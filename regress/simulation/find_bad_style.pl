@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: find_bad_style.pl,v 1.3 2003/01/03 11:49:58 fukachan Exp $
+# $FML: find_bad_style.pl,v 1.4 2003/01/11 16:08:44 fukachan Exp $
 #
 
 use strict;
@@ -24,8 +24,12 @@ my $comment   = '';
 my $reason    = '';
 my $fnf_args  = '';
 my $cur_fn    = '';
+my $implicit  = ();
+my $cur_buf   = '';
 
 while (<>) {
+    $cur_buf = $_;
+
     if (/^\#.*(Copyright.*)/i) {
 	$copyright = $1;
     }
@@ -37,6 +41,7 @@ while (<>) {
 
     # reset the line number counter
     if ($prev_argv ne $ARGV) {
+	_info($prev_argv);
 	$count     = 0;
 	$prev_argv = $ARGV;
     }
@@ -86,11 +91,36 @@ while (<>) {
 	undef $comment;
     }
 
-    if ($in_sub && /\@_;\s*$/) {
+    if ($in_sub && /^    my.*\@_;\s*$/) {
 	_check_args( $ARGV, $_ );
     }
     $fnf_args = '' if /^\}/;
     $fnf_args = '' if /^sub .*\}/;
+
+
+    # 
+    # 3. usage of $_ is wrong.
+    # 
+    if ($in_sub) {
+	local($_) = $cur_buf;
+	$_ =~ s@/[\w/]+/@//@g;
+
+	if (/\$_/o && (! /\$_[a-zA-Z0-9]\w+/)) {
+	    _log('use_underbar', $ARGV, $cur_buf);
+	}
+	if (/if\s+.*\/|if.*m\W/o && (! /\$.*[=!]\~/o) && /\/\S+\//o) {
+	    _log('use_underbar', $ARGV, $cur_buf);
+	}
+
+	if (/if\(/) {
+	    _log('if_style', $ARGV, $cur_buf);
+	}
+
+	if (/for\(/) {
+	    _log('for_style', $ARGV, $cur_buf);
+	}
+    }
+
 
     # 
     # last resort: logging buffer
@@ -100,6 +130,9 @@ while (<>) {
 	$cur_fn  = $1 . "()";
 	$in_sub  = 1;
 	$defined = 0;
+    }
+    if (/^sub .*\}/ || /^\}/o) {
+	$in_sub = 0;
     }
 
     if ($in_sub) {
@@ -233,5 +266,41 @@ sub _check_args
 	print "\tFNF  @fnf\n";
 	print "\t\@_   @args\n";
 	print "\n";
+    }
+}
+
+
+# Descriptions: set hash at %implicit
+#    Arguments: STR($key) STR($file) STR($buf)
+# Side Effects: update %implicit
+# Return Value: none
+sub _log
+{
+    my ($key, $file, $buf) = @_;
+
+    $buf =~ s/^\s*//;
+    $implicit->{ $key }->{ $file } .= "\t ($count)> ".$buf;
+}
+
+
+# Descriptions: show value of %implicit for the specified $file.
+#    Arguments: STR($file)
+# Side Effects: none
+# Return Value: none
+sub _info
+{
+    my ($file) = @_;
+    my %type = (
+		'use_underbar' => 'use of $_',
+		'if_style'     => 'wrong style: if',
+		'for_style'    => 'wrong style: for',
+		);
+
+    for my $key (sort keys %$implicit) {
+	if ($implicit->{ $key }->{ $file }) {
+	    print "\n$file\n";
+	    print "\t", $type{ $key } ,"\n";
+	    print $implicit->{ $key }->{ $file };
+	}
     }
 }
