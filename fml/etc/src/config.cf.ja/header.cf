@@ -5,14 +5,14 @@
 #      History:
 #        Value: yes / no
 #     Examples:
-use_header_loop_check		=	yes
+use_incoming_mail_header_loop_check		=	yes
 
 
 # Descriptions: ヘッダに対するループチェックのルール群
 #      History:
 #        Value:
 #     Examples:
-header_loop_check_rules		=	check_message_id
+incoming_mail_header_loop_check_rules		=	check_message_id
 					check_x_ml_info
 					check_list_post
 
