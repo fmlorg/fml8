@@ -91,10 +91,10 @@ sub Prepend
     print "<CENTER><EM>$ModulePrefix class modules</EM></CENTER>\n";
     print "<HR>\n";
 
-    my $appendix = "prepend_index.ja.html";
-    if (-f $appendix) {
+    my $pointer = "pointer.ja.html";
+    if (-f $pointer) {
 	use FileHandle;
-	my $fh = new FileHandle $appendix;
+	my $fh = new FileHandle $pointer;
 	while (<$fh>) { print $_;}
 	close($fh);
 	$found++;
