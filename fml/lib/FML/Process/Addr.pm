@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Addr.pm,v 1.5 2003/01/07 08:38:34 fukachan Exp $
+# $FML: Addr.pm,v 1.6 2003/01/29 13:28:22 fukachan Exp $
 #
 
 package FML::Process::Addr;
@@ -226,24 +226,14 @@ sub _fmladdr
 	mode     => $mode,
     });
 
-    # XXX-TODO: all unix system has /etc/passwd ?
-    # XXX-TODO: we should implement another mothod to get accounts.
-    # read addresses from password file
-    if (-f "/etc/passwd") {
-	use FileHandle;
-	my $fh = new FileHandle "/etc/passwd";
-	if (defined $fh) {
-	    my ($user, $buf);
-	    while ($buf = <$fh>) {
-		($user) = split(/:/, $buf);
+    use FML::Sys::User;
+    my $sys  = new FML::Sys::User $curproc;
+    my $list = $sys->get_user_list();
 
-		# which definition survives ? alias > user ?
-		unless (defined $aliases->{ $user }) {
-		    $aliases->{ $user } = "$user (LOCAL USER)";
-		}
-	    }
-
-	    $fh->close();
+    for my $user (keys %$list) {
+	# which definition survives ? alias > user ?
+	unless (defined $aliases->{ $user }) {
+	    $aliases->{ $user } = "$user (LOCAL USER)";
 	}
     }
 
