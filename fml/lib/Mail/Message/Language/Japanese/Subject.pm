@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Subject.pm,v 1.1.1.1 2001/11/03 08:15:28 fukachan Exp $
+# $FML: Subject.pm,v 1.2 2001/11/09 10:39:05 fukachan Exp $
 #
 
 
@@ -35,9 +35,6 @@ in the subject.
 
 =cut
 
-
-require Exporter;
-@ISA = qw(Exporter);
 
 # XXX we should it in proper way in the future.
 # XXX but we import it anyway for further rewriting.

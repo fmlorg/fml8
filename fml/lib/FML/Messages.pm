@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Messages.pm,v 1.7 2001/04/03 09:45:40 fukachan Exp $
+# $FML: Messages.pm,v 1.8 2001/05/28 16:17:13 fukachan Exp $
 #
 
 package FML::Messages;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
-require Exporter;
 
 
 =head1 NAME

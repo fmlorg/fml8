@@ -4,16 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: LDAP.pm,v 1.7 2001/04/03 09:45:46 fukachan Exp $
+# $FML: LDAP.pm,v 1.8 2001/06/17 08:57:10 fukachan Exp $
 #
 
 package IO::Adapter::LDAP;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-
-require Exporter;
-@ISA = qw(Exporter);
 
 
 sub new

@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.3 2001/11/27 15:25:22 fukachan Exp $
+# $FML: Date.pm,v 1.4 2001/12/08 10:39:23 tmu Exp $
 #
 
 package Mail::Message::Date;
@@ -56,10 +56,7 @@ return STAR TREK stardate :-)
 =cut
 
 
-require Exporter;
 use vars qw($TimeZone);
-@ISA = qw(Exporter);
-
 use strict;
 use Carp;
 
