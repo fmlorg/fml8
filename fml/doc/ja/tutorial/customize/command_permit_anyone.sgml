@@ -1,8 +1,8 @@
 <!--
-   $FML$
+   $FML: command_permit_anyone.sgml,v 1.1 2002/07/29 09:32:57 fukachan Exp $
 -->
 
-<sect1 id ="config.command.permitanyone">
+<sect1 id="config.command.permitanyone">
 	<title>
 	ケーススタディ: 誰でもコマンドメールが使える
 	</title>
