@@ -4,13 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.39 2004/06/27 06:02:59 fukachan Exp $
+# $FML: Queue.pm,v 1.40 2004/06/29 10:05:29 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
 use strict;
 use Carp;
-use vars qw($Counter);
+use vars qw($Counter @class_list);
 use File::Spec;
 use Mail::Delivery::ErrorStatus qw(error_set error error_clear);
 
@@ -77,6 +77,8 @@ C<new()> assigns them but do no actual works.
 
 my $dir_mode = 0755;
 
+@class_list = qw(new deferred active incoming info sender recipients
+		 transport);
 
 # Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
@@ -101,15 +103,13 @@ sub new
     # update queue directory mode
     $dir_mode = $args->{ directory_mode } || $dir_mode;
 
-    # prepare directories
-    my $new_dir       = $me->new_dir_path($id);
-    my $info_dir      = $me->info_dir_path($id);
-    my $active_dir    = $me->active_dir_path($id);
-    my $incoming_dir  = $me->incoming_dir_path($id);
-    my $sender_dir    = $me->sender_dir_path($id);
-    my $rcpt_dir      = $me->recipients_dir_path($id);
-    my $deferred_dir  = $me->deferred_dir_path($id);
-    my $transport_dir = $me->transport_dir_path($id);
+    # initialize directories.
+    -d $dir || _mkdirhier($dir);
+    for my $class (@class_list) {
+	my $fp   = sprintf("%s_dir_path", $class);
+	my $_dir = $me->can($fp) ? $me->$fp($id) : undef;
+	-d $_dir || _mkdirhier($_dir);
+    }
 
     # hold information for delivery
     $me->{ _new_qf }               = $me->new_file_path($id);
@@ -118,13 +118,6 @@ sub new
     $me->{ _info }->{ sender }     = $me->sender_file_path($id);
     $me->{ _info }->{ recipients } = $me->recipients_file_path($id);
     $me->{ _info }->{ transport }  = $me->transport_file_path($id);
-
-    # create directories in queue if not exists.
-    for my $_dir ($dir, $active_dir, $incoming_dir, $new_dir, $info_dir,
-		  $deferred_dir, $sender_dir, $rcpt_dir,
-		  $transport_dir) {
-	-d $_dir || _mkdirhier($_dir);
-    }
 
     return bless $me, $type;
 }
@@ -193,10 +186,10 @@ sub filename
 }
 
 
-=head2 list()
+=head2 list( [ $class ] )
 
 return queue list as ARRAY REFERENCE.
-It is a list of queue filenames in C<active/> directory.
+by default, return a list of queue filenames in C<active/> directory.
 
     $ra = $queue->list();
     for $qid (@$ra) {
@@ -209,13 +202,14 @@ where C<$qid> is like this: 990157187.20792.1
 
 
 # Descriptions: return queue file list as ARRAY_REF.
-#    Arguments: OBJ($self)
+#    Arguments: OBJ($self) STR($class)
 # Side Effects: none
 # Return Value: ARRAY_REF
 sub list
 {
-    my ($self) = @_;
-    my $dir = $self->active_dir_path();
+    my ($self, $class) = @_;
+    my $fp  = $class ? "${class}_dir_path" : "active_dir_path";
+    my $dir = $self->can($fp) ? $self->$fp() : undef;
 
     use DirHandle;
     my $dh = new DirHandle $dir;
@@ -603,6 +597,37 @@ sub valid_active_queue
     }
 
     ($ok == 3) ? 1 : 0;
+}
+
+
+# Descriptions: this object (queue) is sane as active queue?
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: 1 or 0
+sub is_valid_queue
+{
+    my ($self) = @_;
+    my $ok = 0;
+
+    for my $f ($self->{ _active_qf },
+	       $self->{ _info }->{ sender },
+	       $self->{ _info }->{ recipients }) {
+	$ok++ if -f $f && -s $f;
+    }
+
+    ($ok == 3) ? 1 : 0;
+}
+
+
+# Descriptions: return list of queue classes.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub get_class_list
+{
+    my ($self) = @_;
+
+    return \@class_list;
 }
 
 
