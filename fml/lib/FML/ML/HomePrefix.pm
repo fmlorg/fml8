@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HomePrefix.pm,v 1.5 2004/04/27 13:23:25 fukachan Exp $
+# $FML: HomePrefix.pm,v 1.6 2004/07/23 13:16:39 fukachan Exp $
 #
 
 package FML::ML::HomePrefix;
@@ -133,15 +133,30 @@ sub add
 	$obj->add($domain, [ $dir ]);
     }
 
+    $obj->close();
+
+    # change onwer and group of the created directory.
+    if ($< == 0) {  # running as user "root".
+	my $owner = $curproc->fml_owner();
+	my $group = $curproc->fml_group();
+	$curproc->chown($owner, $group, $pri_map);
+    }
+
     # check the directory.
     if (-d $dir) {
 	$curproc->logwarn("$dir already exist. reuse it.");
     }
     else {
 	$curproc->mkdir($dir);
-
 	if (-d $dir) {
 	    $curproc->log("$dir created");
+
+	    # change onwer and group of the created directory.
+	    if ($< == 0) {  # running as user "root".
+		my $owner = $curproc->fml_owner();
+		my $group = $curproc->fml_group();
+		$curproc->chown($owner, $group, $dir);
+	    }
 	}
 	else {
 	    $curproc->logerror("fail to mkdir $dir");
@@ -184,6 +199,13 @@ sub delete
     $obj->open();
     $obj->delete($domain);
     $obj->close();
+
+    # change onwer and group of the created directory.
+    if ($< == 0) {  # running as user "root".
+	my $owner = $curproc->fml_owner();
+	my $group = $curproc->fml_group();
+	$curproc->chown($owner, $group, $pri_map);
+    }
 }
 
 
