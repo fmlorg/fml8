@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.57 2002/07/11 14:52:10 fukachan Exp $
+# $FML: Makefile,v 1.58 2002/08/03 10:30:06 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -75,8 +75,22 @@ _test:
 	@ echo "* errormails"
 	@ (cd ../errormails; make check)
 
-regen:
-	(cd ../../fml/etc; make )
-
 diag:
 	env PATH=/usr/pkg/bin:$$PATH make check
+
+
+#
+# re-generate files for fml/etc/ and fml/doc/
+#
+
+LIST_TARGET = ../../fml/doc/share/config/list_makefml_command.txt
+
+regen: regen_default_config_cf regen_command_list
+
+regen_default_config_cf:
+	(cd ../../fml/etc; make )
+
+regen_command_list: $(LIST_TARGET)
+
+$(LIST_TARGET): ../../fml/etc/src/config.cf.ja/command.cf
+	sh ../../fml/utils/bin/listup_commnads.sh
