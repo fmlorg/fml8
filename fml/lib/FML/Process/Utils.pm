@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.13 2002/02/24 08:23:59 fukachan Exp $
+# $FML: Utils.pm,v 1.14 2002/03/17 06:24:32 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -173,6 +173,25 @@ sub command_line_options
     my $args = $curproc->{ __parent_args };
 
     return $args->{ options };
+}
+
+
+=head2 ml_domain()
+
+not yet implemenetd properly. 
+Anyway, return the default domain defined in /etc/fml/main.cf.
+
+=cut
+
+
+# Descriptions: return my domain
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub ml_domain
+{
+    my ($curproc) = @_;
+    return $curproc->default_domain();
 }
 
 
