@@ -1,5 +1,5 @@
 #
-# $FML: modules,v 1.7 2003/09/13 05:03:11 fukachan Exp $
+# $FML: modules,v 1.8 2003/12/24 12:49:10 fukachan Exp $
 #
 # map between programs and modules (like /etc/name_to_sysnum on solaris ?)
 #
@@ -35,9 +35,9 @@ fmlthread		FML::Process::Obsolete		$ml
 
 
 # cgi-bin/
-admin/fmlthread.cgi	FML::CGI::ThreadTrack		$cgiargs
-admin/thread.cgi	FML::CGI::ThreadTrack		$cgiargs
-admin/threadview.cgi	FML::CGI::ThreadTrack		$cgiargs
+admin/fmlthread.cgi	FML::CGI::Thread		$cgiargs
+admin/thread.cgi	FML::CGI::Thread		$cgiargs
+admin/threadview.cgi	FML::CGI::Thread		$cgiargs
 
 # admin configuration cgi
 admin/menu.cgi		FML::CGI::Admin::Menu		$cgiargs
