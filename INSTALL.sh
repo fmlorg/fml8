@@ -4,12 +4,12 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: INSTALL.sh,v 1.59 2002/11/16 14:25:50 fukachan Exp $
+# $FML: INSTALL.sh,v 1.60 2002/11/26 07:32:43 fukachan Exp $
 #
 
 # Run this from the top-level fml source directory.
 
-PATH=/bin:/usr/bin:/usr/sbin:/usr/etc:/sbin:/etc
+PATH=/usr/xpg4/bin:/bin:/usr/bin:/usr/sbin:/usr/etc:/sbin:/etc
 umask 022
 
 
@@ -23,9 +23,9 @@ get_fml_version () {
 }
 
 _mkdir () {
-	local dir=$1 
-	echo mkdiring $dir; 
-	test -d $dir || mkdir -p $dir
+	_dir=$1 
+	echo mkdiring $_dir; 
+	test -d $_dir || mkdir -p $_dir
 }
 
 
