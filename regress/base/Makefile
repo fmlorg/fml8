@@ -7,7 +7,7 @@ test:
 	@ $(PERL) ../base/lock.pl
 	@ echo "* checksum test"
 	@ $(PERL) ../base/md5.pl
-	@ echo "* multipart operations test"
+	@ echo "* Mail::Message module IO test"
 	@ sh ../base/multipart_io.sh
 	@ sh ../base/multipart_maker.sh
 

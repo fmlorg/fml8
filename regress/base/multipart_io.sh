@@ -19,14 +19,28 @@ DIFF () {
 	diff -ub $msg $tmp && echo $file ok || echo $file fail
 }
 
-xdir=$dir/../testmails
-DIFF $xdir/multipart=mixed
-DIFF $xdir/multipart=mixed-preamble
-DIFF $xdir/multipart=mixed-trailor
 
-xdir=$dir/../errormails
+echo "* text operations test"
+xdir=$dir/../testmails
+
+for x in $xdir/text*
+do
+   env test_mode=1 ../message/basic_io.pl $x
+done
+
+
+echo "* multipart operations test"
+xdir=$dir/../testmails
+
+for x in $xdir/multipart*
+do
+   DIFF $x
+done
+
 
 echo "   ++ errormails/ has broken multipart messages ;0"
+xdir=$dir/../errormails
+
 # ../errormails has broken multipart messages ;0
 grep -i -l multipart $xdir/[a-z]*[a-z0-9] |\
 grep -v odn.ne.jp |\
