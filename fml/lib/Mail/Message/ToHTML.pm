@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.6 2002/04/07 05:35:10 fukachan Exp $
+# $FML: ToHTML.pm,v 1.7 2002/04/14 07:20:29 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -19,7 +19,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.6 2002/04/07 05:35:10 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.7 2002/04/14 07:20:29 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -367,7 +367,8 @@ sub _html_file_subdir_name
 	else {
 	    $subdir = $self->_msg_time('yyyymm');
 
-	    if ($curid == $id) {
+	    # XXX why we need validate $curid here ? (sholed be true always ?)
+	    if (defined($curid) && $curid == $id) {
 		$subdir_db->{ $id } = $subdir; # cache subdir info into DB.
 		# print STDERR "xdebug: \$subdir_db->{ $id } = $subdir\n";
 	    }
