@@ -1,0 +1,31 @@
+			コマンドの使い方
+
+
+『データを見るだけのもの』は、これはこれで別に構わないと思うのだけれど、
+『操作をするもの』カテゴリってのがいくつかある。fmlhtmify は別としても、
+こいつらは分離しないで makefml に統合するべきかな〜と思うところアリ。
+ばらさないようにすれば admin コマンドや CGI でも使えるようになり得るしね。
+
+
+＊ データを見るだけのもの
+
+	fmladdr	 [-n]
+	fmlalias [-n]
+	fmldoc   モジュール名
+	fmlconf  [-n] $ml
+	fmlerror $ml
+	fmllog   $ml
+
+
+＊ 何らかの操作をするもの
+
+	makefml    $command $ml
+	fml        $ml $command	(makefml と一緒)
+
+	fmlhtmlify [-I DIR] $src_dir $dst_dir
+
+   [バラバラにしにあで makefml に統合するべきかな〜とおもうもの]
+	fmlsummary $command $ml
+	fmlthread  $command $ml
+	fmlspool   [options] $command $ml
+	fmlsuper   $command $ml
