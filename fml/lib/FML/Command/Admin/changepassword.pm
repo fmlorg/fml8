@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: changepassword.pm,v 1.1 2003/02/02 10:59:19 fukachan Exp $
+# $FML: changepassword.pm,v 1.2 2003/02/09 12:31:41 fukachan Exp $
 #
 
 package FML::Command::Admin::changepassword;
@@ -116,47 +116,21 @@ sub _change_password
     my $config  = $curproc->config();
     my $maps    = $config->get_as_array_ref('admin_member_password_maps');
     my $pri_map = $config->{ primary_admin_member_password_map };
-    my $status  = 0;
+    my $up_args = {
+	maplist  => $maps,
+	address  => $address,
+	password => $password,
+    };
+    my $r = '';
 
-    # crypt-fy password.
-    use FML::Crypt;
-    my $crypt = new FML::Crypt;
-    my $cp    = $crypt->unix_crypt($password, $$);
-
-    # XXX delete entries for address among ALL MAPS.
-    use IO::Adapter;
-    for my $map (@$maps) {
-	my $obj = new IO::Adapter $map;
-	if (defined $obj) {
-	    $obj->open();
-	    if ($obj->find( $address )) {
-		$obj->delete( $address );
-		if ($obj->error()) {
-		    LogError("cannot delete $address from=$map");
-		}
-		else {
-		    Log("delete $address from=$map");
-		}
-	    }
-	    $obj->close();
-	}
+    eval q{
+	use FML::Command::Auth;
+	my $passwd = new FML::Command::Auth;
+	$passwd->change($curproc, $command_args, $up_args);
+    };
+    if ($r = $@) {
+	croak($r);
     }
-
-    # XXX add password entry to ONLY primary map. o.k. ?
-    my $obj = new IO::Adapter $pri_map;
-    if (defined $obj) {
-	$obj->open();
-	$obj->add( $address, [ $cp, "UNIX_CRYPT" ] ) && $status++;
-	if ($obj->error()) {
-	    LogError("cannot add $address to=$pri_map");
-	}
-	else {
-	    Log("add password for $address to=$pri_map");
-	}
-	$obj->close();
-    }
-
-    return $status;
 }
 
 
