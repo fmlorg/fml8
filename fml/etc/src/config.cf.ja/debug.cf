@@ -1,6 +1,6 @@
 =head1	デバッグに役立つ機能
 
-=head2	キャッシュ
+=head2	入力データのキャッシュ
 
 
 # Descriptions: 入力されるメールをキャッシュするか？
@@ -15,3 +15,20 @@ use_incoming_message_cache	=	yes
 #        Value: NUM
 #     Examples: 128
 incoming_message_cache_size	=	128
+
+
+=head2	出力(配送)データのキャッシュ
+
+
+# Descriptions: 出力(配送)されるメールをキャッシュするか？
+#      History: $NUM_LOG_MAIL
+#        Value: yes / no
+#     Examples: y
+use_outgoing_message_cache	=	yes
+
+
+# Descriptions: 出力(配送)されるメールを最大何通キャッシュするか
+#      History: $NUM_LOG_MAIL
+#        Value: NUM
+#     Examples: 128
+outgoing_message_cache_size	=	128
