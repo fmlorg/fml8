@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.7 2001/10/20 17:02:34 fukachan Exp $
+# $FML: Lite.pm,v 1.8 2001/10/21 02:31:56 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -666,29 +666,29 @@ sub cache_message_info
     $db->{ _filename }->{ $id } = $self->message_filename($id);
     $db->{ _filepath }->{ $id } = $dst;
 
-    print STDERR "   date\n" if $debug;
+    print STDERR "   date\n" if $debug > 3;
     $db->{ _date }->{ $id } = $hdr->get('date');
 
-    print STDERR "   subject\n" if $debug;
+    print STDERR "   subject\n" if $debug > 3;
     $db->{ _subject }->{ $id } = 
 	$self->_decode_mime_string( $hdr->get('subject') );
 	
-    print STDERR "   from\n" if $debug;
+    print STDERR "   from\n" if $debug > 3;
     my $ra = _address_clean_up( $hdr->get('from') );
     $db->{ _from }->{ $id } = $ra->[0];
     $db->{ _who }->{ $id } = $self->_who_of_address( $hdr->get('from') );
 
-    print STDERR "   message-id\n" if $debug;
+    print STDERR "   message-id\n" if $debug > 3;
     $ra  = _address_clean_up( $hdr->get('message-id') );
     my $mid = $ra->[0];
     if ($mid) {
-	print STDERR "   message-id = <$mid>\n" if $debug;
+	print STDERR "   message-id = <$mid>\n" if $debug > 3;
 	$db->{ _message_id }->{ $id } = $mid;
 	$db->{ _msgidref }->{ $mid }  = $id;
 	$db->{ _idref }->{ $id }      = $id;
     }
 
-    print STDERR "   in-reply-to\n" if $debug;
+    print STDERR "   in-reply-to\n" if $debug > 3;
     $ra = _address_clean_up( $hdr->get('in-reply-to') );
     my $in_reply_to = $ra->[0];
     for my $mid (@$ra) {
@@ -699,7 +699,7 @@ sub cache_message_info
 	$db->{ _idref }->{ $idp } .= " ".$id if defined $idp;
     }
 
-    print STDERR "   referances\n" if $debug;
+    print STDERR "   referances\n" if $debug > 3;
     $ra = _address_clean_up( $hdr->get('references') );
     for my $mid (@$ra) {
 	$db->{ _msgidref }->{ $mid } .= " ".$id;
@@ -753,8 +753,8 @@ sub _address_clean_up
     my $i = 0;
   LIST:
     for my $addr (@addrs) {
-	next LIST unless $addr =~ /\@/;
 	my $xaddr = $addr->address();
+	next LIST unless $xaddr =~ /\@/;
 	push(@r, $xaddr);
     }
 
@@ -828,8 +828,8 @@ sub update_relation
     my ($self, $id) = @_;
     my $args = $self->evaluate_relation($id);
 
-    if (defined $self->{ _ignore_list }->{ $id }) { # ignore flag
-	warn("no action for $id") if $debug;
+    if ($self->is_ignore($id)) {
+	warn("not update relation around $id") if $debug;
 	return undef;
     }
 
@@ -1201,10 +1201,25 @@ sub _db_close
 	    my \$${db} = \$self->{ _db }->{ _$db };
 	    untie \%\$${db};
 	};
-	print STDERR $str if $debug;
+	print STDERR $str if $debug > 10;
 	eval $str;
 	croak($@) if $@;
     }
+}
+
+
+=head2 C<is_ignore($id)>
+
+we should not process this C<$id>
+
+=cut
+
+
+sub is_ignore
+{
+    my ($self, $id) = @_;
+
+    return defined($self->{ _ignore_list }->{ $id }) ? 1 : 0;
 }
 
 
@@ -1227,6 +1242,11 @@ sub update_id_index
     my $old   = "$html_base_dir/index.html";
     my $new   = "$html_base_dir/index.html.new.$$";
     my $code  = _charset_to_code($self->{ _charset });
+
+    if ($self->is_ignore($args->{id})) {
+	warn("not update index.html around $args->{id}") if $debug;
+	return undef;
+    }
 
     use FileHandle;
     my $wh = new FileHandle "> $new";
@@ -1277,6 +1297,11 @@ sub update_thread_index
     my $old   = "$html_base_dir/thread.html";
     my $new   = "$html_base_dir/thread.html.new.$$";
     my $code  = _charset_to_code($self->{ _charset });
+
+    if ($self->is_ignore($args->{id})) {
+	warn("not update thread.html around $args->{id}") if $debug;
+	return undef;
+    }
 
     use FileHandle;
     my $wh = new FileHandle "> $new";
@@ -1452,6 +1477,11 @@ sub _debug
 	id    => $f,
     });
     print STDERR "end ", (time - $start_time), " sec.\n" if $debug;
+
+    # no more action for old files
+    if ($html->is_ignore($f)) {
+	warn("not process $f (already exists)");
+    }
 }
 
 
