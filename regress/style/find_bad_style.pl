@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: find_bad_style.pl,v 1.7 2003/08/30 13:53:43 fukachan Exp $
+# $FML: find_bad_style.pl,v 1.8 2004/01/04 13:37:14 fukachan Exp $
 #
 
 use strict;
@@ -41,7 +41,7 @@ while (<>) {
 	print "\n$ARGV\n\twrong copyright\n" unless $copyright =~ /$year/;
 
 	# compare mtime
-	{
+	if (0) {
 	    my $st = stat($ARGV);
 	    my $mt = $st->mtime;
 	    my ($sec,$min,$hour,$mday,$mon,$year,$wday) = localtime($mt);
