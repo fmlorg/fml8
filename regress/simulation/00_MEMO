@@ -41,6 +41,37 @@
 	値をよろしく変換する （←ここがむずかしー）
 
 
+[TODO]	variable class and renaming
+
+	command {
+		SOMETHING_command
+		admin_command
+	}
+	
+	directory {
+	
+	}
+	
+	file {
+		template_file
+	}
+	
+	mail {
+		incoming_mail
+		outgoing_mail
+		report_mail
+	}
+	
+	message {
+		reply_message
+	}
+	
+	article {
+		digest -> article_digest
+		spool  -> article_spool
+	}
+
+
 [TODO]	case insensitive of user part of user@domain
 
 
@@ -444,4 +475,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.92 2003/10/26 02:41:38 fukachan Exp $
+$FML: 00_MEMO,v 1.93 2003/10/26 06:00:58 fukachan Exp $
