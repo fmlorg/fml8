@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Switch.pm,v 1.40 2001/11/18 04:50:59 fukachan Exp $
+# $FML: Switch.pm,v 1.41 2001/11/22 11:12:09 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -350,14 +350,14 @@ sub _module_specific_options
 {
     my ($myname) = @_;
 
+    # XXX Caution!
+    # XXX xxx.cgi SHOULD NOT ACCPET the same options as command line
+    # XXX program xxx does.
     if ($myname eq 'fml.pl' || 
 	$myname eq 'loader' ) { 
 	return qw(ctladdr! debug! params=s -c=s);
     }
-    elsif ($myname eq 'fmlthread'     ||
-	   $myname eq 'fmlthread.cgi' ||
-	   $myname eq 'thread.cgi'    ||
-	   $myname eq 'threadview.cgi') {
+    elsif ($myname eq 'fmlthread') {
 	return qw(debug! 
 		  article_id_max=i
 		  spool_dir=s
@@ -365,6 +365,11 @@ sub _module_specific_options
 		  msg_base_url=s
 		  reverse!
 		  params=s -f=s -c=s);
+    }
+    elsif($myname eq 'thread.cgi'    ||
+	  $myname eq 'fmlthread.cgi' ||
+	  $myname eq 'threadview.cgi') {
+	return ();
     }
     elsif ($myname eq 'fmlconf') {
 	return qw(debug! params=s -c=s n!);
@@ -377,13 +382,13 @@ sub _module_specific_options
 	return qw(debug! params=s -c=s);	
     }
     elsif ($myname eq 'makefml.cgi') {
-	return qw(debug!);
-    }
-    elsif ($myname eq 'fmlsch.cgi') {
-	return qw(debug!);
+	return ();
     }
     elsif ($myname eq 'fmlsch') {
 	return qw(debug! -D=s -F=s -m=s a! h!);
+    }
+    elsif ($myname eq 'fmlsch.cgi') {
+	return ();
     }
     elsif ($myname eq 'fmlhtmlify') {
 	return qw(debug! -I=s);
