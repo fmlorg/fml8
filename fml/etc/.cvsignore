@@ -1,5 +1,6 @@
-main.cf
-default_config.cf.ja
-site_default_config.cf
-install.cf
+config.cf
 default_config.cf.en
+default_config.cf.ja
+install.cf
+main.cf
+site_default_config.cf
