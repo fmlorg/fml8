@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.1 2002/05/19 09:44:00 fukachan Exp $
+# $FML: Error.pm,v 1.2 2002/05/19 09:45:54 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -73,7 +73,12 @@ sub prepare
     my $eval = $config->get_hook( 'error_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
-    $self->SUPER::prepare($args);
+    if ($config->yes('use_error_analyzer')) {
+	$self->SUPER::prepare($args);
+    }
+    else {
+	exit(0);
+    }	
 
     $eval = $config->get_hook( 'error_prepare_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -125,26 +130,34 @@ XXX Each command determines need of lock or not.
 sub run
 {
     my ($curproc, $args) = @_;
-    my $msg = $curproc->{ incoming_message }->{ message };
+    my $found = 0;
+    my $pcb   = $curproc->{ pcb };
+    my $msg   = $curproc->{ incoming_message }->{ message };
+
+    my $eval = $config->get_hook( 'error_run_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
     eval q{
 	use Mail::Bounce;
 	my $bouncer = new Mail::Bounce;
 	$bouncer->analyze( $msg );
-    };
-    unles ($@) {
+
 	# show results
 	for my $a ( $bouncer->address_list ) {
+	    $found++;
 	    my $status = $bouncer->status( $a );
 	    my $reason = $bouncer->reason( $a );
 	    Log("bounced: $a");
 	    Log("bounced: reason=$reason");
 	    Log("bounced: status=$status");
 	}
-    }
-    else {
-	LogError($@);
-    }
+    };
+    LogError($@) if $@;
+
+    $pcb->set("error", "found", 1) if $found;
+
+    my $eval = $config->get_hook( 'error_run_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
 
@@ -188,12 +201,19 @@ sub finish
 {
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
+    my $pcb    = $curproc->{ pcb };
 
     my $eval = $config->get_hook( 'error_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
-    $curproc->inform_reply_messages();
-    $curproc->queue_flush();
+    if ($pcb->get("error", "found")) {
+	Log("error message found");
+	$curproc->inform_reply_messages();
+	$curproc->queue_flush();
+    }
+    else {
+	Log("error message not found");
+    }
 
     $eval = $config->get_hook( 'error_finish_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
