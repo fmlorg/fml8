@@ -13,6 +13,7 @@ log.cf
 distribute.cf
 article.cf
 spool.cf
+summary.cf
 htmlarchive.cf
 command.cf
 error.cf
