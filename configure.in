@@ -1,5 +1,5 @@
 dnl
-dnl $FML: configure.in,v 1.36 2003/03/15 09:07:02 fukachan Exp $
+dnl $FML: configure.in,v 1.37 2003/03/16 04:53:33 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -136,7 +136,7 @@ AC_OUTPUT(\
 	)
 
 if test "X$use_warning" = "Xyes" ; then
-	echo "enabled perl -w"
+	echo "enabled: perl -w"
 else
 	echo "disabled warning (perl -w)"
 	sed '1s/-w//' fml/libexec/loader > fml/libexec/loader.new.$$
