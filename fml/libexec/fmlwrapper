@@ -56,7 +56,10 @@ sub Bootstrap
     my $my_default_config = '';
     for (@ARGV) {
 	if  ($_ eq '--ctladdr') {
-	   $options{ ctladdr } = 1; 
+	    $options{ ctladdr } = 1;
+	}
+	elsif ($_ eq '-c') {
+	    $options{ debug } = 1;
 	}
 	elsif ($_ eq '-c') {
 	    $my_default_config = shift @ARGV;
@@ -96,16 +99,16 @@ sub Bootstrap
 
 =head1 NAME
 
-fml.pl -- wrapper which executes the real fml5 programs.
+fmlwrapper -- the wrapper which executes a real fml5 program.
 
 =head1 SYNOPSIS
 
-fml.pl C<[-d]> C<[--ctladdr]> $mail_list_address
+fmlwrapper C<[-c main.cf]> C<[-d]> C<[--ctladdr]> ml_home_dir
 
 =head1 DESCRIPTION
 
-C<$mail_list_address>
-    Hmm,,,?
+C<-c main.cf>
+    main.cf alternative
 
 C<-d>
     debug on.
