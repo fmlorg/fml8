@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.226 2004/04/17 13:25:14 fukachan Exp $
+# $FML: Kernel.pm,v 1.227 2004/04/27 13:36:40 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -131,6 +131,7 @@ sub new
 	my $opts = $args->{ options }->{ o };
 	while (($k, $v) = each %$opts) { $cfargs->{ $k } = $v;}
     }
+
 
     # 2.1 speculate $fml_owner_home_dir by the current process uid
     #     XXX we should compare $fml_owner and $< ?
@@ -918,6 +919,14 @@ sub load_config_files
     # XXX overload variables from each $cf
     for my $cf (@$_files) {
       $config->overload( $cf );
+    }
+
+    #  overwrite variables by -o options (2)
+    my $options = $curproc->command_line_options();
+    if (defined $options->{ o }) {
+	my ($k, $v);
+	my $opts = $options->{ o } || {};
+	while (($k, $v) = each %$opts) { $config->set($k, $v);}
     }
 
     # XXX We need to expand variables after we load all *cf files.
