@@ -33,6 +33,7 @@ link:
 	rm -f lib; ln -s ../../fml/lib
 	rm -f FML; ln -s ../../fml/lib/FML
 	rm -f Ticket; ln -s ../../fml/lib/FML/Ticket
+	rm -f CGI; ln -s ../../fml/lib/FML/CGI
 	rm -f Process; ln -s ../../fml/lib/FML/Process
 	rm -f IO; ln -s ../../fml/lib/IO
 	rm -f File; ln -s ../../fml/lib/File
