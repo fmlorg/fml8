@@ -1,0 +1,126 @@
+<!--
+	$FML: cvstags.sgml,v 1.2 2001/04/25 02:55:31 fukachan Exp $
+-->
+
+<appendix id="inet6">
+
+<title> NetBSD 1.5 での IPv6 の設定 </title>
+
+<para>
+<ulink url="http://www.netbsd.org/Documentation/network/ipv6/">
+NetBSD の IPv6 の解説
+</ulink>
+を読みながら進めれば難しくはないです。
+</para>
+
+<sect1>
+	<title>	IIJ IPv6 トンネル型サービスの場合 </title>
+
+<para>
+まず、上流 ISP から IPv6 アドレス空間を割り当ててもらいます。
+例えば 2001:240:22::/48 などといったアドレスがもらえます。
+</para>
+
+<para>
+次に IPv6 がルータモードの NetBSD を作り gif0 で IIJ のルータと
+トンネルを張ります。
+<screen>
+   IIJ NOC 側ルータ
+      |
+      | (unnumbered link)
+      |
+   NetBSD
+      |
+   ------------------------ セグメント ---
+</screen>
+</para>
+
+<para>
+トンネルを張った後、route6d を動かします。
+これにより IIJ からの ::/0 を受けとります。
+そして、
+こちらからは 2001:240:22::/48 を advertise することになります。 
+</para>
+
+<warning>
+<para>
+route6d を何も考えずに起動すると /64 を advertise してしまうので
+/48 に aggregate することを忘れずに。
+</para>
+</warning>
+
+</sect1>
+
+<sect1>
+	<title> トンネルの設定 </title>
+
+<para>
+gif インターフェイスを使ってトンネルを張ります。
+手動で設定する場合は、次のようになります。
+<screen>
+# ifconfig gif0 tunnel 10.1.1.1 10.2.2.2
+</screen>
+ここで、自分のアドレスが 10.1.1.1
+10.2.2.2 がトンネルを張る相手の IP アドレスです。
+このアドレスについては連絡が来ているはずです。
+</para>
+
+<para>
+次回リブート時に自動的に設定されるためには、
+/etc/ifconfig.gif0 に次のような内容を書きます。
+<screen>
+tunnel 10.1.1.1 10.2.2.2
+</screen>
+</para>
+
+<para>
+トンネルが上がったかどうかは 
+<screen>
+% ping6 -n ff02::1%gif0
+</screen>
+を実行して、複数の返事があれば OK です。
+この ff02 の意味などについては
+<ulink url="http://www.netbsd.org/Documentation/network/ipv6/">
+[NetBSD の IPv6 の解説]
+</ulink>
+をはじめ IPv6 の諸解説を参照してください。
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title> ルーティング </title>
+
+<para>
+IIJ のルータからは ::/0 (IPv4 なら 0/0) つまりデフォルトルートが
+流れてきます。
+</para>
+
+<para>
+route6d を動かすには /etc/rc.conf に
+<screen>
+route6d=YES		route6d_flags="-A 2001:240:22::/48,gif0"
+</screen>
+と書き、
+<screen>
+# /etc/rc.d/route6d start
+</screen>
+を実行して下さい。
+/48 へ aggregate していることに注意して下さい。
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title> ホストなどへのアドレスの割り当て </title>
+
+<para>
+適宜ふるなり、rtadvd か rtsold で自動で割り当てるなりします。
+</para>
+
+</sect1>
+
+
+</appendix>
