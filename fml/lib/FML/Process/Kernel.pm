@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.234 2004/07/23 15:59:10 fukachan Exp $
+# $FML: Kernel.pm,v 1.235 2004/07/27 16:34:32 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2238,7 +2238,9 @@ sub queue_in
     my $config       = $curproc->config();
     my $sender       = $config->{ maintainer };
     my $charset      = $curproc->get_charset($category);
-    my $subject      = $config->{ "${category}_subject" };
+    my $myname       = $curproc->myname();
+    my $_defsubj     = "message from fml8 $myname system";
+    my $subject      = $config->{ "${category}_subject" } || $_defsubj;
     my $reply_to     = $config->{ command_mail_address };
     my $is_multipart = 0;
     my $rcptkey      = '';
