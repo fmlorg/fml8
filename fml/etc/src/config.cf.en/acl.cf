@@ -182,7 +182,7 @@ admin_recipient_maps		=	$primary_admin_recipient_map
 #      History: 4.0's $PASSWD_FILE
 #        Value: file
 #     Examples: /var/spool/ml/elena/etc/passwd
-primary_admin_member_password_map = file:$ml_home_dir/etc/passwd-admin
+primary_admin_member_password_map = file:$etc_dir/passwd-admin
 
 
 # Descriptions: all password files.
@@ -191,7 +191,7 @@ primary_admin_member_password_map = file:$ml_home_dir/etc/passwd-admin
 #        Value:
 #     Examples:
 admin_member_password_maps	=	$primary_admin_member_password_map
-					file:$ml_home_dir/etc/passwd
+					file:$etc_dir/passwd
 
 
 =head2 moderator

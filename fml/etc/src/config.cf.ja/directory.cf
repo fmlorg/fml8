@@ -25,21 +25,22 @@ directory_private_mode	=	0700
 
 
 newml_command_init_public_directories	=	$domain_config_base_dir
-					$domain_mail_config_dir
-					$domain_postfix_config_dir
-					$domain_qmail_config_dir
-					$domain_exim_config_dir
-					$domain_sendmail_config_dir
-					$domain_procmail_config_dir
-					$shared_db_dir
-					$udb_base_dir
+						$domain_mail_config_dir
+						$domain_postfix_config_dir
+						$domain_qmail_config_dir
+						$domain_exim_config_dir
+						$domain_sendmail_config_dir
+						$domain_procmail_config_dir
+						$shared_db_dir
+						$udb_base_dir
 
-newml_command_init_private_directories	=	$tmp_dir
-					$spool_dir
-					$var_dir
-					$db_dir
-					$error_analyzer_cache_dir
-					$lock_dir
+newml_command_init_private_directories	=	$etc_dir
+						$tmp_dir
+						$spool_dir
+						$var_dir
+						$db_dir
+						$error_analyzer_cache_dir
+						$lock_dir
 
 
 =head2 fml system directories
@@ -89,6 +90,13 @@ udb_base_dir	= $ml_home_prefix/@udb@
 
 
 =head2 ML 固有
+
+
+# Descriptions: パスワードファイルなどを置くディレクトリ
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml/elena/etc
+etc_dir		= $ml_home_dir/etc
 
 
 # Descriptions: さまざまな目的につかう
