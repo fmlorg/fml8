@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.46 2002/04/13 14:53:08 fukachan Exp $
+# $FML: Command.pm,v 1.50 2002/04/25 04:15:21 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -211,35 +211,17 @@ sub finish
 
 # Descriptions: check message of the current process
 #               whether it contais keyword e.g. "confirm".
-#    Arguments: OBJ($self) STR_REF($ra_body)
+#    Arguments: OBJ($curproc) ARRAY_REF($ra_data)
 # Side Effects: none
 # Return Value: ARRAY
 sub _pre_scan
 {
-    my ($curproc, $ra_body) = @_;
-    my $config  = $curproc->{ config };
+    my ($curproc, $ra_data) = @_;
 
-    # special traps
-    my $confirm_prefix = $config->{ confirm_command_prefix };
-    my $admin_prefix   = $config->{ privileged_command_prefix };
-    my $confirm_found  = '';
-    my $admin_found    = '';
-
-    # clean up
-    $confirm_prefix =~ s/\s*$//;
-    $admin_prefix   =~ s/\s*$//;
-
-    for (@$ra_body) {
-	if (/$confirm_prefix\s+\w+\s+([\w\d]+)/) {
-	    $confirm_found = $1;
-	}
-
-	if (/$admin_prefix\s+\w+\s+([\w\d]+)/) {
-	    $admin_found = $1;
-	}
-    }
-
-    return ($confirm_found, $admin_found);
+    use FML::Command::DataCheck;
+    my $check = new FML::Command::DataCheck;
+    my $data  = $check->find_special_keyword($curproc, $ra_data);
+    return ($data->{ confirm_keyword }, $data->{ admin_keyword });
 }
 
 
@@ -285,18 +267,13 @@ sub _is_valid_command
 #    Arguments: STR($command) STR($comname)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub _parse_command_options
+sub _parse_command_arguments
 {
     my ($command, $comname) = @_;
-    my $found = 0;
-    my (@options) = ();
 
-    for (split(/\s+/, $command)) {
-	push(@options, $_) if $found;
-	$found = 1 if $_ eq $comname;
-    }
-
-    return \@options;
+    use FML::Command::DataCheck;
+    my $check = new FML::Command::DataCheck;
+    $check->parse_command_arguments($command, $comname);
 }
 
 
@@ -309,11 +286,9 @@ sub _get_command_name
 {
     my ($command) = @_;
 
-    # cut off the prepended strings
-    $command =~ s/^[\#\s]*//;
-
-    my ($comname, $comsubname) = split(/\s+/, $command);
-    return ($comname, $comsubname);
+    use FML::Command::DataCheck;
+    my $check = new FML::Command::DataCheck;
+    $check->parse_command_buffer($command)
 }
 
 
@@ -518,7 +493,7 @@ sub _evaluate_command
 		comname      => $comname,
 		command      => $command,
 		ml_name      => $ml_name,
-		options      => _parse_command_options($command, $comname),
+		options      => _parse_command_arguments($command, $comname),
 		argv         => $argv,
 		args         => $args,
 	    };
