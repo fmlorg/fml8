@@ -22,6 +22,28 @@ IO::Adapter::MySQL - interface to talk with a MySQL server
 
 =head1 SYNOPSIS
 
+   use IO::MapAdapter;
+   
+   my $map        = 'mysql:toymodel';
+   my $map_params = {
+       $map => {
+   	sql_server    => 'localhost',
+   	user          => 'fukachan',
+   	user_password => 'uja',
+   	database      => 'fml',
+   	table         => 'ml',
+   	params        => {
+   	    ml_name   => 'elena',
+   	    file      => 'members',
+   	},
+       },
+   };
+   
+   my $obj = new IO::MapAdapter ($map, $map_params);
+   $obj->open();
+   $obj->add( 'rudo@nuinui.net' );
+   $obj->close();
+
 =head1 DESCRIPTION
 
 This module is a top level driver to talk with a MySQL server in SQL
@@ -34,6 +56,10 @@ Each model name is specified at $args->{ schema } in new($args).
 =head1 METHODS
 
 =head2 C<configure($me, $args)>
+
+IO::Adapter::MySQL specific configuration loader.
+It also calles SQL::Schema::$model module for model specific
+customizatoins and functions.
 
 =cut
 
@@ -122,7 +148,15 @@ sub get_next_value
 
 =head2 C<add($addr)>
 
+add C<$addr> to the sql server specified at new().
+SQL::Schema::$model provides model specific SQL query statement.
+If SQL::Schema::add() exists, SQL::Schema::add() is called.
+
 =head2 C<delete($addr)>
+
+delete C<$addr> from the sql server specified at new().
+SQL::Schema::$model provides model specific SQL query statement.
+If SQL::Schema::delete() exists, SQL::Schema::delete() is called.
 
 =cut
 
@@ -161,4 +195,29 @@ sub delete
 }
 
 
+=head1 SEE ALSO
+
+L<DBI>,
+L<DBD::MySQL>,
+L<IO::Adapter::DBI>
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1 HISTORY
+
+IO::Adapter::File appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
+=cut
+
+1;
 1;
