@@ -9,12 +9,14 @@
 #
 
 package Netlib::CheckSum;
+
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
-require Exporter;
 
-@ISA       = qw(Exporter);
+require Exporter;
+@ISA = qw(Exporter);
+
 
 sub new
 {
@@ -22,11 +24,12 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {};
     return bless $me, $type;
-  }
+}
 
 
 sub md5
-  {
+{
+    ;
 }
 
 
