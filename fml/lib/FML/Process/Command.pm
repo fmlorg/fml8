@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.52 2002/04/26 10:29:13 fukachan Exp $
+# $FML: Command.pm,v 1.53 2002/05/18 15:29:41 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -214,15 +214,19 @@ sub finish
 #               whether it contais keyword e.g. "confirm".
 #    Arguments: OBJ($curproc) ARRAY_REF($ra_data)
 # Side Effects: none
-# Return Value: ARRAY
-sub _pre_scan
+# Return Value: HASH_REF
+sub _check_context
 {
     my ($curproc, $ra_data) = @_;
 
     use FML::Command::DataCheck;
     my $check = new FML::Command::DataCheck;
     my $data  = $check->find_special_keyword($curproc, $ra_data);
-    return ($data->{ confirm_keyword }, $data->{ admin_keyword });
+
+    # current process tries to confirm the previous result e.g. subscribe.
+    $data->{ under_confirmation } = $data->{ confirm_keyword } ? 1 : 0;
+
+    return $data;
 }
 
 
@@ -361,12 +365,12 @@ sub _get_command_mode
     my $is_auth    = $status->{ is_auth };
     my $is_admin   = $status->{ is_admin };
     my $is_member  = $status->{ is_member };
-    my $confirm_id = $status->{ confirm_id };
+    my $confirm_id = $status->{ context }->{ confirm_keyword };
+    my $is_confirm = $status->{ context }->{ under_confirmation };
 
     # special traps are needed for "confirm" and "admin" commands.
     my $confirm_prefix = $config->{ confirm_command_prefix };
     my $admin_prefix   = $config->{ privileged_command_prefix };
-
 
     # Case: "confirm" command.
     #        It is exceptional strangers can use.
@@ -426,6 +430,11 @@ sub _get_command_mode
 	    LogError("command processing stop.");
 	    return '__LAST__';
 	}
+    }
+    # ignore all requests
+    elsif ($is_confirm) {
+	Log("ignore(confirm stage): $command");
+	return '__NEXT__';	
     }
     # Case: use command (commands "a usual member" can use)
     else {
@@ -504,7 +513,7 @@ sub _evaluate_command_lines
 
     # preliminary scanning for message to find "confirm" or "admin"
     my $command_lines = $msg->message_text_as_array_ref();
-    my ($confirm_id, $admin_password) = $curproc->_pre_scan($command_lines);
+    my $context       = $curproc->_check_context($command_lines);
 
     # [user credential check]
     #     is_admin: whether From: is a member of admin users.
@@ -519,9 +528,9 @@ sub _evaluate_command_lines
 	is_member      => $is_member,
 	mode           => $mode,
 	level          => 'unknown',
-	confirm_id     => $confirm_id, 
-	admin_password => $admin_password,
+	context        => $context,
     };
+
 
     my $eval = $config->get_hook( 'command_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -549,27 +558,28 @@ sub _evaluate_command_lines
 	};
 	$mode = $curproc->_get_command_mode($args, $status, $cominfo);
 
-	# check if the further processing is allowed
+	# 1. check $mode if the further processing is allowed
 	next COMMAND if $mode eq '__NEXT__';
-	unless ($mode eq 'user' || $mode eq 'admin' || $mode eq 'special') {
+	unless ($mode eq 'user' || $mode eq 'admin') {
 	    LogError("command processing looks insane. stop.");
 	    last COMMAND;
 	}
 
-	# check if this command is allowed in the current $mode ?
+	# 2. check $level if this command is allowed in the current $mode ?
 	unless ($curproc->_allow_command($mode, $status, $cominfo)) {
 	    Log("(debug) ignore $fixed_command");
 	    next COMMAND;
 	}
 
+	# 3. simple syntax check
 	unless ($curproc->_is_valid_syntax($args, $status, $fixed_command)) {
 	    Log("(debug) ignore $fixed_command");
 	    next COMMAND;
 	}
 
+	# o.k. here we go to execute command
 	Log("execute \"$fixed_command\"");
 
-	# o.k. here we go to execute command
 	use FML::Command;
 	my $obj = new FML::Command;
 	if (defined $obj) {
