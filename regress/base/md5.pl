@@ -9,12 +9,42 @@
 # $FML$
 #
 
-print STDERR "specify STDIN\n";
+$file = shift || '/etc/group';
 
-my $body; while (<>) { $body .=  $_;}
+my $body; 
+
+use FileHandle;
+my $fh = new FileHandle $file;
+while (<$fh>) { $body .=  $_;}
+close($fh);
 
 use FML::Checksum;
 $p = new FML::Checksum;
-print $p->md5( \$body ), "\n";
+
+$internal = $p->md5( \$body );
+$external = program($file);
+
+print "FML::Checksum::md5 ... ";
+print (($internal eq $external) ? "ok" : "fail");
+print "\n";
 
 exit 0;
+
+
+
+sub program
+{
+    my ($file) = @_;
+
+    use IO::Handle;
+    $fh = new IO::Handle;
+
+    open($fh, "md5 $file|");
+    while (<$fh>) {
+	chop;
+	(@x) = split(/\s*=\s*/);
+    }
+    close($fh);
+
+    return $x[1];
+}
