@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.13 2001/10/21 05:22:10 fukachan Exp $
+# $FML: Lite.pm,v 1.14 2001/10/21 05:53:58 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -13,6 +13,12 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 my $debug = $ENV{'debug'} ? 1 : 0;
+my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
+
+my $version = q$FML: Lite.pm,v 1.14 2001/10/21 05:53:58 fukachan Exp $;
+if ($version =~ /,v\s+([\d\.]+)\s+/) {
+    $version = "$URL $1";
+}
 
 =head1 NAME
 
@@ -874,6 +880,11 @@ sub evaluate_relation
     my $next_id          = $id + 1 if -f $next_file;
     my $prev_thread_id   = $db->{ _prev_id }->{ $id };
     my $next_thread_id   = $db->{ _next_id }->{ $id };
+
+    # diagnostic
+    undef $prev_thread_id if $prev_thread_id == $id;
+    undef $next_thread_id if $next_thread_id == $id;
+
     my $link_prev_id     = $self->message_filename($prev_id);
     my $link_next_id     = $self->message_filename($next_id);
     my $link_prev_thread = $self->message_filename($prev_thread_id);
@@ -1174,6 +1185,10 @@ sub _print_index_end
 
     $self->mhl_separator($wh);
     _print($wh, _format_index_navigator(), $code);
+
+    # append version information
+    _print($wh, "<BR>Genereated by $version\n", $code);
+
     $self->html_end($wh);
 
     unless (rename($new, $old)) {
@@ -1285,25 +1300,56 @@ sub _update_id_montly_index_master
 
     $self->_db_open();
     my $db = $self->{ _db };
-    my $mlist = $db->{ _monthly_idlist };
-    my (@list) = sort __sort_yyyymm keys %$mlist;
+    my $mlist   = $db->{ _monthly_idlist };
+    my (@list)  = sort __sort_yyyymm keys %$mlist;
+    my ($years) = _yyyy_range(\@list);
 
-    $self->_print_ul($wh, $db, $code);
-    for my $id (@list) { # ( YYYY/MM YYYY/MM ... )
-	my $xx = $id; $xx =~ s@/@@g; 
-	my $fn = "month.$xx.html";
+    _print($wh, "<TABLE>", $code);
 
-	use File::Spec;
-	my $file = File::Spec->catfile($html_base_dir, $fn);
-	if (-f $file) {
-	    _print($wh, "<LI>", $code);
-	    _print($wh, "<A HREF=\"$fn\"> $id </A>", $code);
+    for my $year (@$years) {
+	# $self->_print_ul($wh, $db, $code);
+
+	_print($wh, "<TR>", $code);
+
+	for my $month (1 .. 12) {
+	    _print($wh, "<TR>", $code) if $month == 7;
+
+	    my $id = sprintf("%04d/%02d", $year, $month); # YYYY/MM
+	    my $xx = sprintf("%04d%02d", $year, $month); # YYYYMM
+	    my $fn = "month.$xx.html";
+
+	    use File::Spec;
+	    my $file = File::Spec->catfile($html_base_dir, $fn);
+	    if (-f $file) {
+		_print($wh, "<TD><A HREF=\"$fn\"> $id </A>", $code);
+	    }
+	    else {
+		_print($wh, "<TD>", $code);
+	    }
 	}
+
+	# $self->_print_end_of_ul($wh, $db, $code);
     }
-    $self->_print_end_of_ul($wh, $db, $code);
+    _print($wh, "</TABLE>", $code);
     
     $self->_db_close();
     $self->_print_index_end( $htmlinfo );
+}
+
+
+sub _yyyy_range
+{
+    my ($list) = @_;
+    my ($yyyy);
+
+    for (@$list) {
+	if (/^(\d{4})\/(\d{2})/) {
+	    $yyyy->{ $1 } = $1;
+	}
+    }
+
+    my (@yyyy) = keys %$yyyy;
+    return( \@yyyy );
 }
 
 
@@ -1312,7 +1358,7 @@ sub __sort_yyyymm
     my ($xa, $xb) = ($a, $b);
     $xa =~ s@/@@;
     $xb =~ s@/@@;
-    $a <=> $b;
+    $xa <=> $xb;
 }
 
 
@@ -1712,7 +1758,9 @@ if ($0 eq __FILE__) {
 		}
 
 		for my $f ( 1 .. $max ) {
-		    _debug( "$x/$f" );
+		    use File::Spec;
+		    my $file = File::Spec->catfile($x, $f);
+		    _debug( $file );
 		}
 	    }
 	}
