@@ -1,6 +1,20 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/03/18
+
+   CGI の再構成をはじめる
+
+	FML::CGI::*
+	FML::Process::CGI::*
+	reconstruct CGI around structure phase 1:
+	o table not frame based menu support (similar style to www.netbsd.org)
+	o prepare method for each location in the screen.
+	   for example,
+	   + run_cgi_main() to show main menu at the center in the screen.
+	   + run_cgi_navigator() to show navigation bar at the left.
+	o longjmp() by eval::croak when we encounter insecure conditions.
+
 2002/03/17
 
    chaddr コマンドが動くようになった！
@@ -1679,4 +1693,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.55 2002/03/16 10:54:41 fukachan Exp $
+$FML: CHANGES.txt,v 1.56 2002/03/17 14:48:22 fukachan Exp $
