@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ErrorStatus.pm,v 1.7 2003/02/16 02:36:31 fukachan Exp $
+# $FML: ErrorStatus.pm,v 1.8 2003/08/23 04:35:25 fukachan Exp $
 #
 
 package ErrorStatus;
@@ -33,7 +33,7 @@ require Exporter;
 
 =head1 NAME
 
-ErrorStatus - error handling component
+ErrorStatus - error handling component.
 
 =head1 SYNOPSIS
 
@@ -72,7 +72,7 @@ return $message which is saved by C<error_set($msg)>.
 =cut
 
 
-# Descriptions: save the error message in $self object.
+# Descriptions: set the error message within $self object.
 #    Arguments: OBJ($self) STR($mesg)
 # Side Effects: update OBJ
 # Return Value: STR
