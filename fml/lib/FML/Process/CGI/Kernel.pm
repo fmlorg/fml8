@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.22 2002/04/10 09:51:26 fukachan Exp $
+# $FML: Kernel.pm,v 1.23 2002/04/22 11:11:09 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -510,7 +510,7 @@ sub cgi_try_get_address
 
     # retry !
     unless ($a) {
-	eval q{ $a = $curproc->safe_param_address_selected();};
+	eval q{ $a = $curproc->safe_param_address();};
 	unless ($@) {
 	    $address = $a;
 	}
@@ -522,6 +522,50 @@ sub cgi_try_get_address
     }
 
     return $address;
+}
+
+
+=head2 cgi_try_get_address()
+
+return input address after validating the input
+
+=cut
+
+
+# Descriptions: return input ml_name after validating the input
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: longjmp() if critical error occurs.
+# Return Value: STR
+sub cgi_try_get_ml_name
+{
+    my ($curproc, $args) = @_;
+    my $ml_name = '';
+    my $a = '';
+
+    eval q{ $a = $curproc->safe_param_ml_name_specified();};
+    unless ($@) {
+	$ml_name = $a;
+    }
+    else {
+	# XXX longjmp() if insecure input is given.
+	my $r = $@;
+	if ($r =~ /ERROR\.INSECURE/) { croak($r);}
+    }
+
+    # retry !
+    unless ($a) {
+	eval q{ $a = $curproc->safe_param_ml_name();};
+	unless ($@) {
+	    $ml_name = $a;
+	}
+	else {
+	    # XXX longjmp() if insecure input is given.
+	    my $r = $@;
+	    if ($r =~ /ERROR\.INSECURE/) { croak($r);}
+	}
+    }
+
+    return $ml_name;
 }
 
 
