@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.29 2003/12/22 12:38:45 fukachan Exp $
+# $FML: Queue.pm,v 1.30 2003/12/29 07:33:05 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -255,7 +255,6 @@ sub getidinfo
     # validate if the queue id is given
     $id ||= $self->id();
 
-    # XXX-TODO: we should provide e.g. sender_dir_path().
     # sender
     use FileHandle;
     $fh = new FileHandle $self->sender_file_path($id);
@@ -265,7 +264,6 @@ sub getidinfo
 	$fh->close;
     }
 
-    # XXX-TODO: we should provide e.g. recipients_dir_path().
     # recipient array
     $fh = new FileHandle $self->recipients_file_path($id);
     if (defined $fh) {
@@ -404,29 +402,30 @@ sub set
     elsif ($key eq 'recipients') {
 	my $fh = new FileHandle ">> $qf_recipients";
 	if (defined $fh) {
-	    # XXX-TODO: validate $value == ARRAY_REF.
-	    for my $rcpt (@$value) { print $fh $rcpt, "\n";}
+	    if (ref($value) eq 'ARRAY') {
+		for my $rcpt (@$value) { print $fh $rcpt, "\n";}
+	    }
 	    $fh->close;
 	}
     }
     elsif ($key eq 'recipient_maps') {
 	my $fh = new FileHandle ">> $qf_recipients";
 	if (defined $fh) {
-	    # XXX-TODO: validate $value == ARRAY_REF.
-	    use IO::Adapter;
-	    for my $map (@$value) {
-		my $obj = new IO::Adapter $map;
-		if (defined $obj) {
-		    $obj->open();
+	    if (ref($value) eq 'ARRAY') {
+		for my $map (@$value) {
+		    use IO::Adapter;
+		    my $obj = new IO::Adapter $map;
+		    if (defined $obj) {
+			$obj->open();
 
-		    my $buf;
-		    while ($buf = $obj->get_next_key()) {
-			print $fh $buf, "\n";
+			my $buf;
+			while ($buf = $obj->get_next_key()) {
+			    print $fh $buf, "\n";
+			}
+			$obj->close();
 		    }
-		    $obj->close();
 		}
 	    }
-
 	    $fh->close;
 	}
     }
