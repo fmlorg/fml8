@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.20 2001/10/23 07:41:57 fukachan Exp $
+# $FML: Lite.pm,v 1.21 2001/10/27 04:50:40 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.20 2001/10/23 07:41:57 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.21 2001/10/27 04:50:40 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -224,6 +224,7 @@ sub htmlfy_rfc822_message
 
 	    # e.g. text/html case 
 	    if ($type =~ /^text/ && (not $enc)) {
+		# XXX-BAD
 		$self->_text_print_by_raw_mode({ 
 		    message => $m,
 		    file    => $outf,
@@ -240,10 +241,10 @@ sub htmlfy_rfc822_message
 	    # show inline href appeared in parent html.
 	    $self->_print_inline_object({
 		inline => 1,
-		fh   => $wh,
-		type => $type,
-		num  => $attach,
-		file => $outf,
+		fh     => $wh,
+		type   => $type,
+		num    => $attach,
+		file   => $outf,
 	    });
 	}
     }
@@ -362,12 +363,16 @@ sub html_begin
     }
 
     if (defined $title) {
-	print $wh "<title>$title</title>\n";
+	print $wh "<title>";
+	_print_safe_str($wh, $title);
+	print $wh "</title>\n";
     }
 
     print $wh "</HEAD>\n";
     print $wh "<BODY>\n";
-    print $wh "<CENTER>$title</CENTER>\n";
+    print $wh "<CENTER>";
+    _print_safe_str($wh, $title);
+    print $wh "</CENTER>\n";
 }
 
 
@@ -580,9 +585,7 @@ sub _text_print
 	&Jcode::convert(\$buf, 'euc');
     }
 
-    use HTML::FromText;
-    print $fh text2html($buf, urls => 1, pre => 1);
-    print $fh "\n";
+    _print_safe_buf($fh, $buf);
 }
 
 
@@ -690,14 +693,14 @@ sub cache_message_info
 	else {
 	    $db->{_info }->{id_max } = $id;
 	}
-	print STDERR "   parent\n" if $debug;
-	print STDERR "   update id_max = $db->{_info }->{id_max }\n" if $debug;
+	_PRINT_DEBUG("   parent");
+	_PRINT_DEBUG("   update id_max = $db->{_info }->{id_max }");
     }
     else {
-	print STDERR "   child\n" if $debug;
+	_PRINT_DEBUG("   child");
     }
 
-    print STDERR "   cache_message_info( id=$id ) running\n" if $debug;
+    _PRINT_DEBUG("   cache_message_info( id=$id ) running");
 
     $db->{ _filename }->{ $id } = $self->message_filename($id);
     $db->{ _filepath }->{ $id } = $dst;
@@ -970,6 +973,7 @@ sub _update_relation
 		next;
 	    }
 
+	    # just copy (rewrite only $preamble and $footer not message)
 	    _print($wh, $_, $code);
 	}
 	$rh->close;
@@ -1037,10 +1041,8 @@ sub evaluate_relation
 	$subject->{ next_thread } = $db->{ _subject }->{ $next_thread_id };
     }
 
-    if ($debug) {
-	print STDERR "subject($prev_id -> $id -> $next_id)\n";
-	print STDERR "       ($prev_thread_id -> $id -> $next_thread_id)\n";
-    }
+    _PRINT_DEBUG("subject($prev_id -> $id -> $next_id)");
+    _PRINT_DEBUG("       ($prev_thread_id -> $id -> $next_thread_id)");
 
     my $args = {
 	id               => $id,
@@ -1235,7 +1237,7 @@ sub _db_open
     my $db_type = $args->{ db_type } || $self->{ _db_type } || 'AnyDBM_File';
     my $db_dir  = $self->{ _html_base_directory };
 
-    print STDERR "_db_open( type = $db_type )\n" if $debug;
+    _PRINT_DEBUG("_db_open( type = $db_type )");
 
     eval qq{ use $db_type; use Fcntl;};
     unless ($@) {
@@ -1246,7 +1248,6 @@ sub _db_open
 		tie \%$db, \$db_type, \$file, O_RDWR|O_CREAT, 0644;
 		\$self->{ _db }->{ _$db } = \\\%$db;
 	    };
-	    print STDERR $str if $debug > 10;
 	    eval $str;
 	    croak($@) if $@;
 	}
@@ -1267,14 +1268,13 @@ sub _db_close
     my $db_type = $args->{ db_type } || $self->{ _db_type } || 'AnyDBM_File';
     my $db_dir  = $self->{ _html_base_directory };
 
-    print STDERR "_db_close()\n" if $debug;
+    _PRINT_DEBUG("_db_close()");
 
     for my $db (@kind_of_databases) {
 	my $str = qq{ 
 	    my \$${db} = \$self->{ _db }->{ _$db };
 	    untie \%\$${db};
 	};
-	print STDERR $str if $debug > 10;
 	eval $str;
 	croak($@) if $@;
     }
@@ -1448,8 +1448,6 @@ sub _update_id_montly_index_master
     _print($wh, "<TABLE>", $code);
 
     for my $year (@$years) {
-	# $self->_print_ul($wh, $db, $code);
-
 	_print($wh, "<TR>", $code);
 
 	for my $month (1 .. 12) {
@@ -1468,8 +1466,6 @@ sub _update_id_montly_index_master
 		_print($wh, "<TD>", $code);
 	    }
 	}
-
-	# $self->_print_end_of_ul($wh, $db, $code);
     }
     _print($wh, "</TABLE>", $code);
     
@@ -1704,11 +1700,42 @@ sub _print
 }
 
 
+sub _print_safe_str
+{
+    my ($wh, $str, $code) = @_;
+    __print_safe_str(0, $wh, $str, $code);
+}
+
+
+sub _print_safe_buf
+{
+    my ($wh, $str, $code) = @_;
+    __print_safe_str(1, $wh, $str, $code);
+}
+
+
+sub __print_safe_str
+{
+    my ($attr_pre, $wh, $str, $code) = @_;
+    my (@c) = caller;
+
+    if (defined $str) {
+	use Jcode;
+	&Jcode::convert(\$str, $code);
+    }
+
+    use HTML::FromText;
+    print $wh text2html($str, urls => 1, pre => $attr_pre);
+    print $wh "\n";
+}
+
+
 sub _PRINT_DEBUG
 {
     my ($str) = @_;
     print STDERR "(debug) $str\n" if $ENV{'DEBUG'} == 100 || $debug;
 }
+
 
 =head2 internal utility functions for HTML TAGS
 
@@ -1753,10 +1780,9 @@ sub _print_li_filename
 
     _print($wh, "<LI>\n", $code);
     _print($wh, "<A HREF=\"$filename\">\n", $code);
-    # _print($wh, "[ $id ] ", $code);
-    _print($wh, $subject, $code);
-    _print($wh, ",\n", $code);
-    _print($wh, "$who\n", $code);
+    _print_safe_str($wh, $subject, $code);
+    _print($wh, "\n", $code);
+    _print_safe_str($wh, "$who\n", $code);
     _print($wh, "</A>\n", $code);
 }
 
