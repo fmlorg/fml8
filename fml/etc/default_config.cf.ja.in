@@ -1248,24 +1248,26 @@ command_mail_size_filter_rules	=	check_header_size
 					permit
 
 
-=head2	メール一通あたりに含まれているコマンドの総数の上限
+=head2	コマンドメール一通あたりに含まれているコマンドへの上限
 
 
-# Descriptions: メール一通あたりに含まれているコマンドの総数の上限。
+# Descriptions: コマンドメール一通あたりに含まれている
+#               有効なコマンド数の上限。
 #      History: $MAXNUM_COMMAND_INPUT
 #        Value: NUM
 #     Examples: 100
 command_mail_valid_command_limit	=	100
 
 
-# Descriptions: メール一通あたりに含まれているコマンドの総数の上限。
+# Descriptions: コマンドメール一通あたりに含まれている
+#               無効なコマンド数の上限。
 #      History: $MAXNUM_COMMAND_INPUT
 #        Value: NUM
 #     Examples: 100
-command_mail_junk_command_limit		=	100
+command_mail_invalid_command_limit	=	100
 
 
-# Descriptions: 一行あたりのコマンドの長さの上限
+# Descriptions: コマンドメールにおける一行あたりのコマンドの長さの上限。
 #      History: $MAXLEN_COMMAND_INPUT
 #        Value: NUM
 #     Examples: 128
