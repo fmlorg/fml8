@@ -1,5 +1,5 @@
 <!--
-   $FML: style.sgml,v 1.9 2003/11/01 03:53:06 fukachan Exp $
+   $FML: style.sgml,v 1.10 2003/11/30 09:16:55 fukachan Exp $
 -->
 
 <chapter id="programingstyle">
@@ -26,8 +26,6 @@ FNF
 変数の命名規則（ネーミングコンベンション）
 </title>
 
-<caption>
-
 <para>
 default という単語をどこにはさむか？は悩ましいです。
 一番左に来る（たいてはい最初の _ までの）文字列部分は、
@@ -44,8 +42,6 @@ default という単語をどこにはさむか？は悩ましいです。
 と考える)より、「クラス_default_変数」ないしは「クラス_変数_default」
 というシンタックスの方が素直な分類方式のような気がします。
 </para>
-
-</caption>
 
 
 <sect2>
