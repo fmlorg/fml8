@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.7 2003/01/01 02:06:22 fukachan Exp $
+# $FML: Sequence.pm,v 1.1 2003/03/16 10:44:41 fukachan Exp $
 #
 
 package FML::Article::Sequence;
@@ -97,8 +97,7 @@ sub id
 	use File::Sequence;
 	my $sfh = new File::Sequence { sequence_file => $seq_file };
 	if (defined $sfh) {
-	    $n = $sfh->get_id();
-	    $sfh->close();
+	    $n = $sfh->get_id() || 0;
 	}
 
 	return $n;
