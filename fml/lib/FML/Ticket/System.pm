@@ -21,11 +21,12 @@ use FML::Log qw(Log);
 
 FML::Ticket::System - ticket system core engine
 
-=head1 SYNOPSIS
+=head1  SYNOPSIS
 
-   package FML::Ticket::Model::toymodel;
-   use FML::Ticket::System;
-   @ISA = qw(FML::Ticket::System);
+	use Ticket::Model::toymodel;
+	$ticket = new Ticket::Model::toymodel;
+	$ticket->asign($curproc, $args);
+	$ticket->update_cache($curproc, $args);
 
 =head1 DESCRIPTION
 
@@ -168,6 +169,29 @@ sub increment_id
 
     $id;
 }
+
+
+=head1 REFERENCES
+
+=head2 ticket status ("RT" case)
+                
+A Request will always be in one of the following four states:
+
+     Open -- the Request is expecting imminent action a/o updates
+  Stalled -- the Request needs a specific action or piece of
+             information before it can proceed
+ Resolved -- the Request has either been answered or successfully
+             taken care of, and no longer needs action
+     Dead -- the request should not have been in the ticketing system to begin
+             with and has been completely purged.
+
+=head2 ticket status ("REQ" case)
+
+       Another somewhat hardcoded features is the "status" field.
+       We're not exactly sure how to use this yet,  but  normally
+       use  "stalled" to indicate that this request isn't one can
+       make any progress at the moment, thus isn't worth  picking
+       from the queue to work on.
 
 
 =head1 SEE ALSO
