@@ -1,0 +1,20 @@
+<!--
+   $FML$
+-->
+
+<chapter>
+	<title>
+	コマンドの拡張
+	</title>
+
+
+<!-- モジュールの使い方について、 FML::Command:: 以下の話 -->
+&sect.command.module;
+
+<!-- コマンドの拡張例 -->
+&sect.command.extension;
+
+&sect.command.internal;
+
+
+</chapter>

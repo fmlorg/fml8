@@ -1,8 +1,8 @@
 <!--
-	$FML: command.sgml,v 1.1 2001/11/24 03:22:58 fukachan Exp $
+	$FML: command.sgml,v 1.2 2002/07/02 10:39:38 fukachan Exp $
 -->
 
-<chapter id="fml.command.bymail">
+<sect1 id="fml.command.bymail">
 	<title>
 	コマンドメール (fml をメールで操作する)
 	</title>
@@ -14,19 +14,7 @@ fml にメールで文字列(コマンド)を送り込むことで、fml に特定の処理をして
 </para>
 
 
-<para>
-&fmldevel;  では
-<screen>
-メールによるコマンド処理
-makefml によるコマンド処理
-CGI でのコマンド処理
-</screen>
-これらすべての機能が FML::Command:: クラスのモジュールを使うように
-設計されています。
-</para>
-
-
-<sect1 id="fml.command.bymail.flow">
+<sect2 id="fml.command.bymail.flow">
 	<title>
 	処理の流れ
 	</title>
@@ -52,15 +40,25 @@ fml.pl はメールを標準入力から受けとり、
 </para>
 </warning>
 
+</sect2>
+
+
+<sect2>
+	<title>
+	モジュールについて
+	</title>
+
+<para>
+&fmldevel;  では
+<screen>
+メールによるコマンド処理
+makefml によるコマンド処理
+CGI でのコマンド処理
+</screen>
+これらすべての機能が FML::Command:: クラスのモジュールを使うように
+設計されています。
+</para>
+
+</sect2>
+
 </sect1>
-
-
-<!-- モジュールの使い方について、 FML::Command:: 以下の話 -->
-&sect.command.module;
-
-<!-- コマンドの拡張例 -->
-&sect.command.extension;
-
-&sect.command.internal;
-
-</chapter>

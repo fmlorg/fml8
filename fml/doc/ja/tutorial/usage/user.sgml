@@ -1,0 +1,14 @@
+<!--
+   $FML: post.sgml,v 1.3 2002/04/01 23:41:07 fukachan Exp $
+-->
+
+<chapter id="usage.user">
+	<title>
+	ＭＬのメンバーができること
+	</title>
+
+<!-- 投稿とコマンドメール -->
+&sect.usage.post;
+&sect.usage.command;
+
+</chapter>

@@ -1,0 +1,13 @@
+<!--
+   $FML: post.sgml,v 1.3 2002/04/01 23:41:07 fukachan Exp $
+-->
+<chapter id="usage.cuctomize">
+	<title>
+	カスタマイズの事例
+	</title>
+
+
+<!-- procmail -->
+&sect.usage.procmail;
+
+</chapter>

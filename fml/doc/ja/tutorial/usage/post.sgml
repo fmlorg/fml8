@@ -1,8 +1,8 @@
 <!--
-   $FML: post.sgml,v 1.2 2001/11/24 03:22:59 fukachan Exp $
+   $FML: post.sgml,v 1.3 2002/04/01 23:41:07 fukachan Exp $
 -->
 
-<chapter id="usage.post">
+<sect1 id="usage.post">
 	<title>
 	記事の投稿 (配送処理プログラムについて)
 	</title>
@@ -18,7 +18,7 @@ fml.pl はメールを標準入力から受けとり、
 </para>
 
 
-<sect1>
+<sect2>
 	<title>
 	fml.pl が ＭＬとして処理するべきこと
 	</title>
@@ -36,10 +36,10 @@ Subject: [elena:00100] えれなさん素敵
 スレッド追跡システムのデータベースを更新
 </para>
 
-</sect1>
+</sect2>
 
 
-<sect1>
+<sect2>
 	<title>
 	投稿記事の振舞いを制御する変数
 	</title>
@@ -50,10 +50,10 @@ Subject: [elena:00100] えれなさん素敵
 </para>
 </warning>
 
-</sect1>
+</sect2>
 
 
-<sect1>
+<sect2>
    <title> 解説: ブートしていく様子 </title>
 
 <para>
@@ -81,7 +81,7 @@ $0 を調べます。
 FML::Process::Distribute をロードし、配送処理に移ります。
 </para>
 
+</sect2>
+
+
 </sect1>
-
-
-</chapter>
