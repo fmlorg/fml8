@@ -3,7 +3,7 @@
 # Copyright (C) 2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML$
+# $FML: Super.pm,v 1.1 2003/01/07 11:43:27 fukachan Exp $
 #
 
 package FML::Process::Super;
@@ -61,7 +61,7 @@ sub new
 
 
 # Descriptions: fix ml_*, load config and fix @INC.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: fix @INC
 # Return Value: none
 sub prepare
@@ -82,7 +82,7 @@ sub prepare
 
 
 # Descriptions: dummy to avoid to take data from STDIN
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub verify_request
@@ -161,7 +161,7 @@ _EOF_
 
 
 # Descriptions: dummy to avoid to take data from STDIN
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub finish
@@ -178,7 +178,7 @@ sub finish
 
 
 # Descriptions: dummy to avoid to take data from STDIN
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub DESTROY {}

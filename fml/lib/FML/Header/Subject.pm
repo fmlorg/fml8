@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.34 2002/12/10 12:00:49 fukachan Exp $
+# $FML: Subject.pm,v 1.35 2002/12/20 03:44:52 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -142,7 +142,7 @@ sub decode
 
 
 # Descriptions: delete subject tag
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) STR($subject) STR($tag)
 # Side Effects: none
 # Return Value: STR
 sub delete_subject_tag
@@ -276,7 +276,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MTAControl.pm,v 1.15 2003/01/04 12:19:36 fukachan Exp $
+# $FML: MTAControl.pm,v 1.16 2003/01/07 08:38:31 fukachan Exp $
 #
 
 package FML::MTAControl;
@@ -111,7 +111,7 @@ sub setup
 
 
 # Descriptions: update alias.db from alias file
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
 sub update_alias
@@ -130,7 +130,7 @@ sub update_alias
 
 
 # Descriptions: find key in alias maps
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: none
 sub find_key_in_alias_maps
@@ -150,7 +150,7 @@ sub find_key_in_alias_maps
 
 
 # Descriptions: return aliases as HASH_REF
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: HASH_REF
 sub get_aliases_as_hash_ref
@@ -169,8 +169,7 @@ sub get_aliases_as_hash_ref
 
 
 # Descriptions: install alias file
-#    Arguments: OBJ($self)
-#               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
 sub install_alias
@@ -189,8 +188,7 @@ sub install_alias
 
 
 # Descriptions: remove entry in alias maps
-#    Arguments: OBJ($self)
-#               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
 sub remove_alias
@@ -209,8 +207,7 @@ sub remove_alias
 
 
 # Descriptions: install/update virtual map file
-#    Arguments: OBJ($self)
-#               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
 sub install_virtual_map
@@ -229,8 +226,7 @@ sub install_virtual_map
 
 
 # Descriptions: remove entry in virtual maps
-#    Arguments: OBJ($self)
-#               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
 sub remove_virtual_map
@@ -249,8 +245,7 @@ sub remove_virtual_map
 
 
 # Descriptions: update virtual_map
-#    Arguments: OBJ($self) 
-#               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update virtual_map
 # Return Value: none
 sub update_virtual_map
@@ -285,8 +280,8 @@ sub _install
 
 
 # Descriptions: remove the specified entry in the postfix style map
-#    Arguments: OBJ($self) 
-#               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
+#               HASH_REF($p)
 # Side Effects: update virtual_map
 # Return Value: none
 sub _remove_postfix_style_virtual

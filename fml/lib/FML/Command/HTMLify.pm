@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.13 2002/12/23 14:43:18 fukachan Exp $
+# $FML: HTMLify.pm,v 1.14 2002/12/24 10:19:43 fukachan Exp $
 #
 
 package FML::Command::HTMLify;
@@ -34,7 +34,7 @@ and file in C<$ml_home_dir>.
 
 
 # Descriptions: convert text to html style.
-#    Arguments: OBJ($self) HASH_REF($args) HASH_REF($optargs)
+#    Arguments: OBJ($curproc) HASH_REF($args) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: none
 sub convert
@@ -157,7 +157,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Ken'ichi Fukamachi
+Copyright (C) 2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

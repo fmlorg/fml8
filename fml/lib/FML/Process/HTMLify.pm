@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2001,2002 Ken'ichi Fukamachi
+# Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.25 2002/11/18 22:47:26 fukachan Exp $
+# $FML: HTMLify.pm,v 1.26 2002/12/22 03:46:20 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -60,7 +60,7 @@ sub new
 
 
 # Descriptions: adjust ml_*, load configuration files, and fix @INC.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub prepare
@@ -81,7 +81,7 @@ sub prepare
 
 
 # Descriptions: dummy.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub verify_request
@@ -162,7 +162,7 @@ _EOF_
 
 
 # Descriptions: dummy.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub finish
@@ -195,7 +195,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.7 2002/12/10 12:00:48 fukachan Exp $
+# $FML: Summary.pm,v 1.8 2002/12/15 14:04:25 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -33,8 +33,8 @@ standard constructor.
 
 # Descriptions: standard constructor.
 #    Arguments: OBJ($self) OBJ($curproc)
-# Side Effects:
-# Return Value: none
+# Side Effects: $self->{ _curproc } = $curproc;
+# Return Value: OBJ
 sub new
 {
     my ($self, $curproc) = @_;
@@ -219,7 +219,7 @@ sub append
 
 
 # Descriptions: re-genearete summary from $min to $max.
-#    Arguments: OBJ($self) NUM(min) NUM($max)
+#    Arguments: OBJ($self) NUM($min) NUM($max)
 # Side Effects: re-create $summary file.
 # Return Value: none
 sub rebuild
@@ -261,7 +261,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Ken'ichi Fukamachi
+Copyright (C) 2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.21 2002/09/22 14:56:52 fukachan Exp $
+# $FML: DocViewer.pm,v 1.22 2002/12/18 04:43:52 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -69,7 +69,7 @@ sub new
 
 
 # Descriptions: load default configurations and fix @INC.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub prepare
@@ -90,7 +90,7 @@ sub prepare
 
 
 # Descriptions: check @ARGV and show help if needed
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: may exit.
 #               longjmp() to help() if appropriate.
 # Return Value: none
@@ -123,7 +123,7 @@ C<fmlconf($args)>.
 
 
 # Descriptions: just a switch, call _fmldoc()
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub run
@@ -138,7 +138,7 @@ sub run
 
 
 # Descriptions: fmldoc wrapper / top level dispacher
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub _fmldoc
@@ -236,7 +236,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.13 2002/09/22 14:56:51 fukachan Exp $
+# $FML: Qmail.pm,v 1.14 2002/12/18 04:03:52 fukachan Exp $
 #
 
 package FML::MTAControl::Qmail;
@@ -31,7 +31,7 @@ set up aliases and virtual maps for qmail.
 
 
 # Descriptions: udummy. qmail not needs installation of alias files.
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
 sub qmail_install_alias
@@ -43,7 +43,7 @@ sub qmail_install_alias
 
 
 # Descriptions: remove .qmail-$ml* files (remove aliases).
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
 sub qmail_remove_alias
@@ -80,7 +80,7 @@ sub qmail_remove_alias
 
 
 # Descriptions: dummy (update alias).
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
 sub qmail_update_alias
@@ -92,7 +92,7 @@ sub qmail_update_alias
 
 
 # Descriptions: dummy (find key in aliases).
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub qmail_find_key_in_alias_maps
@@ -105,7 +105,7 @@ sub qmail_find_key_in_alias_maps
 
 
 # Descriptions: get { key => value } in aliases
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: HASH_REF
 sub qmail_get_aliases_as_hash_ref
@@ -118,7 +118,7 @@ sub qmail_get_aliases_as_hash_ref
 
 
 # Descriptions: return alias_maps as ARRAY_REF
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: ARRAY_REF
 sub qmail_alias_maps
@@ -131,7 +131,7 @@ sub qmail_alias_maps
 
 
 # Descriptions: create ~/.qmail-* files
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: creates ~/.qmail-XXX
 # Return Value: none
 sub qmail_setup
@@ -247,7 +247,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Ken'ichi Fukamachi
+Copyright (C) 2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2002 Ken'ichi Fukamachi
+# Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calender.pm,v 1.9 2002/09/22 14:56:51 fukachan Exp $
+# $FML: Calender.pm,v 1.10 2002/12/18 04:43:51 fukachan Exp $
 #
 
 package FML::Process::Calender;
@@ -50,7 +50,7 @@ dummy.
 
 # Descriptions: dummy constructor.
 #               avoid the default fml new() since we do not need it.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
 sub new
@@ -195,7 +195,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Ken'ichi Fukamachi
+Copyright (C) 2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

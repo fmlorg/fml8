@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: FileUtils.pm,v 1.8 2002/12/24 10:19:43 fukachan Exp $
+# $FML: FileUtils.pm,v 1.9 2003/01/03 07:05:05 fukachan Exp $
 #
 
 package FML::Command::FileUtils;
@@ -62,7 +62,7 @@ in FML::Restriction class.
 
 
 # Descriptions: remove files
-#    Arguments: OBJ($self) ... varargs ...
+#    Arguments: OBJ($self) VARARGS(@p)
 # Side Effects: remove files
 # Return Value: same as remove()
 sub delete

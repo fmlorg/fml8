@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.81 2003/01/05 02:26:23 fukachan Exp $
+# $FML: Switch.pm,v 1.82 2003/01/05 05:13:49 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -255,7 +255,7 @@ C<$args> is like this:
 # Descriptions: top level process switch
 #               emulates "use $package" but $package is dynamically
 #               determined by e.g. $0.
-#    Arguments: HASH_REF($args)
+#    Arguments: STR($myname) HASH_REF($args)
 # Side Effects: process switching :-)
 #               ProcessSwtich() is exported to main:: Name Space.
 # Return Value: STR(package name)

@@ -3,7 +3,7 @@
 # Copyright (C) 2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML$
+# $FML: ErrorViewer.pm,v 1.1 2003/01/05 02:22:17 fukachan Exp $
 #
 
 package FML::Process::ErrorViewer;
@@ -63,7 +63,7 @@ sub new
 
 
 # Descriptions: adjust ml_* and load configuration files.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub prepare
@@ -90,7 +90,7 @@ sub prepare
 
 
 # Descriptions: check @ARGV, call help() if needed
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: exit ASAP.
 #               longjmp() to help() if appropriate
 # Return Value: none
@@ -133,7 +133,7 @@ See <FML::Process::Switch()> on C<$args> for more details.
 
 
 # Descriptions: just a switch, call _fmlconf()
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub run
@@ -167,7 +167,7 @@ show help.
 
 
 # Descriptions: show help
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub help
@@ -184,7 +184,7 @@ _EOF_
 
 
 # Descriptions: dummy
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub finish
@@ -214,7 +214,7 @@ run dump_variables of C<FML::Config>.
 
 
 # Descriptions: show error messages
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub _fmlerror

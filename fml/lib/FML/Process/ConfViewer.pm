@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.18 2002/09/29 05:28:25 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.19 2002/12/18 04:43:52 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -63,7 +63,7 @@ sub new
 
 
 # Descriptions: adjust ml_* and load configuration files.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub prepare
@@ -90,7 +90,7 @@ sub prepare
 
 
 # Descriptions: check @ARGV, call help() if needed
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: exit ASAP.
 #               longjmp() to help() if appropriate
 # Return Value: none
@@ -133,7 +133,7 @@ See <FML::Process::Switch()> on C<$args> for more details.
 
 
 # Descriptions: just a switch, call _fmlconf()
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub run
@@ -167,7 +167,7 @@ show help.
 
 
 # Descriptions: show help
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub help
@@ -188,7 +188,7 @@ _EOF_
 
 
 # Descriptions: dummy
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub finish
@@ -218,7 +218,7 @@ run dump_variables of C<FML::Config>.
 
 
 # Descriptions: show configurations variables in the sytle "key = value".
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub _fmlconf
@@ -249,7 +249,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.13 2003/01/02 15:51:49 fukachan Exp $
+# $FML: Spool.pm,v 1.14 2003/01/07 11:43:11 fukachan Exp $
 #
 
 package FML::Process::Spool;
@@ -61,7 +61,7 @@ sub new
 
 
 # Descriptions: dummy to avoid to take data from STDIN
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub prepare
@@ -82,7 +82,7 @@ sub prepare
 
 
 # Descriptions: dummy to avoid to take data from STDIN
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub verify_request
@@ -340,7 +340,7 @@ _EOF_
 
 
 # Descriptions: dummy to avoid to take data from STDIN
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub finish
@@ -357,7 +357,7 @@ sub finish
 
 
 # Descriptions: dummy to avoid to take data from STDIN
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub DESTROY {}

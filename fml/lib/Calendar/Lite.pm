@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.8 2002/09/22 14:56:39 fukachan Exp $
+# $FML: Lite.pm,v 1.9 2002/12/12 04:57:10 fukachan Exp $
 #
 
 package Calender::Lite;
@@ -333,7 +333,7 @@ C<$n> is number or string among C<this>, C<next> and C<last>.
 
 
 # Descriptions: print calender for specific month as HTML.
-#    Arguments: OBJ($self) HANDLE($fd) STR($month) [STR($year)]
+#    Arguments: OBJ($self) HANDLE($fh) STR($month) [STR($year)]
 # Side Effects: none
 # Return Value: none
 sub print_specific_month

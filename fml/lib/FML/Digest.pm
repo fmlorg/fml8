@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Digest.pm,v 1.5 2002/12/22 03:39:43 fukachan Exp $
+# $FML: Digest.pm,v 1.6 2002/12/24 10:19:42 fukachan Exp $
 #
 
 package FML::Digest;
@@ -35,8 +35,8 @@ constructor.
 
 
 # Descriptions: constructor.
-#    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: none
+#    Arguments: OBJ($self) OBJ($curproc)
+# Side Effects: $self->{ _curproc } = $curproc;
 # Return Value: OBJ
 sub new
 {
@@ -107,7 +107,7 @@ sub get_article_id
 
 
 # Descriptions: return the last article id sent back as digest
-#    Arguments: OBJ($self)
+#    Arguments: OBJ($self) STR($seq_file)
 # Side Effects: none
 # Return Value: NUM
 sub _get_id
@@ -256,7 +256,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Ken'ichi Fukamachi
+Copyright (C) 2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent3.pm,v 1.9 2003/01/08 04:19:10 fukachan Exp $
+# $FML: MimeComponent3.pm,v 1.10 2003/01/09 03:49:44 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -324,6 +324,10 @@ sub _cutoff
 }
 
 
+# Descriptions: check if the object chain has effective part ?
+#    Arguments: OBJ($self) OBJ($msg)
+# Side Effects: none
+# Return Value: NUM( 1 or 0 )
 sub _has_effective_part
 {
     my ($self, $msg) = @_;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.18 2002/12/24 10:19:43 fukachan Exp $
+# $FML: Auth.pm,v 1.19 2003/01/03 07:06:39 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -95,7 +95,7 @@ sub permit_admin_member_maps
 
 
 # Descriptions: reject if the mail address looks like system accounts.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: NUM or STR (__LAST__, a special upcall)
 sub reject_system_accounts

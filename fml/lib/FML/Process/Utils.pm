@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.51 2002/12/23 14:45:46 fukachan Exp $
+# $FML: Utils.pm,v 1.52 2002/12/24 10:19:47 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -693,7 +693,7 @@ sub ml_home_dir
 # Descriptions: return $ml_home_prefix defined in main.cf (/etc/fml/main.cf).
 #               return $ml_home_prefix for $domain if $domain is specified.
 #               return default one if $domain is not specified.
-#    Arguments: OBJ($curproc) STR($domain)
+#    Arguments: HASH_REF($main_cf) STR($domain)
 # Side Effects: none
 # Return Value: STR
 sub __ml_home_prefix_from_main_cf
@@ -1100,7 +1100,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
