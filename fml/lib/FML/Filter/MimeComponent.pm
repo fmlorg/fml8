@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent.pm,v 1.10 2004/02/01 14:52:50 fukachan Exp $
+# $FML: MimeComponent.pm,v 1.11 2004/04/23 04:10:34 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -16,7 +16,7 @@ use ErrorStatus qw(error_set error error_clear);
 
 =head1 NAME
 
-FML::Filter::MimeComponent - filter based on mail MIME components
+FML::Filter::MimeComponent - filter based on mail MIME components.
 
 =head1 SYNOPSIS
 
@@ -42,7 +42,7 @@ For example,
 
 =head2 new()
 
-usual constructor.
+constructor.
 
 =cut
 
@@ -107,7 +107,7 @@ C<Usage>:
 =cut
 
 
-# Descriptions: top level dispatcher
+# Descriptions: top level dispatcher.
 #    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: none
 # Return Value: none
@@ -244,7 +244,7 @@ sub mime_component_check
 #               OBJ($mp) STR($whole_type)
 # Side Effects: "reject" and "permit" affects nothing.
 #               "cutoff" changes the chain of Mail::Message OBJs.
-# Return Value: none
+# Return Value: STR
 sub _rule_match
 {
     my ($self, $msg, $rule, $mp, $whole_type) = @_;
@@ -288,6 +288,8 @@ sub __regexp_match
     if ($regexp =~ /^\!/o) {
 	$reverse = 1;
 	$regexp =~ s/^\!//o;
+
+	# XXX-TODO: correct ?
 	$regexp =~ s/^\(\S+\)/$1/o;
     }
 
@@ -343,9 +345,9 @@ sub __basic_regexp_match
 sub _cutoff
 {
     my ($self, $mp) = @_;
-    my $curproc   = $self->{ _curproc };
-    my $data_type = $mp->data_type();
-    my $prevmp    = $mp->{ prev };
+    my $curproc     = $self->{ _curproc };
+    my $data_type   = $mp->data_type();
+    my $prevmp      = $mp->{ prev };
 
     if ($prevmp) {
 	my $prev_type = $prevmp->data_type();
@@ -388,9 +390,9 @@ sub _has_effective_part
 }
 
 
-# Descriptions: parser of child multipart
+# Descriptions: parser of child multipart.
 #    Arguments: OBJ($self) OBJ($msg)
-# Side Effects: update $recursive_level
+# Side Effects: update $recursive_level (file scope variable).
 # Return Value: NUM
 sub _rfc822_mime_component_check
 {
@@ -490,6 +492,10 @@ sub read_filter_rule_from_file
 	    use Carp;
 	    carp("no valid filter rules");
 	}
+    }
+    else {
+	use Carp;
+	carp("cannot open $file");
     }
 }
 
