@@ -142,9 +142,6 @@
 	subscribe -> 一カ月すると削除される？
 
 
-○	インストーラも perl version を (fml-devel:330)
-
-
 ○	too old date mail must be a spam
 
 
@@ -357,4 +354,4 @@ sub compare_euc_string
 
 
 ----------
-$FML: 00_MEMO,v 1.59 2003/01/07 11:56:57 fukachan Exp $
+$FML: 00_MEMO,v 1.60 2003/01/29 13:42:49 fukachan Exp $
