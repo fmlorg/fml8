@@ -1,0 +1,65 @@
+○ 実装済み
+
+	DSN (RFC1894, e.g. Postfix-release, Sendmail, et. al.)
+	Postfix 19991231
+	Qmail
+	Exim
+
+   要テスト
+	Smtpfeed -F オプション
+
+--------------------------------------------------------------------
+
+		エラーメールコレクション
+
+
+○ エラーメールのサンプルあり
+
+  * 25/tcp を喋りそうなソフトウエア
+
+	CC:Mail
+	InterMail
+	InterScan
+	MAILsweeper
+	MailShield
+	Microsoft Exchange
+	Netscape Messagin Server 3.62
+	Norton-AntiVirus
+	SLmail
+	SMI-8.6
+	SkyWalker
+	fetchmail
+	netscape
+	Exim
+
+  * 特定の ISP やメール関連のサービスなど
+
+	freeml.com		独自 && 日本語はつらい;)
+	GOO			独自 && 日本語はつらい;)
+	ODN			RFC1894 もどきだけど肝心のアドレスがない 
+	Biglobe.ne.jp		DSN じゃない sendmail ???
+	nifty.ne.jp		独自
+	Geocities		DSN
+	Lycos			独自 && 日本語はつらい;)
+
+
+○ エラーメールのサンプルなし
+
+  * MTA
+
+	Smail
+	Novell GroupWise
+	Microsoft SMTPSVC
+	SMTP32
+
+  * 特定の ISP など
+
+	Caiwireless
+	Compuserve
+
+
+○ その他 or よくわからない
+
+	Yahoo
+		messages from yahoo.com ってフォーマットは昔の話か？
+		今は sendmail みたいだ
