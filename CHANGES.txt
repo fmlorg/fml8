@@ -10,6 +10,34 @@
 	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
 	気をつけてください。
 
+2004/09/03-04
+
+   キューイングシステムの修正 
+
+   FML::Process::Kernel 
+	implement is_process_time_limit() method to warn that end of process
+	life time comes soon.
+	
+   Mail::Delivery::Queue 
+	bug fix queue strategy info file hanling.
+	implement log(), {set,get}_log_function().
+	log more and more.
+	log messages in removing queue
+	is_valid_queue() returns ok if the specified queue exists in active or
+	deferred queue.
+	
+   FML::Process::QueueManager 
+	set log function for qmgr.
+	reset queue list fter rescheduling.
+	pull up $max_count to 100.
+	resolve lock confliction in queue manipulation.
+	fix message::remove too old queue ...
+	targets cleanup() operatites are non active queues.
+	
+   FML::Command::Admin::mailq 
+	print only valid queue
+	show all entries not only within active queue.
+
 2004/08/30
 
    2004/08 の主要な変更点はキューイングシステムの拡張/修正です。
@@ -7670,4 +7698,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.221 2004/08/15 15:07:19 fukachan Exp $
+$FML: CHANGES.txt,v 1.222 2004/08/29 22:18:15 fukachan Exp $
