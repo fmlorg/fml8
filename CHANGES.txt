@@ -1,7 +1,55 @@
 		CHANGES
 		$Date$
 
+
+2001/09/18
+
+   errormail collection
+	add netscape messaging server 3.54 sample
+	thanks PR for Toshimi Aoki <toshi@kinotrope.co.jp>
+
+2001/09/17
+
+   IO::Adapter
+
+     * IO::Adapter::{DBI,MySQL,RDBMS}.pm
+	rename: $self->{ _driver } -> $self->{ _model_specific_driver } 
+	dynamically load DBD:mysql
+
+	move replace(), getline() and get_nextvalue() to DBI.pm 
+	since these functions are MI (Map Independent).
+
+	implement setpos(), getpos() and eof() in MySQL.pm 
+	since these functions is dependent on map type (MD).
+
+	RDBMS.pm is not used now, so removed.
+
+     * IO/Adapter.pm
+	change replace()
+	o fix typo: s/regexp/replace/
+	o fix case insensitive search when $show_all is on
+	o call md_find (md == map dependent, function) if defined
+	o enabled to call md_XXX()
+		define AUTOLOAD() to hook up md_XXX() functions
+		XXX For example, md_XXX() should be implemented at
+		XXX IO::Adapter::SQL::toymodel.pm
+
+     * IO/Adapter/SQL/toymodel.pm
+	rename: fetch_and_cache_address_list -> fetch_all  
+	implement md_find()
+
+
 2001/09/13
+
+   FML::Process::QueueManager
+	send() can take queue id as the argument
+
+   FML::Process::Kernel
+	more friendly error message
+
+	implement queue_flush($queue): This flush C<$queue>, that is,
+	send mail specified by C<$queue>.  It uses
+	FML::Process::QueueManager module.
 
    FML::Config.pm
 	define FIRSTKEY and NEXTKEY for complete hash emulation
@@ -187,5 +235,5 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.10 2001/09/13 13:49:03 fukachan Exp $
+$FML: CHANGES.txt,v 1.11 2001/09/13 13:49:54 fukachan Exp $
 
