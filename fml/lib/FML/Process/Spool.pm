@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.14 2003/01/07 11:43:11 fukachan Exp $
+# $FML: Spool.pm,v 1.15 2003/01/11 16:05:20 fukachan Exp $
 #
 
 package FML::Process::Spool;
@@ -199,18 +199,19 @@ sub _convert
     my $dh = new DirHandle $src_dir;
     if (defined $dh) {
 	my $source = '';
+	my $dir;
 
-	while (defined($_ = $dh->read)) {
-	    next if /^\./o;
+	while (defined($dir = $dh->read)) {
+	    next if $dir =~ /^\./o;
 
-	    $source = File::Spec->catfile($src_dir, $_);
+	    $source = File::Spec->catfile($src_dir, $dir);
 
 	    if (-d $source) {
 		print STDERR "   $source is a subdir.\n";
 	    }
 	    elsif (-f $source) {
-		my $subdirpath = $article->subdirpath($_);
-		my $filepath   = $article->filepath($_);
+		my $subdirpath = $article->subdirpath($dir);
+		my $filepath   = $article->filepath($dir);
 
 		next if -f $filepath;
 
@@ -289,10 +290,11 @@ sub _scan_dir
     use DirHandle;
     my $dh = new DirHandle $dir;
     if (defined $dh) {
-	while (defined($_ = $dh->read)) {
-	    next if /^\./;
+	my $xdir;
+	while (defined($xdir = $dh->read)) {
+	    next if $xdir =~ /^\./o;
 
-	    $f = File::Spec->catfile($dir, $_);
+	    $f = File::Spec->catfile($dir, $xdir);
 	    if (-f $f) {
 		$num_file++;
 	    }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent3.pm,v 1.11 2003/01/11 16:05:15 fukachan Exp $
+# $FML: MimeComponent3.pm,v 1.12 2003/01/29 13:26:49 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -371,12 +371,13 @@ sub read_filter_rule_from_file
 
     if (defined $fh) {
 	my $rules = [];
+	my $buf;
 
-	while (<$fh>) {
-	    next if /^#/o;
-	    next if /^\s*$/o;
+	while ($buf = <$fh>) {
+	    next if $buf =~ /^#/o;
+	    next if $buf =~ /^\s*$/o;
 
-	    ($whole_type, $type, $action) = split(/\s+/, $_);
+	    ($whole_type, $type, $action) = split(/\s+/, $buf);
 	    push(@$rules, [ $whole_type, $type, $action ] );
 	}
 
@@ -494,11 +495,11 @@ if ($0 eq __FILE__) {
 	$obj->dump_filter_rules();
 	print STDERR "\n";
 
-	for (@ARGV) {
-	    print STDERR ">>> ", basename($_), "\n";
-	    my $msg = Mail::Message->parse( { file => $_ });
+	for my $argv (@ARGV) {
+	    print STDERR ">>> ", basename($argv), "\n";
+	    my $msg = Mail::Message->parse( { file => $argv });
 	    my $obj = new FML::Filter::MimeComponent;
-	    my $fh  = new FileHandle $_;
+	    my $fh  = new FileHandle $argv;
 	    $obj->mime_component_check($msg);
 	    print STDERR "\n";
 	}

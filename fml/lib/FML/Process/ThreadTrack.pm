@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ThreadTrack.pm,v 1.37 2002/12/24 10:06:25 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.38 2002/12/24 10:19:47 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -322,10 +322,10 @@ sub _read_filter_list
 	use FileHandle;
 	my $fh = new FileHandle $file;
 	if (defined $fh) {
-	    my ($key, $value);
-	    while (<$fh>) {
-		chop;
-		($key, $value) = split(/\s+/, $_, 2);
+	    my ($key, $value, $buf);
+	    while ($buf = <$fh>) {
+		chomp $buf;
+		($key, $value) = split(/\s+/, $buf, 2);
 		if ($key) {
 		    $thread->add_filter( { $key => $value });
 		}
@@ -440,13 +440,14 @@ sub interactive
 	my $prompt  = "$ml_name thread> ";
 	my $OUT     = $term->OUT || \*STDOUT;
 	my $res     = '';
+	my $buf     = '';
 
 	# main loop;
 	no strict;
-	while ( defined ($_ = $term->readline($prompt)) ) {
-	    _exec($curproc, $args, $thread, $ttargs, $_);
+	while ( defined ($buf = $term->readline($prompt)) ) {
+	    _exec($curproc, $args, $thread, $ttargs, $buf);
 	    warn $@ if $@;
-	    $term->addhistory($_) if /\S/;
+	    $term->addhistory($buf) if $buf =~ /\S/o;
 	}
     };
     carp($@) if $@;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.155 2003/01/25 12:11:19 fukachan Exp $
+# $FML: Kernel.pm,v 1.156 2003/02/01 04:36:28 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -724,7 +724,7 @@ sub __debug_ml_xxx
     my $config = $curproc->{ config };
 
     if (defined $config->{ log_file } && (-w $config->{ log_file })) {
-	for (@delayed_buffer) { Log( $_ ); }
+	for my $buf (@delayed_buffer) { Log( $buf ); }
 	@delayed_buffer = ();
 
 	for my $var (qw(ml_name ml_domain ml_home_prefix ml_home_dir)) {
@@ -757,11 +757,11 @@ sub _find_ml_home_dir_in_argv
 
     # "elena" is translated to "/var/spool/ml/elena"
   ARGV:
-    for (@ARGV) {
+    for my $argv (@ARGV) {
 	# 1. for the first time
 	#   a) speculate "/var/spool/ml/$_" looks a $ml_home_dir ?
 	unless ($found_cf) {
-	    my $x  = File::Spec->catfile($ml_home_prefix, $_);
+	    my $x  = File::Spec->catfile($ml_home_prefix, $argv);
 	    my $cf = File::Spec->catfile($x, "config.cf");
 	    if (-d $x && -f $cf) {
 		$found_cf    = 1;
@@ -773,17 +773,17 @@ sub _find_ml_home_dir_in_argv
 	last ARGV if $found_cf;
 
 	# 2. /var/spool/ml/elena looks a $ml_home_dir ?
-	if (-d $_) {
-	    $ml_home_dir = $_;
-	    my $cf = File::Spec->catfile($_, "config.cf");
+	if (-d $argv) {
+	    $ml_home_dir = $argv;
+	    my $cf = File::Spec->catfile($argv, "config.cf");
 	    if (-f $cf) {
 		push(@cf, $cf);
 		$found_cf = 1;
 	    }
 	}
 	# 3. looks a file, so /var/spool/ml/elena/config.cf ?
-	elsif (-f $_) {
-	    push(@cf, $_);
+	elsif (-f $argv) {
+	    push(@cf, $argv);
 	}
     }
 
@@ -1463,8 +1463,9 @@ sub message_nl
 	use FileHandle;
 	my $fh = new FileHandle $file;
 	if (defined $fh) {
-	    while (<$fh>) { $buf .= $_;}
-	    close($fh);
+	    my $xbuf;
+	    while ($xbuf = <$fh>) { $buf .= $xbuf;}
+	    $fh->close();
 	}
     }
     else {
@@ -1957,9 +1958,12 @@ sub prepare_file_to_return
 	};
 
 	if (defined $obj) {
-	    while (<$rh>) {
-		if (/\$/) { $config->expand_variable_in_buffer(\$_, $args);}
-		$wh->print( $obj->convert( $_, 'jis-jp' ) );
+	    my $buf;
+	    while ($buf = <$rh>) {
+		if ($buf =~ /\$/o) { 
+		    $config->expand_variable_in_buffer(\$buf, $args);
+		}
+		$wh->print( $obj->convert( $buf, 'jis-jp' ) );
 	    }
 	}
 	else {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.43 2002/09/22 15:01:23 fukachan Exp $
+# $FML: File.pm,v 1.44 2003/01/11 15:22:26 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -313,11 +313,13 @@ sub _get_value
 
     my $fh = $self->{_fh};
     if (defined $fh) {
+	my $xbuf;
+
 	$self->setpos(0);
 
       LOOP:
-	while (<$fh>) {
-	    ($xkey, $buf) = split(/\s+/, $_, 2);
+	while ($xbuf = <$fh>) {
+	    ($xkey, $buf) = split(/\s+/, $xbuf, 2);
 	    if ($key eq $xkey) { last LOOP;}
 	}
 
@@ -437,9 +439,11 @@ sub add
     my $wh = $self->{ _wh };
 
     if (defined $fh && defined $wh) {
+	my $buf;
+
       FILE_IO:
-	while (<$fh>) {
-	    print $wh $_;
+	while ($buf = <$fh>) {
+	    print $wh $buf;
 	}
 	$fh->close;
 
@@ -492,10 +496,12 @@ sub delete
     my $wh = $self->{ _wh };
 
     if (defined $fh) {
+	my $buf;
+
       FILE_IO:
-	while (<$fh>) {
-	    next FILE_IO if /^$key\s+\S+|^$key\s*$/;
-	    print $wh $_;
+	while ($buf = <$fh>) {
+	    next FILE_IO if $buf =~ /^$key\s+\S+|^$key\s*$/;
+	    print $wh $buf;
 	}
 	$fh->close;
 	$wh->close;

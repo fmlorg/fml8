@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledFile.pm,v 1.26 2003/01/07 08:38:35 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.27 2003/01/11 15:14:27 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -155,11 +155,11 @@ sub FIRSTKEY
     use IO::File;
     my $fh = new IO::File $file;
     if (defined $fh) {
-	my ($k, $v);
-	while (<$fh>) {
+	my ($k, $v, $buf);
+	while ($buf = <$fh>) {
 	    # XXX overwritten. it means last match.
 	    # XXX-TODO: hmm, what imply first match ?
-	    ($k, $v) = split(/\s+/, $_, 2);
+	    ($k, $v) = split(/\s+/, $buf, 2);
 	    $hash->{ $k } = $v if $k;
 	}
 	$fh->close();
@@ -232,11 +232,11 @@ sub get_all_values_as_hash_ref
 	if (defined $fh) {
 	    $self->{ _fh } = $fh;
 
-	    my ($a, $k, $v);
-	    while (<$fh>) {
-		chomp;
+	    my ($a, $k, $v, $buf);
+	    while ($buf = <$fh>) {
+		chomp $buf;
 
-		($k, $v) = split(/\s+/, $_, 2);
+		($k, $v) = split(/\s+/, $buf, 2);
 
 		if (defined $hash->{ $k }) {
 		    $a = $hash->{ $k };
@@ -312,17 +312,18 @@ sub _fetch
 
     # o.k. we open cache file, here we go for searching
     my ($xkey, $xvalue, $value, @values) = ();
+    my $buf;
 
   SEARCH:
-    while (<$fh>) {
-	next SEARCH if /^\#*$/;
-	next SEARCH if /^\s*$/;
-	next SEARCH unless /^$prekey/i;
-	next SEARCH unless /^$keytrap/i;
+    while ($buf = <$fh>) {
+	next SEARCH if $buf =~ /^\#*$/o;
+	next SEARCH if $buf =~ /^\s*$/o;
+	next SEARCH unless $buf =~ /^$prekey/i;
+	next SEARCH unless $buf =~ /^$keytrap/i;
 
-	chomp;
+	chomp $buf;
 
-	($xkey, $xvalue) = split(/\s+/, $_, 2);
+	($xkey, $xvalue) = split(/\s+/, $buf, 2);
 	if ($xkey eq $key) {
 	    $value = $xvalue; # save the value for $key
 

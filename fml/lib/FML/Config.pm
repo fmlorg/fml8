@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.77 2003/01/11 06:58:44 fukachan Exp $
+# $FML: Config.pm,v 1.78 2003/01/28 05:33:33 fukachan Exp $
 #
 
 package FML::Config;
@@ -306,7 +306,7 @@ sub _read_file
 
     if (defined $fh) {
 	my ($key, $value, $curkey, $comment_buffer);
-	my ($after_cut, $hook);
+	my ($after_cut, $hook, $buf);
 	my $name_space = ''; # by default
 
 	# For example
@@ -318,36 +318,36 @@ sub _read_file
 	# [mysql:fml]
 	#    var = key1 ...
 	#
-	while (<$fh>) {
+	while ($buf = <$fh>) {
 	    # Example: [mysql:fml]
 	    #   switched to the new name space.
-	    if (/^\[([\w\d\:]+)\]\s*$/o) {
+	    if ($buf =~ /^\[([\w\d\:]+)\]\s*$/o) {
 		$name_space = "[$1]";
 	    }
 
 	    if ($after_cut) {
-		$hook     .= $_ unless /^=/o;
-		$after_cut = 0  if /^=\w+/o;
+		$hook     .= $buf unless $buf =~ /^=/o;
+		$after_cut = 0        if $buf =~ /^=\w+/o;
 		next;
 	    }
-	    $after_cut = 1 if /^=cut/o; # end of postfix format
+	    $after_cut = 1 if $buf =~ /^=cut/o; # end of postfix format
 
-	    if (/^=/o) { # ignore special keywords of pod formats
+	    if ($buf =~ /^=/o) { # ignore special keywords of pod formats
 		$name_space = '';
 		next;
 	    }
 
 	    if ($mode eq 'raw') { # save comment buffer
-		if (/^\s*\#/o) { $comment_buffer .= $_;}
+		if ($buf =~ /^\s*\#/o) { $comment_buffer .= $buf;}
 	    }
 	    else { # by default, nuke trailing "\n"
 		chomp;
 	    }
 
 	    # case 1. "key = value1"
-	    if (/^([A-Za-z0-9_]+)\s*(=)\s*(.*)/o   ||
-		/^([A-Za-z0-9_]+)\s*(\+=)\s*(.*)/o ||
-		/^([A-Za-z0-9_]+)\s*(\-=)\s*(.*)/o) {
+	    if ($buf =~ /^([A-Za-z0-9_]+)\s*(=)\s*(.*)/o   ||
+		$buf =~ /^([A-Za-z0-9_]+)\s*(\+=)\s*(.*)/o ||
+		$buf =~ /^([A-Za-z0-9_]+)\s*(\-=)\s*(.*)/o) {
 		my ($key, $xmode, $value) = ($1, $2, $3);
 		$xmode  =~ s/=//o;
 		$value  =~ s/\s*$//o;
@@ -366,7 +366,7 @@ sub _read_file
 		}
 	    }
 	    # case 2. "^\s+value2"
-	    elsif (/^\s+(.*)/o && defined($curkey)) {
+	    elsif ($buf =~ /^\s+(.*)/o && defined($curkey)) {
 		my $value = $1;
 		__append_config($config, $curkey, $value, $name_space);
 	    }

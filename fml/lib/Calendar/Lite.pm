@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.12 2003/01/25 12:48:17 fukachan Exp $
+# $FML: Lite.pm,v 1.13 2003/01/31 14:50:32 fukachan Exp $
 #
 
 package Calendar::Lite;
@@ -228,11 +228,14 @@ sub parse
 	if (defined $dh) {
 	    use File::Spec;
 
-	    while (defined($_ = $dh->read)) {
-		next if $_ =~ /~$/;
-		next if $_ =~ /^\./;
+	    my $xdir;
 
-		my $schedule_file = File::Spec->catfile($data_dir, $_);
+	  DIR:
+	    while (defined($xdir = $dh->read)) {
+		next DIR if $xdir =~ /~$/o;
+		next DIR if $xdir =~ /^\./o;
+
+		my $schedule_file = File::Spec->catfile($data_dir, $xdir);
 		if (-f $schedule_file) {
 		    $self->_analyze($schedule_file, \@pat);
 		}
@@ -261,17 +264,19 @@ sub _analyze
     my $fh = new FileHandle $file;
 
     if (defined $fh) {
+	my $buf;
+
       LINE:
-	while (<$fh>) {
+	while ($buf = <$fh>) {
 	    for my $pat (@$pattern) {
-		if (/$pat(.*)/) {
+		if ($buf =~ /$pat(.*)/) {
 		    $self->_add_entry($1, $2);
 		    next LINE;
 		}
 	    }
 
 	    # for example, "*/24 something"
-	    if (/^\*\/(\d+)\s+(.*)/) {
+	    if ($buf =~ /^\*\/(\d+)\s+(.*)/) {
 		$self->_add_entry($1, $2);
 	    }
 	}

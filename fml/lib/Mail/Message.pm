@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.71 2003/01/09 03:46:23 fukachan Exp $
+# $FML: Message.pm,v 1.72 2003/01/11 15:13:51 fukachan Exp $
 #
 
 package Mail::Message;
@@ -399,8 +399,8 @@ sub dup_header
 	my $body    = $self->{ next };
 
 	# 1. copy header and the first body part
-	for (keys %$self) { $dupmsg->{ $_ }  = $self->{ $_ };}
-	for (keys %$body) { $dupmsg2->{ $_ } = $body->{ $_ };}
+	for my $k (keys %$self) { $dupmsg->{ $k }  = $self->{ $k };}
+	for my $k (keys %$body) { $dupmsg2->{ $k } = $body->{ $k };}
 
 	# 2. overwrite only header data in $dupmsg
 	my $header = $self->{ data };
@@ -1168,9 +1168,7 @@ sub _print_messsage_on_disk
 	my $buf;
 
       SMTP_IO:
-	while (<$fh>) {
-	    $buf = $_;
-
+	while ($buf = <$fh>) {
 	    unless (defined $raw_print_mode) {
 		# fix \n -> \r\n in the end of the line
 		if ($buf !~ /\r\n$/) { $buf =~ s/\n$/\r\n/;}
