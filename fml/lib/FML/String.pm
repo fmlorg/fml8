@@ -11,6 +11,7 @@
 package FML::String;
 use strict;
 use Carp;
+use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 =head1 NAME
 

@@ -19,8 +19,8 @@ require Exporter;
 
 # XXX we should it in proper way in the future.
 # XXX but we import it anyway for further rewriting.
-my $CUT_OFF_RERERE_PATTERN;
-my $CUT_OFF_RERERE_HOOK;
+my $CUT_OFF_RERERE_PATTERN = '';
+my $CUT_OFF_RERERE_HOOK    = '';
 
 
 # subjec reply pattern
@@ -63,7 +63,7 @@ sub cut_off_reply_tag
     Jcode::convert(\$subject, 'euc');
 
     if ($CUT_OFF_RERERE_PATTERN) {
-	Jcode::convert(*CUT_OFF_RERERE_PATTERN, 'euc');
+	Jcode::convert(\$CUT_OFF_RERERE_PATTERN, 'euc');
     }
 
     $pattern .= '|' . $CUT_OFF_RERERE_PATTERN if ($CUT_OFF_RERERE_PATTERN);
