@@ -33,7 +33,7 @@ proc/liblogmail.pl             0.22
 	proc/liblop.pl                 1.16	removed
 	proc/libmakefml.pl             0.19	removed
 	proc/libmd5.pl                 0.25	done
-proc/libmesgle.pl              1.06	
+	proc/libmesgle.pl              1.06	done?
 	proc/libmgrdom.pl              0.24	removed
 	proc/libmladdr.pl              0.20	removed
 proc/libmodedef.pl             1.12	
