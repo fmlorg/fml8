@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.34 2003/11/08 06:51:49 fukachan Exp $
+# $FML: Control.pm,v 1.1 2003/11/23 04:07:02 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -123,13 +123,30 @@ sub useradd
     }
 
     $curproc->unlock($lock_channel);
+
+    # upcall error
     if ($reason) {
+	$curproc->logerror($reason);
 	croak($reason);
     }
 
     unless ($trycount) {
 	$curproc->logerror("fail to add $address");
 	croak("fail to add $address");
+    }
+
+    # update user database.
+    if ($curproc->is_under_mta_process() || 1) {
+	my $info_args = {
+	    address => $address,
+	};
+
+	eval q{
+	    use FML::User::Info;
+	    my $info = new FML::User::Info $curproc;
+	    $info->import_from_mail_header($curproc, $info_args);
+	};
+	$curproc->logerror($@) if $@;	
     }
 }
 
@@ -204,7 +221,10 @@ sub userdel
     }
 
     $curproc->unlock($lock_channel);
+
+    # upcall error
     if ($reason) {
+	$curproc->logerror($reason);
 	croak($reason);
     }
 
@@ -212,6 +232,9 @@ sub userdel
 	$curproc->logerror("no such user $address");
 	croak("no such user $address");
     }
+
+    # update user database.
+    # NOTHING TO DO.
 }
 
 
@@ -323,6 +346,8 @@ sub _try_chaddr_in_map
 	    $obj->close();
 	}
     }
+
+    # update user database.
 }
 
 
@@ -408,12 +433,15 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
+
+2003/11:23:
+FML::User::Control is renamed from FML::Command::UserControl.
 
 FML::User::Control first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
