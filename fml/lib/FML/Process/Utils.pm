@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.55 2003/01/26 03:14:18 fukachan Exp $
+# $FML: Utils.pm,v 1.56 2003/01/29 13:27:32 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -400,6 +400,36 @@ sub _cat
 	}
 	$fh->close();
     }
+}
+
+
+=head2 unique( $array )
+
+make components in $array unique.
+
+=cut
+
+
+# Descriptions: make components in $array unique
+#    Arguments: OBJ($self) ARRAY_REF($array)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub unique
+{
+    my ($self, $array) = @_;
+    my $x     = [];
+    my $cache = {};
+
+    if (ref($array) eq 'ARRAY' && @$array) {
+      COMPONENT:
+	for my $k (@$array) {
+	    next COMPONENT if $cache->{ $k };
+	    push(@$x, $k);
+	    $cache->{ $k } = 1;
+	}
+    }
+
+    return $x;
 }
 
 
