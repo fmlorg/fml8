@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: String.pm,v 1.4 2004/02/15 04:38:37 fukachan Exp $
+# $FML: String.pm,v 1.5 2004/02/15 09:32:05 fukachan Exp $
 #
 
 package Mail::Message::String;
@@ -400,6 +400,77 @@ sub unfold
     return $str;
 }
 
+
+=head2 is_citation($data)
+
+$data looks a citation or not.
+
+=head2 is_signature($data)
+
+$data looks a citation or not.
+
+=cut
+
+
+# Descriptions: looks a citation or not
+#    Arguments: OBJ($self) STR($data)
+# Side Effects: none
+# Return Value: 1 or 0
+sub is_citation
+{
+    my ($self)   = @_;
+    my $data     = $self->as_str();
+    my $trap_pat = ''; # keyword to trap citation at the head of the line.
+
+    if ($data =~ /(\n.)/) { $trap_pat = quotemeta($1);}
+
+    # XXX-TODO: only /\n>/ regexp is correct ?
+    # > a i u e o ...
+    # > ka ki ku ke ko ...
+    if ($data =~ /\n>/) { return 1;}
+    if ($trap_pat) { if ($data =~ /$trap_pat.*$trap_pat/) { return 1;}}
+
+    return 0;
+}
+
+
+# Descriptions: looks a citation or not
+#               XXX fml 4.0 assumes:
+#               XXX If the paragraph has @ or ://, it must be signature.
+#               trap special keyword like tel:011-123-456789 ...
+#    Arguments: OBJ($self) STR($data)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub is_signature
+{
+    my ($self) = @_;
+    my $data   = $self->as_str();
+
+    if ($data =~ /\@/o    ||
+	$data =~ /TEL:/oi ||
+	$data =~ /FAX:/oi ||
+	$data =~ /:\/\//o ) {
+	return 1;
+    }
+
+    # -- fukachan ( usenet style signature ? )
+    # // fukachan ( signature derived from what ? )
+    if ($data =~ /^--/o || $data =~ /^\/\//o) {
+	return 1;
+    }
+
+    # XXX Japanese specific condition
+    use Mail::Message::Encode;
+    my $obj = new Mail::Message::Encode;
+    $data   = $obj->convert( $data, 'euc-jp' );
+
+    # "2-byte @"domain where "@" is a 2-byte "@" character.
+    if ($data =~ /\241\367[-A-Za-z0-9]+|[-A-Za-z0-9]+\241\367/o) {
+	return 1;
+    }
+
+    return 0;
+}
 
 
 #
