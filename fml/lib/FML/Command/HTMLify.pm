@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.11 2002/10/03 22:10:15 fukachan Exp $
+# $FML: HTMLify.pm,v 1.12 2002/11/18 22:47:25 fukachan Exp $
 #
 
 package FML::Command::HTMLify;
@@ -19,7 +19,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::Command::HTMLify - utility functions to convert
+FML::Command::HTMLify - utility functions to convert text to html.
 
 =head1 SYNOPSIS
 
@@ -33,9 +33,9 @@ and file in C<$ml_home_dir>.
 =cut
 
 
-# Descriptions:
-#    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects:
+# Descriptions: convert text to html style.
+#    Arguments: OBJ($self) HASH_REF($args) HASH_REF($optargs)
+# Side Effects: none
 # Return Value: none
 sub convert
 {
@@ -43,6 +43,8 @@ sub convert
     my $config  = $curproc->config();
     my $src_dir = $optargs->{ src_dir };
     my $dst_dir = $optargs->{ dst_dir };
+
+    # XXX-TODO: care for non Japanese.
     my $charset = 'euc-jp';
 
     croak("src_dir not defined") unless defined $src_dir;
@@ -50,7 +52,8 @@ sub convert
     croak("dst_dir not defined") unless defined $dst_dir;
     croak("dst_dir not exists")  unless -d $dst_dir;
 
-    # XXX NOT NEED THIS CHECK ?
+    # XXX-TODO: NOT NEED THIS CHECK ? No, it it soog that 
+    # XXX-TODO: we can convert MH folder to HTML format files.
     #     unless ($curproc->is_config_cf_exist()) {
     #		croak("invalid ML");
     #    }
@@ -75,7 +78,7 @@ sub convert
 	if ($is_subdir_exists) {
 	    my (@x) = sort _sort_subdirs @$subdirs;
 	    print STDERR "   subdirs: @x\n";
-	    for my $xdir (sort _sort_subdirs @$subdirs) {
+	    for my $xdir (@x) {
 		eval q{
 		    use Mail::Message::ToHTML;
 		    my $obj = new Mail::Message::ToHTML $htmlifier_args;
