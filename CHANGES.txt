@@ -1,6 +1,11 @@
 		CHANGES
 		$Date$
 
+2001/10/21
+
+   Mail::HTML::Lite 
+	oops, fix untie() operation to be ensured
+	
 2001/10/20
 
    Mail::HTML::Lite 
@@ -22,6 +27,22 @@
 	new() takes charset as argument
 	change _decode_mime_string() to method
 	modify ifdef in_chaset_to_code() to be more suitable
+
+	we can make index.html and thread.html
+	
+	Mail::HTML::Lite::new() accepts
+		{ db_type => "DB_TYPE", attachment => 0::1 }
+
+	change html_begin argument::($wh, { message => $msg });
+	we can specify title in <HEAD>
+	several minior changes
+	
+	bug fix::_address_clean_up() should check return value, which is
+	address or not more rigolously.
+	
+	bug fix::check parent::child (attachment) process or not
+	
+	more and more debug info
 
    Mail::Message 
 	
@@ -619,4 +640,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.20 2001/10/17 15:42:45 fukachan Exp $
+$FML: CHANGES.txt,v 1.21 2001/10/20 07:55:55 fukachan Exp $
