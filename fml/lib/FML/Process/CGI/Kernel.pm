@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.63 2003/10/15 10:12:51 fukachan Exp $
+# $FML: Kernel.pm,v 1.64 2003/10/16 15:06:57 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -117,17 +117,19 @@ sub prepare
 sub _set_charset
 {
     my ($curproc) = @_;
-    my $lang = $curproc->cgi_var_language() || 
-	$curproc->_http_accept_language();
+    my $lang = 
+	$curproc->cgi_var_language() || $curproc->_http_accept_language();
 
-    if ($lang =~ /japanese|^ja/i) {
-	$curproc->set_charset("template_file", 'euc-jp');
-    }
-    elsif ($lang =~ /english|^en/i) {
-	$curproc->set_charset("template_file", 'us-ascii');
+    use Mail::Message::Charset;
+    my $obj     = new Mail::Message::Charset;
+    my $charset = $obj->language_to_internal_charset($lang);
+
+    if ($charset) {
+	$curproc->set_charset("template_file", $charset);
     }
     else {
-	$curproc->set_charset("template_file", 'us-ascii');
+	my $default = $obj->internal_default_charset();
+	$curproc->set_charset("template_file", $default);
     }
 }
 
@@ -146,6 +148,7 @@ sub _http_accept_language
 
       LANG:
 	for my $lang (split(/\s*,\s*/, $buf)) {
+	    $lang =~ s/\s*;.*$//;
 	    if ($lang =~ /^ja/) {
 		$r = 'ja';
 		last LANG;
