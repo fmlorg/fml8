@@ -1,3 +1,4 @@
 main.cf
 default_config.cf.ja
 site_default_config.cf
+install.cf
