@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.19 2002/09/22 14:57:02 fukachan Exp $
+# $FML: SMTP.pm,v 1.20 2002/12/30 15:06:45 fukachan Exp $
 #
 
 
@@ -402,7 +402,7 @@ See L<Mail::Message> for more details.
 # Return Value: none
 sub deliver
 {
-    my ($self, $args, $io_params) = @_;
+    my ($self, $args) = @_;
 
     # recipient limit
     $self->{_recipient_limit} = $args->{recipient_limit} || 1000;
