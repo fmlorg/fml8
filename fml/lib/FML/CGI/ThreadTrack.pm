@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.14 2001/12/23 11:39:45 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.15 2002/03/18 13:52:19 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -189,10 +189,12 @@ sub run_cgi_navigator
 
     print "ML: ";
     print popup_menu(-name   => 'ml_name', -values => $ml_list);
+    print "<BR>\n";
 
     print "orderd by: ";
     my $order = [ 'cost', 'date', 'reverse date' ];
     print popup_menu(-name   => 'order', -values => $order );
+    print "<BR>\n";
 
     print submit(-name => 'change target');
     print reset(-name => 'reset');
