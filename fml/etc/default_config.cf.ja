@@ -1,47 +1,58 @@
-=head1 configurations
+=head1	基本的なパラメータ
 
 # domain	= fml.org
 # fqdn		= mx0.fml.org
 
 
-=head2 default modes
+=head2	default modes
 
 default_file_mode	=	0600
 
 default_directory_mode	=	0755
-=head1 Directories
+
+=head1	ディレクトリ
 
 # $ml_home_dir is given from libexec/loader.
 # ml_home_dir	=
 
 shared_db_dir	= $ml_home_prefix/@db@
 
-=head2 アクセス制御
 
-# fml 4.0 の PERMIT_POST_FROM と REJECT_ADDR を合体したもの
+=head1	アクセス制御ルール
+
+# 投稿への制限
+# XXX fml 4.0 の PERMIT_POST_FROM と REJECT_ADDR を合体したもの
 post_restrictions	=	reject_system_accounts
 				permit_members_only
 				reject
 
+# コマンドへの制限
 # fml 4.0 の PERMIT_COMMAND_FROM と REJECT_ADDR を合体したもの
 command_restrictions	=	reject_system_accounts
 				permit_members_only
 				reject
 
+# メンバーとみなされるのは誰か？
 # fml 4.0 の $MEMBER_LIST @MEMBER_LIST 相当
 member_maps		=	file:$ml_home_dir/members 
 
 
+# 受信者のリスト
 # fml 4.0 の $ACTIVE_LIST @ACTIVE_LIST 相当
 recipient_maps		=	file:$ml_home_dir/recipients
 				file:$ml_home_dir/actives
 				unix.group:fml
-=head2 MTA
 
+=head1		MTA の設定
+
+# ひとつの SMTP トランザクションで MTA に渡す受信者の数の上限
+# デフォルトは postfix にあわせて 1000
 recipient_limit		=	1000
 
+# デフォールトの MTA は自分自身( localhost ) 
 mta			=	[::1]:25
 				127.0.0.1:25
+
 
 =head1	ヘッダの操作
 
@@ -73,7 +84,8 @@ subject_tag_name	=	$ml_name
 
 # % の意味は UNIX マニュアルを参照。例えば sprintf 関数など 
 subject_tag		=	[$ml_name:%05d]
-=head2 ロック
+
+=head1	ロック
 
 use_lock	= yes
 
@@ -83,9 +95,8 @@ lock_file	= $lock_dir/simplelock
 
 lock_type	= flock
 
-###
-### basic logging
-###
+
+=head1	ログのとり方
 
 # enable logging function
 use_log		=	yes
@@ -98,8 +109,9 @@ log_file	=	$ml_home_dir/log
 log_type	=	file
 
 # log message format
-log_message_format	=	fml4-compatible
-=head2 記事のスプール
+log_format_type	=	fml4_compatible
+
+=head1	記事のスプール
 
 sequence_file	= $ml_home_dir/seq
 
@@ -108,12 +120,16 @@ use_spool	= yes
 spool_dir	= $ml_home_dir/spool
 
 spool_type	= plane
-# value: confirmation / ? 
 
-command_chaddr_type	=	confirmation
-###
-### Section: Tickets / Trouble Tickets System
-###
+=head1	コマンドの定義
+
+# value: confirmation / 
+command_chaddr_type		=	confirmation
+
+command_unsubscribe_type	=	confirmation
+
+=head1	Tickets / Trouble Tickets System
+
 
 use_ticket		=	yes
 
@@ -129,6 +145,7 @@ ticket_subject_tag	=	[$ticket_id_syntax]
 ticket_sequence_file	=	$ml_home_dir/ticket.seq
 
 ticket_db_dir		=	$shared_db_dir/ticket/$mlname
+
 =head1	プログラムのパス名
 
 # 
@@ -184,6 +201,7 @@ path_pgps	=
 
 path_pgpv	=	
 
+
 =head1	システム依存
 
 #
@@ -196,9 +214,11 @@ has_getpwgid	=	yes
 
 has_alarm	=	yes
 
-=head1 hooks
+
+=head1 フック
 
 ### default_config.cf file ends here.
 ### fml 4.0's 現在の LOCAL_CONFIG で別れ目になる行
 
 =cut
+
