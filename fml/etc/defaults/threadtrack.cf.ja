@@ -1,10 +1,18 @@
-=head1	チケットシステム
+=head1	スレッド追跡システム
 
-# Descriptions: チケットシステムを使うか
+# Descriptions: スレッド追跡システムを使うか
 #      History: fml 5.0 new
 #        Value: yes / no
 #     Examples:
 use_thread_track	=	yes
+
+
+# Descriptions: スレッド追跡システムは Subject タグを利用するか？
+#      History: fml 5.0 new
+#        Value: yes / no
+#     Examples:
+use_thread_subject_tag	=	no
+
 
 # Descriptions: チケットにつけるＭＬ名
 #               複数のＭＬにまたがったチケットを追跡するために
