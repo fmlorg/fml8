@@ -30,15 +30,15 @@ Q: インストールスクリプトの挙動
 
 Q: ＭＬの作成
 4: makefml newml ML もしくは makefml new ML
-8: makefml newml ML 
+8: makefml newml ML
 
 Q: newml コマンドが作るエイリアス(見本)ファイル
 4: sendmail 用 (互換性があるため postfix 用としても使用可能)
 8: postfix, sendmail, qmail, procmail すべてを作る
 
 Q: newml コマンドが作るエイリアス(見本)ファイルのパス
-4: /var/spool/ml/etc/aliaes
-8: /var/spool/ml/etc/mail/aliaes
+4: /var/spool/ml/etc/aliases
+8: /var/spool/ml/etc/mail/aliases
 
 Q: qmail 用の設定を作る
 4: makefml qmail-setup ML
@@ -72,27 +72,31 @@ Q: LISTSERV スタイルのコマンドのセットアップ。
 
 Q: アドレスを(受信者、送信者リスト両方に)追加する
 4: makefml add ML ADDRESS
-	もしくは adduser でもよい。 
+	もしくは adduser でもよい。
 	終了後、ファイルの変更点が表示される。
 	デフォルトの操作対象は actives と members ファイル。
-8: makefml subscribe ML ADDRESS 
+8: makefml subscribe ML ADDRESS
 	なお
 	add subscribe adduser useradd
-	コマンドは全て同じ意味である。 
+	コマンドは全て同じ意味である。
 	エラーにならない限り、画面表示はなく、静かに終る。
-	デフォルトの操作対象は recipients と members ファイル。	
+	デフォルトの操作対象は
+	$primary_recipient_maps と $primary_member_maps で、
+	具体的には recipients と members ファイル。
 
 Q: アドレスを(受信者、送信者リスト両方から)削除する
 4: makefml bye ML ADDRESS
-	もしくは byeuser でもよい。 
+	もしくは byeuser でもよい。
 	終了後、ファイルの変更点が表示される。
 	デフォルトの操作対象は actives と members ファイル。
-8: makefml unsubscribe ML ADDRESS 
+8: makefml unsubscribe ML ADDRESS
 	なお
-	bye unsubscribe deluser remove resign signoff userdel 
-	コマンドは全て同じ意味である。 
+	bye unsubscribe deluser remove resign signoff userdel
+	コマンドは全て同じ意味である。
 	エラーにならない限り、画面表示はなく、静かに終る。
-	デフォルトの操作対象は recipients と members ファイル。	
+	デフォルトの操作対象は
+	$primary_recipient_maps と $primary_member_maps で、
+	具体的には recipients と members ファイル。
 	
 Q: アドレスを変更する(受信者リスト、メンバーリストともに変更する)
 4: makefml chaddr ML OLD_ADDRESS NEW_ADDRESS
@@ -100,21 +104,31 @@ Q: アドレスを変更する(受信者リスト、メンバーリストともに変更する)
 	デフォルトの操作対象は actives と members ファイル。
 8: makefml chaddr ML OLD_ADDRESS NEW_ADDRESS
 	エラーにならない限り、画面表示はなく、静かに終る。
-	デフォルトの操作対象は recipients と members ファイル。	
+	デフォルトの操作対象は
+	$primary_recipient_maps と $primary_member_maps で、
+	具体的には recipients と members ファイル。
 
 Q: 受信者リストにのみアドレスを追加する。
 4: makefml addactives ML ADDRESS
 	これは addactive add2active add2actives でも同じ意味。
 	終了後、ファイルの変更点が表示される。
 	デフォルトの操作対象は actives ファイル。
-8: 未実装
+8: makefml addactives ML ADDRESS 
+	エラーにならない限り、画面表示はなく、静かに終る。
+	デフォルトの操作対象は
+	$primary_recipient_maps で、
+	具体的には recipients ファイル。
 
 Q: メンバーリストにのみアドレスを追加する。
 4: makefml addmembers ML ADDRESS
 	これは addmember add2member add2members でも同じ。
 	終了後、ファイルの変更点が表示される。
 	デフォルトの操作対象は members ファイル。
-8: 未実装
+8: makefml addmembers ML ADDRESS
+	エラーにならない限り、画面表示はなく、静かに終る。
+	デフォルトの操作対象は
+	$primary_recipient_maps と $primary_member_maps で、
+	具体的には recipients と members ファイル。
 
 Q: リアルタイム配送を止める
 4: makefml off ML ADDRESS
@@ -122,19 +136,22 @@ Q: リアルタイム配送を止める
 	終了後、ファイルの変更点が表示される。
 	デフォルトの操作対象は actives ファイル。
 8: makefml off ML ADDRESS
+	エラーにならない限り、画面表示はなく、静かに終る。
 
 Q: リアルタイム配送を再開する
 4: makefml on  ML ADDRESS
 	終了後、ファイルの変更点が表示される。
 	デフォルトの操作対象は actives ファイル。
-8: makefml on  ML ADDRESS
+8: makefml digestoff ML ADDRESS もしくは makefml digest ML ADDRESS off
+	エラーにならない限り、画面表示はなく、静かに終る。
 
 Q: まとめおくり配送へ
 4: makefml matome ML ADDRESS
-	コマンドは digest でもよい。 
+	コマンドは digest でもよい。
 	終了後、ファイルの変更点が表示される。
 	デフォルトの操作対象は actives ファイル。
-8: 未実装
+8: makefml digeston ML ADDRESS もしくは makefml digest ML ADDRESS on
+	エラーにならない限り、画面表示はなく、静かに終る。	
 
 
 #
@@ -160,12 +177,14 @@ Q: リモート管理者を削除する。
 Q: リモート管理者のパスワードを設定する(1)
 4: makefml passwd ML
 	対話モードになり、アドレスとパスワードの入力を促される。
-8: 未実装
+8: makefml passwd ML はエラーになる。(未実装?)
 
 Q: リモート管理者のパスワードを設定する(2)
 4: makefml passwd ML ADDRESS
 	対話モードになり、パスワードの入力を促される。
-8: 未実装
+8: makefml passwd ML ADDRESS
+	引数で PASSWORD を入力しない場合は、
+	対話モードになり、パスワードの入力を促される。
 
 Q: リモート管理者のパスワードを設定する(3)
 4: makefml passwd ML ADDRESS PASSWORD
@@ -182,7 +201,7 @@ Q: リモート管理者のパスワードを設定する(3)
 #
 Q: メニュー形式で設定を変更する
 4: makefml config ML
-8: 未実装
+8: 実装しているが、まだ中途半端。
 
 Q: 設定ファイルを編集する
 4: makefml edit ML
