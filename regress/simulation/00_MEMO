@@ -65,12 +65,6 @@
 	}
 
 
-[TODO]	case insensitive of user part of user@domain
-
-	$user_auth_mail_addr_check_type = 
-		case_sensitive / case_insensitive	?
-
-
 [TODO]	rmml したＭＬをふっかつさせることは？
 
 	一番日付が最近の @xxx.yyyymmdd を探して、そこから戻す。
@@ -457,4 +451,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.96 2003/11/21 11:35:56 fukachan Exp $
+$FML: 00_MEMO,v 1.97 2003/11/25 11:36:10 fukachan Exp $
