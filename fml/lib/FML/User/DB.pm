@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.2 2003/11/23 14:16:49 fukachan Exp $
+# $FML: DB.pm,v 1.3 2003/11/24 13:27:04 fukachan Exp $
 #
 
 package FML::User::DB;
@@ -111,7 +111,7 @@ sub find
 {
     my ($self, $class, $key) = @_;
     my $curproc = $self->{ _curproc };
-    my $config  = $debug ? $curproc->{ config } : $curproc->config();
+    my $config  = $curproc->config();
     my $mapname = sprintf("user_db_%s_maps", $class);
     my $maps    = $config->get_as_array_ref( $mapname );
 
@@ -127,7 +127,7 @@ sub find
 	    $obj = new IO::Adapter $map;
 	    $obj->open();
 	    $obj->touch();
-	    $value = $obj->find($key, { 
+	    $value = $obj->find($key, {
 		want           => 'key,value',
 		case_sensitive => 0,
 	    });
