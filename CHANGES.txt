@@ -1,6 +1,51 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/11/18
+
+   FML::Process::Digest 
+	correct start id calculation
+	enable queue flush to send digest.
+	
+   FML::Digest 
+   FML::Process::Kernel 
+	digest routine can customizes header. 
+	XXX preliminary support. needs overhaul? 
+
+2002/11/17
+
+   new variables
+	define $digest_*hook
+	$primary_digest_member_map	= $primary_member_map
+	$digest_member_maps		= $primary_member_maps
+	$primary_digest_recipient_map	= file:$ml_home_dir::recipients-digest
+	$digest_recipient_maps		= $primary_recipient_map
+	$article_sequence_file (= $sequence_file) for symmetry
+	$use_digest_program
+	$digest_sequence_file
+	$article_sequence_file
+	
+   FML::Process::Switch 
+	enable libexec/digest
+
+   File::Sequence 
+	fix get_id(); not use chomp() but use s::[\s\r\n]*$::::.
+	define set_id($id) to update value in the sequence file.
+	
+   FML::Process::Digest
+	newly created for digest delivery program.
+	implement _digest(), which is the real function to process digest
+	message creation.
+	
+	XXX mail queue operation is not yet implemented.
+
+   FML::Digest 
+   FML::Process::Digest Kernel.pm 
+   Mail::Delivery::Queue 
+	enabled passing of recipient_maps (ARRAY_REF) into mail queue.
+	By this, we can now pass $digest_recipient_maps as digest recipients
+	to mail queue system.
+
 2002/11/09
 
    I-D を消去し、www.fml.org I-D コレクションを見るようにした。
@@ -3538,4 +3583,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.107 2002/10/28 15:53:45 fukachan Exp $
+$FML: CHANGES.txt,v 1.108 2002/11/10 13:10:17 fukachan Exp $
