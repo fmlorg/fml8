@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.83 2003/10/15 01:03:35 fukachan Exp $
+# $FML: Utils.pm,v 1.84 2003/10/15 04:20:01 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1362,20 +1362,6 @@ sub language_default
 }
 
 
-# Descriptions: inform language returned by cgi process
-#    Arguments: OBJ($curproc)
-# Side Effects: none
-# Return Value: STR
-sub language_of_cgi_message
-{
-    my ($curproc) = @_;
-    my $config  = $curproc->config();
-    my $charset = $config->{ cgi_charset };
-
-    return( $charset || $curproc->language_default() );
-}
-
-
 # Descriptions: language used in reply message
 #    Arguments: OBJ($curproc)
 # Side Effects: none
@@ -1426,6 +1412,57 @@ sub get_charset
     my $charset   = $pcb->get("charset", $_category) || $default || 'us-ascii';
 
     return $charset;
+}
+
+
+=head2 get_accept_language_list($list)
+
+set preferred language candidates requested by sender.
+$list is ARRAY_REF.
+
+=head2 get_accept_language_list()
+
+return preferred language candidates requested by sender.
+The type of return value is ARRAY_REF.
+
+=cut
+
+
+# Descriptions: return language candidates requested by sender
+#    Arguments: OBJ($curproc) ARRAY_REF($list)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub set_accept_language_list
+{
+    my ($curproc, $list) = @_;
+    my $pcb = $curproc->pcb();
+
+    if (defined $pcb) {
+	if (ref($list) eq 'ARRAY') {
+	    $pcb->set('incoming_message', 'accept-language', $list);
+	}
+	else {
+	    $curproc->logerror("set_accept_language_list: invalid data");
+	}
+    }
+}
+
+
+# Descriptions: return language candidates requested by sender
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub get_accept_language_list
+{
+    my ($curproc) = @_;
+    my $pcb = $curproc->pcb();
+
+    if (defined $pcb) {
+	return $pcb->get('incoming_message', 'accept-language');
+    }
+    else {
+	return [ '*' ];
+    }
 }
 
 
