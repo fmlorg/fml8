@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.7 2002/02/18 14:24:12 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.8 2002/02/20 14:10:37 fukachan Exp $
 #
 
 package FML::Command::Admin::unsubscribe;
@@ -66,7 +66,7 @@ sub process
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
     my $options       = $command_args->{ options };
-    my $address       = $command_args->{ address } || $options->[ 0 ];
+    my $address       = $command_args->{ command_data } || $options->[ 0 ];
 
     # fundamental check
     croak("\$member_map is not specified")    unless $member_map;

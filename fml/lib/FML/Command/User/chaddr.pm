@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.7 2002/02/18 14:14:52 fukachan Exp $
+# $FML: chaddr.pm,v 1.8 2002/03/17 04:21:38 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -107,7 +107,7 @@ sub process
 	    keyword   => $keyword,
 	    cache_dir => $cache_dir,
 	    class     => 'chaddr',
-	    address   => $sender,
+	    address   => "$old_addr $new_addr",
 	    buffer    => $command,
 	};
 	my $id = $confirm->assign_id;
