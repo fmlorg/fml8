@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: BodyCheck.pm,v 1.11 2001/12/22 09:21:06 fukachan Exp $
+# $FML: BodyCheck.pm,v 1.12 2001/12/23 13:46:14 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -96,7 +96,7 @@ C<Usage>:
 =cut
 
 
-# Descriptions: top level dispatcher 
+# Descriptions: top level dispatcher
 #    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
 # Side Effects: none
 # Return Value: none

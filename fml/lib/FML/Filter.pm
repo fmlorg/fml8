@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.3 2001/12/22 16:10:50 fukachan Exp $
+# $FML: Filter.pm,v 1.4 2001/12/23 13:46:13 fukachan Exp $
 #
 
 package FML::Filter;
@@ -34,7 +34,7 @@ where C<$message> is C<Mail::Message> object.
 
 top level dispatcher for FML filtering engine.
 It consists of two types, header and body filtering engines.
-Detail of rules is found in 
+Detail of rules is found in
 L<FML::Filter::HeaderCheck> and L<FML::Filter::BodyCheck>.
 
 =head1 METHODS
