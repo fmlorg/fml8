@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.20 2004/05/17 12:33:31 fukachan Exp $
+# $FML: Utils.pm,v 1.21 2004/06/29 10:05:29 fukachan Exp $
 #
 
 package Mail::Delivery::Utils;
@@ -157,8 +157,10 @@ sub _smtplog
     my $fp = $SmtpLogFunctionPointer;
 
     if ($fp) {
-	eval &$fp($buf);
-	print STDERR $@, "\n" if $@;
+	if (defined $buf) {
+	    eval q{ &$fp($buf); };
+	    print STDERR $@, "\n" if $@;
+	}
     }
     else {
 	print STDERR @_, "\n";
