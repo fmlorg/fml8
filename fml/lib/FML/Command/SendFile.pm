@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.4 2001/10/17 03:05:12 fukachan Exp $
+# $FML: SendFile.pm,v 1.5 2001/12/22 09:21:03 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -17,30 +17,36 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Command::SendFile - utility functions to send back specified file
+FML::Command::SendFile - utility functions to send back file(s)
 
 =head1 SYNOPSIS
 
-not yet implemented
+For example, See L<FML::Command::User::get> and
+L<FML::Command::Admin::get>..
+
+   sub process
+   {
+       my ($self, $curproc, $command_args) = @_;
+       $self->send_article($curproc, $command_args);
+   }
 
 =head1 DESCRIPTION
+
+This module provides several utility functions to send back article
+and file in C<$ml_home_dir>.
 
 =head1 METHODS
 
 =head2 C<send_article($curproc, $command_args)>
 
-send back articles.
-
-used in
-C<FML::Command::User>
-and
-C<FML::Command::Admin>
-modules.
+send back articles.  This is used in C<FML::Command::User> and
+C<FML::Command::Admin> modules.
 
 =cut
 
+
 # Descriptions: send back articles
-#    Arguments: $self $curproc $command_args
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
 # Return Value: none
 sub send_article
@@ -80,9 +86,9 @@ sub send_article
 
 
 # Descriptions: check the argument and expand it if needed
-#    Arguments: $self $curproc $filename_string
+#    Arguments: OBJ($self) OBJ($curproc) STR($fn)
 # Side Effects: none
-# Return Value: HASH ARRAY as [ $fist .. $last ]
+# Return Value: HASH_ARRAY as [ $fist .. $last ]
 sub _is_valid_argument
 {
     my ($self, $curproc, $fn) = @_;
@@ -126,9 +132,9 @@ sub _is_valid_argument
 
 
 # Descriptions: make an array from $fist to $last number
-#    Arguments: $first_number $last_number
+#    Arguments: NUM($first_number) NUM($last_number)
 # Side Effects: none
-# Return Value: HASH ARRAY as [ $first .. $last ]
+# Return Value: HASH_ARRAY as [ $first .. $last ]
 sub _expand_range
 {
     my ($first, $last) = @_;
@@ -145,8 +151,9 @@ send back file specified as C<$command_args->{ _file_to_send }>.
 
 =cut
 
-# Descriptions:
-#    Arguments: $self $curproc $command_args
+
+# Descriptions: send arbitrary file in $ml_home_dir.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
 # Return Value: none
 sub send_file

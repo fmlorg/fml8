@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.37 2001/05/27 14:27:53 fukachan Exp $
+# $FML: Header.pm,v 1.38 2001/12/22 09:21:01 fukachan Exp $
 #
 
 package FML::Header;
@@ -56,9 +56,9 @@ forward the request up to superclass C<Mail::header::new()>.
 
 
 # Descriptions: forward new() request to the base class
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
-# Return Value: none
+# Return Value: OBJ
 sub new
 {
     my ($self, $args) = @_;
@@ -68,6 +68,10 @@ sub new
 }
 
 
+# Descriptions: dummy
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub DESTROY {}
 
 
@@ -89,6 +93,11 @@ alias of C<Mail::Header::set($key, $value)>.
 
 =cut
 
+
+# Descriptions: get() wrapper to remove \n$
+#    Arguments: OBJ($self) ARRAY(@x)
+# Side Effects: none
+# Return Value: STR
 sub get
 {
     my ($self, @x) = @_;
@@ -98,6 +107,10 @@ sub get
 }
 
 
+# Descriptions: set() wrapper
+#    Arguments: OBJ($self) ARRAY(@x)
+# Side Effects: none
+# Return Value: none
 sub set
 {
     my ($self, @x) = @_;
@@ -113,6 +126,10 @@ It parse it by C<Mail::Address::parse()> and nuke < and >.
 =cut
 
 
+# Descriptions: utility to remove ^\s*< and >\s*$
+#    Arguments: OBJ($self) STR($addr)
+# Side Effects: none
+# Return Value: STR
 sub address_clean_up
 {
     my ($self, $addr) = @_;
@@ -141,10 +158,11 @@ return the C<boundary> defind in the header's Content-Type field.
 
 =cut
 
+
 # Descriptions: return the type defind in the header's Content-Type field.
-#    Arguments: $self
+#    Arguments: OBJ($header)
 # Side Effects: extra spaces in the type to return is removed.
-# Return Value: none
+# Return Value: STR or UNDEF
 sub data_type
 {
     my ($header) = @_;
@@ -158,9 +176,9 @@ sub data_type
 
 
 # Descriptions: return boundary defined in Content-Type
-#    Arguments: $self $args
+#    Arguments: OBJ($header)
 # Side Effects: none.
-# Return Value: none
+# Return Value: STR or UNDEF
 sub mime_boundary
 {
     my ($header) = @_;
@@ -196,6 +214,10 @@ add X-ML-Count:
 =cut
 
 
+# Descriptions: add "X-ML-Name: elena" to header
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+# Side Effects: update $header
+# Return Value: none
 sub add_fml_ml_name
 {
     my ($header, $config, $args) = @_;
@@ -203,6 +225,10 @@ sub add_fml_ml_name
 }
 
 
+# Descriptions: add "X-Mail-Count: NUM" to header
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+# Side Effects: update $header
+# Return Value: none
 sub add_fml_traditional_article_id
 {
     my ($header, $config, $args) = @_;
@@ -210,6 +236,10 @@ sub add_fml_traditional_article_id
 }
 
 
+# Descriptions: add "X-ML-Count: NUM" to header
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+# Side Effects: update $header
+# Return Value: none
 sub add_fml_article_id
 {
     my ($header, $config, $args) = @_;
@@ -238,6 +268,10 @@ add X-Sequence.
 =cut
 
 
+# Descriptions: add "X-ML-Server: fml .." and "List-Software: fml .." to header
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+# Side Effects: update $header
+# Return Value: none
 sub add_software_info
 {
     my ($header, $config, $args) = @_;
@@ -258,6 +292,10 @@ sub add_software_info
 }
 
 
+# Descriptions: add List-* to header
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+# Side Effects: update $header
+# Return Value: none
 sub add_rfc2369
 {
     my ($header, $config, $args) = @_;
@@ -302,6 +340,10 @@ sub add_rfc2369
 }
 
 
+# Descriptions: add "X-Sequence: elena NUM" to header
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+# Side Effects: update $header
+# Return Value: none
 sub add_x_sequence
 {
     my ($header, $config, $args) = @_;
@@ -322,6 +364,10 @@ add or replace C<Reply-To:>.
 =cut
 
 
+# Descriptions: rewrite subject if needed
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+# Side Effects: update $header
+# Return Value: none
 sub rewrite_subject_tag
 {
     my ($header, $config, $args) = @_;
@@ -337,6 +383,10 @@ sub rewrite_subject_tag
 }
 
 
+# Descriptions: rewrite Reply-To: if needed
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+# Side Effects: update $header
+# Return Value: none
 sub rewrite_reply_to
 {
     my ($header, $config, $args) = @_;
@@ -362,6 +412,11 @@ The keys are space separeted.
 
 =cut
 
+
+# Descriptions: remove some header fields defined in $config
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+# Side Effects: update $header
+# Return Value: none
 sub delete_unsafe_header_fields
 {
     my ($header, $config, $args) = @_;
@@ -385,6 +440,10 @@ References: fields.
 =cut
 
 
+# Descriptions: remove tag like string in $str
+#    Arguments: OBJ($header) STR($str)
+# Side Effects: none
+# Return Value: STR
 sub delete_subject_tag_like_string
 {
     my ($header, $str) = @_;
@@ -395,6 +454,11 @@ sub delete_subject_tag_like_string
 }
 
 
+# Descriptions: extract Message-ID:'s in $header from
+#               In-Reply-To: and References: fields.
+#    Arguments: OBJ($header)
+# Side Effects: none
+# Return Value: HASH_ARRAY
 sub extract_message_id_references
 {
     my ($header) = @_;
@@ -439,6 +503,11 @@ C<address_for_post> address.
 =cut
 
 
+# Descriptions: check whether message-id is duplicated or not
+#                against mail loop.
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+# Side Effects: update cache
+# Return Value: STR or 0
 sub verify_message_id_uniqueness
 {
     my ($header, $config, $args) = @_;
@@ -469,6 +538,11 @@ sub verify_message_id_uniqueness
     return $dup;
 }
 
+
+# Descriptions: check X-ML-Info: duplication against mail loop
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+# Side Effects: none
+# Return Value: 1 or 0
 sub verify_x_ml_info_uniqueness
 {
     my ($header, $config, $args) = @_;
@@ -483,6 +557,11 @@ sub verify_x_ml_info_uniqueness
     }
 }
 
+
+# Descriptions: check mail loop by List-Post: field
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+# Side Effects: none
+# Return Value: 1 or 0
 sub verify_list_post_uniqueness
 {
     my ($header, $config, $args) = @_;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Scheduler.pm,v 1.6 2001/11/13 15:18:31 fukachan Exp $
+# $FML: Scheduler.pm,v 1.7 2001/12/22 09:21:02 fukachan Exp $
 #
 
 package FML::CGI::Scheduler;
@@ -13,26 +13,27 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 use CGI qw/:standard/; # load standard CGI routines
-
 use FML::Process::CGI;
 @ISA = qw(FML::Process::CGI);
 
 
 =head1 NAME
 
-FML::CGI::Scheduler - CGI module demo to show your schedule
+FML::CGI::Scheduler - demonstration CGI module to show schedule (HTML TABLE)
 
 =head1 SYNOPSIS
 
-    $ticket = new FML::CGI::Scheduler;
-    $ticket->new();
-    $ticket->run();
+    $obj = new FML::CGI::Scheduler;
+    $obj->prepare();
+    $obj->verify_request();
+    $obj->run();
+    $obj->finish();
 
-See L<FML::Process::Flow> for flow methods details.
+run() executes html_start(), run_cgi() and html_end() described below.
+
+See L<FML::Process::Flow> for flow details.
 
 =head1 DESCRIPTION
-
-C<NOT YET IMPLEMENTED>.
 
 =head2 CLASS HIERARCHY
 
@@ -43,11 +44,15 @@ C<FML::CGI::Scheduler> is a subclass of C<FML::Process::CGI>.
 Almost methods common for CGI or HTML are forwarded to
 C<FML::Process::CGI> base class.
 
-This module has routines needed for CGI.
+This module has routines needed for CGI main methond run().
 
 =cut
 
 
+# Descriptions: print out HTML header + body former part 
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub html_start
 {
     my ($curproc, $args) = @_;
@@ -69,6 +74,10 @@ sub html_start
 }
 
 
+# Descriptions: print out body latter part 
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub html_end
 {
     my ($curproc, $args) = @_;
@@ -83,6 +92,10 @@ sub html_end
 }
 
 
+# Descriptions: print out navigation bar
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub _show_guide
 {
     my ($curproc, $args) = @_;
@@ -93,6 +106,10 @@ sub _show_guide
 }
 
 
+# Descriptions: main routine for calender (HTML TABLE format)
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub run_cgi
 {
     my ($curproc, $args) = @_;

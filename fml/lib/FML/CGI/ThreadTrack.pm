@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.11 2001/11/19 11:36:47 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.12 2001/12/22 09:21:02 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -13,7 +13,6 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 use CGI qw/:standard/; # load standard CGI routines
-
 use FML::Process::CGI;
 @ISA = qw(FML::Process::CGI);
 
@@ -24,15 +23,17 @@ FML::CGI::ThreadTrack - CGI details to control thread system
 
 =head1 SYNOPSIS
 
-    $thread = new FML::CGI::ThreadTrack;
-    $thread->new();
-    $thread->run();
+    $obj = new FML::CGI::ThreadTrack;
+    $obj->prepare();
+    $obj->verify_request();
+    $obj->run();
+    $obj->finish();
+
+run() executes html_start(), run_cgi() and html_end() described below.
 
 See L<FML::Process::Flow> for flow details.
 
 =head1 DESCRIPTION
-
-C<NOT YET IMPLEMENTED>.
 
 =head2 CLASS HIERARCHY
 
@@ -46,6 +47,10 @@ C<FML::Process::CGI> base class.
 =cut
 
 
+# Descriptions: print out HTML header + body former part 
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub html_start
 {
     my ($curproc, $args) = @_;
@@ -65,6 +70,10 @@ sub html_start
 }
 
 
+# Descriptions: print out body latter part 
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub html_end
 {
     my ($curproc, $args) = @_;
@@ -78,6 +87,11 @@ sub html_end
 }
 
 
+# Descriptions: main routine for thread control
+#               run_cgi() can process request: list, show, change_status
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub run_cgi
 {
     my ($curproc, $args) = @_;
@@ -123,6 +137,10 @@ sub run_cgi
 }
 
 
+# Descriptions: prepare basic parameter for Mail::ThreadTrack module
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: HASH_REF
 sub _build_param
 {
     my ($curproc, $args) = @_;
@@ -159,6 +177,10 @@ sub _build_param
 }
 
 
+# Descriptions: print navigation bar
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub _show_guide
 {
     my ($curproc, $args) = @_;

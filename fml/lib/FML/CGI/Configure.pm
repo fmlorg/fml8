@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Configure.pm,v 1.6 2001/11/17 04:03:36 fukachan Exp $
+# $FML: Configure.pm,v 1.7 2001/12/22 09:21:02 fukachan Exp $
 #
 
 package FML::CGI::Configure;
@@ -22,19 +22,19 @@ use FML::Process::CGI;
 
 FML::CGI::Configure - provides functions for makefml CGI interface
 
-    XXX NOT YET IMPLEMENTED
-
 =head1 SYNOPSIS
 
-    $makefml = new FML::CGI::Configure;
-    $makefml->new();
-    $makefml->run();
+    $obj = new FML::CGI::Configure;
+    $obj->prepare();
+    $obj->verify_request();
+    $obj->run();
+    $obj->finish();
+
+run() executes html_start(), run_cgi() and html_end() described below.
 
 See L<FML::Process::Flow> for flow details.
 
 =head1 DESCRIPTION
-
-C<NOT YET IMPLEMENTED>.
 
 =head2 CLASS HIERARCHY
 
@@ -61,6 +61,10 @@ This module has routines needed for CGI.
 =cut
 
 
+# Descriptions: print out HTML header + body former part 
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub html_start
 {
     my ($curproc, $args) = @_;
@@ -82,6 +86,10 @@ sub html_start
 }
 
 
+# Descriptions: print out body latter part 
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub html_end
 {
     my ($curproc, $args) = @_;
@@ -96,6 +104,10 @@ sub html_end
 }
 
 
+# Descriptions: print out navigation bar
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub _show_guide
 {
     my ($curproc, $args) = @_;
@@ -104,6 +116,11 @@ sub _show_guide
 }
 
 
+# Descriptions: main routine for makefml.cgi.
+#               kick off suitable FML::Command finally via _execulte_command().
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub run_cgi
 {
     my ($curproc, $args) = @_;
@@ -130,6 +147,10 @@ sub run_cgi
 }
 
 
+# Descriptions: execute FML::Command
+#    Arguments: OBJ($curproc) HASH_REF($args) HASH_REF($command_args)
+# Side Effects: load module
+# Return Value: none
 sub _execute_command
 {
     my ($curproc, $args, $command_args) = @_;
@@ -157,6 +178,10 @@ sub _execute_command
 }
 
 
+# Descriptions: show menu
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub _show_menu
 {
     my ($curproc, $args) = @_;

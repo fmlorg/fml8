@@ -4,12 +4,35 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Attribute.pm,v 1.1 2001/10/17 10:24:26 fukachan Exp $
+# $FML: Attribute.pm,v 1.2 2001/12/22 09:21:03 fukachan Exp $
 #
 
 package FML::Command::Attribute;
 use strict;
 use vars qw($FML_USER_COMMAND $FML_ADMIN_COMMAND);
+
+=head1 NAME
+
+FML::Command::Attribute - define attributes for each command
+
+=head1 SYNOPSIS
+
+    $r = $obj->get_attribute($mode, $comname, 'require_lock');
+    lock() if $r;
+
+=head1 DESCRIPTION
+
+get attribute for command under ucrrent mode.
+do something following the attribute value.
+
+=head1 METHOD
+
+=head2 get_attribute(mode, comname, attribute)
+
+return attribute for (mode, comname, attribute) combination.
+
+=cut
+
 
 $FML_USER_COMMAND = {
     '__default__' => {
@@ -22,6 +45,10 @@ $FML_USER_COMMAND = {
 };
 
 
+# Descriptions: return attribute for (mode, comname, attribute) combination
+#    Arguments: OBJ($self) STR($mode) STR($comname) STR($attribute)
+# Side Effects: none
+# Return Value: STR
 sub get_attribute
 {
     my ($self, $mode, $comname, $attribute) = @_;
@@ -58,14 +85,6 @@ sub get_attribute
     }
 }
 
-
-=head1 NAME
-
-FML::Command::Attribute - attribute for each command
-
-=head1 SYNOPSIS
-
-=head1 DESCRIPTION
 
 =head1 AUTHOR
 
