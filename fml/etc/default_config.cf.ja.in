@@ -556,9 +556,17 @@ use_spool	= 	yes
 
 # Descriptions: 記事のスプールディレクトリを階層化するか？
 #      History: 4.0 にはない。fml-devel new
-#        Value: yes / no
+#        Value: plane subdir
+#     Examples: plane
+spool_type	= 	plane
+
+
+# Descriptions:
+#      History:
+#        Value:
 #     Examples:
-use_spool_subdir	= 	no
+spool_subdir_unit =	1000
+
 
 # Descriptions: 記事番号を保存するファイル
 #      History: $SEQ_FILE

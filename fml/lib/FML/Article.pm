@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.36 2002/04/06 01:30:54 fukachan Exp $
+# $FML: Article.pm,v 1.37 2002/04/15 10:31:17 fukachan Exp $
 #
 
 package FML::Article;
@@ -230,16 +230,17 @@ sub _filepath
     my $spool_dir  = $config->{ spool_dir };
 
     # use subdir ? e.g. spool/0/999 style
-    if ($config->yes( 'use_spool_subdir' ) ) {
+    if ($config->{ spool_type } eq 'subdir') {
 	$use_subdir = 1;
     }
 
     use Mail::Message::Spool;
     my $spool = new Mail::Message::Spool;
     my $args = {
-	base_dir   => $spool_dir,
-	id         => $id,
-	use_subdir => $use_subdir,
+	base_dir    => $spool_dir,
+	id          => $id,
+	use_subdir  => $use_subdir,
+	subdir_unit => $config->{ spool_subdir_unit },
     } ;
     my $file = $spool->filepath($args);
     my $dir  = $spool->dirpath($args);
