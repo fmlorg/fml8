@@ -1,6 +1,29 @@
 		CHANGES
 		Last Modified: $Date$
 
+2001/11/12
+
+   use autoconf
+	modified a lot
+
+   loader
+	loader generated from loader.in (autoconf)
+	
+   Standalone 
+	expand ${variable}
+	
+   FML::CGI::ThreadTrack 
+	fix typo, $myname resolved by $curproc->myname()
+	
+   FML::Process::Switch 
+	fix to introduce $config_dir (etc::fml) from main.cf
+	default_config -> default_config_cf
+
+   FML::CGI::ThreadTrack 
+   FML::Process::CGI::Kernel Param.pm 
+	move "function to get paramlist" to FML::Process::CGI::Param module
+	implement safe_pramlist\d+_\S+() via AUTOLOAD()
+
 2001/11/11
 
    Mail::ThreadTrack::Print::Sort 
@@ -1004,4 +1027,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.32 2001/11/08 03:39:48 fukachan Exp $
+$FML: CHANGES.txt,v 1.33 2001/11/11 22:23:56 fukachan Exp $
