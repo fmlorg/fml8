@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.76 2004/01/04 13:37:55 fukachan Exp $
+# $FML: Makefile,v 1.77 2004/03/12 11:47:42 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -53,6 +53,9 @@ check:
 	   egrep '\.pm$$' ` |\
 	   sed -e 's@^lib//@@' -e 's@^lib/@@' |\
 	   tee 44_STYLE
+	@ echo "-- check messages"
+	@ (cd ../../fml/share/message; sh .diag.sh )
+	@ echo "-- clean up."
 	- test -s 33_TODO  || rm -f 33_TODO
 	- test -s 44_STYLE || rm -f 44_STYLE
 	@ echo ""; echo "-- summary"; echo "";
