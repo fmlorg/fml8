@@ -1,0 +1,340 @@
+<!--
+   $FML$
+-->
+
+<chapter id=="module.mail.message">
+	<title>
+	Mail::Message モジュール
+	</title>
+
+<sect1>
+	<title>
+	Mail::Message の概要
+	</title>
+
+<para>
+このオブジェクトモジュールはメールの解析と、
+解析されたデータ構造へのさまざまな操作手段を提供してくれます。
+</para>
+
+<para>
+少し詳しく説明すると、このモジュールはメールを解析し、
+<screen>
+(multipart でない場合)
+
+header -> body
+
+(multipart の場合)
+
+header -> preamble -> part1 -> part2 -> trailor
+</screen>
+のようにオブジェクトが数珠つなぎのようなデータ構造を作ります。
+ちなみに鎖の鎖の鎖の間の double link list です。
+Mail::Message のクラスは
+このようなデータ構造に対して、さまざまなオペレーションを提供します。
+</para>
+
+<para>
+この鎖の部分部分それぞれが Mail::Message オブジェクトです。
+つまり一通のメールはメールヘッダから始まるオブジェクトの鎖として
+表現されます。
+</para>
+
+<para>
+header は Mail::Message のタイプが text/rfc822-headers で、
+data が Mail::Header オブジェクトになります。
+一方 part1 は 
+text/plain
+で、
+data 部分が文字列へのリファレンスです。
+</para>
+
+<para>
+参照: 
+<ulink url="../../en/modules/Mail/Message.txt">
+Mail::Message モジュールのマニュアル
+</ulink>
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	Mail::Message モジュール: 解析する
+	</title>
+
+<para>
+parse() メソッドは
+引数で与えられた
+ファイル(名)かファイルディスクリプタに対し
+メッセージの解析をします。
+</para>
+
+<para>
+get_data_type_list()
+は
+鎖の列の情報を返します。
+情報は HASH ARRAY の形で返されます。
+例えば MIME/Multipart は次のようになります。
+<screen>
+  type[ 1]: text/rfc822-headers       | multipart/mixed
+  type[ 2]: multipart/mixed           | multipart/mixed
+  type[ 3]: multipart.preamble        | multipart/mixed
+  type[ 4]: multipart.delimiter       | multipart/mixed
+  type[ 5]: text/plain                | multipart/mixed
+  type[ 6]: multipart.delimiter       | multipart/mixed
+  type[ 7]: image/gif                 | multipart/mixed
+  type[ 8]: multipart.close-delimiter | multipart/mixed
+  type[ 9]: text/plain                | multipart/mixed
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	Mail::Message モジュール: 新しいメッセージを作る
+	</title>
+
+<para>
+new() メソッドは通常、新しいメッセージを作る際に使われます。
+</para>
+
+<para>
+MIME/multipart 専用のためのメソッドもあります。
+<sceen>
+build_mime_multipart_chain($args)
+parse_and_build_mime_multipart_chain($args)
+build_mime_header($args)
+</sceen>
+しかしながら、MIME/mulitpart の作成には
+Mail::Message::Compose クラスがあります。
+実のところ、このクラスの実態は MIME::Lite そのものです :-)
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	Mail::Message モジュール: ヘッダの操作
+	</title>
+
+<para>
+dup_header() メソッドは
+RFC822 型のメッセージのヘッダ部分のみのコピーを行ないます。
+メールの本体の部分はそのままです。
+複製されたヘッダオブジェクトからのリンクは
+メールの本体です。
+<screen>
+              |<--------------- メール本体 ------------->
+header0 ----> part1 -> part2 -> ...
+               A
+               |
+dup_header0 ---
+</screen>
+</para>
+
+
+<para>
+rfc822_message_header()
+はメッセージの中のヘッダ部分のオブジェクトを返します。
+文字列ではないことに注意して下さい。
+</para>
+
+<para>
+head_message() は鎖の先頭のオブジェクトを返します。
+last_message() は鎖の最後のオブジェクトを返します。
+そのため、通常、図の header オブジェクトを返すことになりますので、
+多くの場合 rfc822_message_header() と等価です。
+</para>
+
+<para>
+header_data_type()
+はメール全体のタイプ(文字列)を返します。
+つまり、このメッセージは単なるテキストなのかマルチパートなのか？などを
+教えてくれます。
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	Mail::Message モジュール: メッセージ本文の操作
+	</title>
+
+<para>
+以下では、このような鎖を例にとるとします。
+<screen>
+(multipart でない場合)
+
+header -> body
+
+(multipart の場合)
+
+header -> preamble -> part1 -> part2 -> trailor
+</screen>
+</para>
+
+
+<para>
+まず header_data_type()
+はメール全体のタイプ(文字列)を返します。
+つまり、このメッセージは単なるテキストなのかマルチパートなのか？などを
+教えてくれます。
+つまり header の Content-Type で得られる情報です。
+</para>
+
+<para>
+rfc822_message_body() メソッドは
+body ないしは part1 の部分のオブジェクトを返します。
+rfc822_message_body_head() メソッドも同じ操作をします。
+</para>
+
+<para>
+head_message() は鎖の先頭のオブジェクトを返します。
+last_message() は鎖の最後のオブジェクトを返します。
+そのため、通常、図の header オブジェクトを返すことになりますので、
+多くの場合 rfc822_message_header() と等価です。
+last_message() は鎖の最後の部分なのでメッセージ本文の最後になります。
+</para>
+
+<para>
+get_first_plaintext_message($args)
+は
+鎖の中で最初の plain/text タイプの Mail::Message オブジェクトを返します。
+フィルタリングでは最初の 
+plain/text タイプのメッセージ部分に着目することが多いので
+この関数を使うと便利です。
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	Mail::Message モジュール: オブジェクトの検索
+	</title>
+
+<para>
+find() メソッドは Mail::Message の特定のタイプを探し、
+最初に見つけたオブジェクトを返します。
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	Mail::Message モジュール: メッセージを表示する。
+	</title>
+
+<para>
+print() メソッドは文字どおり print です。
+通常は引数で出力するファイルディスクリプタを渡して下さい。
+</para>
+
+<para>
+print() には CRLF なのか LF なのかを指定する mode という概念があります。 
+このために
+set_print_mode(mode) および
+reset_print_mode()
+というメソッドがあります。
+通常は raw で、SMTP の時だけは smtp を指定して下さい。
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	Mail::Message モジュール: 便利な関数
+	</title>
+
+<sect2>
+	<title>
+	サイズ
+	</title>
+
+<para>
+size()
+はオブジェクトのサイズを返します。
+メール全体ではありません。
+header_size()
+や
+body_size()
+を使うと、ヘッダやメール本文全体の長さを教えてくれます。
+</para>
+
+<para>
+is_empty()
+はオブジェクトが空かどうかを教えてくれます。
+</para>
+</sect2>
+
+
+<sect2>
+	<title>
+	一般的な情報
+	</title>
+
+<para>
+envelope_sender()
+は
+メールの送信者情報(文字列)を返します。
+</para>
+
+<para>
+get_data_type()
+は
+Mail::Message オブジェクトのタイプ(文字列)を返します。
+これは、メール全体のタイプ（マルチパートとか text/plain)
+どではなく、鎖の各部分のオブジェクトのタイプであることに注意して下さい。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Mail::Message 内の構造
+	</title>
+
+<para>
+num_paragraph()
+は
+その Mail::Message オブジェクトの中に
+何個のパラグラフがあるか(数字)を返します。
+</para>
+
+
+<para>
+nth_paragraph(数字)
+は
+数字番目のパラグラフの内容を文字列として返します。
+例えば、一番目のパラグラフは 0 ではなく 1 と指定して下さい。  
+</para>
+
+
+<para>
+header()
+は
+MIME/multipart の各ブロックにあるヘッダ部分を返します。
+data()
+は、データの部分です。
+それぞれ
+header_in_body_part($size)
+data_in_body_part($size)
+の alias です。
+</para>
+
+</sect2>
+
+</sect1>
+
+
+
+</chapter>
