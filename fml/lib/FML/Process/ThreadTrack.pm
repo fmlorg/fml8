@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: ThreadTrack.pm,v 1.16 2001/06/10 11:24:12 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.1 2001/11/03 11:49:21 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -30,9 +30,7 @@ See C<Mail::ThreadTrack> module.
 
 =head1 DESCRIPTION
 
-This class drives ticket system in the top level.
-The ticket database is maintained by each ticket system model, 
-which is called in C<run()> method.
+This class drives thread tracking system in the top level.
 
 =head1 METHOD
 
@@ -68,7 +66,7 @@ sub prepare
 
 =head2 C<run($args)>
 
-call the actual ticket system.
+call the actual thread tracking system.
 It supports only 'list' and 'close' commands.
 
 =cut
@@ -77,17 +75,17 @@ sub run
 {
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
-    my $argv    = $args->{ ARGV };
+    my $argv    = $curproc->command_line_argv();
     my $command = $argv->[ 0 ] || 'list';
 
     #  argumente for thread track module
     my $ml_name       = $config->{ ml_name };
-    my $ticket_db_dir = $config->{ ticket_db_dir };
+    my $thread_db_dir = $config->{ thread_db_dir };
     my $spool_dir     = $config->{ spool_dir };
     my $ttargs        = {
 	logfp       => \&Log,
 	fd          => \*STDOUT,
-	db_base_dir => $ticket_db_dir,
+	db_base_dir => $thread_db_dir,
 	ml_name     => $ml_name,
 	spool_dir   => $spool_dir,
     };
@@ -99,6 +97,17 @@ sub run
     if ($command eq 'list') {
 	$thread->show_summary();
     }
+    elsif ($command eq 'mkdb') {
+	my $max_id = $curproc->article_id_max();
+	for my $id ( 1 .. $max_id ) {
+	    print STDERR "process $id\n";
+	}
+    }
+    elsif ($command eq 'db_clear') {
+	$thread->db_open();
+	$thread->db_clear();
+	$thread->db_close();
+    }
     elsif ($command eq 'close') {
 	$curproc->lock();
 
@@ -108,7 +117,7 @@ sub run
 	    status    => 'close',
 	};
 	if ($thread_id) {
-	    $thread->set_status($curproc, $args);
+	    $thread->set_status($args);
 	}
 	else {
 	    croak("specify \$thread_id");
