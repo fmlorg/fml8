@@ -5,6 +5,9 @@
 
 2002/12/26
 
+   FML::Article 
+	bug fix: defined check for $sfh
+
    FML::Mailer 
 	not set smtp_log_handle to avoid duplication
 
@@ -3897,4 +3900,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.120 2002/12/25 11:52:25 fukachan Exp $
+$FML: CHANGES.txt,v 1.121 2002/12/26 15:03:02 fukachan Exp $
