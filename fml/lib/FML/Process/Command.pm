@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.36 2002/02/23 11:02:17 fukachan Exp $
+# $FML: Command.pm,v 1.37 2002/03/17 06:24:31 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -229,13 +229,12 @@ sub _pre_scan
 #    Arguments: OBJ($self) HASH_REF($args) HASH_REF($opts)
 # Side Effects: none
 # Return Value: 1 or 0
-sub _can_accpet_command
+sub _is_valid_command
 {
-    my ($curproc, $args, $opts) = @_;
+    my ($curproc, $args, $mode, $opts) = @_;
     my $config  = $curproc->{ config };
     my $cred    = $curproc->{ credential }; # user credential
     my $prompt  = $config->{ command_prompt } || '>>>';
-    my $mode    = $opts->{ mode };
     my $comname = $opts->{ comname };
     my $command = $opts->{ command };
 
@@ -257,18 +256,25 @@ sub _can_accpet_command
 	return 0;
     }
 
-    # 3. Even new comer need to use commands [ guide, subscirbe, confirm ].
-    unless ($cred->is_member($curproc, $args)) {
-	unless ($config->has_attribute("available_commands_for_stranger",
-				       $comname)) {
-	    $curproc->reply_message("\n$prompt $command");
-	    $curproc->reply_message_nl('command.deny',
-				       "not allowed to use this command.");
-	    return 0;
+    if (0) {
+	# 3. Even new comer need to use commands [ guide, subscirbe, confirm ].
+	unless ($cred->is_member($curproc, $args)) {
+	    unless ($config->has_attribute("available_commands_for_stranger",
+					   $comname)) {
+		$curproc->reply_message("\n$prompt $command");
+		$curproc->reply_message_nl('command.deny',
+					   "not allowed to use this command.");
+		return 0;
+	    }
+	    else {
+		return 1;
+		Log("permit command $comname for stranger");
+	    }
 	}
-	else {
-	    Log("permit command $comname for stranger");
-	}
+
+	# not reach here
+	LogWarn("_is_member: invalid condition");
+	return 0;
     }
 
     return 1; # o.k. accpet this command.
@@ -342,70 +348,107 @@ sub _evaluate_command
     my $eval = $config->get_hook( 'command_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
+    # 
+    # credential
+    # 
+    my $cred      = $curproc->{ credential };
+    my $is_member = $cred->is_member($curproc, $args);
+    my $is_admin  = $cred->is_privileged_member($curproc, $args);
+
+    # 
+    # main loop
+    # 
+    my ($command, $comname, $comsubname, $opts);
+
     # firstly, prompt (for politeness :) to show processing ...
     $curproc->reply_message("result for your command requests follows:");
 
   COMMAND:
-    for my $command (@body) {
-	next if $command =~ /^\s*$/; # ignore empty lines
+    for my $orig_command (@body) {
+	next COMMAND if $orig_command =~ /^\s*$/; # ignore empty lines
 
-	# raw log
-	Log("input: $command");
+	Log("input: $orig_command"); # log raw buffer
 
 	# command = line itsetlf, it contains superflous strings
 	# comname = command name
 	# for example, command = "# help", comname = "help"
-	my ($comname, $comsubname) = _get_command_name($command);
+	($comname, $comsubname) = _get_command_name($orig_command);
+	$command = $orig_command;
+	$mode    = 'unknown';
 
-	# Case: "confirm" command is exceptional.
-	#       we need to evaluate "confirm" message even for not member.
-	#       XXX $command may be "> confirm chaddr ...".
+	# Case: "confirm" command.
+	#        It is exceptional strangers can use.
+	#        validate general command except for confirmation
+	#        if $id is 1, this message must be confirmation reply.
 	if ($command =~ /$confirm_prefix/ && $id) {
-	    $comname = $confirm_prefix; # comname = confirm
+	    # XXX $command may be "> confirm chaddr ...".
+	    $comname = $confirm_prefix;          # comname = confirm
+	    $command =~ s/^.*$comname/$comname/; # normalize $command
+	    $opts    = { comname => $comname, command => $command };
 
-	    Log("try $comname <$command>");
-	    $command =~ s/^.*$comname/$comname/;
+	    if ($curproc->_is_valid_command($args, "stranger", $opts)) {
+		$mode = 'user';
+	    }
+	    else {
+		# no, we do not accept this command.
+		Log("invalid command: $command");
+		next COMMAND;
+	    }
 	}
-	# Case: "admin" command is exceptional.
-	#        try priviledged mode.
+	# Case: "admin" command is exceptional. try priviledged mode.
 	elsif ($comname =~ /$admin_prefix/) {
-	    $mode    = 'admin';
-	    $comname = $comsubname;
+	    if ($is_admin) {
+		$comname = $comsubname;
+		$command =~ s/^.*$comname/admin $comname/;
+		$opts    = { comname => $comname, command => $command };
 
-	    Log("try $comname <$command>");
-	    $command =~ s/^.*$comname/admin $comname/;
-
-	    my $opts = {
-		mode => 'privileged_user',
-		comname => $comname,
-		command => $command };
-	    unless ($curproc->_can_accpet_command($args, $opts)) {
-		# no, we do not accept this command.
-		Log("invalid command = $command");
-		next COMMAND;
+		my $xmode = 'privileged_user';
+		if ($curproc->_is_valid_command($args, $xmode, $opts)) {
+		    $mode = 'admin';
+		}
+		else {
+		    # no, we do not accept this command.
+		    Log("invalid command(priv mode): $command");
+		    next COMMAND;
+		}
+	    }
+	    else {
+		LogError("privileged command from not an admin user");
+		LogError("command processing stop.");
+		last COMMAND;
 	    }
 	}
-	# Case: commands except for 'admin' nor "confirm" reply message.
-	#       check whether we need to accpet this command ?
-	#       we accpet commands from ML members only by default.
-	#
-	#       validate general command except for confirmation
-	#       if $id is 1, this message must be confirmation reply.
+	# Case: use command (commands "a usual member" can use)
 	else {
-	    my $opts = {
-		mode => 'user', comname => $comname, command => $command };
-	    unless ($curproc->_can_accpet_command($args, $opts)) {
-		# no, we do not accept this command.
-		Log("invalid command = $command");
-		next COMMAND;
+	    if ($is_member) {
+		$opts = { comname => $comname, command => $command };
+		if ($curproc->_is_valid_command($args, "user", $opts)) {
+		    $mode = 'user';
+		}
+		else {
+		    # no, we do not accept this command.
+		    Log("invalid command: $command");
+		    next COMMAND;
+		}
 	    }
+	    else {
+		LogError("command from not member.");
+		LogError("command processing stop.");
+		last COMMAND;
+	    }
+	}
+
+	# cheap sanity condition
+	unless ($mode eq 'user' || $mode eq 'admin' || $mode eq 'special') {
+	    LogError("command processing looks insane. stop.");
+	    last COMMAND;
 	}
 
 	# o.k. here we go to execute command
 	use FML::Command;
 	my $obj = new FML::Command;
 	if (defined $obj) {
-	    $curproc->reply_message("\n$prompt $command");
+	    $curproc->reply_message("\n$prompt $orig_command");
 
 	    # arguments to pass off to each method
 	    my $command_args = {
