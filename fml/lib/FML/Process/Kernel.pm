@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.72 2002/01/30 15:27:59 fukachan Exp $
+# $FML: Kernel.pm,v 1.73 2002/02/01 12:03:56 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -292,7 +292,7 @@ sub unlock
 	Log( "unlocked $lock_file");
     }
     else {
-	croak("Error: cannot lock");
+	croak("Error: cannot unlock");
     }
 }
 
@@ -539,6 +539,7 @@ If you attach a plain text with the charset = iso-2022-jp,
 
 =cut
 
+
 sub reply_message
 {
     my ($curproc, $msg) = @_;
@@ -582,7 +583,7 @@ sub reply_message_nl
     my $buf    = '';
 
     use File::Spec;
-    $class =~ s@\.@/@; # XXX replace the first "." only
+    $class =~ s@\.@/@g; # XXX replace the first "." only
     my $file = File::Spec->catfile($dir, $class);
 
     if (-f $file) {
@@ -593,6 +594,9 @@ sub reply_message_nl
 	    close($fh);
 	}
     }
+    else {
+	LogWarn("no such file: $file");
+    }	
 
     if (defined $buf) {
 	eval q{
