@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.35 2002/04/05 04:19:43 fukachan Exp $
+# $FML: Article.pm,v 1.36 2002/04/06 01:30:54 fukachan Exp $
 #
 
 package FML::Article;
@@ -54,7 +54,9 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {};
 
-    _setup_article_template($curproc);
+    if (defined $curproc->{'incoming_message'}->{ message }) {
+	    _setup_article_template($curproc);
+    }
     $me->{ curproc } = $curproc;
 
     return bless $me, $type;
@@ -198,6 +200,30 @@ return article file path.
 sub filepath
 {
     my ($self, $id) = @_;
+    my ($file_path, $dir_path) = $self->_filepath($id);
+    return $file_path;
+}
+
+
+# Descriptions: return subdir path for this article
+#    Arguments: OBJ($self) NUM($id)
+# Side Effects: none
+# Return Value: STR(file path)
+sub subdirpath
+{
+    my ($self, $id) = @_;
+    my ($file_path, $dir_path) = $self->_filepath($id);
+    return $dir_path;
+}
+
+
+# Descriptions: return article file path.
+#    Arguments: OBJ($self) NUM($id)
+# Side Effects: none
+# Return Value: ARRAY( STR(file path), STR(dir path) )
+sub _filepath
+{
+    my ($self, $id) = @_;
     my $use_subdir = 0;
     my $curproc    = $self->{ curproc };
     my $config     = $curproc->{ config };
@@ -223,7 +249,7 @@ sub filepath
 	mkdirhier($dir, 0700);
     }
 
-    return $file;
+    return ($file, $dir);
 }
 
 
