@@ -32,6 +32,7 @@ check:
 	@ (cd ../../fml; make check 2>&1 ) | grep -v OK || echo ''
 
 link:
+	rm -f ErrorMessages; ln -s ../../fml/lib/ErrorMessages
 	rm -f doc; ln -s ../../fml/doc
 	rm -f etc; ln -s ../../fml/etc
 	rm -f lib; ln -s ../../fml/lib
