@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Switch.pm,v 1.33 2001/11/09 00:05:19 fukachan Exp $
+# $FML: Switch.pm,v 1.34 2001/11/09 13:23:14 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -178,7 +178,7 @@ sub main::Bootstrap2
 	    croak($reason);
 	}
 	else {
-	    $reason =~ s/[\n\s]*at.*$//m;
+	    $reason =~ s/[\n\s]*\s+at\s+.*$//m;
 	    croak($reason);
 	}
     }
