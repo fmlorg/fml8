@@ -2,6 +2,9 @@
 		Last Modified: $Date$
 
 
+○	etc/src/config.cf.ja/ の説明文を見直すように
+
+
 ○	トラフィックの統計？
 
 
@@ -230,4 +233,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.11 2002/03/30 08:15:33 fukachan Exp $
+$FML: 00_MEMO,v 1.12 2002/03/31 09:46:27 fukachan Exp $
