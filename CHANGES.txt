@@ -13,6 +13,39 @@
 	気をつけてください。
 
 
+2004/05/18
+
+   記事の配送システムもキューイングベースへ移行する
+	これで、すべての配送が一度メールキューに書くパターンになった。
+
+
+2004/05/17
+
+   配送システム オーバーホール、つづき
+
+   Mail::Delivery::Utils 
+	implement {set,get}_map_status()
+	ensure numeric value
+
+   Mail::Delivery::SMTP 
+	implement fallback when it fails to send the mail to all MTA's.
+	failed message is inserted into mail queue for later delivery retry.
+	
+	Also, shorten retry count $max_loop_count since fallback is
+	implemented now.
+	
+	define {set,get}_last_command(), {set,get}_send_command_status().
+	modified to use them.
+	
+	rename::socket_is_connected -> is_socket_connected
+	
+   FML::Process::Distribute 
+	enable delivery fallback
+	
+   FML::Mailer 
+	pass params $smpt_servers and $smtp_recipient_limit into
+	delivery system
+
 2004/05/16
 
    配送システム オーバーホール
@@ -30,7 +63,13 @@
 	
    Mail::Delivery::Utils 
 	not export _smtplog
-	
+
+   Mail::Delivery::SMTP 
+	clean up message, log.
+	fix retry logic.
+	define $MAP_ERR_OPEN.
+	log status of done or not (log only yet).
+
    FML::Command::Admin::list 
 	remove is_cgi related codes.
 
@@ -6946,4 +6985,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.203 2004/05/16 13:23:01 fukachan Exp $
+$FML: CHANGES.txt,v 1.204 2004/05/16 13:25:26 fukachan Exp $
