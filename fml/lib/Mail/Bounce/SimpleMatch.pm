@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SimpleMatch.pm,v 1.7 2001/04/12 13:39:56 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.8 2001/04/12 13:50:23 fukachan Exp $
 #
 
 
@@ -191,7 +191,7 @@ sub _address_match
 	    last SCAN if /$end_regexp/;
 
 	    if (/(\S+\@\S+)/) { 
-		my $addr = $self->_addr_clean_up($mta_type, $1);
+		my $addr = $self->address_clean_up($mta_type, $1);
 		if ($addr) {
 		    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
 		    $result->{ $addr }->{ 'Status'}           = '5.x.y';
@@ -199,35 +199,13 @@ sub _address_match
 	    }
 
 	    if (/$addr_regexp/) { 
-		my $addr = $self->_addr_clean_up($mta_type, $1);
+		my $addr = $self->address_clean_up($mta_type, $1);
 		if ($addr) {
 		    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
 		    $result->{ $addr }->{ 'Status'}           = '5.x.y';
 		}
 	    }
 	}
-    }
-}
-
-
-sub _addr_clean_up
-{
-    my ($self, $type, $addr) = @_;
-
-    # nuke predecing and trailing strings around user@domain pattern
-    my $prev_addr = $addr;
-    do { 
-	$prev_addr = $addr;
-	$addr      =~ s/\.$//;
-	$addr      =~ s/^<//;
-	$addr      =~ s/>$//;
-    } while ($addr ne $prev_addr);
-
-    if ($type eq 'nifty.ne.jp' && $addr !~ /\@/) {
-	$addr . '@nifty.ne.jp';
-    }
-    else {
-	$addr;
     }
 }
 
