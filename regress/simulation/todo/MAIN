@@ -50,12 +50,6 @@
 
 =head1	フィルタ
 
-	FML::Filter::HeaderCheck
-
-	FML::Filter::BodyCheck
-		fml 4.0 の EnvelopeFilter
-
-	FML::Filter:: はあまりきれいでない。
 	FML::Process::Distribute に組み込まれていない。	
 
 
