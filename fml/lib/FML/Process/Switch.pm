@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.77 2002/11/16 14:24:46 fukachan Exp $
+# $FML: Switch.pm,v 1.78 2002/11/26 07:32:30 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -278,6 +278,11 @@ sub ProcessSwitch
 
     return $pkg;
 }
+
+
+#
+# XXX-TODO: hmm, we should use config file such as /etc/fml/module.cf ?
+#
 
 
 # Descriptions: return the suitable getopt options
