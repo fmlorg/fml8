@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2004 Ken'ichi Fukamachi
 #
-# $FML: Subject.pm,v 1.25 2004/01/24 09:04:00 fukachan Exp $
+# $FML: Subject.pm,v 1.1 2004/02/04 15:11:38 fukachan Exp $
 #
 
 package Mail::Message::Subject;
@@ -126,9 +126,9 @@ sub delete_tag
 	my $retag = $self->_regexp_compile($tag);
 	$subject  =~ s/$retag//g;
 	$subject  =~ s/^\s*//;
+	$self->set($subject);
     }
 
-    $self->set($subject);
     return $subject;
 }
 
