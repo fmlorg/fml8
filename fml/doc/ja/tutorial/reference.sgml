@@ -1,0 +1,11 @@
+<!-- 
+	すでに <chapter> 〜 </chapter> の中で include されていることに注意
+
+	$FML: reference.sgml,v 1.2 2001/04/22 16:10:46 fukachan Exp $
+-->
+
+<title>Reference</title>
+
+<sect1 id="terms">
+    &terms;
+</sect1>
