@@ -47,18 +47,19 @@
 
 --------------------------------------------------------------------
 
-○ TODO 英語で返ってこないものをどう扱うか (考え中) 
-
-	Netscape Messaging Server 4.15
-		ドメインを見て言語別にメッセージが変わる(らしい)
-
-	Microsoft SMTPSVC
-		UNICODE(unicode-1-1-utf-7)
-		日本語版の場合、もちろん日本語
-
---------------------------------------------------------------------
-
 		エラーメールコレクション
+
+○ エラーメールのサンプルなし ; 募集中！
+
+  * MTA
+
+	Novell GroupWise
+
+  * 特定の ISP など
+	
+	ido.ne.jp 	qmail らしい	●au(旧IDO)
+	Caiwireless
+	Compuserve
 
 
 ○ エラーメールのサンプルあり
@@ -99,17 +100,16 @@
 	pakeo.ne.jp		独自
 
 
-○ エラーメールのサンプルなし
+--------------------------------------------------------------------
 
-  * MTA
+○ TODO 英語で返ってこないものをどう扱うか (考え中) 
 
-	Novell GroupWise
+	Netscape Messaging Server 4.15
+		ドメインを見て言語別にメッセージが変わる(らしい)
 
-  * 特定の ISP など
-	
-	ido.ne.jp 	qmail らしい	●au(旧IDO)
-	Caiwireless
-	Compuserve
+	Microsoft SMTPSVC
+		UNICODE(unicode-1-1-utf-7)
+		日本語版の場合、もちろん日本語
 
 ○ その他 or よくわからない
 
@@ -118,4 +118,4 @@
 		今は sendmail みたいだ
 
 
-$FML: STATUS.ja.txt,v 1.8 2001/04/13 04:57:58 fukachan Exp $
+$FML: STATUS.ja.txt,v 1.9 2001/04/15 13:24:18 fukachan Exp $
