@@ -1,5 +1,5 @@
 <!--
-   $FML: preface.sgml,v 1.12 2001/11/24 03:22:52 fukachan Exp $
+   $FML: preface.sgml,v 1.13 2002/04/01 23:41:00 fukachan Exp $
 -->
 
 
@@ -9,15 +9,21 @@
 	</title>
 
 
+<sect1 id="status">
+	<title>
+	fml-devel (fml 開発版)の現状と TODO 
+	</title>
+
+
 <warning>
 <para>
-現状の &fml5; はかなり使えますが、
-ドキュメントも不十分だし、
-機能も 4.0 の半分弱程度です。
+現状の &fml5; は運用ベースに入りつつあります。
+基本的な機能はかなり実装されました。
+4.0 の細かな部分までフォローできているわけではありませんが
 </para>
 
 <para>
-そういう意味で、実運用には、まだ
+そういう意味で、いろいろな機能を使いたい場合、まだまだ
 <ulink url="http://www.fml.org/software/fml/menu.html">
 4.0 stable
 </ulink>
@@ -25,16 +31,16 @@
 </para>
 
 <para>
-2001 年も終りに近付く今日この頃、
-&fml5; は開発用とはいえ、十分実用的に動いています。
-makefml や CGI でユーザの登録もできるし、
-HTML 化機能＋スレッド追跡システムは便利で、
-作者は、(特に 4.0 にない諸機能を使うために)運用ベースで使っています。
-ただ、多くのこまごまとした機能は未実装ですし、
-再デザインの研究最終段階といったあたりという感じです。
+現在の fml-devel で動く機能そして TODO リストは
+<ulink url="../../../fml/doc/ja/todo/STATUS.html">
+http://www.fml.org/software/fml-devel/fml/doc/ja/todo/STATUS.html
+</ulink>
+を参照して下さい。
 </para>
+
 </warning>
 
+</sect1>
 
 
 <!-- ======================================================== -->
