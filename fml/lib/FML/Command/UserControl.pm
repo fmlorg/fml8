@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.19 2002/09/22 14:56:43 fukachan Exp $
+# $FML: UserControl.pm,v 1.20 2002/12/23 21:17:29 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -68,7 +68,12 @@ sub useradd
     my $msg_args = $command_args->{ msg_args };
     $msg_args->{ _arg_address } = $address;
 
+    my $ml_home_dir = $config->{ ml_home_dir };
     for my $map (@$maplist) {
+	my $_map = $map;
+	$_map =~ s@$ml_home_dir@\$ml_home_dir@;
+	$_map =~ s/file://;
+
 	my $cred = new FML::Credential $curproc;
 	unless ($cred->has_address_in_map($map, $config, $address)) {
 	    $msg_args->{ _arg_map } = $curproc->which_map_nl($map);
@@ -79,7 +84,7 @@ sub useradd
 	    $obj->touch(); # create a new map entry (e.g. file) if needed.
 	    $obj->add( $address );
 	    unless ($obj->error()) {
-		Log("add $address to map=$map");
+		Log("add $address to map=$_map");
 		$curproc->reply_message_nl('command.add_ok',
 					   "$address added.",
 					   $msg_args);
@@ -88,11 +93,11 @@ sub useradd
 		$curproc->reply_message_nl('command.add_fail',
 					   "failed to add $address",
 					   $msg_args);
-		croak("fail to add $address to map=$map");
+		croak("fail to add $address to map=$_map");
 	    }
 	}
 	else {
-	    croak( "$address is already member (map=$map)" );
+	    croak( "$address is already member (map=$_map)" );
 	    return undef;
 	}
     }
@@ -122,7 +127,12 @@ sub userdel
     my $msg_args = $command_args->{ msg_args };
     $msg_args->{ _arg_address } = $address;
 
+    my $ml_home_dir = $config->{ ml_home_dir };
     for my $map (@$maplist) {
+	my $_map = $map; 
+	$_map =~ s@$ml_home_dir@\$ml_home_dir@;
+	$_map =~ s/file://;
+
 	my $cred = new FML::Credential $curproc;
 	if ($cred->has_address_in_map($map, $config, $address)) {
 	    $msg_args->{ _arg_map } = $curproc->which_map_nl($map);
@@ -132,7 +142,7 @@ sub userdel
 	    my $obj = new IO::Adapter $map, $config;
 	    $obj->delete( $address );
 	    unless ($obj->error()) {
-		Log("remove $address from map=$map");
+		Log("remove $address from map=$_map");
 		$curproc->reply_message_nl('command.del_ok',
 					   "$address removed.",
 					   $msg_args);
@@ -141,11 +151,11 @@ sub userdel
 		$curproc->reply_message_nl('command.del_fail',
 					   "failed to remove $address",
 					   $msg_args);
-		croak("fail to remove $address from map=$map");
+		croak("fail to remove $address from map=$_map");
 	    }
 	}
 	else {
-	    LogWarn("no such user in map=$map") if $debug;
+	    LogWarn("no such user in map=$_map") if $debug;
 	}
     }
 
