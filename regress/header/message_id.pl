@@ -1,6 +1,6 @@
 #!/usr/local/bin/perl
 #
-# $FML$
+# $FML: message_id.pl,v 1.1 2001/04/15 05:05:06 fukachan Exp $
 #
 
 use strict;
@@ -9,6 +9,8 @@ use vars qw(%opts);
 use lib qw(lib ../../cpan/lib);
 
 test();
+
+gen_message_id();
 
 for my $msg (@ARGV) {
     message_io_test($msg);
@@ -58,4 +60,19 @@ sub message_io_test
     my $header = $msg->rfc822_message_header;
     my $h      = $header->extract_message_id_references();
     for (@$h) { print $_, "\n";}
+}
+
+sub gen_message_id
+{
+    print "\n* generate message_id\n";
+
+    use FML::Header::MessageID;
+    my $obj = new FML::Header::MessageID;
+
+    my $curproc = { config => { address_for_post => 'elena@fml.org' }};
+    my $args = {};
+
+    print $obj->gen_id($curproc, $args), "\n";
+    print $obj->gen_id($curproc, $args), "\n";
+    print $obj->gen_id($curproc, $args), "\n";
 }
