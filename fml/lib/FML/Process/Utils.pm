@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.54 2003/01/25 09:13:35 fukachan Exp $
+# $FML: Utils.pm,v 1.55 2003/01/26 03:14:18 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -363,6 +363,43 @@ sub _mkpath_str
     }
 
     umask($cur_mask);
+}
+
+
+# XXX-TODO: $curproc->cat() is strage.
+
+# Descriptions: concantenate files to STDOUT
+#    Arguments: OBJ($curproc) ARRAY_REF($files) HANDLE($out)
+# Side Effects: none
+# Return Value: none
+sub cat
+{
+    my ($curproc, $files, $out) = @_;
+    $out ||= \*STDOUT;
+
+    for my $file (@$files) {
+	_cat($file, $out);
+    }    
+}
+
+
+# Descriptions: cat file to STDOUT
+#    Arguments: STR($file) HANDLE($out)
+# Side Effects: none
+# Return Value: none
+sub _cat
+{
+    my ($file, $out) = @_;
+
+    use FileHandle;
+    my $fh = new FileHandle $file;
+    if (defined $fh) {
+	my $buf = '';
+	while (sysread($fh, $buf, 4096)) { 
+	    syswrite($out, $buf);
+	}
+	$fh->close();
+    }
 }
 
 
