@@ -1,11 +1,17 @@
 =head1 configurations
 
-# domain		= fml.org
-
+# domain	= fml.org
 # fqdn		= mx0.fml.org
+# ml_home_dir	= /var/spool/ml/$ml_name
 
-# ml_home_dir	= /tmp
 
+
+=head1 Directories
+
+# $ml_home_dir is given from libexec/fmlwrapper.
+# ml_home_dir
+
+shared_db_dir	= $ml_home_prefix/@@db@@
 
 =head2 アクセス制御
 
@@ -51,7 +57,6 @@ header_rewrite_rules =	rewrite_subject_tag
 			add_fml_article_id
 			add_x_sequence
 			add_rfc2369
-			add_ticket_tag
 
 subject_tag_name	=	$ml_name
 
@@ -89,14 +94,15 @@ chaddr_type	=	confirmation
 ### Section: Tickets / Trouble Tickets System
 ###
 
-# 
+use_ticket		=	yes
+
 ticket_model		=	toymodel
 
-# 
 ticket_subject_tag	=	[%s #%08d]
 
-#
 ticket_sequence_file	=	$ml_home_dir/ticket.seq
+
+ticket_db_dir		=	$shared_db_dir/ticket/$mlname
 =head1 hooks
 ###
 ### default_config.cf file ends here.

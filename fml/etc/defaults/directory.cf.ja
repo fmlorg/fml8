@@ -1,0 +1,7 @@
+=head1 Directories
+
+# $ml_home_dir is given from libexec/fmlwrapper.
+# ml_home_dir
+
+shared_db_dir	= $ml_home_prefix/@@db@@
+

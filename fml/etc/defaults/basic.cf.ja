@@ -1,9 +1,8 @@
 =head1 configurations
 
-# domain		= fml.org
-
+# domain	= fml.org
 # fqdn		= mx0.fml.org
+# ml_home_dir	= /var/spool/ml/$ml_name
 
-# ml_home_dir	= /tmp
 
 
