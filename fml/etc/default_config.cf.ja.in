@@ -948,6 +948,22 @@ article_text_plain_filter_rules	=	reject_not_iso2022jp_japanese_string
 					permit
 
 
+=head2	フィルタで弾かれたことを教える
+
+
+# Descriptions: フィルタで弾かれたことを教える
+#      History: 4.0 ではハードコードだったような…
+#        Value: yes / no
+#     Examples: yes
+use_article_filter_reject_notice	=	yes
+
+
+# Descriptions: エラーのお知らせの受信者
+#      History: 4.0 ではハードコードだったような…
+#        Value: admin | sender
+#     Examples: admin sender
+article_filter_reject_notice_recipients	=	admin
+						sender
 
 =head1	記事および記事のスプール
 
