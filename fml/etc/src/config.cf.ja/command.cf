@@ -112,3 +112,11 @@ privileged_command_prefix	=	admin
 newml_command_template_files 	=	config.cf
 					include
 					include-ctl
+
+
+
+# Descriptions: information をおくディレクトリ (ＭＬごと)
+#      History: none
+#        Value: directory
+#     Examples: ~fml/public_html/fml/listinfo/fml.org/elena
+listinfo_dir	= $fml_owner_home_dir/public_html/fml/listinfo/$ml_domain/$ml_name

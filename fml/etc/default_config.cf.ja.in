@@ -47,11 +47,13 @@ default_directory_mode	=	0755
 #     Examples: /var/spool/ml/elena
 # ml_home_dir	=
 
+
 # Descriptions: fml からシステムに教えるデータを置くためのディレクトリ
 #      History: fml 4.0 ではきめうち
 #        Value: directory
 #     Examples: /var/spool/ml/etc
 sysconf_dir	= $ml_home_prefix/etc
+
 
 # Descriptions: MTA 用に教えるための設定ファイルを置くディレクトリ
 #      History: fml 4.0 ではきめうち
@@ -59,11 +61,13 @@ sysconf_dir	= $ml_home_prefix/etc
 #     Examples: /var/spool/ml/etc/mail
 mailconf_dir	= $sysconf_dir/mail
 
+
 # Descriptions: ML 間でシェアするデータベースをおくホームディレクトリ
 #      History: fml 4.0 に該当するものはない
 #        Value: directory
 #     Examples: /var/spool/ml/@db@
 shared_db_dir	= $ml_home_prefix/@db@
+
 
 # Descriptions: さまざまな目的につかう
 #               multi-purpose log, temporary, transient, and spool files
@@ -71,6 +75,7 @@ shared_db_dir	= $ml_home_prefix/@db@
 #        Value: directory
 #     Examples: /var/spool/ml/elena/var
 var_dir		= $ml_home_dir/var
+
 
 # Descriptions: 一時的な中間ファイルを置くディレクトリ
 #      History: $TMP_DIR
@@ -93,17 +98,19 @@ db_dir		= $var_dir/db
 #     Examples: /var/spool/ml/elena/var/mqueue
 mqueue_dir	= $var_dir/mqueue
 
-# Descriptions: message template (file)
+
+# Descriptions: message template (paragraph)
 #      History: /usr/local/fml/drafts/
 #        Value: directory
 #     Examples: /usr/local/share/fml/$fml_version/template/$language
 message_template_dir	= $fml_share_dir/template/$template_file_charset
 
-# Descriptions: message template (paragraph)
-#      History: /usr/local/fml/messages/
+
+# Descriptions: listinfo template
+#      History: /usr/local/fml/listinfo/
 #        Value: directory
-#     Examples: /usr/local/share/fml/$fml_version/message/$language
-message_message_dir	= $fml_share_dir/message/$template_file_charset
+#     Examples: /usr/local/share/fml/$fml_version/listinfo/$language
+listinfo_template_dir	= $fml_share_dir/listinfo/$template_file_charset
 
 =head1	ファイル
 
@@ -578,8 +585,8 @@ use_html_archive	=	yes
 #               注意: ドメインごと、ＭＬごとに別のディレクトリになる
 #      History: none
 #        Value: directory
-#     Examples: ~fml/public_html/mlarchive/fml.org/elena
-html_archive_dir	= $fml_owner_home_dir/public_html/mlarchive/$ml_domain/$ml_name
+#     Examples: ~fml/public_html/fml/mlarchive/fml.org/elena
+html_archive_dir	= $fml_owner_home_dir/public_html/fml/mlarchive/$ml_domain/$ml_name
 
 =head1	コマンドの定義
 
@@ -695,6 +702,14 @@ privileged_command_prefix	=	admin
 newml_command_template_files 	=	config.cf
 					include
 					include-ctl
+
+
+
+# Descriptions: information をおくディレクトリ (ＭＬごと)
+#      History: none
+#        Value: directory
+#     Examples: ~fml/public_html/fml/listinfo/fml.org/elena
+listinfo_dir	= $fml_owner_home_dir/public_html/fml/listinfo/$ml_domain/$ml_name
 
 =head1	スレッド追跡システム
 
