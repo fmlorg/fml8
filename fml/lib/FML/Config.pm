@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.40 2001/09/22 14:11:30 fukachan Exp $
+# $FML: Config.pm,v 1.41 2001/10/10 03:10:10 fukachan Exp $
 #
 
 package FML::Config;
@@ -533,7 +533,10 @@ sub has_attribute
     my ($self, $key, $attribute) = @_;
     my (@attribute) = split(/\s+/, $_fml_config{$key});
 
+    return 0 unless defined $attribute;
+
     for my $k (@attribute) {
+	next unless defined $k;
 	return 1 if $k eq $attribute;
     }
 
