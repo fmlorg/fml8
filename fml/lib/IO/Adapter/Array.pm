@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Array.pm,v 1.26 2002/09/22 14:56:58 fukachan Exp $
+# $FML: Array.pm,v 1.27 2002/12/22 02:54:37 fukachan Exp $
 #
 
 package IO::Adapter::Array;
@@ -109,15 +109,11 @@ sub open
 
 =item C<getline()>
 
-the same as get_next_value().
+should not use this ?
 
 =item C<get_next_key()>
 
 return the next element of the array.
-
-=item C<get_next_value()>
-
-undef. ambigous in array case.
 
 =cut
 
@@ -145,13 +141,33 @@ sub get_next_key
 }
 
 
-# Descriptions: undefined function
-#    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: none
-# Return Value: UNDEF
-sub get_next_value
+=head2 get_value_as_str($key)
+
+return values corresponding with the specified key as string.
+
+   key => "value1 value2 value3"
+
+=head2 get_value_as_array_ref($key)
+
+return values corresponding with the specified key as array_ref.
+
+   key => [ value1 value2 value3 ]
+
+=cut
+
+sub get_value_as_str
 {
-    return undef;
+    my ($self, $key) = @_;
+
+    # XXX-TODO NOT IMPLEMENTED
+}
+
+
+sub get_value_as_array_ref
+{
+    my ($self, $key) = @_;
+
+    # XXX-TODO NOT IMPLEMENTED
 }
 
 

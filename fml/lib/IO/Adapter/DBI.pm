@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.22 2002/12/22 02:54:37 fukachan Exp $
+# $FML: DBI.pm,v 1.23 2003/01/11 15:22:25 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -168,9 +168,9 @@ sub close
 
 return the next address.
 
-=head2 C<get_next_value()>
+=head2 C<get_next_key()>
 
-same as C<getline()> now.
+return the next key.
 
 =cut
 
@@ -194,21 +194,6 @@ sub get_next_key
 {
     my ($self, $args) = @_;
     $self->_get_data_from_cache($args, 'key');
-}
-
-
-# Descriptions: return value(s) to the primary key in the table
-#               as ARRAY_REF
-#               XXX definition is o.k.?
-#    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: none
-# Return Value: ARRAY_REF
-sub get_next_value
-{
-    my ($self, $args) = @_;
-
-    # XXX-TODO 'get_net_value() not implemented. (why ?)
-    croak('get_net_value() not implemented');
 }
 
 
@@ -270,6 +255,36 @@ sub _fetch_all
     my $query  = $config->{ sql_get_next_key };
 
     $self->execute({ query => $query });
+}
+
+
+=head2 get_value_as_str($key)
+
+return values corresponding with the specified key as string.
+
+   key => "value1 value2 value3"
+
+=head2 get_value_as_array_ref($key)
+
+return values corresponding with the specified key as array_ref.
+
+   key => [ value1 value2 value3 ]
+
+=cut
+
+sub get_value_as_str
+{
+    my ($self, $key) = @_;
+
+    # XXX-TODO NOT IMPLEMENTED
+}
+
+
+sub get_value_as_array_ref
+{
+    my ($self, $key) = @_;
+
+    # XXX-TODO NOT IMPLEMENTED
 }
 
 

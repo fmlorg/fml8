@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.24 2002/09/22 15:01:23 fukachan Exp $
+# $FML: Adapter.pm,v 1.25 2003/01/11 15:22:25 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -288,42 +288,16 @@ sub touch
 }
 
 
-=head2 getXXX(), methods to retrieve data
+=head2 methods to retrieve data
 
-getXXX() should be classified into:
+get_next_key() is used to get the next primary key incrementally.
 
-   getline()        raw data
-                    which may consist of "key" and "value" pair.
-   get_next_key()   next primary key
-   get_next_value() next value for (the next) key
-
-For a file map, following usage is intuitive such that
-getline() returns "key value1 value2 ...",
-get_next_key() returns "key" and
-get_next_value() returns "value1 value2 ...", isn't it ?
-
-If possible, getline() should not be used since the definition of
-getline() for a file map is valid but amgibuous for other maps e.g.
-/etc/group, DBMS (SQL based) et. al.
-
-=item C<getline()>
-
-In C<file> map case, it is the same as usual getline() for a file.
-In other maps, it is the same as C<get_next_value()> method below.
+Also, another methods, getline() and get_next_value(), can be
+considered but these are not userd in fml version 8 now.
 
 =item C<get_next_key()>
 
 return the next primary key.
-
-=item C<get_next_value()>
-
-return the next values (for the next key).
-
-get the next value from the specified database (map).
-For example, this function returns the first column in the next line
-for C<file> map.
-It return the next element of the array,
-in C<array_reference>, C<unix.group>, C<nis.grouop> maps.
 
 =head2 C<add( $address, [$argv] )>
 

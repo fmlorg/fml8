@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: MySQL.pm,v 1.23 2002/09/22 14:56:59 fukachan Exp $
+# $FML: MySQL.pm,v 1.24 2003/01/11 15:22:26 fukachan Exp $
 #
 
 
@@ -58,8 +58,7 @@ C<IO::Adapter::SQL::> modules.
 
 You can specify your own module name at $args->{ driver } in
 new($args).
-It is expected to provdie C<add()>, C<delete()> and
-C<get_next_value()> method.
+It is expected to provide C<add()> and C<delete()> methods.
 
 =head1 METHODS
 
