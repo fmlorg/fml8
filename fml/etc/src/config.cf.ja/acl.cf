@@ -17,12 +17,14 @@ post_restrictions	=	reject_system_accounts
 #      History: fml 4.0 の PERMIT_COMMAND_FROM と REJECT_ADDR を合体したもの
 #        Value: list of attributes (
 #			permit_anyone
+#			permit_commands_for_stranger
 #			permit_members_only
 #			reject_system_accounts
 #			reject
 #		)
 #     Examples:
 command_restrictions	=	reject_system_accounts
+				permit_commands_for_stranger
 				permit_members_only
 				reject
 
