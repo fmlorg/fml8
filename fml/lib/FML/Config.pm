@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.83 2003/08/23 04:35:26 fukachan Exp $
+# $FML: Config.pm,v 1.84 2003/08/24 14:08:28 fukachan Exp $
 #
 
 package FML::Config;
@@ -802,11 +802,11 @@ sub expand_variable_in_buffer
 	my $varname = $1;
 	if (defined $config->{ $varname }) {
 	    my $x = $config->{ $varname };
-	    $$rbuf =~ s/\$$varname/$x/;
+	    $$rbuf =~ s/\$$varname/$x/g;
 	}
 	if (defined $args->{ $varname }) {
 	    my $x = $args->{ $varname };
-	    $$rbuf =~ s/\$$varname/$x/;
+	    $$rbuf =~ s/\$$varname/$x/g;
 	}
     }
 }
