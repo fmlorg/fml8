@@ -90,6 +90,68 @@ sub verify_request { 1;}
 sub finish { 1;}
 
 
+# See CGI.pm for more details
+sub run
+{
+    my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
+    my $title  = $config->{ ticket_cgi_title }   || 'ticket system interface';
+    my $color  = $config->{ ticket_cgi_bgcolor } || '#E6E6FA';
+
+    use FileHandle;
+    my ($rfd, $wfd) = FileHandle::pipe;
+    $args->{ fd }   = $wfd;
+
+    # ticket object
+    my $ticket = $curproc->_load_ticket_model_module($args);
+    $ticket->mode({ mode => 'html' });
+
+    # o.k start html
+    print start_html(-title=>$title,-BGCOLOR=>$color), "\n";
+
+    # menu at the top of scrren
+    $ticket->cgi_top_menu($curproc, $args);
+
+    # get ticket id list
+    my $tid = $ticket->get_id_list($curproc, $args);
+    $ticket->sort($curproc, $args, $tid);
+    for (@$tid) { $ticket->html_show($curproc, $args, $_);}
+
+    # show summary
+    $ticket->mode({ mode => 'html' });
+    $ticket->show_summary($curproc, $args, {rfd => $rfd, wfd => $wfd});
+
+    # o.k. end of html
+    print end_html;
+    print "\n";
+}
+
+
+
+=head2 C<_load_ticket_model_module($args)>
+
+load model dependent module.
+
+=cut
+
+sub _load_ticket_model_module
+{
+    my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
+    my $model  = $config->{ ticket_model };
+    my $pkg    = "FML::Ticket::Model::$model";
+
+    # fake use() to do "use FML::Ticket::$model;"
+    eval qq{ require $pkg; $pkg->import();};
+    unless ($@) {
+	return $pkg->new($curproc, $args);
+    }
+    else {
+	Log($@);
+    }
+}
+
+
 =head1 AUTHOR
 
 Ken'ichi Fukamachi
