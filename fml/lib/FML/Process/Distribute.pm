@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.85 2002/07/23 13:03:13 fukachan Exp $
+# $FML: Distribute.pm,v 1.86 2002/07/31 13:02:54 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -372,7 +372,7 @@ sub _header_rewrite
 	    });
 	}
 	else {
-	    Log("Error: header->$rule is undefined");
+	    LogError("header->$rule is undefined");
 	}
     }
 }

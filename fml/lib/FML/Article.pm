@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.41 2002/06/30 14:27:47 fukachan Exp $
+# $FML: Article.pm,v 1.42 2002/07/31 13:00:46 fukachan Exp $
 #
 
 package FML::Article;
@@ -127,7 +127,7 @@ sub increment_id
     use File::Sequence;
     my $sfh = new File::Sequence { sequence_file => $seq_file };
     my $id  = $sfh->increment_id;
-    if ($sfh->error) { Log( $sfh->error ); }
+    if ($sfh->error) { LogError( $sfh->error ); }
 
     # save $id in pcb (process control block) and return $id
     $pcb->set('article', 'id', $id);

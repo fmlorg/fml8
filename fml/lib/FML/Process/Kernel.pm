@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.118 2002/07/25 00:10:29 fukachan Exp $
+# $FML: Kernel.pm,v 1.119 2002/07/30 04:02:33 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -739,8 +739,8 @@ sub _check_restrictions
 	    else {
 		# A: No, deny distribution
 		my $sender = $cred->sender;
-		Log("$sender is not a ML member");
-		Log( $cred->error() );
+		LogError("$sender is not an ML member");
+		LogError( $cred->error() );
 		$curproc->reply_message_nl('error.not_member',
 					   "you are not a ML member." );
 		$curproc->reply_message( "   your address: $sender" );

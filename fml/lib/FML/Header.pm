@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.45 2002/07/02 11:54:06 fukachan Exp $
+# $FML: Header.pm,v 1.46 2002/07/31 12:58:21 fukachan Exp $
 #
 
 package FML::Header;
@@ -387,7 +387,7 @@ sub rewrite_article_subject_tag
 	$pkg->rewrite_article_subject_tag($header, $config, $args);
     }
     else {
-	Log("Error: cannot load $pkg");
+	LogError("cannot load $pkg");
     }
 }
 
