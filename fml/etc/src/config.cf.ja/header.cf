@@ -1,0 +1,94 @@
+=head1	ヘッダの操作
+
+# Descriptions: ヘッダ書換えの操作をするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_header_rewrite		=	yes
+
+# Descriptions: ヘッダ情報を根拠にしたフィルタリングをするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_header_filter		=	yes
+
+# Descriptions: フィルタリングのルール
+#      History:
+#        Value:
+#     Examples:
+header_filter_rules		=	is_valid_message_id
+
+# Descriptions: ヘッダ情報を根拠にしたループチェックをするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_header_loop_check		=	yes
+
+# Descriptions: ヘッダに対するループチェックのルール群
+#      History:
+#        Value:
+#     Examples:
+header_loop_check_rules		=	verify_message_id_uniqueness
+					verify_x_ml_info_uniqueness
+					verify_list_post_uniqueness
+
+# Descriptions: Message-ID のキャッシュを格納するディレクトリ
+#      History:
+#        Value:
+#     Examples:
+message_id_cache_dir		=	$db_dir/message_id
+
+
+# Descriptions: 記事のヘッダを書き換えるルール群
+#               Re: を切り落とす操作はデフォルトなので指定の必要なし
+#      History:
+#        Value:
+#     Examples:
+article_header_rewrite_rules	=	delete_unsafe_header_fields
+					rewrite_subject_tag
+					rewrite_reply_to
+					add_software_info
+					add_fml_ml_name
+					add_fml_traditional_article_id
+					add_fml_article_id
+					add_x_sequence
+					add_rfc2369
+
+
+# Descriptions: 記事のまとめおくりのヘッダを書き換えるルール群
+#      History:
+#        Value:
+#     Examples:
+digest_header_rewrite_rules	=	add_software_info
+					add_rfc2369
+
+
+# Descriptions: あぶないタグを消す
+#      History: fml 4.0 の SKIP_FIELDS
+#        Value: strings
+#     Examples:
+unsafe_header_fields		=	Return-Receipt-To
+
+
+# Descriptions: Subject: につけるタグの制御
+#      History:
+#        Value:
+#     Examples:
+subject_tag_name		=	$ml_name
+
+
+# Descriptions: Subject: のタグ 
+#               % の意味は UNIX マニュアルを参照。例えば sprintf 関数など 
+#      History:
+#        Value:
+#     Examples: [elena:00080]
+subject_tag			=	[$ml_name:%05d]
+
+
+# Descriptions: X-ML-Name: および X-Sequence にあらわれる ML 名
+#               XXX そこだけ変えたい場合があるかもしれないので、
+#               XXX 一応 $ml_name とは分けておく。
+#      History:
+#        Value:
+#     Examples: elena
+x_ml_name			=	$ml_name

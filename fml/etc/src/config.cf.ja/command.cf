@@ -1,0 +1,59 @@
+=head1	コマンドの定義
+
+#
+# 注意: まだまだ考え中といえます
+#
+
+# Descriptions: command prompt in message reply
+#      History: hard coded in fml (< 4.0)
+#        Value: string without spaces
+#     Examples: >>>
+command_prompot			=	>>>
+
+
+# Descriptions: chaddr コマンドで confirmation 認証(コールバック認証)
+#               を行なうか否か？
+#      History:
+#        Value:  confirmation / ""
+#     Examples:
+command_chaddr_type		=	confirmation
+
+
+# Descriptions: unsubscribe コマンドで confirmation 認証(コールバック認証)
+#               を行なうか否か？
+#      History:
+#        Value:  confirmation / ""
+#     Examples:
+command_unsubscribe_type	=	confirmation
+
+
+
+# Descriptions: 有効なコマンド一覧を書く
+#      History: fml 4.0 ではデフォルトのコマンド定義一覧に対し
+#               @PERMIT_PROCEDURE @DENY_PROCEDURE などで
+#               変更を加える
+#        Value: 
+#     Examples:
+available_commands		=	help
+					get
+					mget
+					get
+					mget
+					subscribe
+					bye
+					remove
+					resign
+					unsubscribe
+					chaddr
+					confirm
+					guide
+					info
+
+
+available_commands_for_stranger	=	guide
+					info
+					subscribe
+					$confirm_keyword
+
+
+confirm_keyword			=	confirm

@@ -1,0 +1,80 @@
+=head1	アクセス制御ルール
+
+# Descriptions: 投稿への制限
+#      History: fml 4.0 の PERMIT_POST_FROM と REJECT_ADDR を合体したもの
+#        Value: list of attributes
+#     Examples:
+post_restrictions	=	reject_system_accounts
+				permit_members_only
+				reject
+
+# Descriptions: コマンドへの制限
+#      History: fml 4.0 の PERMIT_COMMAND_FROM と REJECT_ADDR を合体したもの
+#        Value: list of attributes
+#     Examples:
+command_restrictions	=	reject_system_accounts
+				permit_members_only
+				reject
+
+
+=head2 メンバーとみなされるのは誰か？
+
+# Descriptions: 登録などの際に対象となるメンバーリスト
+#               XXX map のタイプによっては書き込みできないこともある
+#               XXX (例: unix.group )
+#      History: fml 4.0 の $MEMBER_LIST
+#        Value: filename
+#     Examples: /var/spool/ml/elena/members
+primary_member_map	=	file:$ml_home_dir/members
+
+
+# Descriptions: メンバーかどうか認証する際に検索するすべてのメンバーリスト 
+#      History: fml 4.0 の $MEMBER_LIST @MEMBER_LIST 相当
+#         Type:
+#     Examples:
+member_maps		=	$primary_member_map
+
+
+=head2 受信者のリスト
+
+
+# Descriptions: 登録などの際に対象とする受信者のリスト
+#               XXX map のタイプによっては書き込みできないこともある
+#               XXX (例: unix.group )
+#      History: fml 4.0 の $ACTIVE_LIST 
+#        Value: filename
+#     Examples: /var/spool/ml/elena/actives
+primary_recipient_map	=	 file:$ml_home_dir/actives
+
+
+# Descriptions: すべての受信者のリスト
+#      History: fml 4.0 の $ACTIVE_LIST @ACTIVE_LIST 相当
+#        Value: a list of filenames
+#     Examples: file:$ml_home_dir/recipients
+#		unix.group:fml
+recipient_maps		=	$primary_recipient_map
+				file:$ml_home_dir/recipients
+
+=head2 アカウントベースのアクセス制限をかける
+
+# Descriptions: OS が使っているようなアカウントや自動プログラムのリスト
+#               これらのアカウントは
+#                 1. だれだか個人を特定できないようなアカウントである。
+#                 2. えてして自動プログラムなどになっており、
+#                    メールループなどをひきおこしうる。
+#               これらの理由により望ましくないアカウントたちと思われる。
+#      History: fml 4.0 の $REJECT_ADDR
+#        Value: a list of strings
+#     Examples: see below
+system_accounts		=	root
+				postmaster
+				MAILER-DAEMON
+				msgs
+				nobody
+				news
+				majordomo
+				listserv
+				listproc
+				\S+\-help
+				\S+\-subscribe
+				\S+\-unsubscribe
