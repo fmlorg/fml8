@@ -49,9 +49,6 @@ sub _setup_article_template
     $curproc->{ article }->{ header } = $msg->{'header'}->dup();
     $curproc->{ article }->{ body }   = $msg->{'body'};
     
-    use FML::Log qw(Log);
-    Log( ref( $curproc->{ article }->{ header } ) );
-
     # initialize the header object
     use FML::Header;
     $curproc->{'article'}->{'header'}->check;
