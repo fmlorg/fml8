@@ -1,0 +1,45 @@
+Select ML (mailing list) and command (command) in the 
+left naviation bar and click $_arg_button_submit button.
+
+<table>
+<tr>
+	<td>	adduser
+	<td>	add address
+</tr>
+
+<tr>
+	<td>	deluser
+	<td>	remove address
+</tr>
+
+<tr>
+	<td>	addadmin
+	<td>	add a new remote administrator
+</tr>
+
+<tr>
+	<td>	deladmin
+	<td>	remove remote administrator
+</tr>
+
+<tr>
+	<td>	list
+	<td>	see address list
+</tr>
+
+<tr>
+	<td>	log
+	<td>	see log
+</tr>
+
+<tr>
+	<td>	newml
+	<td>	create ML
+</tr>
+
+<tr>
+	<td>	rmml
+	<td>	remove ML
+</tr>
+
+</table>

@@ -1,0 +1,10 @@
+error: you are not a member of this $ml_name mailing list.
+
+1) check From: field in your mail.
+
+2) in these days, virus or spammer forges your mail address.
+   Even if you don't know the original mail, it may be sent by
+   somebody's computer infected on virus.
+
+   Analyze Received: field for more details.
+

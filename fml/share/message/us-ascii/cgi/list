@@ -1,0 +1,6 @@
+list addresses of this ML. The list is the member list by default.
+You can change the list by scrolling $_arg_scroll_map. 
+
+After select by $_arg_scroll_map, click $_arg_button_show button.
+
+Available $_arg_scroll_map are one of member, recipient and admin_member.

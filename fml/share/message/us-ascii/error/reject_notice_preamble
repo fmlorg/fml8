@@ -1,0 +1,10 @@
+
+The following string is the first $_arg_size bytes of rejected message.
+
+[caution]
+
+We avoid the use of MIME/multipart to avoid virus infection by your
+mail reader MUA. 
+
+Analyze received header fields et.al. for more details.
+
