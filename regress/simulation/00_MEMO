@@ -3,6 +3,19 @@
 
 	XXX 作業したら TODO/STATUS.txt もアップデートしてね XXX
 
+○	postconf で file じゃないものは無視しないとだね
+
+
+○	filter
+
+   * filter statistics
+	統計をとりたい
+	統計をみせろ コマンド
+	それをするためのデータベースを最初から用意すること
+
+   * MTI
+	fmltreadで使っているDBをうまく利用できないものでしょうか？
+
 
 ○	IO::Adapter
 
@@ -317,4 +330,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.25 2002/06/01 07:17:25 fukachan Exp $
+$FML: 00_MEMO,v 1.26 2002/06/23 03:38:17 fukachan Exp $
