@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: dir.pm,v 1.1 2002/03/24 11:26:46 fukachan Exp $
+# $FML: dir.pm,v 1.2 2002/04/03 11:32:59 fukachan Exp $
 #
 
 package FML::Command::Admin::dir;
@@ -52,7 +52,7 @@ sub new
 sub need_lock { 0;}
 
 
-# Descriptions: show result by "ls -l"
+# Descriptions: show the result by "ls -l"
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
@@ -67,6 +67,7 @@ sub process
 
     # analyze ...
     for my $x (@$options) {
+	# restrict the file name
 	if ($x =~ /^(\-[A-Za-z]+)$/) {
 	    $du_args->{ opt_ls } = $1;
 	}
