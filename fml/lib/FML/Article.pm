@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.51 2002/12/24 10:19:38 fukachan Exp $
+# $FML: Article.pm,v 1.52 2002/12/26 15:07:49 fukachan Exp $
 #
 
 package FML::Article;
@@ -284,10 +284,12 @@ sub _filepath
 	subdir_unit => $unit,
     } ;
     my $file = $spool->filepath($args);
-    my $dir  = $spool->dirpath($args);
+    my $dir  = $spool->dirpath($args); # spool/ or spool/$subdir/
 
-    unless (-d $dir) {
-	$curproc->mkdir($dir, "mode=private");
+    if ($use_subdir) {
+	unless (-d $dir) {
+	    $curproc->mkdir($dir, "mode=private");
+	}
     }
 
     return ($file, $dir);
@@ -385,7 +387,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
