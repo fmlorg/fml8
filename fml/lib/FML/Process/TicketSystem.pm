@@ -45,13 +45,13 @@ sub run
 
     $curproc->lock();
     {
-	$curproc->_ticket_list_up($args);
+	$curproc->_ticket_show_summary($args);
     }
     $curproc->unlock();
 }
 
 
-sub _ticket_list_up
+sub _ticket_show_summary
 {
     my ($curproc, $args) = @_;    
     my $config = $curproc->{ config };
@@ -62,7 +62,7 @@ sub _ticket_list_up
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
 	my $ticket = $pkg->new($curproc, $args);
-	$ticket->list_up($curproc, $args);
+	$ticket->show_summary($curproc, $args);
     }
     else {
 	Log($@);
