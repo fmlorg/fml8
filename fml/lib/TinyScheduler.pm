@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: TinyScheduler.pm,v 1.5 2001/04/05 08:32:49 fukachan Exp $
+# $FML: TinyScheduler.pm,v 1.6 2001/06/17 08:57:10 fukachan Exp $
 #
 
 package TinyScheduler;
@@ -174,11 +174,40 @@ sub _parse
 }
 
 
+=head2 C<print($fd)>
+
+print out the result as HTML.
+You can specify the output channel by C<$fd>.
+
+=cut
+
+
 sub print
 {
     my ($self, $fd) = @_;
     $fd = $fd || \*STDOUT;
     print $fd $self->{ _schedule }->as_HTML;
+}
+
+
+=head2 C<print_specific_month($fh, $n)>
+
+print range specified by C<$n>.
+C<$n> is one of C<this>, C<next> and C<last>.   
+
+=cut
+
+sub print_specific_month
+{
+    my ($self, $fh, $n) = @_;
+    my ($sec,$min,$hour,$mday,$month,$year,$wday) = localtime(time);
+    my $thismonth = $month + 1;
+    $thismonth++ if $n eq 'next';
+    $thismonth-- if $n eq 'last';
+
+    print $fh "<A NAME=\"$n\">\n";
+    $self->parse( { month => $thismonth } );
+    $self->print($fh);
 }
 
 

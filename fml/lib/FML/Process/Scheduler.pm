@@ -4,7 +4,7 @@
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Scheduler.pm,v 1.2 2001/04/03 09:45:43 fukachan Exp $
+# $FML: Scheduler.pm,v 1.3 2001/04/05 08:31:44 fukachan Exp $
 #
 
 package FML::Process::Scheduler;
@@ -68,16 +68,25 @@ sub prepare { ; }
 sub run
 {
     my ($self, $args) = @_;
-
+    
     use FileHandle;
     use TinyScheduler;
 
     my $schedule = new TinyScheduler $args;
-    $schedule->parse;
+    my $tmp      = $schedule->tmpfile;
+    my $fh       = new FileHandle $tmp, "w";
 
-    my $tmp = $schedule->tmpfile;
-    my $fh  = new FileHandle $tmp, "w";
-    $schedule->print($fh);
+    # show three calender for this month, next month, last month
+    my $show_3_month = defined($args->{ options }->{ a }) ? 1 : 0;
+    if ($show_3_month) {
+	for my $n ('this', 'next', 'last') {
+	    $schedule->print_specific_month($fh, $n);
+	}
+    }
+    else {
+	$schedule->print_specific_month($fh, 'this');
+    }
+
     $fh->close;
 
     my $mode = $args->{ options }->{ m } || 'text';

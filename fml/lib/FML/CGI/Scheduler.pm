@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Scheduler.pm,v 1.2 2001/04/03 09:45:41 fukachan Exp $
+# $FML: Scheduler.pm,v 1.3 2001/06/17 08:57:09 fukachan Exp $
 #
 
 package FML::CGI::Scheduler;
@@ -67,8 +67,18 @@ sub run
     use TinyScheduler;
 
     my $schedule = new TinyScheduler { user => param('user') };
-    $schedule->parse;
-    $schedule->print;
+
+    for my $n ('this', 'next', 'last') {
+	print "<A HREF=\"\#$n\">[$n month]</A>\n";
+    }
+
+    for my $n ('this', 'next', 'last') {
+	$schedule->print_specific_month(\*STDOUT, $n);
+    }
+
+    for my $n ('this', 'next', 'last') {
+	print "<A HREF=\"\#$n\">[$n month]</A>\n";
+    }
 }
 
 
