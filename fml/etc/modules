@@ -1,5 +1,5 @@
 #
-# $FML: modules,v 1.4 2003/03/14 12:49:48 fukachan Exp $
+# $FML: modules,v 1.5 2003/03/15 09:11:47 fukachan Exp $
 #
 # map between programs and modules (like /etc/name_to_sysnum on solaris ?)
 #
@@ -17,18 +17,21 @@ fmlserv			FML::Process::ListServer	?
 mead			FML::Process::Error		$ml
 
 # bin/
+makefml			FML::Process::Configure		$command $ml $opts
 fml			FML::Process::Configure		$ml $command $opts
 fmladdr			FML::Process::Addr		
 fmlalias		FML::Process::Alias		
 fmlconf			FML::Process::ConfViewer	
 fmldoc			FML::Process::DocViewer		
-fmlerror		FML::Process::Obsolete		$ml
 fmlhtmlify		FML::Process::HTMLify		$ml
+
+# bin/ but obsolete
+fmlerror		FML::Process::Obsolete		$ml
 fmlspool		FML::Process::Obsolete		$ml
 fmlsummary		FML::Process::Obsolete		$ml
 fmlsuper		FML::Process::Obsolete		$ml
-fmlthread		FML::Process::ThreadTrack	$ml
-makefml			FML::Process::Configure		$command $ml $opts
+fmlthread		FML::Process::Obsolete		$ml
+
 
 # cgi-bin/
 fmlthread.cgi		FML::CGI::ThreadTrack		$cgiargs
