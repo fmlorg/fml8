@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: apache.sgml,v 1.1 2004/10/02 14:29:46 fukachan Exp $
 -->
 
 
@@ -22,7 +22,7 @@ fml8 CGI の内部構造については
 </warning>
 
 
-<sect id="setup.apache.suexec">
+<sect1 id="setup.apache.suexec">
 	<title>
 	apache で suexec を使う
 	</title>
