@@ -58,6 +58,23 @@ To start delivery, use deliver() method in this way.
                           body            => $body_object,
                       });
 
+You can use ARRAY REFERENCE.
+
+    # reference to an array of recipients
+    $raaray = [ 'kenken@nuinui.net' ];
+
+    $service->deliver(
+                      {
+                          mta             => '127.0.0.1:25',
+
+                          smtp_sender     => 'rudo@nuinui.net',
+                          recipient_array_reference => $rarray,
+                          recipient_limit => 1000,
+
+                          header          => $header_object,
+                          body            => $body_object,
+                      });
+
 =head1 DESCRIPTION
 
 This module provides SMTP/ESMTP mail delivery service.
@@ -353,8 +370,8 @@ sub deliver
     }
 
     # alloc virtual recipient map
-    if (ref( $args->{ recipient_array } ) eq 'ARRAY') {
-	my $map = $self->_alloc_recipients_array_on_memory($args);
+    if (ref( $args->{ recipient_array_reference } ) eq 'ARRAY') {
+	my $map = $args->{ recipient_array_reference };
 	push(@maps, $map);
     }
 
@@ -649,20 +666,6 @@ sub _send_recipient_list
     if ( $self->_get_target_map ) {
 	$self->_send_recipient_list_by_recipient_map($args);
     }
-}
-
-
-# Descriptions: create CODE REFERECE to handle recipients array on memory 
-#    Arguments: $self $args
-# Side Effects: $me is referenced, so not destroyed. It is a closure (?).
-# Return Value: CODE REFERENCE
-sub _alloc_recipients_array_on_memory
-{
-    my ($self, $args) = @_;
-    return sub {
-	my ($me) = @_;
-	$me->{ _recipients_array_on_memory } = $args->{ recipient_array };
-    };
 }
 
 

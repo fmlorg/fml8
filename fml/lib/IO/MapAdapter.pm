@@ -90,12 +90,7 @@ sub new
     my ($type) = ref($self) || $self;
     my ($me)   = {};
 
-    if ( ref($map) eq 'CODE' ) {
-	$me->{_type} = 'array_on_memory_by_code';
-	eval { &$map($me);};
-	_error_reason($me, $@) if $@;
-    }
-    elsif ( ref($map) eq 'ARRAY' ) {
+    if (ref($map) eq 'ARRAY') {
 	$me->{_type}            = 'array_reference';
 	$me->{_array_reference} = $map;
 
@@ -187,10 +182,6 @@ sub open
 	$self->{_array_reference} = \@members;
 	$self->SUPER::open( { flag => $flag } );
     }
-    elsif ($self->{'_type'} eq 'array_on_memory_by_code') {
-	$self->{_array_reference} = $self->{ _recipients_array_on_memory };
-	$self->SUPER::open( { flag => $flag } );
-    }
     elsif ($self->{'_type'} eq 'array_reference') {
 	$self->SUPER::open( { flag => $flag } );
     }
@@ -247,7 +238,6 @@ sub _get_address
 	return undef;
     }
     elsif ($self->{'_type'} eq 'unix.group' ||
-	   $self->{'_type'} eq 'array_on_memory_by_code' ||
 	   $self->{'_type'} eq 'array_reference') {
 	$self->SUPER::get_next_value();
     }
@@ -301,7 +291,6 @@ sub getpos
 	defined $fh ? tell($fh) : undef;
     }
     elsif ($self->{'_type'} eq 'unix.group' ||
-	   $self->{'_type'} eq 'array_on_memory_by_code' ||
 	   $self->{'_type'} eq 'array_reference') {
 	$self->SUPER::getpos();
     }
@@ -320,7 +309,6 @@ sub setpos
 	seek($fh, $pos, 0);
     }
     elsif ($self->{'_type'} eq 'unix.group' ||
-	   $self->{'_type'} eq 'array_on_memory_by_code' ||
 	   $self->{'_type'} eq 'array_reference') {
 	$self->SUPER::getpos($pos);
     }
@@ -339,7 +327,6 @@ sub eof
 	$fh->eof if defined $fh;
     }
     elsif ($self->{'_type'} eq 'unix.group' ||
-	   $self->{'_type'} eq 'array_on_memory_by_code' ||
 	   $self->{'_type'} eq 'array_reference') {
 	$self->SUPER::eof();
     }
@@ -357,7 +344,6 @@ sub close
 	$self->{_fh}->close if defined $self->{_fh};
     }
     elsif ($self->{'_type'} eq 'unix.group' ||
-	   $self->{'_type'} eq 'array_on_memory_by_code' ||
 	   $self->{'_type'} eq 'array_reference') {
 	;
     }
