@@ -78,10 +78,4 @@ guide_file		=	$ml_home_dir/guide
 #      History:
 #        Value:
 #     Examples:
-summary_file		=	$ml_home_dir/summary
-
-# Descriptions: ヘルプファイル
-#      History:
-#        Value:
-#     Examples:
 objective_file		=	$ml_home_dir/objective
