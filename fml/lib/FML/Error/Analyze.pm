@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.13 2003/01/04 13:09:17 tmu Exp $
+# $FML: Analyze.pm,v 1.14 2003/01/04 13:26:33 tmu Exp $
 #
 
 package FML::Error::Analyze;
@@ -109,6 +109,9 @@ sub simple_count
 	    Log("summary: $k = $v points");
 	}
     }
+
+    # save info
+    $self->{ _summary } = $summary;
 
     return \@removelist;
 }
@@ -245,6 +248,9 @@ sub error_continuity
 	}
     }
 
+    # save info
+    $self->{ _summary } = $summary;
+
     return \@removelist;
 }
 
@@ -342,6 +348,18 @@ sub __debug_printable_array
     }
 
     return $s;
+}
+
+
+# Descriptions: get data detail for the result as HASH_REF.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: HASH_REF
+sub get_data_detail
+{
+    my ($self) = @_;
+
+    return $self->{ _summary } || {}; 
 }
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.9 2003/01/03 03:49:30 fukachan Exp $
+# $FML: Error.pm,v 1.10 2003/01/03 07:05:34 fukachan Exp $
 #
 
 package FML::Error;
@@ -88,8 +88,28 @@ sub analyze
     my $fp       = $config->{ error_analyzer_function } || 'simple_count';
     my $list     = $analyzer->$fp($curproc, $rdata);
 
+    $self->{ _analyzer } = $analyzer;
+
     # pass address list to remove
     $self->{ _remove_addr_list } = $list;
+}
+
+
+# Descriptions: get data detail for the current result as HASH_REF.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: HASH_REF
+sub get_data_detail
+{
+    my ($self) = @_;
+    my $analyzer = $self->{ _analyzer };
+
+    if (defined $analyzer) {
+	return $analyzer->get_data_detail();
+    }
+    else {
+	return {}
+    }
 }
 
 
