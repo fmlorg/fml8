@@ -12,10 +12,49 @@
 	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
 	気をつけてください。
 
+2004/04/20
+
+   FML::Command::Admin::error 
+	-O algorithm= option
+
+2004/04/18
+
+   variable name clean up:
+	_list -> _select_list
+
+	s/cgi_language_list/cgi_language_select_list/;
+	s/cgi_menu_address_map_list/cgi_menu_address_map_select_list/;
+	s/error_analyzer_function_list/error_analyzer_function_select_list/;
+	s/template_file_charset_list/template_file_charset_select_list/;
+
+	   FML::CGI::List 
+	   FML::Command::Admin::error 
+	   FML::Process::CGI::Kernel Utils 
+
+   FML::PCB Config 
+   FML::Process::State 
+	preparation of context switch (preliminary. not yet implemented)
+
+   FML::Restriction::Base 
+	remove regexp() method, which not used.
+	fix description.
+
 2004/04/17
 
    log rotation が出来るようにした。
 
+	   variables
+		define $log_ratate variables
+	
+	   FML::File::Rotate 
+		modified to current fml8 style.
+	
+	   FML::Process::Utils 
+		implement log_rorate()
+	
+	   FML::Process::Kernel 
+		run $curproc->log_rorate() lastly
+	
    File::* クラスを一掃する。
 
    FML::Process::Kernel 
@@ -6744,4 +6783,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.194 2004/04/02 14:28:44 fukachan Exp $
+$FML: CHANGES.txt,v 1.195 2004/04/17 15:00:56 fukachan Exp $
