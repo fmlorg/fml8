@@ -3,6 +3,11 @@
 
 	*** 2003 年末 〜 2004 年初め オーバホールキャンペーン終了 ***
 
+2004/02/29
+
+   Mail::Message::Language 
+	accept_language_list() return [] not [*] if not found.
+
 2004/02/27
 
    コマンドの返事を返す際に、より正しい言語選択を行なう
@@ -6283,4 +6288,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.180 2004/02/15 04:40:29 fukachan Exp $
+$FML: CHANGES.txt,v 1.181 2004/02/29 15:47:53 fukachan Exp $
