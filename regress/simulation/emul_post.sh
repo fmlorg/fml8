@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: test.sh,v 1.8 2001/04/14 14:35:08 fukachan Exp $
+# $FML: emul_post.sh,v 1.1 2001/10/12 09:01:24 fukachan Exp $
 #
 
 DO () {
@@ -11,10 +11,12 @@ DO () {
 
 	test -f $msg || return;
 
+	maincf=/tmp/main.cf.$$
+	trap "rm -f $maincf" 0 1 3 15
+	sed -e "s@\$pwd@$PWD@g" regress/simulation/main.cf > $maincf
+
 	regress/message/scramble.pl $msg |\
-	${PERL:-perl} -w fml/libexec/loader \
-		--params pwd=$PWD \
-		-c $pwd/main.cf \
+	${PERL:-perl} -w fml/libexec/loader -c $maincf \
 		/var/spool/ml/elena
 	echo "-- exit code: $?"
    )
