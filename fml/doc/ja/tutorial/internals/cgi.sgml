@@ -1,10 +1,10 @@
 <!--
-   $FML$
+   $FML: cgi.sgml,v 1.1 2001/12/23 04:04:23 fukachan Exp $
 -->
 
-<sect1 id="internal.cgi">
+<sect1 id="internal.cgi.method">
 	<title>
-	CGI の構造
+	ケーススタディ: CGI プロセスのメソッド
 	</title>
 
 <para>
@@ -14,6 +14,12 @@ html_start()
 run_cgi()
 html_end()
 </screen>
+ここで
+html_start() は、
+ようするに HTML の先頭部分、たとえば DOCTYPE から BODY あたりを、
+html_end() は
+/BODY と /HTML を表示する部分をカスタマイズするために用います。
+run_cgi() メソッドでは BODY の部分を表示してください。
 </para>
 
 <para>
@@ -35,7 +41,7 @@ run()
    html_end()
 finish()
 </screen>
-などということになります。
+ということになります。
 </para>
 
 </sect1>
