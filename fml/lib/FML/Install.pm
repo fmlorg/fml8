@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.2 2003/01/28 09:03:07 fukachan Exp $
+# $FML: Install.pm,v 1.3 2003/01/28 23:35:02 fukachan Exp $
 #
 
 package FML::Install;
@@ -664,6 +664,29 @@ sub get_version
 }
 
 
+=head2 is_run_as_root()
+
+check if the current process runs as root.
+
+=cut
+
+
+# Descriptions: check if the current process runs as root.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub is_run_as_root
+{
+    my ($self) = @_;
+
+    if ($< == 0) {
+	return 1;
+    }
+
+    return 0;
+}
+
+
 =head2 is_valid_owner( $owner )
 
 check if $owner is a valid user ?
@@ -821,7 +844,7 @@ sub copy_dir
 {
     my ($self, $src_dir, $dst_dir) = @_;
 
-    @_cache = (); # XXX global in this package. 
+    @_cache = (); # XXX global in this package.
 
     use File::Find;
     find(\&_want_file, $src_dir);
