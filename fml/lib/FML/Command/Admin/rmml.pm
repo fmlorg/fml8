@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmml.pm,v 1.21 2003/10/15 01:03:30 fukachan Exp $
+# $FML: rmml.pm,v 1.22 2003/12/28 13:23:17 fukachan Exp $
 #
 
 package FML::Command::Admin::rmml;
@@ -28,7 +28,7 @@ See C<FML::Command> for more details.
 =head1 DESCRIPTION
 
 remove the mailing list directory (precisely speaking,
-we just rename ml -> @ml)
+we just rename ml -> @ml.$date)
 and the corresponding alias entries.
 
 =head1 METHODS
@@ -58,18 +58,18 @@ sub new
 sub need_lock { 0;}
 
 
-# Descriptions: set up a new mailing list
+# Descriptions: remove the specified mailing list.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
-# Side Effects: create mailing list directory,
-#               install config.cf, include, include-ctl et. al.
+# Side Effects: remove mailing list directory and the corresponding
+#               alias entries.
 # Return Value: none
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $options        = $curproc->command_line_options();
     my $config         = $curproc->config();
-    my $ml_name        = $config->{ ml_name };
-    my $ml_domain      = $config->{ ml_domain };
+    my $ml_name        = $curproc->ml_name();
+    my $ml_domain      = $curproc->ml_domain();
     my $ml_home_prefix = $curproc->ml_home_prefix($ml_domain);
     my $ml_home_dir    = $curproc->ml_home_dir($ml_name, $ml_domain);
     my $params         = {
@@ -81,28 +81,31 @@ sub process
 	ml_home_dir       => $ml_home_dir,
     };
 
-    # fundamental check
+    # fundamental sanity check
     croak("\$ml_name is not specified")     unless $ml_name;
     croak("\$ml_home_dir is not specified") unless $ml_home_dir;
 
+    # XXX-TODO: WHY? (update $ml_home_prefix and expand variables again.)
     # update $ml_home_prefix and expand variables again.
     $config->set( 'ml_home_prefix' , $ml_home_prefix );
 
-    # check if $ml_name already exists.
+    # check if $ml_name exists.
     unless (-d $ml_home_dir) {
-	warn("no such ml ($ml_home_dir)");
+	my $s = "no such ml_home_dir ($ml_home_dir) for $ml_name\@$ml_domain";
+	$curproc->ui_message($s);
+	$curproc->logwarn($s);
 	return;
     }
 
     # o.k. here we go!
     use FML::ML::Control;
-    my $control = new FML::ML::Control;
-    $control->remove_ml_home_dir($curproc, $command_args, $params);
-    $control->remove_aliases($curproc, $command_args, $params);
+    my $ml = new FML::ML::Control;
+    $ml->remove_ml_home_dir($curproc, $command_args, $params);
+    $ml->remove_aliases($curproc, $command_args, $params);
 }
 
 
-# Descriptions: show cgi menu for rmml
+# Descriptions: show cgi menu for rmml command.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($args) HASH_REF($command_args)
 # Side Effects: create home directories, update aliases, ...
