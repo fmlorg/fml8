@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.7 2002/09/22 14:56:40 fukachan Exp $
+# $FML: Error.pm,v 1.8 2002/12/18 04:24:26 fukachan Exp $
 #
 
 package FML::Error;
@@ -19,15 +19,26 @@ my $debug = 1;
 
 =head1 NAME
 
-FML::Error - analyze error messages.
+FML::Error - front end for the analyze of error messages.
 
 =head1 SYNOPSIS
+
+    use FML::Error;
+    my $error = new FML::Error $curproc;
+
+    # analyze error messages and holds the result within the object.
+    $error->analyze();
+
+    # remove addresses analyze() determined as bouncers.
+    $error->remove_bouncers();
 
 =head1 DESCRIPTION
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
+
+usual constructor.
 
 =cut
 
@@ -45,9 +56,22 @@ sub new
 }
 
 
-# Descriptions: error message analyzer
+=head2 analyze()
+
+open error message cache and 
+analyze the data by the analyzer function.
+The function is specified by $config->{ error_analyzer_function }.
+Available functions are located in C<FML::Error::Analyze>.
+C<simple_count> function is used by default if $config->{
+error_analyzer_function } is unspecified.
+
+=cut
+
+
+# Descriptions: open error message cache and analyze the data by
+#               the specified analyzer function.
 #    Arguments: OBJ($self)
-# Side Effects: none
+# Side Effects: set up $self->{ _remove_addr_list } used internally. 
 # Return Value: none
 sub analyze
 {
@@ -69,9 +93,20 @@ sub analyze
 }
 
 
-# Descriptions: delete addresses analyze() determines as bouncers
+=head2 remove_bouncers()
+
+delete mail addresses, analyze() determined as bouncers, by deluser()
+method.
+
+You need to call analyze() method before calling remove_bouncers() to
+list up addresses to remove.
+
+=cut
+
+
+# Descriptions: delete addresses analyze() determined as bouncers
 #    Arguments: OBJ($self)
-# Side Effects: none
+# Side Effects: update user address lists.
 # Return Value: none
 sub remove_bouncers
 {
@@ -106,7 +141,14 @@ sub remove_bouncers
 }
 
 
-# Descriptions: delete the specified address
+=head2 deluser( $address )
+
+delete the specified address by C<FML::Command::Admin::unsubscribe>.
+
+=cut
+
+
+# Descriptions: delete the specified address.
 #    Arguments: OBJ($self) STR($address)
 # Side Effects: none
 # Return Value: none
@@ -179,7 +221,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Ken'ichi Fukamachi
+Copyright (C) 2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
