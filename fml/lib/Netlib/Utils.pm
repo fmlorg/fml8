@@ -88,6 +88,13 @@ sub _error_why
 }
 
 
+sub error_reason
+{
+    my ($self, $mesg) = @_;
+    $self->_error_why($mesg);
+}
+
+
 sub error
 {
     my ($self, $args) = @_;
