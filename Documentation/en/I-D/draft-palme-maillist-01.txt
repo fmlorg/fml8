@@ -1,0 +1,580 @@
+INTERNET-DRAFT                                      Jacob Palme
+Network Working Group                  Stockholm University/KTH
+draft-palme-maillist-01.txt                              Sweden
+Expires November 2001                                  May 2001
+
+
+
+
+
+Appropriate Mailing List Behaviour
+
+
+Status of this Memo
+
+
+This document is an Internet-Draft and is in full conformance
+with all provisions of Section 10 of RFC2026.
+
+Internet-Drafts are working documents of the Internet Engineering
+Task Force (IETF), its areas, and its working groups.  Note that
+other groups may also distribute working documents as
+Internet-Drafts.
+
+Internet-Drafts are draft documents valid for a maximum of six
+months and may be updated, replaced, or obsoleted by other
+documents at any time.  It is inappropriate to use Internet-
+Drafts as reference material or to cite them other than as
+"work in progress."
+
+The list of current Internet-Drafts can be accessed at
+http://www.ietf.org/ietf/1id-abstracts.txt
+
+The list of Internet-Draft Shadow Directories can be accessed at
+http://www.ietf.org/shadow.html.
+
+Copyright (C) The Internet Society 2001. All Rights Reserved.
+
+
+
+Abstract
+
+This memo summarizes common ideas on how good mailing lists should
+behave. Some of this is taken from IETF standards, some is not. This
+memo is not intended, itself, to become a standard, but might, if
+accepted by the IETF, be published as informational RFC or as a Best
+Current Practice (BCP) document.
+
+
+Table of contents
+
+1.   Terminology and Scope
+2.   Reserved E-mail Addresses
+3.   Sending Requests to a List Expander
+  3.1   Subscription Control
+    3.1.1  To Subscribe
+    3.1.2  To Unsubscribe
+  3.2   To Get Information about a List
+4.   Who may Post to a Mailing List
+5.   SMTP Envelope
+6.   Delivery Status Notifications
+7.   Nested Lists
+8.   Loop Control
+9.   List Headers
+10.  Header Munging
+11.  Spam Control
+12.  Mail Bombing
+13.  Groupware
+14.  Security Considerations
+15.  Copyright and Disclaimer
+16.  Acknowledgments
+17.  References
+18.  Author's address
+
+
+1.    Terminology and Scope
+
+By a mailing list is in this specification meant an automatic agent
+which has an e-mail address, and which will resend messages, sent to
+this address via SMTP [RFC2821], to all e-mail addresses in a list of
+subscribers to the mailing list. This process of resending is
+designated "expansion" of the mailing list. Note that lists which are
+expanded by the sender's client before submission to the mail
+transport system are not covered by this specification, even though
+the word "mailing list" is sometimes used also for such lists.
+
+This memo summarizes customary ideas on how good mailing lists should
+behave. Some of this is taken from IETF standards, some is not.
+
+
+2.    Reserved E-mail Addresses
+
+Every mailing list has an e-mail address, named according to the same
+conventions as for personal mailboxes, and reachable through the same
+mail transport system as for personal mailboxes.
+
+If the e-mail address of a mailing list is "flowers@foo.bar.net" then
+the following e-mail addresses are also reserved:
+
+flowers-request@foo.bar.net
+flowers-owner@foo.bar.net
+flowers-errors@foo.bar.net
+
+Messages sent to "flowers-request@foo.bar.net" are usually handled by
+an automatic process which performs common actions as requested in the
+message. Sometimes all, or some, such messages are sent to a human
+administrator of the list.
+
+Messages sent to "flowers-owner@foo.bar.net" are sent to a human
+administrator of the list, or cause a non-delivery notification (see
+section 6. Delivery Status Notifications) in accordance with [RFC1891]
+and [RFC1894], if the list administrator is not willing to handle
+messages sent to this e-mail address.
+
+Messages sent to "flowers-errors@foo.bar.net" are usually handled by a
+person or a process which handles routine maintenance of a list, such
+as removal of list members who persistently (for at least 3-4 days)
+return negative Delivery Status Notifications. The e-mail address
+"flowers-errors@foo.bar.net" should in this case also be put as the
+SMTP sender when expanding messages from the mailing lists to its
+members. If there is no person or process doing such maintenance, the
+SMTP sender for expanded messages may instead be empty.
+
+
+3.    List Headers
+
+A mailing list expander should add headers to the mailing list
+according to [RFC2369] and [RFC2919]. Examples:
+
+List-Help: <mailto:flowers@foo.net?subject=help> (List Instructions)
+List-Unsubscribe: <mailto: flowers@foo.net?subject=unsubscribe>
+List-Subscribe: <mailto: flowers@foo.net?subject=subscribe>
+List-Archive: <http://www.foo.net/flowers-archive>
+List-Post: <mailto:moderator@foo.net> (Postings are Moderated)
+List-Owner: <mailto:grant@foo.net> (Grant Neufeld)
+List-Id: List Header Mailing List <list-header.nisto.com>
+
+Note that the "List-" headers can either contain an e-mail address, to
+which requests are sent in a format specified in the "List-" command,
+for example
+
+   List-Unsubscribe: <mailto: flowers@foo.net?subject=unsubscribe>
+
+Or can contain an URL of a web page, on which a subscription request
+can be made.
+
+
+4.    Sending Requests to a List Expander
+
+Some, but not all, mailing lists accept commands sent in messages to
+an automatic agent representing the list expander. The most common
+address for such an agent is "flowers-request@foo.bar.net", but other
+addresses occur, such as "list-handler@foo.bar.net".
+
+There is no agreed standard on the format of commands in such
+messages, so it is good practice to accept a number of common variants
+in either the subject or the text of the message to the agent. Such
+commands are case-insensitive. Information about which format is used
+by a particular mailing list expander is specified in the "List-"
+headers, see section 3 List Headers above.
+
+Common such commands are:
+
+4.1   Subscription Control
+
+The subscription control commands handle the subscription of the SMTP
+sender of the request (not the subscription for name in the From: or
+Sender: header). The mailing list expander may however find the name
+of the requestor from the "From:" or "Sender:" field, in order to
+register the name. This name is however not used in normal list
+expansion. The actual address for this agent or web page is specified
+in "List-" headers, see section 3 List Headers above.
+
+4.1.1 To Subscribe
+
+Common commands are: sub, subscribe, join. Best is to support all of
+them.
+
+Sometimes the name of the requestor (not the e-mail address) is
+specified after this command, for example "Subscribe Mary Woodfence".
+Other systems require the e-mail address to be specified in the
+subscribe command, or a full e-mail user-friendly name and address in
+the format used in From: e-mail header, like
+"Subscribe Mary Woodfence <maryw@foo.bar>"
+
+4.1.2 To Unsubscribe
+
+Common unsubscribe commands are: uns, unsubscribe, signoff, sign-off,
+sign off, delete, leave, cancel, remove, rem, del. Best is to support
+all of them.
+
+4.2   To Get Information about a List
+
+Common commands to retrieve information about a list are: help,
+review, query, info, information. Best is to support all of them.
+
+The information returned may include a textual description of the
+purpose of the list and of which postings are acceptable to the list.
+It may also include description of how to subscribe and unsubscribe
+and where archives of the mailing list are kept. Some lists also
+return a list of the subscribers of the list.
+
+The actual address for the agent or web page returning such
+information is specified in "List-" headers, see section 3 List
+Headers above.
+
+
+5.    Mail Bombing
+
+Some people will add other people's e-mail addresses to mailing lists
+without their permission, causing them to be bombarded with mail they
+do not want. To counteract this, good practice is that a mailing list
+expander, which receives a request to add an e-mail address to the
+mailing list, should send a message to this e-mail address, asking if
+the recipient really wants to be added to the list, and putting a
+secret codeword in the "Subject:". If no confirmatory reply arrives
+with this codeword in its "Subject:" then the person is not
+permanently added to the list.
+
+
+6.    Who may Post to a Mailing List
+
+There may be different kinds of restrictions on who may submit
+messages to a list. Common cases are:
+
+- Anyone:           Anyone can submit messages to the list (warning,
+                     see section 12. Spam Control below).
+- Subscribers only: Only subscribers are allowed to submit to the list.
+- Moderators only:  Only one or more designated moderators may
+                     submit to the list.
+
+Other cases, such as geographical or domain name restrictions, or that
+only a program, agent or filter may post, also occur. A sublist in a
+nested mailing list structure can be set to reject all postings which
+do not come from its superlist.
+
+The checking on who may submit to a list is usually done on the SMTP
+sender of the message, not on the names in From: or Sender: fields in
+the heading, because this name is a little more difficult to fake.
+Note however, that mail which is forwarded through nested mailing
+lists, will have the administrator of the previous list as SMTP
+sender. If the previous list does not perform filtering, and a list
+often gets messages from other mailing lists, filtering inom the From:
+header may be necessary.
+
+If a message is sent to a list, by someone who is not allowed to
+submit to the list, this can be handled in either of two ways:
+
+(a) Forward the message to the moderator of the list, who decides
+     whether to accept or reject the message. This option should
+     only be used if there really does exist a moderator who really
+     performs this task on a regular basis.
+
+(b) Send a non-delivery notification to the SMTP sender of the
+     rejected message, in accordance with [RFC1891] and [RFC1894].
+
+
+7.    SMTP Envelope
+
+The SMTP sender [RFC2821] of a message after expansion should be the
+list owner or maintainer [RFC1123], not the original sender, for
+exmaple the mailing list flowers@foo.bar.net may set flowers-
+errors@foo.bar.net as the SMTP sender of expanded messages.
+
+When several mailing lists are nested, each list in sequence, which
+expands a message, should set its owner or maintainer as SMTP sender,
+so that the SMTP sender always indicates the owner of the latest list
+expander, through which the message has passed.
+
+For small, closed lists, the option of retaining the SMTP sender of
+the original sender can also occur.
+
+The SMTP recipients should be the subscribers of the mailing list
+doing the expansion. A mailing list may send to all recipients in one
+envelope (SMTP submission) or may split the recipients into multiple
+submissions, like one submission for each recipient. For large lists,
+it may be best to split the recipients with only 99 RCPT TO for each
+submission, since some SMTP servers may not accept more than 99
+recipients.
+
+Some mailing list have a facility that a subscriper can stay a
+subscriber, but not get submissions sent. Other mailing list allow
+subscribers to get submissions in different formats, such as digests
+of all messages once a day or once a week, or only a list of URLs to
+retrieve the new messages, not the full text. Such options will mean
+that the content of the messages sent via SMTP is different for
+different subscribers.
+
+
+8.    Delivery Status Notifications
+
+Delivery Status Notification [RFC1891], [RFC1894] requests are usually
+not forwarded by mailing list expanders. Instead, notifications are
+sent when the message arrives at the list, and the list maintainer can
+request notifications when the messages are delivered to list
+subscribers.
+
+An exception to this is small, closed lists, where sometimes Delivery
+Status Notification requests are forwarded through the list, and the
+notifications are sent back to the original sender.
+
+
+9.    Nested Lists
+
+A subscriber of a mailing list can be another mailing list. This is
+called "nested lists". Nested lists are used for efficiency reasons
+and in order to distribute the management of different parts of the
+subscriber space.
+
+Nested lists can have a hierarchical structure or be looped, see
+Figure 7.1:
+
+
+   Figure 7.1   Examples of hierarchical and looped nesting
+
+                   Hierarchical                  Looped
+
+                      Top list               +---<-List A-<-+
+                         V                   V         ^    ^
+             +-----<-----+----->-----+     List B--->--+--<-+
+             V           V           V       V              ^
+          Sublist A  Sublist B  Sublist C    +---->------List C
+             V
+      +--<---+---->---+
+      V               V
+   SubList A1  Sublist A2
+
+
+With a hierarchical structure, contributions intended for all
+subscribers of the whole set of lists must be sent to the top list.
+Theoretically, messages intended for only a brach of the tree might be
+sent to the top of that branch, but this is usually not recommended,
+because users have difficulty understanding it.
+
+A way to stop contributions to other branches than the top list is to
+designated that the sublists will only accept contributions from their
+immediate superior in the nesting structure.
+
+Looped nesting can cause loops, where the same message circles
+indefinitely between the lists. How such loops can be avoided is
+described in section 8. Loop Control. Another alternative is to only
+use hierarhically nested lists. It is, however, sometimes desirable to
+allow looped nesting, for example when one or more of the nested lists
+is a groupware system which accepts local contributions using other
+submission methods than e-mail (see section 12 Mail Bombing). Looped
+nesting will also avoid the problem with contributions submitted to
+the wrong branch of a hierarchical structure.
+
+A common practice is to accept contributions only to the top list in a
+nested structure of mailing lists. This would mean that sublists will
+only accept contributions coming from the superior list.
+
+In a few cases, submissions are acceted to sublists, intended only to
+a subset of the main list, but this practice is usually not
+recommended.
+
+
+10.   Loop Control
+
+Loops can occur because lists are nested (see section 7. Nested
+Lists). Even if lists are not intended to be nested, it is advisable
+to employ loop control techniques, because nesting of lists can happen
+by mistake.
+
+Mailing lists commonly employ one or more of the following techniques
+for avoiding loops and duplicates. It is better to employ more than
+one of these techniques:
+
+(1) Add a "Received:" header to all messages passing the list. If a
+     mailing list recognizes its own "Received:" header in an incoming
+     message, such a message is dropped. No non-delivery notification
+     should be sent in this case (since it might cause another loop).
+
+     Note: The content of the Received header should be different from
+     what is added by the mail transport agent during ordinary routing
+     of e-mail, since otherwise a message routed by this mail transport
+     agent may at a later time be rejected by the mailing list, even
+     though it has not actually passed the list.
+
+(2) A variant of this which is *not* recommended is to use "Resent-"
+     headers or "List-" headers. A problem with such headers is that
+     they may not always correctly show the whole path which the
+     message has gone through. It is normally not desirable that
+     mailing lists add "Resent-" headers to messages, see section
+     11: Header Munging and [RFC2822].
+
+(3) Store a list of the Message-ID-s of messages which have passed
+     the list, and reject incoming messages whose Message-ID is on
+     this list. To achieve loop control, this list need not be kept
+     for a long time, a week may be enough in most cases.
+
+(4) Store a list of the content or checksum of messages which have
+     passed this list, and use it in the same way as the Message-ID.
+     The advantage with this is that it may work even when a message
+     did not have any Message-ID or when some badly behaving list
+     expander has removed or modified the Message-ID.
+
+
+11.   Header Munging
+
+Apart from what is specifed in sections 9. Loop Control and 10. List
+Headers, a mailing list expander should not in any way modify the
+heading of a message. In particular, the list should not change the
+Message-ID, not add "Resent-", "From:", "Sender:", "Auto-Submitted:"
+or "Reply-To:", and should not remove or modify "Received:" headers
+(but may add an additional "Received:" header with information about
+the mailing list expansion). The practice to add the e-mail address of
+the list in a "Reply-To:" header is common, but is not recommended.
+Instead, use the "List-Post:" command from [RFC2369].
+
+
+12.   Spam Control
+
+Many mailing list expanders employ various methods to counteract
+spamming. Examples of such methods are:
+
+(1) Do not allow non-subscribers to post to the list.
+
+(2) Check all submissions by a human moderator before acceptance.
+
+(3) Employ various filtering techniques to recognize spams, such as
+     multiple occurence of the same message sent to different mailing
+     lists. Since such techniques may reject legitimate messages,
+     rejected messages should be passed to a human moderator for
+     checking.
+
+
+13.   Groupware
+
+A groupware product may appear as a mailing list to people accessing
+it via e-mail, and may at the same time appear as a forum to people
+accessing it via other user interfaces, such as HTTP [RFC2068]/HTML
+[RFC1866] or own protocols for this particular groupware.
+
+Such groupware products may allow addition of e-mail addresses as
+subscribers to a forum in the same way as groupware users are added as
+members of the forum.
+
+A message created in a groupware system, and sent out via e-mail,
+should include the e-mail address of the forum (groupware discussion
+group) in a "To:" och "Cc:" header, as well as in the List-headers
+according to [RFC2369] and [RFC 2919].
+
+One particular class of Groupware is Usenet News. This document is not
+written to specially cater to the issues of gatewaying between e-mail
+and Usenet News. Such gatewaying is a complex issue, which requires
+special consideration for that particular case.
+
+
+14.   Security Considerations
+
+Allowing people to retrieve lists of subscribers of mailing lists may
+be misused by spammers and other people using these names for no-goood
+purposes.
+
+Allowing anyone to post to a list may be misused by spammers. See see
+section 12. Spam Control.
+
+Loop control may incur some risk of messages disappearing, but this
+should normally not happen.
+
+Loop control with Message-ID can be misused to stop unwanted messages,
+but this would be difficult, since the offender must send the false
+message with the same Message-ID before the message to be stopped.
+
+Spam control may incur some risk of messages disappearing. A way to
+reduce this risk is to forward rejected messages to a human moderator
+for checking.
+
+A well-known problem with moderated mailing lists is that if the
+moderator is sick, on holiday, or otherwise occupied, the list ceases
+to work. Some mailing list try to solve this problem by having
+multiple moderators, so that another moderator can take over when one
+of them cannot perform the moderating task.
+
+
+15.   Copyright and Disclaimer
+
+The IETF takes no position regarding the validity or scope of any
+intellectual property or other rights that might be claimed to pertain
+to the implementation or use of the technology described in this
+document or the extent to which any license under such rights might or
+might not be available; neither does it represent that it has made any
+effort to identify any such rights. Information on the IETF's
+procedures with respect to rights in standards-track and standards-
+related documentation can be found in BCP-11. Copies of claims of
+rights made available for publication and any assurances of licenses
+to be made available, or the result of an attempt made to obtain a
+general license or permission for the use of such proprietary rights
+by implementors or users of this specification can be obtained from
+the IETF Secretariat."
+
+The IETF invites any interested party to bring to its attention any
+copyrights, patents or patent applications, or other proprietary
+rights which may cover technology that may be required to practice
+this standard. Please address the information to the IETF Executive
+Director.
+
+This document and translations of it may be copied and furnished to
+others, and derivative works that comment on or otherwise explain it
+or assist in its implmentation may be prepared, copied, published and
+distributed, in whole or in part, without restriction of any kind,
+provided that the above copyright notice and this paragraph are
+included on all such copies and derivative works. However, this
+document itself may not be modified in any way, such as by removing
+the copyright notice or references to the Internet Society or other
+Internet organizations, except as needed for the purpose of developing
+Internet standards in which case the procedures for copyrights defined
+in the Internet Standards process must be followed, or as required to
+translate it into languages other than English.
+
+The limited permissions granted above are perpetual and will not be
+revoked by the Internet Society or its successors or assigns.
+
+
+16.   Acknowledgments
+
+Many people have helped with the production of this document. Of
+special value have been .....
+
+
+17.   References
+
+[RFC821]    Simple Mail Transfer Protocol. J. Postel. Aug-01-
+             1982. (Format: TXT=124482 bytes) (Obsoletes
+             RFC0788) (Also STD0010) (Status: STANDARD)
+
+[RFC822]    Standard for the format of ARPA Internet text
+             messages. D. Crocker. Aug-13-1982. (Format:
+             TXT=109200 bytes) (Obsoletes RFC0733) (Updated by
+             RFC1123, RFC1138, RFC1148, RFC1327, RFC2156) (Also
+             STD0011) (Status: STANDARD)
+
+[RFC1123]   Requirements for Internet hosts - application and
+             support. R.T. Braden. Oct-01-1989. (Format:
+             TXT=245503 bytes) (Updates RFC0822) (Updated by
+             RFC2181) (Status: STANDARD)
+
+[RFC1866]   Hypertext Markup Language - 2.0. T. Berners-Lee &
+             D. Connolly. November 1995. (Format: TXT=146904
+             bytes) (Status: PROPOSED STANDARD)
+
+[RFC1891]   SMTP Service Extension for Delivery Status
+             Notifications. K. Moore. January 1996. (Format:
+             TXT=65192 bytes) (Status: PROPOSED STANDARD)
+
+[RFC1894]   An Extensible Message Format for Delivery Status
+             Notifications. K. Moore & G. Vaudreuil. January
+             1996. (Format: TXT=77462 bytes) (Status: PROPOSED
+             STANDARD)
+
+[RFC2068]   Hypertext Transfer Protocol -- HTTP/1.1. R.
+             Fielding, J. Gettys, J. Mogul, H. Frystyk, T.
+             Berners-Lee. January 1997. (Format: TXT=378114
+             bytes) (Status: PROPOSED STANDARD)
+
+[RFC2369]   The Use of URLs as Meta-Syntax for Core Mail List
+             Commands and their Transport through Message
+             Header Fields. G. Neufeld, J. Baer. July 1998.
+             (Format: TXT=30853 bytes) (Status: PROPOSED
+             STANDARD)
+
+[RFC2919]   List-Id: A Structured Field and Namespace for the
+             Identification of Mailing Lists, By R. Chandhok
+             and G. Wegner, March 2001 (Status: PROPOSED
+             STANDARD).
+
+[RFC2821]   Simple Mail Transfer Protocol, by J. Klensin,
+             April 2001.
+
+[RFC2822]   Internet Message Format, by P. Resnick, April
+             2001.
+
+
+
+18.   Author's address
+
+Jacob Palme                          Phone: +46-8-16 16 67
+Stockholm University/KTH             Fax: +46-8-783 08 29
+Skeppargatan 73                      E-mail: jpalme@dsv.su.se
+S-115 30 Stockholm, Sweden

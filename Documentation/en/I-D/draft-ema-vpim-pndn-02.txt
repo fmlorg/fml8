@@ -1,0 +1,9 @@
+
+This  document has been replaced by draft-ietf-vpim-pndn-00.txt.
+For more information or a copy of the document, contact the author directly.
+
+Draft Author(s):
+
+E. Burger: e.burger@ieee.org                                                       
+
+

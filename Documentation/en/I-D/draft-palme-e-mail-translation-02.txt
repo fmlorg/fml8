@@ -1,0 +1,991 @@
+Network Working Group                                     Jacob Palme
+Internet Draft                               Stockholm University/KTH
+draft-palme-e-mail-translation-02.txt                          Sweden
+Category-to-be: Proposed standard                 Date: December 2000
+                                                   Expires: June 2001
+
+
+
+                  Support for Language Translation
+                       in E-Mail and Netnews
+
+                        Status of this Memo
+
+
+This document is an Internet-Draft and is in full conformance
+with all provisions of Section 10 of RFC2026.
+
+Internet-Drafts are working documents of the Internet Engineering
+Task Force (IETF), its areas, and its working groups.  Note that
+other groups may also distribute working documents as
+Internet-Drafts.
+
+Internet-Drafts are draft documents valid for a maximum of six
+months and may be updated, replaced, or obsoleted by other
+documents at any time.  It is inappropriate to use Internet-
+Drafts as reference material or to cite them other than as
+"work in progress."
+
+The list of current Internet-Drafts can be accessed at
+http://www.ietf.org/ietf/1id-abstracts.txt
+
+The list of Internet-Draft Shadow Directories can be accessed at
+http://www.ietf.org/shadow.html.
+
+Copyright (C) The Internet Society 1999, 2000. All Rights
+Reserved.
+
+
+1.1   Abstract
+
+This memo specifies extensions to e-mail and netnews standards, to
+allow for the submission of translations of messages, not only at
+initial submission time, but also at later time, and made by other
+translators than the original author of the message. three new e-
+mail/netnews header fields are proposed, "Content-Translation-Of,
+"Content-Translator" and "Translation-Request".
+
+
+1.2   Mailing list
+
+To write
+
+ Further discussion of this memo can take place in the mailing list WG-
+ LANGTRANS@SU.SE.
+
+ Comments on less important details may also be sent to the editor,
+ Jacob Palme <jpalme@dsv.su.se>.
+
+To subscribe
+
+ To subscribe to this mailing list, send a message to
+ LISTSERV@SU.SE
+ which contains the text
+ SUB[SCRIBE] LANGTRANS <your name (not your email address)>
+
+To unsubscribe
+
+ To unsubscribe from this list, send a message to
+ LISTSERV@SU.SE
+ which contains the text
+ UNS[UBSCRIBE] LANGTRANS
+
+To access mailing list archives
+
+ The archives are available for browsing from
+ http://salut.nu/forum/uno/6/1/
+ Use the browsing command "All messages" to get everything written on a
+ single web page.
+
+
+Table of Contents
+
+2    Language Support in Existing Standards
+3    Multi-Language Scenario
+4    The Content-Translation-Of Header Field
+5    The Content-Translator Header Field
+6    USE of The Multipart/Choices MIME Content Type
+7    The Translation-Request Header
+8    Examples
+     8.1  Separate Original and Translated Messages
+     8.2  Sending a Message to a Translator for Translation
+     8.3  Resending of the Message in 8.2 After Translation
+9    For Further Study
+10   Security Considerations
+11   Copyright and Disclaimer
+12   Acknowledgments
+13   References
+14   Author's Address
+Appendix 1: An Investigation of Handling of
+Multipart/Alternative in some Common Mailers in November 2000
+
+
+2     Language Support in Existing Standards
+
+The "Content-Language:" e-mail content header specified in RFC 1766 [6]
+can be used to specify one or a list of natural languages used in that
+message body.
+
+The "Content-Type: Multipart/alternative" defined in MIME [4] might be
+used to send the same text in more than one language. Each part would
+then be marked with the "Content-Language:" header to indicate its
+language, and the recipient might choose the body part according to his
+or her language preferences. The combination of Multipart/alternative
+with Content-Language is however not commonly supported and gives
+disastrous results with most mailers (November 2000), so this solution
+is not recommended in this specification.
+
+In HTTP [7], a request operation can indicate a list of preferred
+languages, and the server can then deliver the resource in the
+preferred language. The request operation can also indicate how good
+each language is for a particular user, in the format:
+
+          Accept-Content-Language: da, en-gb;q=0.8, en;q=0.7
+
+HTTP also has facilities for the server to tell the client which
+alternatives are available in different languages, letting the client
+choose between them. It is also possible, with HTTP, to deliver a
+resource in the "Multipart/alternative" format, if the recipient wants
+to store the resource in all available language versions. These HTTP
+features are however not commonly supported (November 2000).
+
+All of these methods of transmitting information is based on the
+assumption that all language versions are ready and available when a
+message is sent.
+
+
+3     Multi-Language Scenario
+
+John Smith writes a message in English and submits it to a mailing list
+or to a Usenet newsgroup. The mailing list expander sends this message
+to an automatic translation agent which translates it into other
+languages and returns the translations to the mailing list expander.
+The mailing list expander might then either forward all translations to
+each member of the list, or forward to each member only the translation
+preferred by this member. Ernst D’rrenmatt has requested the mailing
+list to send him all language versions, but reads this message in
+English, because he has indicated that he prefers English original
+documents to automatic German translations. Hilda Schmidt reads the
+message in both English and German, decides that the automatic German
+translation is not very good, and cleans it up, submitting a new better
+translation to German. Ernst D’rrenmatt checks this translation, makes
+some corrections, and submits a final corrected version of the German
+translation of the original message.
+
+
+4     The Content-Translation-Of Header Field
+
+The "Content-Translation-Of" header field is used when submitting a
+translation to a message, which earlier has been sent in another
+language. The syntax for this header field is similar to the syntax for
+the "In-Reply-To" header, but only one value is allowed, since every
+translation can only be the translation of one previous message. The
+value contains the Message-ID of the original message before
+translation. If a message is available in more than one language,
+"Content-Translation-Of" should always reference the original message,
+even if the translation was actually based on a translated version. If
+the original message is available in more than one version, with
+"Supersedes" or "Replaces" references between the versions, then the
+"Content-Translation-Of" should reference the version which was the
+basis of this translation.
+
+Translation is applied to the body content, and to the content of the
+"Subject:" header, but not to any other header contents. When a
+"Subject:" is translated, the language code enclosed in parenthesis"
+can be added to the beginning of the "Subject".
+
+If more than one translation is available of the same original message,
+the "Supersedes" or "Replaces" header field should not be used between
+them. "Supersedes" or "Replaces" are only to be used when the original
+message is revised.
+
+
+5     The Content-Translator Header Field
+
+The "Content-Translator" header field indicates who made the
+translation. When a translation is submitted, the "From" header field
+should still indicate the original author, but the "Content-Translator"
+header field can indicate who made the translation.
+
+The syntax of the "Content-Translator" header field is:
+
+Content-Translator           = "Content-Translator:" ( CFWS mailbox-
+list / Phrase )
+                       *(";" translator-parameter) CFWS CRLF
+
+translator-parameter = art / fluency / future-extension
+
+art                  = "Human" / "Machine" / "Original"
+
+fluency              = "Expert" / "Native" / "Other"
+
+The meaning of these parameters are:
+
+Human    = Translation was made or revised/approved by a human
+           translator.
+
+Machine  = Translation was entirely automatic, with no human checking
+           of the translation. In this case, the "Auto-Submitted" [8]
+           header should also be added to the message heading.
+
+Original = This is the original before translation. Absence of a
+           "Content-Translator" also indicates that the message is not
+           translated, but "Content-Translator: None; Original" can be
+           used to explicitly specify that this is not translated.
+
+Expert   = Translation was made by an expert translator.
+
+Native   = Translation was made by a native speaker of the target
+           language.
+
+
+Other    = Translation was made by someone who is not an expert nor
+           a native speaker of the target language.
+
+
+6     USE of The Multipart/Choices MIME Content Type
+
+When several translations of the same message are sent in the same
+message, the content-type multipart/choices, as defined in [9].
+
+If translation is desired also of the "Subject" header, then the
+translated body parts have to be of content-type Message/rfc822, since
+only that content-type allows different subject in different body
+parts.
+
+It is recommended to add information about translation at the top of
+each body part (example, see section 8.3 below), because some mailers
+display multiple body parts in sequence inline with no indication of
+the Differences between them. This recommendation may be lifted at some
+future time when most mailers have support for Multipart/choices.
+
+It is also recommended to add a blank line at the end of each
+translation, since this will show up neater on some old mailers, which
+display all body parts in sequence to the recipient.
+
+
+7     The Translation-Request Header
+
+The Translation-Request header is used when sending a message for
+translation to a human or machine translator. Its value is a list of
+the languages to which translation is requested. The languages are
+specified according to [6]. The language of the original can be
+included in the Translation-Request header, this tells the translator
+to include the original of the message when it is forwarded after
+translation, together with the translations to other languages.
+
+When the Translation-Request header is used, the content-type should
+always be "Message/rfc822" [5] and the content should be the message to
+be translated. When the translation is ready, the translator is
+instructed to send the translation to the recipients in the "To:",
+"Cc:" and "Bcc:" headers and to leave non-translated headers of the
+message/rfc822 body as they were before the translation. When the
+translator resends the translation, Resent-From" is added with the name
+of the translator, and "Resent-Date" with the date of the translation.
+If translation to multiple languages is requested, the result is sent
+using the content-type multipart/choices.
+
+Syntax: "Translation-Request:" CFWS language 1*(, CFWS language)
+        CFWS CRLF
+
+
+8     Examples
+
+8.1   Separate Original and Translated Messages
+
+    Message-ID: A@foo.bar.net
+    From: John Smith <jsmit@foo.bar.net>
+    To: Tropical Flowers Mailing List <tropflow@foo.bar.net>
+    Content-Translator: None; Original
+    Content-Language: en
+
+    Message-ID: B@foo.bar.net
+    From: John Smith <jsmit@foo.bar.net>
+    To: Tropical Flowers Mailing List <tropflow@foo.bar.net>
+    Content-Translation-Of: A
+    Content-Translator: Erika Ernst <eernst@foo.bar.de>; human; native
+    Content-Language: de
+
+    Message-ID: C@foo.bar.net
+    From: John Smith <jsmit@foo.bar.net>
+    To: Tropical Flowers Mailing List <tropflow@foo.bar.net>
+    Content-Translation-Of: A
+    Content-Translator: Tomas D’rrenmatt <tdurrenmatt@foo.bar.de>;
+                         expert
+    Content-Language: de
+
+    Message-ID: D@foo.bar.net
+    From: John Smith <jsmit@foo.bar.net>
+    To: Tropical Flowers Mailing List <tropflow@foo.bar.net>
+    Content-Language: en
+    Supersedes: A
+
+    Message-ID: E@foo.bar.net
+    From: John Smith <jsmit@foo.bar.net>
+    To: Tropical Flowers Mailing List <tropflow@foo.bar.net>
+    Content-Translation-Of: D
+    Content-Translator: Supertrans Translation Engine
+                        <supertrans@foo.bar>; machine
+    Auto-Submitted: Auto-generated
+    Content-Language: de
+    Supersedes: A
+
+
+8.2   Sending a Message to a Translator for Translation
+
+    Message-ID: Z@foo.bar.net
+    From: John Smith <jsmit@foo.bar.net>
+    Translation-Request: en, fr, de
+    Content-Type: Message/rfc822
+
+    Message-ID: Z-en@foo.bar.net
+    From: John Smith <jsmit@foo.bar.net>
+    To: Tropical Flowers Mailing List <tropflow@foo.bar.net>
+    Content-Translator: None; Original
+    Content-Language: en
+    Subject: Orchids
+
+    Orchids are beautiful.
+
+
+8.3   Resending of the Message in 8.2 After Translation
+
+    Resent-From: Supertrans Translation Engine <supertrans@foo.bar>
+    Message-ID: Z@supertrans.bar.net
+    From: John Smith <jsmit@foo.bar.net>
+    Content-Type: Multipart/choices; boundary="boundary 1"
+    To: Tropical Flowers Mailing List <tropflow@foo.bar.net>
+    Subject: (en) Orchids
+
+    --boundary 1
+    Message-ID: Z-@foo.bar.net
+    From: John Smith <jsmit@foo.bar.net>
+    Translation-Request: en, fr, de
+    Content-Type: Message/rfc822
+
+    Message-ID: Z-en@foo.bar.net
+    From: John Smith <jsmit@foo.bar.net>
+    To: Tropical Flowers Mailing List <tropflow@foo.bar.net>
+    Content-Translator: None; Original
+    Content-Language: en
+    Subject: (en) Orchids
+
+    Original English Text
+    ---------------------
+
+    Orchids are beautiful.
+
+    --boundary 1
+    Content-Type: Message/rfc822
+
+    Message-ID: Z-de@supertrans.bar.net
+    From: John Smith <jsmit@foo.bar.net>
+    Content-Translation-Of: A
+    Content-Translator: Supertrans Translation
+                        Engine <supertrans@foo.bar>; machine
+    Content-Language: de
+    Subject: (de) Orchideen
+
+    Deutsche ›bersetzung
+    --------------------
+
+    Orchideen sind sch÷n.
+
+    --boundary 1
+    Content-Type: Message/rfc822
+
+    Message-ID: Z-fr@supertrans.bar.net
+    Content-Translation-Of: A
+    Content-Translator: Supertrans Translation Engine
+                        <supertrans@foo.bar>; machine
+    Content-Language: fr
+    Subject: (fr) Orchid‰e
+
+    Traduction fran‡ais
+    -------------------
+
+    Orchid‰e sont beau.
+
+    --boundary 1--
+
+
+9     For Further Study
+
+The following is not yet resolved in this draft:
+
+-  How a user can register its language preferences with a mail
+   server or a mailing list expander.
+
+-  Whether POP/IMAP should be extended with commands to request
+   messages in only a certain language.
+
+-  How to handle translation in Usenet News. One might for example
+   have a set of co-ordinated newsgroups, with the same articles in
+   different languages. A newsgroup "alt.cultures.multiple" might be
+   provided with English in "alt.cultures.multiple.en", German in
+   "alt.cultures.multiple.de", etc., with automatic or manual
+   translation of the messages between these newsgroups.
+
+-  Handling of signatures and seals.
+
+
+10    Security Considerations
+
+Translations made by other people than the original author of
+a message will of course entail the risk of intentional or
+unintentional incorrectness of the translation. But this is a
+risk we must accept if we want to have translations, and if
+everyone is not fluent in every language.
+
+Some people claim that machine translation technology is so
+bad, that it should not be used at all. I do not agree,
+machine translation will often give a good understanding of
+the intent of the original text even if the translation is not
+perfect. And if the recipient has a choice of either not
+understanding a message at all, or getting a machine
+translation, the recipient may still prefer the automatic
+translation. Based on this, the recipient might decide whether
+the message is of enough interest to be willing to pay for a
+human to make a better translation.
+
+The risk can be reduced, if the receiving user agent clearly
+shows that a message is a translator, who made the
+translation, and allows the user to check the original text
+and compare it with the translation.
+
+A translation will invalidate any digital signatures or seals,
+but the translator might add its own signature and seals to
+ensure that the translation is not corrupted when sent from
+translator to readers. These signatures and seals will not
+promise any correspondence with the original text, except the
+promise which a translator might give of the correctness of
+its translations.
+
+
+11    Copyright and Disclaimer
+
+The IETF takes no position regarding the validity or scope of
+any intellectual property or other rights that might be
+claimed to pertain to the implementation or use of the
+technology described in this document or the extent to which
+any license under such rights might or might not be available;
+neither does it represent that it has made any effort to
+identify any such rights. Information on the IETF's procedures
+with respect to rights in standards-track and standards-
+related documentation can be found in BCP-11. Copies of claims
+of rights made available for publication and any assurances of
+licenses to be made available, or the result of an attempt
+made to obtain a general license or permission for the use of
+such proprietary rights by implementors or users of this
+specification can be obtained from the IETF Secretariat."
+
+The IETF invites any interested party to bring to its
+attention any copyrights, patents or patent applications, or
+other proprietary rights which may cover technology that may
+be required to practice this standard. Please address the
+information to the IETF Executive Director.
+
+Copyright (C) The Internet Society (2000). All Rights
+Reserved.
+
+This document and translations of it may be copied and
+furnished to others, and derivative works that comment on or
+otherwise explain it or assist in its implementation may be
+prepared, copied, published and distributed, in whole or in
+part, without restriction of any kind, provided that the above
+copyright notice and this paragraph are included on all such
+copies and derivative works. However, this document itself may
+not be modified in any way, such as by removing the copyright
+notice or references to the Internet Society or other Internet
+organizations, except as needed for the purpose of developing
+Internet standards in which case the procedures for copyrights
+defined in the Internet Standards process must be followed, or
+as required to translate it into languages other than English.
+
+The limited permissions granted above are perpetual and will
+not be revoked by the Internet Society or its successors or
+assigns.
+
+
+12    Acknowledgments
+
+Suggestions during the development of this memo has been given by
+Harald Alvestrand, Bill Jansson, Larry Masinter, Keith Moore and Henry
+Spencer.
+
+13    References
+
+Ref.    Author, title                                    IETF status
+                                                         (July 1996)
+-----   ---------------------------------------------    -----------
+[1]     J. Postel: "Simple Mail Transfer Protocol",      Standard,
+        STD 10, RFC 821, August 1982.                    Recommended
+
+[2]     D. Crocker: "Standard for the format of ARPA     Standard,
+        Internet text messages." STD 11, RFC 822,        Recommended
+        August 1982.
+
+[3]     M.R. Horton, R. Adams: "Standard for             Not an
+        interchange of USENET messages", RFC 1036,       official
+        December 1987.                                   IETF
+                                                         standard,
+                                                         but in
+                                                         reality a de-
+                                                         facto
+                                                         standard for
+                                                         Usenet News
+
+[4]     N. Freed & N. Borenstein: "Multipurpose          Draft
+        Internet Mail Extensions (MIME) Part One:        Standard,
+        Format of Internet Message Bodies." RFC 2045.    elective
+        November 1996.
+
+[5]     N. Freed & N. Borenstein: "Multipurpose          Draft
+        Internet Mail Extensions (MIME) Part Two:        Standard,
+        Media Types." RFC 2046. November 1996.           elective
+
+[6]     H. Alvestrand: "Tags for the Identification      Proposed
+        of Languages", RFC 1766, February 1995.          standard,
+                                                         elective
+
+[7]     R. Fielding, J. Gettys, J. Mogul, H. Frystyk,    Draft
+        T. Berners-Lee: Hypertext Transfer Protocol -    standard
+        - HTTP/1.1, RFC 2616, June 1999.
+
+[8]     J. Palme: The Auto-Submitted, Supersedes and     Work in
+        Expires Headers in E-mail and Netnews, draft-    progress
+        ietf-mailext-new-fields-14.txt, November
+        1998.
+
+[9]     J. Palme: The multipart/choices Content-Type.    Work in
+        draft-palme-multipart-choices-00.txt,            progress
+        December 2000.
+
+
+14    Author's Address
+
+Jacob Palme                     Phone: +46-8-16 16 67
+Stockholm University/KTH        Fax: +46-8-783 08 29
+Skeppargatan 73                 E-mail: jpalme@dsv.su.se
+S-115 30 Stockholm, Sweden
+
+
+Appendix 1: An Investigation of Handling of Multipart/Alternative in
+some Common Mailers in November 2000
+
+As a basis for possible work on developing standards for language-
+translation in e-mail, I tested how some common mailers handled
+multipart/alternative with different Content-Language in the body parts
+in November 2000.
+
+I used the following test messages:
+
+Test message 1: First part English, second part German
+
+Test message 2: Same as test message 1, but first part German, second
+part English
+
+Test message 3: Same as test message 2, but multipart/mixed instead of
+multipart/alternative.
+
+Test message 4: Same as test message 3, but with Content-Disposition:
+Attachment on all but the first body part.
+
+Test message 5: Multipart/mixed on an outer level, with the first part
+a directory of attachments, and the second part a multipart/alternative
+with the German and English parts as the two alternatives.
+
+Test message 6: Multipart/alternative with the first part containing
+all the translations in one body part, and the second part a
+multipart/alternative with one translation in each alternative.
+
+I tested this with the following mailers:
+Eudora 5 Macintosh, Pine 4.21 on Unix, Netscape 4.7 Macintosh, Outlook
+Express 5 Macintosh, First Class 5.611 Macintosh, KOM 2000 (our own
+system), and Hotmail.
+
+Result: None of the mailers seemed to test on the Content-Language
+value, and make a selection based on this.
+
+Eudora, Outlook Express, KOM 2000 and Hotmail only showed the first
+body part. Netscape only showed the second body part. Pine only showed
+the second body part, but provided a user command to see also the first
+body part. First Class displayed both body parts in sequence, i.e. i
+treated multipart/alternative as identical to multipart/mixed.
+
+The conclusion of this is that if IETF makes a standard, specifying
+that different translations of the same message should be sent with
+multipart/alternative with different Content-Language on the different
+body parts, then most mailers will not show a user the version in the
+preferred language of that user.
+
+Since backwards compatibility with existing mailers is very important,
+this seems to indicate that an IETF standard for handling of language
+translation in e-mail has to use some other format than
+multipart/alternative to indicate translations.
+
+I also tested some more complex messages. In test message 4, I used
+multipart/mixed with three body parts, the first a list of the rest of
+the body parts, which contained the message in different languages.
+This format was not ideal either with the existing mailers. Most of
+them showed all three body parts in sequence inline (even though all
+except the first were marked as Content-Disposition: Attachment) and
+some of them without any visible marker between the body parts.
+
+In test message 5, on the top level is a multipart/mixed with two body
+parts, the first a list of the body parts, the second a
+multipart/alternative with the different language parts. This had the
+same problem as all the other multipart/alternative test examples: Many
+of the mailers arbitrarily chooses one of the multipart/alternatives
+and only shows this, some mailers choose the first alternative, some
+the second.
+
+In test message 6, I had on the top level a multipart/alternative where
+the first body part was a text/plain with all the language versions in
+one text. The second body part was another multipart/alternative with
+the different language parts as body parts. A mailer which cannot
+discriminate between languages, should for this message only display
+body part 1. Only Outlook Express and KOM 2000 did this. Pine, Netscape
+and Hotmail arbitrarily showed only one language version.
+
+In test message 7, I tested the format proposed in this ietf-draft, as
+shown in section 8.3 above.
+
+
+Test message 1:
+---------------
+
+      Message-ID: <language-test-1@dsv.su.se>
+      Date: Wed, 12 Nov 2000 18:12:00 +0100
+      From: Jacob Palme <jpalme@dsv.su.se>
+      MIME-Version: 1.0
+      To: jpalme@dsv.su.se, jptest@dsv.su.se
+      Subject: Language test message no. 1 v1
+      Content-Type: multipart/alternative; boundary="==boundary-2"
+
+      Text displayed only to non-MIME-compliant mailers
+
+      --==boundary-2
+      Content-Type: text/plain; charset=iso-8859-1
+      Content-Transfer-Encoding: 8bit
+      Content-Language: en
+
+      Message in English.
+
+      --==boundary-2
+      Content-Type: text/plain; charset=iso-8859-1
+      Content-Transfer-Encoding: 8bit
+      Content-Language: de
+
+      Nachricht auf deutsch.
+      --==boundary-2--
+
+
+Test message 2:
+---------------
+
+      Message-ID: <language-test-2@dsv.su.se>
+      Date: Wed, 12 Nov 2000 18:12:00 +0100
+      From: Jacob Palme <jpalme@dsv.su.se>
+      MIME-Version: 1.0
+      To: jpalme@dsv.su.se, jptest@dsv.su.se
+      Subject: Language test message no. 1 v1
+      Content-Type: multipart/alternative; boundary="==boundary-2"
+
+      Text displayed only to non-MIME-compliant mailers
+
+      --==boundary-2
+      Content-Type: text/plain; charset=iso-8859-1
+      Content-Transfer-Encoding: 8bit
+      Content-Language: de
+
+      Nachricht auf deutsch.
+      --==boundary-2
+      Content-Type: text/plain; charset=iso-8859-1
+      Content-Transfer-Encoding: 8bit
+      Content-Language: en
+
+      Message in English.
+      --==boundary-2--
+
+
+Test message 3:
+---------------
+
+      Message-ID: <language-test-3@dsv.su.se>
+      Date: Wed, 12 Nov 2000 18:12:00 +0100
+      From: Jacob Palme <jpalme@dsv.su.se>
+      MIME-Version: 1.0
+      To: jpalme@dsv.su.se,jptest@dsv.su.se
+      Subject: Language test message no. 3 v1
+      Content-Type: multipart/mixed; boundary="==boundary-2"
+
+      Text displayed only to non-MIME-compliant mailers
+
+      --==boundary-2
+      Content-Type: text/plain; charset=iso-8859-1
+      Content-Transfer-Encoding: 8bit
+      Content-Language: de
+
+      Nachricht auf deutsch.
+      --==boundary-2
+      Content-Type: text/plain; charset=iso-8859-1
+      Content-Transfer-Encoding: 8bit
+      Content-Language: en
+
+      Message in English.
+      --==boundary-2--
+
+
+Test message 4:
+---------------
+
+      Message-ID: <language-test-4@dsv.su.se>
+      Date: Wed, 12 Nov 2000 18:12:00 +0100
+      From: Jacob Palme <jpalme@dsv.su.se>
+      MIME-Version: 1.0
+      To: jpalme@dsv.su.se,jptest@dsv.su.se
+      Subject: Language test message no. 4 v1
+      Content-Type: multipart/mixed; boundary="==boundary-2"
+
+      Text displayed only to non-MIME-compliant mailers
+
+      --==boundary-2
+      Content-Type: text/plain; charset=iso-8859-1
+      Content-Transfer-Encoding: 8bit
+
+      Attachment 1: Deutsch
+      Attachment 2: English
+
+      Nachricht auf deutsch.
+      --==boundary-2
+      Content-Type: text/plain; charset=iso-8859-1
+      Content-Transfer-Encoding: 8bit
+      Content-Disposition: Attachment
+      Content-Language: de
+
+      Nachricht auf deutsch.
+      --==boundary-2
+      Content-Type: text/plain; charset=iso-8859-1
+      Content-Transfer-Encoding: 8bit
+      Content-Disposition: Attachment
+      Content-Language: en
+
+      Message in English.
+      --==boundary-2--
+
+
+Test message 5:
+---------------
+
+      Message-ID: <language-test-5@dsv.su.se>
+      Date: Mon, 13 Nov 2000 12:12:00 +0100
+      From: Jacob Palme <jpalme@dsv.su.se>
+      MIME-Version: 1.0
+      To: jpalme@dsv.su.se,jptest@dsv.su.se
+      Subject: Language test message no. 5 v1
+      Content-Type: multipart/mixed; boundary="==boundary-2"
+
+      Text displayed only to non-MIME-compliant mailers
+
+      --==boundary-2
+      Content-Type: text/plain; charset=iso-8859-1
+      Content-Transfer-Encoding: 8bit
+
+      Attachment 1: Deutsch
+      Attachment 2: English
+
+      --==boundary-2
+      Content-Type: Multipart/alternative; boundary="==boundary-1"
+
+      --==boundary-1
+      Content-Type: text/plain; charset=iso-8859-1
+      Content-Transfer-Encoding: 8bit
+      Content-Language: de
+
+      Nachricht auf deutsch.
+      --==boundary-1
+      Content-Type: text/plain; charset=iso-8859-1
+      Content-Transfer-Encoding: 8bit
+      Content-Language: en
+
+      Message in English.
+      --==boundary-1--
+      --==boundary-2--
+
+
+Test message 6:
+---------------
+
+      Message-ID: <language-test-6@dsv.su.se>
+      Date: Wed, 12 Nov 2000 18:12:00 +0100
+      From: Jacob Palme <jpalme@dsv.su.se>
+      MIME-Version: 1.0
+      To: jpalme@dsv.su.se,jptest@dsv.su.se
+      Subject: Language test message no. 6 v1
+      Content-Type: multipart/alternative; boundary="==boundary-1"
+
+      Text displayed only to non-MIME-compliant mailers
+
+      --==boundary-1
+      Content-Type: text/plain; charset=iso-8859-1
+
+      **** This message in English ***
+
+      Message in English.
+
+      **** Diese Nachricht auf deutsch
+
+      Nachricht auf deutsch.
+      --==boundary-1
+      Content-Type: multipart/alternative; boundary="==boundary-2"
+
+      --==boundary-2
+      Content-Type: text/plain; charset=iso-8859-1
+      Content-Transfer-Encoding: 8bit
+      Content-Language: en
+
+      Message in English.
+
+      --==boundary-2
+      Content-Type: text/plain; charset=iso-8859-1
+      Content-Transfer-Encoding: 8bit
+      Content-Language: de
+
+      Nachricht auf deutsch.
+      --==boundary-2--
+      --==boundary-1--
+
+Test message 7:
+--------------
+
+Same as in section 8.3 above.
+
+Mailer          Test message 1&2        Test message 3
+------          -----------------       ---------------
+
+Eudora 5        Only displayed the      Both shown in
+Macintosh       first alternative,      sequence, Content-
+version         did not even indicate   headers shown, but
+                that there was any      not Content-Language!
+                other alternative.      No indication that
+                                        the different
+                                        language of the two
+                                        body parts.
+
+Pine 4.21 on a  Only the second         Both versions are
+Unix platform   alternative is shown    listed in sequence
+                directly, but the       with a divider
+                user can ask to see     indication in-
+                the first alternative   between, no
+                with the VIEW           indication that the
+                command. Nothing is     different language of
+                said to indicate that   the two body parts.
+                the two alternatives
+                contain the same text
+                in two languages.
+
+Netscape 4.7    Only the second         Both versions are
+on a Macintosh  alternative is shown,   listed in sequence
+                did not even indicate   with a horizontal
+                that there was any      rule in-between, no
+                other alternative.      indication that the
+                                        different language of
+                                        the two body parts.
+
+Outlook         Only displayed the      Both shown in
+Express 5,      first alternative,      sequence, no divider
+Macintosh       did not even indicate   and no indication
+edition         that there was any      that the different
+                other alternative.      language of the two
+                                        body parts.
+
+First Class     Both versions are       Both versions are
+5.611,          listed in sequence      listed in sequence
+Macintosh       with no divider in-     with no divider in-
+client          between, no             between, no
+                indication that the     indication that the
+                different language of   different language of
+                the two body parts.     the two body parts.
+
+KOM 2000        Only displayed the      Both versions are
+                first alternative,      listed in sequence
+                did not even indicate   with a blank line in-
+                that there was any      between, no
+                other alternative.      indication that the
+                                        different language of
+                                        the two body parts.
+
+Hotmail         Only displayed the      Both shown in
+                first alternative,      sequence, blank line
+                did not even indicate   in-between.
+                that there was any
+                other alternative.
+
+
+Mailer          Test message 4          Test message 5
+------          ---------------         ---------------
+
+Eudora 5        All three body parts    First and second body
+Macintosh       in sequence.            part shown inline.
+version
+
+Pine 4.21 on a  First message shown     First message shown
+Unix platform   inline, the rest        inline, the rest
+                available by commands   available by commands
+                to retrieve             to retrieve
+                attachments.            attachments.
+
+Netscape 4.7    All three body parts    Only first and third
+on a Macintosh  in sequence with a      body part shown in
+                horizontal rule in-     sequence with two
+                between.                horizontal rules in-
+                                        between.
+
+Outlook         All three body parts    First and third body
+Express 5,      in sequence.            parts in sequence.
+Macintosh
+edition
+
+First Class     All three body parts
+5.611,          listed in sequence.
+Macintosh
+client
+
+KOM 2000        All three body parts    First and third body
+                in sequence,            part in sequence,
+                horizontal rule in      horizontal rule in
+                between.                between.
+
+Hotmail         All three body parts    First and third body
+                in sequence.            part in sequence.
+
+
+Mailer          Test message 6          Test message 7
+------          ---------------         --------------
+
+Eudora 5        The first and the       All translations
+Macintosh       second, but not the     inline in sequence
+version         third body part is      with all headers,
+                shown.                  including translation-
+                                        headers shown on each
+                                        body part.
+
+Pine 4.21 on a  Last body part (the     All translations
+Unix platform   German variant) shown   listed as
+                inline, the other       attachments.
+                body parts available
+                as attachments.
+
+Netscape 4.7    Only the last body      All translations
+on a Macintosh  part (the German        inline with some
+                variant shown,          headers shown on each
+                nothing indicates to    body parts.
+                the reader that
+                anything more is
+                available.)
+
+Outlook         Only the first body     All translations
+Express 5,      part shown, with both   inline with some
+Macintosh       language text within    headers shown on each
+edition         a single body part!     body parts.
+
+First Class                             All translations
+5.611,                                  inline in sequence
+Macintosh                               with all headers,
+client                                  including translation-
+                                        headers shown on each
+                                        body part.
+
+KOM 2000        Only the first body     All translations
+                part is shown,          inline with some
+                containing both         headers shown on each
+                language versions in    body parts.
+                one body part.
+
+Hotmail         Only the second body    All translations
+                part is shown, no       inline with some
+                indication that any     headers shown on each
+                more text is            body parts.
+                available.
+
