@@ -10,7 +10,79 @@
 use_command_mail_program	=	yes
 
 
-=head2	サイズ制限
+=head2	コマンド プロンプト
+
+# Descriptions: command prompt in message reply
+#      History: hard coded in fml (< 4.0)
+#        Value: string without spaces
+#     Examples: >>>
+command_mail_reply_prompt			=	>>>
+
+
+=head2	フィルタ
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+use_command_mail_filter	= 	yes
+ 
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+command_mail_filter_functions	=	command_mail_size_filter
+
+
+=head2	フィルタで弾かれたことを教える
+
+
+# Descriptions: フィルタで弾かれたことを教える
+#      History: 4.0 ではハードコードだったような…
+#        Value: yes / no
+#     Examples: yes
+use_command_mail_filter_reject_notice	=	yes
+
+
+# Descriptions: エラーのお知らせの受信者
+#      History: 4.0 ではハードコードだったような…
+#        Value: maintainer | sender
+#     Examples: maintainer sender
+command_mail_filter_reject_notice_recipients	=	maintainer
+							sender
+
+
+# Descriptions: 弾いたメールをどのようにフォワードするか？
+#               ウィルスなどを考慮すると、文字列がいいとおもう
+#      History: 4.0 では文字列で、これはハードコーディングされていた。
+#        Value: multipart / string
+#     Examples: string
+command_mail_filter_reject_notice_data_type	=	string
+
+
+=head2	サイズ制限ベースのフィルタ
+
+
+# Descriptions: サイズ情報を根拠にしたフィルタリングをするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_command_mail_size_filter	=	yes
+
+
+# Descriptions: フィルタリングのルール。
+#               どのルールにもマッチしないなら、コマンドメールは認められる。
+#      History:
+#        Value:
+#     Examples:
+command_mail_size_filter_rules	=	check_header_size
+					check_body_size
+					check_command_limit
+					check_line_length_limit
+					permit
+
 
 
 # Descriptions: MTA から fml が受けとる際のコマンドメールのヘッダサイズの上限値
@@ -42,57 +114,6 @@ outgoing_command_mail_header_size_limit	= $default_mail_header_size_limit
 #     Examples: 10240000
 outgoing_command_mail_body_size_limit	= $default_mail_body_size_limit
 
-
-=head2	特定のコマンドの制限
-
-
-# Descriptions: get コマンドで指定できる記事数の上限。
-#               一つの get コマンドの上限であり、かつ、
-#               複数の get コマンドのリクエスト記事数を全部足し合わせた値が
-#               この値を越えていないか？もチェックされる。
-#      History: $MGET_SEND_BACK_FILES_LIMIT
-#        Value: NUM
-#     Examples: 100
-get_command_request_limit	=	100
-
-
-=head2	フィルタ
-
-
-# Descriptions:
-#      History:
-#        Value:
-#     Examples:
-use_command_mail_filter	= 	yes
- 
-
-# Descriptions:
-#      History:
-#        Value:
-#     Examples:
-command_mail_filter_functions	=	command_mail_size_filter
-
-
-=head2	サイズ制限ベースのフィルタ
-
-
-# Descriptions: サイズ情報を根拠にしたフィルタリングをするか？
-#      History:
-#        Value: yes / no
-#     Examples:
-use_command_mail_size_filter	=	yes
-
-
-# Descriptions: フィルタリングのルール。
-#               どのルールにもマッチしないなら、コマンドメールは認められる。
-#      History:
-#        Value:
-#     Examples:
-command_mail_size_filter_rules	=	check_header_size
-					check_body_size
-					check_command_limit
-					check_line_length_limit
-					permit
 
 
 =head2	コマンドメール一通あたりに含まれているコマンドへの上限
@@ -128,42 +149,32 @@ command_mail_invalid_command_limit	=	100
 command_mail_line_length_limit	=	128
 
 
-=head2	コマンドの定義
-
-#
-# 注意: まだまだ考え中といえます
-#
-
-# Descriptions: command prompt in message reply
-#      History: hard coded in fml (< 4.0)
-#        Value: string without spaces
-#     Examples: >>>
-command_mail_reply_prompt			=	>>>
+=head2	CGI
 
 
-# Descriptions: subscribe コマンドで confirmation 認証(コールバック認証)
-#               を行なうか否か？
-#      History:
-#        Value:  confirmation / ""
-#     Examples:
-subscribe_command_auth_type	=	confirmation
+# Descriptions: listinfo template
+#      History: /usr/local/fml/listinfo/
+#        Value: directory
+#     Examples: /usr/local/share/fml/$fml_version/listinfo/$language
+listinfo_template_dir	= $fml_share_dir/listinfo/$template_file_default_charset
 
 
-# Descriptions: chaddr コマンドで confirmation 認証(コールバック認証)
-#               を行なうか否か？
-#      History:
-#        Value:  confirmation / ""
-#     Examples:
-chaddr_command_auth_type	=	confirmation
+# Descriptions: information をおくディレクトリ (ＭＬごと)
+#      History: none
+#        Value: directory
+#     Examples: ~fml/public_html/fml/listinfo/fml.org/elena
+listinfo_base_dir	= $fml_owner_home_dir/public_html/fml/listinfo
 
 
-# Descriptions: unsubscribe コマンドで confirmation 認証(コールバック認証)
-#               を行なうか否か？
-#      History:
-#        Value:  confirmation / ""
-#     Examples:
-unsubscribe_command_auth_type	=	confirmation
+# Descriptions: information をおくディレクトリ (ＭＬごと)
+#      History: none
+#        Value: directory
+#     Examples: ~fml/public_html/fml/listinfo/fml.org/elena
+listinfo_dir	= $listinfo_base_dir/$ml_domain/$ml_name
 
+
+
+=head2	コンテキストごとのコマンドのリスト
 
 
 # Descriptions: 有効なコマンド一覧を書く
@@ -258,6 +269,9 @@ commands_for_ml_admin_cgi	=	adduser
 					log
 
 
+=head2	特定のコマンドへの制限
+
+
 # Descriptions: confirmation の返事を表す特別なコマンド
 #        Value: STR
 #     Examples:
@@ -270,31 +284,38 @@ confirm_command_prefix		=	confirm
 privileged_command_prefix	=	admin
 
 
-=head2	CGI
+# Descriptions: get コマンドで指定できる記事数の上限。
+#               一つの get コマンドの上限であり、かつ、
+#               複数の get コマンドのリクエスト記事数を全部足し合わせた値が
+#               この値を越えていないか？もチェックされる。
+#      History: $MGET_SEND_BACK_FILES_LIMIT
+#        Value: NUM
+#     Examples: 100
+get_command_request_limit	=	100
 
 
-# Descriptions: listinfo template
-#      History: /usr/local/fml/listinfo/
-#        Value: directory
-#     Examples: /usr/local/share/fml/$fml_version/listinfo/$language
-listinfo_template_dir	= $fml_share_dir/listinfo/$template_file_default_charset
+# Descriptions: subscribe コマンドで confirmation 認証(コールバック認証)
+#               を行なうか否か？
+#      History:
+#        Value:  confirmation / ""
+#     Examples:
+subscribe_command_auth_type	=	confirmation
 
 
-# Descriptions: information をおくディレクトリ (ＭＬごと)
-#      History: none
-#        Value: directory
-#     Examples: ~fml/public_html/fml/listinfo/fml.org/elena
-listinfo_base_dir	= $fml_owner_home_dir/public_html/fml/listinfo
+# Descriptions: chaddr コマンドで confirmation 認証(コールバック認証)
+#               を行なうか否か？
+#      History:
+#        Value:  confirmation / ""
+#     Examples:
+chaddr_command_auth_type	=	confirmation
 
 
-# Descriptions: information をおくディレクトリ (ＭＬごと)
-#      History: none
-#        Value: directory
-#     Examples: ~fml/public_html/fml/listinfo/fml.org/elena
-listinfo_dir	= $listinfo_base_dir/$ml_domain/$ml_name
-
-
-=head2	newml
+# Descriptions: unsubscribe コマンドで confirmation 認証(コールバック認証)
+#               を行なうか否か？
+#      History:
+#        Value:  confirmation / ""
+#     Examples:
+unsubscribe_command_auth_type	=	confirmation
 
 
 # Descriptions: ＭＬ作成時 (makefml newml)の際に作られる
@@ -304,28 +325,16 @@ listinfo_dir	= $listinfo_base_dir/$ml_domain/$ml_name
 newml_command_template_files 	=	config.cf
 
 
-
-=head2	フィルタで弾かれたことを教える
-
-
-# Descriptions: フィルタで弾かれたことを教える
-#      History: 4.0 ではハードコードだったような…
-#        Value: yes / no
-#     Examples: yes
-use_command_mail_filter_reject_notice	=	yes
+# Descriptions: ＭＬ作成時の際に作われる fml_owner の値の指定。
+#               -admin 宛のエラーメールなどが転送される先である。
+#               デフォルトでは main.cf の fml_owner の値(通常ユーザ fml)。
+#        Value: STR
+#     Examples:
+newml_command_ml_admin_default_address 	=	$fml_owner
 
 
-# Descriptions: エラーのお知らせの受信者
-#      History: 4.0 ではハードコードだったような…
-#        Value: maintainer | sender
-#     Examples: maintainer sender
-command_mail_filter_reject_notice_recipients	=	maintainer
-							sender
-
-
-# Descriptions: 弾いたメールをどのようにフォワードするか？
-#               ウィルスなどを考慮すると、文字列がいいとおもう
-#      History: 4.0 では文字列で、これはハードコーディングされていた。
-#        Value: multipart / string
-#     Examples: string
-command_mail_filter_reject_notice_data_type	=	string
+# Descriptions: 引数で指定しない時に、list コマンドが表示するべきマップ
+#      History: none
+#        Value: ARRAY
+#     Examples:
+list_command_default_maps		=	$recipient_maps

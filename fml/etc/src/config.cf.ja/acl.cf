@@ -239,17 +239,17 @@ moderator_recipient_maps	=	$primary_moderator_recipient_map
 #        Value: a list of strings
 #     Examples: see below
 system_special_accounts		=	root
-				postmaster
-				MAILER-DAEMON
-				msgs
-				nobody
-				news
-				majordomo
-				listserv
-				listproc
-				\S+\-help
-				\S+\-subscribe
-				\S+\-unsubscribe
+					postmaster
+					MAILER-DAEMON
+					msgs
+					nobody
+					news
+					majordomo
+					listserv
+					listproc
+					\S+\-help
+					\S+\-subscribe
+					\S+\-unsubscribe
 
 
 
