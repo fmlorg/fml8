@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.60 2003/12/06 04:48:24 fukachan Exp $
+# $FML: ToHTML.pm,v 1.61 2003/12/25 10:48:21 tmu Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.60 2003/12/06 04:48:24 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.61 2003/12/25 10:48:21 tmu Exp $;
 my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $versionid = "$1";
@@ -2020,8 +2020,9 @@ sub _print_li_filename
     my $subject  = $db->get('article_subject', $id) ||
 			$db->get('subject', $id) || "no subject";
     my $who      = $db->get('who', $id) || "no sender";
-    if ($self->{ _use_address_mask } ne 'yes' and $db->get('from', $id) ne '') {
-	$who	 = "" if($who =~ /\@xxx/);
+    if ($self->{ _use_address_mask } ne 'yes' && 
+	$db->get('from', $id) ne '') {
+	$who	 = "" if ($who =~ /\@xxx/);
 	$who	.= " " . $db->get('from', $id);
     }
 
