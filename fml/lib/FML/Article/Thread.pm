@@ -3,12 +3,14 @@
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Thread.pm,v 1.4 2003/08/23 14:37:59 fukachan Exp $
+# $FML: Thread.pm,v 1.5 2004/03/28 13:04:31 fukachan Exp $
 #
 
 package FML::Article::Thread;
 
-use vars qw($debug @ISA @EXPORT @EXPORT_OK $AUTOLOAD);
+use vars qw($debug @ISA @EXPORT @EXPORT_OK $AUTOLOAD
+	    $print_mode
+	    %print_switch);
 use strict;
 use Carp;
 
@@ -24,6 +26,20 @@ my $state_analyzed    = "analyzed";
 my $state_followed    = "followed";
 my $state_closed      = "closed";
 my $state_auto_closed = "closed(auto)";
+
+# DISPATCH TABLE
+$print_mode   = 'text';
+%print_switch = (
+		 text => {
+		     summary => \&psw_message_queue_text_summary_print,
+		     list    => \&psw_message_queue_text_list_print,
+		 },
+
+		 html => {
+		     summary => \&psw_message_queue_html_summary_print,
+		     list    => \&psw_message_queue_html_list_print,
+		 },
+		 );
 
 
 =head1 NAME
@@ -149,18 +165,22 @@ sub print_summary
 sub _print_summary
 {
     my ($self, $fp, $thread_args) = @_;
-    my $curproc  = $self->{ _curproc };
-    my $thread   = $self->{ _thread_object };
-    my $article  = $self->{ _article_object };
-    my $prompt   = ">>>";
+    my $curproc = $self->{ _curproc };
+    my $thread  = $self->{ _thread_object };
+    my $article = $self->{ _article_object };
+    my $queue   = [];
 
     # here we go.
     my $summary = $thread->get_thread_data($thread_args);
+
+  THREAD:
     for my $head_id (sort {$a <=> $b} keys %$summary) {
+	# firstly check thread status.
+	my $status = $thread->get_thread_status($head_id) || "open";
+	next THREAD if $status eq $state_closed;
+	next THREAD if $status eq $state_auto_closed;
+
 	my $list = $summary->{ $head_id } || [];
-
-	print "$prompt article $head_id (@$list)\n";
-
 	for my $id (@$list) {
 	    my $article_path = $article->filepath($id);
 
@@ -169,14 +189,25 @@ sub _print_summary
 	    if (defined $fh) {
 		use Mail::Message;
 		my $msg = Mail::Message->parse(  { fd => $fh } );
-		print $msg->$fp();
-		print "\n";
+		my $buf = $msg->$fp();
+		my $q = {
+		    cur_id  => $id,
+		    head_id => $head_id,
+		    id_list => $list,
+		    status  => $status,
+		    summary => $buf,
+		    message => $msg,
+		};
+		push(@$queue, $q);
 	    }
 	    else {
 		$curproc->logerror("no such file: $article_path");
 	    }
 	}
     }
+
+    my $pfp = $print_switch{ $print_mode }->{ summary };
+    $self->$pfp($queue);
 }
 
 
@@ -198,25 +229,30 @@ list up thread and the related information.
 sub print_list
 {
     my ($self, $thread_args) = @_;
-    my $curproc  = $self->{ _curproc };
-    my $thread   = $self->{ _thread_object };
-    my $article  = $self->{ _article_object };
-    my $format   = "%-8s %-8d %s\n";
-
+    my $curproc = $self->{ _curproc };
+    my $thread  = $self->{ _thread_object };
+    my $article = $self->{ _article_object };
     my $summary = $thread->get_thread_data($thread_args);
+    my $queue   = [];
+
+  THREAD:
     for my $head_id (sort {$a <=> $b} keys %$summary) {
-	my $list   = $summary->{ $head_id } || [];
-	my $status = "open";
+	my $status = $thread->get_thread_status($head_id) || "open";
+	next THREAD if $status eq $state_closed;
+	next THREAD if $status eq $state_auto_closed;
 
-	if (@$list) {
-	    printf $format, $status, $head_id, join(" ", @$list);
-	}
-	else {
-	    printf $format, $status, $head_id, '';
-	}
+	my $list = $summary->{ $head_id } || [];
+	my $q = {
+	    head_id => $head_id,
+	    id_list => $list,
+	    status  => $status,
+	};
+	push(@$queue, $q);
     }
-}
 
+    my $pfp = $print_switch{ $print_mode }->{ list };
+    $self->$pfp($queue);
+}
 
 
 =head1 HANDLE STATUS
@@ -471,6 +507,194 @@ sub _change_thread_status
 	$curproc->log("close thread $id");
 	$thread->set_thread_status($id, $state);
     }
+}
+
+
+=head1 DEFAULT PRINT ENGINES
+
+=cut
+
+
+# Descriptions: set mode of output.
+#    Arguments: OBJ($self) STR($mode)
+# Side Effects: update package scope $print_mode variable.
+# Return Value: none
+sub set_print_style
+{
+    my ($self, $mode) = @_;
+
+    if (defined $mode) {
+	if ($mode eq 'text' || $mode eq 'html') {
+	    $print_mode = $mode;
+	}
+    }
+}
+
+
+# Descriptions: set mode of output.
+#    Arguments: OBJ($self) STR($key) STR($value)
+# Side Effects: update package scope %print_switch dispatcher table.
+# Return Value: none
+sub set_print_function
+{
+    my ($self, $key, $value) = @_;
+
+    if (ref($value) eq 'CODE') {
+	$print_switch{ $key } = $value;
+    }
+    else {
+	croak("set_print_function: invalid data");
+    }
+}
+
+
+# Descriptions: default print engine for summary.
+#    Arguments: OBJ($self)ARRAY_REF($queue)
+# Side Effects: none
+# Return Value: none
+sub psw_message_queue_text_summary_print
+{
+    my ($self, $queue) = @_;
+
+    for my $q (@$queue) {
+	my $cur_id  = $q->{ cur_id }  || '';
+	my $head_id = $q->{ head_id } || '';	
+	my $id_list = $q->{ id_list } || [];
+	my $status  = $q->{ status }  || 'unknown';
+	my $summary = $q->{ summary } || '';
+	my $msg     = $q->{ message } || undef;
+	my $wh      = $q->{ output_channel } || \*STDOUT;
+	my $prompt  = ">>>";
+
+	if ($cur_id && $head_id) {
+	    if ($head_id == $cur_id) {
+		print $wh "$prompt article thread";
+		print $wh " (@$id_list)";
+		print $wh " status=$status\n";
+	    }
+
+	    $summary =~ s/^\s*/   /;
+	    $summary =~ s/\n\s*/\n   /g;
+	    print $wh $summary;
+
+	    print $wh "\n";
+	}
+	else {
+	    carp("psw_message_queue_text_summary_print: invalid data");
+	}
+    }
+}
+
+
+# Descriptions: default print engine for list.
+#    Arguments: OBJ($self)ARRAY_REF($queue)
+# Side Effects: none
+# Return Value: none
+sub psw_message_queue_text_list_print
+{
+    my ($self, $queue) = @_;
+
+    for my $q (@$queue) {
+	my $head_id = $q->{ head_id } || '';	
+	my $id_list = $q->{ id_list } || [];
+	my $status  = $q->{ status }  || 'unknown';
+	my $wh      = $q->{ output_channel } || \*STDOUT;
+	my $format  = "%-12s %s\n";
+
+	if (@$id_list) {
+	    printf $wh $format, $status, join(" ", @$id_list);
+	}
+	else {
+	    printf $wh $format, $status, $head_id, '';
+	}
+    }
+}
+
+
+# Descriptions: default print engine for summary.
+#    Arguments: OBJ($self)ARRAY_REF($queue)
+# Side Effects: none
+# Return Value: none
+sub psw_message_queue_html_summary_print
+{
+    my ($self, $queue) = @_;
+    my $q  = $queue->[ 0 ] || {};
+    my $wh = $q->{ output_channel } || \*STDOUT;
+
+    print $wh "<table border=4>\n";
+
+    for my $q (@$queue) {
+	my $cur_id  = $q->{ cur_id }  || '';
+	my $head_id = $q->{ head_id } || '';	
+	my $id_list = $q->{ id_list } || [];
+	my $status  = $q->{ status }  || 'unknown';
+	my $summary = $q->{ summary } || '';
+	my $msg     = $q->{ message } || undef;
+	my $wh      = $q->{ output_channel } || \*STDOUT;
+	my $prompt  = "";
+
+	print $wh "<tr>\n";
+
+	if ($cur_id && $head_id) {
+	    if ($head_id == $cur_id) {
+		print $wh "<td> @$id_list";
+		print $wh "<td> $status\n";
+	    }
+	    else {
+		print $wh "<td>\n";
+		print $wh "<td>\n";
+	    }
+
+	    print $wh "<td>\n";
+	    $summary =~ s/^\s*/   /;
+	    $summary =~ s/\n\s*/\n   /g;
+	    print $wh $summary;
+
+	    print $wh "<BR>\n";
+	}
+	else {
+	    carp("psw_message_queue_html_summary_print: invalid data");
+	}
+    }
+
+    print $wh "</table>\n";
+}
+
+
+# Descriptions: default print engine for list.
+#    Arguments: OBJ($self)ARRAY_REF($queue)
+# Side Effects: none
+# Return Value: none
+sub psw_message_queue_html_list_print
+{
+    my ($self, $queue) = @_;
+    my $q  = $queue->[ 0 ] || {};
+    my $wh = $q->{ output_channel } || \*STDOUT;
+
+    print $wh "<table border=4>\n";
+
+    for my $q (@$queue) {
+	my $head_id = $q->{ head_id } || '';	
+	my $id_list = $q->{ id_list } || [];
+	my $status  = $q->{ status }  || 'unknown';
+	my $wh      = $q->{ output_channel } || \*STDOUT;
+
+	print $wh "<tr>\n";
+	if (@$id_list) {
+	    print $wh "<td>\n";
+	    print $wh  $status;
+	    print $wh "<td>\n";
+	    print $wh join(" ", @$id_list);
+	}
+	else {
+	    print $wh "<td>\n";
+	    print $wh  $status;
+	    print $wh "<td>\n";
+	    printf $wh $head_id;
+	}
+    }
+
+    print $wh "</table>\n";
 }
 
 
