@@ -3,6 +3,29 @@
 
    2002/12 は、オーバホール・キャンペーン実施中ですぉ。
 
+2002/12/31
+
+   Mail::Bounce::SimpleMatch 
+	bug fix trap pattern for more accuracy.
+
+   variables
+	+path_sum                  = @SUM@
+	+path_gzcat                = @GZCAT@
+	+path_makemap              = @MAKEMAP@
+	
+	define $newml_command_mta_config_list
+	define $rmml_command_mta_config_list
+	define $sendmail_virtual_map_file
+	
+	change $domain_sendmail_config_dir
+	$domain_mail_config_dir -> $domain_config_base_dir::sendmail
+
+   FML::MTAControl::Postfix 
+	remove duplicated call "postmap virtual"
+
+   update configure
+	search sum, digest, gzcat and makemap, too.
+
 2002/12/30
 
    Mail::Delivery::SMTP 
@@ -3914,4 +3937,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.122 2002/12/28 04:44:09 fukachan Exp $
+$FML: CHANGES.txt,v 1.123 2002/12/31 00:39:17 fukachan Exp $
