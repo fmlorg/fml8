@@ -1,8 +1,8 @@
 <!--
-	$FML$
+	$FML: cvstags.sgml,v 1.1 2001/04/24 15:19:14 fukachan Exp $
 -->
 
-<chapter id="cvstags">
+<appendix id="cvstags">
 
 <title> cvs tags </title>
 
@@ -66,4 +66,4 @@
  </tgroup>
 </table>
 
-</chapter>
+</appendix>
