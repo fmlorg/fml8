@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: CacheDir.pm,v 1.2 2001/04/04 12:21:19 fukachan Exp $
+# $FML: CacheDir.pm,v 1.3 2001/04/04 14:47:55 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -201,6 +201,8 @@ sub close
 
 
 
+=head2 C<find(key)>
+
 =head2 C<get(key)>
 
 =head2 C<set(key, value)>
@@ -267,6 +269,13 @@ sub _search
     $self->close;
 
     $buf;
+}
+
+
+sub find
+{
+    my ($self, $key) = @_;
+    $self->get($key);
 }
 
 
