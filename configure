@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# From configure.in Revision: 1.22 
+# From configure.in Revision: 1.23 
 
 # Guess values for system-dependent variables and create Makefiles.
 # Generated automatically using autoconf version 2.13 
@@ -1636,6 +1636,112 @@ else
 fi
 
 
+# Extract the first word of "less", so it can be a program name with args.
+set dummy less; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1643: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_LESS'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$LESS" in
+  /*)
+  ac_cv_path_LESS="$LESS" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_LESS="$LESS" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_LESS="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+LESS="$ac_cv_path_LESS"
+if test -n "$LESS"; then
+  echo "$ac_t""$LESS" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "more", so it can be a program name with args.
+set dummy more; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1678: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_MORE'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$MORE" in
+  /*)
+  ac_cv_path_MORE="$MORE" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_MORE="$MORE" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_MORE="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+MORE="$ac_cv_path_MORE"
+if test -n "$MORE"; then
+  echo "$ac_t""$MORE" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "w3m", so it can be a program name with args.
+set dummy w3m; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1713: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_W3M'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$W3M" in
+  /*)
+  ac_cv_path_W3M="$W3M" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_W3M="$W3M" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_W3M="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+W3M="$ac_cv_path_W3M"
+if test -n "$W3M"; then
+  echo "$ac_t""$W3M" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+
 use_warning=yes
 # Check whether --with-warning or --without-warning was given.
 if test "${with_warning+set}" = set; then
@@ -1887,6 +1993,9 @@ s%@PGPK@%$PGPK%g
 s%@PGPS@%$PGPS%g
 s%@PGPV@%$PGPV%g
 s%@GPG@%$GPG%g
+s%@LESS@%$LESS%g
+s%@MORE@%$MORE%g
+s%@W3M@%$W3M%g
 s%@fmlconfdir@%$fmlconfdir%g
 s%@mlspooldir@%$mlspooldir%g
 s%@fml_owner@%$fml_owner%g
