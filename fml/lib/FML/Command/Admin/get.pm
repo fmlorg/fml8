@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.11 2002/02/23 10:22:18 fukachan Exp $
+# $FML: get.pm,v 1.12 2002/04/07 05:00:17 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
@@ -79,10 +79,10 @@ sub process
 	if (-f $filepath) {
 	    Log("send back $filename");
 	    $command_args->{ _filename_to_send } = $filename;
-	    $command_args->{ _file_to_send }     = $filepath;
+	    $command_args->{ _filepath_to_send }     = $filepath;
 	    $self->send_file($curproc, $command_args);
 	    delete $command_args->{ _filename_to_send };
-	    delete $command_args->{ _file_to_send };
+	    delete $command_args->{ _filepath_to_send };
 	}
 	else {
 	    $curproc->reply_message_nl('error.no_such_file',
