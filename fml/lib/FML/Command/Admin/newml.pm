@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.9 2001/12/23 11:39:45 fukachan Exp $
+# $FML: newml.pm,v 1.10 2002/01/27 15:04:36 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -52,10 +52,8 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $config         = $curproc->{ 'config' };
     my $main_cf        = $curproc->{ 'main_cf' };
-    my $member_map     = $config->{ 'primary_member_map' };
-    my $recipient_map  = $config->{ 'primary_recipient_map' };
     my ($ml_name, $ml_domain, $ml_home_prefix, $ml_home_dir) = 
-	$self->_get_virtual_domain_info($curproc, $command_args);
+	$self->_get_domain_info($curproc, $command_args);
     my $params         = {
 	executable_prefix => $main_cf->{ executable_prefix },
 	ml_name           => $ml_name,
@@ -98,57 +96,27 @@ sub process
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
 # Return Value: ARRAY
-sub _get_virtual_domain_info
+sub _get_domain_info
 {
     my ($self, $curproc, $command_args) = @_;
-    my $main_cf        = $curproc->{ 'main_cf' };
     my $ml_name        = $command_args->{ 'ml_name' };
-    my $ml_domain      = $main_cf->{ 'default_domain' };
-    my $ml_home_prefix = $main_cf->{ 'ml_home_prefix' };
+    my $ml_domain      = $curproc->default_domain();
+    my $ml_home_prefix = '';
     my $ml_home_dir    = '';
 
-    # virtual domain support: e.g. "makefml newml elena@nuinui.net"
-    if ($ml_name =~ /\@/) {
-	my $virtual_domain = '';
-
+    # virtual domain support e.g. "makefml newml elena@nuinui.net"
+    if ($ml_name =~ /\@/o) {
 	# overwrite $ml_name
-	($ml_name, $virtual_domain) = split(/\@/, $ml_name);
-
-	# check virtual domain list.
-	my ($virtual_maps) = $curproc->get_virtual_maps();
-	if (@$virtual_maps) {
-	    my $dir = '';
-	    eval q{ use IO::Adapter; };
-	    unless ($@) {
-	      MAP:
-		for my $map (@$virtual_maps) {
-		    my $obj  = new IO::Adapter $map;
-		    $obj->open();
-		    $dir = $obj->find("^$virtual_domain");
-		    last MAP if $dir;
-		}
-		($virtual_domain, $dir) = split(/\s+/, $dir);
-		$dir =~ s/[\s\n]*$// if defined $dir;
-
-		# found
-		if ($dir) {
-		    $ml_home_prefix = $dir;
-
-		    use File::Spec;
-		    $ml_domain   = $virtual_domain;
-		    $ml_home_dir = File::Spec->catfile($dir, $ml_name);
-		}
-	    }
-	    else {
-		croak("cannot load IO::Adapter");
-	    }
-	}
+	($ml_name, $ml_domain) = split(/\@/, $ml_name);
+	$ml_home_prefix = $curproc->ml_home_prefix($ml_domain);
     }
     # default domain: e.g. "makefml newml elena"
     else {
-	use File::Spec;
-	$ml_home_dir = File::Spec->catfile($ml_home_prefix, $ml_name);
+	$ml_home_prefix = $curproc->ml_home_prefix();
     }
+
+    eval q{ use File::Spec;};
+    $ml_home_dir = File::Spec->catfile($ml_home_prefix, $ml_name);
 
     return ($ml_name, $ml_domain, $ml_home_prefix, $ml_home_dir);
 }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.8 2002/01/30 14:51:15 fukachan Exp $
+# $FML: Utils.pm,v 1.9 2002/02/02 15:18:00 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -195,11 +195,58 @@ sub __ml_home_prefix_from_main_cf
     my ($main_cf, $domain) = @_;
 
     if (defined $domain) {
-	warn("not implemented");
+	my ($virtual_maps) = __get_virtual_maps($main_cf);
+	if (@$virtual_maps) {
+	    __ml_home_prefix_search_in_virtual_maps($main_cf, $domain, $virtual_maps);
+	}
+	else {
+
+	}
     }
     else {
-	return $main_cf->{ ml_home_prefix };
+	if (defined $main_cf->{ ml_home_prefix }) {
+	    return $main_cf->{ ml_home_prefix };
+	}
+	elsif (defined $main_cf->{ default_ml_home_prefix }) {
+	    return $main_cf->{ default_ml_home_prefix };
+	}
+	else {
+	    croak("\${default_,}ml_home_prefix is undefined.");
+	}
     }
+}
+
+
+
+sub __ml_home_prefix_search_in_virtual_maps
+{
+    my ($main_cf, $virtual_domain, $virtual_maps) = @_;
+
+    if (@$virtual_maps) {
+	my $dir = '';
+	eval q{ use IO::Adapter; };
+	unless ($@) {
+	  MAP:
+	    for my $map (@$virtual_maps) {
+		my $obj  = new IO::Adapter $map;
+		$obj->open();
+		$dir = $obj->find("^$virtual_domain");
+		last MAP if $dir;
+	    }
+	    ($virtual_domain, $dir) = split(/\s+/, $dir);
+	    $dir =~ s/[\s\n]*$// if defined $dir;
+
+	    # found
+	    if ($dir) {
+		return $dir; # == $ml_home_prefix
+	    }
+	}
+	else {
+	    croak("cannot load IO::Adapter");
+	}
+    }
+
+    return undef;
 }
 
 
@@ -225,11 +272,18 @@ return virtual maps.
 sub get_virtual_maps
 {
     my ($curproc) = @_;
-    my $args = $curproc->{ __parent_args }->{ main_cf };
+    my $main_cf = $curproc->{ __parent_args }->{ main_cf };
+    __get_virtual_maps($main_cf);
+}
 
-    if (defined $args->{ virtual_maps } && $args->{ virtual_maps }) {
+
+sub __get_virtual_maps
+{
+    my ($main_cf) = @_;
+
+    if (defined $main_cf->{ virtual_maps } && $main_cf->{ virtual_maps }) {
 	my (@r) = ();   
-	my (@maps) = split(/\s+/, $args->{ virtual_maps });
+	my (@maps) = split(/\s+/, $main_cf->{ virtual_maps });
 	for (@maps) {
 	    if (-f $_) { push(@r, $_);}
 	}
