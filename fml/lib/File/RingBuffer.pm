@@ -1,0 +1,132 @@
+#-*- perl -*-
+#
+#  Copyright (C) 2001 Ken'ichi Fukamachi
+#   All rights reserved. This program is free software; you can
+#   redistribute it and/or modify it under the same terms as Perl itself. 
+#
+# $Id$
+# $FML$
+#
+
+package File::RingBuffer;
+use strict;
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
+use Carp;
+use IO::File;
+
+=head1 NAME
+
+File::RingBuffer - IO operations to ring buffer which consists of files
+
+=head1 SYNOPSIS
+
+   ... lock e.g. by flock(2) ...
+
+   use File::RingBuffer;
+   $obj = new File::RingBuffer { 
+       directory => '/some/where'
+   };
+   $fh = $obj->open;
+   print $fh $message;
+   $fh->close;
+
+   ... unlock ...
+
+=head1 DESCRIPTION
+
+To log messages but up to some limit, it is useful to use the ring of
+files as a buffer.
+
+Consider several files under a directory C<ring/>
+where the unit of the ring is 5 here.
+C<ring/> may have 5 files in it. 
+
+   0 1 2 3 4
+
+To log a message is to write it to one of them.
+At the first time the message is logged to the file C<1>, 
+and next time to C<2> and so on.
+If all 5 files are used, pick up and use (overwrite) the oldest one.
+The oldest one is C<0>. 
+
+We use a file in cyclic way as follows:
+
+   0 -> 1 -> 2 -> 3 -> 4 -> 0 -> 1 -> ...
+
+We expires the old data.
+A file name is a number for simplicity.
+The latest number is holded in C<ring/.seq> file (C<.seq> in that
+direcotry by default) and truncated to 0 by the modulus C<5>.
+
+=head1 METHODS
+
+=cut
+
+
+require Exporter;
+@ISA = qw(IO::File);
+
+BEGIN {}
+END   {}
+
+
+sub new
+{
+    my ($self, $args) = @_;
+    my ($type) = ref($self) || $self;
+    my $me     = {};
+
+    $me->{ _directory }          = $args->{ directory };
+    $me->{ _modulus }            = $args->{ modulus } || 128;
+    $me->{ _sequence_file_name } = $args->{ sequence_file_name } || '.seq';
+
+    return bless $me, $type;
+}
+
+
+sub open
+{
+    my ($self) = @_;
+    my $seq_file = $self->{ _directory } ."/". $self->{ _sequence_file_name };
+    my $modulus  = $self->{ _modulus } || 128;
+
+    use File::Sequence;
+    my $sfh = new File::Sequence {
+	sequence_file => $seq_file,
+	modulus       => $modulus,
+    };
+    my $id   = $sfh->increment_id;
+    my $file = $self->{ _directory } ."/". $id;
+    my $mode = 'w';
+
+    new IO::File $file, $mode;
+}
+
+
+sub close
+{
+    my ($self) = @_;
+    $self->SUPER::close();
+}
+
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1 HISTORY
+
+File::RingBuffer appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
+=cut
+
+
+1;
