@@ -41,8 +41,15 @@ addadmin	add a new administrator
 byeadmin	remove the specified administrator
 (deladmin)
 
-password	password
-pass
+password	パスワードの認証 例: admin password パスワード
+(pass)		パスワードの認証 例: admin pass     パスワード
+
+changepassword	パスワードの変更
+(passwd)	〃
+(initpass)	〃
+(chpass)	〃
+		例: admin changepassword [アドレス] パスワード
+
 
 
 ○ 未実装
@@ -51,4 +58,4 @@ pass
 help		admin のヘルプファイルを取り寄せる
 
 
-$FML: MANIFEST.euc-jp,v 1.8 2002/09/28 14:42:31 fukachan Exp $
+$FML: MANIFEST.euc-jp,v 1.9 2003/01/28 09:05:11 fukachan Exp $
