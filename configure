@@ -716,7 +716,17 @@ done
 
 ac_given_srcdir=$srcdir
 
-trap 'rm -fr `echo "config.sh fml/libexec/loader fml/etc/main.cf" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
+trap 'rm -fr `echo "\
+	config.sh \
+	fml/libexec/loader \
+	fml/etc/main.cf \
+	fml/bin/fmlconf \
+	fml/bin/fmldoc \
+	fml/bin/fmlhtmlify \
+	fml/bin/fmlsch \
+	fml/bin/fmlthread \
+	fml/bin/makefml \
+	" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
 cat >> $CONFIG_STATUS <<EOF
 
@@ -791,7 +801,17 @@ EOF
 
 cat >> $CONFIG_STATUS <<EOF
 
-CONFIG_FILES=\${CONFIG_FILES-"config.sh fml/libexec/loader fml/etc/main.cf"}
+CONFIG_FILES=\${CONFIG_FILES-"\
+	config.sh \
+	fml/libexec/loader \
+	fml/etc/main.cf \
+	fml/bin/fmlconf \
+	fml/bin/fmldoc \
+	fml/bin/fmlhtmlify \
+	fml/bin/fmlsch \
+	fml/bin/fmlthread \
+	fml/bin/makefml \
+	"}
 EOF
 cat >> $CONFIG_STATUS <<\EOF
 for ac_file in .. $CONFIG_FILES; do if test "x$ac_file" != x..; then
@@ -856,6 +876,7 @@ EOF
 chmod +x $CONFIG_STATUS
 rm -fr confdefs* $ac_clean_files
 test "$no_create" = yes || ${CONFIG_SHELL-/bin/sh} $CONFIG_STATUS || exit 1
+
 
 if test -f fml/libexec/loader ; then
    chmod 755 fml/libexec/loader

@@ -1,4 +1,4 @@
-AC_REVISION($FML: configure.in,v 1.1 2001/11/12 13:26:00 fukachan Exp $)
+AC_REVISION($FML: configure.in,v 1.2 2001/11/12 14:34:16 fukachan Exp $)
 
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(fml/libexec/loader.in)
@@ -18,7 +18,18 @@ AC_PATH_PROG(PERL, perl)
 
 AC_SUBST(SHELL)
 
-AC_OUTPUT(config.sh fml/libexec/loader fml/etc/main.cf)
+AC_OUTPUT(\
+	config.sh \
+	fml/libexec/loader \
+	fml/etc/main.cf \
+	fml/bin/fmlconf \
+	fml/bin/fmldoc \
+	fml/bin/fmlhtmlify \
+	fml/bin/fmlsch \
+	fml/bin/fmlthread \
+	fml/bin/makefml \
+	)
+
 if test -f fml/libexec/loader ; then
    chmod 755 fml/libexec/loader
 fi

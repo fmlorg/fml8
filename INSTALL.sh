@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: INSTALL.sh,v 1.29 2001/11/08 03:38:21 fukachan Exp $
+# $FML: INSTALL.sh,v 1.30 2001/11/12 15:03:34 fukachan Exp $
 #
 
 # Run this from the top-level fml source directory.
@@ -76,6 +76,7 @@ for prog in fmldoc fmlthread fmlconf makefml fmlsch fmlhtmlify
 do
 	echo update ${bindir}/$prog
 	cp fml/bin/$prog ${bindir}/$prog.new
+	chmod 755 ${bindir}/$prog.new
 	mv ${bindir}/$prog.new ${bindir}/$prog
 done
 
