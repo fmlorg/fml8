@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET6.pm,v 1.10 2002/09/22 14:57:03 fukachan Exp $
+# $FML: INET6.pm,v 1.11 2002/12/20 03:50:28 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET6;
@@ -122,8 +122,7 @@ sub connect6
 	# clean up
 	delete $self->{_socket} if defined $self->{_socket};
 
-	# XXX-TODO: "LOOP" is an appropriate label ?
-      LOOP:
+      ADDR_ENTRY:
 	while (scalar(@res) >= 5) {
 	    ($family, $type, $proto, $saddr, $canonname, @res) = @res;
 
@@ -131,17 +130,17 @@ sub connect6
 		getnameinfo($saddr, NI_NUMERICHOST | NI_NUMERICSERV);
 
 	    # check only IPv6 case here.
-	    next LOOP if $family != AF_INET6;
+	    next ADDR_ENTRY if $family != AF_INET6;
 
 	    $fh = new IO::Socket;
 	    socket($fh, $family, $type, $proto) || do {
 		Log("Error: cannot create IPv6 socket");
 		$self->error_set("Error: cannot create IPv6 socket");
-		next LOOP;
+		next ADDR_ENTRY;
 	    };
 	    if (connect($fh, $saddr)) {
 		Log("(debug6) o.k. connect [$host]:$port");
-		last LOOP;
+		last ADDR_ENTRY;
 	    }
 	    else {
 		Log("Error: cannot connect [$host]:$port via IPv6");
