@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.153 2004/06/30 15:03:19 tmu Exp $
+# $FML: Distribute.pm,v 1.154 2004/07/23 15:59:09 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -131,6 +131,11 @@ sub verify_request
 
     unless ($curproc->is_refused()) {
 	$curproc->_check_filter();
+    }
+
+    if ($curproc->filter_state_get_tempfail_request()) {
+	$curproc->exit_as_tempfail(); # XXX LONG JUMP!
+        # NOT REACH HERE
     }
 
     $eval  = $config->get_hook( 'distribute_verify_request_end_hook' );

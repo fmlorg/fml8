@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.13 2004/07/11 15:43:39 fukachan Exp $
+# $FML: State.pm,v 1.14 2004/07/23 15:59:10 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -571,6 +571,34 @@ sub filter_state_virus_checker_get_error
 {
     my ($curproc) = @_;
     my $category = "virus_checker";
+    my $pcb = $curproc->pcb();
+
+    return( $pcb->get("filter_state", $category) || 0 );
+}
+
+
+# Descriptions: we need to exit as EX_TEMPFAIL.
+#    Arguments: OBJ($curproc)
+# Side Effects: update pcb.
+# Return Value: none
+sub filter_state_set_tempfail_request
+{
+    my ($curproc) = @_;
+    my $category = "exit_tempfail";
+    my $pcb = $curproc->pcb();
+
+    $pcb->set("filter_state", $category, 1);
+}
+
+
+# Descriptions: check if we need to exit as EX_TEMPFAIL.
+#    Arguments: OBJ($curproc)
+# Side Effects: none.
+# Return Value: NUM
+sub filter_state_get_tempfail_request
+{
+    my ($curproc) = @_;
+    my $category  = "exit_tempfail";
     my $pcb = $curproc->pcb();
 
     return( $pcb->get("filter_state", $category) || 0 );
