@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.1 2003/12/28 13:23:19 fukachan Exp $
+# $FML: Qmail.pm,v 1.2 2004/01/02 14:42:45 fukachan Exp $
 #
 
 package FML::MTA::Control::Qmail;
@@ -106,7 +106,7 @@ sub qmail_find_key_in_alias_maps
 }
 
 
-# Descriptions: get { key => value } in aliases
+# Descriptions: get { key => value } in aliases.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: HASH_REF
@@ -119,7 +119,7 @@ sub qmail_get_aliases_as_hash_ref
 }
 
 
-# Descriptions: return alias_maps as ARRAY_REF
+# Descriptions: return alias_maps as ARRAY_REF.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -132,7 +132,7 @@ sub qmail_alias_maps
 }
 
 
-# Descriptions: create ~/.qmail-* files
+# Descriptions: create ~/.qmail-* files.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: creates ~/.qmail-XXX
 # Return Value: none
@@ -187,18 +187,21 @@ sub qmail_setup
 sub qmail_install_virtual_map
 {
     my ($self, $curproc, $params) = @_;
-    my $fmlowner     = $curproc->fml_owner();
-    my $config       = $curproc->config();
-    my $ml_domain    = $config->{ ml_domain };
-    my $virtual      = $config->{ qmail_virtual_map_file };
+    my $fmlowner  = $curproc->fml_owner();
+    my $config    = $curproc->config();
+    my $ml_domain = $config->{ ml_domain };
+    my $virtual   = $config->{ qmail_virtual_map_file };
 
     # 1. check the current template file firstly
     my $found = 0;
     my $fh    = new FileHandle $virtual;
     if (defined $fh) {
 	my $buf;
+
+      LINE:
 	while ($buf = <$fh>) {
 	    $found = 1 if $buf =~ /^$ml_domain:/i;
+	    last LINE  if $found;
 	}
 	$fh->close();
     }
@@ -219,7 +222,7 @@ sub qmail_install_virtual_map
 }
 
 
-# Descriptions: dummy
+# Descriptions: dummy.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -229,7 +232,7 @@ sub qmail_remove_virtual_map
 }
 
 
-# Descriptions: dummy
+# Descriptions: dummy.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none

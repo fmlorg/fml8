@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.23 2003/09/13 09:17:00 fukachan Exp $
+# $FML: Postfix.pm,v 1.1 2003/12/28 13:23:19 fukachan Exp $
 #
 
 package FML::MTA::Control::Postfix;
@@ -30,7 +30,7 @@ set up aliases and virtual maps for postfix.
 =cut
 
 
-# Descriptions: install new alias entries
+# Descriptions: install new alias entries.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
@@ -61,7 +61,7 @@ sub postfix_install_alias
 }
 
 
-# Descriptions: remove alias
+# Descriptions: remove alias.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
@@ -123,7 +123,7 @@ sub postfix_remove_alias
 }
 
 
-# Descriptions: regenerate aliases.db
+# Descriptions: regenerate aliases.db.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
@@ -232,7 +232,7 @@ sub _find_key_in_file
 
 
 
-# Descriptions: get { key => value } in aliases
+# Descriptions: get { key => value } in aliases.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
@@ -256,6 +256,7 @@ sub postfix_get_aliases_as_hash_ref
     for my $map (@$maps) {
 	$curproc->ui_message("scan key = $key, map = $map") if $debug;
 
+	# XXX-TODO: correct? file:/some/where/map ignored too ?
 	if ($map =~ /^\w+:/) {
 	    $curproc->ui_message("* ignored $map");
 	    next MAP;
@@ -268,11 +269,11 @@ sub postfix_get_aliases_as_hash_ref
 
 	  LINE:
 	    while ($buf = <$fh>) {
-		next LINE if $buf =~ /^#/;
-		next LINE if $buf =~ /^\s*$/;
+		next LINE if $buf =~ /^#/o;
+		next LINE if $buf =~ /^\s*$/o;
 
 		chomp $buf;
-		($key, $value)   = split(/:/, $buf, 2);
+		($key, $value) = split(/:/, $buf, 2);
 		$value =~ s/^\s*//;
 		$value =~ s/s*$//;
 		$aliases->{ $key } = $value;
@@ -288,7 +289,7 @@ sub postfix_get_aliases_as_hash_ref
 }
 
 
-# Descriptions: return alias_maps as ARRAY_REF
+# Descriptions: return alias_maps as ARRAY_REF.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
@@ -318,7 +319,7 @@ sub postfix_alias_maps
 }
 
 
-# Descriptions: install configuration templates
+# Descriptions: install configuration templates.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: create include*
@@ -344,7 +345,7 @@ sub postfix_setup
 }
 
 
-# Descriptions: rewrite $params
+# Descriptions: rewrite $params.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update $params
@@ -362,7 +363,7 @@ sub _postfix_rewrite_virtual_params
 }
 
 
-# Descriptions: install postfix virtual_maps
+# Descriptions: install postfix virtual_maps.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: install/udpate postfix virtual_maps and the .db
@@ -382,6 +383,7 @@ sub postfix_install_virtual_map
     my $dst     = $virtual . "." . $$;
     $curproc->ui_message("updating $virtual");
 
+    # XXX-TODO: correct for 2nd virtual domain ?
     # at the first time
     unless( -f $virtual) {
 	use FileHandle;
@@ -403,7 +405,7 @@ sub postfix_install_virtual_map
 
 
 
-# Descriptions: remove postfix virtual_maps
+# Descriptions: remove postfix virtual_maps.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: remove/udpate postfix virtual_maps and the .db
@@ -411,10 +413,10 @@ sub postfix_install_virtual_map
 sub postfix_remove_virtual_map
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config  = $curproc->config();
-    my $map     = $config->{ postfix_virtual_map_file };
-    my $key     = $params->{ ml_name };
-    my $p       = {
+    my $config = $curproc->config();
+    my $map    = $config->{ postfix_virtual_map_file };
+    my $key    = $params->{ ml_name };
+    my $p      = {
 	key => $key,
 	map => $map,
     };
@@ -422,7 +424,7 @@ sub postfix_remove_virtual_map
 }
 
 
-# Descriptions: regenerate virtual.db
+# Descriptions: regenerate virtual.db.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases

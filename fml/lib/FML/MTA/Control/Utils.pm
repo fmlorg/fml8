@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.2 2003/02/09 12:31:43 fukachan Exp $
+# $FML: Utils.pm,v 1.1 2003/12/28 13:23:19 fukachan Exp $
 #
 
 package FML::MTA::Control::Utils;
@@ -21,9 +21,9 @@ FML::MTA::Control::Utils - utility functions
 
 =head1 SYNOPSIS
 
-set up aliases and virtual maps for Utils.
-
 =head1 DESCRIPTION
+
+utility functions for MTA control library.
 
 =head1 METHODS
 

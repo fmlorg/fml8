@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sendmail.pm,v 1.7 2003/09/13 09:17:00 fukachan Exp $
+# $FML: Sendmail.pm,v 1.1 2003/12/28 13:23:19 fukachan Exp $
 #
 
 package FML::MTA::Control::Sendmail;
@@ -33,7 +33,7 @@ set up aliases and virtual maps for sendmail.
 #XXX-TODO: We should check "Tfml" in sendmail.cf in installation.
 
 
-# Descriptions: install new alias entries
+# Descriptions: install new alias entries.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
@@ -45,7 +45,7 @@ sub sendmail_install_alias
 }
 
 
-# Descriptions: remove alias
+# Descriptions: remove alias.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
@@ -57,7 +57,7 @@ sub sendmail_remove_alias
 }
 
 
-# Descriptions: regenerate aliases.db
+# Descriptions: regenerate aliases.db.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
@@ -79,7 +79,7 @@ sub sendmail_update_alias
 }
 
 
-# Descriptions: find key in aliases
+# Descriptions: find key in aliases.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
@@ -91,7 +91,7 @@ sub sendmail_find_key_in_alias_maps
 }
 
 
-# Descriptions: get { key => value } in aliases
+# Descriptions: get { key => value } in aliases.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
@@ -103,7 +103,7 @@ sub sendmail_get_aliases_as_hash_ref
 }
 
 
-# Descriptions: return alias_maps as ARRAY_REF
+# Descriptions: return alias_maps as ARRAY_REF.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
@@ -118,7 +118,7 @@ sub sendmail_alias_maps
 }
 
 
-# Descriptions: install configuration templates
+# Descriptions: install configuration templates.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: create include*
@@ -130,7 +130,7 @@ sub sendmail_setup
 }
 
 
-# Descriptions: rewrite $params
+# Descriptions: rewrite $params.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update $params
@@ -143,7 +143,7 @@ sub _sendmail_rewrite_virtual_params
 }
 
 
-# Descriptions: install sendmail virtual_maps
+# Descriptions: install sendmail virtual_maps.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: install/udpate sendmail virtual_maps and the .db
@@ -184,7 +184,7 @@ sub sendmail_install_virtual_map
 
 
 
-# Descriptions: remove sendmail virtual_maps
+# Descriptions: remove sendmail virtual_maps.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: remove/udpate sendmail virtual_maps and the .db
@@ -192,10 +192,10 @@ sub sendmail_install_virtual_map
 sub sendmail_remove_virtual_map
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $config  = $curproc->config();
-    my $map     = $config->{ sendmail_virtual_map_file };
-    my $key     = $params->{ ml_name };
-    my $p       = {
+    my $config = $curproc->config();
+    my $map    = $config->{ sendmail_virtual_map_file };
+    my $key    = $params->{ ml_name };
+    my $p      = {
 	key => $key,
 	map => $map,
     };
@@ -203,7 +203,7 @@ sub sendmail_remove_virtual_map
 }
 
 
-# Descriptions: regenerate virtual.db
+# Descriptions: regenerate virtual.db.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
@@ -218,6 +218,8 @@ sub sendmail_update_virtual_map
     # XXX-TODO: NOT IMPLEMENTED
     if (-f $virtual) {
 	$curproc->ui_message("updating $virtual database");
+
+	# XXX-TODO: oops, hash HARD CODED.
 	if (-x $makemap) {
 	    system "$makemap hash $virtual < $virtual";
 	}
@@ -237,7 +239,7 @@ get map types supported by makemap.
 =cut
 
 
-# Descriptions: get map types supported by makemap
+# Descriptions: get map types supported by makemap.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.2 2004/01/02 10:23:56 fukachan Exp $
+# $FML: Control.pm,v 1.3 2004/01/02 14:50:32 fukachan Exp $
 #
 
 package FML::MTA::Control;
@@ -55,7 +55,7 @@ and
 my $default_mta = 'postfix';
 
 
-# Descriptions: ordinary constructor
+# Descriptions: ordinary constructor.
 #    Arguments: OBJ($self) HASH_REF($ctl_args)
 # Side Effects: none
 # Return Value: OBJ
@@ -92,7 +92,7 @@ sub is_valid_mta_type
 }
 
 
-# Descriptions: install configuration template files
+# Descriptions: install configuration template files.
 #    Arguments: OBJ($self)
 #               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
@@ -170,7 +170,7 @@ sub get_aliases_as_hash_ref
 }
 
 
-# Descriptions: install alias file
+# Descriptions: install alias file.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
@@ -189,7 +189,7 @@ sub install_alias
 }
 
 
-# Descriptions: remove entry in alias maps
+# Descriptions: remove entry in alias maps.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
@@ -208,7 +208,7 @@ sub remove_alias
 }
 
 
-# Descriptions: install/update virtual map file
+# Descriptions: install/update virtual map file.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
@@ -227,7 +227,7 @@ sub install_virtual_map
 }
 
 
-# Descriptions: remove entry in virtual maps
+# Descriptions: remove entry in virtual maps.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
@@ -246,7 +246,7 @@ sub remove_virtual_map
 }
 
 
-# Descriptions: update virtual_map
+# Descriptions: update virtual_map.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update virtual_map
 # Return Value: none
@@ -265,7 +265,7 @@ sub update_virtual_map
 }
 
 
-# Descriptions: install file $to dst with variable expansion of $src
+# Descriptions: install file $to dst with variable expansion of $src.
 #    Arguments: OBJ($self) STR($src) STR($dst) HASH_REF($config)
 # Side Effects: create $dst
 # Return Value: none
@@ -273,6 +273,7 @@ sub _install
 {
     my ($self, $src, $dst, $config) = @_;
 
+    # XXX-TODO: method-ify ? 
     eval q{
 	use FML::Config::Convert;
 	&FML::Config::Convert::convert_file($src, $dst, $config);
@@ -281,7 +282,7 @@ sub _install
 }
 
 
-# Descriptions: remove the specified entry in the postfix style map
+# Descriptions: remove the specified entry in the postfix style map.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 #               HASH_REF($p)
 # Side Effects: update virtual_map
@@ -291,6 +292,10 @@ sub _remove_postfix_style_virtual
     my ($self, $curproc, $params, $optargs, $p) = @_;
     my $removed = 0;
     my $key     = $p->{ key };
+
+    #
+    # XXX-TODO: ERROR: this module is private but used over modules. 
+    #
 
     use File::Spec;
     my $virtual     = $p->{ map };
