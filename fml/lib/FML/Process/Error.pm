@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.18 2002/08/09 08:35:36 fukachan Exp $
+# $FML: Error.pm,v 1.19 2002/08/14 03:31:56 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -196,7 +196,7 @@ sub _clean_up_bouncers
     my ($curproc, $args) = @_;
     my $channel = 'erroranalyzer';
 
-    if ($curproc->is_timeout($channel)) {
+    if ($curproc->is_event_timeout($channel)) {
 	Log("(debug) event timeout");
 
 	eval q{
@@ -211,7 +211,7 @@ sub _clean_up_bouncers
 	};
 	LogError($@) if $@;
 
-	$curproc->set_timeout($channel, time + 3600);
+	$curproc->set_event_timeout($channel, time + 3600);
     }
     else {
 	Log("(debug) event not timeout");

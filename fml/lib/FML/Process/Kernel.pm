@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.129 2002/08/14 14:22:14 fukachan Exp $
+# $FML: Kernel.pm,v 1.130 2002/08/15 08:03:23 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -355,11 +355,11 @@ sub _lock_init
 }
 
 
-=head2 is_timeout( $channel )
+=head2 is_event_timeout( $channel )
 
-=head2 get_timeout( $channel )
+=head2 get_event_timeout( $channel )
 
-=head2 set_timeout( $channel, $time )
+=head2 set_event_timeout( $channel, $time )
 
 =cut
 
@@ -368,10 +368,10 @@ sub _lock_init
 #    Arguments: OBJ($curproc) STR($channel)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
-sub is_timeout
+sub is_event_timeout
 {
     my ($curproc, $channel) = @_;
-    my $t = $curproc->get_timeout($channel);
+    my $t = $curproc->get_event_timeout($channel);
 
     if ($t) {	
 	return (time > $t) ? 1 : 0;
@@ -387,10 +387,10 @@ sub is_timeout
 #    Arguments: OBJ($curproc) STR($channel)
 # Side Effects: none
 # Return Value: NUM
-sub get_timeout
+sub get_event_timeout
 {
     my ($curproc, $channel) = @_;
-    my $qf = $curproc->_init_timeout($channel);
+    my $qf = $curproc->_init_event_timeout($channel);
 
     if (-f $qf) {
 	use FileHandle;
@@ -409,10 +409,10 @@ sub get_timeout
 #    Arguments: OBJ($curproc) STR($channel) NUM($time)
 # Side Effects: none
 # Return Value: NUM
-sub set_timeout
+sub set_event_timeout
 {
     my ($curproc, $channel, $time) = @_;
-    my $qf = $curproc->_init_timeout($channel);
+    my $qf = $curproc->_init_event_timeout($channel);
 
     use FileHandle;
     my $wh = new FileHandle "> $qf";
@@ -427,7 +427,7 @@ sub set_timeout
 #    Arguments: OBJ($curproc) STR($channel)
 # Side Effects: none
 # Return Value: STR
-sub _init_timeout
+sub _init_event_timeout
 {
     my ($curproc, $channel) = @_;
     
