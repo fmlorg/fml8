@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: MySQL.pm,v 1.13 2001/06/17 08:57:10 fukachan Exp $
+# $FML: MySQL.pm,v 1.14 2001/08/05 03:24:44 fukachan Exp $
 #
 
 
@@ -95,9 +95,12 @@ sub configure
 
     # $self->{ _driver } is the $config->{ driver } object.
     unless ($@) {
-	print STDERR "load $pkg\n" if $ENV{ 'debug' };
+	printf STDERR "%-20s %s\n", "loading", $pkg if $ENV{'debug'};
+
 	@ISA = ($pkg, @ISA);
 	$me->{ _driver } = $pkg;
+
+	printf STDERR "%-20s %s\n", "MySQL::ISA:", "@ISA" if $ENV{'debug'};
     }
     else {
 	error_set($self, $@);
@@ -131,14 +134,11 @@ sub get_next_value
     # for the first time
     unless ($self->{ _res }) {
 	# $self->{ _driver } is the $config->{ driver } object.
-	if ( $self->{ _driver }->can('get_next_value') ) {
-	    $self->{ _driver }->get_next_value($args);
+	if ( $self->can('fetch_and_cache_address_list') ) {
+	    $self->fetch_and_cache_address_list($args);
 	}
 	else {
-	    my $query = $self->build_sql_query({ 
-		query   => 'get_next_value',
-	    });
-	    $self->execute({ query => $query });
+	    croak "cannot get next value\n";
 	}
     }
 
@@ -149,57 +149,6 @@ sub get_next_value
     else {
 	$self->error_set( $DBI::errstr );
 	undef;
-    }
-}
-
-
-=head2 C<add($addr)>
-
-add C<$addr> to the sql server specified at new().
-IO::Adapter::SQL::$model provides model specific SQL query statement.
-If IO::Adapter::SQL::add() exists, IO::Adapter::SQL::add() is called.
-
-=head2 C<delete($addr)>
-
-delete C<$addr> from the sql server specified at new().
-IO::Adapter::SQL::$model provides model specific SQL query statement.
-If IO::Adapter::SQL::delete() exists, IO::Adapter::SQL::delete() is called.
-
-=cut
-
-
-sub add
-{
-    my ($self, $addr) = @_;
-
-    # $self->{ _driver } is the $config->{ driver } object.
-    if ( $self->{ _driver }->can('add') ) {
-	$self->{ _driver }->add($addr);
-    }
-    else {
-	my $query = $self->build_sql_query({ 
-	    query   => 'add',
-	    address => $addr,
-	});
-	$self->execute({ query => $query });
-    }
-}
-
-
-sub delete
-{
-    my ($self, $addr) = @_;
-
-    # $self->{ _driver } is the $config->{ driver } object.
-    if ( $self->{ _driver }->can('delete') ) {
-	$self->{ _driver }->delete($addr);
-    }
-    else {
-	my $query = $self->build_sql_query({ 
-	    query   => 'delete',
-	    address => $addr,
-	});
-	$self->execute({ query => $query });
     }
 }
 
