@@ -1,0 +1,131 @@
+<!--
+   $FML$
+   $jaFML: encode.sgml,v 1.2 2003/04/15 14:51:42 fukachan Exp $
+-->
+
+<chapter id="module.mail.message.encode">
+	<title>
+	Mail::Message::Encode class
+	</title>
+
+<para>
+[reference] fml-help ML's Count: 02012, 02013, 02016.
+</para>
+
+<screen>
+[Usage]
+
+	use Mail::Message::Encode;
+	my $encode  = new Mail::Message::Encode;
+	my $str_euc = $encode->convert( $s, 'euc-jp' );
+	my $str_euc = $encode->convert( $s, 'euc-jp', 'iso-2022-jp' );
+
+	my $encode  = new Mail::Message::Encode;
+	my $status  = $encode->convert_str_ref( \$s, 'euc-jp' );
+	my $status  = $encode->convert_str_ref( \$s, 'euc-jp', 'jis' );
+
+	my $fp = sub { ... };
+	$encode->run_in_chcode( $fp, $oout, $in );
+
+   * 4.0 compatible functions are available.
+	ues Mail::Message::Encode qw(STR2EUC);
+	my $euc_s = STR2EUC( $s );
+</screen>
+
+
+<sect1>
+	<title>
+	Mail::Message::Encode specification
+	</title>
+
+<para>
+The main code is within _convert_str_ref() method.
+
+<screen>
+   sub convert # if the argument is STR.
+   {
+	my ($self, $str, $out_code, $in_code) = @_;
+	_convert_str_ref(\$str, $out, $in);
+
+        return $str;
+   }
+
+
+   sub convert_str_ref # if the argument is STR_REF.
+   {
+	my ($self, $str, $out, $in) = @_;
+	_convert_str_ref($str, $out, $in);
+   }
+
+
+   sub _convert_str_ref # if the argument is STR_REF.
+   {
+        my ($str, $out, $in) = @_;
+
+        # 1. speculate charset
+        if $in unspecified -> speculat -> fail -> return 0 
+
+        # 2. try conversion
+        if ($in resolved or or $in specified in @_) {
+                converted to $out charset
+                (use jcode, Jcode, use Encode if perl version > 5.8).
+                conversion
+                return 1 ; # success
+        }
+        else { # principle of least surprise ?
+                nothing todo ;
+                return $str;
+        }
+
+        return 0 ; # failed
+   }
+</screen>
+
+<screen>
+sub base64 {}
+sub quoted_printable {}
+</screen>
+is useful for convenience.
+<screen>
+$x = $encode->base64($s);
+</screen>
+For backward compatibility, STR2XXX() functoins are prepared.
+<screen>
+   STR2EUC(  $str, [$icode] )
+   STR2JIS(  $str, [$icode] )
+   STR2SJIS( $str, [$icode] )
+</screen>
+These wraps convert_str_ref().
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	run_in_chcode()
+	</title>
+
+<para>
+In language dependent processes, convert the charset to machine
+friendly one, process something and back it to the original chaset
+each time. This step is widely used. So it is convenient to prepare a
+function to unify these steps in one function.
+<screen>
+run_in_chcode example:
+
+sub run_in_chcode
+{
+   my ($self, $proc, $s, $out_code, $in_code) = @_;
+
+   my $conv_status = convert_str_ref($s, $EUC_JP, $in_code);
+   my $proc_status = &$proc($s, @_);
+   convert_str_ref($s, $out_code, $EUC_JP) if $conv_status && $out_code;
+   return wantarray ? ($conv_status, $proc_status): $conv_status;
+}
+</screen>
+</para>
+
+</sect1>
+
+</chapter>

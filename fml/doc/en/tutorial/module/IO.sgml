@@ -1,0 +1,389 @@
+<!--
+   $FML$
+   $jaFML: IO.sgml,v 1.4 2003/04/15 14:51:42 fukachan Exp $
+-->
+
+<chapter id="module.io.adapter">
+	<title>
+	IO abstraction layer (IO::Adapter class)
+	</title>
+
+
+<sect1 id="module.io.adapter.overview">
+	<title>
+	IO::Adapter overview
+	</title>
+
+<para>
+All IO of &fmldevel; should use IO::Adapter class like vfs/vnode
+interface. For example, read/write member list, add/remove a user.
+The usage is like this:
+<screen>
+use IO::Adapter;
+$obj = new IO::Adapter $map, $map_params;
+$obj->open || croak("cannot open $map");
+while ($x = $obj->get_next_key()) { ... }
+$obj->close;
+</screen>
+</para>
+
+<para>
+$map is map:identifier. file: can be omitted.
+Currently available maps follows:
+<screen>
+file:/var/spool/ml/elena/recipients
+unix.group:root
+nis.group:root
+mysql:id
+postgresql:id  (not yet implemented)
+ldap:id        (not yet implemented)
+</screen>
+</para>
+
+<para>
+"file:" map is a normal file (text file).
+"unix.group:root" map is to read root entry in /etc/group file.
+"nis.group:root" map is to read root entry in NIS (YP).
+"mysql:id" map implies the use of MySQL.
+Parameters for MySQL access is defined in "mysql:id" entry.
+These paraemeters should be specified before calling "new
+IO::Adapter".
+</para>
+
+</sect1>
+
+
+<sect1 id="module.io.adapter.methods">
+	<title>
+	IO::Adapter methods
+	</title>
+
+<para>
+Official method IO::Adapter privides currently follows:
+<screen>
+new()
+open()
+close()
+
+get_next_key()
+
+add(KEY)
+delete(KEY)
+
+getpos()
+setpos(NUM)
+eof()
+
+touch()
+
+find(REGEXP, $args)
+</screen>
+</para>
+
+<para>
+KEY is a primary key for database access. In almost cases, the primary
+key is a mail address. REGEXP is a regular expression (regexp), this
+is usually also a mail address.
+</para>
+
+<para>
+Unification of all types of IO needs that we should implement leastest
+methods.
+</para>
+
+<para>
+The currently implemented methods are selected by test and our
+operations. If could, we select SQL IO more than file IO for
+abstraction model. It introduces difference between &fml4; and &fml8;
+but it is mandatory for further abstraction.
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	argument type of methods
+	</title>
+
+<para>
+get_next_key() is typical.  It needs no argument or STR as the
+argument and the return value is STR.  since this method is used to
+list up the content of files or retrieve the specific address in the
+file.
+</para>
+
+<para>
+In other case, the argument may be a pair of strings.
+<screen>
+KEY_STR => [
+     VALUE_STR_1
+     VALUE_STR_2
+     VALUE_STR_3
+]
+</screen>
+This is used as the return value to represent ARRAY. For example,
+"actives" file of &fml4; consists of lines which have plural space
+separeted entries. So it is a type of array.
+<screen>
+rudo@nuinui.net	s=skip m=xxx.yyy.z # commnet
+
+rudo@nuinui.net => [
+        s=skip
+        m=xxx.yyy.z
+        # comment
+]
+</screen>
+</para>
+
+<para>
+It is summarized as follows.
+The argument is one of "nothing" or "STR".
+The return value is either of STR of ARRAY_REF (array reference).
+<screen>
+argument     return value
+---------------------------------------
+none      => STR
+
+STR       => STR
+
+none      => [STR, STR, ... ]
+
+STR       => [STR, STR, ... ]
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1 id="module.io.adapter.map.file">
+	<title>
+	file map
+	</title>
+
+<para>
+"file:/some/where/file/name" or file name "/some/where/file/name" map
+is abstraction of IO to/from a text file.
+</para>
+
+</sect1>
+
+
+<sect1 id="module.io.adapter.map.unixgroup">
+	<title>
+	unixgroup map
+	</title>
+
+<para>
+Abstraction of /etc/group. IO is read only.
+</para>
+
+<para>
+For example, the access to 
+<screen>
+wheel:*:0:root,rudo,kenken
+</screen>
+in /etc/group is "unixgroup:wheel" map in IO::Adapter.
+<screen>
+$obj = new IO::Adapter "unixgroup:wheel";
+</screen>
+If you call get_next_key() method for this object,
+you will get the member of wheel group sequentially.
+In other words the wheel group is regarded as the follogin file
+by IO::Adapter.
+<screen>
+root
+rudo
+kenken
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1 id="module.io.adapter.map.nis">
+	<title>
+	NIS map
+	</title>
+
+<para>
+It is same as one of /etc/group but the data is retrieved from NIS/YP.
+</para>
+
+</sect1>
+
+
+<sect1 id="module.io.adapter.map.mysql">
+	<title>
+	MySQL map
+	</title>
+
+<para>
+For more eacy maintenance, we should write all mysql configurations in
+one file. For example, it is better that we have only to write SQL
+configuratinos in config.cf.
+</para>
+
+<para>
+But we identify plural mysql consitions. So, we use the tag
+[mysql:members] to declare the region between the tag to the next tag
+or =cut. It is similar to .ini file (M$). We use the tags like this:
+<screen>
+config.cf example
+
+member_maps     =       mysql:members
+
+recipient_maps  =       mysql:recipients
+
+[mysql:members]
+
+sql_server      =       localhost
+sql_user        =       fml
+sql_password    =       uja
+sql_database    =       fml
+sql_table       =       ml
+
+sql_find	=	select * from ...
+
+		...
+</screen>
+</para>
+
+<para>
+In calling IO::Adapter, use 
+<screen>
+new IO::Adapter "mysql:members", $config;
+</screen>
+where $config is a hash reference holding some paremeters like this:
+<screen>
+$config => {
+	[mysql:members] => {
+		sql_sever => localhost
+			...	
+	}
+}
+</screen>
+FML::Config prepares this $config by readinc .cf files. Hence, we
+usually use FML::Config object as an argument of IO::Adapter::new()
+method.
+</para>
+
+
+<sect2>
+	<title>
+	Discussion:
+	How to write sql statements in config.cf ?
+	(fml-devel 204)
+	</title>
+
+<para>
+How about lexical scope ? The .cf files cannot define all variables
+since lexical scope variables exist.
+We use &amp;varname syntax for such lexical scope variables.
+</para>
+
+<para>
+For example, use different member and recipient maps.  In sql
+statements, the difference is a flag (fml_recipient) in a table.  So
+in calling MySQL , the where statement has different value but it is
+determined lexically.
+<screen>
+member_maps 	= 	mysql:members
+
+recipient_maps 	= 	mysql:recipients
+
+
+[mysql:members]
+
+sql_server	=	localhost
+sql_user	=	fml
+sql_password	=	uja
+sql_database	=	fml
+sql_table	=	ml
+
+sql_get_next_key =	select fml_address from $sql_table
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+
+sql_getline	=	select * from $sql_table
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+
+sql_add		=	insert into $sql_table
+			values ('$ml_name', '$ml_domain', '&amp;address', 1, 1)
+
+sql_delete	=	delete from $sql_table
+			where	fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_address = '&amp;address'
+
+sql_find	=	select * from $sql_table
+			where	fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_address like '&amp;regexp'
+
+
+
+[mysql:recipients]
+
+sql_server	=	localhost
+sql_user	=	fml
+sql_password	=	uja
+sql_database	=	fml
+sql_table	=	ml
+
+sql_get_next_key =	select fml_address from $sql_table
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_recipient = '1'
+
+sql_getline	=	select * from $sql_table
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_recipient = '1'
+
+sql_add		=	update ml
+			set recipient = 1
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_address = '&amp;address'
+
+sql_delete	=	update ml
+			set recipient = 0
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_address = '&amp;address'
+
+
+sql_find	=	select * from $sql_table
+			where	fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_recipient = '1'
+					and
+				fml_address like '&amp;regexp'
+</screen>
+</para>
+
+</sect2>
+
+
+</sect1>
+
+
+</chapter>

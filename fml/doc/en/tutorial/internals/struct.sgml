@@ -1,0 +1,15 @@
+<!--
+   $FML$
+   $jaFML: struct.sgml,v 1.2 2003/04/15 14:51:41 fukachan Exp $
+-->
+
+<appendix id="structure">
+	<title>
+	curproc struct (object in fact)
+	</title>
+
+
+&struct.curproc;
+
+
+</appendix>

@@ -1,0 +1,310 @@
+<!--
+   $FML$
+   $jaFML: Message.sgml,v 1.2 2003/04/15 14:51:42 fukachan Exp $
+-->
+
+<chapter id="module.mail.message">
+	<title>
+	Mail::Message module
+	</title>
+
+<sect1 id="module.mail.message.overview">
+	<title>
+	Mail::Message overview
+	</title>
+
+<para>
+Mail::Message object provides several methods to analyze a message and
+manipulate messages or parts of a message.
+</para>
+
+<para>
+Precisely speaking, this module analyzes the specified mail message
+and build a chain of Mail::Message objects.
+<screen>
+If not multipart
+
+   header -> body
+
+else if multipart
+
+   header -> preamble -> part1 -> part2 -> trailor
+</screen>
+The link between objects is double link list. Mail::Message class
+provides several methods to manipulate these structures.
+</para>
+
+<para>
+Each part of this chain is a Mail::Message object. In other words, one
+mail message consits of a chain of plural Mail::Message objects.
+</para>
+
+<para>
+For example, "header" is a Mail::Message, which type is
+text/rfc822-headers and the data is Mail::Header object. Instead
+"part1" is a Mail::Message object, which type is text/plain and the
+data is reference to the data string.
+</para>
+
+<para>
+References:
+<ulink url="../../en/modules/Mail/Message.txt">
+Mail::Message module manual.
+</ulink>
+</para>
+
+</sect1>
+
+
+<sect1 id="module.mail.message.parse">
+	<title>
+	Mail::Message module: analyze
+	</title>
+
+<para>
+parse() analyzes the file which file name or the file handle for the
+file should be specified at the argument.
+</para>
+
+<para>
+data_type_list() returns information of the chain.
+The return value is array reference.
+For example, MIME/multipart consists of the following objects.
+<screen>
+  type[ 1]: text/rfc822-headers       | multipart/mixed
+  type[ 2]: multipart/mixed           | multipart/mixed
+  type[ 3]: multipart.preamble        | multipart/mixed
+  type[ 4]: multipart.delimiter       | multipart/mixed
+  type[ 5]: text/plain                | multipart/mixed
+  type[ 6]: multipart.delimiter       | multipart/mixed
+  type[ 7]: image/gif                 | multipart/mixed
+  type[ 8]: multipart.close-delimiter | multipart/mixed
+  type[ 9]: text/plain                | multipart/mixed
+</screen>
+The center is the object type, the right one is the mime type of the
+whole message (content-type in the mail header).
+</para>
+
+</sect1>
+
+
+<sect1 id="module.mail.message.create">
+	<title>
+	Mail::Message module: create a new object
+	</title>
+
+<para>
+new() method is used to create a new object chain.
+</para>
+
+<para>
+The following MIME/multipart specific methdos exist.
+<screen>
+build_mime_multipart_chain($args)
+parse_and_build_mime_multipart_chain($args)
+build_mime_header($args)
+</screen>
+These method is used internally now.
+So these will become private methods in the furure.
+Please do not use these methods.
+</para>
+
+<para>
+To create a new MIME/mulitpart message, use Mail::Message::Compose. It
+is MIME::Lite class in fact :-)
+</para>
+
+</sect1>
+
+
+<sect1 id="module.mail.message.headerop">
+	<title>
+	Mail::Message module: header manipulations
+	</title>
+
+<para>
+dup_header() method duplicates only header part of a chain and left
+the body part. The new chain has different head (header object) but
+the second part is the same as the original chain.
+<screen>
+              |<--------------- mail body ------------->
+header0 ----> part1 -> part2 -> ...
+               A
+               |
+dup_header0 ---
+</screen>
+</para>
+
+
+<para>
+whole_message_header() returns the header object the chain. The return
+value is a Mail::Message object not string.
+</para>
+
+<para>
+header_data_type() return the type of the whole message as string.
+It tells whether this message is text or multipart.
+</para>
+
+</sect1>
+
+
+<sect1 id="module.mail.message.bodyop">
+	<title>
+	Mail::Message module: manipulate messabe body
+	</title>
+
+<para>
+Consider the following object chain.
+<screen>
+If multipart
+
+header -> body
+
+else if not multipart
+
+header -> preamble -> part1 -> part2 -> trailor
+</screen>
+</para>
+
+
+<para>
+header_data_type() return the type of the whole type.
+It is the information from Content-Type: in the whole message header.
+</para>
+
+<para>
+whole_message_body() returns body or part1 if multipart.
+whole_message_body_head() is same.
+</para>
+
+<para>
+find_first_plaintext_message($args) return the first text/plain type
+object in the chain. This is useful in filter codes since filter
+system checks the first text field in a lot of cases.
+</para>
+
+</sect1>
+
+
+<sect1 id="module.mail.message.search">
+	<title>
+	Mail::Message module: search
+	</title>
+
+<para>
+find() searches the specified type of Mail::Message in the object
+chain and returns the first matched object.
+</para>
+
+</sect1>
+
+
+<sect1 id="module.mail.message.print">
+	<title>
+	Mail::Message module: print
+	</title>
+
+<para>
+print() method is useual print() functions.
+Usually specify the file descriptor as the argument.
+</para>
+
+<para>
+print() has the concept "mode" to specify CRLF or LF. use
+set_print_mode(mode) and reset_print_mode() to set the mode. By
+default, mode is raw. Specify smtp mode in SMTP codes.
+</para>
+
+</sect1>
+
+
+<sect1 id="module.mail.message.utils">
+	<title>
+	Mail::Message module: utility functions
+	</title>
+
+<sect2>
+	<title>
+	size
+	</title>
+
+<para>
+size() returns the size of the object not the whole size.
+header_size() tells the size of the header.
+body_size() tells the size of the body part.
+</para>
+
+<para>
+is_empty() tells the object data is empty or not. 
+</para>
+</sect2>
+
+
+<sect2>
+	<title>
+	general information
+	</title>
+
+<para>
+envelope_sender() returns the envelope sender as string.
+</para>
+
+<para>
+data_type() returns the type of the object (a part of an object chain)
+not the whole message type (Content-Type: in the whole message
+header).
+</para>
+
+<para>
+encoding_mechanism() returns the encoding mechanism of the object (a
+part of an object chain) as string. This is not of the whole message
+encoding mechanism.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Mail::Message internals
+	</title>
+
+<para>
+num_paragraph() returns the number of paragraph in the data of the
+object.
+</para>
+
+
+<para>
+nth_paragraph(N) returns N-th paragrah as the string.
+Caution that N starts from 1 not 0.
+</para>
+
+
+<para>
+header() return the header part of a multipart block.
+data() returns the data part.
+Respectively, alias of message_fields($size) and message_text($size).
+</para>
+
+</sect2>
+
+</sect1>
+
+
+<sect1 id="module.mail.message.ref">
+	<title>
+	Rerefences
+	</title>
+
+<para>
+
+<ulink url="../../en/modules/Mail/Message.txt">
+Mail::Message manual
+</ulink>
+</para>
+</sect1>
+
+
+</chapter>

@@ -1,0 +1,38 @@
+<!--
+   $FML$
+   $jaFML: recipe.forward.sgml,v 1.2 2003/04/15 14:51:38 fukachan Exp $
+-->
+
+<qandaentry>
+<question>
+<para>
+switch forwarding address regarding the mail content.
+</para>
+</question>
+
+<answer>
+<para>
+It is simple if you can prepare different files as necessary.
+For example, prepare
+<screen>
+recipients.A
+recipients.B
+recipients.C
+</screen>
+for the corresponding conditions A B C.
+Set up the following hook:
+<screen>
+if (condition A matched) {
+   $config->set('recipient_maps', "recipients.A");
+}
+elsif (condition B matched) {
+   $config->set('recipient_maps', "recipients.B");
+}
+elsif (condition C matched) {
+   $config->set('recipient_maps', "recipients.C");
+}
+</screen>
+</para>
+</answer>
+
+</qandaentry>
