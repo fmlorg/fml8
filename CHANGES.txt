@@ -1,7 +1,70 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/03/06
+
+   variables
+	$use_article_filter_reject_notice
+	$article_filter_reject_notice_recipients
+	
+   etc/main.cf, etc/install.cf	
+	define $default_module_config
+	define $default_command_line_option_config
+
+   FML::Process::Distribute 
+	
+   FML::Process::Distribute 
+	enable switch by $use_article_filter_reject_notice
+	FNF: use get_as_array_ref()
+	
+   FML::Process::Addr 
+	switched to use FML::Sys::User
+	
+   FML::Restriction::Command 
+	nuke is_valid_mail_address() which is not used.
+	
+   FML::Process::Kernel 
+	validate From::syntax in credential updating.
+	FNF: use get_as_array_ref()
+
+   FML::Process::Kernel 
+   FML::Restriction::Post 
+	moved main codes of _check_restrions() to methods defined in new
+	FML::Restriction::Post module.
+	switched to use FML::Restriction::Post.
+
+   FML::Process::Scheduler 
+	remove dummy modules::queue_in() and exits()
+	
+   FML::Error::Cache 
+	modified not to use _new().
+	removed _new().
+	
+   FML::MTAControl::Procmail 
+	clarify *virtual* functoins are dummy.
+	These module do not need to handle virtual issue since
+	ml_name@ml_domain is explicitly written in procmailrc.
+	
+   FML::Process::Switch 
+	remove hard-coded module specific configuraitons.
+	resolve module name and the options based on etc::modules.
+	
+	use $default_config_dir/modules to resolv map between prorame
+	name and class (+ options).
+	
+	use etc::command_line_options to resolve getopts() parameters.
+	default_module_maps -> default_module_config.
+
+   FML::Filter 
+   FML::Process::Utils 
+	implment new method convert_to_mail_address() and use it
+	to expand {admin, sender, ...} to the corresponding mail address.
+
 2003/03/05
+
+   FML::Header 
+	do not show List-Help::unless $use_command_mail_program specified.
+	implement rewrite_errors_to()
 
    FML::Process::Command Distribute 
 	return header for debug in error
@@ -134,7 +197,7 @@
    Mail::Delivery::Queue 
    Mail::ThreadTrack::Print::Message 
    Mail::Message::ToHTML 
-	FNF::not use $_
+	FNF: not use $_
 
 2003/02/10
 
@@ -281,7 +344,7 @@
    FML::Command::DirUtils
 	use FML::Restriction::Base::regexp_match() to check command
 	line options.
-	FNF::remove $_
+	FNF: remove $_
 	
    FML::Restriction::Base
 	define 'command_line_options' regexp.
@@ -4398,4 +4461,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.132 2003/03/04 02:54:49 fukachan Exp $
+$FML: CHANGES.txt,v 1.133 2003/03/05 15:24:22 fukachan Exp $
