@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Print.pm,v 1.16 2001/11/11 11:12:28 fukachan Exp $
+# $FML: Print.pm,v 1.17 2001/11/19 08:49:30 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -147,7 +147,8 @@ sub _do_list
 sub __do_summary
 {
     my ($thread, $option) = @_;
-    my $mode = $thread->get_mode || 'text';
+    my $mode   = $thread->get_mode || 'text';
+    my $config = $thread->{ _config };
 
     # rh: thread id list picked from status.db
     my $thread_id_list = $thread->list_up_thread_id();
@@ -157,6 +158,12 @@ sub __do_summary
     # 3. show short summary for each message if needed (mode dependent)
     if (@$thread_id_list) {
 	$thread->sort_thread_id($thread_id_list);
+
+	# reverse order (first thread is the latest one) if reverse mode
+	if (defined $config->{ reverse_order }) { 
+	    @$thread_id_list = reverse @$thread_id_list;
+	}
+
 	$thread->_print_thread_summary($thread_id_list);
 
 	if ($option->{ mode } eq 'summary') {
