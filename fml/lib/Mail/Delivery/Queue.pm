@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.32 2004/01/24 09:03:57 fukachan Exp $
+# $FML: Queue.pm,v 1.33 2004/02/15 04:38:36 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -308,8 +308,10 @@ use Fcntl qw(:DEFAULT :flock);
 sub lock
 {
     my ($self, $args) = @_;
-    my $fh   = new FileHandle $self->{ _active_qf };
     my $wait = defined $args->{ wait } ? $args->{ wait } : 10;
+    my $prep = defined $args->{ lock_before_runnable } ? 1 : 0;
+    my $file = $prep ? $self->{ _new_qf } : $self->{ _active_qf };
+    my $fh   = new FileHandle $file;
 
     eval {
 	local($SIG{ALRM}) = sub { croak("lock timeout");};
