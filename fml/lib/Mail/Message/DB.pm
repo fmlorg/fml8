@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.1.2.6 2003/06/14 05:39:03 fukachan Exp $
+# $FML: DB.pm,v 1.1.2.7 2003/06/14 06:55:03 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -12,7 +12,7 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 	    @table_list
 	    @orig_header_fields @header_fields
-	    %header_field_type 
+	    %header_field_type
 	    );
 use Carp;
 
@@ -21,7 +21,7 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.1.2.6 2003/06/14 05:39:03 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.1.2.7 2003/06/14 06:55:03 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 my $debug = 1;
@@ -53,11 +53,11 @@ my $is_keepalive = 1;
 		    next_key
 		    prev_key
 
-		    filename
-		    filepath
+		    html_filename
+		    html_filepath
 		    subdir
 
-		    month 
+		    month
 		    inv_month
 
 		    hint
@@ -156,6 +156,7 @@ sub DESTROY
 {
     my ($self) = @_;
 
+    _PRINT_DEBUG("DB::DESTROY");
     if (defined $self->{ _db }) {
 	$self->db_close();
     }
@@ -180,6 +181,8 @@ sub analyze
     my $month  = $self->msg_time($hdr, 'yyyy/mm');
     my $subdir = $self->msg_time($hdr, 'yyyymm');
 
+    _PRINT_DEBUG("analyze start");
+
     my $db = $self->db_open();
 
     $self->_update_max_id($db, $id);
@@ -192,11 +195,13 @@ sub analyze
     # HASH { YYYY/MM => (id1 id2 id3 ..) }
     $self->_db_array_add($db, 'inv_month', $month, $id);
 
-    $self->_analyze_thread($db, $msg, $hdr);
+    $self->_analyze_thread($db, $id, $msg, $hdr);
 
     unless ($is_keepalive) {
 	$self->db_close();
     }
+
+    _PRINT_DEBUG("analyze end");
 }
 
 
@@ -238,14 +243,14 @@ sub _save_header_info
     my ($self, $db, $id, $hdr) = @_;
     my ($fld, $val);
 
-    # @header_fields may be overwritten. For example, 
+    # @header_fields may be overwritten. For example,
     #   key = message_id
     #   fld = message-id
     #   val = xxx@yyy.domain
     for my $key (@header_fields) {
 	$fld =  $key;
 	$fld =~ s/_/-/g;
-	$fld =~ tr/A-Z/a-z/;  
+	$fld =~ tr/A-Z/a-z/;
 	$val =  $hdr->get($fld);
 	$val =~ s/\s*$//;
 
@@ -277,7 +282,7 @@ sub _save_header_info
 }
 
 
-# Descriptions: analyze thread information based on In-Reply-To: 
+# Descriptions: analyze thread information based on In-Reply-To:
 #               and References. It updates HASH_REF(ref_key_list).
 #
 #               For example, "article 101" is a reply to "article 100"
@@ -291,18 +296,21 @@ sub _save_header_info
 #                                 91 => "101",
 #                       };
 #
-#    Arguments: OBJ($self) HASH_REF($db) OBJ($msg) OBJ($hdr)
+#    Arguments: OBJ($self) HASH_REF($db) NUM($id) OBJ($msg) OBJ($hdr)
 # Side Effects: update db
 # Return Value: none
 sub _analyze_thread
 {
-    my ($self, $db, $msg, $hdr) = @_;
+    my ($self, $db, $id, $msg, $hdr) = @_;
     my $current_key  = $self->get_key();
     my $ra_ref       = $self->_address_clean_up($hdr->get('references'));
     my $ra_inreplyto = $self->_address_clean_up($hdr->get('in-reply-to'));
     my $in_reply_to  = $ra_inreplyto->[0] || '';
     my %uniq         = ();
     my $count        = 0;
+
+    # ref_key_list = ( id(myself), id(in-reply-to), id's(references) );
+    $self->_db_array_add($db, 'ref_key_list', $id, $id);
 
     # search order is artibrary (see comments above).
   MSGID_SEARCH:
@@ -346,7 +354,7 @@ sub _analyze_thread
 	$idp = 0;
     }
 
-    # 4. if $idp (link to previous message) found, 
+    # 4. if $idp (link to previous message) found,
     if (defined($idp) && $idp && $idp =~ /^\d+$/) {
 	if ($idp != $current_key) {
 	    $self->_db_set($db, 'prev_key', $current_key, $idp);
@@ -462,7 +470,9 @@ sub _db_array_add
 {
     my ($self, $db, $table, $key, $value) = @_;
     my $found = 0;
-    my $ra    = _str_to_array_ref($db->{ $table }->{ $key }) || [];
+    my $ra    = $self->get_as_array_ref($table, $key) || [];
+
+    _PRINT_DEBUG("ARRAY: table=$table key=$key, add '$value' into (@$ra)");
 
     if (defined($key) && $key && defined($value) && $value) {
 	# check duplication to ensure uniqueness within this array.
@@ -477,6 +487,9 @@ sub _db_array_add
 	    $v .= $v ? " $value" : $value;
 	    $self->_db_set($db, $table, $key, $v);
 	}
+    }
+    else {
+	_PRINT_DEBUG("ARRAY: fail to add");
     }
 }
 
@@ -652,6 +665,8 @@ sub set
     my ($self, $table, $key, $value) = @_;
     my $db = $self->db_open();
 
+    _PRINT_DEBUG("_db_set: table=$table { $key => $value }");
+
     $self->_db_set($db, $table, $key, $value);
 }
 
@@ -666,6 +681,30 @@ sub get
     my $db = $self->db_open();
 
     return $self->_db_get($db, $table, $key);
+}
+
+
+# Descriptions: get $key (list) of $table as array (ARRAY_REF)
+#    Arguments: OBJ($self) STR($table) STR($key)
+# Side Effects: one
+# Return Value: ARRAY_REF
+sub get_as_array_ref
+{
+    my ($self, $table, $key) = @_;
+
+    _PRINT_DEBUG("get_as_array_ref($table, $key)");
+
+    my $db  = $self->db_open();
+    my $val = $self->_db_get($db, $table, $key);
+    $val =~ s/^\s*//;
+    $val =~ s/\s*$//;
+
+    _PRINT_DEBUG("get_as_array_ref($table, $key, '$val')");
+
+    my (@x) = split(/\s+/, $val);
+
+    _PRINT_DEBUG("return(@x)");
+    return( \@x );
 }
 
 
@@ -791,6 +830,23 @@ sub get_key
     return( $self->{ _key } || undef );
 }
 
+
+=head1 HANDLE TABLE
+
+=cut
+
+
+# Descriptions: get table as hash ref to handle it as HASH_REF
+#    Arguments: OBJ($self) STR($table)
+# Side Effects: none
+# Return Value: HASH_REF
+sub get_table_as_hash_ref
+{
+    my ($self, $table) = @_;
+    my $db = $self->db_open();
+
+    return( $db->{ "_$table" } || {} );
+}
 
 
 =head1 DEBUG
