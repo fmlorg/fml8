@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.24 2004/01/24 09:03:58 fukachan Exp $
+# $FML: SMTP.pm,v 1.25 2004/05/16 04:55:55 fukachan Exp $
 #
 
 
@@ -142,7 +142,7 @@ sub new
 
 # Descriptions: send a (SMTP/LMTP) command string to BSD socket.
 #    Arguments: OBJ($self) STR($command)
-# Side Effects: log file by _smtplog
+# Side Effects: update log file by smtplog.
 #               set _last_command and _error_action in object itself
 # Return Value: none
 sub _send_command
@@ -165,7 +165,7 @@ sub _send_command
 
 # Descriptions: receive a reply for a (SMTP/LMTP) command.
 #    Arguments: OBJ($self)
-# Side Effects: log file by _smtplog
+# Side Effects: update log file by smtplog.
 # Return Value: none
 sub _read_reply
 {
