@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.80 2003/06/20 22:29:33 fukachan Exp $
+# $FML: Message.pm,v 1.81 2003/08/16 05:24:43 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1384,13 +1384,9 @@ sub parse_and_build_mime_multipart_chain
 {
     my ($self, $args) = @_;
 
-    print "// start parse_and_build_mime_multipart_chain\n" if $debug;
-
     # check input parameters
     return undef unless $args->{ boundary };
     return undef unless $args->{ data  };
-
-    print "// start parse_and_build_mime_multipart_chain (0)\n" if $debug;
 
     # base content-type
     my $base_data_type = $args->{ data_type };
@@ -1402,6 +1398,7 @@ sub parse_and_build_mime_multipart_chain
     my $dash_boundary   = "--".$boundary;
     my $delimeter       = "\n". $dash_boundary;
     my $close_delimeter = $delimeter ."--";
+    my $no_preamble     = 0;
 
     # 1. check the preamble before multipart blocks
     #    XXX mpb = multipart-body
@@ -1411,14 +1408,36 @@ sub parse_and_build_mime_multipart_chain
     #    which is effective but wrong.
     #    The first delimeter should be handled specially.
     #    Exactly, it is a dash-boundary not delimeter!
-    my $mpb_begin       = index($$data, $delimeter, 0);
-    $mpb_begin          = index($$data, $boundary, 0) if $mpb_begin < 0;
+    my $mpb_begin         = -1;
+    my $pos_dash_boundary = -1;
+    {
+	# dirty hack to avoid wrong logic. should be fixed in the future.
+	my $pdd = index($$data, $delimeter, 0);     # ^.+dash-boundary
+	my $pdb = index($$data, $dash_boundary, 0); # ^dash-boundary
+
+	# save potision of the first dash-boundary for further reference.
+	$pos_dash_boundary = $pdb;
+
+	if ($pdb == 0) {
+	    $mpb_begin = 0;
+	}
+	else {
+	    $mpb_begin = $pdd;
+	}
+    }
     my $mpb_end         = index($$data, $close_delimeter, 0);
     my $pb              = 0; # pb = position of the beginning in $data
     my $pe              = $mpb_begin; # pe = position of the end in $data
+
+    # XXX here, the block {0, ($pe - $pb)} is the preamble.
+    # XXX So, it may be 0 ($pe == $pb == 0).
+
+    # tell where _next_part_pos() search the next $delimeter from.
+    # set the current position to be the next byte after the preamble.
     $self->_set_pos( $pe + 1 );
 
-    # fix the end of multipart block against broken MIME/multipart
+    # fix the end of multipart block against broken MIME/multipart.
+    # If close-delimeter not found, $broken_close_delimiter = 1.
     my $broken_close_delimiter = 1 if $mpb_end < 0;
     {
 	# oops, no delimiter is not found !!!
@@ -1444,7 +1463,7 @@ sub parse_and_build_mime_multipart_chain
 	    $mpb_end = $data_end;
 	}
 	else {
-	    print "   * ok ?\n" if $debug;
+	    print "   * ok ? mpb begin=$mpb_begin end=$mpb_end\n" if $debug;
 	}
     }
 
@@ -1455,31 +1474,30 @@ sub parse_and_build_mime_multipart_chain
     # 
     # XXX The first delimeter should be handled specially.
     # XXX Exactly, it is dash-boundary not delimeter!
-    my $preamble    = "\n".substr($$data, 0, length($delimeter) - 1);
-    my $no_preamble = 1 if $preamble eq $delimeter;
+    my $dp = index($$data, $dash_boundary, 0); # ^dash-boundary
+    $no_preamble = 1 if $dp == 0;
 
-    #
-    # HERE WE GO but debug firstly :)
-    #
     if ($debug) {
 	print "\tmpb($mpb_begin, $mpb_end)\n\t----------\n\n";
-	print "\tno preamble\n" if $no_preamble;
-	print "\tpreamble    = $preamble\n";
-	print "\tno_preamble = $no_preamble\n";
+	print "\tno_preamble   = ", ($no_preamble ? "yes" : "no"), "\n";
+	print "\tdelimeter size: ", length($delimeter), "\n";
     }
 
     # prepare lexical variables
     my ($msg, $next_part, $prev_part, @m);
-    my $i = 0; # counter to indicate the $i-th message
+    my $i       = 0; # counter to indicate the $i-th message
+    my $loopcnt = 0; # loop counter.
 
     do {
+	$loopcnt++; print "\n// $loopcnt\n" if $debug;
+
 	# 2. analyze the region for the next part in $data
 	#     we should check the condition "$pe > $pb" here
 	#     to avoid the empty preamble case.
 	# XXX this function is not called
 	# XXX if there is not the prededing preamble.
 	if ($pe > $pb) { # XXX not effective region if $pe <= $pb
-	    print "   new block ($pb, $pe) " if $debug;
+	    print "   [$loopcnt] new multipart block ($pb, $pe) " if $debug;
 
 	    my ($header, $pb) = _get_mime_header($data, $pb, $pe);
 	    if ($debug) {
@@ -1515,7 +1533,8 @@ sub parse_and_build_mime_multipart_chain
 	}
 
 	# 3. where is the region for the next part?
-	($pb, $pe) = $self->_next_part_pos($data, $delimeter);
+	($pb, $pe) = $self->_next_part_pos($data, $delimeter,
+					   $loopcnt, $pos_dash_boundary);
 	if ($debug) {
 	    print "\tnext block:";
 	    print "   ($pb, $pe)\t$mpb_begin<->$mpb_end/$data_end\n";
@@ -1546,9 +1565,14 @@ sub parse_and_build_mime_multipart_chain
 		print "   *** broken condition pb=$pb pe=$pe ***\n" if $debug;
 	    }
 	    elsif ($pb < $pe) {
-		print "   delimiter\n" if $debug;
-
 		my $buf = $delimeter."\n";
+		print "   set up delimiter\n" if $debug;
+
+		# Exception: $data =~ /^dash-boudary/ NOT /^.+delimeter/;
+		if ($loopcnt == 1 && $pos_dash_boundary == 0) {
+		    $buf = $dash_boundary."\n";
+		}
+
 		$m[ $i++ ] = $self->_alloc_new_part({
 		    data           => \$buf,
 		    data_type      => $virtual_data_type{'delimiter'},
@@ -1642,7 +1666,11 @@ sub _get_mime_header
     my $pos = index($$data, "\n\n", $pos_begin) + 1;
     my $buf = substr($$data, $pos_begin, $pos - $pos_begin);
 
-    print "\t_get_mime_header pos=$pos should be < end=$pos_end\n" if $debug;
+    if ($debug) {
+	print "\n\t_get_mime_header($pos_begin, $pos_end): ";
+	print "$pos_begin -> pos=$pos should be < end=$pos_end\n";
+	print "\tmime_header={$buf}\n" if $debug;
+    }
 
     if ($pos > $pos_end) {
 	return ('', $pos_begin);
@@ -1737,13 +1765,20 @@ sub delete_message_part_link
 
 # Descriptions: search the next MIME boundary
 #    Arguments: OBJ($self) HASH_STR($data) STR($delimeter)
+#               NUM($loopcnt) NUM(mpb_begin)
 # Side Effects: none
 # Return Value: (NUM, NUM)
 sub _next_part_pos
 {
-    my ($self, $data, $delimeter) = @_;
+    my ($self, $data, $delimeter, $loopcnt, $mpb_begin) = @_;
     my ($len, $p, $pb, $pe, $pp);
     my $maxlen = length($$data);
+    my $lendel = length($delimeter);
+
+    # Exception: $data =~ /^dash-boudary/ NOT $data =~ /^.+delimeter/;
+    if ($loopcnt == 1 && $mpb_begin == 0) {
+	$lendel -= 1;
+    }
 
     # get the next deliemter position
     $pp  = $self->_get_pos();
@@ -1754,8 +1789,8 @@ sub _next_part_pos
     print "\t_next_part_pos( p=$p pp=$pp maxlen=$maxlen )\n" if $debug;
 
     $len = $p > 0 ? ($p - $pp) : ($maxlen - $pp);
-    $pb  = $pp + length($delimeter);
-    $pe  = $pb + $len - length($delimeter);
+    $pb  = $pp + $lendel;
+    $pe  = $pb + $len - $lendel;
 
     # but broken if $p == $pp == 0 !!!
     if ($pp == 0) { $pb = $pe = $maxlen;}
