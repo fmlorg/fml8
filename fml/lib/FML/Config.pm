@@ -14,10 +14,17 @@ use Carp;
 
 sub new
 {
-    my ($self) = @_;
+    my ($self, $args) = @_;
 
     unless (defined %_fml_config) { %_fml_config = ();}
     my $me = \%_fml_config;
+
+    # import variables
+    if (defined $args) {
+	my ($k, $v);
+	while (($k, $v) = each %$args) { set($me, $k, $v);}
+    }
+
     return bless $me, $self;
 }
 

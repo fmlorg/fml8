@@ -24,10 +24,19 @@ sub new
 {
     my ($self, $args)    = @_;
     my ($curproc) = {}; # alloc memory as the struct current_process.
+    my $cfargs    = {};
+
+    # import variables
+    if ($args->{ ml_home_dir }) {
+	$cfargs->{ ml_home_dir } = $args->{ ml_home_dir };
+    }
+    else {
+	croak "ml_home_dir is not defined.\n";
+    }
 
     # bind FML::Config object to $curproc
     use FML::Config;
-    $curproc->{ config } = new FML::Config;
+    $curproc->{ config } = new FML::Config $cfargs;
 
     bless $curproc, $self;
 
