@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.27 2002/04/24 03:50:00 fukachan Exp $
+# $FML: newml.pm,v 1.28 2002/04/24 03:59:15 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -95,6 +95,12 @@ sub process
 	}
     }
 
+    # check alias key defined in MTA aliases
+    if ($self->_mta_alias_has_ml_entry($curproc, $ml_name)) {
+	warn("$ml_name already exists (somewhere in MTA aliases)");
+	return ;
+    }
+
     # o.k. here we go !
     eval q{
 	use File::Utils qw(mkdirhier);
@@ -180,7 +186,7 @@ sub _update_aliases
     _install($src, $dst, $params);
 
     # append
-    if ($self->_alias_has_ml_entry($alias, $ml_name)) {
+    if ($self->_alias_has_ml_entry($curproc, $alias, $ml_name)) {
 	print STDERR "warning: $ml_name already defined!\n";
 	print STDERR "         ignore aliases updating.\n";
     }
@@ -203,13 +209,42 @@ sub _update_aliases
 }
 
 
+
 # Descriptions: $alias file has an $ml_name entry or not
-#    Arguments: OBJ($self) STR($alias) STR($ml_name)
+#    Arguments: OBJ($self) OBJ($curproc) STR($ml_name)
+# Side Effects: none
+# Return Value: NUM( 1 or 0 )
+sub _mta_alias_has_ml_entry
+{
+    my ($self, $curproc, $ml_name) = @_;
+    my $found = 0;
+
+    eval q{
+	use FML::MTAControl;
+	my $postfix = new FML::MTAControl;
+	$found = $postfix->find_key_in_alias($curproc, {
+	    mta_type   => 'postfix',
+	    key        => $ml_name,
+	});
+    };
+    croak($@) if $@;
+
+    return $found;
+}
+
+
+# Descriptions: $alias file has an $ml_name entry or not
+#    Arguments: OBJ($self) OBJ($curproc) STR($alias) STR($ml_name)
 # Side Effects: none
 # Return Value: NUM( 1 or 0 )
 sub _alias_has_ml_entry
 {
-    my ($self, $alias, $ml_name) = @_;
+    my ($self, $curproc, $alias, $ml_name) = @_;
+    my $found = 0;
+
+    # search all entries defined in MTA
+    $found = $self->_mta_alias_has_ml_entry($curproc, $ml_name);
+    return 1 if $found;
 
     use FileHandle;
     my $fh = new FileHandle $alias;
