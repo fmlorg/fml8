@@ -13,9 +13,76 @@
 	気をつけてください。
 
 
+2004/04/30
+
+   コマンドのより厳しいエラーチェック
+
+   FML::Command::Admin::{digest,off,on}
+	more restrict error checks.
+	
+   FML::Command::Admin::changepassword 
+	more restrict error checks.
+	fix rewrite_prompt().
+	
+   FML::Command::User::admin 
+	call command specific rewrite_prompt() if could.
+	
+   FML::User::Control 
+	return error messages more.
+	call croak() if critical error.
+
+2004/04/27
+	
+   variables
+	define $etc_dir and fixed to use it.
+	newml command creates $etc_dir.
+
+   IO::Adapter の検索 API を少し変更する
+	IO::Adapter 側で quotemeta() の心配をするとかしない。
+	渡された $regexp を信じるので、呼び出す側で考慮しないといけない。 
+
+   IO::Adapter 
+	use $regexp as itself, not quotemeta()-ify.
+
+   FML::Process::Debug 
+	move quotemeta($regexp) from IO::Adapter to here.
+	compare domains case insensitively.
+	
+   FML::ML::HomePrefix 
+	bug fix search logic.
+	move quotemeta() from IO::Adapter to here.
+	
+   FML::Credential 
+	implement is_same_domain().
+	move quotemeta() from IO::Adapter to here.
+	
+   FML::Process::Utils 
+	method-ify some module internal functions.
+	bug fix search logic of ml_home_prefix.
+	move quotemeta() from IO::Adapter to here.
+	
+   FML::User::DB 
+	move quotemeta() from IO::Adapter to here.
+	
+   FML::Process::Kernel 
+	fix comments.
+	use $str->charcode_convert_to_external_charset(), remove
+	hard-coded 'jis'.
+	
+   FML::Command::Auth 
+	bug fix search logic.
+	move quotemeta() from IO::Adapter to here.
+	
+   FML::Header::Subject 
+	remove _delete_subject_tag().
+	method-ify delete_subject_tag().
+
 2004/04/23
 
    BUG FIX: パスワードファイルの初期化バグ修正
+
+   FML::Command::Auth 
+	bug fix: we need to touch etc/passwd-admin file firstly.
 
 2004/04/22
 
@@ -6821,4 +6888,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.198 2004/04/22 13:11:49 fukachan Exp $
+$FML: CHANGES.txt,v 1.199 2004/04/23 13:47:27 fukachan Exp $
