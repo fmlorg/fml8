@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: subscribe.pm,v 1.4 2001/10/11 23:59:54 fukachan Exp $
+# $FML: subscribe.pm,v 1.5 2001/10/13 02:35:00 fukachan Exp $
 #
 
 package FML::Command::Admin::subscribe;
@@ -29,19 +29,19 @@ See C<FML::Command> for more details.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $optargs)>
+=head2 C<process($curproc, $command_args)>
 
 =cut
 
 
 sub process
 {
-    my ($self, $curproc, $optargs) = @_;
+    my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ config };
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
-    my $options       = $optargs->{ options };
-    my $address       = $optargs->{ address } || $options->[ 0 ];
+    my $options       = $command_args->{ options };
+    my $address       = $command_args->{ address } || $options->[ 0 ];
 
     # fundamental check
     croak("address is not specified")       unless defined $address;

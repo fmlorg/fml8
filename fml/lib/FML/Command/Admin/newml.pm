@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: newml.pm,v 1.1.1.1 2001/08/26 08:01:04 fukachan Exp $
+# $FML: newml.pm,v 1.2 2001/08/26 13:05:04 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -25,7 +25,7 @@ FML::Command::Admin::newml - make a new mailing list
 
     use FML::Command::Admin::newml;
     $obj = new FML::Command::Admin::newml;
-    $obj->newml($curproc, $optargs);
+    $obj->newml($curproc, $command_args);
 
 See C<FML::Command> for more details.
 
@@ -33,19 +33,19 @@ See C<FML::Command> for more details.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $optargs)>
+=head2 C<process($curproc, $command_args)>
 
 =cut
 
 
 sub process
 {
-    my ($self, $curproc, $optargs) = @_;
+    my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ 'config' };
     my $main_cf       = $curproc->{ 'main_cf' };
     my $member_map    = $config->{ 'primary_member_map' };
     my $recipient_map = $config->{ 'primary_recipient_map' };
-    my $ml_name       = $optargs->{ 'ml_name' };
+    my $ml_name       = $command_args->{ 'ml_name' };
 
     # fundamental check
     croak("\$ml_name is not specified")    unless $ml_name;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: edit.pm,v 1.1.1.1 2001/08/26 08:01:04 fukachan Exp $
+# $FML: edit.pm,v 1.2 2001/09/22 13:17:11 fukachan Exp $
 #
 
 package FML::Command::Admin::edit;
@@ -29,7 +29,7 @@ See C<FML::Command> for more details.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $optargs)>
+=head2 C<process($curproc, $command_args)>
 
 C<TODO>:
 now we can read and write config.cf, not change it.
@@ -38,20 +38,20 @@ now we can read and write config.cf, not change it.
 
 
 # Descriptions: edit config.cf
-#    Arguments: $self $curproc $optargs 
+#    Arguments: $self $curproc $command_args 
 # Side Effects: update config.cf
 # Return Value: none
 sub process
 {
-    my ($self, $curproc, $optargs) = @_;
+    my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ config };
-    my $options       = $optargs->{ options };
-    my $address       = $optargs->{ address } || $options->[ 0 ];
-    my $myname        = $optargs->{ args }->{ myname };
+    my $options       = $command_args->{ options };
+    my $address       = $command_args->{ address } || $options->[ 0 ];
+    my $myname        = $command_args->{ args }->{ myname };
 
     # ML's home directory
     use File::Spec;
-    my $ml_home_dir   = $optargs->{ 'args' }->{ 'ml_home_dir' };
+    my $ml_home_dir   = $command_args->{ 'args' }->{ 'ml_home_dir' };
     my $config_cf     = File::Spec->catfile($ml_home_dir, "config.cf");
 
     use FML::Config;

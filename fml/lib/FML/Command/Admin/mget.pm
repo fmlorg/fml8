@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: mget.pm,v 1.2 2001/08/26 07:59:03 fukachan Exp $
+# $FML: mget.pm,v 1.1.1.1 2001/08/26 08:01:04 fukachan Exp $
 #
 
 package FML::Command::Admin::mget;
@@ -20,8 +20,8 @@ use FML::Command::Admin::get;
 
 sub process
 {
-    my ($self, $curproc, $optargs) = @_;
-    $self->SUPER::process($curproc, $optargs);
+    my ($self, $curproc, $command_args) = @_;
+    $self->SUPER::process($curproc, $command_args);
 }
 
 
