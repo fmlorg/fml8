@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digestoff.pm,v 1.5 2003/08/23 04:35:30 fukachan Exp $
+# $FML: digestoff.pm,v 1.6 2003/09/27 03:00:17 fukachan Exp $
 #
 
 package FML::Command::Admin::digestoff;
@@ -23,7 +23,8 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-disable digest mode for the specified address.
+disable digest mode for the specified address. 
+It means delivery to this address from digest to real delivery mode.
 
 =head1 METHODS
 
@@ -60,6 +61,7 @@ sub lock_channel { return 'command_serialize';}
 
 
 # Descriptions: disable digest mode for the specified user.
+#               changed from digest to real delivery mode.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $recipient_map,$digest_recipient_maps
 # Return Value: none

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: chpass.pm,v 1.1 2003/02/02 10:59:19 fukachan Exp $
 #
 
 package FML::Command::Admin::chpass;
@@ -17,7 +17,7 @@ use FML::Command::Admin::changepassword;
 @ISA = qw(FML::Command::Admin::changepassword);
 
 
-# Descriptions: change admin password
+# Descriptions: change remote administrator password.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: forward request to password module
 # Return Value: none
@@ -30,7 +30,7 @@ sub process
 
 =head1 NAME
 
-FML::Command::Admin::chpass - change admin password
+FML::Command::Admin::chpass - change remote administrator password
 
 =head1 SYNOPSIS
 
@@ -38,6 +38,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
+change remote administrator password.
 an alias of C<FML::Command::Admin::changepassword>.
 
 =head1 CODING STYLE

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: error.pm,v 1.7 2003/05/28 14:35:16 fukachan Exp $
+# $FML: error.pm,v 1.8 2003/08/23 04:35:31 fukachan Exp $
 #
 
 package FML::Command::Admin::error;
@@ -23,11 +23,13 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-change delivery mode from real time to digest.
+show error status.
 
 =head1 METHODS
 
 =head2 process($curproc, $command_args)
+
+call error status list generator.
 
 =cut
 
@@ -59,7 +61,7 @@ sub need_lock { 1;}
 sub lock_channel { return undef;}
 
 
-# Descriptions: change delivery mode from real time to digest.
+# Descriptions: list up status of error messages
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $recipient_map
 # Return Value: none

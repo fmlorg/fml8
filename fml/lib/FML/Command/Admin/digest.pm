@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.12 2003/09/27 03:00:16 fukachan Exp $
+# $FML: digest.pm,v 1.13 2003/11/23 03:54:45 fukachan Exp $
 #
 
 package FML::Command::Admin::digest;
@@ -73,15 +73,23 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $config  = $curproc->config();
     my $options = $command_args->{ options } || [];
-    my $address = $command_args->{ command_data } || $options->[ 0 ] || undef;
-    my $mode    = $options->[ 1 ] || '';
 
-    # maps
+    # XXX We should always add/rewrite only $primary_*_map maps via 
+    # XXX command mail, CUI and GUI.
+    # XXX Rewriting of maps not $primary_*_map is
+    # XXX 1) may be not writable.
+    # XXX 2) ambigous and dangerous 
+    # XXX    since the map is under controlled by other module.
+    # XXX    for example, one of member_maps is under admin_member_maps. 
     my $recipient_map         = $config->{ primary_recipient_map };
     my $recipient_maps        = $config->get_as_array_ref('recipient_maps');
     my $digest_recipient_map  = $config->{ primary_digest_recipient_map };
     my $digest_recipient_maps =
 	$config->get_as_array_ref('digest_recipient_maps');
+
+    # XXX-TODO: validate $address ?
+    my $address = $command_args->{ command_data } || $options->[ 0 ] || undef;
+    my $mode    = $options->[ 1 ] || '';
 
     # fundamental check
     croak("address not defined")     unless defined $address;

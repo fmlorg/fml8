@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: file.pm,v 1.13 2003/08/23 04:35:31 fukachan Exp $
+# $FML: file.pm,v 1.14 2003/08/29 15:33:58 fukachan Exp $
 #
 
 package FML::Command::Admin::file;
@@ -23,11 +23,11 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-file a new address.
-
 =head1 METHODS
 
 =head2 process($curproc, $command_args)
+
+dispatch functions for file operations.
 
 =cut
 
@@ -114,6 +114,7 @@ sub cgi_menu
 {
     my ($self, $curproc, $args, $command_args) = @_;
 
+    # XXX-TODO: dummy.?
     ;
 }
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.19 2003/08/29 15:33:58 fukachan Exp $
+# $FML: chaddr.pm,v 1.20 2003/11/23 03:54:45 fukachan Exp $
 #
 
 package FML::Command::Admin::chaddr;
@@ -62,20 +62,28 @@ sub need_lock { 1;}
 sub lock_channel { return 'command_serialize';}
 
 
-# Descriptions: change address from old one to new one
+# Descriptions: change address from old one to new one.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config        = $curproc->config();
+    my $config  = $curproc->config();
+    my $options = $command_args->{ options };
+
+    # XXX We should always add/rewrite only $primary_*_map maps via 
+    # XXX command mail, CUI and GUI.
+    # XXX Rewriting of maps not $primary_*_map is
+    # XXX 1) may be not writable.
+    # XXX 2) ambigous and dangerous 
+    # XXX    since the map is under controlled by other module.
+    # XXX    for example, one of member_maps is under admin_member_maps. 
     my $member_map    = $config->{ 'primary_member_map'    };
     my $recipient_map = $config->{ 'primary_recipient_map' };
-    my $options       = $command_args->{ options };
-    my $old_address   = '';
-    my $new_address   = '';
 
+    my $old_address = '';
+    my $new_address = '';
     if (defined $command_args->{ command_data }) {
 	my $x = $command_args->{ command_data };
 	($old_address, $new_address) = split(/\s+/, $x);
@@ -87,6 +95,7 @@ sub process
 
     $curproc->log("chaddr: $old_address -> $new_address");
 
+    # XXX-TODO: validate $old_address and $new_address syntax.
     # sanity check
     unless ($old_address && $new_address) {
 	croak("chaddr: invalid arguments");

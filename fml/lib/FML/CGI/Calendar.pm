@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Calendar.pm,v 1.4 2003/08/29 15:33:55 fukachan Exp $
+# $FML: Calendar.pm,v 1.5 2003/10/15 08:16:23 fukachan Exp $
 #
 
 package FML::CGI::Calendar;
@@ -43,10 +43,18 @@ Almost all methods inherit C<FML::Process::CGI> base class.
 
 =head1 METHODS
 
+=head2 html_start()
+
+print out HTML header + body former part and navigator.
+
+=head2 html_end()
+
+print out the navigator and closing of html.
+
 =cut
 
 
-# Descriptions: print out HTML header + body former part
+# Descriptions: print out HTML header + body former part and navigator.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -72,7 +80,7 @@ sub html_start
 }
 
 
-# Descriptions: print out body latter part
+# Descriptions: print out the navigator and closing of html.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -104,7 +112,22 @@ sub _show_guide
 }
 
 
-# Descriptions: main routine for calendar as HTML TABLE format
+=head2 run_cgi_main()
+
+main routine to print calendar as HTML TABLE format.
+
+=head2 run_cgi_navigator()
+
+dummy.
+
+=head2 run_cgi_options()
+
+dummy.
+
+=cut
+
+
+# Descriptions: main routine to print calendar as HTML TABLE format.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none

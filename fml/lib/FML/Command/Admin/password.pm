@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: password.pm,v 1.10 2003/08/23 04:35:31 fukachan Exp $
+# $FML: password.pm,v 1.11 2003/12/31 03:49:17 fukachan Exp $
 #
 
 package FML::Command::Admin::password;
@@ -23,11 +23,11 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-password a new address.
-
 =head1 METHODS
 
 =head2 process($curproc, $command_args)
+
+authenticate the remote admin password.
 
 =cut
 
