@@ -1,9 +1,10 @@
 #!/bin/sh
 #
-# $FML: install.sh,v 1.9 2002/04/01 10:07:09 fukachan Exp $
+# $FML: install.sh,v 1.10 2002/04/14 07:24:40 fukachan Exp $
 #
 
 (cd ../..; ./configure \
+	--with-warning \
 	--with-fmlconfdir=/etc/fml \
 	--with-fml-owner=fukachan \
 	--with-fml-group=wheel \
