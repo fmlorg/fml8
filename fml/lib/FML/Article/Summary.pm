@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.18 2004/02/06 13:21:27 fukachan Exp $
+# $FML: Summary.pm,v 1.19 2004/02/13 14:11:12 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -115,13 +115,14 @@ sub _prepare_info
 
 	# de-tag, unfold, and charset conversion.
 	if ($subject) {
+	    # XXX as side effect, converted to internal code e.g. euc-jp.
 	    use Mail::Message::Subject;
 	    my $sbj = new Mail::Message::Subject $subject;
 	    $sbj->mime_decode();
 	    $sbj->unfold();
 	    $sbj->delete_tag($tag);
 	    $sbj->unfold();
-	    $sbj->charcode_convert();
+	    $sbj->charcode_convert_to_external_charset(); # e.g. iso-2022-jp
 	    $subject = $sbj->as_str();
 	}
 
