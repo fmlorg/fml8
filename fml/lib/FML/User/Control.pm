@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.1 2003/11/23 04:07:02 fukachan Exp $
+# $FML: Control.pm,v 1.2 2003/11/23 14:18:23 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -136,7 +136,7 @@ sub useradd
     }
 
     # update user database.
-    if ($curproc->is_under_mta_process() || 1) {
+    if ($curproc->is_under_mta_process()) {
 	my $info_args = {
 	    address => $address,
 	};
