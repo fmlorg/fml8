@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ML.pm,v 1.10 2003/09/25 11:37:33 fukachan Exp $
+# $FML: ML.pm,v 1.1 2003/09/27 03:00:18 fukachan Exp $
 #
 
 package FML::CGI::ML;
@@ -37,14 +37,17 @@ sub new
 sub cgi_menu
 {
     my ($self, $curproc, $args, $command_args) = @_;
-    my $config       = $curproc->config();
-    my $action       = $curproc->safe_cgi_action_name();
-    my $ml_domain    = $curproc->ml_domain();
-    my $ml_list      = $curproc->get_ml_list($ml_domain);
+    my $target       = $curproc->cgi_var_frame_target();
+    my $action       = $curproc->cgi_var_action();
+    my $ml_domain    = $curproc->cgi_var_ml_domain();
+    my $ml_list      = $curproc->cgi_var_ml_name_list($ml_domain);
     my $address      = $curproc->safe_param_address() || '';
-    my $target       = '_top';
     my $comname      = $command_args->{ comname };
     my $command_list = [ 'newml', 'rmml' ];
+
+    unless ($curproc->cgi_var_cgi_mode() eq "admin") {
+	croak("Admin::ML::cgi_menu: prohibited in this mode");
+    }    
 
     print start_form(-action=>$action, -target=>$target);
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.9 2003/02/20 04:32:49 fukachan Exp $
+# $FML: List.pm,v 1.1 2003/09/27 03:00:18 fukachan Exp $
 #
 
 package FML::CGI::List;
@@ -37,13 +37,11 @@ sub new
 sub cgi_menu
 {
     my ($self, $curproc, $args, $command_args) = @_;
-    my $action      = $curproc->safe_cgi_action_name();
-    my $target      = '_top';
+    my $target      = $curproc->cgi_var_frame_target();
+    my $action      = $curproc->cgi_var_action();
+    my $map_list    = $curproc->cgi_var_address();
+    my $map_default = $curproc->cgi_var_address_map();
     my $ml_name     = $command_args->{ ml_name };
-    my $config      = $curproc->config();
-    my $map_list    = $config->get_as_array_ref('cgi_menu_map_list');
-    my $_defaultmap = $config->{ cgi_menu_default_map };
-    my $map_default = $curproc->safe_param_map() || $_defaultmap;
 
     use FML::Restriction::Base;
     my $safe = new FML::Restriction::Base;
