@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: htmlify.pm,v 1.8 2002/02/20 14:10:37 fukachan Exp $
+# $FML: htmlify.pm,v 1.9 2002/03/17 06:24:29 fukachan Exp $
 #
 
 package FML::Command::Admin::htmlify;
@@ -91,8 +91,8 @@ sub process
 	    mkdirhier($dst_dir, 0755);
 	}
 
-	use Mail::HTML::Lite;
-	&Mail::HTML::Lite::htmlify_dir($src_dir, { directory => $dst_dir });
+	use Mail::Message::ToHTML;
+	&Mail::Message::ToHTML::htmlify_dir($src_dir, { directory => $dst_dir });
     }
     else {
 	croak("no destination directory\n");

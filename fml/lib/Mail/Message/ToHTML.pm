@@ -1,35 +1,35 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.39 2002/02/01 12:04:02 fukachan Exp $
+# $FML: Lite.pm,v 1.40 2002/03/31 02:43:21 fukachan Exp $
 #
 
-package Mail::HTML::Lite;
+package Mail::Message::ToHTML;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 my $debug = 0;
-my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
+my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: Lite.pm,v 1.39 2002/02/01 12:04:02 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.40 2002/03/31 02:43:21 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
 
 =head1 NAME
 
-Mail::HTML::Lite - convert text format mail to HTML format
+Mail::Message::ToHTML - convert text format mail to HTML format
 
 =head1 SYNOPSIS
 
   ... lock by something ...
 
-  use Mail::HTML::Lite;
-  my $obj = new Mail::HTML::Lite {
+  use Mail::Message::ToHTML;
+  my $obj = new Mail::Message::ToHTML {
       charset   => "euc-jp",
       directory => "/var/www/htdocs/ml/elena",
   };
@@ -200,7 +200,7 @@ sub htmlfy_rfc822_message
 		my $outf = _gen_attachment_filename($dst, $attach, 'html');
 		my $args = $self->{ _args };
 		$args->{ attachment } = 1; # clarify not top level content.
-		my $text = new Mail::HTML::Lite $args;
+		my $text = new Mail::Message::ToHTML $args;
 		$text->htmlfy_rfc822_message({
 		    parent_id => $id,
 		    src => $tmpf,
@@ -458,10 +458,10 @@ sub mhl_separator
 }
 
 
-my $preamble_begin = "<!-- __PREAMBLE_BEGIN__ by Mail::HTML::Lite -->";
-my $preamble_end   = "<!-- __PREAMBLE_END__   by Mail::HTML::Lite -->";
-my $footer_begin   = "<!-- __FOOTER_BEGIN__ by Mail::HTML::Lite -->";
-my $footer_end     = "<!-- __FOOTER_END__   by Mail::HTML::Lite -->";
+my $preamble_begin = "<!-- __PREAMBLE_BEGIN__ by Mail::Message::ToHTML -->";
+my $preamble_end   = "<!-- __PREAMBLE_END__   by Mail::Message::ToHTML -->";
+my $footer_begin   = "<!-- __FOOTER_BEGIN__ by Mail::Message::ToHTML -->";
+my $footer_end     = "<!-- __FOOTER_END__   by Mail::Message::ToHTML -->";
 
 
 # Descriptions: prepare information area before main message appears.
@@ -2286,7 +2286,7 @@ sub htmlify_file
 
     use File::Basename;
     my $id = basename($file);
-    my $html = new Mail::HTML::Lite {
+    my $html = new Mail::Message::ToHTML {
 	charset   => "euc-jp",
 	directory => $dst_dir,
     };
@@ -2375,15 +2375,17 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::HTML::Lite appeared in fml5 mailing list driver package.
+Mail::Message::ToHTML appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
+
+This class is renamed from C<Mail::HTML::Lite> 1.40 (2001-2002).
 
 =cut
 

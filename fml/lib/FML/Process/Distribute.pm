@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.65 2002/02/17 13:46:29 fukachan Exp $
+# $FML: Distribute.pm,v 1.66 2002/03/30 13:48:26 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -432,12 +432,12 @@ sub htmlify
     my $article_file   = $article->filepath($article_id);
 
     eval q{
-	use Mail::HTML::Lite;
+	use Mail::Message::ToHTML;
 	use File::Utils qw(mkdirhier);
     };
     unless ($@) {
 	mkdirhier($html_dir) unless -d $html_dir;
-	&Mail::HTML::Lite::htmlify_file($article_file, {
+	&Mail::Message::ToHTML::htmlify_file($article_file, {
 	    directory => $html_dir,
 	});
     }

@@ -3,7 +3,7 @@
 # Copyright (C) 2000-2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.11 2002/02/17 13:45:10 fukachan Exp $
+# $FML: HTMLify.pm,v 1.12 2002/03/17 06:24:31 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -27,7 +27,7 @@ FML::Process::HTMLify -- htmlify articles
 
 =head1 SYNOPSIS
 
-See C<Mail::HTML::Lite> module.
+See C<Mail::Message::ToHTML> module.
 
 =head1 DESCRIPTION
 
@@ -99,7 +99,7 @@ call the actual thread tracking system.
 
 =cut
 
-# Descriptions: convert text format article to HTML by Mail::HTML::Lite
+# Descriptions: convert text format article to HTML by Mail::Message::ToHTML
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: load modules, create HTML files and directories
 # Return Value: none
@@ -134,8 +134,8 @@ sub run
         }
 
 	eval q{
-	    use Mail::HTML::Lite;
-	    &Mail::HTML::Lite::htmlify_dir($src_dir, {
+	    use Mail::Message::ToHTML;
+	    &Mail::Message::ToHTML::htmlify_dir($src_dir, {
 		directory => $dst_dir,
 	    });
 	};
