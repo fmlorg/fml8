@@ -1,5 +1,5 @@
 <!--
-   $FML: db.sgml,v 1.1 2001/08/05 12:33:50 fukachan Exp $
+   $FML: db.sgml,v 1.2 2001/08/19 12:53:08 fukachan Exp $
 -->
 
 <chapter id="db">
@@ -75,6 +75,8 @@ DBMS
 例えば、登録時の confirmation のキャッシュや
 message-id キャッシュです。
 これらは expire を時間で制御したいからです。
+このクラスは引数でファイル名を与えることになっているので、
+ファイル名に日付付のファイルを選ぶと良いでしょう。
 </para>
 
 
@@ -84,7 +86,7 @@ message-id キャッシュです。
 first match と last match は切替えることができます。
 どちらの戦略で探すのか、
 クラスオブジェクトを生成する際に明示的に指定することが推奨されます。
-デフォルトは last match です。
+デフォルトは first match です。
 </para>
 </warning>
 
