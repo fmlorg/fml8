@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.24 2001/10/28 10:48:21 fukachan Exp $
+# $FML: Lite.pm,v 1.25 2001/10/28 11:54:40 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.24 2001/10/28 10:48:21 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.25 2001/10/28 11:54:40 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -167,10 +167,11 @@ sub htmlfy_rfc822_message
     for ($m = $msg; defined($m) ; $m = $m->{ 'next' }) {
 	$type = $m->get_data_type;
 
+	if ($type =~ /^\w+\/[-\w\d\.]+$/) { croak("invalid type");}
 	last CHAIN if $type eq 'multipart.close-delimiter'; # last of multipart
 	next CHAIN if $type =~ /^multipart/;
 
-	# header
+	# header (Mail::Message object uses this special type)
 	if ($type eq 'text/rfc822-headers') {
 	    $self->mhl_separator($wh);
 	    my $charset = $self->{ _charset };
@@ -182,7 +183,7 @@ sub htmlfy_rfc822_message
 	elsif ($type eq 'message/rfc822') {
 	    $attach++;
 
-	    my $tmpf = $self->_create_temporary_file($m);
+	    my $tmpf = $self->_create_temporary_file_in_raw_mode($m);
 	    if (defined $tmpf && -f $tmpf) {
 		# write attachement into a separete file
 		my $outf = _gen_attachment_filename($dst, $attach, 'html');
@@ -195,11 +196,11 @@ sub htmlfy_rfc822_message
 		});
 
 		# show inline href appeared in parent html.
-		$self->_print_inline_object({
-		    fh   => $wh,
-		    type => $type,
-		    num  => $attach,
-		    file => $outf,
+		$self->_print_inline_object_link({
+		    fh   => $wh,     # file descriptor
+		    type => $type,   # XXX derived from input message
+		    num  => $attach, # number
+		    file => $outf,   # temporary file name
 		});
 
 		unlink $tmpf;
@@ -229,27 +230,27 @@ sub htmlfy_rfc822_message
 		# once create temporary file
 		_PRINT_DEBUG("attachment: type=$type attach=$attach enc=$enc");
 		if ($enc) {
-		    $self->_binary_print($msginfo);
+		    $self->_binary_print($msginfo);   # XXX raw mode
 		}
 		else {
-		    $self->_text_raw_print($msginfo);
+		    $self->_text_raw_print($msginfo); # XXX raw mode
 		}
 
-		# disable html tag
+		# disable html tag in file which is saved in raw mode.
 		if (-f $tmpf) {
 		    $msginfo->{ description } = "(HTML TAGs are disabled)";
-		    _rewrite_html_file($tmpf, $outf);
+		    _disable_html_tag_in_file($tmpf, $outf);
 		    unlink $tmpf;
 		}
 	    }
-	    # e.g. image/gif, but this case includes encoded "text/html".
+	    # e.g. image/gif not text/* nor message/*
 	    else {
 		$msginfo->{ file } = $outf;
 		$self->_binary_print($msginfo);
 	    }
 
 	    # show inline href appeared in parent html.
-	    $self->_print_inline_object({
+	    $self->_print_inline_object_link({
 		inline => 1,
 		fh     => $wh,
 		type   => $type,
@@ -267,7 +268,7 @@ sub htmlfy_rfc822_message
 }
 
 
-sub _rewrite_html_file
+sub _disable_html_tag_in_file
 {
     my ($inf, $outf) = @_;
 
@@ -495,7 +496,7 @@ sub _create_temporary_filename
 #    Arguments: $self $args
 # Side Effects: 
 # Return Value: none
-sub _create_temporary_file
+sub _create_temporary_file_in_raw_mode
 {
     my ($self, $msg) = @_;
     my $tmpf = $self->_create_temporary_filename();
@@ -534,7 +535,7 @@ sub _relative_path
 #    Arguments: $self $args
 # Side Effects: 
 # Return Value: none
-sub _print_inline_object
+sub _print_inline_object_link
 {
     my ($self, $args) = @_;
     my $wh   = $args->{ fh };
@@ -1017,8 +1018,8 @@ sub _update_relation
 {
     my ($self, $id) = @_;
     my $args     = $self->evaluate_relation($id);
-    my $preamble = $self->evaluate_preamble($args);
-    my $footer   = $self->evaluate_footer($args);
+    my $preamble = $self->evaluate_safe_preamble($args);
+    my $footer   = $self->evaluate_safe_footer($args);
     my $code     = _charset_to_code($self->{ _charset });
 
     my $pat_preamble_begin = quotemeta($preamble_begin);
@@ -1137,7 +1138,7 @@ sub evaluate_relation
 #    Arguments: $self $args
 # Side Effects: 
 # Return Value: none
-sub evaluate_preamble
+sub evaluate_safe_preamble
 {
     my ($self, $args) = @_;
     my $link_prev_id     = $args->{ link_prev_id };
@@ -1186,7 +1187,7 @@ sub evaluate_preamble
 #    Arguments: $self $args
 # Side Effects: 
 # Return Value: none
-sub evaluate_footer
+sub evaluate_safe_footer
 {
     my ($self, $args) = @_;
     my $link_prev_id     = $args->{ link_prev_id };
@@ -1700,6 +1701,7 @@ sub _print_thread
 
       IDLIST:
 	for my $id (@idlist) {
+	    # @idlist = (number's)
 	    _print_raw_str($wh, "<!-- thread (@idlist) -->\n", $code);
 
 	    next IDLIST if $uniq->{ $id };
