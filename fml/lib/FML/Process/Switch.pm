@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Switch.pm,v 1.32 2001/11/08 03:37:58 fukachan Exp $
+# $FML: Switch.pm,v 1.33 2001/11/09 00:05:19 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -464,6 +464,8 @@ sub _module_we_use
     else {
 	return '';
     }
+
+    print STDERR "module = $pkg (for $0)\n" if $ENV{'debug'};
 
     return $pkg;
 }

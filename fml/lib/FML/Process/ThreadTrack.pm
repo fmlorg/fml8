@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: ThreadTrack.pm,v 1.9 2001/11/07 04:31:13 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.10 2001/11/07 09:28:27 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -94,6 +94,7 @@ sub run
 	reverse_order => (defined $options->{ reverse } ? 1 : 0),
     };
 
+
     use Mail::ThreadTrack;
     my $thread = new Mail::ThreadTrack $ttargs;
     $thread->set_mode('text');
@@ -112,6 +113,7 @@ sub run
 	$thread->review( $str , 1, $max_id );
     }
     elsif ($command eq 'db_rebuild') {
+	print STDERR "\$thread->db_mkdb(1, $max_id);\n" if $ENV{'debug'};
 	$thread->db_mkdb(1, $max_id);
     }
     elsif ($command eq 'db_clear') {
