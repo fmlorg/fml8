@@ -1,10 +1,9 @@
-#!/usr/local/bin/perl -w
 #-*- perl -*-
 #
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: ConfViewer.pm,v 1.2 2001/11/25 07:53:13 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.3 2001/11/25 14:53:41 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;

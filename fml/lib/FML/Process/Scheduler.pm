@@ -1,10 +1,9 @@
-#!/usr/local/bin/perl -w
 #-*- perl -*-
 #
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Scheduler.pm,v 1.7 2001/11/25 10:43:35 fukachan Exp $
+# $FML: Scheduler.pm,v 1.8 2001/11/25 14:53:41 fukachan Exp $
 #
 
 package FML::Process::Scheduler;

@@ -1,10 +1,9 @@
-#!/usr/local/bin/perl -w
 #-*- perl -*-
 #
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Distribute.pm,v 1.54 2001/11/25 07:53:57 fukachan Exp $
+# $FML: Distribute.pm,v 1.55 2001/11/26 09:12:37 fukachan Exp $
 #
 
 package FML::Process::Distribute;

@@ -1,10 +1,9 @@
-#!/usr/local/bin/perl -w
 #-*- perl -*-
 #
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Command.pm,v 1.22 2001/11/25 03:13:50 fukachan Exp $
+# $FML: Command.pm,v 1.23 2001/11/25 07:53:57 fukachan Exp $
 #
 
 package FML::Process::Command;

@@ -1,10 +1,9 @@
-#!/usr/local/bin/perl -w
 #-*- perl -*-
 #
 # Copyright (C) 2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: SafeCGI.pm,v 1.1 2001/11/25 09:12:58 fukachan Exp $
+# $FML: CGI.pm,v 1.1.1.1 2001/11/25 11:26:04 fukachan Exp $
 #
 
 package FML::Restriction::CGI;

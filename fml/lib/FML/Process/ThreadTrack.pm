@@ -1,10 +1,9 @@
-#!/usr/local/bin/perl -w
 #-*- perl -*-
 #
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: ThreadTrack.pm,v 1.15 2001/11/19 08:49:30 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.16 2001/11/20 07:32:37 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;

@@ -1,10 +1,9 @@
-#!/usr/local/bin/perl -w
 #-*- perl -*-
 #
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: DocViewer.pm,v 1.6 2001/11/25 03:55:38 fukachan Exp $
+# $FML: DocViewer.pm,v 1.7 2001/11/25 07:53:57 fukachan Exp $
 #
 
 package FML::Process::DocViewer;

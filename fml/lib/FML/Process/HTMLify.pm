@@ -1,10 +1,9 @@
-#!/usr/local/bin/perl -w
 #-*- perl -*-
 #
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: HTMLify.pm,v 1.3 2001/11/07 10:05:52 fukachan Exp $
+# $FML: HTMLify.pm,v 1.4 2001/11/17 04:01:54 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
