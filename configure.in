@@ -1,5 +1,5 @@
 dnl
-dnl $FML: configure.in,v 1.7 2001/11/27 09:31:38 fukachan Exp $
+dnl $FML: configure.in,v 1.8 2001/12/11 12:13:48 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -50,6 +50,13 @@ AC_PATH_PROG(PGPS,     pgps)
 AC_PATH_PROG(PGPV,     pgpv)
 AC_PATH_PROG(GPG,      gpg)
 dnl path_check_end
+
+
+fmlconfdir=${sysconfdir}/fml
+AC_ARG_WITH(fmlconfdir, 
+[  --with-fmlconfdir=DIR   use DIR instead of SYSCONFDIR/etc/fml], 
+    fmlconfdir=$withval)
+AC_SUBST(fmlconfdir)
 
 
 mlspooldir=/var/spool/ml
