@@ -55,6 +55,7 @@ sub new
     # initialize directory for DB files for further work
     my $config  = $curproc->{ config };
     my $ml_name = $config->{ ml_name };
+
     $me->{ _db_dir } = $config->{ ticket_db_dir } ."/". $ml_name;
     $me->_init_ticket_db_dir($curproc, $args) || do { return undef;};
 
