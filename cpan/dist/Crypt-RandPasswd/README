@@ -1,0 +1,27 @@
+
+Crypt::RandPasswd - random password generator based on FIPS-181
+
+By John Porter (JDPORTER@cpan.org)
+
+This is an implementation of the Automated Password Generator standard,
+defined in FIPS Publication 181, "Standard for Automated Password Generator":
+http://www.itl.nist.gov/fipspubs/fip181.htm
+
+	use Crypt::RandPasswd;
+	( $word, $hyphenated ) = Crypt::RandPasswd::word( $minlen, $maxlen );
+	$word = Crypt::RandPasswd::word( $minlen, $maxlen );
+	$word = Crypt::RandPasswd::letters( $minlen, $maxlen );
+	$word = Crypt::RandPasswd::chars( $minlen, $maxlen );
+
+	# override the defaults for these functions:
+	*Crypt::RandPasswd::rng = \&my_random_number_generator;
+	*Crypt::RandPasswd::restrict = \&my_restriction_filter;
+
+The module file can also be run directly as a script:
+
+# To print the usage statement:
+% perl Crypt/RandPasswd.pm  -help
+
+# To print out one password using the default parameter values:
+% perl Crypt/RandPasswd.pm 
+
