@@ -1,5 +1,5 @@
 dnl
-dnl $FML: configure.in,v 1.13 2002/04/01 03:41:27 fukachan Exp $
+dnl $FML: configure.in,v 1.14 2002/04/01 05:00:42 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -95,6 +95,7 @@ AC_OUTPUT(\
 	config.sh \
 	fml/etc/main.cf \
 	fml/etc/default_config.cf.ja \
+	fml/etc/site_default_config.cf \
 	fml/libexec/loader \
 	fml/bin/fmlconf \
 	fml/bin/fmldoc \
