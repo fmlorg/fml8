@@ -1,5 +1,5 @@
 #
-# $FML: command_line_options,v 1.3 2003/03/14 06:55:58 fukachan Exp $
+# $FML: command_line_options,v 1.4 2003/04/18 15:53:10 fukachan Exp $
 #
 # map between programs and options
 #
@@ -9,23 +9,23 @@
 #
 
 # libexec/
-command		ctladdr! debug! help! params=s -c=s
-digest		ctladdr! debug! help! params=s -c=s
-distribute	ctladdr! debug! help! params=s -c=s
-error		ctladdr! debug! help! params=s -c=s
-mead		ctladdr! debug! help! params=s -c=s
+command		debug! help! params=s -c=s
+digest		debug! help! params=s -c=s
+distribute	debug! help! params=s -c=s
+error		debug! help! params=s -c=s
+mead		debug! help! params=s -c=s
 
 # bin/
-fml		debug! help! force! params=s -c=s
-fmladdr		debug! help! -c=s n!
-fmlalias	debug! help! -c=s n!
-fmlconf		debug! help! params=s -c=s n!
-fmldoc		debug! help! params=s -c=s v! t! u! m! l!
+fml		debug! help! force! quiet! q! params=s -c=s
+fmladdr		debug! help! n! -c=s
+fmlalias	debug! help! n! -c=s
+fmlconf		debug! help! n! -c=s params=s
+fmldoc		debug! help!    -c=s params=s v! t! u! m! l!
 fmlerror	debug! help!
 fmlhtmlify	debug! help! -I=s
 fmlspool	debug! help! -I=s convert! style=s srcdir=s
 fmlthread	debug! help! article_id_max=i spool_dir=s base_url=s msg_base_url=s reverse! params=s -f=s -c=s
-makefml		debug! help! force! params=s -c=s
+makefml		debug! help! force! quiet! q! params=s -c=s
 
 # cgi-bin/
 config.cgi		
