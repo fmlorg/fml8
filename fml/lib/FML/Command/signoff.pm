@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: signoff.pm,v 1.1 2001/04/05 10:39:08 fukachan Exp $
+# $FML: signoff.pm,v 1.2 2001/06/17 08:57:10 fukachan Exp $
 #
 
 package FML::Command::signoff;
@@ -17,8 +17,8 @@ use FML::Command::unsubscribe;
 
 sub signoff
 {
-    my ($self, $curproc, $args) = @_;
-    $self->SUPER::unsubscribe($curproc, $args);
+    my ($self, $curproc, $optargs) = @_;
+    $self->SUPER::unsubscribe($curproc, $optargs);
 }
 
 

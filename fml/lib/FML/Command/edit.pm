@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: edit.pm,v 1.2 2001/07/15 08:14:45 fukachan Exp $
+# $FML: edit.pm,v 1.3 2001/07/15 11:45:39 fukachan Exp $
 #
 
 package FML::Command::edit;
@@ -31,14 +31,14 @@ See C<FML::Command> for more details.
 
 sub edit
 {
-    my ($self, $curproc, $args) = @_;
+    my ($self, $curproc, $optargs) = @_;
     my $config        = $curproc->{ config };
-    my $options       = $args->{ options };
-    my $address       = $args->{ address } || $options->[ 0 ];
-    my $myname        = $args->{ args }->{ myname };
+    my $options       = $optargs->{ options };
+    my $address       = $optargs->{ address } || $options->[ 0 ];
+    my $myname        = $optargs->{ args }->{ myname };
 
     # ML's home directory
-    my $ml_home_dir   = $args->{ 'args' }->{ 'ml_home_dir' };
+    my $ml_home_dir   = $optargs->{ 'args' }->{ 'ml_home_dir' };
     my $config_cf     = $ml_home_dir."/config.cf";
 
     use FML::Config;

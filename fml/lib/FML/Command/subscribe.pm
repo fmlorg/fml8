@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: subscribe.pm,v 1.8 2001/05/04 14:32:32 fukachan Exp $
+# $FML: subscribe.pm,v 1.9 2001/05/27 14:27:54 fukachan Exp $
 #
 
 package FML::Command::subscribe;
@@ -31,12 +31,12 @@ See C<FML::Command> for more details.
 
 sub subscribe
 {
-    my ($self, $curproc, $args) = @_;
+    my ($self, $curproc, $optargs) = @_;
     my $config        = $curproc->{ config };
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
-    my $options       = $args->{ options };
-    my $address       = $args->{ address } || $options->[ 0 ];
+    my $options       = $optargs->{ options };
+    my $address       = $optargs->{ address } || $options->[ 0 ];
 
     # fundamental check
     croak("\$member_map is not specified")    unless $member_map;

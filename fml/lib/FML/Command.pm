@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Command.pm,v 1.4 2001/04/03 09:45:40 fukachan Exp $
+# $FML: Command.pm,v 1.5 2001/05/27 14:27:53 fukachan Exp $
 #
 
 package FML::Command;
@@ -54,7 +54,7 @@ sub DESTROY { ;}
 
 sub AUTOLOAD
 {
-    my ($self, $curproc, $args) = @_;
+    my ($self, $curproc, $optargs) = @_;
 
     return if $AUTOLOAD =~ /DESTROY/;
 
@@ -67,7 +67,7 @@ sub AUTOLOAD
     unless ($@) {
 	if ($pkg->can($command)) {
 	    $curproc->lock() if $self->require_lock($command);
-	    $pkg->$command($curproc, $args);
+	    $pkg->$command($curproc, $optargs);
 	    $curproc->unlock() if $self->require_lock($command);
 	}
 	else {

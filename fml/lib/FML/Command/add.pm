@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: add.pm,v 1.5 2001/04/03 09:45:41 fukachan Exp $
+# $FML: add.pm,v 1.6 2001/05/27 14:27:54 fukachan Exp $
 #
 
 package FML::Command::add;
@@ -17,8 +17,8 @@ use FML::Command::subscribe;
 
 sub add
 {
-    my ($self, $curproc, $args) = @_;
-    $self->SUPER::subscribe($curproc, $args);
+    my ($self, $curproc, $optargs) = @_;
+    $self->SUPER::subscribe($curproc, $optargs);
 }
 
 =head1 NAME

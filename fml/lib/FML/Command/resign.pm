@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: resign.pm,v 1.5 2001/04/03 09:45:42 fukachan Exp $
+# $FML: resign.pm,v 1.6 2001/05/27 14:27:54 fukachan Exp $
 #
 
 package FML::Command::resign;
@@ -17,8 +17,8 @@ use FML::Command::unsubscribe;
 
 sub resign
 {
-    my ($self, $curproc, $args) = @_;
-    $self->unsubscribe($curproc, $args);
+    my ($self, $curproc, $optargs) = @_;
+    $self->unsubscribe($curproc, $optargs);
 }
 
 =head1 NAME
