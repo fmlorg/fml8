@@ -1,5 +1,5 @@
 <!--
-   $FML: preface.sgml,v 1.7 2001/05/10 03:12:10 fukachan Exp $
+   $FML: preface.sgml,v 1.8 2001/08/26 05:55:51 fukachan Exp $
 -->
 
 <preface>
@@ -219,7 +219,9 @@ fml-devel で作られたモジュールのマージおよび
 
    <listitem>
 	<para>
+		<link linkend="io.adapter">
 		抽象化 IO 層
+		</link>
 
 		メンバーファイルをファイル、/etc/group, NIS, MySQL 
 		から取り出すことができます。
