@@ -4,18 +4,23 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.10 2003/12/26 14:51:37 fukachan Exp $
+# $FML: Install.pm,v 1.11 2004/01/21 03:45:03 fukachan Exp $
 #
 
 package FML::Install;
 
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $debug);
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD 
+	    $install_root $debug);
 use Carp;
 use FileHandle;
 use File::Spec;
 use File::Copy;
 use File::Basename;
+
+
+# default ('' == '/')
+$install_root = '';
 
 
 =head1 NAME
@@ -90,6 +95,21 @@ sub new
     enable_message($me);
 
     return bless $me, $type;
+}
+
+
+# Descriptions: change install_root directory.
+#    Arguments: OBJ($self) STR($dir)
+# Side Effects: update $install_root gloval variable.
+# Return Value: none
+sub set_install_root
+{
+    my ($self, $dir) = @_;
+
+    if (defined $dir) { 
+	$install_root = $dir;
+	print STDERR "\tinstall_root = $install_root\n";
+    }
 }
 
 
@@ -217,7 +237,8 @@ sub install_main_cf
     # XXX src = relative path, dst = absolute path
     my $src        = File::Spec->catfile("fml", "etc", "main.cf");
     my $config_dir = $self->path( 'config_dir' );
-    my $dst        = File::Spec->catfile($config_dir, "main.cf");
+    my $dst        = File::Spec->catfile($install_root, 
+					 $config_dir, "main.cf");
 
     if (-f $dst) {
 	print STDERR "skipping $dst (debug)\n" if $debug;
@@ -252,7 +273,7 @@ sub install_sample_cf_files
     for my $file (@$samples) {
 	# XXX src = relative path, dst = absolute path
 	my $src = File::Spec->catfile("fml", "etc", $file);
-	my $dst = File::Spec->catfile($config_dir, $file);
+	my $dst = File::Spec->catfile($install_root, $config_dir, $file);
 
 	if (-f $dst) {
 	    print STDERR "skipping $dst (debug)\n" if $debug;
@@ -296,7 +317,7 @@ sub install_default_config_files
     for my $file (@$nl_template_files) {
 	# XXX src = relative path, dst = absolute path
 	my $src = File::Spec->catfile("fml", "etc", $file);
-	my $dst = File::Spec->catfile($config_dir, $file);
+	my $dst = File::Spec->catfile($install_root, $config_dir, $file);
 
 	# always override.
 	$self->convert($src, $dst, 0644);
@@ -315,7 +336,7 @@ sub install_default_config_files
     for my $file (@$template_files) {
 	# XXX src = relative path, dst = absolute path
 	my $src = File::Spec->catfile("fml", "etc", $file);
-	my $dst = File::Spec->catfile($config_dir, $file);
+	my $dst = File::Spec->catfile($install_root, $config_dir, $file);
 
 	# always override.
 	$self->convert($src, $dst, 0644);
@@ -335,7 +356,8 @@ sub install_mtree_dir
     my $config = $self->{ _config };
 
     # XXX src = relative path, dst = absolute path
-    my $dst_dir = File::Spec->catfile($self->path( 'default_config_dir' ),
+    my $dst_dir = File::Spec->catfile($install_root,
+				      $self->path( 'default_config_dir' ),
 				      "mtree");
     my $src_dir = File::Spec->catfile("fml", "etc", "mtree");
 
@@ -367,7 +389,7 @@ sub install_lib_dir
 {
     my ($self)  = @_;
     my $config  = $self->{ _config };
-    my $dst_dir = $self->path( 'lib_dir' );
+    my $dst_dir = File::Spec->catfile($install_root, $self->path('lib_dir'));
     my $src_dir = '';
 
     print STDERR "updating $dst_dir\n";
@@ -392,7 +414,8 @@ sub install_libexec_dir
 
     # XXX src = relative path, dst = absolute path
     my $src_dir = File::Spec->catfile("fml", "libexec");
-    my $dst_dir = $self->path( 'libexec_dir' );
+    my $dst_dir = File::Spec->catfile($install_root,
+				      $self->path( 'libexec_dir' ));
 
     print STDERR "updating $dst_dir\n";
     $self->copy_dir( $src_dir, $dst_dir );
@@ -409,7 +432,8 @@ sub install_data_dir
 
     # XXX src = relative path, dst = absolute path
     my $src_dir = File::Spec->catfile("fml", "share");
-    my $dst_dir = $self->path( 'data_dir' );
+    my $dst_dir = File::Spec->catfile($install_root,
+				      $self->path( 'data_dir' ));
 
     print STDERR "updating $dst_dir\n";
     $self->copy_dir( $src_dir, $dst_dir );
@@ -437,7 +461,7 @@ sub install_bin_programs
     for my $prog (@$progs) {
 	# XXX src = relative path, dst = absolute path
 	my $src = File::Spec->catfile("fml", "bin", $prog);
-	my $dst = File::Spec->catfile($dst_dir, $prog);
+	my $dst = File::Spec->catfile($install_root, $dst_dir, $prog);
 
 	print STDERR "updating $dst\n" if $debug;
 	unless (-f $dst) {
@@ -502,7 +526,8 @@ sub need_resymlink_loader
     # XXX src = relative path, dst = absolute path
     my $loader      = File::Spec->catfile("fml", "libexec", "loader");
     my $libexec_dir = $config->{ libexec_dir };
-    my $cur_loader  = File::Spec->catfile($libexec_dir, "loader");
+    my $cur_loader  = File::Spec->catfile($install_root, 
+					  $libexec_dir, "loader");
 
     if ($debug) {
 	print STDERR "cur $cur_loader\n";
@@ -554,7 +579,8 @@ sub install_loader
     # XXX src = relative path, dst = absolute path
     my $loader      = File::Spec->catfile("fml", "libexec", "loader");
     my $libexec_dir = $config->{ libexec_dir };
-    my $cur_loader  = File::Spec->catfile($libexec_dir, "loader");
+    my $cur_loader  = File::Spec->catfile($install_root,
+					  $libexec_dir, "loader");
     my $tmp         = $cur_loader . ".$$";
 
     $self->_copy($loader, $tmp);
@@ -579,8 +605,10 @@ sub resymlink_loader
 {
     my ($self)        = @_;
     my $config        = $self->{ _config };
-    my $libexec_dir   = $config->{ libexec_dir };
+    my $libexec_dir   = File::Spec->catfile($install_root,
+					    $config->{ libexec_dir });
     my $cur_loader    = File::Spec->catfile($libexec_dir, "loader");
+					    
     my $bin_programs  = $config->get_as_array_ref('bin_programs');
     my $exec_programs = $config->get_as_array_ref('libexec_programs');
 
