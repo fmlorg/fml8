@@ -13,54 +13,11 @@
 ちゃんと aliases を追加しないといかんひょ、
 重複チェックは OS 定義以外の部分は自動では増えないから（あたりまえ）。
 
+	
+○	File::CachdDir と Tie::JournaledDir
 
-○ 拡張 （TODO： どきゅめんとをかく）
-
-  my "help" command 
-
-	/var/spool/ml/elena/local/lib/FML/Command/User/help.pm
-
-	package の名前空間に気をつけて
-
-  メッセージ
-
-	/var/spool/ml/elena/local/share/message/euc-jp/クラス
-
-
-○ [TODO DOC] File::CachdDir と Tie::JournaledDir
-
-	File::CacheDir は改名し、なくす方向で。
-	いまは
-		FML/Process/Kernel.pm
-		FML/Filter/TrafficMonitor.pm （←事実上、まだ使ってない）
-	でしか読んでいない
-
-	サイズの上限がある → リングバッファ → File::CacheDir
-
-		only ?
-		FML/Process/Kernel.pm
-		
-
-	ひたすら書く＋ expire を目的にする → じゃーなる
-
-		でも時間方向の File::CacheDir はそれと一緒じゃん？
-
-		Tie::JournaledDir の keys はまちがってないか？
-			ファイルごとに JournaledFile しても重複するだろ？
-
-	これらとはべつに
-
-		key => [
-				ろぐ1	 (どっかのふぁいるのどっかの行)
-				ろぐ2	 (どっかのふぁいるのどっかの行)
-				ろぐ3	 (どっかのふぁいるのどっかの行)
-			]
-
-	がたのでーたをたくわえるこうぞうがほしい
-
-	いや、こういうこうぞうをしてるか、
-	このかたちでとりだすアクセスメソッドがほしい	→ done
-
+	Tie::JournaledDir の keys はまちがってないか？
+		ファイルごとに JournaledFile しても重複するだろ？
 
 ○	FML::Article
 
@@ -69,47 +26,27 @@
 
 ○	0700 とかハードコードされてるじょ
 
-
-        FML/Article.pm:		mkpath( $spool_dir, 0, 0700 );
-        FML/Article.pm:	mkdirhier($dir, 0700);
-        
         FML/Config/Convert.pm:        chmod 0644, "$dst.$$";
         FML/Config/Convert.pm:	chmod 0644, $dst_tmp;
+
         FML/Confirm.pm:	mkdirhier($dir, 0700);
-        FML/Process/Distribute.pm:		mkpath($html_dir, 0, 0755);
-        FML/Process/Kernel.pm:	mkpath($lock_dir, 0, 0700);
-        FML/Process/Kernel.pm:	mkpath($dir, 0, 0700);
-        
-        FML/Process/Kernel.pm:    -d $tmp_dir || mkdir $tmp_dir, 0755;
-        
-        FML/Process/Spool.pm:	mkdir($dst_dir, 0700);
-        FML/Process/Spool.pm:			mkdir($subdirpath, 0700);
-        
-        FML/Process/Scheduler.pm:	    mkdirhier($qdir, $config->{ default_dir_mode } || 0755 );
+
         FML/Header/MessageID.pm:	    mkdirhier($dir, 0700);
-        FML/Command/Admin/newml.pm:	    mkdirhier( $ml_home_dir, $config->{ default_dir_mode } || 0755 );
-        FML/Command/Admin/newml.pm:	    mkdirhier( $_dir, $config->{ default_dir_mode } || 0755 );
-        FML/Command/Admin/newml.pm:	mkdirhier( $dir, $config->{ default_dir_mode } || 0755 );
-        FML/Command/Admin/newml.pm:	    mkdirhier( $dir, $config->{ default_dir_mode } || 0755 );
-        FML/Command/Admin/newml.pm:	    chmod 0755, $dst;
-        FML/Command/Admin/newml.pm:	mkdirhier($listinfo_dir, $config->{ default_dir_mode } || 0755 );
-        FML/Command/Admin/check.pm:	-d $spool_dir || midir($spool_dir, 0700);
-        FML/Command/Admin/check.pm:    return ($mode & 0777);
-        
-        FML/Command/HTMLify.pm:            mkdirhier($dst_dir, 0755);
-        
+
         File/CacheDir.pm:	my $mode = $args->{ directory_mode } || 0755;
-        
+
         Mail/Delivery/Queue.pm:	mkpath( [ $dir ], 0, 0755);
         
-        Mail/ThreadTrack/DB.pm:                tie \%$db, \$db_type, \$file, O_RDWR|O_CREAT, 0644;
-        Mail/ThreadTrack/DB.pm:	    tie %index, $db_type, $index_file, O_RDWR|O_CREAT, 0644;
-        
+        Mail/ThreadTrack/DB.pm:
+	               tie \%$db, \$db_type, \$file, O_RDWR|O_CREAT, 0644;
+        Mail/ThreadTrack/DB.pm:
+		    tie %index, $db_type, $index_file, O_RDWR|O_CREAT, 0644;
+
         Mail/ThreadTrack.pm:    $mode = defined $mode ? $mode : 0700;
         
         Mail/Message/ToHTML.pm:		mkdir($xsubdir, 0755);
-        Mail/Message/ToHTML.pm:		tie \%$db, \$db_type, \$file, O_RDWR|O_CREAT, 0644;
-        
+        Mail/Message/ToHTML.pm:
+		tie \%$db, \$db_type, \$file, O_RDWR|O_CREAT, 0644;
 
 ○	auto-responses
 
@@ -139,13 +76,6 @@
 	s/content/data/g;
 
 	we need our own MIME generator ???
-
-
-○	必要かしら？
-
-	$default_umask
-
-	time_zone config?
 
 
 ○	ちょっと見栄えが？
@@ -296,4 +226,4 @@ sub compare_euc_string
 
 
 ----------
-$FML: 00_MEMO,v 1.46 2002/08/17 05:28:34 fukachan Exp $
+$FML: 00_MEMO,v 1.47 2002/09/06 13:20:39 fukachan Exp $
