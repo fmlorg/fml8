@@ -33,11 +33,17 @@ command_restrictions	=	reject_system_accounts
 #      History: fml 4.0 の ?
 #        Value: list of attributes (
 #			permit_anyone
+#			permit_admin_member_maps
 #			check_admin_member_password
 #			reject_system_accounts
 #			reject
 #		)
 #     Examples:
+#		1. members-admin だけで認証する
+#			permit_admin_member_maps reject
+#		2. パスワード認証 (members-admin ＆＆パスワード認証)
+#			check_admin_member_password reject
+#
 admin_command_restrictions	=	reject_system_accounts
 					check_admin_member_password
 					reject

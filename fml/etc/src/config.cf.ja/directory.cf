@@ -22,14 +22,7 @@
 #      History: fml 4.0 ではきめうち
 #        Value: directory
 #     Examples: /var/spool/ml/etc
-sysconf_dir	= $ml_home_prefix/etc
-
-
-# Descriptions: MTA 用に教えるための設定ファイルを置くディレクトリ
-#      History: fml 4.0 ではきめうち
-#        Value: directory
-#     Examples: /var/spool/ml/etc/mail
-mailconf_dir	= $sysconf_dir/mail
+domain_config_base_dir	= $ml_home_prefix/etc
 
 
 # Descriptions: ML 間でシェアするデータベースをおくホームディレクトリ

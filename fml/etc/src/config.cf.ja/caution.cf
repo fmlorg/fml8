@@ -7,6 +7,31 @@
 #
 #	message		subject やメール本文の文章の方を指す
 #
+# [プレフィックス]
+#
+#	fml_		fml システム共通＆＆全ドメイン共通
+#			個々のＭＬではなく fml システム全体で共通の変数。
+#			例: fml_libexec_dir = /usr/local/libexec/fml
+#
+#	domain_ ?		各ドメインごと
+#			ml_home_prefix	= /var/spool/ml は別として、
+#			例:
+#			domain_config_dir_prefix   = /var/spool/ml/etc
+#			domain_sendmail_config_dir = /var/spool/ml/etc/mail
+#			domain_mail_config_dir     = /var/spool/ml/etc/mail
+#			domain_postfix_config_dir  = /var/spool/ml/etc/postfix
+#			domain_fml_config_dir      = /var/spool/ml/etc/fml
+#	 
+#	 path_		プログラムのパス設定、つまり OS 依存
+#
+#	 postfix_	postfix システムの…
+#	 
+#	 qmail_		qmail システムの…
+#	 
+#	なし(一般)	原則として、個々のＭＬごとの変数
+#
+#	****_dir	個々のＭＬの変数。例: /var/spool/ml/elena/var/db
+#
 #
 # [参照] 変数名の体系については
 #   http://www.fml.org/software/fml-devel/Documentation/ja/tutorial/

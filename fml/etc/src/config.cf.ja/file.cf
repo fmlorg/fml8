@@ -1,15 +1,2 @@
 =head1	ファイル
 
-# Descriptions: MTA に教えるための aliases ファイル
-#      History: fml 4.0 ではきめうち
-#        Value: file path
-#     Examples: /var/spool/ml/etc/mail/aliases
-mail_aliases_file	=	$mailconf_dir/aliases
-
-
-# Descriptions: MTA に教えるための virtual map ファイル
-#      History: none
-#        Value: file path
-#     Examples: /var/spool/ml/etc/mail/virtual
-postfix_virtual_map_file	=	$mailconf_dir/virtual
-
