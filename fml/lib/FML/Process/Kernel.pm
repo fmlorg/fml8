@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Kernel.pm,v 1.47 2001/06/02 12:38:19 fukachan Exp $
+# $FML: Kernel.pm,v 1.48 2001/08/05 13:55:05 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -549,31 +549,60 @@ sub inform_reply_messages
     for my $category ('reply_message', 'system_message') {
 	if (defined($pcb->get($category, 'text')) ||
 	    defined($pcb->get($category, 'queue') )) {
-	    $curproc->_queue_in($category);
+	    $curproc->queue_in($category);
 	}
     }
 }
 
 
-sub _queue_in
+=head2 C<queue_in($category, $optargs)>
+
+=cut
+
+
+sub queue_in
 {
-    my ($curproc, $category) = @_;
+    my ($curproc, $category, $optargs) = @_;
     my $config       = $curproc->{ config };
-    my $maintainer   = $config->{ maintainer };
-    my $charset      = $config->{ "${category}_charset" };
+
+    # default values
+    my $sender       = $config->{ maintainer };
+    my $charset      = $config->{ "${category}_charset" } || 'us-ascii';
     my $subject      = $config->{ "${category}_subject" };
+    my $recipient    = undef; # by default. used as sanity check later
+
+    if (defined $curproc->{ credential }) {
+	$recipient = $curproc->{ credential }->sender();
+    }
+
+    # overwrite
+    if (defined $optargs) {
+	$sender    = $optargs->{'sender'}    if defined $optargs->{'sender'};
+	$charset   = $optargs->{'charset'}   if defined $optargs->{'charset'};
+	$subject   = $optargs->{'subject'}   if defined $optargs->{'subject'};
+	$recipient = $optargs->{'recipient'} if defined $optargs->{'recipient'};
+    }
+
+    # cheap sanity check
+    unless (defined($sender) && defined($recipient)) {
+	use Carp;
+	croak("panic: queue_in() must be given sender and recipient\n");
+    }
+
+
+    #
+    # start building a message 
+    #
+    use Mail::Message::Compose;
 
     my $pcb          = $curproc->{ pcb };
     my $string       = $pcb->get($category, 'text') || undef;
     my $is_multipart = $pcb->get($category, 'queue') ? 1 : 0;
-    my $recipient    = $curproc->{ credential }->sender();
     my $msg;
-
-    use Mail::Message::Compose;
 
     if ($is_multipart) {
 	$msg = new Mail::Message::Compose
-	    From    => $maintainer,
+	    From    => $sender,
 	    To      => $recipient,
 	    Subject => $subject,
 	    Type    => "multipart/mixed";
@@ -597,7 +626,7 @@ sub _queue_in
     # text/plain format message (by default).
     else {
 	$msg = new Mail::Message::Compose
-	    From    => $maintainer,
+	    From    => $sender,
 	    To      => $recipient,
 	    Subject => $subject,
 	    Data    => $string;
@@ -610,7 +639,7 @@ sub _queue_in
     my $queue     = new Mail::Delivery::Queue { directory => $queue_dir };
     my $qid       = $queue->id();
 
-    $queue->set('sender',     $maintainer);
+    $queue->set('sender',     $sender);
     $queue->set('recipients', [ $recipient ]);
     $queue->in( $msg ) && Log("queue=$qid in");
     $queue->setrunnable();
