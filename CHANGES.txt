@@ -13,6 +13,27 @@
 	気をつけてください。
 
 
+2004/05/16
+
+   配送システム オーバーホール
+
+   FML::User::Control 
+	enhance print_userlist() for command mail.
+	
+   Mail::Delivery::SMTP Utils 
+	rollback if DATA error occurs.
+	rename _get_*() -> get_*(), _set_*() -> set_*() since private methods
+	should not be shared over modules.
+	remove private method.
+	s/_rollback_map_position/rollback_map_position/g;
+	s/_reset_mapinfo/reset_mapinfo/g;
+	
+   Mail::Delivery::Utils 
+	not export _smtplog
+	
+   FML::Command::Admin::list 
+	remove is_cgi related codes.
+
 2004/05/02
 
    variables
@@ -6925,4 +6946,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.202 2004/05/02 15:51:37 fukachan Exp $
+$FML: CHANGES.txt,v 1.203 2004/05/16 13:23:01 fukachan Exp $
