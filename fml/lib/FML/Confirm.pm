@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Confirm.pm,v 1.12 2003/11/17 13:06:11 fukachan Exp $
+# $FML: Confirm.pm,v 1.13 2003/11/22 05:41:50 fukachan Exp $
 #
 
 package FML::Confirm;
@@ -257,13 +257,18 @@ This cache uses C<FML::Cache::Journal> based on C<Tie::JournaledDir>.
 sub _open_db
 {
     my ($self) = @_;
-    my $db    = $self->{ _journal_db };
-    my $dir   = $self->{ _cache_dir };
-    my $class = $self->{ _class };
-    my $_db   = $db->open($dir, $class);
+    my $db = $self->{ _journal_db };
 
-    $self->{ _db } = $_db;
-    return $_db;
+    if (defined $db) {
+	my $dir   = $self->{ _cache_dir };
+	my $class = $self->{ _class };
+	my $_db   = $db->open($dir, $class);
+	$self->{ _db } = $_db;
+	return $_db;
+    }
+    else {
+	return undef;
+    }
 }
 
 
@@ -275,7 +280,9 @@ sub _close_db
 {
     my ($self) = @_;
     my $db = $self->{ _journal_db };
-    $db->close();
+    if (defined $db) {
+	$db->close();
+    }
 }
 
 
