@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.9 2002/09/11 23:18:28 fukachan Exp $
+# $FML: Subject.pm,v 1.10 2002/09/22 14:57:05 fukachan Exp $
 #
 
 
@@ -36,8 +36,8 @@ in the subject.
 =cut
 
 
-# XXX we should it in proper way in the future.
-# XXX but we import it anyway for further rewriting.
+# XXX-TODO: we should it in proper way in the future.
+# XXX-TODO: but we import it anyway for further rewriting.
 my $CUT_OFF_RERERE_PATTERN = '';
 my $CUT_OFF_RERERE_HOOK    = '';
 
@@ -71,7 +71,9 @@ For example, it is like this:
 sub is_reply
 {
     my ($self, $x) = @_;
+
     return 0 unless $x;
+
     &Jcode::convert(\$x, 'euc');
     return ($x =~ /^((\s|(¡¡))*($pattern)\s*)+/ ? 1 : 0);
 }
@@ -110,6 +112,8 @@ sub cut_off_reply_tag
 {
     my ($subject) = @_;
     my ($y, $limit);
+
+    # XXX-TODO: method-ify ?
 
     Jcode::convert(\$subject, 'euc');
 

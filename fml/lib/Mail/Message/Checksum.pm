@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Checksum.pm,v 1.4 2002/09/11 23:18:25 fukachan Exp $
+# $FML: Checksum.pm,v 1.5 2002/09/22 14:57:03 fukachan Exp $
 #
 
 package Mail::Message::Checksum;
@@ -70,6 +70,7 @@ sub _init
 	$self->{ _type } = 'native';
     }
     else {
+	# XXX-TODO: hmm, we should remove search_program() dependence?
 	eval qq{ require File::Utils; import File::Utils qw(search_program);};
 	my $prog = search_program('md5') || search_program('md5sum');
 	if (defined $prog) {
@@ -77,7 +78,6 @@ sub _init
 	}
     }
 }
-
 
 
 =head2 C<md5(\$string)>
@@ -212,7 +212,7 @@ sub cksum2
         Log("ERROR: no such file $file");
     }
 
-    ($crc, $total);
+    return ($crc, $total);
 }
 
 

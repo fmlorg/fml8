@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.13 2002/09/11 23:18:25 fukachan Exp $
+# $FML: Date.pm,v 1.14 2002/09/22 14:57:03 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -73,7 +73,7 @@ sub new
 
 
 # Descriptions: prepare date by several time format
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: NUM($time)
 # Side Effects: create object
 # Return Value: HASH_REF
 sub _date
@@ -88,6 +88,7 @@ sub _date
     my @Month = ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
 		 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
 
+    # XXX-TODO: default timezone is +0900. o.k. ? :-)
     $TimeZone ||= '+0900';
     my ($sec,$min,$hour,$mday,$mon,$year,$wday) = (localtime($time))[0..6];
 
@@ -127,7 +128,7 @@ sub log_file_style
 {
     my ($self, $time) = @_;
     my $p = _date($time || time);
-    $p->{'log_file_style'};
+    return $p->{'log_file_style'};
 }
 
 
@@ -139,7 +140,7 @@ sub mail_header_style
 {
     my ($self, $time) = @_;
     my $p = _date($time || time);
-    $p->{'mail_header_style'};
+    return $p->{'mail_header_style'};
 }
 
 
@@ -151,7 +152,7 @@ sub YYYYMMDD
 {
     my ($self, $time) = @_;
     my $p = _date($time || time);
-    $p->{'YYYYMMDD'};
+    return $p->{'YYYYMMDD'};
 }
 
 
@@ -165,7 +166,7 @@ sub YYYYxMMxDD
     my $date = _date($time || time);
 
     $sep ||= '/'; # 1999/09/13 by default
-    $date->{ YYYY }. $sep . $date->{ MM }. $sep. $date->{ DD };
+    return $date->{ YYYY }. $sep . $date->{ MM }. $sep. $date->{ DD };
 }
 
 
@@ -177,7 +178,7 @@ sub current_time
 {
     my ($self, $time) = @_;
     my $p = _date($time || time);
-    $p->{'current_time'};
+    return  $p->{'current_time'};
 }
 
 
@@ -189,7 +190,7 @@ sub precise_current_time
 {
     my ($self, $time) = @_;
     my $p = _date($time || time);
-    $p->{'precise_current_time'};
+    return $p->{'precise_current_time'};
 }
 
 
@@ -226,7 +227,7 @@ sub stardate
 
     $integer = $integer % 10000;
 
-    sprintf("[%d]%04d.%02.2s", $issue, $integer, $fraction);
+    return sprintf("[%d]%04d.%02.2s", $issue, $integer, $fraction);
 }
 
 
@@ -290,6 +291,9 @@ sub date_to_unixtime
     my (%month);
     my ($zone);
 
+    # XXX-TODO: method-ify date_to_unixtime() ?
+    # XXX-TODO: more documents
+
     $in =~ s/[\s\n]*$//;
 
     require 'timelocal.pl';
@@ -338,7 +342,10 @@ sub date_to_unixtime
     }
     elsif ($in =~
 	/(\d+)\s+(\w+)\s+(\d+)\s+(\d+):(\d+)\s+([\+\-])(\d\d)(\d\d)/) {
-	if ($debug_mti) { print STDERR "Date2UnixTime: Standard without \$sec\n";}
+	if ($debug_mti) { 
+	    print STDERR "Date2UnixTime: Standard without \$sec\n";
+	}
+
 	$day   = $1;
 	$month = ($month{$2} || $month) - 1;
 	$year  = $3 > 1900 ? $3 - 1900 : $3;
@@ -403,7 +410,8 @@ sub date_to_unixtime
     my $t;
     eval('$t = &timegm($sec,$min,$hour,$day,$month,$year) + $shift*3600');
     _log($@) if $@;
-    $t;
+
+    return $t;
 }
 
 

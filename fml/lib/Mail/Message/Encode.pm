@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.8 2002/09/22 15:01:23 fukachan Exp $
+# $FML: Encode.pm,v 1.9 2002/11/26 13:55:46 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -23,6 +23,8 @@ Mail::Message::Encode - encode/decode/charset conversion routines
 =head1 METHODS
 
 =head2 C<new()>
+
+standard constructor.
 
 =cut
 
@@ -53,7 +55,17 @@ sub new
 }
 
 
-# Descriptions: speculate code of $str
+=head2 C<detect_code($str)>
+
+speculate the code of $str string.
+$str is checked by Unicode::Japanese.
+
+C<CAUTION>: we handle only Japanese.
+
+=cut
+
+
+# Descriptions: speculate code of $str string.
 #    Arguments: OBJ($self) STR($str)
 # Side Effects: none
 # Return Value: STR
@@ -62,7 +74,7 @@ sub detect_code
     my ($self, $str) = @_;
     my $lang = $self->{ _language };
 
-    # code by default
+    # XXX-TODO: care for non Japanese.
     if ($lang eq 'japanese') {
 	use Unicode::Japanese;
 	my $obj = new Unicode::Japanese;
@@ -90,6 +102,19 @@ sub detect_code
 #            utf8    UTF8
 
 
+=head2 convert($str, $out_code, $in_code)
+
+convert $str to $out_code code.
+$in_code is used as a hint.
+
+=head2 convert_str_ref($str_ref, $out_code, $in_code)
+
+convert string reference $str_str to $out_code code.
+$in_code is used as a hint.
+
+=cut
+
+
 # Descriptions: convert $str to $out_code code
 #    Arguments: OBJ($self) STR($str) STR($out_code) STR($in_code)
 # Side Effects: none
@@ -115,6 +140,7 @@ sub convert_str_ref
 	croak("convert_str_ref: invalid input data");
     }
 
+    # XXX-TODO: care for non Japanese.
     if ($lang eq 'japanese') {
 	# 1. if the encoding for the given $str_ref is unknown, return ASAP.
 	unless (defined $in_code) {
@@ -169,7 +195,23 @@ sub _jp_str_ref
 }
 
 
-# Descriptions: run $proc($s) after $s is converted to $out_code code
+=head2 run_in_code($proc, $s, $args, $out_code, $in_code)
+
+run $proc($s) under $out_code environment.
+So, execute $proc like this.
+
+    my $obj         = new Mail::Message::Encode;
+    my $conv_status = $obj->convert_str_ref($s, $out_code, $in_code);
+
+   &$proc($s, $args);
+
+It means run $proc() after $s is converted to $out_code code.
+
+=cut
+
+
+# Descriptions: run $proc($s) under $out_code environment.
+#               It means run $proc() after $s is converted to $out_code code.
 #    Arguments: OBJ($self) CODE_REF($proc) STR($s) HASH_REF($args)
 #               STR($out_code) STR($in_code)
 # Side Effects: none
@@ -181,6 +223,8 @@ sub run_in_code
 
     my $obj         = new Mail::Message::Encode;
     my $conv_status = $obj->convert_str_ref($s, $out_code, $in_code);
+
+    # XXX-TODO: validate $proc name regexp.
     eval q{
 	$proc_status = &$proc($s, $args);
     };
@@ -194,6 +238,10 @@ sub run_in_code
 
 
 =head1 utilities
+
+=head2 is_iso2022jp_string($buf)
+
+$buf looks like Japanese or not ?
 
 =cut
 
@@ -251,6 +299,18 @@ sub _look_not_iso2022jp_string
 
 =head1 BACKWARD COMPATIBILITY
 
+=head2 STR2EUC($str)
+
+convert $str to japanese EUC code.
+
+=head2 STR2JIS($str)
+
+convert $str to japanese JIS code.
+
+=head2 STR2SJIS($str)
+
+convert $str to japanese SJIS code.
+
 =cut
 
 
@@ -291,6 +351,11 @@ sub STR2JIS
 
 
 =head1 MIME ENCODE
+
+=head2 encode_mime_string($str, $encode, $out_code, $in_code)
+
+encode string $str to encoding system $encode with output code $out_code.
+$in_code is used as a hint.
 
 =cut
 
@@ -338,6 +403,19 @@ sub encode_mime_string
 
     return $str_out ? $str_out : $str_orig;
 }
+
+
+=head2 base64($str, $out_code, $in_code)
+
+encode $str by base64 with out code out_code.
+$in_code is use as a hint.
+
+=head2 qp($str, $out_code, $in_code)
+
+encode $str by quoted-printable with out code out_code.
+$in_code is use as a hint.
+
+=cut
 
 
 # Descriptions: encode $str by base64
@@ -400,6 +478,9 @@ sub decode_mime_string
 }
 
 
+#
+# debug
+#
 if ($0 eq __FILE__) {
     $| = 1;
 
@@ -448,10 +529,6 @@ if ($0 eq __FILE__) {
     print "\n=> STR2JIS  ? = <", $obj->detect_code($str0), ">\n";
 }
 
-
-=head1 CODING STYLE
-
-See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 CODING STYLE
 
