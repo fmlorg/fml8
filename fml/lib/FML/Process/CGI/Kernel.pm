@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.10 2001/12/22 09:21:10 fukachan Exp $
+# $FML: Kernel.pm,v 1.11 2001/12/23 11:37:08 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -164,7 +164,7 @@ get HASH ARRAY of valid mailing lists.
 =cut
 
 
-# Descriptions: list up ML 
+# Descriptions: list up ML
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: HASH_ARRAY

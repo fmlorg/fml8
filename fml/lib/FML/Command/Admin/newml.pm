@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.7 2001/12/22 09:21:03 fukachan Exp $
+# $FML: newml.pm,v 1.8 2001/12/23 03:50:27 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -94,7 +94,7 @@ sub process
 
 # Descriptions: install $dst with variable expansion of $src
 #    Arguments: STR($src) STR($dst) HASH_REF($config)
-# Side Effects: create $dst 
+# Side Effects: create $dst
 # Return Value: none
 sub _install
 {

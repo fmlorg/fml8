@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Scheduler.pm,v 1.7 2001/12/22 09:21:02 fukachan Exp $
+# $FML: Scheduler.pm,v 1.8 2001/12/23 09:20:42 fukachan Exp $
 #
 
 package FML::CGI::Scheduler;
@@ -49,7 +49,7 @@ This module has routines needed for CGI main methond run().
 =cut
 
 
-# Descriptions: print out HTML header + body former part 
+# Descriptions: print out HTML header + body former part
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -74,7 +74,7 @@ sub html_start
 }
 
 
-# Descriptions: print out body latter part 
+# Descriptions: print out body latter part
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none

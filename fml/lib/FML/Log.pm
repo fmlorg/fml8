@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.14 2001/12/22 09:21:01 fukachan Exp $
+# $FML: Log.pm,v 1.15 2001/12/23 11:37:06 fukachan Exp $
 #
 
 package FML::Log;
@@ -97,7 +97,7 @@ sub Log
     $level    = $args->{ level }    if defined $args->{ level };
 
     # reference to "date" object
-    eval q{ 
+    eval q{
 	use Mail::Message::Date;
 	$rdate = new Mail::Message::Date;
     };

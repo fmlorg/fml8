@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Scheduler.pm,v 1.10 2001/12/22 09:21:10 fukachan Exp $
+# $FML: Scheduler.pm,v 1.11 2001/12/23 07:04:30 fukachan Exp $
 #
 
 package FML::Process::Scheduler;
@@ -17,7 +17,7 @@ use FML::Process::Kernel;
 
 =head1 NAME
 
-FML::Process::Scheduler -- demonstration of FML module usage 
+FML::Process::Scheduler -- demonstration of FML module usage
 
 =head1 SYNOPSIS
 
@@ -69,7 +69,7 @@ sub finish         { 1; }
 
 
 # Descriptions: prepare parameters and call TinyScheduler module.
-#               we use w3m to show calender (HTML table).  
+#               we use w3m to show calender (HTML table).
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: create temporary file and remove it in the last
 # Return Value: none

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.6 2001/12/22 09:21:01 fukachan Exp $
+# $FML: Mailer.pm,v 1.7 2001/12/22 16:10:50 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -28,7 +28,7 @@ FML::Mailer - Utilities to send mails
     });
 
 where C<$message> is a C<Mail::Message> object to send.
-If you want to sent plural recipinets, 
+If you want to sent plural recipinets,
 specify the recipients as ARRAY HASH at C<recipients> parameter.
 
     $obj->send( {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.5 2001/12/22 09:21:09 fukachan Exp $
+# $FML: QueueManager.pm,v 1.6 2001/12/23 11:37:07 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -26,7 +26,7 @@ or if you send specific queue C<$queue_id>, use
 
     $obj->send($curproc, $queue_id);
 
-where C<$queue_id> is queue id such as 1000390413.14775.1, 
+where C<$queue_id> is queue id such as 1000390413.14775.1,
 not file path.
 
 =head1 DESCRIPTION

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QMail.pm,v 1.9 2001/12/22 09:21:09 fukachan Exp $
+# $FML: QMail.pm,v 1.10 2001/12/23 07:04:30 fukachan Exp $
 #
 
 package FML::Process::QMail;
@@ -51,7 +51,7 @@ C<NOT YET IMPLERMENTED>.
 
 
 # Descriptions: qmail style command extention
-#               elena-subscribe@domain implies 
+#               elena-subscribe@domain implies
 #               "mail message body with subscribe to elena-ctl@domain"
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
