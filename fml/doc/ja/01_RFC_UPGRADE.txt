@@ -47,3 +47,19 @@
 2-2	makefml --force newml を全ＭＬに対して実行
 
 2-3	各ＭＬで 1-3
+
+
+----------------------------------------------------------------------------
+TIPS
+
+X-Sequence: fml-devel 389
+
+fml4 to fml8への移行tips(4と8を同時運用するために)
+
+fml4での設定(site_init.phとかconfig.phで)
+push(@ACTIVE_LIST,"$DIR/recipients") if( -f "$DIR/recipients" ) ;
+
+fml8での設定(site_default_config.cfやconfig.cfで)
+html_archive_dir = $ml_home_dir/htdocs
+
+
