@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MessageID.pm,v 1.2 2001/04/15 13:30:49 fukachan Exp $
+# $FML: MessageID.pm,v 1.3 2001/12/22 09:21:07 fukachan Exp $
 #
 
 package FML::Header::MessageID;
@@ -19,8 +19,8 @@ FML::Header::MessageID - manupulate message-id
 =head1 SYNOPSIS
 
     use FML::Header::MessageID;
-    my $xobj = new FML::Header::MessageID;
-    my $obj  = $xobj->open_cache( {
+    my $mid = new FML::Header::MessageID;
+    my $obj = $mid->open_cache( {
         directory => $directory,
     });
 
@@ -40,11 +40,13 @@ FML::Header::MessageID - manupulate message-id
 
 =head1 DESCRIPTION
 
+manipulate Message-Id database.
+
 =head1 METHODS
 
 =head2 C<new($args)>
 
-usual constructor.
+standard constructor.
 
 =cut
 
@@ -53,6 +55,10 @@ use File::CacheDir;
 @ISA = qw(File::CacheDir);
 
 
+# Descriptions: standard constructor
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self, $args) = @_;
@@ -68,6 +74,11 @@ open cache and return C<File::CacheDir> object.
 
 =cut
 
+
+# Descriptions: open message-id database
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: OBJ
 sub open_cache
 {
     my ($self, $args) = @_;
@@ -92,11 +103,19 @@ sub open_cache
 
 =head2 C<get($key)>
 
+get value for the key $key in message-id database.
+
 =head2 C<set($key, $value)>
+
+set value for the key $key in message-id database.
 
 =cut
 
 
+# Descriptions: get value for $key
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: none
+# Return Value: STR
 sub get
 {
     my ($self, $key) = @_;
@@ -110,6 +129,10 @@ sub get
 }
 
 
+# Descriptions: set value for $key
+#    Arguments: OBJ($self) STR($key) STR($value)
+# Side Effects: none
+# Return Value: STR
 sub set
 {
     my ($self, $key, $value) = @_;
@@ -125,11 +148,15 @@ sub set
 
 =head2 C<gen_id($curproc, $args)>
 
-return a new message-id.
+generate and return a new message-id.
 
 =cut
 
 
+# Descriptions: generate new message-id used in reply message
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args)
+# Side Effects: counter increment
+# Return Value: STR
 sub gen_id
 {
     my ($self, $curproc, $args) = @_;
