@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: Credential.pm,v 1.7 2001/04/03 09:45:40 fukachan Exp $
 #
 
 package FML::Credential;
@@ -13,6 +13,7 @@ package FML::Credential;
 use strict;
 use vars qw(%Credential @ISA @EXPORT @EXPORT_OK);
 use Carp;
+use ErrorStatus qw(errstr error error_set error_clear);
 
 
 =head1 NAME
@@ -58,9 +59,97 @@ sub new
 sub DESTROY {}
 
 
+=head2 C<is_same_address($addr1, $addr2 [, $level])>
+
+return 1 if C<$addr1> and C<$addr2> looks same within some ambiguity.
+The ambiguity is followed by these rules.
+
+1. C<user> part must be the same case sensitively.
+
+2. C<domain> part is case insensitive by definition of C<DNS>.
+
+3. C<domain> part is the same from the top C<gTLD> layer to
+   C<$level>-th sub domain level.
+
+=cut
+
+sub is_same_address
+{
+    my ($self, $xaddr, $yaddr, $level) = @_;
+    my ($xuser, $xdomain) = split(/\@/, $xaddr);
+    my ($yuser, $ydomain) = split(/\@/, $yaddr);
+
+    # rule 1
+    if ($xuser ne $yuser) { return 0;}
+
+    # rule 2
+    if ("\L$xdomain\E" eq "\L$ydomain\E") { return 1;}
+
+    # rule 3: not yet
+
+    0;
+}
+
+
 =head2 C<is_member()>
 
-not yet implemented
+return 1 if the sender is a ML member and 0 if not.
+
+=cut
+
+
+# Descriptions: 
+#    Arguments: $self $curproc $args
+# Side Effects: 
+# Return Value: none
+sub is_member
+{
+    my ($self, $curproc, $args) = @_;
+    my $status = 0;
+
+    my $member_maps = $curproc->{ config }->{ member_maps };
+    my $address = $curproc->{'credential'}->{'sender'};
+    my ($user, $domain) = split(/\@/, $address);
+
+    use IO::MapAdapter;
+    for my $map (split(/\s+/, $member_maps)) {
+	if ($map) {
+	    my $obj = new IO::MapAdapter $map;
+	    my $x = $obj->find( $user );
+	    my ($r) = split(/\s+/, $x);
+
+	    if ($self->is_same_address($r, $address)) {
+		$status = 1; # found
+	    }
+	    last if $x;
+	}
+    }
+
+    unless ($status) {
+	$self->error_set("user=$user domain=$domain not found");
+    }
+
+    $status;
+}
+
+
+sub match_system_accounts
+{
+    my ($self, $curproc, $args) = @_;
+    my $config = $curproc->{ config };
+
+    # compare $user part of the sender address
+    my ($user, $domain) = split(/\@/, $self->sender());
+
+    # compare $user part with e.g. root, postmaster, ...
+    # XXX always case INSENSITIVE
+    for my $addr (split(/\s+/, $config->{ system_accounts })) {
+	if ($user =~ /^${addr}$/i) { return $addr;}
+    }
+
+    return '';
+}
+
 
 =head2 C<sender()>
 
@@ -68,14 +157,6 @@ return the mail address of the mail sender who kicks off this fml
 process.
 
 =cut
-
-
-# Descriptions: 
-#    Arguments: $self $args
-# Side Effects: 
-# Return Value: none
-sub is_member { 1;}
-
 
 # Descriptions: returh the mail sender
 #    Arguments: $self
