@@ -1,6 +1,11 @@
 		雑多なメモ
 		Last Modified: $Date$
 
+	XXX 作業したら TODO/STATUS.txt もアップデートしてね XXX
+
+
+○	CGI で xxx-admin さんをかすたまいずしたい？
+
 
 ○	IO::Adapter
 
@@ -283,4 +288,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.21 2002/04/26 10:33:54 fukachan Exp $
+$FML: 00_MEMO,v 1.22 2002/04/28 14:55:54 fukachan Exp $
