@@ -1,8 +1,6 @@
 		CHANGES
 		Last Modified: $Date$
 
-	*** 2003 年末 〜 2004 年初め オーバホールキャンペーン終了 ***
-
   [注意]
 	コマンドメールのコードを全面的に書き直しました。
 
@@ -12,6 +10,29 @@
 	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
 	気をつけてください。
 
+
+2004/06/30
+
+   オーバーホール実施中 (2004/06/27 - )
+
+
+2004/06/29
+
+   FML::Process::Distribute 
+	mark by stop_this_process() when submission denied.
+
+   オーバーホール
+	FML::Command::Admin::chaddr off 
+	FML::Command::User::admin digest unsubscribe 
+	Mail::Message::Address 
+	Mail::Delivery 
+	Mail::Delivery::ESMTP ErrorStatus QueueUtils 
+	Mail::Delivery::Net::INET4 INET6 
+		[overhaul]
+		o fix comments.
+		o fix messages/error messages.
+		o use //o if could.
+		o specify initial value.
 
 2004/06/27
 
@@ -7347,4 +7368,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.213 2004/06/24 11:42:04 fukachan Exp $
+$FML: CHANGES.txt,v 1.214 2004/06/27 09:41:21 fukachan Exp $
