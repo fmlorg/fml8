@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.101 2003/10/26 02:20:02 fukachan Exp $
+# $FML: Switch.pm,v 1.102 2003/11/25 04:15:24 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -33,11 +33,11 @@ C<libexec/loader> (C<libexec/fml/loader>), the wrapper, loads this
 program and calls C<Bootstrap2()>.
 C<Bootstrap2()> loads main.cf,
 analyzes the command arguments
-and call C<ProcessSwitch()> finally.
+and call C<load_module()> finally.
 
-C<ProcessSwitch()> emulates "use $package" to load
+C<load_module()> emulates "use $package" to load
 module suitable with the arguments.
-The fml flow bifurcates here through C<ProcessSwitch()>.
+The fml flow bifurcates here through C<load_module()>.
 
 The flow details of program exists in FML::Process:: class.
 For example, libexec/distribute (fml.pl) runs in this way.
@@ -51,7 +51,7 @@ For example, libexec/distribute (fml.pl) runs in this way.
        main::Bootstrap2()       Process::Switch
             |
             V
-       ProcessSwitch()          Process::Switch
+       load_module()            Process::Switch
             |
             |  <---  $obj = FML::Process:Distribute
             |
@@ -67,7 +67,7 @@ kick off the second phase of bootstrap.
 
 It reads *.cf files, parses them and set the result to C<@cf>
 array variable.
-We pass it to C<ProcessSwitch()> later.
+We pass it to C<load_module()> later.
 
     @cf = (
 	   /etc/fml/defaults/$VERSION/default_config.cf
@@ -125,7 +125,7 @@ sub main::Bootstrap2
 
     # 2.1 prepare @$cf
     #     XXX hmm, .. '/etc/fml/site_default_config.cf' is good ???
-    my $cf = ();
+    my $cf = [];
     unshift(@$cf, $main_cf->{ site_default_config_cf });
     unshift(@$cf, $main_cf->{ default_config_cf });
 
@@ -171,17 +171,18 @@ sub main::Bootstrap2
 	main_cf          => $main_cf,
 
 	# options
-	need_ml_name     => 0,         # defined in _module_we_use()
+	need_ml_name     => 0,         # defined in _module_to_load()
 
 	# curproc back pointer, used in emergency.
 	curproc          => {},
     };
 
     # get the object. The suitable module is speculcated by $0.
-    my $obj = ProcessSwitch($myname, $args);
+    my $obj = load_module($myname, $args);
 
     # start the process.
     eval q{
+      use FML::Process::Flow;
       FML::Process::Flow::ProcessStart($obj, $args);
     };
     if ($@) {
@@ -236,10 +237,10 @@ sub __log
 }
 
 
-=head2 ProcessSwitch($args)
+=head2 load_module($args)
 
 load the library and prepare environment to use it.
-C<ProcessSwitch($args)> return process object C<$obj>.
+C<load_module($args)> return process object C<$obj>.
 
 To start the process, we pass C<$obj> with C<$args> to
 C<FML::Process::Flow::ProcessStart($obj, $args)>.
@@ -266,7 +267,7 @@ C<$args> is like this:
     };
 
     # get the object. The suitable module is speculcated by $0.
-    my $obj = ProcessSwitch($args);
+    my $obj = load_module($args);
 
     # start the process.
     FML::Process::Flow::ProcessStart($obj, $args);
@@ -281,13 +282,13 @@ C<$args> is like this:
 # Side Effects: process switching :-)
 #               ProcessSwtich() is exported to main:: Name Space.
 # Return Value: STR(package name)
-sub ProcessSwitch
+sub load_module
 {
     my ($myname, $args) = @_;
 
-    # Firstly, create process
-    # $pkg is a  package name, for exampl,e "FML::Process::Distribute".
-    my $pkg = _module_we_use($args);
+    # Firstly, load the module and return the class name (NOT OBJECT).
+    # $pkg is a package name, for example, "FML::Process::Distribute".
+    my $pkg = _module_to_load($args);
     unless (defined $pkg) {
 	croak("$args->{ myname } is unknown program\n");
     }
@@ -354,24 +355,11 @@ sub _module_specific_options
 }
 
 
-# Descriptions: this program ($0) requires ML name always or not?
-#    Arguments: HASH_REF($args)
-# Side Effects: none
-# Return Value: NUM(1 (require ml name always) or 0)
-sub _ml_name_is_required
-{
-    my ($args) = @_;
-    my $opt = $args->{ module_info }->{ options } || '';
-
-    return($opt =~ /\$ml/o ? 1 : 0);
-}
-
-
 # Descriptions: determine package we need and require() it if needed.
 #    Arguments: HASH_REF($args)
 # Side Effects: none
 # Return Value: STR(FML::Process::SOMETHING module name)
-sub _module_we_use
+sub _module_to_load
 {
     my ($args)   = @_;
     my $main_cf  = $args->{ main_cf };
@@ -398,6 +386,24 @@ sub _module_we_use
 
     return $pkg;
 }
+
+
+# Descriptions: this program ($0) requires ML name always or not?
+#    Arguments: HASH_REF($args)
+# Side Effects: none
+# Return Value: NUM(1 (require ml name always) or 0)
+sub _ml_name_is_required
+{
+    my ($args) = @_;
+    my $opt = $args->{ module_info }->{ options } || '';
+
+    return($opt =~ /\$ml/o ? 1 : 0);
+}
+
+
+=head1 UTILITIES
+
+=cut
 
 
 # Descriptions: return the longest match-ed entry in $def_file file.
