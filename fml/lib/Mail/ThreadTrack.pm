@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.23 2001/12/22 09:21:15 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.24 2001/12/26 14:23:29 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -497,6 +497,28 @@ sub log
     else {
 	print STDERR "Log> $str\n";
     }
+}
+
+
+=head2 filepath($args)
+
+return article file path.
+
+=cut
+
+# Descriptions: return article file path.
+#    Arguments: OBJ($self) OBJ($curproc) NUM($id)
+# Side Effects: none
+# Return Value: STR(file path)
+sub filepath
+{
+    my ($self, $args) = @_;
+
+    use Mail::Message::Spool;
+    my $spool = new Mail::Message::Spool;
+    my $file  = $spool->filepath($args);
+
+    return $file;
 }
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Text.pm,v 1.6 2002/01/13 14:51:26 fukachan Exp $
+# $FML: Text.pm,v 1.7 2002/01/13 15:19:53 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Text;
@@ -53,8 +53,11 @@ sub show_articles_in_thread
     use FileHandle;
     if (defined($articles) && defined($spool_dir) && -d $spool_dir) {
 	my $s = '';
-	for (split(/\s+/, $articles)) {
-	    my $file = File::Spec->catfile($spool_dir, $_);
+	for my $id (split(/\s+/, $articles)) {
+	    my $file = $self->filepath({
+		spool_dir => $spool_dir,
+		id        => $id,
+	    });
 	    my $fh   = new FileHandle $file;
 	    while (defined($_ = $fh->getline())) {
 		next if 1 .. /^$/;
@@ -166,7 +169,10 @@ sub __print_message_summary
 	    if (defined $rh->{ _articles }->{ $thread_id }) {
 		(@aid) = split(/\s+/, $rh->{ _articles }->{ $thread_id });
 		$aid  = $aid[0];
-		$file = File::Spec->catfile($spool_dir, $aid);
+		$file = $self->filepath({
+		    spool_dir => $spool_dir,
+		    id        => $aid,
+		});
 		if (-f $file) {
 		    $self->print(  $self->message_summary($file) );
 		}
