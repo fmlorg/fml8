@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Text.pm,v 1.10 2002/09/11 23:18:30 fukachan Exp $
+# $FML: Text.pm,v 1.11 2002/09/22 14:57:07 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Text;
@@ -13,9 +13,13 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use Mail::ThreadTrack::Print::Utils qw(decode_mime_string STR2EUC);
 
+#
+# XXX-TODO: insert more examples on format in each function.
+#
+
 =head1 NAME
 
-Mail::ThreadTrack::Print::Text - what is this
+Mail::ThreadTrack::Print::Text - printing suitable for text
 
 =head1 SYNOPSIS
 
@@ -29,11 +33,14 @@ See C<Mail::ThreadTrack::Print> for usage of this subclass.
 
 =head2 show_articles_in_thread(thread_id)
 
+show articles as text in this thread.
+
 =cut
 
-
+# XXX-TODO: $is_show_cost_indicate hard-coded.
 my $is_show_cost_indicate = 0;
 
+# XXX-TODO: $format hard-coded.
 my $format = "%-20s %10s %5s %8s %s\n";
 
 
@@ -53,18 +60,25 @@ sub show_articles_in_thread
     use FileHandle;
     if (defined($articles) && defined($spool_dir) && -d $spool_dir) {
 	my $s = '';
+	# $articles = "1 2 3 4 5";
 	for my $id (split(/\s+/, $articles)) {
 	    my $file = $self->filepath({
 		base_dir => $spool_dir,
 		id       => $id,
 	    });
-	    my $fh   = new FileHandle $file;
-	    while (defined($_ = $fh->getline())) {
-		next if 1 .. /^$/;
-		$s = STR2EUC($_);
-		print $wh $s;
+
+	    my $fh = new FileHandle $file;
+	    if (defined $fh) {
+	      LINE:
+		while (defined($_ = $fh->getline())) {
+		    next LINE if 1 .. /^$/;
+
+		    # XXX-TODO: we suppose Japanese only here.
+		    $s = STR2EUC($_);
+		    print $wh $s;
+		}
+		$fh->close;
 	    }
-	    $fh->close;
 	}
     }
 }
@@ -79,13 +93,14 @@ sub __start_thread_summary
     my ($self, $args) = @_;
     my $fd = $self->{ _fd } || \*STDOUT;
 
+    # XXX-TODO: guide line is hard-coded. o.k.?
     printf($fd $format, 'id', 'date', 'age', 'status', 'articles');
     print $fd "-" x60;
     print $fd "\n";
 }
 
 
-# Descriptions: print formated brief summary
+# Descriptions: print formatted brief summary
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -98,14 +113,14 @@ sub __print_thread_summary
     my $status    = $optargs->{ status };
     my $thread_id = $optargs->{ thread_id };
     my $articles  = $optargs->{ articles };
-    my $aid       = (split(/\s+/, $articles))[0];
+    my $aid       = (split(/\s+/, $articles))[0]; # the head of this thread
 
     printf($fd $format, $thread_id, $date, $age, $status,
 	   _format_list(25, $articles));
 }
 
 
-# Descriptions: print closing string, empty now
+# Descriptions: print closing string, empty now (dummy).
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -126,11 +141,12 @@ sub _format_list
     my (@idlist) = split(/\s+/, $str);
     my $r = '';
 
+  ID:
     for (@idlist) {
 	$r .= $_ . " ";
 	if (length($r) > $max) {
 	    $r .= "...";
-	    last;
+	    last ID;
 	}
     }
 
@@ -153,7 +169,7 @@ sub __print_message_summary
 
     if (defined $config->{ spool_dir }) {
 	my ($aid, @aid, $file);
-	my $spool_dir  = $config->{ spool_dir };
+	my $spool_dir = $config->{ spool_dir };
 
       THREAD_ID_LIST:
 	for my $thread_id (@$thread_id) {
@@ -192,6 +208,7 @@ sub _cost_to_indicator
     my ($cost) = @_;
     my $how_bad = 0;
 
+    # XXX-TODO: cost indicator is broken ?
     if ($cost =~ /(\w+)\-(\d+)/) {
 	$how_bad += $2;
 	$how_bad += 2 if $1 =~ /open/;
@@ -201,10 +218,6 @@ sub _cost_to_indicator
     $how_bad;
 }
 
-
-=head1 CODING STYLE
-
-See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 CODING STYLE
 
