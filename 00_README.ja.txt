@@ -2,12 +2,18 @@
 
 ちゃんとしたインストーラはまだありません。
 
-Install.sh  の先頭にあるディレクトリ名などを適当に修正し、
-root で実行して下さい。それぞれのディレクトリの役割は次の通りです。
+トップ・ディレクトリにある INSTALL.sh の先頭にあるディレクトリ名などを
+適当に修正し、root で実行して下さい。
+
+	% su root
+	# sh INSTALL.sh
+
+それぞれのディレクトリの役割は次の通りです。
 
 /etc/fml
 
-	基本設定ファイル ( fml 4 の /usr/local/fmlの .fml や cf 相当)
+	基本設定ファイル
+	( fml 4 の /usr/local/fml/.fml や default_config.ph 相当)
 
 /usr/local/libexec/fml
 
@@ -21,9 +27,13 @@ root で実行して下さい。それぞれのディレクトリの役割は次の通りです。
 
 	ＭＬのホームディレクトリ。fml 4 と同じ目的です。
 
+	注意: /var/spool/ml のオーナは INSTALL.sh の
+	owner 変数(デフォルトはユーザ fml)に設定されます。
+
 
 ○ ドキュメントは HTML 版だけです。
-このディレクトリにある index.ja.html を見て下さい。
+
+トップ・ディレクトリにある index.ja.html からたどっていってください。
 
 
 ○ elena ＭＬの設定の見方

@@ -24,7 +24,7 @@ lib_dir=$default_prefix/lib/fml
 ml_spool_dir=/var/spool/ml
 
 # owner of /var/spool/ml
-owner=`id -un`
+owner=fml
 
 ######################
 
