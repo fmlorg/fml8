@@ -1,5 +1,5 @@
 #
-# $FML: main.cf,v 1.11 2002/06/25 08:12:23 fukachan Exp $
+# $FML: main.cf,v 1.12 2002/06/27 10:18:43 fukachan Exp $
 # 
 
 fml_version	=	__fml_version__
@@ -45,6 +45,16 @@ domain_default_config = $config_dir/domains/__domain__/config.cf
 # ml's home directories
 # $ml_home_dir (e.g. /var/spool/ml/elena ) is taken from loader's @ARGV.
 default_ml_home_prefix	= /var/spool/ml
+
+
+# map between programs name and modules
+# Example: /etc/fml/defaults/8.0/modules
+default_module_config	=	$default_config_dir/modules
+
+
+# map between programs name and command line options
+# Example: /etc/fml/defaults/8.0/command_line_options
+default_command_line_option_config = $default_config_dir/command_line_options
 
 
 # virtual format: domain directory
