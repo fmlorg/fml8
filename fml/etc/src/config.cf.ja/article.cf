@@ -114,6 +114,7 @@ use_article_header_filter		=	yes
 #        Value:
 #     Examples:
 article_header_filter_rules		=	check_message_id
+						check_date
 						permit
 
 
