@@ -4,13 +4,14 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.58 2001/10/14 03:00:32 fukachan Exp $
+# $FML: Kernel.pm,v 1.59 2001/11/03 10:15:49 fukachan Exp $
 #
 
 package FML::Process::Kernel;
 
 use strict;
 use Carp;
+use vars qw(@ISA);
 
 =head1 NAME
 
@@ -56,12 +57,16 @@ parameters.
 =cut
 
 use FML::Process::Flow;
+use FML::Process::Utils;
 use FML::Parse;
 use FML::Header;
 use FML::Config;
 use FML::Log qw(Log LogWarn LogError);
 use File::SimpleLock;
 use FML::Messages;
+
+# for small utilities: fml_version(), myname(), et. al.
+push(@ISA, qw(FML::Process::Utils));
 
 # Descriptions: constructor
 #    Arguments: $self $args
@@ -113,6 +118,7 @@ sub new
 
     # for more convenience, save the parent configuration
     $curproc->{ main_cf } = $args->{ main_cf };
+    $curproc->{ __parent_args } = $args;
 
     # bind FML::Config object to $curproc
     use FML::Config;
