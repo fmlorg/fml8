@@ -43,11 +43,12 @@ sub assign
     my $replied_message = FML::Header::Subject->is_reply( $subject );
 
     # ticket-id
-    my $ticket_id       = $self->_extract_ticket_id($header, $config);
+    my $ticket_id = $self->_extract_ticket_id($header, $config);
     
     # if the header carries "Subject: Re: ..." with ticket-id, 
     # we do not rewrite the subject but save the extracted $ticket_id.
     if ($replied_message && $ticket_id) {
+	Log("extracted ticket_id=$ticket_id");
 	$self->{ _ticket_id } = $ticket_id;
     }
     else {
@@ -73,7 +74,7 @@ sub update_status
     my $content = $rbody->get_content_reference();
 
     if ($$content =~ /close/) {
-	$self->{ _status } = "closed";
+	$self->{ _status } = "close";
     }
     else {
 	Log("(debug) ticket status not changes");
@@ -99,12 +100,15 @@ sub update_db
 sub _gen_ticket_id
 {
     my ($self, $header, $config, $id) = @_;
-    my $tag       = $config->{ ticket_subject_tag };
     my $ml_name   = $config->{ ml_name };
-    my $ticket_id = sprintf($tag, $ml_name, $id);
 
-    # XXX _ticket_subject_tag == _ticket_id is a good design or not?
+    # ticket_id in subject
+    my $tag       = $config->{ ticket_subject_tag };
+    my $ticket_id = sprintf($tag, $ml_name, $id);
     $self->{ _ticket_subject_tag } = $ticket_id;
+
+    $tag       = $config->{ ticket_id_syntax };
+    $ticket_id = sprintf($tag, $ml_name, $id);
     $self->{ _ticket_id }          = $ticket_id;
 
     return $ticket_id;
@@ -121,7 +125,10 @@ sub _extract_ticket_id
     my $regexp = FML::Header::Subject::_regexp_compile($tag);
 
     if ($subject =~ /($regexp)\s*$/) {
-	return $1;
+	my $id = $1;
+	$id =~ s/^(\[|\(|\{)//;
+	$id =~ s/(\]|\)|\})$//;
+	return $id;
     }
 }
 
