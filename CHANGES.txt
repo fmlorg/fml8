@@ -1,6 +1,61 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/04/29
+
+   libexec/error がエラーメッセージを再転送可能にした。
+	転送先は $maintainer_recipient_maps に従う。デフォルトは未定義
+
+   variables
+	define $maintainer_recipient_maps
+	
+   FML::Process::Error 
+	define sender as $maintainer as a dummy sender to avoid
+	unexpected error.
+
+	if $maintainer_recipient_maps defined, forward error message
+	to it.
+	
+   FML::Process::Kernel 
+	permit use of reply_message() for libexec::error
+	
+   FML::Command::Admin::mailq 
+	modify format to be more similar to usual mailq output.
+
+2003/04/21
+
+   FML::Header 
+	obsolete mime_boundary() (same Mail::Message
+	_header_mime_boundary())
+
+2003/04/20
+
+   FML::Article 
+	not *path() method but spool_in() creates subdir if needed.
+
+2003/04/19
+
+   etc/default_config.cf.ja.in 
+   etc/src/config.cf.ja/acl.cf 
+   FML::Error 
+	we should handle addresses used by fml such as elena@fml.org,
+	elena-ctl@fml.org et.al. exceptionally in handling errors.
+
+	ＭＬが使うアドレス( elena とか elena-ctl )は無視しないとね
+
+   Mail::Bounce
+	enhance smtp32 rules
+
+   FML::Command::Admin::newml 
+   FML::Config::Convert 
+   etc/aliases
+   etc/postfix_virtual 
+	fix virtual domain handling (fml-devel:417)
+
+	バーチャルドメインのテンプレートが間違ってたので修正。
+	今まで作っていた postfix の virtual テンプレートと
+	うまくいくようにした。
+
 2003/04/18
 
    etc/command_line_options	
@@ -4661,4 +4716,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.140 2003/04/15 15:32:27 fukachan Exp $
+$FML: CHANGES.txt,v 1.141 2003/04/18 15:58:09 fukachan Exp $
