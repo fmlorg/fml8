@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.62 2001/11/25 05:15:37 fukachan Exp $
+# $FML: Kernel.pm,v 1.63 2001/11/26 08:58:35 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -109,6 +109,12 @@ sub new
 	if (defined $args->{ main_cf }->{ $dir_var }) {
 	    $cfargs->{ 'fml_'.$dir_var } = $args->{ main_cf }->{ $dir_var };
 	}
+    }
+
+    # speculate $fml_owner_home_dir by the current process uid
+    {
+	my $dir = (getpwuid($<))[7];
+	$cfargs->{ 'fml_owner_home_dir' } = $dir if defined $dir;
     }
 
     # import $fml_version
