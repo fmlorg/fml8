@@ -4,14 +4,14 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.102 2002/05/30 16:06:57 fukachan Exp $
+# $FML: Kernel.pm,v 1.103 2002/06/01 03:01:54 fukachan Exp $
 #
 
 package FML::Process::Kernel;
 
 use strict;
 use Carp;
-use vars qw(@ISA @Tmpfiles);
+use vars qw(@ISA @Tmpfiles $TmpFileCounter);
 use File::Spec;
 
 use FML::Process::Flow;
@@ -766,6 +766,10 @@ This $args is passed through to reply_message().
 =cut
 
 
+# Descriptions: set reply message with translation to natual language
+#    Arguments: OBJ($curproc) STR($class) STR($default_msg) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub reply_message_nl
 {
     my ($curproc, $class, $default_msg, $args) = @_;
@@ -787,6 +791,10 @@ sub reply_message_nl
 }
 
 
+# Descriptions: get template message in natual language
+#    Arguments: OBJ($curproc) STR($class) STR($default_msg) HASH_REF($args)
+# Side Effects: none
+# Return Value: STR
 sub message_nl
 {
     my ($curproc, $class, $default_msg, $args) = @_;
@@ -1076,6 +1084,11 @@ sub queue_in
 }
 
 
+# Descriptions: append message in $msg_in into $msg_out 
+#    Arguments: OBJ($curproc) OBJ($msg_in) OBJ($msg_out)
+# Side Effects: create a new $tmpfile
+#               update garbage collection queue (clean_up_queue)
+# Return Value: none
 sub _append_rfc822_message
 {
     my ($curproc, $msg_in, $msg_out) = @_;
@@ -1111,6 +1124,10 @@ sub _append_rfc822_message
 }
 
 
+# Descriptions: insert $file into garbage collection queue (clean_up_queue)
+#    Arguments: OBJ($curproc) STR($file)
+# Side Effects: update $curproc->{ __clean_up_tmpfiles };
+# Return Value: none
 sub add_into_clean_up_queue
 {
     my ($curproc, $file) = @_;
@@ -1125,6 +1142,10 @@ sub add_into_clean_up_queue
 }
 
 
+# Descriptions: remove garbage collection queue (clean_up_queue)
+#    Arguments: OBJ($curproc)
+# Side Effects: remove files in $curproc->{ __clean_up_tmpfiles }
+# Return Value: none
 sub clean_up_tmpfiles
 {
     my ($curproc) = @_;
@@ -1139,14 +1160,20 @@ sub clean_up_tmpfiles
 }
 
 
+# Descriptions: return the temporary file path you can use
+#    Arguments: OBJ($curproc)
+# Side Effects: update the counter to ensure file name uniqueness
+# Return Value: STR
 sub temp_file_path
 {
     my ($curproc) = @_;
     my $config  = $curproc->{ config };
     my $tmp_dir = $config->{ tmp_dir };
 
+    $TmpFileCounter++; # ensure uniqueness
+
     use File::Spec;
-    return File::Spec->catfile( $tmp_dir, "tmp.$$.". time );
+    return File::Spec->catfile( $tmp_dir, "tmp.$$.". time . $TmpFileCounter);
 }
 
 
@@ -1298,6 +1325,10 @@ sub open_outgoing_message_channel
 =cut
 
 
+# Descriptions: parse exception error message and return (key, reason)
+#    Arguments: OBJ($curproc) STR($exception)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
 sub parse_exception
 {
     my ($curproc, $exception) = @_;
@@ -1317,6 +1348,11 @@ sub parse_exception
 =cut
 
 
+# Descriptions: set umask as 000 for public use
+#    Arguments: OBJ($curproc)
+# Side Effects: update umask
+#               save the current umask in PCB
+# Return Value: NUM
 sub set_umask_as_public
 {
     my ($curproc) = @_;
@@ -1329,6 +1365,10 @@ sub set_umask_as_public
 }
 
 
+# Descriptions: back to the saved umask in PCB
+#    Arguments: OBJ($curproc)
+# Side Effects: umask
+# Return Value: NUM
 sub reset_umask
 {
     my ($curproc) = @_;
