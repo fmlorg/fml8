@@ -13,7 +13,7 @@ package FML::Process::Switch;
 use strict;
 use Carp;
 use vars qw($debug);
-
+use Standalone;
 
 sub main::Bootstrap2
 {
@@ -173,10 +173,7 @@ sub _ml_name_is_required
 {
     my ($myname) = @_;
 
-    if ($myname eq 'fmlconf') {
-	return 0;
-    }
-    elsif ($myname eq 'fmldoc') {
+    if ($myname eq 'fmldoc') {
 	return 0;
     }
     else {

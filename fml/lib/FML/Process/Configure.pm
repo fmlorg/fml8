@@ -43,7 +43,6 @@ sub run
     my $config  = $curproc->{ config };
     my $myname  = $args->{ myname };
     my $argv    = $args->{ ARGV };
-    my $command = $argv->[ 0 ] || croak("command not specified\n");
 
     # XXX debug
     # use Data::Dumper; print Dumper( $args ); sleep 3;
@@ -55,6 +54,7 @@ sub run
 	exec 'perldoc', '-v', @$argv;
     }
     else {
+	my $command = $argv->[ 0 ] || croak("command not specified\n");
 	$curproc->lock();
 	{
 	    ;
@@ -69,6 +69,7 @@ sub _show_conf
     my ($curproc, $args) = @_;    
     my $config = $curproc->{ config };
     my $mode   = $args->{ options }->{ n } ? 'difference_only' : 'all';
+    my $argv   = $args->{ ARGV };
 
     $config->dump_variables({ mode => $mode });
 }
