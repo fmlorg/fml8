@@ -26,7 +26,6 @@ sub julian_day
 {
     my($year, $month, $day) = @_;
     my($tmp);
-    my($secs);
 
     use Carp;
 #    confess() unless defined $day;
@@ -198,3 +197,10 @@ Kurt Jaeger aka PI <zrzr0111@helpdesk.rus.uni-stuttgart.de>
 Gary Puckering <garyp%cognos.uucp@uunet.uu.net>
 	based on Collected Algorithms of the ACM ?;
 and the unknown-to-me author of Time::Local.
+
+=head1 LICENSE
+
+Copyright (C) 1996-1999 David Muir Sharnoff.  License hereby
+granted for anyone to use, modify or redistribute this module at
+their own risk.  Please feed useful changes back to muir@idiom.com.
+

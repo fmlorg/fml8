@@ -12,7 +12,7 @@ use strict;
 
 use vars qw($VERSION %mltable);
 
-$VERSION = 96.032702;
+$VERSION = 99.1117;
 
 CONFIG:	{
 	%mltable = qw(
@@ -70,6 +70,9 @@ a month.  That's all it does.  Really!
 
 David Muir Sharnoff <muir@idiom.com>
 
-Copyright (C) 1996-1999 David Muir Sharnoff.  All Rights Reserved.
-Use and redistribution allowed at user's own risk.
+=head1 LICENSE
+
+Copyright (C) 1996-1999 David Muir Sharnoff.  License hereby
+granted for anyone to use, modify or redistribute this module at
+their own risk.  Please feed useful changes back to muir@idiom.com.
 

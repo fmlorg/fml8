@@ -192,6 +192,9 @@ Written by David Muir Sharnoff <muir@idiom.com>.
 The starting point for this package was a posting by 
 Paul Foley <paul@ascent.com> 
 
-Copyright (C) 1996-1999 David Muir Sharnoff.  All Rights Reserved.
-Use and redistribution allowed at user's own risk.
+=head1 LICENSE
+
+Copyright (C) 1996-1999 David Muir Sharnoff.  License hereby
+granted for anyone to use, modify or redistribute this module at
+their own risk.  Please feed useful changes back to muir@idiom.com.
 

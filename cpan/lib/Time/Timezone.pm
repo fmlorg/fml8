@@ -15,7 +15,7 @@ use strict;
 
 use vars qw($VERSION);
 
-$VERSION = 99.062401;
+$VERSION = 2003.0211;
 
 sub tz2zone
 {
@@ -64,14 +64,16 @@ sub tz_local_offset
 	$time = time() unless $time;
 	my (@l) = localtime($time);
 	my $isdst = $l[8] || 0;
+	my $tzenv = defined($ENV{TZ}) ? $ENV{TZ} : "__notz";
 
-	if (@Timezone::tz_local && defined($Timezone::tz_local[$isdst])) {
-		return $Timezone::tz_local[$isdst];
+	if ($Timezone::tz_local{$tzenv} &&
+	    defined($Timezone::tz_local{$tzenv}[$isdst])) {
+		return $Timezone::tz_local{$tzenv}[$isdst];
 	}
 
-	$Timezone::tz_local[$isdst] = &calc_off($time);
+	$Timezone::tz_local{$tzenv}[$isdst] = &calc_off($time);
 
-	return $Timezone::tz_local[$isdst];
+	return $Timezone::tz_local{$tzenv}[$isdst];
 }
 
 sub calc_off
@@ -83,7 +85,7 @@ sub calc_off
 
 	my $off;
 
-	$off =     $l[0] - $g[0]
+	$off =	   $l[0] - $g[0]
 		+ ($l[1] - $g[1]) * 60
 		+ ($l[2] - $g[2]) * 3600;
 
@@ -114,65 +116,67 @@ CONFIG: {
 	use vars qw(%dstZone %zoneOff %dstZoneOff %Zone);
 
 	%dstZone = (
-	#   "ndt"  =>   -2*3600-1800,	 # Newfoundland Daylight   
-	    "adt"  =>   -3*3600,  	 # Atlantic Daylight   
-	    "edt"  =>   -4*3600,  	 # Eastern Daylight
-	    "cdt"  =>   -5*3600,  	 # Central Daylight
-	    "mdt"  =>   -6*3600,  	 # Mountain Daylight
-	    "pdt"  =>   -7*3600,  	 # Pacific Daylight
-	    "ydt"  =>   -8*3600,  	 # Yukon Daylight
-	    "hdt"  =>   -9*3600,  	 # Hawaii Daylight
-	    "bst"  =>   +1*3600,  	 # British Summer   
-	    "mest" =>   +2*3600,  	 # Middle European Summer   
-	    "sst"  =>   +2*3600,  	 # Swedish Summer
-	    "fst"  =>   +2*3600,  	 # French Summer
-	    "wadt" =>   +8*3600,  	 # West Australian Daylight
+	#   "ndt"  =>	-2*3600-1800,	 # Newfoundland Daylight   
+	    "adt"  =>	-3*3600,	 # Atlantic Daylight   
+	    "edt"  =>	-4*3600,	 # Eastern Daylight
+	    "cdt"  =>	-5*3600,	 # Central Daylight
+	    "mdt"  =>	-6*3600,	 # Mountain Daylight
+	    "pdt"  =>	-7*3600,	 # Pacific Daylight
+	    "ydt"  =>	-8*3600,	 # Yukon Daylight
+	    "hdt"  =>	-9*3600,	 # Hawaii Daylight
+	    "bst"  =>	+1*3600,	 # British Summer   
+	    "mest" =>	+2*3600,	 # Middle European Summer   
+	    "met dst" => +2*3600,	 # Middle European Summer   
+	    "sst"  =>	+2*3600,	 # Swedish Summer
+	    "fst"  =>	+2*3600,	 # French Summer
+	    "wadt" =>	+8*3600,	 # West Australian Daylight
 	#   "cadt" =>  +10*3600+1800,	 # Central Australian Daylight
-	    "eadt" =>  +11*3600,  	 # Eastern Australian Daylight
-	    "nzdt" =>  +13*3600,  	 # New Zealand Daylight   
+	    "eadt" =>  +11*3600,	 # Eastern Australian Daylight
+	    "nzdt" =>  +13*3600,	 # New Zealand Daylight	  
 	);
 
 	%Zone = (
-	    "gmt"	=>   0,  	 # Greenwich Mean
-	    "ut"        =>   0,  	 # Universal (Coordinated)
-	    "utc"       =>   0,
-	    "wet"       =>   0,  	 # Western European
-	    "wat"       =>  -1*3600,	 # West Africa
-	    "at"        =>  -2*3600,	 # Azores
+	    "gmt"	=>   0,		 # Greenwich Mean
+	    "ut"	=>   0,		 # Universal (Coordinated)
+	    "utc"	=>   0,
+	    "wet"	=>   0,		 # Western European
+	    "wat"	=>  -1*3600,	 # West Africa
+	    "at"	=>  -2*3600,	 # Azores
 	# For completeness.  BST is also British Summer, and GST is also Guam Standard.
-	#   "bst"       =>  -3*3600,	 # Brazil Standard
-	#   "gst"       =>  -3*3600,	 # Greenland Standard
-	#   "nft"       =>  -3*3600-1800,# Newfoundland
-	#   "nst"       =>  -3*3600-1800,# Newfoundland Standard
-	    "ast"       =>  -4*3600,	 # Atlantic Standard
-	    "est"       =>  -5*3600,	 # Eastern Standard
-	    "cst"       =>  -6*3600,	 # Central Standard
-	    "mst"       =>  -7*3600,	 # Mountain Standard
-	    "pst"       =>  -8*3600,	 # Pacific Standard
+	#   "bst"	=>  -3*3600,	 # Brazil Standard
+	#   "gst"	=>  -3*3600,	 # Greenland Standard
+	#   "nft"	=>  -3*3600-1800,# Newfoundland
+	#   "nst"	=>  -3*3600-1800,# Newfoundland Standard
+	    "ast"	=>  -4*3600,	 # Atlantic Standard
+	    "est"	=>  -5*3600,	 # Eastern Standard
+	    "cst"	=>  -6*3600,	 # Central Standard
+	    "cest"	=>  +2*3600,	 # Central European Summer
+	    "mst"	=>  -7*3600,	 # Mountain Standard
+	    "pst"	=>  -8*3600,	 # Pacific Standard
 	    "yst"	=>  -9*3600,	 # Yukon Standard
 	    "hst"	=> -10*3600,	 # Hawaii Standard
 	    "cat"	=> -10*3600,	 # Central Alaska
 	    "ahst"	=> -10*3600,	 # Alaska-Hawaii Standard
 	    "nt"	=> -11*3600,	 # Nome
 	    "idlw"	=> -12*3600,	 # International Date Line West
-	    "cet"	=>  +1*3600, 	 # Central European
-	    "met"	=>  +1*3600, 	 # Middle European
-	    "mewt"	=>  +1*3600, 	 # Middle European Winter
-	    "swt"	=>  +1*3600, 	 # Swedish Winter
-	    "fwt"	=>  +1*3600, 	 # French Winter
-	    "eet"	=>  +2*3600, 	 # Eastern Europe, USSR Zone 1
-	    "bt"	=>  +3*3600, 	 # Baghdad, USSR Zone 2
+	    "cet"	=>  +1*3600,	 # Central European
+	    "met"	=>  +1*3600,	 # Middle European
+	    "mewt"	=>  +1*3600,	 # Middle European Winter
+	    "swt"	=>  +1*3600,	 # Swedish Winter
+	    "fwt"	=>  +1*3600,	 # French Winter
+	    "eet"	=>  +2*3600,	 # Eastern Europe, USSR Zone 1
+	    "bt"	=>  +3*3600,	 # Baghdad, USSR Zone 2
 	#   "it"	=>  +3*3600+1800,# Iran
-	    "zp4"	=>  +4*3600, 	 # USSR Zone 3
-	    "zp5"	=>  +5*3600, 	 # USSR Zone 4
-	#   "ist"	=>  +5*3600+1800,# Indian Standard
-	    "zp6"	=>  +6*3600, 	 # USSR Zone 5
+	    "zp4"	=>  +4*3600,	 # USSR Zone 3
+	    "zp5"	=>  +5*3600,	 # USSR Zone 4
+	    "ist"	=>  +5*3600+1800,# Indian Standard
+	    "zp6"	=>  +6*3600,	 # USSR Zone 5
 	# For completeness.  NST is also Newfoundland Stanard, and SST is also Swedish Summer.
 	#   "nst"	=>  +6*3600+1800,# North Sumatra
-	#   "sst"	=>  +7*3600, 	 # South Sumatra, USSR Zone 6
-	    "wast"	=>  +7*3600, 	 # West Australian Standard
+	#   "sst"	=>  +7*3600,	 # South Sumatra, USSR Zone 6
+	    "wast"	=>  +7*3600,	 # West Australian Standard
 	#   "jt"	=>  +7*3600+1800,# Java (3pm in Cronusland!)
-	    "cct"	=>  +8*3600, 	 # China Coast, USSR Zone 7
+	    "cct"	=>  +8*3600,	 # China Coast, USSR Zone 7
 	    "jst"	=>  +9*3600,	 # Japan Standard, USSR Zone 8
 	#   "cast"	=>  +9*3600+1800,# Central Australian Standard
 	    "east"	=> +10*3600,	 # Eastern Australian Standard
@@ -187,7 +191,7 @@ CONFIG: {
 
 	# Preferences
 
-	$zoneOff{0}       = 'gmt';
+	$zoneOff{0}	  = 'gmt';
 	$dstZoneOff{3600} = 'bst';
 
 }
@@ -205,8 +209,9 @@ sub tz_offset
 	$zone = lc $zone;
 
 	if ($zone =~ /^([\-\+]\d{3,4})$/) {
-		my $v = 0 + $1;
-		return int($v / 100) * 60 + ($v % 100);
+		my $sign = $1 < 0 ? -1 : 1 ;
+		my $v = abs(0 + $1);
+		return $sign * 60 * (int($v / 100) * 60 + ($v % 100));
 	} elsif (exists $dstZone{$zone} && ($dst || !exists $Zone{$zone})) {
 		return $dstZone{$zone};
 	} elsif(exists $Zone{$zone}) {
@@ -270,3 +275,9 @@ C<tz_name()> determines the name of the timezone based on its offset
 Graham Barr <bodg@tiuk.ti.com>
 David Muir Sharnoff <muir@idiom.com>
 Paul Foley <paul@ascent.com>
+
+=head1 LICENSE
+
+David Muir Sharnoff disclaims any copyright and puts his contribution
+to this module in the public domain.
+
