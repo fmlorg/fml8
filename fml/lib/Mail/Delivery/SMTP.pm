@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SMTP.pm,v 1.2 2001/04/07 06:40:04 fukachan Exp $
+# $FML: SMTP.pm,v 1.3 2001/04/08 06:01:38 fukachan Exp $
 #
 
 
@@ -254,7 +254,7 @@ sub _connect
 	return $socket if defined $socket;
     }
     else {
-	Log("(debug) IPv6 is not ready");
+	Log("IPv6 is not ready");
     }
 
     # 2. try to connect(2) $args->{ _mta } by IPv4.
@@ -427,7 +427,7 @@ sub deliver
 		$n_mta++;
 
 		# o.k. try to deliver mail by using $mta.
-		Log("(debug) use $mta for map=$map");
+		Log("use $mta for map=$map");
 		$args->{ _mta } = $mta;
 		$self->_deliver($args);
 
