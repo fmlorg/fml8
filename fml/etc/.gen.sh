@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML$
+# $FML: .gen.sh,v 1.3 2001/06/17 08:57:08 fukachan Exp $
 #
 
 jatmp=default_config.cf.ja.$$
@@ -16,6 +16,6 @@ do
 	echo "" >> $jatmp
 done
 
-mv $jatmp default_config.cf.ja
+mv $jatmp default_config.cf.ja.in
 
 exit 0

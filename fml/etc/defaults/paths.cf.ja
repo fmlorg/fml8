@@ -1,61 +1,52 @@
-=head1	プログラムのパス名
+#
+# $FML: paths.cf.in,v 1.1 2001/11/18 02:35:05 fukachan Exp $
+#
 
-# 
-# 注意: デフォルトのパス名は NetBSD 1.5 リリース準拠です。
-# 
+path_perl                 = @PERL@
 
+path_cksum                = @CKSUM@
 
-=head2	メールサーバ
+path_md5                  = @MD5@
 
-path_sendmail	=	/usr/sbin/sendmail
+path_tar                  = @TAR@
 
+path_gzip                 = @GZIP@
 
-=head2	ファイル操作
+path_zcat                 = @ZCAT@
 
-path_tar	=	/usr/bin/tar
+path_gunzip               = @GUNZIP@
 
-path_uuencode	=	/usr/bin/uuencode
+path_lha                  = @LHA@
 
-path_compress	=	/usr/bin/compress
+path_ish                  = @ISH@
 
-path_zcat	=	/usr/bin/zcat
+path_bzip2                = @BZIP2@
 
-path_lha	=	
+path_bunzip2              = @BUNZIP2@
 
-path_ish	=	
+path_uuencode             = @UUENCODE@
 
-path_zip	=	
+path_compress             = @COMPRESS@
 
-path_bzip2	=	/usr/bin/bzip2
+path_sendmail             = @SENDMAIL@
 
+path_nkf                  = @NKF@
 
-=head2 バージョン管理
+path_kakasi               = @KAKASI@
 
-path_rcs	=	/usr/bin/rcs
+path_namazu               = @NAMAZU@
 
-path_ci		=	/usr/bin/ci
+path_pgp                  = @PGP@
 
-path_co		=	/usr/bin/co
+path_pgp5                 = @PGP5@
 
-path_cvs	=	
+path_pgpe                 = @PGPe@
 
+path_pgpk                 = @PGPK@
 
-=head2	認証
+path_pgps                 = @PGPS@
 
-path_md5	=	/usr/bin/md5
+path_pgpv                 = @PGPV@
 
-
-=head2	非対称暗号
-
-path_pgp	=	
-
-path_pgp5	=	
-
-path_pgpe	=	
-
-path_pgpk	=	
-
-path_pgps	=	
-
-path_pgpv	=	
+path_gpg                  = @GPG@
 

@@ -12,5 +12,6 @@ command.cf
 threadtrack.cf
 dbms.cf
 cgi.cf
+paths.cf
 system_dependence.cf
 __end__.cf
