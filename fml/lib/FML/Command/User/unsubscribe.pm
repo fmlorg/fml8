@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.23 2003/11/22 05:41:51 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.24 2003/12/30 03:07:54 fukachan Exp $
 #
 
 package FML::Command::User::unsubscribe;
@@ -69,7 +69,8 @@ sub lock_channel { return 'command_serialize';}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config        = $curproc->config();
+    my $config = $curproc->config();
+    my $cred   = $curproc->{ credential };
 
     # XXX We should always add/rewrite only $primary_*_map maps via 
     # XXX command mail, CUI and GUI.
@@ -83,20 +84,19 @@ sub process
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_command_prefix };
     my $command       = $command_args->{ command };
-    my $address       = $curproc->{ credential }->sender();
+    my $address       = $cred->sender();
 
     # cheap sanity checks
     croak("\$member_map is not specified")    unless $member_map;
     croak("\$recipient_map is not specified") unless $recipient_map;
 
-    use FML::Credential;
-    my $cred = new FML::Credential $curproc;
-
     # exatct match as could as possible.
+    my $compare_level = $cred->get_compare_level();
     $cred->set_compare_level( 100 );
 
     # if not member, unsubscriber request is wrong.
     unless ($cred->is_member($address)) {
+	$cred->set_compare_level( $compare_level );
 	$curproc->reply_message_nl('error.not_member');
 	$curproc->logerror("unsubscribe request from not member");
 	croak("unsubscribe request from not member");
@@ -117,6 +117,8 @@ sub process
 	$curproc->reply_message_nl('command.confirm');
 	$curproc->reply_message("\n$id\n");
     }
+
+    $cred->set_compare_level( $compare_level );
 }
 
 

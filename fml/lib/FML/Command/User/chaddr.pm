@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.24 2003/11/22 05:41:51 fukachan Exp $
+# $FML: chaddr.pm,v 1.25 2003/12/30 03:07:54 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -25,7 +25,7 @@ See C<FML::Command> for more details.
 =head1 DESCRIPTION
 
 Firstly, apply confirmation before chaddr (change subscribed address)
-processed.  After confirmation succeeds, chaddr process proceeds.
+processed. After confirmation succeeds, chaddr process proceeds.
 
 =head1 METHODS
 
@@ -33,7 +33,7 @@ processed.  After confirmation succeeds, chaddr process proceeds.
 
 If either old or new addresses in chaddr arguments is an ML member,
 try to confirm this request. The confirmation is returned to "From:"
-address in the mail header, "reply-to" is not used.
+address in the mail header, "Reply-To" is ignored.
 
 =cut
 
@@ -65,7 +65,7 @@ sub need_lock { 1;}
 sub lock_channel { return 'command_serialize';}
 
 
-# Descriptions: chaddr adapter: confirm before chaddr operation
+# Descriptions: chaddr adapter: confirm before real chaddr operation.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update database for confirmation.
 #               prepare reply message.
@@ -73,7 +73,8 @@ sub lock_channel { return 'command_serialize';}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config        = $curproc->config();
+    my $config = $curproc->config();
+    my $cred   = $curproc->{ credential };
 
     # XXX We should always add/rewrite only $primary_*_map maps via 
     # XXX command mail, CUI and GUI.
@@ -88,18 +89,17 @@ sub process
     my $keyword       = $config->{ confirm_command_prefix };
     my $comname       = $command_args->{ comname };
     my $command       = $command_args->{ command };
-    my $sender        = $curproc->{ credential }->sender();
+    my $sender        = $cred->sender();
 
     # cheap sanity checks
     croak("\$member_map is not specified")    unless $member_map;
     croak("\$recipient_map is not specified") unless $recipient_map;
 
-    use FML::Credential;
-    my $cred = new FML::Credential $curproc;
-
     # exatct match as could as possible.
+    my $compare_level = $cred->get_compare_level();
     $cred->set_compare_level( 100 );
 
+    # XXX-TODO: syntax checks of addresses
     # addresses we check and send back confirmation messages to
     my $optargs = {};
     my $x = $command_args->{ command };
@@ -108,7 +108,7 @@ sub process
     $optargs->{ recipient } = [ $sender, $old_addr, $new_addr ];
 
     # prompt again (since recipient differs)
-    my $prompt  = $config->{ command_mail_reply_prompt } || '>>>';
+    my $prompt = $config->{ command_mail_reply_prompt } || '>>>';
     $curproc->reply_message("\n$prompt $command", $optargs);
 
     # if either old or new addresses in chaddr arguments is an ML member,
@@ -134,8 +134,11 @@ sub process
     # try confirmation before chaddr
     else {
 	$curproc->reply_message_nl('error.not_member', '', $optargs);
+	$cred->set_compare_level( $compare_level );
 	croak("not member");
     }
+
+    $cred->set_compare_level( $compare_level );
 }
 
 
