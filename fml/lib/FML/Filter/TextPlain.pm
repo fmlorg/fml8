@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: TextPlain.pm,v 1.7 2004/01/01 23:52:14 fukachan Exp $
+# $FML: TextPlain.pm,v 1.8 2004/01/02 14:50:31 fukachan Exp $
 #
 
 package FML::Filter::TextPlain;
@@ -16,7 +16,7 @@ use ErrorStatus qw(error_set error error_clear);
 
 =head1 NAME
 
-FML::Filter::TextPlain - analyze the first plain text part in mail.
+FML::Filter::TextPlain - analyze the first plain text part in message.
 
 =head1 SYNOPSIS
 
@@ -76,7 +76,13 @@ overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 sub rules
 {
     my ($self, $rarray) = @_;
-    $self->{ _rules } = $rarray;
+
+    if (ref($rarray) eq 'ARRAY') {
+	$self->{ _rules } = $rarray;
+    }
+    else {
+	carp("rules: invalid input");
+    }
 }
 
 
@@ -171,6 +177,7 @@ sub reject_not_iso2022jp_japanese_string
     my ($self, $msg, $first_msg) = @_;
     my $buf = $first_msg->nth_paragraph(1);
 
+    # XXX-TODO: is_iso2022jp_or_ascii_string() ?
     use Mail::Message::Encode;
     my $obj = new Mail::Message::Encode;
     unless ($obj->is_iso2022jp_string($buf)) {
@@ -360,6 +367,7 @@ sub reject_japanese_command_syntax
     if ($buf =~ /\033\044\102(\043[\101-\132\141-\172])/) {
 	# trap /JIS"2byte"[A-Za-z]+/
 
+	# XXX-TODO: Mail::Message::String->to_euc_jp() ?
 	# EUC-fy for further investigation
 	use Mail::Message::Encode;
 	my $obj = new Mail::Message::Encode;
@@ -418,7 +426,7 @@ sub need_one_line_check
 sub is_citation
 {
     my ($self, $data) = @_;
-    my $trap_pat = ''; # keyword to trap citation at the head of the line
+    my $trap_pat      = ''; # keyword to trap citation at the head of the line.
 
     if ($data =~ /(\n.)/) { $trap_pat = quotemeta($1);}
 
@@ -443,7 +451,8 @@ sub is_signature
 {
     my ($self, $data) = @_;
 
-    if ($data =~ /\@/ ||
+    # XXX-TODO: //o
+    if ($data =~ /\@/    ||
 	$data =~ /TEL:/i ||
 	$data =~ /FAX:/i ||
 	$data =~ /:\/\// ) {
@@ -491,6 +500,7 @@ sub clean_up_buffer
     $xbuf =~ s/\S+@[-\.0-9A-Za-z]+/account\@domain/g;
 
     # 2. remove invalid syntax seen in help file with the bug? ;D
+    #    which derives from fml help file at the old age.
     $xbuf =~ s/^_CTK_//g;
     $xbuf =~ s/\n_CTK_//g;
 

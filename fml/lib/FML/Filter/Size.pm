@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Size.pm,v 1.6 2004/01/01 23:52:14 fukachan Exp $
+# $FML: Size.pm,v 1.7 2004/01/02 14:50:31 fukachan Exp $
 #
 
 package FML::Filter::Size;
@@ -61,6 +61,8 @@ sub new
 }
 
 
+# XXX-TODO rules() -> set_rules() ?
+
 
 =head2 rules( $rules )
 
@@ -76,7 +78,13 @@ overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 sub rules
 {
     my ($self, $rarray) = @_;
-    $self->{ _rules } = $rarray;
+
+    if (ref($rarray) eq 'ARRAY') {
+	$self->{ _rules } = $rarray;
+    }
+    else {
+	carp("rules: invalid input");
+    }
 }
 
 
@@ -197,13 +205,13 @@ sub _check_mail_size
 
     if ($type eq 'header') {
 	if ($hdr_size > $limit) {
-	    $reason = "header size exceeds the limit: $hdr_size > $limit";
+	    $reason     = "header size exceeds the limit: $hdr_size > $limit";
 	    $errmsg_key = 'error.header_size_limit';
 	}
     }
     elsif ($type eq 'body') {
 	if ($body_size > $limit) {
-	    $reason = "body size exceeds the limit: $body_size > $limit";
+	    $reason     = "body size exceeds the limit: $body_size > $limit";
 	    $errmsg_key = 'error.body_size_limit';
 	}
     }
@@ -239,6 +247,8 @@ sub check_command_limit
 
     use FML::Command::Filter;
     my $_msg   = $curproc->incoming_message_body();
+
+    # XXX-TODO new FML::Command::Filter $curproc ?
     my $obj    = new FML::Command::Filter;
     my $reason = $obj->check_command_limit($curproc, $_msg);
 
@@ -260,6 +270,8 @@ sub check_line_length_limit
 
     use FML::Command::Filter;
     my $_msg   = $curproc->incoming_message_body();
+
+    # XXX-TODO new FML::Command::Filter $curproc ?
     my $obj    = new FML::Command::Filter;
     my $reason = $obj->check_line_length_limit($curproc, $_msg);
 
