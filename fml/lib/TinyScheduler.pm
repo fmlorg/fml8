@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: TinyScheduler.pm,v 1.10 2001/11/25 14:53:41 fukachan Exp $
+# $FML: TinyScheduler.pm,v 1.11 2001/11/27 11:32:34 fukachan Exp $
 #
 
 package TinyScheduler;
@@ -109,7 +109,8 @@ sub tmpfile
 	$tmpdir = $dir;
     }
     else {
-	croak("Hmm, unsafe ? I cannot write $dir, stop\n");
+	croak("$dir not exists\n")      unless -d $dir;
+	croak("$dir is not writable\n") unless -w $dir;
     }
 
     eval q{ 
