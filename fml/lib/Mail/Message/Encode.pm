@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.1 2002/08/11 14:38:31 fukachan Exp $
+# $FML: Encode.pm,v 1.4 2002/08/13 04:53:32 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -190,6 +190,62 @@ sub run_in_code
     }
 
     return wantarray ? ($conv_status, $proc_status): $conv_status;
+}
+
+
+=head1 utilities
+
+=cut
+
+
+# Descriptions: $buf looks like Japanese or not ?
+#    Arguments: OBJ($self) STR($buf)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub is_iso2022jp_string
+{
+    my ($self, $buf) = @_;
+    return (not _look_not_iso2022jp_string($buf));
+}
+
+
+# Descriptions: $buf looks like Japanese or not ?
+#               based on fml-support: 07020, 07029
+#                  Koji Sudo <koji@cherry.or.jp>
+#                  Takahiro Kambe <taca@sky.yamashina.kyoto.jp>
+#               check the given buffer has unusual Japanese (not ISO-2022-JP)
+#    Arguments: STR($buf)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub _look_not_iso2022jp_string
+{
+    my ($buf) = @_;
+
+    # trivial check;
+    return 0 unless defined $buf;
+    return 0 unless $buf;
+
+    # check 8 bit on
+    if ($buf =~ /[\x80-\xFF]/){
+        return 1;
+    }
+
+    # check SI/SO
+    if ($buf =~ /[\016\017]/) {
+        return 1;
+    }
+
+    # HANKAKU KANA
+    if ($buf =~ /\033\(I/) {
+        return 1;
+    }
+
+    # MSB flag or other control sequences
+    if ($buf =~ /[\001-\007\013\015\020-\032\034-\037\177-\377]/) {
+        return 1;
+    }
+
+    0; # O.K.
 }
 
 
