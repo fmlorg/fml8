@@ -55,8 +55,9 @@ sub _show_conf
 {
     my ($curproc, $args) = @_;    
     my $config = $curproc->{ config };
+    my $mode   = $args->{ options }->{ n } ? 'difference_only' : 'all';
 
-    $config->dump_variables();
+    $config->dump_variables({ mode => $mode });
 }
 
 

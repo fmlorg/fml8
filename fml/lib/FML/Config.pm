@@ -31,11 +31,10 @@ sub new
 
 sub dump_variables
 {
-    my ($mode) = @_;
+    my ($self, $args) = @_;
     my ($k, $v);
-    my $len = 0;
-
-    $mode ||= 'all';
+    my $len  = 0;
+    my $mode = $args->{ mode } || 'all';
 
     for $k (keys %_fml_config) { $len = $len > length($k) ? $len : length($k);}
 

@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $Id: loader,v 1.6 2001/02/05 10:18:20 fukachan Exp $ 
+# $Id: loader,v 1.7 2001/02/06 09:44:41 fukachan Exp $ 
 # $FML$
 #
 
@@ -143,13 +143,15 @@ sub prepare_myname_options
     my ($myname) = @_;
 
     if ($myname eq 'fml.pl' || 
-	$myname eq 'loader' ||
-	$myname eq 'fmlconf') { 
+	$myname eq 'loader' ) { 
 	return qw(ctladdr! debug! params=s -c=s);
     }
     elsif ($myname eq 'fmlticket') {
 	return qw(debug! params=s -c=s -A=s -R=s);
-    } 
+    }
+    elsif ($myname eq 'fmlconf') {
+	return qw(ctladdr! debug! params=s -c=s n!);
+    }
     else {
 	croak "$myname is unknown yet\n";
     }
