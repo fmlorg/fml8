@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.3 2002/03/31 09:42:36 fukachan Exp $
+# $FML: ToHTML.pm,v 1.4 2002/03/31 12:11:04 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -12,10 +12,14 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
-my $debug = 0;
-my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
+# BEGIN { @AnyDBM_File::ISA = qw(DB_File GDBM_File NDBM_File); }
 
-my $version = q$FML: ToHTML.pm,v 1.3 2002/03/31 09:42:36 fukachan Exp $;
+my $is_strict_warn = 0;
+my $debug = 0;
+my $URL   = 
+    "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
+
+my $version = q$FML: ToHTML.pm,v 1.4 2002/03/31 12:11:04 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -1224,33 +1228,42 @@ sub _update_relation
 
     use FileHandle;
     my $file        = $args->{ file };
-    my ($old, $new) = ($file, "$file.new.$$");
-    my $rh = new FileHandle $old;
-    my $wh = new FileHandle "> $new";
-    if (defined $rh && defined $wh) {
-	while (<$rh>) {
-	    if (/^$pat_preamble_begin/ .. /^$pat_preamble_end/) {
-		_print_raw_str($wh, $preamble, $code) if /^$pat_preamble_end/;
-		next;
-	    }
-	    if (/^$pat_footer_begin/ .. /^$pat_footer_end/) {
-		_print_raw_str($wh, $footer, $code) if /^$pat_footer_end/;
-		next;
-	    }
+    if (defined $file) {
+	my ($old, $new) = ($file, "$file.new.$$");
+	my $rh = new FileHandle $old;
+	my $wh = new FileHandle "> $new";
 
-	    # just copy (rewrite only $preamble and $footer not message)
-	    _print_raw_str($wh, $_, $code);
+	if (defined $rh && defined $wh) {
+	    while (<$rh>) {
+		if (/^$pat_preamble_begin/ .. /^$pat_preamble_end/) {
+		    _print_raw_str($wh, $preamble, $code) if /^$pat_preamble_end/;
+		    next;
+		}
+		if (/^$pat_footer_begin/ .. /^$pat_footer_end/) {
+		    _print_raw_str($wh, $footer, $code) if /^$pat_footer_end/;
+		    next;
+		}
+
+		# just copy (rewrite only $preamble and $footer not message)
+		_print_raw_str($wh, $_, $code);
+	    }
+	    $rh->close;
+	    $wh->close;
+
+	    unless (rename($new, $old)) {
+		croak("rename($new, $old) fail (id=$id)\n");
+	    }
 	}
-	$rh->close;
-	$wh->close;
-
-	unless (rename($new, $old)) {
-	    croak("rename($new, $old) fail (id=$id)\n");
+	else {
+	    unless (defined $file) { 
+		$new = $old = '(null string)';
+	    }
+	    warn("cannot open   $old (id=$id)\n") unless defined $rh;
+	    warn("cannot create $new (id=$id)\n") unless defined $wh;
 	}
     }
     else {
-	warn("cannot open   $old (id=$id)\n") unless defined $rh;
-	warn("cannot create $new (id=$id)\n") unless defined $wh;
+	warn("undefined file for $id\n") if $is_strict_warn;
     }
 }
 
@@ -1359,11 +1372,13 @@ sub evaluate_safe_preamble
     }
 
     if (defined $link_prev_thread_id) {
-	$preamble .= "<A HREF=\"${prefix}$link_prev_thread_id\">[Prev by Thread]</A>\n";
+	$preamble .= 
+	    "<A HREF=\"${prefix}$link_prev_thread_id\">[Prev by Thread]</A>\n";
     }
     else {
 	if (defined $link_prev_id) {
-	    $preamble .= "<A HREF=\"${prefix}$link_prev_id\">[Prev by Thread]</A>\n";
+	    $preamble .= 
+		"<A HREF=\"${prefix}$link_prev_id\">[Prev by Thread]</A>\n";
 	}
 	else {
 	    $preamble .= "[No Prev Thread]\n";
@@ -1371,11 +1386,13 @@ sub evaluate_safe_preamble
     }
 
     if (defined $link_next_thread_id) {
-	$preamble .= "<A HREF=\"${prefix}$link_next_thread_id\">[Next by Thread]</A>\n";
+	$preamble .= 
+	    "<A HREF=\"${prefix}$link_next_thread_id\">[Next by Thread]</A>\n";
     }
     else {
 	if (defined $link_next_id) {
-	    $preamble .= "<A HREF=\"${prefix}$link_next_id\">[Next by Thread]</A>\n";
+	    $preamble .= 
+		"<A HREF=\"${prefix}$link_next_id\">[Next by Thread]</A>\n";
 	}
 	else {
 	    $preamble .= "[No Next Thread]\n";
@@ -1409,28 +1426,38 @@ sub evaluate_safe_footer
     if (defined($link_prev_id)) {
 	$footer .= "<BR>\n";
 	$footer .= "<A HREF=\"${prefix}$link_prev_id\">Prev by ID: ";
-	$footer .= _sprintf_safe_str( $subject->{ prev_id } );
+	if (defined $subject->{ prev_id } ) {
+	    $footer .= _sprintf_safe_str( $subject->{ prev_id } );
+	}
 	$footer .= "</A>\n";
     }
 
     if (defined($link_next_id)) {
 	$footer .= "<BR>\n";
 	$footer .= "<A HREF=\"${prefix}$link_next_id\">Next by ID: ";
-	$footer .= _sprintf_safe_str( $subject->{ next_id } );
+	if (defined $subject->{ next_id } ) {
+	    $footer .= _sprintf_safe_str( $subject->{ next_id } );
+	}
 	$footer .= "</A>\n";
     }
 
     if (defined $link_prev_thread_id) {
 	$footer .= "<BR>\n";
-	$footer .= "<A HREF=\"${prefix}$link_prev_thread_id\">Prev by Thread: ";
-	$footer .= _sprintf_safe_str($subject->{ prev_thread_id });
+	$footer .= 
+	    "<A HREF=\"${prefix}$link_prev_thread_id\">Prev by Thread: ";
+	if (defined $subject->{ prev_thread_id }) {
+	    $footer .= _sprintf_safe_str($subject->{ prev_thread_id });
+	}
 	$footer .= "</A>\n";
     }
 
     if (defined $link_next_thread_id) {
 	$footer .= "<BR>\n";
-	$footer .= "<A HREF=\"${prefix}$link_next_thread_id\">Next by Thread: ";
-	$footer .= _sprintf_safe_str($subject->{ next_thread_id });
+	$footer .= 
+	    "<A HREF=\"${prefix}$link_next_thread_id\">Next by Thread: ";
+	if (defined $subject->{ next_thread_id }) {
+	    $footer .= _sprintf_safe_str($subject->{ next_thread_id });
+	}
 	$footer .= "</A>\n";
     }
 
@@ -1697,7 +1724,9 @@ sub update_id_monthly_index
     for my $id (@$affected_list) {
 	next IDLIST unless $id =~ /^\d+$/;
 	my $month = $db->{ _month }->{ $id };
-	$month_update{ $month } = 1;
+	if (defined $month) {
+	    $month_update{ $month } = 1;
+	}
     }
 
     # todo list
