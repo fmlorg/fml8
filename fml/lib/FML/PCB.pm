@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: PCB.pm,v 1.8 2001/12/22 09:21:02 fukachan Exp $
+# $FML: PCB.pm,v 1.9 2001/12/22 14:27:28 fukachan Exp $
 #
 
 package FML::PCB;
@@ -89,7 +89,7 @@ You must specify C<category>, C<key> and the C<value>.
 =cut
 
 
-# Descriptions: print out hash {key => value} 
+# Descriptions: print out hash {key => value}
 #    Arguments: NONE
 # Side Effects: none
 # Return Value: none

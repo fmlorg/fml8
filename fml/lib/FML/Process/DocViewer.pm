@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.10 2001/12/22 09:21:09 fukachan Exp $
+# $FML: DocViewer.pm,v 1.11 2001/12/22 13:24:32 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -96,7 +96,7 @@ C<fmlconf($args)>.
 =cut
 
 
-# Descriptions: just a switch, call _fmldoc() 
+# Descriptions: just a switch, call _fmldoc()
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
