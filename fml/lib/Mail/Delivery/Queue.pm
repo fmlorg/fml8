@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.37 2004/05/25 03:43:02 fukachan Exp $
+# $FML: Queue.pm,v 1.38 2004/06/27 02:39:31 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -380,23 +380,25 @@ sub in
 	}
 	$fh->close;
 
-	my $write_count = $self->{ _write_count } = $msg->write_count();
+	if ($msg->can('write_count')) {
+	    my $write_count = $self->{ _write_count } = $msg->write_count();
 
-	use File::stat;
-	my $try_count = 3;
-	my $ok = 0;
-      TRY:
-	while ($try_count-- > 0) {
-	    my $st = stat($qf);
-	    if ($st->size == $write_count) {
-		$ok = 1;
-		last TRY;
+	    use File::stat;
+	    my $try_count = 3;
+	    my $ok = 0;
+	  TRY:
+	    while ($try_count-- > 0) {
+		my $st = stat($qf);
+		if ($st->size == $write_count) {
+		    $ok = 1;
+		    last TRY;
+		}
+		sleep 1;
 	    }
-	    sleep 1;
-	}
 
-	unless ($ok) {
-	    $self->error_set("write error: size mismatch");
+	    unless ($ok) {
+		$self->error_set("write error: size mismatch");
+	    }
 	}
     }
 
@@ -412,7 +414,8 @@ sub in
 sub write_count
 {
     my ($self) = @_;
-    return $self->{ _write_count };
+
+    return( $self->{ _write_count } || 0 );
 }
 
 
