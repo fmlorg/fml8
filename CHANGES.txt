@@ -1,6 +1,100 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/08/18
+
+   FML::Command::SendFile 
+	more debug info.
+	
+	send_user_xxx_message()
+	set $command_args->{ _filename_to_send } before calling send_file().
+	
+   FML::Command::User::confirm 
+	send back welcome file in subscribe case
+
+2002/08/16
+
+   FML::Error::Analyze 
+	error_continuity::sum up time sequence with not point but mountain
+	with some width.
+	rename::simple_count_by_day -> error_continuity
+
+   Mail::Message::Encode 
+	add is_iso2022jp_string()
+	
+   FML::Command::Admin::log 
+   FML::Filter::BodyCheck 
+   FML::Process::Kernel 
+	switch FML::Language to Mail::Message::Encode
+
+   FML::Language::ISO2022JP 
+   FML::Language::Japanese::{String,Utils}
+	Removed
+
+2002/08/15
+
+   new variables	
+	$error_analyzer_function
+	$error_analyzer_simple_count_limit
+	
+   FML::Error 
+	count up address with status=5*
+	move analyzer function() to FML::Error::Analyze
+	rename: *_timeout -> *_event_timeout
+	
+   FML::Process::Kernel 
+	check if $maintainer differs $ml_address
+	rename: *_timeout -> *_event_timeout
+
+2002/08/14
+
+   FML::Process::Kernel 
+	use $config->get_as_array_ref( 'header_loop_check_rules' ) to get list.
+	rename: refuse_further_processing() -> stop_this_process()
+	define do_nothing($reason), same as stop_this_process()
+
+   FML::Process::Alias Command ConfViewer Configure Distribute
+		DocViewer Error HTMLify Kernel Spool ThreadTrack 
+   FML::Process::CGI::Kernel 
+	apply fix_perl_include_path(); after load_config_files() runs to add
+	ml local library path to @INC.
+	This is used for ml specific extention e.g. command extension.
+	
+   FML::Process::Kernel 
+	enable ml local message template handling
+	
+   variables
+	define $ml_local_* for ml specific customize
+	+ ml_local_dir           =       $ml_home_dir::local
+	+ ml_local_lib_dir       =       $ml_local_dir::lib
+	+ ml_local_share_dir     =       $ml_local_dir::share
+	+ ml_local_message_template_dir  = $ml_local_share_dir::message
+	
+	change definition for $message_template_dir:
+	$fml_share_dir::message::$template_file_charset -> 
+		$fml_share_dir::message
+
+2002/08/13
+
+   fml.org を 4.0 から fml-devel ベースへ移行開始
+
+   etc/include*
+	__ml_home_prefix__::__ml_name__ -> __ml_name__@__ml_domain__
+	
+   etc/config.cf*
+	comment out $ml_name, $ml_domain
+	
+   FML::MTAControl::Postfix 
+	bug fix $fh-close() under defined($fh) is confirmed
+	use "postconf -d" to expand variables
+
+   Mail::Message::Encode 
+   remove FML::Encode and Mail::Message::Decode 
+	merge FML::Encode Mail::Message::Decode into Mail::Message::Encode
+
+   FML::Header::Subject 
+	switched to use of Mail::Message::Encode
+
 2002/08/11
 
    FML::Encode 
@@ -3130,4 +3224,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.95 2002/08/10 01:25:20 fukachan Exp $
+$FML: CHANGES.txt,v 1.96 2002/08/13 03:19:17 fukachan Exp $
