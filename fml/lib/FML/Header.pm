@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: Header.pm,v 1.28 2001/04/06 16:25:41 fukachan Exp $
+# $FML: Header.pm,v 1.29 2001/04/14 14:46:45 fukachan Exp $
 #
 
 package FML::Header;
@@ -30,8 +30,8 @@ FML::Header - header manipulators
 
 =head1 DESCRIPTION
 
-C<FML::Header> is an adapter for C<Mail::Header> class.
-C<Mail::Header> is the base class. 
+C<FML::Header> is an adapter for C<Mail::Header> class (See C<CPAN>
+for more details). C<Mail::Header> is the base class.
 
 =head1 METHODS
 
@@ -43,10 +43,13 @@ C<combine()>, C<get()>, C<delete()>, C<count()>, C<print()>,
 C<as_string()>, C<fold_length()>, C<tags()>, C<dup()>, C<cleanup()>,
 C<unfold()>.
 
+CAUTION: Pay attention! 
+C<FML::Header> overload C<get()> to remove the trailing "\n".
+
 =cut
 
-require Exporter;
-@ISA = qw(Mail::Header Exporter);
+
+@ISA = qw(Mail::Header);
 
 
 # Descriptions: forward new() request to the base class
@@ -72,13 +75,14 @@ sub AUTOLOAD
 }
 
 
-=head2 C<get()>
+=head2 C<get($key)>
 
-return the value of C<Mail::Header::get()> but without the trailing "\n".
+return the value of C<Mail::Header::get($key)> but without the trailing
+"\n".
 
-=head2 C<set()>
+=head2 C<set($key, $value)>
 
-alias of C<Mail::Header::set()>.
+alias of C<Mail::Header::set($key, $value)>.
 
 =cut
 
@@ -320,7 +324,22 @@ sub remove_subject_tag_like_string
 }
 
 
-=head2 C<verify_list_post_uniqueness()>
+=head1 FILTERING FUNCTIONS
+
+=head2 C<verify_message_id_uniqueness($config, $args)>
+
+check whether message-id is unique or not. If the message-id is found
+in our past message-id cache, the injected message loops.
+
+=head2 C<verify_x_ml_info_uniqueness($config, $args)>
+
+The injected message loops if x-ml-info: has our own
+C<address_for_post> address.
+
+=head2 C<verify_list_post_uniqueness($config, $args)>
+
+The injected message loops if list-post: has our own
+C<address_for_post> address.
 
 =cut
 
