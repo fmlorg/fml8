@@ -9,6 +9,12 @@ help		ヘルプファイルを取り寄せる
 guide		guide ファイルを取り寄せる
 summary		summary ファイルを取り寄せる
 
+( (compatibility)
+objective	objective ファイルを取り寄せる if found
+deny		deny ファイルを取り寄せる if found
+)
+
+
 subscribe	ＭＬへの入会
 (add)
 					confirm を返す
@@ -49,4 +55,4 @@ off
 on
 
 
-$FML: MANIFEST.euc-jp,v 1.1 2001/10/13 02:55:51 fukachan Exp $
+$FML: MANIFEST.euc-jp,v 1.2 2001/10/13 12:23:35 fukachan Exp $
