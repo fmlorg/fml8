@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Digest.pm,v 1.99 2002/10/03 22:10:15 fukachan Exp $
+# $FML: Digest.pm,v 1.1 2002/11/16 14:25:08 fukachan Exp $
 #
 
 package FML::Process::Digest;
@@ -112,12 +112,16 @@ check the mail sender and the mail loop possibility.
 sub verify_request
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config     = $curproc->{ config };
+    my $maintainer = $config->{ maintainer };
 
     my $eval = $config->get_hook( 'digest_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
-    # do nothing :-)
+    # set sender against further errors
+    my $cred = new FML::Credential $curproc;
+    $curproc->{'credential'} = $cred;
+    $curproc->{'credential'}->set( 'sender', $maintainer );
 
     $eval = $config->get_hook( 'digest_verify_request_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -155,7 +159,7 @@ sub run
 
     $curproc->lock();
     unless ($curproc->is_refused()) {
-	;
+	$curproc->_digest($args);
     }
     else {
 	LogError("ignore this request.");
@@ -216,6 +220,36 @@ sub finish
     $eval = $config->get_hook( 'digest_finish_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
+}
+
+
+# Descriptions: 
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: 
+# Return Value: none
+sub _digest
+{
+    my ($curproc, $args) = @_;
+
+    use FML::Digest;
+    my $digest = new FML::Digest $curproc;
+    my $aid    = $digest->get_article_id();
+    my $did    = $digest->get_digest_id();
+
+    # run digest proceess if article(s) not to send found.
+    if ($aid > $did) {
+	my $range  = "$did-$aid";
+
+	# create multipart of articles as a digest.
+	$digest->create_multipart_message({ range => $range });
+
+	# update the last digest id for the next digest delivery.
+	# e.g. seq-digest in each ml home directory.
+	$digest->set_digest_id($aid);
+    }
+    else {
+	Log("no articles to send as digest");
+    }
 }
 
 
