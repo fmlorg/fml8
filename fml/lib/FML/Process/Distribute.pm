@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.137 2004/01/31 04:06:32 fukachan Exp $
+# $FML: Distribute.pm,v 1.138 2004/03/12 11:45:51 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -198,8 +198,9 @@ sub run
     my $config     = $curproc->config();
     my $maintainer = $config->{ maintainer };
     my $sender     = $curproc->{'credential'}->{'sender'};
-    my $data_type  =
-	$config->{article_post_restrictions_reject_notice_data_type} || 'string';
+    my $_data_type = 
+	$config->{ article_post_restrictions_reject_notice_data_type };
+    my $data_type  = $_data_type || 'string';
     my $size       = 2048;
     my $msg_args   = {
 	recipient    => $sender,
@@ -216,32 +217,13 @@ sub run
 	    $curproc->_distribute($args);
 	}
 	else {
-	    my $pcb = $curproc->pcb();
-
-	    # XXX-TODO: hmm, what is use of $pcb ?
-
 	    $curproc->log("deny article submission");
 
-	    my $rule = $pcb->get("check_restrictions", "deny_reason");
-	    if ($rule eq 'reject_system_special_accounts') {
-		my $r = "deny request from a system account";
-		$curproc->reply_message_nl("error.system_special_accounts",
-					   $r, $msg_args);
-	    }
-	    elsif ($rule eq 'permit_member_maps') {
-		my $r = "deny request from a not member";
-		$curproc->reply_message_nl("error.not_member", $r, $msg_args);
-	    }
-	    elsif ($rule eq 'reject') {
-		my $r = "deny your request";
-		$curproc->reply_message_nl("error.reject_post", $r, $msg_args);
-	    }
-	    else {
-		my $r = "deny your request due to an unknown reason";
-		$curproc->reply_message_nl("error.reject_post", $r, $msg_args);
-	    }
-
 	    # send back deny request with the original message.
+	    $curproc->restriction_state_reply_reason('article_post',
+						     $msg_args);
+
+	    # with original message.
 	    my $msg = $curproc->incoming_message();
 	    if ($data_type eq 'string') {
 		my $s = $msg->whole_message_as_str( {
