@@ -49,11 +49,20 @@ sub run
     # fake use() to do "use FML::Ticket::$model;"
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
+	my $ticket = $pkg->new($curproc, $args);
+
 	if ($command eq 'list') {
-	    $curproc->_ticket_show_summary($args, $pkg);
+	    $ticket->show_summary($curproc, $args);
 	}
 	elsif ($command eq 'close') {
 	    $curproc->lock();
+
+	    my $ticket_id = $argv->[ 2 ];
+	    my $args = {
+		ticket_id => $ticket_id, 
+		status    => 'close',
+	    };
+	    $ticket->set_status($curproc, $args);
 
 	    $curproc->unlock();
 	}
@@ -64,14 +73,6 @@ sub run
     else {
 	Log($@);
     }
-}
-
-
-sub _ticket_show_summary
-{
-    my ($curproc, $args, $pkg) = @_;
-    my $ticket = $pkg->new($curproc, $args);
-    $ticket->show_summary($curproc, $args);
 }
 
 
