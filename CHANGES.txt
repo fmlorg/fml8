@@ -1,6 +1,27 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/04/18
+
+   etc/command_line_options	
+	define menu.cgi
+	
+   FML::Command::Admin::newml 
+	mkdir $ml_home_prefix if not found
+
+   Mail::Message 
+	_header_mime_boundary() boundary detect no quote string case
+
+2003/04/16
+
+   article_filter_reject_notice_recipients
+	change attribute names of recipient used in filter rejection
+	notice: admin -> maintainer
+
+   FML::Header 
+	rewrite_received() outside loop $header->delete($org) for bad
+	count
+
 2003/04/15
 
    Mail::Delivery::Queue 
@@ -4640,4 +4661,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.139 2003/04/12 13:50:41 fukachan Exp $
+$FML: CHANGES.txt,v 1.140 2003/04/15 15:32:27 fukachan Exp $
