@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Command.pm,v 1.10 2001/05/28 16:17:14 fukachan Exp $
+# $FML: Command.pm,v 1.11 2001/10/08 20:30:06 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -139,10 +139,11 @@ sub _evaluate_command
 
   COMMAND:
     for my $command (@body) { 
+	my $comname = (split(/\s+/, $command))[0];
 	my $is_valid = 
-	    $config->has_attribute( "available_commands", $command )
+	    $config->has_attribute( "available_commands", $comname )
 		? 'yes' : 'no';
-	Log("command = " . $command . " (valid?=$is_valid)");
+	Log("command = " . $comname . " (valid?=$is_valid)");
 	next if $is_valid eq 'no';
 
 	# arguments to pass off to each method
@@ -160,7 +161,7 @@ sub _evaluate_command
 	my $obj = new FML::Command;
 	if (defined $obj) {
 	    eval q{
-		$obj->$command($curproc, $optargs);
+		$obj->$comname($curproc, $optargs);
 	    };
 	    if ($@) {
 		LogError("fail to exec ${command}");
