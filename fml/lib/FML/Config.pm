@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.96 2004/07/23 13:16:31 fukachan Exp $
+# $FML: Config.pm,v 1.97 2004/07/23 15:58:59 fukachan Exp $
 #
 
 package FML::Config;
@@ -549,6 +549,56 @@ sub read
 }
 
 
+# Descriptions: merge the specified hash values into $file.
+#    Arguments: OBJ($self) STR($file) HASH_REF($hash_ref) 
+# Side Effects: none
+# Return Value: none
+sub merge_to_file
+{
+    my ($self, $file, $hash_ref) = @_;
+    my $done = 0;
+
+    my ($rh, $wh) = IO::Adapter::AtomicFile->rw_open($file);
+
+    if (defined $rh && defined $wh) {
+	my $buf;
+
+      LINE:
+	while ($buf = <$rh>) {
+	    if ($buf =~ /^=|^\[/ && $done == 0) {
+		$self->_dump_hash_ref($wh, $hash_ref);
+		$done = 1;
+	    }
+	    print $wh $buf;
+	}
+
+	$wh->close();
+	$rh->close();
+    }
+}
+
+
+# Descriptions: print out hash values to the specified  channel.
+#    Arguments: OBJ($self) HANDLE($wh) HASH_REF($hash_ref)
+# Side Effects: none
+# Return Value: none
+sub _dump_hash_ref
+{
+    my ($self, $wh, $hash_ref) = @_;
+
+    use File::Basename;
+    my $name = basename($0);
+
+    print $wh "\n";
+    for my $k (keys %$hash_ref) {
+	print $wh "# configured by $name\n";
+	print $wh "$k = $hash_ref->{ $k }\n";
+	print $wh "\n";
+    }
+    print $wh "\n";
+}
+
+
 # Descriptions: save $config into $file file.
 #    Arguments: OBJ($self) STR($file)
 # Side Effects: rewrite $file
@@ -912,9 +962,23 @@ sub has_attribute
 }
 
 
-=head2 dump_variables()
+=head2 dump_variables($cfargs)
 
 show all {key => value} for debug.
+
+You can specify options at $cfargs.
+
+Specify all at mode to dump all variables.
+
+    $cfargs = { mode => all };
+
+Specify get_diff_as_hash_ref at mode to show 
+only variables differed from the original one.
+
+    $cfargs = { mode => get_diff_as_hash_ref };
+
+Dump only variables differed from the original one to STDOUT when
+other mode specified.
 
 =cut
 
@@ -922,13 +986,14 @@ show all {key => value} for debug.
 # Descriptions: dump all variables
 #    Arguments: OBJ($self) HASH_REF($cfargs)
 # Side Effects: none
-# Return Value: none
+# Return Value: HASH_REF
 sub dump_variables
 {
     my ($self, $cfargs) = @_;
     my $dump_mode       = $cfargs->{ mode } || 'all';
     my $len             = 0;
     my $use_sql         = 0;
+    my $diff            = {};
     my ($k, $v);
 
     $self->expand_variables();
@@ -956,30 +1021,51 @@ sub dump_variables
 	else {
 	    if (defined $_default_fml_config{ $k }) {
 		if ($v ne $_default_fml_config{ $k }) {
-		    printf $format, $k, $v;
+		    if ($dump_mode eq 'get_diff_as_hash_ref') {
+			$diff->{ $k } = $v;
+		    }
+		    else {
+			printf $format, $k, $v;
+		    }
 		}
 	    }
 	    else {
-		printf $format, $k, $v;
+		if ($dump_mode eq 'get_diff_as_hash_ref') {
+		    $diff->{ $k } = $v;
+		}
+		else {
+		    printf $format, $k, $v;
+		}
 	    }
 	}
     }
 
     # 2. dump 2nd level if needed (if $use_sql).
     if ($use_sql) {
+	my $ns_key;
 	for $k (sort keys %_fml_config_result) {
 	    if ($k =~ /^\[/o) {
+		$ns_key = $k;
 		my $hash_ref = $_fml_config_result{ $k };
 
-		print "\n$k\n";
+		unless ($dump_mode eq 'get_diff_as_hash_ref') {
+		    print "\n$k\n";
+		}
 		my ($k, $v);
 		for $k (sort keys %$hash_ref) {
 		    $v = $hash_ref->{ $k };
-		    printf $format, $k, $v;
+		    if ($dump_mode eq 'get_diff_as_hash_ref') {
+			$diff->{ $ns_key }->{ $k } = $v;
+		    }
+		    else {
+			printf $format, $k, $v;
+		    }
 		}
 	    }
 	}
     }
+
+    return $diff;
 }
 
 
