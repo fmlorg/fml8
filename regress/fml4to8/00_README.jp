@@ -1,0 +1,3 @@
+list.menu	fml4 の etc/makefml/menu.conf にある変数名一覧。
+		ここに出てくるような変数は自動変換できることが望ましい。
+
