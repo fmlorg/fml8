@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.11 2001/06/10 10:22:44 fukachan Exp $
+	$FML: chapters.ent,v 1.12 2001/06/10 12:58:31 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -30,7 +30,7 @@
 
 <!-- う〜ん、分類は…？;-) -->
 <!entity chapter.fmlcommands SYSTEM "commands.sgml">
-<!entity chapter.modules     SYSTEM "modules.sgml">
+<!entity chapter.db          SYSTEM "internals/db.sgml">
 
 
 <!-- 配送 -->
