@@ -3,4 +3,4 @@ doc: html
 html: index.html
 
 index.html: [A-Z]*
-	perl ../../doc/bin/distdir2url.pl > index.html
+	perl ../../fml/utils/bin/distdir2url.pl > index.html
