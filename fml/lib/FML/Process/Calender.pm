@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calender.pm,v 1.3 2002/04/06 14:48:36 fukachan Exp $
+# $FML: Calender.pm,v 1.4 2002/04/07 05:04:38 fukachan Exp $
 #
 
 package FML::Process::Calender;
@@ -63,7 +63,17 @@ sub new
 # Side Effects: none
 # Return Value: none
 sub prepare        { 1; }
+
+# Descriptions: dummy
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub verify_request { 1; }
+
+# Descriptions: dummy
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub finish         { 1; }
 
 
