@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.33 2001/12/23 14:12:51 fukachan Exp $
+# $FML: Lite.pm,v 1.34 2001/12/26 12:38:10 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,14 +15,14 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.33 2001/12/23 14:12:51 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.34 2001/12/26 12:38:10 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
 
 =head1 NAME
 
-Mail::HTML::Lite - mail to html converter
+Mail::HTML::Lite - convert text format mail to HTML format
 
 =head1 SYNOPSIS
 
@@ -83,10 +83,10 @@ stored.
 =cut
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: constructor.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self, $args) = @_;
@@ -118,12 +118,12 @@ where C<$path> is file path.
 =cut
 
 
-# Descriptions:
-#    Arguments: $self $args
+# Descriptions: top level entrance to convert mail to html
+#    Arguments: OBJ($self) HASH_REF($args)
 #               $args = { id => $id, path => $path };
 #                  $id    identifier (e.g. "1" (article id))
 #                  $src_path  file path  (e.g. "/some/where/1");
-# Side Effects:
+# Side Effects: none
 # Return Value: none
 sub htmlfy_rfc822_message
 {
@@ -162,7 +162,8 @@ sub htmlfy_rfc822_message
     $self->html_begin($wh, { message => $msg });
     $self->mhl_preamble($wh);
 
-    # analyze $msg (message chain)
+    # analyze $msg, chain of Mail::Message objects.
+    # See Mail::Message class for more detail.
     my ($m, $type, $attach);
   CHAIN:
     for ($m = $msg; defined($m) ; $m = $m->{ 'next' }) {
@@ -274,6 +275,10 @@ sub htmlfy_rfc822_message
 }
 
 
+# Descriptions: copy $inf file to $outf file with disabling HTML tag
+#    Arguments: STR($inf) STR($outf)
+# Side Effects: create $outf file
+# Return Value: none
 sub _disable_html_tag_in_file
 {
     my ($inf, $outf) = @_;
@@ -291,10 +296,10 @@ sub _disable_html_tag_in_file
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: return HTML filename
+#    Arguments: OBJ($self) NUM($id)
+# Side Effects: none
+# Return Value: STR or UNDEF
 sub message_filename
 {
     my ($self, $id) = @_;
@@ -308,10 +313,10 @@ sub message_filename
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: return HTML file path
+#    Arguments: OBJ($self) NUM($id)
+# Side Effects: none
+# Return Value: STR
 sub message_filepath
 {
     my ($self, $id) = @_;
@@ -326,10 +331,10 @@ sub message_filepath
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: parse $args and return file id, name, path.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: ARRAY(NUM, STR, STR)
 sub _init_htmlfy_rfc822_message
 {
     my ($self, $args) = @_;
@@ -366,9 +371,9 @@ sub _init_htmlfy_rfc822_message
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: show html header
+#    Arguments: OBJ($self) HANDLE($wh) HASH_REF($args)
+# Side Effects: none
 # Return Value: none
 sub html_begin
 {
@@ -416,9 +421,9 @@ sub html_begin
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: show html closing
+#    Arguments: OBJ($self) HANDLE($wh)
+# Side Effects: none
 # Return Value: none
 sub html_end
 {
@@ -428,9 +433,9 @@ sub html_end
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: show html separetor, we use <HR> now.
+#    Arguments: OBJ($self) HANDLE($wh)
+# Side Effects: none
 # Return Value: none
 sub mhl_separator
 {
@@ -445,9 +450,11 @@ my $footer_begin   = "<!-- __FOOTER_BEGIN__ by Mail::HTML::Lite -->";
 my $footer_end     = "<!-- __FOOTER_END__   by Mail::HTML::Lite -->";
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: prepare information area before main message appears.
+#               Later, this area is replaced with useful information 
+#               e.g. thread link.
+#    Arguments: OBJ($self) HANDLE($wh)
+# Side Effects: none
 # Return Value: none
 sub mhl_preamble
 {
@@ -457,9 +464,11 @@ sub mhl_preamble
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: prepare information area after main message appears.
+#               Later, this area is replaced with useful information 
+#               e.g. thread link.
+#    Arguments: OBJ($self) HANDLE($wh)
+# Side Effects: none
 # Return Value: none
 sub mhl_footer
 {
@@ -469,10 +478,10 @@ sub mhl_footer
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: prepare write handle
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create $args->{ dst } file if needed
+# Return Value: HANDLE
 sub _set_output_channel
 {
     my ($self, $args) = @_;
@@ -490,10 +499,10 @@ sub _set_output_channel
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: return temporary file path
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: STR
 sub _create_temporary_filename
 {
     my ($self, $msg) = @_;
@@ -503,10 +512,10 @@ sub _create_temporary_filename
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: create a temporary file with the content $msg
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create $tmpf file
+# Return Value: STR
 sub _create_temporary_file_in_raw_mode
 {
     my ($self, $msg) = @_;
@@ -528,10 +537,10 @@ sub _create_temporary_file_in_raw_mode
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: convert $file filepath to relative path
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: none
+# Return Value: STR
 sub _relative_path
 {
     my ($self, $file) = @_;
@@ -542,9 +551,9 @@ sub _relative_path
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: print link as html
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
 # Return Value: none
 sub _print_inline_object_link
 {
@@ -571,10 +580,10 @@ sub _print_inline_object_link
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: return attachment filename
+#    Arguments: OBJ($self) STR($attach) STR($suffix)
+# Side Effects: none
+# Return Value: STR
 sub _gen_attachment_filename
 {
     my ($dst, $attach, $suffix) = @_;
@@ -592,11 +601,13 @@ my @header_field = qw(From To Cc Subject Date
 		      X-ML-Name X-Mail-Count X-Sequence);
 
 
-# Descriptions:
-#    Arguments: $self $args
+# Descriptions: format header of $msg with escaping HTML metachars
+#               and disabling special HTML tags.
+#               See _sprintf_safe_str() for how to escape.
+#    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: none
 #               XXX print return value (str) in raw mode later.
-# Return Value: none
+# Return Value: STR
 sub _format_safe_header
 {
     my ($self, $msg) = @_;
@@ -626,6 +637,10 @@ sub _format_safe_header
 }
 
 
+# Descriptions: show link to index html files
+#    Arguments: none
+# Side Effects: none
+# Return Value: none
 sub _format_index_navigator
 {
     my $str = qq{
@@ -638,10 +653,10 @@ return $str;
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: print out text data with escaping by _print_safe_buf()
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: STR
 sub _text_safe_print
 {
     my ($self, $args) = @_;
@@ -657,9 +672,9 @@ sub _text_safe_print
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: print out message without escaping
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create $outf
 # Return Value: none
 sub _text_raw_print
 {
@@ -684,9 +699,10 @@ sub _text_raw_print
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: print out binary with MIME encoding or 
+#               text with escaping
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create $outf file
 # Return Value: none
 sub _binary_print
 {
@@ -732,6 +748,10 @@ we should not process this C<$id>
 =cut
 
 
+# Descriptions: check list to be ignored
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: 1 or 0
 sub is_ignore
 {
     my ($self, $id) = @_;
@@ -751,9 +771,9 @@ See section C<Internal Data Presentation> for more detail.
 =cut
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: update database on message header, thread relation et.al.
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
+# Side Effects: update database
 # Return Value: none
 sub cache_message_info
 {
@@ -902,6 +922,10 @@ sub cache_message_info
 }
 
 
+# Descriptions: convert space-separeted string to array
+#    Arguments: STR($str)
+# Side Effects: none
+# Return Value: ARRAY_REF
 sub __str2array
 {
     my ($str) = @_;
@@ -915,6 +939,10 @@ sub __str2array
 }
 
 
+# Descriptions: add { key => value } of database $dbname
+#    Arguments: HASH_REF($db) STR($dbname) STR($key) STR($value)
+# Side Effects: update database
+# Return Value: none
 sub __add_value_to_array
 {
     my ($db, $dbname, $key, $value) = @_;
@@ -932,6 +960,11 @@ sub __add_value_to_array
 }
 
 
+# Descriptions: speculate head of thread list, 
+#               traced back from $id.
+#    Arguments: HASH_REF($db) STR($id)
+# Side Effects: none
+# Return Value: NUM
 sub _thread_head
 {
     my ($db, $id) = @_;
@@ -949,6 +982,10 @@ sub _thread_head
 }
 
 
+# Descriptions: speculate head of the next thread list.
+#    Arguments: HASH_REF($db) STR($id)
+# Side Effects: none
+# Return Value: STR
 sub _search_default_next_thread_id
 {
     my ($db, $id) = @_;
@@ -957,6 +994,12 @@ sub _search_default_next_thread_id
     @ra = reverse @$list if defined $list;
 
     for (1 .. 10) { push(@c0, $id + $_);}
+
+    # prepare thread list to search
+    # 1. thread includes $id
+    # 2. thread(s) begining at each id in thread 1.
+    # 3. last resort: thread includes ($id+1),
+    #                 thread includes ($id+2), ...
     for my $xid ($id, @ra, @c0) {
 	my $default = __search_default_next_thread_id($db, $xid);
 	return $default if defined $default;
@@ -964,6 +1007,10 @@ sub _search_default_next_thread_id
 }
 
 
+# Descriptions: speculate the next id of $id.
+#    Arguments: HASH_REF($db) STR($id)
+# Side Effects: none
+# Return Value: STR
 sub __search_default_next_thread_id
 {
     my ($db, $id) = @_;
@@ -978,7 +1025,8 @@ sub __search_default_next_thread_id
 	$prev = $xid;
     }
 
-    # found ( XXX we use $prev in reverse order, so this $prev means "next")
+    # found 
+    # XXX we use $prev in reverse order, so this $prev means "next"
     if ($prev > 0) {
 	_PRINT_DEBUG("default thread: $id => $prev (@$list)");
 	return $prev;
@@ -997,9 +1045,10 @@ update link relation around C<$id>.
 =cut
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: top level dispatcher to update database.
+#               _update_relation() has real function for updating.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: update databse
 # Return Value: none
 sub update_relation
 {
@@ -1033,7 +1082,7 @@ sub update_relation
 	}
     }
 
-    # update all articles in this thread.
+    # update link relation for all articles in this thread.
     for my $id (@$thread_list) {
 	next UPDATE if $uniq{ $id}; $uniq{ $id } = 1;
 	$self->_update_relation( $id );
@@ -1042,9 +1091,9 @@ sub update_relation
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: update link in preamble and footer.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: rewrite index file
 # Return Value: none
 sub _update_relation
 {
@@ -1093,10 +1142,10 @@ sub _update_relation
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: return thread link relation et.al. for $id
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: HASH_REF
 sub evaluate_relation
 {
     my ($self, $id) = @_;
@@ -1166,10 +1215,10 @@ sub evaluate_relation
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: return preamble without metachars
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: STR
 sub evaluate_safe_preamble
 {
     my ($self, $args) = @_;
@@ -1225,10 +1274,10 @@ sub evaluate_safe_preamble
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: return footer without metachars
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: STR
 sub evaluate_safe_footer
 {
     my ($self, $args) = @_;
@@ -1348,6 +1397,12 @@ my @kind_of_databases = qw(from date subject message_id references
 #      Subject:
 #      From:
 #
+
+
+# Descriptions: open database
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: tied with $self->{ _db }
+# Return Value: none
 sub _db_open
 {
     my ($self, $args) = @_;
@@ -1375,9 +1430,9 @@ sub _db_open
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: close database
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: untie $self->{ _db }
 # Return Value: none
 sub _db_close
 {
@@ -1405,9 +1460,9 @@ update index.html.
 =cut
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: print navigation bar et.al. at upper half of indexes 
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create $new html
 # Return Value: none
 sub _print_index_begin
 {
@@ -1428,9 +1483,9 @@ sub _print_index_begin
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: print navigation bar et.al. at the end of indexes.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create $new html
 # Return Value: none
 sub _print_index_end
 {
@@ -1455,9 +1510,9 @@ sub _print_index_end
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: update index.html
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: rewrite index.html
 # Return Value: none
 sub update_id_index
 {
@@ -1499,6 +1554,10 @@ sub update_id_index
 =cut
 
 
+# Descriptions: update monthly index 
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: rewrite monthly index 
+# Return Value: none
 sub update_id_monthly_index
 {
     my ($self, $args) = @_;
@@ -1537,9 +1596,10 @@ sub update_id_monthly_index
     $self->_update_id_montly_index_master($args);
 }
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+
+# Descriptions: update monthly index master
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: rewrite monthly_index.html
 # Return Value: none
 sub _update_id_montly_index_master
 {
@@ -1591,6 +1651,10 @@ sub _update_id_montly_index_master
 }
 
 
+# Descriptions: return list of YYYY/MM format
+#    Arguments: ARRAY_REF($list)
+# Side Effects: none
+# Return Value: ARRAY_REF
 sub _yyyy_range
 {
     my ($list) = @_;
@@ -1607,6 +1671,10 @@ sub _yyyy_range
 }
 
 
+# Descriptions: sort YYYY/MM formt strings
+#    Arguments: none
+# Side Effects: none
+# Return Value: NUM
 sub __sort_yyyymm
 {
     my ($xa, $xb) = ($a, $b);
@@ -1616,9 +1684,9 @@ sub __sort_yyyymm
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: update month.YYYYMM.html
+#    Arguments: OBJ($self) HASH_REF($args) HASH_REF($monthlyinfo)
+# Side Effects: update month.YYYYMM.html
 # Return Value: none
 sub _update_id_monthly_index
 {
@@ -1665,9 +1733,9 @@ update thread.html.
 =cut
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: update thread.html
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: rewrite thread.html
 # Return Value: none
 sub update_thread_index
 {
@@ -1710,6 +1778,10 @@ sub update_thread_index
 }
 
 
+# Descriptions: check whether $id has next or previous link.
+#    Arguments: OBJ($self) HASH_REF($db) NUM($id)
+# Side Effects: none
+# Return Value: 1 or 0
 sub _has_link
 {
     my ($self, $db, $id) = @_;
@@ -1724,8 +1796,10 @@ sub _has_link
 }
 
 
-#  print thread array of (head_id id2 id3 ...)
-#
+# Descriptions: print thread array of (head_id id2 id3 ...)
+#    Arguments: OBJ($self) HANDLE($wh) HASH_REF($db) STR($head_id) STR($code)
+# Side Effects: none
+# Return Value: none
 sub _print_thread
 {
     my ($self, $wh, $db, $head_id, $code) = @_;
@@ -1781,10 +1855,10 @@ sub _print_thread
 =cut
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: cnvert charset to code e.g. iso-2022-jp => jis
+#    Arguments: STR($charset)
+# Side Effects: none
+# Return Value: STR
 sub _charset_to_code
 {
     my ($charset) = @_;
@@ -1807,9 +1881,9 @@ sub _charset_to_code
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: print raw $str to $wh channel
+#    Arguments: HANDLE($wh) STR($str) STR($code)
+# Side Effects: none
 # Return Value: none
 sub _print_raw_str
 {
@@ -1825,6 +1899,11 @@ sub _print_raw_str
 }
 
 
+# Descriptions: print safe $str to $wh channel
+#               XXX text2html($str, urls => 1, pre => 0)
+#    Arguments: HANDLE($wh) STR($str) STR($code)
+# Side Effects: none
+# Return Value: none
 sub _print_safe_str
 {
     my ($wh, $str, $code) = @_;
@@ -1832,6 +1911,11 @@ sub _print_safe_str
 }
 
 
+# Descriptions: print safe $str to $wh channel
+#               XXX text2html($str, urls => 1, pre => 1)
+#    Arguments: HANDLE($wh) STR($str) STR($code)
+# Side Effects: none
+# Return Value: none
 sub _print_safe_buf
 {
     my ($wh, $str, $code) = @_;
@@ -1839,6 +1923,10 @@ sub _print_safe_buf
 }
 
 
+# Descriptions: print safe $str to $wh channel
+#    Arguments: NUM($attr_pre) HANDLE($wh) STR($str) STR($code)
+# Side Effects: none
+# Return Value: none
 sub __print_safe_str
 {
     my ($attr_pre, $wh, $str, $code) = @_;
@@ -1848,6 +1936,10 @@ sub __print_safe_str
 }
 
 
+# Descriptions: return safe $str
+#    Arguments: STR($str) STR($code)
+# Side Effects: none
+# Return Value: STR
 sub _sprintf_safe_str
 {
     my ($str, $code) = @_;
@@ -1855,6 +1947,11 @@ sub _sprintf_safe_str
 }
 
 
+# Descriptions: return safe $str modified by text2html().
+#               $str language code is modified by Jcode if needed.
+#    Arguments: NUM($attr_pre) HANDLE($wh) STR($str) STR($code)
+# Side Effects: none
+# Return Value: STR or UNDEF
 sub __sprintf_safe_str
 {
     my ($attr_pre, $wh, $str, $code) = @_;
@@ -1878,8 +1975,13 @@ sub __sprintf_safe_str
 }
 
 
-# $url$trailor => $url $trailor for text2html() incomplete regexp
-# based on fml 4.0-current (2001/10/28)
+# Descriptions: extract URL syntax in $url string.
+#               $url$trailor => $url $trailor for text2html()
+#               XXX incomplete regexp, we should correct it.
+#    Arguments: STR($url)
+# Side Effects: none
+#      History: based on fml 4.0-current (2001/10/28)
+# Return Value: STR
 sub _separete_url
 {
     my ($url) = @_;
@@ -1908,6 +2010,10 @@ sub _separete_url
 }
 
 
+# Descriptions: debug
+#    Arguments: STR($str)
+# Side Effects: none 
+# Return Value: none
 sub _PRINT_DEBUG
 {
     my ($str) = @_;
@@ -1915,6 +2021,10 @@ sub _PRINT_DEBUG
 }
 
 
+# Descriptions: debug, print out hash 
+#    Arguments: HASH_REF($hash)
+# Side Effects: none 
+# Return Value: none
 sub _PRINT_DEBUG_DUMP_HASH
 {
     my ($hash) = @_;
@@ -1936,6 +2046,10 @@ tags et.al.
 =cut
 
 
+# Descriptions: print <UL> with proper indentation
+#    Arguments: OBJ($self) HANDLE($wh) HASH_REF($db) STR($code)
+# Side Effects: none
+# Return Value: none
 sub _print_ul
 {
     my ($self, $wh, $db, $code) = @_;
@@ -1947,6 +2061,10 @@ sub _print_ul
 }
 
 
+# Descriptions: print </UL> with proper indentation
+#    Arguments: OBJ($self) HANDLE($wh) HASH_REF($db) STR($code)
+# Side Effects: none
+# Return Value: none
 sub _print_end_of_ul
 {
     my ($self, $wh, $db, $code) = @_;
@@ -1960,6 +2078,10 @@ sub _print_end_of_ul
 }
 
 
+# Descriptions: print <LI> filename ... with proper indentation
+#    Arguments: OBJ($self) HANDLE($wh) HASH_REF($db) STR($code)
+# Side Effects: none
+# Return Value: none
 sub _print_li_filename
 {
     my ($self, $wh, $db, $id, $code) = @_;
@@ -1985,6 +2107,11 @@ sub _print_li_filename
 =cut
 
 
+# Descriptions: clean up email address by Mail::Address.
+#               return clean-up'ed address list.
+#    Arguments: STR($addr)
+# Side Effects: none
+# Return Value: ARRAY_REF
 sub _address_clean_up
 {
     my ($addr) = @_;
@@ -2005,9 +2132,13 @@ sub _address_clean_up
 }
 
 
+# Descriptions: extrace gecos fieldin $address
+#    Arguments: OBJ($self) STR($address)
+# Side Effects: none
+# Return Value: STR
 sub _who_of_address
 {
-    my ($self, $address, $options) = @_;
+    my ($self, $address) = @_;
     my ($user);
 
     use Mail::Address;
@@ -2029,6 +2160,10 @@ sub _who_of_address
 }
 
 
+# Descriptions: head of array (space separeted string)
+#    Arguments: STR($buf)
+# Side Effects: none
+# Return Value: STR
 sub _list_head
 {
     my ($buf) = @_;
@@ -2038,6 +2173,10 @@ sub _list_head
 }
 
 
+# Descriptions: decode MIME-encoded $str
+#    Arguments: OBJ($self) STR($str) HASH_REF($options)
+# Side Effects: none
+# Return Value: STR
 sub _decode_mime_string
 {
     my ($self, $str, $options) = @_;
@@ -2090,9 +2229,9 @@ try to convert all rfc822 messages to HTML in C<$dir> directory.
 =cut
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: convert $file to HTML
+#    Arguments: STR($file) HASH_REF($args)
+# Side Effects: none
 # Return Value: none
 sub htmlify_file
 {
@@ -2130,9 +2269,9 @@ sub htmlify_file
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: convert all articles in specified directory
+#    Arguments: STR($src_dir) HASH_REF($args)
+# Side Effects: none
 # Return Value: none
 sub htmlify_dir
 {
@@ -2190,7 +2329,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
