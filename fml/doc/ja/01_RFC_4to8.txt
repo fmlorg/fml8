@@ -93,15 +93,52 @@
 	cf -> .fml4rc/cf (移動)
 
 
-  解釈の仕方
+  解釈の仕方 (fml4 -> fml8) 
 
-	ターゲットのＭＬconfig.phを読む
-		＃libloadconfig にある関数コールが問題;_;
+  こまんど？「fml $ml_name merge /some/where/config.ph」か？
 
-	$s = sprintf("package config%03d;require \"%s\";\n\npackage main;\n", 
-			$i, $f);
-	eval $s;
-	print $@ if $@;
+	1) 新規にＭＬを作り、古い設定をマージする
+	2) いまあるＭＬディレクトリ(/var/spool/ml/elena)をそのままつかう
+		どっちにしても config.cf と aliases のために
+		newml を実行する必要がある。
+
+	% fml $ml_name merge /var/spool/ml/$ml_name
+
+		（できれば）ろっくをする。
+			すくなくとも members などの更新はされないだろう
+		fml4 の backup をとる
+		include* ファイル群を「 exit 75 」へ変更する
+
+	まず「fml --force newml $ml_name」相当のことを行なう
+
+		↓
+
+	ターゲットのＭＬconfig.phを読み、
+	default_config.ph と比較する
+	＃libloadconfig にある関数コールが問題;_;
+
+		↓
+
+	差分を出力 (変数名は、まだ fml4)
+		HASH_REF = {
+			VAR_NAME => VAR_VALUE,
+		};
+
+		↓
+
+	FML::Merge::FML4::config.txt により
+	fml8 の相当するルールへ変換する
+
+		# BEGIN CONFIG TRANSLATION
+		# VAR_NAME => VAR_VALUE
+		key = value
+
+		# END CONFIG TRANSLATION
+
+		↓
+
+	config.cf を生成	
+
 
 
 *)	config.txt をどうする？
@@ -144,4 +181,4 @@
 
 
 ------------------------------------------------------------
-$FML: 01_RFC_4to8.txt,v 1.1 2004/03/12 14:49:08 fukachan Exp $
+$FML: 01_RFC_4to8.txt,v 1.2 2004/03/15 04:15:47 fukachan Exp $
