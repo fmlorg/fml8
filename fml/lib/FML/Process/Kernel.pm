@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.112 2002/07/14 04:13:58 fukachan Exp $
+# $FML: Kernel.pm,v 1.113 2002/07/14 15:15:29 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -363,9 +363,8 @@ sub simple_loop_check
 {
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
-    my $r_msg  = $curproc->{ incoming_message };
-    my $header = $r_msg->{ header };
-    my $match = 0;
+    my $header = $curproc->incoming_message_header();
+    my $match  = 0;
 
   RULES:
     for my $rule (split(/\s+/, $config->{ header_loop_check_rules })) {

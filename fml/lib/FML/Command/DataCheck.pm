@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DataCheck.pm,v 1.2 2002/04/26 10:29:12 fukachan Exp $
+# $FML: DataCheck.pm,v 1.3 2002/05/19 11:23:57 fukachan Exp $
 #
 
 package FML::Command::DataCheck;
@@ -122,7 +122,7 @@ sub find_commands_for_stranger
     my ($self, $curproc) = @_;
     my $config   = $curproc->{ config };
     my $commands = $config->get_as_array_ref('commands_for_stranger');
-    my $body     = $curproc->{ incoming_message }->{ body };
+    my $body     = $curproc->incoming_message_body();
     my $msg      = $body->find_first_plaintext_message();
     my (@body)   = split(/\n/, $msg->message_text );
     my $comname  = '';

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: BodyCheck.pm,v 1.19 2002/05/18 02:22:42 tmu Exp $
+# $FML: BodyCheck.pm,v 1.20 2002/07/02 12:39:00 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -86,8 +86,8 @@ C<$msg> is C<Mail::Message> object.
 C<Usage>:
 
     use FML::Filter::BodyCheck;
-    my $obj     = new FML::Filter::BodyCheck;
-    my $msg = $curproc->{ incoming_message }->{ body };
+    my $obj = new FML::Filter::BodyCheck;
+    my $msg = $curproc->incoming_message_body();
 
     $obj->body_check($msg, $args);
     if ($obj->error()) {

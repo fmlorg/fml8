@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.9 2002/06/27 08:25:50 fukachan Exp $
+# $FML: Error.pm,v 1.10 2002/06/30 05:18:46 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -137,7 +137,7 @@ sub run
     my $config = $curproc->{ config };
     my $found  = 0;
     my $pcb    = $curproc->{ pcb };
-    my $msg    = $curproc->{ incoming_message }->{ message };
+    my $msg    = $curproc->incoming_message();
 
     my $eval = $config->get_hook( 'error_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.32 2002/07/02 12:48:42 fukachan Exp $
+# $FML: Utils.pm,v 1.33 2002/07/14 15:11:01 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -24,7 +24,162 @@ See FML::Process::Kernel.
 
 =head1 DESCRIPTION
 
-=head1 METHODS
+=head1 access METHODS to handle configuration space
+
+=cut
+
+
+# Descriptions: return FML::Config object
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: OBJ
+sub config
+{
+    my ($curproc) = @_;
+
+    if (defined $curproc->{ config }) {
+	return $curproc->{ config };
+    }
+    else {
+	return undef;
+    }
+}
+
+
+# Descriptions: return FML::PCB object
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: OBJ
+sub pcb
+{
+    my ($curproc) = @_;
+
+    if (defined $curproc->{ pcb }) {
+	return $curproc->{ pcb };
+    }
+    else {
+	return undef;
+    }
+}
+
+
+=head1 access METHODS to handle incoming_message
+
+available all processes which eats message via STDIN.
+
+=cut
+
+
+# Descriptions: return incoming_message header object if could
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: OBJ
+sub incoming_message_header
+{
+    my ($curproc) = @_;
+
+    if (defined $curproc->{ incoming_message }->{ header }) {
+	return $curproc->{ incoming_message }->{ header };
+    }
+    else {
+	return undef;
+    }
+}
+
+
+# Descriptions: return incoming_message body object if could
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: OBJ
+sub incoming_message_body
+{
+    my ($curproc) = @_;
+
+    if (defined $curproc->{ incoming_message }->{ body }) {
+	return $curproc->{ incoming_message }->{ body };
+    }
+    else {
+	return undef;
+    }
+}
+
+
+# Descriptions: return incoming_message message object if could
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: OBJ
+sub incoming_message
+{
+    my ($curproc) = @_;
+
+    if (defined $curproc->{ incoming_message }->{ message }) {
+	return $curproc->{ incoming_message }->{ message };
+    }
+    else {
+	return undef;
+    }
+}
+
+
+=head1 access METHODS to handle article
+
+available only in C<libexec/distribute> process.
+
+=cut
+
+
+# Descriptions: return article header object if could
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: OBJ
+sub article_header
+{
+    my ($curproc) = @_;
+
+    if (defined $curproc->{ article }->{ header }) {
+	return $curproc->{ article }->{ header };
+    }
+    else {
+	return undef;
+    }
+}
+
+
+# Descriptions: return article body object if could
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: OBJ
+sub article_body
+{
+    my ($curproc) = @_;
+
+    if (defined $curproc->{ article }->{ body }) {
+	return $curproc->{ article }->{ body };
+    }
+    else {
+	return undef;
+    }
+}
+
+
+# Descriptions: return article message object if could
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: OBJ
+sub article_message
+{
+    my ($curproc) = @_;
+
+    if (defined $curproc->{ article }->{ message }) {
+	return $curproc->{ article }->{ message };
+    }
+    else {
+	return undef;
+    }
+}
+
+
+=head1 METHODS for convenience
 
 =head2 fml_version()
 

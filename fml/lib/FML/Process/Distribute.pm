@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.82 2002/07/02 12:40:37 fukachan Exp $
+# $FML: Distribute.pm,v 1.83 2002/07/14 15:15:29 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -208,7 +208,7 @@ sub run
 		$curproc->reply_message_nl("error.reject_post", $r);
 	    }
 
-	    my $msg = $curproc->{ incoming_message }->{ message };
+	    my $msg = $curproc->incoming_message();
 	    $curproc->reply_message( $msg );
 
 	    # inform maintainer too.
@@ -357,10 +357,9 @@ sub _build_article_object
 sub _header_rewrite
 {
     my ($curproc, $args) = @_;
-
     my $config = $curproc->{ config };
-    my $header = $curproc->{ article }->{ header };
-    my $rules  = $curproc->{ config }->{ article_header_rewrite_rules };
+    my $header = $curproc->article_header();
+    my $rules  = $config->{ article_header_rewrite_rules };
     my $id     = $args->{ id };
 
     for my $rule (split(/\s+/, $rules)) {
@@ -386,11 +385,10 @@ sub _header_rewrite
 sub _deliver_article
 {
     my ($curproc, $args) = @_;
-
-    my $config  = $curproc->{ config };               # FML::Config   object
-    my $message = $curproc->{ article }->{ message }; # Mail::Message object
-    my $header  = $curproc->{ article }->{ header };  # FML::Header   object
-    my $body    = $curproc->{ article }->{ body };    # Mail::Message object
+    my $config  = $curproc->{ config };        # FML::Config   object
+    my $message = $curproc->article_message(); # Mail::Message object
+    my $header  = $curproc->article_header();  # FML::Header   object
+    my $body    = $curproc->article_body();    # Mail::Message object
 
     unless ( $config->yes( 'use_article_delivery' ) ) {
 	return;
@@ -468,7 +466,7 @@ sub _thread_check
 	rewrite_header => $is_rewrite_hdr,
     };
 
-    my $msg = $curproc->{ article }->{ message };
+    my $msg = $curproc->article_message();
 
     eval q{
 	use Mail::ThreadTrack;

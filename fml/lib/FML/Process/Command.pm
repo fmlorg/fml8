@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.63 2002/07/02 03:58:32 fukachan Exp $
+# $FML: Command.pm,v 1.64 2002/07/14 15:15:29 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -156,7 +156,7 @@ sub run
 	}
 
 	# append the incoming message as the reference
-	my $msg  = $curproc->{ incoming_message }->{ message };
+	my $msg  = $curproc->incoming_message();
 	$curproc->reply_message( $msg );
 
 	unless (defined $reason) { $reason = 'unknown';}
@@ -614,7 +614,7 @@ sub _evaluate_command_lines
     my $argv    = $curproc->command_line_argv();
     my $prompt  = $config->{ command_prompt } || '>>>';
     my $mode    = 'unknown';
-    my $rbody   = $curproc->{ incoming_message }->{ body };
+    my $rbody   = $curproc->incoming_message_body();
     my $msg     = $rbody->find_first_plaintext_message();
 
     # preliminary scanning for message to find "confirm" or "admin"
@@ -754,7 +754,7 @@ sub _evaluate_command_lines
 
     # send bak the original input message if needed
     {
-	my $msg = $curproc->{ incoming_message }->{ message };
+	my $msg = $curproc->incoming_message();
 
 	# in the case "confirm"
 	if ($status->{ context }->{ under_confirmation }) {
