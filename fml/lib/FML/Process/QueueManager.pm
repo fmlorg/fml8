@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: QueueManager.pm,v 1.2 2001/05/19 03:40:36 fukachan Exp $
+# $FML: QueueManager.pm,v 1.3 2001/05/29 16:21:16 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -21,6 +21,12 @@ FML::Process::QueueManager - provide queue manipulation functions
     use FML::Process::QueueManager;
     my $obj = new FML::Process::QueueManager { directory => $queue_dir };
     $obj->send($curproc);
+
+or if you send specific queue C<$queue_id>, use
+
+    $obj->send($curproc, $queue_id);
+
+where C<$queue_id> is like this 1000390413.14775.1 not file path.
 
 =head1 DESCRIPTION
 
@@ -51,20 +57,21 @@ sub new
 }
 
 
-=head2 C<send($curproc)> 
+=head2 C<send($curproc, $id)> 
 
 try to send all mails in the queue.
+If queue id C<$id> is specified, send queue for C<$id>.
 
 =cut
 
 sub send
 {
-    my ($self, $curproc) = @_;
+    my ($self, $curproc, $id) = @_;
     my $queue_dir = $self->{ _directory };
 
     use Mail::Delivery::Queue;
     my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
-    my $ra    = $queue->list();
+    my $ra    = defined $id ? [ $id ] : $queue->list();
 
     for my $qid (@$ra) { 
 	my $q = new Mail::Delivery::Queue { 
