@@ -35,6 +35,7 @@ link:
 	rm -f Ticket; ln -s ../../fml/lib/FML/Ticket
 	rm -f CGI; ln -s ../../fml/lib/FML/CGI
 	rm -f Process; ln -s ../../fml/lib/FML/Process
+	rm -f Command; ln -s ../../fml/lib/FML/Command
 	rm -f IO; ln -s ../../fml/lib/IO
 	rm -f File; ln -s ../../fml/lib/File
 	rm -f Tie; 
