@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CacheDir.pm,v 1.8 2001/08/22 10:30:59 fukachan Exp $
+# $FML: CacheDir.pm,v 1.9 2001/12/22 09:21:11 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -42,8 +42,10 @@ You can specify C<file_name> parameter.
 If so, the file names become _smtplog.0, _smtplog.1, ...
 
 The C<File::CacheDir> described above is limited by size.
-You can use File::CacheDir based on not size but time, so with time
-based expiretion. If you so,
+
+You can use File::CacheDir based on time not size.
+It is time based expiretion. 
+If you so, use new() like this:
 
    $obj = new File::CacheDir {
        directory  => '/some/where',
@@ -51,16 +53,16 @@ based expiretion. If you so,
        expires_in => 90,             # 90 days
    };
 
-C<cache_type> is C<cyclic> by default.
+where C<cache_type> is C<cyclic> by default.
 
 
 =head1 DESCRIPTION
 
-To log messages but up to some limit, it may be useful to use filenames
-in cyclic way.
+To log messages up to some limit, 
+it may be useful to use filenames in cyclic way.
 The file to write is chosen among a set of files allocated as a buffer.
 
-Consider several files under a directory C<ring/>
+Consider several files under a directory C<ring/> as a ring buffer
 where the unit of the ring is 5 here.
 C<ring/> may have 5 files in it.
 
@@ -69,8 +71,8 @@ C<ring/> may have 5 files in it.
 To log a message is to write it to one of them.
 At the first time the message is logged to the file C<0>,
 and next time to C<1> and so on.
-If all 5 files are used, it reuses and overwrites the oldest one C<0>.
-
+If all 5 files are used, 
+this module reuses and overwrites the oldest one C<0>.
 So we use a file in cyclic way as follows:
 
    0 -> 1 -> 2 -> 3 -> 4 -> 0 -> 1 -> ...
@@ -78,22 +80,15 @@ So we use a file in cyclic way as follows:
 We expire the old data.
 A file name is a number for simplicity.
 The latest number is holded in C<ring/.seq> file (C<.seq> in that
-direcotry by default) and truncated to 0 by the modulus C<5>.
+direcotry by default) and truncated to 0 by the modulo C<5>.
 
 =head1 METHODS
 
-=head2 C<open()>
-
-no argument.
-
-=head2 C<close()>
-
-no argument.
+=head2 new(args)
 
 =cut
 
 
-require Exporter;
 @ISA = qw(IO::File);
 
 BEGIN {}
@@ -102,9 +97,9 @@ END   {}
 
 # Descriptions: constructor
 #               forward new() request to superclass (IO::File)
-#    Arguments: $class_name
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
-# Return Value: class object
+# Return Value: OBJ
 #               XXX $self is blessed file handle.
 sub new
 {
@@ -119,7 +114,7 @@ sub new
 
 
 # Descriptions: determine the file name to write into
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: increment $sequence_file_name
 #               set the file name at ${*$self}{ _file }
 # Return Value: none
@@ -133,11 +128,11 @@ sub _take_file_name
     my $cache_type         = $args->{ cache_type } || 'cyclic';
 
     my $file;
-    use File::Spec;
+    eval q{ use File::Spec;};
 
     unless (-d $directory) {
 	my $mode = $args->{ directory_mode } || 0755;
-	use File::Utils qw(mkdirhier);
+	eval q{ use File::Utils qw(mkdirhier);};
 	mkdirhier($directory, $mode);
     }
 
@@ -149,7 +144,7 @@ sub _take_file_name
     elsif ($cache_type eq 'cyclic') {
 	my $seq_file = File::Spec->catfile($directory, $sequence_file_name);
 
-	use File::Sequence;
+	eval q{ use File::Sequence;};
 	my $sfh = new File::Sequence {
 	    sequence_file => $seq_file,
 	    modulus       => $modulus,
@@ -165,11 +160,18 @@ sub _take_file_name
 }
 
 
+=head2 C<open(file, mode)>
+
+no argument.
+
+=cut
+
+
 # Descriptions: open() a file in the buffer
-#    Arguments: $self
+#    Arguments: OBJ($self) STR($file) STR($mode)
 #               XXX $self is blessed file handle.
 # Side Effects: create ${ *$self } hash to save status information
-# Return Value: write file handle (for $file.new.$$)
+# Return Value: HANDLE(write file handle for $file.new.$$)
 sub open
 {
     my ($self, $file, $mode) = @_;
@@ -197,10 +199,17 @@ sub open
 }
 
 
+=head2 C<close()>
+
+no argument.
+
+=cut
+
+
 # Descriptions: forward close() to SUPER class
-#    Arguments: $self
+#    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: value returned by SUPER::close()
+# Return Value: same as SUPER::close() or UNDEF
 sub close
 {
     my ($self) = @_;
@@ -209,16 +218,17 @@ sub close
 }
 
 
+=head2 get(key)
 
-=head2 C<find(key)>
-
-=head2 C<get(key)>
-
-=head2 C<set(key, value)>
+get value (latest value in the ring buffer) for key.
 
 =cut
 
 
+# Descriptions: get value (latest value in the ring buffer) for key.
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: none
+# Return Value: STR
 sub get
 {
     my ($self, $key) = @_;
@@ -226,6 +236,10 @@ sub get
 }
 
 
+# Descriptions: get value (latest value in the ring buffer) for key.
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: none
+# Return Value: STR
 sub get_latest_value
 {
     my ($self, $key) = @_;
@@ -245,12 +259,13 @@ sub get_latest_value
     for (readdir($dh)) { push(@dh, $_) if /^\d+/;}
     @dh = sort { $b <=> $a } @dh;
 
+    eval q{ use File::Spec;};
+
     for (@dh) {
 	next if $_ =~ /^\./;
 	next if $_ !~ /^\d/;
 	next if $_ =~ /^\d{1,2}$/;
 
-	use File::Spec;
 	$file = File::Spec->catfile($dir, $_);
 	$buf  = $self->_search($file, $key);
 	last if $buf;
@@ -261,11 +276,15 @@ sub get_latest_value
 }
 
 
+# Descriptions: search value for $key in the $file
+#    Arguments: OBJ($self) STR($file) STR($key)
+# Side Effects: none
+# Return Value: STR
 sub _search
 {
     my ($self, $file, $key) = @_;
     my $hash = $self->{ _cache_data };
-    my $pkey = substr($key, 0, 1);
+    my $pkey = quotemeta( substr($key, 0, 1) );
     my $buf;
 
     # negative cache
@@ -289,6 +308,18 @@ sub _search
 }
 
 
+=head2 find(key)
+
+get value (latest value in the ring buffer) for key.
+same as get() now.
+
+=cut
+
+
+# Descriptions: get value (latest value in the ring buffer) for key.
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: none
+# Return Value: STR
 sub find
 {
     my ($self, $key) = @_;
@@ -296,6 +327,17 @@ sub find
 }
 
 
+=head2 set(key, value) 
+
+set value for key.
+
+=cut
+
+
+# Descriptions: set value for key.
+#    Arguments: OBJ($self) STR($key) STR($value)
+# Side Effects: none
+# Return Value: same as close()
 sub set
 {
     my ($self, $key, $value) = @_;
