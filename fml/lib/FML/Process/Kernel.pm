@@ -70,20 +70,20 @@ sub new
 
     # import variables
     my (@import_vars) = qw(ml_home_prefix ml_home_dir);
-    for my $var (@import_vars) {
+    my $var;
+
+  IMPORT_CHECK:
+    for $var (@import_vars) {
 	if (defined $args->{ $var }) {
 	    $cfargs->{ $var } = $args->{ $var };
 	}
 	else {
 	    if ($var eq 'ml_home_dir') {
-		next unless $args->{ need_ml_name };
+		next IMPORT_CHECK unless $args->{ need_ml_name };
 	    }
 
-	    croak "variable $var is not defined.\n";
-	    # fndamental checks
-	    unless ($args->{ ml_home_dir }) {
-		croak("Error: \$ml_home_dir not defined");
-	    }
+	    # critical error
+	    croak("Error: variable=$var is not defined");
 	}
     }
 
