@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Aug 31, 1995
-### Revised: Mar 22, 2003
+### Revised: Jun  1, 2003
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-$VERSION = "imput version 20030322(IM144)";
+$VERSION = "imput version 20030601(IM145)";
 
 $Prog = 'imput';
 
@@ -656,7 +656,9 @@ help($EXPLANATION) && exit $EXIT_SUCCESS if $Help;
 #   }
 
 ##### FINAL HEADER PROCESSING #####
-    &add_header(\@Header, 1, 'X-'.$Resend_prefix.'Dispatcher', $VERSION);
+    if (use_xdispatcher()) {
+	&add_header(\@Header, 1, 'X-'.$Resend_prefix.'Dispatcher', $VERSION);
+    }
     &kill_header(\@Header, 'Bcc', 0);
     &kill_header(\@Header, 'Dcc', 0);
     &kill_header(\@Header, 'Fcc', 0);
@@ -1738,7 +1740,7 @@ sub process_queue {
 	    rename("$queue_dir/$q.wrk", "$queue_dir/$q");
 	    return;
 	}
-	im_notice("processing $queue_dir/$q.wrk ...\n");
+	im_notice("processing $queue_dir/$q.wrk...\n");
 	while (<QUEUE>) {
 	    chomp;
 	    last if (/^$/);

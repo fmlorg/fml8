@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Mar 22, 2003
+### Revised: Jun  1, 2003
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "imclean version 20030322(IM144)";
+my $VERSION = "imclean version 20030601(IM145)";
 
 $Prog = 'imclean';
 
@@ -125,7 +125,7 @@ sub imclean($@) {
 	$set = imap_range2set($HANDLE, @msgs);
     }
 
-    print "unlinking msgs in $folder ... " unless ($opt_noharm || $opt_quiet);
+    print "unlinking msgs in $folder..." unless ($opt_noharm || $opt_quiet);
     print "\n" if $opt_verbose;
     flush('STDOUT') unless $opt_noharm;
 

@@ -1,6 +1,30 @@
+145 (2003/06/01)
+
+* IM/LocalMbox.pm (process_maildir): Fix for modern delivery identifiers in
+  a maildir according to `http://cr.yp.to/proto/maildir.html'.
+* Fix that setuid imget fails with tainted variables.
+* imsetup.in, cnf.im/SiteConfig.in, dot.im/Config: Add comments for
+  MailFoldersFile, NamazuDir, MknmzIncludeFile, MknmzIgnoreFoldersRegex and
+  UseXDispatcher.
+* IM/Config.pm.in (use_xdispatcher): New subroutine.
+* IM/Config.pm.in (UseXDispatcher): New config variable.
+* immknmz.in: Doc fix.
+* immknmz.in: Use END block for tempfile and lockdir.
+* immknmz.in: Fix NMZ.stamp handling.
+* IM/Config.pm.in (MailFoldersFile, NamazuDir, MknmzIncludeFile,
+  MknmzIgnoreFoldersRegex) New config variable.
+* IM/Config.pm.in (mail_folders_file, namazu_dir, namazu_path,
+  mknmz_include_file, mknmz_ignore_folders_regex): New subroutines.
+* IM/Config.pm.in: Set Immknmz.Src to blank.
+* immknmz.in: New option, `--src'.  Folders can be specified.
+  (thanks to Hideyuki SHIRAI, [Mew-dist 13633] on 13 Jul 2000)
+* Message fixes.
+* imget.in: Doc fix.
+* IM/Scan.pm (parse_body): Revise regexp.
+
 144 (2003/03/22)
 
-* IM/Util.pm: Fix `$osname' for darwin. (Thanks to WATANABE Hideyuki)
+* IM/Util.pm: Fix `$osname' for Darwin. (Thanks to WATANABE Hideyuki)
 * IM/Scan.pm (parse_body): Regexp fix.
 * 00readme: Doc fix.
 * imput.in: Doc fix.

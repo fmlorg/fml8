@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Mar 22, 2003
+### Revised: Jun  1, 2003
 ###
 
-my $PM_VERSION = "IM::LocalMbox.pm version 20030322(IM144)";
+my $PM_VERSION = "IM::LocalMbox.pm version 20030601(IM145)";
 
 package IM::LocalMbox;
 require 5.003;
@@ -103,11 +103,13 @@ sub local_get_msg($$$$$) {
 
     $getchk_hook = getchksbr_file();
     if ($getchk_hook) {
-	if ($getchk_hook =~ /^(\S+)$/) {
+	if ($getchk_hook =~ /(.+)/) {
 	    if ($main::INSECURE) {
 		im_warn("Sorry, GetChkSbr is ignored for SUID root script.\n");
 	    } else {
-		$getchk_hook = $1;    # to pass through taint check
+		if ($> != 0) {
+		    $getchk_hook = $1;    # to pass through taint check
+		}
 		if (-f $getchk_hook) {
 		    require $getchk_hook;
 		} else {
@@ -137,8 +139,10 @@ sub local_get_msg($$$$$) {
 			return -1;
 		    }
 		    if ($how eq 'get' && $main::opt_keep == 0) {
-			$f =~ /(.+)/;	# $f is tainted yet
-			$f = $1;	# clean up
+			if ($> != 0) {
+			    $f =~ /(.+)/;	# may be tainted
+			    $f = $1;	# clean up
+			}
 			unlink("$mbox/$f");
 		    }
 		    $msgs++;
@@ -281,7 +285,7 @@ sub process_maildir($$$$) {
 	    return -1;
 	}
 	foreach $f (sort {(-M $b) <=> (-M $a) || $a cmp $b} readdir(FLDR)) {
-	    if ($f =~ /^\d+\.(\d+|\d+_\d+)\..+/ && -s "$dir/$f") {
+	    if ($f =~ /^\d+\.[^.:\/]+\./ && -s "$dir/$f") {
 		my $ret = process_file("$dir/$f", $dst, $how, $noscan);
 		next if ($ret > 0);	# skip by rule
 		if ($ret < 0) {
@@ -289,8 +293,12 @@ sub process_maildir($$$$) {
 		    return -1;
 		}
 		if ($how eq 'get' && $main::opt_keep == 0) {
-		    $f =~ /(.+)/;	# $f is tainted yet
-		    $f = $1;		# clean up
+		    if ($> != 0) {
+			$dir =~ /(.+)/;	# may be tainted
+			$dir = $1;	# clean up
+			$f =~ /(.+)/;	# may be tainted
+			$f = $1;		# clean up
+		    }
 		    unlink("$dir/$f");
 		}
 		$msgs++;

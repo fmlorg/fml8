@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Mar 22, 2003
+### Revised: Jun  1, 2003
 ###
 
-my $PM_VERSION = "IM::MsgStore.pm version 20030322(IM144)";
+my $PM_VERSION = "IM::MsgStore.pm version 20030601(IM145)";
 
 package IM::MsgStore;
 require 5.003;
@@ -196,8 +196,10 @@ sub exec_getsbrfile($) {
 	    im_warn("Sorry, GetSbr is ignored for SUID root script\n");
 	    return;
 	}
-	if ($get_hook =~ /^(\S+)$/) {
-	    $get_hook = $1;        # to pass through taint check
+	if ($get_hook =~ /(.+)/) {
+	    if ($> != 0) {
+		$get_hook = $1;        # to pass through taint check
+	    }
 	    if (-f $get_hook) {
 		require $get_hook;
 	    } else {

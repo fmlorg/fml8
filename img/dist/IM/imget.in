@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Jan 14, 1996
-### Revised: Mar 22, 2003
+### Revised: Jun  1, 2003
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "imget version 20030322(IM144)";
+my $VERSION = "imget version 20030601(IM145)";
 
 $Prog = 'imget';
 
@@ -68,7 +68,7 @@ Usage: $Prog [OPTIONS]
 #   'thread;b;;'       => 'Make threads',
 #   'indent;i;;'       => "Width of thread indent",
     'lock;s;flock;'    => 'Local mailbox locking style. (none,flock,file)',
-    'rpath;s;append;'  => "conversion of UNIX From line into Return-Path:\n" .
+    'rpath;s;append;'  => "Conversion of UNIX From line into Return-Path:\n" .
 	"\t\t(append, ignore, replace)",
     'keep;i;0;'        => "Preserve messages.\n" .
 	"\t\t(POP: in days; 0=delete immediately, -1=preserve forever)\n" .
@@ -298,7 +298,7 @@ Default value is "flock".
 
 =item I<-r, --rpath=STRING>
 
-conversion of UNIX From line into Return-Path: (append, ignore, replace).
+Conversion of UNIX From line into Return-Path: (append, ignore, replace).
 Default value is "append".
 
 =item I<-k, --keep=NUM>

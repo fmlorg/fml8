@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Mar 22, 2003
+### Revised: Jun  1, 2003
 ###
 
-my $PM_VERSION = "IM::Pop.pm version 20030322(IM144)";
+my $PM_VERSION = "IM::Pop.pm version 20030601(IM145)";
 
 package IM::Pop;
 require 5.003;
@@ -288,8 +288,10 @@ sub pop_process($$$$) {
 	if ($histfile eq '') {
 	    im_err("POP historyfile $histfile undefined.\n");
 	    return -1;
-	} elsif ($histfile =~ /(\S+)/) {
-	    $histfile = $1;	# to pass through taint check
+	} elsif ($histfile =~ /(.+)/) {
+	    if ($> != 0) {
+		$histfile = $1;	# to pass through taint check
+	    }
 	} else {
 	    im_err("invalid POP historyfile: $histfile.\n");
 	    return -1;
@@ -442,11 +444,13 @@ sub pop_inc($$$$$$$$) {
 
     my $getchk_hook = getchksbr_file();
     if ($getchk_hook) {
-	if ($getchk_hook =~ /^(\S+)$/) {
+	if ($getchk_hook =~ /(.+)/) {
 	    if ($main::INSECURE) {
 		im_warn("Sorry, GetChkSbr is ignored for SUID root script.\n");
 	    } else {
-		$getchk_hook = $1;    # to pass through taint check
+		if ($> != 0) {
+		    $getchk_hook = $1;    # to pass through taint check
+		}
 		if (-f $getchk_hook) {
 		    require $getchk_hook;
 		} else {

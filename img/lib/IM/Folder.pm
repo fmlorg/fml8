@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Mar 22, 2003
+### Revised: Jun  1, 2003
 ###
 
-my $PM_VERSION = "IM::Folder.pm version 20030322(IM144)";
+my $PM_VERSION = "IM::Folder.pm version 20030601(IM145)";
 
 package IM::Folder;
 require 5.003;
@@ -270,8 +270,10 @@ sub create_folder($) {
 	    next;
 	}
 	$p .= "/$subdir";
-	$p =~ /(.+)/;   # $p may be tainted
-	$p = $1;        # clean up
+	if ($> != 0) {
+	    $p =~ /(.+)/;	# may be tainted
+	    $p = $1;	# clean up
+	}
 	unless (-d $p) {
 #	    im_debug("Creating directory: $p\n")
 #	      if (&debug('folder'));

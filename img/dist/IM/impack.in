@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Mar 22, 2003
+### Revised: Jun  1, 2003
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "impack version 20030322(IM144)";
+my $VERSION = "impack version 20030601(IM145)";
 
 $Prog = 'impack';
 
@@ -79,7 +79,7 @@ sub impack($) {
 
     my @paths = get_impath($folder, 'all');
 
-    print "packing messages in $opt_src ... " unless $opt_noharm;
+    print "packing messages in $opt_src..." unless $opt_noharm;
     flush('STDOUT') unless $opt_noharm;
 
     foreach (@paths) {

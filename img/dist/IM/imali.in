@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Mar 22, 2003
+### Revised: Jun  1, 2003
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "imali version 20030322(IM144)";
+my $VERSION = "imali version 20030601(IM145)";
 
 $Prog = 'imali';
 
@@ -37,7 +37,7 @@ use vars qw($Prog $EXPLANATION @OptConfig
 $EXPLANATION = "$VERSION
 display aliases for mail/news address
 
-Usage: $Prog [OPTIONS] [TARGETS ...]
+Usage: $Prog [OPTIONS] [TARGETS...]
 ";
 
 @OptConfig = (
@@ -109,7 +109,7 @@ imali - display aliases for mail/news address
 
 =head1 SYNOPSIS
 
-B<imali> [OPTIONS] [TARGETS ...]
+B<imali> [OPTIONS] [TARGETS...]
 
 =head1 DESCRIPTION
 

@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Mar 22, 2003
+### Revised: Jun  1, 2003
 ###
 
-my $PM_VERSION = "IM::Config.pm version 20030322(IM144)";
+my $PM_VERSION = "IM::Config.pm version 20030601(IM145)";
 
 package IM::Config;
 require 5.003;
@@ -33,7 +33,7 @@ use vars qw(@ISA @EXPORT);
     inbox_folder draft_folder trash_folder config_cases config_case_inbox
     preserve_dot
     folder_mode msg_mode allowcrlf use_cl no_sync fsync_no preferred_fsync_no
-    addrbook_file aliases_file petname_file
+    addrbook_file aliases_file petname_file mail_folders_file
     context_file getchksbr_file getsbr_file scansbr_file scan_header_pick
     address addresses_regex
     msgdbfile msgdbtype
@@ -41,7 +41,9 @@ use vars qw(@ISA @EXPORT);
     nntpservers nntphistoryfile nntpauthuser set_nntpauthuser
     popaccount pophistoryfile imapaccount httpproxy noproxy
     usepwagent pwagentport pwagent_tmp_dir pwagent_tmp_path usepwfiles pwfiles
-    expand_path usetouchfile touchfile namazuv2 namazu_lock_dir namazu_lock_path
+    expand_path use_xdispatcher usetouchfile touchfile
+    namazuv2 namazu_dir namazu_path namazu_lock_dir namazu_lock_path
+    mknmz_include_file mknmz_ignore_folders_regex
     pop_timeout imap_timeout nntp_timeout dns_timeout
     connect_timeout command_timeout rcv_buf_siz
     db_type file_attr ssh_path);
@@ -114,6 +116,8 @@ BEGIN {
     'addrbookfile;s;;AddrBookFile'      => 'Address book file',
     'aliasesfile;s;;AliasesFile'        => 'Aliases file',
     'petnamefile;s;;PetNameFile'	=> 'PetName file',
+    'petnamefile;s;;PetNameFile'	=> 'PetName file',
+    'mailfoldersfile;s;;MailFoldersFile'	=> 'Mail folders file',
     'contextfile;s;Context;ContextFile'	=> 'Context file',
     'address;s;;Address'		=> 'Email addresses',
     'addrregex;s;;AddrRegex'		=> 'Email addresses by regex',
@@ -144,10 +148,14 @@ BEGIN {
     'connecttimeout;i;60;ConnectTimeout'  => 'Timeout for connection making',
     'commandtimeout;i;300;CommandTimeout' => 'Timeout for each command',
     'rcvbufsiz;i;;RcvBufSiz'		=> 'Receive buffer size of TCP',
+    'usexdispatcher;b;;UseXDispatcher'	=> 'Use X-Dispatcher field',
     'usetouchfile;b;;UseTouchFile'	=> 'Use touch file',
     'touchfile;s;;TouchFile'		=> 'Touch file name',
-    'namazuv2;b;;NamazuV2'		=> 'Use Namazu Version 2',
-    'namazulockdir;s;;NamazuLockDir'	=> 'Lock directory for immknmz',
+    'namazuv2;b;;NamazuV2'		=> 'Use Namazu Version 2 (1.9 or late)',
+    'namazudir;s;;NamazuDir'	=> 'A directory to contain Namazu indexes',
+    'namazulockdir;s;;NamazuLockDir'	=> 'Lock directory for Namazu',
+    'mknmzincludefile;s;;MknmzIncludeFile'	=> 'A file for mknmz -I',
+    'mknmzignorefoldersregex;s;;MknmzIgnoreFoldersRegex'	=> 'Folders regex ignored by immknmz',
     );
 
     # these vars should be in current package?
@@ -841,6 +849,10 @@ sub petname_file() {
     return &expand_path($PetNameFile);
 }
 
+sub mail_folders_file() {
+    return &expand_path($MailFoldersFile);
+}
+
 sub address() {
     return $Address;
 }
@@ -921,6 +933,10 @@ sub pwfiles() {
     return $PwFiles;
 }
 
+sub use_xdispatcher() {
+    return $UseXDispatcher;
+}
+
 sub usetouchfile() {
     return $UseTouchFile;
 }
@@ -967,6 +983,22 @@ sub ssh_path() {
 
 sub namazuv2() {
     return $NamazuV2;
+}
+
+sub namazu_dir() {
+    return $NamazuDir;
+}
+
+sub namazu_path() {
+    return expand_home(namazu_dir());
+}
+
+sub mknmz_include_file() {
+    return &expand_path($MknmzIncludeFile);
+}
+
+sub mknmz_ignore_folders_regex() {
+    return $MknmzIgnoreFoldersRegex;
 }
 
 sub namazu_lock_dir() {
@@ -1055,12 +1087,14 @@ ContextFile=Context		# relative to ~/.im/
 # folders
 Src=$InboxFolder		# default source of most commands
 Imclean.Src=$TrashFolder	# default source for message cleanups
+Immknmz.Src=			# folders specified by Mail/.folders are used
 #Imget.dst=$InboxFolder		# default inbox folder
 Imrm.dst=$TrashFolder		# default trash folder
 # mail address aliases for imali/imput
 AddrBookFile=Addrbook		# relative to ~/.im/
 AliasesFile=Aliases		# relative to ~/.im/
 #PetnameFile=Petnames		# relative to ~/.im/
+MailFoldersFile=~/Mail/.folders
 UseTouchFile=off
 TouchFile=.mew-touch
 # imget/imls
@@ -1077,6 +1111,7 @@ NntpServers=localhost		# default server for NNTP
 # imput
 FccDir=$MailDir
 QueueDir=queue			# relative to ~/.im/
+UseXDispatcher=on		# use X-Dispatcher field
 # imget
 Imget.Src=local			# default source of imget (local mailbox)
 PopHistory=pophist-{POPSERVERID}	# to save last state (relative to ~/.im/)
@@ -1085,7 +1120,10 @@ NntpHistory=newshist		# to save last state (relative to ~/.im/)
 PwAgentTmpDir=pwagtmp		# temporary directory (relative to ~/.im/)
 # namazu
 NamazuV2=off			# use Namazu version 2 (1.9.x or late)
+NamazuDir=Namazu		# relative to ~/
 NamazuLockDir=nmzlock		# lock directory (relative to ~/.im/)
+MknmzIncludeFile=~/Namazu/mknmz-inc.pl	# mknmz -I <file>
+MknmzIgnoreFoldersRegex=\+(attach|draft|trash|queue|postq|schedule)
 __END__
 
 =head1 NAME
@@ -1108,7 +1146,7 @@ mail_dir mail_path news_dir news_path queue_dir queue_path
 inbox_folder draft_folder trash_folder config_cases config_case_inbox
 preserve_dot
 folder_mode msg_mode allowcrlf use_cl no_sync fsync_no preferred_fsync_no
-addrbook_file aliases_file petname_file
+addrbook_file aliases_file petname_file mail_folders_file
 context_file getchksbr_file getsbr_file scansbr_file scan_header_pick
 address addresses_regex
 msgdbfile msgdbtype
@@ -1116,7 +1154,9 @@ mbox_style
 nntpservers nntphistoryfile nntpauthuser set_nntpauthuser
 popaccount pophistoryfile imapaccount httpproxy noproxy
 usepwagent pwagentport pwagent_tmp_dir pwagent_tmp_path usepwfiles pwfiles
-expand_path usetouchfile touchfile namazuv2 namazu_lock_dir namazu_lock_path
+expand_path use_xdispatcher usetouchfile touchfile
+namazuv2 namazu_dir namazu_path namazu_lock_dir namazu_lock_path
+mknmz_include_file mknmz_ignore_folders_regex
 pop_timeout imap_timeout nntp_timeout dns_timeout
 connect_timeout command_timeout rcv_buf_siz
 db_type file_attr ssh_path

@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Mar 22, 2003
+### Revised: Jun  1, 2003
 ###
 
-my $PM_VERSION = "IM::Scan.pm version 20030322(IM144)";
+my $PM_VERSION = "IM::Scan.pm version 20030601(IM145)";
 
 package IM::Scan;
 require 5.003;
@@ -121,11 +121,13 @@ sub set_scan_form($$$) {
     $JIS_SAFE= $jis_safe;
 
     my $scan_hook = scansbr_file();
-    if ($scan_hook =~ /^(\S+)$/) {
+    if ($scan_hook =~ /(.+)/) {
 	if ($main::INSECURE) {
 	    im_warn("Sorry, ScanSbr is ignored for SUID root script.\n");
 	} else {
-	    $scan_hook = $1;	# to pass through taint check
+	    if ($> != 0) {
+		$scan_hook = $1;	# to pass through taint check
+	    }
 	    if (-f $scan_hook) {
 		require $scan_hook;
 	    } else {
@@ -262,15 +264,16 @@ sub parse_body(*$) {
 	next if /^=2D/;
 	next if /^\s+[\w*-]+=/;		# eg. "boundary="; * = RFC2231
 	next if /^\s*[\w-]+: /;		# Headers and header style citation
-	next if /^\s*[>:|\/_}]/;	# other citation
-	next if /^  /;
+	next if /^\s*[>:|\#;\/_}]/;
+	next if /^\s*[[<\/(.]+ *snip/;
+	next if /^   /;
 	next if /^\s*\w+([\'._-]+\w+)*>/;
 	next if /^\s*(On|At) .*[^.!\s\n]\s*$/;
-        next if /(:|;|\/)\s*\n$/;
-        next if /(wrote|writes?|said|says?)[^.!\n]?\s*\n$/;
+	next if /(:|;|\/)\s*\n$/;
+	next if /(wrote|writes?|said|says?)[^.!\n]?\s*\n$/;
 	next if /^This is a multi-part message in MIME format/i;
 
-	if (/^\s*In (message|article|<|\")/i) {
+	if (/^\s*In (message|article|mail|news|<|\"|\[|\()/i) {
 	    if ($mode == 0) {
 		$_ = <HANDLE>;
 	    } else {
@@ -536,10 +539,10 @@ sub my_addr(@) {
     unless (defined($ADDRESS_HASH{'init'})) {
 	$ADDRESS_HASH{'addr'} = addresses_regex();
 	unless ($ADDRESS_HASH{'addr'}) {
-	    $ADDRESS_HASH{'addr'} = '^' . quotemeta(address()) . '$';  #'
-            $ADDRESS_HASH{'addr'} =~ s/(\\\s)*\\,(\\\s)*/\$|\^/g;
+	    $ADDRESS_HASH{'addr'} = '^' . quotemeta(address()) . "\$";
+	    $ADDRESS_HASH{'addr'} =~ s/(\\\s)*\\,(\\\s)*/\$|\^/g;
 	}
-	    $ADDRESS_HASH{'init'} = 1;
+	$ADDRESS_HASH{'init'} = 1;
     }
     return 0 if ($ADDRESS_HASH{'addr'} eq "");
     foreach $addr (@addrs) {

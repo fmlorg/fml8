@@ -1,6 +1,16 @@
+		Differences between IM145 and IM144
+
+* Fix that imget fails when modern delivery identifiers are used in a
+  maildir, according to `http://cr.yp.to/proto/maildir.html'.
+* Fix that setuid imget fails with tainted variables.
+* New immknmz option `--src', target folders can be specified.
+* New config variables, `MailFoldersFile', `NamazuDir', `MknmzIncludeFile',
+  `MknmzIgnoreFoldersRegex', and `UseXDispatcher'.
+* Revised regexp for Form=%b.
+
 		Differences between IM144 and IM143
 
-* Supporting darwin.
+* Supporting Darwin.
 * Regexp fix for Form=%b.
 * Bug fix for configure options.
 * Doc/message fix.
@@ -14,7 +24,7 @@
 		Differences between IM142 and IM141
 
 * Local security fix for impwagent and immknmz.
-* IM/TcpTransaction.pm: Socket6.pm support.
+* IM/TcpTransaction.pm: Socket6.pm support for IPv6.
 * IM/MD5.pm: Fix 64bit integer problem.
 * imsetup: Support `User' and `MBoxStyle=qmail'.
 * imsetup: Bug fix for Perl 5.8.0.

@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Mar 22, 2003
+### Revised: Jun  1, 2003
 ###
 
-my $PM_VERSION = "IM::Message.pm version 20030322(IM144)";
+my $PM_VERSION = "IM::Message.pm version 20030601(IM145)";
 
 package IM::Message;
 require 5.003;
@@ -17,6 +17,7 @@ require Exporter;
 use IM::Util;
 use IM::Address qw(extract_addr replace_addr fetch_addr);
 use IM::Alias qw(alias_lookup hosts_completion);
+use IM::Config qw(use_xdispatcher);
 use integer;
 use strict;
 use vars qw(@ISA @EXPORT);
@@ -479,7 +480,9 @@ sub put_mimed_bcc(*$$$$$$) {
 	print CHAN "Sender: $main::Sender_line$crlf";
     }
     print CHAN "To: blind-copy-recipients:;$crlf";
-    print CHAN "X-Dispatcher: $main::VERSION$crlf";
+    if (use_xdispatcher()) {
+	print CHAN "X-Dispatcher: $main::VERSION$crlf";
+    }
     if (($subj = &header_value($Header, 'Subject')) ne '') {
 	print CHAN "Subject: Bcc: $subj$crlf";
     } else {
@@ -583,7 +586,9 @@ sub put_mimed_error_notify(*$$$$$$$$;$) {
 
     return -1 unless (print CHAN "To: $main::Sender_line$crlf");
     print CHAN "From: Imput-Error-Report$crlf";
-    print CHAN "X-Dispatcher: $main::VERSION$crlf";
+    if (use_xdispatcher()) {
+	print CHAN "X-Dispatcher: $main::VERSION$crlf";
+    }
     if (($subj = &header_value($Header, 'Subject')) ne '') {
 	print CHAN "Subject: Returned message: $subj$crlf";
     } else {

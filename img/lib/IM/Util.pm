@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Mar 22, 2003
+### Revised: Jun  1, 2003
 ###
 
-my $PM_VERSION = "IM::Util.pm version 20030322(IM144)";
+my $PM_VERSION = "IM::Util.pm version 20030601(IM145)";
 
 package IM::Util;
 require 5.003;
@@ -262,9 +262,13 @@ sub flush(*) {
 #
 
 sub im_open($$) {
-    my($d, $a) = @_;
+    my($d, $f) = @_;
     my($r);
-    if ($r = open($d, $a)) {
+    if ($> != 0) {
+	$f =~ /(.+)/;	# may be tainted
+	$f = $1;	# clean up
+    }
+    if ($r = open($d, $f)) {
 	binmode($d);
     }
     return $r;
@@ -273,6 +277,10 @@ sub im_open($$) {
 sub im_sysopen($$$) {
     my($d, $f, $a) = @_;
     my($r);
+    if ($> != 0) {
+	$f =~ /(.+)/;	# may be tainted
+	$f = $1;	# clean up
+    }
     if ($r = sysopen($d, $f, $a)) {
 	binmode($d);
     }

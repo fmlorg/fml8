@@ -2,12 +2,11 @@
 ################################################################
 ###
 ###			       immknmz
-###	     "mew-nmz-mknmz-all-folders" (in mew-nmz.el)
 ###
 ### Author:  Shuichi Kitaguchi <kit@Mew.org>
 ###	Internet Message Group <img@mew.org>
 ### Created: Sep 23, 1999
-### Revised: Mar 22, 2003
+### Revised: Jun  1, 2003
 ###
 
 BEGIN {
@@ -15,37 +14,29 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "immknmz version 20030322(IM144)";
+my $VERSION = "immknmz version 20030601(IM145)";
 
 $Prog = 'immknmz';
-
-###
-### Modify these variables if you need.
-###
-my $nmzdir        = "Namazu";	# "~/$nmzdir"
-my $mknmz_include = "mknmz-inc.pl";	# mknmz -I <file>
-my @ignorefolders = ("draft", "trash", "schedule", "queue",);
-
-
-# Code:
 
 use IM::Config;
 use IM::Util;
 use IM::Folder;
 use IO::File;
 use strict;
-use vars qw($Prog $EXPLANATION @OptConfig $opt_help $opt_gcnmz $opt_verbose $opt_timestamp);
+use vars qw($Prog $EXPLANATION @OptConfig $opt_help $opt_verbose
+	    @opt_src $opt_gcnmz $opt_timestamp);
 
 $EXPLANATION = "$VERSION
-make namazu index for mail/news folders
+make namazu index for mail folders
 
-Usage: $Prog [OPTIONS]
+Usage: $Prog [OPTIONS] [FOLDERS]
 ";
 
 @OptConfig = (
+	      'src;F@;;'    => 'Set source folders. (Mail/.folders file is used by default)',
 	      'gcnmz;b;;'   => "Use gcnmz after mknmz (Garbage Collection for Namazu index).",
-	      'verbose;b;;' => "With verbose messages.",
 	      'timestamp;b;;' => "Use checking time stamp.",
+	      'verbose;b;;' => "With verbose messages.",
 	      'help;b;;'    => "Show this message.",
 	      );
 
@@ -54,47 +45,31 @@ read_cfg();
 read_opt(\@ARGV);
 help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
 
-sub get_mtime {
-    my($path) = @_;
-    my($dev,$ino,$mode,$nlink,$uid,$gid,
-       $rdev,$size,$atime,$mtime,$ctime,
-       $blksize,$blocks) = stat($path) or return -1;
-    return $mtime;
-}
-
 my $lockdir = namazu_lock_path();
 if ($lockdir) {
     unless (mkdir($lockdir, 0700)) {
 	print STDERR "$Prog: can not create lock directory: $lockdir.\n";
+	$lockdir = "";
 	exit $EXIT_ERROR;
     }
 }
-sub unlock_exit($) {
-    my($status) = @_;
-    rmdir $lockdir if $lockdir;
-    exit $status;
+END {
+    if ($lockdir && -d $lockdir) {
+	rmdir $lockdir;
+    }
 }
 
-my $mailpath = mail_path()."/";
-my $namazupath = home_dir()."/$nmzdir/".mail_dir()."/";
+my $mailpath = mail_path() . "/";
+my $namazupath = namazu_path() . "/" . mail_dir() . "/";
+my $mknmz_incfile = mknmz_include_file();
+if (! -f $mknmz_incfile) {
+    $mknmz_incfile = "";
+}
 my $mknmz_args = "-q";
+$mknmz_args = "" if $opt_verbose;
 
-my $incfile = home_dir()."/$nmzdir/$mknmz_include";
-if (! -f $incfile) {
-    $incfile = "";
-}
-my $folderspath = $mailpath."/.folders";
-my $msgfolder;
-my $msgdir;
-my $flag;
-my $nmzfolder;
-my $gcnmztgt;
-my $ret;
-my @filelist;
 my $tempdir;
 my $tempfile;
-my $timestamp;
-
 $tempdir = $ENV{TMPDIR} || $ENV{TEMP} || $ENV{TMP} || '/tmp';
 $tempdir =~ s:\\:/:g;
 $tempdir =~ s/\/+$//;
@@ -102,139 +77,199 @@ $tempdir = sprintf("%s/immknmz-%d-%d", $tempdir, $$, time());
 rmdir $tempdir;
 unless (mkdir($tempdir, 0700)) {
     print STDERR "$Prog: can not create directory: $tempdir.\n";
-    unlock_exit($EXIT_ERROR);
+    $tempdir = "";
+    exit($EXIT_ERROR);
 }
 $tempfile = "$tempdir/tempfile";
-
-$mknmz_args = "" if $opt_verbose;
-
-im_open(\*FILE, "<$folderspath");
-while (<FILE>) {
-    s/\r$// if &win95p() || &os2p();
-    chomp;
-    $msgfolder = $_;
-    $flag = 0;
-    foreach (@ignorefolders) {
-	if ($msgfolder !~ /^\+/) {  # ! local folder
-	    $flag=1;
-	    last;
-	} elsif ($msgfolder =~ /^\+$_/) {  # == @ignorefolders
-	    $flag=1;
-	    last;
-	}
+END {
+    if ($tempfile && -f $tempfile) {
+	unlink $tempfile;
     }
-    if ($flag != 0) {
-	print "skipping $msgfolder...\n";
-	flush('STDOUT');
-    } else {
-	$nmzfolder = $msgfolder;
-	$msgfolder =~ s/^\+/$mailpath/g;
-	$msgdir = $msgfolder;
-	$nmzfolder =~ s/^\+/$namazupath/g;
-
-        $timestamp = "$nmzfolder/NMZ.stamp";
-        if ($opt_timestamp) {
-	    my $foldermtime;
-	    if (&usetouchfile() && -r $msgfolder . "/" . &touchfile()) {
-		$foldermtime = get_mtime($msgfolder . "/" . &touchfile());
-	    } else {
-		$foldermtime = get_mtime("$msgfolder");
-	    }
-            if ($foldermtime < get_mtime("$timestamp")) {
-                print "index of $msgfolder may be up to date.\n" if $opt_verbose;
-		flush('STDOUT');
-                next;
-            }
-        }
-        im_open(\*STAMP,">$timestamp.new");
-        print STAMP "touched by IM.";
-        close(STAMP);
-
-	opendir(DIR,$msgfolder);
-	@filelist = grep(/^[0-9]*$/ && -f "$msgfolder/$_",readdir(DIR));
-	closedir(DIR);
-
-	if ((&win95p() || &os2p()) && !&namazuv2()) {
-	    $msgfolder =~ s:/:\\:g;
-	}
-
-	if (scalar(@filelist) > 0) {
-	    unless (sysopen(\*TEMPFILE, "$tempfile",
-			    O_RDWR()|O_CREAT()|O_EXCL(), 0600)) {
-		print STDERR "$Prog: can not create file: $tempfile.\n";
-		unlock_exit($EXIT_ERROR);
-	    }
-	    binmode(\*TEMPFILE);
-	    foreach (@filelist) {
-		if (! -d "$msgdir/$_") {
-		    if ((&win95p() || &os2p()) && !&namazuv2()) {
-			print TEMPFILE "$msgfolder\\$_\n";
-		    } else {
-			print TEMPFILE "$msgfolder/$_\n";
-		    }
-		}
-	    }
-	    close(TEMPFILE);
-
-	    create_folder($nmzfolder);
-	    $gcnmztgt = "$nmzfolder" . "/NMZ";
-	    
-	    print "$Prog: processing $msgfolder ...\n";
-            flush('STDOUT');
-	    if ($incfile eq "") {
-		$ret = system "mknmz -Uh $mknmz_args -O $nmzfolder -F $tempfile";
-	    } else {
-		$ret = system "mknmz -Uh $mknmz_args -O $nmzfolder -F $tempfile -I $incfile";
-	    }
-	    unlink $tempfile;
-	    if ($ret == 2) {
-		print "$Prog: abort.\n";
-		flush('STDOUT');
-		last;
-	    } elsif ($opt_gcnmz) {
-		print "$Prog: gcnmz $msgfolder ...\n" if $opt_verbose;
-		flush('STDOUT');
-		if (&namazuv2()) {
-		    system "gcnmz --no-backup --quiet $gcnmztgt";
-		} else {
-		    system "gcnmz $gcnmztgt";
-		    opendir(DIR,$nmzfolder);
-		    @filelist = grep(/^.*.BAK$/ && -f "$nmzfolder/$_",readdir(DIR));
-		    closedir(DIR);
-		    if (scalar(@filelist) > 0) {
-			foreach (@filelist) {
-			    unlink "$nmzfolder" . "/$_";
-			}
-		    }
-		}
-	    }
-	}
-        rename("$timestamp.new", "$timestamp");
+    if ($tempdir && -d $tempdir) {
+	rmdir $tempdir;
     }
 }
-close(FILE);
-rmdir $tempdir;
-unlock_exit($EXIT_SUCCESS);
+
+my $use_dosish_path = ((&win95p() || &os2p()) && !&namazuv2());
+
+sub get_mtime($) {
+    my($path) = @_;
+    my($dev, $ino, $mode, $nlink, $uid, $gid,
+       $rdev, $size, $atime, $mtime, $ctime,
+       $blksize, $blocks) = stat($path) or return -1;
+    return $mtime;
+}
+
+sub make_folder_index($) {
+    my($msgfld) = @_;
+    my($msgfolder, $msgdir, $nmzfolder, $gcnmztgt, $ret, $timestamp, @filelist);
+
+    $msgfolder = $msgfld;
+    $msgfolder =~ s/^\+/$mailpath/g;
+    $msgdir = $msgfolder;
+    if ($use_dosish_path) {
+	$msgfolder =~ s:/:\\:g;
+    }
+
+    $nmzfolder = $msgfld;
+    $nmzfolder =~ s/^\+/$namazupath/g;
+
+    $timestamp = "$nmzfolder/NMZ.stamp";
+    if ($opt_timestamp) {
+	my $foldermtime;
+	if (&usetouchfile() && -r $msgdir . "/" . &touchfile()) {
+	    $foldermtime = get_mtime($msgdir . "/" . &touchfile());
+	} else {
+	    $foldermtime = get_mtime("$msgdir");
+	}
+	if (-r $timestamp && $foldermtime < get_mtime("$timestamp")) {
+	    print "index of $msgdir may be up to date.\n" if $opt_verbose;
+	    flush('STDOUT');
+	    return;
+	}
+    }
+    create_folder($nmzfolder);
+    if (im_open(\*STAMP, ">$timestamp.new")) {
+	print STAMP "touched by IM.";
+	close(STAMP);
+    }
+
+    opendir(DIR, $msgdir);
+    @filelist = grep(/^[0-9]*$/ && -f "$msgdir/$_", readdir(DIR));
+    closedir(DIR);
+
+    if (scalar(@filelist) > 0) {
+	unless (sysopen(\*TEMPFILE, "$tempfile",
+			O_RDWR()|O_CREAT()|O_EXCL(), 0600)) {
+	    print STDERR "$Prog: can not create file: $tempfile.\n";
+	    exit($EXIT_ERROR);
+	}
+	binmode(\*TEMPFILE);
+	foreach (@filelist) {
+	    if (! -d "$msgdir/$_") {
+		if ($use_dosish_path) {
+		    print TEMPFILE "$msgfolder\\$_\n";
+		} else {
+		    print TEMPFILE "$msgfolder/$_\n";
+		}
+	    }
+	}
+	close(TEMPFILE);
+
+	print "$Prog: processing $msgfolder...\n";
+	flush('STDOUT');
+	if ($mknmz_incfile eq "") {
+	    $ret = system "mknmz -Uh $mknmz_args -O $nmzfolder -F $tempfile";
+	} else {
+	    $ret = system "mknmz -Uh $mknmz_args -O $nmzfolder -F $tempfile -I $mknmz_incfile";
+	}
+	unlink $tempfile;
+	if ($ret == 2) {
+	    print "$Prog: abort.\n";
+	    flush('STDOUT');
+	    last;
+	} elsif ($opt_gcnmz) {
+	    $gcnmztgt = "$nmzfolder" . "/NMZ";
+	    print "$Prog: gcnmz $msgfolder...\n" if $opt_verbose;
+	    flush('STDOUT');
+	    if (&namazuv2()) {
+		system "gcnmz --no-backup --quiet $gcnmztgt";
+	    } else {
+		system "gcnmz $gcnmztgt";
+		opendir(DIR, $nmzfolder);
+		@filelist = grep(/^.*.BAK$/ && -f "$nmzfolder/$_",
+				 readdir(DIR));
+		closedir(DIR);
+		if (scalar(@filelist) > 0) {
+		    foreach (@filelist) {
+			unlink "$nmzfolder" . "/$_";
+		    }
+		}
+	    }
+	}
+    }
+    if (-f "$timestamp.new") {
+	rename("$timestamp.new", "$timestamp");
+    }
+}
+
+my %IGNORED_FOLDERS_HASH = ();
+
+sub is_ignored_folder($) {
+    my($fld) = @_;
+    if ($fld !~ /^\+/) {
+	return 1;
+    }
+    unless (defined($IGNORED_FOLDERS_HASH{'init'})) {
+	$IGNORED_FOLDERS_HASH{'fld'} = mknmz_ignore_folders_regex();
+	$IGNORED_FOLDERS_HASH{'init'} = 1;
+    }
+    if ($IGNORED_FOLDERS_HASH{'fld'} eq "") {
+	return 0;
+    }
+    if ($fld =~ /$IGNORED_FOLDERS_HASH{'fld'}/o) {
+	return 1;
+    }
+    return 0;
+}
+
+if (@opt_src) {  # folders specified by the --src option
+    my $fld;
+    foreach $fld (@opt_src) {
+	if ($fld !~ /^\+/) {
+	    print "skipping $fld...\n" if $opt_verbose;
+	    flush('STDOUT');
+	} else {
+	    make_folder_index($fld);
+	}
+    }
+} else {  # all folders
+    my $flds_file = mail_folders_file();
+    my $fld;
+
+    im_open(\*FILE, "<$flds_file");
+    while (<FILE>) {
+	s/\r$// if &win95p() || &os2p();
+	chomp;
+	$fld = $_;
+	if (is_ignored_folder($fld)) {
+	    print "skipping $fld...\n" if $opt_verbose;
+	    flush('STDOUT');
+	} else {
+	    make_folder_index($fld);
+	}
+    }
+    close(FILE);
+}
+exit($EXIT_SUCCESS);
 
 __END__
 
 =head1 NAME
 
-immknmz - make namazu index for mail/news folders
+immknmz - make namazu index for mail folders
 
 =head1 SYNOPSIS
 
-B<immknmz> [OPTIONS]
+B<immknmz> [OPTIONS] [FOLDERS]
 
 =head1 DESCRIPTION
 
-The I<immknmz> command makes namazu index for mail/news folders.
+The I<immknmz> command makes namazu index for mail folders.
+
+Folders contained by the ~/Mail/.folders file are used by default.
+If you want to specify the folders, use the `--src' option.
 
 This command is provided by IM (Internet Message).
 
 =head1 OPTIONS
 
 =over 5
+
+=item I<-s, --src=FOLDER,FOLDER...>
+
+Set source folders.
+"--src=+xxx" is equivalent to "+xxx".
 
 =item I<-g, --gcnmz={on,off}>
 

@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: May  9, 1997
-### Revised: Mar 22, 2003
+### Revised: Jun  1, 2003
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "imsetup version 20030322(IM144)";
+my $VERSION = "imsetup version 20030601(IM145)";
 
 $Prog = 'imsetup';
 
@@ -477,14 +477,21 @@ keep=$keep
 #UsePwFiles=yes			# use password files
 #PwFiles=password		# password files (relative to ~/.im/)
 
+#MailFoldersFile=~/Mail/.folders
+
 #UseTouchFile=yes		# use time-stamp file
 #TouchFile=.mew-touch		# time-stamp file for message folders
+
 #NamazuV2=yes			# use Namazu version 2 (1.9.x or late)
+#NamazuDir=Namazu		# relative to ~/
 #NamazuLockDir=nmzlock		# lock directory (relative to ~/.im/)
+#MknmzIncludeFile=~/Namazu/mknmz-inc.pl	# mknmz -I <file>
+#MknmzIgnoreFoldersRegex=\+(attach|draft|trash|queue|postq|schedule)
 
 ## imput specific
 #FccDir=\$MailDir		# directory for FCC folders
 #QueueDir=queue			# directory for to store messages to be sent
+#UseXDispatcher=yes		# use X-Dispatcher field
 #MsgIdDomain=\${HOST}		# if you want to use FQDN of dispatching host
 #ObeyMTAdomain=yes		# do not append domainpart to addresses by imput
 #NoMsgIdForNews=yes		# do not insert Message-Id: when posting as news
