@@ -10,17 +10,17 @@ sub STR2EUC
 
 sub show_articles_for_ticket
 {
-    my ($self, $ticket_id) = @_;
+    my ($self, $thread_id) = @_;
     my $mode      = $self->get_mode || 'text';
     my $config    = $self->{ _config };
     my $spool_dir = $config->{ spool_dir };
 
     $self->db_open();
 
-    my $articles = $self->{ _hash_table }->{ _articles }->{ $ticket_id };
+    my $articles = $self->{ _hash_table }->{ _articles }->{ $thread_id };
 
     print "<B>";
-    print "show contents related with ticket_id=$ticket_id\n";
+    print "show contents related with thread_id=$thread_id\n";
     print "</B>";
     print "<HR>";
     print "<PRE>\n";
@@ -87,7 +87,7 @@ sub cgi_top_menu
 
 
 
-# This shows summary on C<$ticket_id> in HTML language.
+# This shows summary on C<$thread_id> in HTML language.
 # It is used in C<FML::CGI::TicketSystem>.
 sub _show_ticket_by_html_table
 {
@@ -108,13 +108,13 @@ sub _show_ticket_by_html_table
     my $articles = $optargs->{ articles };
     my $aid      = (split(/\s+/, $articles))[0];
 
-    # do nothing if the $ticket_id is unknown.
+    # do nothing if the $thread_id is unknown.
     return unless $tid;
 
     # <FORM ACTION=> ..>
     my $xtid = CGI::escape($tid);
     $action  = "${action}?ml_name=${ml_name}";
-    $action .= "&ticket_id=$xtid&article_id=$aid";
+    $action .= "&thread_id=$xtid&article_id=$aid";
 
     print "<TR>\n";
     print "<TD>";
@@ -159,21 +159,21 @@ sub run_cgi
 
     # get action parameter via HTTP
     my $action = param('action') || 'list';
-    my $ticket_id = param('ticket_id');
+    my $thread_id = param('thread_id');
 
     # o.k start html
     print start_html(-title=>$title,-BGCOLOR=>$color), "\n";
 
     if ($action eq 'close') {
 	$self->set_status({
-	    ticket_id => $ticket_id,
+	    thread_id => $thread_id,
 	    status    => 'closed',
 	});
     }
 
     if ($action eq 'show') {
-	Log("run.cgi.show_articles for $ticket_id");
-	$self->show_articles_for_ticket($ticket_id);
+	Log("run.cgi.show_articles for $thread_id");
+	$self->show_articles_for_ticket($thread_id);
     }
     else {
 	# menu at the top of scrren

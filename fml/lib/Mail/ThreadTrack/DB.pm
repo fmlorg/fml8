@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: @template.pm,v 1.1 2001/08/07 12:23:48 fukachan Exp $
+# $FML: DB.pm,v 1.1.1.1 2001/11/02 09:07:39 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -29,7 +29,7 @@ Mail::ThreadTrack::DB - what is this
 open DB.
 It uses tie() to bind a hash to a DB file.
 Our minimal_states uses several DB files for
-C<%ticket_id>,
+C<%thread_id>,
 C<%date>,
 C<%status>,
 C<%sender>,
@@ -45,7 +45,7 @@ untie() corresponding hashes opened by C<db_open()>.
 =cut
 
 
-my @kind_of_databases = qw(ticket_id
+my @kind_of_databases = qw(thread_id
 			   info
                            date
 			   status

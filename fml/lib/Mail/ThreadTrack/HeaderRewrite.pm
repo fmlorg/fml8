@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: @template.pm,v 1.2 2001/10/27 04:27:18 fukachan Exp $
+# $FML: HeaderRewrite.pm,v 1.1.1.1 2001/11/02 09:07:39 fukachan Exp $
 #
 
 package Mail::ThreadTrack::HeaderRewrite;
@@ -40,8 +40,8 @@ sub rewrite_header
 	$header->add('X-Ticket-Status', $self->{ _status_info });
     }
 
-    if (defined $self->{ _ticket_id }) {
-	$header->add('X-Ticket-ID', $self->{ _ticket_id });
+    if (defined $self->{ _thread_id }) {
+	$header->add('X-Ticket-ID', $self->{ _thread_id });
     }
 
     if (defined $self->{ _status_history }) {

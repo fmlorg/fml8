@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Print.pm,v 1.1.1.1 2001/11/02 09:07:39 fukachan Exp $
+# $FML: Print.pm,v 1.2 2001/11/03 00:10:06 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -41,7 +41,7 @@ C<articles>, which is a list of articles with the ticket-id.
 
 =head2 C<simple_print()>
 
-show entries by the ticket_id order. For example,
+show entries by the thread_id order. For example,
 
        date    age status  ticket id             articles
  ------------------------------------------------------------
@@ -65,30 +65,30 @@ It is also larger if $status is C<open>.
 sub show_summary
 {
     my ($self) = @_;
-    my ($tid, $status, $ticket_id);
+    my ($tid, $status, $thread_id);
     my $mode = $self->get_mode || 'text';
 
     # rh: ticket id list, which is ARRAY REFERENCE tied to db_dir/*db's
-    $ticket_id = $self->list_up_ticket_id();
+    $thread_id = $self->list_up_thread_id();
 
     # self->{ _hash_table } is tied to DB's.
     $self->db_open();
 
-    if (@$ticket_id) {
+    if (@$thread_id) {
 	# sort the ticket output order it out by cost
 	# and print the ticket summary in that order.
-	$self->sort($ticket_id);
+	$self->sort($thread_id);
 
 	if ($mode eq 'html') {
 	    print "<TABLE BORDER=4>\n" if $mode eq 'html';
-	    $self->_print_ticket_summary($ticket_id);
+	    $self->_print_ticket_summary($thread_id);
 	    print "</TABLE>\n" if $mode eq 'html';
 	}
 	else {
-	    $self->_print_ticket_summary($ticket_id);
+	    $self->_print_ticket_summary($thread_id);
 
 	    # show short summary for each article
-	    $self->_print_article_summary($ticket_id);
+	    $self->_print_article_summary($thread_id);
 	}
     }
 
@@ -100,7 +100,7 @@ sub show_summary
 
 sub _print_ticket_summary
 {
-    my ($self, $ticket_id) = @_;
+    my ($self, $thread_id) = @_;
     my $mode   = $self->get_mode || 'text';
     my $rh_age = $self->{ _age } || {};
     my $fd     = $self->{ _fd } || \*STDOUT;
@@ -120,13 +120,13 @@ sub _print_ticket_summary
 
     my ($tid, @article_id, $article_id, $date, $age, $status) = ();
     my $dh = new Mail::Message::Date;
-    for $tid (@$ticket_id) {
+    for $tid (@$thread_id) {
 	# get the first $article_id from the article_id list
 	(@article_id) = split(/\s+/, $rh->{ _articles }->{ $tid });
 	$article_id   = $article_id[0];
 
 	# determine $date for the $article_id
-	# $age and $status for $ticket_id
+	# $age and $status for $thread_id
 	$date   = $dh->YYYYxMMxDD( $rh->{ _date }->{ $article_id } , '/');
 	$age    = $rh_age->{ $tid };
 	$status = $rh->{ _status }->{ $tid };
@@ -164,7 +164,7 @@ sub _cost_to_indicator
 
 sub _print_article_summary
 {
-    my ($self, $ticket_id) = @_;
+    my ($self, $thread_id) = @_;
     my $config = $self->{ _config };
     my $age  = $self->{ _age }  || {};
     my $cost = $self->{ _cost } || {};
@@ -179,7 +179,7 @@ sub _print_article_summary
 	}
 
 	my $spool_dir  = $config->{ spool_dir };
-	for my $tid (@$ticket_id) {
+	for my $tid (@$thread_id) {
 	    if ($is_show_cost_indicate) {
 		my $how_bad = _cost_to_indicator( $cost->{ $tid } );
 		printf $fd "\n%6s  %-10s  %s\n", $how_bad, $tid;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Analyze.pm,v 1.1.1.1 2001/11/02 09:07:39 fukachan Exp $
+# $FML: Analyze.pm,v 1.2 2001/11/03 00:13:10 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -68,7 +68,7 @@ sub _is_reply
 # Descriptions: assign a new ticket or 
 #               extract the existing ticket-id from the subject
 #    Arguments: $self $curproc $args
-# Side Effects: a new ticket_id may be assigned
+# Side Effects: a new thread_id may be assigned
 #               article header is rewritten
 # Return Value: none
 sub _assign
@@ -79,19 +79,19 @@ sub _assign
     my $subject  = $header->get('subject');
     my $is_reply = _is_reply($subject);
 
-    # 1. try to extract $ticket_id from subject: field
-    my $ticket_id = $self->_extract_ticket_id_in_subject($header, $config);
-    unless ($ticket_id) {
-	# 1.1 hmm, we tail to but we try to speculate ticket_id 
+    # 1. try to extract $thread_id from subject: field
+    my $thread_id = $self->_extract_thread_id_in_subject($header, $config);
+    unless ($thread_id) {
+	# 1.1 hmm, we tail to but we try to speculate thread_id 
 	#     from other header information.
-	$ticket_id = $self->_speculate_ticket_id($msg);
-	if ($ticket_id) {
+	$thread_id = $self->_speculate_thread_id($msg);
+	if ($thread_id) {
 	    $is_reply = 1;
-	    $self->{ _ticket_id } = $ticket_id;
-	    $self->log("speculated id=$ticket_id");
+	    $self->{ _thread_id } = $thread_id;
+	    $self->log("speculated id=$thread_id");
 	}
 	else {
-	    $self->log("(debug) fail to spelucate ticket_id");
+	    $self->log("(debug) fail to spelucate thread_id");
 	}
     }
 
@@ -107,20 +107,20 @@ sub _assign
     }
     
     # if the header carries "Subject: Re: ..." with ticket-id, 
-    # we do not rewrite the subject but save the extracted $ticket_id.
-    if ($is_reply && $ticket_id) {
-	$self->log("reply message with ticket_id=$ticket_id");
-	$self->{ _ticket_id } = $ticket_id;
+    # we do not rewrite the subject but save the extracted $thread_id.
+    if ($is_reply && $thread_id) {
+	$self->log("reply message with thread_id=$thread_id");
+	$self->{ _thread_id } = $thread_id;
 	$self->{ _status    } = 'analyzed';
 	$self->_append_ticket_status_info('analyzed');
     }
-    elsif ($ticket_id) {
-	$self->log("usual message with ticket_id=$ticket_id");
-	$self->{ _ticket_id } = $ticket_id;
+    elsif ($thread_id) {
+	$self->log("usual message with thread_id=$thread_id");
+	$self->{ _thread_id } = $thread_id;
 	$self->_append_ticket_status_info("found");
     }
     else {
-	$self->log("message with no ticket_id");
+	$self->log("message with no thread_id");
 
 	# assign a new ticket number for a new message
 	my $id = $self->increment_id();
@@ -128,7 +128,7 @@ sub _assign
 	# O.K. rewrite Subject: of the article to distribute
 	unless ($self->error) {
 	    my $header = $msg->rfc822_message_header();
-	    $self->_get_ticket_id($header, $config, $id);
+	    $self->_get_thread_id($header, $config, $id);
 	    $self->_rewrite_header($header, $config, $id);
 	    $self->_append_ticket_status_info("newly assigned");
 	}
@@ -151,12 +151,12 @@ sub _assign
 #     From: rudo
 #     To: elena-ml
 #
-# This reply message has no ticket_id since the message from kenken to
+# This reply message has no thread_id since the message from kenken to
 # rudo comes directly from kenken not through fml driver.
-# In this case, we try to speculdate the reply relation and the ticket_id
-# of this thread by using _speculate_ticket_id().
+# In this case, we try to speculdate the reply relation and the thread_id
+# of this thread by using _speculate_thread_id().
 #
-sub _speculate_ticket_id
+sub _speculate_thread_id
 {
     my ($self, $msg) = @_;
     my $header  = $msg->rfc822_message_header();
@@ -284,14 +284,14 @@ sub _extract_message_id_references
 }
 
 
-sub _extract_ticket_id_in_subject
+sub _extract_thread_id_in_subject
 {
     my ($self, $header, $config) = @_;
     my $tag     = $config->{ ticket_subject_tag };
     my $subject = $header->get('subject');
     my $regexp  = _regexp_compile($tag);
 
-    # Subject: ... [ticket_id]
+    # Subject: ... [thread_id]
     if (($config->{ ticket_subject_tag_location } eq 'appended') &&
 	($subject =~ /($regexp)\s*$/)) {
 	my $id = $1;
@@ -300,8 +300,8 @@ sub _extract_ticket_id_in_subject
 	return $id;
     }
     # XXX incomplete, we check subject after cutting off "Re:" et. al.
-    # Subject: [ticket_id] ...
-    # Subject: Re: [ticket_id] ...
+    # Subject: [thread_id] ...
+    # Subject: Re: [thread_id] ...
     elsif (($config->{ ticket_subject_tag_location } eq 'appended') &&
 	   ($subject =~ /^\s*($regexp)/)) {
 	my $id = $1;
@@ -316,20 +316,20 @@ sub _extract_ticket_id_in_subject
 }
 
 
-sub _get_ticket_id
+sub _get_thread_id
 {
     my ($self, $header, $config, $id) = @_;
     my $subject_tag = $config->{ ticket_subject_tag };
-    my $id_syntax   = $config->{ ticket_id_syntax };
+    my $id_syntax   = $config->{ thread_id_syntax };
 
-    # ticket_id in subject
-    my $ticket_id = sprintf($subject_tag, $id);
-    $self->{ _ticket_subject_tag } = $ticket_id;
+    # thread_id in subject
+    my $thread_id = sprintf($subject_tag, $id);
+    $self->{ _ticket_subject_tag } = $thread_id;
 
-    $ticket_id = sprintf($id_syntax, $id);
-    $self->{ _ticket_id } = $ticket_id;
+    $thread_id = sprintf($id_syntax, $id);
+    $self->{ _thread_id } = $thread_id;
 
-    return $ticket_id;
+    return $thread_id;
 }
 
 
@@ -393,18 +393,18 @@ sub _update_db
     my ($self, $msg) = @_;
     my $config     = $self->{ _config };
     my $article_id = $config->{ article_id };
-    my $ticket_id  = $self->{ _ticket_id };
+    my $thread_id  = $self->{ _thread_id };
 
     # 0. logging
-    $self->log("article_id=$article_id ticket_id=$ticket_id");
+    $self->log("article_id=$article_id thread_id=$thread_id");
 
     # prepare hash table tied to db_dir/*db's
     my $rh = $self->{ _hash_table };
 
     # 1. 
-    $rh->{ _ticket_id }->{ $article_id }  = $ticket_id;
+    $rh->{ _thread_id }->{ $article_id }  = $thread_id;
     $rh->{ _date      }->{ $article_id }  = time;
-    $rh->{ _articles  }->{ $ticket_id  } .= $article_id . " ";
+    $rh->{ _articles  }->{ $thread_id  } .= $article_id . " ";
 
     # 2. record the sender information
     my $header = $msg->rfc822_message_header;
@@ -412,24 +412,24 @@ sub _update_db
 
     # 3. update status information
     if (defined $self->{ _status }) {
-	$self->_set_status($ticket_id, $self->{ _status });
+	$self->_set_status($thread_id, $self->{ _status });
     }
     else {
 	# set the default status value for the first time.
-	unless (defined $rh->{ _status }->{ $ticket_id }) {
-	    $self->_set_status($ticket_id, 'open');
+	unless (defined $rh->{ _status }->{ $thread_id }) {
+	    $self->_set_status($thread_id, 'open');
 	}
     }
 
     # 4. save optional/additional information
-    #    message_id hash is { message_id => ticket_id };
+    #    message_id hash is { message_id => thread_id };
     my $mid = $header->get('message-id');
     $mid    = $self->_address_clean_up($mid);
-    $rh->{ _message_id }->{ $mid } = $ticket_id;
+    $rh->{ _message_id }->{ $mid } = $thread_id;
 
     # 5. history
     my $buf    = '';
-    my (@aid)  = split(/\s+/, $rh->{ _articles  }->{ $ticket_id });
+    my (@aid)  = split(/\s+/, $rh->{ _articles  }->{ $thread_id });
     my $sender = $rh->{ _sender }->{ $aid[0] };
     my $when   = $rh->{ _date }->{ $aid[0] };
 
@@ -454,24 +454,24 @@ sub _update_index_db
 {
     my ($self) = @_;
     my $config    = $self->{ _config };
-    my $ticket_id = $self->{ _ticket_id };
+    my $thread_id = $self->{ _thread_id };
     my $rh        = $self->{ _hash_table };
     my $ml_name   = $config->{ ml_name };
 
-    my $ref = $rh->{ _index }->{ $ticket_id } || '';
+    my $ref = $rh->{ _index }->{ $thread_id } || '';
     if ($ref !~ /^$ml_name|\s$ml_name\s|$ml_name$/) {
-	$rh->{ _index }->{ $ticket_id } .= $ml_name." ";
+	$rh->{ _index }->{ $thread_id } .= $ml_name." ";
     }
 }
 
 
 =head2 C<set_status($args)>
 
-set $status for $ticket_id. It rewrites DB (file).
+set $status for $thread_id. It rewrites DB (file).
 C<$args>, HASH reference, must have two keys.
 
     $args = {
-	ticket_id => $ticket_id,
+	thread_id => $thread_id,
 	status    => $status,
     }
 
@@ -487,19 +487,19 @@ C<set_status()> calls db_open() an db_close() automatically within it.
 sub set_status
 {
     my ($self, $args) = @_;
-    my $ticket_id = $args->{ ticket_id };
+    my $thread_id = $args->{ thread_id };
     my $status    = $args->{ status };
 
     $self->db_open();
-    $self->_set_status($ticket_id, $status);
+    $self->_set_status($thread_id, $status);
     $self->db_close();
 }
 
 
 sub _set_status
 {
-    my ($self, $ticket_id, $value) = @_;
-    $self->{ _hash_table }->{ _status }->{ $ticket_id } = $value;
+    my ($self, $thread_id, $value) = @_;
+    $self->{ _hash_table }->{ _status }->{ $thread_id } = $value;
 }
 
 

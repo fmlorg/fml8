@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.1.1.1 2001/11/02 09:07:39 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.2 2001/11/03 00:11:22 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -73,12 +73,12 @@ sub new
     }
     my $ml_name = $config->{ ml_name };
 
-    unless (defined $args->{ ticket_id_syntax }) {
-	$config->{ ticket_id_syntax } = "$ml_name/\%d";
+    unless (defined $args->{ thread_id_syntax }) {
+	$config->{ thread_id_syntax } = "$ml_name/\%d";
     }
 
     unless (defined $args->{ ticket_subject_tag }) {
-	my $id_syntax = $config->{ ticket_id_syntax };
+	my $id_syntax = $config->{ thread_id_syntax };
 	$config->{ ticket_subject_tag } = "[$id_syntax]";
     }
 
@@ -181,17 +181,17 @@ sub increment_id
 }
 
 
-=head2 list_up_ticket_id()
+=head2 list_up_thread_id()
 
-return @ticket_id ARRAY 
+return @thread_id ARRAY 
 
 =cut
 
-# return @ticket_id ARRAY
-sub list_up_ticket_id
+# return @thread_id ARRAY
+sub list_up_thread_id
 {
     my ($self) = @_;
-    my ($tid, $status, @ticket_id);
+    my ($tid, $status, @thread_id);
 
     # self->{ _hash_table } is tied to DB's.
     $self->db_open();
@@ -205,54 +205,54 @@ sub list_up_ticket_id
 	    next TICEKT_LIST if $status =~ /close/o;
 	}
 
-	push(@ticket_id, $tid);
+	push(@thread_id, $tid);
     }
 
     $self->db_close();
 
-    \@ticket_id;
+    \@thread_id;
 }
 
 
-=head2 sort($ticket_id_list)
+=head2 sort($thread_id_list)
 
 =cut
 
 
 sub sort
 {
-    my ($self, $ticket_id_list) = @_;
+    my ($self, $thread_id_list) = @_;
 
     # get age HASH TABLE
-    my ($age, $cost) = $self->_calculate_age($ticket_id_list);
+    my ($age, $cost) = $self->_calculate_age($thread_id_list);
     $self->{ _age }  = $age;
     $self->{ _cost } = $cost;
 
-    $self->_sort_ticket_id($ticket_id_list, $cost);
+    $self->_sort_thread_id($thread_id_list, $cost);
 }
 
 
-sub _sort_ticket_id
+sub _sort_thread_id
 {
-    my ($self, $ticket_id_list, $cost) = @_;
+    my ($self, $thread_id_list, $cost) = @_;
 
-    @$ticket_id_list = sort { 
+    @$thread_id_list = sort { 
 	$cost->{$b} cmp $cost->{$a};
-    } @$ticket_id_list;
+    } @$thread_id_list;
 }
 
 
 sub _calculate_age
 {
-    my ($self, $ticket_id_list) = @_;
+    my ($self, $thread_id_list) = @_;
     my (%age, %cost) = ();
     my $now   = time; # save the current UTC for convenience
     my $rh    = $self->{ _hash_table } || {};
     my $day   = 24*3600;
 
-    # $age hash referehence = { $ticket_id => $age };
+    # $age hash referehence = { $thread_id => $age };
     my (@aid, $last, $age, $date, $status, $tid) = ();
-    for $tid (sort @$ticket_id_list) {
+    for $tid (sort @$thread_id_list) {
 	# $last: get the latest one of article_id's
 	(@aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
 	$last  = $aid[ $#aid ] || 0;
@@ -261,7 +261,7 @@ sub _calculate_age
 	$age = sprintf("%2.1f%s", ($now - $rh->{ _date }->{ $last })/$day);
 	$age{ $tid } = $age;
 
-	# evaluate cost hash table which is { $ticket_id => $cost }
+	# evaluate cost hash table which is { $thread_id => $cost }
 	$cost{ $tid } = $rh->{ _status }->{ $tid }.'-'. $age;
     }
 
