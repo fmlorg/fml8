@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.88 2004/01/02 14:50:27 fukachan Exp $
+# $FML: Config.pm,v 1.89 2004/01/18 14:09:05 fukachan Exp $
 #
 
 package FML::Config;
@@ -788,11 +788,12 @@ sub expand_variable_in_buffer
 	last EXPAND if $loop++ > $loop_max;
 
 	my $varname = $1;
-	if (defined $config->{ $varname }) {
+
+	if (defined $config->{ $varname } && $config->{ $varname }) {
 	    my $x = $config->{ $varname };
 	    $$rbuf =~ s/\$$varname/$x/g;
 	}
-	if (defined $cfargs->{ $varname }) {
+	if (defined $cfargs->{ $varname } && $cfargs->{ $varname }) {
 	    my $x = $cfargs->{ $varname };
 	    $$rbuf =~ s/\$$varname/$x/g;
 	}
