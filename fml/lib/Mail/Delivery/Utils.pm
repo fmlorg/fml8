@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.15 2004/01/24 09:03:58 fukachan Exp $
+# $FML: Utils.pm,v 1.16 2004/05/16 04:55:56 fukachan Exp $
 #
 
 package Mail::Delivery::Utils;
@@ -19,7 +19,6 @@ require Exporter;
 @ISA    = qw(Exporter);
 @EXPORT = qw(
 	     Log
-	     _smtplog
 	     smtplog
 
 	     $LogFunctionPointer
