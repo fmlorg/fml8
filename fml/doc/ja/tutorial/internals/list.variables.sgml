@@ -62,6 +62,25 @@ $primary_admin_recipient_map
 </row>
 <row>
 <entry>
+article_filter_reject_notice_data_type</entry>
+<entry>
+ 弾いたメールをどのようにフォワードするか？</entry>
+<entry>
+string
+   </entry>
+</row>
+<row>
+<entry>
+article_filter_reject_notice_recipients</entry>
+<entry>
+ エラーのお知らせの受信者</entry>
+<entry>
+maintainer
+   sender
+   </entry>
+</row>
+<row>
+<entry>
 article_header_filter_rules</entry>
 <entry>
  フィルタリングのルール。</entry>
@@ -79,6 +98,7 @@ article_header_rewrite_rules</entry>
 delete_unsafe_header_fields
    rewrite_article_subject_tag
    rewrite_reply_to
+   rewrite_errors_to
    add_software_info
    add_fml_ml_name
    add_fml_traditional_article_id
@@ -112,6 +132,17 @@ article_sequence_file</entry>
  記事番号を保存するファイル (ダミー？)</entry>
 <entry>
 $sequence_file
+   </entry>
+</row>
+<row>
+<entry>
+article_size_filter_rules</entry>
+<entry>
+ フィルタリングのルール。</entry>
+<entry>
+check_header_size
+   check_body_size
+   permit
    </entry>
 </row>
 <row>
@@ -186,6 +217,26 @@ cgi_main_menu_color</entry>
 </row>
 <row>
 <entry>
+cgi_menu_default_map</entry>
+<entry>
+ CGI のアドレス操作の際に選べる種類のデフォルト値</entry>
+<entry>
+member
+   </entry>
+</row>
+<row>
+<entry>
+cgi_menu_map_list</entry>
+<entry>
+ CGI のアドレス操作の際に選べる種類</entry>
+<entry>
+member
+   recipient
+   admin_member
+   </entry>
+</row>
+<row>
+<entry>
 cgi_navigation_bar_color</entry>
 <entry>
  デフォルトの bgcolor</entry>
@@ -200,6 +251,36 @@ chaddr_command_auth_type</entry>
  chaddr コマンドで confirmation 認証(コールバック認証)</entry>
 <entry>
 confirmation
+   </entry>
+</row>
+<row>
+<entry>
+command_mail_filter_reject_notice_data_type</entry>
+<entry>
+ 弾いたメールをどのようにフォワードするか？</entry>
+<entry>
+string
+   </entry>
+</row>
+<row>
+<entry>
+command_mail_filter_reject_notice_recipients</entry>
+<entry>
+ エラーのお知らせの受信者</entry>
+<entry>
+maintainer
+   sender
+   </entry>
+</row>
+<row>
+<entry>
+command_mail_size_filter_rules</entry>
+<entry>
+ フィルタリングのルール。</entry>
+<entry>
+check_header_size
+   check_body_size
+   permit
    </entry>
 </row>
 <row>
@@ -297,6 +378,24 @@ default_file_mode</entry>
  ファイルを作成する時のデフォルトモード</entry>
 <entry>
 0600
+   </entry>
+</row>
+<row>
+<entry>
+default_mail_body_size_limit</entry>
+<entry>
+ 本文サイズの上限のデフォルト値</entry>
+<entry>
+10240000
+   </entry>
+</row>
+<row>
+<entry>
+default_mail_header_size_limit</entry>
+<entry>
+ ヘッダサイズの上限のデフォルト値</entry>
+<entry>
+102400
    </entry>
 </row>
 <row>
@@ -547,6 +646,42 @@ $fml_owner_home_dir/public_html/fml/mlarchive/$ml_domain/$ml_name
 </row>
 <row>
 <entry>
+incoming_article_body_size_limit</entry>
+<entry>
+ 投稿された記事の本文の上限値</entry>
+<entry>
+$default_mail_body_size_limit
+   </entry>
+</row>
+<row>
+<entry>
+incoming_article_header_size_limit</entry>
+<entry>
+ 投稿された記事のヘッダの上限値</entry>
+<entry>
+$default_mail_header_size_limit
+   </entry>
+</row>
+<row>
+<entry>
+incoming_command_mail_body_size_limit</entry>
+<entry>
+ MTA から fml が受けとる際のコマンドメールの本文サイズの上限値</entry>
+<entry>
+$default_mail_body_size_limit
+   </entry>
+</row>
+<row>
+<entry>
+incoming_command_mail_header_size_limit</entry>
+<entry>
+ MTA から fml が受けとる際のコマンドメールのヘッダサイズの上限値</entry>
+<entry>
+$default_mail_header_size_limit
+   </entry>
+</row>
+<row>
+<entry>
 incoming_mail_cache_dir</entry>
 <entry>
  入力されるメールを置くディレクトリ</entry>
@@ -570,6 +705,17 @@ ldap_query_filter</entry>
  LDAP のフィルタ</entry>
 <entry>
 (objectclass=*)
+   </entry>
+</row>
+<row>
+<entry>
+list_addresses</entry>
+<entry>
+ ＭＬが使うアドレス: 例: elena, elena-ctl</entry>
+<entry>
+$address_for_post
+   $address_for_command
+   $maintainer
    </entry>
 </row>
 <row>
@@ -815,6 +961,42 @@ $ml_home_dir/objective
 </row>
 <row>
 <entry>
+outgoing_article_body_size_limit</entry>
+<entry>
+ 投稿された記事の(配送時の)本文の上限値</entry>
+<entry>
+$default_mail_body_size_limit
+   </entry>
+</row>
+<row>
+<entry>
+outgoing_article_header_size_limit</entry>
+<entry>
+ 投稿された記事の(配送時の)ヘッダの上限値</entry>
+<entry>
+$default_mail_header_size_limit
+   </entry>
+</row>
+<row>
+<entry>
+outgoing_command_mail_body_size_limit</entry>
+<entry>
+ fml から MTA へ渡す際のコマンドメールの本文サイズの上限値</entry>
+<entry>
+$default_mail_body_size_limit
+   </entry>
+</row>
+<row>
+<entry>
+outgoing_command_mail_header_size_limit</entry>
+<entry>
+ fml から MTA へ渡す際のコマンドメールのヘッダサイズの上限値</entry>
+<entry>
+$default_mail_header_size_limit
+   </entry>
+</row>
+<row>
+<entry>
 outgoing_mail_cache_dir</entry>
 <entry>
  deliver されるメールを置くディレクトリ</entry>
@@ -840,6 +1022,24 @@ post_restrictions</entry>
 reject_system_accounts
    permit_member_maps
    reject
+   </entry>
+</row>
+<row>
+<entry>
+post_restrictions_reject_notice_data_type</entry>
+<entry>
+ 弾いたメールをどのようにフォワードするか？</entry>
+<entry>
+string
+   </entry>
+</row>
+<row>
+<entry>
+postfix_verp_delimiters</entry>
+<entry>
+ verps delimieters used in postfix</entry>
+<entry>
++=
    </entry>
 </row>
 <row>
@@ -952,6 +1152,15 @@ $domain_procmail_config_dir/procmailrc
 </row>
 <row>
 <entry>
+qmail_verp_delimiters</entry>
+<entry>
+ verps delimieters used in qmail</entry>
+<entry>
+-=
+   </entry>
+</row>
+<row>
+<entry>
 qmail_virtual_map_file</entry>
 <entry>
  MTA に教えるための virtual map ファイル(テンプレート)</entry>
@@ -1058,6 +1267,15 @@ subscribe_command_auth_type</entry>
  subscribe コマンドで confirmation 認証(コールバック認証)</entry>
 <entry>
 confirmation
+   </entry>
+</row>
+<row>
+<entry>
+summary_format_address_length</entry>
+<entry>
+ アドレスは先頭の何バイトかだけを記録する。詳しくはログ見ろ</entry>
+<entry>
+15
    </entry>
 </row>
 <row>
@@ -1199,6 +1417,15 @@ yes
 </row>
 <row>
 <entry>
+use_article_filter_reject_notice</entry>
+<entry>
+ フィルタで弾かれたことを教える</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
 use_article_header_filter</entry>
 <entry>
  ヘッダ情報を根拠にしたフィルタリングをするか？</entry>
@@ -1235,6 +1462,15 @@ yes
 </row>
 <row>
 <entry>
+use_article_size_filter</entry>
+<entry>
+ サイズ情報を根拠にしたフィルタリングをするか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
 use_article_text_plain_filter</entry>
 <entry>
  先頭の text/plain 部分に対するフィルタ。</entry>
@@ -1253,9 +1489,27 @@ yes
 </row>
 <row>
 <entry>
+use_command_mail_filter_reject_notice</entry>
+<entry>
+ フィルタで弾かれたことを教える</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
 use_command_mail_program</entry>
 <entry>
  コマンドメールを使うか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_command_mail_size_filter</entry>
+<entry>
+ サイズ情報を根拠にしたフィルタリングをするか？</entry>
 <entry>
 yes
    </entry>
