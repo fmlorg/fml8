@@ -1,17 +1,14 @@
 FML/Config.pm
 FML/Credential.pm
 
-Process/Command.pm
-Process/Configure.pm
-Process/Kernel.pm
-Process/TicketSystem.pm
-Process/CGI.pm
-
-MailingList/Net/INET4.pm
-MailingList/Net/INET6.pm
 MailingList/Delivery.pm
 MailingList/Messages.pm
 MailingList/SMTP.pm
 MailingList/Utils.pm
 
+
+
+--- not yet implemented ---
+
+Process/TicketSystem.pm
 CGI/TicketSystem.pm
