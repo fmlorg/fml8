@@ -23,6 +23,11 @@ address_for_post    = $ml_name@$ml_domain
 # コマンド用のアドレス
 address_for_command = $ml_name-ctl@$ml_domain
 
+# tag test
+article_header_rewrite_rules	+=	rewrite_article_subject_tag
+
+article_subject_tag = [\U$ml_name\E %05d)
+
 
 [mysql:fml]
 
