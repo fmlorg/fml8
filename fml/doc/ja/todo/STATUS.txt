@@ -65,8 +65,8 @@ II部　fmlのセットアップ〜MLの作成
 
 6章　Windows 2000/NT4上でのfmlのインストール
 
-	[TODO] Microsoft ものは全然手をつけていません。
-	[TODO] Microsoft ものは IMail から手をつけるのがいいんじゃないかな
+	[TODO]	Microsoft ものは全然手をつけていません。
+	[TODO]	Microsoft ものは IMail から手をつけるのがいいんじゃないかな
 
 	[TODO]	pop based ML
 	[TODO]	imap based ML
@@ -104,9 +104,7 @@ II部　fmlのセットアップ〜MLの作成
 
 9章　fmlの動作確認
 
-	[TODO] 書くべし、書くべし、書くべし
-
-	これは fml 4.0 と同様に行なって下さい。
+	これは fml 4.0 とほぼ同様の感じ。
 
 
 III部　fmlのカスタマイズ
@@ -196,7 +194,7 @@ III部　fmlのカスタマイズ
 	[TODO] モデレータ 
 
 	自動ファイル返送
-		[ TODO ] multipart 以外はなしだよな
+		[ TODO ] multipart 以外はなしだよな？ なし
 
 	[TODO] 複数の管理者による運用
 
@@ -227,7 +225,7 @@ III部　fmlのカスタマイズ
 	/usr/local/share/fml/$fml_version/message/$charset/
 	にあります。
 
-	[TODO] ディレクトリを決める
+	[TODO] site local のディレクトリを決める
 		/etc/fml/ 以下?
 		site_local/ ?
 		$domain/ ?
@@ -247,19 +245,21 @@ III部　fmlのカスタマイズ
 		検出できるルール: ヘッダ、本文、特殊なウィルス
 		content filter
 
-	[TODO] ContertFilter のファイル名
-		/etc/fml/ にいれちゃえー
-
-	[TODO] ContertFilter のデフォルト値
-		/etc/fml/ にいれちゃえー
+	4.0 の ContertFilter 相当機能は mime_component_filter
+		ファイル名は /etc/fml/mime_component_filter
+		デフォルト値は  /etc/fml/mime_component_filter
 
 	[TOOD] 入力サイズ制限
+
+		header_size_limit = 102400
+		message_size_limit = 10240000
 
 	[TODO] 統計をとりたい(どのルールにどのくらい引っかかったか？)
 		
 	[TODO] 統計を見せるコマンド（必要？）
 
 	[TODO] 統計のためのデータベース
+
 
 17章　トラフィックを制限する（メール爆弾対策）
 
@@ -423,4 +423,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.14 2002/08/17 05:30:57 fukachan Exp $
+$FML: STATUS.txt,v 1.15 2002/09/21 09:53:39 fukachan Exp $
