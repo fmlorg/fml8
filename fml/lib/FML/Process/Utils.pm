@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.17 2002/03/30 11:08:36 fukachan Exp $
+# $FML: Utils.pm,v 1.18 2002/04/07 05:27:19 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -282,6 +282,20 @@ sub ml_home_prefix
     my ($curproc, $domain) = @_;
     my $main_cf = $curproc->{ __parent_args }->{ main_cf };
     __ml_home_prefix_from_main_cf($main_cf, $domain);
+}
+
+
+# Descriptions: return $ml ML's home directory
+#    Arguments: OBJ($curproc) STR($ml) STR($domain)
+# Side Effects: none
+# Return Value: STR
+sub ml_home_dir
+{
+    my ($curproc, $ml, $domain) = @_;
+    my $prefix = $curproc->ml_home_prefix($domain);
+
+    use File::Spec;
+    return File::Spec->catfile($prefix, $ml);
 }
 
 
