@@ -63,7 +63,8 @@ sub Bootstrap
     }
 
     # 3. reset @INC
-    use lib qw( $config->{ local_lib_dir } $config->{ lib_dir });
+    unshift(@INC, $config->{ local_lib_dir });
+    unshift(@INC, $config->{ lib_dir });
 
     # 4. inspect my mode from $0
     use File::Basename;
