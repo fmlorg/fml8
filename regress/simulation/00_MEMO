@@ -21,16 +21,6 @@
 	(send)		この名前でいいかしら？
 
 
-○	newml のときに aliases をどうするの？
-
-	案１
-	/etc/fml/ドメイン名/aliases
-
-	案２ (prefix は virtual_maps でドメインごとに定義されているの
-		で一意に定まる)
-	/var/spool/ml/etc/mail/aliases
-
-
 ○	makefml get ???
 
 	ところで、誰に送信するんじゃ？ :-) って、そうか、makefml じゃ
@@ -313,4 +303,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.5 2002/02/20 14:42:22 fukachan Exp $
+$FML: 00_MEMO,v 1.6 2002/02/23 15:32:00 fukachan Exp $
