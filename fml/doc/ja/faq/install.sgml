@@ -1,0 +1,44 @@
+<!--
+	$FML$
+-->
+
+<chapter id="installation">
+
+<title> installation </title>
+
+<qandaset>
+<qandaentry>
+<question>
+	<para>
+	loader や Bootstrap() がどーとかいうエラーが出る
+	</para>
+</question>
+
+<answer>
+	<para>
+	ブートストラップのやり方がまだ収束してないので、稀に
+
+	/usr/local/fml/libexec/loader
+
+	を入れ替える必要がある時があります。
+	loader は /etc/fml/main.cf を読む
+	前に起動されるものなので、手動で切替えるしかないのです。
+	</para>
+
+	<para>
+	やりかたはインストール後に、
+
+<screen>
+# /usr/local/fml/libexec/
+# mv current-yyyymmdd/loader loader
+</screen>
+
+	などとしてください。
+	cp でもいいけど同一パーティッション上の mv なら atomic で
+	あることが保証されるので、その方が良いです。
+	</para>
+</answer>
+</qandaentry>
+</qandaset>
+
+</chapter>

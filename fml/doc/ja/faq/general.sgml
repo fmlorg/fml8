@@ -1,0 +1,51 @@
+<!--
+	$FML$
+-->
+
+<chapter id="installation">
+
+<title> general </title>
+
+<qandaset>
+<qandaentry>
+<question>
+	<para>
+	ドキュメントは ?
+	</para>
+</question>
+
+<answer>
+	<para>
+	ドキュメントは HTML 版だけです。
+
+	トップ・ディレクトリにある index.ja.html からたどっていってください。
+	</para>
+</answer>
+</qandaentry>
+</qandaset>
+
+
+<qandaset>
+<qandaentry>
+<question>
+	<para>
+	elena ＭＬの設定の見方
+	</para>
+</question>
+
+<answer>
+	<para>
+	   全部の変数を表示する
+	/usr/local/libexec/fml/fmlconf elena
+	</para>
+
+	<para>
+	   デフォルト値と異なる変数を表示する
+	/usr/local/libexec/fml/fmlconf -n elena
+	</para>
+
+</answer>
+</qandaentry>
+</qandaset>
+
+</chapter>
