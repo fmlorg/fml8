@@ -1,6 +1,37 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/04/14
+
+   Mail::Message::ToHTML 
+	fix $subdir handling on month boundary
+	validate $curid ($self->{ _current_id})
+	validate or warn input into Jcode
+	set $code for Jcode if needed
+
+   CPAN	modules 
+	updated Jcode to 0.79
+
+2002/04/13
+
+   FML::Command::User::unsubscribe 
+	use FML::Confirm not via eval{ use ..}
+	
+   FML::Process::Command 
+	select the error message by the $xxx_restrictions error reason
+	
+   Mail::Message 
+	implement whole_message_as_string_ref()
+	
+   FML::Process::Command 
+	reply_message( OBJ(Mail::Message) ) when the message is rejected by
+	$command_restrictions.
+	
+   FML::Process::Kernel 
+	o reply_message() can handle OBJ(Mail::Message).
+	o save error reason at pcb area when the message is rejected by
+	xxx_restrictions.
+	
 2002/04/12
 
    FML::Process::Distribute 
@@ -1991,4 +2022,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.65 2002/04/10 15:22:51 fukachan Exp $
+$FML: CHANGES.txt,v 1.66 2002/04/12 15:06:43 fukachan Exp $
