@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: INSTALL.sh,v 1.50 2002/05/24 06:37:31 fukachan Exp $
+# $FML: INSTALL.sh,v 1.51 2002/05/24 14:11:19 fukachan Exp $
 #
 
 # Run this from the top-level fml source directory.
@@ -72,7 +72,9 @@ echo updating $default_config_dir/
 cp fml/etc/default_config.cf.ja $default_config_dir/default_config.cf
 cp fml/etc/config.cf.ja         $default_config_dir/config.cf
 
-for file in include include-ctl include-error aliases dot_htaccess \
+for file in include include-ctl include-error aliases \
+	postfix_virtual \
+	dot_htaccess \
 	dot-qmail dot-qmail-admin dot-qmail-ctl dot-qmail-default \
 	dot-qmail-request
 do
