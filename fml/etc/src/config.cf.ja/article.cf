@@ -129,10 +129,11 @@ use_article_non_mime_filter		=	yes
 
 
 # Descriptions: とりあえず、だみ〜
-#      History:
-#        Value: permit / reject
+#      History: なし
+#        Value: permit / reject_empty_content_type
 #     Examples: permit
-article_non_mime_filter_rules		=	permit
+article_non_mime_filter_rules		=	reject_empty_content_type
+						permit
 
 
 # Descriptions: MIME の構造に基づいたフィルタを行なう
