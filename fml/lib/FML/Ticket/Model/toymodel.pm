@@ -58,6 +58,9 @@ sub new
     $me->{ _db_dir } = $config->{ ticket_db_dir } ."/". $ml_name;
     $me->_init_ticket_db_dir($curproc, $args) || do { return undef;};
 
+    # index for cross reference over mailing lists.
+    $me->{ _index_db } = $config->{ ticket_db_dir } ."/\@index";
+
     return bless $me, $type;
 }
 
@@ -237,6 +240,14 @@ sub _update_db
 	$self->_set_status($ticket_id, $self->{ _status });
     }
 
+    # register myself to index_db for further reference among mailing
+    # lists
+    my $ml_name = $config->{ ml_name };
+    my $ref = $rh->{ _index }->{ $ticket_id } || '';
+    if ($ref !~ /^$ml_name|\s$ml_name\s|$ml_name$/) {
+	$rh->{ _index }->{ $ticket_id } .= $ml_name." ";
+    }
+
     $self->_close_db($curproc, $args);
 }
 
@@ -337,12 +348,13 @@ sub _open_db
     my $db_type   = $curproc->{ ticket_db_type } || 'AnyDBM_File';
     my $db_dir    = $self->{ _db_dir };
 
-    my (%ticket_id, %date, %status, %articles, %sender);
+    my (%ticket_id, %date, %status, %articles, %sender, %index);
     my $ticket_id_file = $db_dir.'/ticket_id';
     my $date_file      = $db_dir.'/date';
     my $status_file    = $db_dir.'/status';
     my $sender_file    = $db_dir.'/sender';
     my $articles_file  = $db_dir.'/articles';
+    my $index_file     = $self->{ _index_db };
 
     eval qq{ use $db_type;};
     unless ($@) {
@@ -353,6 +365,7 @@ sub _open_db
 	    tie %status,    $db_type, $status_file,    O_RDWR|O_CREAT, 0644;
 	    tie %sender,    $db_type, $sender_file,    O_RDWR|O_CREAT, 0644;
 	    tie %articles,  $db_type, $articles_file,  O_RDWR|O_CREAT, 0644;
+	    tie %index,     $db_type, $index_file,     O_RDWR|O_CREAT, 0644;
 	};
 	unless ($@) {
 	    $self->{ _hash_table }->{ _ticket_id } = \%ticket_id;
@@ -360,6 +373,7 @@ sub _open_db
 	    $self->{ _hash_table }->{ _status }    = \%status;
 	    $self->{ _hash_table }->{ _sender }    = \%sender;
  	    $self->{ _hash_table }->{ _articles }  = \%articles;
+ 	    $self->{ _hash_table }->{ _index }     = \%index;
 	}
 	else {
 	    Log("Error: tail to tie() under $db_type");
@@ -383,12 +397,14 @@ sub _close_db
     my $status    = $self->{ _hash_table }->{ _status };
     my $sender    = $self->{ _hash_table }->{ _sender };
     my $articles  = $self->{ _hash_table }->{ _articles };
+    my $index     = $self->{ _hash_table }->{ _index };
 
     untie %$ticket_id;
     untie %$date;
     untie %$status;
     untie %$sender;
     untie %$articles;
+    untie %$index;
 }
 
 
