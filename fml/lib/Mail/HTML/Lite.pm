@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.8 2001/10/21 02:31:56 fukachan Exp $
+# $FML: Lite.pm,v 1.9 2001/10/21 03:07:52 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -20,6 +20,8 @@ Mail::HTML::Lite - mail to html converter
 
 =head1 SYNOPSIS
 
+  ... lock by something ... 
+
   use Mail::HTML::Lite;
   my $obj = new Mail::HTML::Lite { 
       charset   => "euc-jp",
@@ -30,6 +32,11 @@ Mail::HTML::Lite - mail to html converter
       id  => 1,
       src => "/var/spool/ml/elena/spool/1",
   });
+
+  ... unlock by something ... 
+
+This module itself provides no lock function.
+please use flock() built in perl or CPAN lock modules for it. 
 
 =head1 DESCRIPTION
 
@@ -1258,14 +1265,14 @@ sub update_id_index
 
     $self->_db_open();
     my $db = $self->{ _db };
-    my $id_max =  $db->{ _info }->{ id_max };
+    my $id_max = $db->{ _info }->{ id_max };
 
-    _print($wh, "<UL>\n", $code);
+    $self->_print_ul($wh, $db, $code);
     for my $id ( 1 .. $id_max ) {
 	$self->_print_li_filename($wh, $db, $id, $code);
     }
-    _print($wh, "</UL>\n", $code);
-
+    $self->_print_end_of_ul($wh, $db, $code);
+    
     $self->_db_close();
 
     $self->mhl_separator($wh);
