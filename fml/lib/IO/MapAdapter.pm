@@ -81,10 +81,17 @@ This wrapper maps IO for some object to usual file IO.
 
 =item C<new()>
 
-the constructor. $args is a map.
+the constructor. The first argument is a map decribed above.
 
 =cut
 
+
+# Descriptions: a constructor, which prepare IO operations for the
+#               given $map
+#    Arguments: $self $map $args
+# Side Effects: @ISA is modified
+#               load and import sub-class
+# Return Value: object
 sub new
 {
     my ($self, $map, $args) = @_;
@@ -144,30 +151,21 @@ sub new
 }
 
 
-sub _error_reason
-{
-    my ($self, $mesg) = @_;
-    $self->{ _error_reason } = $mesg;
-}
+=head2 
 
+=item C<open([$flag])>
 
-sub error
-{
-    my ($self) = @_;
-    return $self->{ _error_reason };
-}
+start IO operation for the map. $flag is passed to SUPER CLASS open()
+for "file:" map but ignored in other maps now.
 
+=cut
 
-sub dump_variables
-{
-    my ($self, $args) = @_;
-    my ($k, $v);
-    while (($k, $v) = each %$self) {
-	print STDERR "IO::Map.debug: $k => $v\n";
-    }
-}
-
-
+# Descriptions: open IO, each request is forwraded to each sub-class
+#    Arguments: $self $flag
+#               $flag is the same as open()'s flag for file: map but
+#               "r" only for other maps.
+# Side Effects: none
+# Return Value: file handle
 sub open
 {
     my ($self, $flag) = @_;
@@ -191,12 +189,48 @@ sub open
 }
 
 
-# aliases for convenience
+=head2
+
+=item C<getline()>
+
+For file map, it is the same as usual getline() for file.
+For other maps, same as C<get_next_value()> method.
+
+=item C<get_next_value()>
+
+get the next value. For example, the first column in the next line for
+C<file> map. For C<array_reference>, C<unix.group>, C<nis.grouop> maps,
+return the next element of the array.
+
+=item C<get_member()>
+
+an alias of C<get_next_value()> now.
+
+=item C<get_active()>
+
+an alias of C<get_next_value()> now.
+
+=item C<get_recipient()>
+
+an alias of C<get_next_value()> now.
+
+=cut
+
+# Descriptions: aliases for convenience
+#               request is forwarded to get_next_value() method.
+#    Arguments: $self
+# Side Effects: none
+# Return Value: none
 sub get_member    { my ($self) = @_; $self->get_next_value;}
 sub get_active    { my ($self) = @_; $self->get_next_value;}
 sub get_recipient { my ($self) = @_; $self->get_next_value;}
 
 
+# Descriptions: destructor
+#               request is forwarded to close() method.
+#    Arguments: $self $args
+# Side Effects: object is undef'ed.
+# Return Value: none
 sub DESTROY
 {
     my ($self) = @_;
@@ -204,6 +238,35 @@ sub DESTROY
     undef $self;
 }
 
+
+# Descriptions: log the error message in the object
+#               internal use fucntion.
+#    Arguments: $self $mesg
+#               $mesg is the error message string.
+# Side Effects: $self->{ _error_reason } is set to $mesg.
+# Return Value: $mesg
+sub _error_reason
+{
+    my ($self, $mesg) = @_;
+    $self->{ _error_reason } = $mesg;
+}
+
+
+# Descriptions: return the error message
+#    Arguments: $self
+# Side Effects: none
+# Return Value: error message
+sub error
+{
+    my ($self) = @_;
+    return $self->{ _error_reason };
+}
+
+=head2
+
+=item C<error()>
+
+return the most recent error message if exists.
 
 =head1 AUTHOR
 
