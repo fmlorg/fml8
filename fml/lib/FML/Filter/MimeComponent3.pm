@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent3.pm,v 1.1 2002/10/26 03:27:36 fukachan Exp $
+# $FML: MimeComponent3.pm,v 1.2 2002/10/26 04:03:15 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -111,7 +111,7 @@ sub mime_component_check
     my $whole_data_type = $msg->whole_message_header_data_type();
 
     # debug info
-    if (1) { $self->dump_message_structure($msg);}
+    if ($debug) { $self->dump_message_structure($msg);}
 
   MSG:
     for ($mp = $msg, $i = 1; $mp; $mp = $mp->{ next }) {
@@ -149,17 +149,25 @@ sub mime_component_check
     }
 
     # debug info
-    if ($is_cutoff) { $self->dump_message_structure($msg);}
+    if ($is_cutoff && $debug) { $self->dump_message_structure($msg);}
 
     # if matched with "reject" at laest once, reject the whole mail.
     if (defined $count{ 'reject' } && $count{ 'reject' } > 0) {
 	$is_match = 1;
+	$action   = 'reject';
+    }
+    else {
+	$action   = 'permit';
     }
 
     my $decision = $is_match ? $action : $default_action;
     my $_reason  = $is_match ? $reason : "default action";
     Log("mime_component_filter: $decision ($_reason)");
     __dprint("\n   our desicion: $decision ($_reason)");
+
+    if ($decision eq 'reject') {
+	$self->error_set($_reason);
+    }
     return $decision;
 }
 
