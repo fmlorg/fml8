@@ -1,16 +1,16 @@
 <!--
-	$FML$
+	$FML: install.sgml,v 1.1.1.1 2001/04/26 13:31:36 fukachan Exp $
 -->
 
 <chapter id="installation">
 
-<title> installation </title>
+<title> インストール </title>
 
 <qandaset>
 <qandaentry>
 <question>
 	<para>
-	loader や Bootstrap() がどーとかいうエラーが出る
+	loader や Bootstrap() がど〜っとかいうエラーが出る
 	</para>
 </question>
 
@@ -26,16 +26,16 @@
 	</para>
 
 	<para>
-	やりかたはインストール後に、
-
+	切替え方はインストール後に、
 <screen>
 # /usr/local/fml/libexec/
 # mv current-yyyymmdd/loader loader
 </screen>
-
 	などとしてください。
-	cp でもいいけど同一パーティッション上の mv なら atomic で
-	あることが保証されるので、その方が良いです。
+	cp でもいいですが、
+	同一パーティッション上の mv なら atomic で
+	あることが保証されるので、
+	mv が良いです。
 	</para>
 </answer>
 </qandaentry>

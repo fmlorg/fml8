@@ -1,10 +1,10 @@
 <!--
-	$FML$
+   $FML: general.sgml,v 1.1.1.1 2001/04/26 13:31:36 fukachan Exp $
 -->
 
 <chapter id="installation">
 
-<title> general </title>
+<title> 一般的な話 </title>
 
 <qandaset>
 <qandaentry>
@@ -18,7 +18,7 @@
 	<para>
 	ドキュメントは HTML 版だけです。
 
-	トップ・ディレクトリにある index.ja.html からたどっていってください。
+	トップ・ディレクトリにある index.html.ja からたどっていってください。
 	</para>
 </answer>
 </qandaentry>
@@ -35,15 +35,14 @@
 
 <answer>
 	<para>
-	   全部の変数を表示する
+	全部の変数を表示する
 	/usr/local/libexec/fml/fmlconf elena
 	</para>
 
 	<para>
-	   デフォルト値と異なる変数を表示する
+	デフォルト値と異なる変数を表示する
 	/usr/local/libexec/fml/fmlconf -n elena
 	</para>
-
 </answer>
 </qandaentry>
 </qandaset>
