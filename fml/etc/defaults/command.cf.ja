@@ -1,8 +1,19 @@
 =head1	コマンドの定義
 
-# value: confirmation / 
+
+# Descriptions: chaddr コマンドで confirmation 認証(コールバック認証)
+#               を行なうか否か？
+#      History:
+#        Value:  confirmation / ""
+#     Examples:
 command_chaddr_type		=	confirmation
 
+
+# Descriptions: unsubscribe コマンドで confirmation 認証(コールバック認証)
+#               を行なうか否か？
+#      History:
+#        Value:  confirmation / ""
+#     Examples:
 command_unsubscribe_type	=	confirmation
 
 

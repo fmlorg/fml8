@@ -28,7 +28,7 @@ digest_header_rewrite_rules	=	add_software_info
 
 # Descriptions: あぶないタグを消す
 #      History: fml 4.0 の SKIP_FIELDS
-#         Type: strings
+#        Value: strings
 #     Examples:
 unsafe_header_fields		=	Return-Receipt-To
 

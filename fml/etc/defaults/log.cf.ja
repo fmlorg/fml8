@@ -1,13 +1,22 @@
 =head1	ログのとり方
 
-# enable logging function
+# Descriptions: enable logging function
+#               ログとり機能を有効にする
+#      History: 
+#        Value: yes / no
+#     Examples:
 use_log		=	yes
 
-# logfile
+# Descriptions: ログファイル
+#      History: fml 4.0 の $LOGFILE
+#        Value: filename
+#     Examples:
 log_file	=	$ml_home_dir/log
 
-# type of logging
-# value: file / syslog
+# Descriptions: ログとりのタイプ
+#      History: fml 5.0 new
+#        Value: file / syslog
+#     Examples:
 log_type	=	file
 
 # log message format

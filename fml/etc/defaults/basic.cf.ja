@@ -8,7 +8,7 @@
 
 # Descriptions: いわゆるＭＬの管理者、エラーメールの返る先
 #      History: fml 4.0 の $MAINTAINER
-#         Type: rfc822_address
+#        Value: rfc822_address
 maintainer	=
 
 
