@@ -29,7 +29,7 @@ proc/libfml.pl                 6.13
 proc/libhtmlsubr.pl            1.77	
 	proc/liblibrary.pl             1.33	removed?
 	proc/liblock.pl                0.32	removed
-proc/liblogmail.pl             0.22	
+	proc/liblogmail.pl             0.22	removed
 	proc/liblop.pl                 1.16	removed
 	proc/libmakefml.pl             0.19	removed
 	proc/libmd5.pl                 0.25	done
@@ -49,8 +49,8 @@ proc/librcs.pl                 0.27
 	proc/librelayhack.pl           0.37	removed
 proc/libremote.pl              0.06	
 	proc/librfc1153.pl             0.81	removed
-proc/libsendfile.pl            4.08	
-proc/libsmtpsd.pl              0.43	
+	proc/libsendfile.pl            4.08	removed almost
+	proc/libsmtpsd.pl              0.43	removed
 	proc/libstardate.pl            0.21	done
 proc/libsynchtml.pl            7.80	
 proc/libtagdef.pl              0.48	
