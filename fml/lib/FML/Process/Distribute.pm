@@ -84,7 +84,7 @@ sub _distribute
     my $id = $ah->increment_id;
 
     # ticket system checks the message before header rewritings.
-    $curproc->_ticket_system_check($args) if $config->yes('use_ticket');
+    $curproc->_ticket_check($args) if $config->yes('use_ticket');
 
     # header operations
     # XXX we need $curproc->{ article }, which is prepared above.
@@ -190,7 +190,7 @@ sub _deliver_article
 }
 
 
-sub _ticket_system_check
+sub _ticket_check
 {
     my ($curproc, $args) = @_;    
     my $config = $curproc->{ config };
@@ -205,11 +205,12 @@ sub _ticket_system_check
 	return;
     }
 
+    # fake use() to do "use FML::Ticket::$model;"
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
-	my $ts = $pkg->new;
-	$ts->add_ticket($curproc, $args);
-	$ts->update_ticket_trace_cache($curproc);
+	my $ticket = $pkg->new;
+	$ticket->assign($curproc, $args);
+	$ticket->update_cache($curproc, $args);
     }
     else {
 	Log($@);

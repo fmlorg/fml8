@@ -42,30 +42,48 @@ sub increment_id
 }
 
 
-sub update_ticket_trace_cache
+sub pcb_save_id
+{
+    my ($self, $curproc, $id) = @_;
+    my $pcb = $curproc->{ pcb }; # FML::PCB object
+    $pcb->set('ticket', 'id', $id);
+}
+
+
+sub pcb_get_id
 {
     my ($self, $curproc) = @_;
+    my $pcb = $curproc->{ pcb }; # FML::PCB object
+    $pcb->get('ticket', 'id');
+}
+
+
+sub _update_cache_init
+{
+    my ($self, $curproc, $args) = @_;
     my $config    = $curproc->{ config };
-    my $db_dir    = $config->{ ticket_db_dir };
     my $ml_name   = $config->{ ml_name };
-    my $cachefile = $db_dir. $ml_name;
+    my $db_dir    = $config->{ ticket_db_dir } ."/". $ml_name;
 
     unless (-d $db_dir) {
-	use FML::File qw(mkdirhier);
-	mkdirhier($db_dir, $config->{ default_directory_mode });
-	$self->error_reason( FML::File->error() );
-	return;
+	use FML::Utils qw(mkdirhier);
+	mkdirhier($db_dir, $config->{ default_directory_mode }) || do {
+	    $self->error_reason( FML::Utils->error() );
+	    return undef;
+	};
     }
 
-    use FileHandle;
-    my $fh = new FileHandle ">> $cachefile";
-    if (defined $fh) {
-	print $fh "";
-	close($fh);
+    if (defined $self->{ _cachefile }) {
+	my $cachefile = $self->{ _cachefile };
+	unless (-f $cachefile) {
+	    use FML::Utils qw(touch);
+	    touch($cachefile) || do {
+		return undef;
+	    };
+	}
     }
-    else {
-	$self->error_reason("cannot open ticket cache");
-    }
+
+    return 1;
 }
 
 
