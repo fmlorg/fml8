@@ -1,8 +1,8 @@
 #-*- perl -*-
 #
-# Copyright (C) 2002 Ken'ichi Fukamachi
+# Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #
-# $FML: Spool.pm,v 1.9 2002/09/11 23:18:27 fukachan Exp $
+# $FML: Spool.pm,v 1.10 2002/09/22 14:57:04 fukachan Exp $
 #
 
 package Mail::Message::Spool;
@@ -115,7 +115,7 @@ sub dirpath
 	my $unit     = 1000;
 	my $subdir   = int($id/$unit);
 
-	if (defined $args->{ use_subdir }) {
+	if (defined $args->{ use_subdir } && $args->{ use_subdir }) {
 	    $is_hash = 1;
 	    use File::Spec;
 	    $dir = File::Spec->catfile($base_dir, $subdir);
@@ -166,7 +166,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Ken'ichi Fukamachi
+Copyright (C) 2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
