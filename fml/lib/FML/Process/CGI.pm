@@ -107,12 +107,58 @@ sub run
 {
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
+    my $myname = $config->{ program_name };
 
     # model specific ticket object
-    my $module = 'FML::Ticket::Model::'.$config->{ ticket_model };
-    my $ticket = $curproc->load_module($args, $module);
-    $ticket->mode({ mode => 'html' });
-    $ticket->run_cgi($curproc, $args);
+    if ($myname eq 'fmlticket.cgi') {
+	my $module = 'FML::Ticket::Model::'.$config->{ ticket_model };
+	my $ticket = $curproc->load_module($args, $module);
+	$ticket->mode({ mode => 'html' });
+	$ticket->run_cgi($curproc, $args);
+    }
+    elsif ($myname eq 'makefml.cgi') {
+	$curproc->_makefml($args);
+    }
+    else {
+	croak("Who am I ($myname)? I don't know $myname\n");
+    }
+}
+
+
+sub _makefml
+{
+    my ($curproc, $args) = @_;
+    my $method  = param('method');
+    my $ml_name = param('ml_name');
+    my $address = param('address') || '';
+    my $argv    = $args->{ ARGV } || '';
+    my @options = ();
+
+    # arguments to pass off to each method
+    my $optargs = {
+	command => $method,
+	ml_name => $ml_name,
+	address => $address,
+	options => \@options,
+	argv    => $argv,
+	args    => $args,
+    };
+
+    Log("makefml.cgi ml_name=$ml_name command=$method address=$address");
+
+    # here we go
+    $curproc->lock() if $curproc->_makefml_require_lock($method);
+    require FML::Command;
+    my $obj = new FML::Command;
+    $obj->$method($curproc, $optargs);
+    $curproc->unlock() if $curproc->_makefml_require_lock($method);
+}
+
+
+sub _makefml_require_lock
+{
+    my ($self, $command) = @_;
+    $command eq 'newml' ? 0 : 1;
 }
 
 

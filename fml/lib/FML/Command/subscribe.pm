@@ -35,7 +35,7 @@ sub subscribe
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
     my $options       = $args->{ options };
-    my $address       = $options->[ 0 ];
+    my $address       = $args->{ address } || $options->[ 0 ];
 
     # fundamental check
     croak("\$member_map is not specified")    unless $member_map;

@@ -72,7 +72,7 @@ sub new
     my ($cfargs)  = {};
 
     # import variables
-    my (@import_vars) = qw(ml_home_prefix ml_home_dir);
+    my (@import_vars) = qw(ml_home_prefix ml_home_dir program_name);
     my $var;
 
   IMPORT_CHECK:
