@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.40 2004/02/01 14:52:49 fukachan Exp $
+# $FML: Filter.pm,v 1.41 2004/04/23 04:10:27 fukachan Exp $
 #
 
 package FML::Filter;
@@ -13,7 +13,15 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use ErrorStatus qw(error_set error error_clear);
 
+# debug
 my $debug = 0;
+
+# ERROR CODES
+my $FILTER_OK                 = 0;
+my $FILTER_ERR_REJECT         = 1;
+my $FILTER_ERR_IGNORE         = 2;
+my $FILTER_ERR_HEADER_REWRITE = 3;
+
 
 =head1 NAME
 
@@ -45,14 +53,14 @@ constructor.
 
 
 # Descriptions: constructor.
-#    Arguments: OBJ($self)
+#    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: none
 # Return Value: OBJ
 sub new
 {
-    my ($self) = @_;
+    my ($self, $curproc) = @_;
     my ($type) = ref($self) || $self;
-    my $me     = {};
+    my $me     = { _curproc => $curproc };
     return bless $me, $type;
 }
 
@@ -120,6 +128,8 @@ sub _apply_article_size_filter
 	# go check
 	$obj->size_check($mesg);
 	if ($obj->error()) {
+	    $curproc->filter_state_set_error("article_filter",
+					     $FILTER_ERR_REJECT);
 	    my $x;
 	    $x =  $obj->error();
 	    $x =~ s/\s*at .*$//o;
@@ -157,6 +167,8 @@ sub _apply_article_header_filter
 	# go check
 	$obj->header_check($mesg);
 	if ($obj->error()) {
+	    $curproc->filter_state_set_error("article_filter",
+					     $FILTER_ERR_REJECT);
 	    my $x;
 	    $x =  $obj->error();
 	    $x =~ s/\s*at .*$//o;
@@ -196,6 +208,8 @@ sub _apply_article_non_mime_filter
 		if (defined $hdr) {
 		    my $type  = $hdr->get('content-type') || '';
 		    unless ($type) {
+			$curproc->filter_state_set_error("article_filter",
+							 $FILTER_ERR_REJECT);
 			my $s = "no Content-Type:";
 			$self->error_set($s);
 			return $s;
@@ -212,7 +226,7 @@ sub _apply_article_non_mime_filter
 # Descriptions: syntax check for text(/plain).
 #    Arguments: OBJ($self) OBJ($curproc) OBJ($mesg)
 # Side Effects: none
-# Return Value: none
+# Return Value: STR(reason) or 0 (not trapped, ok)
 sub _apply_article_text_plain_filter
 {
     my ($self, $curproc, $mesg) = @_;
@@ -232,6 +246,8 @@ sub _apply_article_text_plain_filter
 	# go check
 	$obj->body_check($mesg);
 	if ($obj->error()) {
+	    $curproc->filter_state_set_error("article_filter",
+					     $FILTER_ERR_REJECT);
 	    my $x;
 	    $x =  $obj->error();
 	    $x =~ s/\s*at .*$//o;
@@ -248,7 +264,7 @@ sub _apply_article_text_plain_filter
 # Descriptions: analyze MIME structure and filter it if matched.
 #    Arguments: OBJ($self) OBJ($curproc) OBJ($mesg)
 # Side Effects: none
-# Return Value: none
+# Return Value: STR(reason) or 0 (not trapped, ok)
 sub _apply_article_mime_component_filter
 {
     my ($self, $curproc, $mesg) = @_;
@@ -272,6 +288,9 @@ sub _apply_article_mime_component_filter
 	}
 
 	if ($obj->error()) {
+	    $curproc->filter_state_set_error("article_filter",
+					     $FILTER_ERR_REJECT);
+
 	    my $x;
 	    $x =  $obj->error();
 	    $x =~ s/\s*at .*$//o;
@@ -279,6 +298,111 @@ sub _apply_article_mime_component_filter
 	    $self->error_set($x);
 	    return $x;
 	}
+    }
+
+    return 0;
+}
+
+
+# Descriptions: analyze external spam checker.
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($mesg)
+# Side Effects: none
+# Return Value: STR(reason) or 0 (not trapped, ok)
+sub _apply_article_spam_filter
+{
+    my ($self, $curproc, $mesg) = @_;
+    my $config = $curproc->config();
+
+    if ($config->yes( 'use_article_spam_filter' )) {
+	my $drivers = $config->get_as_array_ref('article_spam_filter_drivers');
+
+      DRIVER:
+	for my $driver (@$drivers) {
+	    $curproc->log("spam: call $driver");
+	    my $r = $self->_external_article_filter($curproc, $mesg, $driver);
+	    if ($r) {
+		# set reject if action unspecified.
+		unless ($curproc->filter_state_get_error("article_filter")) {
+		    $curproc->filter_state_set_error("article_filter",
+						     $FILTER_ERR_IGNORE);
+		}
+
+		return $r;
+	    }
+	}
+    }
+    else {
+	$curproc->log("debug: spam filter disabled");
+    }
+
+    return 0;
+}
+
+
+# Descriptions: analyze external virus checker.
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($mesg)
+# Side Effects: none
+# Return Value: STR(reason) or 0 (not trapped, ok)
+sub _apply_article_virus_filter
+{
+    my ($self, $curproc, $mesg) = @_;
+    my $config = $curproc->config();
+
+    if ($config->yes( 'use_article_virus_filter' )) {
+	my $drivers =
+	    $config->get_as_array_ref('article_virus_filter_drivers');
+
+      DRIVER:
+	for my $driver (@$drivers) {
+	    my $r = $self->_external_article_filter($curproc, $mesg, $driver);
+	    if ($r) {
+		# set reject if action unspecified.
+		unless ($curproc->filter_state_get_error("article_filter")) {
+		    $curproc->filter_state_set_error("article_filter",
+						     $FILTER_ERR_IGNORE);
+		}
+
+		return $r;
+	    }
+	}
+    }
+    else {
+	$curproc->log("debug: virus filter disabled");
+    }
+
+    return 0;
+}
+
+
+# Descriptions: call external filter.
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($mesg) STR($driver)
+# Side Effects: none
+# Return Value: STR(reason) or 0 (not trapped, ok)
+sub _external_article_filter
+{
+    my ($self, $curproc, $mesg, $driver) = @_;
+
+    my $ext_filter = undef;
+    eval q{
+	use FML::Filter::External;
+	$ext_filter = new FML::Filter::External;
+	$ext_filter->spawn($curproc, $mesg, $driver);
+    };
+    if ($@) {
+	$curproc->logerror($@);
+    }
+
+    if (defined $ext_filter) {
+	my $x;
+	if ($x = $ext_filter->error()) {
+            $x =~ s/\s*at .*$//o;
+            $x =~ s/[\n\s]*$//mo;
+            $self->error_set($x);
+            return $x;
+	}
+    }
+    else {
+	$curproc->logerror("FML::Filter::External failed");
     }
 
     return 0;
@@ -445,6 +569,9 @@ sub _apply_command_mail_size_filter
 	# go check
 	$obj->size_check($mesg);
 	if ($obj->error()) {
+	    $curproc->filter_state_set_error("commnd_mail",
+					     $FILTER_ERR_REJECT);
+
 	    my $x;
 	    $x =  $obj->error();
 	    $x =~ s/\s*at .*$//o;
