@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: BodyCheck.pm,v 1.24 2002/09/13 16:35:57 tmu Exp $
+# $FML: BodyCheck.pm,v 1.25 2002/09/22 14:56:49 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -353,9 +353,10 @@ sub reject_japanese_command_syntax
 	# trap /JIS"2byte"[A-Za-z]+/
 
 	# EUC-fy for further investigation
-	use Mail::Message::Encode qw(STR2EUC);
-	my $s = &STR2EUC($buf);
-	$s    = (split(/\n/, $s))[0]; # check the first line only
+	use Mail::Message::Encode;
+	my $obj = new Mail::Message::Encode;
+	my $s   = $obj->convert( $buf, 'euc-jp' );
+	$s      = (split(/\n/, $s))[0]; # check the first line only
 
 	my ($n_pat, $sp_pat);
 	$n_pat  = '\243[\301-\332\341-\372]';
