@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.82 2002/03/31 12:11:26 fukachan Exp $
+# $FML: Kernel.pm,v 1.83 2002/04/10 04:31:09 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -14,7 +14,19 @@ use Carp;
 use vars qw(@ISA);
 use File::Spec;
 
+use FML::Process::Flow;
+use FML::Process::Utils;
+use FML::Parse;
+use FML::Header;
+use FML::Config;
+use FML::Log qw(Log LogWarn LogError);
+use File::SimpleLock;
+
+# for small utilities: fml_version(), myname(), et. al.
+push(@ISA, qw(FML::Process::Utils));
+
 my $debug = 0;
+
 
 =head1 NAME
 
@@ -59,16 +71,6 @@ parameters.
 
 =cut
 
-use FML::Process::Flow;
-use FML::Process::Utils;
-use FML::Parse;
-use FML::Header;
-use FML::Config;
-use FML::Log qw(Log LogWarn LogError);
-use File::SimpleLock;
-
-# for small utilities: fml_version(), myname(), et. al.
-push(@ISA, qw(FML::Process::Utils));
 
 # Descriptions: constructor
 #    Arguments: OBJ($self) HASH_REF($args)
@@ -76,9 +78,9 @@ push(@ISA, qw(FML::Process::Utils));
 # Return Value: FML::Process::Kernel object
 sub new
 {
-    my ($self, $args)    = @_;
-    my ($curproc) = {}; # alloc memory as the struct current_process.
-    my ($cfargs)  = {};
+    my ($self, $args) = @_;
+    my ($curproc)     = {}; # alloc memory as the struct current_process.
+    my ($cfargs)      = {};
 
     # import variables
     my (@import_vars) = qw(ml_home_prefix ml_home_dir program_name);
@@ -107,7 +109,14 @@ sub new
     }
 
     # import XXX_dir variables from /etc/fml/main.cf
-    for my $dir_var (qw(lib_dir libexec_dir share_dir)) {
+    for my $dir_var (qw(
+			config_dir
+			default_config_dir
+			lib_dir
+			libexec_dir
+			share_dir
+			local_lib_dir
+			)) {
 	if (defined $args->{ main_cf }->{ $dir_var }) {
 	    $cfargs->{ 'fml_'.$dir_var } = $args->{ main_cf }->{ $dir_var };
 	}
@@ -136,6 +145,7 @@ sub new
     use FML::PCB;
     $curproc->{ pcb } = new FML::PCB;
 
+    # object-ify. bless! bless! bless!
     bless $curproc, $self;
 
     # load config.cf files, which is passed from loader.
@@ -170,7 +180,7 @@ sub _signal_init
 {
     my ($curproc, $args) = @_;
 
-    $SIG{'ALRM'} = $SIG{'INT'}  = $SIG{'QUIT'} = $SIG{'TERM'} = sub {
+    $SIG{'ALRM'} = $SIG{'INT'} = $SIG{'QUIT'} = $SIG{'TERM'} = sub {
 	my ($signal) = @_;
 	Log("SIG$signal trapped");
 	sleep 1;
@@ -220,7 +230,7 @@ sub prepare
 
 =head2 C<lock($args)>
 
-locks the current process.
+lock the current process.
 It is a giant lock now.
 
 =head2 C<unlock($args)>
@@ -230,9 +240,10 @@ It is a giant lock now.
 
 =cut
 
-# Descriptions:
+
+# Descriptions: do a giant lock
 #    Arguments: OBJ($curproc) HASH_REF($args)
-# Side Effects:
+# Side Effects: none
 # Return Value: none
 sub lock
 {
@@ -331,7 +342,7 @@ sub verify_sender_credential
 	$curproc->{'credential'}->set( 'sender', $from );
     }
     else {
-	Log("invalid From:");
+	LogError("invalid From:");
     }
 }
 
@@ -343,6 +354,7 @@ The autual check is done by header->C<$rule()> for a C<rule>.
 See C<FML::Header> object for more details.
 
 =cut
+
 
 # Descriptions: top level of loop checks
 #    Arguments: OBJ($curproc) HASH_REF($args)
@@ -356,6 +368,7 @@ sub simple_loop_check
     my $header = $r_msg->{ header };
     my $match = 0;
 
+  RULES:
     for my $rule (split(/\s+/, $config->{ header_loop_check_rules })) {
 	if ($header->can($rule)) {
 	    $match = $header->$rule($config, $args) ? $rule : 0;
@@ -364,7 +377,7 @@ sub simple_loop_check
 	    Log("header->${rule}() is undefined");
 	}
 
-	last if $match;
+	last RULES if $match;
     }
 
     if ($match) {
@@ -421,6 +434,7 @@ The C<body> is C<Mail::Message> object.
 
 =cut
 
+
 # Descriptions: parse the message to a set of header and body
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: $curproc->{'incoming_message'} is set up
@@ -458,18 +472,33 @@ The restriction rules follows the order of C<command_restrictions>.
 =cut
 
 
+# Descriptions: permit this post process
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
 sub permit_post
 {
     my ($curproc, $args) = @_;
     $curproc->_check_resitrictions($args, 'post');
 }
 
+
+# Descriptions: permit this command process
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
 sub permit_command
 {
     my ($curproc, $args) = @_;
     $curproc->_check_resitrictions($args, 'command');
 }
 
+
+# Descriptions: permit this $type process based on the rules defined
+#               in ${type}_restrictions.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
 sub _check_resitrictions
 {
     my ($curproc, $args, $type) = @_;
@@ -526,6 +555,11 @@ invalid conditions by such as filtering.
 =cut
 
 
+# Descriptions: stop further processing since
+#               this process looks invalid in some sence.
+#    Arguments: OBJ($curproc) STR($reason)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
 sub refuse_further_processing
 {
     my ($curproc, $reason) = @_;
@@ -533,6 +567,10 @@ sub refuse_further_processing
 }
 
 
+# Descriptions: inform whether we should stop further processing?
+#    Arguments: OBJ($curproc) STR($reason)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
 sub is_refused
 {
     my ($curproc, $reason) = @_;
@@ -577,6 +615,10 @@ If you attach a plain text with the charset = iso-2022-jp,
 =cut
 
 
+# Descriptions: set reply message
+#    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub reply_message
 {
     my ($curproc, $msg, $args) = @_;
@@ -601,6 +643,10 @@ sub reply_message
 }
 
 
+# Descriptions: add the specified $msg into on memory queue
+#    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($args) ARRAY_REF($recipient)
+# Side Effects: update on momory queue which is on PCB area.
+# Return Value: none
 sub _append_message_into_queue
 {
     my ($curproc, $msg, $args, $recipient) = @_;
@@ -619,6 +665,11 @@ sub _append_message_into_queue
 }
 
 
+# Descriptions: built and return recipient type and list in
+#               on memory queue.
+#    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($args)
+# Side Effects: none
+# Return Value: ARRAY( HASH_REF, HASH_REF )
 sub _reply_message_recipient_keys
 {
     my ($curproc, $msg, $args) = @_;
@@ -644,6 +695,10 @@ sub _reply_message_recipient_keys
 }
 
 
+# Descriptions: make a key
+#    Arguments: ARRAY_REF($rarray)
+# Side Effects: none
+# Return Value: STR
 sub _gen_recipient_key
 {
     my ($rarray) = @_;
@@ -723,6 +778,7 @@ Prepare the message and queue it in by C<Mail::Delivery::Queue>.
 
 =cut
 
+
 # Descriptions: msg (message to return to the sender) is either of
 #               text/plain if only "text" is defined.
 #               msg = header + get(message, text)
@@ -790,6 +846,8 @@ sub queue_in
     # override parameters (may be processed here always)
     if (defined $optargs) {
 	my $a = $optargs;
+
+	# override parameters
 	$sender    = $a->{'sender'}         if defined $a->{'sender'};
 	$charset   = $a->{'charset'}        if defined $a->{'charset'};
 	$subject   = $a->{'subject'}        if defined $a->{'subject'};
