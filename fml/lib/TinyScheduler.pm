@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: TinyScheduler.pm,v 1.14 2001/12/22 07:16:35 fukachan Exp $
+# $FML: TinyScheduler.pm,v 1.15 2001/12/22 09:21:00 fukachan Exp $
 #
 
 package TinyScheduler;
@@ -210,10 +210,12 @@ sub parse
 	my $dh = new DirHandle $data_dir;
 
 	if (defined $dh) {
+	    use File::Spec;
+
 	    while (defined($_ = $dh->read)) {
 		next if $_ =~ /~$/;
 		next if $_ =~ /^\./;
-		my $schedule_file = "$data_dir/$_";
+		my $schedule_file = File::Spec->catfile($data_dir, $_);
 		if (-f $schedule_file) {
 		    $self->_analyze($schedule_file, \@pat);
 		}

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.20 2002/01/30 14:51:16 fukachan Exp $
+# $FML: DB.pm,v 1.21 2002/02/01 12:04:03 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -60,10 +60,11 @@ sub db_open
     my $db_type = $self->{ config }->{ db_type } || 'AnyDBM_File';
     my $db_dir  = $self->{ _db_dir };
 
+    use File::Spec;
     eval qq{ use $db_type; use Fcntl;};
     unless ($@) {
         for my $db (@kind_of_databases) {
-            my $file = "$db_dir/${db}";
+	    my $file = File::Spec->catfile($db_dir, $db);
             my $str  = qq{
                 my \%$db = ();
                 tie \%$db, \$db_type, \$file, O_RDWR|O_CREAT, 0644;
