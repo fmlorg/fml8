@@ -2,6 +2,68 @@
 		$Date$
 
 
+2001/10/09
+
+   FML::Process::Command
+	catch up the modification in FML::Process::Distribute.
+	make command function work with replying request mail.
+	disable lock()/unlock() since each command module lock/unlock
+	by itself. 
+
+   FML::Process::Distribute
+	modified finish() to use queue_flush()
+
+
+2001/10/08
+
+   メールでのコマンドの応答を可能にした(プロトタイプ)
+	add a lot of debug messages
+
+	* Affcted modules:
+		FML::Command
+		FML::Process::Command
+		FML::Process::Distribute
+		FML::Process::Kernel
+		FML::Process::Switch
+
+	* newly added:
+		FML::Command::User::help
+
+	* test tools:
+		regress/simulation/test-ctl.sh
+		regress/testmails/text=plain.command
+
+   FML::Command
+   FML::Process::Kernel
+	more debug info
+
+   FML::Process::Distribute
+	log ACL error
+
+   FML::Process::Switch
+	enable "loader --ctladdr" behaves as libexec/command
+	more debug messages
+	modify style e.g. eval q## -> eval q{} et. al.
+
+   regress/simulation/test-ctl.sh 
+	added simple command mode emulator
+
+   regress/simulation/perlcheck 
+	add -I ../../fml/libexec
+
+   libexec/loader
+	die() -> croak()
+	define missing default value in initialization
+	remove obsolete variable: $libexec_dir
+	eval()-fiy more
+	fix error message
+	show $@ in error
+	fix typo
+
+   fix: more severe initialization check 
+	FML::Credential
+
+
 2001/09/23
 
    Mail::Message
@@ -281,5 +343,5 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.13 2001/09/22 14:52:04 fukachan Exp $
+$FML: CHANGES.txt,v 1.14 2001/09/23 14:50:52 fukachan Exp $
 
