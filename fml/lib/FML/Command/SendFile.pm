@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.18 2002/07/17 12:09:26 fukachan Exp $
+# $FML: SendFile.pm,v 1.19 2002/08/17 23:27:33 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -202,7 +202,7 @@ sub send_user_xxx_message
     }
     # if "help" is not found, use the default help message.
     else {
-	$curproc->reply_message_nl("help.user.${type}",
+	$curproc->reply_message_nl("user.${type}",
 				   "${type} unavailable (error).");
     }
 }
