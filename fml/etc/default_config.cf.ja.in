@@ -1002,12 +1002,12 @@ domain_local_log_file	=	$domain_local_dir/@log@
 
 
 # Descriptions: 機会処理にやさしいフォーマットでログを出力する。
-#               コマンドラインオプションで --computer-output を指定すると
-#               use_computer_output = yes と同じ意味になる。
+#               コマンドラインオプションで --log-computer-output を指定すると
+#               use_log_computer_output = yes と同じ意味になる。
 #      History: none
 #        Value: yes | no
 #     Examples: no
-use_computer_output	=	no
+use_log_computer_output	=	no
 
 
 # Descriptions: 機会処理にやさしいフォーマットを出力する際の出力エンジン。
@@ -1015,7 +1015,7 @@ use_computer_output	=	no
 #      History: none
 #        Value: CLASS
 #     Examples: FML::Log::Print::Simple
-computer_output_engine	=	FML::Log::Print::Simple
+log_computer_output_engine	=	FML::Log::Print::Simple
 
 =head1	配送プロセス
 
