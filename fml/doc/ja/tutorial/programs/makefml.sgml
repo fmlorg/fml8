@@ -1,5 +1,5 @@
 <!--
-	$FML: makefml.sgml,v 1.1.1.1 2001/04/26 08:33:58 fukachan Exp $
+	$FML: makefml.sgml,v 1.2 2001/04/26 11:02:40 fukachan Exp $
 -->
 
 <sect1 id="makefml">
@@ -7,30 +7,64 @@
 <title> makefml (/usr/local/bin/makefml) </title>
 
 <para>
-makefml の使い方は fml 4.0 の makefml と同様です。
-現在使えるコマンドは以下のものだけです。
+makefml の基本的な使い方は fml 4.0 の makefml と同様です。
+というより、できるだけ互換性を保つように構築する予定です。
+</para>
 
+<para>
+現状 makefml に命令を与えると admin コマンドと同じ動作をするようになっ
+ています。
+つまり特権的な動作ということです。
+例えば、メンバーの登録に confirmation は必要ありません。
+</para>
+
+<para>
+現在使えるコマンドは以下のものです。
 <itemizedlist>
 	<listitem>
 	<para>
 	メンバーの登録
+	(
+		subscribe
+		add
+	)
 	</para>
 	</listitem>
 
 	<listitem>
 	<para>
 	メンバーの削除
+	(
+		bye
+		remove
+		resign
+		signoff
+		unsubscribe
+	)
 	</para>
 	</listitem>
 
 	<listitem>
 	<para>
-	ＭＬの作成( newml )
+	ＭＬの作成
+	(
+		newml 
+	)
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
+	ファイルを送り返す
+	(
+		get
+		mget
+	)
 	</para>
 	</listitem>
 
 </itemizedlist>
-
+詳しくは FML::Command::Admin のクラスを見て下さい。
 </para>
 
 </sect1>
