@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.23 2004/08/13 13:24:54 fukachan Exp $
+# $FML: QueueManager.pm,v 1.24 2004/08/14 06:28:55 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -86,7 +86,15 @@ sub send
 
     use Mail::Delivery::Queue;
     my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
-    my $ra    = defined $id ? [ $id ] : $queue->list();
+    my $ra    = [];
+
+    if (defined $id) {
+	$ra = [ $id ];
+    }
+    else {
+	$queue->set_strategy("fair-queue");
+	$ra = $queue->list();
+    }
 
   QUEUE:
     for my $qid (@$ra) {
