@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.44 2002/04/12 11:55:18 fukachan Exp $
+# $FML: Command.pm,v 1.45 2002/04/13 13:52:39 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -147,6 +147,10 @@ sub run
 	    $curproc->reply_message_nl("error.not_member",
 				       "deny request from a not member");
 	}
+
+	# append the incoming message as the reference
+	my $msg  = $curproc->{ incoming_message }->{ message };
+	$curproc->reply_message( $msg );
 
 	Log("deny command. reason=$reason");
     }
