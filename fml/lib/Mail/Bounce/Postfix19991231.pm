@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DSN.pm,v 1.2 2001/04/09 14:06:15 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.1 2001/04/09 15:32:24 fukachan Exp $
 #
 
 
@@ -41,8 +41,7 @@ Mail::Bounce::Postfix19991231 - Postfix-19991231 error message format parser
 
 sub analyze
 {
-    my ($self, $msg) = @_;
-    my $result  = {};
+    my ($self, $msg, $result) = @_;
     my $state   = 0;
     my $pattern = '--- Delivery error report follows ---';
     my $end_pattern = '--- Undelivered message follows ---';

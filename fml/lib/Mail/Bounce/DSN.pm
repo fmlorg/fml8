@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DSN.pm,v 1.2 2001/04/09 14:06:15 fukachan Exp $
+# $FML: DSN.pm,v 1.3 2001/04/09 15:31:48 fukachan Exp $
 #
 
 
@@ -41,8 +41,7 @@ Mail::Bounce::DSN - DSN error message format parser
 
 sub analyze
 {
-    my ($self, $msg) = @_;
-    my $result = {};
+    my ($self, $msg, $result) = @_;
     my $m;
 
     if ($m = $msg->find( { data_type => 'message/delivery-status' } )) {
