@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.51 2002/09/15 02:11:24 fukachan Exp $
+	$FML: chapters.ent,v 1.52 2002/09/29 06:01:56 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -63,6 +63,9 @@
 
 <!entity sect.config.ml.hier    SYSTEM "customize/ml.hier.ml">
 
+
+<!entity recipe.header.tag.uppercase SYSTEM "customize/recipe.header.tag.uppercase.sgml">
+<!entity recipe.header.tag.lowercase SYSTEM "customize/recipe.header.tag.lowercase.sgml">
 
 <!entity sect.usage.guide           SYSTEM "usage/guide.sgml">
 <!entity sect.usage.subscribe       SYSTEM "usage/subscribe.sgml">

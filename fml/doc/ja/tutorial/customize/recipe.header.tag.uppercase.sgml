@@ -1,0 +1,23 @@
+<!--
+   $FML$
+-->
+
+
+<qandaentry>
+
+<question>
+<para>
+記事のヘッダの Subject: のタグを大文字にしたい
+</para>
+</question>
+
+<answer>
+<para>
+<screen>
+article_subject_tag = [\U$ml_name\E:%05d]
+</screen>
+(注意: 2002/10/29 以降の snapshot を使ってください)。 
+</para>
+</answer>
+
+</qandaentry>
