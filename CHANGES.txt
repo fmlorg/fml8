@@ -1,6 +1,26 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/04/12
+
+   FML::Process::Distribute 
+	send back mesg "we deny requests from system accounts"
+	
+   FML::Process::Command 
+	check by permit_command() before command execution ;)
+	send back mesg "we deny requests from system accounts"
+
+   FML::CGI::Calender 
+	switched to the current style
+
+2002/04/11
+
+   FML::Config 
+	has_attribute() should look up %_fml_config_result
+	
+   FML::Process::Command 
+	accept commands, e.g. subscribe, allowed for not members
+
 2002/04/10
 
    2002/03 分クリーンアップおわり
@@ -1971,4 +1991,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.64 2002/04/06 14:53:38 fukachan Exp $
+$FML: CHANGES.txt,v 1.65 2002/04/10 15:22:51 fukachan Exp $
