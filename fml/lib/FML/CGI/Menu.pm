@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.8 2004/01/02 14:50:29 fukachan Exp $
+# $FML: Menu.pm,v 1.9 2004/01/18 13:56:04 fukachan Exp $
 #
 
 package FML::CGI::Menu;
@@ -255,6 +255,124 @@ sub run_cgi_navigator
     print reset(-name  => $name_reset);
 
     print end_form;
+}
+
+
+=head2 run_cgi_menu()
+
+execute cgi_menu() given as FML::Command::*
+
+=cut
+
+
+# Descriptions: execute FML::Command
+#    Arguments: OBJ($curproc)
+# Side Effects: load module
+# Return Value: none
+sub run_cgi_menu
+{
+    my ($curproc)    = @_;
+
+    $curproc->cgi_execute_cgi_menu();
+}
+
+
+=head2 run_cgi_help()
+
+help.
+
+=cut
+
+
+# Descriptions: show help
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub run_cgi_help
+{
+    my ($curproc) = @_;
+    my $ml_name   = $curproc->cgi_var_ml_name();
+    my $ml_domain = $curproc->cgi_var_ml_domain();
+    my $mode      = $curproc->cgi_var_cgi_mode();
+    my $role      = $curproc->message_nl('term.config_interface');
+    my $msg_args  = $curproc->_gen_msg_args();
+
+    print "<B>\n<CENTER>\n";
+    if ($mode eq 'admin') {
+	print "fml CGI $role for \@$ml_domain ML's\n";
+    }
+    else {
+	print "fml CGI $role for $ml_name\@$ml_domain ML\n";
+    }
+    print "</CENTER><BR>\n</B>\n";
+
+    # top level help message
+    my $buf  = '';
+    if ($mode eq 'admin') {
+	$buf = $curproc->message_nl("cgi.admin.top", "", $msg_args);
+    }
+    else {
+	$buf = $curproc->message_nl("cgi.ml-admin.top", "", $msg_args);
+    }
+
+    print $buf;
+}
+
+
+=head2 run_cgi_command_help()
+
+command_help.
+
+=cut
+
+
+# Descriptions: show command_dependent help
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub run_cgi_command_help
+{
+    my ($curproc)    = @_;
+    my $buf          = '';
+    my $navi_command = $curproc->safe_param_navi_command();
+    my $command      = $curproc->safe_param_command();
+    my $msg_args     = $curproc->_gen_msg_args();
+
+    # natural language-ed name
+    my $name_usage   = $curproc->message_nl('term.usage',  'usage');
+
+    if ($navi_command) {
+	print "[$name_usage]<br> <b> $navi_command </b> <br>\n";
+	$buf = $curproc->message_nl("cgi.$navi_command", '', $msg_args);
+    }
+    elsif ($command) {
+	print "[$name_usage]<br> <b> $command </b> <br>\n";
+	$buf = $curproc->message_nl("cgi.$command", '', $msg_args);
+    }
+
+    print $buf;
+}
+
+
+# Descriptions: prepare arguemnts for message handling.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: HASH_REF
+sub _gen_msg_args
+{
+    my ($curproc) = @_;
+
+    # natural language-ed name
+    my $name_submit = $curproc->message_nl('term.submit', 'submit');
+    my $name_show   = $curproc->message_nl('term.show',   'show');
+    my $name_map    = $curproc->message_nl('term.map',    'map');
+    my $msg_args    = {
+	_arg_button_submit => $name_submit,
+	_arg_button_show   => $name_show,
+	_arg_scroll_map    => $name_map,
+    };
+
+    return $msg_args;
 }
 
 
