@@ -1,0 +1,39 @@
+$curproc->log();
+
+
+$curproc->logwarn();
+
+
+$curproc->logerror();
+	えらーをきろくする。
+	が、fatal error とはかぎらない。
+
+
+$curproc->error_set($hash);
+
+	$hash = {
+		key         => ERROR_KEY,
+		key_args    => {
+			_arg_xxx => "yyy",
+		},
+		string      => ERROR_STRING,
+		type        => TYPE,
+		at_package  => PACKAGE,
+		at_function => FUNCTION,
+		at_line     => LINE_NUMBER,
+	};
+
+
+	error_queue = [  $hash_01, $hash_02, ... ]; にいれる
+
+	$curproc->logerror( string ); 
+
+	croak( __なんか、このしすてむをつかってるというしるしを__ ) をよぶ
+
+   でよい？＃ちがうばしょから croak あがるけど？
+
+
+$hash = $curproc->error_get();
+
+	いちばん、とっぷれべるで、一番、おくまった fatal error の情報
+	を取り出すためにある。

@@ -1,0 +1,137 @@
+
+	fml4 から fml8 への移行について (一気に変換する編)
+
+*** ? ***
+	逆に「一気に変換しない編」ってありうるのか？
+
+	つまり、fml4 と fml8 が共存しながら、on the fly で切り替わっていく
+	ということだ。それは include の書換えを考えると、なさそうなんだが？
+
+	アップグレード注には include ファイルに exit 75 とかかいておくか？
+
+
+0)	準備
+
+	/var/spool/ml 以下にＭＬの本体があると仮定する
+
+	fml8 を普通にインストールする。
+
+
+0.1)	何かする前にバックアップをとる
+
+	Q: どこに？
+	A: 各ＭＬの下だろう
+
+		/var/spool/ml/elena/.fml4rc/
+			cf
+			config.ph
+			actives
+			members*
+
+	$file は移す(rename(2))。また、$file をコンバートしたら
+
+		touch /var/spool/ml/elena/.fml4rc/.${file}_done
+
+	して、処理の状況をトレースできるようにする。
+		
+
+1)	メンバーリストの変換
+
+	fmlsrc/convert.pl ? 	fmlsrc/update.pl  ?
+	なんか、すくりぷとがあって、
+		% convert.pl 元ディレクトリ [先ディレクトリ]
+			--target=  も可( fml4 がデフォルト )
+	を実行すると、よろしくがんばる？実体は、FML::Merge ?
+	＃ターゲットシステムの違いも考慮しておくべし
+
+	いや、どういうときに、どう使うか？が確立されてないので
+	/usr/local/bin/fmlmerge のほうがよいか？
+	いや、どうしても newml と同じ関数を呼ぶんだが…
+	＃ fml8 固有のファイルもあるから、それは必要
+	
+		FML::Process::Merge (?)
+		FML::Merge
+		FML::Merge::ターゲットシステム::ファイル依存コード
+		FML::Merge::FML4::config.txt (翻訳ルール? MERGE? RULES.txt?)
+		FML::Merge::FML4::actives
+		FML::Merge::FML4::members
+		FML::Merge::FML4::members_admin
+		FML::Merge::FML4::cf
+		FML::Merge::FML4::msendrc
+		FML::Merge::FML4::include
+		FML::Merge::FML4::include_ctl
+		FML::Merge::FML4::include_mead
+		FML::Merge::FML4::aliases
+		FML::Merge::FML4::crontab
+		FML::Merge::FML4::config_ph
+		FML::Merge::FML4::site_init_ph
+		FML::Merge::FML4::site_force_ph
+		FML::Merge::FML4::log
+		FML::Merge::FML4::help
+		FML::Merge::FML4::help_admin
+		FML::Merge::FML4::deny
+		FML::Merge::FML4::guide
+		FML::Merge::FML4::welcome
+		FML::Merge::FML4::confirm
+		FML::Merge::FML4::objective
+		FML::Merge::FML4::qmail_alias
+		FML::Merge::FML4::qmail_users
+
+
+	actives		->	recipients		digest以外に
+	actives		->	recipients-digest	digestだけ
+
+	members		->	members 		そのまま
+
+	members-admin	->	members-admin		そのまま
+	members-admin	->	recipients-admin	コピー
+
+
+2)	設定ファイルの変換
+
+	cf -> config.cf
+	cf -> .fml4rc/cf (移動)
+
+
+
+*)	config.txt をどうする？
+
+
+.if PERMIT_POST_FROM == anyone
+
+	post_restrictions = reject_system_special_accounts permit_anyone
+
+.if PERMIT_POST_FROM == members_only 
+	.if REJECT_POST_HANDLER == reject
+
+		DEFAULT
+
+.if PERMIT_POST_FROM == members_only 
+	.if REJECT_POST_HANDLER == auto_subscribe
+
+		NOT_SUPPORTED
+
+.if PERMIT_POST_FROM == members_only 
+	.if REJECT_POST_HANDLER == ignore
+
+		NOT_SUPPORTED
+
+.if PERMIT_POST_FROM == moderator 
+
+		NOT_SUPPORTED
+
+
+
+#
+# USE_RFC2369:
+#
+.if USE_RFC2369 == 1
+	DEFAULT
+
+.if USE_RFC2369 == 0
+	article_header_rewrite_rules -= add_rfc2369
+
+
+
+------------------------------------------------------------
+$FML$
