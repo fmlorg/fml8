@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.23 2001/10/27 14:56:30 fukachan Exp $
+# $FML: Lite.pm,v 1.24 2001/10/28 10:48:21 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.23 2001/10/27 14:56:30 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.24 2001/10/28 10:48:21 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -173,11 +173,9 @@ sub htmlfy_rfc822_message
 	# header
 	if ($type eq 'text/rfc822-headers') {
 	    $self->mhl_separator($wh);
-	    my $header = $self->_format_header($msg);
-	    $self->_text_safe_print({ 
-		fh   => $wh,
-		data => $header,
-	    });
+	    my $charset = $self->{ _charset };
+	    my $header  = $self->_format_safe_header($msg);
+	    _print_raw_str($wh, $header, $charset);
 	    $self->mhl_separator($wh);
 	}
 	# message/rfc822 case
@@ -584,30 +582,33 @@ my @header_field = qw(From To Cc Subject Date
 
 # Descriptions: 
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects: none
+#               XXX print return value (str) in raw mode later.
 # Return Value: none
-sub _format_header
+sub _format_safe_header
 {
     my ($self, $msg) = @_;
-    my ($buf, $buf40);
+    my ($buf);
     my $hdr = $msg->rfc822_message_header;
     my $header_field = \@header_field;
 
     # header
-    $buf40 .= "<SPAN CLASS=mailheaders>\n";
+    $buf .= "<SPAN CLASS=mailheaders>\n";
     for my $field (@$header_field) {
 	if (defined($hdr->get($field))) {
-	    $buf40 .= "<SPAN CLASS=${field}>\n";
+	    $buf .= "<SPAN CLASS=${field}>\n";
 	    $buf .= "${field}: ";
-	    $buf40 .= "</SPAN>\n";
+	    $buf .= "</SPAN>\n";
 
 	    my $xbuf = $hdr->get($field); 
-	    $buf40 .= "<SPAN CLASS=${field}-value>\n";
-	    $buf .= $xbuf =~ /=\?iso/i ? $self->_decode_mime_string($xbuf) : $xbuf;
-	    $buf40 .= "</SPAN>\n";
+	    $xbuf = $self->_decode_mime_string($xbuf) if $xbuf =~ /=\?iso/i;
+	    $buf .= "<SPAN CLASS=${field}-value>\n";
+	    $buf   .= _sprintf_safe_str($xbuf);
+	    $buf .= "</SPAN>\n";
+	    $buf .= "<BR>\n";
 	}
     }
-    $buf40 .= "</SPAN>\n";
+    $buf .= "</SPAN>\n";
 
     return($buf);
 }
@@ -1199,25 +1200,29 @@ sub evaluate_footer
     if (defined($link_prev_id)) {
 	$footer .= "<BR>\n";
 	$footer .= "<A HREF=\"$link_prev_id\">Prev by ID: ";
-	$footer .= "$subject->{ prev_id }</A>\n";
+	$footer .= _sprintf_safe_str( $subject->{ prev_id } );
+	$footer .= "</A>\n";
     }
 
     if (defined($link_next_id)) {
 	$footer .= "<BR>\n";
 	$footer .= "<A HREF=\"$link_next_id\">Next by ID: ";
-	$footer .= "$subject->{ next_id }</A>\n";
+	$footer .= _sprintf_safe_str( $subject->{ next_id } );
+	$footer .= "</A>\n";
     }
 
     if (defined $link_prev_thread) {
 	$footer .= "<BR>\n";
 	$footer .= "<A HREF=\"$link_prev_thread\">Prev by Thread: ";
-	$footer .= "$subject->{ prev_thread }</A>\n";
+	$footer .= _sprintf_safe_str($subject->{ prev_thread });
+	$footer .= "</A>\n";
     }
 
     if (defined $link_next_thread) {
 	$footer .= "<BR>\n";
 	$footer .= "<A HREF=\"$link_next_thread\">Next by Thread: ";
-	$footer .= "$subject->{ next_thread }</A>\n";
+	$footer .= _sprintf_safe_str($subject->{ next_thread });
+	$footer .= "</A>\n";
     }
 
     $footer .= qq{<BR>\n};
@@ -1785,6 +1790,23 @@ sub _print_safe_buf
 sub __print_safe_str
 {
     my ($attr_pre, $wh, $str, $code) = @_;
+    my $p = __sprintf_safe_str($attr_pre, $wh, $str, $code);
+    print $wh $p;
+    print $wh "\n";
+}
+
+
+sub _sprintf_safe_str
+{
+    my ($str, $code) = @_;
+    return __sprintf_safe_str(0, undef, $str, $code);
+}
+
+
+sub __sprintf_safe_str
+{
+    my ($attr_pre, $wh, $str, $code) = @_;
+    my $rbuf = '';
 
     if (defined($str) && defined($code)) {
 	use Jcode;
@@ -1792,8 +1814,41 @@ sub __print_safe_str
     }
 
     use HTML::FromText;
-    print $wh text2html($str, urls => 1, pre => $attr_pre);
-    print $wh "\n";
+
+    # $url$trailor => $url $trailor for text2html() incomplete regexp 
+    $str =~ s#(http://\S+[\w\d/])#_separete_url($1)#ge;
+
+    return text2html($str, urls => 1, pre => $attr_pre);
+}
+
+
+# $url$trailor => $url $trailor for text2html() incomplete regexp 
+# based on fml 4.0-current (2001/10/28)
+sub _separete_url
+{
+    my ($url) = @_;
+    my ($re_euc_c) = '[\241-\376][\241-\376]';
+    my ($re_euc_s)  = "($re_euc_c)+";
+    my $trailor = '';
+
+    # remove prepended/appended EUC strings
+    if ($url =~ /($re_euc_s)+$/) {
+        $trailor = $1;
+        $url     =~ s/$trailor//;
+    }
+
+    # incomplete but may be effective ?
+    # RFC2068 says these special char's are not used.
+    # we should not include these char's in URL.
+    # reserved       = ";" | "/" | "?" | ":" | "@" | "&" | "=" | "+"
+    # unsafe         = CTL | SP | <"> | "#" | "%" | "<" | ">"
+    if ($url =~ /(\&\w{2}\;|\;|\?|\:|\@|\&|\=|\+|\#|\%|\<|\>|\")+$/) {
+        my $pat  = $1;
+        $trailor = $pat . $trailor;
+        $url     =~ s/${pat}$//; 
+    }
+
+    return "$url $trailor";
 }
 
 
