@@ -1,5 +1,5 @@
 <!--
-# $FML$
+   $FML: bookinfo.sgml,v 1.1 2003/07/24 15:37:36 fukachan Exp $
    $jaFML: bookinfo.sgml,v 1.11 2003/02/11 13:54:11 fukachan Exp $
 -->
 
@@ -7,6 +7,7 @@
   <bookbiblio>
      <title>
 	fml 8 tutorial
+	( under being translated ... )
      </title>
 
      <author>
