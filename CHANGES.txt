@@ -12,10 +12,19 @@
 	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
 	気をつけてください。
 
+
+2004/04/21
+
+   FML::Process::Utils 
+	bug fix mkdir()::str to octal handling bug
+
 2004/04/20
 
    FML::Command::Admin::error 
 	-O algorithm= option
+
+   [BUG FIX] makefml でエラーがでるのを直した。
+	ごめんなさい、設定ファイルの TYPO が原因です。
 
 2004/04/18
 
@@ -6783,4 +6792,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.195 2004/04/17 15:00:56 fukachan Exp $
+$FML: CHANGES.txt,v 1.196 2004/04/20 13:49:38 fukachan Exp $
