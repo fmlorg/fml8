@@ -1,0 +1,59 @@
+kern/fml.pl                    13.30	
+	kern/libenvf.pl                1.46	done
+	kern/libenvfsubr.pl            0.62	done
+kern/liblmtp.pl                0.24	
+	kern/libloadconfig.pl          2.12	removed
+	kern/libsmtp.pl                4.22	done
+kern/libsmtphack.pl            0.39	
+	kern/libsmtpmci.pl             0.29	done
+kern/libsmtpsubr.pl            0.70	
+	kern/libsmtpsubr2.pl           0.37	done?
+kern/libsmtputils.pl           1.22	
+	kern/libtrap.pl                0.23	removed
+kern/msend.pl                  3.42	
+	proc/libMIME.pl                0.73	done
+proc/libamctl.pl               5.14	
+proc/libarchive.pl             0.47	
+	proc/libcksum.pl               0.57	done
+proc/libconfirm.pl             3.99	
+	proc/libcrosspost.pl           1.17	removed
+proc/libcrypt.pl               0.98	
+	proc/libdatabases.pl           0.72	done
+	proc/libdebug.pl               0.53	removed?
+proc/libdist.pl                2.03	
+proc/libdisthack.pl            1.25	
+proc/liberror.pl               0.38	
+proc/libexpire.pl              0.66	
+proc/libfml.pl                 6.13	
+	proc/libfop.pl                 4.59	removed
+proc/libhtmlsubr.pl            1.77	
+	proc/liblibrary.pl             1.33	removed?
+	proc/liblock.pl                0.32	removed
+proc/liblogmail.pl             0.22	
+	proc/liblop.pl                 1.16	removed
+	proc/libmakefml.pl             0.19	removed
+	proc/libmd5.pl                 0.25	done
+proc/libmesgle.pl              1.06	
+	proc/libmgrdom.pl              0.24	removed
+	proc/libmladdr.pl              0.20	removed
+proc/libmodedef.pl             1.12	
+proc/libmoderated.pl           1.86	
+	proc/libmodeutils.pl           0.64	removed?
+proc/libmti.pl                 2.03	
+proc/libnewsyslog.pl           0.69	
+proc/libpgp.pl                 2.74	
+	proc/libpop.pl                 0.98	removed?
+proc/libqmail.pl               0.19	
+proc/libra.pl                  6.35	
+proc/librcs.pl                 0.27	
+	proc/librelayhack.pl           0.37	removed
+proc/libremote.pl              0.06	
+	proc/librfc1153.pl             0.81	removed
+proc/libsendfile.pl            4.08	
+proc/libsmtpsd.pl              0.43	
+	proc/libstardate.pl            0.21	done
+proc/libsynchtml.pl            7.80	
+proc/libtagdef.pl              0.48	
+proc/libutils.pl               2.27	
+	proc/libviruschk.pl            0.39	done
+	proc/libwhois.pl               1.53	removed
