@@ -12,32 +12,13 @@ $RE_JOUT   = '\033\([BJ]';
 ###############################
 
 
-
-
-
-
 sub Parse
 {
-    my ($new_block, $gobble, $curf, $first_header_part);
-    my ($mp_block, $p, $pmax);
-
     $new_block = 1;
     $gobble    = 0;
     $curf      = $NULL;
     $first_header_part = 1;
 
-    # gobble error mail
-    {
-	$pmax = sysread(STDIN, 
-			$MessageBuffer, 
-			$MEAD_INCOMING_MAIL_SIZE_LIMIT);
-
-	if ($pmax >= $MEAD_INCOMING_MAIL_SIZE_LIMIT) {
-	    &Log("warn: input mail is too large");
-	    &Log("warn: check the fisrt $MEAD_INCOMING_MAIL_SIZE_LIMIT bytes");
-	}
-	&Log("log: read $pmax bytes") if $debug;
-    }
 
     my ($msgbufp, $msgbufp1);
     for ($msgbufp = 0; $msgbufp <= $pmax; ) {
@@ -132,28 +113,6 @@ sub Parse
 	    }
 	}
 
-
-	###
-	### RFC1891,1894 DSN
-	###
-	if ($mp_block =~ /delivery\-status/i) {
-	    if (/^Final-Recipient:.*\s+(\S+\@\S+)/i) {
-		$DSN_FinalRecipient = &BareAddr($1);
-	    }
-	    elsif (/^Original-Recipient:.*\s+(\S+\@\S+)/i) {
-		$DSN_OriginalRecipient =  &BareAddr($1);
-	    }
-	    elsif (/^Status:\s*5/i) {
-		if ($DSN_OriginalRecipient) {
-		    &CacheOn($DSN_OriginalRecipient, " ");
-		}
-		if ($DSN_FinalRecipient) {
-		    &CacheOn($DSN_FinalRecipient, " ");
-		}
-
-		$found++;	    
-	    }
-	}
 
 	# smtpfeed -1 -F hack
 	if (/^To: \(original recipient in envelope at \S+\) <(\S+)>/) {
@@ -307,5 +266,3 @@ sub Parse
 	}
     }
 }
-
-
