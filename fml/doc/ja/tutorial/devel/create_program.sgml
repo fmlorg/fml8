@@ -1,5 +1,5 @@
 <!--
-	$FML: inet6.sgml,v 1.3 2001/11/19 14:55:15 fukachan Exp $
+	$FML: create_program.sgml,v 1.1 2001/11/25 06:06:57 fukachan Exp $
 -->
 
 <chapter id="program.create">
@@ -123,13 +123,40 @@ CGI 系列では次のような、オブジェクトの関係にあります。
 <para>
 CGI のプログラムの書き方も同様です。
 コマンドラインのプログラムと同様に、
+FML::CGI のモジュールを見本にして、
 FML::CGI::○○○ 
 を適宜用意して下さい。
 </para>
 
+
 <para>
-FML::Process::CGI::Kernel は、
-2001/11 現在、プロセスは以下のメソッドからなっています。
+FML::CGI::○○○ の注意点は、
+用意するメソッドは
+<screen>
+html_start()
+run_cgi()
+html_end()
+</screen>
+になるという点です。
+これは
+FML::Process::CGI 以下で駆動される時に、
+run() メソッドが、
+<screen>
+$curproc->html_start($args);
+$curproc->run_cgi($args);
+$curproc->html_end($args);
+</screen>
+を呼び出しているからです。
+FML::Process::CGI::Kernel 自身は、
+2001/11 現在、プロセスは以下のメソッド
+	<footnote>
+	<para>
+	このため、多くの場合
+	FML::Process::Kernel 
+	のメソッドは呼ばれてはいません。
+	</para>
+	</footnote>
+からなっています。
 <screen>
 new()
 prepare()
@@ -137,9 +164,6 @@ verify_request()
 run()
 finish()
 </screen>
-そのため、多くの場合
-FML::Process::Kernel 
-のメソッドが呼ばれることはありません。
 </para>
 
 </sect1>
