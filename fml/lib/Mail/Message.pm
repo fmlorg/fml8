@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.70 2003/01/09 00:43:57 fukachan Exp $
+# $FML: Message.pm,v 1.71 2003/01/09 03:46:23 fukachan Exp $
 #
 
 package Mail::Message;
@@ -721,7 +721,7 @@ sub whole_message_header_data_type
 
 
 # Descriptions: return boundary defined in Content-Type
-#    Arguments: OBJ($self) OBJ($Header)
+#    Arguments: OBJ($self) OBJ($header)
 # Side Effects: none.
 # Return Value: STR
 sub _header_mime_boundary
@@ -893,7 +893,7 @@ The previous part of C<$self> object is C<$obj>.
 
 
 # Descriptions: set next message in the chain
-#    Arguments: OBJ($self) OBJ(ref_next_message)
+#    Arguments: OBJ($self) OBJ($ref_next_message)
 # Side Effects: update next pointer in object
 # Return Value: OBJ
 sub _next_message_is
@@ -904,7 +904,7 @@ sub _next_message_is
 
 
 # Descriptions: set previous message in the chain
-#    Arguments: OBJ($self) OBJ(ref_prev_message)
+#    Arguments: OBJ($self) OBJ($ref_prev_message)
 # Side Effects: update prev pointer in object
 # Return Value: OBJ
 sub _prev_message_is
@@ -2068,7 +2068,7 @@ sub message_text
 
 
 # Descriptions: get body in message as ARRAY REF
-#    Arguments: OBJ($self) NUM($size)
+#    Arguments: OBJ($self) VARARGS(@argv)
 # Side Effects: none
 # Return Value: ARRAY_REF
 sub message_text_as_array_ref
