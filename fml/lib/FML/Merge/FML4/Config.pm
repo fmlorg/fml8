@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.1.1.1 2004/03/16 12:58:21 fukachan Exp $
+# $FML: Config.pm,v 1.2 2004/03/17 12:55:03 fukachan Exp $
 #
 
 package FML::Merge::FML4::Config;
@@ -276,6 +276,16 @@ sub backup_mode
     else {
 	return 'unknown';
     }
+}
+
+
+#
+# debug
+#
+if ($0 eq __FILE__) {
+   for my $f (keys %$ml_home_dir_backup_target_files) {
+	print $f, "\n";
+   }
 }
 
 
