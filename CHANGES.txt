@@ -1,6 +1,17 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/11/18
+
+   FML::Confirm 
+   FML::Command::User::confirm 
+	fix argument FML::Confirm::is_expired($id) from time to id.
+	
+   FML::Credential 
+	implement is_user_part_case_sensitive() and modified to use it.
+	we should attach $self internal directly even if within the
+	same module. 
+
 2003/11/16
 
    ドメインの扱い(デフォルトおよびバーチャルドメイン)の拡張(その１終了)
@@ -5669,4 +5680,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.171 2003/11/16 14:37:32 fukachan Exp $
+$FML: CHANGES.txt,v 1.172 2003/11/16 22:23:39 fukachan Exp $
