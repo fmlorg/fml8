@@ -5,13 +5,14 @@
 # ml_home_dir	= /var/spool/ml/$ml_name
 
 
-
+# default umask
+default_umask	= 0022
 =head1 Directories
 
 # $ml_home_dir is given from libexec/fmlwrapper.
 # ml_home_dir
 
-shared_db_dir	= $ml_home_prefix/@@db@@
+shared_db_dir	= $ml_home_prefix/@db@
 
 =head2 アクセス制御
 
