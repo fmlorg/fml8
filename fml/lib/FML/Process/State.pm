@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.7 2004/04/22 12:48:19 fukachan Exp $
+# $FML: State.pm,v 1.8 2004/05/18 08:49:19 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -499,7 +499,7 @@ sub smtp_server_state_set_error
 
 # Descriptions: check if $mta as error for later hint.
 #               implies "all servers" unless $mta specified.
-#    Arguments: OBJ($curproc)
+#    Arguments: OBJ($curproc) STR($mta)
 # Side Effects: update pcb.
 # Return Value: NUM(1 or 0)
 sub smtp_server_state_get_error
