@@ -1,5 +1,8 @@
 =head1	ユーザ情報
 
+
+=head2	データベース
+
 # Descriptions: primary { address => gecos_field } map.
 #      History: none
 #        Value: map
