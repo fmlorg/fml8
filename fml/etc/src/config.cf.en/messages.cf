@@ -11,19 +11,19 @@ language_preference_order	=	en ja
 #      History:
 #        Value:
 #     Examples:
-reply_message_default_charset	=	$reply_message_charset_en
+report_mail_default_charset	=	$report_mail_charset_en
 
 # Descriptions:
 #      History:
 #        Value:
 #     Examples:
-reply_message_charset_ja	=	iso-2022-jp
+report_mail_charset_ja	=	iso-2022-jp
 
 # Descriptions:
 #      History:
 #        Value:
 #     Examples:
-reply_message_charset_en	=	us-ascii
+report_mail_charset_en	=	us-ascii
 
 # Descriptions:
 #      History:
@@ -61,7 +61,7 @@ message_default_subject	=	fml system message ($ml_name ML)
 #      History:
 #        Value:
 #     Examples:
-reply_message_subject	=	fml results ($ml_name ML)
+report_mail_subject	=	fml results ($ml_name ML)
 
 
 =head2 template files

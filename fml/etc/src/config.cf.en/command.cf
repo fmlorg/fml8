@@ -309,3 +309,14 @@ command_mail_filter_reject_notice_recipients	=	maintainer
 #        Value: multipart / string
 #     Examples: string
 command_mail_filter_reject_notice_data_type	=	string
+
+
+=head2	log command
+
+
+# Descriptions: show the last N lines of log file where N == 100.
+#      History: $ADMIN_LOG_DEFAULT_LINE_LIMIT
+#        Value: NUM
+#     Examples: 100
+log_command_tail_starting_location	=	100
+

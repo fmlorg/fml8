@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.213 2004/02/27 22:23:12 fukachan Exp $
+# $FML: Kernel.pm,v 1.214 2004/02/29 15:59:04 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1438,7 +1438,7 @@ sub reply_message
     my $lang_list = $curproc->get_preferred_languages();
 
     for my $lang (@$lang_list) {
-	my $rm_charset = $curproc->lang_to_charset("reply_message", $lang);
+	my $rm_charset = $curproc->lang_to_charset("report_mail",   $lang);
 	my $tf_charset = $curproc->lang_to_charset("template_file", $lang);
 	my $charsets = {
 	    reply_message_charset => $rm_charset,
@@ -1763,7 +1763,7 @@ sub reply_message_nl
     my $lang_list = $curproc->get_preferred_languages();
 
     for my $lang (@$lang_list) {
-	my $rm_charset = $curproc->lang_to_charset("reply_message", $lang);
+	my $rm_charset = $curproc->lang_to_charset("report_mail",   $lang);
 	my $tf_charset = $curproc->lang_to_charset("template_file", $lang);
 	my $charsets = {
 	    reply_message_charset => $rm_charset,
