@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# From configure.in Revision: 1.14 
+# From configure.in Revision: 1.15 
 
 # Guess values for system-dependent variables and create Makefiles.
 # Generated automatically using autoconf version 2.13 
@@ -1629,6 +1629,7 @@ trap 'rm -fr `echo "\
 	config.sh \
 	fml/etc/main.cf \
 	fml/etc/default_config.cf.ja \
+	fml/etc/site_default_config.cf \
 	fml/libexec/loader \
 	fml/bin/fmlconf \
 	fml/bin/fmldoc \
@@ -1744,6 +1745,7 @@ CONFIG_FILES=\${CONFIG_FILES-"\
 	config.sh \
 	fml/etc/main.cf \
 	fml/etc/default_config.cf.ja \
+	fml/etc/site_default_config.cf \
 	fml/libexec/loader \
 	fml/bin/fmlconf \
 	fml/bin/fmldoc \
