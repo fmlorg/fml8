@@ -1,19 +1,19 @@
 #!/bin/sh
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: config.sh.in,v 1.6 2001/12/11 13:12:17 fukachan Exp $
+# $FML: config.sh.in,v 1.7 2002/03/31 12:12:28 fukachan Exp $
 #
 
 
 LIBS=@LIBS@
 CC=@CC@
-CFLAGS=@CFLAGS@
-LDFLAGS=@LDFLAGS@
+CFLAGS="@CFLAGS@"
+LDFLAGS="@LDFLAGS@"
 
-INSTALLCMD=@INSTALL@
+INSTALLCMD="@INSTALL@"
 
 
 prefix=@prefix@
