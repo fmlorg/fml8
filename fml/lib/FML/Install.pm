@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.4 2003/01/29 14:21:05 fukachan Exp $
+# $FML: Install.pm,v 1.5 2003/01/30 03:32:12 fukachan Exp $
 #
 
 package FML::Install;
@@ -504,8 +504,8 @@ sub need_resymlink_loader
 	return 1;
     }
 
-    my $cur_sum = $self->md5( $cur_loader );
-    my $new_sum = $self->md5( $loader );
+    my $cur_sum = $self->md5( $cur_loader ) || '';
+    my $new_sum = $self->md5( $loader )     || '';
 
     # need to update loader.
     if ($cur_sum ne $new_sum) {
