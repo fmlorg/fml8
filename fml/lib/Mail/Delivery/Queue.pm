@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Queue.pm,v 1.2 2001/05/16 11:45:23 fukachan Exp $
+# $FML: Queue.pm,v 1.3 2001/05/18 10:39:29 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -141,6 +141,86 @@ sub filename
 }
 
 
+=head2 C<list()>
+
+return queue list array hash. 
+It is a list in C<active/> directory.
+
+    $ra = $queue->list();
+    for $qid (@$ra) {
+	something for $qid ...
+     }
+
+where C<$qid> is like this: 990157187.20792.1
+
+=cut
+
+sub list
+{
+    my ($self) = @_;
+    my $dir = $self->{ _directory }. "/active";
+    my @r; # result array which holds active queue list
+
+    use DirHandle;
+    my $dh = new DirHandle $dir;
+    if (defined $dh) {
+	while (defined ($_ = $dh->read)) {
+	    next unless /^\d+/;
+	    push(@r, $_);
+	}
+    }
+
+    \@r;
+}
+
+
+=head1 METHODS TO MANIPULATE INFORMATION
+
+=head2 C<getidinfo(id)>
+
+=cut
+
+
+sub getidinfo
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory };
+    my ($fh, $sender, @recipients);
+
+    # validate queue id is given
+    $id = $id || $self->id();
+
+    # sender
+    use FileHandle;
+    $fh = new FileHandle "$dir/info/sender/$id";
+    if (defined $fh) {
+	$sender = $fh->getline;
+	$sender =~ s/[\n\s]*$//;
+	$fh->close;
+    }
+
+    # recipient array
+    $fh = new FileHandle "$dir/info/recipients/$id";
+    if (defined $fh) {
+	while (defined( $_ = $fh->getline)) {
+	    s/[\n\s]*$//;
+	    push(@recipients, $_);
+	}
+	$fh->close;
+    }
+
+    return {
+	id         => $id,
+	path       => "$dir/active/$id",
+	sender     => $sender,
+	recipients => \@recipients,
+    };
+}
+
+
+
+=head1 LOCK
+
 =head2 C<lock()>
 
 =head2 C<unlock()>
@@ -158,12 +238,13 @@ sub LOCK_UN {8;}
 
 sub lock
 {
-    my ($self) = @_;
-    my $fh = new FileHandle $self->{ _active_qf };
+    my ($self, $args) = @_;
+    my $fh   = new FileHandle $self->{ _active_qf };
+    my $wait = defined $args->{ wait } ? $args->{ wait } : 10; 
 
     eval {
 	local($SIG{ALRM}) = sub { croak("lock timeout");}; 
-        alarm( 10 );
+        alarm( $wait );
 	flock($fh, &LOCK_EX);
 	$self->{ _lock }->{ _fh } = $fh;
     };
@@ -254,6 +335,11 @@ directory to C<active/> directory like C<postfix> queue strategy.
 
 remove all queue assigned to this object C<$self>.
 
+=head2 C<valid()>
+
+It checks the queue file is broken or not.
+return 1 (valid) or 0.
+
 =cut
 
 
@@ -288,6 +374,21 @@ sub remove
 	 $self->{ _info }->{ recipients }) {
 	unlink $_ if -f $_;
     }
+}
+
+
+sub valid
+{
+    my ($self) = @_;
+    my $ok = 0;
+
+    for ($self->{ _active_qf },
+	 $self->{ _info }->{ sender },
+	 $self->{ _info }->{ recipients }) {
+	$ok++ if -f $_ && -s $_;
+    }
+
+    ($ok == 3) ? 1 : 0;
 }
 
 
