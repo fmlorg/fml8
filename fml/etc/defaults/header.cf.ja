@@ -23,10 +23,6 @@ header_check_rules		=	verify_message_id_uniqueness
 
 message_id_cache_dir	=	$db_dir/message_id
 
-x_ml_info_cache_dir	=	$db_dir/x_ml_info
-
-list_post_cache_dir	=	$db_dir/list_post
-
 
 # Descriptions: 記事のヘッダを書き換えるルール群
 #               Re: を切り落とす操作はデフォルトなので指定の必要なし
