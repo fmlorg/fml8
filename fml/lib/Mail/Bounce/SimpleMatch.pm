@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SimpleMatch.pm,v 1.27 2002/01/16 13:34:02 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.28 2002/01/16 13:43:21 fukachan Exp $
 #
 
 
@@ -46,7 +46,7 @@ When we trap C<end>,   the state changes from l to 0.
 
 =cut
 
-my $debug = $ENV{'debug'} ? 1 : 0;
+my $debug = 0;
 
 my $address_trap_regexp = {
 

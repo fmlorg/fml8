@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: toymodel.pm,v 1.6 2001/12/24 07:40:57 fukachan Exp $
+# $FML: toymodel.pm,v 1.7 2001/12/24 07:44:35 fukachan Exp $
 #
 
 
@@ -12,6 +12,8 @@ package IO::Adapter::SQL::toymodel;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+my $debug = 0;
 
 =head1 NAME
 
@@ -41,7 +43,7 @@ sub add
 {
     my ($self, $addr) = @_;
 
-    print STDERR "add( $addr )\n" if $ENV{'debug'};
+    print STDERR "add( $addr )\n" if $debug;
 
     my $query = $self->_build_sql_query({
 	query   => 'add',
@@ -60,7 +62,7 @@ sub delete
 {
     my ($self, $addr) = @_;
 
-    print STDERR "delete( $addr )\n" if $ENV{'debug'};
+    print STDERR "delete( $addr )\n" if $debug;
 
     my $query = $self->_build_sql_query({
 	query   => 'delete',
@@ -160,7 +162,7 @@ sub _build_sql_query
     my $file    = $self->{ _params }->{ file };
     my $table   = $self->{ _table };
 
-    print STDERR "_build_sql_query( query=$query )\n" if $ENV{'debug'};
+    print STDERR "_build_sql_query( query=$query )\n" if $debug;
 
     if ($query eq 'add') {
 	"insert into $table values ('$ml_name', '$file', '$address', 0, 0)";

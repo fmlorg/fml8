@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.46 2002/01/16 14:01:14 fukachan Exp $
+# $FML: Message.pm,v 1.47 2002/01/18 15:38:41 fukachan Exp $
 #
 
 package Mail::Message;
@@ -12,7 +12,7 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $InComingMessage);
 use Carp;
 
-my $debug = $ENV{'debug'} ? $ENV{'debug'} : 0;
+my $debug = 0;
 
 # virtual content-type
 my %virtual_data_type =
@@ -1318,7 +1318,7 @@ sub parse_and_build_mime_multipart_chain
 	    if ($debug) {
 		my $r = substr($$data, $pb, $pe - $pb);
 		print "[ data_type=$args->{ data_type } ]\n";
-		print "{$r}\n" if $ENV{'debug'} > 1;
+		print "{$r}\n" if $debug > 1;
 	    }
 
 	    $m[ $i++ ] = $self->_alloc_new_part($args);

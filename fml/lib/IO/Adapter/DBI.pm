@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.12 2002/01/27 09:25:24 fukachan Exp $
+# $FML: DBI.pm,v 1.13 2002/01/27 13:11:58 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -12,6 +12,8 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use IO::Adapter::ErrorStatus qw(error_set error error_clear);
+
+my $debug = 0;
 
 =head1 NAME
 
@@ -73,7 +75,7 @@ sub execute
     my $dbh   = $self->{ _dbh };
     my $query = $args->{  query };
 
-    print STDERR "execute query={$query}\n" if $ENV{'debug'};
+    print STDERR "execute query={$query}\n" if $debug;
 
     undef $self->{ _res };
 

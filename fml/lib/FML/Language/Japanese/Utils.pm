@@ -4,13 +4,15 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.4 2001/12/22 09:21:08 fukachan Exp $
+# $FML: Utils.pm,v 1.5 2001/12/23 12:19:13 fukachan Exp $
 #
 
 package FML::Language::Japanese::Utils;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+my $debug = 0;
 
 =head1 NAME
 
@@ -129,7 +131,7 @@ sub compare_euc_string
 	    $loc = index($pa, $pat);
 	}
 
-	print STDERR "buf = <$a> pa=<$pa> pat=<$pat> loc=$loc\n" if $ENV{'debug'};
+	print STDERR "buf = <$a> pa=<$pa> pat=<$pat> loc=$loc\n" if $debug;
 
 	return 1 if ($loc % 2) == 0;
 

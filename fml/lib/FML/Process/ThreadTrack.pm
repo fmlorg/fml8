@@ -3,7 +3,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ThreadTrack.pm,v 1.18 2001/12/22 09:21:10 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.19 2001/12/23 11:37:08 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -137,7 +137,7 @@ sub run
 	$thread->db_mkdb($last_id, $max_id);
     }
     elsif ($command eq 'db_rebuild') {
-	print STDERR "\$thread->db_mkdb(1, $max_id);\n" if $ENV{'debug'};
+	print STDERR "\$thread->db_mkdb(1, $max_id);\n" if $debug;
 	$thread->db_mkdb(1, $max_id);
     }
     elsif ($command eq 'db_clear') {
@@ -282,7 +282,7 @@ sub _close
 	    $thread->close($id);
 	}
 	else {
-	    Log("thread_id=$id not exists") if $ENV{'debug'};
+	    Log("thread_id=$id not exists") if $debug;
 	}
     }
 }

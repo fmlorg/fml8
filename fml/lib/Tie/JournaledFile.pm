@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledFile.pm,v 1.11 2001/12/22 09:21:22 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.12 2001/12/26 14:23:31 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -69,7 +69,7 @@ standard hash functions.
 =cut
 
 
-my $debug = $ENV{'debug'} ? 1 : 0;
+my $debug = 0;
 
 
 # Descriptions: constructor

@@ -1,10 +1,12 @@
 #-*- perl -*-
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.49 2002/01/13 13:35:24 fukachan Exp $
+# $FML: Config.pm,v 1.50 2002/01/30 14:51:15 fukachan Exp $
 #
 
 package FML::Config;
+
+my $debug = 0;
 
 use strict;
 use Carp;
@@ -292,7 +294,7 @@ sub _read_file
 		    $comment->{ $key } = $comment_buffer;
 		    undef $comment_buffer;
 
-		    print STDERR "push(@$order, $key);\n" if $ENV{'debug'};
+		    print STDERR "push(@$order, $key);\n" if $debug;
 		    push(@$order, $key);
 		}
 	    }
@@ -374,7 +376,7 @@ sub read
     });
 
     # XXX debug: removed in the future
-    if ($ENV{'debug'}) {
+    if ($debug) {
 	my ($k, $v);
 	while (($k, $v) = each %$config) {
 	    print STDERR "\nconfig{ $k } =>\n";
@@ -422,7 +424,7 @@ sub write
 	# XXX get variable list modified in this process
 	my $newkeys = $self->{ _newly_added_keys };
 	for my $k (@$order, @$newkeys) {
-	    if ($ENV{'debug'} && defined $comment->{$k}) {
+	    if ($debug && defined $comment->{$k}) {
 		print STDERR "write.config{ ", $comment->{$k}, " }";
 		print STDERR join("\n\t", split(/\s+/, $config->{$k})), "\n";
 	    }

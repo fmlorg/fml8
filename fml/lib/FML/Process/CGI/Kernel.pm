@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.12 2001/12/23 11:39:46 fukachan Exp $
+# $FML: Kernel.pm,v 1.13 2002/01/30 15:20:30 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -209,8 +209,6 @@ sub AUTOLOAD
     my ($curproc) = @_;
 
     return if $AUTOLOAD =~ /DESTROY/;
-
-    if (defined $ENV{'debug'}) { my (@c) = caller; warn("AUTOLOAD: @c");}
 
     my $comname = $AUTOLOAD;
     $comname =~ s/.*:://;

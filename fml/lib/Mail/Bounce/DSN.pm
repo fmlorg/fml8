@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DSN.pm,v 1.15 2002/01/16 13:34:02 fukachan Exp $
+# $FML: DSN.pm,v 1.16 2002/01/16 13:43:21 fukachan Exp $
 #
 
 
@@ -14,7 +14,7 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
-my $debug = $ENV{'debug'} ? 1 : 0;
+my $debug = 0;
 
 @ISA = qw(Mail::Bounce);
 

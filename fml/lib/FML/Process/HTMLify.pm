@@ -3,7 +3,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.6 2001/12/22 09:21:09 fukachan Exp $
+# $FML: HTMLify.pm,v 1.7 2001/12/23 07:04:30 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -15,6 +15,8 @@ use Carp;
 use FML::Process::Kernel;
 use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
+
+my $debug = 0;
 
 @ISA = qw(FML::Process::Kernel);
 
@@ -95,11 +97,11 @@ sub run
     my $src_dir = $argv->[0];
     my $dst_dir = $argv->[1];
 
-    print STDERR "htmlify\t$src_dir =>\n\t\t$dst_dir\n" if $ENV{'debug'};
+    print STDERR "htmlify\t$src_dir =>\n\t\t$dst_dir\n" if $debug;
 
     # prepend $opt_I as @INC
     if (defined $options->{ I }) {
-	print STDERR "\t\tprepend $options->{ I } (\@INC)\n" if $ENV{'debug'};
+	print STDERR "\t\tprepend $options->{ I } (\@INC)\n" if $debug;
 	unshift(@INC, $options->{ I });
     }
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.13 2002/01/27 09:25:23 fukachan Exp $
+# $FML: Adapter.pm,v 1.14 2002/01/27 13:11:57 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -12,6 +12,8 @@ use vars qw(@ISA @ORIG_ISA $FirstTime $AUTOLOAD);
 use strict;
 use Carp;
 use IO::Adapter::ErrorStatus qw(error_set error error_clear);
+
+my $debug = 0;
 
 # prepare error_set() is called
 @ISA = qw(IO::Adapter::ErrorStatus);
@@ -193,7 +195,7 @@ sub new
     @ORIG_ISA = @ISA unless $FirstTime++;
     @ISA      = ($pkg, @ORIG_ISA);
 
-    printf STDERR "%-20s %s\n", "IO::Adapter::ISA:", "@ISA" if $ENV{'debug'};
+    printf STDERR "%-20s %s\n", "IO::Adapter::ISA:", "@ISA" if $debug;
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
 	$pkg->configure($me, $args) if $pkg->can('configure');

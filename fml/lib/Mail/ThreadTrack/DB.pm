@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.19 2002/01/13 13:35:30 fukachan Exp $
+# $FML: DB.pm,v 1.20 2002/01/30 14:51:16 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -12,7 +12,7 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
-my $debug = defined $ENV{'debug'} ? 1 : 0;
+my $debug = 0;
 
 =head1 NAME
 

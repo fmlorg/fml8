@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix19991231.pm,v 1.14 2002/01/16 13:34:02 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.15 2002/01/16 13:43:21 fukachan Exp $
 #
 
 
@@ -13,6 +13,8 @@ package Mail::Bounce::Postfix19991231;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+my $debug = 0;
 
 @ISA = qw(Mail::Bounce);
 
@@ -90,7 +92,7 @@ sub _analyze_plaintext
 		my $data = $m->nth_paragraph( $i + 1 );
 
 		# debug
-		print STDERR "paragraph($i){$data}\n" if $ENV{'debug'};
+		print STDERR "paragraph($i){$data}\n" if $debug;
 
 		if ($data =~ /$pattern/)     { $state = 1;}
 		if ($data =~ /$end_pattern/) { $state = 0;}
@@ -126,7 +128,7 @@ sub _analyze_broken_dsn
 	    my $data = $m->nth_paragraph( $i + 1 );
 
 	    # debug
-	    print STDERR "paragraph($i){$data}\n" if $ENV{'debug'};
+	    print STDERR "paragraph($i){$data}\n" if $debug;
 
 	    if ($data =~ /\<(\S+\@\S+\w+)\>:\s*(.*)/) {
 		$self->_parse_address($data, $result);

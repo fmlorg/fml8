@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: MySQL.pm,v 1.18 2001/12/24 07:40:57 fukachan Exp $
+# $FML: MySQL.pm,v 1.19 2002/01/27 13:11:58 fukachan Exp $
 #
 
 
@@ -12,6 +12,8 @@ package IO::Adapter::MySQL;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+my $debug = 0;
 
 use IO::Adapter::DBI;
 @ISA = qw(IO::Adapter::DBI);
@@ -100,12 +102,12 @@ sub configure
 
     # $self->{ _driver } is the $config->{ driver } object.
     unless ($@) {
-	printf STDERR "%-20s %s\n", "loading", $pkg if $ENV{'debug'};
+	printf STDERR "%-20s %s\n", "loading", $pkg if $debug;
 
 	@ISA = ($pkg, @ISA);
 	$me->{ _model_specific_driver } = $pkg;
 
-	printf STDERR "%-20s %s\n", "MySQL::ISA:", "@ISA" if $ENV{'debug'};
+	printf STDERR "%-20s %s\n", "MySQL::ISA:", "@ISA" if $debug;
     }
     else {
 	error_set($self, $@);

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.71 2002/01/20 13:47:07 fukachan Exp $
+# $FML: Kernel.pm,v 1.72 2002/01/30 15:27:59 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -13,6 +13,8 @@ use strict;
 use Carp;
 use vars qw(@ISA);
 use File::Spec;
+
+my $debug = 0;
 
 =head1 NAME
 
@@ -187,7 +189,7 @@ sub _trap_help
     my $option = $curproc->command_line_options();
 
     if (defined $option->{ help }) {
-	print STDERR "FML::Process::Kernel trapped\n" if defined $ENV{'debug'};
+	print STDERR "FML::Process::Kernel trapped\n" if $debug;
 	if ($curproc->can('help')) {
 	    $curproc->help();
 	}
