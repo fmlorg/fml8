@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MTAControl.pm,v 1.16 2003/01/07 08:38:31 fukachan Exp $
+# $FML: MTAControl.pm,v 1.17 2003/01/11 16:05:13 fukachan Exp $
 #
 
 package FML::MTAControl;
@@ -16,10 +16,12 @@ use FML::MTAControl::Postfix;
 use FML::MTAControl::Qmail;
 use FML::MTAControl::Procmail;
 use FML::MTAControl::Sendmail;
+use FML::MTAControl::Utils;
 @ISA = qw(FML::MTAControl::Postfix
 	  FML::MTAControl::Qmail
 	  FML::MTAControl::Procmail
 	  FML::MTAControl::Sendmail
+	  FML::MTAControl::Utils
 	  );
 
 my $debug = 0;
