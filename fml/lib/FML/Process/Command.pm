@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Command.pm,v 1.18 2001/10/13 13:09:50 fukachan Exp $
+# $FML: Command.pm,v 1.19 2001/10/14 00:33:41 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -178,20 +178,47 @@ sub _can_accpet_command
 }
 
 
+# Descriptions: parse command buffer to make 
+#               argument vector after command name
+#    Arguments: ($string_to_parse, $string_command_name)
+# Side Effects: none
+# Return Value: ARRAY REFERENCE
+sub _parse_command_options
+{
+    my ($command, $comname) = @_;
+    my $found = 0;
+    my (@options) = ();
+
+    for (split(/\s+/, $command)) {
+	push(@options, $_) if $found;
+	$found = 1 if $_ eq $comname;
+    }
+
+    return \@options;
+}
+
+
+sub _get_command_name
+{
+    my ($command) = @_;
+    my $comname = (split(/\s+/, $command))[0];
+    return $comname;
+}
+
+
 # dynamic loading of command definition.
 # It resolves your customized command easily.
 sub _evaluate_command
 {
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
-    my $cred    = $curproc->{ credential }; # user credential
-
     my $ml_name = $config->{ ml_name };
     my $argv    = $config->{ main_cf }->{ ARGV };
     my $keyword = $config->{ confirm_keyword };
+    my $prompt  = $config->{ command_prompt } || '>>>';
+
     my $body    = $curproc->{ incoming_message }->{ body }->data_in_body_part;
     my @body    = split(/\n/, $body);
-    my $prompt  = $config->{ command_prompt } || '>>>';
     my $id      = $curproc->_pre_scan( \@body );
 
     $curproc->reply_message("result for your command requests follows:");
@@ -200,18 +227,22 @@ sub _evaluate_command
     for my $command (@body) {
 	next if $command =~ /^\s*$/; # ignore empty lines
 
-	my $comname = (split(/\s+/, $command))[0];
-	my $opts    = { comname => $comname, command => $command, };
+	# command = line itsetlf, it contains superflous strings
+	# comname = command name
+	# for example, command = "# help", comname = "help"
+	my $comname = _get_command_name($command);
 
-	# special treating for confirmation
+	# validate general command except for confirmation
 	unless ($command =~ /$keyword/ && defined($id)) {
 	    # we can accpet this command ?
+	    my $opts = { comname => $comname, command => $command };
 	    unless ($curproc->_can_accpet_command($args, $opts)) {
 		# no, we do not accept this command. 
-		Log("invalud command = $command");
+		Log("invalid command = $command");
 		next COMMAND;
 	    }
 	}
+	# "confirmation" is exceptional.
 	else {
 	    $comname = $keyword; # comname = confirm
 	    Log("try $comname <$command>");
@@ -222,12 +253,7 @@ sub _evaluate_command
 	use FML::Command;
 	my $obj = new FML::Command;
 	if (defined $obj) {
-	    my $found = 0;
-	    my (@options) = ();
-	    for (split(/\s+/, $command)) {
-		push(@options, $_) if $found;
-		$found = 1 if $_ eq $comname;
-	    }
+	    $curproc->reply_message("\n$prompt $command");
 
 	    # arguments to pass off to each method
 	    my $command_args = {
@@ -235,20 +261,19 @@ sub _evaluate_command
 		comname      => $comname,
 		command      => $command,
 		ml_name      => $ml_name,
-		options      => _parse_command_options($command),
+		options      => _parse_command_options($command, $comname),
 		argv         => $argv,
 		args         => $args,
 	    };
 
-
-	    $curproc->reply_message("\n$prompt $command");
+	    # execute command ($comname method) under eval().
 	    eval q{
 		$obj->$comname($curproc, $command_args);
 	    };
 	    unless ($@) {
 		$curproc->reply_message_nl('command.ok', "ok.");
 	    }
-	    else {
+	    else { # error trap 
 		$curproc->reply_message_nl('command.fail', "fail.");
 		LogError("command ${comname} fail");
 		if ($@ =~ /^(.*)\s+at\s+/) {
@@ -258,26 +283,6 @@ sub _evaluate_command
 	    }
 	}
     } # END OF FOR LOOP: for my $command (@body) { ... }
-}
-
-
-# Descriptions: parse command buffer to make 
-#               argument vector after command name
-#    Arguments: $string_to_parse
-# Side Effects: none
-# Return Value: ARRAY REFERENCE
-sub _parse_command_options
-{
-    my ($command) = @_;
-    my $found = 0;
-    my (@options) = ();
-
-    for (split(/\s+/, $command)) {
-	push(@options, $_) if $found;
-	$found = 1 if $_ eq $comname;
-    }
-
-    return \@options;
 }
 
 
