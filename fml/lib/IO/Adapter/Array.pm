@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Array.pm,v 1.32 2003/08/23 04:35:43 fukachan Exp $
+# $FML: Array.pm,v 1.33 2003/11/26 11:00:32 fukachan Exp $
 #
 
 package IO::Adapter::Array;
@@ -133,7 +133,7 @@ sub getline { get_next_key(@_);}
 # Return Value: ARRAY_REF
 sub get_key_values_as_array_ref
 {
-    my ($self) = @_;
+    my ($self, $args) = @_;
     my $x = $self->get_next_key();
     return [ $x ];
 }
