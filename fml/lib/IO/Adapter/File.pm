@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.46 2003/05/26 12:28:06 fukachan Exp $
+# $FML: File.pm,v 1.47 2003/08/23 04:35:44 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -254,7 +254,6 @@ sub _get_next_xxx
 		$value =~ s/^\s*//;
 		$value =~ s/\s*$//;
 		my (@buf) = split(/\s+/, $value);
-		print STDERR "[ @buf ]\n";
 		$buf = \@buf;
 	    }
 	    $ec++;

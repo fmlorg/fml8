@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Rotate.pm,v 1.14 2003/08/23 04:35:42 fukachan Exp $
+# $FML: Rotate.pm,v 1.15 2003/08/23 15:33:16 fukachan Exp $
 #
 
 package File::Rotate;
@@ -138,7 +138,6 @@ sub rotate
     do {
 	my $old = "$file.".($max - 1 > 0 ? $max - 1 : 0);
 	my $new = "$file.".($max);
-	print STDERR "rename($old, $new)" if -f $old;
 	-f $old && rename($old, $new);
 	$max--;
     } while ($max > 0);

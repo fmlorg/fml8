@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.26 2003/05/26 12:28:06 fukachan Exp $
+# $FML: DBI.pm,v 1.27 2003/08/23 04:35:44 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -361,7 +361,7 @@ sub md_find
 	}
     }
     else {
-	print STDERR "no _res\n";
+	print STDERR "no _res\n" if $debug;
 	return undef;
     }
 
