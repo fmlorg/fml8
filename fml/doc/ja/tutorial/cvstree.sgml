@@ -1,0 +1,72 @@
+<!-- 
+	$FML
+-->
+
+<chapter id="dirhier">
+
+<title> cvs tree の構造 </title>
+
+<sect1>
+	<title> ディレクトリ構造 </title>
+
+<para>
+<programlisting>
+/etc/fml/
+/usr/local/lib/fml/$VERSION/
+/usr/local/libexec/fml/$VERSION/
+/usr/share/doc/fml/$VERSION/
+</programlisting>
+</para>
+
+
+<table>
+ <title> cvs tree 以下のディレクトリの説明 </title>
+
+ <tgroup cols=2>
+
+   <thead>
+	<row>
+	<entry> ディレクトリ	</entry>
+	<entry> 説明		</entry>
+	</row>
+   </thead>
+
+   <tbody>
+	<row>
+	<entry>
+		Documentation/
+	</entry>
+
+	<entry>	
+		ドキュメント
+	</entry>
+	</row>
+   
+
+	<row>
+	<entry>	fml/etc/	</entry>
+	<entry> 設定変数	</entry>
+	</row>
+   
+
+	<row>
+	<entry>	fml/lib/ 		</entry>
+	<entry>	perl モジュール群	</entry>
+	</row>
+   
+
+	<row>
+	<entry> 	fml/libexec/ 	</entry>
+	<entry> 
+		実行されるプログラムの実体。
+		もっともすぐにモジュールを
+		呼び出すので、正確には wrapper です。
+	</entry>
+	</row>
+   </tbody>
+
+ </tgroup>
+</table>
+</sect1>
+
+</chapter>
