@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.21 2002/02/19 13:32:43 fukachan Exp $
+# $FML: Command.pm,v 1.22 2002/02/20 13:59:48 fukachan Exp $
 #
 
 package FML::Command;
@@ -52,6 +52,27 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {};
     return bless $me, $type;
+}
+
+
+# Descriptions: rewrite buffer
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args) STR_REF($rbuf)
+# Side Effects: none
+# Return Value: none
+sub rewrite_prompt
+{
+    my ($self, $curproc, $command_args, $rbuf) = @_;
+    my $command = undef;
+    my $comname = $command_args->{ comname };
+    my $mode = $command_args->{'command_mode'} =~ /admin/i ? 'Admin' : 'User';
+    my $pkg  = "FML::Command::${mode}::${comname}";
+
+    eval qq{ use $pkg; \$command = new $pkg;};
+    unless ($@) {
+	if ($command->can('rewrite_prompt')) {
+	    $command->rewrite_prompt($curproc, $command_args, $rbuf);
+	}
+    }
 }
 
 
