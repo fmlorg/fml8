@@ -1,6 +1,55 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/03/31
+
+   "makefml newml" set up ~fml/fml/listinfo/$domain/$ml/
+	ＭＬの作成時に WWW ページを用意する( listinfo を作る)。
+	FML::Command::Admin::newml 
+
+	variables
+	+ remove $message_message_dir
+	+ change $message_template_dir
+	+ change $html_archive_dir
+	+ add $listinfo_dir
+
+   階層化構造を取れるようにする
+	HTML 化記事を置くディレクトリ
+	スプールディレクトリ
+	
+   FML::Process::Kernel 
+	$message_message_dir -> $message_template_dir
+   FML::Command::Admin::htmlify 
+   FML::Process::{Distribute,HTMLify}
+   Mail::Message::ToHTML 
+   Mail::HTML::Lite 
+	rename class::Mail::HTML::Lite -> Mail::Message::ToHTML
+	change .ht* database names
+
+   FML::Article 
+   Mail::Message::Spool 
+   Mail::ThreadTrack 
+   Mail::ThreadTrack::DB Print.pm 
+   Mail::ThreadTrack::Print::HTML Text.pm 
+	use Mail::Message::Spool::filepath() for the article file path.
+	use $self->filepath() which is  based on Mail::Message::Spool
+	Mail::Message::Spool::spool arg changes::$spool_dir -> $base_dir
+	
+   Mail::HTML::Lite 
+	rename message_file*() -> html_file*()
+	html file path is YYYYMM/msg$id.html by default
+
+2002/03/30
+
+   FML::Article 
+   FML::Command::SendFile 
+   FML::Process::Distribute 
+	FML::Article::filepath() determines the article file path.
+
+   admin {delete,unlink} -> admin file $subcommand
+	コマンド名が衝突する可能性があるため
+	admin コマンドのシンタックスの拡張をはじめる。
+
 2002/03/25
 
    enable admin {delete,unlink}
@@ -1834,4 +1883,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.60 2002/03/24 15:35:14 fukachan Exp $
+$FML: CHANGES.txt,v 1.61 2002/03/29 11:16:05 fukachan Exp $
