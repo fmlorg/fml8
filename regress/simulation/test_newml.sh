@@ -10,6 +10,9 @@ SHOW () {
 	rm -fr /tmp/nuinui 
 	sh reset_lib.sh 
 
+	echo mkdir /tmp/nuinui 
+	mkdir /tmp/nuinui 
+
 	printf "\n*** newml *** \n\n"
 
 	printf "\n\n\n" > /dev/stderr 
