@@ -202,6 +202,24 @@ sub _deliver_article
 
     my $fp  = sub { Log(@_);}; # pointer to the log function
     my $sfp = sub { my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;};
+
+    { # debug
+	my $dir = $config->{ smtp_log_dir };
+	use FML::Utils qw(mkdirhier);
+	mkdirhier($dir) unless -d $dir;
+
+	my $f = $config->{ smtp_log_file };
+	unlink $f if -f $f;
+	if ($f) {
+	    use FileHandle;
+	    my $fh = new FileHandle "> $f";
+	    if (defined $fh) {
+		$fh->autoflush(1);
+		$sfp = sub { print $fh @_;};
+	    }
+	}
+    }
+
     my $service = new MailingList::Delivery {
 	log_function       => $fp,
 	smtp_log_function  => $sfp,
