@@ -1,3 +1,8 @@
+#!/bin/sh
+#
+# $FML$
+#
+
 SHOW () {
 	head -30 /tmp/nuinui/*rudo/include* \
 		/tmp/nuinui/etc/mail/aliases \
@@ -19,6 +24,8 @@ SHOW () {
 	makefml newml rudo@nuinui.net 
 	SHOW
 
+	ls -lRa /tmp/nuinui
+
 	printf "\n*** rmml *** \n\n"
 
 	printf "\n\n\n" > /dev/stderr 
@@ -26,3 +33,7 @@ SHOW () {
 	SHOW
 
 ) 2>&1 | tee /tmp/rr
+
+echo See /tmp/rr
+
+exit 0
