@@ -16,10 +16,41 @@ use Carp;
 use FML::Errors qw(error_reason error error_reset);
 use FML::Log qw(Log);
 
-require Exporter;
-@ISA = qw(Exporter);
+
+=head1 NAME
+
+FML::Ticket::System - ticket system core engine
+
+=head1 SYNOPSIS
+
+   package FML::Ticket::Model::toymodel;
+   use FML::Ticket::System;
+   @ISA = qw(FML::Ticket::System);
+
+=head1 DESCRIPTION
+
+=head2 CLASS HIERARCHY
+
+        FML::Ticket::System
+                |
+                A 
+       -------------------
+       |        |        |
+    toymodel  model2    ....
+
+=head1 METHODS
+
+=head2 C<new()>
+
+usual constructor.
+
+=cut
 
 
+# Descriptions: constructor
+#    Arguments: $self
+# Side Effects: none
+# Return Value: object
 sub new
 {
     my ($self) = @_;
@@ -29,19 +60,10 @@ sub new
 }
 
 
-sub increment_id
-{
-    my ($self, $seq_file) = @_;
-
-    use File::Sequence;
-    my $sfh = new File::Sequence { sequence_file => $seq_file };
-    my $id  = $sfh->increment_id;
-    $self->error_reason( $sfh->error );
-
-    $id;
-}
-
-
+# Descriptions: save the ticket $id in FML::PCB object
+#    Arguments: $self $curproc $id
+# Side Effects: set id in PCB
+# Return Value: none
 sub _pcb_set_id
 {
     my ($self, $curproc, $id) = @_;
@@ -50,6 +72,10 @@ sub _pcb_set_id
 }
 
 
+# Descriptions: get the ticket $id from FML::PCB
+#    Arguments: $self $curproc
+# Side Effects: none
+# Return Value: number (ticket id)
 sub _pcb_get_id
 {
     my ($self, $curproc) = @_;
@@ -58,10 +84,15 @@ sub _pcb_get_id
 }
 
 
+# Descriptions: set up directory which is taken from 
+#               $self->{ _db_dir }
+#    Arguments: $self $curproc $args
+# Side Effects: create a "_db_dir" directory if needed
+# Return Value: 1 (success) or undef (fail)
 sub _init_ticket_db_dir
 {
     my ($self, $curproc, $args) = @_;
-    my $config    = $curproc->{ config };
+    my $config = $curproc->{ config };
 
     if (defined $self->{ _db_dir }) {
 	my $db_dir    = $self->{ _db_dir };
@@ -78,6 +109,10 @@ sub _init_ticket_db_dir
 }
 
 
+# Descriptions: replace SPACE with _
+#    Arguments: string
+# Side Effects: none
+# Return Value: string
 sub _quote_space
 {
     my ($id) = @_;
@@ -86,6 +121,10 @@ sub _quote_space
 }
 
 
+# Descriptions: replace _ with SPACE
+#    Arguments: string
+# Side Effects: none
+# Return Value: string
 sub _dequote_space
 {
     my ($id) = @_;
@@ -94,6 +133,11 @@ sub _dequote_space
 }
 
 
+# Descriptions: log the error "undefined function" for debug
+#               XXX nuke this in the future ! this is only for debug.
+#    Arguments: $self
+# Side Effects: log the error
+# Return Value: none
 sub AUTOLOAD
 {
     my ($self) = @_;
@@ -101,13 +145,35 @@ sub AUTOLOAD
 }
 
 
-=head1 NAME
+=head2 C<increment_id(file)>
 
-FML::Ticket::System - ticket system core engine
+increment sequence number which is taken up from C<file> 
+and save its new number to C<file>.
 
-=head1 SYNOPSIS
+=cut
 
-=head1 DESCRIPTION
+
+# Descriptions: increment $id holded in $seq_file
+#    Arguments: $self $seq_file
+# Side Effects: increment id holded in $seq_file 
+# Return Value: number
+sub increment_id
+{
+    my ($self, $seq_file) = @_;
+
+    use File::Sequence;
+    my $sfh = new File::Sequence { sequence_file => $seq_file };
+    my $id  = $sfh->increment_id;
+    $self->error_reason( $sfh->error );
+
+    $id;
+}
+
+
+=head1 SEE ALSO
+
+L<File::Utils>,
+L<File::Sequence>.
 
 =head1 AUTHOR
 

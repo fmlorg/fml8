@@ -14,7 +14,7 @@ use vars qw(%_fml_config %_default_fml_config);
 
 =head1 NAME
 
-FML::Config -- fml5 configuration holding object
+FML::Config -- manipulate fml5 configuration
 
 =head1 SYNOPSIS
 
@@ -40,18 +40,18 @@ The hash holds several references to other data structures,
 which are mainly hashes.
 
     $CurProc = {
-		# configurations
-		config => {
-		    key => value,
-		},
+	# configurations
+	config => {
+	    key => value,
+	},
 
-		# emulator mode though fml mode in fact
-		emulator => $emulator,
+	# emulator mode though fml mode in fact
+	emulator => $emulator,
 
-		# struct incoming_message holds the mail input from STDIN.
-		incoming_message => $r_msg,
-		article          => $r_msg,
-		};
+	# struct incoming_message holds the mail input from STDIN.
+	incoming_message => $r_msg,
+	article          => $r_msg,
+    };
 
 We use r_variable_name syntax where "r_" implies "reference to" here.
 C<$r_msg> is the reference to "struct message".

@@ -22,7 +22,7 @@ use Jcode;
 
 =head1 NAME
 
-Dialect::Japanese::Subject - what is this
+Dialect::Japanese::Subject - Japanese specific handling of a subject
 
 =head1 SYNOPSIS
 
