@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.8 2002/07/02 12:55:10 fukachan Exp $
+# $FML: Subject.pm,v 1.9 2002/09/11 23:18:28 fukachan Exp $
 #
 
 
@@ -132,6 +132,10 @@ sub cut_off_reply_tag
     $subject;
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

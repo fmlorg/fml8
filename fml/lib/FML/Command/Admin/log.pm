@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.7 2002/08/16 15:59:19 fukachan Exp $
+# $FML: log.pm,v 1.8 2002/09/11 23:18:07 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -151,6 +151,10 @@ sub _html_to_text
     }
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

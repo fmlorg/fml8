@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.15 2002/08/14 03:31:55 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.16 2002/09/11 23:18:14 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -227,6 +227,10 @@ sub _fmlconf
     $config->dump_variables({ mode => $mode });
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: SimpleLock.pm,v 1.12 2002/01/13 15:46:52 fukachan Exp $
+# $FML: SimpleLock.pm,v 1.13 2002/09/11 23:18:19 fukachan Exp $
 #
 
 package File::SimpleLock;
@@ -152,6 +152,10 @@ sub _simple_funlock
 
 L<FileHandle>,
 L<ErrorStatus>,
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

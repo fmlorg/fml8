@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.12 2002/07/02 12:53:11 fukachan Exp $
+# $FML: Date.pm,v 1.13 2002/09/11 23:18:25 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -406,6 +406,10 @@ sub date_to_unixtime
     $t;
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

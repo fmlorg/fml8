@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.73 2002/08/19 12:41:01 fukachan Exp $
+# $FML: Command.pm,v 1.74 2002/09/11 23:18:14 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -817,6 +817,10 @@ sub _evaluate_command_lines
     }
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MTAControl.pm,v 1.11 2002/08/03 13:13:19 fukachan Exp $
+# $FML: MTAControl.pm,v 1.12 2002/09/11 23:18:03 fukachan Exp $
 #
 
 package FML::MTAControl;
@@ -292,6 +292,10 @@ sub _install
     croak($@) if $@;
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

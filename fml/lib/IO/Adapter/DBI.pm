@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.19 2002/08/03 13:13:27 fukachan Exp $
+# $FML: DBI.pm,v 1.20 2002/09/11 23:18:20 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -379,6 +379,10 @@ sub md_find
     return( $show_all ? \@buf : $x );
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

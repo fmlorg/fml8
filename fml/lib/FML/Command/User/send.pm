@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: send.pm,v 1.8 2002/04/06 14:46:28 fukachan Exp $
+# $FML: send.pm,v 1.9 2002/09/11 23:18:10 fukachan Exp $
 #
 
 package FML::Command::User::send;
@@ -38,6 +38,10 @@ forwarded C<FML::Command::User::get>.
 =head1 DESCRIPTION
 
 an alias of C<FML::Command::User::get>.
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

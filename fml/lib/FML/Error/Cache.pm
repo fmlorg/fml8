@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.3 2002/08/16 00:59:59 fukachan Exp $
+# $FML: Cache.pm,v 1.4 2002/09/11 23:18:11 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -166,6 +166,10 @@ sub get_all_values_as_hash_ref
     $obj->get_all_values_as_hash_ref();
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 CODING STYLE
 

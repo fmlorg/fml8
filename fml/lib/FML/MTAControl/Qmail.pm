@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.11 2002/07/12 15:03:27 fukachan Exp $
+# $FML: Qmail.pm,v 1.12 2002/09/11 23:18:13 fukachan Exp $
 #
 
 package FML::MTAControl::Qmail;
@@ -240,6 +240,10 @@ sub qmail_update_virtual_map
     0;
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

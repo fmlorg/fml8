@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.2 2001/12/24 02:26:34 fukachan Exp $
+# $FML: Utils.pm,v 1.3 2002/09/11 23:18:28 fukachan Exp $
 #
 
 package Mail::Message::Utils;
@@ -48,6 +48,10 @@ sub remove_subject_tag_like_string
     $str;
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 CODING STYLE
 

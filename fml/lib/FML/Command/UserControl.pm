@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.17 2002/08/08 03:09:46 fukachan Exp $
+# $FML: UserControl.pm,v 1.18 2002/09/11 23:18:06 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -178,6 +178,10 @@ sub userlist
     }
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mget.pm,v 1.6 2002/04/07 05:08:24 fukachan Exp $
+# $FML: mget.pm,v 1.7 2002/09/11 23:18:08 fukachan Exp $
 #
 
 package FML::Command::Admin::mget;
@@ -38,6 +38,10 @@ See C<FML::Command> for more details.
 =head1 DESCRIPTION
 
 an alias of C<FML::Command::Admin::get>.
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

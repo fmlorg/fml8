@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: deny.pm,v 1.4 2002/04/06 01:32:21 fukachan Exp $
+# $FML: deny.pm,v 1.5 2002/09/11 23:18:09 fukachan Exp $
 #
 
 package FML::Command::User::deny;
@@ -66,6 +66,10 @@ sub process
     $self->send_user_xxx_message($curproc, $command_args, "deny");
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

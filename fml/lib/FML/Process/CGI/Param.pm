@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Param.pm,v 1.16 2002/07/02 04:00:52 fukachan Exp $
+# $FML: Param.pm,v 1.17 2002/09/11 23:18:17 fukachan Exp $
 #
 
 package FML::Process::CGI::Param;
@@ -120,6 +120,10 @@ sub safe_paramlist
     return \@list;
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: User.pm,v 1.12 2002/08/03 13:13:21 fukachan Exp $
+# $FML: User.pm,v 1.13 2002/09/11 23:18:04 fukachan Exp $
 #
 
 package FML::CGI::Admin::User;
@@ -112,6 +112,10 @@ sub cgi_menu
     print end_form;
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

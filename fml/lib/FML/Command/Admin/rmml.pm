@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmml.pm,v 1.7 2002/07/12 15:06:34 fukachan Exp $
+# $FML: rmml.pm,v 1.8 2002/09/11 23:18:08 fukachan Exp $
 #
 
 package FML::Command::Admin::rmml;
@@ -178,6 +178,10 @@ sub cgi_menu
     }
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

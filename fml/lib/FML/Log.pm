@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.21 2002/09/11 15:25:27 fukachan Exp $
+# $FML: Log.pm,v 1.22 2002/09/11 23:18:03 fukachan Exp $
 #
 
 package FML::Log;
@@ -180,6 +180,10 @@ sub LogError
 L<Mail::Message::Date>,
 L<FML::Config>,
 L<FML::Credential>,
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Alias.pm,v 1.3 2002/08/14 03:31:55 fukachan Exp $
+# $FML: Alias.pm,v 1.4 2002/09/11 23:18:13 fukachan Exp $
 #
 
 package FML::Process::Alias;
@@ -239,6 +239,10 @@ sub _fmlalias
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

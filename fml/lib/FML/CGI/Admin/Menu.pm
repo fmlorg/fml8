@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.20 2002/07/02 12:00:03 fukachan Exp $
+# $FML: Menu.pm,v 1.21 2002/09/11 23:18:04 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -262,6 +262,10 @@ L<CGI>,
 L<FML::Process::CGI>
 and
 L<FML::Process::Flow>
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

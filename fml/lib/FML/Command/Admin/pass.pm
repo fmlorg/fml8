@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: pass.pm,v 1.2 2002/04/03 15:01:14 fukachan Exp $
+# $FML: pass.pm,v 1.3 2002/09/11 23:18:08 fukachan Exp $
 #
 
 package FML::Command::Admin::pass;
@@ -39,6 +39,10 @@ See C<FML::Command> for more details.
 =head1 DESCRIPTION
 
 an alias of C<FML::Command::Admin::password>.
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

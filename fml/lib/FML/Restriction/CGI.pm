@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: CGI.pm,v 1.6 2002/07/02 04:01:11 fukachan Exp $
+# $FML: CGI.pm,v 1.7 2002/09/11 23:18:18 fukachan Exp $
 #
 
 package FML::Restriction::CGI;
@@ -107,6 +107,10 @@ if ($0 eq __FILE__) {
     }
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

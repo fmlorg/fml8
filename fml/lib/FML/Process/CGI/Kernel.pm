@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.42 2002/08/14 03:31:58 fukachan Exp $
+# $FML: Kernel.pm,v 1.43 2002/09/11 23:18:17 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -717,6 +717,10 @@ sub AUTOLOAD
     }
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

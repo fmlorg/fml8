@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: AtomicFile.pm,v 1.2 2002/08/21 14:27:21 fukachan Exp $
+# $FML: AtomicFile.pm,v 1.3 2002/09/11 23:18:20 fukachan Exp $
 #
 
 package IO::Adapter::AtomicFile;
@@ -289,6 +289,10 @@ sub DESTROY
     $self->rollback;
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

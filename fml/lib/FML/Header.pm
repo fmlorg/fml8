@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.47 2002/07/31 13:22:02 fukachan Exp $
+# $FML: Header.pm,v 1.48 2002/09/11 23:18:02 fukachan Exp $
 #
 
 package FML::Header;
@@ -606,6 +606,10 @@ sub check_list_post
 =head1 SEE ALSO
 
 L<Mail::Header>
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MessageID.pm,v 1.6 2002/08/03 10:32:35 fukachan Exp $
+# $FML: MessageID.pm,v 1.7 2002/09/11 23:18:12 fukachan Exp $
 #
 
 package FML::Header::MessageID;
@@ -159,6 +159,10 @@ sub gen_id
     time.".$$.$Counter\@" . $config->{ address_for_post };
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

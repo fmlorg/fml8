@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.19 2002/08/14 03:31:56 fukachan Exp $
+# $FML: DocViewer.pm,v 1.20 2002/09/11 23:18:15 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -221,6 +221,10 @@ sub finish
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.16 2002/07/02 12:52:47 fukachan Exp $
+# $FML: Queue.pm,v 1.17 2002/09/11 23:18:23 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -486,6 +486,10 @@ sub DESTROY
     unlink $self->{ _new_qf } if -f $self->{ _new_qf };
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

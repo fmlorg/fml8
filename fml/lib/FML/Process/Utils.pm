@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.42 2002/09/11 23:18:17 fukachan Exp $
+# $FML: Utils.pm,v 1.43 2002/09/15 00:11:12 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1004,6 +1004,10 @@ sub hints
     return $main_cf->{ _hints };
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

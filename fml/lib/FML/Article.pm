@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.45 2002/09/11 23:18:01 fukachan Exp $
+# $FML: Article.pm,v 1.46 2002/09/15 00:11:42 fukachan Exp $
 #
 
 package FML::Article;
@@ -317,6 +317,10 @@ sub speculate_max_id
 L<FML::Header>,
 L<Mail::Message>,
 L<File::Sequence>
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.13 2002/08/08 03:09:46 fukachan Exp $
+# $FML: Auth.pm,v 1.14 2002/09/11 23:18:04 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -182,6 +182,10 @@ sub check_admin_member_password
     return 0;
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 CODING STYLE
 

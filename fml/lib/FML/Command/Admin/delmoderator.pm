@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: delmoderator.pm,v 1.1 2002/07/26 00:40:56 fukachan Exp $
+# $FML: delmoderator.pm,v 1.2 2002/09/11 23:18:07 fukachan Exp $
 #
 
 package FML::Command::Admin::delmoderator;
@@ -108,6 +108,10 @@ sub cgi_menu
     }
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.25 2002/07/25 11:34:02 fukachan Exp $
+# $FML: Sequence.pm,v 1.26 2002/09/11 23:18:18 fukachan Exp $
 #
 
 package File::Sequence;
@@ -333,6 +333,10 @@ sub _search_max_id_from_top
     }
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.70 2002/08/07 00:09:35 fukachan Exp $
+# $FML: Config.pm,v 1.71 2002/09/11 23:18:01 fukachan Exp $
 #
 
 package FML::Config;
@@ -1145,6 +1145,10 @@ sub NEXTKEY
     shift @$keys;
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

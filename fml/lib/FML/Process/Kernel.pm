@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.135 2002/09/11 23:18:15 fukachan Exp $
+# $FML: Kernel.pm,v 1.136 2002/09/15 00:11:43 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1889,6 +1889,10 @@ sub reset_umask
     umask($saved_umask);
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.27 2002/06/01 05:02:34 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.28 2002/09/11 23:18:22 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -532,6 +532,10 @@ sub filepath
     return $file;
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

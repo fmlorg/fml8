@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.5 2002/08/16 15:42:07 fukachan Exp $
+# $FML: Encode.pm,v 1.6 2002/09/11 23:18:25 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -448,6 +448,10 @@ if ($0 eq __FILE__) {
     print "\n=> STR2JIS  ? = <", $obj->detect_code($str0), ">\n";
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 CODING STYLE
 

@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calender.pm,v 1.7 2002/08/03 13:13:23 fukachan Exp $
+# $FML: Calender.pm,v 1.8 2002/09/11 23:18:14 fukachan Exp $
 #
 
 package FML::Process::Calender;
@@ -178,6 +178,10 @@ Usage: $name [-a] [-m mode] [month] [year]
 _EOF_
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.9 2002/09/11 23:18:16 fukachan Exp $
+# $FML: Spool.pm,v 1.10 2002/09/15 00:11:44 fukachan Exp $
 #
 
 package FML::Process::Spool;
@@ -336,6 +336,10 @@ sub finish
 # Return Value: none
 sub DESTROY {}
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

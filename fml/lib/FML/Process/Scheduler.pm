@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Scheduler.pm,v 1.17 2002/09/11 23:18:16 fukachan Exp $
+# $FML: Scheduler.pm,v 1.18 2002/09/15 00:11:44 fukachan Exp $
 #
 
 package FML::Process::Scheduler;
@@ -67,6 +67,10 @@ sub exits
 
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

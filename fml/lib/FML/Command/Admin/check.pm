@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: check.pm,v 1.2 2002/06/01 05:02:32 fukachan Exp $
+# $FML: check.pm,v 1.3 2002/09/15 00:11:43 fukachan Exp $
 #
 
 package FML::Command::Admin::check;
@@ -186,6 +186,10 @@ sub _is_755
     return ($smode eq '755' ? 1 : 0);
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

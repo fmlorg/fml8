@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.95 2002/09/11 23:18:14 fukachan Exp $
+# $FML: Distribute.pm,v 1.96 2002/09/15 00:11:43 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -532,6 +532,10 @@ sub htmlify
     $curproc->reset_umask();
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

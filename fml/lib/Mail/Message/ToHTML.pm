@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.21 2002/08/10 14:27:23 fukachan Exp $
+# $FML: ToHTML.pm,v 1.22 2002/09/11 23:18:27 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.21 2002/08/10 14:27:23 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.22 2002/09/11 23:18:27 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -2552,6 +2552,10 @@ if ($0 eq __FILE__) {
    expiration
 
    sub directory?
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

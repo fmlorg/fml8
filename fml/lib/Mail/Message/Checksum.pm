@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Checksum.pm,v 1.3 2002/04/28 13:14:56 fukachan Exp $
+# $FML: Checksum.pm,v 1.4 2002/09/11 23:18:25 fukachan Exp $
 #
 
 package Mail::Message::Checksum;
@@ -247,6 +247,10 @@ by G(x) using mod 2 division, producing a remainder R(x) of degree
 The coefficients of R(x) are considered to be a 32-bit sequence.
 
 The bit sequence is complemented and the result is the CRC.
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

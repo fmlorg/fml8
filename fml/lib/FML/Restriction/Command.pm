@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.5 2002/07/18 23:47:35 fukachan Exp $
+# $FML: Command.pm,v 1.6 2002/09/11 23:18:18 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -86,6 +86,10 @@ sub is_valid_mail_address
      $s =~ /^[\0-\177]+\@[\0-\177]+$/) ? 1 : 0;
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

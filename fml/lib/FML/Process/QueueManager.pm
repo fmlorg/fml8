@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.7 2001/12/23 11:39:45 fukachan Exp $
+# $FML: QueueManager.pm,v 1.8 2002/09/11 23:18:16 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -137,6 +137,10 @@ sub _send
     return $r;
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

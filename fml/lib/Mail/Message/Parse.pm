@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Parse.pm,v 1.6 2002/01/30 14:51:16 fukachan Exp $
+# $FML: Parse.pm,v 1.7 2002/09/11 23:18:25 fukachan Exp $
 #
 
 
@@ -44,6 +44,10 @@ where C<$args> is same as one of C<Mail::Message>'s C<parse()>.
 =head1 DESCRIPTION
 
 just a wrapper for C<Mail::Message> parser function.
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

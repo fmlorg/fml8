@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: PCB.pm,v 1.10 2001/12/22 14:40:34 fukachan Exp $
+# $FML: PCB.pm,v 1.11 2002/09/11 23:18:03 fukachan Exp $
 #
 
 package FML::PCB;
@@ -129,6 +129,10 @@ sub set
     $self->{ $category }->{ $key } = $value;
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

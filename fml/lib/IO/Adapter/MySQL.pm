@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: MySQL.pm,v 1.21 2002/07/23 13:06:36 fukachan Exp $
+# $FML: MySQL.pm,v 1.22 2002/09/11 23:18:20 fukachan Exp $
 #
 
 
@@ -178,6 +178,10 @@ sub eof
 L<DBI>,
 L<DBD::MySQL>,
 L<IO::Adapter::DBI>
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

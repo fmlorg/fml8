@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Compose.pm,v 1.3 2001/12/22 09:21:19 fukachan Exp $
+# $FML: Compose.pm,v 1.4 2002/09/11 23:18:25 fukachan Exp $
 #
 
 
@@ -28,6 +28,10 @@ See C<Mail::Message>.
 =head1 DESCRIPTION
 
 This class is the adapter for C<MIME::Lite>.
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

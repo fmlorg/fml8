@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Flow.pm,v 1.16 2002/07/02 03:59:06 fukachan Exp $
+# $FML: Flow.pm,v 1.17 2002/09/11 23:18:15 fukachan Exp $
 #
 
 package FML::Process::Flow;
@@ -100,6 +100,10 @@ sub ProcessStart
     $process->clean_up_tmpfiles();
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

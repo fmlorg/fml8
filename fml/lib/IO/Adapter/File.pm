@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.40 2002/08/26 03:39:58 fukachan Exp $
+# $FML: File.pm,v 1.41 2002/09/11 23:18:20 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -510,6 +510,10 @@ sub delete
 =head1 SEE ALSO
 
 L<IO::Adapter>
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

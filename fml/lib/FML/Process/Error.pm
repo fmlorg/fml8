@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.21 2002/08/19 12:38:15 fukachan Exp $
+# $FML: Error.pm,v 1.22 2002/09/11 23:18:15 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -275,6 +275,10 @@ sub finish
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

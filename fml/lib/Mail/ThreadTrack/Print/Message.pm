@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.6 2002/01/13 14:51:26 fukachan Exp $
+# $FML: Message.pm,v 1.7 2002/09/11 23:18:30 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Message;
@@ -214,6 +214,10 @@ sub _who_of_address
     }
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 CODING STYLE
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.26 2002/03/31 02:25:44 fukachan Exp $
+# $FML: DB.pm,v 1.27 2002/09/11 23:18:29 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -287,6 +287,10 @@ sub db_last_modified
     return $last_modified;
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

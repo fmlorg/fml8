@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.9 2002/08/13 14:36:43 fukachan Exp $
+# $FML: Postfix.pm,v 1.10 2002/09/11 23:18:13 fukachan Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -399,6 +399,10 @@ sub postfix_update_virtual_map
     system "$postmap $virtual";
 }
 
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 

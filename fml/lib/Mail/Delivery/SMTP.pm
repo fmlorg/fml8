@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.17 2002/07/31 13:02:10 fukachan Exp $
+# $FML: SMTP.pm,v 1.18 2002/09/11 23:18:24 fukachan Exp $
 #
 
 
@@ -838,6 +838,10 @@ L<IO::Adapter>
 See I<http://www.postfix.org/> on C<Postfix>
 which replaces sendmail with little effort
 but provides a lot of compatibility except for sendmail.cf.
+
+=head1 CODING STYLE
+
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 
