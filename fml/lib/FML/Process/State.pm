@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.14 2004/07/23 15:59:10 fukachan Exp $
+# $FML: State.pm,v 1.15 2004/08/13 15:02:49 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -668,7 +668,9 @@ sub mail_queue_set_incoming_queue
     my ($curproc, $queue) = @_;
     my $pcb = $curproc->pcb();
 
-    $pcb->set("incoming_smtp_transaction", "queue_object", $queue);
+    if (defined $pcb) {
+	$pcb->set("incoming_smtp_transaction", "queue_object", $queue);
+    }
 }
 
 
@@ -681,7 +683,9 @@ sub mail_queue_get_incoming_queue
     my ($curproc) = @_;
     my $pcb = $curproc->pcb();
 
-    $pcb->get("incoming_smtp_transaction", "queue_object") || undef;
+    if (defined $pcb) {
+	$pcb->get("incoming_smtp_transaction", "queue_object") || undef;
+    }
 }
 
 
