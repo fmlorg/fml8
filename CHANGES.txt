@@ -11,12 +11,29 @@
 	気をつけてください。
 
 
+2004/12/23
+
+   FML::CGI::Calendar 
+   FML::Process::Calendar 
+   FML::Demo::Calendar
+   Calendar::Lite is removed.
+	move Calendar::Lite to FML::Demo::Calendar since this module needs
+	FML::* class.
+
+2004/12/19
+
+   FML::Process::Emulate 
+	emulate fml4's mead.pl and msend.pl
+	
+   FML::Process::Kernel 
+	$debug_module_regexp_list restricts debug regions.
+
 2004/12/18
 
    デバッグモードでログの出方が変わるようにしました。
 	
    variables
-	define $debug to control log messages.
+	define $use_debug to control log messages.
 
    FML::Process::Kernel 
 	logdebug() works if debug = yes defined.
@@ -7999,4 +8016,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.233 2004/12/09 11:56:20 fukachan Exp $
+$FML: CHANGES.txt,v 1.234 2004/12/18 14:57:21 fukachan Exp $
