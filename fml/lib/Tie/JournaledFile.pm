@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: JournaledFile.pm,v 1.6 2001/08/05 04:22:03 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.7 2001/08/05 13:03:31 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-Tie::JournaledFile - hash emulation for a log structered file
+Tie::JournaledFile - hash operation for a jurnaled style log file
 
 =head1 SYNOPSIS
 
@@ -23,16 +23,19 @@ Tie::JournaledFile - hash emulation for a log structered file
    $db = new Tie::JournaledFile { file => 'cache.txt' };
 
    # get all entries with the key = 'rudo'
-   @values = $db->grep( 'rudo' );
+   @values = $db->find( 'rudo' );
 
-or
+or access in hash style
 
    use Tie::JournaledFile;
    tie %db, 'Tie::JournaledFile', { file => 'cache.txt' };
    print $db{ rudo }, "\n";
 
-where the format of "cache.txt" is "key value" for each line.
-For example
+where the format of "cache.txt" is 
+
+   key value
+
+for each line. For example
 
      rudo   teddy bear
      kenken north fox
@@ -44,12 +47,18 @@ By default, FETCH() returns the first value with the key.
    tie %db, 'Tie::JournaledFile', { first_match => 1, file => 'cache.txt' };
    print $db{ rudo }, "\n";
 
-If you print out the latest value (so at the later line somewhere in
-the file) for the specified C<$key>
+If you print out the latest value for C<$key>
 
    use Tie::JournaledFile;
    tie %db, 'Tie::JournaledFile', { last_match => 1, file => 'cache.txt' };
    print $db{ rudo }, "\n";
+
+It is the value at the latest line with the key in the file.
+
+=head2 KNOWN BUG
+
+YOU CANNOT USE SPACE (\s+) IN THE KEY.
+
 
 =head1 METHODS
 
@@ -58,6 +67,9 @@ the file) for the specified C<$key>
 standard hash functions.
 
 =cut
+
+
+my $debug = $ENV{'debug'} ? 1 : 0;
 
 
 # Descriptions: constructor
@@ -70,27 +82,20 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {};
 
-    # make a cache file if not exists
     $me->{ _file } = $args->{ file };
-    unless (-f $me->{ _file }) {
-	use Time::localtime;
-	my $date = ctime(time);
-	_puts($me, "# format: ^key\\s+value\$");
-	_puts($me, "#              key: should not have spaces in it.");
-	_puts($me, "#            value: may have spaces in it.");
-	_puts($me, "#");
-	_puts($me, "# created at $date");
-    }
-    
+
     # define search strategy: first or last match
-    if (defined $args->{ first_match }) {
-	$me->{ _match_style } = 'first';
+    if (defined $args->{ 'first_match' } && defined $args->{ 'last_match' }) {
+	croak "both first_match and last_match specified\n";
     }
-    elsif (defined $args->{ last_match }) {
-	$me->{ _match_style } = 'last';
+    elsif (defined $args->{ 'first_match' }) {
+	$me->{ '_match_style' } = 'first';
+    }
+    elsif (defined $args->{ 'last_match' }) {
+	$me->{ '_match_style' } = 'last';
     }
     else {
-	$me->{ _match_style } = 'first';
+	$me->{ '_match_style' } = 'first';
     }
 
     return bless $me, $type;
@@ -101,7 +106,7 @@ sub TIEHASH
 {
     my ($self, $args) = @_;
     my ($type) = ref($self) || $self;
-    $args->{ last_match } = 1;
+    $args->{ 'last_match' } = 1;
     new($self, $args);
 }
 
@@ -126,12 +131,21 @@ sub FIRSTKEY
 
     use IO::File;
     my $fh = new IO::File;
-    $fh->open( $self->{ _file }, "r");
-    $self->{ _fh } = $fh;
+    if ($fh->open( $self->{ '_file' }, "r")) {
+	$self->{ _fh } = $fh;
 
-    my $r = <$fh>;
-    my @r = split(/\s+/, $r);
-    return $r[0];
+	my $r   = <$fh>;
+	my $key = (split(/\s+/, $r))[0];
+
+	# negative cache
+	$self->{ '_key_negative_cache' }->{ $key } = 1;
+
+	print STDERR "   File.FIRSTKEY: $key (return)\n" if $debug;	
+	return $key;
+    }
+    else {
+	return undef; # error: cannot open file
+    }
 }
 
 
@@ -139,23 +153,60 @@ sub NEXTKEY
 {
     my ($self) = @_;
     my $fh = $self->{ _fh };
-    my $r  = <$fh>;
-    my @r  = split(/\s+/, $r);
-    return $r[0];
+
+    if (defined $fh) {
+	my ($r, $key);
+
+      LOOP:
+	while (defined ($r = <$fh>)) {
+	    $key = (split(/\s+/, $r))[0];
+
+	    # duplicated (already returned key)
+	    if (defined $self->{ '_key_negative_cache' }->{ $key }) {
+		print STDERR "   File.NEXTKEY: $key (dup, ignored)\n" if $debug;
+		next LOOP;
+	    }
+	    else {
+		print STDERR "   File.NEXTKEY: $key (found)\n" if $debug;
+	    }
+
+	    # negative cache
+	    $self->{ '_key_negative_cache' }->{ $key }++;
+	    last LOOP;
+	}
+
+	# duplicated key ( > 1 ) is found. ignore it.
+	# XXX "> 1" is important to clarify duplication or not.
+	if ((defined $self->{ '_key_negative_cache' }->{ $key }) &&
+	    ($self->{ '_key_negative_cache' }->{ $key } > 1)) {
+	    print STDERR "   File.NEXTKEY: $key (ignored*)\n" if $debug;
+	    return undef;
+	}
+	# not found
+	else {
+	    print STDERR "   File.NEXTKEY: not found\n" if $debug;
+	    return $key;
+	}
+    }
+    # error: file handle is not defined.
+    else { 
+	return undef;
+    }
 }
 
 
-=head2 C<grep(key)>
+=head2 C<find(key)>
 
-return the line with the C<key>. 
+return the array of line(s) with the specified C<key>. 
+
 The line is either first or last mached line.
-It is determined by C<last_match> or C<first_match> parameter at
-C<new()> method. 
-C<first_match> by default.
+The maching strategy is determined by C<last_match> or C<first_match>
+parameter at C<new()> method. C<first_match> by default.
 
 =cut
 
-sub grep
+
+sub find
 {
     my ($self, $key) = @_;
     my $rarray = $self->_fetch($key, 'array');
@@ -164,9 +215,9 @@ sub grep
 
 
 # Descriptions: real function to search $key.
-#               This routine is used at grep() and FETCH() methods.
+#               This routine is used at find() and FETCH() methods.
 #               return the value with the $key
-#               $self->{ _match_style } conrolls the matching algorithm
+#               $self->{ '_match_style' } conrolls the matching algorithm
 #               is either of the fist or last match.
 #    Arguments: $self $key $mode
 #               $key is the string to search.
@@ -176,14 +227,15 @@ sub grep
 sub _fetch
 {
     my ($self, $key, $mode) = @_;
-    my $prekey = $key;
+    my $prekey  = $key;
+    my $keytrap = quotemeta($key);
 
     # the first 1 byte of the key
-    if ($key =~ /^(.)/) { $prekey = $1;}
+    if ($key =~ /^(.)/) { $prekey = quotemeta($1);}
 
     use IO::File;
     my $fh = new IO::File;
-    $fh->open( $self->{ _file }, "r");
+    $fh->open( $self->{ '_file' }, "r");
 
     # error (we fail to open cache file).
     unless (defined $fh) { return undef;}
@@ -196,7 +248,7 @@ sub _fetch
 	next SEARCH if /^\#*$/;
 	next SEARCH if /^\s*$/;
 	next SEARCH unless /^$prekey/i; 
-	next SEARCH unless /^$key/i;
+	next SEARCH unless /^$keytrap/i;
 
 	chop;
 
@@ -207,7 +259,7 @@ sub _fetch
 	    }
 	    if ($mode eq 'scalar') {
 		# firstmatch: exit loop ASAP if the $key is found.
-		if ($self->{ _match_style } eq 'first') {
+		if ($self->{ '_match_style' } eq 'first') {
 		    last SEARCH;
 		}
 	    }
@@ -218,7 +270,7 @@ sub _fetch
     if ($mode eq 'scalar') {
 	return( $xvalue || undef );
     }
-    if ($mode eq 'array') {
+    elsif ($mode eq 'array') {
 	return \@values;
     }    
 }
@@ -237,7 +289,6 @@ sub _store
 }
 
 
-
 # Descriptions: append given string to cache file
 #    Arguments: $self $string
 # Side Effects: update cache file
@@ -245,7 +296,7 @@ sub _store
 sub _puts
 {
     my ($self, $string) = @_;
-    my $file = $self->{ _file };
+    my $file = $self->{ '_file' };
 
     use IO::File;
     my $fh = new IO::File;
