@@ -30,3 +30,7 @@ $SUBJECT_TAG_TYPE              = "[:]";
 $BRACKET                       = "elena";
 
 
+$DISTRIBUTE_FILTER_HOOK = q#
+	print STDERR "test of hook\n";
+#;
+
