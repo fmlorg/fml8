@@ -1,6 +1,48 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/06/15
+
+   variables	
+	add check_date to $article_header_filter_rules (PR by
+	fml-devel:478).
+
+2003/06/14
+
+   Mail::Message::DB [udb]
+	implement separete method _save_header_info() to handle header info.
+	
+	implement get_as_array_ref() and get_table_as_hash_ref().
+	fixed to cooperate with ToHTML module.
+	add more print debug codes.
+
+	thread_summary() return more info::id, html_*
+	move thread_summary generator wrapper from ToHTML to DB
+	
+   Mail::Message::ToHTML [udb]
+	modified to use Mail::Message::Encode::decode_mime_string().
+	rewritten based on new DB module.
+	remove ndb_key(), which is not used.
+	fix filename to use db value.
+	fix filepath of thread links.
+	add a lot of printf debug.
+	move thread_summary generator wrapper from ToHTML to DB.
+	remove __str2array().
+	$self->{ _thread_list }->{ $id }       (STR) changed to
+	$self->{ _hint_ref_key_list }->{ $id } (ARRAY_REF).
+
+   Mail::Message::{DB,ToHTML,Utils} [udb]
+	implement Mail::Message::Utils::from_to_name() and modified modules to
+	use it.
+	
+   Mail::Message::Utils [udb]
+	fixed to use Mail::Message::Encode
+
+2003/06/11
+
+   FML::Filter::Header 
+	add check_date() for missing date field
+
 2003/06/06
 
    Mail::Message::MH 
@@ -4892,4 +4934,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.146 2003/06/04 15:20:53 fukachan Exp $
+$FML: CHANGES.txt,v 1.147 2003/06/08 15:52:23 fukachan Exp $
