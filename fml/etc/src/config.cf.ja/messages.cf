@@ -45,11 +45,18 @@ system_message_subject	=	fml system message ($ml_name ML)
 =head2 テンプレートファイル群
 
 
-# Descriptions: message template (paragraph)
+# Descriptions: directory to hold message template files
 #      History: /usr/local/fml/drafts/
 #        Value: directory
+#     Examples: /usr/local/share/fml/$fml_version/message
+message_template_dir	= $fml_share_dir/message
+
+
+# Descriptions: directory to hold ml specific message template files
+#      History: $DIR/drafts/
+#        Value: directory
 #     Examples: /usr/local/share/fml/$fml_version/template/$language
-message_template_dir	= $fml_share_dir/message/$template_file_charset
+ml_local_message_template_dir	= $ml_local_share_dir/message
 
 
 =head2 テンプレートファイル群 for user

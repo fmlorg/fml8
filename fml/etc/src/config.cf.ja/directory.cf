@@ -80,6 +80,30 @@ tmp_dir		= $ml_home_dir/tmp
 db_dir		= $var_dir/db
 
 
+=head2 ml local
+
+
+# Descriptions: 各ＭＬローカルのディレクトリ
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml/elena/local
+ml_local_dir		=	$ml_home_dir/local
+
+
+# Descriptions: 各ＭＬローカルの lib/ ディレクトリ
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml/elena/local/lib
+ml_local_lib_dir	=	$ml_local_dir/lib
+
+
+# Descriptions: 各ＭＬローカルの share/ ディレクトリ
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml/elena/local/share
+ml_local_share_dir	=	$ml_local_dir/share
+
+
 =head2 スケジューラ
 
 # Descriptions: イヴェントのキューディレクトリ
