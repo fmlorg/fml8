@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML$
+# $FML: emul_filer.sh,v 1.1 2003/01/09 04:04:09 fukachan Exp $
 #
 
 if [ -f mime_component_filter ];then
@@ -14,7 +14,7 @@ echo use $filter as filter rules.
 for x in $*
 do
    perl -I ../../fml/lib -I ../../cpan/lib \
-	FML/Filter/MimeComponent3.pm -c $filter $x
+	FML/Filter/MimeComponent.pm -c $filter $x
 done
 
 exit 0
