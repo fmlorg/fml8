@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.24 2003/08/29 15:34:00 fukachan Exp $
+# $FML: confirm.pm,v 1.25 2003/11/17 13:06:12 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -103,7 +103,7 @@ sub process
     }
 
     use FML::Confirm;
-    my $confirm = new FML::Confirm {
+    my $confirm = new FML::Confirm $curproc, {
 	keyword   => $keyword,
 	cache_dir => $cache_dir,
 	class     => $class,

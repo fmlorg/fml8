@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Confirm.pm,v 1.11 2003/08/23 15:33:11 fukachan Exp $
+# $FML: Confirm.pm,v 1.12 2003/11/17 13:06:11 fukachan Exp $
 #
 
 package FML::Confirm;
@@ -19,7 +19,7 @@ FML::Confirm - manipulate confirmation database
 =head1 SYNOPSIS
 
     use FML::Confirm;
-    my $confirm = new FML::Confirm {
+    my $confirm = new FML::Confirm $curproc, {
             keyword   => $keyword,
             cache_dir => $cache_dir,
             class     => 'subscribe',
@@ -56,20 +56,23 @@ usual constructor.
 
 
 # Descriptions: constructor.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($cargs)
 # Side Effects: create object
 # Return Value: OBJ
 sub new
 {
-    my ($self, $args) = @_;
+    my ($self, $curproc, $cargs) = @_;
     my ($type) = ref($self) || $self;
-    my $me     = {};
+    my $me     = { _curproc => $curproc };
 
     for my $id ('keyword', 'class', 'address', 'buffer', 'cache_dir') {
-	if (defined $args->{ $id }) {
-	    $me->{ "_$id" } = $args->{ $id };
+	if (defined $cargs->{ $id }) {
+	    $me->{ "_$id" } = $cargs->{ $id };
 	}
     }
+
+    use FML::Cache::Journal;
+    $me->{ _journal_db } = new FML::Cache::Journal $curproc;
 
     return bless $me, $type;
 }
@@ -106,49 +109,6 @@ sub assign_id
     $self->store_id( $md5sum );
 
     return $id;
-}
-
-
-# Descriptions: open database by Tie::JournaledDir.
-#    Arguments: OBJ($self) STR($id) STR($comment)
-# Side Effects: open database, mkdir if needed
-# Return Value: HASH_REF to dabase
-sub _open_db
-{
-    my ($self, $id, $comment) = @_;
-    my (%db) = ();
-
-    # XXX-TODO: dir_mode hard-coded.
-    my $mode = $self->{ _dir_mode } || 0700;
-
-    use File::Spec;
-    my $cache_dir = $self->{ _cache_dir };
-    my $class     = $self->{ _class };
-    my $dir       = File::Spec->catfile($cache_dir, $class);
-
-    unless (-d $dir) {
-	use File::Path;
-	mkpath( [ $dir ], 0, $mode );
-    }
-
-    use Tie::JournaledDir;
-    tie %db, 'Tie::JournaledDir', { dir => $dir };
-
-    $self->{ _db } = \%db;
-
-    return \%db;
-}
-
-
-# Descriptions: close database.
-#    Arguments: OBJ($self)
-# Side Effects: none
-# Return Value: none
-sub _close_db
-{
-    my ($self) = @_;
-    my $db = $self->{ _db };
-    untie %$db;
 }
 
 
@@ -276,6 +236,46 @@ sub is_expired
     else {
 	return 0;
     }
+}
+
+
+=head1 Cache database
+
+This cache uses C<FML::Cache::Journal> based on C<Tie::JournaledDir>.
+
+=head2 _open_db()
+
+=head2 _close_db()
+
+=cut
+
+
+# Descriptions: open cache database.
+#    Arguments: OBJ($self)
+# Side Effects: close db
+# Return Value: HASH_REF
+sub _open_db
+{
+    my ($self) = @_;
+    my $db    = $self->{ _journal_db };
+    my $dir   = $self->{ _cache_dir };
+    my $class = $self->{ _class };
+    my $_db   = $db->open($dir, $class);
+
+    $self->{ _db } = $_db;
+    return $_db;
+}
+
+
+# Descriptions: close database interface.
+#    Arguments: OBJ($self)
+# Side Effects: close db
+# Return Value: none
+sub _close_db
+{
+    my ($self) = @_;
+    my $db = $self->{ _journal_db };
+    $db->close();
 }
 
 

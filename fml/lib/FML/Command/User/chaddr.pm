@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.22 2003/08/29 15:34:00 fukachan Exp $
+# $FML: chaddr.pm,v 1.23 2003/10/17 14:00:52 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -116,7 +116,7 @@ sub process
 
 	# XXX-TODO: should be FML::Confirm { ... address => [ @addr ] } ?
 	use FML::Confirm;
-	my $confirm = new FML::Confirm {
+	my $confirm = new FML::Confirm $curproc, {
 	    keyword   => $keyword,
 	    cache_dir => $cache_dir,
 	    class     => 'chaddr',

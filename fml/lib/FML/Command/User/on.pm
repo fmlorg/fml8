@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: on.pm,v 1.10 2003/08/23 07:24:44 fukachan Exp $
+# $FML: on.pm,v 1.11 2003/08/29 15:34:00 fukachan Exp $
 #
 
 package FML::Command::User::on;
@@ -110,7 +110,7 @@ sub process
     else {
 	$curproc->log("on request, try confirmation");
 	use FML::Confirm;
-	my $confirm = new FML::Confirm {
+	my $confirm = new FML::Confirm $curproc, {
 	    keyword   => $keyword,
 	    cache_dir => $cache_dir,
 	    class     => 'on',
