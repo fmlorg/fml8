@@ -3,9 +3,9 @@ all: anal
 anal:
 	@ find . | sort | grep -v CVS | sed 's@./@@'
 
-html:	_clean index.ja.html
+html:	index.ja.html
 
-index.ja.html: *.pm
+index.ja.html: *.pm loader
 	../../doc/bin/dir2url.pl > index.ja.html
 
 _clean:

@@ -1,8 +1,11 @@
 all: html
 
-html:	_clean index.ja.html
+html: _subdir index.ja.html
 
-index.ja.html: *.pm
+index.ja.html: [A-Z]*
+	../../doc/bin/dir2url.pl > index.ja.html
+
+_subdir: [A-Z]*
 	(cd Dialect; make html)
 	(cd FML; make html)
 	(cd File; make html)
@@ -10,7 +13,6 @@ index.ja.html: *.pm
 	(cd MailingList; make html)
 	(cd Tie; make html)
 	(cd ErrorMessages; make html)
-	../../doc/bin/dir2url.pl > index.ja.html
 
 _clean:
 	rm -f index.ja.html */index.ja.html

@@ -3,7 +3,7 @@ all: anal
 anal:
 	@ find . | sort | grep -v CVS | sed 's@./@@'
 
-html:	_clean index.ja.html
+html:	index.ja.html
 
 index.ja.html: *.pm
 	(cd Net; make html)
