@@ -48,6 +48,7 @@ available_commands		=	help
 					confirm
 					guide
 					info
+					admin
 
 
 available_commands_for_stranger	=	guide
