@@ -150,8 +150,8 @@ Content-Type: multipart/mixed;
 MIME-Type: text/plain
 Test1: _abc _def _ghi _fdjhfd _fhdjkfh _dkhkjd _fdjkf _dshfdks _fhdjfdkhfk
     _dshfds _fdsjk _fdkhfdks _fdsjf _dkf
-Test1: _abc _def _ghi _fdjhfd _fhdjkfh _dkhaaaaaaaaaaakjdfdjkfdshfdksfhdjf
-    dkhfkdshfdsfdsjkfdkhfdksfdsjf _dkf
+Test1: _abc _def _ghi _fdjhfd _fhdjkfh _dkhaaaaaaaaaaakjdfdjkfdshfdksfhdjfdkhfkdshfdsfdsjkfdkhfdksfdsjf
+    _dkf
 EOF
 @mail = map { "$_\n" } split /\n/, $headin;
 

@@ -9,10 +9,10 @@ Mail/Filter.pm
 Mail/Header.pm			
 Mail/Internet.pm		Functions for RFC822 mail manipulations
 Mail/Mailer.pm			Simple mail agent interface
-Mail/Mailer/mail.pm
 Mail/Mailer/rfc822.pm
 Mail/Mailer/sendmail.pm
 Mail/Mailer/smtp.pm
+Mail/Mailer/qmail.pm
 Mail/Mailer/test.pm
 Mail/Send.pm			Simple interface for sending mail
 Mail/Util.pm			Mail related utilities
@@ -20,9 +20,9 @@ MailTools.ppd
 Makefile.PL			Perl MakeMaker Makefile
 README
 README.demos
-bin/forwd_demo.PL		example script to forward a message
-bin/rplyto_demo.PL		example script to reply to a message
-bin/send_demo.PL		example script to send a message using sendmail
+examples/forwd_demo.PL		example script to forward a message
+examples/rplyto_demo.PL		example script to reply to a message
+examples/send_demo.PL		example script to send a message using sendmail
 t/extract.t
 t/header.t
 t/internet.t

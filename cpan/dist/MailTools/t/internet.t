@@ -3,6 +3,8 @@
 require Mail::Internet;
 use Config;
 
+$ENV{LOGNAME} ||= 'unknown';
+
 print "1..3\n";
 $|=1;
 

@@ -1,3 +1,184 @@
+
+version 1.52: Fri Nov 29 13:52:00 CET 2002
+
+	- Work-around for bug in perl 5.8.0 unicode \U within s///
+	  Patched in Mail::Header by [Autrijus Tang]
+
+version 1.51: Tue Oct 29 14:25:28 CET 2002
+
+	- Mail::Util::maildomain() if no information about domains
+	  is found in sendmail.cf, no error should be reported.
+	  [Vaughn Skinner]
+
+	- Removed the possibility to use 'mailx', which was the
+	  default: removal from the detectionn routines and Mail/Mailer/mail.pm.
+	  Strongly suggested by [Sebastian Krahmer]
+
+version 1.50: Wed Sep  4 00:38:49 CEST 2002
+
+	- Mail::Util::domainname() Patch to remove use of S variable from
+	  sendmail.cf, because its inclusion is contra-productive.
+	  [Timur Bakeyev]
+
+	- Mail::Util::domainname() Clean domain from sendmail.cf from
+	  trailing trash (if present) [Timur Bakeyev]
+
+	- Mail::Util::domainname()  Added environment variable MAILDOMAIN
+	  to overrule smart domain discovery. [Timur Bakeyev]
+
+version 1.49: Wed Aug 28 08:36:58 CEST 2002
+
+	- t/internet.t defaults $ENV{LOGNAME} to avoid warnings in tests
+	  when that variable is not defined. [Chromatic]
+
+	- Mail::Mailer::_clean_up left an extra space behind each header
+	  line. Patched by [Robert Spier]
+
+	- Mail::Mailer::_clean_up now also trims folded headerlines on more
+	  than two lines.
+
+version 1.48: Wed Aug  7 22:54:56 CEST 2002
+
+	- Mail::Mailer::test only worked in UNIX, because it used the 'test',
+	  'sh' and 'cat' command. [Matt Selsky] provided a patch to remove
+	  these dependencies.  It may not work on ancient perl versions, but
+	  that is not really a problem for a testing facility.
+
+	- The fix for nested comments in Mail::Address's, which went in a long
+	  time ago, broke the parser.  As example
+	   "Mark Overmeer <mailtools@overmeer.net> (mailtools maintainer)"
+	  was parsed into two separate objects.... wrong.
+          [Nicholas Oxhøj] reversed the patch.
+
+version 1.47: Fri Jul  5 12:02:55 CEST 2002
+
+	- Mail::Mailer::_cleanup_headers unfolds the header lines, but
+	  forgot to remove the indentation blanks as was discovered by
+	  [Meng Weng Wong]
+
+	- Mail::Cap::new has two new options:
+          filename => FILENAME,   which is just long for FILENAME only
+          take => 'ALL', to include all mail-cap files, not only the
+	  first one found.  Contributed by [Oleg Muravskiy]
+
+version 1.46: Wed May 29 15:08:44 CEST 2002
+
+	- [Philip Molter] discoverd my typo in Mail/Mailer/rfc822.pm
+	  which forced me to release a new version....
+
+version 1.45: Thu May 23 10:15:59 CEST 2002
+
+	- [Mark D. Anderson] Add Content-Disposition to the list
+	  of structured header fields in Mail::Header.
+
+	- [David Weeler] Added darwin to `mail' versions which require
+	  '-I' in Mail::Mailer.
+
+	- [Leon Avery] updated Mail/Mailer/rfc822.pm to be more
+	  careful with multi-lined, multi-occurence headers.
+
+	- [Drieux] small fix in Mail/Mailer/smtp.pm which enables the
+	  passing-on of args to Net::SMTP.
+
+	- {Mark Overmeer] Put a message about Mail::Box in Mail::Internet
+
+version 1.44 Sat Mar 23 10:16:47 CET 2002
+
+	- [Andreas Marcel Riechert] add -I to mailx for netbsd and
+	  openbsd too.
+
+	- [Nate Mueller] Do respect user's X-Mailer in Mail::Internet
+	  above own line.
+
+	- [Alexey Egorov] Header-line without body lost line-separator
+	  in Mail::Header.pm
+
+	- [Bo Adler] and [Iosif Fettich] Found that I removed a blank
+	  before 'sub smtpsend' which caused AutoSplit to misbehave.
+
+version 1.43: Fri Feb  8 09:43:25 CET 2002
+
+	- [Jason Burnett] Added debug option for Net::SMTP for
+	  Mail::Mail::smtp.
+
+	- [Slavan Rezic] + [Jonathan Stowe] Added eval around getpwuid,
+          to avoid croak on Windows.
+
+	- [Slavan Rezic] minor doc update.  The documentation is
+	  still poor.
+
+	- A lot of people complaint (and that after so many years that the
+	  module is active) about folder lines within words or strings.
+	  The mistake in the original implementation was that it tried to
+	  fold too hard; folding is a service, but no requirement.
+ 	  So: that overly active folding is removed now.
+
+version 1.42: Mon Dec 10 19:22:01 CET 2001
+
+	- Moved examples from bin/ to examples/, so people may be
+	  able to find them.
+
+	- Mail::Util now also tries sendmail option S for domainname.
+	  Patched by [Todd R. Eigenschink]
+
+	Included Debian changes by [Steve Kowalik]:
+	- Added Mail::Mailer::qmail
+
+version 1.41: Wed Nov 14 10:35:57 CET 2001
+
+	- Mail::Util::maildomain did not expand variables.  Fixed the
+	  regular expression.  Reported by [Jean-Damien Durand]
+
+	- [Henrik Gemal] wished better warnings in Mail::Address::parse,
+	  which are provided now.
+
+	- [Lucas Nussbaum] reported incorrect folding of unstructured
+	  header lines.  The whole idea of folder unstructured fields
+	  is flawed, as far as I know, but anyway noone apparantly had
+	  sufficient long subject fields to find-out ;)
+	  Fixed in Mail::Mailer.
+
+version 1.40: Fri Aug 24 20:15:30 CEST 2001
+
+	- mailaddress defaults to username, not gcos in Mail/Util.pm
+	  Patched by [Vivek Khera]
+
+	- Increased all version-numbers to show that maintainer-address
+	  did change.   Suggested by [Tassilo v Parseval]
+
+	  All packages in this bundle with have the same version!!!
+	  The highest number used was 1.33.
+
+
+version 1.16: Wed Aug  8 11:28:26 CEST 2001
+	by Mark Overmeer <mailtools@overmeer.net>
+
+	From now on MailTools will be maintained by Mark Overmeer
+	<mailtools@overmeer.net>
+
+	- Updated all manual-pages to include address of new maintainer.
+
+	- Prohibition to modify header should be respected in Mail::Header.
+	  Patch by [Tatsuhiko Miyagawa]
+
+	- Securely close socket in Mail::Mailer::smtp.
+	  Patch by [Heikki Korpela]
+
+	- Fixed "bad file-descriptor" errors in Mail::Mailer::smtp.
+          Patch by [Aaron J Mackey]
+
+	- Some long header-lines caused the following line in the header
+	  to be indented too.  This should be fixed.
+	  Reported by [Simon Cozens]
+
+	- Small modifications to Mail::Mailer should make the module
+	  work for os2.  Patch by [Ilya Zakharevich]
+
+	- Fix to be able to specify an index at the first addition of
+	  a header-line to the Mail::Header structure.
+	  Patch by [Lucas Fisher]
+
+
 Change 583 on 2000/09/04 by <gbarr@pobox.com> (Graham Barr)
 
 	Mail::Address

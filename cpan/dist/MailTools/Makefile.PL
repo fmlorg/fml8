@@ -1,11 +1,11 @@
 # This -*- perl -*- script makes the Makefile
-# $Id: //depot/MailTools/Makefile.PL#10 $
+# $Id: //depot/MailTools/Makefile.PL#11 $
 
 #--- Distribution section ---
 
 $NAME     = 'Mail';
 $DISTNAME = "MailTools";
-$VERSION  = "1.15";
+$VERSION  = "1.52";
 
 BEGIN { require 5.001 }
 
@@ -61,7 +61,7 @@ my @ppd;
 
 if ($] >= 5.00503) {
   @ppd = (
-    AUTHOR    => 'Graham Barr <gbarr@pobox.com>',
+    AUTHOR    => 'Mark Overmeer <mailtools@overmeer.net>',
     ABSTRACT  => 'Various Mail related modules'
   );
 }
