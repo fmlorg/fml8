@@ -1,6 +1,10 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/03/24
+
+   img/ is updated to im-144.
+
 2003/03/18
 
   【重要】 giant lock をなくす。粒度の細かいロックへ移行した。
@@ -13,6 +17,9 @@
 	more logs around locks.
 	add deadlock warning.
 	reuse lock object if could.
+
+   FML::Command::UserControl 
+	modify chaddr algorithm::"del() and add()" -> "add() and del()".
 
 2003/03/17
 
@@ -4603,4 +4610,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.136 2003/03/16 13:04:40 fukachan Exp $
+$FML: CHANGES.txt,v 1.137 2003/03/18 14:21:37 fukachan Exp $
