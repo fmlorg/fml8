@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: loader.in,v 1.9 2002/03/20 03:14:53 fukachan Exp $
+# $FML: loader.in,v 1.10 2002/04/01 23:41:17 fukachan Exp $
 #
 
 eval 'exec @PERL@ -S $0 ${1+"$@"}'
@@ -279,7 +279,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-libexec/loader appeared in fml5 mailing list driver package.
+libexec/loader appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: check.pm,v 1.3 2002/09/15 00:11:43 fukachan Exp $
+# $FML: check.pm,v 1.4 2002/09/22 14:56:44 fukachan Exp $
 #
 
 package FML::Command::Admin::check;
@@ -204,7 +204,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::Admin::check appeared in fml5 mailing check driver package.
+FML::Command::Admin::check appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more detaicheck.
 
 =cut
