@@ -1,0 +1,310 @@
+
+
+Network Working Group                        K. Toyoda, MGCS
+Internet Draft                       D. Crocker, Brandenburg
+  draft-ietf-fax-esmtp-conneg-00.txt               June 2001
+Expires: <12/01>
+
+
+
+                   SMTP Service Extension
+           for Content Negotiation of Internet Fax
+     
+     
+     
+     STATUS OF THIS MEMO
+     
+     This document is an Internet-Draft and is in full
+     conformance with all provisions of Section 10 of
+     RFC2026. Internet-Drafts are working documents of the
+     Internet Engineering Task Force (IETF), its areas, and
+     its working groups.  Note that other groups may also
+     distribute working documents as Internet-Drafts.
+     
+     Internet-Drafts are draft documents valid for a maximum
+     of six months and may be updated, replaced, or
+     obsoleted by other documents at any time.  It is
+     inappropriate to use Internet-Drafts as reference
+     material or to cite them other than as "work in
+     progress."
+     
+     The list of current Internet-Drafts can be accessed at
+          http://www.ietf.org/ietf/1id-abstracts.txt
+     
+     The list of Internet-Draft Shadow Directories can be
+     accessed at
+          http://www.ietf.org/shadow.html.
+     
+     COPYRIGHT NOTICE
+     
+     Copyright (C) The Internet Society (2001).  All Rights
+     Reserved.
+     
+     SUMMARY
+     
+     This document defines a content negotiation SMTP
+     service extension [ESMTP1, ESMTP2] whereby an SMTP
+     client may request information about content
+     capabilities of the target device or system that is
+     serviced by an SMTP server.  The SMTP server may report
+     the target's content capabilities back to the client.
+     This process emulates a classic facsimile start-of-
+     session capabilities negotiation.  This service
+     extension is primarily intended for "direct" SMTP
+     transfers, although relayed scenarios are permitted.
+
+
+
+1.   CONVENTIONS
+     
+     In examples, "C:" and "S:" indicate lines sent by the
+     client and server respectively.
+     
+     The key words "MUST", "MUST NOT", "SHOULD", "SHOULD
+     NOT", and "MAY" in this document are to be interpreted
+     as defined in "Key words for use in RFCs to Indicate
+     Requirement Levels" [KEYWORDS].
+
+
+
+2.   CONTENT NEGOTIATION SERVICE EXTENSION
+     
+     (1)  The name of the SMTP service extension is
+          "Content_Negotiation"
+
+     (2)  The EHLO keyword value associated with this extension
+          is "CONNEG"
+
+     (3)  A parameter using the keyword "CONNEG" is added to the
+          RCPT-TO command
+
+     (4)  The server responds with a report of the content
+          capabilities of the device or system that embodies the
+          target RCPT-TO address.
+
+
+
+3.   CONNEG PARAMETER TO RCPT-TO
+     
+     Parameter:
+          
+          CONNEG
+     
+     Arguments:
+          
+          There are no arguments.
+     
+     Client Action:
+          
+          If the server issued a 250-CONNEG, as part of its
+     EHLO response for the current session, the client MAY
+     issue the CONNEG parameter with RCPT-TO.
+          
+          If the client issues the CONNEG parameter with
+     RCPT-TO, then it MUST honor the capabilities specified
+     in the CONNEG RCPT-TO reply, and transform data that is
+     sent, so that the target can accept the data. The
+     client SHOULD transform the data to the "highest" level
+     of capability of the server.
+     
+     Server Action:
+          
+          If the client specifies CONNEG in the RCPT-TO, but
+     the server does not support the CONNEG parameter, the
+     server MUST reject the RCPT-TO command with a 504
+     reply.
+          
+          If the server does support the CONNEG parameter,
+     then it MUST issue a 250 reply, followed by its
+     capabilities of the target that is specified by the
+     RCPT-TO address.
+          
+          The response to a CONNEG RCPT-TO request will be
+     multi-line.  For successful (250) responses, at least
+     the first line of the response is for RCPT-TO
+     information other than CONNEG.  Additional response
+     lines are for CONNEG.    In order to avoid problems due
+     to variations in line buffer sizes, the total
+     parametric listing must be provided as a series of
+     lines, each beginning with "250-CONNEG" except for the
+     last line, which is "250 CONNEG".
+          
+          An alternative approach for lengthy CONNEG data
+     would be to fit the entire parameter list into one,
+     very long virtual line, using backslash ("\") escapes
+     at the end of each physical line.  This risks the
+     buffer overflow problem, cited above.
+          
+          The contents of the capability listing MUST
+     conform to the specifications in "Content Feature
+     Schema for Internet Fax". [RFC2879]
+
+
+
+4.   SYNTAX
+     
+     Content_Negotiation =    "CONNEG"
+     
+     Capability          =    <<as per [RFC2879]>>
+
+
+
+5.   EXAMPLE
+     
+     S: 220 ifax1.jp IFAX
+     
+     C: EHLO ifax1.jp
+     
+     S: 250-ifax1.jp
+     S: 250-DSN
+     S: 250 CONNEG
+     
+     C: MAIL FROM:<May@ifax2.jp>
+     
+     S: 250 <May@ifax2.jp> sender ok
+     
+     C: RCPT TO:<June@ifax1.jp> CONNEG
+     
+     S: 250-<June@ifax1.jp> recipient ok
+     S: 250-CONNEG (&(image-file-structure=TIFF-minimal)
+     S: 250-CONNEG   (MRC-mode=0)
+     S: 250-CONNEG   (color=Binary)
+     S: 250-CONNEG   (|(&(dpi=204)
+     S: 250-CONNEG       (dpi-xyratio=[204/98,204/196]) )
+     S: 250-CONNEG     (&(dpi=200)
+     S: 250-CONNEG       (dpi-xyratio=[200/100,1]) )
+     S: 250-CONNEG     (&(dpi=400)
+     S: 250-CONNEG       (dpi-xyratio=1) ) )
+     S: 250-CONNEG   (|(image-coding=[MH,MR,MMR])
+     S: 250-CONNEG      (&(image-coding=JBIG)
+     S: 250-CONNEG        (image-coding-constraint=JBIG-T85)
+     S: 250-CONNEG        (JBIG-stripe-size=128) ) )
+     S: 250-CONNEG   (paper-size=[letter,A4,B4])
+     S: 250 CONNEG   (ua-media=stationery) )
+     
+     C: DATA
+     
+     S: 354 okay, send data
+     
+     C: <<RFC 2822 message with MIME Content-Type:TIFF-FX
+          Per:
+          (  image-file-structure=TIFF-minimal
+             dpi=400
+             image-coding=JBIG
+             size-x=2150
+           )
+        >>
+     
+     S: 250 message accepted
+     
+     C: QUIT
+     
+     S: 221 goodbye
+
+
+
+6.   IANA CONSIDERATIONS
+     
+     This memo is not intended to create any new issues for
+     IANA.
+
+
+
+7.   SECURITY CONSIDERATIONS
+     
+     This ESMTP option calls for a respondent to disclose
+     its capabilities.  Mechanisms for determining the
+     requestor's authenticated identity are outside the
+     scope of this specification.  It is intended that this
+     mechanism permit disclosure of public information;
+     hence there is no particular need for security
+     measures.
+     
+     However there is nothing to prevent disclosure of
+     sensitive information that should receive restricted
+     distribution.  It is, therefore, the responsibility of
+     the disclosing ESMTP server to determine whether
+     additional security measures should be applied to the
+     use of this ESMTP option.
+
+
+
+8.   ACKNOWLEDGEMENTS
+     
+     Graham Klyne provided useful suggestions to an earlier
+     draft.
+
+
+
+9.   REFERENCES
+     
+     [ESMTP1]  Klensin, J., Freed, N., Rose, M., Stefferud,
+               E. and D. Crocker, "SMTP Service Extensions",
+               RFC 1869, November 1995
+     
+     [ESMTP2]  Klensin, J., "Simple Mail Transfer Protocol",
+               RFC 2821, April 2001.
+     
+     [RFC2879] McIntyre, L. and G. Klyne, "Content Feature
+               Schema for Internet Fax", RFC 2531, August
+               2000
+
+
+
+10.       AUTHORS' ADDRESSES
+     
+     Kiyoshi Toyoda
+     Matsushita Graphic Communication Systems,Inc
+     2-3-8 Shimomeguro, Meguro-Ku
+     Tokyo 153  JAPAN
+     
+     +81.3.5434.7161
+     ktoyoda@rdmg.mgcs.mei.co.jp
+     
+     
+     Dave Crocker
+     Brandenburg InternetWorking
+     675 Spruce Drive
+     Sunnyvale, CA  94086  USA
+     
+     +1.408.246.8253
+     dcrocker@brandenburg.com
+
+
+
+11.       FULL COPYRIGHT STATEMENT
+     
+     Copyright (C) The Internet Society (2001).  All Rights
+     Reserved.
+     
+     This document and translations of it may be copied and
+     furnished to others, and derivative works that comment
+     on or otherwise explain it or assist in its
+     implementation may be prepared, copied, published and
+     distributed, in whole or in part, without restriction
+     of any kind, provided that the above copyright notice
+     and this paragraph are included on all such copies and
+     derivative works.  However, this document itself may
+     not be modified in any way, such as by removing the
+     copyright notice or references to the Internet Society
+     or other Internet organizations, except as needed for
+     the purpose of developing Internet standards in which
+     case the procedures for copyrights defined in the
+     Internet Standards process must be followed, or as
+     required to translate it into languages other than
+     English.
+     
+     The limited permissions granted above are perpetual and
+     will not be revoked by the Internet Society or its
+     successors or assigns.
+     
+     This document and the information contained herein is
+     provided on an "AS IS" basis and THE INTERNET SOCIETY
+     AND THE INTERNET ENGINEERING TASK FORCE DISCLAIMS ALL
+     WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+     LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION
+     HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED
+     WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A
+     PARTICULAR PURPOSE.
+
+
