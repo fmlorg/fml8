@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.54 2003/03/05 16:23:14 fukachan Exp $
+# $FML: Header.pm,v 1.55 2003/03/14 03:50:18 fukachan Exp $
 #
 
 package FML::Header;
@@ -393,6 +393,10 @@ add errors-to: if not specified.
 replace original C<Date:> to C<X-Date:>.
 and now fml process time add to C<Date:>.
 
+=head2 C<rewrite_received>
+
+replace original C<Received:> to C<X-Received:>.
+
 =cut
 
 
@@ -460,6 +464,28 @@ sub rewrite_date
     $header->replace('Date', $newdate);
     Log("(debug) rewrite the orginal date to 'X-Date: $orgdate'");
     Log("(debug) rewrite the new date to 'Date: $newdate'");
+}
+
+
+# Descriptions: rewrite Received: to X-Received: if needed
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+# Side Effects: update $header
+# Return Value: none
+sub rewrite_received
+{
+    my ($header, $config, $args) = @_;
+    my($i,$data);
+    my $org = "Received";
+    my $new = "X-Received";
+    my $num = $header->count($org);
+
+    for($i = 0;$i < $num;$i++)
+    {
+	$data = $header->get($org, $i);
+	$header->add($new, $data);
+	$header->delete($org, $i);
+    }
+    Log("(debug) rewrite $org to $new (total $num)");
 }
 
 
