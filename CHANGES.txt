@@ -57,6 +57,12 @@
 	
 	implemnt need_lock().
 
+   FML::Article::Summary 
+	charcode_convert() -> charcode_convert_to_external_charset().
+	
+   FML::Restriction::Base Command 
+	prepare and use command mail specific definitions.
+
 2004/02/29
 
    Mail::Message::Language 
@@ -6342,4 +6348,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.183 2004/03/03 14:43:53 fukachan Exp $
+$FML: CHANGES.txt,v 1.184 2004/03/04 09:42:58 fukachan Exp $
