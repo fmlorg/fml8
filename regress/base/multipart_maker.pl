@@ -1,6 +1,6 @@
 #!/usr/local/bin/perl
 #
-# $FML$
+# $FML: multipart_maker.pl,v 1.7 2001/04/06 16:25:45 fukachan Exp $
 #
 
 use strict;
@@ -64,6 +64,6 @@ if ($rcpt) {
     print "\n";
 }
 
-$master->raw_print;
+$master->print;
 
 exit 0;
