@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+#  Copyright (C) 2001 Ken'ichi Fukamachi
+#   All rights reserved. This program is free software; you can
+#   redistribute it and/or modify it under the same terms as Perl itself. 
+#
+# $FML: INSTALL.sh,v 1.29 2001/11/08 03:38:21 fukachan Exp $
+#
+
+
+LIBS=@LIBS@
+CC=@CC@
+CFLAGS=@CFLAGS@
+LDFLAGS=@LDFLAGS@
+
+INSTALLCMD=@INSTALL@
+
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+bindir=@bindir@
+mandir=@mandir@
+
+default_prefix=@exec_prefix@
+config_dir=@sysconfdir@
+libexec_dir=@libexecdir@/fml
+lib_dir=@libdir@/fml
+
+
+# ml spool
+ml_spool_dir=/var/spool/ml
+
+
+# owner of /var/spool/ml
+owner=fml
