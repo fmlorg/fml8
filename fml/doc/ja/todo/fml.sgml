@@ -1,5 +1,5 @@
 <!--
-   $FML: fml.sgml,v 1.5 2001/07/15 09:51:20 fukachan Exp $
+   $FML: fml.sgml,v 1.6 2001/07/29 01:54:57 fukachan Exp $
 -->
 
 <chapter id="fml4.todo">
@@ -50,19 +50,6 @@ toy model でテーブルが一つのもの ( members == actives )
 mget の uu って何か空行が足りなくないかい？
 </para>
 </sect1>
-
-
-<!-- ============================================== -->
-<sect1>
-<title> unsubscribe with confirmation の bug ? </title>
-
-<para>
-confirmation をする unsubscribe で必要以上にチェックがループしてる。
-ただし、結果としてはきちんと動いているようなので、
-メッセージが煩わしいという感じ
-</para>
-</sect1>
-
 
 
 <!-- ============================================== -->
