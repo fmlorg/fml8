@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: loader,v 1.20 2001/11/10 04:00:26 fukachan Exp $
+# $FML: loader.in,v 1.1 2001/11/12 13:26:01 fukachan Exp $
 #
 
 eval 'exec /usr/local/bin/perl -S $0 ${1+"$@"}'
@@ -15,8 +15,12 @@ use strict;
 use Carp;
 
 # main configuration file for directory switch
-$ConfDir = '@sysconfdir@';
-$MainCF  = "$ConfDir/main.cf";
+{
+    my $prefix      = "@prefix@";
+    my $exec_prefix = "@exec_prefix@";
+    $ConfDir        = "@sysconfdir@";
+    $MainCF         = "$ConfDir/main.cf";
+}
 
 eval q{ &Bootstrap();};
 if ($@) { print STDERR "Error: ", $@, "\n"; exit 1;}
