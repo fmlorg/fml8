@@ -3,7 +3,7 @@
 # Copyright (C) 2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML$
+# $FML: Emulate.pm,v 1.1 2004/11/23 04:24:16 fukachan Exp $
 #
 
 package FML::Process::Emulate;
@@ -81,43 +81,84 @@ sub prepare
     $curproc->fix_perl_include_path();
     $curproc->scheduler_init();
     $curproc->log_message_init();
+    $curproc->_fml4_emulate();
+}
 
-    my $a = $curproc->command_line_options || {};
-    if (defined $a->{ ctladdr } && $a->{ ctladdr }) {
-	$curproc->log("start as command_mail mode");
 
- 	eval q{
-	    use FML::Process::Command;
-	    unshift(@ISA, "FML::Process::Command");
-	};
-	$curproc->logerror($@) if $@;
-	croak("failed to initialize command_mail process.") if $@;
+# Descriptions: emulate fml4 (fml.pl in fact) process.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub _fml4_emulate
+{
+    my ($curproc) = @_;
+    my $option    = $curproc->command_line_options || {};
 
-	if ($config->yes('use_command_mail_function')) {
-	    $curproc->parse_incoming_message();
-	}
-	else {
-	    $curproc->logerror("use of command_mail program prohibited");
-	    exit(0);
-	}
+    if (defined $option->{ ctladdr } && $option->{ ctladdr }) {
+	$curproc->_fml4_emulate_command_mail_process();
     }
     else {
-	$curproc->log("start as article_post mode");
+	$curproc->_fml4_emulate_post_article_process();
+    }
+}
 
-	eval q{
-	    use FML::Process::Distribute;
-	    unshift(@ISA, "FML::Process::Distribute");
-	};
-	$curproc->logerror($@) if $@;
-	croak("failed to initialize article_post process.") if $@;
 
-	if ($config->yes('use_article_post_function')) {
-	    $curproc->parse_incoming_message();
-	}
-	else {
-	    $curproc->logerror("use of distribute program prohibited");
-	    exit(0);
-	}
+# Descriptions: emulate fml4 (fml.pl in fact) process.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub _fml4_emulate_post_article_process
+{
+    my ($curproc) = @_;
+    my $config    = $curproc->config();
+
+    $curproc->log("start as article_post mode");
+
+    eval q{
+	use FML::Process::Distribute;
+	unshift(@ISA, "FML::Process::Distribute");
+    };
+    if ($@) {
+	$curproc->logerror($@);
+	croak("failed to initialize article_post process.");
+    }
+
+    if ($config->yes('use_article_post_function')) {
+	$curproc->parse_incoming_message();
+    }
+    else {
+	$curproc->logerror("use of distribute program prohibited");
+	exit(0);
+    }
+}
+
+
+# Descriptions: emulate fml4 (fml.pl in fact) process.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub _fml4_emulate_command_mail_process
+{
+    my ($curproc) = @_;
+    my $config    = $curproc->config();
+
+    $curproc->log("start as command_mail mode");
+
+    eval q{
+	use FML::Process::Command;
+	unshift(@ISA, "FML::Process::Command");
+    };
+    if ($@) {
+	$curproc->logerror($@);
+	croak("failed to initialize command_mail process.");
+    }
+
+    if ($config->yes('use_command_mail_function')) {
+	$curproc->parse_incoming_message();
+    }
+    else {
+	$curproc->logerror("use of command_mail program prohibited");
+	exit(0);
     }
 }
 
