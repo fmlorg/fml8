@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.40 2003/01/11 06:58:44 fukachan Exp $
+# $FML: Credential.pm,v 1.41 2003/01/23 21:42:20 fukachan Exp $
 #
 
 package FML::Credential;
@@ -174,6 +174,7 @@ sub is_same_address
     $max_level = $max_level || $self->{ _max_level } || 3;
 
     # rule 1: case sensitive
+    print STDERR "1. check only account part\n" if $debug;
     if ($is_case_sensitive) {
 	if ($xuser ne $yuser) { return 0;}
     }
@@ -186,17 +187,21 @@ sub is_same_address
     $ydomain ||= ''; 
 
     # rule 2: case insensitive
+    print STDERR "2. eq domain ?\n" if $debug;
     if ("\L$xdomain\E" eq "\L$ydomain\E") { return 1;}
 
     # rule 3: compare a.b.c.d.jp in reverse order
+    print STDERR "3. compare each part in domain ?\n" if $debug;
     my (@xdomain) = reverse split(/\./, $xdomain);
     my (@ydomain) = reverse split(/\./, $ydomain);
     for (my $i = 0; $i < $#xdomain; $i++) {
 	my $xdomain = $xdomain[ $i ];
 	my $ydomain = $ydomain[ $i ];
+	print STDERR "    $xdomain eq $ydomain ?\n" if $debug;
 	if ("\L$xdomain\E" eq "\L$ydomain\E") { $level++;}
     }
 
+    print STDERR "result: $level >= $max_level ?\n" if $debug;
     if ($level >= $max_level) { return 1;}
 
     # fail
