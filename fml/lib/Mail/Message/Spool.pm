@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #
-# $FML: Spool.pm,v 1.5 2002/04/06 01:30:37 fukachan Exp $
+# $FML: Spool.pm,v 1.6 2002/04/18 22:24:54 fukachan Exp $
 #
 
 package Mail::Message::Spool;
@@ -77,7 +77,7 @@ sub filepath
 	my $id       = $args->{ id };
 	my $is_hash  = 0;
 	my $file     = '';
-	my $unit     = 
+	my $unit     =
 	    defined($args->{ subdir_unit }) ?  $args->{ subdir_unit } : 1000;
 	my $subdir   = int($id/$unit);
 

@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.1 2002/04/15 10:34:10 fukachan Exp $
+# $FML: Spool.pm,v 1.2 2002/04/16 04:05:10 fukachan Exp $
 #
 
 package FML::Process::Spool;
@@ -119,8 +119,8 @@ sub run
     my $src_dir = defined $options->{srcdir} ? $options->{srcdir} : $dst_dir;
     my $optargs = {
 	article => $article,
-	src_dir => $src_dir, 
-	dst_dir => $dst_dir, 
+	src_dir => $src_dir,
+	dst_dir => $dst_dir,
     };
 
     # XXX you can specify the spool type by --style=subdir but only
@@ -132,7 +132,7 @@ sub run
     else {
 	# show status by default for "Principle of Least Surprise".
 	$curproc->_check($args, $optargs);
-    } 
+    }
 
     $eval = $config->get_hook( 'fmlspool_run_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -162,7 +162,7 @@ sub _convert
     if (defined $dh) {
 	my $source = '';
 
-	while (defined($_ = $dh->read)) { 
+	while (defined($_ = $dh->read)) {
 	    next if /^\./;
 
 	    $source = File::Spec->catfile($src_dir, $_);
@@ -181,7 +181,7 @@ sub _convert
 		if (-f $subdirpath) {
 		    croak("$subdirpath file/dir conflict");
 		}
-		else { 
+		else {
 		    unless (-d $subdirpath) {
 			mkdir($subdirpath, 0700);
 		    }
@@ -243,7 +243,7 @@ sub _scan_dir
     use DirHandle;
     my $dh = new DirHandle $dir;
     if (defined $dh) {
-	while (defined($_ = $dh->read)) { 
+	while (defined($_ = $dh->read)) {
 	    next if /^\./;
 
 	    $f = File::Spec->catfile($dir, $_);
@@ -251,7 +251,7 @@ sub _scan_dir
 		$num_file++;
 	    }
 	    elsif (-d $f) {
-		$num_dir++; 
+		$num_dir++;
 		my ($x_num_file, $x_num_dir) = _scan_dir( $f );
 		$num_file += $x_num_file;
 		$num_dir  += $x_num_dir;

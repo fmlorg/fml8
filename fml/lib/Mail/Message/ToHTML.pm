@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.11 2002/04/15 03:47:49 fukachan Exp $
+# $FML: ToHTML.pm,v 1.12 2002/04/18 15:27:04 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -19,7 +19,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.11 2002/04/15 03:47:49 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.12 2002/04/18 15:27:04 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -333,7 +333,7 @@ sub html_filename
     if (defined($id) && ($id > 0)) {
 	if ($use_subdir eq 'yes') {
 	    my $r = $self->_html_file_subdir_name($id);
-	    # print STDERR "xdebug: $id => $r\n"; 
+	    # print STDERR "xdebug: $id => $r\n";
 	    return $r;
 	}
 	else {
@@ -372,7 +372,7 @@ sub _html_file_subdir_name
 		$subdir_db->{ $id } = $subdir; # cache subdir info into DB.
 		# print STDERR "xdebug: \$subdir_db->{ $id } = $subdir\n";
 	    }
-	    
+
 	    use File::Spec;
 	    my $xsubdir = File::Spec->catfile($html_base_dir, $subdir);
 	    unless (-d $xsubdir) {

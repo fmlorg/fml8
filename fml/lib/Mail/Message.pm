@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.50 2002/04/08 12:44:27 fukachan Exp $
+# $FML: Message.pm,v 1.51 2002/04/13 14:43:09 fukachan Exp $
 #
 
 package Mail::Message;
@@ -663,7 +663,7 @@ sub whole_message_body
 # Return Value: STR_REF
 sub whole_message_as_string_ref
 {
-    my ($self) = @_;    
+    my ($self) = @_;
 
     return $InComingMessage;
 }

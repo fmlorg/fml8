@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.14 2002/04/08 12:44:25 fukachan Exp $
+# $FML: HTMLify.pm,v 1.15 2002/04/15 04:01:47 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -177,7 +177,7 @@ sub  _check_subdir_exists
     use DirHandle;
     my $dh = new DirHandle $src_dir;
     if (defined $dh) {
-	while (defined($_ = $dh->read)) { 
+	while (defined($_ = $dh->read)) {
 	    next if /^\./;
 	    $subdir = File::Spec->catfile($src_dir, $_);
 
