@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.8 2004/02/01 14:38:03 fukachan Exp $
+# $FML: Sequence.pm,v 1.9 2004/02/01 15:54:45 fukachan Exp $
 #
 
 package FML::Article::Sequence;
@@ -31,8 +31,6 @@ FML::Article::Sequence - article sequence manipulation
 increment the sequence number of this article C<$self> and
 save it to C<$sequence_file>.
 
-This routine uses C<File::Sequence> module.
-
 =cut
 
 
@@ -50,12 +48,12 @@ sub increment_id
 
     $curproc->lock($lock_channel);
 
-    # XXX-TODO we should enhance IO::Adapter module to handle
-    # XXX-TODO sequential number.
-    use File::Sequence;
-    my $sfh = new File::Sequence { sequence_file => $seq_file };
-    my $id  = $sfh->increment_id;
-    if ($sfh->error) { $curproc->logerror( $sfh->error ); }
+    use IO::Adapter;
+    my $io = new IO::Adapter "file:$seq_file";
+    my $id = $io->sequence_increment();
+    if ($io->error()) {
+	$curproc->logerror( $io->error() );
+    }
 
     # save $id in pcb (process control block) and return $id
     $pcb->set('article', 'id', $id);
@@ -92,16 +90,37 @@ sub id
     # processes not Process::Distribute
     else {
 	my $seq_file = $config->{ article_sequence_file };
-	my $n        = 0;
+	my $map      = sprintf("file:%s", $seq_file);
 
-	use File::Sequence;
-	my $sfh = new File::Sequence { sequence_file => $seq_file };
-	if (defined $sfh) {
-	    $n = $sfh->get_id() || 0;
-	}
-
-	return $n;
+	return( $self->get_number_from_map($map) || 0 );
     }
+}
+
+
+# Descriptions: get number from map.
+#    Arguments: OBJ($self) STR($map)
+# Side Effects: none
+# Return Value: NUM
+sub get_number_from_map
+{
+    my ($self, $map) = @_;
+
+    use IO::Adapter;
+    my $io = new IO::Adapter $map;
+    if (defined $io) {
+	$n  = $io->getline() || 0;
+	$n =~ s/^\s*//;
+	$n =~ s/\s*$//;
+
+	if ($n =~ /^\d+$/) {
+	    return $n;
+	}
+	else {
+	    return 0;
+	}
+    }
+
+    return 0;
 }
 
 

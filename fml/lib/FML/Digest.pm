@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Digest.pm,v 1.16 2004/02/15 04:38:25 fukachan Exp $
+# $FML: Digest.pm,v 1.17 2004/03/12 04:22:53 fukachan Exp $
 #
 
 package FML::Digest;
@@ -129,20 +129,12 @@ sub _get_id
 
     $curproc->lock($channel);
 
-    # XXX-TODO: we should enhance IO::Adapter module to handle
-    # XXX-TODO: sequential number.
     if (-f $seq_file) {
-	use File::Sequence;
-	my $sfh = new File::Sequence { sequence_file => $seq_file };
-	if (defined $sfh) {
-	    my $_id = $sfh->get_id();
-	    unless ($sfh->error) {
-		$id = $_id;
-	    }
-	    else {
-		$curproc->logerror( $sfh->error );
-	    }
-	}
+	my $map = sprintf("file:%s", $seq_file);
+
+	use FML::Article::Sequence;
+	my $seq = new FML::Article::Sequence $curproc;
+	$id = $seq->get_number_from_map($map) || 0;
     }
 
     $curproc->unlock($channel);
@@ -162,18 +154,17 @@ sub set_digest_id
     my $curproc  = $self->{ _curproc };
     my $config   = $curproc->config();
     my $seq_file = $config->{ digest_sequence_file };
+    my $map      = sprintf("file:%s", $seq_file);
     my $channel  = $self->get_lock_channel_name();
-
-    # XXX-TODO: we should enhance IO::Adapter module to handle
-    # XXX-TODO: sequential number.
-    # XXX-TODO: defined() check for $sfh.
-    use File::Sequence;
 
     $curproc->lock($channel);
 
-    my $sfh = new File::Sequence { sequence_file => $seq_file };
-    $sfh->set_id($id);
-    if ($sfh->error) { $curproc->logerror( $sfh->error ); }
+    use IO::Adapter;
+    my $io = new IO::Adapter $map;
+    $io->sequence_replace($id);
+    if ($io->error()) {
+	$curproc->logerror( $io->error() );
+    }
 
     $curproc->unlock($channel);
 
