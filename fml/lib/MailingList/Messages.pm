@@ -279,9 +279,10 @@ sub build_mime_multipart_chain
 
     my $base_content_type = $args->{ base_content_type };
     my $msglist           = $args->{ message_list };
-    my $boundary          = "--".$args->{ boundary } || "---". time ."-$$-";
-    my $buffer            = $boundary."\n";
-    my $buffer_end        = $boundary . "--\n";
+    my $boundary          = $args->{ boundary } || "--". time ."-$$-";
+    my $dash_boundary     = "--". $boundary;
+    my $delbuf            = "\n". $dash_boundary."\n";
+    my $delbuf_end        = "\n". $dash_boundary . "--\n";
 
     for my $m (@$msglist) {
 	# delimeter: --boundary
@@ -289,7 +290,7 @@ sub build_mime_multipart_chain
 	    base_content_type => $base_content_type,
 	    content_type      => $content_type{'delimeter'},
 	    boundary          => $boundary,
-	    content           => \$buffer,
+	    content           => \$delbuf,
 	};
 
 	$head = $msg unless $head; # save the head $msg
@@ -307,7 +308,7 @@ sub build_mime_multipart_chain
 	base_content_type => $base_content_type,
 	content_type      => $content_type{'close-delimeter'},
 	boundary          => $boundary,
-	content           => \$buffer_end,
+	content           => \$delbuf_end,
     };
     $prev_m->next_chain( $msg ); # ... -> content -> close-delimeter
 
@@ -496,6 +497,13 @@ C<new()> calls this routine if the message looks MIME multipart.
 #      ---boundary--
 #         ... trailor ...
 #
+# RFC2046 Appendix say,
+#           multipart-body := [preamble CRLF]
+#                              dash-boundary transport-padding CRLF
+#                              body-part *encapsulation
+#                              close-delimiter transport-padding
+#                              [CRLF epilogue]
+#
 sub parse_and_build_mime_multipart_chain
 {
     my ($self, $args) = @_;
@@ -508,21 +516,24 @@ sub parse_and_build_mime_multipart_chain
     my $base_content_type = $args->{ content_type };
 
     # boundaries of the continuous multipart blocks
-    my $content     = $args->{ content };  # reference to content
-    my $content_end = length($$content);   # end position of the content
-    my $boundary    = $args->{ boundary }; # MIME boundary string
-    my $mpb_begin   = index($$content, $boundary     , 0);
-    my $mpb_end     = index($$content, $boundary."--", 0);
+    my $content         = $args->{ content };  # reference to content
+    my $content_end     = length($$content);   # end position of the content
+    my $boundary        = $args->{ boundary }; # MIME boundary string
+    my $dash_boundary   = "--".$boundary;
+    my $delimeter       = "\n". $dash_boundary;
+    my $close_delimeter = $delimeter ."--";
+
+    # 1. check the preamble before multipart blocks
+    #    XXX mpb = multipart-body
+    my $mpb_begin       = index($$content, $delimeter, 0);
+    my $mpb_end         = index($$content, $close_delimeter, 0);
+    my $pb              = 0; # pb = position of the beginning in $content
+    my $pe              = $mpb_begin; # pe = position of the end in $content
+    $self->_set_pos( $pe + 1 );
 
     # prepare lexical variables
     my ($msg, $next_part, $prev_part, @m);
     my $i = 0; # counter to indicate the $i-th message
-
-    # 1. check the preamble before multipart blocks
-    my $pb  = 0;          # pb = position of the beginning in $content
-    my $pe  = $mpb_begin; # pe = position of the end in $content
-    $self->_set_pos( $pe + 1 );
-
     do {
 	# 2. analyze the region for the next part in $content
 	#     we should check the condition "$pe > $pb" here
@@ -547,23 +558,23 @@ sub parse_and_build_mime_multipart_chain
 	}
 
 	# 3. where is the region for the next part?
-	($pb, $pe) = $self->_next_part_pos($content, $boundary);
+	($pb, $pe) = $self->_next_part_pos($content, $delimeter);
 
 	# 4. insert a multipart delimiter
-	#    XXX we malloc(), "my $tmpbuf", to store the boundary string.
+	#    XXX we malloc(), "my $tmpbuf", to store the delimeter string.
 	if ($pe > $mpb_end) { # check the closing of the blocks or not
-	    my $tmpbuf = $boundary . "--\n";
+	    my $buf = $close_delimeter."\n";
 	    $m[ $i++ ] = $self->_alloc_new_part({
-		content           => \$tmpbuf,
+		content           => \$buf,
 		content_type      => $content_type{'close-delimiter'},
 		base_content_type => $base_content_type,
 	    });
 
 	}
 	else {
-	    my $tmpbuf = $boundary . "\n";
+	    my $buf = $delimeter."\n";
 	    $m[ $i++ ] = $self->_alloc_new_part({
-		content           => \$tmpbuf,
+		content           => \$buf,
 		content_type      => $content_type{'delimiter'},
 		base_content_type => $base_content_type,
 	    });
@@ -573,7 +584,7 @@ sub parse_and_build_mime_multipart_chain
 
     # check the trailor after multipart blocks exists or not.
     {
-	my $p = index($$content, "\n", $mpb_end) + 1;
+	my $p = index($$content, "\n", $mpb_end + length($close_delimeter)) +1;
 	if (($content_end - $p) > 0) {
 	    $m[ $i++ ] = $self->_alloc_new_part({
 		boundary          => $boundary,
@@ -663,7 +674,7 @@ sub build_mime_header
 }
 
 
-# XXX $buf contains no MIME boundary, acutual message itself:
+# XXX $buf contains no MIME delimeter, acutual message itself:
 #     {Content-Type: ...
 #
 #       ... body ...}
@@ -679,19 +690,19 @@ sub _alloc_new_part
 
 sub _next_part_pos
 {
-    my ($self, $content, $boundary) = @_;
+    my ($self, $content, $delimeter) = @_;
     my ($len, $p, $pb, $pe, $pp);
     my $maxlen = length($$content);
 
-    # get the next boundary position
+    # get the next deliemter position
     $pp  = $self->_get_pos();
-    $p   = index($$content, $boundary, $pp);
+    $p   = index($$content, $delimeter, $pp);
     $self->_set_pos( $p + 1 );
 
     # determine the begin and end of the next block without delimiter
     $len = $p > 0 ? ($p - $pp) : ($maxlen - $pp);
-    $pb  = $pp + length($boundary);
-    $pe  = $pb + $len - length($boundary);
+    $pb  = $pp + length($delimeter);
+    $pe  = $pb + $len - length($delimeter);
 
     return ($pb, $pe);
 }
@@ -857,9 +868,67 @@ For example,
 C<get_content_reference()>
 returns the reference to the content of the message.
 
-=cut
+=head1 APPENDIX (RFC2046 Appendix A)
 
-######################################################################
+Appendix A -- Collected Grammar
+
+   This appendix contains the complete BNF grammar for all the syntax
+   specified by this document.
+
+   By itself, however, this grammar is incomplete.  It refers by name to
+   several syntax rules that are defined by RFC 822.  Rather than
+   reproduce those definitions here, and risk unintentional differences
+   between the two, this document simply refers the reader to RFC 822
+   for the remaining definitions. Wherever a term is undefined, it
+   refers to the RFC 822 definition.
+
+     boundary := 0*69<bchars> bcharsnospace
+
+     bchars := bcharsnospace / " "
+
+     bcharsnospace := DIGIT / ALPHA / "'" / "(" / ")" /
+                      "+" / "_" / "," / "-" / "." /
+                      "/" / ":" / "=" / "?"
+
+     body-part := <"message" as defined in RFC 822, with all
+                   header fields optional, not starting with the
+                   specified dash-boundary, and with the
+                   delimiter not occurring anywhere in the
+                   body part.  Note that the semantics of a
+                   part differ from the semantics of a message,
+                   as described in the text.>
+
+     close-delimiter := delimiter "--"
+
+     dash-boundary := "--" boundary
+                      ; boundary taken from the value of
+                      ; boundary parameter of the
+                      ; Content-Type field.
+
+     delimiter := CRLF dash-boundary
+
+     discard-text := *(*text CRLF)
+                     ; May be ignored or discarded.
+
+     encapsulation := delimiter transport-padding
+                      CRLF body-part
+
+     epilogue := discard-text
+
+     multipart-body := [preamble CRLF]
+                       dash-boundary transport-padding CRLF
+                       body-part *encapsulation
+                       close-delimiter transport-padding
+                       [CRLF epilogue]
+
+     preamble := discard-text
+
+     transport-padding := *LWSP-char
+                          ; Composers MUST NOT generate
+                          ; non-zero length transport
+                          ; padding, but receivers MUST
+                          ; be able to handle padding
+                          ; added by message transports.
 
 =head1 AUTHOR
 

@@ -74,7 +74,7 @@ sub mime_boundary
     my $m = $header->get('content-type');
 
     if ($m =~ /boundary=\"(.*)\"/) {
-	return "--".$1;
+	return $1;
     }
     else {
 	undef;

@@ -18,7 +18,7 @@ while (<$fh>) {
     if (1 .. /^$/) {
 	$header .= $_;
 	if (/boundary=\"(.*)\"/) {
-	    $boundary = "--".$1;
+	    $boundary = $1;
 	}
     }
     else {
