@@ -42,14 +42,23 @@ sub Log
     use FileHandle;
 
     # When the second argument is not defined, use the default log_file.
+    my $style  = $config->{ log_message_format } || 'traditional';
     my $file   = $log_file || $config->{ log_file } || '/dev/stderr';
     my $fh     = new FileHandle ">> $file";
     my $sender = FML::Credential->sender;
 
     if (defined $fh) {
-	print $fh $rdate->{'log_file_style'}, " ", $mesg;
-	print $fh " ($sender)" if defined $sender;
-	print $fh "\n";
+	if ($style eq 'traditional') {
+	    print $fh $rdate->{'log_file_style'}, " ", $mesg;
+	    print $fh " ($sender)" if defined $sender;
+	    print $fh "\n";
+	}
+	else {
+	    my $name = $0; $name =~ s@.*/@@;
+	    my $iam  = $name."[". $config->{ pid } ."]";
+	    print $fh $rdate->{'log_file_style'}, " ", $iam, " ", $mesg;
+	    print $fh "\n";
+	}
     }
     else {
 	croak "Error: cannot open $file\n";
