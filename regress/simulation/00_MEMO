@@ -7,6 +7,14 @@
         XXX 遠大なビジョンやとりあえず後まわしでよいものは STATUS.txt へ
 
 
+[TODO] config tool
+
+	GUI -> config
+	CUI -> config (さきだろう)
+
+		めにゅー config はどうする？			
+
+
 [TODO]	Mail::Message->print() ???
 
 	FML/Filter/External/spamc.pm:	$msg->print($wh);
@@ -19,25 +27,6 @@
 	FML/Process/Kernel.pm:	$msg_in->print($wh);
 
 	Mail/Delivery/Queue.pm:	$msg->print($fh);
-
-
-[TODO]	content filter
-
-	タイムアウトしたら、どうするべき？もんだい
-
-	local:
-		bogofilter 
-		spamc
-		clamscan
-
-		article_filter_rules	=	article_content_filter
-							...
-
-		use_article_content_filter = no
-
-		article_content_filter_transport = smtp:localhost:10025
-
-	などとしておけば、じゅんばんをかえられるな
 
 
 [TODO]	Calendar/Lite.pm uses FML::Restriction::Base;-)
@@ -308,5 +297,5 @@
 
 
 ----------
-$FML: 00_MEMO,v 1.114 2004/07/23 15:15:55 fukachan Exp $
+$FML: 00_MEMO,v 1.115 2004/07/31 09:33:58 fukachan Exp $
 
