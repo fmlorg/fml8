@@ -12,6 +12,13 @@
 	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
 	気をつけてください。
 
+2004/03/20
+
+   FML::Merge 
+   FML::Merge::FML4::List 
+   FML::Merge::Config 
+	switched to FML::Merge::Config based coding.
+
 2004/03/15-17
 
    fml4 の設定を fml8 のものへ半自動変換するツールを実装した。
@@ -6532,4 +6539,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.189 2004/03/14 14:20:08 fukachan Exp $
+$FML: CHANGES.txt,v 1.190 2004/03/18 02:09:10 fukachan Exp $
