@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.61 2002/05/11 09:35:21 fukachan Exp $
+# $FML: Message.pm,v 1.62 2002/05/11 09:46:29 fukachan Exp $
 #
 
 package Mail::Message;
@@ -799,7 +799,7 @@ sub find
 	    }
 	}
     }
-    elsif (defined $args->{ data_type_regexp } && 
+    elsif (defined $args->{ data_type_regexp } &&
 	   $args->{ data_type_regexp }) {
 	my $regexp = $args->{ data_type_regexp };
 	my $mp     = $self;
