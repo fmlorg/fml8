@@ -8,6 +8,9 @@ Attribute::Types              Attributes that confer type on variables
 Attribute::Memoize            Attribute interface to Memoize.pm 
 Attribute::TieClasses         attribute wrappers for CPAN Tie classes 
 Attribute::Abstract           implement abstract methods with attributes 
+Attribute::Overload           Attribute that makes overloading easier 
+Attribute::Deprecated         Mark deprecated methods 
+Attribute::Signature          Signatures on methods and subroutines 
 Exporter::Import              Alternate symbol exporter 
 Exporter::Options             Extends Exporter to handle use-line options 
 Exporter::PkgAlias            Load a module into multiple namespaces 
@@ -16,11 +19,17 @@ Inline::C                     Write Perl subroutines in C
 Inline::CPP                   Easy implementation of C++ extensions 
 Inline::Python                Easy implementation of Python extensions 
 Inline::Tcl                   Write Perl subroutines in Tcl 
+Inline::Java                  Easy implementation of Java extensions 
+Inline::ASM                   Write Perl subroutines in Assembler 
+Inline::Struct                Bind C structures directly to Perl. 
+Inline::Files                 Multiple virtual files after __END__ 
+Inline::Guile                 Inline module for Guile Scheme interpreter 
 Regexp::Common                Provide commonly requested regular expr. 
 Regexp::Shellish              Shell-like regular expressions 
 Regexp::Func                  Replace =~, !~, m//, s/// with functions 
 Safe::Hole                    Exec subs in the original package from Safe 
 Symbol::Table                 OO interface to package symbols 
+Symbol::Approx::Sub           Call subroutines using approximate names 
 B::Fathom                     Estimate the readability of Perl code 
 B::Graph                      Perl Compiler backend to diagram OP trees 
 B::LexInfo                    Show info about subroutine lexical variables 
@@ -34,6 +43,9 @@ Filter::cpp                   Filters script through C preprocessor
 Filter::tee                   Copies to file perl source being compiled 
 Filter::decrypt               Template for a perl source decryption filter 
 Filter::Simple                Simplified source filtering 
+Filter::constant              constant mod working like real Pre Processor 
+Filter::Trigraph              Understand ANSI C trigraphs in Perl source. 
+PerlIO::gzip                  provide a PerlIO layer to gzip/gunzip 
 Thread::Group                 Wait()-like and grouping functions 
 Thread::IO                    ? IO routines 
 Thread::Object                ? OO routines 
@@ -42,10 +54,13 @@ Thread::Queue                 Thread-safe queues
 Thread::Semaphore             Thread-safe semaphores 
 Thread::Signal                A thread which runs signal handlers reliably 
 Thread::Specific              Thread-specific keys 
+Thread::RWLock                rwlock implementation for perl threads 
 IThread::Mutex                ? 
 IThread::Semaphore            ? 
 IThread::Queue                ? 
 Module::Reload                Reloads files in %INC based on timestamps 
+Module::InstalledVersion      Find version number of installed module 
+Module::Use                   Tracks modules loaded by a script 
 Pod::Diff                     compare two POD files and report diff 
 Pod::DocBook                  convert POD to and from DocBook 
 Pod::HTML                     converter to HTML 
@@ -73,17 +88,18 @@ Pod::XML                      Generate XML from POD
 Pod::Tree                     Create a static syntax tree for a POD 
 Pod::Checker                  Check pod documents for syntax errors 
 Perl6::Variables              Perl 6 variable syntax for Perl 5 
+Perl6::Interpolators          Use Perl 6 function-interpolation syntax 
+Acme::Buffy                   An encoding scheme for Buffy fans 
 Benchmark::Timer              Perl code benchmarking tool 
 ExtUtils::DynaGlue            Methods for generating Perl extension files 
 ExtUtils::MakeMaker           Writes Makefiles for extensions 
 ExtUtils::Manifest            Utilities for managing MANIFEST files 
-ExtUtils::Typemap             ? xsubpp typemap handling 
 ExtUtils::Embed               Utilities for embedding Perl in C/C++ apps 
 ExtUtils::F77                 Facilitate use of FORTRAN from Perl/XS code 
+ExtUtils::configPL            configures .PL files 
 Carp::Assert                  Stating the obvious to let the computer know 
 Carp::CheckArgs               Check subroutine argument types 
 Carp::Datum                   Debugging And Tracing Ultimate Module 
-ClearCase::Ct                 Generic cleartool wrapper 
 Conjury::C                    Generic software construction toolset 
 Conjury::Core                 Generic software construction toolset 
 Conjury::Stage                Generic software construction toolset 
@@ -102,29 +118,39 @@ Devel::Peek                   Peek at internal representation of Perl data
 Devel::RegExp                 Access perl internal regex functions 
 Devel::SearchINC              loading Perl modules from development dirs 
 Devel::SmallProf              Line-by-line profiler 
-Devel::StackTrace             Stacktrace object w/ info like Carp::confess 
+Devel::StackTrace             Stacktrace object w/ info form caller() 
 Devel::Symdump                Perl symbol table access and dumping 
 Devel::TraceFuncs             Trace funcs by using object destructions 
 Devel::TraceLoad              Traces the loading of perl source code 
+Devel::TraceMethods           Perl module for tracing module calls 
+Devel::Constants              Resolve Constants back to their names 
+Devel::Messenger              Let Your Code Talk to You 
 Exception::Class              Declare exception class hierarchies 
 Exception::Cxx                Cause perl to longjmp using C++ exceptions 
 Perf::ARM                     Application Response Measurement 
-Sub::Curry                    Perl module to curry functions ((a la Lisp)) 
+Sub::Curry                    Cute module to curry functions 
+Sub::Quotelike                Allow to define quotelike functions 
 Test::Cmd                     Portable test infrastructure for commands 
 Test::Harness                 Executes perl-style tests 
 Test::Unit                    framework for XP style unit testing 
 Test::Suite                   Represents a collection of Test::Cases 
 Test::Case                    Represent a single test case 
-VCS::CVS                      Interface to GNU's CVS 
+Test::Mail                    Test framework for email applications 
+Test::Simple                  Basic utilities for writing tests 
+Test::Exception               Functions for testing exception-based code 
+Test::More                    More functions for writing tests 
+Test::Litmus                  Submit test results to the litmus webtool 
 VCS::PVCS                     ? PVCS Version Manager (intersolv.com) 
 VCS::RCS                      Interface layer over RCS (See also Rcs) 
 VCS::RCE                      Perl layer over RCE C API 
+VCS::StarTeam                 Provides an interface to StarBase's StarTeam 
 Async::Group                  Deal with simultaneous asynchronous calls 
 Async::Process                ? class to run sub-processes 
 BSD::HostIdent                ? s/gethostname(), s/gethostid() 
 BSD::Ipfwgen                  Generate ipfw(8) filters 
 BSD::Resource                 getrusage(), s/getrlimit(), s/getpriority() 
 Env::Path                     Advanced operations on path variables 
+Env::Modulecmd                Interface to modulecmd from Perl 
 Proc::Background              OS independent background process objects 
 Proc::ExitStatus              Interpret and act on wait() status values 
 Proc::Forkfunc                Simple lwall-style fork wrapper 
@@ -136,18 +162,27 @@ Proc::Spawn                   Run external programs
 Proc::SyncExec                Spawn processes but report exec() errors 
 Proc::times                   By-name interface to process times function 
 Proc::Queue                   limits number of concurrent forked processes 
-Schedule::At                  ? OS independent interface to the at command 
-Schedule::ByClock             Return at given times 
+Schedule::At                  OS independent interface to the at command 
+Schedule::ByClock             Return to caller at given seconds/minutes 
 Schedule::Cron                cron-like scheduler for perl subroutines 
 Schedule::Load                Remote system load, processes, scheduling 
+Shell::Source                 Run programs and inherit environment changes 
 Sys::AlarmCall                Timeout on any sub. Allows nested alarms 
 Sys::Hostname                 Implements a portable hostname function 
 Sys::Sysconf                  Defines constants for POSIX::sysconf() 
 Sys::Syslog                   Provides same functionality as BSD syslog 
+Sys::CPU                      Access CPU info. number, etc on Win and UNIX 
+Sys::Lastlog                  Provide a moderately Object Oreiented Interf 
+Sys::Utmp                     Object(ish) Interface to UTMP files. 
+Sys::Hostname::Long           Return the hosts fully qualified name 
 Be::Attribute                 Manipulate BeOS BFS MIME file attributes 
 Be::Query                     Query a BeOS file system 
 FreeBSD::SysCalls             FreeBSD-specific system calls 
 HPUX::Ioscan                  Perl function to handle HPUX ioscan command 
+Linux::AIO                    asynchronous I/O using linux/clone 
+Linux::Cpuinfo                Object Oriented Interface to /proc/cpuinfo 
+Linux::Fuser                  Determine which processes have a file open 
+Linux::Svgalib                Object Oriented Perl interface to svgalib 
 Mac::AppleEvents              AppleEvent manager and AEGizmos 
 Mac::AssistantFrames          Easy creation of assistant dialogs 
 Mac::Components               (QuickTime) Component manager 
@@ -175,7 +210,6 @@ MSDOS::Attrib                 Get/set DOS file attributes in OS/2 or Win32
 MSDOS::Descript               Manage 4DOS style DESCRIPT.ION files 
 MSDOS::SysCalls               MSDOS interface (interrupts, port I/O) 
 MVS::VBFile                   Read MVS VB (variable-length) files 
-NeXTStep::NetInfo             NeXTStep's NetInfo (like ONC NIS) 
 OS2::ExtAttr                  (Tied) access to extended attributes 
 OS2::FTP                      Access to ftplib interface 
 OS2::PrfDB                    (Tied) access to .INI-style databases 
@@ -221,13 +255,14 @@ PDA::PilotDesktop             ? Managing Pilot Desktop databases software
 Hardware::Simulator           Simulate different pieces of hardware 
 Device::SerialPort            POSIX clone of Win32::SerialPort 
 Device::SVGA                  ? SVGA Graphic card driver 
+Device::ParallelPort          Low Level access to Parallel Port 
 Device::ISDN::OCLM            Perl interface to the 3com OCLM ISDN TA 
 AudioCD::Mac                  Extension for controlling Audio CDs on MacOS 
 Socket::PassAccessRights      Pass file descriptor via Unix domain socket 
 Net::ACAP                     Interface to ACAP Protocol (Internet-Draft) 
 Net::AIM                      AOL Instant Messenger TOC protocol 
 Net::AOLIM                    AOL Instant Messenger OO Interface (TOC) 
-Net::Bind                     Interface to bind daemon files 
+Net::Bind                     Interface to bind daemon related files 
 Net::CDDB                     Interface to the CDDB (CD Database) 
 Net::Cmd                      For command based protocols (FTP, SMTP etc) 
 Net::DHCPClient               Interface to DHCP as a client 
@@ -237,7 +272,6 @@ Net::DNSServer                Secure and Extensible Name Server
 Net::Daemon                   Abstract base class for portable servers 
 Net::Dnet                     DECnet-specific socket usage 
 Net::Domain                   Try to determine TCP domain name of system 
-Net::DummyInetd               A dummy Inetd server 
 Net::FTP                      Interface to File Transfer Protocol 
 Net::Gen                      Generic support for socket usage 
 Net::Gnutella                 Gnutella network (v0.4) interface 
@@ -273,14 +307,14 @@ Net::ParseWhois               Get+Parse "whois" domain data
 Net::Patricia                 Patricia Trie perl module for fast IP addres 
 Net::Pcap                     An interface for LBL's packet capture lib 
 Net::Peep                     Clients for Peep: The Network Auralizer 
-Net::Ping                     TCP and ICMP ping 
+Net::Ping                     TCP, UDP, or ICMP ping 
 Net::Printer                  Direct to lpd printing 
 Net::SCP                      Perl extension for secure copy protocol 
 Net::SFTP                     Secure File Transfer Protocol client 
 Net::SMPP                     Protocol for sending SMS (to GSM or CDMA). 
 Net::SMS                      Send SMS wireless text-messages. 
 Net::SMTP                     Interface to Simple Mail Transfer Protocol 
-Net::SNMP                     Interface to SNMP Protocol (RFC1157) 
+Net::SNMP                     Object oriented interface to SNMP 
 Net::SNPP                     Client interface to SNPP protocol 
 Net::SOCKS                    TCP/IP access through firewalls using SOCKS 
 Net::SSH                      Perl extension for secure shell 
@@ -292,26 +326,40 @@ Net::TCP                      TCP-specific socket usage
 Net::TFTP                     Interface to Trivial File Transfer Protocol 
 Net::Telnet                   Interact with TELNET port or other TCP ports 
 Net::Time                     Obtain time from remote machines 
-Net::Traceroute               Trace routes 
+Net::Traceroute               Trace routes in IPv4, v6 
 Net::UDP                      UDP-specific socket usage 
 Net::VNC                      Interface VNC remote frame buffer protocol 
 Net::Whois                    Get+parse "whois" domain data from InterNIC 
 Net::XWhois                   Whois Client Interface for Perl5. 
-Net::Z3950                    OO interface to the Yaz Z39.50 toolkit 
+Net::Z3950                    OO interface (ZOOM) to Yaz Z39.50 toolkit 
 Net::hostent                  A by-name interface for hosts functions 
 Net::netent                   A by-name interface for networks functions 
 Net::protoent                 A by-name interface for protocols functions 
 Net::servent                  A by-name interface for services functions 
 Net::xAP                      Interface to IMAP,ACAP,ICAP substrate 
+Net::OSCAR                    AOL Instant Messenger OSCAR protocol 
+Net::CIDR                     Manipulate netblock lists in CIDR notation 
+Net::CDDBScan                 String search interface to CDDB datbase 
+Net::FTPServer                Secure, extensible, configurable FTP server 
+Net::Traceroute6              Interface to IPv6 traceroute 
+Net::QMQP                     Interface to Quick Mail Queueing Protocol 
+Net::ICQV5                    Module to send and receive ICQ messages. 
+Net::ICQV5CD                  Crypt/decrypt ICQ protocol V5 packets 
+Net::ICQ2000                  allows send and receive ICQ messages. 
+Net::FreeDB                   OOP interface to the FreeDB database 
+Net::Google                   Simple OOP-ish interface to the Google API 
 Net::Daemon::SSL              SSL extension for Net::Daemon 
 Net::DHCP::Watch              A class for monitoring a remote DHCPD server 
 Net::IMAP::Simple             Only implements the basic IMAP features 
 Net::Ping::External           Cross-platform interface to "ping" utilities 
 Net::SMS::Genie               Send SMS messages using the Genie gateway 
+Net::SMS::Web                 generic module for sending SMS via web 
 Net::SNMP::Interfaces         Obtain IfTable entries via SNMP 
 Net::SSH::Perl                Perl client Interface to SSH 
-Net::Telnet::Cisco            Net::Telnet wrapper for Cisco devices 
+Net::Telnet::Cisco            Automate telnet sessions w/ routers&switches 
 NetAddr::IP                   Manipulation and operations on IP addresses 
+NetAddr::IP::Find             Find IP addresses in plain text 
+DNS::ZoneParse                Parse and manipulate DNS Zone files 
 IPC::Cache                    Shared-memory object cache 
 IPC::ChildSafe                Control child process w/o risk of deadlock 
 IPC::Globalspace              Multi-process shared hash and shared events 
@@ -352,6 +400,7 @@ SNMP::NPAdmin                 Perl API to query printers via SNMP.
 SNMP::BridgeQuery             Query bridge/switch for forwarding database 
 Mon::Client                   Network monitoring client 
 Mon::SNMP                     Network monitoring suite 
+Openview::Message             OO and function access to Openview opcmsg() 
 Parallel::ForkManager         A simple parallel processing fork manager 
 Parallel::Pvm                 Interface to the PVM messaging service 
 ::IOP::IDLtree                IDL to symbol tree translator 
@@ -362,6 +411,7 @@ ControlX10::CM17              inexpensive RF transmit-only X10
 RAS::PortMaster               Interface to Livingston PortMaster 
 RAS::AS5200                   Interface to Cisco AS5200 dialup server 
 RAS::HiPerARC                 Interface to 3Com TotalControl HiPerARC 
+IPTables::IPv4::IPQueue       IPTables userspace packet queuing 
 Math::Amoeba                  Multidimensional Function Minimisation 
 Math::Approx                  Approximate x,y-values by a function 
 Math::BaseCalc                Convert numbers between various bases 
@@ -404,8 +454,16 @@ Math::BigIntFast              Efficient big integer arithmetic (in C)
 Math::QuadTree                Quad Edge data structure for 2D manifolds 
 Math::Fleximal                Arithmetic with any base representation 
 Math::Project                 Compute intersection with upright line 
+Math::VectorReal              Handling 3D Vector Mathematics 
+Math::RPN                     Reverse Polish Notation Expression Evaluator 
+Math::SimpleInterest          Functions for Simple Interest calculations 
+Math::Random                  Random Number Generators 
+Math::Bezier::Convert         convert cubic and quadratic bezier curve 
+Math::BigInt::BitVect         Use Bit::Vector for Math::BigInt routines 
+Math::BigInt::Pari            Use Math::Pari for Math::BigInt routines 
 Math::Business::EMA           An Exponential Moving Average Calculator 
-Math::MatrixReal              Everything you ever wanted to do with Matr. 
+Math::Calc::Units             Unit-aware calculator with readable output 
+Math::MatrixReal              Manipulate NxN matrices 
 Math::MatrixReal::Ext1        Convenience extensions for Math::MatrixReal 
 Math::Polynomial::Solve       Solve polynomials up to degree 4 
 Math::Random::MT              The Mersenne Twister PRNG 
@@ -430,8 +488,11 @@ PDL::NetCDF                   Reads/Writes NetCDF files from/to PDL objs
 PDL::Options                  Provides hash options handling for PDL 
 PDL::PP                       Automatically generate C code for PDL 
 PDL::Slatec                   Interface to slatec (linpack+eispack) lib. 
+PDL::NiceSlice                a nicer slicing syntax for PDL 
+PDL::IO::HDF5                 PDL Interface to the HDF5 Data Format 
 Quantum::Superpositions       QM-like superpositions in Perl 
 Quantum::Entanglement         QM entanglement of variables in perl 
+Quantum::Usrn                 Square root of not. 
 Array::Compare                Class to compare two arrays 
 Array::Heap                   Manipulate array elements as a heap 
 Array::IntSpan                Handling arrays using IntSpan techniques 
@@ -452,8 +513,10 @@ Heap::Elem::StrRev            String element reversed order
 Heap::Elem::Ref               Obj ref heap element container 
 Heap::Elem::RefRev            Obj ref element reversed order 
 Scalar::Util                  Scalar utilities (dualvar reftype etc) 
+Scalar::Properties            run-time properties on scalar variables 
 List::Util                    List utilities (eg min, max, reduce) 
-Bit::Vector                   Fast virtual arbitrary-machineword-size CPU 
+List::Intersperse             Intersperse / unsort / disperse a list 
+Bit::Vector                   Fast virtual arbitrary-size-machineword CPU 
 Set::Bag                      Bag (multiset) class 
 Set::IntRange                 Set of integers (arbitrary intervals, fast) 
 Set::IntSpan                  Set of integers newsrc style '1,5-9,11' etc 
@@ -463,7 +526,7 @@ Set::Scalar                   Set of scalars (inc references)
 Set::Window                   Manages an interval on the integer line 
 Set::CheckList                Maintain a list of "to-do" items 
 Set::Crontab                  Expand crontab(5)-style integer lists 
-Set::Infinite                 Set Theory module for infinite sets 
+Set::Infinite                 Infinite Set Theory module, with Date, Time 
 Graph::Kruskal                Kruskal Algorithm for Minimal Spanning Trees 
 Graph::Reader                 Base class for graph file format reader 
 Graph::Writer                 Base class for graph file format writer 
@@ -473,6 +536,7 @@ Graph::Writer::Dot            Write a Graph in file format used by Dot
 Graph::Writer::VCG            Write a Graph in file format used by VCG 
 Graph::Writer::daVinci        Write a Graph in file format used by daVinci 
 Decision::Markov              Build/evaluate Markov models for decisions 
+Decision::ACL                 Manage and Build Access Control Lists 
 Date::Calc                    Gregorian calendar date calculations 
 Date::Convert                 Conversion between Gregorian, Hebrew, more? 
 Date::CTime                   Updated ctime.pl with mods for timezones 
@@ -482,6 +546,27 @@ Date::Language                Multi-language date support
 Date::Manip                   Complete date/time manipulation package 
 Date::Parse                   ASCII Date parser using regexp's 
 Date::Time                    Lightweight normalised datetime data type 
+Date::ISO                     Calculate dates in the ISO calendar 
+Date::Discordian              Calculate dates in the Discordian calendar 
+Date::DayOfWeek               Calculate day of week for Gregorian dates 
+Date::Easter                  Calculate the date of Easter 
+Date::ICal                    Class for ICal date objects 
+Date::Handler                 Simple Object oriented Date Handling 
+Date::SundayLetter            Calculates the Sunday Letters for a given ye 
+Date::Doomsday                Determine doomsday for a given year 
+Date::Simple                  A simple date object 
+Date::Bahai                   Calculate dates in the Bahai calendar 
+Date::Persian                 Calculate dates in the Persian calendar 
+Date::Japanese                Calculate dates in the Japanese calendar 
+Date::Hindu                   Calculations in the Hindu calendar 
+Date::Passover                Calculate date of Passover or Rosh Hashanah 
+Date::Chinese                 Calculations in the Chinese calendar 
+Date::Ethiopic                Calculations in the Ethiopic calendar 
+Date::Egyptian                Calculations in the Egyptian calendar 
+Date::Gregorian               Gregorian calendar 
+Date::Roman                   Manipulating Roman-style dates 
+Date::Convert::French_Rev     From/to French Revolutionary Calendar 
+Date::Japanese::Era           Year conversion for Japanese Era 
 Date::Tolkien::Shire          J.R.R. Tolkien's hobbit calendar 
 Time::Avail                   Calculate min. remaining in time interval 
 Time::CTime                   Format Times ala ctime(3) with many formats 
@@ -497,7 +582,7 @@ Time::Zone                    Timezone info and translation routines
 Time::gmtime                  A by-name interface for gmtime 
 Time::localtime               A by-name interface for localtime 
 Time::Seconds                 API to convert seconds to other date values 
-Time::Stopwatch               Use tied scalars as timers 
+Time::Stopwatch               Tied variables that count seconds 
 Time::Unix                    Force time() to return secs since UNIX epoch 
 Time::TAI64                   Time manipulation in the TAI64* formats 
 Calendar::CSA                 interface with calenders such as Sun and CDE 
@@ -507,7 +592,7 @@ Tie::AliasHash                Hash with key aliases
 Tie::Array                    Base class for implementing tied arrays 
 Tie::CPHash                   Case preserving but case insensitive hash 
 Tie::Cache                    In memory size limited LRU cache 
-Tie::CharArray                Access Perl scalars as arrays of characters 
+Tie::CharArray                Manipulate strings as arrays of characters 
 Tie::Cycle                    Cycle through a list of values via a scalar. 
 Tie::DBI                      Tie hash to a DBI handle 
 Tie::DB_FileLock              Locking access to Berkeley DB 1.x. 
@@ -515,7 +600,7 @@ Tie::DB_Lock                  Tie DB_File with automatic locking
 Tie::Dir                      Tie hash for reading directories 
 Tie::Discovery                Discover data by caching sub results 
 Tie::DxHash                   Keeps insertion order; allows duplicate keys 
-Tie::File                     Tie hash to files in a directory 
+Tie::File                     Tie array to lines of a file 
 Tie::FileLRUCache             File based persistent LRU cache 
 Tie::Handle                   Base class for implementing tied filehandles 
 Tie::Hash                     Base class for implementing tied hashes 
@@ -545,8 +630,13 @@ Tie::SubstrHash               Very compact hash stored in a string
 Tie::TextDir                  ties a hash to a directory of textfiles 
 Tie::WarnGlobal               Ties variables to functions, warns on use 
 Tie::Watch                    Watch variables, run code when read/written 
+Tie::GHash                    A smaller hash; interface to Gnome glib hash 
+Tie::TransactHash             Allows edits on a hash without disturbing it 
+Tie::Concurrent               Retie a hash when reading/writing. 
 Tie::Scalar::Timeout          Scalar variables that time out 
 Tie::Cache::LRU               A Least-Recently Used cache 
+Tie::Hash::Regex              Look up values in hashes using regexes 
+Tie::Hash::Stack              Maintains an array of hashes like a stack 
 Class::Accessor               Automated accessor generation 
 Class::BlackHole              treat unhandled method calls as no-op 
 Class::Classless              Framework for classless OOP 
@@ -573,16 +663,29 @@ Class::Tree                   C++ class hierarchies & disk directories
 Class::WhiteHole              Treat unhandled method calls as errors 
 Class::Handler                Make Apache-like pseudoclass event handlers 
 Class::Loader                 Load modules & construct objects on demand. 
-Class::Date                   a date and time class for perl 
-Class::ArrayObjects           utility class for array based objects 
-Class::ObjectTemplate::DB     Template base class for DB objects 
+Class::Date                   a full-featured date and time class for perl 
+Class::ArrayObjects           Utility class for array based objects 
+Class::MethodMapper           Abstract Class wrapper for AutoLoader 
+Class::MakeMethods            Generate common types of methods 
+Class::Flyweight              implement the flyweight pattern in OO perl 
+Class::Prototyped             Fast prototype-based OO programming in Perl 
+Class::Holon                  Declare hierarchical classes with one line 
+Class::PseudoHash             Emulates Pseudo-Hash behaviour via overload 
+Class::Tangram                Automated class accessors, Tangram friendly 
+Class::DBI::mysql             Extensions to Class::DBI for MySQL 
+Class::ObjectTemplate::DB     Template base class for database objects 
 Object::Info                  General info about objects (is-a, ...) 
 Object::Transaction           Transactions on serialized HASH files 
+Object::Prototyped            Fast prototype-based OO programming in Perl 
+Object::Realize::Later        Delay construction of real data until used 
 POE::Kernel                   An event queue that dispatches events 
 POE::Session                  state machine running on POE::Kernel events 
 POE::Component::RSS           Event based RSS interface 
 POE::Component::SubWrapper    Event based Module interface 
 POE::Component::UserBase      A component to manage user authentication 
+POE::Component::Pcap          POE Interface to Net::Pcap 
+POE::Component::MPG123        POE Component for accessing and working wit 
+POE::Component::Client::UserAgentLWP and LWP::Parallel based POE component 
 POE::Component::IRC::Onjoin   Provides IRC moved message & onjoin services 
 POE::Component::IRC::SearchEngineSearch Engine for IRC 
 Sort::ByCompatMatrix          Sort objects by attribute compatibility 
@@ -619,6 +722,9 @@ Data::HexDump                 Hexadecial Dumper
 Data::Hexdumper               Display binary data in multiple formats 
 Data::Stash                   Data structures in simple text format 
 Data::BinStruct               OO access to binary data structures 
+Data::MaskPrint               Allows for exact formatting of data 
+Data::Serializer              Generic interface to serializer modules 
+Data::Tabular::Dumper         Automate dumping of data to XML, XSL and CSV 
 Tree::Base                    Defines a basic binary search tree 
 Tree::Fat                     Embeddable F-Tree algorithm suite 
 Tree::Smart                   Splay tree, fastest for commonly accessed ke 
@@ -629,7 +735,7 @@ Tree::Nary                    Perl implementation of N-ary search trees
 Tree::DAG_Node                base class for trees 
 Tree::M                       M-trees provide efficient metric searches 
 DFA::Command                  Discrete Finite Automata command processor 
-DFA::Kleene                   ? Kleene's Algorithm for DFA 
+DFA::Kleene                   Kleene's Algorithm for DFA 
 DFA::Simple                   An "augmented transition network" 
 DBI::Format                   Defined display formats for data from DBI 
 DBIx::Abstract                Wrapper for DBI that generates SQL 
@@ -643,16 +749,19 @@ DBIx::OracleSequence          OO access to Oracle sequences via DBD-Oracle
 DBIx::Password                Abstration layer for database passwords 
 DBIx::Recordset               DB-Abtractionlayer / Access via Arrays/Hashs 
 DBIx::Table                   OO access to DBI database tables 
-DBIx::TableAdapter            An object-relational mapper for DBI tables 
+DBIx::TableAdapter            A object-relational table adapter class 
 DBIx::Tree                    Expand self-referential table into a tree 
 DBIx::XML_RDB                 Creates XML from DBI datasources 
 DBIx::DBSchema                Database-independent schema objects 
 DBIx::XMLMEssage              Exchange of XML messages between DBI sources 
 DBIx::Browse                  A class to browse related tables via CGI/Web 
-DBIx::XHTML_Table             Create XHTML tables from SQL queries 
+DBIx::XHTML_Table             SQL query result set to XHTML table 
 DBIx::SchemaView              Retrieving and drawing of DB schema (Tk) 
 DBIx::SystemCatalog           Accessing system catalog in common databases 
-DBIx::dbMan                   Tk database manipulating tool 
+DBIx::dbMan                   Tk/cmdline database manipulating tool 
+DBIx::Sequence                Database independent ID generation 
+DBIx::TextIndex               Creates fulltext indexes of SQL text columns 
+DBIx::FetchLoop               Fetch with change detection and aggregates 
 DBIx::Lookup::Field           Create a lookup hash from a database table 
 DBD::ASAny                    Adaptive Server Anywhere Driver for DBI 
 DBD::Altera                   Altera SQL Server for DBI - pure Perl code 
@@ -684,6 +793,10 @@ DBD::RDB                      DBI driver for Oracle RDB (OpenVMS only)
 DBD::DtfSQLmac                dtF/SQL (Mac OS edition) driver for DBI 
 DBD::ADO                      Database interface modules of MS ADO for DBI 
 DBD::Excel                    Excel database driver for the DBI module 
+DBD::Recall                   Transparent database replication layer 
+DBD::Sprite                   Sprite driver 
+DBD::PrimeBase                A primeBase database interface 
+DBD::mysqlPP                  Pure Perl MySQL driver for the DBI 
 DDL::Oracle                   Reverse engineers object DDL; also defrags 
 MSSQL::DBlib                  Access MS SQL Server through DB-Library. 
 MSSQL::Sqllib                 High-level interface using MSSQL::DBlib. 
@@ -694,16 +807,19 @@ Sybase::DBlib                 Sybase DBlibrary interface
 Sybase::Simple                Simplified db access using Sybase::CTlib 
 Sybase::Sybperl               sybperl 1.0xx compatibility module 
 Sybase::CTlib                 Sybase CTlibrary interface 
-MLDBM::Sync                   MLDBM wrapper to serialize concurrent access 
+Sybase::Xfer                  Transfer data between sybase servers 
+MySQL::TableInfo              Access to MySQL table's meta data 
+CDB_File::BiIndex             Two directional index based on CDB File 
+CDB_File::Generator           CDB_File::Generator 
+CDB_File::BiIndex::Generator  Creates for CDB_File::BiIndexes 
 DB_File::Lock                 DB_File wrapper with flock-based locking 
 DB_File::DB_Database          DB_File to MultiField Table with Index 
+MLDBM::Sync                   MLDBM wrapper to serialize concurrent access 
 DBM::DBass                    DBM with hashes, locking and XML records 
 AsciiDB::Parse                ? Generic text database parsing 
 AsciiDB::TagFile              Tie class for a simple ASCII database 
 Db::Ctree                     Faircom's CTREE+ database interface 
-Db::Documentum                Documentum EDMS Perl client interface 
 Db::dmObject                  Object-based interface to Documentum EDMS 
-Db::DFC                       OO Interface to Documentum's DFC using JPL 
 DbFramework::Attribute        Relational attribute class 
 DbFramework::DataModel        Relational data model/schema class 
 DbFramework::DataType         Attribute data type class 
@@ -726,8 +842,15 @@ Spreadsheet::Excel            ? Interface to Excel spreadsheets
 Spreadsheet::Lotus            ? Interface to Lotus 1-2-3 spreadsheets 
 Spreadsheet::WriteExcel       Write cross-platform Excel binary file. 
 Spreadsheet::ParseExcel       Get information from Excel file 
-X500::DN                      X500 Distinguished Name parser 
+X500::DN                      Handle X.500 DNs (Distinguished Names) 
+X500::RDN                     handle X.500 Relative Distinguished Names 
+X500::DN::Parser              X500 Distinguished Name parser 
 Splash::DB                    ? 
+PApp::SQL                     easy yet fast and powerful dbi sql wrapper 
+Palm::ThinkDB                 Manipulate ThinkDB TinyBytes for PalmOS 
+Replication::Recall::Client   Recall replication library client interface 
+Replication::Recall::Server   Recall replication library server interface 
+Replication::Recall::DBServer Database replication server using Recall 
 Term::ANSIColor               Color output using ANSI escape sequences 
 Term::ANSIScreen              Terminal control using ANSI escape sequences 
 Term::Cap                     Basic termcap: Tgetent, Tputs, Tgoto 
@@ -744,10 +867,11 @@ Term::Screen                  Basic screen + input class (uses Term::Cap)
 Term::Size                    Simple way to get terminal size 
 Term::TUI                     User interface based on Term::ReadLine 
 Term::VT102                   Emulates a colour VT102 terminal in memory 
+Term::Interact                Get Data Interactively From User 
 Term::ReadLine::Perl          GNU Readline history and completion in Perl 
 Term::ReadLine::Gnu           GNU Readline XS library wrapper 
 Curses::Forms                 Form management for Curses::Widgets 
-Curses::Widgets               Assorted widgets for rapid interfaces 
+Curses::Widgets               Assorted widgets for rapid interface design 
 Emacs::Lisp                   Perl-to-Emacs-Lisp glue 
 Tk::TextANSIColor             use ANSI color codes in Text widget 
 Tk::Autoscroll                Alternative way to scroll 
@@ -804,6 +928,9 @@ Tk::ObjEditorDialog           Tk popup dialog to edit data or objects
 Tk::Pgplot                    Pgplot widget for Tk 
 Tk::PathEntry                 Entry for selecting paths with completion 
 Tk::JComboBox                 another combo box (similar to the java comp) 
+Tk::Workspace                 Persistent Text/Shell/Command Widgets 
+Tk::DateEntry                 Drop down calendar for selecting dates 
+Tk::MListbox                  Multicolumn Listbox. 
 Log::Dispatch::ToTk           Interface class between Log::Dispatch and Tk 
 Log::Dispatch::TkText         Text widget to log Log::Dispatch messages 
 Puppet::Body                  Base class for persistent data 
@@ -827,6 +954,7 @@ X11::Xbae                     Xbae matrix (spreadsheet like) interface
 X11::Xforms                   provides the binding to the xforms library 
 X11::Xpm                      X Pixmap library interface 
 GUI::Guido                    ? bd+O Communicate with objects in a GUI 
+Java::JVM::Classfile          Parse JVM Classfiles 
 Language::Basic               Implementation of BASIC 
 Language::Prolog              An implementation of Prolog 
 Language::PGForth             ? Peter Gallasch's Forth implementation 
@@ -842,6 +970,7 @@ Blatte::Ws                    Internal Blatte whitespace handler
 Blatte::HTML                  Intrinsics for writing HTML in Blatte 
 C::DynaLib                    Allows direct calls to dynamic libraries 
 C::Scan                       Heuristic parse of C files 
+C::Include                    Operate C/C++ structs like perl deep struct 
 FFI::Library                  Access to functions in shared libraries 
 FFI::Win32::Typelib           FFI taking definitions from a type library 
 FFI::Win32::COM               Access to COM using VTBL interface 
@@ -891,6 +1020,12 @@ File::BasicFlock              Simple flock() wrapper
 File::Searcher                Search filetree do search/replace regexes 
 File::VirtualPath             Portable abstraction of a file/dir/url path 
 File::NFSLock                 NFS compatible (safe) locking utility 
+File::CacheDir                auto ttl-based file cleanup without a cron 
+File::Repl                    file/dir structure replication 
+File::Touch                   Update timestamps, create nonexistent files 
+File::Data                    Prepend, insert, append data into files 
+File::Which                   Portable implementation of `which' 
+File::ManualFlock             Manual file locking; flock not required 
 File::Searcher::Interactive   Interactive search do search/replace regexes 
 Dir::Purge                    Delete files in directory based on timestamp 
 Filesys::AFS                  AFS Distributed File System interface 
@@ -903,6 +1038,7 @@ Filesys::dfent                By-name interface
 Filesys::mntent               By-name interface 
 Filesys::statfs               By-name interface 
 Filesys::DiskSpace            Perl df (requires h2ph) 
+Filesys::SmbClientParser      Perl interface to reach Samba ressources 
 LockFile::Lock                Lock handles created by LockFile::* schemes 
 LockFile::Manager             Records locks created by LockFile::* 
 LockFile::Scheme              Abstract superclass for locking modules 
@@ -921,6 +1057,8 @@ String::ShellQuote            Quote string for safe passage through shells
 String::Strip                 xs Module to remove white-space from strings 
 String::Random                Perl module to generate random strings based 
 String::Similarity            Calculate the similarity of two strings 
+String::Buffer                A simple string buffer class. 
+String::Multibyte             manipulate multibyte character strings 
 Text::Abbrev                  Builds hash of all possible abbreviations 
 Text::Bastardize              corrupts text in various ways 
 Text::Bib                     Module moved to Text::Refer 
@@ -943,7 +1081,7 @@ Text::SimpleTemplate          Template for dynamic text generation
 Text::Soundex                 Convert a string to a soundex value 
 Text::Tabs                    Expand and contract tabs ala expand(1) 
 Text::TeX                     TeX typesetting language input parser 
-Text::Templar                 An object-oriented templating system 
+Text::Templar                 An object-oriented text templating system 
 Text::Template                Expand template text with embedded perl 
 Text::TreeFile                Reads tree of strings into a data structure 
 Text::Vpp                     Versatile text pre-processor 
@@ -956,7 +1094,10 @@ Text::xSV                     Read CSV files, handling embedded returns
 Text::Header                  Content-independent RFC 822 header functions 
 Text::BarGraph                Generate text bar graph from data in a hash 
 Text::EtText                  editable-text format for HTML output 
-Text::PDF::API                Allows creation of nifty PDF-files. 
+Text::Quickwrap               Width limiting fast text wrapper 
+Text::Scan                    Fast text search for large number of keys 
+Text::MicroMason              Simplified HTML::Mason Templating 
+Text::ScriptTemplate          Lightweight full-featured template processor 
 Text::Wrap::Hyphenate         ? Like Text::Wrap with ability to hyphenate 
 Text::Balanced                Extract balanced-delimiter substrings 
 Text::Banner                  Resembles UNIX banner command 
@@ -966,16 +1107,17 @@ Text::Trie                    Find common heads and tails from strings
 Text::English                 English language stemming 
 Text::German                  German language stemming 
 Text::Stem                    Porter algorithm for stemming English words 
-Lingua::DetectCharset         ? Heuristics to detect coded character sets 
+Lingua::DetectCharset         Heuristics to detect coded character sets 
 Lingua::Ident                 Statistical language identification 
 Lingua::Ispell                Interface to the Ispell spellchecker 
 Lingua::Stem                  Word stemmer with localization 
 Lingua::Preferred             Pick a language based on user's preferences 
+Lingua::Conjunction           Convert lists into conjunctions 
 Lingua::EN                    ? Namespace for English language 
 Lingua::PT                    Namespace for Portugese language modules 
 Lingua::EN::AddressParse      Manipulate geographical addresses 
-Lingua::EN::Cardinal          ? Convert numbers to words 
-Lingua::EN::Fathom            Readability measurements of English text 
+Lingua::EN::Cardinal          Converts numbers to words 
+Lingua::EN::Fathom            Readability measurements for English text 
 Lingua::EN::Hyphenate         Syllable based hyphenation 
 Lingua::EN::Infinitive        Find infinitive of a conjugated word 
 Lingua::EN::Inflect           English sing->plur, a/an, nums, participles 
@@ -983,12 +1125,18 @@ Lingua::EN::MatchNames        Smart matching for human names
 Lingua::EN::NameCase          Convert NAMES and names to Correct Case 
 Lingua::EN::NameParse         Manipulate persons name 
 Lingua::EN::Nickname          Genealogical nickname matching(Peggy=Midge) 
-Lingua::EN::Ordinal           ? Convert numbers to words 
+Lingua::EN::Ordinal           Converts numbers to words 
 Lingua::EN::Squeeze           Shorten english text for Pagers/GSM phones 
 Lingua::EN::Syllable          ? Estimate syllable count in words 
 Lingua::EN::Numbers::Ordinate go from cardinal (53) to ordinal (53rd) 
+Lingua::JA::Number            Translate numbers into Japanese 
+Lingua::JA::Sort::JIS         compare and sort Japanese character strings 
+Lingua::KR::Hangul            Basis function for Hangul character 
+Lingua::PT::pln               Portuguese Natural Language Processing 
 Lingua::Romana::Perligata     Perl in Latin 
 Lingua::RU::Charset           Detect/Convert russian character sets. 
+Lingua::RU::Antimat           Removes foul language from a Russian string 
+Lingua::ZH::HanConvert        Convert traditional <-> simplified Chinese 
 PostScript::Barcode           Various types of barcodes as PostScript 
 PostScript::Basic             Basic methods for postscript generation 
 PostScript::Document          Generate multi-page PostScript 
@@ -1020,6 +1168,10 @@ Parse::Yapp                   Generates OO LALR parser modules
 Parse::YALALR                 Yet Another LALR parser 
 Parse::Vipar                  Visual LALR parser debugger 
 Parse::Lexer                  Conventional generator of lexical analyzers 
+Parse::ABNF                   Augmented Backus-Naur Form (RFC 2234) 
+Parse::FixedLength            Parse strings containing fixed length fields 
+Parse::Syntax                 Syntax highlighter for programmers' forums 
+Parse::Syslog                 Parse Unix syslog files 
 Search::Dict                  Search a dictionary ordered text file 
 Search::InvertedIndex         Inverted index database support 
 Search::Binary                Generic binary search 
@@ -1029,34 +1181,56 @@ SGML::SPGrove                 Load SGML, XML, and HTML files
 SGML::Entity                  An entity defined in an SGML or XML document 
 XML::AutoWriter               DOCTYPE based XML output 
 XML::CSV                      Transform comma separated values to XML 
+XML::Canonical                Perl wrapper to libxml2 Canonical XML 
 XML::Catalog                  Resolve public identifiers and remap system 
+XML::Checker                  Validates XML against DTD 
+XML::Clean                    XMLized text. 
+XML::Comma                    Toolkit for managing large "doc" collections 
 XML::DOM                      Implements Level 1 of W3's DOM 
+XML::Directory                Returns a content of directory as XML 
 XML::Doctype                  A DTD object class 
 XML::Dumper                   Converts XML from/to Perl code 
 XML::Edifact                  Scripts for translating EDIFACT into XML 
 XML::Element                  XML elements with the same interface as HTML 
 XML::Encoding                 Parses encoding map XML files 
+XML::Excel                    Transform Excel spreadsheet data into XML 
+XML::GDOME                    Interface to Level 2 DOM gdome library 
+XML::GXML                     XML transformation and XML->HTML conv. 
 XML::Generator                Generates XML documents 
 XML::Grove                    Flexible lightweight mid-level XML objects 
+XML::NamespaceSupport         Generic namespace helpers (ported from SAX2) 
 XML::PPD                      PPD file format and XML parsing elements 
 XML::PYX                      XML to PYX generator 
 XML::Parser                   Flexible fast parser with plug-in styles 
 XML::QL                       Implements the XML Query Language 
+XML::RDB                      create,populate, & unpop RDB tables from XML 
+XML::RegExp                   Regular expressions for XML tokens 
 XML::Registry                 Implements a generic XML registry 
 XML::Sablotron                Interface to the Sablotron XSLT processor 
+XML::Simple                   Easy API to maintain XML (esp config files) 
+XML::Stream                   Module for handling XML Streams 
 XML::TreeBuilder              Build a tree of XML::Element objects 
+XML::UM                       Convert UTF-8 strings to any encoding 
 XML::Writer                   Module for writing XML documents 
 XML::XPath                    A set of modules for parsing and evaluating 
 XML::XQL                      Performs XQL queries on XML object trees 
 XML::XSLT                     Process XSL Transformational sheets 
-XML::miniXQL                  Simplistic XQL-like search using streams 
-XML::Excel                    Transform Excel spreadsheet data into XML 
 XML::Xalan                    Interface to Xalan (Apache XSLT processor) 
-XML::GXML                     XML transformation and XML->HTML conv. 
+XML::Xerces                   Perl API to Apache Xerces XML Parser 
+XML::miniXQL                  Simplistic XQL-like search using streams 
+XML::STX                      Pure Perl STX engine 
+XML::GDOME::XSLT              XSLT using libxslt and XML::GDOME 
+XML::Handler::Composer        Another XML printer/writer/generator 
+XML::Handler::PrintEvents     Prints PerlSAX events (for debugging) 
+XML::Filter::DetectWS         PerlSAX filter detects ignorable whitespace 
+XML::Filter::Reindent         Reformats whitespace for pretty printing XML 
+XML::Filter::SAXT             Replicates SAX events to SAX event handlers 
+XML::Writer::String           Module to capture output from XML::Writer 
 XML::SAXDriver::CSV           complements XML::CSV, SAX interface 
 XML::SAXDriver::Excel         complements XML::Excel, SAX interface 
 Frontier::RPC                 Performs Remote Procedure Calls using XML 
 RDF::Service                  RDF API with DBI and other backends 
+RDF::Core                     Basic RDF Tools 
 RTF::Base                     ? Classes for Microsoft Rich Text Format 
 RTF::Generator                Next Generation of RTF::Document 
 RTF::Parser                   ? Base class for parsing RTF files 
@@ -1078,6 +1252,8 @@ PDF::Core                     Core Library for PDF library
 PDF::Parse                    parsing functions for PDF library 
 PDF::Create                   Create PDF files 
 PDF::Labels                   Produce sheets of mailing labels in PDF 
+PDF::PlainLayout              Package providing simple PDF layout elements 
+PCL::Simple                   Create PCL for printing plain text files 
 Getopt::ArgvFile              Take options from files 
 Getopt::Declare               An easy-to-use WYSIWYG command-line parser 
 Getopt::EvaP                  Long/short options, multilevel help 
@@ -1090,6 +1266,8 @@ Getopt::Simple                A simple-to-use interface to Getopt::Long
 Getopt::Std                   Implements basic getopt and getopts 
 Getopt::Tabular               Table-driven argument parsing with help text 
 Getopt::Tiny                  Table of references interface, auto usage() 
+Getopt::GetArgs               Enhanced argument passing to subroutines 
+Getopt::Attribute             Attribute wrapper for Getopt::Long 
 Getargs::Long                 Parses long function args f(-arg => value) 
 App::Config                   Configuration file mgmt 
 App::Manager                  Installing/Managing/Uninstalling Software 
@@ -1099,7 +1277,7 @@ Config::Ini                   Accesses Windows .ini and .reg files
 AppConfig::Std                Provides standard configuration options 
 I18N::Charset                 Character set names and aliases 
 I18N::Collate                 Locale based comparisons 
-I18N::LangTags                compare & extract language tags (RFC1766) 
+I18N::LangTags                compare & extract language tags (RFC3066) 
 I18N::WideMulti               ? Wide and multibyte character string 
 Locale::Country               ISO 3166 two letter country codes 
 Locale::Date                  Month/weekday names in various languages 
@@ -1116,6 +1294,8 @@ Unicode::String               String manipulation for Unicode strings
 Unicode::Map8                 Convert between most 8bit encodings 
 Unicode::Normal               Composition, canonical ordering, blocks 
 Unicode::MapUTF8              Conversions to and from arbitrary charsets 
+Unicode::Japanese             Japanese Charset Converting 
+Unicode::Lite                 Easy conversion between encodings 
 No::Dato                      Norwegian stuff 
 No::KontoNr                   Norwegian stuff 
 No::PersonNr                  Norwegian stuff 
@@ -1138,7 +1318,8 @@ Digest::SHA1                  NIST SHA message digest algorithm
 Digest::HMAC                  HMAC message integrity check 
 Digest::UserSID               Managing session-id's with Digest::SHA1 
 Digest::BubbleBabble          Create bubble-babble fingerprints 
-Crypt::Beowulf                An original, very fast encryption algorithm 
+Digest::MD4                   Perl interface to the RSA Data Security Inc. 
+Digest::Perl::MD5             Pure perl implementation of MD5 
 Crypt::Blowfish               XS-based implementation of Blowfish 
 Crypt::Blowfish_PP            Blowfish encryption algorithm in Pure Perl 
 Crypt::CBC                    Cipherblock chaining for Crypt::DES/IDEA 
@@ -1161,10 +1342,10 @@ Crypt::UnixCrypt              Perl-only implementation of crypt(3)
 Crypt::RandPasswd             Random password generator based on FIPS-181 
 Crypt::Rijndael               AES/Rijndael Encryption Module 
 Crypt::TripleDES              Triple DES encyption. 
-Crypt::PGP5                   An Object Oriented Interface to PGP5. 
-Crypt::PGP6                   An Object Oriented Interface to PGP6. 
-Crypt::PGP                    Unified OO Interface to PGP and GnuPG 
-Crypt::GPG                    An Object Oriented Interface to GnuPG 
+Crypt::PGP5                   Object-oriented interface to PGP v5. 
+Crypt::PGP6                   Object-oriented Interface to PGP v6. 
+Crypt::PGP                    Unified interface to PGP and GnuPG 
+Crypt::GPG                    Object-oriented interface to GnuPG 
 Crypt::ECB                    ECB mode for Crypt::DES, Blowfish, etc. 
 Crypt::CipherSaber            OO module for CS-1 and CS-2 encryption 
 Crypt::PGPSimple              Basic interface to PGP 
@@ -1174,6 +1355,11 @@ Crypt::NULL                   NULL Encryption Algorithm
 Crypt::DH                     Diffie-Hellman key exchange system 
 Crypt::PassGen                Generate pronouncable passwords 
 Crypt::GOST                   GOST encryption algorithm 
+Crypt::SKey                   Perl S/Key calculator 
+Crypt::SmbHash                LM/NT hashing, for Samba's smbpasswd entries 
+Crypt::Twofish2               Crypt::CBC compliant Twofish encryption 
+Crypt::OpenPGP                Pure-Perl OpenPGP implementation 
+Crypt::Rijndael_PP            pure perl implementation of Rijndael (AES) 
 Crypt::OpenSSL::RSA           Interface to OpenSSL RSA methods 
 Crypt::OpenSSL::Random        Interface to OpenSSL PRNG methods 
 Crypt::OpenSSL::BN            Interface to OpenSSL arithmetic 
@@ -1185,6 +1371,12 @@ Authen::PAM                   Interface to PAM library
 Authen::TacacsPlus            Authentication on tacacs+ server 
 Authen::Ticket                Suite consisting of master/client/tools 
 Authen::PIN                   Create and verify strong PIN numbers 
+Authen::ACE4                  Perl extension for accessing a SecurID ACE s 
+Authen::CyrusSASL             Cyrus-sasl pwcheck/saslauthd authentication. 
+Authen::SASL                  SASL authentication framework 
+Authen::Krb5::KDB             Parse Kerberos5 database files 
+Authen::Krb5::Easy            Easy krb5 client interface using krb libs. 
+Authen::SASL::Cyrus           XS Interface to Cyrus SASL 
 RADIUS::Dictionary            Object interface to RADIUS dictionaries 
 RADIUS::Packet                Object interface to RADIUS (rfc2138) packets 
 RADIUS::UserFile              Manipulate a RADIUS users file 
@@ -1196,7 +1388,7 @@ URI::Find                     Find URIs in plain text
 URI::URL                      Uniform Resource Locator objects 
 CGI::Application              Framework for building reusable web-apps 
 CGI::ArgChecker               Consistent, extensible CGI param validation 
-CGI::Authent                  request the HTTP authentification 
+CGI::Authent                  conditionaly send the HTTP authent request 
 CGI::Base                     Complete HTTPD CGI Interface class 
 CGI::BasePlus                 Extra CGI::Base methods (incl file-upload) 
 CGI::CList                    Manages hierarchical collapsible lists 
@@ -1232,7 +1424,11 @@ CGI::State                    CGI params into multi-dimensional hash
 CGI::SSI                      Use SSI from CGI scripts 
 CGI::FormMagick               FormMagick 
 CGI::Test                     Off-line CGI test framework 
-CGI::Portable                 Framework for server-agnostic web apps 
+CGI::Portable                 Framework for server-generic web apps 
+CGI::MxWidget                 CGI widgets for using with CGI::MxScreen 
+CGI::SimpleCache              Simple and fast cache for CGI modules 
+CGI::URI2param                extract query keys and values out of an URI 
+CGI::ManageSession            Base class for managing CGI state 
 HTML::Base                    Object-oriented way to build pages of HTML 
 HTML::CalendarMonth           Calendar Months as easy HTML::Element trees 
 HTML::Demoroniser             Correct moronic and incompatible HTML 
@@ -1264,12 +1460,22 @@ HTML::Template                a simple HTML templating system
 HTML::TokeParser              Alternative HTML::Parser interface 
 HTML::Validator               HTML validator utilizing nsgmls and libwww 
 HTML::Tagset                  data tables useful in parsing HTML 
-HTML::EasyTags                Make proper HTML 4 tags/lists/parts 
-HTML::FormTemplate            Store definition, make persist forms, report 
+HTML::EasyTags                Make well-formed XHTML or HTML 4 tags, lists 
+HTML::FormTemplate            Make data-defined persistant forms, reports 
 HTML::LoL                     Construct HTML from Perl data structures 
 HTML::ActiveLink              Dynamically activate HTML links based on URL 
 HTML::WebMake                 simple web site management system 
 HTML::Lint                    HTML validation module (& script) 
+HTML::Bricks                  Build web sites without writing code or HTML 
+HTML::Index                   Perl extension for indexing HTML files 
+HTML::Macro                   processes HTML templates 
+HTML::Encoding                Determine the encoding of (X)HTML documents 
+HTML::FromText                Mark up text as HTML 
+HTML::Processor               OO Template Processing Library for HTML,Text 
+HTML::ParseBrowser            OO User Agent string parser 
+HTML::CalendarMonthDB         Module Generating Persistant HTML Calendars 
+HTML::GenToc                  generate table of contents for HTML docs 
+HTML::Entities::ImodePictogramencode / decode i-mode pictogram 
 HTML::Widgets::DateEntry      Creates date entry widgets for HTML forms. 
 HTML::Widgets::Menu           Builds an HTML menu 
 HTML::Widgets::Search         Perl module for building searches returning 
@@ -1289,21 +1495,38 @@ HTTP::GHTTP                   Perl interface to the gnome ghttp library
 HTTP::WebTest                 Run tests on remote URLs or local web files 
 HTTP::QuickBase               Wraps the QuickBase HTTP API 
 HTTP::Webdav                  Interface to Neon HTTP and WebDAV library 
+HTTP::Test                    Web application regression testing framework 
+HTTP::Size                    get the download size for web resources 
 HTTP::Request::Common         Functions that generate HTTP::Requests 
 HTTP::Request::Form           Generates HTTP::Request objects out of forms 
-WAP::Wbmp                     Wireless bitmap manipulation module 
-WAP::WML                      Wireless Markup language routines 
-WML::Card                     Builds WML code for different wap browsers 
-WML::Deck                     WML Deck generator 
 HTTPD::Access                 Management of server access control files 
 HTTPD::Authen                 Preform HTTP Basic and Digest Authentication 
 HTTPD::Config                 Management of server configuration files 
 HTTPD::GroupAdmin             Management of server group databases 
 HTTPD::UserAdmin              Management of server user databases 
+HTTPD::Log::Filter            module to filter entries out of an httpd log 
+Jabber::Connection            handle client and component connections 
+Jabber::RPC                   implements Jabber-RPC (XML-RPC over Jabber) 
+Jabber::RPC::HTTPgate         gateway between XML-RPC and Jabber-RPC 
+LWP::Conn                     LWPng stuff 
+LWP::MediaTypes               Media types and mailcap processing 
+LWP::Parallel                 Allows parallel http, https and ftp access 
+LWP::Protocol                 LWP support for URL schemes (http, file etc) 
+LWP::RobotUA                  A UserAgent for robot applications 
+LWP::Simple                   Simple procedural interface to libwww-perl 
+LWP::UA                       LWPng stuff 
+LWP::UserAgent                A WWW UserAgent class 
+WAP::Wbmp                     Wireless bitmap manipulation module 
+WAP::WML                      Wireless Markup language routines 
+WML::Card                     Builds WML code for different wap browsers 
+WML::Deck                     WML Deck generator 
 WWW::BBSWatch                 email WWW bulletin board postings 
 WWW::Robot                    Web traversal engine for robots & agents 
 WWW::RobotRules               Parse /robots.txt file 
 WWW::Search                   Front-end to Web search engines 
+WWW::Link                     Link Testing related modules 
+WWW::Cache::Google            URI class for Google cache 
+WWW::Mail::Hotmail            Get mail from an HTTPMail server ie. Hotmail 
 WWW::Search::AlltheWeb        Class for searching AlltheWeb 
 WWW::Search::Go               Backend class for searching with go.com 
 WWW::Search::FirstGov         Backend class for searching FirstGov.gov 
@@ -1313,14 +1536,8 @@ WWW::Search::HotBot           search on www.hotbot.com
 WWW::Search::Lycos            search on www.lycos.com 
 WWW::Search::Magellan         search on Magellan 
 WWW::Search::Yahoo            search various flavors of www.yahoo.com 
-LWP::Conn                     LWPng stuff 
-LWP::MediaTypes               Media types and mailcap processing 
-LWP::Parallel                 Allows parallel http, https and ftp access 
-LWP::Protocol                 LWP support for URL schemes (http, file etc) 
-LWP::RobotUA                  A UserAgent for robot applications 
-LWP::Simple                   Simple procedural interface to libwww-perl 
-LWP::UA                       LWPng stuff 
-LWP::UserAgent                A WWW UserAgent class 
+WWW::Search::RpmFind          Search interface for rpmfind.net 
+WWW::Search::Google           search Google via SOAP 
 MIME::Base64                  Encode/decode Base 64 (RFC 2045) 
 MIME::QuotedPrint             Encode/decode Quoted-Printable 
 MIME::Decoder                 OO interface for decoding MIME messages 
@@ -1330,10 +1547,10 @@ MIME::IO                      DEPRECATED: now part of IO::
 MIME::Latin1                  DEPRECATED and removed 
 MIME::Lite                    Single module for composing simple MIME msgs 
 MIME::Parser                  Parses streams to create MIME entities 
-MIME::Types                   Returns the MIME type for a filename/suffix 
+MIME::Types                   Information and processing MIME types 
 MIME::Words                   Encode/decode RFC1522-escaped header strings 
 MIME::Lite::HTML              Provide routine to transform HTML to MIME 
-Apache::ASP                   Implement Active Server Pages 
+Apache::ASP                   Active Server Pages for Apache and mod_perl 
 Apache::AdBanner              Ad banner server 
 Apache::AddrMunge             Munge email addresses in webpages 
 Apache::Archive               Make linked contents pages of .tar(.gz) 
@@ -1347,7 +1564,7 @@ Apache::Dispatch              Call PerlHandlers as CGI scripts
 Apache::Embperl               Embed Perl in HTML 
 Apache::EmbperlChain          Feed handler output to Embperl 
 Apache::FTP                   ? Full-fledged FTP proxy 
-Apache::Filter                OutputChain like functionality 
+Apache::Filter                Lets handlers filter each others' output 
 Apache::Forward               OutputChain like functionality 
 Apache::Gateway               A multiplexing gateway 
 Apache::GzipChain             Compress files on the fly 
@@ -1359,7 +1576,7 @@ Apache::NNTPGateway           A Web based NNTP (usenet) interface
 Apache::NavBar                Navigation bar generator 
 Apache::OWA                   Runs Oracle PL/SQL Web Toolkit apps 
 Apache::OutputChain           Chain output of stacked handlers 
-Apache::PageKit               Application framework w/ HTML::Template 
+Apache::PageKit               MVC Web App framework, based on mod_perl/XML 
 Apache::PassFile              Send file via OutputChain 
 Apache::PerlRun               Run unaltered CGI scripts 
 Apache::PrettyPerl            Syntax highlighting for Perl files 
@@ -1383,8 +1600,21 @@ Apache::WebSQL                Adaptation of Sybase's WebSQL
 Apache::ePerl                 Fast emulated Embedded Perl (ePerl) 
 Apache::iNcom                 An e-commerce framework 
 Apache::CVS                   Apache PerlContentHandler for CVS 
-Apache::Motd                  Provides motd functionality to a webserver 
+Apache::Motd                  Add motd functionality to Apache webserver 
 Apache::DnsZone               Webbased dns-zone manager for BIND 
+Apache::AuthExpire            PerlAuthenHandler to implement time limits 
+Apache::OpenIndex             Apache modperl module to manage site files 
+Apache::SharedMem             Share data between Apache children prcesses 
+Apache::AntiSpam              AntiSpam filter for web pages 
+Apache::Storage               Storing data in Apache. 
+Apache::Clickable             Make URLs and Emails in HTML clickable 
+Apache::RedirectDBI           Redirect to different directories by DBI 
+Apache::AuthCookieLDAP        An AuthCookie module backed by LDAP database 
+Apache::ParseControl          control the parsing of server-side scripts 
+Apache::HTMLView              A mod_perl module for compiled HTMLView page 
+Apache::ACEProxy              IDN compatible ACE proxy server 
+Apache::LogIgnore             mod_perl log handler to ignore connections 
+Apache::UploadMeter           Provides GUI progress meter for HTTP uploads 
 Apache::ASP::Lite             Lightweight IIS emulation under Apache 
 Apache::RequestNotes          Pass cookie & form data around pnotes 
 Apache::AuthAny               Authenticate with any username/password 
@@ -1417,7 +1647,6 @@ Apache::RoleAuthz             ? Role-based authorization
 Apache::AccessLimitNum        Limit user access by number of requests 
 Apache::BlockAgent            Block access from certain agents 
 Apache::DayLimit              Limit access based on day of week 
-Apache::IPThrottle            Limit bandwith consumption by IP 
 Apache::RobotLimit            Limit access of robots 
 Apache::SpeedLimit            Control client request rate 
 Apache::MIME                  Perl implementation of mod_mime 
@@ -1439,7 +1668,7 @@ Apache::TransLDAP             Translate URIs to LDAP queries
 Apache::RefererBlock          Block based on MIME type + Referer 
 Apache::Timeit                Benchmark PerlHandlers 
 Apache::Usertrack             Perl version of mod_usertrack 
-Apache::DBILogConfig          Custom format logging via DBI 
+Apache::DBILogConfig          Custom format logging via DBI for mod_perl 
 Apache::DBILogger             Logging via DBI 
 Apache::DumpHeaders           Watch HTTP transaction via headers 
 Apache::LogMail               Log certain requests via email 
@@ -1509,6 +1738,8 @@ Apache::SIG                   Signal handlers for mod_perl
 Apache::State                 ? Powerful state engine 
 Apache::TempFile              Manage temporary files 
 Apache::Upload                File upload class 
+Apache::Cookie::Encrypted     Cookies with value auto encrypted/decrypted 
+Apache::MP3::Skin             Enables use of skin files with Apache::MP3 
 Netscape::Bookmarks           Netscape bookmarks 
 Netscape::Cache               Access Netscape cache files 
 Netscape::History             Class for accessing Netscape history DB 
@@ -1518,6 +1749,10 @@ HyperWave::CSP                Interface to HyperWave's HCI protocol
 WebFS::FileCopy               Get, put, copy, delete files located by URL 
 WebCache::Digest              Internet Cache Protocol (RFCs 2186 and 2187) 
 FCGI::ProcManager             A FastCGI process manager 
+Slash::OurNet                 Slash WebBBS module via OurNet connectivity 
+Slash::Syndicate              Advanced Kibo plugin for Slash 
+OurNet::OSD                   Remote deployment and signature verification 
+OurNet::BBSApp::Sync          Synchronize OurNet::BBS Objects 
 Event::Stats                  Collects statistics for Event 
 Event::tcp                    TCP session layer library 
 Event::Functions              Utility functions for initializing servers 
@@ -1572,6 +1807,9 @@ Convert::Morse                Convert from/to Morse code (.--. . .-. .-..)
 Convert::RACE                 Conversion between Unicode and RACE 
 Convert::Base                 Convert integers to/from arbitrary bases. 
 Convert::PEM                  Read/write encrypted ASN.1 PEM files 
+Convert::Base32               Encoding and decoding of base32 strings 
+Convert::DUDE                 Conversion between Unicode and DUDE 
+Convert::TNEF                 Perl module to read TNEF files 
 Convert::ASCII::Armor         Convert binary octets to ASCII armoured msg. 
 AppleII::Disk                 Read/write Apple II disk image files 
 AppleII::ProDOS               Manipulate files on ProDOS disk images 
@@ -1579,13 +1817,17 @@ AppleII::DOS33                ? Manipulate files on DOS 3.3 disk images
 AppleII::Pascal               ? Manipulate files on Apple Pascal disk images 
 Archive::Tar                  Read, write and manipulate tar files 
 Archive::Zip                  Provides an interface to ZIP archive files 
+Archive::Parity               makes parity file, recover files 
+Archive::Ar                   Read, write and manipulate ar archives 
 Cache::Cache                  Generic cache interface and implementations 
+Cache::Mmap                   Shared data cache using memory mapped files 
 RPM::Constants                Constants for RPM package management 
 RPM::Database                 DB interface for RPM package management 
 RPM::Headers                  Headers for RPM package management 
 GD::Barcode                   Create barcode image with GD 
 GD::Graph                     Create charts using GD 
 GD::Text                      Classes for string handling with GD 
+SVG::Graph                    Series of Modules to produce SVG graphs 
 VRML::VRML1                   VRML methods with the VRML 1.0 standard 
 VRML::VRML2                   VRML methods with the VRML 2.0 standard 
 VRML::Color                   color functions and X11 color names 
@@ -1595,6 +1837,8 @@ Graphics::Libplot             Binding for C libplotter plotting library
 Graphics::Plotter             Binding for C++ libplotter plotting library 
 Graphics::Simple              Simple drawing primitives 
 Graphics::Turtle              ? Turtle graphics package 
+Graphics::ColorNames          provides RGB values for standard color names 
+Graphics::MNG                 Perl I/F to the MNG library from Gerard Juyn 
 Image::Colorimetry            transform colors between colorspaces 
 Image::DS9                    Interface to SAO DS9 image & analysis prog 
 Image::Grab                   Grabbing images off the Internet 
@@ -1605,6 +1849,9 @@ Image::Info                   Extract meta information from image files
 Image::Imlib2                 Interface to the Imlib2 image library 
 Image::DeAnim                 Create static GIF file from animated GIF 
 Image::IPTCInfo               Extracts IPTC meta-info from images 
+Image::Timeline               Create GIF or PNG timelines 
+Image::WorldMap               Create graphical world maps of data 
+Image::GD::Thumbnail          Produce thumbnail imag with the GD library 
 Chart::Base                   Business chart widget collection 
 Chart::Gdchart                based on Bruce V's C gdchart distribution 
 Chart::Graph                  front-end to gnuplot and XRT 
@@ -1622,7 +1869,7 @@ Mail::Address                 Manipulation of electronic mail addresses
 Mail::Alias                   Manipulate E-mail aliases and alias files 
 Mail::Audit                   Toolkit for constructing mail filters 
 Mail::Cap                     Parse mailcap files as specified in RFC 1524 
-Mail::CheckUser               Checking email addresses for validness 
+Mail::CheckUser               Check email addresses for validity 
 Mail::Ezmlm                   Object methods for ezmlm mailing lists 
 Mail::Field                   Base class for handling mail header fields 
 Mail::Folder                  Base-class for mail folder handling 
@@ -1639,32 +1886,38 @@ Mail::Sendmail                Simple platform independent mailer
 Mail::UCEResponder            ? Spamfilter 
 Mail::Util                    Mail utilities (for by some Mail::* modules) 
 Mail::IMAPClient              An IMAP Client API 
-Mail::VersionTracker          Parses newsletters from versiontracker.com 
-Mail::Box                     Mail-folder manager, fast MUA backend 
+Mail::Box                     Mail folder manager and MUA backend 
 Mail::Vmailmgr                A Perl module to use Vmailmgr daemon 
 Mail::ListDetector            Mailing list message detector 
 Mail::PerlTix                 Mail ticketing and transaction system 
+Mail::MboxParser              Read-only access to UNIX-mailboxes 
+Mail::SpamAssassin            Mail::Audit spam detector plugin 
+Mail::Verify                  Attempt to verify an email address 
+Mail::QmailRemote             send email using qmail-remote directly. 
+Mail::Sieve                   RFC 3028 Mail Filtering 
 Mail::Field::Received         Parses Received headers as per RFC822 
 News::Article                 Module for handling Usenet articles 
 News::Gateway                 Mail/news gatewaying, moderation support 
 News::NNTPClient              Support for clients of NNTP servers 
 News::Newsrc                  Manage .newsrc files 
 News::Scan                    Gathers and reports newsgroup statistics 
+News::GnusFilter              gnus MIME-hook filter to score usenet posts 
 NNTP::Server                  ? Support for an NNTP server 
 NNML::Server                  An simple RFC 977 NNTP server 
 IMAP::Admin                   IMAP Administration 
 Sendmail::Milter              Write mail filters for sendmail in Perl 
+Sendmail::AccessDB            Interface to sendmail's access.db 
+Religion::Package             Prepend package name to warn/die messages 
 Hook::PrePostCall             Add actions before and after a routine 
 Memoize::ExpireLRU            Provide LRU Expiration for Memoize 
+Strict::Prototype             Allows for inter-prototype variable def's 
 IO::AtomicFile                Write a file which is updated atomically 
 IO::Dir                       Directory handle objects and methods 
 IO::File                      Methods for disk file based i/o handles 
 IO::Handle                    Base class for input/output handles 
 IO::Lines                     I/O handle to read/write to array of lines 
 IO::Pipe                      Methods for pipe handles 
-IO::Ptty                      Pseudo terminal interface functions 
-IO::Pty                       Methods for pseudo-terminal allocation etc 
-IO::React                     OO Expect-like communication 
+IO::React                     Object oriented expect-like communication 
 IO::STREAMS                   Methods for System V style STREAMS control 
 IO::Scalar                    I/O handle to read/write to a string 
 IO::ScalarArray               I/O handle to read/write to array of scalars 
@@ -1679,11 +1932,12 @@ IO::Zlib                      IO:: style interface to Compress::Zlib
 IO::Default                   Replace select() with $DEFOUT, $DEFERR, $DEF 
 IO::String                    IO::File interface for in-core strings 
 IO::Stringy                   I/O on in-core objects like strings/arrays 
+IO::Filter                    Generic filters for IO handles. 
+IO::Tty                       provide an interface to TTYs and PTYs 
 Log::Agent                    A general logging framework 
 Log::Delayed                  Delay error exits until multiple errors seen 
 Log::Detect                   Detect and show error regexps in logfiles 
 Log::Dispatch                 Log messages to multiple outputs 
-Log::Loggerx                  Simple file logging interface 
 Log::Topics                   Control flow of topic based logging messages 
 Log::TraceMessages            Print developer's trace messages 
 Log::Agent::Logger            Application-level logging interface 
@@ -1700,7 +1954,7 @@ Win32::Event                  Use Win32 event objects for IPC
 Win32::EventLog               Interface to Win32 EventLog functions 
 Win32::FUtils                 Implements missing File Utility functions 
 Win32::FileOp                 file operations + fancy dialogs, INI files 
-Win32::FileType               modify Win32 fily type mapping 
+Win32::FileType               modify Win32 file type mapping 
 Win32::GD                     Win32 port of the GD extension (gif module) 
 Win32::GUI                    Perl-Win32 Graphical User Interface 
 Win32::GuiTest                SendKeys, FindWindowLike and more 
@@ -1724,6 +1978,10 @@ Win32::WinError               Interface to Win32 WinError functions
 Win32::SystemInfo             Memory and Processor information 
 Win32::API                    Perl Win32 API Import Facility 
 Win32::DriveInfo              drives on Win32 systems 
+Win32::Msiexec                a MSIEXEC.EXE like frontend to manage *.msi 
+Win32::SharedFileOpen         Interface to Win32 sopen + fsopen functions 
+Win32::Guidgen                Generates GUIDs 
+Win32::EventLog::Carp         For carping in the Windows NT Event Log 
 Win32::MultiMedia::Mci        An interface for the MCI system on Win32 
 Win32::MultiMedia::Joystick   An interface for game controllers on Win32 
 Win32::OLE::OPC               Ole for Process Control Server Interface 
@@ -1736,6 +1994,7 @@ Win32API::Window              Win32 Windowing functions/constants
 AI::Fuzzy                     Perl extension for Fuzzy Logic 
 AI::jNeural                   Jet's Neural Architecture 
 AI::NeuralNet                 A simple back-prop neural net 
+AI::Categorize                Automatically classify documents by content 
 AI::NeuralNet::SOM            Kohonen Self-Organizing Maps 
 AI::Gene::Sequence            Base class of mutation methods +gene grammar 
 AI::Gene::Simple              Base class of mutation methods 
@@ -1747,11 +2006,16 @@ Astro::SunTime                Calculate sun rise/set times
 Astro::Time                   General time conversions for Astronomers 
 Astro::Sunrise                Computes sunrise/sunset for a given day 
 Astro::SkyCat                 Interface to ESO SkyCat library 
+Astro::Cosmology              Calculate cosmological distance/volume/times 
+Astro::SkyCoords              celestial coordinates in astronomy 
+Astro::FITS::Header           interface to FITS headers 
 Audio::CD                     Perl interface to libcdaudio (cd + cddb) 
 Audio::Sox                    ? sox sound library as one or more modules 
 Audio::SoundFile              Sound I/O based on libsndfile, PDL interface 
 Audio::Mixer                  Sound mixer control using ioctl 
 Audio::OSS                    Interface to Open Sound System audio devices 
+Audio::Ecasound               ecasound bindings, sound and fx processing 
+Audio::MPEG                   Encode/Decode MPEG Audio (MP3) 
 Audio::Play::MPG123           Generic frontend for MPG123 
 MPEG::ID3v1Tag                ID3v1 MP3 Tag Reader/Writer 
 MPEG::ID3v2Tag                OO, extensible ID3 v2.3 tagging module 
@@ -1759,6 +2023,7 @@ MPEG::MP3Play                 Create your own MPEG audio player
 MP3::Info                     Manipulate / fetch info from MP3 audio files 
 MP3::Tag                      Tag - Module for reading tags of mp3 files 
 MP3::Daemon                   A daemon that possesses mpg123 
+MP3::M3U                      M3u playlist parser 
 BarCode::UPC                  ? Produce PostScript UPC barcodes 
 Bio::Genex                    Store, manipulate gene expression data 
 Business::Cashcow             Internet payment with the Danish PBS 
@@ -1771,13 +2036,16 @@ Business::US_Amort            US-style loan amortization calculations
 Chemistry::Elements           Working with Chemical Elements 
 Chemistry::Isotopes           extends Elements to deal with isotopes 
 Cisco::Conf                   Cisco router administratian via TFTP 
+CompBio::Simple               Less restrictive interface to CompBio.pm 
 Embedix::DB                   persistence for ECDs 
+Embedix::ECD                  represent ECD files as perl objects 
 FAQ::OMatic                   A CGI-based FAQ/help database maintainer 
 Festival::Client              Communicate with a Festival server 
 Festival::Client::Async       Festival client blocking or non-blocking 
 Finance::Quote                Fetch stock prices over the Internet 
 Finance::QuoteHist            Historical stock quotes from multiple sites 
 Finance::Streamer             interface to Datek Streamer 
+Finance::NikkeiQuote          get stock information from Nikkei 
 Games::Cards                  Tools to write card games in Perl 
 Games::Dice                   Simulates rolling dice 
 Games::Hex                    Object library for hexmap-based board games 
@@ -1789,6 +2057,8 @@ Games::AIBots                 An improved clone of A.I.Wars in Perl
 Geo::METAR                    Process Aviation Weather (METAR) Data 
 Geo::Storm_Tracker            ? Retrieves tropical storm advisories 
 Geo::WeatherNOAA              Current/forecast weather from NOAA 
+Geo::IP                       Look up country by IP Address 
+GSM::SMS                      Modules for sending and receiving SMS 
 HP200LX::DB                   Handle HP 200LX palmtop computer database 
 HP200LX::DBgui                Tk base GUI for HP 200LX db files 
 LEGO::RCX                     Control you Lego Mindstorm RCX computer 
@@ -1818,6 +2088,35 @@ GISI::MIFMID                  MapInfo MIFMID file format driver
 Resolute::RAPS                Interface to Resolute Software's RAPS 
 AltaVista::SearchSDK          Perl Wrapper for AltaVista SDK functionality 
 AltaVista::PerlSDK            Utilize the AltaVista Search Developer's Kit 
+Db::Documentum                Documentum EDMS API - Perl interface 
+Db::DFC                       OO Interface to Documentum's DFC using JPL 
+Db::Mediasurface              API and I/O modules for Mediasurface CMS 
 Real::Encode                  ? Interface to Progressive Network's RealAudio 
+NexTrieve::Collection         logical collection object 
+NexTrieve::Daemon             logical daemon object 
+NexTrieve::DBI                convert DBI statement to document sequence 
+NexTrieve::Docseq             logical document sequence for indexing 
+NexTrieve::Document           logical document object 
+NexTrieve::Hitlist            result of query from search engine 
+NexTrieve::HTML               convert HTML-file(s) to logical document(s) 
+NexTrieve::Index              create an index out of a docseq 
+NexTrieve::Mbox               convert Unix mailbox to document sequence 
+NexTrieve::Message            convert Mail::Message object(s) to document( 
+NexTrieve::MIME               MIME-type conversions for documents 
+NexTrieve::Overview           an overview of NexTrieve and its Perl suppor 
+NexTrieve::PDF                Convert PDF-file(s) to logical document(s) 
+NexTrieve::Query              Create/adapt query 
+NexTrieve::Querylog           Turn query log into Query objects 
+NexTrieve::Replay             Turn Querylog into Hitlist for a Search 
+NexTrieve::Resource           Create/adapt resource-file 
+NexTrieve::RFC822             Convert message(s) to logical document(s) 
+NexTrieve::Search             Logical search engine object 
+NexTrieve::Targz              Maintain a Targz message archive 
+NexTrieve::UTF8               Change encoding to UTF-8 
+NexTrieve::Collection::Index  logical index object within a collection 
+NexTrieve::Hitlist::Hit       a single hit of the result 
+Messaging::TIBCO              Interfacing to TIBCO/Rendezvous(RVRD) 
 P4::Client                    Client interface to the Perforce SCM system 
+SAP::Rfc                      SAP RFC Interface 
 Bundle::Bugzilla              Bundle to load modules for Bugzilla 
+Bundle::Perl6                 A bundle to install Perl6-related modules 
