@@ -1,6 +1,35 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/07/20
+
+   Mail::Message::DB 
+	comment on analyze()
+
+	restrict demand copying only for the previous messages before
+	the current one.
+
+   Mail::Message::ToHTML 
+   Mail::Message::Thread 
+	moved analyzer dispatcher to ::Thread module to use analyzer
+	independetly.
+
+   Mail::Message::Thread 
+	analyze() accpets $id if specified.
+	
+   FML::Process::{Distribute,Utils} 
+	separete thread_db_args() routine prepares thread information.
+	pass $aritcle_id to analyze().
+
+2003/07/19
+
+   Mail::Message
+	merge udb branch to switch to the new thread engine
+	fixed to co-work with udb well.
+
+   variables
+	defined $udb_base_dir
+
 2003/07/03
 
    Mail::Message::ToHTML 
@@ -4984,4 +5013,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.150 2003/07/03 04:27:31 fukachan Exp $
+$FML: CHANGES.txt,v 1.151 2003/07/13 13:53:53 fukachan Exp $
