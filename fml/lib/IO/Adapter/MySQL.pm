@@ -148,58 +148,6 @@ sub load_schema
 }
 
 
-=head2 C<getline()>
-
-return the next address.
-
-=head2 C<get_next_value()>
-
-same as C<getline()> now.
-
-=cut
-
-
-sub _schema_configure
-{
-    my ($self, $query_type) = @_;
-    my $query  = $self->{ _query }->{ $query_type };
-
-    if (ref($query) eq 'CODE') {
-	$query = &$query();
-    }
-    else {
-	$query;
-    }
-}
-
-
-sub getline
-{
-    my ($self, $args) = @_;
-    $self->get_next_value($args);
-}
-
-
-sub get_next_value
-{
-    my ($self, $args) = @_;
-
-    unless ($self->{ _res }) {
-	my $query = $self->_schema_configure('get_next_value');
-	$self->execute({ query => $query });
-    }
-
-    if ($self->{ _res }) {
-	my @row = $self->{ _res }->fetchrow_array;
-	join(" ", @row);
-    }
-    else {
-	$self->error_reason( $DBI::errstr );
-	undef;
-    }
-}
-
-
 =head2 C<execute($args)>
 
 execute sql query.
@@ -258,24 +206,77 @@ sub error
 }
 
 
+=head2 C<getline()>
+
+return the next address.
+
+=head2 C<get_next_value()>
+
+same as C<getline()> now.
+
+=cut
+
+
+sub _schema_configure
+{
+    my ($self, $query_type) = @_;
+    my $query  = $self->{ _query }->{ $query_type };
+
+    if (ref($query) eq 'CODE') {
+	$query = &$query();
+    }
+    else {
+	$query;
+    }
+}
+
+
+sub getline
+{
+    my ($self, $args) = @_;
+    $self->get_next_value($args);
+}
+
+
+sub get_next_value
+{
+    my ($self, $args) = @_;
+
+    unless ($self->{ _res }) {
+	my $query = $self->_schema_configure('get_next_value');
+	$self->execute({ query => $query });
+    }
+
+    if ($self->{ _res }) {
+	my @row = $self->{ _res }->fetchrow_array;
+	join(" ", @row);
+    }
+    else {
+	$self->error_reason( $DBI::errstr );
+	undef;
+    }
+}
+
+
 =head2 C<add()>
 
 =cut
 
+
 sub add
 {
-    my ($self, $args) = @_;
+    my ($self, $addr) = @_;
     my $query = $self->_schema_configure('add');
-    $query = sprintf($query, $args);
+    $query = sprintf($query, $addr);
     $self->execute({ query => $query });
 }
 
 
 sub delete
 {
-    my ($self, $args) = @_;
+    my ($self, $addr) = @_;
     my $query = $self->_schema_configure('delete');
-    $query = sprintf($query, $args);
+    $query = sprintf($query, $addr);
     $self->execute({ query => $query });
 }
 
