@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Procmail.pm,v 1.8 2003/02/14 01:27:16 fukachan Exp $
+# $FML: Procmail.pm,v 1.9 2003/02/20 04:32:50 fukachan Exp $
 #
 
 package FML::MTAControl::Procmail;
@@ -235,12 +235,9 @@ sub procmail_setup
 }
 
 
-#
-# XXX-TODO: how to handle procmail virtual maps ?
-#
-
-
-# Descriptions: rewrite $params
+# Descriptions: dummy. 
+#               This module do not need to handle virtual issue since
+#               ml_name@ml_domain is written in procmailrc.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update $params
@@ -248,11 +245,12 @@ sub procmail_setup
 sub _procmail_rewrite_virtual_params
 {
     my ($self, $curproc, $params, $optargs) = @_;
-
 }
 
 
-# Descriptions: install procmail virtual_maps
+# Descriptions: dummy. 
+#               This module do not need to handle virtual issue since
+#               ml_name@ml_domain is written in procmailrc.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: install/udpate procmail virtual_maps and the .db
@@ -260,12 +258,12 @@ sub _procmail_rewrite_virtual_params
 sub procmail_install_virtual_map
 {
     my ($self, $curproc, $params, $optargs) = @_;
-
 }
 
 
-
-# Descriptions: remove procmail virtual_maps
+# Descriptions: dummy. 
+#               This module do not need to handle virtual issue since
+#               ml_name@ml_domain is written in procmailrc.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: remove/udpate procmail virtual_maps and the .db
@@ -273,11 +271,12 @@ sub procmail_install_virtual_map
 sub procmail_remove_virtual_map
 {
     my ($self, $curproc, $params, $optargs) = @_;
-
 }
 
 
-# Descriptions: regenerate virtual.db
+# Descriptions: dummy. 
+#               This module do not need to handle virtual issue since
+#               ml_name@ml_domain is written in procmailrc.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
@@ -285,7 +284,6 @@ sub procmail_remove_virtual_map
 sub procmail_update_virtual_map
 {
     my ($self, $curproc, $params, $optargs) = @_;
-
 }
 
 
