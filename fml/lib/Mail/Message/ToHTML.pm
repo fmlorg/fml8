@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.5 2002/04/06 02:02:19 fukachan Exp $
+# $FML: ToHTML.pm,v 1.6 2002/04/07 05:35:10 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -19,7 +19,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.5 2002/04/06 02:02:19 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.6 2002/04/07 05:35:10 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -150,7 +150,8 @@ sub htmlfy_rfc822_message
     #    $id  = article id
     #   $src  = source file
     #   $dst  = destination file (target html)
-    my ($id, $src, $dst) = $self->_init_htmlfy_rfc822_message($args);
+    my ($id, $src, $dst)   = $self->_init_htmlfy_rfc822_message($args);
+    $self->{ _current_id } = $id;
 
     # target html exists already.
     if (-f $dst) {
@@ -331,7 +332,9 @@ sub html_filename
 
     if (defined($id) && ($id > 0)) {
 	if ($use_subdir eq 'yes') {
-	    return $self->_html_file_subdir_name($id);
+	    my $r = $self->_html_file_subdir_name($id);
+	    # print STDERR "xdebug: $id => $r\n"; 
+	    return $r;
 	}
 	else {
 	    return "msg${id}.html";
@@ -354,14 +357,26 @@ sub _html_file_subdir_name
     my $subdir        = '';
     my $subdir_style  = $self->{ _subdir_style };
     my $month_db      = $self->{ _db }->{ _month };
+    my $subdir_db     = $self->{ _db }->{ _subdir };
+    my $curid         = $self->{ _current_id };
 
     if ($subdir_style eq 'yyyymm') {
-	$subdir = $self->_msg_time('yyyymm');
+	if (defined $subdir_db->{ $id } && $subdir_db->{ $id }) {
+	    $subdir = $subdir_db->{ $id };
+	}
+	else {
+	    $subdir = $self->_msg_time('yyyymm');
 
-	use File::Spec;
-	my $xsubdir = File::Spec->catfile($html_base_dir, $subdir);
-	unless (-d $xsubdir) {
-	    mkdir($xsubdir, 0755);
+	    if ($curid == $id) {
+		$subdir_db->{ $id } = $subdir; # cache subdir info into DB.
+		# print STDERR "xdebug: \$subdir_db->{ $id } = $subdir\n";
+	    }
+	    
+	    use File::Spec;
+	    my $xsubdir = File::Spec->catfile($html_base_dir, $subdir);
+	    unless (-d $xsubdir) {
+		mkdir($xsubdir, 0755);
+	    }
 	}
     }
 
@@ -1529,6 +1544,7 @@ my @kind_of_databases = qw(from date subject message_id references
 			   filename filepath
 			   unixtime month monthly_idlist
 			   thread_list
+			   subdir
 			   who info);
 
 
