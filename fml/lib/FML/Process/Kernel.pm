@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.230 2004/05/25 04:02:07 fukachan Exp $
+# $FML: Kernel.pm,v 1.231 2004/06/09 14:57:27 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -643,7 +643,11 @@ sub _commit_message_id_cache_update_transaction
     my $header    = $curproc->incoming_message_header();
 
     # XXX-TODO: more granuar
-    $header->update_message_id_cache($config);
+    if (defined $header) {
+	if ($header->can('update_message_id_cache')) {
+	    $header->update_message_id_cache($config);
+	}
+    }
 }
 
 
