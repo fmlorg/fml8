@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.9 2001/10/21 03:07:52 fukachan Exp $
+# $FML: Lite.pm,v 1.10 2001/10/21 03:26:32 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -1241,27 +1241,71 @@ update index.html.
 #    Arguments: $self $args
 # Side Effects: 
 # Return Value: none
+sub _print_index_begin
+{
+    my ($self, $args) = @_;
+    my $old   = $args->{ old };
+    my $new   = $args->{ new };
+    my $title = $args->{ title };
+    my $code  = _charset_to_code($self->{ _charset });
+
+    use FileHandle;
+    my $wh = new FileHandle "> $new";
+    $args->{ wh } = $wh;
+
+    $self->html_begin($wh, { title => $title });
+
+    _print($wh, _format_index_navigator(), $code);
+    $self->mhl_separator($wh);
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub _print_index_end
+{
+    my ($self, $args) = @_;
+    my $wh    = $args->{ wh };
+    my $old   = $args->{ old };
+    my $new   = $args->{ new };
+    my $title = $args->{ title };
+    my $code  = $args->{ code };
+
+    $self->mhl_separator($wh);
+    _print($wh, _format_index_navigator(), $code);
+    $self->html_end($wh);
+
+    unless (rename($new, $old)) {
+	croak("rename($new, $old) fail\n");
+    }
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub update_id_index
 {
     my ($self, $args) = @_;
     my $html_base_dir = $self->{ _html_base_directory };
-    my $title = defined($args->{ title }) ? $args->{ title } : "ID Index";
-    my $old   = "$html_base_dir/index.html";
-    my $new   = "$html_base_dir/index.html.new.$$";
-    my $code  = _charset_to_code($self->{ _charset });
+    my $code          = _charset_to_code($self->{ _charset });
+    my $htmlinfo = {
+	title => defined($args->{ title }) ? $args->{ title } : "ID Index",
+	old   => "$html_base_dir/index.html",
+	new   => "$html_base_dir/index.html.new.$$",
+	code  => $code,
+    };
 
     if ($self->is_ignore($args->{id})) {
 	warn("not update index.html around $args->{id}") if $debug;
 	return undef;
     }
 
-    use FileHandle;
-    my $wh = new FileHandle "> $new";
-
-    $self->html_begin($wh, { title => $title });
-
-    _print($wh, _format_index_navigator(), $code);
-    $self->mhl_separator($wh);
+    $self->_print_index_begin( $htmlinfo );
+    my $wh = $htmlinfo->{ wh };
 
     $self->_db_open();
     my $db = $self->{ _db };
@@ -1274,14 +1318,7 @@ sub update_id_index
     $self->_print_end_of_ul($wh, $db, $code);
     
     $self->_db_close();
-
-    $self->mhl_separator($wh);
-    _print($wh, _format_index_navigator(), $code);
-    $self->html_end($wh);
-
-    unless (rename($new, $old)) {
-	croak("rename($new, $old) fail\n");
-    }
+    $self->_print_index_end( $htmlinfo );
 }
 
 
@@ -1300,22 +1337,21 @@ sub update_thread_index
 {
     my ($self, $args) = @_;
     my $html_base_dir = $self->{ _html_base_directory };
-    my $title = defined($args->{ title }) ? $args->{ title } : "Thread Index";
-    my $old   = "$html_base_dir/thread.html";
-    my $new   = "$html_base_dir/thread.html.new.$$";
-    my $code  = _charset_to_code($self->{ _charset });
+    my $code          = _charset_to_code($self->{ _charset });
+    my $htmlinfo = {
+	title => defined($args->{ title }) ? $args->{ title } : "Thread Index",
+	old   => "$html_base_dir/thread.html",
+	new   => "$html_base_dir/thread.html.new.$$",
+	code  => $code,
+    };
 
     if ($self->is_ignore($args->{id})) {
 	warn("not update thread.html around $args->{id}") if $debug;
 	return undef;
     }
 
-    use FileHandle;
-    my $wh = new FileHandle "> $new";
-
-    $self->html_begin($wh, { title => $title });
-    _print($wh, _format_index_navigator(), $code);
-    $self->mhl_separator($wh);
+    $self->_print_index_begin( $htmlinfo );
+    my $wh = $htmlinfo->{ wh };
 
     $self->_db_open();
     my $db = $self->{ _db };
@@ -1334,14 +1370,7 @@ sub update_thread_index
     $self->_print_end_of_ul($wh, $db, $code);
 
     $self->_db_close();
-
-    $self->mhl_separator($wh);
-    _print($wh, _format_index_navigator(), $code);
-    $self->html_end($wh);
-
-    unless (rename($new, $old)) {
-	croak("rename($new, $old) fail\n");
-    }
+    $self->_print_index_end( $htmlinfo );
 }
 
 
