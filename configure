@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# From configure.in Revision: 1.8 
+# From configure.in Revision: 1.9 
 
 # Guess values for system-dependent variables and create Makefiles.
 # Generated automatically using autoconf version 2.13 
@@ -610,7 +610,7 @@ else
 fi
 
 
-echo "$ac_t""checking whether optional useful commands are available" 1>&6
+echo "$ac_t"""checking whether optional useful commands are available or not"" 1>&6
 
 # Extract the first word of "cksum", so it can be a program name with args.
 set dummy cksum; ac_word=$2
@@ -1771,3 +1771,23 @@ test "$no_create" = yes || ${CONFIG_SHELL-/bin/sh} $CONFIG_STATUS || exit 1
 if test -f fml/libexec/loader ; then
    chmod 755 fml/libexec/loader
 fi
+
+. config.sh
+echo ""
+echo "fml has been configure with the following options:"
+echo ""
+echo "                 prefix: $prefix"
+echo "            exec_prefix: $exec_prefix"
+echo "                 bindir: $bindir"
+echo "                sbindir: $sbindir"
+echo "                lib_dir: $libdir"
+echo "            libexec_dir: $libexecdir"
+echo "                 mandir: $mandir"
+echo ""
+echo "      fml process owner: $fml_owner"
+echo "      fml process group: $fml_group"
+echo "             fmlconfdir: $fmlconfdir"
+echo "             mlspooldir: $mlspooldir"
+echo ""
+echo "Now you must run \"make install\"."
+echo ""

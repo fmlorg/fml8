@@ -1,5 +1,5 @@
 dnl
-dnl $FML: configure.in,v 1.8 2001/12/11 12:13:48 fukachan Exp $
+dnl $FML: configure.in,v 1.9 2001/12/11 13:12:17 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -20,7 +20,7 @@ if test ! -n "$have_perl" ; then
 fi
 AC_PATH_PROG(PERL,   perl)
 
-AC_MSG_RESULT([checking whether optional useful commands are available])
+AC_MSG_RESULT("checking whether optional useful commands are available or not")
 
 AC_PATH_PROG(CKSUM,    cksum)
 AC_PATH_PROG(MD5,      md5)
@@ -98,3 +98,23 @@ AC_OUTPUT(\
 if test -f fml/libexec/loader ; then
    chmod 755 fml/libexec/loader
 fi
+
+
+echo ""
+echo "fml has been configure with the following options:"
+echo ""
+echo "                 prefix: $prefix"
+echo "            exec_prefix: $exec_prefix"
+echo "                 bindir: $bindir"
+echo "                sbindir: $sbindir"
+echo "                lib_dir: $libdir"
+echo "            libexec_dir: $libexecdir"
+echo "                 mandir: $mandir"
+echo ""
+echo "      fml process owner: $fml_owner"
+echo "      fml process group: $fml_group"
+echo "             fmlconfdir: $fmlconfdir"
+echo "             mlspooldir: $mlspooldir"
+echo ""
+echo "Now you must run \"make install\"."
+echo ""
