@@ -8,7 +8,7 @@
 # $FML$
 #
 
-package FML::Base::File;
+package FML::File;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $ErrorString);
 use Carp;
@@ -20,25 +20,12 @@ require Exporter;
 
 =head1 NAME
 
-FML::Base::Errors.pm - error handling utilities
+FML::File.pm - error handling utilities
 
 =head1 SYNOPSIS
 
-	package Something;
-	use FML::Base::Errors qw(error_reason error error_reset);
-
-	sub xxx
-	{
-		if something errors ...
-		$self->error_reason( error reason );
-	}
-
-When you use Something module,
-
-	use Something;
-	$obj = new Something;
-	unless ($obj->error) { $obj->do_somting( ...); };
-
+   use FML::File qw(mkdiehier);
+   mkdirhier($dir, $mode);
 
 =head1 DESCRIPTION
 
@@ -55,20 +42,22 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Base::Errors.pm appeared in fml5.
+FML::File.pm appeared in fml5.
 
 =cut
 
 sub error       { return $ErrorString;}
+
 sub error_reset { undef $ErrorString;}
 
 sub mkdirhier
 {
     my ($dir, $mode) = @_;
 
-    eval q{ 
+    # XXX $mode (e.g. 0755) should be a numeric not a string
+    eval qq{ 
 	use File::Path;
-	mkpath($dir, 0, $mode);
+	mkpath(\$dir, 0, $mode);
     };
     $ErrorString = $@;
 }
@@ -76,7 +65,7 @@ sub mkdirhier
 
 sub touch
 {
-
+    my ($file, $mode) = @_;
 }
 
 

@@ -13,7 +13,8 @@ package FML::Ticket::System;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Base::Errors qw(error_reason error error_reset);
+use FML::Errors qw(error_reason error error_reset);
+use FML::Log qw(Log);
 
 require Exporter;
 @ISA = qw(Exporter);
@@ -48,14 +49,11 @@ sub update_ticket_trace_cache
     my $db_dir    = $config->{ ticket_db_dir };
     my $ml_name   = $config->{ ml_name };
     my $cachefile = $db_dir. $ml_name;
-    my $umask     = $config->{ default_umask } || 0022;
-
-    printf "%o\n", (0777 & $umask);
 
     unless (-d $db_dir) {
-	use FML::Base::File qw(mkdirhier);
-	mkdirhier($db_dir, 0755);
-	$self->error_reason( FML::Base::File->error() );
+	use FML::File qw(mkdirhier);
+	mkdirhier($db_dir, $config->{ default_directory_mode });
+	$self->error_reason( FML::File->error() );
 	return;
     }
 
@@ -74,11 +72,7 @@ sub update_ticket_trace_cache
 sub AUTOLOAD
 {
     my ($self) = @_;
-
-    eval q{
-	use FML::Log;
-	Log("FYI: unknown method $AUTOLOAD is called");
-    };
+    Log("FYI: unknown method $AUTOLOAD is called");
 }
 
 

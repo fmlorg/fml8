@@ -8,7 +8,7 @@
 # $FML$
 #
 
-package FML::Base::Errors;
+package FML::Errors;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
@@ -19,12 +19,12 @@ require Exporter;
 
 =head1 NAME
 
-FML::Base::Errors.pm - error handling utilities
+FML::Errors.pm - error handling utilities
 
 =head1 SYNOPSIS
 
 	package Something;
-	use FML::Base::Errors qw(error_reason error error_reset);
+	use FML::Errors qw(error_reason error error_reset);
 
 	sub xxx
 	{
@@ -54,7 +54,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Base::Errors.pm appeared in fml5.
+FML::Errors.pm appeared in fml5.
 
 =cut
 
