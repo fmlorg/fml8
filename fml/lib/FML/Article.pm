@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.54 2003/03/16 08:38:58 fukachan Exp $
+# $FML: Article.pm,v 1.55 2003/03/16 10:44:40 fukachan Exp $
 #
 
 package FML::Article;
@@ -138,7 +138,7 @@ sub spool_in
     my $use_subdir = $config->{ spool_type } eq 'subdir' ? 1 : 0;
     my $channel    = $self->get_lock_channel_name();
 
-    if ( $config->yes( 'use_spool' ) ) {
+    if ($config->yes( 'use_spool' )) {
 	$curproc->lock($channel);
 
 	unless (-d $spool_dir) {
@@ -147,6 +147,14 @@ sub spool_in
 
 	# translate the article path e.g. spool/1900,  spool/2/1900
 	my $file = $self->filepath($id);
+
+	# verify and create subdir if not found before spool in.
+	if ($use_subdir) {
+	    my $dir = $self->subdirpath($id);
+	    unless (-d $dir) {
+		$curproc->mkdir($dir, "mode=private");
+	    }
+	}
 
 	unless (-f $file) {
 	    use FileHandle;
@@ -230,12 +238,6 @@ sub _filepath
     } ;
     my $file = $spool->filepath($args);
     my $dir  = $spool->dirpath($args); # spool/ or spool/$subdir/
-
-    if ($use_subdir) {
-	unless (-d $dir) {
-	    $curproc->mkdir($dir, "mode=private");
-	}
-    }
 
     return ($file, $dir);
 }
