@@ -36,9 +36,12 @@ sub prepare
     ;
 }
 
+
 sub run
 {
     my ($curproc, $args) = @_;
+
+    # use Data::Dumper; print Dumper( $args ); sleep 30;
 
     $curproc->lock();
     {
@@ -53,15 +56,7 @@ sub _ticket_list_up
     my ($curproc, $args) = @_;    
     my $config = $curproc->{ config };
     my $model  = $config->{ ticket_model };
-    my $pkg    = "FML::Ticket::Model::";
-
-    if ($model eq 'toymodel') {
-	$pkg .= $model;
-    }
-    else {
-	Log("ticket: unknown model");
-	return;
-    }
+    my $pkg    = "FML::Ticket::Model::". $model;
 
     # fake use() to do "use FML::Ticket::$model;"
     eval qq{ require $pkg; $pkg->import();};
