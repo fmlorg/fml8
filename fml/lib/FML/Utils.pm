@@ -16,7 +16,7 @@ use Carp;
 
 require Exporter;
 @ISA       = qw(Exporter);
-@EXPORT_OK = qw(mkdirhier touch search_program);
+@EXPORT_OK = qw(mkdirhier touch search_program copy);
 
 =head1 NAME
 
@@ -139,6 +139,23 @@ sub search_program
     }
 
     return wantarray ? () : undef;
+}
+
+
+
+# wrappers for delegation :-)
+sub copy
+{
+    my ($src, $dst) = @_;
+    my $pkg = 'IO::File::Atomic';
+
+    eval qq{ require $pkg; $pkg->import();};
+    unless ($@) {
+	$pkg->new->copy($src, $dst);
+    }
+    else {
+	undef;
+    }
 }
 
 

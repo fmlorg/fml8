@@ -9,12 +9,18 @@
 # $FML$
 #
 
-use IO::File::Atomic;
+unless (@ARGV) {
+    use FML::Utils qw(copy);
+    copy("main.cf", "/tmp/main.cf");
+}
+else {
+    my ($src, $dst) = @ARGV;
 
-($src, $dst) = @ARGV;
-print "IO::File::Atomic->copy($src, $dst);\n";
-print "sleep 3;\n";
-sleep 3;
-my $status = IO::File::Atomic->copy($src, $dst) || die("fail to copy");
+    use IO::File::Atomic;
+    print "IO::File::Atomic->copy($src, $dst);\n";
+    print "sleep 3;\n";
+    sleep 3;
+    my $status = IO::File::Atomic->copy($src, $dst) || die("fail to copy");
+}
 
 exit 0;
