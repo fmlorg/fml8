@@ -8,25 +8,25 @@
 # $FML$
 #
 
-package FML::Ticket::Model::minimal_by_db;
+package FML::Ticket::Model::minimal_states;
 
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
 use FML::Log qw(Log LogWarn LogError);
-use FML::Ticket::System;
 
-require Exporter;
-@ISA = qw(FML::Ticket::System Exporter);
+use FML::Ticket::System;
+@ISA = qw(FML::Ticket::System);
+
 
 =head1 NAME
 
-FML::Ticket::Model::minimal_by_db - a ticket system minimal_by_db
+FML::Ticket::Model::minimal_states - a ticket system minimal_states
 
 =head1 SYNOPSIS
 
-   use FML::Ticket::Model::minimal_by_db;
-   my $ticket = FML::Ticket::Model::minimal_by_db->new($curproc, $args);
+   use FML::Ticket::Model::minimal_states;
+   my $ticket = FML::Ticket::Model::minimal_states->new($curproc, $args);
    if (defined $ticket) {
       $ticket->assign($curproc, $args);
       $ticket->update_status($curproc, $args);
@@ -48,8 +48,8 @@ status.
                 |
                 A 
         -----------------
-       |        |        |
-    minimal_by_db  model2    ....
+       |                 |
+    minimal_states     model2    ....
 
 =head1 METHODS
 
@@ -89,6 +89,13 @@ sub new
 
 
 sub DESTROY {}
+
+
+sub mode
+{
+    my ($self, $args) = @_;
+    $self->{ _mode } = $args->{ mode } || 'text';
+}
 
 
 =head2 C<assign($curproc, $args)>
@@ -319,7 +326,7 @@ sub _update_index_db
 
 open DB.
 It uses tie() to bind a hash to a DB file.
-Our minimal_by_db uses several DB files for
+Our minimal_states uses several DB files for
 C<%ticket_id>,
 C<%date>,
 C<%status>,
@@ -484,31 +491,57 @@ It is also larger if $status is C<open>.
 
 sub show_summary
 {
+    my ($self, $curproc, $args, $optargs) = @_;
+    my $method = 'show_summary_in_'. $self->{ _mode };
+    $self->$method($curproc, $args, $optargs);
+}
+
+
+sub show_summary_in_text
+{
     my ($self, $curproc, $args) = @_;
     my ($tid, $status, $ticket_id);
 
-    # rh: Reference to Hash table, which is tied to db_dir/*db's
+    # rh: ticket id list, which is ARRAY REFERENCE tied to db_dir/*db's
     $ticket_id = $self->get_id_list($curproc, $args);
 
     # self->{ _hash_table } is tied to DB's.
     $self->open_db($curproc, $args);
 
     if (@$ticket_id) {
-	# age HASH TABLE
-	my ($rh_age, $rh_cost) = 
-	    $self->_calculate_age($curproc, $args, $ticket_id);
-
-	# sort the ticket output order and print it out
-	$self->_sort_ticket_id($curproc, $ticket_id, $rh_cost);
-	$self->_print_ticket_summary($curproc, $args, $ticket_id, $rh_age);
+	# sort the ticket output order it out by cost
+	# and print the ticket summary in that order.
+	$self->sort($curproc, $args, $ticket_id);
+	$self->_print_ticket_summary($curproc, $args, $ticket_id);
 
 	# show short summary for each article
-	$self->_print_article_summary($curproc, $args, $ticket_id, 
-				      $rh_age, $rh_cost);
+	$self->_print_article_summary($curproc, $args, $ticket_id);
     }
 
     # self->{ _hash_table } is untied from DB's.
     $self->close_db($curproc, $args);
+}
+
+
+sub show_summary_in_html
+{
+    my ($self, $curproc, $args, $optargs) = @_;
+    my $rfd    = $optargs->{ rfd };
+    my $wfd    = $optargs->{ wfd };
+
+    my $ml_name = $curproc->{ config }->{ ml_name };
+    print "<HR>\n";
+    print "<P> $ml_name ML brief summary <BR>\n";
+    print "<PRE>\n";
+
+    my $argv     = $args->{ ARGV };
+    $argv->[ 0 ] = 'list';
+    $self->show_summary_in_text($curproc, $args);
+
+    close($wfd);
+    while (<$rfd>) { print STDOUT "  $_";}
+
+    print "</PRE>\n\n";
 }
 
 
@@ -539,9 +572,22 @@ sub get_id_list
 }
 
 
+sub sort
+{
+    my ($self, $curproc, $args, $ticket_id) = @_;
+
+    # get age HASH TABLE
+    my ($age, $cost) = $self->_calculate_age($curproc, $args, $ticket_id);
+    $self->{ _age }  = $age;
+    $self->{ _cost } = $cost;
+
+    $self->_sort_ticket_id($curproc, $args, $ticket_id, $cost);
+}
+
+
 sub _sort_ticket_id
 {
-    my ($self, $curproc, $ticket_id, $cost) = @_;
+    my ($self, $curproc, $args, $ticket_id, $cost) = @_;
 
     @$ticket_id = sort { 
 	$cost->{$b} cmp $cost->{$a};
@@ -554,15 +600,15 @@ sub _calculate_age
     my ($self, $curproc, $args, $ticket_id) = @_;
     my (%age, %cost) = ();
     my $now   = time; # save the current UTC for convenience
-    my $rh    = $self->{ _hash_table };
+    my $rh    = $self->{ _hash_table } || {};
     my $day   = 24*3600;
 
     # $age hash referehence = { $ticket_id => $age };
-    my (@aid, $last, $age, $date, $status);
-    for my $tid (sort @$ticket_id) {
+    my (@aid, $last, $age, $date, $status, $tid) = ();
+    for $tid (sort @$ticket_id) {
 	# $last: get the latest one of article_id's
 	(@aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
-	$last  = $aid[ $#aid ];
+	$last  = $aid[ $#aid ] || 0;
 
 	# how long this ticket is not concerned ?
 	$age = sprintf("%2.1f%s", ($now - $rh->{ _date }->{ $last })/$day);
@@ -578,8 +624,8 @@ sub _calculate_age
 
 sub _print_ticket_summary
 {
-    my ($self, $curproc, $args, $ticket_id, $rh_age) = @_;
-
+    my ($self, $curproc, $args, $ticket_id) = @_;
+    my $rh_age = $self->{ _age } || {};
     my $fd     = $self->{ _fd } || \*STDOUT;
     my $rh     = $self->{ _hash_table };
     my $format = "%10s  %5s %6s  %-20s  %s\n";
@@ -622,14 +668,16 @@ sub _cost_to_indicator
 
 sub _print_article_summary
 {
-    my ($self, $curproc, $args, $ticket_id, $age, $cost) = @_;
-    my $fd     = $self->{ _fd } || \*STDOUT;
-    my $rh     = $self->{ _hash_table };
-    my ($aid, @aid);
-    my $spool_dir  = $curproc->{ config }->{ spool_dir };
+    my ($self, $curproc, $args, $ticket_id) = @_;
+    my $age  = $self->{ _age }  || {};
+    my $cost = $self->{ _cost } || {};
+    my $fd   = $self->{ _fd }   || \*STDOUT;
+    my $rh   = $self->{ _hash_table };
 
     print $fd "\n\"!\" mark: stalled? please check and reply it.\n";
 
+    my ($aid, @aid);
+    my $spool_dir  = $curproc->{ config }->{ spool_dir };
     for my $tid (@$ticket_id) {
 	my $how_bad = _cost_to_indicator( $cost->{ $tid } );
 	printf $fd "\n%6s  %-10s  %s\n", $how_bad, $tid;
@@ -709,6 +757,48 @@ sub _header_summary
 }
 
 
+
+sub cgi_top_menu
+{
+    my ($self, $curproc, $args) = @_;
+    my $config = $curproc->{ config };
+    my $action = '/cgi-bin/fmlticket.cgi';
+
+    use CGI qw/:standard/;
+    print start_form(-action=>$action,
+		     -target=>'ResultsWindow'),
+    "mailing list: ", textfield('ml_name'),p,
+    "action: ", checkbox_group(-name=>'action',
+			       -values=>['list', 'close'],
+			       -defaults=>['list']),
+    p,
+    submit,
+    end_form;
+}
+
+
+=head2 C<html_show($ticket_id)>
+
+This shows summary on C<$ticket_id> in HTML language.
+It is used in C<FML::CGI::TicketSystem>.
+
+=cut
+
+
+sub html_show
+{
+    my ($self, $curproc, $args, $id) = @_;
+    my $config  = $curproc->{ config };
+    my $ml_name = $config->{ ml_name };
+    my $action  = $config->{ ticket_cgi_base_url } || "/cgi-bin/fmlticket.cgi";
+    $action  = "${action}?ml_name=${ml_name}&action=close";
+
+    printf "%s", $id;
+    print "<A HREF=\"$action\" TARGET=\"$id\">close</A>\n";
+    print "<BR>\n";
+}
+
+
 =head1 AUTHOR
 
 Ken'ichi Fukamachi
@@ -722,7 +812,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Ticket::Model::minimal_by_db appeared in fml5 mailing list driver package.
+FML::Ticket::Model::minimal_states appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
