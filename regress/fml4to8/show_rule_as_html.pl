@@ -1,9 +1,11 @@
 #!/usr/bin/env perl
 #
-# $FML: show_rule_as_html.pl,v 1.1 2004/06/24 11:39:05 fukachan Exp $
+# $FML: show_rule_as_html.pl,v 1.2 2004/12/09 11:35:12 fukachan Exp $
 #
 
-print "<TABLE BORDER=4>\n";
+my $raw_mode = $ENV{ 'RAW_MODE' } ? 1 : 0;
+
+print "<TABLE BORDER=4>\n" unless $raw_mode;
 while (<>) {
     chomp;
 
@@ -33,24 +35,37 @@ while (<>) {
     elsif (/^\t(.*)/) {
 	my $x = _P($1);
 	if (defined $var_value) {
-	    printf "\t<TR>\n\t<TD>%s <TD>%s\n", "$var_name ($var_value)", $x;
+	    if ($raw_mode) {
+		printf "%-40s  %s\n", "$var_name ($var_value)", $x;
+	    }
+	    else {
+		printf "\t<TR>\n\t<TD>%s <TD>%s\n", 
+		"$var_name ($var_value)", $x;
+	    }
 	}
 	else {
-	    printf "\t<TR>\n\t<TD>%s <TD>%s\n", $var_name, $x;
+	    if ($raw_mode) {
+		printf "%-40s  %s\n", $var_name, $x;
+	    }
+	    else {
+		printf "\t<TR>\n\t<TD>%s <TD>%s\n", $var_name, $x;
+	    }
 	}
     }
 }
 
-print "</TABLE>\n";
+print "</TABLE>\n" unless $raw_mode;
 
 exit 0;
 
 
 sub _P
 {
-    my ($x)= @_;
+    my ($x) = @_;
     $x =~ s/\s*$//;
     $x =~ s/^\s*//;
+
+    if ($raw_mode) { return $x;}
 
     #       .fml8_default           fml8 のデフォルトと同じ、気にするな
     #       .not_yet_implemented    まだ、実装されてない
@@ -89,6 +104,7 @@ sub _P
     }
     else {
 	if ($x =~ /^\s*\./) {
+		print STDERR "INPUT{$x}\n";
 	    use Carp;
 	    croak($x);
 	}
