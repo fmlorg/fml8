@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.52 2003/11/30 09:59:18 fukachan Exp $
+# $FML: Credential.pm,v 1.53 2004/01/02 14:42:45 fukachan Exp $
 #
 
 package FML::Credential;
@@ -29,12 +29,13 @@ FML::Credential - functions to authenticate the mail sender
    use FML::Credential;
 
    # get the mail sender
-   my $sender = FML::Credential->sender;
+   my $cred   = new FML::Credential;
+   my $sender = $cred->sender;
 
 =head1 DESCRIPTION
 
-a collection of utilitity functions to authenticate the sender who
-kicks off this mail.
+a collection of utilitity functions to authenticate the sender of the
+message which kicks off this proces
 
 =head2 User credential information
 
@@ -307,7 +308,7 @@ sub is_recipient
 }
 
 
-# Descriptions: sender of the current process is an ML member or not.
+# Descriptions: compare the specified address included in the specified maps.
 #    Arguments: OBJ($self) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
@@ -328,6 +329,7 @@ sub _is_member
     my $address     = $optargs->{ address };
 
     if (defined $address) {
+	# XXX-TODO: used ?
 	($user, $domain) = split(/\@/, $address);
     }
     else {
@@ -337,6 +339,7 @@ sub _is_member
   MAP:
     for my $map (@$member_maps) {
 	if (defined $map) {
+	    # XXX-TODO: has_ is o.k.? hmmm, find_address_in_map() ?
 	    $status = $self->has_address_in_map($map, $config, $address);
 	    last MAP if $status;
 	}
@@ -380,7 +383,7 @@ sub has_address_in_map
 
     # 2. try each address in the result matches $address to check.
     if (defined $addrs) {
-      LOOP:
+      ADDR:
 	for my $r (@$addrs) {
 	    # 3. is_same_address() conceals matching algorithm details.
 	    print STDERR "is_same_address($r, $address)\n" if $debug;
@@ -388,7 +391,7 @@ sub has_address_in_map
 		print STDERR "\tmatch!\n" if $debug;
 		$status = 1; # found
 		$self->_save_address($r);
-		last LOOP;
+		last ADDR;
 	    }
 	    else {
 		print STDERR "\tnot match!\n" if $debug;
@@ -407,16 +410,16 @@ sub has_address_in_map
 
 =head2 matched_address()
 
-return the latest matched address.
+return the last matched address.
 
 =cut
 
 
-# XXX-TODO: matched_address() returns the latest one but
+# XXX-TODO: matched_address() returns the last matched one but
 # XXX-TODO: wrong if x@A.B and x@A.b matches.
 
 
-# Descriptions: return the latest matched address.
+# Descriptions: return the last matched address.
 #               used together with has_address_in_map().
 #    Arguments: OBJ($self)
 # Side Effects: none
@@ -559,6 +562,7 @@ sub get_compare_level
    XXX NUKE THIS ?
 
 =cut
+
 
 # XXX-TODO: remove get() and set(), which are not used ?
 
