@@ -1,0 +1,101 @@
+			FML::Encode クラス(?)
+
+
+[リファレンス]
+	fml-help ML's Count: 02012, 02013, 02016 など
+
+
+[使い方の例]
+
+	use FML::Encode;
+	my $encode  = new FML::Encode;
+	my $str_euc = $encode->convert( $s, 'euc-jp' );
+	my $str_euc = $encode->convert( $s, 'euc-jp', 'iso-2022-jp' );
+
+	my $encode  = new FML::Encode;
+	my $status  = $encode->convert_str_ref( \$s, 'euc-jp' );
+	my $status  = $encode->convert_str_ref( \$s, 'euc-jp', 'jis' );
+
+	my $fp = sub { ... };
+	$encode->chcodedo( $fp, $oout, $in );
+
+   * 4.0 互換
+	ues FML::Encode qw(STR2EUC);
+	my $euc_s = STR2EUC( $s );
+
+
+[仕様]
+
+本体は _convert_str_ref() にまとめる。
+
+
+   sub convert # 引数が STR
+   {
+	my ($self, $str, $out_code, $in_code) = @_;
+	_convert_str_ref(\$str, $out, $in);
+
+        return $str;
+   }
+
+
+   sub convert_str_ref # 引数が STR_REF
+   {
+	my ($self, $str, $out, $in) = @_;
+	_convert_str_ref($str, $out, $in);
+   }
+
+
+   sub _convert_str_ref # 引数が STR_REF
+   {
+        my ($str, $out, $in) = @_;
+
+        # 1. 推測
+        もし $in がない → 推測 → 失敗 → 0 をかえす？ 
+
+        # 2. 変換をトライ
+        if ($in がわかった or $in が指定された) {
+                $out へ変換
+                jcode, Jcode, Encode は perl バージョンによって
+                よろしく変換をがんばる
+                return 1 ; ＃成功
+        }
+        else { # principle of least surprise ?
+                なにもしない＃ str はそのまま返す
+        }
+
+        return 0 ; # 失敗
+   }
+
+
+   sub base64 {}
+   sub quoted_printable {}
+
+	があるといいかな〜
+
+	$x = $encode->base64($s);
+
+
+[互換性というか便宜上、STR2XXX() も準備する]
+
+   STR2EUC(  $str, [$icode] )
+   STR2JIS(  $str, [$icode] )
+   STR2SJIS( $str, [$icode] )
+
+は convert_str_ref を wrap する。
+
+
+[特別な関数]
+
+euc にしてごにょごにょ する典型的なコードは全部 wrap する。
+
+
+# change code and do $proc
+sub chcodedo
+{
+   my ($self, $proc, $s, $out_code, $in_code) = @_;
+
+   my $conv_status = convert_str_ref($s, $EUC_JP, $in_code);
+   my $proc_status = &$proc($s, @_);
+   convert_str_ref($s, $out_code, $EUC_JP) if $conv_status && $out_code;
+   return wantarray ? ($conv_status, $proc_status): $conv_status;
+}
