@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: install.cf.in,v 1.3 2003/01/28 04:30:44 fukachan Exp $
+# $FML: install.cf.in,v 1.4 2003/03/06 11:29:11 fukachan Exp $
 #
 
 
@@ -80,6 +80,8 @@ template_files	=	include
 			procmailrc
 			install.cf
 			modules
+			command_line_options
+
 
 bin_programs	=	fml
 			fmladdr
