@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.67 2002/03/31 03:39:14 fukachan Exp $
+# $FML: Distribute.pm,v 1.68 2002/04/10 04:31:09 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -12,16 +12,15 @@ use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use strict;
 use Carp;
 
-use FML::Process::Kernel;
 use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
-
+use FML::Process::Kernel;
 @ISA = qw(FML::Process::Kernel);
 
 
 =head1 NAME
 
-FML::Process::Distribute -- fml5 article distributer library.
+FML::Process::Distribute -- article distributer library.
 
 =head1 SYNOPSIS
 
@@ -46,7 +45,7 @@ we bless it as C<FML::Process::Distribute> object again.
 =cut
 
 
-# Descriptions: constructor.
+# Descriptions: ordinary constructor.
 #               sub class of FML::Process::Kernel
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
@@ -68,18 +67,18 @@ forward the request to the base class.
 
 
 # Descriptions: prepare miscellaneous work before the main routine starts
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub prepare
 {
-    my ($self, $args) = @_;
-    my $config = $self->{ config };
+    my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'distribute_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
-    $self->SUPER::prepare($args);
+    $curproc->SUPER::prepare($args);
 
     $eval = $config->get_hook( 'distribute_prepare_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -94,8 +93,11 @@ check the mail sender and the mail loop possibility.
 
 
 # Descriptions: verify the mail sender and others
+#               1. verify user credential
+#               2. primitive loop check
+#               3. filter
 #    Arguments: OBJ($curproc) HASH_REF($args)
-# Side Effects: lock
+# Side Effects: none
 # Return Value: none
 sub verify_request
 {
@@ -114,6 +116,10 @@ sub verify_request
 }
 
 
+# Descriptions: filter
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: set flag to ignore this process if it should be filtered.
+# Return Value: none
 sub _check_filter
 {
     my ($curproc, $args) = @_;

@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ThreadTrack.pm,v 1.24 2002/02/27 09:20:33 tmu Exp $
+# $FML: ThreadTrack.pm,v 1.25 2002/03/17 06:24:31 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -12,10 +12,9 @@ use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use strict;
 use Carp;
 
-use FML::Process::Kernel;
 use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
-
+use FML::Process::Kernel;
 @ISA = qw(FML::Process::Kernel);
 
 
@@ -58,7 +57,7 @@ sub new
 
 
 # Descriptions: dummy to avoid to take data from STDIN
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub prepare
@@ -74,8 +73,8 @@ sub prepare
 }
 
 
-# Descriptions: none
-#    Arguments: OBJ($self) HASH_REF($args)
+# Descriptions: dummy.
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none.
 # Return Value: none
 sub verify_request
@@ -99,9 +98,9 @@ call the actual thread tracking system.
 =cut
 
 
-# Descriptions: switch of commands to use Mail::ThreadTrack module
+# Descriptions: switch to Mail::ThreadTrack module
 #    Arguments: OBJ($curproc) HASH_REF($args)
-# Side Effects: load module
+# Side Effects: load module if needed
 # Return Value: none
 sub run
 {
@@ -199,6 +198,10 @@ sub run
 }
 
 
+# Descriptions: 
+#    Arguments: OBJ($curproc) OBJ($thread)
+# Side Effects: none
+# Return Value: none
 sub _speculate_last_id
 {
     my ($curproc, $thread) = @_;
@@ -213,7 +216,9 @@ sub _speculate_last_id
 	    use File::stat;
 	    my $st = stat($seq_file);
 	    $sf_last_modified =
-		$sf_last_modified > $st->mtime ? $sf_last_modified : $st->mtime;
+		$sf_last_modified > $st->mtime ? 
+		    $sf_last_modified : 
+			$st->mtime;
 	};
     }
 
@@ -222,18 +227,16 @@ sub _speculate_last_id
     # updaiteing $seq_file.
     # XXX 3600 is the magic number. How long time is appropriate ?
     if (-f $seq_file &&
-	($sf_last_modified + 3600 > $db_last_modified)
-	) {
+	($sf_last_modified + 3600 > $db_last_modified)) {
 	print STDERR "read seqfile\n"; sleep 3;
 	eval q{
 	    use File::Sequence;
-	    my $sfh      = new File::Sequence { sequence_file => $seq_file };
+	    my $sfh = new File::Sequence { sequence_file => $seq_file };
 	    return $sfh->get_id();
 	};
 	warn($@) if $@;
     }
     else {
-
 	my $last_id = 0;
 
 	$thread->db_open();
@@ -323,7 +326,7 @@ sub _read_filter_list
 # Descriptions: change status to "closed".
 #               $thread_id accepts MH style format.
 #               MH style is expanded by C<Mail::Messsage::MH>.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($thread) STR($thread_id) NUM($min) NUM($max)
 # Side Effects: update thread status database
 # Return Value: none
 sub _close
@@ -394,13 +397,6 @@ sub finish
 
 
 sub DESTROY {}
-
-
-sub AUTOLOAD
-{
-    my ($curproc, $args) = @_;
-    1;
-}
 
 
 package FML::Process::ThreadTrack::CUI;
