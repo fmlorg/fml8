@@ -1,5 +1,5 @@
 #
-# $FML: Makefile.local,v 1.1 2001/11/24 06:54:45 fukachan Exp $
+# $FML: Makefile.local,v 1.2 2002/03/21 07:09:30 fukachan Exp $
 #
 
 FORMATER = ../../../utils/bin/varlist.pl
@@ -10,3 +10,10 @@ VARLIST  = internals/list.variables.sgml
 $(VARLIST): $(SOURCE)
 	$(FORMATER) -sgml $(SOURCE) > $(VARLIST).new
 	mv $(VARLIST).new $(VARLIST)
+
+install: install_image
+
+install_image: ../../en/figures/command.dataflow.gif
+
+../../en/figures/command.dataflow.gif: command/states.gif
+	cp command/states.gif ../../en/figures/command.dataflow.gif
