@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MTAControl.pm,v 1.9 2002/06/27 08:24:08 fukachan Exp $
+# $FML: MTAControl.pm,v 1.10 2002/07/12 15:06:33 fukachan Exp $
 #
 
 package FML::MTAControl;
@@ -76,7 +76,7 @@ sub setup
 	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
 	    $self->{ mta_type };
 
-    if ($mta_type eq 'postfix' || 
+    if ($mta_type eq 'postfix' ||
 	$mta_type eq 'qmail'   ||
 	$mta_type eq 'procmail') {
 	my $method = "${mta_type}_setup";
@@ -123,7 +123,7 @@ sub find_key_in_alias_maps
 	    $self->{ mta_type };
     my $key      = $optargs->{ key };
 
-    if ($mta_type eq 'postfix' || 
+    if ($mta_type eq 'postfix' ||
 	$mta_type eq 'qmail'   ||
 	$mta_type eq 'procmail') {
 	my $method = "${mta_type}_find_key_in_alias_maps";
@@ -146,7 +146,7 @@ sub get_aliases_as_hash_ref
 	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
 	    $self->{ mta_type };
 
-    if ($mta_type eq 'postfix' || 
+    if ($mta_type eq 'postfix' ||
 	$mta_type eq 'qmail'   ||
 	$mta_type eq 'procmail') {
 	my $method = "${mta_type}_get_aliases_as_hash_ref";
@@ -170,7 +170,7 @@ sub install_alias
 	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
 	    $self->{ mta_type };
 
-    if ($mta_type eq 'postfix' || 
+    if ($mta_type eq 'postfix' ||
 	$mta_type eq 'qmail'   ||
 	$mta_type eq 'procmail') {
 	my $method = "${mta_type}_install_alias";
@@ -194,7 +194,7 @@ sub remove_alias
 	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
 	    $self->{ mta_type };
 
-    if ($mta_type eq 'postfix' || 
+    if ($mta_type eq 'postfix' ||
 	$mta_type eq 'qmail'   ||
 	$mta_type eq 'procmail') {
 	my $method = "${mta_type}_remove_alias";
@@ -218,7 +218,7 @@ sub install_virtual_map
 	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
 	    $self->{ mta_type };
 
-    if ($mta_type eq 'postfix' || 
+    if ($mta_type eq 'postfix' ||
 	$mta_type eq 'qmail'   ||
 	$mta_type eq 'procmail') {
 	my $method = "${mta_type}_install_virtual_map";
@@ -242,7 +242,7 @@ sub remove_virtual_map
 	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
 	    $self->{ mta_type };
 
-    if ($mta_type eq 'postfix' || 
+    if ($mta_type eq 'postfix' ||
 	$mta_type eq 'qmail'   ||
 	$mta_type eq 'procmail') {
 	my $method = "${mta_type}_remove_virtual_map";
@@ -265,7 +265,7 @@ sub update_virtual_map
 	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
 	    $self->{ mta_type };
 
-    if ($mta_type eq 'postfix' || 
+    if ($mta_type eq 'postfix' ||
 	$mta_type eq 'qmail'   ||
 	$mta_type eq 'procmail') {
 	my $method = "${mta_type}_update_virtual_map";

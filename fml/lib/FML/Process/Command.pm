@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.68 2002/07/25 00:10:11 fukachan Exp $
+# $FML: Command.pm,v 1.69 2002/08/03 10:35:08 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -476,7 +476,7 @@ sub _get_command_mode
 	    }
 	}
 	else {
-	    # Exapmle: incorrect password 
+	    # Exapmle: incorrect password
 	    if ($is_admin && (! $is_auth)) {
 		$status->{ _stop_reason_key } = 'command.auth_fail';
 		$status->{ _stop_reason_str } = "not authenticated.";

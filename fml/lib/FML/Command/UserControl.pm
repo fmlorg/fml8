@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.14 2002/07/23 13:03:12 fukachan Exp $
+# $FML: UserControl.pm,v 1.15 2002/07/24 09:27:16 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -116,7 +116,7 @@ sub userdel
 	    $msg_args->{ _arg_map } = $curproc->which_map_nl($map);
 
 	    $trycount++;
-	    
+
 	    my $obj = new IO::Adapter $map, $config;
 	    $obj->delete( $address );
 	    unless ($obj->error()) {

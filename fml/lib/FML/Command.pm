@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.29 2002/07/14 22:46:59 fukachan Exp $
+# $FML: Command.pm,v 1.30 2002/07/18 23:16:06 fukachan Exp $
 #
 
 package FML::Command;
@@ -72,7 +72,7 @@ buffer.
 
 
 # Descriptions: rewrite prompt buffer
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) STR_REF($rbuf)
 # Side Effects: none
 # Return Value: none

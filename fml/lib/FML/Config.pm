@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.67 2002/07/23 13:37:47 fukachan Exp $
+# $FML: Config.pm,v 1.68 2002/07/25 11:34:01 fukachan Exp $
 #
 
 package FML::Config;
@@ -316,7 +316,7 @@ sub _read_file
 	#
 	# [mysql:fml]
 	#    var = key1 ...
-	# 
+	#
 	while (<$fh>) {
 	    # Example: [mysql:fml]
 	    #   switched to the new name space.
@@ -391,7 +391,7 @@ sub __update_config
 
     if ($mode) {
 	if ($name_space) {
-	    $config->{ $name_space }->{ $key } = 
+	    $config->{ $name_space }->{ $key } =
 		_evaluate($config, $key, $mode, $value, $name_space);
 	}
 	else {
@@ -557,7 +557,7 @@ sub write
 	croak "cannot backup $file";
     }
 
-    # 3. write config 
+    # 3. write config
     if (defined $fh) {
 	$fh->autoflush(1);
 
@@ -641,7 +641,7 @@ sub __hash_copy
 	    $dst->{ $key } = $newhash;
 	}
 	else {
-	    $dst->{ $key } = $src->{ $key }; 
+	    $dst->{ $key } = $src->{ $key };
 	}
     }
 }
@@ -661,7 +661,7 @@ sub _expand_nextlevel
 	    # XXX variable expansion within the next level.
 	    my $hash = $config->{ $ns };
 	    _expand_variables( $hash, $config );
-	} 
+	}
     }
 }
 
@@ -1053,7 +1053,7 @@ sub FETCH
     if (defined($_fml_config_result{$key})) {
 	my $x = $_fml_config_result{$key};
 
-	# HASH_REF such as [mysql:fml] => { ... } 
+	# HASH_REF such as [mysql:fml] => { ... }
 	if (ref($x)) {
 	    return $x;
 	}
@@ -1083,7 +1083,7 @@ sub STORE
 	$need_expansion_variables = 1;
     }
 
-    if (defined $key && defined $value) { 
+    if (defined $key && defined $value) {
 	$_fml_config{$key} = $value;
     }
 }

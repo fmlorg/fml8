@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.5 2002/01/18 15:37:38 fukachan Exp $
+# $FML: ErrorAnalyze.pm,v 1.1 2002/07/30 04:03:27 fukachan Exp $
 #
 
 package FML::ErrorAnalyze;
@@ -30,7 +30,7 @@ where C<$bounce_info) follows:
 		       reason  => '... reason ... ',
 		   }
     ];
-    
+
 =head1 DESCRIPTION
 
 =head1 METHODS
@@ -40,9 +40,9 @@ where C<$bounce_info) follows:
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($self) HASH_REF($curproc)
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub new
 {
@@ -67,9 +67,9 @@ sub cache_on
 	my $time = time;
 
 	for my $hint (@$info) {
-	    $address = $hint->{ address }; 
-	    $reason  = $hint->{ reason }; 
-	    $status  = $hint->{ status }; 
+	    $address = $hint->{ address };
+	    $reason  = $hint->{ reason };
+	    $status  = $hint->{ status };
 
 	    $io->set($address, "$time status=$status");
 	}
@@ -147,7 +147,7 @@ sub deluser
     my ($self, $address) = @_;
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->{ config };
-    my $ml_name = $config->{ ml_name }; 
+    my $ml_name = $config->{ ml_name };
 
     use FML::Restriction::Base;
     my $safe    = new FML::Restriction::Base;

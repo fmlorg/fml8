@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledDir.pm,v 1.10 2002/08/03 04:21:30 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.11 2002/08/03 10:30:44 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -304,7 +304,7 @@ sub CLEAR
 
 =head2 get_all_values_as_hash_ref()
 
-return { key => values } for all keys. 
+return { key => values } for all keys.
 The returned value is HASH REFERECE for the KEY as follows:
 
    KEY => [

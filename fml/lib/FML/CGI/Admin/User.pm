@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: User.pm,v 1.10 2002/07/02 03:55:21 fukachan Exp $
+# $FML: User.pm,v 1.11 2002/07/13 13:09:02 fukachan Exp $
 #
 
 package FML::CGI::Admin::User;
@@ -49,7 +49,7 @@ sub cgi_menu
     my $address_list = [];
 
     # which address list to show at the scrolling list
-    if ($comname eq 'subscribe'   || 
+    if ($comname eq 'subscribe'   ||
 	$comname eq 'adduser'     ||
 	$comname eq 'useradd'     ||
 	$comname eq 'unsubscribe' ||

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.36 2002/07/23 13:03:13 fukachan Exp $
+# $FML: Utils.pm,v 1.37 2002/07/23 13:16:44 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -802,7 +802,7 @@ sub which_map_nl
     for my $mode (qw(member recipient admin_member)) {
 	my $maps = $config->get_as_array_ref("${mode}_maps");
 	for my $m (@$maps) {
-	    if ($map eq $m) { 
+	    if ($map eq $m) {
 		$found = $mode;
 		last SEARCH_MAPS;
 	    }

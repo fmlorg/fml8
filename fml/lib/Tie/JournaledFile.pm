@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledFile.pm,v 1.18 2002/08/03 06:42:33 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.19 2002/08/03 10:30:44 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -189,7 +189,7 @@ sub NEXTKEY
 
 =head2 get_all_values_as_hash_ref()
 
-return { key => values } for all keys. 
+return { key => values } for all keys.
 The returned value is HASH REFERECE for the KEY as follows:
 
    KEY => [
@@ -215,7 +215,7 @@ which is by default.
 sub get_all_values_as_hash_ref
 {
     my ($self) = @_;
-    my $hash   = {}; 
+    my $hash   = {};
 
     use IO::File;
     my $fh = new IO::File;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CacheDir.pm,v 1.15 2002/05/17 09:50:56 fukachan Exp $
+# $FML: CacheDir.pm,v 1.16 2002/07/02 12:50:16 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -360,7 +360,7 @@ sub set
     my ($self, $key, $value) = @_;
     my $fh = $self->open;
 
-    if (defined $fh) { 
+    if (defined $fh) {
 	print $fh $key, "\t", $value, "\n";
 	$self->close;
     }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.12 2002/07/17 09:28:33 fukachan Exp $
+# $FML: confirm.pm,v 1.13 2002/07/22 15:39:55 tmu Exp $
 #
 
 package FML::Command::User::confirm;
@@ -113,7 +113,7 @@ sub process
 	}
     }
     else {
-	$curproc->reply_message_nl('error.no_such_confirmation', 
+	$curproc->reply_message_nl('error.no_such_confirmation',
 				   "no such confirmatoin request id=$id",
 				   { _arg_id => $id });
 	LogError("no such confirmation request id=$id");

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.87 2002/07/31 13:22:03 fukachan Exp $
+# $FML: Distribute.pm,v 1.88 2002/08/03 10:35:08 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -62,13 +62,13 @@ sub new
 =head2 C<prepare($args)>
 
 forward the request to the base class.
-adjust ml_* and load configuration files. 
+adjust ml_* and load configuration files.
 
 =cut
 
 
 # Descriptions: prepare miscellaneous work before the main routine starts.
-#               adjust ml_* and load configuration files. 
+#               adjust ml_* and load configuration files.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -213,7 +213,7 @@ sub run
 	    $curproc->reply_message( $msg );
 
 	    # inform maintainer too.
-	    my $msg_args = { 
+	    my $msg_args = {
 		_arg_address => $sender,
 		recipient    => $maintainer,
 	    };
@@ -436,7 +436,7 @@ sub _deliver_article
 
 			  'message'         => $message,
 
-			  map_params        => $config, 
+			  map_params        => $config,
 		      });
     if ($service->error) { Log($service->error); return;}
 }

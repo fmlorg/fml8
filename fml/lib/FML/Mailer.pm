@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.11 2002/07/02 11:56:12 fukachan Exp $
+# $FML: Mailer.pm,v 1.12 2002/07/23 13:03:11 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -126,7 +126,7 @@ sub send
     unless ($sender) {
 	LogError("FML::Mailer: no sender");
 	return 0;
-    }    
+    }
 
     # 2. recipient(s)
     my $recipients = [];

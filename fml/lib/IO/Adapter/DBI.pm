@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.17 2002/07/24 11:05:50 fukachan Exp $
+# $FML: DBI.pm,v 1.18 2002/07/24 13:01:40 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -199,7 +199,7 @@ sub get_next_key
 
 
 # Descriptions: return value(s) to the primary key in the table
-#               as ARRAY_REF 
+#               as ARRAY_REF
 #               XXX definition is o.k.?
 #    Arguments: OBJ($self) HASH_REF($args) STR($mode)
 # Side Effects: none
@@ -321,7 +321,7 @@ sub delete
 
 =head2 md_find()
 
-map specific find(). 
+map specific find().
 
 =cut
 

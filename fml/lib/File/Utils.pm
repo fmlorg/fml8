@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.14 2002/07/02 12:52:10 fukachan Exp $
+# $FML: Utils.pm,v 1.15 2002/07/25 11:34:02 fukachan Exp $
 #
 
 package File::Utils;
@@ -55,7 +55,7 @@ clear error message.
 # Side Effects: none
 # Return Value: STR(error message)
 sub error
-{ 
+{
     if (defined $ErrorString) {
 	return $ErrorString;
     }

@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Scheduler.pm,v 1.13 2002/07/30 04:03:26 fukachan Exp $
+# $FML: Scheduler.pm,v 1.14 2002/08/03 10:35:09 fukachan Exp $
 #
 
 package FML::Process::Scheduler;
@@ -51,9 +51,9 @@ sub new
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($self) STR($key)
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub queue_in
 {
@@ -61,9 +61,9 @@ sub queue_in
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub exits
 {

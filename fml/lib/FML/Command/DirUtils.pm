@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DirUtils.pm,v 1.5 2002/04/07 12:13:03 fukachan Exp $
+# $FML: DirUtils.pm,v 1.6 2002/07/02 12:03:41 fukachan Exp $
 #
 
 package FML::Command::DirUtils;
@@ -46,7 +46,7 @@ sub new
 
 
 # Descriptions: show the result by executing "ls"
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($du_args)
 # Side Effects: none
 # Return Value: none
