@@ -1,14 +1,88 @@
 <!--
-   $FML: module.sgml,v 1.3 2002/07/07 01:57:11 fukachan Exp $
+   $FML: dataflow.sgml,v 1.1 2002/12/25 11:50:42 fukachan Exp $
 -->
 
 
 <sect1 id="fml.command.dataflow">
 	<title>
-	コマンドの入力データフロー
+	コマンドの処理のフロー
 	</title>
 
 
-<graphic entityref="image.command.dataflow"></graphic>
+<!--
+  <graphic entityref="image.command.dataflow"></graphic>
+-->
+
+<para>
+すべての処理は最終的に FML::Command 経由で FML::Command::モード::コマ
+ンド クラスを呼び出します。GUI および CUI、コマンドメールは、そこに至
+る前処理が異なるだけです。
+</para>
+
+
+<sect2>
+	<title>
+	コマンドメールの処理
+	</title>
+
+<caution>
+<para>
+2004/03/05 以降は、新しいフレームワークとなりました。
+</para>
+</caution>
+
+<para>
+コマンドは行単位で、解析されます。
+</para>
+
+<para>
+空行を無視するなどの基本的な処理の後、コマンド(行の先頭の文字列)が、現
+在のコンテキストで許されるコマンドか否か？を確認します。
+</para>
+
+<para>
+1) guideやsubscribeのようにメンバー以外にも許されるコマンドであれば、
+   直接コマンド呼び出しルーチンへ処理が移ります。
+</para>
+
+<para>
+2) メンバーだけに許されるコマンドの場合、
+   command_restrictionsのルールに従って他の条件を確認し、
+   許されたなら、呼び出しルーチンへ処理が移ります。
+</para>
+
+<para>
+「呼び出しルーチン」では、
+(コマンドに依存した)返事の送り先の確認と
+(コマンドに依存する)シンタックスチェックを経て、
+FML::Command 経由でコマンドが実行されます。
+この実行は一般ユーザ権限で実行されます。
+</para>
+
+<para>
+admin コマンドの実行は、ここでは行なわれません。
+「admin ...」コマンドは、まず一般ユーザ権限で実行され、
+FML::Command::User::admin クラスが呼び出されます。
+この中で、$admin_command_restrictions に基づいて、リモート権限があるか？
+が確認され、もう一度 FML::Command 経由で管理者権限の
+「FML::Command::Admin::コマンド」クラスが呼び出されます。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	CUI (makefml/fml)の処理
+	</title>
+
+<para>
+このプログラムを使える時点で管理者権限があるはずです。よって、
+FML::Command経由で「FML::Command::Admin::コマンド」クラスを直接呼び出
+しています。
+</para>
+
+</sect2>
+
 
 </sect1>

@@ -1,5 +1,5 @@
 <!--
-   $FML: internal.sgml,v 1.5 2002/07/07 01:57:11 fukachan Exp $
+   $FML: internal.sgml,v 1.6 2003/04/15 14:51:36 fukachan Exp $
 -->
 
 <sect1 id="fml.command.internal.change">
@@ -36,7 +36,7 @@ sub process
 {
     my ($self, $curproc, $optargs) = @_;
     my $config    = $curproc->{ config };
-    my $charset   = $config->{ reply_message_charset };
+    my $charset   = $config->{ reply_message_charset_ja };
     my $help_file = $config->{ help_file };
 
     # template substitution: kanji code, $varname expansion et. al.
