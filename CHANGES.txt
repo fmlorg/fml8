@@ -10,6 +10,23 @@
 	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
 	気をつけてください。
 
+2004/07/25
+
+   FML::Command::HTMLify 
+	rewritten to use $curproc->thread_db_args() method for code sharing.
+	
+   FML::Process::Utils 
+	thread_db_args() returns htmlifier parameters with subject tag hints.
+	
+   Mail::Message::ToHTML 
+	handle subject tag separetely in string escaping.
+	
+   Mail::Message 
+	implement get_print_mode()
+	
+   Mail::Delivery::SMTP 
+	override print mode of Mail::Message object to "raw" in fallbacking.
+
 2004/07/23
 
    OVERHAUL ...
@@ -7547,4 +7564,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.217 2004/07/18 16:17:45 fukachan Exp $
+$FML: CHANGES.txt,v 1.218 2004/07/24 01:33:02 fukachan Exp $
