@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledDir.pm,v 1.9 2002/02/02 08:04:55 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.10 2002/08/03 04:21:30 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -215,15 +215,15 @@ sub STORE
 # Return Value: HASH_REF
 sub __gen_hash
 {
-    my ($self) = @_; 
+    my ($self) = @_;
     my $files = $self->{ '_files' } || [];
     my $hash  = {};
     my %db    = ();
     my ($k, $v);
 
     use FileHandle;
-    for my $f (reverse @$files) { 
-	tie %db, 'Tie::JournaledFile', { 
+    for my $f (reverse @$files) {
+	tie %db, 'Tie::JournaledFile', {
 	    'last_match' => 1,
 	    'file'       => $f,
 	};
@@ -277,8 +277,8 @@ sub NEXTKEY
 }
 
 
-sub EXISTS   
-{ 
+sub EXISTS
+{
     my ($self, $key) = @_;
     my $v = $self->FETCH($key);
 
@@ -286,25 +286,74 @@ sub EXISTS
 }
 
 
-sub DELETE   
-{ 
+sub DELETE
+{
     my ($self, $key) = @_;
     $self->STORE($key, '');
 }
 
 
-sub CLEAR    
+sub CLEAR
 {
     ;
 }
 
 
-=head1 LOG
 
-$Log$
-Revision 1.10  2002/08/03 04:21:30  fukachan
-bug fix keys() and each(), modified to use hash on memory.
-implement EXISTS(), DELETE(), CLEAR()
+=head1 NOT tie() BASED METHODS
+
+=head2 get_all_values_as_hash_ref()
+
+return { key => values } for all keys. 
+The returned value is HASH REFERECE for the KEY as follows:
+
+   KEY => [
+	   VALUE1,
+	   VALUE2,
+	   vlaue3,
+	   ];
+
+not
+
+   KEY => VALUE
+
+which is by default.
+
+=cut
+
+
+# Descriptions: get all values for the key as ARRAY_REF.
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: none
+# Return Value: HASH_REF
+sub get_all_values_as_hash_ref
+{
+    my ($self) = @_;
+    my $files  = $self->{ '_files' } || [];
+    my $result = {};
+
+    use FileHandle;
+    for my $f (reverse @$files) {
+	my $obj  = new Tie::JournaledFile { 'file' => $f };
+	my $hash = $obj->get_all_values_as_hash_ref();
+
+	# copy
+	my ($a, $k, $v);
+	while (($k, $v) = each %$hash) {
+	    if (defined $result->{ $k }) {
+		$a = $result->{ $k };
+	    }
+	    else {
+		$a = [];
+	    }
+
+	    push(@$a, @$v);
+	    $result->{ $k } = $a;
+	}
+    }
+
+    return $result;
+}
 
 
 =head1 AUTHOR

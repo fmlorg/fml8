@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledFile.pm,v 1.17 2002/08/03 04:18:17 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.18 2002/08/03 06:42:33 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -153,7 +153,7 @@ sub FIRSTKEY
     my $fh = new IO::File $file;
     if (defined $fh) {
 	my ($k, $v);
-	while (<$fh>) { 
+	while (<$fh>) {
 	    ($k, $v) = split(/\s+/, $_, 2);
 	    $hash->{ $k } = $v if $k;
 	}
@@ -184,6 +184,66 @@ sub NEXTKEY
     else {
 	return undef;
     }
+}
+
+
+=head2 get_all_values_as_hash_ref()
+
+return { key => values } for all keys. 
+The returned value is HASH REFERECE for the KEY as follows:
+
+   KEY => [
+	   VALUE1,
+	   VALUE2,
+	   vlaue3,
+	   ];
+
+not
+
+   KEY => VALUE
+
+which is by default.
+
+=cut
+
+
+# Descriptions: return all key and the values as HASH_REF
+#               { key => [ values ] }
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: HASH_REF
+sub get_all_values_as_hash_ref
+{
+    my ($self) = @_;
+    my $hash   = {}; 
+
+    use IO::File;
+    my $fh = new IO::File;
+    $self->{ _fh } = $fh;
+
+    $fh->open($self->{ '_file' }, "r");
+
+    if (defined $fh) {
+	my ($a, $k, $v);
+	while (<$fh>) {
+	    chomp;
+
+	    ($k, $v) = split(/\s+/, $_, 2);
+
+	    if (defined $hash->{ $k }) {
+		$a = $hash->{ $k };
+	    }
+	    else {
+		$a = [];
+	    }
+
+	    push(@$a, $v);
+	    $hash->{ $k } = $a;
+	}
+	$fh->close();
+    }
+
+    return $hash;
 }
 
 
@@ -230,14 +290,14 @@ sub _fetch
 
     use IO::File;
     my $fh = new IO::File;
-    $fh->open( $self->{ '_file' }, "r");
+    $fh->open($self->{ '_file' }, "r");
 
     # error (we fail to open cache file).
     unless (defined $fh) { return undef;}
 
     # o.k. we open cache file, here we go for searching
-    my ($xkey, $xvalue, $value) = ();
-    my (@values)        = ();
+    my ($xkey, $xvalue, $value, @values) = ();
+
   SEARCH:
     while (<$fh>) {
 	next SEARCH if /^\#*$/;
@@ -245,7 +305,7 @@ sub _fetch
 	next SEARCH unless /^$prekey/i;
 	next SEARCH unless /^$keytrap/i;
 
-	chop;
+	chomp;
 
 	($xkey, $xvalue) = split(/\s+/, $_, 2);
 	if ($xkey eq $key) {
@@ -320,17 +380,6 @@ sub _puts
 	croak "cannot open cache file $file\n";
     }
 }
-
-
-=head1 LOG
-
-$Log$
-Revision 1.18  2002/08/03 06:42:33  fukachan
-enhance find:
-find(key, [mode]) where mode = scalar, array, array_ref
-
-Revision 1.17  2002/08/03 04:18:17  fukachan
-bug fix FIRSTKEY() and NEXTKEY(), modified to use hash on memory
 
 
 =head1 AUTHOR
