@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: subscribe.pm,v 1.2 2001/08/26 07:58:39 fukachan Exp $
+# $FML: subscribe.pm,v 1.1.1.1 2001/08/26 08:01:04 fukachan Exp $
 #
 
 package FML::Command::Admin::subscribe;
@@ -61,7 +61,7 @@ sub process
 	    $obj->add( $address );
 	}
 	else {
-	    $self->error_set( "$address already exists" );
+	    $self->error_set( "$address is member (map=$map)" );
 	    return undef;
 	}
     }
