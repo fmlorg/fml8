@@ -7,13 +7,16 @@
         XXX 遠大なビジョンやとりあえず後まわしでよいものは STATUS.txt へ
 
 
+[TODO]	エラートラップフレームワーク
+
+
+[TODO]	FML::Restriction::* のつかいかた
+
+		FML/Process/CGI/Param.pm
+
+
 [TODO]	FML::Credential object って、verify_request() で
 	ある必要があるのかな？
-
-
-[TODO]	load_config_... () は引数がいらないようになった。
-
-		FML::Process::*	以下、書き換え
 
 
 [TODO]	FML::PCB FML::Config は、コンテキスト切替時にどうする？
@@ -264,19 +267,6 @@ FileHandle と IO::File 両方 use しちゃうからか？
 	Mail/Bounce/Qmail.pm
 
 
-[TODO]	ちょっとコーディングスタイルが古いかな?
-
-		FML::Header
-		FML::Header::Subject
-		File::Sequence
-		Mail::Delivery::* (?)
-		FML::Filter::TextPlain
-		FML::Filter::Header
-
-	ちょっとコーディングスタイルが古いかな?
-	近々に見直すべし
-
-
 [TODO]	2002,2003 年のオーバホールの残り
 
   ＊おもたい
@@ -292,9 +282,16 @@ FileHandle と IO::File 両方 use しちゃうからか？
 	Mail/ThreadTrack/Print
 
 	Mail/Message/Print などに集結させるべきだろう？
-
 		print_axss (against cross site scripting).
 
+  * ちょっとコーディングスタイルが古いかな?
+
+	FML::Header
+	FML::Header::Subject
+	File::Sequence
+	Mail::Delivery::* (?)
+	FML::Filter::TextPlain
+	FML::Filter::Header
 
   * 2003-2004 オーバホール、やりのこし
 	FML/Log.pm
@@ -316,16 +313,17 @@ FileHandle と IO::File 両方 use しちゃうからか？
 	カスタマイズ/拡張しやすいように admin 認証の部分を
 	admin コマンド経由で呼び出すようにできないのか？
 
-	ステートマシンは別のメタフレームの仕組み移す。
 
-
-[TODO]	File::* は、なくすべきだとおもうなぁ。
+[TODO]	ステートマシンは別のメタフレームの仕組みに移すべきやろ。
 
 
 [TODO]	FML::Command というかコマンドまわりのステートって
 	どこをみればいっぱつでわかるの？
 
 	state ようのモジュールがひつようか？
+
+
+[TODO]	File::* は、なくすべきだとおもうなぁ。
 
 
 [TODO]	フィルタ関数は、やっぱり FML::FIlter 以下に集結している
@@ -350,6 +348,7 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 	ん？もういいのかな？
 
+
 [TODO]	udb_write_map ?
 
 	local いがいのばあい、はどうすればいいの？
@@ -369,4 +368,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.103 2003/12/24 12:49:53 fukachan Exp $
+$FML: 00_MEMO,v 1.104 2004/01/24 15:37:33 fukachan Exp $
