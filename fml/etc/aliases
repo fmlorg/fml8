@@ -1,0 +1,15 @@
+### BEGIN-__ml_name__@__ml_domain__-ML-aliases ###
+
+# address for post
+__ml_name__: :include:__ml_home_dir__/include
+owner-__ml_name__: __fml_owner__
+
+# address for command
+__ml_name__-ctl: :include:__ml_home_dir__/include-ctl
+owner-__ml_name__-ctl: __fml_owner__
+
+# maintainer
+__ml_name__-request: __ml_name__-admin
+__ml_name__-admin: __fml_owner__
+
+### END-__ml_name__@__ml_domain__-ML-aliases ###
