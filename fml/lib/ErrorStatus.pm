@@ -4,10 +4,14 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ErrorStatus.pm,v 1.4 2002/09/11 23:18:00 fukachan Exp $
+# $FML: ErrorStatus.pm,v 1.5 2002/09/22 14:56:37 fukachan Exp $
 #
 
 package ErrorStatus;
+
+#
+# XXX-TODO we should not use ErrorStatus module, is'nt it?
+#
 
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
@@ -58,43 +62,43 @@ return $message which is saved by C<error_set($msg)>.
 =cut
 
 
-# Descriptions: set the error message
+# Descriptions: save the error message in $self object.
 #    Arguments: OBJ($self) STR($mesg)
 # Side Effects: update OBJ
 # Return Value: STR
 sub error_set
 {
     my ($self, $mesg) = @_;
-    $self->{'_error_reason'} = $mesg;
+    $self->{'_error_reason'} = $mesg if defined $mesg;
 }
 
 
-# Descriptions: get the error message
+# Descriptions: get the error message.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub error
 {
     my ($self) = @_;
-    return $self->{'_error_reason'};
+    return $self->{'_error_reason'} ? $self->{'_error_reason'} : undef;
 }
 
 
-# Descriptions: get the error message
+# Descriptions: get the error message.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub errstr
 {
     my ($self) = @_;
-    return $self->{'_error_reason'};
+    return $self->error();
 }
 
 
-# Descriptions: clear the error message
+# Descriptions: clear the error message buffer.
 #    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: STR
+# Return Value: STR (cleared message)
 sub error_clear
 {
     my ($self) = @_;
