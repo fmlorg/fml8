@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.41.2.3 2003/06/02 23:59:57 fukachan Exp $
+# $FML: ToHTML.pm,v 1.41.2.4 2003/06/03 13:43:49 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 1;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.41.2.3 2003/06/02 23:59:57 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.41.2.4 2003/06/03 13:43:49 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -2125,27 +2125,10 @@ sub _decode_mime_string
     my $charset = $options->{ 'charset' } || $self->{ _charset };
     my $code    = _charset_to_code($charset) || 'euc';
 
-    # If looks Japanese and $code is specified as Japanese, decode !
-    if (defined($str) &&
-	($str =~ /=\?ISO\-2022\-JP\?[BQ]\?/i) &&
-	($code eq 'euc' || $code eq 'jis')) {
-        if ($str =~ /=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/i) {
-	    eval q{ use MIME::Base64; };
-            $str =~ s/=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/decode_base64($1)/gie;
-        }
-
-        if ($str =~ /=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/i) {
-	    eval q{ use MIME::QuotedPrint;};
-            $str =~ s/=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/decode_qp($1)/gie;
-        }
-
-	if (defined($str) && $str) {
-	    eval q{ use Jcode;};
-	    my $icode = &Jcode::getcode(\$str);
-	    warn("code not specified") unless defined $code;
-	    warn("icode not specified") unless defined $icode;
-	    &Jcode::convert(\$str, $code, $icode);
-	}
+    if (defined($str) && $str) {
+	use Mail::Message::Encode;
+	my $encode = new Mail::Message::Encode;
+	return $encode->decode_mime_string($str, $code);
     }
 
     return $str;
