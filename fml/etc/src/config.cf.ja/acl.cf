@@ -121,7 +121,7 @@ primary_digest_recipient_map	=	 file:$ml_home_dir/recipients-digest
 #        Value: a list of filenames
 #     Examples: file:$ml_home_dir/recipients-digest
 #		unix.group:fml
-digest_recipient_maps		=	$primary_recipient_map
+digest_recipient_maps		=	$primary_digest_recipient_map
 
 
 =head2 リモート管理者メンバーとみなされるのは誰か？
