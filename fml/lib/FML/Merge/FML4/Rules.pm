@@ -392,7 +392,7 @@ sub translate
     if ($key eq 'AUTO_REGISTERED_UNDELIVER_P' && $value == 1) {
     $s = undef;
 
-    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
     return $s if defined $s;
     }
     
@@ -401,6 +401,14 @@ sub translate
     $s = undef;
 
     $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'AUTO_REGISTERD_UNDELIVER_P' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
     return $s if defined $s;
     }
     
@@ -433,6 +441,14 @@ sub translate
     $s = undef;
 
     $s .= "use_admin_command_mail_fucntion = yes";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'REMOTE_ADMINISTRATION_REQUIRE_PASSWORD' && $value == 1) {
+    $s = undef;
+
+    $s .= "admin_command_mail_restrictions += check_admin_member_password";
     return $s if defined $s;
     }
     
@@ -893,6 +909,22 @@ sub translate
     }
     
     
+    if ($key eq 'APPEND_STARDATE' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'APPEND_STARDATE' && $value == 0) {
+    $s = undef;
+
+    $s .= "article_header_rewrite_rules -= rewrite_stardate";
+    return $s if defined $s;
+    }
+    
+    
     if ($key eq 'USE_RFC2369' && $value == 1) {
     $s = undef;
 
@@ -1125,7 +1157,7 @@ sub translate
     }
     
     
-    if ($key eq 'SLEEPTIME' && $value == 60) {
+    if ($key eq 'SLEEPTIME' && defined $value) {
     $s = undef;
 
     $s .= &$fp_rule_ignore($self, $diff, $key, $value);
