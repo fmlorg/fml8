@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmml.pm,v 1.16 2003/08/29 15:33:59 fukachan Exp $
+# $FML: rmml.pm,v 1.17 2003/09/04 12:27:53 fukachan Exp $
 #
 
 package FML::Command::Admin::rmml;
@@ -118,8 +118,8 @@ sub _remove_ml_home_dir
     print STDERR "removing ml_home_dir for $ml_name\n";
 
     # /var/spool/ml/elena -> /var/spool/ml/@elena
-    use File::Spec;
-    my $removed_dir = File::Spec->catfile($ml_home_prefix, '@'.$ml_name);
+    my $removed_dir = 
+	$curproc->removed_ml_home_dir_path($ml_home_prefix, $ml_name);
     rename($ml_home_dir, $removed_dir);
 
     if (-d $removed_dir && (! -d $ml_home_dir)) {

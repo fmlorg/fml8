@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.76 2003/08/29 15:42:03 fukachan Exp $
+# $FML: Utils.pm,v 1.77 2003/09/05 09:01:26 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -12,6 +12,8 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use FML::Log qw(Log LogWarn LogError);
+use File::Spec;
+use File::stat;
 
 
 =head1 NAME
@@ -430,6 +432,115 @@ sub unique
     }
 
     return $x;
+}
+
+
+=head1 ml_home_dir handling
+
+=cut
+
+
+# Descriptions:
+#    Arguments: OBJ($curproc) STR($ml_home_prefix) STR($ml_name)
+# Side Effects: none
+# Return Value: STR
+sub removed_ml_home_dir_path
+{
+    my ($curproc, $ml_home_prefix, $ml_name) = @_;
+
+    use Mail::Message::Date;
+    my $dobj = new Mail::Message::Date time;
+    my $date = $dobj->{ YYYYMMDD };
+
+    use File::Spec;
+    my $x = sprintf("%s%s.%d", '@', $ml_name, $date);
+    return File::Spec->catfile($ml_home_prefix, $x);
+}
+
+
+# Descriptions: find the latest removed $ml_home_dir
+#    Arguments: OBJ($curproc) STR($ml_home_prefix) STR($ml_name)
+# Side Effects: none
+# Return Value: STR
+sub find_latest_removed_ml_home_dir
+{
+    my ($curproc, $ml_home_prefix, $ml_name) = @_;
+    my ($entry) = [];
+
+    use DirHandle;
+    my $dh = new DirHandle $ml_home_prefix;
+    if (defined $dh) {
+	my $x;
+
+      ENTRY:
+	while ($x = $dh->read()) {
+	    next ENTRY if $x =~ /^\./o;
+
+	    if ($x =~ /^\@$ml_name$/ || $x =~ /^\@$ml_name\.\d+$/) {
+		push(@$entry, $x);
+	    }
+	}
+	$dh->close();
+    }
+
+    my $name = $curproc->_sort_ml_name($ml_home_prefix, $ml_name, $entry);
+    if ($name) {
+	return File::Spec->catfile($ml_home_prefix, $name);
+    }
+    else {
+	return '';
+    }
+}
+
+
+# Descriptions: sort ml_name entries (@$entry) and return the latest.
+#    Arguments: OBJ($curproc)
+#               STR($ml_home_prefix) STR($ml_name) ARRAY_REF($entry)
+# Side Effects: none
+# Return Value: STR
+sub _sort_ml_name
+{
+    my ($curproc, $ml_home_prefix, $ml_name, $entry) = @_;
+    my $latest   = 0;
+    my $is_found = 0;
+
+    for my $x (@$entry) {
+	if ($x =~ /^\@$ml_name\.(\d+)$/) {
+	    $latest = $1 > $latest ? $1 : $latest;
+	}
+	elsif ($x =~ /^\@$ml_name$/) {
+	    $is_found = $x;
+	}
+    }
+
+    my $latest_name = sprintf("%s%s.%d", '@', $ml_name, $latest);
+    if ($latest && $is_found) {
+	my $mtime_latest = _mtime($ml_home_prefix, $latest_name);
+	my $mtime_exact  = _mtime($ml_home_prefix, $is_found);
+	return( ($mtime_latest > $mtime_exact) ? $latest_name : $is_found );
+    }
+    elsif ($latest) {
+	return $latest_name;
+    }
+    elsif ($is_found) {
+	return $is_found;
+    }
+    else {
+	return '';
+    }
+}
+
+
+# Descriptions: return mtime of $prefix/$x file/dir.
+#    Arguments: STR($prefix) STR($x)
+# Side Effects: none
+# Return Value: NUM
+sub _mtime
+{
+    my ($prefix, $x) = @_;
+    my $p  = File::Spec->catfile($prefix, $x);
+    my $st = stat($p);
+    return $st->mtime;
 }
 
 
