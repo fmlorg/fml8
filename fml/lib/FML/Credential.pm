@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.56 2004/03/17 10:11:35 fukachan Exp $
+# $FML: Credential.pm,v 1.57 2004/03/17 13:22:06 fukachan Exp $
 #
 
 package FML::Credential;
@@ -76,6 +76,10 @@ sub new
 }
 
 
+# Descriptions: analyze $config.
+#    Arguments: OBJ($self)
+# Side Effects: update $self.
+# Return Value: none
 sub _reconfigure
 {
     my ($self) = @_;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.12 2004/03/14 06:51:33 fukachan Exp $
+# $FML: Command.pm,v 1.13 2004/03/14 08:51:15 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -122,7 +122,7 @@ permit if admin_member_maps has the sender.
 # Descriptions: permit if admin_member_maps has the sender.
 #    Arguments: OBJ($self) STR($rule) STR($sender)
 # Side Effects: none
-# Return Value: NUM
+# Return Value: ARRAY(STR, STR)
 sub permit_admin_member_maps
 {
     my ($self, $rule, $sender) = @_;
@@ -139,6 +139,10 @@ sub permit_admin_member_maps
 }
 
 
+# Descriptions: check if admin member passwrod is valid.
+#    Arguments: OBJ($self) STR($rule) STR($sender) HASH_REF($context)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
 sub check_admin_member_password
 {
     my ($self, $rule, $sender, $context) = @_;
