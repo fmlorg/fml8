@@ -1,0 +1,46 @@
+
+		fml4 から fml8 への翻訳テスト
+
+
+このディレクトリにある test スクリプトを実行して下さい。
+
+	% perl test
+
+デフォルトでは、ＭＬのホームディレクトリが /var/spool/ml 以下にある(た
+とえば elena ＭＬは /var/spool/ml/elena にある)ことを仮定しています。
+
+もし /var/spool/ml ではないディレクトリ(たとえば /usr/local/fml4/ml )
+を使っている場合は、test スクリプトの引数で指定して下さい。
+
+	% perl test /usr/local/fml4/ml
+
+次のような実行結果が表示されます。Q: 部分が翻訳対象の変数、A: が翻訳の
+結果です。OK は、うまく翻訳できたことを意味しますが、FAILED となってい
+る部分は、まだうまく翻訳できていません。
+
+	% perl test /usr/local/fml4/ml
+	// check /usr/local/fml4/ml/elena/config.ph
+	
+	# Q: MESSAGE_LANGUAGE => Japanese
+	# A: OK TRANSLATION FOUND
+	language_preference_order = ja en
+	
+	
+	# Q: OUTGOING_ADDRESS => $ml_name-outgoing@$ml_domain
+	# A: FAILED (NOT TRANSLATED)
+	
+		... 以下、各ＭＬの翻訳結果が続くが省略 ...
+	
+	--- failure summary ---
+	
+	# Q: OUTGOING_ADDRESS => $ml_name-outgoing@$ml_domain
+	
+
+このディレクトリ以下にある全ＭＬの翻訳を試み、最後にサマリが表示されま
+す。このサマリ部分を教えて下さい。
+
+なお、何も表示されないのは間違いです。
+	
+	% perl test
+	Congraturations! ALL OK
+
