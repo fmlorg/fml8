@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.33 2002/02/17 08:13:24 fukachan Exp $
+# $FML: Command.pm,v 1.34 2002/02/17 09:14:41 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -203,15 +203,19 @@ sub _pre_scan
     # special traps
     my $confirm_prefix = $config->{ confirm_command_prefix };
     my $admin_prefix   = $config->{ privileged_command_prefix }; 
-    my $confirm_found  = 0;
-    my $admin_found    = 0;
+    my $confirm_found  = '';
+    my $admin_found    = '';
+
+    # clean up
+    $confirm_prefix =~ s/\s*$//;
+    $admin_prefix   =~ s/\s*$//;
 
     for (@$ra_body) {
-	if (/$confirm_prefix\s+\w\s+([\w\d]+)/) {
+	if (/$confirm_prefix\s+\w+\s+([\w\d]+)/) {
 	    $confirm_found = $1;
 	}
 
-	if (/$admin_prefix\s+\w\s+([\w\d]+)/) {
+	if (/$admin_prefix\s+\w+\s+([\w\d]+)/) {
 	    $admin_found = $1;
 	}
     }
@@ -337,6 +341,7 @@ sub _evaluate_command
     my $eval = $config->get_hook( 'command_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
+    # firstly, prompt (for politeness :) to show processing ...
     $curproc->reply_message("result for your command requests follows:");
 
   COMMAND:
@@ -353,7 +358,8 @@ sub _evaluate_command
 
 	# Case: "confirm" command is exceptional.
 	#       we need to evaluate "confirm" message even for not member.
-	if ($comname =~ /$confirm_prefix/ && $id) {
+	#       XXX $command may be "> confirm chaddr ...".
+	if ($command =~ /$confirm_prefix/ && $id) {
 	    $comname = $confirm_prefix; # comname = confirm
 
 	    Log("try $comname <$command>");
@@ -408,9 +414,13 @@ sub _evaluate_command
 		$curproc->reply_message_nl('command.ok', "ok.");
 	    }
 	    else { # error trap
+		my $reason = $@;
+		Log($reason);
+
 		$curproc->reply_message_nl('command.fail', "fail.");
 		LogError("command ${comname} fail");
-		if ($@ =~ /^(.*)\s+at\s+/) {
+
+		if ($reason =~ /^(.*)\s+at\s+/) {
 		    my $reason = $1;
 		    Log($reason); # pick up reason
 		}
