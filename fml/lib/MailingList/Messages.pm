@@ -618,10 +618,19 @@ sub get_content_header
 sub get_content_body
 {
     my ($self, $size) = @_;
-    my $content   = $self->{ content };
-    my $pos       = index($$content, "\n\n", $self->{ offset_begin });
-    my $pos_begin = $pos + 2;
-    my $msglen    = $self->{ offset_end } - $pos_begin;
+    my $content           = $self->{ content };
+    my $base_content_type = $self->{ base_content_type };
+    my ($pos, $pos_begin, $msglen);
+
+    if ($base_content_type =~ /multipart/i) {
+	$pos       = index($$content, "\n\n", $self->{ offset_begin });
+	$pos_begin = $pos + 2;
+	$msglen    = $self->{ offset_end } - $pos_begin;
+    }
+    else {
+	$pos_begin = 0;
+	$msglen    = length($$content);
+    }
 
     $size ||= 512;
     if ($msglen < $size) { $size = $msglen;}
