@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CacheDir.pm,v 1.21 2002/09/28 09:27:43 fukachan Exp $
+# $FML: CacheDir.pm,v 1.22 2002/12/23 14:34:22 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -278,7 +278,7 @@ sub get_latest_value
     opendir($dh, $dir);
 
     my @dh = ();
-    for (readdir($dh)) { push(@dh, $_) if /^\d+/;}
+    for my $dir (readdir($dh)) { push(@dh, $dir) if $dir =~ /^\d+/;}
     @dh = sort { $b <=> $a } @dh;
 
     eval q{ use File::Spec;};

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.20 2003/01/11 15:14:23 fukachan Exp $
+# $FML: Utils.pm,v 1.21 2003/01/11 15:16:33 fukachan Exp $
 #
 
 package File::Utils;
@@ -237,8 +237,9 @@ sub append
     my $wh = new FileHandle ">> $dst";
 
     if (defined($rh) && defined($wh)) {
-	while (<$rh>) {
-	    print $wh $_;
+	my $buf = '';
+	while ($buf = <$rh>) {
+	    print $wh $buf;
 	}
 	$wh->close();
 	$rh->close();

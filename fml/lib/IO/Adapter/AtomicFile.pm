@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: AtomicFile.pm,v 1.5 2002/12/22 02:54:12 fukachan Exp $
+# $FML: AtomicFile.pm,v 1.6 2002/12/23 15:15:08 fukachan Exp $
 #
 
 package IO::Adapter::AtomicFile;
@@ -228,7 +228,8 @@ sub copy
     my $wh = $self->open($dst);
 
     if (defined($rh) && defined($wh)) {
-	while (sysread($rh, $_, 4096)) { print $wh $_;}
+	my $buf = '';
+	while (sysread($rh, $buf, 4096)) { print $wh $buf;}
 	$wh->close;
 	$rh->close;
 
