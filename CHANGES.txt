@@ -1,6 +1,39 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/03/19
+
+   CGI の再構成: FML::CGI と FML::Command 間のトランポリン機構
+	コマンド依存の機能を FML::Command クラスへ委任する
+
+   FML::Process::CGI::Param 
+	accpet empty value even if it not matches filter:)
+	
+   FML::Command::Admin::subscribe unsubscribe.pm 
+	implement cgi_menu() to show command specific menu in CGI screen
+	
+   FML::CGI::Admin::Menu 
+   FML::Process::CGI::Kernel 
+	o prepend cgi_ or run_cgi to function name.
+	o implement trampoline mechanism using FML::Command::class.
+	o change::pop_menu -> scrolling_list
+
+   FML::Command::UserControl 
+	define FML::Command::UserControl class to share user control codes.
+	modified Admin::{subscribe,unsubscribe} commands to use it.
+	
+   new commands
+	これらの admin コマンドが新たに使えるようになりました。
+	admin addadmin
+	admin addpriv
+	admin byeadmin
+	admin byepriv
+	admin log
+
+   new variables
+	$primary_admin_member_map
+	$admin_member_maps
+
 2002/03/18
 
    CGI の再構成をはじめる
@@ -15,6 +48,20 @@
 	   + run_cgi_navigator() to show navigation bar at the left.
 	o longjmp() by eval::croak when we encounter insecure conditions.
 
+   FML::CGI::Admin::Menu 
+   FML::Process::CGI::Kernel 
+	cosmetics
+	FNF
+	define cgi_execute_command() and try_get_address() into
+	FML::Process::CGI::Kernel and remove them from FML::CGI::Admin::Menu
+	
+   FML::Process::Utils 
+	define ml_domain() but same as default_domain() yet
+
+   new variables (for CGI)
+	$cgi_main_menu_color
+	$cgi_navigation_bar_color
+	
 2002/03/17
 
    chaddr コマンドが動くようになった！
@@ -1693,4 +1740,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.56 2002/03/17 14:48:22 fukachan Exp $
+$FML: CHANGES.txt,v 1.57 2002/03/18 13:55:48 fukachan Exp $
