@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.22 2002/09/11 23:18:03 fukachan Exp $
+# $FML: Log.pm,v 1.23 2002/09/22 14:56:40 fukachan Exp $
 #
 
 package FML::Log;
@@ -42,6 +42,12 @@ or specify arguments in the hash reference
 FML::Log contains several interfaces to write log messages, for
 example, log files, syslog() (not yet implemented).
 
+=cut
+
+#
+# XXX-TODO: FML::Log -> syslog().
+#
+
 =head2 Log( $message [, $args])
 
 The required argument is the message to log.
@@ -59,7 +65,7 @@ $config->{ log_format_type } defines the format sytle.
 C<sender> to log is taken from C<FML::Credential> object.
 
 Key C<log_format_type> changes the log format.
-By default our log format is same as one of fml 4.0.
+By default, our log format is same as fml 4.0 format.
 
 =head2 LogWarn( $message [, $args])
 
@@ -101,6 +107,9 @@ sub Log
 	use Mail::Message::Date;
 	$rdate = new Mail::Message::Date;
     };
+    if ($@) {
+	croak("Mail::Message::Date not found");
+    }
 
     # open the $file by using FileHandle.pm
     use FileHandle;
@@ -119,11 +128,13 @@ sub Log
     }
 
     if (defined $fh) {
+	# fml <= 4.x style
 	if ($style eq 'fml4_compatible') {
 	    print $fh $rdate->{'log_file_style'}, " ", $mesg;
 	    print $fh " ($sender)" if defined $sender;
 	    print $fh "\n";
 	}
+	# fml 8.x style
 	else {
 	    use File::Basename;
 	    my $name = basename($0);
