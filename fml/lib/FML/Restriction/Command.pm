@@ -4,13 +4,17 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.10 2004/03/04 04:30:15 fukachan Exp $
+# $FML: Command.pm,v 1.11 2004/03/04 12:21:34 fukachan Exp $
 #
 
 package FML::Restriction::Command;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+use FML::Restriction::Post;
+push(@ISA, qw(FML::Restriction::Post));
+
 
 =head1 NAME
 
@@ -39,6 +43,76 @@ sub new
     return bless $me, $type;
 }
 
+
+# Descriptions: permit if $sender is an ML member.
+#    Arguments: OBJ($self) STR($rule) STR($sender) HASH_REF($v_args)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
+sub permit_user_command
+{
+    my ($self, $rule, $sender, $v_args) = @_;
+    my $curproc  = $self->{ _curproc };
+    my $config   = $curproc->config();
+    my $context  = $v_args || {};
+    my $comname  = $context->{ comname } || '';
+
+    # 1) sender check
+    my ($match, $reason) = $self->SUPER::permit_member_maps($rule, $sender);
+
+    # 2) command match anonymous one ?
+    if ($match) {
+	if ($reason eq 'reject') {
+	    my $_rule = "permit_member_maps";
+	    $curproc->restriction_state_set_deny_reason($_rule);
+	    return(0, undef);
+	}
+	else {
+	    if ($config->has_attribute('user_command_mail_allowed_commands',
+				       $comname)) {
+		$curproc->log("debug: match: rule=$rule comname=$comname");
+		return("matched", "permit");
+	    }
+	    else {
+		$curproc->restriction_state_set_deny_reason($rule);
+		return(0, undef);
+	    }
+	}
+    }
+    else {
+	my $_rule = "permit_member_maps";
+	$curproc->restriction_state_set_deny_reason($_rule);
+	return(0, undef);
+    }
+}
+
+
+# Descriptions: permit this command even if $sender is a stranger.
+#    Arguments: OBJ($self) STR($rule) STR($sender) HASH_REF($v_args)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
+sub permit_anonymous_command
+{
+    my ($self, $rule, $sender, $v_args) = @_;
+    my $curproc  = $self->{ _curproc };
+    my $config   = $curproc->config();
+    my $context  = $v_args || {};
+    my $comname  = $context->{ comname } || '';
+
+    # 1) sender: no check.
+    # 2) command match anonymous one ?
+    if ($config->has_attribute('anonymous_command_mail_allowed_commands',
+			       $comname)) {
+	$curproc->log("debug: match: rule=$rule comname=$comname");
+	return("matched", "permit");
+    }
+
+    return(0, undef);
+}
+
+
+=head1 UTILITIES
+
+=cut
 
 # Descriptions: $s looks secure as a command ?
 #    Arguments: OBJ($self) STR($s)
