@@ -1,0 +1,1312 @@
+
+
+Network Working Group                                            E. Burger
+Internet Draft                                    Centigram Communications
+Document: draft-ietf-vpim-pndn-00.txt                        July 14, 2000
+Obsoletes: draft-ema-vpim-pndn-01.txt
+Category: Standards Track
+Expires in six months
+
+
+                   Partial Non-Delivery Notification
+
+
+Status of this Memo
+
+   This document is an Internet-Draft and is in full conformance with
+   all provisions of Section 10 of RFC2026 [1].  Internet-Drafts are
+   working documents of the Internet Engineering Task Force (IETF), its
+   areas, and its working groups.  Note that other groups may also
+   distribute working documents as Internet-Drafts.
+
+   Internet-Drafts are draft documents valid for a maximum of six
+   months.  Other documents may update, replace, or obsolete this
+   document at any time.  It is inappropriate to use Internet-Drafts as
+   reference material or to cite them other than as "work in progress."
+
+   The list of current Internet-Drafts can be accessed at
+   http://www.ietf.org/ietf/1id-abstracts.txt
+
+   The list of Internet-Draft Shadow Directories can be accessed at
+   http://www.ietf.org/shadow.html.
+
+
+
+
+1.   Abstract
+   This document describes the interaction between systems sending
+   multi-part Internet mail [2] to systems that cannot render parts of
+   the sent message.  In particular, this document describes an
+   extension to the Delivery Status Notification mechanism described in
+   [3].
+
+   An example of partial message delivery failure is the case when a
+   user sends an audio file and a video file to an Internet Voice Mail
+   [4] system.  The Internet Voice Mail system can render the audio
+   part but not the video part.  In this case, a partial delivery
+   occurs.
+
+   This document reflects work undertaken in support of the Internet
+   Voice Mail and Voice Profile for Internet Mail [5] initiatives.  The
+   VPIM Work Group home page is <http://www.ema.org/vpim>.
+
+
+
+
+
+Burger                    Expires 1/14/2001                   [Page 1]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+Table of Contents
+
+   1.   Abstract .....................................................1
+   2.   Conventions used in this document ............................2
+   3.   Introduction .................................................3
+
+   4.   Operation ....................................................5
+   5.   Contents of the PNDN .........................................6
+     5.1.  The message/partial-delivery-status content-type ..........6
+     5.2.  Per-Message PNDN Fields ...................................7
+        5.2.1.  Fields from RFC 1894 .................................7
+        5.2.2.  Original-Message-ID ..................................7
+     5.3.  Per-Part PNDN Fields ......................................8
+        5.3.1.  Fields from RFC 1894 .................................8
+
+        5.3.2.  Action Field .........................................8
+        5.3.3.  Final Recipient Field ................................9
+        5.3.4.  Original Content ID Field ............................9
+        5.3.5.  Original Content Description Field ...................9
+        5.3.6.  Original Content Disposition Field ..................10
+        5.3.7.  Original Content Type Field .........................10
+        5.3.8.  Status Field ........................................10
+
+   6.   Appendix - Examples .........................................11
+     6.1.  PNDN With One Failed Body Part ...........................13
+     6.2.  PNDN With Two Failed Body Parts ..........................14
+     6.3.  PNDN With One Body Part Failure and Two Recipients .......15
+     6.4.  PNDN With One Body Part Failure for One Recipient and
+           Another Body Part Failure for Two Recipients .............16
+   7.   Formal Syntax ...............................................17
+   8.   Security Considerations .....................................19
+
+     8.1.  Forgery ..................................................19
+     8.2.  Confidentiality ..........................................19
+   9.   References ..................................................21
+   10.  Acknowledgments .............................................21
+   11.  Author's Address ............................................22
+   12.  Notices and Full Copyright Statement ........................23
+
+
+
+
+2.   Conventions used in this document
+
+   This document refers generically to the sender of a message in the
+   masculine (he/him/his) and the recipient of the message in the
+   feminine (she/her/hers).  This convention is purely for convenience
+   and makes no assumption about the gender of a message sender or
+   recipient.
+
+
+
+
+Burger            Internet Draft - Expires 1/14/2001          [Page 2]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in
+   this document are to be interpreted as described in RFC-2119 [6].
+
+   FORMATTING NOTE: Notes, such at this one, provide additional
+   nonessential information that the reader may skip without missing
+   anything essential.  The primary purpose of these non-essential
+   notes is to convey information about the rationale of this document,
+   or to place this document in the proper historical or evolutionary
+   context.  Readers whose sole purpose is to construct a conformant
+   implementation may skip such information.  However, it may be of use
+   to those who wish to understand why we made certain design choices.
+
+
+
+
+3.   Introduction
+
+   This document describes partial non-delivery notifications (PNDN).
+   Partial non-delivery notifications are an extension of the Delivery
+   Status Notification (DSN) described in RFC 1894 [3].
+
+   The need for a partial non-delivery notification comes about because
+   of the internetworking of Internet mail systems with legacy
+   messaging systems that do not fulfil all of the semantics of
+   Internet mail.  Such legacy systems have a limited ability to render
+   all parts of a given message. This document will use the case of an
+   Internet mail system sending electronic messages a legacy voice
+   messaging system for illustrative purposes.
+
+   Electronic mail has historically been text-centric.  Extensions such
+   as MIME enable the desktop to send and receive multi-part,
+   multimedia messages.  Popular multimedia data types include binary
+   word processing documents, binary business presentation graphics,
+   voice, and video.
+
+   Voice mail has historically been audio-centric.  Many voice
+   messaging systems can only render voice.  Extensions such as fax
+   enable the voice mail system to send and receive fax images as well
+   as create multi-part voice and fax messages.  A few voice mail
+   systems can render text using text-to-speech or text-to-fax
+   technology.  Although theoretically possible, none can today render
+   video.
+
+   An important aspect of the interchange between voice messaging
+   services and desktop e-mail client applications is that the
+   rendering capability of the voice messaging platform is often much
+   less than the rendering capability of a desktop e-mail client.  In
+   the e-mail case, the sender has the expectation that the recipient
+   receives all components of a multimedia message.  This is so even if
+   the recipient cannot render all body parts.  For the most part, the
+
+
+Burger            Internet Draft - Expires 1/14/2001          [Page 3]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+   recipient can either find the appropriate rendering tool or tell the
+   sender that she cannot read the particular attachment.
+
+   This is an important issue.  By definition, a MIME-enabled user
+   agent, conforming to [7] will present or make available all of the
+   body parts to the recipient.  However, a voice mail system may not
+   be capable of storing non-voice objects.  Moreover, the voice mail
+   system may not be capable of notifying the recipient that there were
+   undeliverable message parts.
+
+   The inability of the receiving system to render a body part is
+   usually a permanent failure.  Retransmission of the message will not
+   improve the likelihood of a future successful delivery.  Contrast
+   this to the case with normal data delivery.  Traditional message
+   failures, such as a garbled message or disabled link will benefit
+   from retransmission.
+
+   Note that the PNDN does not attempt to address User Agent failures,
+   such as a corruption of a body part.  PNDN only addresses the
+   capability of a system to handle the data type by observing the
+   part's metadata.  Other mechanisms, such as Message Disposition
+   Notification [8], can address the situation when the recipient
+   system discovers an error in the payload of a body part.
+
+   This document addresses the need to allow Internet e-mail client
+   applications to send arbitrary multi-part multimedia messages to
+   voice messaging systems, retaining the semantics of delivery
+   notification, while taking into account the limitations of the voice
+   messaging system's rendering capabilities.  The method described by
+   this document is applicable to any interface between a full-featured
+   user agent and a recipient mail transfer agent that has less
+   rendering and media type storage capabilities than the sender has.
+
+   Ideally, the voice mail system would notify the recipient of the
+   undeliverable body parts.  Such behavior would satisfy the essential
+   requirements of [8].  In fact, if the voice mail system can notify
+   the recipient there were undeliverable body parts, then there would
+   be no need for this document.  However, many voice mail systems are
+   not capable of making this notification.
+
+   NOTE: Another method of handling partial delivery is to determine
+   what parts of the message the sender considers critical.  If the
+   voice mail system could not deliver the critical parts, then the
+   voice mail system would reject the entire message.  If the voice
+   mail system could deliver the critical parts, but there were other
+   undeliverable parts, it would silently delete the parts from the
+   delivered message.  However, currently there is no method to
+   identify critical parts.  In light of the limitations of voice mail
+   systems, we decided to deliver as much of the message as possible,
+   notifying the sender of any parts that the voice mail system fails
+   to deliver.
+
+
+Burger            Internet Draft - Expires 1/14/2001          [Page 4]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+   NOTE: The concept of a critical part indicator is still a useful
+   construction.  The sender may wish to specify a body part as so
+   important that if the system cannot deliver the specified body part,
+   then the system will not deliver any parts of the message.  However,
+   this is beyond the scope of this document.  We should revisit this
+   issue once there is an acceptable mechanism for identifying critical
+   parts.
+
+
+
+
+4.   Operation
+
+   The sending system sees the Internet Voice Mail system as a peer e-
+   mail client.  The only special consideration on the part of the
+   sending system is that it may encode the MIME message following the
+   format specified by VPIM [5] or the Internet Voice Mail Profile [4].
+   Properly encoding and profiling the message will enhance the
+   receiving system's ability to process and successfully deliver the
+   message.  Such considerations include the formatting and encoding of
+   the sender's audio name clip, return address information, out-dial
+   destinations, and other elements.  Refer to [5] for more
+   information.
+
+   The recipient system, on receipt of e-mail destined for a voice mail
+   user, makes a best-efforts attempt to deliver what parts it can to
+   the user.
+
+   If the recipient system is capable of delivering the entire message,
+   it follows the notification protocols specified in [4].
+
+   If the recipient system cannot deliver any part of the message, it
+   will return the non-delivery notification specified in [4].
+
+   If the recipient system is capable of delivering only part of the
+   message, it will return a partial non-delivery notification (PNDN)
+   as described below.
+
+   Delivery failure can occur for all recipients of a message because
+   the recipient system cannot handle a given body part.  However,
+   body-part delivery failure can also occur for a subset of recipients
+   of a message.  This happens if the recipient system is capable of
+   handling the media type of the body part, but the recipient user
+   does not subscribe to a service that can present the media type.
+   For example, consider an Internet Voice Mail platform that can
+   handle fax.  Now consider a service provider that has a class of
+   service that is voice only.  If the message recipient user has a
+   voice only class of service, she will not be able to render fax,
+   which is an image.
+
+   NOTE:  We chose Delivery Status Notification (DSN) [3] over Message
+   Disposition Notification (MDN) [8] as a model for PNDN.  There was
+
+Burger            Internet Draft - Expires 1/14/2001          [Page 5]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+   some discussion on this point because an Internet Voice Mail system
+   acts as both a UA and a MTA.  The Message Disposition Notification
+   deals with things such as return receipt.  The generation of the
+   return receipt can occur long after the receiving system has
+   received the message.  On the other hand, the receiving system can
+   know on receipt whether it has the capabilities to deliver all parts
+   of the message.  In this case, the recipient acts more like an MTA
+   than a UA.  In addition, we decided it was more important for the
+   sender to know the system would never deliver some parts of the
+   message.  It would not be desirable to wait for the recipient to
+   attempt to read the message and only at that point generate a
+   notification that the system could not deliver parts of the message.
+
+   NOTE:  This is why the language uses "is capable of delivering"
+   rather than "delivers" in the description above.
+
+
+
+
+5.   Contents of the PNDN
+
+   The PNDN informs a human or machine sender that the recipient system
+   could not deliver one or more parts of a message they have sent.
+
+   The PNDN is a special case of Delivery Status Notification.  In the
+   sections that follow, refer to [3] for a full description of the
+   fields.
+
+   The receiving system transmits a PNDN as a MIME message with a top-
+   level content-type of multipart/report, as defined in [3].
+
+   The mail system can use the multipart/report content-type for any of
+   several kinds of reports.  For a PNDN, the report-type parameter
+   uses the DSN multipart/report content-type of "delivery-status".
+
+   As described in [9], the first part of a multipart/report content-
+   type is a human readable explanation of the report.  For a PNDN, the
+   second component of the multipart/report is of content-type
+   message/delivery-status.  The third component of the
+   multipart/report consists of the original message or some portion
+   thereof.
+
+
+
+5.1. The message/delivery-status content-type
+
+   The message/delivery-status content-type definition is as follows:
+
+     MIME type name:            message
+     MIME subtype name:         delivery-status
+     Optional parameters:       none.
+     Encoding considerations:   "7bit" encoding is sufficient and
+
+Burger            Internet Draft - Expires 1/14/2001          [Page 6]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+                                conforming systems MUST use it to
+                                maintain readability when viewed
+                                by non-MIME mail readers.
+     Security considerations:   discussed in section 7 of this memo.
+
+
+   The message/delivery-status report type for use in the
+   multipart/report is "delivery-status".
+
+   The body of a message/delivery-status consists of one or more
+   "fields" formatted according to the ABNF [10] specified below and in
+   [3].  The per-message fields appear first, followed by a blank line.
+   Following the per-message fields are one or more groups of per-
+   recipient/per-body part fields.  A blank line precedes each group of
+   per-recipient fields.
+
+   The syntax of the message/delivery-status content is in section 7.
+
+   Section 5.2 describes the per-message-fields.  Section 5.3 describes
+   the per-part-fields.
+
+   NOTE:  Readers should focus on Section 5.3 as it describes the
+   essential extensions to DSN.
+
+
+
+5.2. Per-Message PNDN Fields
+
+
+5.2.1. Fields from RFC 1894
+
+   Except as noted below, the PNDN contains all fields as appropriate
+   from DSN [3].  In particular, Reporting-MTA MUST be present.
+
+   NOTE:  The sender's MTA could generate a DSN.  In this case, the
+   Reporting-MTA is optional.  However, only receiving systems will
+   generate Partial Non-Delivery Notifications.  Thus, the sender needs
+   to know who reported the failure.
+
+
+5.2.2. Original-Message-ID
+
+   The recipient system MUST generate an Original-Message-ID field if a
+   Message-ID field was present in the original message.
+
+   NOTE:  This is a change from RFC 1894.  Few User Agents insert an
+   Envelope-ID.  The sender needs to know what message failed.  Sending
+   back the original message in a multimedia environment has security
+   implications.  In particular, requiring the receiving system to send
+   back large multimedia files would make them vulnerable to denial of
+   service attacks.  Moreover, MIME-encoded body parts are in base64.
+   Since we cannot rely on the user recognizing the original text of
+
+Burger            Internet Draft - Expires 1/14/2001          [Page 7]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+   their message, we must rely on alternative identifying
+   characteristics.
+
+
+
+5.3. Per-Part PNDN Fields
+
+   A PNDN contains information about attempts to deliver a message's
+   parts to one or more recipients.  A group of contiguous per-message,
+   per-recipient body-part content partial non-delivery notification
+   fields contains delivery information for that recipient.  A blank
+   line precedes each group of per-recipient fields.
+
+   PNDN expands upon DSN by introducing body part indicators to DSN's
+   per-recipient block.  This extension allows multiple body part
+   indicators per per-recipient block.  A conforming implementation
+   MUST choose to separate each body-part failure into its own per-
+   recipient block.
+
+   For example, take a message sent to two users, A and B.  In
+   addition, let's say that Part 1 fails for the same reason for both
+   users, and Part 2 fails only for user B for the same reason Part 1
+   failed.  Here is the way of rendering the per-recipient block.
+
+             Recipient A Failure
+             Part 1 Failure
+
+             Recipient B Failure
+             Part 1 Failure
+             Part 2 Failure
+
+
+
+   NOTE:  This RFC could have allowed splitting the report by body-
+   parts. However, this would break other NDN implementations,
+   especially MIXER.
+
+5.3.1. Fields from RFC 1894
+
+   Except as noted below, the PNDN contains all fields as appropriate
+   from DSN [3].  The Original-Recipient, Final-Recipient, Last-
+   Attempt-Date, and Final-Log-ID fields follow their meaning and
+   requirements set forth in DSN.  The Will-Retry-Until field is not
+   relevant, as the PNDN is not a delayed delivery notification.
+
+
+5.3.2. Action Field
+
+   The action field reflects the disposition of the message.  Since the
+   receiving system can deliver at least part of the message, the
+   action value SHOULD be "delivered".  If the recipient system did not
+
+
+Burger            Internet Draft - Expires 1/14/2001          [Page 8]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+   deliver any parts of the message, then it would perform the normal
+   undeliverable message processing described by DSN [3].
+
+   NOTE: Considering partial delivery a failure or a success is a
+   matter of many debates.  There is work ongoing in the IETF to
+   develop an indicator for identifying critical body parts.  With a
+   critical body part indicator, the recipient system can return to the
+   sender a success or failure indication based on whether or not the
+   system succeeded in delivering the critical parts.
+
+   Without critical part indicators, one may chose to err on the side
+   of failing the entire message.  However, from a practical point of
+   view, the sender probably will have some idea of the capabilities of
+   the recipient.  Moreover, experience shows that users do not take
+   well to being bombarded with failure notices they believe should be
+   warnings.
+
+   Therefore, until such a time as we have a critical body part
+   indicator, the best practice is to return a delivered notice to the
+   sender, with the appropriate warning and explanation message for the
+   body part(s) not delivered.
+
+
+5.3.3. Final Recipient Field
+
+   The Final-Recipient field indicates the recipient for which this set
+   of per-part fields applies.  The definition of the final recipient
+   field is as described by DSN [3].  However, for security reasons,
+   the PNDN relaxes the imperative for including this field.  That is,
+   the per-part data MAY include the final recipient field
+
+   NOTE:  The change in imperative from [3], from MUST to MAY, comes
+   from the Internet Voice Mail environment.  One can envision Internet
+   Voice Mail implementations where the service provider wishes to keep
+   the actual host name of the voice mail system hidden yet in the
+   Internet name space.  Reporting the final recipient field may
+   include the actual host name of a voice mail node.  Making that
+   information public through a PNDN may enable attacks on that node.
+
+
+5.3.4. Original Content ID Field
+
+   The Original-Content-ID field MUST be present in the PNDN if a
+   Content-ID field is present in the original message.  This field
+   aids the sender in understanding exactly which body part the
+   receiving system is not capable of delivering.
+
+
+5.3.5. Original Content Description Field
+
+   The Original-Content-Description field MUST be present in the PNDN
+   if a Content-Description field is present in the original message.
+
+Burger            Internet Draft - Expires 1/14/2001          [Page 9]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+   This field aids the sender in understanding exactly which body part
+   the receiving system is not capable of delivering.  This field will
+   be much more useful than the Original-Content-ID field to a human
+   sender.  However, few User Agents insert the Content-Description
+   field in a message.
+
+
+5.3.6. Original Content Disposition Field
+
+   The Original-Content-Disposition field MAY be present in the PNDN if
+   a Content-Disposition field is present in the original message.
+
+   If the original message does not have a Content-Type field, the
+   Original-Content-Disposition field MUST be present in the PNDN if a
+   Content-Disposition field is present in the original message.
+
+   The Original-Content-Disposition field aids the sender in
+   understanding exactly which body part the receiving system is not
+   capable of delivering.  This field will be more useful than the
+   Original-Content-ID field to a human sender.  It will let the human
+   know the file name of the part the receiving system is not capable
+   of handling.
+
+
+5.3.7. Original Content Type Field
+
+   The Original-Content-Type field MUST be present in the PNDN if a
+   Content-Type field is present in the original message.  This field
+   aids the sender in understanding exactly which body part the
+   receiving system is not capable of delivering.  This field will be
+   much more useful than the Original-Content-ID field to a human
+   sender.  It will let the human know the MIME types that the
+   receiving system is not capable of handling.  In addition, the
+   sender will get a clue as to what body part the receiving system is
+   not capable of handling from the filename sub-field, if present.
+
+
+5.3.8. Status Field
+
+   Message Transfer Agents (MTAs) are free to generate standard status
+   codes from [11].  This section describes status codes that have
+   special meaning for PNDN.
+
+   All of these status codes are of type "permanent failures of media",
+   type 5.
+
+   Receiving systems that generate Partial Non-Delivery Notifications
+   MUST insert descriptive text in the comment field of the status code
+   so a human sender can understand why his message failed.
+
+   Sending systems that automatically process returned status codes
+   MUST use the numeric status code and MUST NOT use the comment.
+
+Burger            Internet Draft - Expires 1/14/2001         [Page 10]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+
+
+5.3.8.1.  Media not Supported
+
+   If the recipient system is not capable of delivering a part of a
+   message because it does not support a given media type, it MUST
+   return the Media not Supported status code.  For example, if an
+   Internet Voice Mail system receives an AutoCAD document and it can
+   only render voice, the Internet Voice Mail system will return a
+   Media not Supported status code.
+
+   The Media not Supported status code is 5.6.1 [11].
+
+
+5.3.8.2.  Conversion With Loss Performed
+
+   If the recipient system can deliver the part, but only with a lossy
+   conversion, the receiving system SHOULD NOT return Conversion With
+   Loss Performed.
+
+   NOTE:  We considered the optional return code of Conversion With
+   Loss Performed, Status 5.6.4.  However, we realized two things.
+   First, few Internet Voice Mail systems would necessarily have the
+   capability of generating this warning.  Second, there is dubious
+   value to the sender of receiving this warning.  If the receiver has
+   trouble understanding the rendering of the body part, she can always
+   send a message to the sender.  On the other hand, we could foresee
+   confusion on the part of the sender if he constantly received
+   warning messages every time he sends a message to the particular
+   recipient.
+
+
+
+
+6.   Appendix - Examples
+
+   NOTE:  These examples are for illustrative purposes only and are not
+   a normative part of the PNDN definition.  If an example conflicts
+   with the normative description of sections 3 through 5, the example
+   is wrong.
+
+   The examples in this appendix use the following MIME-Encoded message
+   for the original sent message.
+
+   The message has three parts.  The first part is a text message.  The
+   second part is a voice message.  The third part is a fax message.
+   Here is the sample message.
+
+
+
+   Message-ID: 005901bf3532$2c0c3e20$29010981@mtc.telecnnct.com
+   From: "Eric Burger" <ericb@mtc.telecnnct.com>
+
+Burger            Internet Draft - Expires 1/14/2001         [Page 11]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+   To: "Eric Burger" <eric.burger@centigram.com>
+   Subject: Three-part Message
+   Date: Mon, 22 Nov 1999 12:02:30 -0500
+   MIME-Version: 1.0
+   Content-Type: multipart/mixed;
+        boundary="----=_NextPart_000_0007_01BF34E1.74123720"
+   X-Priority: 3
+   X-Mailer: The One And Only Test Platform V8.1222.974B
+
+   This is a multi-part message in MIME format.
+
+   ------=_NextPart_000_0007_01BF34E1.74123720
+   Content-Type: text/plain;
+        charset="iso-8859-1"
+   Content-Transfer-Encoding: 7bit
+   Content-ID: TextPart0AFF8B
+
+   Here is a three-part message.  The first part is text (this one).
+   The second part is voice.  The third part is fax.
+
+
+
+   ------=_NextPart_000_0007_01BF34E1.74123720
+   Content-Type: audio/wav;
+        name="Voice Message.wav"
+   Content-Transfer-Encoding: base64
+   Content-Disposition: attachment;
+        filename="Voice Message.wav"
+
+   UklGRjgRAABXQVZFZm10IBQAAAAxAAEAQB8AAFkGAABBAAAAAgBAAWZhY3QEAAAAwFMA
+   EQAASfYQFoWCEkuSTST3JGyiTbIfDybr9hltilsnh+uBo/OEpE1iTFGWuFEcFJFuVAxk
+   ...
+   0TIT1twS7JVeyYHHFDaWIEN1mcYMlvLNgGoakdxbL2ErxZprJS+htNhu4ozNYKmwCGvT
+   wErbIgazEvRAGn5hMxhcqGS59UE1cHEjR08A
+
+   ------=_NextPart_000_0007_01BF34E1.74123720
+   Content-Type: image/tiff;
+        name="My House.tif"
+   Content-Transfer-Encoding: base64
+   Content-Disposition: attachment;
+        filename="My House.tif"
+   Content-Description: Picture of My House
+
+   SUkqABhSAAAAAU2agAFNmoABTZqAAU2agAFNmoABTZqAAU2agAFNmoABTZqAAU2agAFN
+   AU2agAFNmoABTZqAAU2agAFNmoABTZqAAU2agAGRqDuH4JefU8/YSwd8/xdn7CKC4PMW
+   ...
+   UAAAGgEFAAEAAAAIUgAAGwEFAAEAAAAQUgAAJAEEAAEAAAAEAAAAKAEDAAEAAAACAAAA
+   AAAAAAEARgEDAAEAAAAAAAAARwEDAAEAAAAAAAAAAAAAAA==
+
+   ------=_NextPart_000_0007_01BF34E1.74123720--
+
+
+
+Burger            Internet Draft - Expires 1/14/2001         [Page 12]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+
+6.1. PNDN With One Failed Body Part
+
+   This example shows a PNDN for a system that does not handle text,
+   but does handle voice and fax.
+
+
+
+   Date: Thu, 22 Nov 1999 09:05:15 -0800
+   From: Mail Delivery Subsystem <MAILER-DAEMON@CENTIGRAM.COM>
+   Message-Id: <199407072116.RAA14128@TELECNNCT>
+   Subject: WARNING: Could Not Delivery Body Part
+   To: <ericb@mtc.telecnnct.com>
+   MIME-Version: 1.0
+   Content-Type: multipart/report; report-type=delivery-status;
+         boundary="RAA14128.773615765/CENTIGRAM.COM"
+
+   --RAA14128.773615765/CENTIGRAM.COM
+
+   The original message was received at Mon, 22 Nov 1999 09:05:05 -0800
+   from root@localhost
+
+      ----- The following addresses had delivery problems -----
+   <eric.burger@centigram.com>  (warning)
+
+      ----- Transcript of session follows -----
+   Could Not Deliver Text Part to < eric.burger@centigram.com >
+
+   Body part will be deleted from queue
+
+   --RAA14128.773615765/CENTIGRAM.COM
+   content-type: message/delivery-status
+
+   Original-Message-ID:
+        005901bf3532$2c0c3e20$29010981@mtc.telecnnct.com
+   Reporting-MTA: dns; telecnnct.com
+
+   Action: delivered
+   Status: 5.6.1     (Media not Supported)
+   Original-Recipient: rfc822;eric.burger@centigram.com
+   Original-Content-ID: TextPart0AFF8B
+
+
+   --RAA14128.773615765/CENTIGRAM.COM
+   content-type: message/rfc822
+
+   Here is a three-part message.  The first part is text (this one).
+   The second part is voice.  The third part is fax.
+
+   --RAA14128.773615765/CENTIGRAM.COM--
+
+
+
+Burger            Internet Draft - Expires 1/14/2001         [Page 13]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+
+6.2. PNDN With Two Failed Body Parts
+
+   This example shows a PNDN for a system that does not handle text or
+   fax.
+
+
+
+   Date: Thu, 22 Nov 1999 09:05:15 -0800
+   From: Mail Delivery Subsystem <MAILER-DAEMON@CENTIGRAM.COM>
+   Message-Id: <199407072116.RAA14128@TELECNNCT>
+   Subject: WARNING: Could Not Delivery Body Part
+   To: <ericb@mtc.telecnnct.com>
+   MIME-Version: 1.0
+   Content-Type: multipart/report; report-type=delivery-status;
+         boundary="RAA14128.773615765/CENTIGRAM.COM"
+
+   --RAA14128.773615765/CENTIGRAM.COM
+
+   The original message was received at Mon, 22 Nov 1999 09:05:05 -0800
+   from root@localhost
+
+      ----- The following addresses had delivery problems -----
+   <eric.burger@centigram.com>  (warning)
+
+      ----- Transcript of session follows -----
+   Could Not Deliver Text Part to < eric.burger@centigram.com >
+   Could Not Deliver Fax Part to < eric.burger@centigram.com >
+
+   Body parts will be deleted from queue
+
+   --RAA14128.773615765/CENTIGRAM.COM
+   content-type: message/delivery-status
+
+   Original-Message-ID:
+        005901bf3532$2c0c3e20$29010981@mtc.telecnnct.com
+   Reporting-MTA: dns; telecnnct.com
+
+   Original-Recipient: rfc822;eric.burger@centigram.com
+   Status: 5.6.1     (Media not Supported)
+   Action: delivered
+   Original-Content-Description: Picture of My House
+   Original-Content-Type: image/tiff; name="My House.tif"
+   Original-Content-Disposition: attachment; filename="My House.tif"
+   Status: 5.6.1     (Media not Supported)
+   Action: delivered
+   Original-Content-ID: TextPart0AFF8B
+
+   --RAA14128.773615765/CENTIGRAM.COM
+   content-type: message/rfc822
+
+
+
+Burger            Internet Draft - Expires 1/14/2001         [Page 14]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+   Here is a three-part message.  The first part is text (this one).
+   The second part is voice.  The third part is fax.
+
+   --RAA14128.773615765/CENTIGRAM.COM--
+
+
+
+6.3. PNDN With One Body Part Failure and Two
+     Recipients
+
+   This example shows a PNDN for a system that does not handle text,
+   but does handle voice and fax.  Assume the original message was sent
+   to <ericb@mtc.telecnnct.com> and <8005551212@vm.sp.net>.
+
+
+
+   Date: Thu, 22 Nov 1999 09:05:15 -0800
+   From: Mail Delivery Subsystem <MAILER-DAEMON@CENTIGRAM.COM>
+   Message-Id: <199407072116.RAA14128@TELECNNCT>
+   Subject: WARNING: Could Not Delivery Body Part
+   To: <ericb@mtc.telecnnct.com>
+   MIME-Version: 1.0
+   Content-Type: multipart/report; report-type=delivery-status;
+         boundary="RAA14128.773615765/CENTIGRAM.COM"
+
+   --RAA14128.773615765/CENTIGRAM.COM
+
+   The original message was received at Mon, 22 Nov 1999 09:05:05 -0800
+   from root@localhost
+
+      ----- The following addresses had delivery problems -----
+   <eric.burger@centigram.com>  (warning)
+   <8005551212@vm.sp.net>  (warning)
+
+      ----- Transcript of session follows -----
+   Could Not Deliver Text Part to < eric.burger@centigram.com >
+   Could Not Deliver Text Part to < 8005551212@vm.sp.net >
+
+   Body part will be deleted from queue
+
+   --RAA14128.773615765/CENTIGRAM.COM
+   content-type: message/delivery-status
+
+   Original-Message-ID:
+        005901bf3532$2c0c3e20$29010981@mtc.telecnnct.com
+   Reporting-MTA: dns; telecnnct.com
+
+   Action: delivered
+   Status: 5.6.1     (Media not Supported)
+   Original-Recipient: rfc822;eric.burger@centigram.com
+   Final-Recipient: rfc822;eburger@vmail27.sp.net
+   Original-Content-ID: TextPart0AFF8B
+
+Burger            Internet Draft - Expires 1/14/2001         [Page 15]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+
+   Action: delivered
+   Status: 5.6.1     (Media not Supported)
+   Original-Recipient: rfc822;8005551212@vm.sp.net
+   Final-Recipient: rfc822;eburger@vmail27.sp.net
+   Original-Content-ID: TextPart0AFF8B
+
+
+   --RAA14128.773615765/CENTIGRAM.COM
+   content-type: message/rfc822
+
+   Here is a three-part message.  The first part is text (this one).
+   The second part is voice.  The third part is fax.
+
+   --RAA14128.773615765/CENTIGRAM.COM--
+
+
+
+6.4. PNDN With One Body Part Failure for One Recipient
+     and Another Body Part Failure for Two Recipients
+
+   This example shows a PNDN for a system that does not handle text,
+   but does handle voice and fax.  However, the recipient at
+   ericb@mtc.telecnnct.com does not subscribe to a fax service.  Assume
+   the original message was sent to <ericb@mtc.telecnnct.com> and
+   <8005551212@vm.sp.net>.
+
+
+
+   Date: Thu, 22 Nov 1999 09:05:15 -0800
+   From: Mail Delivery Subsystem <MAILER-DAEMON@CENTIGRAM.COM>
+   Message-Id: <199407072116.RAA14128@TELECNNCT>
+   Subject: WARNING: Could Not Delivery Body Part
+   To: <ericb@mtc.telecnnct.com>
+   MIME-Version: 1.0
+   Content-Type: multipart/report; report-type=delivery-status;
+         boundary="RAA14128.773615765/CENTIGRAM.COM"
+
+   --RAA14128.773615765/CENTIGRAM.COM
+
+   The original message was received at Mon, 22 Nov 1999 09:05:05 -0800
+   from root@localhost
+
+      ----- The following addresses had delivery problems -----
+   <eric.burger@centigram.com>  (warning)
+   <8005551212@vm.sp.net>  (warning)
+
+      ----- Transcript of session follows -----
+   Could Not Deliver Text Part to < eric.burger@centigram.com >
+   Could Not Deliver Text Part to < 8005551212@vm.sp.net >
+   Could Not Deliver Fax Part to < eric.burger@centigram.com >
+
+
+Burger            Internet Draft - Expires 1/14/2001         [Page 16]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+   Body part will be deleted from queue
+
+   --RAA14128.773615765/CENTIGRAM.COM
+   content-type: message/delivery-status
+
+   Original-Message-ID:
+        005901bf3532$2c0c3e20$29010981@mtc.telecnnct.com
+   Reporting-MTA: dns; telecnnct.com
+
+   Action: delivered
+   Status: 5.6.1     (Media not Supported)
+   Original-Recipient: rfc822;eric.burger@centigram.com
+   Final-Recipient: rfc822;eburger@vmail27.sp.net
+   Original-Content-ID: TextPart0AFF8B
+   Action: delivered
+   Status: 5.6.1     (Media not Supported)
+   Original-Content-Description: Picture of My House
+   Original-Content-Type: image/tiff; name="My House.tif"
+   Original-Content-Disposition: attachment; filename="My House.tif"
+
+   Action: delivered
+   Status: 5.6.1     (Media not Supported)
+   Original-Recipient: rfc822;8005551212@vm.sp.net
+   Original-Content-ID: TextPart0AFF8B
+
+   --RAA14128.773615765/CENTIGRAM.COM
+   content-type: message/rfc822
+
+   Here is a three-part message.  The first part is text (this one).
+   The second part is voice.  The third part is fax.
+
+   --RAA14128.773615765/CENTIGRAM.COM--
+
+
+
+
+7.   Formal Syntax
+
+   The following syntax specification uses the augmented Backus-Naur
+   Form (BNF) as described in RFC-2234 [10].
+
+
+   delivery-status-content =
+          per-message-fields 1*( CRLF per-part-fields)
+
+
+7.1. Syntax of Per-Message Fields
+
+   per-message-fields =
+          [ original-message-id-field CRLF ]
+          [ original-envelope-id-field CRLF ]
+          reporting-mta-field CRLF
+
+Burger            Internet Draft - Expires 1/14/2001         [Page 17]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+          [ dsn-gateway-field CRLF ]
+          [ received-from-mta-field CRLF ]
+          [ arrival-date-field CRLF ]
+          *( extension-field CRLF )
+
+
+   original-message-id-field =
+          "Original-Message-ID" ":" message-id
+
+   message-id = *text
+
+
+   Original-envelope-id-field, reporting-mta-field, dsn-gateway-field,
+   received-from-mta-field, arrival-date-field, and extension-field are
+   all as defined in DSN [3].
+
+
+7.2. Syntax of Per-Part Fields
+
+   per-part-fields =
+       1*( [ original-content-description-field CRLF ]
+           [ original-content-id-field CRLF ]
+           [ original-content-disposition-field CRLF ]
+           [ original-content-type-field CRLF ] )
+       1*( [ original-recipient-field CRLF ]
+           final-recipient-field CRLF )
+       action-field CRLF
+       status-field CRLF
+       [ remote-mta-field CRLF ]
+       [ diagnostic-code-field CRLF ]
+       [ last-attempt-date-field CRLF ]
+       *( extension-field CRLF )
+
+
+   action-field =
+        "Action: delivered"
+
+   original-content-id-field =
+             "Original-Content-ID" ":" content-id
+
+   content-id = *text
+
+   original-content-description-field =
+             "Original-Content-Description" ":" content-description
+
+   content-description = *text
+
+   original-content-disposition-field =
+             "Original-Content-Disposition" ":" content-disposition
+
+   content-disposition = *text
+
+
+Burger            Internet Draft - Expires 1/14/2001         [Page 18]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+   original-content-type-field =
+             "Original-Content-Type" ":" content-type
+
+   content-type = *text
+
+   status-field =
+          "Status" ":" status-code "(" comment ")"
+
+   status-code =
+          DIGIT "." 1*3DIGIT "." 1*3DIGIT
+
+   comment = *text
+
+
+   Original-recipient-field, final-recipient-field, remote-mta-field,
+   diagnostic-code-field, last-attempt-date-field, and extension-field
+   are as defined in DSN [3].
+
+   Status-code is defined in [11].
+
+
+8.   Security Considerations
+
+   The following security considerations apply when using PNDNs.
+
+
+
+8.1. Forgery
+
+   One can forge a PNDN as easily as ordinary Internet electronic mail.
+   User agents and automatic mail handling facilities (such as
+   automatic voice mail forwarding agents) that wish to make use of
+   PNDNs should take appropriate precautions to minimize the potential
+   damage from denial-of-service attacks.
+
+   Security threats related to forged PNDNs include the sending of:
+
+   (a) A falsified delivery notification when the message is
+       not delivered to the indicated recipient,
+   (b) A falsified Final-Recipient address, or
+   (c) A falsified Remote-MTA identification.
+
+
+
+8.2. Confidentiality
+
+   Another dimension of security is confidentiality.  For example, a
+   message recipient can be autoforwarding messages.  However, she does
+   not wish to divulge her autoforward address.  The desire for such
+   confidentiality will probably be heightened as "wireless mailboxes",
+   such as pagers, become more widely used as autoforward addresses.
+
+
+Burger            Internet Draft - Expires 1/14/2001         [Page 19]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+   Confidentiality also applies to the service provider.  For example,
+   in an Internet Voice Mail scenario, one can envision implementations
+   of protocols such as VPIM [5] where reporting the actual Internet
+   host name can open the system to attack.
+
+   MTA authors are encouraged to provide a mechanism that enables the
+   end user to preserve the confidentiality of a forwarding address.
+   Depending on the degree of confidentiality required, and the nature
+   of the environment to which a message were being forwarded, this
+   might be accomplished by one or more of:
+
+   (a) omitting the "Final-Recipient" field, as it has
+       little use to the sender,
+
+   (b) omitting "Remote-*" or extension fields of a PNDN
+       whenever they would otherwise contain confidential
+       information (such as a confidential forwarding address),
+
+   (c) for messages forwarded to a confidential address,
+       setting the envelope return address (e.g. SMTP MAIL FROM
+       address) to the NULL reverse-path ("<>") (so that no
+       PNDNs would be sent from a downstream MTA to the
+       original sender), or
+
+   (d) when forwarding mail to a confidential address, having
+       the forwarding MTA rewrite the envelope return address
+       for the forwarded message and attempt delivery of that
+       message as if the forwarding MTA were the originator.
+       On its receipt of final delivery status, the forwarding
+       MTA would issue a PNDN to the original sender.
+
+   In general, the Reporting MTA site can omit any optional PNDN field
+   that it determines inclusion of the field would impose too great a
+   compromise of site confidentiality.  The need for such
+   confidentiality must be balanced against the utility of the omitted
+   information in trouble reports.
+
+   Implementers are cautioned that many existing MTAs will send non-
+   delivery notifications to a return address in the message header
+   (rather than to the one in the envelope), in violation of SMTP and
+   other protocols.  If a message is forwarded through such an MTA, no
+   reasonable action on the part of the forwarding MTA will prevent the
+   downstream MTA from compromising the forwarding address.  Likewise,
+   if the recipient's MTA automatically responds to messages based on a
+   request in the message header (such as the nonstandard, but widely
+   used, Return-Receipt-To extension header), it will also compromise
+   the forwarding address.
+
+
+
+
+
+
+Burger            Internet Draft - Expires 1/14/2001         [Page 20]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+9.   References
+
+
+   1  Bradner, S., "The Internet Standards Process -- Revision 3", BCP
+      9, RFC 2026, October 1996.
+
+   2  Freed, N. and Borenstein, N, "Multipurpose Internet Mail
+      Extensions (MIME) Part One: Format of Internet Message Bodies",
+      RFC 2045, Innosoft and First Virtual, November 1996.
+
+   3  Moore, K. and Vaudreuil, G., "An Extensible Message Format for
+      Delivery Status Notifications", RFC 1894, U. Tennessee and Octel
+      Network Services, January 1996.
+
+   4  a.k.a. VPIMv3
+
+   5  Vaudreuil, G. and Parsons, G., "Voice Profile for Internet Mail -
+      version 2", Lucent Technologies and Nortel Networks, RFC 2421,
+      September 1998.
+
+   6  Bradner, S., "Key words for use in RFCs to Indicate Requirement
+      Levels", BCP 14, RFC 2119, March 1997.
+
+   7  Freed, N. and Borenstein, N, "Multipurpose Internet Mail
+      Extensions (MIME) Part Two: Media Types", RFC 2046, Innosoft and
+      First Virtual, November 1996.
+
+   8  Fajman, R., "An Extensible Message Format for Message Disposition
+      Notifications", RFC 2298, National Institutes of Health, March
+      1998.
+
+   9  Vaudreuil, G., "The Multipart/Report Content Type for the
+      Reporting of Mail System Administrative Messages", RFC 1892,
+      Octel Network Services, January 1996.
+
+   10 Crocker, D. and Overell, P., "Augmented BNF for Syntax
+      Specifications: ABNF", RFC 2234, Internet Mail Consortium and
+      Demon Internet Ltd., November 1997.
+
+   11 Vaudreuil, G., "Enhanced Mail System Status Codes", RFC 1893,
+      Octel Network Systems, January 1996.
+
+
+
+
+10.    Acknowledgments
+
+   I'd like to thank Graham Klyne and Keith Moore for valuable insights
+   into the mechanics of DSN.  Graham Klyne also helped me put this
+   document into English.  However, any bizarre language is my own
+   fault.
+
+
+Burger            Internet Draft - Expires 1/14/2001         [Page 21]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+   Ned Freed and Herman R. Silbiger both had valuable experience
+   corroborating the assertion that users do not like to receive
+   failure notices unless there is a real failure.  Carl-Uno Mauros was
+   able to put into words much better than I did in a prior draft the
+   differences between a system that cannot render a particular part
+   versus a transmission failure.
+
+
+
+11.    Author's Address
+
+   Eric W. Burger
+   Centigram Communications Corporation
+   Maryland Technology Center
+   1375 Piccard Dr., MS 150 R
+   Rockville, MD  20850-4311
+   USA
+   Phone: +1 301/212-3320
+   Email: e.burger@ieee.org
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Burger            Internet Draft - Expires 1/14/2001         [Page 22]
+                  Partial Non-Delivery Notification         July, 2000
+
+
+12.    Notices and Full Copyright Statement
+
+   The IETF takes no position regarding the validity or scope of any
+   intellectual property or other rights that might be claimed to
+   pertain to the implementation or use of the technology described in
+   this document or the extent to which any license under such rights
+   might or might not be available; neither does it represent that it
+   has made any effort to identify any such rights.  Information on the
+   IETF's procedures with respect to rights in standards-track and
+   standards-related documentation can be found in BCP-11.  Copies of
+   claims of rights made available for publication and any assurances
+   of licenses to be made available, or the result of an attempt made
+   to obtain a general license or permission for the use of such
+   proprietary rights by implementors or users of this specification
+   can be obtained from the IETF Secretariat.
+
+   The IETF invites any interested party to bring to its attention any
+   copyrights, patents or patent applications, or other proprietary
+   rights which may cover technology that may be required to practice
+   this standard.  Please address the information to the IETF Executive
+   Director.
+
+   Copyright (C) 1999, 2000 The Internet Society.  All Rights Reserved.
+
+   This document and translations of it may be copied and furnished to
+   others, and derivative works that comment on or otherwise explain it
+   or assist in its implmentation may be prepared, copied, published
+   and distributed, in whole or in part, without restriction of any
+   kind, provided that the above copyright notice and this paragraph
+   are included on all such copies and derivative works.  However, this
+   document itself may not be modified in any way, such as by removing
+   the copyright notice or references to the Internet Society or other
+   Internet organizations, except as needed for the  purpose of
+   developing Internet standards in which case the procedures for
+   copyrights defined in the Internet Standards process must be
+   followed, or as required to translate it into languages other than
+   English.
+
+   The limited permissions granted above are perpetual and will not be
+   revoked by the Internet Society or its successors or assigns.
+
+   This document and the information contained herein is provided on an
+   "AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
+   TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING
+   BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION
+   HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF
+   MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+
+
+
+
+
+Burger            Internet Draft - Expires 1/14/2001         [Page 23]
+

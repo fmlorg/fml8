@@ -1,0 +1,599 @@
+
+
+Network Working Group                                           E. Burger
+Internet Draft                                   Centigram Communications
+Document: draft-burger-vpim-pc-00.txt                          E. Candell
+Category: Standards Track                        Comverse Network Systems
+Expires in six Months                                        June 6, 2000
+
+
+                    Primary Content of Internet Mail
+
+
+Status of this Memo
+
+   This document is an Internet-Draft and is in full conformance with
+   all provisions of Section 10 of RFC2026 [1].
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF), its areas, and its working groups. Note that
+   other groups may also distribute working documents as Internet-
+   Drafts. Internet-Drafts are draft documents valid for a maximum of
+   six months and may be updated, replaced, or obsoleted by other
+   documents at any time. It is inappropriate to use Internet- Drafts
+   as reference material or to cite them other than as "work in
+   progress."
+
+   The list of current Internet-Drafts can be accessed at
+   http://www.ietf.org/ietf/1id-abstracts.txt
+
+   The list of Internet-Draft Shadow Directories can be accessed at
+   http://www.ietf.org/shadow.html.
+
+
+
+1.
+  Abstract
+
+   This document describes a mechanism for identifying the primary
+   content type of a multi-part Internet mail message.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                           Expires 12/6/00                    [Page 1]
+
+                   Primary Content of Internet Mail           May 2000
+
+
+
+Table of Contents
+
+1.  ABSTRACT .........................................................1
+2.  CONVENTIONS USED IN THIS DOCUMENT ................................2
+3.  INTRODUCTION .....................................................2
+
+4.  PRIMARY-CONTENT REFERENCE FIELD ..................................3
+4.1.  Primary-Content Syntax .........................................4
+4.2.  content-type Syntax ............................................4
+5.  SECURITY CONSIDERATIONS ..........................................4
+6.  IANA CONSIDERATIONS ..............................................4
+6.1.  Primary-Content Registration ...................................4
+6.2.  Primary Content Type Registrations .............................5
+6.2.1.  voice-message ................................................5
+6.2.2.  fax-message ..................................................6
+6.2.3.  video-message ................................................7
+6.2.4.  text-message .................................................7
+7.  REFERENCES .......................................................8
+8.  ACKNOWLEDGMENTS ..................................................9
+9.  AUTHOR'S ADDRESSES ...............................................9
+
+
+2.
+  Conventions used in this document
+
+   This document refers generically to the sender of a message in the
+   masculine (he/him/his) and the recipient of the message in the
+   feminine (she/her/hers).  This convention is purely for convenience
+   and makes no assumption about the gender of a message sender or
+   recipient.
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in
+   this document are to be interpreted as described in RFC-2119 [2].
+
+   FORMATTING NOTE: Notes, such at this one, provide additional
+   nonessential information that the reader may skip without missing
+   anything essential.  The primary purpose of these non-essential
+   notes is to convey information about the rationale of this document,
+   or to place this document in the proper historical or evolutionary
+   context.  Readers whose sole purpose is to construct a conformant
+   implementation may skip such information.  However, it may be of use
+   to those who wish to understand why we made certain design choices.
+
+
+3.
+  Introduction
+
+   This document describes the Primary Content identification for
+   multi-part Internet mail.
+
+
+
+
+Burger and Candell         Expires 12/6/00                    [Page 2]
+
+                   Primary Content of Internet Mail           May 2000
+
+
+
+   There is a need for a method of indicating to a User Agent (UA) that
+   the sender or sending system designates that a particular message is
+   primarily of some type.  For example, some clients put a little fax
+   or telephone icon next to a message header in the client application
+   to indicate of the message is fax mail or voice mail, respectively.
+   In addition, some clients will launch helper applications that are
+   appropriate to a particular type of primary message type.  This is a
+   different approach than the usual method of launching a helper
+   application based on one of the (many) media types in the message.
+
+   One method of indicating the primary media content of a message is
+   to examine the media types in the message.  However, this requires
+   the UA to scan the entire message before making this determination.
+   This is particularly burdensome for the multi-media mail situation,
+   as voice and especially video mail objects are quite large.
+
+   Another method of indicating the primary media content of a message
+   is to register a multipart/* MIME subtype.  For example, the VPIM
+   Work Group has registered multipart/voice-message to indicate that a
+   message is primarily voice mail [3].  However, multipart/voice-
+   message is identical in syntax to multipart/mixed.  The only
+   difference is that VPIM mail transfer agents and user agents
+   recognize that they can perform special handling of the message
+   based on it being a voice mail message.
+
+   We wish to avoid scanning the entire message.  In addition, we wish
+   to avoid having to create multiple aliases for multipart/mixed every
+   time someone identifies a new primary content type.
+
+   Since the Primary Content indicator is an attribute of the entire
+   message, it is logical to define a new top-level (RFC 822 [4])
+   message attribute, Primary-Content.
+
+   Primary-Content only serves to identify the primary content type of
+   the message.  It does not provide any indication of content that the
+   UA must be capable of delivering.  It does not imply any message
+   disposition or delivery notification.  See the companion document,
+   Critical Content of Internet Mail [5], for a mechanism to perform
+   these tasks.
+
+   Since Primary-Content is only an indicator, goofy situations, such
+   as a message marked "voice-message" but without a voice body part,
+   MUST NOT generate any error report.
+
+
+4.
+  Primary-Content Reference Field
+
+   The Primary-Content reference field is a top-level header inserted
+   by the sending UA to indicate the primary content type of the
+   message.
+
+
+
+Burger and Candell         Expires 12/6/00                    [Page 3]
+
+                   Primary Content of Internet Mail           May 2000
+
+
+
+  4.1. Primary-Content Syntax
+
+   The syntax of the Primary-Content field, formatted according to the
+   ABNF [6] is as follows.  Note that "Primary-Content" is not case
+   sensitive, per RFC 822.
+
+        "Primary-Content" ":" content-type CRLF
+
+  4.2. content-type Syntax
+
+   The content-type indicates the primary media content type of the
+   message.  This is an IANA registered value.  Current values for
+   Primary-Content are as follows.
+
+        content-type =  1 *( [ "voice-message"]
+                             [ "fax-message" ]
+                             [ "video-message" ]
+                             [ "text-message" ] )
+
+
+
+5.
+  Security Considerations
+
+   The intention for this header is to indicate media content type
+   only. One can imagine one creating an "Application" primary content
+   type, and have a poorly designed user agent blindly execute a mailed
+   program.
+
+   Don't do that!
+
+
+6.
+  IANA Considerations
+
+   NOTE: We won't send in any registrations until it looks like this
+   will become a RFC!
+
+   Following the policies outlined in [7], IANA assigns values for
+   Primary-Content as Specification Required.
+
+  6.1. Primary-Content Registration
+
+   To: ietf-types@iana.org
+   Subject: Registration of New Top-Level Header Field Primary-Content
+
+   Header name:
+   Primary-Content
+
+   Required parameters:
+   Single 7bit text value
+
+   Parameter value:
+
+
+Burger and Candell         Expires 12/6/00                    [Page 4]
+
+                   Primary Content of Internet Mail           May 2000
+
+
+
+   The parameter value specifies the primary media content type for the
+   message.
+
+   Security considerations:
+   The intention for this header is to indicate media content type
+   only. One can imagine one creating an "Application" primary content
+   type, and have a poorly designed user agent blindly execute a mailed
+   program.
+
+   Published specification:
+   draft-burger-vpim-pc-00.txt
+
+   Applications which use this media type:
+   Mail
+   VPIM
+   FPIM
+
+   Additional information: none
+
+   Person & email address to contact for further information:
+   Eric Burger
+   e.burger@ieee.org
+
+   Intended usage: COMMON
+
+
+  6.2. Primary Content Type Registrations
+
+     6.2.1. voice-message
+
+   To: ietf-types@iana.org
+   Subject: Registration of New Primary-Content type voice-message
+
+   Primary-Content type name:
+   voice-message
+
+   Required parameters:
+   none
+
+   Optional parameters:
+   none
+
+   Encoding considerations:
+   none
+
+   Security considerations:
+   none
+
+   Interoperability considerations:
+   User agents declaring the primary content to be voice-message SHOULD
+   conform to VPIMv2.
+
+
+Burger and Candell         Expires 12/6/00                    [Page 5]
+
+                   Primary Content of Internet Mail           May 2000
+
+
+
+   Published specification:
+   draft-burger-vpim-pc-00.txt
+   RFC 2421, Voice Profile for Internet Mail - version 2
+
+   Applications which use this media type:
+   VPIM
+
+   Additional information:
+   none
+
+   Person & email address to contact for further information:
+   Eric Burger
+   e.burger@ieee.org
+
+   Intended usage: COMMON
+
+
+     6.2.2. fax-message
+
+   To: ietf-types@iana.org
+   Subject: Registration of New Primary-Content type fax-message
+
+   Primary-Content type name:
+   fax-message
+
+   Required parameters:
+   none
+
+   Optional parameters:
+   none
+
+   Encoding considerations:
+   none
+
+   Security considerations:
+   none
+
+   Interoperability considerations:
+   none
+
+   Published specification:
+   draft-burger-vpim-pc-00.txt
+
+   Applications which use this media type:
+   FPIM
+
+   Additional information:
+   none
+
+   Person & email address to contact for further information:
+   Eric Burger
+   e.burger@ieee.org
+
+Burger and Candell         Expires 12/6/00                    [Page 6]
+
+                   Primary Content of Internet Mail           May 2000
+
+
+
+
+   Intended usage: COMMON
+
+
+     6.2.3. video-message
+
+   To: ietf-types@iana.org
+   Subject: Registration of New Primary-Content type video-message
+
+   Primary-Content type name:
+   voice-message
+
+   Required parameters:
+   none
+
+   Optional parameters:
+   none
+
+   Encoding considerations:
+   none
+
+   Security considerations:
+   none
+
+   Interoperability considerations:
+   none
+
+   Published specification:
+   draft-burger-vpim-pc-00.txt
+
+   Applications which use this media type:
+   VPIM, FPIM
+
+   Additional information:
+   none
+
+   Person & email address to contact for further information:
+   Eric Burger
+   e.burger@ieee.org
+
+   Intended usage: COMMON
+
+
+     6.2.4. text-message
+
+   To: ietf-types@iana.org
+   Subject: Registration of New Primary-Content type text-message
+
+   Primary-Content type name:
+   text-message
+
+   Required parameters:
+
+Burger and Candell         Expires 12/6/00                    [Page 7]
+
+                   Primary Content of Internet Mail           May 2000
+
+
+
+   none
+
+   Optional parameters:
+   none
+
+   Encoding considerations:
+   none
+
+   Security considerations:
+   none
+
+   Interoperability considerations:
+   none
+
+   Published specification:
+   draft-burger-vpim-pc-00.txt
+
+   Applications which use this media type:
+   VPIM, FPIM
+
+   Additional information:
+   none
+
+   Person & email address to contact for further information:
+   Eric Burger
+   e.burger@ieee.org
+
+   Intended usage: COMMON
+
+
+7.
+  References
+
+
+   1  Bradner, S., "The Internet Standards Process -- Revision 3", BCP
+      9, RFC 2026, October 1996.
+
+   2  Bradner, S., "Key words for use in RFCs to Indicate Requirement
+      Levels", BCP 14, RFC 2119, March 1997.
+
+   3  Vaudreuil, G. and Parsons, G., "VPIM Voice Message MIME Sub-type
+      Registration", RFC 2423, Lucent Technologies and Northern
+      Telecom, September 1998.
+
+   4  Crocker, D., "Standard for the Format of ARPA Internet Text
+      Messages", STD 11, RFC 822, August 1982.
+
+   5  Burger, E. and Candell, E., "Critical Content of Internet Mail",
+      draft-burger-vpim-cc-00.txt, Work in Progress.
+
+
+
+
+
+Burger and Candell         Expires 12/6/00                    [Page 8]
+
+                   Primary Content of Internet Mail           May 2000
+
+
+
+
+   6  Crocker, D. and Overell, P.(Editors), "Augmented BNF for Syntax
+      Specifications: ABNF", RFC 2234, Internet Mail Consortium and
+      Demon Internet Ltd., November 1997.
+
+   7  Alvestrand, H. and T. Narten, "Guidelines for Writing an IANA
+      Considerations Section in RFCs", BCP 26, RFC 2434, October 1998.
+
+
+
+8.
+  Acknowledgments
+
+   Coming soon!
+
+
+9.
+  Author's Addresses
+
+   Eric Burger
+   Centigram Communications Corporation
+   Maryland Technology Center
+   1375 Piccard Dr., MS 150I
+   Rockville, MD  20850-4311
+   USA
+
+   Phone: +1 301/212-3320
+   Email: e.burger@ieee.org
+
+
+   Emily Candell
+   Comverse Network Systems
+   200 Quannapowitt Pkwy.
+   Wakefield, MA  01880
+   USA
+
+   Phone: +1 781/213-2324
+   Email: emily@comversens.com
+
+
+Full Copyright Statement
+
+   The IETF takes no position regarding the validity or scope of any
+   intellectual property or other rights that might be claimed to
+   pertain to the implementation or use of the technology described in
+   this document or the extent to which any license under such rights
+   might or might not be available; neither does it represent that it
+   has made any effort to identify any such rights.  Information on the
+   IETF's procedures with respect to rights in standards-track and
+   standards-related documentation can be found in BCP-11.  Copies of
+   claims of rights made available for publication and any assurances
+   of licenses to be made available, or the result of an attempt made
+   to obtain a general license or permission for the use of such
+
+
+Burger and Candell         Expires 12/6/00                    [Page 9]
+
+                   Primary Content of Internet Mail           May 2000
+
+
+
+   proprietary rights by implementers or users of this specification
+   can be obtained from the IETF Secretariat.
+
+   The IETF invites any interested party to bring to its attention any
+   copyrights, patents or patent applications, or other proprietary
+   rights which may cover technology that may be required to practice
+   this standard.  Please address the information to the IETF Executive
+   Director.
+
+   Copyright (C) 2000 The Internet Society.  All Rights Reserved.
+
+   This document and translations of it may be copied and furnished to
+   others, and derivative works that comment on or otherwise explain it
+   or assist in its implementation may be prepared, copied, published
+   and distributed, in whole or in part, without restriction of any
+   kind, provided that the above copyright notice and this paragraph
+   are included on all such copies and derivative works.  However, this
+   document itself may not be modified in any way, such as by removing
+   the copyright notice or references to the Internet Society or other
+   Internet organizations, except as needed for the  purpose of
+   developing Internet standards in which case the procedures for
+   copyrights defined in the Internet Standards process must be
+   followed, or as required to translate it into languages other than
+   English.
+
+   The limited permissions granted above are perpetual and will not be
+   revoked by the Internet Society or its successors or assigns.
+
+   This document and the information contained herein is provided on an
+   "AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
+   TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING
+   BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION
+   HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF
+   MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Burger and Candell         Expires 12/6/00                   [Page 10]
+
+
+
