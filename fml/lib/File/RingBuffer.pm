@@ -45,8 +45,9 @@ If so, the file names become _smtplog.0, _smtplog.1, ...
 
 =head1 DESCRIPTION
 
-To log messages but up to some limit, it may be useful to use a file
-in cyclic way. It is chosen among a set of files as a buffer.
+To log messages but up to some limit, it may be useful to use filenames
+in cyclic way. 
+The file to write is chosen among a set of files allocated as a buffer.
 
 Consider several files under a directory C<ring/>
 where the unit of the ring is 5 here.
@@ -55,16 +56,15 @@ C<ring/> may have 5 files in it.
    0 1 2 3 4
 
 To log a message is to write it to one of them.
-At the first time the message is logged to the file C<1>, 
-and next time to C<2> and so on.
-If all 5 files are used, pick up and use (overwrite) the oldest one.
-The oldest one is C<0>. 
+At the first time the message is logged to the file C<0>, 
+and next time to C<1> and so on.
+If all 5 files are used, it reuses and overwrites the oldest one C<0>.
 
-We use a file in cyclic way as follows:
+So we use a file in cyclic way as follows:
 
    0 -> 1 -> 2 -> 3 -> 4 -> 0 -> 1 -> ...
 
-We expires the old data.
+We expire the old data.
 A file name is a number for simplicity.
 The latest number is holded in C<ring/.seq> file (C<.seq> in that
 direcotry by default) and truncated to 0 by the modulus C<5>.

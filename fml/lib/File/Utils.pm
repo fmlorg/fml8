@@ -20,7 +20,7 @@ require Exporter;
 
 =head1 NAME
 
-File::Utils - error handling utilities
+File::Utils - utilities to handle files
 
 =head1 SYNOPSIS
 
@@ -37,7 +37,6 @@ C<search_program>
 and
 C<copy>.
 
-
 =head1 METHODS
 
 =cut
@@ -53,6 +52,13 @@ sub error       { return $ErrorString;}
 # Side Effects: undef $ErrorString buffer
 # Return Value: none
 sub error_reset { undef $ErrorString;}
+
+
+=head2 C<mkdiehier($dir, $mode)>
+
+make a directory C<$dir> by the mode C<$mode> recursively.
+
+=cut
 
 
 # Descriptions: "mkdir -p" or "mkdirhier"
@@ -74,6 +80,12 @@ sub mkdirhier
     return ($@ ? undef : 1);
 }
 
+
+=head2 C<touch($file, $mode)>
+
+create a file which is size zero if the file not exists.
+
+=cut
 
 # Descriptions: touch: create file if file not exists
 #    Arguments: file file_mode
@@ -109,6 +121,18 @@ sub touch
 }
 
 
+=head2 C<search_program($file [, $path_list ])>
+
+search C<$file>. 
+C<$path_list> is the hash array.
+It searches it among C<$path_list> if specified.
+
+The default search path list is 
+
+  ('/usr/bin', '/bin', '/sbin', ' /usr/local/bin', 
+   '/usr/gnu/bin', '/usr/pkg/bin')
+
+=cut
 
 # Descriptions: file $file executable
 #    Arguments: file [path_list]
@@ -146,6 +170,12 @@ sub search_program
 }
 
 
+=head2 C<copy($src, $dst)>
+
+copy C<$src> to C<$dst> in the atomic way.
+This routine uses C<IO::File::Atomic> module.
+
+=cut
 
 # wrappers for delegation :-)
 sub copy
