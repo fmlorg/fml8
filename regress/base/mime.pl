@@ -1,12 +1,12 @@
 #!/usr/local/bin/perl
 #
-# $FML: mime.pl,v 1.5 2001/03/26 11:41:09 fukachan Exp $
+# $FML: mime.pl,v 1.6 2001/06/17 09:00:30 fukachan Exp $
 #
-
 
 use strict;
 use Carp;
-use FML::MIME qw(decode_mime_string encode_mime_string);
+use Mail::Message::Decode qw(decode_mime_string);
+use Mail::Message::Encode qw(encode_mime_string);
 use MIME::Base64;
 use MIME::QuotedPrint;
 
