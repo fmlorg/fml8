@@ -4,12 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.73 2003/02/01 08:48:08 fukachan Exp $
+# $FML: Message.pm,v 1.74 2003/02/09 12:31:46 fukachan Exp $
 #
 
 package Mail::Message;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
+	    $override_print_mode
 	    $override_log_function);
 use Carp;
 
@@ -953,7 +954,7 @@ sub print
 sub reset_print_mode
 {
     my ($self) = @_;
-    $self->{ _print_mode } = 'raw';
+    $override_print_mode = 'raw';
 }
 
 
@@ -967,12 +968,12 @@ sub set_print_mode
     my ($self, $mode) = @_;
 
     if (defined($mode) && $mode) {
-    if ($mode eq 'raw') {
-	$self->{ _print_mode } = 'raw';
-    }
-    elsif ($mode eq 'smtp') {
-	$self->{ _print_mode } = 'smtp';
-    }
+	if ($mode eq 'raw') {
+	    $override_print_mode = 'raw';
+	}
+	elsif ($mode eq 'smtp') {
+	    $override_print_mode = 'smtp';
+	}
     }
 }
 
@@ -1033,7 +1034,7 @@ sub _print_messsage_on_memory
     my ($self, $fd, $args) = @_;
 
     # \n -> \r\n
-    my $raw_print_mode = 1 if $self->{ _print_mode } eq 'raw';
+    my $raw_print_mode = 1 if $override_print_mode eq 'raw';
 
     # set up offset for the buffer
     my $data  = $self->{ data };
@@ -1148,7 +1149,7 @@ sub _print_messsage_on_disk
     my ($self, $fd, $args) = @_;
 
     # \n -> \r\n
-    my $raw_print_mode = 1 if $self->{ _print_mode } eq 'raw';
+    my $raw_print_mode = 1 if $override_print_mode eq 'raw';
     my $header   = $self->{ header }   || undef;
     my $filename = $self->{ filename } || undef;
     my $logfp    = $override_log_function || $self->{ _log_function };
