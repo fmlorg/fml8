@@ -8,6 +8,7 @@ Class-NamedParms		1.04		perl itself
 Class-ParmList			1.03		perl itself
 Crypt-RandPasswd		0.02		perl itself
 Crypt-TripleDES			0.24		perl itself
+Crypt-UnixCrypt			1.0		perl itself
 
 File-Spec			0.82		perl itself
 
@@ -36,4 +37,4 @@ VCS-CVS				2.00		perl itself
 
 Text-CSV			0.01		perl itsetlf
 
-$FML: MANIFEST,v 1.4 2001/10/19 13:13:08 fukachan Exp $
+$FML: MANIFEST,v 1.5 2002/02/17 06:32:53 fukachan Exp $
