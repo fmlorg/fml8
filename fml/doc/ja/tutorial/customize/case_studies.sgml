@@ -1,5 +1,5 @@
 <!--
-   $FML: case_studies.sgml,v 1.3 2003/02/16 15:12:29 fukachan Exp $
+   $FML: case_studies.sgml,v 1.4 2003/04/15 14:51:36 fukachan Exp $
 -->
 
 
@@ -27,7 +27,7 @@ article_header_rewrite_rules	-=	rewrite_article_subject_tag
 つまり mlname から office#mlname へ変更する。
 <screen>
 # office#$mlname
-x_ml_name                       =       office#$ml_name
+outgoing_mail_header_x_ml_name      =       office#$ml_name
 </screen>
 </para>
 
