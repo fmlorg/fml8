@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Command.pm,v 1.8 2001/10/08 15:51:56 fukachan Exp $
+# $FML: Command.pm,v 1.9 2001/10/10 14:58:45 fukachan Exp $
 #
 
 package FML::Command;
@@ -103,17 +103,6 @@ sub require_lock
 {
     my ($self, $command) = @_;
     $command eq 'newml' ? 0 : 1;
-}
-
-
-=head2 C<error_nl()>
-
-=cut
-
-sub error_nl
-{
-    my ($self) = @_;
-    return undef;
 }
 
 
