@@ -27,6 +27,7 @@ address_compare_function_type = user_part_case_insensitive
 #        Value: list of attributes (
 #			permit_anyone
 #			permit_member_maps
+#			check_article_thread
 #			reject_system_special_accounts
 #			reject
 #		)
