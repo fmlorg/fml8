@@ -4,13 +4,16 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: CGI.pm,v 1.18 2001/11/07 14:25:55 fukachan Exp $
+# $FML: Param.pm,v 1.1.1.1 2001/11/08 15:35:32 fukachan Exp $
 #
 
 package FML::Process::CGI::Param;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+# load standard CGI routines
+use CGI qw/:standard/;
 
 =head1 NAME
 
@@ -36,37 +39,7 @@ It provides basic functions and flow.
 
 =cut
 
-
-# Descriptions: 
-#    Arguments: $self $args
-# Side Effects: 
-#      History: fml 4.0's SecureP()
-# Return Value: none
-sub safe_param
-{
-    my ($key, $filter) = @_;
-    my $value = param($key);
-
-    if (defined $filter && defined $value) {
-	if ($value =~ /^$filter$/) {
-	    return $value;
-	}
-	else {
-	    return undef;
-	}
-    }
-    else {
-	return undef;
-    }
-}
-
-
-=head2 safe_param_xxx()
-
-get and filter param('xxx') via AUTOLOAD().
-
-=cut
-
+@EXPORT_OK = qw(safe_param %allow_regexp);
 
 my %allow_regexp = (
 		    'address' => '[-a-z0-9_]@[-A-Z0-9\.]+',
@@ -76,26 +49,28 @@ my %allow_regexp = (
 		    );
 
 
-sub AUTOLOAD
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+#      History: fml 4.0's SecureP()
+# Return Value: none
+sub safe_param
 {
-    my ($curproc) = @_;
+    my ($self, $key) = @_;
 
-    return if $AUTOLOAD =~ /DESTROY/;
+    if (defined param($key) && defined $allow_regexp{ $key }) {
+	my $value  = param($key);
+	my $filter = $allow_regexp{ $key };
 
-    my $comname = $AUTOLOAD;
-    $comname =~ s/.*:://;
-
-    if ($comname =~ /^safe_param_(\S+)/) {
-	my $varname = $1;
-
-	# diagnostic
-	unless (defined $allow_regexp{ $varname }) {
-	    croak("no allow_regexp for $comname");
+	if ($value =~ /^$filter$/) {
+	    return $value;
 	}
-	return safe_param($varname, $allow_regexp{ $varname });
+	else {
+	    croak("parameter $key has invalid character");
+	}
     }
     else {
-	croak("unknown method $comname");
+	croak("parameter $key not permitted");
     }
 }
 

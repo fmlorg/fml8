@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: CGI.pm,v 1.18 2001/11/07 14:25:55 fukachan Exp $
+# $FML: Kernel.pm,v 1.1.1.1 2001/11/08 15:35:32 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -160,6 +160,32 @@ sub _makefml
     require FML::Command;
     my $obj = new FML::Command;
     $obj->$method($curproc, $optargs);
+}
+
+
+=head2 safe_param_xxx()
+
+get and filter param('xxx') via AUTOLOAD().
+
+=cut
+
+
+sub AUTOLOAD
+{
+    my ($curproc) = @_;
+
+    return if $AUTOLOAD =~ /DESTROY/;
+
+    my $comname = $AUTOLOAD;
+    $comname =~ s/.*:://;
+
+    if ($comname =~ /^safe_param_(\S+)/) {
+        my $varname = $1;
+        return $curproc->safe_param($varname);
+    }
+    else {
+        croak("unknown method $comname");
+    }
 }
 
 
