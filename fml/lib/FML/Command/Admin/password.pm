@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: password.pm,v 1.3 2002/09/11 23:18:08 fukachan Exp $
+# $FML: password.pm,v 1.4 2002/09/22 14:56:46 fukachan Exp $
 #
 
 package FML::Command::Admin::password;
@@ -32,7 +32,7 @@ password a new address.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -65,7 +65,9 @@ sub process
     # Though this module should be called after authentication,
     # this module is a module of authentication.
 
-    # dummary
+    # XXX-TODO: NOT IMPLEMNETED.
+
+    # dummy
     return 1;
 }
 

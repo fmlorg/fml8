@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: file.pm,v 1.6 2002/09/22 14:56:45 fukachan Exp $
+# $FML: file.pm,v 1.7 2002/11/23 15:20:00 fukachan Exp $
 #
 
 package FML::Command::Admin::file;
@@ -32,7 +32,7 @@ file a new address.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -77,7 +77,7 @@ sub process
     my $regexp  = $safe->basic_variable();
     my $filereg = $regexp->{ file };
 
-    # argv = command subcommand args ...
+    # argv = command subcommand args ... = command options
     my ($subcommand, @args)= @$options;
 
     if ($subcommand eq 'remove' ||

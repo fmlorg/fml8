@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.2 2002/11/23 13:12:47 fukachan Exp $
+# $FML: digest.pm,v 1.3 2002/12/10 12:00:49 fukachan Exp $
 #
 
 package FML::Command::Admin::digest;
@@ -13,9 +13,14 @@ use Carp;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 
 
+#
+# XXX-TODO: clean up digest command more.
+#
+
+
 =head1 NAME
 
-FML::Command::Admin::digest - toggle digest mode off/on
+FML::Command::Admin::digest - toggle digest mode to off/on.
 
 =head1 SYNOPSIS
 
@@ -32,7 +37,7 @@ change digest mode for the specified address to off/on.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -52,7 +57,7 @@ sub new
 sub need_lock { 1;}
 
 
-# Descriptions: change on or off digest mode
+# Descriptions: toggle delivery mode between real time and digest.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $recipient_map,$digest_recipient_maps
 sub process
@@ -71,7 +76,8 @@ sub process
 	$config->get_as_array_ref('digest_recipient_maps');
 
     # fundamental check
-    croak("address is not specified")   unless defined $address;
+    croak("address not defined")   unless defined $address;
+    croak("address not specified")   unless $address;
     croak("primary_recipient_map not defined")
 	unless defined $primary_recipient_map;
     croak("recipient_maps not defined") unless defined $recipient_maps;
@@ -108,7 +114,7 @@ sub process
 }
 
 
-# Descriptions: change to on mode
+# Descriptions: change delivery mode to real time.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $recipient_map
 sub _digest_on
@@ -132,12 +138,13 @@ sub _digest_on
 	maplist => [ $digest_recipient_map ],
     };
 
+    # XXX-TODO: we expect userdel() and useradd() validate $address.
     $self->_userdel($curproc, $command_args, $uc_normal_args);
     $self->_useradd($curproc, $command_args, $uc_digest_args);
 }
 
 
-# Descriptions: change to off mode
+# Descriptions: change delivery mode to digest.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $recipient_map
 sub _digest_off
@@ -161,11 +168,17 @@ sub _digest_off
 	maplist => $digest_recipient_maps,
     };
 
+    # XXX-TODO: we expect userdel() and useradd() validate $address.
     $self->_userdel($curproc, $command_args, $uc_digest_args);
     $self->_useradd($curproc, $command_args, $uc_normal_args);
 }
 
 
+# Descriptions: add the specified user.
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($args) HASH_REF($uc_args)
+# Side Effects: update address list(s).
+# Return Value: none
 sub _useradd
 {
     my ($self, $curproc, $command_args, $uc_args) = @_;
@@ -183,6 +196,11 @@ sub _useradd
 }
 
 
+# Descriptions: remove the specified user.
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($args) HASH_REF($uc_args)
+# Side Effects: update address list(s).
+# Return Value: none
 sub _userdel
 {
     my ($self, $curproc, $command_args, $uc_args) = @_;
@@ -200,7 +218,7 @@ sub _userdel
 }
 
 
-# Descriptions: show cgi menu for on
+# Descriptions: show cgi menu.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $recipient_map
 # Return Value: none
@@ -208,6 +226,11 @@ sub cgi_menu
 {
     my ($self, $curproc, $args, $command_args) = @_;
     my $r = '';
+
+    # 
+    # XXX-TODO: NOT IMPLEMENTED.
+    # 
+    return;
 
     eval q{
 	use FML::CGI::Admin::User;

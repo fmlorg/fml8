@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: htmlify.pm,v 1.18 2002/09/22 14:56:45 fukachan Exp $
+# $FML: htmlify.pm,v 1.19 2002/09/24 14:23:13 fukachan Exp $
 #
 
 package FML::Command::Admin::htmlify;
@@ -29,7 +29,7 @@ show user htmlify(s).
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -49,7 +49,7 @@ sub new
 sub need_lock { 0;}
 
 
-# Descriptions: show the user htmlify
+# Descriptions: convert article format from text to html.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: forward request to dir module
 # Return Value: none
@@ -63,7 +63,7 @@ sub process
     my $debug   = 0;
 
     unless ($config->yes('use_html_archive')) {
-	croak("html archive disabled");
+	croak("html archive function disabled");
     }
 
     print STDERR "htmlify\t$src_dir =>\n\t\t$dst_dir\n" if $debug;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.7 2002/09/11 23:18:07 fukachan Exp $
+# $FML: chaddr.pm,v 1.8 2002/09/22 14:56:44 fukachan Exp $
 #
 
 package FML::Command::Admin::chaddr;
@@ -33,7 +33,7 @@ change address from old one to new one.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -89,18 +89,20 @@ sub process
     use FML::Credential;
     use FML::Log qw(Log LogWarn LogError);
 
-    # change all maps
+    # change all maps including this $address.
     my (@maps) = ();
     push(@maps, @$member_maps);
     push(@maps, @$recipient_maps);
     for my $map (@maps) {
 	my $cred = new FML::Credential $curproc;
 
+	# XXX-TODO: this condition is correct ?
+	# XXX-TODO: we should remove old one when both old and new ones exist.
 	# the current member/recipient file must have $old_address
 	# but should not contain $new_address.
 	if ($cred->has_address_in_map($map, $config, $old_address)) {
 	    unless ($cred->has_address_in_map($map, $config, $new_address)) {
-		# remove the old address.
+		# remove the old address only if $new_address not included.
 		{
 		    my $obj = new IO::Adapter $map, $config;
 		    $obj->touch();

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.15 2002/09/11 23:18:07 fukachan Exp $
+# $FML: get.pm,v 1.16 2002/09/22 14:56:45 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
@@ -26,14 +26,14 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-get arbitrary file(s) in $ml_home_dir
+get arbitrary file(s) in $ml_home_dir.
 
 =head1 METHODS
 
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -64,7 +64,7 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $config      = $curproc->{ 'config' };
     my $ml_home_dir = $config->{ ml_home_dir };
-    my $command     = $command_args->{ 'command' };
+    my $command     = $command_args->{ command };
     my $options     = $command_args->{ options };
 
     # This module is called after
@@ -76,6 +76,7 @@ sub process
 	use File::Spec;
 	my $filepath = File::Spec->catfile($ml_home_dir, $filename);
 
+	# XXX-TODO: we expect send_file() validates ${filename,filepath}.
 	if (-f $filepath) {
 	    Log("send back $filename");
 
@@ -88,6 +89,7 @@ sub process
 	    delete $command_args->{ _filepath_to_send };
 	}
 	else {
+	    Log("$filename not found");
 	    $curproc->reply_message_nl('error.no_such_file',
 				       "no such file $filename",
 				       {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.17 2002/09/11 23:18:08 fukachan Exp $
+# $FML: subscribe.pm,v 1.18 2002/09/22 14:56:46 fukachan Exp $
 #
 
 package FML::Command::Admin::subscribe;
@@ -29,10 +29,12 @@ subscribe a new address.
 
 =head2 C<process($curproc, $command_args)>
 
+subscribe a new user.
+
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -52,7 +54,7 @@ sub new
 sub need_lock { 1;}
 
 
-# Descriptions: subscribe a new user
+# Descriptions: subscribe a new user.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
@@ -66,7 +68,8 @@ sub process
     my $address       = $command_args->{ command_data } || $options->[ 0 ];
 
     # fundamental check
-    croak("address is not specified")         unless defined $address;
+    croak("address is not defined")           unless defined $address;
+    croak("address is not specified")         unless $address;
     croak("\$member_map is not specified")    unless $member_map;
     croak("\$recipient_map is not specified") unless $recipient_map;
 
@@ -77,6 +80,7 @@ sub process
     };
     my $r = '';
 
+    # XXX-TODO: we expect useradd() validates $address.
     eval q{
 	use FML::Command::UserControl;
 	my $obj = new FML::Command::UserControl;

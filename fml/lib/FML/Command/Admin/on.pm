@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: on.pm,v 1.3 2002/09/11 23:18:08 fukachan Exp $
+# $FML: on.pm,v 1.4 2002/09/22 14:56:45 fukachan Exp $
 #
 
 package FML::Command::Admin::on;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::on - change on mode
+FML::Command::Admin::on - change delivery mode from digest to real time
 
 =head1 SYNOPSIS
 
@@ -23,7 +23,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-change on mode address.
+change delivery mode from digest to real time.
 
 =head1 METHODS
 
@@ -32,7 +32,7 @@ change on mode address.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -52,7 +52,7 @@ sub new
 sub need_lock { 1;}
 
 
-# Descriptions: change on mode
+# Descriptions: change delivery mode from digest to real time.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $recipient_map
 # Return Value: none
@@ -60,13 +60,17 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ config };
+
+    # XXX-TODO: use of $primary_recipient_map is correct here?
     my $recipient_map = $config->{ primary_recipient_map };
     my $options       = $command_args->{ options };
     my $address       = $command_args->{ command_data } || $options->[ 0 ];
 
     # fundamental check
-    croak("address is not specified")         unless defined $address;
-    croak("\$recipient_map is not specified") unless $recipient_map;
+    croak("address not defined")           unless defined $address;
+    croak("\$recipient_map not defined")   unless defined $recipient_map;
+    croak("address not specified")         unless $address;
+    croak("\$recipient_map not specified") unless $recipient_map;
 
     # FML::Command::UserControl specific parameters
     my $uc_args = {
@@ -75,6 +79,7 @@ sub process
     };
     my $r = '';
 
+    # XXX-TODO: we expect useradd() validates $address.
     eval q{
 	use FML::Command::UserControl;
 	my $obj = new FML::Command::UserControl;
