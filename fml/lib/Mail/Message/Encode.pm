@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.7 2002/09/22 14:57:04 fukachan Exp $
+# $FML: Encode.pm,v 1.8 2002/09/22 15:01:23 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -124,7 +124,7 @@ sub convert_str_ref
 	    }
 	}
 	else {
-	    print "1 ok\n";
+	    # print "1 ok\n";
 	}
 
 	# 2. try conversion ! (converted to 'euc' by default).
