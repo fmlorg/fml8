@@ -3,13 +3,10 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.72 2002/09/22 14:56:39 fukachan Exp $
+# $FML: Config.pm,v 1.73 2002/09/24 14:23:10 fukachan Exp $
 #
 
 package FML::Config;
-
-my $debug = 0;
-
 use strict;
 use Carp;
 use vars qw($need_expansion_variables
@@ -20,6 +17,9 @@ use vars qw($need_expansion_variables
 	    $_fml_user_hooks
 	    );
 use ErrorStatus qw(error_set error error_clear);
+
+
+my $debug = 0;
 
 
 =head1 NAME
@@ -60,13 +60,13 @@ It contains several references to other data structures.
     };
 
 where we use r_variable_name syntax where "r_" implies "reference to"
-here.
+here in this document.
 
 For exapmle, this C<$r_msg> is the reference to a hash to represent a
 mail message. It composes of header, body and several information.
 
     $r_msg = {
-	r_header => \$header,p
+	r_header => \$header,
 	r_body   => \$body,
 	info   => {
 	    mime-version => 1.0,
