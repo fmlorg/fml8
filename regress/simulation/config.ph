@@ -27,7 +27,12 @@ $XMLCOUNT                      = "X-Mail-Count";
 
 $SUBJECT_TAG_TYPE              = "[:]";
 
+$SUBJECT_FORM_LONG_ID          = 7;
+
 $BRACKET                       = "elena";
+
+$BASE_DIR                      = "/tmp";
+$GUIDE_FILE                    = "$BASE_DIR/guide";
 
 
 $DISTRIBUTE_FILTER_HOOK = q#
