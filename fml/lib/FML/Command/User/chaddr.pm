@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.6 2002/02/17 08:13:25 fukachan Exp $
+# $FML: chaddr.pm,v 1.7 2002/02/18 14:14:52 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -34,6 +34,9 @@ After confirmation succeeds, chaddr process proceeds.
 =head1 METHODS
 
 =head2 C<process($curproc, $command_args)>
+
+if the old address in chaddr arguments is a member, 
+try to confirm this request irrespective of "From:" address.
 
 =cut
 
@@ -71,8 +74,9 @@ sub process
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_command_prefix };
+    my $comname       = $command_args->{ comname };
     my $command       = $command_args->{ command };
-    my $address       = $curproc->{ credential }->sender();
+    my $sender        = $curproc->{ credential }->sender();
 
     # fundamental check
     croak("\$member_map is not specified")    unless $member_map;
@@ -81,25 +85,39 @@ sub process
     use FML::Credential;
     my $cred = new FML::Credential;
 
-    # if not member, chaddrr request is wrong.
-    unless ($cred->is_member($curproc, { address => $address })) {
-	$curproc->reply_message_nl('error.not_member');
-	croak("not member");
-    }
-    # try confirmation before chaddr
-    else {
-	Log("chaddrr request, try confirmation");
+    # addresses we check and send back confirmation messages to
+    my $optargs = {};
+    my $x = $command_args->{ command };
+    $x =~ s/^.*$comname\s+//;
+    my ($old_addr, $new_addr) = split(/\s+/, $x);
+    $optargs->{ recipient } = [ $sender, $old_addr, $new_addr ];
+
+    # prompt again (since recipient differs)
+    my $prompt  = $config->{ command_prompt } || '>>>';
+    $curproc->reply_message("\n$prompt $command", $optargs);
+
+    # if either old or new addresses in chaddr arguments is an ML member, 
+    # try to confirm this request irrespective of "From:" address.
+    if ($cred->is_member($curproc, { address => $old_addr }) ||
+	$cred->is_member($curproc, { address => $new_addr })) {
+	Log("chaddr request, try confirmation");
+
 	use FML::Confirm;
 	my $confirm = new FML::Confirm {
 	    keyword   => $keyword,
 	    cache_dir => $cache_dir,
 	    class     => 'chaddr',
-	    address   => $address,
+	    address   => $sender,
 	    buffer    => $command,
 	};
 	my $id = $confirm->assign_id;
-	$curproc->reply_message_nl('command.confirm');
-	$curproc->reply_message("\n$id\n");
+	$curproc->reply_message_nl('command.confirm', '', $optargs);
+	$curproc->reply_message("\n$id\n", $optargs);
+    }
+    # try confirmation before chaddr
+    else {
+	$curproc->reply_message_nl('error.not_member', '', $optargs);
+	croak("not member");
     }
 }
 
