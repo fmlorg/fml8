@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: HTMLify.pm,v 1.2 2001/11/05 13:02:35 fukachan Exp $
+# $FML: HTMLify.pm,v 1.3 2001/11/07 10:05:52 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -84,7 +84,7 @@ sub run
     my $src_dir = $argv->[0];
     my $dst_dir = $argv->[1];
 
-    print STDERR "htmlify\t$src_dir =>\n\t\t$dst_dir\n";
+    print STDERR "htmlify\t$src_dir =>\n\t\t$dst_dir\n" if $ENV{'debug'};
 
     # prepend $opt_I as @INC
     if (defined $options->{ I }) { 
