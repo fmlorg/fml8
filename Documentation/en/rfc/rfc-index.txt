@@ -5,7 +5,7 @@
                              RFC INDEX
                            -------------
 
-(CREATED ON: 03/11/2002.)
+(CREATED ON: 05/30/2002.)
 
 This file contains citations for all RFCs in numeric order.
 
@@ -2869,9 +2869,9 @@ See the RFC Editor Web page http://www.rfc-editor.org
 0906 Bootstrap loading using TFTP. R. Finlayson. Jun-01-1984. (Format:
      TXT=10102 bytes) (Status: UNKNOWN)
 
-0907 Host Access Protocol specification. Bolt Beranek and Newman,
-     Inc.. Jul-01-1984. (Format: TXT=129985 bytes) (Updated by RFC1221)
-     (Also STD0040) (Status: STANDARD)
+0907 Host Access Protocol specification. Bolt Beranek and Newman Inc..
+     Jul-01-1984. (Format: TXT=129985 bytes) (Updated by RFC1221) (Also
+     STD0040) (Status: STANDARD)
 
 0908 Reliable Data Protocol. D. Velten, R.M. Hinden, J. Sax.
      Jul-01-1984. (Format: TXT=97646 bytes) (Updated by RFC1151) (Status:
@@ -4454,8 +4454,8 @@ See the RFC Editor Web page http://www.rfc-editor.org
      (Obsoleted by RFC1548) (Status: PROPOSED STANDARD)
 
 1332 The PPP Internet Protocol Control Protocol (IPCP). G. McGregor.
-     May 1992. (Format: TXT=17613 bytes) (Obsoletes RFC1172) (Status:
-     PROPOSED STANDARD)
+     May 1992. (Format: TXT=17613 bytes) (Obsoletes RFC1172) (Updated by
+     RFC3241) (Status: PROPOSED STANDARD)
 
 1333 PPP Link Quality Monitoring. W. Simpson. May 1992. (Format:
      TXT=29965 bytes) (Obsoleted by RFC1989) (Status: PROPOSED STANDARD)
@@ -6098,8 +6098,8 @@ See the RFC Editor Web page http://www.rfc-editor.org
      bytes) (Status: EXPERIMENTAL)
 
 1766 Tags for the Identification of Languages. H. Alvestrand. March
-     1995. (Format: TXT=16966 bytes) (Obsoleted by RFC3066) (Status:
-     PROPOSED STANDARD)
+     1995. (Format: TXT=16966 bytes) (Obsoleted by RFC3066, RFC3282)
+     (Status: PROPOSED STANDARD)
 
 1767 MIME Encapsulation of EDI Objects. D. Crocker. March 1995.
      (Format: TXT=15293 bytes) (Status: PROPOSED STANDARD)
@@ -8698,13 +8698,14 @@ See the RFC Editor Web page http://www.rfc-editor.org
 
 2458 Toward the PSTN/Internet Inter-Networking--Pre-PINT
      Implementations. H. Lu, M. Krishnaswamy, L. Conroy, S. Bellovin, F.
-     Burg, A., DeSimone, K. Tewani, P. Davidson, H. Schulzrinne, K.
+     Burg, A. DeSimone, K. Tewani, P. Davidson, H. Schulzrinne, K.
      Vishwanathan. November 1998. (Format: TXT=139100 bytes) (Status:
      INFORMATIONAL)
 
 2459 Internet X.509 Public Key Infrastructure Certificate and CRL
      Profile. R. Housley, W. Ford, W. Polk, D. Solo. January 1999.
-     (Format: TXT=278438 bytes) (Status: PROPOSED STANDARD)
+     (Format: TXT=278438 bytes) (Obsoleted by RFC3280) (Status: PROPOSED
+     STANDARD)
 
 2460 Internet Protocol, Version 6 (IPv6) Specification. S. Deering, R.
      Hinden. December 1998. (Format: TXT=85490 bytes) (Obsoletes RFC1883)
@@ -8765,11 +8766,11 @@ See the RFC Editor Web page http://www.rfc-editor.org
 2474 Definition of the Differentiated Services Field (DS Field) in the
      IPv4 and IPv6 Headers. K. Nichols, S. Blake, F. Baker, D. Black.
      December 1998. (Format: TXT=50576 bytes) (Obsoletes RFC1455, RFC1349)
-     (Updated by RFC3168) (Status: PROPOSED STANDARD)
+     (Updated by RFC3168, RFC3260) (Status: PROPOSED STANDARD)
 
 2475 An Architecture for Differentiated Service. S. Blake, D. Black,
      M. Carlson, E. Davies, Z. Wang, W. Weiss. December 1998. (Format:
-     TXT=94786 bytes) (Status: INFORMATIONAL)
+     TXT=94786 bytes) (Updated by RFC3260) (Status: INFORMATIONAL)
 
 2476 Message Submission. R. Gellens, J. Klensin. December 1998.
      (Format: TXT=30050 bytes) (Status: PROPOSED STANDARD)
@@ -9234,11 +9235,12 @@ See the RFC Editor Web page http://www.rfc-editor.org
      (Format: TXT=17413 bytes) (Status: PROPOSED STANDARD)
 
 2597 Assured Forwarding PHB Group. J. Heinanen, F. Baker, W. Weiss, J.
-     Wroclawski. June 1999. (Format: TXT=24068 bytes) (Status: PROPOSED
-     STANDARD)
+     Wroclawski. June 1999. (Format: TXT=24068 bytes) (Updated by RFC3260)
+     (Status: PROPOSED STANDARD)
 
 2598 An Expedited Forwarding PHB. V. Jacobson, K. Nichols, K. Poduri.
-     June 1999. (Format: TXT=23656 bytes) (Status: PROPOSED STANDARD)
+     June 1999. (Format: TXT=23656 bytes) (Obsoleted by RFC3246) (Status:
+     PROPOSED STANDARD)
 
 2599 Request for Comments Summary RFC Numbers 2500-2599. A. DeLaCruz.
      March 2000. (Format: TXT=45845 bytes) (Status: INFORMATIONAL)
@@ -9768,11 +9770,11 @@ See the RFC Editor Web page http://www.rfc-editor.org
 
 2741 Agent Extensibility (AgentX) Protocol Version 1. M. Daniele, B.
      Wijnen, M. Ellison, D. Francisco. January 2000. (Format: TXT=199867
-     bytes) (Obsoletes RFC2257) (Status: PROPOSED STANDARD)
+     bytes) (Obsoletes RFC2257) (Status: DRAFT STANDARD)
 
 2742 Definitions of Managed Objects for Extensible SNMP Agents. L.
      Heintz, S. Gudur, M. Ellison. January 2000. (Format: TXT=36644 bytes)
-     (Status: PROPOSED STANDARD)
+     (Status: DRAFT STANDARD)
 
 2743 Generic Security Service Application Program Interface Version 2,
      Update 1. J. Linn. January 2000. (Format: TXT=229418 bytes)
@@ -10181,7 +10183,7 @@ See the RFC Editor Web page http://www.rfc-editor.org
 
 2851 Textual Conventions for Internet Network Addresses. M. Daniele,
      B. Haberman, S. Routhier, J. Schoenwaelder. June 2000. (Format:
-     TXT=32587 bytes) (Status: PROPOSED STANDARD)
+     TXT=32587 bytes) (Obsoleted by RFC3291) (Status: PROPOSED STANDARD)
 
 2852 Deliver By SMTP Service Extension. D. Newman. June 2000. (Format:
      TXT=29285 bytes) (Updates RFC1894) (Status: PROPOSED STANDARD)
@@ -11162,6 +11164,10 @@ See the RFC Editor Web page http://www.rfc-editor.org
      Sanmugam, S. Bradner, J. Klensin. June 2001. (Format: TXT=11405
      bytes) (Status: INFORMATIONAL)
 
+3114 Implementing Company Classification Policy with the S/MIME
+     Security Label. W. Nicolls. May 2002. (Format: TXT=27764 bytes)
+     (Status: INFORMATIONAL)
+
 3115 Mobile IP Vendor/Organization-Specific Extensions. G. Dommety, K.
      Leung. April 2001. (Format: TXT=16363 bytes) (Obsoletes RFC3025)
      (Status: PROPOSED STANDARD)
@@ -11633,14 +11639,145 @@ See the RFC Editor Web page http://www.rfc-editor.org
      Cordonnier. February 2002. (Format: TXT=9102 bytes) (Status:
      INFORMATIONAL)
 
+3241 Robust Header Compression (ROHC) over PPP. C. Bormann. April
+     2002. (Format: TXT=24424 bytes) (Updates RFC1332) (Status: PROPOSED
+     STANDARD)
+
+3242 RObust Header Compression (ROHC): A Link-Layer Assisted Profile
+     for IP/UDP/RTP. L-E. Jonsson, G. Pelletier. April 2002. (Format:
+     TXT=49007 bytes) (Status: PROPOSED STANDARD)
+
+3243 RObust Header Compression (ROHC): Requirements and Assumptions
+     for 0-byte IP/UDP/RTP Compression. L-E. Jonsson. April 2002. (Format:
+     TXT=12451 bytes) (Status: INFORMATIONAL)
+
 3244 Microsoft Windows 2000 Kerberos Change Password and Set Password
      Protocols. M. Swift, J. Trostle, J. Brezak. February 2002. (Format:
      TXT=13334 bytes) (Status: INFORMATIONAL)
+
+3245 The History and Context of Telephone Number Mapping (ENUM)
+     Operational Decisions: Informational Documents Contributed to ITU-T
+     Study. J. Klensin, Ed.. March 2002. (Format: TXT=23758 bytes)
+     (Status: INFORMATIONAL)
+
+3246 An Expedited Forwarding PHB (Per-Hop Behavior). B. Davie, A.
+     Charny, J.C.R. Bennet, K. Benson, J.Y. Le Boudec, W. Courtney, S.
+     Davari, V. Firoiu, D. Stiliadis. March 2002. (Format: TXT=33896
+     bytes) (Obsoletes RFC2598) (Status: PROPOSED STANDARD)
+
+3247 Supplemental Information for the New Definition of the EF PHB
+     (Expedited Forwarding Per-Hop Behavior). A. Charny, J. Bennet, K.
+     Benson, J. Boudec, A. Chiu, W. Courtney, S. Davari, V. Firoiu, C.
+     Kalmanek, K. Ramakrishnan. March 2002. (Format: TXT=53786 bytes)
+     (Status: INFORMATIONAL)
+
+3248 A Delay Bound alternative revision of RFC 2598. G. Armitage, B.
+     Carpenter, A. Casati, J. Crowcroft, J. Halpern, B. Kumar, J.
+     Schnizlein. March 2002. (Format: TXT=21597 bytes) (Status:
+     INFORMATIONAL)
+
+3251 Electricity over IP. B. Rajagopalan. 1 April 2002. (Format:
+     TXT=18994 bytes) (Status: INFORMATIONAL)
+
+3252 Binary Lexical Octet Ad-hoc Transport. H. Kennedy. 1 April 2002.
+     (Format: TXT=25962 bytes) (Status: INFORMATIONAL)
 
 3253 Versioning Extensions to WebDAV (Web Distributed Authoring and
      Versioning). G. Clemm, J. Amsden, T. Ellison, C. Kaler, J. Whitehead.
      March 2002. (Format: TXT=245514 bytes) (Status: PROPOSED STANDARD)
 
+3254 Definitions for talking about directories. H. Alvestrand. April
+     2002. (Format: TXT=21541 bytes) (Status: INFORMATIONAL)
+
+3255 Extending Point-to-Point Protocol (PPP) over Synchronous Optical
+     NETwork/Synchronous Digital Hierarchy (SONET/SDH) with virtual
+     concatenation, high order and low order payloads. N. Jones, C.
+     Murton. April 2002. (Format: TXT=14192 bytes) (Status: PROPOSED
+     STANDARD)
+
+3256 The DOCSIS (Data-Over-Cable Service Interface Specifications)
+     Device Class DHCP (Dynamic Host Configuration Protocol) Relay Agent
+     Information Sub-option. D. Jones, R. Woundy. April 2002. (Format:
+     TXT=8551 bytes) (Status: PROPOSED STANDARD)
+
+3257 Stream Control Transmission Protocol Applicability Statement. L.
+     Coene. April 2002. (Format: TXT=24198 bytes) (Status: INFORMATIONAL)
+
+3258 Distributing Authoritative Name Servers via Shared Unicast
+     Addresses. T. Hardie. April 2002. (Format: TXT=22195 bytes) (Status:
+     INFORMATIONAL)
+
+3259 A Message Bus for Local Coordination. J. Ott, C. Perkins, D.
+     Kutscher. April 2002. (Format: TXT=84125 bytes) (Status:
+     INFORMATIONAL)
+
+3260 New Terminology and Clarifications for Diffserv. D. Grossman.
+     April 2002. (Format: TXT=21900 bytes) (Updates RFC2474, RFC2475,
+     RFC2597) (Status: INFORMATIONAL)
+
+3269 Author Guidelines for Reliable Multicast Transport (RMT) Building
+     Blocks and Protocol Instantiation documents. R. Kermode, L. Vicisano.
+     April 2002. (Format: TXT=25258 bytes) (Status: INFORMATIONAL)
+
+3270 Multi-Protocol Label Switching (MPLS) Support of Differentiated
+     Services. F. Le Faucheur, L. Wu, B. Davie, S. Davari, P. Vaananen, R.
+     Krishnan, P. Cheval, J. Heinanen. May 2002. (Format: TXT=137960
+     bytes) (Status: PROPOSED STANDARD)
+
+3271 The Internet is for Everyone. V. Cerf. April 2002. (Format:
+     TXT=12345 bytes) (Status: INFORMATIONAL)
+
+3272 Overview and Principles of Internet Traffic Engineering. D.
+     Awduche, A. Chiu, A. Elwalid, I. Widjaja, X. Xiao. May 2002. (Format:
+     TXT=190384 bytes) (Status: INFORMATIONAL)
+
 3275 (Extensible Markup Language) XML-Signature Syntax and Processing.
      D. Eastlake 3rd, J. Reagle, D. Solo. March 2002. (Format: TXT=164198
      bytes) (Obsoletes RFC3075) (Status: DRAFT STANDARD)
+
+3276 Definitions of Managed Objects for High Bit-Rate DSL - 2nd
+     generation (HDSL2) and Single-Pair High-Speed Digital Subscriber Line
+     (SHDSL) Lines Processing. B. Ray, R. Abbi. May 2002. (Format:
+     TXT=122991 bytes) (Status: PROPOSED STANDARD)
+
+3277 Intermediate System to Intermediate System (IS-IS) Transient
+     Blackhole Avoidance. D. McPherson. April 2002. (Format: TXT=13077
+     bytes) (Status: INFORMATIONAL)
+
+3278 Use of Elliptic Curve Cryptography (ECC) Algorithms in
+     Cryptographic Message Syntax (CMS). S. Blake-Wilson, D. Brown, P.
+     Lambert. April 2002. (Format: TXT=33779 bytes) (Status:
+     INFORMATIONAL)
+
+3279 Algorithms and Identifiers for the Internet X.509 Public Key
+     Infrastructure Certificate and Certificate Revocation List (CRL)
+     Profile. L. Bassham, W. Polk, R. Housley. April 2002. (Format:
+     TXT=53833 bytes) (Status: PROPOSED STANDARD)
+
+3280 Internet X.509 Public Key Infrastructure Certificate and
+     Certificate Revocation List (CRL) Profile. R. Housley, W. Polk, W.
+     Ford, D. Solo. April 2002. (Format: TXT=295556 bytes) (Obsoletes
+     RFC2459) (Status: PROPOSED STANDARD)
+
+3281 An Internet Attribute Certificate Profile for Authorization. S.
+     Farrell, R. Housley. April 2002. (Format: TXT=90580 bytes) (Status:
+     PROPOSED STANDARD)
+
+3282 Content Language Headers. H. Alvestrand. May 2002. (Format:
+     TXT=14022 bytes) (Updates 1766) (Status: DRAFT STANDARD)
+
+3285 Using Microsoft Word to create Internet Drafts and RFCs. M.
+     Gahrns, T. Hain. May 2002. (Format: TXT=34556 bytes) (Status:
+     INFORMATIONAL)
+
+3286 An Introduction to the Stream Control Transmission Protocol
+     (SCTP). L. Ong, J. Yoakum. May 2002. (Format: TXT=22644 bytes)
+     (Status: INFORMATIONAL)
+
+3290 An Informal Management Model for Diffserv Routers. Y. Bernet, S.
+     Blake, D. Grossman, A. Smith. May 2002. (Format: TXT=129443 bytes)
+     (Status: INFORMATIONAL)
+
+3291 Textual Conventions for Internet Network Addresses. M. Daniele,
+     B. Haberman, S. Routhier, J. Schoenwaelder. May 2002. (Format:
+     TXT=43564 bytes) (Obsoletes RFC2851) (Status: PROPOSED STANDARD)
