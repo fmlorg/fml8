@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.54 2001/10/10 03:15:19 fukachan Exp $
+# $FML: Kernel.pm,v 1.55 2001/10/10 14:56:01 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -741,15 +741,41 @@ C<Caution:>
 
 =cut
 
+
 # Descriptions: expand $xxx variables in template (e.g. $help_file).
+#               1. in Japanese case, convert kanji code: iso-2022-jp -> euc
+#               2. expand variables: $ml_name -> elena
+#               3. back kanji code: euc -> iso-2022-jp
+#               4. return the new created template
 #    Arguments: $self $filename_string $args
 # Side Effects: none
-# Return Value: file name string
-sub expand_variables_in_file
+# Return Value: a new filepath (string) to be prepared
+sub prepare_file_to_return
 {
-    my ($curproc, $file, $args) = @_;
-    Log("expand ... $file ...");
-    return $file;
+    my ($curproc, $args) = @_;
+    my $config      = $curproc->{ config };
+    my $tmp_dir     = $config->{ tmp_dir };
+    my $tmpf        = "$tmp_dir/$$";
+    my $src_file    = $args->{ src };
+    my $charset_out = $args->{ charset };
+
+    -d $tmp_dir || mkdir $tmp_dir;
+
+    use FileHandle;
+    my $rh = new FileHandle $src_file;
+    my $wh = new FileHandle "> $tmpf"; 
+
+    use FML::Language::ISO2022JP qw(STR2JIS);
+    if (defined($rh) && defined($wh)) {
+	while (<$rh>) {
+	    if (/\$/) { $config->expand_variable_in_buffer( \$_ );}
+	    $wh->print(STR2JIS($_));
+	}
+	close($wh);
+	close($rh);
+    }
+
+    return (-s $tmpf ? $tmpf : undef);
 }
 
 
