@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: test_newml.sh,v 1.4 2002/12/31 03:57:56 fukachan Exp $
+# $FML: test_newml.sh,v 1.5 2003/01/04 14:08:54 fukachan Exp $
 #
 
 SHOW () {
@@ -28,14 +28,14 @@ SHOW () {
 	rm -fr /tmp/nuinui 
 	sh reset_lib.sh 
 
-	echo mkdir /tmp/nuinui 
-	mkdir /tmp/nuinui 
-
 	printf "\n*** newml *** \n\n"
 
 	printf "\n\n\n" > /dev/stderr 
 	makefml newml rudo@nuinui.net 
 	SHOW
+
+	test -d /tmp/nuinui || echo error: /tmp/nuinui not exist
+	test -d /tmp/nuinui || exit 1
 
 	ls -lRa /tmp/nuinui
 
