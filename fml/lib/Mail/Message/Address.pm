@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.8 2004/01/01 07:29:27 fukachan Exp $
+# $FML: Address.pm,v 1.1 2004/01/31 06:32:40 fukachan Exp $
 #
 
 package Mail::Message::Address;
@@ -16,7 +16,7 @@ use Mail::Address;
 
 =head1 NAME
 
-Mail::Message::Address - what is this
+Mail::Message::Address - manipulate address type string.
 
 =head1 SYNOPSIS
 
@@ -42,13 +42,29 @@ sub new
     my (@addrs) = Mail::Address->parse($str);
     my $addr    = $addrs[0]->address;
 
-    my $me   = {
-	_addrs     => \@addrs,
-	_addr_head => $addrs[0],
-	_orig_str  => $str,
+    # XXX in-core data area.
+    # XXX this aread may break Mail::Address object, so
+    # XXX we not use @ISA to Mail::Address class but use it via AUTOLOAD().
+    my $me = {
+	_addrs       => \@addrs,
+	_addr_head   => $addrs[0],
+	_string      => $addr,
+	_orig_string => $str,
     };
 
     return bless $me, $type;
+}
+
+
+# Descriptions: return date as string.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub as_str
+{
+    my ($self) = @_;
+
+    return $self->{ _string };
 }
 
 
@@ -63,19 +79,41 @@ clean up address and return it.
 
 # Descriptions: utility to remove ^\s*< and >\s*$.
 #    Arguments: OBJ($self)
-# Side Effects: update $self->{ _str }.
+# Side Effects: update $self->{ _string }.
 # Return Value: none
 sub clean_up
 {
     my ($self) = @_;
-    my $addr   = $self->address();
+    my $addr   = $self->{ _string } || '';
 
     # 1. remove ^\s*< and >\s*$.
     $addr =~ s/^\s*<//o;
     $addr =~ s/>\s*$//o;
 
     # return the result.
-    $self->{ _str } = $addr || '';
+    $self->{ _string } = $addr || '';
+}
+
+
+=head1 UTILITIES
+
+=head2 substr($offset, $len)
+
+return $len byte of data from $offset.
+
+=cut
+
+
+# Descriptions: return substr()-fied data.
+#    Arguments: OBJ($self) NUM($offset) NUM($len)
+# Side Effects: none
+# Return Value: STR
+sub substr
+{
+    my ($self, $offset, $len) = @_;
+    my $addr = $self->{ _string } || '';
+
+    return substr($addr, $offset, $len);
 }
 
 
@@ -142,6 +180,7 @@ if ($0 eq __FILE__) {
 	    if ($str) {
 		my $m_addr = new Mail::Message::Address $str;
 		printf $format, "ADDRESS", $m_addr->address();
+		printf $format, "substr",  $m_addr->substr(0, 15);
 	    }
 	}
     }
