@@ -4,7 +4,7 @@
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML$
+# $FML: Scheduler.pm,v 1.2 2001/04/03 09:45:43 fukachan Exp $
 #
 
 package FML::Process::Scheduler;
@@ -52,6 +52,16 @@ dummy.
 =cut
 
 
+# avoid default fml new() since we do not need it.
+sub new
+{
+    my ($self) = @_;
+    my ($type) = ref($self) || $self;
+    my $me     = {};
+    return bless $me, $type;
+}
+
+
 sub prepare { ; }
 
 
@@ -62,7 +72,7 @@ sub run
     use FileHandle;
     use TinyScheduler;
 
-    my $schedule = new TinyScheduler;
+    my $schedule = new TinyScheduler $args;
     $schedule->parse;
 
     my $tmp = $schedule->tmpfile;
@@ -70,7 +80,13 @@ sub run
     $schedule->print($fh);
     $fh->close;
 
-    system "w3m -dump $tmp";
+    my $mode = $args->{ options }->{ m } || 'text';
+    if ($mode eq 'text') {
+	system "w3m -dump $tmp";
+    }
+    else {
+	system "cat $tmp";	
+    }
 
     unlink $tmp;
 }
