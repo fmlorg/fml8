@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.5 2002/12/22 03:08:49 fukachan Exp $
+# $FML: Utils.pm,v 1.5.2.1 2003/06/14 06:55:05 fukachan Exp $
 #
 
 package Mail::Message::Utils;
@@ -70,9 +70,12 @@ sub from_to_name
     use Mail::Address;
     my (@addrs) = Mail::Address->parse($address);
 
+    use Mail::Message::Encode;
+    my $encode = new Mail::Message::Encode;
+
     for my $addr (@addrs) {
 	if (defined( $addr->phrase() )) {
-	    my $phrase = $self->_decode_mime_string( $addr->phrase() );
+	    my $phrase = $encode->decode_mime_string( $addr->phrase() );
 
 	    if ($phrase) {
 		return($phrase);
