@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: .gen.sh,v 1.7 2002/05/24 14:10:14 fukachan Exp $
+# $FML: .gen.sh,v 1.8 2002/06/01 07:14:47 fukachan Exp $
 #
 
 tmp=default_config.cf.xx.$$
@@ -21,6 +21,7 @@ _EOF_
 		-e "s@'@@g" \
 		-e 's/ *//g' |\
 	grep -v START_HOOK |\
+	sort -t _ |\
 	sed -e 's/^/# $/' -e 's/$/ = q{ 1;};/'
 )  > src/hooks.cf
 
