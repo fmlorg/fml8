@@ -1,6 +1,15 @@
 		CHANGES
 		$Date$
 
+2001/09/13
+
+   FML::Config.pm
+	define FIRSTKEY and NEXTKEY for complete hash emulation
+
+   FML::Command::Admin	ユーザ用コマンド群
+		commit prototype
+		makefml uses this class
+
 2001/08/26
 
    FML::Credential
@@ -20,7 +29,6 @@
 	FML::Command::Admin	ユーザ用コマンド群
 
 		newml edit などは Admin のみ
-
 
 2001/08/24
 
@@ -179,5 +187,5 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.9 2001/09/13 11:49:48 fukachan Exp $
+$FML: CHANGES.txt,v 1.10 2001/09/13 13:49:03 fukachan Exp $
 
