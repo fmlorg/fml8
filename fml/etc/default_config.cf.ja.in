@@ -7,6 +7,24 @@
 #
 #	message		subject やメール本文の文章の方を指す
 #
+# [ルール]
+#		$ACTION_$CONDITION 形式
+#
+#		permit_xxx	条件 xxx にマッチすれば許可、スイッチ処理終
+#				条件 xxx にマッチしない場合は次へ続く
+#
+#		reject_xxx	条件 xxx にマッチしたら拒否、スイッチ処理終
+#				条件 xxx にマッチしない場合は次へ続く
+#
+#		check_xxx	条件 xxx にマッチして permit/reject が
+#				指示されるので、それによって許可/拒否 
+#				そして、スイッチ処理は終り。
+#				条件 xxx にマッチしない場合は次へ続く
+#
+#		permit		permit_all のこと、スイッチ処理終
+#
+#		reject		reject_all のこと、スイッチ処理終
+#
 # [プレフィックス]
 #
 #	fml_		fml システム共通＆＆全ドメイン共通
@@ -50,7 +68,7 @@ maintainer	=
 
 =head2	言語
 
-default_charset	=	iso-2022-jp
+default_charset		=	iso-2022-jp
 
 
 =head2	default modes
@@ -365,7 +383,7 @@ template_file_charset	=	euc-jp
 #      History:
 #        Value:
 #     Examples:
-message_default_subject	=	fml system message
+default_message_subject	=	fml system message ($ml_name ML)
 
 
 # Descriptions:
@@ -1054,13 +1072,13 @@ ml_admin_cgi_base_dir	=	$cgi_base_dir/ml-admin/$ml_name
 #      History:
 #        Value:
 #     Examples:
-cgi_default_charset	=	euc-jp
+default_cgi_charset	=	euc-jp
 
 # Descriptions: CGI の表示の CHARSET
 #      History:
 #        Value:
 #     Examples:
-cgi_charset		=	$cgi_default_charset
+cgi_charset		=	$default_cgi_charset
 
 
 # Descriptions: デフォルトの bgcolor
@@ -1315,4 +1333,89 @@ outgoing_mail_cache_size	=	128
 ###                                                          ###
 
 =cut
+
+#
+# list of available hooks
+#
+
+# $distribute_prepare_start_hook = q{ 1;};
+# $distribute_prepare_end_hook = q{ 1;};
+# $distribute_verify_request_start_hook = q{ 1;};
+# $distribute_verify_request_end_hook = q{ 1;};
+# $distribute_run_start_hook = q{ 1;};
+# $distribute_run_end_hook = q{ 1;};
+# $distribute_finish_start_hook = q{ 1;};
+# $distribute_finish_end_hook = q{ 1;};
+# $makefml_prepare_start_hook = q{ 1;};
+# $makefml_prepare_end_hook = q{ 1;};
+# $makefml_verify_request_start_hook = q{ 1;};
+# $makefml_verify_request_end_hook = q{ 1;};
+# $makefml_finish_start_hook = q{ 1;};
+# $makefml_finish_end_hook = q{ 1;};
+# $makefml_run_start_hook = q{ 1;};
+# $makefml_run_end_hook = q{ 1;};
+# $command_prepare_start_hook = q{ 1;};
+# $command_prepare_end_hook = q{ 1;};
+# $command_verify_request_start_hook = q{ 1;};
+# $command_verify_request_end_hook = q{ 1;};
+# $command_finish_start_hook = q{ 1;};
+# $command_finish_end_hook = q{ 1;};
+# $command_run_start_hook = q{ 1;};
+# $command_run_end_hook = q{ 1;};
+# $fmlhtmlify_prepare_start_hook = q{ 1;};
+# $fmlhtmlify_prepare_end_hook = q{ 1;};
+# $fmlhtmlify_verify_request_start_hook = q{ 1;};
+# $fmlhtmlify_verify_request_end_hook = q{ 1;};
+# $fmlhtmlify_run_start_hook = q{ 1;};
+# $fmlhtmlify_run_end_hook = q{ 1;};
+# $fmlhtmlify_finish_start_hook = q{ 1;};
+# $fmlhtmlify_finish_end_hook = q{ 1;};
+# $fmlthread_prepare_start_hook = q{ 1;};
+# $fmlthread_prepare_end_hook = q{ 1;};
+# $fmlthread_verify_request_start_hook = q{ 1;};
+# $fmlthread_verify_request_end_hook = q{ 1;};
+# $fmlthread_run_start_hook = q{ 1;};
+# $fmlthread_run_end_hook = q{ 1;};
+# $fmlthread_finish_start_hook = q{ 1;};
+# $fmlthread_finish_end_hook = q{ 1;};
+# $fmldoc_prepare_start_hook = q{ 1;};
+# $fmldoc_prepare_end_hook = q{ 1;};
+# $fmldoc_verify_request_start_hook = q{ 1;};
+# $fmldoc_verify_request_end_hook = q{ 1;};
+# $fmldoc_run_start_hook = q{ 1;};
+# $fmldoc_run_end_hook = q{ 1;};
+# $fmldoc_finish_start_hook = q{ 1;};
+# $fmldoc_finish_end_hook = q{ 1;};
+# $fmlalias_prepare_start_hook = q{ 1;};
+# $fmlalias_prepare_end_hook = q{ 1;};
+# $fmlalias_verify_request_start_hook = q{ 1;};
+# $fmlalias_verify_request_end_hook = q{ 1;};
+# $fmlalias_finish_start_hook = q{ 1;};
+# $fmlalias_finish_end_hook = q{ 1;};
+# $fmlalias_run_start_hook = q{ 1;};
+# $fmlalias_run_end_hook = q{ 1;};
+# $fmlconf_prepare_start_hook = q{ 1;};
+# $fmlconf_prepare_end_hook = q{ 1;};
+# $fmlconf_verify_request_start_hook = q{ 1;};
+# $fmlconf_verify_request_end_hook = q{ 1;};
+# $fmlconf_run_start_hook = q{ 1;};
+# $fmlconf_run_end_hook = q{ 1;};
+# $fmlconf_finish_start_hook = q{ 1;};
+# $fmlconf_finish_end_hook = q{ 1;};
+# $fmlspool_prepare_start_hook = q{ 1;};
+# $fmlspool_prepare_end_hook = q{ 1;};
+# $fmlspool_verify_request_start_hook = q{ 1;};
+# $fmlspool_verify_request_end_hook = q{ 1;};
+# $fmlspool_run_start_hook = q{ 1;};
+# $fmlspool_run_end_hook = q{ 1;};
+# $fmlspool_finish_start_hook = q{ 1;};
+# $fmlspool_finish_end_hook = q{ 1;};
+# $error_prepare_start_hook = q{ 1;};
+# $error_prepare_end_hook = q{ 1;};
+# $error_verify_request_start_hook = q{ 1;};
+# $error_verify_request_end_hook = q{ 1;};
+# $error_run_start_hook = q{ 1;};
+# $error_run_end_hook = q{ 1;};
+# $error_finish_start_hook = q{ 1;};
+# $error_finish_end_hook = q{ 1;};
 
