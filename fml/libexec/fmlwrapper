@@ -55,12 +55,14 @@ sub Bootstrap
     my @cf      = ();
     my %options = ();
     my $my_default_config = '';
+    my $ml_home_dir       = ''; # e.g. /var/spool/ml/elena
     GetOptions(\%options, 
 	       qw(ctladdr! debug! params=s -c=s)
 	       );
 
     for (@ARGV) {
 	if (-d $_) {
+	    $ml_home_dir = $_;
 	    push(@cf, "$_/config.cf") if -f "$_/config.cf";
 	}
 	elsif (-f $_) {
@@ -95,8 +97,10 @@ sub Bootstrap
 		  {
 		      cf_list      => \@cf,
 		      myname       => $myname,
+		      ml_home_dir  => $ml_home_dir,
 		      options      => \%options,
 		  });
+
 }
 
 
