@@ -1,8 +1,8 @@
 <!--
-   $FML: cgi.sgml,v 1.1 2002/07/05 03:11:11 fukachan Exp $
+   $FML: cgi.sgml,v 1.2 2002/07/06 14:55:20 fukachan Exp $
 -->
 
-<chapter id="setup.cgi">
+<chapter id="setupcgi">
 	<title>
 	CGI の設定
 	</title>
@@ -10,8 +10,8 @@
 
 <para>
 参照: CGI の内部構造については
-<link linkend="internal.cgi.method">
-<xref linkend="internal.cgi.method">
+<link linkend="internalcgi.method">
+<xref linkend="internalcgi.method">
 </link>
 を参照して下さい。
 </para>
@@ -33,7 +33,7 @@ CGI を使う場合でも、メールサーバとして postfix や qmail を使っている場
 </warning>
 
 
-<sect1 id="setup.cgi.install">
+<sect1 id="setupcgi.install">
 	<title>
 	makefml newml は CGI スクリプトを作ります
 	</title>
@@ -64,10 +64,14 @@ http://lists.fml.org/~fml/cgi-bin/fml/fml.org/ml-admin/elena/config.cgi
 の両方が makefml により用意されます。
 </para>
 
+<para>
+<graphic entityref="image.cgi.newml"></graphic>
+</para>
+
 </sect1>
 
 
-<sect1 id="setup.cgi.htaccess">
+<sect1 id="setupcgi.htaccess">
 	<title>
 	.htaccess を編集する
 	</title>
@@ -106,7 +110,7 @@ require valid-user
 </sect1>
 
 
-<sect1 id="setup.cgi.admin.cgi.overview">
+<sect1 id="setupcgi.admin.cgi.overview">
 	<title>
 	例: ドメインマスタ CGI の画面
 	</title>
@@ -153,10 +157,15 @@ options Language:    list        アドレスリストを見る
 もちろんコマンドごとに異なります:)
 </para>
 
+<para>
+<graphic entityref="image.cgi.top"></graphic>
+</para>
+
+
 </sect1>
 
 
-<sect1 id="setup.cgi.admin.cgi.newml">
+<sect1 id="setupcgi.admin.cgi.newml">
 	<title>
 	CGI の使い方の例: ＭＬの作成
 	</title>
@@ -172,10 +181,14 @@ ML 名を選択する必要はありません:)
 作成するＭＬ名を入力し、中央の submit ボタンを押して下さい。
 </para>
 
+<para>
+<graphic entityref="image.cgi.newml"></graphic>
+</para>
+
 </sect1>
 
 
-<sect1 id="setup.cgi.admin.cgi.subscribe">
+<sect1 id="setupcgi.admin.cgi.subscribe">
 	<title>
 	CGI の使い方の例: メンバー登録
 	</title>
@@ -189,6 +202,10 @@ submit ボタンを押して下さい。
 中央に、アドレスの入力を促す画面が現れるので、
 登録したいアドレスを入力し、
 中央の submit ボタンを押して下さい。
+</para>
+
+<para>
+<graphic entityref="image.cgi.useradd"></graphic>
 </para>
 
 </sect1>

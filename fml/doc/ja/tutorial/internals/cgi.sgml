@@ -1,14 +1,14 @@
 <!--
-   $FML: cgi.sgml,v 1.7 2002/07/06 14:55:18 fukachan Exp $
+   $FML: cgi.sgml,v 1.8 2002/07/19 03:21:55 fukachan Exp $
 -->
 
-<chapter id="internal.cgi">
+<chapter id="internalcgi">
 	<title>
 	CGI プロセスの内部構造
 	</title>
 
 
-<sect1 id="internal.cgi.method">
+<sect1 id="internalcgi.method">
 	<title>
 	メソッド
 	</title>
@@ -58,7 +58,7 @@ finish()
 </sect1>
 
 
-<sect1 id="internal.cgi.frames">
+<sect1 id="internalcgi.frames">
 	<title>
 	CGI の画面の作りとメソッド
 	</title>
@@ -102,7 +102,7 @@ sw   south  se
 </sect1>
 
 
-<sect1 id="internal.cgi.trampoline">
+<sect1 id="internalcgi.trampoline">
 	<title>
 	画面とトランポリン機構
 	</title>
@@ -131,7 +131,7 @@ FML::CGI::Admin::User →
 </sect1>
 
 
-<sect1 id="internal.cgi.problems">
+<sect1 id="internalcgi.problems">
 	<title>
 	備考: FML::CGI::Admin:: ではハードコーディングするしかない？	
 	</title>
