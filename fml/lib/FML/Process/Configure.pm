@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Configure.pm,v 1.22 2001/05/29 16:21:16 fukachan Exp $
+# $FML: Configure.pm,v 1.23 2001/05/31 11:02:32 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -80,11 +80,16 @@ sub prepare { ; }
 
 =head2 C<run($args)>
 
-the main top level dispatcher for C<fmlconf> and C<makefml>. 
+the top level dispatcher for C<fmlconf> and C<makefml>. 
+
 It kicks off internal function 
 C<_fmlconf($args)> for C<fmlconf> 
     and 
 C<_makefml($args)> for makefml.
+
+NOTE: 
+C<$args> is passed from parrent libexec/loader.
+See <FML::Process::Switch()> on C<$args> for more details.
 
 =cut
 
@@ -111,6 +116,13 @@ sub run
 }
 
 
+=head2 C<_fmlconf($args)> (INTERNAL USE)
+
+run dump_variables of C<FML::Config>.
+
+=cut
+
+
 # Descriptions: show configurations variables in the sytle "key = value"
 #    Arguments: $self $args
 # Side Effects: none
@@ -120,10 +132,27 @@ sub _fmlconf
     my ($curproc, $args) = @_;    
     my $config = $curproc->{ config };
     my $mode   = $args->{ options }->{ n } ? 'difference_only' : 'all';
-    my $argv   = $args->{ ARGV };
 
     $config->dump_variables({ mode => $mode });
 }
+
+
+=head2 C<_makefml($args)> (INTERNAL USE)
+
+switch of C<makefml> command.
+It kicks off <FML::Command::$command> corrsponding with 
+C<@$argv> ( $argv = $args->{ ARGV } ).
+
+C<Caution:>
+C<$args> is passed from parrent libexec/loader.
+We construct a new struct C<$optargs> here to pass parameters 
+to child objects.
+C<FML::Command::$command> object takes them as arguments not pure
+C<$args>. It is a little mess. Pay attention.
+
+See <FML::Process::Switch()> on C<$args> for more details.
+
+=cut
 
 
 # Descriptions: makefml top level dispacher
