@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.23 2002/09/22 14:56:40 fukachan Exp $
+# $FML: Log.pm,v 1.24 2002/12/18 03:42:28 fukachan Exp $
 #
 
 package FML::Log;
@@ -120,8 +120,12 @@ sub Log
     my $fh     = undef;
     my $sender = FML::Credential->sender;
 
-    if (defined $file && -f $file) {
+    if (defined $file) {
+	my $old_mask = umask(077);
 	$fh = new FileHandle ">> $file";
+	umask($old_mask);
+
+	$fh = \*STDERR unless $fh;
     }
     else {
 	$fh = \*STDERR;
