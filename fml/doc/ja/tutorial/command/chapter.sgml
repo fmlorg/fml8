@@ -1,0 +1,80 @@
+<!--
+	$FML: commands.sgml,v 1.7 2001/09/17 13:11:51 fukachan Exp $
+-->
+
+<chapter id="fml.command.op">
+	<title>
+	fml をメールで操作する
+	</title>
+
+<para>
+fml にメールで文字列(コマンド)を送り込むことで、fml に特定の処理をして
+もらうことができます。例えば、メンバーの登録、削除や、過去の記事を取り
+寄せるなどの処理です。
+</para>
+
+<para>
+メールによるコマンド処理
+makefml によるコマンド処理
+CGI でのコマンド処理
+すべてが同じ FML::Command:: クラスのモジュールを使うことにします。 
+</para>
+
+
+<sect1 id="fml.command.module.hierarchy">
+	<title>
+	FML::Command クラス以下の構成
+	</title>
+
+<para>
+FML::Command:: クラスの再構成
+<screen>
+FML::Command.pm		FML::Command クラス以下への入口
+FML::Command::ACL	ACL
+FML::Command::Utils	よもやまの定義
+FML::Command::User	ユーザ用コマンド群
+FML::Command::Admin	ユーザ用コマンド群
+</screen>
+</para>
+
+<para>
+例えば、ユーザ用のコマンドの場合
+FML::Command.pm を経由して
+FML::Command::User::コマンド.pm
+モジュールを使うことになります。
+</para>
+
+</sect1>
+
+
+&command.internal;
+
+
+<sect1 id="fml.command.hack.example0">
+   <title> コマンドの拡張の仕方の例 </title>
+
+
+   <sect2>
+	<title> 独自コマンドを作る。 </title>
+
+	<para>
+	fml 5.0 では、
+	例えばユーザ向けのコマンド uja を作りたい場合、
+	FML::Command 以下から適当に cut & paste して
+<screen>	
+/usr/local/lib/fml/site_local/FML/Command/User/uja.pm
+</screen>	
+	というファイルを置けば OK にしようとしています。
+	</para>
+
+<para>
+これだけではだめで、許可するコマンドリストに追加して始めて有効になるよ
+うにしないといけないでしょう。
+</para>
+
+</sect2>
+
+
+</sect1>
+
+</chapter>
