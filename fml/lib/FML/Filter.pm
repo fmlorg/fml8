@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.28 2003/05/13 04:26:47 fukachan Exp $
+# $FML: Filter.pm,v 1.29 2003/05/14 12:02:00 fukachan Exp $
 #
 
 package FML::Filter;
@@ -13,6 +13,8 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use FML::Log qw(Log LogWarn LogError);
 use ErrorStatus qw(error_set error error_clear);
+
+my $debug = 0;
 
 =head1 NAME
 
@@ -73,12 +75,12 @@ sub article_filter
       FUNCTION:
 	for my $function (@$functions) {
 	    if ($config->yes( "use_${function}" )) {
-		Log("filter(debug): check by $function");
+		Log("filter(debug): check by $function") if $debug;
 		my $fp = "_apply_$function";
 		$status = $self->$fp($curproc, $args, $message);
 	    }
 	    else {
-		Log("filter(debug): not check by $function");
+		Log("filter(debug): not check by $function") if $debug;
 	    }
 
 	    last FUNCTION if $status;
@@ -249,7 +251,7 @@ sub _apply_article_mime_component_filter
 	    $obj->mime_component_check($mesg);
 	}
 	else {
-	    Log("(debug) disabled since rule file not found");
+	    Log("(debug) disabled since rule file not found") if $debug;
 	    return 0;
 	}
 
@@ -372,12 +374,12 @@ sub command_mail_filter
       FUNCTION:
 	for my $function (@$functions) {
 	    if ($config->yes( "use_${function}" )) {
-		Log("filter(debug): check by $function");
+		Log("filter(debug): check by $function") if $debug;
 		my $fp = "_apply_$function";
 		$status = $self->$fp($curproc, $args, $message);
 	    }
 	    else {
-		Log("filter(debug): not check by $function");
+		Log("filter(debug): not check by $function") if $debug;
 	    }
 
 	    last FUNCTION if $status;

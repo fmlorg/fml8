@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.59 2003/04/21 10:39:10 tmu Exp $
+# $FML: Header.pm,v 1.60 2003/05/03 03:26:54 fukachan Exp $
 #
 
 package FML::Header;
@@ -16,6 +16,8 @@ use FML::Log qw(Log LogWarn LogError);
 
 use Mail::Header;
 @ISA = qw(Mail::Header);
+
+my $debug = 0;
 
 =head1 NAME
 
@@ -440,8 +442,8 @@ sub rewrite_date
 
     $header->add('X-Date', $orgdate) if ($orgdate);
     $header->replace('Date', $newdate);
-    Log("(debug) rewrite the orginal date to 'X-Date: $orgdate'");
-    Log("(debug) rewrite the new date to 'Date: $newdate'");
+    Log("(debug) rewrite the orginal date to 'X-Date: $orgdate'") if $debug;
+    Log("(debug) rewrite the new date to 'Date: $newdate'") if $debug;
 }
 
 
@@ -462,7 +464,7 @@ sub rewrite_received
 	$header->add($new, $data);
     }
     $header->delete($org);
-    Log("(debug) rewrite $org to $new (total $num)");
+    Log("(debug) rewrite $org to $new (total $num)") if $debug;
 }
 
 
