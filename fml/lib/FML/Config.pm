@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.76 2002/12/24 10:19:41 fukachan Exp $
+# $FML: Config.pm,v 1.77 2003/01/11 06:58:44 fukachan Exp $
 #
 
 package FML::Config;
@@ -712,8 +712,18 @@ sub _expand_variables
 	while ($max++ < 16) {
 	    $org = $config->{ $x };
 
+	    # expand $prefix -> something
 	    $config->{$x} =~
 		s/\$([a-z_]+[a-z0-9])/(defined $config->{$1} ?
+				       $config->{$1} :
+				       (defined $hints->{$1} ?
+					$hints->{$1} :
+					''
+					))/ge;
+
+	    # expand ${prefix} -> something
+	    $config->{$x} =~
+		s/\$\{([a-z_]+[a-z0-9])\}/(defined $config->{$1} ?
 				       $config->{$1} :
 				       (defined $hints->{$1} ?
 					$hints->{$1} :
