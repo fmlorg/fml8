@@ -28,6 +28,13 @@ article_header_rewrite_rules	+=	rewrite_article_subject_tag
 
 article_subject_tag = [\U$ml_name\E %05d)
 
+#
+# for error simulation
+#
+error_analyzer_function	=	simple_count
+
+error_analyzer_simple_count_limit	=	2
+
 
 [mysql:fml]
 
