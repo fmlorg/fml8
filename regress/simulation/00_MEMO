@@ -61,31 +61,13 @@
 	libexec/auto-newml ?
 
 
-[TODO]	Mail::Message::Encode へマージしたいもの
+[TODO]	スレッド関連のモジュール全部見直せよ
 
-	Mail/Message/Decode.pm
-	Mail/Message/Encode.pm
-		はどうする？
-
-	FML::Language を削除
-	FML::Language::ISO2022JP を削除
-		実態は以下の2つのクラス
-
-	FML::Language::Japanese::String
-		STR2EUC()
-		STR2JIS()
-		STR2SJIS()
-
-
-	FML::Language::Japanese::Utils
-		is_iso2022jp_string()
-		_look_not_iso2022jp_string()
-		compare_euc_string()
+	Mail::Message::ToHTML の DB エンジンを取り出し、
+	Mail::Message::DB なりに移す。
+	スレッドその他のエンジンもそれを使うことになる。
 
 	Mail/ThreadTrack/Print/Utils.pm に STR2EUC がある
-
-
-[TODO]	スレッド関連のモジュール全部見直せよ
 
 	MTI との統合
 
@@ -98,7 +80,6 @@
 		コマンドラインオプションは、OK？
 
 		Mail::ThreadTrack
-		FML::Command::Admin::thread
 		FML::Article::Thread		(不要じゃないの？)
 
 	どこに、なんのメソッドがあるべきなのか？	
@@ -106,7 +87,6 @@
 	output とモードの明瞭化を
 	どこでどう CSS とたたかうの？
 	Mail::ThreadTrack::Analyze をきれいにしないとね
-
 
 	index.html (fml-devel 234)
 	 	最近のＭＬのレビュー 
@@ -345,4 +325,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.83 2003/05/26 13:10:12 fukachan Exp $
+$FML: 00_MEMO,v 1.84 2003/05/26 23:50:31 fukachan Exp $
