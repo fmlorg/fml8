@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.40 2003/05/16 13:40:57 fukachan Exp $
+# $FML: ToHTML.pm,v 1.41 2003/05/27 11:34:14 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.40 2003/05/16 13:40:57 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.41 2003/05/27 11:34:14 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -2650,12 +2650,12 @@ if ($0 eq __FILE__) {
     my $charset  = 'euc-jp';
 
     eval q{
-	my $obj = new Mail::Message::ToHTML:
+	my $obj = new Mail::Message::ToHTML;
 
 	for my $x (@ARGV) {
 	    if (-f $x) {
 		$obj->htmlify_file($x, {
-		    directory => $dir
+		    directory => $dir,
 		    charset   => $charset,
 		    });
 	    }
