@@ -1,5 +1,5 @@
 <!--
-   $FML: filter.sgml,v 1.1 2003/04/13 03:29:02 fukachan Exp $
+   $FML: filter.sgml,v 1.2 2003/04/13 04:36:12 fukachan Exp $
 -->
 
 <chapter id="internals.filter">
@@ -14,17 +14,19 @@
 	</title>
 
 <para>
-フィルタには大きく分けて３種類あります。
+フィルタには大きく分けて３種類あります。それは、
 ヘッダ、
 メール本文、
-MIME 構造を元にしたフィルタ(mime component filter)です。
+MIME 構造を元にしたフィルタ(mime component filter)の３つです。
 メール本文に対するフィルタには MIME でないものをどうするか？
 text/plain に対してより厳しいシンタックスチェックを行なうフィルタも
-あるので、大きく分けると４つといえるかも。
+あるので、大きく分けると４つというほうがよいかもしれません。
 <screen>
-header
+大まかな区分け
 
-body
+  header
+
+  body
 	non-mime
 		permit / reject (4.0 の content filter の !MIME)
 
@@ -38,8 +40,8 @@ body
 		シンタックスチェック
 </screen>
 本当はこれ以外に、外部の virus scanner なりに飛ばす迂回路が必要だと思
-うんだけど今はまだ考えてない。とりあえず、それは postfix でやってくだ
-さい。
+うんだけど今はまだ考えていません。とりあえず、それは postfix でやって
+ください。
 </para>
 
 </sect1>
@@ -58,13 +60,13 @@ text/plain 	permit
 text/html	reject
 *		permit
 </screen>
-みたいなフォーマットで書く。
+みたいなフォーマットで書きます。
 </para>
 
 <para>
 MIME が前提なので、!MIME なんてのはない。が、text/plain と 
 multipart/mixed 中の text/plain を区別するために、こういう書き方である
-必要があるとおもう。
+必要があるとおもうわけです。
 <screen>
 全体			部分		アクション
 ----------------------------------------------
@@ -82,7 +84,7 @@ text/plain 		:size>500k	cutoff
 </para>
 
 <para>
-ルールの構成上の問題点はいくつかある。
+ルールの構成上の問題点はいくつかあります。
 </para>
 
 <sect2>
@@ -91,8 +93,9 @@ text/plain 		:size>500k	cutoff
 	</title>
 
 <para>
-アクションには first match のものとそうでないものがある。
-reject は first match だが、cutoff は first match ではない。
+アクションには first match のものとそうでないものがある。reject は た
+いてい first match ですが、cutoff は first match ではないとおもわれま
+す。さて？
 </para>
 
 </sect2>
@@ -104,34 +107,36 @@ reject は first match だが、cutoff は first match ではない。
 	</title>
 
 <para>
-では、permit はどうだろうか？実のところ、文脈依存と考えられるのだが、
-どうするとよいだろうか？たとえば、multipart のメールの中身が
+では、permit はどうでしょう？実のところ文脈依存と考えらますが、何が正
+しいのかよくわかりません。たとえば、multipart のメールの中身が
 <screen>
 text/plain + image/jpeg + text/html
 </screen>
 のように３つの異なるタイプのパートからなる場合、どういうルールなら曖昧
-さがないだろうか？結論をいえば、cutoff や reject を指定するタイプのルー
-ルしかうまく機能しない、つまり「特定の○○を削除ないしは拒否する」こと
-ならうまくできるといえる。ゆえにデフォルトは permit にするしかないんだ
-ともいえる。
+さがないのだろうか？
 </para>
 
 <para>
-『permit は「個別に許す」という意味である』説と、
-『permit は「メール全体を許す」という意味である』説の両方がある。
-たとえば、
+結論をいえば、cutoff や reject を指定するタイプのルールしかうまく機能
+しない、つまり「特定の○○を削除ないしは拒否する」ことならうまくできる
+といえそうです。ゆえにデフォルトは permit にするしかない。
+</para>
+
+<para>
+『permit は「個別に許す」という意味である』説と、『permit は「メール全
+体を許す」という意味である』説の両方があります。たとえば、
 <screen>
 text/plain	*	permit
 *		*	reject
 </screen>
 は text/plain は許す、それ以外のいかなる型も許さない。
-これは text/plain に曖昧さがないので OK。
+これは text/plain に曖昧さがないので OK でしょう。
 </para>
 
 <para>
-一方、『permit は「メール全体を許す」という意味である』説だが、たとえ
-ば text/plain のメールだけを許したいとしよう。 直観的にはこう書くだろ
-う。
+一方、『permit は「メール全体を許す」という意味である』説があります。
+たとえば text/plain のメールだけを許したいとしましょう。 直観的にはこ
+う書くとおもいます。
 <screen>
 text/plain	*	permit
 *		*	reject
@@ -140,9 +145,9 @@ text/plain	*	permit
 <screen>		
 *	*	reject
 </screen>
-と一緒になってしまう。だから permit は"メール全体を OK としてルールと
-の照らし合わせ処理をそこで終りにする"という意味にしないといけない。
-よって、次のようなルールはありえない。
+と一緒になってしまうわけです。だから permit は"メール全体を OK として
+ルールとの照らし合わせ処理をそこで終りにする"という意味にしないといけ
+ない。よって、次のようなルールはありえない。
 <screen>
 text/plain 		*		permit
 multipart/mixed		text/plain	permit
@@ -150,7 +155,7 @@ multipart/mixed		text/html	reject
 multipart/mixed		image/*		cutoff
 *			*		permit
 </screen>
-というのは、このルールは次のように書いても同じだからである。
+ありえないというのは、このルールは次のように書いても同じだからです。
 <screen>
 text/plain 		*		permit
 multipart/mixed		text/html	reject
@@ -159,11 +164,11 @@ multipart/mixed		image/*		cutoff
 </screen>
 つまり permit 命令で処理が終ってしまうとすれば、multipart に対しては事
 実上使ってはいけないことになる。『デフォルトの処理』か『text/plain * 』
-のようなものに対してのみ permit 命令は意味がある。
+のようなものに対してのみ permit 命令は意味があるわけです。
 </para>
 
 <para>
-以下、first match を前提に、事例を考えてみよう。
+以下、first match を前提に、事例を考えてみましょう。
 </para>
 
 </sect2>
@@ -176,17 +181,17 @@ multipart/mixed		image/*		cutoff
 
 <para>
 暗黙のデフォルトルールは、他の header や text フィルタとの整合性を考え
-ると、「とりあえず通す」だろうか？
+ると、「とりあえず通す」ですかね？
 <screen>
 *		*	permit
 </screen>
 これは content filter の「ルールをうまく書けない」という別の理由によっ
-ても支持されるだろう。
+ても支持されるでしょう。
 </para>
 
 <para>
 なお、デフォルトの挙動を reject に変更するには * * reject を最後に付け
-加えれば良いだけだ。
+加えてください。
 </para>
 
 </sect2>
@@ -214,7 +219,7 @@ text/plain	*	permit
 
 <para>
 text/plain があれば何でも許す。それ以外の型は拒否する。
-これは簡単なルールが書けない例だ。
+これは簡単なルールが書けない例です。
 <screen>
 text/plain	*		permit
 multipart/*	text/plain	permit
@@ -229,14 +234,14 @@ text/plain + text/plain + text/plain
 text/plain + text/plain + image/jpeg
 </screen>
 でもどっちも OK になってしまうのね。だめじゃん。
-もっとも not オペレータ(!)があれば、解決は可能だ。
+もっとも not オペレータ(!)があれば、解決は可能でしょう。
 <screen>
 text/plain	*		permit
 multipart/*	!text/plain	reject
 multipart/*	text/plain	permit
 *		*		reject
 </screen>
-たぶん、これが期待される plain/text のみを通すルールだろう
+たぶん、これが期待される plain/text のみを通すルールだとおもいます。
 </para>
 
 </sect2>
@@ -265,7 +270,7 @@ multipart/*	text/html	reject
 	</title>
 
 <para>
-じゃ、これはどうよ？これは簡単なルールが書けない例だな。
+じゃ、これはどうよ？これは簡単なルールが書けない例でんな。
 <screen>
 text/plain	*		permit
 multipart/*	text/plain	permit
@@ -338,7 +343,7 @@ text/plain + text/plain + text/plain
 text/plain + text/plain + image/jpeg
 text/plain + text/plain + text/html
 </screen>
-みな OK だが、ルールのマッチする場所が異なる。
+どれも OK だが、ルールのマッチする場所が異なります。
 </para>
 
 </sect2>
@@ -356,12 +361,12 @@ text/plain + text/plain + text/html
 </para>
 
 <para>
-結論を先に書くと、いまの機能でいいようだ。content filter の起源となっ
-た cutoff の機能はもう不要みたい。
+結論を先に書くと、いまの機能でいいようで、content filter の起源となっ
+た cutoff の機能はもう不要みたいです。
 </para>
 
 <para>
-さて、content filter の使い方をいくつか考えてみよう。
+まずは content filter の使い方をいくつか考えてみます。
 <screen>
 (1) text/plain と multipart の text/plain だけは通す
 	text/plain じゃないメールなんて○○ ML では不要
@@ -379,10 +384,10 @@ text/plain + text/plain + text/html
 
 (5) text/html のメールなんて spam に決まってるから捨てる
 </screen>
-まとめると、通常は (1) でよいということに決まりのようだ。
-規模とポリシー(きびしくできるか否かなど)によって(2)もアリかもしれない。
-例えば社内ＭＬのようにメールの型を厳しくできないＭＬは、そもそも 
-mime component filter を on にしない。
+で、アンケートの結果をまとめると、通常は (1) を使う。これは決まりみた
+いです。規模とポリシー(きびしくできるか否かなど)によって(2)もアリかも
+しれない。例えば社内ＭＬのようにメールの型を厳しくできないＭＬは、そも
+そも mime component filter を on にしないというわけです。
 </para>
 
 </sect1>

@@ -1,5 +1,5 @@
 <!--
-   $FML: recipe.version.sgml,v 1.2 2002/10/29 04:10:08 fukachan Exp $
+   $FML: recipe.listup.addresses.sgml,v 1.1 2002/11/09 14:16:19 fukachan Exp $
 -->
 
 <qandaentry>
@@ -12,7 +12,7 @@
 <answer>
 
 <para>
-fmladdr が /etc/passwd で定義されているユーザとaliases ファイルに設定
+fmladdr が /etc/passwd で定義されているユーザと aliases ファイルに設定
 されている全アドレスを表示してくれます。
 <screen>
 % fmladdr

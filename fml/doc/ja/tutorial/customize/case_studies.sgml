@@ -1,5 +1,5 @@
 <!--
-   $FML: case_studies.sgml,v 1.2 2003/02/16 14:35:51 fukachan Exp $
+   $FML: case_studies.sgml,v 1.3 2003/02/16 15:12:29 fukachan Exp $
 -->
 
 
@@ -9,13 +9,22 @@
 	</title>
 
 <para>
-ヘッダ関連では、
-Subject: にヘッダをつけない。
+ヘッダ関連では、まず Subject: にタグをつけない
+<footnote>
+<para>
+なお、この設定はデフォルトの site_default_config.cf に仕込まれているた
+め、&fmldevel; のデフォルトです。
+</para>
+</footnote>
+ことにした。
 <screen>
 article_header_rewrite_rules	-=	rewrite_article_subject_tag
 </screen>
-そして、X-ML-Name: 部分の mlname にオフィス名をつける。
-つまり、mlname から office#mlname へ変更だ。
+</para>
+
+<para>
+そして、X-ML-Name: 部分の mlname にオフィス名をつける(prepend する)、
+つまり mlname から office#mlname へ変更する。
 <screen>
 # office#$mlname
 x_ml_name                       =       office#$ml_name
@@ -23,11 +32,12 @@ x_ml_name                       =       office#$ml_name
 </para>
 
 <para>
-記事は誰でも投稿可能だ。
+記事は誰でも投稿可能としよう。
 <screen>
 post_restrictions		=	permit_anyone
 </screen>
-そして、フィルタの多くを使わない。
+そして、社内用途のＭＬなので、フィルタの多くは使わない。
+つぅか、使うと問題出まくりのようです;)
 <screen>
 use_body_filter				=	no
 use_article_body_filter			=	no
@@ -35,29 +45,30 @@ use_article_non_mime_filter		=	no
 use_article_mime_component_filter	=	no
 use_article_text_plain_filter		=	no
 </screen>
-長期的な展望を踏まえるなら、
-仕事のメールは数が多いので数万通単位で記事を保存するだろう。
-よって、記事のスプールは subdir 形式とするとよい。
+</para>
+
+<para>
+気時のスプールだが、長期的な展望を踏まえるなら、仕事のメールは数が多い
+ので、数万通単位で記事を保存すると思います。よって、記事のスプールは 
+subdir 形式とします。
 <screen>
 spool_type			=	subdir
 </screen>
 </para>
 
 <para>
-なお、コマンドメールは使わない。
+なお、コマンドメールは使いません。
 <screen>
 use_command_mail_program	=	no
 </screen>
 コマンドメールそのものを禁止するには、aliases から該当するエントリを省
-くことが確実だ。だが、ＭＬを作成するたびに、aliases から削除することは
-ミス操作を誘い易い。また、CGI 操作の場合、CGI 操作者が aliases の操作
-をするのはおかしい。
-そういったことを想定し、コマンドメール用のプログラムが一度は起動するが、
-すぐ終るという設定にしている。これが
+くことが確実ですが、ＭＬを作成するたびに、aliases から削除することはミ
+ス操作を誘い易いでしょう。また、CGI 操作の場合、CGI 操作者が aliases 
+の操作をするのはおかしいです。そこで、コマンドメール用のプログラムが一
+度は起動しても、すぐ終るという設定にしています。
 <screen>
 use_command_mail_program	=	no
 </screen>
-という設定だ。
 </para>
 
 </sect1>
@@ -69,28 +80,28 @@ use_command_mail_program	=	no
 	</title>
 
 <para>
-以下の設定を /etc/fml/site_default_config.cf に書き、
-全ＭＬに反映させる。
+以下の設定を /etc/fml/site_default_config.cf に書き、全ＭＬに反映させ
+てください。
 </para>
 
 <para>
-まず、記事のヘッダにはＭＬ名を大文字にしてつける。
+まず、記事の subject にはＭＬ名を大文字にしたタグをつけます。
 <screen>
 article_subject_tag = (\U$ml_name\E %05d)
 </screen>
 たとえば 
-support@example.co.jp ＭＬは
+support@example.co.jp ＭＬでは
 <screen>
 Subject: (SUPPORT 10000)
 </screen>
-などとなる。
+などとなるわけです。
 </para>
 
 <para>
-そして、過去記事を参照させるために、コマンドメールの使用を許す。
+そして、過去記事を参照させるために、コマンドメールの使用を許します。
 ただし、自ドメイン(例: example.co.jp )からのリクエストに対してのみ、
-コマンドメールの使用を許す。
-これは、HOOK で実現する。
+コマンドメールの使用を許すこととします。
+これは、HOOK で実現可能です。
 <screen>
 $command_verify_request_end_hook = q{
         my $cred = $curproc->{ credential };

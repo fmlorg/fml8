@@ -1,5 +1,5 @@
 <!--
-   $FML: newml.sgml,v 1.1.1.1 2002/07/04 08:30:48 fukachan Exp $
+   $FML: newml.sgml,v 1.2 2002/07/06 14:55:20 fukachan Exp $
 -->
 
 
@@ -45,6 +45,25 @@ makefml を使ってＭＬを作成します。
         <para>
 	/var/spool/ml/etc/mail/aliases に elena の設定を仕込む。
 	postalias で /var/spool/ml/etc/mail/aliases.db を再生成する。
+        </para>
+   </listitem>
+
+   <listitem>
+        <para>
+	~fml/.qmail-* ファイル群を生成する。
+        </para>
+   </listitem>
+
+   <listitem>
+        <para>
+	procmailrc の見本を作る。
+        </para>
+   </listitem>
+
+   <listitem>
+        <para>
+	必要に応じて、
+	各 MTA ごとのバーチャルドメインの設定見本などを作る。
         </para>
    </listitem>
 

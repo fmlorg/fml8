@@ -1,3 +1,7 @@
+<!--
+   $FML$
+-->
+
 <qandaentry>
 <question>
 <para>
@@ -18,7 +22,7 @@ recipients.C
 この場合は HOOK で条件をチェックしつつ
 <screen>
 if (条件 A にマッチした) {
-   $config->set( 'recipient_maps', "recipients.A");
+   $config->set('recipient_maps', "recipients.A");
 }
 </screen>
 のようなコードを書けば動きます。

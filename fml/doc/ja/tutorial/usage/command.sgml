@@ -1,5 +1,5 @@
 <!--
-	$FML: command.sgml,v 1.5 2002/07/28 06:26:57 fukachan Exp $
+	$FML: command.sgml,v 1.6 2002/09/28 14:14:07 fukachan Exp $
 -->
 
 <sect1 id="fml.command.bymail">
@@ -16,14 +16,19 @@ fml にメールで文字列(コマンド)を送り込むことで、fml に特定の処理をして
 <important>
 <para>
 fml の基本的な使い方は makefml を使った操作です。
-makefml ではすべての作業が許されます。
 </para>
 
 <para>
-一方、コマンドメールなどでユーザに提供されているコマンド操作は 
-makefml による操作のごく一部です。
-それは makefml のコマンドの一部を使えなくし、
-適宜 confirmation を付け加えたコマンド体系といってよいでしょう。
+makefml を使えるということは、ＭＬサーバのホストのシェルが取れている、
+つまり SSH なりでそのホストに入る際にＭＬの管理者であると認証されてい
+るわけです。よって、特権的な操作といえます。
+</para>
+
+<para>
+一方、コマンドメールなどでユーザに提供されているコマンド操作は makefml 
+で可能な操作のごく一部です。つまり、コマンドメールとは makefml のコマ
+ンドの一部を使えなくし、適宜 confirmation を付け加えたコマンド体系といっ
+てよいでしょう。
 </para>
 </important>
 
@@ -37,10 +42,9 @@ makefml による操作のごく一部です。
 elena ＭＬの場合、
 コマンドメールを elena-ctl@fml.org に送信してください。
 メールは MTA が受け、最終的に MTA は
-/usr/local/libexec/fml/fml.pl --ctladdr
-(もしくは /usr/local/libexec/fml/command )
-というコマンドを実行します。
-fml.pl はメールを標準入力から受けとり、
+/usr/local/libexec/fml/command
+というプログラムを実行します。
+command はメールを標準入力から受けとり、
 ＭＬとして必要な処理をした後、MTA へ配送を委ねます。
 </para>
 

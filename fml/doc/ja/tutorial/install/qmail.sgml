@@ -1,5 +1,5 @@
 <!--
-   $FML: qmail.sgml,v 1.1 2002/07/04 10:59:00 fukachan Exp $
+   $FML: qmail.sgml,v 1.2 2002/07/06 14:55:17 fukachan Exp $
 -->
 
 <sect1 id="install.qmail">
@@ -9,15 +9,19 @@
 
 <warning>
 <para>
-&fmldevel; の qmail 設定は
+&fmldevel; の qmail 設定は、
+バーチャルドメインなのかデフォルトのドメインなのか？を問わず、
+常に
 /var/qmail/control/virtualdomains
-を前提としています。
+の利用を前提としています。
 </para>
 </warning>
 
 <para>
 makefml newml を実行するだけでＭＬが自動的に有効になるように、あらかじ
 め qmail の設定を変更しておいて下さい。
+/var/qmail/control/virtualdomains の設定見本は
+(ドメインごとに) /var/spool/ml/etc/qmail に作成されます。
 </para>
 
 
@@ -31,8 +35,7 @@ makefml newml を実行するだけでＭＬが自動的に有効になるように、あらかじ
 /var/qmail/control/virtualdomains
 </screen>
 に、あらかじめ次のような設定を仕込んでおけば、
-makefml newml を実行するだけで 
-qmail でも自動的にＭＬが有効になります。
+makefml newml を実行するだけで自動的にＭＬが有効になります。
 <screen>
 fml.org:fml-fml.org
 </screen>

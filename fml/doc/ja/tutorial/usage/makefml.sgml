@@ -1,5 +1,5 @@
 <!--
-   $FML: makefml.sgml,v 1.5 2002/07/28 06:26:58 fukachan Exp $
+   $FML: makefml.sgml,v 1.6 2002/07/28 23:33:43 fukachan Exp $
 -->
 
 
@@ -13,10 +13,10 @@
 % su fml
 % makefml newml ＭＬ名
 </screen>
-ＭＬ名は @ 抜きの場合デフォルトのドメイン、
-アドレスを完全に指定すればバーチャルドメインまで含めて
-makefml がよろしくがんばります。
-例えば
+ＭＬ名は＠抜きの場合、デフォルトのドメインとなり、アドレスを完全に指定
+すればバーチャルドメインまで含めてmakefml がよろしくがんばることになっ
+ています。もちろんデフォルトかバーチャルかにかかわらず、常に＠ドメイン
+つきで指定して構いません。例えば
 <screen>
 % makefml newml elena
 % makefml newml elena@fml.org
@@ -109,7 +109,7 @@ resign
 signoff
 unsubscribe
 </screen>
-でも同様です。
+どれを使っても同じです。
 </para>
 
 
@@ -125,7 +125,7 @@ unsubscribe
 <para>
 <screen>
 % su fml
-% makefml useradd ＭＬ名 古いメールアドレス 新しいメールアドレス
+% makefml chaddr ＭＬ名 古いメールアドレス 新しいメールアドレス
 </screen>
 ＭＬ名は @ 抜きの場合デフォルトのドメイン、
 アドレスを完全に指定すればバーチャルドメインまで含めて
@@ -195,7 +195,17 @@ off の反対
 <screen>
 % makefml list elena
 </screen>
+これはメンバーのリスト(投稿可能者のリスト)を表示します。
+<screen>
+% makefml list elena recipient
+</screen>
+は受信者のリストを表示します。
+この形式でいいのか疑問なんですが…
 </para>
+
+<!--
+ XXX-TODO この形式でいいのか疑問なんですが… (makefml list elena recipient)
+-->
 
 </sect1>
 
@@ -207,7 +217,7 @@ off の反対
 
 <para>
 (まだ、できません;-)。
-config.cf などを編集して下さい。
+config.cf などをエディタで編集して下さい。
 </para>
 
 </sect1>
@@ -258,7 +268,7 @@ addpriv
 byeadmin
 byepriv
 </screen>
-でも同様です。
+どれを使っても同じです。
 </para>
 
 

@@ -1,31 +1,28 @@
 <!--
-   $FML: module.sgml,v 1.2 2002/07/02 10:39:31 fukachan Exp $
+   $FML: module.sgml,v 1.3 2002/07/07 01:57:11 fukachan Exp $
 -->
 
 
 <sect1 id="fml.command.module.hierarchy">
 	<title>
-	コマンドが使うモジュール
+	各種コマンドで使うモジュール
 	</title>
 
 <para>
-&fmldevel; では、
-コマンドメール、makefml そして CGI が使うモジュール
-は共有されています。
-ただし、その権限の差異によって、
-ユーザ用のモジュールと管理者用のモジュールの2つに分かれています。
-以下、これらのモジュール群の構成について解説します。
+&fmldevel; では、コマンドメール、makefml そして CGI が使うモジュールは
+共有されています。ただし、その権限の差異によって、一般ユーザ用のモジュー
+ルと管理者用のモジュールの２つに大きく分かれています。以下、これらのモ
+ジュール群の構成について解説します。
 </para>
 
 <para>
 FML::Command:: クラスは以下のような構成になっています。
 <screen>
 FML::Command		FML::Command クラス以下への入口
-FML::Command::Utils	よもやまの定義
 FML::Command::User	ユーザ用コマンド群
 FML::Command::Admin	管理者用コマンド群
 </screen>
-例えば、(メールでの)ユーザ用のコマンドの場合
+例えば、(コマンドメールでの)ユーザ用のコマンドの場合
 FML::Command を経由して
 FML::Command::User::コマンド
 モジュールを使うことになります。
@@ -33,14 +30,14 @@ FML::Command::User::コマンド
 
 <sect2>
 	<title>
-	(メールでの)一般ユーザ用コマンド
+	(コマンドメールでの)一般ユーザ用コマンド
 	</title>
 
 <para>
 FML::Process::Command から
 FML::Command 経由で
 FML::Command::User::コマンド
-を用います。
+を呼び出しています。
 </para>
 
 <para>
@@ -50,8 +47,8 @@ FML::Command::Admin::コマンド
 例えば登録と削除の実作業は
 FML::Command::Admin::コマンド
 内のコードが行なっています。
-登録/削除のコードはすべてのプログラムで共有するためです。
-この場合
+登録/削除の実体のコードをすべてのプログラムで共有するためです。
+この場合、
 FML::Command::User::コマンド
 のコマンドは confirm を行なうための wrapper という位置付けになります。
 </para>
@@ -66,10 +63,11 @@ FML::Command::User::コマンド
 FML::Process::Command から
 FML::Command 経由で
 FML::Command::Admin::コマンド
-を用います。
+を呼び出しています。
 </para>
 
 </sect2>
+
 
 <sect2>
 	<title>
@@ -80,10 +78,11 @@ FML::Command::Admin::コマンド
 FML::Process::Configure から
 FML::Command 経由で
 FML::Command::Admin::コマンド
-を用います。
+を呼び出しています。
 </para>
 
 </sect2>
+
 
 <sect2>
 	<title>
@@ -95,7 +94,7 @@ FML::Command::Admin::コマンド
 FML::Process::CGI から
 FML::Command 経由で
 FML::Command::Admin::コマンド
-を用います。
+を呼び出しています。
 </para>
 
 </sect2>

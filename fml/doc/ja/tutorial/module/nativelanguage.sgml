@@ -1,10 +1,11 @@
 <!--
-   $FML: nativelanguage.sgml,v 1.1 2001/11/24 03:22:56 fukachan Exp $
+   $FML: nativelanguage.sgml,v 1.2 2002/04/01 23:41:05 fukachan Exp $
 -->
 
 <chapter>
-   <title> 言語別の処理関数 </title>
-
+	<title>
+	言語別の処理関数
+	</title>
 
 <para>
 fml 内部では言語に依存した変換処理が必要です。
@@ -28,12 +29,8 @@ fml 内部では言語に依存した変換処理が必要です。
 	</title>
 
 <para>
-クラス名は
-なにか::Language::
-もしくは
-Language::
-などとなります。
-これらの階層以下に言語依存モジュール群は配置されます。
+言語依存のクラス名は「なにか::Language::」となります。これらの階層以下
+に言語依存モジュール群が配置されます。
 </para>
 
 <para>

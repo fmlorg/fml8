@@ -1,5 +1,5 @@
 <!--
-   $FML: cgi.sgml,v 1.2 2002/07/06 14:55:20 fukachan Exp $
+   $FML: cgi.sgml,v 1.3 2002/07/23 09:34:34 fukachan Exp $
 -->
 
 <chapter id="setupcgi">
@@ -8,21 +8,24 @@
 	</title>
 
 
+<warning>
+
 <para>
-参照: CGI の内部構造については
+CGI の内部構造については
 <link linkend="internalcgi.method">
 <xref linkend="internalcgi.method">
 </link>
 を参照して下さい。
 </para>
 
-<warning>
 <para>
 apache で suexec を使うことを前提としています。
 </para>
 
 <para>
-また、現在はドメイン全体を管理する CGI しかありません。
+また、現在はＭＬごとの CGI はなく、
+ドメイン全体を管理する CGI しかありません。
+そのうち作ります _o_ 
 </para>
 
 <para>
@@ -61,7 +64,8 @@ http://lists.fml.org/~fml/cgi-bin/fml/ドメイン/ml-admin/ＭＬ名/config.cgi
 例
 http://lists.fml.org/~fml/cgi-bin/fml/fml.org/ml-admin/elena/config.cgi
 </screen>
-の両方が makefml により用意されます。
+の両方が makefml により用意されます
+(後者はそういう予定ということで、実際には作られません _o_)。
 </para>
 
 <para>
@@ -154,7 +158,7 @@ options Language:    list        アドレスリストを見る
 <para>
 なお、画面の左下もしくは右にヘルプメッセージが表示されるので
 それを参考にして下さい。
-もちろんコマンドごとに異なります:)
+もちろんコマンドごとにメッセージは異なります:)
 </para>
 
 <para>

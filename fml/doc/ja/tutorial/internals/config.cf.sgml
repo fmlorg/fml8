@@ -1,9 +1,11 @@
 <!--
-   $FML: config.cf.sgml,v 1.7 2002/07/02 10:39:35 fukachan Exp $
+   $FML: config.cf.sgml,v 1.8 2002/07/06 14:55:18 fukachan Exp $
 -->
 
 <chapter>
-   <title> 設定ファイル config.cf </title>
+	<title>
+	設定ファイル config.cf
+	</title>
 
 
 <!-- ======================================= -->
@@ -16,17 +18,18 @@
 </para>
 
 <para>
-そのために &fml4; では
-各ＭＬのホームディレクトリ $DIR に config.ph というファイルがあります。
-これは .ph という名前でわかる通り perl script です。
+そのために &fml4; では各ＭＬのホームディレクトリ $DIR に config.ph と
+いうファイルがあります。これは .ph という名前でわかる通り perl script 
+です。
 </para>
 
 <para>
 &fmldevel; では config.cf 一つです。
-フォーマットは postfix や .ini 風の 
+フォーマットは postfix や .ini 風の
 <screen>
 変数 = 値
 </screen>
+形式になっています。
 </para>
 
 <sect2>
@@ -43,6 +46,11 @@ makefml や CGI をはじめとする設定インターフェイスを書きにくいのです。
 そこで &fml4; では、
 cf というファイルと config.ph という
 2 つのフォーマットの異なるファイルが使われています。
+<footnote>
+<para>
+.mc から .cf を作る点で、なんとなく sendmail みたいですね;)
+</para>
+</footnote>
 </para>
 
 <para>

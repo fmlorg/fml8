@@ -1,5 +1,5 @@
 <!--
-   $FML: main.cf.sgml,v 1.6 2002/07/06 14:55:18 fukachan Exp $
+   $FML: main.cf.sgml,v 1.7 2002/09/15 02:11:24 fukachan Exp $
 -->
 
 <sect2 id="main.cf">
@@ -8,11 +8,11 @@
 	</title>
 
 <para>
-/etc/fml/main.cf は各ＭＬの設定ではありません。
-これは、fml のバージョンなどメタレベルの依存性を解決するための設定ファ
-イルで、fml のプログラム群が起動する時に参照します。
+/etc/fml/main.cf は各ＭＬの設定ではありません。fml のバージョンなどメ
+タレベルの依存性を解決するための設定ファイルで、fml のプログラム群が起
+動する時に参照します。また、main.cf には ディレクトリやプロセスのユー
+ザの指定など最も基本的な情報のみが書かれています。
 </para>
-
 
 <para>
 main.cf のフォーマットは他の .cf と同様
@@ -29,7 +29,7 @@ main.cf のフォーマットは他の .cf と同様
 
 <screen>
 #
-# $FML: main.cf.sgml,v 1.6 2002/07/06 14:55:18 fukachan Exp $
+# $FML: main.cf.sgml,v 1.7 2002/09/15 02:11:24 fukachan Exp $
 #
 
 # fml version

@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: postfix.sgml,v 1.2 2002/07/06 14:55:20 fukachan Exp $
 -->
 
 <sect1 id="setup.postfix.aliases">
@@ -25,9 +25,9 @@ postfix の設定については
 
 
 <para>
-makefml はシステムの aliases を変更することはありませんが、
-$ml_home_prefix/etc/mail/aliases
-への追加と aliases.db の更新が自動的に行なわれています。
+makefml はシステムの aliases (例: /etc/mail/aliases)を変更することはあ
+りませんが、$ml_home_prefix/etc/mail/aliases への追加と aliases.db の
+更新は自動的に行なわれています。
 </para>
 
 
@@ -37,7 +37,7 @@ $ml_home_prefix/etc/mail/aliases
 	</title>
 
 <para>
-aliases のエントリは
+fml が管理しているＭＬの aliases のエントリは
 $ml_home_prefix/etc/mail/aliases
 に追加されます。
 <screen>

@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.header.sgml,v 1.1 2002/07/28 06:26:56 fukachan Exp $
+   $FML: chapter.header.sgml,v 1.2 2002/10/29 03:32:21 fukachan Exp $
 -->
 
 <chapter id="customize.header">
@@ -8,7 +8,8 @@
 	</title>
 
 <para>
-ヘッダ情報は Mail::Header クラスのオブジェクトに収納されています。
+ヘッダ情報は FML::Header クラスのオブジェクトに収納されています。
+なお FML::Header は Mail::Header を継承しているので、
 Mail::Header で操作可能なことは何でもできます。
 </para>
 

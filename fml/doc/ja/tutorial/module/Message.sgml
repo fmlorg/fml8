@@ -1,5 +1,5 @@
 <!--
-   $FML: Mail::Message.sgml,v 1.7 2002/07/07 01:57:11 fukachan Exp $
+   $FML: Message.sgml,v 1.1 2003/02/18 02:29:14 fukachan Exp $
 -->
 
 <chapter id="module.mail.message">
@@ -7,18 +7,18 @@
 	Mail::Message モジュール
 	</title>
 
-<sect1>
+<sect1 id="module.mail.message.overview">
 	<title>
 	Mail::Message の概要
 	</title>
 
 <para>
 このオブジェクトモジュールはメールの解析と、
-解析されたデータ構造へのさまざまな操作手段を提供してくれます。
+解析されたデータ構造へのさまざまな操作手段を提供しています。
 </para>
 
 <para>
-少し詳しく説明すると、このモジュールはメールを解析し、
+もう少し詳しく説明すると、このモジュールはメールを解析し、
 <screen>
 (multipart でない場合)
 
@@ -28,16 +28,14 @@ header -> body
 
 header -> preamble -> part1 -> part2 -> trailor
 </screen>
-のようにオブジェクトが数珠つなぎのようなデータ構造を作ります。
-ちなみに鎖と鎖の間は double link list です。
-Mail::Message のクラスは
-このようなデータ構造に対して、さまざまなオペレーションを提供します。
+のようにオブジェクトが数珠つなぎとなったデータ構造を作ります。ちなみに
+鎖と鎖の間は double link list です。Mail::Message のクラスはこのような
+データ構造に対して、さまざまな操作を行なうメソッドを提供しています。
 </para>
 
 <para>
-この鎖の部分部分それぞれが Mail::Message オブジェクトです。
-つまり一通のメールはメールヘッダから始まるオブジェクトの鎖として
-表現されます。
+この鎖の部分部分それぞれが Mail::Message オブジェクトです。つまり一通
+のメールはメールヘッダから始まるオブジェクトの鎖として表現されます。
 </para>
 
 <para>
@@ -59,24 +57,19 @@ Mail::Message モジュールのマニュアル
 </sect1>
 
 
-<sect1>
+<sect1 id="module.mail.message.parse">
 	<title>
 	Mail::Message モジュール: 解析する
 	</title>
 
 <para>
-parse() メソッドは
-引数で与えられた
-ファイル(名)かファイルディスクリプタに対し
-メッセージの解析をします。
+parse() メソッドは引数で与えられたファイル(名)かファイルディスクリプタ
+に対しメッセージの解析をします。
 </para>
 
 <para>
-data_type_list()
-は
-鎖の列の情報を返します。
-情報は ARRAY REFERENCE の形で返されます。
-例えば MIME/Multipart は次のようになります。
+data_type_list() は鎖の列の情報を返します。情報は ARRAY REFERENCE の形
+で返されます。例えば MIME/Multipart は次の表現されています。
 <screen>
   type[ 1]: text/rfc822-headers       | multipart/mixed
   type[ 2]: multipart/mixed           | multipart/mixed
@@ -88,12 +81,14 @@ data_type_list()
   type[ 8]: multipart.close-delimiter | multipart/mixed
   type[ 9]: text/plain                | multipart/mixed
 </screen>
+真中の列がオブジェクトの鎖を表しています。
+右端は全体の mime type です。
 </para>
 
 </sect1>
 
 
-<sect1>
+<sect1 id="module.mail.message.create">
 	<title>
 	Mail::Message モジュール: 新しいメッセージを作る
 	</title>
@@ -109,6 +104,12 @@ build_mime_multipart_chain($args)
 parse_and_build_mime_multipart_chain($args)
 build_mime_header($args)
 </screen>
+これらのメソッドを直接呼び出すことは実際ないので、
+これらは private に移行するかもしれません。
+だから、とりえあずこれらは使わないでください。
+</para>
+
+<para>
 しかしながら、MIME/mulitpart の作成には
 Mail::Message::Compose クラスがあります。
 実のところ、このクラスの実態は MIME::Lite そのものです :-)
@@ -117,7 +118,7 @@ Mail::Message::Compose クラスがあります。
 </sect1>
 
 
-<sect1>
+<sect1 id="module.mail.message.headerop">
 	<title>
 	Mail::Message モジュール: ヘッダの操作
 	</title>
@@ -161,7 +162,7 @@ header_data_type()
 </sect1>
 
 
-<sect1>
+<sect1 id="module.mail.message.bodyop">
 	<title>
 	Mail::Message モジュール: メッセージ本文の操作
 	</title>
@@ -214,7 +215,7 @@ plain/text タイプのメッセージ部分に着目することが多いので
 </sect1>
 
 
-<sect1>
+<sect1 id="module.mail.message.search">
 	<title>
 	Mail::Message モジュール: オブジェクトの検索
 	</title>
@@ -227,7 +228,7 @@ find() メソッドは Mail::Message の特定のタイプを探し、
 </sect1>
 
 
-<sect1>
+<sect1 id="module.mail.message.print">
 	<title>
 	Mail::Message モジュール: メッセージを表示する。
 	</title>
@@ -249,7 +250,7 @@ reset_print_mode()
 </sect1>
 
 
-<sect1>
+<sect1 id="module.mail.message.utils">
 	<title>
 	Mail::Message モジュール: 便利な関数
 	</title>
@@ -301,7 +302,7 @@ encoding_mechanism()
 Mail::Message オブジェクトのエンコーディングメカニズム(文字列)を返します。
 エンコーディングされていないなら undef が返ります。
 これは、メール全体のタイプ（マルチパートとか text/plain)
-どではなく、鎖の各部分のオブジェクトのタイプであることに注意して下さい。
+ではなく、鎖の各部分のオブジェクトのタイプであることに注意して下さい。
 </para>
 
 </sect2>
@@ -345,7 +346,7 @@ message_text($size)
 </sect1>
 
 
-<sect1>
+<sect1 id="module.mail.message.ref">
 	<title>
 	参照
 	</title>

@@ -1,5 +1,5 @@
 <!--
-   $FML: create_program.sgml,v 1.4 2002/07/02 10:39:31 fukachan Exp $
+   $FML: create_program.sgml,v 1.5 2002/07/06 14:55:16 fukachan Exp $
 -->
 
 <chapter id="program.create">
@@ -55,46 +55,37 @@ finish()
 <para>
 FML::Process::○○○
 を用意したら、
-FML::Process::Switch
-を編集します。
-このモジュールでは、各プログラムごとに
-『ロードするモジュール』
-『コマンドラインオプション』
-『ＭＬ名を必要とするか否か？』
-を定義してください。
-編集する場所は以下の private method です。
-<screen>
-sub _module_specific_options
-sub _ml_name_is_required
-sub _module_we_use
-</screen>
+etc/modules
+にプログラムとクラスの関係を定義して下さい。
+また、
+etc/command_line_options
+にオプションとＭＬ名の有無などを定義してください。
 </para>
 
 <para>
-この 2 つの準備だけで、新しいプログラムの準備は終りですです。
+この 2 つの準備だけで、新しいプログラムの準備は終りです。
 呼びたい名前のファイルを loader と link もしくは symlink することで
 実行が可能になります。
 例えば、標準のインストールでは、次のようになっています。
 <screen>
 % ls -l /usr/local/libexec/fml
-total 11
--rw-r--r--  1 fml       wheel  4044 Nov 20 00:19 Standalone.pm
-lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 command -> loader
-drwxr-xr-x  3 root      wheel   512 Nov 23 22:10 current-20011123
-lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 distribute -> loader
-lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 fml.pl -> loader
-lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 fmlconf -> loader
-lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 fmldoc -> loader
-lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 fmlhtmlify -> loader
-lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 fmlsch -> loader
-lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 fmlsch.cgi -> loader
-lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 fmlserv -> loader
-lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 fmlthread -> loader
-lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 fmlthread.cgi -> loader
--rwxr-xr-x  1 fml       wheel  4358 Nov 23 22:08 loader
-lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 makefml -> loader
-lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 makefml.cgi -> loader
-lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 mead -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 command@ -> loader
+drwxr-xr-x  2 root  wheel   512 Apr 14 18:25 current-20030414/
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 digest@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 distribute@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 error@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 fml@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 fml.pl@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 fmladdr@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 fmlalias@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 fmlconf@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 fmldoc@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 fmlhtmlify@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 fmlsch@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 fmlserv@ -> loader
+-rwxr-xr-x  1 root  wheel  6863 Apr 14 18:24 loader*
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 makefml@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 mead@ -> loader
 </screen>
 </para>
 
@@ -105,6 +96,10 @@ lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 mead -> loader
 	<title>
 	プログラムを作る( CGI 用)
 	</title>
+
+<!--
+  XXX-TODO ただしい？ ＞ プログラムを作る( CGI 用)
+-->
 
 <para>
 CGI のプログラムは

@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.1 2002/12/26 15:38:00 fukachan Exp $
+   $FML: chapter.sgml,v 1.2 2003/01/05 10:10:20 fukachan Exp $
 -->
 
 <chapter id="digest">
@@ -14,6 +14,12 @@
 を定期的に cron から起動すれば、まとめ送りができます。
 </para>
 
+<warning>
+<para>
+まだ、簡易版です。
+</para>
+</warning>
+
 
 <sect1 id="digest.config.files">
 	<title>
@@ -21,12 +27,16 @@
 	</title>
 
 <para>
-$ml_home_dir/ 以下のファイルの仕様はこうです。
+$ml_home_dir/ 以下のまとめおくり関連ファイルには次のようなものがありま
+す。
 <screen>
 seq-digest
 members-digest 
 recipients-digest
 </screen>
+</para>
+
+<para>
 seq-digest は最後に送った記事は何番か？を記録しています。
 </para>
 
@@ -47,6 +57,12 @@ mysql とかも使えます。
 	<title>
 	案: ダイジェスト関連のコマンドをどうするか？
 	</title>
+
+
+<!--
+   XXX-TODO ダイジェスト関連のコマンドをどうするか？
+-->
+
 
 <para>
 digest コマンドのまとめ。作るなら、こうかな？(fml-devel 313)

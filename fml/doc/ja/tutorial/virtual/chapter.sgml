@@ -1,16 +1,30 @@
+<!--
+   $FML$
+-->
+
 <chapter id="virtualdomain">
 	<title>
 	バーチャルドメインの取り扱いについて
 	</title>
 
 <para>
-virtual domain のサポートをどう実装するか？が問題の一です。
-できるだけ fml 全体で統一的に扱えるようにするべきです。
+できるだけ fml 全体で統一的に扱えるようにするには
+virtual domain をどう扱うかは難しい問題です。
 </para>
 
 <para>
-そして問題のその２は、場変(ホストを新しくする、ドメインを変更する)場合に
-いかに簡単に設定変更ができるか？という設問です。
+問題その１は、makefml などでバーチャルドメインであることを、どう表現す
+るか？です。そして問題その２は、場変(ホストを新しくする、ドメインを変
+更する)場合にも簡単に設定変更ができるにはどうすればよいのか？というテー
+マです。
+</para>
+
+<para>
+結論を先にいえば、「ユーザ＠ドメイン」形式の文字列をＭＬ名に使えばデフォ
+ルトのドメインかバーチャルドメインかに関わらず「fml がよきにはからう」
+ようになっています。ただ、ヒントは必要なので、etc/fml/virtual というファ
+イルに設定を書くことにしています。このファイルは main.cf の 
+virtual_maps という変数で定義されているファイルです。
 </para>
 
 
@@ -24,8 +38,14 @@ virtual domain のサポートをどう実装するか？が問題の一です。
 <link linkend="install.virtual">
 /etc/fml/virtual を手で編集
 </link>
-してください。これだけです。あとは fml がよろしく頑張ります。
-ただし、いろいろな操作でＭＬ名を＠ドメインつきで行なって下さい。
+してください。これだけで OK です。あとは fml がよろしく頑張ります。た
+だし、いろいろな操作でＭＬ名を「ユーザ＠ドメイン」形式で指定することに
+注意して下さい。
+</para>
+
+<para>
+デフォルトのドメインの場合には、＠ドメインが不要となります。
+つまり、この場合に限り &fml4; と同じ形式に戻るというわけです。
 </para>
 
 <para>
@@ -36,34 +56,39 @@ makefml newml	ML@virtualdomain
 makefml add	ML@virtualdomain	address
 makefml bye	ML@virtualdomain	address
 </screen>
-などという具合いになります。
+などといった具合いになります。
 </para>
 
 <para>
-なお、CGI での操作ではドメイン名の指定は不要です。
-これは、config.cgi 生成時にドメインがスクリプト中に埋め込まれているためです。
+なお、CGI での操作ではドメイン名の指定は不要です。これは、config.cgi 
+生成時にドメインがスクリプト中に埋め込まれているためです。画面にもドメ
+イン名が出ているはずですし、そもそも URL にドメイン名が入っている
+<screen>
+http://lists/~fml/cgi-bin/fml/$domain/admin/config.cgi
+</screen>
+ので、どのドメインの操作をしているのかはわかっているはずです。
 </para>
 
 <warning>
 <para>
-CGI の URL にはドメインが入っているのは操作する人が分かりやすいようにという
-配慮であって、URL を元にドメイン名を決めているわけではありません。
-<screen>
-http://lists/~fml/cgi-bin/fml/$domain/admin/config.cgi
-</screen>
+なお、CGI の URL にドメイン名が入っているのは、操作する人にとって分か
+りやすいようにという配慮であって、URL を元にドメイン名を決めているわけ
+ではありません。ＭＬ名やドメイン名は newml 時に作成される .cgi スクリ
+プトにハードコーディングされています。
 </para>
 </warning>
 
 </sect1>
 
 
-<sect1>
+<sect1 id="virtualdomain.movement">
 	<title>
-	ケーススタディ: 場変？ (XXX 書きかけ↓つづきを！)
+	ケーススタディ: ひっこし / 場変 はどうするの？ (書きかけ_o_)
 	</title>
 
 <!--
-	レシピ化を！
+   XXX-TODO 引越しねたが書きかけ つづきを書け！
+   レシピ化を！
 -->
 
 <para>
@@ -92,6 +117,10 @@ http://lists/~fml/cgi-bin/fml/$domain/admin/config.cgi
 "| /some/where/libexec/distribute elena@fml.org"
 </screen>
 書式変更が必要ではないのか？
+</para>
+
+<para>
+4.0 から 8.0 へは？
 一応、fml.pl は互換性のため fml.pl $DIR でも可で、
 libexec/distribute libexec/command など新しいコマンドは
 ＭＬ名を引数にとるということにしてある。

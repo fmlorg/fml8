@@ -1,4 +1,8 @@
-<chapter id="structure">
+<!--
+   $FML$
+-->
+
+<appendix id="structure">
 	<title>
 	curproc 構造体 (本当はオブジェクト)
 	</title>
@@ -7,4 +11,4 @@
 &struct.curproc;
 
 
-</chapter>
+</appendix>

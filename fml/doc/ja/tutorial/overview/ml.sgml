@@ -1,5 +1,5 @@
 <!--
-   $FML: ml.sgml,v 1.1 2002/07/02 10:39:37 fukachan Exp $
+   $FML: ml.sgml,v 1.2 2002/07/04 10:59:01 fukachan Exp $
 -->
 
 <chapter id="overview.ml">
@@ -7,7 +7,7 @@
 	ＭＬとは？
 	</title>
 
-<sect1>
+<sect1 id="overview.email">
 	<title>
 	電子メール
 	</title>
@@ -17,24 +17,25 @@
 </para>
 
 <para>
-見栄えはメールソフトによって変わりますが、メールサーバがやりとりしてい
-るのは次のような形式のテキストのファイルに過ぎません。
-	<screen>
-	From: rudo@nuinui.net
-	To: kenken@nuinui.net
-	Subject: あそぼうよ
+見栄えはメールソフトによって変わりますが、
+メールサーバがやりとりしている内容は
+次のような形式のテキストファイルに過ぎません。
+<screen>
+From: rudo@nuinui.net
+To: kenken@nuinui.net
+Subject: あそぼうよ
 
-	やは、けんけん。ぼく、るどだよ。
+やは、けんけん。ぼく、るどだよ。
 
-	// るど
-	</screen>
+// るど
+</screen>
 </para>
 
 </sect1>
 
 
 
-<sect1>
+<sect1 id="overview.mailinglist">
 	<title>
 	メーリングリスト(ＭＬ)
 	</title>
@@ -50,10 +51,7 @@
 これがＭＬの仕組みです。
 </para>
 
-</sect1>
-
-
-<sect1>
+<sect2 id="overview.mldriver">
 	<title>
 	ＭＬドライバのモデル
 	</title>
@@ -63,6 +61,9 @@
 <graphic entityref="image.ml"></graphic>
 </para>
 
+</sect2>
+
 </sect1>
+
 
 </chapter>

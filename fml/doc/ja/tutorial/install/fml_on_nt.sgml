@@ -1,5 +1,5 @@
 <!--
-	$FML: fml_on_nt.sgml,v 1.1 2002/07/02 10:39:34 fukachan Exp $
+	$FML: fml_on_nt.sgml,v 1.2 2002/07/06 14:55:17 fukachan Exp $
 -->
 
 <chapter id="install.fml.nt">
@@ -10,7 +10,7 @@
 <warning>
 <para>
 まだ、&fmldevel; は動きません。ごめんなさい。
-この章はダミー or ごめんっていうためだけにあります。
+この章はダミーで、「ごめん」っていうためだけにあります。
 </para>
 </warning>
 

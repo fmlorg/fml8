@@ -1,5 +1,5 @@
 <!--
-   $FML: fml_on_unix.sgml,v 1.3 2002/07/06 14:55:17 fukachan Exp $
+   $FML: fml_on_unix.sgml,v 1.4 2003/02/11 11:10:58 fukachan Exp $
 -->
 
 <chapter id="install.fml.unix">
@@ -44,16 +44,18 @@ configure (GNU autoconf) および make を実行して下さい。
 # ./configure
 # make install
 </screen>
-configure が適宜、変数を書き換えてくれます。
-make install を実行するる戸、
-configure が生成する etc/fml/install.cf を元に、
-同様に configure が生成した install.pl (perl script) が走り、
-インストールを行ないます。
+configure が適宜、script 群や .cf 群の変数を書き換えます。
 </para>
 
 <para>
-変更が必要なら configure の引数で変更して下さい。
-変更できる変数は以下のものです。
+make install を実行すると、configure が生成する etc/fml/install.cf を
+元に、configure が生成した install.pl (perl script) がインストールを行
+ないます。
+</para>
+
+<para>
+ユーザ名や基本的なディレクトリ構成などは configure の引数で変更して下さい。
+変更できる変数は以下のものです。configure --help で表示されます。
 fml では各ディレクトリにさらに /fml といった suffix をつけます。
 変更できるのはその直前の prefix 部分までです。
 <screen>
@@ -74,10 +76,7 @@ oldincludedir   /usr/include
 infodir         ${prefix}/info
 mandir          ${prefix}/man
 </screen>
-</para>
-
-<para>
-また
+そして、これらの変数も configure の引数で上書きすることができます。
 <screen>
 fmlconfdir      $sysconfidr/fml             /usr/local/etc/fml        
 mlspooldir      /var/spool/ml               /var/spool/ml
@@ -85,7 +84,6 @@ fml_owner       fml                         fml
 fml_group       fml                         fml
 default_domain  推測する                    推測する
 </screen>
-これらの変数は、configure の引数で上書きすることができます。
 これらのオプションは
 <screen>
 configure --help 
@@ -208,6 +206,9 @@ Now you must run "make install".
 
 
 <!-- ====================================================== -->
+<!--
+   XXX-TODO 各ディレクトリの役割は別ファイルへ？
+-->
 <sect1>
 	<title>
 	補足: 各ディレクトリの役割
@@ -238,7 +239,7 @@ Now you must run "make install".
           <entry> /usr/local/etc/fml	</entry>
           <entry>
 	基本設定ファイルを置く場所。
-	( fml 4 の /usr/local/fml/.fml や default_config.ph 相当)
+	( &fml4; の /usr/local/fml/.fml や default_config.ph 相当)
 
 	バージョンやライブラリの場所(ディレクトリ)などを指定する。
           </entry>
@@ -247,7 +248,7 @@ Now you must run "make install".
         <row>
           <entry> /usr/local/libexec/fml 		</entry>
           <entry>
-	実行ファイル ( fml 4 の /usr/local/fml )
+	実行ファイル ( &fml4; の /usr/local/fml )
 	  </entry>
         </row>
 
@@ -256,7 +257,7 @@ Now you must run "make install".
 		/usr/local/lib/fml
 	  </entry>
           <entry>
-		ライブラリ ( fml 4 の /usr/local/fml )
+	perl module 群を置く場所 ( &fml4; の /usr/local/fml )
 	  </entry>
         </row>
 
@@ -265,8 +266,9 @@ Now you must run "make install".
 		/usr/local/share/fml
 	  </entry>
           <entry>
-		メッセージなどのテンプレート、
-		言語依存です。
+	メッセージなどのテンプレートを置く( &fml4; の 
+		/usr/local/fml/messages/ 相当)。
+	言語依存です。
 	  </entry>
         </row>
 
@@ -275,8 +277,8 @@ Now you must run "make install".
 		/var/spool/ml
 	  </entry>
           <entry>
-		ＭＬのホームディレクトリ(の prefix)。
-		fml 4 と同じ目的に使われます。
+		デフォルトドメインのＭＬ群のトップディレクトリ。
+		&fml4; と同じ目的に使われます。
 
 		注意: /var/spool/ml のオーナは configure で指定した
 		owner 変数(デフォルトはユーザ fml)に設定されます。
@@ -312,7 +314,7 @@ configure を実行後、ユーザ root になり、make install を実行して下さい。
 <para>
 configure はユーザ root で実行する必要はありませんが、
 make install はユーザ root で実行して下さい。
-間違えないように、configure も root で実行しても構いません。 
+間違えないように、configure も root で実行するほうがいいかもね。
 <screen>
 % su root
 # ./configure
@@ -336,6 +338,11 @@ configure のオプション指定が正しければ、
 編集の必要はまずないです。 
 </para>
 
+<para>
+mani.cf は大枠の最も基本的な設定です。より細かな設定は fml の動作の指
+定などは site_default_config.cf の役割です。
+</para>
+
 <!-- main.cf の見本 -->
 &sect.main.cf;
 
@@ -355,8 +362,7 @@ configure のオプション指定が正しければ、
 これは &fml4; の site_init.ph に相当するものです。
 </para>
 </footnote>
-です。
-必要に応じて編集してください。
+です。必要に応じて編集してください。
 </para>
 
 <para>
@@ -366,17 +372,17 @@ configure のオプション指定が正しければ、
 
 <para>
 デフォルトでは見本として:)
-subject のタグをつけない設定だけが入っています。
+subject のタグをつけない設定とフィルタ関連の設定だけが入っています。
 <screen>
-# $FML: fml_on_unix.sgml,v 1.3 2002/07/06 14:55:17 fukachan Exp $
+# $FML: site_default_config.cf.in,v 1.5 2002/10/31 10:46:38 fukachan Exp $
 #
 #               site default_config.cf EXAMPLE
 #
 # fml-devel loads .cf files in this order for elena ML.
-#      1. /etc/fml/defaults/$VERSION/default_config.cf
-#      2. /etc/fml/site_default_config.cf
-#      3. /etc/fml/domains/$DOMAIN/default_config.cf
-#      4. /var/spool/ml/elena/config.cf
+#      1. ${prefix}/etc/fml/defaults/$VERSION/default_config.cf
+#      2. ${prefix}/etc/fml/site_default_config.cf
+#      3. ${prefix}/etc/fml/domains/$DOMAIN/default_config.cf
+#      4. /tmp/dir/elena/config.cf
 #
 # This file overrides the default "default_config.cf" configurations
 # in the following way.
@@ -385,12 +391,63 @@ subject のタグをつけない設定だけが入っています。
 # We want to disable the subject tag in articles by default.
 article_header_rewrite_rules	-=	rewrite_article_subject_tag
 
+# mime based comonent filter
+use_mime_component_filter	=	yes
 
 
+# [site specific options]
+#   Example:
+#	key  = value
+#	key += value
+#	key -= value
+
+
+=cut
+
 #
-# site specific options.
-#
+# you can write hooks here after.
+#   Example:
+#	$distribute_run_start_hook = q{ ... };
 </screen>
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	フィルタをどうするか？
+	</title>
+
+<para>
+デフォルトではすべてのフィルタが有効です。
+</para>
+
+<para>
+特に mime component filter が問題です。
+mime component filter が有効なので、デフォルトでは
+ＭＬへの投稿が許されるのは text/plain のメールのみです。
+</para>
+
+<para>
+mime component filter を無効にするには
+site_default_config.cf で
+<screen>
+use_mime_component_filter	=	no
+</screen>
+としてください。
+</para>
+
+<para>
+mime component filter を有効にしたいが、
+ルールをカスタマイズしたいという場合は
+site_default_config.cf は
+<screen>
+use_mime_component_filter	=	yes
+</screen>
+のままにして、
+/usr/local/etc/fml/mime_component_filter 
+をカスタマイズしてください。
 </para>
 
 </sect1>
@@ -403,15 +460,20 @@ article_header_rewrite_rules	-=	rewrite_article_subject_tag
 
 <para>
 /usr/local/etc/fml/main.cf の編集は必要ありませんが、
-/usr/local/etc/fml/virtual は編集して下さい。
+/usr/local/etc/fml/virtual を編集して下さい。
 </para>
 
 <para>
-fml.org がデフォルトのドメインとすると、fml.org のＭＬ群は 
-/var/spool/ml 以下をデフォルトでは使います。そのため、別のドメイン 
+fml.org がデフォルトのドメインとしましょう。この場合、fml.org のＭＬ群
+に対しては /var/spool/ml 以下を使います。ところが、ディレクトリ名には 
+fml.org などと入っていないので、このままでは elena@fml.org と 
+elena@nuinui.net の２つを作ることが出来ません。 別のドメイン 
 nuinui.net のＭＬ群は別のディレクトリ(例: /var/spool/nuinui.net)を使う
 必要があります。
-その「ドメイン→ディレクトリ」の対応関係を 
+</para>
+
+<para>
+そこで「ドメイン → ディレクトリ」の対応関係を 
 /usr/local/etc/fml/virtual に定義して下さい。
 <screen>
 nuinui.net	/var/spool/nuinui.net

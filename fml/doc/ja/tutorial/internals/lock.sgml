@@ -1,5 +1,5 @@
 <!--
-   $FML: lock.sgml,v 1.1 2003/04/12 15:20:03 fukachan Exp $
+   $FML: lock.sgml,v 1.2 2003/04/13 04:36:12 fukachan Exp $
 -->
 
 
@@ -15,7 +15,7 @@
 	</title>
 
 <para>
-ながらく giant lock だったが、2002/03 に giant lock をなくした。
+ながらく giant lock だったが、2003/03 に giant lock をなくした。
 </para>
 
 <para>
@@ -25,11 +25,10 @@ Mail::Delivery 関連はメンバーリストにアクセスするので、いろいろありそう。
 </para>
 
 <para>
-一方、Mail::Delivery::SMTP の操作の際にはメンバーリストのロックが必要です。
-現在は、
-Mail::Delivery::SMTP を呼び出す FML のクラス(
-実は FML::Send と FML::Process::Delivery の２箇所しかない
-)がロック処理をしています。
+一方、Mail::Delivery::SMTP の操作の際にはメンバーリストのロックが必要
+です。現在は、Mail::Delivery::SMTP を呼び出す FML のクラス(実は 
+FML::Send と FML::Process::Delivery の２箇所しかない)の中でロック処理
+をしています。
 </para>
 
 <para>
@@ -39,7 +38,7 @@ Mail::Delivery::SMTP を呼び出す FML のクラス(
 FML/Command/UserControl.pm 
 や
 FML/Command/Auth.pm
-には write lock が必要だが、
+には write lock が必要ですが、
 FML/Credential.pm
 には read lock だけでよさそう。
 </para>
@@ -53,13 +52,12 @@ FML/Credential.pm
 	</title>
 
 <para>
-*_maps をよぶまえには MUTEX ロックをする。
-いや、やりすぎかもしれんが
+*_maps をよぶまえには MUTEX ロックをする。いや、やりすぎかもしれません。
 </para>
 
 <para>
 メンバーリストへ IO::Adapter をかます時に、
-READ,WRITE LOCK がほしい。
+READER WRITER LOCK がほしい。
 <footnote>
 <para>
 READ ロックは不要か？いや、だめだろ

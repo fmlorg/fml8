@@ -1,18 +1,11 @@
 <!--
-   $FML: dbms.sgml,v 1.2 2001/10/13 08:47:56 fukachan Exp $
+   $FML: dbms.sgml,v 1.3 2002/07/06 14:55:18 fukachan Exp $
 -->
 
 <chapter id="dbms">
 	<title>
 	データベース管理システム
 	</title>
-
-<warning>
-<para>
-まだ、実装途中です。
-</para>
-</warning>
-
 
 <para>
 DBMS との通信は

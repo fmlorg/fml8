@@ -1,5 +1,5 @@
 <!--
-   $FML: hook.sgml,v 1.1 2002/02/16 13:23:25 fukachan Exp $
+   $FML: hook.sgml,v 1.2 2002/07/06 14:55:18 fukachan Exp $
 -->
 
 <chapter id="hook">
@@ -24,11 +24,12 @@ $START_HOOK のような曖昧なものではなく。
 </para>
 
 <para>
-また、HOOK の書き方がしょうしょう良くなくても動くのがよいでしょう。
-通常
+また、HOOK の書き方が少々良くなくても動くのがよいでしょう。通常
+<screen>
 use strict;
-になっていますが、
-HOOK を評価する lexical scope では無視するようにするべきでしょう。
+</screen>
+になっていますが、HOOK を評価する lexical scope では無視するようにする
+べきでしょう。
 </para>
 
 </sect1>
@@ -45,8 +46,8 @@ hook 名前の標準的な形式については
 プログラム名_メソッド名_start_hook
 プログラム名_メソッド名_end_hook
 </screen>
-のようにすることにします。
-例えば、fmlconf のメインの部分 run() の HOOK の名前は
+のようにすることにしました。
+たとえば、fmlconf のメインの部分 run() の HOOK の名前は
 <screen>
 fmlconf_run_start_hook
 fmlconf_run_end_hook

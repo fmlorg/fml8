@@ -1,5 +1,5 @@
 <!--
-   $FML: restriction.sgml,v 1.5 2002/07/23 09:34:34 fukachan Exp $
+   $FML: restriction.sgml,v 1.6 2003/04/12 15:26:36 fukachan Exp $
 -->
 
 <chapter id="restriction">
@@ -8,9 +8,10 @@
 	</title>
 
 <para>
-入力データは FML::Restriction::CGI クラスが提供する正規表現で
-検査します。
+入力データ(特にコマンドなど)は FML::Restriction::CGI クラスが提供する
+正規表現で検査します。
 </para>
+
 
 <sect1 id="restriction.overview">
 	<title>
@@ -23,9 +24,9 @@
 	</title>
 
 <para>
-FML::Restriction::CGI クラスによる入力データチェックはありませんが、
-FML::Filter クラスによるフィルタチェックがデフォルトで適用されます。
-フィルタをはずすには、config.cf で
+FML::Restriction クラスによる入力データチェックはありませんが、
+FML::Filter クラスによるフィルタチェックがデフォルトで適用されます。フィ
+ルタをはずすには、config.cf で
 <screen>
 use_article_body_filter		=	no
 </screen>
@@ -56,21 +57,21 @@ FML::Command::{User,Admin}::コマンド の実行に進むことができます。
 	</title>
 
 <para>
+CGI の各プログラムでは、safe_param_ほえほえ() という関数経由でのみデー
+タを受けとることができます。
+</para>
+
+<para>
 safe_param_*()
 および
 try_cgi_*() 
-は安全な値を返すことになっている。
-正規表現でチェックされてた後、返される。
+は安全な値を返すことになっています。
+FML::Restiction の正規表現でチェックされてた後、返される。
 </para>
 
 <para>
-safe_param_ほえほえ() という関数経由でのみ CGI から
-データを受けとることができる。
-</para>
-
-<para>
-safe_param_XXX() は FML::Restriction::CGI ( FML::Restriction::Base を
-継承している)経由でパターンの検査をしています。
+これらの safe_param_XXX() は FML::Restriction::CGI (
+FML::Restriction::Base を継承している)経由でパターンの検査をしています。
 </para>
 
 </sect2>
@@ -78,11 +79,20 @@ safe_param_XXX() は FML::Restriction::CGI ( FML::Restriction::Base を
 
 <sect2>
 	<title>
-	makefml
+	makefml および fml
 	</title>
 
 <para>
-コマンドラインで実行するので、入力チェックなしがデフォルト
+コマンドラインで実行するので、「入力チェックなし」がデフォルトです。
+そのシェルが取れる時点で認証されているはずなので、
+正しいユーザ/そのユーザのすることは正しいと信じています。
+</para>
+
+<para>
+もちろん、各モジュールごとの制限は受けます。
+たとえば、adduser でアドレスを追加しようとしても、
+アドレスに見えないような文字列を入れれば拒否されます。
+このあたりの制限は各モジュール依存です。
 </para>
 
 </sect2>
@@ -108,10 +118,8 @@ FML::Restriction::CGI クラスのモジュールを用いて
 </para>
 
 <para>
-FML::Restriction 以下では Base を継承したりしますが、
-他のモジュールでは、FML::Restriction クラスを object composition
-として使って下さい。
-例えば、
+FML::Restriction 以下では Base を継承していますが、他のモジュールでは、
+FML::Restriction クラスを object composition して使って下さい。例えば、
 <screen>
 use FML::Restriction::CGI;
 $safe = new FML::Restriction::CGI;
@@ -131,15 +139,14 @@ if ($value =~ /^$allowed_regexp{$key}$) { ... ok, do something ... ;}
 	</title>
 
 <para>
-CGI では
-FML::Restriction::CGI クラスのモジュールを用いて
+CGI では FML::Restriction::CGI クラスのモジュールを用いて
 入力データがある正規表現の中に収まるかどうか？の検査をします。
 </para>
 
 <para>
 入力値は、前述のクラスの入力制限をうけるべきです。
 そのため、直接 param() を使ってはいけません。
-必ず safe_param_xxx() メソッドを通じてのみ、
+必ず safe_param_xxx() メソッドを通じて、
 param() ( CGI モジュール )からのデータ入力をして下さい。
 </para>
 
@@ -173,16 +180,22 @@ for my $key (param()) {
 
 <sect1>
 	<title>
-	議論
+	議論; FML::Restriction の制限はきびし過ぎる？
 	</title>
 
 <para>
-FML::Restriction:: でRFC 2822 っていってもねぇ… RFC の定義が広すぎるよね。
+FML::Restriction のクラスでは RFC などで許されている表現のごく一部だけ
+を許しています。
+</para>
+
+<para>
+RFC の定義が広すぎるんで…手抜きといえば手抜きといわれちゃいますが、
+安全側に倒しています。
 </para>
 
 <para>
 FML::Restriction::Command はコマンドのシンタックスチェックはもうちょっ
-と粒度を上げるべきなのかもしれない？
+と粒度を上げるべきなのかもしれませんが、現状ではしていません。
 </para>
 
 </sect1>

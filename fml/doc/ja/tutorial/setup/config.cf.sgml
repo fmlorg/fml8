@@ -1,5 +1,5 @@
 <!--
-   $FML: config.cf.sgml,v 1.1.1.1 2002/07/04 08:30:48 fukachan Exp $
+   $FML: config.cf.sgml,v 1.2 2002/07/06 14:55:20 fukachan Exp $
 -->
 
 <sect1 id="setup.config.cf">
@@ -8,66 +8,52 @@
 	</title>
 
 <para>
-makefml は makefml newml を実行した際に
-config.cf (設定ファイル) と
+makefml は、
+makefml newml を実行した際に、
+各ＭＬごとに config.cf (設定ファイル) と
 fml を起動するために MTA が呼び出すファイルである
 (postfix のための) include 類および
 ~fml/.qmail-*
-を用意してくれます。
+など必要な設定ファイル一式を用意します。
 <screen>
 % su fml
 % makefml newml elena
    ... snip ...
 % ls /var/spool/ml/elena
-config.cf include include-ctl
+config.cf include include-ctl include-error
+	... snip ...
 </screen>
 </para>
 
 <para>
-ＭＬのカスタマイズは config.cf をエディタで編集して下さい。
+(現状)ＭＬのカスタマイズは config.cf をエディタで編集して下さい。
+</para>
+
 <warning>
 <para>
 まだ、設定ツールはできていません。
 </para>
 </warning>
-とりあえず config.cf の先頭の ml_domain と ml_name が
-正しいかどうかを確認して下さい。
+
+
+<para>
+config.cf には、ほとんど何も定義されていません。config.cf の先頭の 
+ml_domain と ml_name もコメントになっていますが、それらはコマンドの引
+数で決まります。
+たとえば /var/spool/ml/elena/include ファイルは
 <screen>
-config.cf の例
-
-# ドメイン名 (参照: 以下のアドレスを見よ $ml_domain がこの値に展開される)
-ml_domain           = fml.org
-
-# ML の名前
-ml_name		    = elena
-
-# 管理者のアドレス
-maintainer	    = $ml_name-admin@$ml_domain
-
-# 投稿用のアドレス
-address_for_post    = $ml_name@$ml_domain
-
-# コマンド用のアドレス
-address_for_command = $ml_name-ctl@$ml_domain
+"| /usr/local/libexec/fml/distribute elena@fml.org"
 </screen>
+そして、/var/spool/ml/elena/include-ctl ファイルは
+<screen>
+</screen>
+などとなっています。このコマンド引数の elena@fml.org の部分から
+ml_domain と ml_name を設定しています。
 </para>
 
 <para>
 include include-ctl aliases の書き方は &fml4; と同様です。
-include ファイルの PATH がちょっと違いますが、
-aliases の設定の仕方は一緒です。
-</para>
-
-<para>
-/var/spool/ml/elena/include ファイルは
-<screen>
-"| /usr/local/libexec/fml/fml.pl /var/spool/ml/elena"
-</screen>
-
-/var/spool/ml/elena/include-ctl ファイルは
-<screen>
-"| /usr/local/libexec/fml/fml.pl /var/spool/ml/elena --ctladdr"
-</screen>
+コマンドの PATH がちょっと違いますが、aliases の設定の仕方は一緒です。
 </para>
 
 </sect1>

@@ -1,3 +1,7 @@
+<!--
+   $FML$
+-->
+
 <chapter id="module.mail.message.encode">
 	<title>
 	Mail::Message::Encode クラス
@@ -31,7 +35,7 @@ fml-help ML's Count: 02012, 02013, 02016 など
 
 <sect1>
 	<title>
-	仕様
+	Mail::Message::Encode の仕様
 	</title>
 
 <para>
@@ -77,14 +81,13 @@ fml-help ML's Count: 02012, 02013, 02016 など
 </screen>
 
 <screen>
-   sub base64 {}
-   sub quoted_printable {}
-
-	があるといいかな〜
-
-	$x = $encode->base64($s);
+sub base64 {}
+sub quoted_printable {}
 </screen>
-
+があるといいかな〜
+<screen>
+$x = $encode->base64($s);
+</screen>
 また、互換性というか便宜上、STR2XXX() も準備する。
 <screen>
    STR2EUC(  $str, [$icode] )
@@ -99,13 +102,15 @@ fml-help ML's Count: 02012, 02013, 02016 など
 
 <sect1>
 	<title>
-	特別な関数
+	run_in_chcode()
 	</title>
 
 <para>
-euc にしてごにょごにょ する典型的なコードは全部 wrap する。
+言語依存処理の過程では、プログラムの扱いやすいコードに変換し、処理を行
+なう関数が多数存在します。そこで、そういった関数を用意すると便利です。
 <screen>
-# change code and do $proc
+run_in_chcode の実装例
+
 sub run_in_chcode
 {
    my ($self, $proc, $s, $out_code, $in_code) = @_;

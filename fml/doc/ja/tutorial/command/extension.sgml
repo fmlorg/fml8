@@ -1,5 +1,5 @@
 <!--
-   $FML: extension.sgml,v 1.8 2002/10/29 04:15:57 fukachan Exp $
+   $FML: extension.sgml,v 1.9 2003/04/13 04:36:10 fukachan Exp $
 -->
 
 
@@ -18,8 +18,8 @@
 
 <warning>
 <para>
-このホスト全ての ML で有効にする場合、
-拡張するモジュールを
+このホスト上の全ての ML で利用可能なコマンドを作りたい場合は、
+拡張したモジュールを
 <screen>
 /usr/local/lib/fml/site_local/
 </screen>
@@ -33,6 +33,7 @@
 
 <para>
 以下では、このホスト全ての ML で有効にする場合を考えます。
+もちろん、どっちにケースでもモジュールの書き方は一緒です。
 </para>
 </warning>
 
@@ -48,9 +49,8 @@ FML::Command 以下から適当に cut and paste して
 <screen>
 /usr/local/lib/fml/site_local/FML/Command/User/uja.pm
 </screen>
-というファイルを置き、
-.cf に許可するコマンドリストに追加して始めて有効になるようにしてくださ
-い。
+というファイルを置き、site_default_config.cf に許可するコマンドリスト
+に追加してください。
 <screen>
 commands_for_user += uja
 </screen>
@@ -70,9 +70,8 @@ FML::Command 以下から適当に cut and paste して
 <screen>
 /usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
 </screen>
-というファイルを置き、
-.cf に許可するコマンドリストに追加して始めて有効になるようにしてくださ
-い。
+というファイルを置き、site_default_config.cf に許可するコマンドリスト
+に追加してください。
 <screen>
 commands_for_privileged_user += uja
 </screen>
@@ -116,7 +115,8 @@ FML::Command 以下から適当に cut and paste して
 <screen>
 /usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
 </screen>
-というファイルを置けば有効になります。
+というファイルを置けば有効になります
+モジュールを置くだけで有効になります。
 commands_for_ 系の変数の設定変更は不要です。
 </para>
 
@@ -158,9 +158,8 @@ FML::Command 以下から適当に cut and paste して
 <screen>
 /usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
 </screen>
-というファイルを置き、
-.cf に許可するコマンドリストに追加して始めて有効になるようにしてくださ
-い。
+というファイルを置き、site_default_config.cf に許可するコマンドリスト
+に追加してください。
 <screen>
 commands_for_admin_cgi += uja
 </screen>

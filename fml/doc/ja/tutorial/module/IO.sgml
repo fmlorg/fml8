@@ -1,5 +1,5 @@
 <!--
-   $FML: IO.sgml,v 1.2 2003/03/14 02:57:44 fukachan Exp $
+   $FML: IO.sgml,v 1.3 2003/04/13 04:36:12 fukachan Exp $
 -->
 
 <chapter id="module.io.adapter">
@@ -14,10 +14,10 @@
 	</title>
 
 <para>
-&fmldevel; でのメンバーリストの読み書き、
-例えばアドレスの登録/削除、は
-IO::Adapter という抽象クラスを通じて行ないます。
-使い方は例えば次のような感じです。
+&fmldevel; でのメンバーリストの読み書き、例えばアドレスの登録/削除は
+IO::Adapter という抽象クラスを通じて行ないます。ようは Unix で 
+vfs/vnode インターフェイスの導入した時のような感じですね。
+使い方は次のようになります。
 <screen>
 use IO::Adapter;
 $obj = new IO::Adapter $map, $map_params;
@@ -28,14 +28,15 @@ $obj->close;
 </para>
 
 <para>
+$map は「map:識別子」となります。file: は省略可能です。
 現在のところ $map は次のようなものが使えます。
 <screen>
-file:/var/spool/ml/elena/actives
+file:/var/spool/ml/elena/recipients
 unix.group:root
 nis.group:root
 mysql:id
-postgresql:id  (未実装)
-ldap:id        (未実装)
+postgresql:id  (未実装、実装予定)
+ldap:id        (未実装、実装予定)
 </screen>
 </para>
 
@@ -45,7 +46,8 @@ unix.group:root は /etc/group の root のエントリにあるユーザのリストを、
 nis.group:root は NIS の root のエントリにあるユーザのリストです。
 mysql:id は MySQL へのアクセスです。
 mysql:id で指定されたパラメータを用います。
-このパラメータは new() を実行する際に別途与える必要があります。
+このパラメータは new IO::Adapter を実行する際に、
+指定する必要があります。
 </para>
 
 </sect1>
@@ -53,11 +55,11 @@ mysql:id で指定されたパラメータを用います。
 
 <sect1 id="module.io.adapter.methods">
 	<title>
-	メソッド
+	IO::Adapter のメソッド
 	</title>
 
 <para>
-IO::Adapter の提供する公式なメソッドは次の通りです。
+現在、IO::Adapter の提供する公式なメソッドは次の通りです。
 <screen>
 new()
 open()
@@ -77,6 +79,9 @@ touch()
 find(REGEXP, $args)
 </screen>
 です。
+</para>
+
+<para>
 KEY はデータベースのプライマリキーで、
 通常メールアドレスです。
 REGEXP は正規表現ですが、たいていはメールアドレスです。
@@ -107,7 +112,7 @@ REGEXP は正規表現ですが、たいていはメールアドレスです。
 <para>
 get_next_key() のように引数なしか STR を引数にして STR を返り値にする
 ものが多いです。これはファイルの一覧を見るとか、特定のアドレスに対する
-何かの値を取り寄せるとかいう操作でよく使われるためです。
+何かの値を取り寄せるとかいう操作がよく使われるためです。
 </para>
 
 <para>
@@ -137,8 +142,8 @@ rudo@nuinui.net => [
 </para>
 
 <para>
-まとめると引数はないか STR なので STR とひとまとめにしても良いです。
-一方、返り値は STR か ARRAY_REF になります。
+まとめると引数は「ない」か」STR」なので STR とひとまとめにしても良いで
+しょう。一方、返り値は STR か ARRAY_REF になります。
 <screen>
 引数    返り値
 ---------------------------------------
@@ -189,13 +194,14 @@ $obj = new IO::Adapter "unixgroup:wheel";
 </screen>
 というオブジェクトに対し get_next_key() すると
 グループのメンバーが順に返されます。
-つまり 3 行のファイルを読みだすものとして、
+ちょうど
 <screen>
 root
 rudo
 kenken
 </screen>
 のようなファイルとみなされます。
+つまり 3 行のファイルを読みだすようにみなされているわけですね。
 </para>
 
 </sect1>
@@ -207,7 +213,7 @@ kenken
 	</title>
 
 <para>
-/etc/group とほぼ同様ですが、ソースが
+/etc/group のケースとほぼ同様ですが、ソースが
 NIS/YP から group にあたるものを引っ張ってくるところだけが異なります。
 </para>
 
@@ -220,9 +226,9 @@ NIS/YP から group にあたるものを引っ張ってくるところだけが異なります。
 	</title>
 
 <para>
-保守性をあげるためには、一箇所に設定をまとめておきたい。
-&fmldevel; の設定では .cf の中にSQL の設定を書いておきたい。
-つまり一つの cf ファイルにいろいろ書けるようにしておきたい。
+保守性をあげるためには、一箇所に設定をまとめておきたい。つまり、一つの 
+cf ファイルにいろいろ書けるようにしておきたい。たとえば &fmldevel; の
+場合、config.cf の中だけに SQL の設定を書いておきたいわけです。
 </para>
 
 <para>

@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: create.sgml,v 1.1 2003/02/18 02:24:47 fukachan Exp $
 -->
 
 <chapter id="module.create">
@@ -9,9 +9,9 @@
 
 
 <para>
-ここでは、単純なスケジュール表示ソフトを例にとり、fml8 フレームワーク
-の中で新しいプログラムを追加するにはどうすれば良いのかを説明します。 
-以下、プログラム名は fmlsch とし、その CGI 版が fmlsch.cgi です。
+ここでは、単純なスケジュール表示ソフトを例にとり、&fmldevel; のフレー
+ムワークの中で新しいプログラムを追加するにはどうすれば良いのかを説明し
+ます。 以下、プログラム名は fmlsch とし、その CGI 版が fmlsch.cgi です。
 </para>
 
 
@@ -66,8 +66,8 @@ Date-Calc も必要なので適宜インストールしてください。
 	</title>
 
 <para>
-仕事のほとんどの部分は TinyCalender が実行しますが、
-fml8 のブートローダから TinyCalender を呼び出すために
+仕事のほとんどの部分は Calender::Lite が実行しますが、
+&fmldevel; のブートローダから Calender::Lite を呼び出すために
 FML::Process:: クラスを修正する必要があります。
 </para>
 
@@ -78,11 +78,12 @@ fml/lib/FML/Process/Calender.pm
 </para>
 
 <para>
-そして、
-ブートローダーへ fmlsch の場合は FML::Process::Calender を呼び出せば
-良いことを教えるために
-fml/lib/FML/Process/Switch.pm
-へ fmlsch のモジュール名などを追加します。
+そして、ブートローダーへ fmlsch の場合は FML::Process::Calender を呼び
+出せば良いことを教えるために
+etc/modules
+と
+etc/command_line_options
+に fmlsch のモジュール名との対応関係を追加します。
 </para>
 
 
@@ -95,49 +96,6 @@ FML::Process::Calender::run() メソッドだけ用意すればおしまいです。
 
 未定義の関数は FML::Process::Kernel のメソッドが使われます(継承)。
 </para>
-
-<para>
-FML::Process::Switch には以下のルール群を追加します。
-ここで追加するのは
-	getopt() のオプション
-	ML 名は必須か？
-	呼び出すモジュール名
-です。
-<screen>
-   --- Switch.pm	2001/03/25 04:09:00	1.14
-   +++ Switch.pm	2001/03/27 15:27:00
-   @@ -323,6 +323,9 @@
-        elsif ($myname eq 'makefml.cgi') {
-    	return qw(debug!);
-        }
-   +    elsif ($myname eq 'fmlsch') {
-   +	return qw(debug!);
-   +    }
-        else {
-    	croak "options for $myname are not defined.\n";
-        }
-   @@ -340,6 +343,9 @@
-        if ($myname eq 'fmldoc') {
-    	return 0;
-        }
-   +    elsif ($myname eq 'fmlsch') {
-   +	return 0;
-   +    }
-        elsif ($myname eq 'makefml') {
-    	return 0;
-        }
-   @@ -390,6 +396,12 @@
-        }
-        elsif ($name eq 'makefml.cgi') {
-    	$pkg = 'FML::CGI::Configure';
-   +    }
-   +    elsif ($name eq 'fmlsch') {
-   +	$pkg = 'FML::Process::Calender';
-        }
-        else {
-    	return '';
-</screen>
-</para>   
 
 </sect2>
 

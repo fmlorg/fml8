@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: get.sgml,v 1.1 2002/07/28 12:20:19 fukachan Exp $
 -->
 
 <sect1 id="usage.user.get">
@@ -15,7 +15,7 @@ get 記事番号
 </screen>
 と書いたメールを
 elena-ctl@fml.org  に送って下さい。
-記事が送り返されます。
+記事が mime/multipart で送り返されます。
 </para>
 
 </sect1>

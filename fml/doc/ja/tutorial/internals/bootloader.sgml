@@ -1,5 +1,5 @@
 <!--
-   $FML: bootloader.sgml,v 1.8 2002/07/06 14:55:18 fukachan Exp $
+   $FML: bootloader.sgml,v 1.9 2003/03/09 08:29:10 fukachan Exp $
 -->
 
 <chapter id="bootloader">
@@ -8,12 +8,10 @@
 	</title>
 
 <para>
-
 &fmldevel; にはインストールされている fml のバージョン依存性を考慮するた
 めに、本章で述べるようなブートストラップの過程があります。
-
 <screen>
-fml (libexec/distribute) が boot していくイメージ
+fml (libexec/distribute) が boot していく様子
 
        functions                class
        ----------------------------------------
@@ -59,7 +57,13 @@ loader は FML::Process::Switch をロードし、
 $0 を調べます。
 その名前から自分の仕事は配送処理だと知ります。
 配送処理なので
-FML::Process::Distribute をロードし、配送処理に移ります。
+FML::Process::Distribute クラスをロードし、配送処理に移ります。
+</para>
+
+<para>
+なお、プログラム名とクラスの対応関係は 
+etc/fml/defaults/バージョン/modules 
+で定義されています。
 </para>
 
 <para>
@@ -113,33 +117,27 @@ FML::Process::Mead       >-|    |
    <itemizedlist>
 	<listitem>
 	<para>
-	   /usr/local/etc/fml/main.cf を読み込む。
-		読み込むと fml のバージョンが分かる。
-		default_config.cf はバージョン依存であるので、
-		ここでまずバージョンを評価しなければいけないことに注意。
+	/usr/local/etc/fml/main.cf を読み込む。
+	読み込むと fml のバージョンが分かる。
+	main.cf の値から @INC を再設定しバージョン依存性を解決します。
+	default_config.cf はバージョン依存であるので、
+	ここでまずバージョンを評価しなければいけないことに注意してください。
 	</para>
 	</listitem>
 
 	<listitem>
 	<para>
-	 	( fml.pl を例にとると)
-		@ARGV を評価し、
-		どのＭＬの config.cf 群をロードすればいいのかを準備する。
-		変数の評価と展開には libexec/Standalone.pm を用います。
-
-		これはあまりよくないような気がします。
-		libexec/ を @INC に加えないといけないこと、
-		libexec/loader と libexec/Standalone.pm の２つが
-		入れ換えないといけないものになってしまうので。
+	@ARGV を評価し、
+	どのＭＬの config.cf 群をロードすればいいのかを準備します。
 	</para>
 	</listitem>
 
 	<listitem>
 	<para>
-		次に
-		FML::Process::Switch
-		( バージョン依存 )ファイルを
-		ロードします。
+	次に
+	FML::Process::Switch
+	(バージョン依存)クラスを
+	ロードします。
 	</para>
 
 	   <itemizedlist>
@@ -171,8 +169,8 @@ $process->run($args);
 $process->finish($args);
 </screen>
 		のように実行されています。
-		各プロセスは、それぞれについて適当な関数を
-		用意してください。
+		各プロセスは、それぞれについて適当なメソッドを
+		FML::Process:: 以下に用意する必要があります。
 		</para>
 		</listitem>
 	   </itemizedlist>
@@ -185,10 +183,15 @@ $process->finish($args);
 
 <sect1 id="bootloader.resolv.mlxxx">
 	<title>
-	ml_name と ml_domain の値はどこで解決するのが正しいか？
+	議論: ml_name と ml_domain の値はどこで解決するのが正しいか？
 	</title>
 
 <para>
+現在では、FML::Process:: の prepare() あたりで解決しています。
+</para>
+
+<para>
+以下、２、３の走り書き/おぼえがきを残しておきます。
 <screen>
 main::Bootstrap()
 

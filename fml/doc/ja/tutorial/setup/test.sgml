@@ -1,3 +1,7 @@
+<!--
+   $FML$
+-->
+
 <chapter id="test">
 	<title>
 	テスト
@@ -35,8 +39,8 @@ qmail をメールサーバに使っている人は特にやることはないとおもいます。
 </para>
 
 <para>
-以下では、fml8 と MTA が動いているホスト(ahodori.fml.org)をメールサー
-バと呼びます。
+以下では、&fmldevel; と MTA が動いているホスト(ahodori.fml.org)をメー
+ルサーバと呼びます。
 </para>
 
 </sect1>
@@ -137,17 +141,24 @@ fml8 には、今のところ、それに相当するものはありません。
 
 <sect1>
 	<title>
-        テストした形跡を消す（MLの最初期化）
+        テストした形跡を消す（MLの再初期化）
 	</title>
 
 <para>
-テストの形跡を消すには、
-ML のホームにあるファイルやディレクトリを消して下さい。
+テストの形跡を消すには、ＭＬを消して作り直せば良いでしょう。
 <screen>
 % su fml
-% cd /var/spool/ml/elena 
-% rm -fr log seq members recipients etc var spool tmp
+% makefml rmml test
+% makefml newml test
 </screen>
+今、テストしたＭＬのホームディレクトリは
+/var/spool/ml/@test
+に残っていますので、それも消してしまってかまいません。
+<screen>
+% rm -fr /var/spool/ml/@test
+</screen>
+残しておくと、将来(今作った２つ目の) test ML を消そうと思った時に
+困りますからね。
 </para>
 
 </sect1>

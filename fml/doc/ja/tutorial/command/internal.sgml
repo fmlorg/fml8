@@ -1,16 +1,16 @@
 <!--
-   $FML: internal.sgml,v 1.4 2002/07/02 10:39:30 fukachan Exp $
+   $FML: internal.sgml,v 1.5 2002/07/07 01:57:11 fukachan Exp $
 -->
 
-<sect1 id="fml.command.interal.change">
+<sect1 id="fml.command.internal.change">
 	<title>
 	補足:
 	『&fml4;と &fmldevel; のコードの書き方はどのくらい違うか？』
 	</title>
 
 <para>
-コマンドの典型『ファイルを送り返す』だけの help コマンドを例にとり説明
-しましょう。
+コマンドの典型である『ファイルを送り返す』だけの help コマンドを例にと
+り、相違点を説明しましょう。
 </para>
 
 <para>
@@ -22,15 +22,15 @@ FML::Process::Command クラスから
 
 <warning>
 <para>
-全てのコマンドは FML::Command::User::コマンド もしくは
-FML::Command::Admin::コマンド クラスとして実装されています。
-なお makefml や CGI は FML::Command::Admin::コマンド を使います。
-コマンドメールは User や Admin を適宜使い分けます。
+全てのコマンドは FML::Command::User::コマンドもしくは
+FML::Command::Admin::コマンドクラスとして実装されています。なお 
+makefml や CGI は FML::Command::Admin::コマンド を使います。コマンドメー
+ルは User や Admin を権限に応じて適宜使い分けます。
 </para>
 </warning>
 
 <para>
-例えば help の実体は FML::Command::User::help の process() 関数です。
+help コマンドの実体は FML::Command::User::help の process() 関数です。
 <screen>
 sub process
 {
@@ -59,10 +59,11 @@ sub process
     }
 }
 </screen>
-ここで $curproc は UNIX カーネルでおなじみの current process 構造体へ
-のポインタに相当するハッシュリファレンスです。
-そして $config ハッシュとして蓄えられている設定変数空間は、4.0 ではグ
-ローバル変数です。
+ここで $curproc はハッシュリファレンスで、&fml4; の %Envelope におおむ
+ね相当します。名前の通り、UNIX カーネルでおなじみの current process 構
+造体へのポインタのようなもので、プロセスに関連するいろいろなデータ構造
+やオブジェクトへのリファレンスを含んでいます。そして $config ハッシュ
+として蓄えられている設定変数空間は、&fml4; ではグローバル変数です。
 </para>
 
 <para>
@@ -91,7 +92,7 @@ $curproc->reply_message() は引数によって振舞いがことなりますが、
 なお get コマンドなども同じキューイングの仕組みを使っています。つまり 
 &fml4; の Notify() 相当部分が(通常の記事配送以外の)あらゆる送信機能を
 担当するということです。この点において、送信のキューイングのメカニズム
-は大きく異なっています。
+は &fml4; と大きく異なっています。
 </para>
 
 </sect1>

@@ -1,15 +1,15 @@
 <!--
-   $FML: fml.sgml,v 1.2 2002/07/04 10:59:01 fukachan Exp $
+   $FML: fml.sgml,v 1.3 2002/07/07 01:57:12 fukachan Exp $
 -->
 
-<chapter id="overview">
+<chapter id="overview.fml">
 	<title>
 	&fmldevel; の概要
 	</title>
 
 
 <!-- ======================================================== -->
-<sect1>
+<sect1 id="overview.fml8">
 	<title>
 	&fmldevel; でできること
 	</title>
@@ -20,27 +20,26 @@
 </para>
 
 <para>
-
     <itemizedlist>
 
 
     <listitem>
 	<para>
 	設定ファイル形式が新しくなりました。
-	postfix スタイルの設定ファイルです。
+	今度は postfix 風の設定ファイルです。
 	</para>
     </listitem>
 
 
     <listitem>
 	<para>
-	makefml によるコマンド操作:
+	makefml によるコマンド操作は &fml4; と同様です:
 		ＭＬの作成/削除、
 		メンバーの登録/削除/変更(chaddr)、
 		リモート管理者の登録/削除、
 		ログを見る、
 		メンバーリストを見る、
-		他		
+		他。		
 	</para>
     </listitem>
 
@@ -51,7 +50,7 @@
 		メンバーの登録/削除/変更(chaddr)、
 		リモート管理者の登録/削除、
 		ログを見る、
-		メンバーリストを見る、
+		メンバーリストを見る。
 	</para>
     </listitem>
 
@@ -60,7 +59,7 @@
 	<para>
 	配送、
 	ヘッダの書き換え、
-	フィルタ( 4.0 の Envelope Filter と Content Filter に相当するもの )、
+	フィルタ( 4.0 の Envelope Filter と Content Filter に相当するもの )。
 	</para>
     </listitem>
 
@@ -82,9 +81,10 @@
 	</para>
     </listitem>
 
+
     <listitem>
 	<para>
-	エラーメール解析
+	エラーメールの自動解析
 	</para>
     </listitem>
 
@@ -115,7 +115,7 @@
     <listitem>
 	<para>
 	MTA が起動するメインのプログラム:
-	fml.pl distribute command
+	fml.pl distribute command error
 	</para>
     </listitem>
 
@@ -123,13 +123,14 @@
     <listitem>
 	<para>
 	管理を支援するユーティリティ:
+	fmladdr
+	fmlailas
 	fmlconf
 	fmldoc
 	fmlhtmlify
 	fmlsch
-	fmlthread
-	fmlspool
 	makefml
+	fml
 	</para>
     </listitem>
 
@@ -150,7 +151,7 @@
 
 
 <!-- ======================================================== -->
-<sect1>
+<sect1 id="overview.fml8.install">
 	<title>
 	インストール作業の概略
 	</title>
@@ -159,21 +160,29 @@
 <important>
 
 <para>
-&fmldevel; は &fml4; 相当のものを完全に一から書き直すプロジェクトです。
-使い方の見かけは &fml4; に"似せて"います。
-インストールにおける主な注意点は
-root での作業、
-configure の使用、
+インスール方法は GNU autoconf を使うデファクトスタンダードなものとなっ
+ています。&fml4; にあまり似ていません。ですが、OS 附属のパッケージシス
+テムなどにはやさしくなっているといえるでしょう。
+</para>
+
+<para>
+インストールにおける主な注意点/&fml4;との相違点は、
+「root での作業」、
+「configure の使用」、
 そして /usr/local/etc/fml/ 以下のファイル、
-特に /usr/local/etc/fml/main.cf というグローバルな設定ファイルの編集です。
+特に 
+/usr/local/etc/fml/main.cf 
+および
+/usr/local/etc/fml/site_default_config.ph
+というグローバルな設定ファイルの編集などです。
 </para>
 
 </important>
 
 
 <para>
-さて、いつものように elena ＭＬの作成過程を例にとりましょう。
-インストールのおおまかな流れは次のようになります。
+さて、いつものように elena ＭＬ(elena@fml.org)の作成過程を例にとりましょ
+う。インストールのおおまかな流れは次のようになります。
 </para>
 
 
@@ -190,8 +199,8 @@ configure の使用、
 	<para>
 	<link linkend="install.fml.unix">
 	ユーザ root でインストールをします。
-	ユーザ root になり、
-	まず、ユーザ fml とグループ fml を作成します。
+	ユーザ root になったら、
+	まずはユーザ fml とグループ fml を作成します。
 	その後、
 	<link linkend="install.fml.unix.configure">
 	configure
@@ -219,13 +228,9 @@ configure の使用、
 		で変更が可能です。
 		</para>
 		</footnote>
-	に
-	fmldoc fmlconf fmlthread makefml fmlhtmlify fmlsch
-	などをインストールします。
-	実は、
-	これらは
-	/usr/local/libexec/fml の下の実体を呼び出す単なる
-	wrapper です。
+	に makefml や fmldoc など fml で始まるユーティリティプログラム
+	群をインストールします。実は、これらは
+	/usr/local/libexec/fml の下の実体を呼び出す単なる wrapper です。
 	</para>
    </listitem>
 
@@ -239,6 +244,12 @@ configure の使用、
 % su fml
 % makefml newml elena
 </screen>
+もしくは fml コマンド(後述)を使って
+<screen>
+% su fml
+% fml elena newml
+</screen>
+でも OK になりました。
 	</para>
    </listitem>
 
@@ -279,13 +290,14 @@ configure の使用、
 
 <!-- ============================================================= -->
 <sect1 id="guide.newml">
-
-   <title> ＭＬを作る </title>
+	<title>
+	ＭＬを作る
+	</title>
 
 <para>
 makefml を使ってＭＬを作成します。
 デフォルトのドメイン(例: fml.org)の場合、
-makefml 使い方は &fml4; の時と同様です。
+makefml の使い方は &fml4; の時と同様です。
 elena@fml.org ＭＬを作るには
 <screen>
 % su fml
@@ -302,7 +314,7 @@ elena@fml.org ＭＬを作るには
 <para>
 一方、バーチャルドメイン(nuinui.net)の場合は、
 ＭＬのアドレスを全部指定して下さい。
-elena@nuinui.net を作る場合は、次のように実行して下さい。
+たとえば elena@nuinui.net を作る場合は、次のように実行します。
 <screen>
 % su fml
 % makefml newml elena@nuinui.net
@@ -388,8 +400,9 @@ elena@nuinui.net を作る場合は、次のように実行して下さい。
 </para>
 
 <para>
-フォーマットは、config.cf (後述)と同様で、
+site_default_config.cf のフォーマットは、config.cf (後述)と同様で、
 指定できる変数も config.cf と同じです。
+全変数のリストは default_config.ph (後述)を見て下さい。
 </para>
 
 </sect2>
@@ -405,11 +418,11 @@ elena ＭＬの設定のカスタマイズは
 /var/spool/ml/elena/config.cf
 を編集して下さい。
 フォーマットは postfix の設定ファイルと同様です(&fml4; の config.ph よ
-りは cf にやや近いですが)。
+りは cf にやや近いですが、フォーマットが違うことに変わりはない)。
 </para>
 
 <para>
-適宜必要な項目だけを追加して下さい。
+適宜、必要な項目だけを追加して下さい。
 指定しない場合はデフォルト値が使われます。
 デフォルト値はインストールしたバージョンに依存しており、
 <screen>
@@ -423,7 +436,10 @@ elena ＭＬの設定のカスタマイズは
 <para>
 また、ライブラリなどのインストール先も fml のバージョンごとに
 別のディレクトリになっていることに注意して下さい。
-この仕組みのおかげでアップグレードしても元に戻すのが簡単です。
+<link linkend="bootloader">
+この仕組み
+</link>
+のおかげでアップグレードしても元に戻すのが簡単です。
 これは &fmldevel; の特徴です。
 </para>
 

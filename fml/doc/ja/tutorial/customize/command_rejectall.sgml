@@ -1,5 +1,5 @@
 <!--
-   $FML: command_rejectall.sgml,v 1.1 2002/07/29 09:32:58 fukachan Exp $
+   $FML: command_rejectall.sgml,v 1.2 2003/01/05 08:00:59 fukachan Exp $
 -->
 
 <sect1 id="config.command.rejectall">
@@ -8,6 +8,15 @@
 	</title>
 
 <para>
+コマンドプロセスが起動しても、即効で終了するようにすることができます。
+これが(aliases を編集することをのぞけば)一番確実な方法です。
+<screen>
+use_command_mail_program	=	no
+</screen>
+</para>
+
+<para>
+プロセスが動いてしまうのですが、別解として次のやり方もありでしょう。
 <screen>
 command_restrictions = reject
 </screen>

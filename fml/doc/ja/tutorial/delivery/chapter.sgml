@@ -1,5 +1,5 @@
 <!--
-    $FML: chapter.sgml,v 1.10 2002/09/15 02:11:23 fukachan Exp $
+   $FML: chapter.sgml,v 1.11 2002/10/29 03:44:17 fukachan Exp $
 -->
 
 <chapter id="delivery">
@@ -13,9 +13,9 @@
 	</title>
 
 <para>
-&fmldevel; の最大の目的の一つは、メンバーリストの取得と操作の統合と抽
-象化です。配送には抽象化された Mail::Delivery クラスを次のように使いま
-す。
+&fmldevel; の最大の目的の一つは、メンバーリストの取得操作におけるコー
+ドの統合と抽象化です。配送には抽象化された Mail::Delivery クラスを次の
+ように使います。
 </para>
 
 <para>
@@ -79,8 +79,7 @@ header -> preamble -> part1 -> part2 -> trailor (multipart)
 <link linkend="module.mail.message">
 Mail::Message
 </link>
-クラスは
-このようなデータ構造に対して、さまざまなオペレーションを提供します。
+クラスはこのようなデータ構造を操作するメソッドを提供しています。
 </para>
 
 </sect1>
@@ -108,7 +107,7 @@ FML::Mailer を呼ぶことはないかもしれない。
 
 <para>
 将来、どうも使ってないようなら
- FML::Process::QueueManager に合併するべきかもしれない。
+FML::Process::QueueManager に合併するべきかもしれない。
 </para>
 
 </sect1>
@@ -122,7 +121,6 @@ FML::Mailer を呼ぶことはないかもしれない。
 <qandaset>
 
 &recipe.delivery.forward;
-
 
 </qandaset>
 

@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.config.sgml,v 1.1 2002/07/29 09:32:57 fukachan Exp $
+   $FML: chapter.config.sgml,v 1.2 2002/07/29 12:14:17 fukachan Exp $
 -->
 
 <chapter id="config">
@@ -10,12 +10,16 @@
 
 <sect1 id="config.sitedefaultconfig.cf">
 	<title>
-	そのホストのすべてのＭＬに同じ設定を強制する
+	そのホストのすべてのＭＬのデフォルト設定を変更する
 	</title>
 
 <para>
 /usr/local/etc/fml/site_default_config.cf に書いて下さい。
 フォーマットは .cf 形式、つまり config.cf と同様です。
+</para>
+
+<para>
+このファイルは、&fml4; の site_init.ph に相当するものです。
 </para>
 
 </sect1>
