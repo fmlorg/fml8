@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.16 2002/07/24 09:30:45 fukachan Exp $
+# $FML: DBI.pm,v 1.17 2002/07/24 11:05:50 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -176,18 +176,18 @@ same as C<getline()> now.
 =cut
 
 
-# Descriptions: get from DBI map
+# Descriptions: return a table row as a string sequentially
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: STR
 sub getline
 {
     my ($self, $args) = @_;
-    croak('getline() not implemented');
+    $self->_get_data_from_cache($args, 'getline');
 }
 
 
-# Descriptions: return key from DBI map
+# Descriptions: return the primary key in the table sequentially
 #    Arguments: OBJ($self) HASH_REF($args) STR($mode)
 # Side Effects: none
 # Return Value: STR
@@ -198,10 +198,12 @@ sub get_next_key
 }
 
 
-# Descriptions: return value(s) from DBI map
+# Descriptions: return value(s) to the primary key in the table
+#               as ARRAY_REF 
+#               XXX definition is o.k.?
 #    Arguments: OBJ($self) HASH_REF($args) STR($mode)
 # Side Effects: none
-# Return Value: STR
+# Return Value: ARRAY_REF
 sub get_next_value
 {
     my ($self, $args) = @_;
@@ -240,6 +242,9 @@ sub _get_data_from_cache
 	elsif ($mode eq 'value') {
 	    shift @row;
 	    return \@row;
+	}
+	elsif ($mode eq 'getline') {
+	    return join(" ", @row);
 	}
 	else {
 	    warn("DBI: invalid option");
