@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.5 2002/03/18 13:54:28 fukachan Exp $
+# $FML: Base.pm,v 1.6 2002/03/24 11:18:09 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -70,7 +70,7 @@ my %basic_variable =
 
      # directory
      'directory'         => '[-a-zA-Z0-9]+',
-
+     'file'              => '[-a-zA-Z0-9]+',
      );
 
 
