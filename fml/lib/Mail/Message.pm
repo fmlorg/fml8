@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.76 2003/04/18 14:37:47 tmu Exp $
+# $FML: Message.pm,v 1.77 2003/05/01 10:56:08 fukachan Exp $
 #
 
 package Mail::Message;
@@ -661,6 +661,18 @@ sub whole_message_header
     my $m = $self->find( { data_type => 'text/rfc822-headers' } );
 
     defined $m ? $m->{ data } : undef ;
+}
+
+
+# Descriptions: get header content as string.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub whole_message_header_as_str
+{
+    my ($self) = @_;
+    my $m = $self->whole_message_header();
+    return $m->as_string();
 }
 
 
