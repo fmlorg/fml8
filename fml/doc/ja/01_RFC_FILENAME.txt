@@ -1,8 +1,30 @@
+	ここまできたらファイル名も変える方が建設的だろうという話
+
+
 X-Sequence: fml-devel 205
 
-もう、ここまできたらファイル名も変える方が建設的だとおもふ？
+	基本系
+		recipients-役割
+		members-役割
 
-1. 受信者リスト
+	さらに
+		ファイル-役割
+		例: 
+			passwd-admin
+			passwd-moderator
+			passwd-cgiadmin ?
+
+	以下同様に『役割』を新設するごとに
+
+		members-役割
+		recipient-役割
+
+	を使う、でも recipient-* はないことが多いと:)
+	＃ 理論的には使い分けても良い（が、どういう場合があるのかはよ
+	＃ くわからないけど）。
+
+
+例 1. ＭＬのメンバー／受信者リスト
 
 	primary_recipient_maps	=	recipients
 
@@ -10,32 +32,25 @@ X-Sequence: fml-devel 205
 	recipient_maps	=	recipients
 				actives
 
-2. リモート管理者のリスト
+	[TODO] warning 出るところがあるので、なんとかせな
 
-	members-admin でもいい？ なら
+例 2. リモート管理者のリスト
+
+	recipients-admin
+	members-admin
  
-3.	モデレータ
+例 3.	モデレータのリスト
 
-	moderators じゃなくて members-moderator
+	recipients-moderator
+	members-moderator
 
-が適切ではないのかなぁ… 
 
-以下同様に『役割』を新設するごとに
+例 4.	リモート管理者のパスワード
 
-	members-役割
-	recipient-役割
+	etc/passwd-admin
 
-を使う、でも recipient-* はないことが多いと:)
-＃ 理論的には使い分けても良い（が、どういう場合があるのかはよくわから
-＃ ない）。
+	注意: 4.0 では etc/passwd
 
-逆に、上の 2. 3. が変なら
 
-	admins
-	moderators
-
-のようにするべき？
-＃そのばあい members ってのがよくわからいけど…
-
--- fukachan
-
+-----
+$FML$
