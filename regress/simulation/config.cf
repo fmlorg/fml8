@@ -42,6 +42,14 @@ error_analyzer_function	=	simple_count
 error_analyzer_simple_count_limit	=	2
 
 
+
+article_post_restrictions       =       reject_system_special_accounts
+					check_article_thread
+                                        permit_member_maps
+                                        reject
+
+
+
 [mysql:fml]
 
 sql_server	=	mysql.home.fml.org
