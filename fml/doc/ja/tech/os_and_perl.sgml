@@ -199,6 +199,14 @@
 	</row>
 
 	<row>
+	<entry>FreeBSD</entry>
+	<entry>5.0 (not released)</entry>
+	<entry>none</entry>
+	<entry>?</entry>
+	<entry></entry>
+	</row>
+
+	<row>
 	<entry>BSD/OS</entry>
 	<entry>2.0</entry>
 	<entry>4.036</entry>
@@ -231,7 +239,7 @@
 	</row>
 
 	<row>
-	<entry>BSD/OS </entry>
+	<entry>BSD/OS</entry>
 	<entry>4.0.1</entry>
 	<entry>5.004_02</entry>
 	<entry>/usr/bin/perl5</entry>
@@ -487,7 +495,7 @@
 	</row>
 
 	<row>
-	<entry>AIX </entry>
+	<entry>AIX</entry>
 	<entry>4.3.2</entry>
 	<entry>none</entry>
 	<entry></entry>
@@ -495,7 +503,7 @@
 	</row>
 
 	<row>
-	<entry>AIX </entry>
+	<entry>AIX</entry>
 	<entry>4.3.3</entry>
 	<entry>5.005_03</entry>
 	<entry></entry>
