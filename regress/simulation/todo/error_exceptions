@@ -1,8 +1,0 @@
-fml/lib/IO/File/Atomic.pm:sub error
-
-fml/lib/File/Rotate.pm:sub error
-
-fml/lib/File/Utils.pm:sub error       { return $ErrorString;}
-fml/lib/File/Utils.pm:sub error_reset { undef $ErrorString;}
-fml/lib/File/Utils.pm:    error_reset();
-fml/lib/File/Utils.pm:    error_reset();
