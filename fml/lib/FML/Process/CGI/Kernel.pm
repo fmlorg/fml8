@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.17 2002/03/18 15:21:33 fukachan Exp $
+# $FML: Kernel.pm,v 1.18 2002/03/19 08:02:06 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -204,10 +204,11 @@ sub _drive_cgi_by_table
 
     # the first line
     print "<tr>\n";
-    print "<td></td>\n";
-    print "<td rowspan=2 valign=\"top\">\n";
+    print "<td>\n";
+    print "</td>\n";
+    print "<td>\n";
 
-    eval q{ $curproc->run_cgi_main($args);};
+    eval q{ $curproc->run_cgi_title($args);};
     if ($r = $@) { _error_string($r);}
 
     print "</td>\n";
@@ -221,9 +222,18 @@ sub _drive_cgi_by_table
     eval q{ $curproc->run_cgi_navigator($args);};
     if ($r = $@) { _error_string($r);}
 
+    print "<td rowspan=2 valign=\"top\">\n";
+
+    eval q{ $curproc->run_cgi_main($args);};
+    if ($r = $@) { _error_string($r);}
+
     print "</td>\n";
-    print "<td></td>\n";
-    print "<td></td>\n";
+    print "<td rowspan=2 valign=\"top\">\n";
+
+    eval q{ $curproc->run_cgi_help($args);};
+    if ($r = $@) { _error_string($r);}
+
+    print "</td>\n";
     print "</tr>\n";
 
     # the 3rd line
@@ -346,6 +356,45 @@ sub cgi_execute_command
 	    }
 	}
     }
+}
+
+
+=head2 run_cgi_title($args)
+
+show title.
+
+=cut
+
+
+sub run_cgi_title
+{
+    my ($curproc, $args) = @_;
+    my $myname  = $curproc->myname();
+    my $domain  = $curproc->ml_domain();
+    my $ml_name = $curproc->safe_param_ml_name();
+    my $role    = '';
+    my $title   = '';
+
+    $role  = "for thread view" if $myname =~ /thread/;
+    $role  = "for configuration" if $myname =~ /config|menu/;
+    $title = "${ml_name}\@${domain} CGI $role";
+    print $title;
+}
+
+
+# Descriptions: show help
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
+sub run_cgi_help
+{
+    my ($curproc, $args) = @_;
+    my $domain = $curproc->ml_domain();
+
+    print "<B>\n";
+    print "<CENTER>fml CGI interface for \@$domain ML's</CENTER><BR>\n";
+    print "help<BR>\n";
+    print "</B>\n";
 }
 
 
