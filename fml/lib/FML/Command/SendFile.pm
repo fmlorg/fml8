@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: get.pm,v 1.3 2001/10/10 10:08:06 fukachan Exp $
+# $FML: SendFile.pm,v 1.1 2001/10/13 12:17:49 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -118,7 +118,6 @@ sub send_file
     my $what_file = $optargs->{ _file_to_send };
     my $config    = $curproc->{ config };
     my $charset   = $config->{ reply_message_charset };
-    my $charset   = $config->{ template_file_charset };
 
     # template substitution: kanji code, $varname expansion et. al.
     my $params = {
