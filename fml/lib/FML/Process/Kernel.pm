@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.219 2004/03/13 10:29:46 fukachan Exp $
+# $FML: Kernel.pm,v 1.220 2004/03/14 06:33:14 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1092,7 +1092,6 @@ sub permit_post
     my ($curproc) = @_;
     my $config    = $curproc->config();
     my $cred      = $curproc->{ credential }; # user credential
-    my $pcb       = $curproc->pcb();
     my $sender    = $cred->sender();
     my $rules     = $config->get_as_array_ref( "article_post_restrictions" );
 
