@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: journaledfile.pl,v 1.3 2002/04/18 14:18:07 fukachan Exp $
+# $FML: journaledfile.pl,v 1.4 2002/05/11 08:34:52 fukachan Exp $
 #
 
 use strict;
@@ -8,7 +8,11 @@ use lib qw(../../fml/lib);
 use Tie::JournaledFile;
 
 $| = 1;
-print "Tie::JournaledFile ";
+
+#
+# 1. read/write
+#
+print "Tie::JournaledFile write ... ";
 
 my $debug = defined $ENV{'debug'} ? 1 : 0;
 my %db   = ();
@@ -33,6 +37,23 @@ else {
     print "fail\n";
     print "   >", $db{ $key }, "<\n";
     print "   >", $buf, "<\n";
+}
+
+
+#
+# 2. keys
+#
+print "Tie::JournaledFile keys ... ";
+
+my @p = keys %db;
+my $count_orig = ` awk '{print $1}' $file | sort | uniq | wc -l `;
+my $count = $#p + 1;
+
+if ($count_orig == $count) {
+    print "ok\n";
+}
+else {
+    print "fail ($count_orig != $count)\n";
 }
 
 exit 0;
