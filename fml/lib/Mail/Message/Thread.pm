@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Thread.pm,v 1.3 2004/03/27 09:23:07 fukachan Exp $
+# $FML: Thread.pm,v 1.4 2004/03/28 10:28:23 fukachan Exp $
 #
 
 package Mail::Message::Thread;
@@ -196,7 +196,7 @@ sub get_thread_status
 }
 
 
-# Descriptions: set thread status.
+# Descriptions: set article status.
 #    Arguments: OBJ($self) NUM($id) STR($status)
 # Side Effects: update UDB
 # Return Value: none
@@ -219,6 +219,32 @@ sub get_article_status
     my $db = $self->db();
 
     $db->get('article_status', $id);
+}
+
+
+# Descriptions: set article summary.
+#    Arguments: OBJ($self) NUM($id) STR($summary)
+# Side Effects: update UDB
+# Return Value: none
+sub set_article_summary
+{
+    my ($self, $id, $summary) = @_;
+    my $db = $self->db();
+
+    $db->set('article_summary', $id, $summary);
+}
+
+
+# Descriptions: get article summary.
+#    Arguments: OBJ($self) NUM($id)
+# Side Effects: none
+# Return Value: STR
+sub get_article_summary
+{
+    my ($self, $id) = @_;
+    my $db = $self->db();
+
+    $db->get('article_summary', $id);
 }
 
 
