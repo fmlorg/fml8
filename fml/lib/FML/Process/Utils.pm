@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.114 2004/04/21 10:09:52 fukachan Exp $
+# $FML: Utils.pm,v 1.115 2004/04/23 04:10:37 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1075,7 +1075,7 @@ sub ml_home_prefix
 {
     my ($curproc, $domain) = @_;
     my $main_cf = $curproc->{ __parent_args }->{ main_cf };
-    __ml_home_prefix_from_main_cf($main_cf, $domain);
+    $curproc->__ml_home_prefix_from_main_cf($main_cf, $domain);
 }
 
 
@@ -1096,12 +1096,12 @@ sub ml_home_dir
 # Descriptions: return $ml_home_prefix defined in main.cf (/etc/fml/main.cf).
 #               return $ml_home_prefix for $domain if $domain is specified.
 #               return default one if $domain is not specified.
-#    Arguments: HASH_REF($main_cf) STR($domain)
+#    Arguments: OBJ($curproc) HASH_REF($main_cf) STR($domain)
 # Side Effects: none
 # Return Value: STR
 sub __ml_home_prefix_from_main_cf
 {
-    my ($main_cf, $domain) = @_;
+    my ($curproc, $main_cf, $domain) = @_;
     my $default_domain = $main_cf->{ default_domain };
 
     if (defined $domain) {
@@ -1109,7 +1109,7 @@ sub __ml_home_prefix_from_main_cf
 
 	my ($prefix_maps) = __get_ml_home_prefix_maps($main_cf);
 	if (@$prefix_maps) {
-	    $found = ___search_in_ml_home_prefix_maps($main_cf,
+	    $found = $curproc->___search_in_ml_home_prefix_maps($main_cf,
 						      $domain,
 						      $prefix_maps);
 	}
@@ -1146,7 +1146,8 @@ sub __ml_home_prefix_from_main_cf
 
 # Descriptions: search domain in $prefix_maps.
 #               return $ml_home_prefix for the domain if found.
-#    Arguments: HASH_REF($main_cf)
+#    Arguments: OBJ($curproc)
+#               HASH_REF($main_cf)
 #               STR($domain)
 #               ARRAY_REF($prefix_maps)
 #         bugs: currently support the only file type of IO::Adapter.
@@ -1159,10 +1160,12 @@ sub __ml_home_prefix_from_main_cf
 # Return Value: STR
 sub ___search_in_ml_home_prefix_maps
 {
-    my ($main_cf, $domain, $prefix_maps) = @_;
+    my ($curproc, $main_cf, $domain, $prefix_maps) = @_;
+    my $cred = $curproc->{ credential };
 
     if (@$prefix_maps) {
-	my $dir = '';
+	my $dir  = '';
+	my $dirs = ();
 	eval q{ use IO::Adapter; };
 	unless ($@) {
 	  MAP:
@@ -1171,7 +1174,17 @@ sub ___search_in_ml_home_prefix_maps
 		my $obj = new IO::Adapter $map;
 		if (defined $obj) {
 		    $obj->open();
-		    $dir = $obj->find("^$domain");
+		    
+		    my $_domain = quotemeta($domain);
+		    my ($domainlist) = $obj->find($_domain, { all => 1 });
+		  DIR:
+		    for my $_dom (@$domainlist) {
+			my ($_domain) = split(/\s+/, $_dom);
+			if ($cred->is_same_domain($_domain, $domain)) {
+			    $dir = $_dom; # DOMAIN PREFIX
+			    last DIR;
+			}
+		    }
 		}
 		last MAP if $dir;
 	    }
@@ -1468,9 +1481,6 @@ sub get_address_list
     my ($curproc, $map) = @_;
     my $config = $curproc->config();
     my $list   = $config->get_as_array_ref( $map );
-
-
-    # XXX-TODO: moved to FML::User::Control ?
 
     eval q{ use FML::User::Control;};
     unless ($@) {
