@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.4 2002/03/18 15:21:31 fukachan Exp $
+# $FML: Menu.pm,v 1.5 2002/03/19 08:02:05 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -95,21 +95,6 @@ sub html_end
     # o.k. end of html
     print end_html;
     print "\n";
-}
-
-
-# Descriptions: show help
-#    Arguments: OBJ($curproc) HASH_REF($args)
-# Side Effects: none
-# Return Value: none
-sub run_cgi_help
-{
-    my ($curproc, $args) = @_;
-    my $domain = $curproc->ml_domain();
-
-    print "<B>\n";
-    print "fml CGI interface for \@$domain ML's\n";
-    print "</B>\n";
 }
 
 
