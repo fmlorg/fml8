@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: CacheDir.pm,v 1.4 2001/04/14 11:20:56 fukachan Exp $
+# $FML: CacheDir.pm,v 1.5 2001/04/14 14:47:56 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -144,7 +144,7 @@ sub _take_file_name
 
     if ($cache_type eq 'temporal') {
 	my ($sec,$min,$hour,$mday,$mon,$year,$wday) = localtime(time);
-	my $file_name = sprintf("%04d%02d%02d", 1900+$year, $mon+1, $wday);
+	my $file_name = sprintf("%04d%02d%02d", 1900+$year, $mon+1, $mday);
 	$file = File::Spec->catfile($directory, $file_name);
     }
     elsif ($cache_type eq 'cyclic') {
@@ -159,10 +159,10 @@ sub _take_file_name
 	$file  = File::Spec->catfile($directory, $file_name.$id);
     }
 
-    $self->{ _cache_type } = $cache_type;
+    $self->{ _cache_type } = $cache_type || 'cyclic';
     $self->{ _cache_data } = {};
-    $self->{ _directory }  = $directory;
-    $self->{ _file }       = $file;
+    $self->{ _directory }  = $directory || '';
+    $self->{ _file }       = $file || '';
 }
 
 
@@ -175,7 +175,11 @@ sub open
 {
     my ($self, $file, $mode) = @_;
     $file = $file || $self->{ _file };
-    $mode = $mode || ($self->{ _cache_type } eq 'temporal' ? "a+" : "w+");
+    $mode = defined $mode ? $mode :
+	($self->{ _cache_type } eq 'temporal' ? "a+" : "w+");
+
+    # error
+    return undef unless $file;
 
     # If the cache is limited by "time", we only add values to the file.
     # If limited by space, we ovewrite the file, so open it by the mode "w".
@@ -228,13 +232,17 @@ sub get_latest_value
     my ($self, $key) = @_;
     my $file = $self->{ _file };
     my $buf  = $self->_search($file, $key);
+
+    # return cache
     return $buf if $buf; 
 
     my $dir = $self->{ _directory };
-    my $dh  = new IO::Handle;
+    return '' unless $dir;
+
+    my $dh = new IO::Handle;
+    opendir($dh, $dir);
 
     my @dh = ();
-    opendir($dh, $dir);
     for (readdir($dh)) { push(@dh, $_) if /^\d+/;}
     @dh = sort { $b <=> $a } @dh;
 
@@ -261,6 +269,7 @@ sub _search
     my $buf;
 
     # negative cache
+    return '' unless $file;
     return '' if defined $hash->{ $file };
     $hash->{ $file } = 1;
 
