@@ -79,11 +79,6 @@ sub close
 }
 
 
-#####
-##### This is just a dummy yet now.
-#####
-
-
 =head1 NAME
 
 IO::Adapter::Array.pm - what is this

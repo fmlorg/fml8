@@ -121,11 +121,6 @@ sub close
 }
 
 
-#####
-##### This is just a dummy yet now.
-#####
-
-
 =head1 NAME
 
 IO::Adapter::File.pm - what is this
