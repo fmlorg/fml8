@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Command.pm,v 1.14 2001/10/10 14:56:01 fukachan Exp $
+# $FML: Command.pm,v 1.15 2001/10/11 04:16:41 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -97,17 +97,7 @@ C<command>.
 sub run
 {
     my ($curproc, $args) = @_;
-
-    # $curproc->lock();
-    {
-	if ($curproc->permit_command($args)) {
-	    $curproc->_evaluate_command($args); 
-	}
-	else {
-	    Log("deny command submission");
-	}
-    }
-    # $curproc->unlock();
+    $curproc->_evaluate_command($args); 
 }
 
 
@@ -126,71 +116,130 @@ sub finish
 }
 
 
+sub _pre_scan
+{
+    my ($curproc, $ra_body) = @_;
+    my $config  = $curproc->{ config };
+    my $keyword = $config->{ confirm_keyword };
+    my $found   = 0;
+
+    for (@$ra_body) {
+	if (/$keyword\s+\w\s+([\w\d]+)/) {
+	    $found = $1;
+	}
+    }
+
+    return $found;
+}
+
+
+sub _can_accpet_command
+{
+    my ($curproc, $args, $opts) = @_;
+    my $config  = $curproc->{ config };
+    my $cred    = $curproc->{ credential }; # user credential
+    my $prompt  = $config->{ command_prompt } || '>>>';
+    my $comname = $opts->{ comname };
+    my $command = $opts->{ command };
+
+    # 1. simple command syntax check
+    use FML::Filter::Utils;
+    unless ( FML::Filter::Utils::is_secure_command_string( $command ) ) {
+	LogError("insecure command: $command");
+	$curproc->reply_message("\n$prompt $command");
+	$curproc->reply_message("insecure, so ignored.");
+	return 0;
+    }
+
+    # 2. use of this command is allowed in FML::Config or not ?
+    unless ($config->has_attribute("available_commands", $comname)) {
+	$curproc->reply_message("\n$prompt $command");
+	$curproc->reply_message("not command, ignored.");
+	return 0;
+    }		
+    
+    # 3. Even new comer need to use commands [ guide, subscirbe, confirm ].
+    unless ($cred->is_member($curproc, $args)) {
+	unless ($config->has_attribute("available_commands_for_stranger", 
+				       $comname)) {
+	    $curproc->reply_message("\n$prompt $command");
+	    $curproc->reply_message("you are not allowd to use this command.");
+	    return 0;
+	}
+	else {
+	    Log("permit command $comname for stranger");
+	}
+    }
+
+    return 1; # o.k. accpet this command.
+}
+
+
 # dynamic loading of command definition.
 # It resolves your customized command easily.
 sub _evaluate_command
 {
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
+    my $cred    = $curproc->{ credential }; # user credential
+
     my $ml_name = $config->{ ml_name };
     my $argv    = $config->{ main_cf }->{ ARGV };
+    my $keyword = $config->{ confirm_keyword };
     my $body    = $curproc->{ incoming_message }->{ body }->data_in_body_part;
     my @body    = split(/\n/, $body);
     my $prompt  = $config->{ command_prompt } || '>>>';
+    my $id      = $curproc->_pre_scan( \@body );
 
     $curproc->reply_message("result for your command requests follows:");
 
   COMMAND:
     for my $command (@body) {
-	# 
-	# cheap diagnostics
-	# 
+	next if $command =~ /^\s*$/; # ignore empty lines
 
-	# 1. command exists or not 
 	my $comname = (split(/\s+/, $command))[0];
-	my $is_valid = 
-	    $config->has_attribute( "available_commands", $comname )
-		? 'yes' : 'no';
-	Log("command = " . $comname . " (valid?=$is_valid)");
+	my $opts    = { comname => $comname, command => $command, };
 
-	# 2. command syntax check
-	use FML::Filter::Utils;
-	unless ( FML::Filter::Utils::is_secure_command_string( $command ) ) {
-	    LogError("insecure command: $command");
-	    $curproc->reply_message("\n$prompt $command");
-	    $curproc->reply_message("insecure, so ignored.");
-	    $is_valid = 'no';
+	# special treating for confirmation
+	unless ($command =~ /$keyword/ && defined($id)) {
+	    # we can accpet this command ?
+	    unless ($curproc->_can_accpet_command($args, $opts)) {
+		# no, we do not accept this command. 
+		Log("invalud command = $command");
+		next COMMAND;
+	    }
+	}
+	else {
+	    $comname = $keyword; # comname = confirm
+	    Log("try $comname <$command>");
+	    $command =~ s/^.*$comname/$comname/;
 	}
 
-	# stop.
-	next COMMAND if $is_valid eq 'no';
-
-	# arguments to pass off to each method
-	my @options = ();
-	my $optargs = {
-	    command_mode => 'user',
-	    command      => $command,
-	    ml_name      => $ml_name,
-	    options      => \@options,
-	    argv         => $argv,
-	    args         => $args,
-	};
-
+	# o.k. here we go to execute command
 	use FML::Command;
 	my $obj = new FML::Command;
 	if (defined $obj) {
+	    # arguments to pass off to each method
+	    my $optargs = {
+		command_mode => 'user',
+		command      => $command,
+		ml_name      => $ml_name,
+		options      => [],
+		argv         => $argv,
+		args         => $args,
+	    };
+
 	    $curproc->reply_message("\n$prompt $command");
 	    eval q{
 		$obj->$comname($curproc, $optargs);
 	    };
-
 	    unless ($@) {
 		$curproc->reply_message_nl('general.success', "ok.");
 	    }
 	    else {
 		$curproc->reply_message_nl('general.fail', "fail.");
 		LogError("command ${comname} fail");
-		if ($@ =~ /^(.*)at/) {
+		if ($@ =~ /^(.*)\s+at\s+/) {
 		    my $reason = $1;
 		    my $nlinfo = $obj->error_nl();
 
@@ -206,11 +255,7 @@ sub _evaluate_command
 		}
 	    }
 	}
-
-	#
-	# next COMMAND;
-	#
-    }
+    } # END OF FOR LOOP: for my $command (@body) { ... }
 }
 
 
