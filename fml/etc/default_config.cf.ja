@@ -43,6 +43,20 @@ recipient_maps		=	file:$ml_home_dir/recipients
 				file:$ml_home_dir/actives
 				unix.group:fml
 
+# system accounts
+system-accounts		=	root
+				postmaster
+				MAILER-DAEMON
+				msgs
+				nobody
+				news
+				majordomo
+				listserv
+				listproc
+				\S+\-help
+				\S+\-subscribe
+				\S+\-unsubscribe
+
 =head1		MTA の設定
 
 # ひとつの SMTP トランザクションで MTA に渡す受信者の数の上限
