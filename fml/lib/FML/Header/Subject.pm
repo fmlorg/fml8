@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.29 2002/09/11 23:18:12 fukachan Exp $
+# $FML: Subject.pm,v 1.30 2002/09/22 14:56:50 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -64,16 +64,25 @@ replace the subject with the newer content.
 sub rewrite_article_subject_tag
 {
     my ($self, $header, $config, $args) = @_;
+    my ($in_code, $out_code) = ();
 
     # for example, ml_name = elena
-    my $ml_name = $config->{ ml_name };
-    my $tag     = $config->{ article_subject_tag };
-    my $subject = $header->get('subject');
+    my $ml_name  = $config->{ ml_name };
+    my $tag      = $config->{ article_subject_tag };
+    my $subject  = $header->get('subject');
+
+    if ($subject =~ /=\?iso-2022-jp\?/i) {
+	$in_code  = 'jis-jp';
+	$out_code = 'euc-jp';
+    }
+    else {
+	$in_code = $out_code = '';
+    }
 
     # decode mime
     use Mail::Message::Encode;
     my $obj = new Mail::Message::Encode;
-    $subject = $obj->decode_mime_string( $subject );
+    $subject = $obj->decode_mime_string($subject , $out_code);
 
     # cut off Re: Re: Re: ...
     $self->_cut_off_reply(\$subject);
@@ -87,6 +96,7 @@ sub rewrite_article_subject_tag
     # add(prepend) the rewrited tag
     $tag = sprintf($tag, $args->{ id });
     my $new_subject = $tag." ".$subject;
+    $new_subject = $obj->encode_mime_string($new_subject, 'base64', $in_code);
     $header->replace('Subject', $new_subject);
 }
 
