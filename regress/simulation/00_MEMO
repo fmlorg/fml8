@@ -2,6 +2,21 @@
 		Last Modified: $Date$
 
 
+○	IO::Adapter
+
+	IO::Adapter::get_XXX() の定義を考え直すべし？
+	IO::Adapter::find() の定義を考え直すべし？
+	(いや、全部直したんじゃないか？)
+
+○	remove $msg->{ next }
+
+	FML/Filter/BodyCheck.pm
+	Mail/HTML/Lite.pm
+	Mail/Message.pm
+	Mail/Bounce/Postfix19991231.pm
+	Mail/Bounce/Qmail.pm
+
+
 ○	etc/src/config.cf.ja/ の説明文を見直す
 
 
@@ -268,4 +283,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.20 2002/04/25 14:37:11 fukachan Exp $
+$FML: 00_MEMO,v 1.21 2002/04/26 10:33:54 fukachan Exp $
