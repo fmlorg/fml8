@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SimpleMatch.pm,v 1.17 2001/05/20 12:58:24 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.18 2001/05/20 13:20:55 fukachan Exp $
 #
 
 
@@ -22,7 +22,11 @@ Mail::Bounce::SimpleMatch - SimpleState error message format parser
 
 =head1 SYNOPSIS
 
+See C<Mail::Bounce> for more details.
+
 =head1 DESCRIPTION
+
+sub class used in C<Mail::Bounce>.
 
 =head1 SIMPLE STATE MACHINE
 
@@ -36,12 +40,7 @@ Please write C<regexp> pattern to clarify the following states.
 When we trap C<start>, the state changes from 0 to 1.
 When we trap C<end>,   the state changes from l to 0.
 
-=head1 METHODS
-
-=head2 C<new()>
-
 =cut
-
 
 my $debug = $ENV{'debug'} ? 1 : 0;
 

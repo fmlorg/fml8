@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: Delivery.pm,v 1.1.1.1 2001/04/03 09:53:28 fukachan Exp $
+# $FML: Delivery.pm,v 1.2 2001/05/05 12:54:02 fukachan Exp $
 #
 
 package Mail::Delivery;
@@ -28,7 +27,6 @@ Mail::Delivery - mail delivery system interface
 	default_io_timeout => 10,
     };
     if ($service->error) { Log($service->error); return;}
-
 
     $map_params = {
 	'mysql:toymodel' => {
@@ -53,7 +51,8 @@ Mail::Delivery - mail delivery system interface
                       });
     if ($service->error) { Log($service->error); return;}
 
-Actually the real estate of this class is 
+This class provides the entrance for sub classes.
+Actually implementation of this class is 
 almost C<Mail::Delivery::SMTP> class.
 Please see it for more details.
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Queue.pm,v 1.3 2001/05/18 10:39:29 fukachan Exp $
+# $FML: Queue.pm,v 1.4 2001/05/19 03:41:34 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -143,8 +143,8 @@ sub filename
 
 =head2 C<list()>
 
-return queue list array hash. 
-It is a list in C<active/> directory.
+return queue list as ARRAY REFERENCE.
+It is a list of queue filenames in C<active/> directory.
 
     $ra = $queue->list();
     for $qid (@$ra) {
@@ -176,10 +176,17 @@ sub list
 
 =head1 METHODS TO MANIPULATE INFORMATION
 
-=head2 C<getidinfo(id)>
+=head2 C<getidinfo($id)>
+
+return information related with the queue id C<$id>.
+The returned information is
+
+	id         => $id,
+	path       => "$dir/active/$id",
+	sender     => $sender,
+	recipients => \@recipients,
 
 =cut
-
 
 sub getidinfo
 {
@@ -216,7 +223,6 @@ sub getidinfo
 	recipients => \@recipients,
     };
 }
-
 
 
 =head1 LOCK
@@ -295,6 +301,9 @@ sub in
    $queue->set('sender', $sender);
    $queue->set('recipients', [ $recipient0, $recipient1 ] );
 
+It sets up delivery information in C<info/sender/> and
+C<info/recipients/> directories.
+
 =cut
 
 sub set
@@ -331,15 +340,6 @@ This file is scheduled to be delivered.
 In fact, setrunnable() C<rename>s the queue id file from C<new/>
 directory to C<active/> directory like C<postfix> queue strategy.
 
-=head2 C<remove()>
-
-remove all queue assigned to this object C<$self>.
-
-=head2 C<valid()>
-
-It checks the queue file is broken or not.
-return 1 (valid) or 0.
-
 =cut
 
 
@@ -362,6 +362,19 @@ sub setrunnable
     # move new/$id to active/$id
     rename( $self->{ _new_qf }, $self->{ _active_qf } );
 }
+
+
+
+=head2 C<remove()>
+
+remove all queue assigned to this object C<$self>.
+
+=head2 C<valid()>
+
+It checks the queue file is broken or not.
+return 1 (valid) or 0.
+
+=cut
 
 
 sub remove

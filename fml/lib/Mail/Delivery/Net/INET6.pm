@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: INET6.pm,v 1.2 2001/05/11 16:11:15 fukachan Exp $
+# $FML: INET6.pm,v 1.3 2001/05/25 04:45:40 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET6;
@@ -15,8 +15,8 @@ use Mail::Delivery::Utils;
 
 require Exporter;
 
-@ISA       = qw(Exporter);
-@EXPORT    = qw(is_ipv6_ready is_ipv6_mta_syntax connect6);
+@ISA     = qw(Exporter);
+@EXPORT  = qw(is_ipv6_ready is_ipv6_mta_syntax connect6);
 
 sub _we_can_use_Socket6
 {

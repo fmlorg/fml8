@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Configure.pm,v 1.21 2001/04/03 09:45:43 fukachan Exp $
+# $FML: Configure.pm,v 1.22 2001/05/29 16:21:16 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -22,7 +22,7 @@ use FML::Config;
 
 =head1 NAME
 
-FML::Process::Configure -- fmlconf and makefml wrapper
+FML::Process::Configure -- fmlconf and makefml main functions
 
 =head1 SYNOPSIS
 
@@ -32,17 +32,18 @@ FML::Process::Configure -- fmlconf and makefml wrapper
 
 =head1 DESCRIPTION
 
-FML::Process::Configure is the wrapper for fmlconf and makefml.
-
-See C<FML::Process::Flow> for each program flow.
-
-=head2 MODULES
+FML::Process::Configure provides the main function for 
+C<fmlconf>
+ and 
+C<makefml>.
 
 These programs, 
 C<fmlconf> and C<makefml>,
 bootstrap by using these modules in this order.
 
    libexec/loader -> FML::Process::Switch -> FML::Process::Configure
+
+See C<FML::Process::Flow> for the flow detail.
 
 =head1 METHODS
 
