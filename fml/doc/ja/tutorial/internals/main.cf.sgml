@@ -1,5 +1,5 @@
 <!--
-	$FML: main.cf.sgml,v 1.1 2001/04/24 11:40:58 fukachan Exp $	
+	$FML: main.cf.sgml,v 1.1.1.1 2001/05/01 14:52:05 fukachan Exp $	
 -->
 <sect1 id="main.cf">
 <title> /etc/fml/main.cf </title>
@@ -12,6 +12,14 @@ fml のプログラム群が起動する時に参照します。
 
 
 <para>
+main.cf はこのようなファイルです。
+
+フォーマットは
+<screen>
+変数名 = 値
+</screen>
+です。
+
 <screen>
 # fml version
 #   This is important

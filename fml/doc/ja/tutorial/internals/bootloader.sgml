@@ -1,5 +1,5 @@
 <!--
-	$FML: bootloader.sgml,v 1.2 2001/04/24 06:51:59 fukachan Exp $
+	$FML: bootloader.sgml,v 1.1.1.1 2001/05/01 14:52:05 fukachan Exp $
 -->
 
 <chapter id="bootloader">    	
@@ -11,41 +11,58 @@
 fml 5.0 にはインストールされている fml のバージョン依存性を考慮するた
 めに、実行時には本章で述べるようなブートストラップの過程があります。
 
-<programlisting>
+<screen>
 boot していくイメージ
 
 libexec/loader -> 
      FML::Process::Switch -> 
          FML::Process::Flow -> 
               FML::Process::それぞれのプログラムのモジュール
-</programlisting>
+</screen>
 </para>
 
 
 <sect1>
-<title> 例: 配送の場合 </title>
+   <title> 例: 配送の場合 </title>
 
 <para>
 loader から次々と呼ばれていく様子は、例えば配送処理の場合、次のよう
-になる。
-
-<programlisting>
-libexec/loader は FML::Process::Switch をロードし、
-FML::Process::Distribute を実行すると決める。
-
-FML::Process::Flow::ProcessStart() は引数として
-FML::Process::Distribute を渡され、
-FML::Process::Distribute を実行していく。
-</programlisting>
+になります。
 </para>
+
+<para>
+libexec/loader は /etc/fml/main.cf を読みこみます。
+fml_version 変数から使うべきライブラリのバージョンを決めます。
+例えば fml_vesrion が current-20010501 となっていたら
+/usr/local/lib/fml/current-20010501/ 以下にあるライブラリを使うといった
+具合です。
+</para>
+
+<para>
+@INC を設定した後、
+loader は FML::Process::Switch をロードし、
+$0 を調べます。
+その名前から自分の仕事は配送処理だと知ります。
+配送処理なので
+FML::Process::Distribute をロードし、配送処理に移ります。
+</para>
+
+<para>
+こういった処理は見かけ上
+FML::Process::Flow::ProcessStart() という関数が制御しています。
+ProcessStart() が引数として
+FML::Process::Distribute を渡され、
+FML::Process::Distribute を実行していくという流れになります。
+</para>
+
 </sect1>
 
 
 <sect1>
-<title> FML::Process:: クラスの階層構造 </title>
+  <title> FML::Process:: クラスの階層構造 </title>
 
 <para>
-<programlisting>
+<screen>
 FML::Process::Distribute >-|
 FML::Process::Command    >-|-- FML::Process::Kernel
 FML::Process::Mead       >-|    |   
@@ -53,7 +70,7 @@ FML::Process::Mead       >-|    |
                                 |-use-a FML::Config
                                 |-use-a FML::Log
                                 |-use-a  ... その他 ...
-</programlisting>
+</screen>
 
 =&gt;
 <ulink url="../../../fml/lib/FML/Process/programs.ja.html">
@@ -132,12 +149,12 @@ FML::Process::それぞれのプログラムのモジュールについて
 		FML::Process::Flow の中に、
 		どのように fml プロセスを実行するかが
 		定義されています。
-<programlisting>
+<screen>
 $process = new FML::Process::なにか;
 $process->prepare($args);
 $process->run($args);
 $process->finish($args);
-</programlisting>
+</screen>
 		のように実行されています。
 		各プロセスは、それぞれについて適当な関数を
 		用意してください。
