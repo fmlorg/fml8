@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.4 2001/11/03 01:22:13 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.5 2001/11/03 02:41:40 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -78,7 +78,9 @@ sub new
     my ($self, $args) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
-    my $config = $me->{ _config } = {};
+    my $config = $me->{ _config } = {
+	db_type => 'AnyDBM_File',
+    };
 
     for my $key (qw(ml_name spool_dir article_id db_base_dir)) {
 	if (defined $args->{ $key }) {
@@ -103,6 +105,7 @@ sub new
     use File::Spec;
     my $base_dir          = $config->{ db_base_dir };
     $me->{ _db_base_dir } = $base_dir;
+    $me->{ _index_db }    = File::Spec->catfile($base_dir, "index");
     $me->{ _db_dir }      = File::Spec->catfile($base_dir, $ml_name);
     $me->{ _fd }          = $args->{ fd } || \*STDOUT;
 
@@ -332,6 +335,48 @@ sub get_mode
 {
     my ($self) = @_;
     return(defined $self->{ _mode } ?  $self->{ _mode } : undef);
+}
+
+
+=head2 C<set_status($args)>
+
+set $status for $thread_id. It rewrites DB (file).
+C<$args>, HASH reference, must have two keys.
+
+    $args = {
+	thread_id => $thread_id,
+	status    => $status,
+    }
+
+C<set_status()> calls db_open() an db_close() automatically within it.
+
+=cut
+
+
+# Descriptions: 
+#    Arguments: $self $curproc $args
+# Side Effects: 
+# Return Value: none
+sub set_status
+{
+    my ($self, $args) = @_;
+    my $thread_id = $args->{ thread_id };
+    my $status    = $args->{ status };
+
+    $self->db_open();
+    $self->_set_status($thread_id, $status);
+    $self->db_close();
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub _set_status
+{
+    my ($self, $thread_id, $value) = @_;
+    $self->{ _hash_table }->{ _status }->{ $thread_id } = $value;
 }
 
 
