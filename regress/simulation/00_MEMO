@@ -8,12 +8,6 @@
 	XXX
 
 
-○ 移行 （[DOC TODO] テストの章にでも捕捉を書く）
-
-ちゃんと aliases を追加しないといかんひょ、
-重複チェックは OS 定義以外の部分は自動では増えないから（あたりまえ）。
-
-	
 ○	File::CachdDir と Tie::JournaledDir
 
 	Tie::JournaledDir の keys はまちがってないか？
@@ -226,4 +220,4 @@ sub compare_euc_string
 
 
 ----------
-$FML: 00_MEMO,v 1.47 2002/09/06 13:20:39 fukachan Exp $
+$FML: 00_MEMO,v 1.48 2002/09/15 01:53:55 fukachan Exp $
