@@ -1,0 +1,172 @@
+#! @PERL@ -w
+#-*- perl -*-
+#
+# Copyright (C) 2000-2001 Ken'ichi Fukamachi
+#          All rights reserved. 
+#
+# $FML: loader,v 1.20 2001/11/10 04:00:26 fukachan Exp $
+#
+
+eval 'exec /usr/local/bin/perl -S $0 ${1+"$@"}'
+        if $running_under_some_shell;
+
+use vars qw($ConfDir $MainCF $running_under_some_shell);
+use strict;
+use Carp;
+
+# main configuration file for directory switch
+$ConfDir = '@sysconfdir@';
+$MainCF  = "$ConfDir/main.cf";
+
+eval q{ &Bootstrap();};
+if ($@) { print STDERR "Error: ", $@, "\n"; exit 1;}
+
+exit 0;
+
+
+# Firstly we load Standalone.pm which has main.cf parser().
+# XXX we should remove the last resort '/usr/local/libexec/fml';
+# XXX which is not always true.
+BEGIN {
+    use File::Basename;
+    unshift(@INC, '/usr/local/libexec/fml');
+    unshift(@INC, dirname($0));
+    require Standalone;
+}
+
+
+# Descriptions: top lebel bootstrap program
+#               which load a dispather program (process_switch) 
+#               for process switch. The flow of execution follows:
+#               libexec/loader -> 
+#                  libexec/process_switch -> 
+#                      FML::Process::Something
+#    Arguments: none
+#               XXX this program sees $0
+#                   (program name, == argv[0] of C language) 
+# Side Effects: switch to the real process
+# Return Value: none
+sub Bootstrap
+{
+    # 1. main.cf exists and I can open it?
+    -f $MainCF   || croak("cannot find ${MainCF}");
+    my $fh = new FileHandle $MainCF;
+    defined($fh) || croak("cannot find ${MainCF}");
+
+    # parse command line options (preliminary)
+    #   XXX -c and --params options affect Standalone::load_cf().
+    #   XXX so, we need to parse only options for -c and --params.
+    #   XXX We should check @ARGV again after.
+    my $main_cf_file = $MainCF;
+    my $params = {};
+    for (my $i = 0; $i <= $#ARGV; $i++) {
+	# -c main.cf
+	if ($ARGV[ $i ] =~ /^\-c$/) {
+	    $main_cf_file = $ARGV[$i + 1];
+	}
+
+	# --params key=value
+	if ($ARGV[ $i ] =~ /^\-\-params$/) { 
+	    $params = $ARGV[$i + 1];
+	}
+    }
+
+    # 2.1 o.k. try to load main.cf (1st pass) to resolve @INC
+    my $main_cf = Standalone::load_cf($main_cf_file, $params);
+
+    # 2.1.1 set up @INC to load FML::Process::Switch
+    if (defined $main_cf->{ lib_dir }) {
+	push(@INC, split(/\s+/, $main_cf->{ lib_dir }));
+    }
+    else {
+	croak("\$lib_dir not defined in main.cf");
+    }
+
+    # 2.2 load version dependent Bootstrap2(), 
+    #     which is imported from FML::Process::Switch
+    eval {
+	require FML::Process::Switch;
+    };
+    unless ($@) {
+	eval q{ &Bootstrap2($main_cf_file);};
+	if ($@) {
+	    my $reason = $@;
+	    if ($ENV{'debug'} || defined( $main_cf->{ debug } )) {
+		croak("fail to execute Bootstrap2($main_cf_file)\n$@\n");
+	    }
+	    else {
+		$reason =~ s/[\n\s]*\s+at\s+.*$//m;
+		print STDERR "Error: ", $reason, "\n";
+		exit(1);
+	    }
+	}
+    }
+    else {
+	croak("cannot load FML::Process::Switch\n");
+    }
+}
+
+
+=head1 NAME
+
+loader -- the wrapper which executes a real fml5 program.
+
+=head1 SYNOPSIS
+
+loader C<[-c main.cf]> C<[--debug]> C<[--ctladdr]> [ml_home_dir]
+
+=head1 DESCRIPTION
+
+Perl modules C<fml> uses are dependent on fml version.
+C<loader> resolves fml version dependence by checking
+/etc/fml/main.cf and prepare @INC for some fml version.
+
+C<libexec/fml/loader> loads version dependent C<FML::Process::Switch>
+and executes C<Bootstrap2()> function.
+
+It analyzes $0 and knows who I am.
+It determies which class it use.
+The C<$class> module is one of C<FML::Process::$program>.
+
+C<FML::Process::Flow::ProcessStart($class, ..)> starts the program
+specified by C<$class>.
+See C<FML::Process::Switch> for more details.
+
+=head1 COMMAND LINE OPTIONS
+
+C<-c main.cf>
+    main.cf alternative
+
+C<--debug>
+    debug on.
+
+C<--ctladdr> 
+    fml.pl --cltaddr executes FML::Process::Command.
+
+C<--params> 
+    --params 'key1=value1 key2=value2 ...'
+
+=head1 SEE ALSO
+
+L<FML::Process::Switch>
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1 HISTORY
+
+libexec/loader appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
+=cut
+
+
+1;

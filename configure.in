@@ -1,0 +1,21 @@
+AC_REVISION($FML$)
+
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(fml/libexec/loader.in)
+
+# compile with optimisation and without debugging by default
+CFLAGS=${CFLAGS-"-O"}
+LDFLAGS=${LDFLAGS-""}
+
+dnl Checks for programs.
+
+dnl perl is mandatory
+AC_CHECK_PROGS(have_perl, perl)
+if test ! -n "$have_perl" ; then
+   AC_MSG_ERROR("Perl needs to be installed to use fml")
+fi
+AC_PATH_PROG(PERL, perl)
+
+AC_SUBST(SHELL)
+
+AC_OUTPUT(config.sh fml/libexec/loader)
