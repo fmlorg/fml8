@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DirUtils.pm,v 1.8 2002/09/11 23:18:05 fukachan Exp $
+# $FML: DirUtils.pm,v 1.9 2002/09/22 14:56:43 fukachan Exp $
 #
 
 package FML::Command::DirUtils;
@@ -23,6 +23,8 @@ FML::Command::DirUtils - utilities for directory handlings
 =head1 DESCRIPTION
 
 =head1 METHODS
+
+=head2 new()
 
 =cut
 
@@ -44,6 +46,9 @@ sub new
     return bless $me, $type;
 }
 
+#
+# XXX-TODO: if we can find CPAN module for dir listing, use it.
+#
 
 # Descriptions: show the result by executing "ls"
 #    Arguments: OBJ($self)
@@ -58,6 +63,8 @@ sub dir
     my $argv    = $du_args->{ argv };
     my $opt_ls  = '';
 
+    # XXX-TODO: define and use safe "option" regexp in FML::Restriction?
+    # XXX-TODO: safe "option" regexp [-A-Za-z0-9] ?
     # option: permit "ls [-A-Za-z]" syntax
     if (defined($du_args->{ opt_ls })) {
 	my $opt = $du_args->{ opt_ls };
@@ -77,7 +84,7 @@ sub dir
     my $ml_home_dir    = $config->{ ml_home_dir };
     chdir $ml_home_dir || croak("cannot chdir \$ml_home_dir");
 
-    # build a safe argument
+    # build safe arguments
     my $y = '';
     for my $x (@$argv) {
 	if ($x =~ /^$dir_regexp$/ || $x =~ /^\s*$/) {
@@ -86,16 +93,17 @@ sub dir
     }
 
     if (-x $path_ls) {
-	Log("$path_ls $opt_ls $y");
+	my $eval = "$path_ls $opt_ls $y";
+	Log($eval);
 
 	use FileHandle;
-	my $fh = new FileHandle "$path_ls $opt_ls $y|";
+	my $fh = new FileHandle "$eval|";
 	if (defined $fh) {
 	    while (<$fh>) { $curproc->reply_message($_);}
 	    $fh->close();
 	}
 	else {
-	    LogError("tail to run '$path_ls $opt_ls $y'");
+	    LogError("tail to run '$eval'");
 	}
     }
     else {
