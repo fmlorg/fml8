@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Freeserve.pm,v 1.3 2003/08/06 14:13:41 tmu Exp $
+# $FML: Freeserve.pm,v 1.4 2003/10/15 01:03:39 fukachan Exp $
 #
 
 #
@@ -19,7 +19,7 @@ use Carp;
 
 =head1 NAME
 
-Mail::Bounce::Freeserve - Freeserve error message format parser
+Mail::Bounce::Freeserve - Freeserve error message format parser.
 
 =head1 SYNOPSIS
 

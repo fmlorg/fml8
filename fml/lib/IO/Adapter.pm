@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.32 2004/04/11 12:58:38 fukachan Exp $
+# $FML: Adapter.pm,v 1.33 2004/04/27 13:31:54 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -23,7 +23,7 @@ END   {}
 
 =head1 NAME
 
-IO::Adapter - adapter for several IO interfaces
+IO::Adapter - adapter for several IO interfaces.
 
 =head1 SYNOPSIS
 
@@ -110,7 +110,7 @@ This wrapper provides IO like a usual file for the specified C<$map>.
 
    map name        descriptions or examples
    ---------------------------------------------------
-   file            file:$file_name
+   file            file:$file_name (prefix file: is optional).
                    For example, file:/var/spool/ml/elena/recipients
 
    unix.group      unix.group:$group_name
@@ -138,7 +138,7 @@ the constructor. The first argument is a map decribed above.
 
 
 # Descriptions: a constructor, which prepare IO operations for the
-#               given $map.
+#               specified $map.
 #    Arguments: OBJ($self) STR($map) HASH_REF($args)
 # Side Effects: @ISA is modified
 #               load and import sub-class
@@ -266,9 +266,8 @@ sub open
 
 =head2 touch()
 
-create a file if not exists.
-This method is avaialble for file: type.
-It is dummy for maps other than file: type.
+create a file if not exists. This method is avaialble for all types
+but dummy for maps other than file: type.
 
 =cut
 
@@ -299,7 +298,7 @@ unlock. currently, only supported for file map.
 =cut
 
 
-# Descriptions: create a file if not exists.
+# Descriptions: lock. currently, only supported for file map.
 #    Arguments: OBJ($self)
 # Side Effects: create $map if needed or possible
 # Return Value: none
@@ -314,7 +313,7 @@ sub lock
 }
 
 
-# Descriptions: create a file if not exists.
+# Descriptions: unlock. currently, only supported for file map.
 #    Arguments: OBJ($self)
 # Side Effects: create $map if needed or possible
 # Return Value: none
@@ -352,7 +351,7 @@ or
 
 =head2 delete( $address )
 
-delete lines which matches $regexp from this map.
+delete lines which match $regexp from this map.
 
 =cut
 
@@ -417,14 +416,14 @@ You can change the search behaviour by C<$args> (HASH REFERENCE).
 
 The result returned by find() is primary key of data or key and value
 e.g the whole line in the file format. find() returns the whole one
-line by default. If want options is specified in $args, return value
+line by default. If want option is specified in $args, return value
 changes. 'want' options is 'key' or 'key,value', 'key,value' by default.
 
 find() returns the result as STRING or ARRAY REFERENCE.
 You get only the first entry as string by default.
 If you specify C<all>, you get the result(s) as ARRAY REFERENCE.
 
-For example, to search mail addresses in recipient list,
+For example, to search mail addresses matching $regexp in recipient list,
 
     my $a = $self->find($regexp, { want => 'key', all => 1});
     for my $addr (@$a) {
@@ -451,7 +450,8 @@ sub find
 	return $self->md_find($regexp, $args);
     }
 
-    # XXX NO, quotemeta $regexp before call find() method.
+    # XXX NO, NOT USE quotemeta $regexp before call find() method HERE.
+    # XXX PLEASE CARE REGEXP BEFORE CALL IO::Adapter.
     # we may need quote for special address e.g. a+b@domain.
     # $regexp = quotemeta($regexp);
 
@@ -506,16 +506,20 @@ methods suitable for sequence id operation.
 
 increment map content by one and return the result (incrmented vlaue).
 
+CAUTION: now implemented only for file map.
+
 =head2 sequence_replace($seq)
 
 set the sequence value to $seq.
 that is, overwrite sequence value by number $seq.
 
+CAUTION: now implemented only for file map.
+
 =cut
 
 
 # Descriptions: increment map content by one and return the result
-#               (incrmented vlaue).
+#               (incremented vlaue).
 #    Arguments: OBJ($self)
 # Side Effects: create $map if needed or possible
 # Return Value: NUM(> 1, 0 is failure)
@@ -556,6 +560,15 @@ sub sequence_replace
 }
 
 
+=head1 UTILITY
+
+=head2
+
+=item C<error()>
+
+return the most recent error message if exists.
+
+
 =head1 DESTRUCTOR
 
 =head2 DESTROY
@@ -574,13 +587,6 @@ sub DESTROY
     undef $self;
 }
 
-
-
-=head2
-
-=item C<error()>
-
-return the most recent error message if exists.
 
 =head1 CODING STYLE
 

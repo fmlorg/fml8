@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Japanese.pm,v 1.9 2003/08/13 13:43:46 fukachan Exp $
+# $FML: Japanese.pm,v 1.10 2004/01/24 09:00:55 fukachan Exp $
 #
 
 #
@@ -24,7 +24,7 @@ my $debug = 0;
 
 =head1 NAME
 
-Mail::Bounce::Language::Japanese - Japanese dependent error message parser
+Mail::Bounce::Language::Japanese - Japanese dependent error message parser.
 
 =head1 SYNOPSIS
 

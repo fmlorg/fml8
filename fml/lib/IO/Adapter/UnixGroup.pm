@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UnixGroup.pm,v 1.20 2003/08/23 15:33:16 fukachan Exp $
+# $FML: UnixGroup.pm,v 1.21 2004/01/24 09:00:53 fukachan Exp $
 #
 
 package IO::Adapter::UnixGroup;
@@ -19,7 +19,7 @@ use IO::Adapter::Array;
 
 =head1 NAME
 
-IO::Adapter::UnixGroup - IO wrapper to read /etc/group
+IO::Adapter::UnixGroup - IO wrapper to read /etc/group.
 
 =head1 SYNOPSIS
 

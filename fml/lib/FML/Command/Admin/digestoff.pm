@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digestoff.pm,v 1.10 2004/02/15 04:38:29 fukachan Exp $
+# $FML: digestoff.pm,v 1.11 2004/04/28 04:10:36 fukachan Exp $
 #
 
 package FML::Command::Admin::digestoff;
@@ -15,7 +15,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 
 =head1 NAME
 
-FML::Command::Admin::digest - digest mode off
+FML::Command::Admin::digest - digest mode off (from digest to real time).
 
 =head1 SYNOPSIS
 
@@ -33,7 +33,7 @@ It means delivery to this address from digest to real delivery mode.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -46,14 +46,14 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
 
 
-# Descriptions: lock channel
+# Descriptions: lock channel.
 #    Arguments: none
 # Side Effects: none
 # Return Value: STR

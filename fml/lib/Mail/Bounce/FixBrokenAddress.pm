@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: FixBrokenAddress.pm,v 1.10 2004/01/02 14:42:47 fukachan Exp $
+# $FML: FixBrokenAddress.pm,v 1.11 2004/01/24 09:00:54 fukachan Exp $
 #
 
 
@@ -21,7 +21,7 @@ my $debug = 0;
 
 =head1 NAME
 
-Mail::Bounce::FixBrokenAddress - handle irregular error message
+Mail::Bounce::FixBrokenAddress - handle irregular error message.
 
 =head1 SYNOPSIS
 

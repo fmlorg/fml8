@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: on.pm,v 1.18 2004/04/28 04:10:37 fukachan Exp $
+# $FML: on.pm,v 1.19 2004/04/30 13:38:05 fukachan Exp $
 #
 
 package FML::Command::Admin::on;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::on - change delivery mode from digest to real time
+FML::Command::Admin::on - change delivery mode from digest to real time.
 
 =head1 SYNOPSIS
 
@@ -32,7 +32,7 @@ change delivery mode from digest to real time.
 =cut
 
 
-# Descriptions: constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -45,14 +45,14 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
 
 
-# Descriptions: lock channel
+# Descriptions: lock channel.
 #    Arguments: none
 # Side Effects: none
 # Return Value: STR
@@ -82,8 +82,8 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $config  = $curproc->config();
     my $cred    = $curproc->{ credential };
-    my $options = $command_args->{ options };
-    my $address = $command_args->{ command_data } || $options->[ 0 ];
+    my $options = $command_args->{ options } || [];
+    my $address = $command_args->{ command_data } || $options->[ 0 ] || '';
 
     # XXX We should always add/rewrite only $primary_*_map maps via
     # XXX command mail, CUI and GUI.
@@ -91,7 +91,7 @@ sub process
     # XXX 1) may be not writable.
     # XXX 2) ambigous and dangerous
     # XXX    since the map is under controlled by other module.
-    # XXX    for example, one of member_maps is under admin_member_maps.
+    # XXX    for example, $member_maps contains different classes.
     my $recipient_map = $config->{ primary_recipient_map };
 
     # fundamental check
@@ -144,7 +144,7 @@ sub process
 }
 
 
-# Descriptions: show cgi menu for on
+# Descriptions: show cgi menu for on.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $recipient_map
 # Return Value: none

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledDir.pm,v 1.22 2004/01/24 09:04:00 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.23 2004/02/26 04:27:48 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -18,7 +18,7 @@ $debug = 0;
 
 =head1 NAME
 
-Tie::JournaledDir - tie hash to journaled style directory cache
+Tie::JournaledDir - tie hash to journaled style directory cache.
 
 =head1 SYNOPSIS
 
@@ -38,7 +38,8 @@ names.
     /some/where/998520340
     /some/where/998520342
 
-C<Tie::JournaledFile> manipulates each file.
+C<Tie::JournaledFile> called from C<Tie::JournaledDir> manipulates
+each file.
 
 C<Tie::JournaledDir> has cache files in a directory.
 C<Tie::JournaledDir> wraps C<Tie::JournaledFile> over several files.
@@ -55,12 +56,12 @@ It enables easy automatic expiration.
 	limit => number (days),         # optional
     };
 
-you need specify C<dir> as cache dir at least.
+At least you need to specify C<dir> as the cache dir.
 
 C<unit> is optional, "day" by default.
 C<unit> is number (seconds) or keyword "day".
 
-C<limit> is number. It is the range of unit to search.
+C<limit> is number. It is the range of units to search.
 
 For example,
 
@@ -122,18 +123,19 @@ sub new
     unless ($dir) { croak("dir unspecified");}
 
     # reverse order file list to search
+    # since we need to find latest value.
     my @filelist = ();
     for (my $i = 0; $i < $limit; $i++) {
 	$filelist[ $i ] = _file_name($unit, $dir, $i);
     }
 
-    # set up object
+    # set up object.
     $me->{ '_dir' }    = $dir;
     $me->{ '_files' }  = \@filelist;
     $me->{ '_limit' }  = $limit;
     $me->{ '_expire' } = $expire;
 
-    # expire old cache files, firstly.
+    # Firstly, expire old cache files.
     expire($me);
 
     return bless $me, $type;
@@ -388,7 +390,7 @@ not
 
    KEY => VALUE
 
-which is by default.
+This behaviour is by default.
 
 =cut
 
@@ -403,8 +405,7 @@ sub get_all_values_as_hash_ref
     my $files  = $self->{ '_files' } || [];
     my $result = {};
 
-    # read files in reverse order to overwrite values by the latest one
-    # from old to new.
+    # read files in reverse order to collect all values from old to new.
     use FileHandle;
     for my $f (reverse @$files) {
 	my $obj  = new Tie::JournaledFile {
@@ -428,7 +429,7 @@ sub get_all_values_as_hash_ref
 	}
     }
 
-    # return all values assigned to the key.
+    # return all values assigned to the key as HASH_REF.
     #        { key => [ value1, value2, ... ] }.
     return $result;
 }

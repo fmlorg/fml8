@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ErrorStatus.pm,v 1.7 2003/08/23 15:33:16 fukachan Exp $
+# $FML: ErrorStatus.pm,v 1.8 2004/01/24 09:03:56 fukachan Exp $
 #
 
 package IO::Adapter::ErrorStatus;
@@ -19,7 +19,7 @@ require Exporter;
 
 =head1 NAME
 
-IO::Adapter::ErrorStatus - error handling component
+IO::Adapter::ErrorStatus - error handling component.
 
 =head1 SYNOPSIS
 

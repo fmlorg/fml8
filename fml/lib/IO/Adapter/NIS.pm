@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: NIS.pm,v 1.22 2003/08/23 15:33:16 fukachan Exp $
+# $FML: NIS.pm,v 1.23 2004/01/24 09:00:53 fukachan Exp $
 #
 
 package IO::Adapter::NIS;
@@ -19,7 +19,7 @@ use IO::Adapter::Array;
 
 =head1 NAME
 
-IO::Adapter::NIS - NIS map operations
+IO::Adapter::NIS - NIS map operations.
 
 =head1 SYNOPSIS
 
@@ -62,6 +62,7 @@ sub configure
 
     # XXX-TODO: UNIX only.
     # XXX-TODO: we call "ypmatch" but should use full-path if could.
+    # XXX-TODO: who validate $key value ?
     # emulate an array on memory
     my $key        = $me->{_name};
     my (@x)        = split(/:/, `ypmatch $key group.byname`);

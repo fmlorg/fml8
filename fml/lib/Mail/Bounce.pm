@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Bounce.pm,v 1.26 2003/08/23 04:35:44 fukachan Exp $
+# $FML: Bounce.pm,v 1.27 2004/01/24 09:03:56 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -16,7 +16,7 @@ my $debug = 0;
 
 =head1 NAME
 
-Mail::Bounce - analyze error messages
+Mail::Bounce - analyze error message.
 
 =head1 SYNOPSIS
 
@@ -86,7 +86,7 @@ returned C<$result> provides the following information:
 
 =head2 new()
 
-standard new() method.
+constructor.
 
 =cut
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledFile.pm,v 1.30 2003/10/15 01:03:41 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.31 2004/01/24 09:04:01 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-Tie::JournaledFile - hash operation for a jurnaled style log file
+Tie::JournaledFile - hash operation for a jurnaled style log file.
 
 =head1 SYNOPSIS
 

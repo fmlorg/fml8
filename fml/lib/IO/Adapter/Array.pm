@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Array.pm,v 1.34 2003/11/29 06:31:48 fukachan Exp $
+# $FML: Array.pm,v 1.35 2004/01/24 09:03:55 fukachan Exp $
 #
 
 package IO::Adapter::Array;
@@ -84,7 +84,7 @@ $flag is "r" only (read only) now.
 #                              flag => $flag
 #                  _array_reference => ARRAY_REFERENCE
 #               }
-# Side Effects: malloc @elements array
+# Side Effects: malloc @elements array.
 # Return Value: ARRAY_REF
 sub open
 {
@@ -102,7 +102,7 @@ sub open
     $self->{_elements}     = $r_array;
     $self->{_num_elements} = $#elements;
     $self->{_counter}      = 0;
-    return( @elements ? \@elements : undef );
+    return( @elements ? \@elements : [] );
 }
 
 
@@ -119,7 +119,7 @@ return the next element of the array.
 =cut
 
 
-# Descriptions: forwarded to get_next_key()
+# Descriptions: forwarded to get_next_key().
 #               XXX getline() == get_next_key() is valid in this case.
 #               XXX since this map has only key and no value.
 #    Arguments: OBJ($self) HASH_REF($args)
@@ -128,7 +128,8 @@ return the next element of the array.
 sub getline { get_next_key(@_);}
 
 
-# Descriptions: return (key, values, ... ) as ARRAY_REF
+# Descriptions: return (key, values, ... ) as ARRAY_REF.
+#               XXX no value in the case of this map.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -139,7 +140,7 @@ sub get_key_values_as_array_ref
     return [ $x ];
 }
 
-# Descriptions: return the next element of the array
+# Descriptions: return the next element of the array.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: increment the counter in the object
 # Return Value: STR(the next element)
@@ -198,6 +199,7 @@ end of IO operation. It is a dummy.
 
 =cut
 
+
 # Descriptions: echeck whether end of the array is not now.
 #    Arguments: OJB($self)
 # Side Effects: none
@@ -206,6 +208,8 @@ end of IO operation. It is a dummy.
 sub eof
 {
     my ($self) = @_;
+
+    # XXX-TODO: > ? >= ? OK?
     $self->{_counter} > $self->{_num_elements} ? 1 : 0;
 }
 

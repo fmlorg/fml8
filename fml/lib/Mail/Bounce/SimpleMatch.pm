@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SimpleMatch.pm,v 1.40 2004/01/24 09:00:54 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.41 2004/06/02 12:00:00 tmu Exp $
 #
 
 
@@ -22,7 +22,7 @@ use Mail::Bounce::Language::Japanese;
 
 =head1 NAME
 
-Mail::Bounce::SimpleMatch - simple state machine to parse error messages
+Mail::Bounce::SimpleMatch - simple state machine to parse error messages.
 
 =head1 SYNOPSIS
 

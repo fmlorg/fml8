@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digeston.pm,v 1.10 2004/02/15 04:38:29 fukachan Exp $
+# $FML: digeston.pm,v 1.11 2004/04/28 04:10:36 fukachan Exp $
 #
 
 package FML::Command::Admin::digeston;
@@ -15,7 +15,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 
 =head1 NAME
 
-FML::Command::Admin::digest - digest mode on
+FML::Command::Admin::digest - digest mode on (from real time to digest).
 
 =head1 SYNOPSIS
 
@@ -33,7 +33,7 @@ change delivery mode to this address from real to digest one.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -46,14 +46,14 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
 
 
-# Descriptions: lock channel
+# Descriptions: lock channel.
 #    Arguments: none
 # Side Effects: none
 # Return Value: STR
@@ -74,7 +74,7 @@ sub verify_syntax
 }
 
 
-# Descriptions: digest mode off/on for the specified user.
+# Descriptions: digest mode on for the specified user.
 #               change delivery mode to this address from real to digest one.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $recipient_map,$digest_recipient_maps
@@ -94,7 +94,7 @@ sub process
 }
 
 
-# Descriptions: show cgi menu for digeston
+# Descriptions: show cgi menu for digest on.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $recipient_map
 # Return Value: none

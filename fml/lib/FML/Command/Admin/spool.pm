@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: spool.pm,v 1.5 2004/03/23 04:20:46 fukachan Exp $
+# $FML: spool.pm,v 1.6 2004/03/24 00:14:09 fukachan Exp $
 #
 
 package FML::Command::Admin::spool;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::spool - small maintenance jobs on the spool directory
+FML::Command::Admin::spool - small maintenance jobs on the spool directory.
 
 =head1 SYNOPSIS
 
@@ -45,14 +45,14 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
 
 
-# Descriptions: lock channel
+# Descriptions: lock channel.
 #    Arguments: none
 # Side Effects: none
 # Return Value: STR

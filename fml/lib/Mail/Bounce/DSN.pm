@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DSN.pm,v 1.22 2003/01/26 03:23:09 fukachan Exp $
+# $FML: DSN.pm,v 1.23 2004/01/24 09:00:54 fukachan Exp $
 #
 
 
@@ -21,7 +21,7 @@ my $debug = 0;
 
 =head1 NAME
 
-Mail::Bounce::DSN - DSN error message format parser
+Mail::Bounce::DSN - DSN error message format parser.
 
 =head1 SYNOPSIS
 
@@ -113,7 +113,7 @@ sub analyze
 }
 
 
-# Descriptions: DSN parser
+# Descriptions: DSN parser.
 #               [DSN Example]
 #               Final-Recipient: rfc822; rudo@nuinui.net
 #               Action: failed
@@ -121,7 +121,7 @@ sub analyze
 #               Diagnostic-Code: X-Postfix; connect to mx.nuinui.net[10.1.1.1]:
 #                    Connection refused
 #    Arguments: OBJ($self) STR($buf) HASH_REF($result)
-# Side Effects: update $result
+# Side Effects: update $result.
 # Return Value: none
 sub _parse_dsn_format
 {

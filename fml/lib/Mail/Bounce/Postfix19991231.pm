@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix19991231.pm,v 1.22 2003/01/11 15:14:24 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.23 2004/01/24 09:03:57 fukachan Exp $
 #
 
 
@@ -20,7 +20,7 @@ my $debug = 0;
 
 =head1 NAME
 
-Mail::Bounce::Postfix19991231 - Postfix-19991231 error message format parser
+Mail::Bounce::Postfix19991231 - Postfix-19991231 error message format parser.
 
 =head1 SYNOPSIS
 

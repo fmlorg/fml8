@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: GOO.pm,v 1.10 2004/01/02 14:42:47 fukachan Exp $
+# $FML: GOO.pm,v 1.11 2004/01/24 09:03:57 fukachan Exp $
 #
 
 
@@ -16,7 +16,7 @@ use Carp;
 
 =head1 NAME
 
-Mail::Bounce::GOO - GOO error message format parser
+Mail::Bounce::GOO - GOO error message format parser.
 
 =head1 SYNOPSIS
 
