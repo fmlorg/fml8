@@ -50,8 +50,6 @@
 
 =head1	ループチェック
 
-	loop_check
-
 	MAIL_LIST != MAINTAINER
 
 
