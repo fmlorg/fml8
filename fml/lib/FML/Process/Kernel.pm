@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.156 2003/02/01 04:36:28 fukachan Exp $
+# $FML: Kernel.pm,v 1.157 2003/02/01 08:51:41 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -486,10 +486,20 @@ sub verify_sender_credential
 	LogError("cannot extract From:");
     }
 
-    # XXX-TODO: check $from should match safe address regexp.
-
     # XXX "@addrs must be empty" is valid since From: is unique.
-    unless (@addrs) {
+    if (@addrs) {
+	LogWarn("invalid From: duplicated addresses");
+	LogWarn("use $from as the sender");
+	my $i = 0;
+	for my $a ($addr, @addrs) {
+	    my $s = $a->address;
+	    ++$i;
+	    LogWarn("From[$i] $s");
+	}
+    }
+
+    # XXX-TODO: check $from should match safe address regexp.
+    if ($from) {
 	# XXX o.k. From: is proven to be valid now.
 	# XXX log it anyway
 	Log("sender: $from");
@@ -499,7 +509,8 @@ sub verify_sender_credential
 	$curproc->{'credential'}->set( 'sender', $from );
     }
     else {
-	LogError("invalid From:");
+	$curproc->stop_this_process();
+	LogError("no valid From:");
     }
 }
 
@@ -540,7 +551,7 @@ sub simple_loop_check
     if ($match) {
 	# we should stop this process ASAP.
 	$curproc->stop_this_process();
-	Log("mail loop detected for $match");
+	LogError("mail loop detected for $match");
     }
 }
 
