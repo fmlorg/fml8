@@ -7,7 +7,11 @@
 <!entity intro     SYSTEM "intro.sgml">
 <!entity install   SYSTEM "install.sgml">
 <!entity bootloader   SYSTEM "bootloader.sgml">
+<!entity programingstyle  SYSTEM "programing_style.sgml">
 <!entity reference SYSTEM "reference.sgml">
+
+
 
 <!-- ²èÁü -->
 <!entity architecture SYSTEM "architecture.gif" ndata gif>
+
