@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.33 2004/01/02 14:50:36 fukachan Exp $
+# $FML: HTMLify.pm,v 1.34 2004/01/24 15:37:03 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -72,8 +72,7 @@ sub prepare
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->resolve_ml_specific_variables();
-    my $cf_list = $curproc->get_config_files_list();
-    $curproc->load_config_files($cf_list);
+    $curproc->load_config_files();
     $curproc->fix_perl_include_path();
 
     $eval = $config->get_hook( 'fmlhtmlify_prepare_end_hook' );

@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calendar.pm,v 1.10 2004/01/02 16:08:06 fukachan Exp $
+# $FML: Calendar.pm,v 1.11 2004/01/14 13:31:28 fukachan Exp $
 #
 
 package FML::Process::Calendar;
@@ -88,8 +88,7 @@ sub prepare
     # load default configurations.
     use FML::Config;
     $curproc->{ config } = new FML::Config;
-    my $cf_list = $curproc->get_config_files_list();
-    $curproc->load_config_files($cf_list);
+    $curproc->load_config_files();
 }
 
 
