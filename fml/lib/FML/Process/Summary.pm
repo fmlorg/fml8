@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Summary.pm,v 1.1 2002/11/26 09:45:34 fukachan Exp $
+# $FML: Summary.pm,v 1.2 2002/11/26 10:30:06 fukachan Exp $
 #
 
 package FML::Process::Summary;
@@ -90,14 +90,14 @@ sub prepare
 sub verify_request
 {
     my ($curproc, $args) = @_;
-    my $argv = $curproc->command_line_argv();
-    my $len  = $#$argv + 1;
+    my $argv   = $curproc->command_line_argv();
+    my $len    = $#$argv;
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmlsummary_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
-    if (0) {
+    if ($len < 1) {
 	print STDERR "Error: missing argument(s)\n";
 	$curproc->help();
 	exit(0);
@@ -178,7 +178,7 @@ Usage: $name \$command \$ml_name [options]
 
 $name help         \$ml_name                   show this help
 
-$name list
+$name rebuild      \$ml_name                   rebuild summary file.
 
 _EOF_
 }
