@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MessageID.pm,v 1.15 2003/09/19 13:30:34 tmu Exp $
+# $FML: MessageID.pm,v 1.16 2003/11/11 10:26:55 tmu Exp $
 #
 
 package FML::Header::MessageID;
@@ -110,6 +110,7 @@ sub db_close
 =head2 get($key)
 
 get value for the key $key in message-id database.
+return '' if not found nor defined.
 
 =head2 set($key, $value)
 
@@ -127,12 +128,12 @@ sub get
     my ($self, $key) = @_;
     my $db = $self->{ _db };
 
-    # XXX-TODO: what should we do if undefined ?
     if (defined $db) {
-	return $db->{ $key };
+	return( $db->{ $key } || '' );
     }
-
-    undef;
+    else {
+	return '';
+    }
 }
 
 
