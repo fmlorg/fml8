@@ -1,6 +1,38 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/02/20
+
+   File::Sequence
+	add function _search_max_id_from_top()
+	
+   clean up commands
+	多くのコマンドを動くようにした(微修正だが:-)。
+
+	update $available_commands_for_stranger and $available_commands
+	fix path::$message_template_dir -> $ml_home_dir
+	o $guide_file
+	o $help_file
+	o $objective_file
+	o $summary_file
+	
+   FML::Process::Kernel 
+	add Reply-To::into our reply message
+
+2002/02/19
+
+   FML::Command 
+	remove require_lock() due to obsolete
+
+2002/02/18
+
+   clean up FML::Command::{User,Admin}::*
+	remove FML::Command::Utils and ErroStatus
+	we should not inherit anything as could as possible.
+
+   enhance xxx_restrictions: 
+	enable "permit_anyone" can be used in {post,command}_restrictions.
+
 2002/02/17
 
    FML::Config 
@@ -1563,4 +1595,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.51 2002/02/13 13:56:46 fukachan Exp $
+$FML: CHANGES.txt,v 1.52 2002/02/17 14:00:09 fukachan Exp $
