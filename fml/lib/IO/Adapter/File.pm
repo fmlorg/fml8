@@ -254,6 +254,7 @@ sub add
     my $wh = $self->{ _wh };
 
     if (defined $fh) {
+      FILE_IO:
 	while (<$fh>) {
 	    print $wh $_;
 	}
@@ -289,6 +290,41 @@ sub delete
 	while (<$fh>) {
 	    next FILE_IO if /$regexp/;
 	    print $wh $_;
+	}
+	close($fh);
+	$wh->close;
+    }
+    else {
+	$self->_error_reason("Error: cannot open file=$self->{ _file }");
+	return undef;
+    }
+}
+
+
+=head2 C<replace($regexp, $value)>
+
+replace lines which matches $regexp with $value.
+
+=cut
+
+sub replace
+{
+    my ($self, $regexp, $value) = @_;
+
+    $self->open("w");
+
+    my $fh = $self->{ _fh };
+    my $wh = $self->{ _wh };
+
+    if (defined $fh) {
+      FILE_IO:
+	while (<$fh>) {
+	    if (/$regexp/) {
+		print $wh $value, "\n";
+	    }
+	    else {
+		print $wh $_;
+	    }
 	}
 	close($fh);
 	$wh->close;

@@ -230,6 +230,10 @@ add $address to the specified map.
 
 delete lines which matches $regexp from this map.
 
+=head2 C<regexp( $regexp, $value )>
+
+replace lines which matches $regexp with $value.
+
 =cut
 
 
@@ -257,13 +261,31 @@ sub add
 # Return Value: none
 sub delete
 {
-    my ($self, $address) = @_;
+    my ($self, $regexp) = @_;
 
     if ($self->can('delete')) {
-	$self->SUPER::delete($address);
+	$self->SUPER::delete($regexp);
     }
     else {
 	$self->_error_reason("Error: delete() method is not supported.");
+	undef;
+    }
+}
+
+
+# Descriptions: 
+#    Arguments: $self $regexp $value
+# Side Effects: 
+# Return Value: none
+sub replace
+{
+    my ($self, $regexp, $value) = @_;
+
+    if ($self->can('replace')) {
+	$self->SUPER::replace($regexp, $value);
+    }
+    else {
+	$self->_error_reason("Error: replace() method is not supported.");
 	undef;
     }
 }
