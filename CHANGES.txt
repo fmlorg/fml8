@@ -1,6 +1,23 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/02/13
+
+   Mail::Message 
+	use module global print_mode parameter not private one within
+	object.
+
+   FML::Command::Admin::off 
+	fixed to use $config->get_as_array_ref().
+	
+   FML::Command::UserControl 
+   FML::Command::Admin::{digest,off,on,subscribe,unsubscribe}
+	user{add,del}() checks input $address.
+	nuke the corresponding TODO.
+	
+   FML::Command::Admin::check 
+	validate $ml_name existence firstly.
+
 2003/02/11
 
    switch INSTALL.sh to install.pl
@@ -4279,4 +4296,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.127 2003/01/29 14:52:29 fukachan Exp $
+$FML: CHANGES.txt,v 1.128 2003/02/11 14:31:14 fukachan Exp $
