@@ -40,6 +40,8 @@ sub add_ticket
     # out ticket system does nothing.
     unless ( FML::Header::Subject->is_reply( $subject ) ) {
 	Log( "seq: ". $config->{ ticket_sequence_file } );
+
+	# call SUPER class's FML::Ticket::System::increment_id()
 	my $id = $self->increment_id( $config->{ ticket_sequence_file } );
 	unless ($self->error) {
 	    $self->_rewrite_subject($header, $config, $id);
@@ -49,7 +51,7 @@ sub add_ticket
 	};
     }
     else {
-	Log("not reply message");
+	Log("ticket: not looks reply message, so ignored");
     }
 }
 
@@ -77,6 +79,17 @@ FML::__HERE_IS_YOUR_MODULE_NAME__.pm - what is this
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
+
+=head1 CLASS HIERARCHY
+
+        FML::Ticket::System
+                |
+                A 
+       -------------------
+       |        |        |
+    toymodel  model2    ....
+
+=head1 METHOD
 
 =head2 new
 
