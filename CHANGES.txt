@@ -1,10 +1,25 @@
 		CHANGES
 		Last Modified: $Date$
 
-2004/01/01
+2004/01/01-2004/01/04
 
 	*** 2003 年末 〜 2004 年初め オーバホールキャンペーン中 ***
 
+   clean up
+	$curproc とペアになっている $args をほとんどのクラスでは削除した。
+	$args へのアクセスは FML::Process::Utils のアクセスメソッド経由
+	のみとする。
+
+   FML::Process::Utils 
+	+set_config_files_list()
+	+append_to_config_files_list()
+	+get_config_files_list()
+	
+   FML::Digest 
+	fix lock algorithm.
+	clean up.
+	fix comments.
+	
 2003/12/31
 
    2003 年末 〜 2004 年初め オーバホールキャンペーン
@@ -5999,4 +6014,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.177 2003/12/26 14:56:45 fukachan Exp $
+$FML: CHANGES.txt,v 1.178 2004/01/04 13:40:52 fukachan Exp $
