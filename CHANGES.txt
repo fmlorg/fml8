@@ -1,7 +1,108 @@
 		CHANGES
 		Last Modified: $Date$
 
+2001/11/11
+
+   Mail::ThreadTrack::Print::Sort 
+	change cost evaluation logic (numeric now)
+	
+   Mail::ThreadTrack::Print 
+   Mail::ThreadTrack::Print::HTML Message.pm 
+	clean up summary() mode for both text and html modes.
+	print() method knows what should it do for text::html mode.
+	
+   Mail::ThreadTrack::HeaderRewrite 
+	defined $rh->{ _articles  }->{ $thread_id }
+	
+   Mail::ThreadTrack::Print 
+   Mail::ThreadTrack::Print::HTML Text.pm 
+	dynamic binding accoding to mode::text or html
+	
+   Mail::ThreadTrack 
+	change article_summary_lines to 5 by default
+	
+   FML::Process::CGI::Param 
+	define article_id, method -> action
+	
+   FML::Process::CGI::Kernel 
+	header( -charset => $charset)
+	
+   FML::CGI::ThreadTrack 
+	modified to fit FML::Process::CGI structure.
+	enable 'close' operation
+	reset button
+	
+   FML::Process::CGI::Kernel 
+	workaround::header( -target  => "ResultsWindow" ) anyway
+	
+   FML::Process::CGI::Param 
+	allow action =~ ::^[-a-z_]+$::
+	
+   FML::CGI::ThreadTrack 
+   Mail::ThreadTrack 
+   Mail::ThreadTrack::Print 
+   Mail::ThreadTrack::Print::HTML 
+	enable "show" and "change_status" to work
+	
+   FML::CGI::ThreadTrack 
+   FML::Process::{Distribute,Switch,ThreadTrack}
+   Mail::ThreadTrack 
+   Mail::ThreadTrack::Print::HTML 
+	ThreadTrack switches acconding to myname ($0).
+	threadview is view only and cannot change status.
+
+2001/11/10
+
+   loader
+   FML::Process::Switch 
+	bug fix::format $reason
+	
+   FML::Process::CGI::Kernel 
+	remove makefml issue.
+	modify run() which now executes:
+		$curproc->html_start($args);
+		$curproc->run_cgi($args);
+		$curproc->html_end($args);
+
 2001/11/08
+
+   Mail::Message::Language::Japanese::Subject 
+	nuke new(), not used
+	
+   Mail::ThreadTrack 
+	restructure hierarchy
+	clean up inheritence for further refactoring
+	modify method names
+	clean up
+	nuke some "*cost*" indicator codes
+	closed -> close for some cases
+	
+   Mail::ThreadTrack::Analyze 
+	avoid duplicated commit to articles DB { thread_id => [ id1 id2 ... ] }
+   Mail::ThreadTrack::Print::Message 
+	ignore ^= line in message summary
+	
+   Mail::Message::Date 
+	validate $in $shift_m
+	
+   Mail::ThreadTrack 
+	list_up_thread_id()::remove db_*() operation
+	
+   Mail::ThreadTrack::Analyze 
+	speculate date from header's Date:
+	
+   loader
+	least error infomation by default OR raw $@ if debug
+	
+   FML::Process::Switch 
+	least error infomation by default OR raw $@ if debug
+	
+   Mail::ThreadTrack::Print 
+	bug fix trap pattern of _valid_buf() and
+	_delete_subject_tag_like_string()
+	
+   FML::Process::CGI 
+	use FML::Process::CGI::{Kernel,Param}
 
    FML::Command 
 	defined() check for $command_args
@@ -903,4 +1004,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.31 2001/11/05 14:37:47 fukachan Exp $
+$FML: CHANGES.txt,v 1.32 2001/11/08 03:39:48 fukachan Exp $
