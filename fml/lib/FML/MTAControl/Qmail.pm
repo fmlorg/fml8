@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.7 2002/06/27 08:24:09 fukachan Exp $
+# $FML: Qmail.pm,v 1.8 2002/06/30 14:30:15 fukachan Exp $
 #
 
 package FML::MTAControl::Qmail;
@@ -196,12 +196,20 @@ sub qmail_install_virtual_map
 }
 
 
+# Descriptions: dummy
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub qmail_remove_virtual_map
 {
     0;
 }
 
 
+# Descriptions: dummy
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub qmail_update_virtual_map
 {
     0;
