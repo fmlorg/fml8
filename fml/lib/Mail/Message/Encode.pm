@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.16 2003/11/08 05:56:22 fukachan Exp $
+# $FML: Encode.pm,v 1.17 2004/01/24 09:04:00 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -17,6 +17,17 @@ use Carp;
 Mail::Message::Encode - encode/decode/charset conversion routines
 
 =head1 SYNOPSIS
+
+    use Mail::Message::Encode;
+    my $obj = new Mail::Message::Encode;
+    $str    = $obj->encode_mime_string($str, $encode, $out_code, $in_code);
+    $self->set($str);
+
+It is not recommended but if you use old style, import required function:
+
+    use Mail::Message::Encode qw(STR2EUC);
+    my $euc_string = STR2EUC($string);
+
 
 =head1 DESCRIPTION
 
@@ -79,7 +90,7 @@ sub detect_code
     my ($self, $str) = @_;
     my $lang = $self->{ _language };
 
-    # XXX-TODO: care for non Japanese.
+    # XXX Japanese includes English.
     if ($lang eq 'japanese' || $lang eq 'english') {
 	# getcode() can detect the follogin code:
 	# jis, sjis, euc, utf8, ucs2, ucs4, utf16, utf16-ge, utf16-le,
@@ -150,7 +161,7 @@ sub convert_str_ref
 	croak("convert_str_ref: invalid input data");
     }
 
-    # XXX-TODO: care for non Japanese.
+    # XXX Japanese includes English.
     if ($lang eq 'japanese' || $lang eq 'english') {
 	# 1. if the encoding for the given $str_ref is unknown, return ASAP.
 	unless (defined $in_code) {
