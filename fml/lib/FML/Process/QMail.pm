@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QMail.pm,v 1.11 2001/12/23 11:39:45 fukachan Exp $
+# $FML: QMail.pm,v 1.12 2002/06/01 05:02:33 fukachan Exp $
 #
 
 package FML::Process::QMail;
@@ -109,7 +109,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::QMail appeared in fml5 mailing list driver package.
+FML::Process::QMail first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

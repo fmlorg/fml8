@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Array.pm,v 1.23 2002/02/17 03:13:50 fukachan Exp $
+# $FML: Array.pm,v 1.24 2002/06/01 05:02:34 fukachan Exp $
 #
 
 package IO::Adapter::Array;
@@ -233,7 +233,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-IO::Adapter::Array appeared in fml5 mailing list driver package.
+IO::Adapter::Array first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

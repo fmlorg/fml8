@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.4 2002/08/13 04:53:32 fukachan Exp $
+# $FML: Encode.pm,v 1.5 2002/08/16 15:42:07 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -466,7 +466,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::Message::Encode appeared in fml5 mailing list driver package.
+Mail::Message::Encode first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.15 2002/04/10 09:57:25 fukachan Exp $
+# $FML: Queue.pm,v 1.16 2002/07/02 12:52:47 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -500,7 +500,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::Delivery::Queue appeared in fml5 mailing list driver package.
+Mail::Delivery::Queue first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

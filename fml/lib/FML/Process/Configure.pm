@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.42 2002/07/02 12:40:18 fukachan Exp $
+# $FML: Configure.pm,v 1.43 2002/08/14 03:31:56 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -275,7 +275,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::Configure appeared in fml5 mailing list driver package.
+FML::Process::Configure first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.6 2001/12/23 11:37:07 fukachan Exp $
+# $FML: QueueManager.pm,v 1.7 2001/12/23 11:39:45 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -151,7 +151,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::QueueManager appeared in fml5 mailing list driver package.
+FML::Process::QueueManager first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

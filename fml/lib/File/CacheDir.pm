@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CacheDir.pm,v 1.16 2002/07/02 12:50:16 fukachan Exp $
+# $FML: CacheDir.pm,v 1.17 2002/08/03 13:13:25 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -380,7 +380,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-File::CacheDir appeared in fml5 mailing list driver package.
+File::CacheDir first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

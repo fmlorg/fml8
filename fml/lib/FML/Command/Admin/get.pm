@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.13 2002/04/07 12:08:32 fukachan Exp $
+# $FML: get.pm,v 1.14 2002/07/02 12:09:23 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
@@ -112,7 +112,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::Admin::get appeared in fml5 mailing list driver package.
+FML::Command::Admin::get first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

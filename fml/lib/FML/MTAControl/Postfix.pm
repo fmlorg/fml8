@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.8 2002/07/17 09:34:20 fukachan Exp $
+# $FML: Postfix.pm,v 1.9 2002/08/13 14:36:43 fukachan Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -413,7 +413,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::MTAControl appeared in fml5 mailing list driver package.
+FML::MTAControl first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

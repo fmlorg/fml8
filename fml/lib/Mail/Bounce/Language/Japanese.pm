@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Japanese.pm,v 1.4 2001/12/24 02:26:33 fukachan Exp $
+# $FML: Japanese.pm,v 1.5 2002/02/01 12:04:01 fukachan Exp $
 #
 
 #
@@ -118,7 +118,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::Bounce::Language::Japanese appeared in fml5 mailing list driver package.
+Mail::Bounce::Language::Japanese first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: byepriv.pm,v 1.1 2002/03/19 11:34:37 fukachan Exp $
+# $FML: byepriv.pm,v 1.2 2002/04/03 11:32:59 fukachan Exp $
 #
 
 package FML::Command::Admin::byepriv;
@@ -52,7 +52,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::Admin::bye appeared in fml5 mailing list driver package.
+FML::Command::Admin::bye first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

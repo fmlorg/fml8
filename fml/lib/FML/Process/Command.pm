@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.72 2002/08/14 03:31:55 fukachan Exp $
+# $FML: Command.pm,v 1.73 2002/08/19 12:41:01 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -831,7 +831,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::Command appeared in fml5 mailing list driver package.
+FML::Process::Command first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Param.pm,v 1.15 2002/04/27 07:24:27 fukachan Exp $
+# $FML: Param.pm,v 1.16 2002/07/02 04:00:52 fukachan Exp $
 #
 
 package FML::Process::CGI::Param;
@@ -134,7 +134,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::CGI::Param appeared in fml5 mailing list driver package.
+FML::Process::CGI::Param first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

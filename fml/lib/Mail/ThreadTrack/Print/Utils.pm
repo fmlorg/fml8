@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.2 2001/12/22 09:21:21 fukachan Exp $
+# $FML: Utils.pm,v 1.3 2002/01/13 14:51:26 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Utils;
@@ -105,7 +105,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::ThreadTrack::Print::Utils appeared in fml5 mailing list driver package.
+Mail::ThreadTrack::Print::Utils first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

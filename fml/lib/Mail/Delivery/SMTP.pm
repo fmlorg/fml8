@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.16 2002/07/23 13:03:14 fukachan Exp $
+# $FML: SMTP.pm,v 1.17 2002/07/31 13:02:10 fukachan Exp $
 #
 
 
@@ -852,7 +852,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::Delivery::SMTP appeared in fml5 mailing list driver package.
+Mail::Delivery::SMTP first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.18 2002/07/24 13:01:40 fukachan Exp $
+# $FML: DBI.pm,v 1.19 2002/08/03 13:13:27 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -393,7 +393,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-IO::Adapter::Array appeared in fml5 mailing list driver package.
+IO::Adapter::Array first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

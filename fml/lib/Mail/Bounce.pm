@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Bounce.pm,v 1.19 2002/01/16 13:43:21 fukachan Exp $
+# $FML: Bounce.pm,v 1.20 2002/02/01 12:03:59 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -332,7 +332,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::Bounce appeared in fml5 mailing list driver package.
+Mail::Bounce first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

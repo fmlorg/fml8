@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: MySQL.pm,v 1.20 2002/02/01 12:03:59 fukachan Exp $
+# $FML: MySQL.pm,v 1.21 2002/07/23 13:06:36 fukachan Exp $
 #
 
 
@@ -192,7 +192,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-IO::Adapter::File appeared in fml5 mailing list driver package.
+IO::Adapter::File first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

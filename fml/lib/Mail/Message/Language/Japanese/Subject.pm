@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.7 2002/04/10 09:57:25 fukachan Exp $
+# $FML: Subject.pm,v 1.8 2002/07/02 12:55:10 fukachan Exp $
 #
 
 
@@ -147,7 +147,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 =head1 HISTORY
 
 Mail::Message::Language::Japanese::Subject
-appeared in fml5 mailing list driver package.
+first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

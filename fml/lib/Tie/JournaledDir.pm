@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledDir.pm,v 1.13 2002/08/07 00:08:02 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.14 2002/08/07 14:37:24 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -384,7 +384,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Tie::JournaledDir appeared in fml5 mailing list driver package.
+Tie::JournaledDir first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

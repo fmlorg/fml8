@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.93 2002/08/19 14:20:04 fukachan Exp $
+# $FML: Distribute.pm,v 1.94 2002/09/02 03:31:43 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -551,7 +551,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::Distribute appeared in fml5 mailing list driver package.
+FML::Process::Distribute first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: deny.pm,v 1.3 2002/02/18 14:14:52 fukachan Exp $
+# $FML: deny.pm,v 1.4 2002/04/06 01:32:21 fukachan Exp $
 #
 
 package FML::Command::User::deny;
@@ -80,7 +80,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::User::deny appeared in fml5 mailing list driver package.
+FML::Command::User::deny first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ContentCheck.pm,v 1.8 2002/05/11 13:55:23 tmu Exp $
+# $FML: ContentCheck.pm,v 1.9 2002/07/02 03:56:38 fukachan Exp $
 #
 
 package FML::Filter::ContentCheck;
@@ -272,7 +272,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Filter::ContentCheck appeared in fml5 mailing list driver package.
+FML::Filter::ContentCheck first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

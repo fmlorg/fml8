@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.21 2002/07/02 03:59:19 fukachan Exp $
+# $FML: HTMLify.pm,v 1.22 2002/08/14 03:31:56 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -197,7 +197,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::Kernel appeared in fml5 mailing list driver package.
+FML::Process::Kernel first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

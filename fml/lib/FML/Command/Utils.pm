@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.2 2001/12/22 16:10:50 fukachan Exp $
+# $FML: Utils.pm,v 1.3 2001/12/23 03:50:26 fukachan Exp $
 #
 
 package FML::Command::Utils;
@@ -53,7 +53,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::Utils appeared in fml5 mailing list driver package.
+FML::Command::Utils first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: SimpleLock.pm,v 1.11 2002/01/13 06:59:50 fukachan Exp $
+# $FML: SimpleLock.pm,v 1.12 2002/01/13 15:46:52 fukachan Exp $
 #
 
 package File::SimpleLock;
@@ -166,7 +166,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-File::SimpleLock appeared in fml5 mailing list driver package.
+File::SimpleLock first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

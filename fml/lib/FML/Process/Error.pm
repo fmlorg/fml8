@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.20 2002/08/15 08:04:41 fukachan Exp $
+# $FML: Error.pm,v 1.21 2002/08/19 12:38:15 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -289,7 +289,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::Error appeared in fml5 mailing list driver package.
+FML::Process::Error first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

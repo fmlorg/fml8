@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.41 2002/07/19 03:13:03 fukachan Exp $
+# $FML: Kernel.pm,v 1.42 2002/08/14 03:31:58 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -731,7 +731,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::CGI::Kernel appeared in fml5 mailing list driver package.
+FML::Process::CGI::Kernel first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

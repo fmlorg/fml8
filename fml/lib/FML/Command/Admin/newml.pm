@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.48 2002/07/28 03:30:46 fukachan Exp $
+# $FML: newml.pm,v 1.49 2002/08/28 15:07:07 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -471,7 +471,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::Admin::newml appeared in fml5 mailing list driver package.
+FML::Command::Admin::newml first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: add.pm,v 1.5 2002/02/18 14:24:11 fukachan Exp $
+# $FML: add.pm,v 1.6 2002/04/03 11:32:58 fukachan Exp $
 #
 
 package FML::Command::Admin::add;
@@ -52,7 +52,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::Admin::add appeared in fml5 mailing list driver package.
+FML::Command::Admin::add first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.15 2002/03/30 11:08:35 fukachan Exp $
+# $FML: subscribe.pm,v 1.16 2002/04/03 11:32:59 fukachan Exp $
 #
 
 package FML::Command::Admin::subscribe;
@@ -121,7 +121,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::Admin::subscribe appeared in fml5 mailing list driver package.
+FML::Command::Admin::subscribe first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

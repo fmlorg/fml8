@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Checksum.pm,v 1.2 2002/04/11 23:15:26 fukachan Exp $
+# $FML: Checksum.pm,v 1.3 2002/04/28 13:14:56 fukachan Exp $
 #
 
 package Mail::Message::Checksum;
@@ -261,7 +261,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::Message::Checksum appeared in fml5 mailing list driver package.
+Mail::Message::Checksum first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 Algorithm used here is based on NetBSD cksum library (C program).

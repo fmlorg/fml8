@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.12 2002/06/25 07:48:27 fukachan Exp $
+# $FML: Base.pm,v 1.13 2002/07/02 04:01:45 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -137,7 +137,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::Configure appeared in fml5 mailing list driver package.
+FML::Process::Configure first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

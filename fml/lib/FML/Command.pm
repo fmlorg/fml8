@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.30 2002/07/18 23:16:06 fukachan Exp $
+# $FML: Command.pm,v 1.31 2002/08/03 13:13:18 fukachan Exp $
 #
 
 package FML::Command;
@@ -216,7 +216,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command appeared in fml5 mailing list driver package.
+FML::Command first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.6 2002/05/27 11:20:02 fukachan Exp $
+# $FML: Utils.pm,v 1.7 2002/06/01 05:09:28 fukachan Exp $
 #
 
 package Mail::Delivery::Utils;
@@ -398,7 +398,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::Delivery::Utils appeared in fml5 mailing list driver package.
+Mail::Delivery::Utils first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

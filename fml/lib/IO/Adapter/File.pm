@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.39 2002/08/21 14:31:05 fukachan Exp $
+# $FML: File.pm,v 1.40 2002/08/26 03:39:58 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -524,7 +524,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-IO::Adapter::File appeared in fml5 mailing list driver package.
+IO::Adapter::File first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

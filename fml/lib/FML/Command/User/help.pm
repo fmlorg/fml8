@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: help.pm,v 1.11 2002/02/18 14:14:52 fukachan Exp $
+# $FML: help.pm,v 1.12 2002/04/06 01:32:21 fukachan Exp $
 #
 
 package FML::Command::User::help;
@@ -81,7 +81,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::User::help appeared in fml5 mailing list driver package.
+FML::Command::User::help first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DSN.pm,v 1.16 2002/01/16 13:43:21 fukachan Exp $
+# $FML: DSN.pm,v 1.17 2002/02/01 12:04:00 fukachan Exp $
 #
 
 
@@ -172,7 +172,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::Bounce::DSN appeared in fml5 mailing list driver package.
+Mail::Bounce::DSN first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

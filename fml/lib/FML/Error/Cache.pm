@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.2 2002/08/07 15:06:58 fukachan Exp $
+# $FML: Cache.pm,v 1.3 2002/08/16 00:59:59 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -184,7 +184,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Error::Cache appeared in fml5 mailing list driver package.
+FML::Error::Cache first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

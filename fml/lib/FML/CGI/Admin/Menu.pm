@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.19 2002/06/30 14:30:14 fukachan Exp $
+# $FML: Menu.pm,v 1.20 2002/07/02 12:00:03 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -276,7 +276,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::CGI::Admin::Menu appeared in fml5 mailing list driver package.
+FML::CGI::Admin::Menu first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

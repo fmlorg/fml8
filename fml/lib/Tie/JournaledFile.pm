@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledFile.pm,v 1.20 2002/08/03 13:13:29 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.21 2002/08/07 14:36:37 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -400,7 +400,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Tie::JournaledFile appeared in fml5 mailing list driver package.
+Tie::JournaledFile first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix19991231.pm,v 1.17 2002/05/21 08:37:16 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.18 2002/06/30 14:27:49 fukachan Exp $
 #
 
 
@@ -172,7 +172,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::Bounce::Postfix19991231 appeared in fml5 mailing list driver package.
+Mail::Bounce::Postfix19991231 first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

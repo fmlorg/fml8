@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: deladmin.pm,v 1.1 2002/07/13 09:45:41 fukachan Exp $
+# $FML: deladmin.pm,v 1.2 2002/07/26 00:40:10 fukachan Exp $
 #
 
 package FML::Command::Admin::deladmin;
@@ -122,7 +122,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::Admin::deladmin appeared in fml5 mailing list driver package.
+FML::Command::Admin::deladmin first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

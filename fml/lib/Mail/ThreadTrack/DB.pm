@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.25 2002/03/31 01:59:00 fukachan Exp $
+# $FML: DB.pm,v 1.26 2002/03/31 02:25:44 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -301,7 +301,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::ThreadTrack::DB appeared in fml5 mailing list driver package.
+Mail::ThreadTrack::DB first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.20 2002/07/31 13:00:19 fukachan Exp $
+# $FML: Log.pm,v 1.21 2002/09/11 15:25:27 fukachan Exp $
 #
 
 package FML::Log;
@@ -194,7 +194,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Log appeared in fml5 mailing list driver package.
+FML::Log first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

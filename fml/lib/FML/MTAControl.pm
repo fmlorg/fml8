@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MTAControl.pm,v 1.10 2002/07/12 15:06:33 fukachan Exp $
+# $FML: MTAControl.pm,v 1.11 2002/08/03 13:13:19 fukachan Exp $
 #
 
 package FML::MTAControl;
@@ -306,7 +306,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::MTAControl appeared in fml5 mailing list driver package.
+FML::MTAControl first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

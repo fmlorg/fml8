@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: BodyCheck.pm,v 1.21 2002/07/15 15:27:14 fukachan Exp $
+# $FML: BodyCheck.pm,v 1.22 2002/08/16 15:59:19 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -549,7 +549,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Filter::BodyCheck appeared in fml5 mailing list driver package.
+FML::Filter::BodyCheck first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: remove.pm,v 1.7 2002/02/20 14:10:38 fukachan Exp $
+# $FML: remove.pm,v 1.8 2002/04/03 11:33:00 fukachan Exp $
 #
 
 package FML::Command::User::remove;
@@ -53,7 +53,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::User::remove appeared in fml5 mailing list driver package.
+FML::Command::User::remove first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

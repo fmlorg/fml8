@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: ErrorStatus.pm,v 1.3 2002/06/01 03:29:09 fukachan Exp $
 #
 
 package IO::Adapter::ErrorStatus;
@@ -118,7 +118,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-IO::Adapter::ErrorStatus appeared in fml5 mailing list driver package.
+IO::Adapter::ErrorStatus first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

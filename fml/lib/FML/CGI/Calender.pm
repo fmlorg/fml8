@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Calender.pm,v 1.3 2002/04/12 13:56:04 fukachan Exp $
+# $FML: Calender.pm,v 1.4 2002/07/02 11:57:38 fukachan Exp $
 #
 
 package FML::CGI::Calender;
@@ -164,7 +164,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::CGI::Calender appeared in fml5 mailing list driver package.
+FML::CGI::Calender first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

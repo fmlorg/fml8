@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: CGI.pm,v 1.5 2002/04/06 02:42:39 fukachan Exp $
+# $FML: CGI.pm,v 1.6 2002/07/02 04:01:11 fukachan Exp $
 #
 
 package FML::Restriction::CGI;
@@ -121,7 +121,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::Configure appeared in fml5 mailing list driver package.
+FML::Process::Configure first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

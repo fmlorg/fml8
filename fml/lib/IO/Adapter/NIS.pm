@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: NIS.pm,v 1.16 2001/12/22 09:21:13 fukachan Exp $
+# $FML: NIS.pm,v 1.17 2001/12/24 07:40:57 fukachan Exp $
 #
 
 package IO::Adapter::NIS;
@@ -85,7 +85,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-IO::Adapter::NIS appeared in fml5 mailing list driver package.
+IO::Adapter::NIS first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

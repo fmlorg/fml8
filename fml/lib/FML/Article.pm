@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.43 2002/07/31 13:22:01 fukachan Exp $
+# $FML: Article.pm,v 1.44 2002/09/06 04:13:11 fukachan Exp $
 #
 
 package FML::Article;
@@ -336,7 +336,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Article appeared in fml5 mailing list driver package.
+FML::Article first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

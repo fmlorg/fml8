@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Flow.pm,v 1.15 2002/04/27 05:25:02 fukachan Exp $
+# $FML: Flow.pm,v 1.16 2002/07/02 03:59:06 fukachan Exp $
 #
 
 package FML::Process::Flow;
@@ -114,7 +114,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::Flow appeared in fml5 mailing list driver package.
+FML::Process::Flow first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

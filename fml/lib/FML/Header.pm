@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.46 2002/07/31 12:58:21 fukachan Exp $
+# $FML: Header.pm,v 1.47 2002/07/31 13:22:02 fukachan Exp $
 #
 
 package FML::Header;
@@ -620,7 +620,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Header appeared in fml5 mailing list driver package.
+FML::Header first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

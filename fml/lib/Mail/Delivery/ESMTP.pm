@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ESMTP.pm,v 1.5 2001/12/26 02:48:50 fukachan Exp $
+# $FML: ESMTP.pm,v 1.6 2002/02/17 05:43:43 fukachan Exp $
 #
 
 package Mail::Delivery::ESMTP;
@@ -58,7 +58,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::Delivery::ESMTP appeared in fml5 mailing list driver package.
+Mail::Delivery::ESMTP first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

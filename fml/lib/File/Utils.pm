@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.15 2002/07/25 11:34:02 fukachan Exp $
+# $FML: Utils.pm,v 1.16 2002/08/03 13:13:25 fukachan Exp $
 #
 
 package File::Utils;
@@ -260,7 +260,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-File::Utils appeared in fml5 mailing list driver package.
+File::Utils first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

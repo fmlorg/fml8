@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DirUtils.pm,v 1.6 2002/07/02 12:03:41 fukachan Exp $
+# $FML: DirUtils.pm,v 1.7 2002/08/03 13:13:21 fukachan Exp $
 #
 
 package FML::Command::DirUtils;
@@ -118,7 +118,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::DirUtils appeared in fml5 mailing list driver package.
+FML::Command::DirUtils first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

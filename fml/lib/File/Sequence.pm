@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.24 2002/07/02 12:51:39 fukachan Exp $
+# $FML: Sequence.pm,v 1.25 2002/07/25 11:34:02 fukachan Exp $
 #
 
 package File::Sequence;
@@ -347,7 +347,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-File::Sequence appeared in fml5 mailing list driver package.
+File::Sequence first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

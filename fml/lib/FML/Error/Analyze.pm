@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.3 2002/08/17 02:38:37 fukachan Exp $
+# $FML: Analyze.pm,v 1.4 2002/08/26 03:51:52 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -168,7 +168,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Error::Analyze appeared in fml5 mailing list driver package.
+FML::Error::Analyze first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

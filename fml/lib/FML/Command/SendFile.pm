@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.20 2002/08/19 13:58:43 fukachan Exp $
+# $FML: SendFile.pm,v 1.21 2002/08/19 14:39:00 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -221,7 +221,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::SendFile appeared in fml5 mailing list driver package.
+FML::Command::SendFile first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

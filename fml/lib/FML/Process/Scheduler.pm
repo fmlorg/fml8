@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Scheduler.pm,v 1.15 2002/08/03 13:13:24 fukachan Exp $
+# $FML: Scheduler.pm,v 1.16 2002/08/07 14:32:45 fukachan Exp $
 #
 
 package FML::Process::Scheduler;
@@ -84,7 +84,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::Scheduler appeared in fml5 mailing list driver package.
+FML::Process::Scheduler first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

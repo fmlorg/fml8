@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: objective.pm,v 1.3 2002/02/18 14:14:53 fukachan Exp $
+# $FML: objective.pm,v 1.4 2002/04/06 01:32:22 fukachan Exp $
 #
 
 package FML::Command::User::objective;
@@ -80,7 +80,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::User::objective appeared in fml5 mailing list driver package.
+FML::Command::User::objective first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

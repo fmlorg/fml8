@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.72 2002/06/30 14:30:16 fukachan Exp $
+# $FML: Switch.pm,v 1.73 2002/07/02 12:47:51 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -478,7 +478,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::Switch appeared in fml5 mailing list driver package.
+FML::Process::Switch first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

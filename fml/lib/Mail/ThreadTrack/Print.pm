@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Print.pm,v 1.23 2002/03/31 02:25:44 fukachan Exp $
+# $FML: Print.pm,v 1.24 2002/07/02 11:51:15 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -404,7 +404,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::ThreadTrack::Print appeared in fml5 mailing list driver package.
+Mail::ThreadTrack::Print first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

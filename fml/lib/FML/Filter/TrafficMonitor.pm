@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: TrafficMonitor.pm,v 1.5 2002/04/20 11:22:09 fukachan Exp $
+# $FML: TrafficMonitor.pm,v 1.6 2002/04/27 05:25:02 fukachan Exp $
 #
 
 package FML::Filter::TrafficMonitor;
@@ -84,7 +84,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Filter::TrafficMonitor appeared in fml5 mailing list driver package.
+FML::Filter::TrafficMonitor first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ErrorStatus.pm,v 1.2 2001/12/22 09:21:00 fukachan Exp $
+# $FML: ErrorStatus.pm,v 1.3 2002/06/01 03:29:10 fukachan Exp $
 #
 
 package ErrorStatus;
@@ -118,7 +118,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-ErrorStatus appeared in fml5 mailing list driver package.
+ErrorStatus first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

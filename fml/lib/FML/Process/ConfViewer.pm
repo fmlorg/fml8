@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.14 2002/07/02 03:58:33 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.15 2002/08/14 03:31:55 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -241,7 +241,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::ConfViewer appeared in fml5 mailing list driver package.
+FML::Process::ConfViewer first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

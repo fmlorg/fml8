@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.11 2002/06/01 05:02:34 fukachan Exp $
+# $FML: Date.pm,v 1.12 2002/07/02 12:53:11 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -420,7 +420,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::Message::Date appeared in fml5 mailing list driver package.
+Mail::Message::Date first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 C<date_to_unixtime> is imported from fml 4.0-current libmti.pl.

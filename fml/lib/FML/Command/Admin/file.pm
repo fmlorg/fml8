@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: file.pm,v 1.3 2002/07/02 12:08:52 fukachan Exp $
+# $FML: file.pm,v 1.4 2002/07/17 09:32:51 fukachan Exp $
 #
 
 package FML::Command::Admin::file;
@@ -125,7 +125,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::Admin::log appeared in fml5 mailing list driver package.
+FML::Command::Admin::log first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

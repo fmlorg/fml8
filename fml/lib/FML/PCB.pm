@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: PCB.pm,v 1.9 2001/12/22 14:27:28 fukachan Exp $
+# $FML: PCB.pm,v 1.10 2001/12/22 14:40:34 fukachan Exp $
 #
 
 package FML::PCB;
@@ -143,7 +143,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::PCB appeared in fml5 mailing list driver package.
+FML::PCB first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calender.pm,v 1.6 2002/07/02 03:58:06 fukachan Exp $
+# $FML: Calender.pm,v 1.7 2002/08/03 13:13:23 fukachan Exp $
 #
 
 package FML::Process::Calender;
@@ -192,7 +192,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::Calender appeared in fml5 mailing list driver package.
+FML::Process::Calender first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 C<FML::Process::Scheduler> is renamed to C<FML::Process::Calender>.

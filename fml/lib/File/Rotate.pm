@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Rotate.pm,v 1.9 2002/01/13 05:57:40 fukachan Exp $
+# $FML: Rotate.pm,v 1.10 2002/01/13 06:59:50 fukachan Exp $
 #
 
 package File::Rotate;
@@ -190,7 +190,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-File::Rotate appeared in fml5 mailing list driver package.
+File::Rotate first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.12 2002/07/23 13:03:11 fukachan Exp $
+# $FML: Mailer.pm,v 1.13 2002/08/03 13:13:19 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -212,7 +212,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Mailer appeared in fml5 mailing list driver package.
+FML::Mailer first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

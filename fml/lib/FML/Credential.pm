@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.32 2002/08/26 03:40:44 fukachan Exp $
+# $FML: Credential.pm,v 1.33 2002/08/26 05:52:06 fukachan Exp $
 #
 
 package FML::Credential;
@@ -510,7 +510,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Credential appeared in fml5 mailing list driver package.
+FML::Credential first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

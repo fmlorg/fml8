@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.69 2002/08/03 13:13:18 fukachan Exp $
+# $FML: Config.pm,v 1.70 2002/08/07 00:09:35 fukachan Exp $
 #
 
 package FML::Config;
@@ -1159,7 +1159,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Article appeared in fml5 mailing list driver package.
+FML::Article first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

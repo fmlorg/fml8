@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.18 2002/07/02 03:58:49 fukachan Exp $
+# $FML: DocViewer.pm,v 1.19 2002/08/14 03:31:56 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -235,7 +235,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::DocViewer appeared in fml5 mailing list driver package.
+FML::Process::DocViewer first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.4 2002/08/15 04:21:52 fukachan Exp $
+# $FML: Error.pm,v 1.5 2002/08/16 00:59:06 fukachan Exp $
 #
 
 package FML::Error;
@@ -186,7 +186,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Error appeared in fml5 mailing list driver package.
+FML::Error first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

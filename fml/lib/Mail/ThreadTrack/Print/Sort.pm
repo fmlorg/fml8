@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sort.pm,v 1.5 2001/12/22 09:21:21 fukachan Exp $
+# $FML: Sort.pm,v 1.6 2002/01/13 14:51:26 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Sort;
@@ -111,7 +111,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::ThreadTrack::Print::Sort appeared in fml5 mailing list driver package.
+Mail::ThreadTrack::Print::Sort first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Confirm.pm,v 1.3 2001/12/22 09:21:01 fukachan Exp $
+# $FML: Confirm.pm,v 1.4 2001/12/22 16:08:58 fukachan Exp $
 #
 
 package FML::Confirm;
@@ -285,7 +285,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Confirm appeared in fml5 mailing list driver package.
+FML::Confirm first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

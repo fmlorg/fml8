@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTML.pm,v 1.10 2002/03/31 01:59:01 fukachan Exp $
+# $FML: HTML.pm,v 1.11 2002/03/31 02:25:45 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::HTML;
@@ -262,7 +262,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::ThreadTrack::Print::HTML appeared in fml5 mailing list driver package.
+Mail::ThreadTrack::Print::HTML first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

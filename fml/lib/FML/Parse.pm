@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Parse.pm,v 1.24 2002/04/26 00:25:25 fukachan Exp $
+# $FML: Parse.pm,v 1.25 2002/07/02 03:54:49 fukachan Exp $
 #
 
 package FML::Parse;
@@ -105,7 +105,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Parse appeared in fml5 mailing list driver package.
+FML::Parse first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

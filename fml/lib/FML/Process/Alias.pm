@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Alias.pm,v 1.2 2002/06/27 08:25:49 fukachan Exp $
+# $FML: Alias.pm,v 1.3 2002/08/14 03:31:55 fukachan Exp $
 #
 
 package FML::Process::Alias;
@@ -253,7 +253,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::Alias appeared in fml5 mailing list driver package.
+FML::Process::Alias first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.8 2002/04/10 04:30:00 fukachan Exp $
+# $FML: Filter.pm,v 1.9 2002/06/01 14:53:38 fukachan Exp $
 #
 
 package FML::Filter;
@@ -151,7 +151,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Filter appeared in fml5 mailing list driver package.
+FML::Filter first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

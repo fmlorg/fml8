@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.40 2002/09/02 03:31:44 fukachan Exp $
+# $FML: Utils.pm,v 1.41 2002/09/06 04:13:25 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -935,7 +935,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::Utils appeared in fml5 mailing list driver package.
+FML::Process::Utils first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

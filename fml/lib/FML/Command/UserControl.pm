@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.16 2002/08/03 13:13:21 fukachan Exp $
+# $FML: UserControl.pm,v 1.17 2002/08/08 03:09:46 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -192,7 +192,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::UserControl appeared in fml5 mailing list driver package.
+FML::Command::UserControl first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

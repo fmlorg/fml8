@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.4 2002/07/18 23:14:12 fukachan Exp $
+# $FML: Command.pm,v 1.5 2002/07/18 23:47:35 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -100,7 +100,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Restriction::Command appeared in fml5 mailing list driver package.
+FML::Restriction::Command first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

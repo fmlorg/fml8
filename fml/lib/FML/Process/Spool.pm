@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.7 2002/06/30 01:23:55 fukachan Exp $
+# $FML: Spool.pm,v 1.8 2002/08/14 03:31:57 fukachan Exp $
 #
 
 package FML::Process::Spool;
@@ -350,7 +350,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::Spool appeared in fml5 mailing list driver package.
+FML::Process::Spool first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

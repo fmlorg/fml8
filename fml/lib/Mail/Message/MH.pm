@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #
-# $FML: MH.pm,v 1.7 2002/07/17 12:08:46 fukachan Exp $
+# $FML: MH.pm,v 1.8 2002/07/17 12:23:29 fukachan Exp $
 #
 
 package Mail::Message::MH;
@@ -149,7 +149,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::Message::MH appeared in fml5 mailing list driver package.
+Mail::Message::MH first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

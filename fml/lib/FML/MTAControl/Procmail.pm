@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Procmail.pm,v 1.1 2002/07/12 15:06:32 fukachan Exp $
+# $FML: Procmail.pm,v 1.2 2002/07/17 09:33:46 fukachan Exp $
 #
 
 package FML::MTAControl::Procmail;
@@ -290,7 +290,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::MTAControl appeared in fml5 mailing list driver package.
+FML::MTAControl first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.11 2002/04/06 14:46:27 fukachan Exp $
+# $FML: chaddr.pm,v 1.12 2002/08/08 03:09:47 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -130,7 +130,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::User::chaddr appeared in fml5 mailing list driver package.
+FML::Command::User::chaddr first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

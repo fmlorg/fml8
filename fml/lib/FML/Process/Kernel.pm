@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.133 2002/08/26 05:56:36 fukachan Exp $
+# $FML: Kernel.pm,v 1.134 2002/08/28 05:52:35 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1905,7 +1905,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::Kernel appeared in fml5 mailing list driver package.
+FML::Process::Kernel first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

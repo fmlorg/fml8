@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.10 2002/07/11 15:05:49 fukachan Exp $
+# $FML: Qmail.pm,v 1.11 2002/07/12 15:03:27 fukachan Exp $
 #
 
 package FML::MTAControl::Qmail;
@@ -254,7 +254,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::MTAControl appeared in fml5 mailing list driver package.
+FML::MTAControl first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

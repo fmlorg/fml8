@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Delivery.pm,v 1.4 2001/12/22 09:21:14 fukachan Exp $
+# $FML: Delivery.pm,v 1.5 2001/12/26 02:48:49 fukachan Exp $
 #
 
 package Mail::Delivery;
@@ -142,7 +142,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::Delivery appeared in fml5 mailing list driver package.
+Mail::Delivery first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

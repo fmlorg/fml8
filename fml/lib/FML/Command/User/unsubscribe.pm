@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.12 2002/04/13 13:51:46 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.13 2002/08/08 03:09:47 fukachan Exp $
 #
 
 package FML::Command::User::unsubscribe;
@@ -115,7 +115,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::User::unsubscribe appeared in fml5 mailing list driver package.
+FML::Command::User::unsubscribe first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

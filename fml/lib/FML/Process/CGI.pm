@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CGI.pm,v 1.19 2001/11/08 15:36:21 fukachan Exp $
+# $FML: CGI.pm,v 1.20 2001/12/22 09:21:08 fukachan Exp $
 #
 
 package FML::Process::CGI;
@@ -47,7 +47,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::CGI appeared in fml5 mailing list driver package.
+FML::Process::CGI first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: on.pm,v 1.1 2002/07/22 15:39:55 tmu Exp $
+# $FML: on.pm,v 1.2 2002/08/08 03:09:47 fukachan Exp $
 #
 
 package FML::Command::User::on;
@@ -126,7 +126,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::User::on appeared in fml5 mailing list driver package.
+FML::Command::User::on first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: password.pm,v 1.1 2002/03/23 14:24:38 fukachan Exp $
+# $FML: password.pm,v 1.2 2002/03/30 11:08:35 fukachan Exp $
 #
 
 package FML::Command::Admin::password;
@@ -97,7 +97,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::Admin::password appeared in fml5 mailing list driver package.
+FML::Command::Admin::password first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

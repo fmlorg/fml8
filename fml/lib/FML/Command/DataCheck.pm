@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DataCheck.pm,v 1.3 2002/05/19 11:23:57 fukachan Exp $
+# $FML: DataCheck.pm,v 1.4 2002/07/15 15:27:13 fukachan Exp $
 #
 
 package FML::Command::DataCheck;
@@ -181,7 +181,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::DataCheck appeared in fml5 mailing list driver package.
+FML::Command::DataCheck first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

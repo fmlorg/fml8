@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.25 2002/02/01 12:04:03 fukachan Exp $
+# $FML: Analyze.pm,v 1.26 2002/07/31 13:02:54 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -632,7 +632,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::ThreadTrack::Analyze appeared in fml5 mailing list driver package.
+Mail::ThreadTrack::Analyze first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
