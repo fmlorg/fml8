@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: merge.pm,v 1.1 2004/03/16 13:07:33 fukachan Exp $
+# $FML: merge.pm,v 1.2 2004/03/17 04:09:37 fukachan Exp $
 #
 
 package FML::Command::Admin::merge;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::merge - what is this
+FML::Command::Admin::merge - top level dispather of configuration merge
 
 =head1 SYNOPSIS
 
@@ -119,8 +119,6 @@ sub process
 
     # 4. convert files if needed.
     $merge->convert_list_files();
-
-    return;
 
     # 5. analyze fml4 configuration and build diff only.
     # 6. translate diff into fml8 cf.
