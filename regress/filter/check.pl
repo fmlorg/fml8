@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: check.pl,v 1.1 2001/09/23 09:17:18 fukachan Exp $
+# $FML: check.pl,v 1.2 2001/09/23 14:47:18 fukachan Exp $
 #
 
 use lib qw(../../fml/lib ../../cpan/lib ../../img/lib);
@@ -15,7 +15,7 @@ for my $f (@ARGV) {
 	use File::Basename;
 	my $fn = basename($f);
 
-	printf STDERR "%-20s header = ", $fn;
+	printf STDERR "%-25s header = ", $fn;
 
 	use FML::Filter::HeaderCheck;
 	my $obj = new FML::Filter::HeaderCheck;
@@ -31,7 +31,7 @@ for my $f (@ARGV) {
 	}
 
 
-	printf STDERR "%-20s   body = ", $fn;
+	printf STDERR "%-25s   body = ", $fn;
 
 	use FML::Filter::BodyCheck;
 	my $obj = new FML::Filter::BodyCheck;
