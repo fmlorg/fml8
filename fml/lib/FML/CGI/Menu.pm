@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.4 2003/10/14 10:55:27 fukachan Exp $
+# $FML: Menu.pm,v 1.5 2003/10/15 08:16:23 fukachan Exp $
 #
 
 package FML::CGI::Menu;
@@ -115,7 +115,6 @@ sub run_cgi_main
     my $config  = $curproc->config();
     my $address = $curproc->cgi_try_get_address();
     my $ml_name = $curproc->cgi_var_ml_name();
-    my $hints   = $curproc->hints();
     my $pcb     = $curproc->pcb();
     my $mode    = 'admin'; # cgi runs under admin mode (same way as makefml)
 
