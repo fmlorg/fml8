@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: INET6.pm,v 1.4 2001/05/31 11:02:34 fukachan Exp $
+# $FML: INET6.pm,v 1.5 2001/10/10 08:51:08 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET6;
@@ -133,7 +133,9 @@ sub connect6
 	}
 
 	# check socket is under connected state.
-	if (($family != -1) && defined($fh) && ($fh->connected)) {
+	# XXX sub $socket->connected { getpeername($self);}
+	# XXX IO::Socket of old perl have no such method.
+	if (($family != -1) && defined($fh)) {
 	    if ($family == AF_INET6) {
 		$self->{_socket} = $fh;
 		Log("connected to $host:$port by IPv6");

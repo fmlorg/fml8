@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SMTP.pm,v 1.7 2001/07/08 13:37:22 fukachan Exp $
+# $FML: SMTP.pm,v 1.8 2001/10/10 08:50:04 fukachan Exp $
 #
 
 
@@ -187,7 +187,8 @@ sub _read_reply
 	alarm( $self->{_default_io_timeout} );
 	my $buf = '';
 
-	croak("socket is not connected") unless $socket->connected;
+	croak("socket is not connected") unless
+	    $self->socket_is_connected($socket);
 
       SMTP_REPLY:
 	while (1) {
@@ -276,6 +277,27 @@ sub _connect
 	Log("try mta=$args->{_mta} by IPv4");
 	return $self->connect4($args);
     }
+}
+
+=head2 C<socket_is_connected($socket)>
+
+$socket has peer or not by C<getpeername()>.
+
+   XXX sub $socket->connected { getpeername($self);}
+   XXX IO::Socket of old perl have no such method. 
+
+=cut
+
+
+sub socket_is_connected
+{
+    my ($self, $socket) = @_;
+
+    if (defined $socket) {
+	return( getpeername($socket) );
+    }
+
+    return 0;
 }
 
 
@@ -511,8 +533,9 @@ sub _deliver
     
     # 0. create BSD SOCKET as the communication terminal
     #    IF_ERROR_FOUND: do nothing and return as soon as possible
-    my $socket = $self->_connect($args);
-    unless (defined($socket) && $socket->connected) {
+    my $socket       = $self->_connect($args);
+    my $is_connected = $self->socket_is_connected($socket);
+    unless (defined($socket) && $is_connected) {
 	Log("cannot connected");
 	return undef;
     }
