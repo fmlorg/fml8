@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: INET6.pm,v 1.1.1.1 2001/04/03 09:53:30 fukachan Exp $
+# $FML: INET6.pm,v 1.2 2001/05/11 16:11:15 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET6;
@@ -103,6 +102,9 @@ sub connect6
 	my @res = getaddrinfo($host, $port, AF_UNSPEC, SOCK_STREAM);
 	$family = -1;
 
+	# clean up
+	delete $self->{_socket} if defined $self->{_socket};
+
       LOOP:
 	while (scalar(@res) >= 5) {
 	    ($family, $type, $proto, $saddr, $canonname, @res) = @res;
@@ -115,14 +117,16 @@ sub connect6
 
 	    socket($fh, $family, $type, $proto) || do {
 		Log("Error: cannot create IPv6 socket");
+		$self->error_set("Error: cannot create IPv6 socket");
 		next LOOP;
 	    };
 	    if (connect($fh, $saddr)) {
-		Log("(debug6) o.k. connect $host");
+		Log("(debug6) o.k. connect [$host]:$port");
 		last LOOP;
 	    }
 	    else {
-		Log("Error: cannot connect via IPv6");
+		Log("Error: cannot connect [$host]:$port via IPv6");
+		$self->error_set("Error: cannot [$host]:$port via IPv6");
 	    }
 
 	    $family = -1;
@@ -133,7 +137,8 @@ sub connect6
 	    Log("connected to $host:$port by IPv6");
 	} else {
 	    $self->{_socket} = undef;
-	    Log("(debug6) fail to connect $host:$port by IPv6");
+	    Log("(debug6) fail to connect [$host]:$port by IPv6");
+	    $self->error_set("Error: cannot [$host]:$port via IPv6");
 	}
     };
 }
