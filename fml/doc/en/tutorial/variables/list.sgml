@@ -255,22 +255,22 @@ cgi_main_menu_color</entry>
 </row>
 <row>
 <entry>
-cgi_menu_default_map</entry>
-<entry>
- default value of list types in CGI operations.</entry>
-<entry>
-member
-   </entry>
-</row>
-<row>
-<entry>
-cgi_menu_map_list</entry>
+cgi_menu_address_map_list</entry>
 <entry>
  choise of address list types in CGI operations.</entry>
 <entry>
 member
    recipient
    admin_member
+   </entry>
+</row>
+<row>
+<entry>
+cgi_menu_default_address_map</entry>
+<entry>
+ default value of list types in CGI operations.</entry>
+<entry>
+member
    </entry>
 </row>
 <row>

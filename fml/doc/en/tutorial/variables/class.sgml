@@ -105,8 +105,8 @@ cgi {
     ?     $cgi_default_language
     ?     $cgi_language_list
     ?     $cgi_main_menu_color
-          $cgi_menu_default_map
-    ?     $cgi_menu_map_list
+    ?     $cgi_menu_address_map_list
+          $cgi_menu_default_address_map
     ?     $cgi_navigation_bar_color
    }
 }
