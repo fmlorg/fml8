@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.117 2003/07/20 06:51:02 fukachan Exp $
+# $FML: Distribute.pm,v 1.118 2003/08/03 14:32:23 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -388,7 +388,7 @@ sub _distribute
 
     if ($config->yes('use_html_archive')) {
 	Log("htmlify article $id");
-	$curproc->htmlify($args);
+	$curproc->_htmlify($args);
     }
 }
 
@@ -566,7 +566,7 @@ sub _thread_check
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: update html database
 # Return Value: none
-sub htmlify
+sub _htmlify
 {
     my ($curproc, $args) = @_;
     my $config       = $curproc->config();
