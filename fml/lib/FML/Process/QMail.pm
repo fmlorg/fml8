@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QMail.pm,v 1.20 2004/01/02 14:50:37 fukachan Exp $
+# $FML: QMail.pm,v 1.21 2004/03/12 04:22:56 fukachan Exp $
 #
 
 package FML::Process::QMail;
 use strict;
 use Carp;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
-use FML::Log qw(Log LogWarn LogError);
 
 
 # Descriptions: standard contructor
@@ -88,12 +87,12 @@ sub DotQmailExt
 	return '';
     }
 
-    &$curproc->log("dot-qmail-ext: $ext");
+    $curproc->log("dot-qmail-ext: $ext");
     $ext =~ s/^$key//i;
     $ext =~ s/\-\-/\@/i; # since @ cannot be used
     $ext =~ s/\-/ /g;
     $ext =~ s/\@/-/g;
-    &$curproc->log("\$ext -> $ext");
+    $curproc->log("\$ext -> $ext");
 
     # XXX: "# command" is internal represention
     return sprintf("# %s", $ext);
