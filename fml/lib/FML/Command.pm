@@ -1,10 +1,10 @@
-   #-*- perl -*-
+#-*- perl -*-
 #
 #  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.43 2004/01/22 12:35:35 fukachan Exp $
+# $FML: Command.pm,v 1.44.2.1 2004/03/04 04:20:27 fukachan Exp $
 #
 
 # XXX
@@ -108,9 +108,14 @@ sub get_mode
 {
     my ($self, $curproc, $command_args) = @_;
 
-    # XXX use capital letter for module name used latter.
-    if ($command_args->{'command_mode'} =~ /admin/i) {
-	return 'Admin';
+    if (defined $command_args->{ command_mode }) {
+	# XXX use capital letter for module name used latter.
+	if ($command_args->{'command_mode'} =~ /admin/i) {
+	    return 'Admin';
+	}
+	else {
+	    return 'User';
+	}
     }
     else {
 	return 'User';
@@ -133,7 +138,7 @@ how to rewrite by rewrite_prompt() method in it.
 =cut
 
 
-# Descriptions: rewrite prompt buffer
+# Descriptions: rewrite prompt buffer.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) STR_REF($rbuf)
 # Side Effects: none
@@ -170,12 +175,12 @@ sub rewrite_prompt
 return addresses to inform for the command reply.
 
 Each module such as C<FML::Command::$MODE::$SOMETING> specifies
-recipients by notice_cc_recipient() method in it.
+recipients by notice_cc_recipient() method in it if needed.
 
 =cut
 
 
-# Descriptions: return addresses to inform
+# Descriptions: return addresses to inform.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -192,6 +197,83 @@ sub notice_cc_recipient
 	if ($command->can('notice_cc_recipient')) {
 	    $command->notice_cc_recipient($curproc, $command_args);
 	}
+    }
+
+    return [];
+}
+
+
+=head2 verify_syntax($curproc, $command_args)
+
+verify the syntax command string.
+return 0 if it looks insecure.
+
+=cut
+
+
+# Descriptions: verify the syntax command string.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub verify_syntax
+{
+    my ($self, $curproc, $command_args) = @_;
+    my $command = undef;
+    my $comname = $command_args->{ comname };
+    my $mode    = $self->get_mode($curproc, $command_args);
+    my $pkg     = "FML::Command::${mode}::${comname}";
+
+    eval qq{ use $pkg; \$command = new $pkg;};
+    unless ($@) {
+	if ($command->can('verify_syntax')) {
+	    return $command->verify_syntax($curproc, $command_args);
+	}
+    }
+
+    return $self->simple_syntax_check($curproc, $command_args);
+}
+
+
+# Descriptions: simple syntax checker.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub simple_syntax_check
+{
+    my ($self, $curproc, $command_args) = @_;
+    my $comname    = $command_args->{ comname }    || '';
+    my $comsubname = $command_args->{ comsubname } || '';
+    my $options    = $command_args->{ options }    || [];
+
+    # test pattern
+    my @test = @$options;
+    unshift(@test, $comsubname);
+    unshift(@test, $comname);
+    $self->safe_regexp_match($curproc, $command_args, \@test);
+}
+
+
+# Descriptions: simple syntax of given array by FML::Restriction::Command.
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($command_args) ARRAY_REF($testlist)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub safe_regexp_match
+{
+    my ($self, $curproc, $command_args, $testlist) = @_;
+
+    # simple command syntax check
+    use FML::Restriction::Command;
+    my $safe = new FML::Restriction::Command;
+    if ($safe->command_regexp_match($testlist)) {
+	return 1;
+    }
+    else {
+	my $command = $command_args->{ masked_original_command };
+	$curproc->logerror("insecure command: $command");
+	$curproc->reply_message_nl('command.insecure',
+				   "insecure, so ignored.");
+	return 0;
     }
 }
 
@@ -220,10 +302,7 @@ sub AUTOLOAD
 
     # user mode by default
     # XXX IMPORTANT: user mode if the given mode is invalid.
-    my $mode = 'User';
-    if (defined $command_args->{ command_mode }) {
-	$mode = $self->get_mode($curproc, $command_args);
-    }
+    my $mode = $self->get_mode($curproc, $command_args);
 
     my $comname = $AUTOLOAD;
     $comname =~ s/.*:://;
@@ -237,11 +316,7 @@ sub AUTOLOAD
 	my $need_lock    = 0; # no lock by default.
 	my $lock_channel = $default_lock_channel;
 
-	# we need to authenticate this ?
-	if ($command->can('auth')) {
-	    $command->auth($curproc, $command_args);
-	}
-
+	# resource limit check.
 	if ($command->can('check_limit')) {
 	    my $n = $command->check_limit($curproc, $command_args);
 	    if ($n) { croak("exceed limit");}

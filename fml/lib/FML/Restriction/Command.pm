@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.8 2002/12/15 15:17:18 fukachan Exp $
+# $FML: Command.pm,v 1.9.4.1 2004/03/04 04:07:54 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -24,22 +24,30 @@ collection of utility functions used in command routines.
 
 =head1 METHODS
 
-=head2 is_secure_command_string($str)
-
-check if $str string looks secure ?
-return 1 if secure.
-
 =cut
 
 
-# Descriptions: $s looks secure ?
-#    Arguments: STR($s)
+# Descriptions: constructor.
+#    Arguments: OBJ($self) OBJ($curproc)
+# Side Effects: none
+# Return Value: OBJ
+sub new
+{
+    my ($self, $curproc) = @_;
+    my ($type) = ref($self) || $self;
+    my $me     = { _curproc => $curproc };
+    return bless $me, $type;
+}
+
+
+# Descriptions: $s looks secure as a command ?
+#    Arguments: OBJ($self) STR($s)
 # Side Effects: none
 #      History: fml 4.0's SecureP()
 # Return Value: NUM(1 or 0)
-sub is_secure_command_string
+sub _is_secure_command_string
 {
-   my ($s) = @_;
+   my ($self, $s) = @_;
 
    # 0. clean up
    $s =~ s/^\s*\#\s*//o; # remove ^#
@@ -69,6 +77,45 @@ sub is_secure_command_string
 }
 
 
+# Descriptions: incremental regexp match for the given data.
+#    Arguments: OBJ($self) VAR_ARGS($data)
+# Side Effects: none
+# Return Value: NUM(>0 or 0)
+sub command_regexp_match
+{
+    my ($self, $data) = @_;
+    my $r = 0;
+
+    use FML::Restriction::Base;
+    my $safe = new FML::Restriction::Base;
+
+    if (ref($data)) {
+	if (ref($data) eq 'ARRAY') {
+	  DATA:
+	    for my $x (@$data) {
+		next DATA unless $x;
+
+		unless ($safe->regexp_match('command', $x)) {
+		    $r = 0;
+		    last DATA;
+		}
+		else {
+		    $r++;
+		}
+	    }
+	}
+	else {
+	    croak("FML::Restriction::Command: wrong data");
+	}
+    }
+    else {
+	$r = $safe->regexp_match('command', $data);
+    }
+
+    return $r;
+}
+
+
 =head1 CODING STYLE
 
 See C<http://www.fml.org/software/FNF/> on fml coding style guide.
@@ -79,7 +126,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
