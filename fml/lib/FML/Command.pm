@@ -4,8 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.32 2002/09/11 23:18:01 fukachan Exp $
+# $FML: Command.pm,v 1.33 2002/09/22 14:56:39 fukachan Exp $
 #
+
+# XXX 
+# XXX FML::Command should be simple since all program uses this wrapper.
+# XXX So, complicated checks are moved to FML::Process::* and each module.
+# XXX 
 
 package FML::Command;
 use strict;
@@ -28,20 +33,20 @@ FML::Command - fml command dispatcher
 
 C<FML::Command> is a wrapper and dispathcer for fml commands.
 AUTOLOAD() picks up the command request and dispatches
-C<FML::Command::User::somoting> suitable for the request.
-Also, C<FML::Command::Admin::somoting> for the admin command request
-and makefml commands.
+C<FML::Command::User::something> suitable for the request.
+Also, it kicks off C<FML::Command::Admin::something> for the admin
+command request and makefml commands.
 
 =head1 METHODS
 
 =head2 C<new()>
 
-ordinary constructor.
+constructor.
 
 =cut
 
 
-# Descriptions: ordinary constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -54,7 +59,7 @@ sub new
 }
 
 
-# Descriptions: ordinary destructor
+# Descriptions: destructor (dummy).
 #    Arguments: none
 # Side Effects: none
 # Return Value: none
@@ -67,6 +72,9 @@ rewrite the specified buffer $rbuf (STR_REF).
 $rbuf is rewritten as a result.
 For example, this function is used to hide the password in the $rbuf
 buffer.
+
+Each module such as C<FML::Command::$MODE::$SOMETING> specifies
+how to rewrite by rewrite_prompt() method in it.
 
 =cut
 
@@ -99,6 +107,9 @@ sub rewrite_prompt
 
 return addresses to inform for the command reply.
 
+Each module such as C<FML::Command::$MODE::$SOMETING> specifies
+recipients by notice_cc_recipient() method in it.
+
 =cut
 
 
@@ -127,8 +138,8 @@ sub notice_cc_recipient
 =head2 C<AUTOLOAD()>
 
 the command dispatcher.
-It hooks up the C<command> request and loads the module in
-C<FML::Command::command>.
+It hooks up the C<$command> request and loads the module in
+C<FML::Command::$MODE::$command>.
 
 =cut
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Digest.pm,v 1.3 2002/11/18 13:53:09 fukachan Exp $
+# $FML: Digest.pm,v 1.4 2002/12/10 12:00:47 fukachan Exp $
 #
 
 package FML::Digest;
@@ -13,6 +13,9 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use FML::Log qw(Log LogWarn LogError);
 
+#
+# XXX-TODO: Currently, fml 8 digest has no granuality like fml 4.
+#
 
 =head1 NAME
 
@@ -26,13 +29,15 @@ FML::Digest - create digest, a subset of articles.
 
 =head2 C<new()>
 
+constructor.
+
 =cut
 
 
-# Descriptions:
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects:
-# Return Value: none
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self, $curproc) = @_;
@@ -43,18 +48,35 @@ sub new
 }
 
 
-# Descriptions: return the last article id sent back as digest
+=head1 GIANT LOCK VERSION of DIGEST 
+
+=head2 id()
+
+same as get_digest_id().
+
+=head2 get_digest_id()
+
+return the last article id sent back as digest.
+
+=head2 set_digest_id()
+
+set the last article id sent back as digest.
+
+=cut
+
+
+# Descriptions: return the last article id sent back as digest.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM
 sub id
 {
     my ($self) = @_;
-    $self->digest_id();
+    $self->get_digest_id();
 }
 
 
-# Descriptions: return the last article id sent back as digest
+# Descriptions: return the last article id sent back as digest.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM
@@ -92,10 +114,11 @@ sub _get_id
 {
     my ($self, $seq_file) = @_;
 
-    # XXX we should enhance IO::Adapter module to handle
-    # XXX sequential number.
+    # XXX-TODO: we should enhance IO::Adapter module to handle
+    # XXX-TODO: sequential number.
     use File::Sequence;
 
+    # XXX-TODO: defined() check for $sfh.
     if (-f $seq_file) {
 	my $sfh = new File::Sequence { sequence_file => $seq_file };
 	my $id  = $sfh->get_id();
@@ -106,6 +129,7 @@ sub _get_id
     else {
 	Log("$seq_file not found") if 0;
 
+	# XXX-TODO: defined() check for $sfh.
 	my $sfh = new File::Sequence { sequence_file => $seq_file };
 	my $id  = $sfh->increment_id();
 	if ($sfh->error) { LogError( $sfh->error ); }
@@ -115,8 +139,8 @@ sub _get_id
 }
 
 
-# Descriptions: return the last article id sent back as digest
-#    Arguments: OBJ($self)
+# Descriptions: return the last article id sent back as digest.
+#    Arguments: OBJ($self) NUM($id)
 # Side Effects: none
 # Return Value: NUM
 sub set_digest_id
@@ -126,8 +150,9 @@ sub set_digest_id
     my $config   = $curproc->{ config };
     my $seq_file = $config->{ digest_sequence_file };
 
-    # XXX we should enhance IO::Adapter module to handle
-    # XXX sequential number.
+    # XXX-TODO: we should enhance IO::Adapter module to handle
+    # XXX-TODO: sequential number.
+    # XXX-TODO: defined() check for $sfh.
     use File::Sequence;
     my $sfh = new File::Sequence { sequence_file => $seq_file };
     $sfh->set_id($id);
@@ -137,9 +162,9 @@ sub set_digest_id
 }
 
 
-# Descriptions:
+# Descriptions: insert articles sent as digest into reply message queue.
 #    Arguments: OBJ($self) HASH_REF($optargs)
-# Side Effects:
+# Side Effects: update reply messages chain on memory
 # Return Value: none
 sub create_multipart_message
 {
