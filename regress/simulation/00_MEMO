@@ -7,6 +7,13 @@
         XXX 遠大なビジョンやとりあえず後まわしでよいものは STATUS.txt へ
 
 
+[TODO]	FML::Process::State
+
+	FML::PCB を変更するルーチンは、	
+	FML::Process::State か FML::Process::Utils だけにあるべきじゃ
+	ないかな？
+	
+
 [TODO]	エラートラップフレームワーク
 
 
@@ -29,9 +36,6 @@
 		FML::Process::QMail
 		FML::Sys::Alias
 		File::Rotate
-
-
-[TODO]	変数のクラス構造を再構成
 
 
 [TODO]	変数の ...s vs _list 
@@ -184,6 +188,13 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 		fml $ml コマンド-サブコマンド アドレス
 		fml $ml useradd-as-recipient アドレス
+
+	やっぱり、むりだろな、すなおに
+
+		addrecipient	== add2actives
+		addmember	== add2members
+
+	?	
 
 
 [TODO]	reply-to: special hack
@@ -353,4 +364,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.105 2004/02/27 04:10:59 fukachan Exp $
+$FML: 00_MEMO,v 1.106 2004/03/03 13:26:36 fukachan Exp $
