@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.32 2002/02/17 03:07:55 fukachan Exp $
+# $FML: Command.pm,v 1.33 2002/02/17 08:13:24 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -75,6 +75,7 @@ forward the request to SUPER CLASS.
 sub prepare
 {
     my ($self, $args) = @_;
+    my $config = $self->{ config };
 
     my $eval = $config->get_hook( 'command_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -100,6 +101,7 @@ verify the sender is a valid member or not.
 sub verify_request
 {
     my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'command_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -175,6 +177,7 @@ _EOF_
 sub finish
 {
     my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'command_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -191,21 +194,29 @@ sub finish
 #               whether it contais keyword e.g. "confirm".
 #    Arguments: OBJ($self) STR_REF($ra_body)
 # Side Effects: none
-# Return Value: STR or 0
+# Return Value: ARRAY
 sub _pre_scan
 {
     my ($curproc, $ra_body) = @_;
     my $config  = $curproc->{ config };
-    my $keyword = $config->{ confirm_command_prefix };
-    my $found   = 0;
+
+    # special traps
+    my $confirm_prefix = $config->{ confirm_command_prefix };
+    my $admin_prefix   = $config->{ privileged_command_prefix }; 
+    my $confirm_found  = 0;
+    my $admin_found    = 0;
 
     for (@$ra_body) {
-	if (/$keyword\s+\w\s+([\w\d]+)/) {
-	    $found = $1;
+	if (/$confirm_prefix\s+\w\s+([\w\d]+)/) {
+	    $confirm_found = $1;
+	}
+
+	if (/$admin_prefix\s+\w\s+([\w\d]+)/) {
+	    $admin_found = $1;
 	}
     }
 
-    return $found;
+    return ($confirm_found, $admin_found);
 }
 
 
@@ -279,15 +290,20 @@ sub _parse_command_options
 }
 
 
-# Descriptions: return command name ( ^\S+ in $command )
+# Descriptions: return command name ( ^\S+ in $command ).
+#               remove the prepending strings such as \s, #, ...
 #    Arguments: STR($command)
 # Side Effects: none
-# Return Value: STR
+# Return Value: ARRAY
 sub _get_command_name
 {
     my ($command) = @_;
-    my $comname = (split(/\s+/, $command))[0];
-    return $comname;
+
+    # cut off the prepended strings
+    $command =~ s/^[\#\s]*//;
+
+    my ($comname, $comsubname) = split(/\s+/, $command);
+    return ($comname, $comsubname);
 }
 
 
@@ -304,14 +320,19 @@ sub _evaluate_command
     my $config  = $curproc->{ config };
     my $ml_name = $config->{ ml_name };
     my $argv    = $curproc->command_line_argv();
-    my $keyword = $config->{ confirm_command_prefix };
     my $prompt  = $config->{ command_prompt } || '>>>';
-
+    my $mode    = 'user';
     my $rbody   = $curproc->{ incoming_message }->{ body };
     my $msg     = $rbody->find_first_plaintext_message();
     my $body    = $msg->message_text;
     my @body    = split(/\n/, $body);
-    my $id      = $curproc->_pre_scan( \@body ); # confirmation reply ?
+
+    # preliminary scanning for message to find "confirm" or "admin"
+    my ($id, $admin_password) = $curproc->_pre_scan( \@body );
+
+    # special traps are needed for "confirm" and "admin" commands. 
+    my $confirm_prefix = $config->{ confirm_command_prefix };
+    my $admin_prefix   = $config->{ privileged_command_prefix }; 
 
     my $eval = $config->get_hook( 'command_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -328,28 +349,38 @@ sub _evaluate_command
 	# command = line itsetlf, it contains superflous strings
 	# comname = command name
 	# for example, command = "# help", comname = "help"
-	my $comname = _get_command_name($command);
+	my ($comname, $comsubname) = _get_command_name($command);
 
-	# Case: not "confirm" reply message.
+	# Case: "confirm" command is exceptional.
+	#       we need to evaluate "confirm" message even for not member.
+	if ($comname =~ /$confirm_prefix/ && $id) {
+	    $comname = $confirm_prefix; # comname = confirm
+
+	    Log("try $comname <$command>");
+	    $command =~ s/^.*$comname/$comname/;
+	}
+	# Case: "admin" command is exceptional.
+	#        try priviledged mode.
+	elsif ($comname =~ /$admin_prefix/) {
+	    $mode    = 'admin';
+	    $comname = $comsubname;
+
+	    Log("try $comname <$command>");
+	    $command =~ s/^.*$comname/admin $comname/;
+	}
+	# Case: commands except for 'admin' nor "confirm" reply message.
 	#       check whether we need to accpet this command ?
 	#       we accpet commands from ML members only by default.
 	#
 	#       validate general command except for confirmation
 	#       if $id is 1, this message must be confirmation reply.
-	unless ($command =~ /$keyword/ && defined($id)) {
+	else {
 	    my $opts = { comname => $comname, command => $command };
 	    unless ($curproc->_can_accpet_command($args, $opts)) {
 		# no, we do not accept this command.
 		Log("invalid command = $command");
 		next COMMAND;
 	    }
-	}
-	# Case: "confirm" command is exceptional.
-	#       we need to evaluate "confirm" message even for not member.
-	else {
-	    $comname = $keyword; # comname = confirm
-	    Log("try $comname <$command>");
-	    $command =~ s/^.*$comname/$comname/;
 	}
 
 	# o.k. here we go to execute command
@@ -360,7 +391,7 @@ sub _evaluate_command
 
 	    # arguments to pass off to each method
 	    my $command_args = {
-		command_mode => 'user',
+		command_mode => $mode,
 		comname      => $comname,
 		command      => $command,
 		ml_name      => $ml_name,
