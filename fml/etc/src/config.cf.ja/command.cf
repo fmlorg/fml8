@@ -61,7 +61,7 @@ available_commands_for_stranger	=	guide
 					add
 					subscribe
 					chaddr
-					$confirm_keyword
+					$confirm_command_prefix
 
 
 available_commands_for_privileged_user	=	subscribe
