@@ -4,22 +4,21 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.7 2001/04/07 06:39:30 fukachan Exp $
+# $FML: Message.pm,v 1.8 2001/04/07 08:08:37 fukachan Exp $
 #
 
 package Mail::Message;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $InComingMessage);
 use Carp;
 
-
 # virtual content-type
-my %data_type = 
+my %virtual_data_type = 
     (
-     'preamble'        => '_multipart_preamble/plain',
-     'delimiter'       => '_multipart_delimiter/plain',
-     'close-delimiter' => '_multipart_close-delimiter/plain',
-     'trailer'         => '_multipart_trailer/plain',
+     'preamble'        => 'multipart.preamble',
+     'delimiter'       => 'multipart.delimiter',
+     'close-delimiter' => 'multipart.close-delimiter',
+     'trailer'         => 'multipart.trailer',
      );
 
 =head1 NAME
@@ -88,41 +87,47 @@ et. al.
    $message = {
                 version        => 1.0
 
-                next           => $next_message (HASH reference)
-                prev           => $prev_message (HASH reference)
+                next           => \$next_message
+                prev           => \$prev_message
+
+                base_data_type => "text/plain"
 
                 mime_version   => 1.0
-                base_data_type => text/plain
-                data_type      => text/plain
+                header         => $header
+                data_type      => "text/plain"
                 data           => \$message_body
-                header         => {
-                                       field_name => field_value
-                                  }
+
+                data_info      => \$information
                }
 
    key                value
    -----------------------------------------------------
+   version            Mail::Message object version
    next               pointer to the next message
    prev               pointer to the previous message
-   version            Mail::Message object version
-   mime_version       MIME version
    base_data_type     type of the whole message
+   mime_version       MIME version
+   header             MIME header of the part
    data_type          type of each message (part)
-   header             MIME header
    data               reference to the data (that is, memory area)
+   data_info          reference to miscellaneous information.
 
+Only rfc822/message type uses C<data_info> field.
+C<header> holds MIME content header of the corresponding message.
+                                       
 The default value for each key follows:
 
    key              value
    -----------------------------------------------------
+   version           1.0
    next              undef
    prev              undef
-   version           1.0
+   base_data_type    text/plain
    mime_version      1.0
-   base_data_type
-   data_type         text/plain
    header            undef
+   data_type         text/plain
    data              ''
+   data_info         ''
 
 
 =head1 HOW TO PARSE
@@ -159,15 +164,15 @@ C<Mail::Message> parser interpetes it as follows:
 
       base_data_type                 data_type
    ----------------------------------------------------------
-   0: multipart/mixed                _multipart_preamble/plain
-   1: multipart/mixed                _multipart_delimiter/plain
+   0: multipart/mixed                multipart.preamble
+   1: multipart/mixed                multipart.delimiter
    2: multipart/mixed                text/plain
-   3: multipart/mixed                _multipart_delimiter/plain
+   3: multipart/mixed                multipart.delimiter
    4: multipart/mixed                image/gif
-   5: multipart/mixed                _multipart_close-delimiter/plain
-   6: multipart/mixed                _multipart_trailer/plain
+   5: multipart/mixed                multipart.close-delimiter
+   6: multipart/mixed                multipart.trailer
 
-C<_multipart_something> is a faked type to treat both real content,
+C<multipart.something> is a faked type to treat both real content,
 MIME delimiters and others in the same Mail::Message framework.
 
 
@@ -274,10 +279,16 @@ sub _create
 
     # set up object for data on memory
     if (defined $r_data) {
-	my $len = length( $$r_data );
+	if (ref($r_data) eq 'Mail::Header' || ref($r_data) eq 'FML::Header') {
+	    ; # do nothing
+	}
+	else {
+	    my $len = length( $$r_data );
+	    $self->{ offset_begin } = $args->{ offset_begin } || 0;
+	    $self->{ offset_end }   = $args->{ offset_end   } || $len;
+	}
+
 	$self->{ data }         = $args->{ data } || '';
-	$self->{ offset_begin } = $args->{ offset_begin } || 0;
-	$self->{ offset_end }   = $args->{ offset_end   } || $len;
 	$self->{ _on_memory }   = 1; # flag to indicate data is on memory
     }
     # set up object for data on disk
@@ -295,6 +306,260 @@ sub _create
     else {
 	carp("_create: neither data nor filename specified");
     }
+}
+
+
+sub dup_header
+{
+    my ($self) = @_;
+
+    # if the head object is rfc822 header, dup the header. 
+    if ($self->{ data_type } eq 'rfc822/message.header') {
+	my $dupmsg  = new Mail::Message; # make a new object
+	my $dupmsg2 = new Mail::Message; # make a new object
+	my $body    = $self->{ next };
+
+	# 1. copy header and the first body part
+	for (keys %$self) { $dupmsg->{ $_ }  = $self->{ $_ };}
+	for (keys %$body) { $dupmsg2->{ $_ } = $body->{ $_ };}
+
+	# 2. overwrite only header data in $dupmsg
+	my $header = $self->{ data };
+	$dupmsg->{ data } = $header->dup();
+	$dupmsg->next_message( $body );
+	$body->prev_message( $dupmsg );
+
+	# 3. return the new object.
+	return $dupmsg;
+    }
+    else {
+	undef;
+    }
+}
+
+
+=head1 METHODS to parse
+
+=head2 C<parse($fd)>
+
+read data from file descriptor C<$fd> and parse it to the mail header
+and the body.
+
+=cut
+
+sub parse
+{
+    my ($self, $args) = @_;
+    my $fd  = $args->{ fd }  || \*STDIN;
+
+    # make an object
+    my ($type) = ref($self) || $self;
+    my $me     = {};
+    bless $me, $type;
+
+    # parse the header and the body
+    my $result = {};
+    $me->_parse($fd, $result);
+
+    # make a Mail::Messsage object for the (whole) mail header 
+    # $me becomes a Mail::Message;
+    $me->_parse_header($result);
+    $me->_build_header_object($args, $result);
+
+    # make a Mail::Messsage object for the mail body
+    my $ref_body = $me->_build_body_object($args, $result);
+
+    # make a chain such as "undef -> header -> body -> undef"
+    $me->next_message( $ref_body );
+    $ref_body->prev_message( $me );
+
+    # return information
+    $result->{ body_size } = length($InComingMessage);
+    $me->{ data_info }     = $result;
+
+    # return the object
+    $me;
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub _parse
+{
+    my ($self, $fd, $result) = @_;
+    my ($header, $header_size, $p, $buf);
+    my $total_buffer_size;
+
+    while ($p = sysread($fd, $_, 1024)) {
+	$total_buffer_size += $p;
+	$buf .= $_; 
+	if (($p = index($buf, "\n\n", 0)) > 0) {
+	    $header      = substr($buf, 0, $p + 1);
+	    $header_size = $p + 1;
+	    $InComingMessage = substr($buf, $p + 2);
+	    last;
+	}
+    }
+
+    # extract mail body and put it to $InComingMessage
+    while ($p = sysread($fd, $_, 1024)) {
+	$total_buffer_size += $p;
+	$InComingMessage   .= $_;
+    }
+
+    # read the message (mail body) from the incoming mail
+    my $body_size = length($InComingMessage);
+
+    # result to return
+    $result->{ header }      = $header;
+    $result->{ header_size } = $header_size;
+    $result->{ body_size }   = $body_size;
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub _parse_header
+{
+    my ($self, $r) = @_;
+
+    # parse the header
+    my (@h) = split(/\n/, $r->{ header });
+    for my $x (@h) { $x .= "\n";}
+
+    # save unix-from (mail-from) in PCB and remove it in the header
+    if ($h[0] =~ /^From\s/o) {
+	$r->{ envelope_sender } = (split(/\s+/, $h[0]))[1];
+	shift @h;
+    }
+
+    $r->{ header_array } = \@h;
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub _build_header_object
+{
+    my ($self, $args, $r) = @_;
+    my $pkg = $args->{ header_class } || 'Mail::Header';
+    my $ha  = $r->{ header_array };
+    my $header_obj;
+
+    eval qq{ require $pkg; $pkg->import();
+	     \$header_obj = new $pkg \$ha, Modify => 0; 
+	 };
+    croak($@) if $@;
+
+    my $data_type = $self->data_type($header_obj);
+    _create($self, {
+	base_data_type => $data_type,
+	data_type      => "rfc822/message.header",
+	data           => $header_obj,
+    });
+
+    # save header object
+    $r->{ header } = $header_obj;
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub _build_body_object
+{
+    my ($self, $args, $result) = @_;
+
+    return new Mail::Message {
+	boundary  => $self->mime_boundary($result->{ header }),
+	data_type => $self->data_type($result->{ header }),
+	data      => \$InComingMessage,
+    };
+}
+
+
+=head2 C<rfc822_message_header()>
+
+return Mail::Header object for the message header.
+
+=head2 C<rfc822_message_body()>
+
+return a Mail::Message object or a chain of objects for the message body.
+
+=cut
+
+
+sub rfc822_message_header
+{
+    my ($self) = @_;
+    ($self->{ data_type } eq 'rfc822/message.header') ? $self->{ data } : undef;
+}
+
+
+sub rfc822_message_body
+{
+    my ($self) = @_;
+
+    if ($self->{ data_type } eq 'rfc822/message.header') {
+	$self->{ next } || undef;
+    }
+    else {
+	$self;
+    }
+}
+
+
+=head2 C<mime_boundary(header)>
+
+return the mime C<boundary> string.
+It is extracted from C<header> object.
+
+=head2 C<data_type(header)>
+
+return the C<type> string.
+It is extracted from C<header> object.
+
+=cut
+
+
+# Descriptions: return boundary defined in Content-Type
+#    Arguments: $self $args
+# Side Effects: none.
+# Return Value: none
+sub mime_boundary
+{
+    my ($self, $header) = @_;
+    my $m = $header->get('content-type');
+
+    if ($m =~ /boundary=\"(.*)\"/) {
+	return $1;
+    }
+    else {
+	undef;
+    }
+}
+
+
+# Descriptions: return the type defind in the header's Content-Type field.
+#    Arguments: $self
+# Side Effects: extra spaces in the type to return is removed.
+# Return Value: none
+sub data_type
+{
+    my ($self, $header) = @_;
+    my ($type) = split(/;/, $header->get('content-type'));
+    if (defined $type) {
+	$type =~ s/\s*//g;
+	return $type;
+    }
+    undef;
 }
 
 
@@ -467,31 +732,34 @@ sub _print_messsage_on_memory
     my $raw_print_mode = 1 if $self->{ _print_mode } eq 'raw';
     
     # set up offset for the buffer
-    my $r_body = $self->{ data };
-    my $header = $self->{ header };
-    my $pp     = $self->{ offset_begin };
-    my $p_end  = $self->{ offset_end };
-    my $maxlen = length($$r_body);
-    my $logfp  = $self->{ _log_function };
-    $logfp     = ref($logfp) eq 'CODE' ? $logfp : undef;
+    my $data  = $self->{ data };
+    my $type  = $self->{ data_type } || croak("no data_type");
+    my $pp    = $self->{ offset_begin };
+    my $p_end = $self->{ offset_end };
+    my $logfp = $self->{ _log_function };
+    $logfp    = ref($logfp) eq 'CODE' ? $logfp : undef;
 
     # 1. print content header if exists
+    my $header = ($type eq 'rfc822/message.header') ? $data->as_string : $self->{header};
     if (defined $header) {
 	$header =~ s/\n/\r\n/g unless (defined $raw_print_mode);
 	print $fd $header;
 	print $fd ($raw_print_mode ? "\n" : "\r\n");
     }
+    return if ($type eq 'rfc822/message.header');
+    
 
     # 2. print content body: write each line in buffer
     my ($p, $len, $buf, $pbuf);
+    my $maxlen = length($$data);
   SMTP_IO:
     while (1) {
-	$p = index($$r_body, "\n", $pp);
+	$p = index($$data, "\n", $pp);
 	last SMTP_IO if $p >= $p_end;
 
 	$len = $p - $pp + 1;
 	$len = ($p < 0 ? ($maxlen - $pp) : $len);
-	$buf = substr($$r_body, $pp, $len);
+	$buf = substr($$data, $pp, $len);
 
 	# do nothing, get away from here 
 	last SMTP_IO if $len == 0;
@@ -592,7 +860,7 @@ sub build_mime_multipart_chain
 	my $msg = new Mail::Message {
 	    boundary       => $boundary,
 	    base_data_type => $base_data_type,
-	    data_type      => $data_type{'delimeter'},
+	    data_type      => $virtual_data_type{'delimeter'},
 	    data           => \$delbuf,
 	};
 
@@ -610,7 +878,7 @@ sub build_mime_multipart_chain
     my $msg = new Mail::Message {
 	boundary       => $boundary,
 	base_data_type => $base_data_type,
-	data_type      => $data_type{'close-delimeter'},
+	data_type      => $virtual_data_type{'close-delimeter'},
 	data           => \$delbuf_end,
     };
     $prev_m->next_message( $msg ); # ... -> data -> close-delimeter
@@ -698,7 +966,7 @@ sub parse_and_build_mime_multipart_chain
 		data           => $data,
 		base_data_type => $base_data_type,
 	    };
-	    my $default = ($i == 0) ? $data_type{'preamble'} : undef;
+	    my $default = ($i == 0) ? $virtual_data_type{'preamble'} : undef;
 	    $args->{ data_type } = _get_data_type($args, $default);
 
 	    $m[ $i++ ] = $self->_alloc_new_part($args);
@@ -713,7 +981,7 @@ sub parse_and_build_mime_multipart_chain
 	    my $buf = $close_delimeter."\n";
 	    $m[ $i++ ] = $self->_alloc_new_part({
 		data           => \$buf,
-		data_type      => $data_type{'close-delimiter'},
+		data_type      => $virtual_data_type{'close-delimiter'},
 		base_data_type => $base_data_type,
 	    });
 
@@ -722,7 +990,7 @@ sub parse_and_build_mime_multipart_chain
 	    my $buf = $delimeter."\n";
 	    $m[ $i++ ] = $self->_alloc_new_part({
 		data           => \$buf,
-		data_type      => $data_type{'delimiter'},
+		data_type      => $virtual_data_type{'delimiter'},
 		base_data_type => $base_data_type,
 	    });
 	}
@@ -738,7 +1006,7 @@ sub parse_and_build_mime_multipart_chain
 		offset_begin   => $p,
 		offset_end     => $data_end,
 		data           => $data,
-		data_type      => $data_type{'trailor'},
+		data_type      => $virtual_data_type{'trailor'},
 		base_data_type => $base_data_type,
 	    });
 	}
@@ -943,6 +1211,33 @@ sub is_empty
 
     # false
     return 0;
+}
+
+
+=head2 C<header_size()>
+
+=head2 C<body_size()>
+
+=cut
+
+sub header_size
+{
+    my ($self) = @_;
+    $self->{ data_info }->{ header_size };
+}
+
+
+sub body_size
+{
+    my ($self) = @_;
+    $self->{ data_info }->{ body_size };
+}
+
+
+sub envelope_sender
+{
+    my ($self) = @_;
+    $self->{ data_info }->{ envelope_sender };
 }
 
 
@@ -1156,7 +1451,9 @@ sub get_data_type_list
 
     for ($i = 0, $m = $msg; defined $m ; $m = $m->{ 'next' }) {
 	$i++;
-	push(@buf, "type[$i]: $m->{'data_type'} | $m->{'base_data_type'}");
+	my $data = $m->{'data'};
+	push(@buf, sprintf("type[%d]: %-25s | %s", 
+			   $i, $m->{'data_type'}, $m->{'base_data_type'}));
     }
     \@buf;
 }
