@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: TrafficMonitor.pm,v 1.7 2002/09/11 23:18:12 fukachan Exp $
+# $FML: TrafficMonitor.pm,v 1.8 2002/09/22 14:56:50 fukachan Exp $
 #
 
 package FML::Filter::TrafficMonitor;
@@ -24,12 +24,16 @@ FML::Filter::TrafficMonitor - Mail Traffic Information
 
 =head2 C<new()>
 
-usual constructor.
+constructor.
 
 =cut
 
 use File::CacheDir;
 @ISA = qw(File::CacheDir);
+
+#
+# XXX-TODO: NOT IMPLEMENTED.
+#
 
 
 # Descriptions:
