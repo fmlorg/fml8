@@ -1,6 +1,24 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/10/26
+
+   FML::Filter::MimeComponent3 
+	fix initianlization bug
+	
+   FML::Filter 
+	use MimeComponent3 as a test
+
+2002/10/23
+
+   Mail::ThreadTrack::DB 
+	typofix filepath value at sub db_mkdb()
+	
+2002/10/22
+
+   FML::Process::Kernel 
+	handle fmlthread $argv same as makefml one
+
 2002/10/21
 
    MIME component フィルタの描き直し
@@ -3457,4 +3475,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.104 2002/10/20 13:29:45 fukachan Exp $
+$FML: CHANGES.txt,v 1.105 2002/10/21 15:00:20 fukachan Exp $
