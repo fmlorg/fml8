@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.1.1.1 2001/10/19 13:45:32 fukachan Exp $
+# $FML: Lite.pm,v 1.2 2001/10/20 06:19:07 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -628,7 +628,7 @@ sub cache_message_info
 	}
     }
     else {
-	warn("no prev/next thread link\n");
+	warn("no prev/next thread link (id=$id)\n");
     }
 
     $self->_db_close();
@@ -686,22 +686,18 @@ sub _decode_mime_string
 sub update_relation
 {
     my ($self, $id) = @_;
+    my $args = $self->evaluate_relation($id);
 
     # update target itself, of course
     $self->_update_relation($id);
 
-    # rewrite links of files for prev/next id (article id)
-    # (order by e.g. Article ID, MH folder)
-    $self->_update_relation($id - 1) if $id > 1;
-    $self->_update_relation($id + 1);
-
-    # rewrite links for prev/next by thread
-    my $args = $self->evaluate_relation($id);
-    if (defined $args->{ prev_id }) {
-	$self->_update_relation( $args->{ prev_id } );
-    }
-    if (defined $args->{ next_id }) {
-	$self->_update_relation( $args->{ next_id } );
+    # rewrite links of files for 
+    #      prev/next id (article id) and
+    #      prev/next by thread
+    for my $id (qw(prev_id next_id prev_thread_id next_thread_id)) {
+	if (defined $args->{ $id }) {
+	    $self->_update_relation( $args->{ $id });
+	}
     }
 }
 
@@ -745,7 +741,7 @@ sub _update_relation
 	$wh->close;
 
 	unless (rename($new, $old)) {
-	    croak("rename($new, $old) fail\n");
+	    croak("rename($new, $old) fail (id=$id)\n");
 	}
     }
     else {
@@ -823,6 +819,10 @@ sub evaluate_relation
     my $args = {
 	id               => $id,
 	file             => $file,
+	prev_id          => $prev_id,
+	next_id          => $next_id,
+	prev_thread      => $prev_thread_id,
+	next_thread      => $next_thread_id,
 	link_prev_id     => $link_prev_id,
 	link_next_id     => $link_next_id,
 	link_prev_thread => $link_prev_thread,
@@ -853,14 +853,29 @@ sub evaluate_preamble
     if (defined($link_prev_id)) {
 	$preamble .= "<A HREF=\"$link_prev_id\">[Prev by ID]</A>\n";
     }
+    else {
+	$preamble .= "[No Prev ID]\n";
+    }
+
     if (defined($link_next_id)) {
 	$preamble .= "<A HREF=\"$link_next_id\">[Next by ID]</A>\n";
     }
+    else {
+	$preamble .= "[No Next ID]\n";
+    }
+
     if (defined $link_prev_thread) {
 	$preamble .= "<A HREF=\"$link_prev_thread\">[Prev by Thread]</A>\n";
     }
+    else {
+	$preamble .= "[No Prev Thread]\n";
+    }
+    
     if (defined $link_next_thread) {
 	$preamble .= "<A HREF=\"$link_next_thread\">[Next by Thread]</A>\n";
+    }
+    else {
+	$preamble .= "[No Next Thread]\n";
     }
 
     $preamble .= qq{<A HREF=\"index.html\">[ID Index]</A>\n};
@@ -1049,18 +1064,45 @@ sub make_index
 # debug
 #
 
+sub _debug
+{
+    my ($file) = @_;
+
+    use File::Basename;
+    my $f = basename($file);
+    my $html = new Mail::HTML::Lite { directory => "/tmp/htdocs" };
+
+    print STDERR "\n_debug(id=$f src=$file)\n";
+
+    $html->htmlfy_rfc822_message({
+	id  => $f,
+	src => $file,
+    });
+    $html->update_relation( $f );
+}
+
+
 if ($0 eq __FILE__) {
     eval q{
-	for (@ARGV) {
-	    use File::Basename;
-	    my $f = basename($_);
-	    my $html = new Mail::HTML::Lite { directory => "/tmp/htdocs" };
-	    $html->htmlfy_rfc822_message({
-		id  => $f,
-		src => $_,
-	    });
+	for my $x (@ARGV) {
+	    if (-f $x) {
+		_debug($x);
+	    }
+	    elsif (-d $x) {
+		my $max = 0;
+		use DirHandle;
+		my $dh = new DirHandle $x;
+		if (defined $dh) {
+		    for my $file ( $dh->read() ) {
+			next unless $file =~ /^\d+$/;
+			$max = $max < $file ? $file : $max;
+		    }
+		}
 
-	    $html->update_relation( $f );
+		for my $f ( 1 .. $max ) {
+		    _debug( "$x/$f" );
+		}
+	    }
 	}
     };
     croak($@) if $@;
