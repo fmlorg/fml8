@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: admin.pm,v 1.4 2004/03/04 04:30:13 fukachan Exp $
+# $FML: admin.pm,v 1.5 2004/03/12 11:45:49 fukachan Exp $
 #
 
 package FML::Command::User::admin;
@@ -124,7 +124,10 @@ sub process
 	$self->_execute_admin_command($curproc, $command_args, $class);
     }
     else {
-	$curproc->logerror("admin: not auth, cannot run \"$command\"");
+	my $class = $command_args->{ comsubname } || '';
+	my $c     = "admin $class ...";
+	my $masked_command = $command_args->{ masked_original_command } || $c;
+	$curproc->logerror("admin: not auth, cannot run \"$masked_command\"");
 	$curproc->reply_message_nl("command.admin_auth_fail",
 				   "not authenticated.");
 	$curproc->command_context_set_stop_process();
@@ -140,26 +143,36 @@ sub process
 sub _try_admin_auth
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config  = $curproc->config();
-    my $rules   = $config->get_as_array_ref('admin_command_mail_restrictions');
-    my $cred    = $curproc->{ credential };
-    my $sender  = $cred->sender();
-    my $optargs = { address => $sender };
-    my $class   = $command_args->{ comsubname } || '';
-    my $is_auth = 0;
+    my $cred     = $curproc->{ credential };
+    my $sender   = $cred->sender();
+    my $opt_args = { address => $sender };
+    my $class    = $command_args->{ comsubname } || '';
 
     # XXX-TODO: configurable.
     # prepare() for later use.
     if ($class eq 'pass' || $class eq 'password') {
 	$self->_execute_admin_command($curproc, $command_args, $class);
 	my $p = $curproc->command_context_get_admin_password();
-	$optargs->{ password } = $p || '';
+	$opt_args->{ password } = $p || '';
     }
+
+    return $self->_new_admin_command_mail_restrictions($curproc, 
+						       $command_args, 
+						       $opt_args);
+}
+
+
+sub _apply_admin_command_mail_restrictions
+{
+    my ($self, $curproc, $command_args, $opt_args) = @_;
+    my $config  = $curproc->config();
+    my $rules   = $config->get_as_array_ref('admin_command_mail_restrictions');
+    my $is_auth = 0;
 
     use FML::Command::Auth;
     my $auth = new FML::Command::Auth;
     for my $rule (@$rules) {
-	$is_auth = $auth->$rule($curproc, $optargs);
+	$is_auth = $auth->$rule($curproc, $opt_args);
 
 	# reject as soon as possible
 	if ($is_auth eq '__LAST__') {
@@ -177,6 +190,67 @@ sub _try_admin_auth
 
     # deny transition to admin mode by default
     return 0;
+}
+
+
+sub _new_admin_command_mail_restrictions
+{
+    my ($self, $curproc, $command_args, $opt_args) = @_;
+    my $context = $command_args;
+    my $config  = $curproc->config();
+    my $sender  = $opt_args->{ address } || '';
+
+    # initialize admin command specific area to pass it to sub layer.
+    $context->{ admin_option } = $opt_args || {};
+
+    # command restriction rules
+    use FML::Restriction::Command;
+    my $acl   = new FML::Restriction::Command $curproc;
+    my $rules = $config->get_as_array_ref('admin_command_mail_restrictions');
+    my ($match, $result) = (0, 0);
+  RULE:
+    for my $rule (@$rules) {
+	$curproc->log("chech by $rule");
+
+	if ($acl->can($rule)) {
+	    # match  = matched. return as soon as possible from here.
+	    #          ASAP or RETRY the next rule, depends on the rule.
+	    # result = action determined by matched rule.
+	    ($match, $result) = $acl->$rule($rule, $sender, $context);
+	}
+	else {
+	    ($match, $result) = (0, undef);
+	    $curproc->logwarn("unknown rule=$rule");
+	}
+
+	if ($match) {
+	    $curproc->log("$result rule=$rule");
+	    last RULE;
+	}
+    }
+
+    # delete admin command specific data area.
+    delete $context->{ admin_option };
+
+    # determine action.
+    if ($match) {
+	$curproc->log("match=$match result=$result");
+
+	if ($result eq "permit") {
+	    return 1;
+	}
+	elsif ($result eq "deny") {
+	    return 0;
+	}
+	else {
+	    $curproc->log("unknown result");
+	    return 0;
+	}
+    }
+    else {
+	$curproc->log("no match");
+	return 0;
+    }
 }
 
 

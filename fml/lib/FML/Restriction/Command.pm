@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.11 2004/03/04 12:21:34 fukachan Exp $
+# $FML: Command.pm,v 1.12 2004/03/14 06:51:33 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -107,6 +107,56 @@ sub permit_anonymous_command
     }
 
     return(0, undef);
+}
+
+
+=head1 ADMIN COMMAND SPECIFIC RULES
+
+=head2 permit_admin_member_maps($rule, $sender)
+
+permit if admin_member_maps has the sender.
+
+=cut
+
+
+# Descriptions: permit if admin_member_maps has the sender.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: NUM
+sub permit_admin_member_maps
+{
+    my ($self, $rule, $sender) = @_;
+    my $curproc = $self->{ _curproc };
+    my $cred    = $curproc->{ credential };
+    my $match   = $cred->is_privileged_member($sender);
+
+    if ($match) {
+	$curproc->log("found in admin_member_maps");
+	return("matched", "permit");
+    }
+
+    return(0, undef);
+}
+
+
+sub check_admin_member_password
+{
+    my ($self, $rule, $sender, $context) = @_;
+    my $curproc  = $self->{ _curproc };
+    my $opt_args = $context->{ admin_option } || {};
+    my $password = $opt_args->{ password }    || '';
+
+    use FML::Command::Auth;
+    my $auth   = new FML::Command::Auth;
+    my $status = $auth->check_admin_member_password($curproc, $opt_args);
+    if ($status) {
+	$curproc->log("admin password: auth ok");
+	return("matched", "permit");
+    }
+    else {
+	$curproc->log("admin password: auth fail");
+	return(0, undef);
+    }
 }
 
 
