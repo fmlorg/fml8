@@ -4,14 +4,14 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.58 2004/07/11 15:25:53 fukachan Exp $
+# $FML: File.pm,v 1.59 2004/07/23 15:59:14 fukachan Exp $
 #
 
 package IO::Adapter::File;
 
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
-	    %LockedFileHandle %FileIsLocked);
+	    $Counter %LockedFileHandle %FileIsLocked);
 use Carp;
 use IO::Adapter::ErrorStatus qw(error_set error error_clear);
 
@@ -641,16 +641,26 @@ For example, to set sequence number to the specified value $new_id:
 sub sequence_increment
 {
     my ($self, $args) = @_;
-    my $file = $args->{ file };
-    my $id   = 0;
+    my $backup = sprintf("%s.%d.%d.%d.bak", 
+			 $args->{ file }, time, $$, $Counter++);
+    my $file   = $args->{ file };
+    my $id     = 0;
 
     unless (-f $file) { $self->touch();}
+
+    if (-f $file) {
+	unless (link($file, $backup)) {
+	    $self->error_set("failed to link.");
+	    return 0;
+	}
+    }
 
     use IO::Adapter::AtomicFile;
     my ($rh, $wh) = IO::Adapter::AtomicFile->rw_open($file);
 
     if ($rh->error || $wh->error) {
-	$self->error_set("fail to open temporary files.");
+	$self->error_set("failed to open temporary files.");
+	unlink($backup) if -f $backup;
 	return 0;
     }
 
@@ -661,6 +671,7 @@ sub sequence_increment
     }
     else {
 	$self->error_set("cannot open the sequence file");
+	unlink($backup) if -f $backup;
 	return 0;
     }
 
@@ -670,6 +681,7 @@ sub sequence_increment
     }
     else {
 	$self->error_set("file contains not a number");
+	unlink($backup) if -f $backup;
 	return 0;
     }
 
@@ -681,6 +693,7 @@ sub sequence_increment
 	if ($wh->error()) {
 	    $self->error_set("write error");
 	    $wh->rollback();
+	    unlink($backup) if -f $backup;
 	    return 0;
 	}
 	else {
@@ -698,13 +711,18 @@ sub sequence_increment
 	if (defined $rh) {
 	    my $new_id = $self->_read_one_word($rh);
 	    unless ($new_id == $id) {
-		$self->error_set("fail to save id");
+		$self->error_set("failed to save id");
+
+		# rollback
+		rename($backup, $file);
+
 		return 0;
 	    }
 	    $rh->close();
 	}
     }
 
+    unlink($backup) if -f $backup;
     return $id;
 }
 
