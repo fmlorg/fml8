@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: byeadmin.pm,v 1.5 2002/09/11 23:18:06 fukachan Exp $
+# $FML: byeadmin.pm,v 1.6 2002/09/22 14:56:44 fukachan Exp $
 #
 
 package FML::Command::Admin::byeadmin;
@@ -23,7 +23,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-byeadmin a new user.
+remove the specified administrator.
 
 =head1 METHODS
 
@@ -60,7 +60,12 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ config };
+
+    # 
+    # XXX-TODO: remove targets are a set of admin_*_maps
+    # 
     my $member_map    = $config->{ primary_admin_member_map };
+    my $recipient_map = $config->{ primary_admin_recipient_map };
     my $options       = $command_args->{ options };
     my $address       = $command_args->{ command_data } || $options->[ 0 ];
 
@@ -73,7 +78,7 @@ sub process
     # FML::Command::UserControl specific parameters
     my $uc_args = {
 	address => $address,
-	maplist => [ $member_map ],
+	maplist => [ $member_map, $recipient_map ],
     };
     my $r = '';
 
