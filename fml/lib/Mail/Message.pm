@@ -4,12 +4,12 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.56 2002/04/28 09:42:17 fukachan Exp $
+# $FML: Message.pm,v 1.57 2002/04/28 10:19:23 fukachan Exp $
 #
 
 package Mail::Message;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $InComingMessage);
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 my $debug = 0;
@@ -243,7 +243,7 @@ sub new
     # XXX alloc memory area to hold the whole message.
     # XXX (NOT NEEDED ? but only parse() needs $InComingMessage ?)
     # $InComingMessage = \$data;
-
+    $me->{ __data } = \$data;
     bless $me, $type;
 
     if ($args) { _build_message($me, $args);}
@@ -465,6 +465,8 @@ sub parse
 
     # parse the header and the body
     my $result = {};
+    my $data   = '';
+    $me->{ __data } = \$data;
     $me->_parse($fd, $result);
 
     # make a Mail::Messsage object for the (whole) mail header
@@ -480,8 +482,8 @@ sub parse
     $ref_body->_prev_message_is( $me );
 
     # return information
-    if (defined($InComingMessage)) {
-	$result->{ body_size } = length($$InComingMessage);
+    if (defined($data) && $data) {
+	$result->{ body_size } = length($data);
     }
     else {
 	$result->{ body_size } = 0;
@@ -502,7 +504,8 @@ sub _parse
 {
     my ($self, $fd, $result) = @_;
     my ($header, $header_size, $p, $buf, $data);
-    my $total_buffer_size;
+    my $total_buffer_size = 0;
+    my $data_ptr          = $self->{ __data };
 
   DATA:
     while ($p = sysread($fd, $data, 1024)) {
@@ -512,22 +515,22 @@ sub _parse
 	if (($p = index($buf, "\n\n", 0)) > 0) {
 	    $header      = substr($buf, 0, $p + 1);
 	    $header_size = $p + 1;
-	    $$InComingMessage = substr($buf, $p + 2);
+	    $$data_ptr   = substr($buf, $p + 2);
 	    last DATA;
 	}
     }
 
-    # extract mail body and put it to $$InComingMessage
+    # extract mail body and put it to $$data_ptr
   DATA:
     while ($p = sysread($fd, $data, 1024)) {
 	$total_buffer_size += $p;
-	$$InComingMessage  .= $data;
+	$$data_ptr         .= $data;
     }
 
     # read the message (mail body) from the incoming mail
     my $body_size = 0;
-    if (defined($InComingMessage)) {
-	$body_size = length($$InComingMessage);
+    if (defined($data_ptr)) {
+	$body_size = length($$data_ptr);
     }
 
     if ($debug > 2) {
@@ -602,13 +605,14 @@ sub _build_header_object
 sub _build_body_object
 {
     my ($self, $args, $result) = @_;
+    my $data_ptr = $self->{ __data };
 
     # XXX we use data_type (type defined in Content-Type: field) here.
     # XXX "base_data_type" is used only internally.
     return new Mail::Message {
 	boundary  => $self->_header_mime_boundary($result->{ header }),
 	data_type => $self->_header_data_type($result->{ header }),
-	data      => $InComingMessage,
+	data      => $data_ptr,
     };
 }
 
@@ -677,8 +681,7 @@ sub whole_message_body
 sub whole_message_as_string_ref
 {
     my ($self) = @_;
-
-    return $InComingMessage;
+    return $self->{ __data };
 }
 
 
