@@ -1,0 +1,31 @@
+<!--
+   $FML: general.sgml,v 1.4 2001/05/27 04:50:44 fukachan Exp $
+-->
+
+<chapter id="member">
+	<title>
+	メンバー管理
+	</title>
+
+<qandaset>
+<qandaentry>
+<question>
+	<para>
+	メンバー一覧が見たい
+	</para>
+</question>
+
+<answer>
+<para>
+elena ML のメンバー一覧を見たい場合、
+<screen>
+makefml list elena
+</screen>
+</para>
+</answer>
+</qandaentry>
+</qandaset>
+
+
+
+</chapter>

@@ -1,0 +1,21 @@
+<!--
+This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
+to generate various output formats.
+
+$FML: book.sgml,v 1.1 2001/05/19 06:03:02 fukachan Exp $
+-->
+
+<!doctype book public "-//FML//DTD DocBook V3.1-Based Extension//EN" [
+	<!entity % include SYSTEM "include/chapters.ent"> %include;
+]>
+
+<book>
+
+  &bookinfo;
+
+  <toc></toc>
+
+  &chapter.member;
+
+</book>
+
