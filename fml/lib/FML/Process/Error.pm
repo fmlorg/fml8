@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+# Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.47 2004/12/05 16:19:10 fukachan Exp $
+# $FML: Error.pm,v 1.48 2005/01/01 08:36:29 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -344,7 +344,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004,2005 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
