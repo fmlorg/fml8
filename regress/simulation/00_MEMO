@@ -112,6 +112,12 @@
 
 -------------------- 2002-06 AUDIT --------------------
 
+○   [DOC] Delivered-To をけそう tips
+
+
+○   subject でふぉわーどさきをかえる tips をしこもう
+
+
 ○   FML::CGI::Admin:: ではハードコーディングするしかない？
 
   例 FML::CGI::Admin::User
@@ -499,4 +505,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.32 2002/07/13 14:28:41 fukachan Exp $
+$FML: 00_MEMO,v 1.33 2002/07/15 15:29:18 fukachan Exp $
