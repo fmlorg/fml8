@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: DB.pm,v 1.1.2.1 2003/06/01 12:28:56 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -17,7 +17,7 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML$;
+my $version = q$FML: DB.pm,v 1.1.2.1 2003/06/01 12:28:56 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 my $debug = 1;
@@ -320,6 +320,69 @@ sub _analyze_thread
 }
 
 
+=head1 SUMMARY
+
+retrieve summary on thread et.al.
+
+=head2 thread_summary($id).
+
+return the following thread summary around the primary key $id.
+
+    my $summary = {
+	prev_id        => $prev_id,
+	next_id        => $next_id,
+	prev_thread_id => $prev_thread_id,
+	next_thread_id => $next_thread_id,
+    };
+
+For example, supporse $id 5 and the thread link is (3 5 6):
+
+    my $summary = {
+	prev_id        => 4,
+	next_id        => 6,
+	prev_thread_id => 3,
+	next_thread_id => 6,
+    };
+
+=cut
+
+
+# Descriptions: return thread summary around key $id.
+#    Arguments: OBJ($self) NUM($id)
+# Side Effects: none
+# Return Value: HASH_REF
+sub thread_summary
+{
+    my ($self, $id)    = @_;
+    my $db             = $self->db_open();
+    my $prev_id        = $id > 1 ? $id - 1 : undef;
+    my $next_id        = $id + 1;
+    my $prev_thread_id = $self->_db_get($db, 'prev_key', $id);
+    my $next_thread_id = $self->_db_get($db, 'next_key', $id);
+
+    # diagnostic
+    if ($prev_thread_id) {
+	undef $prev_thread_id if $prev_thread_id == $id;
+    }
+    if ($next_thread_id) {
+	undef $next_thread_id if $next_thread_id == $id;
+    }
+
+    # XXX this routine returns information expected straight forwardly, so
+    # XXX $summary may be invalid since $next*id not yet exists.
+    # XXX we expect the program calling this method validates this info.
+    # XXX For examle, check the existence of msg${next_id}.html before use.
+    my $summary = {
+	prev_id        => $prev_id,
+	next_id        => $next_id,
+	prev_thread_id => $prev_thread_id,
+	next_thread_id => $next_thread_id,
+    };
+
+    return $summary;
+}
+
+
 =head1 UTILITY FUNCTIONS
 
 All methods are module internal.
@@ -421,8 +484,7 @@ sub msg_time
 	}
     }
     else {
-	my $id = $self->{ _current_id };
-	warn("cannot pick up Date: field id=$id");
+	warn("cannot pick up Date: field");
 	return '';
     }
 }
@@ -678,7 +740,7 @@ sub _PRINT_DEBUG_DUMP_HASH
 
     if ($debug) {
 	while (($k, $v) = each %$hash) {
-	    printf STDERR "%-30s => %s\n", $k, $v;
+	    printf STDERR "(debug) %-30s => %s\n", $k, $v;
 	}
     }
 }
