@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Procmail.pm,v 1.3 2002/09/11 23:18:13 fukachan Exp $
+# $FML: Procmail.pm,v 1.4 2002/09/22 14:56:51 fukachan Exp $
 #
 
 package FML::MTAControl::Procmail;
@@ -17,7 +17,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::MTAControl - procmail utilities
+FML::MTAControl::Procmail - handle procmail specific configurations
 
 =head1 SYNOPSIS
 
@@ -26,8 +26,6 @@ set up aliases and virtual maps for procmail.
 =head1 DESCRIPTION
 
 =head1 METHODS
-
-=head2 new()
 
 =cut
 
@@ -141,11 +139,11 @@ sub procmail_find_key_in_alias_maps
 	    while (<$fh>) {
 		return 1 if /^$key:/;
 	    }
+	    $fh->close;
 	}
 	else {
 	    warn("cannot open $map");
 	}
-	$fh->close;
     }
 
     return 0;
@@ -226,6 +224,11 @@ sub procmail_setup
 
     0;
 }
+
+
+#
+# XXX-TODO: how to handle procmail virtual maps ?
+#
 
 
 # Descriptions: rewrite $params
