@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.18 2002/06/28 03:40:55 fukachan Exp $
+# $FML: Menu.pm,v 1.19 2002/06/30 14:30:14 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -22,7 +22,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::CGI::Admin::Menu - provides CGI for ML administrators
+FML::CGI::Admin::Menu - provides CGI controll for the specific domain
 
 =head1 SYNOPSIS
 
@@ -45,6 +45,9 @@ C<FML::CGI::Admin::Menu> is a subclass of C<FML::Process::CGI>.
              FML::Process::Kernel
                        |
                        A
+             FML::Process::CGI::Kernel
+                       |
+                       A
              FML::Process::CGI
                        |
                        A
@@ -58,7 +61,7 @@ C<FML::CGI::Admin::Menu> is a subclass of C<FML::Process::CGI>.
 Almost methods common for CGI or HTML are forwarded to
 C<FML::Process::CGI> base class.
 
-This module has routines needed for CGI.
+This module has routines needed for the admin CGI.
 
 =cut
 
@@ -73,7 +76,7 @@ sub html_start
     my $config  = $curproc->{ config };
     my $myname  = $curproc->myname();
     my $domain  = $curproc->ml_domain();
-    my $ml_name = $curproc->safe_param_ml_name();
+    my $ml_name = $curproc->cgi_try_get_ml_name($args);
     my $title   = "${ml_name}\@${domain} configuration interface";
     my $color   = $config->{ cgi_main_menu_color } || '#FFFFFF';
     my $charset = $config->{ cgi_charset } || 'euc-jp';
@@ -114,28 +117,29 @@ sub run_cgi_main
     my $ml_name = $curproc->cgi_try_get_ml_name($args);
     my $hints   = $curproc->hints();
     my $pcb     = $curproc->{ pcb };
+    my $mode    = 'admin'; # cgi runs under admin mode (same way as makefml)
 
     # specified command, we need to identify
     # the command specifined in the cgi_navigation and cgi_mein.
     my $navi_command = $curproc->safe_param_navi_command() || '';
     my $command      = $curproc->safe_param_command() || '';
 
-    print "command = $command, navi_command = $navi_command<br>\n" if $debug;
-
-    # update config on memory to hadlne
-    # 1. ml_name specified here
-    # 2. virtual domain
+    # updat config: $ml_name is found now (get $ml_name from CGI).
     $config->set('ml_name', $ml_name);
-    $curproc->rewrite_config_if_needed($args, {
-	ml_name   => $ml_name,
-	ml_domain => $hints->{ ml_domain },
-    });
+
+    if ($debug) {
+	print "<PRE>\n";
+	print "ml_name      = $ml_name\n";
+	print "command      = $command\n";
+	print "navi_command = $navi_command\n";
+	print "</PRE>\n";
+    }
 
     if (($command eq 'newml' && $ml_name) ||
 	($command eq 'rmml'  && $ml_name)) {
 	print "<br>* case 1 <br>\n" if $debug;
 	my $command_args = {
-	    command_mode => 'admin',
+	    command_mode => $mode,
 	    comname      => $command,
 	    command      => $command,
 	    ml_name	 => $ml_name,
@@ -151,7 +155,7 @@ sub run_cgi_main
 	print "<br>* case 2 <br>\n" if $debug;
 	my $ml_name      = $curproc->safe_param_ml_name();
 	my $command_args = {
-	    command_mode => 'admin',
+	    command_mode => $mode,
 	    comname      => $command,
 	    command      => $command,
 	    ml_name	 => $ml_name,
@@ -168,10 +172,11 @@ sub run_cgi_main
 
 	my $ml_name      = $curproc->safe_param_ml_name();
 	my $command_args = {
-	    command_mode => 'admin',
+	    command_mode => $mode,
 	    comname      => $navi_command,
 	    command      => $navi_command,
 	    ml_name	 => $ml_name,
+	    options      => [ ],
 	    argv         => undef,
 	    args         => undef,
 	};
@@ -183,10 +188,11 @@ sub run_cgi_main
 
 	my $ml_name      = $curproc->safe_param_ml_name();
 	my $command_args = {
-	    command_mode => 'admin',
+	    command_mode => $mode,
 	    comname      => $command,
 	    command      => $command,
 	    ml_name	 => $ml_name,
+	    options      => [ ],
 	    argv         => undef,
 	    args         => undef,
 	};
@@ -208,16 +214,13 @@ sub run_cgi_main
 sub run_cgi_navigator
 {
     my ($curproc, $args) = @_;
+    my $config  = $curproc->{ config };
     my $action  = $curproc->myname();
     my $target  = '_top';
-    my $ml_list = $curproc->get_ml_list($args);
-    my $address = $curproc->safe_param_address() || '';
-    my $config  = $curproc->{ config };
-    my $command_list =
-	$config->get_as_array_ref('commands_for_admin_cgi');
 
-    # main menu
+    # 1. ML
     my $ml_name = $curproc->cgi_try_get_ml_name($args);
+    my $ml_list = $curproc->get_ml_list($args);
     my $fml_url = '<A HREF="http://www.fml.org/software/fml-devel/">fml</A>';
     print "<B>$fml_url admin menu</B>\n<BR>\n";
 
@@ -230,16 +233,22 @@ sub run_cgi_navigator
 			 -size    => 5);
     print "\n<BR>\n";
 
-    my $command_default = $curproc->safe_param_navi_command() ||
-	$curproc->safe_param_command();
+    # 2. command
+    my $navi_command    = $curproc->safe_param_navi_command() || '';
+    my $command         = $curproc->safe_param_command() || '';
+    my $command_default = $navi_command || $command;
+    my $command_list    =
+	$config->get_as_array_ref('commands_for_admin_cgi');
 
     print "  command:\n";
-    print scrolling_list(-name   => 'navi_command',
-			 -values => $command_list,
+    print scrolling_list(-name    => 'navi_command',
+			 -values  => $command_list,
 			 -default => [ $command_default ],
-			 -size   => 5);
+			 -size    => 5);
     print "\n<BR>\n";
 
+
+    # 3. submit
     print submit(-name => 'submit');
     print reset(-name  => 'reset');
 
