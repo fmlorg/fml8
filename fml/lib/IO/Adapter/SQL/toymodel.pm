@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: toymodel.pm,v 1.7 2001/12/24 07:44:35 fukachan Exp $
+# $FML: toymodel.pm,v 1.8 2002/02/01 12:03:59 fukachan Exp $
 #
 
 
@@ -186,7 +186,7 @@ Ken'ichi Fukamchi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamchi
+Copyright (C) 2001,2002 Ken'ichi Fukamchi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

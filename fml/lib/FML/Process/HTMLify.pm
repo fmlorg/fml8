@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000-2001 Ken'ichi Fukamachi
+# Copyright (C) 2000-2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.7 2001/12/23 07:04:30 fukachan Exp $
+# $FML: HTMLify.pm,v 1.8 2002/02/01 12:03:56 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -170,7 +170,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
