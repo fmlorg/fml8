@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.27 2002/06/24 09:42:52 fukachan Exp $
+# $FML: Utils.pm,v 1.28 2002/06/24 13:40:07 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -602,22 +602,22 @@ sub get_ml_list
 }
 
 
-=head2 get_recipient_list()
+=head2 get_address_list( $map )
 
-get HASH ARRAY of valid mailing lists.
+get HASH ARRAY of address list for the specified map.
 
 =cut
 
 
-# Descriptions: list up recipients list
-#    Arguments: OBJ($curproc) HASH_REF($args)
+# Descriptions: get address list for the specified map
+#    Arguments: OBJ($curproc) STR($map)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub get_recipient_list
+sub get_address_list
 {
-    my ($curproc) = @_;
+    my ($curproc, $map) = @_;
     my $config = $curproc->{ config };
-    my $list   = $config->get_as_array_ref( 'recipient_maps' );
+    my $list   = $config->get_as_array_ref( $map );
 
     eval q{ use IO::Adapter;};
     unless ($@) {

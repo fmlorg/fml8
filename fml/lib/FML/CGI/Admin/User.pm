@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: User.pm,v 1.7 2002/04/25 04:15:19 fukachan Exp $
+# $FML: User.pm,v 1.8 2002/06/24 11:06:11 fukachan Exp $
 #
 
 package FML::CGI::Admin::User;
@@ -38,20 +38,24 @@ sub new
 sub cgi_menu
 {
     my ($self, $curproc, $args, $command_args) = @_;
-    my $action  = $curproc->myname();
-    my $target  = '_top';
-    my $ml_list = $curproc->get_ml_list($args);
-    my $address = $curproc->safe_param_address() || '';
-    my $config  = $curproc->{ config };
-
-    #
-    my $address_list = $curproc->get_recipient_list();
+    my $action       = $curproc->myname();
+    my $target       = '_top';
+    my $ml_list      = $curproc->get_ml_list($args);
+    my $address      = $curproc->safe_param_address() || '';
+    my $config       = $curproc->{ config };
     my $ml_name      = $command_args->{ ml_name };
     my $comname      = $command_args->{ comname };
-    my $command_list =
-	$config->get_as_array_ref('commands_for_admin_cgi');
+    my $address_list = [];
 
+    # prepare address list to show them at the scrolling list
+    if ($comname eq 'subscribe' || $comname eq 'unsubscribe') {
+	$address_list = $curproc->get_address_list( 'member_maps' );
+    }
+    elsif ($comname eq 'addadmin' || $comname eq 'byeadmin') {
+	$address_list = $curproc->get_address_list( 'admin_member_maps' );
+    }
 
+    # create <FORM ... > ... by (start_form() ... end_form())
     print start_form(-action=>$action, -target=>$target);
 
     print table( { -border => undef },
