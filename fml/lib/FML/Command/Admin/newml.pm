@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.36 2002/05/28 13:36:01 fukachan Exp $
+# $FML: newml.pm,v 1.37 2002/05/28 14:39:56 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -237,6 +237,7 @@ sub _install_postfix_virtual_map
     my $config       = $curproc->{ config };
     my $ml_name      = $config->{ ml_name };
     my $ml_domain    = $config->{ ml_domain };
+    my $postmap      = $config->{ path_postmap };
 
     my $virtual = $config->{ postfix_virtual_map_file };
     my $src     = File::Spec->catfile($template_dir, 'postfix_virtual');
@@ -244,6 +245,8 @@ sub _install_postfix_virtual_map
     print STDERR "updating $virtual\n";
     _install($src, $dst, $params);
     append($dst, $virtual);
+    unlink $dst;
+    system "$postmap $virtual";
 }
 
 
