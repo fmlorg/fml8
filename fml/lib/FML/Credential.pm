@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.49 2003/11/25 14:50:11 fukachan Exp $
+# $FML: Credential.pm,v 1.50 2003/11/26 04:47:08 fukachan Exp $
 #
 
 package FML::Credential;
@@ -62,7 +62,7 @@ sub new
     my ($self, $curproc) = @_;
     my ($type) = ref($self) || $self;
     my $config = $curproc->config();
-    my $type   = $config->{ address_compare_function_type };
+    my $actype = $config->{ address_compare_function_type };
     my $me     = \%Credential;
 
     # default comparison level
@@ -77,13 +77,13 @@ sub new
     }
 
     # case insensitive for backward compatibility. (default)
-    if ($type eq 'user_part_case_insensitive' ||
-	$type eq 'case_insensitive') {
+    if ($actype eq 'user_part_case_insensitive' ||
+	$actype eq 'case_insensitive') {
 	$me->{ _user_part_case_sensitive } = 0;
     }
     # case sensitive for user part comparison.
-    elsif ($type eq 'user_part_case_sensitive' ||
-	   $type eq 'case_sensitive') {
+    elsif ($actype eq 'user_part_case_sensitive' ||
+	   $actype eq 'case_sensitive') {
 	$me->{ _user_part_case_sensitive } = 1;
     }
     # case-insensitive by default for backward compatibility.
