@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: User.pm,v 1.4 2003/09/27 06:58:16 fukachan Exp $
+# $FML: User.pm,v 1.5 2003/10/14 10:55:27 fukachan Exp $
 #
 
 package FML::CGI::User;
@@ -47,20 +47,24 @@ sub cgi_menu
     my $address_list = [];
     my $selected_key = '';
 
+    # XXX-TODO: we should enable configurable by config files.
+
     # which address list to show at the scrolling list
     if ($comname eq 'subscribe'   ||
 	$comname eq 'adduser'     ||
 	$comname eq 'useradd'     ||
 	$comname eq 'unsubscribe' ||
 	$comname eq 'userdel'     ||
-	$comname eq 'deluser'     ) {
-	$address_list = $curproc->get_address_list( 'member_maps' );
-	$selected_key = 'members';
-    }
-    elsif ($comname eq 'digeston') {
+	$comname eq 'deluser'     ||
+	$comname eq 'digeston') {
 	$address_list = $curproc->get_address_list( 'recipient_maps' );
 	$selected_key = 'recipients';
     }
+    elsif (0) {
+	$address_list = $curproc->get_address_list( 'member_maps' );
+	$selected_key = 'members';
+    }
+    # XXX digest operatoins is asymmetric with *_maps.
     elsif ($comname eq 'digestoff') {
 	$address_list = $curproc->get_address_list( 'digest_recipient_maps' );
 	$selected_key = 'digest_recipients';

@@ -279,7 +279,7 @@ cgi_menu_default_address_map</entry>
 <entry>
  CGI のアドレス操作の際に選べる種類のデフォルト値</entry>
 <entry>
-member
+recipient
    </entry>
 </row>
 <row>
