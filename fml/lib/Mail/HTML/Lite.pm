@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.26 2001/10/28 12:32:05 fukachan Exp $
+# $FML: Lite.pm,v 1.27 2001/10/28 14:55:54 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.26 2001/10/28 12:32:05 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.27 2001/10/28 14:55:54 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -894,6 +894,9 @@ sub cache_message_info
 sub __str2array
 {
     my ($str) = @_;
+
+    return undef unless defined $str;
+
     $str =~ s/^\s*//; 
     $str =~ s/\s*$//; 
     my (@a) = split(/\s+/, $str);
@@ -940,7 +943,7 @@ sub _search_default_next_thread_id
     my ($db, $id) = @_;
     my $list = __str2array( $db->{ _thread_list }->{ $id } );
     my (@ra, @c0, @c1) = ();
-    @ra = reverse @$list;
+    @ra = reverse @$list if defined $list;
 
     for (1 .. 10) { push(@c0, $id + $_);}
     for my $xid ($id, @ra, @c0) {
@@ -1897,7 +1900,7 @@ sub _separete_url
 sub _PRINT_DEBUG
 {
     my ($str) = @_;
-    print STDERR "(debug) $str\n" if $ENV{'DEBUG'} == 100 || $debug;
+    print STDERR "(debug) $str\n" if $debug;
 }
 
 
@@ -1906,7 +1909,7 @@ sub _PRINT_DEBUG_DUMP_HASH
     my ($hash) = @_;
     my ($k,$v);
 
-    if ($ENV{'DEBUG'} == 100 || $debug) {
+    if ($debug) {
 	while (($k, $v) = each %$hash) {
 	    print STDERR "   $k => $v\n";
 	}
