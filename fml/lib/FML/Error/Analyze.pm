@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.19 2003/02/09 12:31:42 fukachan Exp $
+# $FML: Analyze.pm,v 1.20 2003/05/28 13:14:05 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -95,6 +95,21 @@ sub removal_address
     }
     else {
 	return [];
+    }
+}
+
+
+# Descriptions: print address and the status summary.
+#    Arguments: OBJ($self) STR($addr)
+# Side Effects: none
+# Return Value: none
+sub print
+{
+    my ($self, $addr) = @_;
+    my $analyzer = $self->{ _analyzer };
+	
+    if (defined $analyzer) {
+	return $analyzer->print($addr);
     }
 }
 

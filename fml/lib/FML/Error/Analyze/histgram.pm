@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.7 2003/01/01 02:06:22 fukachan Exp $
+# $FML: histgram.pm,v 1.1 2003/05/28 13:14:05 fukachan Exp $
 #
 
 package FML::Error::Analyze::histgram;
@@ -203,6 +203,30 @@ sub removal_address
     my ($self) = @_;
 
     return( $self->{ _removal_address } || [] );
+}
+
+
+# Descriptions: print address and the summary
+#    Arguments: OBJ($self) STR($addr)
+# Side Effects: none
+# Return Value: none
+sub print
+{
+    my ($self, $addr) = @_;
+    my $wh       = \*STDOUT;
+    my $summary  = $self->summary();
+    my $bufarray = $summary->{ $addr } || [];
+    my $x        = '';
+    my $y        = '';
+
+    for my $y (@$bufarray) {
+	$x .= defined $y ? $y : 0; 
+	$x .= " ";
+    }
+
+    $x =~ s/^\s*//;
+    $x =~ s/\s*$//;
+    printf $wh "%25s => (%s)\n", $addr, $x;
 }
 
 

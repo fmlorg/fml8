@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.21 2003/05/20 13:49:04 fukachan Exp $
+# $FML: Error.pm,v 1.22 2003/05/28 13:14:04 fukachan Exp $
 #
 
 package FML::Error;
@@ -457,21 +457,8 @@ sub print
 
     if (defined $analyzer) {
 	my $info = $analyzer->summary();
-    	my ($k, $v);
-	
-	while (($k, $v) = each %$info) {
-	    if (defined($v) && ref($v) eq 'ARRAY') {
-		my $x = '';
-		for my $y (@$v) {
-		    $x .= $y if defined $y;
-		    $x .= " ";
-		}
-
-		printf $wh "%25s => (%s)\n", $k, $x;
-	    }
-	    else {
-		printf $wh "%25s => %s\n", $k, $v;
-	    }
+	for my $k (keys %$info) {
+	    $analyzer->print($k);
 	}
     }
 }
