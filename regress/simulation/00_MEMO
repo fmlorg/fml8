@@ -8,13 +8,6 @@
 	XXX
 
 
-[TODO]	virtual_mps -> $ml_home_prefix_maps ?
-
-	[CHECK]	
-		etc/main.cf.in
-		FML/Process/Utils.pm
-
-
 [TODO]	charset と言語(japanese,english)との対応関係を一箇所にまとめて定義
 
 	[CHECK]	
@@ -475,4 +468,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.93 2003/10/26 06:00:58 fukachan Exp $
+$FML: 00_MEMO,v 1.94 2003/11/15 02:54:58 fukachan Exp $
