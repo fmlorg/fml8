@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: internal.sgml,v 1.1 2003/07/29 12:13:54 fukachan Exp $
    $jaFML: internal.sgml,v 1.6 2003/04/15 14:51:36 fukachan Exp $
 -->
 
@@ -9,12 +9,8 @@
 	</title>
 
 <para>
-(... not yet translated  ...)
-</para>
-
-<para>
-Consider help command which send back help message to the sender, an
-example of command.
+Consider "help" command an an example of command,
+which sends back help message to the sender.
 </para>
 
 <para>
@@ -25,10 +21,10 @@ FML::Process::Command via AUTOLOAD of FML::Command.
 
 <warning>
 <para>
-All commands are implemented as either of FML::Command::User
-FML::Command::Admin classes. CUI (makefml, fml) and GUI (CGI) uses
-FML::Command::Admin class. Command mail users both classes according
-to the context.
+All commands are implemented at either of FML::Command::User
+FML::Command::Admin classes. Both CUI (makefml, fml) and GUI (CGI)
+uses FML::Command::Admin class. Instead command mail users both
+classes according to the context.
 </para>
 </warning>
 
@@ -66,24 +62,24 @@ sub process
 where $curproc is an object, which type is hash reference.
 It corresponds to %Envelope of &fml4;.
 It contains several references to objects for this process.
-$config is an object, but global in $fml4;.
+For exmple, variable $config is an object holding configuration variables.
 </para>
 
 <para>
 prepare_file_to_return() converts the message language and expands the
-arguments in the message templtes.
+arguments in the message templates.
  </para>
 
 <para>
 $curproc->reply_message() inserts the specified mesage string into the
-queue.
+message queue of this process on memory.
 </para>
 
 <para>
-The error/log messages queued in are aggergated to one message at the
-last of the current process. It is driven by Mail::Delivery class to
-send it. If needed, the aggregator handles text strings and multipart
-properly.
+The error/log messages queued in on memory are aggergated to one
+message at the last of the current process. Mail::Delivery class
+handles the aggregation and send it. If needed, the aggregator handles
+text strings and multipart properly to build one message.
 </para>
 
 <para>
@@ -92,9 +88,12 @@ is different.
 </para>
 
 <para>
-FYI: commands such as get for the file manipulation uses the same
-message queuing mechanism. This is different from &fml4;'s Notify()
-fundamentally.
+FYI: commands such as "get" for the file manipulation uses the same
+message queuing mechanism. Notify() sends back immediately. This is
+different from &fml4;'s Notify() fundamentally.
 </para>
 
 </sect1>
+
+
+

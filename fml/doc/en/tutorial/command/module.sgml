@@ -1,38 +1,36 @@
 <!--
-   $FML$
+   $FML: module.sgml,v 1.1 2003/07/24 15:37:35 fukachan Exp $
    $jaFML: module.sgml,v 1.4 2003/04/15 14:51:36 fukachan Exp $
 -->
 
 
 <sect1 id="fml.command.module.hierarchy">
 	<title>
-	modules for commands
+	Modules for commands
 	</title>
 
 <para>
-In &fmldevel;, all command modules are shared among command mail,
-CUI(makefml, fml) and GUI. 
-Commands are caregorized into user and administrative ones by the
-priviledge. 
+In &fmldevel;, all command modules are shared among command mail, CUI
+(makefml, fml) and GUI (CGI). Commands are caregorized into user and
+administrative ones by the priviledge.
 </para>
 
 <para>
-FML::Command:: consists of the following classes:
+FML::Command class consists of the following classes:
 <screen>
 FML::Command		entrance into FML::Command
-FML::Command::User	command for usual ML users.
-FML::Command::Admin	command for administrators.
+FML::Command::User	command for general ML users.
+FML::Command::Admin	command for remote administrators.
 </screen>
-For example, a user command in a command mail kicks off
-FML::Command firstly, after some steps, 
-calls FML::Command::User::$command where $command is the specified
-command name. 
+For example, a user command in a command mail kicks off FML::Command
+firstly, after some steps, calls FML::Command::User::$command where
+$command is the specified command name.
 </para>
 
 
 <sect2>
 	<title>
-	usre command in command mail
+	User command in command mail
 	</title>
 
 <para>
@@ -41,20 +39,18 @@ via FML::Command.
 </para>
 
 <para>
-
-Finally, some module calls FML::Command::Admin::$command for real work even if it is
-a user command. 
-For example, 
-FML::Command::Admin::subscribe works for subscription.
-In this case, 
-FML::Command::User::subscribe module is a wrapper or an entrance for
-confirmation before the real subscription work. 
+FYI: some module calls FML::Command::Admin::$command for real work
+even if it is a user command. For example,
+FML::Command::Admin::subscribe works for subscription. In this case,
+FML::Command::User::subscribe module is a wrapper/entrance for
+confirmation before the real subscription process runs.
 </para>
+
 </sect2>
 
 <sect2>
 	<title>
-	admin command (administrative command in command mail)
+	Admin command (administrative command in command mail)
 	</title>
 
 <para>

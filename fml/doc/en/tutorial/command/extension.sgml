@@ -1,41 +1,41 @@
 <!--
-   $FML$
+   $FML: extension.sgml,v 1.1 2003/07/24 15:37:35 fukachan Exp $
    $jaFML: extension.sgml,v 1.10 2003/04/15 14:51:36 fukachan Exp $
 -->
 
 
 <sect1 id="fml.command.hack.commandmail">
 	<title>
-	command extensoin: command mail
+	Command extension: command mail
 	</title>
 
 
 <warning>
 <para>
 To make a new command usable for all ML's on this host, 
-put the module you wrote at
+you need to put the module you wrote at
 <screen>
 /usr/local/lib/fml/site_local/
 </screen>
-
+.
 If you permit the command is used only for the specifiec ML
 (e.g. elena ML), put it at the ML local library path
 <screen>
 /var/spool/ml/elena/local/lib/
 </screen>
-.
+where $ml_home_dir = /var/spool/ml/elena.
 </para>
 
 <para>
-In this section, we consider the former case.
-In both cases, the module codes are same.
+In this section, we consider the former case. In both cases, the way
+of writing the module codes are same. Only path differs.
 </para>
 </warning>
 
 
 <sect2>
 	<title> 
-	create a new user command
+	Create a new user command
 	</title>
 
 <para>
@@ -50,6 +50,8 @@ to permit the user of "uja" command.
 <screen>
 commands_for_user += uja
 </screen>
+It you allow the command only for the specific elena ML, 
+edit /var/spool/ml/elena/config.cf in the same way.
 </para>
 
 </sect2>
@@ -57,13 +59,13 @@ commands_for_user += uja
 
 <sect2>
 	<title> 
-	create a new admin command "admin uja"
+	Create a new admin command "admin uja"
 	</title>
 
 <para>
-In the same way describe above, hack the module!:)
-but the location differs.
-Put it at the FML::Command::Admin:: class.
+In the same way described above, hack the module!:)
+but the module path differs.
+Put it at the FML::Command::Admin:: class. For example
 <screen>
 /usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
 </screen>
@@ -111,9 +113,9 @@ Create a module "uja" and put it at
 <screen>
 /usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
 </screen>
-No editing of .cf files.
-The existence of module file enables the command automatically 
-in the case CUI since the use of CUI implies administrator use.
+You do not need to edit .cf files. The existence of module file
+enables the command automatically in the CUI case since the usability
+of CUI implies administrator use.
 </para>
 
 </sect1>
@@ -149,7 +151,7 @@ In both cases, the module codes are same.
 
 
 <para>
-craete a module "uja" and put it at
+Craete a module "uja" and put it at
 <screen>
 /usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
 </screen>
