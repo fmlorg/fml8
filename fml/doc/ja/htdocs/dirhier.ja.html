@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>
+ディレクトリ構造
+</TITLE>
+<META http-equiv="Content-Type"
+	content="text/html; charset=EUC-JP">
+</HEAD>
+
+<BODY BGCOLOR="#E6E6FA">
+<!-- ================== body =========================================== -->
+
+<P> 実際にインストールされる場所は、次のような場所と想定されています。
+<PRE>
+/etc/fml/
+/usr/local/lib/fml/$VERSION/
+/usr/local/libexec/fml/$VERSION/
+/usr/share/doc/fml/$VERSION/
+</PRE>
+
+<P> ソース中のディレクトリ構造
+<TABLE BORDER=4>
+   <TR>
+	<TD> ディレクトリ
+	<TD> 説明
+
+   <TR>
+	<TD>
+	<A HREF="index.ja.html" TARGET="_top">fml/doc/</A>
+	<TD>	
+	ドキュメント
+
+   <TR>
+	<TD>
+	<A HREF="../etc/index.html"">fml/etc/</A>
+	<TD> 設定変数
+
+   <TR>
+	<TD>	<A HREF="../lib/index.ja.html"> fml/lib/ </A>
+	<TD>	perl モジュール群
+
+   <TR>
+	<TD> 	<A HREF="../libexec/boot.ja.html"> fml/libexec/ </A>
+	<TD> 
+		実行されるプログラムの実体。
+		もっともすぐにモジュールを
+		呼び出すので、正確には wrapper です。
+
+</TABLE>
+
+<!-- =================================================================== -->
+</BODY>
+</HTML>

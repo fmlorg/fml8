@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>
+fml5 で既に動く機能
+</TITLE>
+<META http-equiv="Content-Type"
+	content="text/html; charset=EUC-JP">
+</HEAD>
+
+<BODY BGCOLOR="#E6E6FA">
+<!-- ================== body =========================================== -->
+
+<CENTER>
+fml5 で既に動く機能
+</CENTER>
+
+<P>
+これらのものは /usr/local/libexec/fml 以下にインストールされます。
+実際には /usr/local/libexec/fml/loader へのリンクです。
+起動される時の名前で振舞いを変えています。
+
+<P>
+注意: fml5 ではすべてのプログラムは /usr/local/libexec/fml/loader を経
+由して起動されます。バージョン依存性を処理するために、つねにこの 
+loader を通して起動していくことになっています。
+
+<TABLE BORDER=4>
+   <TR>
+	<TD>
+		fml.pl
+		<BR>
+		distribute
+	<TD>  	配送処理をする。
+		subject を書き換える。
+		スプールに記事として溜める。
+		IPv6 をしゃべる。
+		チケット番号をふる。
+		et. al. 
+
+   <TR>
+	<TD>	command
+		<BR>
+		fml.pl --ctladdr
+	<TD>  
+		プログラム自体は動きますが、
+		機能するコマンドはまだないです。
+
+   <TR>
+	<TD>	makefml
+	<TD>  
+		登録と削除関係、および最低限のＭＬの作成だけは動きます
+		(add subscribe
+		<BR>
+		bye unsubscribe resign remove 
+		<BR>
+		そして newml)。
+		使い方は fml 4.0 と一緒です。
+		<BR>
+		% makefml add elena アドレス
+		<BR>
+		% makefml bye elena アドレス
+		<BR>
+		% makefml newml elena
+   <TR>
+	<TD>  makefml.cgi
+	<TD>  makefml の CGI インターフェイス。
+		うごくけど、まだプロトタイプ。
+		動く機能は makefml と同等のものです。
+		それは最終的に makefml と同じ関数を呼び出しているからです。
+<PRE>
+例:
+/cgi-bin/makefml.cgi?ml_name=elena&method=bye&address=rudo@nuinui.net
+</PRE>
+
+   <TR>
+	<TD>  fmlconf
+	<TD>  変数一覧を表示します
+
+   <TR>
+	<TD>  fmldoc
+	<TD>  モジュールのマニュアルを表示する
+		<BR>
+		perldoc への wrapper です。
+
+   <TR>
+	<TD>  fmlticket
+	<TD>  
+		現在のチケットシステムのサマリを表示する
+		<BR>
+		チケットの close
+
+   <TR>
+	<TD>  fmlticket.cgi
+	<TD>  
+		fmlticket の CGI 版
+		<BR>
+		チケットを close する。
+		あるチケットに該当する記事群を表示する。
+
+   <TR>
+	<TD>	mead
+	<TD>  
+		ま〜だだよ
+
+   <TR>
+	<TD>	fmlserv
+	<TD>  
+		ま〜だだよ
+
+</TABLE>
+
+<!-- =================================================================== -->
+</BODY>
+</HTML>
