@@ -205,8 +205,8 @@ sub _set_up_template
     my ($self, $args) = @_;
 
     # message chains
-    $self->{ next }         = $args->{ next } || undef;
-    $self->{ prev }         = $args->{ prev } || undef;
+    $self->{ 'next' }       = $args->{ 'next' } || undef;
+    $self->{ 'prev' }       = $args->{ 'prev' } || undef;
 
     # basic content information
     $self->{ version }      = $args->{ version }       || 1.0;
@@ -261,14 +261,14 @@ sub _create
 sub next_chain
 {
     my ($self, $ref_next_message) = @_;
-    $self->{ next } = $ref_next_message;
+    $self->{ 'next' } = $ref_next_message;
 }
 
 
 sub prev_chain
 {
     my ($self, $ref_prev_message) = @_;
-    $self->{ prev } = $ref_prev_message;
+    $self->{ 'prev' } = $ref_prev_message;
 }
 
 
@@ -362,8 +362,8 @@ sub print
 	    $msg->_print_messsage_on_disk($fd, $args);
 	}
 
-	last MSG unless $msg->{ next };
-	$msg = $msg->{ next };
+	last MSG unless $msg->{ 'next' };
+	$msg = $msg->{ 'next' };
     }
 }
 
@@ -829,12 +829,12 @@ sub get_content_body
 sub get_first_plaintext_message
 {
     my ($self, $args) = @_;
-    my $size = $args->{ size } || 512;
+    my $size = $args->{ 'size' } || 512;
 
     my $mp;
     for ($mp = $self; 
-	 defined $mp->{ content } || defined $mp->{ next }; 
-	 $mp = $mp->{ next }) {
+	 defined $mp->{ content } || defined $mp->{ 'next' }; 
+	 $mp = $mp->{ 'next' }) {
 	my $type = $mp->get_content_type;
 
 	if ($type eq 'text/plain') {
@@ -886,7 +886,7 @@ sub get_content_type_list
     my ($msg) = @_;
     my ($m, @buf, $i);
 
-    for ($i = 0, $m = $msg; defined $m ; $m = $m->{ next }) {
+    for ($i = 0, $m = $msg; defined $m ; $m = $m->{ 'next' }) {
 	$i++;
 	push(@buf, "type[$i]: $m->{'content_type'} | $m->{'base_content_type'}");
     }
