@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.18 2003/01/25 09:14:06 fukachan Exp $
+# $FML: Base.pm,v 1.19 2003/01/25 09:34:44 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -23,6 +23,12 @@ FML::Restriction::Base -- define safe data representations
     my $regexp = $safe->regexp( 'type' );
 
     if ($data =~ /^($regexp)$/) {
+	# o.k. do something ...
+    }
+
+or
+
+    if ($safe->regexp_match('address', $data)) {
 	# o.k. do something ...
     }
 
@@ -87,6 +93,7 @@ my $user_regexp    = '[-A-Za-z0-9\._]+';
 my $command_regexp = '[-A-Za-z0-9_]+';
 my $file_regexp    = '[-A-Za-z0-9_]+';
 my $dir_regexp     = '[-A-Za-z0-9_]+';
+my $option_regexp  = '[-A-Za-z0-9]+';
 my %basic_variable =
     (
      # address, user and domain et.al.
@@ -108,6 +115,9 @@ my %basic_variable =
      'directory'         => $dir_regexp,
      'file'              => $file_regexp,
      'map'               => $file_regexp,
+
+     # unix command switch
+     'command_line_options' => $option_regexp,
      );
 
 
