@@ -14,6 +14,24 @@ default value(s)</entry>
 <tbody>
 <row>
 <entry>
+admin_cgi_base_dir</entry>
+<entry>
+ このＭＬの admin CGI を置くディレクトリ</entry>
+<entry>
+$cgi_base_dir/admin
+   </entry>
+</row>
+<row>
+<entry>
+admin_member_maps</entry>
+<entry>
+ メンバーかどうか認証する際に検索するすべてのメンバーリスト </entry>
+<entry>
+$primary_admin_member_map
+   </entry>
+</row>
+<row>
+<entry>
 article_header_rewrite_rules</entry>
 <entry>
  記事のヘッダを書き換えるルール群</entry>
@@ -31,7 +49,7 @@ delete_unsafe_header_fields
 </row>
 <row>
 <entry>
-available_commands</entry>
+available_commands_for_user</entry>
 <entry>
  有効なコマンド一覧を書く</entry>
 <entry>
@@ -40,15 +58,21 @@ help
    mget
    get
    mget
+   send
    subscribe
+   add
+   unsubscribe
    bye
    remove
    resign
-   unsubscribe
+   signoff
    chaddr
    confirm
    guide
    info
+   admin
+   objective
+   summary
    </entry>
 </row>
 <row>
@@ -86,6 +110,15 @@ verify_body_cksum_uniqueness
 </row>
 <row>
 <entry>
+cgi_base_dir</entry>
+<entry>
+ CGI を置くトップディレクトリ</entry>
+<entry>
+$fml_owner_home_dir/public_html/cgi-bin/fml/$ml_domain
+   </entry>
+</row>
+<row>
+<entry>
 cgi_charset</entry>
 <entry>
  CGI の表示の CHARSET </entry>
@@ -100,6 +133,24 @@ cgi_default_charset</entry>
  デフォルトの CHARSET </entry>
 <entry>
 euc-jp
+   </entry>
+</row>
+<row>
+<entry>
+cgi_main_menu_color</entry>
+<entry>
+ デフォルトの bgcolor</entry>
+<entry>
+#FFFFFF
+   </entry>
+</row>
+<row>
+<entry>
+cgi_navigation_bar_color</entry>
+<entry>
+ デフォルトの bgcolor</entry>
+<entry>
+#FFFFFF
    </entry>
 </row>
 <row>
@@ -138,6 +189,15 @@ command_unsubscribe_type</entry>
  unsubscribe コマンドで confirmation 認証(コールバック認証)</entry>
 <entry>
 confirmation
+   </entry>
+</row>
+<row>
+<entry>
+confirm_command_prefix</entry>
+<entry>
+ confirmation の返事を表す特別なコマンド</entry>
+<entry>
+confirm
    </entry>
 </row>
 <row>
@@ -201,7 +261,7 @@ guide_file</entry>
 <entry>
  ヘルプファイル</entry>
 <entry>
-$message_template_dir/guide
+$ml_home_dir/guide
    </entry>
 </row>
 <row>
@@ -266,7 +326,16 @@ help_file</entry>
 <entry>
  ヘルプファイル</entry>
 <entry>
-$message_template_dir/help
+$ml_home_dir/help
+   </entry>
+</row>
+<row>
+<entry>
+html_archive_dir</entry>
+<entry>
+ HTML 化された記事を作るディレクトリ (ＭＬごと)</entry>
+<entry>
+$fml_owner_home_dir/public_html/mlarchive/$ml_domain/$ml_name
    </entry>
 </row>
 <row>
@@ -343,6 +412,24 @@ file
 </row>
 <row>
 <entry>
+mail_aliases_file</entry>
+<entry>
+ MTA に教えるための aliases ファイル</entry>
+<entry>
+$mailconf_dir/aliases
+   </entry>
+</row>
+<row>
+<entry>
+mailconf_dir</entry>
+<entry>
+ MTA 用に教えるための設定ファイルを置くディレクトリ</entry>
+<entry>
+$sysconf_dir/mail
+   </entry>
+</row>
+<row>
+<entry>
 member_maps</entry>
 <entry>
  メンバーかどうか認証する際に検索するすべてのメンバーリスト </entry>
@@ -379,6 +466,15 @@ $fml_share_dir/template/$template_file_charset
 </row>
 <row>
 <entry>
+ml_admin_cgi_base_dir</entry>
+<entry>
+ このＭＬの admin CGI を置くディレクトリ</entry>
+<entry>
+$cgi_base_dir/ml-admin/$ml_name
+   </entry>
+</row>
+<row>
+<entry>
 mqueue_dir</entry>
 <entry>
  mail queue のディレクトリ</entry>
@@ -388,11 +484,22 @@ $var_dir/mqueue
 </row>
 <row>
 <entry>
+newml_command_template_files</entry>
+<entry>
+ ＭＬ作成時 (makefml newml )の際に作られる</entry>
+<entry>
+config.cf
+   include
+   include-ctl
+   </entry>
+</row>
+<row>
+<entry>
 objective_file</entry>
 <entry>
  ヘルプファイル</entry>
 <entry>
-$message_template_dir/objective
+$ml_home_dir/objective
    </entry>
 </row>
 <row>
@@ -404,6 +511,15 @@ post_restrictions</entry>
 reject_system_accounts
    permit_members_only
    reject
+   </entry>
+</row>
+<row>
+<entry>
+primary_admin_member_map</entry>
+<entry>
+ 登録などの際に対象となるメンバーリスト</entry>
+<entry>
+file:$ml_home_dir/members-admin
    </entry>
 </row>
 <row>
@@ -422,6 +538,15 @@ primary_recipient_map</entry>
  登録などの際に対象とする受信者のリスト</entry>
 <entry>
 file:$ml_home_dir/actives
+   </entry>
+</row>
+<row>
+<entry>
+privileged_command_prefix</entry>
+<entry>
+ 管理用のコマンドを表す特別なコマンド</entry>
+<entry>
+admin
    </entry>
 </row>
 <row>
@@ -558,7 +683,16 @@ summary_file</entry>
 <entry>
  ヘルプファイル</entry>
 <entry>
-$message_template_dir/summary
+$ml_home_dir/summary
+   </entry>
+</row>
+<row>
+<entry>
+sysconf_dir</entry>
+<entry>
+ fml からシステムに教えるデータを置くためのディレクトリ</entry>
+<entry>
+$ml_home_prefix/etc
    </entry>
 </row>
 <row>
@@ -718,6 +852,15 @@ yes
 </row>
 <row>
 <entry>
+use_html_archive</entry>
+<entry>
+ 記事を HTML 化するか否か</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
 use_lock</entry>
 <entry>
  ロックをするか？</entry>
@@ -745,9 +888,18 @@ yes
 </row>
 <row>
 <entry>
+use_thread_subject_tag</entry>
+<entry>
+ スレッド追跡システムは Subject タグを利用するか？</entry>
+<entry>
+no
+   </entry>
+</row>
+<row>
+<entry>
 use_thread_track</entry>
 <entry>
- チケットシステムを使うか</entry>
+ スレッド追跡システムを使うか</entry>
 <entry>
 yes
    </entry>
