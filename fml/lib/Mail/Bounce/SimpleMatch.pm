@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SimpleMatch.pm,v 1.36 2003/02/09 12:31:49 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.37 2003/04/07 15:39:20 tmu Exp $
 #
 
 
@@ -115,9 +115,14 @@ my $address_trap_regexp = {
     },
 
 
-    'smtp32' => {
+    'smtp32(a)' => {
     	'start' => 'undeliverable to',
     	'end'   => 'original message follows',
+    },
+
+    'smtp32(b)' => {
+    	'start' => 'undeliverable to',
+    	'end'   => 'Original message follows',
     },
 
     'smtpsvc' => {
