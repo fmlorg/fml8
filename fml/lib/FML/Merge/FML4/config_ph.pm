@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.8 2004/09/06 07:06:26 fukachan Exp $
+# $FML: config_ph.pm,v 1.9 2004/12/09 03:37:39 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
@@ -348,12 +348,31 @@ sub translate_xxx
 	    return $s;
 	}
     }
-    elsif ($key eq 'PERMIT_POST_FROM') {
-	if ($value eq 'anyone') {
-	    return 'article_post_restrictions = reject_system_special_accounts
-                                                permit_anyone
-                                                reject';
-	}
+    elsif ($key eq 'MAINTAINER') {
+	return "maintainer = $value";
+    }
+    elsif ($key eq 'MAIL_LIST') {
+	return "article_post_address = $value";
+    }
+    elsif ($key eq 'CONTROL_ADDRESS') {
+	return "command_mail_address = $value";
+    }
+    elsif ($key eq 'SMTP_SENDER') {   
+	return "smtp_sender = $value";
+    }
+    elsif ($key eq 'REJECT_ADDR') {
+	return "system_special_accounts = $value";
+    }
+    elsif ($key eq 'HOST' || $key eq 'PORT') {
+	my $host = $diff->{ 'HOST' } || '127.0.0.1';
+	my $port = $diff->{ 'PORT' } || 25;
+	return "smtp_servers = $host:$port";
+    }
+    elsif ($key eq 'ADMIN_MEMBER_LIST' ||
+	   $key eq 'MEMBER_LIST' ||
+	   $key eq 'ACTIVE_LIST' ||
+	   $key eq 'PASSWD_FILE') {
+	;
     }
 
     return '# UNKNOWN TRANSLATION RULE';
