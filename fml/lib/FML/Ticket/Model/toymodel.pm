@@ -73,7 +73,7 @@ sub update_status
     my $content = $rbody->get_content_reference();
 
     if ($$content =~ /close/) {
-	$self->{ _ticket_id } .= " closed";
+	$self->{ _status } = "closed";
     }
     else {
 	Log("(debug) ticket status not changes");
@@ -81,22 +81,18 @@ sub update_status
 }
 
 
-sub update_cache
+sub update_db
 {
     my ($self, $curproc, $args) = @_;
     my $config    = $curproc->{ config };
     my $ml_name   = $config->{ ml_name };
-    my $db_dir    = $config->{ ticket_db_dir } ."/". $ml_name;
-    my $cache_file = $db_dir ."/cache.txt";
 
-    # cache file
-    $self->{ _cache_file } = $cache_file;
+    # initialize directory for DB files for further work
+    $self->{ _db_dir } = $config->{ ticket_db_dir } ."/". $ml_name;
+    $self->_init_ticket_db_dir($curproc, $args) || do { return undef;};
 
-    # initialize $db_dir and $cache_file for further work
-    $self->_update_cache_init($curproc, $args) || do { return undef;};
-
-    # save $id in $cache_file
-    $self->_save_ticket_id_in_cache($curproc, $args);
+    # save $ticke_id et.al. in db_dir/
+    $self->_update_db($curproc, $args);
 }
 
 
@@ -106,7 +102,11 @@ sub _gen_ticket_id
     my $tag       = $config->{ ticket_subject_tag };
     my $ml_name   = $config->{ ml_name };
     my $ticket_id = sprintf($tag, $ml_name, $id);
-    $self->{ _ticket_id } = $ticket_id;
+
+    # XXX _ticket_subject_tag == _ticket_id is a good design or not?
+    $self->{ _ticket_subject_tag } = $ticket_id;
+    $self->{ _ticket_id }          = $ticket_id;
+
     return $ticket_id;
 }
 
@@ -120,7 +120,7 @@ sub _extract_ticket_id
     use FML::Header::Subject;
     my $regexp = FML::Header::Subject::_regexp_compile($tag);
 
-    if ($subject =~ /($regexp)/) {
+    if ($subject =~ /($regexp)\s*$/) {
 	return $1;
     }
 }
@@ -131,77 +131,72 @@ sub _rewrite_subject
     my ($self, $header, $config, $id) = @_;
 
     # create ticket syntax in the subject
-    my $ticket_id = $self->_gen_ticket_id($header, $config, $id);
+    $self->_gen_ticket_id($header, $config, $id);
 
     # append the ticket tag to the subject
     my $subject = $header->get('subject') || '';
-    $header->replace('Subject', $subject." ".$ticket_id);
+    $header->replace('Subject', 
+		     $subject." " . $self->{ _ticket_subject_tag });
 
     # X-* information
-    $header->add('X-Ticket-ID', $ticket_id);
+    $header->add('X-Ticket-ID', $self->{ _ticket_id });
 }
 
 
-sub _save_ticket_id_in_cache
+sub _update_db
 {
     my ($self, $curproc, $args) = @_;
     my $config    = $curproc->{ config };
     my $pcb       = $curproc->{ pcb };
+    my $db_type   = $curproc->{ ticket_db_type } || 'AnyDBM_File';
+    my $db_dir    = $self->{ _db_dir };
 
-    use IO::File;
-    my $fh = new IO::File $self->{ _cache_file }, "a";
-    if (defined $fh) {
-	my $article_id = $pcb->get('article', 'id');
-	my $ticket_id  = $self->{ _ticket_id };
-	printf $fh "%-10d %-30s %10d\n",
-	$article_id, 
-	_quote_space( $ticket_id ),
-	time;
-	close($fh);
-    }
-}
+    my (%ticket_id, %date, %status, %articles);
+    my $ticket_id_file = $db_dir.'/ticket_id';
+    my $date_file      = $db_dir.'/date';
+    my $status_file    = $db_dir.'/status';
+    my $articles_file  = $db_dir.'/articles';
 
+    eval qq{ use $db_type;};
+    unless ($@) {
+	eval q{
+	    use Fcntl;
+	    tie %ticket_id, $db_type, $ticket_id_file, O_RDWR|O_CREAT, 0644;
+	    tie %date,      $db_type, $date_file, O_RDWR|O_CREAT, 0644;
+	    tie %status,    $db_type, $status_file, O_RDWR|O_CREAT, 0644;
+	    tie %articles,  $db_type, $articles_file, O_RDWR|O_CREAT, 0644;
+	};
+	unless ($@) {
+	    my $article_id = $pcb->get('article', 'id');
+	    my $ticket_id  = $self->{ _ticket_id };
 
-sub _quote_space
-{
-    my ($id) = @_;
-    $id =~ s/\s/_/g;
-    return $id;
-}
+	    Log("article_id=$article_id ticket_id=$ticket_id");
 
+	    $ticket_id{ $article_id } = $ticket_id;
+	    $date{ $article_id }      = time;
+	    $articles{ $ticket_id }  .= $article_id . " ";
 
-sub _dequote_space
-{
-    my ($id) = @_;
-    $id =~ s/_/ /g;
-    return $id;
-}
+	    # default value of status
+	    unless (defined $status{ $ticket_id }) {
+		$status{ $ticket_id } = 'open';
+	    }
 
+	    if (defined $self->{ _status }) {
+		$status{ $ticket_id } = $self->{ _status };
+	    }
 
-sub get_ticket_list
-{
-    my ($self, $header, $config) = @_;
-    my (%db, $k, $v);
-
-    # %db: $article_id => "$ticket_id $unixtime"
-    use Tie::LogFileDB;
-    my $cache_file = $self->{ _cache_file };
-    tie %db, 'Tie::LogFileDB', { file => $cache_file };
-
-    my (@open_list)   = ();
-    my (@closed_list) = ();
-    while(($k, $v) = each %db) {
-	if ($v =~ /closed\s+/o) {
-	    push(@closed_list, $v);
+	    untie %ticket_id;
+	    untie %date;
+	    untie %status;
+	    untie %articles;
 	}
 	else {
-	    push(@open_list, $v);
+	    Log("Error: tail to tie() under $db_type");
 	}
     }
-
-    untie %db;
-
-    return (\@open_list, \@closed_list);
+    else {
+	Log("Error: fail to use $db_type");
+    }
 }
 
 

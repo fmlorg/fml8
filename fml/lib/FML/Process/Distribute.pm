@@ -215,7 +215,7 @@ sub _ticket_check
 	my $ticket = $pkg->new;
 	$ticket->assign($curproc, $args);
 	$ticket->update_status($curproc, $args);
-	$ticket->update_cache($curproc, $args);
+	$ticket->update_db($curproc, $args);
     }
     else {
 	Log($@);

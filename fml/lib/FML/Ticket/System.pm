@@ -58,32 +58,40 @@ sub _pcb_get_id
 }
 
 
-sub _update_cache_init
+sub _init_ticket_db_dir
 {
     my ($self, $curproc, $args) = @_;
     my $config    = $curproc->{ config };
     my $ml_name   = $config->{ ml_name };
-    my $db_dir    = $config->{ ticket_db_dir } ."/". $ml_name;
 
-    unless (-d $db_dir) {
-	use FML::Utils qw(mkdirhier);
-	mkdirhier($db_dir, $config->{ default_directory_mode }) || do {
-	    $self->error_reason( FML::Utils->error() );
-	    return undef;
-	};
-    }
-
-    if (defined $self->{ _cache_file }) {
-	my $cache_file = $self->{ _cache_file };
-	unless (-f $cache_file) {
-	    use FML::Utils qw(touch);
-	    touch($cache_file) || do {
+    if (defined $self->{ _db_dir }) {
+	my $db_dir    = $self->{ _db_dir };
+	unless (-d $db_dir) {
+	    use FML::Utils qw(mkdirhier);
+	    mkdirhier($db_dir, $config->{ default_directory_mode }) || do {
+		$self->error_reason( FML::Utils->error() );
 		return undef;
 	    };
 	}
     }
 
     return 1;
+}
+
+
+sub _quote_space
+{
+    my ($id) = @_;
+    $id =~ s/\s/_/g;
+    return $id;
+}
+
+
+sub _dequote_space
+{
+    my ($id) = @_;
+    $id =~ s/_/ /g;
+    return $id;
 }
 
 
