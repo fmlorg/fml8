@@ -1,7 +1,4 @@
-	$default_umask
-	$has_alarm
-	$has_getuid
-	$has_getgid
+$default_umask
 
 
 loop_check
@@ -54,3 +51,5 @@ Resolved -- the Request has either been answered or successfully
        use  "stalled" to indicate that this request isn't one can
        make any progress at the moment, thus isn't worth  picking
        from the queue to work on.
+
+
