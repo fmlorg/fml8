@@ -1,13 +1,13 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Calender.pm,v 1.7 2002/12/18 04:47:34 fukachan Exp $
+# $FML: Calendar.pm,v 1.1 2003/01/31 14:53:29 fukachan Exp $
 #
 
-package FML::CGI::Calender;
+package FML::CGI::Calendar;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
@@ -19,11 +19,11 @@ use FML::Process::CGI;
 
 =head1 NAME
 
-FML::CGI::Calender - CGI module to show calender as HTML TABLE (DEMO)
+FML::CGI::Calendar - CGI module to show calendar as HTML TABLE (DEMO)
 
 =head1 SYNOPSIS
 
-    $obj = new FML::CGI::Calender;
+    $obj = new FML::CGI::Calendar;
     $obj->prepare();
     $obj->verify_request();
     $obj->run();
@@ -37,7 +37,7 @@ See L<FML::Process::Flow> for flow details.
 
 =head2 CLASS HIERARCHY
 
-C<FML::CGI::Calender> is a subclass of C<FML::Process::CGI>.
+C<FML::CGI::Calendar> is a subclass of C<FML::Process::CGI>.
 
 Almost all methods inherit C<FML::Process::CGI> base class.
 
@@ -104,7 +104,7 @@ sub _show_guide
 }
 
 
-# Descriptions: main routine for calender as HTML TABLE format
+# Descriptions: main routine for calendar as HTML TABLE format
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -113,8 +113,8 @@ sub run_cgi_main
     my ($curproc, $args) = @_;
     my $user = $curproc->safe_param_user;
 
-    use Calender::Lite;
-    my $schedule = new Calender::Lite { user => $user };
+    use Calendar::Lite;
+    my $schedule = new Calendar::Lite { user => $user };
 
     for my $n ('this', 'next', 'last') {
 	$schedule->print_specific_month(\*STDOUT, $n);
@@ -161,14 +161,14 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Ken'ichi Fukamachi
+Copyright (C) 2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::CGI::Calender first appeared in fml8 mailing list driver package.
+FML::CGI::Calendar first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
