@@ -1,50 +1,143 @@
 		CHANGES
 		Last Modified: $Date$
 
-   月末だから、クリーンナップキャンペーン
-	FNF-ify (update/clean up documents, coding style ...)
+2003/02/11
 
+   switch INSTALL.sh to install.pl
+	インストーラを shell script から perl script へ変更しました！
+
+   FML::Install 
+	define default value (null) for md5 checksum result
+
+   FML::MTAControl 
+   FML::MTAControl::{Postfix,Procmail} 
+   Mail::ThreadTrack::Print::{HTML,Text} 
+   Mail::Delivery::Queue 
+   Mail::ThreadTrack::Print::Message 
+   Mail::Message::ToHTML 
+	FNF::not use $_
+
+2003/02/10
+
+   solaris 9 でもうごいたよ (^^)
+
+2003/02/08
+
+   variables
+	$command_run_*_hook added
+
+   etc/dot-qmail*
+	change args::ml_home_dir  -> ml_name@ml_domain
+
+2003/02/07
+
+   Mail::Message::ToHTML 
+	quick hack at sub sub _print_inline_object_link() URL Link
+
+2003/02/05
+
+   FML::Process::Command 
+	add $command_run_{start,end}_hook
+
+2003/02/03
+
+   FML::Process::Command
+   FML::Process::Error
+	stop_this_process() メソッドが意味をなすように修正
+	おもに hook のため
+
+2003/02/01
+
+   返事の返し方を変更 (お試し)
+	宛先の組ではなく、宛先ベースでメッセージをまとめる
+
+   FML::Process::Utils
+	implement unique()
+	
+   FML::Process::Kernel
+	unique recipient array before queuing.
+	implement another strategy of recipient based ququeing (for test).
+	
+   FML::Command::UserControl
+   FML::Command::Admin::chaddr
+   FML::Command::User::{chaddr,subscribe,unsubscribe}
+	try exact matching just before changing user.
+
+   IO::Adapter
+   IO::Adapter::{Array,DBI,MySQL}
+	remove get_next_value() method.
+	add todo for get_value_as_* if needed.
+	update document.
+	
+   IO::Adapter
+	get_next_value() メソッドを削除
+
+   FML::Command::Admin::chaddr
+	remove address matched by FML::Credential
+	in the case of $old_address
+	
+   FML::Config
+	FNF
+	bug fix wrong argument for chomp().
+	
+   FML::Credential
+	implement matched_address() method
+	
+   FML::Command::UserControl
+	try to remove address matched by $cred->has_address_in_map(), not
+	address specified by the function argument.
+
+   FML::Command::Auth
+	use FML::Crypt not Crypt::UnixCrypt directly.
+
+   variables	
+	enable changepassword, chpass, initpass and passwd as admin
+	command.
+
+2003/01/31
+
+   fix typo: rename Calender to Calendar ;)
 
 2003/01/29
 
    FNF-ify (update/clean up documents, coding style ...)
 	FML::Install
-	File::CacheDir Utils.pm 
-	IO::Adapter::AtomicFile 
+	File::CacheDir Utils.pm
+	IO::Adapter::AtomicFile
 
-   FML::Command::Admin::newml 
-   FML::MTAControl::Utils 
+   FML::Command::Admin::newml
+   FML::MTAControl::Utils
 	in newml, we should check if $ml_name already exists as a user
-	name or not. 
+	name or not.
 	
-   FML::MTAControl 
+   FML::MTAControl
 	add FML::MTAControl::Utils into @ISA
 
-   FML::Process::Calender 
+   FML::Process::Calender
 	prepare() loads default configuration to use $path_* info.
 	w3m -> $path_w3m
 	cat -> $curproc->cat() method (XXX temporary use).
 	
-   FML::Process::Utils 
+   FML::Process::Utils
 	implement cat() method for convenience
 	
-   FML::Command::Admin::unsubscribe 
+   FML::Command::Admin::unsubscribe
 	use $config->get_as_array_ref() method.
 
    install.pl.in
-   FML::Install 
+   FML::Install
 	implement is_run_as_root().
 	we verify install.pl runs as root.
 
 2003/01/28
 
-   FML::Config 
+   FML::Config
 	expand ${variable}
 	
-   FML::Header::Subject 
+   FML::Header::Subject
 	decode() returns tag info, too
 	
-   FML::Install 
+   FML::Install
 	At the first time, do not ask if upgrade or not loader.
 	bug fix checks in copy_dir().
 	copy_dir() install files by preserving [am]time.
@@ -59,22 +152,22 @@
 	mv real codes from byeadmin to deladmin module.
 	now, byeadmin is a forwarder to deladmin.
 	
-   FML::Command::Admin::delmoderator 
+   FML::Command::Admin::delmoderator
 	sync with deladmin codes
 
 2003/01/26
 
    FNF-ify (update/clean up documents, coding style ...)
 
-   FML::Command::DirUtils 
+   FML::Command::DirUtils
 	use FML::Restriction::Base::regexp_match() to check command
 	line options.
 	FNF::remove $_
 	
-   FML::Restriction::Base 
+   FML::Restriction::Base
 	define 'command_line_options' regexp.
 	
-   FML::Command::Admin::byeadmin 
+   FML::Command::Admin::byeadmin
 	bug fix target maps to handle.
 
 2003/01/25
@@ -82,22 +175,22 @@
    FNF-ify (update/clean up documents, coding style ...)
 
    FML::Command::Utils
-	removed since it is not used. 
+	removed since it is not used.
 
-   FML::Process::Utils 
+   FML::Process::Utils
 	get_ml_list() checks arguments matched with regxp provided by
 	FML::Restriction::Base.
 	
-   FML::Error 
-   FML::Command::DirUtils FileUtils.pm 
-   FML::Command::Admin::dir file.pm 
-   FML::Process::Kernel 
-   FML::Restriction::Base 
+   FML::Error
+   FML::Command::DirUtils FileUtils.pm
+   FML::Command::Admin::dir file.pm
+   FML::Process::Kernel
+   FML::Restriction::Base
 	implement FML::Restriction::Base::regexp_match() and
 	switched to use it.
 	
-   Calender::Lite 
-   FML::Restriction::Base 
+   Calender::Lite
+   FML::Restriction::Base
 	implement FML::Restriction::Base::regexp_match() can handle special
 	class "fullpath" not based on regexp.
 	
@@ -123,11 +216,11 @@
 
 	とりあえず、この機能はデフォルトで on です。
 
-   Mail::Message 
+   Mail::Message
 	fix next/prev link of object chain
 	implemenet is_multipart() method
 	
-   FML::Filter::MimeComponent3 
+   FML::Filter::MimeComponent3
 	when $opt_cut_off_empty_part is non zero, we cut off empty part.
 	Also, reject this message if no effective part in multipart.
 	
@@ -135,13 +228,13 @@
 
 2003/01/09
 
-   FML::Filter::MimeComponent3 
+   FML::Filter::MimeComponent3
 	fix wrong logic of handling determined $action vs default_action.
 	corerct messages.
 
 2003/01/08
 
-   FML::Filter::MimeComponent3 
+   FML::Filter::MimeComponent3
 	sync default rule w/ etc/mime_component_filter
 
 2003/01/07
@@ -150,10 +243,10 @@
 	postfix_verp_delimiters	=	+=
 	qmail_verp_delimiters	=	-=
 	
-   FML::Command::UserControl 
+   FML::Command::UserControl
 	shorten log messages
 	
-   FML::Process::Spool 
+   FML::Process::Spool
 	change argument style
 
 2003/01/05
@@ -165,23 +258,23 @@
    variables
 	$fmlerror_*hook added
 	
-   FML::Process::Switch 
+   FML::Process::Switch
 	add fmlerror, fix fmlsuper getopt
 	
-   FML::Error 
-   FML::Error::Analyze 
+   FML::Error
+   FML::Error::Analyze
 	
 	implement get_data_detail()
 
 2003/01/04
 
-   FML::MTAControl 
+   FML::MTAControl
 	add && enable FML::MTAControl::Sendmail.
 	
 	implement _remove_postfix_style_virtual(), which moved from
 	FML::MTAControl::Postfix.
 	
-   FML::MTAControl::Postfix 
+   FML::MTAControl::Postfix
 	postfix_find_key_in_alias_maps()::find system aliases and fml defined
 	aliases irrespective of the result by postconf. This search uses newly
 	implemented _find_key_in_file() but it is a bug since it handles file
@@ -189,7 +282,7 @@
 	
 	modified to use _remove_postfix_style_virtual().
 	
-   FML::Error::Analyze 
+   FML::Error::Analyze
 	add analize day limit
 	
 	change day checkpoint at simple_count
@@ -202,15 +295,15 @@
    variables
 	add admin_member_maps into member_maps
 	
-   FML::Command 
+   FML::Command
 	define $debug.
 	more error messages.
 	
-   FML::Restriction::Base 
+   FML::Restriction::Base
 	implement regexp() method.
 	FNF-ify.
 	
-   FML::Error 
+   FML::Error
 	modified use FML::Restriction::Base->regexp().
 	
    FML::Command::{DirUtils,FileUtils}
@@ -221,8 +314,8 @@
    FML::Command::Admin::{newml,rmml}
 	get_as_array_ref() to get $newml_command_mta_config_list values.
 	
-   FML::Process::Command 
-   FML::Command::Auth 
+   FML::Process::Command
+   FML::Command::Auth
 	modify log messages.
 	hide messages for debug mode.
 	
@@ -241,10 +334,10 @@
    variables
 	add $fmlsuper_*hook
 	
-   FML::Process::Switch 
+   FML::Process::Switch
 	enable fmlsuper using FML::Process::Super
 	
-   FML::Process::Spool 
+   FML::Process::Spool
 	fix description
 
 2002/12
@@ -254,7 +347,7 @@
 
 2002/12/31
 
-   Mail::Bounce::SimpleMatch 
+   Mail::Bounce::SimpleMatch
 	bug fix trap pattern for more accuracy.
 
    variables
@@ -269,7 +362,7 @@
 	change $domain_sendmail_config_dir
 	$domain_mail_config_dir -> $domain_config_base_dir::sendmail
 
-   FML::MTAControl::Postfix 
+   FML::MTAControl::Postfix
 	remove duplicated call "postmap virtual"
 
    update configure
@@ -277,8 +370,8 @@
 
 2002/12/30
 
-   Mail::Delivery::SMTP 
-   Mail::Message 
+   Mail::Delivery::SMTP
+   Mail::Message
 	enhance Mail::Message::set_log_function() to override the global log
 	function within Mail::Message name space.  Thie enables all objects
 	within the current Mail::Message space uses the same log function.
@@ -291,23 +384,23 @@
 
 2002/12/26
 
-   FML::Article 
+   FML::Article
 	bug fix: defined check for $sfh
 
-   FML::Mailer 
+   FML::Mailer
 	not set smtp_log_handle to avoid duplication
 
-   FML::Log 
+   FML::Log
 	create log file with mode 0600 if could.
 	it seems o.k. by "Principle of Least Surprise".
 
 2002/12/25
 
-   FML::Process::Distribute 
+   FML::Process::Distribute
 	not use smtp_log_handle to avoid duplication in
 	var/mail/outgoing/ (PR fml-devel:345).
 
-   FML::Process::Command 
+   FML::Process::Command
 	fix comments.
 	rename::_allow_command() -> _config_allow_command()
 
@@ -315,7 +408,7 @@
 
    *オーバホール・キャンペーン実施中
 
-   FML::Process::Command 
+   FML::Process::Command
 	rename:
 	o _is_valid_command() -> _config_permit_command()
 	o _is_valid_syntax()  -> _is_safe_syntax()
@@ -328,70 +421,70 @@
 
    *オーバホール・キャンペーン実施中
 
-   File::CacheDir 
+   File::CacheDir
 	fix comments.
 	check defined() more.
 	chop -> chomp.
 	
-   File::Sequence 
+   File::Sequence
 	fix comments.
 	clean up the return value by removing \s*..
 	
-   FML::Command::HTMLify 
+   FML::Command::HTMLify
 	fix comments.
 	aggrege duplicated code.
 	
-   FML::Command::SendFile 
+   FML::Command::SendFile
 	fix comments.
 	rename: _is_valid_argument() -> _get_valid_article_list().
 	sort.
 	
-   FML::Command::User::digest 
+   FML::Command::User::digest
 	fix comments.
 	clean up (sort) codes.
 	
-   FML::Process::Kernel 
+   FML::Process::Kernel
 	clean up.
 	fix comments.
 	fix label name.
 	check address pattern by FML::Restriction.
 	//o if could.
 	
-   IO::Adapter::AtomicFile 
+   IO::Adapter::AtomicFile
 	bug fix: $fh->close() -> $fh->SUPER::close().
 
 2002/12/22
 
-   FML::MTAControl::Postfix 
+   FML::MTAControl::Postfix
 	PR (fml-devel:343)
 	check the existence of virtual file.
 	
    *オーバホール・キャンペーン実施中
 
-   IO::Adapter::AtomicFile 
+   IO::Adapter::AtomicFile
 	cometics. fix comments.
 	defined() check before $fh->close().
 	
-   Mail::ThreadTrack::Print::Text 
+   Mail::ThreadTrack::Print::Text
 	fix comments.
 	add loop label.
 	
-   Mail::ThreadTrack::Print::Message 
+   Mail::ThreadTrack::Print::Message
 	fix comments.
 	//o
 	modify variable to be more readable::$h -> header
 	
-   Mail::ThreadTrack::Analyze 
+   Mail::ThreadTrack::Analyze
 	fix comments.
 	//o
 	defined() check more.
 	
-   Tie::JournaledDir JournaledFile.pm 
+   Tie::JournaledDir JournaledFile.pm
 	fix comments.
 	clean up variable names.
 	inform error by croak() more.
 	
-   FML::Config Confirm.pm 
+   FML::Config Confirm.pm
 	fix comments.
 	add todo(s) as comments.
 	//o
@@ -406,16 +499,16 @@
 	use ::::o if could.
 	fix comments.
 
-   FML::Header 
+   FML::Header
 	s/rerply-to/Reply-To/
 	more defiend() check.
 	
-   FML::Command::Admin::log 
+   FML::Command::Admin::log
 	fix comments.
 	fix typo.
 	bug fix the usage of _show_log() method.
 	
-   FML::Filter::TextPlain 
+   FML::Filter::TextPlain
 	fix comments. add todo(s).
 	rename $m -> $first_msg to clarify variable function.
 	remove not used declaration.
@@ -424,33 +517,33 @@
 
    *オーバホール・キャンペーン実施中
 
-   FML::Header 
+   FML::Header
 	clean up comments.
 	require() -> use()
 	
-   FML::Log 
+   FML::Log
 	clean up commnets.
 	croak() if loading Mail::Message::Date fails.
 	
-   FML::MTAControl::Procmail 
+   FML::MTAControl::Procmail
 	fix comments and documents.
 	use $fh->close() not close($fh).
 	
-   FML::MTAControl::Postfix Qmail.pm 
+   FML::MTAControl::Postfix Qmail.pm
 	fix comments
 	
-   FML::MTAControl 
+   FML::MTAControl
 	clean up comments.
 	define is_valid_mta-type() and modified to use it.
 
-   FML::Header::MessageID 
+   FML::Header::MessageID
 	define dummy db_close()
 	
-   FML::Process::Addr 
+   FML::Process::Addr
 	clean up comments.
 	$fh->close()
 	
-   FML::Command::DirUtils 
+   FML::Command::DirUtils
 	clean up comments.
 	modified to define $variable to describe arguments to execute
 	and run system($exec).
@@ -459,53 +552,53 @@
 
    *オーバホール・キャンペーン実施中
 
-   FML::Article 
+   FML::Article
 	id() returns data on memory or in sequence_file if not found
-	on memory. 
+	on memory.
 	clean up comments.
 	use $curproc->config(), $curproc->pcb().
 	
-   FML::Article::Summary 
+   FML::Article::Summary
 	redireced to STDOUT if output channel cannot be opened.
 	add todo(s) as comments.
 	
-   ErrorStatus 
+   ErrorStatus
 	clean up comments.
 	defined() check.
 	forward method::errstr() -> error().
 	
-   FML::Command::Admin::edit 
+   FML::Command::Admin::edit
 	print informational mesage
 	
-   FML::Command::Admin::dir 
+   FML::Command::Admin::dir
 	fix comments.
 	not pass $du_args->{options} to FML::Command::DirUtils module.
 	
-   FML::Command::Admin::byeadmin 
+   FML::Command::Admin::byeadmin
 	care for primary_admin_recipient_map
 	XXX we should handle *_maps not primary_*_map.
 
-   FML::Restriction::CGI Command.pm 
+   FML::Restriction::CGI Command.pm
 	clean up comments
 	
-   FML::Restriction::Base 
+   FML::Restriction::Base
 	clean up comments.
 	define ${file,dir,command}_regexp. modified to use these regexp(s).
 	enhance $command_regexp to include [0-9].
 
 2002/12/13
 
-   File::SimpleLock 
+   File::SimpleLock
 	need write permission for flock on solaris (PR fml-devel:331,332)
 
 2002/12/12
 
-   Calender::Lite 
+   Calender::Lite
 	cosmetic changes.
 	fix comments.
 	fix tag (FILE -> LINE).
 	
-   FML::Error::Analyze 
+   FML::Error::Analyze
 	defined()
 
 2002/12/10
@@ -522,14 +615,14 @@
 
 2002/12/01
 
-   FML::Article::Summary 
-   FML::Process::Distribute 
+   FML::Article::Summary
+   FML::Process::Distribute
 	bug fix article object handling:
 	we should not initialize article object under
 	libexec::distribute runs. pass $article object to $summary
-	object by append($article, $id). 
+	object by append($article, $id).
 
-   FML::Article::Summary 
+   FML::Article::Summary
 	summary date should be sync-ed with article date
 
 2002/11/26
@@ -540,27 +633,27 @@
 	define $fmlsummary*hook
 	define $summary_file, $summary_format_type
 	
-   FML::Article::Summary 
+   FML::Article::Summary
 	FNF-ify.
 	clean up.
 	nuke debug.
-	implement rebuild() to enable "fmlsummary rebuild $ml_name". 
+	implement rebuild() to enable "fmlsummary rebuild $ml_name".
 	make jcode of summary file "jis-jp".
 	implement append($id).
 
-   FML::Process::Summary 
+   FML::Process::Summary
 	newly added as a main module to run fmlsummary program.
-	implement rebuild() to enable "fmlsummary rebuild $ml_name". 
+	implement rebuild() to enable "fmlsummary rebuild $ml_name".
 	fix help and conditions to show help
 	
-   FML::Process::Distribute 
+   FML::Process::Distribute
 	update summary file by calling $summary->append($id)
 
-   FML::Process::Kernel 
+   FML::Process::Kernel
 	enable fmlsummary $command $ml_name ...
 	more defined() check
 
-   FML::Header::Subject 
+   FML::Header::Subject
 	define clean_up(), decode(), delete_subject_tag() to separete
 	functions.
 	
@@ -573,18 +666,18 @@
 	conveninence.
 	XXX remove either in the future.
 	
-   FML::Command::Admin::digest 
+   FML::Command::Admin::digest
 	clean up
 	
    FML::Command::Admin::{dir,file}
 	basic_variables() -> basic_variable() for FML::Restriction::Base
 	
-   FML::Process::Utils 
+   FML::Process::Utils
 	enable to handle digest_recipient in which_map_nl().
 
 2002/11/20
 
-   FML::Error::Cache 
+   FML::Error::Cache
 	mkdir $error_analyzer_cache_dir if not exists
 
    variables
@@ -592,28 +685,28 @@
 
 2002/11/19
 
-   FML::Command::Admin::digest 
+   FML::Command::Admin::digest
 	init digest on off for admin
 
-   FML::Process::Kernel 
+   FML::Process::Kernel
 	bug fix queue identifier generation
 	
-   Mail::Delivery::Queue 
+   Mail::Delivery::Queue
 	input of recipients can be duplicated
 
-   Mail::Message::ToHTML 
+   Mail::Message::ToHTML
 	bug fix function call::f() => $obj->f()
 
 2002/11/18
 
-   FML::Process::Digest 
+   FML::Process::Digest
 	correct start id calculation
 	enable queue flush to send digest.
 	
-   FML::Digest 
-   FML::Process::Kernel 
-	digest routine can customizes header. 
-	XXX preliminary support. needs overhaul? 
+   FML::Digest
+   FML::Process::Kernel
+	digest routine can customizes header.
+	XXX preliminary support. needs overhaul?
 
 2002/11/17
 
@@ -628,10 +721,10 @@
 	$digest_sequence_file
 	$article_sequence_file
 	
-   FML::Process::Switch 
+   FML::Process::Switch
 	enable libexec/digest
 
-   File::Sequence 
+   File::Sequence
 	fix get_id(); not use chomp() but use s::[\s\r\n]*$::::.
 	define set_id($id) to update value in the sequence file.
 	
@@ -642,9 +735,9 @@
 	
 	XXX mail queue operation is not yet implemented.
 
-   FML::Digest 
-   FML::Process::Digest Kernel.pm 
-   Mail::Delivery::Queue 
+   FML::Digest
+   FML::Process::Digest Kernel.pm
+   Mail::Delivery::Queue
 	enabled passing of recipient_maps (ARRAY_REF) into mail queue.
 	By this, we can now pass $digest_recipient_maps as digest recipients
 	to mail queue system.
@@ -655,41 +748,41 @@
 
 2002/11/07
 
-   FML::MTAControl::Postfix 
+   FML::MTAControl::Postfix
 	postconf -d -> postconf (postfix version dependent ?)
 	
-   FML::Process::Switch 
-   FML::Process::Addr 
-   INSTALL.sh configure configure.in 
-   fml/bin/fmladdr.in 
+   FML::Process::Switch
+   FML::Process::Addr
+   INSTALL.sh configure configure.in
+   fml/bin/fmladdr.in
 	implement fmladdr command, which shows all users and aliases.
 
 2002/10/31
 
-   add configura option: --with/without-mime-component-filter   
-	configure.in 
-	fml/etc/site_default_config.cf.in 
+   add configura option: --with/without-mime-component-filter
+	configure.in
+	fml/etc/site_default_config.cf.in
 		configure --with/without-mime-component-filter
 
 2002/10/29
 
-   FML::Process::Utils 
+   FML::Process::Utils
 	fix escape of Log(...) in eval q{}
 	
-   FML::Command::Admin::newml 
+   FML::Command::Admin::newml
 	prinf "a b c" -> a, b, c
 	
-   Mail::Message::ToHTML 
+   Mail::Message::ToHTML
 	umask escaping like splx():
 	mask = umask();
 	umask( ...) ; # set up umask here
 	do something ...
 	uamsk($mask);
 	
-   FML::Process::Utils 
+   FML::Process::Utils
 	ensure umask escape in _mkpath_*()
 	
-   FML::Command::Admin::newml 
+   FML::Command::Admin::newml
 	handle both public and private directories in initialization phase.
 	create variables:
 	$newml_command_init_public_dirs $newml_command_init_private_dirs
@@ -698,47 +791,47 @@
 
 2002/10/28
 
-   FML::Header::Subject 
+   FML::Header::Subject
 	you can use \U$ml_name\$ in subject tag configuration:)
 	
-   FML::Process::ThreadTrack 
+   FML::Process::ThreadTrack
 	fix db_update cannot get last_id from _speculate_last_id() use seqfile
 	
-   File::Sequence 
+   File::Sequence
 	use chomp at get_id()'s return value
 
 2002/10/27
 
-   FML::Filter::MimeComponent3 
+   FML::Filter::MimeComponent3
 	bug fix interface between FML::Filter and MimeComponent3
 
 2002/10/26
 
-   FML::Filter::MimeComponent3 
+   FML::Filter::MimeComponent3
 	fix initianlization bug
 	
-   FML::Filter 
+   FML::Filter
 	use MimeComponent3 as a test
 
 2002/10/23
 
-   Mail::ThreadTrack::DB 
+   Mail::ThreadTrack::DB
 	typofix filepath value at sub db_mkdb()
 	
 2002/10/22
 
-   FML::Process::Kernel 
+   FML::Process::Kernel
 	handle fmlthread $argv same as makefml one
 
 2002/10/21
 
    MIME component フィルタの描き直し
 
-   FML::Filter 
+   FML::Filter
 	re-enable mime component filter based on
 	Filter::MimeComponent2
 
-   FML::Filter::MimeComponent2 
+   FML::Filter::MimeComponent2
 	
 	fix rule appling algorithm:
 	 for rule (rules) {
@@ -762,13 +855,13 @@
 
 2002/10/12
 
-   Mail::Message::ToHTML 
+   Mail::Message::ToHTML
 	rename index.html to index_all.html
 	add sub create_top_index()
 
 2002/10/06
 
-   Mail::Message::ToHTML 
+   Mail::Message::ToHTML
 	add index reverse code at _update_id_monthly_index()
 
 2002/10/04
@@ -776,9 +869,9 @@
    variables
 	define $html_archive_index_order_type
 	
-   FML::Command::HTMLify 
-   FML::Process::Distribute 
-   Mail::Message::ToHTML 
+   FML::Command::HTMLify
+   FML::Process::Distribute
+   Mail::Message::ToHTML
 	enabled to handle order in index.html by
 	$html_archive_index_order_type.
 	
@@ -786,10 +879,10 @@
 	o htmlify_{file,dir}() is changted to normal methods for passing
 	arguments.
 	
-   FML::Filter 
+   FML::Filter
 	add prototype for $use_article_non_mime_filter
 	
-   FML::Header::Subject 
+   FML::Header::Subject
 	workaround to re-encode subject after subject tag handling
 
 2002/09/30
@@ -813,10 +906,10 @@
 	reconstruct filter system.  create a new file "article.cf",
 	and gather article_*_filter definitions in it.
 
-   FML::Process::Distribute 
+   FML::Process::Distribute
 	sync w:::FML::Filter reconstruction. rename function name
 	
-   FML::Filter 
+   FML::Filter
 	following new variable $article_filter_functions,
 	call the following function sequentially.
 	o article_header_filter
@@ -826,23 +919,23 @@
 
 2002/09/29
 
-   FML::Process::ConfViewer 
+   FML::Process::ConfViewer
 	"fmlconf $ml $varname" shows "$varname = $value".
 	unless $varname specified, dump all variables.
 
-   FML::Config::Convert 
+   FML::Config::Convert
 	hold file mode. set $dst mode same as $src mode
 	
-   FML::Confirm 
-   FML::Header::MessageID 
-   File::CacheDir 
-   Mail::ThreadTrack 
-   Mail::Delivery::Queue 
-   Mail::Message::ToHTML 
-   Mail::ThreadTrack::DB 
+   FML::Confirm
+   FML::Header::MessageID
+   File::CacheDir
+   Mail::ThreadTrack
+   Mail::Delivery::Queue
+   Mail::Message::ToHTML
+   Mail::ThreadTrack::DB
 	we should not use hard-coded file::dir mode
 	
-   FML::Article 
+   FML::Article
 	care subdir case more
 
 2002/09/28
@@ -856,19 +949,19 @@
 	$article_body_filter_rules add permit as the last resort
 	$article_header_filter_rules append permit rule
 	
-   FML::Filter::BodyCheck 
-   FML::Filter::HeaderCheck 
+   FML::Filter::BodyCheck
+   FML::Filter::HeaderCheck
 	define permit rule
 
 2002/09/23
 
-   FML::Filter::BodyCheck 
+   FML::Filter::BodyCheck
 	should not import STR2EUC from Mail::Message::Encode
 	bug fixed to use Mail::Message::Encode->convert()
 
 2002/09/14
 
-   FML::Filter::BodyCheck 
+   FML::Filter::BodyCheck
 	add use Mail::Message::Encode at reject_japanese_command_syntax()
 	because rejected by filter due to Undefined subroutine
 	&FML::Filter::BodyCheck::STR2EUC called
@@ -883,78 +976,78 @@
 
 2002/09/09
 
-   INSTALL.sh 
+   INSTALL.sh
 	not use "id -p" (PR by fml-devel:241)
 
 2002/08/29
 
-   INSTALL.sh 
+   INSTALL.sh
 	add a cheap diag: check the existence of $owner and $group
 
-   FML::Command::Admin::newml 
+   FML::Command::Admin::newml
 	validate $ml_home_prefix before main
 
 2002/08/28
 
-   FML/Process/Kernel 
+   FML/Process/Kernel
 	proper handling of "$program /var/spool/ml/elena" case
 
 2002/08/26
 
-   IO::Adapter::File 
+   IO::Adapter::File
 	ensure rollback in calling get_value_*()
 	
-   FML::Error::Analyze 
+   FML::Error::Analyze
 	error_continuity::in summation, bad if $v >= 2
 	
-   FML::Credential 
+   FML::Credential
 	is_same_address() validate input data more
 	
-   FML::Process::Kernel 
+   FML::Process::Kernel
 	bug fix my ml_name (+ ml_domain) detection code:
 	
 	[back ground detail] "fmlconf -n elena@fml.org" works but
 	"fmlconf -n elena" not works since we ignore the latter case.
 	Regaredless of poorman's strategy but we pick up the first non
 	/^-/ string as a $ml_name and set $ml_domain to the default
-	domain. 
+	domain.
 
 2002/08/21
 
-   IO::Adapter 
+   IO::Adapter
 	enhance add() to add($address, [$argv])
 	
-   IO::Adapter::File 
+   IO::Adapter::File
 	enhance add()
 	implement get_next_value()
 	define get_value_as_str($key), get_value_as_array_ref($key)
 
-   IO::Adapter::AtomicFile 
+   IO::Adapter::AtomicFile
 	more unique temp filename
 	
 2002/08/20
 
-   FML::Process::Distribute 
+   FML::Process::Distribute
 	modify error message
 	
-   FML::Command::SendFile 
+   FML::Command::SendFile
 	message key change
 	command.get.invalid.args -> command.get_invalid_args
 	
-   IO::Adapter::File 
+   IO::Adapter::File
 	remove fml 4 specific ignore rules such as m=.. option
 	delete(KEY) not (REGEXP)
 
 2002/08/19
 
-   FML::Process::Error 
+   FML::Process::Error
 	rename::$use_error_analyzer -> $use_error_analyzer_program
 	use default $log_format_type now
 	
-   FML::Process::Command 
+   FML::Process::Command
 	enable process if $use_command_mail_program is defined.
 	
-   FML::Process::Distribute 
+   FML::Process::Distribute
 	enable process if $use_distribute_program is defined.
 	
    variables
@@ -965,31 +1058,31 @@
 
 2002/08/18
 
-   FML::Command::SendFile 
+   FML::Command::SendFile
 	more debug info.
 	
 	send_user_xxx_message()
 	set $command_args->{ _filename_to_send } before calling send_file().
 	
-   FML::Command::User::confirm 
+   FML::Command::User::confirm
 	send back welcome file in subscribe case
 
 2002/08/16
 
-   FML::Error::Analyze 
+   FML::Error::Analyze
 	error_continuity::sum up time sequence with not point but mountain
 	with some width.
 	rename::simple_count_by_day -> error_continuity
 
-   Mail::Message::Encode 
+   Mail::Message::Encode
 	add is_iso2022jp_string()
 	
-   FML::Command::Admin::log 
-   FML::Filter::BodyCheck 
-   FML::Process::Kernel 
+   FML::Command::Admin::log
+   FML::Filter::BodyCheck
+   FML::Process::Kernel
 	switch FML::Language to Mail::Message::Encode
 
-   FML::Language::ISO2022JP 
+   FML::Language::ISO2022JP
    FML::Language::Japanese::{String,Utils}
 	Removed
 
@@ -999,30 +1092,30 @@
 	$error_analyzer_function
 	$error_analyzer_simple_count_limit
 	
-   FML::Error 
+   FML::Error
 	count up address with status=5*
 	move analyzer function() to FML::Error::Analyze
 	rename: *_timeout -> *_event_timeout
 	
-   FML::Process::Kernel 
+   FML::Process::Kernel
 	check if $maintainer differs $ml_address
 	rename: *_timeout -> *_event_timeout
 
 2002/08/14
 
-   FML::Process::Kernel 
+   FML::Process::Kernel
 	use $config->get_as_array_ref( 'header_loop_check_rules' ) to get list.
 	rename: refuse_further_processing() -> stop_this_process()
 	define do_nothing($reason), same as stop_this_process()
 
    FML::Process::Alias Command ConfViewer Configure Distribute
-		DocViewer Error HTMLify Kernel Spool ThreadTrack 
-   FML::Process::CGI::Kernel 
+		DocViewer Error HTMLify Kernel Spool ThreadTrack
+   FML::Process::CGI::Kernel
 	apply fix_perl_include_path(); after load_config_files() runs to add
 	ml local library path to @INC.
 	This is used for ml specific extention e.g. command extension.
 	
-   FML::Process::Kernel 
+   FML::Process::Kernel
 	enable ml local message template handling
 	
    variables
@@ -1033,7 +1126,7 @@
 	+ ml_local_message_template_dir  = $ml_local_share_dir::message
 	
 	change definition for $message_template_dir:
-	$fml_share_dir::message::$template_file_charset -> 
+	$fml_share_dir::message::$template_file_charset ->
 		$fml_share_dir::message
 
 2002/08/13
@@ -1046,20 +1139,20 @@
    etc/config.cf*
 	comment out $ml_name, $ml_domain
 	
-   FML::MTAControl::Postfix 
+   FML::MTAControl::Postfix
 	bug fix $fh-close() under defined($fh) is confirmed
 	use "postconf -d" to expand variables
 
-   Mail::Message::Encode 
-   remove FML::Encode and Mail::Message::Decode 
+   Mail::Message::Encode
+   remove FML::Encode and Mail::Message::Decode
 	merge FML::Encode Mail::Message::Decode into Mail::Message::Encode
 
-   FML::Header::Subject 
+   FML::Header::Subject
 	switched to use of Mail::Message::Encode
 
 2002/08/11
 
-   FML::Encode 
+   FML::Encode
 	プロトタイプを作ってみる。
 	XXX このモジュールは fml 4.0 でも使う
 
@@ -1068,23 +1161,23 @@
    libexec/error
 	エラーアドレスの自動削除機能一通り完成
 
-   FML::Process::Error 
+   FML::Process::Error
 	change lock granuality
 	
-   FML::Error 
+   FML::Error
 	validate syntax for target address to remove
 	check if the target address is a ML member before deluser() runs
 	
 2002/08/08
 
-   FML::Error 
+   FML::Error
 	enable real deluser()
 	
-   FML::Credential 
+   FML::Credential
    FML::Command::{Auth,UserControl}
    FML::Command::Admin::chaddr
    FML::Command::User::{chaddr,off,on,subscribe,unsubscribe}
-   FML::Process::{Command,Error,Kernel} 
+   FML::Process::{Command,Error,Kernel}
 	change arguments of credential functions to clarify the target address:
 	e.g. is_member($curproc, $args) -> is_member(addr)
 	
@@ -1099,17 +1192,17 @@
    libexec/error
 	エラーアドレスの自動削除機能を実装
 
-   FML::Error::Cache 
-   FML::Process::Error 
-   FML::Error 
+   FML::Error::Cache
+   FML::Process::Error
+   FML::Error
 	enable automatic user removing (prototype)
 	
    FML::Process::{Kernel,Utils}
 	define $curproc->{ scheduler } not _scheduler
-	define access method scheduler(). 
+	define access method scheduler().
 	please use it e.g. $curproc->scheduler().
 	
-   FML::Process::Kernel 
+   FML::Process::Kernel
 	lock() and unlock() accepts channel as the argument if needed.
 	
 	implemented
@@ -1117,19 +1210,19 @@
 	o get_timeout( $channel )
 	o set_timeout( $channel, $time )
 	
-   FML::Process::Error 
+   FML::Process::Error
    FML::ErrorAnalyze  (removed)
 	create FML::Error:::with separate clesses for cache manipulation and
 	analyzer.
 	modified to FML::Error::Cache for cache writing.
 
-   FML::Process::Scheduler 
+   FML::Process::Scheduler
 	$scheduler_queue_dir -> $event_queue_dir
 	
-   Tie::JournaledFile 
+   Tie::JournaledFile
 	check the file existence
 	
-   Tie::JournaledDir 
+   Tie::JournaledDir
 	bug fix the default day type handling
 	
 2002/08/03
@@ -1162,7 +1255,7 @@
 2002/07/31
 
    ログファイル
-	ログファイルフォーマットのデフォルトを変更 
+	ログファイルフォーマットのデフォルトを変更
 
    FML::Header
    FML::Header::MessageID
@@ -4186,4 +4279,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.126 2003/01/09 04:02:11 fukachan Exp $
+$FML: CHANGES.txt,v 1.127 2003/01/29 14:52:29 fukachan Exp $
