@@ -33,7 +33,7 @@ sub configure
 
 =head1 NAME
 
-IO::Adapter::NIS.pm - NIS map definition under IO::MapAdapter
+IO::Adapter::NIS.pm - NIS map operations
 
 =head1 SYNOPSIS
 
@@ -47,7 +47,7 @@ IO::Adapter::NIS.pm - NIS map definition under IO::MapAdapter
 
 =head1 DESCRIPTION
 
-fake IO for 
+fake IO operations to
 NIS (Network Information System, its old name is Yellow Page).
 See L<IO::Adapter::Array> for more details.
 
@@ -55,7 +55,7 @@ C<CAUTION: this map is read only>.
 
 =head1 METHODS
 
-See L<IO::Adapter::Array>
+See L<IO::Adapter::Array>.
 
 =head1 SEE ALSO
 

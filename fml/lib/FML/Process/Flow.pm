@@ -27,8 +27,8 @@ C<$args> is HASH REFERENCE.
 
 =head1 DESCRIPTION
 
-This is the current fml program flow. 
-Each function is implemented in each module in FML::Process class.
+This module describes the current fml program flow. 
+Each function is implemented in each module of FML::Process classes.
 
     # create a new process object
     my $process = $pkg->new($args);

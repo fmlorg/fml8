@@ -16,7 +16,7 @@ use Carp;
 
 =head1 NAME
 
-FML::MIME - utilities to handle MIME encoded string
+FML::MIME - handle a MIME encoded string
 
 =head1 SYNOPSIS
 
@@ -37,13 +37,14 @@ require Exporter;
 @EXPORT_OK = qw(decode_mime_string encode_mime_string);
 
 
-=head2 C<decode_mime_string(string, [options])>
+=head2 C<decode_mime_string(string, [$options])>
 
-decode an base64/quoted-printable encoded string to a plain message.
+decode a base64/quoted-printable encoded string to a plain message.
 The encoding method is automatically detected.
 
-C<options> is a HASH REFERENCE.
-You can specify the charset of string to return as C<options->{ charset }>.
+C<$options> is a HASH REFERENCE.
+You can specify the charset of the string to return 
+by $options->{ charset }. 
 
 =cut
 
@@ -70,13 +71,14 @@ sub decode_mime_string
 }
 
 
-=head2 C<decode_mime_string(string, [options])>
+=head2 C<decode_mime_string(string, [$options])>
 
-encode the C<string> by the encoder C<options->{ encode }>.
+encode the C<string> by the encoder $options->{ encode }.
 The encode is base64 by default.
 
 C<options> is a HASH REFERENCE.
-You can specify the charset of string to return as C<options->{ charset }>.
+You can specify the charset of string to return 
+by $options->{ charset }.
 
 =cut
 

@@ -23,7 +23,6 @@ etc/defaults/cgi.cf.ja
 Dialect/Japanese/String.pm
 Dialect/Japanese/Subject.pm
 Dialect/Japanese/Utils.pm
-Dialect/ISO2022JP.pm
 
 
 FML/Article.pm
@@ -35,7 +34,6 @@ FML/Debug.pm
 FML/Errors.pm
 FML/Header.pm
 FML/Log.pm
-FML/MIME.pm
 FML/Messages.pm
 FML/PCB.pm
 FML/Parse.pm
@@ -43,25 +41,13 @@ FML/Parse.pm
 
 CGI/TicketSystem.pm
 
-
-Command/mget.pm
-Command/bye.pm
-Command/get.pm
-Command/remove.pm
-Command/resign.pm
-Command/subscribe.pm
-Command/unsubscribe.pm
-
-
 Header/Subject.pm
 
 
 Process/Command.pm
 Process/Configure.pm
 Process/Distribute.pm
-Process/Flow.pm
 Process/Kernel.pm
-Process/QMail.pm
 Process/Switch.pm
 Process/TicketSystem.pm
 Process/CGI.pm
@@ -75,8 +61,6 @@ File/Utils.pm
 
 
 IO/Adapter/Array.pm
-IO/Adapter/NIS.pm
-IO/Adapter/UnixGroup.pm
 
 
 MailingList/Net/INET4.pm

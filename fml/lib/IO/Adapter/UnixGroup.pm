@@ -32,7 +32,7 @@ sub configure
 
 =head1 NAME
 
-IO::Adapter::UnixGroup - IO wrapper for /etc/group
+IO::Adapter::UnixGroup - IO wrapper to read /etc/group
 
 =head1 SYNOPSIS
 
@@ -51,6 +51,8 @@ IO::Adapter::UnixGroup - IO wrapper for /etc/group
 =head1 DESCRIPTION
 
 See L<IO::Adapter::Array> for more details.
+
+C<CAUTION: this map is read only>.
 
 =head1 SEE ALSO
 
