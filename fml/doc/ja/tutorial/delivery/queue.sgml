@@ -1,8 +1,40 @@
 <!--
-    $FML: queue.sgml,v 1.4 2004/04/07 11:07:03 fukachan Exp $
+    $FML: queue.sgml,v 1.5 2004/05/21 11:54:06 fukachan Exp $
 -->
 
-<sect1 id="message.reply">
+<sect1 id="message.queue.incoming">
+	<TITLE>
+	fml がメールを読みこむ際のキューイング
+	</TITLE>
+
+<para>
+fmlの各プロセスは MTA から起動され、STDIN(標準入力)からメールを読みこ
+みます。
+</para>
+
+<para>
+fml は、いったんメールを読みこみ、まずはディスクに書き込みます。書き込
+みに成功した場合、その書き込んだファイルに対してメッセージの解析をスター
+トします。これにより、少なくとも読みこんだオリジナルのメールの記録は残
+せます。
+</para>
+
+<para>
+もし、失敗した場合、exit(EX_TEMPFAIL)します。たいていの OS では 
+exit(75) です。このエラーコードをうけとると、MTA は一時的なエラーがお
+こったとみなすため、このメッセージの再送処理を試みてくれます。
+</para>
+
+<para>
+このキューの処理はMail::Delivery::Queueを使い、ＭＬ固有の queue で管理
+されます。一連の処理が終ると、たいていは、そのプロセスの最後に、このキュー
+は消されます。
+</para>
+
+</sect1>
+
+
+<sect1 id="message.queue.outgoing">
 	<TITLE>
 	fml からメールで返事を送り返す
 	</TITLE>
@@ -16,6 +48,12 @@ FML::Process::QueueManager
 クラス経由で(配送)処理をします。
 </para>
 
+<para>
+微妙に処理が異なりますが、記事の配送もコマンドメールも同様に
+Mail::Delivery::Queue ベースのキューイング処理をしています。そのため、
+配送処理の途中でエラーが起きた場合、別のfmlプロセスにより再送処理が行
+なわれます。
+</para>
 
 <sect2>
 	<title>
@@ -83,10 +121,9 @@ Mail::Delivery
 </para>
 
 <para>
-キューを操作する際には、対象のキューを flock(2) します。ロックをするの
-は他のATOMIC操作によってもよいのですが、flock(2) を使う最大の理由は、
-操作途中にOSが逝ってしまうことを想定しているためといえます。flock(2)で
-あれば、リブート後、ふつうに再送処理がリスタートするだけでよいからです。
+キューを操作する際には、対象のキューを flock(2) します。ロックを他の
+ATOMIC操作を使って実装してもよいのですが、flock(2) を使う最大の理由は、
+操作途中にOSが逝ってしまうケースを想定しているためです。
 </para>
 
 </sect1>
@@ -102,9 +139,11 @@ queue ディレクトリは複数のディレクトリからなります。
 <screen>
 new/
 active/
+incoming/
 deferred/
 info/sender/
 info/recipients/
+info/transport/
 </screen>
 info/ には envelope 情報が格納されます。
 </para>
@@ -117,7 +156,10 @@ new/ から active/ に移動されます。
 </para>
 
 <sect2>
-   <title> queue ディレクトリをロックする </title>
+	<title>
+	queue ディレクトリをロックする
+	</title>
+
 <para>
 特定の $queue_id object ごとに lock() と unlock() メソッドを使い、
 ロックをかけます。
