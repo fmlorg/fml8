@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Param.pm,v 1.21 2003/08/25 14:13:59 fukachan Exp $
+# $FML: Param.pm,v 1.22 2004/01/21 03:40:43 fukachan Exp $
 #
 
 package FML::Process::CGI::Param;
@@ -17,7 +17,7 @@ use CGI qw/:standard/;
 
 =head1 NAME
 
-FML::Process::CGI::Param - restrict CGI input
+FML::Process::CGI::Param - restrict CGI input.
 
 =head1 SYNOPSIS
 
@@ -72,7 +72,8 @@ sub safe_param
 	}
     }
     else {
-	croak("CGI parameter $key is undefined");
+	my $r = "CGI parameter $key is undefined";
+	croak("__ERROR_cgi.insecure__: $r");
     }
 }
 
@@ -82,6 +83,9 @@ sub safe_param
 return ARRAY_REF for $key.
 
 =cut
+
+
+# XXX-TODO: safe_paramlist NOT USED ?
 
 
 # Descriptions: return ARRAY_REF for key if the value is appropriate.
