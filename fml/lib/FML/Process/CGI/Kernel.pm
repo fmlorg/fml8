@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Kernel.pm,v 1.5 2001/11/11 11:04:58 fukachan Exp $
+# $FML: Kernel.pm,v 1.6 2001/11/11 23:34:00 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -54,21 +54,24 @@ sub new
 {
     my ($self, $args) = @_;
     my $type = ref($self) || $self;
+    my $is_need_ml_name = $args->{ 'need_ml_name' };
 
     # we should get $ml_name from HTTP.
-    my $ml_home_prefix = $args->{ ml_home_prefix };
-    my $ml_name        = safe_param_ml_name($self) || do {
-	croak("not get ml_name from HTTP") if $args->{ need_ml_name };
-    };
+    if ($is_need_ml_name) {
+	my $ml_home_prefix = $args->{ ml_home_prefix };
+	my $ml_name        = safe_param_ml_name($self) || do {
+	    croak("not get ml_name from HTTP") if $args->{ need_ml_name };
+	};
 
-    use File::Spec;
-    my $ml_home_dir = File::Spec->catfile($ml_home_prefix, $ml_name);
-    my $config_cf   = File::Spec->catfile($ml_home_dir, 'config.cf');
+	use File::Spec;
+	my $ml_home_dir = File::Spec->catfile($ml_home_prefix, $ml_name);
+	my $config_cf   = File::Spec->catfile($ml_home_dir, 'config.cf');
 
-    # fix $args { cf_list, ml_home_dir };
-    my $cflist = $args->{ cf_list };
-    push(@$cflist, $config_cf);
-    $args->{ ml_home_dir } =  $ml_home_dir;
+	# fix $args { cf_list, ml_home_dir };
+	my $cflist = $args->{ cf_list };
+	push(@$cflist, $config_cf);
+	$args->{ ml_home_dir } =  $ml_home_dir;
+    }
 
     # o.k. load configurations
     my $curproc = new FML::Process::Kernel $args;
@@ -151,6 +154,8 @@ sub AUTOLOAD
     my ($curproc) = @_;
 
     return if $AUTOLOAD =~ /DESTROY/;
+
+    if (defined $ENV{'debug'}) { my (@c) = caller; warn("AUTOLOAD: @c");}
 
     my $comname = $AUTOLOAD;
     $comname =~ s/.*:://;
