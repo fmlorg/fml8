@@ -1,5 +1,5 @@
 <!--
-   $FML: style.sgml,v 1.8 2003/11/01 02:37:16 fukachan Exp $
+   $FML: style.sgml,v 1.9 2003/11/01 03:53:06 fukachan Exp $
 -->
 
 <chapter id="programingstyle">
@@ -96,6 +96,42 @@ use_article_header_なんとか
 
 command_mail_header_なんとか
 use_command_mail_header_なんとか
+</screen>
+</para>
+
+<para>
+<link linkend="list.variables.by.class">
+クラスの階層構造
+</link>
+で現すと、こーんな感じになるとおもいます。
+<screen>
+command {
+	SOMETHING_command
+	admin_command
+}
+	
+directory {
+	XXX_directory
+}
+	
+file {
+	template_file
+}
+	
+mail {
+	incoming_mail
+	outgoing_mail
+	report_mail
+}
+	
+message {
+	reply_message
+}
+	
+article {
+	article_digest (digestではなく、article の digest だとわかる命名を)
+	article_spool  (spoolではなく、article の spool だとわかる命名を)
+}
 </screen>
 </para>
 
