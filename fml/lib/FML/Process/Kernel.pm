@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.163 2003/03/06 09:34:15 fukachan Exp $
+# $FML: Kernel.pm,v 1.164 2003/03/14 03:51:48 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1774,7 +1774,12 @@ sub queue_in
 	}
 
 	$queue->in( $msg ) && Log("queue=$qid in");
-	$queue->setrunnable();
+	if ($queue->setrunnable()) {
+	    Log("queue=$qid runnable");
+	}
+	else {
+	    Log("queue=$qid broken");
+	}
 
 	# return queue object
 	return $queue;

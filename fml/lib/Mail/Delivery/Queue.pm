@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.22 2002/12/20 03:50:27 fukachan Exp $
+# $FML: Queue.pm,v 1.23 2003/02/11 12:03:19 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -461,7 +461,11 @@ sub setrunnable
     }
 
     # move new/$id to active/$id
-    rename( $self->{ _new_qf }, $self->{ _active_qf } );
+    if (rename( $self->{ _new_qf }, $self->{ _active_qf } )) {
+	return 1;
+    }
+
+    return 0;
 }
 
 
