@@ -1,0 +1,47 @@
+		$ml_name ML help file
+
+		commands for usual users.
+
+	XXX: () implies an alias.
+
+----------------------------------------------------------------------
+[implemented]
+
+help		retrieve this file.
+guide		retrieve guide file.
+summary		retrieve summary file of argticles.
+
+subscribe	subscribe
+(add)
+		* This command sends back a confirm.
+
+unsubscribe	unsubscribe
+		* This command sends back a confirm.
+
+(bye)
+(remove)
+(resign)
+(signoff)
+
+chaddr		change registered address
+		* This command sends back a confirm.
+
+confirm		confirmation command.
+
+		It is used in subscribe, unsubscribe, chaddr command
+		2nd stage. 
+
+get		get specifiec article(s)
+(mget)
+(send)
+
+[not implemented]
+
+members
+actives
+
+off
+on
+
+
+$FML: help,v 1.2 2002/04/01 23:41:21 fukachan Exp $
