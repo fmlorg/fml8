@@ -1,5 +1,5 @@
 #
-# $FML: main.cf.in,v 1.16 2003/10/25 04:06:37 fukachan Exp $
+# $FML: main.cf.in,v 1.17 2003/10/26 02:20:01 fukachan Exp $
 #
 
 # fml version
@@ -50,28 +50,39 @@ local_lib_dir		=	@libdir@/fml/site_local
 
 
 ###
-### DOMAIN AND MAP BETWEEN DOMAIN AND DIRECTORY
+### DOMAIN AND MAPS BETWEEN DOMAIN AND DIRECTORY
 ###
 
 
-# default domain
+# default domain. used when domain unspecified in using makefml et.al.
 default_domain		=	@default_domain@
 
 
-# ml's home directories
-# $ml_home_dir (e.g. /var/spool/ml/elena ) is taken from loader's @ARGV.
-# This is compatible with fml 4.0.
+# default parent directory of ml's home directories.
+# same as fml 4.0 by default but ml_home_prefix_map(s) changes the map
+# between ml and the home directory.
 # Example: /var/spool/ml
 default_ml_home_prefix	=	@mlspooldir@
 
 
-# map of { $ml_name => $ml_home_dir }
+# primary of { $ml_name => $ml_home_dir } map relation.
+# makefml/fml command try to modify this map.
+#
+# The syntax is "domain directory". For example
+#   fml.org	/var/spool/ml/fml.org
+#   nuinui.net	/var/spool/ml/nuinui.net
+#
 # Example: /etc/fml/ml_home_prefix
-ml_home_prefix_maps	=	$config_dir/ml_home_prefix
-				$virtual_maps
+primary_ml_home_prefix_map	=	$config_dir/ml_home_prefix
 
 
-# virtual format: domain directory
+# maps of { $ml_name => $ml_home_dir } map relation.
+ml_home_prefix_maps		=	$primary_ml_home_prefix_map
+					$virtual_maps
+
+# obsolete map: DO NOT USE THIS MAP NOW.
+#               This is used before introduction of $ml_home_prefix_maps.
+#               It is backward compatible only.
 # for example,
 #   fml.org	/var/spool/ml/fml.org
 #   nuinui.net	/var/spool/ml/nuinui.net
