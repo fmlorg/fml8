@@ -14,10 +14,38 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
 
 
+=head1 NAME
+
+FML::MIME - utilities to handle MIME encoded string
+
+=head1 SYNOPSIS
+
+    use FML::MIME qw(decode_mime_string encode_mime_string);
+    $decoded = decode_mime_string( $message );
+
+=head1 DESCRIPTION
+
+MIME utilities to encode and decode string.
+
+=head1 METHODS
+
+=cut
+
+
 require Exporter;
 @ISA       = qw(Exporter);
 @EXPORT_OK = qw(decode_mime_string encode_mime_string);
 
+
+=head2 C<decode_mime_string(string, [options])>
+
+decode an base64/quoted-printable encoded string to a plain message.
+The encoding method is automatically detected.
+
+C<options> is a HASH REFERENCE.
+You can specify the charset of string to return as C<options->{ charset }>.
+
+=cut
 
 sub decode_mime_string
 {
@@ -40,6 +68,17 @@ sub decode_mime_string
     &Jcode::convert(\$str, 'euc');
     $str;
 }
+
+
+=head2 C<decode_mime_string(string, [options])>
+
+encode the C<string> by the encoder C<options->{ encode }>.
+The encode is base64 by default.
+
+C<options> is a HASH REFERENCE.
+You can specify the charset of string to return as C<options->{ charset }>.
+
+=cut
 
 
 sub encode_mime_string
@@ -68,42 +107,15 @@ sub encode_mime_string
 }
 
 
-# original idea comes from
-# import fml-support: 02651 (hirono@torii.nuie.nagoya-u.ac.jp)
-# import fml-support: 03440, Masaaki Hirono <hirono@highway.or.jp>
-my $MimeBEncPat = 
-	'=\?[Ii][Ss][Oo]-2022-[Jj][Pp]\?[Bb]\?([A-Za-z0-9\+\/]+)=*\?=';
+=head1 SEE ALSO
 
-my $MimeQEncPat = 
-	'=\?[Ii][Ss][Oo]-2022-[Jj][Pp]\?[Qq]\?([\011\040-\176]+)=*\?=';
-
-#  s/$MimeBEncPat/&kconv(&base64decode($1))/geo;
-#  s/$MimeQEncPat/&kconv(&MimeQDecode($1))/geo;
-# sub MimeQDecode
-# {
-#    local($_) = @_;
-#    s/=*$//;
-#    s/=(..)/pack("H2", $1)/ge;
-#    $_;
-#}
-
-
-
-=head1 NAME
-
-FML::MIME.pm - what is this
-
-
-=head1 SYNOPSIS
-
-=head1 DESCRIPTION
-
-=head2 new
-
-=item Function()
-
+L<Jcode>,
+L<MIME::Base64>,
+L<MIME::QuotedPrint>.
 
 =head1 AUTHOR
+
+Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 

@@ -9,9 +9,48 @@ package FML::PCB;
 
 use strict;
 use Carp;
+use vars qw(%_fml_PCB); # PCB: Process Control Block (malloc it here)
 
-# PCB: Process Control Block
-use vars qw(%_fml_PCB);
+
+=head1 NAME
+
+FML::PCB -- manipulate Process Control Block
+
+=head1 SYNOPSIS
+
+    $pcb = new FML::PCB;
+    $pcb->set('lock', 'object', $lockobj);
+    $lockobj = $pcb->get('lock', 'object');
+
+=head1 DESCRIPTION
+
+=head2 DATA STRUCTURE
+
+C<$CurProc->{ pcb }> area holds the CURrent PROCess information.
+The hash holds several references to other data structures,
+which are mainly hashes.
+
+    $CurProc = {
+		pcb => {
+		    key => value,
+		},
+
+		incoming_message => $r_msg,
+		article          => $r_msg,
+
+		... snip ...
+
+		};
+
+=head1 METHODS
+
+=head2 C<new( $args )>
+
+initialize the C<pcb> memory area. 
+If $args HASH REFERENCE is specified, 
+copy the hash content in it to C<pcb> area.
+
+=cut
 
 
 sub new
@@ -29,6 +68,21 @@ sub new
 
     return bless $me, $self;
 }
+
+
+=head2 C<dump_variables()>
+
+show all {key => value} for debug.
+
+=head2 C<get( category, key )>
+
+You must specify C<category> and C<key>.
+
+=head2 C<set( category, key, value)>
+
+You must specify C<category>, C<key> and the C<value>.
+
+=cut
 
 
 sub dump_variables
@@ -54,115 +108,23 @@ sub set
 }
 
 
-sub FETCH
-{
-    my ($self, $key) = @_;
-    return $_fml_PCB{$key};
-}
+=head1 AUTHOR
 
+Ken'ichi Fukamachi
 
-sub STORE
-{
-    my ($self, $key, $value) = @_;
-    $_fml_PCB{$key} = $value;
-}
+=head1 COPYRIGHT
 
+Copyright (C) 2001 Ken'ichi Fukamachi
 
-sub DELETE
-{
-    my ($self, $key) = @_;
-    delete $_fml_PCB{$key};
-}
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
 
+=head1 HISTORY
 
-sub CLEAR
-{
-    my ($self) = @_;
-    undef %_fml_PCB;
-}
-
-
-=head1 NAME
-
-FML::PCB -- fml5 PCBuration holding object
-
-=head1 SYNOPSIS
-
-    $PCB = new FML::PCB;
-
-    # get the current value
-    $PCB->{recipient_maps};
-
-    # set the new value
-    $PCB->{recipient_maps} = 'mysql:toymodel';
-
-    # function style to get/set the value for the key "recipient_maps"
-    $PCB->get('recipient_maps');
-    $PCB->set('recipient_maps', 'mysql:toymodel');
-
-
-=head1 DESCRIPTION
-
-
-=head1 METHOD
-
-=item  Init( ref_to_curproc )
-
-special method only used in the initialization phase.
-This method binds $curproc and the %_fml_PCB memory area.
-
-=item  load_file( filename ) 
-
-read the PCBuration file, split key and value and set them to
-%_fml_PCB.
-
-=item  get( key )
-
-=item  set( key, value )
-
-=item  dump_variables()
-
-show all {key => value} for debug.
-
-=head1 DATA STRUCTURE
-
-C<%CurProc> holds the CURrent PROCess information.
-The hash holds several references to other data structures,
-which are mainly hashes.
-
-    $CurProc = {
-		# PCBurations
-		PCB => {
-		    key => value,
-		},
-
-		# emulator mode though fml mode in fact
-		emulator => $emulator,
-
-		# struct incoming_message holds the mail input from STDIN.
-		incoming_message => $r_msg,
-		article          => $r_msg,
-		};
-
-We use r_variable_name syntax where "r_" implies "reference to" here.
-C<$r_msg> is the reference to "struct message".
-
-    $r_msg = {
-	r_header => \$header,
-	r_body   => \$body,
-	info   => {
-	    mime-version => 1.0, 
-	    content-type => {
-		charset      => ISO-2022-JP,
-	    },
-	    size         => $size,
-	},
-    };
-
-where $header is the object returned by Mail::Header class (CPAN
-module) and the $body is the reference to the mail body region on
-memory which locates within FML::Parse name space.
+FML::PCB appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
 
 =cut
+
 
 1;

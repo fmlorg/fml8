@@ -1,4 +1,3 @@
-FML/MIME.pm
 FML/Article.pm
 FML/Config.pm
 FML/Credential.pm
@@ -18,7 +17,6 @@ FML/Process/QMail.pm
 FML/Process/Command.pm
 FML/Process/Switch.pm
 FML/Header/Subject.pm
-FML/PCB.pm
 FML/Checksum.pm
 IO/Adapter/File.pm
 IO/Adapter/LDAP.pm
