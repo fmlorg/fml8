@@ -1,6 +1,71 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/02/16
+
+   clean up campaign of codes
+
+   variables
+	+summary_format_address_length
+	+cgi_menu_map_list
+	+cgi_menu_default_map
+	
+   FML::Config 
+	check the existence in load_file()
+	nuke ^\s* and \s*$ in array expantion.
+	yes() and no() compares the value case insensitively
+	bug fixed to work both FIRSTKEY() and NEXTKEY().
+	add debug code.
+	
+   FML::CGI::Calendar ThreadTrack 
+   FML::CGI::Admin::Menu 
+   FML::Command::HTMLify 
+   FML::Command::Admin::log 
+   FML::Process::Distribute 
+	use language_*() method to determine $charset
+	
+   FML::Article::Summary 
+	modified to use $summary_format_address_length.
+	it determines address length in summary file.
+	
+   FML::Command::User::get 
+	update comments and nuke todo.
+	
+   FML::Process::CGI::Kernel 
+	use language_*() to determine $charset.
+	remove hard-coded.
+	we ensure cgi_try_*() returns safe value.
+
+   FML::CGI::Admin::List 
+	nuke hard-coded and use config basd value.
+	add more syntax checks before main work.
+	
+   FML::Process::Utils 
+	implemente the following methods:
+	is_safe_syntax()
+	language_default()
+	language_of_cgi_message()
+	language_of_reply_message()
+	language_of_html_file()
+
+2003/02/15
+
+   FML::Command::UserControl 
+	use FML::Restriction::Base
+	
+   FML::Process::Utils 
+	implement safe_cgi_action_name()
+	
+   FML::CGI::ThreadTrack 
+   FML::CGI::Admin::List ML Menu User 
+   FML::Process::CGI::Kernel 
+	switched to use safe_cgi_action_name()
+
+2003/02/14
+
+   FML::MTAControl::Procmail 
+	fix code to find ml_name in procmailrc
+
 2003/02/13
 
    Mail::Message 
@@ -4296,4 +4361,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.128 2003/02/11 14:31:14 fukachan Exp $
+$FML: CHANGES.txt,v 1.129 2003/02/13 15:08:36 fukachan Exp $
