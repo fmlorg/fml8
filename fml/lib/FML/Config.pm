@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.31 2001/07/14 14:15:05 fukachan Exp $
+# $FML: Config.pm,v 1.32 2001/07/15 04:00:26 fukachan Exp $
 #
 
 package FML::Config;
@@ -233,10 +233,14 @@ sub _read_file
 		$value             =~ s/\s*$//o;
 		$curkey            = $key;
 		$config->{ $key }  = $value;
-		$comment->{ $key } = $comment_buffer;
 
 		# save variable order for re-construction e.g. used in write()
-		if ($mode eq 'raw') { push(@$order, $key);}
+		if ($mode eq 'raw') { 
+		    $comment->{ $key } = $comment_buffer;
+		    undef $comment_buffer;
+
+		    push(@$order, $key);
+		}
 	    }
 	    # case 2.
 	    elsif (/^\s+(.*)/ && defined($curkey)) {
@@ -263,6 +267,9 @@ appearing order.
 
 =cut
 
+# allocate space to hold
+my $config_hold_space = {};
+
 
 # Descriptions: 
 #    Arguments: $self $args
@@ -284,7 +291,7 @@ sub read
     });
 
     # XXX debug: removed in the future
-    if (1) {
+    if (0) {
 	my ($k, $v);
 	while (($k, $v) = each %$config) {
 	    print STDERR "\n[$k]\n";
@@ -297,9 +304,9 @@ sub read
     }
 
     # save the value in the object
-    $self->{ _config_template }->{ config }  = $config;
-    $self->{ _config_template }->{ comment } = $comment;
-    $self->{ _config_template }->{ order  }  = $order;
+    $config_hold_space->{ config }  = $config;
+    $config_hold_space->{ comment } = $comment;
+    $config_hold_space->{ order  }  = $order;
 }
 
 
@@ -309,8 +316,30 @@ sub read
 # Return Value: none
 sub write
 {
-    my ($self, $file, $config) = @_;
+    my ($self, $file) = @_;
+    my $config  = $config_hold_space->{ config };
+    my $comment = $config_hold_space->{ comment };
+    my $order   = $config_hold_space->{ order  };
 
+    # get handle to update $file
+    my $fh = IO::File::Atomic->open($file);
+
+    if (defined $fh) {
+	$fh->autoflush(1);
+	for my $k (@$order) {
+	    print $fh $comment->{$k} if defined $comment->{$k};
+	    print $fh "$k = ";
+	    print $fh join("\n\t", split(/\s+/, $config->{$k}));
+	    print $fh "\n";
+	    print $fh "\n";
+	}    
+	$fh->close;
+    }
+    else {
+	use Carp;
+	carp("cannot open > $file");
+	Log("cannot open > $file");
+    }
 }
 
 
