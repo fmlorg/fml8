@@ -3,6 +3,89 @@
 
 	*** 2003 年末 〜 2004 年初め オーバホールキャンペーン終了 ***
 
+2004/02/27
+
+   コマンドの返事を返す際に、より正しい言語選択を行なう
+   必要なら(というより判断がつかないなら)、複数の言語で返す。
+
+   FML::Process::Kernel 
+	fix comments on reply_message() around.
+	reply_message() handles request when the current process runs
+	under MTA. fix regexp optimization.
+
+	define __convert_message_nl() and use it.
+	allow loader program uses reply_message() method.
+	
+	select proper language for reply message based on Accept-Language,
+	Content-Type and language preference order.
+	use plural languages if needed.
+	
+   FML::Process::Utils 
+	define lang_to_charset().
+	fix return value for some methods.
+	use "print if $debug" in some cases.
+
+
+2004/02/26
+
+   variables
+	define $language_preference_order
+	
+   etc/command_line_options 
+	new option -o key=value which overrider configurations.
+	you can use duplicated -o options e.g. -o key1=value1 -o key2=value2.
+	
+	remove not used -params options
+	
+   FML::Process::Kernel 
+	new option -o key=value which overrider configurations.
+	you can use duplicated -o options e.g. -o key1=value1 -o key2=value2.
+
+	more proper charset handling based on Content-Type::field.
+	
+	change Mail::Message::Encode to Mail::Message::String in
+	message handling. 
+
+	implement get_preferred_languages() method.
+
+   FML::Process::Utils 
+	get_charset: fix default charset handling
+	implement set_language_hint(), get_language_hint().
+	get_accept_language_list() returns [] not [*] when no data.
+
+   FML::Error::Cache 
+	firstly, constructor() expires too old cache.
+	
+   Mail::Message 
+	enhance trap regexp for charset=...
+	
+   Mail::Message::Charset 
+	fix comments
+	
+   Mail::Message::Language 
+	handle X-Accept-Language:
+
+   Tie::JournaledDir 
+	new() expires too old cache files.
+
+2004/02/15
+
+   FML::Article::Spool 
+	check input data more.
+	
+   Mail::Message::String 
+	add new methods:
+	+charcode_convert_to_internal_code().
+	+charcode_convert_to_external_charset().
+	
+	we need to ignore original charset in some cases.
+	So, if "=?sjis=..." is input, we return it as "=?iso-2022-jp...".
+	
+	more debug codes.
+	
+   FML::Process::Kernel 
+	ui_message() prefers $msg_args->{level} if specified.
+
 2004/02/13
 
    FML::Article::Summary 
@@ -6200,4 +6283,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.179 2004/01/04 16:37:32 fukachan Exp $
+$FML: CHANGES.txt,v 1.180 2004/02/15 04:40:29 fukachan Exp $
