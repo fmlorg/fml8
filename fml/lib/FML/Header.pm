@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.58 2003/04/16 08:09:23 tmu Exp $
+# $FML: Header.pm,v 1.59 2003/04/21 10:39:10 tmu Exp $
 #
 
 package FML::Header;
@@ -457,8 +457,7 @@ sub rewrite_received
     my $new = "X-Received";
     my $num = $header->count($org);
 
-    for($i = 0;$i < $num;$i++)
-    {
+    for ($i = 0; $i < $num; $i++) {
 	$data = $header->get($org, $i);
 	$header->add($new, $data);
     }
