@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Switch.pm,v 1.45 2001/11/25 06:46:29 fukachan Exp $
+# $FML: Switch.pm,v 1.46 2001/11/25 07:47:32 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -83,14 +83,14 @@ We pass it to C<ProcessSwitch()> later.
 # Return Value: the same as FML::Process::Flow::ProcessStart()
 sub main::Bootstrap2
 {
-    my ($main_cf_file)    = @_;
-    my @argv              = @ARGV; # save the original argument vector
-    my @cf                = ();
-    my %options           = ();
-    my $ml_home_dir       = ''; # e.g. /var/spool/ml/elena
+    my ($main_cf_file, $main_cf) = @_;
+    my @argv        = @ARGV; # save the original argument vector
+    my @cf          = ();
+    my %options     = ();
+    my $ml_home_dir = ''; # e.g. /var/spool/ml/elena
 
     use File::Basename;
-    my $myname            = basename($0); # inspect my name from $0
+    my $myname      = basename($0); # inspect my name from $0
 
     # 0.1
     print STDERR "\nsetuid is not set $< != $>\n\n" if $< != $>;
@@ -114,9 +114,7 @@ sub main::Bootstrap2
     }
 
     # 2.1 analyze main.cf and get the result in $main_cf
-    use Standalone;
-    $main_cf_file = $options{'c'} || $main_cf_file;
-    my $main_cf   = Standalone::load_cf($main_cf_file, $options{'params'});
+    #     removed. 
 
     # 2.2 parse @ARGV and get a list of configuration files
     #     XXX $main_cf{ ml_home_dir } (e.g. /var/spool/ml/elena) is defined

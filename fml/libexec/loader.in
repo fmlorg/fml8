@@ -4,42 +4,61 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: loader.in,v 1.3 2001/11/25 11:41:05 fukachan Exp $
+# $FML: loader.in,v 1.4 2001/11/25 14:14:08 fukachan Exp $
 #
 
-eval 'exec /usr/local/bin/perl -S $0 ${1+"$@"}'
+eval 'exec @PERL@ -S $0 ${1+"$@"}'
         if $running_under_some_shell;
 
-use vars qw($ConfDir $MainCF $running_under_some_shell);
+use vars qw($running_under_some_shell);
 use strict;
-use Carp;
 
 # reset PATH in the early stage
 $ENV{'PATH'} = '/bin:/usr/bin';
 delete @ENV{'IFS', 'CDPATH', 'ENV', 'BASH_ENV'};
 
-# main configuration file for directory switch
 {
     my $prefix      = "@prefix@";
     my $exec_prefix = "@exec_prefix@";
-    $ConfDir        = "@sysconfdir@";
-    $MainCF         = "$ConfDir/main.cf";
-}
+    my $main_cf     = "@sysconfdir@/fml/main.cf";
 
-eval q{ &Bootstrap();};
-if ($@) { print STDERR "Error: ", $@, "\n"; exit 1;}
+    eval q{ &Bootstrap($main_cf);};
+
+    # not use Carp.pm to be quiet if needed 
+    if ($@) { print STDERR "Error: ", $@, "\n"; exit 1;}
+}
 
 exit 0;
 
 
-# Firstly we load Standalone.pm which has main.cf parser().
-# XXX we should remove the last resort '/usr/local/libexec/fml';
-# XXX which is not always true.
-BEGIN {
-    use File::Basename;
-    unshift(@INC, '/usr/local/libexec/fml');
-    require Standalone;
-}
+=head1 NAME
+
+loader -- top level wrapper to load and start a real fml program.
+
+=head1 SYNOPSIS
+
+loader C<[-c main.cf]> [program specific options]
+
+=head1 DESCRIPTION
+
+Perl modules C<fml> uses are dependent on fml version.
+C<loader> resolves fml version dependence by 
+@sysconfdir@/main.cf, set up proper @INC and load C<FML::Process::Switch>.
+
+See C<FML::Process::Switch> for boot strap phase 2 of fml process.
+
+=head1 COMMAND LINE OPTIONS
+
+C<-c main.cf>
+    main.cf alternative
+
+=head1 METHOD
+
+=head2 Bootstrap( main_cf )
+
+top level loader.
+
+=cut
 
 
 # Descriptions: top lebel bootstrap program
@@ -55,38 +74,37 @@ BEGIN {
 # Return Value: none
 sub Bootstrap
 {
-    # 1. main.cf exists and I can open it?
-    -f $MainCF   || croak("cannot find ${MainCF}");
-    my $fh = new FileHandle $MainCF;
-    defined($fh) || croak("cannot find ${MainCF}");
+    my ($main_cf_default) = @_;
 
-    # parse command line options (preliminary)
-    #   XXX -c and --params options affect Standalone::load_cf().
-    #   XXX so, we need to parse only options for -c and --params.
-    #   XXX We should check @ARGV again after.
-    my $main_cf_file = $MainCF;
-    my $params = {};
+    # 1. main.cf exists and I can open it?
+    unless (-f $main_cf_default) {
+	_simple_croak("cannot find ${main_cf_default}");
+    }
+    my $fh = new FileHandle $main_cf_default;
+    unless (defined $fh) {
+	_simple_croak("cannot open ${main_cf_default}");
+    }
+
+    # 1.1 parse command line options (preliminary).
+    #     we check @ARGV again after by getopt().
+    my $main_cf_file = $main_cf_default; # main.cf by default 
+    my $params       = {};
     for (my $i = 0; $i <= $#ARGV; $i++) {
 	# -c main.cf
 	if ($ARGV[ $i ] =~ /^\-c$/) {
 	    $main_cf_file = $ARGV[$i + 1];
 	}
-
-	# --params key=value
-	if ($ARGV[ $i ] =~ /^\-\-params$/) { 
-	    $params = $ARGV[$i + 1];
-	}
     }
 
     # 2.1 o.k. try to load main.cf (1st pass) to resolve @INC
-    my $main_cf = Standalone::load_cf($main_cf_file, $params);
+    my $main_cf = _simple_load_cf($main_cf_file, $params);
 
     # 2.1.1 set up @INC to load FML::Process::Switch
     if (defined $main_cf->{ lib_dir }) {
 	push(@INC, split(/\s+/, $main_cf->{ lib_dir }));
     }
     else {
-	croak("\$lib_dir not defined in main.cf");
+	_simple_croak("\$lib_dir not defined in main.cf");
     }
 
     # 2.2 load version dependent Bootstrap2(), 
@@ -95,11 +113,11 @@ sub Bootstrap
 	require FML::Process::Switch;
     };
     unless ($@) {
-	eval q{ &Bootstrap2($main_cf_file);};
+	eval q{ &Bootstrap2($main_cf_file, $main_cf);};
 	if ($@) {
 	    my $reason = $@;
 	    if ($ENV{'debug'} || defined( $main_cf->{ debug } )) {
-		croak("fail to execute Bootstrap2($main_cf_file)\n$@\n");
+		_simple_croak("fail to execute Bootstrap2($main_cf_file)\n$@\n");
 	    }
 	    else {
 		$reason =~ s/[\n\s]*\s+at\s+.*$//m;
@@ -109,49 +127,143 @@ sub Bootstrap
 	}
     }
     else {
-	croak("cannot load FML::Process::Switch\n");
+	_simple_croak("cannot load FML::Process::Switch\n");
     }
 }
 
 
-=head1 NAME
+=head2 _simple_load_cf(cf_file, params)
 
-loader -- the wrapper which executes a real fml5 program.
+load "key = value" style configuration file and build a hash.
+return HASH REFERENCE.
 
-=head1 SYNOPSIS
+   my $main_cf = _simple_load_cf($main_cf_file, $params);
 
-loader C<[-c main.cf]> C<[--debug]> C<[--ctladdr]> [ml_home_dir]
+where $param is optional.
 
-=head1 DESCRIPTION
+=cut
 
-Perl modules C<fml> uses are dependent on fml version.
-C<loader> resolves fml version dependence by checking
-/etc/fml/main.cf and prepare @INC for some fml version.
 
-C<libexec/fml/loader> loads version dependent C<FML::Process::Switch>
-and executes C<Bootstrap2()> function.
+# Descriptions: load "key = value" style configuration.
+#               It is available to use the following style.
+#                    key = value1 value2
+#                          value3
+#               XXX This file is non-Object Oriented style but 
+#               XXX this is minimum module used in standalone program.
+#    Arguments: $file $params
+#               $params is 'key1=value1 key2=value2' syntax.
+# Side Effects: $config (hash reference) is allocated on memory here.
+# Return Value: hash reference to configuration parameters
+sub _simple_load_cf
+{
+    my ($file, $params) = @_;
+    my $config = $params ? _simple_parse_params($params) : {};
 
-It analyzes $0 and knows who I am.
-It determies which class it use.
-The C<$class> module is one of C<FML::Process::$program>.
+    use FileHandle;
+    my $fh = new FileHandle $file;
 
-C<FML::Process::Flow::ProcessStart($class, ..)> starts the program
-specified by C<$class>.
-See C<FML::Process::Switch> for more details.
+    if (defined $fh) {
+	my $curkey = '';
+	while (<$fh>) {
+	    next if /^\#/;
+	    chop;
 
-=head1 COMMAND LINE OPTIONS
+	    if (/^([A-Za-z]\w+)\s+=\s*(.*)/) {
+		my ($key, $value) = ($1, $2);
+		$curkey           = $key;
+		$config->{$key}   = $value;
+	    }
+	    if (/^\s+(.*)/) {
+		$config->{ $curkey }  .= " ". $1;
+	    }
+	}
+	$fh->close;
+    }
+    else {
+	_simple_croak("Error: cannot open $file");
+    }
 
-C<-c main.cf>
-    main.cf alternative
+    _simple_expand_variables( $config );
+    return $config;
+}
 
-C<--debug>
-    debug on.
 
-C<--ctladdr> 
-    fml.pl --cltaddr executes FML::Process::Command.
+# Descriptions: expand $var to the value of $var.
+#    Arguments: $ref_to_config
+# Side Effects: rewrite the given $config 
+# Return Value: none
+sub _simple_expand_variables
+{
+    my ($config) = @_;
+    my (@order) = keys %$config;
 
-C<--params> 
-    --params 'key1=value1 key2=value2 ...'
+    # check whether the variable definition is recursive.
+    # For example, definition "var_a = $var_a/b/c" causes a loop.
+    for my $x ( @order ) {
+	if ((defined $x) && defined ($config->{ $x })) {
+	    if ($config->{ $x } =~ /\$$x/) {
+		_simple_croak("loop1: definition of $x is recursive\n");
+	    }
+	}
+    }
+
+    # main expansion loop
+    my $org = '';
+    my $max = 0;
+  KEY:
+    for my $x ( @order ) {
+	next KEY unless defined($config->{ $x });
+	next KEY if $config->{ $x } !~ /\$/o;
+
+	# we need a loop to expand nested variables, for example, 
+	# a = $x/y and b = $a/c/0
+	# 
+	$max = 0;
+      EXPANSION_LOOP:
+	while ($max++ < 16) {
+	    $org = $config->{ $x };
+
+	    if ($config->{ $x } =~ /\{/) { # expand ${prefix}/xxx ...
+		$config->{ $x } =~ s/\$\{([a-z_]+)\}/$config->{$1}/g;
+	    }
+	    $config->{ $x } =~ s/\$([a-z_]+)/$config->{$1}/g;
+
+	    last EXPANSION_LOOP if $config->{ $x } !~ /\$/o;
+	    last EXPANSION_LOOP if $org eq $config->{ $x };
+
+	    if ($config->{ $x } =~ /\$$x/) {
+		_simple_croak("loop2: definition of $x is recursive\n");
+	    }
+        }
+
+	if ($max >= 16) {
+	    _simple_croak("variable expansion of $x causes infinite loop\n");
+	} 
+    }
+}
+
+
+sub _simple_parse_params
+{
+    my ($params) = @_;
+    my %config = ();
+
+    for my $x (split(/\s+/, $params)) {
+	my ($key, $value) = split(/=/, $x);
+	$config{ $key } = $value;
+    }
+
+    \%config;
+}
+
+
+sub _simple_croak
+{
+    my ($reason) = @_;
+    print STDERR "fml loader error: $reason";
+    exit(1);
+}
+
 
 =head1 SEE ALSO
 
