@@ -1,0 +1,15 @@
+<qandaentry>
+<question>
+<para>
+Postfix のバージョンが知りたい。
+</para>
+</question>
+
+<answer>
+<para>
+<screen>
+postconf mail_version
+</screen>
+</para>
+</answer>
+</qandaentry>
