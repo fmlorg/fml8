@@ -3,11 +3,11 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: toymodel.pm,v 1.6 2001/06/17 08:57:11 fukachan Exp $
+# $FML: toymodel.pm,v 1.1.1.1 2001/08/05 01:55:17 fukachan Exp $
 #
 
 
-package SQL::Schema::toymodel;
+package IO::Adapter::SQL::toymodel;
 
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
@@ -15,12 +15,12 @@ use Carp;
 
 =head1 NAME
 
-SQL::Schema::toymodel - SQL statement dependent on toymodel
+IO::Adapter::SQL::toymodel - SQL statement dependent on toymodel
 
 =head1 SYNOPSIS
 
-  use SQL::Schema::toymodel;
-  $obj = new SQL::Schema::toymodel;
+  use IO::Adapter::SQL::toymodel;
+  $obj = new IO::Adapter::SQL::toymodel;
 
 =head1 DESCRIPTION
 

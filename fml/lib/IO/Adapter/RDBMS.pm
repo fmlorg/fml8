@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: RDBMS.pm,v 1.9 2001/05/30 14:35:11 fukachan Exp $
+# $FML: RDBMS.pm,v 1.10 2001/06/09 08:58:10 fukachan Exp $
 #
 
 package IO::Adapter::RDBMS;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-IO::Adapter::RDBMS - IO with SQL servers
+IO::Adapter::RDBMS - talk with SQL servers
 
 =head1 SYNOPSIS
 
@@ -31,7 +31,7 @@ IO::Adapter::RDBMS - IO with SQL servers
 Configure object for C<dsn>.
 
     new({
-	driver => 'SQL::Schema::toymodel',
+	driver => 'IO::Adapter::SQL::toymodel',
     });
 
 It forwards the request to the specified driver, 
@@ -53,7 +53,8 @@ sub configure
 
     $type = 'MySQL'      if $type eq 'mysql';
     $type = 'PostgreSQL' if $type eq 'postgresql';
-    my $driver = "IO::Adapter::${type}::${schema}";
+    my $driver = "IO::Adapter::SQL::${type}::${schema}";
+    print STDERR "driver = $driver\n" if defined $ENV{'debug'};
 
     # forward the request to the specified subclass or DBI base class
     eval qq{ require $driver; $driver->import();};

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML$
+# $FML: MySQL.pm,v 1.13 2001/06/17 08:57:10 fukachan Exp $
 #
 
 
@@ -50,7 +50,7 @@ This module is a top level driver to talk with a MySQL server in SQL
 (Structured Query Language).
 
 The model dependent SQL statement is expected to be holded in
-C<SQL::Schema::> modules. 
+C<IO::Adapter::SQL::> modules. 
 
 You can specify your own module name at $args->{ driver } in
 new($args). 
@@ -63,7 +63,7 @@ C<get_next_value()> method.
 =head2 C<configure($me, $args)>
 
 IO::Adapter::MySQL specific configuration loader.
-It also calles SQL::Schema::$model module for model specific
+It also calles IO::Adapter::SQL::$model module for model specific
 customizatoins and functions.
 
 =cut
@@ -90,12 +90,12 @@ sub configure
     });
     
     # load model specific library
-    my $pkg = $config->{ driver } || 'SQL::Schema::toymodel';
+    my $pkg = $config->{ driver } || 'IO::Adapter::SQL::toymodel';
     eval qq{ require $pkg; $pkg->import();};
 
     # $self->{ _driver } is the $config->{ driver } object.
     unless ($@) {
-	print STDERR "load $pkg\n" if $ENV{ 'debug ' };
+	print STDERR "load $pkg\n" if $ENV{ 'debug' };
 	@ISA = ($pkg, @ISA);
 	$me->{ _driver } = $pkg;
     }
@@ -156,14 +156,14 @@ sub get_next_value
 =head2 C<add($addr)>
 
 add C<$addr> to the sql server specified at new().
-SQL::Schema::$model provides model specific SQL query statement.
-If SQL::Schema::add() exists, SQL::Schema::add() is called.
+IO::Adapter::SQL::$model provides model specific SQL query statement.
+If IO::Adapter::SQL::add() exists, IO::Adapter::SQL::add() is called.
 
 =head2 C<delete($addr)>
 
 delete C<$addr> from the sql server specified at new().
-SQL::Schema::$model provides model specific SQL query statement.
-If SQL::Schema::delete() exists, SQL::Schema::delete() is called.
+IO::Adapter::SQL::$model provides model specific SQL query statement.
+If IO::Adapter::SQL::delete() exists, IO::Adapter::SQL::delete() is called.
 
 =cut
 

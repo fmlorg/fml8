@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML$
+# $FML: DBI.pm,v 1.6 2001/06/17 08:57:10 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -25,7 +25,7 @@ This module is a top level driver to talk with a DBI server in SQL
 (Structured Query Language).
 
 The model dependent SQL statement is expected to be holded in
-other modules in such as C<SQL::Schema::> class.
+other modules in such as C<IO::Adapter::SQL::> class.
 Each model name is specified at $args->{ schema } in new($args).
 
 =head1 METHODS
