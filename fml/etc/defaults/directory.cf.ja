@@ -1,8 +1,14 @@
 =head1	ディレクトリ
 
-# $ml_home_dir is given from libexec/loader.
+# description: ML のホームディレクトリ
+#              $ml_home_dir は FML::Process::Switch が決める
+# history: fml 4.0 の $DIR のこと
+# type: directory string
 # ml_home_dir	=
 
+# description: ML 間でシェアするデータベースをおくホームディレクトリ
+# history: fml 4.0 に該当するものはない
+# type: directory string
 shared_db_dir	= $ml_home_prefix/@db@
 
 var_dir		= $ml_home_dir/var
