@@ -64,8 +64,9 @@ This wrapper maps IO for some object to usual file IO.
    unix.group      unix.group:$group_name
                    For example, unix.group:fml
 
-   nis             NIS "Netork Information System" (YP)
-                   *** not yet implemented ***
+   nis.group       nis.group:$group_name
+                   the NIS "Netork Information System" (YP) map "group.byname"
+                   For example, nis.group:fml
 
    mysql           mysql:$schema_name
                    *** not yet implemented ***
@@ -110,6 +111,17 @@ sub new
 	    # emulate an array on memory
 	    my (@x)       = getgrnam( $me->{_name} );
 	    my (@members) = split ' ', $x[3];
+	    $me->{_array_reference} = \@members;
+	}
+	elsif ($map =~ /nis\.group:(\S+)/) {
+	    my $key      = $1;
+	    $pkg         = 'IO::Adapter::Array';
+	    $me->{_name} = $key;
+	    $me->{_type} = 'nis.group';
+
+	    # emulate an array on memory
+	    my (@x)       = `ypmatch $key group.byname`;
+	    my (@members) = split ',', $x[3];
 	    $me->{_array_reference} = \@members;
 	}
 	elsif ($map =~ /(ldap|mysql|postgresql):(\S+)/) {
