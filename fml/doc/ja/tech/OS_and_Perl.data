@@ -347,6 +347,21 @@
 [comments]     5.6.0 built for darwin
 
 
+[system]       Mac OS X Server Developer Release DR1
+[perl.version] ?
+
+[system]       Mac OS X Server Developer Release DR2
+[perl.version] ?
+
+[system]       Mac OS X
+[perl.version] ?
+
+[system]       Mac OS X for Interl
+[perl.version] ?
+
+[system]       Mac OS X Developer Preview DP1,2,3,4
+[perl.version] ?
+
 
 #
 # not UNIX-like
@@ -365,7 +380,6 @@
 
 
 
-
 CONTRIBUTORS:
 
 	katino@cvs.fml.org
@@ -380,4 +394,4 @@ SEE ALSO:
    http://www.cyber-magic.org/~taka/perl-versions.html
    http://www.uinet.or.jp/~taka/perl-versions.html
 
-$FML: OS_and_Perl.data,v 1.1 2001/04/28 14:37:03 fukachan Exp $
+$FML: OS_and_Perl.data,v 1.2 2001/04/30 03:57:44 fukachan Exp $
