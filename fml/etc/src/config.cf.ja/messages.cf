@@ -25,7 +25,7 @@ template_file_charset	=	euc-jp
 #      History:
 #        Value:
 #     Examples:
-message_default_subject	=	fml system message
+default_message_subject	=	fml system message ($ml_name ML)
 
 
 # Descriptions:
