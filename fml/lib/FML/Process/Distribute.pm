@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.101 2002/12/01 13:46:13 fukachan Exp $
+# $FML: Distribute.pm,v 1.102 2002/12/24 10:06:24 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -424,7 +424,7 @@ sub _deliver_article
     my $wh = $curproc->open_outgoing_message_channel();
     if (defined $wh) {
 	$sfp = sub { print $wh @_;};
-	$handle = $wh;
+	$handle = undef; # $wh;
     }
 
     # delay loading of module
