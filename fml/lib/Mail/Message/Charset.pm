@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #
-# $FML: Charset.pm,v 1.1 2003/10/18 04:43:52 fukachan Exp $
+# $FML: Charset.pm,v 1.2 2004/01/24 09:03:59 fukachan Exp $
 #
 
 package Mail::Message::Charset;
@@ -183,6 +183,18 @@ my %message_charset_map  = (
 			    'english'  => 'us-ascii',
 			    );
 
+my %rev_message_charset_map  = (
+				'euc-jp'      => 'ja',
+				'euc'         => 'ja',
+				'sjis-jp'     => 'ja',
+				'sjis'        => 'ja',
+				'jis-jp'      => 'ja',
+				'jis'         => 'ja',
+				'iso-2022-jp' => 'ja',
+
+				'us-ascii'    => 'en',
+				);
+
 
 # Descriptions: constructor.
 #    Arguments: OBJ($self)
@@ -240,6 +252,18 @@ sub language_to_message_charset
     my ($self, $language) = @_;
 
     return( $message_charset_map{ lc($language) } || '' );
+}
+
+
+# Descriptions: charset to language: e.g. iso-2022-jp => japanese.
+#    Arguments: OBJ($self) STR($charset)
+# Side Effects: none
+# Return Value: STR
+sub message_charset_to_language
+{
+    my ($self, $charset) = @_;
+
+    return( $rev_message_charset_map{ lc($charset) } || '' );
 }
 
 
