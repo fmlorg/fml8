@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: PCB.pm,v 1.14 2003/08/23 04:35:28 fukachan Exp $
+# $FML: PCB.pm,v 1.15 2003/08/23 15:33:11 fukachan Exp $
 #
 
 package FML::PCB;
@@ -45,29 +45,29 @@ Typically, $curproc is composed like this:
 
 =head1 METHODS
 
-=head2 new( $args )
+=head2 new( $pcb_args )
 
 initialize the C<pcb> memory area.
-If $args HASH REFERENCE is specified, initialize C<pcb> area by it.
+If $pcb_args HASH REFERENCE is specified, initialize C<pcb> area by it.
 
 =cut
 
 
 # Descriptions: constructor. bind object to private hash
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) HASH_REF($pcb_args)
 # Side Effects: bind object to internal hash
 # Return Value: OBJ
 sub new
 {
-    my ($self, $args) = @_;
+    my ($self, $pcb_args) = @_;
 
     unless (defined %_fml_PCB) { %_fml_PCB = ();}
     my $me = \%_fml_PCB;
 
     # import variables
-    if (defined $args) {
+    if (defined $pcb_args) {
 	my ($k, $v);
-	while (($k, $v) = each %$args) { set($me, $k, $v);}
+	while (($k, $v) = each %$pcb_args) { set($me, $k, $v);}
     }
 
     return bless $me, $self;
