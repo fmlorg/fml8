@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.237 2004/08/13 11:45:23 fukachan Exp $
+# $FML: Kernel.pm,v 1.238 2004/08/14 06:20:00 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -160,19 +160,22 @@ sub new
     # object-ify. bless! bless! bless!
     bless $curproc, $self;
 
-    # 3.5 initialize signal handlers
+    # 4.1 initialize watchdog timer.
+    $curproc->_watchdog_init;
+
+    # 4.2 initialize signal handlers
     $curproc->_signal_init;
 
-    # 3.6 default printing style
+    # 4.3 default printing style
     $curproc->_print_init;
 
-    # 3.7 set up message queue for logging. (moved to each program)
+    # 4.4 set up message queue for logging. (moved to each program)
     # $curproc->_log_message_init();
 
-    # 3.8 prepare credential object
+    # 4.5 prepare credential object
     $curproc->_credential_init();
 
-    # 4.1 debug. XXX remove this in the future !
+    # 5.1 debug. XXX remove this in the future !
     $curproc->__debug_ml_xxx('loaded:');
 
     if ($args->{ myname } eq 'loader') {
@@ -189,6 +192,36 @@ sub new
     }
 
     return $curproc;
+}
+
+
+# Descriptions: initialize watchdog timer.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub _watchdog_init
+{
+    my ($curproc) = @_;
+
+    $curproc->{ __start_time } = time;
+}
+
+
+# Descriptions: watchdog timer time out.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub is_process_time_limit
+{
+    my ($curproc) = @_;
+    my $time  = $curproc->{ __start_time };
+    my $limit = int(1000 * 0.95);
+
+    if (time > $time + $limit) {
+	return 1;
+    }
+
+    return 0;
 }
 
 
