@@ -79,7 +79,7 @@ cgi_navigation_bar_color	=	#FFFFFF
 #      History: 4.0 には該当する変数はない
 #        Value: member recipient admin_member
 #     Examples: member recipient admin_member
-cgi_menu_map_list		=	member
+cgi_menu_address_map_list		=	member
 					recipient
 					admin_member
 
@@ -88,4 +88,4 @@ cgi_menu_map_list		=	member
 #      History: 4.0 には該当する変数はない
 #        Value: member recipient admin_member
 #     Examples: member
-cgi_menu_default_map		=	member
+cgi_menu_default_address_map		=	member

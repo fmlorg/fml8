@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.6 2003/10/15 10:12:13 fukachan Exp $
+# $FML: Utils.pm,v 1.7 2003/10/16 14:06:57 fukachan Exp $
 #
 
 package FML::Process::CGI::Utils;
@@ -99,7 +99,7 @@ sub cgi_var_address_map
 {
     my ($curproc)   = @_;
     my $config      = $curproc->config();
-    my $_defaultmap = $config->{ cgi_menu_default_map };
+    my $_defaultmap = $config->{ cgi_menu_default_address_map };
 
     return $curproc->safe_param_map() || $_defaultmap;
 }
@@ -113,7 +113,7 @@ sub cgi_var_address_map_list
 {
     my ($curproc) = @_;
     my $config    = $curproc->config();
-    return $config->get_as_array_ref('cgi_menu_map_list');
+    return $config->get_as_array_ref('cgi_menu_address_map_list');
 }
 
 
