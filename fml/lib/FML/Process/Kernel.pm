@@ -162,6 +162,9 @@ sub load_config_files
     for my $cf (@$files) { 
       $curproc->{ config }->overload( $cf );
     }
+
+    # XXX We need to expand variables after we load all *cf files.
+    $curproc->{ config }->expand_variables();
 }
 
 

@@ -69,7 +69,6 @@ sub overload
 sub load_file
 {
     my ($self, $file) = @_;
-    my (@key_order) = ();
     my $config        = \%_fml_config;
 
     # open the $file by using FileHandle.pm
@@ -92,7 +91,6 @@ sub load_file
 		$value =~ s/\s*$//o;
 		$curkey           = $key;
 		$config->{$key}   = $value;
-		push(@key_order, $key);
 	    }
 	    if (/^\s+(.*)/) {
 		my $value = $1;
@@ -105,29 +103,29 @@ sub load_file
     else {
 	$self->_log("Error: cannot open $file");
     }
-
-    # expand variable name e.g. $dir/xxx -> /var/spool/ml/elena/xxx
-    _expand_variables( $config, \@key_order );
 }
 
 
-sub _expand_variables
+# expand variable name e.g. $dir/xxx -> /var/spool/ml/elena/xxx
+sub expand_variables
 {
-    my ($config, $order) = @_;
-    my $max = 0;
-    my $org = '';
+    my ($self) = @_;
+    my $config = \%_fml_config;
+    my @order  = keys %_fml_config;
 
     # check whether the variable definition is recursive.
-    # For example, definition "var_a = $var_a/b/c" causes loop.
-    for my $x ( @$order ) {
+    # For example, definition "var_a = $var_a/b/c" causes a loop.
+    for my $x ( @order ) {
 	if ($config->{ $x } =~ /\$$x/) {
 	    croak("loop1: definition of $x is recursive\n");
 	}
     }
 
-
+    # main expansion loop
+    my $org = '';
+    my $max = 0;
   KEY:
-    for my $x ( @$order ) {
+    for my $x ( @order ) {
 	next KEY if $config->{ $x } !~ /\$/o;
 
 	# we need a loop to expand nested variables, for example, 
