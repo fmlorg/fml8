@@ -182,6 +182,8 @@ sub _update_db
     if (defined $self->{ _status }) {
 	$rh_status->{ $ticket_id } = $self->{ _status };
     }
+
+    $self->_close_db($curproc, $args);
 }
 
 
