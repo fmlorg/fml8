@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.6 2002/12/18 04:50:16 fukachan Exp $
+# $FML: List.pm,v 1.7 2003/02/15 02:54:25 fukachan Exp $
 #
 
 package FML::CGI::Admin::List;
@@ -40,18 +40,24 @@ sub cgi_menu
     my $action      = $curproc->safe_cgi_action_name();
     my $target      = '_top';
     my $ml_name     = $command_args->{ ml_name };
+    my $config      = $curproc->config();
+    my $map_list    = $config->get_as_array_ref('cgi_menu_map_list');
+    my $_defaultmap = $config->{ cgi_menu_default_map };
+    my $map_default = $curproc->safe_param_map() || $_defaultmap;
 
-    # XXX-TODO: $map_list hard-coded
-    my $map_list    = [ 'member', 'recipient', 'admin_member' ];
-    my $map_default = $curproc->safe_param_map() || 'member';
+    use FML::Restriction::Base;
+    my $safe = new FML::Restriction::Base;
+    unless ($safe->regexp_match('ml_name', $ml_name)) {
+	croak("invalid ml_name");
+    } 
 
-    # create <FORM ... > ... by (start_form() ... end_form())
+    # check $map_default included in $map_list.
+    unless ($config->has_attribute("cgi_menu_map_list", $map_default)) {
+	croak("invalid map: $map_default");
+    }
+
     print start_form(-action=>$action, -target=>$target);
-
     print hidden(-name => 'command', -default => 'list');
-
-    # XXX-TODO: we should validate $ml_name by safe regexp ?
-    # XXX-TODO: check $map_default included in $map_list.
     print table( { -border => undef },
 		Tr( undef,
 		   td([
@@ -70,7 +76,6 @@ sub cgi_menu
 		       ]),
 		   )
 		);
-
 
     print submit(-name => 'show');
     print end_form;
