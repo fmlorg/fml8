@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Param.pm,v 1.11 2001/12/23 11:37:08 fukachan Exp $
+# $FML: Param.pm,v 1.12 2002/03/18 13:52:20 fukachan Exp $
 #
 
 package FML::Process::CGI::Param;
@@ -58,6 +58,9 @@ sub safe_param
 	    if ($value =~ /^$filter$/) {
 		return $value;
 	    }
+	    elsif ($value =~ /^\s*$/) {
+		return '';
+	    }
 	    else {
 		croak("ERROR.INSECURE: CGI parameter $key has invalid character(s).");
 	    }
@@ -104,6 +107,9 @@ sub safe_paramlist
 	    if ($numregexp == 1) { push(@list, [ $1, $value ] );}
 	    if ($numregexp == 2) { push(@list, [ $1, $2, $value ] );}
 	    if ($numregexp == 3) { push(@list, [ $1, $2, $3, $value ] );}
+	}
+	elsif ($x =~ /^\s*$/) {
+	    return '';
 	}
 	else {
 	    croak("ERROR.INSECURE");
