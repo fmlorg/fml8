@@ -1761,6 +1761,21 @@ default_cgi_charset	=	euc-jp
 cgi_charset		=	$default_cgi_charset
 
 
+# Descriptions: CGI の言語モード (!= charset) 
+#      History:
+#        Value:
+#     Examples:
+default_cgi_language	=	japanese
+
+
+# Descriptions: CGI で利用可能な言語モード (!= charset) 
+#      History:
+#        Value:
+#     Examples:
+cgi_language_list	=	japanese
+				english
+
+
 # Descriptions: デフォルトの bgcolor
 #      History:
 #        Value: #%6x

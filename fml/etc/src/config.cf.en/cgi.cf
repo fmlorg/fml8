@@ -36,6 +36,18 @@ default_cgi_charset	=	us-ascii
 #     Examples:
 cgi_charset		=	$default_cgi_charset
 
+# Descriptions: language mode of CGI (!= charset) 
+#      History:
+#        Value:
+#     Examples:
+default_cgi_language   =       english
+
+# Descriptions: available language mode in CGI
+#      History:
+#        Value:
+#     Examples:
+cgi_language_list      =	english
+				japanese
 
 # Descriptions: default bgcolor
 #      History:
