@@ -1,5 +1,5 @@
 #
-# $FML$
+# $FML: Makefile,v 1.31 2001/04/08 07:21:59 fukachan Exp $
 #
 
 all: link
@@ -26,7 +26,6 @@ allclean: clean
 	rm -f CGI
 	rm -f Command
 	rm -f SQL
-	rm -f ErrorMessages
 	rm -f Language
 	rm -f doc-devel
 
@@ -41,7 +40,6 @@ check:
 	@ (cd ../../fml; make check 2>&1 ) | grep -v OK || echo ''
 
 link:
-	rm -f ErrorMessages; ln -s ../../fml/lib/ErrorMessages
 	rm -f doc; ln -s ../../fml/doc
 	rm -f etc; ln -s ../../fml/etc
 	rm -f lib; ln -s ../../fml/lib
