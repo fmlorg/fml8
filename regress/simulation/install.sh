@@ -1,7 +1,9 @@
 #!/bin/sh
 #
-# $FML: install.sh,v 1.3 2001/09/22 14:10:06 fukachan Exp $
+# $FML: install.sh,v 1.4 2001/10/08 15:41:16 fukachan Exp $
 #
+
+(cd ../..; ./configure --sysconfdir=/etc/fml )
 
 # config.cf
 sudo -v
