@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.60 2002/04/28 13:34:16 fukachan Exp $
+# $FML: Message.pm,v 1.61 2002/05/11 09:35:21 fukachan Exp $
 #
 
 package Mail::Message;
@@ -533,7 +533,6 @@ sub _parse
     else {
 	$header      = $buf;
 	$header_size = $total_buffer_size;
-	$$data_ptr   = undef;
     }
 
     # read the message (mail body) from the incoming mail
