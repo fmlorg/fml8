@@ -1,0 +1,83 @@
+=head1	header manipulation
+
+
+# Descriptions: use loop check based on header information ?
+#      History:
+#        Value: yes / no
+#     Examples:
+use_header_loop_check		=	yes
+
+
+# Descriptions: loop check rules
+#      History:
+#        Value:
+#     Examples:
+header_loop_check_rules		=	check_message_id
+					check_x_ml_info
+					check_list_post
+
+# Descriptions: Message-ID cache directory
+#      History:
+#        Value:
+#     Examples:
+message_id_cache_dir		=	$db_dir/message_id
+
+
+# Descriptions: use article header rewrite function ?
+#      History:
+#        Value: yes / no
+#     Examples:
+use_article_header_rewrite		=	yes
+
+
+# Descriptions: header rewriting rules
+#      History:
+#        Value:
+#     Examples:
+article_header_rewrite_rules	=	delete_unsafe_header_fields
+					rewrite_article_subject_tag
+					rewrite_reply_to
+					rewrite_errors_to
+					add_software_info
+					add_fml_ml_name
+					add_fml_traditional_article_id
+					add_fml_article_id
+					add_x_sequence
+					add_rfc2369
+
+
+# Descriptions: use digest article header rewrite function ?
+#      History:
+#        Value: yes / no
+#     Examples:
+use_digest_header_rewrite		=	yes
+
+
+# Descriptions: digest article header rewrite rules
+#      History:
+#        Value:
+#     Examples:
+digest_header_rewrite_rules	=	add_software_info
+					add_rfc2369
+
+
+# Descriptions: remove unsafe header fields
+#      History: $SKIP_FIELDS
+#        Value: strings
+#     Examples:
+unsafe_header_fields		=	Return-Receipt-To
+
+
+# Descriptions: Subject: tag.
+#               see sprintf(3) on the usage of % et.al.
+#      History:
+#        Value:
+#     Examples: [elena:00080]
+article_subject_tag			=	[$ml_name:%05d]
+
+
+# Descriptions: ml name in both X-ML-Name: and X-Sequence header fields.
+#      History:
+#        Value:
+#     Examples: elena
+x_ml_name			=	$ml_name

@@ -1,0 +1,68 @@
+=head1 message manipulation
+
+=head2 language
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+reply_message_charset	=	$default_charset
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+template_file_charset	=	euc-jp
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+default_message_subject	=	fml system message ($ml_name ML)
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+reply_message_subject	=	fml results ($ml_name ML)
+
+
+=head2 template files
+
+
+# Descriptions: directory to hold message template files
+#      History: /usr/local/fml/drafts/
+#        Value: directory
+#     Examples: /usr/local/share/fml/$fml_version/message
+message_template_dir	= $fml_share_dir/message
+
+
+# Descriptions: directory to hold ml specific message template files
+#      History: $DIR/drafts/
+#        Value: directory
+#     Examples: /usr/local/share/fml/$fml_version/template/$language
+ml_local_message_template_dir	= $ml_local_share_dir/message
+
+
+=head2 template files for user
+
+
+# Descriptions: help file
+#      History:
+#        Value:
+#     Examples:
+help_file		=	$ml_home_dir/help
+
+# Descriptions: guilde file
+#      History:
+#        Value:
+#     Examples:
+guide_file		=	$ml_home_dir/guide
+
+# Descriptions: objective file
+#      History:
+#        Value:
+#     Examples:
+objective_file		=	$ml_home_dir/objective

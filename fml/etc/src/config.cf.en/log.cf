@@ -1,0 +1,38 @@
+=head1	logging
+
+# Descriptions: user logging function
+#      History: enabled by default
+#        Value: yes / no
+#     Examples:
+use_log		=	yes
+
+# Descriptions: log file
+#      History: $LOGFILE
+#        Value: filename
+#     Examples:
+log_file	=	$ml_home_dir/log
+
+# Descriptions: logging type
+#      History: fml 8.0 new
+#        Value: file / syslog
+#     Examples:
+log_type	=	file
+
+# Descriptions: log message format
+#      History:
+#        Value: fml4_compatible
+#               process[pid]
+#               process:time.pid ?
+#     Examples: * fml4_compatible example
+#               01/01/28 00:53:57 IPv6 is ready (fukachan@fml.org)
+#               * process[pid] 
+#               02/07/31 00:56:19 loader[29507] try mta=127.0.0.1:25 by IPv6
+#               * process:time.pid ?
+#               02/07/31 00:56:19 loader: 1028074827.29507 try ...
+log_format_type	=	process[pid]
+
+# Descriptions: log dir
+#      History:
+#        Value: filename
+#     Examples:
+log_dir		=	$var_dir/log

@@ -1,0 +1,38 @@
+=head1	article and article spool
+
+# Descriptions: user article delivery function ?
+#      History:
+#        Value: yes / no
+#     Examples:
+use_article_delivery	=	yes
+
+# Descriptions: store article into spool directory ?
+#      History: $NOT_USE_SPOOL
+#        Value: yes / no
+#     Examples:
+use_spool	= 	yes
+
+# Descriptions: use subdir in spool directory ?
+#      History: 
+#        Value: plane subdir
+#     Examples: plane
+spool_type	= 	plane
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+spool_subdir_unit =	1000
+
+# Descriptions: file to store article sequence.
+#      History: $SEQ_FILE
+#        Value: filename
+#     Examples:
+sequence_file	= $ml_home_dir/seq
+
+# Descriptions: spool directory
+#      History: $SPOOL_DIR
+#        Value: directory
+#     Examples:
+spool_dir	= $ml_home_dir/spool

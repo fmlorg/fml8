@@ -1,0 +1,24 @@
+=head1	lock
+
+# Descriptions: use lock system ?
+#      History:
+#        Value: yes /no
+use_lock	= yes
+
+# Descriptions: directory where lock files are created.
+#      History:
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var/lock
+lock_dir	= $var_dir/lock
+
+# Descriptions: giant lock file name
+#      History: $SPOOL_DIR
+#        Value: filename
+#     Examples: /var/spool/ml/elena/var/lock/giantlock
+lock_file	= $lock_dir/giantlock
+
+# Descriptions: lock algorithm type
+#      History: $USE_FLOCK
+#        Value: flock
+#     Examples:
+lock_type	= flock

@@ -1,0 +1,60 @@
+# CAUTIONS
+#
+# [terms]
+#
+#	mail		rfc822/message. use mail here.
+#
+#	message		subject, strings within mail body and error messages.
+#
+# [rules]
+#		$ACTION_$CONDITION format
+#
+#		permit_xxx	allow if condition xxx matched.
+#				try next condition if not matched.
+#
+#		reject_xxx	reject if condition xxx matched.
+#				processing stops here. 
+#				try next condition if not matched.
+#
+#		check_xxx	permit/reject follows condition xxx.
+#				other variables specicy the condtion detail.
+#				try next condition if not matched.
+#
+#		permit		permit_all. 
+#				processing stops here. 
+#
+#		reject		reject_all.
+#				processing stops here. 
+#
+# [prefix]
+#
+#	fml_		fml system common or common over all domains.
+#			fml_* variable is used for function common over 
+#			the whole fml system.
+#			Example: fml_libexec_dir = /usr/local/libexec/fml
+#
+#	domain_ ?	domain specific.
+#			Except for $ml_home_prefix (= /var/spool/ml),
+#
+#			Example:
+#			domain_config_dir_prefix   = /var/spool/ml/etc
+#			domain_sendmail_config_dir = /var/spool/ml/etc/mail
+#			domain_mail_config_dir     = /var/spool/ml/etc/mail
+#			domain_postfix_config_dir  = /var/spool/ml/etc/postfix
+#			domain_fml_config_dir      = /var/spool/ml/etc/fml
+#	 
+#	path_		program path. OS specific.
+#
+#	postfix_	postfix specific ...
+#	 
+#	qmail_		qmail specific ...
+#	 
+#	others		ML specific variables
+#
+#	****_dir	ML specific directory vriables
+#
+#
+# References: See
+#   http://www.fml.org/software/fml-devel/Documentation/en/tutorial/
+# for the variable naming convention.
+#

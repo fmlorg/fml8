@@ -1,0 +1,20 @@
+=head1	convert article to html format.
+
+# Descriptions: use html converter function ?
+#      History: $AUTO_HTML_GEN
+#        Value: yes / no
+#     Examples: yes
+use_html_archive	=	yes
+
+# Descriptions: html archive directory of the specific ML.
+#      History: none
+#        Value: directory
+#     Examples: ~fml/public_html/fml/mlarchive/fml.org/elena
+html_archive_dir	= $fml_owner_home_dir/public_html/fml/mlarchive/$ml_domain/$ml_name
+
+
+# Descriptions:
+#      History:
+#        Value: normal / reverse
+#     Examples: reverse
+html_archive_index_order_type	=	reverse

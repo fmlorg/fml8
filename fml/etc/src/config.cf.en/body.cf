@@ -1,0 +1,22 @@
+=head1	mail body
+
+
+# Descriptions: use loop check based on body information
+#      History:
+#        Value: yes / no
+#     Examples:
+use_body_loop_check		=	yes
+
+
+# Descriptions: body loop check rules
+#      History:
+#        Value:
+#     Examples:
+body_loop_check_rules		=	check_body_cksum
+
+
+# Descriptions: Message-ID cache directory
+#      History:
+#        Value:
+#     Examples:
+body_cksum_cache_dir		=	$db_dir/body_cksum

@@ -1,0 +1,142 @@
+=head1 MTA related configurations
+
+newml_command_mta_config_list	=	postfix sendmail qmail procmail
+
+rmml_command_mta_config_list	=	$newml_command_mta_config_list
+
+
+=head2 directory
+
+
+# Descriptions: directory to hold config files for MTA
+#      History: hard-coded in fml 4.0
+#        Value: directory
+#     Examples: /var/spool/ml/etc/mail
+domain_mail_config_dir		= 	$domain_config_base_dir/mail
+
+
+# Descriptions: directory to hold postfix specific config files.
+#      History: hard-coded in fml 4.0
+#        Value: directory
+#     Examples: /var/spool/ml/etc/mail
+domain_postfix_config_dir	= 	$domain_config_base_dir/postfix
+
+
+# Descriptions: directory to hold qmail specific config files.
+#      History: hard-coded in fml 4.0
+#        Value: directory
+#     Examples: /var/spool/ml/etc/mail
+domain_qmail_config_dir		= 	$domain_config_base_dir/qmail
+
+
+# Descriptions: directory to hold exim specific config files.
+#      History: hard-coded in fml 4.0
+#        Value: directory
+#     Examples: /var/spool/ml/etc/mail
+domain_exim_config_dir		= 	$domain_config_base_dir/exim
+
+
+# Descriptions: directory to hold sendmail specific config files.
+#      History: hard-coded in fml 4.0
+#        Value: directory
+#     Examples: /var/spool/ml/etc/sendmail
+domain_sendmail_config_dir	= 	$domain_config_base_dir/sendmail
+
+
+# Descriptions: directory to hold procmail specific config files.
+#      History: hard-coded in fml 4.0
+#        Value: directory
+#     Examples: /var/spool/ml/etc/procmail
+domain_procmail_config_dir	= 	$domain_config_base_dir/procmail
+
+
+=head2 sendmail / postfix
+
+
+# Descriptions: aliases
+#      History: hard-coded in fml 4.0
+#        Value: file path
+#     Examples: /var/spool/ml/etc/mail/aliases
+mail_aliases_file	=	$domain_mail_config_dir/aliases
+
+
+=head2	postfix
+
+
+# Descriptions: virtual map file
+#      History: none
+#        Value: file path
+#     Examples: /var/spool/ml/etc/mail/virtual
+postfix_virtual_map_file	=	$domain_postfix_config_dir/virtual
+
+
+
+# Descriptions: templates of include files
+#        Value: ARRAY
+#     Examples:
+newml_command_postfix_template_files 	=	include
+						include-ctl
+						include-error
+
+
+# Descriptions: verps delimieters used in postfix
+#      History: none
+#        Value: +=
+#     Examples: +=
+postfix_verp_delimiters	=	+=
+
+
+=head2	qmail
+
+
+# Descriptions: templates files of ~fml/.qmail-*
+#        Value: ARRAY
+#     Examples:
+newml_command_qmail_template_files 	=	dot-qmail
+						dot-qmail-ctl
+						dot-qmail-admin
+						dot-qmail-request
+						dot-qmail-default
+
+
+# Descriptions: virtual domain configurations for qmail
+#      History: none
+#        Value: file path
+#     Examples: /var/qmail/control/virtualdomains
+qmail_virtualdomains_file = /var/qmail/control/virtualdomains
+
+
+# Descriptions: template of /var/qmail/control/virtualdomains
+#      History: none
+#        Value: file path
+#     Examples: /var/spool/ml/etc/qmail/virtualdomains
+qmail_virtual_map_file	=	$domain_qmail_config_dir/virtualdomains
+
+
+
+# Descriptions: verps delimieters used in qmail
+#      History: none
+#        Value: -=
+#     Examples: -=
+qmail_verp_delimiters	=	-=
+
+
+=head2	sendmail
+
+# Descriptions: sample of /etc/mail/virtusertable
+#      History: none
+#        Value: file path
+#     Examples: /var/spool/ml/etc/mail/virtual
+sendmail_virtual_map_file =	$domain_sendmail_config_dir/virtusertable
+
+
+=head2 procmail
+
+
+# Descriptions: sample of ~fml/.procmailrc
+#      History: hard-coded in fml 4.0
+#        Value: file path
+#     Examples: /var/spool/ml/etc/procmail/aliases
+procmail_aliases_file	=	$domain_procmail_config_dir/procmailrc
+
+

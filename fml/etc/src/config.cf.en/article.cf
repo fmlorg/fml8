@@ -1,0 +1,202 @@
+=head1	article handling
+
+=head2	article sequence number
+
+
+# Descriptions: file to store sequence number
+#      History: $SEQ_FILE
+#        Value: filename
+#     Examples:
+article_sequence_file	= $sequence_file
+
+
+=head2 ACL
+
+
+# Descriptions: how to inform the rejected message 
+#               when the filter system rejects.
+#               We prefer string not mime/multipart to avoid parsing by MUA.
+#      History: string in 4.0.
+#        Value: multipart / string
+#     Examples: string
+post_restrictions_reject_notice_data_type	=	string
+
+
+=head2	size limit
+
+
+# Descriptions: maximum size limit of article header passed from MTA.
+#      History:
+#        Value: NUM
+#     Examples: 102400
+incoming_article_header_size_limit	= $default_mail_header_size_limit
+
+
+# Descriptions: maximum size limit of article body passed from MTA.
+#      History:
+#        Value: NUM
+#     Examples: 10240000
+incoming_article_body_size_limit	= $default_mail_body_size_limit
+
+
+# Descriptions: maximum size limit of deliverd article header. 
+#               (not yet implemented ;-)
+#      History:
+#        Value: NUM
+#     Examples: 102400
+outgoing_article_header_size_limit	= $default_mail_header_size_limit
+
+
+# Descriptions: maximum size limit of deliverd article body.
+#               (not yet implemented ;-)
+#        Value: NUM
+#     Examples: 10240000
+outgoing_article_body_size_limit	= $default_mail_body_size_limit
+
+
+=head2	filter
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+use_article_filter	= 	yes
+ 
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+article_filter_functions	=	article_size_filter
+					article_header_filter
+					article_non_mime_filter
+					article_mime_component_filter
+					article_text_plain_filter
+
+
+=head2	size based filter
+
+
+# Descriptions: use size based filter
+#      History:
+#        Value: yes / no
+#     Examples:
+use_article_size_filter	=	yes
+
+
+# Descriptions: size based filter rules.
+#               first match. 
+#               permit post if no rule matched.
+#      History:
+#        Value:
+#     Examples:
+article_size_filter_rules	=	check_header_size
+					check_body_size
+					permit
+
+
+=head2	header base filter
+
+
+# Descriptions: use header based filter ?
+#      History:
+#        Value: yes / no
+#     Examples:
+use_article_header_filter		=	yes
+
+
+# Descriptions: header filter rules.
+#               first match. 
+#               permit post if no rule matched.
+#      History:
+#        Value:
+#     Examples:
+article_header_filter_rules		=	check_message_id
+						check_date
+						permit
+
+
+=head2	filter for non MIME structure
+
+
+# Descriptions: dummy
+#      History: !MIME of 4.0 content filter
+#        Value: yes / no
+#     Examples:
+use_article_non_mime_filter		=	yes
+
+
+# Descriptions: dummy
+#      History:
+#        Value: permit / reject
+#     Examples: permit
+article_non_mime_filter_rules		=	permit
+
+
+# Descriptions: MIME structure based filter
+#      History: 4.0 content filter
+#        Value: yes / no
+#     Examples:
+use_article_mime_component_filter	=	yes
+
+
+# Descriptions: file of filter rules
+#      History: @CONTENT_HANDLER
+#        Value:
+#     Examples:
+article_mime_component_filter_rules	= $fml_config_dir/mime_component_filter
+
+
+
+=head2	filter for text/plain
+
+
+# Descriptions: use text/plain filter, which is a simple syntax checker.
+#      History: 4.0's EnvelopeFilter
+#        Value: yes / no
+#     Examples:
+use_article_text_plain_filter		=	yes
+
+
+# Descriptions: filter rules of text/plain filter.
+#               first match.
+#               permit post if no rule matched.
+#      History:
+#         Note: permit by default 
+#        Value:
+#     Examples:
+article_text_plain_filter_rules	=	reject_not_iso2022jp_japanese_string
+					reject_null_mail_body
+					reject_one_line_message
+					reject_old_fml_command_syntax
+					reject_invalid_fml_command_syntax
+					reject_japanese_command_syntax
+					reject_ms_guid
+					permit
+
+
+=head2	inform the filter rejection
+
+
+# Descriptions: infor the filter rejection ?
+#      History: hard-coded in fml 4.0
+#        Value: yes / no
+#     Examples: yes
+use_article_filter_reject_notice	=	yes
+
+
+# Descriptions: recipients to inform
+#      History: hard-coded in fml 4.0
+#        Value: maintainer | sender
+#     Examples: maintainer sender
+article_filter_reject_notice_recipients	=	maintainer
+						sender
+
+
+# Descriptions: how fml refer the rejeced message.
+#               We prefer string not multipart to avoid parsing of MUA.
+#      History: string in fml 4.0.
+#        Value: multipart / string
+#     Examples: string
+article_filter_reject_notice_data_type	=	string

@@ -1,0 +1,83 @@
+=head1	MTA configurations
+
+=head2	SMTP server parameters
+
+# Descriptions: recipient limits over one smtp transaction.
+#               1000 by default and ite value is same as postfix.
+#      History: none
+#        Value: number
+#     Examples:
+smtp_recipient_limit		=	1000
+
+# Descriptions: smtp servers.
+#               IPv4 and IPv6 loopback by default :)
+#      History: fml 4.0's $HOST
+#        Value: host:port
+#     Examples:
+smtp_servers		=	[::1]:25
+				127.0.0.1:25
+
+# Descriptions: MAIL FROM:<$smtp_sender> in SMTP
+#      History: fml 4.0 $SMTP_SENDER
+#        Value: mail_address (RFC822 addrspec)
+#     Examples: elena-admin@fml.org
+smtp_sender		=	$maintainer
+
+
+=head2 mail queue
+
+# Descriptions: mail queue directory
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var/mail/queue
+mail_queue_dir	= $var_dir/mail/queue
+
+
+=head2	debug of smtp
+
+=head3	input mail cache
+
+
+# Descriptions: cache incoing mail ?
+#      History: $NUM_LOG_MAIL
+#        Value: yes / no
+#     Examples: y
+use_incoming_mail_cache	=	yes
+
+
+# Descriptions: incoming mail queue directory
+#      History: LOG_MAIL_DIR ($DIR/var/Mail/)
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var/mail/incoming
+incoming_mail_cache_dir	= $var_dir/mail/incoming
+
+
+# Descriptions: the maximum number of cached incoming mails
+#      History: $NUM_LOG_MAIL
+#        Value: NUM
+#     Examples: 128
+incoming_mail_cache_size	=	128
+
+
+=head3	outgoing mail cache
+
+
+# Descriptions: cache outgoing mail cache ?
+#      History: $NUM_LOG_MAIL
+#        Value: yes / no
+#     Examples: y
+use_outgoing_mail_cache	=	yes
+
+
+# Descriptions: outgoing mail cache directory
+#      History: LOG_MAIL_DIR ($DIR/var/Mail/)
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var/mail/outgoing
+outgoing_mail_cache_dir	= $var_dir/mail/outgoing
+
+
+# Descriptions: the maximum number of cached outgoing mails
+#      History: $NUM_LOG_MAIL
+#        Value: NUM
+#     Examples: 128
+outgoing_mail_cache_size	=	128
