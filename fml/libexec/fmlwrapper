@@ -11,7 +11,7 @@
 eval 'exec /usr/local/bin/perl -S $0 ${1+"$@"}'
         if $running_under_some_shell;
 
-use vars qw($MainCF);
+use vars qw($MainCF $running_under_some_shell);
 use strict;
 use Carp;
 use Getopt::Long;
@@ -95,8 +95,8 @@ sub Bootstrap
     }
 
     # 5. o.k. here we go!
-    if (-f "$libexec_dir/fml") {
-	require "$libexec_dir/fml";
+    if (-f "$libexec_dir/process_switch") {
+	require "$libexec_dir/process_switch";
 	ProcessSwitch( 
 		      {
 			  fml_version    => $main_cf->{ fml_version },
