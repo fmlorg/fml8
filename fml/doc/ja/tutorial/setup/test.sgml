@@ -3,6 +3,24 @@
 	テスト
 	</title>
 
+<!--
+
+[fml bible]
+
+9章　fmlの動作確認
+        9.1 メールサーバ自体のテストを行う
+        9.2 MLへの送信テスト
+        9.3 fml自体のテスト
+        9.4 テストした形跡を消す（MLの最初期化）
+
+-->
+
+
+<sect1>
+	<title>
+	テストの前に
+	</title>
+
 <warning>
 <para>
 テストの前に
@@ -11,5 +29,128 @@ postfix の aliases をきちんと追加して下さい。
 これをしないと root ＭＬとか作れちゃいます:-)
 </para>
 </warning>
+
+<para>
+qmail をメールサーバに使っている人は特にやることはないとおもいます。
+</para>
+
+<para>
+以下では、fml8 と MTA が動いているホスト(ahodori.fml.org)をメールサー
+バと呼びます。
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+        メールサーバ自体のテストを行う
+	</title>
+
+<para>
+ＭＬの動作テストの前に、ahodori.fml.org のメールサーバ自体がきちんと動
+作していることを確認して下さい。
+</para>
+
+<para>
+まず、メールサーバに個人宛のメールアドレス rudo@fml.org を用意しましょう。
+簡単に実行するには、ユーザ rudo くんを作ればよいでしょう。
+</para>
+
+<para>
+まず、メールサーバ以外のホストからの到達性を確認して下さい。
+つまり、
+メールサーバ以外のホストから
+rudo@fml.org くんにメールを出し、ちゃんと受けとれるかを
+確認してください。
+</para>
+
+<para>
+次に、そのホスト上で rudo くんにメールが届くかも試して下さい。
+つまり ahodori の上で rudo@fml.org へメールを出してください。
+<screen>
+% echo test |Mail rudo@fml.org
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+        ML への送信テスト
+	</title>
+
+<para>
+elena ML (ここでは elena@fml.org)を作成し、
+rudo@fml.org を登録して下さい。
+<screen>
+% su fml
+% makefml newml elena
+% makefml add elena rudo@fml.org
+</screen>
+</para>
+
+<para>
+前節と同様に、ホスト外から、そしてホストの上から
+elena@fml.org へテストメールを出してみて下さい。 
+この時、テストメールの From: が rudo@fml.org になっていないと
+いけないことに注意して下さい。
+</para>
+
+<sect2>
+	<title>
+	確認事項
+	</title>
+
+<para>
+もし、うまくいかない時は以下のような項目を確認して下さい。
+<screen>
+メールサーバのログを確認する
+fml のログにエラーメッセージがないか
+fml はメールサーバに配送するべきメール(記事)を渡したか？
+メールサーバは配送処理に成功したか？
+</screen>
+</para>
+
+</sect2>
+
+</sect1>
+
+
+<sect1>
+	<title>
+        fml8 自体のテスト
+	</title>
+
+<para>
+fml4 には makefml test というコマンドがありますが、
+fml8 には、今のところ、それに相当するものはありません。
+</para>
+
+<para>
+作らなきゃ…
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+        テストした形跡を消す（MLの最初期化）
+	</title>
+
+<para>
+テストの形跡を消すには、
+ML のホームにあるファイルやディレクトリを消して下さい。
+<screen>
+% su fml
+% cd /var/spool/ml/elena 
+% rm -fr log seq members recipients etc var spool tmp
+</screen>
+</para>
+
+</sect1>
+
 
 </chapter>
