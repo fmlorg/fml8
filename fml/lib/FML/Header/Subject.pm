@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Subject.pm,v 1.18 2001/06/10 10:22:45 fukachan Exp $
+# $FML: Subject.pm,v 1.19 2001/07/31 14:19:41 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -129,16 +129,19 @@ sub _regexp_compile
 {
     my ($s) = @_;
 
+    $s = quotemeta( $s );
+    $s =~ s@\\\%@\%@g;
     $s =~ s@\%s@\\S+@g;
+    $s =~ s@\%d@\\d+@g;
     $s =~ s@\%0\d+d@\\d+@g;
     $s =~ s@\%\d+d@\\d+@g;
     $s =~ s@\%\-\d+d@\\d+@g;
 
     # quote for regexp substitute: [ something ] -> \[ something \]
-    $s =~ s/^(.)/quotemeta($1)/e;
-    $s =~ s/(.)$/quotemeta($1)/e;
+    # $s =~ s/^(.)/quotemeta($1)/e;
+    # $s =~ s/(.)$/quotemeta($1)/e;
 
-    $s;
+    return $s;
 }
 
 
