@@ -58,6 +58,8 @@ changepassword	パスワードの変更
 addmoderator	モデレータの追加
 delmoderator	モデレータの削除
 
+mailq		配送予定のメールキュー
+
 
 
 ○ 未実装
@@ -72,4 +74,4 @@ moderatormod	属性を変更するコマンドは必要だろうか？
 help		admin のヘルプファイルを取り寄せる
 
 
-$FML: MANIFEST.euc-jp,v 1.10 2003/02/01 13:53:55 fukachan Exp $
+$FML: MANIFEST.euc-jp,v 1.11 2003/03/11 14:44:49 fukachan Exp $

@@ -1,5 +1,5 @@
 #
-# $FML$
+# $FML: modules,v 1.1 2003/03/06 11:29:11 fukachan Exp $
 #
 # map between programs and modules (like /etc/name_to_sysnum on solaris ?)
 #
@@ -26,7 +26,7 @@ fmlerror		FML::Process::ErrorViewer	$ml
 fmlhtmlify		FML::Process::HTMLify		$ml
 fmlspool		FML::Process::Spool		$ml
 fmlsummary		FML::Process::Summary		$ml
-fmlsuper		FML::Process::Super		$ml
+fmlsuper		FML::Process::Obsolete		$ml
 fmlthread		FML::Process::ThreadTrack	$ml
 makefml			FML::Process::Configure		$command $ml $opts
 
