@@ -2,11 +2,6 @@
 		Last Modified: $Date$
 
 
-○	メッセージオブジェクト
-
-	メッセージオブジェクトに返送先が bind されないといけない
-
-
 ○	コマンド clean up キャンペーン
 
    * user
@@ -303,4 +298,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.6 2002/02/23 15:32:00 fukachan Exp $
+$FML: 00_MEMO,v 1.7 2002/02/27 14:45:45 fukachan Exp $
