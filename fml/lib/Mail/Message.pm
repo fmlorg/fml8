@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.88 2004/02/26 08:25:34 fukachan Exp $
+# $FML: Message.pm,v 1.89 2004/02/29 15:59:40 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1838,6 +1838,153 @@ sub _set_pos
 {
     my ($self, $pos) = @_;
     $self->{ _current_pos } = $pos;
+}
+
+
+=head1 CREATE MESSAGE SUMMARY
+
+=head2 one_line_summary($params)
+
+return one line summary.
+
+=head2 summary($params)
+
+return short summary.
+
+=cut
+
+
+# Descriptions: create one line summary.
+#    Arguments: OBJ($self) HASH_REF($params)
+# Side Effects: none
+# Return Value: STR
+sub one_line_summary
+{
+    my ($self, $params) = @_;
+    $params->{ 'with_header' } = 'no';
+    $self->summary($params);
+}
+
+
+# Descriptions: create summary.
+#    Arguments: OBJ($self) HASH_REF($params)
+# Side Effects: none
+# Return Value: STR
+sub summary
+{
+    my ($self, $params) = @_;
+    my $header = $self->whole_message_header();
+    my $msg    = $self->find_first_plaintext_message();
+    my $result = '';
+
+    # options
+    my $is_hdr = $params->{ with_header } || 'yes';
+    my $is_msg = 1;
+
+    # 1. prepend subject.
+    if ($is_hdr eq 'yes' && defined $header) {
+	use Mail::Message::String;
+	my $subject = $header->get('subject') || '';
+	if ($subject =~ /=\?/o) {
+	    my $string  = new Mail::Message::String $subject;
+	    $string->mime_decode();
+	    $string->charcode_convert_to_internal_code();
+	    $result .= $string->as_str();
+	}
+	else {
+	    $result .= $subject;
+	}
+    }
+
+    # 2. summarize message to a few lines.
+    if ($is_msg && defined $msg) {
+	my $prgbuf = '';
+	my $found  = 0;
+	my $max    = $params->{ summary_max_lines } || 3;
+	my $np     = $msg->num_paragraph();
+
+      PARAGRAPH:
+	for my $i (1 .. $np) {
+	    $prgbuf = $msg->nth_paragraph($i);
+
+	  LINE:
+	    for my $buf (split(/\n/, $prgbuf)) {
+		if ($buf && $self->_is_useful_for_summary($buf)) {
+		    $result .= "   $buf\n";
+		    $found++;
+		}
+
+		last PARAGRAPH if $found >= $max;
+	    }
+	}
+    }
+
+    return $result;
+}
+
+
+# Descriptions: check if $buf looks effective string e.g. not quote ?
+#    Arguments: OBJ($self) STR($buf)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub _is_useful_for_summary
+{
+    my ($self, $buf) = @_;
+
+    # ignore empty line.
+    return 0 if $buf =~ /^\s*$/o;
+
+    # ignore string similar to quote.
+    return 0 if $self->_is_citation_or_signature($buf);
+
+    # ignore mail header like patterns.
+    return 0 if $buf =~ /^X-[-A-Za-z0-9]+:/io;
+    return 0 if $buf =~ /^Return-[-A-Za-z0-9]+:/io;
+    return 0 if $buf =~ /^Mime-[-A-Za-z0-9]+:/io;
+    return 0 if $buf =~ /^Content-[-A-Za-z0-9]+:/io;
+    return 0 if $buf =~ /^(To|From|Subject|Reply-To|Received):/io;
+    return 0 if $buf =~ /^(Message-ID|Date):/io;
+
+    # o.k.
+    return 1;
+}
+
+
+# Descriptions: check if $buf looks not effective string e.g. quote ?
+#    Arguments: OBJ($self) STR($buf)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub _is_citation_or_signature
+{
+    my ($self, $buf) = @_;
+
+    use Mail::Message::String;
+    my $string = new Mail::Message::String $buf;
+    $string->charcode_convert_to_internal_code();
+    return 1 if $string->is_citation();
+    return 1 if $string->is_signature();
+
+    my $str = $string->as_str();
+    if ($str =~ /^[\>\#\|\*\:\;\=]/o) {
+	return 1;
+    }
+    elsif ($str =~ /^in /o) { # citation ?
+	return 1;
+    }
+    elsif ($str =~ /^\w+.*wrote:/io) { # citation.
+	return 1;
+    }
+    elsif ($str =~ /\w+\@\w+/o) { # mail address ?
+	return 1;
+    }
+    elsif ($str =~ /^\S+\>/o) { # citation ?
+	return 1;
+    }
+    elsif ($str =~ /^hi|^hi,/io) { # self introduction.
+	return 1;
+    }
+
+    return 0;
 }
 
 
