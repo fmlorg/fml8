@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DB.pm,v 1.11 2001/11/09 13:30:57 fukachan Exp $
+# $FML: DB.pm,v 1.12 2001/11/16 10:09:14 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -194,6 +194,27 @@ sub db_mkdb
 	delete $self->{ _status };
     }
     print STDERR "\n" if $count > 0;
+}
+
+
+=head2 db_dump([$type])
+
+dump hash as text. 
+dump status database if $type is not specified.
+
+=cut
+
+
+sub db_dump
+{
+    my ($self, $type) = @_;
+    my $db_type = "_" . ( defined $type ? $type : 'status' );
+    my $rh      = $self->{ _hash_table }->{ $db_type };
+
+    my ($k, $v);
+    while (($k, $v) = each %$rh) {
+	printf "%-20s %s\n", $k, $v;
+    }
 }
 
 

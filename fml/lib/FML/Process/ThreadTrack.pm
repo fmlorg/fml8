@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: ThreadTrack.pm,v 1.12 2001/11/11 13:37:41 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.13 2001/11/18 06:42:17 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -112,6 +112,12 @@ sub run
     elsif ($command eq 'review') {
 	my $str = defined $argv->[2] ? $argv->[ 2 ] : 'last:100';
 	$thread->review( $str , 1, $max_id );
+    }
+    elsif ($command eq 'db_dump') {
+	my $type = defined $argv->[ 2 ] ? $argv->[ 2 ] : 'status';
+	$thread->db_open();
+	$thread->db_dump( $type );
+	$thread->db_close();
     }
     elsif ($command eq 'db_rebuild') {
 	print STDERR "\$thread->db_mkdb(1, $max_id);\n" if $ENV{'debug'};
