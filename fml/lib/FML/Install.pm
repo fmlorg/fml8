@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.15 2004/07/23 15:59:00 fukachan Exp $
+# $FML: Install.pm,v 1.16 2004/07/27 15:47:39 fukachan Exp $
 #
 
 package FML::Install;
@@ -281,6 +281,11 @@ sub install_sample_cf_files
 	else {
 	    $self->convert($src, $dst, 0644);
 	}
+    }
+
+    my $gw_config_dir = $config->get( 'group_writable_config_dir' );
+    if (-d $gw_config_dir) {
+	chmod 0775, $gw_config_dir;
     }
 }
 
