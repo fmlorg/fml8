@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.39 2001/09/13 12:20:39 fukachan Exp $
+# $FML: Config.pm,v 1.40 2001/09/22 14:11:30 fukachan Exp $
 #
 
 package FML::Config;
@@ -118,7 +118,10 @@ sub new
     # import variables
     if (defined $args) {
 	my ($k, $v);
-	while (($k, $v) = each %$args) { set($me, $k, $v);}
+	while (($k, $v) = each %$args) { 
+	    print "set($me, $k, $v)\n" if $0 =~ /loader/; # debug
+	    set($me, $k, $v);
+	}
     }
 
     # unique object identifier
