@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.6 2001/04/06 16:25:44 fukachan Exp $
+# $FML: Message.pm,v 1.7 2001/04/07 06:39:30 fukachan Exp $
 #
 
 package Mail::Message;
@@ -22,12 +22,9 @@ my %data_type =
      'trailer'         => '_multipart_trailer/plain',
      );
 
-
-
-######################################################################
 =head1 NAME
 
-Mail::Message -- manipulate mail messages
+Mail::Message -- manipulate mail messages (parse, analyze and compose)
 
 =head1 SYNOPSIS
 
@@ -55,13 +52,29 @@ To make a multipart message, do this.
 
 =head1 DESCRIPTION
 
+=head2 OVERVIEW
+
 C<A mail message> has the data and the MIME header if needed.
 C<Mail::Message> object holds them and other control information such
 as the reference to the next C<Mail::Message> object, et. al.
 
-The messages are chained bi-directional among them.
-Out idea on the chain is similar to IPv6.
-For example, MIME/multipart is a chain of messages such as
+C<Mail::Message> provides useful functions to analyze a mail message.
+It can handle MIME multipart. It provides the functions to check and
+get information on message (part) size et. al.
+
+C<Mail::Message> also can compose a multipart message in primitive
+way.
+It is useful for you to use C<Mail::Message::Compose> class to handle
+MIME multipart in more clever way.  It is preapred as an adapter for
+C<MIME::Lite> class.
+
+=head2 INTERNAL REPRESENTATION
+
+One mail consists of a message or a chain of message objects.
+Elements of a chain are bi-directional among them.
+Our idea to handle the chain is similar to IPv6.
+For example, a MIME/multipart message is a chain of message objects
+such as
 
   undef -> mesg1 -> mesg2 -> mesg3 -> undef
 
@@ -69,8 +82,8 @@ To describe such a chain, a message object consists of the following
 structure.
 Described below, C<MIME delimiter> is also treated as a virtual
 message for convenience.
-It is more useful for other modules to consider what is a MIME
-delimiter et. al.
+It is useful for other modules to consider what is a MIME delimiter
+et. al.
 
    $message = {
                 version        => 1.0
@@ -112,7 +125,7 @@ The default value for each key follows:
    data              ''
 
 
-=head1 INTERNAL REPRESENTATION
+=head1 HOW TO PARSE
 
 =head2 plain/text
 
@@ -369,6 +382,14 @@ sub prev_message
 print out a chain of messages to the file descriptor $fd.
 If $fd is not specified, STDOUT is used.
 
+=head2 C<set_print_mode(mode)>
+
+set print mode to C<mode>.
+
+=head2 C<reset_print_mode()>
+
+reset print() mode.
+
 =cut
 
 
@@ -399,6 +420,10 @@ sub set_print_mode
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub _print
 {
     my ($self, $fd) = @_;
@@ -489,6 +514,10 @@ sub _print_messsage_on_memory
 
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub _print_messsage_on_disk
 {
     my ($self, $fd, $args) = @_;
@@ -542,6 +571,10 @@ sub _print_messsage_on_disk
 
 =cut
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub build_mime_multipart_chain
 {
     my ($self, $args) = @_;
@@ -595,25 +628,29 @@ C<new()> calls this routine if the message looks MIME multipart.
 =cut
 
 
-# CAUTION: $args must be the same as it of new().
+# Descriptions: 
+#              CAUTION: $args must be the same as it of new().
 #
-#         ... preamble ...
-#      V $mpb_begin
-#      ---boundary
-#         ... message 1 ...
-#      ---boundary
-#         ... message 2 ...
-#      V $mpb_end  (V here is not $buf_end)
-#      ---boundary--
-#         ... trailor ...
+#                      ... preamble ...
+#                   V $mpb_begin
+#                   ---boundary
+#                      ... message 1 ...
+#                   ---boundary
+#                      ... message 2 ...
+#                   V $mpb_end  (V here is not $buf_end)
+#                   ---boundary--
+#                      ... trailor ...
 #
-# RFC2046 Appendix say,
-#           multipart-body := [preamble CRLF]
-#                              dash-boundary transport-padding CRLF
-#                              body-part *encapsulation
-#                              close-delimiter transport-padding
-#                              [CRLF epilogue]
+#              RFC2046 Appendix say,
+#                        multipart-body := [preamble CRLF]
+#                                           dash-boundary transport-padding CRLF
+#                                           body-part *encapsulation
+#                                           close-delimiter transport-padding
+#                                           [CRLF epilogue]
 #
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub parse_and_build_mime_multipart_chain
 {
     my ($self, $args) = @_;
@@ -758,6 +795,14 @@ sub _get_mime_header
 }
 
 
+=head2 C<build_mime_header($args)>
+
+=cut
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub build_mime_header
 {
     my ($self, $args) = @_;
@@ -783,6 +828,10 @@ sub build_mime_header
 #     {Content-Type: ...
 #
 #       ... body ...}
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub _alloc_new_part
 {
     my ($self, $args) = @_;
@@ -793,6 +842,10 @@ sub _alloc_new_part
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub _next_part_pos
 {
     my ($self, $data, $delimeter) = @_;
@@ -813,6 +866,10 @@ sub _next_part_pos
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub _get_pos
 {
     my ($self) = @_;
@@ -820,12 +877,18 @@ sub _get_pos
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub _set_pos
 {
     my ($self, $pos) = @_;
     $self->{ _current_pos } = $pos;
 }
 
+
+=head1 METHODS (UTILITY FUNCTIONS)
 
 =head2 C<size()>
 
@@ -837,8 +900,13 @@ return this message has empty content or not.
 
 =cut
 
+
 my $total = 0;
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub size
 {
     my ($self) = @_;
@@ -858,6 +926,10 @@ sub size
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub is_empty
 {
     my ($self) = @_;
@@ -874,6 +946,16 @@ sub is_empty
 }
 
 
+=head2 C<get_data_type()>
+
+return the data type of the message object. 
+
+=cut
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub get_data_type
 {
     my ($self) = @_;
@@ -889,6 +971,11 @@ return the number of paragraphs in the message ($self).
 
 =cut
 
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub num_paragraph
 {
     my ($self) = @_;
@@ -952,19 +1039,13 @@ get header in the content.
 get body part in the content, 
 which is the whole mail or a part of multipart.
 
-=head2 C<get_first_plaintext_message($args)>
-
-return the Messages object for the first "plain/text" message in a
-chain. For example,
-
-         $m    = $msg->get_first_plaintext_message();
-         $body = $m->data_in_body_part();
-
-where $body is the mail body (string).
-
 =cut
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub header_in_body_part
 {
     my ($self, $size) = @_;
@@ -972,6 +1053,10 @@ sub header_in_body_part
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub data_in_body_part
 {
     my ($self, $size) = @_;
@@ -997,6 +1082,22 @@ sub data_in_body_part
 }
 
 
+=head2 C<get_first_plaintext_message($args)>
+
+return the Messages object for the first "plain/text" message in a
+chain. For example,
+
+         $m    = $msg->get_first_plaintext_message();
+         $body = $m->data_in_body_part();
+
+where $body is the mail body (string).
+
+=cut
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub get_first_plaintext_message
 {
     my ($self, $args) = @_;
@@ -1026,7 +1127,10 @@ internal use. set CODE REFERENCE to the log function
 
 =cut
 
-# set log function pointer (CODE REFERNCE)
+# Descriptions: set log function pointer (CODE REFERNCE)
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub set_log_function
 {
     my ($self, $fp) = @_;
@@ -1034,7 +1138,17 @@ sub set_log_function
 }
 
 
-# XXX debug, remove this in the future
+=head2 C<get_data_type_list()>
+
+show the list of data_types in the chain order.
+This is defined for debug and removed in the future.
+
+=cut
+
+# Descriptions: XXX debug, remove this in the future
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub get_data_type_list
 {
     my ($msg) = @_;
