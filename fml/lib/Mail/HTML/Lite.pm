@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.15 2001/10/21 07:37:07 fukachan Exp $
+# $FML: Lite.pm,v 1.16 2001/10/21 10:41:33 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.15 2001/10/21 07:37:07 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.16 2001/10/21 10:41:33 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -758,15 +758,21 @@ sub cache_message_info
     #   next_id = { id => next_id } (? in-reply-to of the future message ?)
 
     #  $ids = (id1 id2 id3 ...)
-    my $ids = $db->{ _msgidref }->{ $in_reply_to };
+    my $ids = '';
+    if (defined $in_reply_to) {
+	$ids = $db->{ _msgidref }->{ $in_reply_to };
+    }
     if (defined $ids) {
 	my $prev_id = _list_head($ids);
-	$db->{ _prev_id }->{ $id } = $prev_id;
 
-	# XXX we should not overwrite " id => next_id " hash.
-	# XXX we preserve the first " id => next_id " value.
-	unless (defined $db->{ _next_id }->{ $prev_id }) {
-	    $db->{ _next_id }->{ $prev_id } = $id;
+	if (defined $prev_id) {
+	    $db->{ _prev_id }->{ $id } = $prev_id;
+
+	    # XXX we should not overwrite " id => next_id " hash.
+	    # XXX we preserve the first " id => next_id " value.
+	    unless (defined $db->{ _next_id }->{ $prev_id }) {
+		$db->{ _next_id }->{ $prev_id } = $id;
+	    }
 	}
     }
     else {
@@ -878,23 +884,35 @@ sub evaluate_relation
     my $next_file        = $self->message_filepath( $id + 1 );
     my $prev_id          = $id > 1 ? $id - 1 : undef;
     my $next_id          = $id + 1 if -f $next_file;
-    my $prev_thread_id   = $db->{ _prev_id }->{ $id };
-    my $next_thread_id   = $db->{ _next_id }->{ $id };
+    my $prev_thread_id   = $db->{ _prev_id }->{ $id } || undef;
+    my $next_thread_id   = $db->{ _next_id }->{ $id } || undef;
 
     # diagnostic
-    undef $prev_thread_id if $prev_thread_id == $id;
-    undef $next_thread_id if $next_thread_id == $id;
+    if ($prev_thread_id) {
+	undef $prev_thread_id if $prev_thread_id == $id;
+    }
+    if ($next_thread_id) {
+	undef $next_thread_id if $next_thread_id == $id;
+    }
 
     my $link_prev_id     = $self->message_filename($prev_id);
     my $link_next_id     = $self->message_filename($next_id);
     my $link_prev_thread = $self->message_filename($prev_thread_id);
     my $link_next_thread = $self->message_filename($next_thread_id);
-    my $subject = {
-	prev_id     => $db->{ _subject }->{ $prev_id },
-	next_id     => $db->{ _subject }->{ $next_id },
-	prev_thread => $db->{ _subject }->{ $prev_thread_id },
-	next_thread => $db->{ _subject }->{ $next_thread_id },
-    };
+
+    my $subject = {};
+    if (defined $prev_id) {
+	$subject->{ prev_id } = $db->{ _subject }->{ $prev_id };
+    }
+    if (defined $next_id) {
+	$subject->{ next_id } = $db->{ _subject }->{ $next_id };
+    }
+    if (defined $prev_thread_id) {
+	$subject->{ prev_thread } = $db->{ _subject }->{ $prev_thread_id };
+    }
+    if (defined $next_thread_id) {
+	$subject->{ next_thread } = $db->{ _subject }->{ $next_thread_id };
+    }
 
     if ($debug) {
 	print STDERR "subject($prev_id -> $id -> $next_id)\n";
@@ -1386,6 +1404,10 @@ sub _update_id_monthly_index
     $self->_db_open();
     my $db = $self->{ _db };
     my $id_max = $db->{ _info }->{ id_max };
+
+    # oops, this list may be " a b c d e " string, nuke \s* to avoid warning.
+    $db->{ _monthly_idlist }->{ $this_month } =~ s/^\s*//;
+    $db->{ _monthly_idlist }->{ $this_month } =~ s/\s*$//;
     my (@list) = split(/\s+/, $db->{ _monthly_idlist }->{ $this_month });
 
     $self->_print_ul($wh, $db, $code);
