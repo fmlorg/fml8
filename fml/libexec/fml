@@ -31,7 +31,9 @@ sub main::ProcessSwitch
 
     # 1. create process
     my $pkg     = _package_we_use($args);
+
     eval qq{ require $pkg; }; # XXX require() needs bare words.
+    croak($@) if $@;
     $pkg->import();   # fake to use() method.
     my $process = $pkg->new($args); # create a new process object
 
