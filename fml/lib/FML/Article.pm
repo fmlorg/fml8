@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.52 2002/12/26 15:07:49 fukachan Exp $
+# $FML: Article.pm,v 1.53 2003/03/03 15:27:22 fukachan Exp $
 #
 
 package FML::Article;
@@ -76,6 +76,19 @@ sub new
     $me->{ curproc } = $curproc;
 
     return bless $me, $type;
+}
+
+
+# Descriptions: return lock channel name.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub get_lock_channel_name
+{
+    my ($self) = @_;
+
+    # XXX LOCK_CHANNEL: article_spool
+    return 'article_spool';
 }
 
 
@@ -196,8 +209,11 @@ sub spool_in
     my $config     = $curproc->config();
     my $spool_dir  = $config->{ spool_dir };
     my $use_subdir = $config->{ spool_type } eq 'subdir' ? 1 : 0;
+    my $channel    = $self->get_lock_channel_name();
 
     if ( $config->yes( 'use_spool' ) ) {
+	$curproc->lock($channel);
+
 	unless (-d $spool_dir) {
 	    $curproc->mkdir($spool_dir, "mode=private");
 	}
@@ -220,6 +236,8 @@ sub spool_in
 	else {
 	    LogError("$id article already exists");
 	}
+
+	$curproc->unlock($channel);
     }
     else {
 	Log("not spool article $id");
