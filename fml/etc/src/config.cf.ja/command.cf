@@ -60,6 +60,7 @@ available_commands_for_stranger	=	guide
 					info
 					add
 					subscribe
+					chaddr
 					$confirm_keyword
 
 
@@ -70,6 +71,7 @@ available_commands_for_privileged_user	=	subscribe
 					remove
 					resign
 					signoff
+					chaddr
 					get
 					mget
 					send
