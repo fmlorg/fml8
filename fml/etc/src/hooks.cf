@@ -66,6 +66,14 @@
 # $fmldoc_run_start_hook = q{ 1;};
 # $fmldoc_verify_request_end_hook = q{ 1;};
 # $fmldoc_verify_request_start_hook = q{ 1;};
+# $fmlerror_finish_end_hook = q{ 1;};
+# $fmlerror_finish_start_hook = q{ 1;};
+# $fmlerror_prepare_end_hook = q{ 1;};
+# $fmlerror_prepare_start_hook = q{ 1;};
+# $fmlerror_run_end_hook = q{ 1;};
+# $fmlerror_run_start_hook = q{ 1;};
+# $fmlerror_verify_request_end_hook = q{ 1;};
+# $fmlerror_verify_request_start_hook = q{ 1;};
 # $fmlhtmlify_finish_end_hook = q{ 1;};
 # $fmlhtmlify_finish_start_hook = q{ 1;};
 # $fmlhtmlify_prepare_end_hook = q{ 1;};
