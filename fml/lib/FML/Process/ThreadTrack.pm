@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: ThreadTrack.pm,v 1.6 2001/11/06 22:52:27 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.7 2001/11/07 03:14:22 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -76,12 +76,13 @@ sub run
     my $config  = $curproc->{ config };
     my $argv    = $curproc->command_line_argv();
     my $options = $curproc->command_line_options();
+    my $mydir   = $curproc->command_line_argv_find('srcdir=(\S+)');
     my $command = $argv->[ 0 ] || '';
 
     #  argumente for thread track module
     my $ml_name       = $config->{ ml_name };
     my $thread_db_dir = $config->{ thread_db_dir };
-    my $spool_dir     = $config->{ spool_dir };
+    my $spool_dir     = $mydir || $config->{ spool_dir };
     my $max_id        = $curproc->article_id_max();
     my $ttargs        = {
 	logfp       => \&Log,
