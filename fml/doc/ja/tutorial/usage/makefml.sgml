@@ -1,5 +1,5 @@
 <!--
-   $FML: makefml.sgml,v 1.4 2002/07/07 01:57:12 fukachan Exp $
+   $FML: makefml.sgml,v 1.5 2002/07/28 06:26:58 fukachan Exp $
 -->
 
 
@@ -142,11 +142,88 @@ makefml がよろしくがんばります。
 </sect1>
 
 
+<sect1 id="usage.makefml.off">
+	<title>
+	配送を止める
+	</title>
+
+<para>
+<screen>
+% makefml off elena メールアドレス
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1 id="usage.makefml.on">
+	<title>
+	配送を再開する
+	</title>
+
+<para>
+off の反対
+<screen>
+% makefml on elena メールアドレス
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1 id="usage.makefml.log">
+	<title>
+	ログを見る
+	</title>
+
+<para>
+<screen>
+% makefml log elena
+% makefml log elena@fml.org
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1 id="usage.makefml.list">
+	<title>
+	メンバーリストを見る
+	</title>
+
+<para>
+<screen>
+% makefml list elena
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1 id="usage.makefml.config">
+	<title>
+	設定の変更
+	</title>
+
+<para>
+(まだ、できません;-)。
+config.cf などを編集して下さい。
+</para>
+
+</sect1>
+
 
 <sect1 id="usage.makefml.admin.adddel">
 	<title>
 	リモート管理者の登録と削除
 	</title>
+
+<warning>
+<para>
+fml 管理者は(当然:-)、
+リモート管理のための諸設定をすることができます。
+</para>
+</warning>
 
 <para>
 一般のＭＬメンバーの登録は addadmin 削除は deladmin です。
@@ -211,35 +288,6 @@ makefml がよろしくがんばります。
 % makefml delmoderator elena rudo@nuinui.net
 % makefml addmoderator elena@fml.org rudo@nuinui.net
 % makefml delmoderator elena@fml.org rudo@nuinui.net
-</screen>
-</para>
-
-</sect1>
-
-
-<sect1 id="usage.makefml.log">
-	<title>
-	ログを見る
-	</title>
-
-<para>
-<screen>
-% makefml log elena
-% makefml log elena@fml.org
-</screen>
-</para>
-
-</sect1>
-
-
-<sect1 id="usage.makefml.list">
-	<title>
-	メンバーリスト見る
-	</title>
-
-<para>
-<screen>
-% makefml list elena
 </screen>
 </para>
 
