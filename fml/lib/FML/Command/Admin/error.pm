@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: error.pm,v 1.10 2004/01/01 08:48:40 fukachan Exp $
+# $FML: error.pm,v 1.11 2004/04/18 05:59:43 fukachan Exp $
 #
 
 package FML::Command::Admin::error;
@@ -69,31 +69,60 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
 
-    # XXX-TODO: fml $ml error --algorithm $algorithm ?
     $self->_fmlerror($curproc);
 }
 
 
-# Descriptions: show error messages
+# Descriptions: show analyzed result of error messages in all
+#               available analyzer cases.
 #    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub _fmlerror
 {
     my ($self, $curproc) = @_;
-    my $config = $curproc->config();
-    my $list   = $config->get_as_array_ref('error_analyzer_function_select_list');
+    my $config      = $curproc->config();
+    my $select_list = 
+	$config->get_as_array_ref('error_analyzer_function_select_list');
 
     use FML::Error;
     my $error = new FML::Error $curproc;
 
-    for my $fp (@$list) {
-	print "# analyzer function = $fp\n";
-	$error->set_analyzer_function($fp);
-	$error->analyze();
-	$error->print();
-	print "\n";
+    # XXX fml $ml error -O algorithm=ALGORITHM
+    my $option = $curproc->cui_command_specific_options() || {};
+    if (defined $option->{ algorithm } && $option->{ algorithm }) {
+	my $fp = $option->{ algorithm };
+	if ($config->has_attribute('error_analyzer_function_select_list', 
+				   $fp)) {
+	    $self->_run_analyzer($curproc, $error, $fp);
+	}
+	else {
+	    $curproc->ui_message("error: unknown algorithm: $fp");
+	    $curproc->logerror("unknown algorithm: $fp");
+	}
     }
+    else {
+	# show all cases.
+	for my $fp (@$select_list) {
+	    $self->_run_analyzer($curproc, $error, $fp);
+	}
+    }
+}
+
+
+# Descriptions: 
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($error) STR($fp)
+# Side Effects: none
+# Return Value: none
+sub _run_analyzer
+{
+    my ($self, $curproc, $error, $fp) = @_;
+
+    print "# analyzer function = $fp\n";
+    $error->set_analyzer_function($fp);
+    $error->analyze();
+    $error->print();
+    print "\n";
 }
 
 
