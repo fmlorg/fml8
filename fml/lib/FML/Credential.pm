@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Credential.pm,v 1.13 2001/08/26 12:57:05 fukachan Exp $
+# $FML: Credential.pm,v 1.14 2001/10/08 15:47:28 fukachan Exp $
 #
 
 package FML::Credential;
@@ -50,6 +50,10 @@ sub new
     my ($self) = @_;
     my ($type) = ref($self) || $self;
     my $me     = \%Credential;
+
+    # default comparison level
+    set_compare_level( $me, 3 );
+
     return bless $me, $type;
 }
 
@@ -69,17 +73,33 @@ The ambiguity is followed by these rules.
 3. C<domain> part is the same from the top C<gTLD> layer to
    C<$level>-th sub domain level.
 
+            .jp
+           d.jp
+         c.d.jp
+           ......
 
-   XXX RULE 3 IS NOT YET IMPLEMENTED
+By default we compare the last 3 level. 
+For example, 
 
+            rudo@nuinui.net   
+            rudo@sapporo.nuinui.net
+
+These addresses differs. But
+
+            rudo@fml.nuinui.net   
+            rudo@sapporo.fml.nuinui.net
+
+are same since the last 3 top level domains are same.
 
 =cut
+
 
 sub is_same_address
 {
     my ($self, $xaddr, $yaddr, $level) = @_;
     my ($xuser, $xdomain) = split(/\@/, $xaddr);
     my ($yuser, $ydomain) = split(/\@/, $yaddr);
+    my $max_level = $self->{ _max_level } || 3;
 
     # rule 1
     if ($xuser ne $yuser) { return 0;}
@@ -87,9 +107,19 @@ sub is_same_address
     # rule 2
     if ("\L$xdomain\E" eq "\L$ydomain\E") { return 1;}
 
-    # rule 3: not yet
+    # rule 3: compare a.b.c.d.jp in reverse order
+    my (@xdomain) = reverse split(/\./, $xdomain);
+    my (@ydomain) = reverse split(/\./, $ydomain);
+    for (my $i = 0; $i < $#xdomain; $i++) {
+	my $xdomain = $xdomain[ $i ];
+	my $ydomain = $ydomain[ $i ];
+	if ("\L$xdomain\E" eq "\L$ydomain\E") { $level++;}
+    }
 
-    0;
+    if ($level >= $max_level) { return 1;} 
+
+    # fail
+    return 0;
 }
 
 
@@ -170,7 +200,6 @@ sub has_address_in_map
 }
 
 
-
 =head2 C<match_system_accounts($curproc, $args)>
 
 C<sender> ( == $self->sender() ) matches a system account or not.
@@ -215,6 +244,34 @@ sub sender
     my ($self) = @_;
     $Credential{ sender };
 }
+
+
+=head2 C<set_compare_level( $level )>
+
+set C<level>, how many sub-domains from top level we compare, in
+C<in_same_address()> address comparison.
+
+=head2 C<get_compare_level()>
+
+get level in C<in_same_address()> address comparison.
+return the number of C<level>.
+
+=cut
+
+
+sub set_compare_level
+{
+    my ($self, $level) = @_;
+    $self->{ _max_level } = $level;
+}
+
+
+sub get_compare_level
+{
+    my ($self, $level) = @_;
+    return (defined $self->{ _max_level } ? $self->{ _max_level } : undef);
+}
+
 
 
 =head2 C<get(key)>
