@@ -2,6 +2,13 @@
 		Last Modified: $Date$
 
 
+○	階層化
+
+	スプール
+
+○	トラフィックの統計？
+
+
 ○	CGI ?
 
 	FML::Process::CGI::{Kernel,Param}
@@ -317,4 +324,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.9 2002/03/17 06:05:04 fukachan Exp $
+$FML: 00_MEMO,v 1.10 2002/03/18 13:46:58 fukachan Exp $
