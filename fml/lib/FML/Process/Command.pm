@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Command.pm,v 1.16 2001/10/12 00:19:19 fukachan Exp $
+# $FML: Command.pm,v 1.17 2001/10/13 03:12:35 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -225,6 +225,7 @@ sub _evaluate_command
 	    # arguments to pass off to each method
 	    my $optargs = {
 		command_mode => 'user',
+		comname      => $comname,
 		command      => $command,
 		ml_name      => $ml_name,
 		options      => [],
