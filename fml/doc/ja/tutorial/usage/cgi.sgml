@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: cgi.sgml,v 1.1 2002/03/18 06:57:37 fukachan Exp $
 -->
 
 <chapter id="cgi">
@@ -21,23 +21,5 @@ CGI で可能な項目は makefml のサブセットとなります。
 </para>
 
 
-<sect1>
-	<title>
-	画面の作りとメソッド 
-	</title>
-
-<para>
-<screen>
-          ヘッダ
-バー１    メニュー     バー２ 
-          フッタ
-</screen>
-なお、
-バー１の部分は navigation bar と、
-バー２の部分は navigation subbar
-と読んでいます。
-</para>
-
-</sect1>
 
 </chapter>

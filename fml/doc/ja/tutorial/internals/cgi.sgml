@@ -1,10 +1,16 @@
 <!--
-   $FML: cgi.sgml,v 1.1 2001/12/23 04:04:23 fukachan Exp $
+   $FML: cgi.sgml,v 1.2 2002/03/18 06:57:18 fukachan Exp $
 -->
+
+<chapter id="internal.cgi">
+	<title>
+	CGI プロセスの内部構造
+	</title>
+
 
 <sect1 id="internal.cgi.method">
 	<title>
-	ケーススタディ: CGI プロセスのメソッド
+	メソッド
 	</title>
 
 <para>
@@ -45,3 +51,54 @@ finish()
 </para>
 
 </sect1>
+
+
+<sect1 id="internal.cgi.frames">
+	<title>
+	画面の作りとメソッド 
+	</title>
+
+<para>
+典型的な画面は次のように分割されると考えて良いでしょう。
+<screen>
+          ヘッダ
+バー１    メニュー     バー２ 
+          フッタ
+</screen>
+なお、バー１と２の部分は navigation などと呼ばれます。
+</para>
+
+
+<para>
+ヘッダ部分( HTTP ヘッダではなく、HTML の DOCTYPE から BODY あたり)
+やフッタの部分は
+html_start() および html_end() で HTML コードを生成するでしょう。 
+BODY の中身は
+<screen>
+バー１    メニュー     バー２ 
+</screen>
+の部分で、run_cgi() によって生成します。
+</para>
+
+
+<warning>
+<para>
+TODO:
+run_cgi() の中身をもっと細かくすることと、
+画面上のどの部分をどのメソッドが記述するのかを指定できる
+アクセスメソッドが必要です。
+また BODY の中身も、これにあわせて、より細かく
+<screen>
+nw   north  ne
+west center east
+sw   south  se
+</screen>
+くらいの精度がないといけないかも知れません。
+</para>
+</warning>
+
+
+</sect1>
+
+
+</chapter>
