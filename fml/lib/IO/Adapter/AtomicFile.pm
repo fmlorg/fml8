@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: AtomicFile.pm,v 1.4 2002/09/22 14:56:58 fukachan Exp $
+# $FML: AtomicFile.pm,v 1.5 2002/12/22 02:54:12 fukachan Exp $
 #
 
 package IO::Adapter::AtomicFile;
@@ -194,7 +194,7 @@ sub close
 
     # XXX close the "write" file handle (write .. to $temp file)
     if (defined $fh) {
-       $fh->close();
+       $fh->SUPER::close();
     }
 
     if (rename($temp, $orig)) {
