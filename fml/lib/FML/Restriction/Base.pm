@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.11 2002/06/22 14:22:44 fukachan Exp $
+# $FML: Base.pm,v 1.12 2002/06/25 07:48:27 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -26,6 +26,9 @@ FML::Restriction::Base -- define safe data representations
 
 FML::Restriction::Base provides data regexp considered as safe.
 
+ALL FML MODULES SHOULD INHERIT THIS MODULE if it needs to check
+whether some variable is safe or not.
+
 =head1 METHODS
 
 =head2 C<new($args)>
@@ -42,7 +45,7 @@ usual constructor.
 # Return Value: OBJ
 sub new
 {
-    my ($self) = @_;
+    my ($self, $args) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
     return bless $me, $type;
@@ -95,9 +98,9 @@ my %basic_variable =
      'article_id'        => '\d+',
 
      # file, directory et.al.
-     'directory'         => '[-a-zA-Z0-9_]+',
-     'file'              => '[-a-zA-Z0-9_]+',
-     'map'               => '[-a-zA-Z0-9_]+',
+     'directory'         => '[-A-Za-z0-9_]+',
+     'file'              => '[-A-Za-z0-9_]+',
+     'map'               => '[-A-Za-z0-9_]+',
      );
 
 
