@@ -1,5 +1,27 @@
 =head1	アクセス制御ルール
 
+=head2	アドレス認証についての詳細
+
+
+# Descriptions: FML::Credential でアドレスの比較をするか?(当然する)
+#      History: 当然するので、off/on スイッチなぞない
+#        Value: yes | no
+#     Examples: yes
+use_address_compare = yes
+
+
+# Descriptions: メンバーチェックをする際に、ユーザパートの比較で
+#               大文字小文字を区別するかしないか？
+#               互換性のため、デフォルトは「しない」 
+#      History: none
+#        Value: user_part_case_sensitive | user_part_case_insensitive
+#     Examples: user_part_case_insensitive
+address_compare_type = user_part_case_insensitive
+
+
+=head2	各機能における制限( ***_restrictions )
+
+
 # Descriptions: 投稿への制限
 #      History: fml 4.0 の PERMIT_POST_FROM と REJECT_ADDR を合体したもの
 #        Value: list of attributes (

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.47 2003/08/29 15:33:54 fukachan Exp $
+# $FML: Credential.pm,v 1.48 2003/11/17 15:38:16 fukachan Exp $
 #
 
 package FML::Credential;
@@ -61,13 +61,34 @@ sub new
 {
     my ($self, $curproc) = @_;
     my ($type) = ref($self) || $self;
+    my $config = $curproc->config();
     my $me     = \%Credential;
 
     # default comparison level
     set_compare_level( $me, 3 );
 
+    # user address check
+    if ($config->yes('use_address_compare')) {
+	$me->{ _use_address_compare } = 1;
+    }
+    else {
+	$me->{ _use_address_compare } = 0;
+    }
+
     # case sensitive for user part comparison.
-    $me->{ _user_part_case_sensitive } = 1;
+    if ($config->{ address_compare_type } eq 'user_part_case_sensitive' ||
+	$config->{ address_compare_type } eq 'case_sensitive') {
+	$me->{ _user_part_case_sensitive } = 1;
+    }
+    # for backward compatibility.
+    elsif ($config->{ address_compare_type } eq 'user_part_case_insensitive' ||
+	   $config->{ address_compare_type } eq 'case_insensitive') {
+	$me->{ _user_part_case_sensitive } = 0;
+    }
+    # case-insensitive by default for backward compatibility.
+    else {
+	$me->{ _user_part_case_sensitive } = 0;
+    }
 
     # hold pointer to $curproc
     $me->{ _curproc } = $curproc if defined $curproc;
@@ -170,6 +191,9 @@ are same since the last 3 top level domains are same.
 sub is_same_address
 {
     my ($self, $xaddr, $yaddr, $max_level) = @_;
+
+    # always same if address_check function disabled.
+    unless ($self->{ _use_address_compare }) { return 1; }
 
     # both should be defined !
     unless (defined($xaddr) && defined($yaddr)) {
