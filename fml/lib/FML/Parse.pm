@@ -69,19 +69,19 @@ use FML::Log qw(Log);
 
 sub new
 {
-    my ($self, $fd) = @_;
+    my ($self, $curproc, $fd) = @_;
     my $me = {};
     bless $me, $self;
 
     # return ( $ref_to_mail_header, $ref_to_mail_body, $error_code);
-    return $me->_parse($fd);
+    return $me->_parse($curproc, $fd);
 }
 
 
 # return ( $ref_to_mail_header, $ref_to_mail_body, $error_code);
 sub _parse
 {
-    my ($self, $fd) = @_;
+    my ($self, $curproc, $fd) = @_;
     my ($header, $header_size);
     my $body_size;
     my $total_buffer_size;
@@ -113,6 +113,13 @@ sub _parse
     my @h = split(/\n/, $header);
     my $x;
     for $x (@h) { $x .= "\n";}
+
+    # save unix-from (mail-from) in PCB and remove it in the header
+    if ($h[0] =~ /^From\s/o) {
+	my $pcb = $curproc->{ pcb };
+	$pcb->set('credential', 'unix-from', $h[0]);
+	shift @h;
+    }
 
     # extract each field from the header array
     my $r_header = new FML::Header \@h, Modify => 0;

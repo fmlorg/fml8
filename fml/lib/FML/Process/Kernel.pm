@@ -204,7 +204,7 @@ sub parse_incoming_mail
     # malloc the incoming message on memory.
     # $r_msg is the reference to the memory area.
     my $r_msg = {};
-    ($r_msg->{'header'}, $r_msg->{'body'}) = new FML::Parse \*STDIN;
+    ($r_msg->{'header'}, $r_msg->{'body'}) = new FML::Parse $curproc, \*STDIN;
     $curproc->{'incoming_mail'} = $r_msg;
 }
 
