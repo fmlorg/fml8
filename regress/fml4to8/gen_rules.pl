@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: gen_rules.pl,v 1.1 2004/12/09 03:45:12 fukachan Exp $
+# $FML: gen_rules.pl,v 1.2 2004/12/15 23:15:14 fukachan Exp $
 #
 
 use strict;
@@ -10,12 +10,13 @@ my $debug     = $ENV{'debug'} || 0;
 my $var_rules = ();
 my $var_count = 0;
 my $recursive = 0;
-my $ignore_regexp = 'use_fml8_value|fml8_default|unavailable|ignore|not_yet_implemented|not_yet_configurable';
+my $ignore_regexp = 'unavailable|not_yet_implemented|not_yet_configurable';
 
 _init();
 
 _preamble();
-for my $var_name (sort keys %$var_rules) {
+for my $var_name (sort {$a <=> $b} keys %$var_rules) {
+    $recursive = 0;
     _parse_var_rules($var_name, $var_rules->{ $var_name });
 }
 _trailor();
@@ -39,6 +40,7 @@ sub _init
 
 	    if ($buf =~ /^\.if\s+(\S+)/o) {
 		$var_name  = sprintf("var%s_%s", $var_count++, $1);
+		$var_name  = sprintf("%s_%s", $var_count++, $1);
 		$var_rules->{ $var_name } .= $buf;
 		next LINE;
 	    }
@@ -49,8 +51,7 @@ sub _init
 			print STDERR "var_name = $var_name\n";
 			print STDERR "\tignored ($1)\n";
 		    }
-
-		    $var_rules->{ $var_name } = '';
+		    # $var_rules->{ $var_name } = '';
 		}
 		elsif ($buf =~ /\S+/o) {
 		    if ($debug) {
@@ -103,6 +104,8 @@ sub translate
     my ($self, $dispatch, $diff, $key, $value) = @_;
     my $fp_rule_convert           = $dispatch->{ rule_convert };
     my $fp_rule_prefer_fml4_value = $dispatch->{ rule_prefer_fml4_value };
+    my $fp_rule_prefer_fml8_value = $dispatch->{ rule_prefer_fml8_value };
+    my $fp_rule_ignore            = $dispatch->{ rule_ignore };
     my $s;
 
 !;
@@ -121,67 +124,70 @@ sub _parse_var_rules
 {
     my ($var_name, $var_rules) = @_;
     my $rule_out = '';
-    my $i;
-    my $found = 0;
+    my $found    = 0;
+    my $i        = 0;
 
     print STDERR "ALLOC $var_name => $var_rules\n" if $debug;
     return unless $var_name;
     return unless $var_rules;
 
+  RULE:
     for my $rule (split(/\n/, $var_rules)) {
 	$i++;
 	print STDERR "$var_name [$i] $rule\n" if $debug;
 
-	if ($rule =~ /^\.if/) {
-	    $rule_out .= _parse_if($rule);
+	# 1st level (/^.if .../ statement)
+	if ($rule =~ /^\.if/o) {
+	    $rule_out .= _puts(_parse_if($rule, $recursive));
 	}
+	# 2nd level
 	else {
 	    $rule =~ s/^\s*//;
 	    $rule =~ s/\s*$//;
 
-	    if ($rule =~ /^\s*\.if/) {
+	    if ($rule =~ /^\s*\.if/o) {
 		$recursive++;
-		$rule_out .= _parse_if($rule);
-		next;
+		$rule_out .= _puts(_parse_if($rule, $recursive));
+		next RULE;
 	    }
 
 	    if ($rule eq '.use_fml4_value') {
 		$found = 1;
-		$rule_out .= "   \$s .= \&\$fp_rule_prefer_fml4_value(\$self, \$diff, \$key, \$value);\n";
+		$rule_out .= _puts("\$s .= \&\$fp_rule_prefer_fml4_value(\$self, \$diff, \$key, \$value);");
 	    }
-	    elsif ($rule eq '.use_fml8_value') {
+	    elsif ($rule eq '.use_fml8_value' || $rule eq '.fml8_default') {
 		$found = 1;
-		$rule_out .= "   \$s .= \&\$fp_rule_prefer_fml8_value(\$self, \$diff, \$key, \$value);\n";
+		$rule_out .= _puts("\$s .= \&\$fp_rule_prefer_fml8_value(\$self, \$diff, \$key, \$value);");
 	    }
 	    elsif ($rule eq '.convert') {
 		$found = 1;
-		$rule_out .= "   \$s .= \&\$fp_rule_convert(\$self, \$diff, \$key, \$value);\n";
+		$rule_out .= _puts("\$s .= \&\$fp_rule_convert(\$self, \$diff, \$key, \$value);");
+	    }
+	    elsif ($rule =~ /^\s*\.ignore/o) {
+		$found = 1;
+		$rule_out .= _puts("\$s .= \&\$fp_rule_ignore(\$self, \$diff, \$key, \$value);");
 	    }
 	    elsif ($rule =~ /^\s*\.($ignore_regexp)/o) {
-		$rule_out .= "   # $rule\n";
+		$found = 1;
+		$rule_out .= _puts("\$s .= \"\# $rule\";");
 	    }
 	    else {
 		$found = 1;
-		$rule_out .= "   \$s .= \"$rule\";\n";
-		$rule_out .= "   \$s .= \"\\n\";\n";
+		$rule_out .= _puts("\$s .= \"$rule\";");
 	    }
 
-	    if ($recursive > 0) {
-		$rule_out  =~ s/\n/\n   /g;
-		$rule_out .= "   }\n";
+	    while ($recursive > 0) {
+		$rule_out .= _puts("}");
 		$recursive--;
 	    }
-	}
-    }
+
+	} # if 
+    } # for my $rule (...)
 
     if ($found) {
-	$rule_out .= "   return \$s if defined \$s;\n";
-	$rule_out .= "}\n";
-	$rule_out .= "\n";
-
-	$rule_out =~ s/^\s*\n/\n/;
-	$rule_out =~ s/\n/\n   /g;
-
+	$rule_out .= _puts("return \$s if defined \$s;");
+	$rule_out .= _puts("}");
+	$rule_out .= _puts("");
 	print $rule_out;
     }
 }
@@ -189,44 +195,47 @@ sub _parse_var_rules
 
 sub _parse_if
 {
-    my ($rule) = @_;
+    my ($rule, $recursive) = @_;
     my $rule_out = '';
 
-    if ($rule =~ /^\.if\s+(\S+)\s+==\s+(\S+)/) {
+    if ($rule =~ /^\.if\s+(\S+)\s+(==|>|>=|<|<=)\s+(\S+)/) {
 	$rule_out .= "\n";
-	my ($key, $value) = ($1, $2);
+	my ($key, $op, $value) = ($1, $2, $3);
 	if ($value =~ /^\d+$/o) {
-	    $rule_out .= "if (\$key eq '$key' && \$value == $value) {\n";
-	    $rule_out .= "   \$s = undef;\n";
+	    $rule_out .= _puts("if (\$key eq '$key' && \$value $op $value) {");
+	    $rule_out .= _puts("\$s = undef;");
 	}
 	else {
-	    $rule_out .= "if (\$key eq '$key' && \$value eq '$value') {\n";
-	    $rule_out .= "   \$s = undef;\n";
+	    $rule_out .= _puts("if (\$key eq '$key' && \$value eq '$value') {");
+	    $rule_out .= _puts("\$s = undef;");
 	}
     }
     elsif ($rule =~ /^\.if\s+(\S+)\s+\!=\s+(\S+)/) {
 	$rule_out .= "\n";
 	my ($key, $value) = ($1, $2);
 	if ($value =~ /^\d+$/o) {
-	    $rule_out .= "if (\$key eq '$key' && \$value \!= $value) {\n";
-	    $rule_out .= "   \$s = undef;\n";
+	    $rule_out .= _puts("if (\$key eq '$key' && \$value \!= $value) {");
+	    $rule_out .= _puts("\$s = undef;");
 	}
 	else {
-	    $rule_out .= "if (\$key eq '$key' && \$value ne '$value') {\n";
-	    $rule_out .= "   \$s = undef;\n";
+	    $rule_out .= _puts("if (\$key eq '$key' && \$value ne '$value') {");
+	    $rule_out .= _puts("\$s = undef;");
 	}
     }
     elsif ($rule =~ /^\.if\s+(\S+)\s*$/) {
+	$rule_out .= "\n";
 	my $key = $1;
-	$rule_out .= "if (\$key eq '$key' && defined \$value) {\n";
-	$rule_out .= "   \$s = undef;\n";
-    }
-
-    if ($recursive > 0) {
-	$rule_out =~ s/^/   /;
-	$rule_out =~ s/\n/\n   /g;
+	$rule_out .= _puts("if (\$key eq '$key' && defined \$value) {");
+	$rule_out .= _puts("\$s = undef;");
     }
 
     return $rule_out;
 }
 
+
+sub _puts
+{
+    my ($s) = @_;
+    my $rule_out = "    " x ($recursive + 1);
+    return sprintf("%s%s\n", $rule_out, $s);
+}
