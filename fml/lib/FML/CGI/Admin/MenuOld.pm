@@ -4,26 +4,26 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.3 2004/07/23 13:16:34 fukachan Exp $
+# $FML: MenuOld.pm,v 1.30 2004/07/23 13:16:34 fukachan Exp $
 #
 
-package FML::CGI::MLAdmin::Menu;
+package FML::CGI::Admin::MenuOld;
 use strict;
 use Carp;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use CGI qw/:standard/; # load standard CGI routines
 
-use FML::CGI::Skin::Base;
-@ISA = qw(FML::CGI::Skin::Base);
+use FML::CGI::Skin::OldFashion;
+@ISA = qw(FML::CGI::Skin::OldFashion);
 
 
 =head1 NAME
 
-FML::CGI::MLAdmin::Menu - provides CGI controll for the specific ML.
+FML::CGI::Admin::MenuOld - provides CGI control function for the specific domain.
 
 =head1 SYNOPSIS
 
-    $obj = new FML::CGI::MLAdmin::Menu;
+    $obj = new FML::CGI::Admin::MenuOld;
     $obj->prepare();
     $obj->verify_request();
     $obj->run();
@@ -37,7 +37,7 @@ See L<FML::Process::Flow> for flow details.
 
 =head2 CLASS HIERARCHY
 
-C<FML::CGI::MLAdmin::Menu> is a subclass of C<FML::Process::CGI>.
+C<FML::CGI::Admin::MenuOld> is a subclass of C<FML::Process::CGI>.
 
              FML::Process::Kernel
                        |
@@ -51,10 +51,10 @@ C<FML::CGI::MLAdmin::Menu> is a subclass of C<FML::Process::CGI>.
             -----------------------
            |                       |
            A                       A
-     FML::CGI::Menu          FML::CGI::Menu
+     FML::CGI::MenuOld          FML::CGI::MenuOld
            |                       |
            A                       A
- FML::CGI::MLAdmin::Menu    FML::CGI::MLMLAdmin::Menu
+ FML::CGI::Admin::MenuOld    FML::CGI::MLAdmin::MenuOld
 
 =head1 METHODS
 
@@ -87,7 +87,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::CGI::MLAdmin::Menu first appeared in fml8 mailing list driver package.
+FML::CGI::Admin::MenuOld first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

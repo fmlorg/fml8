@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.29 2004/01/21 03:45:04 fukachan Exp $
+# $FML: Menu.pm,v 1.30 2004/07/23 13:16:34 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -13,8 +13,8 @@ use Carp;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use CGI qw/:standard/; # load standard CGI routines
 
-use FML::CGI::Menu;
-@ISA = qw(FML::CGI::Menu);
+use FML::CGI::Skin::Base;
+@ISA = qw(FML::CGI::Skin::Base);
 
 
 =head1 NAME

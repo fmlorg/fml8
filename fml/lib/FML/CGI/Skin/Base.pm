@@ -4,10 +4,10 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.11 2004/03/31 12:34:26 fukachan Exp $
+# $FML: Menu.pm,v 1.12 2004/07/23 13:16:33 fukachan Exp $
 #
 
-package FML::CGI::Menu;
+package FML::CGI::Skin::Base;
 use strict;
 use Carp;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
@@ -21,11 +21,11 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::CGI::Menu - provides CGI control function for the specific domain.
+FML::CGI::Skin::Base - provides CGI control function for the specific domain.
 
 =head1 SYNOPSIS
 
-    $obj = new FML::CGI::Menu;
+    $obj = new FML::CGI::Skin::Base;
     $obj->prepare();
     $obj->verify_request();
     $obj->run();
@@ -39,7 +39,7 @@ See L<FML::Process::Flow> for flow details.
 
 =head2 CLASS HIERARCHY
 
-C<FML::CGI::Menu> is a subclass of C<FML::Process::CGI>.
+C<FML::CGI::Skin::Base> is a subclass of C<FML::Process::CGI>.
 
              FML::Process::Kernel
                        |
@@ -53,7 +53,7 @@ C<FML::CGI::Menu> is a subclass of C<FML::Process::CGI>.
             -----------------------
            |                       |
            A                       A
- FML::CGI::Menu
+ FML::CGI::Skin::Base
 
 =head1 METHODS
 
@@ -205,19 +205,19 @@ sub run_cgi_main
 
 
 # Descriptions: show menu (table based menu).
-#    Arguments: OBJ($curproc)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub run_cgi_navigator
 {
-    my ($curproc) = @_;
-    my $target    = $curproc->cgi_var_frame_target();
-    my $action    = $curproc->cgi_var_action();
+    my ($curproc, $args) = @_;
+    my $target           = $curproc->cgi_var_frame_target();
+    my $action           = $curproc->cgi_var_action();
 
     # natural language-ed name
     my $name_ml_name = $curproc->message_nl('term.ml_name', 'ml_name');
     my $name_command = $curproc->message_nl('term.command', 'command');
-    my $name_change  = $curproc->message_nl('term.change',  'change');
+    my $name_switch  = $curproc->message_nl('term.switch',  'switch to');
     my $name_reset   = $curproc->message_nl('term.reset',   'reset');
 
     # 1. ML
@@ -226,14 +226,23 @@ sub run_cgi_navigator
     my $title   = $curproc->cgi_var_navigator_title();
     print $title, "\n";
 
+    # 1.1 menu description.
+    my $_key  = $args->{ skin } || "base";
+    my $key   = sprintf("cgi.%s_navigation", $_key || "base");
+    my $_desc = "select ml_name and command, and click 'switch to' button.\n";
+    my $desc  = $curproc->message_nl($key,  $_desc);
+    print $desc, "\n";
+    print "\n<BR>\n";
+
     print start_form(-action=>$action, -target=>$target);
     print $curproc->cgi_hidden_info_language();
 
+    my $ml_list_size = $#$ml_list + 1;
     print $name_ml_name, ":\n";
     print scrolling_list(-name    => 'ml_name',
 			 -values  => $ml_list,
 			 -default => [ $ml_name ],
-			 -size    => 5);
+			 -size    => $ml_list_size > 5 ? 5 : $ml_list_size);
     print "\n<BR>\n";
 
     # 2. command
@@ -242,16 +251,17 @@ sub run_cgi_navigator
     my $command_default = $navi_command || $command;
     my $command_list    = $curproc->cgi_var_available_command_list();
 
+    my $clist_size = $#$command_list + 1;
     print $name_command, ":\n";
     print scrolling_list(-name    => 'navi_command',
 			 -values  => $command_list,
 			 -default => [ $command_default ],
-			 -size    => 5);
+			 -size    => $clist_size > 5 ? 5 : $clist_size);
     print "\n<BR>\n";
 
 
     # 3. submit
-    print submit(-name => $name_change);
+    print submit(-name => $name_switch);
     print reset(-name  => $name_reset);
 
     print end_form;
@@ -402,7 +412,9 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 2003/09/25: FML::CGI::Menu is derived from FML::CGI::Admin::Menu.
 
-FML::CGI::Menu first appeared in fml8 mailing list driver package.
+2004/10/08: FML::CGI::Menu is renamed to FML::CGI::Skin::Base class.
+
+FML::CGI::Skin::Base first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
