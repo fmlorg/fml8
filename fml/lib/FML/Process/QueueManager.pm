@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.20 2004/05/25 03:34:31 fukachan Exp $
+# $FML: QueueManager.pm,v 1.21 2004/07/23 13:01:29 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -21,7 +21,8 @@ FML::Process::QueueManager - provide queue manipulation functions.
 To flush all entries in the queue,
 
     use FML::Process::QueueManager;
-    my $queue = new FML::Process::QueueManager { directory => $queue_dir };
+    my $qmgr_args = { directory => $queue_dir };
+    my $queue     = new FML::Process::QueueManager $curproc, $qmgr_args;
     $queue->send($curproc);
 
 or if you send specific queue C<$queue_id>, use
@@ -37,33 +38,31 @@ queue flush!
 
 =head1 METHODS
 
-=head2 new($qm_args)
+=head2 new($qmgr_args)
 
 constructor.
 
 =cut
 
 
-# XXX-TODO: new FML::Process::QueueManager $curproc
-
-
 # Descriptions: constructor.
-#    Arguments: OBJ($self) HASH_REF($qm_args)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($qmgr_args)
 # Side Effects: none
 # Return Value: OBJ
 sub new
 {
-    my ($self, $qm_args) = @_;
+    my ($self, $curproc, $qmgr_args) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
 
-    $me->{ _directory } = $qm_args->{ directory };
+    $me->{ _curproc   } = $curproc;
+    $me->{ _directory } = $qmgr_args->{ directory };
 
     return bless $me, $type;
 }
 
 
-=head2 send($curproc, $id)
+=head2 send( [ $id ] )
 
 try to send all messages in the queue. If the queue id C<$id> is
 specified, send only the queue corresponding to C<$id>.
@@ -72,13 +71,14 @@ specified, send only the queue corresponding to C<$id>.
 
 
 # Descriptions: send message(s) in queue directory sequentially.
-#    Arguments: OBJ($self) OBJ($curproc) STR($id)
+#    Arguments: OBJ($self) STR($id)
 # Side Effects: queue flush-ed
 # Return Value: none
 sub send
 {
-    my ($self, $curproc, $id) = @_;
-    my $queue_dir = $self->{ _directory };
+    my ($self, $id) = @_;
+    my $curproc     = $self->{ _curproc };
+    my $queue_dir   = $self->{ _directory };
 
     use Mail::Delivery::Queue;
     my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
@@ -142,6 +142,44 @@ sub _send
     }
 
     return $r;
+}
+
+
+=head2 cleanup( [ $id ] )
+
+clean up queue directory.
+
+=cut
+
+
+# Descriptions: clean up directory.
+#    Arguments: OBJ($self)
+# Side Effects: queue flush-ed
+# Return Value: none
+sub cleanup
+{
+    my ($self)    = @_;
+    my $curproc   = $self->{ _curproc };
+    my $queue_dir = $self->{ _directory };
+
+    use Mail::Delivery::Queue;
+    my $queue   = new Mail::Delivery::Queue { directory => $queue_dir };
+    my $classes = $queue->get_class_list() || []; # new, incoming, ...
+
+    for my $class (@$classes) {
+	my $ra = $queue->list($class);
+	for my $qid (@$ra) {
+	    my $q = new Mail::Delivery::Queue {
+		id        => $qid,
+		directory => $queue_dir,
+	    };
+
+	    unless ( $q->is_valid_queue() ) {
+		$curproc->log("qmgr: remove invalid queue qid=$qid");
+		# $q->remove();
+	    }
+	}
+    }
 }
 
 
