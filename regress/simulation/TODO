@@ -19,7 +19,7 @@ kern/liblmtp.pl                0.24
 kern/msend.pl                  3.42	
 	proc/libMIME.pl                0.73	done
 proc/libamctl.pl               5.14	
-proc/libarchive.pl             0.47	
+	proc/libarchive.pl             0.47	scheduled in the future ?
 	proc/libcksum.pl               0.57	done
 	proc/libconfirm.pl             3.99	done (half done?)
 	proc/libcrosspost.pl           1.17	removed
@@ -37,6 +37,9 @@ proc/libhtmlsubr.pl            1.77
 	proc/liblock.pl                0.32	removed
 	proc/liblogmail.pl             0.22	removed
 	proc/liblop.pl                 1.16	removed
+
+		* summary (search + restricted summary)
+
 	proc/libmakefml.pl             0.19	removed
 	proc/libmd5.pl                 0.25	done
 	proc/libmesgle.pl              1.06	done?
@@ -51,7 +54,7 @@ proc/libpgp.pl                 2.74
 	proc/libpop.pl                 0.98	removed?
 proc/libqmail.pl               0.19	
 proc/libra.pl                  6.35	
-proc/librcs.pl                 0.27	
+	proc/librcs.pl                 0.27	removed?
 	proc/librelayhack.pl           0.37	removed
 	proc/libremote.pl              0.06	removed
 	proc/librfc1153.pl             0.81	removed
