@@ -1,0 +1,913 @@
+
+
+Network Working Group                                           E. Burger
+Internet Draft                                   Centigram Communications
+Document: draft-ietf-vpim-hint-00.txt                          E. Candell
+Obsoletes: draft-burger-vpim-pc-00.txt           Comverse Network Systems
+Category: Standards Track                                        C. Eliot
+Expires in six Months                               Microsoft Corporation
+                                                                 G. Klyne
+                                                     Content Technologies
+                                                            July 14, 2000
+
+
+                     Content Hint for Internet Mail
+
+Status of this Memo
+
+   This document is an Internet-Draft and is in full conformance with
+   all provisions of Section 10 of RFC2026 [1].
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF), its areas, and its working groups. Note that
+   other groups may also distribute working documents as Internet-
+   Drafts. Internet-Drafts are draft documents valid for a maximum of
+   six months and may be updated, replaced, or obsoleted by other
+   documents at any time. It is inappropriate to use Internet- Drafts
+   as reference material or to cite them other than as "work in
+   progress."
+
+   The list of current Internet-Drafts can be accessed at
+   http://www.ietf.org/ietf/1id-abstracts.txt
+
+   The list of Internet-Draft Shadow Directories can be accessed at
+   http://www.ietf.org/shadow.html.
+
+
+1.   Abstract
+
+   This document describes a mechanism to allow senders of a multi-part
+   Internet mail message to convey presentational information on the
+   message as a whole.  The document specifies a RFC 822 header called
+   "Content-Hint".  This mechanism is very similar to the use of the
+   Content-Disposition MIME entity described in [2].  Content-
+   Disposition gives clues to the receiving User Agent (UA) for how to
+   display a given body part.  Content-Hint gives clues to the
+   receiving UA for the context of the message display.  This allows
+   the receiving UA to present the message in a meaningful way to the
+   recipient.
+
+   This mechanism is needed because examining the message itself is
+   insufficient to determine the context of the message.  For example,
+   one can envision a UA that distinguishes between a voice mail
+   message with a text annotation and a text message with an audio
+   attachment.  Content-Hint would provide the hint to the receiving UA
+   which context to present the message.
+
+                           Expires 1/14/01                    [Page 1]
+                   Primary Content of Internet Mail          July 2000
+
+
+Table of Contents
+
+1.  ABSTRACT .........................................................1
+2.  CONVENTIONS USED IN THIS DOCUMENT ................................2
+3.  MOTIVATION AND GOALS .............................................3
+
+3.1.  The problem ....................................................3
+3.2.  Some messaging scenarios .......................................4
+3.2.1.    Internet e-mail.............................................4
+3.2.2.    Short text messaging service................................5
+3.2.3.    Facsimile...................................................5
+3.2.4.    Voice mail..................................................6
+3.2.5.    Multimedia message..........................................6
+3.3.  The goal .......................................................7
+
+4.  FUNCTIONAL REQUIREMENTS ..........................................7
+5.  THE CONTENT-HINT .................................................7
+6.  CONTENT-HINT REFERENCE FIELD .....................................8
+6.1.  Content-Hint Syntax ............................................8
+6.2.  content-hint Syntax ............................................8
+6.2.1.    voice-message...............................................9
+6.2.2.    fax-message.................................................9
+
+6.2.3.    video-message...............................................9
+6.2.4.    sms-message.................................................9
+6.2.5.    none........................................................9
+7.  SECURITY CONSIDERATIONS ..........................................9
+8.  IANA CONSIDERATIONS .............................................10
+8.1.  Content-Hint Registration .....................................10
+8.2.  Primary Content Type Registrations ............................11
+8.2.1.    voice-message..............................................11
+
+8.2.2.    fax-message................................................11
+8.2.3.    video-message..............................................12
+8.2.4.    sms-message................................................13
+9.  REFERENCES ......................................................14
+10. ACKNOWLEDGMENTS .................................................14
+11. AUTHOR'S ADDRESSES ..............................................15
+
+
+2.   Conventions used in this document
+
+   This document refers generically to the sender of a message in the
+   masculine (he/him/his) and the recipient of the message in the
+   feminine (she/her/hers).  This convention is purely for convenience
+   and makes no assumption about the gender of a message sender or
+   recipient.
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in
+   this document are to be interpreted as described in RFC-2119 [3].
+
+
+Burger et. al.             Expires 1/14/01                    [Page 2]
+                   Primary Content of Internet Mail          July 2000
+
+
+
+   FORMATTING NOTE: Notes, such at this one, provide additional
+   nonessential information that the reader may skip without missing
+   anything essential.  The primary purpose of these non-essential
+   notes is to convey information about the rationale of this document,
+   or to place this document in the proper historical or evolutionary
+   context.  Readers whose sole purpose is to construct a conformant
+   implementation may skip such information.  However, it may be of use
+   to those who wish to understand why we made certain design choices.
+
+
+3.   Motivation and goals
+
+  3.1. The problem
+
+   Multimedia messaging systems receive messages that may be presented
+   in variety of ways.  For example, traditional e-mail uses simple
+   text messages that the recipient displays and edits.  An UA may
+   automatically print Fax images.  Another UA may play voice messages
+   through a telephone handset.  Likewise, the receiving desktop
+   computer may process and/or present documents transferred over e-
+   mail using a local application.  Emerging and future developments
+   may deliver other forms of information that have their own
+   characteristics for user presentation, such as video messages and
+   short text messages.
+
+   An often-requested characteristic for multimedia messaging systems
+   is to collect received messages in a "universal inbox", and to offer
+   them to the user as a combined list.
+
+   In the context of "unified messaging" different message media may
+   have different implied semantics.  For example, some users may
+   perceive voicemail to have an implicit assumption of urgency.  Thus
+   they may wish to gather them together and process them before other
+   messages.  Thus the end-user receiving agent needs to be able to
+   identify voicemail and distinguish it from other messages.
+
+   The uses of this kind of presentation characteristic for each
+   message is multi-fold:
+
+   o    display an indication to the user (e.g. by a suitably evocative
+        icon along with other summary fields),
+
+   o    auto-forwarding a specific message type into another messaging
+        environment? (e.g., short text to a mobile short message
+        service),
+
+   o    prioritizing and grouping messages in an inbox display list,
+
+   o    suggesting appropriate default handling for presentation,
+
+
+
+Burger et. al.             Expires 1/14/01                    [Page 3]
+                   Primary Content of Internet Mail          July 2000
+
+
+   o    suggesting appropriate default handling for reply, forward,
+        etc., and
+
+   o    filtering the message list for presentation via limited-
+        capability user interfaces (e.g. there is no point in offering
+        images when the user is connected by a voice-only telephone
+        user interface).
+
+   A problem faced by multimedia messaging systems is that it is not
+   always easy to decide the presentation characteristics of a received
+   message.  For example:
+
+   o    a message that contains audio and image data:  is this a fax
+        message that happens to have some voice commentary, or is it a
+        voice message that is accompanied by some supplementary
+        diagrams, or is it a fully multimedia message, in which all
+        parts are expected to carry equal significance?
+
+   o    a message containing text and audio data:  is this an e-mail
+        with an MP3 music attachment, or is it a voice message that
+        happens to have been generated with an initial text header for
+        the benefit of non-voice-enabled e-mail receivers?
+
+   Thus, the issue of presentation characteristics may be related to
+   message media content, but is not the same thing.  The media type
+   used in a message is not sufficient to indicate presentation
+   characteristics.  One cannot determine a priori which of multiple
+   media types to use in a alternative message.  Also what about
+   distinguishing traditional e-mail text and SMS messages?  They are
+   the same media type, but have different presentation
+   characteristics.
+
+  3.2. Some messaging scenarios
+
+   These scenarios are neither comprehensive nor fixed.  For example,
+   e-mails being typically text-based do not mean that they cannot
+   convey a voice-message.  This very mutability serves to underline
+   the desirability of providing some explicit message handling hint.
+
+     3.2.1. Internet e-mail
+
+   Internet e-mail carries textual information.  Sometimes it conveys
+   computer application data of arbitrary size.
+
+   Typically, one uses e-mail for non-urgent messages, which the
+   recipient will retrieve and process at a time convenient to her.
+
+   The normal device for receiving and processing e-mail messages is
+   some kind of personal computer.  Modern personal computers usually
+   come with a reasonably large display and an alphanumeric keyboard.
+   Audio, video, and printing capabilities are not necessarily
+   available.
+
+Burger et. al.             Expires 1/14/01                    [Page 4]
+                   Primary Content of Internet Mail          July 2000
+
+
+
+   Two parties can use E-mail can for communication between two parties
+   (one-to-one), a small number of known parties (one-to-few) or, via
+   an e-mail distribution list, between a larger number of unknown
+   parties (one-to-many).
+
+   One of the endearing characteristics of e-mail is the way that it
+   allows the recipient to forward all or part of a to another party,
+   with or without additional comments.  It is quite common for an e-
+   mail to contain snippets of content from several previous messages.
+   Similar features apply when replying to an e-mail.
+
+     3.2.2. Short text messaging service
+
+   One can use a short text message to convey textual information of
+   limited size, typically, up to 160 characters.
+
+   The short text messaging service (SMS) is a facility that has
+   evolved for use with mobile telephones, and has an associated per-
+   message transmission charge.  People use SMS for relatively urgent
+   messages, which the sender wishes the receiver to see and possibly
+   respond to within a short time period.
+
+   The normal device for sending and receiving a short text message is
+   a mobile telephone with a small character display and a numeric-only
+   keyboard.  Personal computers and personal digital assistants (PDAs)
+   can also participate in short text messaging.
+
+   Currently, the most common use of short text messages are between
+   just two parties (one-to-one).
+
+   Users often send short text messages in isolation, rather than as
+   part of a longer exchange.  One use for them is as a prompt or
+   invitation to communicate by some more convenient and content-rich
+   method, such as a telephone call.
+
+     3.2.3. Facsimile
+
+   People use facsimile to convey image information of moderate size,
+   typically a small number of pages.  Sometimes people use facsimile
+   for larger documents.
+
+   Facsimile is a facility that usually uses circuit-switched telephone
+   circuits, with modest connection-time charges.  Message transfer
+   takes place in real-time.  Thus, people often use facsimile for
+   moderately urgent.
+
+   The normal device for sending and receiving a facsimile is a self-
+   contained scanning and printing device connected to a telephone line
+   or a desktop computer.
+
+
+
+Burger et. al.             Expires 1/14/01                    [Page 5]
+                   Primary Content of Internet Mail          July 2000
+
+
+   Most facsimiles are between just two parties (one-to-one).  However,
+   broadcast facsimile service is between multiple parties (one-to-
+   many).
+
+   Most facsimile exchanges are in isolation, rather than as part of a
+   longer exchange.  Facsimile data is typically not suitable for
+   further processing by computer.
+
+     3.2.4. Voice mail
+
+   People use voice mail to convey audio information, almost
+   exclusively human speech.
+
+   Voice mail is a facility that usually uses circuit-switched
+   telephone circuits, with modest connection-time charges, often used
+   for moderately urgent messages.  A common use for them is as a
+   prompt or invitation to communicate by some more convenient method,
+   such as a telephone call. In most, but not all cases, the sender of
+   a voice message does not want to send a message at all.  Rather,
+   they wished to engage in a real-time conversation.
+
+   The normal device for sending and receiving a voice mail is a
+   telephone handset.
+
+   Voice messages are usually sent between just two parties (one-to-
+   one).
+
+   Voice mail data is not generally suitable for further processing by
+   computer.
+
+     3.2.5. Multimedia message
+
+   We define a multimedia message as a message containing more than one
+   basic media type (text, image, audio, video, model, application).
+   These are the characteristics of a multimedia message.
+
+   In some cases, it is just e-mail with an attachment that a
+   multimedia display application presents.  For example, I can send
+   you an MP3 of something I recorded in my garage today.
+
+   In other cases, it represents a convergence between two or more of
+   the scenarios described above.  For example, a voice message with an
+   accompanying diagram or a talking head video message.
+
+   The characteristics will vary somewhat with the intent of the
+   sender.  This in turn may affect the user agent or application used
+   to create the message.
+
+
+
+
+
+
+Burger et. al.             Expires 1/14/01                    [Page 6]
+                   Primary Content of Internet Mail          July 2000
+
+
+  3.3. The goal
+
+   The goal, then, of this document is to describe a simple mechanism
+   that provides enough information to allow a receiving user agent to
+   make some reasonable decisions about how to present a message.
+
+   The sort of decisions that a receiving agent needs to make include
+   the following items.
+
+   o    what icon or class name to display for each message in a list
+
+   o    a default device and/or application to use for presentation of
+        the message
+
+   o    whether to try and forward the message into another environment
+
+   It is not a goal for this mechanism to provide detailed handling
+   information.  One may apply other techniques to provide more
+   detailed handling information.  The mechanism designed here should
+   work with, rather than against, these other techniques.
+
+
+4.   Functional requirements
+
+   o    To identify a message as belonging to one of small number of
+        enumerated message classes.
+
+   o    Specify a core set of message classes for all message user
+        agents to recognize.
+
+   o    Specify message classes by the originating user's choice of
+        authoring tool or simple user interaction.
+
+   o    Incorrect or invalid message labelling must not result in
+        failure to transfer or inability to present a message.
+
+   o    Message labeling information has to be interpretable in
+        reasonable fashion by many different user agent systems.
+
+   o    The mechanism should be extensible to allow new kinds of
+        message to be introduced and labelled.
+
+
+5.   The Content-Hint
+
+   One method of indicating the interpretation context of the media
+   content of a message is to examine the media types in the message.
+   However, this requires the UA to scan the entire message before
+   making this determination.  This is particularly burdensome for the
+   multi-media mail situation, as voice and especially video mail
+   objects are quite large.
+
+
+Burger et. al.             Expires 1/14/01                    [Page 7]
+                   Primary Content of Internet Mail          July 2000
+
+
+   Another method of indicating the primary media content of a message
+   is to register a multipart/* MIME subtype.  For example, the VPIM
+   Work Group has registered multipart/voice-message to indicate that a
+   message is primarily voice mail [4].  However, multipart/voice-
+   message is identical in syntax to multipart/mixed.  The only
+   difference is that VPIM mail transfer agents and user agents
+   recognize that they can perform special handling of the message
+   based on it being a voice mail message.
+
+   We wish to avoid scanning the entire message.  In addition, we wish
+   to avoid having to create multiple aliases for multipart/mixed every
+   time someone identifies a new primary content type.
+
+   Since the content context is an attribute of the entire message, it
+   is logical to define a new top-level (RFC 822 [5]) message
+   attribute.  To this end, this document introduces the message
+   attribute "Content-Hint".
+
+   Content-Hint only serves to identify the content context of the
+   message.  It does not provide any indication of content that the UA
+   must be capable of delivering.  It does not imply any message
+   disposition or delivery notification.  See the companion document,
+   Critical Content of Internet Mail [6], for a mechanism to perform
+   these tasks.
+
+   Since Content-Hint is only an indicator, goofy situations, such as a
+   message marked "voice-message" but without a voice body part, MUST
+   NOT generate any error report.
+
+
+6.   Content-Hint Reference Field
+
+   The Content-Hint reference field is a top-level header inserted by
+   the sending UA to indicate the primary content type of the message.
+
+  6.1. Content-Hint Syntax
+
+   The syntax of the Content-Hint field, formatted according to the
+   ABNF [7] is as follows.  Note that "Content-Hint" is not case
+   sensitive, per RFC 822.
+
+        "Content-Hint" ":" content-hint CRLF
+
+  6.2. content-hint Syntax
+
+   The content-type indicates the primary media content context of the
+   message.  This is an IANA registered value.  Current values for
+   Content-Hint are as follows.
+
+
+
+
+
+Burger et. al.             Expires 1/14/01                    [Page 8]
+                   Primary Content of Internet Mail          July 2000
+
+
+        content-hint =  1 *( [ "voice-message"]
+                             [ "fax-message" ]
+                             [ "video-message" ]
+                             [ "sms-message" ]
+                             [ "none" ]
+                             Extension-type )
+
+        Extension-type = token   ; Defined and registered per Section 8
+                       / x-token ; Experimental, private use
+
+        token = <syntax as defined by [8], but not starting with
+                 the characters "X-" or "x-">
+
+        x-token = <syntax as defined by [8] for private use>
+
+     6.2.1. voice-message
+
+   The voice-message hint states the message is a voice message, with
+   voice messaging semantics.
+
+     6.2.2. fax-message
+
+   The fax-message hint states the message is a facsimile message, with
+   facsimile messaging semantics.
+
+     6.2.3. video-message
+
+   The video-message hint states the message is a video message, with
+   facsimile messaging sematics.
+
+     6.2.4. sms-message
+
+   The sms-message hint states the message is a short text message
+   service (SMS) message, with SMS messaging semantics.
+
+     6.2.5. none
+
+   The none hint states there is no hint for this message.  Clearly, if
+   a message has no Content-Hint reference field, none MUST be the
+   default value.
+
+7.   Security Considerations
+
+   The intention for this header is to indicate media content context
+   only.  One can imagine one creating an "Application" content hint,
+   and have a poorly designed user agent blindly execute a mailed
+   program.  Don't do that!
+
+   One can envision a denial of service attack by bombing a receiver
+   with a message with a Content-hint that doesn't fit the profile of
+   the actual body parts.  This is why the receiver MUST consider the
+
+
+Burger et. al.             Expires 1/14/01                    [Page 9]
+                   Primary Content of Internet Mail          July 2000
+
+
+   Content-hint to be a hint only.  The receiver SHOULD NOT rely on the
+   Content-hint exclusively for presentation processing.
+
+8.   IANA Considerations
+
+   NOTE: We won't send in any registrations until it looks like this
+   will become a RFC!
+
+   Following the policies outlined in [9], IANA assigns values for
+   Content-Hint as Specification Required.
+
+  8.1. Content-Hint Registration
+
+   To: ietf-types@iana.org
+   Subject: Registration of New Top-Level Header Field Content-Hint
+
+   Header name:
+   Content-Hint
+
+   Required parameters:
+   Single 7bit text value
+
+   Parameter value:
+   The parameter value specifies the primary media content type for the
+   message.
+
+   Security considerations:
+   The intention for this header is to indicate media content type
+   only. One can imagine one creating an "Application" primary content
+   type, and have a poorly designed user agent blindly execute a mailed
+   program.
+
+   Published specification:
+   draft-ietf-vpim-hint-00.txt
+
+   Applications which use this media type:
+   Mail
+   VPIM
+   FPIM
+
+   Additional information: none
+
+   Person & email address to contact for further information:
+   Eric Burger
+   e.burger@ieee.org
+
+   Intended usage: COMMON
+
+
+
+
+
+
+Burger et. al.             Expires 1/14/01                   [Page 10]
+                   Primary Content of Internet Mail          July 2000
+
+
+   8.2.        Primary Content Type Registrations
+
+     8.2.1. voice-message
+
+   To: ietf-types@iana.org
+   Subject: Registration of New Content-Hint type voice-message
+
+   Content-Hint type name:
+   voice-message
+
+   Required parameters:
+   none
+
+   Optional parameters:
+   none
+
+   Encoding considerations:
+   none
+
+   Security considerations:
+   none
+
+   Interoperability considerations:
+   User agents declaring the primary content to be voice-message SHOULD
+   conform to VPIMv2.
+
+   Published specification:
+   draft-ietf-vpim-hint-00.txt
+   RFC 2421, Voice Profile for Internet Mail - version 2
+
+   Applications which use this media type:
+   VPIM
+
+   Additional information:
+   none
+
+   Person & email address to contact for further information:
+   Eric Burger
+   e.burger@ieee.org
+
+   Intended usage: COMMON
+
+
+     8.2.2. fax-message
+
+   To: ietf-types@iana.org
+   Subject: Registration of New Content-Hint type fax-message
+
+   Content-Hint type name:
+   fax-message
+
+
+
+Burger et. al.             Expires 1/14/01                   [Page 11]
+                   Primary Content of Internet Mail          July 2000
+
+
+   Required parameters:
+   none
+
+   Optional parameters:
+   none
+
+   Encoding considerations:
+   none
+
+   Security considerations:
+   none
+
+   Interoperability considerations:
+   none
+
+   Published specification:
+   draft-ietf-vpim-hint-00.txt
+
+   Applications which use this media type:
+   FPIM
+
+   Additional information:
+   none
+
+   Person & email address to contact for further information:
+   Eric Burger
+   e.burger@ieee.org
+
+   Intended usage: COMMON
+
+
+     8.2.3. video-message
+
+   To: ietf-types@iana.org
+   Subject: Registration of New Content-Hint type video-message
+
+   Content-Hint type name:
+   voice-message
+
+   Required parameters:
+   none
+
+   Optional parameters:
+   none
+
+   Encoding considerations:
+   none
+
+   Security considerations:
+   none
+
+
+
+Burger et. al.             Expires 1/14/01                   [Page 12]
+                   Primary Content of Internet Mail          July 2000
+
+
+   Interoperability considerations:
+   none
+
+   Published specification:
+   draft-ietf-vpim-hint-00.txt
+
+   Applications which use this media type:
+   VPIM, FPIM
+
+   Additional information:
+   none
+
+   Person & email address to contact for further information:
+   Eric Burger
+   e.burger@ieee.org
+
+   Intended usage: COMMON
+
+
+     8.2.4. sms-message
+
+   To: ietf-types@iana.org
+   Subject: Registration of New Content-Hint type sms-message
+
+   Content-Hint type name:
+   sms-message
+
+   Required parameters:
+   none
+
+   Optional parameters:
+   none
+
+   Encoding considerations:
+   none
+
+   Security considerations:
+   none
+
+   Interoperability considerations:
+   none
+
+   Published specification:
+   draft-ietf-vpim-hint-00.txt
+
+   Applications which use this media type:
+   VPIM, FPIM
+
+   Additional information:
+   none
+
+
+
+Burger et. al.             Expires 1/14/01                   [Page 13]
+                   Primary Content of Internet Mail          July 2000
+
+
+   Person & email address to contact for further information:
+   Eric Burger
+   e.burger@ieee.org
+
+   Intended usage: COMMON
+
+
+9.   References
+
+
+   1  Bradner, S., "The Internet Standards Process -- Revision 3", BCP
+      9, RFC 2026, October 1996.
+
+   2  Troost, R., Dorner, S., and Moore, K., "Communicating
+      Presentation Information in Internet Messages: The Content-
+      Disposition Header Field", RFC 2183, New Century Systems,
+      QUALCOMM Incorporated, and University of Tennessee, August 1997.
+
+   3  Bradner, S., "Key words for use in RFCs to Indicate Requirement
+      Levels", BCP 14, RFC 2119, March 1997.
+
+   4  Vaudreuil, G. and Parsons, G., "VPIM Voice Message MIME Sub-type
+      Registration", RFC 2423, Lucent Technologies and Northern
+      Telecom, September 1998.
+
+   5  Crocker, D., "Standard for the Format of ARPA Internet Text
+      Messages", STD 11, RFC 822, August 1982.
+
+   6  Burger, E. and Candell, E., "Critical Content of Internet Mail",
+      draft-ietf-vpim-cc-00.txt, Work in Progress.
+
+   7  Crocker, D. and Overell, P.(Editors), "Augmented BNF for Syntax
+      Specifications: ABNF", RFC 2234, Internet Mail Consortium and
+      Demon Internet Ltd., November 1997.
+
+   8  Freed, N. and Borenstein, N., "Multipurpose Internet Mail
+      Extensions (MIME) Part One: Format of Internet Message Bodies",
+      RFC 2045, Innosoft and First Virtual, November 1996.
+
+   9  Alvestrand, H. and T. Narten, "Guidelines for Writing an IANA
+      Considerations Section in RFCs", BCP 26, RFC 2434, October 1998.
+
+
+
+10.    Acknowledgments
+
+   Many of the ideas here arose originally from a discussion with Jutta
+   Degener.
+
+   We'd also like to thank Keith Moore for helping us tighten-up our
+   explanations.
+
+
+Burger et. al.             Expires 1/14/01                   [Page 14]
+                   Primary Content of Internet Mail          July 2000
+
+
+
+
+11.    Author's Addresses
+
+   Eric Burger
+   Centigram Communications Corporation
+   Maryland Technology Center
+   1375 Piccard Dr., MS 150I
+   Rockville, MD  20850-4311
+   USA
+
+   Phone/Fax: +1 301/212-3320
+   Email: e.burger@ieee.org
+
+
+   Emily Candell
+   Comverse Network Systems
+   200 Quannapowitt Pkwy.
+   Wakefield, MA  01880
+   USA
+
+   Phone: +1 781/213-2324
+   Email: emily@comversens.com
+
+
+   Graham Klyne
+   Content Technologies Ltd.
+   1220 Parkview,
+   Arlington Business Park
+   Theale
+   Reading, RG7 4SA
+   United Kingdom.
+
+   Telephone: +44 118 930 1300
+   Facsimile: +44 118 930 1301
+   E-mail:    GK@ACM.ORG
+
+
+   Charles Eliot
+   Microsoft Corporation
+   <<<I need your address here!!!>>>
+
+   Telephone: <Insert Number Here>
+   E-Mail: charle@Exchange.Microsoft.com
+
+
+
+Full Copyright Statement
+
+   The IETF takes no position regarding the validity or scope of any
+   intellectual property or other rights that might be claimed to
+   pertain to the implementation or use of the technology described in
+
+Burger et. al.             Expires 1/14/01                   [Page 15]
+                   Primary Content of Internet Mail          July 2000
+
+
+   this document or the extent to which any license under such rights
+   might or might not be available; neither does it represent that it
+   has made any effort to identify any such rights.  Information on the
+   IETF's procedures with respect to rights in standards-track and
+   standards-related documentation can be found in BCP-11.  Copies of
+   claims of rights made available for publication and any assurances
+   of licenses to be made available, or the result of an attempt made
+   to obtain a general license or permission for the use of such
+   proprietary rights by implementers or users of this specification
+   can be obtained from the IETF Secretariat.
+
+   The IETF invites any interested party to bring to its attention any
+   copyrights, patents or patent applications, or other proprietary
+   rights which may cover technology that may be required to practice
+   this standard.  Please address the information to the IETF Executive
+   Director.
+
+   Copyright (C) 2000 The Internet Society.  All Rights Reserved.
+
+   This document and translations of it may be copied and furnished to
+   others, and derivative works that comment on or otherwise explain it
+   or assist in its implementation may be prepared, copied, published
+   and distributed, in whole or in part, without restriction of any
+   kind, provided that the above copyright notice and this paragraph
+   are included on all such copies and derivative works.  However, this
+   document itself may not be modified in any way, such as by removing
+   the copyright notice or references to the Internet Society or other
+   Internet organizations, except as needed for the  purpose of
+   developing Internet standards in which case the procedures for
+   copyrights defined in the Internet Standards process must be
+   followed, or as required to translate it into languages other than
+   English.
+
+   The limited permissions granted above are perpetual and will not be
+   revoked by the Internet Society or its successors or assigns.
+
+   This document and the information contained herein is provided on an
+   "AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
+   TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING
+   BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION
+   HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF
+   MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+
+
+
+
+
+
+
+
+
+
+Burger et. al.             Expires 1/14/01                   [Page 16]
+
