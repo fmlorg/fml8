@@ -52,11 +52,11 @@ sub new
 
     bless $curproc, $self;
 
-    # load config.cf files, which is passed from fmlwrapper.
+    # load config.cf files, which is passed from loader.
     $curproc->load_config_files( $args->{ cf_list } );
 
     # debug
-    if ($0 =~ /fmlwrapper/) { $curproc->debug; sleep 3;}
+    if ($0 =~ /loader/) { $curproc->debug; sleep 3;}
 
     return $curproc;
 }

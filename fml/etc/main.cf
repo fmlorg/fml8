@@ -25,6 +25,6 @@ domain_default_config = $config_dir/domains/__domain__/config.cf
 
 
 # ml's home directories
-# $ml_home_dir (e.g. /var/spool/ml/elena ) is taken from fmlwrapper's @ARGV.
+# $ml_home_dir (e.g. /var/spool/ml/elena ) is taken from loader's @ARGV.
 
 ml_home_prefix	= /var/spool/ml

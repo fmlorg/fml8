@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $Id$ 
+# $Id: loader,v 1.17 2001/01/29 03:10:29 fukachan Exp $ 
 # $FML$
 #
 
@@ -36,7 +36,7 @@ BEGIN {
 # Descriptions: top lebel bootstrap program
 #               which load the required library and switch myself to it.
 #               loading order: 
-#               libexec/fmlwrapper -> libexec/fml -> FML::Process::Something
+#               libexec/loader -> libexec/fml -> FML::Process::Something
 #    Arguments: none
 # Side Effects: switch to the real process
 # Return Value: none
@@ -90,7 +90,7 @@ sub Bootstrap
     my $myname = basename($0);
 
     # debug;
-    if ($0 =~ /fmlwrapper/) {
+    if ($0 =~ /loader/) {
 	use Data::Dumper; print Dumper( $main_cf ); sleep 3;
     }
 
@@ -117,11 +117,11 @@ sub Bootstrap
 
 =head1 NAME
 
-fmlwrapper -- the wrapper which executes a real fml5 program.
+loader -- the wrapper which executes a real fml5 program.
 
 =head1 SYNOPSIS
 
-fmlwrapper C<[-c main.cf]> C<[--debug]> C<[--ctladdr]> ml_home_dir
+loader C<[-c main.cf]> C<[--debug]> C<[--ctladdr]> ml_home_dir
 
 =head1 DESCRIPTION
 

@@ -69,10 +69,10 @@ cp -pr cpan/lib/*	$lib_dir/$fml_version/
 echo update $libexec_dir/$fml_version/
 cp -pr fml/libexec/*	$libexec_dir/$fml_version/
 
-if [ ! -f $libexec_dir/fmlwrapper ];then
+if [ ! -f $libexec_dir/loader ];then
 
-   echo install libexec/fmlwrapper
-   cp -pr fml/libexec/fmlwrapper    $libexec_dir/
+   echo install libexec/loader
+   cp -pr fml/libexec/loader    $libexec_dir/
 
    echo install libexec/Standalone.pm
    cp -pr fml/libexec/Standalone.pm $libexec_dir/
@@ -80,11 +80,11 @@ if [ ! -f $libexec_dir/fmlwrapper ];then
    (
 	cd $libexec_dir/
 
-	echo -n "   link fmlwrapper to: "
+	echo -n "   link loader to: "
 	for x in fml.pl distribute command fmlserv mead fmlconf fmlticket
 	do
 		rm -f $x
-		ln -s fmlwrapper $x && echo -n "$x "
+		ln -s loader $x && echo -n "$x "
 	done
 	echo ""
    )

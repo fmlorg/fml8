@@ -64,7 +64,7 @@ sub _package_we_use
     my $name   = $args->{ myname };
     my $pkg    = '';
 
-    if ($name eq 'fml.pl' || $name eq 'distribute' || $name eq 'fmlwrapper') {
+    if ($name eq 'fml.pl' || $name eq 'distribute' || $name eq 'loader') {
 	$pkg = 'FML::Process::Distribute';
     }
     elsif (( $name eq 'fml.pl' && $args->{ options }->{ ctladdr }) || 
