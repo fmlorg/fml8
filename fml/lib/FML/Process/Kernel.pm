@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.246 2004/12/09 04:53:42 fukachan Exp $
+# $FML: Kernel.pm,v 1.247 2004/12/15 13:53:52 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1544,9 +1544,10 @@ sub logerror
 sub logdebug
 {
     my ($curproc, $msg, $msg_args) = @_;
-    my (@c) = caller;
+    my $config = $curproc->config();
+    my (@c)    = caller;
 
-    if (0) {
+    if ($config->yes('debug')) {
 	$curproc->log_message($msg, {
 	    msg_args => $msg_args,
 	    level    => 'debug',
