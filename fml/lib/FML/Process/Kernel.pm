@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.93 2002/04/27 14:28:05 fukachan Exp $
+# $FML: Kernel.pm,v 1.94 2002/04/28 13:33:43 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -460,6 +460,19 @@ sub parse_incoming_message
     $curproc->{ incoming_message }->{ message } = $msg;
     $curproc->{ incoming_message }->{ header  } = $msg->whole_message_header;
     $curproc->{ incoming_message }->{ body  }   = $msg->whole_message_body;
+
+    # save input message for further investigation
+    {
+	my $config = $curproc->{ config };
+	my $dir    = $config->{ mincoming_dir };
+        my $obj    = new File::CacheDir {
+            directory  => $dir,
+        };
+
+	my $wh = $obj->open();
+	$msg->print($wh);
+	$obj->close();
+    }
 }
 
 
