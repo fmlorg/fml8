@@ -2,10 +2,11 @@
 #
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #
-# $FML: MH.pm,v 1.5 2002/05/19 07:47:05 fukachan Exp $
+# $FML: MH.pm,v 1.6 2002/07/02 12:54:44 fukachan Exp $
 #
 
 package Mail::Message::MH;
+use strict;
 
 =head1 NAME
 
@@ -36,6 +37,19 @@ return ARRAY_REF of numbers specified by the following format:
 =cut
 
 
+# Descriptions: usual constructor
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: OBJ
+sub new
+{
+    my ($self, $args) = @_;
+    my ($type) = ref($self) || $self;
+    my $me     = {};
+    return bless $me, $type;
+}
+
+
 # Descriptions: expand MH style expression to list of numbers
 #    Arguments: OBJ($self) STR($str) NUM($min) NUM($max)
 # Side Effects: none
@@ -46,6 +60,14 @@ sub expand
     my $ra = [];
 
     unless (defined $min) { $min = 1;}
+
+    if ($str =~ /,/o) {
+	for my $s (split(/,/, $str)) {
+	    my $ra0 = $self->expand($s, $min, $max);
+	    for my $element (@$ra0) { push(@$ra, $element);}
+	}
+	return $ra;
+    }
 
     if ($str eq 'all') {
 	unless (defined $max) { return undef;}
@@ -75,7 +97,7 @@ sub expand
         return [ $max ];
     }
     elsif ($str =~ /^first:(\d+)$/) {
-	return _expand_range($min, $min + $1);
+	return _expand_range($min, $min + $1 - 1);
     }
     elsif ($str =~ /^last:(\d+)$/) {
 	unless (defined $max) { return undef;}
@@ -98,6 +120,24 @@ sub _expand_range
     for ($first .. $last) { push(@fn, $_);}
 
     return \@fn;
+}
+
+
+if ($0 eq __FILE__) {
+    my $mh = new Mail::Message::MH;
+    for (qw(1,2,3
+	    1,10,last:20
+	    100
+	    100-110
+	    first-110
+	    190-last
+	    first first:10
+	    last  last:10
+	    )) {
+	print "\n[$_] => ";
+	my $a = $mh->expand($_, 1, 200);
+	print "@$a\n";
+    }
 }
 
 
