@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.45 2004/09/03 12:49:42 fukachan Exp $
+# $FML: Queue.pm,v 1.46 2004/09/04 02:33:31 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -992,14 +992,24 @@ sub is_valid_queue
 
     # files to check.
     my $qf_active     = $self->active_file_path($id);
+    my $qf_deferred   = $self->deferred_file_path($id);
     my $qf_sender     = $self->sender_file_path($id);
     my $qf_recipients = $self->recipients_file_path($id);
-
-    for my $f ($qf_active, $qf_sender, $qf_recipients) {
+    
+    for my $f ($qf_sender, $qf_recipients) {
 	$ok++ if -f $f && -s $f;
     }
 
-    ($ok == 3) ? 1 : 0;
+    # XXX You need lock() before calling is_valid_*_queue() method.
+    # 
+    # if "-s $qf_active ; rename() in some other process; -s $qf_deferred"
+    # operation is done, this check fails.
+    # make this check more robust, check again.
+    # this logic is stupid and not perfect but effective ?
+    if (-s $qf_active || -s $qf_deferred) { $ok++;}
+    if (-s $qf_active || -s $qf_deferred) { $ok++;}
+
+    ($ok == 4) ? 1 : 0;
 }
 
 
