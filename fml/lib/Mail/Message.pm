@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.59 2002/04/28 11:25:43 fukachan Exp $
+# $FML: Message.pm,v 1.60 2002/04/28 13:34:16 fukachan Exp $
 #
 
 package Mail::Message;
@@ -505,6 +505,7 @@ sub _parse
     my ($self, $fd, $result) = @_;
     my ($header, $header_size, $p, $buf, $data);
     my $total_buffer_size = 0;
+    my $is_header_found   = 0;
     my $data_ptr          = $self->{ __data };
 
   DATA:
@@ -513,18 +514,26 @@ sub _parse
 	$buf               .= $data;
 
 	if (($p = index($buf, "\n\n", 0)) > 0) {
-	    $header      = substr($buf, 0, $p + 1);
-	    $header_size = $p + 1;
-	    $$data_ptr   = substr($buf, $p + 2);
+	    $is_header_found = 1;
+	    $header          = substr($buf, 0, $p + 1);
+	    $header_size     = $p + 1;
+	    $$data_ptr       = substr($buf, $p + 2);
 	    last DATA;
 	}
     }
 
-    # extract mail body and put it to $$data_ptr
-  DATA:
-    while ($p = sysread($fd, $data, 1024)) {
-	$total_buffer_size += $p;
-	$$data_ptr         .= $data;
+    if ($is_header_found) {
+	# extract mail body and put it to $$data_ptr
+      DATA:
+	while ($p = sysread($fd, $data, 1024)) {
+	    $total_buffer_size += $p;
+	    $$data_ptr         .= $data;
+	}
+    }
+    else {
+	$header      = $buf;
+	$header_size = $total_buffer_size;
+	$$data_ptr   = undef;
     }
 
     # read the message (mail body) from the incoming mail
