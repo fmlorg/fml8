@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Credential.pm,v 1.16 2001/10/10 14:56:59 fukachan Exp $
+# $FML: Credential.pm,v 1.17 2001/10/13 03:03:43 fukachan Exp $
 #
 
 package FML::Credential;
@@ -42,7 +42,7 @@ bind \%Credential to $self and return it as an object.
 # Descriptions: usual constructor
 #               bind $self ($me) to \%Credential, so
 #               you can access the same \%Credential through this object.
-#    Arguments: $self
+#    Arguments: OBJ($self)
 # Side Effects: bind $self ($me) to \%Credential
 # Return Value: object
 sub new
@@ -63,8 +63,9 @@ sub DESTROY {}
 
 =head2 C<is_same_address($addr1, $addr2 [, $level])>
 
-return 1 if C<$addr1> and C<$addr2> looks same within some ambiguity.
-The ambiguity is followed by these rules.
+return 1 (same ) or 0 (different).
+It returns 1 if C<$addr1> and C<$addr2> looks same within some
+ambiguity.  The ambiguity is defined by the following rules:
 
 1. C<user> part must be the same case sensitively.
 
@@ -78,8 +79,8 @@ The ambiguity is followed by these rules.
          c.d.jp
            ......
 
-By default we compare the last 3 level. 
-For example, 
+By default we compare the last (top) C<3> level. 
+For example, consider these two addresses:
 
             rudo@nuinui.net   
             rudo@sapporo.nuinui.net
@@ -94,6 +95,10 @@ are same since the last 3 top level domains are same.
 =cut
 
 
+# Descriptions: compare addresses are same.
+#    Arguments: OBJ($self) STR($xaddr) STR($xaddr) NUM($max_level)
+# Side Effects: none
+# Return Value: 1 or 0
 sub is_same_address
 {
     my ($self, $xaddr, $yaddr, $max_level) = @_;
@@ -132,10 +137,10 @@ return 0 if not.
 =cut
 
 
-# Descriptions: 
-#    Arguments: $self $curproc $args
-# Side Effects: 
-# Return Value: none
+# Descriptions: sender of the current process is an ML member or not.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: 1 or 0
 sub is_member
 {
     my ($self, $curproc, $args) = @_;
@@ -166,6 +171,11 @@ sub is_member
 }
 
 
+# Descriptions: $map contains $address or not in some ambiguity
+#               by is_same_address().
+#    Arguments: OBJ($self) STR($map) STR($address)
+# Side Effects: none
+# Return Value: 1 or 0
 sub has_address_in_map
 {
     my ($self, $map, $address) = @_;
@@ -211,6 +221,10 @@ The system accounts are given as
 =cut
 
 
+# Descriptions: sender of this process is a system account ?
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: STR
 sub match_system_accounts
 {
     my ($self, $curproc, $args) = @_;
@@ -237,7 +251,7 @@ process.
 =cut
 
 # Descriptions: returh the mail sender
-#    Arguments: $self
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: mail address
 sub sender
@@ -260,6 +274,10 @@ return the number of C<level>.
 =cut
 
 
+# Descriptions: set address comparison level
+#    Arguments: OBJ($self) NUM($level)
+# Side Effects: change private variables in object
+# Return Value: NUM
 sub set_compare_level
 {
     my ($self, $level) = @_;
@@ -267,9 +285,13 @@ sub set_compare_level
 }
 
 
+# Descriptions: return address comparison level
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
 sub get_compare_level
 {
-    my ($self, $level) = @_;
+    my ($self) = @_;
     return (defined $self->{ _max_level } ? $self->{ _max_level } : undef);
 }
 
@@ -286,10 +308,10 @@ sub get_compare_level
 =cut
 
 
-# Descriptions: 
-#    Arguments: $self key
-# Side Effects: none
-# Return Value: string
+# Descriptions: get value for the specified key
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: change object
+# Return Value: STR
 sub get
 {
     my ($self, $key) = @_;
@@ -297,10 +319,10 @@ sub get
 }
 
 
-# Descriptions: 
-#    Arguments: $self key value
+# Descriptions: set value for $key to be $value
+#    Arguments: OBJ($self) STR($key) STR($value)
 # Side Effects: none
-# Return Value: string
+# Return Value: STR
 sub set
 {
     my ($self, $key, $value) = @_;

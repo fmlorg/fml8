@@ -1,7 +1,10 @@
 #-*- perl -*-
-# Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #
-# $FML: PCB.pm,v 1.5 2001/04/03 09:45:40 fukachan Exp $ 
+#  Copyright (C) 2000,2001 Ken'ichi Fukamachi
+#   All rights reserved. This program is free software; you can
+#   redistribute it and/or modify it under the same terms as Perl itself. 
+#
+# $FML$
 #
 
 package FML::PCB;

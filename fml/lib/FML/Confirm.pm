@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: @template.pm,v 1.1 2001/08/07 12:23:48 fukachan Exp $
+# $FML: Confirm.pm,v 1.1 2001/10/11 23:57:38 fukachan Exp $
 #
 
 package FML::Confirm;
@@ -14,11 +14,29 @@ use Carp;
 
 =head1 NAME
 
-FML::Confirm - assign id for e.g. confirmation 
+FML::Confirm - manipulate confirmation database
 
 =head1 SYNOPSIS
 
+    use FML::Confirm;
+    my $confirm = new FML::Confirm {
+            keyword   => $keyword,
+            cache_dir => $cache_dir,
+            class     => 'subscribe',
+            address   => $address,
+            buffer    => $command,
+        };
+    my $id = $confirm->assign_id;
+    $curproc->reply_message_nl('command.confirm');
+    $curproc->reply_message("\n$id\n");
+
 =head1 DESCRIPTION
+
+This module provides several utilitiy functions for confirmation.
+    assign id
+    store id
+    expire id
+    database manipulation
 
 =head1 METHODS
 
@@ -27,6 +45,7 @@ FML::Confirm - assign id for e.g. confirmation
 usual constructor.
 
     $args = {
+	keyword   => "confirm",
 	cache_dir => "/some/where",
 	class     => "subscribe",
 	address   => "mail@address",
@@ -35,6 +54,11 @@ usual constructor.
 
 =cut
 
+
+# Descriptions: constructor.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create object
+# Return Value: OBJ
 sub new
 {
     my ($self, $args) = @_;
@@ -51,6 +75,17 @@ sub new
 }
 
 
+=head2 assign_id()
+
+assing new id for current object.
+
+=cut
+
+
+# Descriptions: assing new id for current object
+#    Arguments: OBJ($self)
+# Side Effects: update databse
+# Return Value: STR
 sub assign_id
 {
     my ($self) = @_;
@@ -74,6 +109,10 @@ sub assign_id
 }
 
 
+# Descriptions: open databse
+#    Arguments: OBJ($self) STR($id) STR($comment)
+# Side Effects: open database, mkdir if needed
+# Return Value: HASH_REF to dabase
 sub _open_db
 {
     my ($self, $id, $comment) = @_;
@@ -85,7 +124,7 @@ sub _open_db
     my $dir       = File::Spec->catfile($cache_dir, $class);
 
     unless (-d $dir) {
-	use File::Utils qw(mkdirhier);
+	eval q{ use File::Utils qw(mkdirhier);};
 	mkdirhier($dir, 0700);
     }
 
@@ -98,6 +137,10 @@ sub _open_db
 }
 
 
+# Descriptions: close database
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
 sub _close_db
 {
     my ($self) = @_;
@@ -106,6 +149,17 @@ sub _close_db
 }
 
 
+=head2 store_id($id, $comment)
+
+save id into databse with comment if specified.
+
+=cut
+
+
+# Descriptions: save id into databse
+#    Arguments: OBJ($self) STR($id) STR($comment)
+# Side Effects: update database
+# Return Value: none
 sub store_id
 {    
     my ($self, $id, $comment) = @_;
@@ -121,6 +175,17 @@ sub store_id
 }
 
 
+=head2 find($id)
+
+find database value for $id
+
+=cut
+
+
+# Descriptions: find value for $id
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: update object
+# Return Value: STR
 sub find
 {
     my ($self, $id) = @_;    
@@ -135,6 +200,17 @@ sub find
 }
 
 
+=head2 get_request($id)
+
+get value for request id $id.
+
+=cut
+
+
+# Descriptions: get request id
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
 sub get_request
 {
     my ($self, $id) = @_;    
@@ -147,6 +223,17 @@ sub get_request
 }
 
 
+=head2 get_address($id)
+
+get address for $id.
+
+=cut 
+
+
+# Descriptions: get address for $id
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
 sub get_address
 {
     my ($self, $id) = @_;    
@@ -159,6 +246,18 @@ sub get_address
 }
 
 
+=head2 is_expired($found, $howold)
+
+request for $id is expired or not.
+specify $found (database value) for $it as argument.
+
+=cut
+
+
+# Descriptions: request for $id is expired or not
+#    Arguments: OBJ($self) STR($found) NUM($howold)
+# Side Effects: none
+# Return Value: 1 or 0
 sub is_expired
 {
     my ($self, $found, $howold) = @_;

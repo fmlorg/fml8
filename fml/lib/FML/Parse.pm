@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Parse.pm,v 1.15 2001/05/05 15:41:43 fukachan Exp $
+# $FML: Parse.pm,v 1.16 2001/05/27 14:27:54 fukachan Exp $
 #
 
 package FML::Parse;
@@ -46,6 +46,11 @@ Normally C<fd> is the handle for STDIN channel.
 
 =cut
 
+
+# Descriptions: parse message read from file handle $fd
+#    Arguments: OBJ($self) OBJ($curproc) HANDLE($fd)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self, $curproc, $fd) = @_;
@@ -57,7 +62,10 @@ sub new
 }
 
 
-# return ( $ref_to_mail_header, $ref_to_mail_body, $error_code);
+# Descriptions: parse message read from file handle $fd
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: OBJ
 sub _parse
 {
     my ($self, $curproc, $fd) = @_;
