@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: install.sh,v 1.14 2003/02/11 11:10:58 fukachan Exp $
+# $FML: install.sh,v 1.15 2004/06/24 11:03:59 fukachan Exp $
 #
 
 prefix=/usr/local
@@ -19,6 +19,7 @@ fi
 	--with-fmlconfdir=$conf_dir/fml \
 	--with-fml-owner=fukachan \
 	--with-fml-group=wheel \
+	--with-group-writable-ml-home-prefix-map \
 	)
 
 # config.cf
