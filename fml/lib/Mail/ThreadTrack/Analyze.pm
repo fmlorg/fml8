@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Analyze.pm,v 1.17 2001/11/26 09:12:38 fukachan Exp $
+# $FML: Analyze.pm,v 1.18 2001/11/27 11:21:46 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -570,6 +570,10 @@ sub _update_db
     #    message_id hash is { message_id => thread_id };
     # RFC822 says msg-id =  "<" addr-spec ">" ; Unique message id
     my $mid = $header->get('message-id'); $mid =~ s/[\n\s]*$//;
+    if ($mid eq "") {
+	print STDERR "missing message-id $thread_id\n" if $debug;
+	return;
+    }
     $rh->{ _message_id }->{ $mid } = $thread_id;
 }
 

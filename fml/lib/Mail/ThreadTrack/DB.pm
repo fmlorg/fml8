@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DB.pm,v 1.14 2001/11/20 07:28:50 fukachan Exp $
+# $FML: DB.pm,v 1.15 2001/11/20 09:43:21 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -188,6 +188,7 @@ sub db_mkdb
 	# analyze
 	my $file = File::Spec->catfile($spool_dir, $id);
 	my $fh   = new FileHandle $file;
+	next unless (defined $fh);	# for file missing
 	my $msg  = Mail::Message->parse({ fd => $fh });
 	$self->analyze($msg);
 
