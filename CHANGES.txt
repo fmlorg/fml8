@@ -1,9 +1,55 @@
 		CHANGES
 		$Date$
 
+2001/08/23
+
+   FML::Config の拡張
+	postfix style のさらなる拡張
+
+	変数名 += 値
+	変数名 -= 値
+	で、特定の値の足し引きができます。
+
+	例:
+		x  = a b c d
+		x -= b
+		は
+		x = a c d
+
+		x  = a b c d
+		x += e
+		は
+		x = a b c d e
+		などとなる。
+
+2001/08/21
+
+   Tie::JournaledDir クラスの創設
+   Tie::JournaledFile の clean up
+
+	Tie::JournaledDir クラスはキャッシュとしてあるディレクトリを使い、
+	その中の複数個のファイルを順番に使います。
+	それぞれのファイルは Tie::JournaledFile を使ってアクセスします。
+
+	これにより auto expiration をする Journaled 型キャッシュを実現
+	します。
+
+	add Tie::JournaledDir which wraps Tie::JournaledFile and uses some
+	directory as cache area. 
+
+	add/update test tools for Tie::Journaled{File,Dir} modules.
+
+	clean up Tie::JournaledFile
+	o remove header in the cache file
+	o $self->{ 'key' }
+	o $debug is on if $ENV{'debug'} is defined.
+	o more carefull check of whether the value is defined or not.
+	o quotemeta() for pre search key in find()
+	o rename grep() to find()
+
 2001/08/19
 
-  フィルタ
+  フィルタコードの改良
 	一行メールか否か？の判定コードをきれいにする
 
 		そのために signature や引用か？を判定するコード他を書く
@@ -101,5 +147,5 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.6 2001/08/07 12:31:46 fukachan Exp $
+$FML: CHANGES.txt,v 1.7 2001/08/19 15:02:16 fukachan Exp $
 
