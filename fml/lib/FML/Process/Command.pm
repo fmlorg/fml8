@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.27 2002/01/16 13:34:00 fukachan Exp $
+# $FML: Command.pm,v 1.28 2002/01/16 13:43:20 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -285,9 +285,11 @@ sub _evaluate_command
     my $keyword = $config->{ confirm_keyword };
     my $prompt  = $config->{ command_prompt } || '>>>';
 
-    my $body    = $curproc->{ incoming_message }->{ body }->message_text;
+    my $rbody   = $curproc->{ incoming_message }->{ body };
+    my $msg     = $rbody->find_first_plaintext_message();
+    my $body    = $msg->message_text;
     my @body    = split(/\n/, $body);
-    my $id      = $curproc->_pre_scan( \@body );
+    my $id      = $curproc->_pre_scan( \@body ); # confirmation reply ?
 
     $curproc->reply_message("result for your command requests follows:");
 
@@ -295,14 +297,21 @@ sub _evaluate_command
     for my $command (@body) {
 	next if $command =~ /^\s*$/; # ignore empty lines
 
+	# raw log
+	Log("input: $command");
+
 	# command = line itsetlf, it contains superflous strings
 	# comname = command name
 	# for example, command = "# help", comname = "help"
 	my $comname = _get_command_name($command);
 
-	# validate general command except for confirmation
+	# Case: not "confirm" reply message.
+	#       check whether we need to accpet this command ?
+	#       we accpet commands from ML members only by default.
+	# 
+	#       validate general command except for confirmation
+	#       if $id is 1, this message must be confirmation reply.
 	unless ($command =~ /$keyword/ && defined($id)) {
-	    # we can accpet this command ?
 	    my $opts = { comname => $comname, command => $command };
 	    unless ($curproc->_can_accpet_command($args, $opts)) {
 		# no, we do not accept this command.
@@ -310,7 +319,8 @@ sub _evaluate_command
 		next COMMAND;
 	    }
 	}
-	# "confirmation" is exceptional.
+	# Case: "confirm" command is exceptional.
+	#       we need to evaluate "confirm" message even for not member.
 	else {
 	    $comname = $keyword; # comname = confirm
 	    Log("try $comname <$command>");
