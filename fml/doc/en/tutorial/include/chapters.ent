@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: chapters.ent,v 1.1 2003/07/24 15:37:36 fukachan Exp $
    $jaFML: chapters.ent,v 1.75 2003/06/20 22:03:12 fukachan Exp $
 -->
 
@@ -8,8 +8,9 @@
 <!-- pointer -->
 <!entity fmlbible    "fml bible(oreilly japan)">
 <!entity www.fml.org "http://www.fml.org/software/fml/">
-<!entity fml4        "fml 4">
-<!entity fmldevel    "fml 8">
+<!entity fml4        "fml4">
+<!entity fml8        "fml8">
+<!entity fmldevel    "fml8">
 
 
 <!-- images -->
