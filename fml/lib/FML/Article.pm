@@ -27,12 +27,11 @@ sub new
     my ($self, $curproc) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
-    bless $me, $type;
 
-    $me->_setup_article_template($curproc);
+    _setup_article_template($curproc);
     $me->{ curproc } = $curproc;
 
-    return $me;
+    return bless $me, $type;
 }
 
 
@@ -42,7 +41,7 @@ sub new
 # Return Value: none
 sub _setup_article_template
 {
-    my ($self, $curproc) = @_;
+    my ($curproc) = @_;
 
     # setup article to distribute
     my $msg = $curproc->{'incoming_mail'};
@@ -62,13 +61,13 @@ sub _setup_article_template
 #    Arguments: $self
 # Side Effects: record the current article sequence number
 # Return Value: number (sequence identifier)
-sub gen_article_id
+sub increment_id
 {
     my ($self) = @_;
-    my $curproc   = $self->{ curproc };
-    my $config    = $curproc->{ config };
-    my $seq_file  = $config->{ sequence_file };
-    my $id        = 0;
+    my $curproc  = $self->{ curproc };
+    my $config   = $curproc->{ config };
+    my $seq_file = $config->{ sequence_file };
+    my $id       = 0;
 
     use IO::File::Atomic;
     my ($rh, $wh) = IO::File::Atomic->rw_open($seq_file);
