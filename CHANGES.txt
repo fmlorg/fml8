@@ -1,6 +1,33 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/03/16
+
+   FML::Process::Kernel 
+	new message queue handling. sync with reply-message branch
+	
+	clean up logic to handle messages queue.
+	for $recipient ( queue ) {
+		apply the following rules for messages returned to
+		specified $recipient. 
+
+		1. pick up text messages and put them into the first part.
+		2. append non text messages
+	}
+
+2002/03/06
+
+   variables
+	define directory for cgi and HTML article archive
+	define $newml_command_template_files
+	define $available_commands_for_admin_cgi
+
+   FML::Config 
+	implement get_as_array_ref()
+	
+   FML::Process::Switch 
+	makefml --force $command $ml ...
+
 2002/02/24
 
    update /etc: define the following variables
@@ -1624,4 +1651,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.53 2002/02/20 14:20:18 fukachan Exp $
+$FML: CHANGES.txt,v 1.54 2002/02/24 20:35:04 fukachan Exp $
