@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DB.pm,v 1.2 2001/11/03 00:18:01 fukachan Exp $
+# $FML: DB.pm,v 1.3 2001/11/03 01:22:14 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -51,17 +51,18 @@ my @kind_of_databases = qw(thread_id
 			   status
 			   sender
 			   articles
-			   message_id
-			   index);
-                
+			   message_id);
 
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub db_open
 {
     my ($self) = @_;
-    my $db_type = $self->{ config }->{ thread_db_type } || 'AnyDBM_File';
+    my $db_type = $self->{ config }->{ db_type } || 'AnyDBM_File';
     my $db_dir  = $self->{ _db_dir };
-
-    my $index_file      = $self->{ _index_db };
 
     eval qq{ use $db_type; use Fcntl;};
     unless ($@) {
@@ -75,6 +76,14 @@ sub db_open
             eval $str;
             croak($@) if $@;
         }
+
+	my %index      = ();
+	my $index_file = $self->{ _index_db };
+	eval q{
+	    tie %index, $db_type, $index_file, O_RDWR|O_CREAT, 0644;
+	    $self->{ _hash_table }->{ _index } = \%index;
+	};
+	croak($@) if $@;
     }
     else {
         croak("cannot use $db_type");
@@ -84,6 +93,10 @@ sub db_open
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub db_close
 {
     my ($self) = @_;
@@ -96,8 +109,10 @@ sub db_close
         eval $str;
         croak($@) if $@;
     }
-}
 
+    my $index = $self->{ _hash_table }->{ _index };
+    untie %$index;
+}
 
 
 =head1 AUTHOR
