@@ -1,0 +1,121 @@
+<!--
+   $FML$
+-->
+
+
+<sect1 id="config.post.check.article.thread">
+	<title>
+	ケーススタディ: フォローする場合なら誰でも投稿可能なＭＬ
+	</title>
+
+<para>
+「メンバー以外からの投稿」を受けて「投稿が拒否される」ケースが結構あり
+ます。
+</para>
+
+<para>
+もちろん自分の使っているアドレスを変更したのを忘れたとか、サブドメイン
+があったりなかったりなど、適当な使い方をしていたためのエラーもあれば、
+転送先で読んで、そこから返事を書いてエラーになるケースもあります。
+</para>
+
+<para>
+そこで、2004/10/28 以降の article-post_restrictions には、特定の条件を
+満たせば短時間だけFrom:に関わらず投稿可能なオプション機能が追加されて
+います。
+</para>
+
+<para>
+現在の実装は「本ＭＬの記事を受けていて、その記事に対してのリプライをす
+るのであれば通してやろう」というものです。ただし時間制限つきです。
+具体的には、In-Reply-To: もしくは References: で過去(一週間以内)の記事
+の message-id: を参照しているメールに対しては、(From: のメールアドレス
+に関わらず)記事の投稿を許します。
+</para>
+
+
+<sect2>
+	<title>
+	設定例
+	</title>
+
+<para>
+設定例は次のようになります。
+check_article_thread が、このオプションです
+(なお check_article_thread より良い名称も募集中)。
+<screen>
+article_post_restrictions       =       reject_system_special_accounts
+                                        check_article_thread
+                                        permit_member_maps
+                                        reject
+</screen>
+もちろんデフォルトでは使いません。
+利用したい場合は、明示的に article_post_restrictions を変更して下さい。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	議論
+	</title>
+
+<para>
+ま、ようは cookie みたいなもんですよね。
+ですが、課題は色々あります。
+</para>
+
+<para>
+1) 許す時間の長さを、どのくらいまで短くするのが適正か？
+</para>
+
+<para>
+2) subject: とスレッドの依存関係両方をチェックすると、
+   かなり偽造するのが大変になるだろうとは思う。
+<footnote>
+<para>
+真面目に確率計算をしてくれると、
+卒論くらいに、ちょうど良いかなぁ（そうか？）。
+誰かやりたい人がいたら、御一報を:-)
+</para>
+</footnote>
+
+	もっとも、たいてい message-id の方が長いことが多いから、From: 
+	偽造よりこっちのほうが突破は難しいですかね？
+
+	でもでも、駄目駄目な message-id をつける mailer だと、逆に弱く
+	なるけどねぇ。UNIXタイム@ホスト(FQDNじゃない) みたいなへぼいや
+	つだと、予測する範囲がすごく小さいや。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	応用例: 特定招集の人だけがスレッドをたてられるＭＬ
+	</title>
+
+<para>
+<screen>
+primary_member_map		=       $tmp_dir/members-dummy
+
+article_post_restrictions       =       reject_system_special_accounts
+                                        check_article_thread
+                                        reject
+</screen>
+とか設定すると疑似的に「スレッドをたてる小数の人(管理者) + スレッドへ
+のリプライをする管理者以外の人たち」という運用になりますね。
+</para>
+
+<para>
+つまり、最初に管理者の人が話題をふる。その話題へのフォローだけはＭＬに
+ながれる。ようするに、新規の話題は管理者の人しかふれない。
+モデレータ風だけど、ちっと違う感じです。
+</para>
+
+</sect2>
+
+
+</sect1>

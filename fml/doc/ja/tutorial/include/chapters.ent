@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.89 2004/05/28 05:03:37 fukachan Exp $
+	$FML: chapters.ent,v 1.90 2004/10/02 14:29:46 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -65,6 +65,8 @@
 <!entity sect.config.command.rejectall      SYSTEM "customize/command_rejectall.sgml">
 <!entity sect.config.mailmagazine           SYSTEM "customize/mailmagazine.sgml">
 <!entity sect.config.post.permit.anyone     SYSTEM "customize/post_permit_anyone.sgml">
+<!entity sect.config.post.check.article.thread SYSTEM "customize/post_check_article_thread.sgml">
+
 
 <!entity sect.config.ml.hier		SYSTEM "customize/ml.hier.ml">
 
