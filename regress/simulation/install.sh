@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: install.sh,v 1.15 2004/06/24 11:03:59 fukachan Exp $
+# $FML: install.sh,v 1.16 2004/09/29 06:00:52 fukachan Exp $
 #
 
 prefix=/usr/local
@@ -29,6 +29,7 @@ if [ -d /var/spool/ml/elena ];then
 	echo updating /var/spool/ml/elena/config.cf
 	cp /var/spool/ml/elena/config.cf /var/spool/ml/elena/config.cf.bak
 	cp config.cf /var/spool/ml/elena/config.cf
+	cp config.ph /var/spool/ml/elena/config.ph
 fi
 
 ( cd ../../fml/etc/; sh .gen.sh )
