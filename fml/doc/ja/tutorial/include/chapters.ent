@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.57 2002/11/26 11:17:13 fukachan Exp $
+	$FML: chapters.ent,v 1.58 2002/12/25 11:50:43 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -107,6 +107,9 @@
 <!-- 配送 -->
 <!entity chapter.delivery         SYSTEM "delivery/chapter.sgml">
 <!entity sect.mailqueue           SYSTEM "delivery/queue.sgml">
+
+<!-- まとめおくり -->
+<!entity chapter.digest           SYSTEM "digest/chapter.sgml">
 
 
 <!entity recipe.delivery.forward  SYSTEM "delivery/recipe.forward.sgml">

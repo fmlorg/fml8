@@ -1,0 +1,34 @@
+<!--
+   $FML$
+-->
+
+<chapter id="digest">
+	<title>
+	digest
+	</title>
+
+<para>
+<screen>
+/usr/local/libexec/fml/digest ＭＬ名
+</screen>
+を定期的に cron から起動すれば、まとめ送りができます。
+</para>
+
+<para>
+$ml_home_dir/ 以下のファイルの仕様はこうです。
+<screen>
+seq-digest
+members-digest 
+recipients-digest
+</screen>
+seq-digest は最後に送った記事は何番か？を記録しています。
+
+members-digest はダミーです。
+
+recipients-digest が、まとめおくりの配送リストです。
+
+$digest_recipient_maps は、もちろん IO::Adapter なので、
+mysql とかも使えます。
+</para>
+
+</chapter>
