@@ -4,6 +4,7 @@ directory.cf
 file.cf
 acl.cf
 delivery.cf
+digest.cf
 messages.cf
 header.cf
 body.cf
