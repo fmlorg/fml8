@@ -804,6 +804,15 @@ $maintainer
 </row>
 <row>
 <entry>
+list_command_default_maps</entry>
+<entry>
+ default map to show by list command.</entry>
+<entry>
+$recipient_maps
+   </entry>
+</row>
+<row>
+<entry>
 listinfo_base_dir</entry>
 <entry>
  base directory for ML information</entry>
@@ -1017,6 +1026,15 @@ moderator_recipient_maps</entry>
  dummy</entry>
 <entry>
 $primary_moderator_recipient_map
+   </entry>
+</row>
+<row>
+<entry>
+newml_command_ml_admin_default_address</entry>
+<entry>
+ fml_owner value used by newml command.</entry>
+<entry>
+$fml_owner
    </entry>
 </row>
 <row>

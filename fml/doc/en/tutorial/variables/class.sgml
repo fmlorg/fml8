@@ -131,6 +131,7 @@ command {
     ?     $command_mail_reply_prompt
           $command_mail_restrictions
           $use_command_mail_function
+    ?     $user_command_mail_allowed_commands
    }
 
    command_mail_filter { 
@@ -192,6 +193,16 @@ get_command {
    }
 }
 
+list_command {
+
+   list_command { 
+   }
+
+   list_command_default { 
+          $list_command_default_maps
+   }
+}
+
 log_command {
 
    log_command { 
@@ -204,6 +215,7 @@ newml_command {
    newml_command { 
     ?     $newml_command_init_private_directories
     ?     $newml_command_init_public_directories
+    ?     $newml_command_ml_admin_default_address
     ?     $newml_command_mta_config_list
           $newml_command_postfix_template_files
           $newml_command_qmail_template_files
@@ -242,7 +254,6 @@ unsubscribe_command {
 user_command {
 
    user_command { 
-    ?     $user_command_mail_allowed_commands
    }
 }
 
@@ -373,6 +384,19 @@ ldap {
     ?     $ldap_server_bind
     ?     $ldap_server_password
     ?     $ldap_servers
+   }
+}
+
+list {
+
+   list_command { 
+   }
+
+   list_command_default { 
+   }
+
+   list_* {
+    ?     $list_addresses
    }
 }
 
@@ -717,7 +741,6 @@ _dir$ {
     ?     $commands_for_ml_admin_cgi
     ?     $file_default_mode
     ?     $language_preference_order
-    ?     $list_addresses
     ?     $unsafe_header_fields
 </screen>
 </para>
