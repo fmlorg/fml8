@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: ThreadTrack.pm,v 1.14 2001/11/18 08:57:29 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.15 2001/11/19 08:49:30 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -123,6 +123,11 @@ sub run
 	$thread->db_dump( $type );
 	$thread->db_close();
     }
+    elsif ($command eq 'db_update') {
+	my $last_id = $curproc->_speculate_last_id($thread);
+	print STDERR "db_update: $last_id -> $max_id\n";
+	$thread->db_mkdb($last_id, $max_id);	
+    }
     elsif ($command eq 'db_rebuild') {
 	print STDERR "\$thread->db_mkdb(1, $max_id);\n" if $ENV{'debug'};
 	$thread->db_mkdb(1, $max_id);
@@ -153,6 +158,29 @@ sub run
     }
 
     $curproc->unlock();
+}
+
+
+sub _speculate_last_id
+{
+    my ($curproc, $thread) = @_;
+    my $last_id = 0;
+
+    $thread->db_open();
+
+    my $rh = $thread->db_hash( 'date' );
+    if (defined $rh) {
+	eval q{
+	    use File::Sequence;
+	    my $obj = new File::Sequence;
+	    $last_id = $obj->search_max_id( { hash => $rh } );
+	};
+	warn($@) if $@;
+    }
+
+    $thread->db_close();
+
+    return $last_id;
 }
 
 
@@ -249,11 +277,12 @@ print <<"_EOF_";
 
 Usage: $name \$command \$ml_name [options]
 
-$name list       \$ml_name          list up summary
-$name summary    \$ml_name          list up summary
-$name close      \$ml_name id       close ticket specified by id (MH style)
-$name db_rebuild \$ml_name          rebuild thread database for \$ml_name  ML
-$name db_clear   \$ml_name          clear thread database for \$ml_name ML
+$name list       \$ml_name      list up summary
+$name summary    \$ml_name      list up summary
+$name close      \$ml_name id   close ticket specified by id (MH style)
+$name db_update  \$ml_name      rebuild database for latest articles
+$name db_rebuild \$ml_name      rebuild database for whole of ML
+$name db_clear   \$ml_name      clear thread database for \$ml_name ML
 
 _EOF_
 }
