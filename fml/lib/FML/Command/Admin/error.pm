@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: error.pm,v 1.4 2003/03/28 10:32:22 fukachan Exp $
+# $FML: error.pm,v 1.5 2003/05/20 04:22:56 fukachan Exp $
 #
 
 package FML::Command::Admin::error;
@@ -82,25 +82,9 @@ sub _fmlerror
     my $config = $curproc->config();
 
     use FML::Error;
-    my $obj  = new FML::Error $curproc;
-    my $data = $obj->analyze();
-    my $info = $obj->get_data_detail();
-
-    # XXX-TODO: move to FML::Error more.
-    my ($k, $v);
-    while (($k, $v) = each %$info) {
-	if (defined($v) && ref($v) eq 'ARRAY') {
-	    my $x = '';
-	    for my $y (@$v) {
-		$x .= $y if defined $y;
-		$x .= " ";
-	    }
-	    print "$k => ( $x)\n";
-	}
-	else {
-	    print "$k => $v\n";
-	}
-    }
+    my $error = new FML::Error $curproc;
+    $error->analyze();
+    $error->dump();
 }
 
 

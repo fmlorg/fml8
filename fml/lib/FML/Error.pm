@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.18 2003/03/28 10:32:20 fukachan Exp $
+# $FML: Error.pm,v 1.19 2003/04/19 11:41:04 fukachan Exp $
 #
 
 package FML::Error;
@@ -367,6 +367,41 @@ sub deluser
                 croak($reason);
             }
         }
+    }
+}
+
+
+=head1 DUMP ADDRESS AND STATUS
+
+=head2 dump([$handle])
+
+=cut
+
+
+# Descriptions: 
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: 
+# Return Value: none
+sub dump
+{
+    my ($self, $handle) = @_;
+    my $info = $self->get_data_detail();
+    my $wh   = $handle || \*STDOUT;
+
+    my ($k, $v);
+    while (($k, $v) = each %$info) {
+	if (defined($v) && ref($v) eq 'ARRAY') {
+	    my $x = '';
+	    for my $y (@$v) {
+		$x .= $y if defined $y;
+		$x .= " ";
+	    }
+
+	    printf $wh "%25s => (%s)\n", $k, $x;
+	}
+	else {
+	    printf $wh "%25s => %s\n", $k, $v;
+	}
     }
 }
 
