@@ -4,14 +4,14 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.164 2003/03/14 03:51:48 fukachan Exp $
+# $FML: Kernel.pm,v 1.165 2003/03/17 08:58:50 fukachan Exp $
 #
 
 package FML::Process::Kernel;
 
 use strict;
 use Carp;
-use vars qw(@ISA @Tmpfiles $TmpFileCounter);
+use vars qw(@ISA @Tmpfiles $TmpFileCounter %LockInfo);
 use File::Spec;
 
 use FML::Process::Flow;
@@ -266,18 +266,31 @@ unlock a giant lock if the channel is not specified.
 sub lock
 {
     my ($curproc, $channel) = @_;
+    my $pcb       = $curproc->pcb();
     my $lock_file = '';
+    my $time_in   = time;
+
+    if (defined $LockInfo{ $channel } && $LockInfo{ $channel }) {
+	my @c = caller;
+	LogWarn( "channel=$channel already locked ($c[0] $c[1])" );
+	return;
+    }
 
     # initialize
     ($channel, $lock_file) = $curproc->_lock_init($channel);
 
     require File::SimpleLock;
-    my $lockobj = new File::SimpleLock;
+    my $lockobj = $pcb->get('lock', $channel) || new File::SimpleLock;
 
     my $r = $lockobj->lock( { file => $lock_file } );
     if ($r) {
-	my $pcb = $curproc->{ pcb };
+	my $t = time - $time_in;
+	if ($t > 1) {
+	    Log("lock requires $t sec.");
+	}
+
 	$pcb->set('lock', $channel, $lockobj);
+	$LockInfo{ $channel } = 1;
 	Log("lock channel=$channel");
     }
     else {
@@ -295,6 +308,7 @@ sub unlock
 {
     my ($curproc, $channel) = @_;
     my $lock_file = '';
+    my $time_in   = time;
 
     # initialize
     ($channel, $lock_file) = $curproc->_lock_init($channel);
@@ -305,6 +319,12 @@ sub unlock
     if (defined $lockobj) {
 	my $r = $lockobj->unlock( { file => $lock_file } );
 	if ($r) {
+	    my $t = time - $time_in;
+	    if ($t > 1) {
+		Log("unlock requires $t sec.");
+	    }
+
+	    delete $LockInfo{ $channel };
 	    Log("unlock channel=$channel");
 	}
 	else {
