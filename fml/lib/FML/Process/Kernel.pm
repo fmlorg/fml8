@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.250 2004/12/19 11:26:33 fukachan Exp $
+# $FML: Kernel.pm,v 1.251 2004/12/29 08:15:19 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2348,7 +2348,10 @@ sub queue_in
     my $myname       = $curproc->myname();
     my $_defsubj     = "message from fml8 $myname system";
     my $subject      = $config->{ "${category}_subject" } || $_defsubj;
-    my $reply_to     = $config->{ command_mail_address };
+    my $_rpto        = $config->{ command_mail_address };
+    my $reply_to     = $config->{ outgoing_mail_header_reply_to }   || $_rpto;
+    my $precedence   = $config->{ outgoing_mail_header_precedence } || 'bulk';
+    my $errors_to    = $config->{ outgoing_mail_header_errors_to }  || $sender;
     my $is_multipart = 0;
     my $rcptkey      = '';
     my $rcptlist     = [];
@@ -2360,6 +2363,7 @@ sub queue_in
     use Mail::Message::Date;
     my $_nowdate     = new Mail::Message::Date time;
     my $our_date     = $_nowdate->{ mail_header_style };
+    my $stardate     = $_nowdate->stardate();
 
     # override parameters (may be processed here always)
     if (defined $optargs) {
@@ -2445,11 +2449,14 @@ sub queue_in
 	my $_to = $hdr_to || $rcptkey;
 	eval q{
 	    $msg = new Mail::Message::Compose
-		From      => $sender,
-		To        => $_to,
-		Subject   => $subject,
-		Type      => "multipart/mixed",
-	        Datestamp => undef,
+		From          => $sender,
+		To            => $_to,
+		Subject       => $subject,
+		"Errors-To:"  => $errors_to,
+		"Precedence:" => $precedence,
+		"X-Stardate"  => $stardate,
+		Type          => "multipart/mixed",
+	        Datestamp     => undef,
 	};
 	$msg->add('Reply-To' => $reply_to);
 	$msg->add('Date' => $our_date);
@@ -2551,11 +2558,14 @@ sub queue_in
 	my $_to = $hdr_to || $rcptkey;
 	eval q{
 	    $msg = new Mail::Message::Compose
-		From      => $sender,
-		To        => $_to,
-		Subject   => $subject,
-		Data      => $s,
-	        Datestamp => undef,
+		From          => $sender,
+		To            => $_to,
+		Subject       => $subject,
+		"Errors-To:"  => $errors_to,
+		"Precedence:" => $precedence,
+		"X-Stardate"  => $stardate,
+		Data          => $s,
+	        Datestamp     => undef,
 	};
 	$msg->attr('content-type.charset' => $charset);
 	$msg->add('Reply-To' => $reply_to);
