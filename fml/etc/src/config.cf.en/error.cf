@@ -17,10 +17,10 @@ maintainer_recipient_maps	=
 
 # Descriptions: use error message analyzer ?
 #      History: none
+#		use_error_analyzer_program (fml8 pre alpha)
 #        Value: yes
 #     Examples: yes / no
-use_error_analyzer_program	=	yes
-
+use_error_mail_analyzer_function = ${use_error_analyzer_program:-yes}
 
 =head2	cache
 

@@ -27,24 +27,24 @@ address_compare_function_type = user_part_case_insensitive
 #			reject
 #		)
 #     Examples:
-post_restrictions	=	reject_system_special_accounts
-				permit_member_maps
-				reject
+article_post_restrictions	=	reject_system_special_accounts
+					permit_member_maps
+					reject
 
 # Descriptions: restrictions for command mail
 #      History: fml 4.0's PERMIT_COMMAND_FROM + REJECT_ADDR
 #        Value: list of attributes (
 #			permit_anyone
-#			permit_commands_for_stranger
+#			permit_anonymous_command_mail
 #			permit_member_maps
 #			reject_system_special_accounts
 #			reject
 #		)
 #     Examples:
-command_restrictions	=	reject_system_special_accounts
-				permit_commands_for_stranger
-				permit_member_maps
-				reject
+command_mail_restrictions	=	reject_system_special_accounts
+					permit_anonymous_command_mail
+					permit_member_maps
+					reject
 
 
 # Descriptions: restrictions for admin command mail
@@ -62,7 +62,7 @@ command_restrictions	=	reject_system_special_accounts
 #		2. password auth (members-admin + password)
 #			check_admin_member_password reject
 #
-admin_command_restrictions	=	reject_system_special_accounts
+admin_command_mail_restrictions	=	reject_system_special_accounts
 					check_admin_member_password
 					reject
 

@@ -18,7 +18,7 @@ article_sequence_file	= $sequence_file
 #      History: 4.0 では文字列で、これはハードコーディングされていた。
 #        Value: multipart / string
 #     Examples: string
-post_restrictions_reject_notice_data_type	=	string
+article_post_restrictions_reject_notice_data_type	=	string
 
 
 =head2	サイズ制限

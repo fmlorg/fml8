@@ -5,9 +5,11 @@
 
 # Descriptions: コマンドメールを使うか？
 #      History: なし
+#		$use_command_mail_program (fml8 pre alpha)
 #        Value: yes
 #     Examples: yes / no
-use_command_mail_program	=	yes
+use_command_mail_function = ${use_command_mail_program:-yes}
+
 
 
 =head2	コマンド プロンプト
@@ -183,7 +185,7 @@ listinfo_dir	= $listinfo_base_dir/$ml_domain/$ml_name
 #               変更を加える
 #        Value:
 #     Examples:
-commands_for_user	=		help
+user_command_mail_allowed_commands	=		help
 					get
 					mget
 					get
@@ -208,7 +210,7 @@ commands_for_user	=		help
 					summary
 
 
-commands_for_stranger	=		guide
+anonymous_command_mail_allowed_commands	=		guide
 					info
 					add
 					subscribe
@@ -216,7 +218,7 @@ commands_for_stranger	=		guide
 					$confirm_command_prefix
 
 
-commands_for_privileged_user	=	subscribe
+admin_command_mail_allowed_commands	=	subscribe
 					add
 					unsubscribe
 					bye
@@ -246,9 +248,7 @@ commands_for_privileged_user	=	subscribe
 					list
 
 
-commands_for_admin	=		$commands_for_privileged_user
-
-commands_for_admin_cgi	=		adduser
+admin_cgi_allowed_commands	=		adduser
 					deluser
 					addadmin
 					deladmin

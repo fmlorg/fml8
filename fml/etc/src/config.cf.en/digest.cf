@@ -2,10 +2,11 @@
 
 
 # Descriptions:
-#      History:
+#      History: none
+#		use_digest_program (fml8 pre alpha)
 #        Value:
 #     Examples:
-use_digest_program	=	yes
+use_article_digest_function = ${use_digest_program:-yes}
 
 
 # Descriptions: file to store the last sequence to deliver
