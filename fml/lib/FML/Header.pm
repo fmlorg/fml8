@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.48 2002/09/11 23:18:02 fukachan Exp $
+# $FML: Header.pm,v 1.49 2002/09/22 14:56:40 fukachan Exp $
 #
 
 package FML::Header;
@@ -113,11 +113,15 @@ sub set
 
 =head2 C<address_clean_up(address)>
 
-clean up given C<address>.
-It parse it by C<Mail::Address::parse()> and nuke < and >.
+clean up given C<address>. This method parses the given address by
+C<Mail::Address::parse()>, remove < and > and return the result.
 
 =cut
 
+#
+# XXX-TODO: address_clean_up() in this class is apporopriate ?
+# XXX-TODO: is it in some other class such as FML::Address ?
+#
 
 # Descriptions: utility to remove ^\s*< and >\s*$
 #    Arguments: OBJ($self) STR($addr)
@@ -216,6 +220,11 @@ add X-Mail-Count:
 add X-ML-Count:
 
 =cut
+
+#
+# XXX-TODO: "x-ml-name: unknown" or "x-ml-name: " if $config is undefined?
+# XXX-TODO: which is better if we follow Principle of Least Surprise ?
+#
 
 
 # Descriptions: add "X-ML-Name: elena" to header
@@ -382,7 +391,7 @@ sub rewrite_article_subject_tag
     my ($header, $config, $args) = @_;
 
     my $pkg = "FML::Header::Subject";
-    eval qq{ require $pkg; $pkg->import();};
+    eval qq{ use $pkg;};
     unless ($@) {
 	$pkg->rewrite_article_subject_tag($header, $config, $args);
     }
