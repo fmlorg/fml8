@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent3.pm,v 1.3 2002/10/27 02:30:15 fukachan Exp $
+# $FML: MimeComponent3.pm,v 1.4 2002/11/10 14:50:19 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -90,7 +90,7 @@ C<Usage>:
 =cut
 
 
-    my $default_action = 'permit';
+my $default_action = 'permit';
 
 
 # Descriptions: top level dispatcher
@@ -172,7 +172,8 @@ sub mime_component_check
 }
 
 
-# Descriptions:
+# Descriptions: try rule match by regexp.
+#               see __regexp_match() for matching details.
 #    Arguments: OBJ($self) OBJ($msg) ARRAY_REF($rule)
 #               OBJ($mp) STR($whole_type)
 # Side Effects: "reject" and "permit" affects nothing.
@@ -260,6 +261,10 @@ sub __basic_regexp_match
 }
 
 
+# Descriptions: cut off $mp from a chain of Mail::Message objects. 
+#    Arguments: OBJ($self) OBJ($mp)
+# Side Effects: change a chain of objects.
+# Return Value: none
 sub _cutoff
 {
     my ($self, $mp) = @_;
@@ -280,7 +285,7 @@ sub _cutoff
 }
 
 
-=head1 utilities
+=head1 UTILITY FUNCTIONS
 
 =cut
 
@@ -322,6 +327,11 @@ sub read_filter_rule_from_file
 }
 
 
+# Descriptions: dump message structure
+#               (a chain of Mail::Message objects).
+#    Arguments: OBJ($self) OBJ($msg)
+# Side Effects: none
+# Return Value: none
 sub dump_message_structure
 {
     my ($self, $msg) = @_;
