@@ -1,5 +1,5 @@
 #
-# $FML: RULES.txt,v 1.5 2004/12/29 08:22:59 fukachan Exp $
+# $FML: RULES.txt,v 1.6 2004/12/29 10:30:00 fukachan Exp $
 #     BASED ON fml/cf/MANIFEST 1.104
 #
 #	.convert		よろしく変換して頑張る
@@ -215,14 +215,14 @@
 # # article spool
 # # value: directory string
 # SPOOL_DIR:	 spool
-.if SPOOL_DIR == spool
+.if SPOOL_DIR
 	.convert
 
 
 # # tmp, after chdir, under DIR
 # # value: directory string
 # TMP_DIR:	tmp
-.if TMP_DIR == tmp
+.if TMP_DIR
 	.convert
 
 
@@ -1342,8 +1342,8 @@
 .if TZone == +0900
 	.use_fml8_value
 
-.if TZone == JST
-	.use_fml8_value
+.if TZone != +0900
+	.convert
 
 
 # # time zone within summer time if you use summer time.
@@ -1362,6 +1362,9 @@
 # # value: 1/0
 # PASS_ALL_FIELDS_IN_HEADER: 1
 .if PASS_ALL_FIELDS_IN_HEADER == 1
+	.fml8_default
+
+.if SUPERFLUOUS_HEADERS == 1
 	.fml8_default
 
 
@@ -1414,8 +1417,8 @@
 # # obsolete: since this is the same as --ctladdr.
 # # value: 1/0
 # COMMAND_ONLY_SERVER:	0
-.if COMMAND_ONLY_SERVER == 0
-	.ignore
+.if COMMAND_ONLY_SERVER
+	.fml8_default
 
 
 # # **ATTENTION**
@@ -1644,14 +1647,14 @@
 # #
 # # value: string
 # MSEND_SUBJECT_TEMPLATE:	Digest _ARTICLE_RANGE_ _PART_ _ML_FN_
-.if MSEND_SUBJECT_TEMPLATE == Digest _ARTICLE_RANGE_ _PART_ _ML_FN_
-	.not_yet_implemented
+.if MSEND_SUBJECT_TEMPLATE
+	.ignore
 
 
 # # Digest/Matome Okuri rc file
 # # value: filename string
 # MSEND_RC:	 $VARLOG_DIR/msendrc
-.if MSEND_RC == $VARLOG_DIR/msendrc
+.if MSEND_RC != $VARLOG_DIR/msendrc
 	.convert
 
 
@@ -1754,8 +1757,8 @@
 
 
 # HELP_FILE:	 $DIR/help
-.if HELP_FILE == $DIR/help
-	.ignore
+.if HELP_FILE
+	.use_fml8_value
 
 
 # # When fml rejects mail from someone, fml sends back this file to the sender.
@@ -1774,7 +1777,7 @@
 
 
 # MGET_LOGFILE:    $DIR/log
-.if MGET_LOGFILE == $DIR/log
+.if MGET_LOGFILE != $DIR/log
 	.ignore
 
 
@@ -1812,6 +1815,15 @@
 # # value: filename string
 # LOCK_FILE:	 $VARRUN_DIR/lockfile.v7
 .if LOCK_FILE == $VARRUN_DIR/lockfile.v7
+	.ignore
+
+.if LOCK_DIR
+	.ignore
+
+.if LOCKDIR
+	.ignore
+
+.if LOCKFILE
 	.ignore
 
 
@@ -2807,11 +2819,68 @@
 .if SMTPLOG
 	.use_fml8_value
 
+.if PROHIBIT_COMMAND_FOR_STRANGER == 1
+	.use_fml8_value
+
+.if PROHIBIT_COMMAND_FOR_STRANGER == 0
+	.ignore
+
+.if USE_LIBMIME == 1
+	.use_fml8_value
+
+.if USE_LIBMIME == 0
+	.ignore
+
+.if LIBMIMEDIR
+	.ignore
+
+.if RPG_ML_FORM_FLAG == 1
+	.use_fml8_value
+
+.if RPG_ML_FORM_FLAG == 0
+	.ignore
+
+.if SUN_OS_413 == 1
+	.ignore
+
+.if SUN_OS_413 == 0
+	.ignore
+
+.if SUBJECT_HML_FORM
+	.convert
+
+.if HML_FORM_LONG_ID
+	.convert
+
+.if ML_MEMBER_CHECK
+	.convert
+
+.if DEFAULT_HTTP_PORT
+	.ignore
+
+.if DEFAULT_GOPHER_PORT
+	.ignore
+
+.if DEFAULT_HTML_FIELD
+	.ignore
+
 .if CP
 	.use_fml8_value
 
 .if RM
 	.use_fml8_value
+
+.if FML
+	.ignore
+
+.if LOAD_LIBRARY
+	.convert
+
+.if STORED_BOUNDARY
+	.ignore
+
+.if AGAINST_NIFTY
+	.ignore
 
 .if _Ds
 	.ignore
