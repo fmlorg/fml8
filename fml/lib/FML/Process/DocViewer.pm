@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: DocViewer.pm,v 1.7 2001/11/25 07:53:57 fukachan Exp $
+# $FML: DocViewer.pm,v 1.8 2001/11/27 11:40:30 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -158,6 +158,10 @@ sub _fmldoc
     push(@opts, '-u') if $args->{ options }->{ u };
     push(@opts, '-m') if $args->{ options }->{ m };
     push(@opts, '-l') if $args->{ options }->{ l };
+
+    # add path for perl executatbles e.g. /usr/local/bin
+    use Config;
+    $ENV{'PATH'} .= ":". $Config{ scriptdir };
 
     exec 'perldoc', @opts, @$argv;
 }
