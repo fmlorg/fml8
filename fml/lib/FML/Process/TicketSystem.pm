@@ -94,6 +94,8 @@ TicketSystem -- primitive fml5 ticket system
 
 =head1 SYNOPSIS
 
+C<NOT YET IMPLEMENTED>.
+
 =head1 DESCRIPTION
 
 =cut

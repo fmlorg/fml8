@@ -28,15 +28,12 @@ FML::Process::Configure -- fmlconf and makefml
 
 =cut
 
-
-require Exporter;
 @ISA = qw(FML::Process::Kernel Exporter);
 
-
-# Descriptions: 
+# Descriptions: constructor
 #    Arguments: $self $args
-# Side Effects: 
-# Return Value: none
+# Side Effects: none
+# Return Value: FML::Process::Configure object
 sub new
 {
     my ($self, $args) = @_;
@@ -48,14 +45,14 @@ sub new
 
 # Descriptions: dummy yet now
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects: none
 # Return Value: none
 sub prepare {    ; }
 
 
-# Descriptions: 
+# Descriptions: just a switch
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects: none
 # Return Value: none
 sub run
 {
@@ -81,9 +78,9 @@ sub run
 }
 
 
-# Descriptions: 
+# Descriptions: show configurations variables in the sytle "key = value"
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects: none
 # Return Value: none
 sub _show_conf
 {
@@ -93,13 +90,6 @@ sub _show_conf
     my $argv   = $args->{ ARGV };
 
     $config->dump_variables({ mode => $mode });
-}
-
-
-sub AUTOLOAD
-{
-    my ($curproc, $args) = @_;
-    ;
 }
 
 

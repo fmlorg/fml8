@@ -30,9 +30,11 @@ FML::Process::QMail - emulate C<qmail-ext> address
 
 =head1 SYNOPSIS
 
-NOT YET MERGED 
+C<NOT YET IMPLERMENTED>.
 
 =head1 DESCRIPTION
+
+C<NOT YET IMPLERMENTED>.
 
 =head1 METHODS
 
