@@ -8,13 +8,6 @@
 # $FML$
 #
 
-### XXX comment templates ###
-# Descriptions: 
-#    Arguments: $self $args
-# Side Effects: 
-# Return Value: none
-#############################
-
 
 package Netlib::SMTP;
 use strict;
@@ -31,6 +24,58 @@ require Exporter;
 
 BEGIN {}
 
+
+=head1 NAME
+
+Netlib::SMTP.pm - interface for SMTP service
+
+=head1 SYNOPSIS
+
+To initialize, 
+
+    use Netlib::SMTP;
+    my $fp  = sub { Log(@_);}; # pointer to the log function
+    my $sfp = sub { my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;};
+    my $service = new Netlib::SMTP {
+        log_function       => $fp,
+        smtp_log_function  => $sfp,
+        socket_timeout     => 2,     # XXX 2 for debug but 10 by default
+    };
+    if ($service->error) { Log($service->error); return;}
+
+To start delivery, use deliver() method in this way.
+
+    $service->deliver(
+                      {
+                          mta             => '127.0.0.1:25',
+
+                          smtp_sender     => 'rudo@nuinui.net',
+                          recipient_maps  => $recipient_maps,
+                          recipient_limit => 1000,
+
+                          header          => $header_object,
+                          body            => $body_object,
+                      });
+
+=head1 DESCRIPTION
+
+=head1 METHODS
+
+=item C<new()>
+
+constructor. If you control parameters, specify it in a hash reference
+as an argument of new().
+
+        hash key           value
+        --------------------------------------------
+        log_function       reference to function for logging
+        smtp_log_function  reference to function for logging
+        socket_timeout     set the timeout associated with the socket
+
+log_function() is for general purpose.
+smtp_log_function() is used to log SMTP transactions.
+
+=cut
 
 # Descriptions: Netlib::SMTP constructor
 #    Arguments: $self $args
@@ -213,6 +258,50 @@ sub close
 ##### SMTP delivery main loop
 #####
 
+=item C<deliver()>
+
+start delivery process.
+
+        hash key           value
+        --------------------------------------------
+        mta                127.0.0.1:25 [::1]:25
+        smtp_sender        sender's mail address
+        recipient_maps     $recipient_maps
+        recipient_limit    recipients in one SMTP transactions
+        header             FML::Header object
+        body               Netlib::Messages object
+
+C<mta> is a list of MTA's.
+The syntax of each MTA is address:port style. 
+If you use a raw IPv6 address, use [address]:port syntax. 
+For example, [::1]:25 (v6 loopback).
+You can specify IPv4 and IPv6 addresses.
+deliver() automatically tries smtp in both protocols.
+
+C<smtp_sender> is the sender's email address. It is used at MAIL FROM:
+parameter.
+
+C<recipient_maps> is a list of C<maps>.
+See L<IO::MapAdapter> for more details. 
+For example,
+
+to read address from a file
+
+         file:/var/spool/ml/elena/recipients
+
+to read addresses from /etc/group
+
+         unix.group:fml
+
+C<recipient_limit> is the max number of recipients in one SMTP
+transaction. 1000 by default, which corresponds to the limit by Postfix. 
+
+C<header> is FML::Header object.
+
+C<body> is Netlib::Messages object.
+See L<Netlib::Messages> for more details.
+
+=cut
 
 # Descriptions: main delivery loop for each recipient_maps and each mta.
 #               real delivery is done within _deliver() method.
@@ -655,18 +744,13 @@ sub _reset_smtp_transaction
 }
 
 
-=head1 NAME
 
-Netlib::SMTP.pm - SMTP functions
+=head1 SEE ALSO
 
-=head1 SYNOPSIS
-
-   use Netlib::SMTP;
-   my $service = new Netlib::SMTP $CurProc;
-
-
-=head1 DESCRIPTION
-
+L<IO::Socket>
+L<Netlib::Utils>
+L<Netlib::INET4>
+L<Netlib::INET6>
 
 
 =head1 AUTHOR
