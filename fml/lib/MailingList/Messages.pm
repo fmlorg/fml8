@@ -20,10 +20,10 @@ require Exporter;
 # virtual content-type
 my %content_type = 
     (
-     'preamble'        => 'multipart.preamble/plain',
-     'delimiter'       => 'multipart.delimiter/plain',
-     'close-delimiter' => 'multipart.close-delimiter/plain',
-     'trailer'         => 'multipart.trailer/plain',
+     'preamble'        => '_multipart_preamble/plain',
+     'delimiter'       => '_multipart_delimiter/plain',
+     'close-delimiter' => '_multipart_close-delimiter/plain',
+     'trailer'         => '_multipart_trailer/plain',
      );
 
 
@@ -152,15 +152,15 @@ The internal parser interpetes it as follows:
 
       base_content_type              content_type
    ----------------------------------------------------------
-   0: multipart/mixed                multipart.preamble/plain
-   1: multipart/mixed                multipart.delimiter/plain
+   0: multipart/mixed                _multipart_preamble/plain
+   1: multipart/mixed                _multipart_delimiter/plain
    2: multipart/mixed                text/plain
-   3: multipart/mixed                multipart.delimiter/plain
+   3: multipart/mixed                _multipart_delimiter/plain
    4: multipart/mixed                image/gif
-   5: multipart/mixed                multipart.close-delimiter/plain
-   6: multipart/mixed                multipart.trailer/plain
+   5: multipart/mixed                _multipart_close-delimiter/plain
+   6: multipart/mixed                _multipart_trailer/plain
 
-C<multipart.something> is a faked type to treat both real content,
+C<_multipart_something> is a faked type to treat both real content,
 delimiters and others in the same MailingList::Messages framework.
 
 =head1 METHOD
