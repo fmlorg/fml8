@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Confirm.pm,v 1.14 2003/11/29 10:50:43 fukachan Exp $
+# $FML: Confirm.pm,v 1.15 2004/01/02 14:42:45 fukachan Exp $
 #
 
 package FML::Confirm;
@@ -32,25 +32,27 @@ FML::Confirm - manipulate confirmation database
 
 =head1 DESCRIPTION
 
-This module provides several utilitiy functions for confirmation.
+This module provides several utilitiy functions for confirmation:
     assign id
-    store id
+    store  id
     expire id
-    database manipulation
+    database manipulation utility
 
 =head1 METHODS
 
-=head2 new($args)
+=head2 new($cargs)
 
-usual constructor.
+constructor. The argument follows:
 
-    $args = {
+    $cargs = {
 	keyword   => "confirm",
-	cache_dir => "/some/where",
 	class     => "subscribe",
 	address   => "mail@address",
 	buffer    => $buffer,
+	cache_dir => "/some/where",
     };
+
+This class uses FML::Cache::Journal as database internally.
 
 =cut
 
@@ -91,7 +93,7 @@ assign new id for current object.
 # Return Value: STR
 sub assign_id
 {
-    my ($self) = @_;
+    my ($self)  = @_;
     my $class   = $self->{ _class };
     my $addr    = $self->{ _address };
     my $buffer  = $self->{ _buffer };
@@ -104,8 +106,11 @@ sub assign_id
     my $cksum  = new Mail::Message::Checksum;
     my $md5sum = $cksum->md5( \$string );
 
-    # o.k. assign id
+    # XXX-TODO: o.k.? $id is returned but not saved within object ?
+    # 1. build id
     my $id = "$keyword $class $md5sum";
+
+    # 2. save the time map: { MD5 => ASSIGNED_UNIX_TIME }
     $self->store_id( $md5sum );
 
     return $id;
@@ -119,18 +124,19 @@ save id into databse with comment if specified.
 =cut
 
 
-# Descriptions: save id into databse
+# Descriptions: save id into database.
 #    Arguments: OBJ($self) STR($id) STR($comment)
 # Side Effects: update database
 # Return Value: none
 sub store_id
 {
     my ($self, $id, $comment) = @_;
-    my $class = $self->{ _class };
-    my $addr  = $self->{ _address };
-    my $db    = $self->_open_db();
+    my $class  = $self->{ _class };
+    my $addr   = $self->{ _address };
+    my $db     = $self->_open_db();
+    my $id_str = sprintf("%s%s", time, defined $comment ? " $comment" : '');
 
-    $db->{ $id } = time .(defined $comment ? " $comment" : '');
+    $db->{ $id }           = $id_str;
     $db->{ "request-$id" } = "$class $addr";
     $db->{ "address-$id" } = $addr;
 
@@ -152,10 +158,13 @@ find database value for $id
 sub find
 {
     my ($self, $id) = @_;
-    my $db = $self->_open_db();
+    my $db    = $self->_open_db();
+    my $found = '';
 
-    my $found = $db->{ $id };
-    $self->_close_db();
+    if (defined $db) {
+	$found = $db->{ $id } || '';
+	$self->_close_db();
+    }
 
     $self->{ _found } = $found;
 
@@ -177,10 +186,13 @@ get value for request id $id.
 sub get_request
 {
     my ($self, $id) = @_;
-    my $db = $self->_open_db();
+    my $db    = $self->_open_db();
+    my $found = '';
 
-    my $found = $db->{ "request-$id" } || undef;
-    $self->_close_db();
+    if (defined $db) {
+	$found = $db->{ "request-$id" } || '';
+	$self->_close_db();
+    }
 
     return $found;
 }
@@ -200,10 +212,13 @@ get address for $id.
 sub get_address
 {
     my ($self, $id) = @_;
-    my $db = $self->_open_db();
+    my $db    = $self->_open_db();
+    my $found = '';
 
-    my $found = $db->{ "address-$id" } || undef;
-    $self->_close_db();
+    if (defined $db) {
+	$found = $db->{ "address-$id" } || '';
+	$self->_close_db();
+    }
 
     return $found;
 }
@@ -225,8 +240,9 @@ sub is_expired
 {
     my ($self, $id, $howold) = @_;
     my $found = $self->find($id);
-    my ($time, $commont) = split(/\s+/, $found);
+    my ($time, $comment) = split(/\s+/, $found);
 
+    # XXX-TODO: expiration limit should be configurable.
     # expired in 2 weeks by default.
     $howold ||= 14*24*3600;
 
@@ -280,6 +296,7 @@ sub _close_db
 {
     my ($self) = @_;
     my $db = $self->{ _journal_db };
+
     if (defined $db) {
 	$db->close();
     }
