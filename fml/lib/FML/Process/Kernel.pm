@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.215 2004/03/11 15:37:17 fukachan Exp $
+# $FML: Kernel.pm,v 1.216 2004/03/12 04:22:55 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1064,12 +1064,12 @@ sub _inject_charset_hints
 =head2 premit_post($args)
 
 permit posting.
-The restriction rules follows the order of C<post_restrictions>.
+The restriction rules follows the order of C<article_post_restrictions>.
 
 =head2 premit_command($args)
 
 permit fml command use.
-The restriction rules follows the order of C<command_restrictions>.
+The restriction rules follows the order of C<command_mail_restrictions>.
 
 =cut
 
@@ -1081,7 +1081,7 @@ The restriction rules follows the order of C<command_restrictions>.
 sub permit_post
 {
     my ($curproc) = @_;
-    $curproc->_check_restrictions('post');
+    $curproc->_check_restrictions('article_post');
 }
 
 
@@ -1092,7 +1092,7 @@ sub permit_post
 sub permit_command
 {
     my ($curproc) = @_;
-    $curproc->_check_restrictions('command');
+    $curproc->_check_restrictions('command_mail');
 }
 
 

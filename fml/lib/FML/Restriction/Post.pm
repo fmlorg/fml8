@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.8 2003/11/30 09:59:20 fukachan Exp $
+# $FML: Post.pm,v 1.9 2004/01/21 03:40:44 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -131,7 +131,7 @@ sub permit_member_maps
 
 
 #
-# XXX-TODO: permit_commands_for_stranger -> permit_anonymous_command ?
+# XXX-TODO: permit_anonymous_command_mail -> permit_anonymous_command ?
 #
 
 
@@ -139,16 +139,16 @@ sub permit_member_maps
 #    Arguments: OBJ($self) STR($rule) STR($sender)
 # Side Effects: none
 # Return Value: ARRAY(STR, STR)
-sub permit_commands_for_stranger
+sub permit_anonymous_command_mail
 {
     my ($self, $rule, $sender) = @_;
     my $curproc = $self->{ _curproc };
     my $pcb     = $curproc->pcb();
 
-    # XXX-TODO: find_commands_for_stranger -> match_anonymous_command ?
+    # XXX-TODO: find_anonymous_command_mail_allowed_commands -> match_anonymous_command ?
     use FML::Command::DataCheck;
     my $check = new FML::Command::DataCheck;
-    if ($check->find_commands_for_stranger($curproc)) {
+    if ($check->find_anonymous_command_mail_allowed_commands($curproc)) {
 	$curproc->log("$rule matched. accepted.");
 	return("matched", "permit");
     }

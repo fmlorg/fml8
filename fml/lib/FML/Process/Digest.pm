@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Digest.pm,v 1.15 2004/01/24 15:37:02 fukachan Exp $
+# $FML: Digest.pm,v 1.16 2004/01/31 04:06:32 fukachan Exp $
 #
 
 package FML::Process::Digest;
@@ -86,7 +86,7 @@ sub prepare
     $curproc->fix_perl_include_path();
     $curproc->scheduler_init();
 
-    unless ($config->yes('use_digest_program')) {
+    unless ($config->yes('use_article_digest_function')) {
 	$curproc->logerror("use of digest_program prohibited");
 	exit(0);
     }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.72 2004/02/15 04:38:25 fukachan Exp $
+# $FML: Header.pm,v 1.73 2004/03/12 04:22:53 fukachan Exp $
 #
 
 package FML::Header;
@@ -308,7 +308,7 @@ sub add_rfc2369
     my $post       = $config->{ article_post_address };
     my $command    = $config->{ command_mail_address };
     my $maintainer = $config->{ maintainer };
-    my $use_command_mail_program = $config->yes('use_command_mail_program');
+    my $use_command_mail_function = $config->yes('use_command_mail_function');
 
     # information for list-id
     my $ml_name = $config->{ ml_name };
@@ -320,7 +320,7 @@ sub add_rfc2369
 	$msg->attr('List-ID'    => $id) if $id;
 	$msg->attr('List-Post'  => "<mailto:${post}>") if $post;
 	$msg->attr('List-Owner' => "<mailto:${maintainer}>") if $maintainer;
-	if ($command && $use_command_mail_program) {
+	if ($command && $use_command_mail_function) {
 	    $msg->attr('List-Help' =>  "<mailto:${command}?body=help>");
 	    $msg->attr('List-Subscribe' =>
 		       "<mailto:${command}?body=subscribe>");
@@ -333,7 +333,7 @@ sub add_rfc2369
 	$header->add('List-Post',  "<mailto:${post}>")       if $post;
 	$header->add('List-Owner', "<mailto:${maintainer}>") if $maintainer;
 
-	if ($command && $use_command_mail_program) {
+	if ($command && $use_command_mail_function) {
 	    $header->add('List-Help', "<mailto:${command}?body=help>");
 	    $header->add('List-Subscribe',
 			 "<mailto:${command}?body=subscribe>");

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: admin.pm,v 1.3.2.1 2004/03/04 04:02:56 fukachan Exp $
+# $FML: admin.pm,v 1.4 2004/03/04 04:30:13 fukachan Exp $
 #
 
 package FML::Command::User::admin;
@@ -104,7 +104,7 @@ sub process
     my $command = $command_args->{ original_command };
 
     # 1. check already authenticated. if not, try auth.
-    #    authentication rules are defined as $admin_command_restrictions.
+    #    authentication rules are defined as $admin_command_mail_restrictions.
     #    XXX _try_admin_auth() needs to handle several types:
     #              1. password auth (one line).
     #              2. pgp auth      (one file).
@@ -141,7 +141,7 @@ sub _try_admin_auth
 {
     my ($self, $curproc, $command_args) = @_;
     my $config  = $curproc->config();
-    my $rules   = $config->get_as_array_ref('admin_command_restrictions');
+    my $rules   = $config->get_as_array_ref('admin_command_mail_restrictions');
     my $cred    = $curproc->{ credential };
     my $sender  = $cred->sender();
     my $optargs = { address => $sender };

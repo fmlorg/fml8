@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.99.2.1 2004/03/04 04:03:58 fukachan Exp $
+# $FML: Command.pm,v 1.100 2004/03/04 04:30:14 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -91,7 +91,7 @@ sub prepare
     $curproc->scheduler_init();
     $curproc->log_message_init();
 
-    if ($config->yes('use_command_mail_program')) {
+    if ($config->yes('use_command_mail_function')) {
 	$curproc->parse_incoming_message();
     }
     else {
@@ -334,15 +334,15 @@ sub _command_switch
 
     # 1. anonymous user mode firstly.
     #    no check
-    if ($config->has_attribute("commands_for_stranger", $comname)) {
+    if ($config->has_attribute("anonymous_command_mail_allowed_commands", $comname)) {
 	$curproc->_command_execute($context);
     }
     # 2. user mode command.
     #    admin command module called via user mode "admin" command.
     #    so admin_commad_restriction is applied in "admin" module hereafter.
-    elsif ($config->has_attribute("commands_for_user", $comname)) {
+    elsif ($config->has_attribute("user_command_mail_allowed_commands", $comname)) {
 	# permit_xxx() sets the error reason at "check_restriction" in pcb.
-	# apply "command_restrictions" here.
+	# apply "command_mail_restrictions" here.
 	if ($curproc->permit_command()) {
 	    $curproc->_command_execute($context);
 	}

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.136 2004/01/24 15:37:02 fukachan Exp $
+# $FML: Distribute.pm,v 1.137 2004/01/31 04:06:32 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -86,7 +86,7 @@ sub prepare
     $curproc->scheduler_init();
     $curproc->log_message_init();
 
-    if ($config->yes('use_distribute_program')) {
+    if ($config->yes('use_article_post_function')) {
 	$curproc->parse_incoming_message();
     }
     else {
@@ -199,7 +199,7 @@ sub run
     my $maintainer = $config->{ maintainer };
     my $sender     = $curproc->{'credential'}->{'sender'};
     my $data_type  =
-	$config->{post_restrictions_reject_notice_data_type} || 'string';
+	$config->{article_post_restrictions_reject_notice_data_type} || 'string';
     my $size       = 2048;
     my $msg_args   = {
 	recipient    => $sender,

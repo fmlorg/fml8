@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DataCheck.pm,v 1.12 2004/01/02 14:42:43 fukachan Exp $
+# $FML: DataCheck.pm,v 1.13 2004/01/21 03:45:08 fukachan Exp $
 #
 
 package FML::Command::DataCheck;
@@ -127,11 +127,11 @@ sub find_special_keyword
 #    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: none
 # Return Value: NUM( 1 or )
-sub find_commands_for_stranger
+sub find_anonymous_command_mail_allowed_commands
 {
     my ($self, $curproc) = @_;
     my $config   = $curproc->config();
-    my $commands = $config->get_as_array_ref('commands_for_stranger');
+    my $commands = $config->get_as_array_ref('anonymous_command_mail_allowed_commands');
     my $body     = $curproc->incoming_message_body();
     my $msg      = $body->find_first_plaintext_message();
 
@@ -144,7 +144,7 @@ sub find_commands_for_stranger
 	($comname) = $self->parse_command_buffer( $buf );
 	next LINE unless defined($comname) && $comname;
 
-	# $comname matches one of $commands_for_stranger ?
+	# $comname matches one of $anonymous_command_mail_allowed_commands ?
 	# XXX-TODO: we need to care for lowercase/uppercase mismtach ?
 	# XXX-TODO: need to define macro EQUAL_CASE_INSENSITIVE(a,b) ?
       COMMAND:

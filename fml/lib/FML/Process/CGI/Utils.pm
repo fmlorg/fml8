@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.10 2004/01/01 08:48:41 fukachan Exp $
+# $FML: Utils.pm,v 1.11 2004/01/21 03:40:43 fukachan Exp $
 #
 
 package FML::Process::CGI::Utils;
@@ -140,7 +140,7 @@ sub cgi_var_available_command_list
     my $cgi_mode  = $curproc->cgi_var_cgi_mode();
 
     if ($cgi_mode eq 'admin') {
-	return $config->get_as_array_ref('commands_for_admin_cgi');
+	return $config->get_as_array_ref('admin_cgi_allowed_commands');
     }
     else {
 	return $config->get_as_array_ref('commands_for_ml_admin_cgi');

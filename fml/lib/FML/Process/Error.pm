@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.39 2004/01/24 15:37:03 fukachan Exp $
+# $FML: Error.pm,v 1.40 2004/01/31 04:06:33 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -59,11 +59,11 @@ sub new
 
 parse argv, load config files and fix @INC.
 
-if $use_error_analyzer_program, parse incoming message.
+if $use_error_mail_analyzer_function, parse incoming message.
 
 =cut
 
-# Descriptions: check if $use_error_analyzer_program value is yes.
+# Descriptions: check if $use_error_mail_analyzer_function value is yes.
 #               parse incoming message if this process runs.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
@@ -82,7 +82,7 @@ sub prepare
     $curproc->scheduler_init();
     $curproc->log_message_init();
 
-    if ($config->yes('use_error_analyzer_program')) {
+    if ($config->yes('use_error_mail_analyzer_function')) {
 	$curproc->parse_incoming_message();
     }
     else {
