@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.46 2003/07/20 04:58:29 fukachan Exp $
+# $FML: ToHTML.pm,v 1.47 2003/07/20 06:45:17 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.46 2003/07/20 04:58:29 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.47 2003/07/20 06:45:17 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -115,8 +115,14 @@ sub new
 }
 
 
+# Descriptions: destructor.
+#    Arguments: OBJ($self)
+# Side Effects: none 
+# Return Value: none
 sub DESTROY
 {
+    my ($self) = @_;
+
     _PRINT_DEBUG("ToHTML::DESTROY");
     1;
 }

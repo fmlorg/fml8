@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Size.pm,v 1.1 2003/05/14 12:02:01 fukachan Exp $
+# $FML: Size.pm,v 1.2 2003/06/22 16:05:14 fukachan Exp $
 #
 
 package FML::Filter::Size;
@@ -215,14 +215,22 @@ sub _check_mail_size
 }
 
 
-=head1
+=head1 CHECK COMMAND SYNTAX
+
+=head2 check_command_limit($msg, $type)
+
+check the total number of command requests.
+
+=head2 check_line_length_limit($msg, $type)
+
+check the length limit of one command request.
 
 =cut
 
 
-# Descriptions: 
+# Descriptions: check the total number of command requests
 #    Arguments: OBJ($self) OBJ($msg) STR($type)
-# Side Effects: 
+# Side Effects: croak() if condition matched.
 # Return Value: none
 sub check_command_limit
 {
@@ -241,9 +249,9 @@ sub check_command_limit
 }
 
 
-# Descriptions: 
+# Descriptions: check the length limit of one command request.
 #    Arguments: OBJ($self) OBJ($msg) STR($type)
-# Side Effects: 
+# Side Effects: croak() if condition matched.
 # Return Value: none
 sub check_line_length_limit
 {

@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #
-# $FML$
+# $FML: MH.pm,v 1.15 2003/07/19 10:23:34 fukachan Exp $
 #
 
 package Mail::Message::MH;
@@ -78,19 +78,19 @@ sub expand
     }
     elsif ($str =~ /^(\d+)\-(\d+)$/) {
         my ($first, $last) = ($1, $2);
-	$first = $min if($first < $min);
-	$last  = $max if($last > $max);
+	$first = $min if ($first < $min);
+	$last  = $max if ($last > $max);
         return _expand_range($first, $last);
     }
     elsif ($str =~ /^(first)\-(\d+)$/) {
         my ($first, $last) = ($1, $2);
-	$last  = $max if($last > $max);
+	$last  = $max if ($last > $max);
         return _expand_range($min, $last);
     }
     elsif ($str =~ /^(\d+)\-(last)$/) {
 	unless (defined $max) { return undef;}
         my ($first, $last) = ($1, $2);
-	$first = $min if($first < $min);
+	$first = $min if ($first < $min);
         return _expand_range($first, $max);
     }
     elsif ($str eq 'first') {

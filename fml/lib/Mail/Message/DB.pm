@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.3 2003/07/20 04:57:16 fukachan Exp $
+# $FML: DB.pm,v 1.4 2003/07/20 10:28:03 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -25,7 +25,7 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.3 2003/07/20 04:57:16 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.4 2003/07/20 10:28:03 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -222,7 +222,7 @@ XXX-TODO: This routine should be moved to Mail::Message::Thread ?
 
 # Descriptions: update database on message header, thread relation
 #               et. al.
-#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: update database
 # Return Value: none
 sub analyze
@@ -617,7 +617,7 @@ sub tohtml_thread_summary
 
 
 # Descriptions: speculate head of the next thread list.
-#    Arguments: HASH_REF($db) STR($id)
+#    Arguments: OBJ($self) HASH_REF($db) STR($id)
 # Side Effects: none
 # Return Value: STR
 sub _search_default_next_thread_id
@@ -647,7 +647,7 @@ sub _search_default_next_thread_id
 
 
 # Descriptions: speculate the next id of $id.
-#    Arguments: HASH_REF($db) STR($id)
+#    Arguments: OBJ($self) HASH_REF($db) STR($id)
 # Side Effects: none
 # Return Value: STR
 sub __search_default_next_id_in_thread
@@ -713,7 +713,7 @@ sub _str_to_array_ref
 
 # Descriptions: add { key => value } into $table with converting
 #               where value is "x y z ..." form, space separated string.
-#    Arguments: HASH_REF($db) STR($dbname) STR($key) STR($value)
+#    Arguments: OBJ($self) HASH_REF($db) STR($table) STR($key) STR($value)
 # Side Effects: update database
 # Return Value: none
 sub _db_array_add
@@ -773,7 +773,7 @@ sub _decode_mime_string
 
 
 # Descriptions: return formated time of message Date:
-#    Arguments: OBJ($self) STR($type)
+#    Arguments: OBJ($self) OBJ($hdr) STR($type)
 # Side Effects: none
 # Return Value: STR
 sub msg_time
@@ -801,7 +801,7 @@ sub msg_time
 
 # Descriptions: clean up email address by Mail::Address.
 #               return clean-up'ed address list.
-#    Arguments: STR($addr)
+#    Arguments: OBJ($self) STR($addr)
 # Side Effects: none
 # Return Value: ARRAY_REF
 sub _address_clean_up
@@ -1044,7 +1044,7 @@ sub set_db_base_dir
 
 
 # Descriptions: get db_base_dir
-#    Arguments: OBJ($self) STR($dir)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: none
 sub get_db_base_dir
@@ -1080,7 +1080,7 @@ sub get_db_name
 
 
 # Descriptions: set the curent key
-#    Arguments: OBJ($self) STR($name)
+#    Arguments: OBJ($self) STR($key)
 # Side Effects: none
 # Return Value: none
 sub set_key

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.2 2002/12/20 03:41:28 fukachan Exp $
+# $FML: Header.pm,v 1.3 2003/06/11 13:01:06 tmu Exp $
 #
 
 package FML::Filter::Header;
@@ -152,7 +152,7 @@ sub check_date
 {
     my ($self, $msg, $args) = @_;
 
-    if(! $msg->get('date')) {
+    if (! $msg->get('date')) {
 	croak( "Missing Date: field" );
     }
 }
@@ -168,7 +168,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
