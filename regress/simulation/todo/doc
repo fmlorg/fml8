@@ -1,13 +1,5 @@
-Dialect/Japanese/String.pm
-Dialect/Japanese/Subject.pm
-Dialect/Japanese/Utils.pm
-
 FML/Config.pm
 FML/Credential.pm
-
-CGI/TicketSystem.pm
-
-Header/Subject.pm
 
 Process/Command.pm
 Process/Configure.pm
@@ -17,11 +9,13 @@ Process/Switch.pm
 Process/TicketSystem.pm
 Process/CGI.pm
 
-Ticket/System.pm
-
 MailingList/Net/INET4.pm
 MailingList/Net/INET6.pm
 MailingList/Delivery.pm
 MailingList/Messages.pm
 MailingList/SMTP.pm
 MailingList/Utils.pm
+
+CGI/TicketSystem.pm
+
+Ticket/System.pm
