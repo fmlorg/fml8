@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003 MURASHITA Takuya
+#  Copyright (C) 2002,2003,2004 MURASHITA Takuya
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.10 2003/12/31 04:04:39 fukachan Exp $
+# $FML: digest.pm,v 1.11 2004/02/15 04:38:31 fukachan Exp $
 #
 
 package FML::Command::User::digest;
@@ -141,7 +141,7 @@ MURASHITA Takuya
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003 MURASHITA Takuya
+Copyright (C) 2002,2003,2004 MURASHITA Takuya
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
