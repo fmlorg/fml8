@@ -58,10 +58,27 @@ sub new
     # load config.cf files, which is passed from loader.
     $curproc->load_config_files( $args->{ cf_list } );
 
+    # initialize signal
+    $curproc->_signal_init;
+
     # debug
     if ($0 =~ /loader/) { $curproc->debug; sleep 3;}
 
     return $curproc;
+}
+
+
+# default signal handling
+sub _signal_init
+{
+    my ($curproc, $args) = @_;
+
+    $SIG{'ALRM'} = $SIG{'INT'}  = $SIG{'QUIT'} = $SIG{'TERM'} = sub {
+	my ($signal) = @_;
+	Log("SIG$signal trapped");
+	sleep 1;
+	croak("SIG$signal trapped");
+    };
 }
 
 

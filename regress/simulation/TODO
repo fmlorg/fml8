@@ -15,18 +15,11 @@ mode-html-generator
 
 alarm() 
 
-
-default signal handling
-    $SIG{'ALRM'} = 'Tick';
-    $SIG{'INT'}  = $SIG{'QUIT'} = $SIG{'TERM'} = 'SignalLog';
-    
 MIME Content Handler(include backword compatible)
 
 log suffix extension
 
-
 chaddr を認証の前にトラップすること( libtrap.pl )
-
 
 5.0 では ReloadMySelf() って必要ないような気がするが…
 
@@ -51,5 +44,3 @@ Resolved -- the Request has either been answered or successfully
        use  "stalled" to indicate that this request isn't one can
        make any progress at the moment, thus isn't worth  picking
        from the queue to work on.
-
-
