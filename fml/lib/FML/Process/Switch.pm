@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.55 2002/03/06 14:45:59 fukachan Exp $
+# $FML: Switch.pm,v 1.56 2002/03/07 14:19:51 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -403,7 +403,7 @@ sub _module_specific_options
     elsif ($myname eq 'makefml') {
 	return qw(debug! help! force! params=s -c=s);
     }
-    elsif ($myname eq 'makefml.cgi' || $myname eq 'menu.cgi') {
+    elsif ($myname eq 'config.cgi' || $myname eq 'menu.cgi') {
 	return ();
     }
     elsif ($myname eq 'fmlsch') {
@@ -438,7 +438,9 @@ sub _ml_name_is_required
     elsif ($myname eq 'makefml') {
 	return 0;
     }
-    elsif ($myname eq 'menu.cgi') {
+    elsif ($myname eq 'menu.cgi'   || 
+	   $myname eq 'config.cgi' ||
+	   $myname eq 'thread.cgi') {
 	return 0;
     }
     else {
@@ -491,10 +493,10 @@ sub _module_we_use
     elsif ($name eq 'qmail-ext') {
 	$pkg = 'FML::Process::QMail';
     }
-    elsif ($name eq 'makefml.cgi') {
-	$pkg = 'FML::CGI::Configure';
-    }
     elsif ($name eq 'menu.cgi') {
+	$pkg = 'FML::CGI::Admin::Menu';
+    }
+    elsif ($name eq 'config.cgi') {
 	$pkg = 'FML::CGI::Admin::Menu';
     }
     elsif ($name eq 'fmlsch') {
