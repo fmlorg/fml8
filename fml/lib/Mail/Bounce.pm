@@ -4,13 +4,15 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Bounce.pm,v 1.3 2001/04/11 15:15:55 fukachan Exp $
+# $FML: Bounce.pm,v 1.4 2001/04/11 16:36:45 fukachan Exp $
 #
 
 package Mail::Bounce;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+my $debug = $ENV{'debug'} ? 1 : 0;
 
 =head1 NAME
 
@@ -41,6 +43,13 @@ sub analyze
     my ($self, $msg) = @_;
     my $result = {};
 
+    if ($debug) {
+	my $h = $msg->get_data_type_list;
+	print "   ----- dump msg -----\n";
+	for (@$h) { print "   ", $_, "\n";}
+	print "   ----- dump msg end -----\n";
+    }
+
     for my $pkg (
 		 'DSN', 
 		 'Postfix19991231', 
@@ -50,6 +59,9 @@ sub analyze
 		 'SimpleMatch', 
 		 ) {
 	my $module = "Mail::Bounce::$pkg";
+
+	print "\n   --- module: $module\n" if $debug;
+
 	eval qq { 
 	    require $module; $module->import();
 	    $module->analyze( \$msg , \$result );
