@@ -48,3 +48,6 @@ test:
 	@ echo "* IO::* class test"
 	@ apply perl IO/t/*pl
 	@ make -f ../base/Makefile
+
+regen:
+	(cd ../../fml/etc; sh .gen.sh)
