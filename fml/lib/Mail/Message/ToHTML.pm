@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.64 2004/02/24 14:36:53 fukachan Exp $
+# $FML: ToHTML.pm,v 1.65 2004/03/24 01:32:04 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.64 2004/02/24 14:36:53 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.65 2004/03/24 01:32:04 fukachan Exp $;
 my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $versionid = "$1";
@@ -743,6 +743,9 @@ sub _format_safe_header
     my $hdr = $msg->whole_message_header;
     my $header_field = \@header_field;
 
+    my $mimeopt = $main::opt_mimedecodequoted;
+    $main::opt_mimedecodequoted = 1;
+
     # header
     $buf .= "<SPAN CLASS=mailheaders>\n";
     for my $field (@$header_field) {
@@ -769,6 +772,7 @@ sub _format_safe_header
     }
     $buf .= "</SPAN>\n";
 
+    $main::opt_mimedecodequoted = $mimeopt;
     return($buf);
 }
 
@@ -2025,6 +2029,12 @@ sub _print_li_filename
 	$who	 = "" if ($who =~ /\@xxx/);
 	$who	.= " " . $db->get('from', $id);
     }
+
+    my $mimeopt = $main::opt_mimedecodequoted;
+    $main::opt_mimedecodequoted = 1;
+    $subject = $self->_decode_mime_string($subject) if $subject =~ /=\?/i;
+    $who = $self->_decode_mime_string($who) if $who =~ /=\?/i;
+    $main::opt_mimedecodequoted = $mimeopt;
 
     _PRINT_DEBUG("-- print_li_filename id=$id file=$filename");
 
