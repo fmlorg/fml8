@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.32 2003/03/28 10:32:21 fukachan Exp $
+# $FML: UserControl.pm,v 1.33 2003/08/23 07:24:42 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -128,7 +128,8 @@ sub useradd
     }
 
     unless ($trycount) {
-	$curproc->logerror("no trail to add $address");
+	$curproc->logerror("fail to add $address");
+	croak("fail to add $address");
     }
 }
 
@@ -208,7 +209,8 @@ sub userdel
     }
 
     unless ($trycount) {
-	$curproc->logerror("no trail to remove $address");
+	$curproc->logerror("no such user $address");
+	croak("no such user $address");
     }
 }
 
