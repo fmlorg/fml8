@@ -1,6 +1,6 @@
 # Mail::Header.pm
 #
-# Copyright (c) 1995-7 Graham Barr <gbarr@pobox.com>. All rights reserved.
+# Copyright (c) 1995-2001 Graham Barr <gbarr@pobox.com>. All rights reserved.
 # This program is free software; you can redistribute it and/or
 # modify it under the same terms as Perl itself.
 
@@ -19,7 +19,7 @@ use strict;
 use Carp;
 use vars qw($VERSION $FIELD_NAME);
 
-$VERSION = "1.19";
+$VERSION = "1.52";
 
 my $MAIL_FROM = 'KEEP';
 my %HDR_LENGTHS = ();
@@ -86,7 +86,7 @@ my %STRUCTURE;
   Resent-Date Resent-From Resent-Sender Resent-To Return-Path
   list-help list-post list-unsubscribe Mailing-List
   Received References Message-ID In-Reply-To
-  Content-Length Content-Type
+  Content-Length Content-Type Content-Disposition
   Delivered-To
   Lines
   MIME-Version
@@ -112,7 +112,7 @@ sub _fold_line
 
  if(length($_[0]) > $ml)
   {
-   if ($_[0] =~ /^([-\w]+)/ and exists $STRUCTURE{ lc $1 } )
+   if ($_[0] =~ /^([-\w]+)/ && exists $STRUCTURE{ lc $1 } )
     {
      #Split the line up
      # first bias towards splitting at a , or a ; >4/5 along the line
@@ -135,14 +135,8 @@ sub _fold_line
     }
    else
     {
-      my $dif = $max-$min;
-
-      $_[0] =~ s/(?:^|\G)
-		(?:
-		  (.{$min,$max})\s+
-		 |(.{$min,$max})
-		)
-                /$+\n    /xg;
+      $_[0] =~ s/(.{$min,$max})\s+/$+\n    /g;
+      $_[0] =~ s/\s*$/\n/s;
     }
   }
 
@@ -160,10 +154,10 @@ sub _tag_case
 
  $tag =~ s/:\Z//o;
 
- # Change the case of the tag
- # eq Message-Id
- $tag =~ s/\b([a-z]+)/\L\u$1/gio;
- $tag =~ s/\b([b-df-hj-np-tv-z]+|MIME)\b/\U$1/gio
+ # Change the casing of the tag, eg "Message-Id"
+ # Bug in unicode \U, perl 5.8.0 requires an extra \u
+ $tag =~ s/\b([a-z]+)/\L\u\u$1/gio;
+ $tag =~ s/\b([b-df-hj-np-tv-z]+|MIME)\b/\U\u$1/gio
 	if $tag =~ /-/;
 
  $tag;
@@ -242,24 +236,24 @@ sub _insert
 
  if($where < 0)
   {
-   $where = scalar(@{$me->{'mail_hdr_list'}}) + $where + 1;
+   $where = @{$me->{'mail_hdr_list'}} + $where + 1;
 
    $where = 0
 	if($where < 0);
   }
- elsif($where >= scalar(@{$me->{'mail_hdr_list'}}))
+ elsif($where >= @{$me->{'mail_hdr_list'}})
   {
-   $where = scalar(@{$me->{'mail_hdr_list'}});
+   $where = @{$me->{'mail_hdr_list'}};
   }
 
- my $atend = $where == scalar(@{$me->{'mail_hdr_list'}});
+ my $atend = $where == @{$me->{'mail_hdr_list'}};
 
  splice(@{$me->{'mail_hdr_list'}},$where,0,$line);
 
  $me->{'mail_hdr_hash'}{$tag} ||= [];
  my $ref = \${$me->{'mail_hdr_list'}}[$where];
 
- if(scalar($me->{'mail_hdr_hash'}{$tag}) && $where)
+ if($me->{'mail_hdr_hash'}{$tag} && $where)
   {
    if($atend)
     {
@@ -267,9 +261,8 @@ sub _insert
     }
    else
     {
-     my($ln,$i,$ref);
-     $i = 0;
-     foreach $ln (@{$me->{'mail_hdr_list'}})
+     my $i = 0;
+     foreach my $ln (@{$me->{'mail_hdr_list'}})
       {
        my $r = \$ln;
        last if($r == $ref);
@@ -750,7 +743,7 @@ sub fold_length
    if(defined $len)
     {
      $me->{'mail_hdr_foldlen'} = $len > 20 ? $len : 20;
-     $me->fold;
+     $me->fold if $me->{'mail_hdr_modify'};
     }
   }
 
@@ -1011,11 +1004,11 @@ multiple lines. IF C<TAG> is not given then all lines are unfolded.
 
 =head1 AUTHOR
 
-Graham Barr <gbarr@pobox.com>
+Graham Barr.  Maintained by Mark Overmeer <mailtools@overmeer.net>
 
 =head1 COPYRIGHT
 
-Copyright (c) 1995-7 Graham Barr. All rights reserved. This program is free
+Copyright (c) 1995-2001 Graham Barr. All rights reserved. This program is free
 software; you can redistribute it and/or modify it under the same terms
 as Perl itself.
 

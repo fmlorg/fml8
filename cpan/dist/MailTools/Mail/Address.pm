@@ -1,6 +1,6 @@
 # Mail::Address.pm
 #
-# Copyright (c) 1995-8 Graham Barr <gbarr@pobox.com>. All rights reserved.
+# Copyright (c) 1995-2001 Graham Barr <gbarr@pobox.com>.  All rights reserved.
 # This program is free software; you can redistribute it and/or
 # modify it under the same terms as Perl itself.
 
@@ -11,7 +11,7 @@ use Carp;
 use vars qw($VERSION);
 use locale;
 
-$VERSION = "1.17";
+$VERSION = "1.52";
 sub Version { $VERSION }
 
 #
@@ -154,6 +154,8 @@ sub new {
 
 sub parse {
  my $pkg = shift;
+ my @line    = grep { defined $_} @_;
+ my $line    = join '', @line;
 
  local $_;
 
@@ -162,10 +164,10 @@ sub parse {
  my @address = ();
  my @objs    = ();
  my $depth   = 0;
- my $idx = 0;
- my $tokens = _tokenise(grep { defined $_} @_);
- my $len = scalar(@{$tokens});
- my $next = _find_next($idx,$tokens,$len);
+ my $idx     = 0;
+ my $tokens  = _tokenise(@line);
+ my $len     = @$tokens;
+ my $next    = _find_next($idx,$tokens,$len);
 
  for( ; $idx < $len ; $idx++) {
   $_ = $tokens->[$idx];
@@ -177,16 +179,10 @@ sub parse {
    $depth++;
   }
   elsif($_ eq '>') {
-   $depth-- if($depth);
-   unless($depth) {
-    my $o = _complete($pkg,\@phrase, \@address, \@comment);
-    push(@objs, $o) if(defined $o);
-    $depth = 0;
-    $next = _find_next($idx,$tokens,$len);
-   }
+   $depth-- if $depth;
   }
   elsif($_ eq ',') {
-   warn "Unmatched '<>'" if($depth);
+   warn "Unmatched '<>' in $line" if($depth);
    my $o = _complete($pkg,\@phrase, \@address, \@comment);
    push(@objs, $o) if(defined $o);
    $depth = 0;
@@ -198,11 +194,11 @@ sub parse {
   elsif($next eq "<") {
    push(@phrase,$_);
   }
-  elsif($_ =~ /\A[\Q.\@:;\E]\Z/ || !scalar(@address) || $address[$#address] =~ /\A[\Q.\@:;\E]\Z/) {
+  elsif( /\A[\Q.\@:;\E]\Z/ || !@address || $address[-1] =~ /\A[\Q.\@:;\E]\Z/) {
    push(@address,$_);
   }
   else {
-   warn "Unmatched '<>'" if($depth);
+   warn "Unmatched '<>' in $line" if($depth);
    my $o = _complete($pkg,\@phrase, \@address, \@comment);
    push(@objs, $o) if(defined $o);
    $depth = 0;
@@ -412,11 +408,11 @@ Unimplemented yet but should return the UUCP canon for the message
 
 =head1 AUTHOR
 
-Graham Barr <gbarr@pobox.com>
+Graham Barr.  Maintained by Mark Overmeer <mailtools@overmeer.net>
 
 =head1 COPYRIGHT
 
-Copyright (c) 1995-8 Graham Barr. All rights reserved. This program is free
+Copyright (c) 1995-2001 Graham Barr. All rights reserved. This program is free
 software; you can redistribute it and/or modify it under the same terms
 as Perl itself.
 

@@ -29,12 +29,6 @@ behaviour of a method by passing C<$command> to the C<new> method.
 
 =over 4
 
-=item C<mail>
-
-Use the Unix system C<mail> program to deliver the mail.  C<$command>
-is the path to C<mail>.  Mail::Mailer will search for C<mailx>, C<Mail>
-and C<mail> (in this order).
-
 =item C<sendmail>
 
 Use the C<sendmail> program to deliver the mail.  C<$command> is the
@@ -47,10 +41,18 @@ to use can be specified in C<@args> with
 
     $mailer = new Mail::Mailer 'smtp', Server => $server;
 
+The smtp mailer does not handle C<Cc> and C<Bcc> lines, neither their
+C<Resent-*> fellows. The C<Debug> options enables debugging output
+from C<Net::SMTP>.
+
+=item C<qmail>
+
+Use qmail's qmail-inject program to deliver the mail.
+
 =item C<test>
 
-Used for debugging, this calls C</bin/echo> to display the data.  No
-mail is ever sent.  C<$command> is ignored.
+Used for debugging, this displays the data on STDOUT.  No mail is ever
+sent.  C<$command> is ignored.
 
 =back
 
@@ -95,6 +97,12 @@ of mailx, one could set C<PERL_MAILERS> to:
 
     "mail:/does/not/exists:sendmail:$HOME/test/bin/sendmail"
 
+On systems which may include C<:> in file names, use C<|> as separator
+between type-groups.
+
+    "mail:c:/does/not/exists|sendmail:$HOME/test/bin/sendmail"
+
+
 =back
 
 =head1 SEE ALSO
@@ -103,15 +111,12 @@ Mail::Send
 
 =head1 AUTHORS
 
-Maintained by Graham Barr E<lt>F<gbarr@pobox.com>E<gt>
+Maintained by Mark Overmeer <mailtools@overmeer.net>
 
 Original code written by Tim Bunce E<lt>F<Tim.Bunce@ig.co.uk>E<gt>,
 with a kick start from Graham Barr E<lt>F<gbarr@pobox.com>E<gt>. With
 contributions by Gerard Hickey E<lt>F<hickey@ctron.com>E<gt> Small fix
 and documentation by Nathan Torkington E<lt>F<gnat@frii.com>E<gt>.
-
-For support please contact comp.lang.perl.misc or Graham Barr
-E<lt>F<gbarr@pobox.com>E<gt>
 
 =cut
 
@@ -121,7 +126,7 @@ use vars qw(@ISA $VERSION $MailerBinary $MailerType %Mailers @Mailers);
 use Config;
 use strict;
 
-$VERSION = "1.21"; # $Id: //depot/MailTools/Mail/Mailer.pm#13 $
+$VERSION = "1.52";
 
 sub Version { $VERSION }
 
@@ -130,32 +135,19 @@ sub Version { $VERSION }
 # Suggested binaries for types?  Should this be handled in the object class?
 @Mailers = (
 
-    # Body on stdin with tilde escapes
-    'mail'	=> 	'mail',
-
     # Headers-blank-Body all on stdin
-    'sendmail'  =>      '/usr/lib/sendmail;/usr/sbin/sendmail;/usr/ucblib/sendmail',
+    'sendmail'  => '/usr/lib/sendmail;/usr/sbin/sendmail;/usr/ucblib/sendmail',
 
-    'smtp'	=> 	undef,
-    'test'	=> 	'test'
+    'smtp'	=> undef,
+    'qmail'     => '/usr/sbin/qmail-inject;/var/qmail/bin/qmail-inject',
+    'test'	=> undef
 );
 
-# There are several flavours of mail, which do we have ????
-
-{
-    my $cmd = is_exe('mailx;Mail;mail');
-    my $osname = $Config{'osname'};
-
-    if($osname =~ /(?:dgux)|(?:solaris)/io) {
-	$cmd .= " -~";
-    }
-    elsif($osname =~ /(?:linux)|(?:bsdos)|(?:freebsd)/io) {
-	$cmd .= " -I";
-    }
-    push @Mailers, 'mail', $cmd;
+if($ENV{PERL_MAILERS})
+{   push @Mailers
+       , map { split /\:/, $_, 2}
+             split /$Config{path_sep}/, $ENV{PERL_MAILERS};
 }
-
-push(@Mailers, split(/:/,$ENV{PERL_MAILERS})) if $ENV{PERL_MAILERS};
 
 %Mailers = @Mailers;
 
@@ -163,7 +155,11 @@ $MailerBinary = undef;
 
 # does this really need to be done? or should a default mailer be specfied?
 
-if($^O eq 'MacOS' || $^O eq 'VMS' || $^O eq 'MSWin32') {
+if($^O eq 'os2') {
+    $Mailers{sendmail} = 'sendmail' unless is_exe($Mailers{sendmail});
+}
+
+if($^O eq 'MacOS' || $^O eq 'VMS' || $^O eq 'MSWin32' || $^O eq 'os2') {
     $MailerType = 'smtp';
     $MailerBinary = $Mailers{$MailerType};
 }
@@ -204,10 +200,10 @@ sub to_array {
 }
 
 sub is_exe {
-    my $exe = shift;
+    my $exe = shift || '';
     my $cmd;
 
-    foreach $cmd (split /;/, $exe) {
+    foreach $cmd (split /\;/, $exe) {
 	$cmd =~ s/^\s+//;
 
 	# remove any options
@@ -215,11 +211,11 @@ sub is_exe {
 
 	# check for absolute or relative path
 	return ($cmd)
-	    if (-x $name and ! -d $name and $name =~ m:/:);
+	    if (-x $name and ! -d $name and $name =~ m:[\\/]:);
 
 	if (defined $ENV{PATH}) {
 	    my $dir;
-	    foreach $dir (split(/:/, $ENV{PATH})) {
+	    foreach $dir (split(/$Config{path_sep}/, $ENV{PATH})) {
 		return "$dir/$cmd"
 		    if (-x "$dir/$name" && ! -d "$dir/$name");
 	    }
@@ -284,7 +280,8 @@ sub _cleanup_hdrs {
   my $h;
   foreach $h (values %$hdrs) {
     foreach (ref($h) ? @{$h} : $h) {
-      s/\n//;
+      s/\n\s*/ /g;
+      s/\s+$//;
     }
   }
 }
