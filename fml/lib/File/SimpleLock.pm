@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: SimpleLock.pm,v 1.13 2002/09/11 23:18:19 fukachan Exp $
+# $FML: SimpleLock.pm,v 1.14 2002/09/22 14:56:57 fukachan Exp $
 #
 
 package File::SimpleLock;
@@ -95,7 +95,7 @@ sub _simple_flock
     my ($self, $file) = @_;
 
     use FileHandle;
-    my $fh = new FileHandle $file;
+    my $fh = new FileHandle ">> $file";
 
     if (defined $fh) {
 	$LockedFileHandle{ $file } = $fh;
