@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.113 2003/05/02 07:57:54 fukachan Exp $
+# $FML: Distribute.pm,v 1.114 2003/05/13 03:49:55 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -199,9 +199,11 @@ sub run
     my $sender     = $curproc->{'credential'}->{'sender'};
     my $data_type  = 
 	$config->{post_restrictions_reject_notice_data_type} || 'string';
-    my $msg_args = {
+    my $size       = 2048;
+    my $msg_args   = {
 	_arg_address => $sender,
 	recipient    => $sender,
+	size         => $size, 
     };
 
     my $eval = $config->get_hook( 'distribute_run_start_hook' );
@@ -239,7 +241,14 @@ sub run
 	    # send back deny request with the original message.
 	    my $msg = $curproc->incoming_message();
 	    if ($data_type eq 'string') {
-		my $s = $msg->whole_message_as_str( { indent => '   ' } );
+		my $s = $msg->whole_message_as_str( { 
+		    indent => '   ',
+		    size   => $size,
+		} );
+		my $r = "The first $size bytes of this message follows:";
+		$curproc->reply_message_nl("error.reject_notice_preamble",
+					   $r,
+					   $msg_args);
 		$curproc->reply_message(sprintf("\n\n%s", $s), $msg_args);
 	    }
 	    else {

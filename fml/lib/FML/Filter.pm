@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.26 2003/05/09 13:09:15 tmu Exp $
+# $FML: Filter.pm,v 1.27 2003/05/13 03:49:55 fukachan Exp $
 #
 
 package FML::Filter;
@@ -249,6 +249,7 @@ sub article_filter_reject_notice
     my $msg    = $curproc->incoming_message();
     my $r      = $msg_args->{ _arg_reason } || 'unknown';
     my $type   = $config->{article_filter_reject_notice_data_type} || 'string';
+    my $size   = 2048;
 
     # recipients
     my $list  =
@@ -256,6 +257,7 @@ sub article_filter_reject_notice
     my $rcpts = $curproc->convert_to_mail_address($list);
     $msg_args->{ recipient }    = $rcpts;
     $msg_args->{ _arg_address } = $cred->sender();
+    $msg_args->{ _arg_size    } = $size;
 
     Log("filter notice: [ @$rcpts ]");
 
@@ -271,7 +273,14 @@ sub article_filter_reject_notice
 	$curproc->reply_message($msg, $msg_args);
     }
     elsif ($type eq 'string') {
-	my $s = $msg->whole_message_as_str( { indent => '   ' } );
+	my $s = $msg->whole_message_as_str( { 
+	    indent => '   ', 
+	    size   => $size, 
+	});
+	my $r = "The first $size bytes of this message follows:";
+	$curproc->reply_message_nl("error.reject_notice_preamble",
+				   $r,
+				   $msg_args);
 	$curproc->reply_message(sprintf("\n\n%s", $s), $msg_args);
     }
     else {
