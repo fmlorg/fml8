@@ -246,17 +246,4 @@ sub parse_incoming_message
 }
 
 
-# debug
-sub debug
-{
-    my ($curproc, $args) = @_;
-
-    eval {
-	require FML::Debug;
-	my $fp = new FML::Debug;
-	$fp->show_structure($curproc);
-    };
-}
-
-
 1;
