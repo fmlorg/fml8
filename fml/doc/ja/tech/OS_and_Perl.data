@@ -109,6 +109,11 @@
 [perl.version] 5.005_03
 [perl.path]    /usr/bin/perl
 
+[system]       FreeBSD
+[release]      4.5
+[perl.version] 5.005_03
+[perl.path]    /usr/bin/perl
+
 
 
 [system]       BSD/OS
@@ -417,4 +422,4 @@ SEE ALSO:
    http://www.cyber-magic.org/~taka/perl-versions.html
    http://www.uinet.or.jp/~taka/perl-versions.html
 
-$FML: OS_and_Perl.data,v 1.6 2001/12/05 05:19:47 fukachan Exp $
+$FML: OS_and_Perl.data,v 1.7 2001/12/28 08:29:01 fukachan Exp $
