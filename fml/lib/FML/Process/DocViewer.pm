@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.17 2002/06/27 08:25:50 fukachan Exp $
+# $FML: DocViewer.pm,v 1.18 2002/07/02 03:58:49 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -78,6 +78,7 @@ sub prepare
 
     # $curproc->resolve_ml_specific_variables( $args );
     $curproc->load_config_files( $args->{ cf_list } );
+    $curproc->fix_perl_include_path();
 
     $eval = $config->get_hook( 'fmldoc_prepare_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }

@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ThreadTrack.pm,v 1.30 2002/06/30 01:23:00 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.31 2002/07/02 03:59:42 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -70,6 +70,7 @@ sub prepare
 
     $curproc->resolve_ml_specific_variables( $args );
     $curproc->load_config_files( $args->{ cf_list } );
+    $curproc->fix_perl_include_path();
 
     $eval = $config->get_hook( 'fmlthread_prepare_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }

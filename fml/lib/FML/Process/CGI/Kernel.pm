@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.40 2002/07/17 12:13:25 fukachan Exp $
+# $FML: Kernel.pm,v 1.41 2002/07/19 03:13:03 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -91,6 +91,7 @@ sub prepare
 
     $curproc->_cgi_resolve_ml_specific_variables( $args );
     $curproc->load_config_files( $args->{ cf_list } );
+    $curproc->fix_perl_include_path();
 
     print header(-type    => "text/html; charset=$charset",
 		 -charset => $charset,

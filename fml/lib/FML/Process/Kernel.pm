@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.123 2002/08/07 14:58:38 fukachan Exp $
+# $FML: Kernel.pm,v 1.124 2002/08/08 03:09:48 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -746,6 +746,25 @@ sub load_config_files
     # XXX We need to expand variables after we load all *cf files.
     # XXX 2001/05/05 changed to dynamic expansion for hook
     # $curproc->{ config }->expand_variables();
+}
+
+
+# Descriptions: add ml local library path into @INC
+#    Arguments: OBJ($OBJ)
+# Side Effects: update @INC
+# Return Value: none
+sub fix_perl_include_path
+{
+    my ($curproc) = @_;
+    my $config = $curproc->{ config };
+
+    # XXX update @INC here since we should do after loading configurations.
+    # update @INC for ml local libraries
+    if (defined $config->{ ml_home_dir } &&
+	$config->{ ml_home_dir } &&
+	defined $config->{ ml_local_lib_dir }) {
+	unshift(@INC, $config->{ ml_local_lib_dir });
+    }
 }
 
 
