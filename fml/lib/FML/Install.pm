@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.1 2003/01/28 04:16:17 fukachan Exp $
+# $FML: Install.pm,v 1.2 2003/01/28 09:03:07 fukachan Exp $
 #
 
 package FML::Install;
@@ -143,7 +143,7 @@ In addition, chmod() if $mode specified.
 
 
 # Descriptions: create $dst with variable substitutions.
-#    Arguments: OBJ($self) STR($src) STR($dst)
+#    Arguments: OBJ($self) STR($src) STR($dst) NUM($mode)
 # Side Effects: create $dst file.
 # Return Value: none
 sub convert
@@ -814,7 +814,7 @@ my @_cache = ();
 
 
 # Descriptions: copy all files recursively.
-#    Arguments: OBJ($self) STR($src_dir) STR(dst_dir)
+#    Arguments: OBJ($self) STR($src_dir) STR($dst_dir)
 # Side Effects: update $dst_dir
 # Return Value: none
 sub copy_dir
@@ -871,7 +871,7 @@ sub _want_file
 # Return Value: none
 sub chown
 {
-    my ($self, $owner, $group, $dir ) = @_;
+    my ($self, $owner, $group, $dir) = @_;
 
     use User::pwent;
     my $pw  = getpwnam($owner) || croak("no such user: $owner");
@@ -911,7 +911,8 @@ sub md5
 
     my $fh  = new FileHandle $file;
     if (defined $fh) {
-	while (<$fh>) { $buf .= $_;}
+	my $xbuf;
+	while ($xbuf = <$fh>) { $buf .= $xbuf;}
 	$fh->close();
     }
 
