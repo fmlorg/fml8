@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: Install.pm,v 1.1 2003/01/28 04:16:17 fukachan Exp $
 #
 
 package FML::Install;
@@ -363,7 +363,7 @@ sub install_lib_dir
     for my $vendor (@$vendors) {
 	# XXX src = relative path, dst = absolute path
 	$src_dir = File::Spec->catfile($vendor, "lib");
-	print STDERR "   copying from $src_dir\n";
+	print STDERR "    copy from $src_dir\n";
 	$self->copy_dir( $src_dir, $dst_dir );
     }
 }
@@ -499,6 +499,11 @@ sub need_resymlink_loader
     # when new bin/$program found
     return 1 if $self->_is_need_resymlink_loader();
 
+    # first time
+    unless (-f $cur_loader) {
+	return 1;
+    }
+
     my $cur_sum = $self->md5( $cur_loader );
     my $new_sum = $self->md5( $loader );
 
@@ -539,8 +544,7 @@ sub install_loader
     my $cur_loader  = File::Spec->catfile($libexec_dir, "loader");
     my $tmp         = $cur_loader . ".$$";
 
-    use File::Copy;
-    copy($loader, $tmp);
+    $self->_copy($loader, $tmp);
     chmod 0755, $tmp;
 
     unless (rename($tmp, $cur_loader)) {
@@ -748,6 +752,33 @@ sub path
 
 =head1 UTILITY FUNCTIONS FOR FILE HANDLING
 
+=head2 copy
+
+=cut
+
+
+# Descriptions: copy $src to $dst by preserving $atime and $mtime.
+#    Arguments: OBJ($self) STR($src) STT($dst)
+# Side Effects: create $dst
+# Return Value: none
+sub _copy
+{
+    my ($self, $src, $dst) = @_;
+
+    use File::stat;
+    my $st = stat($src);
+
+    use File::Copy;
+    copy($src, $dst);
+
+    if (-f $dst) {
+	my $atime = $st->atime;
+	my $mtime = $st->mtime;
+	utime $atime, $mtime, $dst;
+    }
+}
+
+
 =head2 mkdir( $dir, [$mode] )
 
 mkdir $dir with the mode $mode if $mode specified.
@@ -803,14 +834,15 @@ sub copy_dir
 	my $src = $file;
 	my $dst = File::Spec->catfile( $dst_dir, $n );
 
+	my $src_dir = dirname($src);
 	my $dst_dir = dirname($dst);
 	unless (-d $dst_dir) {
 	    print STDERR " ** ? ** $dst_dir\n" if -f $dst_dir;
 	    $self->mkdir( $dst_dir );
 	}
 
-	if (-f $src && -f $dst) {
-	    copy($src, $dst);
+	if (-f $src && -d $dst_dir) {
+	    $self->_copy($src, $dst);
 	}
 	else {
 	    print "warning $src -> $dst\n" if $debug;
