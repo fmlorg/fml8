@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Array.pm,v 1.29 2003/02/11 09:48:17 fukachan Exp $
+# $FML: Array.pm,v 1.30 2003/02/11 11:37:47 fukachan Exp $
 #
 
 package IO::Adapter::Array;
@@ -138,44 +138,6 @@ sub get_next_key
     my $ra = $self->{_elements};
 
     return( defined $$ra[ $i ] ? $$ra[ $i ] : undef );
-}
-
-
-=head2 get_value_as_str($key)
-
-return values corresponding with the specified key as string.
-
-   key => "value1 value2 value3"
-
-=head2 get_value_as_array_ref($key)
-
-return values corresponding with the specified key as array_ref.
-
-   key => [ value1 value2 value3 ]
-
-=cut
-
-# Descriptions: return value corresponding with the specified key as STR.
-#    Arguments: OBJ($self) STR($key)
-# Side Effects: none
-# Return Value: STR
-sub get_value_as_str
-{
-    my ($self, $key) = @_;
-
-    # XXX-TODO NOT IMPLEMENTED
-}
-
-
-# Descriptions: return value corresponding with the specified key as ARRAY_REF.
-#    Arguments: OBJ($self) STR($key)
-# Side Effects: none
-# Return Value: ARRAY_REF
-sub get_value_as_array_ref
-{
-    my ($self, $key) = @_;
-
-    # XXX-TODO NOT IMPLEMENTED
 }
 
 

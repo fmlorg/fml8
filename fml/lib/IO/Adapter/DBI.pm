@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.24 2003/02/01 10:55:04 fukachan Exp $
+# $FML: DBI.pm,v 1.25 2003/02/11 11:37:48 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -255,45 +255,6 @@ sub _fetch_all
     my $query  = $config->{ sql_get_next_key };
 
     $self->execute({ query => $query });
-}
-
-
-=head2 get_value_as_str($key)
-
-return values corresponding with the specified key as string.
-
-   key => "value1 value2 value3"
-
-=head2 get_value_as_array_ref($key)
-
-return values corresponding with the specified key as array_ref.
-
-   key => [ value1 value2 value3 ]
-
-=cut
-
-
-# Descriptions: return value corresponding with the specified key as STR.
-#    Arguments: OBJ($self) STR($key)
-# Side Effects: none
-# Return Value: STR
-sub get_value_as_str
-{
-    my ($self, $key) = @_;
-
-    # XXX-TODO NOT IMPLEMENTED
-}
-
-
-# Descriptions: return value corresponding with the specified key as ARRAY_REF.
-#    Arguments: OBJ($self) STR($key)
-# Side Effects: none
-# Return Value: ARRAY_REF
-sub get_value_as_array_ref
-{
-    my ($self, $key) = @_;
-
-    # XXX-TODO NOT IMPLEMENTED
 }
 
 
