@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2001 Ken'ichi Fukamachi
+# Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: CGI.pm,v 1.4 2001/12/23 12:19:14 fukachan Exp $
+# $FML: CGI.pm,v 1.5 2002/04/06 02:42:39 fukachan Exp $
 #
 
 package FML::Restriction::CGI;
@@ -17,7 +17,7 @@ use FML::Restriction::Base;
 
 =head1 NAME
 
-FML::Restriction::CGI -- define safe data regexp for CGI module
+FML::Restriction::CGI -- define safe data regexp for CGI modules
 
 =head1 SYNOPSIS
 
@@ -114,7 +114,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
