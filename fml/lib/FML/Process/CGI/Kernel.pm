@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.33 2002/06/24 11:06:12 fukachan Exp $
+# $FML: Kernel.pm,v 1.34 2002/06/25 02:21:20 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -253,9 +253,9 @@ sub _drive_cgi_by_table
 
 	'west'   => 'run_cgi_navigator', 
 	'center' => 'run_cgi_main',
-	'east'   => 'run_cgi_options',
+	'east'   => 'run_cgi_command_help',
 
-	'sw'     => 'run_cgi_command_help',
+	'sw'     => 'run_cgi_options',
 	'south'  => '',
 	'se'     => '',
     };
@@ -265,11 +265,11 @@ sub _drive_cgi_by_table
 	north    => '',
 	ne       => '',
 
-	'west'   => 'valign="top" BGCOLOR="#E0E0F0"', 
+	'west'   => 'valign="top" BGCOLOR="#E0E0F0"',
 	'center' => 'rowspan=2 valign="top"',
 	'east'   => 'rowspan=2 valign="top"',
 
-	'sw'     => 'valign="top"',
+	'sw'     => 'valign="top" BGCOLOR="#E0E0F0"',
 	'south'  => 'rowspan=2 valign="top"',
 	'se'     => 'rowspan=2 valign="top"',
     };
@@ -415,9 +415,11 @@ sub run_cgi_command_help
     my $command      = $curproc->safe_param_command();
 
     if ($navi_command) {
+	print "[Usage]<br> <b> $navi_command </b> <br>\n";
 	$buf = $curproc->message_nl("cgi.$navi_command");
     }
     elsif ($command) {
+	print "[Usage]<br> <b> $command </b> <br>\n";
 	$buf = $curproc->message_nl("cgi.$command");
     }
 
@@ -495,7 +497,7 @@ sub run_cgi_options
     my $domain = $curproc->ml_domain();
     my $action = $curproc->myname();
 
-    print "<B><CENTER> OPTIONS </CENTER></B>\n";
+    print "<P> <B> options </B>\n";
 
     print start_form(-action=>$action);
 
