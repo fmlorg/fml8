@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: MySQL.pm,v 1.14 2001/08/05 03:24:44 fukachan Exp $
+# $FML: MySQL.pm,v 1.15 2001/08/05 12:07:22 fukachan Exp $
 #
 
 
@@ -76,8 +76,8 @@ sub configure
     my $params = $config->{ params }; #
 
     # import basic DBMS parameters
-    $me->{ _config }        = $config;
-    $me->{ _params }        = $params;
+    $me->{ _config }        = $config                    || undef;
+    $me->{ _params }        = $params                    || undef;
     $me->{ _sql_server }    = $config->{ sql_server }    || 'localhost';
     $me->{ _database }      = $config->{ database }      || 'fml';
     $me->{ _table }         = $config->{ table }         || 'ml';
@@ -98,7 +98,7 @@ sub configure
 	printf STDERR "%-20s %s\n", "loading", $pkg if $ENV{'debug'};
 
 	@ISA = ($pkg, @ISA);
-	$me->{ _driver } = $pkg;
+	$me->{ _model_specific_driver } = $pkg;
 
 	printf STDERR "%-20s %s\n", "MySQL::ISA:", "@ISA" if $ENV{'debug'};
     }
@@ -109,47 +109,58 @@ sub configure
 }
 
 
-=head2 C<getline()>
+=head2 C<setpos($pos)>
 
-return the next address.
-
-=head2 C<get_next_value()>
-
-same as C<getline()> now.
+MySQL does not support rollack, so we close and open this transcation.
+After re-opening, we moved to the specified $pos.
 
 =cut
 
 
-sub getline
+sub setpos
 {
-    my ($self, $args) = @_;
-    $self->get_next_value($args);
+    my ($self, $pos) = @_;
+    my $i = 0;
+
+    # requested position $pos is later here
+    if ($pos > $self->{ _row_pos }) {
+	$i = $pos - $self->{ _row_pos } - 1;
+    }
+    else {
+	# hmm, rollback() is not supported on mysql.
+	# we need to restart this session.
+	my $args = $self->{ _args };
+	$self->close($args);
+	$self->open($args);
+	$i = $pos - 1;
+    }
+
+    # discard
+    while ($i-- > 0) { $self->get_next_value();}
 }
 
 
-sub get_next_value
+=head2 C<getpos()>
+
+=cut
+
+
+sub getpos
 {
-    my ($self, $args) = @_;
+    my ($self) = @_;
+    return $self->{ _row_pos };
+}
 
-    # for the first time
-    unless ($self->{ _res }) {
-	# $self->{ _driver } is the $config->{ driver } object.
-	if ( $self->can('fetch_and_cache_address_list') ) {
-	    $self->fetch_and_cache_address_list($args);
-	}
-	else {
-	    croak "cannot get next value\n";
-	}
-    }
 
-    if ($self->{ _res }) {
-	my @row = $self->{ _res }->fetchrow_array;
-	join(" ", @row);
-    }
-    else {
-	$self->error_set( $DBI::errstr );
-	undef;
-    }
+=head2 C<eof()>
+
+=cut
+
+
+sub eof
+{
+    my ($self) = @_;
+    $self->{ _row_pos } < $self->{ _row_max } ? 0 : 1;
 }
 
 

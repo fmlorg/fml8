@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: DBI.pm,v 1.6 2001/06/17 08:57:10 fukachan Exp $
+# $FML: DBI.pm,v 1.7 2001/08/05 03:24:44 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -65,6 +65,10 @@ sub execute
     my $dbh   = $self->{ _dbh };
     my $query = $args->{  query };
 
+    print STDERR "execute query={$query}\n" if $ENV{'debug'};
+
+    undef $self->{ _res };
+
     if (defined $dbh) {
 	my $res = $dbh->prepare($query);
 
@@ -104,12 +108,22 @@ sub open
 {
     my ($self, $args) = @_;
 
-    use DBI;
-    use DBD::mysql;
+    # save for restart
+    $self->{ _args } = $args;
 
+    # DSN parameters
     my $dsn      = $self->{ _dsn };
     my $user     = $self->{ _user }        || 'fml';
     my $password = $self->{_user_password} || '';
+
+    use DBI;
+    if ($dsn =~ /DBD:mysql/) {
+	eval q{ use DBD::mysql; };
+	if ($@) {
+	    $self->error_set( $@ );
+	    return undef;
+	}
+    }
 
     # try to connect
     my $dbh = DBI->connect($dsn, $user, $password);
@@ -137,6 +151,88 @@ sub close
     delete $self->{ _res };
     delete $self->{ _dbh };
 }
+
+
+=head2 C<getline()>
+
+return the next address.
+
+=head2 C<get_next_value()>
+
+same as C<getline()> now.
+
+=cut
+
+
+sub getline
+{
+    my ($self, $args) = @_;
+    $self->get_next_value($args);
+}
+
+
+sub get_next_value
+{
+    my ($self, $args) = @_;
+
+    # for the first time
+    unless ($self->{ _res }) {
+	# reset row information
+	undef $self->{ _row_pos };
+	undef $self->{ _row_max };
+
+	if ( $self->can('fetch_all') ) {
+	    $self->fetch_all($args);
+	}
+	else {
+	    croak "cannot get next value\n";
+	}
+    }
+
+    if ($self->{ _res }) {
+	# store the row size
+	unless (defined $self->{ _row_max }) {
+	    $self->{ _row_max } = $self->{ _res }->rows;
+	}
+
+	my @row = $self->{ _res }->fetchrow_array;
+	$self->{ _row_pos }++;
+	join(" ", @row);
+    }
+    else {
+	$self->error_set( $DBI::errstr );
+	undef;
+    }
+}
+
+
+=head2 C<replace($regexp, $value)>
+
+=cut
+
+sub replace
+{
+    my ($self, $regexp, $value) = @_;
+    my (@addr);
+
+    # firstly, get list matching /$regexp/i;
+    my $a = $self->find($regexp, { all => 1});
+
+    # secondarly double check: get list matchi /$regexp/;
+    for my $addr (@$a) {
+	push(@addr, $addr) if ($addr =~ /$regexp/);
+    }
+
+    # thirdly, replace it
+    for my $addr (@addr) {
+	$self->delete( $addr );
+	$self->add( $value );
+    }
+
+}
+
+
+=cut
 
 
 =head1 AUTHOR
