@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Exim.pm,v 1.4 2001/04/10 11:52:26 fukachan Exp $
+# $FML: Exim.pm,v 1.1 2001/04/10 14:34:19 fukachan Exp $
 #
 
 
@@ -63,11 +63,12 @@ sub analyze
     my $m    = $msg->rfc822_message_header();
     my $addr = $m->get('X-Failed-Recipients');
 
-    $addr =~ s/\s*$//;
-
-    # set up return buffer
-    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
-    $result->{ $addr }->{ 'Status' }          = '5.x.y';
+    # set up return buffer if $addr is found.
+    if ($addr) {
+	$addr =~ s/\s*$//;
+	$result->{ $addr }->{ 'Final-Recipient' } = $addr;
+	$result->{ $addr }->{ 'Status' }          = '5.x.y';
+    }
 }
 
 =head1 AUTHOR
