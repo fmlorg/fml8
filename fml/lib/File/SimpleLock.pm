@@ -3,7 +3,7 @@
 # Copyright (C) 2000 Ken'ichi Fukamachi 
 # 
 # $Id$ 
-# $FML$ 
+# $FML: SimpleLock.pm,v 1.6 2001/04/03 09:31:27 fukachan Exp $ 
 #
 
 package File::SimpleLock;
@@ -11,7 +11,7 @@ package File::SimpleLock;
 use vars qw(%LockedFileHandle %FileIsLocked @ISA $Error);
 use strict;
 use Carp;
-use ErrorMessages::Status qw(error_set error error_clear);
+use ErrorStatus qw(error_set error error_clear);
 
 =head1 NAME
 
@@ -137,7 +137,7 @@ sub _simple_funlock
 =head1 SEE ALSO
 
 L<FileHandle>,
-L<ErrorMessages::Status>,
+L<ErrorStatus>,
 
 =head1 AUTHOR
 

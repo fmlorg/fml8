@@ -5,14 +5,14 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: MapAdapter.pm,v 1.26 2001/04/03 09:45:45 fukachan Exp $
 #
 
 package IO::MapAdapter;
 use vars qw(@ISA @ORIG_ISA $FirstTime);
 use strict;
 use Carp;
-use ErrorMessages::Status qw(error_set error error_clear);
+use IO::Adapter::ErrorStatus qw(error_set error error_clear);
 
 BEGIN {}
 END   {}

@@ -5,14 +5,14 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: Sequence.pm,v 1.6 2001/04/03 09:31:27 fukachan Exp $
 #
 
 package File::Sequence;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
-use ErrorMessages::Status qw(error_set error error_clear);
+use ErrorStatus qw(error_set error error_clear);
 
 =head1 NAME
 

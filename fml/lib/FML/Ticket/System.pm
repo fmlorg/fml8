@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: System.pm,v 1.22 2001/04/03 09:45:44 fukachan Exp $
 #
 
 package FML::Ticket::System;
@@ -13,7 +13,7 @@ package FML::Ticket::System;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use ErrorMessages::Status qw(error_set error error_clear);
+use ErrorStatus qw(error_set error error_clear);
 use FML::Log qw(Log LogWarn LogError);
 
 

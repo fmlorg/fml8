@@ -2,7 +2,7 @@
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #
 # $Id$
-# $FML$ # 注意: cvs のタグを $FML$ にする
+# $FML: Config.pm,v 1.26 2001/04/03 09:45:40 fukachan Exp $ # 注意: cvs のタグを $FML: Config.pm,v 1.26 2001/04/03 09:45:40 fukachan Exp $ にする
 #
 
 package FML::Config;
@@ -10,7 +10,7 @@ package FML::Config;
 use strict;
 use Carp;
 use vars qw(%_fml_config %_default_fml_config);
-use ErrorMessages::Status qw(error_set error error_clear);
+use ErrorStatus qw(error_set error error_clear);
 
 
 =head1 NAME

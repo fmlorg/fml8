@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: Array.pm,v 1.17 2001/04/03 09:45:45 fukachan Exp $
 #
 
 package IO::Adapter::Array;
@@ -13,7 +13,7 @@ package IO::Adapter::Array;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use ErrorMessages::Status qw(error_set error error_clear);
+use IO::Adapter::ErrorStatus qw(error_set error error_clear);
 
 =head1 NAME
 
