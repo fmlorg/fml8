@@ -1,7 +1,12 @@
 #!/bin/sh
 #
-# $FML: install.sh,v 1.10 2002/04/14 07:24:40 fukachan Exp $
+# $FML: install.sh,v 1.11 2002/04/20 11:22:57 fukachan Exp $
 #
+
+if [ ! -f .this_is_a_test_machine ];then
+	echo "touch .this_is_a_test_machine here if you use this script"
+	exit 1
+fi
 
 (cd ../..; ./configure \
 	--with-warning \
