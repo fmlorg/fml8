@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.29 2004/03/04 12:21:34 fukachan Exp $
+# $FML: Base.pm,v 1.30 2004/04/18 11:14:34 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Restriction::Base -- define safe data representations
+FML::Restriction::Base -- define safe data representations.
 
 =head1 SYNOPSIS
 
@@ -35,7 +35,7 @@ a variable is safe or not.
 
 =head2 new($args)
 
-usual constructor.
+constructor.
 
 =cut
 
@@ -80,14 +80,14 @@ Of cource, "user@domain", described above.
 
 =cut
 
-my $domain_regexp  = '[-A-Za-z0-9\.]+';
-my $user_regexp    = '[-A-Za-z0-9\._\+]+';
-my $command_regexp = '[-A-Za-z0-9_]+';
-my $commail_regexp = '[-A-Za-z0-9_:]+'; # allow e.g. last:3
-my $file_regexp    = '[-A-Za-z0-9_]+';
-my $dir_regexp     = '[-A-Za-z0-9_]+';
-my $option_regexp  = '[-A-Za-z0-9]+';
-my $number_regexp  = '\d+';
+my $domain_regexp  = '[-A-Za-z0-9\.]+';    # domain of user@domain 
+my $user_regexp    = '[-A-Za-z0-9\._\+]+'; # user of user@domain
+my $command_regexp = '[-A-Za-z0-9_]+';     # command name
+my $commail_regexp = '[-A-Za-z0-9_:]+';    # allow e.g. mget last:3
+my $file_regexp    = '[-A-Za-z0-9_]+';     # file name
+my $dir_regexp     = '[-A-Za-z0-9_]+';     # directory name
+my $option_regexp  = '[-A-Za-z0-9]+';      # command option
+my $number_regexp  = '\d+';                # number
 my $address_regexp = sprintf("%s\@%s", $user_regexp, $domain_regexp);
 my %basic_variable =
     (
@@ -164,10 +164,10 @@ C<fullpath>.
 =cut
 
 
-# Descriptions: return allowed regexp for $class.
+# Descriptions: check the string allowed for $class.
 #    Arguments: OBJ($self) STR($class) STR($string)
 # Side Effects: none
-# Return Value: 1 or UNDEF
+# Return Value: NUM(1(success) or UNDEF(failure))
 sub regexp_match
 {
     my ($self, $class, $string) = @_;
@@ -197,7 +197,7 @@ sub regexp_match
 }
 
 
-# Descriptions: return allowed regexp for full path.
+# Descriptions: check the string allowed for fullpath class.
 #               XXX special handling of fully path-ed directory.
 #    Arguments: OBJ($self) STR($string)
 # Side Effects: none
