@@ -10,7 +10,140 @@
 	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
 	気をつけてください。
 
+2004/07/23
 
+   OVERHAUL ...
+
+	FML::Confirm 
+		modified to clarify that db is opened.
+		ensure initialized value.
+		fix comments (FNF).
+		
+	FML::Error 
+		fix comments (FNF).
+		clarify error messages.
+		
+	FML::Filter 
+		fix comments (FNF).
+		clarify messages.
+		
+	FML::Header 
+		fix comments (FNF).
+		ensure initial value.
+		defined check more.
+		
+	FML::Install 
+		bug fix existence of destination file.
+		
+	FML::PCB 
+		use "return ..." always.
+		
+	FML::Article::Sequence 
+		fix comments (FNF).
+		use ::::o if could.
+		
+	FML::Article::Spool 
+		$dir -> $entry
+		fix comments.
+		
+	FML::CGI::ML 
+		fix comments.
+		fix error messages.
+		
+	FML::Command::DirUtils 
+		fix typo of error messages.
+		
+	FML::Command::Admin::subscribe 
+		fix comments (FNF).
+		ensure initial value.
+		
+	FML::Command::Admin::subscribe 
+		fix comments (FNF).
+		ensure initial value.
+		
+	FML::Command::Admin::unsubscribe 
+		fix comments (FNF).
+		ensure initial value.
+		
+	FML::File::Rotate 
+		remove not used variables.
+		
+	FML::Filter::MimeComponent 
+		fix comments.
+		fix error messages.
+		
+	FML::Filter::Size 
+		ensure initial value.
+		
+	FML::Filter::TextPlain 
+		fix comments.
+		use ::::o if could.
+		
+	FML::Header::MessageID 
+		fix comments.
+		use "return ..." always.
+		
+	FML::Header::Subject 
+		fix style (FNF).
+		use ::::o if could.
+		
+	FML::IPC::Message 
+		check input data.
+		
+	FML::Process::Command 
+		fix comments and error messages.
+		
+	FML::Process::Error 
+		fix comments.
+		ensure initial value.
+		check $maintainer value.
+		
+	FML::Process::QueueManager 
+		add qmgr::prefix to log messages.
+		
+	FML::Command::HTMLify 
+		fix comments.
+		use ::::o if could.
+		
+	FML::Command::Admin::changepassword 
+		fix error messages
+		
+	FML::Command::Admin::mergeml 
+		fix error messages
+		
+	FML::Process::CGI::Param 
+		fix error upcall
+		
+	FML::Restriction::Base 
+		fix comments.
+		
+	FML::User::Control 
+		fix error messages.
+		ensure initial value.
+		
+	FML::User::Info 
+		fix typo
+		
+	Mail::Message::Date 
+		fix comments.
+		modify variable name to clarify the role.
+		
+	Mail::Message::Encode 
+		bug fix arguments.
+		
+	FML::Process::CGI::Kernel 
+		fix typo.
+		show nl error message if could.
+		
+	FML::Process::Utils 
+		fix comments, style and add loop label, ... (FNF).
+		ensure initial value.
+		
+	FML::IPC::Queue 
+		change constructor argument (but not used yet).
+		fix error messages.
+		fix comments.
+		
 2004/07/18
 
     imported im-147.
@@ -7414,4 +7547,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.216 2004/07/12 03:01:33 fukachan Exp $
+$FML: CHANGES.txt,v 1.217 2004/07/18 16:17:45 fukachan Exp $
