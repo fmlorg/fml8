@@ -3,7 +3,7 @@
 # Copyright (C) 2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML$
+# $FML: Thread.pm,v 1.1 2003/03/16 04:53:32 fukachan Exp $
 #
 
 package FML::Article::Thread;
@@ -73,7 +73,7 @@ sub _last_modified_time
 
 
 # Descriptions: speculate the last id our thread system processed.
-#    Arguments: OBJ($curproc) OBJ($thread)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($thread)
 # Side Effects: none
 # Return Value: NUM
 sub speculate_last_id
@@ -112,7 +112,7 @@ sub speculate_last_id
 
 
 # Descriptions: speculate the maximum sequence number for ML articles.
-#    Arguments: OBJ($curproc) STR($spool_dir)
+#    Arguments: OBJ($self) OBJ($curproc) STR($spool_dir)
 # Side Effects: none
 # Return Value: NUM
 sub speculate_max_id
@@ -149,12 +149,12 @@ sub speculate_max_id
 
 
 # Descriptions: read filter list
-#    Arguments: OBJ($thread) STR($file)
+#    Arguments: OBJ($self) OBJ($thread) STR($file)
 # Side Effects: none
 # Return Value: none
 sub _read_filter_list
 {
-    my ($thread, $file) = @_;
+    my ($self, $thread, $file) = @_;
 
     if (-f $file) {
 	use FileHandle;
@@ -177,7 +177,7 @@ sub _read_filter_list
 # Descriptions: change status to "closed".
 #               $thread_id accepts MH style format.
 #               MH style is expanded by C<Mail::Messsage::MH>.
-#    Arguments: OBJ($thread) STR($thread_id) NUM($min) NUM($max)
+#    Arguments: OBJ($self) OBJ($thread) STR($thread_id) NUM($min) NUM($max)
 # Side Effects: update thread status database
 # Return Value: none
 sub close
@@ -216,7 +216,7 @@ use Carp;
 
 # Descriptions: top level interface for CUI.
 #               This routine is in loop.
-#    Arguments: OBJ($curproc) HASH_REF($args) OBJ($thread) HASH_REF($ttargs)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($thread) HASH_REF($ttargs)
 # Side Effects: none
 # Return Value: none
 sub interactive
@@ -235,7 +235,7 @@ sub interactive
 	# main loop;
 	no strict;
 	while ( defined ($buf = $term->readline($prompt)) ) {
-	    _exec($curproc, $thread, $ttargs, $buf);
+	    $self->_exec($curproc, $thread, $ttargs, $buf);
 	    warn $@ if $@;
 	    $term->addhistory($buf) if $buf =~ /\S/o;
 	}
@@ -245,9 +245,8 @@ sub interactive
 
 
 # Descriptions: CUI command switch
-#    Arguments: OBJ($curproc) HASH_REF($args)
-#               OBJ($xthread) HASH_REF($ttargs)
-#               STR($buf)
+#    Arguments: OBJ($self) OBJ($curproc)
+#               OBJ($xthread) HASH_REF($ttargs) STR($buf)
 # Side Effects: exit for some type of input.
 # Return Value: none
 sub _exec
