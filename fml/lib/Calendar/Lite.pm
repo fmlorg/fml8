@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.20 2004/02/15 04:38:24 fukachan Exp $
+# $FML: Lite.pm,v 1.21 2004/04/02 12:14:31 fukachan Exp $
 #
 
 package Calendar::Lite;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-Calendar::Lite - show a calendar (demonstration module)
+Calendar::Lite - show a calendar (demonstration module).
 
 =head1 SYNOPSIS
 
@@ -37,12 +37,12 @@ Calendar::Lite - show a calendar (demonstration module)
 =head1 DESCRIPTION
 
 C<CAUTION:> This module is created just for a demonstration to show
-how to write a module based on FML::Process::* not intended for your
-general use. This module is not enough mature nor secure.
+how to write a module not intended for your general use. This module
+is not enough mature nor secure.
 
-C<Calenter::lite> is also a demonstration module to show how to use
-and build up modules to couple with CPAN and FML modules.  This
-routine needs C<HTML::CalendarMonthSimple>.
+C<Calenter::Lite> is also a demonstration module to show how to use
+and build up modules to couple with CPAN and FML modules. For exaple,
+this routine needs C<HTML::CalendarMonthSimple>.
 
 It parses files in ~/.schedule/ and output the schedule of this month
 as HTML TABLE by default. To see it, you need a WWW browser
@@ -53,7 +53,7 @@ e.g. "w3m".
 
 =head2 new($args)
 
-The standard constructor.
+Constructor.
 
 It speculates C<user> by $args->{ user } or $ENV{'USER'} or UID
 and determines the path for ~user/.schedule/.
@@ -74,7 +74,7 @@ C<CAUTION:>
 =cut
 
 
-# Descriptions: usual constructor. $args is optional, passed via CGI.pm
+# Descriptions: constructor. $args is optional, passed via CGI.pm
 #               if fmlsci.cgi uses.
 #                    OR
 #               libexec/loaders's $args if fmlsch uses.
@@ -88,7 +88,7 @@ sub new
     my $me     = {};
     my $user   = $args->{ user } || $ENV{'USER'};
 
-    # default directory to hold schdule file(s): ~/.schedule/ by default
+    # default directory holding schdule file(s): ~/.schedule/ by default
     use User::pwent;
     unless (defined $user) {
 	my $p = getpwuid($<);
@@ -98,6 +98,7 @@ sub new
     my $pw       = getpwnam($user);
     my $home_dir = $pw->dir;
 
+    # XXX-TODO: NOT USE FML::* outside FML:: name space.
     # simple check (not enough mature).
     # This code is not for security but to avoid -T (taint mode) error ;)
     use FML::Restriction::Base;
@@ -134,7 +135,7 @@ It creates just a file path not file itself.
 =cut
 
 
-# Descriptions: determine template file location
+# Descriptions: determine template file location.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: STR(filename)
@@ -191,7 +192,7 @@ sub parse
     my $data_dir  = $self->{ _schedule_dir };
     my $data_file = $self->{ _schedule_file };
 
-    # pick up line matched with this pattern
+    # pick up line matching this pattern
     my @pat = (
 	       sprintf("^%04d%02d(\\d{1,2})\\s+(.*)",   $year, $month),
 	       sprintf("^%04d/%02d/(\\d{1,2})\\s+(.*)", $year, $month),
@@ -330,7 +331,7 @@ sub _analyze
 }
 
 
-# Descriptions: add Calendar entry to $self object
+# Descriptions: add calendar entry to $self object.
 #    Arguments: OBJ($self) STR($day) STR($buf)
 # Side Effects: update $self object
 # Return Value: none
@@ -342,7 +343,7 @@ sub _add_entry
 
     if (defined $day && defined $buf) {
 	print STDERR "day=$day buf=$buf\n" if 0;
-	$cal->addcontent($day, "<p>". $buf);
+	$cal->addcontent($day, "<p>$buf");
     }
 }
 
@@ -399,6 +400,7 @@ sub print_specific_month
 	$thisyear  = $year if defined $year;
     }
     else {
+	# XXX-TODO: fix $thisyear ?
 	if ($default_month == 1) {
 	    $thismonth =  2 if $month eq 'next';
 	    $thismonth = 12 if $month eq 'last';
@@ -465,7 +467,7 @@ XXX: The mode is not used in this module itsef.
 =cut
 
 
-# Descriptions: show the current $mode
+# Descriptions: show the current $mode.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR or undef
@@ -476,7 +478,7 @@ sub get_mode
 }
 
 
-# Descriptions: overwrite $mode
+# Descriptions: override $mode.
 #    Arguments: OBJ($self) STR($mode)
 # Side Effects: update $self object
 # Return Value: STR
