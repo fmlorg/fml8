@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $Id: loader,v 1.4 2001/02/01 08:43:16 fukachan Exp $ 
+# $Id: loader,v 1.5 2001/02/05 04:44:49 fukachan Exp $ 
 # $FML$
 #
 
@@ -65,10 +65,13 @@ sub Bootstrap
     my %options = ();
     my $my_default_config = '';
     my $ml_home_dir       = ''; # e.g. /var/spool/ml/elena
-    GetOptions(\%options, 
-	       qw(ctladdr! debug! params=s -c=s)
-	       );
 
+    # inspect my name from $0
+    use File::Basename;
+    my $myname = basename($0);
+
+    # parse command line options
+    GetOptions(\%options, FML::prepare_myname_options($myname));
     for (@ARGV) {
 	if (-d $_) {
 	    $ml_home_dir = $_;
@@ -94,13 +97,9 @@ sub Bootstrap
     unshift(@INC, split(/\s+/, $main_cf->{ lib_dir }));	    
     unshift(@INC, split(/\s+/, $main_cf->{ local_lib_dir }));
 
-    # 4. inspect my mode from $0
-    use File::Basename;
-    my $myname = basename($0);
-
-    # debug;
+    # 4. debug
     if ($0 =~ /loader/) {
-	use Data::Dumper; print Dumper( $main_cf ); sleep 3;
+	eval q#use Data::Dumper; print Dumper( $main_cf ); sleep 3;#;
     }
 
     # 5. o.k. here we go!
@@ -131,6 +130,26 @@ sub Bootstrap
     }
     else {
 	croak("$libexec_dir/fml is not found.");
+    }
+}
+
+
+package FML;
+use Carp;
+use strict;
+
+sub prepare_myname_options
+{
+    my ($myname) = @_;
+
+    if ($myname eq 'fml.pl' || $myname eq 'loader') { 
+	return qw(ctladdr! debug! params=s -c=s);
+    }
+    elsif ($myname eq 'fmlticket') {
+	return qw(debug! params=s -c=s -A=s -R=s);
+    } 
+    else {
+	croak "$myname is unknown yet\n";
     }
 }
 
