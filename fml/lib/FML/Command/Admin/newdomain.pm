@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newdomain.pm,v 1.2 2003/11/16 11:53:18 fukachan Exp $
+# $FML: newdomain.pm,v 1.3 2003/11/16 12:23:47 fukachan Exp $
 #
 
 package FML::Command::Admin::newdomain;
@@ -58,10 +58,27 @@ sub process
     my $canon_argv = $command_args->{ canon_argv };
     my $domain     = $canon_argv->{ ml_name };
     my $prefix     = $canon_argv->{ options }->[ 0 ];
+    my $error      = '';
 
-    use FML::HomeDir::Prefix;
-    my $ml_home_prefix = new FML::HomeDir::Prefix $curproc;
-    $ml_home_prefix->add($domain, $prefix);
+    if ($domain && $prefix) {
+	use FML::HomeDir::Prefix;
+	my $ml_home_prefix = new FML::HomeDir::Prefix $curproc;
+	$ml_home_prefix->add($domain, $prefix);
+    }
+    elsif ($domain && (! $prefix)) {
+	$error = "ml_home_prefix unspecified";
+    }
+    elsif ((! $domain) && $prefix) {
+	$error = "domain unspecified";
+    }
+    else {
+	$error = "no argument";
+    }
+
+    if ($error) {
+	$curproc->logerror($error);
+	croak($error);
+    }
 }
 
 
