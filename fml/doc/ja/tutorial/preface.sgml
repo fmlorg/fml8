@@ -1,5 +1,5 @@
 <!--
-	$FML: preface.sgml,v 1.4 2001/04/25 02:55:56 fukachan Exp $
+	$FML: preface.sgml,v 1.5 2001/04/25 14:30:20 fukachan Exp $
 -->
 
 <preface>
@@ -155,6 +155,61 @@ fml-devel で作られたモジュールのマージおよび
 
 </sect1>
 
+<!-- ======================================================== -->
+<sect1>
+	<title> fml5で既に動く機能 </title>
+
+<para>
+
+<itemizedlist>
+
+   <listitem>
+	<para>
+		postfix スタイルの設定ファイル 
+	</para>
+   </listitem>
+
+   <listitem>
+	<para>
+		配送、ヘッダの書き換え、フィルタ
+	</para>
+   </listitem>
+
+   <listitem>
+	<para>
+		いくつかのユーティリティプログラム:
+		fmldoc fmlconf makefml fmlticket
+	</para>
+   </listitem>
+
+   <listitem>
+	<para>
+		IPv6 
+	</para>
+   </listitem>
+
+   <listitem>
+	<para>
+		チケットシステム(最小限の機能、CGI 含む):
+		fmlticket fmlticket.cgi
+	</para>
+   </listitem>
+
+   <listitem>
+	<para>
+		抽象化 IO 層
+
+		メンバーファイルをファイル、/etc/group, NIS, MySQL 
+		から取り出すことができます。
+	</para>
+   </listitem>
+</itemizedlist>
+
+
+<link linkend="available"> 詳細はこちら </link>
+</para>
+
+</sect1>
 
 <!-- ======================================================== -->
 <sect1 id="mailinglist">
