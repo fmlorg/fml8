@@ -1,0 +1,9 @@
+file formats in this directory is SGML (Standard Generalized Markup
+Language). 
+
+You can compile it to html format by sgmltools and openjade.
+
+
+
+					Ken'ichi Fukamachi
+					fukachan@fml.org
