@@ -1,6 +1,68 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/02/11
+
+   create FML::Restriction::Command class
+
+   FML::Command::SendFile 
+   FML::Command::User::{guide,help,deny,objective}
+	send back file file in $ml_home_dir if found.
+	return the default message if not found.
+	"guide", "help", "objective" commands use this logic.
+
+	ユーザ用のコマンドの送り返し方を変更
+		1. (4.0 風にいえば) $DIR の help ファイルを送り返す
+		2. help ファイルがないなら、デフォルトのメッセージを使う
+
+		1. は 4.0 との互換性のためで、
+		fml-devel では 2. がデフォルト( help ファイルは作らない )
+
+2002/02/04
+
+   FML::Process::ThreadTrack 
+	determine the max sequence id by considering last mofieid time
+	among the sequence file and thread databases.
+
+   Mail::ThreadTrack::DB 
+	implement db_last_modified()
+	It return the last modified time of "date" DB in dateabase as
+	unix time. 
+
+2002/02/03
+
+   main.cf.in
+	$ml_home_prefix -> $default_ml_home_prefix
+	
+   FML::Command::Admin::newml 
+   FML::Process::Utils 
+	ml_home_prefix() can recognize virtual domain.
+	modified to use it.
+	
+	we should not use $curproc->{ main_cf } directrly in modules out of FML::Process::
+	we implement the following methods in FML::Process::Utils and use them.
+	o $curproc->executable_prefix()
+	o $curproc->template_files_dir_for_newml()
+
+2002/02/02
+
+   FML::Process::Utils 
+	define access methods::default_domain(), ml_home_prefix()
+	(prototype)
+	
+   FML::Process::Switch 
+   FML::Process::CGI::Kernel 
+	use FML::Process::Utils::__ml_home_prefix_from_main_cf() to
+	get $ml_home_prefix. 
+
+   TinyScheduler 
+   Mail::ThreadTrack::DB 
+	use File::Spec
+
+2002/02/01
+
+   remove $ENV{debug} based toggle flag
+
 2002/01/27
 
    FML::Command::Admin::newml 
@@ -1435,4 +1497,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.48 2002/01/18 15:40:13 fukachan Exp $
+$FML: CHANGES.txt,v 1.49 2002/01/27 15:08:23 fukachan Exp $
