@@ -32,16 +32,20 @@ sql_server	=	mysql.home.fml.org
 =cut
 
 #
-# write HOOKS after here if needed.
+# write HOOKS (perl scripts) after here if needed.
 #
 
 $distribute_run_start_hook = q{
+	use FML::Log qw(Log LogError);
 
-	print STDERR "hook: hey!\n";
+        my $header = $curproc->incoming_message_header();
+	my $ct     = $header->get('content-type');
 
-	my $header = $curproc->{ incoming_message }->{ header };
-
-	print STDERR $header->get('content-type');
-
-	sleep 2;
+	if ($ct =~ m@^\s*text/plain@i) {
+		Log("hook: text/plain ok");
+	}
+	else {
+		$curproc->stop_this_process();
+		LogError("hook: not text/plain");
+	}
 };
