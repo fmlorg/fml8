@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.14 2004/03/18 13:29:39 fukachan Exp $
+# $FML: Command.pm,v 1.15 2004/07/23 13:16:43 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -70,7 +70,7 @@ sub permit_user_command
 	else {
 	    if ($config->has_attribute('user_command_mail_allowed_commands',
 				       $comname)) {
-		$curproc->log("debug: match: rule=$rule comname=$comname");
+		$curproc->logdebug("match: rule=$rule comname=$comname");
 		return("matched", "permit");
 	    }
 	    else {
@@ -103,7 +103,7 @@ sub permit_anonymous_command
     # 2) command match anonymous one ?
     if ($config->has_attribute('anonymous_command_mail_allowed_commands',
 			       $comname)) {
-	$curproc->log("debug: match: rule=$rule comname=$comname");
+	$curproc->logdebug("match: rule=$rule comname=$comname");
 	return("matched", "permit");
     }
     # XXX-TODO: not need deny reason logging ?
@@ -133,7 +133,7 @@ sub permit_admin_member_maps
     my $match   = $cred->is_privileged_member($sender);
 
     if ($match) {
-	$curproc->log("found in admin_member_maps");
+	$curproc->logdebug("found in admin_member_maps");
 	return("matched", "permit");
     }
     # XXX-TODO: not need deny reason logging ?
@@ -162,7 +162,7 @@ sub check_admin_member_password
     }
     else {
 	# XXX-TODO: not need deny reason logging ?
-	$curproc->log("admin password: auth fail");
+	$curproc->logerror("admin password: auth fail");
 	return(0, undef);
     }
 }

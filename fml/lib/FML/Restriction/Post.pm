@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.14 2004/10/28 03:32:52 fukachan Exp $
+# $FML: Post.pm,v 1.15 2004/11/14 11:18:23 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -181,11 +181,11 @@ sub check_article_thread
 
     # 
     if ($match) {
-	$curproc->log("check_article_thread matched. ($match sec old)");
+	$curproc->logdebug("check_article_thread matched. ($match sec old)");
 	return("matched", "permit");
     }
     else {
-	$curproc->log("check_article_thread failed.");
+	$curproc->logdebug("check_article_thread unmatched.");
 	return(0, undef);
     }
 }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: admin.pm,v 1.9 2004/06/29 10:02:43 fukachan Exp $
+# $FML: admin.pm,v 1.10 2004/07/23 15:59:04 fukachan Exp $
 #
 
 package FML::Command::User::admin;
@@ -192,15 +192,15 @@ sub _apply_old_admin_command_mail_restrictions
 
 	# reject as soon as possible
 	if ($is_auth eq '__LAST__') {
-	    $curproc->log("admin: rejected by $rule");
+	    $curproc->logerror("admin: rejected by $rule");
 	    return 0;
 	}
 	elsif ($is_auth) {
-	    $curproc->log("admin: auth by $rule");
+	    $curproc->log("admin: authed by $rule");
 	    return $is_auth;
 	}
 	else {
-	    $curproc->log("admin: not match rule=$rule");
+	    $curproc->logdebug("admin: not match rule=$rule");
 	}
     }
 
@@ -232,7 +232,7 @@ sub _apply_new_admin_command_mail_restrictions
     my ($match, $result) = (0, 0);
   RULE:
     for my $rule (@$rules) {
-	$curproc->log("chech by $rule");
+	$curproc->logdebug("chech by $rule");
 
 	if ($acl->can($rule)) {
 	    # match  = matched. return as soon as possible from here.
@@ -246,7 +246,7 @@ sub _apply_new_admin_command_mail_restrictions
 	}
 
 	if ($match) {
-	    $curproc->log("$result rule=$rule");
+	    $curproc->logdebug("$result rule=$rule");
 	    last RULE;
 	}
     }
@@ -265,12 +265,12 @@ sub _apply_new_admin_command_mail_restrictions
 	    return 0;
 	}
 	else {
-	    $curproc->log("unknown result: $result");
+	    $curproc->logerror("unknown result: $result");
 	    return 0;
 	}
     }
     else {
-	$curproc->log("no match");
+	$curproc->logerror("not matched");
 	return 0;
     }
 }

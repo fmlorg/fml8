@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.13 2004/06/27 06:07:12 fukachan Exp $
+# $FML: Control.pm,v 1.14 2004/07/23 13:09:38 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -376,7 +376,7 @@ sub _try_chaddr_in_map
 	    $obj->delete( $old_address_in_map );
 	    unless ($obj->error()) {
 		$obj->close();
-		$curproc->log("delete $old_address from map=$map");
+		$curproc->log("remove $old_address from map=$map");
 	    }
 	    else {
 		$curproc->logerror("fail to delete $old_address to map=$map");

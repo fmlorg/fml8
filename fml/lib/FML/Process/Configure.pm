@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.65 2004/04/23 04:10:36 fukachan Exp $
+# $FML: Configure.pm,v 1.66 2004/07/11 15:43:39 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -339,7 +339,7 @@ sub _makefml
 	    $curproc->logerror($r);
 	    if ($r =~ /^(.*)\s+at\s+/) {
 		my $reason = $1;
-		$curproc->log($reason); # pick up reason
+		$curproc->logerror($reason); # pick up reason
 		croak($reason);
 	    }
 	}

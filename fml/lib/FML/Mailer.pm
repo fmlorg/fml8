@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.28 2004/05/18 00:37:32 fukachan Exp $
+# $FML: Mailer.pm,v 1.29 2004/07/11 15:43:37 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -108,7 +108,7 @@ sub send
 	$maintainer = $config->{ maintainer } if defined $config;
 
 	# default log functions
-	$fp  = sub { $curproc->log(@_);}; # pointer to the log function
+	$fp  = sub { $curproc->logdebug(@_);}; # pointer to the log function
 	$sfp = sub { my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;};
 
 	# overwrite smtp log channel

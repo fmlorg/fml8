@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.109 2004/07/23 12:58:26 fukachan Exp $
+# $FML: Command.pm,v 1.110 2004/07/23 15:59:08 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -156,16 +156,16 @@ sub _check_filter
 		    _arg_reason => $r,
 		};
 
-		$curproc->log("(debug) filter: inform rejection");
+		$curproc->log("filter: inform rejection");
 		$filter->command_mail_filter_reject_notice($curproc,$msg_args);
 	    }
 	    else {
-		$curproc->log("filter: not inform rejection");
+		$curproc->logdebug("filter: not inform rejection");
 	    }
 
 	    # we should stop this process ASAP.
 	    $curproc->stop_this_process();
-	    $curproc->log("rejected by filter due to $r");
+	    $curproc->logerror("rejected by filter due to $r");
 	}
     };
     $curproc->log($@) if $@;
@@ -304,7 +304,7 @@ sub _command_process_loop
 	$num_total++; # the total numer of non null lines
 
 	if ($debug) { # save raw command buffer.
-	    $curproc->log("(debug) input[$num_total]: $orig_command");
+	    $curproc->log("command: input[$num_total]: $orig_command");
 	}
 
 	# XXX analyze the input command and set the result into $context.
@@ -323,7 +323,7 @@ sub _command_process_loop
 	# 1. stop here e.g. we processed "unsubscribe" above, so stop here.
 	if ($curproc->command_context_get_normal_stop()) {
 	    $curproc->reply_message_nl('command.stop', "stopped.");
-	    $curproc->log("command processing stop.");
+	    $curproc->logdebug("command processing stop.");
 	    last COMMAND;
 	}
 
@@ -355,7 +355,7 @@ sub _command_switch
 
     if ($debug) {
 	my $fixed_command = $context->{ fixed_command };
-	$curproc->log("execute \"$fixed_command\"");
+	$curproc->log("command: execute \"$fixed_command\"");
     }
 
     # command restriction rules
@@ -392,7 +392,7 @@ sub _command_switch
 	}
 	elsif ($result eq "deny") {
 	    $num_error++;
-	    $curproc->log("deny command: $comname");
+	    $curproc->logerror("deny command: $comname");
 	    $curproc->reply_message("\n$_prompt");
 	    $curproc->restriction_state_reply_reason('command_mail',
 						     $msg_args);
@@ -403,7 +403,7 @@ sub _command_switch
 	    $curproc->reply_message_nl("command.not_command",
 				       "no such command.",
 				       $msg_args);
-	    $curproc->log("ignore command: $comname");
+	    $curproc->logdebug("ignore command: $comname");
 	}
     }
     else {
@@ -477,7 +477,7 @@ sub _command_execute
 	}
 	else { # error trap
 	    my $reason = $@;
-	    $curproc->log($reason);
+	    $curproc->logerror($reason);
 
 	    $num_error++;
 
@@ -486,7 +486,7 @@ sub _command_execute
 
 	    if ($reason =~ /^(.*)\s+at\s+/) {
 		my $reason = $1;
-		$curproc->log($reason); # pick up reason
+		$curproc->logerror($reason); # pick up reason
 	    }
 	}
     }

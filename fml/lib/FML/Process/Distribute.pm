@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.156 2004/08/15 10:29:42 fukachan Exp $
+# $FML: Distribute.pm,v 1.157 2004/11/03 23:26:52 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -169,16 +169,16 @@ sub _check_filter
 			_arg_reason => $r,
 		    };
 
-		    $curproc->log("(debug) filter: inform rejection");
+		    $curproc->log("article_filter: inform rejection");
 		    $filter->article_filter_reject_notice($curproc, $msg_args);
 		}
 		else {
-		    $curproc->log("filter: not inform rejection");
+		    $curproc->logdebug("filter: not inform rejection");
 		}
 
 		# we should stop this process ASAP.
 		$curproc->stop_this_process();
-		$curproc->log("rejected by filter due to $r");
+		$curproc->logerror("rejected by filter due to $r");
 	    }
 	};
 	$curproc->log($@) if $@;
@@ -187,7 +187,7 @@ sub _check_filter
 	if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
     }
     else {
-	$curproc->log("debug: article_filter disabled");
+	$curproc->logdebug("article_filter disabled");
     }
 }
 
@@ -237,7 +237,7 @@ sub run
 	    $curproc->_deliver_article_prep($args);
 	}
 	else {
-	    $curproc->log("deny article submission");
+	    $curproc->logerror("deny article submission");
 	    $curproc->stop_this_process();
 
 	    # send back deny request with the original message.
@@ -276,7 +276,7 @@ sub run
 	}
     }
     else {
-	$curproc->logerror("ignore this request.");
+	$curproc->logwarn("ignore this request.");
     }
 
     # $curproc->unlock();
@@ -383,7 +383,7 @@ sub _deliver_article_prep
 	$curproc->set_article_id($id);
     }
     else {
-	$curproc->log("returned article id=$id");
+	$curproc->logerror("returned article id=$id");
 	$curproc->logerror("article sequence number not updated");
 	$curproc->unlock($lock_channel);
 	$curproc->exit_as_tempfail(); # XXX LONG JUMP!
@@ -393,7 +393,7 @@ sub _deliver_article_prep
     # XXX debug, remove here in the future
     if ($debug) {
 	my $ha_msg = $curproc->{ article }->{ body }->data_type_list;
-	for my $msg (@$ha_msg) { $curproc->log("debug: $msg");}
+	for my $msg (@$ha_msg) { $curproc->logdebug($msg);}
     }
 
     # thread system checks the message before header rewritings.
@@ -428,7 +428,7 @@ sub _deliver_article_prep
     if ($config->yes('use_html_archive')) {
 	$curproc->log("htmlify article $id");
 	$curproc->_htmlify();
-	$curproc->log("htmlify article $id end");
+	$curproc->logdebug("htmlify article $id end");
     }
 }
 
@@ -468,7 +468,7 @@ sub _header_rewrite
 
   RULE:
     for my $rule (@$rules) {
-	$curproc->log("_header_rewrite( $rule )") if $config->yes('debug');
+	$curproc->logdebug("_header_rewrite( $rule )");
 
 	if ($header->can($rule)) {    # See FML::Header and FML::Header::*
 	    $header->$rule($config, { # for methods themself
@@ -529,7 +529,7 @@ sub _deliver_article
 
     # SMTP-FROM is a must!
     unless ( $config->{'maintainer'} ) {
-	$curproc->log("not delivery for undefined \$maintainer");
+	$curproc->logerror("not delivery for undefined \$maintainer");
 	return;
     }
 
@@ -548,7 +548,7 @@ sub _deliver_article
     if (defined $queue) {
 	$curproc->lock($lock_channel);
 
-	$curproc->log("article: qid=$qid");
+	$curproc->logdebug("article: qid=$qid");
 
 	$queue->set('sender', $config->{ smtp_sender });
 
@@ -557,7 +557,7 @@ sub _deliver_article
 
 	$queue->in($message);
 	my $n = $queue->write_count();
-	$curproc->log("queue: size=$n written");
+	$curproc->logdebug("queue: size=$n written");
 	if ($queue->error()) {
 	    my $error = $queue->error();
 	    $curproc->logerror("queue: $error");
@@ -567,7 +567,7 @@ sub _deliver_article
 	$queue->lock( { lock_before_runnable => "yes" } );
 	unless ($queue->setrunnable()) {
 	    $curproc->logerror("queue: cannot setrunnable");
-	    $curproc->log("try to deliver on the fly");
+	    $curproc->logwarn("try to deliver on the fly");
 	    $fatal = 1;
 	}
 
@@ -575,7 +575,7 @@ sub _deliver_article
     }
 
     # 2. distribute article
-    my $fp  = sub { $curproc->log(@_);}; # pointer to the log function
+    my $fp  = sub { $curproc->logdebug(@_);}; # pointer to the log function
     my $sfp = sub { my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;};
     my $handle = undef;
 
@@ -633,7 +633,7 @@ sub _deliver_article
     $curproc->unlock($lock_channel) unless defined $queue;
 
     if ($service->error) {
-	$curproc->log($service->error);
+	$curproc->logerror($service->error);
 	$curproc->smtp_server_state_set_error();
     }
 
@@ -644,7 +644,7 @@ sub _deliver_article
     if (defined $queue) {
 	$queue->remove();
 	$queue->unlock();
-	$curproc->log("article: qid=$qid removed");
+	$curproc->logdebug("article: qid=$qid removed");
     }
 }
 

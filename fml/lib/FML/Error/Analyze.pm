@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.28 2004/04/23 04:10:33 fukachan Exp $
+# $FML: Analyze.pm,v 1.29 2004/07/23 13:16:37 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -150,7 +150,7 @@ sub AUTOLOAD
     $fp =~ s/.*:://;
     my $pkg = "FML::Error::Analyze::${fp}";
 
-    $curproc->log("load $pkg") if 1; # debug
+    $curproc->logdebug("load $pkg");
 
     my $analyzer = undef;
     eval qq{ use $pkg; \$analyzer = new $pkg;};

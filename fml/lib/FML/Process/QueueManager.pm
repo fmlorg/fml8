@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.29 2004/09/03 13:56:42 fukachan Exp $
+# $FML: QueueManager.pm,v 1.30 2004/09/04 03:14:17 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -84,7 +84,7 @@ sub send
     my $count_ok    = 0;
     my $count_err   = 0;
     my $channel     = 'qmgr_reschedule';
-    my $fp          = sub { $curproc->log(@_);};
+    my $fp          = sub { $curproc->logdebug(@_);};
 
     use Mail::Delivery::Queue;
     my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
@@ -99,7 +99,7 @@ sub send
 	$queue->set_policy("fair-queue");
 	$ra = $queue->list();
 	unless (@$ra) {
-	    $curproc->log("qmgr: empty active queue. re-schedule");
+	    $curproc->logdebug("qmgr: empty active queue. re-schedule");
 	    $queue->reschedule();
 	    $ra = $queue->list();
 	}
@@ -125,7 +125,7 @@ sub send
 		    $count_ok++;
 		}
 		else {
-		    $curproc->log("qmgr: qid=$qid try later.");
+		    $curproc->logwarn("qmgr: qid=$qid try later.");
 		    $q->unlock();
 		    $q->sleep_queue();
 		    $is_locked = 0;
@@ -135,13 +135,13 @@ sub send
 	    }
 	    else {
 		# XXX-TODO: $q->remove() if invalid queue ?
-		$curproc->log("qmgr: qid=$qid is invalid");
+		$curproc->logerror("qmgr: qid=$qid is invalid");
 	    }
 
 	    $q->unlock() if $is_locked;
 	}
 	else {
-	    $curproc->log("qmgr: qid=$qid is locked. retry");
+	    $curproc->logwarn("qmgr: qid=$qid is locked. retry");
 	}
 
 	# upper limit of processing done on one process.
@@ -149,12 +149,12 @@ sub send
     }
 
     if ($count) {
-	$curproc->log("qmgr: $count requests processed: ok=$count_ok/$count");
+	$curproc->logdebug("qmgr: $count requests processed: ok=$count_ok/$count");
     }
 
     if ($curproc->is_event_timeout($channel)) {
 	if (defined $queue) {
-	    $curproc->log("qmgr: re-schedule");
+	    $curproc->logdebug("qmgr: re-schedule");
 	    $queue->reschedule();
 	}
 	$curproc->set_event_timeout($channel, time + 300);
@@ -190,10 +190,10 @@ sub _send
     });
 
     if ($r) {
-	$curproc->log("qmgr: qid=$qid status=sent");
+	$curproc->logdebug("qmgr: qid=$qid status=sent");
     }
     else {
-	$curproc->log("qmgr: qid=$qid status=fail");
+	$curproc->logerror("qmgr: qid=$qid status=fail");
     }
 
     return $r;
@@ -216,7 +216,7 @@ sub cleanup
     my ($self)    = @_;
     my $curproc   = $self->{ _curproc };
     my $queue_dir = $self->{ _directory };
-    my $fp        = sub { $curproc->log(@_);};
+    my $fp        = sub { $curproc->logdebug(@_);};
 
     use Mail::Delivery::Queue;
     my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
@@ -238,7 +238,7 @@ sub cleanup
 
 	    # enough old.
 	    if ($mtime < $now - $limit) {
-		$curproc->log("qmgr: remove too old queue qid=$qid");
+		$curproc->logdebug("qmgr: remove too old queue qid=$qid");
 		$q->remove();
 	    }
 	}

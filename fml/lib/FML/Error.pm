@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.31 2004/05/22 06:19:51 fukachan Exp $
+# $FML: Error.pm,v 1.32 2004/07/23 04:03:38 fukachan Exp $
 #
 
 package FML::Error;
@@ -298,13 +298,13 @@ sub is_list_address
 
     for my $sysaddr (@$addrs) {
 	if (defined $sysaddr && $sysaddr) {
-	    $curproc->log("check is_same_address($addr, $sysaddr)") if $debug;
+	    $curproc->logdebug("check is_same_address($addr, $sysaddr)");
 	    if ($cred->is_same_address($addr, $sysaddr)) {
-		$curproc->log("match") if $debug;
+		$curproc->log("matched") if $debug;
 		$match++;
 	    }
 	    else {
-		$curproc->log("not match") if $debug;
+		$curproc->log("not matched") if $debug;
 	    }
 	}
     }

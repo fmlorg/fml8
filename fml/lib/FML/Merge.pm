@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Merge.pm,v 1.12 2004/09/06 07:05:34 fukachan Exp $
+# $FML: Merge.pm,v 1.13 2004/11/25 12:21:39 fukachan Exp $
 #
 
 package FML::Merge;
@@ -349,7 +349,6 @@ sub speculate_default_config_ph_path
     else {
 	my $config = $curproc->config();
 	my $file   = $config->{ compat_old_fml_default_config_ph_file };
-	$curproc->log("check $file");
 	if (-f $file) {
 	    print STDERR "   using $file as default_config.ph\n";
 	    return $file;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.37 2004/04/27 13:37:48 fukachan Exp $
+# $FML: Auth.pm,v 1.38 2004/06/26 11:33:30 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -105,7 +105,7 @@ sub reject_system_special_accounts
     my $match  = $cred->match_system_special_accounts($sender);
 
     if ($match) {
-	$curproc->log("reject_system_special_accounts: matches the sender");
+	$curproc->logerror("reject_system_special_accounts: matches the sender");
 	return '__LAST__';
     }
 
@@ -194,7 +194,7 @@ sub check_admin_member_password
 		    my $p_input = $crypt->unix_crypt($password, $p_infile);
 		    if ($p_infile eq $p_input) {
 			if ($debug) {
-			    $curproc->log("$function: password match");
+			    $curproc->log("$function: password matched");
 			}
 			$password_match = 1;
 			$status         = 1;
@@ -279,7 +279,7 @@ sub change_password
 		    $curproc->logerror("cannot delete $address from=$map");
 		}
 		else {
-		    $curproc->log("delete $address from=$map");
+		    $curproc->log("remove $address from=$map");
 		}
 	    }
 	}

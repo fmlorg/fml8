@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.13 2004/05/25 03:45:20 fukachan Exp $
+# $FML: Sequence.pm,v 1.14 2004/07/23 04:10:54 fukachan Exp $
 #
 
 package FML::Article::Sequence;
@@ -167,7 +167,7 @@ sub speculate_max_id
 	$spool_dir = $config->{ spool_dir };
     }
 
-    $curproc->log("max_id: (debug) scan $spool_dir subdir=$use_subdir");
+    $curproc->logdebug("max_id: scan $spool_dir subdir=$use_subdir");
 
     if ($use_subdir) {
 	use DirHandle;
@@ -194,7 +194,7 @@ sub speculate_max_id
 
 	    # XXX-TODO wrong? to speculate max_id in subdir spool?
 	    $subdir = File::Spec->catfile($spool_dir, $max_subdir);
-	    $curproc->log("max_id: (debug) scan $subdir");
+	    $curproc->logdebug("max_id: scan $subdir");
 	    $curproc->speculate_max_id($subdir);
 	}
     }

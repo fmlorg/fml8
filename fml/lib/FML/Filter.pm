@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.42 2004/05/25 04:08:32 fukachan Exp $
+# $FML: Filter.pm,v 1.43 2004/07/23 04:04:07 fukachan Exp $
 #
 
 package FML::Filter;
@@ -82,13 +82,13 @@ sub article_filter
       FUNCTION:
 	for my $function (@$functions) {
 	    if ($config->yes( "use_${function}" )) {
-		$curproc->log("filter(debug): check by $function") if $debug;
+		$curproc->log("filter: check by $function") if $debug;
 		my $fp  = "_apply_$function";
 		$status = $self->$fp($curproc, $message);
 	    }
 	    else {
 		if ($debug) {
-		    $curproc->log("filter(debug): $function check disabled.");
+		    $curproc->log("filter: $function check disabled.");
 		}
 	    }
 
@@ -198,7 +198,7 @@ sub _apply_article_non_mime_filter
 
       RULE:
 	for my $rule (@$rules) {
-	    $curproc->log("article_non_mime_filter.check $rule") if $debug;
+	    $curproc->log("filter: article_non_mime_filter.check $rule") if $debug;
 
 	    if ($rule eq 'permit') {
 		return 0;
@@ -281,7 +281,7 @@ sub _apply_article_mime_component_filter
 	}
 	else {
 	    if ($debug) {
-		$curproc->log("(debug) disabled since rule file not found");
+		$curproc->log("filter: disabled since rule file not found");
 	    }
 
 	    return 0;
@@ -318,7 +318,7 @@ sub _apply_article_spam_filter
 
       DRIVER:
 	for my $driver (@$drivers) {
-	    $curproc->log("call external spam driver: $driver");
+	    $curproc->logdebug("call external spam driver: $driver");
 	    my $r = $self->_external_article_filter($curproc, $mesg, $driver);
 	    if ($r) {
 		# XXX-TODO: $FILTER_ERR_IGNORE ok?
@@ -333,7 +333,7 @@ sub _apply_article_spam_filter
 	}
     }
     else {
-	$curproc->log("debug: spam filter disabled");
+	$curproc->logdebug("spam filter disabled");
     }
 
     return 0;
@@ -355,7 +355,7 @@ sub _apply_article_virus_filter
 
       DRIVER:
 	for my $driver (@$drivers) {
-	    $curproc->log("call external virus driver: $driver");
+	    $curproc->logdebug("call external virus driver: $driver");
 	    my $r = $self->_external_article_filter($curproc, $mesg, $driver);
 	    if ($r) {
 		# XXX-TODO: $FILTER_ERR_IGNORE ok?
@@ -370,7 +370,7 @@ sub _apply_article_virus_filter
 	}
     }
     else {
-	$curproc->log("debug: virus filter disabled");
+	$curproc->logdebug("virus filter disabled");
     }
 
     return 0;
@@ -525,13 +525,13 @@ sub command_mail_filter
       FUNCTION:
 	for my $function (@$functions) {
 	    if ($config->yes( "use_${function}" )) {
-		$curproc->log("filter(debug): check by $function") if $debug;
+		$curproc->log("filter: check by $function") if $debug;
 		my $fp  = "_apply_$function";
 		$status = $self->$fp($curproc, $message);
 	    }
 	    else {
 		if ($debug) {
-		    $curproc->log("filter(debug): $function check disabled.");
+		    $curproc->log("filter: $function check disabled.");
 		}
 	    }
 

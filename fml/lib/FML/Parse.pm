@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Parse.pm,v 1.33 2004/04/23 04:15:57 fukachan Exp $
+# $FML: Parse.pm,v 1.34 2004/07/11 15:43:37 fukachan Exp $
 #
 
 package FML::Parse;
@@ -71,7 +71,7 @@ sub _parse
     # log information
     my $header_size = $msg->whole_message_header_size();
     my $body_size   = $msg->whole_message_body_size();
-    $curproc->log("read header=$header_size body=$body_size");
+    $curproc->logdebug("read header=$header_size body=$body_size");
 
     # XXX-TODO: use $curproc->XXX_set_envelope_sender($address).
     if (defined $msg->envelope_sender()) {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.15 2004/08/13 15:02:49 fukachan Exp $
+# $FML: State.pm,v 1.16 2004/09/28 13:37:10 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -95,7 +95,7 @@ sub restriction_state_set_deny_reason
     my $pcb = $curproc->pcb();
     $pcb->set("check_restrictions", "deny_reason", $reason);
 
-    $curproc->log("restriction_state_set_deny_reason: $reason") if $debug;
+    $curproc->logdebug("restriction_state_set_deny_reason: $reason") if $debug;
 }
 
 
@@ -122,7 +122,7 @@ sub restriction_state_reply_reason
 
     my $rule = $curproc->restriction_state_get_deny_reason();
 
-    $curproc->log("restriction_state_reply_reason: $rule") if $debug;
+    $curproc->logdebug("restriction_state_reply_reason: $rule") if $debug;
 
     if ($rule eq 'reject_system_special_accounts') {
 	my $r = "deny request from a system account";

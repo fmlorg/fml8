@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Digest.pm,v 1.19 2004/04/23 04:10:27 fukachan Exp $
+# $FML: Digest.pm,v 1.20 2004/07/23 13:16:31 fukachan Exp $
 #
 
 package FML::Digest;
@@ -216,7 +216,7 @@ sub create_multipart_message
 	    $count_ok++;
 	}
 	else {
-	    $curproc->log("no such file: $filepath");
+	    $curproc->logerror("no such file: $filepath");
 	    $count_err++;
 	}
     }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.243 2004/11/25 12:25:56 fukachan Exp $
+# $FML: Kernel.pm,v 1.244 2004/11/30 04:14:59 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -364,12 +364,12 @@ sub lock
     if ($r) {
 	my $t = time - $time_in;
 	if ($t > 1) {
-	    $curproc->log("lock channel=$channel requires $t sec.");
+	    $curproc->logwarn("lock channel=$channel requires $t sec.");
 	}
 
 	$pcb->set('lock', $channel, $io);
 	$LockInfo{ $channel } = 1;
-	$curproc->log("lock channel=$channel");
+	$curproc->logdebug("lock channel=$channel");
     }
     else {
 	$curproc->logerror("cannot lock");
@@ -399,11 +399,11 @@ sub unlock
 	if ($r) {
 	    my $t = time - $time_in;
 	    if ($t > 1) {
-		$curproc->log("unlock requires $t sec.");
+		$curproc->logwarn("unlock requires $t sec.");
 	    }
 
 	    delete $LockInfo{ $channel };
-	    $curproc->log("unlock channel=$channel");
+	    $curproc->logdebug("unlock channel=$channel");
 	}
 	else {
 	    $curproc->logerror("cannot unlock");
@@ -652,7 +652,7 @@ sub simple_loop_check
 	    $match = $header->$rule($config) ? $rule : 0;
 	}
 	else {
-	    $curproc->log("header->${rule}() is undefined");
+	    $curproc->logwarn("header->${rule}() is undefined");
 	}
 
 	last RULE if $match;
@@ -843,7 +843,7 @@ sub resolve_ml_specific_variables
 	# lastly, we need to determine $ml_name and $ml_domain.
 	# parse the argument such as "fml.pl /var/spool/ml/elena ..."
 	unless ($ml_name) {
-	    $curproc->log("(debug) parse @ARGV");
+	    $curproc->logdebug("parse ARGV = ( @ARGV )");
 
 	  ARGS:
 	    for my $arg (@ARGV) {
@@ -869,7 +869,7 @@ sub resolve_ml_specific_variables
 			$config->set( 'ml_home_dir', $arg );
 
 			my $s = "ml_name=$ml_name ml_home_dir=$ml_home_dir";
-			$curproc->log("(debug) $s");
+			$curproc->logdebug("(debug) $s");
 		    }
 		}
 	    }
@@ -1201,7 +1201,7 @@ sub _store_message_into_incoming_queue
     }
 
     unless ($fatal) {
-	$curproc->log("queued/incoming: qid=$queue_id read=$total");
+	$curproc->logdebug("queued/incoming: qid=$queue_id read=$total");
 	$curproc->mail_queue_set_incoming_queue($queue);
     }
     else {
@@ -1222,7 +1222,7 @@ sub _inject_charset_hints
     my $list    = $msg->accept_language_list() || [];
     my $liststr = join("", @$list);
 
-    $curproc->log("hints: charset=\"$charset\" accept_language=[$liststr]");
+    $curproc->logdebug("hints: charset=\"$charset\" accept_language=[$liststr]");
 
     # 1. prefer Accept-Language: alyways, ignore Content-Type: in this case.
     #    set $list even if $list == [] to avoid further warning.
@@ -1238,7 +1238,7 @@ sub _inject_charset_hints
 	my $char = new Mail::Message::Charset;
 	my $lang = $char->message_charset_to_language($charset);
 
-	$curproc->log("hints: \"$charset\" => lang=\"$lang\" as a hint.");
+	$curproc->logdebug("hints: \"$charset\" => lang=\"$lang\" as a hint.");
 	$curproc->set_language_hint('reply_message', $lang);
 	$curproc->set_language_hint('template_file', $lang);
     }
@@ -1287,7 +1287,7 @@ sub permit_post
 	}
 
 	if ($match) {
-	    $curproc->log("match rule=$rule sender=$sender");
+	    $curproc->logdebug("match rule=$rule sender=$sender");
 	    return($result eq "permit" ? 1 : 0);
 	}
     }
@@ -1464,6 +1464,9 @@ sub log_message
     elsif ($level eq 'error') {
 	LogError($msg);
     }
+    elsif ($level eq 'debug') {
+	Log($msg);
+    }
 
     # update message queue
     $curproc->_log_message_queue_append({
@@ -1526,6 +1529,25 @@ sub logerror
 	level    => 'error',
 	caller   => \@c,
     });
+}
+
+
+# Descriptions: log message as debug.
+#    Arguments: OBJ($curproc) STR($msg) HASH_REF($msg_args)
+# Side Effects: none
+# Return Value: none
+sub logdebug
+{
+    my ($curproc, $msg, $msg_args) = @_;
+    my (@c) = caller;
+
+    if (0) {
+	$curproc->log_message($msg, {
+	    msg_args => $msg_args,
+	    level    => 'debug',
+	    caller   => \@c,
+	});
+    }
 }
 
 
@@ -1945,7 +1967,7 @@ sub reply_message_nl
 	};
 
 	my $s = "lang=$lang charset=($rm_charset, $tf_charset) class=$class";
-	$curproc->log("reply_message_nl: $s") if $rm_debug;
+	$curproc->logdebug("reply_message_nl: $s") if $rm_debug;
 	$curproc->_reply_message_nl($class, $default_msg, $rm_args, $charsets);
     }
 }
@@ -2140,7 +2162,8 @@ sub get_preferred_languages
     my $p = $curproc->__find_preferred_languages($pref_order,
 						 $acpt_lang_list,
 						 $mime_lang);
-    $curproc->log("hints: preferred language = [ @$p ]") unless $first_time++;
+    $curproc->logdebug("hints: preferred language = [ @$p ]")
+	unless $first_time++;
     return $p;
 }
 
@@ -2205,8 +2228,9 @@ sub __find_preferred_languages
 	print STDERR "  mime language   = \" $orig_mime_lang \"\n";
 	print STDERR "preferred languge = [ @$selected ]\n";
 	print STDERR "\n";
-	$curproc->log("pref_order=[@$pref_order] acpt=[@$acpt_lang_list]");
-	$curproc->log("mime_lang=$orig_mime_lang selected=[@$selected]");
+	$curproc->logdebug("pref_order=[@$pref_order]");
+	$curproc->logdebug("acpt lang =[@$acpt_lang_list]");
+	$curproc->logdebug("mime_lang=$orig_mime_lang selected=[@$selected]");
     }
 
     if (@$selected) {
@@ -2354,7 +2378,7 @@ sub queue_in
 
 	my @lang = keys %lang_count;
 	if ($#lang > 0) {
-	    $curproc->log("plural languages, so use mulitpart");
+	    $curproc->logdebug("plural languages, so use mulitpart");
 	    $is_multipart = 1;
 	}
     }
@@ -2377,10 +2401,10 @@ sub queue_in
     }
 
 
-    $curproc->log("debug: queue_in: sender=$sender");
-    $curproc->log("debug: queue_in: recipient=$rcptkey");
-    $curproc->log("debug: queue_in: rcptlist=[ @$rcptlist ]");
-    $curproc->log("debug: queue_in: is_multipart=$is_multipart");
+    $curproc->logdebug("queue_in: sender=$sender");
+    $curproc->logdebug("queue_in: recipient=$rcptkey");
+    $curproc->logdebug("queue_in: rcptlist=[ @$rcptlist ]");
+    $curproc->logdebug("queue_in: is_multipart=$is_multipart");
 
 
     ###############################################################
@@ -2466,7 +2490,7 @@ sub queue_in
 		}
 		else {
 		    # $curproc->log("queue_in: type=<$t> aggregated") if $t eq 'text';
-		    $curproc->log("queue_in: unknown type=<$t>") unless $t eq 'text';
+		    $curproc->logerror("queue_in: unknown type=<$t>") unless $t eq 'text';
 		}
 	    }
 	}
@@ -2494,7 +2518,7 @@ sub queue_in
 		    $s .= $q;
 		}
 		else {
-		    $curproc->log("queue_in: unknown typ $t");
+		    $curproc->logerror("queue_in: unknown type $t");
 		}
 	    }
 	}
@@ -2539,12 +2563,12 @@ sub queue_in
 	    $queue->set('recipient_maps', $rcptmaps);
 	}
 
-	$queue->in( $msg ) && $curproc->log("queued/new: qid=$qid");
+	$queue->in( $msg ) && $curproc->logdebug("queued/new: qid=$qid");
 	if ($queue->setrunnable()) {
-	    $curproc->log("queued/active: qid=$qid runnable");
+	    $curproc->logdebug("queued/active: qid=$qid runnable");
 	}
 	else {
-	    $curproc->log("queue: qid=$qid broken");
+	    $curproc->logerror("queue: qid=$qid broken");
 	}
 
 	# return queue object
@@ -2623,7 +2647,7 @@ sub clean_up_tmpfiles
 
     if (defined $queue) {
 	for my $q (@$queue) {
-	    $curproc->log("unlink $q");
+	    $curproc->logdebug("unlink $q");
 	    unlink $q;
 	}
     }
@@ -3034,7 +3058,7 @@ sub finalize
     }
 
     if ($debug > 100) {
-	$curproc->log("debug: dump curproc structure");
+	$curproc->logdebug("debug: dump curproc structure");
 	eval q{
 	    use FML::Process::Debug;
 	    my $obj = new FML::Process::Debug;

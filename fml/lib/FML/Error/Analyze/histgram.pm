@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: histgram.pm,v 1.10 2004/05/22 06:19:52 fukachan Exp $
+# $FML: histgram.pm,v 1.11 2004/07/23 13:16:37 fukachan Exp $
 #
 
 package FML::Error::Analyze::histgram;
@@ -158,7 +158,7 @@ sub _histgram
 	    }
 
 	    my $array = _ra_to_str($ra);
-	    $curproc->log("summary: $addr sum=$sum ($array)");
+	    $curproc->logdebug("summary: $addr sum=$sum ($array)");
 	    push(@removelist, $addr) if $sum >= $limit;
 	}
     }

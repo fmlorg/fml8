@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.69 2004/08/14 08:12:31 fukachan Exp $
+# $FML: Article.pm,v 1.70 2004/10/28 03:33:48 fukachan Exp $
 #
 
 package FML::Article;
@@ -206,7 +206,7 @@ sub spool_in
 	$curproc->unlock($channel);
     }
     else {
-	$curproc->log("not spool article $id");
+	$curproc->log("article: spooling disabled");
     }
 }
 
@@ -229,12 +229,12 @@ sub _try_failover
 
     # 1. try link(2).
     if (link($queue_file, $article_file)) {
-	$curproc->log("article: linked queue to article file");
+	$curproc->logwarn("article: linked queue to article file");
 	$curproc->log("article $id (faked)");
     }
     # 2. try rename(2).
     elsif (rename($queue_file, $article_file)) {
-	$curproc->log("article: renamed queue to article file");
+	$curproc->logwarn("article: renamed queue to article file");
 	$curproc->log("article $id (faked)");
     }
     else {

@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.45 2004/05/22 06:36:44 fukachan Exp $
+# $FML: Error.pm,v 1.46 2004/07/23 13:00:57 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -214,7 +214,7 @@ sub _clean_up_bouncers
     my $channel   = 'error_mail_analyzer';
 
     if ($curproc->is_event_timeout($channel)) {
-	$curproc->log("(debug) event timeout");
+	$curproc->logdebug("event timeout");
 
 	eval q{
 	    use FML::Error;
@@ -228,7 +228,7 @@ sub _clean_up_bouncers
 	$curproc->set_event_timeout($channel, time + 3600);
     }
     else {
-	$curproc->log("(debug) event not timeout");
+	$curproc->logdebug("event not timeout");
     }
 }
 
@@ -283,7 +283,7 @@ sub finish
 	$curproc->log("error message found");
     }
     else {
-	$curproc->log("error message not found");
+	$curproc->logwarn("error message not found");
     }
 
     $curproc->inform_reply_messages();

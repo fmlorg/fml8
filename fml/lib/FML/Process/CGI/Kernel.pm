@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.82 2004/07/23 15:59:11 fukachan Exp $
+# $FML: Kernel.pm,v 1.83 2004/10/09 12:04:18 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -210,7 +210,7 @@ sub _cgi_resolve_ml_specific_variables
 	$curproc->append_to_config_files_list($config_cf);
     }
     else {
-	$curproc->log("debug: no ml_name");
+	$curproc->logdebug("no ml_name");
     }
 
     $curproc->__debug_ml_xxx('cgi:');
@@ -228,7 +228,7 @@ sub _cgi_fix_log_file
 
     $config->set('ml_home_dir', $config->{ domain_local_tmp_dir  });
     $config->set('log_file',    $config->{ domain_local_log_file });
-    $curproc->log("debug: log_file = $config->{ log_file }");
+    $curproc->logdebug("log_file = $config->{ log_file }");
 }
 
 
@@ -328,7 +328,7 @@ sub _error_string
     eval q{
 	$curproc->logerror($r);
 	my ($k, $v);
-	while (($k, $v) = each %ENV) { $curproc->log("$k => $v");}
+	while (($k, $v) = each %ENV) { $curproc->logdebug("$k => $v");}
     };
 }
 

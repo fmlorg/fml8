@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.40 2004/04/23 04:10:31 fukachan Exp $
+# $FML: SendFile.pm,v 1.41 2004/07/23 13:16:35 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -118,7 +118,7 @@ sub send_article
 						   _arg_article => $filename,
 					       }
 					       );
-		    $curproc->log("no such file: $filepath");
+		    $curproc->logerror("no such file: $filepath");
 		}
 	    }
 	}
