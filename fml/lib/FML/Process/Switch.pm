@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.100 2003/10/15 01:03:35 fukachan Exp $
+# $FML: Switch.pm,v 1.101 2003/10/26 02:20:02 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -194,6 +194,7 @@ sub main::Bootstrap2
 
 	if ($be_quiet) {
 	    eval q{ $curproc->finalize();};
+	    exit(1);
 	}
 	else {
 	    if ($obj->can('help')) { eval $obj->help();};
@@ -208,6 +209,8 @@ sub main::Bootstrap2
 	    }
 	}
     }
+
+    exit(0);
 }
 
 
