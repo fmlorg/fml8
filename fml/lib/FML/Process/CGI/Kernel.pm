@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Kernel.pm,v 1.3 2001/11/10 04:03:13 fukachan Exp $
+# $FML: Kernel.pm,v 1.4 2001/11/11 01:08:40 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -93,7 +93,8 @@ sub prepare
     my $charset   = $config->{ cgi_charset } || 'euc-jp';
 
     print header(-type    => "text/html; charset=$charset",
-		 -charset => $charset);
+		 -charset => $charset,
+		 -target  => "ResultsWindow");
 }
 
 
