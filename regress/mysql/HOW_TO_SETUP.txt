@@ -21,8 +21,7 @@ Enter password:
 INSERT INTO user
 VALUES ('beth.fml.org','fukachan',Password('uja'),'Y','Y','Y','Y','Y','N','N','N','N','N','N','N','N','N');
 
-# cat ~/w/cvs/fml/databases/examples/mysql-toymodel/toymodel.sql |\
-	sudo mysql -h localhost -p fml
+# cat toymodel.sql | mysql -h localhost -p fml
 
 
 ###
