@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.17 2002/04/10 09:51:24 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.18 2002/06/01 03:01:53 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -62,9 +62,9 @@ sub html_start
     my $charset = $config->{ cgi_charset } || 'euc-jp';
 
     # o.k start html
-    print start_html(-title=>$title,
-		     -lang => $charset,
-		     -BGCOLOR=>$color);
+    print start_html(-title   => $title,
+		     -lang    => $charset,
+		     -BGCOLOR => $color);
     print "\n";
 }
 
@@ -93,7 +93,7 @@ sub run_cgi_main
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
     my $myname = $config->{ program_name };
-    my $ttargs = $curproc->_build_param($args);
+    my $ttargs = $curproc->_build_threadtrack_param($args);
     my $action = $curproc->safe_param_action() || '';
 
     use Mail::ThreadTrack;
@@ -106,7 +106,7 @@ sub run_cgi_main
 	    $thread->summary();
 	}
 	elsif ($action eq 'show') {
-	    my $id = $curproc->safe_param_article_id();
+	    my $id  = $curproc->safe_param_article_id();
 	    my $tid = $thread->_create_thread_id_strings($id);
 	    $thread->show($tid);
 	}
@@ -143,7 +143,7 @@ sub run_cgi_main
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: HASH_REF
-sub _build_param
+sub _build_threadtrack_param
 {
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
