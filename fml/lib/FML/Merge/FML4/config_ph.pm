@@ -4,17 +4,19 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.8 2004/01/01 07:29:27 fukachan Exp $
+# $FML: config_ph.pm,v 1.1.1.1 2004/03/16 12:58:21 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD 
+	    $count $default_config_ph 
+	    $result %result);
 use Carp;
 
 =head1 NAME
 
-FML::Merge::FML4::config_ph - what is this
+FML::Merge::FML4::config_ph - handle fml4's config.ph file.
 
 =head1 SYNOPSIS
 
@@ -26,12 +28,276 @@ FML::Merge::FML4::config_ph - what is this
 
 =cut
 
+
 sub new
 {
     my ($self) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
     return bless $me, $type;
+}
+
+
+sub set_default_config_ph
+{
+    my ($self, $file) = @_;
+
+    $default_config_ph = $file;
+}
+
+
+sub diff
+{
+    my ($self, $file) = @_;
+
+    # reset always
+    %result = ();
+
+    $self->_load_default_config_ph();
+
+    my $s = $self->_gen_eval_string($file);
+    eval($s);
+    print "error: $@\n" if $@;
+
+    # print $result if defined $result;
+    return \%result;
+}
+
+
+sub _load_default_config_ph
+{
+    package default;
+    no strict;
+
+    $DIR             = '$DIR';
+    $DOMAINNAME      = '$ml_domain';
+    $MAIL_LIST       = '$ml_name@$ml_domain';
+    $CONTROL_ADDRESS = '$ml_name-ctl@$ml_domain';
+    $MAINTAINER      = '$ml_name-admin@$ml_domain';
+    $BRACKET         = '$ml_name';
+    $ML_FN           = '($ml_name ML)';
+    $XMLNAME         = '';
+    $GOOD_BYE_PHRASE = '';
+    $WELCOME_STATEMENT = '';
+
+    require $FML::Merge::FML4::config_ph::default_config_ph;
+
+    $DIR             = '$DIR';
+    $DOMAINNAME      = '$ml_domain';
+    $MAIL_LIST       = '$ml_name@$ml_domain';
+    $CONTROL_ADDRESS = '$ml_name-ctl@$ml_domain';
+    $MAINTAINER      = '$ml_name-admin@$ml_domain';
+    $BRACKET         = '$ml_name';
+    $ML_FN           = '($ml_name ML)';
+    $GOOD_BYE_PHRASE = '--$ml_name@$ml_domain, Be Seeing You!';
+    $XMLNAME         = 'X-ML-Name: $ml_name';
+
+    $WELCOME_STATEMENT =~ s/our /our \(\$ml_name ML\)/;
+
+    package main;
+}
+
+
+sub _gen_eval_string
+{
+    my ($self, $f) = @_;
+    my $package = 'FML::Merge::FML4::config_ph'; 
+    my $s = '';
+
+    $count++;
+
+    $s  = "no strict;\n";
+    $s .= sprintf("package config%03d;\n", $count);
+    $s .= sprintf("\$DIR = \'\$DIR\';\n");
+    $s .= sprintf("\$s = &%s::gen_dummy_macros();\n", $package);
+    $s .= sprintf("eval \$s;\n");
+    $s .= sprintf("print STDERR \$\@ if \$\@;\n");
+    $s .= sprintf("require \"%s\";\n", $f);
+    $s .= sprintf("package main;\n");
+    $s .= sprintf("*stab = *{\"config%03d::\"};\n", $count);
+    $s .= sprintf("&%s::var_dump('config%03d', \\%%stab);\n", $package, $count);
+    $s .= "use strict;\n";
+
+    return $s;
+}
+
+
+sub var_dump
+{
+    my ($package, $stab) = @_;
+    my ($key, $val, $def, $x, $rbuf);
+    
+    # resolv
+    eval "\$x = \$${package}::MAIL_LIST;\n";
+    my ($ml_name, $ml_domain) = split(/\@/, $x);
+
+    while (($key, $val) = each(%$stab)) {
+	next if $key =~
+	    /^(STRUCT_SOCKADDR|CFVersion|CPU_TYPE_MANUFACTURER_OS|HTML_THREAD_REF_TYPE|FQDN|REJECT_ADDR|SKIP_FIELDS)/;
+
+	eval "\$val = \$${package}::$key;\n";
+	eval "\$def = \$default::$key;\n";
+	$def ||= 0;
+	$val ||= 0;
+
+	if (defined $val) {
+	    $val =~ s/$ml_name/\$ml_name/g;
+	    $val =~ s/$ml_domain/\$ml_domain/g;
+	    if ($val && ($val ne $def)) {
+		$rbuf .= "# $key => $val\n";
+		$result{ $key } = $val;
+	    }
+	}
+    }
+
+    $result = $rbuf;
+}
+
+
+sub gen_dummy_macros
+{
+    my $s = '';
+
+    $s .= "sub GET_HEADER_FIELD_VALUE {
+	\$PROC__GET_HEADER_FIELD_VALUE .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub GET_ORIGINAL_HEADER_FIELD_VALUE {
+	\$PROC__GET_ORIGINAL_HEADER_FIELD_VALUE .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub SET_HEADER_FIELD_VALUE {
+	\$PROC__SET_HEADER_FIELD_VALUE .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub GET_ENVELOPE_VALUE {
+	\$PROC__GET_ENVELOPE_VALUE .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub SET_ENVELOPE_VALUE {
+	\$PROC__SET_ENVELOPE_VALUE .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub ENVELOPE_APPEND {
+	\$PROC__ENVELOPE_APPEND .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub ENVELOPE_PREPEND {
+	\$PROC__ENVELOPE_PREPEND .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub GET_BUFFER_FROM_FILE {
+	\$PROC__GET_BUFFER_FROM_FILE .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub STR2JIS {
+	\$PROC__STR2JIS .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub STR2EUC {
+	\$PROC__STR2EUC .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub JSTR {
+	\$PROC__JSTR .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub DEFINE_SUBJECT_TAG {
+	\$PROC__DEFINE_SUBJECT_TAG .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub DEFINE_MODE {
+	\$PROC__DEFINE_MODE .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub DEFINE_FIELD_FORCED {
+	\$PROC__DEFINE_FIELD_FORCED .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub DEFINE_FIELD_ORIGINAL {
+	\$PROC__DEFINE_FIELD_ORIGINAL .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub DEFINE_FIELD_OF_REPORT_MAIL {
+	\$PROC__DEFINE_FIELD_OF_REPORT_MAIL .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub DEFINE_FIELD_PAT_TO_REJECT {
+	\$PROC__DEFINE_FIELD_PAT_TO_REJECT .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub DEFINE_FIELD_LOOP_CHECKED {
+	\$PROC__DEFINE_FIELD_LOOP_CHECKED .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub UNDEF_FIELD_LOOP_CHECKED {
+	\$PROC__UNDEF_FIELD_LOOP_CHECKED .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub ADD_FIELD {
+	\$PROC__ADD_FIELD .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub DELETE_FIELD {
+	\$PROC__DELETE_FIELD .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub COPY_FIELD {
+	\$PROC__COPY_FIELD .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub MOVE_FIELD {
+	\$PROC__MOVE_FIELD .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub ADD_CONTENT_HANDLER {
+	\$PROC__ADD_CONTENT_HANDLER .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub DEFINE_MAILER {
+	\$PROC__DEFINE_MAILER .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub PERMIT_PROCEDURE {
+	\$PROC__PERMIT_PROCEDURE .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub DENY_PROCEDURE {
+	\$PROC__DENY_PROCEDURE .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub DEFINE_PROCEDURE {
+	\$PROC__DEFINE_PROCEDURE .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub PERMIT_ADMIN_PROCEDURE {
+	\$PROC__PERMIT_ADMIN_PROCEDURE .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub DENY_ADMIN_PROCEDURE {
+	\$PROC__DENY_ADMIN_PROCEDURE .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub DEFINE_ADMIN_PROCEDURE {
+	\$PROC__DEFINE_ADMIN_PROCEDURE .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub DEFINE_MAXNUM_OF_PROCEDURE_IN_ONE_MAIL {
+	\$PROC__DEFINE_MAXNUM_OF_PROCEDURE_IN_ONE_MAIL .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub DEFINE_MAXNUM_OF_ADMIN_PROCEDURE_IN_ONE_MAIL {
+	\$PROC__DEFINE_MAXNUM_OF_ADMIN_PROCEDURE_IN_ONE_MAIL .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub SIZE {
+	\$PROC__SIZE .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub DUMMY {
+	\$PROC__DUMMY .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub TRUE {
+	\$PROC__TRUE .= join(\" \", \@_ ). \" \";
+    }\n";
+    $s .= "sub FALSE {
+	\$PROC__FALSE .= join(\" \", \@_ ). \" \";
+    }\n";
+
+    return $s;
+}
+
+
+=head1 TRANSLATION FROM 4 TO 8 
+
+=cut
+
+
+sub translate
+{
+    my ($self, $key, $value) = @_;
+
+    if ($key eq 'SUBJECT_TAG_TYPE') {
+	if ($value eq '[:]') {
+	    return 'article_subject_tag = [$ml_name:%05d]';
+	}
+    }
+
+    if ($key eq 'PERMIT_POST_FROM') {
+	if ($value eq 'anyone') {
+	    return 'article_post_restrictions = reject_system_special_accounts
+                                                permit_anyone
+                                                reject'; 
+	}
+    }
+
+    return '';
 }
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Merge.pm,v 1.2 2004/03/17 04:08:34 fukachan Exp $
+# $FML: Merge.pm,v 1.3 2004/03/17 04:30:19 fukachan Exp $
 #
 
 package FML::Merge;
@@ -214,6 +214,85 @@ sub convert_list_files
     use FML::Merge::FML4::List;
     my $list = new FML::Merge::FML4::List $curproc, $params;
     $list->convert();
+}
+
+
+=head1
+
+=cut
+
+
+sub merge_into_config_cf
+{
+    my ($self)  = @_;
+    my $curproc = $self->{ _curproc };
+    my $params  = $self->{ _params } || {};
+
+    # files to compare.
+    my $old_config_ph     = $self->old_file_path("config.ph");
+    my $default_config_ph = "/tmp/default_config.ph";
+
+    use FML::Merge::FML4::config_ph;
+    my $config_ph = new FML::Merge::FML4::config_ph;
+    $config_ph->set_default_config_ph("/tmp/default_config.ph"); 
+    my $diff      = $config_ph->diff($old_config_ph);
+    $self->_inject_into_config_cf($diff);
+}
+
+
+sub _inject_into_config_cf
+{
+    my ($self, $diff) = @_;
+    my $config_cf = $self->new_file_path("config.cf");
+    my $tmp       = "$config_cf.new.$$";
+
+    print STDERR "merging: $config_cf\n";
+    my $rh = new FileHandle $config_cf;
+    my $wh = new FileHandle "> $tmp";
+    if (defined $rh && defined $wh) {
+	my $buf;
+
+      LINE:
+	while ($buf = <$rh>) {
+	    if ($buf =~ /^=cut/o) {
+		$self->_inject_diff_into_config_cf($wh, $diff);
+	    }
+
+	    print $wh $buf;
+	}
+
+	$wh->close();
+	$rh->close();
+
+	unless (rename($tmp, $config_cf)) {
+	    croak("cannot rename $tmp to $config_cf");
+	}
+    }
+}
+
+
+sub _inject_diff_into_config_cf
+{
+    my ($self, $wh, $diff) = @_;
+    my ($k, $v, $x);
+
+    print $wh "\n";
+    print $wh "# START OF MERGE\n";
+    print $wh "\n";
+
+    use FML::Merge::FML4::config_ph;
+    my $config_ph = new FML::Merge::FML4::config_ph;
+
+    while (($k, $v) = each %$diff) {
+	print $wh "# $k => $v\n";
+	if ($x = $config_ph->translate($k, $v)) {
+	    print $wh $x ,"\n\n";
+	}
+    }
+
+    print $wh "\n";
+    print $wh "# END OF MERGE\n";
+    print $wh "\n";
 }
 
 
