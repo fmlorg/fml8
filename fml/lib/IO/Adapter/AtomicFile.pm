@@ -4,12 +4,12 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Atomic.pm,v 1.16 2002/06/01 04:56:42 fukachan Exp $
+# $FML: AtomicFile.pm,v 1.1 2002/07/25 11:34:02 fukachan Exp $
 #
 
 package IO::Adapter::AtomicFile;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
+use vars qw(@ISA @EXPORT @EXPORT_OK $Counter);
 use Carp;
 use IO::File;
 @ISA = qw(IO::File);
@@ -132,7 +132,9 @@ sub open
     $mode ||= "w";
 
     # temporary file
-    my $temp = $file.".new.".$$;
+    unless (defined $Counter) { $Counter = 0;}
+    $Counter++;
+    my $temp = $file.".new.".$$.$Counter;
     ${*$self}{ _orig_file } = $file;
     ${*$self}{ _temp_file } = $temp;
 
