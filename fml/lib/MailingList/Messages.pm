@@ -91,7 +91,7 @@ internally.
    mime_version       MIME version
    base_content_type  MIME content-type specified in the header
    content_type       MIME content-type
-   header             reference to a header hash
+   header             MIME header
    content            reference to the content (that is, memory area)
 
 Each default value follows:
@@ -107,7 +107,6 @@ Each default value follows:
    header            undef
    content           ''
 
-C<header> is not used now.
 
 =head1 INTERNAL REPRESENTATION
 
@@ -221,10 +220,30 @@ sub _create
 
     # message itself (mail body)
     my $r_content = $args->{ content };
-    my $len       = length( $$r_content );
-    $self->{ content }      = $args->{ content } || '';
-    $self->{ offset_begin } = $args->{ offset_begin } || 0;
-    $self->{ offset_end }   = $args->{ offset_end   } || $len;
+    my $filename  = $args->{ filename };
+
+    # on memory
+    if (defined $r_content) {
+	my $len = length( $$r_content );
+	$self->{ content }      = $args->{ content } || '';
+	$self->{ offset_begin } = $args->{ offset_begin } || 0;
+	$self->{ offset_end }   = $args->{ offset_end   } || $len;
+	$self->{ _on_memory }   = 1;
+    }
+    # on disk
+    elsif (defined $filename) {
+	if (-f $filename) {
+	    undef $self->{ content };
+	    $self->{ filename }   = $filename;
+	    $self->{ _on_memory } = 0; # not on memory
+	}
+	else {
+	    carp("$filename not exist");
+	}
+    }
+    else {
+	carp("neither content nor filename specified");
+    }
 }
 
 
@@ -270,15 +289,21 @@ sub raw_print
 sub print
 {
     my ($self, $fd) = @_;
-    my $msg = $self;
+    my $msg     = $self;
 
     # if $fd is not given, we use STDOUT.
     unless (defined $fd) { $fd = \*STDOUT;}
 
   MSG:
     while (1) {
+	# on memory
 	if (defined $msg->{ content }) {
-	    $msg->_print($fd, $msg->{ content });
+	    $msg->_print_messsage_on_memory($fd);
+	}
+	# not on memory, may be on disk
+	elsif (defined $msg->{ filename } &&
+	    -f $msg->{ filename }) {
+	    $msg->_print_messsage_on_disk($fd);
 	}
 
 	last MSG unless $msg->{ next };
@@ -287,32 +312,42 @@ sub print
 }
 
 
-# Descriptions: send the body part of the message to socket
+# Descriptions: send the body part of the message on memory to socket
 #               replace "\n" in the end of line with "\r\n" on memory.
 #               We should do it to use as less memory as possible.
 #               So we use substr() to process each line.
-#    Arguments: $self $socket $ref_to_body
+#               XXX the message to send out is $self->{ content }.
+#    Arguments: $self $socket
 # Side Effects: none
 # Return Value: none
-sub _print
+sub _print_messsage_on_memory
 {
-    my ($self, $fd, $r_body) = @_;
+    my ($self, $fd) = @_;
+
+    # \n -> \r\n
+    my $raw_print_mode = 1 if defined $self->{ _raw_print };
 
     # set up offset for the buffer
+    my $r_body = $self->{ content };
+    my $header = $self->{ header };
     my $pp     = $self->{ offset_begin };
     my $p_end  = $self->{ offset_end };
     my $maxlen = length($$r_body);
     my $logfp  = $self->{ _log_function };
     $logfp     = ref($logfp) eq 'CODE' ? $logfp : undef;
 
-    # \n -> \r\n
-    my $raw_print_mode = 1 if defined $self->{ _raw_print };
+    # 1. print content header if exists
+    if (defined $header) {
+	$header =~ s/\n/\r\n/g unless (defined $raw_print_mode);
+	print $fd $header;
+	print $fd ($raw_print_mode ? "\n" : "\r\n");
+    }
 
-    # write each line in buffer
+    # 2. print content body: write each line in buffer
     my ($p, $len, $buf, $pbuf, $pe);
   SMTP_IO:
     while (1) {
-	$p   = index($$r_body, "\n", $pp);
+	$p = index($$r_body, "\n", $pp);
 	last SMTP_IO if $p >= $p_end;
 
 	$len = $p - $pp + 1;
@@ -333,6 +368,48 @@ sub _print
 
 	last SMTP_IO if $p < 0;
 	$pp = $p + 1;
+    }
+}
+
+
+
+sub _print_messsage_on_disk
+{
+    my ($self, $fd) = @_;
+
+    # \n -> \r\n
+    my $raw_print_mode = 1 if defined $self->{ _raw_print };
+
+    my $filename = $self->{ filename };
+    my $logfp    = $self->{ _log_function };
+    $logfp       = ref($logfp) eq 'CODE' ? $logfp : undef;
+
+    # open he file
+    use FileHandle;
+    my $fh = new FileHandle $filename;
+
+    if (defined $fh) {
+	my $buf;
+
+      SMTP_IO:
+	while (<$fh>) {
+	    $buf = $_;
+
+	    unless (defined $raw_print_mode) {
+		# fix \n -> \r\n in the end of the line
+		if ($buf !~ /\r\n$/) { $buf =~ s/\n$/\r\n/;}
+
+		# ^. -> ..
+		$buf =~ s/^\./../;
+	    }
+
+	    print $fd $buf;
+	    &$logfp($buf) if $logfp;
+	}
+	close($fh);
+    }
+    else {
+	carp("cannot open $filename");
     }
 }
 
@@ -402,10 +479,13 @@ sub build_mime_multipart_chain
 	# XXX this function is not called
 	# XXX if there is not the prededing preamble.
 	if ($pe > $pb) { # XXX not effective region if $pe <= $pb
+	    my ($header, $pb) = _get_mime_header($content, $pb);
+
 	    my $args = {
 		boundary          => $boundary,
 		offset_begin      => $pb,
 		offset_end        => $pe,
+		header            => $header || undef,
 		content           => $content,
 		base_content_type => $base_content_type,
 	    };
@@ -492,6 +572,21 @@ sub _get_content_type
     }
     else {
 	$default
+    }
+}
+
+
+sub _get_mime_header
+{
+    my ($content, $pos_begin) = @_;
+    my $pos = index($$content, "\n\n", $pos_begin) + 1;
+    my $buf = substr($$content, $pos_begin, $pos - $pos_begin);
+
+    if ($buf =~ /Content-Type:\s*(\S+)\;/) {
+	return ($buf, $pos + 1);
+    }
+    else {
+	return ('', $pos_begin);
     }
 }
 
