@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.6 2001/12/22 09:21:04 fukachan Exp $
+# $FML: get.pm,v 1.7 2001/12/22 16:10:51 fukachan Exp $
 #
 
 package FML::Command::User::get;
@@ -32,12 +32,17 @@ send back articles.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 C<process()>
 
 =cut
 
 
-# Descriptions: send articles by FML::Command::SendFile.
+# Descriptions: send articles (filename =~ /^\d+/$) by FML::Command::SendFile.
+#               This module is called after
+#               FML::Process::Command::_can_accpet_command() already checks the
+#               command syntax. $options is raw command as ARRAY_REF such as
+#                  $options = [ 'get:3', 1, 100 ];
+#               send_article() called below can parse MH style argument.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
 # Return Value: none
@@ -54,7 +59,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
