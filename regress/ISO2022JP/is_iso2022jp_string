@@ -1,0 +1,27 @@
+#!/usr/local/bin/perl
+
+
+use Dialect::ISO2022JP qw(is_iso2022jp_string);
+
+$string = '¤¦¤¸¤ã';
+
+use Jcode;
+
+printf "%15s", "jis ... ";
+Jcode::convert(\$string, 'jis');
+print is_iso2022jp_string($string) ? "ok\n" : "fail\n";
+
+for ('ascii', 'binary', 'sjis', 'euc', 'ucs2', 'utf8') {
+    check($_);
+}
+
+
+sub check
+{
+    my ($code) = @_;
+
+    printf "%15s", "$code ... ";
+    Jcode::convert(\$string, $code);
+    print is_iso2022jp_string($string) ? "fail\n" : "ok\n";
+}
+
