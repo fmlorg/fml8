@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: TinyScheduler.pm,v 1.12 2001/12/08 14:31:32 fukachan Exp $
+# $FML: TinyScheduler.pm,v 1.13 2001/12/11 16:13:03 fukachan Exp $
 #
 
 package TinyScheduler;
@@ -34,17 +34,35 @@ TinyScheduler - scheduler with minimal functions
 
 =head1 DESCRIPTION
 
-demonstration module to show how to use and build up modules
-especially to couple with CPAN and FML modules.
+C<TinSchecdule> is a demonstration module to show how to use and build
+up modules to couple with CPAN and FML modules.
+This routine needs C<HTML::CalendarMonthSimple>.
 
 It parses files in ~/.schedule/ and output schedule of this month as
-HTML TABLE by default.
+HTML TABLE by default. To see it, you need WWW browser e.g. "w3m".
 
-To see it, you need WWW browser e.g. "w3m".
 
 =head1 METHODS
 
-=head2 new()
+=head2 new($args)
+
+standard constructor. 
+
+It speculates C<user> by $args->{ user } or $ENV{'user'} or uid
+and determine path for ~user/.schedule/.
+
+$args can take the following variables:
+
+   $args = {
+       schedule_dir   => DIR, 
+       schedule_file  => FILE,
+       mode           => MODE,
+   };
+
+C<Caution:>
+   The string for ~user is restricted to ^[\w\d\.\/]+$.
+
+   PATH is reset in the last of new().
 
 =cut
 
@@ -74,12 +92,12 @@ sub new
     my $home_dir            = $pw->dir;
 
     # XXX FML::Restriction / Taint
-    # simple check (not enough mature) to avoid -T error ;)
+    # simple check (not enough mature) to avoid -T (taint mode) error ;)
     if ($home_dir =~ /^([\w\d\.\/]+)$/) {
 	$home_dir = $1;
     }
     else {
-	croak("invalid home directory");
+	croak("invalid home directory string");
     }
 
     $me->{ _user }          = $user;
@@ -97,6 +115,14 @@ sub new
 
     return bless $me, $type;
 }
+
+
+=head2 tmpfile($args)
+
+return tmpfile path name.
+It creates just a file path not file itself.
+
+=cut
 
 
 # Descriptions: determine template file location
@@ -127,7 +153,9 @@ sub tmpfile
 }
 
 
-=head2 C<parse($args)>
+=head2 parse($args)
+
+Parse files in ~/.schedule/ or specified schedule file.
 
 =cut
 
@@ -267,7 +295,7 @@ sub print
 =head2 C<print_specific_month($fh, $n)>
 
 print range specified by C<$n>.
-C<$n> is one of C<this>, C<next> and C<last>.   
+C<$n> is number or string among C<this>, C<next> and C<last>.   
 
 =cut
 
@@ -309,9 +337,29 @@ sub print_specific_month
 }
 
 
+=head2 get_mode( $mode )
+
+show mode (string).
+
 =head2 set_mode( $mode )
 
+override mode. 
+The mode is either of 'text' or 'html'.
+
+XXX: The mode is not used in this module itsef.
+     This is a pragma for other module use..
+
 =cut
+
+# Descriptions: show the current $mode 
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: string or undef
+sub get_mode
+{
+    my ($self) = @_;
+    return (defined $self->{ _mode } ? $self->{ _mode } : undef);
+}
 
 
 # Descriptions: overwrite $mode 
