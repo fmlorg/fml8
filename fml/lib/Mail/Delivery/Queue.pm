@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.44 2004/08/15 11:59:04 fukachan Exp $
+# $FML: Queue.pm,v 1.45 2004/09/03 12:49:42 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -933,10 +933,26 @@ sub remove
     my ($self) = @_;
     my $id     = $self->id();
 
+    my $count   = 0;
+    my $removed = 0;
     for my $class (@class_list) {
         my $fp = sprintf("%s_file_path", $class);
         my $f  = $self->can($fp) ? $self->$fp($id) : undef;
-	unlink $f if -f $f;
+
+	if (-f $f) {
+	    $count++;
+	    unlink $f;
+	    $removed++ unless -f $f;
+	}
+    }
+
+    if ($count > 0) {
+	if ($count == $removed) {
+	    $self->log("qid=$id removed");
+	}
+	else {
+	    $self->log("qid=$id remove failed");
+	}
     }
 }
 
