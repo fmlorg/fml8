@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.6 2003/07/19 10:23:35 fukachan Exp $
+# $FML: Utils.pm,v 1.7 2003/07/21 04:51:35 fukachan Exp $
 #
 
 package Mail::Message::Utils;
@@ -86,6 +86,56 @@ sub from_to_name
     }
 
     return( $user ? "$user\@xxx.xxx.xxx.xxx" : $address );
+}
+
+
+=head2 C<search_program($file [, $path_list ])>
+
+search C<$file>.
+C<$path_list> is the ARRAY_REF.
+It searches it among C<$path_list> if specified.
+
+The default search path list is
+
+  ('/usr/bin', '/bin', '/sbin', ' /usr/local/bin',
+   '/usr/gnu/bin', '/usr/pkg/bin')
+
+=cut
+
+
+# Descriptions: search executable named as $file
+#               The "path_list" is an ARRAY_REFERENCE.
+#               For example,
+#               search_program('md5');
+#               search_program('md5', [ '/bin', '/sbin' ]);
+#    Arguments: STR($file) ARRAY_REF($path_list)
+# Side Effects: none
+# Return Value: STR
+sub search_program
+{
+    my ($file, $path_list) = @_;
+
+    my $default_path_list = [
+			     '/usr/bin',
+			     '/bin',
+			     '/sbin',
+			     '/usr/local/bin',
+			     '/usr/gnu/bin',
+			     '/usr/pkg/bin'
+			     ];
+
+    $path_list ||= $default_path_list;
+
+    use File::Spec;
+    my $path;
+    for $path (@$path_list) {
+	my $prog = File::Spec->catfile($path, $file);
+	if (-x $prog) {
+	    return $prog;
+	}
+    }
+
+    return wantarray ? () : undef;
 }
 
 
