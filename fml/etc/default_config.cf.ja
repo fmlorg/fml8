@@ -389,7 +389,7 @@ use_ticket		=	yes
 #      History: fml 5.0 new
 #        Value: string
 #     Examples:
-ticket_model		=	minimal_by_db
+ticket_model		=	minimal_states
 
 # Descriptions: チケットにつけるＭＬ名
 #               複数のＭＬにまたがったチケットを追跡するために
