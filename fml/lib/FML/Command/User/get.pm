@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.15 2003/02/16 08:49:12 fukachan Exp $
+# $FML: get.pm,v 1.16 2003/03/18 10:42:44 fukachan Exp $
 #
 
 package FML::Command::User::get;
@@ -29,8 +29,6 @@ See C<FML::Command> for more details.
 send back articles.
 
 =head1 METHODS
-
-=head2 C<process()>
 
 =cut
 
@@ -60,6 +58,57 @@ sub need_lock { 1;}
 # Side Effects: none
 # Return Value: STR
 sub lock_channel { return 'article_spool_modify';}
+
+
+=head2 check_limit($curproc, $command_args)
+
+=cut
+
+
+# Descriptions: check the limit specific to this command.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub check_limit
+{
+    my ($self, $curproc, $command_args) = @_;
+    my $config = $curproc->config();
+    my $pcb    = $curproc->pcb();
+    my $total  = $pcb->get('command', 'get_command_total_num_request') || 0;
+
+    # 1. check the number of article in one command.
+    my $limit = $config->{ get_command_request_limit } || 10;
+    my $nreq  = $self->num_files_in_send_article_args($curproc, $command_args);
+    my $name  = $command_args->{ comname };
+    my $_args = { _arg_command => $name, };
+
+    # 1.1 total number of requested articles.
+    my $total_num_req = $total + $nreq;
+    $pcb->set('command', 'get_command_total_num_request', $total_num_req);
+
+    if ($total_num_req > $limit) {
+	$curproc->reply_message_nl('command.exceed_total_request_limit',
+				   'total requests exceed limit',
+				   $_args);
+	LogError("get command limit: total=$total_num_req > $limit");
+	return $nreq;
+    }
+    elsif ($nreq > $limit) {
+	$curproc->reply_message_nl('command.exceed_request_limit',
+				   'requests exceed limit',
+				   $_args);
+	LogError("get command limit: $nreq > $limit");
+	return $nreq;	
+    }
+    else {
+	return 0;
+    }
+}
+
+
+=head2 process()
+
+=cut
 
 
 # Descriptions: send articles (filename =~ /^\d+/$) by FML::Command::SendFile.

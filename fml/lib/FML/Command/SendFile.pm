@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.26 2003/03/16 13:00:13 fukachan Exp $
+# $FML: SendFile.pm,v 1.27 2003/03/28 10:03:39 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -48,6 +48,32 @@ C<FML::Command::Admin> modules.
 =cut
 
 
+# Descriptions: return the number of files specified in $command_args.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: none
+# Return Value: none
+sub num_files_in_send_article_args
+{
+    my ($self, $curproc, $command_args) = @_;
+    my $command = $command_args->{ command };
+    my $count   = 0; 
+
+    # command buffer = get 1
+    # command buffer = get 1,2,3
+    # command buffer = get last:3
+    my (@files) = split(/\s+/, $command);
+    shift @files; # remove get
+    for my $fn (@files) {
+	my $filelist = $self->_get_valid_article_list($curproc, $fn);
+	if (defined $filelist) {
+	    $count = $#$filelist + 1;
+	}
+    }
+
+    return $count;
+}
+
+
 # Descriptions: send back articles
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
@@ -84,6 +110,12 @@ sub send_article
 		    });
 		}
 		else {
+		    $curproc->reply_message_nl('command.no_such_article',
+					       "no such article $filename",
+					       {
+						   _arg_article => $filename,
+					       }
+					       );
 		    Log("no such file: $filepath");
 		}
 	    }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.37 2003/03/16 10:47:22 fukachan Exp $
+# $FML: Command.pm,v 1.38 2003/03/18 10:42:40 fukachan Exp $
 #
 
 # XXX
@@ -191,6 +191,11 @@ sub AUTOLOAD
 	# we need to authenticate this ?
 	if ($command->can('auth')) {
 	    $command->auth($curproc, $command_args);
+	}
+
+	if ($command->can('check_limit')) {
+	    my $n = $command->check_limit($curproc, $command_args);
+	    if ($n) { croak("exceed limit");}
 	}
 
 	# this command needs lock (currently giant lock) ?

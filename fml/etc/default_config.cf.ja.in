@@ -1196,6 +1196,19 @@ outgoing_command_mail_header_size_limit	= $default_mail_header_size_limit
 outgoing_command_mail_body_size_limit	= $default_mail_body_size_limit
 
 
+=head2	特定のコマンドの制限
+
+
+# Descriptions: get コマンドで指定できる記事数の上限。
+#               一つの get コマンドの上限であり、かつ、
+#               複数の get コマンドのリクエスト記事数を全部足し合わせた値が
+#               この値を越えていないか？もチェックされる。
+#      History: $MGET_SEND_BACK_FILES_LIMIT
+#        Value: NUM
+#     Examples: 100
+get_command_request_limit	=	100
+
+
 =head2	フィルタ
 
 
