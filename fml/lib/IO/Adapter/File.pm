@@ -105,7 +105,7 @@ sub _read_open
 	return $fh;
     }
     else {
-	$self->_error_reason("Error: cannot open $file $flag");
+	$self->_error_reason("Error: cannot open file=$file flag=$flag");
 	return undef;
     }
 }
@@ -259,7 +259,7 @@ sub add
 	close($fh);
     }
     else {
-	$self->_error_reason("Error: cannot open $self->{ _file }");
+	$self->_error_reason("Error: cannot open file=$self->{ _file }");
 	return undef;
     }
 
