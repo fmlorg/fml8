@@ -1,0 +1,82 @@
+<!--
+   $FML: ticket.sgml,v 1.1 2001/06/10 12:58:30 fukachan Exp $
+-->
+
+<chapter id="ticketsystem.fml.usage">
+	<title>
+	fml 5.0 (minimal_states モデル版)チケットシステムの使い方
+	</title>
+
+<sect1>
+	<title>
+	状態遷移
+	</title>
+
+<para>
+
+</para>
+
+<para>
+   open
+	チケット番号らしきものを含まないメールが投稿されたら
+	自動的に open
+</para>
+
+<para>
+  going
+	誰か返事をしたら、対応中
+</para>
+
+<para>
+  closed
+	close 宣言がなされたら、クローズ
+</para>
+</sect1>
+
+
+<sect1>
+	<title>
+	close 宣言は以下のいずれかの実行である。
+	</title>
+
+<para>
+1)	Subject: が close ではじまる
+</para>
+
+<para>
+   2)	メール本文の行頭が close ではじまる。
+		先頭の空白は無視されます。
+		正規表現では \s*close です。
+		
+		multipart メールの場合は最初の text/plain パートの
+		行頭が close で始まる場合です。
+</para>
+
+<para>
+   3)	メールヘッダで X-Ticket-Pragma: close が指定されていた時
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	特別なヘッダ
+	</title>
+
+<para>
+X-Ticket-Pragma: ignore
+
+	新たにチケットを割り当てない
+	すべてのチケットに関する操作を抑制する。
+</para>
+
+<para>
+X-Ticket-Pragma: close
+
+	チケットをクローズする。
+</para>
+
+</sect1>
+
+</chapter>
