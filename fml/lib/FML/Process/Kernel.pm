@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.204 2004/01/02 14:50:36 fukachan Exp $
+# $FML: Kernel.pm,v 1.205 2004/01/03 01:53:47 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -886,28 +886,38 @@ $config->get() of FETCH() method is called.
 sub load_config_files
 {
     my ($curproc, $files) = @_;
+    my $config = $curproc->config();
+    my $_files = $files || $curproc->get_config_files_list();
 
     # load configuration variables from given files e.g. /some/where.cf
     # XXX overload variables from each $cf
-    for my $cf (@$files) {
-      $curproc->config()->overload( $cf );
+    for my $cf (@$_files) {
+      $config->overload( $cf );
     }
 
     # XXX We need to expand variables after we load all *cf files.
     # XXX 2001/05/05 changed to dynamic expansion for hook
     # $curproc->config()->expand_variables();
 
-    # XXX simple sanity check
-    #     MAIL_LIST != MAINTAINER
-    my $config     = $curproc->config();
-    my $maintainer = $config->{ maintainer };
-    my $ml_address = $config->{ address_for_post };
+    if ($curproc->is_cgi_process() || $curproc->is_under_mta_process()) {
+	# XXX simple sanity check
+	#     MAIL_LIST != MAINTAINER
+	my $maintainer = $config->{ maintainer }       || '';
+	my $ml_address = $config->{ address_for_post } || '';
 
-    use FML::Credential;
-    my $cred = new FML::Credential $curproc;
-    if ($cred->is_same_address($maintainer, $ml_address)) {
-	$curproc->logerror("invalid configuration: \$maintainer == \$address_for_post");
-	$curproc->stop_this_process("configuration error");
+	unless ($maintainer) {
+	    my $s = "configuration error: \$maintainer undefined";
+	    $curproc->logerror($s);
+	    $curproc->stop_this_process("configuration error");
+	}
+
+	use FML::Credential;
+	my $cred = new FML::Credential $curproc;
+	if ($cred->is_same_address($maintainer, $ml_address)) {
+	    my $s = "configuration error: \$maintainer == \$address_for_post";
+	    $curproc->logerror($s);
+	    $curproc->stop_this_process("configuration error");
+	}
     }
 }
 
