@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: TinyScheduler.pm,v 1.3 2001/04/02 04:05:04 fukachan Exp $
+# $FML: TinyScheduler.pm,v 1.4 2001/04/02 04:11:53 fukachan Exp $
 #
 
 package TinyScheduler;
@@ -27,24 +27,33 @@ TinyScheduler - what is this
 
 =cut
 
-
+# $args == parameters from CGI.pm  if fmlsci.cgi uses.
+# $args == libexec/loaders's $args if fmlsch uses.
 sub new
 {
     my ($self, $args) = @_;
-    my ($type) = ref($self) || $self;
-    my $me     = {};
-    my $user   = $args->{ user } || $ENV{'USER'};
+    my ($type)  = ref($self) || $self;
+    my $me      = {};
+
+    # fmlsch.cgi options
+    my $user      = $args->{ user }      || $ENV{'USER'};
+
+    # fmlsch options
+    my $options   = $args->{ options };
 
     # directory
     use User::pwent;
-    my $pw       = getpwnam($user);
-    my $home_dir = $pw->dir;
-    my $dir      = "$home_dir/.tsch";
+    my $pw        = getpwnam($user);
+    my $home_dir  = $pw->dir;
+    my $dir       = $options->{'D'} || "$home_dir/.tsch";
 
     # ~/.schedule/ by default
     $me->{ _user }          = $user;
     $me->{ _schedule_dir }  = $dir;
-    $me->{ _schedule_file } = $args->{ schedule_file } || "$dir/$user";
+    $me->{ _schedule_file } = $options->{'F'} || '';
+
+    # attribute
+    $me->{ _mode } = $options->{ 'm' } || 'text';
 
     return bless $me, $type;
 }
@@ -83,7 +92,8 @@ sub parse
     $month = $args->{ month } || ($month + 1);
 
     # schedule file
-    my $data_dir = $args->{ schedule_dir } || $self->{ _schedule_dir };
+    my $data_dir  = $self->{ _schedule_dir };
+    my $data_file = $self->{ _schedule_file };
 
     # pattern to match
     my @pat = (
@@ -111,33 +121,47 @@ sub parse
     $cal->header(sprintf("%04d/%02d %s",  $year, $month, "schedule"));
     $cal->bgcolor('pink');
 
-    if (-d $data_dir) {
-	use FileHandle;
-
+    if ($data_file && -f $data_file) {
+	$self->_analyze($data_file, \@pat);
+    }
+    elsif (-d $data_dir) {
 	use DirHandle;
 	my $dh = new DirHandle $data_dir;
 
 	if (defined $dh) {
 	    while (defined($_ = $dh->read)) {
 		next if $_ =~ /~$/;
-
-		my $fh = new FileHandle "$data_dir/$_";
-
-		while (<$fh>) {
-		    for my $pat (@pat) {
-			if (/$pat(.*)/) {
-			    $self->_parse($1, $2);
-			}
-		    }
-
-		    # for example, "*/24 something"
-		    if (/^\*\/(\d+)\s+(.*)/) {
-			$self->_parse($1, $2);
-		    }
-		}
-		close($fh);
+		$self->_analyze("$data_dir/$_", \@pat);
 	    }
 	}
+    }
+    else {
+	croak("invalid data");
+    }
+}
+
+
+sub _analyze
+{
+    my ($self, $file, $pattern) = @_;
+
+    use FileHandle;
+    my $fh = new FileHandle $file;
+
+    if (defined $fh) {
+	while (<$fh>) {
+	    for my $pat (@$pattern) {
+		if (/$pat(.*)/) {
+		    $self->_parse($1, $2);
+		}
+	    }
+
+	    # for example, "*/24 something"
+	    if (/^\*\/(\d+)\s+(.*)/) {
+		$self->_parse($1, $2);
+	    }
+	}
+	close($fh);
     }
 }
 
@@ -146,7 +170,7 @@ sub _parse
 {
     my ($self, $day, $buf) = @_;
     my $cal = $self->{ _schedule };
-	$day =~ s/^0//;
+    $day =~ s/^0//;
     $cal->addcontent($day, "<p>". $buf);
 }
 
@@ -164,7 +188,7 @@ if ($0 eq __FILE__) {
 	my %options;
 
 	use Getopt::Long;
-	GetOptions(\%options, "e!");
+	GetOptions(\%options, "e! -D=s -m=s");
 
 	require FileHandle; import FileHandle;
 	require TinyScheduler; import TinyScheduler;
@@ -181,7 +205,7 @@ if ($0 eq __FILE__) {
 	my $fh  = new FileHandle $tmp, "w";
 	$schedule->print($fh);
 	$fh->close;
-
+	
 	system "w3m -dump $tmp";
 
 	unlink $tmp;
