@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: guide.pm,v 1.3 2001/12/22 09:21:04 fukachan Exp $
+# $FML: guide.pm,v 1.8 2002/02/11 10:24:13 fukachan Exp $
 #
 
 package FML::Command::User::guide;
@@ -29,7 +29,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-send back file.
+See C<FML::Command> for more details.
 
 =head1 METHODS
 
@@ -45,10 +45,8 @@ send back file.
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config = $curproc->{ config };
 
-    $command_args->{ _file_to_send } = $config->{ "guide_file" };
-    $self->send_file($curproc, $command_args);
+    $self->send_user_xxx_message($curproc, $command_args, "guide");
 }
 
 

@@ -4,10 +4,10 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: help.pm,v 1.8 2002/02/11 10:24:13 fukachan Exp $
+# $FML: deny.pm,v 1.8 2002/02/11 10:24:13 fukachan Exp $
 #
 
-package FML::Command::User::help;
+package FML::Command::User::deny;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
@@ -21,7 +21,7 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Command::User::help - send back help file
+FML::Command::User::deny - send back deny file
 
 =head1 SYNOPSIS
 
@@ -46,7 +46,7 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
 
-    $self->send_user_xxx_message($curproc, $command_args, "help");
+    $self->send_user_xxx_message($curproc, $command_args, "deny");
 }
 
 
@@ -63,7 +63,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::User::help appeared in fml5 mailing list driver package.
+FML::Command::User::deny appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

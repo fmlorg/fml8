@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.8 2002/01/27 09:23:55 fukachan Exp $
+# $FML: SendFile.pm,v 1.9 2002/01/30 15:32:24 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -198,6 +198,39 @@ sub send_file
 	croak("$what_file not found\n");
     }
 
+}
+
+
+=head2 C<send_user_xxx_message($curproc, $command_args, $type)>
+
+Send back a help file if "help" is found in $ml_home_dir
+(e.g. /var/spool/ml/elena) for backward compatibility.
+Sebd back the default help message if not found.
+
+=cut
+
+
+# Descriptions: send back file file in $ml_home_dir if found.
+#               return the default message if not found.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args) STR($type)
+# Side Effects: put the message into the mail queue
+# Return Value: none
+sub send_user_xxx_message
+{
+    my ($self, $curproc, $command_args, $type) = @_;
+    my $config = $curproc->{ config };
+
+    # if "help" is found in $ml_home_dir (e.g. /var/spool/ml/elena),
+    # send it.
+    if (-f $config->{ "${type}_file" }) {
+	$command_args->{ _file_to_send } = $config->{ "${type}_file" };
+	$self->send_file($curproc, $command_args);
+    }
+    # if "help" is not found, use the default help message.
+    else {
+	$curproc->reply_message_nl("help.user.${type}",
+				   "${type} unavailable (error).");
+    }
 }
 
 
