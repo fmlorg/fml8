@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: dir.pm,v 1.2 2002/04/03 11:32:59 fukachan Exp $
+# $FML: dir.pm,v 1.3 2002/07/02 12:07:51 fukachan Exp $
 #
 
 package FML::Command::Admin::dir;
@@ -65,10 +65,15 @@ sub process
     my $du_args  = {};
     my @argv     = ();
 
+    use FML::Restriction::Base;
+    my $safe   = new FML::Restriction::Base;
+    my $regexp = $safe->basic_variables();
+    my $dirreg = $regexp->{ directory };
+
     # analyze ...
     for my $x (@$options) {
 	# restrict the file name
-	if ($x =~ /^(\-[A-Za-z]+)$/) {
+	if ($x =~ /^($dirreg)$/) {
 	    $du_args->{ opt_ls } = $1;
 	}
 	else {
