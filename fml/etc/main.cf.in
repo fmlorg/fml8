@@ -1,5 +1,5 @@
 #
-# $FML: main.cf.in,v 1.7 2002/01/27 08:30:24 fukachan Exp $
+# $FML: main.cf.in,v 1.8 2002/02/04 00:01:50 fukachan Exp $
 #
 
 # fml version
@@ -8,6 +8,10 @@
 #          fml-current YYYYMMDD
 #          fml-devel YYYYMMDD
 fml_version	=	__fml_version__
+
+fml_owner	=	@fml_owner@
+
+fml_group	=	@fml_group@
 
 
 ###
