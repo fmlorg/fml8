@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: Kernel.pm,v 1.42 2001/04/15 08:46:39 fukachan Exp $
+# $FML: Kernel.pm,v 1.43 2001/05/05 03:56:09 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -249,23 +248,6 @@ sub unlock
 }
 
 
-=head2 C<inform_reply_messages($args)>
-
-inform the error messages to the sender.
-C<not yet implemented>.
-
-=cut
-
-# Descriptions: 
-#    Arguments: $self $args
-# Side Effects: 
-# Return Value: none
-sub inform_reply_messages
-{
-    my ($curproc, $args) = @_;
-}
-
-
 # Descriptions: 
 #    Arguments: $self $args
 # Side Effects: 
@@ -290,8 +272,8 @@ $curproc->{ credential } object.
 sub verify_sender_credential
 {
     my ($curproc, $args) = @_;
-    my $r_msg = $curproc->{'incoming_message'};
-    my $from  = $r_msg->{'header'}->get('from');
+    my $msg  = $curproc->{'incoming_message'};
+    my $from = $msg->{'header'}->get('from');
 
     use Mail::Address;
     my ($addr, @addrs) = Mail::Address->parse($from);
@@ -300,7 +282,10 @@ sub verify_sender_credential
     $from = $addr->address;
     $from =~ s/\n$//o;
 
-    unless (@addrs) { # XXX @addrs must be empty.
+    # XXX "@addrs must be empty" is valid.
+    unless (@addrs) {
+	# XXX o.k. From: is proven to be valid now.
+	# XXX log it anyway
 	Log("sender: $from");
 	use FML::Credential;
 	$curproc->{'credential'} = new FML::Credential;
@@ -454,21 +439,171 @@ sub _check_resitrictions
 	elsif ($rule eq 'permit_members_only') {
 	    # Q: the mail sender is a ML member?
 	    if ($cred->is_member($curproc, $args)) {
-		# A: If so, we try to distribute this article.
+		# A: Yes, we permit to distribute this article.
 		return 1;
 	    }
 	    else {
-		Log("not a ML member");
+		# A: No, deny distribution
+		my $sender = $cred->sender;
+		Log("$sender is not a ML member");
 		Log( $cred->error() );
+		$curproc->reply_message( "you are not a ML member." );
+		$curproc->reply_message( "   your address: $sender" );
 	    }
 	}
 	elsif ($rule eq 'reject') {
-	    return 1;
+	    return 0;
 	}
 	else {
 	    LogWarn("unknown rule=$rule");
 	}
     }
+}
+
+
+=head1 MESSAGE HANDLING
+
+=head2 C<reply_message($msg)>
+
+C<reply_message($msg)> holds message C<$msg> sent back to the mail
+sender.
+
+To send a plain text,
+
+    reply_message( "message" );
+
+but to attach an image file, please use in the following way:
+
+    reply_message( {
+	type        => "image/gif",
+	path        => "aaa00123.gif",
+	filename    => "logo.gif",
+	disposition => "attachment",
+    });
+
+If you attach a plain text with the charset = iso-2022-jp,
+
+    reply_message( {
+	type        => "text/plain; charset=iso-2022-jp",
+	path        => "/etc/fml/main.cf",
+	filename    => "main.cf",
+	disposition => "main.cf example",
+    });
+
+=cut
+
+sub reply_message
+{
+    my ($curproc, $msg) = @_;
+    my $pcb      = $curproc->{ pcb };
+    my $category = 'reply_message';
+
+    if (ref($msg) eq 'HASH') {
+	my $rarray = $pcb->get($category, 'queue') || [];
+	$rarray->[ $#$rarray + 1 ] = $msg;
+	$pcb->set($category, 'queue', $rarray);
+    }
+    # XXX treat $msg string in separete way.
+    # XXX collect all text messages at one special area by default.
+    else {
+	my $msg0 = $pcb->get($category, 'text') || undef;
+	$msg    .= "\n" unless /\n$/;
+	$pcb->set($category, 'text', $msg0.$msg);
+    }
+}
+
+
+=head2 C<inform_reply_messages($args)>
+
+inform the error messages to the sender or maintainer.
+C<inform_reply_messages($args)> checks existence of message(s) of the
+following category.
+
+   category          description
+   ----------------------------------
+   reply_message     message sent back to the mail sender
+   system_message    message sent to this list maintainer
+
+=cut
+
+# Descriptions: msg (message to return to the sender) is either of
+#               text/plain if only "text" is defined.
+#               msg = header + get(message, text)
+#                      OR
+#               multipart/mixed if both "text" and "queue" is defined.
+#               $r  = get(message, queue)
+#               msg = header + "text" + $r->[0] + $r->[1] + ... 
+#
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub inform_reply_messages
+{
+    my ($curproc, $args) = @_;
+    my $pcb = $curproc->{ pcb };
+
+    # inject message string to queue in
+    for my $category ('reply_message', 'system_message') {
+	if (defined($pcb->get($category, 'text')) ||
+	    defined($pcb->get($category, 'queue') )) {
+	    $curproc->_queue_in($category);
+	}
+    }
+}
+
+
+sub _queue_in
+{
+    my ($curproc, $category) = @_;
+    my $config       = $curproc->{ config };
+    my $maintainer   = $config->{ maintainer };
+    my $charset      = $config->{ "${category}_charset" };
+    my $subject      = $config->{ "${category}_subject" };
+
+    my $pcb          = $curproc->{ pcb };
+    my $string       = $pcb->get($category, 'text') || undef;
+    my $is_multipart = $pcb->get($category, 'queue') ? 1 : 0;
+    my $recipient    = $curproc->{ credential }->sender();
+    my $msg;
+
+    use Mail::Message::Compose;
+
+    if ($is_multipart) {
+	$msg = new Mail::Message::Compose
+	    From    => $maintainer,
+	    To      => $recipient,
+	    Subject => $subject,
+	    Type    => "multipart/mixed";
+
+	if (defined $string) {
+	    $msg->attach(Type => "text/plain; charset=$charset",
+			 Data => $string,
+			 );
+	}
+
+	my $a = $pcb->get($category, 'queue');
+	for my $q ( @$a ) {
+	    $msg->attach(Type        => $q->{ type },
+			 Path        => $q->{ path },
+			 Filename    => $q->{ filename },
+			 Disposition => $q->{ disposition });
+	}
+    }
+    # text/plain format message (by default).
+    else {
+	$msg = new Mail::Message::Compose
+	    From    => $maintainer,
+	    To      => $recipient,
+	    Subject => $subject,
+	    Data    => $string;
+	$msg->attr('content-type.charset' => $charset);
+    }
+
+    use Mail::Delivery::Queue;
+    my $queue_dir = $config->{ mqueue_dir };
+    my $queue     = new Mail::Delivery::Queue { directory => $queue_dir };
+    $queue->in( $msg );
+    $queue->setrunnable();
 }
 
 
