@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Analyze.pm,v 1.14 2001/11/09 15:08:49 fukachan Exp $
+# $FML: Analyze.pm,v 1.15 2001/11/18 08:58:54 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -243,7 +243,7 @@ sub update_thread_status
 
     my $header  = $msg->rfc822_message_header();
     my $textmsg = $msg->get_first_plaintext_message();
-    $content    = $textmsg->data_in_body_part();
+    $content    = $textmsg->data_in_body_part() if defined $textmsg;
     $subject    = $header->get('subject') || '';
     $pragma     = $header->get('x-thread-pragma') || $pragma || '';
 
@@ -269,7 +269,7 @@ sub _is_ignore
 
     $header  = $msg->rfc822_message_header();
     $textmsg = $msg->get_first_plaintext_message();
-    $content = $textmsg->data_in_body_part();
+    $content = $textmsg->data_in_body_part() if defined $textmsg;
 
     # check header
     while (($field, $rule) = each %$filterlist) {
