@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: help.pm,v 1.2 2001/10/10 10:08:07 fukachan Exp $
+# $FML: help.pm,v 1.3 2001/10/12 00:00:57 fukachan Exp $
 #
 
 package FML::Command::User::help;
@@ -14,7 +14,9 @@ use Carp;
 
 use ErrorStatus;
 use FML::Command::Utils;
-@ISA = qw(FML::Command::Utils ErrorStatus);
+use FML::Command::SendFile;
+use FML::Log qw(Log LogWarn LogError);
+@ISA = qw(FML::Command::SendFile FML::Command::Utils ErrorStatus);
 
 
 =head1 NAME
@@ -37,28 +39,10 @@ See C<FML::Command> for more details.
 sub process
 {
     my ($self, $curproc, $optargs) = @_;
-    my $config        = $curproc->{ config };
-    my $charset       = $config->{ reply_message_charset };
-    my $help_file     = $config->{ help_file };
+    my $config = $curproc->{ config };
 
-    # template substitution: kanji code, $varname expansion et. al.
-    my $params = {
-	src         => $help_file,
-	charset_out => $charset,
-    };
-    my $help_template = $curproc->prepare_file_to_return( $params ); 
-
-    if (-f $help_template) {
-	$curproc->reply_message( {
-	    type        => "text/plain; charset=$charset",
-	    path        => $help_template,
-	    filename    => "help",
-	    disposition => "help",
-	});
-    }
-    else {
-	croak("no help file ($help_template)\n");
-    }
+    $optargs->{ _file_to_send } = $config->{ "help_file" };
+    $self->send_file($curproc, $optargs);
 }
 
 
