@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.36 2001/07/15 23:35:37 fukachan Exp $
+# $FML: Config.pm,v 1.37 2001/08/05 22:36:42 fukachan Exp $
 #
 
 package FML::Config;
@@ -237,16 +237,26 @@ sub _read_file
 	    if ($mode eq 'raw') { # save comment buffer
 		if (/^\s*\#/) { $comment_buffer .= $_;}
 	    }
-	    else { # in 'default' mode, nuke trailing "\n"
+	    else { # by default, nuke trailing "\n"
 		chop;
 	    }
 
-	    # case 1.
-	    if (/^([A-Za-z0-9_]+)\s+=\s*(.*)/) {
-		my ($key, $value)  = ($1, $2);
-		$value             =~ s/\s*$//o;
-		$curkey            = $key;
-		$config->{ $key }  = $value;
+	    # case 1. "key = value1"
+	    if (/^([A-Za-z0-9_]+)\s*(=)\s*(.*)/   ||
+		/^([A-Za-z0-9_]+)\s*(\+=)\s*(.*)/ ||
+		/^([A-Za-z0-9_]+)\s*(\-=)\s*(.*)/) {
+		my ($key, $mode, $value) = ($1, $2, $3);
+		$mode   =~ s/=//;
+		$value  =~ s/\s*$//o;
+		$curkey = $key;
+
+		if ($mode) {
+		    $config->{ $key } = 
+			_evaluate($config, $key, $mode, $value);
+		}
+		else { # by default
+		    $config->{ $key } = $value;
+		}
 
 		# save variable order for re-construction e.g. used in write()
 		if ($mode eq 'raw') { 
@@ -256,7 +266,7 @@ sub _read_file
 		    push(@$order, $key);
 		}
 	    }
-	    # case 2.
+	    # case 2. "^\s+value2"
 	    elsif (/^\s+(.*)/ && defined($curkey)) {
 		my $value = $1;
 		$value =~ s/\s*$//o;
@@ -268,6 +278,35 @@ sub _read_file
     else {
 	$self->error_set("Error: cannot open $file");
     }
+}
+
+
+# Descriptions: fml special hack to read/write configuration
+#               If key = "value1 value2 value3" and
+#                  key -= value2 is given (mode = '-'),
+#                  key becomes "value1 value3".
+#               If "key += value4, key becomes
+#                  "value1 value2 value3 value4".
+#    Arguments: $config $key $mode $value
+# Side Effects: update $config by $mode
+# Return Value: new value for $config{ $key }
+sub _evaluate
+{
+    my ($config, $key, $mode, $value) = @_;
+    my @buf = split(/\s+/, $config->{ $key });
+
+    if ($mode eq '+') {
+	push(@buf, $value);
+    }
+    elsif ($mode eq '-') {
+	my @newbuf = ();
+	for (@buf) {
+	    push(@newbuf, $_) if $value ne $_;
+	}
+	@buf = @newbuf;
+    }
+
+    return join(" ", @buf);
 }
 
 
