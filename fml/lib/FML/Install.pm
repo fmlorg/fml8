@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.8 2003/10/26 02:04:08 fukachan Exp $
+# $FML: Install.pm,v 1.9 2003/12/21 14:39:05 fukachan Exp $
 #
 
 package FML::Install;
@@ -292,6 +292,7 @@ sub install_default_config_files
     # XXX change file name of components of $nl_template_files into
     # XXX ${file_name}.{ja,en,...}
     my $nl_template_files = $config->get_as_array_ref('nl_template_files');
+    my $nl_language       = $config->{ nl_default_language } || 'en';
     for my $file (@$nl_template_files) {
 	# XXX src = relative path, dst = absolute path
 	my $src = File::Spec->catfile("fml", "etc", $file);
@@ -299,6 +300,14 @@ sub install_default_config_files
 
 	# always override.
 	$self->convert($src, $dst, 0644);
+
+	# always override.
+	# XXX we need install default_config.cf too! (caution: mandatory)
+	if ($dst =~ /\.$nl_language$/) {
+	    my $xxx = $dst;
+	    $xxx =~ s/\.$nl_language$//;
+	    $self->convert($src, $xxx, 0644);
+	}
     }
 
     my $template_files = $config->get_as_array_ref('template_files');
