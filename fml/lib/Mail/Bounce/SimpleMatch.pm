@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SimpleMatch.pm,v 1.13 2001/04/15 12:30:26 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.14 2001/04/15 13:50:31 fukachan Exp $
 #
 
 
@@ -105,6 +105,10 @@ my $address_trap_regexp = {
     	'end'   => 'original message follows',
     },
 
+    'smtpsvc' => {
+    	'start' => '------Transcript of session follows -------',
+    	'end'   => 'Received.*',
+    },
 
     # XXX what is this ???
     'unknown1' => {
