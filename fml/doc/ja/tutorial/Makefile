@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.5 2001/04/23 11:40:44 fukachan Exp $
+# $FML: Makefile,v 1.6 2001/04/23 17:28:10 fukachan Exp $
 #
 
 TMP_DIR    = /tmp
@@ -21,4 +21,5 @@ export: html
 	test -d  $(TARGET_DIR) || mkdir $(TARGET_DIR)
 	rsync -a fml-devel/@*/ $(TARGET_DIR)/
 	rsync -a ../../en/figures/*.gif $(TARGET_DIR)/
+	chmod 755 $(TARGET_DIR)
 
