@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.9 2004/02/01 15:54:45 fukachan Exp $
+# $FML: Sequence.pm,v 1.10 2004/04/11 13:02:14 fukachan Exp $
 #
 
 package FML::Article::Sequence;
@@ -104,6 +104,7 @@ sub id
 sub get_number_from_map
 {
     my ($self, $map) = @_;
+    my $n = 0;
 
     use IO::Adapter;
     my $io = new IO::Adapter $map;
