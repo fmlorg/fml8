@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledDir.pm,v 1.18 2003/01/11 15:14:27 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.19 2003/01/11 15:16:37 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -180,7 +180,7 @@ sub FETCH
 	if (-f $f) {
 	    # XXX reverse order: firstly, try last match in the latest file.
 	    my $obj = new Tie::JournaledFile {
-		'last_match' => 1,
+		'match_condition' => 'last',
 		'file'       => $f,
 	    };
 
@@ -206,7 +206,7 @@ sub STORE
     my $f = $self->{ '_files' }->[ 0 ]; # XXX [0] is the latest file.
 
     my $obj = new Tie::JournaledFile {
-	'last_match' => 1,
+	'match_condition' => 'last',
 	'file'       => $f,
     };
 
@@ -232,7 +232,7 @@ sub __gen_hash
 	next FILE unless -f $f;
 
 	tie %db, 'Tie::JournaledFile', {
-	    'last_match' => 1,
+	    'match_condition' => 'last',
 	    'file'       => $f,
 	};
 
@@ -357,7 +357,7 @@ sub get_all_values_as_hash_ref
     use FileHandle;
     for my $f (reverse @$files) {
 	my $obj  = new Tie::JournaledFile {
-	    'last_match' => 1,
+	    'match_condition' => 'last',
 	    'file'       => $f,
 	};
 	my $hash = $obj->get_all_values_as_hash_ref();
