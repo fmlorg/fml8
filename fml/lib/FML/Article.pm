@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: Article.pm,v 1.19 2001/04/03 09:45:40 fukachan Exp $
+# $FML: Article.pm,v 1.20 2001/04/07 06:41:31 fukachan Exp $
 #
 
 package FML::Article;
@@ -69,12 +69,16 @@ sub _setup_article_template
 {
     my ($curproc) = @_;
 
-    # setup article to distribute
-    my $msg = $curproc->{'incoming_message'};
-
     # create an article template by duplicating the incoming message
-    $curproc->{ article }->{ header } = $msg->{'header'}->dup();
-    $curproc->{ article }->{ body }   = $msg->{'body'};
+    my $dupmsg  = $curproc->{'incoming_message'}->{ message }->dup_header;
+    if (defined $dupmsg) {
+	$curproc->{ article }->{ message } = $dupmsg;
+	$curproc->{ article }->{ header }  = $dupmsg->rfc822_message_header;
+	$curproc->{ article }->{ body }    = $dupmsg->rfc822_message_body;
+    }
+    else {
+	croak("cannot duplicate message");
+    }
 }
 
 
