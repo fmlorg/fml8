@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: .track_relation.pl,v 1.2 2001/10/08 06:11:07 fukachan Exp $
+# $FML: .track_relation.pl,v 1.3 2001/10/08 06:28:14 fukachan Exp $
 #
 
 use strict;
@@ -292,8 +292,9 @@ sub _who_i_am
 
     $buf =~ s/^\d+\s//g;
     $buf =~ s/\n/ /g;
+    $buf =~ s/\s+/ /g;
 
-    if ($buf =~ /^(.*?)\./) {
+    if ($buf =~ /^(.*?)\.\s+/) {
 	return "\"$1\"\n";
     }
 }
