@@ -8,30 +8,15 @@
 	XXX
 
 
-○	fml 4 の cf を解釈できる互換ルーチン
+[TODO]	fml 4 の cf を解釈できる互換ルーチン
 
 
-○	fml/doc/ja/01_RFC_* 群を
+[TODO]	fml/doc/ja/01_RFC_* 群をなんとかする
 
-		なんとかする
-		もう OK なら、ドキュメント化せい
-
-
-○	$action って、どうシンタックスチェックするべ？
-
-	my $action  = $curproc->safe_cgi_action_name();
-
-	Mail/ThreadTrack/Print/HTML.pm
+	もう OK なら、ドキュメント化せい
 
 
-○	euc-jp がはーどこーど
-
-	FML/Article/Summary.pm
-	Mail/Message/Encode.pm
-	Mail/Message/ToHTML.pm
-
-
-○	off/on の問題
+[TODO]	off/on の問題
 
 	on は primary_recipient_map にだけ作用するが、
 	off は recipient_maps すべてに作用する(マッチする全ての map を
@@ -41,14 +26,14 @@
 	削除する。	 
 
 
-○	reply-to: special hack
+[TODO]	reply-to: special hack
 
 	   if (	To: ml1, ml2 ) {
 		set Reply-To: ml1, ml2
 	   }
 
 
-○	libexec/relocated , Process/Relocated
+[TODO]	libexec/relocated , Process/Relocated
 
 	「このＭＬはもうありません」
 	deny とはちょっとちがうとおもうねぇ。
@@ -58,13 +43,10 @@
 	宛に来たもの両方に返事を返すべきだろう。
 
 
-○	libexec/auto-newml
+[TODO]	Accept-Language: を考慮する
 
 
-○	handle Accept-Language: in all reply messages.
-
-
-○	2002 年のオーバホールの残り
+[TODO]	2002 年のオーバホールの残り
 
   ＊ 要 BUG FIX
 	Mail/Delivery/SMTP.pm
@@ -85,20 +67,7 @@
 
 		print_axss (against cross site scripting).
 
-○	Mail::ThreadTrack
-
-   Mail::ThreadTrack
-	output とモードの明瞭化を
-	どこでどう CSS とたたかうの？
-	Mail::ThreadTrack::Analyze をきれいにしないとね
-
-
-	index.html (fml-devel 234)
-	 	最近のＭＬのレビュー 
-	 		＋
-	 	選択画面 → index thread monthly
-
-○	IO::Adapter
+[TODO]	IO::Adapter
 
 	get_*() には File or !File にだけしかないのがある？
 
@@ -113,7 +82,7 @@
 
 	write LDAP ;-)
 
-   [TODO]
+   [チェックリスト]
 	IO/Adapter/File.pm
 
 	IO/Adapter/Array.pm
@@ -124,46 +93,44 @@
 		IO/Adapter/MySQL.pm
 
 
-○	時間つき subscribe のたぐい
+[TODO]	時間つき newml だと、あれか… (上述の newml)
+
+	libexec/auto-newml ?
+
+
+[TODO]	時間つき subscribe 
 	時間つき newml だと、あれか… (上述の newml)
 
 	subscribe -> 一カ月すると削除される？
 
 
-○	too old date mail must be a spam
+[TODO]	フィルタ: 古いメールは SPAM に違いない
 
 
-○	fmlerror
+[TODO]	digest こまんど？ for CGI
+
+
+[TODO]	digest こまんど？ for user
+
+
+[TODO]	fmlerror : エラーの表示
 
 	error summary ?
 
 	error address maintenance
 
 
-○	digest こまんど？ for CGI
-
-
-○	digest こまんど？ for user
-
-
-○	mead bug ?
+[TODO]	mead bug ?
 
 	mkdir in new
 
 	cache db bug ?
 
 
-○	queue 管理するプログラム？ fmlsuper ?
+[TODO]	queue 管理プログラム: fmlsuper じゃなくて makefml queue かな
 
 
-○	ちょっと見栄えが？
-
-   FML::CGI::ThreadTrack
-	見栄えを config.cgi などと合わせる方が良いでしょう
-	＃ テーブルベースの見栄え
-
-
-○	ファイルを用意しただけやんシリーズ;)
+[TODO]	ファイルを用意しただけやんシリーズ;)
 	これから改造するので、ほとんど未修正のままのこす
 
 		一度削除するか？
@@ -172,7 +139,7 @@
 	FML::Filter::TrafficMonitor
 
 
-○	remove $msg->{ next }
+[TODO]	remove $msg->{ next }
 
 	FML/Filter/TextPlain.pm
 	Mail/Message/ToHTML.pm
@@ -181,7 +148,7 @@
 	Mail/Bounce/Qmail.pm
 
 
-○	ちょっとコーディングスタイルが古いかな?
+[TODO]	ちょっとコーディングスタイルが古いかな?
 
 		FML::Header
 		FML::Header::Subject
@@ -194,7 +161,7 @@
 	近々に見直すべし
 
 
-○	ドキュメント( tutorial )
+[TODO]	ドキュメント( tutorial )
 
 	module/Mail::Message::ToHTML
 	threadtrack/chapter.sgml
@@ -204,7 +171,7 @@
 	fml bible のパートIIIの最初の部分のように編成し直すべき
 
 
-○	makefml でうごかない？
+[TODO]	makefml で動くもの、動かないものは何？
 
 			get	***disabled***
 			mget	***disabled***
@@ -231,20 +198,27 @@
 
 
 
-○	FML::Process::Scheduler って？
+[TODO]	FML::Process::Scheduler ってかなり？
 
 	うーん、なかみがない。予約だけされてるモジュールやね
 	mkdir するだけ？ :-)
 
 
-○	mail-message-0-2 タグの後に付け加えられたコードについて再考
+[TODO]	Mail::ThreadTrack のクリーニング
 
-	s/content/data/g;
+	output とモードの明瞭化を
+	どこでどう CSS とたたかうの？
+	Mail::ThreadTrack::Analyze をきれいにしないとね
 
-	we need our own MIME generator ???
 
+	index.html (fml-devel 234)
+	 	最近のＭＬのレビュー 
+	 		＋
+	 	選択画面 → index thread monthly
 
-○ Mail::ThreadTrack
+	ちょっと見栄えが？
+		見栄えを config.cgi などと合わせる方が良いでしょう
+		＃ テーブルベースの見栄え
 
 	ドキュメントの見直し（？）
 
@@ -271,4 +245,4 @@
 
 
 ----------
-$FML: 00_MEMO,v 1.65 2003/03/02 16:38:17 fukachan Exp $
+$FML: 00_MEMO,v 1.66 2003/03/06 13:13:34 fukachan Exp $
