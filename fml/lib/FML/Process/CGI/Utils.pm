@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.1 2003/09/25 11:40:58 fukachan Exp $
+# $FML: Utils.pm,v 1.2 2003/09/27 03:44:04 fukachan Exp $
 #
 
 package FML::Process::CGI::Utils;
@@ -160,6 +160,28 @@ sub cgi_var_cgi_mode
     my $hints     = $curproc->hints();
 
     return $hints->{ cgi_mode };
+}
+
+
+sub cgi_var_navigator_title
+{
+    my ($curproc) = @_;
+    my $fml_url   = $curproc->cgi_var_fml_project_url();
+    my $mode      = $curproc->cgi_var_cgi_mode();
+
+    if ($mode eq 'admin') {
+	return "<B>$fml_url admin menu</B>\n<BR>";
+    }
+    else {
+	return "<B>$fml_url ml-admin menu</B>\n<BR>";
+    }
+}
+
+
+sub cgi_var_fml_project_url
+{
+    my ($curproc) = @_;
+    return '<A HREF="http://www.fml.org/software/fml-devel/">fml</A>';
 }
 
 
