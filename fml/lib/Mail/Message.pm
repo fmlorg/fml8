@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.18 2001/04/15 14:15:30 fukachan Exp $
+# $FML: Message.pm,v 1.19 2001/04/15 14:33:36 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1049,7 +1049,19 @@ sub parse_and_build_mime_multipart_chain
 	    $mpb_end = $data_end;
 	}
     }
-    print "\t($mpb_begin, $mpb_end)\n\t----------\n\n" if $debug; 
+
+    # XXX We should check the first string is delimiter or not.
+    # XXX We need Content-Type: in each block. This may be a bug ?
+    # XXX To avoid the first part without no content-type, we check
+    # XXX the first string in the body data.
+    my $preamble = "\n".substr($$data, 0, length($delimeter) - 1);
+    my $no_preamble = 1 if $preamble eq $delimeter;
+
+    # 
+    # HERE WE GO but debug firstly :)
+    # 
+    print "\tmpb($mpb_begin, $mpb_end)\n\t----------\n\n" if $debug;
+    print "\tno preamble\n" if $debug && $no_preamble;
 
 
     # prepare lexical variables
@@ -1068,7 +1080,7 @@ sub parse_and_build_mime_multipart_chain
 	    my ($header, $pb) = _get_mime_header($data, $pb);
 	    if ($debug) {
 		my $type; $header =~ /(\w+\/\w+)/ && ($type = $1);
-		print "type=$type\n";
+		print "type=$type ";
 	    }
 
 	    my $args = {
@@ -1079,8 +1091,20 @@ sub parse_and_build_mime_multipart_chain
 		data           => $data,
 		base_data_type => $base_data_type,
 	    };
-	    my $default = ($i == 0) ? $virtual_data_type{'preamble'} : undef;
+
+	    my $default;
+	    if ($i == 0) {
+		$default = $no_preamble ? 'text/plain': 
+		    $virtual_data_type{'preamble'};
+	    }
+
 	    $args->{ data_type } = _get_data_type($args, $default);
+
+	    if ($debug) {
+		my $r = substr($$data, $pb, $pe - $pb);
+		print "[ data_type=$args->{ data_type } ]\n";
+		print "{$r}\n" if $ENV{'debug'} > 1;
+	    }
 
 	    $m[ $i++ ] = $self->_alloc_new_part($args);
 	}
@@ -1170,7 +1194,7 @@ sub _get_data_type
     my ($args, $default) = @_;
     my $buf = $args->{ header } || '';
 
-    if ($buf =~ /Content-Type:\s*(\S+)(\n|\;|\s*$)/) {
+    if ($buf =~ /Content-Type:\s*(\S+\w+)(\n|\;|\s*$)/) {
 	return "\L$1";
     }
     else {
