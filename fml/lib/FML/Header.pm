@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.71 2004/02/06 12:41:20 fukachan Exp $
+# $FML: Header.pm,v 1.72 2004/02/15 04:38:25 fukachan Exp $
 #
 
 package FML::Header;
@@ -305,8 +305,8 @@ sub add_rfc2369
     my $object_type = defined $rw_args->{ type } ? $rw_args->{ type } : '';
 
     # addresses
-    my $post       = $config->{ address_for_post };
-    my $command    = $config->{ address_for_command };
+    my $post       = $config->{ article_post_address };
+    my $command    = $config->{ command_mail_address };
     my $maintainer = $config->{ maintainer };
     my $use_command_mail_program = $config->yes('use_command_mail_program');
 
@@ -483,7 +483,7 @@ sub rewrite_reply_to
     my $reply_to = $header->get('reply-to') || '';
 
     unless ($reply_to) {
-	$header->add('Reply-To', $config->{ address_for_post });
+	$header->add('Reply-To', $config->{ article_post_address });
     }
 }
 
@@ -633,12 +633,12 @@ loop.
 =head2 check_x_ml_info($config, $rw_args)
 
 The injected message loops if x-ml-info: has our own
-C<address_for_post> address.
+C<article_post_address> address.
 
 =head2 check_list_post($config, $rw_args)
 
 The injected message loops if list-post: has our own
-C<address_for_post> address.
+C<article_post_address> address.
 
 =cut
 

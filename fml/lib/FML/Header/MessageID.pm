@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MessageID.pm,v 1.20 2004/01/02 14:50:31 fukachan Exp $
+# $FML: MessageID.pm,v 1.21 2004/01/22 12:34:22 fukachan Exp $
 #
 
 package FML::Header::MessageID;
@@ -170,9 +170,9 @@ sub gen_id
 {
     my ($self, $config) = @_;
 
-    # XXX-TODO: if $config->{ address_for_post } undefined ?
+    # XXX-TODO: if $config->{ article_post_address } undefined ?
     $Counter++;
-    return "<".time.".$$.$Counter." . $config->{ address_for_post } . ">";
+    return "<".time.".$$.$Counter." . $config->{ article_post_address } . ">";
 }
 
 

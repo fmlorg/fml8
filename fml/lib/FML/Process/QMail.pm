@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QMail.pm,v 1.19 2004/01/01 23:52:17 fukachan Exp $
+# $FML: QMail.pm,v 1.20 2004/01/02 14:50:37 fukachan Exp $
 #
 
 package FML::Process::QMail;
@@ -78,8 +78,8 @@ sub DotQmailExt
     }
 
     &$curproc->log("dot-qmail-ext[0]: $ext");
-    my ($key)    = (split(/\@/, $config->{ address_for_post }))[0];
-    my ($keyctl) = (split(/\@/, $config->{ address_for_command }))[0];
+    my ($key)    = (split(/\@/, $config->{ article_post_address }))[0];
+    my ($keyctl) = (split(/\@/, $config->{ command_mail_address }))[0];
 
     if ($ext =~ /^($key)$/i) {
 	return '';

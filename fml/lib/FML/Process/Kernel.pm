@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.214 2004/02/29 15:59:04 fukachan Exp $
+# $FML: Kernel.pm,v 1.215 2004/03/11 15:37:17 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -912,7 +912,7 @@ sub load_config_files
 	# XXX simple sanity check
 	#     MAIL_LIST != MAINTAINER
 	my $maintainer = $config->{ maintainer }       || '';
-	my $ml_address = $config->{ address_for_post } || '';
+	my $ml_address = $config->{ article_post_address } || '';
 
 	unless ($maintainer) {
 	    my $s = "configuration error: \$maintainer undefined";
@@ -923,7 +923,7 @@ sub load_config_files
 	use FML::Credential;
 	my $cred = new FML::Credential $curproc;
 	if ($cred->is_same_address($maintainer, $ml_address)) {
-	    my $s = "configuration error: \$maintainer == \$address_for_post";
+	    my $s = "configuration error: \$maintainer == \$article_post_address";
 	    $curproc->logerror($s);
 	    $curproc->stop_this_process("configuration error");
 	}
@@ -2091,7 +2091,7 @@ sub queue_in
     my $sender       = $config->{ maintainer };
     my $charset      = $curproc->get_charset($category);
     my $subject      = $config->{ "${category}_subject" };
-    my $reply_to     = $config->{ address_for_command };
+    my $reply_to     = $config->{ command_mail_address };
     my $is_multipart = 0;
     my $rcptkey      = '';
     my $rcptlist     = [];

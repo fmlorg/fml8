@@ -1,5 +1,5 @@
 #
-# $FML$
+# $FML: config.cf.en,v 1.1 2003/07/26 14:23:48 fukachan Exp $
 #
 # THE CHARSET OF THIS FILE IS US-ASCII.
 #
@@ -11,19 +11,19 @@
 #
 
 # domain name
-# ml_domain           = __ml_domain__
+# ml_domain          = __ml_domain__
 #
 # ml name
-# ml_name	    = __ml_name__
+# ml_name	     = __ml_name__
 
 # maintainer
-maintainer	    = $ml_name-admin@$ml_domain
+maintainer	     = $ml_name-admin@$ml_domain
 
 # address for post
-address_for_post    = $ml_name@$ml_domain
+article_post_address = $ml_name@$ml_domain
 
 # address for command mail
-address_for_command = $ml_name-ctl@$ml_domain
+command_mail_address = $ml_name-ctl@$ml_domain
 
 
 =cut
