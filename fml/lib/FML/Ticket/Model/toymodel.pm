@@ -8,14 +8,16 @@
 # $FML$
 #
 
-package Ticket::Model::toymodel;
+package FML::Ticket::Model::toymodel;
 
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
+use FML::Log qw(Log);
+use FML::Ticket::System;
 
 require Exporter;
-@ISA = qw(Ticket::System Exporter);
+@ISA = qw(FML::Ticket::System Exporter);
 
 
 sub new
@@ -25,6 +27,47 @@ sub new
     my $me     = {};
     return bless $me, $type;
 }
+
+
+sub add_ticket
+{
+    my ($self, $header, $config, $args) = @_;
+    my $subject = $header->get('subject');
+
+    use FML::Header::Subject;
+    my $hh = new FML::Header::Subject;
+
+    # if the header carries "Subject: Re: ...", 
+    # out ticket system does nothing.
+    unless ( $hh->is_reply_message( $subject ) ) {
+	Log( "seq: ". $config->{ ticket_sequence_file } );
+	my $id = $self->increment_id( $config->{ ticket_sequence_file } );
+	unless ($self->error) {
+	    $self->_rewrite_subject($header, $config, $id);
+	}
+	else {
+	    Log( $self->error ); 
+	};
+    }
+    else {
+	Log("not reply message");
+    }
+}
+
+
+sub _rewrite_subject
+{
+    my ($self, $header, $config, $id) = @_;
+
+    my $ml_name = $config->{ ml_name };
+    my $tag     = $config->{ ticket_subject_tag };
+    my $subject = $header->get('subject');
+    my $ticket_id = sprintf($tag, $ml_name, $id );
+
+    # append the ticket tag
+    $header->replace('subject', $subject." ".$ticket_id);
+}
+
 
 
 =head1 NAME

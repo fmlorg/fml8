@@ -77,6 +77,23 @@ sub _regexp_compile
 }
 
 
+sub is_reply_message
+{
+    my ($self, $subject) = @_;
+    $subject =~ /Re:/i ? 1 : 0; 
+}
+
+
+sub execute_ticket_system
+{
+    my ($self, $header, $config, $args) = @_;
+    my $model = $config->{ ticket_model };
+    my $pkg   = "Ticket::Model::".$model;
+    eval qq {require $pkg; $pkg->import();};
+    
+    $pkg->increment_id( $config->{ ticket_sequence_file });
+}
+
 
 =head1 NAME
 

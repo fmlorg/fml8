@@ -147,6 +147,13 @@ sub _header_rewrite
 		mode => 'distribute',
 	    });
 	}
+
+	# ticket system
+	if ($rule eq 'add_ticket_tag') {
+	    $header->add_ticket_tag($config, {
+		mode => 'distribute',
+	    });
+	}
     }
 }
 

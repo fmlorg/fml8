@@ -6,7 +6,7 @@
 ticket_model		=	toymodel
 
 # 
-subject_ticket_tag	=	[%s #%08d]
+ticket_subject_tag	=	[%s #%08d]
 
 #
 ticket_sequence_file	=	$ml_home_dir/ticket.seq

@@ -8,7 +8,7 @@
 # $FML$
 #
 
-package Ticket::System;
+package FML::Ticket::System;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
@@ -28,7 +28,7 @@ sub new
 
 sub increment_id
 {
-    my ($self, $file) = @_;
+    my ($self, $seq_file) = @_;
 
     use FML::SequenceFile;
     my $sfh = new FML::SequenceFile { sequence_file => $seq_file };

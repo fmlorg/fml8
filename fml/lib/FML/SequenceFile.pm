@@ -38,6 +38,14 @@ sub increment_id
 	return 0;
     };
 
+    # touch
+    unless (-f $seq_file) {
+	use FileHandle;
+	my $fh = new FileHandle ">> $seq_file";
+	print $fh "\n";
+	close($fh);
+    };
+
     use IO::File::Atomic;
     my ($rh, $wh) = IO::File::Atomic->rw_open($seq_file);
 

@@ -108,6 +108,25 @@ sub add_x_sequence
 }
 
 
+sub add_ticket_tag
+{
+    my ($header, $config, $args) = @_;
+    my $model = $config->{ ticket_model };
+
+    if ($model eq 'toymodel') {
+	my $pkg = "FML::Ticket::Model::${model}";
+	eval qq{ require $pkg; $pkg->import();};
+	unless ($@) {
+	    my $ts = $pkg->new;
+	    $ts->add_ticket($header, $config, $args);
+	}
+	else {
+	    Log($@);
+	}
+    }
+}
+
+
 sub rewrite_subject_tag
 {
     my ($header, $config, $args) = @_;
