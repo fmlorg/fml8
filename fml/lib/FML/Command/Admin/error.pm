@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: error.pm,v 1.2 2003/03/14 06:53:22 fukachan Exp $
+# $FML: error.pm,v 1.1 2003/03/14 12:49:47 fukachan Exp $
 #
 
 package FML::Command::Admin::error;
@@ -60,12 +60,13 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
 
+    # XXX-TODO: fml $ml error --algorithm $algorithm ?
     $self->_fmlerror($curproc);
 }
 
 
 # Descriptions: show error messages
-#    Arguments: OBJ($curproc)
+#    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub _fmlerror
@@ -78,6 +79,7 @@ sub _fmlerror
     my $data = $obj->analyze();
     my $info = $obj->get_data_detail();
 
+    # XXX-TODO: move to FML::Error more. 
     my ($k, $v);
     while (($k, $v) = each %$info) {
 	if (defined($v) && ref($v) eq 'ARRAY') {
