@@ -13,9 +13,6 @@ FML/Article.pm
 FML/Checksum.pm
 FML/Config.pm
 FML/Credential.pm
-FML/Date.pm
-FML/Debug.pm
-FML/Errors.pm
 FML/Header.pm
 FML/Log.pm
 FML/Messages.pm
@@ -37,11 +34,8 @@ Ticket/System.pm
 File/RingBuffer.pm
 File/Utils.pm
 
-IO/Adapter/Array.pm
-
 MailingList/Net/INET4.pm
 MailingList/Net/INET6.pm
-MailingList/Delivery.ja.pod
 MailingList/Delivery.pm
 MailingList/Messages.pm
 MailingList/SMTP.pm
