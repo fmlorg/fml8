@@ -59,7 +59,7 @@ delete_unsafe_header_fields
 </row>
 <row>
 <entry>
-available_commands_for_user</entry>
+commands_for_user</entry>
 <entry>
  有効なコマンド一覧を書く</entry>
 <entry>

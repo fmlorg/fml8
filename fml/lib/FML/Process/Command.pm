@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.45 2002/04/13 13:52:39 fukachan Exp $
+# $FML: Command.pm,v 1.46 2002/04/13 14:53:08 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -268,8 +268,8 @@ sub _is_valid_command
     }
 
     # 2. use of this command is allowed in FML::Config or not ?
-    unless ($config->has_attribute("available_commands_for_$mode", $comname)) {
-	Log("available_commands_for_$mode has no $comname");
+    unless ($config->has_attribute("commands_for_$mode", $comname)) {
+	Log("commands_for_$mode has no $comname");
 	$curproc->reply_message("\n$prompt $command");
 	$curproc->reply_message_nl('command.not_command',
 				   "not command, ignored.");

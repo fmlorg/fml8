@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: User.pm,v 1.2 2002/03/30 11:08:34 fukachan Exp $
+# $FML: User.pm,v 1.3 2002/04/10 09:51:25 fukachan Exp $
 #
 
 package FML::CGI::Admin::User;
@@ -48,7 +48,7 @@ sub cgi_menu
     my $address_list = $curproc->get_recipient_list();
     my $comname      = $command_args->{ comname };
     my $command_list =
-	$config->get_as_array_ref('available_commands_for_admin_cgi');
+	$config->get_as_array_ref('commands_for_admin_cgi');
 
 
     print start_form(-action=>$action, -target=>$target);

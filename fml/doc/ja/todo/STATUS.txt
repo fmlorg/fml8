@@ -63,8 +63,8 @@ II部　fmlのセットアップ〜MLの作成
 III部　fmlのカスタマイズ
 10章　MLのメンバーができること
 
-	$available_commands_for_user および
-	$available_commands_for_stranger という変数で定義されています。
+	$commands_for_user および
+	$commands_for_stranger という変数で定義されています。
 
 	一般ユーザ向けのコマンド
 		help get mget get mget send subscribe add unsubscribe
@@ -172,7 +172,7 @@ III部　fmlのカスタマイズ
 18章　リモート管理（メールでfmlを操作する）
 
 	管理者がコマンドメールで使える特権コマンドつまり admin コマン
-	ドは $available_commands_for_privileged_user という変数で定義
+	ドは $commands_for_privileged_user という変数で定義
 	されているものが利用可能です。
 
 	subscribe add unsubscribe bye remove resign signoff chaddr
@@ -258,4 +258,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.3 2002/04/13 09:20:22 fukachan Exp $
+$FML: STATUS.txt,v 1.4 2002/04/13 12:13:53 fukachan Exp $
