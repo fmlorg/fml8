@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.10 2004/04/11 13:02:14 fukachan Exp $
+# $FML: Sequence.pm,v 1.11 2004/04/12 10:27:08 fukachan Exp $
 #
 
 package FML::Article::Sequence;
@@ -109,6 +109,7 @@ sub get_number_from_map
     use IO::Adapter;
     my $io = new IO::Adapter $map;
     if (defined $io) {
+	$io->open();
 	$n  = $io->getline() || 0;
 	$n =~ s/^\s*//;
 	$n =~ s/\s*$//;
@@ -119,6 +120,9 @@ sub get_number_from_map
 	else {
 	    return 0;
 	}
+    }
+    else {
+	warn("cannot open map=$map");
     }
 
     return 0;
