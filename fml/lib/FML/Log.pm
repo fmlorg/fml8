@@ -17,7 +17,7 @@ use strict;
 use Carp;
 use FML::Config;
 use FML::Date;
-
+use FML::Credential;
 
 #  usage: &Log( message, { log_file => $log_file } );
 # return: none
@@ -42,11 +42,14 @@ sub Log
     use FileHandle;
 
     # When the second argument is not defined, use the default log_file.
-    my $file = $log_file || $config->{ log_file } || '/dev/stderr';
-    my $fh   = new FileHandle ">> $file";
+    my $file   = $log_file || $config->{ log_file } || '/dev/stderr';
+    my $fh     = new FileHandle ">> $file";
+    my $sender = FML::Credential->sender;
 
     if (defined $fh) {
-	print $fh $rdate->{'log_file_style'}, " ", $mesg, "\n";
+	print $fh $rdate->{'log_file_style'}, " ", $mesg;
+	print $fh " ($sender)" if defined $sender;
+	print $fh "\n";
     }
     else {
 	croak "Error: cannot open $file\n";
