@@ -1,5 +1,10 @@
 =head1 message manipulation
 
+=head2 hint
+
+language_preference_order	=	en ja
+
+
 =head2 language
 
 # Descriptions:

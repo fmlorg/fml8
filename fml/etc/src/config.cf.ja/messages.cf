@@ -1,5 +1,25 @@
 =head1 メッセージ操作
 
+=head2 ヒント
+
+
+# Descriptions: 言語の優先順位
+#               たとえば、Accept-Language: ja などとしてある場合は
+#               ja が優先だと分かりやすい。だが、そういったものがなく、
+#		かつ、「日本人が help というメールを送ってきた」場合は
+#		返事を us-ascii なのか iso-2022-jp で返すべきなのか？
+#		が、プログラムには良く分からない。しょうがないので、
+#		このＭＬが(日本人相手のため)日本語優先と設定されているなら
+#		日本語と英語のメッセージ両方を返すべきだろう。
+#		だが、英語のＭＬであれば、英語だけで良い。
+#		一方、英語のＭＬ(language_preference_order = en)の場合でも、
+#		Accept-Lanaguage: ja なら日本語で返事をするべきであろう。
+#      History: none
+#        Value: ja en
+#     Examples: ja en
+language_preference_order	=	ja en
+
+
 =head2 言語
 
 # Descriptions:
