@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.14 2002/09/11 23:18:18 fukachan Exp $
+# $FML: Base.pm,v 1.15 2002/09/22 14:56:55 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -20,14 +20,18 @@ FML::Restriction::Base -- define safe data representations
 
     use FML::Restriction::Base;
     $safe = new FML::Restriction::Base;
-    my $regexp = $safe->regexp();
+    my $regexp = $safe->basic_variable();
+
+    if ($data =~ /^($regexp)$/) {
+	# o.k. do something ...
+    }
 
 =head1 DESCRIPTION
 
 FML::Restriction::Base provides data regexp considered as safe.
 
-ALL FML MODULES SHOULD INHERIT THIS MODULE if it needs to check
-whether some variable is safe or not.
+ALL FML MODULES SHOULD USE THIS MODULE if it needs to check whether
+a variable is safe or not.
 
 =head1 METHODS
 
@@ -52,7 +56,7 @@ sub new
 }
 
 
-=head1 Basic Parameter Definition for common use
+=head1 Basic Parameter Definitions for common use
 
 We permit the variable name representation as a subset of RFC
 definitions for conveninece and security.
@@ -67,19 +71,22 @@ A domain name is case insensitive (see RFC). For example,
 =head2 user
 
 Very restricted since strict 822 or 2822 representation is very
-difficult and may be insecure in some cases.
+difficult, so may be insecure in some cases.
 
 By the way, "_" is derived from lotus notes ? Anyway we permit "_" for
 convenience.
 
 =head2 mail address
 
-off cource, "user@domain", described above.
+Of cource, "user@domain", described above.
 
 =cut
 
 my $domain_regexp  = '[-A-Za-z0-9\.]+';
 my $user_regexp    = '[-A-Za-z0-9\._]+';
+my $command_regexp = '[-A-Za-z0-9_]+';
+my $file_regexp    = '[-A-Za-z0-9_]+';
+my $dir_regexp     = '[-A-Za-z0-9_]+';
 my %basic_variable =
     (
      # address, user and domain et.al.
@@ -92,15 +99,15 @@ my %basic_variable =
      'ml_name_specified' => $user_regexp,
 
      # fml specific parameters
-     'action'            => '[-A-Za-z_]+',
-     'command'           => '[-A-Za-z_]+',
-     'navi_command'      => '[-A-Za-z_]+',
+     'action'            => $command_regexp,
+     'command'           => $command_regexp,
+     'navi_command'      => $command_regexp,
      'article_id'        => '\d+',
 
      # file, directory et.al.
-     'directory'         => '[-A-Za-z0-9_]+',
-     'file'              => '[-A-Za-z0-9_]+',
-     'map'               => '[-A-Za-z0-9_]+',
+     'directory'         => $dir_regexp,
+     'file'              => $file_regexp,
+     'map'               => $file_regexp,
      );
 
 
