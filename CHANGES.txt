@@ -1,6 +1,152 @@
 		CHANGES
 		$Date$
 
+2001/10/15
+
+   フィルタリングを有効にする
+
+     FML::Filter::BodyCheck
+     FML::Filter::HeaderCheck.pm 
+	define @default_rules and use it if rules not specified
+	rules() method to overwrite filtering rules
+
+     variables
+	define the following variables for filtering (FML::Filter)
+		body_cksum_cache_dir
+		body_filter_rules	
+		body_loop_check_rules	
+		header_filter_rules	
+		use_body_filter		
+		use_body_loop_check	
+		use_header_filter	
+
+2001/10/14
+
+   FML::Process::Kernel 
+	bug fix::we should pay attention to implisit $_ use
+	
+   FML::Process::Configure 
+	sync style w:::Process::Command
+
+   FML::Process::Command 
+	make argument vector from $command
+	relocate _parse_command_options()
+	implemt _get_command_name()
+	clean up
+	fix typo
+
+   FML::Command::Admin::get 
+	prototype to use FML::Command::SendFile
+
+   FML::Command
+   FML::Command::*
+   FML::Process::Configure
+   FML::Process::Command 
+	$optargs -> $command_args
+
+2001/10/13
+
+   FML::Process::Command 
+	pass $comname in $optargs
+	
+   FML::Command::SendFile 
+	fix duplicatoin for $charset
+	
+   FML::Config 
+	avoid infinite loop
+
+   FML::Command::SendFile is added
+	This module provides basic file sending functions
+
+   implement command: get help summary guide
+	FML::Command::SendFile based command        
+
+2001/10/12
+
+   FML::Command 
+	remove error_nl()
+
+   FML::Command::Admin::resign 
+	->SUPER::process()
+
+   FML::Command::Admin::subscribe 
+	clean up log message, LogError() -> croak()
+
+   FML::Command::User::subscribe 
+	use reply_message_nl()
+
+   FML::Command::User::unsubscribe 
+	confirm version
+
+   FML::Config 
+	expand_variable_in_buffer can take optional $args
+
+   FML::Credential 
+	bug fix variable name
+
+   FML::Process::Kernel 
+	implement search template mechanism in reply_message_nl()
+	$config->expand_variable_in_buffer() takes optional $args
+
+   FML::Process::Command 
+	use reply_message_nl()
+	remove exception mechanism by $obj->error_nl();
+
+   etc/
+	define $message_message_dir
+	add chaddr to $available_commands
+
+   メッセージ
+	テンプレートは euc-jp を使う
+
+   FML::Config 
+	expand_variable_in_buffer()
+	expand $varname to $config->{ varname }
+
+   FML::Process::Command 
+
+	add _pre_scan()
+	even not member need to use $confirm_keyword.
+	for example, 'guide', 'subscribe', 'confirm'
+
+	add _can_accpet_command()
+	1. simple command syntax check
+	2. use of this command is allowed in FML::Config or not ?
+	3. Even new comer need to use commands [ guide, subscirbe, confirm ].
+
+   enable confirmation
+	FML::Confirm module を利用します
+	変数 $available_commands_for_stranger を定義する。
+	FML::Confirm provides basic functions needed for confirmation
+	+ FML::Command::User::subscribe
+	+ FML::Command::User::confirm
+	+ FML::Confirm
+
+   FML::Command::Admin::subscribe 
+	check address is specified or not
+
+   FML::Command::User::help 
+	clean up
+	expand_variables_in_file() -> prepare_file_to_return()
+
+   FML::Process::Kernel 
+	define prepare_file_to_return():
+	expand $xxx variables in template (e.g. $help_file).
+	1. in Japanese case, convert kanji code::iso-2022-jp -> euc
+	2. expand variables::$ml_name -> elena
+	3. back kanji code::euc -> iso-2022-jp
+	4. return the new created template
+
+2001/10/11
+
+   FML::Filter::Utils
+	it provides utility functions
+		is_secure_command_string()
+		is_valid_mail_address()
+
+   FML::Process::Command
+	it checks input by FML::Filter::Utils::is_secure_command_string()
+
 2001/10/10
 
    コマンド
@@ -403,4 +549,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.17 2001/10/09 14:50:13 fukachan Exp $
+$FML: CHANGES.txt,v 1.18 2001/10/10 15:05:30 fukachan Exp $
