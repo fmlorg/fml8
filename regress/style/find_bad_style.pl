@@ -5,11 +5,12 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: find_bad_style.pl,v 1.6 2003/03/28 11:05:25 fukachan Exp $
+# $FML: find_bad_style.pl,v 1.7 2003/08/30 13:53:43 fukachan Exp $
 #
 
 use strict;
 use Carp;
+use File::stat;
 
 my $in_sub    = 0;
 my $in_head   = 0;
@@ -38,6 +39,15 @@ while (<>) {
     if (/^\#.*\$FML:.*(\d{4})\/\d{2}\/\d{2} /i) {
 	my $year = $1;
 	print "\n$ARGV\n\twrong copyright\n" unless $copyright =~ /$year/;
+
+	# compare mtime
+	{
+	    my $st = stat($ARGV);
+	    my $mt = $st->mtime;
+	    my ($sec,$min,$hour,$mday,$mon,$year,$wday) = localtime($mt);
+	    $year += 1900;
+	    print "\n$ARGV\n\twrong copyright\n" unless $copyright =~ /$year/;
+	}
     }
 
     # reset the line number counter
