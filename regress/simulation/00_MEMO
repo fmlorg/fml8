@@ -8,6 +8,9 @@
 	XXX
 
 
+[TODO]	chraset と言語(japanese,english)との対応関係を一箇所にまとめて定義
+
+
 [TODO]	fml 4 の cf を解釈できる互換ルーチン
 
 	cf シンタックスを読んで、
@@ -33,9 +36,17 @@
 	こんなかんじ？
 
 
-[TODO]	ドメイン全部きれいに一発で抹殺するには？
+[TODO]	ドメイン制御をするコマンドを作る
 
-		rmml を連発で実行しまくる rmdomain ってのがあればいい？
+	ドメイン全部きれいに一発で抹殺するには？
+
+	rmml を連発で実行しまくる rmdomain ってのがあればいい？
+
+	コマンド
+		newdomain
+		rmdomain
+
+	main.cf は virtual_maps -> domain_maps にするべきだろうか？
 
 
 [TODO]	エラーをどのように呼びだし側へ組織的に伝えるか？
@@ -51,10 +62,6 @@
 	オブジェクトか HASH_REF ごとわたせないか？
 
 
-[TODO]	$main_cf (HASH_REF) が FML::Process::{Switch,Utils,Kernel}
-	以外で参照されているのは間違いだ！ (FNF?)
-
-
 [TODO]	(debug ではない) print STDERR をなくそう => error upcall system
 
 	STDERR は閉じて、$tmp_dir/stderr.$$ などに吐いておくほうがよい？
@@ -68,6 +75,10 @@
 
 [TODO]	$use_log_dup
 	$log_dup_print_engine
+
+
+[TODO]	$main_cf (HASH_REF) が FML::Process::{Switch,Utils,Kernel}
+	以外で参照されているのは間違いだ！ (FNF?)
 
 
 [TODO]	libexec/error エラーメールのフォワードについて改良
@@ -112,9 +123,6 @@
 	コマンドラインオプションは、OK？
 
 	コマンド固有オプションは + ってのは、どうよ？
-
-
-[TODO]	Accept-Language: を考慮する
 
 
 [TODO]	時間つき newml だと、あれか…
@@ -404,4 +412,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.88 2003/10/15 02:43:51 fukachan Exp $
+$FML: 00_MEMO,v 1.89 2003/10/15 03:19:24 fukachan Exp $
