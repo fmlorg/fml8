@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: minimal_states.pm,v 1.20 2001/07/31 14:19:44 fukachan Exp $
+# $FML: minimal_states.pm,v 1.21 2001/08/22 03:08:00 fukachan Exp $
 #
 
 package FML::Ticket::Model::minimal_states;
@@ -170,6 +170,8 @@ sub assign
 	$self->_set_status_info("found");
     }
     else {
+	Log("message with no ticket_id");
+
 	# assign a new ticket number for a new message
 	# call SUPER class's FML::Ticket::System::increment_id()
 	my $id = $self->increment_id( $config->{ ticket_sequence_file } );
@@ -324,11 +326,27 @@ sub _extract_ticket_id
     my $obj    = new FML::Header::Subject;
     my $regexp = $obj->regexp_compile($tag);
 
-    if ($subject =~ /($regexp)\s*$/) {
+    # Subject: ... [ticket_id]
+    if (($config->{ ticket_subject_tag_location } eq 'appended') &&
+	($subject =~ /($regexp)\s*$/)) {
 	my $id = $1;
 	$id =~ s/^(\[|\(|\{)//;
 	$id =~ s/(\]|\)|\})$//;
 	return $id;
+    }
+    # XXX incomplete, we check subject after cutting off "Re:" et. al.
+    # Subject: [ticket_id] ...
+    # Subject: Re: [ticket_id] ...
+    elsif (($config->{ ticket_subject_tag_location } eq 'appended') &&
+	   ($subject =~ /^\s*($regexp)/)) {
+	my $id = $1;
+	$id =~ s/^(\[|\(|\{)//;
+	$id =~ s/(\]|\)|\})$//;
+	return $id;
+    }
+    else {
+	Log("no ticket id /$regexp/ in subject");
+	return 0;
     }
 }
 
