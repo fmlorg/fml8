@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calendar.pm,v 1.13 2004/02/15 04:38:33 fukachan Exp $
+# $FML: Calendar.pm,v 1.14 2004/07/11 15:43:38 fukachan Exp $
 #
 
 package FML::Process::Calendar;
@@ -29,7 +29,7 @@ FML::Process::Calendar -- demonstration of FML module usage.
 
 FML::Process::Calendar is a demonstration module to show fml module
 usage.  This module provides calendar presentation as a simple
-scheduler based on Calendar::Lite class.
+scheduler based on FML::Demo::Calendar class.
 
 =head1 METHODS
 
@@ -106,7 +106,7 @@ sub verify_request { 1; }
 sub finish         { 1; }
 
 
-# Descriptions: prepare parameters and call Calendar::Lite module.
+# Descriptions: prepare parameters and call FML::Demo::Calendar module.
 #               we use w3m to show calendar (HTML table).
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: create temporary file and remove it in the last
@@ -125,7 +125,7 @@ sub run
     }
 
     use FileHandle;
-    use Calendar::Lite;
+    use FML::Demo::Calendar;
 
     # prepare new() argument
     $mode             = $option->{ m } if defined $option->{ m };
@@ -135,7 +135,7 @@ sub run
 	schedule_dir  => $schedule_dir,
 	schedule_file => undef,
     };
-    my $schedule = new Calendar::Lite $schargs;
+    my $schedule = new FML::Demo::Calendar $schargs;
 
     # prepare output channel
     my $tmpf     = $schedule->tmpfilepath;

@@ -1,25 +1,25 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
+#  Copyright (C) 2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.21 2004/04/02 12:14:31 fukachan Exp $
+# $FML: Lite.pm,v 1.22 2004/07/11 15:01:50 fukachan Exp $
 #
 
-package Calendar::Lite;
+package FML::Demo::Calendar;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 =head1 NAME
 
-Calendar::Lite - show a calendar (demonstration module).
+FML::Demo::Calendar - show a calendar (demonstration module).
 
 =head1 SYNOPSIS
 
-    use Calendar::Lite;
-    my $schedule = new Calendar::Lite;
+    use FML::Demo::Calendar;
+    my $schedule = new FML::Demo::Calendar;
 
     $schedule->parse;
 
@@ -216,11 +216,11 @@ sub parse
 }
 
 
-# Descriptions: initialize calender object.
+# Descriptions: initialize Calendar object.
 #    Arguments: OBJ($self) STR($year) STR($month)
 # Side Effects: none
 # Return Value: none
-sub _init_calender
+sub _init_Calendar
 {
     my ($self, $year, $month) = @_;
 
@@ -228,10 +228,10 @@ sub _init_calender
     my $cal = new HTML::CalendarMonthSimple('year'=> $year, 'month'=> $month);
 
     if (defined $cal) {
-	$self->{ _calender } = $cal;
+	$self->{ _Calendar } = $cal;
     }
     else {
-	croak("cannot create calender object");
+	croak("cannot create Calendar object");
     }
 
     $cal->width('70%');
@@ -250,9 +250,9 @@ sub _analyze_file
 {
     my ($self, $year, $month, $file, $pattern) = @_;
 
-    # initialize year+month dependent calender object
-    # since _analyze() adds matched data into this calender object.
-    $self->_init_calender($year, $month);
+    # initialize year+month dependent Calendar object
+    # since _analyze() adds matched data into this Calendar object.
+    $self->_init_Calendar($year, $month);
 
     $self->_analyze($file, $pattern);
 }
@@ -267,9 +267,9 @@ sub _analyze_dir
 {
     my ($self, $year, $month, $data_dir, $pattern) = @_;
 
-    # initialize year+month dependent calender object
-    # since _analyze() adds matched data into this calender object.
-    $self->_init_calender($year, $month);
+    # initialize year+month dependent Calendar object
+    # since _analyze() adds matched data into this Calendar object.
+    $self->_init_Calendar($year, $month);
 
     use DirHandle;
     my $dh = new DirHandle $data_dir;
@@ -338,7 +338,7 @@ sub _analyze
 sub _add_entry
 {
     my ($self, $day, $buf) = @_;
-    my $cal = $self->{ _calender };
+    my $cal = $self->{ _Calendar };
     $day =~ s/^0//;
 
     if (defined $day && defined $buf) {
@@ -365,9 +365,9 @@ sub print_as_html
 {
     my ($self, $fd) = @_;
 
-    if (defined $self->{ _calender }) {
+    if (defined $self->{ _Calendar }) {
 	$fd = defined $fd ? $fd : \*STDOUT;
-	print $fd $self->{ _calender }->as_HTML;
+	print $fd $self->{ _Calendar }->as_HTML;
     }
     else {
 	croak("undefined schedule object");
@@ -427,7 +427,7 @@ sub print_specific_month
 	print $fh "</pre>\n";
     }
 
-    # calender style
+    # Calendar style
     $self->print_as_html($fh);
 }
 
@@ -439,7 +439,7 @@ sub print_specific_month
 sub _print_specific_day
 {
     my ($self, $fh, $time) = @_;
-    my $cal = $self->{ _calender };
+    my $cal = $self->{ _Calendar };
 
     my ($sec,$min,$hour,$mday,$month,$year,$wday) = localtime($time);
     my $buf = $cal->getcontent($mday) || '';
@@ -505,18 +505,19 @@ Ken'chi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003,2004 Ken'chi Fukamachi
+Copyright (C) 2004 Ken'chi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Calendar::Lite first appeared in fml8 mailing list driver package.
+FML::Demo::Calendar first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 Firstly this module name is C<TinyScheduler.pm> and renamed to
-Calendar::Lite later.
+Calendar::Lite later. In 2004, it is renamed to FML::Demo::Calendar
+again since this module must depend FML::* classes.
 
 =cut
 

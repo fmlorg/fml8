@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Calendar.pm,v 1.8 2004/01/01 23:52:09 fukachan Exp $
+# $FML: Calendar.pm,v 1.9 2004/07/23 13:16:33 fukachan Exp $
 #
 
 package FML::CGI::Calendar;
@@ -136,8 +136,8 @@ sub run_cgi_main
     my ($curproc) = @_;
     my $user = $curproc->safe_param_user;
 
-    use Calendar::Lite;
-    my $schedule = new Calendar::Lite { user => $user };
+    use FML::Demo::Calendar;
+    my $schedule = new FML::Demo::Calendar { user => $user };
 
     for my $n ('this', 'next', 'last') {
 	$schedule->print_specific_month(\*STDOUT, $n);
