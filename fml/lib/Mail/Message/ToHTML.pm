@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.2 2002/03/31 05:29:50 fukachan Exp $
+# $FML: ToHTML.pm,v 1.3 2002/03/31 09:42:36 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.2 2002/03/31 05:29:50 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.3 2002/03/31 09:42:36 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -1532,7 +1532,7 @@ sub _db_open
     eval qq{ use $db_type; use Fcntl;};
     unless ($@) {
  	for my $db (@kind_of_databases) {
-	    my $file = "$db_dir/.ht_mhl_${db}";
+	    my $file = "$db_dir/.htdb_${db}";
 	    my $str = qq{
 		my \%$db = ();
 		tie \%$db, \$db_type, \$file, O_RDWR|O_CREAT, 0644;
