@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.28 2002/01/16 13:43:20 fukachan Exp $
+# $FML: Command.pm,v 1.29 2002/01/20 13:52:25 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -202,8 +202,8 @@ sub _can_accpet_command
     my $command = $opts->{ command };
 
     # 1. simple command syntax check
-    use FML::Filter::Utils;
-    unless ( FML::Filter::Utils::is_secure_command_string( $command ) ) {
+    use FML::Restriction::Command;
+    unless (FML::Restriction::Command::is_secure_command_string( $command )) {
 	LogError("insecure command: $command");
 	$curproc->reply_message("\n$prompt $command");
 	$curproc->reply_message_nl('command.insecure',
