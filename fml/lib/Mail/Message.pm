@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.3 2001/04/06 11:35:12 fukachan Exp $
+# $FML: Message.pm,v 1.4 2001/04/06 12:46:59 fukachan Exp $
 #
 
 package Mail::Message;
@@ -279,7 +279,6 @@ sub last
 
     while (1) {
 	if (defined $m->{ next }) {
-	    $i++;
 	    $m = $m->{ next };
 	}
 	else {
