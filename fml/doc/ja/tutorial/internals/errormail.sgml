@@ -1,0 +1,74 @@
+<!--
+   $FML$
+-->
+
+
+<chapter id="error.internal">
+	<title>
+	エラーメール解析プログラム (libexec/error)
+	</title>
+
+<para>
+libexec/error は &fml4; の libexec/mead に相当するものです。
+</para>
+
+
+<sect1 id="error.internal.overview">
+	<title>
+	概要
+	</title>
+
+<para>
+ＭＬ作成時に $ml-admin のアドレスは libexec/error を呼び出すように設定
+されます。
+</para>
+
+<para>
+libexec/error は標準入力からメールを読みこみ、distribute などと同様に 
+parse し、Mail::Message オブジェクトの鎖を作ります。そして、
+Mail::Bounce クラスがエラー内容の解析をします。
+</para>
+
+<para>
+Mail::Bounce は、エラーメールについて「どの MTA が生成したものか？」
+「エラーを引き起こしたメールアドレス」「エラーの理由」を分析します。
+</para>
+
+<para>
+解析結果は $error_analyzer_cache_dir ディレクトリに格納され、
+ます。
+</para>
+
+<para>
+一定時間以上経過すると、$error_analyzer_function がキャッシュのデータ
+を解析し、あるメールアドレスが存在しないように思えるかいなか？を判定し
+ます。その結果、消すべきだと判断されると、削除されます。
+</para>
+
+</sect1>
+
+
+<sect1 id="error.internal.cache">
+	<title>
+	キャッシュ
+	</title>
+
+<para>
+解析結果は $error_analyzer_cache_dir ディレクトリに格納されます。
+</para>
+
+<para>
+現在、キャッシュの入出力には Tie::JournaledDir クラスを使っていますが、
+FML::Erorr::Cache 経由で Tie::JournaledDir への IO を行ないます。
+</para>
+
+<para>
+FML::Erorr::Cache が Tie::JournaledDir の直前に位置し、アダプタとなり
+ます。すべての IO は FML::Erorr::Cache が提供する primitive なメソッド
+を通じてのみ行なわなければなりません。
+</para>
+
+</sect1>
+
+
+</chapter>
