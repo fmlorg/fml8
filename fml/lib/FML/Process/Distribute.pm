@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.154 2004/07/23 15:59:09 fukachan Exp $
+# $FML: Distribute.pm,v 1.155 2004/08/13 15:02:49 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -340,6 +340,9 @@ sub finish
     $curproc->inform_reply_messages();
     unless ($curproc->smtp_server_state_get_error()) {
 	$curproc->queue_flush();
+    }
+    else {
+	$curproc->logwarn("not queue flush due to MTA fatal error.");
     }
 
     $eval  = $config->get_hook( 'distribute_finish_end_hook' );
