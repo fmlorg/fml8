@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Smtpfeed.pm,v 1.1 2001/04/10 14:34:19 fukachan Exp $
+# $FML: Smtpfeed.pm,v 1.1 2001/04/10 16:02:07 fukachan Exp $
 #
 
 
@@ -20,13 +20,20 @@ Mail::Bounce::Smtpfeed - Smtpfeed error message format parser
 
 =head1 SYNOPSIS
 
+See C<Mail::Bounce> for more details.
+
 =head1 DESCRIPTION
+
+See C<Mail::Bounce> for more details.
 
 =head1 Smtpfeed Error Formats
 
-=head1 METHODS
+"smtpfeed -1 -F" sends the mail with the header rewriting of To:
+header field. It will include
 
-=head2 C<new()>
+  To: (original recipient in envelope at ADDRESS) <ADDRESS>
+
+at the header somewhere in the error message.
 
 =cut
 
@@ -57,6 +64,7 @@ sub analyze
     # set up return buffer
     $result->{ $addr }->{ 'Final-Recipient' } = $addr;
     $result->{ $addr }->{ 'Status' }          = '5.x.y';
+    $result->{ $addr }->{ 'hints' }           = 'smtpfeed';
 }
 
 =head1 AUTHOR

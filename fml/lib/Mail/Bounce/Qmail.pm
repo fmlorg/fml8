@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Qmail.pm,v 1.1 2001/04/09 15:56:52 fukachan Exp $
+# $FML: Qmail.pm,v 1.2 2001/04/10 11:52:59 fukachan Exp $
 #
 
 
@@ -29,11 +29,8 @@ format), as describbed in
 
     http://cr.yp.to/proto/qsbmf.txt
 
-=head1 METHODS
-
-=head2 C<new()>
-
 =cut
+
 
 sub analyze
 {
@@ -72,6 +69,7 @@ sub analyze
 
 			$result->{ $addr }->{ 'Diagnostic-Code' } = $reason;
 			$result->{ $addr }->{ 'Status' }          = $status;
+			$result->{ $addr }->{ 'hints' }           = 'qmail';
 		    }
 		} 
 	    }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SimpleMatch.pm,v 1.19 2001/05/31 11:02:33 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.20 2001/07/29 15:08:36 fukachan Exp $
 #
 
 
@@ -254,6 +254,7 @@ sub _address_match
 		if ($addr) {
 		    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
 		    $result->{ $addr }->{ 'Status'}           = '5.x.y';
+		    $result->{ $addr }->{ 'hints' }           = $mta_type;
 		}
 	    }
 
@@ -262,6 +263,7 @@ sub _address_match
 		if ($addr) {
 		    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
 		    $result->{ $addr }->{ 'Status'}           = '5.x.y';
+		    $result->{ $addr }->{ 'hints' }           = $mta_type;
 		}
 	    }
 	}

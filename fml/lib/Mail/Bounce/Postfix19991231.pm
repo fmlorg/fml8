@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Postfix19991231.pm,v 1.7 2001/05/20 12:19:59 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.8 2001/05/27 14:27:56 fukachan Exp $
 #
 
 
@@ -28,11 +28,25 @@ See C<Mail::Bounce> for more details.
 
 sub class used in C<Mail::Bounce>.
 
-=head1 METHODS
+=head1 ERROR FORMAT
 
-=head2 C<analyze($msg, $result)>
+   Date: Fri, 29 Jan 1999 15:05:06 +0900 (JST)
+   From: MAILER-DAEMON@fml.org (Mail Delivery System)
+   Subject: Undelivered Mail Returned to Sender
+   To: fukachan@fml.org
+   Message-Id: <19990129060506.816AD5B33D@katri.fml.org>
+   
+   This is the Postfix program at host katri.fml.org.
 
-See C<Mail::Bounce> for more details.
+       ... reason ...    
+   
+   	--- Delivery error report follows ---
+   
+   <rudo@nuinui.net>: mail to command is restricted
+   
+   	--- Undelivered message follows ---
+   
+   ... original message ...
 
 =cut
 
@@ -122,6 +136,7 @@ sub _parse_address
 	$addr = $self->address_clean_up($self, $addr);
 	$result->{ $addr }->{ 'Diagnostic-Code' } = $reason;
 	$result->{ $addr }->{ 'Status' }          = '5.x.y';
+	$result->{ $addr }->{ 'hints' }           = 'postfix 19991231 style';
     }
 }
 

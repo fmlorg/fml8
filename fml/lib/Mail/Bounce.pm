@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Bounce.pm,v 1.9 2001/07/29 15:06:50 fukachan Exp $
+# $FML: Bounce.pm,v 1.10 2001/07/29 15:08:36 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -50,6 +50,40 @@ object.
 For non DSN pattern,
 try to analyze it by using modules in C<Mail::Bounce::> 
 which can recognize MTA specific and domian specific patterns.
+
+For example,
+
+  Mail::Bounce
+      
+                $msg
+              --------> Mail::Bounce::DSN::analyze()
+              <--------
+               $result
+
+returned C<$result> provides the following information:
+
+    $result = {
+	address1 => {
+	    Original-Recipient => 'rfc822; addr',
+	    Final-Recipient    => 'rfc822; addr',
+	    Diagnostic-Code    => 'reason ...',
+	    Action             => 'failed',
+	    Status             => '4.0.0',
+	    hints              => ... which module matches ...,
+	},
+
+	address2 => {
+	    Original-Recipient => 'rfc822; addr',
+	    Final-Recipient    => 'rfc822; addr',
+	    Diagnostic-Code    => 'reason ...',
+	    Action             => 'failed',
+	    Status             => '4.0.0',
+	    hints              => ... which module matches ...,
+	},
+
+	...
+    };
+
 
 =head1 METHODS
 
@@ -168,6 +202,21 @@ sub reason
 }
 
 
+sub hints
+{
+    my ($self, $addr) = @_;
+    $self->{ _result }->{ $addr }->{ 'hints' };
+}
+
+
+=head2 C<look_like_japanese(string)>
+
+return 1 if C<string> looks Japanese one in JIS/SJIS/EUC code.
+return 0 unless.
+
+=cut
+
+
 my $RE_SJIS_C = '[\201-\237\340-\374][\100-\176\200-\374]';
 my $RE_SJIS_S = "($RE_SJIS_C)+";
 my $RE_EUC_C  = '[\241-\376][\241-\376]';
@@ -183,15 +232,6 @@ my @REGEXP = (
 	      $RE_JIN,
 	      $RE_JOUT,
 	      );
-
-
-=head2 C<look_like_japanese(string)>
-
-return 1 if C<string> looks Japanese one.
-return 0 unless.
-
-=cut
-
 
 sub look_like_japanese
 {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: GOO.pm,v 1.2 2001/04/11 15:51:55 fukachan Exp $
+# $FML: GOO.pm,v 1.1 2001/04/11 16:36:19 fukachan Exp $
 #
 
 
@@ -20,16 +20,25 @@ Mail::Bounce::GOO - GOO error message format parser
 
 =head1 SYNOPSIS
 
+See C<Mail::Bounce> for more details.
+
 =head1 DESCRIPTION
+
+See C<Mail::Bounce> for more details.
 
 =head1 GOO Error Formats
 
-
-=head1 METHODS
-
-=head2 C<new()>
+   To: nospam-ml-admin@ffs.fml.org
+   Subject: [goo mail] Rejecting your mail to user@mail.goo.ne.jp
+   X-SMType: Notification
+   Message-Id: <E12pMyv-0003Q7-00@mail.goo.ne.jp>
+   Date: Wed, 10 May 2000 12:16:17 +0900
+   X-UIDL: 326069d2d4e53c677fa3443428c80788
+   
+     ... Japanese message ...
 
 =cut
+
 
 sub analyze
 {
@@ -45,6 +54,7 @@ sub analyze
 	    $addr =~ s/\s*$//;
 	    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
 	    $result->{ $addr }->{ 'Status' }          = '5.x.y';
+	    $result->{ $addr }->{ 'hints' }           = 'goo.ne.jp';
 	}
     }
 }

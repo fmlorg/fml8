@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Exim.pm,v 1.1 2001/04/10 14:34:19 fukachan Exp $
+# $FML: Exim.pm,v 1.2 2001/04/11 15:51:55 fukachan Exp $
 #
 
 
@@ -20,20 +20,13 @@ Mail::Bounce::Exim - Exim error message format parser
 
 =head1 SYNOPSIS
 
+See C<Mail::Bounce> for more details.
+
 =head1 DESCRIPTION
 
+See C<Mail::Bounce> for more details.
 
- $result = {
-      addr => {
-             Original-Recipient => 'rfc822; addr'
-             Final-Recipient    => 'rfc822; addr'
-             Diagnostic-Code    => 'reason ...'
-             Action             => 'failed'
-             Status             => '4.0.0'
-          }
-      }
-
-=head1 Exim Error Formats
+=head1 ERROR EXAMPLE
 
  Received: from fukachan by eriko.fml.org with local (Exim 2.04 #5)
         id 11fxjP-0005MW-00
@@ -43,10 +36,6 @@ Mail::Bounce::Exim - Exim error message format parser
  To: enterprise-admin@shumi.fml.org
  Subject: Mail delivery failed: returning message to sender
  Message-Id: <E11fxjP-0005MW-00@eriko.fml.org>
-
-=head1 METHODS
-
-=head2 C<new()>
 
 =cut
 
@@ -68,6 +57,7 @@ sub analyze
 	$addr =~ s/\s*$//;
 	$result->{ $addr }->{ 'Final-Recipient' } = $addr;
 	$result->{ $addr }->{ 'Status' }          = '5.x.y';
+	$result->{ $addr }->{ 'hints' }           = 'exim';
     }
 }
 
