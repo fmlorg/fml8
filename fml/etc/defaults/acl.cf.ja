@@ -24,7 +24,7 @@ recipient_maps		=	file:$ml_home_dir/recipients
 				unix.group:fml
 
 # system accounts
-system-accounts		=	root
+system_accounts		=	root
 				postmaster
 				MAILER-DAEMON
 				msgs
