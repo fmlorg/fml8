@@ -4,18 +4,14 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.8 2002/02/17 08:13:25 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.9 2002/02/18 14:14:53 fukachan Exp $
 #
 
 package FML::Command::User::unsubscribe;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-
-
-
 use FML::Log qw(Log LogWarn LogError);
-
 
 
 =head1 NAME
@@ -74,7 +70,7 @@ sub process
     my $command       = $command_args->{ command };
     my $address       = $curproc->{ credential }->sender();
 
-    # fundamental check
+    # cheap sanity checks
     croak("\$member_map is not specified")    unless $member_map;
     croak("\$recipient_map is not specified") unless $recipient_map;
 
@@ -84,12 +80,20 @@ sub process
     # if not member, unsubscriber request is wrong.
     unless ($cred->is_member($curproc, { address => $address })) {
 	$curproc->reply_message_nl('error.not_member');
+	LogError("unsubscribe request from not member");
 	croak("not member");
     }
     # try confirmation before unsubscribe
     else {
 	Log("unsubscriber request, try confirmation");
-	use FML::Confirm;
+	eval q{ 
+	    use FML::Confirm;
+	};
+	if ($@) {
+	    LogError("tail to load FML::Confirm");
+	    croak($@);
+	}
+
 	my $confirm = new FML::Confirm {
 	    keyword   => $keyword,
 	    cache_dir => $cache_dir,
