@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.30 2002/06/27 08:25:51 fukachan Exp $
+# $FML: Utils.pm,v 1.31 2002/06/30 14:30:17 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -491,25 +491,6 @@ sub is_config_cf_exist
 }
 
 
-=head2 get_aliases_filepath($domain)
-
-return the file path of the alias file for this domain $domain.
-
-=cut
-
-
-# Descriptions: return the file path of the alias file
-#               for this domain $domain.
-#    Arguments: OBJ($curproc) STR($domain)
-# Side Effects: none
-# Return Value: STR
-sub mail_aliases
-{
-    my ($curproc, $domain) = @_;
-    return $curproc->{ config }->{ mail_aliases_file };
-}
-
-
 =head2 get_virtual_maps()
 
 return virtual maps.
@@ -553,7 +534,7 @@ sub __get_virtual_maps
 
 =head2 get_ml_list()
 
-get HASH ARRAY of valid mailing lists.
+get ARRAY_REF of valid mailing lists.
 
 =cut
 
@@ -604,7 +585,7 @@ sub get_ml_list
 
 =head2 get_address_list( $map )
 
-get HASH ARRAY of address list for the specified map.
+get ARRAY_REF of address list for the specified map.
 
 =cut
 
@@ -639,93 +620,6 @@ sub get_address_list
     }
 
     return [];
-}
-
-
-=head2 rewrite_config_if_needed($args, $params)
-
-rewrite $ml_* information for virtual domain.
-C<$params> is like this:
-
-	$params = {
-		ml_name   => 'rudo',
-		ml_domain => 'nuinui.net',
-	};
-
-=cut
-
-
-# Descriptions: check argument and prepare virtual domain information
-#               if needed.
-#    Arguments: OBJ($curproc) HASH_REF($args) HASH_REF($params)
-# Side Effects: none
-# Return Value: HASH_REF
-sub rewrite_config_if_needed
-{
-    my ($curproc, $args, $params) = @_;
-    my $config         = $curproc->{ config };
-    my $ml_name        = '';
-    my $ml_domain      = $curproc->default_domain();
-    my $ml_home_prefix = '';
-    my $ml_home_dir    = '';
-
-    # debug
-    # XXX remove this function in the future ?
-    if (0) {
-	my @c = caller;
-
-	print STDERR "rewrite_config_if_needed input:\n";
-	print STDERR "   $c[1] $c[2]\n";
-
-	for (qw(ml_name ml_domain ml_home_prefix ml_home_dir)) {
-	    if (defined $config->{ $_ }) {
-		print STDERR "$_ => $config->{ $_ }\n";
-	    }
-	    else {
-		print STDERR "$_ => \n";
-	    }
-	}
-    }
-
-    return;
-
-    # ml_domain
-    if (defined $params->{ 'ml_domain' }) {
-	$ml_domain = $params->{ 'ml_domain' };
-    }
-    else {
-	$ml_domain = $curproc->default_domain();
-    }
-
-    # virtual domain support e.g. "makefml newml elena@nuinui.net"
-    if (defined $params->{ 'ml_name' } && $params->{ 'ml_name' }) {
-	$ml_name = $params->{ 'ml_name' };
-    }
-
-    if (defined $ml_name && $ml_name && ($ml_name =~ /\@/o)) {
-	# overwrite $ml_name
-	($ml_name, $ml_domain) = split(/\@/, $ml_name);
-	$ml_home_prefix = $curproc->ml_home_prefix($ml_domain);
-    }
-    # default domain: e.g. "makefml newml elena"
-    else {
-	$ml_home_prefix = $curproc->ml_home_prefix($ml_domain);
-    }
-
-    # cheap sanity
-    unless ($ml_home_prefix) {
-	croak("rewrite_config_if_needed: ml_home_prefix is undefined".
-	      "\n\tfor domain=$ml_domain");
-    }
-
-    eval q{ use File::Spec;};
-    $ml_home_dir = File::Spec->catfile($ml_home_prefix, $ml_name);
-
-    # rewrite $curproc->{ config };
-    $config->set('ml_name',        $ml_name);
-    $config->set('ml_domain',      $ml_domain);
-    $config->set('ml_home_prefix', $ml_home_prefix);
-    $config->set('ml_home_dir',    $ml_home_dir);
 }
 
 
