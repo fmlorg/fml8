@@ -297,7 +297,7 @@ cgi_menu_default_address_map</entry>
 <entry>
  default value of list types in CGI operations.</entry>
 <entry>
-member
+recipient
    </entry>
 </row>
 <row>
