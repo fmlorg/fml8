@@ -772,6 +772,7 @@ _dir$ {
 
 *** unclassified ***
     ?     $commands_for_ml_admin_cgi
+    ?     $debug
     ?     $file_default_mode
     ?     $language_preference_order
     ?     $unsafe_header_fields

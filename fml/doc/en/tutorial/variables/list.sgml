@@ -528,6 +528,15 @@ $var_dir/db
 </row>
 <row>
 <entry>
+debug</entry>
+<entry>
+ debug on or off (off by default).</entry>
+<entry>
+no
+   </entry>
+</row>
+<row>
+<entry>
 default_mail_body_size_limit</entry>
 <entry>
  body size limit</entry>

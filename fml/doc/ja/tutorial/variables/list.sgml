@@ -511,6 +511,15 @@ $var_dir/db
 </row>
 <row>
 <entry>
+debug</entry>
+<entry>
+ デバッグ、デフォルトは NO にしてある。</entry>
+<entry>
+no
+   </entry>
+</row>
+<row>
+<entry>
 default_mail_body_size_limit</entry>
 <entry>
  本文サイズの上限のデフォルト値</entry>
