@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.20 2003/02/18 15:55:33 fukachan Exp $
+# $FML: Filter.pm,v 1.21 2003/03/05 13:54:26 fukachan Exp $
 #
 
 package FML::Filter;
@@ -254,13 +254,7 @@ sub article_filter_reject_notice
 			       "reason(s) for rejection: $r",
 			       $msg_args);
 
-    # add header info
-    my $tag     = '   ';
-    my $hdr     = $curproc->incoming_message_header();
-    my $hdr_str = sprintf("\n%s\n", $hdr->as_string());
-    $hdr_str    =~ s/\n/\n$tag/g;
-    $curproc->reply_message($hdr_str);
-
+    $curproc->reply_message_add_header_info($msg_args);
     $curproc->reply_message($msg, $msg_args);
 }
 
