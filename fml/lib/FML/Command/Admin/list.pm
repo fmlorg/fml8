@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: list.pm,v 1.20 2003/12/20 07:50:41 fukachan Exp $
+# $FML: list.pm,v 1.21 2003/12/31 04:00:52 fukachan Exp $
 #
 
 package FML::Command::Admin::list;
@@ -137,13 +137,12 @@ sub _gen_map_candidates
 
 
 # Descriptions: show cgi menu for list command.
-#    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($args) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
 sub cgi_menu
 {
-    my ($self, $curproc, $args, $command_args) = @_;
+    my ($self, $curproc, $command_args) = @_;
     my $r = '';
 
     # declare CGI mode.
@@ -153,7 +152,7 @@ sub cgi_menu
     eval q{
 	use FML::CGI::List;
 	my $obj = new FML::CGI::List;
-	$obj->cgi_menu($curproc, $args, $command_args);
+	$obj->cgi_menu($curproc, $command_args);
     };
     if ($r = $@) {
 	print $r;

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.91 2003/11/29 10:24:27 fukachan Exp $
+# $FML: Command.pm,v 1.92 2003/11/30 09:59:19 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -121,7 +121,7 @@ sub verify_request
     $curproc->verify_sender_credential();
 
     unless ($curproc->is_refused()) {
-	$curproc->_check_filter($args);
+	$curproc->_check_filter();
     }
 
     $eval = $config->get_hook( 'command_verify_request_end_hook' );
@@ -130,18 +130,18 @@ sub verify_request
 
 
 # Descriptions: filter
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: set flag to ignore this process if it should be filtered.
 # Return Value: none
 sub _check_filter
 {
-    my ($curproc, $args) = @_;
-    my $config = $curproc->config();
+    my ($curproc) = @_;
+    my $config    = $curproc->config();
 
     eval q{
 	use FML::Filter;
 	my $filter = new FML::Filter;
-	my $r = $filter->command_mail_filter($curproc, $args);
+	my $r = $filter->command_mail_filter($curproc);
 
 	# filter traps this message.
 	if ($r = $filter->error()) {
@@ -195,7 +195,7 @@ sub run
 
     unless ($curproc->is_refused()) {
 	# permit_xxx() sets the error reason at "check_restriction" in pcb.
-	if ($curproc->permit_command($args)) {
+	if ($curproc->permit_command()) {
 	    $curproc->_evaluate_command_lines($args);
 	}
 	# XXX reject command use irrespective of requests from admins/users.
@@ -311,12 +311,12 @@ sub _check_context
 
 # Descriptions: check command (specified in $opts) is valid and permitted
 #               in the configuration.
-#    Arguments: OBJ($curproc) HASH_REF($args) STR($level) HASH_REF($opts)
+#    Arguments: OBJ($curproc) STR($level) HASH_REF($opts)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub _config_permit_command
 {
-    my ($curproc, $args, $level, $opts) = @_;
+    my ($curproc, $level, $opts) = @_;
     my $config  = $curproc->config();
     my $cred    = $curproc->{ credential }; # user credential
     my $prompt  = $config->{ command_mail_reply_prompt } || '>>>';
@@ -348,13 +348,12 @@ sub _config_permit_command
 
 
 # Descriptions: validate command syntax by FML::Restriction.
-#    Arguments: OBJ($curproc)
-#               HASH_REF($args) HASH_REF($status) HASH_REF($cominfo)
+#    Arguments: OBJ($curproc) HASH_REF($status) HASH_REF($cominfo)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub _is_safe_syntax
 {
-    my ($curproc, $args, $status, $cominfo) = @_;
+    my ($curproc, $status, $cominfo) = @_;
     my $config  = $curproc->config();
     my $prompt  = $config->{ command_mail_reply_prompt } || '>>>';
     my $level   = $status->{ level };
@@ -435,12 +434,12 @@ sub _get_command_name
 
 
 # Descriptions: authenticate the currrent process sender as an admin
-#    Arguments: OBJ($curproc) HASH_REF($args) HASH_REF($optargs)
+#    Arguments: OBJ($curproc) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub _try_admin_auth
 {
-    my ($curproc, $args, $optargs) = @_;
+    my ($curproc, $optargs) = @_;
     my $is_auth = 0;
     my $obj     = undef;
 
@@ -452,7 +451,7 @@ sub _try_admin_auth
 	my $config = $curproc->config();
 	my $rules  = $config->get_as_array_ref('admin_command_restrictions');
 	for my $rule (@$rules) {
-	    $is_auth = $obj->$rule($curproc, $args, $optargs);
+	    $is_auth = $obj->$rule($curproc, $optargs);
 
 	    # reject as soon as possible
 	    if ($is_auth eq '__LAST__') {
@@ -481,13 +480,12 @@ sub _try_admin_auth
 # Descriptions: determine $mode and $level for the current command (line).
 #               We apply this function for each line in command request.
 #               $mode and $level change line by line.
-#    Arguments: OBJ($curproc)
-#               HASH_REF($args) HASH_REF($status) HAS_REF($command_info)
+#    Arguments: OBJ($curproc) HASH_REF($status) HAS_REF($command_info)
 # Side Effects: update $status, $command_info
 # Return Value: STR
 sub _get_command_mode
 {
-    my ($curproc, $args, $status, $command_info) = @_;
+    my ($curproc, $status, $command_info) = @_;
     my $config     = $curproc->config();
     my $command    = $command_info->{ command };
     my $comname    = $command_info->{ comname };
@@ -526,7 +524,7 @@ sub _get_command_mode
 	#    since $commands_for_stranger contains "confirm" command :-)
 	#    It is effective but wrong since we set $level = stranger
 	#    though we should set up $level = user.
-	if ($curproc->_config_permit_command($args, "stranger", $opts)) {
+	if ($curproc->_config_permit_command("stranger", $opts)) {
 	    $status->{ mode }  = 'user';
 	    $status->{ level } = 'stranger';
 	}
@@ -552,7 +550,7 @@ sub _get_command_mode
 	    my $optargs = { address => $sender, password => $data };
 
 	    # XXX simple state machine: update $status->{ is_auth }
-	    $is_auth = $curproc->_try_admin_auth($args, $optargs);
+	    $is_auth = $curproc->_try_admin_auth($optargs);
 	    $status->{ is_auth } = $is_auth;
 	    $curproc->log("admin: o.k. auth-ed as an ML admin") if $is_auth;
 	}
@@ -564,7 +562,7 @@ sub _get_command_mode
 	    my $opts = { comname => $comname, command => $command };
 
 	    my $xmode = 'privileged_user';
-	    if ($curproc->_config_permit_command($args, $xmode, $opts)) {
+	    if ($curproc->_config_permit_command($xmode, $opts)) {
 		$status->{ mode }          = 'admin';
 		$status->{ level }         = 'admin';
 		$command_info->{ command } = $command;
@@ -608,7 +606,7 @@ sub _get_command_mode
     else {
 	if ($is_member) {
 	    my $opts = { comname => $comname, command => $command };
-	    if ($curproc->_config_permit_command($args, "user", $opts)) {
+	    if ($curproc->_config_permit_command("user", $opts)) {
 		$status->{ mode }  = 'user';
 		$status->{ level } = 'user';
 	    }
@@ -620,7 +618,7 @@ sub _get_command_mode
 	}
 	else {
 	    my $opts = { comname => $comname, command => $command };
-	    if ($curproc->_config_permit_command($args, "stranger", $opts)) {
+	    if ($curproc->_config_permit_command("stranger", $opts)) {
 		$status->{ mode }  = 'user';
 		$status->{ level } = 'stranger';
 	    }
@@ -730,13 +728,13 @@ sub __clean_up
 
 
 # Descriptions: set up error message to inform emergency stop
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 #               HASH_REF($status) HASH_REF($cominfo) STR($orig_command)
 # Side Effects: update reply messages
 # Return Value: none
 sub __stop_here
 {
-    my ($curproc, $args, $status, $cominfo, $orig_command) = @_;
+    my ($curproc, $status, $cominfo, $orig_command) = @_;
     my $config  = $curproc->config();
     my $prompt  = $config->{ command_mail_reply_prompt } || '>>>';
     my $key     = $status->{ _stop_reason_key };
@@ -817,7 +815,7 @@ sub _evaluate_command_lines
 	# Example: if orig_command = "# help", comname = "help"
 	$fixed_command = __clean_up($orig_command);
 	$cominfo       = $curproc->_parse_command_args($args, $fixed_command);
-	$mode          = $curproc->_get_command_mode($args, $status, $cominfo);
+	$mode          = $curproc->_get_command_mode($status, $cominfo);
 
 	# 1. check $mode if the further processing is allowed
 	if ($mode eq '__NEXT__') {
@@ -826,7 +824,7 @@ sub _evaluate_command_lines
 	}
 	elsif ($mode eq '__LAST__') {
 	    $curproc->logerror("command processing stop.");
-	    $curproc->__stop_here($args, $status, $cominfo, $orig_command);
+	    $curproc->__stop_here($status, $cominfo, $orig_command);
 	    last COMMAND;
 	}
 
@@ -839,7 +837,7 @@ sub _evaluate_command_lines
 	# 1.3 valid mode
 	unless ($mode eq 'user' || $mode eq 'admin') {
 	    $curproc->logerror("command processing stop.");
-	    $curproc->__stop_here($args, $status, $cominfo, $orig_command);
+	    $curproc->__stop_here($status, $cominfo, $orig_command);
 	    last COMMAND;
 	}
 
@@ -853,7 +851,7 @@ sub _evaluate_command_lines
 	}
 
 	# 3. simple syntax check
-	unless ($curproc->_is_safe_syntax($args, $status, $cominfo)) {
+	unless ($curproc->_is_safe_syntax($status, $cominfo)) {
 	    $curproc->logerror("invalid/unsafe syntax");
 	    $curproc->log("(debug) ignore $fixed_command");
 	    $num_ignored++;

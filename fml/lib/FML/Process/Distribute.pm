@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.131 2003/12/24 14:29:36 fukachan Exp $
+# $FML: Distribute.pm,v 1.132 2003/12/25 10:52:23 tmu Exp $
 #
 
 package FML::Process::Distribute;
@@ -128,7 +128,7 @@ sub verify_request
     }
 
     unless ($curproc->is_refused()) {
-	$curproc->_check_filter($args);
+	$curproc->_check_filter();
     }
 
     $eval = $config->get_hook( 'distribute_verify_request_end_hook' );
@@ -137,18 +137,18 @@ sub verify_request
 
 
 # Descriptions: filter
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: set flag to ignore this process if it should be filtered.
 # Return Value: none
 sub _check_filter
 {
-    my ($curproc, $args) = @_;
-    my $config = $curproc->config();
+    my ($curproc) = @_;
+    my $config    = $curproc->config();
 
     eval q{
 	use FML::Filter;
 	my $filter = new FML::Filter;
-	my $r = $filter->article_filter($curproc, $args);
+	my $r = $filter->article_filter($curproc);
 
 	# filter traps this message.
 	if ($r = $filter->error()) {
@@ -212,7 +212,7 @@ sub run
 
     # $curproc->lock();
     unless ($curproc->is_refused()) {
-	if ($curproc->permit_post($args)) {
+	if ($curproc->permit_post()) {
 	    $curproc->_distribute($args);
 	}
 	else {
@@ -356,7 +356,7 @@ sub _distribute
 
     # XXX $article != $curproc->{ article } (which is just a key)
     # XXX $curproc->{ article } is prepared as a side effect for the future.
-    my $article = $curproc->_build_article_object($args);
+    my $article = $curproc->_build_article_object();
 
     # get sequence number
     my $id = $article->increment_id;
@@ -369,8 +369,8 @@ sub _distribute
 
     # thread system checks the message before header rewritings.
     if ($config->yes('use_thread_track')) {
-	# $curproc->_old_thread_check($args);
-	$curproc->_new_thread_check($args);
+	# $curproc->_old_thread_check();
+	$curproc->_new_thread_check();
     }
 
     # header operations
@@ -387,29 +387,29 @@ sub _distribute
 
     # update header info to sync w/ article header.
     if ($config->yes('use_thread_track')) {
-	$curproc->_new_thread_check_post($args);
+	$curproc->_new_thread_check_post();
     }
 
     $curproc->unlock($lock_channel);
 
     # delivery starts !
-    $curproc->_deliver_article($args);
+    $curproc->_deliver_article();
 
     if ($config->yes('use_html_archive')) {
 	$curproc->log("htmlify article $id");
-	$curproc->_htmlify($args);
+	$curproc->_htmlify();
 	$curproc->log("htmlify article $id end");
     }
 }
 
 
 # Descriptions: build and return FML::Article object
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: OBJ(FML::Article)
 sub _build_article_object
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
 
     # create aritcle to distribute
     use FML::Article;
@@ -422,16 +422,16 @@ sub _build_article_object
 # Descriptions: header rewrite followed by
 #               $config->{ article_header_rewrite_rules }
 #               each method exists in FML::Header module.
-#    Arguments: OBJ($curproc) HASH_REF($hw_args)
+#    Arguments: OBJ($curproc) HASH_REF($hrw_args)
 # Side Effects: $curproc->{ article }->{ header } is rewritten
 # Return Value: none
 sub _header_rewrite
 {
-    my ($curproc, $hw_args) = @_;
+    my ($curproc, $hrw_args) = @_;
     my $config = $curproc->config();
     my $header = $curproc->article_message_header();
     my $rules  = $config->get_as_array_ref('article_header_rewrite_rules');
-    my $id     = $hw_args->{ id };
+    my $id     = $hrw_args->{ id };
 
     for my $rule (@$rules) {
 	$curproc->log("_header_rewrite( $rule )") if $config->yes('debug');
@@ -450,12 +450,12 @@ sub _header_rewrite
 
 
 # Descriptions: deliver the article
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: mail delivery, logging
 # Return Value: none
 sub _deliver_article
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $cred    = $curproc->{ credential };
     my $config  = $curproc->config();               # FML::Config   object
     my $message = $curproc->article_message();        # Mail::Message object
@@ -521,12 +521,12 @@ sub _deliver_article
 
 
 # Descriptions: the top level interface to drive thread tracking system
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: update thread information
 # Return Value: none
 sub _old_thread_check
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $config = $curproc->config();
     my $pcb    = $curproc->pcb();
     my $myname = $curproc->myname();
@@ -560,12 +560,12 @@ sub _old_thread_check
 
 
 # Descriptions: the top level interface to drive thread tracking system
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: update thread information
 # Return Value: none
 sub _new_thread_check
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $pcb = $curproc->pcb();
     my $msg = $curproc->article_message();
 
@@ -574,7 +574,7 @@ sub _new_thread_check
     # XXX we need to specify article_id here since
     # XXX analyzer routine has no clue for the current primary key.
     my $article_id    = $pcb->get('article', 'id');
-    my $tdb_args      = $curproc->thread_db_args($args);
+    my $tdb_args      = $curproc->thread_db_args();
     $tdb_args->{ id } = $article_id;
 
     # analyze the current message to update DB (UDB).
@@ -587,12 +587,12 @@ sub _new_thread_check
 
 
 # Descriptions: the top level interface to drive thread tracking system
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: update thread information
 # Return Value: none
 sub _new_thread_check_post
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $pcb = $curproc->pcb();
     my $hdr = $curproc->article_message_header();
 
@@ -601,7 +601,7 @@ sub _new_thread_check_post
     # XXX we need to specify article_id here since
     # XXX analyzer routine has no clue for the current primary key.
     my $article_id    = $pcb->get('article', 'id');
-    my $tdb_args      = $curproc->thread_db_args($args);
+    my $tdb_args      = $curproc->thread_db_args();
     $tdb_args->{ id } = $article_id;
 
     # overwrite header info base on the article.
@@ -615,12 +615,12 @@ sub _new_thread_check_post
 
 
 # Descriptions: the top level entry to create HTML article
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: update html database
 # Return Value: none
 sub _htmlify
 {
-    my ($curproc, $args) = @_;
+    my ($curproc)    = @_;
     my $config       = $curproc->config();
     my $pcb          = $curproc->pcb();
     my $myname       = $curproc->myname();
@@ -628,11 +628,11 @@ sub _htmlify
     my $spool_dir    = $config->{ spool_dir };
     my $html_dir     = $config->{ html_archive_dir };
     my $udb_dir      = $config->{ udb_base_dir };
-    my $article      = $curproc->_build_article_object($args);
+    my $article      = $curproc->_build_article_object();
     my $article_id   = $pcb->get('article', 'id');
     my $article_file = $article->filepath($article_id);
     my $index_order  = $config->{ html_archive_index_order_type };
-    my $_tdb_args    = $curproc->thread_db_args($args);
+    my $_tdb_args    = $curproc->thread_db_args();
 
     $curproc->set_umask_as_public();
 

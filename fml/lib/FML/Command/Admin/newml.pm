@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.73 2003/12/20 07:52:30 fukachan Exp $
+# $FML: newml.pm,v 1.74 2003/12/28 13:23:16 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -150,19 +150,18 @@ sub process
 
 
 # Descriptions: show cgi menu for newml
-#    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($args) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: create home directories, update aliases, ...
 # Return Value: none
 sub cgi_menu
 {
-    my ($self, $curproc, $args, $command_args) = @_;
+    my ($self, $curproc, $command_args) = @_;
     my $r = '';
 
     eval q{
         use FML::CGI::ML;
         my $obj = new FML::CGI::ML;
-        $obj->cgi_menu($curproc, $args, $command_args);
+        $obj->cgi_menu($curproc, $command_args);
     };
     if ($r = $@) {
         croak($r);

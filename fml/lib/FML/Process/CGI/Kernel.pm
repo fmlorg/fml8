@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.69 2004/01/01 08:40:21 fukachan Exp $
+# $FML: Kernel.pm,v 1.70 2004/01/01 08:48:40 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -263,9 +263,9 @@ star_html(), run_cgi() and end_html().
 
 C<run()> executes
 
-    $curproc->start_html($args);
-    $curproc->run_cgi($args);
-    $curproc->end_html($args);
+    $curproc->html_start();
+    $curproc->_drive_cgi_by_table();
+    $curproc->html_end();
 
 C<run_cgi()> prepares tables by the following granularity.
 
@@ -291,9 +291,9 @@ sub run
 {
     my ($curproc, $args) = @_;
 
-    $curproc->html_start($args);
-    $curproc->_drive_cgi_by_table($args);
-    $curproc->html_end($args);
+    $curproc->html_start();
+    $curproc->_drive_cgi_by_table();
+    $curproc->html_end();
 }
 
 
@@ -329,12 +329,12 @@ sub _error_string
 
 
 # Descriptions: show menu table
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub _drive_cgi_by_table
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $r = '';
 
     # XXX-TODO: hmm, customisable by /etc/fml/cgi.conf ?
@@ -372,7 +372,7 @@ sub _drive_cgi_by_table
     };
 
     # firstly, execute command if needed.
-    $curproc->run_cgi_main($args);
+    $curproc->run_cgi_main();
 
     print "<table border=0 cellspacing=\"0\" cellpadding=\"5\">\n";
     print "\n<!-- new line -->\n";
@@ -395,7 +395,7 @@ sub _drive_cgi_by_table
 
 	my $fp   = $function_table->{ $pos };
 	if ($fp) {
-	    eval q{ $curproc->$fp($args);};
+	    eval q{ $curproc->$fp();};
 	    if ($r = $@) { _error_string($curproc, $r);}
 	}
 	print "\n</td>\n";
@@ -405,7 +405,7 @@ sub _drive_cgi_by_table
 }
 
 
-=head2 cgi_execute_command($args, $command_args)
+=head2 cgi_execute_command($command_args)
 
 execute specified command given as FML::Command::*
 
@@ -413,12 +413,12 @@ execute specified command given as FML::Command::*
 
 
 # Descriptions: execute FML::Command
-#    Arguments: OBJ($curproc) HASH_REF($args) HASH_REF($command_args)
+#    Arguments: OBJ($curproc) HASH_REF($command_args)
 # Side Effects: load module
 # Return Value: none
 sub cgi_execute_command
 {
-    my ($curproc, $args, $command_args) = @_;
+    my ($curproc, $command_args) = @_;
     my $commode = $command_args->{ command_mode };
     my $comname = $command_args->{ comname };
     my $config  = $curproc->config();
@@ -465,7 +465,7 @@ sub cgi_execute_command
 }
 
 
-=head2 run_cgi_title($args)
+=head2 run_cgi_title()
 
 show title.
 
@@ -473,12 +473,12 @@ show title.
 
 
 # Descriptions: show title
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub run_cgi_title
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $myname    = $curproc->cgi_var_myname();
     my $ml_domain = $curproc->cgi_var_ml_domain();
     my $ml_name   = $curproc->cgi_var_ml_name();
@@ -497,7 +497,7 @@ sub run_cgi_title
 }
 
 
-=head2 run_cgi_help($args)
+=head2 run_cgi_help()
 
 help.
 
@@ -505,12 +505,12 @@ help.
 
 
 # Descriptions: show help
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub run_cgi_help
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $ml_name   = $curproc->cgi_var_ml_name();
     my $ml_domain = $curproc->cgi_var_ml_domain();
     my $mode      = $curproc->cgi_var_cgi_mode();
@@ -539,7 +539,7 @@ sub run_cgi_help
 }
 
 
-=head2 run_cgi_command_help($args)
+=head2 run_cgi_command_help()
 
 command_help.
 
@@ -547,12 +547,12 @@ command_help.
 
 
 # Descriptions: show command_dependent help
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub run_cgi_command_help
 {
-    my ($curproc, $args) = @_;
+    my ($curproc)    = @_;
     my $buf          = '';
     my $navi_command = $curproc->safe_param_navi_command();
     my $command      = $curproc->safe_param_command();
@@ -575,12 +575,12 @@ sub run_cgi_command_help
 
 
 # Descriptions: prepare arguemnts for message handling.
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: HASH_REF
 sub _gen_msg_args
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
 
     # natural language-ed name
     my $name_submit = $curproc->message_nl('term.submit', 'submit');
@@ -596,7 +596,7 @@ sub _gen_msg_args
 }
 
 
-=head2 run_cgi_log($args)
+=head2 run_cgi_log()
 
 log.
 
@@ -604,18 +604,18 @@ log.
 
 
 # Descriptions: show log
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub run_cgi_log
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
 
     # XXX-TODO: NOT IMPLEMENTED.
 }
 
 
-=head2 run_cgi_dummy($args)
+=head2 run_cgi_dummy()
 
 dummy.
 
@@ -623,18 +623,18 @@ dummy.
 
 
 # Descriptions: show dummy
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub run_cgi_dummy
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
 
     # XXX-TODO: NOT IMPLEMENTED.
 }
 
 
-=head2 run_cgi_date($args)
+=head2 run_cgi_date()
 
 date.
 
@@ -642,19 +642,19 @@ date.
 
 
 # Descriptions: show date
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub run_cgi_date
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
 
     # XXX-TODO: NOT IMPLEMENTED. NOT USE `date`;
     print `date`;
 }
 
 
-=head2 run_cgi_options($args)
+=head2 run_cgi_options()
 
 show options.
 
@@ -662,17 +662,17 @@ show options.
 
 
 # Descriptions: show options
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub run_cgi_options
 {
-    my ($curproc, $args) = @_;
-    my $domain   = $curproc->cgi_var_ml_domain();
-    my $action   = $curproc->safe_cgi_action_name();
-    my $lang     = $curproc->cgi_var_language();
-    my $config   = $curproc->config();
-    my $langlist = $config->get_as_array_ref('cgi_language_list');
+    my ($curproc) = @_;
+    my $domain    = $curproc->cgi_var_ml_domain();
+    my $action    = $curproc->safe_cgi_action_name();
+    my $lang      = $curproc->cgi_var_language();
+    my $config    = $curproc->config();
+    my $langlist  = $config->get_as_array_ref('cgi_language_list');
 
     if ($#$langlist > 0) {
 	# natural language-ed name
@@ -699,7 +699,7 @@ sub run_cgi_options
 }
 
 
-=head2 run_cgi_menu($args, $comname, $command_args)
+=head2 run_cgi_menu()
 
 execute cgi_menu() given as FML::Command::*
 
@@ -707,12 +707,12 @@ execute cgi_menu() given as FML::Command::*
 
 
 # Descriptions: execute FML::Command
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: load module
 # Return Value: none
 sub run_cgi_menu
 {
-    my ($curproc, $args) = @_;
+    my ($curproc)    = @_;
     my $pcb          = $curproc->pcb();
     my $command_args = $pcb->get('cgi', 'command_args');
 
@@ -727,17 +727,17 @@ sub run_cgi_menu
 	};
 
 	if (defined $obj) {
-	    $obj->cgi_menu($curproc, $args, $command_args);
+	    $obj->cgi_menu($curproc, $command_args);
 	}
     }
     else {
 	my $ml_name = $curproc->safe_param_ml_name();
 
 	if ($ml_name) {
-	    $curproc->run_cgi_help($args);
+	    $curproc->run_cgi_help();
 	}
 	else {
-	    $curproc->run_cgi_help($args);
+	    $curproc->run_cgi_help();
 	}
     }
 }

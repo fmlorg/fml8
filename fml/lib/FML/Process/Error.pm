@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.34 2003/08/29 15:34:08 fukachan Exp $
+# $FML: Error.pm,v 1.35 2003/11/29 10:24:29 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -191,7 +191,7 @@ sub run
 
 	if ($found) {
 	    $pcb->set("error", "found", 1);
-	    $curproc->_clean_up_bouncers($args);
+	    $curproc->_clean_up_bouncers();
 	}
     }
 
@@ -202,13 +202,13 @@ sub run
 
 # Descriptions: run analyzer() if long time spent after the last
 #               analyze.
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: remove addresses which causes bounces
 # Return Value: none
 sub _clean_up_bouncers
 {
-    my ($curproc, $args) = @_;
-    my $channel = 'erroranalyzer';
+    my ($curproc) = @_;
+    my $channel   = 'erroranalyzer';
 
     if ($curproc->is_event_timeout($channel)) {
 	$curproc->log("(debug) event timeout");

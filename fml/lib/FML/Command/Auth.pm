@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.29 2003/11/30 09:59:18 fukachan Exp $
+# $FML: Auth.pm,v 1.30 2003/12/30 03:51:02 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -51,36 +51,36 @@ sub new
 
 
 # Descriptions: virtual reject handler, just return __LAST__ :-)
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: STR (__LAST__, a special upcall)
 sub reject
 {
-    my ($self, $curproc, $args, $optargs) = @_;
+    my ($self, $curproc, $optargs) = @_;
 
     return '__LAST__';
 }
 
 
 # Descriptions: permit anyone
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: NUM
 sub permit_anyone
 {
-    my ($self, $curproc, $args, $optargs) = @_;
+    my ($self, $curproc, $optargs) = @_;
 
     return 1;
 }
 
 
 # Descriptions: permit if admin_member_maps has the sender
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: NUM
 sub permit_admin_member_maps
 {
-    my ($self, $curproc, $args, $optargs) = @_;
+    my ($self, $curproc, $optargs) = @_;
     my $cred   = $curproc->{ credential };
     my $sender = $cred->sender();
     my $match  = $cred->is_privileged_member($sender);
@@ -95,12 +95,12 @@ sub permit_admin_member_maps
 
 
 # Descriptions: reject if the mail address looks like system accounts.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) HASH_REF($optargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: NUM or STR (__LAST__, a special upcall)
 sub reject_system_special_accounts
 {
-    my ($self, $curproc, $args, $optargs) = @_;
+    my ($self, $curproc, $optargs) = @_;
     my $cred   = $curproc->{ credential };
     my $sender = $cred->sender();
     my $match  = $cred->match_system_special_accounts($sender);
@@ -114,7 +114,7 @@ sub reject_system_special_accounts
 }
 
 
-=head2 check_admin_member_password($curproc, $args, $optargs)
+=head2 check_admin_member_password($curproc, $optargs)
 
 check the password if it is valid or not as an administrator.
 
@@ -124,13 +124,12 @@ check the password if it is valid or not as an administrator.
 # Descriptions: check the password if it is valid or not.
 #    Arguments: OBJ($self)
 #               HASH_REF($curproc)
-#               HASH_REF($args)
 #               HASH_REF($optargs)
 # Side Effects: none
 # Return Value: NUM
 sub check_admin_member_password
 {
-    my ($self, $curproc, $args, $optargs) = @_;
+    my ($self, $curproc, $optargs) = @_;
     my $function = "check_admin_member_password";
     my $cred     = $curproc->{ credential };
     my $config   = $curproc->config();

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.199 2003/12/29 14:57:04 fukachan Exp $
+# $FML: Kernel.pm,v 1.200 2003/12/30 03:53:53 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -180,12 +180,12 @@ sub new
 
 
 # Descriptions: set up default signal handling
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub _signal_init
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
 
     $SIG{'ALRM'} = $SIG{'INT'} = $SIG{'QUIT'} = $SIG{'TERM'} = sub {
 	my ($signal) = @_;
@@ -197,23 +197,23 @@ sub _signal_init
 
 
 # Descriptions: set up default printing style handling
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub _print_init
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     $curproc->set_print_style( 'text' );
 }
 
 
 # Descriptions: activate scheduler
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub scheduler_init
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
 
     use FML::Process::Scheduler;
     my $scheduler = new FML::Process::Scheduler $curproc;
@@ -502,13 +502,13 @@ a side effect.
 
 # Descriptions: validate the sender address and do a few things
 #               as a side effect
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: set the return value of $curproc->sender().
 #               stop the current process if needed.
 # Return Value: none
 sub verify_sender_credential
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $msg  = $curproc->{'incoming_message'};
     my $from = $msg->{'header'}->get('from');
 
@@ -1019,35 +1019,35 @@ The restriction rules follows the order of C<command_restrictions>.
 
 
 # Descriptions: permit this post process
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: set the error reason at "check_restriction" in pcb.
 # Return Value: NUM(1 or 0)
 sub permit_post
 {
-    my ($curproc, $args) = @_;
-    $curproc->_check_restrictions($args, 'post');
+    my ($curproc) = @_;
+    $curproc->_check_restrictions('post');
 }
 
 
 # Descriptions: permit this command process
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: set the error reason at "check_restriction" in pcb.
 # Return Value: NUM(1 or 0)
 sub permit_command
 {
-    my ($curproc, $args) = @_;
-    $curproc->_check_restrictions($args, 'command');
+    my ($curproc) = @_;
+    $curproc->_check_restrictions('command');
 }
 
 
 # Descriptions: permit this $type process based on the rules defined
 #               in ${type}_restrictions.
-#    Arguments: OBJ($curproc) HASH_REF($args) STR($type)
+#    Arguments: OBJ($curproc) STR($type)
 # Side Effects: set the error reason at "check_restriction" n pcb.
 # Return Value: NUM(1 or 0)
 sub _check_restrictions
 {
-    my ($curproc, $args, $type) = @_;
+    my ($curproc, $type) = @_;
     my $config = $curproc->config();
     my $cred   = $curproc->{ credential }; # user credential
     my $pcb    = $curproc->pcb();
@@ -1513,13 +1513,13 @@ sub _array_is_different
 
 
 # Descriptions: add the specified $msg into on memory queue
-#    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($args)
+#    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($rm_args)
 #               ARRAY_REF($recipient) ARRAY_REF($recipient_maps) OBJ($hdr)
 # Side Effects: update on momory queue which is on PCB area.
 # Return Value: none
 sub _append_message_into_queue
 {
-    my ($curproc, $msg, $args, $recipient, $recipient_maps, $hdr) = @_;
+    my ($curproc, $msg, $rm_args, $recipient, $recipient_maps, $hdr) = @_;
     my $pcb      = $curproc->pcb();
     my $category = 'reply_message';
     my $class    = 'queue';
@@ -1538,13 +1538,13 @@ sub _append_message_into_queue
 
 
 # Descriptions: add the specified $msg into on memory queue
-#    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($args)
+#    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($rm_args)
 #               ARRAY_REF($recipient) ARRAY_REF($recipient_maps) OBJ($hdr)
 # Side Effects: update on momory queue which is on PCB area.
 # Return Value: none
 sub _append_message_into_queue2
 {
-    my ($curproc, $msg, $args, $recipient, $recipient_maps, $hdr) = @_;
+    my ($curproc, $msg, $rm_args, $recipient, $recipient_maps, $hdr) = @_;
     my $pcb      = $curproc->pcb();
     my $category = 'reply_message';
     my $class    = 'queue';
@@ -1576,12 +1576,12 @@ sub _append_message_into_queue2
 
 # Descriptions: built and return recipient type and list in
 #               on memory queue.
-#    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($args)
+#    Arguments: OBJ($curproc) OBJ($msg)
 # Side Effects: none
 # Return Value: ARRAY( HASH_REF, HASH_REF )
 sub _reply_message_recipient_keys
 {
-    my ($curproc, $msg, $args) = @_;
+    my ($curproc, $msg) = @_;
     my $pcb      = $curproc->pcb();
     my $category = 'reply_message';
     my $class    = 'queue';
@@ -1664,32 +1664,32 @@ This $args is passed through to reply_message().
 
 
 # Descriptions: set reply message with translation to natual language
-#    Arguments: OBJ($curproc) STR($class) STR($default_msg) HASH_REF($args)
+#    Arguments: OBJ($curproc) STR($class) STR($default_msg) HASH_REF($rm_args)
 # Side Effects: none
 # Return Value: none
 sub reply_message_nl
 {
-    my ($curproc, $class, $default_msg, $args) = @_;
+    my ($curproc, $class, $default_msg, $rm_args) = @_;
     my $config = $curproc->config();
-    my $buf    = $curproc->message_nl($class, $default_msg, $args);
+    my $buf    = $curproc->message_nl($class, $default_msg, $rm_args);
 
     $curproc->caller_info($class, caller) if $debug;
 
     if (defined $buf) {
 	if ($buf =~ /\$/) {
-	    $config->expand_variable_in_buffer(\$buf, $args);
+	    $config->expand_variable_in_buffer(\$buf, $rm_args);
 	}
 
 	# XXX-TODO: jis-jp is hard-coded.
 	eval q{
 	    use Mail::Message::Encode;
 	    my $obj = new Mail::Message::Encode;
-	    $curproc->reply_message( $obj->convert( $buf, 'jis-jp' ), $args);
+	    $curproc->reply_message( $obj->convert( $buf, 'jis-jp' ), $rm_args);
 	};
 	$curproc->logerror($@) if $@;
     }
     else {
-	$curproc->reply_message($default_msg, $args);
+	$curproc->reply_message($default_msg, $rm_args);
     }
 }
 
@@ -1711,12 +1711,12 @@ sub reply_message_add_header_info
 
 
 # Descriptions: get template message in natual language
-#    Arguments: OBJ($curproc) STR($class) STR($default_msg) HASH_REF($args)
+#    Arguments: OBJ($curproc) STR($class) STR($default_msg) HASH_REF($m_args)
 # Side Effects: none
 # Return Value: STR
 sub message_nl
 {
-    my ($curproc, $class, $default_msg, $args) = @_;
+    my ($curproc, $class, $default_msg, $m_args) = @_;
     my $config    = $curproc->config();
     my $dir       = $config->{ message_template_dir };
     my $local_dir = $config->{ ml_local_message_template_dir };
@@ -1749,7 +1749,7 @@ sub message_nl
     if (defined $buf) {
 	my $config = $curproc->config();
         if ($buf =~ /\$/o) {
-            $config->expand_variable_in_buffer(\$buf, $args);
+            $config->expand_variable_in_buffer(\$buf, $m_args);
         }
     }
 
@@ -1792,12 +1792,12 @@ Prepare the message and queue it in by C<Mail::Delivery::Queue>.
 #               $r  = get(message, queue)
 #               msg = header + "text" + $r->[0] + $r->[1] + ...
 #
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub inform_reply_messages
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $pcb = $curproc->pcb();
 
     # We should classify reply messages by
@@ -2208,13 +2208,13 @@ sub _add_info_on_header
     $msg->attr('X-ML-Name' => $ml_name);
 
     use FML::Header;
-    my $args = {
+    my $hrw_args = {
 	type    => 'MIME::Lite',
 	message => $msg,
     };
-  FML::Header->add_message_id($config, $args);
-  FML::Header->add_software_info($config, $args);
-  FML::Header->add_rfc2369($config, $args);
+  FML::Header->add_message_id($config, $hrw_args);
+  FML::Header->add_software_info($config, $hrw_args);
+  FML::Header->add_rfc2369($config, $hrw_args);
 }
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.64 2003/09/19 13:30:33 tmu Exp $
+# $FML: Header.pm,v 1.65 2003/11/29 07:23:38 fukachan Exp $
 #
 
 package FML::Header;
@@ -62,20 +62,20 @@ forward the request up to superclass C<Mail::header::new()>.
 
 
 # Descriptions: forward new() request to the base class
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) HASH_REF($rw_args)
 # Side Effects: none
 # Return Value: OBJ
 sub new
 {
-    my ($self, $args) = @_;
+    my ($self, $rw_args) = @_;
 
     # an adapter for Mail::Header::new()
-    $self->SUPER::new($args);
+    $self->SUPER::new($rw_args);
 }
 
 
 # Descriptions: dummy
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) HASH_REF($rw_args)
 # Side Effects: none
 # Return Value: none
 sub DESTROY {}
@@ -193,15 +193,15 @@ sub data_type
 
 =head1 FML SPECIFIC METHODS
 
-=head2 add_fml_ml_name($config, $args)
+=head2 add_fml_ml_name($config, $rw_args)
 
 add X-ML-Name:
 
-=head2 add_fml_traditional_article_id($config, $args)
+=head2 add_fml_traditional_article_id($config, $rw_args)
 
 add X-Mail-Count:
 
-=head2 add_fml_article_id($config, $args)
+=head2 add_fml_article_id($config, $rw_args)
 
 add X-ML-Count:
 
@@ -214,57 +214,57 @@ add X-ML-Count:
 
 
 # Descriptions: add "X-ML-Name: elena" to header
-#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
 sub add_fml_ml_name
 {
-    my ($header, $config, $args) = @_;
+    my ($header, $config, $rw_args) = @_;
     $header->add('X-ML-Name', $config->{ outgoing_mail_header_x_ml_name });
 }
 
 
 # Descriptions: add "X-Mail-Count: NUM" to header
-#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
 sub add_fml_traditional_article_id
 {
-    my ($header, $config, $args) = @_;
-    $header->add('X-Mail-Count', $args->{ id });
+    my ($header, $config, $rw_args) = @_;
+    $header->add('X-Mail-Count', $rw_args->{ id });
 }
 
 
 # Descriptions: add "X-ML-Count: NUM" to header
-#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
 sub add_fml_article_id
 {
-    my ($header, $config, $args) = @_;
-    $header->add('X-ML-Count', $args->{ id });
+    my ($header, $config, $rw_args) = @_;
+    $header->add('X-ML-Count', $rw_args->{ id });
 }
 
 
-=head2 add_software_info($config, $args)
+=head2 add_software_info($config, $rw_args)
 
 add X-MLServer: and List-Software:.
 
-C<MIME::Lite> object as a $args->{ message } can be handled
-when $args->{type} is 'MIME::Lite'.
+C<MIME::Lite> object as a $rw_args->{ message } can be handled
+when $rw_args->{type} is 'MIME::Lite'.
 
-=head2 add_rfc2369($config, $args)
+=head2 add_rfc2369($config, $rw_args)
 
 add List-* sereies defined in RFC2369 and RFC2919.
 
-C<MIME::Lite> object as a $args->{ message } can be handled
-when $args->{type} is 'MIME::Lite'.
+C<MIME::Lite> object as a $rw_args->{ message } can be handled
+when $rw_args->{type} is 'MIME::Lite'.
 
-=head2 add_x_sequence($config, $args)
+=head2 add_x_sequence($config, $rw_args)
 
 add X-Sequence.
 
-=head2 add_message_id($config, $args)
+=head2 add_message_id($config, $rw_args)
 
 add Message-Id.
 
@@ -272,18 +272,18 @@ add Message-Id.
 
 
 # Descriptions: add "X-ML-Server: fml .." and "List-Software: fml .." to header
-#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
 sub add_software_info
 {
-    my ($header, $config, $args) = @_;
+    my ($header, $config, $rw_args) = @_;
     my $fml_version = $config->{ fml_version };
-    my $object_type = defined $args->{ type } ? $args->{ type } : '';
+    my $object_type = defined $rw_args->{ type } ? $rw_args->{ type } : '';
 
     if ($fml_version) {
 	if ($object_type eq 'MIME::Lite') {
-	    my $msg = $args->{ message };
+	    my $msg = $rw_args->{ message };
 	    $msg->attr('X-MLServer'    => $fml_version);
 	    $msg->attr('List-Software' => $fml_version);
 	}
@@ -296,13 +296,13 @@ sub add_software_info
 
 
 # Descriptions: add List-* to header
-#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
 sub add_rfc2369
 {
-    my ($header, $config, $args) = @_;
-    my $object_type = defined $args->{ type } ? $args->{ type } : '';
+    my ($header, $config, $rw_args) = @_;
+    my $object_type = defined $rw_args->{ type } ? $rw_args->{ type } : '';
 
     # addresses
     my $post       = $config->{ address_for_post };
@@ -316,7 +316,7 @@ sub add_rfc2369
 
     # See RFC2369 for more details
     if ($object_type eq 'MIME::Lite') {
-	my $msg = $args->{ message };
+	my $msg = $rw_args->{ message };
 	$msg->attr('List-ID'    => $id) if $id;
 	$msg->attr('List-Post'  => "<mailto:${post}>") if $post;
 	$msg->attr('List-Owner' => "<mailto:${maintainer}>") if $maintainer;
@@ -344,19 +344,19 @@ sub add_rfc2369
 }
 
 # Descriptions: add "Message-ID if not define
-#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
 sub add_message_id
 {
-    my ($header, $config, $args) = @_;
-    my $object_type = defined $args->{ type } ? $args->{ type } : '';
+    my ($header, $config, $rw_args) = @_;
+    my $object_type = defined $rw_args->{ type } ? $rw_args->{ type } : '';
 
     use FML::Header::MessageID;
-    my $mid = FML::Header::MessageID->new->gen_id($config,$args);
+    my $mid = FML::Header::MessageID->new->gen_id($config);
 
     if ($object_type eq 'MIME::Lite') {
-	my $msg = $args->{ message };
+	my $msg = $rw_args->{ message };
 	$msg->attr('Message-Id' => $mid);
     }
     else {
@@ -366,18 +366,18 @@ sub add_message_id
 
 
 # Descriptions: add "X-Sequence: elena NUM" to header
-#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
 sub add_x_sequence
 {
-    my ($header, $config, $args) = @_;
+    my ($header, $config, $rw_args) = @_;
 
-    $header->add('X-Sequence',  "$config->{ outgoing_mail_header_x_ml_name } $args->{ id }");
+    $header->add('X-Sequence',  "$config->{ outgoing_mail_header_x_ml_name } $rw_args->{ id }");
 }
 
 
-=head2 rewrite_article_subject_tag($config, $args)
+=head2 rewrite_article_subject_tag($config, $rw_args)
 
 add subject tag like [elena:00010].
 The actual function definitions exist in C<FML::Header::Subject>.
@@ -406,17 +406,17 @@ replace original C<Received:> to C<X-Received:>.
 
 
 # Descriptions: rewrite subject if needed
-#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
 sub rewrite_article_subject_tag
 {
-    my ($header, $config, $args) = @_;
+    my ($header, $config, $rw_args) = @_;
 
     my $pkg = "FML::Header::Subject";
     eval qq{ use $pkg;};
     unless ($@) {
-	$pkg->rewrite_article_subject_tag($header, $config, $args);
+	$pkg->rewrite_article_subject_tag($header, $config, $rw_args);
     }
     else {
 	croak("cannot load $pkg");
@@ -426,12 +426,12 @@ sub rewrite_article_subject_tag
 
 # Descriptions: rewrite Reply-To: to this ML's address.
 #               add Reply-To: if not specified.
-#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
 sub rewrite_reply_to
 {
-    my ($header, $config, $args) = @_;
+    my ($header, $config, $rw_args) = @_;
     my $reply_to = $header->get('reply-to') || '';
 
     unless ($reply_to) {
@@ -442,23 +442,23 @@ sub rewrite_reply_to
 
 # Descriptions: rewrite Errors-To: to the maintainer.
 #               add Errors-To: if not specified.
-#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
 sub rewrite_errors_to
 {
-    my ($header, $config, $args) = @_;
+    my ($header, $config, $rw_args) = @_;
     $header->add('Errors-To', $config->{ maintainer });
 }
 
 
 # Descriptions: rewrite Date: to X-Date: if needed
-#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
 sub rewrite_date
 {
-    my ($header, $config, $args) = @_;
+    my ($header, $config, $rw_args) = @_;
     my $orgdate = $header->get('date') || '';
 
     use Mail::Message::Date;
@@ -471,12 +471,12 @@ sub rewrite_date
 
 
 # Descriptions: rewrite Received: to X-Received: if needed
-#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
 sub rewrite_received
 {
-    my ($header, $config, $args) = @_;
+    my ($header, $config, $rw_args) = @_;
     my($i,$data);
     my $org = "Received";
     my $new = "X-Received";
@@ -490,7 +490,7 @@ sub rewrite_received
 }
 
 
-=head2 delete_unsafe_header_fields($config, $args)
+=head2 delete_unsafe_header_fields($config, $rw_args)
 
 remove header fields defiend in C<$unsafe_header_fields>.
 C<$unsafe_header_fields> is a list of keys.
@@ -502,12 +502,12 @@ The keys are space separeted.
 
 
 # Descriptions: remove some header fields defined in $config
-#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
 sub delete_unsafe_header_fields
 {
-    my ($header, $config, $args) = @_;
+    my ($header, $config, $rw_args) = @_;
     my ($fields) = $config->get_as_array_ref('unsafe_header_fields');
 
     for my $field (@$fields) { $header->delete($field);}
@@ -575,18 +575,18 @@ sub extract_message_id_references
 
 =head1 FILTERING FUNCTIONS
 
-=head2 check_message_id($config, $args)
+=head2 check_message_id($config, $rw_args)
 
 check whether message-id is unique or not. If the message-id is found
 in the past message-id cache, the injected message must causes a mail
 loop.
 
-=head2 check_x_ml_info($config, $args)
+=head2 check_x_ml_info($config, $rw_args)
 
 The injected message loops if x-ml-info: has our own
 C<address_for_post> address.
 
-=head2 check_list_post($config, $args)
+=head2 check_list_post($config, $rw_args)
 
 The injected message loops if list-post: has our own
 C<address_for_post> address.
@@ -596,12 +596,12 @@ C<address_for_post> address.
 
 # Descriptions: check whether message-id is duplicated or not
 #                against mail loop.
-#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update cache
 # Return Value: STR or 0
 sub check_message_id
 {
-    my ($header, $config, $args) = @_;
+    my ($header, $config, $rw_args) = @_;
     my $dir = $config->{ 'message_id_cache_dir' },
     my $mid = $header->get('message-id');
     my $dup = 0;
@@ -627,12 +627,12 @@ sub check_message_id
 
 
 # Descriptions: check X-ML-Info: duplication against mail loop
-#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: none
 # Return Value: 1 or 0
 sub check_x_ml_info
 {
-    my ($header, $config, $args) = @_;
+    my ($header, $config, $rw_args) = @_;
     my $buf  = $header->get('x-ml-info')  || undef;
     my $addr = $config->{ addr_for_post } || undef;
 
@@ -646,12 +646,12 @@ sub check_x_ml_info
 
 
 # Descriptions: check mail loop by List-Post: field
-#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: none
 # Return Value: 1 or 0
 sub check_list_post
 {
-    my ($header, $config, $args) = @_;
+    my ($header, $config, $rw_args) = @_;
     my $buf  = $header->get('list-post')  || undef;
     my $addr = $config->{ addr_for_post } || undef;
 

@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.84 2003/08/24 14:08:28 fukachan Exp $
+# $FML: Config.pm,v 1.85 2003/09/27 06:50:25 fukachan Exp $
 #
 
 package FML::Config;
@@ -1053,12 +1053,12 @@ tie() IO.
 
 
 # Descriptions: begin op for tie() with %_fml_config
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
 sub TIEHASH
 {
-    my ($self, $args) = @_;
+    my ($self) = @_;
     my ($type) = ref($self) || $self;
     my $me     = \%_fml_config;
     return bless $me, $type;

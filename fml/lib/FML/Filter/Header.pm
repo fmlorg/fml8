@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.4 2003/07/21 04:51:33 fukachan Exp $
+# $FML: Header.pm,v 1.5 2003/08/23 04:35:35 fukachan Exp $
 #
 
 package FML::Filter::Header;
@@ -77,7 +77,7 @@ sub rules
 }
 
 
-=head2 header_check($msg, $args)
+=head2 header_check($msg);
 
 C<$msg> is C<Mail::Message> object.
 
@@ -87,7 +87,7 @@ C<Usage>:
     my $obj  = new FML::Filter::Header;
     my $msg  = $curproc->{'incoming_message'};
 
-    $obj->header_check($msg, $args);
+    $obj->header_check($msg);
     if ($obj->error()) {
        # do something for wrong formated message ...
     }
@@ -96,12 +96,12 @@ C<Usage>:
 
 
 # Descriptions: top level dispatcher
-#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: none
 # Return Value: none
 sub header_check
 {
-    my ($self, $msg, $args) = @_;
+    my ($self, $msg) = @_;
     my $hdr   = $msg->whole_message_header();
     my $rules = $self->{ _rules };
 
@@ -113,7 +113,7 @@ sub header_check
 	}
 
 	eval q{
-	    $self->$rule($hdr, $args);
+	    $self->$rule($hdr);
 	};
 
 	if ($@) {
@@ -130,12 +130,12 @@ sub header_check
 
 # Descriptions: validate the message-id in the given message $msg.
 #               This routine checks whether the message-id has @.
-#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: croak()
 # Return Value: none
 sub check_message_id
 {
-    my ($self, $msg, $args) = @_;
+    my ($self, $msg) = @_;
     my $mid = $msg->get('message-id');
 
     if ($mid !~ /\@/) {
@@ -145,12 +145,12 @@ sub check_message_id
 
 # Descriptions: validate the date in the given message $msg.
 #               This routine checks missing date field
-#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: croak()
 # Return Value: none
 sub check_date
 {
-    my ($self, $msg, $args) = @_;
+    my ($self, $msg) = @_;
 
     if (! $msg->get('date')) {
 	croak( "Missing Date: field" );

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.39 2003/07/21 11:25:37 fukachan Exp $
+# $FML: Subject.pm,v 1.40 2003/08/23 04:35:36 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -58,12 +58,12 @@ replace the subject with the newer content e.g. including the ML tag.
 
 
 # Descriptions: add or rewrite the subject tag
-#    Arguments: OBJ($self) OBJ($header) OBJ($config) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: the header subject is rewritten
 # Return Value: none
 sub rewrite_article_subject_tag
 {
-    my ($self, $header, $config, $args) = @_;
+    my ($self, $header, $config, $rw_args) = @_;
     my ($in_code, $out_code);
 
     # XXX-TODO: need $article_subject_tag expaned already e.g. "\Lmlname\E"
@@ -88,7 +88,7 @@ sub rewrite_article_subject_tag
     my $obj = new Mail::Message::Encode;
 
     # add(prepend) the rewrited tag with mime encoding.
-    $tag = sprintf($tag, $args->{ id });
+    $tag = sprintf($tag, $rw_args->{ id });
     my $new_subject = $tag." ".$subject;
     $new_subject = $obj->encode_mime_string($new_subject, 'base64', $in_code);
     $header->replace('Subject', $new_subject);

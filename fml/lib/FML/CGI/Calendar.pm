@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Calendar.pm,v 1.6 2004/01/01 08:41:33 fukachan Exp $
+# $FML: Calendar.pm,v 1.7 2004/01/01 08:48:38 fukachan Exp $
 #
 
 package FML::CGI::Calendar;
@@ -55,12 +55,12 @@ print out the navigator and closing of html.
 
 
 # Descriptions: print out HTML header + body former part and navigator.
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub html_start
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $config  = $curproc->config();
     my $user    = $curproc->safe_param_user;
     my $myname  = $curproc->myname();
@@ -74,23 +74,23 @@ sub html_start
 		     -BGCOLOR => $color);
     print "\n";
 
-    $curproc->_show_guide($args);
+    $curproc->_show_guide();
 
     print "<HR>\n";
 }
 
 
 # Descriptions: print out the navigator and closing of html.
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub html_end
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
 
     print "<HR>\n";
 
-    $curproc->_show_guide($args);
+    $curproc->_show_guide();
 
     # o.k. end of html
     print end_html;
@@ -99,12 +99,12 @@ sub html_end
 
 
 # Descriptions: print out navigation bar
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub _show_guide
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
 
     for my $n ('this', 'next', 'last') {
 	print "<A HREF=\"\#$n\">[$n month]</A>\n";
@@ -128,12 +128,12 @@ dummy.
 
 
 # Descriptions: main routine to print calendar as HTML TABLE format.
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub run_cgi_main
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $user = $curproc->safe_param_user;
 
     use Calendar::Lite;
@@ -146,23 +146,23 @@ sub run_cgi_main
 
 
 # Descriptions: show menu (table based menu)
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub run_cgi_navigator
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     ;
 }
 
 
 # Descriptions: show menu (table based menu)
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub run_cgi_options
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     ;
 }
 

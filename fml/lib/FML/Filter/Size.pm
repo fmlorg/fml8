@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Size.pm,v 1.4 2003/08/23 04:35:36 fukachan Exp $
+# $FML: Size.pm,v 1.5 2003/10/15 01:03:32 fukachan Exp $
 #
 
 package FML::Filter::Size;
@@ -98,7 +98,7 @@ sub set_class
 }
 
 
-=head2 size_check($msg, $args)
+=head2 size_check($msg)
 
 C<$msg> is C<Mail::Message> object.
 
@@ -108,7 +108,7 @@ C<Usage>:
     my $obj  = new FML::Filter::Size;
     my $msg  = $curproc->{'incoming_message'};
 
-    $obj->Size_check($msg, $args);
+    $obj->Size_check($msg);
     if ($obj->error()) {
        # do something for wrong formated message ...
     }
@@ -117,12 +117,12 @@ C<Usage>:
 
 
 # Descriptions: top level dispatcher
-#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: none
 # Return Value: none
 sub size_check
 {
-    my ($self, $msg, $args) = @_;
+    my ($self, $msg) = @_;
     my $rules = $self->{ _rules };
 
   RULE:
@@ -132,7 +132,7 @@ sub size_check
 	}
 
 	eval q{
-	    $self->$rule($msg, $args);
+	    $self->$rule($msg);
 	};
 
 	if ($@) {
@@ -144,12 +144,12 @@ sub size_check
 
 =head1 FILTER RULES
 
-=head2 check_header_size($msg, $args)
+=head2 check_header_size($msg)
 
 check the size of mail header.
 throw reason via croak() if the size exceeds the limit.
 
-=head2 check_body_size($msg, $args)
+=head2 check_body_size($msg)
 
 check the size of mail body.
 throw reason via croak() if the size exceeds the limit.
@@ -158,23 +158,23 @@ throw reason via croak() if the size exceeds the limit.
 
 
 # Descriptions: check the size of mail header.
-#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: none
 # Return Value: none
 sub check_header_size
 {
-    my ($self, $msg, $args) = @_;
+    my ($self, $msg) = @_;
     $self->_check_mail_size($msg, "header");
 }
 
 
 # Descriptions: check the size of mail body.
-#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: none
 # Return Value: none
 sub check_body_size
 {
-    my ($self, $msg, $args) = @_;
+    my ($self, $msg) = @_;
     $self->_check_mail_size($msg, "body");
 }
 

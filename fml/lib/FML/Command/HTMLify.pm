@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.18 2003/08/23 07:24:42 fukachan Exp $
+# $FML: HTMLify.pm,v 1.19 2003/09/13 09:14:31 fukachan Exp $
 #
 
 package FML::Command::HTMLify;
@@ -34,12 +34,12 @@ and file in C<$ml_home_dir>.
 
 
 # Descriptions: convert text to html style.
-#    Arguments: OBJ($curproc) HASH_REF($args) HASH_REF($optargs)
+#    Arguments: OBJ($curproc) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: none
 sub convert
 {
-    my ($curproc, $args, $optargs) = @_;
+    my ($curproc, $optargs) = @_;
     my $config  = $curproc->config();
     my $ml_name = $config->{ ml_name };
     my $udb_dir = $config->{ udb_base_dir };

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ML.pm,v 1.4 2003/10/14 10:55:27 fukachan Exp $
+# $FML: ML.pm,v 1.5 2003/10/15 01:03:28 fukachan Exp $
 #
 
 package FML::CGI::ML;
@@ -28,15 +28,12 @@ sub new
 
 
 # Descriptions: show menu for subscribe/unsubscribe commands
-#    Arguments: OBJ($self)
-#               OBJ($curproc)
-#               HASH_REF($args)
-#               HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
 # Return Value: none
 sub cgi_menu
 {
-    my ($self, $curproc, $args, $command_args) = @_;
+    my ($self, $curproc, $command_args) = @_;
     my $target       = $curproc->cgi_var_frame_target();
     my $action       = $curproc->cgi_var_action();
     my $ml_domain    = $curproc->cgi_var_ml_domain();

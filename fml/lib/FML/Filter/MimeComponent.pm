@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent.pm,v 1.5 2003/10/14 10:44:08 fukachan Exp $
+# $FML: MimeComponent.pm,v 1.6 2003/10/15 01:03:32 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -79,7 +79,7 @@ sub new
 }
 
 
-=head2 mime_component_check($msg, $args)
+=head2 mime_component_check($msg)
 
 C<$msg> is C<Mail::Message> object.
 
@@ -89,7 +89,7 @@ C<Usage>:
     my $obj = new FML::Filter::MimeComponent;
     my $msg = $curproc->incoming_message();
 
-    $obj->mime_component_check($msg, $args);
+    $obj->mime_component_check($msg);
     if ($obj->error()) {
        # do something for wrong formated message ...
     }
@@ -103,12 +103,12 @@ my $opt_cut_off_empty_part = 1;
 
 
 # Descriptions: parser of child multipart
-#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: update $recursive_level
 # Return Value: NUM
 sub _rfc822_mime_component_check
 {
-    my ($self, $msg, $args) = @_;
+    my ($self, $msg) = @_;
     my $recursive_max_level = 10;
     my $curproc = $self->{ _curproc };
 
@@ -136,7 +136,7 @@ sub _rfc822_mime_component_check
 	if (defined $rh) {
 	    use Mail::Message;
 	    my $msg0 = new Mail::Message->parse( { fd => $rh } );
-	    $self->mime_component_check($msg0, $args);
+	    $self->mime_component_check($msg0);
 	}
     }
 
@@ -167,12 +167,12 @@ sub _temp_file_path
 
 
 # Descriptions: top level dispatcher
-#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: none
 # Return Value: none
 sub mime_component_check
 {
-    my ($self, $msg, $args) = @_;
+    my ($self, $msg) = @_;
     my ($data_type, $prevmp, $nextmp, $mp, $action, $reject_reason);
     my $curproc = $self->{ _curproc };
     my $is_cutoff = 0; # debug
@@ -206,7 +206,7 @@ sub mime_component_check
 	}
 
 	if ($data_type =~ /message\/rfc822/i) {
-	    $self->_rfc822_mime_component_check($mp, $args);
+	    $self->_rfc822_mime_component_check($mp);
 	    next MSG;
 	}
 

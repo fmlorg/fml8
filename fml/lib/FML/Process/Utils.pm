@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.98 2003/12/29 14:49:09 fukachan Exp $
+# $FML: Utils.pm,v 1.99 2003/12/30 03:46:35 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1199,7 +1199,7 @@ sub is_under_mta_process
 }
 
 
-=head2 get_ml_list()
+=head2 get_ml_list($ml_domain)
 
 get ARRAY_REF of valid mailing lists.
 
@@ -1550,7 +1550,7 @@ sub get_accept_language_list
 }
 
 
-=head2 thread_db_args($args)
+=head2 thread_db_args()
 
 prepare and return information (HASH_REF) needed to manipulate thread
 database.
@@ -1559,12 +1559,12 @@ database.
 
 
 # Descriptions: return information (HASH_REF) needed for thread database.
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: HASH_REF
 sub thread_db_args
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $config       = $curproc->config();
     my $ml_name      = $config->{ ml_name };
     my $html_dir     = $config->{ html_archive_dir };

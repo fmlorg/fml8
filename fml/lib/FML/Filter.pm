@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.35 2003/09/20 13:43:29 fukachan Exp $
+# $FML: Filter.pm,v 1.36 2003/10/15 01:03:28 fukachan Exp $
 #
 
 package FML::Filter;
@@ -59,12 +59,12 @@ sub new
 
 
 # Descriptions: entry point for FML::Filter::* modules
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: none
 # Return Value: STR or UNDEF, error reason (string). return undef if ok.
 sub article_filter
 {
-    my ($self, $curproc, $args) = @_;
+    my ($self, $curproc) = @_;
     my $message = $curproc->incoming_message();
     my $config  = $curproc->config();
 
@@ -77,7 +77,7 @@ sub article_filter
 	    if ($config->yes( "use_${function}" )) {
 		$curproc->log("filter(debug): check by $function") if $debug;
 		my $fp = "_apply_$function";
-		$status = $self->$fp($curproc, $args, $message);
+		$status = $self->$fp($curproc, $message);
 	    }
 	    else {
 		$curproc->log("filter(debug): not check by $function") if $debug;
@@ -94,12 +94,12 @@ sub article_filter
 
 
 # Descriptions: size based filtering
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) OBJ($mesg)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($mesg)
 # Side Effects: none
 # Return Value: STR(reason) or 0 (not trapped, ok)
 sub _apply_article_size_filter
 {
-    my ($self, $curproc, $args, $mesg) = @_;
+    my ($self, $curproc, $mesg) = @_;
     my $config = $curproc->config();
 
     use FML::Filter::Size;
@@ -132,12 +132,12 @@ sub _apply_article_size_filter
 
 
 # Descriptions: header based filter
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) OBJ($mesg)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($mesg)
 # Side Effects: none
 # Return Value: STR(reason) or 0 (not trapped, ok)
 sub _apply_article_header_filter
 {
-    my ($self, $curproc, $args, $mesg) = @_;
+    my ($self, $curproc, $mesg) = @_;
     my $config = $curproc->config();
 
     use FML::Filter::Header;
@@ -168,12 +168,12 @@ sub _apply_article_header_filter
 
 
 # Descriptions: filter non MIME format message
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) OBJ($mesg)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($mesg)
 # Side Effects: none
 # Return Value: 0 (always ok, anyway)
 sub _apply_article_non_mime_filter
 {
-    my ($self, $curproc, $args, $mesg) = @_;
+    my ($self, $curproc, $mesg) = @_;
     my $config = $curproc->config();
 
     if ($config->yes( 'use_article_non_mime_filter' )) {
@@ -198,12 +198,12 @@ sub _apply_article_non_mime_filter
 
 
 # Descriptions: syntax check for text(/plain)
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) OBJ($mesg)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($mesg)
 # Side Effects: none
 # Return Value: none
 sub _apply_article_text_plain_filter
 {
-    my ($self, $curproc, $args, $mesg) = @_;
+    my ($self, $curproc, $mesg) = @_;
     my $config = $curproc->config();
 
     if ($config->yes( 'use_article_text_plain_filter' )) {
@@ -233,12 +233,12 @@ sub _apply_article_text_plain_filter
 
 
 # Descriptions: analyze MIME structure and filter it if matched.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) OBJ($mesg)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($mesg)
 # Side Effects: none
 # Return Value: none
 sub _apply_article_mime_component_filter
 {
-    my ($self, $curproc, $args, $mesg) = @_;
+    my ($self, $curproc, $mesg) = @_;
     my $config = $curproc->config();
 
     if ($config->yes( 'use_article_mime_component_filter' )) {
@@ -358,12 +358,12 @@ sub _filter_reject_notice
 =cut
 
 # Descriptions: entry point for FML::Filter::* modules
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: none
 # Return Value: STR or UNDEF, error reason (string). return undef if ok.
 sub command_mail_filter
 {
-    my ($self, $curproc, $args) = @_;
+    my ($self, $curproc) = @_;
     my $message = $curproc->incoming_message();
     my $config  = $curproc->config();
 
@@ -377,7 +377,7 @@ sub command_mail_filter
 	    if ($config->yes( "use_${function}" )) {
 		$curproc->log("filter(debug): check by $function") if $debug;
 		my $fp = "_apply_$function";
-		$status = $self->$fp($curproc, $args, $message);
+		$status = $self->$fp($curproc, $message);
 	    }
 	    else {
 		$curproc->log("filter(debug): not check by $function") if $debug;
@@ -394,12 +394,12 @@ sub command_mail_filter
 
 
 # Descriptions: size based filtering
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) OBJ($mesg)
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($mesg)
 # Side Effects: none
 # Return Value: STR(reason) or 0 (not trapped, ok)
 sub _apply_command_mail_size_filter
 {
-    my ($self, $curproc, $args, $mesg) = @_;
+    my ($self, $curproc, $mesg) = @_;
     my $config = $curproc->config();
 
     use FML::Filter::Size;

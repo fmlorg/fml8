@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.22 2004/01/01 08:43:32 fukachan Exp $
+# $FML: log.pm,v 1.23 2004/01/01 08:48:39 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -70,13 +70,12 @@ sub process
 
 
 # Descriptions: show cgi menu
-#    Arguments: OBJ($self)
-#               OBJ($curproc) HASH_REF($args) HASH_REF($command_args)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
 sub cgi_menu
 {
-    my ($self, $curproc, $args, $command_args) = @_;
+    my ($self, $curproc, $command_args) = @_;
     my $config   = $curproc->config();
     my $log_file = $config->{ log_file };
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.26 2003/08/29 15:33:56 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.27 2003/10/15 08:16:23 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -48,12 +48,12 @@ C<FML::Process::CGI> base class.
 
 
 # Descriptions: print out HTML header + body former part
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub html_start
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $config  = $curproc->config();
     my $title   = $config->{ thread_cgi_title }   || 'thread system interface';
     my $color   = $config->{ thread_cgi_bgcolor } || '#E6E6FA';
@@ -69,12 +69,12 @@ sub html_start
 
 
 # Descriptions: print out body latter part
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub html_end
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
 
     # o.k. end of html
     print end_html;
@@ -84,15 +84,15 @@ sub html_end
 
 # Descriptions: main routine for thread control.
 #               run_cgi() can process request: list, show, change_status
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub run_cgi_main
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $config = $curproc->config();
     my $myname = $config->{ program_name }; # XXX-TODO: valid ?
-    my $ttargs = $curproc->_build_threadtrack_param($args);
+    my $ttargs = $curproc->_build_threadtrack_param();
     my $action = $curproc->safe_param_action() || '';
 
     use Mail::ThreadTrack;
@@ -141,12 +141,12 @@ sub run_cgi_main
 
 
 # Descriptions: prepare basic parameters for Mail::ThreadTrack module
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: HASH_REF
 sub _build_threadtrack_param
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $config = $curproc->config();
     my $myname = $config->{ program_name };
     my $option = $curproc->command_line_options();
@@ -182,17 +182,17 @@ sub _build_threadtrack_param
 
 
 # Descriptions: print navigation bar
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub run_cgi_navigator
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $config  = $curproc->config();
     my $action  = $curproc->safe_cgi_action_name();
     my $target  = $config->{ thread_cgi_target_window } || '_top';
     # XXX-TODO: we should provide $curproc->util->get_ml_list() method ?
-    my $ml_list = $curproc->get_ml_list($args);
+    my $ml_list = $curproc->get_ml_list();
     my $ml_name = $config->{  ml_name };
 
     print start_form(-action=>$action, -target=>$target);

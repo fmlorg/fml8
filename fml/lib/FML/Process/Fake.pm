@@ -3,7 +3,7 @@
 # Copyright (C) 2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Fake.pm,v 1.1 2003/12/24 12:49:09 fukachan Exp $
+# $FML: Fake.pm,v 1.2 2003/12/30 03:57:05 fukachan Exp $
 #
 
 package FML::Process::Fake;
@@ -78,7 +78,7 @@ sub prepare
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->_faker_init($args);
-    $curproc->_faker_prepare($args);
+    $curproc->_faker_prepare();
 
     $eval = $config->get_hook( 'faker_prepare_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
@@ -223,12 +223,12 @@ sub _faker_init
 
 
 # Descriptions: parser of incoming message header.
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub _faker_prepare
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
 
     # 1. parse message 
     $curproc->parse_incoming_message();
@@ -303,11 +303,11 @@ sub _faker_main
 	    # $curproc->_ml_create($ml_name, $ml_domain);
 	}
 
-	$curproc->_process_switch($args, $ml_name, $ml_domain);
+	$curproc->_faker_process_switch($args, $ml_name, $ml_domain);
 
 	if ($curproc->is_valid_ml($ml_name, $ml_domain)) {
 	    $curproc->log("ml found: $ml_name");
-	    $curproc->_process_switch($args, $ml_name, $ml_domain);
+	    $curproc->_faker_process_switch($args, $ml_name, $ml_domain);
 	}
 	else {
 	    $curproc->logerror("fail to create ml: $ml_name");
@@ -361,7 +361,7 @@ sub _faker_analyze_address
 #    Arguments: OBJ($curproc) HASH_REF($args) STR($ml_name) STR($ml_domain)
 # Side Effects: none
 # Return Value: none
-sub _process_switch
+sub _faker_process_switch
 {
     my ($curproc, $args, $ml_name, $ml_domain) = @_;
     my $ml_addr = sprintf("%s@%s", $ml_name, $ml_domain);
