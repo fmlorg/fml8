@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.41 2002/09/06 04:13:25 fukachan Exp $
+# $FML: Utils.pm,v 1.42 2002/09/11 23:18:17 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -195,6 +195,89 @@ sub article_message
     else {
 	LogError("\$curproc->{ article }->{ message } not defined");
 	return undef;
+    }
+}
+
+
+=head1 misc METHODS
+
+=cut
+
+
+# Descriptions: create directory $dir if needed
+#    Arguments: OBJ($curproc) STR($dir) STR($mode)
+# Side Effects: create directory $dir
+# Return Value: NUM(1 or 0)
+sub mkdir
+{
+    my ($curproc, $dir, $mode) = @_;
+    my $config  = $curproc->config();
+    my $dirmode = $config->{ default_directory_mode } || '0700';
+
+    # back up umask
+    my $curmask = umask( 077 ); # full open for readability
+
+    unless (-d $dir) {
+	if (defined $mode) {
+	    if ($mode =~ /^\d+$/) { # NUM 0700
+		_mkpath_num($dir, $mode);
+	    }
+	    elsif ($mode =~ /mode=(\S+)/) {
+		my $xmode = "directory_${1}_mode";
+		if (defined $config->{ $xmode }) {
+		    _mkpath_str($dir, $config->{ $xmode });
+		}
+		else {
+		    LogError("mkdir: invalid mode");
+		}
+	    }
+	    else {
+		LogError("mkdir: invalid mode");
+	    }
+	}
+	elsif ($dirmode =~ /^\d+$/) { # STR 0700
+	    _mkpath_str($dir, $dirmode);
+	}
+	else {
+	    LogError("mkdir: invalid mode");
+	}
+    }
+
+    return( -d $dir ? 1 : 0 );
+}
+
+
+sub _mkpath_num
+{
+    my ($dir, $mode) = @_;
+
+    if ($mode =~ /^\d+$/) { # NUM 0700
+	eval q{ use File::Path;};
+	mkpath([ $dir ], 0, $mode);
+	chmod $mode, $dir; 
+	Log(sprintf("mkdir %s mode=0%o", $dir, $mode));
+    }
+    else {
+	LogError("mkdir: invalid mode (N)");
+    }
+}
+
+
+sub _mkpath_str
+{
+    my ($dir, $mode) = @_;
+
+    if ($mode =~ /^\d+$/) { # STR 0700
+	eval qq{
+	    use File::Path;
+	    mkpath([ \$dir ], 0, $mode);
+	    chmod $mode, \$dir; 
+	    Log(\"mkdirhier $dir mode=$mode\");
+	};
+	LogError($@) if $@;
+    }
+    else {
+	LogError("mkdir: invalid mode (S)");
     }
 }
 
