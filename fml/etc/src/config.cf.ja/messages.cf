@@ -32,7 +32,7 @@ default_message_subject	=	fml system message ($ml_name ML)
 #      History:
 #        Value:
 #     Examples:
-reply_message_subject	=	reply from $ml_name ML
+reply_message_subject	=	fml results ($ml_name ML)
 
 
 # Descriptions:
