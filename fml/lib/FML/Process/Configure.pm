@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.40 2002/05/25 06:58:24 fukachan Exp $
+# $FML: Configure.pm,v 1.41 2002/06/27 08:25:49 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -43,7 +43,7 @@ It make a C<FML::Process::Kernel> object and return it.
 
 =head2 C<prepare($args)>
 
-dummy.
+adjust ml_* and load configuration files.
 
 =cut
 
@@ -61,7 +61,7 @@ sub new
 }
 
 
-# Descriptions: dummy
+# Descriptions: adjust ml_* and load configuration files.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -83,14 +83,14 @@ sub prepare
 
 # Descriptions: check @ARGV, call help() if needed.
 #    Arguments: OBJ($curproc) HASH_REF($args)
-# Side Effects: exit ASAP.
+# Side Effects: exit ASAP if arguments are invalid.
 #               longjmp() to help() if appropriate
 # Return Value: none
 sub verify_request
 {
     my ($curproc, $args) = @_;
-    my $argv = $curproc->command_line_argv();
-    my $len  = $#$argv + 1;
+    my $argv   = $curproc->command_line_argv();
+    my $len    = $#$argv + 1;
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'makefml_verify_request_start_hook' );
@@ -129,9 +129,9 @@ See <FML::Process::Switch()> on C<$args> for more details.
 sub run
 {
     my ($curproc, $args) = @_;
-    my $config  = $curproc->{ config };
-    my $myname  = $curproc->myname();
-    my $argv    = $curproc->command_line_argv();
+    my $config = $curproc->{ config };
+    my $myname = $curproc->myname();
+    my $argv   = $curproc->command_line_argv();
 
     $curproc->_makefml($args);
 }
@@ -212,10 +212,11 @@ sub _makefml
 {
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
+    my $ml_name = $config->{ ml_name };
     my $myname  = $curproc->myname();
     my $argv    = $curproc->command_line_argv();
 
-    my ($method, $ml_name, @options) =  @$argv;
+    my ($method, $argv_ml_name, @options) =  @$argv;
 
     # arguments to pass off to each method
     my $command_args = {
@@ -227,13 +228,6 @@ sub _makefml
 	argv         => $argv,
 	args         => $args,
     };
-
-    # update $config to rewrite $ml_* variable for the virtual domain.
-    # XXX irrespctive of virtual domains or not, we call this method
-    # XXX to update $config->{ ml_name } et. al.
-    # XXX since $config->{ ml_name } is not set here.
-    $curproc->rewrite_config_if_needed($args, $command_args);
-    $command_args->{ ml_name } = $config->{ ml_name };
 
     my $eval = $config->get_hook( 'makefml_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
