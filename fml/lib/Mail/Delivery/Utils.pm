@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.14 2003/12/29 07:31:30 fukachan Exp $
+# $FML: Utils.pm,v 1.15 2004/01/24 09:03:58 fukachan Exp $
 #
 
 package Mail::Delivery::Utils;
@@ -29,15 +29,15 @@ require Exporter;
 	     error
 	     error_clear
 
-	     _set_status_code
-	     _get_status_code
+	     set_status_code
+	     get_status_code
 
-	     _set_target_map
-	     _get_target_map
-	     _set_map_status
-	     _set_map_position
-	     _get_map_status
-	     _get_map_position
+	     set_target_map
+	     get_target_map
+	     set_map_status
+	     set_map_position
+	     get_map_status
+	     get_map_position
 	     _rollback_map_position
 	     _reset_mapinfo
 	     );
@@ -188,11 +188,11 @@ reset the error buffer which C<error_set()> and C<error()> use.
 ##### status codes manipulations
 #####
 
-=head2 _set_status_code($value)
+=head2 set_status_code($value)
 
 save C<($value)> as status code.
 
-=head2 _get_status_code()
+=head2 get_status_code()
 
 get the latest status code.
 
@@ -206,7 +206,7 @@ get the latest status code.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
-sub _get_status_code
+sub get_status_code
 {
     my ($self) = @_;
 
@@ -220,7 +220,7 @@ sub _get_status_code
 #    Arguments: OBJ($self) STR($value)
 # Side Effects: update object
 # Return Value: STR
-sub _set_status_code
+sub set_status_code
 {
     my ($self, $value) = @_;
 
@@ -237,12 +237,12 @@ sub _set_status_code
 
 =head1 METHODS TO HANDLE POSITION at IO MAP
 
-=head2 _set_target_map($map)
+=head2 set_target_map($map)
 
 save the current C<map> name
 where C<map> is a name usable at C<recipient_maps>
 
-=head2 _get_target_map()
+=head2 get_target_map()
 
 return the current C<map>
 where C<map> is a name usable at C<recipient_maps>
@@ -254,7 +254,7 @@ where C<map> is a name usable at C<recipient_maps>
 #    Arguments: OBJ($self) STR($map)
 # Side Effects: update object
 # Return Value: STR
-sub _set_target_map
+sub set_target_map
 {
     my ($self, $map) = @_;
 
@@ -266,7 +266,7 @@ sub _set_target_map
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
-sub _get_target_map
+sub get_target_map
 {
     my ($self) = @_;
 
@@ -276,20 +276,20 @@ sub _get_target_map
 }
 
 
-=head2 _set_map_status($map, $status)
+=head2 set_map_status($map, $status)
 
 save C<$status> for C<$map> IO.
 For example, C<$status> is 'not done'.
 
-=head2 _set_map_position($map, $position)
+=head2 set_map_position($map, $position)
 
 save the C<$position> for C<$map> IO.
 
-=head2 _get_map_status($map)
+=head2 get_map_status($map)
 
 get the current C<$status> for C<$map> IO.
 
-=head2 _get_map_position($map)
+=head2 get_map_position($map)
 
 get the current C<$position> for C<$map> IO.
 
@@ -300,7 +300,7 @@ get the current C<$position> for C<$map> IO.
 #    Arguments: OBJ($self) STR($map) STR($status)
 # Side Effects: update object
 # Return Value: STR
-sub _set_map_status
+sub set_map_status
 {
     my ($self, $map, $status) = @_;
     $self->{ _mapinfo }->{ $map }->{prev_status} =
@@ -313,7 +313,7 @@ sub _set_map_status
 #    Arguments: OBJ($self) STR($map) STR($position)
 # Side Effects: update object
 # Return Value: STR
-sub _set_map_position
+sub set_map_position
 {
     my ($self, $map, $position) = @_;
     $self->{ _mapinfo }->{ $map }->{prev_position} =
@@ -326,7 +326,7 @@ sub _set_map_position
 #    Arguments: OBJ($self) STR($map)
 # Side Effects: update object
 # Return Value: STR
-sub _get_map_status
+sub get_map_status
 {
     my ($self, $map) = @_;
 
@@ -340,7 +340,7 @@ sub _get_map_status
 #    Arguments: OBJ($self) STR($map)
 # Side Effects: update object
 # Return Value: STR
-sub _get_map_position
+sub get_map_position
 {
     my ($self, $map) = @_;
 
@@ -370,7 +370,7 @@ clear information around the latest map operation.
 sub _rollback_map_position
 {
     my ($self) = @_;
-    my $map    = $self->_get_target_map;
+    my $map    = $self->get_target_map;
 
     # count the number of rollback to avoid infinite loop
     if ( $self->{ _map_rollback_info }->{ $map }->{ count } > 2 ) {
@@ -383,12 +383,12 @@ sub _rollback_map_position
 
     my $prev_pos = $self->{ _mapinfo }->{ $map }->{prev_position};
     my $pos      = $self->{ _mapinfo }->{ $map }->{position};
-    $self->_set_map_position($map, $prev_pos);
+    $self->set_map_position($map, $prev_pos);
     Log("Info: rollback $map from $pos to $prev_pos");
 
     my $prev_status = $self->{ _mapinfo }->{ $map }->{prev_status};
     my $status      = $self->{ _mapinfo }->{ $map }->{status};
-    $self->_set_map_status($map, $prev_status);
+    $self->set_map_status($map, $prev_status);
     Log("Info: rollback status of $map to '$prev_status'");
 }
 
@@ -400,7 +400,7 @@ sub _rollback_map_position
 sub _reset_mapinfo
 {
     my ($self) = @_;
-    $self->_set_target_map('');
+    $self->set_target_map('');
     delete $self->{ _mapinfo };
     delete $self->{ _map_rollback_info };
 }

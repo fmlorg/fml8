@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.23 2003/08/23 04:35:45 fukachan Exp $
+# $FML: SMTP.pm,v 1.24 2004/01/24 09:03:58 fukachan Exp $
 #
 
 
@@ -211,7 +211,7 @@ sub _read_reply
 	    }
 
 	    # store the latest status code
-	    if ($buf =~ /^(\d{3})/) { $self->_set_status_code($1);}
+	    if ($buf =~ /^(\d{3})/) { $self->set_status_code($1);}
 
 	    # check status code
 	    if ($buf =~ /^[45]\d{2}\s/) {
@@ -443,9 +443,9 @@ sub deliver
 	    next MAP;
 	}
 
-	$self->_set_target_map($map);
-	$self->_set_map_status($map, 'not done');
-	$self->_set_map_position($map, 0);
+	$self->set_target_map($map);
+	$self->set_map_status($map, 'not done');
+	$self->set_map_position($map, 0);
 
 	# XXX-TODO: correct $max_loop_count evaluation ?
 	# To avoid infinite loop, we enforce some artificial limit.
@@ -480,13 +480,13 @@ sub deliver
 		$self->error_clear;
 
 		# we read the whole $map now.
-		if ($self->_get_map_status($map) eq 'done') {
+		if ($self->get_map_status($map) eq 'done') {
 		    last MTA;
 		}
 	    } # end of MTA: loop
 
 	    # end of MTA_RETRY_LOOP: loop
-	    if ($self->_get_map_status($map) eq 'done') {
+	    if ($self->get_map_status($map) eq 'done') {
 		last MTA_RETRY_LOOP;
 	    }
 
@@ -580,7 +580,11 @@ sub _deliver
     #    IF_ERROR_FOUND: handled in _send_data_to_mta(), so
     #                    return as soon as possible from here.
     $self->_send_data_to_mta($args);
-    if ($self->error) { return;}
+    if ($self->error) {
+	$self->_rollback_map_position;
+	$self->_reset_smtp_transaction;
+	return;
+    }
 
     # 6. QUIT; SMTP session closing ...
     #    IF_ERROR_FOUND: do nothing ?
@@ -648,7 +652,7 @@ sub _send_mail_from
 sub _send_recipient_list_by_recipient_map
 {
     my ($self, $args) = @_;
-    my $map = $self->_get_target_map;
+    my $map = $self->get_target_map;
 
     # open abstract recipient list objects.
     # $map syntax is "type:parameter", e.g.,
@@ -670,8 +674,8 @@ sub _send_recipient_list_by_recipient_map
 	};
 
 	# roll back the previous file offset
-	if ($self->_get_map_position($map) > 0) {
-	    $obj->setpos( $self->_get_map_position($map) );
+	if ($self->get_map_position($map) > 0) {
+	    $obj->setpos( $self->get_map_position($map) );
 	}
 
 	# XXX $obj->get_recipient returns a mail address.
@@ -690,11 +694,11 @@ sub _send_recipient_list_by_recipient_map
 	}
 
 	# save the current position in the file handle
-	$self->_set_map_position($map, $obj->getpos);
+	$self->set_map_position($map, $obj->getpos);
 
 	# done.
 	if ($obj->eof) {
-	    $self->_set_map_status($map, 'done');
+	    $self->set_map_status($map, 'done');
 	}
 
 	# ends
@@ -721,7 +725,7 @@ sub _send_recipient_list
     my ($self, $args) = @_;
 
     # evaluate recipient_maps
-    if ( $self->_get_target_map ) {
+    if ( $self->get_target_map ) {
 	$self->_send_recipient_list_by_recipient_map($args);
     }
 }
@@ -788,7 +792,7 @@ sub _send_data_to_mta
 	$self->_read_reply;
 
 	# XXX if "DATA" transaction cannot start, retry ?
-	if ($self->_get_status_code != '354' || $self->error) {
+	if ($self->get_status_code != '354' || $self->error) {
 	    Log($self->error);
 	    return undef;
 	}
