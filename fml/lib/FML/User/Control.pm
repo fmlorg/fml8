@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.12 2004/05/16 02:42:11 fukachan Exp $
+# $FML: Control.pm,v 1.13 2004/06/27 06:07:12 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -41,7 +41,7 @@ FML::User::Control - utility functions to control user list.
 =cut
 
 
-# Descriptions: standard constructor.
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -71,13 +71,15 @@ sub useradd
     # XXX check if $address is safe (persistent ?).
     my $safe = new FML::Restriction::Base;
     unless ($safe->regexp_match('address', $address)) {
+	$curproc->logerror("unsafe address: <$address>");
 	croak("unsafe address");
     }
 
-    # pass info into reply_message()
+    # pass info into reply_message().
     my $msg_args = $command_args->{ msg_args };
     $msg_args->{ _arg_address } = $address;
 
+    # for convenience.
     my $ml_home_dir = $config->{ ml_home_dir };
 
     # o.k. here we go.
@@ -136,6 +138,7 @@ sub useradd
     }
 
     unless ($trycount) {
+	$curproc->logerror("useradd: no valid target map");
 	$curproc->logerror("fail to add $address");
 	croak("fail to add $address");
     }
@@ -180,6 +183,7 @@ sub userdel
     my $msg_args = $command_args->{ msg_args };
     $msg_args->{ _arg_address } = $address;
 
+    # for convenience.
     my $ml_home_dir = $config->{ ml_home_dir };
 
     $curproc->lock($lock_channel);
@@ -240,6 +244,7 @@ sub userdel
     }
 
     unless ($trycount) {
+	$curproc->logerror("userdel: no valid target map");
 	$curproc->logerror("no such user $address");
 	croak("no such user $address");
     }
@@ -336,6 +341,7 @@ sub _try_chaddr_in_map
     # 3. both conditions are o.k., here we go!
     # XXX-TODO: this condition is correct ?
     # XXX-TODO: we should remove old one when both old and new ones exist.
+    # XXX-TODO: transaction-fy ?
     # XXX WHICH STEP IS IT BETTER TO UPDATE LIST ?
     #  [I] 1. remove the old address only if $new_address not included.
     #      2. add the newadderss
@@ -385,7 +391,7 @@ sub _try_chaddr_in_map
 }
 
 
-# Descriptions: show list
+# Descriptions: show list.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
 # Side Effects: none
@@ -394,8 +400,8 @@ sub print_userlist
 {
     my ($self, $curproc, $command_args, $uc_args) = @_;
     my $config   = $curproc->config();
-    my $maplist  = $uc_args->{ maplist };
-    my $wh       = $uc_args->{ wh };
+    my $maplist  = $uc_args->{ maplist } || [];
+    my $wh       = $uc_args->{ wh }      || undef;
     my $style    = $curproc->get_print_style()      || '';
     my $is_mta   = $curproc->is_under_mta_process() || 0;
     my $msg_args = $command_args->{ msg_args };
@@ -410,6 +416,7 @@ sub print_userlist
 	    my $buf;
 	    $obj->open;
 
+	    # XXX-TODO: we need IO::Adapter->get_key_values_as_str ???
 	  LINE:
 	    while ($x = $obj->get_key_values_as_array_ref()) {
 		$buf = join(" ", @$x) if ref($x) eq 'ARRAY';
