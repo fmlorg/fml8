@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.73 2004/01/02 02:34:53 fukachan Exp $
+# $FML: Kernel.pm,v 1.74 2004/01/18 14:02:19 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -121,6 +121,8 @@ sub _set_charset
     my $lang =
 	$curproc->cgi_var_language() || $curproc->_http_accept_language();
 
+
+    # XXX-TODO: $obj ? -> $charset ?
     use Mail::Message::Charset;
     my $obj     = new Mail::Message::Charset;
     my $charset = $obj->language_to_internal_charset($lang);
@@ -205,6 +207,7 @@ sub _cgi_resolve_ml_specific_variables
 	$config->set('ml_name',     $ml_name);
 	$config->set('ml_home_dir', $ml_home_dir);
 
+	# XXX-TODO: method name .. hmm. $curproc->$obj_$function().
 	# add this ml's config.cf to the .cf list.
 	$curproc->append_to_config_files_list($config_cf);
     }
@@ -304,8 +307,8 @@ sub run
 sub _error_string
 {
     my ($curproc, $r) = @_;
-    my ($key, $msg) = $curproc->parse_exception($r);
-    my $nlmsg       = $curproc->message_nl($key);
+    my ($key, $msg)   = $curproc->parse_exception($r);
+    my $nlmsg         = $curproc->message_nl($key);
 
     if ($r =~ /__ERROR_cgi\.insecure__/) {
 	if ($nlmsg) {
@@ -320,7 +323,6 @@ sub _error_string
     }
 
     eval q{
-	use FML::Log qw(Log LogError);
 	$curproc->logerror($r);
 	my ($k, $v);
 	while (($k, $v) = each %ENV) { $curproc->log("$k => $v");}
@@ -357,7 +359,7 @@ sub _drive_cgi_by_table
 	'se'     => '',
     };
 
-    my $td_attr = {
+    my $td_attr  = {
 	nw       => '',
 	north    => '',
 	ne       => '',
@@ -377,11 +379,11 @@ sub _drive_cgi_by_table
     print "<table border=0 cellspacing=\"0\" cellpadding=\"5\">\n";
     print "\n<!-- new line -->\n";
     print "\n<tr>\n";
-    for my $pos ('nw', 'north', 'ne',
+    for my $pos ('nw',   'north',  'ne',
 		 '!',
 		 'west', 'center', 'east',
 		 '!',
-		 'sw', 'south', 'se') {
+		 'sw',   'south',  'se') {
 	if ($pos eq '!') {
 	    print "</tr>\n";
 	    print "\n<!-- new line -->\n";
@@ -393,7 +395,7 @@ sub _drive_cgi_by_table
 	print "\n<!-- $pos -->\n";
 	print $attr ? "<td $attr>\n" : "<td>\n";
 
-	my $fp   = $function_table->{ $pos };
+	my $fp = $function_table->{ $pos };
 	if ($fp) {
 	    eval q{ $curproc->$fp();};
 	    if ($r = $@) { _error_string($curproc, $r);}
@@ -419,6 +421,8 @@ execute specified command given as FML::Command::*
 sub cgi_execute_command
 {
     my ($curproc, $command_args) = @_;
+
+    # XXX-TODO: who validate $comname, $commode ?
     my $commode = $command_args->{ command_mode };
     my $comname = $command_args->{ comname };
     my $config  = $curproc->config();
@@ -445,10 +449,12 @@ sub cgi_execute_command
 	    $obj->$comname($curproc, $command_args);
 	};
 	unless ($@) {
+	    # XXX-TODO: NL
 	    # XXX-TODO: validate $comname (CSS).
 	    print "OK! $comname succeed.\n";
 	}
 	else {
+	    # XXX-TODO: NL
 	    print "Error! $comname fails.\n<BR>\n";
 	    if ($@ =~ /^(.*)\s+at\s+/) {
 		my $reason    = $@;
@@ -781,8 +787,8 @@ return input address after validating the input
 sub cgi_try_get_address
 {
     my ($curproc) = @_;
-    my $address = '';
-    my $a = '';
+    my $address   = '';
+    my $a         = '';
 
     eval q{ $a = $curproc->safe_param_address_specified();};
     unless ($@) {
@@ -808,6 +814,7 @@ sub cgi_try_get_address
     }
 
     if ($address) {
+	# XXX-TODO: not use $curproc->is_safe_syntax() ?
 	if ($curproc->is_safe_syntax('address', $address)) {
 	    return $address;
 	}
@@ -834,7 +841,7 @@ return input address after validating the input
 sub cgi_try_get_ml_name
 {
     my ($curproc) = @_;
-    my $ml_name = '';
+    my $ml_name   = '';
     my $a = '';
 
     eval q{ $a = $curproc->safe_param_ml_name_specified();};
@@ -861,6 +868,7 @@ sub cgi_try_get_ml_name
     }
 
     if ($ml_name) {
+	# XXX-TODO: not use $curproc->is_safe_syntax() ?
 	if ($curproc->is_safe_syntax('ml_name', $ml_name)) {
 	    return $ml_name;
 	}
@@ -891,6 +899,7 @@ sub safe_cgi_action_name
     my ($curproc) = @_;
     my $name = $curproc->myname();
 
+    # XXX-TODO: not use $curproc->is_safe_syntax() ?
     if ($curproc->is_safe_syntax('action', $name)) {
 	return $name;
     }
