@@ -219,7 +219,7 @@ sub _expand_special_syntax
     }
 
     if ($use_strftime) {
-	eval qq{ require POSIX; import POSIX ();};
+	eval qq{ require POSIX; import POSIX qw(strftime);};
 	unless ($@) {
 	    for my $x ( @order ) {
 		if ($config->{ $x } =~ /\%/) { 
