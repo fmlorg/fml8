@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.17 2004/03/28 10:28:23 fukachan Exp $
+# $FML: DB.pm,v 1.18 2004/03/28 12:13:52 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -21,7 +21,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 use Carp;
 use File::Spec;
 
-my $version = q$FML: DB.pm,v 1.17 2004/03/28 10:28:23 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.18 2004/03/28 12:13:52 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -736,7 +736,7 @@ sub get_thread_data
     my $tail_id = $id_list->[ 0 ] || 1;
 
   KEY:
-    for ($id = $tail_id; $id <= $head_id; $id++) {
+    for my $id (@$id_list) {
 	next KEY if defined $cache->{ $id } && $cache->{ $id };
 
 	# get id array for the thread with the head_id = $id.
