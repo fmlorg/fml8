@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: @template.pm,v 1.1 2001/08/07 12:23:48 fukachan Exp $
+# $FML: Print.pm,v 1.1.1.1 2001/11/02 09:07:39 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -105,16 +105,16 @@ sub _print_ticket_summary
     my $rh_age = $self->{ _age } || {};
     my $fd     = $self->{ _fd } || \*STDOUT;
     my $rh     = $self->{ _hash_table };
-    my $format = "%10s  %5s %6s  %-20s  %s\n";
+    my $format = "%10s  %5s %8s  %-20s  %s\n";
 
     if ($mode eq 'text') {
-	printf($fd $format, 'date', 'age', 'status', 'ticket id', 'articles');
+	printf($fd $format, 'date', 'age', 'status', 'thread id', 'articles');
 	print $fd "-" x60;
 	print $fd "\n";
     }
     else {
 	print "<TD>action\n";
-	print "<TD>date\n"."<TD>age\n"."<TD>status\n"."<TD>ticket id\n";
+	print "<TD>date\n"."<TD>age\n"."<TD>status\n"."<TD>thread id\n";
 	print "<TD>article summary\n";
     }
 
@@ -240,16 +240,19 @@ sub __article_summary
 	    }
 	}
 	close($fh);
+
+	use Mail::Header;
+	my $h = new Mail::Header \@header;
+	my $header_info = $self->_header_summary({
+	    header  => $h,
+	    padding => $padding,
+	}); 
+
+	return STR2EUC( $header_info . $buf );
     }
-
-    use Mail::Header;
-    my $h = new Mail::Header \@header;
-    my $header_info = $self->_header_summary({
-	header  => $h,
-	padding => $padding,
-    }); 
-
-    return $header_info	. $buf;
+    else {
+	return undef;
+    }
 }
 
 
@@ -279,9 +282,23 @@ sub _header_summary
     $from    =~ s/\n/ /g;
 
     my $br = $self->get_mode eq 'html' ? '<BR>' : '';
-    return 
-	$padding. "   From: ". $from ."$br\n". 
-	$padding. "Subject: ". $subject ."$br\n";
+
+    # return buffer
+    my $r = '';
+    $r .= STR2EUC( $padding. "   From: ". $from ."$br\n" );
+    $r .= STR2EUC( $padding. "Subject: ". $subject ."$br\n" );
+
+    return $r;
+}
+
+
+sub STR2EUC
+{
+    my ($str) = @_;
+
+    use Jcode;
+    &Jcode::convert(\$str, 'euc');
+    return $str;
 }
 
 
