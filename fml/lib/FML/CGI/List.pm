@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.3 2003/09/27 04:06:53 fukachan Exp $
+# $FML: List.pm,v 1.4 2003/09/27 04:30:56 fukachan Exp $
 #
 
 package FML::CGI::List;
@@ -37,6 +37,7 @@ sub new
 sub cgi_menu
 {
     my ($self, $curproc, $args, $command_args) = @_;
+    my $config      = $curproc->config();
     my $target      = $curproc->cgi_var_frame_target();
     my $action      = $curproc->cgi_var_action();
     my $map_default = $curproc->cgi_var_address_map();
@@ -54,19 +55,25 @@ sub cgi_menu
 	croak("invalid map: $map_default");
     }
 
+    # natural language-ed name
+    my $name_ml_name = $curproc->message_nl('term.ml_name', 'ml_name');
+    my $name_map     = $curproc->message_nl('term.map',     'map');
+    my $name_show    = $curproc->message_nl('term.show',    'show');
+    my $name_reset   = $curproc->message_nl('term.reset',   'reset');
+
     print start_form(-action=>$action, -target=>$target);
     print hidden(-name => 'command', -default => 'list');
     print table( { -border => undef },
 		Tr( undef,
 		   td([
-		       "ML:",
+		       $name_ml_name,
 		       textfield(-name    => 'ml_name',
 				 -default => $ml_name),
 		       ])
 		   ),
 		Tr( undef,
 		   td([
-		       "map",
+		       $name_map,
 		       scrolling_list(-name    => 'map',
 				      -values  => $map_list,
 				      -default => $map_default,
@@ -75,8 +82,8 @@ sub cgi_menu
 		   )
 		);
 
-    print submit(-name => 'show');
-    print reset(-name  => 'reset');
+    print submit(-name => $name_show);
+    print reset(-name  => $name_reset);
     print end_form;
 }
 

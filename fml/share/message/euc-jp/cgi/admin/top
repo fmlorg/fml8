@@ -1,6 +1,6 @@
 左のナビゲーションバーから、
 ＭＬ(mailing list)とコマンド(command)を選択し、
-submit ボタンを押して下さい。
+$_arg_button_submit ボタンを押して下さい。
 
 <table>
 <tr>

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.26 2003/08/29 15:33:56 fukachan Exp $
+# $FML: Menu.pm,v 1.1 2003/09/25 11:40:57 fukachan Exp $
 #
 
 package FML::CGI::Menu;
@@ -121,7 +121,7 @@ sub run_cgi_main
     # specified command, we need to identify
     # the command specifined in the cgi_navigation and cgi_mein.
     my $navi_command = $curproc->safe_param_navi_command() || '';
-    my $command      = $curproc->safe_param_command() || '';
+    my $command      = $curproc->safe_param_command()      || '';
 
     # updat config: $ml_name is found now (get $ml_name from CGI).
     $config->set('ml_name', $ml_name);
@@ -211,19 +211,24 @@ sub run_cgi_main
 sub run_cgi_navigator
 {
     my ($curproc, $args) = @_;
-    my $config  = $curproc->config();
-    my $action  = $curproc->safe_cgi_action_name();
-    my $target  = '_top';
+    my $target  = $curproc->cgi_var_frame_target();
+    my $action  = $curproc->cgi_var_action();
+
+    # natural language-ed name
+    my $name_ml_name = $curproc->message_nl('term.ml_name', 'ml_name');
+    my $name_command = $curproc->message_nl('term.command', 'command');
+    my $name_change  = $curproc->message_nl('term.change',  'change');
+    my $name_reset   = $curproc->message_nl('term.reset',   'reset');
 
     # 1. ML
     my $ml_name = $curproc->cgi_var_ml_name();
     my $ml_list = $curproc->cgi_var_ml_name_list();
-    my $fml_url = '<A HREF="http://www.fml.org/software/fml-devel/">fml</A>';
-    print "<B>$fml_url admin menu</B>\n<BR>\n";
+    my $title   = $curproc->cgi_var_navigator_title();
+    print $title, "\n";
 
     print start_form(-action=>$action, -target=>$target);
 
-    print "mailing list:\n";
+    print $name_ml_name, ":\n";
     print scrolling_list(-name    => 'ml_name',
 			 -values  => $ml_list,
 			 -default => [ $ml_name ],
@@ -236,7 +241,7 @@ sub run_cgi_navigator
     my $command_default = $navi_command || $command;
     my $command_list    = $curproc->cgi_var_available_command_list();
 
-    print "  command:\n";
+    print $name_command, ":\n";
     print scrolling_list(-name    => 'navi_command',
 			 -values  => $command_list,
 			 -default => [ $command_default ],
@@ -245,8 +250,8 @@ sub run_cgi_navigator
 
 
     # 3. submit
-    print submit(-name => 'submit');
-    print reset(-name  => 'reset');
+    print submit(-name => $name_change);
+    print reset(-name  => $name_reset);
 
     print end_form;
 }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: User.pm,v 1.2 2003/09/27 03:44:05 fukachan Exp $
+# $FML: User.pm,v 1.3 2003/09/27 04:08:14 fukachan Exp $
 #
 
 package FML::CGI::User;
@@ -77,13 +77,19 @@ sub cgi_menu
 	croak("not allowed command");
     }
 
+    # natural language-ed name
+    my $name_ml_name = $curproc->message_nl('term.ml_name', 'ml_name');
+    my $name_command = $curproc->message_nl('term.command', 'command');
+    my $name_submit  = $curproc->message_nl('term.submit',  'submit');
+    my $name_reset   = $curproc->message_nl('term.reset',   'reset');
+
     # create <FORM ... > ... by (start_form() ... end_form())
     print start_form(-action=>$action, -target=>$target);
 
     print table( { -border => undef },
 		Tr( undef,
 		   td([
-		       "ML: ",
+		       $name_ml_name,
 		       textfield(-name    => 'ml_name',
 				 -default => $ml_name,
 				 -size    => 32)
@@ -91,7 +97,7 @@ sub cgi_menu
 		   ),
 		Tr( undef,
 		   td([
-		       "command: ",
+		       $name_command,
 		       textfield(-name    => 'command',
 				 -default => $comname,
 				 -size    => 32)
@@ -119,8 +125,8 @@ sub cgi_menu
 		);
 
 
-    print submit(-name => 'submit');
-    print reset(-name  => 'reset');
+    print submit(-name => $name_submit);
+    print reset(-name  => $name_reset);
     print end_form;
 }
 

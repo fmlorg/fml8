@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.54 2003/09/25 11:40:58 fukachan Exp $
+# $FML: Kernel.pm,v 1.55 2003/09/25 14:58:17 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -468,13 +468,24 @@ sub run_cgi_command_help
     my $navi_command = $curproc->safe_param_navi_command();
     my $command      = $curproc->safe_param_command();
 
+    # natural language-ed name
+    my $name_usage  = $curproc->message_nl('term.usage',  'usage');
+    my $name_submit = $curproc->message_nl('term.submit', 'submit');
+    my $name_show   = $curproc->message_nl('term.show',   'show');
+    my $name_map    = $curproc->message_nl('term.map',    'map');
+    my $msg_args    = {
+	_arg_button_submit => $name_submit,
+	_arg_button_show   => $name_show,
+	_arg_scroll_map    => $name_map,
+    };
+
     if ($navi_command) {
-	print "[Usage]<br> <b> $navi_command </b> <br>\n";
-	$buf = $curproc->message_nl("cgi.$navi_command");
+	print "[$name_usage]<br> <b> $navi_command </b> <br>\n";
+	$buf = $curproc->message_nl("cgi.$navi_command", '', $msg_args);
     }
     elsif ($command) {
-	print "[Usage]<br> <b> $command </b> <br>\n";
-	$buf = $curproc->message_nl("cgi.$command");
+	print "[$name_usage]<br> <b> $command </b> <br>\n";
+	$buf = $curproc->message_nl("cgi.$command", '', $msg_args);
     }
 
     print $buf;
@@ -556,18 +567,25 @@ sub run_cgi_options
     my $domain = $curproc->cgi_var_ml_domain();
     my $action = $curproc->safe_cgi_action_name();
 
-    print "<P> <B> options </B>\n";
+    # natural language-ed name
+    my $name_options = $curproc->message_nl('term.options',  'options');
+    my $name_lang    = $curproc->message_nl('term.language', 'language');
+    my $name_change  = $curproc->message_nl('term.change',   'change');
+    my $name_reset   = $curproc->message_nl('term.reset',    'reset');
+
+    print "<P> <B> $name_options </B>\n";
 
     print start_form(-action=>$action);
 
     # XXX-TODO: $langlist is hard-coded.
-    print "Language:\n";
+    print $name_lang, ":\n";
     my $langlist = [ 'Japanese', 'English' ];
     print scrolling_list(-name   => 'language',
 			 -values => $langlist,
 			 -size   => 1);
 
-    print submit(-name => 'change');
+    print submit(-name => $name_change);
+    print reset(-name  => $name_reset);
 
     print end_form;
 }
