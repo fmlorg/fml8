@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2000,2001 Ken'ichi Fukamachi
+#  Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Parse.pm,v 1.20 2002/01/13 13:26:39 fukachan Exp $
+# $FML: Parse.pm,v 1.21 2002/01/16 13:33:58 fukachan Exp $
 #
 
 package FML::Parse;
@@ -105,7 +105,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
