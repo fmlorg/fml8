@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.12 2001/12/22 14:40:34 fukachan Exp $
+# $FML: DocViewer.pm,v 1.13 2002/02/17 03:07:56 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -70,6 +70,7 @@ sub new
 sub prepare
 {
     my ($curproc, $args) = @_;
+    my $config = $curproc->{ config }; 
 
     my $eval = $config->get_hook( 'fmldoc_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -88,6 +89,7 @@ sub verify_request
 {
     my ($curproc, $args) = @_;
     my $argv = $curproc->command_line_argv();
+    my $config = $curproc->{ config }; 
 
     my $eval = $config->get_hook( 'fmldoc_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -205,6 +207,7 @@ finalize.
 sub finish
 {
     my ($curproc, $args) = @_;
+    my $config = $curproc->{ config }; 
 
     my $eval = $config->get_hook( 'fmldoc_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }

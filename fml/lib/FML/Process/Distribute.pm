@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.63 2002/01/16 13:43:20 fukachan Exp $
+# $FML: Distribute.pm,v 1.64 2002/02/17 03:07:55 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -74,6 +74,7 @@ forward the request to the base class.
 sub prepare
 {
     my ($self, $args) = @_;
+    my $config = $self->{ config };
 
     my $eval = $config->get_hook( 'distribute_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -99,6 +100,7 @@ check the mail sender and the mail loop possibility.
 sub verify_request
 {
     my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'distribute_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -133,6 +135,7 @@ Lastly we unlock the current process.
 sub run
 {
     my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'distribute_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -191,6 +194,7 @@ If needed, we send back error messages to the mail sender.
 sub finish
 {
     my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'distribute_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }

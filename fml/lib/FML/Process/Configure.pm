@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001 Ken'ichi Fukamachi
+# Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.35 2001/12/22 14:25:24 fukachan Exp $
+# $FML: Configure.pm,v 1.36 2002/02/17 03:07:55 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -68,6 +68,9 @@ sub new
 # Return Value: none
 sub prepare
 {
+    my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
+
     my $eval = $config->get_hook( 'makefml_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
@@ -86,6 +89,7 @@ sub verify_request
     my ($curproc, $args) = @_;
     my $argv = $curproc->command_line_argv();
     my $len  = $#$argv + 1;
+    my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'makefml_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -135,7 +139,17 @@ sub run
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
-sub finish { 1;}
+sub finish
+{
+    my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
+
+    my $eval = $config->get_hook( 'makefml_finish_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
+    $eval = $config->get_hook( 'makefml_finish_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+}
 
 
 =head2 help()
@@ -242,37 +256,13 @@ sub _makefml
 }
 
 
-=head2 finish()
-
-finalize.
-
-=cut
-
-
-# Descriptions: clean up in the end of the curreen process.
-#               return error messages et. al.
-#    Arguments: OBJ($curproc) HASH_REF($args)
-# Side Effects: queue flush
-# Return Value: none
-sub finish
-{
-    my ($curproc, $args) = @_;
-
-    my $eval = $config->get_hook( 'makefml_finish_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
-
-    $eval = $config->get_hook( 'makefml_finish_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
-}
-
-
 =head1 AUTHOR
 
 Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
