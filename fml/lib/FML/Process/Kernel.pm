@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.57 2001/10/13 03:11:08 fukachan Exp $
+# $FML: Kernel.pm,v 1.58 2001/10/14 03:00:32 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -821,7 +821,6 @@ sub load_module
 {
     my ($curproc, $args, $pkg) = @_;
 
-    # fake use() to do "use FML::Ticket::$model;"
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
 	return $pkg->new($curproc, $args);
