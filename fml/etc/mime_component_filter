@@ -1,9 +1,9 @@
-# MIME component Filter example.
+# MIME component filter example.
 # 
-# $FML: mime_component_filter,v 1.1 2002/10/21 13:28:31 fukachan Exp $
+# $FML: mime_component_filter,v 1.2 2002/10/26 04:02:28 fukachan Exp $
 #
 
-# allow text/plain messages.
+# allow only text/plain messages.
 text/plain	*		permit
 text/html	*		reject
 multipart/*	!text/plain	reject
