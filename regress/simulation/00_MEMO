@@ -8,16 +8,29 @@
 	XXX
 
 
-[TODO]	chraset と言語(japanese,english)との対応関係を一箇所にまとめて定義
+[TODO]	virtual_mps -> $ml_home_prefix_maps ?
 
-	check:
-		FML/Process/CGI/Kernel.pm
+	[CHECK]	
+		etc/main.cf.in
+		FML/Process/Utils.pm
+
+
+[TODO]	charset と言語(japanese,english)との対応関係を一箇所にまとめて定義
+
+	[CHECK]	
 		FML/Process/Utils.pm
 		FML/Header/Subject.pm
 		FML/Article/Summary.pm
-		FML/Filter/TextPlain.pm
 		Mail/Message/Encode.pm
 		Mail/Message/ToHTML.pm
+
+	OUTPUT をどうすればよいか？で決まる処理はなんとかなる。
+	入力は自動判定になるが、出力は設定ファイルで決まる。
+
+	問題は HTML 化のような入力が動的に変化する場合だ。
+	基本的に入力は自動判定ということで、処理は同様なのだが、
+	出力(たとえば .html の content-type)も入力と同期して変化するべきだ。
+
 
 [TODO]	fml 4 の cf を解釈できる互換ルーチン
 
@@ -87,6 +100,11 @@
 
 [TODO]	$main_cf (HASH_REF) が FML::Process::{Switch,Utils,Kernel}
 	以外で参照されているのは間違いだ！ (FNF?)
+
+
+[TODO]	remove $pcb->{set,get} other than FML::Process::{Kernel,Utils}
+
+	or PCB {category, key} list up in somewhere (fml/etc ?)
 
 
 [TODO]	libexec/error エラーメールのフォワードについて改良
@@ -420,4 +438,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.90 2003/10/17 06:20:13 fukachan Exp $
+$FML: 00_MEMO,v 1.91 2003/10/18 04:37:42 fukachan Exp $
