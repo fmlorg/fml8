@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.37 2002/01/13 11:33:51 fukachan Exp $
+# $FML: Message.pm,v 1.38 2002/01/13 11:37:10 fukachan Exp $
 #
 
 package Mail::Message;
@@ -201,7 +201,7 @@ MIME delimiters and others in the same Mail::Message framework.
 
 =head1 METHODS to create a message object
 
-=head2 C<new($args)>
+=head2 new($args)
 
 constructor which makes C<one> message object.
 
@@ -365,7 +365,7 @@ sub __build_message
 }
 
 
-=head2 C<dup_header()>
+=head2 dup_header()
 
 duplicate a message chain.
 Precisely speaking, it duplicates only the header object
@@ -417,7 +417,7 @@ sub dup_header
 
 =head1 METHODS TO PARSE
 
-=head2 C<parse($args)>
+=head2 parse($args)
 
 read data from file descriptor C<$fd> and parse it to the mail header
 and the body.
@@ -600,16 +600,16 @@ sub _build_body_object
 }
 
 
-=head2 C<rfc822_message_header()>
+=head2 rfc822_message_header()
 
 return Mail::Header object corresponding to the header part for the
 object C<$self>.
 
-=head2 C<rfc822_message_body()>
+=head2 rfc822_message_body()
 
 alias of C<rfc822_message_body_head()>.
 
-=head2 C<rfc822_message_body_head()>
+=head2 rfc822_message_body_head()
 
 return the first or the head Mail::Message object in a chain for the
 body part of the message C<$self>.
@@ -657,7 +657,7 @@ sub rfc822_message_body
 }
 
 
-=head2 C<find($args)>
+=head2 find($args)
 
 return the first C<Mail::Message> object with the specified attrribute.
 You can specify C<data_type> in C<$args> HASH REFERENCE.
@@ -712,7 +712,7 @@ sub find
 }
 
 
-=head2 C<header_data_type()>
+=head2 header_data_type()
 
 return the C<type> string. It is the whole message type which is
 speculated from header C<Content-Type:>.
@@ -774,13 +774,13 @@ sub _header_data_type
 
 =head1 METHODS to manipulate a chain
 
-=head2 C<head_message()>
+=head2 head_message()
 
 no argument.
 It return the head object of a chain of C<Mail::Message> objects.
 Usually it is the header part.
 
-=head2 C<last_message()>
+=head2 last_message()
 
 no argument.
 It return the last object of a chain of C<Mail::Message> objects.
@@ -871,17 +871,17 @@ sub prev_message
 
 =head1 METHODS to print
 
-=head2 C<print( $fd )>
+=head2 print( $fd )
 
 print out a chain of messages to the file descriptor $fd.
 If $fd is not specified, STDOUT is used.
 
-=head2 C<set_print_mode(mode)>
+=head2 set_print_mode(mode)
 
 set print mode to C<mode>.
 The available <mode> is C<raw> or C<smtp>.
 
-=head2 C<reset_print_mode()>
+=head2 reset_print_mode()
 
 reset print() mode.
 It sets the mode to be C<raw>.
@@ -1127,7 +1127,7 @@ sub _print_messsage_on_disk
 
 =head1 METHODS to manipulate a multipart message
 
-=head2 C<build_mime_multipart_chain($args)>
+=head2 build_mime_multipart_chain($args)
 
 build a mime message by scratch.
 This may be obsolete since
@@ -1184,7 +1184,7 @@ sub build_mime_multipart_chain
 }
 
 
-=head2 C<parse_and_build_mime_multipart_chain($args)>
+=head2 parse_and_build_mime_multipart_chain($args)
 
 parse the multipart mail. Actually it calculates the begin and end
 offset for each part of content, not split() and so on.
@@ -1455,7 +1455,7 @@ sub _get_mime_header
 }
 
 
-=head2 C<build_mime_header($args)>
+=head2 build_mime_header($args)
 
 make a fundamental mime header fields and return it.
 
@@ -1559,11 +1559,11 @@ sub _set_pos
 
 =head1 METHODS (UTILITY FUNCTIONS)
 
-=head2 C<size()>
+=head2 size()
 
 return the message size.
 
-=head2 C<is_empty()>
+=head2 is_empty()
 
 return this message has empty content or not.
 
@@ -1623,7 +1623,7 @@ sub is_empty
 }
 
 
-=head2 C<get_encoding_mechanism()>
+=head2 get_encoding_mechanism()
 
 return encoding type for specified Mail::Message not whole mail.
 The return value is one of base64, quoted-printable or undef.
@@ -1652,7 +1652,7 @@ sub get_encoding_mechanism
 }
 
 
-=head2 C<get_offset()>
+=head2 get_offset()
 
 return offset information in the data.
 return value is ARRAY
@@ -1675,11 +1675,11 @@ sub get_offset
 }
 
 
-=head2 C<header_size()>
+=head2 header_size()
 
 get whole header size for this object ($self)
 
-=head2 C<body_size()>
+=head2 body_size()
 
 get whole body size for this object ($self)
 
@@ -1708,7 +1708,7 @@ sub body_size
 }
 
 
-=head2 C<envelope_sender()>
+=head2 envelope_sender()
 
 return reverse_path for this object ($self)
 
@@ -1726,7 +1726,7 @@ sub envelope_sender
 }
 
 
-=head2 C<get_data_type()>
+=head2 get_data_type()
 
 return the data type of the given message object ($self) not the whole
 mail message.
@@ -1748,11 +1748,11 @@ sub get_data_type
 }
 
 
-=head2 C<num_paragraph()>
+=head2 num_paragraph()
 
 return the number of paragraphs in the message ($self).
 
-=head2 C<nth_paragraph($n)>
+=head2 nth_paragraph($n)
 
 return the string of C<$n>-th paragraph.
 For example, C<nth_paragraph(1)> returns the 1st paragraph.
@@ -1850,12 +1850,12 @@ sub _evaluate_pmap
 }
 
 
-=head2 C<header_in_body_part()>
+=head2 header_in_body_part()
 
 return header string in the message content.
 It is mie header for whole mail or each message of MIME/multipart.
 
-=head2 C<data_in_body_part($size)>
+=head2 data_in_body_part($size)
 
 get body string in the message content, which is the whole mail (plain
 text) or body part of a block of multipart.
@@ -1908,7 +1908,7 @@ sub data_in_body_part
 }
 
 
-=head2 C<get_first_plaintext_message($args)>
+=head2 get_first_plaintext_message($args)
 
 return the Messages object for the first "plain/text" message in a
 chain. For example,
@@ -1948,7 +1948,7 @@ sub get_first_plaintext_message
 }
 
 
-=head2 C<set_log_function()>
+=head2 set_log_function()
 
 internal use. set CODE REFERENCE to the log function
 
@@ -1966,7 +1966,7 @@ sub set_log_function
 }
 
 
-=head2 C<get_data_type_list()>
+=head2 get_data_type_list()
 
 show the list of data_types in the chain order.
 This is defined for debug and removed in the future.
