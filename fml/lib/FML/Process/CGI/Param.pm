@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Param.pm,v 1.7 2001/11/13 15:19:18 fukachan Exp $
+# $FML: Param.pm,v 1.8 2001/11/25 09:12:58 fukachan Exp $
 #
 
 package FML::Process::CGI::Param;
@@ -52,10 +52,10 @@ sub safe_param
 {
     my ($self, $key) = @_;
 
-    use FML::Process::SafeData;
-    my $safe = new FML::Process::SafeData;
-    my $safe_param_regexp  = $safe->cgi_param_regexp();
-    my $safe_method_regexp = $safe->cgi_method_regexp();
+    use FML::Restriction::CGI;
+    my $safe = new FML::Restriction::CGI;
+    my $safe_param_regexp  = $safe->param_regexp();
+    my $safe_method_regexp = $safe->method_regexp();
 
     print STDERR "\n<!-- check param $key -->\n" if $debug;
 
@@ -92,10 +92,10 @@ sub safe_paramlist
     my ($self, $numregexp, $key) = @_;
     my (@list) = ();
 
-    use FML::Process::SafeData;
-    my $safe = new FML::Process::SafeData;
-    my $safe_param_regexp  = $safe->cgi_param_regexp();
-    my $safe_method_regexp = $safe->cgi_method_regexp();
+    use FML::Restriction::CGI;
+    my $safe = new FML::Restriction::CGI;
+    my $safe_param_regexp  = $safe->param_regexp();
+    my $safe_method_regexp = $safe->method_regexp();
 
     # match method and return HASH ARRAY with matching values
     $key = $safe_method_regexp->{ $key };
