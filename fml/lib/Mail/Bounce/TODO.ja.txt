@@ -20,3 +20,19 @@
 	ハッシュで {
 		駄目そうなメールアドレス => 理由
 	}
+
+
+○ 日本語のトラップはどうするとよい？
+
+### VERY FUNDAMENTAL CONFIG ###
+$ErrorCodePat = '55\d|5\.\d\.\d';
+$TrapWord     = 'unknown \S+|\S+ unknown|\S+ not known| not found';
+
+# regexp
+$RE_SJIS_C = '[\201-\237\340-\374][\100-\176\200-\374]';
+$RE_SJIS_S = "($RE_SJIS_C)+";
+$RE_EUC_C  = '[\241-\376][\241-\376]';
+$RE_EUC_S  = "($RE_EUC_C)+";
+$RE_JIN    = '\033\$[\@B]';
+$RE_JOUT   = '\033\([BJ]';
+###############################
