@@ -195,7 +195,12 @@ sub _deliver_article
     
     unless ( $config->yes( 'use_article_delivery' ) ) {
 	return;
-    }	
+    }
+
+    # SMTP-FROM is a must!
+    unless ( $config->{'maintainer'} ) {
+	return;
+    }
 
     # distribute article
     use MailingList::Delivery;
@@ -230,7 +235,7 @@ sub _deliver_article
 		      {
 			  'smtp_servers'    => $config->{'smtp_servers'},
 
-			  'smtp_sender'     => 'rudo',
+			  'smtp_sender'     => $config->{'maintainer'},
 			  'recipient_maps'  => $config->{recipient_maps},
 			  'recipient_limit' => $config->{recipient_limit},
 
