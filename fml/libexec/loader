@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $Id: loader,v 1.13 2001/03/09 04:24:41 fukachan Exp $ 
+# $Id: loader,v 1.14 2001/03/20 15:42:35 fukachan Exp $ 
 # $FML$
 #
 
@@ -68,7 +68,8 @@ sub Bootstrap
     # set up @INC
     push(@INC, split(/\s+/, $main_cf->{ lib_dir }));
 
-    # 2.2 load $version depended process_switch
+    # 2.2 load version dependent Bootstrap2(), 
+    #     which is imported from FML::Process::Switch
     eval {
 	require FML::Process::Switch;
     };
@@ -91,16 +92,22 @@ loader C<[-c main.cf]> C<[--debug]> C<[--ctladdr]> [ml_home_dir]
 
 =head1 DESCRIPTION
 
-The loader resolves fml version dependence.
-It checks /etc/fml/main.cf and prepare @INC for some fml version.
-The real process switch routine is dependent on fml version.
+Perl modules C<fml> uses are dependent on fml version.
+C<loader> resolves fml version dependence by checking
+/etc/fml/main.cf and prepare @INC for some fml version.
 
-C<libexec/fml/loader> switches itself to a program specified by $0.
-C<libexec/fml/$VERSION/process_switch> analyzes several conditions
-specified by main.cf, @INC and $0 et. al.
-The swithing is done in libexec/fml/$VERSION/process_switch.
-See C<libexec/fml/$VERSION/process_switch> for more details on process
-switching.
+C<libexec/fml/loader> loads version dependent C<FML::Process::Switch>
+and executes C<Bootstrap2()> function.
+
+It analyzes $0 and knows who I am.
+It determies which class it use.
+The C<$class> module is one of C<FML::Process::$program>.
+
+C<FML::Process::Flow::ProcessStart($class, ..)> starts the program
+specified by C<$class>.
+See C<FML::Process::Switch> for more details.
+
+=head1 COMMAND LINE OPTIONS
 
 C<-c main.cf>
     main.cf alternative
@@ -109,13 +116,14 @@ C<--debug>
     debug on.
 
 C<--ctladdr> 
-    execute fml/libexec/command.
+    fml.pl --cltaddr executes FML::Process::Command.
 
 C<--params> 
     --params 'key1=value1 key2=value2 ...'
 
-=cut
+=head1 SEE ALSO
 
+L<FML::Process::Switch>
 
 =head1 AUTHOR
 

@@ -27,9 +27,14 @@ fml のブートしていく様
 		@ARGV を評価し、
 		どのＭＬの config.cf 群をロードすればいいのかを準備する。
 		変数の評価と展開には libexec/Standalone.pm を用います。
+		<BR>		 
+		これはあまりよくないような気がします。
+		libexec/ を @INC に加えないといけないこと、
+		libexec/loader と libexec/Standalone.pm の２つが
+		入れ換えないといけないものになってしまうので。
 
 	<LI>	次に
-		FML::Process::Switchn
+		FML::Process::Switch
 		( バージョン依存 )ファイルを
 		ロードします。
 	   <UL>
@@ -37,25 +42,25 @@ fml のブートしていく様
 		Bootstrap2() および ProcessSwitch() を実行し、
 		配送用、コマンドモード用などの各
 		プログラム/プロセスなどへ制御を移します(分岐する)。
-		この時は
-		$0 から自分の名前を知り、
+		この時は $0 から自分の名前を知り、
 		どのプロセスへ分岐すればいいのかを判断しています。
 
 		<LI>
 		(ポリモーフィズムの例)
 		モジュールをダイナミックバインディングし、
 		該当するプロセスオブジェクトを生成する。
-		そして、プロセスをスタートさせる。
+		そして、プロセスをスタートさせます。
 		<BR>
-		FML::Process::Flow でどのように実行するかが
-		定義されています。具体的には
+		FML::Process::Flow の中に、
+		どのように fml プロセスを実行するかが
+		定義されています。
 <PRE>
     $process = new FML::Process::なにか;
     $process->prepare($args);
     $process->run($args);
     $process->finish($args);
 </PRE>
-		などと定義されています。
+		のように実行されています。
 		各プロセスは、それぞれについて適当な関数を
 		用意してください。
 
@@ -63,15 +68,28 @@ fml のブートしていく様
 </UL>
 
 <HR>
+<P>
+○ loader から次々と呼ばれていく様子は、例えば配送処理の場合、次のよう
+になる。
+
+libexec/loader は FML::Process::Switch をロードし、
+FML::Process::Distribute を実行すると決める。
+
+FML::Process::Flow::ProcessStart() は引数として
+FML::Process::Distribute を渡され、
+FML::Process::Distribute を実行していく。
+
+<P>
 ○ クラスの階層構造？
 
-FML::Process::Distribute-|
-FML::Process::Command   -|>- FML::Process::Kernel
-FML::Process::Mead      -|    |   
-                              |->  FML::Parse
-                              |->  FML::Config
-                              |->  FML::Log
-                              |->   ... その他 ...
+<PRE>
+FML::Process::Distribute >-|
+FML::Process::Command    >-|-- FML::Process::Kernel
+FML::Process::Mead       >-|    |   
+                                |-use-a FML::Parse
+                                |-use-a FML::Config
+                                |-use-a FML::Log
+                                |-use-a  ... その他 ...
 </PRE>
 
 <!-- =================================================================== -->
