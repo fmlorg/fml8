@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: Parse.pm,v 1.12 2001/04/03 09:45:41 fukachan Exp $
+# $FML: Parse.pm,v 1.13 2001/04/06 16:25:41 fukachan Exp $
 #
 
 package FML::Parse;
@@ -63,55 +63,24 @@ sub new
 sub _parse
 {
     my ($self, $curproc, $fd) = @_;
-    my ($header, $header_size);
-    my $body_size;
-    my $total_buffer_size;
-    my ($p, $buf);
 
-    # extract header and put it to $header
-    while ($p = sysread($fd, $_, 1024)) {
-	$total_buffer_size += $p;
-	$buf .= $_; 
-	if (($p = index($buf, "\n\n", 0)) > 0) {
-	    $header      = substr($buf, 0, $p + 1);
-	    $header_size = $p + 1;
-	    $InComingMessage = substr($buf, $p + 2);
-	    last;
-	}
-    }
+    use Mail::Message;
+    my $msg = Mail::Message->parse( {
+	fd           => $fd,
+	header_class => 'FML::Header',
+    });
 
-    # extract mail body and put it to $FML::Parse::InComingMessage
-    while ($p = sysread($fd, $_, 1024)) {
-	$total_buffer_size += $p;
-	$InComingMessage     .= $_;
-    }
+    # log information
+    my $header_size = $msg->header_size();
+    my $body_size   = $msg->body_size();
+    Log("read header=$header_size body=$body_size");
 
-    # read the message (mail body) from the incoming mail
-    $body_size = length($InComingMessage);
-
-    Log("read total=$total_buffer_size header=$header_size body=$body_size");
-
-    my @h = split(/\n/, $header);
-    my $x;
-    for $x (@h) { $x .= "\n";}
-
-    # save unix-from (mail-from) in PCB and remove it in the header
-    if ($h[0] =~ /^From\s/o) {
+    if (defined $msg->envelope_sender()) {
 	my $pcb = $curproc->{ pcb };
-	$pcb->set('credential', 'unix-from', $h[0]);
-	shift @h;
+	$pcb->set('credential', 'unix-from', $msg->envelope_sender());
     }
 
-    # extract each field from the header array
-    my $r_header = new FML::Header \@h, Modify => 0;
-    my $r_body   = new Mail::Message {
-	boundary  => $r_header->mime_boundary(),
-	data_type => $r_header->data_type(),
-	data      => \$InComingMessage,
-    };
-
-    # return ( $ref_to_mail_header, $ref_to_mail_body, $error_code);
-    return ($r_header, $r_body, 0);
+    return $msg;
 }
 
 
