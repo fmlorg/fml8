@@ -99,8 +99,8 @@ sub open
 	}
     }
     elsif ($self->{'_type'} eq 'unix.group') {
-	my @x = getgrnam( $self->{_name} );
-	my @members = split ' ', $x[3];
+	my (@x)       = getgrnam( $self->{_name} );
+	my (@members) = split ' ', $x[3];
 	$self->{_members}     = \@members;
 	$self->{_num_members} = $#members;
 	$self->{_counter}     = 0;
