@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.6 2002/09/28 05:36:03 fukachan Exp $
+# $FML: Digest.pm,v 1.1 2002/11/17 08:04:03 fukachan Exp $
 #
 
 package FML::Digest;
@@ -150,7 +150,8 @@ sub create_multipart_message
     my $ml_name   = $config->{ ml_name };
     my $charset   = $config->{ template_file_charset };
     my $seq_file  = $config->{ digest_sequence_file };
-    my $msgopts   = { recipient_map => $seq_file }; 
+    my $rcptmaps  = $config->get_as_array_ref('digest_recipient_maps');
+    my $msgopts   = { recipient_maps => $rcptmaps }; 
     my $count_ok  = 0;
     my $count_err = 0;
 

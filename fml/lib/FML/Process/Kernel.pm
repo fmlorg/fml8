@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.138 2002/09/22 15:01:22 fukachan Exp $
+# $FML: Kernel.pm,v 1.139 2002/10/22 02:28:57 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1087,6 +1087,51 @@ makefml not support message handling not yet.
 =cut
 
 
+sub _analyze_recipients
+{
+    my ($curproc, $args) = @_;
+    my $recipient      = [];
+    my $recipient_maps = [];
+
+    if (defined($args->{recipient})) {
+	if (ref($args->{recipient}) eq 'ARRAY') {
+	    $recipient = $args->{ recipient };
+	}
+	elsif (ref($args->{recipient}) eq '') {
+	    $recipient = [ $args->{ recipient } ];
+	}
+	else {
+	    LogError("reply_message: wrong type recipient");
+	}
+    }
+
+    if (defined($args->{recipient_map})) {
+	unless (ref($args->{recipient_map})) {
+	    $recipient_maps = [ $args->{ recipient_map } ];
+	}
+	else {
+	    LogError("reply_message: wrong type recipient_map");
+	}
+    }
+
+    if (defined($args->{recipient_maps})) {
+	if (ref($args->{recipient_maps}) eq 'ARRAY') {
+	    $recipient_maps = $args->{ recipient_maps };
+	}
+	else {
+	    LogError("reply_message: wrong type recipient_maps");
+	}
+    }
+
+    # if both specified, use default sender.
+    if (not $recipient and not $recipient_maps) {
+	$recipient = [ $curproc->{ credential }->sender() ];
+    }
+
+    return ($recipient, $recipient_maps);
+}
+
+
 # Descriptions: set reply message
 #    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($args)
 # Side Effects: none
@@ -1102,16 +1147,8 @@ sub reply_message
 	return;
     }
 
-    my $recipient = [ $curproc->{ credential }->sender() ];
-
-    if (defined($args->{recipient})) {
-	if (ref($args->{recipient}) eq 'ARRAY') {
-	    $recipient = $args->{ recipient };
-	}
-	elsif (ref($args->{recipient}) eq '') {
-	    $recipient = [ $args->{ recipient } ];
-	}
-    }
+    # recipients list
+    my ($recipient, $recipient_maps) = $curproc->_analyze_recipients($args);
 
     # check text messages and fix if needed.
     unless (ref($msg)) {
@@ -1119,7 +1156,8 @@ sub reply_message
 	$msg .= "\n" unless $msg =~ /\n$/;
     }
 
-    $curproc->_append_message_into_queue($msg, $args, $recipient);
+    $curproc->_append_message_into_queue($msg, $args, 
+					 $recipient, $recipient_maps);
 
     if (defined $args->{ always_cc }) {
 	# only if $recipient above != always_cc, duplicate $msg message.
@@ -1165,21 +1203,23 @@ sub _array_is_different
 
 
 # Descriptions: add the specified $msg into on memory queue
-#    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($args) ARRAY_REF($recipient)
+#    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($args)
+#               ARRAY_REF($recipient) ARRAY_REF($recipient_maps)
 # Side Effects: update on momory queue which is on PCB area.
 # Return Value: none
 sub _append_message_into_queue
 {
-    my ($curproc, $msg, $args, $recipient) = @_;
+    my ($curproc, $msg, $args, $recipient, $recipient_maps) = @_;
     my $pcb      = $curproc->{ pcb };
     my $category = 'reply_message';
     my $class    = 'queue';
     my $rarray   = $pcb->get($category, $class) || [];
 
     $rarray->[ $#$rarray + 1 ] = {
-	message   => $msg,
-	type      => ref($msg) ? ref($msg) : 'text',
-	recipient => $recipient,
+	message        => $msg,
+	type           => ref($msg) ? ref($msg) : 'text',
+	recipient      => $recipient,
+	recipient_maps => $recipient_maps,
     };
 
     $pcb->set($category, $class, $rarray);
@@ -1200,19 +1240,22 @@ sub _reply_message_recipient_keys
     my $rarray   = $pcb->get($category, $class) || [];
     my %rcptattr = ();
     my %rcptlist = ();
-    my ($rcptlist, $key, $type) = ();
+    my %rcptmaps = ();
+    my ($rcptlist, $rcptmaps, $key, $type) = ();
 
     for my $m (@$rarray) {
 	if (defined $m->{ recipient } ) {
 	    $rcptlist = $m->{ recipient };
+	    $rcptmaps = $m->{ recipient_maps };
 	    $type     = ref($m->{ message });
-	    $key      = _gen_recipient_key( $rcptlist );
+	    $key      = _gen_recipient_key( $rcptlist, $rcptmaps );
 	    $rcptattr{ $key }->{ $type }++;
 	    $rcptlist{ $key } = $rcptlist;
+	    $rcptmaps{ $key } = $rcptmaps;
 	}
     }
 
-    return ( \%rcptattr, \%rcptlist );
+    return ( \%rcptattr, \%rcptlist, \%rcptmaps );
 }
 
 
@@ -1222,14 +1265,36 @@ sub _reply_message_recipient_keys
 # Return Value: STR
 sub _gen_recipient_key
 {
-    my ($rarray) = @_;
+    my ($rarray, $rmaps) = @_;
+    my $key = '';
 
     if (defined $rarray) {
-	return join(" ", @$rarray);
+	if (ref($rarray) eq 'ARRAY') {
+	    $key = join(" ", @$rarray);
+	}
+	else {
+	    LogError("wrong \$rarray");
+	}
     }
-    else {
-	return '';
+
+    if (defined $rmaps) {
+	if ($key) { 
+	    LogError("both \$rarray and \$rmaps defined");
+	    LogError("array=(@$rarray)") if ref($rarray);
+	    LogError("maps=\$rmaps");
+	}
+
+	if (ref($rmaps) eq 'ARRAY') {
+	    $key = join(" ", @$rmaps);
+	}
+	else {
+	    LogError("wrong \$rmaps");
+	}
     }
+
+    Log("recipient_key = <$key>");
+
+    return $key;
 }
 
 
@@ -1357,7 +1422,7 @@ sub inform_reply_messages
     #    2. pick up messages for it/them.
     #       merge messages by types if needed.
     #
-    my ($attr, $list)  = $curproc->_reply_message_recipient_keys();
+    my ($attr, $list, $maps)  = $curproc->_reply_message_recipient_keys();
     my $need_multipart = 0;
 
     for my $key (keys %$list) {
@@ -1367,6 +1432,7 @@ sub inform_reply_messages
 		$curproc->queue_in($category, {
 		    recipient_key  => $key,
 		    recipient_list => $list->{ $key },
+		    recipient_maps => $maps->{ $key },
 		    recipient_attr => $attr,
 		});
 	    }
@@ -1396,6 +1462,7 @@ sub queue_in
     my $is_multipart = 0;
     my $rcptkey      = '';
     my $rcptlist     = [];
+    my $rcptmaps     = [];
     my $msg          = '';
 
     # override parameters (may be processed here always)
@@ -1408,6 +1475,7 @@ sub queue_in
 	$subject   = $a->{'subject'}        if defined $a->{'subject'};
 	$rcptkey   = $a->{'recipient_key'}  if defined $a->{'recipient_key'};
 	$rcptlist  = $a->{ recipient_list } if defined $a->{'recipient_list'};
+	$rcptmaps  = $a->{ recipient_maps } if defined $a->{'recipient_maps'};
 
 	# we need multipart style or not ?
 	if (defined $a->{'recipient_attr'}) {
@@ -1471,7 +1539,8 @@ sub queue_in
 	for my $m ( @$mesg_queue ) {
 	    my $q = $m->{ message };
 	    my $t = $m->{ type };
-	    my $r = _gen_recipient_key( $m->{ recipient } );
+	    my $r = _gen_recipient_key($m->{ recipient }, 
+				       $m->{ recipient_maps } );
 
 	    # pick up only messages returned to specified $rcptkey
 	    next QUEUE unless $r eq $rcptkey;
@@ -1494,7 +1563,8 @@ sub queue_in
 	for my $m ( @$mesg_queue ) {
 	    my $q = $m->{ message };
 	    my $t = $m->{ type };
-	    my $r = _gen_recipient_key( $m->{ recipient } );
+	    my $r = _gen_recipient_key($m->{ recipient }, 
+				       $m->{ recipient_maps } );
 
 	    next QUEUE unless $r eq $rcptkey;
 
@@ -1525,7 +1595,8 @@ sub queue_in
 	for my $m ( @$mesg_queue ) {
 	    my $q = $m->{ message };
 	    my $t = $m->{ type };
-	    my $r = _gen_recipient_key( $m->{ recipient } );
+	    my $r = _gen_recipient_key($m->{ recipient },
+				       $m->{ recipient_maps });
 
 	    next QUEUE unless $r eq $rcptkey;
 
@@ -1569,7 +1640,15 @@ sub queue_in
 
     if (defined $queue) {
 	$queue->set('sender',     $sender);
-	$queue->set('recipients', $rcptlist);
+
+	if ($rcptlist) {
+	    $queue->set('recipients', $rcptlist);
+	}
+
+	if ($rcptmaps) {
+	    $queue->set('recipient_maps', $rcptmaps);
+	}
+
 	$queue->in( $msg ) && Log("queue=$qid in");
 	$queue->setrunnable();
 

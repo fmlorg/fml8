@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Digest.pm,v 1.1 2002/11/16 14:25:08 fukachan Exp $
+# $FML: Digest.pm,v 1.2 2002/11/17 08:03:09 fukachan Exp $
 #
 
 package FML::Process::Digest;
@@ -214,7 +214,7 @@ sub finish
     my $eval = $config->get_hook( 'digest_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
-    # $curproc->inform_reply_messages();
+    $curproc->inform_reply_messages();
     # $curproc->queue_flush();
 
     $eval = $config->get_hook( 'digest_finish_end_hook' );
