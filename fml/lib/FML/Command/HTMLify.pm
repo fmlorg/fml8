@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.2 2002/04/21 04:54:30 fukachan Exp $
+# $FML: HTMLify.pm,v 1.3 2002/04/22 04:02:01 fukachan Exp $
 #
 
 package FML::Command::HTMLify;
@@ -16,7 +16,7 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Command::HTMLify - utility functions to convert 
+FML::Command::HTMLify - utility functions to convert
 
 =head1 SYNOPSIS
 
@@ -30,9 +30,9 @@ and file in C<$ml_home_dir>.
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub convert
 {
@@ -55,7 +55,7 @@ sub convert
 
 	if ($is_subdir_exists) {
 	    my (@x) = sort _sort_subdirs @$subdirs;
-	    print STDERR "subdirs; @x \n";		
+	    print STDERR "subdirs; @x \n";
 	    for my $xdir (sort _sort_subdirs @$subdirs) {
 		eval q{
 		    use Mail::Message::ToHTML;

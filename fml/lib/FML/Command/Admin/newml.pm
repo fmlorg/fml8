@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.28 2002/04/24 03:59:15 fukachan Exp $
+# $FML: newml.pm,v 1.29 2002/04/24 04:35:39 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -322,7 +322,7 @@ sub _setup_cgi_interface
     #
     # 2. disable CGI access by creating a dummy .htaccess
     #    install .htaccess only for the first time.
-    # 
+    #
     unless ( $is_dir_exists{ $cgi_base_dir } ) {
 	use File::Spec;
 	my $src   = File::Spec->catfile($template_dir, 'dot_htaccess');

@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.17 2002/04/20 04:25:22 fukachan Exp $
+# $FML: HTMLify.pm,v 1.18 2002/04/20 05:02:27 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -126,7 +126,7 @@ sub run
     # main converter
     use FML::Command::HTMLify;
     &FML::Command::HTMLify::convert($curproc, $args, {
-	src_dir => $src_dir, 
+	src_dir => $src_dir,
 	dst_dir => $dst_dir,
     });
 

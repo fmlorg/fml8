@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: TrafficMonitor.pm,v 1.4 2002/01/16 13:43:20 fukachan Exp $
+# $FML: TrafficMonitor.pm,v 1.5 2002/04/20 11:22:09 fukachan Exp $
 #
 
 package FML::Filter::TrafficMonitor;
@@ -32,9 +32,9 @@ use File::CacheDir;
 @ISA = qw(File::CacheDir);
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub new
 {
@@ -47,7 +47,7 @@ sub new
 
 # Descriptions: open cache and return C<File::CacheDir> object.
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub _open_cache
 {

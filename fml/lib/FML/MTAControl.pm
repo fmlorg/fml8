@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MTAControl.pm,v 1.2 2002/04/24 04:35:38 fukachan Exp $
+# $FML: MTAControl.pm,v 1.3 2002/04/25 04:40:03 fukachan Exp $
 #
 
 package FML::MTAControl;
@@ -63,7 +63,7 @@ sub new
 sub update_alias
 {
     my ($self, $curproc, $optargs) = @_;
-    my $mta_type = 
+    my $mta_type =
 	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
 	    $self->{ mta_type };
 
@@ -100,7 +100,7 @@ sub postfix_update_alias
 sub find_key_in_alias
 {
     my ($self, $curproc, $optargs) = @_;
-    my $mta_type = 
+    my $mta_type =
 	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
 	    $self->{ mta_type };
     my $key      = $optargs->{ key };
@@ -121,7 +121,7 @@ sub find_key_in_alias
 sub get_aliases_as_hash_ref
 {
     my ($self, $curproc, $optargs) = @_;
-    my $mta_type = 
+    my $mta_type =
 	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
 	    $self->{ mta_type };
 
