@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: CacheDir.pm,v 1.1 2001/04/03 09:31:27 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -48,11 +48,11 @@ based expiretion. If you so,
 
    $obj = new File::CacheDir {
        directory  => '/some/where',
-       limited_by => 'time',
+       cache_type => 'temporal',
        expires_in => 90,             # 90 days
    };
 
-C<limited_by> is C<space> by default.
+C<cache_type> is C<cyclic> by default.
 
 
 =head1 DESCRIPTION
@@ -128,17 +128,17 @@ sub _take_file_name
     my $file_name          = $args->{ file_name } || '';
     my $sequence_file_name = $args->{ sequence_file_name } || '.seq';
     my $modulus            = $args->{ modulus } || 128;
-    my $limited_by         = $args->{ limited_by } || 'space';
+    my $cache_type         = $args->{ cache_type } || 'cyclic';
 
     my $file;
     use File::Spec;
 
-    if ($limited_by eq 'time') {
+    if ($cache_type eq 'temporal') {
 	my ($sec,$min,$hour,$mday,$mon,$year,$wday) = localtime(time);
 	my $file_name = sprintf("%04d%02d%02d", 1900+$year, $mon+1, $wday);
 	$file = File::Spec->catfile($directory, $file_name);
     }
-    elsif ($limited_by eq 'space') {
+    elsif ($cache_type eq 'cyclic') {
 	my $seq_file = File::Spec->catfile($directory, $sequence_file_name);
 
 	use File::Sequence;
@@ -150,7 +150,7 @@ sub _take_file_name
 	$file  = File::Spec->catfile($directory, $file_name.$id);
     }
 
-    ${*$self}{ _limited_by } = $limited_by;
+    ${*$self}{ _cache_type } = $cache_type;
     ${*$self}{ _file }       = $file;
 }
 
@@ -172,7 +172,7 @@ sub open
 
     # If the cache is limited by "time", we only add values to the file.
     # If limited by space, we ovewrite the file, so open it by the mode "w".
-    my $mode = ${*$self}{ _limited_by } eq 'time' ? "a" : "w";
+    my $mode = ${*$self}{ _cache_type } eq 'temporal' ? "a" : "w";
     $self->SUPER::open($file, $mode) ? $self : undef;
 }
 
