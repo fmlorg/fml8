@@ -38,7 +38,9 @@ sub new
     }
 
     # import $fml_version
-    $cfargs->{ fml_version } = "fml ". $args->{ fml_version };
+    if (defined $args->{ fml_version }) {
+	$cfargs->{ fml_version } = "fml ". $args->{ fml_version };
+    }
 
     # bind FML::Config object to $curproc
     use FML::Config;
