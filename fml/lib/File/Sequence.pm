@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.18 2002/02/01 12:03:58 fukachan Exp $
+# $FML: Sequence.pm,v 1.19 2002/02/17 03:13:49 fukachan Exp $
 #
 
 package File::Sequence;
@@ -270,6 +270,47 @@ sub _search_max_id_from_bottom
     else {
 	warn("no argument");
     }
+}
+
+# Descriptions: search max id number from top
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: NUM
+sub _search_max_id_from_top
+{
+	my ($self, $args) = @_;
+	my ($pebot, $k, $v);
+	my $unit = 50;
+	my $debug = 1;
+
+	$pebot = $self->get_id();
+	print STDERR "get_id ", $pebot, "\n" if $debug;
+
+	if (defined $args->{ hash }) {
+		my $hash = $args->{ hash };
+
+		print STDERR "0. ", $pebot, "\n" if $debug;
+
+		PEBOT_SEARCH:
+		while ($pebot > 0) {
+			last PEBOT_SEARCH if defined $hash->{ $pebot - $unit };
+			$pebot -= $unit;
+			print STDERR "1. ", $pebot, "\n" if defined $ENV{'debug'};
+		}
+
+# decrement by 1.
+		do {
+			$pebot--;
+			return 0 if($pebot <= 0);
+			print STDERR "2. ", $pebot, "\n" if defined $ENV{'debug'};
+		} unless (defined $hash->{ $pebot - 1 });
+
+		return $pebot;
+
+	}
+	else {
+		warn("no argument");
+	}
 }
 
 
