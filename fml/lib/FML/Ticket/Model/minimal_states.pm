@@ -849,7 +849,7 @@ sub cgi_top_menu
     print start_form(-action=>$action, -target=>$target);
     print "mailing list: ", 
     popup_menu(-name   => 'ml_name', -values => \@dirlist),
-    submit(-name => 'change'),
+    submit(-name => 'go'),
     end_form;
 }
 
