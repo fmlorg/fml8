@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.35 2004/05/19 09:04:47 fukachan Exp $
+# $FML: Queue.pm,v 1.36 2004/05/24 15:18:33 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -105,6 +105,7 @@ sub new
     my $new_dir       = $me->new_dir_path($id);
     my $info_dir      = $me->info_dir_path($id);
     my $active_dir    = $me->active_dir_path($id);
+    my $incoming_dir  = $me->incoming_dir_path($id);
     my $sender_dir    = $me->sender_dir_path($id);
     my $rcpt_dir      = $me->recipients_dir_path($id);
     my $deferred_dir  = $me->deferred_dir_path($id);
@@ -113,19 +114,17 @@ sub new
     # hold information for delivery
     $me->{ _new_qf }               = $me->new_file_path($id);
     $me->{ _active_qf }            = $me->active_file_path($id);
+    $me->{ _incoming_qf }          = $me->incoming_file_path($id);
     $me->{ _info }->{ sender }     = $me->sender_file_path($id);
     $me->{ _info }->{ recipients } = $me->recipients_file_path($id);
     $me->{ _info }->{ transport }  = $me->transport_file_path($id);
 
     # create directories in queue if not exists.
-    for my $_dir ($dir, $active_dir, $new_dir, $info_dir,
+    for my $_dir ($dir, $active_dir, $incoming_dir, $new_dir, $info_dir,
 		  $deferred_dir, $sender_dir, $rcpt_dir,
 		  $transport_dir) {
 	-d $_dir || _mkdirhier($_dir);
     }
-
-    # smtp by default
-    $me->set('transport', 'smtp');
 
     return bless $me, $type;
 }
@@ -373,13 +372,13 @@ sub in
     use FileHandle;
     my $fh = new FileHandle "> $qf";
     if (defined $fh) {
-	$fh->clearerr();
 	$fh->autoflush(1);
+	$fh->clearerr();
 	$msg->print($fh);
-	$fh->close;
 	if ($fh->error()) {
 	    $self->error_set("write error");
 	}
+	$fh->close;
     }
 
     # check the existence and the size > 0.
@@ -416,10 +415,10 @@ sub set
 	if (defined $fh) {
 	    $fh->clearerr();
 	    print $fh $value, "\n";
-	    $fh->close;
 	    if ($fh->error()) {
 		$self->error_set("write error");
 	    }
+	    $fh->close;
 	}
     }
     elsif ($key eq 'recipients') {
@@ -429,10 +428,10 @@ sub set
 	    if (ref($value) eq 'ARRAY') {
 		for my $rcpt (@$value) { print $fh $rcpt, "\n";}
 	    }
-	    $fh->close;
 	    if ($fh->error()) {
 		$self->error_set("write error");
 	    }
+	    $fh->close;
 	}
     }
     elsif ($key eq 'recipient_maps') {
@@ -455,11 +454,11 @@ sub set
 		    }
 		}
 	    }
-	    $fh->close;
 
 	    if ($fh->error()) {
 		$self->error_set("write error");
 	    }
+	    $fh->close;
 	}
     }
     elsif ($key eq 'transport') {
@@ -467,10 +466,10 @@ sub set
 	if (defined $fh) {
 	    $fh->clearerr();
 	    print $fh $value, "\n";
-	    $fh->close;
 	    if ($fh->error()) {
 		$self->error_set("write error");
 	    }
+	    $fh->close;
 	}
     }
 }
@@ -501,11 +500,17 @@ sub setrunnable
 
     # something error.
     if ($self->error()) {
+	warn( $self->error() );
 	return 0;
     }
 
     # There must be a set of these three files.
+    # 1. exisntence
     unless (-f $qf_new && -f $qf_sender && -f $qf_recipients) {
+	return 0;
+    }
+    # 2. non-zero size.
+    unless (-s $qf_new && -s $qf_sender && -s $qf_recipients) {
 	return 0;
     }
 
@@ -516,7 +521,6 @@ sub setrunnable
 
     return 0;
 }
-
 
 
 =head2 remove()
@@ -541,6 +545,7 @@ sub remove
 
     for my $f ($self->{ _new_qf },
 	       $self->{ _active_qf },
+	       $self->{ _incoming_qf },
 	       $self->{ _info }->{ sender },
 	       $self->{ _info }->{ recipients },
 	       $self->{ _info }->{ transport }) {
@@ -549,11 +554,11 @@ sub remove
 }
 
 
-# Descriptions: this object (queue) is sane ?
+# Descriptions: this object (queue) is sane as active queue?
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: 1 or 0
-sub valid
+sub valid_active_queue
 {
     my ($self) = @_;
     my $ok = 0;
@@ -621,6 +626,19 @@ sub active_file_path
     my $dir = $self->{ _directory } || croak("directory undefined");
 
     return File::Spec->catfile($dir, "active", $id);
+}
+
+
+# Descriptions: return "incoming" file path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub incoming_file_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "incoming", $id);
 }
 
 
@@ -712,6 +730,19 @@ sub active_dir_path
     my $dir = $self->{ _directory } || croak("directory undefined");
 
     return File::Spec->catfile($dir, "active");
+}
+
+
+# Descriptions: return "incoming" directory path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub incoming_dir_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "incoming");
 }
 
 
