@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.44 2004/04/23 04:10:37 fukachan Exp $
+# $FML: Error.pm,v 1.45 2004/05/22 06:36:44 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -29,8 +29,9 @@ See L<FML::Process::Flow> for details of fml process flow.
 
 =head1 DESCRIPTION
 
-C<FML::Process::Error> is a command wrapper and top level
-dispatcher for commands.
+C<FML::Process::Error> checks incoming message (typically error
+message), update bounced address database and delete address which
+causes too many errors.
 
 =head1 METHODS
 
@@ -41,7 +42,7 @@ make fml process object, which inherits C<FML::Process::Kernel>.
 =cut
 
 
-# Descriptions: standard constructor.
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: inherit FML::Process::Kernel
 # Return Value: OBJ
@@ -108,13 +109,19 @@ sub verify_request
 {
     my ($curproc, $args) = @_;
     my $config     = $curproc->config();
-    my $maintainer = $config->{ maintainer };
+    my $maintainer = $config->{ maintainer } || '';
+    my $eval;
 
-    my $eval = $config->get_hook( 'error_mail_analyzer_verify_request_start_hook' );
+    $eval = $config->get_hook('error_mail_analyzer_verify_request_start_hook');
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # set dummy sender to avoid unexpected error
-    $curproc->{'credential'}->set( 'sender', $maintainer );
+    if ($maintainer) {
+	$curproc->{'credential'}->set( 'sender', $maintainer );
+    }
+    else {
+	$curproc->logerror("maintainer not defined.");
+    }
 
     $eval = $config->get_hook( 'error_mail_analyzer_verify_request_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
