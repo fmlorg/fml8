@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.18 2002/09/11 23:18:06 fukachan Exp $
+# $FML: UserControl.pm,v 1.19 2002/09/22 14:56:43 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -15,6 +15,10 @@ use File::Spec;
 use FML::Credential;
 use FML::Log qw(Log LogWarn LogError);
 use IO::Adapter;
+
+#
+# XXX-TODO: we use this module to add/del user anywhere.
+#
 
 my $debug = 0;
 
@@ -56,8 +60,12 @@ sub useradd
     my $config   = $curproc->config();
     my $address  = $uc_args->{ address };
     my $maplist  = $uc_args->{ maplist };
-    my $msg_args = $command_args->{ msg_args };
     my $trycount = 0;
+
+    # XXX-TODO: validate $address by regexp here ?
+
+    # pass info into reply_message()
+    my $msg_args = $command_args->{ msg_args };
     $msg_args->{ _arg_address } = $address;
 
     for my $map (@$maplist) {
@@ -67,7 +75,7 @@ sub useradd
 
 	    $trycount++;
 
-	    my $obj    = new IO::Adapter $map, $config;
+	    my $obj = new IO::Adapter $map, $config;
 	    $obj->touch(); # create a new map entry (e.g. file) if needed.
 	    $obj->add( $address );
 	    unless ($obj->error()) {
@@ -106,8 +114,12 @@ sub userdel
     my $config   = $curproc->config();
     my $address  = $uc_args->{ address };
     my $maplist  = $uc_args->{ maplist };
-    my $msg_args = $command_args->{ msg_args };
     my $trycount = 0;
+
+    # XXX-TODO: validate $address by regexp here ?
+
+    # pass info to reply_message()
+    my $msg_args = $command_args->{ msg_args };
     $msg_args->{ _arg_address } = $address;
 
     for my $map (@$maplist) {
@@ -164,8 +176,10 @@ sub userlist
 	    $obj->open;
 	    while ($x = $obj->get_next_key()) {
 		if ($style eq 'html') {
+		    # XXX-TODO: html-ify address ?
 		    print $wh $x, "<br>\n";
 		}
+		# we assume text mode by default.
 		else {
 		    print $wh $x, "\n";
 		}
