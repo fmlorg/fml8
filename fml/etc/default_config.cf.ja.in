@@ -1265,6 +1265,9 @@ path_uuencode             = @UUENCODE@
 
 path_compress             = @COMPRESS@
 
+
+=head2 MTA related
+
 path_sendmail             = @SENDMAIL@
 
 path_newaliases           = @NEWALIASES@
@@ -1277,11 +1280,8 @@ path_postconf             = @POSTCONF@
 
 path_postmap              = @POSTMAP@
 
-path_nkf                  = @NKF@
 
-path_kakasi               = @KAKASI@
-
-path_namazu               = @NAMAZU@
+=head2 encryption/decryption
 
 path_pgp                  = @PGP@
 
@@ -1297,6 +1297,20 @@ path_pgpv                 = @PGPV@
 
 path_gpg                  = @GPG@
 
+
+=head2	utilities
+
+path_nkf                  = @NKF@
+
+path_kakasi               = @KAKASI@
+
+path_namazu               = @NAMAZU@
+
+path_less                 = @LESS@
+
+path_more                 = @MORE@
+
+path_w3m                  = @W3M@
 
 =head1	システム依存 (主に BSD との非互換性を記述している)
 
