@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Procmail.pm,v 1.2 2004/01/22 15:00:37 fukachan Exp $
+# $FML: Procmail.pm,v 1.3 2004/01/23 09:17:37 fukachan Exp $
 #
 
 package FML::MTA::Control::Procmail;
@@ -49,9 +49,7 @@ sub procmail_install_alias
     $self->_install($src, $dst, $params);
 
     $curproc->ui_message("updating $alias\n");
-
-    use File::Utils qw(append);
-    append($dst, $alias);
+    $curproc->append($dst, $alias);
     unlink $dst;
 }
 

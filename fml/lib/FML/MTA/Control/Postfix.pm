@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.2 2004/01/22 15:01:02 fukachan Exp $
+# $FML: Postfix.pm,v 1.3 2004/01/23 09:17:37 fukachan Exp $
 #
 
 package FML::MTA::Control::Postfix;
@@ -53,10 +53,7 @@ sub postfix_install_alias
     $self->_install($src, $dst, $xparams);
 
     $curproc->ui_message("updating $alias");
-
-    # XXX-TODO: we should prepare methods such as $curproc->util->append() ?
-    use File::Utils qw(append);
-    append($dst, $alias);
+    $curproc->append($dst, $alias);
     unlink $dst;
 }
 
@@ -397,9 +394,8 @@ sub postfix_install_virtual_map
     }
 
     $self->_install($src, $dst, $params);
-
-    use File::Utils qw(append);
-    append($dst, $virtual);
+    
+    $curproc->append($dst, $virtual);
     unlink $dst;
 }
 

@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.6 2004/02/01 15:54:45 fukachan Exp $
+# $FML: Spool.pm,v 1.7 2004/02/15 09:27:42 fukachan Exp $
 #
 
 package FML::Article::Spool;
@@ -141,8 +141,7 @@ sub convert
 			    link($source, $filepath);
 			}
 			else {
-			    use File::Utils qw(copy);
-			    copy($source, $filepath);
+			    $curproc->copy($source, $filepath);
 			}
 		    }
 		    else {

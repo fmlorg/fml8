@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.110 2004/03/23 06:34:17 fukachan Exp $
+# $FML: Utils.pm,v 1.111 2004/04/02 11:51:32 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -432,6 +432,53 @@ sub touch
 {
     my ($curproc, $file) = @_;
     $curproc->mkfile($file);
+}
+
+
+# XXX-TODO: $curproc->copy() is strage.
+
+# Descriptions: copy $dst to $src in atomic way.
+#    Arguments: OBJ($curproc) STR($src) STR($dst)
+# Side Effects: $dst file created.
+# Return Value: none
+sub copy
+{
+    my ($curproc, $src, $dst) = @_;
+
+    use IO::Adapter::AtomicFile;
+    my $obj = new IO::Adapter::AtomicFile;
+    $obj->new->copy($src, $dst);
+}
+
+
+# XXX-TODO: $curproc->append() is strage.
+
+# Descriptions: append content within $src file into $dst file.
+#    Arguments: OBJ($curproc) STR($src) STR($dst)
+# Side Effects: $dst file created or updated.
+# Return Value: none
+sub append
+{
+    my ($curproc, $src, $dst) = @_;
+
+    use FileHandle;
+    my $rh = new FileHandle $src;
+    my $wh = new FileHandle ">> $dst";
+    if (defined($rh) && defined($wh)) {
+	$wh->autoflush(1);
+
+	my $buf = '';
+	while ($buf = <$rh>) {
+	    print $wh $buf;
+	}
+
+	$wh->close();
+	$rh->close();
+    }
+    else {
+	croak("fail to open $src") unless defined $rh;
+	croak("fail to open $dst") unless defined $wh;
+    }
 }
 
 
