@@ -1,40 +1,55 @@
-DEFAULT_RELAY_SERVER:
+こまんど
+	status
+	stat
+	member
+	active
+	members
+	actives
 
-RELAY_HACK:
-
-CF_DEF:
-
-
-
-REWRITE_TO:
-
-DATE_TYPE:	original-date
-
-USE_ORIGINAL_MESSAGE_ID:	1
+	はなくてよい?
 
 
-USE_WHOIS:
-DEFAULT_WHOIS_SERVER:
-WHOIS_DB:		$VARDB_DIR/whoisdb
-WHOIS_HELP_FILE:
-WHOIS_JCODE_P:		1
+りれーもの
+
+	DEFAULT_RELAY_SERVER:
+	RELAY_HACK:
+	CF_DEF:
+
+へっだ操作
+
+	REWRITE_TO:
+	DATE_TYPE:	original-date
+	USE_ORIGINAL_MESSAGE_ID:	1
+	PASS_ALL_FIELDS_IN_HEADER: 1
+
+WHOIS
+
+	USE_WHOIS:
+	DEFAULT_WHOIS_SERVER:
+	WHOIS_DB:		$VARDB_DIR/whoisdb
+	WHOIS_HELP_FILE:
+	WHOIS_JCODE_P:		1
 
 
-LOCK_SH: 	 1
-LOCK_EX: 	 2
-LOCK_NB:	 4
-LOCK_UN: 	 8
+OS 依存
+
+	LOCK_SH: 	 1
+	LOCK_EX: 	 2
+	LOCK_NB:	 4
+	LOCK_UN: 	 8
 
 
-LOG_CONNECTION:	0
+その他
+
+	LOG_CONNECTION:	0
 
 
-Subject:
-From_address:	 not.found
-User:		 not.found
-Date:		 not.found
+	Subject:
+	From_address:	 not.found
+	User:		 not.found
+	Date:		 not.found
 
-PASS_ALL_FIELDS_IN_HEADER: 1
+
 
 BASE64_DECODE:
 BASE64_ENCODE:
