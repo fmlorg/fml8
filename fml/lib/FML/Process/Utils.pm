@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.22 2002/05/27 08:45:41 fukachan Exp $
+# $FML: Utils.pm,v 1.23 2002/06/01 03:01:54 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -493,6 +493,84 @@ sub __get_virtual_maps
     else {
 	return undef;
     }
+}
+
+
+=head2 get_ml_list()
+
+get HASH ARRAY of valid mailing lists.
+
+=cut
+
+
+# Descriptions: list up ML
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub get_ml_list
+{
+    my ($curproc) = @_;
+    my $config = $curproc->{ config };
+
+    use File::Spec;
+    use DirHandle;
+    my $dh      = new DirHandle $config->{ ml_home_prefix };
+    my $prefix  = $config->{ ml_home_prefix };
+    my $cf      = '';
+    my @dirlist = ();
+
+    if (defined $dh) {
+	while ($_ = $dh->read()) {
+	    next if /^\./;
+	    next if /^\@/;
+	    $cf = File::Spec->catfile($prefix, $_, "config.cf");
+	    push(@dirlist, $_) if -f $cf;
+	}
+	$dh->close;
+    }
+
+    @dirlist = sort @dirlist;
+    return \@dirlist;
+}
+
+
+=head2 get_recipient_list()
+
+get HASH ARRAY of valid mailing lists.
+
+=cut
+
+
+# Descriptions: list up recipients list
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub get_recipient_list
+{
+    my ($curproc) = @_;
+    my $config = $curproc->{ config };
+    my $list   = $config->get_as_array_ref( 'recipient_maps' );
+
+    eval q{ use IO::Adapter;};
+    unless ($@) {
+	my $r = [];
+
+	for my $map (@$list) {
+	    my $io  = new IO::Adapter $map;
+	    my $key = '';
+	    if (defined $io) {
+		$io->open();
+		while (defined($key = $io->get_next_key())) {
+		    push(@$r, $key);
+		}
+		$io->close();
+	    }
+	}
+
+	return $r;
+    }
+
+    return [];
 }
 
 
