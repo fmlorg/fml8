@@ -8,6 +8,9 @@
 	XXX
 
 
+[TODO]	変数のクラス構造を再構成
+
+
 [TODO]	charset と言語(japanese,english)との対応関係を一箇所にまとめて定義
 
 	[CHECK]	
@@ -34,115 +37,11 @@
 	値をよろしく変換する （←ここがむずかしー）
 
 
-[TODO]	variable class and renaming
-
-	command {
-		SOMETHING_command
-		admin_command
-	}
-	
-	directory {
-	
-	}
-	
-	file {
-		template_file
-	}
-	
-	mail {
-		incoming_mail
-		outgoing_mail
-		report_mail
-	}
-	
-	message {
-		reply_message
-	}
-	
-	article {
-		digest -> article_digest
-		spool  -> article_spool
-	}
-
-
-[TODO]	rmml したＭＬをふっかつさせることは？
-
-	一番日付が最近の @xxx.yyyymmdd を探して、そこから戻す。
-
-	だが、
-
-	aliases を復活させる問題があるので、もう一度 newml
-	もする必要があるだろう。つまり
-
-	newml --reuse ? --rewind ? --return ?
-	こんなかんじ？
-
-	それより、renew かなぁ。うむ、renew がいいだろ。
-
-
-[TODO]	エラーをどのように呼びだし側へ組織的に伝えるか？
-
-	エラートラップフレーム？
-
-		$curproc->error_regist( { キー => オブジェクト } );
-		croak(エラーのキー);
-
-	？ 必要な場所すべてに $curproc ってのが難しそう？
-
-	エラーをどのように呼びだし側へ組織的に伝えるか？
-	オブジェクトか HASH_REF ごとわたせないか？
-
-
-[TODO]	$use_log_dup
-	$log_dup_print_engine
-
-
-[TODO]	「このＭＬはもうありません」
-
-	libexec/relocated , Process/Relocated とかじゃだめだね。
-	libexec/ の下の全部のプログラム全部が対応するべきのような…
-	つまり
-		ml
-		ml-ctl
-	宛に来たもの両方に返事を返すべきだろう。
-	でも、ml-error はちがうだろうなぁ
-
-	！じゃ、こんなコマンドは？
-		makefml disable elena
-		makefml enable  elena
-
-	このコマンドは…いや、コマンドじゃなくて変数がいいでしょうねぇ。
-
-
 [TODO]	fml $ml spool {status,convert}: --srcdir= とか必要じゃない？
 
 	コマンドラインオプションは、OK？
 
 	コマンド固有オプションは + ってのは、どうよ？
-
-
-[TODO]	期限つき subscribe
-
-	subscribe -> 一カ月すると削除される？
-
-		FML::User::Info -> FML::User::DB	ok
-
-	o.k. so, how to kick off removal process ?
-
-
-[TODO]	期限つき newml
-
-	libexec/faker
-			時刻を FML::User::DB でどっかに記録
-				shared_db_dir/ml_create_time
-				
-		いや、うむをいわさず、newml コマンドでごーでいいのかな？
-			
-	/etc/postfix/virtual
-	   @nuinui.net       faker=nuinui.net
-
-	/etc/mail/aliases
-	   faker=nuinui.net  :include:/var/ml/nuinui.net/@@faker@@/include
 
 
 [TODO]	スレッド関連のモジュール全部見直せよ
@@ -311,32 +210,6 @@ FileHandle と IO::File 両方 use しちゃうからか？
 	なくて admin コマンドの時は考えなくてもいいからだな、それは …
 
 
-[TODO]	cgi のスタイルシート対応
-
-	文字を小さくした方がいいとか…の類。
-	＃だれか、やってぇ〜 ;)
-
-
-[TODO]	Mail::Message::ToHTML
-
-	X-Sequence: fml-devel 515
-
-	1) spam対策の表示処理について
-
-	今メールアドレスとかを名前の部分だけか address@xxx.xxx.xxx み
-	たいな感じで処理をしていますが、ヘッダ部分のTo:とかCC:とかはそ
-	のままなので、これも直した方がいいかも。また逆にこの機能は会社
-	のwebではそのまま表示されるのが望ましいので変数で処理できるよ
-	うにしたい
-
-	2) indexの要、不要について
-
-	現状ではall,monthly,threadが出来るが、これらも選択できるほうが
-	良いかも#２万通以上のMLがあるとallは不要と思えてくる...
-
-	3) thread.htmlの月別の作成＆出来れば逆順のもの
-
-
 [TODO]	xxx_restrictions = pgp_signature_check ?
 
 
@@ -450,4 +323,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.98 2003/11/25 14:54:52 fukachan Exp $
+$FML: 00_MEMO,v 1.99 2003/11/27 04:26:38 fukachan Exp $

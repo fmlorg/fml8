@@ -110,6 +110,10 @@ II部　fmlのセットアップ〜MLの作成
 
 	[TODO] $maintainer のリストを CGI から設定したい
 
+	[TODO]	cgi のスタイルシート対応
+		文字を小さくした方がいいとか…の類。
+		＃だれか、やってぇ〜 ;)
+
 
 9章　fmlの動作確認
 
@@ -159,7 +163,41 @@ III部　fmlのカスタマイズ
 			パスワード変更は？
 	[TODO]	ＭＬのカスタマイズはファイルの編集あるのみ
 
-	注意: 当然リモートコマンドよりいろいろなことができます。
+		注意: 当然リモートコマンドよりいろいろなことができます。
+
+
+	[TODO]	rmml したＭＬをふっかつさせることは？ → renew コマンドだ
+
+		一番日付が最近の @xxx.yyyymmdd を探して、そこから戻す。
+
+		だが、
+
+		aliases を復活させる問題があるので、もう一度 newml
+		もする必要があるだろう… うむ、renew をつくろう
+
+
+	[TODO]	期限つき subscribe
+
+		subscribe -> 一カ月すると削除される？
+
+			FML::User::Info -> FML::User::DB	ok
+
+		o.k. so, how to kick off removal process ?
+
+
+	[TODO]	期限つき newml
+
+		libexec/faker
+			時刻を FML::User::DB でどっかに記録
+				shared_db_dir/ml_create_time
+				
+		いや、うむをいわさず、newml コマンドでごーでいいのかな？
+			
+		/etc/postfix/virtual
+		   @nuinui.net       faker=nuinui.net
+
+		/etc/mail/aliases
+		   faker=nuinui.net  :include:/ml/nuinui.net/@@faker@@/include
 
 
 12章　fmlの設定ファイルを変更する
@@ -334,6 +372,26 @@ III部　fmlのカスタマイズ
 	[TODO] permission はこれでいい？
 
 
+	[TODO]	Mail::Message::ToHTML
+		X-Sequence: fml-devel 515
+
+	1) spam対策の表示処理について
+
+	今メールアドレスとかを名前の部分だけか address@xxx.xxx.xxx み
+	たいな感じで処理をしていますが、ヘッダ部分のTo:とかCC:とかはそ
+	のままなので、これも直した方がいいかも。また逆にこの機能は会社
+	のwebではそのまま表示されるのが望ましいので変数で処理できるよ
+	うにしたい
+
+	2) indexの要、不要について
+
+	現状ではall,monthly,threadが出来るが、これらも選択できるほうが
+	良いかも#２万通以上のMLがあるとallは不要と思えてくる...
+
+	3) thread.htmlの月別の作成＆出来れば逆順のもの
+
+
+
 21章　まとめ送り
 
 	簡易版のまとめおくりはサポートされている。
@@ -370,6 +428,14 @@ V部　その他のトピック
 		File::Rotate に実装されているが	組み込まれてはいない。
 	[TODO] log suffix extension
 
+	[TODO]	「このＭＬはもうありません」オプション
+
+		libexec/ の下の全部のプログラム全部が対応して、
+		ml や ml-ctl 宛に来たメールにみんな返事を返すべきだ。
+		ただし、negative cache つきで（同じアドレスには一回し
+		か返事をしない)。コマンドじゃなくて変数でしょうねぇ。
+		デフォルトでは off (SPAM 対策）。
+
 
 27章　エラーメールを自動解析する
 
@@ -401,6 +467,18 @@ VI部　fmlの内部構造と機能拡張
 30章　変数と関数
 31章　リストファイルのフォーマット
 32章　fml.plプロセスの動作
+
+	[TODO]	エラーをどのように呼びだし側へ組織的に伝えるか？
+
+		エラートラップフレーム？
+		$curproc->error_regist( { キー => オブジェクト } );
+		croak(エラーのキー);
+
+		？ 必要な場所すべてに $curproc ってのが難しそう？
+
+		エラーをどのように呼びだし側へ組織的に伝えるか？
+		オブジェクトか HASH_REF ごとわたせないか？
+
 33章　デバッグをする
 
 	モジュール単位で $debug という変数がある場合がある。
@@ -470,4 +548,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.31 2003/11/17 15:39:03 fukachan Exp $
+$FML: STATUS.txt,v 1.32 2003/11/25 11:36:11 fukachan Exp $
