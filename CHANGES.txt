@@ -10,6 +10,14 @@
 	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
 	気をつけてください。
 
+2004/07/27
+
+   FML::Install 
+	implement message_nl() and modified to use it.
+	
+   FML::Process::Kernel 
+	log error message::exit(EX_TEMPFAIL) to retry later.
+
 2004/07/25
 
    FML::Command::HTMLify 
@@ -7564,4 +7572,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.218 2004/07/24 01:33:02 fukachan Exp $
+$FML: CHANGES.txt,v 1.219 2004/07/27 14:54:57 fukachan Exp $
