@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.54 2002/10/29 10:38:15 fukachan Exp $
+# $FML: newml.pm,v 1.55 2002/11/10 14:50:18 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -27,7 +27,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-set up a new mailing list
+set up a new mailing list.
 create mailing list directory,
 install config.cf, include, include-ctl et. al.
 
@@ -102,6 +102,7 @@ sub process
 	}
     }
 
+    # XXX-TODO: check /etc/paswd ?
     # check the duplication of alias keys in MTA aliases
     # Example: search among all entries in postfix $alias_maps
     if ($self->_is_mta_alias_maps_has_ml_entry($curproc, $params, $ml_name)) {
@@ -265,6 +266,7 @@ sub _is_mta_alias_maps_has_ml_entry
     eval q{
 	use FML::MTAControl;
 
+	# XXX-TODO: procmail ?
 	for my $mta (qw(postfix qmail)) {
 	    my $obj = new FML::MTAControl;
 	    $found = $obj->find_key_in_alias_maps($curproc, $params, {
@@ -379,6 +381,7 @@ sub _setup_cgi_interface
     #
     # 4. install ml-admin/
     #
+    # XXX-TODO: install ml-admin/
 }
 
 
