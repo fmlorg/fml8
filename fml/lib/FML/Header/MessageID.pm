@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MessageID.pm,v 1.8 2002/09/22 14:56:50 fukachan Exp $
+# $FML: MessageID.pm,v 1.9 2002/09/28 09:27:43 fukachan Exp $
 #
 
 package FML::Header::MessageID;
@@ -61,6 +61,8 @@ sub new
 
 open db and return HASH_REF for the db access.
 
+=head2 C<db_close()>
+
 =cut
 
 
@@ -92,6 +94,15 @@ sub db_open
     }
 
     undef;
+}
+
+
+# Descriptions: close message-id database (dummy).
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
+sub db_close
+{
 }
 
 
