@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.12 2002/04/18 15:27:04 fukachan Exp $
+# $FML: ToHTML.pm,v 1.13 2002/04/19 05:22:01 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -19,7 +19,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.12 2002/04/18 15:27:04 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.13 2002/04/19 05:22:01 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -1027,17 +1027,24 @@ sub cache_message_info
 sub _msg_time
 {
     my ($self, $type) = @_;
-    my $hdr = $self->{ _current_hdr  };
+    my $hdr  = $self->{ _current_hdr  };
 
-    use Time::ParseDate;
-    my $unixtime = parsedate( $hdr->get('date') );
-    my ($sec,$min,$hour,$mday,$mon,$year,$wday) = localtime( $unixtime );
+    if (defined($hdr) && $hdr->get('date')) {
+	use Time::ParseDate;
+	my $unixtime = parsedate( $hdr->get('date') );
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday) = localtime( $unixtime );
 
-    if ($type eq 'yyyymm') {
-	return sprintf("%04d%02d", 1900 + $year, $mon + 1);
+	if ($type eq 'yyyymm') {
+	    return sprintf("%04d%02d", 1900 + $year, $mon + 1);
+	}
+	elsif ($type eq 'yyyy/mm') {
+	    return sprintf("%04d/%02d", 1900 + $year, $mon + 1);
+	}
     }
-    elsif ($type eq 'yyyy/mm') {
-	return sprintf("%04d/%02d", 1900 + $year, $mon + 1);
+    else {
+	my $id = $self->{ _current_id };
+	warn("cannot pick up Date: field id=$id");
+	return '';
     }
 }
 
@@ -2409,8 +2416,18 @@ sub htmlify_file
     my ($file, $args) = @_;
     my $dst_dir = $args->{ directory };
 
+    unless (-f $file) {
+	print STDERR "no such file: $file\n" if $debug;
+	return;
+    }
+
+    unless (-s $file) {
+	print STDERR "empty file: $file\n" if $debug;
+	return;
+    }
+
     use File::Basename;
-    my $id = basename($file);
+    my $id   = basename($file);
     my $html = new Mail::Message::ToHTML {
 	charset   => "euc-jp",
 	directory => $dst_dir,
@@ -2425,6 +2442,9 @@ sub htmlify_file
 	src => $file,
     });
 
+    if ($debug) {
+	printf STDERR "htmlify_file( id=%-6s ) update relation\n", $id;
+    }
     $html->update_relation( $id );
     $html->update_id_monthly_index({ id => $id });
     $html->update_id_index({ id => $id });
@@ -2449,6 +2469,8 @@ sub htmlify_dir
     my ($src_dir, $args) = @_;
     my $dst_dir = $args->{ directory };
     my $max     = 0;
+
+    print STDERR "src = $src_dir\ndst = $dst_dir\n" if $debug;
 
     use DirHandle;
     my $dh = new DirHandle $src_dir;
