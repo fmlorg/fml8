@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.82 2003/08/16 14:57:54 fukachan Exp $
+# $FML: Message.pm,v 1.83 2003/08/20 15:21:17 fukachan Exp $
 #
 
 package Mail::Message;
@@ -110,19 +110,23 @@ Described below, C<MIME delimiter> is also treated as a virtual
 message for convenience.
 
    $message = {
-                version        => 1.0
+                version        => 1.0,
 
-                next           => \$next_message
-                prev           => \$prev_message
+                next           => \$next_message,
+                prev           => \$prev_message,
 
-                base_data_type => "text/plain"
+                base_data_type => "text/plain",
 
-                mime_version   => 1.0
-                header         => $header
-                data_type      => "text/plain"
-                data           => \$message_body
+                mime_version   => 1.0,
+                header         => $header,
+                data_type      => "text/plain",
+                data           => \$message_body,
 
-                data_info      => \$information
+		# optional. if unknonw, speculate it from header info.
+		charset        => "iso-2022-jp",
+		encoding       => "7bit",
+
+                data_info      => \$information,
                }
 
    key                value
@@ -335,6 +339,7 @@ sub __build_message
     # try to get data on both memory and disk
     my $r_data   = $args->{ data }     || undef;
     my $filename = $args->{ filename } || undef;
+    my $parent   = $args->{ parent }   || undef; # top level header info
 
     # set up object for data on memory
     if (defined $r_data) {
@@ -349,6 +354,14 @@ sub __build_message
 
 	$self->{ data }         = $args->{ data } || '';
 	$self->{ _on_memory }   = 1; # flag to indicate data is on memory
+
+	# top level header info (head of a chain).
+	# 'text/plain' part does not know its charset and encoding, so
+	# we need to tell it by using the header info.
+	if (defined $parent) {
+	    $self->{ charset  } = $parent->charset();
+	    $self->{ encoding } = $parent->encoding_mechanism();
+	}
     }
     # set up object for data on disk
     elsif (defined $filename) {
@@ -625,6 +638,12 @@ sub _build_body_object
     # XXX we use data_type (type defined in Content-Type: field) here.
     # XXX "base_data_type" is used only internally.
     return new Mail::Message {
+	# XXX We need to pass the top header part (head of the chain)
+	# XXX for the main text/* part to know its charset and encoding.
+	# XXX This info is needed only in text/* case not multipart/*.
+	parent    => $self,
+
+	# fundamental information
 	boundary  => $self->_header_mime_boundary($result->{ header }),
 	data_type => $self->_header_data_type($result->{ header }),
 	data      => $data_ptr,
@@ -1908,6 +1927,47 @@ sub is_multipart
 }
 
 
+=head2 charset()
+
+return charset.
+
+=cut
+
+
+# Descriptions: return the charset of this object.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub charset
+{
+    my ($self) = @_;
+    my $buf = $self->message_fields();
+
+    # special case: $self equals to header object (head of a chain)
+    unless ($buf) {
+	my $data = $self->{ data };
+	if (ref($data) eq 'Mail::Header' || ref($data) eq 'FML::Header') {
+	    $buf = $data->get('content-type');
+	    $buf =~ s/\s+/ /g;
+	    $buf = "content-type: $buf";
+	}
+    }
+
+    if (defined $self->{ charset } && $self->{ charset }) {
+	return $self->{ charset };
+    }
+    elsif (defined($buf) &&
+	   ($buf =~ /Content-Type:.*charset=\"(\S+)\"/mi)) {
+	my $charset = $1;
+	$charset =~ tr/A-Z/a-z/;
+	return $charset;
+    }
+    else {
+	return undef;
+    }
+}
+
+
 =head2 encoding_mechanism()
 
 return encoding type for specified Mail::Message not whole mail.
@@ -1926,7 +1986,19 @@ sub encoding_mechanism
     my ($self) = @_;
     my $buf = $self->message_fields();
 
-    if (defined($buf) &&
+    # special case: $self equals to header object (head of a chain)
+    unless ($buf) {
+	my $data = $self->{ data };
+	if (ref($data) eq 'Mail::Header' || ref($data) eq 'FML::Header') {
+	    $buf = $data->get('content-transfer-encoding');
+	    $buf = "Content-Transfer-Encoding: $buf";
+	}
+    }
+
+    if (defined $self->{ encoding }) {
+	return $self->{ encoding };
+    }
+    elsif (defined($buf) &&
 	($buf =~ /Content-Transfer-Encoding:\s*(\S+)/mi)) {
 	my $mechanism = $1;
 	$mechanism =~ tr/A-Z/a-z/;
