@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Thread.pm,v 1.1 2003/07/20 04:58:29 fukachan Exp $
+# $FML: Thread.pm,v 1.2 2003/07/20 06:43:26 fukachan Exp $
 #
 
 package Mail::Message::Thread;
@@ -124,6 +124,47 @@ sub analyze
 }
 
 
+=head2 get_thread_data($thread_args)
+
+return thread data as HASH_REF.
+
+=cut
+
+
+# Descriptions: top level dispatcher to get thread data.
+#    Arguments: OBJ($self) HASH_REF($thread_args)
+# Side Effects: update database
+# Return Value: none
+sub get_thread_data
+{
+    my ($self, $thread_args) = @_;
+    my $db = $self->db();
+
+    return $db->get_thread_data($thread_args);
+}
+
+
+=head2 get_thread_member_as_array_ref($head_id)
+
+return id list within the thread specified by $head_id as ARRAY_REF
+e.g.a [ $head_id, id1, id2, id3, ... ].
+
+=cut
+
+# Descriptions: return id list within the thread specified by $head_id
+#               as ARRAY_REF.
+#    Arguments: OBJ($self) NUM($head_id)
+# Side Effects: update database
+# Return Value: none
+sub get_thread_member_as_array_ref
+{
+    my ($self, $head_id) = @_;
+    my $db = $self->db();
+
+    return $db->get_as_array_ref('ref_key_list', $head_id);
+}
+
+
 =head1 TODO
 
 =head1 CODING STYLE
@@ -136,7 +177,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003 Ken'ichi Fukamachi
+Copyright (C) 2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
