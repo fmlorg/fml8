@@ -14,7 +14,7 @@ use vars qw($InComingMessage);
 use strict;
 use Carp;
 use FML::Header;
-use MailingList::Messages;
+use Mail::Message;
 use FML::Config;
 use FML::Log qw(Log LogWarn LogError);
 
@@ -37,7 +37,7 @@ C<new()> returns a set of hash references.
 C<$r_header> is the reference to a header object, which is
 C<Mail::Header> object. 
 C<$r_body> is reference to the scalar mail body variable, which is
-C<MailingList::Messages> object.
+C<Mail::Message> object.
 
 =head1 METHODS
 
@@ -104,7 +104,7 @@ sub _parse
 
     # extract each field from the header array
     my $r_header = new FML::Header \@h, Modify => 0;
-    my $r_body   = new MailingList::Messages {
+    my $r_body   = new Mail::Message {
 	boundary     => $r_header->mime_boundary(),
 	content_type => $r_header->content_type(),
 	content      => \$InComingMessage,
@@ -119,7 +119,7 @@ sub _parse
 
 L<Mail::Header>,
 L<FML::Header>,
-L<MailingList::Messages>,
+L<Mail::Message>,
 L<FML::Config>,
 L<FML::Log>
 

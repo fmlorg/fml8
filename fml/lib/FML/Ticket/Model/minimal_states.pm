@@ -183,7 +183,7 @@ sub update_status
 
     my $content = '';
     my $message = $body->get_first_plaintext_message();
-    if ( ref($message) eq 'MailingList::Messages' ) {
+    if ( ref($message) eq 'Mail::Message' ) {
 	$content = $message->get_content_body();
     }
     else {

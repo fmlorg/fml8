@@ -394,7 +394,7 @@ and
    $curproc->{'incoming_message'}->{ body }
 .
 The C<header> is C<FML::Header> object.
-The C<body> is C<MailingList::Messages> object.
+The C<body> is C<Mail::Message> object.
 
 =cut
 

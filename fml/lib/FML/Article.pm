@@ -32,7 +32,7 @@ FML::Article - article manipulation components
 $article object is just a container which holds 
 C<header> and C<body> object as hash keys.
 The C<header> is an FML::Header object and
-the C<body> is a MailingList::Messages object.
+the C<body> is a Mail::Message object.
 
 =head1 METHODS
 

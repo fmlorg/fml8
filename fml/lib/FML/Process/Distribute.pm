@@ -251,7 +251,7 @@ sub _deliver_article
     my ($curproc, $args) = @_;
 
     my $config  = $curproc->{ config };             # FML::Config obj
-    my $body    = $curproc->{ article }->{ body };  # MailingList::Messages obj
+    my $body    = $curproc->{ article }->{ body };  # Mail::Message obj
     my $header  = $curproc->{ article }->{ header };# FML::Header obj
 	
     unless ( $config->yes( 'use_article_delivery' ) ) {
@@ -265,7 +265,7 @@ sub _deliver_article
     }
 
     # distribute article
-    use MailingList::Delivery;
+    use Mail::Delivery;
 
     my $fp  = sub { Log(@_);}; # pointer to the log function
     my $sfp = sub { my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;};
@@ -287,7 +287,7 @@ sub _deliver_article
 	}
     }
 
-    my $service = new MailingList::Delivery {
+    my $service = new Mail::Delivery {
 	log_function       => $fp,
 	smtp_log_function  => $sfp,
     };
