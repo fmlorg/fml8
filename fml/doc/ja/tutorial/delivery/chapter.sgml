@@ -1,5 +1,5 @@
 <!--
-    $FML: chapter.sgml,v 1.1 2001/04/30 10:21:43 fukachan Exp $
+    $FML: chapter.sgml,v 1.2 2001/05/17 04:25:32 fukachan Exp $
 -->
 
 <chapter id="delivery">
@@ -20,7 +20,17 @@ fml5 の最大の目的の一つは、メンバーリストの取得と操作の統合と抽象化です。
 <para>
 Mail::Delivery::* に属するクラスは SMTP および LMTP 配送へのインターフェ
 イスを提供します。
+つまり
+Mail::Delivery は
+Mail::Delivery 以下の派生クラス
+SMTP
+ESMTP
+LMTP
+へのインターフェイスを提供するアダプター層です。
+</para>
 
+<para>
+例えば次のように使います。
 <screen>
     use Mail::Delivery::SMTP;
     my $service = new Mail::Delivery::SMTP;
@@ -37,23 +47,36 @@ Mail::Delivery::* に属するクラスは SMTP および LMTP 配送へのインターフェ
                           mesage          => $message
                       });
 </screen>
-
 ここで $message は Mail::Message オブジェクトです。
-このオブジェクトは
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	Mail::Message オブジェクト
+	</title>
+
+<para>
+このオブジェクトはメールを解析し、
 <screen>
 header -> body
 header -> preamble -> part1 -> part2 -> trailor (multipart)
 </screen>
-のようにオブジェクトが数珠つなぎになっているオブジェクトです。
+のようにオブジェクトが数珠つなぎのようなデータ構造を作ります。
 </para>
 
 <para>
-Mail::Delivery は
-Mail::Delivery 以下の派生クラス
-SMTP
-ESMTP
-LMTP
-へのインターフェイスを提供するアダプター層です。
+Mail::Message のクラスは
+このようなデータ構造に対して、さまざまなオペレーションを提供します。
+</para>
+
+<para>
+参照: 
+<ulink url="../../en/modules/Mail/Message.txt">
+Mail::Message モジュールのマニュアル
+</ulink>
 </para>
 
 </sect1>

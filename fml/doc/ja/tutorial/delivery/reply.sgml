@@ -1,5 +1,5 @@
 <!--
-    $FML: reply.sgml,v 1.1 2001/05/17 00:47:35 fukachan Exp $
+    $FML: reply.sgml,v 1.2 2001/05/18 10:53:03 fukachan Exp $
 -->
 
 <chapter id="reply">
@@ -68,17 +68,14 @@ new/ から active/ に移動されます。
 	</title>
 
 <para>
-sender にあるメッセージを送り返したい場合は、次のようにします。
+あるメッセージを送り返したい場合は、次のようにします。
 <screen>
 $curproc->reply_message( "you are not a ML member." );
 </screen>
+この場合の受信者はコマンドの結果などを受けとる人、
+fml にリクエストをした人です。
 </para>
 
-<warning>
-<para>
-うーん、言語の変換はどこでどう指示するべき？
-</para>
-</warning>
 
 <para>
 ファイルを送りたい場合や画像を送りたい場合は次のようにします。
@@ -98,6 +95,14 @@ $curproc->reply_message( {
     });
 </screen>
 </para>
+
+
+<warning>
+<para>
+うーん、言語の変換はどこでどう指示するべきでしょうか？
+</para>
+</warning>
+
 
 </sect1>
 

@@ -1,16 +1,24 @@
 <!--
-	$FML: commands.sgml,v 1.3 2001/04/28 09:33:39 fukachan Exp $
+	$FML: commands.sgml,v 1.4 2001/04/30 10:21:43 fukachan Exp $
 -->
 
-<chapter id="fmlcommands">
+<chapter id="fml.command.op">
 
 <title>	fml をメールで操作する </title>
 
 <para>
-fml にメールでコマンドを送り込むことで、fml に特定の処理をしてもらうこ
-とができます。例えば、メンバーの登録、削除や、過去の記事を取り寄せるな
-どの処理です。
+fml にメールで文字列(コマンド)を送り込むことで、fml に特定の処理をして
+もらうことができます。例えば、メンバーの登録、削除や、過去の記事を取り
+寄せるなどの処理です。
 </para>
+
+<para>
+メールによるコマンド処理
+makefml によるコマンド処理
+CGI でのコマンド処理
+すべてが同じ FML::Command:: クラスのモジュールを使うことにします。 
+</para>
+
 
 <sect1>
    <title> コマンドの拡張の仕方の例 </title>
@@ -20,18 +28,20 @@ fml にメールでコマンドを送り込むことで、fml に特定の処理をしてもらうこ
 	<title> 独自コマンドを作る。 </title>
 
 	<para>
+	fml 5.0 では、
 	例えばコマンド uja を作りたいなら、FML::Command をぱくって
-
-	/usr/local/lib/fml/site_local/FML/Command/uja.pm
-
-	というファイルを置けば OK (いいのか、それで?)。
+<screen>	
+/usr/local/lib/fml/site_local/FML/Command/uja.pm
+</screen>	
+	というファイルを置けば OK にしようとしています。
 	</para>
 
-	<para>
-	いや、うそかも… 許可するコマンドリストに追加して始めて
-	有効になるようにしないといけないと思う。
-	</para>
-   </sect2>
+<para>
+これだけではだめで、許可するコマンドリストに追加して始めて有効になるよ
+うにしないといけないでしょう。
+</para>
+
+</sect2>
 
 
 </sect1>
