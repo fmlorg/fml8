@@ -7,6 +7,38 @@
 	XXX fml 4.0 と同じディレクトリ名は使わないように    XXX
 	XXX
 
+○	2002 年のオーバホールの残り
+
+  ＊ 要 BUG FIX
+	Mail/Delivery/SMTP.pm
+
+  ＊おもたい
+	FML/Process/Kernel.pm
+
+	Mail/Message.pm
+	Mail/Message/ToHTML.pm
+
+
+○	IO::Adapter
+
+	get_*() には File にだけしかないのがある？
+
+	SQL and LDAP まわりの改良を
+
+○	Mail::ThreadTrack
+
+   Mail::ThreadTrack
+	output とモードの明瞭化を
+	どこでどう CSS とたたかうの？
+	Mail::ThreadTrack::Analyze をきれいにしないとね
+
+○ 	redhat たいさく?
+
+	FML::MTAControl::Sendmail を作らないとですねぃ。
+
+○ 	じかんつき subscribe のたぐい
+	じかんつき newml だと、あれか…
+
 
 ○	インストーラも perl version を (fml-devel:330)
 
@@ -158,6 +190,24 @@
 	ローカルな更新は、あまりよい結果にならないようだ。
 
 
+○ 	check the address looks safe pattern.
+
+create FML::Utils ?
+
+    # check the address looks safe pattern.
+    if (1) {
+	use FML::Restriction::Base;
+	my $resobj = new FML::Restriction::Base;
+	my $safe   = $regobj->basic_bariable();
+	my $regexp = $safe->{ address };
+
+	unless ($from =~ /^($regexp)$/) {
+	    
+	}
+    }
+
+
+
 ○ 	compare_euc_string($buf, $pat)
 
 =head2 C<compare_euc_string($buf, $pat)>
@@ -217,4 +267,4 @@ sub compare_euc_string
 
 
 ----------
-$FML: 00_MEMO,v 1.54 2002/11/26 14:15:25 fukachan Exp $
+$FML: 00_MEMO,v 1.55 2002/12/15 13:37:41 fukachan Exp $
