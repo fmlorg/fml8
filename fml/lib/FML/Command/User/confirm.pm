@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.7 2002/02/17 13:29:59 fukachan Exp $
+# $FML: confirm.pm,v 1.8 2002/03/17 05:27:32 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -23,7 +23,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-real process after confirmation succeeds.
+execute the actual corresponding process if the confirmation succeeds.
 
 =head1 METHODS
 
@@ -52,7 +52,7 @@ sub new
 sub need_lock { 1;}
 
 
-# Descriptions: real process after confirmation succeeds.
+# Descriptions: execute the actual process if this confirmation succeeds.
 #               run _switch_command() for real process.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
@@ -72,6 +72,8 @@ sub process
 
     # get class and id from buffer, for example,
     # "confirm subscribe 813f42fa2aa84bbba500ed3d2781dea6"
+    # XXX $keyword not starts at the begining of this line.
+    # XXX for example, "confirm", "> confirm" and "xxx> confirm ..."
     if ($command =~ /$keyword\s+(\w+)\s+([\w\d]+)/) {
 	($class, $id) = ($1, $2);
     }
@@ -91,17 +93,19 @@ sub process
 	    $self->_switch_command($class, $address, $curproc, $command_args);
 	}
 	else { # if req is expired
+	    LogError("request expired");
 	    croak("request is expired");
 	}
     }
     else {
+	LogError("no such confirmation request id=$id");
 	croak("no such confirmation request id=$id");
     }
 }
 
 
-# Descriptions: load module for real process and
-#               switched to it.
+# Descriptions: load module for the actual process and
+#               switch this process to it.
 #               We support only {subscribe,unsubscribe,chaddr} now.
 #    Arguments: OBJ($self) STR($class) STR($address)
 #               OBJ($curproc) HASH_REF($command_args)
@@ -126,6 +130,7 @@ sub _switch_command
 	$obj->$class($curproc, $command_args);
     }
     else {
+	LogError("no such rule confirm -> class");
 	croak("no such rule");
     }
 }

@@ -4,15 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: summary.pm,v 1.5 2002/02/13 10:41:18 fukachan Exp $
+# $FML: summary.pm,v 1.6 2002/02/18 14:14:53 fukachan Exp $
 #
 
 package FML::Command::User::summary;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-
-
 
 use FML::Command::SendFile;
 use FML::Log qw(Log LogWarn LogError);

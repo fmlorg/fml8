@@ -4,18 +4,14 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.9 2002/03/17 05:27:32 fukachan Exp $
+# $FML: chaddr.pm,v 1.10 2002/03/17 06:24:30 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-
-
-
 use FML::Log qw(Log LogWarn LogError);
-
 
 
 =head1 NAME
@@ -35,7 +31,7 @@ After confirmation succeeds, chaddr process proceeds.
 
 =head2 C<process($curproc, $command_args)>
 
-if the old address in chaddr arguments is a member,
+if either old or new addresses in chaddr arguments is an ML member,
 try to confirm this request irrespective of "From:" address.
 
 =cut
@@ -78,7 +74,7 @@ sub process
     my $command       = $command_args->{ command };
     my $sender        = $curproc->{ credential }->sender();
 
-    # fundamental check
+    # cheap sanity checks
     croak("\$member_map is not specified")    unless $member_map;
     croak("\$recipient_map is not specified") unless $recipient_map;
 
