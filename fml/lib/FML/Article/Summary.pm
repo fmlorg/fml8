@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.2 2002/11/26 09:44:37 fukachan Exp $
+# $FML: Summary.pm,v 1.3 2002/11/26 10:30:07 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -100,6 +100,10 @@ sub _prepare_info
 	$subject =~ s/\s*\n/ /g;   
 	$subject =~ s/\s+/ /g;
 
+	use Mail::Message::Encode;
+	my $enc  = new Mail::Message::Encode;
+	$subject = $enc->convert($subject, "jis-jp");
+
 	my $info = {
 	    id       => $id,
 	    address  => $address,
@@ -166,6 +170,27 @@ sub _fml4_compatible_style_one_line_summary
 =head1 UTILITIES
 
 =cut
+
+
+# Descriptions: append summary information for article $id.
+#    Arguments: OBJ($self) NUM($id)
+# Side Effects: update summary
+# Return Value: none
+sub append
+{
+    my ($self, $id) = @_;
+    my $curproc = $self->{ _curproc };
+    my $config  = $curproc->config();
+    my $file    = $config->{ 'summary_file' };
+
+    use FileHandle;
+    my $wh = new FileHandle ">> $file";
+    if (defined $wh) {
+	$wh->autoflush(1);
+	$self->print($wh, $id);
+	$wh->close();
+    }
+}
 
 
 # Descriptions: re-genearete summary from $min to $max.
