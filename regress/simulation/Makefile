@@ -46,7 +46,7 @@ link:
 	rm -f File; ln -s ../../fml/lib/File
 	rm -f SQL; ln -s ../../fml/lib/SQL
 	rm -f Tie; ln -s ../../fml/lib/Tie
-	rm -f Dialect; ln -s ../../fml/lib/Dialect
+	rm -f Language; ln -s ../../fml/lib/Language
 	rm -f MailingList; ln -s ../../fml/lib/MailingList
 	rm -f libexec; ln -s ../../fml/libexec
 	rm -f log; ln -s /var/spool/ml/elena/log
