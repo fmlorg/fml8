@@ -21,6 +21,7 @@ if ($@) { print STDERR "Error: ", $@, "\n";}
 exit 0;
 
 
+# Firstly we load Standalone.pm which has main.cf parser().
 BEGIN {
     use File::Basename;
     unshift(@INC, dirname($0));
@@ -28,17 +29,19 @@ BEGIN {
 }
 
 
+# Descriptions: top lebel bootstrap program
+#               which load the required library and switch myself to it.
+#               loading order: 
+#               libexec/fmlwrapper -> libexec/fml -> FML::Process::Something
+#    Arguments: none
+# Side Effects: switch to the real process
+# Return Value: none
 sub Bootstrap
 {
     # 1. main.cf exists and I can open it?
     -f $MainCF   || die("cannot find ${MainCF}");
     my $fh = new FileHandle $MainCF;
     defined($fh) || die("cannot find ${MainCF}");
-
-    # 1.1 o.k. try to load main.cf
-    my $config         = Standalone::load_cf($MainCF);
-    my $libexec_dir    = $config->{ libexec_dir };
-    my $default_config = $config->{ default_config };
 
     # 2. pick up *.cf files to read and set them to @cf.
     #    We pass it to fml_loader.
@@ -48,23 +51,33 @@ sub Bootstrap
     #         /etc/fml/domains/$DOMAIN/config.cf
     #         /var/spool/ml/elena/config.cf
     #        );
-    my @cf = ($default_config);
-    my %optargs = ();
+    my @cf      = ();
+    my %options = ();
+    my $my_default_config = '';
     for (@ARGV) {
 	if  ($_ eq '--ctladdr') {
-	   $optargs{ ctladdr } = 1; 
+	   $options{ ctladdr } = 1; 
+	}
+	elsif ($_ eq '-c') {
+	    $my_default_config = shift @ARGV;
 	}
 	elsif (-d $_) {
 	    push(@cf, "$_/config.cf") if -f "$_/config.cf";
 	}
 	elsif (-f $_) {
-	    push(@cf, "$_");
+	    push(@cf, $_);
 	}
     }
 
+    # 2.1 o.k. try to load main.cf
+    my $main_cf        = Standalone::load_cf($MainCF);
+    my $libexec_dir    = $main_cf->{ libexec_dir };
+    my $default_config = $my_default_config || $main_cf->{ default_config };
+    unshift(@cf, $default_config);
+
     # 3. reset @INC
-    unshift(@INC, $config->{ local_lib_dir });
-    unshift(@INC, $config->{ lib_dir });
+    unshift(@INC, $main_cf->{ local_lib_dir }) if $main_cf->{ local_lib_dir };
+    unshift(@INC, $main_cf->{ lib_dir })       if $main_cf->{ lib_dir };
 
     # 4. inspect my mode from $0
     use File::Basename;
@@ -74,10 +87,9 @@ sub Bootstrap
     require "$libexec_dir/fml";
     ProcessSwitch( 
 		  {
-		      main_config  => $config,
 		      cf_list      => \@cf,
 		      myname       => $myname,
-		      options      => \%optargs,
+		      options      => \%options,
 		  });
 }
 

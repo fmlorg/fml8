@@ -14,7 +14,7 @@ PATH=/bin:/usr/bin:/usr/sbin:/usr/etc:/sbin:/etc
 umask 022
 
 ### configurations ###
-date=`date +%C%y%d%m`
+date=`date +%C%y%m%d`
 version=current-${date}
 prefix_dir=/usr/local
 config_dir=/etc/fml

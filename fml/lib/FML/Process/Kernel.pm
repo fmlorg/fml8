@@ -31,10 +31,8 @@ sub new
 
     bless $curproc, $self;
 
-    # initialize
-    my $main_config = $args->{ main_config };
-    my $ra_cf       = $args->{ cf_list };
-    $curproc->load_config_files( $ra_cf );
+    # load config.cf files, which is passed from fmlwrapper.
+    $curproc->load_config_files( $args->{ cf_list } );
 
     return $curproc;
 }
