@@ -31,10 +31,6 @@ the constructor.
 It checks we can use MD5 perl module or should use some programs e.g. 
 C<md5>, C<cksum>, et.al.
 
-=head2 C<md5(\$string)>
-
-return the md5 checksum of C<$string>.
-
 =cut
 
 
@@ -68,13 +64,21 @@ sub _init
 	$self->{ _type } = 'native';
     }
     else {
-	use FML::Utils qw(search_program);
+	eval qq{ require FML::Utils; import FML::Utils qw(search_program);};
 	my $prog = search_program('md5') || search_program('md5sum');
 	if (defined $prog) {
 	    $self->{ _program } = $prog;
 	} 
     }
 }
+
+
+
+=head2 C<md5(\$string)>
+
+return the md5 checksum of C<$string>.
+
+=cut
 
 
 sub md5
@@ -124,7 +128,7 @@ sub _md5_by_program
 	use FileHandle;
 	my ($rh, $wh) = FileHandle::pipe;
 
-	use IPC::Open2;
+	eval qq{ require IPC::Open2; IPC::Open2->import();};
 	my $pid = open2($rh, $wh, $self->{ _program });
 	if (defined $pid) {
 	    print $wh $$r_data;
@@ -140,6 +144,86 @@ sub _md5_by_program
     undef;
 }
 
+
+=head2 C<cksum1($file)>
+
+not implemented.
+
+This is a 16-bit checksum. The algorithm used by historic BSD systems
+as the sum(1) algorithm and by historic AT&T System V UNIX systems as
+the sum algorithm when using the C<-r> option.
+
+=head2 C<cksum2($file)>
+
+return the traditional checksum of the given C<$file>.
+
+This is a 32-bit checksum. The algorithm used by historic AT&T System
+V UNIX systems as the default sum algorithm.
+
+See POSIX 1003.2 for more details.
+
+=cut
+
+
+sub cksum2
+{
+    my ($self, $f) = @_;
+    my ($crc, $total, $nr, $buf, $r);
+
+    $crc = $total = 0;
+    if (open($f, $f)) {
+        while (($nr = sysread($f, $buf, 1024)) > 0) {
+            my ($i) = 0;
+            $total += $nr;
+
+            for ($i = 0; $i < $nr; $i++) {
+                $r = substr($buf, $i, 1);
+                $crc += ord($r);
+            }
+        }
+        close($f);
+        $crc = ($crc & 0xffff) + ($crc >> 16);
+        $crc = ($crc & 0xffff) + ($crc >> 16);
+    }
+    else {
+        print STDERR "ERROR: no such file $f\n";
+    }
+
+    ($crc, $total);
+}
+
+
+=head2 C<crc($file)>
+
+not implemented.
+
+The default CRC used is based on the polynomial used for CRC error
+checking in the networking standard ISO 8802-3:1989 The CRC checksum
+encoding is defined by the generating polynomial:
+
+  G(x) = x^32 + x^26 + x^23 + x^22 + x^16 + x^12 +
+         x^11 + x^10 + x^8 + x^7 + x^5 + x^4 + x^2 + x + 1
+
+Mathematically, the CRC value corresponding to a given file is defined
+by the following procedure:
+
+The n bits to be evaluated are considered to be the coefficients of
+a mod 2 polynomial M(x) of degree n-1.  These n bits are the bits
+from the file, with the most significant bit being the most signif-
+icant bit of the first octet of the file and the last bit being the
+least significant bit of the last octet, padded with zero bits (if
+necessary) to achieve an integral number of octets, followed by one
+or more octets representing the length of the file as a binary val-
+ue, least significant octet first.  The smallest number of octets
+capable of representing this integer are used.
+
+M(x) is multiplied by x^32 (i.e., shifted left 32 bits) and divided
+by G(x) using mod 2 division, producing a remainder R(x) of degree
+<= 31.
+
+The coefficients of R(x) are considered to be a 32-bit sequence.
+
+The bit sequence is complemented and the result is the CRC.
 
 =head1 AUTHOR
 
