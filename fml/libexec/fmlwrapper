@@ -88,7 +88,7 @@ sub Bootstrap
 
     # debug;
     if ($0 =~ /fmlwrapper/) {
-	use Data::Dumper; print Dumper( $main_cf ); sleep 5;
+	use Data::Dumper; print Dumper( $main_cf ); sleep 3;
     }
 
     # 5. o.k. here we go!

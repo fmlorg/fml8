@@ -47,7 +47,7 @@ sub new
     $curproc->load_config_files( $args->{ cf_list } );
 
     # debug
-    if ($0 =~ /fmlwrapper/) { $curproc->debug; sleep 5;}
+    if ($0 =~ /fmlwrapper/) { $curproc->debug; sleep 3;}
 
     return $curproc;
 }
