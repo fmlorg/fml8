@@ -1,19 +1,23 @@
 #!/usr/bin/env perl
 #
-# $FML$
+# $FML: .remove_obsolete.pl,v 1.1 2001/08/22 22:24:37 fukachan Exp $
 #
 
 use strict;
 use Carp;
 
+print "cvs remove ";
+
 my $prev = '';
 for my $cur (sort <draft*txt>) {
     if (compare($prev, $cur)) {
-	print "cvs remove $prev\n";
+	print "$prev ";
     }
 
     $prev = $cur;
 }
+
+print "\n";
 
 
 sub compare
