@@ -1,5 +1,5 @@
 <!--
-   $FML: newml.sgml,v 1.2 2002/07/06 14:55:20 fukachan Exp $
+   $FML: newml.sgml,v 1.3 2003/04/15 14:51:44 fukachan Exp $
 -->
 
 
@@ -9,10 +9,18 @@
 	</title>
 
 
-<sect1>
+<sect1 id="setup.newml.default">
 	<title>
-	makefml newml でＭＬを作る
+	makefml newml でＭＬを作る (デフォルトドメインの場合)
 	</title>
+
+<caution>
+<para>
+デフォルトドメインの場合、&fml4 と同じで構いません。
+バーチャルドメインを使う場合、ちょっと違います。
+次節を参照して下さい。
+</para>
+</caution>
 
 <para>
 makefml を使ってＭＬを作成します。
@@ -98,6 +106,54 @@ makefml を使ってＭＬを作成します。
    </listitem>
 
 </itemizedlist>
+</para>
+
+</sect1>
+
+
+<sect1 id="setup.newml.nondefault">
+	<title>
+	makefml newml でＭＬを作る (デフォルトドメインでは"ない"場合)
+	</title>
+
+<caution>
+<para>
+デフォルトドメインではない場合、&fml4 と異なります。
+注意点は、最初に newdomain コマンドを使うところとＭＬ名です。
+</para>
+</caution>
+
+<para>
+makefml を使ってＭＬを作成します。
+使い方は &fml4; と同様ですが、ＭＬ名にきちんとドメインまでつけて下さい。
+<screen>
+% su fml
+% makefml newdomain nuinui.net /var/spool/virtual/nuinui.net
+% makefml newml elena@nuinui.net
+</screen>
+</para>
+
+<para>
+newdomainコマンドでは、ドメインと使うml_home_prefixディレクトリのペア
+を指定します。このコマンドは /etc/fml/ml_home_prefix ファイルの編集を
+代行します。上の例では ml_home_prefix ファイルに次の行を追加します。
+<screen>
+nuinui.net /var/spool/virtual/nuinui.net
+</screen>
+ちなみに、消す場合は rmdomain コマンドです。
+</para>
+
+<para>
+newml コマンドは引数のＭＬ名をドメイン名つきにする以外、デフォルトドメ
+インの場合と同じです。
+</para>
+
+<para>
+詳しくは、
+<link linkend="virtualdomain">
+バーチャルドメイン
+</link>
+の章を参照して下さい。
 </para>
 
 </sect1>
