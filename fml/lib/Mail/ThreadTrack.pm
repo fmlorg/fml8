@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.7 2001/11/03 10:02:00 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.8 2001/11/03 11:57:05 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -344,6 +344,52 @@ sub get_mode
 {
     my ($self) = @_;
     return(defined $self->{ _mode } ?  $self->{ _mode } : undef);
+}
+
+
+=head2 exist($thread_id)
+
+=cut
+
+
+# Descriptions: 
+#    Arguments: $self $string
+# Side Effects: 
+# Return Value: none
+sub exist
+{
+    my ($self, $id) = @_;
+    my $r  = 0;
+
+    $self->db_open();
+
+    my $rh = $self->{ _hash_table };
+
+    if (defined $rh->{ _articles }) {
+	my $a = $rh->{ _articles };
+	$r = (defined $a->{ $id } ? 1 : 0);	
+    }
+
+    $self->db_close();
+
+    return $r;
+}
+
+
+=head2 close($thread_id)
+
+close specified $thread_id.
+
+=cut
+
+
+sub close
+{
+    my ($self, $thread_id) = @_;
+
+    $self->db_open();
+    $self->_set_status($thread_id, "close");
+    $self->db_close();
 }
 
 

@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: ThreadTrack.pm,v 1.2 2001/11/04 05:04:43 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.3 2001/11/04 06:50:41 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -67,7 +67,6 @@ sub prepare
 =head2 C<run($args)>
 
 call the actual thread tracking system.
-It supports only 'list' and 'close' commands.
 
 =cut
 
@@ -76,12 +75,13 @@ sub run
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
     my $argv    = $curproc->command_line_argv();
-    my $command = $argv->[ 0 ] || 'list';
+    my $command = $argv->[ 0 ] || '';
 
     #  argumente for thread track module
     my $ml_name       = $config->{ ml_name };
     my $thread_db_dir = $config->{ thread_db_dir };
     my $spool_dir     = $config->{ spool_dir };
+    my $max_id        = $curproc->article_id_max();
     my $ttargs        = {
 	logfp       => \&Log,
 	fd          => \*STDOUT,
@@ -94,11 +94,12 @@ sub run
     my $thread = new Mail::ThreadTrack $ttargs;
     $thread->set_mode('text');
 
+    $curproc->lock();
+
     if ($command eq 'list' || $command eq 'summary') {
 	$thread->show_summary();
     }
     elsif ($command eq 'db_mkdb') {
-	my $max_id = $curproc->article_id_max();
 	$thread->db_mkdb(1, $max_id);
     }
     elsif ($command eq 'db_clear') {
@@ -107,24 +108,45 @@ sub run
 	$thread->db_close();
     }
     elsif ($command eq 'close') {
-	$curproc->lock();
-
 	my $thread_id = $argv->[ 2 ];
-	my $args = {
-	    thread_id => $thread_id, 
-	    status    => 'close',
-	};
-	if ($thread_id) {
-	    $thread->set_status($args);
+	if (defined $thread_id) {
+	    _close($thread, $thread_id, 1, $max_id);
 	}
 	else {
 	    croak("specify \$thread_id");
 	}
-
-	$curproc->unlock();
     }
     else {
-	_help();
+	help();
+    }
+
+    $curproc->unlock();
+}
+
+
+# $thread_id accepts MH style format.
+# MH style is expanded by C<Mail::Messsage::MH>.
+sub _close
+{
+    my ($thread, $thread_id, $min, $max) = @_;
+
+    # expand MH style variable: e.g. last:100 -> [ 100 .. 200 ]
+    use Mail::Message::MH;
+    my $ra = Mail::Message::MH->expand($thread_id, $min, $max);
+    $ra = [ $thread_id ] unless defined $ra;
+
+    for my $id (@$ra) {
+	# e.g. 100 -> elena/100
+	if ($id =~ /^\d+$/) { $id = $thread->_create_thread_id_strings($id);}
+
+	# check "elena/100" exists ?
+	if ($thread->exist($id)) {
+	    Log("close thread_id=$id");
+	    $thread->close($id);
+	}
+	else {
+	    Log("thread_id=$id not exists") if $ENV{'debug'};
+	}
     }
 }
 
@@ -140,7 +162,7 @@ Usage: $name \$command \$ml_name [options]
 
 $name list     \$ml_name          list up summary
 $name summary  \$ml_name          list up summary
-$name close    \$ml_name \$id     close ticket specified by \$id 
+$name close    \$ml_name id       close ticket specified by id (MH style)
 $name db_mkdb  \$ml_name          recreate \$ml_name thread database
 $name db_clear \$ml_name          clear \$ml_name thread database
 
