@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.71 2003/08/03 08:35:58 fukachan Exp $
+# $FML: Makefile,v 1.72 2003/10/17 08:40:46 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -33,7 +33,7 @@ check:
 		grep -v OK || echo ''
 	@ echo "" >> 33_TODO
 	@ echo "   *********** CHECK VARIABLE DEFINITIONS ********** " >> 33_TODO
-	@ ../variables/sync.pl >> 33_TODO
+	@ ../variable/diff.pl >> 33_TODO
 	@ echo "   *********** STATUS.txt ********** " >> 33_TODO
 	@ echo "" >> 33_TODO
 	- egrep '^[0-9]|\[TODO\]' ../../fml/doc/ja/todo/STATUS.txt >> 33_TODO
