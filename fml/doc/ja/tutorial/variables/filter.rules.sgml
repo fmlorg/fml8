@@ -7,14 +7,22 @@
 #		$USE_DISTRIBUTE_FILTER
 #		$INCOMING_MAIL_SIZE_LIMIT
 #		ADD_CONTENT_HANDLER()
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_article_filter	= 	yes
  
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: MIX (
+#			article_size_filter
+#			article_header_filter
+#			article_non_mime_filter
+#			article_mime_component_filter
+#			article_text_plain_filter
+#			article_spam_filter
+#			article_virus_filter
+#		)
 #     Examples:
 article_filter_functions	=	article_size_filter
 					article_header_filter
@@ -27,7 +35,7 @@ article_filter_functions	=	article_size_filter
 
 # Descriptions: サイズ情報を根拠にしたフィルタリングをするか？
 #      History: no
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_size_filter	=	yes
 
@@ -35,7 +43,10 @@ use_article_size_filter	=	yes
 # Descriptions: フィルタリングのルール。
 #               どのルールにもマッチしないなら、記事の投稿は認められる。
 #      History:
-#        Value:
+#        Value: MIX (	check_header_size
+#			check_body_size
+#			permit
+#		)
 #     Examples:
 article_size_filter_rules	=	check_header_size
 					check_body_size
@@ -45,7 +56,7 @@ article_size_filter_rules	=	check_header_size
 # Descriptions: ヘッダ情報を根拠にしたフィルタリングをするか？
 #      History: disabled by default.
 #               "yes" always if $USE_DISTRIBUTE_FILTER is yes.
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_header_filter		=	yes
 
@@ -53,7 +64,11 @@ use_article_header_filter		=	yes
 # Descriptions: フィルタリングのルール。
 #               どのルールにもマッチしないなら、記事の投稿は認められる。
 #      History: check_date に該当するものはない。
-#        Value:
+#        Value: MIX (
+#			check_message_id
+#			check_date
+#			permit
+#		)
 #     Examples:
 article_header_filter_rules		=	check_message_id
 						check_date
@@ -63,14 +78,14 @@ article_header_filter_rules		=	check_message_id
 # Descriptions: とりあえず、だみ〜
 #      History: 4.0 の content filter で、!MIME にあたる部分。
 #		よって、デフォルトでは no ということになる。
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_non_mime_filter		=	yes
 
 
 # Descriptions: とりあえず、だみ〜
 #      History: なし
-#        Value: permit / reject_empty_content_type
+#        Value: MIX ( permit reject_empty_content_type )
 #     Examples: permit
 article_non_mime_filter_rules		=	reject_empty_content_type
 						permit
@@ -78,14 +93,14 @@ article_non_mime_filter_rules		=	reject_empty_content_type
 
 # Descriptions: MIME の構造に基づいたフィルタを行なう
 #      History: 4.0 の content filter 相当。デフォルトでは no だ。
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_mime_component_filter	=	yes
 
 
 # Descriptions: ファイル名
 #      History: 4.0 の @CONTENT_HANDLER 相当
-#        Value:
+#        Value: FILE
 #     Examples:
 article_mime_component_filter_rules	= $fml_config_dir/mime_component_filter
 
@@ -95,7 +110,7 @@ article_mime_component_filter_rules	= $fml_config_dir/mime_component_filter
 #      History: 4.0 の EnvelopeFilter 相当。
 #		$USE_DISTRIBUTE_FILTER が yes の場合、
 #		以下のルールの半分くらいが自動的に適用されていた。
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_text_plain_filter		=	yes
 
@@ -124,7 +139,16 @@ use_article_text_plain_filter		=	yes
 #				<=> FILTER_ATTR_REJECT_MS_GUID
 #
 #         Note: permit by default 
-#        Value:
+#        Value: MIX (
+#			reject_not_iso2022jp_japanese_string
+#			reject_null_mail_body
+#			reject_one_line_message
+#			reject_old_fml_command_syntax
+#			reject_invalid_fml_command_syntax
+#			reject_japanese_command_syntax
+#			reject_ms_guid
+#			permit
+#		)
 #     Examples:
 article_text_plain_filter_rules	=	reject_not_iso2022jp_japanese_string
 					reject_null_mail_body
@@ -140,14 +164,14 @@ article_text_plain_filter_rules	=	reject_not_iso2022jp_japanese_string
 #		また有効にした場合、ヘッダにSPAMであることを知らせる
 #		フラッグをつけ通過させる動作がデフォルト。
 #      History: none
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: no
 use_article_spam_filter		=	no
 
 
 # Descriptions: SPAMだと判定された場合、どうするか？
 #      History: none
-#        Value: reject | ignore | header_rewrite
+#        Value: MIX ( reject ignore header_rewrite )
 #     Examples: header_rewrite
 article_spam_filter_rules	=	header_rewrite
 
@@ -155,21 +179,21 @@ article_spam_filter_rules	=	header_rewrite
 # Descriptions: SPAMチェッカとして使う外部プログラム。
 #		複数指定すると、複数のプログラムを順に試す。
 #      History: none
-#        Value: spamassasin | spamc | bogofilter
+#        Value: MIX ( spamassasin spamc bogofilter )
 #     Examples: bogofilter
 article_spam_filter_drivers	=	bogofilter
 
 
 # Descriptions: 外部のVirusチェッカを使った検査、デフォルトでは無効。
 #      History: none
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: no
 use_article_virus_filter	=	no
 
 
 # Descriptions: ウィルスだと判定された場合、どうするか？
 #      History: none
-#        Value: reject | ignore | header_rewrite
+#        Value: MIX ( reject ignore header_rewrite )
 #     Examples: reject
 article_virus_filter_rules	=	reject
 
@@ -177,7 +201,7 @@ article_virus_filter_rules	=	reject
 # Descriptions: ウィルスチェッカとして使う外部プログラム
 #		複数指定すると、複数のプログラムを順に試す。
 #      History: none
-#        Value: clamscan 
+#        Value: MIX ( clamscan )
 #     Examples: clamscan
 article_virus_filter_drivers	=	clamscan
 
@@ -186,7 +210,7 @@ article_virus_filter_drivers	=	clamscan
 #      History: maintainer には常に弾かれたことを知らせるが、
 #		sender に対しては $FILTER_NOTIFY_REJECTION (= 0 by default)。
 #		デフォルトでは、管理者にのみ知らせる。
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_article_filter_reject_notice	=	yes
 
@@ -195,7 +219,7 @@ use_article_filter_reject_notice	=	yes
 #      History: 4.0 では maintainer あてはハードコーデイングで常に知らせる。
 #		sender 宛ては $FILTER_NOTIFY_REJECTION で制御されていて
 #		デフォルトでは知らせない。
-#        Value: maintainer | sender
+#        Value: MIX ( maintainer sender )
 #     Examples: maintainer sender
 article_filter_reject_notice_recipients	=	maintainer
 						sender
@@ -204,70 +228,70 @@ article_filter_reject_notice_recipients	=	maintainer
 # Descriptions: 弾いたメールをどのようにフォワードするか？
 #               ウィルスなどを考慮すると、文字列がいいとおもう
 #      History: 4.0 では文字列で、これはハードコーディングされていた。
-#        Value: multipart / string
+#        Value: SELECT ( multipart string )
 #     Examples: string
 article_filter_reject_notice_data_type	=	string
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: YES_OR_NO
 #     Examples:
 use_article_spam_filter		=	no
 
 
 # Descriptions: list up driver names used as spam checker.
 #      History: none
-#        Value: spamassassin | spamc | bogofilter
+#        Value: MIX ( spamassassin spamc bogofilter )
 #     Examples: bogofilter
 article_spam_filter_functions	=	bogofilter
 
 
 # Descriptions: exit non-zero status code when spam caught if "-e" specified.
 #      History: none
-#        Value: STR
+#        Value: COMMAND_LINE_OPTIONS
 #     Examples: -e
 article_spam_filter_spamassassin_options	=	-e
 
 
 # Descriptions: spamc optoins. "-c" means check only.
 #      History: none
-#        Value: STR
+#        Value: COMMAND_LINE_OPTIONS
 #     Examples: -c
 article_spam_filter_spamc_options		=	-c
 
 
 # Descriptions: "-e" implies embedded mode.
 #      History: none
-#        Value: STR
+#        Value: COMMAND_LINE_OPTIONS
 #     Examples: -e
 article_spam_filter_bogofilter_options		=	-e
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: YES_OR_NO
 #     Examples:
 use_command_mail_filter	= 	yes
  
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: MIX ( command_mail_size_filter )
 #     Examples:
 command_mail_filter_functions	=	command_mail_size_filter
 
 
 # Descriptions: フィルタで弾かれたことを教える
 #      History: 4.0 ではハードコードだったような…
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_command_mail_filter_reject_notice	=	yes
 
 
 # Descriptions: エラーのお知らせの受信者
 #      History: 4.0 ではハードコードだったような…
-#        Value: maintainer | sender
+#        Value: MIX ( maintainer sender )
 #     Examples: maintainer sender
 command_mail_filter_reject_notice_recipients	=	maintainer
 							sender
@@ -276,14 +300,14 @@ command_mail_filter_reject_notice_recipients	=	maintainer
 # Descriptions: 弾いたメールをどのようにフォワードするか？
 #               ウィルスなどを考慮すると、文字列がいいとおもう
 #      History: 4.0 では文字列で、これはハードコーディングされていた。
-#        Value: multipart / string
+#        Value: SELECT ( multipart string )
 #     Examples: string
 command_mail_filter_reject_notice_data_type	=	string
 
 
 # Descriptions: サイズ情報を根拠にしたフィルタリングをするか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_command_mail_size_filter	=	yes
 
@@ -291,7 +315,13 @@ use_command_mail_size_filter	=	yes
 # Descriptions: フィルタリングのルール。
 #               どのルールにもマッチしないなら、コマンドメールは認められる。
 #      History:
-#        Value:
+#        Value: MIX (
+#			check_header_size
+#			check_body_size
+#			check_command_limit
+#			check_line_length_limit
+#			permit
+#		)
 #     Examples:
 command_mail_size_filter_rules	=	check_header_size
 					check_body_size
@@ -299,6 +329,10 @@ command_mail_size_filter_rules	=	check_header_size
 					check_line_length_limit
 					permit
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_bogofilter           = @BOGOFILTER@
 
 # $article_digest_finish_end_hook = q{ 1;};

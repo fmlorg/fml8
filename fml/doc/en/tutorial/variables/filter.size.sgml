@@ -35,7 +35,7 @@ outgoing_mail_cache_size	=	128
 
 # Descriptions: log rotation policy. 
 #      History: none
-#        Value: size | interval
+#        Value: SELECT ( size interval )
 #     Examples: size
 log_rotate_policy	=	size
 
@@ -80,7 +80,15 @@ outgoing_article_body_size_limit	= $default_mail_body_size_limit
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: MIX (
+#			article_size_filter
+#			article_header_filter
+#			article_non_mime_filter
+#			article_mime_component_filter
+#			article_text_plain_filter
+#			article_spam_filter
+#			article_virus_filter
+#		)
 #     Examples:
 article_filter_functions	=	article_size_filter
 					article_header_filter
@@ -96,7 +104,7 @@ article_filter_functions	=	article_size_filter
 
 # Descriptions: use size based filter.
 #      History: no
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_size_filter	=	yes
 
@@ -105,7 +113,10 @@ use_article_size_filter	=	yes
 #               first match. 
 #               permit post if no rule matched.
 #      History:
-#        Value:
+#        Value: MIX (	check_header_size
+#			check_body_size
+#			permit
+#		)
 #     Examples:
 article_size_filter_rules	=	check_header_size
 					check_body_size
@@ -146,7 +157,7 @@ outgoing_command_mail_body_size_limit	= $default_mail_body_size_limit
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: MIX ( command_mail_size_filter )
 #     Examples:
 command_mail_filter_functions	=	command_mail_size_filter
 
@@ -156,7 +167,7 @@ command_mail_filter_functions	=	command_mail_size_filter
 
 # Descriptions: use size based filter
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_command_mail_size_filter	=	yes
 
@@ -165,7 +176,13 @@ use_command_mail_size_filter	=	yes
 #               first match.
 #               permit if no rule matched.
 #      History:
-#        Value:
+#        Value: MIX (
+#			check_header_size
+#			check_body_size
+#			check_command_limit
+#			check_line_length_limit
+#			permit
+#		)
 #     Examples:
 command_mail_size_filter_rules	=	check_header_size
 					check_body_size
@@ -177,7 +194,7 @@ command_mail_size_filter_rules	=	check_header_size
 # Descriptions: cache size.
 #		it implies days if the cache mode is temporal.
 #      History: none
-#        Value: number
+#        Value: NUM
 #     Examples: 
 error_mail_analyzer_cache_size		=	14
 
