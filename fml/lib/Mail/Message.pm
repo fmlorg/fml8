@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.92 2004/03/31 02:48:23 fukachan Exp $
+# $FML: Message.pm,v 1.93 2004/04/15 09:36:56 tmu Exp $
 #
 
 package Mail::Message;
@@ -36,7 +36,7 @@ Mail::Message -- manipulate mail messages (parse, analyze and compose)
 To parse the stdin and print it,
 
     use Mail::Message;
-    my $m = Mail::Message->parse({ fh => \*STDIN });
+    my $m = Mail::Message->parse({ fh => *STDIN{IO} });
     $m1->print;
 
 to parse file C<$filename>,
@@ -472,7 +472,7 @@ sub parse
 	$fd = new FileHandle $args->{ 'file' };
     }
     else {
-	$fd = $args->{ fd } || \*STDIN;
+	$fd = $args->{ fd } || *STDIN{IO};
     }
 
     # make an object
@@ -1096,7 +1096,7 @@ sub set_print_mode
 
 # Descriptions: print message, all messages in the current chain ($self).
 #    Arguments: OBJ($self) HANDLE($fd)
-# Side Effects: none
+# Side Effects: set error
 # Return Value: none
 sub _print
 {
@@ -1105,10 +1105,18 @@ sub _print
     my $args = $self; # e.g. pass _raw_print flag among functions
 
     # if $fd is not given, we use STDOUT.
-    unless (defined $fd) { $fd = \*STDOUT;}
+    unless (defined $fd) { $fd = *STDOUT{IO};}
+
+    # check if IO::Handle error handling supported.
+    my $has_error = $fd->can('error') && $fd->can('clearerr') ? 1 : 0;
+
+    # error clear
+    $self->error_clear();
 
   MSG:
     while (1) {
+	if ($has_error) { $fd->clearerr();}
+
 	# on memory
 	if (defined $msg->{ data }) {
 	    $msg->_print_messsage_on_memory($fd, $args);
@@ -1117,6 +1125,12 @@ sub _print
 	elsif (defined $msg->{ filename } &&
 	    -f $msg->{ filename }) {
 	    $msg->_print_messsage_on_disk($fd, $args);
+	}
+
+	# error
+	if ($has_error && $fd->error) {
+	    $self->error_set("write error");
+	    last MSG;
 	}
 
 	last MSG unless $msg->{ 'next' };
@@ -2650,6 +2664,53 @@ sub data_type_list
 	}
     }
     \@buf;
+}
+
+
+# Descriptions: set the error message.
+#    Arguments: OBJ($self) STR($mesg)
+# Side Effects: update OBJ
+# Return Value: STR
+sub error_set
+{
+    my ($self, $mesg) = @_;
+    $self->{'_error_reason'} = $mesg;
+}
+
+
+# Descriptions: get the error message.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub error
+{
+    my ($self) = @_;
+    return $self->{'_error_reason'};
+}
+
+
+# Descriptions: get the error message.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub errstr
+{
+    my ($self) = @_;
+    return $self->{'_error_reason'};
+}
+
+
+# Descriptions: clear the error message.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub error_clear
+{
+    my ($self) = @_;
+    my $msg = $self->{'_error_reason'};
+    undef $self->{'_error_reason'} if defined $self->{'_error_reason'};
+    undef $self->{'_error_action'} if defined $self->{'_error_action'};
+    return $msg;
 }
 
 
