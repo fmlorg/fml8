@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.12 2004/06/07 16:04:42 fukachan Exp $
+# $FML: Install.pm,v 1.13 2004/06/17 16:16:08 fukachan Exp $
 #
 
 package FML::Install;
@@ -25,7 +25,7 @@ $install_root = '';
 
 =head1 NAME
 
-FML::Install - utility functions used in installation
+FML::Install - utility functions used in installation.
 
 =head1 SYNOPSIS
 
@@ -125,7 +125,7 @@ read the specified config file, initialize and return config object.
 =cut
 
 
-# Descriptions: read the specified config file and initialize config object
+# Descriptions: read the specified config file and initialize config object.
 #    Arguments: OBJ($self) STR($cf)
 # Side Effects: initialize configuration object
 # Return Value: OBJ
@@ -174,8 +174,8 @@ sub convert
     my $in  = new FileHandle $src;
     my $out = new FileHandle "> $tmp";
 
-    # special flag to influence message
-    my $dst_already_exist = -f $out ? 1 : 0;
+    # special flag
+    my $dst_already_exist = -f $dst ? 1 : 0;
     my $is_show_message   = $self->_is_show_message();
 
     if (defined $in && defined $out) {
@@ -226,7 +226,7 @@ install main.cf e.g. /etc/fml/main.cf.
 =cut
 
 
-# Descriptions: install main.cf
+# Descriptions: install main.cf file.
 #    Arguments: OBJ($self)
 # Side Effects: create main.cf.
 # Return Value: none
@@ -862,7 +862,7 @@ chown $owner:$group $dir.
 =cut
 
 
-# Descriptions: mkdir $dir with the mode $mode
+# Descriptions: mkdir $dir with the mode $mode.
 #    Arguments: OBJ($self) STR($dir) NUM($mode)
 # Side Effects: mkdir $dir
 # Return Value: none
@@ -932,7 +932,7 @@ sub _want_file
 }
 
 
-# Descriptions: chown
+# Descriptions: chown utility.
 #    Arguments: OBJ($self) STR($owner) STR($group) STR($dir)
 # Side Effects: change owner and group of $dir
 # Return Value: none
