@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.90 2003/10/18 07:32:08 fukachan Exp $
+# $FML: Utils.pm,v 1.91 2003/11/02 05:12:37 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1300,11 +1300,23 @@ sub article_max_id
 }
 
 
-=head2 get_print_style()
-
 =head2 set_print_style(mode)
 
+=head2 get_print_style()
+
 =cut
+
+
+# Descriptions: set print style
+#    Arguments: OBJ($curproc) STR($mode)
+# Side Effects: none
+# Return Value: STR
+sub set_print_style
+{
+    my ($curproc, $mode) = @_;
+
+    $curproc->{ __print_style } = $mode;
+}
 
 
 # Descriptions: get print style
@@ -1319,16 +1331,11 @@ sub get_print_style
 }
 
 
-# Descriptions: set print style
-#    Arguments: OBJ($curproc) STR($mode)
-# Side Effects: none
-# Return Value: STR
-sub set_print_style
-{
-    my ($curproc, $mode) = @_;
+=head2 language_default()
 
-    $curproc->{ __print_style } = $mode;
-}
+=head2 language_of_html_file()
+
+=cut
 
 
 # Descriptions: inform default language
@@ -1540,18 +1547,25 @@ sub hints
 }
 
 
-=head2 debug_level()
+=head2 set_debug_level($level)
+
+set debug level (NOT IMPLEMENTED).
+
+=head2 get_debug_level()
 
 return debug level.
 
 =cut
 
 
+# XXX-TODO: set_debug_level() is not implemented.
+
+
 # Descriptions: return debug level.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: NUM
-sub debug_level
+sub get_debug_level
 {
     my ($curproc) = @_;
     my $args = $curproc->{ __parent_args };

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.189 2003/10/26 02:20:01 fukachan Exp $
+# $FML: Kernel.pm,v 1.190 2003/10/30 14:02:40 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2456,7 +2456,7 @@ sub reset_umask
 sub be_quiet
 {
     my ($curproc) = @_;
-    my $debug     = $curproc->debug_level();
+    my $debug     = $curproc->get_debug_level();
     my $config    = $curproc->config();
     my $option    = $curproc->command_line_options();
 
@@ -2479,7 +2479,7 @@ sub be_quiet
 sub finalize
 {
     my ($curproc) = @_;
-    my $debug     = $curproc->debug_level();
+    my $debug     = $curproc->get_debug_level();
     my $config    = $curproc->config();
     my $option    = $curproc->command_line_options();
 
