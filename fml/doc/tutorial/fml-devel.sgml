@@ -1,0 +1,32 @@
+<!doctype book public "-//OASIS//DTD DocBook V3.1//EN" [
+<!entity intro SYSTEM "intro.sgml">
+<!entity reference SYSTEM "reference.sgml">
+]>
+
+<!--
+This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
+to generate various output formats.
+-->
+
+<book>
+  <bookinfo>
+    <title>fml-devel reference manual</title>
+    <author>Ken'ichi Fukamachi</author>
+    <copyright><year/2001/<holder/Ken'ichi Fukamachi/</copyright>
+    <legalnotice>
+      <para>
+	All rights reserved. This program is free software; you can
+	redistribute it and/or modify it under the same terms as Perl itself. 
+      </para>
+    </legalnotice>
+  </bookinfo>
+
+  <chapter id="intro">
+    &intro;
+  </chapter>
+
+  <chapter id="reference">
+    &reference;
+  </chapter>
+
+</book>
