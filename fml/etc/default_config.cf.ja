@@ -165,8 +165,6 @@ lock_type	= flock
 use_log		=	yes
 
 # logfile
-# XXX 特別な使い方として log.%Y%m%d とかくと log.20000101 のように
-#     展開される。これは、POSIX::strftime() を使っている。
 log_file	=	$ml_home_dir/log
 
 # type of logging
