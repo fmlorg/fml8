@@ -32,4 +32,6 @@ Time-modules			100.010301	unknown (your own risk)
 
 VCS-CVS				2.00		perl itself
 
-$FML: MANIFEST,v 1.1 2001/06/01 14:58:14 fukachan Exp $
+Text-CSV			0.01		perl itsetlf
+
+$FML: MANIFEST,v 1.2 2001/07/31 11:16:54 fukachan Exp $
