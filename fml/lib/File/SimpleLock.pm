@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: SimpleLock.pm,v 1.10 2002/01/13 05:57:41 fukachan Exp $
+# $FML: SimpleLock.pm,v 1.11 2002/01/13 06:59:50 fukachan Exp $
 #
 
 package File::SimpleLock;
@@ -43,12 +43,7 @@ unlock flock(2) for $args->{ file };
 =cut
 
 
-# constants
-use POSIX qw(EAGAIN ENOENT EEXIST O_EXCL O_CREAT O_RDONLY O_WRONLY);
-sub LOCK_SH {1;}
-sub LOCK_EX {2;}
-sub LOCK_NB {4;}
-sub LOCK_UN {8;}
+use Fcntl qw(:DEFAULT :flock);
 
 
 # Descriptions: standard constructor.

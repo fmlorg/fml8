@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.8 2002/01/13 07:01:28 fukachan Exp $
+# $FML: Queue.pm,v 1.9 2002/01/13 13:35:26 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -267,13 +267,9 @@ sub getidinfo
 
 =cut
 
-use POSIX qw(EAGAIN ENOENT EEXIST O_EXCL O_CREAT O_RDONLY O_WRONLY);
-use FileHandle;
 
-sub LOCK_SH {1;}
-sub LOCK_EX {2;}
-sub LOCK_NB {4;}
-sub LOCK_UN {8;}
+use FileHandle;
+use Fcntl qw(:DEFAULT :flock);
 
 
 # Descriptions: lock queue
