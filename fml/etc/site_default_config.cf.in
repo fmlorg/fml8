@@ -1,4 +1,4 @@
-# $FML: site_default_config.cf.in,v 1.2 2002/04/01 10:16:48 fukachan Exp $
+# $FML: site_default_config.cf.in,v 1.3 2002/06/01 15:05:10 fukachan Exp $
 #
 #               site default_config.cf EXAMPLE
 #
@@ -17,6 +17,16 @@ article_header_rewrite_rules	-=	rewrite_article_subject_tag
 
 
 
+# [site specific options]
+#   Example:
+#	key  = value
+#	key += value
+#	key -= value
+
+
+=cut
+
 #
-# site specific options.
-#
+# you can write hooks here after.
+#   Example:
+#	$distribute_run_start_hook = q{ ... };
