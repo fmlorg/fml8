@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: User.pm,v 1.13 2002/09/11 23:18:04 fukachan Exp $
+# $FML: User.pm,v 1.14 2002/09/22 14:56:42 fukachan Exp $
 #
 
 package FML::CGI::Admin::User;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use CGI qw/:standard/; # load standard CGI routines
 
 
@@ -64,7 +63,11 @@ sub cgi_menu
 	   $comname eq 'byeadmin'  ) {
 	$address_list = $curproc->get_address_list( 'admin_member_maps' );
     }
+    else {
+	croak("not allowed command");
+    }
 
+    # XXX-TODO: validate $action
     # create <FORM ... > ... by (start_form() ... end_form())
     print start_form(-action=>$action, -target=>$target);
 
