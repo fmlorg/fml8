@@ -13,6 +13,8 @@ deladmin
 delmoderator
 deluser
 digest
+digestoff
+digeston
 dir
 edit
 file

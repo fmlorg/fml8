@@ -6,6 +6,8 @@ byeadmin
 byepriv
 chaddr
 digest
+digestoff
+digeston
 dir
 file
 get

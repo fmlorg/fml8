@@ -2,6 +2,8 @@ addadmin
 adduser
 deladmin
 deluser
+digestoff
+digeston
 list
 log
 newml
