@@ -1,0 +1,88 @@
+<!--
+   $FML$
+-->
+
+<chapter id="hook">
+	<title>
+	HOOK
+	</title>
+
+
+<sect1>
+	<title>
+	hook における諸問題
+	</title>
+
+<para>
+hook は微妙な、もしくは複雑なカスタマイズのために是非必要です。
+ですが、実装においてはいくつかの問題があります。
+</para>
+
+<para>
+まず、第一に hook の名前に一定の基準が必要です。
+$START_HOOK のような曖昧なものではなく。
+</para>
+
+<para>
+また、HOOK の書き方がしょうしょう良くなくても動くのがよいでしょう。
+通常
+use strict;
+になっていますが、
+HOOK を評価する lexical scope では無視するようにするべきでしょう。
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	hook の命名規則
+	</title>
+
+<para>
+hook 名前の標準的な形式については
+<screen>
+プログラム名_メソッド名_start_hook
+プログラム名_メソッド名_end_hook
+</screen>
+のようにすることにします。
+例えば、fmlconf のメインの部分 run() の HOOK の名前は
+<screen>
+fmlconf_run_start_hook
+fmlconf_run_end_hook
+</screen>
+となり、run() の中での hook 呼び出しは次のようなコードになります。
+<screen>
+sub run
+{
+    my ($curproc, $args) = @_;
+    my $config  = $curproc-&gt;{ config };
+
+    my $eval = $config-&gt;get_hook( 'fmlconf_run_start_hook' );
+    if ($eval) {
+	eval qq{ $eval; };
+	print STDERR $@ if $@;
+    }
+
+    $curproc-&gt;_fmlconf($args);
+
+    $eval = $config-&gt;get_hook( 'fmlconf_run_end_hook' );
+    if ($eval) {
+	eval qq{ $eval; };
+	print STDERR $@ if $@;
+    }
+}
+</screen>
+</para>
+
+<para>
+現実にはもっといろいろな場所に HOOK がないと不便でしょうが、
+その名前は上述の HOOK 以外に設定します。
+単純に hook2 でいいのかもしれないし、
+可能であればもう少し理解しやすい名前にするべきでしょう。
+</para>
+
+</sect1>
+
+
+</chapter>
