@@ -219,6 +219,28 @@ sub get_active    { my ($self) = @_; $self->get_next_value;}
 sub get_recipient { my ($self) = @_; $self->get_next_value;}
 
 
+=head2 C<add( $address )>
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub add
+{
+    my ($self, $addr) = @_;
+
+    if ($self->SUPER::can('add')) {
+	$self->SUPER::add($addr);
+    }
+    else {
+	$self->_error_reason("Error: add() method is not supported.");
+	undef;
+    }
+}
+
+=cut
+
 # Descriptions: destructor
 #               request is forwarded to close() method.
 #    Arguments: $self $args
