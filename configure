@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# From configure.in Revision: 1.35 
+# From configure.in Revision: 1.36 
 
 # Guess values for system-dependent variables and create Makefiles.
 # Generated automatically using autoconf version 2.13 
@@ -2084,7 +2084,6 @@ trap 'rm -fr `echo "\
 	fml/bin/fmlhtmlify \
 	fml/bin/fmlsch \
 	fml/bin/fmlthread \
-	fml/bin/fmlspool \
 	fml/bin/fml \
 	fml/bin/makefml \
 	" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
@@ -2219,7 +2218,6 @@ CONFIG_FILES=\${CONFIG_FILES-"\
 	fml/bin/fmlhtmlify \
 	fml/bin/fmlsch \
 	fml/bin/fmlthread \
-	fml/bin/fmlspool \
 	fml/bin/fml \
 	fml/bin/makefml \
 	"}
