@@ -92,7 +92,7 @@ sub get_next_value
 }
 
 
-sub getops
+sub getpos
 {
     my ($self) = @_;
     my $fh = $self->{_fh};
@@ -100,7 +100,7 @@ sub getops
 }
 
 
-sub setops
+sub setpos
 {
     my ($self, $pos) = @_;
     my $fh = $self->{_fh};
