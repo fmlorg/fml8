@@ -4,7 +4,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Nov 16, 2002
+### Revised: Mar 22, 2003
 ###
 
 SHELL=	/bin/sh
@@ -56,7 +56,7 @@ installbin::
 	fi
 	for f in $(PROG); do \
 		$(sed) -e '/###DELETE-ON-INSTALL###/d' $${f} > $${f}.tmp ; \
-		$(INSTALL) -m 555 $${f}.tmp $(bindir)/$${f} ; \
+		$(INSTALL) -m 755 $${f}.tmp $(bindir)/$${f} ; \
 		$(rm) -f $${f}.tmp ; \
 	done
 	$(sed) -e '/###DELETE-ON-INSTALL###/d' imget > imget.tmp

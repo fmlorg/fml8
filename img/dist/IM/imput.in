@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Aug 31, 1995
-### Revised: Dec  7, 2002
+### Revised: Mar 22, 2003
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-$VERSION = "imput version 20021207(IM142)";
+$VERSION = "imput version 20030322(IM144)";
 
 $Prog = 'imput';
 
@@ -2081,7 +2081,7 @@ This command is provided by IM (Internet Message).
 
 Define "sendmail" environment variable with value "imput".
 
-=item With Mew
+=item With Mew 1.x
 
 Eval (setq mew-prog-imput "imput").
 
@@ -2089,7 +2089,7 @@ Eval (setq mew-prog-imput "imput").
 
 Define sendproc in ~/.mh_profile like "sendproc: imput".
 
-=item With sendmail.el (if you are using VM or ....)
+=item With sendmail.el (if you are using VM or ...)
 
 Eval (setq sendmail-program "imput").
 

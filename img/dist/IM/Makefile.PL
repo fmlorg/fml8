@@ -2,7 +2,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Nov 12, 2002
+### Revised: Dec 20, 2002
 ###
 ### perl Makefile.PL
 ### make
@@ -163,7 +163,7 @@ uninstall_config::
 	\$(RM_F) \$(IM_SITECONFIG_DIR)/SiteConfig
 
 install_rpop: install
-	\$(PERL) -e 'chown(0, (getgrnam("mail"))[2], \@ARGV) and chmod(04555, \@ARGV);' \$(INSTALLSCRIPT)/imget
+	\$(PERL) -e 'chown(0, (getgrnam("mail"))[2], \@ARGV) and chmod(04755, \@ARGV);' \$(INSTALLSCRIPT)/imget
     });
   } else {
     push (@m, qq{

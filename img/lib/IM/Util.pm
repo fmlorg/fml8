@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Dec  7, 2002
+### Revised: Mar 22, 2003
 ###
 
-my $PM_VERSION = "IM::Util.pm version 20021207(IM142)";
+my $PM_VERSION = "IM::Util.pm version 20030322(IM144)";
 
 package IM::Util;
 require 5.003;
@@ -48,13 +48,18 @@ $EXIT_ERROR = 1;
 
 my $osname = $^O;
 
-if ($osname =~ /win/i) {
-    if (Win32::IsWinNT()) {
-	$OS = 'WNT';
-    } elsif (Win32::IsWin95()) {
-	$OS = 'WIN95';
-    } else {
-	$OS = 'WIN95';		# xxx
+if ($osname =~ /win/i && $osname !~ /darwin/i) {
+    eval {
+	if (Win32::IsWinNT()) {
+	    $OS = 'WNT';
+	} elsif (Win32::IsWin95()) {
+	    $OS = 'WIN95';
+	} else {
+	    $OS = 'WIN95';	# xxx
+	}
+    };
+    if ($@) {
+	$OS = 'UNIX';
     }
 } elsif ($osname =~ /os2/i) {
     $OS = 'OS/2';

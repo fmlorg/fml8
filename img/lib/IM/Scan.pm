@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Dec  7, 2002
+### Revised: Mar 22, 2003
 ###
 
-my $PM_VERSION = "IM::Scan.pm version 20021207(IM142)";
+my $PM_VERSION = "IM::Scan.pm version 20030322(IM144)";
 
 package IM::Scan;
 require 5.003;
@@ -256,17 +256,21 @@ sub parse_body(*$) {
 	}
 	last unless defined($_);
 
-	next if /^#/;
 	next if /^\s*\n/;
 	next if /^--/;
 	next if /^- --/;
+	next if /^=2D/;
 	next if /^\s+[\w*-]+=/;		# eg. "boundary="; * = RFC2231
 	next if /^\s*[\w-]+: /;		# Headers and header style citation
-	next if /^\s*[\w-]*[>|]/;	# other citation
-	next if /:\n$/;
-	next if /^This is a multi-part message in MIME format./i;
+	next if /^\s*[>:|\/_}]/;	# other citation
+	next if /^  /;
+	next if /^\s*\w+([\'._-]+\w+)*>/;
+	next if /^\s*(On|At) .*[^.!\s\n]\s*$/;
+        next if /(:|;|\/)\s*\n$/;
+        next if /(wrote|writes?|said|says?)[^.!\n]?\s*\n$/;
+	next if /^This is a multi-part message in MIME format/i;
 
-	if (/^In message/ || /^In article/ || /^In <.*>/) {
+	if (/^\s*In (message|article|<|\")/i) {
 	    if ($mode == 0) {
 		$_ = <HANDLE>;
 	    } else {

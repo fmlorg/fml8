@@ -108,7 +108,8 @@ ToDomain=_domain_when_domain_part_is_omitted_
 #Imget.Src=local:${HOME}/Maildir	# in case of qmail
 #UseCL=no			# Use value of Content-Length header
 #NoSync=no			# Do not need fsync(2) on writing file
-#FsyncNumber=118		# system call number of fsync
+#FsyncNumber=0			# if 0, system call number of fsync is guessed
+#SshPath=/usr/bin/ssh		# Path name of SSH program
 
 #Imget.Src=pop
 #PopAccount=/APOP@localhost	# account info for POP access
@@ -135,6 +136,8 @@ ToDomain=_domain_when_domain_part_is_omitted_
 #UsePwFiles=yes			# use password files
 #PwFiles=password		# password files (relative to ~/.im/)
 
+#UseTouchFile=yes		# use time-stamp file
+#TouchFile=.mew-touch		# time-stamp file for message folders
 #NamazuV2=yes			# use Namazu version 2 (1.9.x or late)
 #NamazuLockDir=nmzlock		# lock directory (relative to ~/.im/)
 

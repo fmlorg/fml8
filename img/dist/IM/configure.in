@@ -3,7 +3,7 @@ dnl			     configure.in
 dnl
 dnl Author:  Internet Message Group <img@mew.org>
 dnl Created: Apr 23, 1997
-dnl Revised: Nov 16, 2002
+dnl Revised: Dec 20, 2002
 dnl
 
 AC_INIT(imget.in)
@@ -50,13 +50,17 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 dnl Checks for library functions.
 
 AC_ARG_ENABLE(rpop,
-[  --enable-rpop             Use RPOP (suidperl is needed)],
-[im_rpop="-o root -m 4755"],
-[im_rpop="-m 755"],)
+[  --enable-rpop           Use RPOP (suidperl is needed)],
+[im_rpop="${enableval}"])
+if test "x$im_rpop" = 'xyes'; then
+  im_rpop="-o root -m 4755"
+else
+  im_rpop="-m 755"
+fi
 
 im_fsync_no=undef
 AC_ARG_WITH(fsyncno,
-[  --with-fsyncno=NUMBER     Use NUMBER as SYS_fsync],
+[  --with-fsyncno=NUMBER   Use NUMBER as SYS_fsync],
 [im_fsync_no="${withval}"])
 if test "x$im_fsync_no" = 'xundef'; then
   dnl check fsync() is in sys/syscall.h
@@ -71,7 +75,7 @@ IM_FSYNC_NO=SYS_fsync
 IM_FSYNC_NO=undef
 #endif
 EOF
-    im_fsync_no=`eval $ac_cpp conftest.c | sed -n -e "s/^IM_FSYNC_NO=//p"`
+    im_fsync_no=`eval $ac_cpp conftest.c | sed -n -e 's/ *//g' -e 's/^IM_FSYNC_NO=//p'`
     rm -f conftest.c
   fi
 fi
@@ -83,7 +87,7 @@ fi
 
 im_src_siteperl="use lib '`pwd`';	###DELETE-ON-INSTALL###"
 AC_ARG_WITH(perldir,
-[  --with-perldir=DIR        Use DIR as site_perl directory],
+[  --with-perldir=DIR      Use DIR as site_perl directory],
 [im_path_siteperl="${withval}"
   im_my_siteperl="use lib '${withval}';"],
 [if test "${prefix}" != "NONE" ; then
@@ -92,19 +96,24 @@ dnl prefix is equal to exec_prefix
     im_path_siteperl='${exec_prefix}/lib'
   fi])
 
-AC_MSG_CHECKING([OS type])
-case "$host" in
-  *-*-solaris2*)
-    AC_MSG_RESULT([Seems to be a Solaris; Content-Length: should be checked])
-    im_usecl=yes ;;
-  *)
-    AC_MSG_RESULT([Not a Solaris; Content-Length: can be ignored])
-    im_usecl=no ;;
-esac
+AC_ARG_ENABLE(usecl,
+[  --enable-usecl          Use value of Content-Length header],
+[im_usecl="${enableval}"])
+if test "x$im_usecl" = 'x'; then
+  AC_MSG_CHECKING([OS type])
+  case "$host" in
+    *-*-solaris2*)
+      AC_MSG_RESULT([Seems to be a Solaris; Content-Length: should be checked])
+      im_usecl=yes ;;
+    *)
+      AC_MSG_RESULT([Not a Solaris; Content-Length: can be ignored])
+      im_usecl=no ;;
+  esac
+fi
 
 im_path_ssh=''
 AC_ARG_WITH(ssh,
-[  --with-ssh=PATH           Use PATH as SSH location],
+[  --with-ssh=PATH         Use PATH as SSH location],
 [im_path_ssh="${withval}"])
 if test "x$im_path_ssh" = 'x'; then
   AC_PATH_PROG(im_path_ssh, ssh, '/usr/local/bin/ssh')
@@ -112,7 +121,7 @@ fi
 
 im_hostname=''
 AC_ARG_WITH(hostname,
-[  --with-hostname=HOSTNAME  Use HOSTNAME as default domain for mail-address],
+[  --with-hostname=DOMAIN  Use DOMAIN as default domain for mail-address],
 [im_hostname="${withval}"])
 if test "x$im_hostname" = 'x'; then
   AC_MSG_CHECKING([domain for mail-address])

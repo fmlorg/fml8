@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Dec  7, 2002
+### Revised: Mar 22, 2003
 ###
 
-my $PM_VERSION = "IM::Imap.pm version 20021207(IM142)";
+my $PM_VERSION = "IM::Imap.pm version 20030322(IM144)";
 
 package IM::Imap;
 require 5.003;
@@ -534,7 +534,7 @@ sub imap_process($$$$$$$) {
 	}
     } elsif ($how eq 'get') {
 	if ($msgs > 0) {
-	    im_info("Getting new messages from $host into $dst....\n");
+	    im_info("Getting new messages from $src at $host into $dst...\n");
 	    my @alluids = &imap_all_uids($HANDLE);
 	    return -1 if ($alluids[0] < 0);
 	    my $i;

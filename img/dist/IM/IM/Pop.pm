@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Dec  7, 2002
+### Revised: Mar 22, 2003
 ###
 
-my $PM_VERSION = "IM::Pop.pm version 20021207(IM142)";
+my $PM_VERSION = "IM::Pop.pm version 20030322(IM144)";
 
 package IM::Pop;
 require 5.003;
@@ -456,7 +456,7 @@ sub pop_inc($$$$$$$$) {
 	}
     }
 
-    im_info("Getting new messages into $dst....\n");
+    im_info("Getting new messages from $host into $dst...\n");
     for ($i = $last; $i <= $msgs; $i++) {
 	if ($getchk_hook ne '') {
 	    $head = &pop_head($i);

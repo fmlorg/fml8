@@ -1,31 +1,33 @@
 			   Internet Message
 
 			    Kazu Yamamoto
-			     Sep  5, 1999
+			  Tatsuya Kinoshita
 
-	     Modified by Tatsuya Kinoshita on Dec  7, 2002
+			     Mar 22, 2003
 
 
 			   <<<Copyright>>>
 
-This package provides a series of user interface commands (im*
-commands) and backend Perl5 modules to integrate E-mail and NetNews
-handling. They are designed to be used both from Mew version 1.x and
-on command line.
+IM (Internet Message) provides a series of user interface commands
+(imput, imget, imls, ...) and backend Perl5 modules to integrate
+E-mail and NetNews user interface. They are designed to be used both
+from Mew version 1.x and on command line.
 
 The folder style of IM is exactly the same as that of MH. So, you can
 replace MH with this package without any migration works. Moreover,
 you are able to operate your messages both by IM and MH with
 consistent manner.
 
-IM is free software; you can redistribute it and/or modify it under
-the modified BSD license. See 00copyright for more details.
+IM is copyrighted by IM developing team. You can redistribute it
+and/or modify it under the modified BSD license. See 00copyright for
+more details.
 
 IM/MD5.pm is derived from md5.pl copyrighted by NAKAMURA, Motonori
 <motonori@econ.kyoto-u.ac.jp>. It is converted to Perl4 from C version
 derived from the RSA Data Security, Inc. MD5 Message-Digest Algorithm.
 
 install-sh is under the M.I.T. license.
+
 
 	      <<<Installing under the root privilege>>>
 
@@ -96,7 +98,8 @@ Please send comments, bug reports, and patches to <img@mew.org>.
 You can contact the current maintainer (Tatsuya Kinoshita, since
 October 2002) by this e-mail address.
 
-See also "IM Official Site" (http://tats.iris.ne.jp/im/).
+For the latest news of IM, please see "IM (Internet Message) Official
+Site" (http://tats.iris.ne.jp/im/).
 
 
 			  <<<Programmers>>>

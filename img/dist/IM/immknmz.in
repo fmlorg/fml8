@@ -7,7 +7,7 @@
 ### Author:  Shuichi Kitaguchi <kit@Mew.org>
 ###	Internet Message Group <img@mew.org>
 ### Created: Sep 23, 1999
-### Revised: Dec  7, 2002
+### Revised: Mar 22, 2003
 ###
 
 BEGIN {
@@ -15,7 +15,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "immknmz version 20021207(IM142)";
+my $VERSION = "immknmz version 20030322(IM144)";
 
 $Prog = 'immknmz';
 
@@ -95,7 +95,7 @@ my $tempdir;
 my $tempfile;
 my $timestamp;
 
-$tempdir = $ENV{TMPDIR} || $ENV{TMP} || $ENV{TEMP} || '/tmp';
+$tempdir = $ENV{TMPDIR} || $ENV{TEMP} || $ENV{TMP} || '/tmp';
 $tempdir =~ s:\\:/:g;
 $tempdir =~ s/\/+$//;
 $tempdir = sprintf("%s/immknmz-%d-%d", $tempdir, $$, time());

@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Dec  7, 2002
+### Revised: Mar 22, 2003
 ###
 
-my $PM_VERSION = "IM::MsgStore.pm version 20021207(IM142)";
+my $PM_VERSION = "IM::MsgStore.pm version 20030322(IM144)";
 
 package IM::MsgStore;
 require 5.003;
@@ -16,7 +16,7 @@ require Exporter;
 
 use Fcntl;
 use IM::Config qw(getsbr_file msg_mode msgdbfile expand_path
-		  inbox_folder no_sync fsync_no file_attr);
+		  inbox_folder no_sync fsync_no preferred_fsync_no file_attr);
 use IM::Util;
 use IM::Folder qw(message_number message_name create_folder touch_folder);
 use IM::Message qw(gen_date);
@@ -294,26 +294,21 @@ sub excl_create(*$) {
 sub fsync($) {
     my $fno = shift;
 
-    if (fsync_no()) {
-	# try to use SYS_sync number detected when configure
-	return syscall(fsync_no(), $fno);
+    if (preferred_fsync_no()) {
+	return syscall(preferred_fsync_no(), $fno);
     }
-
-    # otherwise, try to find from header files
+    # try to find from header files
     unless (defined($sys_fsync)) {
-	my $inc = 'syscall.ph';		# only for BSDs?
-	my $prefix;
-	if (-f '/usr/include/sys.s') {	# for IRIX...
-	    # create sys.ph from sys.s
-	    require 'sys.ph';
+	eval { require 'syscall.ph'; };
+	unless ($@) {
 	    $sys_fsync = &SYS_fsync if (defined(&SYS_fsync));
 	}
 	unless ($sys_fsync) {
-	    foreach $prefix (@INC) {
-		if (-f "$prefix/$inc") {
-		    require "$prefix/$inc";
+	    if (-f '/usr/include/sys.s') {  # for IRIX...
+		# create sys.ph from sys.s
+		eval { require 'sys.ph'; };
+		unless ($@) {
 		    $sys_fsync = &SYS_fsync if (defined(&SYS_fsync));
-		    last;
 		}
 	    }
 	}
@@ -328,6 +323,10 @@ sub fsync($) {
 		}
 		close(SYSCALL_H);
 	    }
+	}
+	unless ($sys_fsync) {
+	    # try to use SYS_fsync number detected when configure
+	    $sys_fsync = fsync_no();
 	}
 	unless ($sys_fsync) {
 	    im_die("Can't find a way to fsync(). Set NoSync=yes in your Config file and be careful on file system overflow if your mail folders are on NFS.\n");

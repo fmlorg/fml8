@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Dec  7, 2002
+### Revised: Mar 22, 2003
 ###
 
-my $PM_VERSION = "IM::LocalMbox.pm version 20021207(IM142)";
+my $PM_VERSION = "IM::LocalMbox.pm version 20030322(IM144)";
 
 package IM::LocalMbox;
 require 5.003;
@@ -119,7 +119,7 @@ sub local_get_msg($$$$$) {
 
     if (-d $mbox) {
 	# DIRECTORY
-	im_info("Getting new messages from maildir into $dst....\n")
+	im_info("Getting new messages from maildir into $dst...\n")
 	  if ($how eq 'get');
 
 	my $msgs = 0;
@@ -339,7 +339,7 @@ sub process_mbox($$$$$) {
     local(*MBOX);
     my($first_line, $FIRST_LINE);
 
-    im_info("Getting new messages from local mailbox into $dst....\n")
+    im_info("Getting new messages from local mailbox into $dst...\n")
 	if ($how eq 'get');
     im_warn("opening MBOX ($mbox)\n") if (&verbose);
     unless (im_open(\*MBOX, "<$mbox")) {

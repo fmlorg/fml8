@@ -6,15 +6,15 @@
 ### Author:  Masatoshi Tsuchiya <tsuchiya@pine.kuee.kyoto-u.ac.jp>
 ###	Internet Message Group <img@mew.org>
 ### Created: Oct 05, 1999
-### Revised: Dec  7, 2002
+### Revised: Mar 22, 2003
 ###
 
-my $PM_VERSION = "IM::Ssh.pm version 20021207(IM142)";
+my $PM_VERSION = "IM::Ssh.pm version 20030322(IM144)";
 
 package IM::Ssh;
 require 5.003;
 require Exporter;
-use IM::Config qw(connect_timeout command_timeout $SSH_PATH);
+use IM::Config qw(connect_timeout command_timeout ssh_path);
 use IM::Util;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $SSH $FH @PID);
@@ -27,6 +27,7 @@ $FH      = "SSH00000";
 
 sub ssh_proxy($$$$) {
     my($server, $remote, $local, $host) = @_;
+    my $prog = ssh_path();
 
     unless ($host) {
 	im_err("Missing relay host.\n");
@@ -72,7 +73,7 @@ sub ssh_proxy($$$$) {
 	    close $read;
 	    open(STDOUT, ">&$write");
 	    open(STDERR, ">&$write");
- 	    exec($SSH_PATH, '-n', '-x', '-o', 'BatchMode yes',
+ 	    exec($prog, '-n', '-x', '-o', 'BatchMode yes',
 		 "-L$local:$server:$remote", $host,
 		 sprintf('echo ssh_proxy_connect ; sleep %s',
 			 &command_timeout()));
@@ -81,7 +82,7 @@ sub ssh_proxy($$$$) {
 	    sleep 5;
 	    redo FORK;
 	} else {
-	    im_warn("Can't fork $SSH_PATH.\n");
+	    im_warn("Can't fork $prog.\n");
 	}
     }
     0;

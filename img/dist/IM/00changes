@@ -1,3 +1,37 @@
+144 (2003/03/22)
+
+* IM/Util.pm: Fix `$osname' for darwin. (Thanks to WATANABE Hideyuki)
+* IM/Scan.pm (parse_body): Regexp fix.
+* 00readme: Doc fix.
+* imput.in: Doc fix.
+* imsetup.in, cnf.im/SiteConfig.in, dot.im/Config: Add comments for
+  `UseTouchFile' and `TouchFile'.
+* Fix im_info messages.
+* immknmz.in: Use $ENV{TMPDIR}, $ENV{TEMP}, $ENV{TMP}, or `/tmp'.
+* configure.in, configure: New option, `--enable-usecl'.
+* configure.in, configure: Bug fix for `--disable_rpop'.
+* configure.in, configure: Trimming for `im_fsync_no'.
+* cnf.im/SiteConfig.in: Use `@im_fsync_no@'.
+* Makefile.in: Set mode to 755 instead of 555 for excutables.
+
+143 (2002/12/13)
+
+* The number of the fsync system call is guessed on run time by default.
+  If `FsyncNumber' is set to non-0 in Config, it is preferred.
+* imsetup.in, cnf.im/SiteConfig.in, dot.im/Config: Modify comments for
+  `FsyncNumber'.
+* IM/MsgStore.pm (fsync): Use `preferred_fsync_no', guessed number, and
+  `fsync_no'.
+* IM/Config.pm.in (preferred_fsync_no, fsync_no): Divide from `fsync_no'.
+  `preferred_fsync_no' uses `$FsyncNumber'.
+* imsetup.in, cnf.im/SiteConfig.in, dot.im/Config: Modify comments for
+  `SshPath'.
+* IM/Config.pm.in: Don't export `$SSH_PATH'.
+* IM/Ssh.pm: Use `ssh_path()' instead of `$SSH_PATH'.
+* IM/Config.pm.in (@CfgConfig): Add `SshPath'.
+* IM/Config.pm.in (ssh_path): New subroutine.
+* 00diff: New file.
+
 142 (2002/12/07)
 
 * New maintainer, Tatsuya Kinoshita <tats@vega.ocn.ne.jp>.  I obtained
