@@ -1,6 +1,30 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/07/24
+
+   IO::Adapter 
+	clean up
+	remove AUTOLOAD()
+	removed replace()
+	
+   IO::Adapter::DBI 
+	add missing open(), close()
+	removed replace()
+	
+   IO::Adapter::File
+	removed replace()
+	clean up comments
+
+   IO::Adapter::SQL::toymodel 
+	removed since we discard sql model based framework
+
+   FML::Credential 
+   FML::Command::UserControl 
+   FML::Command::Admin::chaddr 
+	change argv of FML::Credential::has_address_in_map():
+	($map, $address) -> ($map, $config, $address)
+
 2002/07/23
 
    IO::Adapter の SQL コードを大改定
@@ -2911,4 +2935,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.89 2002/07/14 15:22:37 fukachan Exp $
+$FML: CHANGES.txt,v 1.90 2002/07/23 15:16:39 fukachan Exp $
