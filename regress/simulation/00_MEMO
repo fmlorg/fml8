@@ -2,6 +2,33 @@
 		Last Modified: $Date$
 
 
+○	CGI ?
+
+	FML::Process::CGI::{Kernel,Param}
+		|
+		A
+	FML::Process::CGI
+		|
+		A
+	FML::CGI::MenuFrame has components in FML::CGI::Admin et.al.
+
+	screen:
+
+			  header
+	----------------------------------------------
+			|		|
+	navigation_bar	| main_menu	|	navigation_subbar
+			|		|
+	----------------------------------------------
+			  footer
+
+
+	$object->configure( {
+			header => \&xxx_header(),
+
+		});
+
+
 ○	コマンド clean up キャンペーン
 
    * admin
@@ -290,4 +317,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.8 2002/03/16 11:15:01 fukachan Exp $
+$FML: 00_MEMO,v 1.9 2002/03/17 06:05:04 fukachan Exp $
