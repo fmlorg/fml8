@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.64 2002/07/14 15:15:29 fukachan Exp $
+# $FML: Command.pm,v 1.65 2002/07/15 15:27:14 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -532,9 +532,20 @@ sub _get_command_mode
 sub _allow_command
 {
     my ($curproc, $mode, $status, $command_info) = @_;
-    my $level = $status->{ level };
+    my $comname = $command_info->{ comname };
+    my $config  = $curproc->config();
+    my $level   = $status->{ level };
+    my $comlist = $config->get_as_array_ref("commands_for_${level}");
 
     Log("(debug) mode=$mode level=$level");
+
+    if ($config->has_attribute("commands_for_${level}", $comname)) {
+	Log("(debug) $comname o.k. under mode=$mode level=$level");
+    }
+    else {
+	Log("deny command: mode=$mode level=$level");
+	return 0;
+    }
 
     1;
 }
@@ -667,6 +678,13 @@ sub _evaluate_command_lines
 	    $num_ignored++;
 	    next COMMAND;
 	}
+	elsif ($mode eq '__LAST__') {
+	    LogError("command processing stop.");
+	    $curproc->__stop_here($args, $status, $cominfo, $orig_command);
+	    last COMMAND;
+	}
+
+	# 1.3 valid mode
 	unless ($mode eq 'user' || $mode eq 'admin') {
 	    LogError("command processing stop.");
 	    $curproc->__stop_here($args, $status, $cominfo, $orig_command);
@@ -675,6 +693,8 @@ sub _evaluate_command_lines
 
 	# 2. check $level if this command is allowed in the current $mode ?
 	unless ($curproc->_allow_command($mode, $status, $cominfo)) {
+	    $curproc->reply_message_nl("command.deny",
+				    "\tyou cannot use this command.");
 	    Log("(debug) ignore $fixed_command");
 	    $num_ignored++;
 	    next COMMAND;
@@ -682,6 +702,7 @@ sub _evaluate_command_lines
 
 	# 3. simple syntax check
 	unless ($curproc->_is_valid_syntax($args, $status, $cominfo)) {
+	    LogError("invalid syntax");
 	    Log("(debug) ignore $fixed_command");
 	    $num_ignored++;
 	    next COMMAND;
