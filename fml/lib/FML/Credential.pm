@@ -27,11 +27,20 @@ sub new
 }
 
 
+sub DESTROY {}
+
+
 sub is_member
 {
     1;
 }
 
+
+sub sender
+{
+    my ($self) = @_;
+    $Credential{ sender };
+}
 
 sub get
 {
