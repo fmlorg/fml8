@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.3 2002/04/07 05:02:23 fukachan Exp $
+# $FML: log.pm,v 1.4 2002/04/07 05:35:09 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -119,7 +119,6 @@ sub _show_log
 
 	    if ($is_cgi) {
 		print _html_to_text($s);
-		print "<BR>\n";
 	    }
 	    else {
 		print $s;
