@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.211 2004/02/27 04:01:37 fukachan Exp $
+# $FML: Kernel.pm,v 1.212 2004/02/27 12:47:42 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -25,7 +25,9 @@ use File::SimpleLock;
 # for small utilities: fml_version(), myname(), et. al.
 push(@ISA, qw(FML::Process::Utils));
 
-my $debug = 0;
+my $debug      = 0;
+my $rm_debug   = 0;
+my $first_time = 0;
 
 
 =head1 NAME
@@ -1033,9 +1035,8 @@ sub _inject_charset_hints
     $curproc->log("hints: charset=\"$charset\" accept_language=[$liststr]");
 
     # 1. prefer Accept-Language: alyways, ignore Content-Type: in this case. 
-    if ($list) { 
-	$curproc->set_accept_language_list($list);
-    }
+    #    set $list even if $list == [] to avoid further warning.
+    $curproc->set_accept_language_list($list);
 
     # 2. save charset of Content-Type: as a hint.
     if ($charset) {
@@ -1050,6 +1051,10 @@ sub _inject_charset_hints
 	$curproc->log("hints: \"$charset\" => lang=\"$lang\" as a hint.");
 	$curproc->set_language_hint('reply_message', $lang);
 	$curproc->set_language_hint('template_file', $lang);
+    }
+    else {
+	$curproc->set_language_hint('reply_message', '');
+	$curproc->set_language_hint('template_file', '');
     }
 }
 
@@ -1430,6 +1435,30 @@ If given, makefml/fml ignores message output.
 sub reply_message
 {
     my ($curproc, $msg, $rm_args) = @_;
+    my $lang_list = $curproc->get_preferred_languages();
+
+    for my $lang (@$lang_list) {
+	my $rm_charset = $curproc->lang_to_charset("reply_message", $lang);
+	my $tf_charset = $curproc->lang_to_charset("template_file", $lang);
+	my $charsets = {
+	    reply_message_charset => $rm_charset,
+	    template_file_charset => $tf_charset, 
+	};
+
+	$curproc->_reply_message_queuein($msg, $rm_args, $charsets);
+    }
+}
+
+
+# Descriptions: reply message interface.
+#               It injects messages into message queue on memory in fact.
+#               inform_reply_messages() recollects them and send it later. 
+#    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($rm_args) HASH_REF($charsets)
+# Side Effects: none
+# Return Value: none
+sub _reply_message_queuein
+{
+    my ($curproc, $msg, $rm_args, $charsets) = @_;
     my $myname = $curproc->myname();
 
     $curproc->caller_info($msg, caller) if $debug;
@@ -1451,8 +1480,9 @@ sub reply_message
     }
 
     $curproc->_append_message_into_queue2($msg, $rm_args,
-					 $recipient, $recipient_maps,
-					 $hdr);
+					  $recipient, $recipient_maps,
+					  $hdr,
+					  $charsets);
 
     if (defined $rm_args->{ always_cc }) {
 	# only if $recipient above != always_cc, duplicate $msg message.
@@ -1471,7 +1501,8 @@ sub reply_message
 	    $curproc->log("cc: [ @$recipient ]");
 	    $curproc->_append_message_into_queue($msg, $rm_args,
 						 $recipient, $recipient_maps,
-						 $hdr);
+						 $hdr,
+						 $charsets);
 	}
     }
 }
@@ -1568,12 +1599,13 @@ sub _array_is_different
 
 # Descriptions: add the specified $msg into on memory queue
 #    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($rm_args)
-#               ARRAY_REF($recipient) ARRAY_REF($recipient_maps) OBJ($hdr)
+#               ARRAY_REF($rcpt) ARRAY_REF($rcpt_maps) OBJ($hdr)
+#               HASH_REF($charsets)
 # Side Effects: update on momory queue which is on PCB area.
 # Return Value: none
 sub _append_message_into_queue
 {
-    my ($curproc, $msg, $rm_args, $recipient, $recipient_maps, $hdr) = @_;
+    my ($curproc, $msg, $rm_args, $rcpt, $rcpt_maps, $hdr, $charsets) = @_;
     my $pcb      = $curproc->pcb();
     my $category = 'reply_message';
     my $class    = 'queue';
@@ -1582,9 +1614,10 @@ sub _append_message_into_queue
     $rarray->[ $#$rarray + 1 ] = {
 	message        => $msg,
 	type           => ref($msg) ? ref($msg) : 'text',
-	recipient      => $recipient,
-	recipient_maps => $recipient_maps,
+	recipient      => $rcpt,
+	recipient_maps => $rcpt_maps,
 	header         => $hdr,
+	charset        => $charsets->{ reply_message_charset },
     };
 
     $pcb->set($category, $class, $rarray);
@@ -1593,34 +1626,37 @@ sub _append_message_into_queue
 
 # Descriptions: add the specified $msg into on memory queue
 #    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($rm_args)
-#               ARRAY_REF($recipient) ARRAY_REF($recipient_maps) OBJ($hdr)
+#               ARRAY_REF($rcpt) ARRAY_REF($rcpt_maps) OBJ($hdr)
+#               HASH_REF($charsetes)
 # Side Effects: update on momory queue which is on PCB area.
 # Return Value: none
 sub _append_message_into_queue2
 {
-    my ($curproc, $msg, $rm_args, $recipient, $recipient_maps, $hdr) = @_;
+    my ($curproc, $msg, $rm_args, $rcpt, $rcpt_maps, $hdr, $charsets) = @_;
     my $pcb      = $curproc->pcb();
     my $category = 'reply_message';
     my $class    = 'queue';
     my $rarray   = $pcb->get($category, $class) || [];
 
-    for my $rcpt (@$recipient) {
+    for my $rcpt (@$rcpt) {
 	$rarray->[ $#$rarray + 1 ] = {
 	    message        => $msg,
 	    type           => ref($msg) ? ref($msg) : 'text',
 	    recipient      => [ $rcpt ],
 	    recipient_maps => [],
 	    header         => $hdr,
+	    charset        => $charsets->{ reply_message_charset },
 	};
     }
 
-    for my $map (@$recipient_maps) {
+    for my $map (@$rcpt_maps) {
 	$rarray->[ $#$rarray + 1 ] = {
 	    message        => $msg,
 	    type           => ref($msg) ? ref($msg) : 'text',
 	    recipient      => [],
 	    recipient_maps => [ $map ],
 	    header         => $hdr,
+	    charset        => $charsets->{ reply_message_charset },
 	};
     }
 
@@ -1724,13 +1760,42 @@ This $args is passed through to reply_message().
 sub reply_message_nl
 {
     my ($curproc, $class, $default_msg, $rm_args) = @_;
-    my $config  = $curproc->config();
-    my $buf     = $curproc->message_nl($class, $default_msg, $rm_args);
+    my $lang_list = $curproc->get_preferred_languages();
+
+    for my $lang (@$lang_list) {
+	my $rm_charset = $curproc->lang_to_charset("reply_message", $lang);
+	my $tf_charset = $curproc->lang_to_charset("template_file", $lang);
+	my $charsets = {
+	    reply_message_charset => $rm_charset,
+	    template_file_charset => $tf_charset, 
+	};
+
+	my $s = "lang=$lang charset=($rm_charset, $tf_charset) class=$class";
+	$curproc->log("reply_message_nl: $s") if $rm_debug;
+	$curproc->_reply_message_nl($class, $default_msg, $rm_args, $charsets);
+    }
+}
+
+
+# Descriptions: set reply message with translation to natual language
+#    Arguments: OBJ($curproc)
+#               STR($class) STR($default_msg) HASH_REF($rm_args)
+#               HASH_REF($charsets)
+# Side Effects: none
+# Return Value: none
+sub _reply_message_nl
+{
+    my ($curproc, $class, $default_msg, $rm_args, $charsets) = @_;
+    my $buf = $curproc->__convert_message_nl($class,
+					     $default_msg, 
+					     $rm_args, 
+					     $charsets);
 
     $curproc->caller_info($class, caller) if $debug;
 
     if (defined $buf) {
 	if ($buf =~ /\$/o) {
+	    my $config = $curproc->config();
 	    $config->expand_variable_in_buffer(\$buf, $rm_args);
 	}
 
@@ -1741,12 +1806,12 @@ sub reply_message_nl
 	    $str->charcode_convert('jis');
 	    $buf = $str->as_str();
 
-	    $curproc->reply_message($buf, $rm_args); 
+	    $curproc->_reply_message_queuein($buf, $rm_args, $charsets);
 	};
 	$curproc->logerror($@) if $@;
     }
     else {
-	$curproc->reply_message($default_msg, $rm_args);
+	$curproc->_reply_message_queuein($buf, $rm_args, $charsets);
     }
 }
 
@@ -1774,24 +1839,28 @@ sub reply_message_add_header_info
 sub message_nl
 {
     my ($curproc, $class, $default_msg, $m_args) = @_;
-    my $charset = $curproc->get_charset("template_file");
+    my $charset  = $curproc->get_charset("template_file");
+    my $charsets = {
+	template_file_charset => $charset, 
+    };
 
-    $curproc->__convert_message_nl($class, $default_msg, $m_args, $charset);
+    $curproc->__convert_message_nl($class, $default_msg, $m_args, $charsets);
 }
 
 
 # Descriptions: translate template message in natual language.
 #    Arguments: OBJ($curproc) 
 #               STR($class) STR($default_msg) HASH_REF($m_args)
-#               STR($charset)
+#               HASH_REF($charsets)
 # Side Effects: none
 # Return Value: STR
 sub __convert_message_nl
 {
-    my ($curproc, $class, $default_msg, $m_args, $charset) = @_;
+    my ($curproc, $class, $default_msg, $m_args, $charsets) = @_;
     my $config    = $curproc->config();
     my $dir       = $config->{ message_template_dir };
     my $local_dir = $config->{ ml_local_message_template_dir };
+    my $charset   = $charsets->{ template_file_charset };
     my $buf       = '';
 
     use File::Spec;
@@ -1861,14 +1930,35 @@ sub get_preferred_languages
     #   $acpt_lang_list = [ ja en ]
     #   $mime_lang      = ja        ('en' if no mime charset).
     my $acpt_lang_list = $curproc->get_accept_language_list() || [];
-    my $mime_lang      = $curproc->get_language_hint()        || 'en';
+    my $mime_lang      = $curproc->get_language_hint('reply_message') || 'en';
 
     # return = [ ja ] or [ ja en ] ...
     my $p = $curproc->__find_preferred_languages($pref_order, 
 						 $acpt_lang_list, 
 						 $mime_lang);
-    $curproc->log("hints: preferred languge = [ @$p ]");
+    $curproc->log("hints: preferred language = [ @$p ]") unless $first_time++;
     return $p;
+}
+
+
+# Descriptions: return preferred languages e.g. [ ja ], [ ja en ]...
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub get_preferred_charsets
+{
+    my ($curproc)  = @_;
+    my $lang_order = $curproc->get_preferred_languages();
+    my $list       = [];
+
+    use Mail::Message::Charset;
+    my $c = new Mail::Message::Charset;
+    for my $lang (@$lang_order) {
+	my $x = $c->language_to_message_charset($lang);
+	push(@$list, $x);
+    }
+
+    return $list;
 }
 
 
@@ -1892,7 +1982,7 @@ sub __find_preferred_languages
     if (@$acpt_lang_list) {
 	if ($acpt_lang_list->[ 0 ]) {
 	    my $x = $acpt_lang_list->[ 0 ];
-	    $selected = [ $x ];
+	    $selected = [ $x ] if $x =~ /^\w+$/;
 	}
     }
     # 2. when no Accept-Language:
@@ -1911,9 +2001,17 @@ sub __find_preferred_languages
 	print STDERR "  mime language   = \" $orig_mime_lang \"\n";
 	print STDERR "preferred languge = [ @$selected ]\n";
 	print STDERR "\n";
+	$curproc->log("pref_order=[@$pref_order] acpt=[@$acpt_lang_list]");
+	$curproc->log("mime_lang=$orig_mime_lang selected=[@$selected]");
     }
 
-    return $selected;
+    if (@$selected) {
+	return $selected;
+    }
+    else {
+	my $lang = $pref_order->[0];
+	return [ $lang ];
+    }
 }
 
 
@@ -2032,6 +2130,23 @@ sub queue_in
 	}
     }
 
+    # use multipart if plural languages are used.
+    {
+	my $mesg_queue = $pcb->get($category, 'queue');
+	my %lang_count = ();
+
+	for my $m ( @$mesg_queue ) {
+	    my $c = $m->{ charset };
+	    $lang_count{ $c }++ if defined $c;
+	}
+
+	my @lang = keys %lang_count;
+	if ($#lang > 0) {
+	    $curproc->log("plural languages, so use mulitpart");
+	    $is_multipart = 1;
+	}
+    }
+
     # default recipient if undefined.
     unless ($rcptkey) {
 	if (defined $curproc->{ credential }) {
@@ -2080,12 +2195,14 @@ sub queue_in
 	_add_info_on_header($config, $msg);
 
 	my $mesg_queue = $pcb->get($category, 'queue');
+	my %s = ();
 	my $s = '';
 
       QUEUE:
 	for my $m ( @$mesg_queue ) {
 	    my $q = $m->{ message };
 	    my $t = $m->{ type };
+	    my $c = $m->{ charset };
 	    my $r = $curproc->_gen_recipient_key($m->{ recipient },
 						 $m->{ recipient_maps } );
 
@@ -2093,7 +2210,8 @@ sub queue_in
 	    next QUEUE unless $r eq $rcptkey;
 
 	    if ($t eq 'text') {
-		$s .= $q;
+		$s{ $c } .= $q;
+		$s       .= $q;
 	    }
 	}
 
@@ -2102,9 +2220,15 @@ sub queue_in
 	# XXX-TODO: reply message should be determined by context and
 	# XXX-TODO: accept-language: information.
 	if ($s) {
-	    $msg->attach(Type => "text/plain; charset=$charset",
-			 Data => $s,
-			 );
+	    # use [ iso-2022-jp us-ascii ] not [ ja en ] list.
+	    my $list = $curproc->get_preferred_charsets();
+	    for my $charset (@$list) {
+		if ($s{$charset}) {
+		    $msg->attach(Type => "text/plain; charset=$charset",
+				 Data => $s{$charset},
+				 );
+		}
+	    }
 	}
 
 	# 2. pick up non text parts after the second part.
