@@ -1,6 +1,46 @@
 		CHANGES
 		$Date$
 
+2001/07/31
+
+   rename FML::NL to FML::Language
+
+   Mail::Bounce class
+
+	以下のパターンを解析できるようになったはずです。
+		Lotus Notes
+		pakeo.ne.jp
+		jp-r.ne.jp (ほんとか?)
+
+	Mail::Bounce::Language::Japanese
+		日本語依存パーサを作成する
+
+   Mail::Bounce::DSN
+
+	call again $self->address_clean_up($addr, $addr)
+	gives $addr itself as a hint of fixing broken address
+	domain part of $addr may match someting e.g. nifty.ne.jp, webtv.ne.jp.
+
+   Mail::Bounce.pm
+   Mail::Bounce::FixBrokenAddress.pm 
+
+	use Mail::Bounce::FixBrokenAddress to clean up address
+
+	Mail::Bounce::FixBrokenAddress class provides irrgular
+	address handlings, so handles domain/MTA specific addresses.
+	For example, nifty.ne.jp, webtv.ne.jp, ...
+
+2001/07/30
+
+   Mail::Bounce class
+
+        pick up Reporting-MTA and Received-From-MTA in DSN
+
+	clean up documentation
+	add error examples
+
+	modify Mail::Bounce::$module return "hints" to caller
+	(Mail::Bounce class). 
 
 2001/07/19
 
@@ -26,5 +66,5 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.2 2001/07/16 15:03:21 fukachan Exp $
+$FML: CHANGES.txt,v 1.3 2001/07/29 05:50:28 fukachan Exp $
 
