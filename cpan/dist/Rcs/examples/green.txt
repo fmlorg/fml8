@@ -1,0 +1,85 @@
+From - Fri Sep  4 19:24:30 1998
+Return-Path: <greendjf@cvhp152.gpt.co.uk>
+Received: from cvis01.gpt.co.uk (cvis01.gpt.co.uk [195.99.244.34])
+	by onella.admc.com (8.9.0/8.9.0) with SMTP id DAA00464
+	for <craig@admc.com>; Thu, 3 Sep 1998 03:45:15 -0400
+Received: from cvfw01 by cvis01.gpt.co.uk with SMTP
+	(SMI-8.6/GPT-01b5) id IAA03221; Thu, 3 Sep 1998 08:34:39 +0100
+Received: from cvhp152 (cvhp152.gpt.co.uk) by cvhp99.gpt.co.uk with SMTP
+	(1.37.109.17/99-21) id AA007258250; Thu, 3 Sep 1998 08:37:30 +0100
+Received: from cvhp267.gpt.co.uk by cvhp152 with SMTP
+	(1.38.193.4/MAIL-15) id AA12641; Thu, 3 Sep 1998 08:37:30 +0100
+Sender: greendjf@cvhp152.gpt.co.uk
+Message-Id: <35EE4739.A3A04AD1@cvhp152.gpt.co.uk>
+Date: Thu, 03 Sep 1998 08:37:29 +0100
+From: David Green <greendjf@cvhp152.gpt.co.uk>
+Organization: GPT Ltd, U.K.
+X-Mailer: Mozilla 4.06 [en] (X11; I; HP-UX B.10.20 9000/715)
+Mime-Version: 1.0
+To: Craig <craig@admc.com>
+Subject: Re: Rcs.pm 0.07
+References: <359A81C3.3AD5@freter.com> <359B3C03.EF608041@cvhp152.gpt.co.uk> <359B6955.CCA0F605@freter.com> <35E67CD9.19DEDCE1@cvhp152.gpt.co.uk> <35EAA99F.471156A@freter.com> <35EC0CD8.C955E86B@cvhp152.gpt.co.uk> <35EDCEF8.1FB4517D@admc.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+Craig wrote:
+Craig,
+
+I've tried out your new code for daterev and it works ok except that my
+version of perl, 5.004_04, complained that $target_time was not defined
+(out of scope) a few lines up from the bottom of the method. I had to
+define $target_time before the if (@_ == 6) test.
+
+sub daterev {
+    my $self = shift;
+    
+    # ensure date has all the elements
+    if (@_ != 1 and @_ != 6) {
+        croak "daterev must either 1 or 6 arguments";
+    }
+
+    my $target_time;
+    if (@_ == 6) {    # string date passed
+        my($year, $mon, $mday, $hour, $min, $sec) = @_;
+
+        if($year !~ /^\d{4}$/) {
+            croak "year (1st param) must be 4 digit number";
+        }
+
+        $mon--;        # convert to 0-11 range
+        $target_time = timegm($sec, $min, $hour, $mday, $mon, $year);
+    }
+    else {    # system date passed
+        $target_time = shift;
+    }
+
+    if (not defined $self->{DATE}) {
+        _parse_rcs_header($self);
+    }
+
+    
+    my @revisions;
+    my %dates;
+
+    my %dates_hash = %{$self->{DATE}};
+    foreach $revision (keys %dates_hash) {
+        my $date = $dates_hash{$revision};
+        $dates{$date}{$revision} = 1;
+    }
+
+    my $date;
+    foreach $date (reverse sort keys %dates) {
+        foreach $revision (keys %{ $dates{$date} }) {
+            push @revisions, $revision if $date <= $target_time;
+        }
+    }
+
+    return wantarray ? @revisions : $revisions[0];
+}
+
+
+Regards,
+
+David.
+____________________________________________________________________
+David Green, AD4541, GPT Coventry, (740) 2821 greendjf@ncp.gpt.co.uk

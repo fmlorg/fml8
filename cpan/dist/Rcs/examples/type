@@ -1,0 +1,13 @@
+Check-in
+./project/RCS/testfile,v  <--  ./project/src/testfile
+new revision: 1.4; previous revision: 1.3
+enter log message, terminated with single '.' or end of file:
+>> @test multi-line comment@@@@@@
+>> @
+>> @@
+>> @@@
+>> @@@@
+>> multiline comment
+>> @
+>> .
+done

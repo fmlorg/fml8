@@ -1,0 +1,35 @@
+A recent programming project required the creation of a Revision Control
+System (RCS) front end.  I started with inline system calls to the RCS
+utilities, and by creating multiple parsing functions to extract information
+from an RCS archive file.
+
+I then decided to put all my functions in one place, and created Perl module
+Rcs.pm.
+
+The next step was to change my functions into object methods, and Rcs.pm
+became object oriented.  
+
+This Perl module should be of interest to anyone creating an RCS front end.
+
+Here's a quick and dirty example of how to check in a file.
+
+use Rcs;
+
+$obj = Rcs->new;
+$obj->file('testfile.pl');
+
+# Set RCS archive directory, is './RCS' by default
+$obj->rcsdir("./project_tree/archive");
+
+# Set working directory, is '.' by default
+$obj->workdir("./project_tree/src");
+
+$obj->ci('-mRevision Comment');
+
+Full documentation may be found at http://www.freter.com/perl/Rcs/Rcs.html
+
+If there's any interest, I would like to make Rcs.pm publicly available.
+Please let me know is you have any suggestions or comments.
+
+Craig Freter
+<craig@freter.com>
