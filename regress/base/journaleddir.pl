@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: journaleddir.pl,v 1.1 2001/08/21 03:46:40 fukachan Exp $
+# $FML: journaleddir.pl,v 1.2 2001/08/21 10:30:32 fukachan Exp $
 #
 
 BEGIN {
@@ -35,7 +35,7 @@ my $testpat = {
 for my $k (keys %$testpat) {
     my ($buf, $newkey);
     chop($buf = `/usr/games/fortune | sed 1q`);
-    $buf =~ s/^s*//;
+    $buf =~ s/^\s*//;
     if ($buf =~ /^(\S+)/) { $newkey = $1;}
     $testpat->{ $k }         = $buf;
     $testpat->{ $k.$newkey } = $buf;
