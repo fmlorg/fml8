@@ -8,7 +8,7 @@
 # $FML$
 #
 
-package IO::MapAdapter::File;
+package IO::Adapter::File;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
@@ -23,6 +23,95 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {};
     return bless $me, $type;
+}
+
+
+sub open
+{
+    my ($self, $args) = @_;
+
+    my $file = $args->{ file };
+    my $flag = $args->{ flag };
+    my $fh;
+    use FileHandle;
+    $fh = new FileHandle $file, $flag;
+    if (defined $fh) {
+	$self->{_fh} = $fh;
+	return $fh;
+    }
+    else {
+	$self->_error_reason("Error: cannot open $file $flag");
+	return undef;
+    }
+}
+
+
+# debug tools
+my $c = 0;
+my $ec = 0;
+sub line_count { my ($self) = @_; return "${ec}/${c}";}
+
+
+sub get_next_value
+{
+    my ($self) = @_;
+
+    my ($buf) = '';
+    my $fh = $self->{_fh};
+
+    if (defined $fh) {
+      INPUT:
+	while ($buf = <$fh>) {
+	    $c++; # for benchmark (debug)
+	    next INPUT if not defined $buf;
+	    next INPUT if $buf =~ /^\s*$/o;
+	    next INPUT if $buf =~ /^\#/o;
+	    next INPUT if $buf =~ /\sm=/o;
+	    next INPUT if $buf =~ /\sr=/o;
+	    next INPUT if $buf =~ /\ss=/o;
+	    last INPUT;
+	}
+
+	if (defined $buf) {
+	    my @buf = split(/\s+/, $buf);
+	    $buf    = $buf[0];
+	    $buf    =~ s/[\r\n]*$//o;
+	    $ec++;
+	}
+	return $buf;
+    }
+    return undef;
+}
+
+
+sub getops
+{
+    my ($self) = @_;
+    my $fh = $self->{_fh};
+    defined $fh ? tell($fh) : undef;    
+}
+
+
+sub setops
+{
+    my ($self, $pos) = @_;
+    my $fh = $self->{_fh};
+    seek($fh, $pos, 0);
+}
+
+
+sub eof
+{
+    my ($self) = @_;
+    my $fh = $self->{_fh};
+    $fh->eof if defined $fh;
+}
+
+
+sub close
+{
+    my ($self) = @_;
+    $self->{_fh}->close if defined $self->{_fh};
 }
 
 

@@ -89,36 +89,28 @@ sub new
     my ($self, $map, $args) = @_;
     my ($type) = ref($self) || $self;
     my ($me)   = {};
+    my $pkg;
 
     if (ref($map) eq 'ARRAY') {
+	$pkg                    = 'IO::Adapter::Array';
 	$me->{_type}            = 'array_reference';
 	$me->{_array_reference} = $map;
-
-	my $pkg = 'IO::Adapter::Array';
-	unshift(@ISA, $pkg);
-	eval qq{ require $pkg; $pkg->import();};
-	_error_reason($me, $@) if $@;
     }
     else {
 	if ($map =~ /file:(\S+)/ || $map =~ m@^(/\S+)@) {
+	    $pkg         = 'IO::Adapter::File';
 	    $me->{_file} = $1;
 	    $me->{_type} = 'file';
 	}
 	elsif ($map =~ /unix\.group:(\S+)/) {
+	    $pkg         = 'IO::Adapter::Array';
 	    $me->{_name} = $1;
 	    $me->{_type} = 'unix.group';
-
-	    my $pkg = 'IO::Adapter::Array';
-	    unshift(@ISA, $pkg);
-	    eval qq{ require $pkg; $pkg->import();};
-	    _error_reason($me, $@) if $@;
 	}
 	elsif ($map =~ /(ldap|mysql|postgresql):(\S+)/) {
 	    $me->{_type}   = $1;
 	    $me->{_schema} = $2;
-
-	    # lowercase the '_type' syntax
-	    $me->{_type}   =~ tr/A-Z/a-z/;
+	    $me->{_type}   =~ tr/A-Z/a-z/; # lowercase the '_type' syntax
 	}
 	else {
 	    my $s = "IO::MapAdapter::new: args='$map' is unknown.";
@@ -126,6 +118,10 @@ sub new
 	    _error_reason($me, $s);
 	}
     }
+
+    unshift(@ISA, $pkg);
+    eval qq{ require $pkg; $pkg->import();};
+    _error_reason($me, $@) if $@;
 
     return bless $me, $type;
 }
@@ -163,18 +159,7 @@ sub open
     $flag ||= 'r';
 
     if ($self->{'_type'} eq 'file') {
-	my $file = $self->{_file};
-	my $fh;
-	use FileHandle;
-	$fh = new FileHandle $file, $flag;
-	if (defined $fh) {
-	    $self->{_fh} = $fh;
-	    return $fh;
-	}
-	else {
-	    $self->_error_reason("Error: cannot open $file $flag");
-	    return undef;
-	}
+	$self->SUPER::open( { file => $self->{_file}, flag => $flag } );
     }
     elsif ($self->{'_type'} eq 'unix.group') {
 	my (@x)       = getgrnam( $self->{_name} );
@@ -197,11 +182,6 @@ sub open
 }
 
 
-my $c = 0;
-my $ec = 0;
-sub line_count { my ($self) = @_; return "${ec}/${c}";}
-
-
 # aliases for convenience
 sub get_member    { my ($self) = @_; $self->_get_address;}
 sub get_active    { my ($self) = @_; $self->_get_address;}
@@ -211,31 +191,7 @@ sub _get_address
     my ($self) = @_;
 
     if ($self->{'_type'} eq 'file') {
-	my ($buf) = '';
-	my $fh = $self->{_fh};
-
-	if (defined $fh) {
-	  INPUT:
-	    while ($buf = <$fh>) {
-		$c++; # for benchmark (debug)
-		next INPUT if not defined $buf;
-		next INPUT if $buf =~ /^\s*$/o;
-		next INPUT if $buf =~ /^\#/o;
-		next INPUT if $buf =~ /\sm=/o;
-		next INPUT if $buf =~ /\sr=/o;
-		next INPUT if $buf =~ /\ss=/o;
-		last INPUT;
-	    }
-
-	    if (defined $buf) {
-		my @buf = split(/\s+/, $buf);
-		$buf    = $buf[0];
-		$buf    =~ s/[\r\n]*$//o;
-		$ec++;
-	    }
-	    return $buf;
-	}
-	return undef;
+	$self->SUPER::get_next_value();
     }
     elsif ($self->{'_type'} eq 'unix.group' ||
 	   $self->{'_type'} eq 'array_reference') {
@@ -286,12 +242,9 @@ sub getpos
 {
     my ($self) = @_;
 
-    if ($self->{'_type'} eq 'file') {
-	my $fh = $self->{_fh};
-	defined $fh ? tell($fh) : undef;
-    }
-    elsif ($self->{'_type'} eq 'unix.group' ||
-	   $self->{'_type'} eq 'array_reference') {
+    if ($self->{'_type'} eq 'file' ||
+	$self->{'_type'} eq 'unix.group' ||
+	$self->{'_type'} eq 'array_reference') {
 	$self->SUPER::getpos();
     }
     else {
@@ -304,12 +257,9 @@ sub setpos
 {
     my ($self, $pos) = @_;
 
-    if ($self->{'_type'} eq 'file') {
-	my $fh = $self->{_fh};
-	seek($fh, $pos, 0);
-    }
-    elsif ($self->{'_type'} eq 'unix.group' ||
-	   $self->{'_type'} eq 'array_reference') {
+    if ($self->{'_type'} eq 'file' ||
+	$self->{'_type'} eq 'unix.group' ||
+	$self->{'_type'} eq 'array_reference') {
 	$self->SUPER::getpos($pos);
     }
     else {
@@ -322,12 +272,9 @@ sub eof
 {
     my ($self) = @_;
 
-    if ($self->{'_type'} eq 'file') {
-	my $fh = $self->{_fh};
-	$fh->eof if defined $fh;
-    }
-    elsif ($self->{'_type'} eq 'unix.group' ||
-	   $self->{'_type'} eq 'array_reference') {
+    if ($self->{'_type'} eq 'file' ||
+	$self->{'_type'} eq 'unix.group' ||
+	$self->{'_type'} eq 'array_reference') {
 	$self->SUPER::eof();
     }
     else {
@@ -340,12 +287,10 @@ sub close
 {
     my ($self) = @_;
 
-    if ($self->{'_type'} eq 'file') {
-	$self->{_fh}->close if defined $self->{_fh};
-    }
-    elsif ($self->{'_type'} eq 'unix.group' ||
-	   $self->{'_type'} eq 'array_reference') {
-	;
+    if ($self->{'_type'} eq 'file' ||
+	$self->{'_type'} eq 'unix.group' ||
+	$self->{'_type'} eq 'array_reference') {
+	$self->SUPER::close();
     }
     else {
 	$self->_error_reason("Error: type=$self->{_type} is unknown type.");
