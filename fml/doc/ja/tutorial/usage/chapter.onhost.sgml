@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.onhost.sgml,v 1.3 2002/11/26 11:17:13 fukachan Exp $
+   $FML: chapter.onhost.sgml,v 1.4 2003/01/05 08:03:22 fukachan Exp $
 -->
 
 <chapter id="usage.onhost">
@@ -44,6 +44,97 @@ makefml の基本的な使い方は &fml4; の makefml と同様です。
 というのが fml の操作ポリシーです。
 もちろんファイルを編集しても構いませんが。
 </para>
+
+<para>
+なお、fml コマンドは引数の順番の異なる makefml です。
+コマンドの中身/動作は同じですので、
+シンタックスの好き嫌いでどちらかを選んで使って下さい。
+<screen>
+makefml コマンド ＭＬ名 オプション
+fml     ＭＬ名 コマンド オプション
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1 id="usage.commandpolicy">
+	<title>
+	コマンドを用意する基準
+	</title>
+
+<para>
+&fmldevel; では、機能ごとに個別にコマンドを用意するようにしていますが、
+やたらと多くなるだけなので、以下のような基準に基づき用意することにしま
+す(2003/03 記)。
+</para>
+
+<para>
+できるだけ分離しないで makefml に統合するべきかな〜と思います。
+てきぎ admin コマンドや CGI でも使えるようになりうるので、
+再利用性が高いですしね。
+</para>
+
+
+<setc2>
+	<title>
+	特定のＭＬに操作を施すコマンド
+	</title>
+
+<para>
+特定のＭＬに対し、何らかのデータを見るだけでなく操作をする可能性がある
+なら、makefml (or fml) のコマンドとして実装する。
+<screen>
+makefml コマンド ＭＬ名 オプション
+fml     ＭＬ名 コマンド オプション
+</screen>
+</para>
+
+</sect2>
+
+
+<setc2>
+	<title>
+	データを見るだけのコマンド
+	</title>
+
+
+<para>
+特定のＭＬと関わりのないものもある。モジュールのドキュメントを見るとか、
+OS のアカウントやエイリアス一覧を表示させる類のものだ。
+これは fml が頭文字につくコマンドを別途用意する。
+<screen>
+fmladdr	 [-n]
+fmlalias [-n]
+fmldoc   モジュール名
+fmlconf  [-n] $ml
+</screen>
+</para>
+
+</setc2>
+
+
+<setc2>
+	<title>
+	操作を施すコマンドだが、特定のＭＬとの関わりはないかも知れないタイプ
+	</title>
+
+<para>
+これが一番困るケースのような気がする。
+どうしても作る必要があるなら、
+fml が頭文字につくコマンドを別途用意する。
+</para>
+
+<para>
+例: 記事のスプールを HTML 化する。
+でも、fml に限らず、MH フォルダでも構わない。
+<screen>
+fmlhtmlify [-I DIR] $src_dir $dst_dir
+</screen>
+</para>
+
+</sect2>
+
 
 </sect1>
 
