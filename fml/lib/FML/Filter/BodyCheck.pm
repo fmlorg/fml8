@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: BodyCheck.pm,v 1.17 2002/04/10 03:20:52 fukachan Exp $
+# $FML: BodyCheck.pm,v 1.18 2002/04/20 11:21:25 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -481,6 +481,56 @@ sub clean_up_buffer
     $xbuf =~ s/\n_CTK_//g;
 
     $xbuf;
+}
+
+# Descriptions: virus check against uuencode
+#               Even if Multipart, evaluate all blocks agasint virus checks.
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args) OBJ($first_msg)
+# Side Effects: croak if error
+# Return Value: none
+sub reject_uuencode
+{
+    my ($self, $msg, $args, $first_msg) = @_;
+
+    for (my $mp = $msg->{ next }; $mp ; $mp = $mp->{ next } ) {
+	$self->_probe_uuencode($mp);
+    }
+}
+
+
+# Descriptions: check $msg contains uuencode or not.
+#    Arguments: OBJ($self) OBJ($msg)
+# Side Effects: croak() if error
+# Return Value: none
+sub _probe_uuencode
+{
+    my ($self, $msg) = @_;
+    my ($xbuf, $pbuf, $buf, $found, @id);
+
+    # cheap diagnostic check
+    return unless defined $msg->{ data };
+
+    my $uuencode_pat = '^begin\s+\d{3}\s+\S+|\nbegin\s+\d{3}\s+\S+';
+
+    my $window_size = 1024; # at lease 32*2
+    my ($pb, $pe)   = $msg->offset_pair();
+    my $dataref     = $msg->{ data };
+    my $encoding    = $msg->encoding_mechanism();
+
+    # get $window_size bytes window and decode it
+    $buf = substr($$dataref, $pb, $pe - $pb);
+
+    if ($encoding) {
+	$buf = $self->_decode_mime_buffer($buf, $encoding);
+    }
+
+    # check current window
+    if ($buf =~ /($uuencode_pat)/m) {
+	croak "uuencode($1) found, may be a virus";
+    }
+    else {
+	return undef;
+    }
 }
 
 
