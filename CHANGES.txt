@@ -1,6 +1,12 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/06/01
+
+   スレッドデータベースの再設計
+	別ブランチでやってるので source-changes ML にしか動きが見えな
+	いとは思う。
+
 2003/05/28
 
    variables
@@ -4850,4 +4856,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.143 2003/05/06 14:55:03 fukachan Exp $
+$FML: CHANGES.txt,v 1.144 2003/05/28 15:07:26 fukachan Exp $
