@@ -1,0 +1,5 @@
+	how to get bind version
+
+% nslookup -type=txt -class=CHAOS version.bind $HOST
+
+$Id$
