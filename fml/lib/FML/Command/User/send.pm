@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: send.pm,v 1.9 2002/09/11 23:18:10 fukachan Exp $
+# $FML: send.pm,v 1.10 2002/09/22 14:56:48 fukachan Exp $
 #
 
 package FML::Command::User::send;
@@ -16,7 +16,7 @@ use FML::Command::User::get;
 @ISA = qw(FML::Command::User::get);
 
 
-# Descriptions: send articles
+# Descriptions: send back articles
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: forward request to get module
 # Return Value: none
@@ -29,7 +29,7 @@ sub process
 
 =head1 NAME
 
-FML::Command::User::send - send artciles
+FML::Command::User::send - send back artciles
 
 =head1 SYNOPSIS
 

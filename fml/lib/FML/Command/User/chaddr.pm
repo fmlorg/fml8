@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.13 2002/09/11 23:18:09 fukachan Exp $
+# $FML: chaddr.pm,v 1.14 2002/09/22 14:56:47 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -16,7 +16,7 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Command::User::chaddr - change subscriber address
+FML::Command::User::chaddr - change subscribed address
 
 =head1 SYNOPSIS
 
@@ -24,15 +24,16 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-Firstly apply confirmation before chaddr (change subscriber address).
-After confirmation succeeds, chaddr process proceeds.
+Firstly, apply confirmation before chaddr (change subscribed address)
+processed.  After confirmation succeeds, chaddr process proceeds.
 
 =head1 METHODS
 
 =head2 C<process($curproc, $command_args)>
 
-if either old or new addresses in chaddr arguments is an ML member,
-try to confirm this request irrespective of "From:" address.
+If either old or new addresses in chaddr arguments is an ML member,
+try to confirm this request. The confirmation is returned to "From:"
+address in the mail header, "reply-to" is not used.
 
 =cut
 
@@ -66,6 +67,10 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ config };
+
+    # 
+    # XXX-TODO: correct to use *_maps not primary_*_map for chaddr?
+    # 
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
@@ -94,9 +99,12 @@ sub process
 
     # if either old or new addresses in chaddr arguments is an ML member,
     # try to confirm this request irrespective of "From:" address.
+    # 1. request from $old_addr : $old_addr (member now) -> $new_addr
+    # 2. request from $new_addr : $old_addr -> $new_addr (member now)
     if ($cred->is_member($old_addr) || $cred->is_member($new_addr)) {
 	Log("chaddr request, try confirmation");
 
+	# XXX-TODO: should be FML::Confirm { ... address => [ @addr ] } ?
 	use FML::Confirm;
 	my $confirm = new FML::Confirm {
 	    keyword   => $keyword,

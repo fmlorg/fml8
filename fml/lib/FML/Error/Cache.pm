@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.5 2002/09/22 14:56:49 fukachan Exp $
+# $FML: Cache.pm,v 1.6 2002/11/20 14:31:44 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -15,20 +15,23 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Error::Cache - manipulate error/bounce infomation
+FML::Error::Cache - manipulate error/bounce information database.
 
 =head1 SYNOPSIS
 
 	use FML::Error::Cache;
-	my $error = new FML::Error::Cache $curproc;
-	$error->cache_on( $bounce_info );
+	my $db = new FML::Error::Cache $curproc;
+	$db->add( $bounce_info );
 
 where C<$bounce_info) follows:
 
-    $bounce_info = [ { address => 'rudo@nuinui.net',
-		       status  => '5.x.y',
-		       reason  => '... reason ... ',
-		   }
+    $bounce_info = [ 
+            { 
+		address => 'rudo@nuinui.net',
+		status  => '5.x.y',
+		reason  => '... reason ... ',
+	    },
+                  ...
     ];
 
 =head1 DESCRIPTION
@@ -60,7 +63,7 @@ sub new
 }
 
 
-# Descriptions: save bounce info into cache.
+# Descriptions: add bounce info into cache.
 #    Arguments: OBJ($self) HASH_REF($info)
 # Side Effects: update cache
 # Return Value: none
@@ -85,18 +88,18 @@ sub add
 	    $db->{ $address } = "$unixtime status=$status reason=$reason";
 	}
 	else {
-	    LogWarn("Error::Cache: cache_on: invalid data");
+	    LogWarn("FML::Error::Cache: add: invalid data");
 	}
 
 	$self->_close_cache();
     }
     else {
-	croak("add_to_cache: unknown data input type");
+	croak("FML::Error::Cache: add: unknown data input type");
     }
 }
 
 
-# Descriptions: open the cache dir for File::CacheDir
+# Descriptions: open the cache database for File::CacheDir.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -119,7 +122,7 @@ sub _open_cache
 }
 
 
-# Descriptions: dummy
+# Descriptions: destruct tied hash.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: none
@@ -134,13 +137,17 @@ sub _close_cache
 }
 
 
+# Descriptions: return key list in db.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: ARRAY_REF
 sub get_addr_list
 {
     my ($self) = @_;
 
     $self->_open_cache();
-    my $db = $self->{ _db };
 
+    my $db   = $self->{ _db };
     my @addr = keys %$db;
 
     $self->_close_cache();
@@ -149,6 +156,10 @@ sub get_addr_list
 }
 
 
+# Descriptions: return new Tie::JournaledDir object.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
 sub _new
 {
     my ($self) = @_;
@@ -159,12 +170,18 @@ sub _new
     my $mode    = $config->{ error_analyzer_cache_mode } || 'temporal';
     my $days    = $config->{ error_analyzer_cache_size } || 14;
 
+    # 
+    # XXX-TODO: this _new() method is required ?
+    # 
     use Tie::JournaledDir;
     return new Tie::JournaledDir { dir => $dir };
 }
 
 
-
+# Descriptions: get all values as HASH_REF.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: HASH_REF
 sub get_all_values_as_hash_ref
 {
     my ($self) = @_;
@@ -173,10 +190,6 @@ sub get_all_values_as_hash_ref
     $obj->get_all_values_as_hash_ref();
 }
 
-
-=head1 CODING STYLE
-
-See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 CODING STYLE
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.8 2002/10/20 13:33:31 fukachan Exp $
+# $FML: Analyze.pm,v 1.9 2002/12/12 04:57:53 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -19,7 +19,7 @@ my $debug = 1;
 
 =head1 NAME
 
-FML::Error::Analyze - analyzer routine for error cache
+FML::Error::Analyze - provide model specific analyzer routines.
 
 =head1 SYNOPSIS
 
@@ -47,19 +47,25 @@ sub new
 
 =head2 $data STRUCTURE
 
-C<$data> is passed to error analyer function.
+C<$data> is passed to the error analyer function.
 
 	 $data = {
 	    address => [
-	           error_string_1,
-	           error_string_2, ...
+	           error_info_1,
+	           error_info_2, ...
 	    ]
 	 };
+
+where the error_info_* has error reasons.
+
+=head1 METHODS
+
+=head2 simple_count()
 
 =cut
 
 
-# Descriptions: count up the nunber of errors
+# Descriptions: count up the number of errors.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($data)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -74,6 +80,8 @@ sub simple_count
 
     while (($addr, $bufarray) = each %$data) {
 	$count = 0;
+
+	# count up the number of error messsages if the status is 5XX.
 	if (defined $bufarray) {
 	    for my $buf (@$bufarray) {
 		if ($buf =~ /status=5/i) {
@@ -83,6 +91,7 @@ sub simple_count
 	    }
 	}
 
+	# add address to the removal list if the count is over $limit.
 	if ($count > $limit) {
 	    push(@removelist, $addr);
 	}
@@ -90,7 +99,7 @@ sub simple_count
 
     # debug info
     if ($debug) {
-	Log("analyze summary");
+	Log("error: simple_count analyzer summary");
 	my ($k, $v);
 	while (($k, $v) = each %$summary) {
 	    Log("summary: $k = $v points");
@@ -99,6 +108,22 @@ sub simple_count
 
     return \@removelist;
 }
+
+
+=head2 error_continuity()
+
+    examine the continuity of error messages (*).
+    --------------------> time
+         *           ok
+        *********    bad
+        * * *** *    ambiguous
+
+but sum up count as the delta.
+
+         *
+        ***
+
+=cut
 
 
 # Descriptions: error continuity based cost counting
@@ -126,10 +151,6 @@ sub error_continuity
 			$summary->{ $addr } = [ 0 ];
 		    }
 
-		    # count up the folloging distribution function.
-		    #     *
-		    #    ***
-
 		    # center of distribution function
 		    $i = int( (time - $time ) / (24*3600) );
 		    $summary->{ $addr }->[ $i ] += 2;
@@ -152,6 +173,7 @@ sub error_continuity
 	while (($addr, $ra) = each %$summary) {
 	    $sum = 0;
 	    for my $v (@$ra) {
+		# count if the top of the mountain is over 2.
 		if (defined $v) {
 		    $sum += 1 if $v >= 2;
 		}
@@ -166,10 +188,6 @@ sub error_continuity
     return \@removelist;
 }
 
-
-=head1 CODING STYLE
-
-See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 CODING STYLE
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: off.pm,v 1.3 2002/09/11 23:18:10 fukachan Exp $
+# $FML: off.pm,v 1.4 2002/09/22 14:56:47 fukachan Exp $
 #
 
 package FML::Command::User::off;
@@ -16,7 +16,7 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Command::User::off - change off mode
+FML::Command::User::off - change delivery mode from real time to digest.
 
 =head1 SYNOPSIS
 
@@ -24,8 +24,8 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-Firstly apply confirmation before off.
-After confirmation succeeds, off process proceeds.
+change delivery mode from real time to digest
+after confirmation succeeds.
 
 =head1 METHODS
 
@@ -54,7 +54,8 @@ sub new
 sub need_lock { 1;}
 
 
-# Descriptions: off adapter: confirm before off
+# Descriptions: change delivery mode from real time to digest
+#               after confirmation succeeds.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update database for confirmation.
 #               prepare reply message.
@@ -63,6 +64,10 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ config };
+
+    # 
+    # XXX-TODO: correct to use primary_*_map for on/off ?
+    # 
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
@@ -81,7 +86,7 @@ sub process
     unless ($cred->is_member($address)) {
 	$curproc->reply_message_nl('error.not_member');
 	LogError("off request from not member");
-	croak("not member");
+	croak("off request from not member");
 	return;
     }
 
@@ -89,7 +94,7 @@ sub process
     unless ($cred->is_recipient($address)) {
 	$curproc->reply_message_nl('error.not_recipient');
 	LogError("off request from not recipient");
-	croak("not recipient");
+	croak("off request from not recipient");
     }
     # try confirmation before off
     else {

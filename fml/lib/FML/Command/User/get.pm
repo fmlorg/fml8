@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.12 2002/09/11 23:18:09 fukachan Exp $
+# $FML: get.pm,v 1.13 2002/09/22 14:56:47 fukachan Exp $
 #
 
 package FML::Command::User::get;
@@ -67,6 +67,9 @@ sub need_lock { 1;}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
+
+    # XXX-TODO: call send_article() without checking here
+    # XXX-TODO: though checked in FML::Process::Command already.
     $self->send_article($curproc, $command_args);
 }
 

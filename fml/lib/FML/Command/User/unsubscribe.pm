@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.14 2002/09/11 23:18:11 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.15 2002/09/22 14:56:48 fukachan Exp $
 #
 
 package FML::Command::User::unsubscribe;
@@ -16,7 +16,7 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Command::User::unsubscribe - unsubscribe member
+FML::Command::User::unsubscribe - unsubscribe request handling
 
 =head1 SYNOPSIS
 
@@ -24,7 +24,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-Firstly apply confirmation before unsubscribe.
+Firstly apply confirmation before the real unsubscribe process.
 After confirmation succeeds, unsubcribe process proceeds.
 
 =head1 METHODS
@@ -63,6 +63,9 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ config };
+
+    # XXX-TODO: wrong to handle only primary_*_map in deluser phase.
+    # XXX-TODO: we should check all maps?
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
@@ -81,7 +84,7 @@ sub process
     unless ($cred->is_member($address)) {
 	$curproc->reply_message_nl('error.not_member');
 	LogError("unsubscribe request from not member");
-	croak("not member");
+	croak("unsubscribe request from not member");
     }
     # try confirmation before unsubscribe
     else {
