@@ -229,7 +229,7 @@ primary_member_map	=	file:$ml_home_dir/members
 #         Type:
 #     Examples:
 member_maps		=	$primary_member_map
-				$admin_member_maps
+				READ_ONLY($admin_member_maps)
 
 
 =head2 受信者のリスト
