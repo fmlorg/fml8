@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.83 2002/04/10 04:31:09 fukachan Exp $
+# $FML: Kernel.pm,v 1.84 2002/04/10 08:59:39 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -504,12 +504,14 @@ sub _check_resitrictions
     my ($curproc, $args, $type) = @_;
     my $config = $curproc->{ config };
     my $cred   = $curproc->{ credential }; # user credential
+    my $pcb    = $curproc->{ pcb };
 
     for my $rule (split(/\s+/, $config->{ "${type}_restrictions" })) {
 	if ($rule eq 'reject_system_accounts') {
 	    my $match = $cred->match_system_accounts($curproc, $args);
 	    if ($match) {
 		Log("${rule}: $match matches sender address");
+		$pcb->set("check_restrictions", "deny_reason", $rule);
 		return 0;
 	    }
 	}
@@ -533,6 +535,7 @@ sub _check_resitrictions
 	    }
 	}
 	elsif ($rule eq 'reject') {
+	    $pcb->set("check_restrictions", "deny_reason", $rule);
 	    return 0;
 	}
 	else {
@@ -941,11 +944,23 @@ sub queue_in
 
 	    next QUEUE unless $r eq $rcptkey;
 
-	    unless ($t eq 'text') {
-		$msg->attach(Type        => $q->{ type },
-			     Path        => $q->{ path },
-			     Filename    => $q->{ filename },
-			     Disposition => $q->{ disposition });
+	    if ($t eq 'Mail::Message') {
+		use FileHandle;
+		my ($rh, $wh) = FileHandle::pipe;
+		$q->print($wh);
+		$msg->attach(Type => 'message/rfc822',
+			     FH   => $rh);
+	    }
+	    else {
+		unless ($t eq 'text') {
+		    $msg->attach(Type        => $q->{ type },
+				 Path        => $q->{ path },
+				 Filename    => $q->{ filename },
+				 Disposition => $q->{ disposition });
+		}
+		else {
+		    Log("queue_in: unknown typ $t");
+		}
 	    }
 	}
     }
@@ -963,8 +978,20 @@ sub queue_in
 
 	    next QUEUE unless $r eq $rcptkey;
 
-	    if ($t eq 'text') {
-		$s .= $q;
+	    if ($t eq 'Mail::Message') {
+		use FileHandle;
+		my ($rh, $wh) = FileHandle::pipe;
+		$q->print($wh);
+		$msg->attach(Type => 'message/rfc822',
+			     FH   => $rh);
+	    }
+	    else {
+		if ($t eq 'text') {
+		    $s .= $q;
+		}
+		else {
+		    Log("queue_in: unknown typ $t");
+		}
 	    }
 	}
 
