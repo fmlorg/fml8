@@ -5,12 +5,12 @@
 fml 5 project home page
 </TITLE>
 <META http-equiv="Content-Type"
-	content="text/html; charset=US-ASCII">
+	content="text/html; charset=us-ascii">
 </HEAD>
 
-<BODY>
-<A HREF=index.ja.html>[ Japanese ]</A>
-[ English (is not ready) ]
-</BODY>
+<BODY BGCOLOR="#E6E6FA">
 
+<A HREF="index.html.ja">[Japanese]</A>
+
+</BODY>
 </HTML>
