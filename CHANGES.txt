@@ -10,6 +10,24 @@
 	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
 	気をつけてください。
 
+
+2004/10/03
+
+   newdomain および rmdomain コマンド
+	newdomain および rmdomain コマンドが作る/操作するファイルの
+	パーミッションを修正
+
+2004/09/29
+
+   インストーラの修正
+
+   etc/
+	define new variable $group_writable_config_dir.  make configure
+	controll $group_writable_config_dir and $primary_ml_home_prefix_map.
+	
+   FML::Install 
+	set up $group_writable_config_dir.
+
 2004/09/06
 
    fml 4 から 8 へ変換するコンバータの修正
@@ -7709,4 +7727,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.223 2004/09/04 05:36:38 fukachan Exp $
+$FML: CHANGES.txt,v 1.224 2004/09/13 02:05:43 fukachan Exp $
