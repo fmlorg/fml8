@@ -88,4 +88,19 @@ sub check
 }
 
 
+sub _add_rfc2369_to_header
+{
+    my ($header, $config, $args) = @_;
+
+    # addresses
+    my $post       = $config->{ address_for_post };
+    my $command    = $config->{ address_for_command };
+    my $maintainer = $config->{ maintainer };
+
+    # RFC2369
+    $header->add('list-post',  "<mailto:${post}>")       if $post;
+    $header->add('list-owner', "<mailto:${maintainer}>") if $maintainer;
+}
+
+
 1;

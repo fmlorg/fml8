@@ -74,15 +74,61 @@ sub _distribute
 {
     my ($curproc, $args) = @_;
 
-    # use FML::Debug; FML::Debug->show_structure( $curproc ); # XXX DEBUG
+    # XXX   $ah is "article handler" object.
+    # XXX   $ah != $curproc->{ article } (which is just a key)
+    # XXX   $curproc->{ article } is prepared as a side effect.
+    my $ah = $curproc->_prepare_article($args);
+
+    # header operations
+    # XXX we need $curproc->{ article }, which is prepared above.
+    $curproc->_header_rewrite($args);
+
+    # spool in the article before delivery
+    my $id = $ah->increment_id;
+    $ah->spool_in($id);
+
+    # delivery starts !
+    $curproc->_deliver_article($args);
+}
+
+
+sub _prepare_article
+{
+    my ($curproc, $args) = @_;
 
     # create aritcle to distribute
     use FML::Article;
-    my $article = new FML::Article $curproc;
 
-    # spool in
-    my $id = $article->gen_article_id;
-    $article->spool_in( $id );
+    # Side Effects: $article->{ curproc } = $curproc;
+    return new FML::Article $curproc;
+}
+
+
+sub _header_rewrite
+{
+    my ($curproc, $args) = @_;
+
+    my $config = $curproc->{ config };
+    my $header = $curproc->{ article }->{ header };
+    my $rules  = $curproc->{ config }->{ header_rewrite_rules };
+
+    for my $rule (split(/\s+/, $rules)) {
+	Log("_header_rewrite( $rule )");
+	if ($rule eq 'add_rfc2369') {
+	    $header->_add_rfc2369_to_header($config, 
+					    { mode => 'distribute' });
+	}
+    }
+}
+
+
+sub _deliver_article
+{
+    my ($curproc, $args) = @_;
+
+    my $config  = $curproc->{ config };  # FML::Config object
+    my $body    = $curproc->{ article }->{ body };  # Netlib::Messages
+    my $header  = $curproc->{ article }->{ header };# FML::Header
 
     # distribute article
     use Netlib::SMTP;
@@ -94,11 +140,6 @@ sub _distribute
 	socket_timeout     => 2,     # XXX 2 for debug but 10 by default
     };
     if ($service->error) { Log($service->error); return;}
-
-    $article    = $curproc->{ article };
-    my $body    = $article->{ body };    # FML::Body -> Netlib::Messages
-    my $header  = $article->{ header };  # FML::Header object
-    my $config  = $curproc->{ config };  # FML::Config object
 
     $service->deliver(
 		      {
