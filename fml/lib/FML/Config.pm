@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.42 2001/10/10 14:53:45 fukachan Exp $
+# $FML: Config.pm,v 1.43 2001/10/12 00:14:19 fukachan Exp $
 #
 
 package FML::Config;
@@ -503,12 +503,16 @@ expand $varname to $config->{ varname } in C<$rbuf>.
 # Return Value: none
 sub expand_variable_in_buffer
 {
-    my ($config, $rbuf) = @_;
+    my ($config, $rbuf, $args) = @_;
 
     while ($$rbuf =~ /\$([\w\d\_]+)/) {
 	my $varname = $1;
 	if (defined $config->{ $varname }) {
 	    my $x = $config->{ $varname };
+	    $$rbuf =~ s/\$$varname/$x/;
+	}
+	if (defined $args->{ $varname }) {
+	    my $x = $args->{ $varname };
 	    $$rbuf =~ s/\$$varname/$x/;
 	}
     }
