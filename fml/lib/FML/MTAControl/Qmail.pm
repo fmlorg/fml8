@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.8 2002/06/30 14:30:15 fukachan Exp $
+# $FML: Qmail.pm,v 1.9 2002/07/02 03:57:48 fukachan Exp $
 #
 
 package FML::MTAControl::Qmail;
@@ -57,8 +57,33 @@ sub qmail_install_alias
 sub qmail_remove_alias
 {
     my ($self, $curproc, $params, $optargs) = @_;
+    my $config       = $curproc->{ config };
+    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $ml_home_dir  = $params->{ ml_home_dir };
 
-    0;
+    use File::Spec;
+
+    my $qmail_template_files =
+	$config->get_as_array_ref('newml_command_qmail_template_files');
+    my $fml_owner_home_dir = $config->{ fml_owner_home_dir };
+    my $ml_name   = $config->{ ml_name };
+    my $ml_domain = $config->{ ml_domain }; $ml_domain =~ s/\./:/g;
+    for my $file (@$qmail_template_files) {
+	my $xfile = $file;
+	$xfile =~ s/dot-/\./;
+	$xfile =~ s/dot-/\./;
+	$xfile =~ s/qmail/qmail-$ml_domain-$ml_name/;
+
+	my $src   = File::Spec->catfile($template_dir, $file);
+	my $dst   = File::Spec->catfile($fml_owner_home_dir, $xfile);
+
+	if (-f $dst) {
+	    print STDERR "removing $dst\n";
+	    unlink $dst || do {
+		print STDERR "   failed to remove $dst !!!\n";
+	    };
+	}
+    }
 }
 
 
