@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CacheDir.pm,v 1.20 2002/09/22 14:56:57 fukachan Exp $
+# $FML: CacheDir.pm,v 1.21 2002/09/28 09:27:43 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -43,7 +43,7 @@ You can specify C<file_name> parameter.
 
 If so, the file names become _smtplog.0, _smtplog.1, ...
 
-The C<File::CacheDir> described above is limited by size.
+The cache data is limited by size.
 
 You can use File::CacheDir based on time not size.
 It is time based expiretion.
@@ -88,6 +88,17 @@ direcotry by default) and truncated to 0 by the modulo C<5>.
 
 =head2 new(args)
 
+$args hash can take the following arguments:
+
+	variable		default value
+	--------------------------------
+	directory 		.
+	file_name 		""
+	sequence_file_name 	.seq
+	modulus 		128
+	cache_type 		cyclic
+	dir_mode 		0755
+
 =cut
 
 
@@ -97,7 +108,7 @@ BEGIN {}
 END   {}
 
 
-# Descriptions: constructor
+# Descriptions: constructor.
 #               forward new() request to superclass (IO::File)
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
@@ -146,6 +157,7 @@ sub _take_file_name
     elsif ($cache_type eq 'cyclic') {
 	my $seq_file = File::Spec->catfile($directory, $sequence_file_name);
 
+	# XXX-TODO: remove File::Sequence dependence. ?
 	my $sfh = undef;
 	eval q{ use File::Sequence;
 		$sfh = new File::Sequence {
@@ -161,8 +173,8 @@ sub _take_file_name
 
     $self->{ _cache_type } = $cache_type || 'cyclic';
     $self->{ _cache_data } = {};
-    $self->{ _directory }  = $directory || '';
-    $self->{ _file }       = $file || '';
+    $self->{ _directory }  = $directory  || '';
+    $self->{ _file }       = $file       || '';
 }
 
 
@@ -242,7 +254,8 @@ sub get
 }
 
 
-# Descriptions: get value (latest value in the ring buffer) for key.
+# Descriptions: get value (latest value in the ring buffer) for the
+#               specified key.
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: none
 # Return Value: STR
@@ -274,6 +287,8 @@ sub get_latest_value
     for my $_dir (@dh) {
 	next DIR_ENTRY if $_dir =~ /^\./;
 	next DIR_ENTRY if $_dir !~ /^\d/;
+
+	# XXX-TODO: corrct rule to ignore /^\d{1,2}$/; ?
 	next DIR_ENTRY if $_dir =~ /^\d{1,2}$/;
 
 	$file = File::Spec->catfile($dir, $_dir);
@@ -298,8 +313,12 @@ sub _search
     my $pkey = quotemeta( substr($key, 0, 1) );
     my $buf  = '';
 
-    # negative cache
+    # simple check
+    return '' unless defined $file;
     return '' unless $file;
+
+    # negative cache
+    # XXX-TODO: when negative cache is expired ? this code is correct ?
     return '' if defined $hash->{ $file };
     $hash->{ $file } = 1;
 
@@ -313,7 +332,7 @@ sub _search
 	    next ENTRY unless $x =~ /^$pkey/;
 
 	    if ($x =~ /^$key\s+/ || $x =~ /^$key$/) {
-		chop $x;
+		chomp $x;
 		my ($k, $v) = split(/\s+/, $x, 2);
 		$buf = $v;
 	    }
