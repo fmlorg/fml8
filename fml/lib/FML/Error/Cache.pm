@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.17 2004/01/01 08:48:41 fukachan Exp $
+# $FML: Cache.pm,v 1.18 2004/01/31 14:12:17 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -60,6 +60,10 @@ sub new
     unless (-d $db_dir) {
 	$curproc->mkdir($db_dir, "mode=private");
     }
+
+    use Tie::JournaledDir;
+    my $obj = new Tie::JournaledDir { dir => $db_dir };
+    $obj->expire();
 
     return bless $me, $type;
 }
