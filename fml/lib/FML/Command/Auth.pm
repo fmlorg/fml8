@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.32 2004/01/02 14:50:30 fukachan Exp $
+# $FML: Auth.pm,v 1.33 2004/01/21 03:45:08 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -132,6 +132,7 @@ sub check_admin_member_password
     my ($self, $curproc, $optargs) = @_;
     my $function = "check_admin_member_password";
     my $cred     = $curproc->{ credential };
+    my $sender   = $cred->sender();
     my $config   = $curproc->config();
     my $status   = 0;
 
@@ -142,8 +143,8 @@ sub check_admin_member_password
     return 0 unless $optargs->{ password };
 
     # get a set of address and password
-    my $address  = $optargs->{ address };
-    my $password = $optargs->{ password };
+    my $address  = $optargs->{ address }  || $sender;
+    my $password = $optargs->{ password } || '';
     unless ($address && $password) {
 	# XXX-TODO: please return error message.
 	return 0;
@@ -162,6 +163,10 @@ sub check_admin_member_password
     # o.k. start ...
     $curproc->lock($lock_channel);
 
+    # error details.
+    my $user_entry_found = 0;
+    my $password_match   = 0;
+
     # search $user in password database map, which has a hash of
     # { $user => $encrypted_passwrod }.
     my $maplist = $config->get_as_array_ref('admin_member_password_maps');
@@ -179,15 +184,18 @@ sub check_admin_member_password
 	  PASSWORD_ENTRY:
 	    for my $r (@$pwent) {
 		my ($u, $p_infile) = split(/\s+/, $r);
-		my $p_input        = $crypt->unix_crypt($password, $p_infile);
 
 		# 1.1 user match ? ($address syntax is checked above.)
 		if ($cred->is_same_address($u, $address)) {
+		    $user_entry_found = 1;
+
 		    # 1.2 password match ?
+		    my $p_input = $crypt->unix_crypt($password, $p_infile);
 		    if ($p_infile eq $p_input) {
 			if ($debug) {
 			    $curproc->log("$function: password match");
 			}
+			$password_match = 1;
 			$status = 1;
 			last PASSWORD_ENTRY;
 		    }
@@ -198,7 +206,18 @@ sub check_admin_member_password
 
     $curproc->unlock($lock_channel);
 
-    $curproc->logerror("$function: password mismatch") unless $status;
+    unless ($status) {
+	# 1. user not found.
+	unless ($user_entry_found) {
+	    $curproc->logerror("$function: no such user");
+	}
+	# 2. user is found but password is wrong.
+	else {
+	    unless ($password_match) {
+		$curproc->logerror("$function: password mismatch");
+	    }
+	}
+    }
     return $status;
 }
 
@@ -248,6 +267,9 @@ sub change_password
 	    else {
 		$curproc->log("delete $address from=$map");
 	    }
+	}
+	else {
+	    $curproc->logerror("$address not found");
 	}
 
 	# add
