@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Address.pm,v 1.3 2004/02/15 04:38:37 fukachan Exp $
+# $FML: Address.pm,v 1.4 2004/06/29 10:03:48 fukachan Exp $
 #
 
 package Mail::Message::Address;
@@ -43,8 +43,8 @@ sub new
     my ($type) = ref($self) || $self;
 
     # parse it by Mail::Address.
-    my (@addrs) = Mail::Address->parse($str) || ();
-    my $addr    = $addrs[0]->address || '';
+    my (@addrs) = Mail::Address->parse($str);
+    my $addr    = $addrs[0]->address;
 
     # XXX in-core data area.
     # XXX if we manipulate Mail::Address object, it is dangerous. So
