@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: bodycheck.pl,v 1.1.1.1 2001/08/19 14:51:46 fukachan Exp $
+# $FML: headercheck.pl,v 1.1 2001/09/22 15:24:03 fukachan Exp $
 #
 
 use lib qw(../../fml/lib ../../cpan/lib ../../img/lib);
@@ -12,7 +12,7 @@ for my $f (@ARGV) {
     my $message = Mail::Message->parse( { fd => $fh } );
 
     if (defined $message) {
-	print STDERR "$f\t= ";
+	print STDERR "$f\t header = ";
 
 	use FML::Filter::HeaderCheck;
 	my $obj = new FML::Filter::HeaderCheck;
@@ -20,14 +20,13 @@ for my $f (@ARGV) {
 	$obj->header_check($message);
 	if ($obj->error()) {
 	    my $x = $obj->error();
-	    $x =~ s/at .*$//;
+	    $x =~ s/\s*at .*$//;
 	    print STDERR "error: $x";
-	    print STDERR "\n";
 	}
 	else {
 	    print STDERR "ok\n";
 	}
-    }
+   }
 }
 
 exit 0;
