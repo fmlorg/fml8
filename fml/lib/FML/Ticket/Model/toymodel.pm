@@ -113,7 +113,7 @@ sub _rewrite_subject
     my $ticket_id = $self->_gen_ticket_id($header, $config, $id);
 
     # append the ticket tag to the subject
-    my $subject = $header->get('subject');
+    my $subject = $header->get('subject') || '';
     $header->replace('Subject', $subject." ".$ticket_id);
 
     # X-* information
