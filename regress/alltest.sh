@@ -1,4 +1,7 @@
 #!/bin/sh
+#
+# $Id$
+#
 
 sudo rm -f /etc/fml/main.cf 
 sudo rm -f /usr/local/libexec/fml/fmlwrapper
