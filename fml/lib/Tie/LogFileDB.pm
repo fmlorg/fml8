@@ -143,7 +143,7 @@ sub _fetch
 
 =head1 NAME
 
-Tie::LogFileDB.pm - what is this
+Tie::LogFileDB.pm - hash emulation for a log structered file
 
 =head1 SYNOPSIS
 
@@ -183,10 +183,7 @@ file) for the $key
 
 =head1 DESCRIPTION
 
-=head2 new
-
-=item Function()
-
+... not yet ...
 
 =head1 AUTHOR
 
