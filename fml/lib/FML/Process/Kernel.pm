@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.105 2002/06/01 05:09:26 fukachan Exp $
+# $FML: Kernel.pm,v 1.106 2002/06/01 14:53:40 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -744,7 +744,12 @@ sub _gen_recipient_key
 {
     my ($rarray) = @_;
 
-    return join(" ", @$rarray);
+    if (defined $rarray) {
+	return join(" ", @$rarray);
+    }
+    else {
+	return '';
+    }
 }
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.30 2002/06/22 11:49:26 fukachan Exp $
+# $FML: Kernel.pm,v 1.31 2002/06/22 14:39:56 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -98,9 +98,11 @@ sub new
 
     # reset $ml_domain to handle virtual domains
     my $config = $curproc->{ config };
-    $config->set('ml_domain',      $ml_domain);
-    $config->set('ml_home_prefix', $ml_home_prefix);
-    $config->set('ml_home_dir',    $ml_home_dir);
+    $config->set('ml_domain',       $ml_domain);
+    $config->set('ml_home_prefix',  $ml_home_prefix);
+    if (defined $ml_home_dir && $ml_home_dir) {
+	$config->set('ml_home_dir', $ml_home_dir);
+    }
 
     # redefine $curproc as the object $type.
     return bless $curproc, $type;

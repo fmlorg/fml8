@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.59 2002/04/11 05:20:55 fukachan Exp $
+# $FML: Config.pm,v 1.60 2002/06/22 14:25:11 fukachan Exp $
 #
 
 package FML::Config;
@@ -199,6 +199,11 @@ sub set
     my ($self, $key, $value) = @_;
     $self->{ $key } = $value;
     $need_expansion_variables = 1;
+
+    if ($debug > 1) {
+	my (@c) = caller;
+	print "XXX $c[1] $c[2] ($key = $value)<br>\n";
+    }
 }
 
 
@@ -379,20 +384,32 @@ sub _read_file
 sub _evaluate
 {
     my ($config, $key, $mode, $value) = @_;
-    my @buf = split(/\s+/, $config->{ $key });
+    my @buf = ();
+
+    if (defined $config->{ $key }) {
+	@buf = split(/\s+/, $config->{ $key });
+    }
 
     if ($mode eq '+') {
 	push(@buf, $value);
     }
     elsif ($mode eq '-') {
 	my @newbuf = ();
-	for (@buf) {
-	    push(@newbuf, $_) if $value ne $_;
+      BUF:
+	for my $s (@buf) {
+	    next unless defined $s;
+	    next unless $s;
+	    push(@newbuf, $s) if $value ne $s;
 	}
 	@buf = @newbuf;
     }
 
-    return join(" ", @buf);
+    if (@buf) {
+	return join(" ", @buf);
+    }
+    else {
+	return '';
+    }
 }
 
 
@@ -485,7 +502,9 @@ sub write
 
 	    print $fh $comment->{$k} if defined $comment->{$k};
 	    print $fh "$k = ";
-	    print $fh join("\n\t", split(/\s+/, $config->{$k}));
+	    if (defined $config->{$k}) {
+		print $fh join("\n\t", split(/\s+/, $config->{$k}));
+	    }
 	    print $fh "\n";
 	    print $fh "\n";
 	}
