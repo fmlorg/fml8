@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.48 2002/09/28 09:58:19 fukachan Exp $
+# $FML: Article.pm,v 1.49 2002/10/20 13:20:12 fukachan Exp $
 #
 
 package FML::Article;
@@ -39,11 +39,11 @@ C<header> and C<body> object as hash keys.
 The C<header> is an C<FML::Header> object,
 the C<body> is a C<Mail::Message> object
 and
-the C<message> is the whole of chains.
+the C<message> is the head object of object chains.
 
-new() sets up the $curproc as
+C<new()> method sets up the $curproc as
 
-    my $dupmsg  = $curproc->{'incoming_message'}->{ message }->dup_header;
+    my $dupmsg  = $curproc->{ 'incoming_message' }->{ message }->dup_header;
     $curproc->{ article }->{ message } = $dupmsg;
     $curproc->{ article }->{ header }  = $dupmsg->whole_message_header;
     $curproc->{ article }->{ body }    = $dupmsg->whole_message_body;
@@ -70,7 +70,7 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {};
 
-    if (defined $curproc->{'incoming_message'}->{ message }) {
+    if (defined $curproc->{ 'incoming_message' }->{ message }) {
 	_setup_article_template($curproc);
     }
     $me->{ curproc } = $curproc;
@@ -79,16 +79,16 @@ sub new
 }
 
 
-# Descriptions: build an article template to distribute
+# Descriptions: build an article template to distribute.
 #    Arguments: OBJ($curproc)
-# Side Effects: build $curproc->{ article }
+# Side Effects: build $curproc->{ article } HASH_REF. 
 # Return Value: none
 sub _setup_article_template
 {
     my ($curproc) = @_;
 
     # create an article template by duplicating the incoming message
-    my $msg_in = $curproc->{'incoming_message'}->{ message };
+    my $msg_in = $curproc->{ 'incoming_message' }->{ message };
     my $duphdr = $msg_in->dup_header;
     if (defined $duphdr) {
 	$curproc->{ article }->{ message } = $duphdr;
@@ -119,12 +119,12 @@ sub increment_id
 {
     my ($self) = @_;
     my $curproc  = $self->{ curproc };
-    my $config   = $curproc->{ config };
-    my $pcb      = $curproc->{ pcb };
+    my $config   = $curproc->config();
+    my $pcb      = $curproc->pcb();
     my $seq_file = $config->{ sequence_file };
 
-    # XXX we should enhance IO::Adapter module to handle
-    # XXX sequential number.
+    # XXX-TODO we should enhance IO::Adapter module to handle
+    # XXX-TODO sequential number.
     use File::Sequence;
     my $sfh = new File::Sequence { sequence_file => $seq_file };
     my $id  = $sfh->increment_id;
@@ -132,7 +132,8 @@ sub increment_id
 
     # save $id in pcb (process control block) and return $id
     $pcb->set('article', 'id', $id);
-    $id;
+
+    return $id;
 }
 
 
@@ -149,9 +150,27 @@ return the current article sequence number.
 sub id
 {
     my ($self) = @_;
-    my $curproc = $self->{ curproc };
-    my $pcb     = $curproc->{ pcb };
-    return $pcb->get('article', 'id');
+    my $curproc  = $self->{ curproc };
+    my $config   = $curproc->config();
+    my $pcb      = $curproc->pcb();
+
+    my $n = $pcb->get('article', 'id');
+
+    # within Process::Distribute
+    if ($n) {
+	return $n;
+    }
+    # processes not Process::Distribute
+    else {
+	my $seq_file = $config->{ sequence_file };
+
+	use File::Sequence;
+	my $sfh = new File::Sequence { sequence_file => $seq_file };
+	my $n   = $sfh->get_id();
+	$sfh->close();
+
+	return $n;
+    }
 }
 
 
@@ -171,7 +190,7 @@ sub spool_in
 {
     my ($self, $id) = @_;
     my $curproc    = $self->{ curproc };
-    my $config     = $curproc->{ config };
+    my $config     = $curproc->config();
     my $spool_dir  = $config->{ spool_dir };
     my $use_subdir = $config->{ spool_type } eq 'subdir' ? 1 : 0;
 
@@ -200,7 +219,7 @@ sub spool_in
 	}
     }
     else {
-	Log("not spool article");
+	Log("not spool article $id");
     }
 }
 
@@ -208,6 +227,10 @@ sub spool_in
 =head2 filepath($id)
 
 return article file path.
+
+=head2 subdirpath($id)
+
+return subdir path.
 
 =cut
 
@@ -224,7 +247,7 @@ sub filepath
 }
 
 
-# Descriptions: return subdir path for this article
+# Descriptions: return subdir path for this article.
 #    Arguments: OBJ($self) NUM($id)
 # Side Effects: none
 # Return Value: STR(file path)
@@ -236,7 +259,7 @@ sub subdirpath
 }
 
 
-# Descriptions: return article file path.
+# Descriptions: return article file and dir path.
 #    Arguments: OBJ($self) NUM($id)
 # Side Effects: none
 # Return Value: ARRAY( STR(file path), STR(dir path) )
@@ -244,9 +267,10 @@ sub _filepath
 {
     my ($self, $id) = @_;
     my $curproc    = $self->{ curproc };
-    my $config     = $curproc->{ config };
+    my $config     = $curproc->config();
     my $spool_dir  = $config->{ spool_dir };
     my $use_subdir = $config->{ spool_type } eq 'subdir' ? 1 : 0;
+    my $unit       = $config->{ spool_subdir_unit };
 
     use Mail::Message::Spool;
     my $spool = new Mail::Message::Spool;
@@ -254,7 +278,7 @@ sub _filepath
 	base_dir    => $spool_dir,
 	id          => $id,
 	use_subdir  => $use_subdir,
-	subdir_unit => $config->{ spool_subdir_unit },
+	subdir_unit => $unit,
     } ;
     my $file = $spool->filepath($args);
     my $dir  = $spool->dirpath($args);
@@ -269,13 +293,13 @@ sub _filepath
 
 =head2 speculate_max_id([$spool_dir])
 
-scan the spool_dir and get max number among files in it It must be the
-max (latest) article number in its folder.
+scan the spool_dir and get the max number among files in it. It must
+be the max (latest) article number in its folder.
 
 =cut
 
 
-# Descriptions: scan the spool_dir and get max number among files in it
+# Descriptions: scan the spool_dir and get max number among files in it.
 #               It must be the max (latest) article number in its folder.
 #    Arguments: OBJ($curproc) STR($spool_dir)
 # Side Effects: none
@@ -283,7 +307,7 @@ max (latest) article number in its folder.
 sub speculate_max_id
 {
     my ($curproc, $spool_dir) = @_;
-    my $config     = $curproc->{ config };
+    my $config     = $curproc->config();
     my $use_subdir = $config->{ spool_type } eq 'subdir' ? 1 : 0;
 
     unless (defined $spool_dir) {
@@ -315,6 +339,7 @@ sub speculate_max_id
 
 	    $dh->close();
 
+	    # XXX-TODO wrong? to speculate max_id in subdir spool?
 	    $subdir = File::Spec->catfile($spool_dir, $max_subdir);
 	    Log("max_id: (debug) scan $subdir");
 	    $curproc->speculate_max_id($subdir);
