@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CacheDir.pm,v 1.14 2002/05/17 05:03:28 fukachan Exp $
+# $FML: CacheDir.pm,v 1.15 2002/05/17 09:50:56 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -153,8 +153,10 @@ sub _take_file_name
 		    modulus       => $modulus,
 		};
 	};
-	my $id = $sfh->increment_id;
-	$file  = File::Spec->catfile($directory, $file_name.$id);
+	if (defined $sfh) {
+	    my $id = $sfh->increment_id;
+	    $file  = File::Spec->catfile($directory, $file_name.$id);
+	}
     }
 
     $self->{ _cache_type } = $cache_type || 'cyclic';
@@ -179,7 +181,7 @@ no argument.
 sub open
 {
     my ($self, $file, $mode) = @_;
-    $file = $file || $self->{ _file };
+    $file = defined $file ? $file : $self->{ _file };
     $mode = defined $mode ? $mode :
 	($self->{ _cache_type } eq 'temporal' ? "a+" : "w+");
 
@@ -250,6 +252,9 @@ sub get_latest_value
     my $file = $self->{ _file };
     my $buf  = $self->_search($file, $key);
 
+    # cheap sanity;
+    return '' unless defined $key;
+
     # return cache
     return $buf if $buf;
 
@@ -265,14 +270,16 @@ sub get_latest_value
 
     eval q{ use File::Spec;};
 
-    for (@dh) {
-	next if $_ =~ /^\./;
-	next if $_ !~ /^\d/;
-	next if $_ =~ /^\d{1,2}$/;
+  DIR_ENTRY:
+    for my $_dir (@dh) {
+	next DIR_ENTRY if $_dir =~ /^\./;
+	next DIR_ENTRY if $_dir !~ /^\d/;
+	next DIR_ENTRY if $_dir =~ /^\d{1,2}$/;
 
-	$file = File::Spec->catfile($dir, $_);
+	$file = File::Spec->catfile($dir, $_dir);
 	$buf  = $self->_search($file, $key);
-	last if $buf;
+
+	last DIR_ENTRY if $buf;
     }
     closedir($dh) if defined $dh;
 
@@ -289,7 +296,7 @@ sub _search
     my ($self, $file, $key) = @_;
     my $hash = $self->{ _cache_data };
     my $pkey = quotemeta( substr($key, 0, 1) );
-    my $buf;
+    my $buf  = '';
 
     # negative cache
     return '' unless $file;
@@ -297,18 +304,24 @@ sub _search
     $hash->{ $file } = 1;
 
     my $fh = $self->open($file, "r");
-    while ($_ = $fh->getline) {
-	next unless /^$pkey/;
 
-	if (/^$key\s+/ || /^$key$/) {
-	    chop $_;
-	    my ($k, $v) = split(/\s+/, $_, 2);
-	    $buf = $v;
+    if (defined $fh) {
+	my $x;
+
+      ENTRY:
+	while ($x = $fh->getline) {
+	    next ENTRY unless $x =~ /^$pkey/;
+
+	    if ($x =~ /^$key\s+/ || $x =~ /^$key$/) {
+		chop $x;
+		my ($k, $v) = split(/\s+/, $x, 2);
+		$buf = $v;
+	    }
 	}
+	$self->close;
     }
-    $self->close;
 
-    $buf;
+    return $buf;
 }
 
 
@@ -346,8 +359,11 @@ sub set
 {
     my ($self, $key, $value) = @_;
     my $fh = $self->open;
-    print $fh $key, "\t", $value, "\n";
-    $self->close;
+
+    if (defined $fh) { 
+	print $fh $key, "\t", $value, "\n";
+	$self->close;
+    }
 }
 
 
