@@ -47,7 +47,7 @@ sub new
 #    Arguments: $self $args
 # Side Effects: none
 # Return Value: none
-sub prepare {    ; }
+sub prepare { ; }
 
 
 # Descriptions: just a switch
