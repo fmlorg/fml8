@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: System.pm,v 1.24 2001/05/30 04:03:22 fukachan Exp $
+# $FML: System.pm,v 1.25 2001/06/10 11:24:13 fukachan Exp $
 #
 
 package FML::Ticket::System;
@@ -110,42 +110,6 @@ sub _init_ticket_db_dir
     }
 
     return 1;
-}
-
-
-# Descriptions: replace SPACE with _
-#    Arguments: string
-# Side Effects: none
-# Return Value: string
-sub _quote_space
-{
-    my ($id) = @_;
-    $id =~ s/\s/_/g;
-    return $id;
-}
-
-
-# Descriptions: replace _ with SPACE
-#    Arguments: string
-# Side Effects: none
-# Return Value: string
-sub _dequote_space
-{
-    my ($id) = @_;
-    $id =~ s/_/ /g;
-    return $id;
-}
-
-
-# Descriptions: log the error "undefined function" for debug
-#               XXX nuke this in the future ! this is only for debug.
-#    Arguments: $self
-# Side Effects: log the error
-# Return Value: none
-sub AUTOLOAD
-{
-    my ($self) = @_;
-    Log("FYI: unknown method $AUTOLOAD is called");
 }
 
 
