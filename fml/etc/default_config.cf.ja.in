@@ -997,13 +997,16 @@ newml_command_template_files 	=	config.cf
 
 
 
-=head1	
+=head1	エラーメール解析
 
 # Descriptions: use libexe/fml/{error,mead} or not
 #      History:
 #        Value: yes
 #     Examples: yes / no
 use_error_analyzer	=	yes
+
+
+=head2	キャッシュ
 
 
 # Descriptions: error messages のキャッシュを格納するディレクトリ
@@ -1035,6 +1038,21 @@ error_analyzer_cache_mode		=	temporal
 error_analyzer_cache_size		=	14
 
 
+=head2	データを解析する
+
+
+# Descriptions: FML::Error::Analyze 中の関数名。
+#      History: none
+#        Value: simple_count
+#     Examples: simple_count
+error_analyzer_function			=	simple_count
+
+
+# Descriptions: simple_count のエラー回数の上限
+#      History: none
+#        Value: NUM
+#     Examples: 5
+error_analyzer_simple_count_limit	=	5
 
 =head1	スレッド追跡システム
 
