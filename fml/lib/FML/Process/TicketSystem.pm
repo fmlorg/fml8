@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: TicketSystem.pm,v 1.14 2001/04/03 09:45:44 fukachan Exp $
+# $FML: TicketSystem.pm,v 1.15 2001/05/30 04:03:22 fukachan Exp $
 #
 
 package FML::Process::TicketSystem;
@@ -29,8 +29,8 @@ FML::Process::TicketSystem -- primitive fml5 ticket system
     use FML::Process::TicketSystem;
          ... snip ...
 
-    use FML::Ticket::Model::toymodel;
-    $ticket = FML::Ticket::Model::toymodel->new($curproc, $args);
+    use FML::Ticket::Model::minimal_states;
+    $ticket = FML::Ticket::Model::minimal_states->new($curproc, $args);
     $ticket->$method($curproc, $args);
 
 =head1 DESCRIPTION
@@ -83,7 +83,7 @@ sub run
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
     my $model   = $config->{ ticket_model };
-    my $pkg     = "FML::Ticket::Model::". $model;
+    my $pkg     = $config->{ ticket_driver };
     my $argv    = $args->{ ARGV };
     my $command = $argv->[ 0 ] || 'list';
 

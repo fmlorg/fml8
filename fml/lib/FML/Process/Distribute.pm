@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Distribute.pm,v 1.45 2001/05/19 03:30:37 fukachan Exp $
+# $FML: Distribute.pm,v 1.46 2001/05/30 14:35:09 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -319,7 +319,7 @@ sub _ticket_check
     my ($curproc, $args) = @_;    
     my $config = $curproc->{ config };
     my $model  = $config->{ ticket_model };
-    my $pkg    = "FML::Ticket::Model::$model";
+    my $pkg    = $config->{ ticket_driver };
 
     # fake use() to do "use FML::Ticket::$model;"
     eval qq{ require $pkg; $pkg->import();};

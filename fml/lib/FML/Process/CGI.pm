@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: CGI.pm,v 1.12 2001/04/03 09:45:43 fukachan Exp $
+# $FML: CGI.pm,v 1.13 2001/05/28 16:17:13 fukachan Exp $
 #
 
 package FML::Process::CGI;
@@ -120,7 +120,7 @@ sub run
 
     # model specific ticket object
     if ($myname eq 'fmlticket.cgi') {
-	my $module = 'FML::Ticket::Model::'.$config->{ ticket_model };
+	my $module = $config->{ ticket_driver };
 	my $ticket = $curproc->load_module($args, $module);
 	$ticket->mode({ mode => 'html' });
 	$ticket->run_cgi($curproc, $args);

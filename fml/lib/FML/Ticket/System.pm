@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: System.pm,v 1.23 2001/04/08 13:25:39 fukachan Exp $
+# $FML: System.pm,v 1.24 2001/05/30 04:03:22 fukachan Exp $
 #
 
 package FML::Ticket::System;
@@ -22,8 +22,8 @@ FML::Ticket::System - ticket system core engine
 
 =head1  SYNOPSIS
 
-   use Ticket::Model::minimal_states;
-   $ticket = new Ticket::Model::minimal_states;
+   use FML::Ticket::Model::minimal_states;
+   $ticket = new FML::Ticket::Model::minimal_states;
    $ticket->assign($curproc, $args);
    $ticket->update_cache($curproc, $args);
 

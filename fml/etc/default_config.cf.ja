@@ -454,6 +454,12 @@ use_ticket		=	yes
 #     Examples:
 ticket_model		=	minimal_states
 
+# Descriptions: チケットシステムのドライバ
+#      History: fml 5.0 new
+#        Value: string
+#     Examples:
+ticket_driver		=	FML::Ticket::Model::minimal_states
+
 # Descriptions: チケットにつけるＭＬ名
 #               複数のＭＬにまたがったチケットを追跡するために
 #               必要
