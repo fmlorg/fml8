@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.17 2001/10/21 11:19:34 fukachan Exp $
+# $FML: Lite.pm,v 1.18 2001/10/22 11:04:11 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.17 2001/10/21 11:19:34 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.18 2001/10/22 11:04:11 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -1506,26 +1506,29 @@ sub _print_thread
 
     # get id list: @idlist = ( $head_id id2 id3 ... )
     my $buf = $db->{ _idref }->{ $head_id };
-    $buf =~ s/^\s*//;
-    $buf =~ s/\s*$//;
-    my (@idlist) = split(/\s+/, $buf);
 
-  IDLIST:
-    for my $id (@idlist) {
-	_print($wh, "<!-- thread (@idlist) -->\n", $code);
+    if (defined $buf) {
+	$buf =~ s/^\s*//;
+	$buf =~ s/\s*$//;
+	my (@idlist) = split(/\s+/, $buf);
 
-	next IDLIST if $uniq->{ $id };
-	$uniq->{ $id } = 1;
+      IDLIST:
+	for my $id (@idlist) {
+	    _print($wh, "<!-- thread (@idlist) -->\n", $code);
 
-	$self->_print_ul($wh, $db, $code);
+	    next IDLIST if $uniq->{ $id };
+	    $uniq->{ $id } = 1;
 
-	# oops, we should ignore head of the thread ( myself ;-)
-	if (($id != $head_id) && $self->_has_link($db, $id)) {
-	    $self->_print_li_filename($wh, $db, $id, $code);
-	    $self->_print_thread($wh, $db, $id, $code);
-	}
-	else {
-	    $self->_print_li_filename($wh, $db, $id, $code);
+	    $self->_print_ul($wh, $db, $code);
+
+	    # oops, we should ignore head of the thread ( myself ;-)
+	    if (($id != $head_id) && $self->_has_link($db, $id)) {
+		$self->_print_li_filename($wh, $db, $id, $code);
+		$self->_print_thread($wh, $db, $id, $code);
+	    }
+	    else {
+		$self->_print_li_filename($wh, $db, $id, $code);
+	    }
 	}
     }
 
