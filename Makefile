@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.20 2001/11/25 01:32:44 fukachan Exp $
+# $FML: Makefile,v 1.21 2001/12/09 13:20:47 fukachan Exp $
 #
 
 CONV = doc/bin/text2html.pl
@@ -16,6 +16,9 @@ usage:
 
 install:
 	sh INSTALL.sh
+
+install.new:
+	./install.pl fml/etc/install.cf
 
 scan:
 	@ cvs -n update 2>&1 |grep -v : || echo ''
