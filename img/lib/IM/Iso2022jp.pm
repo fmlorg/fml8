@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::Iso2022jp.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::Iso2022jp.pm version 20021207(IM142)";
 
 package IM::Iso2022jp;
 require 5.003;
@@ -28,24 +28,6 @@ use vars qw(@ISA @EXPORT);
 	header_iso2022jp_conv
 );
 
-=head1 NAME
-
-Iso2022jp - MIME header encoder for ISO-2022-JP character set
-
-=head1 SYNOPSIS
-
-use IM/Iso2022jp;
-
-$encoded_string_for_structured_header = struct_iso2022jp_mimefy(string);
-
-$encoded_string_for_unstructured_header = line_iso2022jp_mimefy(string);
-
-$rcode = header_iso2022jp_conv(\@Header, code_conv_flag);
-
-=head1 DESCRIPTION
-
-=cut
-
 use vars qw($Jp_Bin $Jp_Qin $Jp_out
 	    $Jis_kanji $Jis_roman
 	    $C_pascii);
@@ -64,16 +46,16 @@ BEGIN {
 #	return value: (lines, err)
 #	  lines: converted lines (NULL if error)
 #
-sub struct_iso2022jp_mimefy ($) {
+sub struct_iso2022jp_mimefy($) {
     my $line_in = shift;
-    my ($c, $groupsyntax);
-    my ($inquote, $incomment, $addrquote) = (0, 0, 0);
-    my ($groupcolon, $need_space, $need_encode) = (0, 0, 0);
-    my ($line_out, $line_work) = ('', '');
-    my ($n);
+    my($c, $groupsyntax);
+    my($inquote, $incomment, $addrquote) = (0, 0, 0);
+    my($groupcolon, $need_space, $need_encode) = (0, 0, 0);
+    my($line_out, $line_work) = ('', '');
+    my($n);
     im_debug("encoding structured: $line_in\n") if (&debug('encode'));
     while ($line_in ne '') {
-	if ($line_in =~ /^($Jis_kanji[^\e]+$Jis_roman([ \t]*$Jis_kanji[^\e]+$Jis_roman)*)(.*)/os){
+	if ($line_in =~ /^($Jis_kanji[^\e]+$Jis_roman([ \t]*$Jis_kanji[^\e]+$Jis_roman)*)(.*)/os) {
 	    $c = $1;
 	    $line_in = $3;
 	    $need_encode = 1;
@@ -238,7 +220,7 @@ sub struct_iso2022jp_mimefy ($) {
 #	&error_exit;
 	return '';
     }
-    if ($line_out =~ /$Jis_kanji[^\e]+$Jis_roman/o){
+    if ($line_out =~ /$Jis_kanji[^\e]+$Jis_roman/o) {
 	im_err("invalid iso-2022-jp charset location in structured field: "
 	       . "$line_out\n");
 #	&error_exit;
@@ -253,9 +235,9 @@ sub struct_iso2022jp_mimefy ($) {
 #	lines: continuous header lines to be converted
 #	return value: converted lines
 #
-sub line_iso2022jp_mimefy ($) {
-    my ($line_in) = @_;
-    my ($line_out, $this_word, $this_space, $this_code, $follow, $n);
+sub line_iso2022jp_mimefy($) {
+    my($line_in) = @_;
+    my($line_out, $this_word, $this_space, $this_code, $follow, $n);
     $follow = 0;
     $this_space = '';
     $line_out = '';
@@ -292,7 +274,7 @@ sub line_iso2022jp_mimefy ($) {
 		$line_in = $3;
 		$this_word .= $1;
 		$this_code = 'iso-2022-jp';
-	    } elsif ($line_in =~ /^($Jis_roman)(.*)/os){	# XXX
+	    } elsif ($line_in =~ /^($Jis_roman)(.*)/os) {	# XXX
 		last
 		  if ($this_code ne 'us-ascii' && $this_code ne 'iso-2022-jp');
 		$line_in = $2;
@@ -343,10 +325,10 @@ sub line_iso2022jp_mimefy ($) {
 #	struct: true if in structured field
 #	return value: encoded words
 #
-sub word_iso2022jp_mimefy ($$$$) {
-    my ($size, $word_in, $need_pre_space, $struct) = @_;
-    my ($word_out) = '';
-    my ($word_conv, $n, $word_sub, $word_rest);
+sub word_iso2022jp_mimefy($$$$) {
+    my($size, $word_in, $need_pre_space, $struct) = @_;
+    my($word_out) = '';
+    my($word_conv, $n, $word_sub, $word_rest);
 
     if ($main::NoFolding) {
 	if ($main::HdrQEncoding) {
@@ -447,10 +429,10 @@ sub word_iso2022jp_mimefy ($$$$) {
 #	  0: success
 #	 -1: failure
 #
-sub header_iso2022jp_conv ($$) {
-    my ($header, $code_conv) = @_;
-    my ($i, $c);
-    my ($field_name, $field_value);
+sub header_iso2022jp_conv($$) {
+    my($header, $code_conv) = @_;
+    my($i, $c);
+    my($field_name, $field_value);
     for ($i = 0; $i <= $#$header; $i++) {
 	im_debug("Iso2022jp: converting: $$header[$i]\n") if (&debug('encode'));
 	$c = &code_check($$header[$i]);
@@ -501,8 +483,8 @@ sub header_iso2022jp_conv ($$) {
 #	space: separatig space
 #	return value: a concatinated header string
 #
-sub hdr_cat ($$$) {
-    my ($str1, $str2, $space) = @_;
+sub hdr_cat($$$) {
+    my($str1, $str2, $space) = @_;
 
     if ($str1 eq '' || $str1 =~ /\n[\t ]+$/) {
 	return "$str1$space$str2";
@@ -520,6 +502,34 @@ sub hdr_cat ($$$) {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::Iso2022jp - MIME header encoder for ISO-2022-JP
+
+=head1 SYNOPSIS
+
+ use IM::Iso2022jp;
+
+ $encoded_string_for_structured_header = struct_iso2022jp_mimefy(string);
+ $encoded_string_for_unstructured_header = line_iso2022jp_mimefy(string);
+ $rcode = header_iso2022jp_conv(\@Header, code_conv_flag);
+
+=head1 DESCRIPTION
+
+The I<IM::Iso2022jp> module is MIME header encoder for ISO-2022-JP.
+
+This modules is provided by IM (Internet Message).
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.
