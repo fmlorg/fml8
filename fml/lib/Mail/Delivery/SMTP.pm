@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.25 2004/05/16 04:55:55 fukachan Exp $
+# $FML: SMTP.pm,v 1.26 2004/05/16 05:00:30 fukachan Exp $
 #
 
 
@@ -504,7 +504,7 @@ sub deliver
 
     # clean up recipient_map information after "all delivery"
     # CAUTION: this mapinfo tracks the delivery status.
-    $self->_reset_mapinfo;
+    $self->reset_mapinfo;
 
     if ( $self->{ _num_recipients } ) {
 	Log( "recipients: total=". $self->{ _num_recipients } );
@@ -571,7 +571,7 @@ sub _deliver
     #    IF_ERROR_FOUND: roll back the process to the state before this
     $self->_send_recipient_list($args);
     if ($self->error) {
-	$self->_rollback_map_position;
+	$self->rollback_map_position;
 	$self->_reset_smtp_transaction;
 	return;
     }
@@ -581,7 +581,7 @@ sub _deliver
     #                    return as soon as possible from here.
     $self->_send_data_to_mta($args);
     if ($self->error) {
-	$self->_rollback_map_position;
+	$self->rollback_map_position;
 	$self->_reset_smtp_transaction;
 	return;
     }

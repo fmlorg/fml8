@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.16 2004/05/16 04:55:56 fukachan Exp $
+# $FML: Utils.pm,v 1.17 2004/05/16 05:00:41 fukachan Exp $
 #
 
 package Mail::Delivery::Utils;
@@ -37,8 +37,8 @@ require Exporter;
 	     set_map_position
 	     get_map_status
 	     get_map_position
-	     _rollback_map_position
-	     _reset_mapinfo
+	     rollback_map_position
+	     reset_mapinfo
 	     );
 
 
@@ -349,13 +349,13 @@ sub get_map_position
 }
 
 
-=head2 _rollback_map_position()
+=head2 rollback_map_position()
 
 stop the IO for the current C<$map>.
 This method rolls back the operation state to the time when the
 current IO for C<$map> begins.
 
-=head2 _reset_mapinfo()
+=head2 reset_mapinfo()
 
 clear information around the latest map operation.
 
@@ -366,7 +366,7 @@ clear information around the latest map operation.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: none
-sub _rollback_map_position
+sub rollback_map_position
 {
     my ($self) = @_;
     my $map    = $self->get_target_map;
@@ -396,7 +396,7 @@ sub _rollback_map_position
 #    Arguments: OBJ($self)
 # Side Effects: clear info in object
 # Return Value: none
-sub _reset_mapinfo
+sub reset_mapinfo
 {
     my ($self) = @_;
     $self->set_target_map('');
