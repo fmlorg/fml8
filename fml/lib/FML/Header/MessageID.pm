@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MessageID.pm,v 1.7 2002/09/11 23:18:12 fukachan Exp $
+# $FML: MessageID.pm,v 1.8 2002/09/22 14:56:50 fukachan Exp $
 #
 
 package FML::Header::MessageID;
@@ -77,8 +77,10 @@ sub db_open
 
     if ($dir) {
 	unless (-d $dir) {
-	    eval q{ use File::Utils qw(mkdirhier);};
-	    mkdirhier($dir, 0700);
+	    my $dir_mode = $self->{ _dir_mode } || 0700;
+
+	    use File::Path;
+	    mkpath( [ $dir ], 0, $dir_mode );
 	}
 
 	my %db = ();

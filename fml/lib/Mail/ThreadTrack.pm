@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.28 2002/09/11 23:18:22 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.29 2002/09/22 14:57:00 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -67,6 +67,9 @@ C<$id> is sequential number for input data (article).
 =cut
 
 
+my $dir_mode = 0755;
+
+
 # Descriptions: constructor
 #    Arguments: OBJ($self)
 # Side Effects: none
@@ -79,6 +82,10 @@ sub new
     my $config = $me->{ _config } = {
 	db_type => 'AnyDBM_File',
     };
+
+    if (defined $args->{ dir_mode }) {
+	$dir_mode = $args->{ dir_mode };
+    }
 
     my @keys = qw(myname ml_name spool_dir article_id db_base_dir
 		  reverse_order
@@ -153,12 +160,11 @@ sub DESTROY {}
 sub _mkdirhier
 {
     my ($dir, $mode) = @_;
-    $mode = defined $mode ? $mode : 0700;
 
     # XXX $mode (e.g. 0755) should be a numeric not a string
     eval q{
         use File::Path;
-        mkpath($dir, 0, $mode);
+        mkpath($dir, 0, $dir_mode);
     };
 
     return ($@ ? undef : 1);

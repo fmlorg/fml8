@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.17 2002/09/11 23:18:23 fukachan Exp $
+# $FML: Queue.pm,v 1.18 2002/09/22 14:57:02 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -73,6 +73,9 @@ C<new()> assigns them but do no actual works.
 =cut
 
 
+my $dir_mode = 0755;
+
+
 # Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: initialize object
@@ -90,6 +93,11 @@ sub new
     $me->{ _status }    = "new";
     $me->{ _new_qf }    = File::Spec->catfile($dir, "new", $id);
     $me->{ _active_qf } = File::Spec->catfile($dir, "active", $id);
+
+    # queue directory mode
+    if (defined $args->{ directory_mode }) {
+	$dir_mode = $args->{ directory_mode };
+    }
 
     # infomation for delivery
     $me->{ _info }->{ sender }     =
@@ -121,7 +129,7 @@ sub _mkdirhier
 
     eval q{
 	use File::Path;
-	mkpath( [ $dir ], 0, 0755);
+	mkpath( [ $dir ], 0, $dir_mode);
     };
     warn($@) if $@;
 }

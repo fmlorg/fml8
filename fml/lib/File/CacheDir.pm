@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CacheDir.pm,v 1.19 2002/09/15 00:07:53 fukachan Exp $
+# $FML: CacheDir.pm,v 1.20 2002/09/22 14:56:57 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -128,14 +128,14 @@ sub _take_file_name
     my $sequence_file_name = $args->{ sequence_file_name } || '.seq';
     my $modulus            = $args->{ modulus } || 128;
     my $cache_type         = $args->{ cache_type } || 'cyclic';
+    my $dir_mode           = $args->{ dir_mode } || 0755;
 
     my $file;
     eval q{ use File::Spec;};
 
     unless (-d $directory) {
 	use File::Path;
-	my $mode = $args->{ directory_mode } || 0755;
-	mkpath( [ $directory ], 0, $mode);
+	mkpath( [ $directory ], 0, $dir_mode);
     }
 
     if ($cache_type eq 'temporal') {

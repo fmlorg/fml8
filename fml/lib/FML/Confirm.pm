@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Confirm.pm,v 1.6 2002/09/15 00:08:54 fukachan Exp $
+# $FML: Confirm.pm,v 1.7 2002/09/22 14:56:40 fukachan Exp $
 #
 
 package FML::Confirm;
@@ -117,6 +117,7 @@ sub _open_db
 {
     my ($self, $id, $comment) = @_;
     my (%db) = ();
+    my $mode = $self->{ _dir_mode } || 0700;
 
     use File::Spec;
     my $cache_dir = $self->{ _cache_dir };
@@ -125,7 +126,7 @@ sub _open_db
 
     unless (-d $dir) {
 	use File::Path;
-	mkpath( [ $dir ], 0, 0700 );
+	mkpath( [ $dir ], 0, $mode );
     }
 
     use Tie::JournaledDir;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.27 2002/09/11 23:18:29 fukachan Exp $
+# $FML: DB.pm,v 1.28 2002/09/22 14:57:06 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -57,8 +57,9 @@ my @kind_of_databases = qw(thread_id date status sender articles
 sub db_open
 {
     my ($self) = @_;
-    my $db_type = $self->{ config }->{ db_type } || 'AnyDBM_File';
-    my $db_dir  = $self->{ _db_dir };
+    my $db_type   = $self->{ config }->{ db_type } || 'AnyDBM_File';
+    my $db_dir    = $self->{ _db_dir };
+    my $file_mode = $self->{ _file_mode } || 0644;
 
     use File::Spec;
     eval qq{ use $db_type; use Fcntl;};
@@ -67,7 +68,7 @@ sub db_open
 	    my $file = File::Spec->catfile($db_dir, $db);
             my $str  = qq{
                 my \%$db = ();
-                tie \%$db, \$db_type, \$file, O_RDWR|O_CREAT, 0644;
+                tie \%$db, \$db_type, \$file, O_RDWR|O_CREAT, $file_mode;
                 \$self->{ _hash_table }->{ _$db } = \\\%$db;
             };
             eval $str;
@@ -77,7 +78,7 @@ sub db_open
 	my %index      = ();
 	my $index_file = $self->{ _index_db };
 	eval q{
-	    tie %index, $db_type, $index_file, O_RDWR|O_CREAT, 0644;
+	    tie %index, $db_type, $index_file, O_RDWR|O_CREAT, $file_mode;
 	    $self->{ _hash_table }->{ _index } = \%index;
 	};
 	croak($@) if $@;

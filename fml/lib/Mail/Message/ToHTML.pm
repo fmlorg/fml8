@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.22 2002/09/11 23:18:27 fukachan Exp $
+# $FML: ToHTML.pm,v 1.23 2002/09/22 14:57:04 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.22 2002/09/11 23:18:27 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.23 2002/09/22 14:57:04 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -357,6 +357,7 @@ sub _html_file_subdir_name
     my $month_db      = $self->{ _db }->{ _month };
     my $subdir_db     = $self->{ _db }->{ _subdir };
     my $curid         = $self->{ _current_id };
+    my $dir_mode      = $self->{ _dir_mode } || 0755;
 
     if ($subdir_style eq 'yyyymm') {
 	if (defined $subdir_db->{ $id } && $subdir_db->{ $id }) {
@@ -374,7 +375,7 @@ sub _html_file_subdir_name
 	    use File::Spec;
 	    my $xsubdir = File::Spec->catfile($html_base_dir, $subdir);
 	    unless (-d $xsubdir) {
-		mkdir($xsubdir, 0755);
+		mkdir($xsubdir, $dir_mode);
 	    }
 	}
     }
@@ -1573,8 +1574,9 @@ my @kind_of_databases = qw(from date subject message_id references
 sub _db_open
 {
     my ($self, $args) = @_;
-    my $db_type = $args->{ db_type } || $self->{ _db_type } || 'AnyDBM_File';
-    my $db_dir  = $self->{ _html_base_directory };
+    my $db_type   = $args->{ db_type } || $self->{ _db_type } || 'AnyDBM_File';
+    my $db_dir    = $self->{ _html_base_directory };
+    my $file_mode = $self->{ _file_mode } || 0644;
 
     _PRINT_DEBUG("_db_open( type = $db_type )");
 
@@ -1584,7 +1586,7 @@ sub _db_open
 	    my $file = "$db_dir/.htdb_${db}";
 	    my $str = qq{
 		my \%$db = ();
-		tie \%$db, \$db_type, \$file, O_RDWR|O_CREAT, 0644;
+		tie \%$db, \$db_type, \$file, O_RDWR|O_CREAT, $file_mode;
 		\$self->{ _db }->{ _$db } = \\\%$db;
 	    };
 	    eval $str;
