@@ -14,16 +14,120 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
 use IO::Socket;
-use MailingList::SMTP;
 
 require Exporter;
-@ISA = qw(MailingList::SMTP Exporter);
+@ISA = qw(Exporter);
 
 
 sub new
 {
     my ($self, $args) = @_;
-    $self->SUPER::new($args);
+    my $protocol =  $args->{ protocol } || 'SMTP';
+    my $pkg      = 'MailingList::SMTP';
+ 
+    if ($protocol eq 'SMTP') {
+	$pkg = 'MailingList::SMTP';
+    }
+    elsif ($protocol eq 'ESMTP') {
+	$pkg = 'MailingList::EMTP';
+    }
+    elsif ($protocol eq 'LMTP') {
+	$pkg = 'MailingList::LMTP';
+    }
+    else {
+	croak("unknown protocol=$protocol");
+	return undef;
+    }
+
+    unshift(@ISA, $pkg);
+    eval qq{require $pkg; $pkg->import();};
+    unless ($@) {
+	$self->SUPER::new($args);
+    }
+    else {
+	croak("fail to load $pkg");
+	return undef;
+    }
 }
+
+
+=head1 NAME
+
+MailingList::Delivery - mail delivery system interface
+
+=head1 SYNOPSIS
+
+    use MailingList::Delivery;
+    my $service = new MailingList::Delivery {
+	protocol           => 'SMTP',
+	default_io_timeout => 10,
+    };
+    if ($service->error) { Log($service->error); return;}
+
+    $service->deliver(
+                      {
+                          mta             => '[::1]:25 127.0.0.1:25',
+
+                          smtp_sender     => 'rudo@nuinui.net',
+                          recipient_maps  => $recipient_maps,
+                          recipient_limit => 1000,
+
+                          header          => $header_object,
+                          body            => $body_object,
+                      });
+    if ($service->error) { Log($service->error); return;}
+
+Actually the real estate of this class is 
+almost C<MailingList::SMTP> class.
+Please see it for more details.
+
+=head1 DESCRIPTION
+
+In C<MailingList> class, 
+C<Delivery> is an adapter which composes
+C<SMTP>
+C<ESMTP>
+C<LMTP> classes. 
+For example, we use 
+C<Delivery>
+as an entrance into 
+actual delivery routines in 
+C<SMTP>
+C<ESMTP>
+C<LMTP> classes. 
+
+                     SMTP
+                      |
+                      A
+                  ----------
+                 |          |
+  Delivery --> ESMTP       LMTP
+
+
+=head1 METHOD
+
+=item C<new()>
+
+constructor as an adapter. 
+The request is forwarded up to SUPER class.
+
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1 HISTORY
+
+MailingList::Delivery.pm appeared in fml5.
+
+=cut
+
 
 1;
