@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.91 2004/03/28 10:29:56 fukachan Exp $
+# $FML: Message.pm,v 1.92 2004/03/31 02:48:23 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1665,7 +1665,7 @@ sub _data_type
     my ($args, $default) = @_;
     my $buf = $args->{ header } || '';
 
-    if ($buf =~ /Content-Type:\s*(\S+\w+)(\n|\;|\s*$)/) {
+    if ($buf =~ /Content-Type:\s*(\S+\w+)(\n|\;|\s*$)/i) {
 	return "\L$1";
     }
     else {
