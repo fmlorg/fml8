@@ -1218,6 +1218,8 @@ article_filter_functions	=	article_size_filter
 					article_non_mime_filter
 					article_mime_component_filter
 					article_text_plain_filter
+					article_spam_filter
+					article_virus_filter
 
 
 =head2	サイズ制限ベースのフィルタ
@@ -1342,6 +1344,59 @@ article_text_plain_filter_rules	=	reject_not_iso2022jp_japanese_string
 					reject_japanese_command_syntax
 					reject_ms_guid
 					permit
+
+
+=head2	SPAM メールに対するフィルタ
+
+
+# Descriptions: 外部のSPAMチェッカを使った検査、デフォルトでは無効。
+#		また有効にした場合、ヘッダにSPAMであることを知らせる
+#		フラッグをつけ通過させる動作がデフォルト。
+#      History: none
+#        Value: yes | no
+#     Examples: no
+use_article_spam_filter		=	no
+
+
+# Descriptions: SPAMだと判定された場合、どうするか？
+#      History: none
+#        Value: reject | ignore | header_rewrite
+#     Examples: header_rewrite
+article_spam_filter_rules	=	header_rewrite
+
+
+# Descriptions: SPAMチェッカとして使う外部プログラム。
+#		複数指定すると、複数のプログラムを順に試す。
+#      History: none
+#        Value: spamassasin | spamc | bogofilter
+#     Examples: bogofilter
+article_spam_filter_drivers	=	bogofilter
+
+
+=head2	Virus メールに対するフィルタ
+
+
+# Descriptions: 外部のVirusチェッカを使った検査、デフォルトでは無効。
+#      History: none
+#        Value: yes | no
+#     Examples: no
+use_article_virus_filter	=	no
+
+
+# Descriptions: ウィルスだと判定された場合、どうするか？
+#      History: none
+#        Value: reject | ignore | header_rewrite
+#     Examples: reject
+article_virus_filter_rules	=	reject
+
+
+# Descriptions: ウィルスチェッカとして使う外部プログラム
+#		複数指定すると、複数のプログラムを順に試す。
+#      History: none
+#        Value: clamscan 
+#     Examples: clamscan
+article_virus_filter_drivers	=	clamscan
+
 
 
 =head2	フィルタで弾かれたことを教える
