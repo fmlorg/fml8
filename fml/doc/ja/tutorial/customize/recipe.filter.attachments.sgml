@@ -1,5 +1,5 @@
 <!--
-   $FML: recipe.filter.attachments.sgml,v 1.1 2004/12/08 10:39:24 fukachan Exp $
+   $FML: recipe.filter.attachments.sgml,v 1.2 2004/12/08 11:27:45 fukachan Exp $
 -->
 
 
@@ -33,7 +33,8 @@ HOOK でなんとかする/ごまかす例は次の通りです。
 </para>
 
 <para>
-昔の fml8 (2004/12/08 以前)なら、こんな感じ。
+.exe など特定のファイル拡張子にマッチするか？を調べる例。
+に昔の fml8 (2004/12/08 以前)なら、こんな感じ。
 <screen>
 $distribute_verify_request_start_hook = q{
     my $msg = $curproc->incoming_message() || undef;
@@ -54,6 +55,40 @@ $distribute_verify_request_start_hook = q{
     for my $m (@$list) {
 	my $hs = $m->message_fields() || '';
 	if ($hs =~ /filename=.*\.(com|vbs|vbe|wsh|wse|js|exe|doc|rtf)/o) {
+	    $curproc->log("[new] attachment \.$1 found");
+	    $curproc->stop_this_process();
+	}
+    }
+};
+</screen>
+</para>
+
+<para>
+別の解としては、
+<screen>
+Content-Disposition: attachment;
+</screen>
+という表示なることを前提に、これを引っかけるという案もある。
+<screen>
+$distribute_verify_request_start_hook = q{
+    my $msg = $curproc->incoming_message() || undef;
+    for (my $m = $msg; $m ; $m = $m->{ next } ) {
+	my $hs = $m->message_fields() || '';
+	if ($hs =~ /Content-Disposition:.*attachment;/o) {
+	    $curproc->log("attachment \.$1 found");
+	    $curproc->stop_this_process();
+	}
+    }
+};
+</screen>
+2004/12/08 以降なら、こんなかんじ。
+<screen>
+$distribute_verify_request_start_hook = q{
+    my $msg  = $curproc->incoming_message() || undef;
+    my $list = $msg->message_chain_as_array_ref();
+    for my $m (@$list) {
+	my $hs = $m->message_fields() || '';
+	if ($hs =~ /Content-Disposition:.*attachment;/o) {
 	    $curproc->log("[new] attachment \.$1 found");
 	    $curproc->stop_this_process();
 	}
