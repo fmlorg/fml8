@@ -1,11 +1,11 @@
 #!/bin/sh
 #
-# $FML$
+# $FML: perlcheck,v 1.1 2001/09/23 11:24:58 fukachan Exp $
 #
 
 lib=''
 
-for dir in ../../*/lib
+for dir in ../../*/lib ../../fml/libexec
 do
 	lib="$lib -I $dir"
 done
