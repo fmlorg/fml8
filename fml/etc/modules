@@ -1,5 +1,5 @@
 #
-# $FML: modules,v 1.8 2003/12/24 12:49:10 fukachan Exp $
+# $FML: modules,v 1.9 2004/03/31 12:31:30 fukachan Exp $
 #
 # map between programs and modules (like /etc/name_to_sysnum on solaris ?)
 #
@@ -40,11 +40,11 @@ admin/thread.cgi	FML::CGI::Thread		$cgiargs
 admin/threadview.cgi	FML::CGI::Thread		$cgiargs
 
 # admin configuration cgi
-admin/menu.cgi		FML::CGI::Admin::Menu		$cgiargs
+admin/menu.cgi		FML::CGI::Admin::MenuOld	$cgiargs
 admin/config.cgi	FML::CGI::Admin::Menu		$cgiargs
 
 # ml-admin configuration cgi
-ml-admin/*/menu.cgi	FML::CGI::MLAdmin::Menu		$cgiargs
+ml-admin/*/menu.cgi	FML::CGI::MLAdmin::MenuOld	$cgiargs
 ml-admin/*/config.cgi	FML::CGI::MLAdmin::Menu		$cgiargs
 
 # libexec/ compatibility
