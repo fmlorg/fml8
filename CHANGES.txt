@@ -1,6 +1,12 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/07/24
+
+  Document translation to English completed up to 40 % ?
+
+	etc/default_config.cf and etc/config.cf are translated.
+
 2003/07/23
 
   Document translation to English starts 
@@ -5062,4 +5068,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.152 2003/07/20 11:16:03 fukachan Exp $
+$FML: CHANGES.txt,v 1.153 2003/07/24 16:25:03 fukachan Exp $
