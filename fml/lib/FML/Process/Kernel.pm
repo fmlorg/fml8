@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.55 2001/10/10 14:56:01 fukachan Exp $
+# $FML: Kernel.pm,v 1.56 2001/10/12 00:02:04 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -460,7 +460,8 @@ sub _check_resitrictions
 		my $sender = $cred->sender;
 		Log("$sender is not a ML member");
 		Log( $cred->error() );
-		$curproc->reply_message( "you are not a ML member." );
+		$curproc->reply_message_nl('kern.not_member',
+					   "you are not a ML member." );
 		$curproc->reply_message( "   your address: $sender" );
 	    }
 	}
@@ -535,13 +536,41 @@ If translation fails, $default_msg, English by default, is used.
 We need parameters in some cases. 
 They are stored in $args if needed.
 
+	$curproc->reply_message_nl('kern.not_member',
+				   "you are not a ML member." );
 =cut
 
 
 sub reply_message_nl
 {
     my ($curproc, $class, $default_msg, $args) = @_;
-    $curproc->reply_message($default_msg);
+    my $config = $curproc->{ config };
+    my $dir    = $config->{ message_message_dir };
+    my $buf    = '';
+
+    use File::Spec;
+    $class =~ s@\.@/@; # XXX replace the first "." only
+    my $file = File::Spec->catfile($dir, $class);
+
+    if (-f $file) {
+	use FileHandle;
+	my $fh = new FileHandle $file;
+	if (defined $fh) {
+	    while (<$fh>) { $buf .= $_;}
+	    close($fh);
+	}
+    }
+
+    if (defined $buf) {
+	use FML::Language::ISO2022JP qw(STR2JIS);
+	if ($buf =~ /\$/) { 
+	    $config->expand_variable_in_buffer(\$buf, $args);
+	}
+	$curproc->reply_message( STR2JIS( $buf ) );
+    }
+    else {
+	$curproc->reply_message($default_msg);
+    }
 }
 
 
@@ -768,7 +797,7 @@ sub prepare_file_to_return
     use FML::Language::ISO2022JP qw(STR2JIS);
     if (defined($rh) && defined($wh)) {
 	while (<$rh>) {
-	    if (/\$/) { $config->expand_variable_in_buffer( \$_ );}
+	    if (/\$/) { $config->expand_variable_in_buffer(\$_, $args);}
 	    $wh->print(STR2JIS($_));
 	}
 	close($wh);
