@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.60 2003/01/03 10:17:28 fukachan Exp $
+# $FML: Makefile,v 1.61 2003/01/11 16:09:44 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -25,6 +25,12 @@ update:
 check:
 	- mv -f 33_TODO 33_TODO.bak
 	- (cd ../../fml; make check 2>&1 |tee 33_TODO) | grep -v OK || echo ''
+	@ echo "" >> 33_TODO
+	@ echo "   *********** STATUS.txt ********** " >> 33_TODO
+	@ echo "" >> 33_TODO
+	- egrep '^[0-9]|\[TODO\]' ../../fml/doc/ja/todo/STATUS.txt >> 33_TODO
+	@ echo "" >> 33_TODO
+	@ echo "   *********** XXX-TODO ********** " >> 33_TODO
 	@ echo "" >> 33_TODO
 	- ./.gen_todo.pl \
 	  `find lib/ -type f -print |\
