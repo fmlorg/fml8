@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: send.pl,v 1.1 2001/05/05 13:50:59 fukachan Exp $
+# $FML: send2.pl,v 1.1 2001/05/06 13:00:11 fukachan Exp $
 #
 
 use strict;
@@ -44,14 +44,12 @@ my $obj = new Mail::Message::Queue { directory => "/tmp" };
 $obj->in( $msg ) || croak("fail to queue in");
 $obj->activate() || croak("fail to activate queue");
 
-my $qf = $obj->queue_file();
-
 use FML::Mailer;
 my $m = new FML::Mailer;
 $m->send( {
     sender    => $sender,
     recipient => $rcpt,
-    file      => $qf,
+    file      => $obj->filename(),
 });
 
 $obj->remove;
