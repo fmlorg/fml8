@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: emul_error.sh,v 1.1 2002/11/25 14:30:57 fukachan Exp $
+# $FML: emul_error.sh,v 1.2 2003/05/28 15:08:27 fukachan Exp $
 #
 
 DO () {
@@ -24,6 +24,8 @@ else
 	pwd=`pwd`
 	list=$pwd/../errormails/postfix19991231
 fi
+
+sh reset_lib.sh
 
 for msg in $list
 do
