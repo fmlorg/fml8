@@ -1,10 +1,12 @@
 #!/bin/sh
 #
-# $FML: emul_command.sh,v 1.2 2001/11/27 08:41:14 fukachan Exp $
+# $FML: emul_command.sh,v 1.3 2003/03/15 09:19:37 fukachan Exp $
 #
 
 buf=$PWD/__command$$__
 trap "rm -f $buf" 0 1 3 15
+
+header_file=${header:-text=empty}
 
 
 DO () {
@@ -32,8 +34,7 @@ DO () {
 
 (cd ../../fml/etc/;sh .gen.sh)
 
-
-cat ./../testmails/text=empty > $buf
+cat ./../testmails/$header_file > $buf
 cat >> $buf
 
 list=$buf
