@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent3.pm,v 1.15 2003/08/16 15:45:03 fukachan Exp $
+# $FML: MimeComponent3.pm,v 1.16 2003/08/23 04:35:35 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -64,9 +64,9 @@ my $filter_rules = [
 # Return Value: OBJ
 sub new
 {
-    my ($self) = @_;
+    my ($self, $curproc) = @_;
     my ($type) = ref($self) || $self;
-    my $me     = {};
+    my $me     = { _curproc => $curproc };
     return bless $me, $type;
 }
 
@@ -102,6 +102,7 @@ sub mime_component_check
 {
     my ($self, $msg, $args) = @_;
     my ($data_type, $prevmp, $nextmp, $mp, $action, $reject_reason);
+    my $curproc = $self->{ _curproc };
     my $is_cutoff = 0; # debug
     my $i = 1;
     my $j = 1;
@@ -168,7 +169,7 @@ sub mime_component_check
 	    # reject if no effective part.
 	    unless ($self->_has_effective_part($msg)) {
 		my $reason = "no effective part in this multipart";
-		Log($reason);
+		$curproc->log($reason);
 		$count{ 'reject' }++;
 		$reason{ 'reject' } = $reject_reason = $reason;
 	    }
@@ -199,7 +200,7 @@ sub mime_component_check
     }
 
     $_reason ||= "default action";
-    Log("mime_component_filter: $decision ($_reason)");
+    $curproc->log("mime_component_filter: $decision ($_reason)");
     __dprint("\n   our desicion: $decision ($_reason)");
 
     if ($decision eq 'reject') {
@@ -307,6 +308,7 @@ sub __basic_regexp_match
 sub _cutoff
 {
     my ($self, $mp) = @_;
+    my $curproc   = $self->{ _curproc };
     my $data_type = $mp->data_type();
     my $prevmp    = $mp->{ prev };
 
@@ -314,13 +316,13 @@ sub _cutoff
 	my $prev_type = $prevmp->data_type();
 	if ($prev_type eq "multipart.delimiter") {
 	    $prevmp->delete_message_part_link();
-	    Log("delete multipart delimiter");
+	    $curproc->log("delete multipart delimiter");
 	}
     }
 
     $mp->delete_message_part_link();
 
-    Log("delete $data_type");
+    $curproc->log("delete $data_type");
 }
 
 

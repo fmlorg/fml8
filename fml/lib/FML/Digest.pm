@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Digest.pm,v 1.9 2003/03/28 10:03:38 fukachan Exp $
+# $FML: Digest.pm,v 1.10 2003/08/23 04:35:27 fukachan Exp $
 #
 
 package FML::Digest;
@@ -124,6 +124,7 @@ sub get_article_id
 sub _get_id
 {
     my ($self, $seq_file) = @_;
+    my $curproc = $self->{ _curproc };
 
     # XXX-TODO: we should enhance IO::Adapter module to handle
     # XXX-TODO: sequential number.
@@ -132,7 +133,7 @@ sub _get_id
 	my $sfh = new File::Sequence { sequence_file => $seq_file };
 	if (defined $sfh) {
 	    my $id  = $sfh->get_id();
-	    if ($sfh->error) { LogError( $sfh->error ); }
+	    if ($sfh->error) { $curproc->logerror( $sfh->error ); }
 
 	    return $id;
 	}
@@ -164,7 +165,7 @@ sub set_digest_id
 
     my $sfh = new File::Sequence { sequence_file => $seq_file };
     $sfh->set_id($id);
-    if ($sfh->error) { LogError( $sfh->error ); }
+    if ($sfh->error) { $curproc->logerror( $sfh->error ); }
 
     $curproc->unlock($channel);
 
@@ -198,7 +199,7 @@ sub create_multipart_message
 	}
     };
 
-    Log("send back articles range=$range");
+    $curproc->log("send back articles range=$range");
 
     my $filelist = $self->_expand_range($range);
     for my $filename (@$filelist) {
@@ -215,12 +216,12 @@ sub create_multipart_message
 	    $count_ok++;
 	}
 	else {
-	    Log("no such file: $filepath");
+	    $curproc->log("no such file: $filepath");
 	    $count_err++;
 	}
     }
 
-    Log("eat articles ok=$count_ok error=$count_err");
+    $curproc->log("eat articles ok=$count_ok error=$count_err");
 }
 
 

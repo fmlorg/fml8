@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.71 2003/08/20 23:40:29 fukachan Exp $
+# $FML: Utils.pm,v 1.72 2003/08/23 07:24:48 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -286,12 +286,12 @@ sub mkdir
     unless (-d $dir) {
 	if (defined $mode) {
 	    if ($mode =~ /^\d+$/) { # NUM 0700
-		_mkpath_num($dir, $mode);
+		$curproc->_mkpath_num($dir, $mode);
 	    }
 	    elsif ($mode =~ /mode=(\S+)/) {
 		my $xmode = "directory_${1}_mode";
 		if (defined $config->{ $xmode }) {
-		    _mkpath_str($dir, $config->{ $xmode });
+		    $curproc->_mkpath_str($dir, $config->{ $xmode });
 		}
 		else {
 		    $curproc->logerror("mkdir: invalid mode");
@@ -302,7 +302,7 @@ sub mkdir
 	    }
 	}
 	elsif ($dirmode =~ /^\d+$/) { # STR 0700
-	    _mkpath_str($dir, $dirmode);
+	    $curproc->_mkpath_str($dir, $dirmode);
 	}
 	else {
 	    $curproc->logerror("mkdir: invalid mode");
@@ -319,7 +319,7 @@ sub mkdir
 # Return Value: none
 sub _mkpath_num
 {
-    my ($dir, $mode) = @_;
+    my ($curproc, $dir, $mode) = @_;
     my $cur_mask = umask();
 
     umask(0);
@@ -328,10 +328,10 @@ sub _mkpath_num
 	eval q{ use File::Path;};
 	mkpath([ $dir ], 0, $mode);
 	chmod $mode, $dir;
-	Log(sprintf("mkdir %s mode=0%o", $dir, $mode));
+	$curproc->log(sprintf("mkdir %s mode=0%o", $dir, $mode));
     }
     else {
-	LogError("mkdir: invalid mode (N)");
+	$curproc->logerror("mkdir: invalid mode (N)");
     }
 
     umask($cur_mask);
@@ -344,7 +344,7 @@ sub _mkpath_num
 # Return Value: none
 sub _mkpath_str
 {
-    my ($dir, $mode) = @_;
+    my ($curproc, $dir, $mode) = @_;
     my $cur_mask = umask();
 
     umask(0);
@@ -354,12 +354,12 @@ sub _mkpath_str
 	    use File::Path;
 	    mkpath([ \$dir ], 0, $mode);
 	    chmod $mode, \$dir;
-	    Log(\"mkdirhier \$dir mode=$mode\");
+	    $curproc->log(\"mkdirhier \$dir mode=$mode\");
 	};
-	LogError($@) if $@;
+	$curproc->logerror($@) if $@;
     }
     else {
-	LogError("mkdir: invalid mode (S)");
+	$curproc->logerror("mkdir: invalid mode (S)");
     }
 
     umask($cur_mask);

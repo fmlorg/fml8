@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.32 2003/08/23 04:35:27 fukachan Exp $
+# $FML: Filter.pm,v 1.33 2003/08/23 07:24:40 fukachan Exp $
 #
 
 package FML::Filter;
@@ -243,7 +243,7 @@ sub _apply_article_mime_component_filter
 
     if ($config->yes( 'use_article_mime_component_filter' )) {
 	use FML::Filter::MimeComponent3;
-	my $obj  = new FML::Filter::MimeComponent;
+	my $obj  = new FML::Filter::MimeComponent $curproc;
 	my $file = $config->get('article_mime_component_filter_rules');
 
 	if (-f $file) {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.56 2003/04/20 02:49:52 fukachan Exp $
+# $FML: Article.pm,v 1.57 2003/08/23 04:35:26 fukachan Exp $
 #
 
 package FML::Article;
@@ -76,7 +76,7 @@ sub new
     if (defined $curproc->{ 'incoming_message' }->{ message }) {
 	_setup_article_template($curproc);
     }
-    $me->{ curproc } = $curproc;
+    $me->{ _curproc } = $curproc;
 
     return bless $me, $type;
 }
@@ -132,7 +132,7 @@ If the variable C<$use_spool> is 'yes', this routine works.
 sub spool_in
 {
     my ($self, $id) = @_;
-    my $curproc    = $self->{ curproc };
+    my $curproc    = $self->{ _curproc };
     my $config     = $curproc->config();
     my $spool_dir  = $config->{ spool_dir };
     my $use_subdir = $config->{ spool_type } eq 'subdir' ? 1 : 0;
@@ -165,17 +165,17 @@ sub spool_in
 		print $fh "\n";
 		$curproc->{ article }->{ body }->print($fh);
 		$fh->close;
-		Log("article $id");
+		$curproc->log("article $id");
 	    }
 	}
 	else {
-	    LogError("$id article already exists");
+	    $curproc->logerror("$id article already exists");
 	}
 
 	$curproc->unlock($channel);
     }
     else {
-	Log("not spool article $id");
+	$curproc->log("not spool article $id");
     }
 }
 
@@ -222,7 +222,7 @@ sub subdirpath
 sub _filepath
 {
     my ($self, $id) = @_;
-    my $curproc    = $self->{ curproc };
+    my $curproc    = $self->{ _curproc };
     my $config     = $curproc->config();
     my $spool_dir  = $config->{ spool_dir };
     my $use_subdir = $config->{ spool_type } eq 'subdir' ? 1 : 0;

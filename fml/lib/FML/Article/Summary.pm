@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.12 2003/07/21 10:37:12 fukachan Exp $
+# $FML: Summary.pm,v 1.13 2003/08/23 04:35:28 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -152,7 +152,7 @@ sub print_one_line_summary
 	$self->_fml4_compatible_style_one_line_summary($wh, $info);
     }
     else {
-	LogError("unknown \$summary_file_style: $style");
+	$curproc->logerror("unknown \$summary_file_style: $style");
     }
 }
 
@@ -164,15 +164,16 @@ sub print_one_line_summary
 sub _fml4_compatible_style_one_line_summary
 {
     my ($self, $wh, $info) = @_;
-    my $time  = $info->{ unixtime } || undef;
-    my $rdate = undef;
+    my $curproc = $self->{ _curproc };
+    my $time    = $info->{ unixtime } || undef;
+    my $rdate   = undef;
 
     if ($time) {
 	use Mail::Message::Date;
 	$rdate = new Mail::Message::Date $time;
     }
     else {
-	LogError("unix time undefined");
+	$curproc->logerror("unix time undefined");
     }
 
     if (defined $rdate) {
@@ -185,7 +186,7 @@ sub _fml4_compatible_style_one_line_summary
 	printf $wh $format, $date, $id, $addr, $subj;
     }
     else {
-	LogError("date object undefined.");
+	$curproc->logerror("date object undefined.");
     }
 }
 
@@ -248,7 +249,7 @@ sub rebuild
 	rename($tmp, $file);
     }
     else {
-	LogError("fail to write $tmp");
+	$curproc->logerror("fail to write $tmp");
     }
 }
 

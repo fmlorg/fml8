@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.3 2003/08/23 04:35:28 fukachan Exp $
+# $FML: Sequence.pm,v 1.4 2003/08/23 07:24:41 fukachan Exp $
 #
 
 package FML::Article::Sequence;
@@ -43,7 +43,7 @@ This routine uses C<File::Sequence> module.
 sub increment_id
 {
     my ($self) = @_;
-    my $curproc  = $self->{ curproc };
+    my $curproc  = $self->{ _curproc };
     my $config   = $curproc->config();
     my $pcb      = $curproc->pcb();
     my $seq_file = $config->{ sequence_file };
@@ -55,7 +55,7 @@ sub increment_id
     use File::Sequence;
     my $sfh = new File::Sequence { sequence_file => $seq_file };
     my $id  = $sfh->increment_id;
-    if ($sfh->error) { LogError( $sfh->error ); }
+    if ($sfh->error) { $curproc->logerror( $sfh->error ); }
 
     # save $id in pcb (process control block) and return $id
     $pcb->set('article', 'id', $id);
@@ -79,7 +79,7 @@ return the current article sequence number.
 sub id
 {
     my ($self) = @_;
-    my $curproc  = $self->{ curproc };
+    my $curproc  = $self->{ _curproc };
     my $config   = $curproc->config();
     my $pcb      = $curproc->pcb();
 

@@ -3,7 +3,7 @@
 # Copyright (C) 2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Thread.pm,v 1.2 2003/03/16 10:48:11 fukachan Exp $
+# $FML: Thread.pm,v 1.3 2003/03/28 10:03:37 fukachan Exp $
 #
 
 package FML::Article::Thread;
@@ -183,6 +183,7 @@ sub _read_filter_list
 sub close
 {
     my ($self, $thread, $thread_id, $min, $max) = @_;
+    my $curproc = $self->{ _curproc };
 
     # expand MH style variable: e.g. last:100 -> [ 100 .. 200 ]
     use Mail::Message::MH;
@@ -197,11 +198,11 @@ sub close
 
 	# check "elena/100" exists ?
 	if ($thread->exist($id)) {
-	    Log("close thread_id=$id");
+	    $curproc->log("close thread_id=$id");
 	    $thread->close($id);
 	}
 	else {
-	    Log("thread_id=$id not exists") if $debug;
+	    $curproc->log("thread_id=$id not exists") if $debug;
 	}
     }
 }

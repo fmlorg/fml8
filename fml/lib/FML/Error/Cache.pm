@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.11 2003/05/28 13:24:12 fukachan Exp $
+# $FML: Cache.pm,v 1.12 2003/08/23 04:35:34 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -122,6 +122,7 @@ following a set of key ($address) and value.
 sub add
 {
     my ($self, $address, $argv) = @_;
+    my $curproc = $self->{ _curproc };
 
     $self->_open_cache();
 
@@ -137,7 +138,7 @@ sub add
 	    $reason =~ s/\s+/_/g;
 	}
 	else {
-	    LogError("FML::Error::Cache: add: not implemented \$argv type");
+	    $curproc->logerror("FML::Error::Cache: add: not implemented \$argv type");
 	    return undef;
 	}
 
@@ -145,7 +146,7 @@ sub add
 	    $db->{ $address } = "$unixtime status=$status reason=$reason";
 	}
 	else {
-	    LogWarn("FML::Error::Cache: add: invalid data");
+	    $curproc->logwarn("FML::Error::Cache: add: invalid data");
 	}
 
 	$self->_close_cache();
@@ -170,6 +171,7 @@ delete entry for $address.
 sub delete
 {
     my ($self, $address) = @_;
+    my $curproc = $self->{ _curproc };
 
     $self->_open_cache();
 
@@ -179,7 +181,7 @@ sub delete
 	    delete $db->{ $address };
 	}
 	else {
-	    LogWarn("FML::Error::Cache: delete: invalid data");
+	    $curproc->logwarn("FML::Error::Cache: delete: invalid data");
 	}
 
 	$self->_close_cache();

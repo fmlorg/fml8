@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.4 2003/08/01 05:00:58 tmu Exp $
+# $FML: Post.pm,v 1.5 2003/08/03 14:46:41 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -55,7 +55,7 @@ sub reject_system_accounts
     my $pcb     = $curproc->{ pcb };
 
     if ($match) {
-	Log("${rule}: $match matches sender address");
+	$curproc->log("${rule}: $match matches sender address");
 	unless ($pcb->get("check_restrictions", "deny_reason")) {
 	    $pcb->set("check_restrictions", "deny_reason", $rule);
 	}
@@ -96,8 +96,8 @@ sub permit_member_maps
     }
     else {
 	# A: No, deny distribution
-	LogError("$sender is not an ML member");
-	LogError( $cred->error() );
+	$curproc->logerror("$sender is not an ML member");
+	$curproc->logerror( $cred->error() );
 
 	# reply this info in each FML::Process::* module.
 	# $curproc->reply_message_nl('error.not_member',
@@ -131,7 +131,7 @@ sub permit_commands_for_stranger
     use FML::Command::DataCheck;
     my $check = new FML::Command::DataCheck;
     if ($check->find_commands_for_stranger($curproc)) {
-	Log("$rule matched. accepted.");
+	$curproc->log("$rule matched. accepted.");
 	return("matched", "permit");
     }
 

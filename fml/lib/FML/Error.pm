@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.22 2003/05/28 13:14:04 fukachan Exp $
+# $FML: Error.pm,v 1.23 2003/05/28 14:33:42 fukachan Exp $
 #
 
 package FML::Error;
@@ -180,8 +180,9 @@ module, which conceals the detail of cache structure.
 sub add
 {
     my ($self, $info) = @_;
-    my $db   = $self->{ _db };
-    my $addr = $info->{ address }; 
+    my $curproc = $self->{ _curproc };
+    my $db      = $self->{ _db };
+    my $addr    = $info->{ address }; 
 
     if (defined $db) {
 	$self->lock();
@@ -189,7 +190,7 @@ sub add
 	$self->unlock();
     }
     else {
-	LogError("db not open");
+	$curproc->logerror("db not open");
     }
 }
 
@@ -295,13 +296,13 @@ sub is_list_address
     $cred->set_compare_level(100); # match strictly!
     for my $sysaddr (@$addrs) {
 	if (defined $sysaddr && $sysaddr) {
-	    Log("check is_same_address($addr, $sysaddr)") if $debug;
+	    $curproc->log("check is_same_address($addr, $sysaddr)") if $debug;
 	    if ($cred->is_same_address($addr, $sysaddr)) {
-		Log("match") if $debug;
+		$curproc->log("match") if $debug;
 		$match++;
 	    }
 	    else {
-		Log("not match") if $debug;
+		$curproc->log("not match") if $debug;
 	    }
 	}
     }
@@ -349,21 +350,21 @@ sub remove_bouncers
 			$self->deluser( $addr );
 		    }
 		    else {
-			Log("remove_bouncers: <$addr> seems not member");
+			$curproc->log("remove_bouncers: <$addr> seems not member");
 		    }
 		}
 		else {
-		    LogError("remove_bouncers: <$addr> unsafe expr");
+		    $curproc->logerror("remove_bouncers: <$addr> unsafe expr");
 		    next ADDR;
 		}
 	    }
 	    else {
-		LogWarn("remove_bouncers: <$addr> ignored");
+		$curproc->logwarn("remove_bouncers: <$addr> ignored");
 	    }
 	}
     }
     else {
-	LogError("undefined list");
+	$curproc->logerror("undefined list");
     }
 }
 
@@ -391,10 +392,10 @@ sub deluser
 
     # check if $address is a safe string.
     if ($safe->regexp_match('address', $address)) {
-	Log("deluser <$address>");
+	$curproc->log("deluser <$address>");
     }
     else {
-	LogError("deluser: invalid address");
+	$curproc->logerror("deluser: invalid address");
 	return;
     }
 
@@ -424,11 +425,11 @@ sub deluser
         }
         else {
             my $r = $@;
-            LogError("command $method fail");
-            LogError($r);
+            $curproc->logerror("command $method fail");
+            $curproc->logerror($r);
             if ($r =~ /^(.*)\s+at\s+/) {
                 my $reason = $1;
-                Log($reason); # pick up reason
+                $curproc->log($reason); # pick up reason
                 croak($reason);
             }
         }
