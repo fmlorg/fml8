@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.31 2001/04/08 07:21:59 fukachan Exp $
+# $FML: Makefile,v 1.32 2001/04/10 14:12:46 fukachan Exp $
 #
 
 all: link
@@ -28,6 +28,7 @@ allclean: clean
 	rm -f SQL
 	rm -f Language
 	rm -f doc-devel
+	rm -f tutorial
 
 scan:
 	@ (cd ../..; make scan 2>&1) |tee __scan__ || echo 'nothing changed'
@@ -57,6 +58,7 @@ link:
 	rm -f libexec; ln -s ../../fml/libexec
 	rm -f log; ln -s /var/spool/ml/elena/log
 	rm -f doc-devel; ln -s ../../doc/devel/memo doc-devel
+	rm -f tutorial; ln -s ../../fml/doc/ja/tutorial tutorial
 
 
 diff:
