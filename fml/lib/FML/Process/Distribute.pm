@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.106 2003/03/05 13:54:26 fukachan Exp $
+# $FML: Distribute.pm,v 1.107 2003/03/05 15:07:31 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -380,11 +380,10 @@ sub _header_rewrite
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
     my $header = $curproc->article_message_header();
-    my $rules  = $config->{ article_header_rewrite_rules };
+    my $rules  = $config->get_as_array_ref('article_header_rewrite_rules');
     my $id     = $args->{ id };
 
-    # XXX-TODO: use $config->get_as_array_ref()
-    for my $rule (split(/\s+/, $rules)) {
+    for my $rule (@$rules) {
 	Log("_header_rewrite( $rule )") if $config->yes('debug');
 
 	if ($header->can($rule)) {    # See FML::Header and FML::Header::*
