@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Feb 28, 2000
+### Revised: Apr 14, 2000
 ###
 
-my $PM_VERSION = "IM::Config.pm version 20000228(IM140)";
+my $PM_VERSION = "IM::Config.pm version 20000414(IM141)";
 
 package IM::Config;
 require 5.003;
@@ -32,13 +32,13 @@ use vars qw(@ISA @EXPORT);
     mail_dir mail_path news_dir news_path queue_dir queue_path
     inbox_folder draft_folder trash_folder config_cases config_case_inbox
     preserve_dot
-    folder_mode msg_mode allowcrlf no_sync fsync_no
+    folder_mode msg_mode allowcrlf use_cl no_sync fsync_no
     addrbook_file aliases_file petname_file
     context_file getchksbr_file getsbr_file scansbr_file scan_header_pick
     address addresses_regex
     msgdbfile msgdbtype
     mbox_style
-    nntpservers nntphistoryfile nntpauthuser
+    nntpservers nntphistoryfile nntpauthuser set_nntpauthuser
     popaccount pophistoryfile imapaccount httpproxy noproxy
     usepwagent pwagentport usepwfiles pwfiles
     expand_path usetouchfile touchfile namazuv2
@@ -105,6 +105,7 @@ BEGIN {
     'trashfolder;f;;TrashFolder'	=> 'Trash folder',
     'foldermode;i;;FolderMode'		=> 'Folder directory mode when created',
     'msgmode;i;;MsgMode'		=> 'Message file mode when created',
+    'usecl;b;;UseCL' => 'Use value of Content-Length header for delimitation',
     'nosync;b;;NoSync'		=> 'Do not need fsync(2) on writing file',
     'allowcrlf;b;;AllowCRLF'		=> 'CRLF may be in saved message',
     'preservedot;b;;PreserveDot'	=> 'Not substitute "." with "/"',
@@ -789,6 +790,10 @@ sub allowcrlf () {
     return $AllowCRLF;
 }
 
+sub use_cl () {
+    return $UseCL;
+}
+
 sub no_sync () {
     return $NoSync;
 }
@@ -859,6 +864,10 @@ sub nntphistoryfile () {
 
 sub nntpauthuser () {
     return $NNTPauthuser;
+}
+
+sub set_nntpauthuser($) {
+  $NNTPauthuser = shift;
 }
 
 sub popaccount () {

@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Feb 28, 2000
+### Revised: Apr 14, 2000
 ###
 
-my $PM_VERSION = "IM::Imap.pm version 20000228(IM140)";
+my $PM_VERSION = "IM::Imap.pm version 20000414(IM141)";
 
 package IM::Imap;
 require 5.003;
@@ -72,11 +72,13 @@ sub imap_open ($$$$) {
     }
     my $failed = 0;
     if ($auth eq 'LOGIN') {
-	my $pw = $pass;
+	my ($us, $pw) = ($user, $pass);
+	$us =~ s/([\\"])/\\$1/g;	# escape specials
+	$us = "\"$us\"";		# quote it
 	$pw =~ s/([\\"])/\\$1/g;	# escape specials
 	$pw = "\"$pw\"";		# quote it
-	$resp = &send_command($HANDLE, "im$seq LOGIN $user $pw",
-	  "im$seq LOGIN $user PASSWORD");
+	$resp = &send_command($HANDLE, "im$seq LOGIN $us $pw",
+	  "im$seq LOGIN $us PASSWORD");
 	while ($resp !~ /^im$seq/) {
 	    if ($resp =~ /^\* NO/i) {
 #		$failed = 1;

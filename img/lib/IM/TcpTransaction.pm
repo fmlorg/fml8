@@ -5,16 +5,19 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Feb 28, 2000
+### Revised: Apr 14, 2000
 ###
 
-my $PM_VERSION = "IM::TcpTransaction.pm version 20000228(IM140)";
+my $PM_VERSION = "IM::TcpTransaction.pm version 20000414(IM141)";
 
 package IM::TcpTransaction;
 require 5.003;
 require Exporter;
 use IM::Config qw(dns_timeout connect_timeout command_timeout rcv_buf_siz);
 use Socket;
+BEGIN {
+    eval 'use Socket6' unless (eval '&AF_INET6');       # IPv6 patched Perl
+}
 use IM::Util;
 use IM::Ssh;
 use integer;
@@ -122,7 +125,7 @@ sub connect_server ($$$) {
 	}
 	$0 = progname() . ": im_getaddrinfo($s)";
 	@he_infos = im_getaddrinfo($s, $remoteport, AF_UNSPEC, SOCK_STREAM);
-	if ($#he_infos < 0) {
+	if ($#he_infos < 1) {
 	    im_warn("address unknown for $s\n");
 	    @Response = ("address unknown for $s");
 	    if ($serv eq 'smtp') {
@@ -147,7 +150,7 @@ sub connect_server ($$$) {
 		if ($family == AF_INET) {
 		    $port = (unpack_sockaddr_in($sin))[0];
 		} else {
-		    $port = (inet6_unpack_sockaddr_in6($sin))[0];
+		    $port = (unpack_sockaddr_in6($sin))[0];
 		}
 		*SOCK = \*{$name};
 		$SOCK = $port;
@@ -364,7 +367,10 @@ sub pool_priv_sock ($) {
     my $count = shift;
 
     pool_priv_sock_af($count, AF_INET);
-    pool_priv_sock_af($count, inet6_family()) if (eval '&AF_INET6');
+    if (eval 'pack_sockaddr_in6(110, pack("N4", 0, 0, 0, 0))') {
+	no strict 'subs'; # XXX for AF_INET6
+	pool_priv_sock_af($count, AF_INET6);
+    }
 }
 
 sub pool_priv_sock_af ($$) {
@@ -391,7 +397,7 @@ sub pool_priv_sock_af ($$) {
 		$psin = pack_sockaddr_in($privport, $ANYADDR);
 	    } else {
 		$ANYADDR = pack('N4', 0, 0, 0, 0);
-		$psin = inet6_pack_sockaddr_in6($privport, $ANYADDR);
+		$psin = pack_sockaddr_in6($privport, $ANYADDR);
 	    }
 	    last if (bind (*{$TcpSockName}, $psin));
 	    im_warn("privileged socket binding failed: $!.\n")
@@ -448,48 +454,18 @@ sub im_getaddrinfo ($$;$$$$) {
     my ($he_name, $he_alias, $he_type, $he_len, @he_addrs);
     if ($node =~ /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/) {
 	@he_addrs = (pack('C4', $1, $2, $3, $4));
-	$family = AF_INET;
-    } elsif ($node =~ /^[\da-f:]+$/i) {
-	if ($node =~ /::.*::/) {
-	    im_err("bad server address in IPv6 format: $node\n");
-	    return;
-	}
-	if ($node =~ /::/) {
-	    (my $t = $node) =~ s/[^:]//g;
-	    my $n = 7 - length($t);
-	    $t = ':0:';
-	    while ($n--) {
-		$t .= '0:';
-	    }
-	    $node =~ s/::/$t/;
-	}
-	if ($node =~ /^([\da-f]*):([\da-f]*):([\da-f]*):([\da-f]*):([\da-f]*):([\da-f]*):([\da-f]*):([\da-f]*)$/i) {
-	    @he_addrs = (pack('n8',
-		    hex("0x$1"), hex("0x$2"), hex("0x$3"), hex("0x$4"),
-		    hex("0x$5"), hex("0x$6"), hex("0x$7"), hex("0x$8")));
-	    $family = inet6_family(); # AF_INET6
-	} else {
-	    im_err("bad server address in IPv6 format: $node\n");
-	    return;
-	}
     } else {
 	alarm(dns_timeout()) unless win95p();
 	($he_name, $he_alias, $he_type, $he_len, @he_addrs)
 	  = gethostbyname($node);
 	alarm(0) unless win95p();
 	return unless ($he_name);
-	$family = $he_type;
     }
 
     my ($he_addr, @infos);
     foreach $he_addr (@he_addrs) {
-	my $sin;
-	if ($family == AF_INET) {
-	    $sin = pack_sockaddr_in($se_port, $he_addr);
-	} else {
-	    $sin = inet6_pack_sockaddr_in6($se_port, $he_addr);
-	}
-	push(@infos, $family, $socktype, $pe_proto, $sin, $he_name);
+	push(@infos, AF_INET, $socktype, $pe_proto,
+	     pack_sockaddr_in($se_port, $he_addr), $he_name);
     }
     @infos;
 }
@@ -522,28 +498,6 @@ sub getserv($$) {
 	}
     }
     $se_port;
-}
-
-sub inet6_pack_sockaddr_in6 ($;$) {
-    return pack_sockaddr_in6(@_) if (defined &pack_sockaddr_in6);
-
-    my ($port, $he_addr) = @_;
-    pack('CCnN', 1+1+2+4+16+4, inet6_family(), $port, 0) . $he_addr .
-	pack('N', 0);
-}
-
-sub inet6_unpack_sockaddr_in6 ($) {
-    return unpack_sockaddr_in6(@_) if (defined &unpack_sockaddr_in6);
-
-    my $sock = shift;
-    my ($len, $family, $port, $flow, $a1, $a2, $a3, $a4)
-	= unpack('CCnNN4', $sock);
-    my $addr = pack('N4', $a1, $a2, $a3, $a4);
-    ($port, $addr);
-}
-
-sub inet6_family () {
-    return eval '&AF_INET6' || 24;
 }
 
 1;

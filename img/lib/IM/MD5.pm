@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Feb 28, 2000
+### Revised: Apr 14, 2000
 ###
 
-my $PM_VERSION = "IM::MD5.pm version 20000228(IM140)";
+my $PM_VERSION = "IM::MD5.pm version 20000414(IM141)";
 
 package IM::MD5;
 require 5.003;
@@ -106,10 +106,10 @@ sub md5_str ($) {
 
 # F, G, H and I are basic MD5 functions.
 
-sub MD5_F {my($x, $y, $z) = @_; ((($x) & ($y)) | ((~$x) & ($z))); }
-sub MD5_G {my($x, $y, $z) = @_; ((($x) & ($z)) | (($y) & (~$z))); }
+sub MD5_F {my($x, $y, $z) = @_; ((($x) & ($y)) | (&MD5_trunc(~$x) & ($z))); }
+sub MD5_G {my($x, $y, $z) = @_; ((($x) & ($z)) | (($y) & &MD5_trunc(~$z))); }
 sub MD5_H {my($x, $y, $z) = @_; (($x) ^ ($y) ^ ($z)); }
-sub MD5_I {my($x, $y, $z) = @_; (($y) ^ (($x) | (~$z))); }
+sub MD5_I {my($x, $y, $z) = @_; (($y) ^ (($x) | &MD5_trunc(~$z))); }
 
 # ROTATE_LEFT rotates x left n bits.
 
@@ -155,8 +155,13 @@ sub MD5_II {
 
 sub MD5_trunc {
     my($x) = @_;
-    while ($x >= 4294967296) {
-	$x -= 4294967296;
+
+    if (($x | 0) == $x) {
+	$x &= 0xffffffff;
+    } else {
+	while ($x >= 4294967296) {
+	    $x -= 4294967296;
+	}
     }
     return $x;
 }

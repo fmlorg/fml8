@@ -5,17 +5,18 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Feb 28, 2000
+### Revised: Apr 14, 2000
 ###
 
-my $PM_VERSION = "IM::Nntp.pm version 20000228(IM140)";
+my $PM_VERSION = "IM::Nntp.pm version 20000414(IM141)";
 
 package IM::Nntp;
 require 5.003;
 require Exporter;
 
 use Fcntl;
-use IM::Config qw(nntphistoryfile nntpservers nntpauthuser nntp_timeout);
+use IM::Config qw(nntphistoryfile nntpservers nntpauthuser set_nntpauthuser 
+	nntp_timeout);
 use IM::TcpTransaction;
 use IM::Util;
 use integer;
@@ -45,7 +46,7 @@ NNTP - NNTP interface package
 =head1 SYNOPSIS
 
 $return_code = &nntp_transaction(server_list, newsgroups,
-    part_current, part_total);
+    part_current, part_total, authuser);
 $return_code = &nntp_close;
 
 =head1 DESCRIPTION
@@ -105,22 +106,24 @@ sub nntp_close () {
 
 ##### NNTP TRANSACTION MANAGEMENT #####
 #
-# nntp_transaction(server_list, header, body, group, part, total)
+# nntp_transaction(server_list, header, body, group, part, total, authuser)
 #	server_list: list of NNTP servers
 #	group: news group to be posted in
 #	part: part number to be sent in partial message mode
 #	total: total number of partial messages
+#       authuser: User name for NNTP authentication
 #	return value:
 #		 0: success
 #		 1: recoverable error (should be retried)
 #		-1: unrecoverable error
 #
-sub nntp_transaction ($$$$$$) {
-    my ($servers, $Header, $Body, $group, $part, $total) = @_;
+sub nntp_transaction ($$$$$$$) {
+    my ($servers, $Header, $Body, $group, $part, $total, $authuser) = @_;
     my $rc;
 
     require IM::Log && import IM::Log;
 
+    &set_nntpauthuser($authuser);
     do {
 	$rc = &nntp_transact_sub($servers, $Header, $Body, $part, $total);
 	my (@resp) = &command_response;
