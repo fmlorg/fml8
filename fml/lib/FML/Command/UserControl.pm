@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.29 2003/03/18 10:42:41 fukachan Exp $
+# $FML: UserControl.pm,v 1.30 2003/03/18 14:14:50 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -213,9 +213,10 @@ sub userdel
 }
 
 
-# Descriptions: 
-#    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: 
+# Descriptions: dispatch chaddr operation 
+#    Arguments: OBJ($self)
+#               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
+# Side Effects: none
 # Return Value: none
 sub user_chaddr
 {
@@ -241,9 +242,11 @@ sub user_chaddr
 }
 
 
-# Descriptions: 
-#    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: 
+# Descriptions: chaaddr
+#    Arguments: OBJ($self)
+#               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
+#               OBJ($cred) STR($map) 
+# Side Effects: update member list
 # Return Value: none
 sub _try_chaddr_in_map
 {
@@ -364,7 +367,7 @@ sub userlist
 
 
 # Descriptions: return address list as ARRAY_REF
-#    Arguments: OBJ($self) ARRAY_REF($list)
+#    Arguments: OBJ($self) OBJ($curproc) ARRAY_REF($list)
 # Side Effects: none
 # Return Value: ARRAY_REF
 sub get_user_list
