@@ -1,5 +1,5 @@
 <!--
-	$FML$
+	$FML: docbook.sgml,v 1.2 2001/04/24 06:51:59 fukachan Exp $
 -->
 
 <appendix id="docbook">
@@ -24,14 +24,252 @@ SGML の書き方については
 	FreeBSD の初心者向けチュートリアル
 	</ulink>
 
-などを参照して下さい。一覧は
+などを参照して下さい。
+SGML のタグの一覧は
 	
 	<ulink url="http://www.oasis-open.org/docbook/documentation/reference/html/docbook.html">
 	DOCBOOK definitive guide (O'reilly)
 	</ulink>
 
-のオンライン版を見ると良いでしょう。
+のオンライン版を参照すると良いでしょう。
 </para>
 
+
+<para>
+また、本 Appendix で、２、３の典型的な SGML テンプレートをメモしておくので
+それらを適当に切り剥ぎしていけばなんとかなるはずです。
+</para>
+
+
+<!--  =========================================================  -->
+<sect1>
+
+<title> 本( book )形式のテンプレート </title>
+
+<para>
+book スタイルの典型的な SGML のテンプレートは次のようになります。
+</para>
+
+<screen>
+&lt;!doctype book public "-//OASIS//DTD DocBook V3.1//EN" [
+	&lt;!entity % include SYSTEM "include.sgml"&gt; %include;
+]&gt;
+&lt;book id="相互参照のためのID"&gt;
+
+  &amp;bookinfo;
+  &amp;preface; 
+
+  &lt;toc&gt;&lt;/toc&gt;
+
+  &lt;part&gt;
+	&lt;title&gt; タイトル &lt;/title&gt;
+	&lt;partintro&gt;
+	&lt;para&gt;
+	本パートは…目指しています。
+	&lt;/para&gt;
+	&lt;/partintro&gt;
+
+	&lt;!-- 以下、各章が並ぶ --&gt;
+	&amp;overview;
+  &lt;/part&gt;
+&lt;/book&gt;
+</screen>
+
+<para>
+2 行目は include.sgml を include する命令です。
+C 言語の #include や
+perl の require() と同様です。
+</para>
+
+<para>
+そして、 include.sgml の中では次のような命令が定義されています。
+
+<screen>
+&lt;!-- include する SGML ファイル群 --&gt;
+&lt;!entity bookinfo  SYSTEM "bookinfo.sgml"&gt;
+&lt;!entity overview  SYSTEM "overview.sgml"&gt;
+</screen>
+
+これらの定義により
+&amp;bookinfo;
+命令で 
+bookinfo.sgml 
+が include するようになります。
+
+このようにして、文書本体と
+include するヘッダファイルもどきを
+別々のファイルに分離することができます。
+</para>
+
+</sect1>
+
+
+<!--  =========================================================  -->
+<sect1>
+	<title> HTML の &lt;UL&gt; 相当 </title>
+
+<screen>
+&lt;itemizedlist&gt;
+
+   &lt;listitem&gt;
+	&lt;para&gt;
+		アイテム１
+	&lt;/para&gt;
+   &lt;/listitem&gt;
+
+   &lt;listitem&gt;
+	&lt;para&gt;
+		アイテム２
+	&lt;/para&gt;
+   &lt;/listitem&gt;
+
+&lt;/itemizedlist&gt;
+</screen>
+
+<para>
+例えば
+
+<screen>
+&lt;itemizedlist&gt;
+
+   &lt;listitem&gt;
+	&lt;para&gt;
+		けんけんはきたきつね
+	&lt;/para&gt;
+   &lt;/listitem&gt;
+
+   &lt;listitem&gt;
+	&lt;para&gt;
+		るどるどはテディベア
+	&lt;/para&gt;
+   &lt;/listitem&gt;
+
+&lt;/itemizedlist&gt;
+</screen>
+
+は次のようになります。
+
+<itemizedlist>
+   <listitem>
+	<para>		けんけんはきたきつね	</para>
+   </listitem>
+   <listitem>
+	<para>		るどるどはテディベア	</para>
+   </listitem>
+</itemizedlist>
+
+数字付のアイテムは orderedlist です。
+
+<orderedlist>
+   <listitem>
+	<para>		けんけんはきたきつね	</para>
+   </listitem>
+   <listitem>
+	<para>		るどるどはテディベア	</para>
+   </listitem>
+</orderedlist>
+
+</para>
+
+</sect1>
+
+
+<!--  =========================================================  -->
+<sect1>
+	<title> HTML の &lt;TABLE&gt; 相当 </title>
+
+<screen>
+&lt;para&gt;
+  &lt;table&gt;
+    &lt;title&gt; テーブルのタイトル &lt;/title&gt;
+    &lt;tgroup cols=2&gt;
+
+      &lt;thead&gt;
+        &lt;row&gt;
+          &lt;entry&gt; キー 		&lt;/entry&gt;
+          &lt;entry&gt; 値		&lt;/entry&gt;
+        &lt;/row&gt;
+      &lt;/thead&gt;
+
+      &lt;tbody&gt;
+        &lt;row&gt;
+          &lt;entry&gt; キー 1 		&lt;/entry&gt;
+          &lt;entry&gt; 値 1		&lt;/entry&gt;
+        &lt;/row&gt;
+  
+        &lt;row&gt;
+          &lt;entry&gt; キー 2  	&lt;/entry&gt;
+          &lt;entry&gt; 値 2		&lt;/entry&gt;
+        &lt;/row&gt;
+      &lt;/tbody&gt;
+
+    &lt;/tgroup&gt;
+  &lt;/table&gt;
+&lt;/para&gt;
+</screen>
+
+<para>
+例えば
+
+<screen>
+&lt;para&gt;
+  &lt;table&gt;
+    &lt;title&gt; table description &lt;/title&gt;
+    &lt;tgroup cols=2&gt;
+
+      &lt;thead&gt;
+        &lt;row&gt;
+          &lt;entry&gt; 名前 		&lt;/entry&gt;
+          &lt;entry&gt; 説明		&lt;/entry&gt;
+        &lt;/row&gt;
+      &lt;/thead&gt;
+
+      &lt;tbody&gt;
+        &lt;row&gt;
+          &lt;entry&gt; けんけん	&lt;/entry&gt;
+          &lt;entry&gt; きたきつね	 &lt;/entry&gt;
+        &lt;/row&gt;
+  
+        &lt;row&gt;
+          &lt;entry&gt; るど 		&lt;/entry&gt;
+          &lt;entry&gt; テディベア	 &lt;/entry&gt;
+        &lt;/row&gt;
+      &lt;/tbody&gt;
+
+    &lt;/tgroup&gt;
+  &lt;/table&gt;
+&lt;/para&gt;
+</screen>
+
+は次のようになります。
+
+  <table>
+    <title> テーブルの見本 </title>
+    <tgroup cols=2>
+
+      <thead>
+        <row>
+          <entry> 名前 		</entry>
+          <entry> 説明		</entry>
+        </row>
+      </thead>
+
+      <tbody>
+        <row>
+          <entry> けんけん	</entry>
+          <entry> きたきつね	 </entry>
+        </row>
+  
+        <row>
+          <entry> るど 		</entry>
+          <entry> テディベア	 </entry>
+        </row>
+      </tbody>
+
+    </tgroup>
+  </table>
+</para>
+
+</sect1>
 
 </appendix>
