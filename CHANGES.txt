@@ -1,6 +1,20 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/06/29
+
+   FML::Command 
+   FML::Command::SendFile 
+   FML::Command::User::get 
+	check the number of request in get commands.
+
+   update messages
+
+2003/06/26
+
+   FML::Header Filter 
+	add $debug for debug message to Log at only debug-mode
+
 2003/06/24
 
    Mail::Message[udb]::ToHTML 
@@ -4965,4 +4979,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.148 2003/06/15 05:26:16 fukachan Exp $
+$FML: CHANGES.txt,v 1.149 2003/06/25 01:44:09 fukachan Exp $
