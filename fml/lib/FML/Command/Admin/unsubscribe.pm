@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.12 2002/03/30 11:08:35 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.13 2002/04/03 11:32:59 fukachan Exp $
 #
 
 package FML::Command::Admin::unsubscribe;
@@ -60,20 +60,20 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ config };
-    my $member_map    = $config->{ primary_member_map };
-    my $recipient_map = $config->{ primary_recipient_map };
+    my @member_map    = split(/\s+/, $config->{ member_maps });
+    my @recipient_map = split(/\s+/, $config->{ recipient_maps });
     my $options       = $command_args->{ options };
     my $address       = $command_args->{ command_data } || $options->[ 0 ];
 
     # fundamental check
     croak("address is not specified")         unless defined $address;
-    croak("\$member_map is not specified")    unless $member_map;
-    croak("\$recipient_map is not specified") unless $recipient_map;
+    croak("\@member_map is not specified")    unless @member_map;
+    croak("\@recipient_map is not specified") unless @recipient_map;
 
     # FML::Command::UserControl specific parameters
     my $uc_args = {
 	address => $address,
-	maplist => [ $recipient_map, $member_map ],
+	maplist => [ @recipient_map, @member_map ],
     };
     my $r = '';
 
