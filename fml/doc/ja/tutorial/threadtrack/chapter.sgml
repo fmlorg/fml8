@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.5 2002/12/30 07:38:08 fukachan Exp $
+   $FML: chapter.sgml,v 1.6 2003/04/15 14:51:44 fukachan Exp $
 -->
 
 
@@ -33,7 +33,7 @@
 
 
 <para>
-<link linkend="threadtrack.pmtools.summary">
+<link linkend="pmtools">
 Problem Report System のまとめ
 </link>
 については付録を参照して下さい。
