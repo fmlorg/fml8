@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.9 2001/07/02 14:08:53 fukachan Exp $
+# $FML: Date.pm,v 1.1 2001/11/03 08:03:30 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -251,6 +251,8 @@ sub date_to_unixtime
     my (%month);
     my ($zone);
 
+    $in =~ s/[\s\n]*$//;
+
     require 'timelocal.pl';
 
     # hints
@@ -349,6 +351,7 @@ sub date_to_unixtime
     # get gmtime
     $shift_t =~ s/^0*//; 
     $shift_m =~ s/^0*//;
+    $shift_m = 0 unless $shift_m;
 
     $shift = $shift_t + ($shift_m/60);
     $shift = ($pm eq '+' ? -1 : +1) * $shift;
