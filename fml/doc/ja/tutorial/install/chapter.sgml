@@ -1,5 +1,5 @@
 <!--
-	$FML: chapter.sgml,v 1.6 2001/11/19 14:55:16 fukachan Exp $
+	$FML: chapter.sgml,v 1.7 2001/11/23 15:00:47 fukachan Exp $
 -->
 
 <chapter id="installation">
@@ -8,7 +8,7 @@
 
 
 <!-- ====================================================== --> 
-<sect1 id="install">
+<sect1 id="install.configure">
 	<title> ³µÍ× </title>
 
 
