@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.4 2003/10/14 07:04:35 fukachan Exp $
+# $FML: Utils.pm,v 1.5 2003/10/15 01:03:36 fukachan Exp $
 #
 
 package FML::Process::CGI::Utils;
@@ -183,6 +183,10 @@ sub cgi_var_cgi_mode
 }
 
 
+# Descriptions: return value of language varible.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
 sub cgi_var_language
 {
     my ($curproc) = @_;
@@ -197,6 +201,10 @@ sub cgi_var_language
 }
 
 
+# Descriptions: return title string.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
 sub cgi_var_navigator_title
 {
     my ($curproc) = @_;
@@ -212,6 +220,10 @@ sub cgi_var_navigator_title
 }
 
 
+# Descriptions: return fml project url.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
 sub cgi_var_fml_project_url
 {
     my ($curproc) = @_;
