@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.22 2001/11/27 11:22:13 fukachan Exp $
+# $FML: Subject.pm,v 1.23 2001/12/22 09:21:07 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -82,7 +82,7 @@ sub rewrite_subject_tag
     # add(prepend) the rewrited tag
     $tag = sprintf($tag, $args->{ id });
     my $new_subject = $tag." ".$subject;
-    $header->replace('subject', $new_subject);
+    $header->replace('Subject', $new_subject);
 }
 
 
