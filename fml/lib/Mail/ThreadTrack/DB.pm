@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DB.pm,v 1.7 2001/11/04 05:02:41 fukachan Exp $
+# $FML: DB.pm,v 1.8 2001/11/04 06:52:33 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -168,14 +168,9 @@ sub db_mkdb
     my ($self, $min_id, $max_id) = @_;
     my $config    = $self->{ _config };
     my $spool_dir = $config->{ spool_dir };
-    my $args = {};
 
     use Mail::Message;
     use File::Spec;
-
-    for my $key (qw(fd db_base_dir ml_name spool_dir)) {
-	$args->{ $key } = $self->{ $key };
-    }
 
     for my $id ( $min_id .. $max_id ) {
 	print STDERR "process $id\n" if $debug;
