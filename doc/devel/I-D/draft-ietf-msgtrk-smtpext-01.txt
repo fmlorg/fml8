@@ -1,0 +1,434 @@
+
+
+
+
+Internet Draft                                               E. Allman
+draft-ietf-msgtrk-smtpext-01.txt                        Sendmail, Inc.
+Valid for six months                                         T. Hansen
+Updates: RFC 1891                                    AT&T Laboratories
+                                                        March 20, 2001
+
+
+
+
+                        SMTP Service Extension
+                         for Message Tracking
+
+                  <draft-ietf-msgtrk-smtpext-01.txt>
+
+Status of This Memo
+
+     This  document  is  an  Internet-Draft and is in full conformance
+with all provisions of Section 10  of  RFC2026.   Internet-Drafts  are
+working  documents  of the Internet Engineering Task Force (IETF), its
+areas, and its working groups.  Note that other groups may  also  dis-
+tribute working documents as Internet-Drafts.
+
+     Internet-Drafts  are  draft  documents valid for a maximum of six
+months and may be updated, replaced, or obsoleted by  other  documents
+at  any time.  It is inappropriate to use Internet-Drafts as reference
+material or to cite them other than as "work in progress."
+
+     The list of current Internet-Drafts can be accessed at:
+
+    http://www.ietf.org/ietf/1id-abstracts.txt
+
+The list of Internet-Draft Shadow Directories can be accessed at:
+
+    http://www.ietf.org/shadow.html
+
+
+     This document is a submission by the MSGTRK Working Group of  the
+Internet  Engineering Task Force (IETF).  Comments should be submitted
+to the msgtrk@imc.org mailing list.  An archive of  the  mailing  list
+may be found at
+
+    http://www.ietf.org/archive/msgtrk
+
+
+     Distribution of this memo is unlimited.
+
+
+1.  Abstract
+
+        This  memo  defines an extension to the SMTP service whereby a
+   client may mark a message for future tracking.
+
+Internet Draft     Message Tracking ESMTP Extension     March 20, 2001
+
+
+2.  Other Documents and Conformance
+
+        The model used for Message Tracking is  described  in  [DRAFT-
+   MTRK-MODEL].
+
+        Doing  a Message Tracking query is intended as a "last resort"
+   mechanism.  Normally, Delivery Status  Notifications  (DSNs)  [RFC-
+   DSN-SMTP]  and  Message  Disposition Notifications (MDNs) [RFC-MDN]
+   would provide the primary delivery status.  Only if the message  is
+   not  received,  or there is no response from either of these mecha-
+   nisms should a Message Tracking query be issued.
+
+        The definition of the base64 token is  imported  from  section
+   6.8 of [RFC-MIME].
+
+        Syntax notation in this document conforms to [RFC-ABNF].
+
+        The  key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+   NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and  "OPTIONAL"
+   in  this  document  are  to be interpreted as described in RFC 2119
+   [RFC-KEYWORDS].
+
+
+3.  SMTP Extension Overview
+
+        The Message Tracking SMTP service extension uses the SMTP ser-
+   vice  extension  mechanism described in [RFC-ESMTP].  The following
+   service extension is hereby defined:
+
+    (1)   The name of the SMTP service extension  is  "Message  Track-
+          ing".
+
+    (2)   The  EHLO  keyword  value  associated with this extension is
+          "MTRK".
+
+    (3)   No parameters are allowed  with  this  EHLO  keyword  value.
+          Future documents may extend this specification by specifying
+          options.
+
+    (4)   One optional parameter using the keyword "MTRK" is added  to
+          the  MAIL  FROM  command.   In addition, the ENVID and ORCPT
+          parameters (as defined in RFC  1891  sections  5.4  and  5.2
+          respectively)   MUST   be   supported,  with  extensions  as
+          described below.
+
+    (5)   The maximum length of a MAIL FROM command line is  increased
+          by  40  characters by the possible addition of the MTRK key-
+          word and value.  Note that a further extension of 614  char-
+          acters  for  the  ORCPT  and ENVID parameters is required by
+          RFC-DSN-EXT].
+
+    (6)   No SMTP verbs are defined by this extension.
+
+
+
+
+
+
+Allman & Hansen                                               [Page 2]
+
+Internet Draft     Message Tracking ESMTP Extension     March 20, 2001
+
+
+4.  The Extended MAIL FROM Command
+
+        The extended MAIL FROM command is issued  by  an  SMTP  client
+   when  it  wishes  to  inform  an  SMTP server that message tracking
+   information should be retained for future querying.   The  extended
+   MAIL  FROM command is identical to the MAIL FROM command as defined
+   in [RFC-SMTP], except that MTRK, ORCPT, and ENVID parameters appear
+   after the address.
+
+   4.1.  The MTRK parameter to the ESMTP MAIL command
+
+           Any  sender  wishing to track a message must first tag that
+      message as trackable by creating two values A and B:
+
+          A = some-large-random-number
+          B = SHA1(A)
+
+      The large random number A  is  calculated  on  a  host-dependent
+      basis.   See [RFC-RANDOM] for a discussion of choosing good ran-
+      dom numbers.  This random number MUST be at least 128  bits  but
+      MUST NOT be more than 1024 bits.
+
+           The  128-bit  hash  B of A is then computed using the SHA-1
+      algorithm as described in [NIST-SHA1].
+
+           The sender then base64 encodes  value  B  and  passes  that
+      value as the mtrk-certifier on the MAIL FROM command:
+
+          mtrk-parameter  = "MTRK=" mtrk-certifier [ ":" mtrk-timeout ]
+          mtrk-certifier  = base64  ; authenticator
+          mtrk-timeout    = 1*9digit; seconds until timeout
+
+
+           A  is stored in the originator's tracking database to vali-
+      date future tracking requests as described in [DRAFT-MTRK-MTQP].
+      B is stored in tracking tracking databases of compliant MTAs and
+      used to authenticate future tracking requests.
+
+           The mtrk-timeout field indicates the number of seconds that
+      the  client  requests that this tracking information be retained
+      on intermediate servers, as measured from the initial receipt of
+      the message at that server.  Servers MAY ignore this value if it
+      violates local policy.   In  particular,  servers  MAY  silently
+      enforce  an  upper  limit  to how long they will retain tracking
+      data; this limit MUST be at least one day.
+
+           If no mtrk-timeout  field  is  specified  then  the  server
+      should  use  a  local default.  This default SHOULD be 8-10 days
+      and MUST be at least one day.  Notwithstanding this clause,  the
+      information MUST NOT be expired while the message remains in the
+      queue for this server: that is, an MTQP  server  MUST  NOT  deny
+      knowledge  of  a message while that same message sits in the MTA
+      queue.
+
+           If the message is relayed to another compliant SMTP server,
+      the  MTA  acting as the client SHOULD pass an mtrk-timeout field
+
+
+Allman & Hansen                                               [Page 3]
+
+Internet Draft     Message Tracking ESMTP Extension     March 20, 2001
+
+
+      equal to the remaining life of that  message  tracking  informa-
+      tion.   Specifically, the tracking timeout is decremented by the
+      number of seconds the message has lingered at this MTA and  then
+      passed  to the next MTA.  If the decremented tracking timeout is
+      less than or equal to zero, the entire MTRK parameter  MUST  NOT
+      be passed to the next MTA; essentially, the entire tracking path
+      is considered to be lost at that point.
+
+           See [RFC-DELIVERYBY] section 4 for an explanation of why  a
+      timeout is used instead of an absolute time.
+
+   4.2.  Use of ENVID
+
+           To  function  properly, Message Tracking requires that each
+      message have a unique identifier that is  never  reused  by  any
+      other  message.   For  that  purpose,  if  the MTRK parameter is
+      given, an ENVID parameter MUST be included, and  the  syntax  of
+      ENVID from RFC 1891 section 5.4 is extended as follows:
+
+          envid-parameter = "ENVID=" unique-envid
+          unique-envid    = local-envid "@" fqhn
+          local-envid     = xtext
+          fqhn            = xtext
+
+      The  unique-envid  MUST  be  chosen  in such a way that the same
+      ENVID will never be used by any other  message  sent  from  this
+      system  or  any other system.  In most cases, this means setting
+      fqhn to be the fully qualified host name of the system  generat-
+      ing  this  ENVID, and local-envid to an identifier that is never
+      re-used by that host.
+
+           Any retransmissions of  this  message  MUST  assign  a  new
+      ENVID.  In this context, "retransmission" includes forwarding or
+      resending a message.
+
+   4.3.  Forwarding Tracking Certifiers
+
+           MTAs SHOULD forward unexpired tracking certifiers  to  com-
+      pliant mailers as the mail is transferred during regular hop-to-
+      hop transfers.  If the "downstream" MTA is  not  MTRK-compliant,
+      then the MTRK= parameter MUST be deleted.  If the downstream MTA
+      is DSN-compliant, then the ENVID and ORCPT parameters  MUST  NOT
+      be deleted.
+
+           If  aliasing,  forwarding, or other redirection of messages
+      to a single recipient occurs, then the MTA SHOULD treat this  as
+      an  ordinary  hop-to-hop transfer and forward the MTRK=, ENVID=,
+      and ORCPT= values; these values MUST NOT be modified.
+
+           MTAs MUST NOT copy MTRK certifiers when relaying a  message
+      to multiple recipients.  An MTA MAY designate one recipient in a
+      multi-recipient alias as the "primary" recipient to which track-
+      ing  requests  shall  be  forwarded;  other  addresses SHALL NOT
+      receive tracking certifiers.  MTAs MUST NOT forward MTRK  certi-
+      fiers when doing mailing list expansion.
+
+
+
+Allman & Hansen                                               [Page 4]
+
+Internet Draft     Message Tracking ESMTP Extension     March 20, 2001
+
+
+5.  Security Issues
+
+   5.1.  Denial of service
+
+           An attacker could attempt to flood the database of a server
+      by submitting large numbers of small, tracked messages.  In this
+      case,  a  site  may  elect to lower its maximum retention period
+      retroactively.
+
+   5.2.  Confidentiality
+
+           The mtrk-authenticator value (``A'') must be hard  to  pre-
+      dict and not reused.
+
+           The  originating client must take reasonable precautions to
+      protect the secret.  For example, if the secret is stored  in  a
+      message store (e.g., a "Sent" folder), the client must make sure
+      the secret isn't accessible  by  attackers,  particularly  on  a
+      shared store.
+
+           MTAs  SHOULD  take precautions to make certain that message
+      tracking cannot be used to explore internal topologies  of  net-
+      works.
+
+6.  References
+
+   [DRAFT-MTRK-MODEL]
+        T.   Hansen,  ``Message  Tracking  Model  and  Requirements.''
+        draft-ietf-msgtrk-model-03.txt.  November 2000.
+
+   [DRAFT-MTRK-MTQP]
+        T. Hansen, ``Message Tracking Query  Protocol.''   draft-ietf-
+        msgtrk-mtqp-01.txt.  November 2000.
+
+   [RFC-ABNF]
+        Crocker,  D., Editor, and P. Overell, ``Augmented BNF for Syn-
+        tax Specifications: ABNF'', RFC 2234, November 1997.
+
+   [RFC-DELIVERYBY]
+        D. Newman, ``Deliver By SMTP Service Extension.''   RFC  2852.
+        June 2000.
+
+   [RFC-DSN-REPT]
+        G.  Vaudreuil,  ``The  Multipart/Report  Content  Type for the
+        Reporting of Mail System Administrative Messages.''  RFC 1892.
+        January 1996.
+
+   [RFC-DSN-SMTP]
+        K. Moore, ``SMTP Service Extension for Delivery Status Notifi-
+        cations.''  RFC 1891.  January 1996.
+
+   [RFC-DSN-STAT]
+        K. Moore and G. Vaudreuil, ``An Extensible Message Format  for
+        Delivery Status Notifications.''  RFC 1894.  January 1996.
+
+
+
+
+Allman & Hansen                                               [Page 5]
+
+Internet Draft     Message Tracking ESMTP Extension     March 20, 2001
+
+
+   [RFC-EMSSC]
+        G.  Vaudreuil,  ``Enhanced  Mail  System  Status Codes.''  RFC
+        1893.  January 1996.
+
+   [RFC-ESMTP]
+        Rose, M., Stefferud, E.,  Crocker,  D.,  Klensin,  J.  and  N.
+        Freed, ``SMTP Service Extensions.''  STD 10, RFC 1869.  Novem-
+        ber 1995.
+
+   [RFC-KEYWORDS]
+        S. Bradner, ``Key words for use in RFCs to  Indicate  Require-
+        ment Levels.''  RFC 2119.  March 1997.
+
+   [RFC-MDN]
+        R. Fajman, ``An Extensible Message Format for Message Disposi-
+        tion Notifications.''  RFC 2298.  March 1998.
+
+   [RFC-MIME]
+        N. Freed  and  N.  Borenstein,  ``Multipurpose  Internet  Mail
+        Extensions  (MIME)  Part  One: Format of Internet Message Bod-
+        ies.''  RFC 2045.  November 1996.
+
+   [RFC-MSGFMT]
+        D. Crocker, ``Standard for the Format of  ARPA  Internet  Text
+        Messages.''  RFC 822.  August 1982.
+
+   [RFC-RANDOM]
+
+   [RFC-RELATED]
+        E. Levinson, ``The MIME Multipart/Related Content-type.''  RFC
+        2387.  August 1998.
+
+   [NIST-SHA1]
+        NIST FIPS  PUB  180-1,  ``Secure  Hash  Standard.''   National
+        Institute of Standards and Technology, U.S. Department of Com-
+        merce.  May 1994.  DRAFT.
+
+   [RFC-SMTP]
+        J. Postel,  ``Simple  Mail  Transport  Protocol.''   RFC  821.
+        August 1982.
+
+7.  Authors' Addresses
+
+       Eric Allman
+       Sendmail, Inc.
+       6603 Shellmound
+       Emeryville, CA  94608
+       U.S.A.
+
+       E-Mail: eric@Sendmail.COM
+       Phone: +1 510 594 5501
+       Fax: +1 510 594 5411
+
+
+
+
+
+
+Allman & Hansen                                               [Page 6]
+
+Internet Draft     Message Tracking ESMTP Extension     March 20, 2001
+
+
+       Tony Hansen
+       AT&T Laboratories
+       Lincroft, NJ 07738
+       U.S.A.
+
+       Phone: +1 732 576 3207
+       E-Mail: tony@att.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Allman & Hansen                                               [Page 7]
+

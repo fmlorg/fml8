@@ -1,0 +1,556 @@
+Internet Draft                                                 T. Hansen
+draft-ietf-msgtrk-model-02.txt                         AT&T Laboratories
+Valid for six months                                              K. Lin
+                                           Lotus Development Corporation
+                                                           July 14, 2000
+
+
+
+                Message Tracking Model and Requirements
+
+                    <draft-ietf-msgtrk-model-02.txt>
+
+                         Authors' version: 1.12
+
+     Status of this Memo
+
+     This document is an Internet-Draft and is in full conformance with
+all provisions of Section 10 of RFC2026.
+
+     Internet-Drafts are working documents of the Internet Engineering
+Task Force (IETF), its areas, and its working groups.  Note that other
+groups may also distribute working documents as Internet-Drafts.
+
+     Internet-Drafts are draft documents valid for a maximum of six
+months and may be updated, replaced, or obsoleted by other documents at
+any time.  It is inappropriate to use Internet-Drafts as reference
+material or to cite them other than as "work in progress."
+
+     The list of current Internet-Drafts can be accessed at
+http://www.ietf.org/ietf/1id-abstracts.txt.
+
+     The list of Internet-Draft Shadow Directories can be accessed at
+http://www.ietf.org/shadow.html.
+
+     This memo and its companions are discussed on the MSGTRK working
+group mailing list, ietf-msgtrk@imc.org.  To subscribe, send a message
+with the word "subscribe" in the body (on a line by itself) to the
+address ietf-msgtrk-request@imc.org.  An archive of the mailing list may
+be found at http://www.ietf.org/archive/msgtrk.
+
+Copyright Notice
+
+     Copyright (C) The Internet Society (1999).  All Rights Reserved.
+
+Abstract
+
+     Customers buying enterprise message systems often ask: Can I track
+the messages?  Message tracking is the ability to find out the path that
+
+
+
+Hansen,Lin                                                      [Page 1]
+
+Internet Draft  Message Tracking Model and Requirements    July 14, 2000
+
+
+a particular message has taken through a messaging system and the
+current routing status of that message.  This document provides a model
+of message tracking that can be used for understanding the Internet-wide
+message infrastructure and to further enhance those capabilities to
+include message tracking, as well as requirements for proposed message
+tracking solutions.
+
+1.  Problem Statement
+
+     Consider sending a package through a package delivery company.
+Once you've sent a package, you would like to be able to find out if the
+package has been delivered or not, and if not, where that package
+currently is and what its status is.  Note that the status of a package
+may not include whether it was delivered to its addressee, but just the
+destination.  Many package carriers provide such services today, often
+via a web interface.
+
+     Message tracking extends that capability to the Internet-wide mes-
+sage infrastructure, analogous to the service provided by package car-
+riers:  the ability to quickly locate where a message (package) is, and
+to determine whether or not the message (package) has been delivered to
+its final destination.  An Internet-standard approach will allow the
+development of message tracking applications that can operate in a
+multi-vendor messaging environment, and will encourage the operation of
+the function across administrative boundaries.
+
+     The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+"SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this
+document are to be interpreted as described in RFC 2119 [RFC-KEYWORDS].
+
+2.  Definitions
+The following terms are relevant to message tracking.  The terms Track-
+ing User Agent and Tracking Server are new, while all other terms have
+been collected here from other sources.
+
+     Originating Mail User Agent (MUA)
+               The originating mail user agent is the software used to
+               compose and originate a message.  It is the software sit-
+               ting on a person's desktop.
+
+     Originating Mail Submission Agent (MSA)
+               The Mail Submission Agent accepts a message from a User
+               Agent, adds or modifies whatever headers are appropriate
+               for the message's traversal through the Internet, and
+               injects the message into the network via a Message
+               Transfer Agent.  An MSA is used, in lieu of the first MTA
+               by MUA's that do not create fully-compliant Internet mes-
+               sages, to submit messages into the SMTP delivery network.
+
+
+
+Hansen,Lin                                                      [Page 2]
+
+Internet Draft  Message Tracking Model and Requirements    July 14, 2000
+
+
+     Message Transfer Agent (MTA)
+               A Message Transfer Agent accepts a message and moves it
+               forward towards its destination.  That destination may be
+               local or reached via another MTA.  It may use a local
+               queue to store the message before transferring it
+               further.  Any MTA may generate a Non-Delivery Notifica-
+               tion.
+
+     Intermediate Message Transfer Agent (MTA)
+               An Intermediate MTA is an MTA that accepts a message for
+               transfer somewhere else.
+
+     Final Message Transfer Agent (MTA)
+               A Final MTA is an MTA that accepts a message for local
+               delivery.  It is the final place that a message is
+               accepted.  The final MTA is what sends any Delivery
+               Status Notificatons (DSNs).  (Intermediate MTA's may also
+               send a DSN if it relays to a non-DSN aware MTA.)
+
+     Foreign Message Transfer Agent
+               A foreign MTA provides delivery of messages using other
+               protocols than those specified for Internet mail, such as
+               an X.400 mail system.
+
+     Gateway Message Transfer Agent (GW-MTA)
+               A gateway MTA accepts a message for transfer to a foreign
+               MTA outside of the Internet protocol space.
+
+     Local Delivery Agent (DA)
+               The local Delivery Agent delivers the message to the
+               local message store.  (The MTA and DA are often combined
+               into the same program.)
+
+     Delivery Status Notification (DSN)
+               A Delivery Status Notification [RFC-DSN] is produced by
+               an MTA when a message is unsuccessfully delivered, either
+               to its next hop or the final message store, or when it is
+               successfully delivered, either to a foreign MTA, to a
+               local delivery agent, or a non-DSN aware MTA.  Positive
+               notifications are only performed [RFC-ESMTP-DSN] when
+               specifically requested.
+
+     Non-Delivery Notification (NDN)
+               A non-delivery notification is a special form of DSN
+               indicating unsuccessful delivery.
+
+     Message Disposition Notification (MDN)
+               A Message Disposition Notification is used to report the
+
+
+
+Hansen,Lin                                                      [Page 3]
+
+Internet Draft  Message Tracking Model and Requirements    July 14, 2000
+
+
+               disposition of a message after it has been successfully
+               delivered to a recipient.
+
+     Tracking User Agent (TUA)
+               A tracking user agent wants to find information on a mes-
+               sage on the behalf of a user.  It is the requestor or
+               initiator of such a request.  (The MUA and TUA could be
+               combined into the same program.)
+
+     Tracking Server
+               A tracking server provides tracking information to a
+               tracking client.  It is the repository of the information
+               about a message for the traversal through a particular
+               MTA.  (The tracking server and MTA may run on the same
+               system.)
+
+3.  Entities
+
+     The entities involved in message tracking are:  message user
+agents, message submission agents, message transfer agents, tracking
+user agents and tracking servers.
+
+4.  Requirements
+
+     These are requirements that any message tracking solution must be
+able to satisfy:
+
+     The message tracking solution:
+
+     **   MUST scale to the internet.
+
+     **   MUST be easy to deploy.
+
+     **   SHOULD maximize the reuse of existing, already deployed tech-
+          nology and infrastructure.
+
+     **   SHOULD extend existing protocols and not invent new ones.
+
+     **   SHOULD have a low implementation cost.  (This makes it easy to
+          incorporate into existing products.)
+
+     **   MUST restrict tracking of a message to the originator of the
+          message (or a delegate).
+
+     **   MUST be able to do authentication.
+
+     **   MAY allow an originator to delegate this responsibility to a
+          third party.
+
+
+
+Hansen,Lin                                                      [Page 4]
+
+Internet Draft  Message Tracking Model and Requirements    July 14, 2000
+
+
+     **   SHOULD have the property that they would allow per-message
+          delegation of the tracking responsibility.
+
+     **   MUST require a tracking user agent to prove that they are per-
+          mitted to request the tracking information.
+
+     **   MUST be able to uniquely identify messages.
+
+     **   MUST require every message to have unique identification.
+
+5.  Interaction Models
+
+     There are several models by which tracking of messages can be
+enabled, by which messages can be tracked, and by which information can
+be requested and gathered.
+
+5.1.  Tracking Enabling Models
+
+     Either the envelope or message header must contain enough informa-
+tion to track a message and securely retrieve information about the mes-
+sage.  Any message that does not have enough information to track it is
+by definition not trackable.
+
+     If there is not enough information available in current standard
+envelopes or message headers, then the current standards will need to be
+extended.  Either the MUA or MSA must determine the additional informa-
+tion and enable the tracking by adding the additional information to
+either the envelope or header.
+
+     This leads to two tracking enabling models:  passive enabling and
+active enabling.
+
+5.1.1.  Passive Enabling Model
+The "passive enabling" model assumes that there is sufficient informa-
+tion available.  No UA or MSA interaction occurs to turn tracking on; it
+is on by default.
+
+5.1.2.  Active Enabling Model
+
+     The "active  enabling" model requires that the MUA and MSA exchange
+information when the message is submitted.  This exchange indicates that
+logging of the message's traversal should be performed, as well as pro-
+viding enough additional information to allow the message to be tracked.
+This information will need to be passed on to subsequent MTAs as needed.
+
+5.2.  Tracking Request Models
+There are several models by which tracking information may be requested.
+
+
+
+
+Hansen,Lin                                                      [Page 5]
+
+Internet Draft  Message Tracking Model and Requirements    July 14, 2000
+
+
+5.2.1.  Passive Request Model
+
+     The "passive request" model requires active enabling to indicate
+that some form of tracking is to be performed.  The tracking information
+can be sent back immediately (as a form of telemetry) or sent to a 3rd
+party for later retrieval.
+
+5.2.2.  Passive Request Tracking Information
+
+     Forms of passive tracking information that could potentially be
+requested are  as  follows.  Note that mechanisms already exist for
+requesting the information marked with a (+).  The references for such
+mechanisms are listed at the end of each such entry.
+
+     **   send a DSN of a message arriving at an intermediate MTA
+
+     **   (+) send a DSN of a message being rejected while at an inter-
+          mediate MTA [RFC-DSN]
+
+     **   (+) send a DSN of a message leaving an intermediate MTA and
+          going to another MTA [RFC-DELIVER-BY]
+
+     **   send a DSN of a message arriving at a final MTA
+
+     **   (+) send a DSN of a message being rejected while at a final
+          MTA [RFC-DSN]
+
+     **   (+) send a DSN of a message being delivered to a user's mes-
+          sage store [RFC-DSN]
+
+     **   (+) send a DSN of a message being delivered to a foreign MTA
+          [RFC-DSN]
+
+     **   (+) send an MDN of a message being read by an end user [RFC-
+          MDN]
+
+5.3.  Active Request Model
+
+     The "active request" model requires an active query by a user's
+user agent to the MSA, intermediate MTAs and final MTA, or to a third
+party, to find the message's status as known by that MTA.  Active
+request will work with either passive enabling or active enabling.
+
+5.3.1.  Server Chaining vs. Server Referrals
+When a tracking server has been asked for tracking information, and the
+message has been passed on to another MTA of which this tracking server
+has no tracking knowledge, there are two modelling choices:
+
+
+
+
+Hansen,Lin                                                      [Page 6]
+
+Internet Draft  Message Tracking Model and Requirements    July 14, 2000
+
+
+     **   the first tracking server will contact the next tracking
+          server to query for status and pass back the combined status
+          (server chaining), or
+
+     **   the first tracking server will return the address of the next
+          MTA and the tracking client has the responsibility of contact-
+          ing the next tracking server (server referrals).
+
+5.3.2.  Active Request Tracking Information
+Forms of active tracking information that could potentially be requested
+are as follows.  (Note that no mechanisms currently exist for requesting
+such information.)
+
+     **   the message has been queued for later delivery
+
+     **   the message was delivered locally
+
+     **   the message was delivered to another MTA,
+
+     **   the message was delivered to a foreign MTA
+
+     **   ask a different tracking server,
+
+     **   I know but can't tell you,
+
+     **   I don't know.
+
+5.4.  Combining DSN and MDN Information with Message Tracking Informa-
+tion
+
+     The information that would be retrieved by message tracking and the
+information that is returned for DSN and MDN requests all attempt to
+answer the question of "what happened to message XX"?  The information
+provided by each is complementary in nature, but similar.  A tracking
+user agent could use all three possible information  sources  to present
+a total view of the status of a message.
+
+     Both DSN and MDN notifications utilize the formats defined by RFC
+1892 [RFC-REPORT].  This suggests that the information returned by mes-
+sage tracking solutions should also be similar.
+
+6.  Security
+
+     This is a security model for message identification and authentica-
+tion that could be deployed.  (There may be others.)
+
+     A Tracking User Agent must prove that they are permitted to request
+tracking information about a message.  Every [RFC-822]-compliant message
+
+
+
+Hansen,Lin                                                      [Page 7]
+
+Internet Draft  Message Tracking Model and Requirements    July 14, 2000
+
+
+is supposed to contain a Message-Id header.  One possible mechanism is
+for the originator to calculate a one-way hash A from the message ID +
+time stamp + a per-user secret.  The user then calculates another one-
+way hash B to be the hash of A.  The user includes B in the submitted
+message, and retains A.  Later, when the user makes a message tracking
+request to the messaging system or tracking entity, it submits A in the
+tracking request.  The entity receiving the tracking request then uses A
+to calculate B, since it was already provided B, verifying that the
+requestor is authentic.  In summary,
+
+     A = H(message ID + time stamp + secret)
+
+     B = H(A)
+
+Another possible mechanism for A is to ignore the message ID and time
+stamp and just use a one-way hash from a large (>128 bits) random
+number.  B would be calculated as before.  In summary,
+
+     A = H(large-random-number)
+
+     B = H(A)
+
+This is similar in technique to the methods used for One-Time Passwords
+[RFC-OTP].  The success of these techniques is dependent on the random-
+ness of the per-user secret or the large random number, which can be
+incredibly difficult in some environments.
+
+     If the originator of a message were to delegate his or her tracking
+request to a third party by sending them A, this would be vulnerable to
+snooping over unencrypted sessions.  The user can decide on a message-
+by-message basis if this risk is acceptable.
+
+7.  References
+
+
+     [RFC-822] Crocker, D., "Standard for the Format of ARPA Internet
+               Text Messages", STD 11, RFC 822, UDEL, August 1982.
+
+     [RFC-DELIVER-BY]
+               Newman, D., "Deliver By SMTP Service Extension", draft-
+               newman-deliver-02.txt, Innosoft, January 1999.
+
+     [RFC-DSN] Moore, K., and G. Vaudreuil, "An Extensible Message For-
+               mat for Delivery Status Notifications", RFC 1894, Univer-
+               sity of Tennessee, Octel Network Services, January 1996.
+
+     [RFC-ESMTP-DSN]
+               Moore, K., "SMTP Service Extension for Delivery Status
+
+
+
+Hansen,Lin                                                      [Page 8]
+
+Internet Draft  Message Tracking Model and Requirements    July 14, 2000
+
+
+               Notifications", RFC 1891, University of Tennessee, Janu-
+               ary 1996.
+
+     [RFC-KEYWORDS]
+               Bradner, S., "Key words for use in RFCs to Indicate
+               Requirement Levels", RFC 2119, Harvard University, March
+               1997.
+
+     [RFC-MDN] Fajman, R., "An Extensible Message Format for Message
+               Disposition Notifications", RFC 2298, National Institutes
+               of Health, March 1998.
+
+     [RFC-OTP] Haller, N., Metz, C., Nesser, P., Straw, M., "A One-Time
+               Password System", RFC 2289, Bellcore, Kaman Sciences Cor-
+               poration, Nesser & Nesser Consulting, Bellcore, February
+               1998.
+
+     [RFC-REPORT]
+               Vaudreuil, G., "The Multipart/Report Content Type for the
+               Reporting of Mail System Administrative Messages", RFC
+               1892, Octel Network Services, January 1996.
+
+     [RFC-SMTP]Postel, J., "Simple Mail Transfer Protocol", STD 10, RFC
+               821, USC/Information Sciences Institute, August 1982.
+
+8.  Acknowledgements
+
+     This document is the product of input from many people and many
+sources.  It owes much to earlier work by Gordon Jones, Bruce Ernst and
+Greg Vaudreuil.
+
+9.  Authors' Addresses
+     Tony Hansen
+     AT&T Laboratories
+     Lincroft, NJ 07738
+     USA
+
+     Phone: +1 732 576-3207
+     E-Mail: tony@att.com
+
+     Ken Lin
+     Lotus Development Corporation
+     640 Lee Road
+     Wayne, PA 19087
+
+     Phone: +1 610 251-3380
+     E-Mail: ken_lin@lotus.com
+
+
+
+
+Hansen,Lin                                                      [Page 9]
+
+Internet Draft  Message Tracking Model and Requirements    July 14, 2000
+
+
+10.  Full Copyright Statement
+
+     Copyright (C) The Internet Society (1999).  All Rights Reserved.
+
+     This document and translations of it may be copied and furnished to
+others, and derivative works that comment on or otherwise explain it or
+assist in its implmentation may be prepared, copied, published and dis-
+tributed, in whole or in part, without restriction of any kind, provided
+that the above copyright notice and this paragraph are included on all
+such copies and derivative works.  However, this document itself may not
+be modified in any way, such as by removing the copyright notice or
+references to the Internet Society or other Internet organisations,
+except as needed for the purpose of developing Internet standards in
+which case the procedures for copyrights defined in the Internet Stan-
+dards process must be followed, or as required to translate it into
+languages other than English.
+
+     The limited permissions granted above are perpetual and will not be
+revoked by the Internet Society or its successors or assigns.
+
+     This document and the information contained herein is provided on
+an "AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
+TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT
+NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL
+NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR
+FITNESS FOR A PARTICULAR PURPOSE.
+
+     This document expires January 14, 2001.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hansen,Lin                                                     [Page 10]

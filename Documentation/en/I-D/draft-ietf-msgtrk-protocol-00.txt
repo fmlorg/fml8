@@ -1,0 +1,500 @@
+Internet Draft						       E. Allman
+draft-ietf-msgtrk-protocol-00.txt			  Sendmail, Inc.
+Valid for six months					       T. Hansen
+						       AT&T Laboratories
+							  March	10, 2000
+
+
+
+			 SMTP Service Extension
+			  for Message Tracking
+
+		  <draft-ietf-msgtrk-protocol-00.txt>
+
+			 Authors' version: 1.1
+
+     Status of this Memo
+
+     This document is an Internet-Draft	and is in full conformance with
+all provisions of Section 10 of	RFC2026.
+
+     Internet-Drafts are working documents of the Internet Engineering
+Task Force (IETF), its areas, and its working groups.  Note that other
+groups may also	distribute working documents as	Internet-Drafts.
+
+     Internet-Drafts are draft documents valid for a maximum of	six
+months and may be updated, replaced, or	obsoleted by other documents at
+any time.  It is inappropriate to use Internet-Drafts as reference
+material or to cite them other than as "work in	progress."
+
+     The list of current Internet-Drafts can be	accessed at
+http://www.ietf.org/ietf/1id-abstracts.txt.
+
+     The list of Internet-Draft	Shadow Directories can be accessed at
+http://www.ietf.org/shadow.html.
+
+     This memo and its companions are discussed	on the MSGTRK working
+group mailing list, ietf-msgtrk[-request]@imc.org.  An archive of the
+mailing	list may be found at http://www.ietf.org/archive/msgtrk.
+
+Copyright Notice
+
+     Copyright (C) The Internet	Society	(1999).	 All Rights Reserved.
+
+Abstract
+
+     Customers buying enterprise message systems often ask: Can	I track
+the messages?  Message tracking	is the ability to find out the path that
+a particular message has taken through a messaging system and the
+
+
+
+Allman,Hansen						        [Page 1]
+
+Internet Draft	    SMTP Message Tracking Extensions	  March	10, 2000
+
+
+current	routing	status of that message.	 This document provides	exten-
+sions to the ESMTP protocol to enhance its capabilities	to include mes-
+sage tracking.
+
+1.  Introduction
+
+     The Message Tracking Models and Requirements document [RFC-TRACK-
+MODEL] discusses the models that message tracking solutions could fol-
+low, along with	requirements for a message tracking solution that can be
+used with the Internet-wide message infrastructure.  This memo defines
+an extension to	the SMTP service that provides a message tracking solu-
+tion that satisfies those requirements.	 Using the model document's ter-
+minology, it uses active enabling and active requests with request
+referrals.
+
+....
+
+This document is very drafty; its purpose is to	promote	discussion.
+Sections that are obviously in need of filling out have	comments begin-
+ning with "--".
+
+
+1.1.  Terminology
+
+     The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+"SHOULD", "SHOULD NOT",	"RECOMMENDED", "MAY", and "OPTIONAL" in	this
+document are to	be interpreted as described in RFC 2119	[RFC-KEYWORDS].
+
+
+
+2.  Framework for the Message Tracking Service Extension
+
+     The Message Trackng extension to SMTP is laid out as follows:
+
+     **	  the name of the SMTP service defined here is "Message	Track-
+	  ing";
+
+     **	  the EHLO keyword value associated with the extension is
+	  "TRACK";
+
+     **	  the TRACK keyword has	no parameters;
+
+     **	  the TRACKID parameter	is added to the	MAIL FROM command;
+
+     **	  a new	SMTP verb, "MTRK", is defined.
+
+     The rest of this memo defines how support for the extension effects
+     the behavior of a message transfer	agent.
+
+
+
+Allman,Hansen						        [Page 2]
+
+Internet Draft	    SMTP Message Tracking Extensions	  March	10, 2000
+
+
+3.  Message Tracking Enabling
+
+     An	SMTP client wishing to request message tracking	support	for a
+message	may issue the EHLO command to start an SMTP session, to	deter-
+mine if	the server supports any	of several service extensions.	If the
+server responds	with code 250 to the EHLO command, and the response
+includes the EHLO keyword TRACK, then the Message Tracking extension (as
+described in this memo)	is supported.  In general, an ESMTP server which
+implements this	service	extension will propagate message tracking infor-
+mation when relaying mail to other SMTP-based MTAs that	also support
+this extension,	and make a "best effort" to record when	messages are
+passed into other environments.
+
+4.  Additional Parameter for the MAIL FROM Command
+
+     The extended MAIL FROM command is issued by a client when it wishes
+to request that	a server maintain tracking information for the message.
+The extended MAIL FROM command is identical to the MAIL	commands defined
+in [RFC-821], except that the additional parameter may appear after the
+recipient address.  The	general	syntax for extended SMTP commands is
+defined	in [RFC-ESMTP].
+
+4.1.  The TRACKID parameter of the ESMTP MAIL FROM Command
+
+     The TRACKID esmtp-keyword on the extended MAIL FROM command speci-
+fies whether or	not the	message	should be tracked by the server.  If the
+TRACKID	esmtp-keyword is used, it MUST have an associated esmtp-value,
+which is constructed as	described next.
+
+4.2.  Creating the TRACKID Parameter
+
+     The TRACKID parameter consists of two parts: a per-message	authen-
+tication string, the Auth String, and a	per-message tracking identifica-
+tion string, the Tracking ID.
+
+4.2.1.	Tracking ID
+
+     A key requirement of message tracking is the ability to uniquely
+identify a message with	a globally and temporally unique signature.  The
+Message-Id: header is required by [RFC-822] to identify	a message, and
+is usually required to be globally and temporally unique.  So it is
+almost sufficient for tracking identification.	However, a Message ID
+will be	reused under certain circumstances, such as when a message is
+resent,	and such messages must be able to be tracked separately	from the
+original message.  The Tracking	ID is REQUIRED to be the same value as
+used for the Message ID, without the angle brackets, and augmented by a
+colon ":" and a	generational counter.  The generational	counter	will be
+an unsigned integer value that SHOULD start at the value of 0.	For
+
+
+
+Allman,Hansen						        [Page 3]
+
+Internet Draft	    SMTP Message Tracking Extensions	  March	10, 2000
+
+
+example, if the	value of the Message-ID: header	is
+"<123456.89012391@domain.example>", then the value of the tracking ID
+will be	"123456.89012391@domain.example:0".  If	a message is ever resent
+or retransmitted for any other reason by an end-user client, then the
+generational counter MUST be incremented by one.  (The generational
+counter	MAY additionally be incremented	by a small (<10) random	number.)
+
+4.2.2.	Secret Value
+
+     For messages to be	tracked, the mail user agent must use a	secret
+value.	This secret value MAY be a per-message secret, such as a 128-bit
+(16-byte) random number.
+
+4.2.3.	Stored Authentication Value
+
+     The value of the Tracking ID, T, is concatentated with the	secret
+value, S, and passed through the [RFC-MD5] one-way hash	function, to
+create the Stored Authentication Value,	A.
+
+     A = H(T + S)
+
+
+4.2.4.	Transmitted Authentication String
+
+     The Transitted Authentication String, B, is created by passing the
+Stored Authentication Value, A,	through	the MD5	one-way	hash function,
+producing a 16-byte value.  This value is then expressed as a series of
+32 hexadecimal digits, either lower- or	upper-case, transmitted	in
+internet byte order (low-endian	???? ) [RFC-????].
+
+     B = hex(H(A))
+
+4.2.5.	The TRACKID Parameter
+
+     The TRACKID parameter, P, is created from the transmitted authenti-
+cation string, B, a colon ":", and the tracking	ID, T.
+
+     P = B + ":" + T
+
+
+5.  Message Tracking Requests
+
+     The MTRK command is issued	by the client host when	it wishes to
+determine the current status of	a message previously sent to that server
+host.  The syntax of this command is as	follows:
+
+     MTRK <stored-authentication-value>:<tracking-id><CR><LF>
+
+
+
+
+Allman,Hansen						        [Page 4]
+
+Internet Draft	    SMTP Message Tracking Extensions	  March	10, 2000
+
+
+<tracking-id> is the tracking ID, T, of	a message previously sent to
+this server.  The <stored-authentication-value>	is the Stored Authenti-
+cation Value A (as calculated above) for that message.	The <stored-
+authentication-value> is expressed as a	series of 32 hexadecimal digits,
+either lower- or upper-case, transmitted in internet byte order	[RFC-
+????].	This command may be issued at any time once a session is esta-
+blished, as long as there is not a transaction occurring.  Thus, this
+command	is illegal between a MAIL FROM:	command	and the	end of the DATA
+commands and responses.
+
+things to add:
+-- data	to be returned
+-- states to be	returned
+-- format to be	returned
+-- responses to	the verb, 250, 4xx, 5xx
+
+
+other things to	consider:
+-- firewalls? (treat as	gateway	MTAs and let them do chaining?)
+-- affect on SUBMIT? can we ask	MSA to return the A and	B hash?
+-- use message-id directly and require message-id to be	in first 1k of
+message?
+
+
+6.  Examples
+
+     --	examples go here
+
+6.1.  Message Tracking Enabling
+
+
+     S:	220 smtp.example.com ESMTP server ready
+     C:	EHLO example.example.com
+     S:	250-smtp.example.com
+     S:	250 TRACK
+     C:	MAIL FROM:<user@example.com>
+	 TRACKID=1234567890123456789012:12345.54321@example.com:0
+     S:	250 <user@example.com> sender ok
+     C:	RCPT TO:<user2@example.com>
+     S:	25o <user2@example.com>	recipient ok
+     C:	DATA
+     S:	354 okay, send message
+     C:	Message-Id: <12345.54321@example.com>
+     C:	(rest of message here)
+     C:	.
+     S:	250 message accepted
+     C:	QUIT
+     S:	221 goodbye
+
+
+
+Allman,Hansen						        [Page 5]
+
+Internet Draft	    SMTP Message Tracking Extensions	  March	10, 2000
+
+
+6.2.  Message Tracking Request
+
+     S:	220 smtp.example.com ESMTP server ready
+     C:	EHLO example.example.com
+     S:	250-smtp.example.com
+     S:	250 TRACK
+     C:	MTRK 1234567890123456789012:12345.54321@example.com:0
+     S:	-- response to be determined
+
+7.  Security Considerations
+
+     things to add:
+-- text	about no more than a single message can	be lost
+-- man in the middle attack
+-- see RFC 1894	for security considerations on DSNs and	RFC 2298 on MDNs
+
+-- We probably cannot get away with the	following statement:
+
+This RFC does not discuss security issues and is not believed to raise
+any security issues not	already	endemic	in electronic mail and present
+in fully conforming implementations of [RFC821], or otherwise made pos-
+sible by [MIME].
+
+
+8.  References
+
+     [RFC-821] Postel, J., "Simple Mail	Transfer Protocol", STD	10, RFC
+821, University	of Southern California / Information Sciences Institute,
+August 1982.
+
+[RFC-822] Crocker, D., "Standard for the Format	of ARPA	Internet Text
+Messages", STD 11, RFC 822, University of Delaware, August 1982.
+
+[RFC-ESMTP] Klensin, J., Freed,	N., Rose, M., Stefferud, E., and D.
+Crocker, "SMTP Service Extensions", RFC	1651, MCI, Innosoft, Dover Beach
+Consulting, Inc., Network Management Associates, Inc., Silicon Graphics,
+Inc., July 1994.
+
+[RFC-MD5] Rivest, R., "The MD5 Message-Digest Algorithm", RFC 1321,
+April 1992.
+
+[RFC-MODEL] Hansen, T.,	"Message Tracking Models and Requirements", RFC
+????, AT&T Laboratories, ???? 2000.
+
+[RFC-????]  something on internet byte order
+
+
+
+
+
+
+Allman,Hansen						        [Page 6]
+
+Internet Draft	    SMTP Message Tracking Extensions	  March	10, 2000
+
+
+9.  Authors' Addresses
+
+     Eric Allman
+     Sendmail, Inc.
+     street address
+     city, state zip
+
+     Phone: +1
+     E-Mail: eric@sendmail.com
+
+     Tony Hansen
+     AT&T Laboratories
+     Lincroft, NJ 07738
+     USA
+
+     Phone: +1 732 576-3207
+     E-Mail: tony@att.com
+
+10.  Full Copyright Statement
+
+     Copyright (C) The Internet	Society	(1999).	 All Rights Reserved.
+
+     This document and translations of it may be copied	and furnished to
+others,	and derivative works that comment on or	otherwise explain it or
+assist in its implmentation may	be prepared, copied, published and dis-
+tributed, in whole or in part, without restriction of any kind,	provided
+that the above copyright notice	and this paragraph are included	on all
+such copies and	derivative works.  However, this document itself may not
+be modified in any way,	such as	by removing the	copyright notice or
+references to the Internet Society or other Internet organisations,
+except as needed for the purpose of developing Internet	standards in
+which case the procedures for copyrights defined in the	Internet Stan-
+dards process must be followed,	or as required to translate it into
+languages other	than English.
+
+     The limited permissions granted above are perpetual and will not be
+revoked	by the Internet	Society	or its successors or assigns.
+
+     This document and the information contained herein	is provided on
+an "AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
+TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR	IMPLIED, INCLUDING BUT
+NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE	INFORMATION HEREIN WILL
+NOT INFRINGE ANY RIGHTS	OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR
+FITNESS	FOR A PARTICULAR PURPOSE.
+
+     This document expires September 10, 2000.
+
+
+
+
+
+Allman,Hansen						        [Page 7]
+
+Internet Draft	    SMTP Message Tracking Extensions	  March	10, 2000
+
+
+11.  Appendix A	-- Sample Code
+
+     For the sake of illustration, we provide the following sample C
+code for the creation of the saved and transmitted authentication
+strings.  The code is based on MD5 code	as described in	[RFC-MD5].  The
+input is a secret and transaction ID, the output is two	33-byte	strings
+containing the values of the two authentication	strings, encoded as hex
+digits,	and NUL-terminated.
+
+-- I have not yet compiled this	code or	verified that it does indeed
+generate network byte order.
+     /*
+     **	Function: trackauth
+     */
+     #include <md5.h>
+
+     void
+     trackauth(
+		     /*	input parameters ... */
+	 unsigned char*	secret;		    /* pointer to secret */
+	 int secret_len;		    /* length of secret	*/
+	 unsigned char*	transaction_id;	    /* pointer to transaction ID */
+	 int transaction_id_len;	    /* length of transaction ID	*/
+		     /*	output parameters ... */
+	 unsigned char saved_auth_str[33];  /* A: saved	authentication string */
+	 unsigned char trans_auth_str[33];  /* B: transmitted auth. string */
+     )
+     {
+	 MD5_CTX context;		    /* MD5 engine */
+	 unsigned char outbuf[16];	    /* where to	store the context */
+	 register int i, j;		    /* counters	*/
+	 static	char hexdigits[] = "0123456789abcdef";
+
+	 MD5Init(&context);
+	 MD5Update(&context, secret, secret_len);
+	 MD5Update(&context, transaction_id, transaction_id_len);
+	 MD5Final(outbuf, &context);
+	 for (i	= 0, j = 0; i <	16; i++)
+	     {
+	     saved_auth_str[j++] = hexdigits[outbuf[i] & 0xF];
+	     saved_auth_str[j++] = hexdigits[(outbuf[i]	>> 4) &	0xF];
+	     }
+	 saved_auth_str[j] = '\0';
+
+	 MD5Init(&context);
+	 MD5Update(&context, saved_auth_str, 16);
+	 MD5Final(outbuf, &context);
+	 for (i	= 0, j = 0; i <	16; i++)
+
+
+
+Allman,Hansen						        [Page 8]
+
+Internet Draft	    SMTP Message Tracking Extensions	  March	10, 2000
+
+
+	     {
+	     trans_auth_str[j++] = hexdigits[outbuf[i] & 0xF];
+	     trans_auth_str[j++] = hexdigits[(outbuf[i]	>> 4) &	0xF];
+	     }
+	 trans_auth_str[j] = '\0';
+     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Allman,Hansen						        [Page 9]
