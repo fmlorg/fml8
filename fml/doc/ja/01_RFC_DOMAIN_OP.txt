@@ -233,18 +233,9 @@ V.	ドメインとディレクトリ両方を変更したい場合
 	なはずであるということにある。その方がミスが減るだろう。
 
 
-VI.	ml_home_prefix_maps を表示するコマンドを用意する。なんだろう？
+VI.	ml_home_prefix_maps を表示するコマンドを用意
 
-	% makefml ?
-
-	いや、このさい *_maps を表示する汎用コマンドを作るのがいいのかも？
-
-	% makefml listmap $ml_name $map_name
-	% fml $ml_name listmap $map_name
-
-	って、list が、そもそも recipient_maps の中身を表示するものでしたね。
-	引数を拡張するのがいいのかな
-
+	% fml $ml_name list ml_home_prefix
 
 [ケーススタディ]
 
@@ -290,4 +281,4 @@ Q: IPアドレスの変更は?
 	fml-devel の 2003/10末、600 番台あたりの議論を読もう。
 
 ------------------------------------------------
-$FML: 01_RFC_DOMAIN_OP.txt,v 1.4 2003/11/15 02:49:30 fukachan Exp $
+$FML: 01_RFC_DOMAIN_OP.txt,v 1.5 2003/11/16 14:36:30 fukachan Exp $
