@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: ThreadTrack.pm,v 1.5 2001/11/05 14:35:48 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.6 2001/11/06 22:52:27 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -75,6 +75,7 @@ sub run
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
     my $argv    = $curproc->command_line_argv();
+    my $options = $curproc->command_line_options();
     my $command = $argv->[ 0 ] || '';
 
     #  argumente for thread track module
@@ -93,6 +94,10 @@ sub run
     use Mail::ThreadTrack;
     my $thread = new Mail::ThreadTrack $ttargs;
     $thread->set_mode('text');
+
+    if (defined $options->{ f }) {
+	_read_filter_list($thread, $options->{ f });
+    }
 
     $curproc->lock();
 
@@ -125,6 +130,28 @@ sub run
     }
 
     $curproc->unlock();
+}
+
+
+sub _read_filter_list
+{
+    my ($thread, $file) = @_;
+
+    if (-f $file) {
+	use FileHandle;
+	my $fh = new FileHandle $file;
+	if (defined $fh) {
+	    my ($key, $value);
+	    while (<$fh>) {
+		chop;
+		($key, $value) = split(/\s+/, $_, 2);
+		if ($key) {
+		    $thread->add_filter( { $key => $value });
+		}
+	    }
+	    $fh->close();
+	}
+    }
 }
 
 

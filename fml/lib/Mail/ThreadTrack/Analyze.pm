@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Analyze.pm,v 1.9 2001/11/04 04:43:18 fukachan Exp $
+# $FML: Analyze.pm,v 1.10 2001/11/04 06:53:22 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -231,15 +231,23 @@ sub update_thread_status
 	croak("invalid object");
     }
 
+    # filter messages of some class
+    if (defined $self->{ _filterlist }) {
+	if ($self->_is_ignore($msg)) {
+	    $self->log("this thread should be ignored");
+	    $pragma = "close";
+	}
+    }
+
     my $header  = $msg->rfc822_message_header();
     my $textmsg = $msg->get_first_plaintext_message();
     $content    = $textmsg->data_in_body_part();
     $subject    = $header->get('subject') || '';
-    $pragma     = $header->get('x-thread-pragma') || '';
+    $pragma     = $header->get('x-thread-pragma') || $pragma || '';
 
-    if ($content =~ /^\s*close/ || 
-	$subject =~ /^\s*close/ || 
-	$pragma  =~ /close/) {
+    if ($pragma  =~ /close/     ||
+	$content =~ /^\s*close/ || 
+	$subject =~ /^\s*close/) {
 	$self->set_thread_status("closed");
 	$self->_append_thread_status_info("closed");
 	$self->log("thread is closed");
@@ -247,6 +255,32 @@ sub update_thread_status
     else {
 	$self->log("thread status not changed");
     }
+}
+
+
+sub _is_ignore
+{
+    my ($self, $msg) = @_;
+    my ($header, $textmsg, $content);
+    my ($field, $rule);
+    my $filterlist = $self->{ _filterlist };
+
+    $header  = $msg->rfc822_message_header();
+    $textmsg = $msg->get_first_plaintext_message();
+    $content = $textmsg->data_in_body_part();
+
+    # check header
+    while (($field, $rule) = each %$filterlist) {
+	if (defined $header->get($field)) {
+	    my $value = $header->get($field);
+	    if ($ENV{'debug'}) {
+		print STDERR "ignore $field: $value\n" if $value =~ /$rule/m;
+	    }
+	    return 1 if $value =~ /$rule/;
+	}
+    }
+
+    return 0;
 }
 
 
