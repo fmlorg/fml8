@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: summary.pm,v 1.7 2002/04/06 14:46:28 fukachan Exp $
+# $FML: summary.pm,v 1.8 2002/04/07 12:07:34 fukachan Exp $
 #
 
 package FML::Command::User::summary;
@@ -63,10 +63,20 @@ sub need_lock { 1;}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config = $curproc->{ config };
+    my $config       = $curproc->{ config };
+    my $summary_file = $config->{ "summary_file" };
 
-    $command_args->{ _filepath_to_send } = $config->{ "summary_file" };
-    $self->send_file($curproc, $command_args);
+    if (-f $summary_file) {
+	$command_args->{ _filepath_to_send } = $summary_file;
+	$self->send_file($curproc, $command_args);
+    }
+    else {
+	$curproc->reply_message_nl('error.no_such_file',
+				   'summary not found',
+				   {
+				       _arg_file => 'summary',
+				   });
+    }
 }
 
 
