@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.6 2003/12/30 08:22:36 fukachan Exp $
+# $FML: Sequence.pm,v 1.7 2003/12/30 08:24:55 fukachan Exp $
 #
 
 package FML::Article::Sequence;
@@ -42,13 +42,11 @@ This routine uses C<File::Sequence> module.
 # Return Value: NUM(sequence identifier)
 sub increment_id
 {
-    my ($self)  = @_;
-    my $curproc = $self->{ _curproc };
-    my $config  = $curproc->config();
-    my $pcb     = $curproc->pcb();
-
-    # XXX-TODO: sequence_file -> article_sequence_file
-    my $seq_file = $config->{ sequence_file };
+    my ($self)   = @_;
+    my $curproc  = $self->{ _curproc };
+    my $config   = $curproc->config();
+    my $pcb      = $curproc->pcb();
+    my $seq_file = $config->{ article_sequence_file };
 
     $curproc->lock($lock_channel);
 
@@ -93,8 +91,7 @@ sub id
     }
     # processes not Process::Distribute
     else {
-	# XXX-TODO: sequence_file -> article_sequence_file
-	my $seq_file = $config->{ sequence_file };
+	my $seq_file = $config->{ article_sequence_file };
 	my $n        = 0;
 
 	use File::Sequence;
@@ -144,7 +141,7 @@ sub speculate_max_id
 
 	  ENTRY:
 	    while (defined($fn = $dh->read)) {
-		next ENTRY unless $fn =~ /^\d+$/;
+		next ENTRY unless $fn =~ /^\d+$/o;
 
 		use File::Spec;
 		$subdir = File::Spec->catfile($spool_dir, $fn);
@@ -171,7 +168,7 @@ sub speculate_max_id
 
       ENTRY:
 	while (defined($fn = $dh->read)) {
-	    next ENTRY unless $fn =~ /^\d+$/;
+	    next ENTRY unless $fn =~ /^\d+$/o;
 	    $max = $max < $fn ? $fn : $max;
 	}
 
