@@ -1,6 +1,63 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/08/08
+
+   FML::Error 
+	enable real deluser()
+	
+   FML::Credential 
+   FML::Command::{Auth,UserControl}
+   FML::Command::Admin::chaddr
+   FML::Command::User::{chaddr,off,on,subscribe,unsubscribe}
+   FML::Process::{Command,Error,Kernel} 
+	change arguments of credential functions to clarify the target address:
+	e.g. is_member($curproc, $args) -> is_member(addr)
+	
+	modified functions:
+	o is_member()
+	o is_privileged_member()
+	o is_recipient()
+	o match_system_accounts()
+
+2002/08/07
+
+   libexec/error
+	エラーアドレスの自動削除機能を実装
+
+   FML::Error::Cache 
+   FML::Process::Error 
+   FML::Error 
+	enable automatic user removing (prototype)
+	
+   FML::Process::{Kernel,Utils}
+	define $curproc->{ scheduler } not _scheduler
+	define access method scheduler(). 
+	please use it e.g. $curproc->scheduler().
+	
+   FML::Process::Kernel 
+	lock() and unlock() accepts channel as the argument if needed.
+	
+	implemented
+	o is_timeout( $channel )
+	o get_timeout( $channel )
+	o set_timeout( $channel, $time )
+	
+   FML::Process::Error 
+   FML::ErrorAnalyze  (removed)
+	create FML::Error:::with separate clesses for cache manipulation and
+	analyzer.
+	modified to FML::Error::Cache for cache writing.
+
+   FML::Process::Scheduler 
+	$scheduler_queue_dir -> $event_queue_dir
+	
+   Tie::JournaledFile 
+	check the file existence
+	
+   Tie::JournaledDir 
+	bug fix the default day type handling
+	
 2002/08/03
 
    変数
@@ -25,7 +82,7 @@
 	
    FML::Article
    FML::Header
-   FML::Process::Distribute Kernel.pm
+   FML::Process::Distribute Kernel
 	use LogError() if appropriate
 
 2002/07/31
@@ -100,7 +157,7 @@
 2002/07/25
 
    FML::Config
-   File::Sequence Utils.pm
+   File::Sequence Utils
    IO::Adapter::File
    IO::Adapter::AtomicFile
    IO::File::Atomic
@@ -147,15 +204,15 @@
    IO::Adapter の SQL コードを大改定
 
    FML::Mailer
-   FML::Command::Auth UserControl.pm
+   FML::Command::Auth UserControl
    FML::Command::Admin::chaddr
-   FML::Process::Distribute Utils.pm
+   FML::Process::Distribute Utils
    Mail::Delivery::SMTP
 	reconstruct SQL functions in IO::Adapter
 	new IO::Adapter $map, $config;
 
    IO::Adapter
-   IO::Adapter::DBI MySQL.pm
+   IO::Adapter::DBI MySQL
 	reconstruct MySQL functions
 	o get_next_key() works now.
 	o disable some functions once.
@@ -240,13 +297,13 @@
 
    FML::Command::UserControl
    FML::Command::Admin::log
-   FML::Process::Kernel Utils.pm
+   FML::Process::Kernel Utils
    FML::Process::CGI::Kernel
 	define printing style format such as 'text', 'html', ...
 	you can control it by the following access methods,
 	get_print_style() and set_print_style(mode)
 
-   FML::Command::Admin::dir file.pm
+   FML::Command::Admin::dir file
 	use FML::Restriction::
 
    FML::MTAControl::Procmail
@@ -295,7 +352,7 @@
    FML::Command
    FML::Command::UserControl
    FML::Command::User::confirm
-   FML::Process::Command Distribute.pm Kernel.pm
+   FML::Process::Command Distribute Kernel
 	copy message and send it to $maintainer too
 	use reply_message*() with $msg_args to copy the message if needed where
 	$msg_args = { always_cc => $maintainer } or
@@ -323,7 +380,7 @@
 
    FML::MTAControl
    FML::MTAControl::Procmail
-   FML::Command::Admin::newml rmml.pm
+   FML::Command::Admin::newml rmml
 	newml 時に procmail の設定のテンプレートを作る。
 	rmml  時には消す。
 
@@ -361,7 +418,7 @@
    FML::Process::ThreadTrack
 	fix ISA for ->speculate_max_id()
 
-   FML::Process::ConfViewer Spool.pm
+   FML::Process::ConfViewer Spool
 	fix the condition to show help
 
    FML::Process::Error
@@ -382,18 +439,18 @@
   バーチャルドメインサポートの修正、全面的オーバホール
 
    FML::MTAControl
-   FML::Command::Admin::newml rmml.pm
-   FML::MTAControl::Postfix Qmail.pm
+   FML::Command::Admin::newml rmml
+   FML::MTAControl::Postfix Qmail
 	major overhaul
 	o reconstruct architecture
 	o bug fix virtual domain support
 	o sync w:::FML::Process overhaul to bug fix virtual domain support
 
-   FML::Process::Alias Command.pm ConfViewer.pm
-		                            Configure Distribute.pm
-		                            DocViewer Error.pm HTMLify.pm
-		                            Kernel Spool.pm Switch.pm
-		                            ThreadTrack Utils.pm
+   FML::Process::Alias Command ConfViewer
+		                            Configure Distribute
+		                            DocViewer Error HTMLify
+		                            Kernel Spool Switch
+		                            ThreadTrack Utils
    FML::Process::CGI::Kernel
 	major overhaul::delayed loading of *.cf files.  The loading is done
 	within prepare() method now to handle virtual domains properly.
@@ -426,7 +483,7 @@
    FML::Process::CGI::Kernel
 	more defined() checks and sanity check if could
 
-   FML::CGI::Admin::ML Menu.pm User.pm
+   FML::CGI::Admin::ML Menu User
    FML::Process::CGI::Kernel
 	clean up menu, bug fix run_cgi_menu() args
 
@@ -626,7 +683,7 @@
 	install .qmail-do:ma:-$ml for .qmail-do.ma.in-$ml
 
    FML::Command::Admin::newml
-   FML::Process::Configure Utils.pm
+   FML::Process::Configure Utils
 	at the first stage of makefml, care $config and rewrite it, if needed,
 	when we handle virtual domain.
 	implement $curproc->rewrite_config_if_needed() for it.
@@ -651,7 +708,7 @@
    FML::Header::Subject
 	add mime decode for subject
 
-   Mail::Message::Decode Encode.pm
+   Mail::Message::Decode Encode
 	FNF-ify, fix documents and @EXPORTS
 
 2002/05/22
@@ -833,7 +890,7 @@
 	implement message_nl() to separete message converter into natural
 	language and message handling parts
 
-   FML::Process::CGI::Kernel Param.pm
+   FML::Process::CGI::Kernel Param
 	convert exception syntax into the new style. See FNF
 	convert message to natual language if could
 
@@ -893,7 +950,7 @@
 
 2002/04/23
 
-   FML::Process::Distribute Kernel.pm
+   FML::Process::Distribute Kernel
 	fix errro message and enable the rejected message forwarding
 
    FML::Command::Admin::newml
@@ -1089,7 +1146,7 @@
    FML::Filter クラスによるフィンルタリングを有効にする
 	FML::Filter:: のバグ修正
 
-   FML::Process::Distribute Kernel.pm
+   FML::Process::Distribute Kernel
 	enable filtering.
 	implement access methods to control filtering.
 	o $curproc->refuse_further_processing()
@@ -3052,4 +3109,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.92 2002/07/30 04:06:09 fukachan Exp $
+$FML: CHANGES.txt,v 1.93 2002/08/03 10:42:36 fukachan Exp $
