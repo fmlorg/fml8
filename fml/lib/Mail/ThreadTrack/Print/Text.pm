@@ -4,17 +4,48 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Sort.pm,v 1.4 2001/11/10 08:50:41 fukachan Exp $
+# $FML: Text.pm,v 1.3 2001/11/11 00:57:36 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Text;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+use Mail::ThreadTrack::Print::Utils qw(decode_mime_string STR2EUC);
 
 my $is_show_cost_indicate = 0;
 
 my $format = "%-20s %10s %5s %8s %s\n";
+
+
+# Descriptions: show articles as HTML in this thread
+#    Arguments: $self $str
+# Side Effects: none
+# Return Value: none
+sub show_articles_in_thread
+{
+    my ($self, $thread_id) = @_;
+    my $mode      = $self->get_mode || 'text';
+    my $config    = $self->{ _config };
+    my $spool_dir = $config->{ spool_dir };
+    my $articles  = $self->{ _hash_table }->{ _articles }->{ $thread_id };
+    my $wh        = $self->{ _fd } || \*STDOUT;
+
+    use FileHandle;
+    if (defined($articles) && defined($spool_dir) && -d $spool_dir) {
+	my $s = '';
+	for (split(/\s+/, $articles)) {
+	    my $file = File::Spec->catfile($spool_dir, $_);
+	    my $fh   = new FileHandle $file;
+	    while (defined($_ = $fh->getline())) {
+		next if 1 .. /^$/;
+		$s = STR2EUC($_);
+		print $wh $s;
+	    }
+	    $fh->close;
+	}
+    }
+}
 
 
 # Descriptions: show guide line
