@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Print.pm,v 1.22 2002/03/31 01:59:01 fukachan Exp $
+# $FML: Print.pm,v 1.23 2002/03/31 02:25:44 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -266,7 +266,7 @@ sub _do_review
     my $is_first  = 0;
 
     # translate the given parameter (MH style)
-    # get HASH ARRAY of specified range
+    # get ARRAY_REF of specified range
     use Mail::Message::MH;
     my $range = Mail::Message::MH->expand($str, $min, $max);
 
