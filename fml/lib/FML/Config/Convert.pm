@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Convert.pm,v 1.7 2002/05/24 06:36:02 fukachan Exp $
+# $FML: Convert.pm,v 1.8 2002/06/01 05:09:24 fukachan Exp $
 #
 
 
@@ -81,13 +81,14 @@ sub convert
 sub convert_file
 {
    my ($src, $dst, $config) = @_;
+   my $dst_tmp = $dst .".". $$;
 
-    use FileHandle;
-    my $in  = new FileHandle $src;
-    my $out = new FileHandle "> $dst.$$";
+   use FileHandle;
+   my $in  = new FileHandle $src;
+   my $out = new FileHandle "> " . $dst_tmp;
 
     if (defined $in && defined $out) {
-	chmod 0644, "$dst.$$";
+	chmod 0644, $dst_tmp;
 
 	eval q{ convert($in, $out, $config);};
 	croak($@) if $@;
@@ -95,7 +96,7 @@ sub convert_file
 	$out->close();
 	$in->close();
 
-	rename("$dst.$$", $dst) || croak("fail to rename $dst");
+	rename($dst_tmp, $dst) || croak("fail to rename $dst");
     }
     else {
 	croak("fail to open $src") unless defined $in;
@@ -107,7 +108,7 @@ sub convert_file
 # Descriptions: replace __variable__ with real value in $config
 #    Arguments: STR($buf) HASH_REF($config)
 # Side Effects: buffer replacement
-# Return Value: STR($buf)
+# Return Value: STR($buf) HASH_REF($config)
 sub _replace
 {
     my ($buf, $config) = @_;
