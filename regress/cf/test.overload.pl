@@ -1,6 +1,6 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 #
-# $FML: test.overload.pl,v 1.1 2001/08/24 11:55:55 fukachan Exp $
+# $FML: test.overload.pl,v 1.2 2002/04/18 14:18:09 fukachan Exp $
 #
 
 use strict;
@@ -25,7 +25,7 @@ for my $f (@ARGV) {
 
 $prev_x[ 0 ] =~ s/xxx/yyy/;
 
-if ($prev_x[ 0 ] eq $prev_x[ 1]) {
+if ($prev_x[ 0 ] eq $prev_x[ 1 ]) {
     print STDERR "ok\n";
 }
 else {
