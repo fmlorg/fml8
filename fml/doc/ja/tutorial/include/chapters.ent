@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.58 2002/12/25 11:50:43 fukachan Exp $
+	$FML: chapters.ent,v 1.59 2002/12/26 15:38:00 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -145,7 +145,10 @@
 
 
 <!-- misc -->
-<!entity chapter.threadtrack.usage	SYSTEM "threadtrack/chapter.sgml">
+<!entity chapter.threadtrack		SYSTEM "threadtrack/chapter.sgml">
+<!entity sect.threadtrack.states	SYSTEM "threadtrack/states.sgml">
+<!entity sect.threadtrack.model		SYSTEM "threadtrack/model.sgml">
+<!entity sect.threadtrack.db		SYSTEM "threadtrack/db.sgml">
 <!entity chapter.threadtrack.tools	SYSTEM "threadtrack/tools.sgml">
 
 

@@ -1,9 +1,9 @@
 <!--
-   $FML: chapter.sgml,v 1.3 2002/04/01 23:41:06 fukachan Exp $
+   $FML: chapter.sgml,v 1.4 2002/07/02 10:39:38 fukachan Exp $
 -->
 
 
-<chapter id="threadtrack.fml.usage">
+<chapter id="threadtrack">
 	<title>
 	ＭＬの話の筋(スレッド)の追跡 (Thread Tracking System ?)
 	</title>
@@ -40,148 +40,8 @@ Problem Report System のまとめ
 </para>
 
 
-<sect1>
-	<title>
-	ＭＬの状態遷移
-	</title>
-
-<para>
-趣味の話をし合うＭＬは別として、
-多くの場合、『ＭＬにメールを投げる』とは
-「こういう問題を解決したい」
-とか
-「こういう問題があるけど、解決法が分からないから知りたい」
-ということであって、その意味で problem report といえます。
-そして、それに対してフォローアップがなされ、
-解決策が示されたり、未解決のまま放置されたりすることになります。
-</para>
-
-<para>
-これをモデル化すると、
-<screen>
-open    メールが投稿された時
-対応中  誰か返事をしたら、対応中
-closed  この問題について解決されたと判断された時
-
-メールの投稿  →   open
-                    ↓
-フォローアップ→  対応中
-                    ↓
-終りと判断        closed
-</screen>
-判断はモデレータなりを任命する必要があります。
-</para>
-
-<para>
-この点が最もつらい
-	<footnote>
-	<para>
-	どうしてもこれは必要で結局いつものように『最後は人』です。
-	つまり運用に携わる人間が一番大事だということです。
-	これは普遍的な命題です。
-	</para>
-	</footnote>
-ところです。
-誰か(人間)が判断する必要があるわけですし、
-その人は対象のＭＬでの会話の内容についてかなり理解を
-している必要もあります。
-</para>
-
-<para>
-日本語のあ・うんの呼吸で話が終ったと認定できればよいのですが
-それほど簡単ではありません。
-もっとも適当なキーワード「終了とかクローズします」などを
-基準にして判断することはできなくはないでしょう。
-これは将来の TODO といえるでしょう。
-</para>
-
-<para>
-終了のオペレーションは WWW かメールで行なうことを想定しています。
-つまりブラウザの上で操作するか、
-メールの subject や本文に終了を意味する
-キーワードを送り込むことで行ないます。
-</para>
-
-</sect1>
-
-
-
-<!-- &fmldevel; モデル -->
-
-<sect1>
-	<title>
-	&fmldevel; (minimal_states モデル版)チケットシステム
-	</title>
-
-
-<sect2>
-	<title>
-	状態遷移
-	</title>
-
-<para>
-   open
-	チケット番号らしきものを含まないメールが投稿されたら
-	自動的に open
-</para>
-
-<para>
-  going
-	誰か返事をしたら、対応中
-</para>
-
-<para>
-  closed
-	close 宣言がなされたら、クローズ
-</para>
-
-</sect2>
-
-<sect2>
-	<title>
-	close 宣言は以下のいずれかの実行である。
-	</title>
-
-<para>
-1)	Subject: が close ではじまる
-</para>
-
-<para>
-   2)	メール本文の行頭が close ではじまる。
-		先頭の空白は無視されます。
-		正規表現では \s*close です。
-
-		multipart メールの場合は最初の text/plain パートの
-		行頭が close で始まる場合です。
-</para>
-
-<para>
-   3)	メールヘッダで X-Ticket-Pragma: close が指定されていた時
-</para>
-
-</sect2>
-
-
-<sect2>
-	<title>
-	特別なヘッダ
-	</title>
-
-<para>
-X-Ticket-Pragma: ignore
-
-	新たにチケットを割り当てない
-	すべてのチケットに関する操作を抑制する。
-</para>
-
-<para>
-X-Ticket-Pragma: close
-
-	チケットをクローズする。
-</para>
-
-</sect2>
-
-</sect1>
+&sect.threadtrack.states;
+&sect.threadtrack.model;
+&sect.threadtrack.db;
 
 </chapter>

@@ -1,0 +1,78 @@
+<!--
+   $FML$
+-->
+
+<sect1 id="threadtrack.db">
+	<title>
+	スレッドシステムのデータベース
+	</title>
+
+<para>
+以下のようなデータベース群から
+スレッドシステムのデータベースは構成されています。
+<screen>
+ファイル名      内容の例
+----------------------------------------------
+status		open / close
+ml_name		elena
+article_id	100
+thread_id	elena/100
+from		ヘッダの From: (めーる＠アドレスの形式)
+sender		ヘッダの Sender: (めーる＠アドレスの形式)
+x_sender	ヘッダの X-Sender: (めーる＠アドレスの形式)
+</screen>
+たとえば、BSD 上であれば status.db といった .db のファイル群
+のセットとなるわけです。
+</para>
+
+<para>
+これらのファイル群は各ＭＬのホームディレクトリではなく、
+<screen>
+/var/spool/ml/@db@/ＭＬ名/
+</screen>
+というディレクトリに作られています。
+これは、ＭＬが相互に参照しあえる拡張機能を想定しているためです。
+たとえば、「support/100 の記事は sales/98 を出発点としている」
+といった情報を自動的にＭＬが教えてくれるような機能を想定しています。
+残念ながら、現在のところは未実装です。
+</para>
+
+<para>
+いずれの .db も article_id か thread_id が primary key です。
+具体的に書くと以下のようになります。
+<screen>
+[thread .db]
+
+	aritcle_id	=&gt;	thread_id
+
+[article .db]
+
+	thread_id	=&gt;	article_ids
+
+	Example:	elena/100	=&gt; 100 101 103 105
+
+[date .db]
+
+	aritcle_id	=&gt;	unix_time
+
+[sender .db]
+
+	article_id	=&gt;	from
+
+[message_id .db]
+
+	mesasge_id	=&gt;	thread_id
+
+[status .db]
+
+	thread_id	=&gt;	status
+
+[index .db]
+
+	thread_id	=&gt;	"$ml_name " *
+
+	Example: support/100 =&gt; support sales
+</screen>
+</para>
+
+</sect1>
