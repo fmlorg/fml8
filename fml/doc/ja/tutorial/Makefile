@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.6 2001/04/23 17:28:10 fukachan Exp $
+# $FML: Makefile,v 1.7 2001/04/24 08:08:01 fukachan Exp $
 #
 
 TMP_DIR    = /tmp
@@ -23,3 +23,6 @@ export: html
 	rsync -a ../../en/figures/*.gif $(TARGET_DIR)/
 	chmod 755 $(TARGET_DIR)
 
+
+scan:
+	@ cvs -n update 2>&1 |grep -v : || echo ''
