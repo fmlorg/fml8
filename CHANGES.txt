@@ -1,6 +1,60 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/07/29
+
+   変数
+	nuke database_* sql_*
+	
+   FML::Process::Error 
+	bug fix::resolve_ml_specific_variables() and load_config_files()
+	add a few function prototypes
+
+2002/07/28
+
+   変数
+	$newml_command_init_dirs
+		rename::init_config_dir_list -> newml_command_init_dirs
+
+		added $shared_db_dir $var_dir $db_dir $lock_dir
+		$tmp_dir $spool_dir
+	
+	member_maps = $primary_member_map (nuke members-admin)
+
+2002/07/26
+
+   モデレータモードの予備作業
+	moderator の maps を定義する。 
+		members-moderator
+		recipients-moderator
+
+	{add,del}moderator コマンドを作成
+
+   FML::Command::Admin::{add,del}admin 
+		members-admin
+		recipients-admin
+	の両方をアップデートする（けど、recipients の方は使わない)。
+
+2002/07/25
+
+   FML::Config 
+   File::Sequence Utils.pm 
+   IO::Adapter::File 
+   IO::Adapter::AtomicFile 
+   IO::File::Atomic 
+	rename::IO::File::Atomic -> IO::Adapter::AtomicFile
+	
+   IO::Adapter の改良継続中
+
+   FML::Process::Command 
+	improve error messages
+	
+   FML::Process::Kernel 
+	improve log messages
+	
+   IO::Adapter::File 
+	bug fix so that getline() returns undef if not opened
+	
 2002/07/24
 
    IO::Adapter 
@@ -11,6 +65,7 @@
    IO::Adapter::DBI 
 	add missing open(), close()
 	removed replace()
+	implement getline()
 	
    IO::Adapter::File
 	removed replace()
@@ -2935,4 +2990,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.90 2002/07/23 15:16:39 fukachan Exp $
+$FML: CHANGES.txt,v 1.91 2002/07/24 13:50:05 fukachan Exp $
