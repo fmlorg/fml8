@@ -13,6 +13,8 @@ package FML::Article;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
+use FML::Log qw(Log);
+
 require Exporter;
 
 
@@ -128,6 +130,7 @@ sub spool_in
 	    print $fh "\n";
 	    $curproc->{ article }->{ body }->print($fh);
 	    $fh->close;
+	    Log("Article $id");
 	}
     }
     else {
