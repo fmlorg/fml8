@@ -73,3 +73,26 @@ sub reject_japanese_command_syntax
 	}
     }
 }
+
+
+sub reject_invalid_message_id
+{
+
+
+}
+
+
+
+# [VIRUS CHECK against a class of M$ products]
+# Even if Multipart, evaluate all blocks agasint virus checks.
+sub reject_virus_message
+{
+
+	&use('viruschk');
+	my ($xr);
+	$xr = &VirusCheck(*e);
+
+}
+
+
+1;

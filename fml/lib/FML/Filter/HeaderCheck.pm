@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: HeaderCheck.pm,v 1.1.1.1 2001/03/28 15:13:31 fukachan Exp $
+# $FML: HeaderCheck.pm,v 1.1 2001/03/30 09:18:43 fukachan Exp $
 #
 
 package FML::Filter::HeaderCheck;
@@ -58,6 +58,17 @@ Filter rules are applied to the incoming message from STDIN,
 sub header_check
 {
     my ($self, $curproc, $args) = @_;
+}
+
+
+sub is_valid_message_id
+{
+    my ($self, $curproc, $args) = @_;
+
+    if ($e{'h:message-id:'} !~ /\@/) { 
+	$r = "invalid Message-Id";
+	return 0;
+    }
 }
 
 
