@@ -272,9 +272,14 @@ sub _ticket_check
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
 	my $ticket = $pkg->new($curproc, $args);
-	$ticket->assign($curproc, $args);
-	$ticket->update_status($curproc, $args);
-	$ticket->update_db($curproc, $args);
+	if (defined $ticket) {
+	    $ticket->assign($curproc, $args);
+	    $ticket->update_status($curproc, $args);
+	    $ticket->update_db($curproc, $args);
+	}
+	else {
+	    Log("creating ticket object failed");
+	}
     }
     else {
 	Log($@);
