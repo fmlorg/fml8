@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.73 2003/05/31 08:51:08 fukachan Exp $
+	$FML: chapters.ent,v 1.74 2003/06/15 05:23:12 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -74,96 +74,99 @@
 <!-- フィルタ -->
 <!entity chapter.customize.filter    SYSTEM "customize/filter.sgml">
 <!entity recipe.filter.notice        SYSTEM "customize/recipe.filter.notice.sgml">
+<!entity chapter.filter              SYSTEM "internals/filter.sgml">
+<!entity var.filter.rules            SYSTEM "variables/filter.rules.sgml">
+<!entity var.filter.size             SYSTEM "variables/filter.size.sgml">
 
 
-
-<!entity sect.usage.guide           SYSTEM "usage/guide.sgml">
-<!entity sect.usage.subscribe       SYSTEM "usage/subscribe.sgml">
-<!entity sect.usage.unsubscribe     SYSTEM "usage/unsubscribe.sgml">
-<!entity sect.usage.get             SYSTEM "usage/get.sgml">
-<!entity sect.usage.help            SYSTEM "usage/help.sgml">
-<!entity sect.usage.post            SYSTEM "usage/post.sgml">
-<!entity sect.usage.command         SYSTEM "usage/command.sgml">
-<!entity sect.usage.procmail        SYSTEM "setup/procmail.sgml">
-<!entity sect.usage.makefml         SYSTEM "usage/makefml.sgml">
-<!entity sect.usage.fml             SYSTEM "usage/fml.sgml">
-<!entity sect.usage.fmladdr         SYSTEM "usage/fmladdr.sgml">
-<!entity sect.usage.fmlalias        SYSTEM "usage/fmlalias.sgml">
-<!entity sect.usage.fmlconf         SYSTEM "usage/fmlconf.sgml">
-<!entity sect.usage.fmldoc          SYSTEM "usage/fmldoc.sgml">
-<!entity sect.usage.fmlthread       SYSTEM "usage/fmlthread.sgml">
-<!entity sect.usage.fmlhtmlify      SYSTEM "usage/fmlhtmlify.sgml">
-<!entity sect.usage.fmlsummary      SYSTEM "usage/fmlsummary.sgml">
+<!entity sect.usage.guide            SYSTEM "usage/guide.sgml">
+<!entity sect.usage.subscribe        SYSTEM "usage/subscribe.sgml">
+<!entity sect.usage.unsubscribe      SYSTEM "usage/unsubscribe.sgml">
+<!entity sect.usage.get              SYSTEM "usage/get.sgml">
+<!entity sect.usage.help             SYSTEM "usage/help.sgml">
+<!entity sect.usage.post             SYSTEM "usage/post.sgml">
+<!entity sect.usage.command          SYSTEM "usage/command.sgml">
+<!entity sect.usage.procmail         SYSTEM "setup/procmail.sgml">
+<!entity sect.usage.makefml          SYSTEM "usage/makefml.sgml">
+<!entity sect.usage.fml              SYSTEM "usage/fml.sgml">
+<!entity sect.usage.fmladdr          SYSTEM "usage/fmladdr.sgml">
+<!entity sect.usage.fmlalias         SYSTEM "usage/fmlalias.sgml">
+<!entity sect.usage.fmlconf          SYSTEM "usage/fmlconf.sgml">
+<!entity sect.usage.fmldoc           SYSTEM "usage/fmldoc.sgml">
+<!entity sect.usage.fmlthread        SYSTEM "usage/fmlthread.sgml">
+<!entity sect.usage.fmlhtmlify       SYSTEM "usage/fmlhtmlify.sgml">
+<!entity sect.usage.fmlsummary       SYSTEM "usage/fmlsummary.sgml">
 
 
 <!-- コマンド -->
-<!entity chapter.command          SYSTEM "command/chapter.sgml">
-<!entity sect.command.dataflow    SYSTEM "command/dataflow.sgml">
-<!entity sect.command.internal    SYSTEM "command/internal.sgml">
-<!entity sect.command.extension   SYSTEM "command/extension.sgml">
-<!entity sect.command.module      SYSTEM "command/module.sgml">
+<!entity chapter.command             SYSTEM "command/chapter.sgml">
+<!entity sect.command.dataflow       SYSTEM "command/dataflow.sgml">
+<!entity sect.command.internal       SYSTEM "command/internal.sgml">
+<!entity sect.command.extension      SYSTEM "command/extension.sgml">
+<!entity sect.command.module         SYSTEM "command/module.sgml">
 
 
 <!-- う〜ん、分類は…？;-) -->
-<!entity chapter.directory        SYSTEM "internals/directory.sgml">
-<!entity chapter.db               SYSTEM "internals/db.sgml">
-<!entity chapter.db.modules       SYSTEM "internals/db_modules.sgml">
-<!entity chapter.dbms             SYSTEM "internals/dbms.sgml">
-<!entity chapter.hook             SYSTEM "internals/hook.sgml">
-<!entity chapter.policy           SYSTEM "policy.sgml">
+<!entity chapter.directory           SYSTEM "internals/directory.sgml">
+<!entity chapter.db                  SYSTEM "internals/db.sgml">
+<!entity chapter.db.modules          SYSTEM "internals/db_modules.sgml">
+<!entity chapter.dbms                SYSTEM "internals/dbms.sgml">
+<!entity chapter.hook                SYSTEM "internals/hook.sgml">
+<!entity chapter.policy              SYSTEM "policy.sgml">
 
-<!entity chapter.filename         SYSTEM "internals/filename.sgml">
-<!entity chapter.filter           SYSTEM "internals/filter.sgml">
-<!entity chapter.userctl          SYSTEM "internals/userctl.sgml">
+<!entity chapter.filename            SYSTEM "internals/filename.sgml">
+
+<!entity chapter.userctl             SYSTEM "internals/userctl.sgml">
+
 
 
 <!-- 配送 -->
-<!entity chapter.delivery         SYSTEM "delivery/chapter.sgml">
-<!entity sect.mailqueue           SYSTEM "delivery/queue.sgml">
+<!entity chapter.delivery            SYSTEM "delivery/chapter.sgml">
+<!entity sect.mailqueue              SYSTEM "delivery/queue.sgml">
 
 <!-- まとめおくり -->
-<!entity chapter.digest           SYSTEM "digest/chapter.sgml">
+<!entity chapter.digest              SYSTEM "digest/chapter.sgml">
 
 
-<!entity recipe.delivery.forward  SYSTEM "delivery/recipe.forward.sgml">
+<!entity recipe.delivery.forward     SYSTEM "delivery/recipe.forward.sgml">
 
 
 <!-- 内部構造 -->
-<!entity chapter.bootloader       SYSTEM "internals/bootloader.sgml">
-<!entity sect.main.cf             SYSTEM "internals/main.cf.sgml">
-<!entity chapter.internal.cgi	  SYSTEM "internals/cgi.sgml">
-<!entity chapter.programingstyle  SYSTEM "internals/style.sgml">
-<!entity chapter.design           SYSTEM "internals/design.sgml">
-<!entity chapter.config.cf        SYSTEM "internals/config.cf.sgml">
-<!entity chapter.restriction      SYSTEM "internals/restriction.sgml">
-<!entity chapter.credential       SYSTEM "internals/credential.sgml">
-<!entity chapter.lock             SYSTEM "internals/lock.sgml">
-<!entity chapter.io.abstraction   SYSTEM "internals/io_abstraction.sgml">
+<!entity chapter.bootloader          SYSTEM "internals/bootloader.sgml">
+<!entity sect.main.cf                SYSTEM "internals/main.cf.sgml">
+<!entity chapter.internal.cgi	     SYSTEM "internals/cgi.sgml">
+<!entity chapter.programingstyle     SYSTEM "internals/style.sgml">
+<!entity chapter.design              SYSTEM "internals/design.sgml">
+<!entity chapter.config.cf           SYSTEM "internals/config.cf.sgml">
+<!entity chapter.restriction         SYSTEM "internals/restriction.sgml">
+<!entity chapter.credential          SYSTEM "internals/credential.sgml">
+<!entity chapter.lock                SYSTEM "internals/lock.sgml">
+<!entity chapter.io.abstraction      SYSTEM "internals/io_abstraction.sgml">
 
-<!entity chapter.virtual          SYSTEM "virtual/chapter.sgml">
+<!entity chapter.virtual             SYSTEM "virtual/chapter.sgml">
 
-<!-- variables -->
-<!entity table.list.variables     SYSTEM "internals/list.variables.sgml">
-<!entity table.class.variables    SYSTEM "internals/class.variables.sgml">
+<!-- 変数一覧 -->
+<!entity var.table.list.variables    SYSTEM "variables/list.sgml">
+<!entity var.table.class.variables   SYSTEM "variables/class.sgml">
 
 <!-- -->
-<!entity chapter.struct           SYSTEM "internals/struct.sgml">
-<!entity struct.curproc           SYSTEM "internals/CURPROC.sgml">
+<!entity chapter.struct              SYSTEM "internals/struct.sgml">
+<!entity struct.curproc              SYSTEM "internals/CURPROC.sgml">
 
 
 
 <!-- メッセージの取り扱い -->
-<!entity chapter.message          SYSTEM "message/chapter.sgml">
-<!entity sect.message.nl          SYSTEM "message/language.sgml">
-<!entity sect.message.discuss     SYSTEM "message/discussion.sgml">
+<!entity chapter.message             SYSTEM "message/chapter.sgml">
+<!entity sect.message.nl             SYSTEM "message/language.sgml">
+<!entity sect.message.discuss        SYSTEM "message/discussion.sgml">
 
 
 <!-- 開発 -->
-<!entity chapter.cvstree          SYSTEM "devel/cvstree.sgml">
-<!entity chapter.cvstags          SYSTEM "devel/cvstags.sgml">
-<!entity chapter.docbook          SYSTEM "devel/docbook.sgml">
-<!entity chapter.inet6            SYSTEM "devel/inet6.sgml">
-<!entity chapter.program.create   SYSTEM "devel/create_program.sgml">
+<!entity chapter.cvstree             SYSTEM "devel/cvstree.sgml">
+<!entity chapter.cvstags             SYSTEM "devel/cvstags.sgml">
+<!entity chapter.docbook             SYSTEM "devel/docbook.sgml">
+<!entity chapter.inet6               SYSTEM "devel/inet6.sgml">
+<!entity chapter.program.create      SYSTEM "devel/create_program.sgml">
 
 
 <!-- misc -->

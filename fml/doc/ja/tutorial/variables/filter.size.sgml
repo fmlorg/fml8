@@ -1,0 +1,155 @@
+<para>
+<screeen>
+
+# Descriptions: ヘッダサイズの上限のデフォルト値
+#      History:
+#        Value: NUM
+#     Examples: 102400
+default_mail_header_size_limit	=	102400
+
+
+# Descriptions: 本文サイズの上限のデフォルト値
+#      History:
+#        Value: NUM
+#     Examples: 10240000
+default_mail_body_size_limit	=	10240000
+
+
+# Descriptions: 入力されるメールを最大何通キャッシュするか
+#      History: $NUM_LOG_MAIL
+#        Value: NUM
+#     Examples: 128
+incoming_mail_cache_size	=	128
+
+
+# Descriptions: 出力(配送)されるメールを最大何通キャッシュするか
+#      History: $NUM_LOG_MAIL
+#        Value: NUM
+#     Examples: 128
+outgoing_mail_cache_size	=	128
+
+
+# Descriptions: 投稿された記事のヘッダの上限値
+#               (MTA から fml が受けとる際の記事のヘッダサイズの上限値)
+#      History:
+#        Value: NUM
+#     Examples: 102400
+incoming_article_header_size_limit	= $default_mail_header_size_limit
+
+
+# Descriptions: 投稿された記事の本文の上限値
+#               (MTA から fml が受けとる際の記事の本文サイズの上限値)
+#      History:
+#        Value: NUM
+#     Examples: 10240000
+incoming_article_body_size_limit	= $default_mail_body_size_limit
+
+
+# Descriptions: 投稿された記事の(配送時の)ヘッダの上限値
+#               (fml から MTA へ渡す際の記事のヘッダサイズの上限値)
+#		(ごめん、この機能は未実装;-)
+#      History:
+#        Value: NUM
+#     Examples: 102400
+outgoing_article_header_size_limit	= $default_mail_header_size_limit
+
+
+# Descriptions: 投稿された記事の(配送時の)本文の上限値
+#               (fml から MTA へ渡す際の記事の本文サイズの上限値)
+#		(ごめん、この機能は未実装;-)
+#        Value: NUM
+#     Examples: 10240000
+outgoing_article_body_size_limit	= $default_mail_body_size_limit
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+article_filter_functions	=	article_size_filter
+					article_header_filter
+					article_non_mime_filter
+					article_mime_component_filter
+					article_text_plain_filter
+
+
+# Descriptions: サイズ情報を根拠にしたフィルタリングをするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_article_size_filter	=	yes
+
+
+# Descriptions: フィルタリングのルール。
+#               どのルールにもマッチしないなら、記事の投稿は認められる。
+#      History:
+#        Value:
+#     Examples:
+article_size_filter_rules	=	check_header_size
+					check_body_size
+					permit
+
+
+# Descriptions: MTA から fml が受けとる際のコマンドメールのヘッダサイズの上限値
+#      History:
+#        Value: NUM
+#     Examples: 102400
+incoming_command_mail_header_size_limit	= $default_mail_header_size_limit
+
+
+# Descriptions: MTA から fml が受けとる際のコマンドメールの本文サイズの上限値
+#      History:
+#        Value: NUM
+#     Examples: 10240000
+incoming_command_mail_body_size_limit	= $default_mail_body_size_limit
+
+
+# Descriptions: fml から MTA へ渡す際のコマンドメールのヘッダサイズの上限値
+#		(ごめん、この機能は未実装;-)
+#      History:
+#        Value: NUM
+#     Examples: 102400
+outgoing_command_mail_header_size_limit	= $default_mail_header_size_limit
+
+
+# Descriptions: fml から MTA へ渡す際のコマンドメールの本文サイズの上限値
+#		(ごめん、この機能は未実装;-)
+#      History:
+#        Value: NUM
+#     Examples: 10240000
+outgoing_command_mail_body_size_limit	= $default_mail_body_size_limit
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+command_mail_filter_functions	=	command_mail_size_filter
+
+
+# Descriptions: サイズ情報を根拠にしたフィルタリングをするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_command_mail_size_filter	=	yes
+
+
+# Descriptions: フィルタリングのルール。
+#               どのルールにもマッチしないなら、コマンドメールは認められる。
+#      History:
+#        Value:
+#     Examples:
+command_mail_size_filter_rules	=	check_header_size
+					check_body_size
+					check_command_limit
+					check_line_length_limit
+					permit
+
+
+# Descriptions: キャッシュのサイズ
+#		mode が temporal なら日数だ。
+#      History: none
+#        Value: number
+#     Examples: 
+error_analyzer_cache_size		=	14
+
+</screeen>
+</para>

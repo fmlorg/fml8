@@ -117,6 +117,7 @@ chaddr {
 command {
 
    command_mail { 
+    ?     $command_mail_line_length_limit
           $use_command_mail_program
    }
 
@@ -131,9 +132,17 @@ command {
           $use_command_mail_filter_reject_notice
    }
 
+   command_mail_junk_command { 
+    ?     $command_mail_junk_command_limit
+   }
+
    command_mail_size_filter { 
           $command_mail_size_filter_rules
           $use_command_mail_size_filter
+   }
+
+   command_mail_valid_command { 
+    ?     $command_mail_valid_command_limit
    }
 
    command_restrictions { 

@@ -275,13 +275,42 @@ maintainer
 </row>
 <row>
 <entry>
+command_mail_junk_command_limit</entry>
+<entry>
+ メール一通あたりに含まれているコマンドの総数の上限。</entry>
+<entry>
+100
+   </entry>
+</row>
+<row>
+<entry>
+command_mail_line_length_limit</entry>
+<entry>
+ 一行あたりのコマンドの長さの上限</entry>
+<entry>
+128
+   </entry>
+</row>
+<row>
+<entry>
 command_mail_size_filter_rules</entry>
 <entry>
  フィルタリングのルール。</entry>
 <entry>
 check_header_size
    check_body_size
+   check_command_limit
+   check_line_length_limit
    permit
+   </entry>
+</row>
+<row>
+<entry>
+command_mail_valid_command_limit</entry>
+<entry>
+ メール一通あたりに含まれているコマンドの総数の上限。</entry>
+<entry>
+100
    </entry>
 </row>
 <row>

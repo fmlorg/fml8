@@ -1,5 +1,5 @@
 <!--
-   $FML: filter.sgml,v 1.3 2003/04/15 14:51:41 fukachan Exp $
+   $FML: filter.sgml,v 1.4 2003/06/19 16:24:53 fukachan Exp $
 -->
 
 <chapter id="internals.filter">
@@ -68,7 +68,7 @@ use_機能A   = yes
 </screen>
 </para>
 
-&table.list.filter.rules;
+&var.filter.rules;
 
 </sect1>
 
@@ -89,7 +89,7 @@ use_機能A   = yes
 parse() する時にサイズもはかっているので、このフィルタの実装は簡単だ。
 </para>
 
-&table.list.filter.size;
+&var.filter.size;
 
 </sect1>
 

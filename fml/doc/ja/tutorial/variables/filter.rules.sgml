@@ -1,0 +1,187 @@
+<para>
+<screeen>
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+use_article_filter	= 	yes
+ 
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+article_filter_functions	=	article_size_filter
+					article_header_filter
+					article_non_mime_filter
+					article_mime_component_filter
+					article_text_plain_filter
+
+
+# Descriptions: サイズ情報を根拠にしたフィルタリングをするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_article_size_filter	=	yes
+
+
+# Descriptions: フィルタリングのルール。
+#               どのルールにもマッチしないなら、記事の投稿は認められる。
+#      History:
+#        Value:
+#     Examples:
+article_size_filter_rules	=	check_header_size
+					check_body_size
+					permit
+
+
+# Descriptions: ヘッダ情報を根拠にしたフィルタリングをするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_article_header_filter		=	yes
+
+
+# Descriptions: フィルタリングのルール。
+#               どのルールにもマッチしないなら、記事の投稿は認められる。
+#      History:
+#        Value:
+#     Examples:
+article_header_filter_rules		=	check_message_id
+						check_date
+						permit
+
+
+# Descriptions: とりあえず、だみ〜
+#      History: 4.0 の content filter で、!MIME にあたる部分
+#        Value: yes / no
+#     Examples:
+use_article_non_mime_filter		=	yes
+
+
+# Descriptions: とりあえず、だみ〜
+#      History:
+#        Value: permit / reject
+#     Examples: permit
+article_non_mime_filter_rules		=	permit
+
+
+# Descriptions: MIME の構造に基づいたフィルタを行なう
+#      History: 4.0 の content filter 相当
+#        Value: yes / no
+#     Examples:
+use_article_mime_component_filter	=	yes
+
+
+# Descriptions: ファイル名
+#      History: 4.0 の @CONTENT_HANDLER 相当
+#        Value:
+#     Examples:
+article_mime_component_filter_rules	= $fml_config_dir/mime_component_filter
+
+
+# Descriptions: 先頭の text/plain 部分に対するフィルタ。
+#		簡単なシンタックスチェック
+#      History: 4.0 の EnvelopeFilter 相当
+#        Value: yes / no
+#     Examples:
+use_article_text_plain_filter		=	yes
+
+
+# Descriptions: テキスト部分へのフィルタリングのルール。
+#               正確には弾くべき特別なもののルール(マッチしないなら通す)
+#      History:
+#         Note: permit by default 
+#        Value:
+#     Examples:
+article_text_plain_filter_rules	=	reject_not_iso2022jp_japanese_string
+					reject_null_mail_body
+					reject_one_line_message
+					reject_old_fml_command_syntax
+					reject_invalid_fml_command_syntax
+					reject_japanese_command_syntax
+					reject_ms_guid
+					permit
+
+
+# Descriptions: フィルタで弾かれたことを教える
+#      History: 4.0 ではハードコードだったような…
+#        Value: yes / no
+#     Examples: yes
+use_article_filter_reject_notice	=	yes
+
+
+# Descriptions: エラーのお知らせの受信者
+#      History: 4.0 ではハードコードだったような…
+#        Value: maintainer | sender
+#     Examples: maintainer sender
+article_filter_reject_notice_recipients	=	maintainer
+						sender
+
+
+# Descriptions: 弾いたメールをどのようにフォワードするか？
+#               ウィルスなどを考慮すると、文字列がいいとおもう
+#      History: 4.0 では文字列で、これはハードコーディングされていた。
+#        Value: multipart / string
+#     Examples: string
+article_filter_reject_notice_data_type	=	string
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+use_command_mail_filter	= 	yes
+ 
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+command_mail_filter_functions	=	command_mail_size_filter
+
+
+# Descriptions: サイズ情報を根拠にしたフィルタリングをするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_command_mail_size_filter	=	yes
+
+
+# Descriptions: フィルタリングのルール。
+#               どのルールにもマッチしないなら、コマンドメールは認められる。
+#      History:
+#        Value:
+#     Examples:
+command_mail_size_filter_rules	=	check_header_size
+					check_body_size
+					check_command_limit
+					check_line_length_limit
+					permit
+
+
+# Descriptions: フィルタで弾かれたことを教える
+#      History: 4.0 ではハードコードだったような…
+#        Value: yes / no
+#     Examples: yes
+use_command_mail_filter_reject_notice	=	yes
+
+
+# Descriptions: エラーのお知らせの受信者
+#      History: 4.0 ではハードコードだったような…
+#        Value: maintainer | sender
+#     Examples: maintainer sender
+command_mail_filter_reject_notice_recipients	=	maintainer
+							sender
+
+
+# Descriptions: 弾いたメールをどのようにフォワードするか？
+#               ウィルスなどを考慮すると、文字列がいいとおもう
+#      History: 4.0 では文字列で、これはハードコーディングされていた。
+#        Value: multipart / string
+#     Examples: string
+command_mail_filter_reject_notice_data_type	=	string
+
+</screeen>
+</para>

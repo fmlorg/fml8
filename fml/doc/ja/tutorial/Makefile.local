@@ -1,23 +1,27 @@
 #
-# $FML: Makefile.local,v 1.3 2002/12/25 11:50:28 fukachan Exp $
+# $FML: Makefile.local,v 1.4 2003/06/15 05:23:11 fukachan Exp $
 #
 
-PROG_LIST  = ../../../utils/bin/varlist.pl
-PROG_CLASS = ../../../utils/bin/varclass.pl
-SOURCE     =  ../../../etc/default_config.cf.ja.in
+SHOW_CONFIG = ../../../utils/bin/show_config.pl --sgml
+PROG_LIST   = ../../../utils/bin/varlist.pl --sgml
+PROG_CLASS  = ../../../utils/bin/varclass.pl --sgml
+SOURCE      = ../../../etc/default_config.cf.ja.in
 
-VARLIST  = internals/list.variables.sgml
+# destination
+VARLIST           = variables/list.sgml
+VARCLASS          = variables/class.sgml
+SGML_FILTER_RULES = variables/filter.rules.sgml
+SGML_FILTER_SIZE  = variables/filter.size.sgml
 
-VARCLASS = internals/class.variables.sgml
 
-all: $(VARLIST) $(VARCLASS)
+all: $(VARLIST) $(VARCLASS) $(SGML_FILTER_RULES) $(SGML_FILTER_SIZE)
 
 $(VARLIST): $(SOURCE)
-	$(PROG_LIST) -sgml $(SOURCE) > $(VARLIST).new
+	$(PROG_LIST) $(SOURCE) > $(VARLIST).new
 	mv $(VARLIST).new $(VARLIST)
 
 $(VARCLASS): $(SOURCE)
-	$(PROG_CLASS) -sgml $(SOURCE) > $(VARCLASS).new
+	$(PROG_CLASS) $(SOURCE) > $(VARCLASS).new
 	mv $(VARCLASS).new $(VARCLASS)
 
 install: install_image
@@ -26,3 +30,13 @@ install_image: ../../en/figures/command.dataflow.gif
 
 ../../en/figures/command.dataflow.gif: command/states.gif
 	cp command/states.gif ../../en/figures/command.dataflow.gif
+
+$(SGML_FILTER_RULES): $(SOURCE)
+	$(SHOW_CONFIG) --type filter_rules $(SOURCE) \
+		> $(SGML_FILTER_RULES).new
+	mv $(SGML_FILTER_RULES).new $(SGML_FILTER_RULES)
+
+$(SGML_FILTER_SIZE): $(SOURCE)
+	$(SHOW_CONFIG) --type filter_size $(SOURCE) \
+		> $(SGML_FILTER_SIZE).new
+	mv $(SGML_FILTER_SIZE).new $(SGML_FILTER_SIZE)
