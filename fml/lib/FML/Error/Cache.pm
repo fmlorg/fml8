@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.7 2002/12/18 04:23:41 fukachan Exp $
+# $FML: Cache.pm,v 1.8 2002/12/24 10:19:45 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -156,28 +156,6 @@ sub get_addr_list
 }
 
 
-# Descriptions: return new Tie::JournaledDir object.
-#    Arguments: OBJ($self)
-# Side Effects: none
-# Return Value: OBJ
-sub _new
-{
-    my ($self) = @_;
-    my $curproc = $self->{ _curproc };
-    my $config  = $curproc->{ config };
-    my $type    = $config->{ error_analyzer_cache_type };
-    my $dir     = $config->{ error_analyzer_cache_dir  };
-    my $mode    = $config->{ error_analyzer_cache_mode } || 'temporal';
-    my $days    = $config->{ error_analyzer_cache_size } || 14;
-
-    #
-    # XXX-TODO: this _new() method is required ?
-    #
-    use Tie::JournaledDir;
-    return new Tie::JournaledDir { dir => $dir };
-}
-
-
 # Descriptions: get all values as HASH_REF.
 #    Arguments: OBJ($self)
 # Side Effects: none
@@ -185,9 +163,13 @@ sub _new
 sub get_all_values_as_hash_ref
 {
     my ($self) = @_;
-    my $obj = $self->_new();
+    my $curproc = $self->{ _curproc };
+    my $config  = $curproc->config();
+    my $dir     = $config->{ error_analyzer_cache_dir  };
 
-    $obj->get_all_values_as_hash_ref();
+    use Tie::JournaledDir;
+    my $obj = new Tie::JournaledDir { dir => $dir };
+    return $obj->get_all_values_as_hash_ref();
 }
 
 
@@ -201,7 +183,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Ken'ichi Fukamachi
+Copyright (C) 2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
