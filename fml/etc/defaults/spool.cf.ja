@@ -1,8 +1,13 @@
-=head1	記事のスプール
+=head1	記事および記事のスプール
 
+# 記事を配送する
+use_article_delivery	=	yes
+
+# 記事をスプールディレクトリに保存する
+use_spool		= 	yes
+
+# 記事番号
 sequence_file	= $ml_home_dir/seq
-
-use_spool	= yes
 
 spool_dir	= $ml_home_dir/spool
 

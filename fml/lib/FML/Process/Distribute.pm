@@ -172,8 +172,12 @@ sub _deliver_article
     my ($curproc, $args) = @_;
 
     my $config  = $curproc->{ config };  # FML::Config object
-    my $body    = $curproc->{ article }->{ body };  # MailingList::Messages
-    my $header  = $curproc->{ article }->{ header };# FML::Header
+    my $body    = $curproc->{ article }->{ body };  # MailingList::Messages;
+    my $header  = $curproc->{ article }->{ header };# FML::Header;
+    
+    unless ( $config->yes( 'use_article_delivery' ) ) {
+	return;
+    }	
 
     # distribute article
     use MailingList::Delivery;
