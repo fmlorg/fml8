@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.38 2002/01/13 11:37:10 fukachan Exp $
+# $FML: Message.pm,v 1.39 2002/01/13 11:49:28 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1561,7 +1561,7 @@ sub _set_pos
 
 =head2 size()
 
-return the message size.
+return the message size of this object.
 
 =head2 is_empty()
 
@@ -1690,7 +1690,7 @@ get whole body size for this object ($self)
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM
-sub header_size
+sub whole_message_header_size
 {
     my ($self) = @_;
     $self->{ data_info }->{ header_size };
@@ -1701,7 +1701,7 @@ sub header_size
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM
-sub body_size
+sub whole_message_body_size
 {
     my ($self) = @_;
     $self->{ data_info }->{ body_size };
