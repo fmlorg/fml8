@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
 # $Id$
-# $FML: Message.pm,v 1.1.1.1 2001/04/03 09:53:29 fukachan Exp $
+# $FML: Message.pm,v 1.2 2001/04/05 16:34:32 fukachan Exp $
 #
 
 package Mail::Message;
@@ -252,6 +252,43 @@ sub _create
     else {
 	carp("neither content nor filename specified");
     }
+}
+
+
+sub head
+{
+    my ($self) = @_;
+    my $m = $self;
+
+    while (1) {
+	if (defined $m->{ prev }) { 
+	    $m = $m->{ prev };
+	}
+	else {
+	    last;
+	}
+    }
+
+    $m;
+}
+
+
+sub last
+{
+    my ($self) = @_;
+    my $m = $self;
+
+    while (1) {
+	if (defined $m->{ next }) {
+	    $i++;
+	    $m = $m->{ next };
+	}
+	else {
+	    last;
+	}
+    }
+
+    $m;
 }
 
 
