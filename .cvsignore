@@ -5,3 +5,4 @@ config.log
 config.cache
 config.sh
 install.pl
+configure.new.lineno
