@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.1.2.1 2003/06/01 12:28:56 fukachan Exp $
+# $FML: DB.pm,v 1.1.2.2 2003/06/02 00:03:32 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -17,7 +17,7 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.1.2.1 2003/06/01 12:28:56 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.1.2.2 2003/06/02 00:03:32 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 my $debug = 1;
@@ -34,13 +34,14 @@ my (@table_list) = qw(
 		      ref_key_list
 		      next_key
 		      prev_key
-		      monthly_to_key_list
 
 		      filename
 		      filepath
 		      subdir
 
 		      month 
+		      month_to_key_list
+
 		      hint
 		      );
 
@@ -191,7 +192,7 @@ sub analyze
     }
 
     # HASH { YYYY/MM => (id1 id2 id3 ..) }
-    $self->_db_add_list_entry($db, 'monthly_to_key_list', $month, $id);
+    $self->_db_add_list_entry($db, 'month_to_key_list', $month, $id);
 
     $self->_analyze_thread($db, $msg, $hdr);
 
