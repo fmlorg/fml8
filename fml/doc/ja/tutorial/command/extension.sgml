@@ -1,5 +1,5 @@
 <!--
-   $FML: extension.sgml,v 1.6 2002/09/28 13:46:31 fukachan Exp $
+   $FML: extension.sgml,v 1.7 2002/09/29 06:01:10 fukachan Exp $
 -->
 
 
@@ -80,9 +80,6 @@ commands_for_privileged_user += uja
 </para>
 
 </sect2>
-
-</sect2>
-
 
 </sect1>
 
