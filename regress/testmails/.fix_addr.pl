@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: __template.pm,v 1.5 2001/04/03 09:45:39 fukachan Exp $
+# $FML: .fix_addr.pl,v 1.1 2001/04/10 10:46:30 fukachan Exp $
 #
 
 use strict;
@@ -15,6 +15,10 @@ my $base_addr = '10.20.30.';
 my $i         = 1;
 
 while (<>) {
+    # domain 
+    s/sapporo.iij.ad.jp/fml.org/g;
+ 
+    # scramble ip address information  
     my $addr = $base_addr . $i++;
     s/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/$addr/e;
     print;
