@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.137 2002/09/22 14:56:53 fukachan Exp $
+# $FML: Kernel.pm,v 1.138 2002/09/22 15:01:22 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -572,7 +572,7 @@ sub resolve_ml_specific_variables
 
     # 1. virtual domain or not ?
     # 1.1 search ml@domain syntax arg in @ARGV
-    if ($myname eq 'makefml') {
+    if ($myname eq 'makefml' || $myname eq 'fmlthread') {
 	my $default_domain = $curproc->default_domain();
 	($command, $ml_name, @options) = @ARGV;
 
