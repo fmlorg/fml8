@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.41 2004/03/12 11:45:51 fukachan Exp $
+# $FML: Error.pm,v 1.42 2004/03/13 06:03:24 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -303,18 +303,20 @@ sub _forward_error_message
 {
     my ($curproc)  = @_;
     my $config     = $curproc->config();
-    my $maintainer = $config->{ maintainer };
+    my $fml_owner  = $curproc->fml_owner_address();
+    my $maintainer = $config->{ maintainer } || $fml_owner;
     my $maps       = $config->{ maintainer_recipient_maps } || '';
     my $msg        = $curproc->incoming_message();
 
     if ($maps) {
 	my $maps     = $config->get_as_array_ref('maintainer_recipient_maps');
 	my $msg_args = {
-	    sender         => $maintainer,
+	    smtp_sender    => $fml_owner,
 	    recipient_maps => $maps,
 	    header         => {
-		from => $maintainer,
-		to   => $maintainer,
+		sender => $fml_owner,
+		from   => $fml_owner,
+		to     => $maintainer,
 	    },
 	};
 	$curproc->reply_message($msg, $msg_args);

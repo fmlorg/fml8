@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.221 2004/03/20 16:27:01 fukachan Exp $
+# $FML: Kernel.pm,v 1.222 2004/03/23 06:34:16 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1593,14 +1593,16 @@ sub _array_is_different
 sub _append_message_into_queue
 {
     my ($curproc, $msg, $rm_args, $rcpt, $rcpt_maps, $hdr, $charsets) = @_;
-    my $pcb      = $curproc->pcb();
-    my $category = 'reply_message';
-    my $class    = 'queue';
-    my $rarray   = $pcb->get($category, $class) || [];
+    my $pcb         = $curproc->pcb();
+    my $category    = 'reply_message';
+    my $class       = 'queue';
+    my $rarray      = $pcb->get($category, $class) || [];
+    my $smtp_sender = $rm_args->{ smtp_sender } || '';
 
     $rarray->[ $#$rarray + 1 ] = {
 	message        => $msg,
 	type           => ref($msg) ? ref($msg) : 'text',
+	smtp_sender    => $smtp_sender,
 	recipient      => $rcpt,
 	recipient_maps => $rcpt_maps,
 	header         => $hdr,
@@ -1620,15 +1622,17 @@ sub _append_message_into_queue
 sub _append_message_into_queue2
 {
     my ($curproc, $msg, $rm_args, $rcpt, $rcpt_maps, $hdr, $charsets) = @_;
-    my $pcb      = $curproc->pcb();
-    my $category = 'reply_message';
-    my $class    = 'queue';
-    my $rarray   = $pcb->get($category, $class) || [];
+    my $pcb         = $curproc->pcb();
+    my $category    = 'reply_message';
+    my $class       = 'queue';
+    my $rarray      = $pcb->get($category, $class) || [];
+    my $smtp_sender = $rm_args->{ smtp_sender } || '';
 
     for my $rcpt (@$rcpt) {
 	$rarray->[ $#$rarray + 1 ] = {
 	    message        => $msg,
 	    type           => ref($msg) ? ref($msg) : 'text',
+	    smtp_sender    => $smtp_sender,
 	    recipient      => [ $rcpt ],
 	    recipient_maps => [],
 	    header         => $hdr,
@@ -1640,6 +1644,7 @@ sub _append_message_into_queue2
 	$rarray->[ $#$rarray + 1 ] = {
 	    message        => $msg,
 	    type           => ref($msg) ? ref($msg) : 'text',
+	    smtp_sender    => $smtp_sender,
 	    recipient      => [],
 	    recipient_maps => [ $map ],
 	    header         => $hdr,
@@ -1659,16 +1664,21 @@ sub _append_message_into_queue2
 sub _reply_message_recipient_keys
 {
     my ($curproc, $msg) = @_;
-    my $pcb      = $curproc->pcb();
-    my $category = 'reply_message';
-    my $class    = 'queue';
-    my $rarray   = $pcb->get($category, $class) || [];
-    my %rcptattr = ();
-    my %rcptlist = ();
-    my %rcptmaps = ();
-    my %hdr      = ();
+    my $pcb         = $curproc->pcb();
+    my $category    = 'reply_message';
+    my $class       = 'queue';
+    my $rarray      = $pcb->get($category, $class) || [];
+    my %rcptattr    = ();
+    my %rcptlist    = ();
+    my %rcptmaps    = ();
+    my %hdr         = ();
+    my %smtp_sender = ();
     my ($rcptlist, $rcptmaps, $key, $type) = ();
 
+    # mark identifier based on recipients into each message.  messages
+    # with same identifier are aggregated into one mail message later.
+    # XXX-TODO: we should identify messages based on {sender, recipients} ?
+    # XXX-TODO: it may be annoying in some cases... hmm ;-)
     for my $m (@$rarray) {
 	if (defined $m->{ recipient } ) {
 	    $rcptlist = $m->{ recipient };
@@ -1679,10 +1689,11 @@ sub _reply_message_recipient_keys
 	    $rcptlist{ $key } = $rcptlist;
 	    $rcptmaps{ $key } = $rcptmaps;
 	    $hdr{ $key }      = $m->{ header };
+	    $smtp_sender{ $key } = $m->{ smtp_sender } || '';
 	}
     }
 
-    return ( \%rcptattr, \%rcptlist, \%rcptmaps, \%hdr );
+    return ( \%rcptattr, \%rcptlist, \%rcptmaps, \%hdr, \%smtp_sender );
 }
 
 
@@ -2041,7 +2052,8 @@ sub inform_reply_messages
     #    2. pick up messages for it/them.
     #       merge messages by types if needed.
     #
-    my ($attr, $list, $maps, $hdr) = $curproc->_reply_message_recipient_keys();
+    my ($attr, $list, $maps, $hdr, $smtp_sender) = 
+	$curproc->_reply_message_recipient_keys();
     my $need_multipart = 0;
 
     for my $key (keys %$list) {
@@ -2054,6 +2066,7 @@ sub inform_reply_messages
 		    recipient_maps => $maps->{ $key },
 		    recipient_attr => $attr,
 		    header         => $hdr->{ $key },
+		    smtp_sender    => $smtp_sender->{ $key },
 		});
 	    }
 	}
@@ -2085,6 +2098,7 @@ sub queue_in
     my $rcptmaps     = [];
     my $msg          = '';
     my $hdr_to       = '';
+    my $smtp_sender  = '';
 
     use Mail::Message::Date;
     my $_nowdate     = new Mail::Message::Date time;
@@ -2096,7 +2110,7 @@ sub queue_in
 	my $h = $optargs->{ header };
 	my $c = $optargs->{ header }->{ 'content-type' };
 
-	# override parameters
+	# override header parameters
 	$sender    = $h->{'sender'}         if defined $h->{'sender'};
 	$subject   = $h->{'subject'}        if defined $h->{'subject'};
 	$hdr_to    = $h->{'to'}             if defined $h->{'to'};
@@ -2105,6 +2119,9 @@ sub queue_in
 	$rcptkey   = $a->{'recipient_key'}  if defined $a->{'recipient_key'};
 	$rcptlist  = $a->{ recipient_list } if defined $a->{'recipient_list'};
 	$rcptmaps  = $a->{ recipient_maps } if defined $a->{'recipient_maps'};
+
+	# override smtp_sender
+	$smtp_sender = $optargs->{ smtp_sender } || '';
 
 	# we need multipart style or not ?
 	if (defined $a->{'recipient_attr'}) {
@@ -2303,7 +2320,7 @@ sub queue_in
     };
 
     if (defined $queue) {
-	$queue->set('sender', $sender);
+	$queue->set('sender', $smtp_sender || $sender);
 
 	if ($rcptlist) {
 	    $queue->set('recipients', $rcptlist);
