@@ -154,7 +154,7 @@ sub _module_specific_options
 	$myname eq 'loader' ) { 
 	return qw(ctladdr! debug! params=s -c=s);
     }
-    elsif ($myname eq 'fmlticket') {
+    elsif ($myname eq 'fmlticket'|| $myname eq 'fmlticket.cgi') {
 	return qw(debug! params=s -c=s -A=s -R=s);
     }
     elsif ($myname eq 'fmlconf') {
@@ -164,7 +164,7 @@ sub _module_specific_options
 	return qw(ctladdr! debug! params=s -c=s n!);	
     }
     else {
-	croak "$myname is not defined.\n";
+	croak "options for $myname are not defined.\n";
     }
 }
 
@@ -174,6 +174,9 @@ sub _ml_name_is_required
     my ($myname) = @_;
 
     if ($myname eq 'fmldoc') {
+	return 0;
+    }
+    elsif ($myname eq 'fmlticket.cgi') {
 	return 0;
     }
     else {
@@ -205,6 +208,9 @@ sub _module_we_use
     }
     elsif ($name eq 'fmlconf' || $name eq 'fmldoc' || $name eq 'makefml') {
 	$pkg = 'FML::Process::Configure';
+    }
+    elsif ($name eq 'fmlticket.cgi') {
+	$pkg = 'FML::CGI::TicketSystem';
     }
     elsif ($name eq 'fmlticket') {
 	$pkg = 'FML::Process::TicketSystem';
