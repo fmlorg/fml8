@@ -6,12 +6,12 @@
 ○ 実装済み
 
 subscribe	ＭＬへの入会
-(add)
+(add)				(<-> bye)
 (useradd)
 (adduser)
 
 unsubscribe	ＭＬからの脱退
-(bye)
+(bye)				(<-> add)
 (remove)
 (resign)
 (signoff)
@@ -38,8 +38,12 @@ get		任意のファイルを取り寄せる ( MIME/multipart only )
 
 
 addadmin	add a new administrator
+(adminadd)
+
 byeadmin	remove the specified administrator
 (deladmin)
+(admindel)
+
 
 password	パスワードの認証 例: admin password パスワード
 (pass)		パスワードの認証 例: admin pass     パスワード
@@ -51,11 +55,21 @@ changepassword	パスワードの変更
 		例: admin changepassword [アドレス] パスワード
 
 
+addmoderator	モデレータの追加
+delmoderator	モデレータの削除
+
+
 
 ○ 未実装
 
+moderatoradd	モデレータの追加
+moderatordel	モデレータの削除
+
+adminmod	属性を変更するコマンドは必要だろうか？
+
+moderatormod	属性を変更するコマンドは必要だろうか？
 
 help		admin のヘルプファイルを取り寄せる
 
 
-$FML: MANIFEST.euc-jp,v 1.9 2003/01/28 09:05:11 fukachan Exp $
+$FML: MANIFEST.euc-jp,v 1.10 2003/02/01 13:53:55 fukachan Exp $
