@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent2.pm,v 1.6 2002/10/21 13:13:35 fukachan Exp $
+# $FML: MimeComponent3.pm,v 1.1 2002/10/26 03:27:36 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -105,7 +105,7 @@ sub mime_component_check
     my $is_cutoff = 0;
     my $i = 1;
     my $j = 1;
-    my %count = {};
+    my %count = ();
 
     # whole message type
     my $whole_data_type = $msg->whole_message_header_data_type();
