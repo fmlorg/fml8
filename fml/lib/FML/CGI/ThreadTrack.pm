@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.9 2001/05/30 04:03:21 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.1 2001/11/09 00:13:53 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -20,13 +20,13 @@ use FML::Process::CGI;
 
 =head1 NAME
 
-FML::CGI::ThreadTrack - CGI details to control ticket system
+FML::CGI::ThreadTrack - CGI details to control thread system
 
 =head1 SYNOPSIS
 
-    $ticket = new FML::CGI::ThreadTrack;
-    $ticket->new();
-    $ticket->run();
+    $thread = new FML::CGI::ThreadTrack;
+    $thread->new();
+    $thread->run();
 
 See L<FML::Process::Flow> for flow details.
 
@@ -43,23 +43,135 @@ C<FML::CGI::ThreadTrack> is a subclass of C<FML::Process::CGI>.
 Almost methods common for CGI or HTML are forwarded to
 C<FML::Process::CGI> base class.
 
-This module has routines needed for CGI.
-But ticket model specific routines exist within C<FML::Ticket::Model>.
-
 =cut
 
 
-sub run
+sub html_start
+{
+    my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
+    my $title  = $config->{ thread_cgi_title }   || 'thread system interface';
+    my $color  = $config->{ thread_cgi_bgcolor } || '#E6E6FA';
+    my $myname = $config->{ program_name };
+    my $charset = $config->{ cgi_charset } || 'euc-jp';
+
+    # o.k start html
+    print start_html(-title=>$title,
+		     -lang => $charset,
+		     -BGCOLOR=>$color);
+    print "\n";
+
+    $curproc->_show_guide($args);
+}
+
+
+sub html_end
+{
+    my ($curproc, $args) = @_;
+
+    print "<HR>\n"; 
+    $curproc->_show_guide($args);
+
+    # o.k. end of html
+    print end_html;
+    print "\n";
+}
+
+
+sub run_cgi
 {
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
     my $myname = $config->{ program_name };
+    my $ttargs = $curproc->_build_param($args);
+    my $action = $curproc->safe_param_action();
 
-    print STDERR "(debug) loading $0\n";
-    print STDERR $curproc->safe_param_ml_name(), "\n";
-    print STDERR $curproc->safe_param_method(), "\n";
+    use Mail::ThreadTrack;
+    my $thread = new Mail::ThreadTrack $ttargs;
+    $thread->set_mode('html');
+
+    if ($action eq 'list') {
+	$thread->summary();
+    }
+    elsif ($action eq 'close') {
+	my $id  = $curproc->safe_param_article_id();
+	my $tid = $thread->_create_thread_id_strings($id);
+	$thread->close($tid);
+	$thread->summary();
+    }
+    else {
+	$thread->summary();
+    }
 }
 
+
+sub _build_param
+{
+    my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
+
+    #  argumente for thread track module
+    my $ml_name       = $curproc->safe_param_ml_name();
+    my $thread_db_dir = $config->{ thread_db_dir };
+    my $spool_dir     = $config->{ spool_dir };
+    my $max_id        = $curproc->article_id_max();
+    my $ttargs        = {
+	logfp         => \&Log,
+	fd            => \*STDOUT,
+	db_base_dir   => $thread_db_dir,
+	ml_name       => $ml_name,
+	spool_dir     => $spool_dir,
+	reverse_order => 1,
+    };
+
+    return $ttargs;
+}
+
+
+sub _show_guide
+{
+    my ($curproc, $args) = @_;
+    my $config  = $curproc->{ config };
+    my $myname  = $config->{ program_name };
+    my $action  = $myname;
+    my $target  = $config->{ thread_cgi_target_window } || 'ThreadCGIWindow';
+    my $ml_list = $curproc->get_ml_list($args);
+    my $ml_name = $config->{  ml_name };
+
+    print start_form(-action=>$action, -target=>$target);
+
+    print "ML: ";
+    print popup_menu(-name   => 'ml_name', -values => $ml_list);
+
+    print "orderd by: ";
+    my $order = [ 'cost', 'date', 'reverse date' ];
+    print popup_menu(-name   => 'order', -values => $order );
+
+    print submit(-name => 'change target');
+
+    print end_form;
+    print "<HR>\n";
+}
+
+
+sub get_ml_list
+{
+    my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
+
+    use DirHandle;
+    my $dh = new DirHandle $config->{ ml_home_prefix };
+    my @dirlist;
+    my $prefix = $config->{ ml_home_prefix };
+    while ($_ = $dh->read()) {
+	next if /^\./;
+	next if /^\@/;
+	push(@dirlist, $_) if -f "$prefix/$_/config.cf";
+    }
+    $dh->close;
+
+    return \@dirlist;
+}
 
 =head1 SEE ALSO
 
