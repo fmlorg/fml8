@@ -15,7 +15,7 @@ link:
 	rm -f FML; ln -s ../../fml/lib/FML
 	rm -f IO; ln -s ../../fml/lib/IO
 	rm -f Dialect; ln -s ../../fml/lib/Dialect
-	rm -f Netlib; ln -s ../../fml/lib/Netlib
+	rm -f MailingList; ln -s ../../fml/lib/MailingList
 	rm -f libexec; ln -s ../../fml/libexec
 	rm -f log; ln -s /var/spool/ml/elena/log
 

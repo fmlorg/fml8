@@ -30,9 +30,9 @@ clean:
 	@ find . |grep '~' |perl -nple unlink
 
 link:
-	rm -f FML Netlib IO 
+	rm -f FML MailingList IO 
 	ln -s lib/fml5/FML .
-	ln -s lib/fml5/Netlib .
+	ln -s lib/fml5/MailingList .
 	ln -s lib/fml5/IO .
 	(cd libexec; ln -s fmlwrapper fml.pl) 
 

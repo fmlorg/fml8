@@ -160,14 +160,14 @@ sub _deliver_article
     my ($curproc, $args) = @_;
 
     my $config  = $curproc->{ config };  # FML::Config object
-    my $body    = $curproc->{ article }->{ body };  # Netlib::Messages
+    my $body    = $curproc->{ article }->{ body };  # MailingList::Messages
     my $header  = $curproc->{ article }->{ header };# FML::Header
 
     # distribute article
-    use Netlib::SMTP;
+    use MailingList::SMTP;
     my $fp  = sub { Log(@_);}; # pointer to the log function
     my $sfp = sub { my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;};
-    my $service = new Netlib::SMTP {
+    my $service = new MailingList::SMTP {
 	log_function       => $fp,
 	smtp_log_function  => $sfp,
 	socket_timeout     => 2,     # XXX 2 for debug but 10 by default
