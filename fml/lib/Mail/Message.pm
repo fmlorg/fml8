@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.5 2001/04/06 12:58:09 fukachan Exp $
+# $FML: Message.pm,v 1.6 2001/04/06 16:25:44 fukachan Exp $
 #
 
 package Mail::Message;
@@ -23,56 +23,54 @@ my %data_type =
      );
 
 
-sub new
-{
-    my ($self, $args) = @_;
-    my ($type) = ref($self) || $self;
-    my $me     = {};
-
-    bless $me, $type;
-
-    if ($args) { create($me, $args);}
-
-    return bless $me, $type;
-}
-
 
 ######################################################################
 =head1 NAME
 
-Mail::Message -- message manipulator
+Mail::Message -- manipulate mail messages
 
 =head1 SYNOPSIS
 
+To make a message with one part of data and print it.
+
+    # make a message
     my $m1 = new Mail::Message { data => \$body1 };
 
+    # another method to make a message
     my $m2 = new Mail::Message;
-    $m2->create( { data => \$body2 });
+    $m2->create(  { data => \$body2 } );
 
-    # make a chain of $m1, $m2, ...
-    $m1->next_chain( $m2 );
-
-    # print the mail message (a chain of body-parts) in the order:  $m1, $m2, ...
+    # print the mail message.
+    # If it is a chain of body-parts, print() shows $m1, $m2 ... 
+    # in the chain order
     $m1->print;
+
+To make a multipart message, do this.
+
+    # make a multipart message. It consists of a chain of $m1, $m2, ...
+    my $m1 = new Mail::Message { data => \$body1 };
+    my $m2 = new Mail::Message { data => \$body2 };
+    $m1->next_message( $m2 );
+
 
 =head1 DESCRIPTION
 
-A message has the content and a header including the next message
-pointer, et. al.
+C<A mail message> has the data and the MIME header if needed.
+C<Mail::Message> object holds them and other control information such
+as the reference to the next C<Mail::Message> object, et. al.
 
-The messages are chained from/to others among them.
+The messages are chained bi-directional among them.
 Out idea on the chain is similar to IPv6.
 For example, MIME/multipart is a chain of messages such as
 
-  mesg1 -> mesg2 -> mesg3 (-> undef)
+  undef -> mesg1 -> mesg2 -> mesg3 -> undef
 
-Whereas the usual mail, which Content-Type is text/plain, is described
-as
-
-  mesg1 (-> undef)
-
-To describe such chains, a message format is a hash reference
-internally.
+To describe such a chain, a message object consists of the following
+structure.
+Described below, C<MIME delimiter> is also treated as a virtual
+message for convenience.
+It is more useful for other modules to consider what is a MIME
+delimiter et. al.
 
    $message = {
                 version        => 1.0
@@ -93,14 +91,14 @@ internally.
    -----------------------------------------------------
    next               pointer to the next message
    prev               pointer to the previous message
-   version            Mail::Delivery::Message object version
+   version            Mail::Message object version
    mime_version       MIME version
    base_data_type     type of the whole message
    data_type          type of each message (part)
    header             MIME header
    data               reference to the data (that is, memory area)
 
-Each default value follows:
+The default value for each key follows:
 
    key              value
    -----------------------------------------------------
@@ -129,7 +127,7 @@ where the C<i> is the C<i>-th element of a chain.
 
 =head2 multipart/...
 
-Consider a multipart such as
+Consider the following multipart message.
 
    Content-Type: multipart/mixed; boundary="boundary"
 
@@ -144,7 +142,7 @@ Consider a multipart such as
    --boundary--
       ... trailor ...
 
-The internal parser interpetes it as follows:
+C<Mail::Message> parser interpetes it as follows:
 
       base_data_type                 data_type
    ----------------------------------------------------------
@@ -157,25 +155,47 @@ The internal parser interpetes it as follows:
    6: multipart/mixed                _multipart_trailer/plain
 
 C<_multipart_something> is a faked type to treat both real content,
-delimiters and others in the same Mail::Message framework.
+MIME delimiters and others in the same Mail::Message framework.
 
-=head1 METHOD
+
+=head1 METHODS to create an object
 
 =head2 C<new($args)>
 
-constructor. if $args is given, create() method is called.
+constructor. 
+If $args is given, C<create($args)> method is called.
 
 =head2 C<create($args)>
 
-build a template message following the given $args (a hash reference).
+build a template message object to follow the given $args (a hash
+reference).
 
 =cut
 
 
-# Descriptions: adapter to forward the request to object builders
-#               by following content-type. The real work is done at
-#                 &parse_and_build_mime_multipart_chain() if multipart
-#                 &_create() if not
+# Descriptions: usual constructor
+#               call $self->create($args) if $args is given.
+#    Arguments: $self $args
+# Side Effects: none
+# Return Value: Mail::Message object
+sub new
+{
+    my ($self, $args) = @_;
+    my ($type) = ref($self) || $self;
+    my $me     = {};
+
+    bless $me, $type;
+
+    if ($args) { create($me, $args);}
+
+    return bless $me, $type;
+}
+
+
+# Descriptions: adapter to forward the request to make a message object.
+#               It forwards each request by each content-type.
+#               parse_and_build_mime_multipart_chain() works for a multipart message
+#               and _create() for a plain message.
 #    Arguments: $self $args
 # Side Effects: none
 # Return Value: none
@@ -196,65 +216,91 @@ sub create
 }
 
 
+# Descriptions: build a Mail::Message object template
+#    Arguments: $self $args
+# Side Effects: set up default values within $self if needed
+# Return Value: none
 sub _set_up_template
 {
     my ($self, $args) = @_;
 
-    # message chains
-    $self->{ 'next' }       = $args->{ 'next' } || undef;
-    $self->{ 'prev' }       = $args->{ 'prev' } || undef;
-
     # basic content information
-    $self->{ version }      = $args->{ version }       || 1.0;
-    $self->{ mime_version } = $args->{ mime_version }  || 1.0;
-    $self->{ data_type }    = $args->{ data_type  } || 'text/plain';
+    $self->{'version'}    = $args->{'version'} || 1.0;
 
-    # header
-    $self->{ header  }      = $args->{ header  } || undef;
+    # information to make a chain.
+    # a chain is "undef -> message -> undef" by default.
+    $self->{'next'}       = $args->{'next'} || undef;
+    $self->{'prev'}       = $args->{'prev'} || undef;
 
-    # save the mail header Content-Type information
-    $self->{ base_data_type } =
-	$args->{ base_data_type } || $args->{ data_type } || undef;
+    # MIME-header information
+    $self->{'header'  }    = $args->{'header'} || undef;
+
+    # information on data and the type for the message.
+    $self->{'mime_version'}   = $args->{'mime_version'}   || 1.0;
+    $self->{'data_type'}      = $args->{'data_type'  }    || 'text/plain';
+    $self->{'base_data_type'} = $args->{'base_data_type'} || $self->{'data_type'} || undef;
+
+    # default print out mode
+    set_print_mode($self, 'raw');
 }
 
 
+# Descriptions: simple plain/text builder
+#    Arguments: $self $args
+# Side Effects: set up the default values if needed
+# Return Value: none
 sub _create
 {
     my ($self, $args) = @_;
 
-    _set_up_template($self, $args);
+    _set_up_template($self, $args); # build an object template
 
-    # message itself (mail body)
-    my $r_data   = $args->{ data };
-    my $filename = $args->{ filename };
+    # try to get data on both memory and disk
+    my $r_data   = $args->{ data }     || undef;
+    my $filename = $args->{ filename } || undef;
 
-    # on memory
+    # set up object for data on memory
     if (defined $r_data) {
 	my $len = length( $$r_data );
 	$self->{ data }         = $args->{ data } || '';
 	$self->{ offset_begin } = $args->{ offset_begin } || 0;
 	$self->{ offset_end }   = $args->{ offset_end   } || $len;
-	$self->{ _on_memory }   = 1;
+	$self->{ _on_memory }   = 1; # flag to indicate data is on memory
     }
-    # on disk
+    # set up object for data on disk
     elsif (defined $filename) {
 	if (-f $filename) {
 	    undef $self->{ data };
 	    $self->{ header }     = build_mime_header($self, $args);
 	    $self->{ filename }   = $filename;
-	    $self->{ _on_memory } = 0; # not on memory
+	    $self->{ _on_memory } = 0; # flag to indicate data is not on memory
 	}
 	else {
-	    carp("$filename not exist");
+	    carp("_create: $filename not exist");
 	}
     }
     else {
-	carp("neither data nor filename specified");
+	carp("_create: neither data nor filename specified");
     }
 }
 
 
-sub head
+=head1 METHODS to manipulate a chain
+
+=head2 C<head_message()>
+
+no argument. 
+It return the head object of a chain of C<Mail::Message> objects.
+
+=head2 C<last_message()>
+
+no argument. 
+It return the last object of a chain of C<Mail::Message> objects.
+
+=cut
+
+
+sub head_message
 {
     my ($self) = @_;
     my $m = $self;
@@ -272,7 +318,7 @@ sub head
 }
 
 
-sub last
+sub last_message
 {
     my ($self) = @_;
     my $m = $self;
@@ -290,71 +336,33 @@ sub last
 }
 
 
-sub next_chain
+=head2 C<next_message( $obj )>
+
+The next part of C<$self> object is C<$obj>.
+
+=head2 C<prev_message( $obj )>
+
+The previous part of C<$self> object is C<$obj>.
+
+=cut
+
+
+sub next_message
 {
     my ($self, $ref_next_message) = @_;
     $self->{ 'next' } = $ref_next_message;
 }
 
 
-sub prev_chain
+sub prev_message
 {
     my ($self, $ref_prev_message) = @_;
     $self->{ 'prev' } = $ref_prev_message;
 }
 
 
-sub build_mime_multipart_chain
-{
-    my ($self, $args) = @_;
-    my ($head, $prev_m);
 
-    my $base_data_type = $args->{ base_data_type };
-    my $msglist        = $args->{ message_list };
-    my $boundary       = $args->{ boundary } || "--". time ."-$$-";
-    my $dash_boundary  = "--". $boundary;
-    my $delbuf         = "\n". $dash_boundary."\n";
-    my $delbuf_end     = "\n". $dash_boundary . "--\n";
-
-    for my $m (@$msglist) {
-	# delimeter: --boundary
-	my $msg = new Mail::Message {
-	    boundary       => $boundary,
-	    base_data_type => $base_data_type,
-	    data_type      => $data_type{'delimeter'},
-	    data           => \$delbuf,
-	};
-
-	$head = $msg unless $head; # save the head $msg
-
-	# boundary -> data -> boundary ...
-	if (defined $prev_m) { $prev_m->next_chain( $msg );}
-	$msg->next_chain( $m );
-
-	# for the next loop
-	$prev_m = $m;
-    }
-
-    # close delimeter: --boundary--
-    my $msg = new Mail::Message {
-	boundary       => $boundary,
-	base_data_type => $base_data_type,
-	data_type      => $data_type{'close-delimeter'},
-	data           => \$delbuf_end,
-    };
-    $prev_m->next_chain( $msg ); # ... -> data -> close-delimeter
-
-    return $head; # return the pointer to the head of a chain
-}
-
-
-=head2 C<next_chain( $reference_to_message )>
-
-The next one of this message is $reference_to_message.
-
-=head2 C<prev_chain( $reference_to_message )>
-
-The previous one of this message is $reference_to_message.
+=head1 METHODS to print
 
 =head2 C<print( $fd )>
 
@@ -363,17 +371,35 @@ If $fd is not specified, STDOUT is used.
 
 =cut
 
-sub raw_print
+
+sub print
 {
     my ($self, $fd) = @_;
-
-    $self->{ _raw_print } = 1;
-    $self->print($fd);
-    delete $self->{ _raw_print };
+    $self->_print($fd);
 }
 
 
-sub print
+sub reset_print_mode
+{
+    my ($self, $mode) = @_;
+    $self->{ _print_mode } = 'raw';
+}
+
+
+sub set_print_mode
+{
+    my ($self, $mode) = @_;
+
+    if ($mode eq 'raw') {
+	$self->{ _print_mode } = 'raw';
+    }
+    elsif ($mode eq 'smtp') {
+	$self->{ _print_mode } = 'smtp';
+    }
+}
+
+
+sub _print
 {
     my ($self, $fd) = @_;
     my $msg  = $self;
@@ -413,8 +439,8 @@ sub _print_messsage_on_memory
     my ($self, $fd, $args) = @_;
 
     # \n -> \r\n
-    my $raw_print_mode = 1 if defined $args->{ _raw_print };
-
+    my $raw_print_mode = 1 if $self->{ _print_mode } eq 'raw';
+    
     # set up offset for the buffer
     my $r_body = $self->{ data };
     my $header = $self->{ header };
@@ -468,7 +494,7 @@ sub _print_messsage_on_disk
     my ($self, $fd, $args) = @_;
 
     # \n -> \r\n
-    my $raw_print_mode = 1 if defined $args->{ _raw_print };
+    my $raw_print_mode = 1 if $self->{ _print_mode } eq 'raw';
     my $header   = $self->{ header }   || undef;
     my $filename = $self->{ filename } || undef;
     my $logfp    = $self->{ _log_function };
@@ -507,6 +533,56 @@ sub _print_messsage_on_disk
     else {
 	carp("cannot open $filename");
     }
+}
+
+
+=head1 METHODS to manipulate a multipart message
+
+=head2 C<build_mime_multipart_chain($args)>
+
+=cut
+
+sub build_mime_multipart_chain
+{
+    my ($self, $args) = @_;
+    my ($head, $prev_m);
+
+    my $base_data_type = $args->{ base_data_type };
+    my $msglist        = $args->{ message_list };
+    my $boundary       = $args->{ boundary } || "--". time ."-$$-";
+    my $dash_boundary  = "--". $boundary;
+    my $delbuf         = "\n". $dash_boundary."\n";
+    my $delbuf_end     = "\n". $dash_boundary . "--\n";
+
+    for my $m (@$msglist) {
+	# delimeter: --boundary
+	my $msg = new Mail::Message {
+	    boundary       => $boundary,
+	    base_data_type => $base_data_type,
+	    data_type      => $data_type{'delimeter'},
+	    data           => \$delbuf,
+	};
+
+	$head = $msg unless $head; # save the head $msg
+
+	# boundary -> data -> boundary ...
+	if (defined $prev_m) { $prev_m->next_message( $msg );}
+	$msg->next_message( $m );
+
+	# for the next loop
+	$prev_m = $m;
+    }
+
+    # close delimeter: --boundary--
+    my $msg = new Mail::Message {
+	boundary       => $boundary,
+	base_data_type => $base_data_type,
+	data_type      => $data_type{'close-delimeter'},
+	data           => \$delbuf_end,
+    };
+    $prev_m->next_message( $msg ); # ... -> data -> close-delimeter
+
+    return $head; # return the pointer to the head of a chain
 }
 
 
@@ -635,10 +711,10 @@ sub parse_and_build_mime_multipart_chain
     my $j = 0;
     for ($j = 0; $j < $i; $j++) {
 	if (defined $m[ $j + 1 ]) {
-	    next_chain( $m[ $j ], $m[ $j + 1 ] );
+	    next_message( $m[ $j ], $m[ $j + 1 ] );
 	}
 	if (($j > 1) && defined $m[ $j - 1 ]) {
-	    prev_chain( $m[ $j ], $m[ $j - 1 ] );
+	    prev_message( $m[ $j ], $m[ $j - 1 ] );
 	}
 
 	if (0) { # debug
@@ -649,7 +725,7 @@ sub parse_and_build_mime_multipart_chain
     }
 
     # chain $self and our chains built here.
-    next_chain($self, $m[0]);
+    next_message($self, $m[0]);
 }
 
 
