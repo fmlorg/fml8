@@ -80,3 +80,12 @@ path_less                 = @LESS@
 path_more                 = @MORE@
 
 path_w3m                  = @W3M@
+
+
+=head2 spam related utilities
+
+path_spamassassin         = @SPAMASSASSIN@
+
+path_spamd                = @SPAMD@
+
+path_spamc                = @SPAMC@

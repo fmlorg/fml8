@@ -1770,6 +1770,15 @@ path_more                 = @MORE@
 
 path_w3m                  = @W3M@
 
+
+=head2 spam related utilities
+
+path_spamassassin         = @SPAMASSASSIN@
+
+path_spamd                = @SPAMD@
+
+path_spamc                = @SPAMC@
+
 =head1	システム依存 (主に BSD との非互換性を記述している)
 
 #
