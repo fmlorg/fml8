@@ -809,7 +809,7 @@ sub _show_ticket_by_html_table
     my $config    = $curproc->{ config };
     my $ml_name   = $config->{ ml_name };
     my $spool_dir = $config->{ spool_dir };
-    my $action    = $config->{ ticket_cgi_base_url } || '/cgi-bin/fmlticket.cgi';
+    my $action    = 'fmlticket.cgi';
     my $target    = $config->{ ticket_cgi_target_window } || 'TicketCGIWindow';
 
     # printf($fd $format, 
@@ -842,7 +842,8 @@ sub _show_ticket_by_html_table
     $aid = (split(/\s+/, $articles))[0];
     my $buf = $self->_article_summary( $spool_dir ."/". $aid );
     $buf    =~ s/\n/<BR>\n/g;
-    print $buf;
+    use Language::ISO2022JP qw(STR2EUC);
+    print STR2EUC($buf);
 }
 
 
