@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Credential.pm,v 1.10 2001/05/28 16:17:12 fukachan Exp $
+# $FML: Credential.pm,v 1.11 2001/05/29 16:21:15 fukachan Exp $
 #
 
 package FML::Credential;
@@ -116,16 +116,25 @@ sub is_member
     my ($user, $domain) = split(/\@/, $address);
 
     use IO::Adapter;
+
+  MAP:
     for my $map (split(/\s+/, $member_maps)) {
 	if ($map) {
 	    my $obj = new IO::Adapter $map;
-	    my $x = $obj->find( $user );
-	    my ($r) = split(/\s+/, $x);
 
-	    if ($self->is_same_address($r, $address)) {
-		$status = 1; # found
+	    # 1. get all entries match /^$user/ from $map.
+	    my $addrs = $obj->find( $user , { all => 1 });
+
+	    # 2. try each address in the result matches $address to check.
+	    for my $x (@$addrs) {
+		my ($r) = split(/\s+/, $x);
+
+		# 3. is_same_address() conceals matching algorithm details.
+		if ($self->is_same_address($r, $address)) {
+		    $status = 1; # found
+		    last MAP;
+		}
 	    }
-	    last if $x;
 	}
     }
 

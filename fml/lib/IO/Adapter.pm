@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Adapter.pm,v 1.3 2001/06/09 10:55:49 fukachan Exp $
+# $FML: Adapter.pm,v 1.4 2001/06/09 14:27:39 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -343,7 +343,11 @@ You can change the search behaviour by C<$args> (HASH REFERENCE).
 
     $args = {
 	case_sensitive => 1, # case senssitive
+	all            => 1, # get all entries matching $regexp as ARRAY REF
     };
+
+Normaly the result is given as a string.
+If you specify C<all>, you get the result(s) as ARRAY REFERENCE.
 
 =cut
 
@@ -351,7 +355,8 @@ sub find
 {
     my ($self, $regexp, $args) = @_;
     my $case_sensitive = $args->{ case_sensitive } ? 1 : 0;
-    my $x;
+    my $show_all       = $args->{ all } ? 1 : 0;
+    my (@buf, $x);
 
     # forward the request to SUPER class
     if ($self->SUPER::can('_find')) { $self->_find($regexp, $args);}
@@ -359,17 +364,23 @@ sub find
     # search regexp by reading the specified map.
     $self->open;
     while (defined ($x = $self->get_next_value())) {
-	if ($case_sensitive) {
-	    last if $x =~ /$regexp/;
+	if ($show_all) {
+	    push(@buf, $x) if $x =~ /$regexp/;	    
 	}
 	else {
-	    last if $x =~ /$regexp/i;
+	    if ($case_sensitive) {
+		last if $x =~ /$regexp/;
+	    }
+	    else {
+		last if $x =~ /$regexp/i;
+	    }
 	}
     }	   
-    $self->close;
-    $x;
-}
 
+    $self->close;
+
+    $show_all ? \@buf : $x;
+}
 
 
 # Descriptions: destructor
