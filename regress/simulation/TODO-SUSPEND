@@ -1,0 +1,33 @@
+¡û HTML À¸À®
+
+     AUTO_HTML_GEN:
+     
+     HTML_THREAD:			1
+     
+     HTML_INDEX_REVERSE_ORDER:	1
+     
+     HTML_DIR:			htdocs
+     
+     HTML_EXPIRE_LIMIT:
+     
+     HTML_INDEX_TITLE:
+     
+     HTML_DATA_CACHE:
+     HTML_DATA_THREAD:
+     
+     HTML_OUTPUT_FILTER:
+     
+     HTML_STYLESHEET_BASENAME:	
+     
+     HTML_THREAD_REF_TYPE:		prefer-in-reply-to
+     
+     HTML_THREAD_SORT_TYPE:
+     
+     HTML_INDEX_UNIT:		day
+     
+     HTML_INDENT_STYLE:		UL
+     
+     HTML_MULTIPART_IMAGE_REF_TYPE:
+     
+     HTML_DEFAULT_UMASK:
+     HTML_WRITE_UMASK:
