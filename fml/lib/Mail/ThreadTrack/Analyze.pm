@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: @template.pm,v 1.1 2001/08/07 12:23:48 fukachan Exp $
+# $FML: Analyze.pm,v 1.1.1.1 2001/11/02 09:07:39 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -77,7 +77,6 @@ sub _assign
     my $config   = $self->{ _config };
     my $header   = $msg->rfc822_message_header();
     my $subject  = $header->get('subject');
-    my $pcb      = $self->{ _pcb };
     my $is_reply = _is_reply($subject);
 
     # 1. try to extract $ticket_id from subject: field
@@ -89,10 +88,10 @@ sub _assign
 	if ($ticket_id) {
 	    $is_reply = 1;
 	    $self->{ _ticket_id } = $ticket_id;
-	    Log("speculated id=$ticket_id");
+	    $self->log("speculated id=$ticket_id");
 	}
 	else {
-	    Log("(debug) fail to spelucate ticket_id");
+	    $self->log("(debug) fail to spelucate ticket_id");
 	}
     }
 
@@ -110,33 +109,32 @@ sub _assign
     # if the header carries "Subject: Re: ..." with ticket-id, 
     # we do not rewrite the subject but save the extracted $ticket_id.
     if ($is_reply && $ticket_id) {
-	Log("reply message with ticket_id=$ticket_id");
+	$self->log("reply message with ticket_id=$ticket_id");
 	$self->{ _ticket_id } = $ticket_id;
 	$self->{ _status    } = 'analyzed';
 	$self->_append_ticket_status_info('analyzed');
     }
     elsif ($ticket_id) {
-	Log("usual message with ticket_id=$ticket_id");
+	$self->log("usual message with ticket_id=$ticket_id");
 	$self->{ _ticket_id } = $ticket_id;
 	$self->_append_ticket_status_info("found");
     }
     else {
-	Log("message with no ticket_id");
+	$self->log("message with no ticket_id");
 
 	# assign a new ticket number for a new message
 	my $id = $self->increment_id();
 
 	# O.K. rewrite Subject: of the article to distribute
 	unless ($self->error) {
-	    $pcb->{'article'}->{'id'} = $id; # save $id info in PCB
-
 	    my $header = $msg->rfc822_message_header();
 	    $self->_get_ticket_id($header, $config, $id);
 	    $self->_rewrite_header($header, $config, $id);
 	    $self->_append_ticket_status_info("newly assigned");
 	}
 	else {
-	    Log( $self->error );
+	    $self->log("add fail for $id");
+	    $self->log( $self->error );
 	}
     }
 }
@@ -165,7 +163,7 @@ sub _speculate_ticket_id
     my $midlist = _extract_message_id_references( $header );
     my $result  = '';
 
-    for (@$midlist) { Log("(debug) mid=$_");}
+    for (@$midlist) { $self->log("(debug) mid=$_");}
 
     if (defined $midlist) {
 	$self->db_open();
@@ -181,7 +179,7 @@ sub _speculate_ticket_id
 	$self->db_close();
     }
 
-    Log("(debug) not speculated") unless $result;
+    $self->log("(debug) not speculated") unless $result;
     $result;
 }
 
@@ -223,10 +221,10 @@ sub update_ticket_status
 	$pragma  =~ /close/      ) {
 	$self->{ _status } = "closed";
 	$self->_append_ticket_status_info("closed");
-	Log("ticket is closed");
+	$self->log("ticket is closed");
     }
     else {
-	Log("ticket status not changed");
+	$self->log("ticket status not changed");
     }
 }
 
@@ -260,15 +258,21 @@ sub _regexp_compile
 sub _extract_message_id_references
 {
     my ($header) = @_;
-    my $buf = 
-        $header->get('in-reply-to') ."\n". $header->get('references');
+    my (@addrs, @r, %uniq) = ();
 
     use Mail::Address;
-    my @addrs = Mail::Address->parse($buf);
 
-    my @r    = ();
-    my %uniq = ();
-    foreach my $addr (@addrs) { 
+    if (defined $header->get('in-reply-to')) {
+	my $buf = $header->get('in-reply-to');
+	push(@addrs, Mail::Address->parse($buf));
+    }
+
+    if (defined $header->get('references')) {
+	my $buf = $header->get('references');
+	push(@addrs, Mail::Address->parse($buf));
+    }
+
+    for my $addr (@addrs) { 
         my $a = $addr->address;
         unless ($uniq{ $a }) {
             push(@r, $addr->address);
@@ -306,7 +310,7 @@ sub _extract_ticket_id_in_subject
 	return $id;
     }
     else {
-	Log("no ticket id /$regexp/ in subject");
+	$self->log("no ticket id /$regexp/ in subject");
 	return 0;
     }
 }
@@ -388,12 +392,11 @@ sub _update_db
 {
     my ($self, $msg) = @_;
     my $config     = $self->{ _config };
-    my $pcb        = $self->{ _pcb };
-    my $article_id = $pcb->{'article'}->{'id'};
+    my $article_id = $config->{ article_id };
     my $ticket_id  = $self->{ _ticket_id };
 
     # 0. logging
-    Log("article_id=$article_id ticket_id=$ticket_id");
+    $self->log("article_id=$article_id ticket_id=$ticket_id");
 
     # prepare hash table tied to db_dir/*db's
     my $rh = $self->{ _hash_table };
@@ -487,8 +490,6 @@ sub set_status
     my $ticket_id = $args->{ ticket_id };
     my $status    = $args->{ status };
 
-    Log("ticket.set_status($ticket_id, $status)");
-
     $self->db_open();
     $self->_set_status($ticket_id, $status);
     $self->db_close();
@@ -499,12 +500,6 @@ sub _set_status
 {
     my ($self, $ticket_id, $value) = @_;
     $self->{ _hash_table }->{ _status }->{ $ticket_id } = $value;
-}
-
-
-sub Log
-{
-    print STDERR "Log> @_\n";
 }
 
 
