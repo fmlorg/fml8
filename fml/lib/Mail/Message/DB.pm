@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.1.2.9 2003/06/14 14:48:33 fukachan Exp $
+# $FML: DB.pm,v 1.1.2.10 2003/06/15 01:34:16 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -21,7 +21,7 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.1.2.9 2003/06/14 14:48:33 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.1.2.10 2003/06/15 01:34:16 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 my $debug = 1;
@@ -432,8 +432,8 @@ sub thread_summary
     }
 
     if (defined $next_id) {
+	$fn_next_id = $self->_db_get($db, 'html_filename', $next_id);
 	$fp_next_id = $self->_db_get($db, 'html_filepath', $next_id);
-	$fn_next_id = $self->_db_get($db, 'html_filepath', $next_id);
 
 	unless (-f $fp_next_id) {
 	    undef $next_id;
@@ -450,10 +450,10 @@ sub thread_summary
     }
 
     if (defined $next_thread_id) {
-	$fp_next_thread_id = 
-	    $self->_db_get($db, 'html_filepath', $next_thread_id);
 	$fn_next_thread_id = 
 	    $self->_db_get($db, 'html_filename', $next_thread_id);
+	$fp_next_thread_id = 
+	    $self->_db_get($db, 'html_filepath', $next_thread_id);
 
 	unless(-f $fp_next_thread_id) {
 	    undef $next_thread_id;
