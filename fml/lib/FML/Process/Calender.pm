@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2001,2002 Ken'ichi Fukamachi
+# Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calender.pm,v 1.2 2002/04/03 03:39:33 fukachan Exp $
+# $FML: Calender.pm,v 1.3 2002/04/06 14:48:36 fukachan Exp $
 #
 
 package FML::Process::Calender;
@@ -27,10 +27,9 @@ FML::Process::Calender -- demonstration of FML module usage
 
 =head1 DESCRIPTION
 
-FML::Process::Calender is demonstration module to show fml module
-usage.
-This module provides calender presentation for simple scheduler,
-Calender::Lite class.
+FML::Process::Calender is a demonstration module to show fml module
+usage.  This module provides calender presentation for a simple
+scheduler, Calender::Lite class.
 
 =head1 METHODS
 
@@ -60,7 +59,7 @@ sub new
 
 
 # Descriptions: dummy
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub prepare        { 1; }
@@ -70,19 +69,19 @@ sub finish         { 1; }
 
 # Descriptions: prepare parameters and call Calender::Lite module.
 #               we use w3m to show calender (HTML table).
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: create temporary file and remove it in the last
 # Return Value: none
 sub run
 {
-    my ($self, $args) = @_;
+    my ($curproc, $args) = @_;
     my $argv   = $args->{ argv };
     my $option = $args->{ options };
     my $mode   = 'text';
 
     # -h or --help
     if (defined $option->{ h } || defined $option->{ help }) {
-	return $self->help();
+	return $curproc->help();
     }
 
     use FileHandle;
@@ -111,10 +110,13 @@ sub run
 	    $schedule->print_specific_month($wh, $month);
 	}
     }
+    # if "month" to show is specified as arguments,
+    # show the corresponding calender.
     elsif (defined(@$argv) && @$argv) {
 	# ($month, $yeer) = @$argv;
 	$schedule->print_specific_month($wh, @$argv);
     }
+    # show this month calender by default.
     else {
 	$schedule->print_specific_month($wh, 'this');
     }
@@ -134,12 +136,12 @@ sub run
 
 
 # Descriptions: show help
-#    Arguments: OBJ($self)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub help
 {
-    my ($self) = @_;
+    my ($curproc) = @_;
 
     my $name = $0;
     eval q{ use File::Basename;
@@ -171,7 +173,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
@@ -180,6 +182,8 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 FML::Process::Calender appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
+
+C<FML::Process::Scheduler> is renamed to C<FML::Process::Calender>.
 
 =cut
 
