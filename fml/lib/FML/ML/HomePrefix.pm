@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HomePrefix.pm,v 1.3 2004/01/23 09:17:37 fukachan Exp $
+# $FML: HomePrefix.pm,v 1.4 2004/04/23 04:10:34 fukachan Exp $
 #
 
 package FML::ML::HomePrefix;
@@ -101,6 +101,7 @@ sub add
 {
     my ($self, $domain, $dir) = @_;
     my $curproc = $self->{ _curproc };
+    my $cred    = $curproc->{ credential };
     my $pri_map = $self->primary_map();
 
     $self->_sanity_check();
@@ -110,10 +111,23 @@ sub add
     my $obj = new IO::Adapter $pri_map;
     $obj->touch();
 
-    if ($obj->find($domain)) {
-	my $error = "already defined domain: $domain";
-	$curproc->logerror($error);
-	croak($error);
+    my $_domain   = quotemeta($domain);
+    my ($domlist) = $obj->find($_domain, { all => 1 });
+    if (@$domlist) {
+	my $found = 0;
+	for my $_dom (@$domlist) {
+	    my ($_domain) = split(/\s+/, $_dom);
+	    $found = 1 if $cred->is_same_domain($_domain, $domain);
+	}
+
+	if ($found) {
+	    my $error = "already defined domain: $domain";
+	    $curproc->logerror($error);
+	    croak($error);
+	}
+	else {
+	    $obj->add($domain, [ $dir ]);
+	}
     }
     else {
 	$obj->add($domain, [ $dir ]);
