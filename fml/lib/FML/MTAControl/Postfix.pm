@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.13 2002/12/18 04:03:52 fukachan Exp $
+# $FML: Postfix.pm,v 1.14 2002/12/22 14:22:24 fukachan Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -326,7 +326,6 @@ sub postfix_install_virtual_map
     use File::Utils qw(append);
     append($dst, $virtual);
     unlink $dst;
-    system "$postmap $virtual";
 }
 
 
