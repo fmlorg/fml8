@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.13 2002/04/25 04:15:19 fukachan Exp $
+# $FML: Menu.pm,v 1.14 2002/06/21 09:28:12 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -108,13 +108,24 @@ sub run_cgi_main
 {
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
-    my $command = $curproc->safe_param_command() || '';
     my $address = $curproc->cgi_try_get_address($args);
     my $ml_name = $curproc->cgi_try_get_ml_name($args);
+    my $hints   = $curproc->hints();
 
-    # update config on memory
+    # specified command, we need to identify 
+    # the command specifined in the cgi_navigation and cgi_mein.
+    my $navi_command = $curproc->safe_param_navi_command() || '';
+    my $command      = $curproc->safe_param_command() || '';
+
+    # update config on memory to hadlne 
+    # 1. ml_name specified here
+    # 2. virtual domain
     $config->set('ml_name', $ml_name);
-    
+    $curproc->rewrite_config_if_needed($args, {
+	ml_name   => $ml_name,
+	ml_domain => $hints->{ ml_domain },
+    });
+
     if (($command eq 'newml' && $ml_name) ||
 	($command eq 'rmml'  && $ml_name)) {
 	my $command_args = {
@@ -147,6 +158,9 @@ sub run_cgi_main
 
 	print hr;
 	$curproc->run_cgi_menu($args, $command);
+    }
+    elsif ($navi_command) {
+	$curproc->run_cgi_menu($args, $navi_command);
     }
     elsif ($command) {
 	$curproc->run_cgi_menu($args, $command);
@@ -194,7 +208,7 @@ sub run_cgi_navigator
     print "\n<BR>\n";
 
     print "  command:\n";
-    print scrolling_list(-name   => 'command',
+    print scrolling_list(-name   => 'navi_command',
 			 -values => $command_list,
 			 -size   => 5);
     print "\n<BR>\n";
