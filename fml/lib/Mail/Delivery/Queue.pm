@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.40 2004/06/29 10:05:29 fukachan Exp $
+# $FML: Queue.pm,v 1.41 2004/08/13 11:50:49 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -230,6 +230,30 @@ sub list
 }
 
 
+# Descriptions: return list of all queue irrespective of validity.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub list_all
+{
+    my ($self) = @_;
+    my (@r)    = ();
+    my (%r)    = ();
+
+    for my $class (@class_list) {
+	my $ra = $self->list($class);
+	push(@r, @$ra);
+    }
+
+    for my $q (sort @r) {
+	$r{ $q } = 1;
+    }
+
+    @r = keys %r;
+    return \@r;
+}
+
+
 =head1 METHODS TO MANIPULATE INFORMATION
 
 =head2 getidinfo($id)
@@ -286,6 +310,36 @@ sub getidinfo
 	sender     => $sender      || '',
 	recipients => \@recipients || [],
     };
+}
+
+
+# Descriptions: when last modified.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: NUM(oldest unix time)
+sub last_modified_time
+{
+    my ($self, $id) = @_;
+    my $min_mtime = time;
+
+    # queue id.
+    $id ||= $self->id();
+
+    use File::stat;
+    for my $class (@class_list) {
+        my $fp    = sprintf("%s_file_path", $class);
+        my $file  = $self->can($fp) ? $self->$fp($id) : undef;
+
+	if (-f $file) {
+	    my $st    = stat($file);
+	    my $mtime = $st->mtime();
+
+	    # find oldest file info.
+	    $min_mtime = $min_mtime < $mtime ? $min_mtime : $mtime;
+	}
+    }
+
+    return $min_mtime;
 }
 
 
@@ -616,18 +670,6 @@ sub is_valid_queue
     }
 
     ($ok == 3) ? 1 : 0;
-}
-
-
-# Descriptions: return list of queue classes.
-#    Arguments: OBJ($self)
-# Side Effects: none
-# Return Value: ARRAY_REF
-sub get_class_list
-{
-    my ($self) = @_;
-
-    return \@class_list;
 }
 
 
