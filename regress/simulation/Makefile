@@ -21,6 +21,7 @@ allclean: clean
 	rm -f CGI
 	rm -f Command
 	rm -f SQL
+	rm -f ErrorMessages
 
 scan:
 	@ (cd ../..; make scan 2>&1) |tee __scan__ || echo 'nothing changed'
