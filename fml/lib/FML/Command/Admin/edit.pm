@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: edit.pm,v 1.16 2003/08/23 04:35:30 fukachan Exp $
+# $FML: edit.pm,v 1.17 2003/09/13 09:16:59 fukachan Exp $
 #
 
 package FML::Command::Admin::edit;
@@ -25,14 +25,14 @@ See C<FML::Command> for more details.
 
 Tool to edit config.cf.
 
-     not implemented
+     NOT IMPLEMENTED.
 
 =head1 METHODS
 
 =head2 process($curproc, $command_args)
 
 C<TODO>:
-now we can read and write config.cf, not change it.
+now we can read and write config.cf, but can not change it.
 
 =cut
 
@@ -58,25 +58,26 @@ sub need_lock { 0;}
 
 
 # Descriptions: run "vi" or the specified editor to edit config.cf.
+#               If environmental variable EDITOR is specified,
+#               try to run "$EDITOR config.cf".
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update config.cf
+#               change $ENV{ PATH } withiin running editor.
 # Return Value: none
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config      = $curproc->config();
-    my $ml_name     = $curproc->ml_name();
-    my $ml_home_dir = $curproc->ml_home_dir( $ml_name );
-
-    use File::Spec;
-    my $config_cf   = File::Spec->catfile($ml_home_dir, "config.cf");
-
-    # editor
-    my $editor = $ENV{ 'EDITOR' } || 'vi';
+    my $ml_name   = $curproc->ml_name();
+    my $ml_domain = $curproc->ml_domain();
+    my $config_cf = $curproc->config_cf_filepath($ml_name, $ml_domain);
+    my $editor    = $ENV{ 'EDITOR' } || 'vi';
+    my $orig_path = $ENV{ 'PATH' };
 
     if (-f $config_cf) {
+	$ENV{'PATH'} = '/bin/:/usr/bin:/usr/pkg/bin:/usr/local/bin';
 	$curproc->ui_message("$editor $config_cf");
 	system $editor, $config_cf;
+	$ENV{'PATH'} = $orig_path;
     }
     else {
 	warn("$config_cf not found\n");
