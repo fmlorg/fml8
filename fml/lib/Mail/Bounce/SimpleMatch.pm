@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SimpleMatch.pm,v 1.37 2003/04/07 15:39:20 tmu Exp $
+# $FML: SimpleMatch.pm,v 1.38 2003/04/29 03:11:01 fukachan Exp $
 #
 
 
@@ -161,6 +161,12 @@ my $address_trap_regexp = {
     'unknown3' => {
 	'start' => 'this message was created automatically by mail delivery software',
 	'end'   => 'original message follows',
+    },
+
+    # What is E500 ?
+    'E500_SMTP_Mail_Service' => {
+	'start' => '------ Failed Recipients ------',
+	'end'   => '-------- Returned Mail --------',
     },
 
 };
