@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: CacheDir.pm,v 1.3 2001/04/04 14:47:55 fukachan Exp $
+# $FML: CacheDir.pm,v 1.4 2001/04/14 11:20:56 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -136,6 +136,12 @@ sub _take_file_name
     my $file;
     use File::Spec;
 
+    unless (-d $directory) {
+	my $mode = $args->{ directory_mode } || 0755;
+	use File::Utils qw(mkdirhier);
+	mkdirhier($directory, $mode);
+    }
+
     if ($cache_type eq 'temporal') {
 	my ($sec,$min,$hour,$mday,$mon,$year,$wday) = localtime(time);
 	my $file_name = sprintf("%04d%02d%02d", 1900+$year, $mon+1, $wday);
@@ -227,8 +233,10 @@ sub get_latest_value
     my $dir = $self->{ _directory };
     my $dh  = new IO::Handle;
 
+    my @dh = ();
     opendir($dh, $dir);
-    my @dh = sort { $b <=> $a } readdir($dh);
+    for (readdir($dh)) { push(@dh, $_) if /^\d+/;}
+    @dh = sort { $b <=> $a } @dh;
 
     for (@dh) {
 	next if $_ =~ /^\./;
