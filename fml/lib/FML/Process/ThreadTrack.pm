@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ThreadTrack.pm,v 1.33 2002/09/11 23:18:16 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.34 2002/09/22 14:56:54 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -233,12 +233,14 @@ sub _speculate_last_id
     if (-f $seq_file &&
 	($sf_last_modified + 3600 > $db_last_modified)) {
 	print STDERR "read seqfile\n"; sleep 3;
+	my $last_id = 0;
 	eval q{
 	    use File::Sequence;
 	    my $sfh = new File::Sequence { sequence_file => $seq_file };
-	    return $sfh->get_id();
+	    $last_id = $sfh->get_id();
 	};
 	warn($@) if $@;
+	return $last_id;
     }
     else {
 	my $last_id = 0;
