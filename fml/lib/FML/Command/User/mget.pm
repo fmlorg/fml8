@@ -1,11 +1,10 @@
-
 #-*- perl -*-
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mget.pm,v 1.4 2001/12/22 09:21:05 fukachan Exp $
+# $FML: mget.pm,v 1.5 2001/12/22 09:53:10 fukachan Exp $
 #
 
 package FML::Command::User::mget;
