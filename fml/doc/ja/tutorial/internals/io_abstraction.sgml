@@ -1,0 +1,291 @@
+<!--
+   $FML$
+-->
+
+
+<chapter id="io.abstraction">
+	<title>
+	IO インターフェイスとオペレーション
+	</title>
+
+<para>
+移植性や拡張性のためには UNIX における Vnode/VFS interface (vnode(9)参
+照)のような構造をあらゆるレイヤーに導入する必要があります。
+<screen>
+struct vnode {
+		...
+        voff_t          v_size;                 /* size of file */
+        int             v_numoutput;            /* num pending writes */
+        long            v_writecount;           /* ref count of writers */
+		...
+        int             (**v_op)(void *);       /* vnode ops vector */
+		...
+        void            *v_data;                /* private data for fs */
+};
+</screen>
+v_op の先に、
+vop_open()
+vop_read()
+vop_getattr()
+などが定義されています。
+</para>
+
+<para>
+つまり struct vnode の **v_op (vnode operation vector) にあたるものが
+IO に使われるクラスの各メソッドです。たとえば、IO::Adapter はユーザリ
+ストというオブジェクトに対する IO インターフェイスを抽象化したものです。
+</para>
+
+
+<sect1 id="io.abstraction.overview">
+	<title>
+	基本形としての IO::Adapter
+	</title>
+
+<para>
+&fmldevel; 全体の基調となる型は 
+<link linkend="module.io.adapter">
+IO::Adapter
+</link>
+といえるでしょう。実装もすでに完成形であり、primitive なメソッドは何か
+などについて十分考えられています。
+</para>
+
+<para>
+<link linkend="module.io.adapter">
+IO::Adapter
+</link>
+クラスは
+<screen>
+KEY => VALUE
+</screen>
+もしくは
+<screen>
+KEY => [ VALUE, VALUE2, VALUE3 ]
+</screen>
+のいづれかの型のデータ構造を抽象化していると考えられます。
+つまり、これは RDBMS の基礎理論同様の表型のデータ構造です。
+</para>
+<screen>
+KEY1 VALUE1-1 ""     ""
+KEY2 VALUE2-1 VALUE2-2 VALUE2-3
+KEY3 VALUE3-1 VALUE3-2 VALUE3-3
+KEY4 VALUE4-1 VALUE4-2 VALUE4-3
+</screen>
+
+<para>
+ユーザリストを管理する上で必要最低限の基本メソッド群は、
+IO::Adapter の裏にあるオブジェクト本体を呼びだすための
+<screen>
+open()
+close()
+</screen>
+および、そのオブジェクトへの IO である
+<screen>
+add(KEY, ARGV) (ARGV はクラス依存のデータ渡しのためにある引数)
+delete(KEY)
+find(KEY or REGEXP)
+get_next_key()
+</screen>
+があれば十分のようです。
+少なくとも、ユーザ管理はこれらだけで十分書けます。
+</para>
+
+</sect1>
+
+
+<sect1 id="io.abstraction.ops">
+	<title>
+	メソッド / operation vector
+	</title>
+
+<para>
+前述のように IO::Adapter の基本メソッドは次の通りです。
+<screen>
+open()
+close()
+add(KEY, ARGV) (ARGV はクラス依存のデータ渡しのためにある引数)
+delete(KEY)
+find(KEY or REGEXP)
+get_next_key()
+</screen>
+</para>
+
+<para>
+もちろん、オブジェクトを生成するのは new() ですので、
+これら以外に new() だけは必要です:)
+必要なら適宜、ディストラクタも定義して下さい。
+</para>
+
+<para>
+オブジェクトを生成するのは new() です。
+たとえば IO::Adapter であれば、
+<screen>
+$obj = new IO::Adapter マップ;
+</screen>
+などとオブジェクトタイプを引数(マップ)で指定するため、
+それに応じた初期化を行ないます。
+</para>
+
+
+<sect2>
+	<title>
+	open()
+	</title>
+
+<para>
+ファイルであれば open(2)、RDBMS であれば SQL サーバへの接続を確立する
+といった具合です。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	close()
+	</title>
+
+<para>
+すなおに open() の逆です。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	add(KEY, ARGV)
+	</title>
+
+<para>
+KEY (プライマリキー)もしくは、KEY および KEY に付随するデータをオブジェ
+クトに書き込みます。なお、ARGV はクラス依存のデータ渡しのためにある引
+数で、この引数が使われないこともあります。
+</para>
+
+<para>
+UNIX と異なり、オブジェクトの構造に一定の型があります。型とは RDBMS の
+ようなテーブルの形です。
+</para>
+
+<para>
+また、プライマリキーとなるのは通常メールアドレスです。この前提が多くの
+場面で正しいため、メールアドレスをプライマリアドレスにしたテーブル型が
+基本的なデータ構造といえるわけです。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	delete(KEY)
+	</title>
+
+<para>
+KEY および KEY に付随するデータ構造を削除します。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	find(KEY) / find(REGEXP)
+	</title>
+
+<para>
+オブジェクト内からプライマリキーに該当するデータを探します。
+</para>
+
+<para>
+探す対象を正規表現で指定できるように作る方が便利です。
+正規表現検索が使えると、ユーザ検索などで重宝します。
+</para>
+
+<para>
+返り値は STR か ARRAY_REF (KEY に対する [ VALUE, VALUE2, VALUE3 ])です。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	get_next_key()
+	</title>
+
+<para>
+プライマリキーの一覧を取り出したい場合が多々あります。
+そこで
+<screen>
+while ($obj->get_next_key()) { ... }
+</screen>
+のような表現を可能とするために、このメソッドが実装されています。
+</para>
+
+<para>
+これはハッシュの FIRST_KEY() と NEXT_KEY() にあたるといえます。でも、
+我々の場合は open() などのメソッドが別途用意されているため、
+FIRST_KEY() と NEXT_KEY() のように２つに分ける必要はありません。
+</para>
+
+<para>
+XXX すなおに、key() もしくは get_key() でも良い気がする？
+</para>
+
+</sect2>
+
+</sect1>
+
+
+<sect1 id="io.abstraction.discussion">
+	<title>
+	議論
+	</title>
+
+
+<sect2>
+	<title>
+	プライマリキーを全部取り出したい場合は？
+	</title>
+
+<para>
+定石は全部読んでみること、つまり get_next_key() を呼びまくるコードです。
+専用のメソッドがあった方が便利でしょうけど、
+滅多にそんなコードは必要ないようなので、
+専用メソッドがなくても問題はがないようです。
+</para>
+
+<para>
+もし、あるとしたら get_primary_keys() みたいなメソッド？で、
+ARRAY_REF で返すのでしょうかね？
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	返り値が HASH_REF の場合？
+	</title>
+
+<para>
+返り値が HASH_REF であるようなメソッドが欲しいだろうか？
+<screen>
+返り値 = {
+	変数１ => 値１、 
+	変数２ => 値２、 
+}
+</screen>
+って、getattr() とかいうメソッドかなぁ。だが、HASH_REF 中の
+属性のキーがオブジェクトに強く依存するなぁ…う〜む。
+</para>
+
+</sect2>
+
+</sect1>
+
+
+</chapter>
