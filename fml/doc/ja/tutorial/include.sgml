@@ -1,5 +1,5 @@
 <!--
-	$FML: include.sgml,v 1.4 2001/04/24 06:51:59 fukachan Exp $
+	$FML: include.sgml,v 1.5 2001/04/24 07:12:29 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -10,6 +10,7 @@
 
 <!entity appendix  SYSTEM "appendix.sgml">
 <!entity docbook   SYSTEM "docbook.sgml">
+<!entity download   SYSTEM "download.sgml">
 <!entity terms     SYSTEM "terms.sgml">
 <!entity intro     SYSTEM "intro.sgml">
 <!entity install   SYSTEM "install.sgml">

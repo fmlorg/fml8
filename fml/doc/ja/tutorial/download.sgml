@@ -1,0 +1,71 @@
+<!--
+	$FML$
+-->
+
+<chapter id="download">
+
+<title> fml-devel のソースの入手方法 </title>
+
+
+<!-- ====================================================  -->
+<sect1 id="ftp.fml.org">
+
+<title> ftp </title>
+
+<para>
+fml-devel のソースは
+	<ulink url="ftp://ftp.fml.org/pub/fml-devel/">
+	ftp://ftp.fml.org/pub/fml-devel/
+	</ulink>
+から、 ftp で入手できます。
+</para>
+
+<para>
+ある程度の区切りで、不定期に作成されています。
+日付の新しいものを選んでダウンロードして下さい。
+</para>
+
+</sect1>
+
+
+<!-- ====================================================  -->
+<sect1 id="anoncvs">
+
+<title> cvs へのアクセス </title>
+
+<para>
+anonymous CVS へのアクセスはまだできません。
+anoncvs.fml.org は準備中です
+(ちょっと待ってください。
+マシンが壊れてしまったのですが、復旧予定不明)。
+</para>
+
+<para>
+cvs.fml.org にアクセスできる権限のある人は
+
+<screen>
+cvs -d cvs.fml.org:/cvsroot co fmlsrc
+</screen>
+
+でアクセスできます(注: cvs over ssh のみがサポートされます)。
+</para>
+
+</sect1>
+
+
+<!-- ====================================================  -->
+<sect1 id="cvsweb">
+
+<title> cvsweb による cvs へのアクセス </title>
+
+<para>
+<ulink url="http://www.fml.org/cvsweb/fmlsrc/">
+http://www.fml.org/cvsweb/fmlsrc/
+</ulink>
+で cvs を見ることができます。
+</para>
+
+</sect1>
+
+
+</chapter>
