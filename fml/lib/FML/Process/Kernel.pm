@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.98 2002/05/21 11:43:03 fukachan Exp $
+# $FML: Kernel.pm,v 1.99 2002/05/21 14:20:46 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1237,6 +1237,36 @@ sub prepare_file_to_return
     }
 
     return (-s $tmpf ? $tmpf : undef);
+}
+
+
+=head1 ERROR HANDLING
+
+=cut
+
+
+# Descriptions: open cache data area and return file handle to write into it.
+#    Arguments: OBJ($curproc) HASH_REF($optargs)
+# Side Effects: open cache
+# Return Value: HANDLE
+sub open_outgoing_message_channel
+{
+    my ($curproc, $optargs) = @_;
+    my $config = $curproc->{ config };
+
+    # save message for further investigation
+    if ($config->yes('use_outgoing_message_cache')) { 
+	my $dir     = $config->{ outgoing_message_dir };
+	my $modulus = $config->{ outgoing_message_cache_size };
+        my $obj     = new File::CacheDir {
+            directory  => $dir,
+	    modulus    => $modulus,
+        };
+
+	return $obj->open();
+    }
+
+    return undef;
 }
 
 
