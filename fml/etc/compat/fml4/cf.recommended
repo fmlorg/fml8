@@ -1,0 +1,90 @@
+# Copyright (C) 1997-2000 Ken'ichi Fukamachi
+#          All rights reserved. 
+#               1993-1996 fukachan@phys.titech.ac.jp
+#               1996-2000 fukachan@sapporo.iij.ad.jp
+# 
+# FML is free software; you can redistribute it and/or modify
+# it under the terms of GNU General Public License.
+# See the file COPYING for more details.
+#
+# $Id$
+#
+
+CFVersion			6.1
+LANGUAGE			_LANGUAGE_
+MESSAGE_LANGUAGE		_LANGUAGE_
+TZone				_TZ_
+
+### DNS
+DOMAINNAME			_DOMAIN_
+FQDN				_FQDN_
+
+debug				0
+
+MAINTAINER			_ML_-admin@$DOMAINNAME
+
+### Access Policy
+MAIL_LIST			_ML_@$DOMAINNAME
+PERMIT_POST_FROM		members_only
+REJECT_POST_HANDLER		reject
+
+CONTROL_ADDRESS			_ML_-ctl@$DOMAINNAME
+PERMIT_COMMAND_FROM		members_only
+REJECT_COMMAND_HANDLER		reject
+
+### Auto Registration
+AUTO_REGISTRATION_TYPE		confirmation
+
+### Remote Administration 
+REMOTE_ADMINISTRATION
+REMOTE_ADMINISTRATION_AUTH_TYPE	crypt
+PGP_PATH			$DIR/etc/pgp
+
+### Automatic Html Generation
+AUTO_HTML_GEN
+HTML_THREAD_REF_TYPE		prefer-in-reply-to
+HTML_STYLESHEET_BASENAME
+
+### Security
+REJECT_ADDR			root|postmaster|MAILER-DAEMON|msgs|nobody|news|majordomo|listserv|listproc|\S+\-help|\S+\-subscribe|\S+\-unsubscribe
+ADDR_CHECK_MAX			3
+INCOMING_MAIL_SIZE_LIMIT	
+NOTIFY_MAIL_SIZE_OVERFLOW	1
+
+### Header
+ML_FN				(_ML_ ML)
+XMLNAME		 		X-ML-Name: _ML_
+XMLCOUNT			X-Mail-Count
+
+BRACKET				_ML_
+
+REWRITE_TO			0
+SUBJECT_TAG_TYPE
+DATE_TYPE			original-date
+PASS_ALL_FIELDS_IN_HEADER	1
+SKIP_FIELDS			Return-Receipt-To
+
+### Misc
+USE_FLOCK			1
+USE_MIME			1
+MAIL_LIST_ACCEPT_COMMAND	0
+AMLIST_NEWSYSLOG_LIMIT		150K
+
+### SMTP
+OUTGOING_ADDRESS		_ML_-outgoing@$DOMAINNAME
+
+### Architecture
+CPU_TYPE_MANUFACTURER_OS	_CPU_TYPE_MANUFACTURER_OS_
+STRUCT_SOCKADDR			_STRUCT_SOCKADDR_
+
+### Others
+
+USE_LOG_MAIL                    1
+USE_DISTRIBUTE_FILTER           1
+FILTER_ATTR_REJECT_COMMAND      1
+FILTER_ATTR_REJECT_MS_GUID      1
+USE_MTI                         1
+INCOMING_MAIL_SIZE_LIMIT        512000
+
+
+LOCAL_CONFIG
