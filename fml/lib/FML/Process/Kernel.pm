@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.139 2002/10/22 02:28:57 fukachan Exp $
+# $FML: Kernel.pm,v 1.140 2002/11/17 14:07:33 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1132,6 +1132,13 @@ sub _analyze_recipients
 }
 
 
+sub _analyze_header
+{
+    my ($curproc, $args) = @_;
+    return $args->{ header };
+}
+
+
 # Descriptions: set reply message
 #    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($args)
 # Side Effects: none
@@ -1149,6 +1156,7 @@ sub reply_message
 
     # recipients list
     my ($recipient, $recipient_maps) = $curproc->_analyze_recipients($args);
+    my $hdr                          = $curproc->_analyze_header($args);
 
     # check text messages and fix if needed.
     unless (ref($msg)) {
@@ -1157,7 +1165,8 @@ sub reply_message
     }
 
     $curproc->_append_message_into_queue($msg, $args, 
-					 $recipient, $recipient_maps);
+					 $recipient, $recipient_maps,
+					 $hdr);
 
     if (defined $args->{ always_cc }) {
 	# only if $recipient above != always_cc, duplicate $msg message.
@@ -1174,7 +1183,9 @@ sub reply_message
 
 	if (_array_is_different($sent, $recipient)) {
 	    Log("cc: [ @$recipient ]");
-	    $curproc->_append_message_into_queue($msg, $args, $recipient);
+	    $curproc->_append_message_into_queue($msg, $args, 
+						 $recipient, $recipient_maps,
+						 $hdr);
 	}
     }
 }
@@ -1209,7 +1220,7 @@ sub _array_is_different
 # Return Value: none
 sub _append_message_into_queue
 {
-    my ($curproc, $msg, $args, $recipient, $recipient_maps) = @_;
+    my ($curproc, $msg, $args, $recipient, $recipient_maps, $hdr) = @_;
     my $pcb      = $curproc->{ pcb };
     my $category = 'reply_message';
     my $class    = 'queue';
@@ -1220,6 +1231,7 @@ sub _append_message_into_queue
 	type           => ref($msg) ? ref($msg) : 'text',
 	recipient      => $recipient,
 	recipient_maps => $recipient_maps,
+	header         => $hdr,
     };
 
     $pcb->set($category, $class, $rarray);
@@ -1241,6 +1253,7 @@ sub _reply_message_recipient_keys
     my %rcptattr = ();
     my %rcptlist = ();
     my %rcptmaps = ();
+    my %hdr      = ();
     my ($rcptlist, $rcptmaps, $key, $type) = ();
 
     for my $m (@$rarray) {
@@ -1252,10 +1265,11 @@ sub _reply_message_recipient_keys
 	    $rcptattr{ $key }->{ $type }++;
 	    $rcptlist{ $key } = $rcptlist;
 	    $rcptmaps{ $key } = $rcptmaps;
+	    $hdr{ $key }      = $m->{ header };
 	}
     }
 
-    return ( \%rcptattr, \%rcptlist, \%rcptmaps );
+    return ( \%rcptattr, \%rcptlist, \%rcptmaps, \%hdr );
 }
 
 
@@ -1291,8 +1305,6 @@ sub _gen_recipient_key
 	    LogError("wrong \$rmaps");
 	}
     }
-
-    Log("recipient_key = <$key>");
 
     return $key;
 }
@@ -1422,7 +1434,7 @@ sub inform_reply_messages
     #    2. pick up messages for it/them.
     #       merge messages by types if needed.
     #
-    my ($attr, $list, $maps)  = $curproc->_reply_message_recipient_keys();
+    my ($attr, $list, $maps, $hdr) = $curproc->_reply_message_recipient_keys();
     my $need_multipart = 0;
 
     for my $key (keys %$list) {
@@ -1434,6 +1446,7 @@ sub inform_reply_messages
 		    recipient_list => $list->{ $key },
 		    recipient_maps => $maps->{ $key },
 		    recipient_attr => $attr,
+		    header         => $hdr->{ $key },
 		});
 	    }
 	}
@@ -1464,15 +1477,20 @@ sub queue_in
     my $rcptlist     = [];
     my $rcptmaps     = [];
     my $msg          = '';
+    my $hdr_to       = '';
 
     # override parameters (may be processed here always)
     if (defined $optargs) {
 	my $a = $optargs;
+	my $h = $optargs->{ header };
+	my $c = $optargs->{ header }->{ 'content-type' };
 
 	# override parameters
-	$sender    = $a->{'sender'}         if defined $a->{'sender'};
-	$charset   = $a->{'charset'}        if defined $a->{'charset'};
-	$subject   = $a->{'subject'}        if defined $a->{'subject'};
+	$sender    = $h->{'sender'}         if defined $h->{'sender'};
+	$subject   = $h->{'subject'}        if defined $h->{'subject'};
+	$hdr_to    = $h->{'to'}             if defined $h->{'to'};
+	$reply_to  = $h->{'reply-to'}       if defined $h->{'reply-to'};
+	$charset   = $c->{'charset'}        if defined $c->{'charset'};
 	$rcptkey   = $a->{'recipient_key'}  if defined $a->{'recipient_key'};
 	$rcptlist  = $a->{ recipient_list } if defined $a->{'recipient_list'};
 	$rcptmaps  = $a->{ recipient_maps } if defined $a->{'recipient_maps'};
@@ -1522,10 +1540,11 @@ sub queue_in
     croak($@) if $@;
 
     if ($is_multipart) {
+	my $_to = $hdr_to || $rcptkey;
 	eval q{
 	    $msg = new Mail::Message::Compose
 		From     => $sender,
-		To       => $rcptkey,
+		To       => $_to,
 		Subject  => $subject,
 		Type     => "multipart/mixed";
 	};
@@ -1613,10 +1632,11 @@ sub queue_in
 	    }
 	}
 
+	my $_to = $hdr_to || $rcptkey;
 	eval q{
 	    $msg = new Mail::Message::Compose
 		From     => $sender,
-		To       => $rcptkey,
+		To       => $_to,
 		Subject  => $subject,
 		Data     => $s,
 	};
@@ -1645,6 +1665,7 @@ sub queue_in
 	    $queue->set('recipients', $rcptlist);
 	}
 
+	# $rcptlist and $rcptmaps duplication is ok.
 	if ($rcptmaps) {
 	    $queue->set('recipient_maps', $rcptmaps);
 	}
