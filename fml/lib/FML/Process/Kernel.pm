@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.223 2004/04/02 11:56:26 fukachan Exp $
+# $FML: Kernel.pm,v 1.224 2004/04/10 12:42:40 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1010,8 +1010,8 @@ sub parse_incoming_message
     if ($config->yes('use_incoming_mail_cache')) {
 	my $dir     = $config->{ incoming_mail_cache_dir };
 	my $modulus = $config->{ incoming_mail_cache_size };
-	use File::CacheDir;
-        my $obj     = new File::CacheDir {
+	use FML::Cache::Ring;
+        my $obj     = new FML::Cache::Ring {
             directory => $dir,
 	    modulus   => $modulus,
         };
@@ -2615,8 +2615,8 @@ sub open_outgoing_message_channel
     if ($config->yes('use_outgoing_mail_cache')) {
 	my $dir     = $config->{ outgoing_mail_cache_dir };
 	my $modulus = $config->{ outgoing_mail_cache_size };
-	use File::CacheDir;
-        my $obj     = new File::CacheDir {
+	use FML::Cache::Ring;
+        my $obj     = new FML::Cache::Ring {
             directory  => $dir,
 	    modulus    => $modulus,
         };

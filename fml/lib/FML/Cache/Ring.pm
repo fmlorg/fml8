@@ -1,13 +1,13 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CacheDir.pm,v 1.26 2003/12/29 15:02:19 fukachan Exp $
+# $FML: CacheDir.pm,v 1.27 2004/04/15 11:33:03 fukachan Exp $
 #
 
-package File::CacheDir;
+package FML::Cache::Ring;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
@@ -17,14 +17,14 @@ use File::Spec;
 
 =head1 NAME
 
-File::CacheDir - IO operations to ring buffer which consists of files
+FML::Cache::Ring - IO operations to ring buffer which consists of files
 
 =head1 SYNOPSIS
 
    ... lock e.g. by flock(2) ...
 
-   use File::CacheDir;
-   $obj = new File::CacheDir {
+   use FML::Cache::Ring;
+   $obj = new FML::Cache::Ring {
        directory          => '/some/where' # mandatory
        sequence_file_name => '.seq',       # optional
        modulus            => 128,          # optional
@@ -38,7 +38,7 @@ File::CacheDir - IO operations to ring buffer which consists of files
 The buffer directory has files with the name C<0>, C<1>, ...
 You can specify C<file_name> parameter.
 
-   $obj = new File::CacheDir {
+   $obj = new FML::Cache::Ring {
        directory => '/some/where',
        file_name => '_smtplog',
    };
@@ -47,11 +47,11 @@ If so, the file names become _smtplog.0, _smtplog.1, ...
 
 The cache data is limited by size.
 
-You can use File::CacheDir based on time not size.
+You can use FML::Cache::Ring based on time not size.
 It is time based expiretion.
 If you so, use new() like this:
 
-   $obj = new File::CacheDir {
+   $obj = new FML::Cache::Ring {
        directory  => '/some/where',
        cache_type => 'temporal',
        expires_in => 90,             # 90 days
@@ -409,11 +409,17 @@ if ($0 eq __FILE__) {
 	    mkpath( [ $tmp_dir ], 0, 0755);
 	};
     }
-    my $cache = new File::CacheDir { directory => $tmp_dir };
+    my $cache = new FML::Cache::Ring { directory => $tmp_dir };
     $cache->set(time, time);
 
     print STDERR "see $tmp_dir\n";
 }
+
+
+=head1 TODO
+
+Export core parts of this module to another putlic class e.g.
+File::SOMETHING outside FML::* classes, again.
 
 =head1 CODING STYLE
 
@@ -425,15 +431,17 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-File::CacheDir first appeared in fml8 mailing list driver package.
+FML::Cache::Ring first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
+
+FML::Cache::Ring is renamed from File::CacheDir in 2004.
 
 =cut
 
