@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.1.2.7 2003/06/14 06:55:03 fukachan Exp $
+# $FML: DB.pm,v 1.1.2.8 2003/06/14 10:42:51 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -21,7 +21,7 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.1.2.7 2003/06/14 06:55:03 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.1.2.8 2003/06/14 10:42:51 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 my $debug = 1;
@@ -422,15 +422,49 @@ sub thread_summary
 	undef $next_thread_id if $next_thread_id == $id;
     }
 
+    # default
+    $prev_thread_id ||= $prev_id;
+    $next_thread_id ||= $next_id;
+
+    # file name
+    my $fn_prev_id        = $self->_db_get($db, 'html_filename', $prev_id);
+    my $fn_next_id        = $self->_db_get($db, 'html_filename', $next_id);
+    my $fn_prev_thread_id = 
+	$self->_db_get($db, 'html_filename', $prev_thread_id);
+    my $fn_next_thread_id = 
+	$self->_db_get($db, 'html_filename', $next_thread_id);
+
+    # file path
+    my $fp_prev_id        = $self->_db_get($db, 'html_filepath', $prev_id);
+    my $fp_next_id        = $self->_db_get($db, 'html_filepath', $next_id);
+    my $fp_prev_thread_id = 
+	$self->_db_get($db, 'html_filepath', $prev_thread_id);
+    my $fp_next_thread_id = 
+	$self->_db_get($db, 'html_filepath', $next_thread_id);
+
     # XXX this routine returns information expected straight forwardly, so
     # XXX $summary may be invalid since $next*id not yet exists.
     # XXX we expect the program calling this method validates this info.
     # XXX For examle, check the existence of msg${next_id}.html before use.
     my $summary = {
+	id             => $id,
+
 	prev_id        => $prev_id,
 	next_id        => $next_id,
 	prev_thread_id => $prev_thread_id,
 	next_thread_id => $next_thread_id,
+
+	# file relative path info
+	html_filename_prev_id        => $fn_prev_id,
+	html_filename_next_id        => $fn_next_id,
+	html_filename_prev_thread_id => $fn_prev_thread_id,
+	html_filename_next_thread_id => $fn_next_thread_id,
+
+	# file (full)path info
+	html_filepath_prev_id        => $fp_prev_id,
+	html_filepath_next_id        => $fp_next_id,
+	html_filepath_prev_thread_id => $fp_prev_thread_id,
+	html_filepath_next_thread_id => $fp_next_thread_id,
     };
 
     return $summary;
