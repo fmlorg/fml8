@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: spool.pm,v 1.3 2003/03/18 10:42:43 fukachan Exp $
+# $FML: spool.pm,v 1.4 2003/08/23 04:35:32 fukachan Exp $
 #
 
 package FML::Command::Admin::spool;
@@ -67,23 +67,25 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config  = $curproc->config();
+    my $c_opts  = $curproc->cui_command_specific_options() || {};
     my $options = $command_args->{ options };
     my $fp      = $options->[ 0 ] || 'status';
 
-    # XXX-TODO: makefml $ml spool ... what arguments is appropriate ?
-    #           use $dst_dir as $src_dir if --srcdir=DIR not specified.
-    #           you can specify the spool type by --style=subdir ?
-    #           but only "subdir" is supported now :) ?
-
     # prepare arguments on $*_dir directory info.
-    my $dst_dir = $config->{ spool_dir };
-    my $src_dir = $dst_dir;
+    my $dst_dir = $c_opts->{ dst_dir } || $config->{ spool_dir };
+    my $src_dir = $c_opts->{ src_dir } || $config->{ spool_dir };
+
+    # sanity
+    croak("\$src_dir unspecified")       unless $src_dir;
+    croak("no such directory: $src_dir") unless -d $src_dir;
+
+    # prepare command specific parameters
     $command_args->{ _src_dir } = $src_dir;
     $command_args->{ _dst_dir } = $dst_dir;
+    $command_args->{ _output_channel } = \*STDOUT; # suppose only makefml.
 
-    # output channel (we suppose only makefml here).
-    $command_args->{ _output_channel } = \*STDOUT;
-
+    # here we go.
+    print STDERR "converting $src_dir -> $dst_dir\n";
     use FML::Article::Spool;
     my $spool = new FML::Article::Spool $curproc;
     if ($spool->can($fp)) {

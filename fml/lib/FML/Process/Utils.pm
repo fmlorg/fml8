@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.107 2004/02/27 22:17:40 fukachan Exp $
+# $FML: Utils.pm,v 1.108 2004/03/13 10:27:43 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -798,6 +798,19 @@ sub command_line_options
     my $args = $curproc->{ __parent_args };
 
     return $args->{ options };
+}
+
+
+# Descriptions: return comman specific options (-O key=value) as HASH_REF.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: HASH_REF
+sub cui_command_specific_options
+{
+    my ($curproc) = @_;
+    my $args = $curproc->{ __parent_args };
+
+    return( $args->{ options }->{ O } || {} );
 }
 
 
