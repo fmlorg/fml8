@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.52 2002/02/17 01:11:11 fukachan Exp $
+# $FML: Config.pm,v 1.53 2002/02/17 03:13:47 fukachan Exp $
 #
 
 package FML::Config;
@@ -717,7 +717,7 @@ sub is_hook_defined
     print STDERR $@ if $@;
 
     my $is_defined = 0;
-    my $hook = sprintf("%s::%s", '$FML: Config.pm,v 1.52 2002/02/17 01:11:11 fukachan Exp $hook_name);
+    my $hook = sprintf("%s::%s::%s::%s", 'FML', 'Config', 'Hook', $hook_name);
 
     eval qq{
 	if (defined( $hook )) {
@@ -753,8 +753,9 @@ sub get_hook
     my $r    = ''; # return value;
     my $namel = $hook_name; $namel =~ tr/A-Z/a-z/; # lowercase
     my $nameu = $hook_name; $nameu =~ tr/a-z/A-Z/; # uppercase
-    my $hookl = sprintf("%s::%s", '$FML: Config.pm,v 1.52 2002/02/17 01:11:11 fukachan Exp $namel);
-    my $hooku = sprintf("%s::%s", '$FML: Config.pm,v 1.52 2002/02/17 01:11:11 fukachan Exp $nameu);
+    my $hookl = sprintf("\$%s::%s::%s::%s", 'FML', 'Config', 'Hook', $namel);
+    my $hooku = sprintf("\$%s::%s::%s::%s", 'FML', 'Config', 'Hook', $nameu);
+
     # check both lower and upper case e.g. start_hook and START_HOOK.
     eval qq{
 	if (defined( $hookl )) {
