@@ -124,3 +124,11 @@ use_article_filter_reject_notice	=	yes
 #     Examples: maintainer sender
 article_filter_reject_notice_recipients	=	maintainer
 						sender
+
+
+# Descriptions: 弾いたメールをどのようにフォワードするか？
+#               ウィルスなどを考慮すると、文字列がいいとおもう
+#      History: 4.0 では文字列で、これはハードコーディングされていた。
+#        Value: multipart / string
+#     Examples: string
+article_filter_reject_notice_data_type	=	string

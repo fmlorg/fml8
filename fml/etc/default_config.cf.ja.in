@@ -977,6 +977,14 @@ use_article_filter_reject_notice	=	yes
 article_filter_reject_notice_recipients	=	maintainer
 						sender
 
+
+# Descriptions: 弾いたメールをどのようにフォワードするか？
+#               ウィルスなどを考慮すると、文字列がいいとおもう
+#      History: 4.0 では文字列で、これはハードコーディングされていた。
+#        Value: multipart / string
+#     Examples: string
+article_filter_reject_notice_data_type	=	string
+
 =head1	記事および記事のスプール
 
 # Descriptions: 記事を配送する機能を使うか否か？
