@@ -8,6 +8,36 @@
 	XXX
 
 
+○	libexec/relocated , Process/Relocated
+
+
+○	libexec/auto-newml
+
+
+○	handle Accept-Language: in all reply messages.
+
+
+○	command syntax ?
+
+   * not ml specific
+	(read only)
+	fmladdr	 [-n]
+	fmlalias [-n]
+	fmldoc   モジュール名
+	fmlconf  [-n] $ml
+	fmlerror $ml
+	fmllog   $ml
+
+	(read write)
+	fmlhtmlify [-I DIR] $src_dir $dst_dir
+
+	fmlsummary $command $ml
+	fmlthread  $command $ml
+	makefml    $command $ml
+	fmlspool   [options] $command $ml
+	fmlsuper   $command $ml
+
+
 ○	2002 年のオーバホールの残り
 
   ＊ 要 BUG FIX
@@ -15,17 +45,19 @@
 
   ＊おもたい
 	FML/Process/Kernel.pm
-
 	Mail/Message.pm
+
+   * IN/OUT のチェック
 	Mail/Message/ToHTML.pm
 
+	OUT のちぇっくで最重要なのは？
 
-○	IO::Adapter
+	Mail/Message/ToHTML.pm
+	Mail/ThreadTrack/Print
 
-	get_*() には File にだけしかないのがある？
+	Mail/Message/Print などに集結させるべきだろう？
 
-	SQL and LDAP まわりの改良を
-
+		print_axss (against cross site scripting).
 
 ○	Mail::ThreadTrack
 
@@ -35,9 +67,38 @@
 	Mail::ThreadTrack::Analyze をきれいにしないとね
 
 
-○ 	redhat たいさく?
+	index.html (fml-devel 234)
+	 	最近のＭＬのレビュー 
+	 		＋
+	 	選択画面 → index thread monthly
 
-	FML::MTAControl::Sendmail を作らないとですねぃ。
+○	IO::Adapter
+
+	get_*() には File or !File にだけしかないのがある？
+
+	% grep -r 'sub get' ...
+
+		IO::Adapter::Array	sub get_next_value
+		IO::Adapter::DBI	sub get_next_value
+		IO::Adapter::File	sub get_value_as_str
+		IO::Adapter::File	sub get_value_as_array_ref
+
+	XXX get_next_value ってつかわれてはいないのですよ、いまはね
+	XXX get_value_as_* ってつかわれてはいないのですよ、いまはね
+
+	SQL まわりの改良を （もういいの？）
+
+	write LDAP ;-)
+
+
+○	FML::Error
+
+	FML::Error 外のモジュールで FML::Error::Cache をさくじょ
+
+	e.g. 
+		FML::Error->db_open();
+
+	＃これは FNF のルールにするべきじゃないだろうか
 
 
 ○ 	じかんつき subscribe のたぐい
@@ -61,13 +122,16 @@
 
 ○	digest こまんど？ for CGI
 
+
 ○	digest こまんど？ for user
+
 
 ○	mead bug ?
 
 	mkdir in new
 
 	cache db bug ?
+
 
 ○	queue 管理するプログラム？ fmlsuper ?
 
@@ -82,9 +146,10 @@
 ○	ファイルを用意しただけやんシリーズ;)
 	これから改造するので、ほとんど未修正のままのこす
 
+		一度削除するか？
+
 	FML::Process::Qmail
 	FML::Filter::TrafficMonitor
-	IO::Adapter::LDAP
 
 
 ○	remove $msg->{ next }
@@ -257,4 +322,4 @@ sub compare_euc_string
 
 
 ----------
-$FML: 00_MEMO,v 1.56 2002/12/26 15:06:03 fukachan Exp $
+$FML: 00_MEMO,v 1.57 2002/12/30 13:20:10 fukachan Exp $
