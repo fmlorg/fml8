@@ -1,5 +1,5 @@
 <!--
-    $FML: chapter.sgml,v 1.1 2001/04/30 10:21:43 fukachan Exp $
+    $FML: reply.sgml,v 1.1 2001/05/17 00:47:35 fukachan Exp $
 -->
 
 <chapter id="reply">
@@ -12,19 +12,20 @@
 <para>
 送り返すべきメールは
 Mail::Delivery::Queue
-を使い queuue に入れられます。
+を使い queue に入れられます。
+queue に入ったメールは、のちに
+FML::Process::QueueManager
+クラスが(配送)処理をします。
 </para>
 
 <para>
-queue に入ったメールは、のちに
-FML::Process::QueueManager
-クラスが処理します。
 queue ファイルは queue ディレクトリから pickup され、
 Mail::Message で parse され
 FML::Mailer 経由で
 Mail::Delivery が配送処理をします。
 </para>
 </sect1>
+
 
 <sect1>
    <title> queue ディレクトリ  </title>
@@ -46,6 +47,56 @@ queue ファイルを作る時は、一旦 new/ に作成されます。
 queue ファイルを作る作業が終了し、配送準備 OK となったら
 new/ から active/ に移動されます。
 つまり active/ にあるファイルは配送準備ができているものです。
+</para>
+
+<sect2>
+   <title> queue ディレクトリをロックする </title>
+<para>
+特定の $queue_id object ごとに lock() と unlock() メソッドを使い、
+ロックをかけます。
+ロックは active/$queue_id ファイルに対しての flock(2) システムコールです。
+</para>
+</sect2>
+
+</sect1>
+
+
+
+<sect1>
+	<title>
+	fml の中でどうするか？
+	</title>
+
+<para>
+sender にあるメッセージを送り返したい場合は、次のようにします。
+<screen>
+$curproc->reply_message( "you are not a ML member." );
+</screen>
+</para>
+
+<warning>
+<para>
+うーん、言語の変換はどこでどう指示するべき？
+</para>
+</warning>
+
+<para>
+ファイルを送りたい場合や画像を送りたい場合は次のようにします。
+<screen>
+$curproc->reply_message( {
+        type        => "text/plain; charset=iso-2022-jp",
+        path        => "/etc/fml/main.cf",
+        filename    => "main.cf",
+        disposition => "main.cf example",
+    });
+
+$curproc->reply_message( {
+        type        => "image/gif",
+        path        => "/some/where/logo001.gif",
+        filename    => "logo.gif",
+        disposition => "attachment",
+    });
+</screen>
 </para>
 
 </sect1>
