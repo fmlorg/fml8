@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.14 2003/08/23 04:35:47 fukachan Exp $
+# $FML: Encode.pm,v 1.15 2003/09/08 09:17:51 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -39,8 +39,9 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {};
 
-    if ($] > 5.008) {
-	eval q{ Encode;};
+    # XXX we do not use Encode yet, so disabled anyway.
+    if (0 && $] > 5.008) {
+	eval q{ use Encode;};
 	croak("cannot load Encode") if $@;
     }
     elsif ($] <= 5.006001) {
