@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: CGI.pm,v 1.12 2001/04/03 09:45:43 fukachan Exp $
 #
 
 package FML::Process::CGI;
@@ -26,13 +25,14 @@ FML::Process::CGI - CGI basic functions
 
 =head1 DESCRIPTION
 
-the base class of CGI programs
+the base class of CGI programs.
+It provides basic functions and flow.
 
 =head1 METHODS
 
 =head2 C<new()>
 
-constructor which is usual in FML::Process classes.
+ordinary constructor which is used widely in FML::Process classes.
 
 =cut
 
@@ -43,7 +43,7 @@ use FML::Config;
 # load standard CGI routines
 use CGI qw/:standard/;
 
-@ISA = qw(FML::Process::Kernel Exporter);
+@ISA = qw(FML::Process::Kernel);
 
 
 # XXX now we re-evaluate $ml_home_dir and @cf again.
@@ -75,6 +75,7 @@ sub new
 =head2 C<prepare()>
 
 print HTTP header.
+The charset is C<euc-jp> by default.
 
 =cut
 
@@ -92,17 +93,23 @@ sub prepare
 
 =head2 C<verify_request()>
 
-a dummy method
+dummy method now.
 
 =head2 C<finish()>
 
-dummy method
+dummy method now.
 
 =cut
 
 sub verify_request { 1;}
 sub finish { 1;}
 
+
+=head2 C<run()>
+
+dispatch *.cgi programs.
+
+=cut
 
 # See CGI.pm for more details
 sub run

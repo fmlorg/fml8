@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: Messages.pm,v 1.7 2001/04/03 09:45:40 fukachan Exp $
 #
 
 package FML::Messages;
@@ -21,11 +20,16 @@ FML::Messages - manipulate fml system messages
 
 =head1 SYNOPSIS
 
-NOT YET IMPLEMENTED
+   use FML::Messages;
 
 =head1 DESCRIPTION
 
-NOT YET IMPLEMENTED
+C<FML::Messages> is a wrapper.
+It tranlates the error message to specifield language.
+
+=head1 METHODS
+
+   not implemented yet...
 
 =cut
 

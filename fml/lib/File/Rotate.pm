@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: Rotate.pm,v 1.5 2001/04/03 09:31:27 fukachan Exp $
 #
 
 package File::Rotate;
@@ -18,7 +17,7 @@ END   {}
 
 =head1 NAME
 
-File::Rotate - file rotate operations
+File::Rotate - file rotatation utilities
 
 =head1 SYNOPSIS
 
@@ -31,6 +30,7 @@ File::Rotate - file rotate operations
 =head1 DESCRIPTION
 
 Utility functions for file rotate operations. 
+It turns over the given C<file>.
 C<rotation> renames and rearranges files like this:
 
     rm file.4
@@ -40,7 +40,19 @@ C<rotation> renames and rearranges files like this:
     mv file.0 file.1
     mv file   file.0
 
+=head1 METHODS
+
+=head2 C<new($args)>
+
+ordinary constructor. $args accpets the following parameters.
+
+   parameter       default value
+   ------------------------
+   max_size        300*1024
+   num_backlog     4
+
 =cut
+
 
 # Descriptions: constructor
 #               forward new() request to superclass (IO::File)

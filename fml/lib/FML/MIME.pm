@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: MIME.pm,v 1.11 2001/04/03 09:45:40 fukachan Exp $
 #
 
 package FML::MIME;
@@ -26,6 +25,8 @@ FML::MIME - handle a MIME encoded string
 =head1 DESCRIPTION
 
 MIME utilities to encode and decode string.
+It uses C<MIME::Base64> and C<MIME::QuotedPrint> as encoding/decoding
+engines.
 
 =head1 METHODS
 
@@ -71,7 +72,7 @@ sub decode_mime_string
 }
 
 
-=head2 C<decode_mime_string(string, [$options])>
+=head2 C<encode_mime_string(string, [$options])>
 
 encode the C<string> by the encoder $options->{ encode }.
 The encode is base64 by default.
@@ -104,6 +105,7 @@ sub encode_mime_string
     return $buf;
 }
 
+
 sub _encode_mime_string
 {
     my ($str, $options) = @_;
@@ -117,7 +119,7 @@ sub _encode_mime_string
 
     if ($encode eq 'base64') {
 	$header .= '?B?';
-	$str = encode_base64($str);
+	$str     = encode_base64($str);
     }
     elsif ($encode eq 'qp') {
 	$header .= '?Q?';

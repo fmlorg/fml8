@@ -1,7 +1,7 @@
-$FML$
+$FML: doc,v 1.42 2001/05/27 14:41:07 fukachan Exp $
 
 	TODO for documents
-	$Date$
+	Last Modified: $Date$
 
 ---------------
 2001/05 todo (document clean up)
@@ -11,25 +11,17 @@ $FML$
 	FML/Checksum.pm
 	FML/Credential.pm
 	FML/Header/Subject.pm
-	FML/MIME.pm
-	FML/Mailer.pm
 	FML/MemberControl.pm
-	FML/Messages.pm
-	FML/Process/CGI.pm
-	FML/Process/Command.pm
 	FML/Process/Configure.pm
 	FML/Process/Distribute.pm
 	FML/Process/DocViewer.pm
 	FML/Process/Flow.pm
 	FML/Process/Kernel.pm
-	FML/Process/QMail.pm
 	FML/Process/QueueManager.pm
-	FML/Process/Switch.pm
 	FML/Process/TicketSystem.pm
 	FML/Ticket/Model/minimal_states.pm
 	FML/Ticket/System.pm
 	File/Rotate.pm
-	File/SimpleLock.pm
 	IO/Adapter.pm
 	IO/Adapter/Array.pm
 	IO/Adapter/DBI.pm

@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: Credential.pm,v 1.8 2001/04/15 09:07:12 fukachan Exp $
+# $FML: Credential.pm,v 1.9 2001/05/04 14:32:32 fukachan Exp $
 #
 
 package FML::Credential;
@@ -18,7 +17,7 @@ use ErrorStatus qw(errstr error error_set error_clear);
 
 =head1 NAME
 
-FML::Credential - authenticate the mail sender is a ML member or not
+FML::Credential - authenticate the mail sender
 
 =head1 SYNOPSIS
 

@@ -1,9 +1,8 @@
 #-*- perl -*- 
 # 
-# Copyright (C) 2000 Ken'ichi Fukamachi 
+# Copyright (C) 2000,2001 Ken'ichi Fukamachi 
 # 
-# $Id$ 
-# $FML: SimpleLock.pm,v 1.6 2001/04/03 09:31:27 fukachan Exp $ 
+# $FML: SimpleLock.pm,v 1.7 2001/04/08 13:25:39 fukachan Exp $ 
 #
 
 package File::SimpleLock;

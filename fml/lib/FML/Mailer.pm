@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Mailer.pm,v 1.3 2001/05/18 14:59:21 fukachan Exp $
+# $FML: Mailer.pm,v 1.4 2001/05/19 03:29:57 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -27,9 +27,9 @@ FML::Mailer - Utilities to send mails
 	message   => $message,
     });
 
-where C<$message> is a C<Mail::Message> object to be sent. 
-If you sent plural recipinets, you can pass the list of recipients by
-HASH ARRAY.
+where C<$message> is a C<Mail::Message> object to send. 
+If you want to sent plural recipinets, specify ARRAY HASH of the
+recipients as a C<recipient> parameter.
 
     $obj->send( {
 	sender     => 'rudo@nuinui.net',
@@ -37,7 +37,7 @@ HASH ARRAY.
 	message    => $message,
     });
 
-If you send a file, 
+If you send a file, you can specify the filename as a data to send.
 
     use FML::Mailer;
     my $obj = new FML::Mailer;
@@ -53,7 +53,7 @@ If you send a file,
 
 =head2 C<new()>
 
-usual constructor.
+ordinary constructor.
 
 =cut
 
@@ -69,7 +69,15 @@ sub new
 
 =head2 C<send($args)>
 
-method to send the given C<message>.
+send the given C<message>. 
+$args can take the following arguments:
+
+   ----------------------------------
+   sender             string
+   recipient          string 
+   recipients         HASH ARRAY
+   message            Mail::Message object 
+   file               string
 
 =cut
 

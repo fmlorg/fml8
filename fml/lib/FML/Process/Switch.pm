@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: Switch.pm,v 1.17 2001/04/05 08:30:27 fukachan Exp $
+# $FML: Switch.pm,v 1.18 2001/04/15 13:30:02 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -17,11 +16,11 @@ use vars qw($debug);
 
 =head1 NAME
 
-FML::Process::Switch - switch or dispather table to run the suitable library
+FML::Process::Switch - dispatch the suitable library
 
 =head1 SYNOPSIS
 
-(in libexec/loader)
+used in C<libexec/loader>.
 
    package main;
    use FML::Process::Switch;
@@ -32,15 +31,19 @@ FML::Process::Switch - switch or dispather table to run the suitable library
 C<libexec/loader> (C<libexec/fml/loader>), the wrapper, loads this
 program and calls C<Bootstrap2()>.
 C<Bootstrap2()> loads main.cf,
-analyzes the command argument
-and kicks off C<ProcessSwitch()> finally.
-C<ProcessSwitch()> emulates "use $package" to load a program specified
-by the arguments.
+analyzes the command arguments
+and call C<ProcessSwitch()> finally.
+
+C<ProcessSwitch()> emulates "use $package" to load 
+the corresponding library with the arguments.
 The fml flow bifurcates here through C<ProcessSwitch()>.
 
-The details of each program exists in FML::Process:: class.
+The flow details of program exists in FML::Process:: class.
 For example, libexec/distribute (fml.pl) runs in this way.
-   
+
+       functions                class   
+       ----------------------------------------
+
        main::Bootstrap()        libexec/loader
             |
             V
@@ -63,7 +66,8 @@ It reads *.cf files, parses them and set the result to C<@cf>
 array variable.
 We pass it to C<ProcessSwitch()> later.
 
-    @cf = ( /etc/fml/defaults/$VERSION/default_config.cf 
+    @cf = (
+	   /etc/fml/defaults/$VERSION/default_config.cf 
 	   /etc/fml/site_default_config.cf (required ?)
 	   /etc/fml/domains/$DOMAIN/default_config.cf
 	   /var/spool/ml/elena/config.cf
@@ -245,6 +249,14 @@ sub _makefml_parse_argv
 
 
 =head2 C<ProcessSwitch($args)> 
+
+load the library and prepare environment to use it.
+C<ProcessSwitch($args)> return process object C<$obj>.
+
+To start the process, we pass C<$obj> with C<$args> to 
+C<FML::Process::Flow::ProcessStart($obj, $args)>.
+
+C<$args> is like this:
 
     my $args = {
 	fml_version    => $main_cf->{ fml_version },

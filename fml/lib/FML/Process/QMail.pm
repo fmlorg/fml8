@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: QMail.pm,v 1.7 2001/04/03 09:45:43 fukachan Exp $
 #
 
 package FML::Process::QMail;
@@ -35,6 +34,16 @@ C<NOT YET IMPLERMENTED>.
 =head1 DESCRIPTION
 
 C<NOT YET IMPLERMENTED>.
+
+=head1 TODO
+
+   XXX
+   XXX MEMO on TODO
+   XXX
+
+   we should not use "# command" representation even though internally.
+
+   check $ext more restrictly.
 
 =head1 METHODS
 
