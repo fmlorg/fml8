@@ -6,67 +6,169 @@
 
 <title> cvs tree の構造 </title>
 
+
+<!-- ===================================================== -->
 <sect1>
-	<title> ディレクトリ構造 </title>
+
+<title> ソースツリーの構造の概要 </title>
 
 <para>
-<programlisting>
-/etc/fml/
-/usr/local/lib/fml/$VERSION/
-/usr/local/libexec/fml/$VERSION/
-/usr/share/doc/fml/$VERSION/
-</programlisting>
+fml-devel の基本方針として、
+使えるもの(例えば CPAN )は片っ端から使います。
+そうしないと保守する項目が増える一方のためです。
 </para>
 
+<para>
+また、保守する人をはっきり区別するためにベンダーごとにディレクトリを分
+けています。例えば CPAN で保守されているものは CPAN/ ディレクトリ以下
+に入れてください。
+</para>
 
-<table>
- <title> cvs tree 以下のディレクトリの説明 </title>
+<para>
+ライセンスなどによっては、さらに区分を分ける必要が出てくるかも知れませ
+ん。が、とりあえずこの３つにわかれます。
+</para>
 
- <tgroup cols=2>
+<para>
+CPAN/ や 3RDPARTY/ 以下のモジュールを変更したい場合は fml5/ 以下でなん
+らかのラップをするか、パッチをオリジナルに反映してもらって CPAN/ 以下
+をアップデートをします。
+</para>
 
-   <thead>
-	<row>
-	<entry> ディレクトリ	</entry>
-	<entry> 説明		</entry>
-	</row>
-   </thead>
+<para>
+なお site_local/ はそのサイト独自のものなので fml プロジェクトとは無関係です。
+</para>
 
-   <tbody>
-	<row>
-	<entry>
-		Documentation/
-	</entry>
+</sect1>
 
-	<entry>	
-		ドキュメント
-	</entry>
-	</row>
-   
 
-	<row>
-	<entry>	fml/etc/	</entry>
-	<entry> 設定変数	</entry>
-	</row>
-   
+<!-- ===================================================== -->
+<sect1>
+	<title> CVS のディレクトリ構造 </title>
 
-	<row>
-	<entry>	fml/lib/ 		</entry>
-	<entry>	perl モジュール群	</entry>
-	</row>
-   
+   <sect2>
+	 <title> / 以下のディレクトリ構造 </title>
 
-	<row>
-	<entry> 	fml/libexec/ 	</entry>
-	<entry> 
-		実行されるプログラムの実体。
-		もっともすぐにモジュールを
-		呼び出すので、正確には wrapper です。
-	</entry>
-	</row>
-   </tbody>
+	<table>
+	 <title> / 以下のディレクトリ構造 </title>
+	 <tgroup cols=2>
+	
+	  <thead>
+		<row>
+		<entry>	ベンダー名
+		</entry>
+		<entry>	そのディレクトリにおくモジュールの説明
+		</entry>
+		</row>
+	   </thead>
+	
+	  <tbody>
+		<row>
+		<entry>
+			Documentation/
+		</entry>
+		<entry>	
+			ドキュメントとして公開する場所。
+	
+			ベンダー境界を越えて混ざりうるので
+			このディレクトリが創設されました。
+		</entry>
+		</row>
+	
+		<row>
+		<entry>	fml/		
+		</entry>
+		<entry>	fml5 プロジェクト直轄
+		</entry>
+		</row>
+	
+		<row>
+		<entry>	cpan/
+		</entry>
+		<entry>	CPAN で保守されているもの
+			
+			この下のモジュールについては CPAN の説明の通り。
+			単に標準モジュールでないため、ないしは
+			fml5 のバージョン管理や保守のために、ここに収容。
+			
+			なお
+			cpan/dist/ 
+			に輸入したモジュールの元パッケージ全体をおき、
+			cpan/lib/
+			にライブラリを正しいクラス階層にあうように置きます。
+		</entry>
+		</row>
+	
+		<row>
+		<entry> 	3rdparty/
+		</entry>
+		<entry>	サードパーティ用(予約)
+			
+			予約されているだけで、
+			fml5 プロジェクトとしては使いません。
+		</entry>
+		</row>
+	
+	
+		<row>
+		<entry> 	site_local/
+		</entry>
+		<entry>	
+			デフォルトでは CVS ツリー内にはありません。
+			そのサイト独自に保守したいモジュールをおくための
+			ディレクトリ。		
+			名前を予約されているだけで、
+			fml5 プロジェクトとしては使いません。
+		</entry>
+		</row>
+	
+	   </tbody>
+	 </tgroup>
+	</table>
+   </sect2>
 
- </tgroup>
-</table>
+   <sect2>
+	<title> fml/ 以下 </title>
+	
+	<table>
+	 <title> cvs tree の fml/ 以下のディレクトリの説明 </title>
+	
+	 <tgroup cols=2>
+	
+	   <thead>
+		<row>
+		<entry> ディレクトリ	</entry>
+		<entry> 説明		</entry>
+		</row>
+	   </thead>
+	
+	   <tbody>
+		<row>
+		<entry>	fml/etc/	</entry>
+		<entry> 設定変数	</entry>
+		</row>
+	   
+	
+		<row>
+		<entry>	fml/lib/ 		</entry>
+		<entry>	perl モジュール群	</entry>
+		</row>
+	   
+	
+		<row>
+		<entry> 	fml/libexec/ 	</entry>
+		<entry> 
+			実行されるプログラムの実体。
+			もっともすぐにモジュールを
+			呼び出すので、正確には wrapper です。
+		</entry>
+		</row>
+	   </tbody>
+	
+	 </tgroup>
+	</table>
+   </sect2>
+	
 </sect1>
 
 </chapter>
