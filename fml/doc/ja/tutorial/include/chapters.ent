@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.65 2003/02/18 13:40:20 fukachan Exp $
+	$FML: chapters.ent,v 1.66 2003/03/09 08:29:10 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -134,6 +134,10 @@
 
 <!-- variables -->
 <!entity table.list.variables     SYSTEM "internals/list.variables.sgml">
+
+<!-- -->
+<!entity chapter.struct           SYSTEM "internals/struct.sgml">
+<!entity struct.curproc           SYSTEM "internals/CURPROC.sgml">
 
 
 
