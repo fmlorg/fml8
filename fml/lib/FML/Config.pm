@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.50 2002/01/30 14:51:15 fukachan Exp $
+# $FML: Config.pm,v 1.51 2002/02/01 12:03:55 fukachan Exp $
 #
 
 package FML::Config;
@@ -15,6 +15,7 @@ use vars qw($need_expansion_variables
 	    %_fml_config
 	    %_default_fml_config
 	    $object_id
+	    $_fml_user_hooks
 	    );
 use ErrorStatus qw(error_set error error_clear);
 
@@ -254,6 +255,7 @@ sub _read_file
 
     if (defined $fh) {
 	my ($key, $value, $curkey, $comment_buffer);
+	my ($after_cut, $hook);
 
 	# For example
 	#    var = key1         (case 1.)
@@ -262,7 +264,12 @@ sub _read_file
 	#          key2         (case 2.)
 	#
 	while (<$fh>) {
-	    last if /^=cut/; # end of postfix format
+	    if ($after_cut) {
+		$hook     .= $_ unless /^=/;
+		$after_cut = 0  if /^=\w+/;
+		next;
+	    }
+	    $after_cut = 1 if /^=cut/; # end of postfix format
 	    next if /^=/;    # ignore special keywords of pod formats
 
 	    if ($mode eq 'raw') { # save comment buffer
@@ -306,6 +313,9 @@ sub _read_file
 	    }
 	}
 	$fh->close;
+
+	# save hook configuration in FML::Config name space (global).
+	$_fml_user_hooks .= $hook;
     }
     else {
 	$self->error_set("Error: cannot open $file");
@@ -673,6 +683,90 @@ sub dump_variables
 	    }
 	}
     }
+}
+
+
+=head1 HOOK manipulations
+
+    $config->is_hook_defined( 'START_HOOK' );
+    $config->get_hook( 'START_HOOK' );
+
+=head2 is_hook_defined( $hook_name )
+
+whether hook named as $hook_name is defined or not?
+
+=cut
+
+
+# Descriptions: $hook_name is defined ?
+#    Arguments: OBJ($self) STR($hook_name)
+# Side Effects: update FML::Config::Hook name space.
+# Return Value: NUM(1 or 0)
+sub is_hook_defined
+{
+    my ($self, $hook_name) = @_;
+
+    return undef unless $_fml_user_hooks;
+
+    eval qq{
+	package FML::Config::Hook;
+	no strict;
+	$FML::Config::_fml_user_hooks;
+	package FML::Config;
+    };
+    print STDERR $@ if $@;
+
+    my $is_defined = 0;
+    my $hook = sprintf("%s::%s", '$FML::Config::Hook',  $hook_name);
+
+    eval qq{
+	if (defined( $hook )) {
+	    \$is_defined = 1;
+	}
+    };
+    print STDERR $@ if $@;
+
+    return $is_defined;
+}
+
+
+# Descriptions: return hook content named as $hook_name.
+#               XXX $hook_name as a parameter is case insensitive.
+#    Arguments: OBJ($self) STR($hook_name)
+# Side Effects: update FML::Config::Hook name space.
+# Return Value: STR
+sub get_hook
+{
+    my ($self, $hook_name) = @_;
+
+    return undef unless $_fml_user_hooks;
+
+    my $eval = qq{
+	package FML::Config::Hook;
+	no strict;
+	$FML::Config::_fml_user_hooks;
+	package FML::Config;
+    };
+    eval $eval;
+    print STDERR $@ if $@;
+
+    my $r    = ''; # return value;
+    my $namel = $hook_name; $namel =~ tr/A-Z/a-z/; # lowercase
+    my $nameu = $hook_name; $nameu =~ tr/a-z/A-Z/; # uppercase
+    my $hookl = sprintf("%s::%s", '$FML::Config::Hook',  $namel);
+    my $hooku = sprintf("%s::%s", '$FML::Config::Hook',  $nameu);
+    # check both lower and upper case e.g. start_hook and START_HOOK.
+    eval qq{
+	if (defined( $hookl )) { 
+	    \$r = $hookl;
+	}
+	elsif (defined( $hooku )) { 
+	    \$r = $hooku;
+	}
+    };
+    print STDERR $@ if $@;
+
+    return "no strict;\n". $r;
 }
 
 
