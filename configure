@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# From configure.in Revision: 1.38 
+# From configure.in Revision: 1.39 
 
 # Guess values for system-dependent variables and create Makefiles.
 # Generated automatically using autoconf version 2.13 
@@ -1884,6 +1884,113 @@ else
 fi
 
 
+# spam
+# Extract the first word of "spamassassin", so it can be a program name with args.
+set dummy spamassassin; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1892: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_SPAMASSASSIN'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$SPAMASSASSIN" in
+  /*)
+  ac_cv_path_SPAMASSASSIN="$SPAMASSASSIN" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_SPAMASSASSIN="$SPAMASSASSIN" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_SPAMASSASSIN="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+SPAMASSASSIN="$ac_cv_path_SPAMASSASSIN"
+if test -n "$SPAMASSASSIN"; then
+  echo "$ac_t""$SPAMASSASSIN" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "spamd", so it can be a program name with args.
+set dummy spamd; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1927: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_SPAMD'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$SPAMD" in
+  /*)
+  ac_cv_path_SPAMD="$SPAMD" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_SPAMD="$SPAMD" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_SPAMD="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+SPAMD="$ac_cv_path_SPAMD"
+if test -n "$SPAMD"; then
+  echo "$ac_t""$SPAMD" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "spamc", so it can be a program name with args.
+set dummy spamc; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1962: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_SPAMC'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$SPAMC" in
+  /*)
+  ac_cv_path_SPAMC="$SPAMC" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_SPAMC="$SPAMC" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_SPAMC="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+SPAMC="$ac_cv_path_SPAMC"
+if test -n "$SPAMC"; then
+  echo "$ac_t""$SPAMC" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+
 use_warning=yes
 # Check whether --with-warning or --without-warning was given.
 if test "${with_warning+set}" = set; then
@@ -2155,6 +2262,9 @@ s%@GPG@%$GPG%g
 s%@LESS@%$LESS%g
 s%@MORE@%$MORE%g
 s%@W3M@%$W3M%g
+s%@SPAMASSASSIN@%$SPAMASSASSIN%g
+s%@SPAMD@%$SPAMD%g
+s%@SPAMC@%$SPAMC%g
 s%@fmlconfdir@%$fmlconfdir%g
 s%@mlspooldir@%$mlspooldir%g
 s%@fml_owner@%$fml_owner%g
