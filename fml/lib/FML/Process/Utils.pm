@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.109 2004/03/23 04:20:46 fukachan Exp $
+# $FML: Utils.pm,v 1.110 2004/03/23 06:34:17 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -677,6 +677,20 @@ sub fml_owner
     my $args = $curproc->{ __parent_args };
 
     return $args->{ main_cf }->{ fml_owner };
+}
+
+
+# Descriptions: return fml owner mail address.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub fml_owner_address
+{
+    my ($curproc)  = @_;
+    my $owner      = $curproc->fml_owner();
+    my $ml_domain  = $curproc->ml_domain();
+
+    return sprintf("%s%s%s", $owner, '@', $ml_domain);
 }
 
 
