@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.8 2004/01/01 07:29:27 fukachan Exp $
+# $FML: List.pm,v 1.1.1.1 2004/03/16 12:58:20 fukachan Exp $
 #
 
 package FML::Merge::FML4::List;
@@ -135,7 +135,6 @@ sub _write_without_comment
     }
 
     print STDERR "cat $src > $dst\n";
-    return;
 
     use FileHandle;
     my $rh = new FileHandle $src;

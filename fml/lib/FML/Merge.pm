@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.8 2004/01/01 07:29:27 fukachan Exp $
+# $FML: Merge.pm,v 1.1.1.1 2004/03/16 12:58:20 fukachan Exp $
 #
 
 package FML::Merge;
@@ -47,11 +47,16 @@ sub new
     };
 
     # back up to $ml_home_dir/.fml4rc/ directory.
+    #    $ml_home_dir/.fml4rc/
+    #    $ml_home_dir/.fml4rc/etc/
     use File::Spec;
     my $ml_home_dir = $params->{ ml_home_dir } || '';
     if ($ml_home_dir) {
 	my $x_dir = File::Spec->catfile($ml_home_dir, ".fml4rc");
 	$me->{ _backup_dir } = $x_dir;
+	$curproc->mkdir($x_dir, "mode=private") unless -d $x_dir;
+
+	$x_dir = File::Spec->catfile($ml_home_dir, ".fml4rc", "etc");
 	$curproc->mkdir($x_dir, "mode=private") unless -d $x_dir;
     }
     else {
@@ -95,14 +100,19 @@ sub backup_old_config_files
 	my $src  = $self->old_file_path($f);
 	my $dst  = $self->backup_file_path($f);
 
-	if ($mode eq 'move') {
-	    printf STDERR "mv %-30s %-30s\n", $src, $dst;
-	}
-	elsif ($mode eq 'copy') {
-	    printf STDERR "cp %-30s %-30s\n", $src, $dst;
-	}
-	else {
-	    print STDERR "unknown mode (DO NOTHING).\n";
+	if (-f $src) {
+	    if ($mode eq 'move') {
+		printf STDERR "moving  %-30s -> %-30s\n", $src, $dst;
+		rename($src, $dst) || croak("cannot rename $src $dst");
+	    }
+	    elsif ($mode eq 'copy') {
+		printf STDERR "copying %-30s -> %-30s\n", $src, $dst;
+		use IO::Adapter::AtomicFile;
+		IO::Adapter::AtomicFile->copy($src, $dst);
+	    }
+	    else {
+		print STDERR "unknown mode (DO NOTHING).\n";
+	    }
 	}
     }
 }
@@ -145,7 +155,7 @@ For example, the value of NetBSD follows.
 =cut
 
 
-sub disable_include_files
+sub disable_old_include_files
 {
     my ($self) = @_;
 
@@ -156,6 +166,37 @@ sub disable_include_files
     for my $f (@$files) {
 	my $file = $self->old_file_path($f);
 	print STDERR "disable $file\n";
+	print STDERR "   cp $file $file.bak\n";
+	use IO::Adapter::AtomicFile;
+        IO::Adapter::AtomicFile->copy($file, "$file.bak");
+	my $wh = new FileHandle "> $file.tmp";
+	if (defined $wh) {
+	    print $wh "exit 75\n"; # EX_TEMPFAIL
+	    $wh->close();
+
+	    unless (rename("$file.tmp", $file)) {
+		croak("fail to rename $file.tmp to $file");
+	    }
+	}
+	else {
+	    croak("fail to create $file.tmp");
+	}
+    }
+}
+
+
+sub enable_old_include_files
+{
+    my ($self) = @_;
+
+    use FML::Merge::FML4::Config;
+    my $config = new FML::Merge::FML4::Config;
+    my $files  = $config->get_old_include_files();
+
+    for my $f (@$files) {
+	my $file = $self->old_file_path($f);
+	print STDERR "enable $file\n";
+	print STDERR "   mv $file.bak $file\n";
     }
 }
 
