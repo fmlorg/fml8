@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.23 2001/12/22 09:21:07 fukachan Exp $
+# $FML: Subject.pm,v 1.24 2002/04/24 14:28:15 tmu Exp $
 #
 
 package FML::Header::Subject;
@@ -69,6 +69,10 @@ sub rewrite_subject_tag
     my $ml_name = $config->{ ml_name };
     my $tag     = $config->{ subject_tag };
     my $subject = $header->get('subject');
+
+    # decode mime
+    use Mail::Message::Decode qw(decode_mime_string);
+    $subject = decode_mime_string( $subject );
 
     # cut off Re: Re: Re: ...
     $self->_cut_off_reply(\$subject);
