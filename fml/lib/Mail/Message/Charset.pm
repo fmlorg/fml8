@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #
-# $FML: Charset.pm,v 1.2 2004/01/24 09:03:59 fukachan Exp $
+# $FML: Charset.pm,v 1.3 2004/02/06 13:29:47 fukachan Exp $
 #
 
 package Mail::Message::Charset;
@@ -243,7 +243,7 @@ sub language_to_internal_charset
 }
 
 
-# Descriptions: get charset info: e.g. japanese => iso-2022-jp.
+# Descriptions: get charset info: e.g. ja or japanese => iso-2022-jp.
 #    Arguments: OBJ($self) STR($language)
 # Side Effects: none
 # Return Value: STR
@@ -255,7 +255,7 @@ sub language_to_message_charset
 }
 
 
-# Descriptions: charset to language: e.g. iso-2022-jp => japanese.
+# Descriptions: charset to language: e.g. iso-2022-jp => ja.
 #    Arguments: OBJ($self) STR($charset)
 # Side Effects: none
 # Return Value: STR
