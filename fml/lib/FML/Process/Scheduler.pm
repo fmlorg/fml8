@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Scheduler.pm,v 1.20 2002/12/18 04:43:52 fukachan Exp $
+# $FML: Scheduler.pm,v 1.21 2003/01/25 12:11:20 fukachan Exp $
 #
 
 package FML::Process::Scheduler;
@@ -45,28 +45,6 @@ sub new
     }
 
     return bless $me, $type;
-}
-
-
-# Descriptions: dummy
-#    Arguments: OBJ($self) STR($key)
-# Side Effects: none
-# Return Value: none
-sub queue_in
-{
-    my ($self, $key) = @_;
-
-    # XXX-TODO: NOT IMPLEMENTED
-}
-
-
-# Descriptions: dummy
-#    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: none
-# Return Value: none
-sub exits
-{
-    # XXX-TODO: NOT IMPLEMENTED
 }
 
 
