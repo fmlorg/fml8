@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Param.pm,v 1.6 2001/11/13 03:43:07 fukachan Exp $
+# $FML: Param.pm,v 1.7 2001/11/13 15:19:18 fukachan Exp $
 #
 
 package FML::Process::CGI::Param;
@@ -39,22 +39,8 @@ It provides basic functions and flow.
 
 =cut
 
-@EXPORT_OK = qw(safe_param %allow_regexp);
 
-my %allow_regexp = 
-    (
-     'address'    => '[-a-z0-9_]+\@[-A-Za-z0-9\.]+',
-     'ml_name'    => '[-a-z0-9_]+',
-     'action'     => '[-a-z_]+',
-     'command'    => '[-a-z_]+',
-     'user'       => '[-a-z0-9_]+',
-     'article_id' => '\d+',
-     );
-
-my %allow_regexp_list = 
-    (
-     'threadcgi_change_status' => 'change_status\.(__ml_name_regexp__)\/(\d+)',
-     );
+my $debug = defined $ENV{'debug'} ? 1 : 0;
 
 
 # Descriptions: 
@@ -66,10 +52,17 @@ sub safe_param
 {
     my ($self, $key) = @_;
 
-    if (defined $allow_regexp{ $key }) {
+    use FML::Process::SafeData;
+    my $safe = new FML::Process::SafeData;
+    my $safe_param_regexp  = $safe->cgi_param_regexp();
+    my $safe_method_regexp = $safe->cgi_method_regexp();
+
+    print STDERR "\n<!-- check param $key -->\n" if $debug;
+
+    if (defined $safe_param_regexp->{ $key }) {
 	if (defined param($key)) {
 	    my $value  = param($key);
-	    my $filter = $allow_regexp{ $key };
+	    my $filter = $safe_param_regexp->{ $key };
 
 	    if ($value =~ /^$filter$/) {
 		return $value;
@@ -99,16 +92,15 @@ sub safe_paramlist
     my ($self, $numregexp, $key) = @_;
     my (@list) = ();
 
-    # convert $key => regexp
-    $key = $allow_regexp_list{ $key };
-    for my $regexpkey (keys %allow_regexp) {
-	my $x = "__${regexpkey}_regexp__";
-	my $y = $allow_regexp{$regexpkey};
-	$key =~ s/$x/$y/g;
-    }
+    use FML::Process::SafeData;
+    my $safe = new FML::Process::SafeData;
+    my $safe_param_regexp  = $safe->cgi_param_regexp();
+    my $safe_method_regexp = $safe->cgi_method_regexp();
 
-    # search
+    # match method and return HASH ARRAY with matching values
+    $key = $safe_method_regexp->{ $key };
     for my $x (param()) {
+	print STDERR "\n<!-- check param: $x =~ /^$key$/ -->\n";
 	if ($x =~ /^$key$/) {
 	    my $value = defined param($x) ? param($x) : '';
 	    if ($numregexp == 1) { push(@list, [ $1, $value ] );}
