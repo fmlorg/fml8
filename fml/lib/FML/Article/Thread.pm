@@ -1,14 +1,14 @@
 #-*- perl -*-
 #
-# Copyright (C) 2003 Ken'ichi Fukamachi
+# Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Thread.pm,v 1.3 2003/03/28 10:03:37 fukachan Exp $
+# $FML: Thread.pm,v 1.4 2003/08/23 14:37:59 fukachan Exp $
 #
 
 package FML::Article::Thread;
 
-use vars qw($debug @ISA @EXPORT @EXPORT_OK);
+use vars qw($debug @ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use strict;
 use Carp;
 
@@ -18,17 +18,43 @@ use FML::Process::Kernel;
 @ISA = qw(FML::Process::Kernel);
 
 
+# STATES
+my $state_open        = "open";
+my $state_analyzed    = "analyzed";
+my $state_followed    = "followed";
+my $state_closed      = "closed";
+my $state_auto_closed = "closed(auto)";
+
+
 =head1 NAME
 
 FML::Article::Thread -- primitive thread tracking system
 
 =head1 SYNOPSIS
 
-See C<Mail::ThreadTrack> module.
+See FML::Process::Distribute, FML::Command::Admin::thread classes for
+more details.
 
 =head1 DESCRIPTION
 
-This class drives thread tracking system in the top level.
+This class drives primitive thread tracking system at the top level.
+
+We need to clarify the status of each article and each thread.
+
+One thread begins at an article id and contians a group of articles as
+members in it. Each thread has a status such that it is open now,
+analyzed or closed now.
+
+Each article has each meaning. A new article opens and starts a new
+thraed.  Whereas, content of an article closes a thread or threads.
+Also, he/she closes a thread by manual via command mail or CUI/GUI
+interface.
+
+A group of status of articles affects the status of threads.
+So, we need to trace status of articles and threads separetely.
+
+If explicitly not closed, the status of a thread is either of
+"closed(auto)" or "analyzed".
 
 =head1 METHOD
 
@@ -39,290 +65,412 @@ create a C<FML::Process::Kernel> object and return it.
 =cut
 
 
-# Descriptions: standard constructor
-#    Arguments: OBJ($self) OBJ($curproc)
+# Descriptions: constructor.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($thread_db_args)
 # Side Effects: none
 # Return Value: OBJ
 sub new
 {
-    my ($self, $curproc) = @_;
+    my ($self, $curproc, $thread_db_args) = @_;
     my $type = ref($self) || $self;
     my $me   = { _curproc => $curproc };
+
+    # initialize thread object.
+    my $tdb_args = undef;
+    if (defined $thread_db_args) {
+	$tdb_args = $thread_db_args;
+    }
+    else {
+	my $max_id = $curproc->article_max_id();
+	$tdb_args  = $curproc->thread_db_args();
+	$tdb_args->{ id } = $max_id;
+    }
+
+    use Mail::Message::Thread;
+    my $thread  = new Mail::Message::Thread $tdb_args;
+    $me->{ _thread_object } = $thread;
+
+    # initialize $article object.
+    use FML::Article;
+    my $article = new FML::Article $curproc;
+    $me->{ _article_object } = $article;
+
     return bless $me, $type;
 }
 
 
-# Descriptions: return the last modified time.
-#    Arguments: OBJ($self) STR($seq_file)
+=head1 SHOW STATUS
+
+=head2 print_one_line_summary($thread_args)
+
+=head2 print_summary($thread_args)
+
+=cut
+
+
+# Descriptions: print one line summary.
+#    Arguments: OBJ($self) HASH_REF($thread_args)
 # Side Effects: none
-# Return Value: NUM
-sub _last_modified_time
+# Return Value: none
+sub print_one_line_summary
 {
-    my ($self, $seq_file) = @_;
-    my $sf_last_modified  = 0;
+    my ($self, $thread_args) = @_;
+    my $id = $thread_args->{ last_id } || 0;
 
-    if (-f $seq_file) {
-	use File::stat;
-	my $st = stat($seq_file);
-	$sf_last_modified =
-	    ($sf_last_modified > $st->mtime ? $sf_last_modified : $st->mtime);
+    if ($id) {
+	$self->_print_summary("one_line_summary", $thread_args);
     }
-
-    return $sf_last_modified;
 }
 
 
-# Descriptions: speculate the last id our thread system processed.
-#    Arguments: OBJ($self) OBJ($curproc) OBJ($thread)
+# Descriptions: print summary.
+#    Arguments: OBJ($self) HASH_REF($thread_args)
 # Side Effects: none
-# Return Value: NUM
-sub speculate_last_id
+# Return Value: none
+sub print_summary
 {
-    my ($self, $curproc, $thread) = @_;
-    my $config           = $curproc->config();
-    my $seq_file         = $config->{ sequence_file };
-    my $db_last_modified = $thread->db_last_modified();
-    my $sf_last_modified = $self->_last_modified_time($seq_file);
+    my ($self, $thread_args) = @_;
+    my $id = $thread_args->{ last_id } || 0;
 
-    # The condition "$sf_last_modified < $db_last_modified" is always
-    # true since FML::Process::Distribute updates the thread db after
-    # updating $seq_file.
-    # XXX 3600 is the magic number. How long time is appropriate ?
-    if (-f $seq_file &&
-	($sf_last_modified + 3600 > $db_last_modified)) {
-	return $curproc->article_max_id();
+    if ($id) {
+	$self->_print_summary("summary", $thread_args);
     }
-    else {
-	my $last_id = 0;
+}
 
-	$thread->db_open();
 
-	my $rh = $thread->db_hash( 'date' );
-	if (defined $rh) {
-	    use File::Sequence;
-	    my $obj = new File::Sequence;
-	    $last_id = $obj->search_max_id( { hash => $rh } );
+# Descriptions: actual engine to print summary.
+#               $thread_args = {
+#                       last_id => last (max) id of our target range,
+#                       range   => MH style range,
+#               }
+#    Arguments: OBJ($self) STR($fp) HASH_REF($thread_args)
+# Side Effects: none
+# Return Value: none
+sub _print_summary
+{
+    my ($self, $fp, $thread_args) = @_;
+    my $curproc  = $self->{ _curproc };
+    my $thread   = $self->{ _thread_object };
+    my $article  = $self->{ _article_object };
+    my $prompt   = ">>>";
+
+    # here we go.
+    my $summary = $thread->get_thread_data($thread_args);
+    for my $head_id (sort {$a <=> $b} keys %$summary) {
+	my $list = $summary->{ $head_id } || [];
+
+	print "$prompt article $head_id (@$list)\n";
+
+	for my $id (@$list) {
+	    my $article_path = $article->filepath($id);
+
+	    use FileHandle;
+	    my $fh = new FileHandle $article_path;
+	    if (defined $fh) {
+		use Mail::Message;
+		my $msg = Mail::Message->parse(  { fd => $fh } );
+		print $msg->$fp();
+		print "\n";
+	    }
+	    else {
+		$curproc->logerror("no such file: $article_path");
+	    }
 	}
-
-	$thread->db_close();
-
-	return $last_id;
     }
 }
 
 
-# Descriptions: speculate the maximum sequence number for ML articles.
-#    Arguments: OBJ($self) OBJ($curproc) STR($spool_dir)
+=head2 print_list($thread_args)
+
+list up thread and the related information.
+
+=cut
+
+
+# Descriptions: list up thread and the related information.
+#               $thread_args = {
+#                       last_id => last (max) id of our target range,
+#                       range   => MH style range,
+#               }
+#    Arguments: OBJ($self) HASH_REF($thread_args)
 # Side Effects: none
-# Return Value: NUM
-sub speculate_max_id
+# Return Value: none
+sub print_list
 {
-    my ($self, $curproc, $spool_dir) = @_;
+    my ($self, $thread_args) = @_;
+    my $curproc  = $self->{ _curproc };
+    my $thread   = $self->{ _thread_object };
+    my $article  = $self->{ _article_object };
+    my $format   = "%-8s %-8d %s\n";
 
-    eval q{
-	use FML::Article;
-	push(@ISA, 'FML::Article');
-    };
-    my $max_id = $curproc->speculate_max_id();
+    my $summary = $thread->get_thread_data($thread_args);
+    for my $head_id (sort {$a <=> $b} keys %$summary) {
+	my $list   = $summary->{ $head_id } || [];
+	my $status = "open";
 
-    # XXX check whether $max_id > 1 or not since
-    # XXX speculate_max_id() returns 1 by default
-    if ($max_id > 1) {
-	return $max_id;
+	if (@$list) {
+	    printf $format, $status, $head_id, join(" ", @$list);
+	}
+	else {
+	    printf $format, $status, $head_id, '';
+	}
     }
-    else {
-	eval q{
-	    use FML::Article;
-	    push(@ISA, 'FML::Article');
-	    $max_id = $curproc->speculate_max_id($spool_dir);
-	};
-	warn($@) if $@;
+}
+
+
+
+=head1 HANDLE STATUS
+
+=head2 check_thread_status($head_id)
+
+check the status of thread beginning at $head_id.
+update the status in UDB if needed.
+
+=cut
+
+
+# Descriptions: check the status of this thread where the thread is
+#               specified by the $head_id.
+#    Arguments: OBJ($self) NUM($head_id)
+# Side Effects: update UDB.
+# Return Value: OBJ
+sub check_thread_status
+{
+    my ($self, $head_id) = @_;
+    my $curproc = $self->{ _curproc };
+    my $thread  = $self->{ _thread_object };
+    my $article = $self->{ _article_object };
+
+    # check the current thread status (XXX thread, not each member).
+    my $thread_status = $thread->get_thread_status($head_id);
+    if ($thread_status =~ /close/io) { # O.K. stop here.
+	return;
     }
 
-    if ($max_id > 0) {
-	return $max_id;
+    # analyze each member in this thread and close this "thread"
+    # even if found that one member looks closed.
+    # $head_id => [ $head_id, $id1, $id2, ... ];
+    my $id_list = $thread->get_thread_member_as_array_ref($head_id);
+    if (@$id_list) {
+	my $status;
+
+      ID:
+        for my $id (@$id_list) {
+	    $status = $thread->get_article_status($id);
+	    unless ($status) {
+		if ($id) {
+		    my $msg = $self->_init_message($id);
+		    if ($msg->has_closing_phrase()) {
+			$status = $state_auto_closed;
+		    }
+		}
+	    }
+
+	    if ($status =~ /close/io) {
+		$thread->set_thread_status($head_id, $state_auto_closed);
+		last ID;
+	    }
+	} # for;;
+    }
+}
+
+
+# Descriptions: parse article (file) $id and return Mail::Message object.
+#    Arguments: OBJ($self) NUM($id)
+# Side Effects: none
+# Return Value: OBJ
+sub _init_message
+{
+    my ($self, $id) = @_;
+    my $curproc = $self->{ _curproc };
+    my $thread  = $self->{ _thread_object };
+    my $article = $self->{ _article_object };
+
+    # parse article (file) and return Mail::Message object.
+    my $article_path = $article->filepath($id);
+    use FileHandle;
+    my $fh = new FileHandle $article_path;
+    if (defined $fh) {
+	use Mail::Message;
+	return Mail::Message->parse(  { fd => $fh } );
     }
 
-    warn("cannot determine max_id");
     return undef;
 }
 
 
-# Descriptions: read filter list
-#    Arguments: OBJ($self) OBJ($thread) STR($file)
-# Side Effects: none
+=head2 add_article($id, $msg)
+
+check the status of specified article. $msg is a Mail::Message object.
+
+This routine is expected to be called within FML::Process::Distribute.
+So, $msg must be already defined.
+
+=cut
+
+
+# Descriptions: check the content of message object.
+#               log and update UDB if needed.
+#    Arguments: OBJ($self) NUM($id) OBJ($msg)
+# Side Effects: update UDB.
 # Return Value: none
-sub _read_filter_list
+sub add_article
 {
-    my ($self, $thread, $file) = @_;
-
-    if (-f $file) {
-	use FileHandle;
-	my $fh = new FileHandle $file;
-	if (defined $fh) {
-	    my ($key, $value, $buf);
-	    while ($buf = <$fh>) {
-		chomp $buf;
-		($key, $value) = split(/\s+/, $buf, 2);
-		if ($key) {
-		    $thread->add_filter( { $key => $value });
-		}
-	    }
-	    $fh->close();
-	}
-    }
-}
-
-
-# Descriptions: change status to "closed".
-#               $thread_id accepts MH style format.
-#               MH style is expanded by C<Mail::Messsage::MH>.
-#    Arguments: OBJ($self) OBJ($thread) STR($thread_id) NUM($min) NUM($max)
-# Side Effects: update thread status database
-# Return Value: none
-sub close
-{
-    my ($self, $thread, $thread_id, $min, $max) = @_;
+    my ($self, $id, $msg) = @_;
     my $curproc = $self->{ _curproc };
+    my $thread  = $self->{ _thread_object };
+    my $article = $self->{ _article_object };
 
-    # expand MH style variable: e.g. last:100 -> [ 100 .. 200 ]
-    use Mail::Message::MH;
-    my $ra = Mail::Message::MH->expand($thread_id, $min, $max);
-    $ra = [ $thread_id ] unless defined $ra;
+    # analyze the current message and store the data into DB (UDB).
+    # XXX this analyzer examines the basic profile of article, but
+    # XXX not determine the status "open", "close" et.al. for the article.
+    # XXX The determination is deferred below.
+    $thread->analyze($msg);
 
-    for my $id (@$ra) {
-	# e.g. 100 -> elena/100
-	if ($id =~ /^\d+$/) {
-	    $id = $thread->_create_thread_id_strings($id);
-	}
-
-	# check "elena/100" exists ?
-	if ($thread->exist($id)) {
-	    $curproc->log("close thread_id=$id");
-	    $thread->close($id);
-	}
-	else {
-	    $curproc->log("thread_id=$id not exists") if $debug;
-	}
-    }
+    # analyze more details of the content and create a hint to
+    # determine the thread status for later use.
+    $self->check_if_article_is_reply_message($id, $msg);
+    $self->check_if_article_has_closing_phrase($id, $msg);
+    $self->check_if_article_should_be_ignored($id, $msg);
 }
 
 
-package FML::Article::Thread::CUI;
-
-use vars qw($debug @ISA @EXPORT @EXPORT_OK);
-use strict;
-use Carp;
-
-
-# Descriptions: top level interface for CUI.
-#               This routine is in loop.
-#    Arguments: OBJ($self) OBJ($curproc) OBJ($thread) HASH_REF($ttargs)
-# Side Effects: none
+# Descriptions: check the content of message object.
+#               log and update UDB if needed.
+#    Arguments: OBJ($self) NUM($id) OBJ($msg)
+# Side Effects: update UDB.
 # Return Value: none
-sub interactive
+sub check_if_article_is_reply_message
 {
-    my ($self, $curproc, $thread, $ttargs) = @_;
+    my ($self, $id, $msg) = @_;
+    my $curproc = $self->{ _curproc };
+    my $thread  = $self->{ _thread_object };
+    my $article = $self->{ _article_object };
+    my $header  = $msg->whole_message_header();
 
-    eval q{
-	use Term::ReadLine;
-	my $term    = new Term::ReadLine "fmlthread";
-	my $ml_name = $ttargs->{ ml_name };
-	my $prompt  = "$ml_name thread> ";
-	my $OUT     = $term->OUT || \*STDOUT;
-	my $res     = '';
-	my $buf     = '';
-
-	# main loop;
-	no strict;
-	while ( defined ($buf = $term->readline($prompt)) ) {
-	    $self->_exec($curproc, $thread, $ttargs, $buf);
-	    warn $@ if $@;
-	    $term->addhistory($buf) if $buf =~ /\S/o;
-	}
-    };
-    carp($@) if $@;
-}
-
-
-# Descriptions: CUI command switch
-#    Arguments: OBJ($self) OBJ($curproc)
-#               OBJ($xthread) HASH_REF($ttargs) STR($buf)
-# Side Effects: exit for some type of input.
-# Return Value: none
-sub _exec
-{
-    my ($self, $curproc, $xthread, $ttargs, $buf) = @_;
-    my ($command, @argv) = ();
-
-    use Mail::ThreadTrack;
-    my $thread = new Mail::ThreadTrack $ttargs;
-    $thread->set_mode('text');
-
-    # clean up
-    if (defined $buf && $buf) {
-	$buf =~ s/^\s*//;
-	$buf =~ s/\s*$//;
-	($command, @argv) = split(/\s+/, $buf);
+    # 1) get subject.
+    my $subject = $header->get('subject');
+    if ($subject =~ /=\?/o) {
+	my $string = new Mail::Message::String $subject;
+	$string->mime_decode();
+	$string->charcode_convert_to_internal_code();
+	$subject = $string->as_str();
     }
 
-    if ($command eq '') {
-	help();
-    }
-    elsif ($command eq 'quit' || $command eq 'exit' || $command eq 'end') {
-	exit(0);
-    }
-    elsif ($command eq 'list') {
-	$thread->list();
-    }
-    elsif ($command eq 'show') {
-	for my $id (@argv) {
-	    if ($id =~ /^\d+$/) {
-		my $xid = $thread->_create_thread_id_strings($id);
-		use FileHandle;
-		my $wh = new FileHandle "| less";
-		my $saved_fd = $thread->get_fd( $wh );
-		$thread->set_fd( $wh );
-		$thread->show($xid);
-		$thread->set_fd( $saved_fd );
-	    }
-	    else {
-		print "sorry, cannot show $id\n";
-	    }
-	}
-    }
-    elsif ($command eq 'close') {
-	my $max_id = $ttargs->{ max_id };
-	for my $id (@argv) {
-	    print "close $id\n";
-	    &FML::Article::Thread::_close($thread, $id, 1, $max_id);
-	}
+    # 2) it looks subject has a reply tag ?
+    use FML::Header::Subject;
+    my $subj = new FML::Header::Subject;
+    if ($subj->is_reply($subject)) {
+	$thread->set_article_status($id, $state_followed);
     }
     else {
-	help();
+	$thread->set_article_status($id, $state_open);
     }
 }
 
 
-# Descriptions: show CUI help
-#    Arguments: none
+# Descriptions: check the content of message object.
+#               log and update UDB if needed.
+#    Arguments: OBJ($self) NUM($id) OBJ($msg)
+# Side Effects: update UDB.
+# Return Value: none
+sub check_if_article_has_closing_phrase
+{
+    my ($self, $id, $msg) = @_;
+    my $curproc = $self->{ _curproc };
+    my $thread  = $self->{ _thread_object };
+    my $article = $self->{ _article_object };
+
+    my $rules = {
+	'thank you' => 1,
+    };
+    $msg->set_closing_phrase_rules($rules);
+
+    # check it as "closed(auto)" if it looks like the end of thread.
+    # for example, we can find some phrases, "thank you.", "this
+    # problem is resolved.",...  at the last of the article.
+    if ($msg->has_closing_phrase()) {
+	$thread->set_article_status($id, $state_auto_closed);
+    }
+}
+
+
+# Descriptions: check the content of message object.
+#               log and update UDB if needed.
+#    Arguments: OBJ($self) NUM($id) OBJ($msg)
+# Side Effects: update UDB.
+# Return Value: none
+sub check_if_article_should_be_ignored
+{
+    my ($self, $id, $msg) = @_;
+
+    # check if this article should be ignored ?
+    # for example, "cvs source changes" may be ignored at some ML.
+    if (0) {
+	# $self->check_message_filter( file => filter_config_file ) ?
+    }
+}
+
+
+=head1 UTILITY FUNCTIONS
+
+=head2 open_thread_status($th_args)
+
+open thread.
+
+=head2 close_thread_status($th_args)
+
+close thread.
+
+=cut
+
+
+# Descriptions: open thread.
+#    Arguments: OBJ($self) HASH_REF($thread_args)
 # Side Effects: none
 # Return Value: none
-sub help
+sub open_thread_status
 {
-    print "Usage: $0\n\n";
+    my ($self, $thread_args) = @_;
 
-    print "list         show thread summary (without article summary)\n";
-    print "show  id(s)  show articles in thread_id\n";
-    print "close id(s)  close thread specified by thread_id\n";
-    print "quit         to end\n";
-    print "Ctl-D        to end\n";
-    print "\n";
-    print "Typical Usage:\n";
-    print "  > list\n ... \n";
-    print "  > show 100\n";
-    print "  > close 100\n";
-    print "\n";
+    $self->_change_thread_status($thread_args, $state_open);
+}
+
+
+# Descriptions: close thread.
+#    Arguments: OBJ($self) HASH_REF($thread_args)
+# Side Effects: none
+# Return Value: none
+sub close_thread_status
+{
+    my ($self, $thread_args) = @_;
+
+    $self->_change_thread_status($thread_args, $state_closed);
+}
+
+
+# Descriptions: open/close thread with the specified range.
+#    Arguments: OBJ($self) HASH_REF($thread_args) STR($state)
+# Side Effects: update UDB.
+# Return Value: none
+sub _change_thread_status
+{
+    my ($self, $thread_args, $state) = @_;
+    my $curproc = $self->{ _curproc };
+    my $thread  = $self->{ _thread_object };
+    my $article = $self->{ _article_object };
+
+    use Mail::Message::MH;
+    my $mh      = new Mail::Message::MH;
+    my $range   = $thread_args->{ range } || 'last:10';
+    my $head_id = $thread_args->{ last_id };
+    my $id_list = $mh->expand($range, 1, $head_id);
+    my $tail_id = $id_list->[ 0 ] || 1;
+
+    for my $id (@$id_list) {
+	$curproc->log("close thread $id");
+	$thread->set_thread_status($id, $state);
+    }
 }
 
 
@@ -336,7 +484,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003 Ken'ichi Fukamachi
+Copyright (C) 2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
