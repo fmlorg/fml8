@@ -1,0 +1,6 @@
+<_ARG0_>はリモートでfmlをメインテナンスできる管理者
+として登録されていません。最初に
+   コマンド    admin addadmin _ARG0_
+   (shell上で) makefml addadmin _ARG0_
+などを実行して登録する必要があります。
+
