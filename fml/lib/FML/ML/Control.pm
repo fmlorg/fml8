@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.5 2004/02/15 04:38:32 fukachan Exp $
+# $FML: Control.pm,v 1.6 2004/07/23 13:16:39 fukachan Exp $
 #
 
 package FML::ML::Control;
@@ -162,6 +162,31 @@ sub install_template_files
     for my $mta (@$list) {
 	my $obj = new FML::MTA::Control { mta_type => $mta };
 	$obj->setup($curproc, $params);
+    }
+}
+
+
+# Descriptions: install ONLY config.cf file.
+#    Arguments: OBJ($self)
+#               OBJ($curproc)
+#               HASH_REF($command_args)
+#               HASH_REF($params)
+# Side Effects: config.cf created if needed.
+# Return Value: none
+sub install_config_cf
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $config       = $curproc->config();
+    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $ml_home_dir  = $params->{ ml_home_dir };
+
+    use File::Spec;
+    for my $file (qw(config.cf)) {
+	my $src = File::Spec->catfile($template_dir, $file);
+	my $dst = File::Spec->catfile($ml_home_dir,  $file);
+
+	$curproc->ui_message("creating $dst");
+	$self->_install($src, $dst, $params);
     }
 }
 
