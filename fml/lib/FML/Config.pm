@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.63 2002/07/02 03:50:51 fukachan Exp $
+# $FML: Config.pm,v 1.64 2002/07/14 23:02:22 fukachan Exp $
 #
 
 package FML::Config;
@@ -595,6 +595,8 @@ sub _expand_variables
 	    $config->{$x} =~
 		s/\$([a-z_]+[a-z0-9])/(defined $config->{$1} ? $config->{$1} : '')/ge;
 
+	    __expand_special_macros( $config, $x );
+
 	    last EXPANSION_LOOP if $config->{ $x } !~ /\$/o;
 	    last EXPANSION_LOOP if $org eq $config->{ $x };
 
@@ -606,6 +608,28 @@ sub _expand_variables
 	if ($max >= 16) {
 	    croak("variable expansion of $x causes infinite loop\n");
 	}
+    }
+}
+
+
+# Descriptions: expand READ_ONLY(a b c) -> READ_ONLY(a) READ_ONLY(b) ...
+#    Arguments: OBJ($config) STR($x)
+# Side Effects: rewrite $config
+# Return Value: none
+sub __expand_special_macros
+{
+    my ( $config, $x ) = @_;
+
+    return unless defined $config;
+    return unless defined $x;
+    return unless defined $config->{ $x };
+
+    if ($config->{ $x } =~ /READ_ONLY\((.*)\)/) {
+	my (@x) = split(/\s+/, $1);
+	my $v   = '';
+	for my $key (@x) { $v .= " READ_ONLY($key)";}
+
+	$config->{ $x } =~ s/READ_ONLY\((.*)\)/$v/;
     }
 }
 
