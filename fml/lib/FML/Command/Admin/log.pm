@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.4 2002/04/07 05:35:09 fukachan Exp $
+# $FML: log.pm,v 1.5 2002/06/25 04:12:54 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -63,9 +63,10 @@ sub process
     my $log_file = $config->{ log_file };
     my $options  = $command_args->{ options };
     my $address  = $command_args->{ command_data } || $options->[ 0 ];
+    my $style    = $curproc->get_print_style();
 
     if (-f $log_file) {
-	_show_log($log_file, { mode => 'text' });
+	_show_log($log_file, { printing_style => $style });
     }
 }
 
@@ -79,9 +80,10 @@ sub cgi_menu
     my ($self, $curproc, $args, $command_args) = @_;
     my $config   = $curproc->{ config };
     my $log_file = $config->{ log_file };
+    my $style    = $curproc->get_print_style();
 
     if (-f $log_file) {
-	_show_log($log_file, { mode => 'cgi' });
+	_show_log($log_file, { printing_style => $style });
     }
 }
 
@@ -92,8 +94,8 @@ sub cgi_menu
 # Return Value: none
 sub _show_log
 {
-    my ($log_file, $args) = @_;
-    my $is_cgi       = 1 if $args->{ mode } eq 'cgi';
+    my ($self, $log_file, $args) = @_;
+    my $is_cgi       = 1 if $args->{ printin_style } eq 'cgi';
     my $last_n_lines = 30;
     my $linecount    = 0;
     my $maxline      = 0;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.113 2002/07/14 15:15:29 fukachan Exp $
+# $FML: Kernel.pm,v 1.114 2002/07/15 15:27:15 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -142,6 +142,9 @@ sub new
     # 3.5 initialize signal handlers
     $curproc->_signal_init;
 
+    # 3.6 default printing style
+    $curproc->_print_init;
+
     # 4.1 debug. XXX remove this in the future !
     $curproc->__debug_ml_xxx('loaded:');
 
@@ -176,6 +179,17 @@ sub _signal_init
 	sleep 1;
 	croak("SIG$signal trapped");
     };
+}
+
+
+# Descriptions: set up default printing style handling
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
+sub _print_init
+{
+    my ($curproc, $args) = @_;
+    $curproc->set_print_style( 'text' );
 }
 
 

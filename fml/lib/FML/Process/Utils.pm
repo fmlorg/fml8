@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.33 2002/07/14 15:11:01 fukachan Exp $
+# $FML: Utils.pm,v 1.34 2002/07/15 15:27:15 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -838,6 +838,37 @@ sub article_id_max
     else {
 	return 0;
     }
+}
+
+
+=head2 get_print_style()
+
+=head2 set_print_style(mode)
+
+=cut
+
+
+# Descriptions: get print style
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub get_print_style
+{
+    my ($curproc) = @_;
+
+    return( $curproc->{ __print_style } || 'text');
+}
+
+
+# Descriptions: set print style
+#    Arguments: OBJ($curproc) STR($mode)
+# Side Effects: none
+# Return Value: STR
+sub set_print_style
+{
+    my ($curproc, $mode) = @_;
+
+    $curproc->{ __print_style } = $mode;
 }
 
 
