@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: get.pm,v 1.1.1.1 2001/08/26 08:01:04 fukachan Exp $
+# $FML: get.pm,v 1.2 2001/09/13 11:53:30 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
@@ -58,11 +58,13 @@ sub process
 	}
     }
 
-    $curproc->queue_in('reply_message', {
+    my $queue = $curproc->queue_in('reply_message', {
 	'sender'  => 'fukachan',
 	'subject' => 'get result',
 	'recipient' => $recipient,
     });
+
+    $curproc->queue_flush( $queue );
 }
 
 
