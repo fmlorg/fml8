@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: unsubscribe.pm,v 1.10 2001/07/15 12:03:37 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.1.1.1 2001/08/26 05:43:10 fukachan Exp $
 #
 
 package FML::Command::User::unsubscribe;
@@ -18,7 +18,7 @@ use FML::Command::Utils;
 
 =head1 NAME
 
-FML::Command::unsubscribe - remove the specified member
+FML::Command::User::unsubscribe - remove the specified member
 
 =head1 SYNOPSIS
 
@@ -68,7 +68,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::unsubscribe appeared in fml5 mailing list driver package.
+FML::Command::User::unsubscribe appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

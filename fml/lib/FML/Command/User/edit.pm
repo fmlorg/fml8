@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: edit.pm,v 1.6 2001/08/05 22:36:43 fukachan Exp $
+# $FML: edit.pm,v 1.1.1.1 2001/08/26 05:43:10 fukachan Exp $
 #
 
 package FML::Command::User::edit;
@@ -17,7 +17,7 @@ use FML::Command::Utils;
 
 =head1 NAME
 
-FML::Command::edit - edit a new member
+FML::Command::User::edit - edit a new member
 
 =head1 SYNOPSIS
 
@@ -84,7 +84,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::edit appeared in fml5 mailing list driver package.
+FML::Command::User::edit appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: add.pm,v 1.7 2001/07/15 12:03:37 fukachan Exp $
+# $FML: add.pm,v 1.1.1.1 2001/08/26 05:43:10 fukachan Exp $
 #
 
 package FML::Command::User::add;
@@ -24,7 +24,7 @@ sub process
 
 =head1 NAME
 
-FML::Command::add - add a new member
+FML::Command::User::add - add a new member
 
 =head1 SYNOPSIS
 
@@ -45,7 +45,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::add appeared in fml5 mailing list driver package.
+FML::Command::User::add appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: mget.pm,v 1.5 2001/08/26 04:13:40 fukachan Exp $
+# $FML: mget.pm,v 1.1.1.1 2001/08/26 05:43:10 fukachan Exp $
 #
 
 package FML::Command::User::mget;
@@ -27,7 +27,7 @@ sub process
 
 =head1 NAME
 
-FML::Command::mget - what is this
+FML::Command::User::mget - what is this
 
 =head1 SYNOPSIS
 
@@ -50,7 +50,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::mget appeared in fml5 mailing list driver package.
+FML::Command::User::mget appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

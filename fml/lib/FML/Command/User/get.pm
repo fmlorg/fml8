@@ -4,7 +4,7 @@ f#
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: get.pm,v 1.5 2001/08/26 04:13:40 fukachan Exp $
+# $FML: get.pm,v 1.1.1.1 2001/08/26 05:43:10 fukachan Exp $
 #
 
 package FML::Command::User::get;
@@ -18,7 +18,7 @@ use FML::Command::Utils;
 
 =head1 NAME
 
-FML::Command::get - what is this
+FML::Command::User::get - what is this
 
 =head1 SYNOPSIS
 
@@ -55,7 +55,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::get appeared in fml5 mailing list driver package.
+FML::Command::User::get appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

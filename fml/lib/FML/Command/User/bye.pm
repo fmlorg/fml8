@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: bye.pm,v 1.8 2001/07/15 12:03:37 fukachan Exp $
+# $FML: bye.pm,v 1.1.1.1 2001/08/26 05:43:10 fukachan Exp $
 #
 
 package FML::Command::User::bye;
@@ -13,8 +13,8 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 FML::Command::Utils;
-use FML::Command::unsubscribe;
-@ISA = qw(FML::Command::unsubscribe FML::Command::Utils);
+use FML::Command::User::unsubscribe;
+@ISA = qw(FML::Command::User::unsubscribe FML::Command::Utils);
 
 sub process
 {
@@ -25,7 +25,7 @@ sub process
 
 =head1 NAME
 
-FML::Command::bye - remove the specified member
+FML::Command::User::bye - remove the specified member
 
 =head1 SYNOPSIS
 
@@ -46,7 +46,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::bye appeared in fml5 mailing list driver package.
+FML::Command::User::bye appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
