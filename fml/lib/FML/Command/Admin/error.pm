@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: error.pm,v 1.5 2003/05/20 04:22:56 fukachan Exp $
+# $FML: error.pm,v 1.6 2003/05/20 10:02:17 fukachan Exp $
 #
 
 package FML::Command::Admin::error;
@@ -80,11 +80,18 @@ sub _fmlerror
 {
     my ($self, $curproc) = @_;
     my $config = $curproc->config();
+    my $list   = $config->get_as_array_ref('error_analyzer_function_list');
 
     use FML::Error;
     my $error = new FML::Error $curproc;
-    $error->analyze();
-    $error->dump();
+
+    for my $fp (@$list) {
+	print "# analyzer function = $fp\n";
+	$error->set_analyzer_function($fp);
+	$error->analyze();
+	$error->print();
+	print "\n";
+    }
 }
 
 
