@@ -13,30 +13,45 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
 
+
 require Exporter;
-@ISA = qw(Exporter);
-
-
-sub new
-{
-my ($self) = @_;
-my ($type) = ref($self) || $self;
-my $me     = {};
-return bless $me, $type;
-}
+@ISA       = qw(Exporter);
+@EXPORT_OK = qw(mime_decode_string mime_encode_string);
 
 
 sub mime_decode_string
 {
-    my ($str, $type) = @_;
+    my ($str, $options) = @_;
+    my $charset = $options->{ 'charset' } || 'euc-japan';
 
+    if ($charset eq 'euc-japan') {
+	use Jcode;
+	use MIME::Base64;
+
+	if ($str =~ /=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/i) { 
+	    $str =~ s/=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/decode_base64($1)/gie;
+	}
+
+	if ($str =~ /=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/i) { 
+	    $str =~ s/=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/decode_base64($1)/gie;
+	}
+    }
+
+    &Jcode::convert(\$str, 'euc');
+    $str;
 }
 
 
 sub mime_encode_string
 {
-    my ($str, $type) = @_;
+    my ($str, $options) = @_;
+    my $charset = $options->{ 'charset' } || 'iso-2022-jp';
 
+    &Jcode::convert(\$str, 'jis');
+    $str = encode_base64($str);
+    $str  =~ s/\n$//;
+
+    return '=?'. $charset . '?B?' . $str . '?=';
 }
 
 
