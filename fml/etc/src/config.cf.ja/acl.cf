@@ -65,6 +65,7 @@ primary_member_map	=	file:$ml_home_dir/members
 #         Type:
 #     Examples:
 member_maps		=	$primary_member_map
+				$admin_member_maps
 
 
 
