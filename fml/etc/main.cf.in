@@ -1,5 +1,5 @@
 #
-# $FML: main.cf.in,v 1.9 2002/02/24 08:16:37 fukachan Exp $
+# $FML: main.cf.in,v 1.10 2002/04/01 03:40:54 fukachan Exp $
 #
 
 # fml version
@@ -63,7 +63,7 @@ default_ml_home_prefix	=	@mlspooldir@
 
 
 # default domain
-default_domain		=	fml.org
+default_domain		=	@default_domain@
 
 
 # version dependent default_config.cf location
