@@ -696,6 +696,8 @@ available_commands_for_admin_cgi	=	subscribe
 						addadmin
 						byeadmin
 						log
+						newml
+						rmml
 
 
 # Descriptions: confirmation の返事を表す特別なコマンド
@@ -991,6 +993,12 @@ path_uuencode             = @UUENCODE@
 path_compress             = @COMPRESS@
 
 path_sendmail             = @SENDMAIL@
+
+path_newaliases           = @NEWALIASES@
+
+path_postfix              = @POSTFIX@
+
+path_postalias            = @POSTALIAS@
 
 path_nkf                  = @NKF@
 
