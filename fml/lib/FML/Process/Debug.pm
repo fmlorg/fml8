@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Debug.pm,v 1.7 2004/01/04 03:25:09 fukachan Exp $
+# $FML: Debug.pm,v 1.8 2004/01/04 13:19:10 fukachan Exp $
 #
 
 package FML::Process::Debug;
@@ -153,15 +153,16 @@ and return the prefix.
 sub ml_home_prefix
 {
     my ($self, $domain) = @_;
+    my $_domain = quotemeta($domain);
 
     use IO::Adapter;
     my $obj = new IO::Adapter "/etc/fml/ml_home_prefix";
-    my $ent = $obj->find($domain, { want => 'key,value', all => 1 });
+    my $ent = $obj->find($_domain, { want => 'key,value', all => 1 });
 
     # debug
     for my $buf (@$ent) {
 	my ($x_domain, $x_prefix) = split(/\s+/, $buf);
-	return $x_prefix if $x_domain eq $domain;
+	return $x_prefix if "\L$x_domain\E" eq "\L$domain\E";
     }
 
     return '';
