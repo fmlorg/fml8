@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.64 2002/07/14 23:02:22 fukachan Exp $
+# $FML: Config.pm,v 1.65 2002/07/22 09:40:07 fukachan Exp $
 #
 
 package FML::Config;
@@ -306,6 +306,7 @@ sub _read_file
     if (defined $fh) {
 	my ($key, $value, $curkey, $comment_buffer);
 	my ($after_cut, $hook);
+	my $name_space = ''; # by default
 
 	# For example
 	#    var = key1         (case 1.)
@@ -313,14 +314,27 @@ sub _read_file
 	#    var = key1         (case 1.)
 	#          key2         (case 2.)
 	#
+	# [mysql:fml]
+	#    var = key1 ...
+	# 
 	while (<$fh>) {
+	    # Example: [mysql:fml]
+	    #   switched to the new name space.
+	    if (/^\[([\w\d\:]+)\]\s*$/) {
+		$name_space = "[$1]";
+	    }
+
 	    if ($after_cut) {
 		$hook     .= $_ unless /^=/;
 		$after_cut = 0  if /^=\w+/;
 		next;
 	    }
 	    $after_cut = 1 if /^=cut/; # end of postfix format
-	    next if /^=/;    # ignore special keywords of pod formats
+
+	    if (/^=/) { # ignore special keywords of pod formats
+		$name_space = '';
+		next;
+	    }
 
 	    if ($mode eq 'raw') { # save comment buffer
 		if (/^\s*\#/) { $comment_buffer .= $_;}
@@ -338,13 +352,8 @@ sub _read_file
 		$value  =~ s/\s*$//o;
 		$curkey = $key;
 
-		if ($xmode) {
-		    $config->{ $key } =
-			_evaluate($config, $key, $xmode, $value);
-		}
-		else { # by default
-		    $config->{ $key } = $value;
-		}
+		# rewrite/update $config
+		__update_config($config, $key, $value, $name_space, $xmode);
 
 		# save variable order for re-construction e.g. used in write()
 		if ($mode eq 'raw') {
@@ -358,8 +367,7 @@ sub _read_file
 	    # case 2. "^\s+value2"
 	    elsif (/^\s+(.*)/ && defined($curkey)) {
 		my $value = $1;
-		$value =~ s/\s*$//o;
-		$config->{ $curkey } .= " ". $value;
+		__append_config($config, $curkey, $value, $name_space);
 	    }
 	}
 	$fh->close;
@@ -369,6 +377,53 @@ sub _read_file
     }
     else {
 	$self->error_set("Error: cannot open $file");
+    }
+}
+
+
+# Descriptions: update $config
+#    Arguments: OBJ($obj) STR($key) STR($value) STR($name_space) STR($mode)
+# Side Effects: update $config
+# Return Value: none
+sub __update_config
+{
+    my ($config, $key, $value, $name_space, $mode) = @_;
+
+    if ($mode) {
+	if ($name_space) {
+	    $config->{ $name_space }->{ $key } = 
+		_evaluate($config, $key, $mode, $value);
+	}
+	else {
+	    $config->{ $key } = _evaluate($config, $key, $mode, $value);
+	}
+    }
+    else { # by default
+	if ($name_space) {
+	    $config->{ $name_space }->{ $key } = $value;
+	}
+	else {
+	    $config->{ $key } = $value;
+	}
+    }
+}
+
+
+# Descriptions: append $value into $config
+#    Arguments: OBJ($obj) STR($key) STR($value) STR($name_space) STR($mode)
+# Side Effects: update $config
+# Return Value: none
+sub __append_config
+{
+    my ($config, $key, $value, $name_space, $mode) = @_;
+
+    $value =~ s/\s*$//o;
+
+    if ($name_space) {
+	$config->{ $name_space }->{ $key } .= " ". $value;
+    }
+    else {
+	$config->{ $key } .= " ". $value;
     }
 }
 
@@ -538,6 +593,9 @@ The expanded result is saved in the same hash.
 =cut
 
 
+my $debug_sql = 0;
+
+
 # Descriptions: expand variable name
 #               e.g. $dir/xxx -> /var/spool/ml/elena/xxx
 #    Arguments: OBJ($self)
@@ -549,12 +607,55 @@ sub expand_variables
 
     # always expand variables within itself.
     _expand_variables( \%_default_fml_config );
+    # _expand_nextlevel( \%_default_fml_config ); # XXX looks not needed ?
 
     # XXX 2001/05/05
     # XXX %_fml_config        has variables before expansion.
     # XXX %_fml_config_result has variables after expansion.
-    %_fml_config_result = %_fml_config;
+    # XXX copying is important here.
+    __hash_copy(\%_fml_config_result, \%_fml_config);
+
     _expand_variables( \%_fml_config_result );
+    _expand_nextlevel( \%_fml_config_result );
+}
+
+
+sub __hash_copy
+{
+    my ($dst, $src) = @_;
+    my ($key, $value);
+
+    while (($key, $value) = each %$src) {
+	if (ref($value) eq 'HASH') {
+	    my $hash_ref = $value;
+	    my $newhash  = {};
+	    my ($k, $v);
+	    while (($k, $v) = each %$hash_ref) { $newhash->{ $k } = $v;}
+	    $dst->{ $key } = $newhash;
+	}
+	else {
+	    $dst->{ $key } = $src->{ $key }; 
+	}
+    }
+}
+
+
+# Descriptions: update config in the next level name space e.g. [mysql:xxx]
+#    Arguments: OBJ($config)
+# Side Effects: update config
+# Return Value: none
+sub _expand_nextlevel
+{
+    my ($config) = @_;
+
+    for my $ns (keys %$config) {
+	# only for the special map such as '[mysql:fml']
+	if ($ns =~ /^\[/o) {
+	    # XXX variable expansion within the next level.
+	    my $hash = $config->{ $ns };
+	    _expand_variables( $hash, $config );
+	} 
+    }
 }
 
 
@@ -564,7 +665,7 @@ sub expand_variables
 # Return Value: none
 sub _expand_variables
 {
-    my ($config) = @_;
+    my ($config, $hints) = @_;
     my @order  = keys %$config;
 
     # check whether the variable definition is recursive.
@@ -593,7 +694,12 @@ sub _expand_variables
 	    $org = $config->{ $x };
 
 	    $config->{$x} =~
-		s/\$([a-z_]+[a-z0-9])/(defined $config->{$1} ? $config->{$1} : '')/ge;
+		s/\$([a-z_]+[a-z0-9])/(defined $config->{$1} ?
+				       $config->{$1} :
+				       (defined $hints->{$1} ?
+					$hints->{$1} :
+					''
+					))/ge;
 
 	    __expand_special_macros( $config, $x );
 
@@ -763,8 +869,9 @@ sub dump_variables
 {
     my ($self, $args) = @_;
     my ($k, $v);
-    my $len  = 0;
-    my $mode = $args->{ mode } || 'all';
+    my $len     = 0;
+    my $use_sql = 0;
+    my $mode    = $args->{ mode } || 'all';
 
     $self->expand_variables();
 
@@ -774,6 +881,8 @@ sub dump_variables
 
     my $format = '%-'. $len. 's = %s'. "\n";
     for $k (sort keys %_fml_config_result) {
+	$use_sql = 1 if $k =~ /^\[/o;
+
 	next unless $k =~ /^[a-z0-9]/io;
 	$v = $_fml_config_result{ $k };
 
@@ -791,6 +900,21 @@ sub dump_variables
 	    }
 	    else {
 		printf $format, $k, $v;
+	    }
+	}
+    }
+
+    if ($use_sql) {
+	for $k (sort keys %_fml_config_result) {
+	    if ($k =~ /^\[/o) {
+		my $hash_ref = $_fml_config_result{ $k };
+
+		print "\n$k\n";
+		my ($k, $v);
+		for $k (sort keys %$hash_ref) {
+		    $v = $hash_ref->{ $k };
+		    printf $format, $k, $v;
+		}
 	    }
 	}
     }
@@ -921,8 +1045,16 @@ sub FETCH
 
     if (defined($_fml_config_result{$key})) {
 	my $x = $_fml_config_result{$key};
-	$x =~ s/\s*$//;
-	$x;
+
+	# HASH_REF such as [mysql:fml] => { ... } 
+	if (ref($x)) {
+	    return $x;
+	}
+	# scalar variables
+	else {
+	    $x =~ s/\s*$//;
+	    return $x;
+	}
     }
     else {
 	undef;
