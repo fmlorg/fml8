@@ -41,6 +41,10 @@ sub open
 }
 
 
+# raw line reading
+sub getline { get_next_value(@_);} 
+
+
 sub get_next_value
 {
     my ($self, $args) = @_;

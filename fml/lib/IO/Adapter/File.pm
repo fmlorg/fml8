@@ -52,6 +52,14 @@ my $ec = 0;
 sub line_count { my ($self) = @_; return "${ec}/${c}";}
 
 
+sub getline
+{
+    my ($self) = @_;
+    my $fh = $self->{_fh};
+    $fh->getline;
+}
+
+
 sub get_next_value
 {
     my ($self) = @_;

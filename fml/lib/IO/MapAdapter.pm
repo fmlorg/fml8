@@ -106,6 +106,11 @@ sub new
 	    $pkg         = 'IO::Adapter::Array';
 	    $me->{_name} = $1;
 	    $me->{_type} = 'unix.group';
+
+	    # emulate an array on memory
+	    my (@x)       = getgrnam( $me->{_name} );
+	    my (@members) = split ' ', $x[3];
+	    $me->{_array_reference} = \@members;
 	}
 	elsif ($map =~ /(ldap|mysql|postgresql):(\S+)/) {
 	    $me->{_type}   = $1;
@@ -161,19 +166,11 @@ sub open
     if ($self->{'_type'} eq 'file') {
 	$self->SUPER::open( { file => $self->{_file}, flag => $flag } );
     }
-    elsif ($self->{'_type'} eq 'unix.group') {
-	my (@x)       = getgrnam( $self->{_name} );
-	my (@members) = split ' ', $x[3];
-	$self->{_array_reference} = \@members;
+    elsif ($self->{'_type'} eq 'unix.group' ||
+	   $self->{'_type'} eq 'array_reference') {
 	$self->SUPER::open( { flag => $flag } );
     }
-    elsif ($self->{'_type'} eq 'array_reference') {
-	$self->SUPER::open( { flag => $flag } );
-    }
-    elsif ($self->{'_type'} eq 'ldap' ||
-	   $self->{'_type'} eq 'mysql' ||
-	   $self->{'_type'} eq 'postgresql'
-	   ) {
+    elsif ($self->{'_type'} =~ /^(ldap|mysql|postgresql)$/o) {
 	return undef;
     }
     else {
@@ -183,119 +180,9 @@ sub open
 
 
 # aliases for convenience
-sub get_member    { my ($self) = @_; $self->_get_address;}
-sub get_active    { my ($self) = @_; $self->_get_address;}
-sub get_recipient { my ($self) = @_; $self->_get_address;}
-sub _get_address
-{
-    my ($self) = @_;
-
-    if ($self->{'_type'} eq 'file') {
-	$self->SUPER::get_next_value();
-    }
-    elsif ($self->{'_type'} eq 'unix.group' ||
-	   $self->{'_type'} eq 'array_reference') {
-	$self->SUPER::get_next_value();
-    }
-    elsif ($self->{'_type'} eq 'ldap' ||
-	   $self->{'_type'} eq 'mysql' ||
-	   $self->{'_type'} eq 'postgresql'
-	   ) {
-	$self->_error_reason("Error: not yet implemented");
-	return undef;
-    }
-    else {
-	$self->_error_reason("Error: type=$self->{_type} is unknown type.");
-    }
-}
-
-
-# raw line reading
-sub getline
-{
-    my ($self) = @_;
-
-    if ($self->{'_type'} eq 'file') {
-	my $fh = $self->{_fh};
-	$fh->getline;
-    }
-    elsif ($self->{'_type'} eq 'unix.group') {
-	my $i  = $self->{_counter}++;
-	my $ra = $self->{_members};
-	defined $$ra[ $i ] ? $$ra[ $i ] : undef;
-    }
-    elsif ($self->{'_type'} eq 'ldap' ||
-	   $self->{'_type'} eq 'mysql' ||
-	   $self->{'_type'} eq 'postgresql'
-	   ) {
-	$self->_error_reason("Error: not yet implemented");
-	return undef;
-    }
-    else {
-	$self->_error_reason("Error: type=$self->{_type} is unknown type.");
-	return undef;
-    }
-}
-
-
-sub getpos
-{
-    my ($self) = @_;
-
-    if ($self->{'_type'} eq 'file' ||
-	$self->{'_type'} eq 'unix.group' ||
-	$self->{'_type'} eq 'array_reference') {
-	$self->SUPER::getpos();
-    }
-    else {
-	$self->_error_reason("Error: type=$self->{_type} is unknown type.");
-    }
-}
-
-
-sub setpos
-{
-    my ($self, $pos) = @_;
-
-    if ($self->{'_type'} eq 'file' ||
-	$self->{'_type'} eq 'unix.group' ||
-	$self->{'_type'} eq 'array_reference') {
-	$self->SUPER::getpos($pos);
-    }
-    else {
-	$self->_error_reason("Error: type=$self->{_type} is unknown type.");
-    }
-}
-
-
-sub eof
-{
-    my ($self) = @_;
-
-    if ($self->{'_type'} eq 'file' ||
-	$self->{'_type'} eq 'unix.group' ||
-	$self->{'_type'} eq 'array_reference') {
-	$self->SUPER::eof();
-    }
-    else {
-	$self->_error_reason("Error: type=$self->{_type} is unknown type.");
-    }
-}
-
-
-sub close
-{
-    my ($self) = @_;
-
-    if ($self->{'_type'} eq 'file' ||
-	$self->{'_type'} eq 'unix.group' ||
-	$self->{'_type'} eq 'array_reference') {
-	$self->SUPER::close();
-    }
-    else {
-	$self->_error_reason("Error: type=$self->{_type} is unknown type.");
-    }
-}
+sub get_member    { my ($self) = @_; $self->get_next_value;}
+sub get_active    { my ($self) = @_; $self->get_next_value;}
+sub get_recipient { my ($self) = @_; $self->get_next_value;}
 
 
 sub DESTROY
