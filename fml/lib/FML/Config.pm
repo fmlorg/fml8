@@ -1,9 +1,10 @@
 #-*- perl -*-
+#
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.87 2004/01/02 09:42:33 fukachan Exp $
+# $FML: Config.pm,v 1.88 2004/01/02 14:50:27 fukachan Exp $
 #
 
 package FML::Config;
@@ -50,36 +51,13 @@ It contains several references to other data structures.
 
     $curproc = {
 	# configurations
-	config => {
-	    key => value,
-	},
+	config           => C<FML::Config OBJECT>,
 
 	# struct incoming_message holds the mail input from STDIN.
-	incoming_message => $r_msg,
-	article          => $r_msg,
+	incoming_message => C<Mail::Message OBJECT>,
+
+	...
     };
-
-where we use r_variable_name syntax where "r_" implies "reference to"
-here in this document.
-
-For exapmle, this C<$r_msg> is the reference to a hash to represent a
-mail message. It composes of header, body and several information.
-
-    $r_msg = {
-	r_header => \$header,
-	r_body   => \$body,
-	info   => {
-	    mime-version => 1.0,
-	    content-type => {
-		charset      => ISO-2022-JP,
-	    },
-	    size         => $size,
-	},
-    };
-
-where $header is the object returned by Mail::Header class (CPAN
-module) and the $body is the reference to the mail body region on
-memory which locates within FML::Parse name space.
 
 =head2 DELAYED VALUE EXPANSION
 
@@ -143,11 +121,13 @@ sub new
 
 =head2 get( key )
 
-get value for key.
+get value for key. 
+return '' (null string) if undefined.
 
 =head2 get_as_array_ref( key )
 
 get value for key as an array reference.
+return [] if undefined.
 
 =head2 set( key, value )
 
@@ -292,11 +272,11 @@ sub load_file
 sub _read_file
 {
     my ($self, $cfargs) = @_;
-    my $file    = defined $cfargs->{ 'file' }    ? $cfargs->{ 'file' }    : '';
-    my $config  = defined $cfargs->{ 'config' }  ? $cfargs->{ 'config' }  : {};
-    my $comment = defined $cfargs->{ 'comment' } ? $cfargs->{ 'comment' } : {};
-    my $order   = defined $cfargs->{ 'order' }   ? $cfargs->{ 'order' }   : [];
-    my $mode    = defined $cfargs->{ 'mode' }    ? $cfargs->{ 'mode' } : 'default';
+    my $file    = $cfargs->{ 'file' }    || '';
+    my $config  = $cfargs->{ 'config' }  || {};
+    my $comment = $cfargs->{ 'comment' } || {};
+    my $order   = $cfargs->{ 'order' }   || [];
+    my $mode    = $cfargs->{ 'mode' }    || 'default';
 
     # sanity
     return unless $file;
@@ -346,17 +326,18 @@ sub _read_file
 		chomp $buf;
 	    }
 
-	    # case 1. "key = value1"
+	    # case 1. "key = value1" | "key += value1" | "key -= value1"
 	    if ($buf =~ /^([A-Za-z0-9_]+)\s*(=)\s*(.*)/o   ||
 		$buf =~ /^([A-Za-z0-9_]+)\s*(\+=)\s*(.*)/o ||
-		$buf =~ /^([A-Za-z0-9_]+)\s*(\-=)\s*(.*)/o) {
-		my ($key, $xmode, $value) = ($1, $2, $3);
-		$xmode  =~ s/=//o;
+		$buf =~ /^([A-Za-z0-9_]+)\s*(\-=)\s*(.*)/o ) {
+		# "key = value1" | "key += value1" | "key -= value1"
+		my ($key, $op, $value) = ($1, $2, $3);
+		$op     =~ s/=//o;    # '' | '+' | '-'
 		$value  =~ s/\s*$//o;
 		$curkey = $key;
 
 		# rewrite/update $config
-		__update_config($config, $key, $value, $name_space, $xmode);
+		__update_config($config, $key, $op, $value, $name_space);
 
 		# save variable order for re-construction e.g. used in write()
 		if ($mode eq 'raw') {
@@ -366,8 +347,14 @@ sub _read_file
 		    print STDERR "push(@$order, $key);\n" if $debug;
 		    push(@$order, $key);
 		}
+		else {
+		    # XXX-TODO: need this in the case of default mode ?
+		    print STDERR "push(@$order, $key);\n" if $debug;
+		    push(@$order, $key);
+		}
 	    }
-	    # case 2. "^\s+value2"
+	    # case 2. "^\s+value2" (continued line)
+	    # XXX-TODO: $op is ignored ? correct ?
 	    elsif ($buf =~ /^\s+(.*)/o && defined($curkey)) {
 		my $value = $1;
 		__append_config($config, $curkey, $value, $name_space);
@@ -387,23 +374,24 @@ sub _read_file
 
 # Descriptions: update $config by re-evaluating variables relation.
 #    Arguments: HASH_REF($config)
-#               STR($key) STR($value) STR($name_space) STR($mode)
+#               STR($key) STR($op) STR($value) STR($name_space)
 # Side Effects: update $config on memory.
 # Return Value: none
 sub __update_config
 {
-    my ($config, $key, $value, $name_space, $mode) = @_;
+    my ($config, $key, $op, $value, $name_space) = @_;
 
-    if ($mode) {
+    # $op = '' | '+' | '-'
+    if ($op) {
 	if ($name_space) {
 	    $config->{ $name_space }->{ $key } =
-		_evaluate($config, $key, $mode, $value, $name_space);
+		_evaluate($config, $key, $op, $value, $name_space);
 	}
 	else {
-	    $config->{ $key } = _evaluate($config, $key, $mode, $value, 0);
+	    $config->{ $key } = _evaluate($config, $key, $op, $value, 0);
 	}
     }
-    else { # by default
+    else { # by default, override the value for the key.
 	if ($name_space) {
 	    $config->{ $name_space }->{ $key } = $value;
 	}
@@ -441,12 +429,12 @@ sub __append_config
 #               If "key += value4, key becomes
 #                  "value1 value2 value3 value4".
 #    Arguments: HASH_REF($config)
-#               STR($key) STR($mode) STR($value) STR($name_space)
-# Side Effects: update $config by $mode
+#               STR($key) STR($op) STR($value) STR($name_space)
+# Side Effects: update $config by $op
 # Return Value: STR(new value for $config{ $key })
 sub _evaluate
 {
-    my ($config, $key, $mode, $value, $name_space) = @_;
+    my ($config, $key, $op, $value, $name_space) = @_;
     my @buf = ();
 
     if ($name_space) {
@@ -467,12 +455,12 @@ sub _evaluate
     }
 
     # + value = append
-    if ($mode eq '+') {
+    if ($op eq '+') {
 	push(@buf, $value);
     }
     # - $value = remove $value from the values of $key
     # XXX-TODO: it works well when "-= value1 value2" is given ?
-    elsif ($mode eq '-') {
+    elsif ($op eq '-') {
 	my @newbuf = ();
 
       BUF:
@@ -556,10 +544,10 @@ sub read
 sub write
 {
     my ($self, $file) = @_;
-    my $object_id = $self->{ _object_id };
-    my $config  = $config_hold_space->{ $object_id }->{ config };
-    my $comment = $config_hold_space->{ $object_id }->{ comment };
-    my $order   = $config_hold_space->{ $object_id }->{ order  };
+    my $object_id     = $self->{ _object_id };
+    my $config        = $config_hold_space->{ $object_id }->{ config };
+    my $comment       = $config_hold_space->{ $object_id }->{ comment };
+    my $order         = $config_hold_space->{ $object_id }->{ order  };
 
     # 1. check whether I can open $file or not in atomic way.
     #    XXX get handle to update $file
@@ -692,7 +680,7 @@ sub _expand_nextlevel
 sub _expand_variables
 {
     my ($config, $hints) = @_;
-    my @order  = keys %$config;
+    my @order = keys %$config;
 
     # check whether the variable definition is recursive.
     # For example, definition "var_a = $var_a/b/c" causes a loop.
@@ -904,18 +892,21 @@ show all {key => value} for debug.
 sub dump_variables
 {
     my ($self, $cfargs) = @_;
+    my $dump_mode       = $cfargs->{ mode } || 'all';
+    my $len             = 0;
+    my $use_sql         = 0;
     my ($k, $v);
-    my $len     = 0;
-    my $use_sql = 0;
-    my $mode    = $cfargs->{ mode } || 'all';
 
     $self->expand_variables();
 
+    # find apropriate $format.
     for $k (keys %_fml_config_result) {
 	$len = $len > length($k) ? $len : length($k);
     }
-
     my $format = '%-'. $len. 's = %s'. "\n";
+
+    # o.k. here we go.
+    # 1. dump 1st level.
     for $k (sort keys %_fml_config_result) {
 	$use_sql = 1 if $k =~ /^\[/o;
 
@@ -923,7 +914,7 @@ sub dump_variables
 	$v = $_fml_config_result{ $k };
 
 	# print out all keys
-	if ($mode eq 'all') {
+	if ($dump_mode eq 'all') {
 	    printf $format, $k, $v;
 	}
 	# compare the value with the default one
@@ -940,6 +931,7 @@ sub dump_variables
 	}
     }
 
+    # 2. dump 2nd level if needed (if $use_sql).
     if ($use_sql) {
 	for $k (sort keys %_fml_config_result) {
 	    if ($k =~ /^\[/o) {
@@ -977,7 +969,8 @@ sub is_hook_defined
 {
     my ($self, $hook_name) = @_;
 
-    return undef unless $_fml_user_hooks;
+    return 0 unless defined $_fml_user_hooks;
+    return 0 unless $_fml_user_hooks;
 
     eval qq{
 	package FML::Config::Hook;
@@ -1069,7 +1062,7 @@ sub TIEHASH
 # Descriptions: FETCH op for tie() with %_fml_config
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: none
-# Return Value: STR or UNDEF
+# Return Value: STR
 sub FETCH
 {
     my ($self, $key) = @_;
@@ -1095,7 +1088,8 @@ sub FETCH
 	}
     }
     else {
-	undef;
+	# XXX get() return '' if undefined. we should behave as same way.
+	return '';
     }
 }
 
@@ -1216,5 +1210,6 @@ FML::Article first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
+
 
 1;
