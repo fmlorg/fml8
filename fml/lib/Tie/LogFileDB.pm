@@ -8,7 +8,7 @@
 # $FML$
 #
 
-package IO::LogFileDB;
+package Tie::LogFileDB;
 
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
@@ -118,20 +118,20 @@ sub _fetch
 
 =head1 NAME
 
-IO::LogFileDB.pm - what is this
+Tie::LogFileDB.pm - what is this
 
 =head1 SYNOPSIS
 
-   use IO::LogFileDB;
-   $db = new IO::LogFileDB { file => 'cache.txt' };
+   use Tie::LogFileDB;
+   $db = new Tie::LogFileDB { file => 'cache.txt' };
 
    # all entries with the key = 'rudo'
    @values = $db->grep( rudo );
 
 or
 
-   use IO::LogFileDB;
-   tie %db, 'IO::LogFileDB', { file => 'cache.txt' };
+   use Tie::LogFileDB;
+   tie %db, 'Tie::LogFileDB', { file => 'cache.txt' };
    print $db{ rudo }, "\n";
 
 where cache file "cache.txt" format is "key value" for each line.
@@ -143,15 +143,15 @@ For example
 
 By default, FETCH() returns the first value with the key.
 
-   use IO::LogFileDB;
-   tie %db, 'IO::LogFileDB', { first_match => 1, file => 'cache.txt' };
+   use Tie::LogFileDB;
+   tie %db, 'Tie::LogFileDB', { first_match => 1, file => 'cache.txt' };
    print $db{ rudo }, "\n";
 
 if you find the latest value (so at the later line somewhere in the
 file) for the $key
 
-   use IO::LogFileDB;
-   tie %db, 'IO::LogFileDB', { last_match => 1, file => 'cache.txt' };
+   use Tie::LogFileDB;
+   tie %db, 'Tie::LogFileDB', { last_match => 1, file => 'cache.txt' };
    print $db{ rudo }, "\n";
 
 
@@ -176,7 +176,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-IO::LogFileDB.pm appeared in fml5.
+Tie::LogFileDB.pm appeared in fml5.
 
 =cut
 
