@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.33 2004/02/15 04:38:36 fukachan Exp $
+# $FML: Queue.pm,v 1.34 2004/05/18 08:48:29 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -100,24 +100,30 @@ sub new
     $dir_mode = $args->{ directory_mode } || $dir_mode;
 
     # prepare directories
-    my $new_dir      = $me->new_dir_path($id);
-    my $info_dir     = $me->info_dir_path($id);
-    my $active_dir   = $me->active_dir_path($id);
-    my $sender_dir   = $me->sender_dir_path($id);
-    my $rcpt_dir     = $me->recipients_dir_path($id);
-    my $deferred_dir = $me->deferred_dir_path($id);
+    my $new_dir       = $me->new_dir_path($id);
+    my $info_dir      = $me->info_dir_path($id);
+    my $active_dir    = $me->active_dir_path($id);
+    my $sender_dir    = $me->sender_dir_path($id);
+    my $rcpt_dir      = $me->recipients_dir_path($id);
+    my $deferred_dir  = $me->deferred_dir_path($id);
+    my $transport_dir = $me->transport_dir_path($id);
 
     # hold information for delivery
     $me->{ _new_qf }               = $me->new_file_path($id);
     $me->{ _active_qf }            = $me->active_file_path($id);
     $me->{ _info }->{ sender }     = $me->sender_file_path($id);
     $me->{ _info }->{ recipients } = $me->recipients_file_path($id);
+    $me->{ _info }->{ transport }  = $me->transport_file_path($id);
 
     # create directories in queue if not exists.
     for my $_dir ($dir, $active_dir, $new_dir, $info_dir,
-		  $deferred_dir, $sender_dir, $rcpt_dir) {
+		  $deferred_dir, $sender_dir, $rcpt_dir,
+		  $transport_dir) {
 	-d $_dir || _mkdirhier($_dir);
     }
+
+    # smtp by default
+    $me->set('transport', 'smtp');
 
     return bless $me, $type;
 }
@@ -395,6 +401,7 @@ sub set
     my ($self, $key, $value) = @_;
     my $qf_sender     = $self->{ _info }->{ sender };
     my $qf_recipients = $self->{ _info }->{ recipients };
+    my $qf_transport  = $self->{ _info }->{ transport };
 
     use FileHandle;
 
@@ -432,6 +439,13 @@ sub set
 		    }
 		}
 	    }
+	    $fh->close;
+	}
+    }
+    elsif ($key eq 'transport') {
+	my $fh = new FileHandle "> $qf_transport";
+	if (defined $fh) {
+	    print $fh $value, "\n";
 	    $fh->close;
 	}
     }
@@ -499,7 +513,8 @@ sub remove
     for my $f ($self->{ _new_qf },
 	       $self->{ _active_qf },
 	       $self->{ _info }->{ sender },
-	       $self->{ _info }->{ recipients }) {
+	       $self->{ _info }->{ recipients },
+	       $self->{ _info }->{ transport }) {
 	unlink $f if -f $f;
     }
 }
@@ -540,7 +555,7 @@ sub DESTROY
 =cut
 
 
-# Descriptions: return "new" directory path.
+# Descriptions: return "new" file path.
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
 # Return Value: STR
@@ -553,7 +568,7 @@ sub new_file_path
 }
 
 
-# Descriptions: return "deferred" directory path.
+# Descriptions: return "deferred" file path.
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
 # Return Value: STR
@@ -566,7 +581,7 @@ sub deferred_file_path
 }
 
 
-# Descriptions: return "active" directory path.
+# Descriptions: return "active" file path.
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
 # Return Value: STR
@@ -579,7 +594,7 @@ sub active_file_path
 }
 
 
-# Descriptions: return "info" directory path.
+# Descriptions: return "info" file path.
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
 # Return Value: STR
@@ -592,7 +607,7 @@ sub info_file_path
 }
 
 
-# Descriptions: return "sender" directory path.
+# Descriptions: return "sender" file path.
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
 # Return Value: STR
@@ -605,7 +620,7 @@ sub sender_file_path
 }
 
 
-# Descriptions: return "recipients" directory path.
+# Descriptions: return "recipients" file path.
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
 # Return Value: STR
@@ -615,6 +630,19 @@ sub recipients_file_path
     my $dir = $self->{ _directory } || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info", "recipients", $id);
+}
+
+
+# Descriptions: return "transport" file path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub transport_file_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "info", "transport", $id);
 }
 
 
@@ -693,6 +721,19 @@ sub recipients_dir_path
     my $dir = $self->{ _directory } || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info", "recipients");
+}
+
+
+# Descriptions: return "transport" directory path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub transport_dir_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "info", "transport");
 }
 
 
