@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SimpleMatch.pm,v 1.12 2001/04/12 16:41:22 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.13 2001/04/15 12:30:26 fukachan Exp $
 #
 
 
@@ -100,10 +100,26 @@ my $address_trap_regexp = {
     },
 
 
-    # XXX what is this ???
     'smtp32' => {
     	'start' => 'undeliverable to',
     	'end'   => 'original message follows',
+    },
+
+
+    # XXX what is this ???
+    'unknown1' => {
+	'start' => 'here is your list of failed recipients',
+	'end'   => 'here is your returned mail',
+    },
+
+    'unknown2' => {
+	'start' => 'the following addresses had',
+	'end'   => 'transcript of session follows',
+    },
+
+    'unknown3' => {
+	'start' => 'this message was created automatically by mail delivery software',
+	'end'   => 'original message follows',
     },
 };
 
