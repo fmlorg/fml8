@@ -667,6 +667,7 @@ sub _header_summary
 
     $from    =~ s/\n/ /g;
     $subject =~ s/\n/ /g;
+    $subject = FML::Header::remove_subject_tag_like_string($subject);
 
     return 
 	$padding. "   From: ". $from ."\n". 

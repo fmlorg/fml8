@@ -168,6 +168,16 @@ sub rewrite_reply_to
 }
 
 
+sub remove_subject_tag_like_string
+{
+    my ($str) = @_;
+    $str =~ s/\W[-\w]+.\s*\d+\W//g;
+    $str =~ s/\s+/ /g;
+    $str =~ s/^\s*//g;
+    $str;
+}
+
+
 =head1 SEE ALSO
 
 L<Mail::Address>
