@@ -1,5 +1,5 @@
 <para>
-<screeen>
+<screen>
 
 # Descriptions: ヘッダサイズの上限のデフォルト値
 #      History:
@@ -151,5 +151,5 @@ command_mail_size_filter_rules	=	check_header_size
 #     Examples: 
 error_analyzer_cache_size		=	14
 
-</screeen>
+</screen>
 </para>
