@@ -1,11 +1,42 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/06/04
+
+  import im-145
+
+2003/06/03
+
+   Mail::Message[udb]::DB 
+	monthly_to_key_list -> month_to_key_list
+	
+   Mail::Message[udb]::ToHTML 
+	remove _address_clean_up(), which is not used.
+
+2003/06/02
+
+   Mail::Message::IMPLEMENTATION [udb branch]
+	update idea::sync with current implementation
+	
+   Mail::Message::ToHTML [udb branch]
+	modified to use DB::thread_summary($id).
+	rename method to be more easy for eyes.
+	remove not used variables.
+	FNF a little.
+
 2003/06/01
 
    スレッドデータベースの再設計
 	別ブランチでやってるので source-changes ML にしか動きが見えな
 	いとは思う。
+
+   Mail::Message::ToHTML [udb branch]
+   Mail::Message::DB [udb branch]
+	move main db manipulation code from ToHTML to DB.
+	XXX caution::but the index generator not works now.
+
+   Mail::Message::DB [udb branch]
+	implement thread_summary().
 
 2003/05/28
 
@@ -4856,4 +4887,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.144 2003/05/28 15:07:26 fukachan Exp $
+$FML: CHANGES.txt,v 1.145 2003/06/01 12:38:17 fukachan Exp $
