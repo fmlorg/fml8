@@ -3,6 +3,30 @@
 # $Id$
 #
 
+HEADER () {
+cat <<'_EOF'
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>
+fml5 homepage menubar 
+</TITLE>
+<META http-equiv="Content-Type"
+	content="text/html; charset=EUC-JP">
+</HEAD>
+
+<BODY BGCOLOR="#E6E6FA">
+_EOF
+}
+
+FOOTER () {
+cat <<'_EOF'
+</BODY>
+</HTML>
+_EOF
+}
+
+
 SHOW () {
    echo "<UL>"
    for x in *[a-z0-9A-Z]
@@ -14,15 +38,28 @@ SHOW () {
 
 	echo "	<LI>";
 	if [ -d $x ];then
+	   if [ -f $x/index.ja.html ];then
 		echo "	<A HREF=$x/index.ja.html>$x::</A>"
+	   else
+		echo "  $x  ";	
+		if [ -f $x/README ];then
+			echo "	<A HREF=$x/README>README</A>"
+		fi
+		if [ -f $x/INSTALL ];then
+			echo "	<A HREF=$x/INSTALL>INSTALL</A>"
+		fi
+	   fi
 	else
-		echo "	<A HREF=$x>$x</A>"
+		echo "	$x"
 	fi
 	echo ""
    done
    echo "</UL>"
 }
 
+
+HEADER
 SHOW
+FOOTER
 
 exit 0;
