@@ -1,6 +1,55 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/06/22
+
+   bug fix domain/virtual domain handling (specially in CGI) 
+
+   FML::Process::CGI::Kernel 
+	use $curproc->ml_XXX() as could as possible in new()
+	clean up table configuration:
+	define tables for function and <td> attributes
+	
+   FML::Log 
+	eval Log(warn ...) || print stderr it
+	
+   FML::Restriction::Base 
+	define navi_command as the same as command
+	
+   FML::Config 
+	defined() check more
+	
+   FML::Command::Admin::newml 
+	fix args of ml_home_xxx()
+	
+   FML::CGI::Admin::ML 
+	change get_ml_list() args
+	
+   FML::CGI::Admin::Menu 
+	classify the command in the navigation and main
+
+2002/06/21
+
+   CGI bug fixes
+
+   FML::Process::Utils 
+   FML::Process::CGI::Kernel 
+	move get_ml_list() and get_recipient_list()
+	from Process::CGI::Kernel to Process::Utils.
+	
+   FML::CGI::Admin::Menu 
+   FML::Command::Admin::newml 
+	set up $ml_name dynamically
+	
+   FML::Command::UserControl 
+	ignore non-existed files, not croak()
+
+   IO::Adapter::File 
+	close write handle and read handle after the write one.
+	
+   FML::Command::UserControl 
+	use IO::Adapter->get_next_key() not getline() for member list up
+	
 2002/06/01
 
    major variable naming overhaul
@@ -2554,4 +2603,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.79 2002/05/28 15:10:44 fukachan Exp $
+$FML: CHANGES.txt,v 1.80 2002/06/01 15:01:38 fukachan Exp $
