@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: file.pm,v 1.1 2002/03/30 10:18:34 fukachan Exp $
+# $FML: file.pm,v 1.2 2002/04/03 11:32:59 fukachan Exp $
 #
 
 package FML::Command::Admin::file;
@@ -72,7 +72,7 @@ sub process
     my $du_args  = {};
     my @argv     = ();
 
-    # analyze ...
+    # argv = command subcommand args ...
     my ($subcommand, @args)= @$options;
 
     if ($subcommand eq 'remove' ||
@@ -90,7 +90,7 @@ sub process
 	$obj->remove($curproc, $command_args, $du_args);
     }
     else {
-	croak("unknown subcommand");
+	croak("Admin::file: unknown subcommand");
     }
 }
 
