@@ -1,7 +1,7 @@
 <!-- 
 	すでに <chapter> 〜 </chapter> の中で include されていることに注意
 
-	$FML: intro.sgml,v 1.1.1.1 2001/04/22 16:17:17 fukachan Exp $
+	$FML: intro.sgml,v 1.2 2001/04/23 11:37:24 fukachan Exp $
 -->
 
 <title>fml5 (仮名) プロジェクトの目的</title>
@@ -216,11 +216,76 @@ fml 5.0 のアルファ版のアルファ版のアルファ版
 </sect1>
 
 
-<!-- =================================================================== -->
+
+<!-- ======================================================== -->
 <sect1>
 
 <title> アーキテクチャア・イメージ </title>
 
 <graphic entityref="architecture"></graphic>
+
+</sect1>
+
+
+
+<!-- ======================================================== -->
+
+<sect1>
+
+<TITLE> リリース・エンジニアリングについて </TITLE>
+
+<para>
+アーキテクトでも、デベロッパーに偏ってもいけない。
+抽象化に萌過ぎても、オブジェクト指向分析に燃え過ぎてもいけない。
+中庸であり、一カ月単位でフィードバックしながら
+プロジェクトの計画とコードレビューを行なうこと。
+</para>
+
+
+<para>
+<table>
+ <title> 日取り </title>
+ <tgroup cols=2>
+   <thead>
+	<row>
+	<entry> 日取り </entry>
+	<entry> 内容 </entry>
+	</row>
+   </thead>
+
+   <tbody>
+
+	<row>
+	<entry> 最初の 4〜5日</entry>
+	<entry> 計画を練り直す。
+		リリースエンジニアリングプロセス中の 
+		20 ％程度はこの計画に費やすこと
+	</entry>
+	</row>
+
+	<row>
+	<entry> 2〜3 週間</entry>
+	<entry> コードを書く</entry>
+	</row>
+
+	<row>
+	<entry> 最終週</entry>
+	<entry> ドキュメントを見直す、およびコードレビュー</entry>
+	</row>
+
+	<row>
+	<entry> 月の切れ目</entry>
+	<entry> まぁまぁ大丈夫ぽい snapshot を出してみる。
+		alpha-0,
+		alpha-1,
+		alpha-2, ...
+	</entry>
+	</row>
+
+   </tbody>
+ </tgroup>
+</table>
+</para>
+
 
 </sect1>
