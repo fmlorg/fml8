@@ -10,8 +10,10 @@ owner-__ml_name__-ctl: __fml_owner__
 
 # maintainer
 __ml_name__-request: __ml_name__-admin
-__ml_name__-admin: __fml_owner__
-#__ml_name__-admin: __fml_owner__, __ml_name__-error
-#__ml_name__-error: :include:__ml_home_dir__/include-error
+__ml_name__-admin: __fml_owner__, __ml_name__-error
+
+# error analyzer
+__ml_name__-error: :include:__ml_home_dir__/include-error
+owner-__ml_name__-error: __fml_owner__
 
 ### </ALIASES __ml_name__@__ml_domain__ ML> ###
