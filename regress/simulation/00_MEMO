@@ -2,7 +2,7 @@
 		Last Modified: $Date$
 
 
-○	etc/src/config.cf.ja/ の説明文を見直すように
+○	etc/src/config.cf.ja/ の説明文を見直す
 
 
 ○	makefml get ???
@@ -24,15 +24,6 @@
 	FML::Process::Qmail
 	FML/Filter/TrafficMonitor.pm
 	IO::Adapter::LDAP
-
-
-○ 	未完成だ
-
-	(perl -cw に引っかかる)
-
-	FML/Filter/BodyCheck.pm
-	FML/Filter/TrafficMonitor.pm
-	../img/lib/IM/EncDec.pm
 
 
 ○	FML::Language:: はどうよ
@@ -222,4 +213,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.17 2002/04/12 13:56:21 fukachan Exp $
+$FML: 00_MEMO,v 1.18 2002/04/12 15:04:07 fukachan Exp $
