@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.13 2002/01/27 13:11:58 fukachan Exp $
+# $FML: DBI.pm,v 1.14 2002/02/01 12:03:58 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -72,8 +72,9 @@ execute sql query.
 sub execute
 {
     my ($self, $args) = @_;
-    my $dbh   = $self->{ _dbh };
-    my $query = $args->{  query };
+    my $dbh    = $self->{ _dbh };
+    my $query  = $args->{  query };
+    my $config = $self->{ _config };
 
     print STDERR "execute query={$query}\n" if $debug;
 
@@ -118,28 +119,27 @@ sub open
 {
     my ($self, $args) = @_;
 
+    print STDERR "DBI::open()\n" if $debug;
+
     # save for restart
     $self->{ _args } = $args;
 
     # DSN parameters
     my $dsn      = $self->{ _dsn };
-    my $user     = $self->{ _user }        || 'fml';
-    my $password = $self->{_user_password} || '';
+    my $user     = $self->{ _sql_user }    || 'fml';
+    my $password = $self->{ _sql_password} || '';
 
-    use DBI;
-    if ($dsn =~ /DBD:mysql/) {
-	eval q{ use DBD::mysql; };
-	if ($@) {
-	    $self->error_set( $@ );
-	    return undef;
-	}
-    }
+    print STDERR "open $dsn\n" if $debug;
 
     # try to connect
-    my $dbh = DBI->connect($dsn, $user, $password);
+    use DBI;
+    my $dbh = DBI->connect($dsn, $user, $password, { RaiseError => 1 } );
     unless (defined $dbh) {
 	$self->error_set( $DBI::errstr );
 	return undef;
+    }
+    else {
+	print STDERR "connected to $dsn\n" if $debug;
     }
 
     $self->{ _dbh } = $dbh;
@@ -181,7 +181,7 @@ same as C<getline()> now.
 sub getline
 {
     my ($self, $args) = @_;
-    $self->get_next_key($args);
+    croak('getline() not implemented');
 }
 
 
@@ -192,7 +192,7 @@ sub getline
 sub get_next_key
 {
     my ($self, $args) = @_;
-    $self->_get_next_xxx($args, 'key');
+    $self->_get_data_from_cache($args, 'key');
 }
 
 
@@ -203,7 +203,7 @@ sub get_next_key
 sub get_next_value
 {
     my ($self, $args) = @_;
-    $self->_get_next_xxx($args, 'value');
+    croak('get_net_value() not implemented');
 }
 
 
@@ -211,22 +211,17 @@ sub get_next_value
 #    Arguments: OBJ($self) HASH_REF($args) STR($mode)
 # Side Effects: none
 # Return Value: STR
-sub _get_next_xxx
+sub _get_data_from_cache
 {
     my ($self, $args, $mode) = @_;
 
-    # for the first time
+    # for the first time, get the data and cache it for the later use.
     unless ($self->{ _res }) {
 	# reset row information
 	undef $self->{ _row_pos };
 	undef $self->{ _row_max };
 
-	if ( $self->can('fetch_all') ) {
-	    $self->fetch_all($args);
-	}
-	else {
-	    croak "cannot get next value\n";
-	}
+	$self->_fetch_all($args);
     }
 
     if ($self->{ _res }) {
@@ -238,20 +233,76 @@ sub _get_next_xxx
 	my @row = $self->{ _res }->fetchrow_array;
 	$self->{ _row_pos }++;
 	if ($mode eq 'key') {
-	    $row[0];
+	    return $row[0];
 	}
 	elsif ($mode eq 'value') {
 	    shift @row;
-	    join(" ", @row);
+	    return \@row;
 	}
 	else {
-	    warn("invalid option");
+	    warn("DBI: invalid option");
 	}
     }
     else {
 	$self->error_set( $DBI::errstr );
 	undef;
     }
+}
+
+
+# Descriptions: get one entry from DBMS
+#               create an SQL query and exetute it
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: update DB via SQL
+# Return Value: STR
+sub _fetch_all
+{
+    my ($self, $args) = @_;
+    my $config = $self->{ _config };
+    my $query  = $config->{ sql_get_next_key };
+
+    $self->execute({ query => $query });
+}
+
+
+=head2 add($addr)
+
+=head2 delete($addr)
+
+=cut
+
+
+# Descriptions: add $addr
+#               create an SQL query and exetute it
+#    Arguments: OBJ($self) STR($addr)
+# Side Effects: update DB via SQL
+# Return Value: STR
+sub add
+{
+    my ($self, $addr) = @_;
+    my $config = $self->{ _config };
+    my $query  = $config->{ sql_add };
+
+    $query =~ s/\&address/$addr/g;
+
+    $self->execute({ query => $query });
+}
+
+
+# Descriptions: delete $addr
+#               create an SQL query and exetute it
+#    Arguments: OBJ($self) STR($addr)
+# Side Effects: update DB via SQL
+# Return Value: STR
+sub delete
+{
+    my ($self, $addr) = @_;
+    my $config = $self->{ _config };
+    my $query  = $config->{ sql_delete };
+
+    $query =~ s/\&address/$addr/g;
+
+    $self->execute({ query => $query });
 }
 
 
@@ -283,6 +334,55 @@ sub replace
 	$self->add( $value );
     }
 
+}
+
+
+# Descriptions: search, md = map dependent
+#               create an SQL query and exetute it
+#    Arguments: OBJ($self) STR($regexp) HASH_REF($args)
+# Side Effects: update DB via SQL
+# Return Value: STR or ARRAY_REF
+sub md_find
+{
+    my ($self, $regexp, $args) = @_;
+    my $case_sensitive = $args->{ case_sensitive } ? 1 : 0;
+    my $show_all       = $args->{ all } ? 1 : 0;
+    my (@buf, $x);
+
+    my $query = $self->_build_sql_query({
+	query  => 'search',
+	regexp => $regexp,
+    });
+    $self->execute({ query => $query });
+
+    if (defined $self->{ _res }) {
+	my ($row);
+	while (defined ($row = $self->{ _res }->fetchrow_arrayref)) {
+	    $x = join(" ", @$row);
+
+	    if ($show_all) {
+		if ($case_sensitive) {
+		    push(@buf, $x) if $x =~ /$regexp/;
+		}
+		else {
+		    push(@buf, $x) if $x =~ /$regexp/i;
+		}
+	    }
+	    else {
+		if ($case_sensitive) {
+		    last if $x =~ /$regexp/;
+		}
+		else {
+		    last if $x =~ /$regexp/i;
+		}
+	    }
+	}
+    }
+    else {
+	return undef;
+    }
+
+   $show_all ? \@buf : $x;
 }
 
 

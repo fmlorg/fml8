@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.16 2002/02/17 03:13:49 fukachan Exp $
+# $FML: Adapter.pm,v 1.17 2002/07/22 09:41:12 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -148,7 +148,7 @@ sub new
     my ($self, $map, $args) = @_;
     my ($type) = ref($self) || $self;
     my ($me)   = { _map => $map };
-    my $pkg;
+    my ($pkg, @pkg);
 
     # 2002/07/22: accpet READ_ONLY($map).
     if ($map =~ /^READ_ONLY\(/) {
@@ -187,6 +187,7 @@ sub new
 	    $me->{_params} = $args;
 	    $me->{_type}   =~ tr/A-Z/a-z/; # lowercase the '_type' syntax
 	    $pkg           = 'IO::Adapter::MySQL';
+	    @pkg           = qw(IO::Adapter::DBI);
 	}
 	elsif ($map =~ /(ldap):(\S+)/i) {
 	    $me->{_type}   = $1;
@@ -203,10 +204,13 @@ sub new
 
     # save @ISA for further use, re-evaluate @ISA
     @ORIG_ISA = @ISA unless $FirstTime++;
-    @ISA      = ($pkg, @ORIG_ISA);
+    @ISA      = ($pkg, @pkg, @ORIG_ISA);
 
-    printf STDERR "%-20s %s\n", "IO::Adapter::ISA:", "@ISA" if $debug;
-    eval qq{ require $pkg; $pkg->import();};
+    if ($debug) {
+	printf STDERR "%-20s %s\n", "IO::Adapter::ISA:", "@ISA";
+	print STDERR "use $pkg\n";
+    }
+    eval qq{ use $pkg; };
     unless ($@) {
 	$pkg->configure($me, $args) if $pkg->can('configure');
     }

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: MySQL.pm,v 1.19 2002/01/27 13:11:58 fukachan Exp $
+# $FML: MySQL.pm,v 1.20 2002/02/01 12:03:59 fukachan Exp $
 #
 
 
@@ -16,7 +16,8 @@ use Carp;
 my $debug = 0;
 
 use IO::Adapter::DBI;
-@ISA = qw(IO::Adapter::DBI);
+push(@ISA, 'IO::Adapter::DBI');
+
 
 =head1 NAME
 
@@ -79,40 +80,29 @@ sub configure
 {
     my ($self, $me, $args) = @_;
     my $map    = $me->{ _map };       # e.g. "mysql:toymodel"
-    my $config = $args->{ $map };     # { add => 'insert into ..', }
-    my $params = $config->{ params }; #
+    my $config = $args->{ "[$map]" };
 
-    # import basic DBMS parameters
-    $me->{ _config }        = $config                    || undef;
-    $me->{ _params }        = $params                    || undef;
-    $me->{ _sql_server }    = $config->{ sql_server }    || 'localhost';
-    $me->{ _database }      = $config->{ database }      || 'fml';
-    $me->{ _table }         = $config->{ table }         || 'ml';
-    $me->{ _user }          = $config->{ user }          || 'fml';
-    $me->{ _user_password } = $config->{ user_password } || '';
-    $me->{_dsn}             = $self->SUPER::make_dsn( {
-	driver     =>  'mysql',
-	database   =>  $me->{ _database },
-	host       =>  $me->{ _sql_server },
+    # import variables
+    for my $key (qw(sql_server
+		    sql_database
+		    sql_table
+		    sql_user
+		    sql_password)) {
+	$me->{ "_$key" } = $config->{ $key };
+    }
+
+    use IO::Adapter::DBI;
+    my $dsn = IO::Adapter::DBI->make_dsn( {
+	driver   => 'mysql',
+	database => $config->{ sql_database },
+	host     => $config->{ sql_server },
     });
 
-    # load model specific library
-    my $pkg = $config->{ driver } || 'IO::Adapter::SQL::toymodel';
-    eval qq{ require $pkg; $pkg->import();};
+    # save the current DSN
+    $me->{ _dsn } = $dsn;
 
-    # $self->{ _driver } is the $config->{ driver } object.
-    unless ($@) {
-	printf STDERR "%-20s %s\n", "loading", $pkg if $debug;
-
-	@ISA = ($pkg, @ISA);
-	$me->{ _model_specific_driver } = $pkg;
-
-	printf STDERR "%-20s %s\n", "MySQL::ISA:", "@ISA" if $debug;
-    }
-    else {
-	error_set($self, $@);
-	return undef;
-    }
+    # save map specific configuration
+    $me->{ _config } = $config;
 }
 
 
