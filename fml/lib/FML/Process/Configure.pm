@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Configure.pm,v 1.26 2001/10/14 00:58:41 fukachan Exp $
+# $FML: Configure.pm,v 1.27 2001/10/14 03:08:59 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -101,8 +101,8 @@ sub run
 {
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
-    my $myname  = $args->{ myname };
-    my $argv    = $args->{ ARGV };
+    my $myname  = $curproc->myname();
+    my $argv    = $curproc->command_line_argv();
 
     if ($myname eq 'fmlconf') {
 	$curproc->_fmlconf($args);
@@ -163,8 +163,8 @@ sub _makefml
 {
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
-    my $myname  = $args->{ myname };
-    my $argv    = $args->{ ARGV };
+    my $myname  = $curproc->myname();
+    my $argv    = $curproc->command_line_argv();
 
     my ($method, $ml_name, @options) =  @$argv;
 

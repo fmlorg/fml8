@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Command.pm,v 1.19 2001/10/14 00:33:41 fukachan Exp $
+# $FML: Command.pm,v 1.20 2001/10/14 03:31:10 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -213,7 +213,7 @@ sub _evaluate_command
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
     my $ml_name = $config->{ ml_name };
-    my $argv    = $config->{ main_cf }->{ ARGV };
+    my $argv    = $curproc->command_line_argv();
     my $keyword = $config->{ confirm_keyword };
     my $prompt  = $config->{ command_prompt } || '>>>';
 

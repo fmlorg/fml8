@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: DocViewer.pm,v 1.2 2001/04/03 09:45:43 fukachan Exp $
+# $FML: DocViewer.pm,v 1.3 2001/05/29 16:21:16 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -91,8 +91,8 @@ sub run
 {
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
-    my $myname  = $args->{ myname };
-    my $argv    = $args->{ ARGV };
+    my $myname  = $curproc->myname();
+    my $argv    = $curproc->command_line_argv();
 
     if ($myname eq 'fmldoc') {
         $curproc->_fmldoc($args);
@@ -111,8 +111,8 @@ sub _fmldoc
 {
     my ($curproc, $args) = @_;    
     my $config  = $curproc->{ config };
-    my $myname  = $args->{ myname };
-    my $argv    = $args->{ ARGV };
+    my $myname  = $curproc->myname();
+    my $argv    = $curproc->command_line_argv();
 
     my (@opts);
     push(@opts, '-v') if $args->{ options }->{ v };
