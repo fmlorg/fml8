@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Analyze.pm,v 1.13 2001/11/09 13:30:06 fukachan Exp $
+# $FML: Analyze.pm,v 1.14 2001/11/09 15:08:49 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -385,9 +385,9 @@ sub _extract_thread_id_in_subject
 {
     my ($self, $header) = @_;
     my $config  = $self->{ _config };
-    my $tag     = $config->{ thread_subject_tag };
+    my $tag     = $config->{ thread_subject_tag } || '';
     my $loctype = $config->{ thread_subject_tag_location } || 'appended';
-    my $subject = $header->get('subject');
+    my $subject = $header->get('subject') || '';
     my $regexp  = _regexp_compile($tag);
 
     # Subject: ... [thread_id]
