@@ -1,45 +1,63 @@
-# 基本的なネーミング
-#    CLASS {
-# 	use_CLASS_NAME
-# 	CLASS_NAME
-# 	CLASS_NAME_{type,size,limit,...}
-# 	CLASS_default_NAME_{type,size,limit,...}
-#   }
+## 基本的なネーミング
+##    CLASS {
+## 	use_CLASS_NAME
+## 	CLASS_NAME
+## 	CLASS_NAME_{type,size,limit,...}
+## 	CLASS_default_NAME_{type,size,limit,...}
+##   }
 
-#	旧			新
-# -----------------------------------------------------------
+##	旧			新
+## -----------------------------------------------------------
 
-# アドレス
+## アドレス
 address_for_post		article_post_address
 address_for_command		command_mail_address
 
-# libexec/ 以下の各プログラムの機能の off/on
+## libexec/ 以下の各プログラムの機能の off/on
 use_digest_program              use_article_digest_function 
 use_distribute_program          use_article_post_function
 use_command_mail_program        use_command_mail_function
 use_error_analyzer_program      use_error_analyzer_function
 
-# restrictions
+## restrictions
 post_restrictions               article_post_restrictions
 command_restrictions            command_mail_restrictions
 admin_command_restrictions      admin_command_mail_restrictions
 
-# コマンドのリスト
-				ml_admin_cgi_allowed_command_list
-commands_for_admin_cgi		admin_cgi_allowed_command_list	
-commands_for_admin		admin_command_mail_allowed_command_list
-commands_for_privileged_user	admin_command_mail_allowed_command_list
-commands_for_stranger		anonymous_command_mail_allowed_command_list
-commands_for_user		user_command_mail_allowed_command_list
+## コマンドのリスト
+				ml_admin_cgi_allowed_commands
+commands_for_admin_cgi		admin_cgi_allowed_commands	
+commands_for_admin		admin_command_mail_allowed_commands
+commands_for_privileged_user	admin_command_mail_allowed_commands
+commands_for_stranger		anonymous_command_mail_allowed_commands
+commands_for_user		user_command_mail_allowed_commands
 
-# メッセージ
+## メッセージ
 reply_message_charset		report_mail_charset
 reply_message_subject		report_mail_subject
 reply_message_default_charset	report_mail_default_charset
 default_message_subject		report_mail_default_subject
 template_file_charset		message_template_file_charset
 
-# OS 関連 (system_ prefix に統合)
-system_accounts			system_special_accounts
-path_*				system_path_*
-timezone			system_timezone
+## OS 関連 (system_ prefix に統合)
+## path_*			system_path_*
+# has_*				system_has_*
+# system_accounts		system_special_accounts
+# timezone			system_timezone
+
+
+## newml command
+# newml_command_init_private_dirs	newml_command_init_private_directories
+# newml_command_init_public_dirs	newml_command_init_public_directories
+
+
+## ヘッダ
+# x_ml_name			outgoing_mail_header_x_ml_name
+
+
+## フィルタ
+# header_loop_check_rules	incoming_mail_header_loop_check_rules
+# use_header_loop_check		use_incoming_mail_header_loop_check
+# body_loop_check_rules		incoming_mail_body_loop_check_rules
+# use_body_loop_check		use_incoming_mail_body_loop_check
+# body_cksum_cache_dir		incoming_mail_body_cksum_cache_dir
