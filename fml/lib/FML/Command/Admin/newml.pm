@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.52 2002/09/22 14:56:45 fukachan Exp $
+# $FML: newml.pm,v 1.53 2002/10/29 09:07:39 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -145,11 +145,19 @@ sub _init_ml_home_dir
     }
 
     # $ml_home_dir/etc/mail
-    my $dirlist = $config->get_as_array_ref('newml_command_init_dirs');
+    my $dirlist = $config->get_as_array_ref('newml_command_init_public_dirs');
     for my $_dir (@$dirlist) {
 	unless (-d $_dir) {
 	    print STDERR "creating ", $_dir, "\n";
 	    $curproc->mkdir( $_dir, "mode=public");
+	}
+    }
+
+    $dirlist = $config->get_as_array_ref('newml_command_init_private_dirs');
+    for my $_dir (@$dirlist) {
+	unless (-d $_dir) {
+	    print STDERR "creating ", $_dir, "\n";
+	    $curproc->mkdir( $_dir, "mode=private");
 	}
     }
 }
@@ -212,6 +220,7 @@ sub _update_aliases
     my $ml_name   = $config->{ ml_name };
     my $ml_domain = $config->{ ml_domain };
     my $alias     = $config->{ mail_aliases_file };
+    my $mask      = umask( 022 ); 
 
     # append
     if ($self->_is_mta_alias_maps_has_ml_entry($curproc, $params, $ml_name)) {
@@ -239,6 +248,8 @@ sub _update_aliases
 	};
 	croak($@) if $@;
     }
+
+    umask( $mask );
 }
 
 
