@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.100 2004/03/04 04:30:14 fukachan Exp $
+# $FML: Command.pm,v 1.101 2004/03/12 11:45:50 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -14,8 +14,7 @@ use Carp;
 use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
 use FML::Process::Kernel;
-use FML::Process::State;
-@ISA = qw(FML::Process::State FML::Process::Kernel);
+@ISA = qw(FML::Process::Kernel);
 
 
 my ($num_total, $num_error, $num_ignored, $num_processed) = (0, 0, 0, 0);
@@ -276,6 +275,7 @@ sub finish
 sub _command_process_loop
 {
     my ($curproc) = @_;
+    my $ml_domain = $curproc->ml_domain();
     my $config    = $curproc->config();
     my $rbody     = $curproc->incoming_message_body();
     my $msg       = $rbody->find_first_plaintext_message();
@@ -283,7 +283,12 @@ sub _command_process_loop
     my $context   = {};
 
     # firstly, prompt (for politeness :) to show processing ...
-    $curproc->reply_message("result for your command requests follows:");
+    {
+	my $whoami    = "Hi, I am fml8 system for $ml_domain domain.";
+	my $result_is = "result for your command requests follows:";
+	$curproc->reply_message_nl("system.whoami",  $whoami);
+	$curproc->reply_message_nl("command.result", $result_is);
+    }
 
     # the main loop to analyze each command at each line.
   COMMAND:
@@ -322,62 +327,70 @@ sub _command_process_loop
 sub _command_switch
 {
     my ($curproc, $context) = @_;
-    my $config  = $curproc->config();
-    my $prompt  = $config->{ command_mail_reply_prompt } || '>>>';
-    my $comname = $context->{ comname };
-    my $pcb     = $curproc->pcb();	
+    my $config   = $curproc->config();
+    my $prompt   = $config->{ command_mail_reply_prompt } || '>>>';
+    my $cred     = $curproc->{ credential }; # user credential
+    my $sender   = $cred->sender();
+    my $comname  = $context->{ comname };
+    my $msg_args = $context->{ msg_args } || {};
 
     if ($debug) {
 	my $fixed_command = $context->{ fixed_command };
 	$curproc->log("execute \"$fixed_command\"");
     }
 
-    # 1. anonymous user mode firstly.
-    #    no check
-    if ($config->has_attribute("anonymous_command_mail_allowed_commands", $comname)) {
-	$curproc->_command_execute($context);
-    }
-    # 2. user mode command.
-    #    admin command module called via user mode "admin" command.
-    #    so admin_commad_restriction is applied in "admin" module hereafter.
-    elsif ($config->has_attribute("user_command_mail_allowed_commands", $comname)) {
-	# permit_xxx() sets the error reason at "check_restriction" in pcb.
-	# apply "command_mail_restrictions" here.
-	if ($curproc->permit_command()) {
-	    $curproc->_command_execute($context);
+    # command restriction rules
+    use FML::Restriction::Command;
+    my $acl   = new FML::Restriction::Command $curproc;
+    my $rules = $config->get_as_array_ref('command_mail_restrictions');
+    my ($match, $result) = (0, 0);
+  RULE:
+    for my $rule (@$rules) {
+	if ($acl->can($rule)) {
+	    # match  = matched. return as soon as possible from here.
+	    #          ASAP or RETRY the next rule, depends on the rule.
+	    # result = action determined by matched rule.
+	    ($match, $result) = $acl->$rule($rule, $sender, $context);
 	}
 	else {
-	    # check the error reason by permit_command().
-	    my $reason = $pcb->get("check_restrictions", "deny_reason");
-	    if (defined($reason) &&
-		($reason eq 'reject_system_special_accounts')) {
-		my $s = "deny request from system accounts";
-		$curproc->reply_message_nl("error.system_special_accounts",$s);
-	    }
-	    else {
-		$curproc->reply_message_nl("error.not_member",
-					   "deny request from a not member");
-	    }
+	    ($match, $result) = (0, undef);
+	    $curproc->logwarn("unknown rule=$rule");
+	}
 
-	    # append the incoming message into the error message sent back
-	    # as the reference.
-	    my $msg = $curproc->incoming_message();
-	    $curproc->reply_message( $msg );
-
-	    # add header info.
-	    $curproc->reply_message_add_header_info();
-
-	    unless (defined $reason) { $reason = 'unknown';}
-	    $curproc->log("deny command. reason=$reason");
+	if ($match) {
+	    $curproc->log("$result rule=$rule");
+	    last RULE;
 	}
     }
-    # 3. not matched.
+
+    if ($match) {
+	my $option  = $context->{ option } || [];
+	my $cont    = $option->[ 1 ] ? "..." : "";
+	my $_prompt = "$prompt $comname $cont";
+
+	if ($result eq "permit") {
+	    $curproc->_command_execute($context);
+	}
+	elsif ($result eq "deny") {
+	    $num_error++;
+	    $curproc->log("deny command: $comname");
+	    $curproc->reply_message("\n$_prompt");
+	    $curproc->restriction_state_reply_reason('command_mail',
+						     $msg_args);
+	}
+	else {
+	    $num_ignored++;
+	    $curproc->reply_message("\n$_prompt");
+	    $curproc->reply_message_nl("command.not_command", 
+				       "no such command.",
+				       $msg_args);
+	    $curproc->log("ignore command: $comname");
+	}
+    }
     else {
-	my $orig_command = $context->{ original_command } || '';
-	$curproc->reply_message("\n$prompt $orig_command");
-	$curproc->reply_message_nl("command.not_command", "\tno such commnd.");
-	$curproc->logerror("no such command: $comname");
 	$num_ignored++;
+	$curproc->logerror("match no restriction rule: $comname");
+	$curproc->reply_message("   ignored.", $msg_args);
     }
 }
 
