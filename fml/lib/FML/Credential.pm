@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Credential.pm,v 1.12 2001/06/29 05:57:32 fukachan Exp $
+# $FML: Credential.pm,v 1.13 2001/08/26 12:57:05 fukachan Exp $
 #
 
 package FML::Credential;
@@ -112,7 +112,14 @@ sub is_member
 
     my $member_maps = $curproc->{ config }->{ member_maps };
     my $address = $curproc->{'credential'}->{'sender'};
-    my ($user, $domain) = split(/\@/, $address);
+    my ($user, $domain) = ();
+
+    if (defined $address) {
+	($user, $domain) = split(/\@/, $address);
+    }
+    else {
+	return $status;
+    }
 
     use IO::Adapter;
 
