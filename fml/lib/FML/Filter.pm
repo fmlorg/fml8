@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.5 2001/12/23 13:48:07 fukachan Exp $
+# $FML: Filter.pm,v 1.6 2002/04/07 15:01:08 tmu Exp $
 #
 
 package FML::Filter;
@@ -75,8 +75,8 @@ sub check
 	    my $obj = new FML::Filter::HeaderCheck;
 
 	    # overwrite filter rules based on FML::Config
-	    if (defined $config->{ header_filter_rles }) {
-		my (@rules) = split(/\s+/, $config->{ header_filter_rles });
+	    if (defined $config->{ header_filter_rules }) {
+		my (@rules) = split(/\s+/, $config->{ header_filter_rules });
 		$obj->rules( \@rules );
 	    }
 
@@ -96,8 +96,8 @@ sub check
 	    my $obj = new FML::Filter::BodyCheck;
 
 	    # overwrite filter rules based on FML::Config
-	    if (defined $config->{ body_filter_rles }) {
-		my (@rules) = split(/\s+/, $config->{ body_filter_rles });
+	    if (defined $config->{ body_filter_rules }) {
+		my (@rules) = split(/\s+/, $config->{ body_filter_rules });
 		$obj->rules( \@rules );
 	    }
 
@@ -117,8 +117,8 @@ sub check
 	    my $obj = new FML::Filter::ContentCheck;
 
 	    # overwrite filter rules based on FML::Config
-	    if (defined $config->{ content_filter_rles }) {
-		my (@rules) = split(/\s+/, $config->{ content_filter_rles });
+	    if (defined $config->{ content_filter_rules }) {
+		my (@rules) = split(/\s+/, $config->{ content_filter_rules });
 		$obj->rules( \@rules );
 	    }
 
