@@ -39,12 +39,10 @@ sub increment_id
 	return 0;
     };
 
-    # touch
+    # touch the sequence file if it does not exist.
     unless (-f $seq_file) {
-	use FileHandle;
-	my $fh = new FileHandle ">> $seq_file";
-	print $fh "\n";
-	close($fh);
+	use FML::Utils qw(touch);
+	touch($seq_file);
     };
 
     use IO::File::Atomic;
