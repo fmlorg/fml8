@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.12 2004/12/29 08:28:18 fukachan Exp $
+# $FML: config_ph.pm,v 1.13 2004/12/30 04:39:59 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
@@ -543,7 +543,7 @@ sub _fix_time_zone
     my ($self, $diff, $key, $value) = @_;
 
     if ($value eq ' JST') {
-	return "+0900";
+	return "system_timezone = +0900";
     }
 
     return "# ***ERROR*** UNKNOWN TIME ZONE";
