@@ -6,14 +6,25 @@
 #     Examples:
 use_header_rewrite		=	yes
 
-# Descriptions: ヘッダを根拠にしたフィルタリングなどをするか？
+# Descriptions: ヘッダ情報を根拠にしたフィルタリングをするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_header_filter		=	yes
+
+# Descriptions: フィルタリングのルール
+#      History:
+#        Value:
+#     Examples:
+header_filter_rules		=	is_valid_message_id
+
+# Descriptions: ヘッダ情報を根拠にしたループチェックをするか？
 #      History:
 #        Value: yes / no
 #     Examples:
 use_header_loop_check		=	yes
 
-
-# Descriptions: ヘッダベースのフィルタリングのルール群
+# Descriptions: ヘッダに対するループチェックのルール群
 #      History:
 #        Value:
 #     Examples:
@@ -21,7 +32,11 @@ header_loop_check_rules		=	verify_message_id_uniqueness
 					verify_x_ml_info_uniqueness
 					verify_list_post_uniqueness
 
-message_id_cache_dir	=	$db_dir/message_id
+# Descriptions: Message-ID のキャッシュを格納するディレクトリ
+#      History:
+#        Value:
+#     Examples:
+message_id_cache_dir		=	$db_dir/message_id
 
 
 # Descriptions: 記事のヘッダを書き換えるルール群

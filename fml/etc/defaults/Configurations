@@ -4,6 +4,7 @@ acl.cf
 delivery.cf
 messages.cf
 header.cf
+body.cf
 lock.cf
 log.cf
 spool.cf

@@ -268,14 +268,25 @@ objective_file		=	$message_template_dir/objective
 #     Examples:
 use_header_rewrite		=	yes
 
-# Descriptions: ヘッダを根拠にしたフィルタリングなどをするか？
+# Descriptions: ヘッダ情報を根拠にしたフィルタリングをするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_header_filter		=	yes
+
+# Descriptions: フィルタリングのルール
+#      History:
+#        Value:
+#     Examples:
+header_filter_rules		=	is_valid_message_id
+
+# Descriptions: ヘッダ情報を根拠にしたループチェックをするか？
 #      History:
 #        Value: yes / no
 #     Examples:
 use_header_loop_check		=	yes
 
-
-# Descriptions: ヘッダベースのフィルタリングのルール群
+# Descriptions: ヘッダに対するループチェックのルール群
 #      History:
 #        Value:
 #     Examples:
@@ -283,7 +294,11 @@ header_loop_check_rules		=	verify_message_id_uniqueness
 					verify_x_ml_info_uniqueness
 					verify_list_post_uniqueness
 
-message_id_cache_dir	=	$db_dir/message_id
+# Descriptions: Message-ID のキャッシュを格納するディレクトリ
+#      History:
+#        Value:
+#     Examples:
+message_id_cache_dir		=	$db_dir/message_id
 
 
 # Descriptions: 記事のヘッダを書き換えるルール群
@@ -339,6 +354,44 @@ subject_tag			=	[$ml_name:%05d]
 #        Value:
 #     Examples: elena
 x_ml_name			=	$ml_name
+
+=head1	メール本文(ボディ)への操作
+
+# Descriptions: ヘッダ情報を根拠にしたフィルタリングをするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_body_filter		=	yes
+
+# Descriptions: フィルタリングのルール
+#      History:
+#        Value:
+#     Examples:
+body_filter_rules		=	reject_not_iso2022jp_japanese_string
+					reject_null_mail_body
+					reject_one_line_message
+					reject_old_fml_command_syntax
+					reject_invalid_fml_command_syntax
+					reject_japanese_command_syntax
+					reject_ms_guid
+
+# Descriptions: ヘッダ情報を根拠にしたループチェックをするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_body_loop_check		=	yes
+
+# Descriptions: ヘッダに対するループチェックのルール群
+#      History:
+#        Value:
+#     Examples:
+body_loop_check_rules		=	verify_body_cksum_uniqueness
+
+# Descriptions: Message-ID のキャッシュを格納するディレクトリ
+#      History:
+#        Value:
+#     Examples:
+body_cksum_cache_dir		=	$db_dir/body_cksum
 
 =head1	ロック
 
