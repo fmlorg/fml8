@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: byeadmin.pm,v 1.8 2002/12/24 10:19:44 fukachan Exp $
+# $FML: byeadmin.pm,v 1.9 2003/01/25 12:48:37 fukachan Exp $
 #
 
 package FML::Command::Admin::byeadmin;
@@ -59,26 +59,31 @@ sub need_lock { 1;}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config        = $curproc->{ config };
+    my $config = $curproc->config();
 
-    #
-    # XXX-TODO: remove targets are a set of admin_*_maps
-    #
-    my $member_map    = $config->{ primary_admin_member_map };
-    my $recipient_map = $config->{ primary_admin_recipient_map };
-    my $options       = $command_args->{ options };
-    my $address       = $command_args->{ command_data } || $options->[ 0 ];
+    # target maps
+    my $member_maps    = $config->get_as_array_ref('admin_member_maps');
+    my $recipient_maps = $config->get_as_array_ref('admin_recipient_maps');
+    my $options        = $command_args->{ options };
+    my $address        = $command_args->{ command_data } || $options->[ 0 ];
 
     # fundamental check
-    croak("address is not undefined")    unless defined $address;
-    croak("member_map is not undefined") unless defined $member_map;
-    croak("address is not specified")    unless $address;
-    croak("member_map is not specified") unless $member_map;
+    croak("address not undefined")        unless defined $address;
+    croak("address not specified")        unless $address;
+    croak("member_maps not undefined")    unless defined $member_maps;
+    croak("member_maps not specified")    unless $member_maps;
+    croak("recipient_maps not undefined") unless defined $recipient_maps;
+    croak("recipient_maps not specified") unless $recipient_maps;
+
+    # maplist
+    my $maplist = [];
+    push(@$maplist, @$member_maps)    if @$member_maps;
+    push(@$maplist, @$recipient_maps) if @$recipient_maps;
 
     # FML::Command::UserControl specific parameters
     my $uc_args = {
 	address => $address,
-	maplist => [ $member_map, $recipient_map ],
+	maplist => $maplist,
     };
     my $r = '';
 
