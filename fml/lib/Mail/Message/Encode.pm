@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.11 2003/01/11 15:14:25 fukachan Exp $
+# $FML: Encode.pm,v 1.12 2003/01/11 15:16:35 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -49,6 +49,7 @@ sub new
     }
 
     # default language
+    # XXX 'japanese' includes both Japanese and English.
     $me->{ _language } = 'japanese';
 
     return bless $me, $type;
@@ -57,10 +58,13 @@ sub new
 
 =head2 C<detect_code($str)>
 
-speculate the code of $str string.
-$str is checked by Unicode::Japanese.
+speculate the code of $str string. $str is checked by
+Unicode::Japanese. Unicode::Japanes::getcode() can detect the follogin
+code: jis, sjis, euc, utf8, ucs2, ucs4, utf16, utf16-ge, utf16-le,
+utf32, utf32-ge, utf32-le, ascii, binary, sjis-imode, sjis-doti,
+sjis-jsky.
 
-C<CAUTION>: we handle only Japanese.
+C<CAUTION>: we handle only Japanese and English.
 
 =cut
 
@@ -75,13 +79,18 @@ sub detect_code
     my $lang = $self->{ _language };
 
     # XXX-TODO: care for non Japanese.
-    if ($lang eq 'japanese') {
+    if ($lang eq 'japanese' || $lang eq 'english') {
+	# getcode() can detect the follogin code:
+	# jis, sjis, euc, utf8, ucs2, ucs4, utf16, utf16-ge, utf16-le,
+	# utf32, utf32-ge, utf32-le, ascii, binary, sjis-imode,
+	# sjis-doti, sjis-jsky.
 	use Unicode::Japanese;
 	my $obj = new Unicode::Japanese;
-	$obj->getcode($str);
+	return $obj->getcode($str);
     }
     else {
-	croak("Mail::Message::Encode: unknown language");
+	carp("Mail::Message::Encode: unknown language");
+	return 'unknown';
     }
 }
 
@@ -141,7 +150,7 @@ sub convert_str_ref
     }
 
     # XXX-TODO: care for non Japanese.
-    if ($lang eq 'japanese') {
+    if ($lang eq 'japanese' || $lang eq 'english') {
 	# 1. if the encoding for the given $str_ref is unknown, return ASAP.
 	unless (defined $in_code) {
 	    $in_code = $self->detect_code($$str_ref);
@@ -203,7 +212,7 @@ So, execute $proc like this.
     my $obj         = new Mail::Message::Encode;
     my $conv_status = $obj->convert_str_ref($s, $out_code, $in_code);
 
-   &$proc($s, $args);
+    &$proc($s, $args);
 
 It means run $proc() after $s is converted to $out_code code.
 
@@ -237,7 +246,7 @@ sub run_in_code
 }
 
 
-=head1 utilities
+=head1 UTILITIES
 
 =head2 is_iso2022jp_string($buf)
 
@@ -263,6 +272,7 @@ sub is_iso2022jp_string
 #                  Takahiro Kambe <taca@sky.yamashina.kyoto.jp>
 #               check the given buffer has unusual Japanese (not ISO-2022-JP)
 #    Arguments: STR($buf)
+#      History: imported fml 4.0 functions.
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub _look_not_iso2022jp_string
