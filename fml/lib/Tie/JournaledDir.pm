@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledDir.pm,v 1.12 2002/08/03 13:13:28 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.13 2002/08/07 00:08:02 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -140,7 +140,7 @@ sub _file_name
     elsif ($unit eq 'day') {
 	use Mail::Message::Date;
 	my $date = new Mail::Message::Date time;
-	$fn = $date->YYYYMMDD();
+	$fn = $date->YYYYMMDD( time - $i * 24 * 3600 );
     }
 
     use File::Spec;
@@ -222,7 +222,10 @@ sub __gen_hash
     my ($k, $v);
 
     use FileHandle;
+  FILE:
     for my $f (reverse @$files) {
+	next FILE unless -f $f;
+
 	tie %db, 'Tie::JournaledFile', {
 	    'last_match' => 1,
 	    'file'       => $f,
