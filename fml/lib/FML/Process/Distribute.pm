@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Distribute.pm,v 1.55 2001/11/26 09:12:37 fukachan Exp $
+# $FML: Distribute.pm,v 1.56 2001/11/27 11:40:30 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -212,6 +212,11 @@ sub _distribute
 
     # delivery starts !
     $curproc->_deliver_article($args);
+
+    if ($config->yes('use_html_archive')) {
+	Log("htmlify article $id");
+	$curproc->htmlify($args);
+    }
 }
 
 
@@ -367,6 +372,36 @@ sub _thread_check
     Log($@) if $@;
 }
 
+
+sub htmlify
+{
+    my ($curproc, $args) = @_;    
+    my $config = $curproc->{ config };
+    my $pcb    = $curproc->{ pcb };
+    my $myname = $curproc->myname();
+
+    my $ml_name        = $config->{ ml_name };
+    my $spool_dir      = $config->{ spool_dir };
+    my $html_dir       = $config->{ html_archive_dir };
+    my $article_id     = $pcb->get('article', 'id');
+
+    use File::Spec;
+    my $article_file   = File::Spec->catfile($spool_dir, $article_id);
+
+    eval q{ 
+	use Mail::HTML::Lite;
+	use File::Utils qw(mkdirhier);
+    };
+    unless ($@) {
+	mkdirhier($html_dir) unless -d $html_dir;
+	&Mail::HTML::Lite::htmlify_file($article_file, { 
+	    directory => $html_dir,
+	});
+    }
+    else {
+	Log($@) if $@;
+    }
+}
 
 =head1 AUTHOR
 
