@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: JournaledDir.pm,v 1.1 2001/08/21 03:46:39 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.2 2001/08/21 08:39:03 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -15,24 +15,30 @@ use Carp;
 
 =head1 NAME
 
-Tie::JournaledDir - wrap Tie::JournaledFile
+Tie::JournaledDir - tie hash to journaled style directory cache by Tie::JournaledFile
 
 =head1 SYNOPSIS
 
     use Tie::JournaledDir;
-    $db = new Tie::JournaledDir { 
-        dir => '/some/where',
-    };
-
-    # get all entries with the key = 'rudo'
-    @values = $db->grep( 'rudo' );
-
-OR
-
-    use Tie::JournaledDir;
     tie %db, 'Tie::JournaledDir', { dir => '/some/where' };
-    $db{ 1 } = 1;
+    $db{ 'key' } = 'value';
     untie %db
+
+=head1 DESCRIPTIONS
+
+tie hash by C<Tie::JournaledDir> acceses some directory with a lot of
+files. For example the directory consists of files with numeric names.
+
+    /some/where/998520336
+    /some/where/998520338
+    /some/where/998520340
+    /some/where/998520342
+
+C<Tie::JournaledFile> manipulates each file.
+
+C<Tie::JournaledDir> has a cache by a directory.
+C<Tie::JournaledDir> wraps C<Tie::JournaledFile> over several files.
+It enables easy automatic expiration.
 
 
 =head1 METHODS
@@ -40,6 +46,8 @@ OR
 =head2 TIEHASH, FETCH, STORE, FIRSTKEY, NEXTKEY
 
 standard hash functions.
+
+It uses C<Tie::JournaledFile> in background.
 
 =cut
 
@@ -51,6 +59,11 @@ my $debug = $ENV{'debug'} ? 1 :0;
 
 # Descriptions: constructor
 #    Arguments: $self $args
+#               $args = {
+#                    dir => directory path,
+#                   unit => number (seconds)
+#                  limit => number (days)
+#               }
 # Side Effects: import _match_style into $self
 # Return Value: object
 sub new
@@ -76,6 +89,10 @@ sub new
 }
 
 
+# Descriptions: generate a cache file
+#    Arguments: (number, directory path, number)
+# Side Effects: none
+# Return Value: file path
 sub _file_name
 {
     my ($unit, $dir, $i) = @_;
@@ -86,6 +103,10 @@ sub _file_name
 }
 
 
+# Descriptions: call new()
+#    Arguments: $self $args
+# Side Effects: same as new()
+# Return Value: object returned by new()
 sub TIEHASH
 {
     my ($self, $args) = @_;
@@ -93,6 +114,12 @@ sub TIEHASH
 }
 
 
+# Descriptions: hash{} access to file in the cache directory
+#               by Tie::JournaledFile sequentially.
+#               XXX file list in the directory is given by new().
+#    Arguments: $self $key
+# Side Effects: none
+# Return Value: key string
 sub FETCH
 {
     my ($self, $key) = @_;
@@ -118,6 +145,11 @@ sub FETCH
 }
 
 
+# Descriptions: add { $key => $value } to the latest file
+#               by Tie::JournaledFile.  
+#    Arguments: $self $key $value
+# Side Effects: none
+# Return Value: Tie::JournaledFile->STORE() operation return value
 sub STORE
 {
     my ($self, $key, $value) = @_;
@@ -132,6 +164,11 @@ sub STORE
 }
 
 
+# Descriptions: find key in file
+#    Arguments: $self
+# Side Effects: update object and negative cache in $self
+#               where the cache is file list already searched
+# Return Value: key string
 sub __find_key
 {
     my ($self) = @_;
@@ -196,6 +233,10 @@ sub __find_key
 }
 
 
+# Descriptions: object for cache file is alive
+#    Arguments: $self
+# Side Effects: none
+# Return Value: 1 or 0
 sub __in_valid_search
 {
     my ($self) = @_;
@@ -203,6 +244,10 @@ sub __in_valid_search
 }
 
 
+# Descriptions: return the first key in the latest file
+#    Arguments: $self
+# Side Effects: initialize _key_files{done,obj}
+# Return Value: key string
 sub FIRSTKEY
 {
     my ($self) = @_;
@@ -224,6 +269,11 @@ sub FIRSTKEY
 }
 
 
+# Descriptions: fetch the next key in the cache
+#               file to search changes automatically by Tie::JournaledFile.
+#    Arguments: $self
+# Side Effects: none
+# Return Value: key string
 sub NEXTKEY
 {
     my ($self) = @_;
