@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ThreadTrack.pm,v 1.25 2002/03/17 06:24:31 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.26 2002/04/10 09:00:08 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -198,7 +198,7 @@ sub run
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($curproc) OBJ($thread)
 # Side Effects: none
 # Return Value: none
@@ -216,8 +216,8 @@ sub _speculate_last_id
 	    use File::stat;
 	    my $st = stat($seq_file);
 	    $sf_last_modified =
-		$sf_last_modified > $st->mtime ? 
-		    $sf_last_modified : 
+		$sf_last_modified > $st->mtime ?
+		    $sf_last_modified :
 			$st->mtime;
 	};
     }

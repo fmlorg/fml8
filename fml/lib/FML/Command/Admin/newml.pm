@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.22 2002/04/01 03:41:59 fukachan Exp $
+# $FML: newml.pm,v 1.23 2002/04/10 09:51:25 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -132,7 +132,7 @@ sub process
 
 
 # Descriptions: install config.cf, include, include-ctl et. al.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc)
 #               HASH_REF($command_args)
 #               HASH_REF($params)
@@ -158,7 +158,7 @@ sub _install_template_files
 
 
 # Descriptions: update aliases entry
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc)
 #               HASH_REF($command_args)
 #               HASH_REF($params)
@@ -184,7 +184,7 @@ sub _update_aliases
 
 
 # Descriptions: set up ~fml/public_html/ for this mailing list
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc)
 #               HASH_REF($command_args)
 #               HASH_REF($params)
@@ -208,7 +208,7 @@ sub _setup_mail_archive_dir
 
 # Descriptions: set up CGI interface for this mailing list but
 #               disable it by default.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc)
 #               HASH_REF($command_args)
 #               HASH_REF($params)
@@ -354,7 +354,7 @@ sub _install
 
 
 # Descriptions: set up information for this mailing list.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc)
 #               HASH_REF($command_args)
 #               HASH_REF($params)

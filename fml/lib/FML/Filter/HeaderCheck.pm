@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HeaderCheck.pm,v 1.13 2002/04/08 12:44:25 fukachan Exp $
+# $FML: HeaderCheck.pm,v 1.14 2002/04/10 03:20:53 fukachan Exp $
 #
 
 package FML::Filter::HeaderCheck;
@@ -104,7 +104,7 @@ sub header_check
     my $hdr   = $msg->whole_message_header();
     my $rules = $self->{ _rules };
 
-    # apply $rule check for the header object $hdr 
+    # apply $rule check for the header object $hdr
     for my $rule (@$rules) {
 	eval q{
 	    $self->$rule($hdr, $args);

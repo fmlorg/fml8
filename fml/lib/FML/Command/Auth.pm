@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.3 2002/03/30 11:08:34 fukachan Exp $
+# $FML: Auth.pm,v 1.4 2002/04/07 12:13:02 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -95,7 +95,7 @@ sub check_password
 	my $mapobj = new IO::Adapter $map;
 	my $addrs  = $mapobj->find( $user , { want => 'key,value', all => 1 });
 
-	# if this $map has this $user entry, 
+	# if this $map has this $user entry,
 	# try to check { user => password } relation.
 	if (defined $addrs) {
 	  PASSWORD_ENTRY:

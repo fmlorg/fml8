@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.3 2002/04/01 12:41:40 fukachan Exp $
+# $FML: UserControl.pm,v 1.4 2002/04/07 12:13:03 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -58,7 +58,7 @@ sub useradd
 	my $cred = new FML::Credential;
 	unless ($cred->has_address_in_map($map, $address)) {
 	    my $obj = new IO::Adapter $map;
-	    $obj->touch(); # create a new map entry (e.g. file) if needed. 
+	    $obj->touch(); # create a new map entry (e.g. file) if needed.
 	    $obj->add( $address );
 	    unless ($obj->error()) {
 		Log("add $address to map=$map");
