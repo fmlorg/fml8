@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.64 2002/05/18 15:30:19 fukachan Exp $
+# $FML: Message.pm,v 1.65 2002/07/02 04:02:10 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1056,6 +1056,23 @@ sub _print_messsage_on_memory
 	$header =~ s/\n/\r\n/g unless (defined $raw_print_mode);
 	print $fd $header;
 	print $fd ($raw_print_mode ? "\n" : "\r\n");
+
+	# XXX we need to print header separator only if valid body exists.
+	# XXX but it seems difficult ... ;)
+	if (0) {
+	    my $m = $self->{ next };
+	    if (defined $m) {
+		my $pmap = $self->data_type_list();
+		if ($debug || 1) {
+		    print STDERR "\tlist: @$pmap\n";
+		    print STDERR "\tnext size: ", $m->size, "\n";
+		}
+		if ($m->size() > 0 || $#$pmap > 1) {
+		    print STDERR "\t<cr>\n" if $debug || 1;
+		    print $fd ($raw_print_mode ? "\n" : "\r\n");
+		}
+	    }
+	}
     }
 
     # skip the first rfc822 header (which is the real header for delivery).
