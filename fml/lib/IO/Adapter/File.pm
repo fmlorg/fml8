@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.47 2003/08/23 04:35:44 fukachan Exp $
+# $FML: File.pm,v 1.48 2003/08/24 14:09:25 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -221,6 +221,17 @@ sub get_next_key
 }
 
 
+# Descriptions: return (key, values, ... ) as ARRAY_REF
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub get_key_values_as_array_ref
+{
+    my ($self) = @_;
+    $self->_get_next_xxx('key,value_as_array_ref');
+}
+
+
 # Descriptions: get data and return key or value by $mode.
 #    Arguments: OBJ($self) STR($mode)
 # Side Effects: none
@@ -254,6 +265,13 @@ sub _get_next_xxx
 		$value =~ s/^\s*//;
 		$value =~ s/\s*$//;
 		my (@buf) = split(/\s+/, $value);
+		$buf = \@buf;
+	    }
+	    elsif ($mode eq 'key,value_as_array_ref') {
+		$value =~ s/^\s*//;
+		$value =~ s/\s*$//;
+		my (@buf) = split(/\s+/, $value);
+		unshift(@buf, $key);
 		$buf = \@buf;
 	    }
 	    $ec++;

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.27 2003/08/23 04:35:44 fukachan Exp $
+# $FML: DBI.pm,v 1.28 2003/08/24 14:09:25 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -186,6 +186,17 @@ sub getline
 }
 
 
+# Descriptions: return (key, values, ... ) as ARRAY_REF
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub get_key_values_as_array_ref
+{
+    my ($self, $args) = @_;
+    $self->_get_data_from_cache($args, 'key,value');
+}
+
+
 # Descriptions: return the primary key in the table sequentially
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
@@ -227,6 +238,9 @@ sub _get_data_from_cache
 	}
 	elsif ($mode eq 'value') {
 	    shift @row;
+	    return \@row;
+	}
+	elsif ($mode eq 'key,value') {
 	    return \@row;
 	}
 	elsif ($mode eq 'getline') {
