@@ -1,16 +1,17 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.11 2001/12/23 11:37:08 fukachan Exp $
+# $FML: Kernel.pm,v 1.12 2001/12/23 11:39:46 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+use File::Spec;
 
 use FML::Process::Kernel;
 use FML::Log qw(Log LogWarn LogError);
@@ -173,6 +174,9 @@ sub get_ml_list
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
 
+    use File::Spec;
+    my $cf = '';
+
     use DirHandle;
     my $dh = new DirHandle $config->{ ml_home_prefix };
     my @dirlist;
@@ -180,7 +184,8 @@ sub get_ml_list
     while ($_ = $dh->read()) {
 	next if /^\./;
 	next if /^\@/;
-	push(@dirlist, $_) if -f "$prefix/$_/config.cf";
+	$cf = File::Spec->catfile($prefix, $_, "config.cf");
+	push(@dirlist, $_) if -f $cf;
     }
     $dh->close;
 
@@ -230,7 +235,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
