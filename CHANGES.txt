@@ -12,6 +12,18 @@
 	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
 	気をつけてください。
 
+2004/04/02
+
+   FML::Process::Utils 
+	define fml_owner_address()
+	
+   FML::Process::Error Kernel 
+	fix reply_message() system to handle smtp_sender properly.
+	moify libexec::error to forward mail which smtp sender is fml_owner().
+	
+   Calendar::Lite 
+	show events with , separator
+
 2004/03/31
 
    総書き直しをした新しいスレッドシステムへ切替える。
@@ -6668,4 +6680,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.192 2004/03/28 15:37:25 fukachan Exp $
+$FML: CHANGES.txt,v 1.193 2004/03/31 15:03:55 fukachan Exp $
