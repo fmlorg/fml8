@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.19 2003/04/19 11:41:04 fukachan Exp $
+# $FML: Error.pm,v 1.20 2003/05/20 10:02:16 fukachan Exp $
 #
 
 package FML::Error;
@@ -375,12 +375,14 @@ sub deluser
 
 =head2 dump([$handle])
 
+list up the address and point.
+
 =cut
 
 
-# Descriptions: 
-#    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: 
+# Descriptions: dump { address => the current point }
+#    Arguments: OBJ($self) HANDLE($handle)
+# Side Effects: none
 # Return Value: none
 sub dump
 {
