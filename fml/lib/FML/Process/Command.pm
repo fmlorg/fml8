@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.104 2004/04/23 04:10:35 fukachan Exp $
+# $FML: Command.pm,v 1.105 2004/04/28 04:08:00 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -80,7 +80,7 @@ sub prepare
     my ($curproc, $args) = @_;
     my $config = $curproc->config();
 
-    my $eval = $config->get_hook( 'command_prepare_start_hook' );
+    my $eval = $config->get_hook( 'command_mail_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->resolve_ml_specific_variables();
@@ -97,7 +97,7 @@ sub prepare
 	exit(0);
     }
 
-    $eval = $config->get_hook( 'command_prepare_end_hook' );
+    $eval = $config->get_hook( 'command_mail_prepare_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
@@ -118,7 +118,7 @@ sub verify_request
     my ($curproc, $args) = @_;
     my $config = $curproc->config();
 
-    my $eval = $config->get_hook( 'command_verify_request_start_hook' );
+    my $eval = $config->get_hook( 'command_mail_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->verify_sender_credential();
@@ -127,7 +127,7 @@ sub verify_request
 	$curproc->_check_filter();
     }
 
-    $eval = $config->get_hook( 'command_verify_request_end_hook' );
+    $eval = $config->get_hook( 'command_mail_verify_request_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
@@ -140,6 +140,9 @@ sub _check_filter
 {
     my ($curproc) = @_;
     my $config    = $curproc->config();
+
+    my $eval = $config->get_hook( 'command_mail_filter_start_hook' );
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     eval q{
 	use FML::Filter;
@@ -166,6 +169,9 @@ sub _check_filter
 	}
     };
     $curproc->log($@) if $@;
+
+    my $eval = $config->get_hook( 'command_mail_filter_end_hook' );
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -193,7 +199,7 @@ sub run
     my $pcb    = $curproc->pcb();
     my $config = $curproc->config();
 
-    my $eval = $config->get_hook( 'command_run_start_hook' );
+    my $eval = $config->get_hook( 'command_mail_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     unless ($curproc->is_refused()) {
@@ -204,7 +210,7 @@ sub run
 	$curproc->logerror("ignore this request.");
     }
 
-    $eval = $config->get_hook( 'command_run_end_hook' );
+    $eval = $config->get_hook( 'command_mail_run_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
@@ -250,13 +256,13 @@ sub finish
     my ($curproc, $args) = @_;
     my $config = $curproc->config();
 
-    my $eval = $config->get_hook( 'command_finish_start_hook' );
+    my $eval = $config->get_hook( 'command_mail_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->inform_reply_messages();
     $curproc->queue_flush();
 
-    $eval = $config->get_hook( 'command_finish_end_hook' );
+    $eval = $config->get_hook( 'command_mail_finish_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
