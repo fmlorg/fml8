@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: ESMTP.pm,v 1.1.1.1 2001/04/03 09:53:30 fukachan Exp $
 #
 
 package Mail::Delivery::ESMTP;
@@ -14,7 +13,6 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use Mail::Delivery::SMTP;
 
-require Exporter;
 @ISA = qw(Mail::Delivery::SMTP Exporter);
 
 sub new
@@ -30,9 +28,13 @@ Mail::Delivery::ESMTP - Extended SMTP class
 
 =head1 SYNOPSIS
 
-   use Mail::Delivery::ESMTP;
-   $service = new Mail::Delivery::ESMTP;
-   $service->deliver( ... );
+    use Mail::Message;
+
+      ... make Mail::Message object ...
+
+    use Mail::Delivery::ESMTP;
+    $service = new Mail::Delivery::ESMTP;
+    $service->deliver( ... );
 
 See L<Mail::Delivery::SMTP> for more details since this ESMTP class
 is an adapter for SMTP (super) class for convenience.
