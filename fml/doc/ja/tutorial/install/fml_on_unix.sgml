@@ -1,5 +1,5 @@
 <!--
-   $FML: fml_on_unix.sgml,v 1.7 2004/04/07 11:07:05 fukachan Exp $
+   $FML: fml_on_unix.sgml,v 1.8 2004/10/06 09:07:37 fukachan Exp $
 -->
 
 
@@ -93,6 +93,8 @@ configure --help
 </screen>
 で表示されます。
 <screen>
+例
+ 
   --without-warning       run perl as perl without -w
   --with-fmlconfdir=DIR   use DIR instead of SYSCONFDIR/fml
   --with-mlspooldir=DIR   use DIR instead of /var/spool/ml
@@ -385,7 +387,7 @@ mani.cf は大枠の最も基本的な設定です。より細かな設定、たとえばサイト共
 デフォルトでは &fml4; と合わせるために、および見本として:)
 subject のタグをつけない設定とフィルタ関連の設定だけが入っています。
 <screen>
-# $FML: fml_on_unix.sgml,v 1.7 2004/04/07 11:07:05 fukachan Exp $
+# $FML: fml_on_unix.sgml,v 1.8 2004/10/06 09:07:37 fukachan Exp $
 #
 #               site default_config.cf EXAMPLE
 #
