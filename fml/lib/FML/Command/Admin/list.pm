@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: list.pm,v 1.14 2003/08/23 07:24:43 fukachan Exp $
+# $FML: list.pm,v 1.15 2003/08/29 15:33:58 fukachan Exp $
 #
 
 package FML::Command::Admin::list;
@@ -129,7 +129,7 @@ sub cgi_menu
     my ($self, $curproc, $args, $command_args) = @_;
     my $map_default = $curproc->safe_param_map() || 'member';
     my $options     = [ $map_default ];
-    my $ml_name     = $curproc->cgi_try_get_ml_name($args);
+    my $ml_name     = $curproc->cgi_var_ml_name($args);
     my $r           = '';
 
     # declare CGI mode now.

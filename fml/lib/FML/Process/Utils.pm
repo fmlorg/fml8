@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.79 2003/09/13 13:02:32 fukachan Exp $
+# $FML: Utils.pm,v 1.80 2003/09/19 13:08:56 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1149,12 +1149,12 @@ get ARRAY_REF of valid mailing lists.
 
 
 # Descriptions: list up ML's within the specified $ml_domain.
-#    Arguments: OBJ($curproc) HASH_REF($args) STR($ml_domain)
+#    Arguments: OBJ($curproc) STR($ml_domain)
 # Side Effects: none
 # Return Value: ARRAY_REF
 sub get_ml_list
 {
-    my ($curproc, $args, $ml_domain) = @_;
+    my ($curproc, $ml_domain) = @_;
     my $ml_home_prefix = $curproc->ml_home_prefix();
 
     if (defined $ml_domain) {
