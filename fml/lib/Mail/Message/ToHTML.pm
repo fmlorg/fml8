@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.40 2003/05/16 13:40:57 fukachan Exp $
+# $FML: ToHTML.pm,v 1.41 2003/05/27 11:34:14 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.40 2003/05/16 13:40:57 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.41 2003/05/27 11:34:14 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -92,18 +92,34 @@ stored.
 sub new
 {
     my ($self, $args) = @_;
-    my ($type) = ref($self) || $self;
-    my $me     = {};
+    my ($type)  = ref($self) || $self;
+    my $me      = {};
 
     $me->{ _html_base_directory } = $args->{ directory };
     $me->{ _charset }             = $args->{ charset } || 'us-ascii';
     $me->{ _is_attachment }       = defined($args->{ attachment }) ? 1 : 0;
     $me->{ _db_type }             = $args->{ db_type };
+    $me->{ _db_name }             = $args->{ db_name };
+    $me->{ _db_base_dir }         = $args->{ db_base_dir };
     $me->{ _args }                = $args;
     $me->{ _num_attachment }      = 0; # for child process
     $me->{ _use_subdir }          = 'yes';
     $me->{ _subdir_style }        = 'yyyymm';
     $me->{ _html_id_order }       = $args->{ index_order } || 'normal';
+
+    my $db_type = $me->{ _db_type };
+    my $db_base = $me->{ _db_base_dir } || croak("specify db_base_dir\n");
+    my $db_name = $me->{ _db_name }     || croak("specify db_name\n");
+    my $_args   = {
+	db_module   => $db_type,
+	db_base_dir => $db_base,
+	db_name     => $db_name, # mailing list identifier
+    };
+
+    # Firstly, prepare db object.
+    use Mail::Message::DB;
+    my $ndb = new Mail::Message::DB $_args;
+    $me->{ _ndb } = $ndb;
 
     return bless $me, $type;
 }
@@ -163,7 +179,7 @@ sub htmlfy_rfc822_message
     $self->{ _hints }->{ src }->{ filepath } = $src;
 
     # save information for index.html and thread.html
-    $self->cache_message_info($msg, { id => $id,
+    $self->cache_message_info($msg, { id  => $id,
 				      src => $src,
 				      dst => $dst,
 				  } );
@@ -360,36 +376,27 @@ sub html_filename
 sub _html_file_subdir_name
 {
     my ($self, $id) = @_;
-    my $html_base_dir = $self->{ _html_base_directory };
+    my $ndb           = $self->ndb();
     my $subdir        = '';
+    my $html_base_dir = $self->{ _html_base_directory };
     my $subdir_style  = $self->{ _subdir_style };
-    my $month_db      = $self->{ _db }->{ _month };
-    my $subdir_db     = $self->{ _db }->{ _subdir };
-    my $curid         = $self->{ _current_id };
     my $dir_mode      = $self->{ _dir_mode } || 0755;
 
     if ($subdir_style eq 'yyyymm') {
-	if (defined $subdir_db->{ $id } && $subdir_db->{ $id }) {
-	    $subdir = $subdir_db->{ $id };
-	}
-	else {
-	    $subdir = $self->_msg_time('yyyymm');
+	my $hdr = $self->{ _current_hdr  };
+	$subdir = $ndb->msg_time($hdr, 'yyyymm');
 
-	    # XXX why we need validate $curid here ? (sholed be true always ?)
-	    if (defined($curid) && $curid == $id) {
-		$subdir_db->{ $id } = $subdir; # cache subdir info into DB.
-		# print STDERR "xdebug: \$subdir_db->{ $id } = $subdir\n";
-	    }
-
-	    use File::Spec;
-	    my $xsubdir = File::Spec->catfile($html_base_dir, $subdir);
-	    unless (-d $xsubdir) {
-		my $mask = umask();
-		umask(022);
-		mkdir($xsubdir, $dir_mode);
-		umask($mask);
-	    }
+	use File::Spec;
+	my $xsubdir = File::Spec->catfile($html_base_dir, $subdir);
+	unless (-d $xsubdir) {
+	    my $mask = umask();
+	    umask(022);
+	    mkdir($xsubdir, $dir_mode);
+	    umask($mask);
 	}
+    }
+    else {
+	croak("unknown \$subdir_style");
     }
 
     if ($subdir) {
@@ -397,6 +404,7 @@ sub _html_file_subdir_name
 	return File::Spec->catfile($subdir, "msg$id.html");
     }
     else {
+	warn("not create msg$id.html");
 	return undef;
     }
 }
@@ -607,9 +615,10 @@ sub _set_output_channel
 sub _create_temporary_filename
 {
     my ($self) = @_;
-    my $db_dir = $self->{ _html_base_directory };
+    my $html_base_dir = $self->{ _html_base_directory };
 
-    return "$db_dir/tmp$$";
+    use File::Spec;
+    return File::Spec->catfile($html_base_dir, "tmp.$$");
 }
 
 
@@ -917,176 +926,29 @@ See section C<Internal Data Presentation> for more detail.
 sub cache_message_info
 {
     my ($self, $msg, $args) = @_;
-    my $hdr = $msg->whole_message_header;
-    my $id  = $args-> { id };
-    my $dst = $args-> { dst };
+    my $ndb     = $self->ndb();
+    my $id      = $args->{ id };
+    my $src     = $args->{ src };
+    my $dst     = $args->{ dst };
 
-    $self->_db_open();
-    my $db = $self->{ _db };
+    $ndb->set_key($id);
+    $self->{ _ndb_key } = $id;
 
-    # XXX we should not update max_id when our target is an attachment.
-    # XXX update max_id only under the top level operation
-    unless ($self->{ _is_attachment }) {
-	if (defined $db->{ _info }->{ id_max }) {
-	    $db->{_info}->{id_max} =
-		$db->{_info}->{id_max} < $id ? $id : $db->{_info}->{id_max};
-	}
-	else {
-	    $db->{_info}->{id_max} = $id;
-	}
-	_PRINT_DEBUG("   parent");
-	_PRINT_DEBUG("   update id_max = $db->{_info }->{id_max}");
-    }
-    else {
-	_PRINT_DEBUG("   child");
-    }
-
-    _PRINT_DEBUG("   cache_message_info( id=$id ) running");
-
-    # HASH { $id => Date: }
-    $db->{ _date }->{ $id } = $hdr->get('date');
-
-    # HASH { $id => YYYY/MM }
-    my $month = $self->_msg_time('yyyy/mm');
-    $db->{ _month }->{ $id } = $month;
-
-    # HASH { YYYY/MM => (id1 id2 id3 ..) }
-    __add_value_to_array($db, '_monthly_idlist', $month, $id);
-
-    # need month database to determine subdir for the html file
-    $db->{ _filename }->{ $id } = $self->html_filename($id);
-    $db->{ _filepath }->{ $id } = $dst;
-
-    # HASH { $id => Subject: }
-    $db->{ _subject }->{ $id } =
-	$self->_decode_mime_string( $hdr->get('subject') );
-
-    # HASH { $id => From: }
-    my $ra = _address_clean_up( $hdr->get('from') );
-    $db->{ _from }->{ $id } = $ra->[0];
-    $db->{ _who }->{ $id }  = $self->_who_of_address( $hdr->get('from') );
-
-    # HASH { $id => Message-Id: }
-    # HASH { Message-Id: => $id }
-    # HASH { $id => list of $id ... }
-    $ra  = _address_clean_up( $hdr->get('message-id') );
-    my $mid = $ra->[0];
-    if ($mid) {
-	$db->{ _message_id }->{ $id } = $mid;
-	$db->{ _msgidref }->{ $mid }  = $id;
-	$db->{ _idref }->{ $id }      = $id;
-    }
-
-    # Thread Information by In-Reply-To: and References
-    {
-	my $irt_ra = _address_clean_up( $hdr->get('in-reply-to') );
-	my $in_reply_to = $irt_ra->[0];
-
-	_PRINT_DEBUG("In-Reply-To: $in_reply_to") if defined $in_reply_to;
-
-	# save message-id(s) within In-Reply-To: field into database
-	for my $mid (@$irt_ra) {
-	    # { message-id => (id1 id2 id3 ...)
-	    __add_value_to_array($db, '_msgidref', $mid, $id);
-
-	    # idp (pointer to id) by { message-id => id }
-	    my $idp = _list_head($db->{ _msgidref }->{ $mid });
-
-	    # { idp => (id1 id2 id3 ...) }
-	    __add_value_to_array($db, '_idref', $idp, $id) if defined $idp;
-	}
-
-	# apply the same logic as above for all message-id's in References:
-	my $ref_ra = _address_clean_up( $hdr->get('references') );
-	my %uniq = ();
-      MSGID_SEARCH:
-	for my $mid (@$ref_ra) {
-	    next MSGID_SEARCH unless defined $mid;
-	    next MSGID_SEARCH if $uniq{$mid};
-	    $uniq{$mid} = 1; # ensure uniqueness
-
-	    _PRINT_DEBUG("References: $mid");
-	    __add_value_to_array($db, '_msgidref', $mid, $id);
-	    my $idp = _list_head($db->{ _msgidref }->{ $mid });
-	    __add_value_to_array($db, '_idref', $idp, $id) if defined $idp;
-	}
-
-	# 0. ok. go to speculate prev/next links
-	# 1. If In-Reply-To: is found, use it as "pointer to previous id"
-	my $idp = 0;
-	if (defined $in_reply_to) {
-	    # XXX idp (id pointer) = id1 by _list_head( (id1 id2 id3 ...)
-	    $idp = _list_head( $db->{ _msgidref }->{ $in_reply_to } );
-	}
-	# 2. if not found, try to use References: "in reverse order"
-	elsif (@$ref_ra) {
-	    my (@rra) = reverse(@$ref_ra);
-	    $idp = $rra[0];
-	}
-	# 3. no prev/next link
-	else {
-	    $idp = 0;
-	}
-
-	if (defined($idp) && $idp && $idp =~ /^\d+$/) {
-	    if ($idp != $id) {
-		$db->{ _prev_id }->{ $id } = $idp;
-		_PRINT_DEBUG("\$db->{ _prev_id }->{ $id } = $idp");
-	    }
-	    else {
-		_PRINT_DEBUG("no \$db->{ _prev_id }");
-	    }
-
-	    # XXX we should not overwrite " id => next_id " assinged already.
-	    # XXX we preserve the first " id => next_id " value.
-	    # XXX but we overwride it if "id => id (itself)", wrong link.
-	    unless ((defined $db->{ _next_id }->{ $idp }) &&
-		    ($db->{ _next_id }->{ $idp } != $idp)) {
-		$db->{ _next_id }->{ $idp } = $id;
-		_PRINT_DEBUG("override \$db->{ _next_id }->{ $idp } = $id");
-	    }
-	    else {
-		my $thread_head_id  = _thread_head( $db, $id );
-		_PRINT_DEBUG("no \$db->{ _next_id }->{ $idp } override");
-		_PRINT_DEBUG("   = $db->{ _next_id }->{ $idp }");
-	    }
-	}
-	else {
-	    _PRINT_DEBUG("no prev/next thread link (id=$id)");
-	    warn("no prev/next thread link (id=$id)\n") if $debug;
-	}
-    }
-
-    $self->_db_close();
+    $ndb->analyze($msg);
 }
 
 
-# Descriptions: return
-#    Arguments: OBJ($self) STR($type)
-# Side Effects: none
-# Return Value: STR
-sub _msg_time
+sub ndb_key
 {
-    my ($self, $type) = @_;
-    my $hdr  = $self->{ _current_hdr  };
+    my ($self) = @_;
+    return $self->{ _ndb_key };
+}
 
-    if (defined($hdr) && $hdr->get('date')) {
-	use Time::ParseDate;
-	my $unixtime = parsedate( $hdr->get('date') );
-	my ($sec,$min,$hour,$mday,$mon,$year,$wday) = localtime( $unixtime );
 
-	if ($type eq 'yyyymm') {
-	    return sprintf("%04d%02d", 1900 + $year, $mon + 1);
-	}
-	elsif ($type eq 'yyyy/mm') {
-	    return sprintf("%04d/%02d", 1900 + $year, $mon + 1);
-	}
-    }
-    else {
-	my $id = $self->{ _current_id };
-	warn("cannot pick up Date: field id=$id");
-	return '';
-    }
+sub ndb
+{
+    my ($self) = @_;
+    return $self->{ _ndb };
 }
 
 
@@ -1104,54 +966,6 @@ sub __str2array
     $str =~ s/\s*$//;
     my (@a) = split(/\s+/, $str);
     return \@a;
-}
-
-
-# Descriptions: add { key => value } of database $dbname.
-#               value is "x y z ..." form, space separated string.
-#    Arguments: HASH_REF($db) STR($dbname) STR($key) STR($value)
-# Side Effects: update database
-# Return Value: none
-sub __add_value_to_array
-{
-    my ($db, $dbname, $key, $value) = @_;
-    my $found = 0;
-    my $ra    = __str2array($db->{ $dbname }->{ $key }) || [];
-
-    if (defined($key) && $key && defined($value) && $value) {
-	# check dup to ensure uniqueness within this array.
-	for my $v (@$ra) {
-	    $found = 1 if ($value =~ /^\d+$/o) && ($v == $value);
-	    $found = 1 if ($value !~ /^\d+$/o) && ($v eq $value);
-	}
-	
-	# add if the value is a new comer.
-	unless ($found) {
-	    $db->{ $dbname }->{ $key } .= " $value";
-	}
-    }
-}
-
-
-# Descriptions: speculate head of thread list,
-#               traced back from $id.
-#    Arguments: HASH_REF($db) STR($id)
-# Side Effects: none
-# Return Value: NUM
-sub _thread_head
-{
-    my ($db, $id) = @_;
-    my $max     = 128;
-    my $head_id = $id;
-
-    # track back id list to search the thread head
-    while ($max-- > 0) {
-	my $prev_id = $db->{ _prev_id }->{ $head_id };
-	last unless $prev_id;
-	$head_id = $prev_id;
-    }
-
-    return $head_id;
 }
 
 
@@ -1559,138 +1373,6 @@ sub evaluate_safe_footer
 }
 
 
-=head1 Internal Data Presentation
-
-=head2 Hashes for Database
-
-   name          hash content
-   ----------------------------
-   from          id => From: header field
-   date          id => Date: header field
-   subject       id => Subject: header field
-   message_id    id => Message-Id: header field
-   references    id => References: header field
-   filepath      id => file location ( /some/where/YYYY/MM/DD/xxx.html )
-   idref         id => id(myself) refered-by-id1 refered-by-id2 ...
-   msgidref      message-id => id(myself) refered-by-id1 refered-by-id2 ...
-
-We need several information to speculate thread relation rapidly.
-At least we need two relations:
-
-1. to speculate [Next by Thread]
-
-   message-id => ( id1 id2 id3 ... )
-
-where C<id1> is the message itself.
-
-2. to speculate [Prev by Thread]
-
-   id         => message-id of replied message (e.g. In-Reply-To:)
-
-hashes.
-
-BTW, the end message of the thread has no next message,
-and the top of the thread has no previous message.
-We arrange apporopviate link to another thread.
-Also we need this relation for C<thread.html>.
-
-To resolve this problem, we need ID or Date ordered thread (top id of
-th thread) list ?
-
-   thread   followup relation in the thread
-   -----------------------------
-     id1    id1 - id2 - id4
-     id3    id3 - id5 - id6
-                   |
-                    - id7 - id10
-     id8    id8 - id9 - id11
-     id12   id12   ...
-
-=head2 Usage
-
-For example, you can set { $key => $value } for C<from> data in this way:
-
-    $self->{ _db }->{ _from }->{ $key } = $value;
-
-=cut
-
-my @kind_of_databases = qw(from date subject message_id references
-			   msgidref idref next_id prev_id
-			   filename filepath
-			   unixtime month monthly_idlist
-			   thread_list
-			   subdir
-			   who info);
-
-
-# 1. Hmm, what database is needed for
-#    {Prev,Next} by Article ID
-#    {Prev,Next} by Thread
-#
-# 2. each message needs ?
-#
-#      Subject:
-#      From:
-#
-
-
-# Descriptions: open database
-#    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: tied with $self->{ _db }
-#         Todo: we should use IO::Adapter ?
-# Return Value: none
-sub _db_open
-{
-    my ($self, $args) = @_;
-    my $db_type   = $args->{ db_type } || $self->{ _db_type } || 'AnyDBM_File';
-    my $db_dir    = $self->{ _html_base_directory };
-    my $file_mode = $self->{ _file_mode } || 0644;
-
-    _PRINT_DEBUG("_db_open( type = $db_type )");
-
-    eval qq{ use $db_type; use Fcntl;};
-    unless ($@) {
- 	for my $db (@kind_of_databases) {
-	    my $file = "$db_dir/.htdb_${db}";
-	    my $str = qq{
-		my \%$db = ();
-		tie \%$db, \$db_type, \$file, O_RDWR|O_CREAT, $file_mode;
-		\$self->{ _db }->{ _$db } = \\\%$db;
-	    };
-	    eval $str;
-	    croak($@) if $@;
-	}
-    }
-    else {
-	croak("cannot use $db_type");
-    }
-}
-
-
-# Descriptions: close database
-#    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: untie $self->{ _db }
-#         Todo: we should use IO::Adapter ?
-# Return Value: none
-sub _db_close
-{
-    my ($self, $args) = @_;
-    my $db_type = $args->{ db_type } || $self->{ _db_type } || 'AnyDBM_File';
-    my $db_dir  = $self->{ _html_base_directory };
-
-    _PRINT_DEBUG("_db_close()");
-
-    for my $db (@kind_of_databases) {
-	my $str = qq{
-	    my \$${db} = \$self->{ _db }->{ _$db };
-	    untie \%\$${db};
-	};
-	eval $str;
-	croak($@) if $@;
-    }
-}
-
-
 =head2 C<update_id_index($args)>
 
 update index.html.
@@ -1885,10 +1567,14 @@ sub _update_id_montly_index_master
     my ($self, $args) = @_;
     my $html_base_dir = $self->{ _html_base_directory };
     my $code          = _charset_to_code($self->{ _charset });
+
+    use File::Spec;
+    my $old = File::Spec->catfile($html_base_dir, "monthly_index.html");
+    my $new = File::Spec->catfile($html_base_dir, "monthly_index.html.new.$$");
     my $htmlinfo = {
 	title => defined($args->{ title }) ? $args->{ title } : "ID Index",
-	old   => "$html_base_dir/monthly_index.html",
-	new   => "$html_base_dir/monthly_index.html.new.$$",
+	old   => $old,
+	new   => $new,
 	code  => $code,
     };
 
@@ -2455,19 +2141,6 @@ sub _who_of_address
 }
 
 
-# Descriptions: head of array (space separeted string)
-#    Arguments: STR($buf)
-# Side Effects: none
-# Return Value: STR
-sub _list_head
-{
-    my ($buf) = @_;
-    $buf =~ s/^\s*//;
-    $buf =~ s/\s*$//;
-    return (split(/\s+/, $buf))[0];
-}
-
-
 # Descriptions: decode MIME-encoded $str
 #    Arguments: OBJ($self) STR($str) HASH_REF($options)
 # Side Effects: none
@@ -2648,15 +2321,21 @@ if ($0 eq __FILE__) {
     my $has_fork = defined $ENV{'HAS_FORK'} ? 1 : 0;
     my $max      = defined $ENV{'MAX'} ? $ENV{'MAX'} : 1000;
     my $charset  = 'euc-jp';
+    my $opts     = {
+	db_base_dir => "/tmp/",
+	db_name     => "elena", 
+    };
 
     eval q{
-	my $obj = new Mail::Message::ToHTML:
+	my $obj = new Mail::Message::ToHTML $opts;
 
 	for my $x (@ARGV) {
 	    if (-f $x) {
 		$obj->htmlify_file($x, {
-		    directory => $dir
-		    charset   => $charset,
+		    directory   => $dir,
+		    charset     => $charset,
+		    db_base_dir => "/tmp/",
+		    db_name     => "elena", 
 		    });
 	    }
 	    elsif (-d $x) {
@@ -2669,7 +2348,11 @@ if ($0 eq __FILE__) {
 	    }
 	}
     };
-    croak($@) if $@;
+
+    if ($@) {
+	print STDERR $@;
+	exit(1);
+    }
 }
 
 
