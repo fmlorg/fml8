@@ -1,0 +1,58 @@
+NAME
+     HTML::FromText - mark up text as HTML
+
+SYNOPSIS
+         use HTML::FromText;
+         print text2html($text, urls => 1, paras => 1, headings => 1);
+
+DESCRIPTION
+     The text2html function marks up plain text as HTML.  By
+     default it converts HTML metacharacters into the
+     corresponding entities.  More sophisticated transformations,
+     such as splitting the text into paragraphs or marking up
+     bulleted lists, can be carried out by setting the
+     appropriate options.
+
+INSTALLATION
+     perl Makefile.PL && make && make test && make install
+
+HISTORY
+     1.005  Options 'bold' and 'underline' are more aggressive in
+            recognising markup.
+
+     1.004  New options 'blockparas' (mark up block quotes as ordinary
+            paragraphs) and 'blockcode' (mark up block quotes in
+            fixed-width font while preserving line breaks and spaces).
+
+	    Tabs are expanded throughout the text (it was a bug not to
+	    do so in earlier versions because alignment could be lost,
+	    block quotes not recognised, etc).
+
+            New option 'tables'.
+
+     1.003  Recognize '&' in email addresses, as specified by RFC822.
+
+     1.002  Much improved recognition of e-mail addresses with special
+            characters, as specified by RFC822.
+
+            When 'urls' is supplied, the prefix mailto: on email
+	    addresses is preserved.
+
+            New option 'pre' wraps text in <PRE>...</PRE>.
+
+            When anchor text is in fixed-width font, the <A> element is
+            inside the <TT> element, as required by the HTML DTD.
+
+     1.001  Original CPAN release.
+
+BUGS
+     There are transformations it doesn't do.
+
+AUTHOR
+     Gareth Rees <garethr@cre.canon.co.uk>.
+
+COPYRIGHT
+     Copyright (c) 1999 Canon Research Centre Europe. All rights
+     reserved.  This module is free software; you can
+     redistribute it and/or modify it under the same terms as
+     Perl itself.

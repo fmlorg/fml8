@@ -1,0 +1,33 @@
+---------------------------------IDEAS----------------------------------
+
+1. Have a more general means of representing paragraph transformations
+   and applying them so that text2html can be extended.  Each
+   transformation would have (a) an option name, (b) a sub for testing
+   whether the transformation is applicable to the paragraph and (c) a
+   sub for applying the option.  (There must be a means of passing
+   information from step (b) to step (c) as for the table
+   transformation.)
+
+   (But are there that many other transformations that can be applied on
+   a paragraph basis?  Other kinds of transformations would be harder to
+   generalise like this.  Think about the need to have a different idea
+   about where paragraph boundaries are depending on the options.)
+
+2. The current approach is to test the transformations for applicability
+   one by one and apply the first one that matches.  It might be better
+   to test all the transformations and score them, then apply the
+   best scoring.  This would allow heuristics to be applied.
+
+3. The current approach goes through the paragraphs one by one with no
+   lookahead.  Multiple passes through the paragraphs could allow
+   heuristics to be applied, e.g., to distinguish nested lists from
+   adjacent lists.
+
+4. These transformations could be implemented:
+
+   * lettered paragraphs a) b) c) etc
+
+   * underlined headings
+
+   * quoted text in e-mail message (impossible to accurately given the
+     enormous diversity of quoting styles -- would 60% be good enough?)
