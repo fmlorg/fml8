@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.15 2002/06/01 05:09:28 fukachan Exp $
+# $FML: SMTP.pm,v 1.16 2002/07/23 13:03:14 fukachan Exp $
 #
 
 
@@ -506,7 +506,7 @@ sub deliver
     $self->_reset_mapinfo;
 
     if ( $self->{ _num_recipients } ) {
-	Log( "recipients: ". $self->{ _num_recipients } );
+	Log( "recipients: total=". $self->{ _num_recipients } );
     }
 }
 
