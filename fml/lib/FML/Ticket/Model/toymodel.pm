@@ -178,6 +178,33 @@ sub _dequote_space
 }
 
 
+sub get_ticket_list
+{
+    my ($self, $header, $config) = @_;
+    my (%db, $k, $v);
+
+    # %db: $article_id => "$ticket_id $unixtime"
+    use Tie::LogFileDB;
+    my $cache_file = $self->{ _cache_file };
+    tie %db, 'Tie::LogFileDB', { file => $cache_file };
+
+    my (@open_list)   = ();
+    my (@closed_list) = ();
+    while(($k, $v) = each %db) {
+	if ($v =~ /closed\s+/o) {
+	    push(@closed_list, $v);
+	}
+	else {
+	    push(@open_list, $v);
+	}
+    }
+
+    untie %db;
+
+    return (\@open_list, \@closed_list);
+}
+
+
 =head1 NAME
 
 FML::__HERE_IS_YOUR_MODULE_NAME__.pm - what is this
