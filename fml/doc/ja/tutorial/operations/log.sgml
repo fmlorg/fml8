@@ -1,0 +1,86 @@
+<!--
+   $FML$
+-->
+
+
+<chapter id="operations.log">
+	<title>
+	ログの扱い
+	</title>
+
+
+<sect1 id="operations.log.see">
+	<title>
+	ログを見る
+	</title>
+
+<para>
+<screen>
+% makefml log ＭＬ名
+% fml     ＭＬ名 log
+</screen>
+で、最近のログ(デフォルトでは 30 行分)が表示されます。
+</para>
+
+</sect1>
+
+
+<sect1 id="operations.log.computeroutput">
+	<title>
+	機械処理向きのログを表示する
+	</title>
+
+<para>
+別のコマンドや独自のCGIなどからfml CUIを呼びだし処理をさせたい場合、
+STDERRなどでログを受けとりたいことがあります。
+</para>
+
+<para>
+そういった場合は、
+<screen>
+% makefml --log-computer-output コマンド ＭＬ名
+% fml --log-computer-output     ＭＬ名 コマンド
+</screen>
+とすると、コマンドの結果が標準出力(STDOUT)へ、
+ログがSTDERRへ出力されます。
+</para>
+
+<para>
+たとえば
+<screen>
+% fml --log-computer-output elena@fml.org list
+rudo@nuinui.net
+1070109341  info lock channel=recipient_map_modify
+1070109342  info unlock channel=recipient_map_modify
+</screen>
+この例（デフォルト）では、
+「時刻(unix time)、ログのレベル(info,warning,errorなど)、メッセージ」
+となっています。
+</para>
+
+<para>
+コマンドラインオプション --log-computer-output は、
+config.cf などで
+<screen>
+use_log_computer_output = yes
+</screen>
+と指定することでも可能です。でも、単にこの変数を yes にすると、
+makefml や fml だけでなく、配送やコマンドメールのプログラムも
+STDERRにログの出力をしてしまいます。
+</para>
+
+<para>
+メッセージのキューイングの内部構造や出力フォーマットは、ある perl
+module のなかに押し込めてあります。このモジュール(デフォルトは 
+FML::Log::Print::Simple)は log_computer_output_engine 変数で指定可能で
+す。出力を切替えたい場合は、自分用のモジュールを作り、それを、この変数
+に指定してください。
+モジュールは
+FML::Log::Print::Simple
+を参考に、hack してみてください:)
+</para>
+
+</sect1>
+
+
+</chapter>

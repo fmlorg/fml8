@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.77 2003/10/22 13:47:30 fukachan Exp $
+	$FML: chapters.ent,v 1.78 2003/11/25 04:18:32 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -169,6 +169,10 @@
 <!entity chapter.docbook             SYSTEM "devel/docbook.sgml">
 <!entity chapter.inet6               SYSTEM "devel/inet6.sgml">
 <!entity chapter.program.create      SYSTEM "devel/create_program.sgml">
+
+
+<!-- operations -->
+<!entity chapter.op.log              SYSTEM "operations/log.sgml">
 
 
 <!-- misc -->
