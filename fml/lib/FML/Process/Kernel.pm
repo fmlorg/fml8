@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.74 2002/02/17 13:46:55 fukachan Exp $
+# $FML: Kernel.pm,v 1.75 2002/02/18 12:30:48 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -676,6 +676,7 @@ sub queue_in
     my $charset      = $config->{ "${category}_charset" } || 'us-ascii';
     my $subject      = $config->{ "${category}_subject" };
     my $recipient    = undef; # by default. used as sanity check later
+    my $reply_to     = $config->{ address_for_command };
 
     if (defined $curproc->{ credential }) {
 	$recipient = $curproc->{ credential }->sender();
@@ -714,12 +715,12 @@ sub queue_in
     if ($is_multipart) {
 	eval q{
 	    $msg = new Mail::Message::Compose
-		From    => $sender,
-		To      => $recipient,
-		Subject => $subject,
-		Type    => "multipart/mixed";
+		From     => $sender,
+		To       => $recipient,
+		Subject  => $subject,
+		Type     => "multipart/mixed";
 	};
-
+	$msg->add('Reply-To' => $reply_to);
 	_add_info_on_header($config, $msg);
 
 	if (defined $string) {
@@ -740,12 +741,13 @@ sub queue_in
     else {
 	eval q{
 	    $msg = new Mail::Message::Compose
-		From    => $sender,
-		To      => $recipient,
-		Subject => $subject,
-		Data    => $string;
+		From     => $sender,
+		To       => $recipient,
+		Subject  => $subject,
+		Data     => $string;
 	};
 	$msg->attr('content-type.charset' => $charset);
+	$msg->add('Reply-To' => $reply_to);
 	_add_info_on_header($config, $msg);
     }
 
