@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.207 2004/02/15 09:34:41 fukachan Exp $
+# $FML: Kernel.pm,v 1.208 2004/02/26 05:07:57 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1012,10 +1012,46 @@ sub parse_incoming_message
 	}
     }
 
-    # Accept-Language: handling
+    # use Content-Type: and Accept-Language: as hints.
     if (defined $msg) {
-	my $list = $msg->accept_language_list();
+	$curproc->_inject_charset_hints($msg);
+    }
+}
+
+
+# Descriptions: inject charset hints picked up from message header.
+#    Arguments: OBJ($curproc) OBJ($msg)
+# Side Effects: update corresponding PCB fields.
+# Return Value: none
+sub _inject_charset_hints
+{
+    my ($curproc, $msg) = @_;
+    my $charset = $msg->charset() || '';
+    my $list    = $msg->accept_language_list() || [];
+    my $liststr = join("", @$list);
+
+    $curproc->log("hints: charset=\"$charset\" accept_language=[$liststr]");
+
+    # 1. prefer Accept-Language: alyways, ignore Content-Type: in this case. 
+    if ($list) { 
+	$curproc->log("hints: save accept_language=[@$list]");
 	$curproc->set_accept_language_list($list);
+    }
+
+    # 2. analyze Content-Type: if valid Accept-Languge: unspecified.
+    if ($liststr eq '*' && $charset) {
+	# validate charset usage.
+	#   iso-2022-jp -> japanese -> iso-2022-jp
+	#   sjis        -> japanese -> iso-2022-jp
+	#   euc-jp      -> japanese -> iso-2022-jp
+	use Mail::Message::Charset;
+	my $char = new Mail::Message::Charset;
+	my $lang = $char->message_charset_to_language($charset);
+	$charset = $char->language_to_message_charset($lang);
+
+	$curproc->log("hints: use \"$charset\" as message charset");
+	$curproc->set_charset('message',       $charset);
+	$curproc->set_charset('reply_message', $charset);
     }
 }
 
@@ -1688,8 +1724,8 @@ This $args is passed through to reply_message().
 sub reply_message_nl
 {
     my ($curproc, $class, $default_msg, $rm_args) = @_;
-    my $config = $curproc->config();
-    my $buf    = $curproc->message_nl($class, $default_msg, $rm_args);
+    my $config  = $curproc->config();
+    my $buf     = $curproc->message_nl($class, $default_msg, $rm_args);
 
     $curproc->caller_info($class, caller) if $debug;
 
