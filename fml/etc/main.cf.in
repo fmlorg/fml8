@@ -1,5 +1,5 @@
 #
-# $FML: main.cf.in,v 1.13 2002/09/24 13:32:19 fukachan Exp $
+# $FML: main.cf.in,v 1.14 2003/03/06 11:29:11 fukachan Exp $
 #
 
 # fml version
@@ -78,7 +78,12 @@ domain_default_config 	=	$config_dir/domains/$default_domain/config.cf
 
 # map between programs name and modules
 # Example: /etc/fml/defaults/8.0/modules
-default_module_maps	=	$default_config_dir/modules
+default_module_config	=	$default_config_dir/modules
+
+
+# map between programs name and command line options
+# Example: /etc/fml/defaults/8.0/command_line_options
+default_command_line_option_config = $default_config_dir/command_line_options
 
 
 # virtual format: domain directory
