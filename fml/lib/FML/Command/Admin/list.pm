@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: list.pm,v 1.23 2004/01/02 14:45:04 fukachan Exp $
+# $FML: list.pm,v 1.24 2004/04/23 04:10:29 fukachan Exp $
 #
 
 package FML::Command::Admin::list;
@@ -63,7 +63,6 @@ sub process
 	if (@$x_options) { $options = $x_options;}
     }
 
-    $command_args->{ is_cgi } = 0;
     $self->_show_list($curproc, $command_args, $options);
 }
 
@@ -101,7 +100,6 @@ sub _show_list
     my $uc_args = {
 	maplist => $maplist,
 	wh      => \*STDOUT,
-	is_cgi  => $command_args->{ is_cgi },
     };
     my $r = '';
 
@@ -143,9 +141,6 @@ sub cgi_menu
 {
     my ($self, $curproc, $command_args) = @_;
     my $r = '';
-
-    # declare CGI mode.
-    $command_args->{ is_cgi } = 1;
 
     # navigation bar
     eval q{
