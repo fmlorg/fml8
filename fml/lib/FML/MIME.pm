@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: MIME.pm,v 1.11 2001/04/03 09:45:40 fukachan Exp $
+# $FML: MIME.pm,v 1.12 2001/05/28 16:17:12 fukachan Exp $
 #
 
 package FML::MIME;
@@ -87,28 +87,6 @@ by $options->{ charset }.
 sub encode_mime_string
 {
     my ($str, $options) = @_;
-    my $buf = ''; # return buffer
-    my $p   = 0;
-    my $pp  = 0;
-
-    while ($str) {
-	if ($str =~ /^(\S+)/) {
-	    $buf .= _encode_mime_string($1, $options);
-	    $str =~ s/^(\S+)//;
-	}
-	elsif ($str =~ /^(\s+)/) {
-	    $buf .= $1;
-	    $str =~ s/^(\s+)//;
-	}
-    }
-
-    return $buf;
-}
-
-
-sub _encode_mime_string
-{
-    my ($str, $options) = @_;
     my $charset = $options->{ 'charset' } || 'iso-2022-jp';
     my $encode  = $options->{ 'encode' }  || 'base64';
     my $header  = '=?'. $charset;
@@ -117,18 +95,18 @@ sub _encode_mime_string
     use Jcode;
     &Jcode::convert(\$str, 'jis');
 
+    use IM::Iso2022jp;
+
     if ($encode eq 'base64') {
-	$header .= '?B?';
-	$str     = encode_base64($str);
+	line_iso2022jp_mimefy($str);
     }
     elsif ($encode eq 'qp') {
-	$header .= '?Q?';
-	$str = encode_qp($str);
-	$str =~ s/(\s)/${trailor}${1}${header}/g;
+	$main::HdrQEncoding = 1;
+	line_iso2022jp_mimefy($str);
+	$main::HdrQEncoding = 0;
     }
 
-    $str  =~ s/\n$//;
-    return ($header . $str . $trailor);
+    return $str;
 }
 
 
