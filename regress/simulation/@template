@@ -1,4 +1,4 @@
 # Descriptions: 
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: 
 # Return Value: none
