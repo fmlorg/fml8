@@ -1,20 +1,5 @@
 =head1	ヘッダの操作
 
-# Descriptions: ヘッダ情報を根拠にしたフィルタリングをするか？
-#      History:
-#        Value: yes / no
-#     Examples:
-use_article_header_filter		=	yes
-
-
-# Descriptions: フィルタリングのルール。
-#               どのルールにもマッチしないなら、記事の投稿は認められる。
-#      History:
-#        Value:
-#     Examples:
-article_header_filter_rules		=	check_message_id
-						permit
-
 
 # Descriptions: ヘッダ情報を根拠にしたループチェックをするか？
 #      History:

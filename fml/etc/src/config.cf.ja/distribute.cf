@@ -3,8 +3,10 @@
 =head2	プロセス
 
 
-# Descriptions: 配送処理プログラムをそもそも使うか？
+# Descriptions: 記事の配送処理プログラムをそもそも使うか？
 #      History: なし
 #        Value: yes
 #     Examples: yes / no
 use_distribute_program	=	yes
+
+

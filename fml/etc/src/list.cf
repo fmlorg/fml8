@@ -10,6 +10,7 @@ body.cf
 lock.cf
 log.cf
 distribute.cf
+article.cf
 spool.cf
 htmlarchive.cf
 command.cf
