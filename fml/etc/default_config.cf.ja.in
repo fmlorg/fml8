@@ -301,6 +301,7 @@ primary_admin_member_password_map = file:$ml_home_dir/etc/passwd-admin
 admin_member_password_maps	=	$primary_admin_member_password_map
 					file:$ml_home_dir/etc/passwd
 
+
 =head2 アカウントベースのアクセス制限をかける
 
 # Descriptions: OS が使っているようなアカウントや自動プログラムのリスト
@@ -445,7 +446,7 @@ default_message_subject	=	fml system message ($ml_name ML)
 #      History:
 #        Value:
 #     Examples:
-reply_message_subject	=	reply from $ml_name ML
+reply_message_subject	=	fml results ($ml_name ML)
 
 
 # Descriptions:
