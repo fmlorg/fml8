@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.36 2004/04/23 13:45:15 fukachan Exp $
+# $FML: Auth.pm,v 1.37 2004/04/27 13:37:48 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -19,7 +19,7 @@ my $lock_channel = "auth_map_modify";
 
 =head1 NAME
 
-FML::Command::Auth - authentication functions
+FML::Command::Auth - authentication functions.
 
 =head1 SYNOPSIS
 
@@ -61,7 +61,7 @@ sub reject
 }
 
 
-# Descriptions: permit anyone
+# Descriptions: permit anyone.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: NUM
@@ -73,7 +73,7 @@ sub permit_anyone
 }
 
 
-# Descriptions: permit if admin_member_maps has the sender
+# Descriptions: permit if admin_member_maps has the sender.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: NUM
@@ -125,7 +125,7 @@ check the password if it is valid or not as an administrator.
 #               HASH_REF($curproc)
 #               HASH_REF($optargs)
 # Side Effects: none
-# Return Value: NUM
+# Return Value: NUM(1 if success, 0 if fail)
 sub check_admin_member_password
 {
     my ($self, $curproc, $optargs) = @_;
@@ -146,6 +146,7 @@ sub check_admin_member_password
     my $password = $optargs->{ password } || '';
     unless ($address && $password) {
 	# XXX-TODO: please return error message.
+	$curproc->logerror("FML::Command::Auth: unsafe address input");
 	return 0;
     }
 
@@ -196,7 +197,7 @@ sub check_admin_member_password
 			    $curproc->log("$function: password match");
 			}
 			$password_match = 1;
-			$status = 1;
+			$status         = 1;
 			last PASSWORD_ENTRY;
 		    }
 		}
@@ -233,11 +234,11 @@ sub check_admin_member_password
 =cut
 
 
-# Descriptions:
+# Descriptions: change password.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($up_args)
 # Side Effects: admin password modified.
-# Return Value: NUM
+# Return Value: NUM(1 if success, 0 if fail)
 sub change_password
 {
     my ($self, $curproc, $command_args, $up_args) = @_;
@@ -261,7 +262,8 @@ sub change_password
 	$obj->touch();
 
 	# delete
-	my ($addrs) = $obj->find( $address, { all => 1 });
+	my $_address = quotemeta($address);
+	my ($addrs)  = $obj->find( $_address, { all => 1 });
 	if (@$addrs) {
 	    my $found = 0;
 	    for my $a (@$addrs) {
