@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.92 2002/08/19 12:41:17 fukachan Exp $
+# $FML: Distribute.pm,v 1.93 2002/08/19 14:20:04 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -367,7 +367,7 @@ sub _header_rewrite
 {
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
-    my $header = $curproc->article_header();
+    my $header = $curproc->article_message_header();
     my $rules  = $config->{ article_header_rewrite_rules };
     my $id     = $args->{ id };
 
@@ -394,10 +394,10 @@ sub _header_rewrite
 sub _deliver_article
 {
     my ($curproc, $args) = @_;
-    my $config  = $curproc->{ config };        # FML::Config   object
-    my $message = $curproc->article_message(); # Mail::Message object
-    my $header  = $curproc->article_header();  # FML::Header   object
-    my $body    = $curproc->article_body();    # Mail::Message object
+    my $config  = $curproc->{ config };               # FML::Config   object
+    my $message = $curproc->article_message();        # Mail::Message object
+    my $header  = $curproc->article_message_header(); # FML::Header   object
+    my $body    = $curproc->article_message_body();   # Mail::Message object
 
     unless ( $config->yes( 'use_article_delivery' ) ) {
 	return;

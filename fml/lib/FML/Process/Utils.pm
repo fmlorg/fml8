@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.38 2002/08/03 13:13:24 fukachan Exp $
+# $FML: Utils.pm,v 1.39 2002/08/07 03:59:18 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -149,7 +149,7 @@ available only in C<libexec/distribute> process.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: OBJ
-sub article_header
+sub article_message_header
 {
     my ($curproc) = @_;
 
@@ -166,7 +166,7 @@ sub article_header
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: OBJ
-sub article_body
+sub article_message_body
 {
     my ($curproc) = @_;
 
