@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.126 2002/08/14 04:21:08 fukachan Exp $
+# $FML: Kernel.pm,v 1.127 2002/08/14 14:14:33 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -478,7 +478,7 @@ sub verify_sender_credential
 	$from =~ s/\n$//o;
     }
     else {
-	$curproc->refuse_further_processing("cannot extract From:");
+	$curproc->stop_this_process("cannot extract From:");
 	LogError("cannot extract From:");
     }
 
@@ -533,7 +533,7 @@ sub simple_loop_check
 
     if ($match) {
 	# we should stop this process ASAP.
-	$curproc->refuse_further_processing();
+	$curproc->stop_this_process();
 	Log("mail loop detected for $match");
     }
 }
@@ -930,7 +930,7 @@ sub _check_restrictions
 }
 
 
-=head2 refuse_further_processing($reason)
+=head2 stop_this_process($reason)
 
 Set "we should refuse this processing now" flag.
 We should stop this process as soon as possible.
@@ -948,7 +948,7 @@ invalid conditions by such as filtering.
 #    Arguments: OBJ($curproc) STR($reason)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
-sub refuse_further_processing
+sub stop_this_process
 {
     my ($curproc, $reason) = @_;
     $curproc->{ __this_process_is_invalid } = 1;
