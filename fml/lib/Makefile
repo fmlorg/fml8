@@ -15,4 +15,4 @@ _clean:
 	rm -f index.ja.html */index.ja.html
 
 clean:
-	(cd ../../..;make clean)
+	(cd ../..;make clean)
