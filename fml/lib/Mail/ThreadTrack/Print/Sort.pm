@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Sort.pm,v 1.1 2001/11/09 11:28:42 fukachan Exp $
+# $FML: Sort.pm,v 1.2 2001/11/09 12:08:46 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Sort;
@@ -31,21 +31,13 @@ sub sort_thread_id
     $self->{ _age }  = $age;
     $self->{ _cost } = $cost;
 
-    $self->_sort_thread_id($thread_id_list, $cost);
-}
-
-
-# Descriptions: 
-#    Arguments: $self $args
-# Side Effects: 
-# Return Value: none
-sub _sort_thread_id
-{
-    my ($self, $thread_id_list, $cost) = @_;
-
     @$thread_id_list = sort { 
-	$cost->{$b} cmp $cost->{$a};
+	(defined($cost->{$b}) ? $cost->{$b} : '') 
+	    cmp 
+		(defined($cost->{$a}) ? $cost->{$a} : '')
     } @$thread_id_list;
+
+    return $thread_id_list;
 }
 
 
@@ -64,6 +56,8 @@ sub _calculate_age
     # $age hash referehence = { $thread_id => $age };
     my (@aid, $last, $age, $date, $status, $tid) = ();
     for $tid (sort @$thread_id_list) {
+	next unless defined $rh->{ _articles }->{ $tid };
+
 	# $last: get the latest one of article_id's
 	(@aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
 	$last  = $aid[ $#aid ] || 0;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Print.pm,v 1.11 2001/11/09 11:30:30 fukachan Exp $
+# $FML: Print.pm,v 1.12 2001/11/09 12:08:45 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -138,7 +138,7 @@ sub _do_summary
 
 sub _print_thread_summary
 {
-    my ($self, $thread_id) = @_;
+    my ($self, $thread_id_list) = @_;
     my $mode   = $self->get_mode || 'text';
     my $rh_age = $self->{ _age } || {};
     my $fd     = $self->{ _fd } || \*STDOUT;
@@ -146,12 +146,12 @@ sub _print_thread_summary
     my $format = "%10s  %5s %8s  %-20s  %s\n";
 
     if ($mode eq 'text') {
-	print $fd "<TABLE BORDER=4>\n";
 	printf($fd $format, 'date', 'age', 'status', 'thread id', 'articles');
 	print $fd "-" x60;
 	print $fd "\n";
     }
     else {
+	print $fd "<TABLE BORDER=4>\n";
 	print "<TD>action\n";
 	print "<TD>date\n"."<TD>age\n"."<TD>status\n"."<TD>thread id\n";
 	print "<TD>article summary\n";
@@ -159,7 +159,9 @@ sub _print_thread_summary
 
     my ($tid, @article_id, $article_id, $date, $age, $status) = ();
     my $dh = new Mail::Message::Date;
-    for $tid (@$thread_id) {
+    for $tid (@$thread_id_list) {
+	next unless defined $rh->{ _articles }->{ $tid };
+
 	# get the first $article_id from the article_id list
 	(@article_id) = split(/\s+/, $rh->{ _articles }->{ $tid });
 	$article_id   = $article_id[0];
