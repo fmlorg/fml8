@@ -1,5 +1,5 @@
 #
-# $FML: main.cf.in,v 1.18 2003/11/05 03:37:53 fukachan Exp $
+# $FML: main.cf.in,v 1.19 2004/09/29 05:04:07 fukachan Exp $
 #
 
 # fml version
@@ -124,3 +124,15 @@ default_module_config	=	$default_config_dir/modules
 # map between programs name and command line options
 # Example: /etc/fml/defaults/8.0/command_line_options
 default_command_line_option_config = $default_config_dir/command_line_options
+
+
+# CUI configuration menu
+# Example: /etc/fml/defaults/8.0/menu.conf
+default_cui_menu 	=	$default_config_dir/menu
+
+
+# GUI configuration menu
+# Example: /etc/fml/defaults/8.0/menu.conf
+default_gui_menu 	=	$default_config_dir/menu
+
+
