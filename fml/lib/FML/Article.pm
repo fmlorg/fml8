@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Article.pm,v 1.23 2001/08/22 03:07:59 fukachan Exp $
+# $FML: Article.pm,v 1.24 2001/10/27 04:11:29 fukachan Exp $
 #
 
 package FML::Article;
@@ -178,6 +178,34 @@ sub spool_in
     else {
 	Log("not spool article");
     }
+}
+
+
+=head2 speculate_max_id($spool_dir)
+
+=cut
+
+
+sub speculate_max_id
+{
+    my ($curproc, $spool_dir) = @_;
+
+    use DirHandle;
+    my $dh = new DirHandle $spool_dir;
+    if (defined $dh) {
+	my $max = 0;
+	my $fn  = ''; # file name 
+
+	while (defined($fn = $dh->read)) {
+	    next unless $fn =~ /^\d+$/;
+	    $max = $max < $fn ? $fn : $max;
+	}
+	$dh->close();
+
+	return( $max > 0 ? $max : undef );
+    }
+
+    return undef;
 }
 
 
