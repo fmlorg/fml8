@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.24 2003/03/06 14:13:27 fukachan Exp $
+# $FML: Filter.pm,v 1.25 2003/05/01 13:59:33 fukachan Exp $
 #
 
 package FML::Filter;
@@ -272,7 +272,7 @@ sub article_filter_reject_notice
     }
     elsif ($type eq 'string') {
 	my $s = $msg->whole_message_as_str( { indent => '   ' } );
-	$curproc->reply_message(sprintf("\n\n%s", $s));
+	$curproc->reply_message(sprintf("\n\n%s", $s), $msg_args);
     }
     else {
 	LogError("unknown article_filter_reject_notice_data_type: $type");
