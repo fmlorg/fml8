@@ -1,7 +1,101 @@
 		CHANGES
 		Last Modified: $Date$
 
-   2002/12 は、オーバホール・キャンペーン実施中ですぉ。
+2003/01/05
+
+   add new utility
+	fmlerror
+	fml
+
+   variables
+	$fmlerror_*hook added
+	
+   FML::Process::Switch 
+	add fmlerror, fix fmlsuper getopt
+	
+   FML::Error 
+   FML::Error::Analyze 
+	
+	implement get_data_detail()
+
+2003/01/04
+
+   FML::MTAControl 
+	add && enable FML::MTAControl::Sendmail.
+	
+	implement _remove_postfix_style_virtual(), which moved from
+	FML::MTAControl::Postfix.
+	
+   FML::MTAControl::Postfix 
+	postfix_find_key_in_alias_maps()::find system aliases and fml defined
+	aliases irrespective of the result by postconf. This search uses newly
+	implemented _find_key_in_file() but it is a bug since it handles file
+	search only.
+	
+	modified to use _remove_postfix_style_virtual().
+	
+   FML::Error::Analyze 
+	add analize day limit
+	
+	change day checkpoint at simple_count
+	add simple_count2() error_continuity2() for error type 4xx
+	
+	bugfix missing my at day check values
+
+2003/01/03
+
+   variables
+	add admin_member_maps into member_maps
+	
+   FML::Command 
+	define $debug.
+	more error messages.
+	
+   FML::Restriction::Base 
+	implement regexp() method.
+	FNF-ify.
+	
+   FML::Error 
+	modified use FML::Restriction::Base->regexp().
+	
+   FML::Command::{DirUtils,FileUtils}
+   FML::Command::Admin::{dir,file}
+	modified to use FML::Restriction::Base->regexp().
+	modify messages.
+	
+   FML::Command::Admin::{newml,rmml}
+	get_as_array_ref() to get $newml_command_mta_config_list values.
+	
+   FML::Process::Command 
+   FML::Command::Auth 
+	modify log messages.
+	hide messages for debug mode.
+	
+   FML::Process::{Addr,Alias}
+	fix help message.
+	nuke not used variables.
+
+2003/01/02
+
+   fmlsuper コマンドを追加する。
+	キュー管理のための、ちょっとしたコマンドにするつもり。
+
+   update configure
+	add fmlsuper
+
+   variables
+	add $fmlsuper_*hook
+	
+   FML::Process::Switch 
+	enable fmlsuper using FML::Process::Super
+	
+   FML::Process::Spool 
+	fix description
+
+2002/12
+
+	オーバーホール・キャンペーンでした。
+
 
 2002/12/31
 
@@ -3937,4 +4031,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.123 2002/12/31 00:39:17 fukachan Exp $
+$FML: CHANGES.txt,v 1.124 2003/01/01 02:07:51 fukachan Exp $
