@@ -17,7 +17,7 @@ use Getopt::Long;
 $MainCF = '/etc/fml/main.cf';
 
 eval { &Bootstrap();};
-if ($@) { print STDERR "Error: ", $@, "\n";}
+if ($@) { print STDERR "Error: ", $@, "\n"; exit 1;}
 
 exit 0;
 
