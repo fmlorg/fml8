@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.5 2003/10/15 01:03:36 fukachan Exp $
+# $FML: Utils.pm,v 1.6 2003/10/15 10:12:13 fukachan Exp $
 #
 
 package FML::Process::CGI::Utils;
@@ -196,7 +196,7 @@ sub cgi_var_language
 	return lc($lang);
     }
     else {
-	return 'japanese';
+	return '';
     }
 }
 
