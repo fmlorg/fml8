@@ -1,6 +1,41 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/08/16
+
+   FML::Process::Kernel 
+	check whether $ml_home_dir not exists in _init_lock().
+
+   Mail::Message 
+	modify logic to find the start point of multipart.
+	correct handling of the first dash-boundary.
+	XXX this logic is effective but wrong.
+
+2003/08/15
+
+   FML::Process::Utils 
+   Mail::Message::ToHTML 
+	test html_archive_address_mask mask or nomask
+	address_mask use To and Cc
+
+2003/08/06
+
+   Mail::Bounce::Freeserve 
+   Mail::Bounce::Language::Japanese 
+	moved Japanese contnet to Mail::Bounce::Language::Japanese.
+	bugfix regexp
+
+   Mail::Bounce 
+	enable freeserve.en.jp
+	
+   FML::Process::Distribute 
+	clarify old::new thread engine routines.
+	rename htmlify() to _htmlify() to clarify it is private.
+
+2003/08/05
+
+  Mail::Bounce::Freeserve
+
 2003/08/03
 
    FML::Process::Distribute 
@@ -5087,4 +5122,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.155 2003/08/02 03:08:38 fukachan Exp $
+$FML: CHANGES.txt,v 1.156 2003/08/03 16:37:14 fukachan Exp $
