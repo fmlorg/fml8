@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Bounce.pm,v 1.4 2001/04/11 16:36:45 fukachan Exp $
+# $FML: Bounce.pm,v 1.5 2001/04/12 10:46:47 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -59,14 +59,17 @@ sub analyze
 		 'SimpleMatch', 
 		 ) {
 	my $module = "Mail::Bounce::$pkg";
-
 	print "\n   --- module: $module\n" if $debug;
-
 	eval qq { 
 	    require $module; $module->import();
 	    $module->analyze( \$msg , \$result );
 	};
 	croak($@) if $@;
+
+	if (keys %$result) { 
+	    print "\n   match $module\n" if $debug;
+	    last;
+	}
     }
 
     $self->{ _result } = $result;
