@@ -1,5 +1,5 @@
 <!--
-   $FML: restriction.sgml,v 1.4 2002/07/23 07:19:48 fukachan Exp $
+   $FML: restriction.sgml,v 1.5 2002/07/23 09:34:34 fukachan Exp $
 -->
 
 <chapter id="restriction">
@@ -54,6 +54,14 @@ FML::Command::{User,Admin}::コマンド の実行に進むことができます。
 	<title>
 	CGI
 	</title>
+
+<para>
+safe_param_*()
+および
+try_cgi_*() 
+は安全な値を返すことになっている。
+正規表現でチェックされてた後、返される。
+</para>
 
 <para>
 safe_param_ほえほえ() という関数経由でのみ CGI から
