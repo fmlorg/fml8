@@ -42,7 +42,7 @@ sub increment_id
 }
 
 
-sub pcb_save_id
+sub _pcb_save_id
 {
     my ($self, $curproc, $id) = @_;
     my $pcb = $curproc->{ pcb }; # FML::PCB object
@@ -50,7 +50,7 @@ sub pcb_save_id
 }
 
 
-sub pcb_get_id
+sub _pcb_get_id
 {
     my ($self, $curproc) = @_;
     my $pcb = $curproc->{ pcb }; # FML::PCB object
@@ -73,11 +73,11 @@ sub _update_cache_init
 	};
     }
 
-    if (defined $self->{ _cachefile }) {
-	my $cachefile = $self->{ _cachefile };
-	unless (-f $cachefile) {
+    if (defined $self->{ _cache_file }) {
+	my $cache_file = $self->{ _cache_file };
+	unless (-f $cache_file) {
 	    use FML::Utils qw(touch);
-	    touch($cachefile) || do {
+	    touch($cache_file) || do {
 		return undef;
 	    };
 	}

@@ -41,24 +41,41 @@ sub assign
 
     use FML::Header::Subject;
 
-    # if the header carries "Subject: Re: ...", 
-    # out ticket system does nothing.
-    unless ( FML::Header::Subject->is_reply( $subject ) ) {
+    # if the header carries "Subject: Re: ...", we do not rewrite
+    # the subject but extract $id.
+    if ( FML::Header::Subject->is_reply( $subject ) ) {
+	my $id = $self->_extract_ticket_id($header, $config);
+	$self->{ _ticket_id } = $id;
+    }
+    else {
 	# call SUPER class's FML::Ticket::System::increment_id()
 	my $id = $self->increment_id( $config->{ ticket_sequence_file } );
 
 	# O.K. rewrite Subject: of the article to distribute
 	unless ($self->error) {
-	    $self->pcb_save_id($curproc, $id) if $id;
+	    $self->_pcb_save_id($curproc, $id);
 	    $self->_rewrite_subject($header, $config, $id);
 	}
 	else {
 	    Log( $self->error );
-	};
+	}
     }
-    else {
-	Log("ticket: not looks reply message, so ignored");
-    }
+}
+
+
+sub update_cache
+{
+    my ($self, $curproc, $args) = @_;
+    my $config    = $curproc->{ config };
+    my $ml_name   = $config->{ ml_name };
+    my $db_dir    = $config->{ ticket_db_dir } ."/". $ml_name;
+    my $cache_file = $db_dir ."/cache.txt";
+
+    # cache file
+    $self->{ _cache_file } = $cache_file;
+
+    # save $id in $cache_file
+    $self->_save_ticket_id_in_cache($curproc, $args);
 }
 
 
@@ -70,6 +87,21 @@ sub _gen_ticket_id
     my $ticket_id = sprintf($tag, $ml_name, $id);
     $self->{ _ticket_id } = $ticket_id;
     return $ticket_id;
+}
+
+
+sub _extract_ticket_id
+{
+    my ($self, $header, $config) = @_;
+    my $tag     = $config->{ ticket_subject_tag };
+    my $subject = $header->get('subject');
+
+    use FML::Header::Subject;
+    my $regexp = FML::Header::Subject::_regexp_compile($tag);
+
+    if ($subject =~ /($regexp)/) {
+	return $1;
+    }
 }
 
 
@@ -89,37 +121,23 @@ sub _rewrite_subject
 }
 
 
-sub _save_ticket_id
+sub _save_ticket_id_in_cache
 {
     my ($self, $curproc, $args) = @_;
     my $config    = $curproc->{ config };
     my $pcb       = $curproc->{ pcb };
 
-    # initialize $db_dir and $cachefile for further work
+    # initialize $db_dir and $cache_file for further work
     $self->_update_cache_init($curproc, $args) || do { return undef;};
 
     use IO::File;
-    my $fh = new IO::File $self->{ _cachefile }, "a";
+    my $fh = new IO::File $self->{ _cache_file }, "a";
     if (defined $fh) {
 	my $article_id = $pcb->get('article', 'id');
 	my $ticket_id  = $self->{ _ticket_id };
 	printf $fh "%-10d %s\n", $article_id, _quote_space( $ticket_id );
 	close($fh);
     }
-}
-
-
-sub update_cache
-{
-    my ($self, $curproc, $args) = @_;
-    my $config    = $curproc->{ config };
-    my $ml_name   = $config->{ ml_name };
-    my $db_dir    = $config->{ ticket_db_dir } ."/". $ml_name;
-    my $cachefile = $db_dir ."/cache.txt";
-
-    $self->{ _cachefile } = $cachefile;
-
-    $self->_save_ticket_id($curproc, $args);
 }
 
 
