@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.4 2003/09/27 04:30:56 fukachan Exp $
+# $FML: List.pm,v 1.5 2003/09/27 06:58:16 fukachan Exp $
 #
 
 package FML::CGI::List;
@@ -62,6 +62,7 @@ sub cgi_menu
     my $name_reset   = $curproc->message_nl('term.reset',   'reset');
 
     print start_form(-action=>$action, -target=>$target);
+    print $curproc->cgi_hidden_info_language();
     print hidden(-name => 'command', -default => 'list');
     print table( { -border => undef },
 		Tr( undef,

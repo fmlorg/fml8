@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.2 2003/09/27 06:58:16 fukachan Exp $
+# $FML: Menu.pm,v 1.3 2003/09/27 13:56:42 fukachan Exp $
 #
 
 package FML::CGI::Menu;
@@ -228,6 +228,7 @@ sub run_cgi_navigator
     print $title, "\n";
 
     print start_form(-action=>$action, -target=>$target);
+    print $curproc->cgi_hidden_info_language();
 
     print $name_ml_name, ":\n";
     print scrolling_list(-name    => 'ml_name',

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.57 2003/09/27 13:56:42 fukachan Exp $
+# $FML: Kernel.pm,v 1.58 2003/10/14 07:04:34 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -592,32 +592,34 @@ show options.
 sub run_cgi_options
 {
     my ($curproc, $args) = @_;
-    my $domain = $curproc->cgi_var_ml_domain();
-    my $action = $curproc->safe_cgi_action_name();
-    my $lang   = $curproc->cgi_var_language();
+    my $domain   = $curproc->cgi_var_ml_domain();
+    my $action   = $curproc->safe_cgi_action_name();
+    my $lang     = $curproc->cgi_var_language();
+    my $config   = $curproc->config();
+    my $langlist = $config->get_as_array_ref('cgi_language_list');
 
-    # natural language-ed name
-    my $name_options = $curproc->message_nl('term.options',  'options');
-    my $name_lang    = $curproc->message_nl('term.language', 'language');
-    my $name_change  = $curproc->message_nl('term.change',   'change');
-    my $name_reset   = $curproc->message_nl('term.reset',    'reset');
+    if ($#$langlist > 0) {
+	# natural language-ed name
+	my $name_options = $curproc->message_nl('term.options',  'options');
+	my $name_lang    = $curproc->message_nl('term.language', 'language');
+	my $name_change  = $curproc->message_nl('term.change',   'change');
+	my $name_reset   = $curproc->message_nl('term.reset',    'reset');
 
-    print "<P> <B> $name_options </B>\n";
+	print "<P> <B> $name_options </B>\n";
 
-    print start_form(-action=>$action);
+	print start_form(-action=>$action);
 
-    # XXX-TODO: $langlist is hard-coded.
-    print $name_lang, ":\n";
-    my $langlist = [ 'japanese', 'english' ];
-    print scrolling_list(-name    => 'language',
-			 -values  => $langlist,
-			 -default => [ $lang ],
-			 -size    => 1);
+	print $name_lang, ":\n";
+	print scrolling_list(-name    => 'language',
+			     -values  => $langlist,
+			     -default => [ $lang ],
+			     -size    => 1);
 
-    print submit(-name => $name_change);
-    print reset(-name  => $name_reset);
+	print submit(-name => $name_change);
+	print reset(-name  => $name_reset);
 
-    print end_form;
+	print end_form;
+    }
 }
 
 
@@ -662,6 +664,23 @@ sub run_cgi_menu
 	    $curproc->run_cgi_help($args);
 	}
     }
+}
+
+
+=head1 MISC / UTILITIES
+
+=head2
+
+=cut
+
+
+sub cgi_hidden_info_language
+{
+    my ($curproc, $cgi) = @_;
+    my $lang = $curproc->cgi_var_language();
+
+    return hidden(-name    => 'language',
+		  -default => [ $lang ]);
 }
 
 
