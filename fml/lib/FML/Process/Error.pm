@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.29 2003/03/16 07:26:22 fukachan Exp $
+# $FML: Error.pm,v 1.30 2003/04/29 11:28:05 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -291,11 +291,13 @@ sub finish
 
 =head1 message forwarding
 
+forward the error message.
+
 =cut
 
 
-# Descriptions: forward error message on rejection.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($msg_args)
+# Descriptions: forward the error message.
+#    Arguments: OBJ($curproc)
 # Side Effects: update reply message queue
 # Return Value: none
 sub _forward_error_message
