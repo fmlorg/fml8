@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Subject.pm,v 1.2 2001/07/31 14:19:42 fukachan Exp $
+# $FML: Subject.pm,v 1.1.1.1 2001/11/03 08:15:28 fukachan Exp $
 #
 
 
@@ -56,10 +56,6 @@ my $pattern  = 'Re:|Re\d+:|Re\[\d+\]:|Re\(\d+\):|Re\^\d+:|Re\*\d+:|Re>';
 
 =head1 METHODS
 
-=head2 C<new()>
-
-usual constructor.
-
 =head2 C<is_reply($string)>
 
 check whether C<$string> looks like a reply message.
@@ -69,15 +65,6 @@ For example, it is like this:
   Re: reply to your messages
 
 =cut
-
-
-sub new
-{
-    my ($self) = @_;
-    my ($type) = ref($self) || $self;
-    my $me     = {};
-    return bless $me, $type;
-}
 
 
 sub is_reply
