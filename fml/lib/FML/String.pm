@@ -9,66 +9,64 @@
 #
 
 package FML::String;
-
+use strict;
 use Carp;
+
+=head1 NAME
+
+FML::String -- utilities to manipulate strings
+
+=head1 SYNOPSIS
+
+    use FML::String qw(STR2JIS);
+    $euc_str = STR2JIS($str);
+
+=head1 METHOD
+
+=head2 C<STR2JIS(string)>
+
+convert CHARSET of the given string to JIS.
+
+=head2 C<STR2EUC(string)>
+
+convert CHARSET of the given string to EUC.
+
+=head2 C<STR2SJIS(string)>
+
+convert CHARSET of the given string to SJIS.
+
+=cut
+
 
 require Exporter;
 @ISA       = qw(Exporter); 
-@EXPORT_OK = qw(STR2JIS STR2EUC);
+@EXPORT_OK = qw(STR2JIS STR2EUC STR2SJIS);
 
-use strict;
+use Jcode;
 
-sub AUTOLOAD
-{
-    print STDERR "bad AUTOLOAD()\n";
-}
 
 sub STR2EUC
 {
     my ($str) = @_;
-
-    use Jcode;
     &Jcode::convert(\$str, 'euc');
+    $str;
 }
 
 
 sub STR2JIS
 {
     my ($str) = @_;
-
-    use Jcode;
     &Jcode::convert(\$str, 'jis');
+    $str;
 }
 
 
 sub STR2SJIS
 {
     my ($str) = @_;
-
-    use Jcode;
     &Jcode::convert(\$str, 'sjis');
+    $str;
 }
-
-
-=head1 NAME
-
-FML::String -- utilties to manipulate strings
-
-=head1 SYNOPSIS
-
-=head1 METHOD
-
-=item STR2JIS(string)
-
-convert CHARSET of the given string to JIS.
-
-=item STR2EUC(string)
-
-convert CHARSET of the given string to EUC.
-
-=item STR2SJIS(string)
-
-convert CHARSET of the given string to SJIS.
 
 
 =head1 AUTHOR
