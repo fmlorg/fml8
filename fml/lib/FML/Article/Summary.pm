@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.9 2003/01/11 16:05:13 fukachan Exp $
+# $FML: Summary.pm,v 1.10 2003/02/16 08:48:05 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -97,14 +97,17 @@ sub _prepare_info
 	use Mail::Message;
 	my $msg      = new Mail::Message->parse( { file => $file } );
 	my $header   = $msg->whole_message_header();
-	my $address  = $header->get( 'from' );
-	my $date     = $header->get( 'date' );
+	my $address  = $header->get( 'from' ) || '';
+	my $date     = $header->get( 'date' ) || '';
 	my $unixtime = Mail::Message::Date::date_to_unixtime( $date );
 
 	# log the first 15 bytes of user@domain in From: header field.
-	use FML::Header;
-	my $hdrobj = new FML::Header;
-	$address = substr($hdrobj->address_clean_up( $address ), 0, $addrlen);
+	if (defined $address) {
+	    use FML::Header;
+	    my $hdr  = new FML::Header;
+	    my $addr = $hdr->address_clean_up($address);
+	    $address = defined $addr ? substr($addr, 0, $addrlen) : '';
+	}
 
 	# XXX-TODO $subject->clean_up() (object flavour?)
 	use FML::Header::Subject;
@@ -245,6 +248,28 @@ sub rebuild
     }
     else {
 	LogError("fail to write $tmp");
+    }
+}
+
+
+# Descriptions: print all lines in summary file into file handle $wh.
+#    Arguments: OBJ($self) HANDLE($wh)
+# Side Effects: none
+# Return Value: none
+sub dump
+{
+    my ($self, $wh) = @_;
+    my $curproc      = $self->{ _curproc };
+    my $config       = $curproc->config();
+    my $summary_file = $config->{ "summary_file" };
+
+    if (-f $summary_file) {
+	my $fh = new FileHandle $summary_file;
+	if (defined $fh && defined $wh) {
+	    my $buf;
+	    while ($buf = <$fh>) { print $wh $buf;}
+	    $fh->close();
+	}
     }
 }
 
