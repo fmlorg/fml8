@@ -16,7 +16,7 @@ use_spool	= 	yes
 #      History: 4.0 にはない。fml-devel new
 #        Value: yes / no
 #     Examples:
-use_spool_subdir	= 	yes
+use_spool_subdir	= 	no
 
 # Descriptions: 記事番号を保存するファイル
 #      History: $SEQ_FILE
