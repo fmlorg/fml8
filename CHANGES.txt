@@ -3,6 +3,34 @@
 
    2002/12 は、オーバホール・キャンペーン実施中ですぉ。
 
+2002/12/15
+
+   FML::Article 
+	id() returns data on memory or in sequence_file if not found
+	on memory. 
+	clean up comments.
+	use $curproc->config(), $curproc->pcb().
+	
+   FML::Article::Summary 
+	redireced to STDOUT if output channel cannot be opened.
+	add todo(s) as comments.
+	
+   ErrorStatus 
+	clean up comments.
+	defined() check.
+	forward method::errstr() -> error().
+	
+   FML::Command::Admin::edit 
+	print informational mesage
+	
+   FML::Command::Admin::dir 
+	fix comments.
+	not pass $du_args->{options} to FML::Command::DirUtils module.
+	
+   FML::Command::Admin::byeadmin 
+	care for primary_admin_recipient_map
+	XXX we should handle *_maps not primary_*_map.
+
 2002/12/13
 
    File::SimpleLock 
@@ -3696,4 +3724,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.114 2002/12/09 14:10:03 fukachan Exp $
+$FML: CHANGES.txt,v 1.115 2002/12/15 13:39:18 fukachan Exp $
