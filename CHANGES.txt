@@ -1,6 +1,54 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/11/27
+
+   FML::User::Control 
+	check if $buf retruned from IO::Adapter is defined.
+	
+   IO::Adapter::File 
+	bug fix get_key_values_as_array_ref()
+
+2003/11/26
+
+   list コマンドの拡張、あらゆる map を表示可能にした。
+
+   FML::Command::Admin::list 
+	try to list up arbitorary map if could.
+	FML::User::Control::{userlist -> print_userlist}
+	
+   IO::Adapter::{Array,DBI,File}
+	implement get_key_values_as_array_ref() to return key and all values
+	as ARRAY_REF.
+	
+   FML::User::Control 
+	rename method::userlist -> print_userlist
+	
+	cal get_key_values_as_array_ref() of IO::Adapter to get key and all
+	values.
+	
+	So, print_userlist() print out "key values ...".
+
+   アドレスを比較する関数で大文字小文字を区別する/しないという機能を実装
+   また、互換性のため、デフォルトを case insensitive (区別しない)に変更。
+
+   variabes
+	address_compare -> address_compare_function
+	
+   FML::Credential 
+	bug fix variable overload
+	
+2003/11/25
+
+   FML::User::Control 
+	remove debug condition
+	
+   FML::Credential 
+   variables
+	implement switch to toggle case sensitive check of mail address.
+	+use_address_compare = yes
+	+address_compare_type = user_part_case_insensitive
+
 2003/11/24
 
    FML::Process::Switch 
@@ -5723,4 +5771,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.173 2003/11/21 11:39:27 fukachan Exp $
+$FML: CHANGES.txt,v 1.174 2003/11/25 11:41:07 fukachan Exp $
