@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.58 2003/11/29 10:24:28 fukachan Exp $
+# $FML: Configure.pm,v 1.59 2004/01/02 02:11:26 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -305,7 +305,6 @@ sub _makefml
 	    method   => $method,
 	    options  => \@options,
 	},
-	args         => $args,
     };
 
     my $eval = $config->get_hook( 'makefml_run_start_hook' );

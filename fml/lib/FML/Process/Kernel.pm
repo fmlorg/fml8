@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.201 2004/01/01 23:52:16 fukachan Exp $
+# $FML: Kernel.pm,v 1.202 2004/01/02 02:11:28 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -571,22 +571,22 @@ See C<FML::Header> object for more details.
 =cut
 
 
-# Descriptions: top level of loop checks
-#    Arguments: OBJ($curproc) HASH_REF($args)
+# Descriptions: top level dispatcher for simple loop checks
+#    Arguments: OBJ($curproc)
 # Side Effects: stop the current process if needed.
 # Return Value: none
 sub simple_loop_check
 {
-    my ($curproc, $args) = @_;
-    my $config = $curproc->config();
-    my $header = $curproc->incoming_message_header();
-    my $rules  = $config->get_as_array_ref( 'incoming_mail_header_loop_check_rules' );
-    my $match  = 0;
+    my ($curproc) = @_;
+    my $config    = $curproc->config();
+    my $header    = $curproc->incoming_message_header();
+    my $rules     = $config->get_as_array_ref( 'incoming_mail_header_loop_check_rules' );
+    my $match     = 0;
 
   RULE:
     for my $rule (@$rules) {
 	if ($header->can($rule)) {
-	    $match = $header->$rule($config, $args) ? $rule : 0;
+	    $match = $header->$rule($config) ? $rule : 0;
 	}
 	else {
 	    $curproc->log("header->${rule}() is undefined");
@@ -595,6 +595,7 @@ sub simple_loop_check
 	last RULE if $match;
     }
 
+    # This $match contains the first matched rule name (== reason).
     if ($match) {
 	# we should stop this process ASAP.
 	$curproc->stop_this_process();

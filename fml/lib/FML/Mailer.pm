@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.22 2003/08/25 14:13:57 fukachan Exp $
+# $FML: Mailer.pm,v 1.23 2003/08/29 15:33:54 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -73,10 +73,10 @@ sub new
 }
 
 
-=head2 send($args)
+=head2 send($send_args)
 
 send the given C<message>.
-$args can take the following arguments:
+$send_args can take the following arguments:
 
    ----------------------------------
    sender             string
@@ -89,12 +89,12 @@ $args can take the following arguments:
 
 
 # Descriptions: send messages in the queue (queue flush).
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) HASH_REF($send_args)
 # Side Effects: queue changed
 # Return Value: 1 or 0
 sub send
 {
-    my ($self, $args) = @_;
+    my ($self, $send_args) = @_;
     my $handle     = undef;
     my $fp         = undef;
     my $sfp        = undef;
@@ -126,7 +126,7 @@ sub send
     }
 
     # 1. sender
-    my $sender = (defined $args->{sender} ? $args->{sender} : $maintainer);
+    my $sender = (defined $send_args->{sender} ? $send_args->{sender} : $maintainer);
     unless ($sender) {
 	$curproc->logerror("FML::Mailer: no sender");
 	return 0;
@@ -134,11 +134,11 @@ sub send
 
     # 2. recipient(s)
     my $recipients = [];
-    if (defined $args->{ recipients }) {    # ARRAY_REF
-	$recipients = $args->{ recipients };
+    if (defined $send_args->{ recipients }) {    # ARRAY_REF
+	$recipients = $send_args->{ recipients };
     }
-    elsif (defined $args->{ recipient }) {  # STR
-	my $recipient = $args->{ recipient };
+    elsif (defined $send_args->{ recipient }) {  # STR
+	my $recipient = $send_args->{ recipient };
 	$recipients = [ $recipient ];
     }
     else {
@@ -150,8 +150,8 @@ sub send
     my $message = undef;
 
     # 3.1 message object
-    if (defined($args->{ message })) {
-	$message = $args->{ message };
+    if (defined($send_args->{ message })) {
+	$message = $send_args->{ message };
     }
     else {
 	$curproc->logerror("FML::Mailer: no message");
@@ -159,8 +159,8 @@ sub send
     }
 
     # 3.2 file
-    if (defined($args->{ file })) {
-	my $file = $args->{ file };
+    if (defined($send_args->{ file })) {
+	my $file = $send_args->{ file };
 	if ($file && -f $file) {
 	    use Mail::Message;
 	    use FileHandle;

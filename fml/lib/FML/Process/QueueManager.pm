@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.14 2003/08/23 07:24:48 fukachan Exp $
+# $FML: QueueManager.pm,v 1.15 2003/08/23 08:50:43 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -46,16 +46,16 @@ use FML::Log qw(Log LogWarn LogError);
 
 
 # Descriptions: standard constructor
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) HASH_REF($qm_args)
 # Side Effects: none
 # Return Value: OBJ
 sub new
 {
-    my ($self, $args) = @_;
+    my ($self, $qm_args) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
 
-    $me->{ _directory } = $args->{ directory };
+    $me->{ _directory } = $qm_args->{ directory };
 
     return bless $me, $type;
 }

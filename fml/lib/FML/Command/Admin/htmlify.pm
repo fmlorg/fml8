@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: htmlify.pm,v 1.21 2003/08/29 15:33:58 fukachan Exp $
+# $FML: htmlify.pm,v 1.22 2003/09/08 15:06:04 fukachan Exp $
 #
 
 package FML::Command::Admin::htmlify;
@@ -56,7 +56,6 @@ sub need_lock { 0;}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $args    = $command_args->{ args };
     my $config  = $curproc->config();
     my $src_dir = $config->{ spool_dir };
     my $dst_dir = $config->{ html_archive_dir };
@@ -70,7 +69,7 @@ sub process
 
     # main converter
     use FML::Command::HTMLify;
-    &FML::Command::HTMLify::convert($curproc, $args, {
+    &FML::Command::HTMLify::convert($curproc, {
 	src_dir => $src_dir,
 	dst_dir => $dst_dir,
     });

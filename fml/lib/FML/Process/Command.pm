@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.93 2004/01/01 23:52:15 fukachan Exp $
+# $FML: Command.pm,v 1.94 2004/01/02 02:11:26 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -197,7 +197,7 @@ sub run
     unless ($curproc->is_refused()) {
 	# permit_xxx() sets the error reason at "check_restriction" in pcb.
 	if ($curproc->permit_command()) {
-	    $curproc->_evaluate_command_lines($args);
+	    $curproc->_evaluate_command_lines();
 	}
 	# XXX reject command use irrespective of requests from admins/users.
 	# XXX rejection of admin use occurs in _evaluate_command_lines()
@@ -386,12 +386,12 @@ sub _is_safe_syntax
 
 # Descriptions: parse command buffer to prepare several info
 #               after use. return info as HASH_REF.
-#    Arguments: OBJ($curproc) HASH_REF($args) STR($fixed_command)
+#    Arguments: OBJ($curproc) STR($fixed_command)
 # Side Effects: none
 # Return Value: HASH_REF
 sub _parse_command_args
 {
-    my ($curproc, $args, $fixed_command) = @_;
+    my ($curproc, $fixed_command) = @_;
     my $config  = $curproc->config();
     my $ml_name = $config->{ ml_name };
     my $argv    = $curproc->command_line_argv();
@@ -410,7 +410,6 @@ sub _parse_command_args
 
 	ml_name    => $ml_name,
 	argv       => $argv,
-	args       => $args,
 
 	msg_args   => {},
     };
@@ -757,20 +756,20 @@ sub __stop_here
 # Descriptions: scan message body and execute approviate command
 #               with dynamic loading of command definition.
 #               It resolves your customized command easily.
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: loading FML::Command::command.
 #               prepare messages to return.
 # Return Value: none
 sub _evaluate_command_lines
 {
-    my ($curproc, $args) = @_;
-    my $config  = $curproc->config();
-    my $ml_name = $config->{ ml_name };
-    my $argv    = $curproc->command_line_argv();
-    my $prompt  = $config->{ command_mail_reply_prompt } || '>>>';
-    my $mode    = 'unknown';
-    my $rbody   = $curproc->incoming_message_body();
-    my $msg     = $rbody->find_first_plaintext_message();
+    my ($curproc) = @_;
+    my $config    = $curproc->config();
+    my $ml_name   = $config->{ ml_name };
+    my $argv      = $curproc->command_line_argv();
+    my $prompt    = $config->{ command_mail_reply_prompt } || '>>>';
+    my $mode      = 'unknown';
+    my $rbody     = $curproc->incoming_message_body();
+    my $msg       = $rbody->find_first_plaintext_message();
 
     # preliminary scanning for message to find "confirm" or "admin"
     my $command_lines = $msg->message_text_as_array_ref();
@@ -815,7 +814,7 @@ sub _evaluate_command_lines
 
 	# Example: if orig_command = "# help", comname = "help"
 	$fixed_command = __clean_up($orig_command);
-	$cominfo       = $curproc->_parse_command_args($args, $fixed_command);
+	$cominfo       = $curproc->_parse_command_args($fixed_command);
 	$mode          = $curproc->_get_command_mode($status, $cominfo);
 
 	# 1. check $mode if the further processing is allowed

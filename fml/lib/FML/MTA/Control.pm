@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MTAControl.pm,v 1.21 2003/09/13 09:16:59 fukachan Exp $
+# $FML: Control.pm,v 1.1 2003/12/28 13:23:18 fukachan Exp $
 #
 
 package FML::MTA::Control;
@@ -56,17 +56,17 @@ my $default_mta = 'postfix';
 
 
 # Descriptions: ordinary constructor
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) HASH_REF($ctl_args)
 # Side Effects: none
 # Return Value: OBJ
 sub new
 {
-    my ($self, $args) = @_;
+    my ($self, $ctl_args) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
 
     # default mta is postfix.
-    $me->{ mta_type } = $args->{ mta_type } || $default_mta;
+    $me->{ mta_type } = $ctl_args->{ mta_type } || $default_mta;
 
     return bless $me, $type;
 }
