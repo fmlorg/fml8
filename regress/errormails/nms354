@@ -1,0 +1,71 @@
+Return-Path: <>
+Received: from kongou.example.ne.jp ([yy.yy.yy.yy] helo=localhost.example.ne.jp)
+	by topaz.example.com with esmtp id 15hGux-000O9y-00
+	for info@example.com; Thu, 13 Sep 2001 05:47:31 +0900
+To: info@example.com
+From: =?ISO-2022-JP?B?GyRCJWEhPCVrGyhCIBskQiUiJUklXyVLJTklSCVsITwlPxsoQg==?=<Postmaster@localhost.example.ne.jp>
+Reply-To: =?ISO-2022-JP?B?GyRCJWEhPCVrGyhCIBskQiUiJUklXyVLJTklSCVsITwlPxsoQg==?=<Postmaster@localhost.example.ne.jp>
+Subject: =?ISO-2022-JP?B?GyRCJWEhPCVrGyhCIBskQiU3JTklRiVgGyhCIBskQiUoJWkhPBsoQiAtIBskQkdbPy5JVDJEGyhC?=
+Date: Thu, 13 Sep 2001 05:47:01 +0900
+Message-ID: <20010912204701.AAB27792@localhost.example.ne.jp>
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status;
+		Boundary="===========================_ _= 6133728(27792)"
+
+--===========================_ _= 6133728(27792)
+Content-Type: text/plain; charset=iso-2022-jp
+Content-Transfer-Encoding: 7bit
+
+以下の理由でこのメッセージは配信できませんでした。
+
+1人あるいは複数の受信者がメールボックスのサイズ制限を超過し
+た可能性があるので、メッセージを受け取れませんでした。
+後で再送すれば正しく送信される可能性がありますが、メッセー
+ジが大きい場合は、受信者に問い合わせてメッセージに必要なス
+ペースがあることを確認してから再送することをお勧めします。
+
+ユーザーの割当て制限が超過しました: d2050334
+
+このメッセージにエラーがあると思われた場合、 Postmaster@localhost.example.ne.jp
+ に返信してください。
+
+
+--===========================_ _= 6133728(27792)
+Content-Type: message/delivery-status
+Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
+
+
+Reporting-MTA: dns; localhost.example.ne.jp
+Received-From-MTA: dns; [yy.yy.yy.yy] [yy.yy.yy.yy]
+Arrival-Date: Thu, 13 Sep 2001 05:47:00 +0900
+
+--===========================_ _= 6133728(27792)
+Content-Type: message/rfc822
+Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
+
+Received: from hyuga.example.ne.jp ([yy.yy.yy.yy]) by localhost.example.ne.jp
+          (Netscape Messaging Server 3.54)  with ESMTP id AAA6C8B
+          for <teru@ma.example.ne.jp>; Thu, 13 Sep 2001 05:47:00 +0900
+Received: from topaz.example.com (zircon.example.com [xx.xx.xx.xx])
+	by hyuga.example.ne.jp (8.9.3/3.7W+MNIv1) with ESMTP id FAA09257
+	for <teru@ma.example.ne.jp>; Thu, 13 Sep 2001 05:47:00 +0900 (JST)
+From: info@example.com
+Message-Id: <1.0.J.20010913050545.406.a9aa@turquoise.example.com>
+To: <teru@ma.example.ne.jp>
+Subject: **********
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="ISO-2022-JP"
+Date: 13 Sep 2001 05:05:45 +0900
+
+...
+...
+...
+
+--===========================_ _= 6133728(27792)--
+
+
+
+
