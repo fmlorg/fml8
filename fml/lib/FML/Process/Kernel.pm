@@ -4,14 +4,14 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.88 2002/04/26 09:19:35 fukachan Exp $
+# $FML: Kernel.pm,v 1.89 2002/04/26 10:29:13 fukachan Exp $
 #
 
 package FML::Process::Kernel;
 
 use strict;
 use Carp;
-use vars qw(@ISA);
+use vars qw(@ISA @Tmpfiles);
 use File::Spec;
 
 use FML::Process::Flow;
@@ -959,11 +959,7 @@ sub queue_in
 	    next QUEUE unless $r eq $rcptkey;
 
 	    if ($t eq 'Mail::Message') {
-		use FileHandle;
-		my ($rh, $wh) = FileHandle::pipe;
-		$q->print($wh);
-		$msg->attach(Type => 'message/rfc822',
-			     FH   => $rh);
+		$curproc->_append_rfc822_message($q, $msg);
 	    }
 	    else {
 		unless ($t eq 'text') {
@@ -973,7 +969,8 @@ sub queue_in
 				 Disposition => $q->{ disposition });
 		}
 		else {
-		    Log("queue_in: unknown typ $t");
+		    # Log("queue_in: type=<$t> aggregated") if $t eq 'text';
+		    Log("queue_in: unknown type=<$t>") unless $t eq 'text';
 		}
 	    }
 	}
@@ -993,11 +990,7 @@ sub queue_in
 	    next QUEUE unless $r eq $rcptkey;
 
 	    if ($t eq 'Mail::Message') {
-		use FileHandle;
-		my ($rh, $wh) = FileHandle::pipe;
-		$q->print($wh);
-		$msg->attach(Type => 'message/rfc822',
-			     FH   => $rh);
+		$curproc->_append_rfc822_message($q, $msg);
 	    }
 	    else {
 		if ($t eq 'text') {
@@ -1046,6 +1039,65 @@ sub queue_in
     else {
 	return undef;
     }
+}
+
+
+sub _append_rfc822_message
+{
+    my ($curproc, $msg_in, $msg_out) = @_;
+    my $tmpfile = $curproc->temp_file_path();
+
+    my $wh = new FileHandle "> $tmpfile";
+    $msg_in->print($wh);
+    $wh->close;
+
+    my $rh = new FileHandle $tmpfile;
+    $msg_out->attach(Type     => 'message/rfc822',
+		     Path     => $tmpfile,
+		     Filename => "original_message",
+		     );
+    $rh->close;
+
+    $curproc->add_into_clean_up_queue( $tmpfile );
+}
+
+
+sub add_into_clean_up_queue
+{
+    my ($curproc, $file) = @_;
+    my $queue = $curproc->{ __clean_up_tmpfiles };
+
+    if (defined $queue) {
+	push(@$queue, $file);
+    }
+    else {
+	$curproc->{ __clean_up_tmpfiles } = [ $file ];
+    }
+}
+
+
+sub clean_up_tmpfiles
+{
+    my ($curproc) = @_;
+    my $queue = $curproc->{ __clean_up_tmpfiles };
+
+    if (defined $queue) {
+	for my $q (@$queue) {
+	    Log("unlink $q");
+	    unlink $q;
+	}
+    }
+}
+
+
+sub temp_file_path
+{
+    my ($curproc) = @_;
+    my $config  = $curproc->{ config };
+    my $tmp_dir = $config->{ tmp_dir };
+
+    use File::Spec;
+    return File::Spec->catfile( $tmp_dir, "tmp.$$.". time );
 }
 
 
