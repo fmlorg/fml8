@@ -1,5 +1,5 @@
 <!--
-	$FML: commands.sgml,v 1.7 2001/09/17 13:11:51 fukachan Exp $
+	$FML: chapter.sgml,v 1.1.1.1 2001/10/12 11:00:20 fukachan Exp $
 -->
 
 <chapter id="fml.command.op">
@@ -47,7 +47,7 @@ FML::Command::User::コマンド.pm
 </sect1>
 
 
-&command.internal;
+&sect.command.internal;
 
 
 <sect1 id="fml.command.hack.example0">
