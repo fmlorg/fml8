@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: list.pm,v 1.17 2003/09/27 03:00:16 fukachan Exp $
+# $FML: list.pm,v 1.18 2003/11/23 03:54:45 fukachan Exp $
 #
 
 package FML::Command::Admin::list;
@@ -79,20 +79,19 @@ sub _show_list
 {
     my ($self, $curproc, $command_args, $options) = @_;
     my $config  = $curproc->config();
-    my $maplist = undef;
+    my $maplist = $config->get_as_array_ref( 'recipient_maps' ); # default
 
+    # XXX first match is ok ?
+  ARGV:
     for my $option (@$options) {
-	if ($option =~ /^recipient|active/i) {
-	    $maplist = $config->get_as_array_ref( 'recipient_maps' );
-	}
-	elsif ($option =~ /^member/i) {
-	    $maplist = $config->get_as_array_ref( 'member_maps' );
-	}
-	elsif ($option =~ /^adminmember|^admin_member/i) {
-	    $maplist = $config->get_as_array_ref( 'admin_member_maps' );
-	}
-	else {
-	    $curproc->logwarn("list: unknown type $option");
+	my $list = $self->_gen_key_list($option);
+
+      KEY:
+	for my $key (@$list) {
+	    if (defined $config->{ $key } && $config->{ $key }) {
+		$maplist = $config->get_as_array_ref( $key );
+		last ARGV;
+	    }
 	}
     }
 
@@ -111,11 +110,30 @@ sub _show_list
     eval q{
 	use FML::User::Control;
 	my $obj = new FML::User::Control;
-	$obj->userlist($curproc, $command_args, $uc_args);
+	$obj->print_userlist($curproc, $command_args, $uc_args);
     };
     if ($r = $@) {
 	croak($r);
     }
+}
+
+
+# Descriptions: generate keyword list
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub _gen_key_list
+{
+    my ($self, $key) = @_;
+    my (@list) = (sprintf("%s_maps", $key),
+		  sprintf("primary_%s_map", $key),
+		  sprintf("fml_%s_maps", $key));
+
+    if ($key =~ /maps$/ || $key =~ /^primary_\S+_map$/) {
+	unshift(@list, $key);
+    }
+
+    return \@list;
 }
 
 
