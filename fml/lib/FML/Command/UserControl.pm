@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.25 2003/02/09 12:31:41 fukachan Exp $
+# $FML: UserControl.pm,v 1.26 2003/02/13 14:06:12 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -13,6 +13,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use File::Spec;
 use FML::Credential;
+use FML::Restriction::Base;
 use FML::Log qw(Log LogWarn LogError);
 use IO::Adapter;
 
