@@ -30,12 +30,6 @@ admin {
    }
 }
 
-admin_command {
-
-   admin_command { 
-   }
-}
-
 article {
 
    article_delivery { 
@@ -105,19 +99,15 @@ cgi {
 
    cgi_* {
           $cgi_base_dir
-    ?     $cgi_charset
+    ?     $cgi_charset_en
+    ?     $cgi_charset_ja
+    ?     $cgi_default_charset
+    ?     $cgi_default_language
     ?     $cgi_language_list
     ?     $cgi_main_menu_color
           $cgi_menu_default_map
     ?     $cgi_menu_map_list
     ?     $cgi_navigation_bar_color
-   }
-}
-
-chaddr_command {
-
-   chaddr_command { 
-          $chaddr_command_auth_type
    }
 }
 
@@ -158,6 +148,19 @@ command {
    }
 }
 
+admin_command {
+
+   admin_command { 
+   }
+}
+
+chaddr_command {
+
+   chaddr_command { 
+          $chaddr_command_auth_type
+   }
+}
+
 confirm_command {
 
    confirm_command { 
@@ -165,17 +168,60 @@ confirm_command {
    }
 }
 
+get_command {
+
+   get_command { 
+          $get_command_request_limit
+   }
+}
+
+newml_command {
+
+   newml_command { 
+          $newml_command_init_private_dirs
+          $newml_command_init_public_dirs
+    ?     $newml_command_mta_config_list
+          $newml_command_postfix_template_files
+          $newml_command_qmail_template_files
+          $newml_command_template_files
+   }
+}
+
+privileged_command {
+
+   privileged_command { 
+    ?     $privileged_command_prefix
+   }
+}
+
+rmml_command {
+
+   rmml_command { 
+    ?     $rmml_command_mta_config_list
+   }
+}
+
+subscribe_command {
+
+   subscribe_command { 
+          $subscribe_command_auth_type
+   }
+}
+
+unsubscribe_command {
+
+   unsubscribe_command { 
+          $unsubscribe_command_auth_type
+   }
+}
+
 default {
 
    default_* {
-    ?     $default_cgi_charset
-    ?     $default_cgi_language
-    ?     $default_charset
     ?     $default_directory_mode
     ?     $default_file_mode
           $default_mail_body_size_limit
           $default_mail_header_size_limit
-    ?     $default_message_subject
     ?     $default_umask
    }
 }
@@ -223,6 +269,8 @@ domain {
    domain_* {
           $domain_config_base_dir
           $domain_exim_config_dir
+          $domain_local_dir
+          $domain_local_tmp_dir
           $domain_mail_config_dir
           $domain_postfix_config_dir
           $domain_procmail_config_dir
@@ -242,13 +290,6 @@ error {
     ?     $error_analyzer_function_list
           $error_analyzer_simple_count_limit
           $use_error_analyzer_program
-   }
-}
-
-get_command {
-
-   get_command { 
-          $get_command_request_limit
    }
 }
 
@@ -328,6 +369,7 @@ lock {
 log {
 
    log { 
+          $domain_local_log_file
           $log_dir
           $log_file
           $log_format_type
@@ -363,9 +405,11 @@ member {
    }
 }
 
-message_template {
+message {
 
-   message_template_* {
+   message_* {
+    ?     $message_default_subject
+          $message_id_cache_dir
           $message_template_dir
    }
 }
@@ -390,18 +434,6 @@ moderator {
    moderator_recipient { 
           $moderator_recipient_maps
           $primary_moderator_recipient_map
-   }
-}
-
-newml_command {
-
-   newml_command { 
-          $newml_command_init_private_dirs
-          $newml_command_init_public_dirs
-    ?     $newml_command_mta_config_list
-          $newml_command_postfix_template_files
-          $newml_command_qmail_template_files
-          $newml_command_template_files
    }
 }
 
@@ -469,18 +501,19 @@ path {
    }
 }
 
+post {
+
+   post_* {
+          $post_restrictions
+          $post_restrictions_reject_notice_data_type
+   }
+}
+
 postfix {
 
    postfix_* {
     ?     $postfix_verp_delimiters
           $postfix_virtual_map_file
-   }
-}
-
-privileged_command {
-
-   privileged_command { 
-    ?     $privileged_command_prefix
    }
 }
 
@@ -509,13 +542,13 @@ recipient {
    }
 }
 
-report_mail {
-}
+reply_message {
 
-rmml_command {
-
-   rmml_command { 
-    ?     $rmml_command_mta_config_list
+   reply_message_* {
+    ?     $reply_message_charset_en
+    ?     $reply_message_charset_ja
+    ?     $reply_message_default_charset
+    ?     $reply_message_subject
    }
 }
 
@@ -560,17 +593,20 @@ sql {
    }
 }
 
-subscribe_command {
-
-   subscribe_command { 
-          $subscribe_command_auth_type
-   }
-}
-
 system {
 
    system_* {
     ?     $system_accounts
+   }
+}
+
+template_file {
+
+   template_file_* {
+    ?     $template_file_charset_en
+    ?     $template_file_charset_ja
+    ?     $template_file_charset_list
+    ?     $template_file_default_charset
    }
 }
 
@@ -597,13 +633,6 @@ thread {
    }
 }
 
-unsubscribe_command {
-
-   unsubscribe_command { 
-          $unsubscribe_command_auth_type
-   }
-}
-
 x {
 
    x_* {
@@ -626,7 +655,6 @@ _dir$ {
           $listinfo_base_dir
           $listinfo_dir
           $listinfo_template_dir
-          $message_id_cache_dir
           $ml_admin_cgi_base_dir
           $shared_db_dir
           $tmp_dir
@@ -643,13 +671,8 @@ _dir$ {
     ?     $commands_for_stranger
     ?     $commands_for_user
     ?     $list_addresses
-          $post_restrictions
-          $post_restrictions_reject_notice_data_type
-    ?     $reply_message_charset
-    ?     $reply_message_subject
     ?     $summary_format_address_length
     ?     $summary_format_style
-    ?     $template_file_charset
     ?     $unsafe_header_fields
 </screen>
 </para>

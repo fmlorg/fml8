@@ -200,11 +200,38 @@ $fml_owner_home_dir/public_html/cgi-bin/fml/$ml_domain
 </row>
 <row>
 <entry>
-cgi_charset</entry>
+cgi_charset_en</entry>
 <entry>
  CGI の表示の CHARSET</entry>
 <entry>
-$default_cgi_charset
+us-ascii
+   </entry>
+</row>
+<row>
+<entry>
+cgi_charset_ja</entry>
+<entry>
+ CGI の表示の CHARSET</entry>
+<entry>
+euc-jp
+   </entry>
+</row>
+<row>
+<entry>
+cgi_default_charset</entry>
+<entry>
+ CGI の表示の CHARSET</entry>
+<entry>
+$cgi_charset_ja
+   </entry>
+</row>
+<row>
+<entry>
+cgi_default_language</entry>
+<entry>
+ CGI の言語モード (!= charset) </entry>
+<entry>
+japanese
    </entry>
 </row>
 <row>
@@ -395,24 +422,6 @@ $var_dir/db
 </row>
 <row>
 <entry>
-default_cgi_charset</entry>
-<entry>
- デフォルトの CHARSET</entry>
-<entry>
-euc-jp
-   </entry>
-</row>
-<row>
-<entry>
-default_cgi_language</entry>
-<entry>
- CGI の言語モード (!= charset) </entry>
-<entry>
-japanese
-   </entry>
-</row>
-<row>
-<entry>
 default_directory_mode</entry>
 <entry>
  ディレクトリを作成する時のデフォルトモード</entry>
@@ -500,6 +509,33 @@ domain_exim_config_dir</entry>
  exim 用に教えるための設定ファイルを置くディレクトリ</entry>
 <entry>
 $domain_config_base_dir/exim
+   </entry>
+</row>
+<row>
+<entry>
+domain_local_dir</entry>
+<entry>
+ domian local なディレクトリ。</entry>
+<entry>
+$ml_home_prefix
+   </entry>
+</row>
+<row>
+<entry>
+domain_local_log_file</entry>
+<entry>
+ ドメイン固有のログファイル</entry>
+<entry>
+$domain_local_dir/@log@
+   </entry>
+</row>
+<row>
+<entry>
+domain_local_tmp_dir</entry>
+<entry>
+ domian local な tmp ディレクトリ。</entry>
+<entry>
+$ml_home_prefix/@tmp@
    </entry>
 </row>
 <row>
@@ -810,7 +846,7 @@ listinfo_template_dir</entry>
 <entry>
  listinfo template</entry>
 <entry>
-$fml_share_dir/listinfo/$template_file_charset
+$fml_share_dir/listinfo/$template_file_default_charset
    </entry>
 </row>
 <row>
@@ -853,7 +889,7 @@ $var_dir/log
 <entry>
 log_file</entry>
 <entry>
- ログファイル</entry>
+ ML 固有のログファイル</entry>
 <entry>
 $ml_home_dir/log
    </entry>
