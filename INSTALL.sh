@@ -50,30 +50,35 @@ if [ ! -f $config_dir/main.cf ];then
 		fml/etc/main.cf > $config_dir/main.cf
 fi
 
-cp fml/etc/default_config.cf $config_dir/defaults/$version
+echo update $config_dir/defaults/$version/
+cp fml/etc/default_config.cf $config_dir/defaults/$version/
 
-echo install libraries to $lib_dir/$version/
-cp -pr fml/lib/*	$lib_dir/$version
-cp -pr cpan/lib/*	$lib_dir/$version
+echo update $lib_dir/$version/
+cp -pr fml/lib/*	$lib_dir/$version/
+cp -pr cpan/lib/*	$lib_dir/$version/
 
-echo install executables to $libexec_dir/$version/
-cp -pr fml/libexec/*	$libexec_dir/$version
+echo update $libexec_dir/$version/
+cp -pr fml/libexec/*	$libexec_dir/$version/
 
 if [ ! -f $libexec_dir/fmlwrapper ];then
 
+   echo install libexec/fmlwrapper
    cp -pr fml/libexec/fmlwrapper    $libexec_dir/
+
+   echo install libexec/Standalone.pm
    cp -pr fml/libexec/Standalone.pm $libexec_dir/
+
    (
 	cd $libexec_dir/
 
+	echo -n "   link fmlwrapper to: "
 	for x in fml.pl distribute command fmlserv mead
 	do
-		rm $x
-		echo link $x
-		ln -s fmlwrapper $x
+		rm -f $x
+		ln -s fmlwrapper $x && echo -n "$x "
 	done
+	echo ""
    )
 fi
-
 
 exit 0
