@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.42 2002/06/22 14:32:00 fukachan Exp $
+# $FML: newml.pm,v 1.43 2002/06/23 04:33:48 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -216,6 +216,9 @@ sub _update_aliases
 	    unless ($curproc->is_default_domain($ml_domain)) {
 		# we need to use the original $params here
 		$self->_install_postfix_virtual_map($curproc, $params);
+
+		# update templates for qmail/control/virtualdomains
+		$self->_install_qmail_virtual_map($curproc, $params);
 	    }
 
 	    use FML::MTAControl;
@@ -263,6 +266,46 @@ sub _install_postfix_virtual_map
     append($dst, $virtual);
     unlink $dst;
     system "$postmap $virtual";
+}
+
+
+# Descriptions: prepare a template for qmail/control/virtualdomains
+#               for example: rule of a virtual domain for "nuinui.net"
+#                            nuinui.net:fml-.nuinui.net
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params)
+#         bugs: we cannot update /var/qmail/control/virtualdomains
+#               since it needs root priviledge.
+#               So, we can only update our templates for qmail. 
+# Side Effects: update template not /var/qmail/control/virtualdomains
+# Return Value: none
+sub _install_qmail_virtual_map
+{
+    my ($self, $curproc, $params) = @_;
+    my $fmlowner     = $curproc->fml_owner();
+    my $config       = $curproc->{ config };
+    my $ml_domain    = $config->{ ml_domain };
+    my $virtual      = $config->{ qmail_virtual_map_file };
+
+    # 1. check the current temlate file firstly
+    my $found = 0;
+    my $fh    = new FileHandle $virtual;
+    if (defined $fh) {
+	while (<$fh>) {
+	    $found = 1 if /^$ml_domain:/i;
+	}
+	$fh->close();
+    }
+
+    # 2. if not found
+    unless ($found) {
+	print STDERR "updating $virtual\n";
+
+	my $fh = new FileHandle ">> $virtual";
+	if (defined $fh) {
+	    print $fh "$ml_domain:$fmlowner-$ml_domain\n";
+	    $fh->close();
+	}
+    }
 }
 
 
