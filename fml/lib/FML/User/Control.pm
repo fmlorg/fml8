@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.6 2003/11/27 04:25:07 fukachan Exp $
+# $FML: Control.pm,v 1.7 2003/12/06 04:48:23 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -42,7 +42,7 @@ FML::User::Control - utility functions to control user list.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: standard constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -55,10 +55,10 @@ sub new
 }
 
 
-# Descriptions: add user
+# Descriptions: add user.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
-# Side Effects: update maps
+# Side Effects: update maps, croak() if crical error.
 # Return Value: none
 sub useradd
 {
@@ -81,6 +81,7 @@ sub useradd
 
     my $ml_home_dir = $config->{ ml_home_dir };
 
+    # o.k. here we go.
     $curproc->lock($lock_channel);
 
   MAP:
@@ -143,15 +144,15 @@ sub useradd
 
 	eval q{
 	    use FML::User::Info;
-	    my $info = new FML::User::Info $curproc;
-	    $info->import_from_mail_header($curproc, $info_args);
+	    my $user_info = new FML::User::Info $curproc;
+	    $user_info->import_from_mail_header($curproc, $info_args);
 	};
 	$curproc->logerror($@) if $@;
     }
 }
 
 
-# Descriptions: remove user
+# Descriptions: remove user.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
 # Side Effects: update maps
@@ -238,7 +239,7 @@ sub userdel
 }
 
 
-# Descriptions: dispatch chaddr operation
+# Descriptions: dispatch chaddr operation.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
 # Side Effects: none
@@ -267,7 +268,7 @@ sub user_chaddr
 }
 
 
-# Descriptions: chaaddr
+# Descriptions: real chaddr routine.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
 #               OBJ($cred) STR($map)
@@ -291,6 +292,10 @@ sub _try_chaddr_in_map
     if ($cred->has_address_in_map($map, $config, $old_address)) {
 	$is_old_address_ok  = 1;
 	$old_address_in_map = $cred->matched_address();
+    }
+    else {
+	# XXX-TODO: error handing ?
+	$curproc->logerror("$old_address not found in map=$map");
     }
 
     # 2. new address NOT EXISTS
@@ -400,7 +405,7 @@ sub print_userlist
 }
 
 
-# Descriptions: return address list as ARRAY_REF
+# Descriptions: return address list as ARRAY_REF.
 #    Arguments: OBJ($self) OBJ($curproc) ARRAY_REF($list)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -408,7 +413,7 @@ sub get_user_list
 {
     my ($self, $curproc, $list) = @_;
     my $config = $curproc->config();
-    my $r = [];
+    my $r      = [];
 
     $curproc->lock($lock_channel);
 
@@ -440,7 +445,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003 Ken'ichi Fukamachi
+Copyright (C) 2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
