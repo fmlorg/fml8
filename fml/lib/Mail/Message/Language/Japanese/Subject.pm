@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.3 2001/12/16 14:06:41 fukachan Exp $
+# $FML: Subject.pm,v 1.4 2001/12/22 09:21:20 fukachan Exp $
 #
 
 
@@ -64,6 +64,10 @@ For example, it is like this:
 =cut
 
 
+# Descriptions: looks reply message ?
+#    Arguments: OBJ($self) STR($x)
+# Side Effects: none
+# Return Value: 1 or 0
 sub is_reply
 {
     my ($self, $x) = @_;
@@ -96,6 +100,12 @@ within C<Subject:>.
 #   run-hooks $CUT_OFF_HOOK(ユーザ定義HOOK)
 #}
 # レレレ対策
+
+
+# Descriptions: remove Re:
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: STR
 sub cut_off_reply_tag
 {
     my ($subject) = @_;

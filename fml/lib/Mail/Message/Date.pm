@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.6 2001/12/22 09:21:19 fukachan Exp $
+# $FML: Date.pm,v 1.7 2001/12/24 02:26:34 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -60,14 +60,22 @@ use strict;
 use Carp;
 
 
+# Descriptions: constructor.
+#    Arguments: OBJ($self) NUM($time)
+# Side Effects: create date object by _date()
+# Return Value: OBJ
 sub new
 {
-    my ($class, $time) = @_;
+    my ($self, $time) = @_;
     my $type = _date($time);
-    return bless $type, $class;
+    return bless $type, $self;
 }
 
 
+# Descriptions: prepare date by several time format
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create object
+# Return Value: HASH_REF
 sub _date
 {
     my ($time) = @_;
@@ -111,6 +119,10 @@ sub _date
 }
 
 
+# Descriptions: return logfile style
+#    Arguments: OBJ($self) NUM($time)
+# Side Effects: none
+# Return Value: STR
 sub log_file_style
 {
     my ($self, $time) = @_;
@@ -119,6 +131,10 @@ sub log_file_style
 }
 
 
+# Descriptions: return Date: style date
+#    Arguments: OBJ($self) NUM($time)
+# Side Effects: none
+# Return Value: STR
 sub mail_header_style
 {
     my ($self, $time) = @_;
@@ -127,6 +143,10 @@ sub mail_header_style
 }
 
 
+# Descriptions: return YYYYMMDD style date
+#    Arguments: OBJ($self) NUM($time)
+# Side Effects: none
+# Return Value: STR
 sub YYYYMMDD
 {
     my ($self, $time) = @_;
@@ -135,6 +155,10 @@ sub YYYYMMDD
 }
 
 
+# Descriptions: return e.g. 1999/09/13 style 
+#    Arguments: OBJ($self) NUM($time)
+# Side Effects: none
+# Return Value: STR
 sub YYYYxMMxDD
 {
     my ($self, $time, $sep) = @_;
@@ -145,6 +169,10 @@ sub YYYYxMMxDD
 }
 
 
+# Descriptions: return YYYYMMDD.HHMM
+#    Arguments: OBJ($self) NUM($time)
+# Side Effects: none
+# Return Value: STR
 sub current_time
 {
     my ($self, $time) = @_;
@@ -153,6 +181,10 @@ sub current_time
 }
 
 
+# Descriptions: return YYYYMMDD.HHMMSS
+#    Arguments: OBJ($self) NUM($time)
+# Side Effects: none
+# Return Value: STR
 sub precise_current_time
 {
     my ($self, $time) = @_;
@@ -160,13 +192,14 @@ sub precise_current_time
     $p->{'precise_current_time'};
 }
 
+
 # Descriptions: return Star Trek stardate()
 #                  stardate(tm, issue, integer, fraction)
 #                           unsigned long tm;
 #                           long *issue, *integer, *fraction;
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: stardate
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: STR(stardate)
 sub stardate
 {
     my ($self, $args) = @_;
@@ -238,6 +271,10 @@ sub _log
 }
 
 
+# Descriptions: convert Date: string to UNIXTIME (sec)
+#    Arguments: STR($in)
+# Side Effects: none
+# Return Value: NUM(unix time)
 sub date_to_unixtime
 {
     my ($in) = @_;
