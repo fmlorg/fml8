@@ -38,13 +38,7 @@
    <TR>
 	<TD> FML::Process::Kernel
 	<TD> 対応なし
-	<TD> プログラムに対応するモジュールのベースクラス。
-		各モジュールで別途定義されていないなら
-		FML::Process::Kernel のメソッドが使われる。
-		ここにあるメソッドは
-		FML::Process::FLow::ProcessStart() から
-		呼び出される。
-
+	<TD> 以下のモジュール(後述)のベースクラス。
 		<BR>
 		FML::Process::CGI
 		FML::Process::Command
@@ -52,7 +46,12 @@
 		FML::Process::Distribute
 		FML::Process::DocViewer
 		FML::Process::TicketSystem
-
+		<BR>
+		各モジュールで別途定義されていないなら
+		FML::Process::Kernel のメソッドが使われる。
+		ここにあるメソッドは
+		FML::Process::FLow::ProcessStart() から
+		呼び出される。
 
    <TR>
 	<TD> FML::Process::CGI
@@ -100,7 +99,8 @@
 	<TD> チケットシステムの CUI インターフェイス。
 		GUI はコアな部分は同じでも
 		 CGI.pm を使うなどいろいろと異なる点が多いので
-		FML::CGI::TicketSystem 経由で呼び出す。
+		fmlticket.cgi の方は
+		FML::CGI::TicketSystem 経由で呼び出していることに注意。
 
 </TABLE>
 

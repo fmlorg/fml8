@@ -13,10 +13,28 @@ fml のブートしていく様
 
 <P>fml のブートしていく様について
 
+<PRE>
+イメージ
+
+libexec/loader -> FML::Process::Switch -> 
+                  FML::Process::Flow   ->
+                  FML::Process::それぞれのプログラムのモジュール
+</PRE>
+=&gt;
+<A HREF="../lib/FML/Process/programs.ja.html">
+FML::Process::それぞれのプログラムのモジュールについて
+</A>
+
+<HR>
+ブートしていく順番
+
 <UL>
    <LI> libexec/loader (wrapper)
 	<BR>
 	Bootstrap() を実行する。
+	fml.pl などはこの loader へのシンボリックリンクです。
+	/usr/local/libexec/fml/ を参照して下さい。
+
    <UL>
 	<LI>   /etc/fml/main.cf を読み込む。
 		読み込むと fml のバージョンが分かる。
