@@ -1,6 +1,49 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/11/24
+
+   FML::Process::Switch 
+	ensure valid exit code
+
+2003/11/23
+
+   FML::Confirm 
+   FML::Command::User::{chaddr,confirm,off,on,subscribe,unsubscribe}
+   FML::Cache::Journal 
+   FML::Data::Deadline 
+	separete database part in FML::Confirm to FML::Cache::Journal
+	which can be shared between other modules.
+	
+	change FML::Confirm::new() to take $curproc.
+	
+   FML::Command::Admin::{addadmin,addmoderator,chaddr,deladmin,
+                         delmoderator,digest,list,off,on,
+                         subscribe,unsubscribe}
+   FML::Process::Utils 
+	create FML::User::* class to manipulate user database.
+	1. move FML::Command::UserControl to FML::User::Control class.
+	2. implement FML::User::DB (committed later).
+	
+   variables
+	define the folloging variables:
+	+ $primary_user_db_gecos_map
+	+ $primary_user_db_subscribe_date_map
+	+ $user_db_gecos_maps
+	+ $user_db_subscribe_date_maps
+	
+   Mail::Message::ToHTML 
+	try to mask raw addresses in signature.
+	rename::_who_of_address() -> _address_to_gecos()
+	
+   FML::User::DB 
+	avoid duplication.
+	
+   FML::User::Control 
+   FML::User::Info 
+	run FML::User::Infoal->import_from_mail_header() to save user info
+	included in the header for further use.
+
 2003/11/18
 
    FML::Confirm 
@@ -5680,4 +5723,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.172 2003/11/16 22:23:39 fukachan Exp $
+$FML: CHANGES.txt,v 1.173 2003/11/21 11:39:27 fukachan Exp $
