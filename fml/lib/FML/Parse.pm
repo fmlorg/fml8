@@ -21,7 +21,7 @@ use FML::Log qw(Log);
 
 =head1 NAME
 
-FML::Parse - parse the incoming message/mail to the header and body.
+FML::Parse - parse the incoming message
 
 =head1 SYNOPSIS
 
@@ -29,12 +29,15 @@ FML::Parse - parse the incoming message/mail to the header and body.
 
 =head1 DESCRIPTION
 
-FML::Parse parses the incoming mail. The target to parse is given the
-argument os new() constructor.
+FML::Parse parses the incoming message. 
+C<new()> analyses the data injected from STDIN channel and 
+split it to a set of mail header and body.
+C<new()> returns a set of hash references.
 
-$r_header is the reference to the header object, which is returned by
-Mail::Header class. $r_body is reference to the scalar mail body
-variable, which is alloced in FML::Parse name space.
+C<$r_header> is the reference to a header object, which is
+C<Mail::Header> object. 
+C<$r_body> is reference to the scalar mail body variable, which is
+C<MailingList::Messages> object.
 
 =head1 METHODS
 

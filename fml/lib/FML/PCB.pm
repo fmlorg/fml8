@@ -26,7 +26,7 @@ FML::PCB -- manipulate Process Control Block
 
 =head2 DATA STRUCTURE
 
-C<$CurProc->{ pcb }> area holds the CURrent PROCess information.
+C<$CurProc>->C<{ pcb }> area holds the CURrent PROCess information.
 The hash holds several references to other data structures,
 which are mainly hashes.
 
