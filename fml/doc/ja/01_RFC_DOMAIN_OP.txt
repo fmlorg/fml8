@@ -15,16 +15,38 @@
 		この構成がminimumと言えるか?がこれを実装してみると分かる。
 
 	欠点:	ツールを作る時(最初)だけは気合いが要るねぇ;-)
+
+
+[重要な変更]
+
+   1. /etc/fml を group writable にしたい(group は fml)。
+
+	root でオペレーションすればいいんだけど、でも、CGIやCUIなどツー
+	ル類のことをかんがえると group writable にしておいたほうが楽。
 		
+   2. ml_home_prefix のディレクトリ群を入れ子にしてはいけない
+
 
 [使い方]
 
-   0. ml_home_prefix のディレクトリ群は入れ子にしてはいけない
+   0. ml_home_prefix のディレクトリ群を入れ子にしてはいけない
 	入れ子にしてしまうとchange*コマンドが使えない
 
 	例: 禁止
 		/var/spool/ml			(fml.org)
 		/var/spool/ml/nuinui.net	(nuinui.net)	
+
+	例: だから、
+		/var/spool/ml/domain_01/
+		/var/spool/ml/domain_02/
+	    とか
+		/var/spool/ml_virtual/domain_01/
+		/var/spool/ml_virtual/domain_02/
+	    みたいな使い方をして欲しい。
+
+	また、ツールのことを考えると /var/spool/ml_virtual
+	(ml_home_prefix の更に親)はユーザ fml グループ fml にしておく
+	方が良いとおもう（前述の[重要な変更]の部分にならっている）。
 
    1. デフォルトドメインしか使わない人
 
@@ -268,4 +290,4 @@ Q: IPアドレスの変更は?
 	fml-devel の 2003/10末、600 番台あたりの議論を読もう。
 
 ------------------------------------------------
-$FML: 01_RFC_DOMAIN_OP.txt,v 1.3 2003/10/28 04:38:53 fukachan Exp $
+$FML: 01_RFC_DOMAIN_OP.txt,v 1.4 2003/11/15 02:49:30 fukachan Exp $
