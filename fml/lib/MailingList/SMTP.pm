@@ -390,7 +390,7 @@ sub deliver
 	# try to open $map
 	eval q{
 	    use IO::MapAdapter;
-	    my $obj = new IO::MapAdapter $map;
+	    my $obj = new IO::MapAdapter ($map, $args->{ map_params });
 	    if (defined $obj) { 
 		$obj->open || croak("cannot open $map");
 	    }

@@ -23,10 +23,24 @@ IO::MapAdapter - adapter for several IO interfaces
 =head1 SYNOPSIS
 
     use IO::MapAdapter;
-    $obj = new IO::MapAdapter $map;
+    $obj = new IO::MapAdapter ($map, $map_params);
     $obj->open || croak("cannot open $map");
     while ($x = $obj->getline) { ... }
     $obj->close;
+
+where C<$map_params> is map specific parametes used for C<RDBMS>.
+For example, C<$map_params> is:
+
+    $map_params = {
+	'mysql:toymodel' => {
+	    getline        => "select ... ",
+	    get_next_value => "select ... ",
+	    add            => "insert ... ",
+	    delete         => "delete ... ",
+	    replace        => "set address = 'value' where ... ",
+	},
+    };
+
 
 =head1 DESCRIPTION
 
@@ -96,7 +110,7 @@ sub new
 {
     my ($self, $map, $args) = @_;
     my ($type) = ref($self) || $self;
-    my ($me)   = {};
+    my ($me)   = { _map => $map };
     my $pkg;
 
     if (ref($map) eq 'ARRAY') {
@@ -125,7 +139,7 @@ sub new
 	    $me->{_schema} = $2;
 	    $me->{_params} = $args;
 	    $me->{_type}   =~ tr/A-Z/a-z/; # lowercase the '_type' syntax
-	    $pkg           = 'IO::Adapter::RDBMS';
+	    $pkg           = 'IO::Adapter::MySQL';
 	}
 	elsif ($map =~ /(ldap):(\S+)/i) {
 	    $me->{_type}   = $1;
@@ -145,7 +159,7 @@ sub new
     @ISA      = ($pkg, @ORIG_ISA);
 
     eval qq{ require $pkg; $pkg->import();};
-    $pkg->configure($me) if $pkg->can('configure');
+    $pkg->configure($me, $args) if $pkg->can('configure');
     _error_reason($me, $@) if $@;
 
     return bless $me, $type;
@@ -184,7 +198,7 @@ sub open
 	$self->SUPER::open( { flag => $flag } );
     }
     elsif ($self->{'_type'} =~ /^(ldap|mysql|postgresql)$/o) {
-	return undef;
+	$self->SUPER::open( { flag => $flag } );
     }
     else {
 	$self->_error_reason("Error: type=$self->{_type} is unknown type.");

@@ -29,6 +29,17 @@ MailingList::Delivery - mail delivery system interface
     };
     if ($service->error) { Log($service->error); return;}
 
+
+    $map_params = {
+	'mysql:toymodel' => {
+	    getline        => "select ... ",
+	    get_next_value => "select ... ",
+	    add            => "insert ... ",
+	    delete         => "delete ... ",
+	    replace        => "set address = 'value' where ... ",
+	},
+    };
+
     $service->deliver(
                       {
                           smtp_servers    => '[::1]:25 127.0.0.1:25',
@@ -36,6 +47,7 @@ MailingList::Delivery - mail delivery system interface
                           smtp_sender     => 'rudo@nuinui.net',
                           recipient_maps  => $recipient_maps,
                           recipient_limit => 1000,
+			  map_params      => $map_params,
 
                           header          => $header_object,
                           body            => $body_object,

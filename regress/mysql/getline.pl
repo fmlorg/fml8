@@ -5,23 +5,32 @@
 
 use strict;
 use Carp;
-use IO::Adapter::MySQL;
+use IO::MapAdapter;
 
-my $obj = new IO::Adapter::MySQL {
-    sql_server        => 'localhost',
-    sql_user          => 'fukachan',
-    sql_user_password => 'uja',
-
-    database   => 'fml',
-    table      => 'ml',
-    schema     => 'toymodel',
-
-    ml_name    => 'elena',
+my $map = 'mysql:toymodel';
+my $q   = "select address from ml where ml='elena' and file='members'";
+my $map_params = {
+    $map => {
+	config => {
+	    sql_server    => 'localhost',
+	    user          => 'fukachan',
+	    user_password => 'uja',
+	    database      => 'fml',
+	    table         => 'ml',
+	},
+	query  => {
+	    getline        => $q,
+	    get_next_value => $q,
+	    add            => "insert into ml values ()",
+	},
+    },
 };
 
 
+my $obj = new IO::MapAdapter ($map, $map_params);
+
 if (defined $obj) {
-    if (defined $obj->open() ) {
+    if (defined $obj->open()) {
 	while ($_ = $obj->getline()) {
 	    print $_, "\n";
 	}
