@@ -1,0 +1,20 @@
+
+File::Spec 0.7 -- a module for portably manipulating file specifications
+
+	Copyright (c) 1998 Kenneth Albanowski. All rights reserved.
+	This program is free software; you can redistribute it and/or
+	modify it under the same terms as Perl itself.
+
+This module is designed for Perl 5.004 and earlier (Perl 5.005 and later
+include a version of File::Spec with the distribution, though this version
+could be more recent.)
+
+To install this module, please run:
+
+	perl Makefile.PL
+	make
+	make test
+	make install
+
+For more information on the module, please see the POD documentation
+inside Spec.pm. ("perldoc File::Spec", once it is installed.)
