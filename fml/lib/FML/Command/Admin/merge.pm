@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.8 2004/01/01 07:29:27 fukachan Exp $
+# $FML: merge.pm,v 1.1 2004/03/16 13:07:33 fukachan Exp $
 #
 
 package FML::Command::Admin::merge;
@@ -109,7 +109,7 @@ sub process
     $merge->backup_old_config_files();
 
     # 2. fix include*.
-    $merge->disable_include_files();
+    $merge->disable_old_include_files();
 
     # 3. run newml --force.
     use FML::Command::Admin::newml;
