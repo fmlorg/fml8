@@ -1,6 +1,64 @@
 		CHANGES
 		Last Modified: $Date$
 
+2001/10/29
+
+   Mail::Message 
+	_get_mime_header() checks offset boundary
+	return default pair if overrun.
+	
+   Mail::HTML::Lite 
+	nuke $ENV{DEBUG}, check input data more
+	
+	rename key:
+	prev_thread -> prev_thread_id
+	next_thread -> next_thread_id
+	
+	count up $self->{ _num_attachment } for child process
+	attachment file name $id.$count.html
+	parent passes the id to child (processing attachment)
+	
+	ignore type if type is ::^multipart::
+	
+	check $idp pattern
+
+2001/10/28
+
+   Mail::HTML::Lite 
+	change method to speculate thread link
+
+	rename functions
+	implement _create_temporary_filename()
+	reorder $type check
+	
+	consider case of text::* with encoded content
+	save content to file once and rewrite it by _rewrite_html_file()
+	
+	consider encoding style of quoted-printable, 7bit also
+	
+	_format_safe_header() and print it in raw mode to enable
+	<SPAN> tag use. 
+
+	define _sprintf_safe_str() and  __sprintf_safe_str() for convenience
+	
+	define _separete_url() to help incomplete regexp of
+	HTML::FromText::text2html()
+
+2001/10/27
+
+   Mail::HTML::Lite 
+	use _PRINT_DEBUG(), define _print_safe_{str,buf}() to be easy for eyes
+	_print() -> _print_raw_str()
+	
+   Mail::Message 
+	oops, should be s::::::mi to trap encodinge
+
+   FML::Filter::BodyCheck 
+   Mail::Message 
+   Mail::Bounce::DSN 
+   Mail::HTML::Lite 
+	change method: data() -> data_in_body_part()
+
 2001/10/22
 
    FML::Ticket::System (clean up campaign)
@@ -689,4 +747,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.26 2001/10/22 12:42:56 fukachan Exp $
+$FML: CHANGES.txt,v 1.27 2001/10/23 07:34:15 fukachan Exp $
