@@ -1,5 +1,5 @@
 		CHANGES
-		$Date$
+		Last Modified: $Date$
 
 2001/10/21
 
@@ -663,4 +663,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.22 2001/10/20 17:04:17 fukachan Exp $
+$FML: CHANGES.txt,v 1.23 2001/10/21 07:51:19 fukachan Exp $
