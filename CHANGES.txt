@@ -1,6 +1,36 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/06/24
+
+   CGI の見栄えを大改良中
+
+   FML::Process::Utils 
+	get_ml_list()::check $ml_home_prefix, bug fix default domain handling
+	bug fix ml_home_prefix() args, more defined() checks
+	
+   FML::Config 
+   FML::Process::Kernel 
+   FML::Process::CGI::Kernel 
+	more defined() checks and sanity check if could
+	
+   FML::CGI::Admin::ML Menu.pm User.pm 
+   FML::Process::CGI::Kernel 
+	clean up menu, bug fix run_cgi_menu() args
+
+2002/06/23
+
+   バーチャルドメインのサポート
+	bug fix
+	postfix および qmail は makefml newml を実行するだけで
+	バーチャルドメインの設定まで全自動
+	＃ 最初の一回はちょっとだけ MTA の設定が必要だけどね
+
+   FML::Command::Admin::newml 
+	insert "$ml_domain $ml_domain" to the file "virtual" at the
+	first time since $ml_domain is one of $mydestination.
+	install a template for qmail::control::virtualdomains
+
 2002/06/22
 
    bug fix domain/virtual domain handling (specially in CGI) 
@@ -2610,4 +2640,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.81 2002/06/22 14:47:05 fukachan Exp $
+$FML: CHANGES.txt,v 1.82 2002/06/23 03:39:02 fukachan Exp $
