@@ -14,7 +14,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
 
 require Exporter;
-@ISA       = qw(Exporter);
+@ISA = qw(Exporter);
 
 
 sub new
@@ -28,9 +28,44 @@ sub new
 
 sub rewrite_subject_tag
 {
-    my ($header, $config, $args) = @_;
+    my ($self, $header, $config, $args) = @_;
 
+    # for example, ml_name = elena
+    my $ml_name = $config->{ ml_name };
+    my $tag     = $config->{ subject_tag };
+    my $subject = $header->get('subject');
+
+    # de-tag
+    my $retag   = _regexp_compile($tag);
+    $subject  =~ s/$retag//g;
+    $subject  =~ s/^\s*//;
+
+    # add the updated tag
+    $tag = sprintf($tag, $ml_name, $args->{ id });
+    my $new_subject = $tag." ".$subject;
+    $header->replace('subject', $new_subject);
 }
+
+
+# Descriptions: create regexp for a subject tag, for example
+#               "[%s %05d]" => "\[\S+ \d+\]"
+#    Arguments: a subject tag string
+# Side Effects: none
+# Return Value: a regexp for the given tag
+sub _regexp_compile
+{
+    my ($s) = @_;
+
+    $s =~ s@\%s@\\S+@g;
+    $s =~ s@\%0\d+d@\\d+@g;
+    $s =~ s@\%\d+d@\\d+@g;
+
+    $s =~ s/^(.)/\\$1/;
+    $s =~ s/(.)$/\\$1/;
+
+    $s;
+}
+
 
 
 =head1 NAME

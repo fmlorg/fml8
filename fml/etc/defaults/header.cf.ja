@@ -10,8 +10,12 @@ header_checks        =	validate_message_id
 			verify_unique_x_ml_info
 			verify_unique_list_post
 
-header_rewrite_rules =	add_software_info
+header_rewrite_rules =	rewrite_subject_tag
+			add_software_info
 			add_fml_ml_name
 			add_fml_article_id
 			add_x_sequence
 			add_rfc2369
+
+subject_tag_name	=	$ml_name
+subject_tag		=	[%s:%05d]

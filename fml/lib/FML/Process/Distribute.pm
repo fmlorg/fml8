@@ -118,6 +118,10 @@ sub _header_rewrite
     for my $rule (split(/\s+/, $rules)) {
 	Log("_header_rewrite( $rule )");
 
+	if ($rule eq 'rewrite_subject_tag') {
+	    $header->rewrite_subject_tag($config, { id => $id } );
+	}
+
 	if ($rule eq 'add_software_info') {
 	    $header->add_software_info($config, { id => $id } );
 	}

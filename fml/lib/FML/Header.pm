@@ -108,17 +108,15 @@ sub add_x_sequence
 }
 
 
-sub rewrite_subject
+sub rewrite_subject_tag
 {
     my ($header, $config, $args) = @_;
 
     my $pkg = "FML::Header::Subject";
-    require $pkg; $pkg->import();
+    eval qq{ require $pkg}; $pkg->import();
 
     # subject tag 
-    if ($config->has_attribute( header_rewrite_rules , add_subject_tag )) {
-	$pkg->rewrite_subject_tag($header, $config, $args);
-    }
+    $pkg->rewrite_subject_tag($header, $config, $args);
 }
 
 
