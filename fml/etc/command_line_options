@@ -1,5 +1,5 @@
 #
-# $FML: command_line_options,v 1.14 2004/03/23 04:20:45 fukachan Exp $
+# $FML: command_line_options,v 1.15 2004/03/23 06:34:14 fukachan Exp $
 #
 # map between programs and options
 #
@@ -26,7 +26,7 @@ fmlerror	debug! help! -o=s%
 fmlhtmlify	debug! help! -I=s -o=s%
 fmlspool	debug! help! -I=s convert! style=s srcdir=s -o=s%
 fmlthread	debug! help! article_id_max=i spool_dir=s base_url=s msg_base_url=s reverse! -f=s -c=s -o=s%
-makefml		debug! help! force! log-dup! log-computer-output! quiet! q! allow-send-message! send-to=s -c=s -o=s% -O=%s mode=s
+makefml		debug! help! force! log-dup! log-computer-output! quiet! q! allow-send-message! send-to=s -c=s -o=s% -O=s% mode=s
 
 # cgi-bin/
 config.cgi		
