@@ -962,6 +962,46 @@ log_format_type	=	process[pid]
 log_dir		=	$var_dir/log
 
 
+=head2 log rotation
+
+
+# Descriptions: rotate log files or not.
+#      History: no if $LOGFILE_NEWSYSLOG_LIMIT == 0, yes if > 0.
+#        Value: yes | no
+#     Examples: no
+use_log_rotate		=	no
+
+
+# Descriptions: log rotation policy. 
+#      History: none
+#        Value: size | interval
+#     Examples: size
+log_rotate_policy	=	size
+
+
+# Descriptions: rotate log if the size is over this size.
+#      History: $LOGFILE_NEWSYSLOG_LIMIT value.
+#        Value: NUM
+#     Examples: 300000 (300K bytes)
+log_rotate_size		=	300000
+
+
+# Descriptions: The interval field specifies the time separation
+#		between trimming of the logfile.
+#      History: none
+#        Value: NUM
+#     Examples: 86400 (1 day)
+log_rotate_interval	=	86400
+
+
+# Descriptions: number of archive files to be kept besides the log
+#               file itself.
+#      History: none
+#        Value: NUM
+#     Examples: 4
+log_rotate_num_backlog 	=	4
+
+
 =head2 charset
 
 # Descriptions:
