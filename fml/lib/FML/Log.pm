@@ -42,7 +42,7 @@ sub Log
     use FileHandle;
 
     # When the second argument is not defined, use the default log_file.
-    my $style  = $config->{ log_message_format } || 'traditional';
+    my $style  = $config->{ log_format_type }       || 'fml4_compatible';
     my $file   = $log_file || $config->{ log_file } || '/dev/stderr';
     my $fh     = new FileHandle ">> $file";
     my $sender = FML::Credential->sender;
