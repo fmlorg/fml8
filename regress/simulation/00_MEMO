@@ -10,6 +10,14 @@
 
 [TODO]	chraset と言語(japanese,english)との対応関係を一箇所にまとめて定義
 
+	check:
+		FML/Process/CGI/Kernel.pm
+		FML/Process/Utils.pm
+		FML/Header/Subject.pm
+		FML/Article/Summary.pm
+		FML/Filter/TextPlain.pm
+		Mail/Message/Encode.pm
+		Mail/Message/ToHTML.pm
 
 [TODO]	fml 4 の cf を解釈できる互換ルーチン
 
@@ -412,4 +420,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.89 2003/10/15 03:19:24 fukachan Exp $
+$FML: 00_MEMO,v 1.90 2003/10/17 06:20:13 fukachan Exp $
