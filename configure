@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# From configure.in Revision: 1.17 
+# From configure.in Revision: 1.18 
 
 # Guess values for system-dependent variables and create Makefiles.
 # Generated automatically using autoconf version 2.13 
@@ -14,7 +14,7 @@ ac_help=
 ac_default_prefix=/usr/local
 # Any additions from configure.in:
 ac_help="$ac_help
-  --with-warning          run perl as perl -w"
+  --without-warning       run perl as perl without -w"
 ac_help="$ac_help
   --with-fmlconfdir=DIR   use DIR instead of SYSCONFDIR/fml"
 ac_help="$ac_help
@@ -1461,8 +1461,7 @@ else
 fi
 
 
-
-use_warning=0
+use_warning=yes
 # Check whether --with-warning or --without-warning was given.
 if test "${with_warning+set}" = set; then
   withval="$with_warning"
