@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.80 2002/03/17 04:20:03 fukachan Exp $
+# $FML: Kernel.pm,v 1.81 2002/03/17 06:24:31 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -640,7 +640,7 @@ sub reply_message_nl
 {
     my ($curproc, $class, $default_msg, $args) = @_;
     my $config = $curproc->{ config };
-    my $dir    = $config->{ message_message_dir };
+    my $dir    = $config->{ message_template_dir };
     my $buf    = '';
 
     use File::Spec;
