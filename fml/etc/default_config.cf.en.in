@@ -293,24 +293,24 @@ address_compare_function_type = user_part_case_insensitive
 #			reject
 #		)
 #     Examples:
-post_restrictions	=	reject_system_special_accounts
-				permit_member_maps
-				reject
+article_post_restrictions	=	reject_system_special_accounts
+					permit_member_maps
+					reject
 
 # Descriptions: restrictions for command mail
 #      History: fml 4.0's PERMIT_COMMAND_FROM + REJECT_ADDR
 #        Value: list of attributes (
 #			permit_anyone
-#			permit_commands_for_stranger
+#			permit_anonymous_command_mail
 #			permit_member_maps
 #			reject_system_special_accounts
 #			reject
 #		)
 #     Examples:
-command_restrictions	=	reject_system_special_accounts
-				permit_commands_for_stranger
-				permit_member_maps
-				reject
+command_mail_restrictions	=	reject_system_special_accounts
+					permit_anonymous_command_mail
+					permit_member_maps
+					reject
 
 
 # Descriptions: restrictions for admin command mail
@@ -328,7 +328,7 @@ command_restrictions	=	reject_system_special_accounts
 #		2. password auth (members-admin + password)
 #			check_admin_member_password reject
 #
-admin_command_restrictions	=	reject_system_special_accounts
+admin_command_mail_restrictions	=	reject_system_special_accounts
 					check_admin_member_password
 					reject
 
@@ -671,10 +671,11 @@ outgoing_mail_cache_size	=	128
 
 
 # Descriptions:
-#      History:
+#      History: none
+#		use_digest_program (fml8 pre alpha)
 #        Value:
 #     Examples:
-use_digest_program	=	yes
+use_article_digest_function = ${use_digest_program:-yes}
 
 
 # Descriptions: file to store the last sequence to deliver
@@ -1017,10 +1018,10 @@ log_computer_output_engine	=	FML::Log::Print::Simple
 
 # Descriptions: use function of article delivery
 #      History: none
+#		use_distribute_program (fml8 pre alpha)
 #        Value: yes
 #     Examples: yes / no
-use_distribute_program	=	yes
-
+use_article_post_function = ${use_distribute_program:-yes}
 
 
 =head1	article handling
@@ -1044,7 +1045,7 @@ article_sequence_file	= $sequence_file
 #      History: string in 4.0.
 #        Value: multipart / string
 #     Examples: string
-post_restrictions_reject_notice_data_type	=	string
+article_post_restrictions_reject_notice_data_type	=	string
 
 
 =head2	size limit
@@ -1329,9 +1330,10 @@ html_archive_address_mask_type	=	all
 
 # Descriptions: use commnd mail ?
 #      History: none
+#		use_command_mail_program (fml8 pre alpha)
 #        Value: yes
 #     Examples: yes / no
-use_command_mail_program	=	yes
+use_command_mail_function = ${use_command_mail_program:-yes}
 
 
 =head2	size limit
@@ -1477,7 +1479,7 @@ unsubscribe_command_auth_type	=	confirmation
 #      History: @PERMIT_PROCEDURE @DENY_PROCEDURE
 #        Value:
 #     Examples:
-commands_for_user	=		help
+user_command_mail_allowed_commands	=		help
 					get
 					mget
 					get
@@ -1502,7 +1504,7 @@ commands_for_user	=		help
 					summary
 
 
-commands_for_stranger	=		guide
+anonymous_command_mail_allowed_commands	=		guide
 					info
 					add
 					subscribe
@@ -1510,7 +1512,7 @@ commands_for_stranger	=		guide
 					$confirm_command_prefix
 
 
-commands_for_privileged_user	=	subscribe
+admin_command_mail_allowed_commands	=	subscribe
 					add
 					unsubscribe
 					bye
@@ -1540,9 +1542,7 @@ commands_for_privileged_user	=	subscribe
 					list
 
 
-commands_for_admin	=		$commands_for_privileged_user
-
-commands_for_admin_cgi	=		adduser
+admin_cgi_allowed_commands	=		adduser
 					deluser
 					addadmin
 					deladmin
@@ -1664,10 +1664,10 @@ maintainer_recipient_maps	=
 
 # Descriptions: use error message analyzer ?
 #      History: none
+#		use_error_analyzer_program (fml8 pre alpha)
 #        Value: yes
 #     Examples: yes / no
-use_error_analyzer_program	=	yes
-
+use_error_mail_analyzer_function = ${use_error_analyzer_program:-yes}
 
 =head2	cache
 
