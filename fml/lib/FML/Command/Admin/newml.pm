@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.32 2002/05/24 06:39:39 fukachan Exp $
+# $FML: newml.pm,v 1.33 2002/05/25 04:25:38 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -68,8 +68,10 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $options        = $curproc->command_line_options();
     my $config         = $curproc->{ 'config' };
-    my ($ml_name, $ml_domain, $ml_home_prefix, $ml_home_dir) =
-	$self->_get_domain_info($curproc, $command_args);
+    my $ml_name        = $config->{ ml_name };
+    my $ml_domain      = $config->{ ml_domain };
+    my $ml_home_prefix = $config->{ ml_home_prefix };
+    my $ml_home_dir    = $config->{ ml_home_dir };
     my $params         = {
 	fml_owner         => $curproc->fml_owner(),
 	executable_prefix => $curproc->executable_prefix(),
@@ -116,10 +118,6 @@ sub process
 	print STDERR "creating $mailconfdir\n";
 	mkdirhier( $mailconfdir, $config->{ default_dir_mode } || 0755 );
     }
-
-    # update $config name space.
-    $config->set('ml_name',   $self->{ _ml_name });
-    $config->set('ml_domain', $self->{ _ml_domain });
 
     # 1. install $ml_home_dir/{config.cf,include,include-ctl}
     # 2. set up aliases
@@ -185,7 +183,7 @@ sub _update_aliases
     my ($self, $curproc, $command_args, $params) = @_;
     my $template_dir = $curproc->template_files_dir_for_newml();
     my $config       = $curproc->{ config };
-    my $ml_name      = $self->{ _ml_name };
+    my $ml_name      = $config->{ ml_name };
 
     use File::Spec;
     my $alias = $config->{ mail_aliases_file };
@@ -351,8 +349,8 @@ sub _setup_cgi_interface
 	my $src = File::Spec->catfile($libexec_dir, 'loader');
 
 	# hints
-	my $ml_name   = $self->{ _ml_name };
-	my $ml_domain = $self->{ _ml_domain };
+	my $ml_name   = $config->{ ml_name };
+	my $ml_domain = $config->{ ml_domain };
 	$params->{ __hints_for_fml_process__ } = qq{
 	    \$hints = {
 		cgi_mode  => 'admin',
@@ -375,41 +373,6 @@ sub _setup_cgi_interface
     #
     # 4. install ml-admin/
     #
-}
-
-
-# Descriptions: check argument and prepare virtual domain information
-#               if needed.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
-# Side Effects: none
-# Return Value: ARRAY
-sub _get_domain_info
-{
-    my ($self, $curproc, $command_args) = @_;
-    my $ml_name        = $command_args->{ 'ml_name' };
-    my $ml_domain      = $curproc->default_domain();
-    my $ml_home_prefix = '';
-    my $ml_home_dir    = '';
-
-    # virtual domain support e.g. "makefml newml elena@nuinui.net"
-    if ($ml_name =~ /\@/o) {
-	# overwrite $ml_name
-	($ml_name, $ml_domain) = split(/\@/, $ml_name);
-	$ml_home_prefix = $curproc->ml_home_prefix($ml_domain);
-    }
-    # default domain: e.g. "makefml newml elena"
-    else {
-	$ml_home_prefix = $curproc->ml_home_prefix();
-    }
-
-    eval q{ use File::Spec;};
-    $ml_home_dir = File::Spec->catfile($ml_home_prefix, $ml_name);
-
-    # save for convenience
-    $self->{ _ml_name   } = $ml_name;
-    $self->{ _ml_domain } = $ml_domain;
-
-    return ($ml_name, $ml_domain, $ml_home_prefix, $ml_home_dir);
 }
 
 

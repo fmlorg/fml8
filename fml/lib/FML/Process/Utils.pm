@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.19 2002/04/15 10:29:44 fukachan Exp $
+# $FML: Utils.pm,v 1.20 2002/05/13 14:22:53 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -472,6 +472,49 @@ sub __get_virtual_maps
     else {
 	return undef;
     }
+}
+
+
+=head2 rewrite_config_if_needed($args, $command_args)
+
+rewrite $ml_* information for virtual domain.
+
+=cut
+
+
+# Descriptions: check argument and prepare virtual domain information
+#               if needed.
+#    Arguments: OBJ($curproc) HASH_REF($args) HASH_REF($command_args)
+# Side Effects: none
+# Return Value: HASH_REF
+sub rewrite_config_if_needed
+{
+    my ($curproc, $args, $command_args) = @_;
+    my $config         = $curproc->{ config };
+    my $ml_name        = $command_args->{ 'ml_name' };
+    my $ml_domain      = $curproc->default_domain();
+    my $ml_home_prefix = '';
+    my $ml_home_dir    = '';
+
+    # virtual domain support e.g. "makefml newml elena@nuinui.net"
+    if ($ml_name =~ /\@/o) {
+	# overwrite $ml_name
+	($ml_name, $ml_domain) = split(/\@/, $ml_name);
+	$ml_home_prefix = $curproc->ml_home_prefix($ml_domain);
+    }
+    # default domain: e.g. "makefml newml elena"
+    else {
+	$ml_home_prefix = $curproc->ml_home_prefix();
+    }
+
+    eval q{ use File::Spec;};
+    $ml_home_dir = File::Spec->catfile($ml_home_prefix, $ml_name);
+
+    # rewrite $curproc->{ config };
+    $config->set('ml_name',        $ml_name);
+    $config->set('ml_domain',      $ml_domain);
+    $config->set('ml_home_prefix', $ml_home_prefix);
+    $config->set('ml_home_dir',    $ml_home_dir);
 }
 
 

@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.38 2002/04/10 04:24:15 fukachan Exp $
+# $FML: Configure.pm,v 1.39 2002/04/20 05:40:02 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -224,6 +224,13 @@ sub _makefml
 	argv         => $argv,
 	args         => $args,
     };
+
+    # update $config to rewrite $ml_* variable for the virtual domain.
+    # XXX irrespctive of virtual domains or not, we call this method
+    # XXX to update $config->{ ml_name } et. al.
+    # XXX since $config->{ ml_name } is not set here.
+    $curproc->rewrite_config_if_needed($args, $command_args);
+    $command_args->{ ml_name } = $config->{ ml_name };
 
     my $eval = $config->get_hook( 'makefml_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
