@@ -12,3 +12,10 @@ summary_file		=	$ml_home_dir/summary
 #        Value: fml4_compatible
 #     Examples:
 summary_format_style	=	fml4_compatible
+
+
+# Descriptions: アドレスは先頭の何バイトかだけを記録する。詳しくはログ見ろ
+#      History:
+#        Value: \d+
+#     Examples: 15
+summary_format_address_length	=	15
