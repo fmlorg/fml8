@@ -4,6 +4,8 @@ path_perl                 = @PERL@
 
 path_cksum                = @CKSUM@
 
+path_sum                  = @SUM@
+
 path_md5                  = @MD5@
 
 path_tar                  = @TAR@
@@ -11,6 +13,8 @@ path_tar                  = @TAR@
 path_gzip                 = @GZIP@
 
 path_zcat                 = @ZCAT@
+
+path_gzcat                = @GZCAT@
 
 path_gunzip               = @GUNZIP@
 
@@ -29,9 +33,11 @@ path_uuencode             = @UUENCODE@
 path_compress             = @COMPRESS@
 
 
-=head2 MTA related
+=head2 MTA related program paths
 
 path_sendmail             = @SENDMAIL@
+
+path_makemap              = @MAKEMAP@
 
 path_newaliases           = @NEWALIASES@
 
