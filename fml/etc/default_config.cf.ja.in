@@ -144,6 +144,7 @@ command_restrictions	=	reject_system_accounts
 
 # Descriptions: admin コマンドへの制限
 #      History: fml 4.0 の ?
+#        Value: return 0 if nothing is specified.
 #     Examples:
 admin_command_restrictions	=	check_password
 					reject
@@ -204,6 +205,9 @@ primary_admin_member_map	=	file:$ml_home_dir/members-admin
 #         Type:
 #     Examples:
 admin_member_maps		=	$primary_admin_member_map
+
+
+admin_member_passwd_maps	=	file:$ml_home_dir/etc/passwd
 
 
 =head2 アカウントベースのアクセス制限をかける
@@ -658,6 +662,8 @@ available_commands_for_privileged_user	=	subscribe
 					get
 					mget
 					send
+					password
+					pass
 
 
 available_commands_for_admin_cgi	=	subscribe

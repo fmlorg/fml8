@@ -79,6 +79,8 @@ available_commands_for_privileged_user	=	subscribe
 					get
 					mget
 					send
+					password
+					pass
 
 
 available_commands_for_admin_cgi	=	subscribe
