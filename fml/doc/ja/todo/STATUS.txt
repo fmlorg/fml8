@@ -452,7 +452,8 @@ V部　その他のトピック
 	[TODO] スプールの expire (mode_expire)
 	[TODO] 設定ファイルなどの RCS 管理
 	[TODO] 設定ファイルなどの CVS 管理
-	[TODO] log suffix extension
+	[TODO] log suffix extension: log.YYYYMMDD とかは？
+
 	[TODO] 「このＭＬはもうありません」オプション
 
 		libexec/ の下の全部のプログラム全部が対応して、
@@ -467,7 +468,6 @@ V部　その他のトピック
 	Mail::Bounce モジュールを使う。
 	自動削除も可能。
 
-	[TODO] アルゴリズムを選択可能にする
 	[TODO] カスタマイズを可能にする
 	[TODO] カスタマイズされたモジュールの置き場所
 	[TODO] エラーメールのフォワードについて改良 (fml-devel 451)
@@ -592,4 +592,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.33 2003/11/30 04:45:00 fukachan Exp $
+$FML: STATUS.txt,v 1.34 2004/04/18 02:44:03 fukachan Exp $
