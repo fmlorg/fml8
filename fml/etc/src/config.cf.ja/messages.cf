@@ -12,12 +12,6 @@ reply_message_charset	=	$default_charset
 #      History:
 #        Value:
 #     Examples:
-system_message_charset	=	$default_charset
-
-# Descriptions:
-#      History:
-#        Value:
-#     Examples:
 template_file_charset	=	euc-jp
 
 
@@ -33,13 +27,6 @@ default_message_subject	=	fml system message ($ml_name ML)
 #        Value:
 #     Examples:
 reply_message_subject	=	fml results ($ml_name ML)
-
-
-# Descriptions:
-#      History:
-#        Value:
-#     Examples:
-system_message_subject	=	fml system message ($ml_name ML)
 
 
 =head2 テンプレートファイル群
