@@ -17,8 +17,6 @@ fml/doc/releng.ja.html
 fml/doc/terms.ja.html
 
 
-fml/etc/defaults/NAMING_CONVENTION.txt
-fml/etc/defaults/__end__.cf.ja
 fml/etc/defaults/acl.cf.ja
 fml/etc/defaults/basic.cf.ja
 fml/etc/defaults/command.cf.ja
