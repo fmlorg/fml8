@@ -10,6 +10,17 @@
 	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
 	気をつけてください。
 
+2004/09/06
+
+   fml 4 から 8 へ変換するコンバータの修正
+
+   FML::Merge 
+	replace "::tmp::default_config.ph" with
+	speculate_default_config_ph_path() method.
+	
+   FML::Command::Admin::mergeml 
+	launch warning on site_init.ph and site_force.ph if needed.
+	
 2004/09/03-04
 
    キューイングシステムの修正 
@@ -7698,4 +7709,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.222 2004/08/29 22:18:15 fukachan Exp $
+$FML: CHANGES.txt,v 1.223 2004/09/04 05:36:38 fukachan Exp $
