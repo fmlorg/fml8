@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.37 2004/01/01 23:52:08 fukachan Exp $
+# $FML: Filter.pm,v 1.38 2004/01/02 14:50:28 fukachan Exp $
 #
 
 package FML::Filter;
@@ -76,11 +76,13 @@ sub article_filter
 	for my $function (@$functions) {
 	    if ($config->yes( "use_${function}" )) {
 		$curproc->log("filter(debug): check by $function") if $debug;
-		my $fp = "_apply_$function";
+		my $fp  = "_apply_$function";
 		$status = $self->$fp($curproc, $message);
 	    }
 	    else {
-		$curproc->log("filter(debug): not check by $function") if $debug;
+		if ($debug) {
+		    $curproc->log("filter(debug): not check by $function");
+		}
 	    }
 
 	    last FUNCTION if $status;
@@ -119,7 +121,8 @@ sub _apply_article_size_filter
 	# go check
 	$obj->size_check($mesg);
 	if ($obj->error()) {
-	    my $x = $obj->error();
+	    my $x;
+	    $x =  $obj->error();
 	    $x =~ s/\s*at .*$//;
 	    $x =~ s/[\n\s]*$//m;
 	    $self->error_set($x);
@@ -155,7 +158,8 @@ sub _apply_article_header_filter
 	# go check
 	$obj->header_check($mesg);
 	if ($obj->error()) {
-	    my $x = $obj->error();
+	    my $x;
+	    $x =  $obj->error();
 	    $x =~ s/\s*at .*$//;
 	    $x =~ s/[\n\s]*$//m;
 	    $self->error_set($x);
@@ -220,7 +224,8 @@ sub _apply_article_text_plain_filter
 	# go check
 	$obj->body_check($mesg);
 	if ($obj->error()) {
-	    my $x = $obj->error();
+	    my $x;
+	    $x =  $obj->error();
 	    $x =~ s/\s*at .*$//;
 	    $x =~ s/[\n\s]*$//m;
 	    $self->error_set($x);
@@ -251,12 +256,16 @@ sub _apply_article_mime_component_filter
 	    $obj->mime_component_check($mesg);
 	}
 	else {
-	    $curproc->log("(debug) disabled since rule file not found") if $debug;
+	    if ($debug) {
+		$curproc->log("(debug) disabled since rule file not found");
+	    }
+
 	    return 0;
 	}
 
 	if ($obj->error()) {
-	    my $x = $obj->error();
+	    my $x;
+	    $x =  $obj->error();
 	    $x =~ s/\s*at .*$//;
 	    $x =~ s/[\n\s]*$//m;
 	    $self->error_set($x);
@@ -348,7 +357,8 @@ sub _filter_reject_notice
 	$curproc->reply_message(sprintf("\n\n%s", $s), $msg_args);
     }
     else {
-	$curproc->logerror("unknown ${class}_filter_reject_notice_data_type: $type");
+	my $s = "unknown ${class}_filter_reject_notice_data_type: $type";
+	$curproc->logerror($s);
     }
 }
 
@@ -376,11 +386,13 @@ sub command_mail_filter
 	for my $function (@$functions) {
 	    if ($config->yes( "use_${function}" )) {
 		$curproc->log("filter(debug): check by $function") if $debug;
-		my $fp = "_apply_$function";
+		my $fp  = "_apply_$function";
 		$status = $self->$fp($curproc, $message);
 	    }
 	    else {
-		$curproc->log("filter(debug): not check by $function") if $debug;
+		if ($debug) {
+		    $curproc->log("filter(debug): not check by $function");
+		}
 	    }
 
 	    last FUNCTION if $status;
@@ -420,7 +432,8 @@ sub _apply_command_mail_size_filter
 	# go check
 	$obj->size_check($mesg);
 	if ($obj->error()) {
-	    my $x = $obj->error();
+	    my $x;
+	    $x =  $obj->error();
 	    $x =~ s/\s*at .*$//;
 	    $x =~ s/[\n\s]*$//m;
 	    $self->error_set($x);
