@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.18 2001/11/16 10:08:18 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.19 2001/11/17 04:03:37 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -290,6 +290,31 @@ sub get_mode
 {
     my ($self) = @_;
     return(defined $self->{ _mode } ?  $self->{ _mode } : undef);
+}
+
+
+=head2 set_fd( $fd )
+
+=head2 get_fd( $fd )
+
+=cut
+
+
+sub set_fd
+{
+    my ($self, $fd) = @_;
+    $self->{ _fd } = $fd;
+}
+
+
+# Descriptions: set output format
+#    Arguments: $self $string
+# Side Effects: none
+# Return Value: string
+sub get_fd
+{
+    my ($self) = @_;
+    return $self->{ _mode };
 }
 
 
