@@ -29,7 +29,8 @@ on upgrade installation
 <HR>
 <P><H4>注意点</H4>
 
-<BR>
+<UL>
+<LI>
 Q: loader や Bootstrap() がどーとかいうエラーが出る
 <BR>
 A: ブートストラップのやり方がまだ収束してないので、稀に
@@ -47,5 +48,13 @@ A: ブートストラップのやり方がまだ収束してないので、稀に
 
 などとする。cp でもいいけど同一パーティッション上の mv なら atomic で
 あることが保証されるので、good 。
+
+
+<LI>
+Q: アップグレードしたがうまく動かないので、元に戻したい
+<BR>
+A: /etc/fml/main.cf の fml_verison をアップグレード前のものに
+   戻して下さい。
+</UL>
 </BODY>
 </HTML>
