@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.41.2.7 2003/06/14 10:46:34 fukachan Exp $
+# $FML: ToHTML.pm,v 1.41.2.8 2003/06/14 10:51:42 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 1;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.41.2.7 2003/06/14 10:46:34 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.41.2.8 2003/06/14 10:51:42 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -940,6 +940,10 @@ sub cache_message_info
 }
 
 
+# Descriptions: return Mail::Message::DB object.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
 sub ndb
 {
     my ($self) = @_;
