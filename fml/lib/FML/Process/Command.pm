@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.105 2004/04/28 04:08:00 fukachan Exp $
+# $FML: Command.pm,v 1.106 2004/05/22 02:42:39 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -146,7 +146,7 @@ sub _check_filter
 
     eval q{
 	use FML::Filter;
-	my $filter = new FML::Filter;
+	my $filter = new FML::Filter $curproc;
 	my $r = $filter->command_mail_filter($curproc);
 
 	# filter traps this message.
