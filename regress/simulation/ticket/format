@@ -5,7 +5,7 @@
 
 use strict;
 use Carp;
-use vars qw(%article %options);
+use vars qw(%article %options %cost %costed_ticket);
 use Getopt::Long;
 use lib qw(./fml/lib ./cpan/lib);
 use Jcode;
@@ -15,29 +15,67 @@ GetOptions(\%options, qw(debug! -D=s));
 
 my $ml_home_dir = $options{ D } || croak("-D directory");
 
+my ($buf);
+my ($date, $age, $status, $ticket_id, @articles);
 while (<>) {
-    print ;
-    my ($date, $status, $ticket_id, @articles) = split;
-    $article{ $ticket_id } = $articles[0];
+    if (/^\d+/) {
+	($date, $age, $status, $ticket_id, @articles) = split;
+	my $cost                = $status.'-'.$age;
+	$cost{ $cost }          = $_;
+	$costed_ticket{ $cost } = $ticket_id;
+	$article{ $ticket_id }  = $articles[0];
+    }
+    else {
+	$buf .= $_;
+    }
 }
 
 if (%article) {
+    print $buf;
+    ShowList( \%cost );
+    print "   ---------------------\n";
     print "\n";
     ShowSummary( \%article );
 }
 
 exit 0;
 
+
+sub ShowList
+{
+    my ($cost) = @_;
+    my $k;
+
+    for $k (sort { $b cmp $a } keys %$cost) {
+	print $cost{ $k };
+    }
+}
+
+
 sub ShowSummary
 {
     my ($article) = @_;
-    my ($k, $v);
+    my ($cost, $tid, $num);
     my $f;
 
-    while (($k, $v) = each %$article) {
-	$f = "$ml_home_dir/spool/$v";
-	printf "\n%-10s  %s\n", $k;
-	print _summary($f);
+    print "\"!\" mark: stalled? please check and reply it!!!\n";
+
+    for $cost (sort { $b cmp $a } keys %costed_ticket) {
+	$tid = $costed_ticket{ $cost };
+	$num = $article->{ $tid };
+	$f   = "$ml_home_dir/spool/$num";
+
+	if (-f $f) {
+	    my $how_bad = 0;
+	    if ($cost =~ /(\w+)\-(\d+)/) { 
+		$how_bad += $2;
+		$how_bad += 1 if $1 =~ /open/;
+		$how_bad  = "!" x ($how_bad > 6 ? 6 : $how_bad);
+	    }
+
+	    printf "\n%6s  %-10s  %s\n", $how_bad, $tid;
+	    print _summary($f);
+	}
     }
 }
 
@@ -49,7 +87,7 @@ sub _summary
     
     my $buf;
     my $subject;
-    my $padding = '   > ';
+    my $padding = '      > ';
     my $line = 5;
     my $fh = new FileHandle $f;
     my $zform_is_found = 0;
