@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Rotate.pm,v 1.16 2003/08/24 14:09:25 fukachan Exp $
+# $FML: Rotate.pm,v 1.1 2004/04/17 02:07:44 fukachan Exp $
 #
 
 package FML::File::Rotate;
@@ -21,11 +21,10 @@ FML::File::Rotate - file rotatation utilities
 
 =head1 SYNOPSIS
 
-    $obj = new FML::File::Rotate {
-	max_size    => 10000,
-	num_backlog => 4,
-    };
-    $obj->rotate( \@target_files );
+    my $logrotate = new FML::File::Rotate $curproc;
+    if ($logrotate->is_time_to_rotate($file)) {
+	$logrotate->rotate($file);
+    }
 
 =head1 DESCRIPTION
 
@@ -48,36 +47,88 @@ some programs such as /usr/bin/newsyslog (MIT athena project) do.
 
 =head1 METHODS
 
-=head2 new($args)
+=head2 new($curproc)
 
-ordinary constructor. $args accpets the following parameters.
-
-   parameter       default value
-   ------------------------
-   max_size        300*1024
-   num_backlog     4
+ordinary constructor.
 
 =cut
 
 
-# Descriptions: constructor
-#               forward new() request to superclass (IO::File)
-#    Arguments: OBJ($self) HASH_REF($args)
+# Descriptions: constructor.
+#    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: none
 # Return Value: OBJ
 sub new
 {
-    my ($self, $args) = shift;
+    my ($self, $curproc) = @_;
     my ($type) = ref($self) || $self;
-    my $me     = {};
-
-    if ( ref($args->{ file_list }) eq 'ARRAY' ) {
-	$me->{ _file_list   } = $args->{ file_list };
-    }
-    $me->{ _max_size    } = $args->{ max_size }    || 300*1024;
-    $me->{ _num_backlog } = $args->{ num_backlog } || 4;
-
+    my $me     = { _curproc => $curproc };
     return bless $me, $type;
+}
+
+
+=head1 PARAMETERS
+
+=cut
+
+
+# Descriptions: set max_size.
+#    Arguments: OBJ($self) NUM($size)
+# Side Effects: update $self
+# Return Value: none
+sub set_max_size
+{
+    my ($self, $size) = @_;
+    my $curproc = $self->{ _curproc };
+
+    if (defined $size && $size =~ /^\d+$/o) {
+	$self->{ _max_size } = $size;
+    }
+    else {
+	$curproc->logerror("set_max_size: invalid data: $size");
+    }
+}
+
+
+# Descriptions: get max_size.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
+sub get_max_size
+{
+    my ($self, $size) = @_;
+
+    return( $self->{ _max_size } || 300*1024 );
+}
+
+
+# Descriptions: set number of backlog files.
+#    Arguments: OBJ($self) NUM($num)
+# Side Effects: update $self
+# Return Value: none
+sub set_num_backlog
+{
+    my ($self, $num) = @_;
+    my $curproc = $self->{ _curproc };
+
+    if (defined $num && $num =~ /^\d+$/o) {
+	$self->{ _num_backlog } = $num || 4;
+    }
+    else {
+	$curproc->logerror("set_num_backlog: invalid data: $num");
+    }
+}
+
+
+# Descriptions: get number of backlog files.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
+sub get_num_backlog
+{
+    my ($self) = @_;
+
+    return( $self->{ _num_backlog } || 4 );
 }
 
 
@@ -90,13 +141,13 @@ determine whether the time to do comes or not.
 
 
 # Descriptions: determine the time to rotate
-#    Arguments: OBJ($self)
+#    Arguments: OBJ($self) STR($file)
 # Side Effects: none
 # Return Value: 1 (time comes!) or 0
 sub is_time_to_rotate
 {
-    my ($self) = @_;
-    my ($file, $size, $max) = $self->_get_param();
+    my ($self, $file) = @_;
+    my $size = $self->get_max_size();
 
     use File::stat;
     my $st = stat($file);
@@ -106,7 +157,7 @@ sub is_time_to_rotate
 }
 
 
-=head2 rotate()
+=head2 rotate($file)
 
 rename files to rotate it.
 
@@ -120,58 +171,30 @@ rename files to rotate it.
 =cut
 
 
-# Descriptions: rotate filenames
-#    Arguments: OBJ($self)
-# Side Effects: filename rotations
-#               unlink the oldest file
+# Descriptions: rotate file.
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: rename in proper way and unlink the oldest file if needed.
 # Return Value: none
 sub rotate
 {
-    my ($self) = @_;
-    my ($file, $size, $max) = $self->_get_param();
+    my ($self, $file) = @_;
+    my $size = $self->get_max_size();
+    my $max  = $self->get_num_backlog();
 
     # remove oldest file
-    my $maxfile = $file.".".$max;
+    my $maxfile = sprintf("%s.%s", $file, $max);
     if (-f $maxfile) { unlink $maxfile;}
 
     # mv var/log/file.3 -> var/log/file.4 ...;
     do {
-	my $old = "$file.".($max - 1 > 0 ? $max - 1 : 0);
-	my $new = "$file.".($max);
+	my $old = sprintf("%s.%s", $file, ($max - 1 > 0 ? $max - 1 : 0));
+	my $new = sprintf("%s.%s", $file, $max);
 	-f $old && rename($old, $new);
 	$max--;
     } while ($max > 0);
-}
 
-
-# Descriptions: extract parameters in $self
-#    Arguments: OBJ($self)
-# Side Effects: none
-# Return Value: ARRAY(file, max_size, num_backlog)
-sub _get_param
-{
-    my ($self) = @_;
-    (${*$self}{_file}, ${*$self}{_max_size}, ${*$self}{_num_backlog});
-}
-
-
-=head2 error()
-
-return the error message if exists.
-
-=cut
-
-
-# Descriptions: return error message
-#    Arguments: OBJ($self)
-#               XXX $self is blessed file handle.
-# Side Effects: none
-# Return Value: STR(error message)
-sub error
-{
-    my ($self) = @_;
-    my $fh = $self;
-    ${ *$fh }{ _error };
+    my $bak = sprintf("%s.%s", $file, 0);
+    rename($file, $bak);
 }
 
 
