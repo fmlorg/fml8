@@ -1,3 +1,7 @@
+#
+# $FML$
+#
+
 all: anal
 
 anal:
@@ -6,10 +10,11 @@ anal:
 html:	index.ja.html
 
 index.ja.html: *.pm loader
-	../../doc/bin/dir2url.pl > index.ja.html
+	../../fml/utils/bin/dir2url.pl > index.ja.html
 
 _clean:
 	rm -f index.ja.html */index.ja.html
 
 clean:
 	(cd ../..;make clean)
+
