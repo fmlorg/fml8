@@ -43,9 +43,11 @@ header_checks        =	validate_message_id
 			verify_unique_x_ml_info
 			verify_unique_list_post
 
-header_rewrite_rules =	add_rfc2369
+header_rewrite_rules =	add_software_info
+			add_fml_ml_name
 			add_fml_article_id
 			add_x_sequence
+			add_rfc2369
 =head2 ¥í¥Ã¥¯
 
 lock_dir	= $ml_home_dir/var/lock

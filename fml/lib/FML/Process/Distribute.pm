@@ -118,6 +118,14 @@ sub _header_rewrite
     for my $rule (split(/\s+/, $rules)) {
 	Log("_header_rewrite( $rule )");
 
+	if ($rule eq 'add_software_info') {
+	    $header->add_software_info($config, { id => $id } );
+	}
+
+	if ($rule eq 'add_fml_ml_name') {
+	    $header->add_fml_ml_name($config, { id => $id } );
+	}
+
 	if ($rule eq 'add_fml_article_id') {
 	    $header->add_fml_article_id($config, { id => $id } );
 	}

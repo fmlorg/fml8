@@ -88,11 +88,28 @@ sub check
 }
 
 
+sub add_fml_ml_name
+{
+    my ($header, $config, $args) = @_;
+
+    $header->add('X-ML-Name', $config->{ address_for_post });
+}
+
+
 sub add_fml_article_id
 {
     my ($header, $config, $args) = @_;
 
     $header->add('X-Mail-Count', $args->{ id });
+}
+
+
+sub add_software_info
+{
+    my ($header, $config, $args) = @_;
+
+    $header->add('X-ML-Server',   "fml 5.0 prototype 0");
+    $header->add('List-Software', "fml 5.0 prototype 0");
 }
 
 
@@ -106,8 +123,8 @@ sub add_rfc2369
     my $maintainer = $config->{ maintainer };
 
     # RFC2369
-    $header->add('list-post',  "<mailto:${post}>")       if $post;
-    $header->add('list-owner', "<mailto:${maintainer}>") if $maintainer;
+    $header->add('List-Post',  "<mailto:${post}>")       if $post;
+    $header->add('List-Owner', "<mailto:${maintainer}>") if $maintainer;
 }
 
 
@@ -115,7 +132,7 @@ sub add_x_sequence
 {
     my ($header, $config, $args) = @_;
 
-    $header->add('x-sequence',  "$args->{ name } $args->{ id }");
+    $header->add('X-Sequence',  "$args->{ name } $args->{ id }");
 }
 
 
