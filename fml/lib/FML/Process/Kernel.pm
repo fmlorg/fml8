@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.186 2003/10/15 01:03:34 fukachan Exp $
+# $FML: Kernel.pm,v 1.187 2003/10/15 09:09:11 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1642,6 +1642,7 @@ sub reply_message_nl
 	    $config->expand_variable_in_buffer(\$buf, $args);
 	}
 
+	# XXX-TODO: jis-jp is hard-coded.
 	eval q{
 	    use Mail::Message::Encode;
 	    my $obj = new Mail::Message::Encode;
@@ -1910,6 +1911,9 @@ sub queue_in
 	}
 
 	# 1. eat up text messages and put it into the first part.
+	# XXX-TODO: wrong handling of $charset ???
+	# XXX-TODO: reply message should be determined by context and
+	# XXX-TODO: accept-language: information.
 	if ($s) {
 	    $msg->attach(Type => "text/plain; charset=$charset",
 			 Data => $s,
