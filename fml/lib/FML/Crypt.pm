@@ -1,10 +1,10 @@
-n#-*- perl -*-
+#-*- perl -*-
 #
 #  Copyright (C) 2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.7 2003/01/01 02:06:22 fukachan Exp $
+# $FML: Crypt.pm,v 1.1 2003/02/02 04:46:33 fukachan Exp $
 #
 
 package FML::Crypt;
