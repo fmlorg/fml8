@@ -1,0 +1,75 @@
+=head1 configurations
+
+DOMAIN	= fml.org
+FQDN	= ahodori.fml.org
+
+ml_home_dir = /var/spool/ml/elena
+
+
+=head2 アクセス制御
+
+# 配列表現には本質的に
+
+# 現在の PERMIT_POST_FROM と REJECT_ADDR をがったいしたもの
+POST_RESTRICTIONS	=	reject_system_accounts
+				permit_members_only
+				reject
+
+# 現在の PERMIT_COMMAND_FROM と REJECT_ADDR をがったいしたもの
+COMMAND_RESTRICTIONS	=	reject_system_accounts
+				permit_members_only
+				reject
+
+member_maps		=	file:$ml_home_dir/members 
+
+recipient_maps		=	file:$ml_home_dir/recipients
+				file:$ml_home_dir/actives
+				unix.group:fml
+
+recipient_limit		=	1000
+
+mta			=	[::1]:25
+				127.0.0.1:25
+				192.168.148.193:25
+				192.168.148.194:25
+
+###
+### Section: Header Manipulations
+###
+
+header_checks        =	validate_message_id
+			verify_unique_x_ml_info
+			verify_unique_list_post
+
+header_rewrite_rules =	add_rfc2369
+=head2 ロック
+
+lock_dir	= $ml_home_dir/var/lock
+
+lock_file	= $lock_dir/simplelock
+
+lock_type	= flock
+
+###
+### basic logging
+###
+
+# logfile
+log_file	=	/tmp/log
+
+# type of logging
+# value: file / syslog
+log_type	=	file
+=head2 すぷーる
+
+sequence_file	= $ml_home_dir/seq
+
+use_spool	= yes
+
+spool_dir	= $ml_home_dir/spool
+
+spool_type	= plane
+###
+### default_config.cf file ends here.
+###
+=cut
