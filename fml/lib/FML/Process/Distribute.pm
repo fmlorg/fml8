@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.145 2004/05/18 08:43:11 fukachan Exp $
+# $FML: Distribute.pm,v 1.146 2004/05/19 09:19:04 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -476,6 +476,9 @@ sub _deliver_article
 	return;
     }
 
+    # XXX_LOCK_CHANNEL: recipient_map_modify
+    my $lock_channel = "recipient_map_modify";
+
     #
     # MAIN ### XXX [queue-based-distrbute] HACK ###
     #
@@ -485,6 +488,8 @@ sub _deliver_article
     my $queue     = new Mail::Delivery::Queue { directory => $queue_dir };
     my $qid       = $queue->id();
     if (defined $queue) {
+	$curproc->lock($lock_channel);
+
 	$curproc->log("article queue=$qid");
 
 	$queue->set('sender', $config->{ smtp_sender });
@@ -495,6 +500,8 @@ sub _deliver_article
 	$queue->in($message);
 	$queue->lock( { lock_before_runnable => "yes" } );
 	$queue->setrunnable();
+
+	$curproc->unlock($lock_channel);
     }
 
     # 2. distribute article
@@ -534,9 +541,7 @@ sub _deliver_article
 	$recipient_maps = $queue->recipients_file_path($qid);
     }
 
-    # XXX_LOCK_CHANNEL: recipient_map_modify
-    my $lock_channel = "recipient_map_modify";
-    $curproc->lock($lock_channel);
+    $curproc->lock($lock_channel) unless defined $queue;
     $service->deliver(
 		      {
 			  'smtp_servers'    => $config->{'smtp_servers'},
@@ -553,7 +558,7 @@ sub _deliver_article
 			  use_queue_dir     => 1,
 			  queue_dir         => $queue_dir,
 		      });
-    $curproc->unlock($lock_channel);
+    $curproc->unlock($lock_channel) unless defined $queue;
 
     if ($service->error) { 
 	$curproc->log($service->error);
