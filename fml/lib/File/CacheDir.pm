@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CacheDir.pm,v 1.24 2003/02/01 06:08:40 fukachan Exp $
+# $FML: CacheDir.pm,v 1.25 2003/08/23 04:35:42 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -178,6 +178,17 @@ sub _take_file_name
 }
 
 
+# Descriptions: return the path of file to be written
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub cache_file_path
+{
+    my ($self) = @_;
+    return $self->{ _opened_file };
+}
+
+
 =head2 open(file, mode)
 
 no argument.
@@ -206,6 +217,7 @@ sub open
 
     # real open with $mode
     if (defined $fh) {
+	$self->{ _opened_file } = $file;
 	$fh->open($file, $mode);
 	$fh->autoflush(1);
 	$self->{ _fh } = $fh;
