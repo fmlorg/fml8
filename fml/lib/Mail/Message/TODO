@@ -1,0 +1,18 @@
+o replace _db_open with ::DB
+
+	sub update_id_index
+	sub update_id_monthly_index
+	sub _update_id_montly_index_master
+	sub _update_id_monthly_index
+	sub update_thread_index
+ 
+
+o set_article_file_path() / get_article_file_path() ?
+
+
+o set_article_html_file_path() / get_article_html_file_path() ?
+
+
+	# need month database to determine subdir for the html file
+	$db->{ _filename }->{ $id } = $self->html_filename($id);
+	$db->{ _filepath }->{ $id } = $dst;
