@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.160 2003/03/05 15:10:09 fukachan Exp $
+# $FML: Kernel.pm,v 1.161 2003/03/05 15:47:21 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -498,15 +498,23 @@ sub verify_sender_credential
 	}
     }
 
-    # XXX-TODO: check $from should match safe address regexp.
     if ($from) {
-	# XXX o.k. From: is proven to be valid now.
-	# XXX log it anyway
 	Log("sender: $from");
-	use FML::Credential;
-	my $cred = new FML::Credential $curproc;
-	$curproc->{'credential'} = $cred;
-	$curproc->{'credential'}->set( 'sender', $from );
+
+	# check $from should match safe address regexp.
+	use FML::Restriction::Base;
+	my $safe = new FML::Restriction::Base;
+	if ($safe->regexp_match('address', $from)) {
+	    # o.k. From: is proven to be valid now.
+	    use FML::Credential;
+	    my $cred = new FML::Credential $curproc;
+	    $curproc->{'credential'} = $cred;
+	    $curproc->{'credential'}->set( 'sender', $from );
+	}
+	else {
+	    $curproc->stop_this_process();
+	    LogError("unsafe From: $from");
+	}
     }
     else {
 	$curproc->stop_this_process();
@@ -629,9 +637,9 @@ sub resolve_ml_specific_variables
 	use FML::Restriction::Base;
 	my $safe = new FML::Restriction::Base;
 
-	# XXX-TODO: searching ml_addr should be first match. ok?
-	# XXX "fmlconf -n elena@fml.org" works ?
-	# XXX yes, but "fmlconf -n elena" works ? no ;-)
+	# XXX searching of ml_addr by the first match. ok?
+	# "fmlconf -n elena@fml.org" works ? yes
+	# "fmlconf -n elena" works ?         yes
       ARGV:
 	for my $arg (@ARGV) {
 	    if ($safe->regexp_match('address', $arg)) {
@@ -969,15 +977,14 @@ sub permit_command
 sub _check_restrictions
 {
     my ($curproc, $args, $type) = @_;
-    my $config = $curproc->{ config };
+    my $config = $curproc->config();
     my $cred   = $curproc->{ credential }; # user credential
     my $pcb    = $curproc->{ pcb };
     my $sender = $cred->sender();
+    my $rules  = $config->get_as_array_ref( "${type}_restrictions" );
 
     # XXX-TODO: method()-ify these functions for further enhancement.
-
-    # XXX-TODO: we should use $config->get_as_array_ref().
-    for my $rule (split(/\s+/, $config->{ "${type}_restrictions" })) {
+    for my $rule (@$rules) {
 	if ($rule eq 'reject_system_accounts') {
 	    my $match = $cred->match_system_accounts($sender);
 	    if ($match) {
