@@ -174,6 +174,12 @@ III部　fmlのカスタマイズ
 
 	コマンドメールの禁止: $command_restrictions で reject とだけ指定
 
+	[TODO] 自動とか手動登録とかをどこで指定するの？
+
+		$subscribe_command_mode	=	auto / manual
+		$chaddr_command_mode	=	auto / manual
+		$unsubscribe_command_mode =	auto / manual
+
 	[TODO] 手動登録？
 
 	[TODO] 自動登録
@@ -204,7 +210,7 @@ III部　fmlのカスタマイズ
 
 	procmail:	4.0 と同様だ
 
-	[削除?] ＭＬ本体でコマンドメールも受けられるように
+	[削除] ＭＬ本体でコマンドメールも受けられる機能
 
 
 14章　ヘッダの書き換え
@@ -276,6 +282,7 @@ III部　fmlのカスタマイズ
 
 	[TODO] 非対称鍵暗号認証
 
+	[TODO] etc/passwd-admin の操作ツール、コマンド
 
 19章　MLの暗号化
 
@@ -326,7 +333,8 @@ V部　その他のトピック
 
 27章　エラーメールを自動解析する
 
-	Mail::Bounce モジュールは作って自動削除も可能になった
+	Mail::Bounce モジュールを使う。
+	自動削除も可能。
 
 	[TODO] アルゴリズムを選択可能にする
 	[TODO] カスタマイズを可能にする
@@ -390,6 +398,7 @@ VII部　Advanced Study
 	[TODO] Mail::Delivery の LMTP モード
 
 	[TODO] outgoing address hack
+		SPAM 対策についてドキュメントを書く
 
 	[TODO] execute $program on the disk NOT IPC.
 
@@ -414,4 +423,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.13 2002/08/10 03:34:00 fukachan Exp $
+$FML: STATUS.txt,v 1.14 2002/08/17 05:30:57 fukachan Exp $
