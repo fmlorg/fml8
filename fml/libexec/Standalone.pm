@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Standalone.pm,v 1.6 2001/05/29 16:21:17 fukachan Exp $
+# $FML: Standalone.pm,v 1.7 2001/10/09 12:39:50 fukachan Exp $
 #
 
 
@@ -132,6 +132,9 @@ sub _expand_variables
 	while ($max++ < 16) {
 	    $org = $config->{ $x };
 
+	    if ($config->{ $x } =~ /\{/) { # expand ${prefix}/xxx ...
+		$config->{ $x } =~ s/\$\{([a-z_]+)\}/$config->{$1}/g;
+	    }
 	    $config->{ $x } =~ s/\$([a-z_]+)/$config->{$1}/g;
 
 	    last EXPANSION_LOOP if $config->{ $x } !~ /\$/o;
