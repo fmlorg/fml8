@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: loader,v 1.17 2001/10/08 12:42:52 fukachan Exp $
+# $FML: loader,v 1.18 2001/10/08 15:44:03 fukachan Exp $
 #
 
 eval 'exec /usr/local/bin/perl -S $0 ${1+"$@"}'
@@ -89,7 +89,15 @@ sub Bootstrap
     unless ($@) {
 	eval q{ &Bootstrap2($main_cf_file);};
 	if ($@) {
-	    croak("fail to execute Bootstrap2($main_cf_file)\n$@\n");
+	    my $reason = $@;
+	    if ($ENV{'debug'} || defined( $main_cf->{ debug } )) {
+		croak("fail to execute Bootstrap2($main_cf_file)\n$@\n");
+	    }
+	    else {
+		$reason =~ s/[\n\s]*at.*$//m;
+		print STDERR "Error: ", $reason, "\n";
+		exit(1);
+	    }
 	}
     }
     else {

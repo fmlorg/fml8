@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Switch.pm,v 1.31 2001/11/07 09:28:27 fukachan Exp $
+# $FML: Switch.pm,v 1.32 2001/11/08 03:37:58 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -171,7 +171,16 @@ sub main::Bootstrap2
     if ($@) {
 	my $reason = $@;
 	if ($obj->can('help')) { eval $obj->help();};
-	croak($reason);
+
+	if ($ENV{'debug'} || 
+	    defined( $main_cf->{ debug } ) || 
+	    defined $options{debug}) {
+	    croak($reason);
+	}
+	else {
+	    $reason =~ s/[\n\s]*at.*$//m;
+	    croak($reason);
+	}
     }
 }
 
