@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.4 2001/10/20 07:29:59 fukachan Exp $
+# $FML: Lite.pm,v 1.5 2001/10/20 12:58:35 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -638,14 +638,23 @@ sub cache_message_info
     $self->_db_open();
     my $db = $self->{ _db };
 
-    # update max id
-    if (defined $db->{ _info }->{ id_max }) {
-	$db->{_info}->{id_max} = 
-	    $db->{_info}->{id_max} < $id ? $id : $db->{_info}->{id_max};
+    # XXX update max id only under the top level operation
+    unless ($self->{ _is_attachment }) {
+	if (defined $db->{ _info }->{ id_max }) {
+	    $db->{_info}->{id_max} = 
+		$db->{_info}->{id_max} < $id ? $id : $db->{_info}->{id_max};
+	}
+	else {
+	    $db->{_info }->{id_max } = $id;
+	}
+	print STDERR "   parent\n" if $debug;
+	print STDERR "   update id_max = $db->{_info }->{id_max }\n" if $debug;
     }
     else {
-	$db->{_info }->{id_max } = $id;
+	print STDERR "   child\n" if $debug;
     }
+
+    print STDERR "   cache_message_info( id=$id ) running\n" if $debug;
 
     $db->{ _filename }->{ $id } = $self->message_filename($id);
     $db->{ _filepath }->{ $id } = $dst;
@@ -659,12 +668,17 @@ sub cache_message_info
     $db->{ _from }->{ $id } = $ra->[0];
     $db->{ _who }->{ $id } = $self->_who_of_address( $hdr->get('from') );
 
+    print STDERR "   message-id\n" if $debug;
     $ra  = _address_clean_up( $hdr->get('message-id') );
     my $mid = $ra->[0];
-    $db->{ _message_id }->{ $id } = $mid;
-    $db->{ _msgidref }->{ $mid }  = $id;
-    $db->{ _idref }->{ $id }      = $id;
+    if ($mid) {
+	print STDERR "   message-id = <$mid>\n" if $debug;
+	$db->{ _message_id }->{ $id } = $mid;
+	$db->{ _msgidref }->{ $mid }  = $id;
+	$db->{ _idref }->{ $id }      = $id;
+    }
 
+    print STDERR "   in-reply-to\n" if $debug;
     $ra = _address_clean_up( $hdr->get('in-reply-to') );
     my $in_reply_to = $ra->[0];
     for my $mid (@$ra) {
@@ -675,6 +689,7 @@ sub cache_message_info
 	$db->{ _idref }->{ $idp } .= " ".$id if defined $idp;
     }
 
+    print STDERR "   referances\n" if $debug;
     $ra = _address_clean_up( $hdr->get('references') );
     for my $mid (@$ra) {
 	$db->{ _msgidref }->{ $mid } .= " ".$id;
@@ -701,7 +716,7 @@ sub cache_message_info
 	}
     }
     else {
-	warn("no prev/next thread link (id=$id)\n");
+	warn("no prev/next thread link (id=$id)\n") if $debug;
     }
 
     $self->_db_close();
@@ -726,7 +741,9 @@ sub _address_clean_up
     my (@addrs) = Mail::Address->parse($addr);
 
     my $i = 0;
+  LIST:
     for my $addr (@addrs) {
+	next LIST unless $addr =~ /\@/;
 	my $xaddr = $addr->address();
 	push(@r, $xaddr);
     }
@@ -1136,11 +1153,13 @@ sub _db_open
     unless ($@) {
  	for my $db (@kind_of_databases) {
 	    my $file = "$db_dir/.ht_mhl_${db}";
-	    eval qq{
-		my \%$db;
+	    my $str = qq{
+		my \%$db = ();
 		tie \%$db, \$db_type, \$file, O_RDWR|O_CREAT, 0644;
 		\$self->{ _db }->{ _$db } = \\\%$db;
 	    };
+	    print STDERR $str if $debug > 10;
+	    eval $str;
 	    croak($@) if $@;
 	}
     }
@@ -1159,6 +1178,8 @@ sub _db_close
     my ($self, $args) = @_;
     my $db_type = $args->{ db_type } || $self->{ _db_type } || 'AnyDBM_File';
     my $db_dir  = $self->{ _html_base_directory };
+
+    print STDERR "_db_close()\n" if $debug;
 
     for my $db (@kind_of_databases) {
 	eval qq{ untie \$self->{ _db }->{ _$db };};
@@ -1384,10 +1405,9 @@ sub _debug
     my $html = new Mail::HTML::Lite {
 	charset   => "euc-jp",
 	directory => "/tmp/htdocs",
-	db_type   => 'SDBM_File',
     };
 
-    print STDERR "\n_debug(id=$f src=$file)\n";
+    printf STDERR "_debug( id=%-6s src=%s )\n", $f, $file;
 
     $html->htmlfy_rfc822_message({
 	id  => $f,
@@ -1397,21 +1417,21 @@ sub _debug
 
     # update index.html
     my $start_time = time;
-    print STDERR "update index.html ... ";
+    print STDERR "update index.html ... " if $debug;;
     $html->update_id_index({ 
 	title => "index",
 	id    => $f,
     });
-    print STDERR "end ", (time - $start_time), "\n";
+    print STDERR "end ", (time - $start_time), " sec.\n" if $debug;;
 
     # update thread.html
     my $start_time = time;
-    print STDERR "update thread.html ... ";
+    print STDERR "update thread.html ... " if $debug;;
     $html->update_thread_index({
 	title => "thread",
 	id    => $f,
     });
-    print STDERR "end ", (time - $start_time), "\n";
+    print STDERR "end ", (time - $start_time), " sec.\n" if $debug;
 }
 
 
