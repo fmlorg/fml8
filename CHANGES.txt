@@ -1,8 +1,28 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/04/28
+
+   FML::Process::Kernel 
+	check $curproc->is_refused() more before action at each step
+	
+   Mail::Message 
+	fix comment.
+	add loop label.
+	FNF.
+	more checks by defined() and whether the content is not empty.
+	new() not need $InComingMessage here
+	remove module global variable $InComingMessage
+	check invalid multipart format
+	
 2002/04/27
 
+   FML::Process::Kernel 
+	kern.not_member -> error.not_member
+	
+   FML::Process::Kernel 
+	disable debug message
+	
    Mail::Message 
 	check more data by defined()
 	
@@ -2232,4 +2252,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.70 2002/04/23 14:32:45 fukachan Exp $
+$FML: CHANGES.txt,v 1.71 2002/04/27 14:30:45 fukachan Exp $
