@@ -1,6 +1,19 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/08/02
+
+  Document translation to English completed up to 70 % ?
+
+   Mail::Message::ToHTML 
+	reduce warning if missing from or subject at sub
+	_print_li_filename()
+
+2003/08/01
+
+   FML::Restriction::Post 
+	deny_reason not over write
+
 2003/07/24
 
   Document translation to English completed up to 40 % ?
@@ -5068,4 +5081,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.153 2003/07/24 16:25:03 fukachan Exp $
+$FML: CHANGES.txt,v 1.154 2003/07/26 14:45:22 fukachan Exp $
