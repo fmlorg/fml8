@@ -50,6 +50,11 @@ sub error       { return $ErrorString;}
 
 sub error_reset { undef $ErrorString;}
 
+
+# Descriptions: "mkdir -p" or "mkdirhier"
+#    Arguments: directory [file_mode]
+# Side Effects: set $ErrorString
+# Return Value: succeeded to create directory or not
 sub mkdirhier
 {
     my ($dir, $mode) = @_;
@@ -66,6 +71,10 @@ sub mkdirhier
 }
 
 
+# Descriptions: touch: create file if file not exists
+#    Arguments: file file_mode
+# Side Effects: none
+# Return Value: 1 if succeed, 0 if not
 sub touch
 {
     my ($file, $mode) = @_;
@@ -96,6 +105,15 @@ sub touch
 }
 
 
+
+# Descriptions: file $file executable
+#    Arguments: file [path_list]
+#               The "path_list" is an ARRAY_REFERENCE. 
+#               For example, 
+#               search_program('md5'); 
+#               search_program('md5', [ '/bin', '/sbin' ]); 
+# Side Effects: none
+# Return Value: pathname if found, undef if not
 sub search_program
 {
     my ($file, $path_list) = @_;
