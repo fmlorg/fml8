@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SimpleMatch.pm,v 1.1 2001/04/11 16:17:41 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.2 2001/04/11 16:37:49 fukachan Exp $
 #
 
 
@@ -47,6 +47,11 @@ my $address_trap_regexp = {
     'biglobe.ne.jp' => {
 	'start' => '----- The following addresses had delivery problems -----',
 	'end'   => '----- Non-delivered information -----',
+    },
+
+    'smail' => {
+	'start' => 'Failed addresses follow:',
+	'end'   => 'Message text follows:',
     },
 };
 
@@ -101,6 +106,8 @@ sub _address_match
 
 	    if (/(\S+\@\S+)/) { 
 		my $addr = $1;
+		$addr =~ s/^<//;
+		$addr =~ s/>$//;
 		$result->{ $addr }->{ 'Final-Recipient' } = $addr;
 		$result->{ $addr }->{ 'Status'} = '5.x.y';
 	    }
