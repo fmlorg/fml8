@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: BodyCheck.pm,v 1.2 2001/03/30 09:18:43 fukachan Exp $
+# $FML: BodyCheck.pm,v 1.3 2001/08/05 14:35:50 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -30,6 +30,8 @@ mail body content.
 usual constructor.
 
 =cut
+
+my $debug = $ENV{'debug'} ? 1 : 0;
 
 
 sub new
@@ -80,8 +82,8 @@ sub body_check
     #     XXX for small enough buffer. The information comes from @pmap, but
     #     XXX we should implement methods for them within $m message object.
     # get useful information for the message object.
-    my $num_paragraph = $m->num_paragraph();
-    my $is_one_line   = $self->is_one_line_message($m);
+    my $num_paragraph       = $m->num_paragraph();
+    my $need_one_line_check = $self->need_one_line_check($m);
 
     ## 5. preparation for main rules.
     $self->clean_up_buffer($m);
@@ -218,16 +220,101 @@ sub clean_up_buffer
 
 sub is_empty
 {
-    my $m;
+    my ($self, $m) = @_;
     $m->is_empty();
 }
 
 
-# XXX fml 4.0: If it has @ or ://, it must be a paragraph 
-sub is_one_line_message
+
+sub need_one_line_check
 {
-    ;
+    my ($self, $m) = @_;
+    my $np = $m->num_paragraph;
+
+    if ($np == 1) {
+	return 1;
+    }
+    elsif ($np == 2) {
+	# if the seconda paragraph looks signature, 
+	# this message has only one effective message (paragraph).
+	if ($self->is_signature($m->nth_paragraph(2))) {
+	    return 1;
+	}
+    }
+    elsif ($np == 3) {
+	# case 1: data + citation + signature
+	# case 2: citation + data + signature
+	if ($self->is_signature($m->nth_paragraph(3))) {
+	    if ($self->is_citation($m->nth_paragraph(1)) ||
+		$self->is_citation($m->nth_paragraph(2))) {
+		return 1;
+	    }
+	}
+    }
+
+    return 0;
 }
+
+
+# XXX fml 4.0 assumes: 
+# XXX If the paragraph has @ or ://, it must be signature.
+sub _check_this_paragraph
+{
+    my ($self, $m) = @_;
+    my $np   = $m->num_paragraph;
+    my $data = '';
+
+    for (my $i = 1; $i <= $np; $i++) { # XXX: 1 .. n (not 0 .. n-1)
+	if ($debug) { print STDERR "($i){", $data, "}\n";}
+    }
+}
+
+
+sub is_citation
+{
+    my ($self, $data) = @_;
+    my $trap_pat = ''; # keyword to trap citation at the head of the line
+
+    if ($data =~ /(\n.)/) { $trap_pat = quotemeta($1);}
+
+    # > a i u e o ...
+    # > ka ki ku ke ko ...
+    if ($data =~ /\n>/) { return 1;}
+    if ($trap_pat) { if ($data =~ /$trap_pat.*$trap_pat/) { return 1;}}
+
+    return 0;
+}
+
+
+# trap special keyword like tel:011-123-456789 ...
+sub is_signature
+{
+    my ($self, $data) = @_;
+
+    if ($data =~ /\@/ || 
+	$data =~ /TEL:/i ||
+	$data =~ /FAX:/i ||
+	$data =~ /:\/\// ) {
+	return 1;
+    }
+
+    # -- fukachan ( usenet style signature ? )
+    # // fukachan ( signature derived from what ? )
+    if ($data =~ /^--/ || $data =~ /^\/\//) {
+	return 1;
+    }
+
+    use FML::Language::ISO2022JP qw(STR2EUC);
+    $data = STR2EUC( $data );
+
+    # "2-byte @"domain where "@" is a 2-byte "@" character.
+    if ($data =~ /[-A-Za-z0-9]\241\367[-A-Za-z0-9]/) {
+	return 1;
+    }
+
+    return 0;
+}
+
 
 
 =head1 AUTHOR

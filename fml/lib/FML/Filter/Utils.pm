@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Utils.pm,v 1.1.1.1 2001/03/28 15:13:31 fukachan Exp $
+# $FML: Utils.pm,v 1.2 2001/03/30 09:18:44 fukachan Exp $
 #
 
 package FML::Filter::Utils;
@@ -61,61 +61,6 @@ sub clean_up_buffer
 }
 
 
-=head2 C<is_one_line($args)>
-
-=cut
-
-
-sub is_one_line
-{
-    my ($self, $buf) = @_;
-
-    local(*e, *pmap, $lparbuf) = @_;
-    my($one_line_check_p) = 0;
-    my($n_paragraph) = $#pmap;
-
-    &Log("OneLineCheckP: n_paragraph=$n_paragraph") if $main::debug;
-
-    if ($n_paragraph == 1) { $one_line_check_p = 1;}
-    if ($n_paragraph == 2) { 
-	my($buf) = &main::STR2EUC($lparbuf);
-	my($pat); 
-	if ($buf =~ /(\n.)/) { $pat = $1;}
-
-	# basic citation ?
-	if ($buf =~ /\n>/) {
-	    &Log("/^>/ lines! must be citation") if $main::debug;
-	    &Log("2 paragraphs but accept mail as citation");
-	}
-	# more functional citation ?:)
-	# Oops ;-) This mail body is also a citation ;-) in this logic;)
-	#   Kenken
-	#   Kaisha
-	# 
-	elsif ($pat && ($buf =~ /$pat.*$pat/)) {
-	    my ($p) = $pat;
-	    $p =~ s/\n//;
-	    &Log("plural /^$p/ lines! must be citation") if $main::debug;
-	    &Log("2 paragraphs but accept mail as citation");
-	}
-	elsif ($lparbuf =~ /\@/ || 
-	    $lparbuf =~ /TEL:/i ||
-	    $lparbuf =~ /FAX:/i ||
-	    $lparbuf =~ /:\/\// ) {
-	    &Log("2 paragraphs and 2nd one may be the signature");
-	    $one_line_check_p = 1; 
-	}
-	# account"2-byte @"domain where "@" is a 2-byte "@" character.
-	elsif ($buf =~ /[-A-Za-z0-9]\241\367[-A-Za-z0-9]/) {
-	    &Log("2 paragraphs and 2nd one may be the signature (2-byte \@)");
-	    $one_line_check_p = 1;
-	}
-    }
-
-    $one_line_check_p;
-}
-
-
 # XXX fml 4.0: EUCCompare($buf, $pat) 
 # XXX          where $pat should be $& (matched pattern)
 sub euc_compare
@@ -133,7 +78,7 @@ sub euc_compare
 
     # always true if given buffer is not EUC.
     if ($a !~ /($re_euc_c|$re_euc_kana|$re_euc_0212)/) {
-	&Log("EUCCompare: do nothing for non EUC strings") if $debug;
+	&Log("EUCCompare: do nothing for non EUC strings");# if $debug;
 	return 1;
     }
 
