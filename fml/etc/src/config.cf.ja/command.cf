@@ -1,5 +1,15 @@
 =head1	コマンドの定義
 
+=head2	プロセス
+
+
+# Descriptions: コマンドメールを使うか？
+#      History: なし
+#        Value: yes
+#     Examples: yes / no
+use_command_mail_program	=	yes
+
+
 =head2	コマンドの定義
 
 #
