@@ -1,0 +1,31 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>
+2, 3 のアイデアメモ
+</TITLE>
+<META http-equiv="Content-Type"
+	content="text/html; charset=EUC-JP">
+</HEAD>
+
+<BODY BGCOLOR="#E6E6FA">
+<!-- ================== body =========================================== -->
+
+<P> メモ:
+
+バッファのスタイルは２つある。
+<UL>
+
+	<LI>
+	ファイルに append していくもの。
+	Log Structured File Buffer とでもいうべきか？
+
+	<LI>
+	あるディレクトリ。その中にあるどれかのファイル
+	File::RingBuffer はそういったディレクトリを操作するためのもの。
+	db/ には 1 〜 100 のファイルがつくられ、順番に使われる。
+
+</UL>
+
+</BODY>
+</HTML>
