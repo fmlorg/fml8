@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.59 2002/12/26 15:38:00 fukachan Exp $
+	$FML: chapters.ent,v 1.60 2002/12/30 07:38:07 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -77,6 +77,7 @@
 <!entity sect.usage.command         SYSTEM "usage/command.sgml">
 <!entity sect.usage.procmail        SYSTEM "setup/procmail.sgml">
 <!entity sect.usage.makefml         SYSTEM "usage/makefml.sgml">
+<!entity sect.usage.fml             SYSTEM "usage/fml.sgml">
 <!entity sect.usage.fmladdr         SYSTEM "usage/fmladdr.sgml">
 <!entity sect.usage.fmlalias        SYSTEM "usage/fmlalias.sgml">
 <!entity sect.usage.fmlconf         SYSTEM "usage/fmlconf.sgml">
@@ -124,6 +125,8 @@
 <!entity chapter.config.cf        SYSTEM "internals/config.cf.sgml">
 <!entity chapter.restriction      SYSTEM "internals/restriction.sgml">
 <!entity chapter.credential       SYSTEM "internals/credential.sgml">
+
+<!entity chapter.virtual          SYSTEM "virtual/chapter.sgml">
 
 <!-- variables -->
 <!entity table.list.variables     SYSTEM "internals/list.variables.sgml">
