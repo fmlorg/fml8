@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.68 2004/07/23 15:58:59 fukachan Exp $
+# $FML: Article.pm,v 1.69 2004/08/14 08:12:31 fukachan Exp $
 #
 
 package FML::Article;
@@ -192,6 +192,10 @@ sub spool_in
 		else {
 		    $fh->close;
 		    $curproc->log("article $id");
+
+		    # update article message id cache.
+		    my $_header = $curproc->incoming_message_header();
+		    $_header->update_article_message_id_cache($config);
 		}
 	    }
 	}
