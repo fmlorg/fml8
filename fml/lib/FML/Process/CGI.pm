@@ -49,7 +49,19 @@ use CGI qw/:standard/;
 sub new
 {
     my ($self, $args) = @_;
-    my $type    = ref($self) || $self;
+    my $type = ref($self) || $self;
+
+    # we should get $ml_name from HTTP.
+    my $ml_home_prefix = $args->{ ml_home_prefix };
+    my $ml_name        = param('ml_name');
+    my $ml_home_dir    = $ml_home_prefix .'/'. $ml_name;
+
+    # fix $args { cf_list, ml_home_dir };
+    my $cf = $args->{ cf_list };
+    push(@$cf, $ml_home_dir.'/config.cf');
+    $args->{ ml_home_dir } =  $ml_home_dir;
+
+    # o.k. load configurations
     my $curproc = new FML::Process::Kernel $args;
     return bless $curproc, $type;
 }
@@ -68,7 +80,7 @@ sub prepare
     my ($curproc) = @_;
     my $config    = $curproc->{ config };
     my $charset   = $config->{ cgi_charset } || 'euc-jp';
-    
+
     print header(-type => "text/html; charset=$charset");
 }
 
