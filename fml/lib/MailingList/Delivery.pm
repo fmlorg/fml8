@@ -73,13 +73,9 @@ C<LMTP> classes.
 
 =item C<new($args)>
 
-constructor. The request is forwarded up to SUPER class.
+constructor. The request is forwarded to SUPER class.
 
 =cut
-
-
-require Exporter;
-@ISA = qw(Exporter);
 
 
 sub new

@@ -22,16 +22,16 @@ END   {}
 
 =head1 NAME
 
-IO::Atomic - atomic  operation
+IO::Atomic - atomic IO operation
 
 =head1 SYNOPSIS
 
     use IO::Atomic;
     my $wh = IO::Atomic->open($file);
     print $wh "new/updated things ...";
-    $wh->close;
+    $wh->close unless $wh->error;
 
-So, in usual cases, you use in this way.
+So, in usual cases, you use this module in the following way.
 
     use FileHandle;
     use IO::Atomic;
@@ -43,7 +43,7 @@ So, in usual cases, you use in this way.
     my $wh = IO::Atomic->open($file);
     while (<$rh>) {
         print $wh "new/updated things ...";
-    } 
+    }
     $wh->close;
     $rh->close;
 
@@ -65,7 +65,14 @@ To copy from $src to $dst,
 =head1 DESCRIPTION
 
 library to wrap atomic IO operations. 
-The C<atomic> feature is based on C<rename()> call.
+The C<atomic> feature is based on C<rename(2)> system call.
+
+=head1 METHODS
+
+=head2 C<new()>
+
+The usual constructor. 
+The request is forwarded to SUPERCLASS new().
 
 =cut
 
@@ -82,6 +89,29 @@ sub new
     $me->open(@_) if @_;
     $me;
 }
+
+
+=head2 C<open(file[, mode])>
+
+open C<file> with C<mode>. 
+If C<mode> is not specified, open C<file> with writable mode by default.
+
+Actually this method openes a new temporary file for write.
+So to write this C<file> is to write the temporary file.
+When close() method sucesses, the file is replaced with this temporary file,
+so updated.
+
+=head2 C<rw_open(file[, mode])>
+
+return the read and write file descriptor. 
+This is a wrapper for C<open()> method above for conveninece.
+
+=head2 C<close()>
+
+close the file.
+After the file is closed, the file is renamed to the original file name.
+
+=cut
 
 
 # Descriptions: open( $file [, $mode] )
@@ -156,6 +186,14 @@ sub close
 }
 
 
+=head2 C<copy(src, dst)>
+
+copy from C<src> file to C<dst> file in atomic way by using 
+C<IO::File::Atomic::rw_open>.
+
+=cut
+
+
 # Descriptions: copy file, which ensures atomic operation
 #    Arguments: $self source_file destination_file
 # Side Effects: $dst's file mode becomes the same as $src
@@ -179,6 +217,17 @@ sub copy
 	return undef;
     }
 }
+
+
+=head2 C<error()>
+
+return the error.
+
+=head2 C<rollback()>
+
+stop the operation. remove the temporary file.
+
+=cut
 
 
 # Descriptions: return error message

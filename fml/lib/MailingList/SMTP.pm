@@ -28,7 +28,7 @@ END   {}
 
 =head1 NAME
 
-MailingList::SMTP.pm - interface for SMTP service
+MailingList::SMTP - interface for SMTP service
 
 =head1 SYNOPSIS
 

@@ -13,11 +13,7 @@ package Dialect::ISO2022JP;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use Dialect::Japanese::Utils qw(is_iso2022jp_string);
 
-require Exporter;
-@ISA       = qw(Dialect::Japanese::Utils Exporter);
-@EXPORT_OK = @Dialect::Japanese::Utils::EXPORT_OK;
 
 =head1 NAME
 
@@ -28,9 +24,35 @@ Dialect::ISO2022JP - adapter for Dialect::Japanese
     use Dialect::ISO2022JP qw(is_iso2022jp_string);
     if ( is_iso2022jp_string($string) ) { do_something_if_Japanese;}
 
+    use Dialect::ISO2022JP qw(STR2EUC);
+    $euc_string = STR2EUC( $string );
+
+=cut
+
+
+use Dialect::Japanese::Utils qw(is_iso2022jp_string);
+use Dialect::Japanese::String qw(STR2JIS STR2EUC STR2SJIS);
+
+require Exporter;
+@ISA = qw(Dialect::Japanese::Utils Dialect::Japanese::String Exporter);
+push(@EXPORT_OK, @Dialect::Japanese::Utils::EXPORT_OK);
+push(@EXPORT_OK, @Dialect::Japanese::String::EXPORT_OK);
+
+
+=head1 METHODS
+
+=head2 C<is_iso2022jp_string>
+
+See L<Dialect::Japanese::Utils>
+
+=head2 C<STR2JIS> C<STR2EUC> C<STR2SJIS>
+
+See L<Dialect::Japanese::String>
+
 =head1 SEE ALSO
 
-L<Dialect::Japanese>
+L<Dialect::Japanese::Utils>,
+L<Dialect::Japanese::String>
 
 =head1 AUTHOR
 

@@ -8,18 +8,18 @@
 # $FML$
 #
 
-package FML::String;
+package Dialect::Japanese::String;
 use strict;
 use Carp;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 =head1 NAME
 
-FML::String -- utilities to manipulate strings
+Dialect::Japanese::String -- utilities to manipulate strings
 
 =head1 SYNOPSIS
 
-    use FML::String qw(STR2JIS);
+    use Dialect::Japanese::String qw(STR2JIS);
     $euc_str = STR2JIS($str);
 
 =head1 METHOD
@@ -83,7 +83,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::String appeared in fml5 mailing list driver package.
+Dialect::Japanese::String appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -33,19 +33,15 @@ sub new
 
 =head1 NAME
 
-IO::Adapter::LDAP.pm - what is this
+IO::Adapter::LDAP - IO by LDAP
 
 =head1 SYNOPSIS
 
+not yet implemented
+
 =head1 DESCRIPTION
 
-=head1 CLASSES
-
-=head1 METHODS
-
-=item C<new()>
-
-... what is this ...
+not yet
 
 =head1 AUTHOR
 

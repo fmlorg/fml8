@@ -1,7 +1,6 @@
 FML/Article.pm
 FML/Config.pm
 FML/Credential.pm
-FML/Date.pm
 FML/Header.pm
 FML/Parse.pm
 FML/Ticket/Model/toymodel.pm
@@ -16,14 +15,11 @@ FML/Process/Command.pm
 FML/Process/Switch.pm
 FML/Header/Subject.pm
 
-IO/Adapter/File.pm
-IO/Adapter/LDAP.pm
 IO/Adapter/NIS.pm
 IO/Adapter/RDBMS.pm
 IO/Adapter/UnixGroup.pm
 IO/Adapter/Array.pm
 IO/MapAdapter.pm
-IO/File/Atomic.pm
 
 Dialect/Japanese/Subject.pm
 Dialect/Japanese/Utils.pm
@@ -31,6 +27,4 @@ Dialect/Japanese/Utils.pm
 MailingList/Net/INET4.pm
 MailingList/Net/INET6.pm
 MailingList/Messages.pm
-MailingList/SMTP.pm
-MailingList/Delivery.pm
 MailingList/Utils.pm

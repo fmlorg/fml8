@@ -35,9 +35,10 @@ The style you use follows:
     precise_current_time        20010107210619
 
 
-=head1 METHOD
+=head1 METHODS
 
 You can also method like $date->$style() style.
+specify the C<style> name described above as a method.
 
 =item    log_file_style()
 
@@ -51,9 +52,10 @@ You can also method like $date->$style() style.
 
 =item    stardate()
 
-return STAR TREK stardate.
+return STAR TREK stardate :-)
 
 =cut
+
 
 require Exporter;
 use vars qw($TimeZone);
@@ -198,6 +200,25 @@ sub stardate
 
     sprintf("[%d]%04d.%02.2s", $issue, $integer, $fraction);
 }
+
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1 HISTORY
+
+FML::Date appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
+=cut
 
 
 1;
