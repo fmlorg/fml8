@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.32 2001/04/10 14:12:46 fukachan Exp $
+# $FML: Makefile,v 1.33 2001/04/22 16:53:22 fukachan Exp $
 #
 
 all: link
@@ -72,7 +72,6 @@ test:
 
 regen:
 	(cd ../../fml/etc; make )
-	(cd ../../;make doc)
 
 diag:
 	env PATH=/usr/pkg/bin:$$PATH make check
