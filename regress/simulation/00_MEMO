@@ -17,30 +17,12 @@
 	unsubscribe はすべての map をサーチし、該当するもの全てを
 	削除する。	 
 
+
 ○ reply-to: special hack
 
-
    if (	To: ml1, ml2 ) {
-	
 	set Reply-To: ml1, ml2
-
    }
-
-
-○ FML::Credential::has_addr_in_map()
-
-
-	user@domain
-
-	user@DOMAIN
-
-は同じだ！と判定されるけど
-
-	IO::Adapter->delete() 
-
-する時は、case が違うアドレスを引数に持ち得る。
-
-	ただしくは Credential が教えて挙げないといけないのね
 
 
 ○	libexec/relocated , Process/Relocated
@@ -113,17 +95,25 @@
 
 	% grep -r 'sub get' ...
 
-		IO::Adapter::Array	sub get_next_value
-		IO::Adapter::DBI	sub get_next_value
 		IO::Adapter::File	sub get_value_as_str
 		IO::Adapter::File	sub get_value_as_array_ref
 
-	XXX get_next_value ってつかわれてはいないのですよ、いまはね
 	XXX get_value_as_* ってつかわれてはいないのですよ、いまはね
 
 	SQL まわりの改良を （もういいの？）
 
 	write LDAP ;-)
+
+   [TODO]
+	IO/Adapter/File.pm
+
+	IO/Adapter/Array.pm
+		IO/Adapter/NIS.pm
+		IO/Adapter/UnixGroup.pm
+
+	IO/Adapter/DBI.pm
+		IO/Adapter/MySQL.pm
+
 
 
 ○	FML::Error
@@ -354,4 +344,4 @@ sub compare_euc_string
 
 
 ----------
-$FML: 00_MEMO,v 1.60 2003/01/29 13:42:49 fukachan Exp $
+$FML: 00_MEMO,v 1.61 2003/01/30 03:33:54 fukachan Exp $
