@@ -3,10 +3,9 @@
 
 	XXX 作業したら TODO/STATUS.txt もアップデートしてね XXX
 
-
-○	IO::Adapter の改造
-
-	AtomicFile の場所
+	XXX
+	XXX fml 4.0 と同じディレクトリ名は使わないように    XXX
+	XXX
 
 
 ○	FML::Article
@@ -15,46 +14,10 @@
 	0700 とかハードコードされてるじょ
 
 
-○   [DOC] Delivered-To をけそう tips
+○	[DOC] Delivered-To をけそう tips
 
 
-○   subject でふぉわーどさきをかえる tips をしこもう
-
-
-○	ドキュメント( tutorial )
-
-	setup/test.sgml
-	usage/fmlhtmlify.sgml
-	module/IO::Adapter.sgml
-	module/Mail::HTML::Lite.sgml
-	command/extension.sgml
-	threadtrack/chapter.sgml
-	threadtrack/tools.sgml
-	
-	usage/ がいまいち(fml bible のパートIIIの最初の部分にあたるもの)
-		usage/command.sgml
-		usage/post.sgml
-
-
-○	makefml でうごかない？
-
-	get
-	mget
-	send
-	password
-	pass
-			dir 	＊不要？
-			ls 	＊不要？
-			file 	＊不要？
-			list 	＊不要？
-
-	* CGI でも不要？
-
-		dir ls file
-
-	   FML::Command::Admin::dir
-		cgi_menu() ?
-		ディレクトリ listing してくれる perl module ないかな？
+○	subject でふぉわーどさきをかえる tips をしこもう
 
 
 ○	コマンド拡張の仕方
@@ -63,7 +26,7 @@
 ○	メッセージの拡張の仕方
 
 
-○	filter
+○	フィルタ
 
    * filter statistics
 	統計をとりたい
@@ -82,23 +45,7 @@
 
 ○	auto-responses
 
-http://www.cs.utk.edu/~moore/internet-drafts/draft-moore-auto-email-response-00
-.txt
-
-
-○	mewml
-
-	newml の段階でつくってしまうべきですかね、
-	常に使うでぃれくとり
-
-
-○	ファイル名の体系はこれでいいのか？
-
-		members
-		members-admin		vs admins	?
-		members-moderator	vs moderators	?
-
-○	addmoderator こまんど？
+	http://www.cs.utk.edu/~moore/internet-drafts/draft-moore-auto-email-response-00.txt
 
 
 ○	Mail::Message::*Code は日本語依存過ぎじゃない？
@@ -106,12 +53,6 @@ http://www.cs.utk.edu/~moore/internet-drafts/draft-moore-auto-email-response-00
 
 ○	CGI で xxx-admin さんをかすたまいずしたい？
 
-
-○	IO::Adapter
-
-	IO::Adapter::get_XXX() の定義を考え直すべし？
-	IO::Adapter::find() の定義を考え直すべし？
-	(いや、全部直したんじゃないか？)
 
 ○	remove $msg->{ next }
 
@@ -123,12 +64,6 @@ http://www.cs.utk.edu/~moore/internet-drafts/draft-moore-auto-email-response-00
 
 
 ○	etc/src/config.cf.ja/ の説明文を見直す
-
-
-○	makefml get ???
-
-	ところで、誰に送信するんじゃ？ :-) って、そうか、makefml じゃ
-	なくて admin コマンドの時は考えなくてもいいからだな、それは …
 
 
 ○	ファイルを用意しただけやんシリーズ;)
@@ -176,6 +111,8 @@ http://www.cs.utk.edu/~moore/internet-drafts/draft-moore-auto-email-response-00
 
 	MAIL_LIST != MAINTAINER
 
+	config の diag か、これは
+
 
 ○	必要かしら？
 
@@ -202,6 +139,48 @@ http://www.cs.utk.edu/~moore/internet-drafts/draft-moore-auto-email-response-00
 
 	ちょっとコーディングスタイルが古いかな?
 	近々に見直すべし
+
+
+○	ドキュメント( tutorial )
+
+	setup/test.sgml
+	usage/fmlhtmlify.sgml
+	module/IO::Adapter.sgml
+	module/Mail::HTML::Lite.sgml
+	command/extension.sgml
+	threadtrack/chapter.sgml
+	threadtrack/tools.sgml
+	
+	usage/ がいまいち(fml bible のパートIIIの最初の部分にあたるもの)
+		usage/command.sgml
+		usage/post.sgml
+
+
+○	makefml でうごかない？
+
+			get	***disabled***
+			mget	***disabled***
+			send	***disabled***
+			password	不要？
+			pass		不要？
+			dir 	＊不要？
+			ls 	＊不要？
+			file 	＊不要？
+			list 	＊不要？
+
+	* CGI でも不要？
+
+		dir ls file
+
+	   FML::Command::Admin::dir
+		cgi_menu() ?
+		ディレクトリ listing してくれる perl module ないかな？
+
+	* makefml get ???
+
+	ところで、誰に送信するんじゃ？ :-) って、そうか、makefml じゃ
+	なくて admin コマンドの時は考えなくてもいいからだな、それは …
+
 
 
 ○ Mail::ThreadTrack 
@@ -405,4 +384,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.37 2002/07/23 12:58:12 fukachan Exp $
+$FML: 00_MEMO,v 1.38 2002/07/24 09:31:48 fukachan Exp $

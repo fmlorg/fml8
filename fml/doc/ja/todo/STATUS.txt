@@ -10,7 +10,13 @@
 	perl 5.00503 on FreeBSD 4.3 STABLE
 	perl ? on FreeBSD 4.6 RELEASE
 
+
+3章
+	[TODO] ＭＬサーバの理論をかく
+
+
 II部　fmlのセットアップ〜MLの作成
+
 4章　Unix上でのfmlのインストール
 
 	ユーザ root になり、configure そして make です。
@@ -26,6 +32,10 @@ II部　fmlのセットアップ〜MLの作成
 	注意: ユーザ fml を作るだけでなく、きちんとユーザ fml さんの
 	      ホームディレクトリも作って下さい。
 
+	[TODO] sendmail
+	[TODO] MacOS X Server
+
+
 5章　Unix上でMLを作る
 
 	"makefml newml elena" を使って下さい。
@@ -33,7 +43,11 @@ II部　fmlのセットアップ〜MLの作成
 	ただし fml-devel では newml 時に設定用 CGI や、HTML 化された記事
 	をおくディレクトリ ~fml/public_html/ .. を用意する点が異なります。
 
+	[TODO] sendmail
+	[TODO] MacOS X Server
+
 	* postfix と qmail がターゲットシステムです。
+		procmail の見本も作るぞ
 
 	* バーチャルドメインの扱い
 
@@ -48,10 +62,16 @@ II部　fmlのセットアップ〜MLの作成
 
 		このファイルの書式は『ドメイン ディレクトリ』です。
 
+
 6章　Windows 2000/NT4上でのfmlのインストール
 
 	[TODO] Microsoft ものは全然手をつけていません。
 	[TODO] Microsoft ものは IMail から手をつけるのがいいんじゃないかな
+
+	[TODO]	pop based ML
+	[TODO]	imap based ML
+	[TODO]	sendmail
+
 
 7章　アップグレード
 
@@ -61,6 +81,11 @@ II部　fmlのセットアップ〜MLの作成
 
 	★ レシピ のアップグレードの節を見てね
 
+	[TODO] メールサーバの停止？
+	[TODO] elena ＭＬのアップグレード？
+		ＭＬ固有のアップグレード tips なんてあるかな
+
+
 8章　Unix上でのCGIのセットアップ
 
 	デフォルトで CGI スクリプトが用意されます。
@@ -68,10 +93,16 @@ II部　fmlのセットアップ〜MLの作成
 	[TODO] .htaccess の設定支援ツールがまだありません。
 		エディタでファイルを消すなり、編集するなりして下さい。
 
-	[TODO] CGI からのエラーの上げ方 ？
+	CGI からのエラーは __ERROR_.(キーワード)__ で croak() してる
+
+	[TODO] 各ＭＬごとの CGI
+
+	[TODO] config 
 
 
 9章　fmlの動作確認
+
+	[TODO] 書くべし、書くべし、書くべし
 
 	これは fml 4.0 と同様に行なって下さい。
 
@@ -101,25 +132,37 @@ III部　fmlのカスタマイズ
 		ＭＬの削除			OK
 		ＭＬのメンバーの登録と削除	OK
 		登録しているアドレスの変更	OK
-	[TODO]	off/on
+		off/on				OK
 	[TODO]	まとめおくり
-		リモート管理			OK
+	[TODO]	リモート管理			
+			パスワード変更は？
 	[TODO]	ＭＬのカスタマイズはファイルの編集あるのみ
 
 	注意: 当然リモートコマンドよりいろいろなことができます。
 
+
 12章　fmlの設定ファイルを変更する
 
-	各ＭＬのホームディレクトリにある config.cf を編集してください。
+	[TODO] 設定ファイルのフォーマットの説明
+	[TODO] 設定ファイルの変更方法
 
-	[TODO] 設定支援ツールはまだありません。
+		各ＭＬのホームディレクトリにある config.cf を編集して
+		ください。
+
+	[TODO] メニューでの操作
+		設定支援ツールはまだありません。
+
+	[TODO] すべてのＭＬに同じ設定を強制する
 
 	/etc/fml/ (とか /usr/local/etc/fml/ とか) 以下に
 	デフォルトの .cf がおかれますし、サイト依存、ドメイン依存
 	の .cf を作ることでサイト、ドメインごとの全ＭＬの
 	デフォルトを変更することもできます。
 
+
 13章　MLのスタイルのカスタマイズ (ケーススタディ)
+
+	[TODO] デフォルトのポリシーの説明 (D)C
 
 	投稿の制御: $post_restrictions で制御
 		
@@ -127,9 +170,11 @@ III部　fmlのカスタマイズ
 
 	コマンドメールの禁止: $command_restrictions で reject とだけ指定
 
+	[TODO] 手動登録？
+
 	[TODO] 自動登録
 		今はデフォルトで自動登録ですわ :-)
-	[TODO]	まだ confirmation タイプしかありません。
+		まだ confirmation タイプしかありません。
 
 	誰でも投稿可能:	$post_restrictions で permit_anyone
 
@@ -139,7 +184,8 @@ III部　fmlのカスタマイズ
 
 	[TODO] モデレータ 
 
-	 自動ファイル返送
+	自動ファイル返送
+		[ TODO ] multipart 以外はなしだよな
 
 	[TODO] 複数の管理者による運用
 
@@ -167,12 +213,22 @@ III部　fmlのカスタマイズ
 	/usr/local/share/fml/$fml_version/message/$charset/
 	にあります。
 
+	[TODO] site_local/ ?
+
+	[TODO] domain_local/ ?
+
+
 16章　記事のフィルタリング
 
 	実装済み (FML::Filter)
 		検出できるルール: ヘッダ、本文、特殊なウィルス
+		content filter
 
-	[TODO] 4.0 の ContertFilter にあたるものを FML::Filter へ統合する。
+	[TODO] ContertFilter のファイル名
+		/etc/fml/ にいれちゃえー
+
+	[TODO] ContertFilter のデフォルト値
+		/etc/fml/ にいれちゃえー
 
 	[TOOD] 入力サイズ制限
 
@@ -182,7 +238,8 @@ III部　fmlのカスタマイズ
 	[TODO] 未実装
 
 	[TODO] トラフィック統計を取るために、あらかじめいろんなデータを
-		DB に取りまくるべき？
+		DB に取りまくるべき？ 
+		thread db とデータを共有する？ 
 
 
 18章　リモート管理（メールでfmlを操作する）
@@ -191,13 +248,9 @@ III部　fmlのカスタマイズ
 	ドは $commands_for_privileged_user という変数で定義
 	されているものが利用可能です。
 
-	subscribe add unsubscribe bye remove resign signoff chaddr
-	addadmin addpriv byeadmin byepriv get mget send password pass
-	dir ls file list
+	利用可能なコマンドは FML::Command::Admin:: クラスの部分集合です
 
-	＊これらは FML::Command::Admin:: クラスで定義されています。
-
-	[TODO] ”approve パスワード コマンド”型構文サポート
+	[TODO] "approve パスワード コマンド"型構文サポート
 
 	[TODO] 非対称鍵暗号認証
 
@@ -251,7 +304,8 @@ V部　その他のトピック
 
 27章　エラーメールを自動解析する
 
-	[TODO] Mail::Bounce モジュールは作ったが、組み込んでない;)
+	[TODO] Mail::Bounce モジュールは作ったが、組み込んだ
+		まだ自動削除ができてない;)
 
 28章　メールサーバの変更/引越し
 
@@ -276,7 +330,8 @@ VII部　Advanced Study
 
 	はじめから前提だぜ
 
-	[TODO] replace メソッドを賢く
+	[削除] replace メソッドは削除した
+		なくても OK ？
 
 37章　配送の高速化について
 
@@ -300,4 +355,4 @@ VIII部　付録
 	queue manager for LMTP ? 
 
 ---
-$FML: STATUS.txt,v 1.9 2002/05/17 09:54:01 fukachan Exp $
+$FML: STATUS.txt,v 1.10 2002/07/13 14:30:14 fukachan Exp $
