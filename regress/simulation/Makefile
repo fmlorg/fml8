@@ -1,14 +1,14 @@
 #
-# $FML: Makefile,v 1.47 2001/10/17 10:26:51 fukachan Exp $
+# $FML: Makefile,v 1.48 2001/10/20 07:54:42 fukachan Exp $
 #
 
 all: link
 
 clean:
 	@ (cd ../..; make clean)
-	rm -f __scan__
 
 allclean: clean clean_link
+	rm -f __scan__
 
 clean_link:
 	for file in * ; do  test -h $$file && rm -f $$file || true ; done
