@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.19 2001/04/15 14:33:36 fukachan Exp $
+# $FML: Message.pm,v 1.20 2001/04/15 15:29:29 fukachan Exp $
 #
 
 package Mail::Message;
@@ -555,7 +555,7 @@ sub find
 	my $mp   = $self;
 	for ( ; $mp; $mp = $mp->{ next }) {
 	    if ($debug) { print "   msg->find(", $type, " eq $type)\n";}
-	    if ($type eq $mp->data_type()) {
+	    if ($type eq $mp->get_data_type()) {
 		if ($debug) { print "   msg->find($type match) = $mp\n";}
 		return $mp;
 	    }
@@ -565,7 +565,7 @@ sub find
 	my $regexp = $args->{ data_type_regexp };
 	my $mp     = $self;
 	for ( ; $mp; $mp = $mp->{ next }) {
-	    my $type = $mp->data_type();
+	    my $type = $mp->get_data_type();
 	    if ($debug) { print "   msg->find(", $type, "=~ /$regexp/)\n";}
 	    if ($type =~ /$regexp/i) {
 		if ($debug) { print "   msg->find($type match) = $mp\n";}
@@ -578,18 +578,19 @@ sub find
 }
 
 
-=head2 C<data_type(header)>
+=head2 C<header_data_type()>
 
-return the C<type> string.
-It is extracted from C<header> object.
+return the C<type> string. It is the whole message type which is
+speculated from header C<Content-Type:>.
 
 =cut
 
 
-sub data_type
+sub header_data_type
 {
     my ($self) = @_;
-    $self->{ data_type } || undef;
+    my $hdr = $self->rfc822_message_header();
+    $self->_header_data_type($hdr);
 }
 
 
