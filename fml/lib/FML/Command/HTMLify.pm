@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.17 2003/07/19 12:58:48 fukachan Exp $
+# $FML: HTMLify.pm,v 1.18 2003/08/23 07:24:42 fukachan Exp $
 #
 
 package FML::Command::HTMLify;
@@ -83,7 +83,7 @@ sub convert
 
 	if ($is_subdir_exists) {
 	    my (@x) = sort _sort_subdirs @$subdirs;
-	    print STDERR "   subdirs: @x\n";
+	    print STDERR "   subdirs: @x\n" if $debug;
 	    for my $xdir (@x) {
 		eval q{
 		    use Mail::Message::ToHTML;
@@ -94,7 +94,7 @@ sub convert
 	    }
 	}
 	else {
-	    print STDERR "   hmm, looks not subdir style.\n";
+	    print STDERR "   hmm, looks not subdir style.\n" if $debug;
 	    eval q{
 		use Mail::Message::ToHTML;
 		my $obj = new Mail::Message::ToHTML $htmlifier_args;
