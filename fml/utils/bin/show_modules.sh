@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id$
+# $FML$
 #
 
 for x in libexec/[a-z]* FML/*pm

@@ -1,6 +1,6 @@
 #!/usr/local/bin/perl
 #
-# $Id$
+# $FML$
 #
 
 use lib qw(./lib/3RDPARTY ./lib/fml5 ./lib/CPAN ./lib);
