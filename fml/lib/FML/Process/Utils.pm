@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.126 2004/11/25 12:20:06 fukachan Exp $
+# $FML: Utils.pm,v 1.127 2004/12/05 16:19:11 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -2099,6 +2099,38 @@ sub log_rorate
 	    $curproc->logerror("cannot attach log rotate object");
 	    $curproc->logerror($r);
 	}
+    }
+}
+
+
+# Descriptions: remove too old incoming queue files.
+#    Arguments: OBJ($curproc) STR($dir) NUM($_limit)
+# Side Effects: remove too old incoming queue files.
+# Return Value: none
+sub remove_too_old_files_in_dir
+{
+    my ($curproc, $dir, $_limit) = @_;
+    my $limit = $_limit || 14*24*3600; # 2 weeks by default.
+
+    use DirHandle;
+    use File::stat;
+    my $dh = new DirHandle $dir;
+    if (defined $dh) {
+	my ($file, $entry, $stat);
+	my $day_limit = time - $limit;
+
+      ENTRY:
+	while ($entry = $dh->read()) {
+	    next ENTRY if $entry =~ /^\./o;
+
+	    $file = File::Spec->catfile($dir, $entry);
+	    $stat = stat($file);
+	    if ($stat->mtime < $day_limit) {
+		$curproc->log("remove too old file: $entry");
+		unlink $file;
+	    }
+	}
+	$dh->close();
     }
 }
 
