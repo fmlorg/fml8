@@ -1,5 +1,5 @@
 <!--
-   $FML: bookinfo.sgml,v 1.10 2003/01/05 08:06:00 fukachan Exp $
+   $FML: bookinfo.sgml,v 1.11 2003/02/11 13:54:11 fukachan Exp $
 -->
 
 <bookinfo>
@@ -60,6 +60,7 @@
 	perl ?       on FreeBSD 4.6 RELEASE
 	perl 5.00503 on FreeBSD 4.7 RELEASE-p3
 	perl 5.00503 on FreeBSD 4.6.2 RELEASE			
+        perl 5.6.1   on Turbolinux Server 8 (qmail)
 	perl 5.6.1   on Redhat Linux 7.2 (postfix)		
 	perl 5.00503 on Redhat Linux 6.2 (sendmail8.11.6)	
 	postfix       + perl 5.6.1 on Solaris 7			
