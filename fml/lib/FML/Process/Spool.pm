@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.12 2002/12/18 04:43:27 fukachan Exp $
+# $FML: Spool.pm,v 1.13 2003/01/02 15:51:49 fukachan Exp $
 #
 
 package FML::Process::Spool;
@@ -106,7 +106,8 @@ sub verify_request
 
 =head2 C<run($args)>
 
-rebuild summary.
+move ml spool to other location.
+convert ml spool from plane to subdir if specified.
 
 =cut
 
@@ -115,7 +116,8 @@ rebuild summary.
 #
 
 
-# Descriptions: convert text format article to HTML by Mail::Message::ToHTML
+# Descriptions: move ml spool to other location.
+#               convert ml spool from plane to subdir if specified.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: load modules, create HTML files and directories
 # Return Value: none
@@ -123,8 +125,12 @@ sub run
 {
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
+    my $ml_name = $config->{ ml_name };
     my $dst_dir = $config->{ spool_dir };
     my $options = $curproc->command_line_options();
+    my $argv    = $curproc->command_line_argv();
+    my $numargs = $#$argv;
+    my $command = $argv->[ 0 ] || '';
 
     my $eval = $config->get_hook( 'fmlspool_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -134,7 +140,7 @@ sub run
     my $article = new FML::Article $curproc;
 
     # XXX-TODO: options and argv(s) are appropriate ?
-    # use $dst_dir if --srcdir=DIR not specified.
+    # use $dst_dir as $src_dir if --srcdir=DIR not specified.
     my $src_dir = $options->{srcdir} || $dst_dir;
     my $optargs = {
 	article => $article,
@@ -142,11 +148,20 @@ sub run
 	dst_dir => $dst_dir,
     };
 
-    # XXX you can specify the spool type by --style=subdir but only
-    # XXX "subdir" is supported now :)
-    if (defined $options->{ convert }) {
-	$curproc->_convert($args, $optargs);
-	$curproc->_check($args, $optargs);
+    # XXX-TODO: you can specify the spool type by --style=subdir
+    # XXX-TODO: but only "subdir" is supported now :)
+    if ($numargs > 0) {
+	if ($command eq 'convert') {
+	    print "convert spool of $ml_name ML.\n\n";
+	    $curproc->_convert($args, $optargs);
+	    $curproc->_check($args, $optargs);
+	}
+	elsif ($command eq 'check') {
+	    $curproc->_check($args, $optargs);
+	}
+	else {
+	    croak("command=$command unknown");
+	}
     }
     else {
 	# show status by default for "Principle of Least Surprise".
@@ -305,11 +320,14 @@ sub help
 
 print <<"_EOF_";
 
-Usage: $name [--convert] [--style=STR] [--srcdir=DIR] [-I DIR] ML
+Usage: $name [--style=STR] [--srcdir=DIR] [-I DIR] COMMAND ML
+
+commands:
+
+convert     convert the spool dir at the same directory path.
+check       check the current spool status.
 
 options:
-
---convert   convert the spool dir at the same directory path
 
 --style=    convertd to subdir style if 'subdir' specified.
 
