@@ -74,6 +74,9 @@ sub _package_we_use
     elsif ($name eq 'fmlconf' || $name eq 'makefml') {
 	$pkg = 'FML::Process::Configure';
     }
+    elsif ($name eq 'fmlticket') {
+	$pkg = 'FML::Process::TicketSystem';
+    }
     elsif ($name eq 'mead') {
 	$pkg = 'FML::Process::MailErrorAnalyzer';
     }
