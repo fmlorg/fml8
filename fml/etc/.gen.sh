@@ -1,21 +1,27 @@
 #!/bin/sh
 #
-# $FML: .gen.sh,v 1.3 2001/06/17 08:57:08 fukachan Exp $
+# $FML: .gen.sh,v 1.4 2001/11/27 09:30:40 fukachan Exp $
 #
 
-jatmp=default_config.cf.ja.$$
-entmp=default_config.cf.en.$$
+tmp=default_config.cf.xx.$$
 
-trap "rm -f $jatmp $entmp" 0 1 3 15
+trap "rm -f $tmp" 0 1 3 15
 
-test -f $jatmp || rm -f $jatmp
-
-cat defaults/Configurations | while read file 
+for lang in ja
 do
-	cat defaults/$file.ja >> $jatmp
-	echo "" >> $jatmp
-done
+	test -f $tmp || rm -f $tmp
 
-mv $jatmp default_config.cf.ja.in
+	cat src/list.cf | while read file 
+	do
+		cat src/config.cf.$lang/$file >> $tmp
+		echo "" >> $tmp
+	done
+
+	mv $tmp default_config.cf.$lang.in
+
+	if [ -f default_config.cf.$lang.in ];then 
+		echo default_config.cf.$lang.in created
+	fi
+done
 
 exit 0
