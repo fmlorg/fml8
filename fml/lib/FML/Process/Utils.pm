@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.58 2003/02/09 12:31:45 fukachan Exp $
+# $FML: Utils.pm,v 1.59 2003/02/15 02:54:00 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -532,14 +532,31 @@ sub safe_cgi_action_name
     my ($curproc) = @_;
     my $name = $curproc->myname();
 
-    use FML::Restriction::Base;
-    my $safe = new FML::Restriction::Base;
-
-    if ($safe->regexp_match('action', $name)) {
+    if ($curproc->is_safe_syntax('action', $name)) {
 	return $name;
     }
     else {
 	return undef;
+    }
+}
+
+
+# Descriptions: check $str with $class regexp defined in FML::Restriction.
+#    Arguments: OBJ($curproc) STR($class) STR($str)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub is_safe_syntax
+{
+    my ($curproc, $class, $str) = @_;
+
+    use FML::Restriction::Base;
+    my $safe = new FML::Restriction::Base;
+
+    if ($safe->regexp_match($class, $str)) {
+	return 1;
+    }
+    else {
+	return 0;
     }
 }
 
@@ -1159,6 +1176,54 @@ sub set_print_style
     my ($curproc, $mode) = @_;
 
     $curproc->{ __print_style } = $mode;
+}
+
+
+# Descriptions: inform default language
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub language_default
+{
+    my ($curproc) = @_;
+
+    return 'euc-jp'; # default
+}
+
+
+# Descriptions: inform language returned by cgi process
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub language_of_cgi_message
+{
+    my ($curproc) = @_;
+    my $config  = $curproc->{ config };
+    my $charset = $config->{ cgi_charset };
+
+    return( $charset || $curproc->language_default() );
+}
+
+
+# Descriptions: language used in reply message
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub language_of_reply_message
+{
+    my ($curproc) = @_;
+    $curproc->language_default();
+}
+
+
+# Descriptions: language used in html files
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub language_of_html_file
+{
+    my ($curproc) = @_;
+    $curproc->language_default();
 }
 
 
