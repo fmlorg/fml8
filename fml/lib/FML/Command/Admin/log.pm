@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.16 2003/08/23 04:35:31 fukachan Exp $
+# $FML: log.pm,v 1.17 2003/08/29 15:33:59 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -100,7 +100,7 @@ sub cgi_menu
 sub _show_log
 {
     my ($self, $log_file, $args) = @_;
-    my $is_cgi       = 1 if $args->{ printing_style } eq 'cgi';
+    my $is_cgi       = 1 if $args->{ printing_style } eq 'html';
     my $last_n_lines = 30;
     my $linecount    = 0;
     my $maxline      = 0;
