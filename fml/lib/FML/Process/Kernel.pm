@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.178 2003/09/05 09:03:16 fukachan Exp $
+# $FML: Kernel.pm,v 1.179 2003/09/13 09:09:48 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1114,21 +1114,6 @@ sub is_refused
 }
 
 
-# Descriptions: close STDERR channel.
-#    Arguments: OBJ($curproc)
-# Side Effects: close(STDERR)
-# Return Value: none
-sub close_stderr_channel_if_quiet_option_specified
-{
-    my ($curproc) = @_;
-    my $option = $curproc->command_line_options();
-
-    if (defined $option->{ quiet } || defined $option->{ q }) {
-	close(STDERR);
-    }
-}
-
-
 =head1 MESSAGE HANDLING
 
 =cut
@@ -1207,7 +1192,7 @@ sub log_message
     my $at_function = $msg_args->{ caller }->[ 1 ];
     my $at_line     = $msg_args->{ caller }->[ 2 ];
 
-    if ($level eq 'ok') { 
+    if ($level eq 'info') { 
 	Log($msg);
     }
     elsif ($level eq 'warning') { 
@@ -2279,11 +2264,6 @@ sub open_outgoing_message_channel
 }
 
 
-=head1 ERROR HANDLING
-
-=cut
-
-
 # Descriptions: parse exception error message and return (key, reason)
 #    Arguments: OBJ($curproc) STR($exception)
 # Side Effects: none
@@ -2299,6 +2279,62 @@ sub parse_exception
     }
 
     return ($key, $reason);
+}
+
+
+# Descriptions: close and re-open STDERR channel.
+#    Arguments: OBJ($curproc)
+# Side Effects: close(STDERR)
+# Return Value: none
+sub _reopen_stderr_channel
+{
+    my ($curproc) = @_;
+    my $option    = $curproc->command_line_options();
+
+    if ($curproc->is_cgi_process()       || 
+	$curproc->is_under_mta_process() ||
+	defined $option->{ quiet } || defined $option->{ q }) {
+	my $tmpfile = $curproc->temp_file_path();
+	my $pcb     = $curproc->pcb();
+	$pcb->set("stderr", "logfile", $tmpfile);
+
+	open(STDERR, "> $tmpfile") || croak("fail to open $tmpfile");
+	$curproc->add_into_clean_up_queue($tmpfile);
+    }
+}
+
+
+# Descriptions: close and log messages written into STDERR channel.
+#    Arguments: OBJ($curproc)
+# Side Effects: close(STDERR)
+# Return Value: none
+sub _finalize_stderr_channel
+{
+    my ($curproc) = @_;
+    my $option    = $curproc->command_line_options();
+    my $pcb       = $curproc->pcb();
+    my $tmpfile   = $pcb->get("stderr", "logfile");
+
+    if ($curproc->is_cgi_process()       ||
+	$curproc->is_under_mta_process() ||
+	defined $option->{ quiet } || defined $option->{ q }) {
+
+	close(STDERR);
+	open(STDERR, ">&STDOUT");
+
+	if (-s $tmpfile) {
+	    use FileHandle;
+	    my $fh = new FileHandle $tmpfile;
+	    if (defined $fh) {
+		my $buf;
+		while ($buf = <$fh>) {
+		    chomp $buf;
+		    $curproc->logwarn($buf);
+		}
+		$fh->close();
+	    }
+	}
+    }
 }
 
 

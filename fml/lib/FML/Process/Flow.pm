@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Flow.pm,v 1.20 2003/01/25 12:11:19 fukachan Exp $
+# $FML: Flow.pm,v 1.21 2003/03/14 03:51:48 fukachan Exp $
 #
 
 package FML::Process::Flow;
@@ -84,6 +84,9 @@ sub ProcessStart
     # e.g. parse the incoming message (e.g. STDIN)
     $process->prepare($args);
 
+    # close and reopen STDERR to record log messages written into STDERR.
+    $process->_reopen_stderr_channel();
+
     # validate the request, for example,
     #    permit post from the sender,
     #    check the mail loop or not ...
@@ -94,6 +97,9 @@ sub ProcessStart
 
     # closing the process
     $process->finish($args);
+
+    # flush stderr channel log.
+    $process->_finalize_stderr_channel($args);
 
     # clean up tmporary files
     $process->clean_up_tmpfiles();
