@@ -29,7 +29,7 @@ rm -fr でちゃれんじ…してもいいけど、失敗するとこわい〜ん;_;
 
 <para>
 例:  FreeBSD + Apache + qmail  で、Rootの権限が無い場合
-<unlink url="http://www.nmt.ne.jp/~myone/fml.shtml"
+<ulink url="http://www.nmt.ne.jp/~myone/fml.shtml">
 http://www.nmt.ne.jp/~myone/fml.shtml
 </ulink>
 </para>
