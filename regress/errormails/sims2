@@ -1,0 +1,29 @@
+Return-Path: <MAILER-DAEMON>
+Received: from ns1.?????.??.jp (localhost [127.0.0.1])
+ by mailer4.?????.??.jp (??????-NSS-V1.0(6))
+ with ESMTP id <0GBM00GXVMFUM6@mailer4.?????.??.jp> for
+ ???@?????.??.jp; Wed, 11 Apr 2001 20:55:07 +0900 (JST)
+Received: from localhost (localhost)	by ns1.?????.??.jp (8.11.2/8.11.2)
+ id f3BBt6N02213; Wed, 11 Apr 2001 20:55:06 +0900 (JST)
+Message-id: <200104111155.f3BBt6N02213@ns1.cc.?????.??.jp>
+MIME-version: 1.0
+Content-type: multipart/report; report-type=delivery-status;
+	boundary="f3BBt6N02213.986990106/ns1.cc.?????.??.jp"
+Subject: Returned mail: see transcript for details
+From: Mail Delivery Subsystem <MAILER-DAEMON@ns1.cc.?????.??.jp>
+To: ???@?????.??.jp
+Date: Wed, 11 Apr 2001 20:55:06 +0900 (JST)
+Auto-submitted: auto-generated (failure)
+
+The original message was received at Wed, 11 Apr 2001 20:54:40 +0900 (JST)
+from [???.??.?.???]
+
+   ----- The following addresses had permanent fatal errors -----
+<rudo@nuinui.net>
+    (reason: 550 5.1.1 <rudo@nuinui.net>... User unknown)
+
+   ----- Transcript of session follows -----
+... while talking to mail.nuinui.net.:
+>>> RCPT To:<rudo@nuinui.net>
+<<< 550 5.1.1 <rudo@nuinui.net>... User unknown
+550 5.1.1 <rudo@nuinui.net>... User unknown
