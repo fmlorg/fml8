@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.28 2003/02/18 15:57:46 fukachan Exp $
+# $FML: Error.pm,v 1.29 2003/03/16 07:26:22 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -107,10 +107,17 @@ dummy.
 sub verify_request
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config     = $curproc->{ config };
+    my $maintainer = $config->{ maintainer };
 
     my $eval = $config->get_hook( 'error_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
+    # set dummy sender to avoid unexpected error
+    use FML::Credential;
+    my $cred = new FML::Credential $curproc;
+    $curproc->{'credential'} = $cred;
+    $curproc->{'credential'}->set( 'sender', $maintainer );
 
     $eval = $config->get_hook( 'error_verify_request_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -145,6 +152,8 @@ sub run
 
     my $eval = $config->get_hook( 'error_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
+    $curproc->_forward_error_message();
 
     unless ($curproc->is_refused()) {
 	eval q{
@@ -272,8 +281,43 @@ sub finish
 	Log("error message not found");
     }
 
+    $curproc->inform_reply_messages();
+    $curproc->queue_flush();
+
     $eval = $config->get_hook( 'error_finish_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+}
+
+
+=head1 message forwarding
+
+=cut
+
+
+# Descriptions: forward error message on rejection.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($msg_args)
+# Side Effects: update reply message queue
+# Return Value: none
+sub _forward_error_message
+{
+    my ($curproc)  = @_;
+    my $config     = $curproc->config();
+    my $maintainer = $config->{ maintainer };
+    my $maps       = $config->{ maintainer_recipient_maps } || '';
+    my $msg        = $curproc->incoming_message();
+
+    if ($maps) {
+	my $maps     = $config->get_as_array_ref('maintainer_recipient_maps');
+	my $msg_args = {
+	    sender         => $maintainer,
+	    recipient_maps => $maps,
+	    header         => {
+		from => $maintainer,
+		to   => $maintainer,
+	    },
+	};
+	$curproc->reply_message($msg, $msg_args);
+    }
 }
 
 
