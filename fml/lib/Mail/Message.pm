@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.16 2001/04/12 16:44:44 fukachan Exp $
+# $FML: Message.pm,v 1.17 2001/04/13 03:52:05 fukachan Exp $
 #
 
 package Mail::Message;
@@ -567,7 +567,7 @@ sub find
 	for ( ; $mp; $mp = $mp->{ next }) {
 	    my $type = $mp->data_type();
 	    if ($debug) { print "   msg->find(", $type, "=~ /$regexp/)\n";}
-	    if ($type =~ /$regexp/) {
+	    if ($type =~ /$regexp/i) {
 		if ($debug) { print "   msg->find($type match) = $mp\n";}
 		return $mp;
 	    }
@@ -621,6 +621,7 @@ sub _header_data_type
     my ($type) = split(/;/, $header->get('content-type'));
     if (defined $type) {
 	$type =~ s/\s*//g;
+	$type =~ tr/A-Z/a-z/;
 	return $type;
     }
     undef;
@@ -1170,7 +1171,7 @@ sub _get_data_type
     my $buf = $args->{ header } || '';
 
     if ($buf =~ /Content-Type:\s*(\S+)(\n|\;|\s*$)/) {
-	return $1;
+	return "\L$1";
     }
     else {
 	$default
@@ -1184,13 +1185,13 @@ sub _get_mime_header
     my $pos = index($$data, "\n\n", $pos_begin) + 1;
     my $buf = substr($$data, $pos_begin, $pos - $pos_begin);
 
-    if ($buf =~ /Content-Type:\s*(\S+)\;/) {
+    if ($buf =~ /Content-Type:\s*(\S+)\;/i) {
 	return ($buf, $pos + 1);
     }
-    elsif ($buf =~ /Content-Type:\s*(\S+)\s*$/) {
+    elsif ($buf =~ /Content-Type:\s*(\S+)\s*$/i) {
 	return ($buf, $pos + 1);
     }
-    elsif ($buf =~ /Content-Type:\s*(\S+)\s*/) {
+    elsif ($buf =~ /Content-Type:\s*(\S+)\s*/i) {
 	return ($buf, $pos + 1);
     }
     else {
@@ -1213,7 +1214,7 @@ sub build_mime_header
     my ($buf, $charset);
     my $data_type = $args->{ data_type };
 
-    if ($data_type =~ /^text/) {
+    if ($data_type =~ /^text/i) {
 	$charset = $args->{ charset } || 'us-ascii';
     }
 
@@ -1405,6 +1406,7 @@ sub get_data_type
     my ($self) = @_;
     my $type = $self->{ data_type };
     $type =~ s/;//;
+    $type =~ tr/A-Z/a-z/;
     $type;
 }
 
