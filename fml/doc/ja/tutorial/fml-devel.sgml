@@ -1,16 +1,12 @@
 <!doctype book public "-//OASIS//DTD DocBook V3.1//EN" [
-<!entity intro     SYSTEM "intro.sgml">
-<!entity terms     SYSTEM "terms.sgml">
-<!entity install   SYSTEM "install.sgml">
-<!entity reference SYSTEM "reference.sgml">
-<!ENTITY architecture SYSTEM "architecture.gif" ndata gif>
+<!entity % include SYSTEM "include.sgml"> %include;
 ]>
 
 <!--
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-$FML: fml-devel.sgml,v 1.6 2001/04/22 16:10:45 fukachan Exp $
+$FML: fml-devel.sgml,v 1.1.1.1 2001/04/22 16:17:17 fukachan Exp $
 -->
 
 <book>
@@ -20,14 +16,25 @@ $FML: fml-devel.sgml,v 1.6 2001/04/22 16:10:45 fukachan Exp $
 	fml-devel (fml 5.0) チュートリアル
     </title>
 
-    <authorgroup>
-	<corpauthor>
-	Ken'ichi Fukamachi
-	</corpauthor>
-    </authorgroup>
+    <author>
+	<honorific> Dr        </honorific>
+	<firstname> Ken'ichi  </firstname>
+	<surname>   Fukamachi </surname>
+	<affiliation>
+		<orgname>FML.ORG</orgname>
+	    <address>
+		<email>
+		<ulink url="mailto:fukachan@fml.org">
+		fukachan@fml.org
+		</ulink> 
+		</email>
+	    </address>
+	</affiliation>
+    </author>
 
     <copyright>
-		<year/2001/<holder/Ken'ichi Fukamachi/
+	<year> 2001 </year>
+	<holder> Ken'ichi Fukamachi </holder>
     </copyright>
 
   </bookbiblio>
@@ -47,8 +54,9 @@ $FML: fml-devel.sgml,v 1.6 2001/04/22 16:10:45 fukachan Exp $
     &intro;
   </chapter>
 
-  <chapter id="reference">
-	&reference;
-  </chapter>
+
+  <!-- 〜ここから後は付録〜 -->
+  <appendix id="terms">   &terms;   </appendix>
+  <appendix id="docbook"> &docbook; </appendix>
 
 </book>
