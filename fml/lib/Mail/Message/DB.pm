@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.14 2004/02/15 04:38:37 fukachan Exp $
+# $FML: DB.pm,v 1.15 2004/03/24 01:32:03 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -21,12 +21,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 use Carp;
 use File::Spec;
 
-use lib qw(../../../../fml/lib
-	   ../../../../cpan/lib
-	   ../../../../img/lib
-	   );
-
-my $version = q$FML: DB.pm,v 1.14 2004/02/15 04:38:37 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.15 2004/03/24 01:32:03 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -707,6 +702,107 @@ sub __search_default_next_id_in_thread
     }
 
     return undef;
+}
+
+
+=head2 get_thread_data($thread_args)
+
+return thread data around the specified key.
+
+=cut
+
+
+# Descriptions: return thread data around the specified key.
+#    Arguments: OBJ($self) HASH_REF($thread_args)
+# Side Effects: none
+# Return Value: HASH_REF
+sub get_thread_data
+{
+    my ($self, $thread_args) = @_;
+    my ($n, $next_key, $list, $id, $found);
+    my $result = {};
+    my $cache  = {};
+
+    # range
+    use Mail::Message::MH;
+    my $mh      = new Mail::Message::MH;
+    my $range   = $thread_args->{ range } || 'last:10';
+    my $head_id = $thread_args->{ last_id };
+    my $id_list = $mh->expand($range, 1, $head_id);
+    my $tail_id = $id_list->[ 0 ] || 1;
+
+  KEY:
+    for ($id = $tail_id; $id <= $head_id; $id++) {
+	next KEY if defined $cache->{ $id } && $cache->{ $id };
+
+	# get id array for the thread with the head_id = $id.
+	$list = [];
+	$self->_get_keys_in_this_thread($id, $list, $cache);
+	$result->{ $id } = $list || [];
+    }
+
+    return $result;
+}
+
+my $recursive = 0;
+
+# Descriptions: return id list for thread with the $head_id at the top.
+#    Arguments: OBJ($self) NUM($head_id) ARRAY_REF($list) HASH_REF($uniq)
+# Side Effects: none
+# Return Value: ARRAY(NUM, NUM, ARRAY_REF)
+sub _get_keys_in_this_thread
+{
+    my ($self, $head_id, $list ,$uniq) = @_;
+
+    $recursive++;
+
+    my $idlist = $self->get_as_array_ref('ref_key_list', $head_id);
+    if (@$idlist) {
+	print STDERR "($recursive) head=$head_id => @$idlist\n" if $debug;
+
+      ID:
+        for my $id (@$idlist) {
+            next ID if $uniq->{ $id };
+            $uniq->{ $id } = 1;
+
+	    print STDERR "($recursive) check id=$id\n" if $debug;
+
+            # oops, we should ignore head of the thread ( myself ;-)
+	    if (($id != $head_id) && $self->_has_link($id)) {
+		print STDERR "call again (call from id=$id)\n" if $debug;
+                push(@$list, $id);
+		$self->_get_keys_in_this_thread($id, $list, $uniq);
+            }
+            else {
+                print STDERR "push(@$list, $id);\n" if $debug;
+                push(@$list, $id);
+            }
+        }
+    }
+    else {
+	print STDERR "($recursive) head=$head_id => no list\n" if $debug;
+	$uniq->{ $head_id } = 1;
+	push(@$list, $head_id);
+    }
+
+    $recursive--;
+}
+
+
+# Descriptions: check whether $id has next or previous link.
+#    Arguments: OBJ($self) NUM($id)
+# Side Effects: none
+# Return Value: 1 or 0
+sub _has_link
+{
+    my ($self, $id) = @_;
+
+    if ($self->get('next_key', $id) || $self->get('prev_key', $id)) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
 }
 
 
