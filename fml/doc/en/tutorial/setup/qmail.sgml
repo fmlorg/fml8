@@ -1,0 +1,36 @@
+<!--
+   $FML$
+   $jaFML: qmail.sgml,v 1.2 2002/07/06 14:55:20 fukachan Exp $
+-->
+
+<sect1 id="setup.qmail.aliases">
+	<title>
+	MTA configuration (qmail)
+	</title>
+
+<para>
+"makefml newml" creates the following files for qmail:
+<screen>
+~fml/.qmail-fml:org-elena
+~fml/.qmail-fml:org-elena-ctl
+</screen>
+Hence, 
+<screen>
+/var/qmail/control/virtualdomains
+</screen>
+is prepared like this, 
+<screen>
+fml.org:fml-fml.org
+</screen>
+you have only to run "makefml newml" to create an ML in the case of
+qmail.
+</para>
+
+<warning>
+<para>
+This configuration assumuss
+ML's uses the whole one domain only for mailing list.
+</para>
+</warning>
+
+</sect1>

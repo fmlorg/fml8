@@ -1,0 +1,58 @@
+<!--
+   $FML$
+   $jaFML: recipe.version.sgml,v 1.4 2003/04/15 14:51:45 fukachan Exp $
+-->
+
+<qandaentry>
+<question>
+<para>
+I want to know fml version.
+</para>
+</question>
+
+<answer>
+<para>
+run "fmlconf" to show all variables.
+You can find $fml_version in it. 
+<screen>
+% fmlconf test |grep fml_version
+fml_version                          = fml-devel current-20021029
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+
+<qandaentry>
+<question>
+<para>
+check Postfix version.
+</para>
+</question>
+
+<answer>
+<para>
+<screen>
+% postconf mail_version
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+
+
+<qandaentry>
+<question>
+<para>
+Check Sendmail version.
+</para>
+</question>
+
+<answer>
+<para>
+<screen>
+% echo '$v' | sendmail -bt
+</screen>
+</para>
+</answer>
+</qandaentry>

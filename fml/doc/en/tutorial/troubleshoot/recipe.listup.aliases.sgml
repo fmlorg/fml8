@@ -1,0 +1,34 @@
+<!--
+   $FML$
+   $jaFML: recipe.listup.aliases.sgml,v 1.1 2002/11/09 14:16:19 fukachan Exp $
+-->
+
+<qandaentry>
+<question>
+<para>
+list up defined aliases
+</para>
+</question>
+
+<answer>
+
+<para>
+run "fmlalias". It shows all addresses defined in aliases files.
+<screen>
+% fmlalias
+</screen>
+</para>
+
+<para>
+<warning>
+<para>
+The difference between fmladdr and fmlalias is whether
+it contais users defined at /etc/passwd or not.
+fmladdr contains it but fmlalias not.
+fmlalias lists up users defined at aliases.
+</para>
+</warning>
+</para>
+
+</answer>
+</qandaentry>

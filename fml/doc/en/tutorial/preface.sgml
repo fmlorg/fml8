@@ -1,0 +1,206 @@
+<!--
+   $FML$
+   $jaFML: preface.sgml,v 1.18 2003/04/15 14:51:35 fukachan Exp $
+-->
+
+
+<preface id="preface">
+	<title>
+	Preface
+	</title>
+
+
+<sect1 id="status">
+	<title>
+	fml-devel status
+	</title>
+
+
+<warning>
+<para>
+&fmldevel; already implemented fundamental functions
+except for configuration editing.
+Several people uses &fmldevel; as operational level.
+</para>
+
+<para>
+&fml8; is intended to implement almost all &fml4; functions but
+not yet.
+So, if you are interested in the use of special features, 
+please use
+<ulink url="http://www.fml.org/software/fml/menu.html">
+4.0 stable
+</ulink>
+.
+</para>
+
+<para>
+See 
+<ulink url="../../../fml/doc/ja/todo/STATUS.html">
+http://www.fml.org/software/fml-devel/fml/doc/ja/todo/STATUS.html
+</ulink>
+for the current status of &fmldevel;.
+</para>
+</warning>
+
+</sect1>
+
+
+<!-- ======================================================== -->
+<sect1 id="way.to.fmlng">
+
+	<title>
+	The road to the next generation of fml
+	</title>
+
+<para>
+&fmldevel; is fully rewritten mailing list driver from scratch to
+re-implement &fml4; The purpose of this project is re-implementation
+of fml mailing list driver system, based on my 10 years experience.
+</para>
+
+<para>
+Roughly speaking, the relatoin between &fml4; and &fmldevel; is
+similar to one between sendmail and postfix.
+</para>
+
+<para>
+&fmldevel; re-implements features of &fml4; functions.  We redesing
+fml and clean up the function and variable naming convenstion.
+</para>
+
+<para>
+For example, when you use &fml4;, you'll find that fml supposes list
+of members is found in the text file on the host.  &fml4; inherits the
+assumption through from version 1.0. It affetcts the core part of
+designs. Hence, it is difficult to extend fml IO for the use of RDBMS,
+redundency et.al. We should need to fully rewrite fml core parts.
+</para>
+
+<para>
+Also, I need a lot of new features. &fmldevel; should provide tiny bug
+tracking system maintatined automatically. 
+It is better to co-relate fml with cvs log.
+</para>
+
+<para>
+Firstly, we need to discuss what we inherit from fml 4.0 design and
+features.
+
+    <itemizedlist>
+
+
+    <listitem>
+	<para>
+	What we inherit into &fmldevel; from &fml4; ?
+	</para>
+    </listitem>
+
+
+    <listitem>
+	<para>
+	easily customisable ?
+	</para>
+    </listitem>
+
+
+    <listitem>
+	<para>
+	remove obsolete features.
+	</para>
+    </listitem>
+
+    </itemizedlist>
+
+Anyway, we should write code for the further discussion! 
+You can find it at the following URL.
+</para>
+
+<para>
+<ulink url="http://www.fml.org/software/fml-devel/">
+http://www.fml.org/software/fml-devel/
+</ulink>
+</para>
+
+<para>
+<ulink url="ftp://ftp.fml.org/pub/fml-devel/">
+ftp://ftp.fml.org/pub/fml-devel/
+</ulink>
+</para>
+
+</sect1>
+
+
+<!-- ======================================================== -->
+<sect1 id="fml.and.fmlng">
+	<title>
+	relation between &fml4; and &fmldevel; development branch.
+	</title>
+
+<para>
+We implement new feature at &fml8; branch.
+&fml4; imports it if needed.
+We only have to bug-fix at &fml4; branch. 
+</para>
+
+<para>
+(further translation omited).
+
+<screen>
+               fml-devel
+             -----------------------------> 8.0
+                       ¢¬¢­
+1.2  ¡Á 4.0 ------------------------------> 4.0-current
+              |      |
+            4.0.1   4.0.2 .... (release / 4.0-stable release)
+</screen>
+</para>
+
+</sect1>
+
+
+<!-- ======================================================== -->
+<sect1 id="mailinglist">
+
+	<title>
+	mailing list
+	</title>
+
+<para>
+Send "subscribe YOUR NAME" to fml-users-ctl@ffs.fml.org and you'll
+receive the reply for confirmation.
+Please send back the confirmation again to 
+fml-users-ctl@ffs.fml.org.
+
+For example, a subscribe mail is as follows:
+<screen>
+To: fml-users-ctl@ffs.fml.org
+
+subscribe Kinomoto Sakura
+</screen>
+</para>
+
+</sect1>
+
+
+<!-- ======================================================== -->
+<sect1>
+
+	<title>
+	Please let me know your opinion ...
+	</title>
+
+<para>
+Please send me the idea on &fmldevel; to the mail address:
+<ulink url="mailto:fml-request@fml.org">
+fml-request@fml.org
+</ulink>
+</para>
+
+</sect1>
+
+
+&sect.terms;
+
+
+</preface>

@@ -1,0 +1,57 @@
+<!--
+   $FML$
+   $jaFML: procmail.sgml,v 1.3 2003/04/15 14:51:44 fukachan Exp $
+-->
+
+<sect1 id="setup.procmail">
+	<title>
+	I want to use ML by my account.
+	</title>
+
+<para>
+When you need to set up a ML on your account, for example virtual
+domain service of ISP, use a mail processor such as procmail.
+</para>
+
+<para>
+You need to filter messages according to To: or Cc: in the mail header
+and redistribute it.
+</para>
+
+<para>
+makefml creates/updates ~/.procmailrc sample in newml 
+at /var/spool/ml/etc/procmail/procmailrc.
+</para>
+
+
+<sect2 id="setup.procmailrc">
+	<title>
+	~/.procmailrc example
+	</title>
+
+<para>
+<screen>
+PATH=$HOME/bin:/usr/bin:/usr/ucb:/bin:/usr/local/bin:/usr/pkg/bin
+MAILDIR=$HOME/Mail	# You'd better make sure it exists
+DEFAULT=$HOME/Mail/mbox
+LOGFILE=$MAILDIR/procmail.log
+LOCKFILE=$HOME/.lockmail
+VERBOSE=on
+
+:0
+* To.*elena@fml.org
+| /usr/local/libexec/fml/fml.pl /var/spool/ml/elena
+
+:0
+* To.*elena-ctl@fml.org
+| /usr/local/libexec/fml/fml.pl /var/spool/ml/elena --ctladdr
+
+# last resort, mail for me et. al.
+:0
+inbox/.
+</screen>
+</para>
+
+</sect2>
+
+</sect1>

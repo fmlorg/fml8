@@ -1,0 +1,191 @@
+<!--
+   $FML$
+   $jaFML: cgi.sgml,v 1.4 2003/04/15 14:51:43 fukachan Exp $
+-->
+
+<chapter id="setupcgi">
+	<title>
+	Configure CGI
+	</title>
+
+
+<warning>
+
+<para>
+See the section
+<link linkend="internalcgi.method">
+<xref linkend="internalcgi.method">
+</link>
+for CGI Internal details.
+</para>
+
+<para>
+We assumes you use suexec under apache.
+</para>
+
+<para>
+Now &fml8; provides the master cgi to control all ML's in one domain,
+but not support a ecgi for each ml. It is not yet implemented.
+</para>
+
+<para>
+If you use postfix and qmail, you do not need to modify MTA
+configuration.
+</para>
+
+</warning>
+
+
+<sect1 id="setupcgi.install">
+	<title>
+	"makefml newml" creates CGI script.
+	</title>
+
+<para>
+"makefml newml" sets up CGI scripts such as config.cgi under 
+~fml/public_html/... directory.
+There are two types of cgi scripts.
+One is for the whole domain, one for each ML. 
+</para>
+
+<para>
+In creating elena@fml.org ML, makefml creates the following cgi
+<screen>
+http://lists.fml.org/~fml/cgi-bin/fml/$domain/admin/config.cgi
+
+Example:
+http://lists.fml.org/~fml/cgi-bin/fml/fml.org/admin/config.cgi
+</screen>
+for all ML's of fml.org.
+To control only elena ML, please use 
+<screen>
+http://lists.fml.org/~fml/cgi-bin/fml/$domain/ml-admin/${ml_name}/config.cgi
+
+Example:
+http://lists.fml.org/~fml/cgi-bin/fml/fml.org/ml-admin/elena/config.cgi
+</screen>
+which is not yet created (not implemented _o_).
+</para>
+
+<para>
+<graphic entityref="image.cgi.newml"></graphic>
+</para>
+
+</sect1>
+
+
+<sect1 id="setupcgi.htaccess">
+	<title>
+	edit .htaccess
+	</title>
+
+<para>
+.htaccess is created but it is configured to deny all.
+<screen>
+http://lists.fml.org/~fml/cgi-bin/fml/$domain/.htaccess
+
+Example:
+http://lists.fml.org/~fml/cgi-bin/fml/fml.org/.htaccess
+</screen>
+</para>
+
+<para>
+The default .htaccess is dummy like this:
+<screen>
+AuthName ByPassword
+AuthType Basic
+require valid-user
+</screen>
+Please edit .htaccess properly.
+</para>
+
+</sect1>
+
+
+<sect1 id="setupcgi.admin.cgi.overview">
+	<title>
+	Example: master cgi
+	</title>
+
+<para>
+The role of this cgi is limited makefml (CUI).
+Though this cgi permits ML creation and destruction,
+all functions makefml has are not supported.
+The functions is limited.
+</para>
+
+<para>
+<screen>
+Eample: TOP MENU
+
+                     @home.fml.org CGI for configuration
+
+fml admin menu             fml CGI interface for @home.fml.org ML's
+mailing list:
+[elena]              
+command:             	.. help message ...
+[subscribe  ]        
+[submit][reset]
+                     subscribe   
+                     unsubscribe 
+                     addadmin    
+                     byeadmin    
+options Language:    list        
+[Japanese] [change]  log         
+                     newml       
+                     rmml        
+</screen>
+</para>
+
+<para>
+<graphic entityref="image.cgi.top"></graphic>
+</para>
+
+
+</sect1>
+
+
+<sect1 id="setupcgi.admin.cgi.newml">
+	<title>
+	CGI Example: create an ML
+	</title>
+
+<para>
+Select newml and push "submit".
+no need to select ML name in this stage.
+</para>
+
+<para>
+You find nother menu at the center.
+Specify the ML name you create and push "submit" at the center.
+</para>
+
+<para>
+<graphic entityref="image.cgi.newml"></graphic>
+</para>
+
+</sect1>
+
+
+<sect1 id="setupcgi.admin.cgi.subscribe">
+	<title>
+	CGI example: subscribe
+	</title>
+
+<para>
+Specify the ML name and select "subscribe", push "submit".
+</para>
+
+<para>
+You find another menu at the center.
+Specify the address to subscribe and push "submit" at the center.
+</para>
+
+<para>
+<graphic entityref="image.cgi.useradd"></graphic>
+</para>
+
+</sect1>
+
+
+</chapter>

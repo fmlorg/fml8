@@ -1,0 +1,49 @@
+<!--
+   $FML$
+   $jaFML: config.cf.sgml,v 1.3 2003/04/15 14:51:44 fukachan Exp $
+-->
+
+<sect1 id="setup.config.cf">
+	<title>
+	customize config.cf
+	</title>
+
+<para>
+In running "makefml newml", makefml sets up
+configuration files such as config.cf,
+include files for sendmail and postfix, 
+~fml/.qmail-* files. 
+<screen>
+% su fml
+% makefml newml elena
+   ... snip ...
+% ls /var/spool/ml/elena
+config.cf include include-ctl include-error
+	... snip ...
+</screen>
+</para>
+
+<para>
+To customize one ML configuraiton,
+edit config.cf.
+</para>
+
+<warning>
+<para>
+no menu tool to edit config.cf yet implemented.
+</para>
+</warning>
+
+
+<para>
+config.cf contains little definition.
+For example,
+/var/spool/ml/elena/include file follows:
+<screen>
+"| /usr/local/libexec/fml/distribute elena@fml.org"
+</screen>
+elena@fml.org in this argument determins 
+values of $ml_domain and $ml_name.
+</para>
+
+</sect1>
