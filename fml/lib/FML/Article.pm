@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: Article.pm,v 1.19 2001/04/03 09:45:40 fukachan Exp $
 #
 
 package FML::Article;
@@ -162,7 +162,7 @@ sub spool_in
 	if (defined $fh) {
 	    $curproc->{ article }->{ header }->print($fh);
 	    print $fh "\n";
-	    $curproc->{ article }->{ body }->raw_print($fh);
+	    $curproc->{ article }->{ body }->print($fh);
 	    $fh->close;
 	    Log("Article $id");
 	}
