@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: install.pl.in,v 1.1 2003/01/28 04:16:16 fukachan Exp $
+# $FML: install.pl.in,v 1.2 2003/01/29 13:58:10 fukachan Exp $
 #
 
 use strict;
@@ -64,23 +64,28 @@ sub _install
     $installer->is_valid_owner( $config->{ owner } );
     $installer->is_valid_group( $config->{ group } );
 
-    $installer->install_main_cf();
-    $installer->install_sample_cf_files();
-    $installer->install_default_config_files();
-    $installer->install_mtree_dir();
-    $installer->install_lib_dir();
-    $installer->install_libexec_dir();
-    $installer->install_data_dir();
+    if ($installer->is_run_as_root()) {
+	$installer->install_main_cf();
+	$installer->install_sample_cf_files();
+	$installer->install_default_config_files();
+	$installer->install_mtree_dir();
+	$installer->install_lib_dir();
+	$installer->install_libexec_dir();
+	$installer->install_data_dir();
 
-    # install programs hereafter.
-    $installer->install_bin_programs();
+	# install programs hereafter.
+	$installer->install_bin_programs();
 
-    # update loader.
-    if ( $installer->need_resymlink_loader() ) {
-	$installer->install_loader();
-	$installer->resymlink_loader();
+	# update loader.
+	if ( $installer->need_resymlink_loader() ) {
+	    $installer->install_loader();
+	    $installer->resymlink_loader();
+	}
+
+	# set up ml_spool_dir such as /var/spool/ml if needed.
+	$installer->setup_ml_spool_dir();
     }
-
-    # set up ml_spool_dir such as /var/spool/ml if needed.
-    $installer->setup_ml_spool_dir();
+    else {
+	croak("Error: run $0 as root.\n");
+    }
 }
