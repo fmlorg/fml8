@@ -1,0 +1,33 @@
+			入力の検査について
+
+
+＊ ポスト
+
+	チェックなしがデフォルト
+	もしフィルタをしたい場合は FML::Filter クラスが検査を担当する。
+
+
+＊ コマンドメール
+
+	コマンドメールは FML::Process::Command で一行ずつ
+	FML::Restriction::Command で定義されているルールで
+	検査される。合格すれば、
+	FML::Command::User::コマンド の実行に進むことができる。
+
+
+＊ CGI
+
+	safe_param_ほえほえ() という関数経由でのみ CGI から
+	データを受けとることができる。
+
+	safe_param_XXX() は FML::Restriction::CGI (
+	FML::Restriction::Base を継承している)経由でパターンの検査をす
+	る。
+
+
+＊ makefml 
+
+	コマンドラインで実行するので、入力チェックなしがデフォルト
+
+----------
+$FML: 00_MEMO,v 1.2 2002/02/04 14:16:44 fukachan Exp $
