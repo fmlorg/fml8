@@ -77,6 +77,10 @@ cp -pr cpan/lib/*	$lib_dir/$fml_version/
 echo update $libexec_dir/$fml_version/
 cp -pr fml/libexec/*	$libexec_dir/$fml_version/
 
+PROGRAMS="fml.pl distribute command ";
+PROGRAMS="$PROGRAMS fmlserv mead fmlconf fmldoc"
+PROGRAMS="$PROGRAMS fmlticket fmlticket.cgi"
+
 if [ ! -f $libexec_dir/loader ];then
 
    echo install libexec/loader
@@ -89,7 +93,7 @@ if [ ! -f $libexec_dir/loader ];then
 	cd $libexec_dir/
 
 	echo -n "   link loader to: "
-	for x in fml.pl distribute command fmlserv mead fmlconf fmlticket fmldoc
+	for x in $PROGRAMS
 	do
 		rm -f $x
 		ln -s loader $x && echo -n "$x "
@@ -98,7 +102,15 @@ if [ ! -f $libexec_dir/loader ];then
    )
 fi
 
-if [ -d $ml_spool_dir ]; then
+iam=`id -un`
+
+if [ "X$iam" != Xroot ];then
+	exit 1
+fi
+
+id -un $owner || exit 1
+
+if [ -d $ml_spool_dir -a -w $ml_spool_dir ]; then
 	echo set up the owner of $ml_spool_dir to be $owner
 	chown -R $owner $ml_spool_dir
 fi
