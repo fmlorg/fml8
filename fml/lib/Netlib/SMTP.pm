@@ -193,7 +193,7 @@ sub _read_reply
     if ($@ =~ /$id socket timeout/) {
 	my $x = $self->{'_last_command'};
 	Log("Error: smtp reply for \"$x\" is timeout");
-	$self->_error_why("Error: smtp reply for \"$x\" is timeout");
+	$self->_error_reason("Error: smtp reply for \"$x\" is timeout");
     }
 }
 
@@ -573,7 +573,7 @@ sub _send_recipient_list_by_recipient_map
 	my $recipient_limit = $self->{_recipient_limit};
 
 	$obj->open || do {
-	    $self->_error_why( $obj->error );
+	    $self->_error_reason( $obj->error );
 	    return undef;
 	};
 

@@ -33,7 +33,7 @@ sub _connect4
     };
     if ($@) {
 	Log("Error: cannot make socket for $mta");
-	$self->_error_why("Error: cannot make socket: $@");
+	$self->_error_reason("Error: cannot make socket: $@");
 	return undef;
     }
 
@@ -45,7 +45,7 @@ sub _connect4
     }
     else {
 	Log("(debug) error. fail to connect $mta");
-	$self->_error_why("Error: cannot open socket: $!");
+	$self->_error_reason("Error: cannot open socket: $!");
 	return undef;
     }
 }

@@ -25,7 +25,7 @@ sub new
     if ( ref($args) eq 'CODE' ) {
 	$me->{_type} = 'array_on_memory';
 	eval { &$args($me);};
-	_log($me, $@) if $@;
+	_error_reason($me, $@) if $@;
     }
     else {
 	if ($args =~ /file:(\S+)/ || $args =~ m@^(/\S+)@) {
@@ -46,7 +46,7 @@ sub new
 	else {
 	    my $s = "IO::MapAdapter::new: args='$args' is unknown.";
 	    print STDERR $s, "\n";
-	    _log($me, $s);
+	    _error_reason($me, $s);
 	}
     }
 
@@ -54,17 +54,17 @@ sub new
 }
 
 
-sub _log
+sub _error_reason
 {
     my ($self, $mesg) = @_;
-    $self->{ _error } = $mesg;
+    $self->{ _error_reason } = $mesg;
 }
 
 
 sub error
 {
     my ($self) = @_;
-    return $self->{ _error };
+    return $self->{ _error_reason };
 }
 
 
@@ -94,7 +94,7 @@ sub open
 	    return $fh;
 	}
 	else {
-	    $self->_log("Error: cannot open $file $flag");
+	    $self->_error_reason("Error: cannot open $file $flag");
 	    return undef;
 	}
     }
@@ -121,7 +121,7 @@ sub open
 	return undef;
     }
     else {
-	$self->_log("Error: type=$self->{_type} is unknown type.");
+	$self->_error_reason("Error: type=$self->{_type} is unknown type.");
     }
 }
 
@@ -180,11 +180,11 @@ sub _get_address
 	   $self->{'_type'} eq 'mysql' ||
 	   $self->{'_type'} eq 'postgresql'
 	   ) {
-	$self->_log("Error: not yet implemented");
+	$self->_error_reason("Error: not yet implemented");
 	return undef;
     }
     else {
-	$self->_log("Error: type=$self->{_type} is unknown type.");
+	$self->_error_reason("Error: type=$self->{_type} is unknown type.");
     }
 }
 
@@ -207,11 +207,11 @@ sub getline
 	   $self->{'_type'} eq 'mysql' ||
 	   $self->{'_type'} eq 'postgresql'
 	   ) {
-	$self->_log("Error: not yet implemented");
+	$self->_error_reason("Error: not yet implemented");
 	return undef;
     }
     else {
-	$self->_log("Error: type=$self->{_type} is unknown type.");
+	$self->_error_reason("Error: type=$self->{_type} is unknown type.");
     }
 }
 
@@ -231,7 +231,7 @@ sub getpos
 	$self->{_counter};
     }
     else {
-	$self->_log("Error: type=$self->{_type} is unknown type.");
+	$self->_error_reason("Error: type=$self->{_type} is unknown type.");
     }
 }
 
@@ -251,7 +251,7 @@ sub setpos
 	$self->{_counter} = $pos;
     }
     else {
-	$self->_log("Error: type=$self->{_type} is unknown type.");
+	$self->_error_reason("Error: type=$self->{_type} is unknown type.");
     }
 }
 
@@ -271,7 +271,7 @@ sub eof
 	$self->{_counter} > $self->{_num_members} ? 1 : 0;
     }
     else {
-	$self->_log("Error: type=$self->{_type} is unknown type.");
+	$self->_error_reason("Error: type=$self->{_type} is unknown type.");
     }
 }
 
@@ -290,7 +290,7 @@ sub close
 	;
     }
     else {
-	$self->_log("Error: type=$self->{_type} is unknown type.");
+	$self->_error_reason("Error: type=$self->{_type} is unknown type.");
     }
 }
 

@@ -13,7 +13,7 @@ use strict;
 use Carp;
 
 require Exporter;
-@ISA       = qw(Exporter);
+@ISA = qw(Exporter);
 
 
 # constants
@@ -33,7 +33,7 @@ sub new
 }
 
 
-sub _error_why
+sub _error_reason
 {
     my $msg = @_;
     $Error = $msg;
@@ -80,7 +80,7 @@ sub _simple_flock
 	eval q{
 	    $r = flock($fh, &LOCK_EX);
 	};
-	_error_why($@) if $@;
+	_error_reason($@) if $@;
 
 	if ($r) {
 	    $FileIsLocked{ $file } = 1;
@@ -88,7 +88,7 @@ sub _simple_flock
 	}
     }
     else {
-	_error_why("cannot open $file");
+	_error_reason("cannot open $file");
     }
 
     return 0;
@@ -108,7 +108,7 @@ sub _simple_funlock
     eval q{
 	$r = flock($fh, &LOCK_UN);
     };
-    _error_why($@) if $@;
+    _error_reason($@) if $@;
 
     if ($r) {
 	delete $FileIsLocked{ $file };

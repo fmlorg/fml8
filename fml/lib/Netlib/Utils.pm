@@ -24,7 +24,7 @@ require Exporter;
 	     $LogFunctionPointer
 	     $SmtpLogFunctionPointer
 
-	     _error_why
+	     _error_reason
 	     error 
 	     error_reset 
 
@@ -81,7 +81,7 @@ sub _smtplog
 }
 
 
-sub _error_why
+sub _error_reason
 {
     my ($self, $mesg) = @_;
     $self->{'_error_reason'} = $mesg;
@@ -91,7 +91,7 @@ sub _error_why
 sub error_reason
 {
     my ($self, $mesg) = @_;
-    $self->_error_why($mesg);
+    $self->_error_reason($mesg);
 }
 
 
