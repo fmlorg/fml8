@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Scheduler.pm,v 1.14 2002/08/03 10:35:09 fukachan Exp $
+# $FML: Scheduler.pm,v 1.15 2002/08/03 13:13:24 fukachan Exp $
 #
 
 package FML::Process::Scheduler;
@@ -38,7 +38,7 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = { _curproc => $curproc };
     my $config = $curproc->config();
-    my $qdir   = $config->{ scheduler_queue_dir };
+    my $qdir   = $config->{ event_queue_dir };
 
     unless (-d $qdir) {
 	eval q{
