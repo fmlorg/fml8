@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2002 Ken'ichi Fukamachi
+# Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Scheduler.pm,v 1.19 2002/09/22 14:56:54 fukachan Exp $
+# $FML: Scheduler.pm,v 1.20 2002/12/18 04:43:52 fukachan Exp $
 #
 
 package FML::Process::Scheduler;
@@ -48,9 +48,9 @@ sub new
 }
 
 
-# Descriptions:
+# Descriptions: dummy
 #    Arguments: OBJ($self) STR($key)
-# Side Effects:
+# Side Effects: none
 # Return Value: none
 sub queue_in
 {
@@ -60,9 +60,9 @@ sub queue_in
 }
 
 
-# Descriptions:
+# Descriptions: dummy
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects:
+# Side Effects: none
 # Return Value: none
 sub exits
 {
@@ -80,7 +80,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Ken'ichi Fukamachi
+Copyright (C) 2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

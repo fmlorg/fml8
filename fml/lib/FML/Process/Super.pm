@@ -3,7 +3,7 @@
 # Copyright (C) 2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Super.pm,v 1.1 2003/01/07 11:43:27 fukachan Exp $
+# $FML: Super.pm,v 1.2 2003/01/11 16:05:20 fukachan Exp $
 #
 
 package FML::Process::Super;
@@ -184,6 +184,10 @@ sub finish
 sub DESTROY {}
 
 
+# Descriptions: open mail queue and list up.
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub _queue
 {
     my ($curproc, $args) = @_;

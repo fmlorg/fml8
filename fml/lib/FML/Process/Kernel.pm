@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.153 2003/01/25 09:14:05 fukachan Exp $
+# $FML: Kernel.pm,v 1.154 2003/01/25 12:04:49 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -952,7 +952,7 @@ sub permit_command
 
 # Descriptions: permit this $type process based on the rules defined
 #               in ${type}_restrictions.
-#    Arguments: OBJ($self) HASH_REF($args) STR($type)
+#    Arguments: OBJ($curproc) HASH_REF($args) STR($type)
 # Side Effects: set the error reason at "check_restriction" n pcb.
 # Return Value: NUM(1 or 0)
 sub _check_restrictions

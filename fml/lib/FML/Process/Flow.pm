@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Flow.pm,v 1.18 2002/09/22 14:56:53 fukachan Exp $
+# $FML: Flow.pm,v 1.19 2003/01/11 16:05:19 fukachan Exp $
 #
 
 package FML::Process::Flow;
@@ -67,8 +67,7 @@ programs kicked by MTA, command line interfaces and CGI's.
 #                  lock, execute main routine, unlock
 #               4. inform error messages, clean up and more ...
 #    Arguments: OBJ($pkg) HASH_REF($args)
-# Side Effects:
-#               ProcessSwtich() is exported to main:: Name Space.
+# Side Effects: ProcessSwtich() is exported to main:: Name Space.
 # Return Value: none
 sub ProcessStart
 {
