@@ -7,7 +7,7 @@
 #
 
 
-package IO::Adapter::MySQL::toymodel;
+package IO::Adapter::MySQL;
 
 
 use strict;
@@ -16,13 +16,21 @@ use Carp;
 
 =head1 NAME
 
-IO::Adapter::MySQL::toymodel - toymodel with SQL
+IO::Adapter::MySQL - IO by SQL
 
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
 
 =head1 METHODS
+
+=head2 C<new($args)>
+
+   $args->{
+       ml_name,
+       db
+       mysql_toymodel_getline_query => ''
+   }
 
 =cut
 
@@ -57,8 +65,9 @@ sub open
     use DBD::mysql;
 
     my $driver   = 'mysql';
-    my $database = $args->{ database_name }    || 'fml';
-    my $host     = $args->{ sql_server }       || 'localhost';
+    my $database = $args->{ database } || $self->{ _databse } || 'fml';
+    my $table    = $args->{ table }    || $self->{ _table }   || 'ml';
+    my $host     = $args->{ sql_server } || $self->{ _sql_server } || 'localhost';
     my $dsn      = "DBI:$driver:$database:$host";
     my $user     = $args->{ sql_user }         || 'fml' || '';
     my $password = $args->{ sql_user_password} || '';
