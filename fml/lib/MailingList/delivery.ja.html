@@ -1,22 +1,31 @@
-=head1	NAME
-
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>
 fml5 のメール配送システムについて
+</TITLE>
+<META http-equiv="Content-Type"
+	content="text/html; charset=EUC-JP">
+</HEAD>
 
-=head1	DESCRIPTION
+<BODY BGCOLOR="#E6E6FA">
 
-=head2	fml4 と fml5 の相違点
+<CENTER>
+fml5 のメール配送システムについて
+</CENTER>
 
-xfml5 の最大の目的の一つは、メンバーリストの取得と操作の統合と抽象化で
-す。MailingList::SMTP は次のように使います。
+<P>	fml4 と fml5 の相違点
 
-=head1	使い方
+fml5 の最大の目的の一つは、メンバーリストの取得と操作の統合と抽象化です。
+配送には抽象化された MailingList クラスを次のように使います。
 
-=head2 MailingList::* クラスの使い方について
+<P> MailingList::* クラスの使い方について
 
-MailingList::* に属するクラスは SMTP および LMTP 配送へのインターフェイスを
-提供します。
+MailingList::* に属するクラスは SMTP および LMTP 配送へのインターフェ
+イスを提供します。
 
-MailingList::SMTP は次のように使います。
+<PRE>
+MailingList::SMTP の実例
 
     use MailingList::SMTP;
     my $service = new MailingList::SMTP;
@@ -33,11 +42,13 @@ MailingList::SMTP は次のように使います。
                           header          => $header_object,
                           body            => $body_object,
                       });
+</PRE>
 
 ここで $header_object はヘッダで、FML::Header オブジェクトです。
 そして $body_oject   はメール本文で、MailingList::Messages オブジェクトです。
 
-=head1	コンポーネント
+
+<P> コンポーネント
 
 C<Delivery> は
 C<SMTP>
@@ -46,24 +57,6 @@ C<LMTP>
 などへのインターフェイスです。
 
 
-=head1	参照
-
-L<"MailingList::SMTP">,
-L<"FML::IO::Map">
-
-=head1	AUTHOR
-
-Ken'ichi Fukamachi
-
-=head1	COPYRIGHT
-
-Copyright (C) 2001 Ken'ichi Fukamachi
-
-All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
-
-=head1	HISTORY
-
-MailingList class appeared in fml5.
-fml5 is fully rewrite of fml4 based on the experience of fml4
-(1993-2001).
+<!-- =================================================================== -->
+</BODY>
+</HTML>

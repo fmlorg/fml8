@@ -25,6 +25,8 @@ FML::Errors - error handling utilities
 
 =head1 SYNOPSIS
 
+Consider the following C<Something> module.
+
 	package Something;
 	use FML::Errors qw(error_reason error error_reset);
 
@@ -34,7 +36,7 @@ FML::Errors - error handling utilities
 		$self->error_reason( error reason );
 	}
 
-When you use Something module,
+When you use C<Something> module,
 
 	use Something;
 	$obj = new Something;
@@ -42,8 +44,8 @@ When you use Something module,
 
 =head1 DESCRIPTION
 
-a wrapper to L<File::Errors>.
-All requests are forwarddt to C<File::Errors>.
+This is a wrapper to L<File::Errors>.
+All requests are forwarded to C<File::Errors>.
 
 =head1 SEE ALSO
 

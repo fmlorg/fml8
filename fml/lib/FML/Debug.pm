@@ -22,14 +22,18 @@ FML::Debug -- debug utilities
 =item show_structure()
 
 It shows the data structure for the given variable.
-It is just an wrapper for L<Data::Dumper>.
+It is just a wrapper for L<Data::Dumper>.
 
 =cut
 
 
+# Descriptions: constructor
+#    Arguments: $self $args
+# Side Effects: none
+# Return Value: none
 sub new
 {
-    my ($self) = @_;
+    my ($self, $args) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
     bless $me, $self,
@@ -37,14 +41,14 @@ sub new
 
 
 # Descriptions: dump the target data structure
-#    Arguments: $self target
+#    Arguments: $self $target
 # Side Effects: none
 # Return Value: none
 sub show_structure
 {
-    my ($self, $r_target) = @_;
+    my ($self, $target) = @_;
     use Data::Dumper;
-    print Dumper( $r_target );
+    print Dumper( $target );
 }
 
 

@@ -65,7 +65,7 @@ The option follows:
       _array_reference => ARRAY_REFERENCE
    }
 
-$flag is "r" only now.
+$flag is "r" only (read only) now.
 
 =cut
 
@@ -180,7 +180,7 @@ set the current position to $pos -th element.
 =item C<eof()>
 
 whether the current position reaches the end of the array or not.
-If so, return 1.
+If it already reaches the end, return 1.
 
 =item C<close()>
 
