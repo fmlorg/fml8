@@ -14,6 +14,29 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
 use FML::Errors qw(error_reason error error_reset);
 
+=head1 NAME
+
+FML::SequenceFile - maintain the sequence number
+
+=head1 SYNOPSIS
+
+   use FML::SequenceFile;
+   my $sfh = new FML::SequenceFile { sequence_file => $seq_file };
+   my $id  = $sfh->increment_id;
+   if ($sfh->error) { use Carp; carp( $sfh->error ); }
+
+=head1 DESCRIPTION
+
+=head2 C<new($args)>
+
+$args->{ sequence_file } is the file holding the current sequence number.
+
+=head2 C<increment_id([$file])>
+
+increment the sequence number.
+
+=cut
+
 require Exporter;
 @ISA = qw(Exporter);
 
@@ -69,21 +92,9 @@ sub increment_id
 }
 
 
-=head1 NAME
-
-FML::SequenceFile.pm - what is this
-
-
-=head1 SYNOPSIS
-
-=head1 DESCRIPTION
-
-=head2 new
-
-=item Function()
-
-
 =head1 AUTHOR
+
+Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
@@ -94,7 +105,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::SequenceFile.pm appeared in fml5.
+FML::SequenceFile appeared in fml5.
 
 =cut
 
