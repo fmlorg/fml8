@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: thread.pm,v 1.3 2003/03/28 10:03:39 fukachan Exp $
+# $FML: thread.pm,v 1.4 2003/08/23 04:35:32 fukachan Exp $
 #
 
 package FML::Command::Admin::thread;
@@ -60,11 +60,81 @@ sub need_lock { 1;}
 sub lock_channel { return 'article_thread';}
 
 
-# Descriptions: change delivery mode from real time to digest.
+# Descriptions: thread manipulation interface.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $recipient_map
 # Return Value: none
 sub process
+{
+    my ($self, $curproc, $command_args) = @_;
+
+    # attach thread library.
+    use Mail::Message::Thread;
+    my $thargs = $curproc->thread_db_args();
+    my $thread = new Mail::Message::Thread $thargs;
+
+    $self->_new_switch($curproc, $command_args, $thread);
+}
+
+
+# Descriptions: dispatch thread sub-command.
+#    Arguments: OBJ($self)
+#               OBJ($curproc) HASH_REF($command_args) OBJ($thread)
+# Side Effects: update $recipient_map
+# Return Value: none
+sub _new_switch
+{
+    my ($self, $curproc, $command_args, $thread) = @_;
+    my $config        = $curproc->config();
+    my $options       = $command_args->{ options } || [];
+    my $command       = $options->[ 0 ] || 'one_line_summary';
+    my $range         = $options->[ 1 ] || '';
+    my $default_range = 'last:10';
+    my $max_id        = $curproc->article_max_id();
+    my $th_args       = {
+	last_id => $max_id,
+    };
+
+    use FML::Article::Thread;
+    my $article_thread = new FML::Article::Thread $curproc;
+    if ($command eq 'one_line_summary') {
+	$th_args->{ range } = $range || $default_range;
+	$article_thread->print_one_line_summary($th_args);
+    }
+    elsif ($command eq 'summary') {
+	$th_args->{ range } = $range || $default_range;
+	$article_thread->print_summary($th_args);
+    }
+    elsif ($command eq 'list') {
+	$th_args->{ range } = $range || '';
+	$article_thread->print_list($th_args);
+    }
+    elsif ($command eq 'open' | $command eq 'reopen') {
+	$th_args->{ range } = $range || '';
+	$article_thread->open_thread_status($th_args);
+    }
+    elsif ($command eq 'close') {
+	$th_args->{ range } = $range || '';
+	$article_thread->close_thread_status($th_args);
+    }
+    else {
+	my $r = "unknown subcommand: thread $command";
+	$curproc->logerror($r);
+	$curproc->ui_message("error: $r");
+    }
+}
+
+
+=head1 OLD VERSION
+
+=cut
+
+
+# Descriptions: thread manipulation interface.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: update $recipient_map
+# Return Value: none
+sub old_process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config = $curproc->config();
@@ -90,7 +160,7 @@ sub process
     #    _read_filter_list($thread, $options->{ f });
     # }
 
-    $self->_switch($curproc, $command_args, $ttargs);
+    $self->_old_switch($curproc, $command_args, $ttargs);
 }
 
 
@@ -99,7 +169,7 @@ sub process
 #               HASH_REF($ttargs)
 # Side Effects: thread db may be updated
 # Return Value: none
-sub _switch
+sub _old_switch
 {
     my ($self, $curproc, $command_args, $ttargs) = @_;
     my $options = $command_args->{ options };
@@ -179,7 +249,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003 Ken'ichi Fukamachi
+Copyright (C) 2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
