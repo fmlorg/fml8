@@ -29,9 +29,9 @@
 	}
 	close(F);
 
-=head2 Dialect::Japanese::Subject のマージが中途半端
+=head2 Language::Japanese::Subject のマージが中途半端
 
-   "Dialect::Japanese::Subject::CUT_OFF_RERERE_PATTERN" used only once: 
+   "Language::Japanese::Subject::CUT_OFF_RERERE_PATTERN" used only once: 
 
 
 =head1	スケジューラ
@@ -56,6 +56,16 @@
 	time_zone config?
 
 
+=head1	SMTP
+
+	outgoing address hack
+
+	execute $program on the disk NOT IPC.
+
+	SmtpFiles2Socket() はもう必要ない？ ( libsmtpsubr.pl )
+		この中にドキュメントの自動補間機能があるが？
+
+
 =head1	将来実装予定だけど、まだ手つかず
 
 	newsyslog()
@@ -71,8 +81,3 @@
 	log suffix extension
 
 	chaddr を認証の前にトラップすること( libtrap.pl )
-
-	SMTP
-		outgoing address hack
-
-		execute $program on the disk NOT IPC.
