@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Digest.pm,v 1.6 2002/12/24 10:19:42 fukachan Exp $
+# $FML: Digest.pm,v 1.7 2003/01/11 16:05:12 fukachan Exp $
 #
 
 package FML::Digest;
@@ -45,6 +45,19 @@ sub new
     my $me     = {};
     $me->{ _curproc } = $curproc;
     return bless $me, $type;
+}
+
+
+# Descriptions: get lock channel name.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub get_lock_channel_name
+{
+    my ($self) = @_;
+
+    # XXX_LOCK_CHANNEL: digest_sequence
+    return 'digest_sequence';
 }
 
 
@@ -98,11 +111,9 @@ sub get_digest_id
 sub get_article_id
 {
     my ($self) = @_;
-    my $curproc  = $self->{ _curproc };
-    my $config   = $curproc->{ config };
-    my $seq_file = $config->{ article_sequence_file };
+    my $curproc = $self->{ _curproc };
 
-    return $self->_get_id($seq_file);
+    return $curproc->article_id_max();
 }
 
 
@@ -116,26 +127,19 @@ sub _get_id
 
     # XXX-TODO: we should enhance IO::Adapter module to handle
     # XXX-TODO: sequential number.
-    use File::Sequence;
-
-    # XXX-TODO: defined() check for $sfh.
     if (-f $seq_file) {
+	use File::Sequence;
 	my $sfh = new File::Sequence { sequence_file => $seq_file };
-	my $id  = $sfh->get_id();
-	if ($sfh->error) { LogError( $sfh->error ); }
+	if (defined $sfh) {
+	    my $id  = $sfh->get_id();
+	    if ($sfh->error) { LogError( $sfh->error ); }
 
-	return $id;
+	    return $id;
+	}
     }
-    else {
-	Log("$seq_file not found") if 0;
 
-	# XXX-TODO: defined() check for $sfh.
-	my $sfh = new File::Sequence { sequence_file => $seq_file };
-	my $id  = $sfh->increment_id();
-	if ($sfh->error) { LogError( $sfh->error ); }
-
-	return 1;
-    }
+    # return default value if something fails.
+    return 1;
 }
 
 
@@ -149,14 +153,20 @@ sub set_digest_id
     my $curproc  = $self->{ _curproc };
     my $config   = $curproc->{ config };
     my $seq_file = $config->{ digest_sequence_file };
+    my $channel  = $self->get_lock_channel_name();
 
     # XXX-TODO: we should enhance IO::Adapter module to handle
     # XXX-TODO: sequential number.
     # XXX-TODO: defined() check for $sfh.
     use File::Sequence;
+
+    $curproc->lock($channel);
+
     my $sfh = new File::Sequence { sequence_file => $seq_file };
     $sfh->set_id($id);
     if ($sfh->error) { LogError( $sfh->error ); }
+
+    $curproc->unlock($channel);
 
     return $id;
 }
