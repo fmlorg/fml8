@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.229 2004/05/24 13:59:45 fukachan Exp $
+# $FML: Kernel.pm,v 1.230 2004/05/25 04:02:07 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -590,7 +590,8 @@ sub verify_sender_credential
 
 =head2 simple_loop_check($args)
 
-loop checks following rules of $config->{ incoming_mail_header_loop_check_rules }.
+loop checks following rules of 
+$config->{ incoming_mail_header_loop_check_rules }.
 The autual check is done by header->C<$rule()> for a C<rule>.
 See C<FML::Header> object for more details.
 
@@ -606,7 +607,8 @@ sub simple_loop_check
     my ($curproc) = @_;
     my $config    = $curproc->config();
     my $header    = $curproc->incoming_message_header();
-    my $rules     = $config->get_as_array_ref( 'incoming_mail_header_loop_check_rules' );
+    my $rules     = 
+	$config->get_as_array_ref( 'incoming_mail_header_loop_check_rules' );
     my $match     = 0;
 
   RULE:
@@ -627,6 +629,21 @@ sub simple_loop_check
 	$curproc->stop_this_process();
 	$curproc->logerror("mail loop detected for $match");
     }
+}
+
+
+# Descriptions: commit message-id cache update transaction.
+#    Arguments: OBJ($curproc)
+# Side Effects: update cache.
+# Return Value: none
+sub _commit_message_id_cache_update_transaction
+{
+    my ($curproc) = @_;
+    my $config    = $curproc->config();
+    my $header    = $curproc->incoming_message_header();
+
+    # XXX-TODO: more granuar
+    $header->update_message_id_cache($config);
 }
 
 
@@ -2924,6 +2941,9 @@ sub finalize
 
     # log rotation
     $curproc->log_rorate();
+
+    # commit transaction
+    $curproc->_commit_message_id_cache_update_transaction();
 }
 
 

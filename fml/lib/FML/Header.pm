@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.74 2004/03/12 11:45:47 fukachan Exp $
+# $FML: Header.pm,v 1.75 2004/05/01 14:29:41 fukachan Exp $
 #
 
 package FML::Header;
@@ -633,16 +633,6 @@ check whether message-id is unique or not. If the message-id is found
 in the past message-id cache, the injected message must causes a mail
 loop.
 
-=head2 check_x_ml_info($config, $rw_args)
-
-The injected message loops if x-ml-info: has our own
-C<article_post_address> address.
-
-=head2 check_list_post($config, $rw_args)
-
-The injected message loops if list-post: has our own
-C<article_post_address> address.
-
 =cut
 
 
@@ -668,14 +658,48 @@ sub check_message_id
 	    # we can tind the $mid in the past message-id cache ?
 	    $dup = $db->{ $mid };
 	    Log( "message-id duplicated" ) if $dup;
-
-	    # save the current id
-	    $db->{ $mid } = 1;
 	}
     }
 
     return $dup;
 }
+
+
+# Descriptions: store message-id into the cache.
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
+# Side Effects: update cache
+# Return Value: STR or 0
+sub update_message_id_cache
+{
+    my ($header, $config, $rw_args) = @_;
+    my $dir = $config->{ 'message_id_cache_dir' };
+    my $mid = $header->get('message-id');
+
+    $mid = $header->address_clean_up($mid);
+    if ($mid) {
+	use FML::Header::MessageID;
+	my $xargs = { directory => $dir };
+	my $db    = FML::Header::MessageID->new->db_open($xargs);
+
+	if (defined $db) {
+	    # save the current id
+	    $db->{ $mid } = 1;
+	}
+    }
+}
+
+
+=head2 check_x_ml_info($config, $rw_args)
+
+The injected message loops if x-ml-info: has our own
+C<article_post_address> address.
+
+=head2 check_list_post($config, $rw_args)
+
+The injected message loops if list-post: has our own
+C<article_post_address> address.
+
+=cut
 
 
 # Descriptions: check X-ML-Info: duplication against mail loop.
