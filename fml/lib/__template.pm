@@ -10,11 +10,11 @@
 
 package FML::__HERE_IS_YOUR_MODULE_NAME__;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 require Exporter;
-@ISA       = qw(Exporter);
+@ISA = qw(Exporter);
 
 
 sub new
@@ -30,17 +30,21 @@ sub new
 
 FML::__HERE_IS_YOUR_MODULE_NAME__.pm - what is this
 
-
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
 
-=head2 new
+=head1 CLASSES
 
-=item Function()
+=head1 METHODS
 
+=item C<new()>
+
+... what is this ...
 
 =head1 AUTHOR
+
+__YOUR_NAME__
 
 =head1 COPYRIGHT
 
@@ -51,9 +55,8 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::__MODULE_NAME__.pm appeared in fml5.
+FML::__HERE_IS_YOUR_MODULE_NAME__.pm appeared in fml5.
 
 =cut
-
 
 1;
