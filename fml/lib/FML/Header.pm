@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.53 2003/03/05 16:10:27 fukachan Exp $
+# $FML: Header.pm,v 1.54 2003/03/05 16:23:14 fukachan Exp $
 #
 
 package FML::Header;
@@ -45,6 +45,12 @@ C<unfold()>.
 
 CAUTION: Pay attention!
 C<FML::Header> overloads C<get()> to remove the trailing "\n".
+
+=cut
+
+#
+# XXX-TODO: need to implement copy() and move() ?
+#
 
 =head2 C<new()>
 
