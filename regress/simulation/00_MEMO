@@ -60,12 +60,6 @@
 	libexec/auto-newml ?
 
 
-[TODO]	FML::Process::Scheduler ってかなり？
-
-	うーん、なかみがない。予約だけされてるモジュールやね
-	mkdir するだけ？ :-)
-
-
 [TODO]	Mail::Message::Encode へマージしたいもの
 
 	Mail/Message/Decode.pm
@@ -91,6 +85,8 @@
 
 
 [TODO]	スレッド関連のモジュール全部見直せよ
+
+	MTI との統合
 
 	Mail::ThreadTrack のクリーニング
 
@@ -334,15 +330,6 @@ FileHandle と IO::File 両方 use しちゃうからか？
 		print_axss (against cross site scripting).
 
 
-[TODO]	ファイルを用意しただけやんシリーズ;)
-	これから改造するので、ほとんど未修正のままのこす
-
-		一度削除するか？
-
-	FML::Process::Qmail
-	FML::Filter::TrafficMonitor
-
-
 [TODO]	remove $msg->{ next }
 
 	FML/Filter/TextPlain.pm
@@ -365,5 +352,25 @@ FileHandle と IO::File 両方 use しちゃうからか？
 	近々に見直すべし
 
 
+======================================================================
+○	用意しただけ/途中も途中…
+
+
+[TODO]	ファイルを用意しただけやんシリーズ;)
+	これから改造するので、ほとんど未修正のままのこす
+
+		一度削除するか？
+
+	FML::Process::Qmail
+	FML::Filter::TrafficMonitor
+
+
+[TODO]	FML::Process::Scheduler ってかなり？
+
+	うーん、なかみがない。予約だけされてるモジュールやね
+	mkdir するだけ？ :-)
+
+
+
 ----------
-$FML: 00_MEMO,v 1.75 2003/05/03 02:27:11 fukachan Exp $
+$FML: 00_MEMO,v 1.76 2003/05/04 07:07:28 fukachan Exp $
