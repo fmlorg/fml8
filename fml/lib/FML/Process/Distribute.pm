@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.99 2002/10/03 22:10:15 fukachan Exp $
+# $FML: Distribute.pm,v 1.100 2002/11/26 14:13:29 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -333,7 +333,7 @@ sub _distribute
     # update summary
     use FML::Article::Summary;
     my $summary = new FML::Article::Summary $curproc;
-    $summary->append($id);
+    $summary->append($article, $id);
 
     # delivery starts !
     $curproc->_deliver_article($args);

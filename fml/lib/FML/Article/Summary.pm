@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.4 2002/11/26 14:13:00 fukachan Exp $
+# $FML: Summary.pm,v 1.5 2002/12/01 06:13:14 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -76,11 +76,17 @@ sub _prepare_info
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
     my $tag     = $config->{ article_subject_tag };
+    my $article = undef;
 
-    use FML::Article;
-    my $article = new FML::Article $curproc;
-    my $file    = $article->filepath($id);
+    if (defined $self->{ _article }) {
+	$article = $self->{ _article };
+    }
+    else {
+	use FML::Article;
+	$article = new FML::Article $curproc;
+    }
 
+    my $file  = $article->filepath($id);
     if (-f $file) {
 	use Mail::Message;
 	my $msg      = new Mail::Message->parse( { file => $file } );
@@ -180,15 +186,19 @@ sub _fml4_compatible_style_one_line_summary
 
 
 # Descriptions: append summary information for article $id.
-#    Arguments: OBJ($self) NUM($id)
+#    Arguments: OBJ($self) OBJ($article) NUM($id)
 # Side Effects: update summary
 # Return Value: none
 sub append
 {
-    my ($self, $id) = @_;
+    my ($self, $article, $id) = @_;
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
     my $file    = $config->{ 'summary_file' };
+
+    if (defined $article) {
+	$self->{ _article } = $article;
+    }
 
     use FileHandle;
     my $wh = new FileHandle ">> $file";
