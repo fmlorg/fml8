@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: admin.pm,v 1.5 2004/03/12 11:45:49 fukachan Exp $
+# $FML: admin.pm,v 1.6 2004/03/14 08:51:15 fukachan Exp $
 #
 
 package FML::Command::User::admin;
@@ -156,13 +156,19 @@ sub _try_admin_auth
 	$opt_args->{ password } = $p || '';
     }
 
-    return $self->_new_admin_command_mail_restrictions($curproc, 
-						       $command_args, 
-						       $opt_args);
+    return $self->_apply_new_admin_command_mail_restrictions($curproc, 
+							     $command_args, 
+							     $opt_args);
 }
 
 
-sub _apply_admin_command_mail_restrictions
+# Descriptions: check if this request is allowed by
+#               $admin_command_mail_restriction.
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($command_args) HASH_REF($opt_args)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub _apply_old_admin_command_mail_restrictions
 {
     my ($self, $curproc, $command_args, $opt_args) = @_;
     my $config  = $curproc->config();
@@ -193,7 +199,13 @@ sub _apply_admin_command_mail_restrictions
 }
 
 
-sub _new_admin_command_mail_restrictions
+# Descriptions: check if this request is allowed by
+#               $admin_command_mail_restriction.
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($command_args) HASH_REF($opt_args)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub _apply_new_admin_command_mail_restrictions
 {
     my ($self, $curproc, $command_args, $opt_args) = @_;
     my $context = $command_args;
