@@ -3,6 +3,13 @@
 
 2001/12/09
 
+  インストーラのバグをとる
+	makefml の引数チェックのバグを修正
+	fml/etc/ 以下の構成を変更する	
+	makefml newml は config.cf 生成時にＭＬ名の変更をする	
+
+2001/12/08
+
    TinyScheduler 
 	more proper error messages
 	
@@ -1238,4 +1245,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.37 2001/12/02 02:19:51 fukachan Exp $
+$FML: CHANGES.txt,v 1.38 2001/12/08 15:05:32 fukachan Exp $
