@@ -1,5 +1,8 @@
 all: test
 
+install:
+	sh INSTALL.sh
+
 scan:
 	@ cvs -n update 2>&1 |grep -v : || echo ''
 
