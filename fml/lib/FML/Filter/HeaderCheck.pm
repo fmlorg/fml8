@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HeaderCheck.pm,v 1.18 2002/09/11 23:18:12 fukachan Exp $
+# $FML: HeaderCheck.pm,v 1.19 2002/09/22 14:56:50 fukachan Exp $
 #
 
 package FML::Filter::HeaderCheck;
@@ -105,7 +105,12 @@ sub header_check
     my $rules = $self->{ _rules };
 
     # apply $rule check for the header object $hdr
+  RULE:
     for my $rule (@$rules) {
+	if ($rule eq 'permit') {
+	    last RULE;
+	}
+
 	eval q{
 	    $self->$rule($hdr, $args);
 	};

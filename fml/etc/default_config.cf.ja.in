@@ -611,11 +611,13 @@ objective_file		=	$ml_home_dir/objective
 use_article_header_filter		=	yes
 
 
-# Descriptions: フィルタリングのルール
+# Descriptions: フィルタリングのルール。
+#               どのルールにもマッチしないなら、記事の投稿は認められる。
 #      History:
 #        Value:
 #     Examples:
 article_header_filter_rules		=	check_message_id
+						permit
 
 
 # Descriptions: ヘッダ情報を根拠にしたループチェックをするか？
