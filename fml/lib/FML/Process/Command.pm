@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.37 2002/03/17 06:24:31 fukachan Exp $
+# $FML: Command.pm,v 1.38 2002/03/22 11:40:27 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -256,27 +256,6 @@ sub _is_valid_command
 	return 0;
     }
 
-    if (0) {
-	# 3. Even new comer need to use commands [ guide, subscirbe, confirm ].
-	unless ($cred->is_member($curproc, $args)) {
-	    unless ($config->has_attribute("available_commands_for_stranger",
-					   $comname)) {
-		$curproc->reply_message("\n$prompt $command");
-		$curproc->reply_message_nl('command.deny',
-					   "not allowed to use this command.");
-		return 0;
-	    }
-	    else {
-		return 1;
-		Log("permit command $comname for stranger");
-	    }
-	}
-
-	# not reach here
-	LogWarn("_is_member: invalid condition");
-	return 0;
-    }
-
     return 1; # o.k. accpet this command.
 }
 
@@ -318,6 +297,39 @@ sub _get_command_name
 }
 
 
+sub _auth_admin
+{
+    my ($curproc, $args, $optargs) = @_;
+    my $is_auth = 0;
+    my $obj     = undef;
+
+    eval q{
+	use FML::Command::Auth;
+	$obj = new FML::Command::Auth;
+    };
+    unless ($@) {
+	my $config = $curproc->{ config };
+	my $rules  = $config->get_as_array_ref('admin_command_restrictions');
+	for my $rule (@$rules) {
+	    if ($rule eq 'reject') { 
+		return 0;
+	    }
+
+	    $is_auth = $obj->$rule($curproc, $args, $optargs);
+	    if ($is_auth) { 
+		return $is_auth;
+	    }
+	    else {
+		Log("admin: $rule fail");
+	    }
+	}
+    }
+    else {
+	return 0;
+    }
+}
+
+
 # Descriptions: scan message body and execute approviate command
 #               with dynamic loading of command definition.
 #               It resolves your customized command easily.
@@ -353,7 +365,11 @@ sub _evaluate_command
     # 
     my $cred      = $curproc->{ credential };
     my $is_member = $cred->is_member($curproc, $args);
+
+    # is_admin: From: is a member of admin users.
+    #  is_auth: authenticated or not by e.g. password
     my $is_admin  = $cred->is_privileged_member($curproc, $args);
+    my $is_auth   = 0;
 
     # 
     # main loop
@@ -397,7 +413,15 @@ sub _evaluate_command
 	}
 	# Case: "admin" command is exceptional. try priviledged mode.
 	elsif ($comname =~ /$admin_prefix/) {
-	    if ($is_admin) {
+	    unless ($is_auth) { # for the first time ?
+		my $sender  = $curproc->{'credential'}->{'sender'};
+		my $optargs = { address => $sender, data => $command };
+
+		# try auth by FML::Command::Auth;
+		$is_auth = $curproc->_auth_admin($args, $optargs);
+	    }
+
+	    if ($is_admin && $is_auth) {
 		$comname = $comsubname;
 		$command =~ s/^.*$comname/admin $comname/;
 		$opts    = { comname => $comname, command => $command };
