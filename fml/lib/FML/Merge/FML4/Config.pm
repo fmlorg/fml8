@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.2 2004/03/17 12:55:03 fukachan Exp $
+# $FML: Config.pm,v 1.3 2004/03/17 13:30:42 fukachan Exp $
 #
 
 package FML::Merge::FML4::Config;
@@ -265,6 +265,10 @@ sub get_continuous_use_files
 }
 
 
+# Descriptions: return backup mode.
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: none
+# Return Value: STR
 sub backup_mode
 {
     my ($self, $file) = @_;

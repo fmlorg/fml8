@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.2 2004/03/17 04:08:35 fukachan Exp $
+# $FML: List.pm,v 1.3 2004/03/17 04:30:20 fukachan Exp $
 #
 
 package FML::Merge::FML4::List;
@@ -27,6 +27,10 @@ FML::Merge::FML4::List - convert member list files.
 =cut
 
 
+# Descriptions: constructor.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self, $curproc, $params) = @_;
@@ -40,6 +44,10 @@ sub new
 }
 
 
+# Descriptions: convert list files from fml4 to fml8 format.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
 sub convert
 {
     my ($self)  = @_;
@@ -68,6 +76,10 @@ sub convert
 }
 
 
+# Descriptions: convert fml4 actives to fml8 recipients.
+#    Arguments: OBJ($self) OBJ($merge)
+# Side Effects: create fml8 file.
+# Return Value: none
 sub _convert_actives
 {
     my ($self, $merge) = @_;
@@ -78,6 +90,10 @@ sub _convert_actives
 } 
 
 
+# Descriptions: convert fml4 members to fml8 members.
+#    Arguments: OBJ($self) OBJ($merge)
+# Side Effects: create fml8 file.
+# Return Value: none
 sub _convert_members
 {
     my ($self, $merge) = @_;
@@ -88,6 +104,10 @@ sub _convert_members
 } 
 
 
+# Descriptions: convert fml4 members-admin to fml8 {recipients,members}-admin.
+#    Arguments: OBJ($self) OBJ($merge)
+# Side Effects: create fml8 file.
+# Return Value: none
 sub _convert_members_admin
 {
     my ($self, $merge) = @_;
@@ -101,6 +121,10 @@ sub _convert_members_admin
 } 
 
 
+# Descriptions: convert fml4 moderators to fml8 {recipients,members}-moderator.
+#    Arguments: OBJ($self) OBJ($merge)
+# Side Effects: create fml8 file.
+# Return Value: none
 sub _convert_moderators
 {
     my ($self, $merge) = @_;
@@ -114,6 +138,10 @@ sub _convert_moderators
 } 
 
 
+# Descriptions: convert fml4 etc/passwd to fml8 etc/passwd-admin.
+#    Arguments: OBJ($self) OBJ($merge)
+# Side Effects: create fml8 file.
+# Return Value: none
 sub _convert_etc_passwd
 {
     my ($self, $merge) = @_;
@@ -124,6 +152,10 @@ sub _convert_etc_passwd
 } 
 
 
+# Descriptions: filter output by removing comment line.
+#    Arguments: OBJ($self) STR($src) STR($dst)
+# Side Effects: create $dst file.
+# Return Value: none
 sub _write_without_comment
 {
     my ($self, $src, $dst) = @_;

@@ -4,16 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Merge.pm,v 1.6 2004/03/17 12:55:03 fukachan Exp $
+# $FML: Merge.pm,v 1.7 2004/03/17 14:20:47 fukachan Exp $
 #
 
 package FML::Merge;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-
-use FML::Merge::Utils;
-push(@INC, qw(FML::Merge::Utils));
 
 
 =head1 NAME
@@ -24,8 +21,9 @@ FML::Merge - merge other system configurations to fml8 ones.
 
 =head1 DESCRIPTION
 
-=cut
+=head2 new($curproc, $params)
 
+=cut
 
 
 # Descriptions: constructor.
@@ -36,7 +34,7 @@ sub new
 {
     my ($self, $curproc, $params) = @_;
     my ($type) = ref($self) || $self;
-    my $me     = { 
+    my $me     = {
 	_curproc => $curproc,
 	_params  => $params,
     };
@@ -67,6 +65,13 @@ sub new
 }
 
 
+=head2 set_target_system($system)
+
+specify target system.
+
+=cut
+
+
 # Descriptions: specify target system.
 #    Arguments: OBJ($self) STR($system)
 # Side Effects: none
@@ -80,6 +85,10 @@ sub set_target_system
 
 
 =head1 BACK UP CONFIGURATION FILES
+
+=head2 backup_old_config_files()
+
+back up old configuration files.
 
 =cut
 
@@ -162,9 +171,21 @@ For example, the value of NetBSD follows.
               that a mailer (e.g.) could not create a connection,
               and the request should be reattempted later.
 
+=head2 disable_old_include_files()
+
+rewrite include* files.
+
+=head2 enable_old_include_files()
+
+not yet implementd.
+
 =cut
 
 
+# Descriptions: rewrite include* files to disable them.
+#    Arguments: OBJ($self)
+# Side Effects: rewrite include* files.
+# Return Value: none
 sub disable_old_include_files
 {
     my ($self) = @_;
@@ -194,6 +215,10 @@ sub disable_old_include_files
 }
 
 
+# Descriptions: rewrite include* files (dummy).
+#    Arguments: OBJ($self)
+# Side Effects: rewrite include* files.
+# Return Value: none
 sub enable_old_include_files
 {
     my ($self) = @_;
@@ -210,11 +235,20 @@ sub enable_old_include_files
 }
 
 
-=head1
+=head1 CONVERT USER LIST FILES.
+
+=head2 convert_list_files()
+
+convert fml4 list files to fml8 style ones.
 
 =cut
 
 
+# Descriptions: convert fml4 list files to fml8 style ones.
+#    Arguments: OBJ($self)
+# Side Effects: old fml4 files moved to .fml4rc/,
+#               fml8 files created if needed.
+# Return Value: none
 sub convert_list_files
 {
     my ($self)  = @_;
@@ -227,11 +261,19 @@ sub convert_list_files
 }
 
 
-=head1
+=head1 MERGE
+
+=head2 merge_into_config_cf()
+
+merge fml4 config.ph into fm8 config.cf file.
 
 =cut
 
 
+# Descriptions: merge fml4 config.ph into fm8 config.cf file.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
 sub merge_into_config_cf
 {
     my ($self)  = @_;
@@ -244,12 +286,16 @@ sub merge_into_config_cf
 
     use FML::Merge::FML4::config_ph;
     my $config_ph = new FML::Merge::FML4::config_ph;
-    $config_ph->set_default_config_ph("/tmp/default_config.ph"); 
+    $config_ph->set_default_config_ph("/tmp/default_config.ph");
     my $diff      = $config_ph->diff($old_config_ph);
     $self->_inject_into_config_cf($diff);
 }
 
 
+# Descriptions: inject config.ph summary to config.cf file.
+#    Arguments: OBJ($self) HASH_REF($diff)
+# Side Effects: rewrite config.cf.
+# Return Value: none
 sub _inject_into_config_cf
 {
     my ($self, $diff) = @_;
@@ -281,6 +327,10 @@ sub _inject_into_config_cf
 }
 
 
+# Descriptions: inject config.ph summary to config.cf file.
+#    Arguments: OBJ($self) HANDLE($wh) HASH_REF($diff)
+# Side Effects: rewrite config.cf.
+# Return Value: none
 sub _inject_diff_into_config_cf
 {
     my ($self, $wh, $diff) = @_;
@@ -310,6 +360,10 @@ sub _inject_diff_into_config_cf
 }
 
 
+# Descriptions: tune sort order: postpone PROC__* and *_HOOK variables.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
 sub _sort_order
 {
     my $x = $a;
@@ -329,6 +383,10 @@ sub _sort_order
 =cut
 
 
+# Descriptions: return file path at the source dir.
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: none
+# Return Value: STR
 sub old_file_path
 {
     my ($self, $file) = @_;
@@ -339,6 +397,10 @@ sub old_file_path
 }
 
 
+# Descriptions: return file path at $ml_home_dir.
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: none
+# Return Value: STR
 sub new_file_path
 {
     my ($self, $file) = @_;
@@ -349,6 +411,10 @@ sub new_file_path
 }
 
 
+# Descriptions: return file path at backup-ed dir e.g. $ml_home_dir/.fml4rc.
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: none
+# Return Value: STR
 sub backup_file_path
 {
     my ($self, $file) = @_;

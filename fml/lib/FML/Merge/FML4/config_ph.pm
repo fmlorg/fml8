@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.3 2004/03/17 12:33:12 fukachan Exp $
+# $FML: config_ph.pm,v 1.4 2004/03/17 12:53:16 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
@@ -29,6 +29,10 @@ FML::Merge::FML4::config_ph - handle fml4's config.ph file.
 =cut
 
 
+# Descriptions: constructor.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self) = @_;
@@ -38,6 +42,10 @@ sub new
 }
 
 
+# Descriptions: set default_config.ph path.
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: none
+# Return Value: STR
 sub set_default_config_ph
 {
     my ($self, $file) = @_;
@@ -46,6 +54,10 @@ sub set_default_config_ph
 }
 
 
+# Descriptions: diff config.ph and return it as HASH_REF.
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: none
+# Return Value: HASH_REF
 sub diff
 {
     my ($self, $file) = @_;
@@ -64,6 +76,10 @@ sub diff
 }
 
 
+# Descriptions: load default_config.ph into "default" name space.
+#    Arguments: none
+# Side Effects: default name space filled up by default_config.ph content.
+# Return Value: none
 sub _load_default_config_ph
 {
     package default;
@@ -98,6 +114,10 @@ sub _load_default_config_ph
 }
 
 
+# Descriptions: generate string to evaluate to load config.ph.
+#    Arguments: OBJ($self) STR($f)
+# Side Effects: none
+# Return Value: STR
 sub _gen_eval_string
 {
     my ($self, $f) = @_;
@@ -122,6 +142,11 @@ sub _gen_eval_string
 }
 
 
+# Descriptions: generate diff config.ph against defualt_config.ph and
+#               save it at %result (global variabl).
+#    Arguments: STR($package) HASH_REF($stab)
+# Side Effects: none
+# Return Value: none
 sub var_dump
 {
     my ($package, $stab) = @_;
@@ -154,6 +179,10 @@ sub var_dump
 }
 
 
+# Descriptions: generate macro definitions used in fml4 config.
+#    Arguments: none
+# Side Effects: none
+# Return Value: STR
 sub gen_dummy_macros
 {
     my $s = '';
@@ -276,9 +305,17 @@ sub gen_dummy_macros
 
 =head1 TRANSLATION FROM 4 TO 8 
 
+=head2 translate($key, $value)
+
+translate fml4 config {$key => $value } to fml8 one if could.
+
 =cut
 
 
+# Descriptions: translate fml4 config {$key => $value } to fml8 one if could.
+#    Arguments: OBJ($self) STR($key) STR($value)
+# Side Effects: none
+# Return Value: STR
 sub translate
 {
     my ($self, $key, $value) = @_;
