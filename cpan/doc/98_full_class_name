@@ -109,7 +109,7 @@ Devel::TraceLoad              Traces the loading of perl source code
 Exception::Class              Declare exception class hierarchies 
 Exception::Cxx                Cause perl to longjmp using C++ exceptions 
 Perf::ARM                     Application Response Measurement 
-Sub::Curry                    Perl module to curry functions ((á la Lisp)) 
+Sub::Curry                    Perl module to curry functions ((a la Lisp)) 
 Test::Cmd                     Portable test infrastructure for commands 
 Test::Harness                 Executes perl-style tests 
 Test::Unit                    framework for XP style unit testing 
