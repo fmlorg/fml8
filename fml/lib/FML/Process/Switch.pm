@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.57 2002/03/20 03:19:59 fukachan Exp $
+# $FML: Switch.pm,v 1.58 2002/03/30 11:08:36 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -267,11 +267,14 @@ sub _makefml_parse_argv
 {
     my ($myname, $main_cf) = @_;
     use FML::Process::Utils;
-    my $ml_home_prefix = FML::Process::Utils::__ml_home_prefix_from_main_cf($main_cf);
+    my $ml_home_prefix = 
+      FML::Process::Utils::__ml_home_prefix_from_main_cf($main_cf);
 
     # makefml specific syntax.
     if (@ARGV) {
+	my @cf = ();
 	my ($command, $ml_name, @options) = @ARGV;
+
 	if ($command =~ /\-\>/) {
 	    ($command, @options) = @ARGV;
 	    ($ml_name, $command) = split('->', $command);
@@ -282,11 +285,17 @@ sub _makefml_parse_argv
 	}
 
 	# save $ml_home_dir value in $main_cf directly
-	$main_cf->{ ml_home_dir } = File::Spec->catfile($ml_home_prefix, $ml_name);
-
-	# config.cf
-	my $cf = File::Spec->catfile($ml_home_prefix, $ml_name, "config.cf");
-	my @cf = ($cf);
+	if (defined $ml_name) {
+	    $main_cf->{ ml_home_dir } = 
+	      File::Spec->catfile($ml_home_prefix, $ml_name);
+	    # config.cf
+	    my $cf = 
+	      File::Spec->catfile($ml_home_prefix, $ml_name, "config.cf");
+	    @cf = ($cf);
+	}
+	else {
+	    warn("\$ml_name not specified");
+	}
 
 	return \@cf;
     }
