@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.16 2002/02/20 14:10:37 fukachan Exp $
+# $FML: newml.pm,v 1.17 2002/02/24 08:28:33 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -66,6 +66,7 @@ sub need_lock { 0;}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
+    my $options        = $curproc->command_line_options();
     my $config         = $curproc->{ 'config' };
     my ($ml_name, $ml_domain, $ml_home_prefix, $ml_home_dir) =
 	$self->_get_domain_info($curproc, $command_args);
@@ -85,51 +86,70 @@ sub process
     # update $ml_home_prefix and expand variables again.
     $config->set( 'ml_home_prefix' , $ml_home_prefix );
 
-    # o.k. here we go !
-    unless (-d $ml_home_dir) {
-	eval q{
-	    use File::Utils qw(mkdirhier);
-	    use File::Spec;
-	};
-	croak($@) if $@;
-
-	mkdirhier( $ml_home_dir, $config->{ default_dir_mode } || 0755 );
-
-	# $ml_home_dir/etc/mail
-	my $mailconfdir = $config->{ mailconf_dir };
-	unless (-d $mailconfdir) {
-	    print STDERR "creating $mailconfdir\n";
-	    mkdirhier( $mailconfdir, $config->{ default_dir_mode } || 0755 );
+    # "makefml --force newml elena" makes elena ML even if elena
+    # already exists.
+    unless (defined $options->{ force } ) {
+	if (-d $ml_home_dir) {
+	    warn("$ml_name already exists");
+	    return ;
 	}
+    }
 
-	# 1. install $ml_home_dir/{config.cf,include,include-ctl}
-	# 2. set up aliases
-	$self->_install_files_for_newml($curproc, $command_args, $params);
-	$self->_setup_aliases_for_newml($curproc, $command_args, $params);
+    # o.k. here we go !
+    eval q{
+	use File::Utils qw(mkdirhier);
+	use File::Spec;
+    };
+    croak($@) if $@;
+
+    mkdirhier( $ml_home_dir, $config->{ default_dir_mode } || 0755 );
+
+    # $ml_home_dir/etc/mail
+    my $mailconfdir = $config->{ mailconf_dir };
+    unless (-d $mailconfdir) {
+	print STDERR "creating $mailconfdir\n";
+	mkdirhier( $mailconfdir, $config->{ default_dir_mode } || 0755 );
     }
-    else {
-	warn("$ml_name already exists");
-    }
+
+    # update $config name space.
+    $config->set('ml_name',   $self->{ _ml_name });
+    $config->set('ml_domain', $self->{ _ml_domain });
+
+    # 1. install $ml_home_dir/{config.cf,include,include-ctl}
+    # 2. set up aliases
+    # 3. prepare mail archive at ~fml/public_html/$domain/$ml/ ?
+    # 4. prepare cgi interface at ?
+    #      ~fml/public_html/cgi-bin/fml/$domain/admin/
+    # 5. prepare thread cgi interface at ?
+    #      ~fml/public_html/cgi-bin/fml/$domain/threadview.cgi ?
+    $self->_install_template_files($curproc, $command_args, $params);
+    $self->_update_aliases($curproc, $command_args, $params);
+    $self->_setup_mail_archive_dir($curproc, $command_args, $params);
+    $self->_setup_menu_cgi_interface($curproc, $command_args, $params);
+    $self->_setup_thread_cgi_interface($curproc, $command_args, $params);
 }
 
 
-sub _install_files_for_newml
+sub _install_template_files
 {
     my ($self, $curproc, $command_args, $params) = @_;
+    my $config       = $curproc->{ config };
     my $template_dir = $curproc->template_files_dir_for_newml();
     my $ml_home_dir  = $params->{ ml_home_dir };
 
-    for my $file (qw(config.cf include include-ctl)) {
+    my $newml_template_files = 
+	$config->get_as_array_ref('newml_command_template_files');
+    for my $file (@$newml_template_files) {
 	my $src = File::Spec->catfile($template_dir, $file);
 	my $dst = File::Spec->catfile($ml_home_dir, $file);
 
-	print STDERR "installing $dst\n";
+	print STDERR "creating $dst\n";
 	_install($src, $dst, $params);
     }
 }
 
 
-sub _setup_aliases_for_newml
+sub _update_aliases
 {
     my ($self, $curproc, $command_args, $params) = @_;
     my $template_dir = $curproc->template_files_dir_for_newml();
@@ -140,11 +160,80 @@ sub _setup_aliases_for_newml
     my $src   = File::Spec->catfile($template_dir, 'aliases');
     my $dst   = $alias . "." . $$;
 
-    print STDERR "updating $dst\n";
+    print STDERR "updating $alias\n";
     _install($src, $dst, $params);
 
     # append
     system "cat $dst >> $alias";
+}
+
+
+sub _setup_mail_archive_dir
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $config = $curproc->{ config };
+    my $dir    = $config->{ html_archive_dir };
+
+    eval q{ use File::Utils qw(mkdirhier);};
+    croak($@) if $@;
+
+    unless (-d $dir) {
+	print STDERR "creating $dir\n";
+	mkdirhier( $dir, $config->{ default_dir_mode } || 0755 );
+    }
+}
+
+
+sub _setup_menu_cgi_interface
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $config       = $curproc->{ config };
+
+    eval q{ use File::Utils qw(mkdirhier);};
+    croak($@) if $@;
+
+    my $cgi_base_dir     = $config->{ cgi_base_dir };
+    my $admin_cgi_dir    = $config->{ admin_cgi_base_dir };
+    my $ml_admin_cgi_dir = $config->{ ml_admin_cgi_base_dir };
+    for my $dir ($admin_cgi_dir, $ml_admin_cgi_dir) {
+	unless (-d $dir) {
+	    print STDERR "creating $dir\n";
+	    mkdirhier( $dir, $config->{ default_dir_mode } || 0755 );
+	}
+    }
+
+    use File::Spec;
+    my $src   = File::Spec->catfile($template_dir, 'dot_htaccess');
+    my $dst   = File::Spec->catfile($cgi_base_dir, '.htaccess');
+
+    print STDERR "creating $dst\n";
+    print STDERR "         (a dummy to disable cgi interface by default)\n";
+    _install($src, $dst, $params);
+}
+
+
+sub _setup_thread_cgi_interface
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $config       = $curproc->{ config };
+
+    eval q{ use File::Utils qw(mkdirhier);};
+    croak($@) if $@;
+
+    return;
+
+    # 
+    # XXX not implemented ...
+    # 
+    use File::Spec;
+    my $src   = File::Spec->catfile($template_dir, 'dot_htaccess');
+    my $dst   = ''; # File::Spec->catfile($cgi_base_dir, '.htaccess');
+
+    print STDERR "creating $dst\n";
+    print STDERR "         (a dummy to disable cgi interface by default)\n";
+    _install($src, $dst, $params);
 }
 
 
@@ -174,6 +263,10 @@ sub _get_domain_info
 
     eval q{ use File::Spec;};
     $ml_home_dir = File::Spec->catfile($ml_home_prefix, $ml_name);
+
+    # save for convenience
+    $self->{ _ml_name   } = $ml_name;
+    $self->{ _ml_domain } = $ml_domain;
 
     return ($ml_name, $ml_domain, $ml_home_prefix, $ml_home_dir);
 }
