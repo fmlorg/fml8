@@ -9,6 +9,12 @@
 
 package FML::Merge::FML4::Rules;
 
+
+# Descriptions: translate fml4 rule to the corresponding fml8 one.
+#    Arguments: OBJ($self)
+#               HASH_REF($dispatch) HASH_REF($diff) STR($key) STR($value)
+# Side Effects: none
+# Return Value: STR
 sub translate
 {
     my ($self, $dispatch, $diff, $key, $value) = @_;
@@ -146,19 +152,19 @@ sub translate
    
    if ($key eq 'CONTENT_HANDLER_CUTOFF_EMPTY_MESSAGE' && defined $value) {
       $s = undef;
-      $s .= &$fp_rule_prefer_fml4_value($self, $diff, $key, $value);
+      $s .= &$fp_rule_convert($self, $diff, $key, $value);
       return $s if defined $s;
    }
    
    if ($key eq 'CONTENT_HANDLER_REJECT_EMPTY_MESSAGE' && defined $value) {
       $s = undef;
-      $s .= &$fp_rule_prefer_fml4_value($self, $diff, $key, $value);
+      $s .= &$fp_rule_convert($self, $diff, $key, $value);
       return $s if defined $s;
    }
    
    if ($key eq 'HTML_MAIL_DEFAULT_HANDLER' && defined $value) {
       $s = undef;
-      $s .= &$fp_rule_prefer_fml4_value($self, $diff, $key, $value);
+      $s .= &$fp_rule_convert($self, $diff, $key, $value);
       return $s if defined $s;
    }
    
@@ -261,18 +267,6 @@ sub translate
    }
    
    
-      if ($key eq 'PERMIT_COMMAND_FROM' && $value eq 'members_only') {
-         $s = undef;
-         
-         if ($key eq 'REJECT_COMMAND_HANDLER' && $value eq 'auto_subscribe') {
-            $s = undef;
-            $s .= ".unavailble";
-         $s .= "\n";
-         }
-      return $s if defined $s;
-   }
-   
-   
    if ($key eq 'USE_RFC2369' && $value == 1) {
       $s = undef;
       $s .= "article_header_rewrite_rules += add_rfc2369";
@@ -291,8 +285,7 @@ sub translate
    
    if ($key eq 'SKIP_FIELDS' && $value eq 'Return-Receipt-To') {
       $s = undef;
-      $s .= "unsafe_header_fields = SKIP_FIELDS";
-      $s .= "\n";
+      $s .= &$fp_rule_convert($self, $diff, $key, $value);
       return $s if defined $s;
    }
    
@@ -333,28 +326,28 @@ sub translate
    }
    
    
-   if ($key eq 'MEMBER_LIST' && $value eq '$DIR/members') {
+   if ($key eq 'MEMBER_LIST' && $value ne '$DIR/members') {
       $s = undef;
       $s .= &$fp_rule_convert($self, $diff, $key, $value);
       return $s if defined $s;
    }
    
    
-   if ($key eq 'ACTIVE_LIST' && $value eq '$DIR/actives') {
+   if ($key eq 'ACTIVE_LIST' && $value ne '$DIR/actives') {
       $s = undef;
       $s .= &$fp_rule_convert($self, $diff, $key, $value);
       return $s if defined $s;
    }
    
    
-   if ($key eq 'GUIDE_FILE' && $value eq '$DIR/guide') {
+   if ($key eq 'GUIDE_FILE' && $value ne '$DIR/guide') {
       $s = undef;
       $s .= &$fp_rule_convert($self, $diff, $key, $value);
       return $s if defined $s;
    }
    
    
-   if ($key eq 'OBJECTIVE_FILE' && $value eq '$DIR/objective') {
+   if ($key eq 'OBJECTIVE_FILE' && $value ne '$DIR/objective') {
       $s = undef;
       $s .= &$fp_rule_convert($self, $diff, $key, $value);
       return $s if defined $s;
@@ -363,41 +356,53 @@ sub translate
    
    if ($key eq 'SPOOL_DIR' && $value eq 'spool') {
       $s = undef;
-      $s .= "spool_dir = SPOOL_DIR";
-      $s .= "\n";
+      $s .= &$fp_rule_convert($self, $diff, $key, $value);
       return $s if defined $s;
    }
    
    
-   if ($key eq 'LOGFILE' && $value eq '$DIR/log') {
+   if ($key eq 'LOGFILE' && $value ne '$DIR/log') {
       $s = undef;
-      $s .= &$fp_rule_prefer_fml4_value($self, $diff, $key, $value);
+      $s .= &$fp_rule_convert($self, $diff, $key, $value);
       return $s if defined $s;
    }
    
-   
-   if ($key eq 'SUMMARY_FILE' && $value eq '$DIR/summary') {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml4_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'SEQUENCE_FILE' && $value eq '$DIR/seq') {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml4_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'HOST' && $value eq 'localhost') {
+   if ($key eq 'LOGFILE_SUFFIX' && defined $value) {
       $s = undef;
       $s .= &$fp_rule_convert($self, $diff, $key, $value);
       return $s if defined $s;
    }
    
    
-   if ($key eq 'PORT' && $value == 25) {
+   if ($key eq 'SUMMARY_FILE' && $value ne '$DIR/summary') {
+      $s = undef;
+      $s .= &$fp_rule_convert($self, $diff, $key, $value);
+      return $s if defined $s;
+   }
+   
+   
+   if ($key eq 'SEQUENCE_FILE' && $value ne '$DIR/seq') {
+      $s = undef;
+      $s .= &$fp_rule_convert($self, $diff, $key, $value);
+      return $s if defined $s;
+   }
+   
+   
+   if ($key eq 'TMP_DIR' && $value eq 'tmp') {
+      $s = undef;
+      $s .= &$fp_rule_convert($self, $diff, $key, $value);
+      return $s if defined $s;
+   }
+   
+   
+   if ($key eq 'HOST' && $value ne 'localhost') {
+      $s = undef;
+      $s .= &$fp_rule_convert($self, $diff, $key, $value);
+      return $s if defined $s;
+   }
+   
+   
+   if ($key eq 'PORT' && $value != 25) {
       $s = undef;
       $s .= &$fp_rule_convert($self, $diff, $key, $value);
       return $s if defined $s;
@@ -473,6 +478,12 @@ sub translate
       return $s if defined $s;
    }
    
+   if ($key eq 'AUTO_REGISTRATION_DEFAULT_MODE' && defined $value) {
+      $s = undef;
+      $s .= &$fp_rule_convert($self, $diff, $key, $value);
+      return $s if defined $s;
+   }
+   
    
    if ($key eq 'MESSAGE_LANGUAGE' && $value eq 'Japanese') {
       $s = undef;
@@ -491,10 +502,7 @@ sub translate
    
    if ($key eq 'FILE_TO_REGIST' && defined $value) {
       $s = undef;
-      $s .= "primary_member_map      =	FILE_TO_REGIST";
-      $s .= "\n";
-      $s .= "primary_recipient_map   =	FILE_TO_REGIST";
-      $s .= "\n";
+      $s .= &$fp_rule_convert($self, $diff, $key, $value);
       return $s if defined $s;
    }
    
