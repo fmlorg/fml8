@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.46 2004/09/04 02:33:31 fukachan Exp $
+# $FML: Queue.pm,v 1.47 2004/09/04 03:12:26 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -487,6 +487,10 @@ sub _change_queue_mode
 }
 
 
+# Descriptions: reschedule queues. wake up queue if needed.
+#    Arguments: OBJ($self)
+# Side Effects: wake up queue if needed.
+# Return Value: none
 sub reschedule
 {
     my ($self) = @_;
