@@ -69,6 +69,31 @@ sub STORE
 }
 
 
+sub FIRSTKEY
+{
+    my ($self) = @_;
+
+    use IO::File;
+    my $fh = new IO::File;
+    $fh->open( $self->{ _file }, "r");
+    $self->{ _fh } = $fh;
+
+    my $r = <$fh>;
+    my @r = split(/\s+/, $r);
+    return $r[0];
+}
+
+
+sub NEXTKEY
+{
+    my ($self) = @_;
+    my $fh = $self->{ _fh };
+    my $r  = <$fh>;
+    my @r  = split(/\s+/, $r);
+    return $r[0];
+}
+
+
 sub _fetch
 {
     my ($self, $key, $mode) = @_;
