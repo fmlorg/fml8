@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.238 2004/08/14 06:20:00 fukachan Exp $
+# $FML: Kernel.pm,v 1.239 2004/09/03 12:46:11 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -986,8 +986,7 @@ sub load_config_files
     # XXX We need to expand variables after we load all *cf files.
     # XXX 2001/05/05 changed to dynamic expansion for hook
     # $curproc->config()->expand_variables();
-
-    if ($curproc->is_cgi_process() || $curproc->is_under_mta_process()) {
+    if ($curproc->is_under_mta_process()) {
 	# XXX simple sanity check
 	#     MAIL_LIST != MAINTAINER
 	my $maintainer = $config->{ maintainer }       || '';
@@ -1001,10 +1000,12 @@ sub load_config_files
 
 	use FML::Credential;
 	my $cred = $curproc->{ credential };
-	if ($cred->is_same_address($maintainer, $ml_address)) {
-	    my $s = "configuration error: \$maintainer == \$article_post_address";
-	    $curproc->logerror($s);
-	    $curproc->stop_this_process("configuration error");
+	my $s = "configuration error: \$maintainer == \$article_post_address";
+	if ($maintainer && $ml_address) {
+	    if ($cred->is_same_address($maintainer, $ml_address)) {
+		$curproc->logerror($s);
+		$curproc->stop_this_process("configuration error");
+	    }
 	}
     }
 }
