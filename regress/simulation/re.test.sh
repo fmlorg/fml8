@@ -3,12 +3,14 @@
 # $Id$
 #
 
-cd .. || exit 1
+pwd=`pwd`
+
+cd ../.. || exit 1
 pwd
-cat regress/example.re |\
+cat $pwd/example.re |\
 perl -w fml/libexec/fmlwrapper \
 	--params pwd=$PWD \
-	-c $PWD/regress/main.cf \
+	-c $pwd/main.cf \
 	/var/spool/ml/elena
 
 echo "-- exit code: $?"
