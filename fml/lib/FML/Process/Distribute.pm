@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Distribute.pm,v 1.51 2001/11/04 04:42:52 fukachan Exp $
+# $FML: Distribute.pm,v 1.52 2001/11/11 13:37:41 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -127,6 +127,27 @@ sub run
 	}
     }
     $curproc->unlock();
+}
+
+
+=head2 help()
+
+=cut
+
+
+# Descriptions: show help
+#    Arguments: none
+# Side Effects: none
+# Return Value: none
+sub help
+{
+print <<"_EOF_";
+
+Usage: $0 \$ml_home_prefix/\$ml_name [options]
+
+   For example, distribute of elena ML
+   $0 /var/spool/ml/elena
+_EOF_
 }
 
 

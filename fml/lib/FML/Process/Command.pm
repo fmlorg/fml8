@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Command.pm,v 1.20 2001/10/14 03:31:10 fukachan Exp $
+# $FML: Command.pm,v 1.21 2001/11/04 03:44:46 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -98,6 +98,27 @@ sub run
 {
     my ($curproc, $args) = @_;
     $curproc->_evaluate_command($args); 
+}
+
+
+=head2 help()
+
+=cut
+
+
+# Descriptions: show help
+#    Arguments: none
+# Side Effects: none
+# Return Value: none
+sub help
+{
+print <<"_EOF_";
+
+Usage: $0 \$ml_home_prefix/\$ml_name [options]
+
+   For example, process command of elena ML
+   $0 /var/spool/ml/elena
+_EOF_
 }
 
 

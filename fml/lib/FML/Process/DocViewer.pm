@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: DocViewer.pm,v 1.3 2001/05/29 16:21:16 fukachan Exp $
+# $FML: DocViewer.pm,v 1.4 2001/11/04 03:44:46 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -100,6 +100,36 @@ sub run
     else {
 	my $command = $argv->[ 0 ] || croak("command not specified\n");
     }
+}
+
+
+=head2 help()
+
+=cut
+
+
+# Descriptions: show help
+#    Arguments: none
+# Side Effects: none
+# Return Value: none
+sub help
+{
+    my $name = $0;
+    eval {
+	use File::Basename;
+	$name = basename($0);
+    };
+
+print <<"_EOF_";
+
+Usage: $name \$command \$ml_name [options]
+
+$name help         \$ml_name                   show this help
+
+$name subscribe    \$ml_name ADDRESS
+$name unsubscribe  \$ml_name ADDRESS
+
+_EOF_
 }
 
 

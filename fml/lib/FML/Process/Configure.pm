@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Configure.pm,v 1.27 2001/10/14 03:08:59 fukachan Exp $
+# $FML: Configure.pm,v 1.28 2001/11/04 03:44:46 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -113,6 +113,36 @@ sub run
     else {
 	my $command = $argv->[ 0 ] || croak("command not specified\n");
     }
+}
+
+
+=head2 help()
+
+=cut
+
+
+# Descriptions: show help
+#    Arguments: none
+# Side Effects: none
+# Return Value: none
+sub help
+{
+    my $name = $0;
+    eval {
+	use File::Basename;
+	$name = basename($0);
+    };
+
+print <<"_EOF_";
+
+Usage: $name \$command \$ml_name [options]
+
+$name help         \$ml_name                   show this help
+
+$name subscribe    \$ml_name ADDRESS
+$name unsubscribe  \$ml_name ADDRESS
+
+_EOF_
 }
 
 
