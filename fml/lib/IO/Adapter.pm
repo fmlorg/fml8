@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.19 2002/07/24 09:29:53 fukachan Exp $
+# $FML: Adapter.pm,v 1.20 2002/07/24 11:05:49 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -325,28 +325,30 @@ for C<file> map.
 It return the next element of the array,
 in C<array_reference>, C<unix.group>, C<nis.grouop> maps.
 
-=head2 C<add( $address )>
+=head2 C<add( $address, [$argv] )>
 
 add $address to the specified map.
 
-=head2 C<delete( $regexp )>
+Optionally, you can add KEY=>VALUE structures such as 
+  $address => STR
+or 
+  $address => [ STR1, STR2, ... ].
+
+
+=head2 C<delete( $address )>
 
 delete lines which matches $regexp from this map.
-
-=head2 C<replace( $regexp, $value )>
-
-replace lines which matches $regexp with $value.
 
 =cut
 
 
 # Descriptions: add $address to the current map
-#    Arguments: OBJ($self) STR($address)
+#    Arguments: OBJ($self) STR($address) VARARGS($argv)
 # Side Effects: modify map content
 # Return Value: same as add()
 sub add
 {
-    my ($self, $address) = @_;
+    my ($self, $address, $argv) = @_;
 
     if ($self->{ _hints }->{ read_only }) {
 	my $map = $self->{ _map };
@@ -354,7 +356,7 @@ sub add
     }
 
     if ($self->can('add')) {
-	$self->SUPER::add($address);
+	$self->SUPER::add($address, $argv);
     }
     else {
 	$self->error_set("Error: add() method is not supported.");
