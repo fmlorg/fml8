@@ -61,15 +61,21 @@ sub add_fml_ml_name
 {
     my ($header, $config, $args) = @_;
 
-    $header->add('X-ML-Name', $config->{ address_for_post });
+    $header->add('X-ML-Name', $config->{ ml_name });
+}
+
+
+sub add_fml_traditional_article_id
+{
+    my ($header, $config, $args) = @_;
+    $header->add('X-Mail-Count', $args->{ id });
 }
 
 
 sub add_fml_article_id
 {
     my ($header, $config, $args) = @_;
-
-    $header->add('X-Mail-Count', $args->{ id });
+    $header->add('X-ML-Count', $args->{ id });
 }
 
 
@@ -104,7 +110,7 @@ sub add_x_sequence
 {
     my ($header, $config, $args) = @_;
 
-    $header->add('X-Sequence',  "$args->{ name } $args->{ id }");
+    $header->add('X-Sequence',  "$config->{ ml_name } $args->{ id }");
 }
 
 

@@ -14,6 +14,7 @@ header_rewrite_rules =	rewrite_subject_tag
 			rewrite_reply_to
 			add_software_info
 			add_fml_ml_name
+			add_fml_traditional_article_id
 			add_fml_article_id
 			add_x_sequence
 			add_rfc2369

@@ -134,6 +134,10 @@ sub _header_rewrite
 	    $header->add_software_info($config, { id => $id } );
 	}
 
+	if ($rule eq 'add_fml_traditional_article_id') {
+	    $header->add_fml_traditional_article_id($config, { id => $id } );
+	}
+
 	if ($rule eq 'add_fml_ml_name') {
 	    $header->add_fml_ml_name($config, { id => $id } );
 	}
