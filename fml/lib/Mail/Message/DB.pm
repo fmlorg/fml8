@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.1.2.5 2003/06/04 13:37:22 fukachan Exp $
+# $FML: DB.pm,v 1.1.2.6 2003/06/14 05:39:03 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -21,7 +21,7 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.1.2.5 2003/06/04 13:37:22 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.1.2.6 2003/06/14 05:39:03 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 my $debug = 1;
@@ -568,24 +568,9 @@ sub _address_clean_up
 sub _who_of_address
 {
     my ($self, $address) = @_;
-    my ($user);
 
-    use Mail::Address;
-    my (@addrs) = Mail::Address->parse($address);
-
-    for my $addr (@addrs) {
-	if (defined( $addr->phrase() )) {
-	    my $phrase = $self->_decode_mime_string( $addr->phrase() );
-
-	    if ($phrase) {
-		return($phrase);
-	    }
-	}
-
-	$user = $addr->user();
-    }
-
-    return( $user ? "$user\@xxx.xxx.xxx.xxx" : $address );
+    use Mail::Message::Utils;
+    return Mail::Message::Utils::from_to_name($address);
 }
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.4 2002/09/22 14:57:05 fukachan Exp $
+# $FML: Utils.pm,v 1.5 2002/12/22 03:08:49 fukachan Exp $
 #
 
 package Mail::Message::Utils;
@@ -48,6 +48,41 @@ sub remove_subject_tag_like_string
     $str =~ s/^\s*//g;
 
     return $str;
+}
+
+
+=head2 from_to_name($address)
+
+extract gecos field in $address with shielding the real address.
+
+=cut
+
+
+# Descriptions: extract gecos field in $address
+#    Arguments: OBJ($self) STR($address)
+# Side Effects: none
+# Return Value: STR
+sub from_to_name
+{
+    my ($address) = @_;
+    my ($user);
+
+    use Mail::Address;
+    my (@addrs) = Mail::Address->parse($address);
+
+    for my $addr (@addrs) {
+	if (defined( $addr->phrase() )) {
+	    my $phrase = $self->_decode_mime_string( $addr->phrase() );
+
+	    if ($phrase) {
+		return($phrase);
+	    }
+	}
+
+	$user = $addr->user();
+    }
+
+    return( $user ? "$user\@xxx.xxx.xxx.xxx" : $address );
 }
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.41.2.4 2003/06/03 13:43:49 fukachan Exp $
+# $FML: ToHTML.pm,v 1.41.2.5 2003/06/14 06:03:20 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 1;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.41.2.4 2003/06/03 13:43:49 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.41.2.5 2003/06/14 06:03:20 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -2094,24 +2094,9 @@ sub _print_li_filename
 sub _who_of_address
 {
     my ($self, $address) = @_;
-    my ($user);
 
-    use Mail::Address;
-    my (@addrs) = Mail::Address->parse($address);
-
-    for my $addr (@addrs) {
-	if (defined( $addr->phrase() )) {
-	    my $phrase = $self->_decode_mime_string( $addr->phrase() );
-
-	    if ($phrase) {
-		return($phrase);
-	    }
-	}
-
-	$user = $addr->user();
-    }
-
-    return( $user ? "$user\@xxx.xxx.xxx.xxx" : $address );
+    use Mail::Message::Utils;
+    return Mail::Message::Utils::from_to_name($address);
 }
 
 
