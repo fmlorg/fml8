@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.18 2004/03/28 12:13:52 fukachan Exp $
+# $FML: DB.pm,v 1.19 2004/03/28 13:01:28 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -21,7 +21,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 use Carp;
 use File::Spec;
 
-my $version = q$FML: DB.pm,v 1.18 2004/03/28 12:13:52 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.19 2004/03/28 13:01:28 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -1125,7 +1125,7 @@ sub _db_set
 {
     my ($self, $db, $table, $key, $value) = @_;
 
-    if (defined $value && $value) {
+    if (defined $value && $value && defined $key && $key) {
 	unless ($self->{ _db_opened }->{ "_$table" }) {
 	    $self->db_open( { table => $table } );
 	}
