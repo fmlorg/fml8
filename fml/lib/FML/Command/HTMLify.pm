@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.23 2004/04/23 04:10:30 fukachan Exp $
+# $FML: HTMLify.pm,v 1.24 2004/07/23 13:03:11 fukachan Exp $
 #
 
 
@@ -40,38 +40,19 @@ html format.
 sub convert
 {
     my ($curproc, $optargs) = @_;
-    my $config  = $curproc->config();
-    my $ml_name = $config->{ ml_name };
-    my $udb_dir = $config->{ udb_base_dir };
     my $src_dir = $optargs->{ src_dir };
     my $dst_dir = $optargs->{ dst_dir };
-    my $charset = $curproc->language_of_html_file();
 
     croak("src_dir not defined") unless defined $src_dir;
     croak("src_dir not exists")  unless -d $src_dir;
     croak("dst_dir not defined") unless defined $dst_dir;
     croak("dst_dir not exists")  unless -d $dst_dir;
 
-    # XXX-TODO: NOT NEED THIS CHECK ? No, it it soon that
-    # XXX-TODO: we can convert MH folder to HTML format files.
-    #     unless ($curproc->is_config_cf_exist()) {
-    #		croak("invalid ML");
-    #    }
-
     print STDERR "  convert\n\t$src_dir =>\n\t$dst_dir\n" if $debug;
 
-    unless (-d $udb_dir) { $curproc->mkdir($udb_dir);}
-
-    my $index_order    = $config->{ html_archive_index_order_type };
-    my $htmlifier_args = {
-	charset        => $charset,
-
-	output_dir     => $dst_dir,  # ~fml/public_html/mlarchive/$domain/$ml/
-	db_base_dir    => $udb_dir,  # /var/spool/ml/@udb@
-	db_name        => $ml_name,  # elena
-
-	index_order    => $index_order, # normal/reverse
-    };
+    # fix parameters: output_dir = ~fml/public_html/mlarchive/$domain/$ml/
+    my $htmlifier_args = $curproc->thread_db_args();
+    $htmlifier_args->{ output_dir } = $dst_dir;
 
     my ($is_subdir_exists, $subdirs) = _check_subdir_exists($src_dir);
     if ($is_subdir_exists) { $curproc->log("looks subdir exists");}
