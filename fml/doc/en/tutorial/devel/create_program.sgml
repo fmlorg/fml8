@@ -1,0 +1,169 @@
+<!--
+   $FML$
+   $jaFML: create_program.sgml,v 1.6 2003/04/15 14:51:38 fukachan Exp $
+-->
+
+<chapter id="program.create">
+	<title>
+	Create a new program
+	</title>
+
+
+<sect1>
+	<title>
+	Create a pgoram (CUI)
+	</title>
+
+<para>
+Firstly, prepare a new module in FML::Process class. See
+FML::Process::Scheduler as the least model, see
+FML::Process::Distribute for the most complicated class.
+</para>
+
+<para>
+See FML::Process::Flow::ProcessStart() for mandatory methods to
+implement. FML::Process::Flow::ProcessStart() kicks off several
+methods sequentially.
+At 2002/07, these methods are mandatory.
+<screen>
+new()
+prepare()
+verify_request()
+run()
+finish()
+</screen>
+See FML::Process::Distribute as a complicated example.
+</para>
+
+<para>
+<screen>
+        FML::Process::Kernel
+                |       uses-a FML::Process::{Flow,Utils} FML::Parse ...
+                |
+                A
+        FML::Process::???
+                        uses-a FML::Something
+                        uses-a CPAN module
+                        uses-a ...
+</screen>
+</para>
+
+<para>
+If you have prepared FML::Process::MODULE, define relation at
+etc/modules. Define available command line options at
+etc/command_line_options if needed.
+</para>
+
+<para>
+The preparation is done. Symlink loader and the new program name.
+For example, 
+<screen>
+% ls -l /usr/local/libexec/fml
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 command@ -> loader
+drwxr-xr-x  2 root  wheel   512 Apr 14 18:25 current-20030414/
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 digest@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 distribute@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 error@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 fml@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 fml.pl@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 fmladdr@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 fmlalias@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 fmlconf@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 fmldoc@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 fmlhtmlify@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 fmlsch@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 fmlserv@ -> loader
+-rwxr-xr-x  1 root  wheel  6863 Apr 14 18:24 loader*
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 makefml@ -> loader
+lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 mead@ -> loader
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	Create a program (CGI)
+	</title>
+
+<para>
+The main CGI program locates at FML::CGI::XXX class.
+These modules has the following relation.
+<screen>
+        FML::Process::Kernel
+                |
+                A
+        FML::Process::CGI::Kernel   uses-a CGI
+                |
+                A
+        FML::Process::CGI
+                |
+                A
+        FML::CGI::XXX
+</screen>
+</para>
+
+<para>
+How to write CGI programs are same as one of CUI.
+CUI modules locates under FML::CGI to clarifyd CUI and GUI.
+</para>
+
+
+<para>
+In the case of CGI, 
+prepare the following methods for looks on screen:
+<screen>
+html_start()
+html_end()
+</screen>
+and
+<screen>
+run_cgi_main()
+run_cgi_title()
+run_cgi_navigator()
+run_cgi_menu()
+run_cgi_command_help()
+run_cgi_options()
+</screen>
+These methods are called from verify_request() and run() in
+FML::Process::CGI.
+</para>
+
+<para>
+CGI process is driven by FML::Process::CGI.
+run() method calls
+<screen>
+$curproc->html_start($args);
+</screen>
+call a set of run_cgi_xxx() methods
+<screen>
+$curproc->html_end($args);
+</screen>
+to control screen.
+</para>
+
+<para>
+At 2001/11, FML::Process::CGI::Kernel consists of the following methods:
+	<footnote>
+	<para>
+	Almost cases,
+	FML::Process::Kernel method is overloaded by other modules.
+	So, not called directly.
+	</para>
+	</footnote>
+<screen>
+new()
+prepare()
+verify_request()
+run()
+finish()
+</screen>
+You do not need edit these files.
+FML::CGI:: is called at run() method.
+</para>
+
+</sect1>
+
+
+</chapter>

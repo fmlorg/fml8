@@ -1,0 +1,125 @@
+<!--
+   $FML$
+   $jaFML: chapter.sgml,v 1.12 2003/04/15 14:51:37 fukachan Exp $
+-->
+
+<chapter id="delivery">
+	<TITLE>
+	&fmldevel; mail delivery system
+	</TITLE>
+
+<sect1 id="fmldevel-delivery">
+	<title>
+	The difference between &fml4; and &fmldevel;
+	</title>
+
+<para>
+One of puposes of &fmldevel; is unification and abstraction of member
+list operations. Mail distribution is based on the following module
+Mail::Delivery.
+</para>
+
+<para>
+Mail::Delivery class provides SMTP, ESMTP and LMTP delivery library
+interface. Mail::Delivery is an adapter layer for Mail::Delivery
+subclass ( SMTP ESMTP LMTP ).
+</para>
+
+<para>
+For example,
+<screen>
+    use Mail::Delivery::SMTP;
+    my $service = new Mail::Delivery::SMTP;
+    if ($service->error) { Log($service->error); return;}
+
+    $service->deliver(
+                      {
+                          mta             => '127.0.0.1:25',
+
+                          smtp_sender     => 'rudo@nuinui.net',
+                          recipient_maps  => $recipient_maps,
+                          recipient_limit => 1000,
+
+                          mesage          => $message
+                      });
+</screen>
+where $message is a 
+<link linkend="module.mail.message">
+Mail::Message
+</link>
+object.
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	<link linkend="module.mail.message">
+	Mail::Message
+	</link>
+	object
+	</title>
+
+<para>
+This object provies message analyzer.
+It analyzes a message and build the following object chains
+<screen>
+header -> body
+header -> preamble -> part1 -> part2 -> trailor (multipart)
+</screen>
+</para>
+
+<para>
+<link linkend="module.mail.message">
+Mail::Message
+</link>
+class provides such data structure described above.
+</para>
+
+</sect1>
+
+
+<!-- mail queue -->
+&sect.mailqueue;
+
+
+<sect1>
+	<title>
+	Discussion: FML::Mailer is apropriate ?
+	</title>
+
+<para>
+Only FML::Process::QueueManager uses FML::Mailer.
+So, independent FML::Mailer class is needed ?
+</para>
+
+<para>
+In usual codes, reply_message() handles all message operations.
+FML::Mailer is always behind it.
+But modules other than reply_message() is created in the future ?
+Hmm, ...
+</para>
+
+<para>
+FML::Mailer should be merged into FML::Process::QueueManager class?
+</para>
+
+</sect1>
+
+
+<sect1 id="recipes.delivery">
+	<title>
+	Delivery TIPS 	
+	</title>
+
+<qandaset>
+
+&recipe.delivery.forward;
+
+</qandaset>
+
+</sect1>
+
+
+</chapter>

@@ -1,0 +1,122 @@
+<!--
+    $FML$
+    $jaFML: queue.sgml,v 1.3 2003/04/15 14:51:37 fukachan Exp $
+-->
+
+<sect1 id="message.reply">
+	<TITLE>
+	fml sends back a mail message
+	</TITLE>
+
+<para>
+Mail::Delivery::Queue class inserts a message to send back into the
+mail queue. Later FML::Process::QueueManager handles the real delivery
+process.
+</para>
+
+
+<sect2>
+	<title>
+	How to write
+	</title>
+
+<para>
+use like this:
+<screen>
+$curproc->reply_message( "you are not a ML member." );
+</screen>
+If no recipient specified, the recipient is the sender of the message
+(From: address).
+</para>
+
+
+<para>
+To send a file, like this:
+<screen>
+$curproc->reply_message( {
+        type        => "text/plain; charset=iso-2022-jp",
+        path        => "/etc/fml/main.cf",
+        filename    => "main.cf",
+        disposition => "main.cf example",
+    });
+
+$curproc->reply_message( {
+        type        => "image/gif",
+        path        => "/some/where/logo001.gif",
+        filename    => "logo.gif",
+        disposition => "attachment",
+    });
+</screen>
+</para>
+
+</sect2>
+
+</sect1>
+
+
+<sect1 id="message.queue">
+	<TITLE>
+	mail queue and delivery system
+	</TITLE>
+
+<para>
+FML::Process::QueueManager pick up one queue from the queue directory.
+Mail::Message parses it.
+Mail::Delivery process the real delivery via FML::Mailer.
+<screen>
+Mail::Delivery::Queue
+   |
+   | ---> queue directory
+   V
+FML::Process::QueueManager
+   |
+   | <--- queue directory
+   V
+FML::Mailer
+   |
+   V
+Mail::Delivery
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1>
+	<TITLE>
+	mail queue directory
+	</TITLE>
+
+<para>
+The queue directory consists of the following plural directories:
+<screen>
+new/
+active/
+deferred/
+info/sender/
+info/recipients/
+</screen>
+info/ stores envelope information
+</para>
+
+<para>
+In creating a new queue file, 
+make a temporary file in new/ once.
+When the delivery preparation is ended, 
+move the queue from new/ to active/.
+Hence files under active/ is delivery ready.
+</para>
+
+<sect2>
+	<title>
+	lock the queue
+	</title>
+
+<para>
+When we need to handle the specific queue file,
+use lock()/unlock() method for each $queue_id object.
+lock algorithm is based on flock(2) for the file.
+</para>
+</sect2>
+
+</sect1>
