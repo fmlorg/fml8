@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.17 2004/02/04 15:19:13 fukachan Exp $
+# $FML: Summary.pm,v 1.18 2004/02/06 13:21:27 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -238,10 +238,12 @@ sub rebuild
 
     use FileHandle;
     my $wh = new FileHandle ">> $tmp";
-
-    # XXX-TODO: $min, $max is mandatory
     if (defined $wh) {
 	$wh->autoflush(1);
+
+	# speculate boundary if not specified.
+	$min ||= 1;
+	$max ||= $curproc->article_max_id();
 
 	for my $id ($min .. $max) {
 	    $self->print($wh, $id);
