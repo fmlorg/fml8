@@ -3,7 +3,7 @@
 # Copyright (C) 2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.2 2001/11/27 11:41:49 fukachan Exp $
+# $FML: Base.pm,v 1.3 2001/12/22 09:21:11 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -35,7 +35,11 @@ usual constructor.
 =cut
 
 
-# avoid default fml new() since we do not need it.
+# Descriptions: constructor.
+#               avoid default fml new() since we do not need it.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self) = @_;
@@ -63,6 +67,10 @@ my %basic_variable =
      );
 
 
+# Descriptions: return HASH_REF of basic variable regexp list
+#    Arguments: none
+# Side Effects: none
+# Return Value: HASH_REF
 sub basic_variable
 {
     return \%basic_variable;

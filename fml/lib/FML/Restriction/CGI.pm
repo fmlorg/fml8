@@ -3,7 +3,7 @@
 # Copyright (C) 2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: CGI.pm,v 1.2 2001/11/27 11:41:49 fukachan Exp $
+# $FML: CGI.pm,v 1.3 2001/12/22 09:21:11 fukachan Exp $
 #
 
 package FML::Restriction::CGI;
@@ -17,7 +17,7 @@ use FML::Restriction::Base;
 
 =head1 NAME
 
-FML::Restriction::CGI -- define safe data class
+FML::Restriction::CGI -- define safe data class for CGI module
 
 =head1 SYNOPSIS
 
@@ -49,6 +49,10 @@ my %cgi_methond =
 
 
 
+# Descriptions: return basic variable safe expression
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: HASH_REF
 sub param_regexp
 {
     my ($self) = @_;
@@ -56,6 +60,10 @@ sub param_regexp
 }
 
 
+# Descriptions: return metho safe expression
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: HASH_REF
 sub method_regexp
 {
     my ($self) = @_;

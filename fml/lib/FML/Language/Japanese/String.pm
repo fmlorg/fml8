@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: String.pm,v 1.2 2001/07/31 14:19:41 fukachan Exp $
+# $FML: String.pm,v 1.3 2001/12/22 09:21:08 fukachan Exp $
 #
 
 package FML::Language::Japanese::String;
@@ -45,6 +45,10 @@ require Exporter;
 use Jcode;
 
 
+# Descriptions: convert string to Japanese EUC
+#    Arguments: STR($str)
+# Side Effects: none
+# Return Value: STR
 sub STR2EUC
 {
     my ($str) = @_;
@@ -53,6 +57,10 @@ sub STR2EUC
 }
 
 
+# Descriptions: convert string to Japanese JIS
+#    Arguments: STR($str)
+# Side Effects: none
+# Return Value: STR
 sub STR2JIS
 {
     my ($str) = @_;
@@ -61,6 +69,10 @@ sub STR2JIS
 }
 
 
+# Descriptions: convert string to Japanese SJIS
+#    Arguments: STR($str)
+# Side Effects: none
+# Return Value: STR
 sub STR2SJIS
 {
     my ($str) = @_;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.3 2001/09/23 11:34:42 fukachan Exp $
+# $FML: Utils.pm,v 1.4 2001/12/22 09:21:08 fukachan Exp $
 #
 
 package FML::Language::Japanese::Utils;
@@ -40,6 +40,10 @@ require Exporter;
 @EXPORT_OK = qw(is_iso2022jp_string);
 
 
+# Descriptions: $buf looks like Japanese or not ?
+#    Arguments: STR($buf)
+# Side Effects: none
+# Return Value: 1 or 0
 sub is_iso2022jp_string
 {
     my ($buf) = @_;
@@ -47,10 +51,14 @@ sub is_iso2022jp_string
 }
 
 
-# based on fml-support: 07020, 07029
-#   Koji Sudo <koji@cherry.or.jp>
-#   Takahiro Kambe <taca@sky.yamashina.kyoto.jp>
-# check the given buffer has unusual Japanese (not ISO-2022-JP)
+# Descriptions: $buf looks like Japanese or not ?
+#               based on fml-support: 07020, 07029
+#                  Koji Sudo <koji@cherry.or.jp>
+#                  Takahiro Kambe <taca@sky.yamashina.kyoto.jp>
+#               check the given buffer has unusual Japanese (not ISO-2022-JP)
+#    Arguments: OBJ($buf)
+# Side Effects: none
+# Return Value: 1 or 0
 sub _look_not_iso2022jp_string
 {
     my ($buf) = @_;
@@ -87,8 +95,12 @@ return 1 if found or 0 if not.
 =cut
 
 
-# XXX fml 4.0: EUCCompare($buf, $pat)
-# XXX          where $pat should be $& (matched pattern)
+# Descriptions: compare Japanese EUC strings
+#               fml 4.0: EUCCompare($buf, $pat)
+#               where $pat should be $& (matched pattern)
+#    Arguments: OBJ($self) STR($a) STR($pat)
+# Side Effects: none
+# Return Value: 1 or 0
 sub compare_euc_string
 {
     my ($self, $a, $pat) = @_;
