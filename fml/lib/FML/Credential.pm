@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.46 2003/08/23 04:35:27 fukachan Exp $
+# $FML: Credential.pm,v 1.47 2003/08/29 15:33:54 fukachan Exp $
 #
 
 package FML::Credential;
@@ -118,6 +118,17 @@ sub set_user_part_case_insensitive
 }
 
 
+# Descriptions: whether we should handle user part case insensitively.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
+sub is_user_part_case_sensitive
+{
+    my ($self) = @_;
+    $self->{ _user_part_case_sensitive } ? 1 : 0;
+}
+
+
 =head2 is_same_address($addr1, $addr2 [, $level])
 
 return 1 (same) or 0 (different).
@@ -168,7 +179,7 @@ sub is_same_address
     my ($xuser, $xdomain) = split(/\@/, $xaddr);
     my ($yuser, $ydomain) = split(/\@/, $yaddr);
     my $level             = 0;
-    my $is_case_sensitive = $self->{ _user_part_case_sensitive };
+    my $is_case_sensitive = $self->is_user_part_case_sensitive();
 
     # the max recursive level in comparison
     $max_level = $max_level || $self->{ _max_level } || 3;
