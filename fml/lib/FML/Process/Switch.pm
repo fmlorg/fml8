@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Switch.pm,v 1.19 2001/05/28 16:17:14 fukachan Exp $
+# $FML: Switch.pm,v 1.20 2001/06/28 09:06:44 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -96,6 +96,11 @@ sub main::Bootstrap2
     print STDERR "\nsetuid is not set $< != $>\n\n" if $< != $>;
     print STDERR "\nsetgid is not set $( != $)\n\n" if $( ne $);
 
+    # 0.2
+    if ($0 =~ /loader/) {
+	print "ARGV: @ARGV\n";
+    }
+
     # 1.1 parse command line options (preliminary)
     use Getopt::Long;
     GetOptions(\%options, _module_specific_options($myname));
@@ -126,11 +131,13 @@ sub main::Bootstrap2
 
     # 4. debug
     if ($0 =~ /loader/) {
-	eval q#
+	eval q{
 	    require Data::Dumper; Data::Dumper->import();
+	    $Data::Dumper::Varname = 'main_cf';
 	    print Dumper( $main_cf );
 	    sleep 3;
-	#;
+	};
+	if ($@) { print STDERR $@;}
     }
 
     # 5. o.k. here we go!
@@ -301,11 +308,15 @@ sub ProcessSwitch
     # Firstly, create process 
     # $pkg is a  package name, for exampl,e "FML::Process::Distribute".
     my $pkg = _module_we_use($args);
-    croak("$args->{ myname } is unknown program\n") unless ($pkg);
+    unless (defined $pkg) {
+	croak("$args->{ myname } is unknown program\n");
+    }
 
-    eval qq{ require $pkg; }; # XXX require() needs bare words.
+    # debug, ignore this
+    if ($0 =~ /loader/) { print "use $pkg\n"; sleep 2;}
+
+    eval qq{ require $pkg; $pkg->import();};
     croak($@) if $@;
-    $pkg->import();   # fake to use() method.
 
     return $pkg;
 }
@@ -386,7 +397,8 @@ sub _module_we_use
     my $pkg    = '';
 
     if (($name eq 'fml.pl' && $args->{ options }->{ ctladdr }) || 
-	   $name eq 'command') {
+	$name eq 'command' ||
+	($name eq 'loader' && $args->{ options }->{ ctladdr })) {
 	$pkg = 'FML::Process::Command';
     }
     elsif ($name eq 'fml.pl' || $name eq 'distribute' || $name eq 'loader') {
