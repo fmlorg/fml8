@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Digest.pm,v 1.12 2003/08/29 15:33:54 fukachan Exp $
+# $FML: Digest.pm,v 1.13 2003/10/14 12:57:42 fukachan Exp $
 #
 
 package FML::Digest;
@@ -185,7 +185,6 @@ sub create_multipart_message
     my $config    = $curproc->config();
     my $ml_name   = $config->{ ml_name };
     my $ml_addr   = $config->{ address_for_post };
-    my $charset   = $curproc->get_charset("template_file");
     my $seq_file  = $config->{ digest_sequence_file };
     my $rcptmaps  = $config->get_as_array_ref('digest_recipient_maps');
     my $count_ok  = 0;
@@ -208,7 +207,7 @@ sub create_multipart_message
 	my $filepath = $article->filepath($filename);
 	if (-f $filepath) {
 	    $curproc->reply_message( {
-		type        => "message/rfc822; charset=$charset",
+		type        => "message/rfc822",
 		path        => $filepath,
 		filename    => $filename,
 		disposition => "$ml_name ML article $filename",
