@@ -1,0 +1,48 @@
+<!--
+   $FML$
+   $jaFML: language.sgml,v 1.5 2003/04/15 14:51:42 fukachan Exp $
+-->
+
+
+<sect1 id="message.nl">
+	<title>
+	message internationalization: 
+	the usage of reply_message_nl()
+	</title>
+
+<para>
+For the message internationalization, 
+use reply_message_nl()
+	<footnote>
+	<para>
+	See FML::Process::Kernel module.
+	</para>
+	</footnote>
+like this:
+<screen>
+$curproc->reply_message_nl('error.already_member',
+			   'already member',
+			   { _arg_address => $address });
+</screen>
+This function uses the message template at
+/usr/local/share/fml/$fml_version/message/$language/error/already_member
+.
+</para>
+
+<para>
+$_arg_VARNAME in the message such as
+<screen>
+$_args_address
+</screen>
+is expanded by using the value specified as the argument of
+reply_mesage_nl().
+</para>
+
+<para>
+Usual $VARIABLE is also expaned by replacing it with value of config.cf.
+For example, $ml_name is expanded to ML name defined in config.cf
+$_arg_ prefix is used for lexical scope variables to avoid
+conflicts against variables in config.cf.
+</para>
+
+</sect1>

@@ -1,0 +1,52 @@
+<!--
+   $FML$
+   $jaFML: dbms.sgml,v 1.5 2003/05/31 08:51:09 fukachan Exp $
+-->
+
+<chapter id="dbms">
+	<title>
+	database management system
+	</title>
+
+
+<sect1 id="dbms.overview">
+	<title>
+	Overview
+	</title>
+
+<para>
+Communication with DBMS (database management system)
+via 
+<link linkend="module.io.adapter">
+IO::Adapter
+</link>
+class.
+</para>
+
+<para>
+This class provides fundamental functions such as insersion and
+deletion of data. If more complex operation is needed, the
+preprocessing module calling IO::Adapter should handle it.
+</para>
+
+</sect1>
+
+
+<sect1 id="dbms.todo">
+	<title>
+	TODO
+	</title>
+
+<para>
+Consider if methods are least set or not. 
+But
+<link linkend="module.io.adapter">
+IO::Adapter 
+</link>
+is enough ?
+</para>
+
+</sect1>
+
+
+</chapter>

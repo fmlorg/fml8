@@ -1,0 +1,100 @@
+<!--
+   $FML$
+   $jaFML: internal.sgml,v 1.6 2003/04/15 14:51:36 fukachan Exp $
+-->
+
+<sect1 id="fml.command.internal.change">
+	<title>
+	How differ coding style among &fml4; and &fml8;
+	</title>
+
+<para>
+(... not yet translated  ...)
+</para>
+
+<para>
+Consider help command which send back help message to the sender, an
+example of command.
+</para>
+
+<para>
+In the case of &fmldevel;, the main code of help command locates at
+FML::Command::User::help class. This class is called by
+FML::Process::Command via AUTOLOAD of FML::Command.
+</para>
+
+<warning>
+<para>
+All commands are implemented as either of FML::Command::User
+FML::Command::Admin classes. CUI (makefml, fml) and GUI (CGI) uses
+FML::Command::Admin class. Command mail users both classes according
+to the context.
+</para>
+</warning>
+
+<para>
+The real content of help command is process() method in
+FML::Command::User::help class.
+<screen>
+sub process
+{
+    my ($self, $curproc, $optargs) = @_;
+    my $config    = $curproc->{ config };
+    my $charset   = $config->{ reply_message_charset };
+    my $help_file = $config->{ help_file };
+
+    # template substitution: kanji code, $varname expansion et. al.
+    my $params = {
+        src         => $help_file,
+        charset_out => $charset,
+    };
+    my $help_template = $curproc->prepare_file_to_return( $params );
+
+    if (-f $help_template) {
+        $curproc->reply_message( {
+            type        => "text/plain; charset=$charset",
+            path        => $help_template,
+            filename    => "help",
+            disposition => "help",
+        });
+    }
+    else {
+        croak("no help file ($help_template)\n");
+    }
+}
+</screen>
+where $curproc is an object, which type is hash reference.
+It corresponds to %Envelope of &fml4;.
+It contains several references to objects for this process.
+$config is an object, but global in $fml4;.
+</para>
+
+<para>
+prepare_file_to_return() converts the message language and expands the
+arguments in the message templtes.
+ </para>
+
+<para>
+$curproc->reply_message() inserts the specified mesage string into the
+queue.
+</para>
+
+<para>
+The error/log messages queued in are aggergated to one message at the
+last of the current process. It is driven by Mail::Delivery class to
+send it. If needed, the aggregator handles text strings and multipart
+properly.
+</para>
+
+<para>
+This mechanism is same as Notify() of &fml4; but the last aggregator
+is different.
+</para>
+
+<para>
+FYI: commands such as get for the file manipulation uses the same
+message queuing mechanism. This is different from &fml4;'s Notify()
+fundamentally.
+</para>
+
+</sect1>
