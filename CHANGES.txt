@@ -1,6 +1,28 @@
 		CHANGES
 		Last Modified: $Date$
 
+   2002/12 は、オーバホール・キャンペーン実施中ですぉ。
+
+2002/12/13
+
+   File::SimpleLock 
+	need write permission for flock on solaris (PR fml-devel:331,332)
+
+2002/12/12
+
+   Calender::Lite 
+	cosmetic changes.
+	fix comments.
+	fix tag (FILE -> LINE).
+	
+   FML::Error::Analyze 
+	defined()
+
+2002/12/10
+
+   updated IM modules to im-142
+	Thank Tatsuya Kinoshita <tats@mbf.nifty.com>.
+
 2002/12/09
 
    update CPAN modules
@@ -3674,4 +3696,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.113 2002/11/26 14:24:48 fukachan Exp $
+$FML: CHANGES.txt,v 1.114 2002/12/09 14:10:03 fukachan Exp $
