@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.77 2004/01/18 03:34:44 fukachan Exp $
+# $FML: newml.pm,v 1.78 2004/02/15 04:38:29 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -115,7 +115,7 @@ sub process
 
     # "makefml --force newml elena" creates elena ML even if elena
     # already exists.
-    unless (defined $options->{ force } ) {
+    unless ($self->get_force_mode($curproc, $command_args)) {
 	if (-d $ml_home_dir) {
 	    # XXX-TODO: $curproc->logwarn() ?
 	    warn("$ml_name ml_home_dir($ml_home_dir) already exists");
@@ -128,7 +128,7 @@ sub process
     # XXX we assume /etc/passwd exists for backword compatibility
     # XXX on all unix plathomes.
     if ($control->is_mta_alias_maps_has_ml_entry($curproc,$params,$ml_name)) {
-	unless (defined $options->{ force } ) {
+	unless ($self->get_force_mode($curproc, $command_args)) {
 	    # XXX-TODO: $curproc->logwarn() ?
 	    warn("$ml_name already exists (somewhere in MTA aliases)");
 	    return ;
@@ -169,6 +169,48 @@ sub cgi_menu
     };
     if ($r = $@) {
         croak($r);
+    }
+}
+
+
+=head1 UTILITIES
+
+=head2 set_force_mode($curproc, $command_args)
+
+set force mode.
+
+=head2 get_force_mode($curproc, $command_args)
+
+return if force mode is enabled or not.
+
+=cut
+
+
+# Descriptions: set force mode.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: update $self.
+# Return Value: none
+sub set_force_mode
+{
+    my ($self, $curproc, $command_args) = @_;
+    $self->{ _force_mode } = 1;
+}
+
+
+# Descriptions: return if force mode is enabled or not.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: none
+# Return Value: none
+sub get_force_mode
+{
+    my ($self, $curproc, $command_args) = @_;
+    my $options = $curproc->command_line_options();
+
+    if (defined $self->{ _force_mode }) {
+	return( $self->{ _force_mode } ? 1 : 0 );
+    }
+    else {
+	return( (defined $options->{ force }) ? 1 : 0 );
     }
 }
 
