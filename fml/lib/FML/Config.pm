@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.32 2001/07/15 04:00:26 fukachan Exp $
+# $FML: Config.pm,v 1.33 2001/07/15 08:14:44 fukachan Exp $
 #
 
 package FML::Config;
@@ -103,7 +103,7 @@ sub new
 {
     my ($self, $args) = @_;
 
-    unless (defined %_fml_config) { %_fml_config = ( pid => $$ );}
+    unless (defined %_fml_config) { %_fml_config = ( _pid => $$ );}
 
     # prepare the tied hash to %_fml_config;
     # to support $config->{ variable } syntax.
