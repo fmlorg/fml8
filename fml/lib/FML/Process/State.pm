@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.8 2004/05/18 08:49:19 fukachan Exp $
+# $FML: State.pm,v 1.9 2004/05/19 09:15:15 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -478,14 +478,61 @@ sub command_context_get_admin_password
 }
 
 
+=head1 FILTER STATE
+
+=head2 filter_state_set_error($category, $code)
+
+save the filter error for later use.
+
+=head2 filter_state_get_error($category)
+
+get the filter error.
+
+=cut
+
+
+# Descriptions: save the filter error for later use.
+#    Arguments: OBJ($curproc) STR($category) STR($code)
+# Side Effects: update pcb.
+# Return Value: none
+sub filter_state_set_error
+{
+    my ($curproc, $category, $code) = @_;
+    my $pcb = $curproc->pcb();
+
+    $pcb->set("filter_state", $category, $code || 0);
+}
+
+
+# Descriptions: get the filter error.
+#    Arguments: OBJ($curproc) STR($category)
+# Side Effects: update pcb.
+# Return Value: none
+sub filter_state_get_error
+{
+    my ($curproc, $category) = @_;
+    my $pcb = $curproc->pcb();
+
+    return( $pcb->get("filter_state", $category) || 0 );
+}
+
+
 =head1 SMTP STATE
+
+=head2 smtp_server_state_set_error($mta)
+
+set $mta as error for later hint.
+
+=head2 smtp_server_state_get_error()
+
+check if $mta as error for later hint.
 
 =cut
 
 
 # Descriptions: set $mta as error for later hint.
 #               implies "all servers" unless $mta specified.
-#    Arguments: OBJ($curproc) MTA($mta)
+#    Arguments: OBJ($curproc) STR($mta)
 # Side Effects: update pcb.
 # Return Value: none
 sub smtp_server_state_set_error
@@ -508,6 +555,45 @@ sub smtp_server_state_get_error
     my $pcb = $curproc->pcb();
 
     return( $pcb->get("smtp_transaction", $mta || "ALL") ? 1 :  0 );
+}
+
+
+=head1 QUEUE
+
+=head2 mail_queue_set_incoming_queue($queue)
+
+save object of incoming queue.
+
+=head2 mail_queue_get_incoming_queue()
+
+get object of incoming queue.
+
+=cut
+
+
+# Descriptions: save object of incoming queue.
+#    Arguments: OBJ($curproc) OBJ($queue)
+# Side Effects: update pcb.
+# Return Value: none
+sub mail_queue_set_incoming_queue
+{
+    my ($curproc, $queue) = @_;
+    my $pcb = $curproc->pcb();
+
+    $pcb->set("incoming_smtp_transaction", "queue_object", $queue);
+}
+
+
+# Descriptions: get object of incoming queue.
+#    Arguments: OBJ($curproc)
+# Side Effects: update pcb.
+# Return Value: OBJ
+sub mail_queue_get_incoming_queue
+{
+    my ($curproc) = @_;
+    my $pcb = $curproc->pcb();
+
+    $pcb->get("incoming_smtp_transaction", "queue_object") || undef;
 }
 
 
