@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.23 2002/09/22 14:57:04 fukachan Exp $
+# $FML: ToHTML.pm,v 1.24 2002/09/28 09:27:44 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.23 2002/09/22 14:57:04 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.24 2002/09/28 09:27:44 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -103,6 +103,7 @@ sub new
     $me->{ _num_attachment } = 0; # for child process
     $me->{ _use_subdir }     = 'yes';
     $me->{ _subdir_style }   = 'yyyymm';
+    $me->{ _html_id_order }  = $args->{ html_id_order} || 'normal';
 
     return bless $me, $type;
 }
@@ -1689,6 +1690,7 @@ sub update_id_index
     my ($self, $args) = @_;
     my $html_base_dir = $self->{ _html_base_directory };
     my $code          = _charset_to_code($self->{ _charset });
+    my $order         = $self->{ _html_id_order } || 'normal';
     my $htmlinfo = {
 	title => defined($args->{ title }) ? $args->{ title } : "ID Index",
 	old   => "$html_base_dir/index.html",
@@ -1709,9 +1711,15 @@ sub update_id_index
     my $id_max = $db->{ _info }->{ id_max };
 
     $self->_print_ul($wh, $db, $code);
-    for my $id ( 1 .. $id_max ) {
-	$self->_print_li_filename($wh, $db, $id, $code);
-    }
+    if($order eq 'reverse') {
+	for my $id ( reverse (1 .. $id_max )) {
+	    $self->_print_li_filename($wh, $db, $id, $code);
+	}
+    } else {
+	for my $id ( 1 .. $id_max ) {
+	    $self->_print_li_filename($wh, $db, $id, $code);
+	}
+	    }
     $self->_print_end_of_ul($wh, $db, $code);
 
     $self->_db_close();
