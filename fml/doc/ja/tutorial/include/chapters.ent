@@ -1,0 +1,54 @@
+<!--
+	$FML: include.sgml,v 1.17 2001/04/30 10:21:44 fukachan Exp $
+-->
+
+<!entity versin "1.1">
+
+<!-- include する SGML ファイル群 -->
+<!entity bookinfo SYSTEM "bookinfo.sgml">
+<!entity preface  SYSTEM "preface.sgml">
+
+
+<!entity available SYSTEM "available.sgml">
+<!entity docbook   SYSTEM "docbook.sgml">
+<!entity download  SYSTEM "download.sgml">
+<!entity install   SYSTEM "install.sgml">
+<!entity terms     SYSTEM "terms.sgml">
+<!entity intro     SYSTEM "intro.sgml">
+<!entity install   SYSTEM "install.sgml">
+<!entity main.cf   SYSTEM "main.cf.sgml">
+
+<!entity fmlcommands  SYSTEM "commands.sgml">
+<!entity overview  SYSTEM "overview.sgml">
+
+<!entity design          SYSTEM "design.sgml">
+<!entity bootloader      SYSTEM "bootloader.sgml">
+<!entity programingstyle SYSTEM "style.sgml">
+<!entity reference       SYSTEM "reference.sgml">
+
+
+
+<!entity delivery          SYSTEM "delivery.sgml">
+<!entity modules          SYSTEM "modules.sgml">
+
+
+<!entity appendix SYSTEM "appendix.sgml">
+<!entity glossary SYSTEM "glossary.sgml">
+<!entity cvstree  SYSTEM "cvstree.sgml">
+<!entity cvstags  SYSTEM "cvstags.sgml">
+
+
+<!-- ポインタ -->
+<!entity fmlbible    "『fml バイブル』(オライリージャパン刊)">
+<!entity www.fml.org "http://www.fml.org/fml/">
+
+<!-- 画像 -->
+<!entity architecture SYSTEM "architecture.gif" ndata gif>
+
+
+<!-- プログラムの説明 -->
+<!entity chapter.programs  SYSTEM "programs/chapter.sgml">
+<!entity sect.fmlconf   SYSTEM "programs/fmlconf.sgml">
+<!entity sect.fmldoc    SYSTEM "programs/fmldoc.sgml">
+<!entity sect.fmlticket SYSTEM "programs/fmlticket.sgml">
+<!entity sect.makefml   SYSTEM "programs/makefml.sgml">

@@ -1,0 +1,14 @@
+<!--
+	$FML: programs.sgml,v 1.1 2001/04/26 11:02:39 fukachan Exp $
+-->
+
+<chapter id="programs">
+
+<title>	プログラム </title>
+
+&sect.fmlconf;
+&sect.fmldoc;
+<!-- &sect.fmlticket; -->
+&sect.makefml;
+
+</chapter>

@@ -2,11 +2,11 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-$FML: book.sgml,v 1.1 2001/04/30 10:21:43 fukachan Exp $
+$FML: book.sgml,v 1.2 2001/05/01 09:15:21 fukachan Exp $
 -->
 
 <!doctype book public "-//FML//DTD DocBook V3.1-Based Extension//EN" [
-	<!entity % include SYSTEM "include.sgml"> %include;
+	<!entity % include SYSTEM "chapters.ent"> %include;
 ]>
 
 <book>
@@ -54,7 +54,7 @@ $FML: book.sgml,v 1.1 2001/04/30 10:21:43 fukachan Exp $
 	<!-- 以下、各章が並ぶ -->
 	&design;
 	&bootloader;
-	&programs;
+	&chapter.programs;
 	&fmlcommands;
         &delivery;
   </part>

@@ -1,5 +1,5 @@
 <!--
-	$FML: include.sgml,v 1.16 2001/04/28 09:33:40 fukachan Exp $
+	$FML: include.sgml,v 1.17 2001/04/30 10:21:44 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -47,8 +47,8 @@
 
 
 <!-- プログラムの説明 -->
-<!entity programs           SYSTEM "programs.sgml">
-<!entity fmlconf   SYSTEM "programs/fmlconf.sgml">
-<!entity fmldoc    SYSTEM "programs/fmldoc.sgml">
-<!entity fmlticket SYSTEM "programs/fmlticket.sgml">
-<!entity makefml   SYSTEM "programs/makefml.sgml">
+<!entity chapter.programs  SYSTEM "programs/chapter.sgml">
+<!entity sect.fmlconf   SYSTEM "programs/fmlconf.sgml">
+<!entity sect.fmldoc    SYSTEM "programs/fmldoc.sgml">
+<!entity sect.fmlticket SYSTEM "programs/fmlticket.sgml">
+<!entity sect.makefml   SYSTEM "programs/makefml.sgml">
