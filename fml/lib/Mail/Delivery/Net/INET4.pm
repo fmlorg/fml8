@@ -1,0 +1,112 @@
+#-*- perl -*-
+#
+#  Copyright (C) 2001 Ken'ichi Fukamachi
+#   All rights reserved. This program is free software; you can
+#   redistribute it and/or modify it under the same terms as Perl itself. 
+#
+# $Id$
+# $FML$
+#
+
+package Mail::Delivery::Net::INET4;
+use strict;
+use vars qw(@ISA @EXPORT @EXPORT_OK);
+use Carp;
+use Mail::Delivery::Utils;
+
+require Exporter;
+
+@ISA       = qw(Exporter);
+@EXPORT    = qw(connect4);
+
+sub connect4
+{
+    my ($self, $args) = @_;
+    my $mta = $args->{ _mta };
+    my $socket = '';
+
+    # avoid croak() in IO::Socket module;
+    eval {
+	local($SIG{ALRM}) = sub { Log("Error: timeout to connect $mta");};
+	use IO::Socket;
+	$socket = new IO::Socket::INET($mta);
+    };
+    if ($@) {
+	Log("Error: cannot make socket for $mta");
+	$self->error_set("Error: cannot make socket: $@");
+	return undef;
+    }
+
+    if (defined $socket) {
+	Log("(debug) o.k. connected to $mta");
+	$self->{'_socket'} = $socket;
+	$socket->autoflush(1);
+	return $socket;
+    }
+    else {
+	Log("(debug) error. fail to connect $mta");
+	$self->error_set("Error: cannot open socket: $!");
+	return undef;
+    }
+}
+
+
+=head1 NAME
+
+Mail::Delivery::Net::INET4 - establish tcp connection over IPv4
+
+=head1 SYNOPSIS
+
+   use Mail::Delivery::Net::INET4;
+
+   $mta = '127.0.0.1:25';
+   $self->connect4( { _mta => $mta });
+
+=head1 DESCRIPTION
+
+This module tries to create a socket and establish tcp connection over
+IPv4. This is a typical socket program.
+
+=head1 METHODS
+
+=item C<connect4()>
+
+try L<connect(2)>. 
+If it succeeds, returned 
+$self->{ _socket } has true value.
+If not, 
+$self->{ _socket } is undef. 
+
+Avaialble arguments follows:
+
+    connect4( { _mta => $mta });
+
+$mta is a hostname or [raw_ipv4_addr]:port form, for example, 
+127.0.0.1:25.
+
+=head1 SEE ALSO
+
+L<Mail::Delivery::SMTP>,
+L<Socket>,
+L<IO::Socket>,
+L<Mail::Delivery::Utils>
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1 HISTORY
+
+Mail::Delivery::Net::INET4 appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
+=cut
+
+1;
