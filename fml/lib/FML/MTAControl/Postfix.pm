@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.2 2002/05/27 08:53:24 fukachan Exp $
+# $FML: Postfix.pm,v 1.3 2002/06/01 05:02:32 fukachan Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -146,6 +146,7 @@ sub postfix_alias_maps
 
 
     my $maps   = `$prog alias_maps`;
+    $maps      =~ s/,/ /g;
     $maps      =~ s/\s+\w+:/ /g;
     $maps      =~ s/^.*=\s*//;
     chomp $maps;
