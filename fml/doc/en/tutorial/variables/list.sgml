@@ -869,6 +869,15 @@ flock
 </row>
 <row>
 <entry>
+log_computer_output_engine</entry>
+<entry>
+ specify perl module for output engine.</entry>
+<entry>
+FML::Log::Print::Simple
+   </entry>
+</row>
+<row>
+<entry>
 log_dir</entry>
 <entry>
  log dir</entry>
@@ -1106,6 +1115,15 @@ outgoing_mail_cache_size</entry>
  the maximum number of cached outgoing mails</entry>
 <entry>
 128
+   </entry>
+</row>
+<row>
+<entry>
+outgoing_mail_header_x_ml_name</entry>
+<entry>
+ ml name in both X-ML-Name: and X-Sequence header fields.</entry>
+<entry>
+$ml_name
    </entry>
 </row>
 <row>
@@ -1755,6 +1773,15 @@ yes
 </row>
 <row>
 <entry>
+use_log_computer_output</entry>
+<entry>
+ if yes, makefml/fml outputs machine friendly log.</entry>
+<entry>
+no
+   </entry>
+</row>
+<row>
+<entry>
 use_outgoing_mail_cache</entry>
 <entry>
  cache outgoing mail cache ?</entry>
@@ -1814,15 +1841,6 @@ var_dir</entry>
  directory hoding</entry>
 <entry>
 $ml_home_dir/var
-   </entry>
-</row>
-<row>
-<entry>
-x_ml_name</entry>
-<entry>
- ml name in both X-ML-Name: and X-Sequence header fields.</entry>
-<entry>
-$ml_name
    </entry>
 </row>
 </tbody>

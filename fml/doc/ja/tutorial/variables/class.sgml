@@ -372,6 +372,11 @@ log {
           $log_type
           $use_log
    }
+
+   log_computer_output { 
+    ?     $log_computer_output_engine
+          $use_log_computer_output
+   }
 }
 
 mail {
@@ -449,6 +454,10 @@ outgoing {
           $outgoing_mail_cache_dir
     ?     $outgoing_mail_cache_size
           $use_outgoing_mail_cache
+   }
+
+   outgoing_* {
+    ?     $outgoing_mail_header_x_ml_name
    }
 }
 
@@ -651,10 +660,6 @@ user {
 }
 
 x {
-
-   x_* {
-    ?     $x_ml_name
-   }
 }
 
 

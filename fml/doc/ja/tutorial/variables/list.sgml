@@ -851,6 +851,15 @@ flock
 </row>
 <row>
 <entry>
+log_computer_output_engine</entry>
+<entry>
+ 機会処理にやさしいフォーマットを出力する際の出力エンジン。</entry>
+<entry>
+FML::Log::Print::Simple
+   </entry>
+</row>
+<row>
+<entry>
 log_dir</entry>
 <entry>
  ログファイル</entry>
@@ -1088,6 +1097,15 @@ outgoing_mail_cache_size</entry>
  出力(配送)されるメールを最大何通キャッシュするか</entry>
 <entry>
 128
+   </entry>
+</row>
+<row>
+<entry>
+outgoing_mail_header_x_ml_name</entry>
+<entry>
+ X-ML-Name: および X-Sequence にあらわれる ML 名</entry>
+<entry>
+$ml_name
    </entry>
 </row>
 <row>
@@ -1737,6 +1755,15 @@ yes
 </row>
 <row>
 <entry>
+use_log_computer_output</entry>
+<entry>
+ 機会処理にやさしいフォーマットでログを出力する。</entry>
+<entry>
+no
+   </entry>
+</row>
+<row>
+<entry>
 use_outgoing_mail_cache</entry>
 <entry>
  出力(配送)されるメールをキャッシュするか？</entry>
@@ -1796,15 +1823,6 @@ var_dir</entry>
  さまざまな目的につかう</entry>
 <entry>
 $ml_home_dir/var
-   </entry>
-</row>
-<row>
-<entry>
-x_ml_name</entry>
-<entry>
- X-ML-Name: および X-Sequence にあらわれる ML 名</entry>
-<entry>
-$ml_name
    </entry>
 </row>
 </tbody>
