@@ -13,11 +13,56 @@
 	気をつけてください。
 
 
+2004/05/22
+
+   HOOKの名前を整理整頓する。
+
+2004/05/21
+
+   FML::Process::Distribute 
+	shorten lock period in delivery
+
+2004/05/19
+
+   FML::Process::Switch 
+	getopts case SENSITIVELY
+	
+   FML::Process::Distribute 
+	not process _deliver_article() when error set by stop_this_process().
+	
+   FML::Process::Kernel 
+	-o overwrite options runs twice to ensure overwrite.
+	
+   variables
+	$use_article_delivery        =       yes
+	$article_delivery_transport  =       smtp
+	
+   Mail::Delivery::Queue 
+	handle transport infomation.
+	fix comments.
+
 2004/05/18
 
    記事の配送システムもキューイングベースへ移行する
 	これで、すべての配送が一度メールキューに書くパターンになった。
 
+   FML::Article 
+	bug fix::avoid duplicated initialization.
+	change $curproc->{ article }->{ KEY } style to method-based.
+	
+   FML::Process::Distribute 
+	enable mail queue based delivery
+	
+   Mail::Delivery::Queue 
+	support lock({ lock_before_runnable => yes }) extension.
+	
+	FML::Process::Distribute needs such option to own the current article
+	delivery by itself to distinct it from queue flush system on other
+	processes.
+	
+   FML::Process::State 
+	implement set_article_id(), get_article_id(),
+	smtp_server_state_set_error() and smtp_server_state_get_error().
 
 2004/05/17
 
@@ -6985,4 +7030,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.204 2004/05/16 13:25:26 fukachan Exp $
+$FML: CHANGES.txt,v 1.205 2004/05/18 14:21:19 fukachan Exp $
