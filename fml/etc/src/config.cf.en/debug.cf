@@ -1,0 +1,12 @@
+=head1 debug mode
+
+
+# Descriptions: debug on or off (off by default).
+#      History: $DEBUG
+#        Value: YES_OR_NO
+#     Examples: no
+debug		=	no
+
+
+
+

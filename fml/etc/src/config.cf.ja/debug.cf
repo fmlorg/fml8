@@ -1,0 +1,12 @@
+=head1 デバッグモード
+
+
+# Descriptions: デバッグ、デフォルトは NO にしてある。
+#      History: $DEBUG
+#        Value: YES_OR_NO
+#     Examples: no
+debug		=	no
+
+
+
+
