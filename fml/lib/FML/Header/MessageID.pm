@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MessageID.pm,v 1.4 2001/12/23 03:00:41 fukachan Exp $
+# $FML: MessageID.pm,v 1.5 2002/07/31 12:58:22 fukachan Exp $
 #
 
 package FML::Header::MessageID;
@@ -18,25 +18,18 @@ FML::Header::MessageID - manupulate message-id
 
 =head1 SYNOPSIS
 
-    use FML::Header::MessageID;
-    my $mid = new FML::Header::MessageID;
-    my $obj = $mid->open_cache( {
-        directory => $directory,
-    });
+        use FML::Header::MessageID;
+        my $xargs = { directory => $dir };
+        my $db    = FML::Header::MessageID->new->db_open($xargs);
 
-    if (defined $obj) {
-           my $fh = $obj->open;
+        if (defined $db) {
+            # we can tind the $mid in the past message-id cache ?
+            $dup = $db->{ $mid };
+            Log( "message-id duplicated" ) if $dup;
 
-           # we can tind the $message_id in the past message-id cache ?
-           my $dup = $obj->find($message_id);
-           print STDERR "error: message-id duplicated\nq" if $dup;
-
-           # save the current id
-           print $fh $message_id, "\t", $message_id, "\n";
-
-           $fh->close;
-       }
-   }
+            # save the current id
+            $db->{ $mid } = 1;
+        }
 
 =head1 DESCRIPTION
 
