@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Configure.pm,v 1.24 2001/07/15 12:02:12 fukachan Exp $
+# $FML: Configure.pm,v 1.25 2001/08/26 08:41:58 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -145,7 +145,7 @@ C<@$argv> ( $argv = $args->{ ARGV } ).
 
 C<Caution:>
 C<$args> is passed from parrent libexec/loader.
-We construct a new struct C<$optargs> here to pass parameters 
+We construct a new struct C<$command_args> here to pass parameters 
 to child objects.
 C<FML::Command::$command> object takes them as arguments not pure
 C<$args>. It is a little mess. Pay attention.
@@ -169,7 +169,7 @@ sub _makefml
     my ($method, $ml_name, @options) =  @$argv;
 
     # arguments to pass off to each method
-    my $optargs = {
+    my $command_args = {
 	command_mode => 'admin',
 	command      => $method,
 	ml_name      => $ml_name,
@@ -181,7 +181,7 @@ sub _makefml
     # here we go
     require FML::Command;
     my $obj = new FML::Command;
-    $obj->$method($curproc, $optargs);
+    $obj->$method($curproc, $command_args);
 }
 
 

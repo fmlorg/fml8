@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SendFile.pm,v 1.1 2001/10/13 12:17:49 fukachan Exp $
+# $FML: SendFile.pm,v 1.2 2001/10/13 13:10:34 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -27,7 +27,7 @@ not yet implemented
 
 =head1 METHODS
 
-=head2 C<send_article($curproc, $optargs)>
+=head2 C<send_article($curproc, $command_args)>
 
 send back articles.
 
@@ -40,13 +40,13 @@ modules.
 =cut
 
 # Descriptions: send back articles
-#    Arguments: $self $curproc $optargs
+#    Arguments: $self $curproc $command_args
 # Side Effects: none
 # Return Value: none
 sub send_article
 {
-    my ($self, $curproc, $optargs) = @_;
-    my $command   = $optargs->{ command };
+    my ($self, $curproc, $command_args) = @_;
+    my $command   = $command_args->{ command };
     my $config    = $curproc->{ config };
     my $ml_name   = $config->{ ml_name };
     my $spool_dir = $config->{ spool_dir };
@@ -102,20 +102,20 @@ sub _is_valid_argument
 }
 
 
-=head2 C<send_file($curproc, $optargs)>
+=head2 C<send_file($curproc, $command_args)>
 
-send back file specified as C<$optargs->{ _file_to_send }>.
+send back file specified as C<$command_args->{ _file_to_send }>.
 
 =cut
 
 # Descriptions: 
-#    Arguments: $self $curproc $optargs
+#    Arguments: $self $curproc $command_args
 # Side Effects: none
 # Return Value: none
 sub send_file
 {
-    my ($self, $curproc, $optargs) = @_;
-    my $what_file = $optargs->{ _file_to_send };
+    my ($self, $curproc, $command_args) = @_;
+    my $what_file = $command_args->{ _file_to_send };
     my $config    = $curproc->{ config };
     my $charset   = $config->{ reply_message_charset };
 
