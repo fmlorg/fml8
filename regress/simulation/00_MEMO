@@ -22,10 +22,6 @@
 		FML/Process/CGI/Param.pm
 
 
-[TODO]	FML::Credential object って、verify_request() で
-	ある必要があるのかな？
-
-
 [TODO]	FML::PCB FML::Config は、コンテキスト切替時にどうする？
 
 
@@ -67,15 +63,6 @@
 	問題は HTML 化のような入力が動的に変化する場合だ。
 	基本的に入力は自動判定ということで、処理は同様なのだが、
 	出力(たとえば .html の content-type)も入力と同期して変化するべきだ。
-
-
-[TODO]	fml 4 の cf を解釈できる互換ルーチン
-
-	cf シンタックスを読んで、
-	＃ そういえば、Config::Tiny で出来るね
-
-	8 の .cf シンタックスに置き換えて
-	値をよろしく変換する （←ここがむずかしー）
 
 
 [TODO]	fml $ml spool {status,convert}: --srcdir= とか必要じゃない？
@@ -152,23 +139,6 @@
 		FML/Command/Admin/thread.pm
 		Mail/ThreadTrack/Analyze.pm
 		Mail/ThreadTrack/DB.pm
-
-
-[TODO]	Subroutine_O_CREAT_redefined_at_
-
->qmailで使っていると出る最近のメッセージ(送信は出来ています)
->#なんで再定義なんだかよくわからん
->
->Subroutine_O_CREAT_redefined_at_
->/usr/local/fml5/lib/fml/current-20030305/IO/Adapter/File.pm_line_161
->Subroutine_O_RDWR_redefined_at_
->/usr/local/fml5/lib/fml/current-20030305/IO/Adapter/File.pm_line_161
-
-おー これもたまに見る。module の load の順番だか何だかからくるんだろうけど…
-
-FileHandle と IO::File 両方 use しちゃうからか？
-
-うーん、わからん。
 
 
 ======================================================================
@@ -364,4 +334,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.106 2004/03/03 13:26:36 fukachan Exp $
+$FML: 00_MEMO,v 1.107 2004/03/12 08:38:04 fukachan Exp $
