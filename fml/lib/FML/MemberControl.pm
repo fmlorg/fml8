@@ -27,10 +27,9 @@ FML::MemberControl - controller
 
 =cut
 
-use FML::Command::add;
-use FML::Command::delete;
-
-@ISA = qw(FML::Command::add FML::Command::delete);
+use FML::Command::subscribe;
+use FML::Command::unsubscribe;
+@ISA = qw(FML::Command::subscribe FML::Command::unsubscribe);
 
 sub new
 {
