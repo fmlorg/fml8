@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.5 2003/03/18 10:52:34 fukachan Exp $
+# $FML: digest.pm,v 1.6 2003/08/23 04:35:33 fukachan Exp $
 #
 
 package FML::Command::User::digest;
@@ -91,7 +91,7 @@ sub process
     # if not member, "on" request is wrong.
     unless ($cred->is_member($address)) {
 	$curproc->reply_message_nl('error.not_member');
-	LogError("digest request from not member");
+	$curproc->logerror("digest request from not member");
 	croak("digest request from not member");
 	return;
     }
@@ -101,7 +101,7 @@ sub process
     }
 
     if ($mode) {
-	Log("digest $mode");
+	$curproc->log("digest $mode");
 
 	$command_args->{ command_data } = $address;
 	$command_args->{ options }->[0] = $address;
@@ -113,12 +113,12 @@ sub process
 	    $obj->process($curproc, $command_args);
 	}
 	else {
-	    LogError("unknown digest mode");
+	    $curproc->logerror("unknown digest mode");
 	    croak("no such digest mode: off or on");
 	}
     }
     else {
-	LogError("digest: mode not specified");
+	$curproc->logerror("digest: mode not specified");
 	croak("digest: mode not specified");
     }
 }

@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Alias.pm,v 1.9 2003/08/23 04:35:37 fukachan Exp $
+# $FML: Alias.pm,v 1.10 2003/08/23 04:43:41 fukachan Exp $
 #
 
 package FML::Process::Alias;
@@ -74,14 +74,14 @@ sub prepare
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmlalias_prepare_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # $curproc->resolve_ml_specific_variables( $args );
     $curproc->load_config_files( $args->{ cf_list } );
     $curproc->fix_perl_include_path();
 
     $eval = $config->get_hook( 'fmlalias_prepare_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -98,7 +98,7 @@ sub verify_request
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmlalias_verify_request_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     if (0) {
 	print STDERR "Error: missing argument(s)\n";
@@ -107,7 +107,7 @@ sub verify_request
     }
 
     $eval = $config->get_hook( 'fmlalias_verify_request_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -147,10 +147,10 @@ sub finish
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmlalias_finish_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $eval = $config->get_hook( 'fmlalias_finish_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -212,7 +212,7 @@ sub _fmlalias
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmlalias_run_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # show fmlonly aliases if -n option specified.
     my $mode = $args->{ options }->{ n } ? 'fmlonly' : 'all';
@@ -229,7 +229,7 @@ sub _fmlalias
     }
 
     $eval = $config->get_hook( 'fmlalias_run_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: FileUtils.pm,v 1.11 2003/01/25 09:14:05 fukachan Exp $
+# $FML: FileUtils.pm,v 1.12 2003/02/09 12:31:41 fukachan Exp $
 #
 
 package FML::Command::FileUtils;
@@ -98,18 +98,18 @@ sub remove
 		unlink $file;
 
 		if (-f $file) {
-		    LogError("fail to remove $file");
+		    $curproc->logerror("fail to remove $file");
 		    $is_error++;
 		}
 		else {
-		    Log("remove $file");
+		    $curproc->log("remove $file");
 		    $curproc->reply_message_nl("command.remove_file",
 					       "removed $file",
 					       { _arg_file => $file } );
 		}
 	    }
 	    else {
-		LogWarn("no such file $file");
+		$curproc->logwarn("no such file $file");
 		$curproc->reply_message_nl("command.no_such_file",
 					   "no such file $file",
 					   { _arg_file => $file } );
@@ -118,7 +118,7 @@ sub remove
 	}
 	# $file filename is unsafe. stop.
 	else {
-	    LogError("<$file> is insecure");
+	    $curproc->logerror("<$file> is insecure");
 	    $curproc->reply_message_nl('command.insecure',
 				       "insecure input");
 	    croak("remove: insecure argument");

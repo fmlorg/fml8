@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.31 2003/05/03 03:23:43 fukachan Exp $
+# $FML: Error.pm,v 1.32 2003/08/23 04:35:39 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -74,7 +74,7 @@ sub prepare
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'error_prepare_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->resolve_ml_specific_variables( $args );
     $curproc->load_config_files( $args->{ cf_list } );
@@ -89,7 +89,7 @@ sub prepare
     }
 
     $eval = $config->get_hook( 'error_prepare_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -111,7 +111,7 @@ sub verify_request
     my $maintainer = $config->{ maintainer };
 
     my $eval = $config->get_hook( 'error_verify_request_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # set dummy sender to avoid unexpected error
     use FML::Credential;
@@ -120,7 +120,7 @@ sub verify_request
     $curproc->{'credential'}->set( 'sender', $maintainer );
 
     $eval = $config->get_hook( 'error_verify_request_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -151,7 +151,7 @@ sub run
     my $msg    = $curproc->incoming_message();
 
     my $eval = $config->get_hook( 'error_run_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->_forward_error_message();
 
@@ -170,9 +170,9 @@ sub run
 		my $reason = $bouncer->reason( $address );
 
 		if ($address) {
-		    Log("bounced: address=<$address>");
-		    Log("bounced: status=$status");
-		    Log("bounced: reason=\"$reason\"");
+		    $curproc->log("bounced: address=<$address>");
+		    $curproc->log("bounced: status=$status");
+		    $curproc->log("bounced: reason=\"$reason\"");
 
 		    $error->add({
 			address => $address,
@@ -186,7 +186,7 @@ sub run
 
 	    $error->db_close();
 	};
-	LogError($@) if $@;
+	$curproc->logerror($@) if $@;
 
 	if ($found) {
 	    $pcb->set("error", "found", 1);
@@ -195,7 +195,7 @@ sub run
     }
 
     $eval = $config->get_hook( 'error_run_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -210,7 +210,7 @@ sub _clean_up_bouncers
     my $channel = 'erroranalyzer';
 
     if ($curproc->is_event_timeout($channel)) {
-	Log("(debug) event timeout");
+	$curproc->log("(debug) event timeout");
 
 	eval q{
 	    use FML::Error;
@@ -218,12 +218,12 @@ sub _clean_up_bouncers
 	    $error->analyze();
 	    $error->remove_bouncers();
 	};
-	LogError($@) if $@;
+	$curproc->logerror($@) if $@;
 
 	$curproc->set_event_timeout($channel, time + 3600);
     }
     else {
-	Log("(debug) event not timeout");
+	$curproc->log("(debug) event not timeout");
     }
 }
 
@@ -271,21 +271,21 @@ sub finish
     my $pcb    = $curproc->{ pcb };
 
     my $eval = $config->get_hook( 'error_finish_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     if ($pcb->get("error", "found")) {
-	Log("error message found");
+	$curproc->log("error message found");
 	# inform ?
     }
     else {
-	Log("error message not found");
+	$curproc->log("error message not found");
     }
 
     $curproc->inform_reply_messages();
     $curproc->queue_flush();
 
     $eval = $config->get_hook( 'error_finish_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 

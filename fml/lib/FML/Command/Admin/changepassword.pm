@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: changepassword.pm,v 1.5 2003/05/12 10:16:42 fukachan Exp $
+# $FML: changepassword.pm,v 1.6 2003/08/23 04:35:30 fukachan Exp $
 #
 
 package FML::Command::Admin::changepassword;
@@ -105,7 +105,7 @@ sub process
 	$self->_change_password($curproc, $command_args, $address, $password);
     }
     else {
-	LogError("myname=$myname unknown program");
+	$curproc->logerror("myname=$myname unknown program");
     }
 }
 

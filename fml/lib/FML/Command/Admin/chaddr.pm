@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.16 2003/05/12 10:16:42 fukachan Exp $
+# $FML: chaddr.pm,v 1.17 2003/08/23 04:35:30 fukachan Exp $
 #
 
 package FML::Command::Admin::chaddr;
@@ -85,7 +85,7 @@ sub process
 	$new_address = $options->[ 1 ];
     }
 
-    Log("chaddr: $old_address -> $new_address");
+    $curproc->log("chaddr: $old_address -> $new_address");
 
     # sanity check
     unless ($old_address && $new_address) {

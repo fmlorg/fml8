@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.25 2003/03/28 10:32:21 fukachan Exp $
+# $FML: Auth.pm,v 1.26 2003/05/12 10:16:41 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -86,7 +86,7 @@ sub permit_admin_member_maps
     my $match  = $cred->is_privileged_member($sender);
 
     if ($match) {
-	Log("found in admin_member_maps");
+	$curproc->log("found in admin_member_maps");
 	return 1;
     }
 
@@ -106,7 +106,7 @@ sub reject_system_accounts
     my $match  = $cred->match_system_accounts($sender);
 
     if ($match) {
-	Log("reject_system_accounts: matches the sender");
+	$curproc->log("reject_system_accounts: matches the sender");
 	return '__LAST__';
     }
 
@@ -180,7 +180,7 @@ sub check_admin_member_password
 		    # 1.2 password match ?
 		    if ($p_infile eq $p_input) {
 			if ($debug) {
-			    Log("check_admin_member_password: password match");
+			    $curproc->log("check_admin_member_password: password match");
 			}
 			$status = 1;
 			last PASSWORD_ENTRY;
@@ -192,7 +192,7 @@ sub check_admin_member_password
 
     $curproc->unlock($lock_channel);
 
-    LogWarn("check_admin_member_password: password not match") unless $status;
+    $curproc->logwarn("check_admin_member_password: password not match") unless $status;
     return $status;
 }
 
@@ -237,20 +237,20 @@ sub change_password
 	if ($obj->find( $address )) {
 	    $obj->delete( $address );
 	    if ($obj->error()) {
-		LogError("cannot delete $address from=$map");
+		$curproc->logerror("cannot delete $address from=$map");
 	    }
 	    else {
-		Log("delete $address from=$map");
+		$curproc->log("delete $address from=$map");
 	    }
 	}
 
 	# add
 	$obj->add( $address, [ $cp, "UNIX_CRYPT" ] ) && $status++;
 	if ($obj->error()) {
-	    LogError("cannot add $address to=$map");
+	    $curproc->logerror("cannot add $address to=$map");
 	}
 	else {
-	    Log("add password for $address to=$map");
+	    $curproc->log("add password for $address to=$map");
 	}
 
 	$obj->close();

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.39 2003/06/29 05:48:11 fukachan Exp $
+# $FML: Command.pm,v 1.40 2003/08/23 04:35:26 fukachan Exp $
 #
 
 # XXX
@@ -102,13 +102,13 @@ sub rewrite_prompt
 	    $command->rewrite_prompt($curproc, $command_args, $rbuf);
 	}
 	else {
-	    LogError("call $pkg but rewrite_prompt() not supported") if $debug;
+	    $curproc->logerror("call $pkg but rewrite_prompt() not supported") if $debug;
 	}
     }
     else {
 	if ($debug) {
-	    LogError($@);
-	    LogError("cannot load $pkg");
+	    $curproc->logerror($@);
+	    $curproc->logerror("cannot load $pkg");
 	}
     }
 }
@@ -180,7 +180,7 @@ sub AUTOLOAD
     $comname =~ s/.*:://;
     my $pkg = "FML::Command::${mode}::${comname}";
 
-    Log("load $pkg") if $myname eq 'loader'; # debug
+    $curproc->log("load $pkg") if $myname eq 'loader'; # debug
 
     my $command = undef;
     eval qq{ use $pkg; \$command = new $pkg;};
@@ -208,7 +208,7 @@ sub AUTOLOAD
 	    }
 	}
 	else {
-	    LogError("${pkg} has no need_lock method");
+	    $curproc->logerror("${pkg} has no need_lock method");
 	    $curproc->reply_message("Error: invalid command definition\n");
 	    $curproc->reply_message("       need_lock() is undefined\n");
 	    $curproc->reply_message("       Please contact the maintainer\n");
@@ -225,12 +225,12 @@ sub AUTOLOAD
 	    $curproc->unlock($lock_channel) if $need_lock;
 	}
 	else {
-	    LogError("${pkg} has no process method");
+	    $curproc->logerror("${pkg} has no process method");
 	}
     }
     else {
-	LogError($@) if $@;
-	LogError("$pkg module is not found");
+	$curproc->logerror($@) if $@;
+	$curproc->logerror("$pkg module is not found");
 	croak("$pkg module is not found"); # upcall to FML::Process::Command
     }
 }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: Filter.pm,v 1.1 2003/06/22 16:05:14 fukachan Exp $
 #
 
 package FML::Command::Filter;
@@ -81,7 +81,7 @@ sub check_command_limit
     }
 
     if ( $count > $limit ) {
-	Log("command_limit: $count > $limit");
+	$curproc->log("command_limit: $count > $limit");
     }
 
     my $r = "number of commands per mail exceeds limit $limit";
@@ -112,7 +112,7 @@ sub check_line_length_limit
     }
 
     if ($match) {
-	Log("line_length_limit: $match times (\$len > $limit)");
+	$curproc->log("line_length_limit: $match times (\$len > $limit)");
     }
 
     my $r = "too long command (> $limit bytes)\n";

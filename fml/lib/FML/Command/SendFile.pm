@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.28 2003/06/29 05:48:12 fukachan Exp $
+# $FML: SendFile.pm,v 1.29 2003/08/23 04:35:29 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -101,7 +101,7 @@ sub send_article
 		my $article  = new FML::Article $curproc;
 		my $filepath = $article->filepath($filename);
 		if (-f $filepath) {
-		    Log("send back article $filename");
+		    $curproc->log("send back article $filename");
 		    $curproc->reply_message( {
 			type        => "message/rfc822; charset=$charset",
 			path        => $filepath,
@@ -116,13 +116,13 @@ sub send_article
 						   _arg_article => $filename,
 					       }
 					       );
-		    Log("no such file: $filepath");
+		    $curproc->log("no such file: $filepath");
 		}
 	    }
 	}
 	# invalid argument
 	else {
-	    LogError("send_article: invalid argument $fn");
+	    $curproc->logerror("send_article: invalid argument $fn");
 	    $is_error = 1;
 	}
     }
@@ -182,7 +182,7 @@ sub send_file
     my $charset  = $config->{ reply_message_charset };
 
     # XXX-TODO: who validate $filename and $filepath ?
-    Log("send_file: $filepath");
+    $curproc->log("send_file: $filepath");
 
     # template substitution: kanji code, $varname expansion et. al.
     # we prepare file to send back which has proper kanji code et.al.

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.12 2003/03/18 10:38:33 fukachan Exp $
+# $FML: QueueManager.pm,v 1.13 2003/08/23 04:35:40 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -94,12 +94,12 @@ sub send
 	    }
 	    else {
 		# XXX-TODO: $q->remove() if invalid queue ?
-		Log("$qid is invalid");
+		$curproc->log("$qid is invalid");
 	    }
 	    $q->unlock();
 	}
 	else {
-	    Log("$qid is locked. retry");
+	    $curproc->log("$qid is locked. retry");
 	}
     }
 }
@@ -132,10 +132,10 @@ sub _send
     });
 
     if ($r) {
-	Log("queue=$qid status=sent");
+	$curproc->log("queue=$qid status=sent");
     }
     else {
-	Log("queue=$qid status=fail");
+	$curproc->log("queue=$qid status=fail");
     }
 
     return $r;

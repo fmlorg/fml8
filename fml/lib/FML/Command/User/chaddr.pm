@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.19 2003/03/18 10:42:44 fukachan Exp $
+# $FML: chaddr.pm,v 1.20 2003/08/23 04:35:32 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -112,7 +112,7 @@ sub process
     # 1. request from $old_addr : $old_addr (member now) -> $new_addr
     # 2. request from $new_addr : $old_addr -> $new_addr (member now)
     if ($cred->is_member($old_addr) || $cred->is_member($new_addr)) {
-	Log("chaddr request, try confirmation");
+	$curproc->log("chaddr request, try confirmation");
 
 	# XXX-TODO: should be FML::Confirm { ... address => [ @addr ] } ?
 	use FML::Confirm;

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.23 2003/01/11 16:05:17 fukachan Exp $
+# $FML: DocViewer.pm,v 1.24 2003/08/23 04:35:39 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -78,14 +78,14 @@ sub prepare
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmldoc_prepare_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # $curproc->resolve_ml_specific_variables( $args );
     $curproc->load_config_files( $args->{ cf_list } );
     $curproc->fix_perl_include_path();
 
     $eval = $config->get_hook( 'fmldoc_prepare_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -101,7 +101,7 @@ sub verify_request
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmldoc_verify_request_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     if (length(@$argv) == 0) {
 	$curproc->help();
@@ -109,7 +109,7 @@ sub verify_request
     }
 
     $eval = $config->get_hook( 'fmldoc_verify_request_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -149,7 +149,7 @@ sub _fmldoc
     my $argv   = $curproc->command_line_argv();
 
     my $eval = $config->get_hook( 'fmldoc_run_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     my (@opts);
     push(@opts, '-v') if $args->{ options }->{ v };
@@ -167,7 +167,7 @@ sub _fmldoc
     croak($@);
 
     $eval = $config->get_hook( 'fmldoc_run_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -219,10 +219,10 @@ sub finish
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmldoc_finish_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $eval = $config->get_hook( 'fmldoc_finish_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.21 2003/05/28 14:33:43 fukachan Exp $
+# $FML: Analyze.pm,v 1.22 2003/08/23 04:35:34 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -138,7 +138,7 @@ sub AUTOLOAD
     $fp =~ s/.*:://;
     my $pkg = "FML::Error::Analyze::${fp}";
 
-    Log("load $pkg") if 1; # debug
+    $curproc->log("load $pkg") if 1; # debug
 
     my $analyzer = undef;
     eval qq{ use $pkg; \$analyzer = new $pkg;};
@@ -149,12 +149,12 @@ sub AUTOLOAD
 	    $self->{ _analyzer } = $analyzer;
 	}
 	else {
-	    LogError("${pkg} has no process method");
+	    $curproc->logerror("${pkg} has no process method");
 	}
     }
     else {
-	LogError($@) if $@;
-	LogError("$pkg module is not found");
+	$curproc->logerror($@) if $@;
+	$curproc->logerror("$pkg module is not found");
 	croak("$pkg module is not found"); # upcall to FML::Error
     }
 }

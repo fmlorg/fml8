@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Digest.pm,v 1.7 2003/08/23 04:35:38 fukachan Exp $
+# $FML: Digest.pm,v 1.8 2003/08/23 04:43:41 fukachan Exp $
 #
 
 package FML::Process::Digest;
@@ -79,7 +79,7 @@ sub prepare
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'digest_prepare_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->resolve_ml_specific_variables( $args );
     $curproc->load_config_files( $args->{ cf_list } );
@@ -87,12 +87,12 @@ sub prepare
     $curproc->scheduler_init();
 
     unless ($config->yes('use_digest_program')) {
-	LogError("use of digest_program prohibited");
+	$curproc->logerror("use of digest_program prohibited");
 	exit(0);
     }
 
     $eval = $config->get_hook( 'digest_prepare_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -114,7 +114,7 @@ sub verify_request
     my $maintainer = $config->{ maintainer };
 
     my $eval = $config->get_hook( 'digest_verify_request_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # set sender against further errors
     my $cred = new FML::Credential $curproc;
@@ -122,7 +122,7 @@ sub verify_request
     $curproc->{'credential'}->set( 'sender', $maintainer );
 
     $eval = $config->get_hook( 'digest_verify_request_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -153,19 +153,19 @@ sub run
     my $sender     = $curproc->{'credential'}->{'sender'};
 
     my $eval = $config->get_hook( 'digest_run_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->lock();
     unless ($curproc->is_refused()) {
 	$curproc->_digest($args);
     }
     else {
-	LogError("ignore this request.");
+	$curproc->logerror("ignore this request.");
     }
     $curproc->unlock();
 
     $eval = $config->get_hook( 'digest_run_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -210,13 +210,13 @@ sub finish
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'digest_finish_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->inform_reply_messages();
     $curproc->queue_flush();
 
     $eval = $config->get_hook( 'digest_finish_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
 }
 
@@ -248,7 +248,7 @@ sub _digest
 	$digest->set_digest_id($aid);
     }
     else {
-	Log("no articles to send as digest");
+	$curproc->log("no articles to send as digest");
     }
 }
 

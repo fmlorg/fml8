@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.19 2003/03/18 10:42:44 fukachan Exp $
+# $FML: subscribe.pm,v 1.20 2003/08/23 04:35:33 fukachan Exp $
 #
 
 package FML::Command::User::subscribe;
@@ -101,7 +101,7 @@ sub process
     }
     # if not, try confirmation before subscribe
     else {
-	Log("new subscriber, try confirmation");
+	$curproc->log("new subscriber, try confirmation");
 	use FML::Confirm;
 	my $confirm = new FML::Confirm {
 	    keyword   => $keyword,

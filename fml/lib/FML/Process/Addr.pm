@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Addr.pm,v 1.8 2003/08/23 04:35:37 fukachan Exp $
+# $FML: Addr.pm,v 1.9 2003/08/23 04:43:40 fukachan Exp $
 #
 
 package FML::Process::Addr;
@@ -78,14 +78,14 @@ sub prepare
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmladdr_prepare_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # $curproc->resolve_ml_specific_variables( $args );
     $curproc->load_config_files( $args->{ cf_list } );
     $curproc->fix_perl_include_path();
 
     $eval = $config->get_hook( 'fmladdr_prepare_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -102,7 +102,7 @@ sub verify_request
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmladdr_verify_request_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     if (0) {
 	print STDERR "Error: missing argument(s)\n";
@@ -111,7 +111,7 @@ sub verify_request
     }
 
     $eval = $config->get_hook( 'fmladdr_verify_request_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -153,10 +153,10 @@ sub finish
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmladdr_finish_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $eval = $config->get_hook( 'fmladdr_finish_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -214,7 +214,7 @@ sub _fmladdr
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmladdr_run_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # show only accounts if -n option specified.
     my $mode = $args->{ options }->{ n } ? 'fmlonly' : 'all';
@@ -242,7 +242,7 @@ sub _fmladdr
     }
 
     $eval = $config->get_hook( 'fmladdr_run_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 

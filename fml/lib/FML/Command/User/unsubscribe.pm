@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.19 2003/03/18 10:42:44 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.20 2003/08/23 04:35:33 fukachan Exp $
 #
 
 package FML::Command::User::unsubscribe;
@@ -93,12 +93,12 @@ sub process
     # if not member, unsubscriber request is wrong.
     unless ($cred->is_member($address)) {
 	$curproc->reply_message_nl('error.not_member');
-	LogError("unsubscribe request from not member");
+	$curproc->logerror("unsubscribe request from not member");
 	croak("unsubscribe request from not member");
     }
     # try confirmation before unsubscribe
     else {
-	Log("unsubscribe request, try confirmation");
+	$curproc->log("unsubscribe request, try confirmation");
 
         use FML::Confirm;
 	my $confirm = new FML::Confirm {

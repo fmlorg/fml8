@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DirUtils.pm,v 1.12 2003/01/25 09:14:05 fukachan Exp $
+# $FML: DirUtils.pm,v 1.13 2003/01/26 03:11:27 fukachan Exp $
 #
 
 package FML::Command::DirUtils;
@@ -71,7 +71,7 @@ sub dir
 	    $opt_ls = $opt;
 	}
 	else {
-	    LogWarn("deny ls options '$opt'");
+	    $curproc->logwarn("deny ls options '$opt'");
 	}
     }
 
@@ -92,7 +92,7 @@ sub dir
 
     if (-x $path_ls) {
 	my $eval = "$path_ls $opt_ls $y";
-	Log("dir: run \"$eval\"");
+	$curproc->log("dir: run \"$eval\"");
 
 	use FileHandle;
 	my $fh = new FileHandle "$eval|";
@@ -102,11 +102,11 @@ sub dir
 	    $fh->close();
 	}
 	else {
-	    LogError("tail to run '$eval'");
+	    $curproc->logerror("tail to run '$eval'");
 	}
     }
     else {
-	LogError("\$path_ls is not found");
+	$curproc->logerror("\$path_ls is not found");
 	croak("\$path_ls is not found");
     }
 }

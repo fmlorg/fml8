@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: on.pm,v 1.8 2003/03/18 10:52:34 fukachan Exp $
+# $FML: on.pm,v 1.9 2003/08/23 04:35:33 fukachan Exp $
 #
 
 package FML::Command::User::on;
@@ -92,7 +92,7 @@ sub process
     # if not member, on request is wrong.
     unless ($cred->is_member($address)) {
 	$curproc->reply_message_nl('error.not_member');
-	LogError("on request from not member");
+	$curproc->logerror("on request from not member");
 	croak("on request from not member");
 	return;
     }
@@ -108,7 +108,7 @@ sub process
     }
     # if not, try confirmation before on
     else {
-	Log("on request, try confirmation");
+	$curproc->log("on request, try confirmation");
 	use FML::Confirm;
 	my $confirm = new FML::Confirm {
 	    keyword   => $keyword,

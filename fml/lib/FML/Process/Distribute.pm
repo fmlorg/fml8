@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.122 2003/08/23 04:35:39 fukachan Exp $
+# $FML: Distribute.pm,v 1.123 2003/08/23 04:43:41 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -78,7 +78,7 @@ sub prepare
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'distribute_prepare_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->resolve_ml_specific_variables( $args );
     $curproc->load_config_files( $args->{ cf_list } );
@@ -89,12 +89,12 @@ sub prepare
 	$curproc->parse_incoming_message($args);
     }
     else {
-	LogError("use of distribute_program prohibited");
+	$curproc->logerror("use of distribute_program prohibited");
 	exit(0);
     }
 
     $eval = $config->get_hook( 'distribute_prepare_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -118,7 +118,7 @@ sub verify_request
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'distribute_verify_request_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->verify_sender_credential();
 
@@ -131,7 +131,7 @@ sub verify_request
     }
 
     $eval = $config->get_hook( 'distribute_verify_request_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -156,19 +156,19 @@ sub _check_filter
 		    _arg_reason => $r,
 		};
 
-		Log("(debug) filter: inform rejection");
+		$curproc->log("(debug) filter: inform rejection");
 		$filter->article_filter_reject_notice($curproc, $msg_args);
 	    }
 	    else {
-		Log("filter: not inform rejection");
+		$curproc->log("filter: not inform rejection");
 	    }
 
 	    # we should stop this process ASAP.
 	    $curproc->stop_this_process();
-	    Log("rejected by filter due to $r");
+	    $curproc->log("rejected by filter due to $r");
 	}
     };
-    Log($@) if $@;
+    $curproc->log($@) if $@;
 }
 
 
@@ -207,7 +207,7 @@ sub run
     };
 
     my $eval = $config->get_hook( 'distribute_run_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # $curproc->lock();
     unless ($curproc->is_refused()) {
@@ -217,7 +217,7 @@ sub run
 	else {
 	    my $pcb = $curproc->{ pcb };
 
-	    Log("deny article submission");
+	    $curproc->log("deny article submission");
 
 	    my $rule = $pcb->get("check_restrictions", "deny_reason");
 	    if ($rule eq 'reject_system_accounts') {
@@ -270,13 +270,13 @@ sub run
 	}
     }
     else {
-	LogError("ignore this request.");
+	$curproc->logerror("ignore this request.");
     }
 
     # $curproc->unlock();
 
     $eval = $config->get_hook( 'distribute_run_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -321,13 +321,13 @@ sub finish
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'distribute_finish_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->inform_reply_messages();
     $curproc->queue_flush();
 
     $eval = $config->get_hook( 'distribute_finish_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
 }
 
@@ -363,7 +363,7 @@ sub _distribute
     # XXX debug, remove here in the future
     if ($debug) {
 	my $ha_msg = $curproc->{ article }->{ body }->data_type_list;
-	for my $msg (@$ha_msg) { Log("debug: $msg");}
+	for my $msg (@$ha_msg) { $curproc->log("debug: $msg");}
     }
 
     # thread system checks the message before header rewritings.
@@ -390,7 +390,7 @@ sub _distribute
     $curproc->_deliver_article($args);
 
     if ($config->yes('use_html_archive')) {
-	Log("htmlify article $id");
+	$curproc->log("htmlify article $id");
 	$curproc->_htmlify($args);
     }
 }
@@ -427,7 +427,7 @@ sub _header_rewrite
     my $id     = $args->{ id };
 
     for my $rule (@$rules) {
-	Log("_header_rewrite( $rule )") if $config->yes('debug');
+	$curproc->log("_header_rewrite( $rule )") if $config->yes('debug');
 
 	if ($header->can($rule)) {    # See FML::Header and FML::Header::*
 	    $header->$rule($config, { # for methods themself
@@ -436,7 +436,7 @@ sub _header_rewrite
 	    });
 	}
 	else {
-	    LogError("header->$rule is undefined");
+	    $curproc->logerror("header->$rule is undefined");
 	}
     }
 }
@@ -456,18 +456,18 @@ sub _deliver_article
     my $body    = $curproc->article_message_body();   # Mail::Message object
 
     unless ( $config->yes( 'use_article_delivery' ) ) {
-	Log("not delivery (\$use_article_delivery = no)");
+	$curproc->log("not delivery (\$use_article_delivery = no)");
 	return;
     }
 
     # SMTP-FROM is a must!
     unless ( $config->{'maintainer'} ) {
-	Log("not delivery for undefined \$maintainer");
+	$curproc->log("not delivery for undefined \$maintainer");
 	return;
     }
 
     # distribute article
-    my $fp  = sub { Log(@_);}; # pointer to the log function
+    my $fp  = sub { $curproc->log(@_);}; # pointer to the log function
     my $sfp = sub { my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;};
     my $handle = undef;
 
@@ -490,7 +490,7 @@ sub _deliver_article
     };
     croak($@) if $@;
 
-    if ($service->error) { Log($service->error); return;}
+    if ($service->error) { $curproc->log($service->error); return;}
 
     # XXX_LOCK_CHANNEL: recipient_map_modify
     my $lock_channel = "recipient_map_modify";
@@ -509,7 +509,7 @@ sub _deliver_article
 		      });
     $curproc->unlock($lock_channel);
 
-    if ($service->error) { Log($service->error); return;}
+    if ($service->error) { $curproc->log($service->error); return;}
 }
 
 
@@ -548,7 +548,7 @@ sub _old_thread_check
 	my $thread = new Mail::ThreadTrack $ttargs;
 	$thread->analyze($msg);
     };
-    Log($@) if $@;
+    $curproc->log($@) if $@;
 }
 
 
@@ -609,17 +609,17 @@ sub _htmlify
     unless ($@) {
 	unless (-d $html_dir) {
 	    $curproc->mkdir($html_dir, "mode=public");
-	    LogError("fail to mkdir $html_dir") unless -d $html_dir;
+	    $curproc->logerror("fail to mkdir $html_dir") unless -d $html_dir;
 	}
 
 	eval q{
 	    my $obj = new Mail::Message::ToHTML $_tdb_args;
 	    $obj->htmlify_file($article_file, $_tdb_args);
 	};
-	LogError($@) if $@;
+	$curproc->logerror($@) if $@;
     }
     else {
-	LogError($@) if $@;
+	$curproc->logerror($@) if $@;
     }
 
     $curproc->reset_umask();

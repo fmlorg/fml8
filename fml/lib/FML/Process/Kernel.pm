@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.173 2003/08/23 04:35:39 fukachan Exp $
+# $FML: Kernel.pm,v 1.174 2003/08/23 05:29:01 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -175,7 +175,7 @@ sub _signal_init
 
     $SIG{'ALRM'} = $SIG{'INT'} = $SIG{'QUIT'} = $SIG{'TERM'} = sub {
 	my ($signal) = @_;
-	Log("SIG$signal trapped");
+	$curproc->log("SIG$signal trapped");
 	sleep 1;
 	croak("SIG$signal trapped");
     };
@@ -272,7 +272,7 @@ sub lock
 
     if (defined $LockInfo{ $channel } && $LockInfo{ $channel }) {
 	my @c = caller;
-	LogWarn( "channel=$channel already locked ($c[0] $c[1])" );
+	$curproc->logwarn( "channel=$channel already locked ($c[0] $c[1])" );
 	return;
     }
 
@@ -286,15 +286,15 @@ sub lock
     if ($r) {
 	my $t = time - $time_in;
 	if ($t > 1) {
-	    Log("lock requires $t sec.");
+	    $curproc->log("lock requires $t sec.");
 	}
 
 	$pcb->set('lock', $channel, $lockobj);
 	$LockInfo{ $channel } = 1;
-	Log("lock channel=$channel");
+	$curproc->log("lock channel=$channel");
     }
     else {
-	LogError("cannot lock");
+	$curproc->logerror("cannot lock");
 	croak("Error: cannot lock");
     }
 }
@@ -321,19 +321,19 @@ sub unlock
 	if ($r) {
 	    my $t = time - $time_in;
 	    if ($t > 1) {
-		Log("unlock requires $t sec.");
+		$curproc->log("unlock requires $t sec.");
 	    }
 
 	    delete $LockInfo{ $channel };
-	    Log("unlock channel=$channel");
+	    $curproc->log("unlock channel=$channel");
 	}
 	else {
-	    LogError("cannot unlock");
+	    $curproc->logerror("cannot unlock");
 	    croak("Error: cannot unlock");
 	}
     }
     else {
-	LogError("object undefined, cannot unlock");
+	$curproc->logerror("object undefined, cannot unlock");
 	croak("Error: object undefined, cannot unlock");
     }
 }
@@ -401,7 +401,7 @@ sub is_event_timeout
 	return (time > $t) ? 1 : 0;
     }
     else {
-	LogWarn("visit timeout channel=$channel at the first time");
+	$curproc->logwarn("visit timeout channel=$channel at the first time");
 	return 1;
     }
 }
@@ -508,23 +508,23 @@ sub verify_sender_credential
     }
     else {
 	$curproc->stop_this_process("cannot extract From:");
-	LogError("cannot extract From:");
+	$curproc->logerror("cannot extract From:");
     }
 
     # XXX "@addrs must be empty" is valid since From: is unique.
     if (@addrs) {
-	LogWarn("invalid From: duplicated addresses");
-	LogWarn("use $from as the sender");
+	$curproc->logwarn("invalid From: duplicated addresses");
+	$curproc->logwarn("use $from as the sender");
 	my $i = 0;
 	for my $a ($addr, @addrs) {
 	    my $s = $a->address;
 	    ++$i;
-	    LogWarn("From[$i] $s");
+	    $curproc->logwarn("From[$i] $s");
 	}
     }
 
     if ($from) {
-	Log("sender: $from");
+	$curproc->log("sender: $from");
 
 	# check $from should match safe address regexp.
 	use FML::Restriction::Base;
@@ -538,12 +538,12 @@ sub verify_sender_credential
 	}
 	else {
 	    $curproc->stop_this_process();
-	    LogError("unsafe From: $from");
+	    $curproc->logerror("unsafe From: $from");
 	}
     }
     else {
 	$curproc->stop_this_process();
-	LogError("no valid From:");
+	$curproc->logerror("no valid From:");
     }
 }
 
@@ -575,7 +575,7 @@ sub simple_loop_check
 	    $match = $header->$rule($config, $args) ? $rule : 0;
 	}
 	else {
-	    Log("header->${rule}() is undefined");
+	    $curproc->log("header->${rule}() is undefined");
 	}
 
 	last RULE if $match;
@@ -584,7 +584,7 @@ sub simple_loop_check
     if ($match) {
 	# we should stop this process ASAP.
 	$curproc->stop_this_process();
-	LogError("mail loop detected for $match");
+	$curproc->logerror("mail loop detected for $match");
     }
 }
 
@@ -721,7 +721,7 @@ sub resolve_ml_specific_variables
 
 	# parse the argument such as "fml.pl /var/spool/ml/elena ..."
 	unless ($ml_name) {
-	    Log("(debug) parse @ARGV");
+	    $curproc->log("(debug) parse @ARGV");
 
 	  ARGS:
 	    for my $arg (@ARGV) {
@@ -740,7 +740,7 @@ sub resolve_ml_specific_variables
 		    $config->set( 'ml_domain',   $default_domain );
 		    $config->set( 'ml_home_dir', $arg );
 
-		    Log("(debug) ml_name=$ml_name ml_home_dir=$ml_home_dir");
+		    $curproc->log("(debug) ml_name=$ml_name ml_home_dir=$ml_home_dir");
 		}
 	    }
 	}
@@ -768,11 +768,11 @@ sub __debug_ml_xxx
     my $config = $curproc->{ config };
 
     if (defined $config->{ log_file } && (-w $config->{ log_file })) {
-	for my $buf (@delayed_buffer) { Log( $buf ); }
+	for my $buf (@delayed_buffer) { $curproc->log( $buf ); }
 	@delayed_buffer = ();
 
 	for my $var (qw(ml_name ml_domain ml_home_prefix ml_home_dir)) {
-	    Log(sprintf("%-25s = %s", '(debug)'.$str. $var,
+	    $curproc->log(sprintf("%-25s = %s", '(debug)'.$str. $var,
 			(defined $config->{ $var } ? $config->{ $var } : '')));
 	}
     }
@@ -873,7 +873,7 @@ sub load_config_files
     use FML::Credential;
     my $cred = new FML::Credential $curproc;
     if ($cred->is_same_address($maintainer, $ml_address)) {
-	LogError("invalid configuration: \$maintainer == \$address_for_post");
+	$curproc->logerror("invalid configuration: \$maintainer == \$address_for_post");
 	$curproc->stop_this_process("configuration error");
     }
 }
@@ -1021,11 +1021,11 @@ sub _check_restrictions
 	}
 	else {
 	    ($match, $result) = (0, undef);
-	    LogWarn("unknown rule=$rule");
+	    $curproc->logwarn("unknown rule=$rule");
 	}
 
 	if ($match) {
-	    Log("match rule=$rule sender=$sender");
+	    $curproc->log("match rule=$rule sender=$sender");
 	    return($result eq "permit" ? 1 : 0);
 	}
     }
@@ -1109,6 +1109,98 @@ sub close_stderr_channel_if_quiet_option_specified
 
 =head1 MESSAGE HANDLING
 
+=head2 log_message($msg, $msg_args)
+
+?
+    log(STR)       log_message(STR, { level => "ok"      })
+    logwarn(STR)   log_message(STR, { level => "warning" })
+    logerror(STR)  log_message(STR, { level => "error"   })
+
+=head2 log($msg, $msg_args)
+
+=head2 logwarn($msg, $msg_args)
+
+=head2 logerror($msg, $msg_args)
+
+=cut
+
+
+# Descriptions: log message
+#    Arguments: OBJ($curproc) STR($msg) HASH_REF($msg_args)
+# Side Effects: none
+# Return Value: none
+sub log_message
+{
+    my ($curproc, $msg, $msg_args) = @_;
+    my $_msg_args   = $msg_args->{ msg_args };
+    my $level       = $msg_args->{ level };
+    my $at_package  = $msg_args->{ caller }->[ 0 ];
+    my $at_function = $msg_args->{ caller }->[ 1 ];
+    my $at_line     = $msg_args->{ caller }->[ 2 ];
+
+    if ($level eq 'ok') { 
+	Log($msg);
+    }
+    elsif ($level eq 'warning') { 
+	LogWarn($msg);
+    }
+    elsif ($level eq 'error') {
+	LogError($msg);
+    }
+}
+
+
+# Descriptions: log message
+#    Arguments: OBJ($curproc) STR($msg) HASH_REF($msg_args)
+# Side Effects: none
+# Return Value: none
+sub log
+{
+    my ($curproc, $msg, $msg_args) = @_;
+    my (@c) = caller;
+
+    $curproc->log_message($msg, {
+	msg_args => $msg_args,
+	level    => 'ok',
+	caller   => \@c,
+    });
+}
+
+
+# Descriptions: log message as warning.
+#    Arguments: OBJ($curproc) STR($msg) HASH_REF($msg_args)
+# Side Effects: none
+# Return Value: none
+sub logwarn
+{
+    my ($curproc, $msg, $msg_args) = @_;
+    my (@c) = caller;
+
+    $curproc->log_message($msg, {
+	msg_args => $msg_args,
+	level    => 'warning',
+	caller   => \@c,
+    });
+}
+
+
+# Descriptions: log message as error.
+#    Arguments: OBJ($curproc) STR($msg) HASH_REF($msg_args)
+# Side Effects: none
+# Return Value: none
+sub logerror
+{
+    my ($curproc, $msg, $msg_args) = @_;
+    my (@c) = caller;
+
+    $curproc->log_message($msg, {
+	msg_args => $msg_args,
+	level    => 'error',
+	caller   => \@c,
+    });
+}
+
+
 =head2 reply_message($msg)
 
 C<reply_message($msg)> holds message C<$msg> sent back to the mail
@@ -1159,7 +1251,7 @@ sub reply_message
     if ($myname eq 'makefml' ||
 	$myname eq 'fml'     ||
 	$myname =~ /\.cgi$/) {
-	LogWarn("(debug) $myname disables reply_message()");
+	$curproc->logwarn("(debug) $myname disables reply_message()");
 	return;
     }
 
@@ -1191,7 +1283,7 @@ sub reply_message
 	}
 
 	if (_array_is_different($sent, $recipient)) {
-	    Log("cc: [ @$recipient ]");
+	    $curproc->log("cc: [ @$recipient ]");
 	    $curproc->_append_message_into_queue($msg, $args,
 						 $recipient, $recipient_maps,
 						 $hdr);
@@ -1221,7 +1313,7 @@ sub _analyze_recipients
 	    $recipient = [ $rcpt ] if $rcpt;
 	}
 	else {
-	    LogError("reply_message: wrong type recipient");
+	    $curproc->logerror("reply_message: wrong type recipient");
 	}
     }
 
@@ -1230,7 +1322,7 @@ sub _analyze_recipients
 	    $recipient_maps = [ $map ] if $map;
 	}
 	else {
-	    LogError("reply_message: wrong type recipient_map");
+	    $curproc->logerror("reply_message: wrong type recipient_map");
 	}
     }
 
@@ -1239,7 +1331,7 @@ sub _analyze_recipients
 	    $recipient_maps = $maps if @$maps;
 	}
 	else {
-	    LogError("reply_message: wrong type recipient_maps");
+	    $curproc->logerror("reply_message: wrong type recipient_maps");
 	}
     }
 
@@ -1374,7 +1466,7 @@ sub _reply_message_recipient_keys
 	    $rcptlist = $m->{ recipient };
 	    $rcptmaps = $m->{ recipient_maps };
 	    $type     = ref($m->{ message });
-	    $key      = _gen_recipient_key( $rcptlist, $rcptmaps );
+	    $key      = $curproc->_gen_recipient_key( $rcptlist, $rcptmaps );
 	    $rcptattr{ $key }->{ $type }++;
 	    $rcptlist{ $key } = $rcptlist;
 	    $rcptmaps{ $key } = $rcptmaps;
@@ -1392,7 +1484,7 @@ sub _reply_message_recipient_keys
 # Return Value: STR
 sub _gen_recipient_key
 {
-    my ($rarray, $rmaps) = @_;
+    my ($curproc, $rarray, $rmaps) = @_;
     my (@c) = caller;
     my $key = '';
 
@@ -1403,7 +1495,7 @@ sub _gen_recipient_key
 	    }
 	}
 	else {
-	    LogError("wrong \$rarray");
+	    $curproc->logerror("wrong \$rarray");
 	}
     }
 
@@ -1414,7 +1506,7 @@ sub _gen_recipient_key
 	    }
 	}
 	else {
-	    LogError("wrong \$rmaps");
+	    $curproc->logerror("wrong \$rmaps");
 	}
     }
 
@@ -1462,7 +1554,7 @@ sub reply_message_nl
 	    my $obj = new Mail::Message::Encode;
 	    $curproc->reply_message( $obj->convert( $buf, 'jis-jp' ), $args);
 	};
-	LogError($@) if $@;
+	$curproc->logerror($@) if $@;
     }
     else {
 	$curproc->reply_message($default_msg, $args);
@@ -1519,7 +1611,7 @@ sub message_nl
 	}
     }
     else {
-	LogWarn("no such file: $file");
+	$curproc->logwarn("no such file: $file");
     }
 
     return $buf;
@@ -1533,7 +1625,7 @@ sub message_nl
 sub caller_info
 {
     my ($curproc, $msg, $pkg, $fn, $line) = @_;
-    Log("msg='$msg' $fn $line");
+    $curproc->log("msg='$msg' $fn $line");
 }
 
 
@@ -1670,10 +1762,10 @@ sub queue_in
     }
 
 
-    Log("debug: queue_in: sender=$sender");
-    Log("debug: queue_in: recipient=$rcptkey");
-    Log("debug: queue_in: rcptlist=[ @$rcptlist ]");
-    Log("debug: queue_in: is_multipart=$is_multipart");
+    $curproc->log("debug: queue_in: sender=$sender");
+    $curproc->log("debug: queue_in: recipient=$rcptkey");
+    $curproc->log("debug: queue_in: rcptlist=[ @$rcptlist ]");
+    $curproc->log("debug: queue_in: is_multipart=$is_multipart");
 
 
     ###############################################################
@@ -1706,8 +1798,8 @@ sub queue_in
 	for my $m ( @$mesg_queue ) {
 	    my $q = $m->{ message };
 	    my $t = $m->{ type };
-	    my $r = _gen_recipient_key($m->{ recipient },
-				       $m->{ recipient_maps } );
+	    my $r = $curproc->_gen_recipient_key($m->{ recipient },
+						 $m->{ recipient_maps } );
 
 	    # pick up only messages returned to specified $rcptkey
 	    next QUEUE unless $r eq $rcptkey;
@@ -1730,8 +1822,8 @@ sub queue_in
 	for my $m ( @$mesg_queue ) {
 	    my $q = $m->{ message };
 	    my $t = $m->{ type };
-	    my $r = _gen_recipient_key($m->{ recipient },
-				       $m->{ recipient_maps } );
+	    my $r = $curproc->_gen_recipient_key($m->{ recipient },
+						 $m->{ recipient_maps } );
 
 	    next QUEUE unless $r eq $rcptkey;
 
@@ -1746,8 +1838,8 @@ sub queue_in
 				 Disposition => $q->{ disposition });
 		}
 		else {
-		    # Log("queue_in: type=<$t> aggregated") if $t eq 'text';
-		    Log("queue_in: unknown type=<$t>") unless $t eq 'text';
+		    # $curproc->log("queue_in: type=<$t> aggregated") if $t eq 'text';
+		    $curproc->log("queue_in: unknown type=<$t>") unless $t eq 'text';
 		}
 	    }
 	}
@@ -1762,8 +1854,8 @@ sub queue_in
 	for my $m ( @$mesg_queue ) {
 	    my $q = $m->{ message };
 	    my $t = $m->{ type };
-	    my $r = _gen_recipient_key($m->{ recipient },
-				       $m->{ recipient_maps });
+	    my $r = $curproc->_gen_recipient_key($m->{ recipient },
+						 $m->{ recipient_maps });
 
 	    next QUEUE unless $r eq $rcptkey;
 
@@ -1775,7 +1867,7 @@ sub queue_in
 		    $s .= $q;
 		}
 		else {
-		    Log("queue_in: unknown typ $t");
+		    $curproc->log("queue_in: unknown typ $t");
 		}
 	    }
 	}
@@ -1820,12 +1912,12 @@ sub queue_in
 	    $queue->set('recipient_maps', $rcptmaps);
 	}
 
-	$queue->in( $msg ) && Log("queue=$qid in");
+	$queue->in( $msg ) && $curproc->log("queue=$qid in");
 	if ($queue->setrunnable()) {
-	    Log("queue=$qid runnable");
+	    $curproc->log("queue=$qid runnable");
 	}
 	else {
-	    Log("queue=$qid broken");
+	    $curproc->log("queue=$qid broken");
 	}
 
 	# return queue object
@@ -1853,7 +1945,7 @@ sub _append_rfc822_message
 	$wh->close;
     }
     else {
-	LogError("_append_rfc822_message: cannot create \$tmpfile");
+	$curproc->logerror("_append_rfc822_message: cannot create \$tmpfile");
     }
 
     if (-f $tmpfile) {
@@ -1866,13 +1958,13 @@ sub _append_rfc822_message
 	    $rh->close;
 	}
 	else {
-	    LogError("_append_rfc822_message: cannot open \$tmpfile");
+	    $curproc->logerror("_append_rfc822_message: cannot open \$tmpfile");
 	}
 
 	$curproc->add_into_clean_up_queue( $tmpfile );
     }
     else {
-	LogError("_append_rfc822_message: \$tmpfile not found");
+	$curproc->logerror("_append_rfc822_message: \$tmpfile not found");
     }
 }
 
@@ -1906,7 +1998,7 @@ sub clean_up_tmpfiles
 
     if (defined $queue) {
 	for my $q (@$queue) {
-	    Log("unlink $q") if $debug;
+	    $curproc->log("unlink $q") if $debug;
 	    unlink $q;
 	}
     }
@@ -2041,7 +2133,7 @@ sub prepare_file_to_return
 	    }
 	}
 	else {
-	    LogError("Mail::Message::Encode object undef");
+	    $curproc->logerror("Mail::Message::Encode object undef");
 	}
 
 	close($wh);
@@ -2158,13 +2250,13 @@ sub finalize
     my $debug     = $curproc->debug_level();
 
     if ($debug > 100) {
-	Log("debug: dump curproc structure");
+	$curproc->log("debug: dump curproc structure");
 	eval q{
 	    use FML::Process::Debug;
 	    my $obj = new FML::Process::Debug;
 	    $obj->dump_curproc($curproc);
 	};
-	LogError($@) if $@;
+	$curproc->logerror($@) if $@;
     }
 }
 

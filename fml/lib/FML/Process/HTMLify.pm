@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.27 2003/01/11 16:05:19 fukachan Exp $
+# $FML: HTMLify.pm,v 1.28 2003/08/23 04:35:39 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -69,14 +69,14 @@ sub prepare
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmlhtmlify_prepare_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->resolve_ml_specific_variables( $args );
     $curproc->load_config_files( $args->{ cf_list } );
     $curproc->fix_perl_include_path();
 
     $eval = $config->get_hook( 'fmlhtmlify_prepare_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -90,10 +90,10 @@ sub verify_request
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmlhtmlify_verify_request_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $eval = $config->get_hook( 'fmlhtmlify_verify_request_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -120,7 +120,7 @@ sub run
     print STDERR "htmlify\n\t$src_dir =>\n\t$dst_dir\n" if $debug;
 
     my $eval = $config->get_hook( 'fmlhtmlify_run_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # prepend $opt_I as @INC
     if (defined $options->{ I }) {
@@ -136,7 +136,7 @@ sub run
     });
 
     $eval = $config->get_hook( 'fmlhtmlify_run_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -171,10 +171,10 @@ sub finish
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmlhtmlify_finish_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $eval = $config->get_hook( 'fmlhtmlify_finish_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 

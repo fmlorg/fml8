@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.31 2003/03/23 15:57:52 fukachan Exp $
+# $FML: UserControl.pm,v 1.32 2003/03/28 10:32:21 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -103,7 +103,7 @@ sub useradd
 	    $obj->touch(); # create a new map entry (e.g. file) if needed.
 	    $obj->add( $address );
 	    unless ($obj->error()) {
-		Log("add $address to map=$_map");
+		$curproc->log("add $address to map=$_map");
 		$curproc->reply_message_nl('command.add_ok',
 					   "$address added.",
 					   $msg_args);
@@ -128,7 +128,7 @@ sub useradd
     }
 
     unless ($trycount) {
-	LogError("no trail to add $address");
+	$curproc->logerror("no trail to add $address");
     }
 }
 
@@ -184,7 +184,7 @@ sub userdel
 	    my $obj = new IO::Adapter $map, $config;
 	    $obj->delete( $address_in_map );
 	    unless ($obj->error()) {
-		Log("remove $address from map=$_map");
+		$curproc->log("remove $address from map=$_map");
 		$curproc->reply_message_nl('command.del_ok',
 					   "$address removed.",
 					   $msg_args);
@@ -198,7 +198,7 @@ sub userdel
 	    }
 	}
 	else {
-	    LogWarn("no such user in map=$_map") if $debug;
+	    $curproc->logwarn("no such user in map=$_map") if $debug;
 	}
     }
 
@@ -208,7 +208,7 @@ sub userdel
     }
 
     unless ($trycount) {
-	LogError("no trail to remove $address");
+	$curproc->logerror("no trail to remove $address");
     }
 }
 
@@ -273,7 +273,7 @@ sub _try_chaddr_in_map
 	$is_new_address_ok = 1;
     }
     else {
-	LogError("$new_address is already member (map=$map)");
+	$curproc->logerror("$new_address is already member (map=$map)");
 	return 0;
     }
 
@@ -296,10 +296,10 @@ sub _try_chaddr_in_map
 	    $obj->open();
 	    $obj->add( $new_address );
 	    unless ($obj->error()) {
-		Log("add $new_address to map=$map");
+		$curproc->log("add $new_address to map=$map");
 	    }
 	    else {
-		LogError("fail to add $new_address to map=$map");
+		$curproc->logerror("fail to add $new_address to map=$map");
 	    }
 	    $obj->close();
 	}
@@ -313,10 +313,10 @@ sub _try_chaddr_in_map
 	    $obj->open();
 	    $obj->delete( $old_address_in_map );
 	    unless ($obj->error()) {
-		Log("delete $old_address from map=$map");
+		$curproc->log("delete $old_address from map=$map");
 	    }
 	    else {
-		LogError("fail to delete $old_address to map=$map");
+		$curproc->logerror("fail to delete $old_address to map=$map");
 	    }
 	    $obj->close();
 	}
@@ -358,7 +358,7 @@ sub userlist
 	    $obj->close;
 	}
 	else {
-	    LogWarn("canot open $map");
+	    $curproc->logwarn("canot open $map");
 	}
     }
 

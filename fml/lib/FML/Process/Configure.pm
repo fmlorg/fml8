@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.52 2003/08/23 04:35:38 fukachan Exp $
+# $FML: Configure.pm,v 1.53 2003/08/23 04:43:41 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -75,7 +75,7 @@ sub prepare
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'makefml_prepare_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->close_stderr_channel_if_quiet_option_specified();
     $curproc->resolve_ml_specific_variables( $args );
@@ -83,7 +83,7 @@ sub prepare
     $curproc->fix_perl_include_path();
 
     $eval = $config->get_hook( 'makefml_prepare_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -100,7 +100,7 @@ sub verify_request
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'makefml_verify_request_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     if ($len <= 1) {
 	$curproc->help();
@@ -108,7 +108,7 @@ sub verify_request
     }
 
     $eval = $config->get_hook( 'makefml_verify_request_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -151,10 +151,10 @@ sub finish
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'makefml_finish_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $eval = $config->get_hook( 'makefml_finish_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -299,7 +299,7 @@ sub _makefml
     };
 
     my $eval = $config->get_hook( 'makefml_run_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # here we go
     require FML::Command;
@@ -315,18 +315,18 @@ sub _makefml
 	}
 	else {
 	    my $r = $@;
-	    LogError("command $method fail");
-	    LogError($r);
+	    $curproc->logerror("command $method fail");
+	    $curproc->logerror($r);
 	    if ($r =~ /^(.*)\s+at\s+/) {
 		my $reason = $1;
-		Log($reason); # pick up reason
+		$curproc->log($reason); # pick up reason
 		croak($reason);
 	    }
 	}
     }
 
     $eval = $config->get_hook( 'makefml_run_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 

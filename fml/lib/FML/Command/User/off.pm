@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: off.pm,v 1.8 2003/03/18 10:52:34 fukachan Exp $
+# $FML: off.pm,v 1.9 2003/08/23 04:35:33 fukachan Exp $
 #
 
 package FML::Command::User::off;
@@ -92,7 +92,7 @@ sub process
     # if not member, off request is wrong.
     unless ($cred->is_member($address)) {
 	$curproc->reply_message_nl('error.not_member');
-	LogError("off request from not member");
+	$curproc->logerror("off request from not member");
 	croak("off request from not member");
 	return;
     }
@@ -100,12 +100,12 @@ sub process
     # if not recipient, off request is wrong.
     unless ($cred->is_recipient($address)) {
 	$curproc->reply_message_nl('error.not_recipient');
-	LogError("off request from not recipient");
+	$curproc->logerror("off request from not recipient");
 	croak("off request from not recipient");
     }
     # try confirmation before off
     else {
-	Log("off request, try confirmation");
+	$curproc->log("off request, try confirmation");
 
         use FML::Confirm;
 	my $confirm = new FML::Confirm {

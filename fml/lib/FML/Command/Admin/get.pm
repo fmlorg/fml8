@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.18 2003/03/18 10:35:13 fukachan Exp $
+# $FML: get.pm,v 1.19 2003/03/18 10:52:35 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
@@ -78,7 +78,7 @@ sub process
 
 	# XXX-TODO: we expect send_file() validates ${filename,filepath}.
 	if (-f $filepath) {
-	    Log("send back $filename");
+	    $curproc->log("send back $filename");
 
 	    $command_args->{ _filename_to_send } = $filename;
 	    $command_args->{ _filepath_to_send } = $filepath;
@@ -89,7 +89,7 @@ sub process
 	    delete $command_args->{ _filepath_to_send };
 	}
 	else {
-	    Log("$filename not found");
+	    $curproc->log("$filename not found");
 	    $curproc->reply_message_nl('error.no_such_file',
 				       "no such file $filename",
 				       {

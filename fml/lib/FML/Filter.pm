@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.31 2003/07/18 12:55:27 fukachan Exp $
+# $FML: Filter.pm,v 1.32 2003/08/23 04:35:27 fukachan Exp $
 #
 
 package FML::Filter;
@@ -75,12 +75,12 @@ sub article_filter
       FUNCTION:
 	for my $function (@$functions) {
 	    if ($config->yes( "use_${function}" )) {
-		Log("filter(debug): check by $function") if $debug;
+		$curproc->log("filter(debug): check by $function") if $debug;
 		my $fp = "_apply_$function";
 		$status = $self->$fp($curproc, $args, $message);
 	    }
 	    else {
-		Log("filter(debug): not check by $function") if $debug;
+		$curproc->log("filter(debug): not check by $function") if $debug;
 	    }
 
 	    last FUNCTION if $status;
@@ -251,7 +251,7 @@ sub _apply_article_mime_component_filter
 	    $obj->mime_component_check($mesg);
 	}
 	else {
-	    Log("(debug) disabled since rule file not found") if $debug;
+	    $curproc->log("(debug) disabled since rule file not found") if $debug;
 	    return 0;
 	}
 
@@ -322,7 +322,7 @@ sub _filter_reject_notice
     $msg_args->{ _arg_address } = $cred->sender();
     $msg_args->{ _arg_size    } = $size;
 
-    Log("filter notice: [ @$rcpts ]");
+    $curproc->log("filter notice: [ @$rcpts ]");
 
     $curproc->reply_message_nl("error.reject_post",
 			       "your post is rejected.",
@@ -348,7 +348,7 @@ sub _filter_reject_notice
 	$curproc->reply_message(sprintf("\n\n%s", $s), $msg_args);
     }
     else {
-	LogError("unknown ${class}_filter_reject_notice_data_type: $type");
+	$curproc->logerror("unknown ${class}_filter_reject_notice_data_type: $type");
     }
 }
 
@@ -375,12 +375,12 @@ sub command_mail_filter
       FUNCTION:
 	for my $function (@$functions) {
 	    if ($config->yes( "use_${function}" )) {
-		Log("filter(debug): check by $function") if $debug;
+		$curproc->log("filter(debug): check by $function") if $debug;
 		my $fp = "_apply_$function";
 		$status = $self->$fp($curproc, $args, $message);
 	    }
 	    else {
-		Log("filter(debug): not check by $function") if $debug;
+		$curproc->log("filter(debug): not check by $function") if $debug;
 	    }
 
 	    last FUNCTION if $status;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.21 2003/03/18 10:42:44 fukachan Exp $
+# $FML: confirm.pm,v 1.22 2003/08/23 04:35:33 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -118,7 +118,7 @@ sub process
 	}
 	else { # if requset is expired
 	    $curproc->reply_message_nl('error.expired', "request expired");
-	    LogError("request expired");
+	    $curproc->logerror("request expired");
 	    croak("request is expired");
 	}
     }
@@ -127,7 +127,7 @@ sub process
 	$curproc->reply_message_nl('error.no_such_confirmation',
 				   "no such confirmatoin request id=$id",
 				   { _arg_id => $id });
-	LogError("no such confirmation request id=$id");
+	$curproc->logerror("no such confirmation request id=$id");
 	croak("no such confirmation request id=$id");
     }
 }
@@ -162,7 +162,7 @@ sub _switch_command
 	$obj->$class($curproc, $command_args);
     }
     else {
-	LogError("no such rule confirm for '$class' command");
+	$curproc->logerror("no such rule confirm for '$class' command");
 	$curproc->reply_message_nl('error.no_such_confirmation_for_command',
 				   "no such confirmation for command $class",
 				   { _arg_command => $class });

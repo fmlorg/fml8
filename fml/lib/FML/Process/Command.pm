@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.86 2003/05/14 12:02:01 fukachan Exp $
+# $FML: Command.pm,v 1.87 2003/08/23 04:35:38 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -78,7 +78,7 @@ sub prepare
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'command_prepare_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->resolve_ml_specific_variables( $args );
     $curproc->load_config_files( $args->{ cf_list } );
@@ -89,12 +89,12 @@ sub prepare
 	$curproc->parse_incoming_message($args);
     }
     else {
-	LogError("use of command_mail_program prohibited");
+	$curproc->logerror("use of command_mail_program prohibited");
 	exit(0);
     }
 
     $eval = $config->get_hook( 'command_prepare_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -115,7 +115,7 @@ sub verify_request
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'command_verify_request_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->verify_sender_credential();
 
@@ -124,7 +124,7 @@ sub verify_request
     }
 
     $eval = $config->get_hook( 'command_verify_request_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -149,19 +149,19 @@ sub _check_filter
 		    _arg_reason => $r,
 		};
 
-		Log("(debug) filter: inform rejection");
+		$curproc->log("(debug) filter: inform rejection");
 		$filter->command_mail_filter_reject_notice($curproc,$msg_args);
 	    }
 	    else {
-		Log("filter: not inform rejection");
+		$curproc->log("filter: not inform rejection");
 	    }
 
 	    # we should stop this process ASAP.
 	    $curproc->stop_this_process();
-	    Log("rejected by filter due to $r");
+	    $curproc->log("rejected by filter due to $r");
 	}
     };
-    Log($@) if $@;
+    $curproc->log($@) if $@;
 }
 
 
@@ -190,7 +190,7 @@ sub run
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'command_run_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     unless ($curproc->is_refused()) {
 	# permit_xxx() sets the error reason at "check_restriction" in pcb.
@@ -222,14 +222,14 @@ sub run
 	    $curproc->reply_message_add_header_info();
 
 	    unless (defined $reason) { $reason = 'unknown';}
-	    Log("deny command. reason=$reason");
+	    $curproc->log("deny command. reason=$reason");
 	}
     }
     else {
-	LogError("ignore this request.");
+	$curproc->logerror("ignore this request.");
     }
     $eval = $config->get_hook( 'command_run_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -275,13 +275,13 @@ sub finish
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'command_finish_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->inform_reply_messages();
     $curproc->queue_flush();
 
     $eval = $config->get_hook( 'command_finish_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
@@ -329,7 +329,7 @@ sub _config_permit_command
     }
     else {
 	if ($level eq 'admin' || $level eq 'user') {
-	    Log("commands_for_$level has no $comname");
+	    $curproc->log("commands_for_$level has no $comname");
 	    $curproc->reply_message("\n$prompt $command");
 	    $curproc->reply_message_nl('command.not_command',
 				       "not command, ignored.");
@@ -338,7 +338,7 @@ sub _config_permit_command
 	    ; # ignored.
 	}
 	else {
-	    LogWarn("unknown level=$level");
+	    $curproc->logwarn("unknown level=$level");
 	}
 
 	return 0;
@@ -366,7 +366,7 @@ sub _is_safe_syntax
     }
     else {
 	if ($level eq 'admin') {
-	    LogError("insecure command: $command");
+	    $curproc->logerror("insecure command: $command");
 	    $curproc->reply_message("\n$prompt $command");
 	    $curproc->reply_message_nl('command.insecure',
 				       "insecure, so ignored.");
@@ -375,7 +375,7 @@ sub _is_safe_syntax
 	    ; # ignored.
 	}
 	else {
-	    LogWarn("unknown level=$level");
+	    $curproc->logwarn("unknown level=$level");
 	}
 
 	return 0;
@@ -455,20 +455,20 @@ sub _try_admin_auth
 
 	    # reject as soon as possible
 	    if ($is_auth eq '__LAST__') {
-		Log("admin: rejected by $rule");
+		$curproc->log("admin: rejected by $rule");
 		return 0;
 	    }
 	    elsif ($is_auth) {
-		Log("admin: auth by $rule");
+		$curproc->log("admin: auth by $rule");
 		return $is_auth;
 	    }
 	    else {
-		Log("admin: not match rule=$rule") if $debug;
+		$curproc->log("admin: not match rule=$rule") if $debug;
 	    }
 	}
     }
     else {
-	LogError("fail to load FML::Command::Auth");
+	$curproc->logerror("fail to load FML::Command::Auth");
 	return 0;
     }
 
@@ -531,17 +531,17 @@ sub _get_command_mode
 	}
 	else {
 	    # no, we do not accept this command.
-	    Log("invalid command: $command");
+	    $curproc->log("invalid command: $command");
 	    return '__NEXT__';
 	}
     }
     # Case: "admin" command is exceptional. try priviledged mode.
     elsif ($command =~ /$admin_prefix\s+/) {
 	if ($is_auth) {
-	    Log("admin: auth-ed already. run <$command>") if $debug;
+	    $curproc->log("admin: auth-ed already. run <$command>") if $debug;
 	}
 	else { # for the first time ?
-	    Log("admin: try auth");
+	    $curproc->log("admin: try auth");
 
 	    my $sender  = $curproc->{'credential'}->{'sender'};
 	    my $data    = $command;
@@ -553,7 +553,7 @@ sub _get_command_mode
 	    # XXX simple state machine: update $status->{ is_auth }
 	    $is_auth = $curproc->_try_admin_auth($args, $optargs);
 	    $status->{ is_auth } = $is_auth;
-	    Log("admin: o.k. auth-ed as an ML admin") if $is_auth;
+	    $curproc->log("admin: o.k. auth-ed as an ML admin") if $is_auth;
 	}
 
 	if ($is_admin && $is_auth) {
@@ -571,7 +571,7 @@ sub _get_command_mode
 	    }
 	    else {
 		# no, we do not accept this command.
-		Log("invalid command(priv mode): $command");
+		$curproc->log("invalid command(priv mode): $command");
 		return '__NEXT__';
 	    }
 	}
@@ -585,7 +585,7 @@ sub _get_command_mode
 	    elsif ((! $is_admin) && $is_auth) {
 		$status->{ _stop_reason_key } = 'error.not_admin_member';
 		$status->{ _stop_reason_str } = "not admin member.";
-		LogError("not admin member");
+		$curproc->logerror("not admin member");
 	    }
 	    # other reasons
 	    else {
@@ -593,14 +593,14 @@ sub _get_command_mode
 		$status->{ _stop_reason_str } = "not authenticated.";
 	    }
 
-	    LogError("admin command not authenticated");
+	    $curproc->logerror("admin command not authenticated");
 	    return '__LAST__';
 	}
     }
     # ignore all requests except for confirm command
     # when we receive "confirm" command for better security.
     elsif ($is_confirm) {
-	Log("ignore(confirm stage): $command");
+	$curproc->log("ignore(confirm stage): $command");
 	return '__NEXT__';
     }
     # Case: use command (commands "a usual member" can use)
@@ -613,7 +613,7 @@ sub _get_command_mode
 	    }
 	    else {
 		# no, we do not accept this command.
-		Log("invalid command: $command");
+		$curproc->log("invalid command: $command");
 		return '__NEXT__';
 	    }
 	}
@@ -627,13 +627,13 @@ sub _get_command_mode
 		# XXX invalid condition is satisfied.
 		# XXX emergency stop if admin mode.
 		if ($status->{ level } eq 'admin') {
-		    LogError("command from not member.");
-		    LogError("command processing stop.");
+		    $curproc->logerror("command from not member.");
+		    $curproc->logerror("command processing stop.");
 		    return '__LAST__';
 		}
 		# XXX but just ignore this commnad unless admin mode.
 		else {
-		    Log("(debug) ignore $command") if $debug;
+		    $curproc->log("(debug) ignore $command") if $debug;
 		    return '__NEXT__';
 		}
 	    }
@@ -658,13 +658,13 @@ sub _config_allow_command
     my $config  = $curproc->config();
     my $level   = $status->{ level };
 
-    Log("(debug) mode=$mode level=$level") if $debug;
+    $curproc->log("(debug) mode=$mode level=$level") if $debug;
 
     if ($config->has_attribute("commands_for_${level}", $comname)) {
-	Log("(debug) $comname o.k. under mode=$mode level=$level") if $debug;
+	$curproc->log("(debug) $comname o.k. under mode=$mode level=$level") if $debug;
     }
     else {
-	Log("deny command: mode=$mode level=$level");
+	$curproc->log("deny command: mode=$mode level=$level");
 	return 0;
     }
 
@@ -795,7 +795,7 @@ sub _evaluate_command_lines
 
 
     my $eval = $config->get_hook( 'command_run_start_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # firstly, prompt (for politeness :) to show processing ...
     $curproc->reply_message("result for your command requests follows:");
@@ -811,7 +811,7 @@ sub _evaluate_command_lines
 
 	$num_total++; # the total numer of non null lines
 
-	Log("(debug) input: $orig_command") if $debug; # log raw buffer
+	$curproc->log("(debug) input: $orig_command") if $debug; # log raw buffer
 
 	# Example: if orig_command = "# help", comname = "help"
 	$fixed_command = __clean_up($orig_command);
@@ -824,7 +824,7 @@ sub _evaluate_command_lines
 	    next COMMAND;
 	}
 	elsif ($mode eq '__LAST__') {
-	    LogError("command processing stop.");
+	    $curproc->logerror("command processing stop.");
 	    $curproc->__stop_here($args, $status, $cominfo, $orig_command);
 	    last COMMAND;
 	}
@@ -837,7 +837,7 @@ sub _evaluate_command_lines
 
 	# 1.3 valid mode
 	unless ($mode eq 'user' || $mode eq 'admin') {
-	    LogError("command processing stop.");
+	    $curproc->logerror("command processing stop.");
 	    $curproc->__stop_here($args, $status, $cominfo, $orig_command);
 	    last COMMAND;
 	}
@@ -846,21 +846,21 @@ sub _evaluate_command_lines
 	unless ($curproc->_config_allow_command($mode, $status, $cominfo)) {
 	    $curproc->reply_message_nl("command.deny",
 				    "\tyou cannot use this command.");
-	    Log("(debug) ignore $fixed_command");
+	    $curproc->log("(debug) ignore $fixed_command");
 	    $num_ignored++;
 	    next COMMAND;
 	}
 
 	# 3. simple syntax check
 	unless ($curproc->_is_safe_syntax($args, $status, $cominfo)) {
-	    LogError("invalid/unsafe syntax");
-	    Log("(debug) ignore $fixed_command");
+	    $curproc->logerror("invalid/unsafe syntax");
+	    $curproc->log("(debug) ignore $fixed_command");
 	    $num_ignored++;
 	    next COMMAND;
 	}
 
 	# o.k. here we go to execute this command
-	Log("execute \"$fixed_command\"") if $debug;
+	$curproc->log("execute \"$fixed_command\"") if $debug;
 	$num_processed++;
 
 	use FML::Command;
@@ -889,7 +889,7 @@ sub _evaluate_command_lines
 
 	    # reply buffer
 	    $curproc->reply_message("\n$prompt $orig_command", $msg_args);
-	    Log($orig_command);
+	    $curproc->log($orig_command);
 
 	    # execute command ($comname method) under eval().
 	    # XXX $obj = FML::Command object NOT FML::Command::$mode::$command
@@ -903,21 +903,21 @@ sub _evaluate_command_lines
 	    }
 	    else { # error trap
 		my $reason = $@;
-		Log($reason);
+		$curproc->log($reason);
 
 		$curproc->reply_message_nl('command.fail', "fail.", $msg_args);
-		LogError("command ${comname} fail");
+		$curproc->logerror("command ${comname} fail");
 
 		if ($reason =~ /^(.*)\s+at\s+/) {
 		    my $reason = $1;
-		    Log($reason); # pick up reason
+		    $curproc->log($reason); # pick up reason
 		}
 	    }
 	}
     } # END OF FOR LOOP: for my $orig_command (@body) { ... }
 
     $eval = $config->get_hook( 'command_run_end_hook' );
-    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # info
     $curproc->reply_message("\ncommand processing results:");
@@ -938,7 +938,7 @@ sub _evaluate_command_lines
 	if (keys %cc_recipient) {
 	    for my $k (keys %cc_recipient) {
 		my $ra_addr = $cc_recipient{ $k };
-		Log("msg.cc: [ @$ra_addr ]");
+		$curproc->log("msg.cc: [ @$ra_addr ]");
 		$curproc->reply_message( $msg , { recipient => $ra_addr });
 	    }
 	}

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.70 2003/08/14 13:43:08 tmu Exp $
+# $FML: Utils.pm,v 1.71 2003/08/20 23:40:29 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -213,7 +213,7 @@ sub article_message_header
 	return $curproc->{ article }->{ header };
     }
     else {
-	LogError("\$curproc->{ article }->{ header } not defined");
+	$curproc->logerror("\$curproc->{ article }->{ header } not defined");
 	return undef;
     }
 }
@@ -231,7 +231,7 @@ sub article_message_body
 	return $curproc->{ article }->{ body };
     }
     else {
-	LogError("\$curproc->{ article }->{ body } not defined");
+	$curproc->logerror("\$curproc->{ article }->{ body } not defined");
 	return undef;
     }
 }
@@ -249,7 +249,7 @@ sub article_message
 	return $curproc->{ article }->{ message };
     }
     else {
-	LogError("\$curproc->{ article }->{ message } not defined");
+	$curproc->logerror("\$curproc->{ article }->{ message } not defined");
 	return undef;
     }
 }
@@ -294,18 +294,18 @@ sub mkdir
 		    _mkpath_str($dir, $config->{ $xmode });
 		}
 		else {
-		    LogError("mkdir: invalid mode");
+		    $curproc->logerror("mkdir: invalid mode");
 		}
 	    }
 	    else {
-		LogError("mkdir: invalid mode");
+		$curproc->logerror("mkdir: invalid mode");
 	    }
 	}
 	elsif ($dirmode =~ /^\d+$/) { # STR 0700
 	    _mkpath_str($dir, $dirmode);
 	}
 	else {
-	    LogError("mkdir: invalid mode");
+	    $curproc->logerror("mkdir: invalid mode");
 	}
     }
 
@@ -1130,7 +1130,7 @@ sub convert_to_mail_address
 	    push(@$result, $sender);
 	}
 	else {
-	    LogError("unknown recipient type $rcpt");
+	    $curproc->logerror("unknown recipient type $rcpt");
 	}
     }
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.16 2003/02/16 08:33:09 fukachan Exp $
+# $FML: HTMLify.pm,v 1.17 2003/07/19 12:58:48 fukachan Exp $
 #
 
 package FML::Command::HTMLify;
@@ -74,7 +74,7 @@ sub convert
     };
 
     my ($is_subdir_exists, $subdirs) = _check_subdir_exists($src_dir);
-    if ($is_subdir_exists) { Log("looks subdir exists");}
+    if ($is_subdir_exists) { $curproc->log("looks subdir exists");}
 
     if (defined $dst_dir) {
         unless (-d $dst_dir) {

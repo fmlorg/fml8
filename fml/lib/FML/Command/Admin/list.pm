@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: list.pm,v 1.12 2003/01/26 03:14:17 fukachan Exp $
+# $FML: list.pm,v 1.13 2003/01/27 00:02:41 fukachan Exp $
 #
 
 package FML::Command::Admin::list;
@@ -92,7 +92,7 @@ sub _show_list
 	    $maplist = $config->get_as_array_ref( 'admin_member_maps' );
 	}
 	else {
-	    LogWarn("list: unknown type $option");
+	    $curproc->logwarn("list: unknown type $option");
 	}
     }
 
