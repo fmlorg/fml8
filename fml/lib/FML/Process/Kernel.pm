@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.140 2002/11/17 14:07:33 fukachan Exp $
+# $FML: Kernel.pm,v 1.141 2002/11/18 13:53:09 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1092,31 +1092,34 @@ sub _analyze_recipients
     my ($curproc, $args) = @_;
     my $recipient      = [];
     my $recipient_maps = [];
+    my $rcpt = $args->{ recipient }      if defined $args->{ recipient };
+    my $map  = $args->{ recipient_map }  if defined $args->{ recipient_map };
+    my $maps = $args->{ recipient_maps } if defined $args->{ recipient_maps };
 
-    if (defined($args->{recipient})) {
-	if (ref($args->{recipient}) eq 'ARRAY') {
-	    $recipient = $args->{ recipient };
+    if (defined($rcpt)) {
+	if (ref($rcpt) eq 'ARRAY') {
+	    $recipient = $rcpt if @$rcpt;
 	}
-	elsif (ref($args->{recipient}) eq '') {
-	    $recipient = [ $args->{ recipient } ];
+	elsif (ref($rcpt) eq '') {
+	    $recipient = [ $rcpt ] if $rcpt;
 	}
 	else {
 	    LogError("reply_message: wrong type recipient");
 	}
     }
 
-    if (defined($args->{recipient_map})) {
-	unless (ref($args->{recipient_map})) {
-	    $recipient_maps = [ $args->{ recipient_map } ];
+    if (defined($map)) {
+	if (ref($map) eq '') {
+	    $recipient_maps = [ $map ] if $map;
 	}
 	else {
 	    LogError("reply_message: wrong type recipient_map");
 	}
     }
 
-    if (defined($args->{recipient_maps})) {
-	if (ref($args->{recipient_maps}) eq 'ARRAY') {
-	    $recipient_maps = $args->{ recipient_maps };
+    if (defined($maps)) {
+	if (ref($maps) eq 'ARRAY') {
+	    $recipient_maps = $maps if @$maps;
 	}
 	else {
 	    LogError("reply_message: wrong type recipient_maps");
@@ -1124,7 +1127,7 @@ sub _analyze_recipients
     }
 
     # if both specified, use default sender.
-    if (not $recipient and not $recipient_maps) {
+    unless (@$recipient || @$recipient_maps) {
 	$recipient = [ $curproc->{ credential }->sender() ];
     }
 
@@ -1280,11 +1283,14 @@ sub _reply_message_recipient_keys
 sub _gen_recipient_key
 {
     my ($rarray, $rmaps) = @_;
+    my (@c) = caller;
     my $key = '';
 
     if (defined $rarray) {
 	if (ref($rarray) eq 'ARRAY') {
-	    $key = join(" ", @$rarray);
+	    if (@$rarray) {
+		$key = join(" ", @$rarray);
+	    }
 	}
 	else {
 	    LogError("wrong \$rarray");
@@ -1292,14 +1298,10 @@ sub _gen_recipient_key
     }
 
     if (defined $rmaps) {
-	if ($key) { 
-	    LogError("both \$rarray and \$rmaps defined");
-	    LogError("array=(@$rarray)") if ref($rarray);
-	    LogError("maps=\$rmaps");
-	}
-
 	if (ref($rmaps) eq 'ARRAY') {
-	    $key = join(" ", @$rmaps);
+	    if (@$rmaps) {
+		$key .= " ".join(" ", @$rmaps);
+	    }
 	}
 	else {
 	    LogError("wrong \$rmaps");
@@ -1659,7 +1661,7 @@ sub queue_in
     };
 
     if (defined $queue) {
-	$queue->set('sender',     $sender);
+	$queue->set('sender', $sender);
 
 	if ($rcptlist) {
 	    $queue->set('recipients', $rcptlist);
