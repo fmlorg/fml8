@@ -63,13 +63,6 @@ sub Parse
 	    }
 	}
 
-	if ($original_mail && $found && $debug) {
-	    &Debug("   --- $_") if $debug;
-	}
-	elsif ($debug) {
-	    &Debug("   | $_") if $debug;
-	}
-
 	$new_block = 1 if /^\s*$/;
 
 	if (/^From:.*mailer-daemon/i || /^From:.*postmaster/) {
@@ -84,10 +77,7 @@ sub Parse
 	    $MTA = "exim";
 	    next;
 	}
-	if (/qmail-send/) {
-	    $MTA = "qmail";
-	    next;
-	}
+
 
 	# get returned addresses
 	if ($first_header_part) {
@@ -119,25 +109,6 @@ sub Parse
 	    &PickUpHint($1);
 	}
 
-	#####
-	##### MTA szpecific
-	#####
-	# postfix
-	# <uja@beth.fml.org>: unknown user
-	if ($mp_block eq 'Content-Description: Notification') {
-	    if (/^\s*(\S+\@\S+):\s*(unknown user|.*:\s+5\d\d\s+.*)/) {
-		$CurAddr = $1;
-		$CurAddr =~ s/[\<\>]//g;
-		$CurAddr =~ s/\s*//g;	
-		&Debug("CurAddr => $CurAddr") if $debug && $CurAddr;
-		$MTA = 'postfix';
-	    }
-	}
-
-	# exim || qmail
-	if ($MTA eq 'qmail' && /This is a permanent error/) {
-	    $RABuf .= $_;
-	}
 
 	if ($MTA eq 'exim' || $MTA eq 'qmail') {
 	    /^\s*(\S+\@\S+):\s*$/ && ($CurAddr = $1);
@@ -162,14 +133,6 @@ sub Parse
 	    &Debug("P_CurAddr => $P_CurAddr") if $debug && $P_CurAddr;
 	}
 
-	# error message line
-	# next if /<<<.*\@/;
-	# next if /^Diagnostic-Code:/i;
-
-	# ignore the original mails
-	# &Debug("next") if $original_mail && $found;
-	next if $original_mail && $found;
-	$original_mail = 1 if /^received:/i;
 
 	##### TRAP CODE #####
 	if (/fatal error/i) { $fatal++;}
@@ -213,19 +176,6 @@ sub Parse
 
 	if (/($ErrorCodePat)/ && $MTA eq 'exim') { 
 	    &AnalyzeErrorWord($_, $CurAddr); 
-	    $found++;
-	}
-
-	###
-	### qmail
-	###
-	if (/\#5\.\d+\.\d+/ && $MTA eq 'qmail') { 
-	    &AnalyzeErrorWord($_, $CurAddr);
-	    $found++;
-	}
-
-	if ($MTA eq 'qmail' && $CurAddr && $RABuf) {
-	    &AnalyzeErrorWord($RABuf, $CurAddr);
 	    $found++;
 	}
 

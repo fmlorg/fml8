@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: bounce_dsn.pl,v 1.1 2001/04/08 16:17:30 fukachan Exp $
+# $FML: bounce.pl,v 1.1 2001/04/09 15:33:30 fukachan Exp $
 #
 
 use strict;
@@ -18,7 +18,7 @@ for my $f (@ARGV) {
     my $msg = Mail::Message->parse( { fd => $fh } );
     my $r   = {};
 
-    for my $pkg ('DSN', 'Postfix19991231') {
+    for my $pkg ('DSN', 'Postfix19991231', 'Qmail') {
 	print "--- $pkg\n";
 	eval qq { 
 	    require Mail::Bounce::$pkg; 
