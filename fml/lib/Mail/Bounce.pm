@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Bounce.pm,v 1.8 2001/04/12 14:12:00 fukachan Exp $
+# $FML: Bounce.pm,v 1.9 2001/07/29 15:06:50 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -185,7 +185,7 @@ my @REGEXP = (
 	      );
 
 
-=head2 C<look_japanese(string)>
+=head2 C<look_like_japanese(string)>
 
 return 1 if C<string> looks Japanese one.
 return 0 unless.
@@ -193,7 +193,7 @@ return 0 unless.
 =cut
 
 
-sub look_japanese
+sub look_like_japanese
 {
     my ($self, $buf) = @_;
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SimpleMatch.pm,v 1.18 2001/05/20 13:20:55 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.19 2001/05/31 11:02:33 fukachan Exp $
 #
 
 
@@ -175,7 +175,7 @@ sub analyze
 	    my $buf = $m->nth_paragraph($i + 1); # 1 not 0 for 1st paragraph
 	    $args->{ buf } = \$buf;
 
-	    unless ( $self->look_japanese( $buf ) ) {
+	    unless ( $self->look_like_japanese( $buf ) ) {
 		if ($debug) { print "{$buf}\n";}
 		$self->_address_match($args);
 	    }
