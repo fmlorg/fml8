@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.86 2003/10/15 01:03:37 fukachan Exp $
+# $FML: Message.pm,v 1.87 2003/10/15 09:09:13 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1956,8 +1956,10 @@ sub charset
     if (defined $self->{ charset } && $self->{ charset }) {
 	return $self->{ charset };
     }
+    # content-type: text/plain; charset=ISO-2022-JP
     elsif (defined($buf) &&
-	   ($buf =~ /Content-Type:.*charset=\"(\S+)\"/mi)) {
+	   ($buf =~ /Content-Type:.*charset=\"(\S+)\"/i ||
+	    $buf =~ /Content-Type:.*charset=(\S+)/i)) {
 	my $charset = $1;
 	$charset =~ tr/A-Z/a-z/;
 	return $charset;
