@@ -4,15 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.8 2002/02/18 14:24:12 fukachan Exp $
+# $FML: get.pm,v 1.9 2002/02/20 14:10:37 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-
-
 
 use FML::Command::SendFile;
 use FML::Log qw(Log LogWarn LogError);
@@ -23,8 +21,6 @@ use FML::Log qw(Log LogWarn LogError);
 FML::Command::Admin::get - get arbitrary file in $ml_home_dir
 
 =head1 SYNOPSIS
-
-   ... NOT IMPLEMENTED ...
 
 See C<FML::Command> for more details.
 
