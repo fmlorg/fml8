@@ -27,6 +27,10 @@
 [release]      2.7
 [perl.version] 5.6.0
 
+[system]       OpenBSD
+[release]      2.8
+[perl.version] 5.6.0
+
 
 
 [system]       FreeBSD
@@ -172,6 +176,49 @@
 [comments]     5.004_05(5.005_03) (may change since unstable)
 
 
+[system]       Vine Linux
+[release]      2.1
+[perl.version] 5.6.0
+[comments]     ?
+
+[system]       Vine Linux
+[release]      2.1
+[perl.version] 5.005_03
+[comments]     ?
+
+
+[system]       TurboLinux Workstation
+[release]      6.0
+[perl.version] 5.005_03
+[comments]     true ?
+
+
+[system]       Slackware
+[release]      7.1
+[perl.version] 5.6.0
+[comments]     
+
+[system]       Slackware-current
+[release]      7.1
+[perl.version] 5.6.0
+[comments]     
+
+
+[system]       RedHat Linux
+[release]      6.2J
+[perl.version] 5.005_03
+
+
+[system]       Laser5 Linux
+[release]      6.0
+[perl.version] 5.005_03
+[comments]     jperl5.005_03-990703 (?)
+
+
+[system]       Kondara MNU/Linux
+[release]      1.2
+[perl.version] 5.005_03
+
 
 
 # See http://japan.cobalt.com/
@@ -228,6 +275,12 @@
 [comments]     存在しないかも(?)
 
 [system]       IRIX
+[release]      6.5.11
+[perl.version] 5.005_04
+[perl.path]    
+[comments]     
+
+[system]       IRIX
 [release]      6.5.7m
 [perl.version] 5.005_04
 [perl.path]    /usr/bin/perl
@@ -246,6 +299,17 @@
 [system]       AIX 
 [release]      4.3.3
 [perl.version] 5.005_03
+
+
+#
+# ???
+#
+
+[system]       QNX RTP
+[release]      ?
+[perl.version] 5.6.0
+[comments]     ?
+
 
 
 
@@ -316,4 +380,4 @@ SEE ALSO:
    http://www.cyber-magic.org/~taka/perl-versions.html
    http://www.uinet.or.jp/~taka/perl-versions.html
 
-$FML$
+$FML: OS_and_Perl.data,v 1.1 2001/04/28 14:37:03 fukachan Exp $
