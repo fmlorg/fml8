@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.13 2002/01/30 15:20:30 fukachan Exp $
+# $FML: Kernel.pm,v 1.14 2002/02/01 12:03:57 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -63,7 +63,8 @@ sub new
 
     # we should get $ml_name from HTTP.
     if ($is_need_ml_name) {
-	my $ml_home_prefix = $args->{ ml_home_prefix };
+	use FML::Process::Utils;
+	my $ml_home_prefix = FML::Process::Utils::__ml_home_prefix_from_main_cf($args);
 	my $ml_name        = safe_param_ml_name($self) || do {
 	    croak("not get ml_name from HTTP") if $args->{ need_ml_name };
 	};

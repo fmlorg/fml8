@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.51 2002/01/30 15:12:44 fukachan Exp $
+# $FML: Switch.pm,v 1.52 2002/02/01 12:03:57 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -148,12 +148,14 @@ sub main::Bootstrap2
     }
 
     # 5. o.k. here we go!
+    use FML::Process::Utils;
+    my $ml_home_prefix = FML::Process::Utils::__ml_home_prefix_from_main_cf($main_cf);
     my $args = {
 	fml_version    => $main_cf->{ fml_version },
 
 	myname         => $myname,
 	program_name   => $myname,
-	ml_home_prefix => $main_cf->{ ml_home_prefix },
+	ml_home_prefix => $ml_home_prefix,
 	ml_home_dir    => $main_cf->{ ml_home_dir },
 
 	cf_list        => $cf,
@@ -215,7 +217,8 @@ sub _parse_argv
 sub _usual_parse_argv
 {
     my ($myname, $main_cf) = @_;
-    my $ml_home_prefix = $main_cf->{ ml_home_prefix };
+    use FML::Process::Utils;
+    my $ml_home_prefix = FML::Process::Utils::__ml_home_prefix_from_main_cf($main_cf);
     my $ml_home_dir    = '';
     my $found_cf       = 0;
     my @cf             = ();
@@ -263,7 +266,8 @@ sub _usual_parse_argv
 sub _makefml_parse_argv
 {
     my ($myname, $main_cf) = @_;
-    my $ml_home_prefix = $main_cf->{ ml_home_prefix };
+    use FML::Process::Utils;
+    my $ml_home_prefix = FML::Process::Utils::__ml_home_prefix_from_main_cf($main_cf);
 
     # makefml specific syntax.
     if (@ARGV) {
