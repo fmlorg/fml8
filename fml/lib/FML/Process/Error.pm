@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.8 2002/06/01 14:53:40 fukachan Exp $
+# $FML: Error.pm,v 1.9 2002/06/27 08:25:50 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -62,13 +62,13 @@ forward the request to SUPER CLASS.
 =cut
 
 # Descriptions: dummy
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub prepare
 {
-    my ($self, $args) = @_;
-    my $config = $self->{ config };
+    my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'error_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
