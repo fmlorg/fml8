@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.8 2004/01/24 09:05:54 fukachan Exp $
+# $FML: Control.pm,v 1.9 2004/04/23 04:10:28 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -117,6 +117,9 @@ sub useradd
 	    }
 	}
 	else {
+	    $curproc->reply_message_nl('error.already_subscribed',
+				       "$address is already subscribed.",
+				       $msg_args);
 	    $reason = "$address is already member (map=$_map)";
 	    last MAP;
 	}
@@ -216,7 +219,10 @@ sub userdel
 	    }
 	}
 	else {
-	    $curproc->logwarn("no such user in map=$_map") if $debug;
+	    $curproc->reply_message_nl('error.no_such_member',
+				       "no such address $address",
+				       $msg_args);
+	    $curproc->logwarn("no such address in map=$_map") if $debug;
 	}
     }
 
