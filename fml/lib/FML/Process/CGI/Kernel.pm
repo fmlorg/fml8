@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.46 2002/12/24 10:19:48 fukachan Exp $
+# $FML: Kernel.pm,v 1.47 2003/02/15 02:54:26 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -89,8 +89,7 @@ adjust ml_*, load config files and fix @INC.
 sub prepare
 {
     my ($curproc, $args) = @_;
-    my $config    = $curproc->{ config };
-    my $charset   = $config->{ cgi_charset } || 'euc-jp';
+    my $charset = $curproc->language_of_cgi_message();
 
     $curproc->_cgi_resolve_ml_specific_variables( $args );
     $curproc->load_config_files( $args->{ cf_list } );
@@ -649,6 +648,13 @@ sub cgi_try_get_address
 	}
     }
 
+    if ($curproc->is_safe_syntax('address', $address)) {
+	return $address;
+    }
+    else {
+	croak("__ERROR_cgi\.insecure__: insecure address = $address");
+    }
+
     return $address;
 }
 
@@ -693,7 +699,12 @@ sub cgi_try_get_ml_name
 	}
     }
 
-    return $ml_name;
+    if ($curproc->is_safe_syntax('ml_name', $ml_name)) {
+	return $ml_name;
+    }
+    else {
+	croak("__ERROR_cgi\.insecure__: insecure ml_name = $ml_name");
+    }
 }
 
 
