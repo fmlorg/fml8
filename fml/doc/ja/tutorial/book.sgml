@@ -2,7 +2,7 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-$FML: book.sgml,v 1.44 2002/09/15 01:45:04 fukachan Exp $
+$FML: book.sgml,v 1.45 2002/09/29 06:05:45 fukachan Exp $
 -->
 
 <!doctype book public "-//FML//DTD DocBook V3.1-Based Extension//EN" [
@@ -91,7 +91,6 @@ $FML: book.sgml,v 1.44 2002/09/15 01:45:04 fukachan Exp $
   </part>
 
 
-<!--
   <part>
 	<title> トラブルシューティング </title>
 	<partintro>
@@ -101,8 +100,10 @@ $FML: book.sgml,v 1.44 2002/09/15 01:45:04 fukachan Exp $
 	</partintro>
 
 
+	&chapter.troubleshoot;
+
   </part>
--->
+
 
   <part>
 	<title> デザイン </title>
