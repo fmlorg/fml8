@@ -1,5 +1,5 @@
 <!--
-   $FML: merge.fml4to8.sgml,v 1.1 2004/03/18 08:59:35 fukachan Exp $
+   $FML: merge.fml4to8.sgml,v 1.2 2004/03/18 14:51:25 fukachan Exp $
 -->
 
 
@@ -130,12 +130,12 @@ article_subject_tag = [$ml_name:%05d]
 「members コマンドなどが使えない」これは fml8 ではデフォルトです。
 fml4 の以下のコマンドに対応するものは不要です。
 <screen>
-&DENY_PROCEDURE('member');
-&DENY_PROCEDURE('active');
-&DENY_PROCEDURE('members');
-&DENY_PROCEDURE('actives');
-&DENY_PROCEDURE('status');
-&DENY_PROCEDURE('stat');
+&amp;DENY_PROCEDURE('member');
+&amp;DENY_PROCEDURE('active');
+&amp;DENY_PROCEDURE('members');
+&amp;DENY_PROCEDURE('actives');
+&amp;DENY_PROCEDURE('status');
+&amp;DENY_PROCEDURE('stat');
 </screen>
 </para>
 
