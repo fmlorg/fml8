@@ -59,17 +59,10 @@ Base::Errors.pm appeared in fml5.
 =cut
 
 
-sub _error_why
-{
-    my ($self, $mesg) = @_;
-    $self->{'_error_reason'} = $mesg;
-}
-
-
 sub error_reason
 {
     my ($self, $mesg) = @_;
-    $self->_error_why($mesg);
+    $self->{'_error_reason'} = $mesg;
 }
 
 
