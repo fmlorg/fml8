@@ -14,9 +14,10 @@ DIFF () {
 	perl $dir/multipart_io.pl $msg  >> $tmp
 	diff -ub $msg $tmp && echo ok || echo fail
 }
- 
+
+xdir=$dir/../testmails
 DIFF $dir/msg_mp
 DIFF $dir/msg_mp.1
-DIFF $dir/msg_mp.2
+DIFF $xdir/multipart=mixed
 
 exit 0;
