@@ -1,0 +1,9 @@
+* general
+
+	queue manager
+
+* SMTP
+
+	outgoing address
+
+	direct exec $program on the disk NOT IPC.

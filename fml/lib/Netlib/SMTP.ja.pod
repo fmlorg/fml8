@@ -1,0 +1,83 @@
+=head1	NAME
+
+fml5 のメール配送システムについて
+
+=head1	DESCRIPTION
+
+=head2	fml4 と fml5 の相違点
+
+fml5 の最大の目的の一つは、メンバーリストの取得と操作の統合と抽象化で
+す。Netlib::SMTP は次のように使います。
+
+
+=head1	使い方
+
+=head2 Netlib::* クラスの使い方について
+
+Netlib::* に属するクラスは SMTP および LMTP 配送へのインターフェイスを
+提供します。
+
+Netlib::SMTP は次のように使います。
+
+    use Netlib::SMTP;
+    my $service = new Netlib::SMTP {
+	log_function   => $fp,
+	socket_timeout => 2,
+    };
+
+    my $ref_to_array   = [ 'kenken@nuinui.net' ];
+    my $recipient_maps = 'file:/var/spool/ml/elena/actives';
+
+    $service->deliver(
+		      {
+			  'mta'             => 'localhost:25',
+
+			  'smtp_sender'     => 'rudo@nuinui.net',
+			  'recipient_array' => $ref_to_array,
+			  'recipient_maps'  => $recipient_maps,
+
+			  'header'          => $header,
+			  'body'            => $body,
+		      });
+    if ($service->error) { Log($service->error); return;}
+
+ここで $header はヘッダで、FML::Header オブジェクトです。
+そして $body   はメール本文で、FML::Body オブジェクトです。
+
+=head1	コンポーネント
+
+	Netlib::SMTP >-|
+	               |- Netlib::Utils
+	               |- Netlib::INET4 >--- Socket
+	               |- Netlib::INET6 >--- Socket
+	               |                  |- Socket6
+	               |
+	               |- FML::IO::Map
+	               |
+	               |- IO::Socket
+
+Netlib::SMTP uses Netlib::Utils, Netlib::INET4 and Netlib::INET6.
+Netlib::SMTP also uses FML::IO::Map to resolve $recipient_maps
+operations.
+
+=head1	参照
+
+L<"Netlib::SMTP">,
+L<"FML::IO::Map">
+
+=head1	AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1	COPYRIGHT
+
+Copyright (C) 2001 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1	HISTORY
+
+Netlib class appeared in fml5.
+fml5 is fully rewrite of fml4 based on the experience of fml4
+(1993-2001).

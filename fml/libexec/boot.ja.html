@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>
+net/fml ブートの仕方
+</TITLE>
+<META http-equiv="Content-Type"
+	content="text/html; charset=EUC-JP">
+</HEAD>
+
+<BODY BGCOLOR="#E6E6FA">
+<!-- ================== body =========================================== -->
+
+<UL>
+   <LI> libexec/fmlwrapper (wrapper)
+	<BR>
+	Bootstrap() を起動する。
+   <UL>
+	<LI>   /etc/fml/main.cf を読み込む。
+		読み込むと fml のバージョンが分かる。
+
+	<LI> 	@ARGV を評価し、
+		どの config.cf 群をロードすればいいのかを準備する。
+		default_config.cf はバージョン依存であるので、
+		ここで評価することに注意。	
+
+	<LI>	libexec/fml ( バージョン依存 )ファイルを
+		ロードし、
+	   <UL>
+		<LI> 
+		ProcessSwitch() を実行して、配送用、コマンドモード用
+		プログラム/プロセスなどへ制御を移す(分岐する)。
+
+		<LI>
+		$0 から自分の名前を知り、
+		どのプロセスへ分岐すればいいのかを判断する。
+
+		<LI>(ポリモーフィズム)
+		ダイナミックバインディングし、
+		プロセスオブジェクトを生成する( fork(2) という意味ではない)。
+		そして、プロセスをスタートさせる。
+
+		具体的には
+		<PRE>
+		$process = new FML::Process::なにか;
+		$process->run() 
+		</PRE>
+		を実行する。
+
+	   </UL>
+</UL>
+
+<PRE>
+fmlwrapper (uses) Standalone.pm
+   |
+  * 動的にライブラリ(バージョン情報を含む)を選択する
+    例: /usr/local/lib/fml/5.000/ほえ/ほえ.pm
+   |
+  fml
+  * 動的にクラスをバインディングしつつ、プロセススタートする。
+       実際のコードは $process->run() などとなるが、書き下すと
+       このようになるだろう。
+
+       FML::Process::Distribute->run() |
+       FML::Process::Command->run()    |-(uses)-> FML::Process::Kernel
+       FML::Process::Mead->run()       |          |   
+                                                  |-  FML::Parse
+                                                  |-  FML::Config
+                                                  |-  FML::Log
+                                                  |-   ... その他 ...
+</PRE>
+
+<!-- =================================================================== -->
+</BODY>
+</HTML>

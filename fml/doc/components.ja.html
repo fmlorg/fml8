@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>
+コンポーネント
+</TITLE>
+<META http-equiv="Content-Type"
+	content="text/html; charset=EUC-JP">
+</HEAD>
+
+<BODY BGCOLOR="#E6E6FA">
+<!-- ================== body =========================================== -->
+<PRE>
+
+       fml/{distribute,command, ... }
+            |||
+  -------- 乖離層 --------
+            |||
+       FML::BaseSystem
+       |            |  
+   FML::Config      |
+    |     |      logging() 
+    |     |       |     |
+  file   DBMS   file  syslog(3)
+</PRE>
+
+FML::BaseSystem は設定の保守とログとりをサポートする最低限の基本システ
+ムのクラスといえる。
+
+<!-- =================================================================== -->
+</BODY>
+</HTML>

@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>
+fml5 [ fml リファクトリング プロジェクト (Refactroing Project) ]
+</TITLE>
+<META http-equiv="Content-Type"
+	content="text/html; charset=EUC-JP">
+</HEAD>
+
+<BODY BGCOLOR="#E6E6FA">
+
+<CENTER>
+fml5 [ fml リファクトリング プロジェクト (Refactroing Project) ]
+</CENTER>
+
+<P> いくつかのアイデア
+
+<TABLE BORDER=4>
+  <TR>
+	<TD> status
+	<TD> <EM>項目</EM>
+	<TD> 備考
+
+  <TR>
+	<TD>
+	<TD> <EM>ライセンス</EM>
+	<BR>
+	ライセンスを Perl 準拠へ変更する
+	<TD>
+
+  <TR>
+	<TD>
+	<TD> <EM>イメージ/モティーフ</EM>
+	<BR>
+	fml4 から fml5 へは、sendmail から postfix への移行のようなイメージで
+	<BR>
+	最低限の config.ph コンバータは用意する。
+
+  <TR>
+	<TD>
+	<TD>
+	<EM> メインプログラムの wrapper (乖離層) </EM>
+	バージョン管理やデバッグを簡単にするための乖離層
+	<PRE>
+	fml.pl --- /etc/fml/wrapper.cf  ---&gt fml/$VERSION/libexec/distribute	
+	</PRE>
+
+  <TR>
+	<TD>
+	<TD>
+	<EM>再利用性</EM>
+	<BR>
+	自主開発はできるだけ避ける。
+	<BR>
+	可能な限りあらゆる CPAN モジュールなどを使う。
+	また、利用する場合にも乖離層を設ける。
+	<PRE>
+	FML::モジュール →  乖離層 → CPAN/モジュール
+	</PRE>
+	<TD>
+	<A HREF="interfaces.ja.html">インターフェイス仕様</A>
+
+  <TR>
+	<TD>
+	<TD> <EM>設定ファイル形式</EM>
+	<UL>
+		<LI> cf と config.ph を統合化する
+		<LI> 配列を表現できる形式
+		<LI> メニュープログラムが楽できるフォーマットを
+		<LI> 原則として”設定ファイル”という名のものは
+		     どれも同じフォーマットとする。
+	</UL>
+	<TD>
+
+  <TR>
+	<TD>
+	<TD>
+	<EM> 変数名ルールの統一 </EM>
+	<UL>
+		<LI>	USE_機能
+		<LI>	機能_TYPE
+		<LI>	機能_ATTRIBUTES
+	</UL>
+	<BR>
+	”USE_ほえ”および”ほえ_TYPE”形式か？	
+	また、NOT_USE などは禁止する( default_config に書くこと)。
+	<BR> 
+	attribute にあたるものが
+	群れになってしまうのはしょうがない。しかし、
+	配列表現が可能なため、現在の ifdef の群れで表現する
+	ようなことが少なくなるはず。
+
+  <TR>
+	<TD>
+	<TD>
+	<EM> 関数名ルールの統一 </EM>
+	<BR>
+	main:: スペースに出てくるものは従来通り X11 風準拠に。
+	<BR>
+	メソッドは他のモジュールにあるようなそれっぽい小文字の名前をつける。
+	<BR>
+	lisp 的要素を廃止する。
+	<BR>
+	参考文献 Perl Cookbook として、
+	そこにあるようなシンタックス風を推奨する？例:
+	<PRE> 
+	MemberP() -> IsMember()
+	</PRE> 
+
+
+  <TR>
+	<TD>
+	<TD>
+	<EM> queue manager </EM>
+	<BR>
+	再送処理のため (e.g.  smtpfeed )
+
+  <TR>
+	<TD>
+	<TD> 
+	<EM> tools </EM>
+	<BR>
+	BSD make を使わない。
+	<BR>
+	C 言語ではないので、autoconf は特には必要ないと思う。
+	しかしながら configure という名前のスクリプトを（フェイクでも）
+	用意することはよいことかもしれない。
+	そのスクリプトは例えば
+	IPv6 ready か否かを決めるために使われるだろう。
+
+
+</TABLE>
+
+<!-- =================================================================== -->
+</BODY>
+</HTML>

@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>
+	... title ...
+</TITLE>
+<META http-equiv="Content-Type"
+	content="text/html; charset=EUC-JP">
+</HEAD>
+
+<BODY BGCOLOR="#E6E6FA">
+<!-- ================== body =========================================== -->
+
+
+<P>今あるモジュールの説明
+
+<TABLE BORDER=4>
+   <TR>
+	<TD>	モジュール
+	<TD>	説明
+
+
+   <TR>
+	<TD>	FML::LoadConfig
+	<TD>	設定ファイルを読み込みハッシュに入れる。
+
+
+   <TR>
+	<TD>	FML::File
+	<TD> 
+		ログファイルに記録するインタフェイス。
+		将来は syslog(3) へとばすことができるとなおよい。
+		まず間違いなくほとんど全てのルーティンが
+		use するべきもの。これをしないと Log() が
+		使えないから :-)	
+
+   <TR>
+	<TD>	FML::Date
+	<TD>
+	 	いろいろな型の日付関連のフォーマッティングのため
+
+   <TR>
+	<TD>	FML::String
+	<TD>	文字列操作関数へのインターフェイス
+
+</TABLE>
+
+
+<!-- =================================================================== -->
+</BODY>
+</HTML>

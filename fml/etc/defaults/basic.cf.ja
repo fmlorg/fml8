@@ -1,0 +1,8 @@
+=head1 configurations
+
+DOMAIN	= fml.org
+FQDN	= ahodori.fml.org
+
+ml_home_dir = /var/spool/ml/elena
+
+

@@ -1,0 +1,121 @@
+#!/usr/local/bin/perl -w
+#-*- perl -*-
+#
+# Copyright (C) 2000 Ken'ichi Fukamachi
+#          All rights reserved. 
+#
+# $FML$
+#
+
+package FML;
+
+use vars qw($debug);
+use strict;
+use Carp;
+
+
+# Descriptions: top level process switch
+#               1. initialize processes and load configurations from *.cf
+#                  switch to each process according with $0 and @ARGV.
+#               2. parse the incoming message(mail)
+#               3. start the main transaction
+#                  lock, execute main routine, unlock
+#               4. inform error messages, clean up and more ...
+#    Arguments: $args
+#               XXX non OO interface
+# Side Effects: process running :-)
+# Return Value: none
+sub main::ProcessSwitch
+{
+    my ($args) = @_;
+
+    # 1. create process
+    my $pkg     = _package_we_use($args);
+    eval qq{ require $pkg; }; # XXX require() needs bare words.
+    $pkg->import();   # fake to use() method.
+    my $process = $pkg->new($args); # create a new process object
+
+    # 2. parse the incoming message (e.g. STDIN)
+    $process->prepare($args);
+
+    # 3. start main transaction
+    $process->run($args);
+
+    # 4. closing the process
+    $process->finish($args);
+}
+
+
+# Descriptions: determine package we need and require() it if needed.
+#    Arguments: $args
+#               XXX non OO interface
+# Side Effects: 
+# Return Value: FML::Process::SOMETHING process object
+sub _package_we_use
+{
+    my ($args) = @_;    
+    my $name   = $args->{ myname };
+    my $pkg    = '';
+
+    if ($name eq 'fml.pl' || $name eq 'distribute') {
+	$pkg = 'FML::Process::Distribute';
+    }
+    elsif (( $name eq 'fml.pl' && $args->{ options }->{ ctladdr }) || 
+	   $name eq 'command') {
+	$pkg = 'FML::Process::Command';
+    }
+    elsif ($name eq 'fmlserv') {
+	$pkg = 'FML::Process::Fmlserv';
+    }
+    elsif ($name eq 'mead') {
+	$pkg = 'FML::Process::Mead';
+    }
+}
+
+
+
+=head1 NAME
+
+fml -- net/fml switch programs
+
+=head1 SYNOPSIS
+
+   fml
+
+=head1 DESCRIPTION
+
+libexec/fml.pl, the wrapper, executes this program. For example, The
+incoming mail to elena@fml.org kicks off libexec/distribute via
+libexec/fml.pl, whereas mail to elena-ctl@fml.org kicks off
+libexec/command finally.
+
+   incoming_mail =>
+      elena@fml.org       => fml.pl => libexec/distribute
+      elena-ctl@fml.org   => fml.pl => libexec/command
+      elena-admin@fml.org => forwarded to administrator(s)
+                                  OR
+                          => libexec/mead
+
+C<-d>
+    debug on.
+
+=head1 FLOW AROUND COMPONENTS
+
+   |  <=> FML::BaseSystem
+   |      load configuration files
+   |      start logging service
+   |
+   |  STDIN                     => FML::Parse
+   |  $CurProc->{'incoming_mail'} <=
+   |  $CurProc->{'credential'}
+   | 
+   |  (lock)
+   |  prepare article
+   |  $CurProc->{'article'} is spooled in.
+   |  $CurProc->{'article'}    <=> Service::SMTP
+   |  (unlock)
+   V
+
+=cut
+
+1;

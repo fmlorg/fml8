@@ -1,0 +1,3481 @@
+The Perl 5 Module List
+
+Maintained by Tim Bunce and Andreas König <modules@perl.org>;
+$Revision$ $Date$ -*- coding:utf-8 -*-
+
+Contents
+
+Introduction
+Where Are The Modules Kept?
+Playing Your Part
+How To Get a More Recent Copy of the List
+Editorial Information and Copyright
+
+Part 1 - Modules: Creation, Use and Abuse
+
+1) Perl 5 Module Terminology
+2) Guidelines for Module Creation
+3) Guidelines for Converting Perl 4 Library Scripts into Modules
+4) Guidelines for Reusing Application Code
+5) Namespace Coordination
+
+Part 2 - The Perl 5 Module List
+
+1) Module Listing Format
+2) Perl Core Modules, Perl Language Extensions and Documentation Tools
+3) Development Support
+4) Operating System Interfaces, Hardware Drivers
+5) Networking, Device Control (modems) and InterProcess Communication
+6) Data Types and Data Type Utilities
+7) Database Interfaces
+8) User Interfaces
+9) Interfaces to or Emulations of Other Programming Languages
+10) File Names, File Systems and File Locking (see also File Handles)
+11) String Processing, Language Text Processing, Parsing and Searching
+12) Option, Argument, Parameter and Configuration File Processing
+13) Internationalization and Locale
+14) Authentication, Security and Encryption
+15) World Wide Web, HTML, HTTP, CGI, MIME
+16) Server and Daemon Utilities
+17) Archiving, Compression and Conversion
+18) Images, Pixmap and Bitmap Manipulation, Drawing and Graphing
+19) Mail and Usenet News
+20) Control Flow Utilities (callbacks and exceptions etc)
+21) File Handle, Directory Handle and Input/Output Stream Utilities
+22) Microsoft Windows Modules
+23) Miscellaneous Modules
+24) Interface Modules to Commercial Software
+
+Part 3 - Big Projects Registry
+
+1) Items in the Todo File
+2) Multi-threading
+3) Object Management Group CORBA & IDL
+4) Expand Tied Array Interface
+5) Extend Yacc To Write XS Code
+6) Approximate Matching Regular Expressions
+
+Part 4 - Standards Cross-reference
+
+4.1) IETF - Internet Engineering Task Force (RFCs)
+4.2) ITU - International Telegraph Union (X.*)
+4.3) ISO - International Standards Organization (ISO*)
+
+Part 5 - Who's Who and What's Where
+
+5.1) Information / Contact Reference Details
+5.2) Perl Frequently Asked Questions (FAQ) Files
+
+  ------------------------------------------------------------------------
+
+Introduction
+
+This document is a semi-formal list of Perl 5 Modules. The Perl 4 concept of
+packages has been extended in Perl 5 and a new standardised form of reusable
+software component has been defined: the Module.
+
+Perl 5 Modules typically conform to certain guidelines which make them
+easier to use, reuse, integrate and extend.
+
+This list has two key aims:
+
+   * FOR DEVELOPERS: To change duplication of effort into cooperation.
+   * FOR USERS: To quickly locate existing software which can be reused.
+
+This list includes the Perl 5 standard modules, other completed modules,
+work-in-progress modules and would-be-nice-to-have ideas for modules. It
+also includes guidelines for those wishing to create new modules including
+how to name them.
+
+Where Are The Modules Kept?
+
+Most, but not all, of the modules can be found within CPAN, the
+Comprehensive Perl Archive Network of mirrored FTP sites. Within the CPAN
+scheme the modules described in this list can be found in the modules/
+directory below the CPAN root directory. CPAN is a worlswide network of
+mirrors and you can find your closest mirror in the file
+http://www.cpan.org/SITES.html
+
+NOTE: If you can't find what you want, or wish to check that what you've
+found is the latest version, or wonder why a module mentioned in this list
+is not on CPAN, you should contact the person associated with the module
+(and not the maintainers of the archives or this list). Contact details are
+given at the start of Part 5.
+
+Playing Your Part
+
+Perl is a huge collaborative effort. Everyone who uses perl is benefiting
+from the contributions of many hundreds, maybe thousands, of people. How
+much time has perl saved you since you started using it?
+
+Do you have any modules you could share with others? For example, you may
+have some perl4 scripts from which generally useful, and reusable, modules
+could be extracted. There may be many people who would find your work very
+useful. Please play your part and contribute to the Perl community where you
+can. [ end of sermon :-]
+
+Help save the world! Please submit new entries and updates to us so we can
+keep this list up-to-date. Send the new or corrected entry by email to
+modules@perl.org . Please do not send code to this address. Instead upload
+your module, once registered, to the PAUSE site for forwarding on to CPAN.
+See section 2, especially 2.6 and 2.11.
+
+How To Get a More Recent Copy of the List
+
+This Module List is fed into CPAN on a semi-regular basis. Its relative path
+within a CPAN mirror is in modules/00modlist.long.html .
+
+Editorial Information and Copyright
+
+This document is Copyright (c) 1997-2000 by Tim Bunce and Andreas König.
+All rights reserved. Permission to distribute this document, in full or
+part, via electronic means (emailed, posted or archived) or printed copy is
+granted providing that no charges are involved, reasonable attempt is made
+to use the most current version, and all credits and copyright notices are
+retained. Requests for other distribution rights, including incorporation in
+commercial products, such as books, magazine articles, or CD-ROMs should be
+made to Tim.Bunce@ig.co.uk and Andreas.Koenig@mind.de .
+
+Disclaimer: The content of this document is simply a collection of
+information gathered from many sources with little or no checking. There are
+NO warranties with regard to this information or its use.
+
+A little background information... I (Tim) created the Module List in August
+1994 and maintained it manually till April 1996. By that time Andreas had
+implemented the Perl Authors Upload Server (PAUSE) and it was happily
+feeding modules through to the CPAN archive sites (see
+http://www.cpan.org/modules/04pause.html for details). Since PAUSE held a
+database of module information which could be maintained by module authors
+it made sense for the module listing part of the Module List to be built
+from that database. In April 1996 Andreas took over the automatic posting of
+the Module List and I now maintain the other parts of the text. We plan to
+add value to the automation over time.
+
+Part 1 - Modules: Creation, Use and Abuse
+
+1) Perl 5 Module Terminology
+
+Perl 5 implements a class using a package, but the presence of a package
+doesn't imply the presence of a class. A package is just a namespace. A
+class is a package that provides subroutines that can be used as methods. A
+method is just a subroutine that expects, as its first argument, either the
+name of a package (for "static" methods), or a reference to something (for
+"virtual" methods).
+
+A module is a file that (by convention) provides a class of the same name
+(sans the .pm), plus an import method in that class that can be called to
+fetch exported symbols. This module may implement some of its methods by
+loading dynamic C or C++ objects, but that should be totally transparent to
+the user of the module. Likewise, the module might set up an AUTOLOAD
+function to slurp in subroutine definitions on demand, but this is also
+transparent. Only the .pm file is required to exist.
+
+2) Guidelines for Module Creation
+
+2.1 Do similar modules already exist in some form?
+
+If so, please try to reuse the existing modules either in whole or by
+inheriting useful features into a new class. If this is not practical try to
+get together with the module authors to work on extending or enhancing the
+functionality of the existing modules. A perfect example is the plethora of
+packages in perl4 for dealing with command line options.
+
+If you are writing a module to expand an already existing set of modules,
+please coordinate with the author of the package. It helps if you follow the
+same naming scheme and module interaction scheme as the original author.
+
+2.2 Try to design the new module to be easy to extend and reuse.
+
+Use blessed references. Use the two argument form of bless to bless into the
+class name given as the first parameter of the constructor, e.g.:
+
+     sub new { my $class = shift; return bless {}, $class; }
+
+or even this if you'd like it to be used as either a static or a virtual
+method.
+
+     sub new { my $self = shift; my $class = ref($self) || $self;
+     return bless {}, $class; }
+
+Pass arrays as references so more parameters can be added later (it's also
+faster). Convert functions into methods where appropriate. Split large
+methods into smaller more flexible ones. Inherit methods from other modules
+if appropriate.
+
+Avoid class name tests like: die "Invalid" unless ref $ref eq 'FOO'.
+Generally you can delete the "eq 'FOO'" part with no harm at all. Let the
+objects look after themselves! If it's vital then you can use the UNIVERSAL
+methods isa and can. Generally, avoid hardwired class names as far as
+possible.
+
+Avoid $r->Class::func() where using @ISA=qw(... Class ...) and $r->func()
+would work (see perlbot man page for more details).
+
+Use autosplit or the SelfLoader module so little used or newly added
+functions won't be a burden to programs which don't use them. Add test
+functions to the module after __END__ either using autosplit or by saying:
+
+     eval join('',<main::DATA>) || die $@ unless caller();
+
+Does your module pass the 'empty sub-class' test? If you say "@SUBCLASS::ISA
+= qw(YOURCLASS);" your applications should be able to use SUBCLASS in
+exactly the same way as YOURCLASS. For example, does your application still
+work if you change: $obj = new YOURCLASS; into: $obj = new SUBCLASS; ?
+
+Avoid keeping any state information in your packages. It makes it difficult
+for multiple other packages to use yours. Keep state information in objects.
+
+Always use -w. Try to "use strict;" (or "use strict qw(...);"). Remember
+that you can add "no strict qw(...);" to individual blocks of code which
+need less strictness. Always use -w. Always use -w! Follow the guidelines in
+the perlstyle(1) manual.
+
+2.3 Some simple style guidelines
+
+The perlstyle manual supplied with perl has many helpful points.
+
+Coding style is a matter of personal taste. Many people evolve their style
+over several years as they learn what helps them write and maintain good
+code. Here's one set of assorted suggestions that seem to be widely used by
+experienced developers:
+
+Use underscores to separate words. It is generally easier to read
+$var_names_like_this than $VarNamesLikeThis, especially for non-native
+speakers of English. It's also a simple rule that works consistently with
+VAR_NAMES_LIKE_THIS.
+
+Package/Module names are an exception to this rule. Perl informally reserves
+lowercase module names for 'pragma' modules like integer and strict. Other
+modules normally begin with a capital letter and use mixed case with no
+underscores (need to be short and portable).
+
+You may find it helpful to use letter case to indicate the scope or nature
+of a variable. For example:
+
+     $ALL_CAPS_HERE constants only (beware clashes with perl vars)
+     $Some_Caps_Here package-wide global/static $no_caps_here function
+     scope my() or local() variables
+
+Function and method names seem to work best as all lowercase. E.g.,
+$obj->as_string().
+
+You can use a leading underscore to indicate that a variable or function
+should not be used outside the package that defined it.
+
+For method calls use either
+
+     $foo = new Foo $arg1, $arg2; # no parentheses $foo =
+     Foo->new($arg1, $arg2);
+
+but avoid the ambiguous form
+
+     $foo = new Foo($arg1, $arg2); # Foo() looks like function call
+
+It can be very helpful if the names of the classes that your module uses can
+be specified as parameters. Consider:
+
+     $dog_class = $args{dog_class} || 'Dog'; $spot =
+     $dog_class->new(...);
+
+This allows the user of your module to specify an alternative class
+(typically a subclass of the one you would normally have used).
+
+On how to report constructor failure, Larry said:
+
+I tend to see it as exceptional enough that I'll throw a real Perl exception
+(die) if I can't construct an object. This has a couple of advantages right
+off the bat. First, you don't have to check the return value of every
+constructor. Just say "$fido = new Doggie;" and presume it succeeded. This
+leads to clearer code in most cases.
+
+Second, if it does fail, you get a better diagnostic than just the
+undefinedness of the return value. In fact, the exception it throws may be
+quite rich in "stacked" error messages, if it's rethrowing an exception
+caught further in.
+
+And you can always catch the exception if it does happen using eval {}.
+
+If, on the other hand, you expect your constructor to fail a goodly part of
+the time, then you shouldn't use exceptions, but you should document the
+interface so that people will know to check the return value. You don't need
+to use defined(), since a constructor would only return a true reference or
+a false undef. So good Perl style for checking a return value would simply
+say
+
+     $conn = new Connection $addr or die "Couldn't create Connection";
+
+In general, make as many things meaningful in a Boolean context as you can.
+This leads to straightforward code. Never write anything like
+
+     if (do_your_thing() == OK)
+
+in Perl. That's just asking for logic errors and domain errors. Just write
+
+     if (do_your_thing())
+
+Perl is designed to help you eschew obfuscation, if that's your thing.
+
+2.4 Select what to export.
+
+Do NOT export method names! Do NOT export anything else by default without a
+good reason!
+
+Exports pollute the namespace of the module user. If you must export try to
+use @EXPORT_OK in preference to @EXPORT and avoid short or common names to
+reduce the risk of name clashes.
+
+Generally anything not exported is still accessible from outside the module
+using the ModuleName::item_name (or $blessed_ref->method) syntax. By
+convention you can use a leading underscore on names to informally indicate
+that they are 'internal' and not for public use.
+
+(It is actually possible to get private functions by saying: my $subref =
+sub { ... }; &$subref; But there's no way to call that directly as a method,
+since a method must have a name in the symbol table.)
+
+As a general rule, if the module is trying to be object oriented then export
+nothing. If it's just a collection of functions then @EXPORT_OK anything but
+use @EXPORT with caution.
+
+2.5 Select a name for the module.
+
+This name should be as descriptive, accurate and complete as possible. Avoid
+any risk of ambiguity. Always try to use two or more whole words. Generally
+the name should reflect what is special about what the module does rather
+than how it does it.
+
+Having 57 modules all called Sort will not make life easy for anyone (though
+having 23 called Sort::Quick is only marginally better :-). Imagine someone
+trying to install your module alongside many others. If in any doubt ask for
+suggestions in comp.lang.perl.modules or modules@perl.org .
+
+Please use a nested module name to informally group or categorise a module,
+e.g., placing a sorting module into a Sort:: category. A module should have
+a very good reason not to have a nested name. Please avoid using more than
+one level of nesting for module names (packages or classes within modules
+can, of course, use any number).
+
+Module names should begin with a capital letter. Lowercase names are
+reserved for special modules such as pragmas (e.g., lib and strict).
+
+Note that module names are not related to class hierarchies. A module name
+Foo::Bar does not in any way imply that Foo::Bar inherits from Foo. Nested
+names are simply used to provide some useful categorisation for humans. The
+same is generally true for all package names.
+
+Since the CPAN is huge and growing daily, it's essential that module authors
+choose names which lend themselves to browsing. That means minimizing
+acronyms, cute names, and jargon. Also, don't make up a new top level
+category unless you have a good reason; please choose an already-existing
+category when possible. Send mail to modules@perl.org before you upload, so
+we can help you select a name.
+
+If you insist on a name that we consider inappropriate, we won't prevent you
+from uploading your module -- but it'll remain in your "author" directory
+and won't be directly visible from CPAN/modules/by-module.
+
+We appreciate the efforts of the contributors who have helped make the CPAN
+the world's largest reusable code repository. Please help us enhance it by
+working with us to choose the best name possible.
+
+If you are developing a suite of related modules/classes it's good practice
+to use nested classes with a common prefix as this will avoid namespace
+clashes. For example: Xyz::Control, Xyz::View, Xyz::Model etc. Use the
+modules in this list as a naming guide.
+
+If adding a new module to a set, follow the original author's standards for
+naming modules and the interface to methods in those modules.
+
+If developing modules for private internal or project specific use, that
+will never be released to the public, then you should ensure that their
+names will not clash with any future public module. You can do this either
+by using the reserved Local::* category or by using an underscore in the top
+level name like Foo_Corp::*.
+
+To be portable each component of a module name should be limited to 11
+characters. If it might be used on DOS then try to ensure each is unique in
+the first 8 characters. Nested modules make this easier.
+
+2.6 Have you got it right?
+
+How do you know that you've made the right decisions? Have you picked an
+interface design that will cause problems later? Have you picked the most
+appropriate name? Do you have any questions?
+
+The best way to know for sure, and pick up many helpful suggestions, is to
+ask someone who knows. The comp.lang.perl.modules Usenet newsgroup is read
+by just about all the people who develop modules and it's generally the best
+place to ask first. If you need more help then try modules@perl.org .
+
+All you need to do is post a short summary of the module, its purpose and
+interfaces. A few lines on each of the main methods is probably enough. (If
+you post the whole module it might be ignored by busy people - generally the
+very people you want to read it!)
+
+Don't worry about posting if you can't say when the module will be ready -
+just say so in the message. It might be worth inviting others to help you,
+they may be able to complete it for you!
+
+2.7 README and other Additional Files.
+
+It's well known that software developers usually fully document the software
+they write. If, however, the world is in urgent need of your software and
+there is not enough time to write the full documentation please at least
+provide a README file containing:
+
+   * A description of the module/package/extension etc.
+   * A copyright notice - see below.
+   * Prerequisites - what else you may need to have.
+   * How to build it - possible changes to Makefile.PL etc.
+   * How to install it.
+   * Recent changes in this release, especially incompatibilities
+   * Changes / enhancements you plan to make in the future.
+
+If the README file seems to be getting too large you may wish to split out
+some of the sections into separate files: INSTALL, Copying, ToDo etc.
+
+2.8 Adding a Copyright Notice.
+
+How you choose to licence your work is a personal decision. The general
+mechanism is to assert your Copyright and then make a declaration of how
+others may copy/use/modify your work.
+
+Perl, for example, is supplied with two types of licence: The GNU GPL and
+The Artistic License (see the files README, Copying and Artistic). Larry has
+good reasons for NOT just using the GNU GPL.
+
+My personal recommendation, out of respect for Larry, Perl and the perl
+community at large is to simply state something like:
+
+     Copyright (c) 1997 Your Name. All rights reserved. This program is
+     free software; you can redistribute it and/or modify it under the
+     same terms as Perl itself.
+
+This statement should at least appear in the README file. You may also wish
+to include it in a Copying file and your source files. Remember to include
+the other words in addition to the Copyright.
+
+2.9 Give the module a version/issue/release number.
+
+To be fully compatible with the Exporter and MakeMaker modules you should
+store your module's version number in a non-my package variable called
+$VERSION. This should be a valid floating point number with at least two
+digits after the decimal (ie hundredths, e.g, $VERSION = "0.01"). See
+Exporter.pm for details.
+
+Don't use a "1.3.2" style version directly. If you use RCS or a similar
+system which supports multilevel versions/branches you can use this (but put
+it all on one line for MakeMaker VERSION_FROM):
+
+$VERSION = do { my @r=(q$Revision$=~/\d+/g); sprintf
+"%d."."%02d"x$#r,@r };
+
+It may be handy to add a function or method to retrieve the number. Use the
+number in announcements and archive file names when releasing the module
+(ModuleName-1.02.tar.gz). See perldoc ExtUtils::MakeMaker.pm for details.
+
+2.10 Listing Prerequisites in a Bundle module
+
+If your module needs some others that are available on CPAN, you might
+consider creating a 'bundle' module that lists all the prerequisites in a
+standardized way. Automatic installation software such as the CPAN.pm module
+can take advantage of such a listing and enable your users to install all
+prerequisites and your own module with one single command. See the CPAN.pm
+module for details.
+
+2.11 How to release and distribute a module.
+
+By far the best way to release modules is to register yourself with the Perl
+Authors Upload Server (PAUSE). By registering with PAUSE you will be able to
+easily upload (or mirror) your modules to the PAUSE server from where they
+will be mirrored to CPAN sites across the planet.
+
+It's good idea to post an announcement of the availability of your module to
+the comp.lang.perl.announce Usenet newsgroup. This will at least ensure very
+wide once-off distribution.
+
+If not using PAUSE you should place the module into a major ftp archive and
+include details of it's location in your announcement. Some notes about ftp
+archives: Please use a long descriptive file name which includes the version
+number. Most incoming directories will not be readable/listable, i.e., you
+won't be able to see your file after uploading it. Remember to send your
+email notification message as soon as possible after uploading else your
+file may get deleted automatically. Allow time for the file to be processed
+and/or check the file has been processed before announcing its location.
+
+FTP Archives for Perl Modules:
+
+Follow the instructions and links on
+
+http://www.cpan.org/modules/04pause.html
+
+or upload to:
+
+ftp://pause.kbx.de/incoming
+
+and notify upload@pause.kbx.de .
+
+By using the PAUSE WWW interface you can ask the Upload Server to mirror
+your modules from your ftp or WWW site into your own directory on CPAN.
+Please remember to send us an updated entry for the Module list!
+
+2.12 Take care when changing a released module.
+
+Always strive to remain compatible with previous released versions (see 2.2
+above) Otherwise try to add a mechanism to revert to the old behaviour if
+people rely on it. Document incompatible changes.
+
+3) Guidelines for Converting Perl 4 Library Scripts into Modules
+
+3.1 There is no requirement to convert anything.
+
+If it ain't broke, don't fix it! Perl 4 library scripts should continue to
+work with no problems. You may need to make some minor changes (like
+escaping non-array @'s in double quoted strings) but there is no need to
+convert a .pl file into a Module for just that. See perltrap.pod for details
+of all known perl4-to-perl5 issues.
+
+3.2 Consider the implications.
+
+All the perl applications which make use of the script will need to be
+changed (slightly) if the script is converted into a module. Is it worth it
+unless you plan to make other changes at the same time?
+
+3.3 Make the most of the opportunity.
+
+If you are going to convert the script to a module you can use the
+opportunity to redesign the interface. The 'Guidelines for Module Creation'
+above include many of the issues you should consider.
+
+3.4 The pl2pm utility will get you started.
+
+This utility will read *.pl files (given as parameters) and write
+corresponding *.pm files. The pl2pm utilities does the following:
+
+   * Adds the standard Module prologue lines
+   * Converts package specifiers from ' to ::
+   * Converts die(...) to croak(...)
+   * Several other minor changes
+
+Being a mechanical process pl2pm is not bullet proof. The converted code
+will need careful checking, especially any package statements. Don't delete
+the original .pl file till the new .pm one works!
+
+4) Guidelines for Reusing Application Code
+
+4.1 Complete applications rarely belong in the Perl Module Library.
+
+4.2 Many applications contain some perl code which could be reused. Help
+save the world! Share your code in a form that makes it easy to reuse.
+
+4.3 Break-out the reusable code into one or more separate module files.
+
+4.4 Take the opportunity to reconsider and redesign the interfaces.
+
+4.5 In some cases the 'application' can then be reduced to a small fragment
+of code built on top of the reusable modules. In these cases the application
+could invoked as:
+
+5) Namespace Coordination
+
+The maintainers of the module list are not the Internic for perl namespaces.
+They do neither sell namespaces nor can they establish property rights. What
+they try to do is to minimize namespace clashes and maximize usablility of
+the CPAN archive by setting up a catalogue of modules and control the
+indexers. Time permitting, they will also try to give advice for what they
+think is a proper usage of the namespace.
+
+It is an important part of the namespace concept that the module list
+maintainers do not guarantee to you that somebody else won't use the, say,
+Foo::Bar namespace. The upload area is not censored except for abuse. People
+are free to upload any modules they like. Instead, there are several levels
+of protection for your namespaces:
+
+a) The most important is the module list which actually lists and proclaims
+your namespace.
+
+b) The second is the indexing mechanism of the CPAN. Modules are indexed on
+a first-come-first-serve basis. The module namespace that is uploaded for
+the first time ever gets indexed, but not the module of the second one who
+tries to use the same namespace.
+
+c) As the whole process is trying to benefit the community, all parties are
+subject to a wider monitoring within the community. This is sometimes
+referred to as security by visibility.
+
+d) So the next level of namespace protection is the common sense. Your own
+common sense. Help to save the world. If you get the impression that
+something goes wrong with regard to namespaces, please write to
+modules@perl.org and let them know.
+
+e) The perhaps most interesting namespace protection is provided by the perl
+symbol table itself. A namespace Foo:: is just a package name and its
+relationship to a namespace Foo::Bar:: is not predetermined whatsoever. The
+two namespaces can be closely or loosely related or not related at all, but
+what's most important, they can be writen by different authors who may work
+rather independently from each other. So if you have registered any
+namespace, it does not mean that you own the whole namespace tree that
+starts there. If you are registered as the contact for Foo::Bar, you are not
+necessarily also associated with Foo::Bar::Baz.
+
+f) In a few rare cases the module list people restrict indexing of certain
+categories. For example: DBI::* under the control of Tim Bunce Sun::* under
+the control of Sun Microsystems
+
+Part 2 - The Perl 5 Module List
+
+The remainder of this document is divided up into sections. Each section
+deals with a particular topic and lists all known modules related to that
+topic. Modules are only listed in one section so check all sections that
+might related to your particular needs.
+
+All the information corresponds to the latest updates we have received. We
+don't record the version number or release dates of the listed Modules. Nor
+do we record the locations of these Modules. Consult the contact, try the
+usual perl CPAN sites or ask in comp.lang.perl.modules. Please do *not* ask
+us directly, we simply don't have the time. Sorry.
+
+1) Module Listing Format
+
+Each Module listing is very short. The main goal is to simply publish the
+existence of the modules, or ideas for modules, and enough contact
+information for you to find out more. Each listing includes some characters
+which convey (approximate) basic status information.
+
+For example:
+
+Name           DSLI  Description                                  Info
+-------------  ----  -------------------------------------------- -----
+Fcntl          Sdcf  Defines fcntl() constants (see File::Lock)   JHI
+
+Where the 'DSLI' characters have the following meanings:
+
+   * D - Development Stage (Note: *NO IMPLIED TIMESCALES*):
+   *
+        o i - Idea, listed to gain consensus or as a placeholder
+        o c - under construction but pre-alpha (not yet released)
+        o a/b - Alpha/Beta testing
+        o R - Released
+        o M - Mature (no rigorous definition)
+        o S - Standard, supplied with Perl 5
+
+   * S - Support Level:
+   *
+        o m - Mailing-list
+        o d - Developer
+        o u - Usenet newsgroup comp.lang.perl.modules
+        o n - None known, try comp.lang.perl.modules
+
+   * L - Language Used:
+   *
+        o p - Perl-only, no compiler needed, should be platform independent
+        o c - C and perl, a C compiler will be needed
+        o h - Hybrid, written in perl with optional C code, no compiler
+          needed
+        o + - C++ and perl, a C++ compiler will be needed
+        o o - perl and another language other than C or C++
+
+   * I - Interface Style
+   *
+        o f - plain Functions, no references used
+        o h - hybrid, object and function interfaces available
+        o n - no interface at all (huh?)
+        o r - some use of unblessed References or ties
+        o O - Object oriented using blessed references and/or inheritance
+
+Where letters are missing they can usually be inferred from the others. For
+example 'i' implies 'id', 'S' implies 'Su'.
+
+The Info column gives a contact reference 'tag'. Lookup this tag in the
+"Information / Contact Reference Details" section in Pert 3 of this
+document. If no contact is given always try asking in
+comp.lang.perl.modules.
+
+Most Modules are nested in categories such as IPC::Open2 and IPC::Open3.
+These are shown as 'IPC::' on one line then each module listed below with a
+'::' prefix.
+
+Ideas For Adoption
+
+Modules listed as in the 'i' Development Stage with no contact reference are
+ideas without an owner. Feel free to 'adopt' these but please let me know so
+that we can update the list and thus inform anyone else who might be
+interested. Adoption simply means that you either hope to implement the
+module one day or would like to cooperate with anyone else who might be
+interested in implementing it.
+
+Cooperation
+
+Similarly, if an idea that interests you has been adopted by someone please
+contact them so you can share ideas. Just because an idea has been adopted
+does NOT imply that it's going to be implemented. Just because a module is
+listed and being implemented does NOT mean it'll get finished. Waiting
+silently in the hope that the Module will appear one day is unlikely to be
+fruitful! Offer to help. Cooperate. Pool your efforts. Go on, try it!
+
+The same applies to modules in all states. Most modules are developed in
+limited spare time. If you're interested in a module don't just wait for it
+to happen, offer to help.
+
+Module developers should feel free to announce incomplete work early. If
+you're not going to be able to spend much time on something then say so. If
+you invite cooperation maybe someone will implement it for you!
+
+2) Perl Core Modules, Perl Language Extensions and Documentation Tools
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+CORE              Sucf Internal package for perl native functions   P5P
+UNIVERSAL         SucO Internal universal base-class                JACKS
+SUPER             SucO Internal class to access superclass methods  P5P
+DynaLoader        SucO Dynamic loader for shared libraries          P5P
+AutoLoader        SupO Automatic function loader (using AutoSplit)  P5P
+SelfLoader        SdpO Automatic function loader (using __DATA__)   JACKS
+Exporter          SupO Implements default import method for modules P5P
+Carp              Supf Throw exceptions outside current package     P5P
+Config            Supf Stores details of perl build configuration   P5P
+English           Supf Defines English names for special variables  P5P
+Symbol            SupO Create 'anonymous' symbol (typeglobs) refs   CHIPS
+Opcode            Supf Disable named opcodes when compiling code    TIMB
+Taint             bdpf Utilities related to tainting                PHOENIX
+
+Perl Pragmatic Modules
+
+constant          Supf Define compile-time constants                P5P
+diagnostics       Sdpf For reporting perl diagnostics in full form  TOMC
+enum              cdpf resemble enumerated types in C               ZENIN
+integer           Supf Controls float vs. integer arithmetic        P5P
+less              Supf Controls optimisations (yet unimplemented)   P5P
+lib               Supf Simple way to add/delete directories in @INC P5P
+overload          SdpO Overload perl operators for new data types   ILYAZ
+sigtrap           Supf For trapping an abort and giving a traceback P5P
+strict            Supf Controls averments (similar to pragmas)      P5P
+subs              Supf use subs qw(x y); is short for sub x; sub y; P5P
+vars              Supf predeclare variable names                    P5P
+
+Experimental pragmatic modules live in the ex:: namespace
+
+ex::
+ex::implements      RdpO Study in Polymorphism                        PDCAWLEY
+ex::interface       RdpO Another study in polymorphism                PDCAWLEY
+ex::override        Rdpf perl pragma to override core functions       CTWETEN
+
+ex::constant::
+ex::constant::vars            Rdph Perl pragma to create readonly variables     CTWETEN
+
+Perl Language Extensions
+
+Alias             bdcf Convenient access to data/code via aliases   GSAR
+End               RdpO Generalized END {}.                          ABIGAIL
+Error             adpO Error/exception handling in an OO-ish way    GBARR
+Perl              adcO Create Perl interpreters from within Perl    GSAR
+Protect           bdpf declare subs private or member               JDUNCAN
+Regexp            adcO An OO interface to regular expressions       GBARR
+Safe              SdcO Restrict eval'd code to safe subset of ops   MICB
+Softref           bdcf Extension for weak/soft referenced SVs       ILYAZ
+
+Inline            adp? Easy way to use other languages in Perl      INGY
+Inline::
+Inline::CPR             adpn C Perl Run - Embed Perl in C, ala Inline     INGY
+Inline::C               bdpn Write C extensions in Perl the easy way      INGY
+Inline::CPP             adpO Easy implementation of C++ extensions        NEILW
+Inline::Python          adpO Easy implementation of Python extensions     NEILW
+
+Exporter::
+Exporter::Import          Rdpn Alternate symbol exporter                    GARROW
+Exporter::Options         adpO Extends Exporter to handle use-line options  YSTH
+Exporter::PkgAlias        adpf Load a module into multiple namespaces       JDPORTER
+
+Safe::
+Safe::Hole            bdcO Exec subs in the original package from Safe  SEYN
+
+Symbol::
+Symbol::Table           RdpO OO interface to package symbols              GARROW
+
+Test              Sdpf Utilities for writing test scripts           JPRIT
+Test::
+Test::Cmd             RdpO Portable test infrastructure for commands    KNIGHT
+Test::Harness         Supf Executes perl-style tests                    P5P
+Test::Unit            adpO simple framework for unit testing            CLEMBURG
+Test::Suite           cdpO tbs                                          HENKE
+Test::Case            cdpO tbs                                          HENKE
+
+The Perl Compiler
+
+B                 aucO The Perl Compiler                            MICB
+O                 aucO Perl Compiler frontends                      MICB
+
+B::
+B::Fathom          bdpO Estimate the readability of Perl code        KSTAR
+B::Graph           bdpr Perl Compiler backend to diagram OP trees    SMCCAM
+B::LexInfo         bdcO Show info about subroutine lexical variables DOUGM
+B::Size            bdcO Measure size of Perl OPs and SVs             DOUGM
+B::TerseSize       bdpO Info about ops and their (estimated) size    DOUGM
+
+Source Code Filters
+
+Filter::Util::
+Filter::Util::Exec            bdcf Interface for creation of coprocess Filters  PMQS
+Filter::Util::Call            bdcf Interface for creation of Perl Filters       PMQS
+
+Filter::
+Filter::exec            bdcf Filters script through an external command   PMQS
+Filter::sh              bdcf Filters script through a shell command       PMQS
+Filter::cpp             bdcf Filters script through C preprocessor        PMQS
+Filter::tee             bdcf Copies to file perl source being compiled    PMQS
+Filter::decrypt         bdcf Template for a perl source decryption filter PMQS
+
+Thread support (note that these are experimental, i.e. pre-alpha)
+
+Thread            cuhO Manipulate threads in Perl (EXPERIMENTAL)    P5P
+
+Thread::
+Thread::Group           bdph Wait()-like and grouping functions           DSUGAL
+Thread::IO              i    IO routines                                  DSUGAL
+Thread::Object          i    OO routines                                  DSUGAL
+Thread::Pool            bdpO Worker pools to run Perl code asynchronously MICB
+Thread::Queue           cuph Thread-safe queues                           P5P
+Thread::Semaphore       cuph Thread-safe semaphores                       P5P
+Thread::Signal          cuhh A thread which runs signal handlers reliably P5P
+Thread::Specific        cuhh Thread-specific keys                         P5P
+
+Module Support
+
+Module::
+Module::Reload          Rdpf Reloads files in %INC based on timestamps    JPRIT
+
+Documentation Tools:
+
+Pod::
+Pod::Diff            cdpf compare two POD files and report diff        IANC
+Pod::HTML            cdpr converter to HTML                            KJALB
+Pod::Index           cdpr index generator                              KJALB
+Pod::Latex           cdpr converter to LaTeX                           KJALB
+Pod::LaTeX           bdpO Converts pod to latex with Pod::Parser       TJENNESS
+Pod::Lint            cdpO Lint-style validator for pod                 NEILB
+Pod::Lyx             adpO A pod to LyX format conversion class         RICHARDJ
+Pod::Man             cdpr converter to man page                        KJALB
+Pod::MIF             adpO converter to FrameMaker MIF                  JNH
+Pod::Parser          bdpO Base class for parsing pod syntax            BRADAPP
+Pod::Pdf             bdpf Converter to PDF                             AJFRY
+Pod::Pod             cdpr converter to canonical pod                   KJALB
+Pod::RTF             cdpr converter to RTF                             KJALB
+Pod::Sdf             cdpf converter to SDF                             IANC
+Pod::Select          bdpf Print only selected sections of pod docs     BRADAPP
+Pod::Simplify        cdpr Common pod parsing code                      KJALB
+Pod::Texinfo         cdpr converter to texinfo                         KJALB
+Pod::Text            Supf convert POD data to formatted ASCII text     TOMC
+Pod::Usage           bdpf Print Usage messages based on your own pod   BRADAPP
+Pod::Rtf             RdpO Converter from POD to Rich Text Format       PVHP
+Pod::Hlp             RdpO Convert POD to formatted VMS Help text       PVHP
+Pod::XML             RdpO Generate XML from POD                        MSERGEANT
+Pod::PP              idpO A Pod pre-processor                          RAM
+
+3) Development Support
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+AutoSplit         Supf Splits modules into files for AutoLoader     P5P
+Benchmark         Supf Easy way to time fragments of perl code      P5P
+Conjury           Rdp? Generic software construction toolset        JWOODYATT
+Coy               Rdpn Like Carp - only prettier                    DCONWAY
+FindBin           adpf Locate current script bin directory          GBARR
+Include           adpO Parse C header files for use in XS           GBARR
+Make              adpO Makefile parsing, and 'make' replacement     NI-S
+Usage             bupr Type and range checking on subroutine args   JACKS
+
+ExtUtils::
+ExtUtils::DynaGlue        adcr Methods for generating Perl extension files  DOUGM
+ExtUtils::MakeMaker       SupO Writes Makefiles for extensions              MMML
+ExtUtils::Manifest        Supf Utilities for managing MANIFEST files        MMML
+ExtUtils::Typemap         i    xsubpp typemap handling                      WPS
+ExtUtils::Embed           Sdpf Utilities for embedding Perl in C/C++ apps   DOUGM
+ExtUtils::F77             RdpO Facilitate use of FORTRAN from Perl/XS code  KGB
+
+Carp::
+Carp::Assert          adpf Stating the obvious to let the computer know MSCHWERN
+Carp::CheckArgs       Rdpf Check subroutine argument types              GARROW
+
+Devel::
+Devel::CallerItem      RupO 'caller()' Object wrapper + useful methods   JACKS
+Devel::CoreStack       adpf generate a stack dump from a core file       ADESC
+Devel::Coverage        adpf Coverage analysis for Perl code              RJRAY
+Devel::Datum           cdpf Debugging And Tracing Ultimate Module        CDE
+Devel::DebugAPI        bdpf Interface to the Perl debug environment      JHA
+Devel::DebugInit       i    Create a .gdbinit or similar file            JASONS
+Devel::DProf           Rdcf Execution profiler                           DMR
+Devel::DumpStack       Rupf Dumping of the current function stack        JACKS
+Devel::Leak            Rdcf Find perl objects that are not reclaimed     NI-S
+Devel::PPPort          bdcn Portability aid for your XS code             KJALB
+Devel::Peek            adcf Peek at internal representation of Perl data ILYAZ
+Devel::RegExp          adcO Access perl internal regex functions         ILYAZ
+Devel::SmallProf       Rdpf Line-by-line profiler                        ASHTED
+Devel::StackTrace      RdpO Stacktrace object w/ info like Carp::confess DROLSKY
+Devel::Symdump         RdpO Perl symbol table access and dumping         ANDK
+Devel::TraceFuncs      adpO Trace funcs by using object destructions     JOEHIL
+Devel::TraceLoad       Rdpf Traces the loading of perl source code       JPRIT
+Devel::Modlist         Rdpf Collect module use information               RJRAY
+
+Exception::
+Exception::Class           bdpO Declare exception class hierarchies          DROLSKY
+Exception::Cxx             Rd+f Cause perl to longjmp using C++ exceptions   JPRIT
+
+Perf::            Performance measurement other than benchmarks
+Perf::ARM             adcf Application Response Measurement             BBACKER
+
+Rcs               adcf Alternate RCS interface (see VCS::RCS)       CFRETER
+VCS               ampO Generic interface to Version Control Systems LBROCARD
+
+VCS::
+VCS::CVS             RdpO Interface to GNU's CVS                       RSAVAGE
+VCS::PVCS            i    PVCS Version Manager (intersolv.com)         BMIDD
+VCS::RCS             idpf Interface layer over RCS (See also Rcs)      RJRAY
+VCS::RCE             idcf Perl layer over RCE C API                    RJRAY
+
+ClearCase         idcf Environment for ClearCase revision control   BRADAPP
+ClearCase::
+ClearCase::Ct              Mnpf Generic cleartool wrapper                    DSB
+
+Sub::
+Sub::Curry           Rdpf Perl module to curry functions ((á la Lisp)) DAVIDH
+
+Perlbug           RdpO Database driven bug tracking system          RFOLEY
+
+Continuus         adpO Interface to Continuus Code Management tool  HENKE
+
+4) Operating System Interfaces, Hardware Drivers
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+Env               Supf Alias environment variables as perl vars     P5P
+Errno             cdpf Constants from errno.h EACCES, ENOENT etc    GBARR
+Fcntl             Sdcf Defines fcntl() constants (see File::Lock)   JHI
+Ioctl             adcf ioctl(2) constants                           JPRIT
+POSIX             SupO An interface to most (all?) of POSIX.1       P5P
+Shell             Supf Run shell commands transparently within perl P5P
+
+Async::
+Async::Group           adpO Deal with simultaneous asynchronous calls    DDUMONT
+Async::Process         i    class to run sub-processes                   DDUMONT
+
+BSD::
+BSD::HostIdent       i    s/gethostname(), s/gethostid()               JHI
+BSD::Ipfwgen         bdpf Generate ipfw(8) filters                     MUIR
+BSD::Resource        Rdcf getrusage(), s/getrlimit(), s/getpriority()  JHI
+
+Env::
+Env::Path            adpO Advanced operations on path variables        DSB
+
+Proc::
+Proc::Background      RdpO OS independent background process objects    BZAJAC
+Proc::ExitStatus      Rdpf Interpret and act on wait() status values    ROSCH
+Proc::Forkfunc        Rdpf Simple lwall-style fork wrapper              MUIR
+Proc::ProcessTable    adcO Unix process table information               DURIST
+Proc::SafePipe        bdpf popen() and `` without calling the shell     ROSCH
+Proc::Short           adpO System calls with timeout option             JHKIM
+Proc::Simple          adpO Fork wrapper with objects                    MSCHILLI
+Proc::Spawn           Rdpf Run external programs                        GARROW
+Proc::SyncExec        Rdpf Spawn processes but report exec() errors     ROSCH
+Proc::times           adpf By-name interface to process times function  TOMC
+
+GTop              bdcO Perl interface to libgtop                    DOUGM
+
+Schedule::        See also Schedule:: in chapter 23
+Schedule::At              Rd   OS independent interface to the at command   JOSERODR
+Schedule::ByClock         adpO Return at given times                        SCHAFFTER
+Schedule::Cron            adpO cron-like scheduler for perl subroutines     ROLAND
+Schedule::Load            RdpO Remote system load, processes, scheduling    WSNYDER
+
+Quota             Rdcf Disk quota system functions, local & remote  TOMZO
+
+Sys::
+Sys::AlarmCall       Rupf Timeout on any sub. Allows nested alarms     JACKS
+Sys::Hostname        Supf Implements a portable hostname function      P5P
+Sys::Sysconf         bdpf Defines constants for POSIX::sysconf()       NI-S
+Sys::Syslog          Supf Provides same functionality as BSD syslog    P5P
+
+    Note: The Sys:: namespace is considered harmful as it is giving no
+    clue about which system. Placing additional modules into this
+    namespace is discouraged.
+
+Platform Specific Modules
+
+Be::
+Be::Attribute       Rd+f Manipulate BeOS BFS MIME file attributes     TSPIN
+Be::Query           Rd+f Query a BeOS file system                     TSPIN
+
+FreeBSD::
+FreeBSD::SysCalls        cdcf FreeBSD-specific system calls                GARY
+
+Mac::             Macintosh specific modules
+Mac::AppleEvents     bmcO AppleEvent manager and AEGizmos              MCPL
+Mac::AssistantFrames RdpO Easy creation of assistant dialogs           GBAUER
+Mac::Components      bmcO (QuickTime) Component manager                MCPL
+Mac::Files           bmcO File manager                                 MCPL
+Mac::Gestalt         bmcO Gestalt manager: Environment enquiries       MCPL
+Mac::Glue            bdpO Control apps with AppleScript terminology    CNANDOR
+Mac::Macbinary       bdpO Decodes MacBinary files.                     MIYAGAWA
+Mac::Memory          bmcO Memory manager                               MCPL
+Mac::MoreFiles       bmcO Further file management routines             MCPL
+Mac::OSA             bmcO Open Scripting Architecture                  MCPL
+Mac::Processes       bmcO Process manager                              MCPL
+Mac::Resources       bmcO Resource manager                             MCPL
+Mac::Serial          bdpO Interface to Macintosh serial ports          DIVERDI
+Mac::Types           bmcO (Un-)Packing of Macintosh specific types     MCPL
+
+Mac::AppleEvents::
+Mac::AppleEvents::Simple          Rdph Simple access to Mac::AppleEvents            CNANDOR
+
+Mac::Apps::
+Mac::Apps::Anarchie        RdpO Control Anarchie 2.01+                       CNANDOR
+Mac::Apps::Launch          Rdpf MacPerl module to launch / quit apps         CNANDOR
+Mac::Apps::MacPGP          RdpO Control MacPGP 2.6.3                         CNANDOR
+Mac::Apps::PBar            RdpO Control Progress Bar 1.0.1                   CNANDOR
+
+Mac::Comm::
+Mac::Comm::OT_PPP          RdpO Control Open Transport PPP / Remote Access   CNANDOR
+
+Mac::FileSpec::
+Mac::FileSpec::Unixish         Mdpf Unixish-compatability in filespecs           SBURKE
+
+Mac::OSA::
+Mac::OSA::Simple          Rdph Simple access to Mac::OSA                    CNANDOR
+
+MSDOS::
+MSDOS::Attrib          bdcf Get/set DOS file attributes in OS/2 or Win32 CJM
+MSDOS::Descript        bdpO Manage 4DOS style DESCRIPT.ION files         CJM
+MSDOS::SysCalls        adcf MSDOS interface (interrupts, port I/O)       DMO
+
+MVS::
+MVS::VBFile          bdpf Read MVS VB (variable-length) files          GROMMEL
+
+NeXTStep::
+NeXTStep::NetInfo         idcO NeXTStep's NetInfo (like ONC NIS)            PGUEN
+
+Netware::
+Netware::NDS             cd+O Interface to Novell Directory Services       KTHOMAS
+Netware::Bindery         cd+O Interface to Novell Bindery mode calls       KTHOMAS
+
+OS2::
+OS2::ExtAttr         RdcO (Tied) access to extended attributes         ILYAZ
+OS2::FTP             bncf Access to ftplib interface                   ILYAZ
+OS2::PrfDB           RdcO (Tied) access to .INI-style databases        ILYAZ
+OS2::REXX            RdcO Access to REXX DLLs and REXX runtime         ILYAZ
+OS2::UPM             bncf User Profile Management                      ILYAZ
+
+Riscos            i    Namespace for Risc-OS (Acorn et.al.)         RISCOSML
+
+SGI::
+SGI::SysCalls        cdcf SGI-specific system calls                    AMOSS
+SGI::GL              adcr SGI's Iris GL library                        AMOSS
+SGI::FM              adcr SGI's Font Management library                AMOSS
+SGI::FAM             RdcO Interface to SGI/Irix File Access Monitor    JGLICK
+
+Solaris::
+Solaris::ACL             adch Provides access to ACLs in Solaris           IROBERTS
+Solaris::Kmem            idcf Read values from the running kernel          ABURLISON
+Solaris::Kstat           adcO Access kernel performance statistics         ABURLISON
+Solaris::MIB             idcO Access STREAMS network statistics            ABURLISON
+Solaris::MapDev          bdpf Maps sdNN disk names to cNtNdN disk names    ABURLISON
+Solaris::NDD             idcO Access network device statistics             ABURLISON
+Solaris::Procfs          adhh Access to the Solaris /proc filesystem       JNOLAN
+Solaris::InstallDB       bdp? Searches for Solaris package/system info     CHRISJ
+Solaris::Package         bdpO Access a Solaris package pkginfo file        CHRISJ
+Solaris::Contents        bdp? Access a Solaris contents file               CHRISJ
+
+Unix::
+Unix::ConfigFile      adpO Abstract interfaces to Unix config files     SSNODGRA
+Unix::Processors      RdcO Interface to per-processor information       WSNYDER
+Unix::Syslog          i    Interface to syslog functions in a C-library MHARNISCH
+Unix::UserAdmin       Rdpf Interface to Unix Account Information        JZAWODNY
+
+VMS::
+VMS::Device          Rdcr Access info about any device on a VMS system DSUGAL
+VMS::Filespec        Sdcf VMS and Unix file name syntax                CBAIL
+VMS::ICC             bdcr Interface to the ICC facilities in VMS 7.2+  DSUGAL
+VMS::Lock            cncO Object interface to $ENQ (VMS lock mgr)      BHUGHES
+VMS::Misc            Rdcr Miscellaneous VMS utility routines           DSUGAL
+VMS::Monitor         Rdcr Access VMS system performance info           DSUGAL
+VMS::Persona         Rdcf Interface to the VMS Persona services        DSUGAL
+VMS::Priv            Rdcf Access VMS Privileges for processes          DSUGAL
+VMS::Process         Rdcf Process management on VMS                    DSUGAL
+VMS::Queue           bdcf Manage queues and entries                    DSUGAL
+VMS::SysCalls        i    VMS-specific system calls                    CBAIL
+VMS::System          Rdcf VMS-specific system calls                    DSUGAL
+VMS::User            bdcr Read access to system UAF data               DSUGAL
+
+Portable Digital Assistants
+
+PDA::
+PDA::Pilot           amcO Interface to pilot-link library              KJALB
+PDA::PilotDesktop    i    Managing Pilot Desktop databases software    JWIEGLEY
+
+Hardware related modules
+
+Hardware::
+Hardware::Simulator       adpf Simulate different pieces of hardware        GSLONDON
+
+Device::
+Device::SerialPort      bdpO POSIX clone of Win32::SerialPort             BBIRTH
+Device::SVGA            c    SVGA Graphic card driver                     SCOTTVR
+
+Device::ISDN::
+Device::ISDN::OCLM            bd?? Perl interface to the 3com OCLM ISDN TA      MERLIN
+
+5) Networking, Device Control (modems) and InterProcess Communication
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+Socket            Smcf Defines socket-related constants             GNAT
+Socket6           adcf getaddrinfo/getnameinfo support module       UMEMOTO
+Ptty              adcf Pseudo terminal interface functions          NI-S
+
+Socket::
+Socket::PassAccessRights adcf Pass file descriptor via Unix domain socket SAMPO
+
+Net::
+Net::ACAP            adpO Interface to ACAP Protocol (Internet-Draft)  KJOHNSON
+Net::AIM             adpO AOL Instant Messenger TOC protocol           ARYEH
+Net::AOLIM           bdpO AOL Instant Messenger OO Interface (TOC)     RWAHBY
+Net::Bind            adpO Interface to bind daemon files               KJOHNSON
+Net::CDDB            cdpr Interface to the CDDB (CD Database)          DSTALDER
+Net::Cmd             cdpO For command based protocols (FTP, SMTP etc)  GBARR
+Net::DLookup         adpO Lookup domains on Internic and 2-letter TLDs DJASMINE
+Net::DNS             bdpO Interface to the DNS resolver                MFUHR
+Net::Daemon          adpO Abstract base class for portable servers     JWIED
+Net::Dict            cdpO Client of Dictionary Server Protocol (DICT)  ABIGAIL
+Net::Dnet            cdcO DECnet-specific socket usage                 SPIDB
+Net::Domain          adpf Try to determine TCP domain name of system   GBARR
+Net::DummyInetd      RdpO A dummy Inetd server                         GBARR
+Net::FTP             adpf Interface to File Transfer Protocol          GBARR
+Net::Gen             RdcO Generic support for socket usage             SPIDB
+Net::Goofey          RdpO Communicate with a Goofey server             GOSSAMER
+Net::Hotline         RdpO Interface to the Hotline protocol            JSIRACUSA
+Net::ICAP            adpO Interface to ICAP Protocol (Internet-Draft)  KJOHNSON
+Net::ICB             bdpO ICB style chat server interface              JMV
+Net::IMAP            adpO Interface to IMAP Protocol (RFC2060)         KJOHNSON
+Net::IRC             cdpO Internet Relay Chat interface                DSHEPP
+Net::Ident           RdpO Performs ident (rfc1413) lookups             JPC
+Net::Inet            RdcO Internet (IP) socket usage                   SPIDB
+Net::Interface       adcO ifconfig(1) implementation                   SRZ
+Net::Jabber          ampO Access to the Jabber protocol                REATMON
+Net::LDAP            adpO Interface to LDAP Protocol (RFC1777)         PLDAP
+Net::LDAPapi         Rdcf Interface to UMICH and Netscape LDAP C API   CDONLEY
+Net::MsgLink         cdpO Abstraction of "user" part for message link  RAM
+Net::NIS             adcO Interface to Sun's NIS                       RIK
+Net::NISPlus         adcO Interface to Sun's NIS+                      RIK
+Net::NNTP            adpO Client interface to NNTP protocol            GBARR
+Net::Netmask         RdpO Understand and manipulate network blocks     MUIR
+Net::Netrc           adpO Support for .netrc files                     GBARR
+Net::PH              RdpO CCSO Nameserver Client class                 GBARR
+Net::POP3            adpO Client interface to POP3 protocol            GBARR
+Net::Patricia        RdcO Patricia Trie perl module for fast IP addres PLONKA
+Net::Pcap            adcr An interface for LBL's packet capture lib    PLISTER
+Net::Ping            SupO TCP and ICMP ping                            RMOSE
+Net::Printer         RdpO Direct to lpd printing                       CFUHRMAN
+Net::SMTP            adpf Interface to Simple Mail Transfer Protocol   GBARR
+Net::SNMP            adpO Interface to SNMP Protocol (RFC1157)         GBARR
+Net::SNPP            cdpO Client interface to SNPP protocol            GBARR
+Net::SOCKS           cdcf TCP/IP access through firewalls using SOCKS  SCOOPER
+Net::SSLeay          bmhf Secure Socket Layer (based on OpenSSL)       SAMPO
+Net::Syslog          RdpO Forwarded syslog protocol                    LHOWARD
+Net::TCP             RdcO TCP-specific socket usage                    SPIDB
+Net::TFTP            cdpf Interface to Trivial File Transfer Protocol  GSM
+Net::Telnet          RdpO Interact with TELNET port or other TCP ports JROGERS
+Net::Time            adpf Obtain time from remote machines             GBARR
+Net::Traceroute      bdpO Trace routes                                 HAG
+Net::UDP             RdcO UDP-specific socket usage                    SPIDB
+Net::VNC             i??? Interface VNC remote frame buffer protocol   BRONG
+Net::hostent         adpf A by-name interface for hosts functions      TOMC
+Net::netent          adpf A by-name interface for networks functions   TOMC
+Net::protoent        adpf A by-name interface for protocols functions  TOMC
+Net::servent         adpf A by-name interface for services functions   TOMC
+Net::xAP             adpO Interface to IMAP,ACAP,ICAP substrate        KJOHNSON
+Net::Z3950           adcO OO interface to the Yaz Z39.50 toolkit       MIRK
+Net::SSL             RdcO Glue that enables LWP to access https URIs   CHAMAS
+Net::Pager           RdpO Send Numeric/AlphaNumeric Pages to any pager ROOTLEVEL
+Net::Whois           RdpO Get+parse "whois" domain data from InterNIC  DHUDES
+Net::XWhois          RdpO Whois Client Interface for Perl5.            VIPUL
+Net::ICQ             bmpO Client interface to ICQ messaging            JMUHLICH
+
+Net::Daemon::
+Net::Daemon::SSL             RdpO SSL extension for Net::Daemon                MKUL
+
+Net::IMAP::
+Net::IMAP::Simple          bdpO Only implements the basic IMAP features      JPAF
+
+Net::SNMP::
+Net::SNMP::Interfaces      RdpO Obtain network interface info via SNMP       JSTOWE
+
+Net::Telnet::
+Net::Telnet::Cisco           RdpO Net::Telnet wrapper for Cisco devices        JOSHUA
+
+NetAddr::
+NetAddr::IP              RdpO Manipulation and operations on IP addresses  LUISMUNOZ
+
+IPC::
+IPC::Cache           adpO Shared-memory object cache                   DCLINTON
+IPC::Chat2           ?    Out-of-service during refit!                 GBARR
+IPC::ChildSafe       RdcO Control child process w/o risk of deadlock   DSB
+IPC::Globalspace     cdpO Multi-process shared hash and shared events  JACKS
+IPC::LDT             Rdpf Implements a length based IPC protocol       JSTENZEL
+IPC::Locker          RdpO Shared semaphore locks across a network      WSNYDER
+IPC::Mmap            i    Interface to Unix's mmap() shared memory     MICB
+IPC::Open2           Supf Open a process for both reading and writing  P5P
+IPC::Open3           Supf Like IPC::Open2 but with error handling      P5P
+IPC::Run             bdph Child procs w/ piping, redir and psuedo-ttys RBS
+IPC::Session         anpO remote shell session mgr; wraps open3()      STEVEGT
+IPC::Shareable       bdpr Tie a variable to shared memory              BSUGARS
+IPC::SharedCache     Rmpr Manage a cache in SysV IPC shared memory     SAMTREGAR
+IPC::Signal          Rdpf Translate signal names to/from numbers       ROSCH
+IPC::SysV            adcr shared memory, semaphores, messages etc      JACKS
+IPC::XPA             adch Interface to SAO XPA messaging system        DJERIUS
+
+RPC::             Remote Procedure Calls (see also DCE::RPC)
+RPC::PlServer        RdpO Interface for building Perl Servers          JWIED
+RPC::PlClient        RdpO Interface for building pServer Clients       JWIED
+RPC::ONC             adcO ONC RPC interface (works with perlrpcgen)    JAKE
+RPC::Simple          adpO Simple OO async remote procedure calls       DDUMONT
+
+DCE::             Distributed Computing Environment (OSF)
+DCE::ACL             bdcO Interface to Access Control List protocol    PHENSON
+DCE::DFS             bdcO DCE Distributed File System interface        PHENSON
+DCE::Login           bdcO Interface to login functions                 PHENSON
+DCE::RPC             c    Remote Procedure Calls                       PHENSON
+DCE::Registry        bdcO DCE registry functions                       PHENSON
+DCE::Status          bdpr Make sense of DCE status codes               PHENSON
+DCE::UUID            bdcf Misc uuid functions                          PHENSON
+
+NetPacket::
+NetPacket::ARP             adpO  Address Resolution Protocol                 TIMPOTTER
+NetPacket::Ethernet        adpO  Ethernet framed data                        TIMPOTTER
+NetPacket::IGMP            adpO  Internet Group Management Protocol          TIMPOTTER
+NetPacket::IP              adpO  Internet Protocol                           TIMPOTTER
+NetPacket::TCP             adpO  Transmission Control Protocol               TIMPOTTER
+NetPacket::UDP             adpO  User Datagram Protocol                      TIMPOTTER
+
+Proxy             i    Transport-independent remote processing      MICB
+Proxy::
+Proxy::Tk              ?    Tk transport class for Proxy (part of Tk)    MICB
+
+Fwctl             bmpO Interface to Linux packet filtering firewall FRAJULAC
+LSF               cdcO Interface to the Load Sharing Facility API   PFRANCEUS
+TFTP              bdpO Interface to TFTP (rfc1350)                  GSM
+ToolTalk          adcr Interface to the ToolTalk messaging service  MARCP
+
+SOAP              cmpO SOAP/Perl language mapping                   KBROWN
+
+IPChains          RdcO Create and Manipulate ipchains               JESSICAQ
+IPChains::
+IPChains::PortFW          bdpO Interface to ipmasqadm portfw command        FRAJULAC
+
+SNMP              RdcO Interface to the UCD SNMP toolkit            GSM
+SNMP::
+SNMP::Monitor         adpO Accounting and graphical display             JWIED
+SNMP::Util            RdpO Perform SNMP set,get,walk,next,walk_hash,... WMARQ
+
+Mon::
+Mon::Client          RdpO Network monitoring client                    TROCKIJ
+Mon::SNMP            RdpO Network monitoring suite                     TROCKIJ
+
+Parallel::
+Parallel::ForkManager     RdpO A simple parallel processing fork manager    DLUX
+Parallel::Pvm             bdcf Interface to the PVM messaging service       DLECONTE
+
+CORBA::
+::IOP::IOR        adpO Decode, munge, and re-encode CORBA IORs      PHILIPA
+::IOP::IDLtree         adpf IDL to symbol tree translator                OMKELLOGG
+
+Modem::
+Modem::VBox            RdpO Perl module for creation of voiceboxes       MLEHMANN
+Modem::Vgetty          bdpO Interface to voice modems using vgetty       YENYA
+
+ControlX10::
+ControlX10::CM10            RmpO Control unit for X10 modules                 BBIRTH
+ControlX10::CM17            RmpO inexpensive RF transmit-only X10             BBIRTH
+
+RAS::
+RAS::PortMaster      RdpO Interface to Livingston PortMaster           STIGMATA
+RAS::AS5200          RdpO Interface to Cisco AS5200 dialup server      STIGMATA
+RAS::HiPerARC        RdpO Interface to 3Com TotalControl HiPerARC      STIGMATA
+
+6) Data Types and Data Type Utilities (see also Database Interfaces)
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+Math::
+Math::Amoeba          Rdpr Multidimensional Function Minimisation       JARW
+Math::Approx          adpO Approximate x,y-values by a function         ULPFR
+Math::BaseCalc        RdpO Convert numbers between various bases        KWILLIAMS
+Math::BigFloat        SupO Arbitrary size floating point math package   MARKB
+Math::BigInt          SupO Arbitrary size integer math package          MARKB
+Math::BigInteger      adc  Arbitrary size integer as XS extension       GARY
+Math::BigRat          ?    Arbitrary size rational numbers (fractions)  MARKB
+Math::Brent           Rdpr One-dimensional Function Minimisation        JARW
+Math::CDF             bdch Cumulative Distribution Functions            CALLAHAN
+Math::Cephes          adcf Interface to St. Moshier's Cephes library    RKOBES
+Math::Complex         SdpO Complex number data type                     RAM
+Math::Derivative      Rdpr 1st and 2nd order differentiation of data    JARW
+Math::Expr            adpO Parses agebraic expressions                  HAKANARDO
+Math::Fortran         Rdpf Implements Fortran log10 & sign functions    JARW
+Math::Fourier         i    Fast Fourier Transforms                      AQUMSIEH
+Math::Fraction        bdpO Fraction Manipulation                        KEVINA
+Math::Geometry        adpf 2D and 3D algorithms                         GMCCAR
+Math::Integral        i    Integration of data                          AQUMSIEH
+Math::Interpolate     Rdpr Polynomial interpolation of data             MATKIN
+Math::LinearProg      idp  Linear programming utilities                 JONO
+Math::Logic           RdpO Provides pure 2, 3 or multi-value logic      SUMMER
+Math::Matrix          adpO Matrix data type (transpose, multiply etc)   ULPFR
+Math::MatrixBool      RdcO Matrix of booleans (Boolean Algebra)         STBEY
+Math::MatrixCplx      idpO Matrix data type for Complex Numbers         STBEY
+Math::MatrixReal      RdpO Everything you ever wanted to do with Matr.  STBEY
+Math::Pari            adcf Interface to the powerful PARI library       ILYAZ
+Math::Polynomial      RdpO Polynomials as objects                       MATKIN
+Math::Prime           i    Prime number testing                         GARY
+Math::RandomPrime     i    Generates random primes of x bits            GARY
+Math::Round           RdpO Perl extension for rounding numbers          GROMMEL
+Math::SigFigs         Rdpf Math using scientific significant figures    SBECK
+Math::Spline          RdpO Cubic Spline Interpolation of data           JARW
+Math::Trig            bdpf tan asin acos sinh cosh tanh sech cosech     JARW
+Math::TrulyRandom     i    based on interrupt timing discrepancies      GARY
+Math::VecStat         Rdpr Some basic numeric stats on vectors          ASPINELLI
+Math::ematica         adcO Interface to the powerful Mathematica system ULPFR
+Math::Libm            RdcO Perl extension for the C math library, libm  DSLEWART
+
+Math::Business::
+Math::Business::EMA             adcO An Exponential Moving Average Calculator     JETTERO
+
+Statistics::
+Statistics::ChiSquare       Rdpf Chi Square test - how random is your data?   JONO
+Statistics::ConwayLife      RdpO Simulates life using Conway's algorithm      DANB
+Statistics::Descriptive     RdpO Descriptive statistical methods              COLINK
+Statistics::LTU             RdpO Implements Linear Threshold Units            TOMFA
+Statistics::MaxEntropy      Rdpf Maximum Entropy Modeling                     TERDOEST
+Statistics::OLS             bdpO ordinary least squares (curve fitting)       SMORTON
+Statistics::ROC             bdpf ROC curves with nonparametric conf. bounds   HAKESTLER
+Statistics::Distributions   RdpO Perl module for calculating critical values  MIKEK
+
+Algorithm::
+Algorithm::Diff            Rdpf Diff (also Longest Common Subsequence)       NEDKONZ
+Algorithm::Permute         bdcO Handy and fast permutation with OO interface EDPRATOMO
+
+Algorithm::Graphs::
+Algorithm::Graphs::TransitiveClosure RdpO Calculates the transitive closure          ABIGAIL
+
+Algorithm::Numerical::
+Algorithm::Numerical::Shuffle         Rdph Knuth's shuffle algorithm                    ABIGAIL
+Algorithm::Numerical::Sample          RDph Knuth's sample algorithm                     ABIGAIL
+
+PDL               amcf Perl Data Language - numeric analysis env    PERLDL
+
+PDL::
+PDL::Audio           adch Sound synthesis and editing with PDL         MLEHMANN
+PDL::Meschach        amcf Links PDL to meschach matrix library         EGROSS
+PDL::NetCDF          bdhO Reads/Writes NetCDF files from/to PDL objs   DHUNT
+PDL::Options         Rdph Provides hash options handling for PDL       TJENNESS
+PDL::PP              amcf Automatically generate C code for PDL        PERLDL
+PDL::Slatec          amof Interface to slatec (linpack+eispack) lib.   PERLDL
+
+Quantum::
+Quantum::Superpositions  RdpO QM-like superpositions in Perl               DCONWAY
+
+Array::
+Array::Compare         RdpO Class to compare two arrays                  DAVECROSS
+Array::Heap            cdpf Manipulate array elements as a heap          JMM
+Array::IntSpan         RdpO Handling arrays using IntSpan techniques     TEVERETT
+Array::PrintCols       adpf Print elements in vertically sorted columns  AKSTE
+Array::Substr          idp  Implement array using substr()               LWALL
+Array::Vec             idp  Implement array using vec()                  LWALL
+Array::Virtual         idp  Implement array using a file                 LWALL
+Array::Reform          RdpO Convert an array into N-sized array of array TBONE
+
+Hash::
+Hash::NoVivify        Rdcf Provide non-autovivifying hash functions     BPOWERS
+
+Heap              bdpO Define Heap interface                        JMM
+Heap::
+Heap::Binary          bdpO Implement Binary Heap                        JMM
+Heap::Binomial        bdpO Implement Binomial Heap                      JMM
+Heap::Fibonacci       bdpO Implement Fibonacci Heap                     JMM
+Heap::Elem            bdpO Heap Element interface, ISA                  JMM
+Heap::Elem::
+Heap::Elem::Num             bdpO Numeric heap element container               JMM
+Heap::Elem::NumRev          bdpO Numeric element reversed order               JMM
+Heap::Elem::Str             bdpO String heap element container                JMM
+Heap::Elem::StrRev          bdpO String element reversed order                JMM
+Heap::Elem::Ref             bdpO Obj ref heap element container               JMM
+Heap::Elem::RefRev          bdpO Obj ref element reversed order               JMM
+
+Scalar::
+Scalar::Util            bdcf Scalar utilities (dualvar reftype etc)       GBARR
+
+List::
+List::Util            bdcf List utilities (eg min, max, reduce)         GBARR
+
+Bit::
+Bit::Vector          RdcO Virtual (arbitrary machineword size) CPU     STBEY
+
+Set::
+Set::Bag             RdpO Bag (multiset) class                         JHI
+Set::IntRange        RdcO Set of integers (arbitrary intervals, fast)  STBEY
+Set::IntSpan         adpO Set of integers newsrc style '1,5-9,11' etc  SWMCD
+Set::NestedGroups    RdpO Grouped data eg ACL's, city/state/country    ABARCLAY
+Set::Object          bdcO Set of Objects (smalltalkish: IdentitySet)   JLLEROY
+Set::Scalar          adpO Set of scalars (inc references)              JHI
+Set::Window          bdpO Manages an interval on the integer line      SWMCD
+
+Graph::
+Graph::Element         RdpO Base class for element of directed graph     NEILB
+Graph::Node            RdpO A node in a directed graph                   NEILB
+Graph::Edge            RdpO An edge in a directed graph                  NEILB
+Graph::Kruskal         Rdpf Kruskal Algorithm for Minimal Spanning Trees STBEY
+
+Decision::
+Decision::Markov          bdpO Build/evaluate Markov models for decisions   ALANSZ
+
+Date::
+Date::Calc            Rdcf Gregorian calendar date calculations         STBEY
+Date::Convert         cdpO Conversion between Gregorian, Hebrew, more?  MORTY
+Date::CTime           adpf Updated ctime.pl with mods for timezones     GBARR
+Date::Format          Rdpf Date formatter ala strftime                  GBARR
+Date::Interval        idpO Lightweight normalised interval data type    KTORP
+Date::Language        adpO Multi-language date support                  GBARR
+Date::Manip           Rdpf Complete date/time manipulation package      SBECK
+Date::Parse           Rdpf ASCII Date parser using regexp's             GBARR
+Date::Time            idpO Lightweight normalised datetime data type    TOBIX
+
+Time::
+Time::Avail           Rdpf Calculate min. remaining in time interval    PSANTORO
+Time::CTime           Rdpf Format Times ala ctime(3) with many formats  MUIR
+Time::DaysInMonth     Rdpf Returns the number of days in a month        MUIR
+Time::HiRes           Rdcf High resolution time, sleep, and alarm       DEWEG
+Time::JulianDay       Rdpf Converts y/m/d into seconds                  MUIR
+Time::Local           Supf Implements timelocal() and timegm()          P5P
+Time::Object          adpO Object Oriented time objects                 MSERGEANT
+Time::ParseDate       Rdpf Parses many forms of dates and times         MUIR
+Time::Period          Rdpf Code to deal with time periods               PRYAN
+Time::Timezone        Rdpf Figures out timezone offsets                 MUIR
+Time::Zone            Rdpf Timezone info and translation routines       GBARR
+Time::gmtime          Supf A by-name interface for gmtime               TOMC
+Time::localtime       Supf A by-name interface for localtime            TOMC
+Time::Seconds         RdcO API to convert seconds to other date values  MSERGEANT
+
+Calendar::
+Calendar::CSA             adcO interface with calenders such as Sun and CDE KJALB
+Calendar::Hebrew          cdpO Hebrew calendar conversion/manipulation      YSTH
+Calendar::RCM             i    Russell Calendar Manager                     HTCHAPMAN
+
+Tie::
+Tie::Hash            Supr Base class for implementing tied hashes      P5P
+Tie::Scalar          Supr Base class for implementing tied scalars     P5P
+Tie::Array           Supr Base class for implementing tied arrays      P5P
+Tie::CPHash          bdpO Case preserving but case insensitive hash    CJM
+Tie::Cache           Mdpr In memory size limited LRU cache             CHAMAS
+Tie::DB_FileLock     Rdpr Locking access to Berkeley DB 1.x.           JMV
+Tie::DB_Lock         Rdpr Tie DB_File with automatic locking           KWILLIAMS
+Tie::DBI             RdpO Tie hash to a DBI handle                     LDS
+Tie::Dir             adpr Tie hash for reading directories             GBARR
+Tie::Discovery       Rdpr Discover data by caching sub results         SIMON
+Tie::File            adpr Tie hash to files in a directory             AMW
+Tie::FileLRUCache    bdph File based persistent LRU cache              SNOWHARE
+Tie::Handle          RdpO Base class for implementing tied filehandles STBEY
+Tie::HashDefaults    adpr Let a hash have default values               JDPORTER
+Tie::IxHash          RdpO Indexed hash (ordered array/hash composite)  GSAR
+Tie::LLHash          Rdpr Fast ordered hashes via linked lists         KWILLIAMS
+Tie::ListKeyedHash   Rdpr Use lists to key multi-level hashes          SNOWHARE
+Tie::Mem             adcO Bind perl variables to memory addresses      PMQS
+Tie::MmapArray       bdcr Ties a file to an array                      ANDREWF
+Tie::Multidim        adpr "tie"-like multidimensional data structures  JDPORTER
+Tie::OffsetArray     adpr Tie one array to another, with index offset  JDPORTER
+Tie::Persistent      Rdpr Persistent data structures via tie           RGIERSIG
+Tie::Quick           i    Simple way to create ties                    TIMB
+Tie::RDBM            RdpO Tie hashes to relational databases           LDS
+Tie::RndHash         bdpO choose a random key of a hash in O(1) time   DFAN
+Tie::SecureHash      RdpO Enforced encapsulation of Perl objects       DCONWAY
+Tie::SentientHash    bdpr Tracks changes to nested data structures     ANDREWF
+Tie::ShadowHash      adpO Merge multiple data sources into a hash      RRA
+Tie::ShiftSplice     i    Defines shift et al in terms of splice       LWALL
+Tie::SortHash        Rdpr Provides persistent sorting for hashes       CTWETEN
+Tie::SubstrHash      SdpO Very compact hash stored in a string         LWALL
+Tie::TextDir         Rdpr ties a hash to a directory of textfiles      KWILLIAMS
+Tie::Watch           bdpO Watch variables, run code when read/written  LUSOL
+Tie::Cycle           RdpO Cycle through a list of values via a scalar. BDFOY
+
+Tie::Scalar::
+Tie::Scalar::Timeout         adpr Scalar variables that time out               MARCEL
+
+Tie::Cache::
+Tie::Cache::LRU             adpr A Least-Recently Used cache                  MSCHWERN
+
+Class::
+Class::Accessor        bdpO Automated accessor generation                MSCHWERN
+Class::DBI             adpO Simple SQL-based object persistance          MSCHWERN
+Class::Eroot           RdpO Eternal Root - Object persistence            DMR
+Class::Fields          bdph Inspect the fields of a class                MSCHWERN
+Class::MethodMaker     bdpO Create generic methods                       FLUFFY
+Class::Multimethods    Rdpf A multiple dispatch mechanism for Perl       DCONWAY
+Class::Mutator         bdpO Dynamic polymorphism implemented in Perl     GMCCAR
+Class::NamedParms      MdpO A named parameter accessor base class        SNOWHARE
+Class::ParmList        MdpO A named parameter list processor             SNOWHARE
+Class::Singleton       bdpO Implementation of a "Singleton" class        ABW
+Class::Template        Rdpr Struct/member template builder               DMR
+Class::Translucent     RdpO Translucent (ala perltootc) method creation  GED
+Class::Tree            MdpO C++ class hierarchies & disk directories     RSAVAGE
+Class::TOM             RmpO Transportable Object Model for perl          JDUNCAN
+Class::Contract        RdpO Design-by-Contract OO in Perl.               DCONWAY
+Class::WhiteHole       RdpO Treat unhandled method calls as errors       MSCHWERN
+Class::BlackHole       RdpO treat unhandled method calls as no-op        SBURKE
+Class::Classless       MdpO Framework for classless OOP                  SBURKE
+Class::ISA             Mdpf Report the search path thru an ISA tree      SBURKE
+
+Object::
+Object::Info            Rupf General info about objects (is-a, ...)       JACKS
+Object::Transaction     bdpO Transactions on serialized HASH files        MUIR
+
+POE::             Perl Object Environment
+POE::Kernel          RdpO An event queue that dispatches events        RCAPUTO
+POE::Session         RdpO state machine running on POE::Kernel events  RCAPUTO
+
+POE::Component::
+POE::Component::RSS             bdp? Event based RSS interface                    MSTEVENS
+POE::Component::SubWrapper      bdp? Event based Module interface                 MSTEVENS
+
+MOP               bdp  Meta Object Protocol (Tool collection)       ORTALO
+Ref               RdpO Print, compare, and copy perl structures     MUIR
+SOOP              RdpO Safe Object Oriented Programming             GARROW
+
+Sort::
+Sort::ByCompatMatrix  idpO Sort objects by attribute compatibility      ICKHABOD
+Sort::Fields          bdpf sort text lines by alpha or numeric fields   JNH
+Sort::PolySort        bdpO general rules-based sorting of lists         DMACKS
+Sort::Versions        Rdpf sorting of revision (and similar) numbers    KJALB
+
+Data Type Marshaling (converting to/from strings) and Persistent Storage
+
+Clone             idch Recursive copy of nested objects             RDF
+FreezeThaw        bdpf Convert arbitrary objects to/from strings    ILYAZ
+Persistence::
+Persistence::Object          adpO Store Object definitions with Data::Dumper   VIPUL
+Storable          Rdcr Persistent data structure mechanism          RAM
+Marshal::
+Marshal::Dispatch        cdpO Convert arbitrary objects to/from strings    MUIR
+Marshal::Packed          cdpO Run-length coded version of Marshal module   MUIR
+Marshal::Eval            cdpO Undo serialization with eval                 MUIR
+Tangram           RmpO Object persistence in relational databases   JLLEROY
+
+Persistent::
+Persistent::Base            bdpO Persistent base classes (& DBM/File classes) DWINTERS
+Persistent::DBI             bdpO Persistent abstract class for DBI databases  DWINTERS
+Persistent::MySQL           bdpO Persistent class for MySQL databases         DWINTERS
+Persistent::Oracle          bdpO Persistent class for Oracle databases        DWINTERS
+Persistent::Sybase          bdpO Persistent class for Sybase databases        DWINTERS
+Persistent::mSQL            bdpO Persistent class for mSQL databases          DWINTERS
+Persistent::LDAP            bdpO Persistent class for LDAP directories        DWINTERS
+
+Data::
+Data::Check           cdpO Checks values for various data formats       KENHOLM
+Data::DRef            adph Nested data access using delimited strings   EVO
+Data::Dumper          RdpO Convert data structure into perl code        GSAR
+Data::Flow            RdpO Acquire data based on recipes                ILYAZ
+Data::Locations       RdpO Insert data into other data w/o temp files   STBEY
+Data::Reporter        RdcO Ascii Report Generator                       RVAZ
+Data::Walker          RdpO Navigate through Perl data structures        JNOLAN
+Data::Random          adpf Generate random sets of data                 ADEO
+Data::JavaScript      RdpO Dumps structures into JavaScript code        SCHOP
+
+Tree::
+Tree::Base            cdpO Defines a basic binary search tree           MSCHWERN
+Tree::Fat             Rdcf Embeddable F-Tree algorithm suite            JPRIT
+Tree::Smart           cdpO Splay tree, fastest for commonly accessed ke MSCHWERN
+Tree::Ternary         bdpO Perl implementation of ternary search trees  MROGASKI
+Tree::Ternary_XS      adcO XS implementation of ternary search trees    LBROCARD
+Tree::Trie            bdpO An implementation of the Trie data structure AVIF
+Tree::Nary            RdpO Perl implementation of N-ary search trees    FSORIANO
+Tree::DAG_Node        MdpO base class for trees                         SBURKE
+
+DFA::
+DFA::Command         MdpO Discrete Finite Automata command processor   RSAVAGE
+DFA::Kleene          R    Kleene's Algorithm for DFA                   STBEY
+DFA::Simple          cdpO An "augmented transition network"            RANDYM
+
+Boulder           MdpO Generalized tag/value data objects           LDS
+Thesaurus         RdpO Create associations between related things   DROLSKY
+
+7) Database Interfaces (see also Data Types)
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+DBI               amcO Generic Database Interface (see DBD modules) DBIML
+
+DBIx -- Extensions to the DBI
+
+DBIx::
+DBIx::Abstract        RmpO Wrapper for DBI that generates SQL           TURNERA
+DBIx::AnyDBD          bdpO Module to make cross db applications easier  MSERGEANT
+DBIx::CGITables       adpO Easy DB access from a CGI                    TOBIX
+DBIx::Copy            adpO Copying databases                            TOBIX
+DBIx::FullTextSearch  bdpO Index documents with MySQL as storage        TJMATHER
+DBIx::glueHTML        bdpO CGI interface to DBI databases               JFURNESS
+DBIx::HTMLView        cdpO Creating web userinterfaces to DBI dbs       HAKANARDO
+DBIx::OracleSequence  adpO OO access to Oracle sequences via DBD-Oracle BLABES
+DBIx::Password        MdpO Abstration layer for database passwords      KROW
+DBIx::Recordset       bmpO DB-Abtractionlayer / Access via Arrays/Hashs GRICHTER
+DBIx::Table           bdpO OO access to DBI database tables             DLOWE
+DBIx::TableAdapter    adpO An object-relational mapper for DBI tables   GED
+DBIx::Tree            adpO Expand self-referential table into a tree    BJEPS
+DBIx::XML_RDB         ???? Creates XML from DBI datasources             MSERGEANT
+DBIx::DBSchema        bmpO Database-independent schema objects          IVAN
+
+DBD::
+DBD::ASAny           adcO Adaptive Server Anywhere Driver for DBI      SMIRNIOS
+DBD::Altera          bdpO Altera SQL Server for DBI - pure Perl code   DSOUFLIS
+DBD::CSV             adcO SQL engine and DBI driver for CSV files      JWIED
+DBD::DB2             adcO DB2 Driver for DBI                           MHM
+DBD::Empress         adcO Empress RDBMS Driver                         SWILLIAM
+DBD::FreeTDS         adcO DBI driver for MS SQLServer and Sybase       SPANNRING
+DBD::SearchServer    cdcO PCDOCS/Fulcrum SearchServer Driver for DB    SHARI
+DBD::Illustra        bmcO Illustra Driver for DBI                      PMH
+DBD::Informix        amcO Informix Driver for DBI                      JOHNL
+DBD::Informix4       adcO DBI driver for Informix SE 4.10              GTHYNI
+DBD::Ingres          bmcO Ingres Driver for DBI                        HTOUG
+DBD::Multiplex       a    Spreading database load acrross servers      TIMB
+DBD::ODBC            amcO ODBC Driver for DBI                          DBIML
+DBD::Oracle          MmcO Oracle Driver for DBI                        TIMB
+DBD::QBase           amcO QBase Driver for DBI                         BENLI
+DBD::RAM             bmpO a DBI driver for files and data structures   JZUCKER
+DBD::SQLrelay        bdpO SQLrelay driver for DBI                      DMOW
+DBD::Solid           amcO Solid Driver for DBI                         TWENRICH
+DBD::Sqlflex         RdcO SQLFLEX driver for DBI                       INFOFLEX
+DBD::Sybase          bmcO Sybase Driver for DBI                        MEWP
+DBD::Unify           bdcO Unify driver for DBI                         HMBRAND
+DBD::XBase           bmpO XBase driver for DBI                         JANPAZ
+DBD::mSQL            RmcO Msql Driver for DBI                          JWIED
+DBD::mysql           RmcO Mysql Driver for DBI                         JWIED
+DBD::pNET            amcO DBD proxy driver                             JWIED
+DBD::InterBase       amcO DBI driver for InterBase RDBMS server        EDPRATOMO
+
+Oraperl           Rmpf Oraperl emulation interface for DBD::Oracle  DBIML
+Ingperl           bmpf Ingperl emulation interface for DBD::Ingres  HTOUG
+
+DDL::
+DDL::Oracle          bdpO Reverse engineers object DDL; also defrags   RVSUTHERL
+
+MSSQL::
+MSSQL::DBlib           Md+O Access MS SQL Server through DB-Library.     SOMMAR
+MSSQL::Sqllib          MdpO High-level interface using MSSQL::DBlib.     SOMMAR
+
+Sybase::
+Sybase::Async           cdpO interact with a Sybase asynchronously        WORENKD
+Sybase::BCP             RdcO Sybase BCP interface                         MEWP
+Sybase::DBlib           RdcO Sybase DBlibrary interface                   MEWP
+Sybase::Simple          bdpO Simplified db access using Sybase::CTlib     MEWP
+Sybase::Sybperl         Rdpf sybperl 1.0xx compatibility module           MEWP
+Sybase::CTlib           RdcO Sybase CTlibrary interface                   MEWP
+
+Ace               i    Interface to ACEDB (Popular Genome DB)       LDS
+BBDB              Rdph Insiduous big brother database               LAXEN
+DTREE             cdcf Interface to Faircom DTREE multikey ISAM db  JWAT
+Datascope         Rdcf Interface to Datascope RDBMS                 DANMQ
+Fame              adcO Interface to FAME database and language      TRIAS
+LotusNotes        i    Interface to Lotus Notes C/C++ API           MBRECH
+Msql              RmcO Mini-SQL database interface                  JWIED
+Mysql             RmcO mysql database interface                     JWIED
+NetCDF            bmcr Interface to netCDF API for scientific data  SEMM
+ObjStore          Rm+O ObjectStore OODBMS Interface                 JPRIT
+Pg                Rdcf PostgreSQL SQL database interface            MERGL
+PgSQL             adpO "Pure perl" interface to PostgreSQL          GTHYNI
+Pogo              ad+O Interface for GOODS object database          SEYN
+Postgres          RncO PostgreSQL interface with Perl5 coding style VKHERA
+Sprite            RdpO Limited SQL interface to flat file databases SHGUN
+Stanza            i    Text format database used by OSF and IBM     JHI
+VDBM              cdph Client/server-layers on top of DBM files     RAM
+WAIT              adhO A rewrite of the freeWAIS-sf engine in Perl  ULPFR
+Wais              Rdcf Interface to the freeWAIS-sf libraries       ULPFR
+XBase             RdpO Read/write interface to XBase files          JANPAZ
+Xbase             bdpf Read Xbase files with simple IDX indexes     PRATP
+
+Tied Hash File Interfaces:
+
+AnyDBM_File       Sup  Uses first available *_File module above     P5P
+BerkeleyDB        RdcO Interface to Berkeley DB 2 & 3               PMQS
+CDB_File          adc  Tie to CDB (Bernstein's constant DB) files   TIMPX
+DBZ_File          adc  Tie to dbz files (mainly for news history)   IANPX
+DWH_File          adpO DBM storage of complex data and objects      SUMUS
+DB_File           Suc  Tie to DB files                              PMQS
+GDBM_File         Suc  Tie to GDBM files                            P5P
+NDBM_File         Suc  Tie to NDBM files                            P5P
+ODBM_File         Suc  Tie to ODBM files                            P5P
+SDBM_File         Suc  Tie to SDBM files                            P5P
+
+MLDBM             RdpO Transparently store multi-level data in DBM  GSAR
+MLDBM::
+MLDBM::Sync            cdpr MLDBM wrapper to serialize concurrent access CHAMAS
+
+DB_File::
+DB_File::Lock            RdpO DB_File wrapper with flock-based locking     DHARRIS
+
+DBM::
+DBM::DBass           adpf DBM with hashes, locking and XML records     SPIDERBOY
+
+AsciiDB::
+AsciiDB::Parse           i    Generic text database parsing                MICB
+AsciiDB::TagFile         adpO Tie class for a simple ASCII database        JOSERODR
+
+Db::
+Db::Ctree           Rdcr Faircom's CTREE+ database interface          REDEN
+Db::Documentum      Rdcf Documentum EDMS Perl client interface        MSROTH
+Db::dmObject        cdpO Object-based interface to Documentum EDMS    JGARRISON
+Db::DFC             adpO OO Interface to Documentum's DFC             MSROTH
+
+DbFramework::
+DbFramework::Attribute       adpO Relational attribute class                   PSHARPE
+DbFramework::DataModel       adpO Relational data model/schema class           PSHARPE
+DbFramework::DataType        adpO Attribute data type class                    PSHARPE
+DbFramework::ForeignKey      adpO Relational foreign key class                 PSHARPE
+DbFramework::Key             adpO Relational key class                         PSHARPE
+DbFramework::Persistent      adpO Persistent object class                      PSHARPE
+DbFramework::PrimaryKey      adpO Relational primary key class                 PSHARPE
+DbFramework::Table           adpO Relational table/entity class                PSHARPE
+DbFramework::Util            adhO Utility functions/methods                    PSHARPE
+
+BTRIEVE::
+BTRIEVE::SAVE            bdpO Read-write access to BTRIEVE SAVE files      DLANE
+
+MARC              bmpO MAchine Readable Catalog (library bib. data) PERL4LIB
+MARC::
+MARC::XML             ampO MAchine Readable Catalog / XML Extension     PERL4LIB
+
+Metadata::
+Metadata::Base            bdpO Base metadata functionality                  DJBECKETT
+Metadata::IAFA            bdpO IAFA templates metadata                      DJBECKETT
+Metadata::SOIF            bdpO Harvest SOIF metadata                        DJBECKETT
+
+OLE::
+OLE::PropertySet     aupO Property Set interface                       MSCHWARTZ
+OLE::Storage         aupO Structured Storage / OLE document interface  MSCHWARTZ
+OLE::Storage_Lite    adpO Simple Class for OLE document interface      KWITKNR
+
+Spectrum::
+Spectrum::CLI             RdpO API for Spectrum Enterprise Mgr. CLI         PLONKA
+
+Spreadsheet::
+Spreadsheet::Excel           i    Interface to Excel spreadsheets              RRAWLINGS
+Spreadsheet::Lotus           i    Interface to Lotus 1-2-3 spreadsheets        RRAWLINGS
+Spreadsheet::WriteExcel      bupO Write numbers & text in Excel binary format  JMCNAMARA
+Spreadsheet::ParseExcel      RdpO Get information from Excel file              KWITKNR
+
+X500::
+X500::DN              MdpO X500 Distinguished Name parser               RSAVAGE
+
+8) User Interfaces (Character and Graphical)
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+Term::
+Term::ANSIColor       Sdpf Color output using ANSI escape sequences     RRA
+Term::Cap             Supf Basic termcap: Tgetent, Tputs, Tgoto         TSANDERS
+Term::Complete        Supf Tab word completion using stty raw           WTOMPSON
+Term::Control         idpf Basic curses-type screen controls (gotxy)    KJALB
+Term::Gnuplot         adcf Draw vector graphics on terminals etc        ILYAZ
+Term::Info            adpf Terminfo interface (currently just Tput)     KJALB
+Term::ProgressBar     idpf Progress bar in just ASCII                   EDAVIS
+Term::Prompt          adpf Prompt a user                                ALLENS
+Term::Query           Rdpf Intelligent user prompt/response driver      AKSTE
+Term::ReadKey         Rdcf Read keystrokes and change terminal modes    KJALB
+Term::ReadLine        Sdcf Common interface for various implementations ILYAZ
+Term::Scraper         cdpO Drive and scrape terminal applications       INGY
+Term::Screen          RdpO Basic screen + input class (uses Term::Cap)  MRKAE
+Term::Size            adcf Simple way to get terminal size              TIMPX
+Term::TUI             bdpf User interface based on Term::ReadLine       SBECK
+
+Term::ReadLine::
+Term::ReadLine::Perl            RdpO GNU Readline history and completion in Perl  ILYAZ
+Term::ReadLine::Gnu             RdcO GNU Readline XS library wrapper              HAYASHI
+
+Major Character User Interface Modules:
+
+Cdk               RdcO Collection of Curses widgets                 GLOVER
+Curses            adcO Character screen handling and windowing      WPS
+Dialog            bdch interface library to libdialog               UNCLE
+PV                bdpO Text-mode User Interface Widgets             AGUL
+PerlMenu          Mdpf Curses-based menu and template system        SKUNZ
+
+Curses::
+Curses::Forms           adpO Form management for Curses::Widgets          CORLISS
+Curses::Widgets         Rdpf Assorted widgets for rapid interfaces        CORLISS
+
+Emacs             adpf Support for Perl embedded in GNU Emacs       JTOBEY
+Emacs::
+Emacs::Lisp            bdch Perl-to-Emacs-Lisp glue                      JTOBEY
+
+Tk X Windows User Interface Modules
+
+Tk                bmcO Object oriented version of Tk v4             TKML
+
+Tk::
+Tk::TextANSIColor   bdpO use ANSI color codes in Text widget          TJENNESS
+Tk::Autoscroll      cdpf Alternative way to scroll                    SREZIC
+Tk::Axis            RmpO Canvas with Axes                             TKML
+Tk::CheckBox        RdpO A radio button widget that uses a checkmark  DKWILSON
+Tk::ChildNotification RdpO Alert widget when child is created         DKWILSON
+Tk::Clock           RdpO Canvas based Clock widget                    HMBRAND
+Tk::Cloth           RdpO Object interface to Tk::Canvas and items     ACH
+Tk::Columns         RdpO Multi column lists w/ resizable borders      DKWILSON
+Tk::ComboEntry      RdpO Drop down list + entry widget                DKWILSON
+Tk::ContextHelp     cdpO A context-sensitive help system              SREZIC
+Tk::Dial            RmpO An alternative to the Scale widget           TKML
+Tk::Date            cdpO A date/time widget                           SREZIC
+Tk::Enscript        cdpf Create postscript from text files using Tk   SREZIC
+Tk::FcyEntry        adpO Entry with bg color depending on -state      ACH
+Tk::FileDialog      RdpO A highly configurable file selection widget  BPOWERS
+Tk::FileEntry       adpO Primitive clone of Tix FileEntry widget      ACH
+Tk::FireButton      RdpO Keeps invoking callback when pressed         ACH
+Tk::FlatCheckbox    cdpO A checkbox suitable for flat reliefs         SREZIC
+Tk::FontDialog      cdpO A font dialog widget for perl/Tk             SREZIC
+Tk::Getopt          adpO Configuration interface to Getopt::Long      SREZIC
+Tk::HistEntry       cdpO An entry widget with history capability      SREZIC
+Tk::HTML            bdpO View HTML in a Tk Text widget                NI-S
+Tk::IconCanvas      RdpO Canvas with movable iconic interface         DKWILSON
+Tk::JPEG            RdcO JPEG loader for Tk::Photo                    NI-S
+Tk::LockDisplay     RdpO Screen saver/lock widget with animation      LUSOL
+Tk::Login           cdpO A Login widget (name, passwd, et al)         BPOWERS
+Tk::Menustrip       RdpO Another MenuBar                              DKWILSON
+Tk::More            adpO A more (or less) like text widget            ACH
+Tk::Multi           bdpO Manages several Text or Canvas widgets       DDUMONT
+Tk::NumEntry        RdpO Numerical entry widget with up/down buttons  ACH
+Tk::ObjScanner      bdpO A scanner to view an object's attribute      DDUMONT
+Tk::Olwm            RmpO Interface to OpenLook toplevels properties   TKML
+Tk::Pane            RdpO A Frame that can be scrolled                 TKML
+Tk::PNG             RdcO PNG loader for Tk::Photo                     NI-S
+Tk::Pod             ?mpO POD browser toplevel widget                  TKML
+Tk::ProgressBar     RdpO Status/progress bar                          TKML
+Tk::ProgressMeter   cdpO Simple thermometer-style widget w/callbacks  BPOWERS
+Tk::RotCanvas       RdpO Canvas with arbitrary rotation support       AQUMSIEH
+Tk::SplitFrame      RdpO A sliding separator for two child widgets    DKWILSON
+Tk::TabFrame        RdpO A tabbed frame geometry manager              DKWILSON
+Tk::TabbedForm      RdpO Ext. TabFrame, allowing managed subwidgets   DKWILSON
+Tk::TableEdit       RdpO Simplified interface to a flat file database DKWILSON
+Tk::TableMatrix     bdcO Display data in Table/Spreadsheet format     CERNEY
+Tk::TiedListbox     RmpO Gang together Listboxes                      TKML
+Tk::TFrame          RdpO A Frame with a title                         ACH
+Tk::TIFF            adpO TIFF loader for Tk::Photo                    SREZIC
+Tk::Tree            RdpO Create and manipulate Tree widgets           CTDEAN
+Tk::TreeGraph       RdpO Widget to draw a tree in a Canvas            DDUMONT
+Tk::WaitBox         RdpO A Wait dialog, of the "Please Wait" variety  BPOWERS
+Tk::XMLViewer       adpO Tk widget to display XML                     SREZIC
+
+Modules in the realm of Tk but with a separate namespace
+
+Log::Dispatch::
+Log::Dispatch::ToTk            RdpO Interface class between Log::Dispatch and Tk DDUMONT
+Log::Dispatch::TkText          RdpO Text widget to log Log::Dispatch messages    DDUMONT
+
+Puppet::
+Puppet::Body            adpO Base class for persistent data               DDUMONT
+Puppet::Log             bdpO Logging facility based on Tk                 DDUMONT
+Puppet::Any             adpO Base class for an optionnal GUI              DDUMONT
+
+Puppet::VcsTools::
+Puppet::VcsTools::History         bdpO VCS (RCS HMS) history viewer based on Canvas DDUMONT
+Puppet::VcsTools::File            adpO VCS (RCS HMS) file manager                   DDUMONT
+
+Orac              RdpO DBA GUI tool for Oracle, Informix and Sybase ANDYDUNC
+PPresenter        MdpO Create presentations with Tk in Perl or XML  MARKOV
+
+Other Major X Windows User Interface Modules:
+
+Gtk               bdcO binding of the Gtk library used by GIMP      KJALB
+
+Gtk::
+Gtk::Dialog          adph Simple interface to create dialogs in Gtk    ALISTAIRC
+
+Fresco            cd+O Interface to Fresco (post X11R6 version)     BPETH
+Glade             adph Glade/Gtk+/Gnome UI source code generator    DMUSGR
+Gnome             bdcO Bindings to the Gnome Desktop Toolkit        KJALB
+Qt                ad+O Interface to the Qt toolkit                  AWIN
+Sx                Rdcf Simple Athena widget interface               FMC
+
+X11::
+X11::Auth            adpO Read and handle X11 '.Xauthority' files      SMCCAM
+X11::Fvwm            RdcO interface to the FVWM window manager API     RJRAY
+X11::Keysyms         adpf X11 key symbols (translation of keysymdef.h) SMCCAM
+X11::Lib             bdcO X11 library interface                        KENFOX
+X11::Motif           bdcO Motif widget set interface                   KENFOX
+X11::Protocol        adpO Raw interface to X Window System servers     SMCCAM
+X11::Toolkit         bdcO X11 Toolkit library interface                KENFOX
+X11::Wcl             bdcO Interface to the Widget Creation Library     JHPB
+X11::XEvent          bdcO provides perl OO acess to XEvent structures  MARTINB
+X11::XFontStruct     bdcO provides perl OO access to XFontStruct       MARTINB
+X11::XRT             adcO XRT widget set (commercial) interface        KENFOX
+X11::Xbae            adcO Xbae matrix (spreadsheet like) interface     KENFOX
+X11::Xforms          bdcO provides the binding to the xforms library   MARTINB
+X11::Xpm             adcf X Pixmap library interface                   KENFOX
+
+Abstract Graphical User Interfaces modules
+
+GUI::
+GUI::Guido           i    bd+O Communicate with objects in a GUI       TBRADFUTE
+
+9) Interfaces to or Emulations of Other Programming Languages
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+Clips             adpO Interface to the Expert System Clips         MSULLIVAN
+Java              RdoO A Perl front-end for JVM communication       METZZO
+Rc                cdcO Perl interface for the Rc shell              JPRIT
+SICStus           adcO Interface to SICStus Prolog Runtime          CBAIL
+
+C::
+C::DynaLib         bdcO Allows direct calls to dynamic libraries     JTOBEY
+C::Scan            RdpO Heuristic parse of C files                   ILYAZ
+
+Tcl               RdcO Complete access to Tcl                       MICB
+::Tk              RdcO Complete access to Tk *via Tcl*              MICB
+
+Language::
+Language::Basic           adpO Implementation of BASIC                      AKARGER
+Language::Prolog          adpO An implementation of Prolog                  JACKS
+Language::PGForth         i    Peter Gallasch's Forth implementation        PETERGAL
+
+Fortran::
+Fortran::NameList        adpf Interface to FORTRAN NameList data           SGEL
+
+ShellScript::
+ShellScript::Env             adpO Simple sh and csh script generator           SVENH
+
+Verilog::
+Verilog::Pli             Rdch Access to simulator functions                WSNYDER
+Verilog::Language        Rdpf Language support, number parsing, etc        WSNYDER
+Verilog::Parser          RdpO Language parsing                             WSNYDER
+Verilog::SigParser       RdpO Signal and module extraction                 WSNYDER
+
+FFI               cdcf Low-level Foreign Function Interface         PMOORE
+
+FFI::
+FFI::Library         cdcO Access to functions in shared libraries      PMOORE
+
+FFI::Win32::
+FFI::Win32::Typelib         idcO FFI taking definitions from a type library   PMOORE
+FFI::Win32::COM             idcO Access to COM using VTBL interface           PMOORE
+
+Python            bmcf Interface Python API (for embedded python)   GAAS
+Python::
+Python::Object          bmcO Wrapper for python objects                   GAAS
+Python::Err             bmcO Wrapper for python exceptions                GAAS
+
+10) File Names, File Systems and File Locking (see also File Handles)
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+Cwd               Supf Current working directory functions          P5P
+
+File::
+File::Attrib          idpO Get/set file attributes (stat)               TYEMQ
+File::BSDGlob         bdcf Secure, csh-compatible filename globbing     GBACON
+File::Backup          bdpf Easy file backup & rotation automation       KWILLIAMS
+File::Basename        Supf Return basename of a filename                P5P
+File::Cache           adpO Share data between processes via filesystem  DCLINTON
+File::CheckTree       Supf Check file/dir tree against a specification  P5P
+File::Compare         Supf Compare file contents quickly                P5P
+File::Copy            adpf Copying files or filehandles                 ASHER
+File::CounterFile     RdpO Persistent counter class                     GAAS
+File::Df              adpf Free disk space utilities (h2ph required)    FTASSIN
+File::Find            Supf Call func for every item in a directory tree P5P
+File::Flock           Mdph flock() wrapper.  Auto-create locks          MUIR
+File::Glob            adpf Filename globing (ksh style)                 TYEMQ
+File::LckPwdF         adcf Lock and unlock the passwd file              ALLENS
+File::Listing         Rdpf Parse directory listings                     GAAS
+File::Lock            adcf File locking using flock() and lockf()       JHI
+File::MultiTail       adpO Tail multiple files                          SGMIANO
+File::Path            Supf File path and name utilities                 P5P
+File::Remote          Rdph Read/write/edit remote files transparently   NWIGER
+File::Rsync           bdpO Copy efficiently over the net and locally    LEAKIN
+File::Signature       cdpf Heuristics for file recognition              JHI
+File::Slurp           Mdpf Read/write/append files quickly              MUIR
+File::Sort            Rdpf Sort a file or merge sort multiple files     CNANDOR
+File::Spec            bdpO Handling files and directories portably      KJALB
+File::Sync            bdcf POSIX/*nix fsync() and sync()                CEVANS
+File::Tail            bdpO A more efficient tail -f                     MGRABNAR
+File::Temp            adpf Create temporary files safely                TJENNESS
+File::chmod           Mdpf Allows for symbolic chmod notation           PINYAN
+File::lockf           bdcf Interface to lockf system call               PHENSON
+File::stat            Supf A by-name interface for the stat function    TOMC
+File::BasicFlock      Rdpf Simple flock() wrapper                       MUIR
+File::Searcher        bdpO Search filetree do search/replace regexes    ASTUBBS
+
+File::Searcher::
+File::Searcher::Interactive     bdpO Interactive search do search/replace regexes ASTUBBS
+
+Dir::
+Dir::Purge           Rdpf Delete files in directory based on timestamp JV
+
+Filesys::
+Filesys::AFS             cdcO AFS Distributed File System interface        NOG
+Filesys::Df              Rdpr Disk free based on Filesys::Statvfs          IGUTHRIE
+Filesys::DiskFree        adpO OS independant parser of the df command      ABARCLAY
+Filesys::Ext2            Rdpf Interface to e2fs filesystem attributes      JPIERCE
+Filesys::SamFS           adcf Interface to SamFS API                       LUPE
+Filesys::Statvfs         Rdcf Interface to the statvfs() system call       IGUTHRIE
+Filesys::dfent           adpf By-name interface                            TOMC
+Filesys::mntent          adpf By-name interface                            TOMC
+Filesys::statfs          adpf By-name interface                            TOMC
+
+LockFile::        Application-level locking facilities
+LockFile::Lock            adpO Lock handles created by LockFile::* schemes  RAM
+LockFile::Manager         adpO Records locks created by LockFile::*         RAM
+LockFile::Scheme          adpO Abstract superclass for locking modules      RAM
+LockFile::Simple          adpr Simple file locking mechanism                RAM
+
+Stat::
+Stat::lsMode          Rdpf Translate mode 0644 to -rw-r--r--            MJD
+
+11) String Processing, Language Text Processing, Parsing and Searching
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+String::
+String::Approx          Rdpf Approximate string matching and substitution JHI
+String::BitCount        adpf Count number of "1" bits in strings          WINKO
+String::CRC             Rdcf Cyclic redundency check generation           MUIR
+String::CRC32           R?c? ZMODEM-like CRC32 generation of strings as w SOENKE
+String::DiffLine        bdcf line # & position of first diff              ALLEN
+String::Edit            adpf Assorted handy string editing functions      TOMC
+String::Parity          adpf Parity (odd/even/mark/space) handling        WINKO
+String::RexxParse       Rdph Perl implementation of REXX 'parse' command  BLCKSMTH
+String::Scanf           Rdpf Implementation of C sscanf function          JHI
+String::ShellQuote      Rdpf Quote string for safe passage through shells ROSCH
+String::Strip           Rdcf xs Module to remove white-space from strings BPOWERS
+String::Random          RdpO Perl module to generate random strings based STEVE
+String::Similarity      RdcO Calculate the similarity of two strings      MLEHMANN
+
+Language text related modules
+
+Text::
+Text::Abbrev          Supf Builds hash of all possible abbreviations    P5P
+Text::Bastardize      cdpO corrupts text in various ways                AYRNIEU
+Text::Bib             RdpO Module moved to Text::Refer                  ERYQ
+Text::BibTeX          adcO Parse BibTeX files                           GWARD
+Text::CSV             adpO Manipulate comma-separated value strings     ALANCITT
+Text::CSV_XS          adpO Fast 8bit clean version of Text::CSV         JWIED
+Text::DelimMatch      RdpO Match (possibly nested) delimited strings    NWALSH
+Text::FillIn          RdpO Fill-in text templates                       KWILLIAMS
+Text::Format          RdpO Advanced paragraph formatting                GABOR
+Text::Graphics        RdpO Graphics rendering toolkit with text output  SFARRELL
+Text::Iconv           RdcO Perl interface to the XPG4 iconv() function  MPIOTR
+Text::Invert          cdpO Create/query inv. index of text entities     NNEUL
+Text::Macros          adpO template macro expander (OO)                 JDPORTER
+Text::Metaphone       bdcf A modern soundex. Phonetic encoding of words MSCHWERN
+Text::MetaText        bdpO Text processing/markup meta-language         ABW
+Text::Morse           cdpf convert text to/from Morse code              JONO
+Text::ParseWords      Supf Parse strings containing shell-style quoting HALPOM
+Text::Refer           RdpO Parse refer(1)-style bibliography files      ERYQ
+Text::SimpleTemplate  adpO Template for dynamic text generation         TAIY
+Text::Soundex         Sdhf Convert a string to a soundex value          MARKM
+Text::Tabs            Sdpf Expand and contract tabs ala expand(1)       MUIR
+Text::TeX             cdpO TeX typesetting language input parser        ILYAZ
+Text::Templar         RdpO An object-oriented templating system         GED
+Text::Template        MdpO Expand template text with embedded perl      MJD
+Text::TreeFile        bdpO Reads tree of strings into a data structure  JNK
+Text::Vpp             RdpO Versatile text pre-processor                 DDUMONT
+Text::Wrap            Sdpf Wraps lines to make simple paragraphs        MUIR
+Text::iPerl           adpf Bring text-docs to life via embedded Perl    PFEIFFER
+Text::DoubleMetaphone adcf Convert string to phonetic encoding          MAURICE
+Text::FastTemplate    bdpO Perl subs from line-oriented templates       BOZZIO
+
+Text::Wrap::
+Text::Wrap::Hyphenate       a    Like Text::Wrap with ability to hyphenate    MJD
+
+Other Text:: modules (these should be under String:: but pre-date it)
+
+Text::
+Text::Balanced        Mdpf Extract balanced-delimiter substrings        DCONWAY
+Text::Banner          adpf Resembles UNIX banner command                LORY
+Text::Merge           i??? Methods for text templating and data merging SHARRIS
+Text::Parser          adpO String parser using patterns and states      PATM
+Text::Trie            adpf Find common heads and tails from strings     ILYAZ
+
+Stemming algorithms
+
+Text::
+Text::English         adpf English language stemming                    IANPX
+Text::German          adpf German language stemming                     ULPFR
+Text::Stem            bdpf Porter algorithm for stemming English words  IANPX
+
+Natural Languages
+
+Lingua::
+Lingua::DetectCharset   a    Heuristics to detect coded character sets    JNEYSTADT
+Lingua::Ident           RdpO Statistical language identification          MPIOTR
+Lingua::Ispell          adpf Interface to the Ispell spellchecker         JDPORTER
+Lingua::Stem            Rdph Word stemmer with localization               SNOWHARE
+
+Specific Natural Languages
+
+Lingua::
+Lingua::EN              i    Namespace for English language modules
+Lingua::PT              bupf Namespace for Portugese language modules     EGROSS
+
+Lingua::EN::
+Lingua::EN::AddressParse    bdpO Manipulate geographical addresses            KIMRYAN
+Lingua::EN::Cardinal        i    Convert numbers to words                     HIGHTOWE
+Lingua::EN::Fathom          RdpO Readability measurements of English text     KIMRYAN
+Lingua::EN::Hyphenate       Rdpf Syllable based hyphenation                   DCONWAY
+Lingua::EN::Infinitive      MdpO Find infinitive of a conjugated word         RSAVAGE
+Lingua::EN::Inflect         Mdpf English singular->plural and "a"->"an"       DCONWAY
+Lingua::EN::MatchNames      bdpf Smart matching for human names               BRIANL
+Lingua::EN::NameCase        Rdpf Convert NAMES and names to Correct Case      SUMMER
+Lingua::EN::NameParse       RdpO Manipulate persons name                      KIMRYAN
+Lingua::EN::Nickname        bdpf Genealogical nickname matching(Peggy=Midge)  BRIANL
+Lingua::EN::Ordinal         i    Convert numbers to words                     HIGHTOWE
+Lingua::EN::Squeeze         bdpf Shorten english text for Pagers/GSM phones   JARIAALTO
+Lingua::EN::Syllable        a    Estimate syllable count in words             GREGFAST
+
+Lingua::EN::Numbers::
+Lingua::EN::Numbers::Ordinate        Rdpf go from cardinal (53) to ordinal (53rd)      SBURKE
+
+Lingua::RU::
+Lingua::RU::Charset         anpf Detect/Convert russian character sets.       FARBER
+
+ERG               Rdpf An extensible report generator framework     PHOENIXL
+
+PostScript::
+PostScript::Barcode         bdpf Various types of barcodes as PostScript      COLEMAN
+PostScript::Basic           bdpO Basic methods for postscript generation      STWIGGER
+PostScript::Document        bdpO Generate multi-page PostScript               SHAWNPW
+PostScript::Elements        bdpO Objects for shapes, lines, images            SHAWNPW
+PostScript::Font            RdpO analyzes PostScript font files               JV
+PostScript::FontInfo        RdpO analyzes Windows font info files             JV
+PostScript::FontMetrics     RdpO analyzes Adobe Font Metric files             JV
+PostScript::Metrics         bdpO Font metrics data used by PS::TextBlock      SHAWNPW
+PostScript::Resources       RdpO loads Unix PostScript Resources file         JV
+PostScript::TextBlock       bdpO Objects used by PS::Document                 SHAWNPW
+
+Font::
+Font::AFM             RdpO Parse Adobe Font Metric files                GAAS
+Font::TFM             RdpO Read info from TeX font metric files         JANPAZ
+Font::TTF             bdpO TrueType font manipulation module            MHOSKEN
+Font::Fret            RdpO Fret - Font REporting Tool                   MHOSKEN
+
+Number::
+Number::Format          RdpO Package for formatting numbers for display   WRW
+
+Number::Phone::
+Number::Phone::US              Rdpf Validates several US phone number formats    KENNEDYH
+
+Email::
+Email::Find            adpf Find RFC 822 email addresses in plain text   MSCHWERN
+
+Parse::
+Parse::ePerl           Rdcr Embedded Perl (ePerl) parser                 RSE
+Parse::Lex             adpO Generator of lexical analysers               PVERD
+Parse::RecDescent      MdpO Recursive descent parser generator           DCONWAY
+Parse::Tokens          bdpO Base class for parsing tokens from text      MCKAY
+Parse::Yapp            RdpO Generates OO LALR parser modules             FDESAR
+Parse::YALALR          RdpO Yet Another LALR parser                      SFINK
+Parse::Vipar           bdpO Visual LALR parser debugger                  SFINK
+
+Search::
+Search::Dict            Supf Search a dictionary ordered text file        P5P
+Search::InvertedIndex   RdpO Inverted index database support              SNOWHARE
+Search::Binary          Rdpf Generic binary search                        RANT
+
+SGML::
+SGML::Element         cdpO Build a SGML element structure tree          LSTAF
+SGML::Parser          RdpO SGML instance parser                         EHOOD
+SGML::SPGrove         bd+O Load SGML, XML, and HTML files               KMACLEOD
+SGML::Entity          RdpO An entity defined in an SGML or XML document KMACLEOD
+
+SGMLS             RdpO A Post-Processor for SGMLS and NSGMLS        INGOMACH
+
+XML               RmhO Large collection of XML related modules      XMLML
+
+XML::
+XML::AutoWriter      RdpO DOCTYPE based XML output                     RBS
+XML::CSV             i?cO Transform comma separated values to XML      ISTERIN
+XML::Catalog         RdpO Resolve public identifiers and remap system  EBOHLMAN
+XML::DOM             bmpO Implements Level 1 of W3's DOM               ENNO
+XML::Doctype         RdpO A DTD object class                           RBS
+XML::Dumper          ampO Converts XML from/to Perl code               EISEN
+XML::Edifact         ???? Scripts for translating EDIFACT into XML     KRAEHE
+XML::Element         RdpO XML elements with the same interface as HTML SBURKE
+XML::Encoding        ???? Parses encoding map XML files                COOPERCL
+XML::Generator       bdpO Generates XML documents                      BHOLZMAN
+XML::Grove           RmpO Flexible lightweight mid-level XML objects   KMACLEOD
+XML::PPD             RdpO PPD file format and XML parsing elements     MURRAY
+XML::PYX             RdpO XML to PYX generator                         MSERGEANT
+XML::Parser          bmcO Flexible fast parser with plug-in styles     COOPERCL
+XML::QL              ???? Implements the XML Query Language            MSERGEANT
+XML::Registry        ampO Implements a generic XML registry            EISEN
+XML::Sablotron       RdcO Interface to the Sablotron XSLT processor    PAVELH
+XML::TreeBuilder     RdpO Build a tree of XML::Element objects         SBURKE
+XML::Writer          ???? Module for writing XML documents             DMEGG
+XML::XPath           RdpO A set of modules for parsing and evaluating  MSERGEANT
+XML::XQL             ampO Performs XQL queries on XML object trees     ENNO
+XML::XSLT            RdcO Process XSL Transformational sheets          BRONG
+XML::miniXQL         ???? Simplistic XQL-like search using streams     MSERGEANT
+
+Frontier::
+Frontier::RPC             ???? Performs Remote Procedure Calls using XML    KMACLEOD
+
+RDF::
+RDF::Service         ampO RDF API with DBI and other backends          JONAS
+
+RTF::
+RTF::Base            i    Classes for Microsoft Rich Text Format       NI-S
+RTF::Document        a pO Generate Rich Text (RTF) Files               RRWO
+RTF::Generator       idpO Next Generation of RTF::Document             RRWO
+RTF::Group           adpO Base class for manipulating Rich Text Format RRWO
+RTF::Parser          a    Base class for parsing RTF files             PVERD
+
+SQL::
+SQL::Schema          bdpO Convert a data dictionary to SQL statements  TODD
+SQL::Statement       adcO Small SQL parser and engine                  JWIED
+SQL::Builder         adpO OO interface for creating SQL statements     ZENIN
+
+TeX::
+TeX::DVI             RdpO Methods for writing DVI (DeVice Independent) JANPAZ
+TeX::Hyphen          RdpO Hyphenate words using TeX's patterns         JANPAZ
+
+FrameMaker        cdpO Top level FrameMaker interface               PEASE
+FrameMaker::
+FrameMaker::FDK             idcO Interface to Adobe FDK                       PEASE
+FrameMaker::MIF             cdpO Parse and Manipulate FrameMaker MIF files    PEASE
+FrameMaker::Control         cdpO Control a FrameMaker session                 PEASE
+
+Marpa             cd+O Context Free Parser                          JKEGL
+
+Chatbot::
+Chatbot::Eliza           RdpO Eliza algorithm encapsulated in an object    JNOLAN
+
+Quiz::
+Quiz::Question        cdpO Questions and Answers wrapper                RFOLEY
+
+Template          RdpO Extensive Toolkit for template processing    ABW
+dTemplate         bmpO Flexible templating system                   DLUX
+
+Barcode::
+Barcode::Code128         adpO Generate CODE 128 bar codes                  WRW
+
+12) Option, Argument, Parameter and Configuration File Processing
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+Getopt::
+Getopt::ArgvFile        Rdpf Take options from files                      JSTENZEL
+Getopt::Declare         MdpO An easy-to-use WYSIWYG command-line parser   DCONWAY
+Getopt::EvaP            Mdpr Long/short options, multilevel help          LUSOL
+Getopt::Gnu             adcf GNU form of long option handling             WSCOT
+Getopt::Help            bdpf Yet another getopt, has help and defaults    IANPX
+Getopt::Long            Sdpr Advanced handling of command line options    JV
+Getopt::Mixed           Rdpf Supports both long and short options         CJM
+Getopt::Regex           ad   Option handling using regular expressions    JARW
+Getopt::Simple          MdpO A simple-to-use interface to Getopt::Long    RSAVAGE
+Getopt::Std             Supf Implements basic getopt and getopts          P5P
+Getopt::Tabular         adpr Table-driven argument parsing with help text GWARD
+Getopt::Tiny            adpr Table of references interface, auto usage()  MUIR
+
+Getargs::
+Getargs::Long            cdpf Parses long function args f(-arg => value)   RAM
+
+Argv              bdph Provide an OO interface to an ARGV           DSB
+ConfigReader      cdpO Read directives from configuration file      AMW
+Resources         bdpf Application defaults management in Perl      FRANCOC
+
+App::             General application development tools
+App::Config          bdpO Configuration file mgmt                      ABW
+App::Manager         adch Installing/Managing/Uninstalling Software    MLEHMANN
+
+Config::
+Config::FreeForm        bdpf Provide in-memory configuration data         BTROTT
+Config::IniFiles             Read/Write INI-Style configuration files     RBOW
+
+CfgTie            adph Framework for tieing system admin tasks      RANDYM
+
+13) Internationalization and Locale
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+I18N::
+I18N::Charset         Rdpf Character set names and aliases              MTHURN
+I18N::Collate         Sdpr Locale based comparisons                     JHI
+I18N::LangTags        Mdpf compare & extract language tags (RFC1766)    SBURKE
+I18N::WideMulti       i    Wide and multibyte character string          JHI
+
+Locale::
+Locale::Country         Rdpf ISO 3166 two letter country codes            NEILB
+Locale::Date            adpf Month/weekday names in various languages     JHI
+Locale::Langinfo        cdcf The <langinfo.h> API                         JHI
+Locale::Language        Rdpf ISO 639 two letter language codes            NEILB
+Locale::Msgcat          RdcO Access to XPG4 message catalog functions     CHRWOLF
+Locale::PGetText        bdpf What GNU gettext does, written in pure perl  MSHOYHER
+Locale::SubCountry      RdpO ISO 3166-2 two letter subcountry codes       KIMRYAN
+Locale::gettext         Rdcf Multilanguage messages                       PVANDRY
+Locale::Maketext        RdpO Framework for software localization          SBURKE
+Locale::PO              RdpO Manipulate .po entries from gettext          ALANSZ
+
+Unicode::
+Unicode::String          RdcO String manipulation for Unicode strings      GAAS
+Unicode::Map8            RdcO Convert between most 8bit encodings          GAAS
+Unicode::Normal          i??? Composition, canonical ordering, blocks      MHOSKEN
+Unicode::MapUTF8         Rdpf Conversions to and from arbitrary charsets   SNOWHARE
+
+No::
+No::Dato            Rdpf Norwegian stuff                              GAAS
+No::KontoNr         Rdpf Norwegian stuff                              GAAS
+No::PersonNr        Rdpf Norwegian stuff                              GAAS
+No::Sort            Rdpf Norwegian stuff                              GAAS
+No::Telenor         Rdpf Norwegian stuff                              GAAS
+
+Cz::
+Cz::Cstocs          RdpO Charset reencoding                           JANPAZ
+Cz::Sort            RdpO Czech sorting                                JANPAZ
+Cz::Speak           bdpf number, etc. convertor to the Czech language YENYA
+
+Geography::
+Geography::States          Rdp? Map states and provinces to their codes      ABIGAIL
+
+Sort::
+Sort::ArbBiLex        Mdpf sort functions for arbitrary sort orders     SBURKE
+
+14) Authentication, Security and Encryption (see also Networking)
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+User::
+User::Utmp            Rdcf Perl access to UNIX utmp(x)-style databases  MPIOTR
+User::pwent           adpf A by-name interface to password database     TOMC
+User::grent           adpf A by-name interface to groups database       TOMC
+User::utent           cdcO Interface to utmp/utmpx/wtmp/wtmpx database  ROSCH
+
+PGP               adpO Simple interface to PGP subprocess via pipes PGPML
+PGP::
+PGP::Sign            bdpr Create/verify PGP/GnuPG signatures, securely RRA
+
+GnuPG             bdpO Perl interface to the GNU privacy guard.     FRAJULAC
+GnuPG::
+GnuPG::Interface       RdpO OO interface to GNU Privacy Guard            FTOBIN
+
+DES               adcf DES encryption (libdes)                      EAYNG
+Des               adcf DES encryption (libdes)                      MICB
+GSS               adcO Generic Security Services API (RFC 2078)     MSHLD
+OpenCA            RmpO Tools for running a Certification Authority  MADWOLF
+SMIMEUtil         amhf Sign, encrypt, verify, decrypt S/MIME mail   SAMPO
+
+Digest::
+Digest::MD5             Rdch  MD5 message digest algorithm                GAAS
+Digest::MD2             Rdch  MD2 message digest algorithm                GAAS
+Digest::SHA1            cdch  NIST SHA message digest algorithm           UWEH
+Digest::HMAC            Rdph  HMAC message integrity check                GAAS
+
+Crypt::
+Crypt::Beowulf         Rdpf An original, very fast encryption algorithm  SIFUKURT
+Crypt::Blowfish        RdhO XS-based implementation of Blowfish          DPARIS
+Crypt::Blowfish_PP     adpO Blowfish encryption algorithm in Pure Perl   MATTBM
+Crypt::CBC             adpO Cipherblock chaining for Crypt::DES/IDEA     LDS
+Crypt::CBCeasy         bdpf Easy things make really easy with Crypt::CBC MBLAZ
+Crypt::DES             a    DES encryption (libdes)                      GARY
+Crypt::ElGamal         bdpO ElGamal digital signatures and keys          VIPUL
+Crypt::IDEA            a    International Data Encryption Algorithm      GARY
+Crypt::Keys            adpO Management system for cryptographic keys     VIPUL
+Crypt::OTP             Rdpf Implements One Time Pad encryption           SIFUKURT
+Crypt::Passwd          Mdhf Perl wrapper around the UFC Crypt            LUISMUNOZ
+Crypt::PasswdMD5       Mdhf Interoperable MD5-based crypt() function     LUISMUNOZ
+Crypt::PRSG            a    160 bit LFSR for pseudo random sequences     GARY
+Crypt::RC4             Rdpf Implements the RC4 encryption algorithm      SIFUKURT
+Crypt::Random          bdpO Cryptographically Strong Random Numbers      VIPUL
+Crypt::Rot13           cdpO simple encryption often seen on usenet       AYRNIEU
+Crypt::RSA             bdpO RSA encryption, decryption, key generation   VIPUL
+Crypt::Solitaire       Rdpf A very simple encryption system              SIFUKURT
+Crypt::Twofish         Rdpf Twofish Encryption Algorothm                 NISHANT
+Crypt::UnixCrypt       Rdpf Perl-only implementation of crypt(3)         MVORL
+Crypt::RandPasswd      RdpO Random password generator based on FIPS-181  JDPORTER
+Crypt::Rijndael        bdch AES/Rijndael Encryption Module               DIDO
+Crypt::TripleDES       RdpO Triple DES encyption.                        VIPUL
+Crypt::PGP5            bdpO An Object Oriented Interface to PGP5.        AGUL
+Crypt::PGP6            cdpO An Object Oriented Interface to PGP6.        AGUL
+Crypt::PGP             cdpO Unified OO Interface to PGP and GnuPG        AGUL
+Crypt::GPG             bdpO An Object Oriented Interface to GnuPG        AGUL
+Crypt::ECB             Mdph ECB mode for Crypt::DES, Blowfish, etc.      APPEL
+Crypt::CipherSaber     bdpO OO module for CS-1 and CS-2 encryption       CHROMATIC
+
+Authen::
+Authen::ACE             adcO Interface to Security Dynamics ACE (SecurID) DCARRIGAN
+Authen::Krb4            RdcO Interface to Kerberos 4 API                  JHORWITZ
+Authen::Krb5            RdcO Interface to Kerberos 5 API                  JHORWITZ
+Authen::PAM             bdch Interface to PAM library                     NIKIP
+Authen::TacacsPlus      adcO Authentication on tacacs+ server             MSHOYHER
+Authen::Ticket          adpO Suite consisting of master/client/tools      JSMITH
+
+RADIUS::
+RADIUS::Dictionary      bdpO Object interface to RADIUS dictionaries      CHRMASTO
+RADIUS::Packet          bdpO Object interface to RADIUS (rfc2138) packets CHRMASTO
+RADIUS::UserFile        bdpO Manipulate a RADIUS users file               OEVANS
+
+SSLeay            cdcO Interface to SSLeay                          EAYNG
+
+15) World Wide Web, HTML, HTTP, CGI, MIME etc (see Text Processing)
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+URI::
+URI::Attr            ampO Stores attributes in the URI name space      LWWWP
+URI::Bookmark        bdpO A Class for bookmarks                        ASPIERS
+URI::Bookmarks       bdpO A Class for bookmark collections             ASPIERS
+URI::Escape          Rmpf General URI escaping/unescaping functions    LWWWP
+URI::Find            adpf Find URIs in plain text                      MSCHWERN
+URI::URL             RmpO Uniform Resource Locator objects             LWWWP
+
+CGI::
+CGI::Application     RmpO Framework for building reusable web-apps     JERLBAUM
+CGI::ArgChecker      bdpO Consistent, extensible CGI param validation  DLOWE
+CGI::Authent         Mdpf request the HTTP authentification            JENDA
+CGI::Base            RmpO Complete HTTPD CGI Interface class           CGIP
+CGI::BasePlus        RmpO Extra CGI::Base methods (incl file-upload)   CGIP
+CGI::CList           bdpO Manages hierarchical collapsible lists       PEARCEC
+CGI::Cache           adpf Speed up slow CGI scripts by caching         BROCSEIB
+CGI::Carp            cmpf Drop-in Carp replacement for CGI scripts     CGIP
+CGI::Debug           Mdph show CGI debugging data                      JONAS
+CGI::Deurl           Mdpr decode the CGI parameters                    JENDA
+CGI::Enurl           Mdpr encode the CGI parameters                    JENDA
+CGI::Formalware      MdpO Convert an XML file to a suite of CGI forms  RSAVAGE
+CGI::Imagemap        Rdph Imagemap handling for specialized apps       MIKEH
+CGI::LogCarp         Rdph Error, log, bug streams, httpd style format  MIKEKING
+CGI::MiniSvr         RmpO Fork CGI app as a per-session mini server    CGIP
+CGI::Minimal         MdpO A micro-sized CGI handler                    SNOWHARE
+CGI::MxScreen        cdpO Screen multi-plexer framework                RAM
+CGI::Out             adpf Buffer CGI output and report errors          MUIR
+CGI::PathInfo        RdpO A lightweight PATH_INFO based CGI package    SNOWHARE
+CGI::Persistent      adpO Transparent State Persistence in CGI scripts VIPUL
+CGI::Query           adpO Parse CGI quiry strings                      MPECK
+CGI::QuickForm       Rdpf Handles UI & validation for CGI forms        SUMMER
+CGI::Request         RmpO Parse CGI request and handle form fields     CGIP
+CGI::Response        ampO Response construction for CGI applications   MGH
+CGI::Screen          adpO Create multi screen CGI-scripts              ULPFR
+CGI::Session         cdpO Persistent storage of complex data in CGI    ZED
+CGI::SpeedyCGI       bdcn Run CGI scripts persistenly                  HORROCKS
+CGI::Validate        adpO Advanced CGI form parser                     ZENIN
+CGI::WML             RdpO Subclass of CGI.pm for WML output            AWOOD
+CGI::XML             ampO Convert CGI.pm variables to/from XML         EISEN
+CGI::XMLForm         adpO Create/query XML for forms                   MSERGEANT
+
+HTML::
+HTML::Base            adpO Object-oriented way to build pages of HTML   GAND
+HTML::CalendarMonth   RmpO Calendar Months as easy HTML::Element trees  MSISK
+HTML::Demoroniser     adpO Correct moronic and incompatible HTML        JDPORTER
+HTML::EP              adpO Modular, extensible Perl embedding           JWIED
+HTML::Element         RdpO Representation of a HTML parsing tree        SBURKE
+HTML::ElementGlob     RmpO Manipulate multiple HTML elements as one     MSISK
+HTML::ElementRaw      RmpO Graft HTML strings onto an HTML::Element     MSISK
+HTML::ElementSuper    RmpO Various HTML::Element extensions             MSISK
+HTML::ElementTable    RmpO Tables as easy HTML element structures       MSISK
+HTML::Embperl         Rmcf Embed Perl in HTML                           GRICHTER
+HTML::Entities        Rmpf Encode/decode HTML entities                  LWWWP
+HTML::FillInForm      adpO Fill in HTML forms, separating HTML and code TJMATHER
+HTML::Formatter       ampO Convert HTML to plain text or Postscript     LWWWP
+HTML::HeadParser      RmpO  Parse <HEAD> section of HTML documents      LWWWP
+HTML::LinkExtor       RmpO  Extract links from HTML documents           LWWWP
+HTML::Mason           bdpO Build sites from modular Perl/HTML blocks    JSWARTZ
+HTML::ParseForm       i    Parse and handle HTML forms via templates    NMONNET
+HTML::Parser          RmcO Basic HTML Parser                            LWWWP
+HTML::QuickCheck      cdpf Fast simple validation of HMTL text          YLU
+HTML::Simple          bdpf Simple functions for generating HTML         TOMC
+HTML::SimpleParse     RdpO Bare-bones HTML parser                       KWILLIAMS
+HTML::StickyForms     adpO HTML form generation for mod_perl/CGI        PMH
+HTML::Stream          RdpO HTML output stream                           ERYQ
+HTML::Subtext         adpO Text substitutions on an HTML template       KAELIN
+HTML::Table           RupO Write HTML tables via spreadsheet metaphor   AJPEACOCK
+HTML::TableExtract    RmpO Flexible HTML table extraction               MSISK
+HTML::TableLayout     bdpO an extensible OO layout manager              PERSICOM
+HTML::Template        MmpO a simple HTML templating system              SAMTREGAR
+HTML::TokeParser      RmpO  Alternative HTML::Parser interface          LWWWP
+HTML::Validator       bdpO HTML validator utilizing nsgmls and libwww   SAIT
+HTML::Tagset          Rdpf data tables useful in parsing HTML           SBURKE
+
+HTML::Widgets::
+HTML::Widgets::DateEntry       RdpO Creates date entry widgets for HTML forms.   KENNEDYH
+HTML::Widgets::Menu            RdpO Builds an HTML menu                          FRANKIE
+HTML::Widgets::Search          RdpO Perl module for building searches returning  FRANKIE
+
+HTTP::
+HTTP::Browscap        cdpO Provides info on web browser capabilities    JAMESPO
+HTTP::BrowserDetect   adph Detect browser, version, OS from UserAgent   LHS
+HTTP::Cookies         RmpO Storage of cookies                           LWWWP
+HTTP::DAV             ampO A client module for the WebDAV protocol      PCOLLINS
+HTTP::Daemon          RmpO Base class for simple HTTP servers           LWWWP
+HTTP::Date            Rmpf Date conversion for HTTP date formats        LWWWP
+HTTP::Headers         RmpO Class encapsulating HTTP Message headers     LWWWP
+HTTP::Message         RmpO Base class for Request/Response              LWWWP
+HTTP::Negotiate       Rmpf HTTP content negotiation                     LWWWP
+HTTP::Request         RmpO Class encapsulating HTTP Requests            LWWWP
+HTTP::Response        RmpO Class encapsulating HTTP Responses           LWWWP
+HTTP::Status          Rmpf HTTP Status code processing                  LWWWP
+HTTP::GHTTP           RdcO Perl interface to the gnome ghttp library    MSERGEANT
+HTTP::WebTest         bdph Run tests on remote URLs or local web files  RANDERSON
+
+HTTP::Request::
+HTTP::Request::Common          Rmpf Functions that generate HTTP::Requests       LWWWP
+HTTP::Request::Form            RdpO Generates HTTP::Request objects out of forms GBAUER
+
+WAP::
+WAP::Wbmp            i??? Wireless bitmap manipulation module          SAA
+WAP::WML             i??? Wireless Markup language routines            SAA
+
+WML::
+WML::Card            RdpO Builds WML code for different wap browsers   MALVARO
+WML::Deck            RdpO WML Deck generator                           MALVARO
+
+HTTPD::
+HTTPD::Access          cdpO Management of server access control files    LDS
+HTTPD::Authen          bdpO Preform HTTP Basic and Digest Authentication LDS
+HTTPD::Config          cdpO Management of server configuration files     LDS
+HTTPD::GroupAdmin      bdpO Management of server group databases         LDS
+HTTPD::UserAdmin       bdpO Management of server user databases          LDS
+
+WWW::
+WWW::BBSWatch        adpO email WWW bulletin board postings            TAYERS
+WWW::Robot           adpO Web traversal engine for robots & agents     NEILB
+WWW::RobotRules      ampO Parse /robots.txt file                       LWWWP
+WWW::Search          adpO Front-end to Web search engines              JOHNH
+
+WWW::Search::
+WWW::Search::AlltheWeb       RdpO Class for searching AlltheWeb                JSMYSER
+WWW::Search::Deja            RdpO Class for www.deja.com searching             MTHURN
+WWW::Search::Go              RdpO Backend class for searching with go.com      ALIAN
+
+LWP               RmpO Libwww-perl                                  LWWWP
+LWP::
+LWP::Conn            ampO LWPng stuff                                  LWWWP
+LWP::MediaTypes      Rmpf Media types and mailcap processing           LWWWP
+LWP::Parallel        RmpO Allows parallel http and ftp access with LWP MARCLANG
+LWP::Protocol        RmpO LWP support for URL schemes (http, file etc) LWWWP
+LWP::RobotUA         RmpO A UserAgent for robot applications           LWWWP
+LWP::Simple          Rmpf Simple procedural interface to libwww-perl   LWWWP
+LWP::UA              ampO LWPng stuff                                  LWWWP
+LWP::UserAgent       RmpO A WWW UserAgent class                        LWWWP
+
+MIME::
+MIME::Base64          Rdhf Encode/decode Base 64 (RFC 2045)             GAAS
+MIME::QuotedPrint     Rdpf Encode/decode Quoted-Printable               GAAS
+MIME::Decoder         RdpO OO interface for decoding MIME messages      ERYQ
+MIME::Entity          RdpO An extracted and decoded MIME entity         ERYQ
+MIME::Head            RdpO A parsed MIME header                         ERYQ
+MIME::IO              ?dpO DEPRECATED: now part of IO::                 ERYQ
+MIME::Latin1          ?dpO DEPRECATED and removed                       ERYQ
+MIME::Lite            RdpO Single module for composing simple MIME msgs ERYQ
+MIME::Parser          RdpO Parses streams to create MIME entities       ERYQ
+MIME::Types           adpr Returns the MIME type for a filename/suffix  OKAMOTO
+MIME::Words           Rdpf Encode/decode RFC1522-escaped header strings ERYQ
+
+MIME::Lite::
+MIME::Lite::HTML            bmpO Provide routine to transform HTML to MIME    ALIAN
+
+Apache            RmcO Interface to the Apache server API           DOUGM
+
+Apache PerlHandler modules
+
+Apache::
+Apache::ASP             bdpO Implement Active Server Pages                CHAMAS
+Apache::AdBanner        cdpf Ad banner server                             CHOLET
+Apache::AddrMunge       bdpf Munge email addresses in webpages            MJD
+Apache::Archive         bdpf Make linked contents pages of .tar(.gz)      JPETERSON
+Apache::AutoIndex       Rdcf Lists directory content                      GOZER
+Apache::AxKit           RdcO XML Application Server for Apache            MSERGEANT
+Apache::BBS             cdpO BBS like System for Apache                   MKOSSATZ
+Apache::Cachet          i    OutputChain with caching                     MERLYN
+Apache::CallHandler     cdpf Map filenames to subroutine calls            GKNOPS
+Apache::Compress        bdpO Compress content on the fly                  KWILLIAMS
+Apache::Dir             i    OO (subclassable) mod_dir replacement        DOUGM
+Apache::Dispatch        bmpf Call PerlHandlers as CGI scripts             GEOFF
+Apache::Embperl         Rmcf Embed Perl in HTML                           GRICHTER
+Apache::EmbperlChain    bdpO Feed handler output to Embperl               CHOLET
+Apache::FTP             i    Full-fledged FTP proxy                       PMKANE
+Apache::Filter          RdpO OutputChain like functionality               KWILLIAMS
+Apache::Forward         bdpO OutputChain like functionality               MPB
+Apache::Gateway         bdpf A multiplexing gateway                       CCWF
+Apache::GzipChain       bmpf Compress files on the fly                    ANDK
+Apache::Layer           bdpf Layer content tree over one or more          SAM
+Apache::Magick          bdpf Image conversion on-the-fly                  MPB
+Apache::Mason           bdpO Build sites w/ modular Perl/HTML blocks      JSWARTZ
+Apache::ModuleDoc       bdpf Self documentation for Apache C modules      DOUGM
+Apache::NNTPGateway     adpf A Web based NNTP (usenet) interface          BOUBAKER
+Apache::NavBar          bdpO Navigation bar generator                     MPB
+Apache::OWA             bdpf Runs Oracle PL/SQL Web Toolkit apps          SVINTO
+Apache::OutputChain     bmpO Chain output of stacked handlers             JANPAZ
+Apache::PageKit         ampO Application framework w/ HTML::Template      TJMATHER
+Apache::PassFile        bdpf Send file via OutputChain                    ANDK
+Apache::PerlRun         Smpf Run unaltered CGI scripts                    APML
+Apache::PrettyPerl      Rdpf Syntax highlighting for Perl files           RA
+Apache::PrettyText      bdpf Re-format .txt files for client display      CHTHORMAN
+Apache::RandomLocation  bdpf Random image display                         RKOBES
+Apache::Registry        Smpf Run unaltered CGI scripts                    APML
+Apache::Reload          RdpO Reload changed modules (extending StatINC)   MSERGEANT
+Apache::RobotRules      cdpf Enforce robot rules (robots.txt)             PARKER
+Apache::SSI             RmpO Implement server-side includes in Perl       KWILLIAMS
+Apache::SSIChain        bmpO SSI on other modules output                  JANPAZ
+Apache::Sandwich        bmpf Layered document (sandwich) maker            VKHERA
+Apache::ShowRequest     bdpf Show phases and module participation         DOUGM
+Apache::SimpleReplace   ampf Simple replacement template tool             GEOFF
+Apache::Stage           Rdpf Manage a document staging directory          ANDK
+Apache::TarGzip         c    Manage .tar.gz file                          ZENIN
+Apache::TimedRedirect   bdpf Redirect urls for a given time period        PETERM
+Apache::UploadSvr       bdpO A lightweight publishing system              ANDK
+Apache::VhostSandwich   cdpf Virtual host layered document maker          MARKC
+Apache::WDB             bdpf Database query/edit tool using DBI           JROWE
+Apache::WebSQL          cdpO Adaptation of Sybase's WebSQL                GUNTHER
+Apache::ePerl           Rdpr Fast emulated Embedded Perl (ePerl)          RSE
+Apache::iNcom           bdpf An e-commerce framework                      FRAJULAC
+
+Apache PerlInitHandler modules
+
+Apache::
+Apache::RequestNotes    ampf Pass cookie & form data around pnotes        GEOFF
+
+Apache PerlAuthenHandler modules
+
+Apache::
+Apache::AuthAny         bdpf Authenticate with any username/password      MPB
+Apache::AuthenCache     bmpf Cache authentication credentials             JBODNAR
+Apache::AuthCookie      RdpO Authen + Authz via cookies                   KWILLIAMS
+Apache::AuthenDBI       bmpO Authenticate via Perl's DBI                  MERGL
+Apache::AuthenGSS       cdpf Generic Security Service (RFC 2078)          DOUGM
+Apache::AuthenIMAP      bdpf Authentication via an IMAP server            MICB
+Apache::AuthenPasswdSrv bdpf External authentication server               JEFFH
+Apache::AuthenPasswd    bdpf Authenticate against /etc/passwd             DEP
+Apache::AuthLDAP        bdpf LDAP authentication module                   CDONLEY
+Apache::AuthPerLDAP     bdpf LDAP authentication module (PerLDAP)         HENRIK
+Apache::AuthenNIS       bdpf NIS authentication                           DEP
+Apache::AuthNISPlus     bdpF NIS Plus authentication/authorization        VALERIE
+Apache::AuthenRaduis    bdpf Authentication via a Radius server           DANIEL
+Apache::AuthenSmb       bdpf Authenticate against NT server               PARKER
+Apache::AuthenURL       bdpf Authenticate via another URL                 JGROENVEL
+Apache::DBILogin        bdpf Authenticate to backend database             JGROENVEL
+Apache::DCELogin        bdpf Obtain a DCE login context                   DOUGM
+Apache::PHLogin         bdpf Authenticate via a PH database               JGROENVEL
+Apache::TicketAccess    bdpO Ticket based access/authentication           MPB
+
+Apache PerlAuthzHandler modules
+
+Apache::
+Apache::AuthzAge        bmpf Authorize based on age                       APML
+Apache::AuthzDCE        cdpf DFS/DCE ACL based access control             DOUGM
+Apache::AuthzDBI        bmpO Group authorization via Perl's DBI           MERGL
+Apache::AuthzGender     bdpf Authorize based on gender                    MPB
+Apache::AuthzNIS        bdpf NIS authorization                            DEP
+Apache::AuthzPasswd     bdpf Authorize against /etc/passwd                DEP
+Apache::AuthzSSL        bdpf Authorize based on client cert               MPB
+Apache::RoleAuthz       i    Role-based authorization                     DOUGM
+
+Apache PerlAccessHandler modules
+
+Apache::
+Apache::AccessLimitNum  bmpf Limit user access by number of requests      APML
+Apache::BlockAgent      bdpf Block access from certain agents             MPB
+Apache::DayLimit        bmpf Limit access based on day of week            MPB
+Apache::IPThrottle      cdpf Limit bandwith consumption by IP             MERLYN
+Apache::RobotLimit      cdpf Limit access of robots                       PARKER
+Apache::SpeedLimit      bdpf Control client request rate                  MPB
+
+Apache PerlTypeHandler modules
+
+Apache::
+Apache::MIME            bdcf Perl implementation of mod_mime              MPB
+Apache::MimeDBI         bdpf Type mapping from a DBI database             MPB
+Apache::MimeXML         bdpf mime encoding sniffer for XML files          MSERGEANT
+
+Apache PerlTransHandler modules (May also include a PerlHandler)
+
+Apache::
+Apache::AdBlocker       bdpf Block advertisement images                   MPB
+Apache::AddHostPath     adpf Prepends parts of hostname to URI            RJENKS
+Apache::AnonProxy       bdpf Anonymizing proxy                            MPB
+Apache::Checksum        bdpf Manage document checksum trees               MPB
+Apache::DynaRPC         i    Dynamically translate URIs into RPCs         DOUGM
+Apache::LowerCaseGETs   bdpf Lowercase URI's when needed                  PLISTER
+Apache::MsqlProxy       bmpf Translate URI's into mSQL queries            APML
+Apache::ProxyPass       bdpf Perl implementation of ProxyPass             MJS
+Apache::ProxyPassThru   bdpO Skeleton for vanilla proxy                   RMANGI
+Apache::ProxyCache      i    Caching proxy                                DOUGM
+Apache::StripSession    bdpf Strip session info from URI                  MPB
+Apache::Throttle        bdpf Speed-based content negotiation              DONS
+Apache::TransLDAP       bdpf Translate URIs to LDAP queries               CDONLEY
+
+Apache PerlFixupHandler modules
+
+Apache::
+Apache::RefererBlock    bdpf Block based on MIME type + Referer           CHOLET
+Apache::Timeit          bmpf Benchmark PerlHandlers                       APML
+Apache::Usertrack       bdpf Perl version of mod_usertrack                ABH
+
+Apache PerlLogHandler modules
+
+Apache::
+Apache::DBILogConfig    bdpf Custom format logging via DBI                JBODNAR
+Apache::DBILogger       bdpf Logging via DBI                              ABH
+Apache::DumpHeaders     bdpf Watch HTTP transaction via headers           DOUGM
+Apache::LogMail         bdpf Log certain requests via email               MPB
+Apache::Traffic         bdpf Logs bytes transferred, per-user basis       MAURICE
+Apache::WatchDog        c    Look for problematic URIs                    DOUGM
+
+Apache PerlChildInitHandler modules
+
+Apache::
+Apache::Resource        Smpf Limit resources used by httpd children       APML
+
+Apache Server Configuration
+
+Apache::
+Apache::ConfigLDAP      i    Config via LDAP and <Perl>                   MARKK
+Apache::ConfigDBI       i    Config via DBI and <Perl>                    MARKIM
+Apache::ModuleConfig    SmcO Interface to configuration API               APML
+Apache::PerlSections    SmpO Utilities for <Perl> sections                APML
+Apache::httpd_conf      bmpO Methods to configure and run an httpd        APML
+Apache::src             SmpO Finding and reading bits of source           APML
+
+Apache Database modules
+
+Apache::
+Apache::DBI             bmpO Persistent DBI connection mgmt.              MERGL
+Apache::Mysql           bdpO Persistent connection mgmt. for Mysql        NJENSEN
+
+Apache::Sybase::
+Apache::Sybase::DBlib           bmpO Persistent DBlib connection mgmt.            BMILLETT
+Apache::Sybase::CTlib           bapO Persistent CTlib connection mgmt.            MDOWNING
+
+Interfaces and integration with Apache C structures and modules
+
+Apache::
+Apache::Backhand        bdcr Bridge between mod_backhand + mod_perl       DLOWE
+Apache::CmdParms        SmcO Interface to Apache cmd_parms struct         APML
+Apache::Command         bmcO Interface to Apache command_rec struct       APML
+Apache::Connection      SmcO Inteface to Apache conn_rec struct           APML
+Apache::Constants       Smcf Constants defined in httpd.h                 APML
+Apache::ExtUtils        SmpO Utils for Apache:C/Perl glue                 APML
+Apache::File            SmcO Methods for working with files               APML
+Apache::Handler         bmcO Interface to Apache handler_rec struct       APML
+Apache::Log             SmcO ap_log_error interface                       APML
+Apache::LogFile         bmcO Interface to Apache's piped logs, etc.       APML
+Apache::Module          bmcO Interface to Apache module struct            APML
+Apache::Scoreboard      RdcO Perl interface to Apache's scoreboard.h      DOUGM
+Apache::Server          SmcO Interface to Apache server_rec struct        APML
+Apache::SubProcess      cmcO Interface to Apache subprocess API           APML
+Apache::Table           SmcO Interface to Apache table struct + API       APML
+Apache::URI             SmcO URI component parsing and unparsing          APML
+Apache::Util            Smcf Interface to Apache's util*.c functions      APML
+
+HTTP Method handler
+
+Apache::
+Apache::PATCH           bdpf HTTP PATCH method handler                    MPB
+Apache::PUT             cdpf HTTP PUT method handler                      SORTIZ
+Apache::Roaming         bdpO PUT/GET/MOVE/DELETE (Netscape Roaming)       JWIED
+
+Watchdog and Monitoring tools
+
+Apache::
+Apache::SizeLimit       Smpf Graceful exit for large children             APML
+Apache::GTopLimit       Rdpn Child exit on small shared or large mem      STAS
+Apache::Status          Smpf Embedded interpreter runtime status          APML
+Apache::VMonitor        Rdpn Visual System and Processes Monitor          STAS
+
+Apache::Watchdog::
+Apache::Watchdog::RunAway         Rdpn RunAway processes watchdog/terminator        STAS
+
+Development and Debug tools
+
+Apache::
+Apache::DB              amcO Hook Perl interactive DB into mod_perl       DOUGM
+Apache::Debug           Rmpf mod_perl debugging utilities                 APML
+Apache::DebugInfo       ampO Per-request data logging                     GEOFF
+Apache::DProf           bmcf Hook Devel::DProf into mod_perl              DOUGM
+Apache::FakeRequest     ampO Implement Apache methods off-line            APML
+Apache::Leak            bmcf Memory leak tracking routines                APML
+Apache::Peek            amcf Devel::Peek for mod_perl                     APML
+Apache::SawAmpersand    bmpf Make sure noone is using $&, $' or $`        APML
+Apache::SmallProf       bmpf Hook Devel::SmallProf into mod_perl          DOUGM
+Apache::StatINC         Smpf Reload require'd files when updated          APML
+Apache::Symbol          bmcO Things for symbol things                     APML
+Apache::Symdump         bmpf Symbol table snapshots to disk               APML
+Apache::test            Smpf Handy routines for 'make test' scripts       APML
+
+Miscellaneous Apache modules
+
+Apache::
+Apache::Byterun         i    Run Perl bytecode modules                    DOUGM
+Apache::Cookie          amcO C version of CGI::Cookie                     APML
+Apache::Icon            bdcO Access to AddIcon* configuration             DOUGM
+Apache::Include         Smpf mod_include + Apache::Registry handler       APML
+Apache::Mmap            bdcf Share data via Mmap module                   FLETCH
+Apache::ParseLog        bdpO OO interface to Apache log files             AKIRA
+Apache::RegistryLoader  SmpO Apache::Registry startup script loader       APML
+Apache::Request         amcO CGI.pm functionality using API methods       APML
+Apache::Safe            ampO Adaptation of "safecgiperl"                  APML
+Apache::Session         bmpO Maintain client <-> httpd session/state      JBAKER
+Apache::Servlet         ampO Interface to the Java Servlet engine         IKLUFT
+Apache::SIG             SmpO Signal handlers for mod_perl                 APML
+Apache::State           i    Powerful state engine                        RSE
+Apache::TempFile        bdpf Manage temporary files                       TOMHUGHES
+Apache::Upload          amcO File upload class                            APML
+
+Netscape::
+Netscape::Cache           bdpO Access Netscape cache files                  SREZIC
+Netscape::History         bdpO Class for accessing Netscape history DB      NEILB
+Netscape::HistoryURL      bdpO Like a URI::URL, but with visit time         NEILB
+Netscape::Server          adcO Perl interface to Netscape httpd API         BSUGARS
+
+HyperWave::
+HyperWave::CSP             cdpO Interface to HyperWave's HCI protocol        GOSSAMER
+
+WebFS::
+WebFS::FileCopy        Rdpf Get, put, copy, delete files located by URL  BZAJAC
+
+WebCache::
+WebCache::Digest          bdpf Internet Cache Protocol (RFCs 2186 and 2187) MHAMILTON
+
+ASP               Rdpr Perl interface to ASP PerlScript             TIMMY
+Authorizenet      bdpf Get Credit Card Info from authorizenet       DLINCOLN
+BizTalk           RdpO Microsoft BizTalk Framework Toolkit          SIMONJ
+CGI_Lite          MnpO Light-weight interface for fast apps         SHGUN
+CIPP              RdpO Preprocessor for embedding Perl, SQL in HTML JRED
+Catalog           bmpO Manage/display resources catalog (URLs etc.) LDACHARY
+PApp              adch Multi-page-state-preserving web applications MLEHMANN
+WDDX              RdpO Allows distributed data exchange via XML     GUELICH
+WING              RmhO Apache based IMAP/NNTP Gateway               MICB
+WOMP              cdpO CGI App Dev Suite: authen/state/html         SPADKINS
+
+FCGI              Rdcr Fast CGI                                     SKIMO
+FCGI::
+FCGI::ProcManager     bdpO A FastCGI process manager                    JURACH
+
+16) Server and Daemon Utilities
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+Event             bmch fast, generic event loop                     JPRIT
+Event::
+Event::Stats           Rmcf Collects statistics for Event                JPRIT
+Event::tcp             bmpO TCP session layer library                    JPRIT
+
+EventServer       RupO Triggers objects on i/o, timers & interrupts JACKS
+::Functions       Rupf Utility functions for initializing servers   JACKS
+::Gettimeofday    Rupr gettimeofday syscall wrapper                 JACKS
+::Signal          Rupr signalhandler for the eventserver            JACKS
+
+Server::Server::
+Server::Server::EventDriven     RupO See 'EventServer' (compatibility maintained) JACKS
+
+Server::Echo::
+Server::Echo::MailPipe        cup  A process which accepts piped mail           JACKS
+Server::Echo::TcpDForking     cup  TCP daemon which forks clients               JACKS
+Server::Echo::TcpDMplx        cup  TCP daemon which multiplexes clients         JACKS
+Server::Echo::TcpISWFork      cup  TCP inetd wait process, forks clients        JACKS
+Server::Echo::TcpISWMplx      cup  TCP inetd wait process, multiplexes clients  JACKS
+Server::Echo::TcpISNowait     cup  TCP inetd nowait process                     JACKS
+Server::Echo::UdpD            cup  UDP daemon                                   JACKS
+Server::Echo::UdpIS           cup  UDP inetd process                            JACKS
+
+Server::Inet::
+Server::Inet::Functions       cdpf Utility functions for Inet socket handling   JACKS
+Server::Inet::Object          cupO Basic Inet object                            JACKS
+Server::Inet::TcpClientObj    cupO A TCP client (connected) object              JACKS
+Server::Inet::TcpMasterObj    cupO A TCP master (listening) object              JACKS
+Server::Inet::UdpObj          cupO A UDP object                                 JACKS
+
+Server::FileQueue::
+Server::FileQueue::Functions       cupf Functions for handling files and mailboxes   JACKS
+Server::FileQueue::Object          cupO Basic object                                 JACKS
+Server::FileQueue::DirQueue        cupO Files queued in a directory                  JACKS
+Server::FileQueue::MboxQueue       cupO Mail queued in a mail box                    JACKS
+
+Server::Mail::
+Server::Mail::Functions       cupf Functions for handling files and mailboxes   JACKS
+Server::Mail::Object          cupO Basic mail object                            JACKS
+
+MailBot           cdpO Archive server, listserv, auto-responder     RHNELSON
+Mud               cdcO A multi-user online interactive game server  GED
+
+NetServer::
+NetServer::Compiler        idph State machine compiler for TCP/IP servers    CHSTROSS
+NetServer::Generic         RdpO generic OOP class for internet servers       CHSTROSS
+NetServer::Portal          bmpO Sets up a mini-server accessible via telnet  JPRIT
+
+Time::
+Time::Warp            Rmcf Change the start and speed of Event time     JPRIT
+
+Spool::
+Spool::Queue           i    Generic printer spooling facilities          RAM
+
+17) Archiving, Compression and Conversion
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+Compress::
+Compress::Bzip2           Rdcf Interface to the Bzip2 compression library   AZEMGI
+Compress::LZO             Rdcf Interface to the LZO compression library     MFX
+Compress::LZV1            RdcO Leight-weight Lev-Zimpel-Vogt compression    MLEHMANN
+Compress::Zlib            RdcO Interface to the Info-Zip zlib library       PMQS
+
+Convert::
+Convert::ASN1            adpO Standard en/decode of ASN.1 structures       GBARR
+Convert::BER             adpO Class for encoding/decoding BER messages     GBARR
+Convert::BinHex          anpO Convert to/from RFC1741 HQX7 (Mac BinHex)    ERYQ
+Convert::EBCDIC          adpf ASCII to/from EBCDIC                         CXL
+Convert::Recode          Rdpf Mapping functions between character sets     GAAS
+Convert::SciEng          bdpO Convert numbers with scientific notation     COLINK
+Convert::Translit        MdpO String conversion among many character sets  GENJISCH
+Convert::UU              bdpf UUencode and UUdecode                        ANDK
+Convert::UUlib           Rdcr Intelligent de- and encode (B64, UUE...)     MLEHMANN
+
+AppleII::
+AppleII::Disk            bdpO Read/write Apple II disk image files         CJM
+AppleII::ProDOS          bdpO Manipulate files on ProDOS disk images       CJM
+AppleII::DOS33           i    Manipulate files on DOS 3.3 disk images      CJM
+AppleII::Pascal          i    Manipulate files on Apple Pascal disk images CJM
+
+Archive::
+Archive::Tar             adpO Read, write and manipulate tar files         CDYBED
+Archive::Zip             RdpO Provides an interface to ZIP archive files   NEDKONZ
+
+PPM               Rdpf Perl Package Manager                         MURRAY
+
+RPM               adcO RPM package management                       RJRAY
+RPM::
+RPM::Constants       adcO Constants for RPM package management         RJRAY
+RPM::Database        adcO DB interface for RPM package management      RJRAY
+RPM::Headers         adcO Headers for RPM package management           RJRAY
+
+18) Images, Pixmap and Bitmap Manipulation, Drawing and Graphing
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+ElectricArc       RdpO Generic diagram manipulation toolset         SELKOVJR
+GIFgraph          RdpO Obsolete, see GD::Graph                      MVERB
+Gimp              Mmch Rich interface to write plugins for The Gimp MLEHMANN
+GraphViz          RdpO Interface to the GraphViz graphing tool      LBROCARD
+OpenGL            adcf Interface to OpenGL drawing/imaging library  FIJI
+PGPLOT            Rdof PGPLOT plotting library - scientific graphs  KGB
+PixDraw           adcO Drawing and manipulating true color images   KSB
+RenderMan         a    Manipulate RenderMan objects                 GMLEWIS
+T3D               cdpO Realtime extensible 3D rendering             GJB
+ThreeD            i    Namespace root for all kinds of 3D modules   ADESC
+
+GD                adcO Interface to Gd Graphics Library             LDS
+GD::
+GD::Barcode         bdpO Create barcode image with GD                 KWITKNR
+GD::Graph           RdpO Create charts using GD                       MVERB
+GD::Text            RdpO Classes for string handling with GD          MVERB
+
+VRML              RdpO VRML methods independent of specification    HPALM
+VRML::
+VRML::VRML1           RdpO VRML methods with the VRML 1.0 standard      HPALM
+VRML::VRML2           RdpO VRML methods with the VRML 2.0 standard      HPALM
+VRML::Color           Rdpf color functions and X11 color names          HPALM
+VRML::Base            RdpO common basic methods                         HPALM
+VRML::Browser         i    A complete VRML viewer                       LUKKA
+
+Graphics::
+Graphics::Libplot         RdcO Binding for C libplotter plotting library    JLAPEYRE
+Graphics::Plotter         Rd+O Binding for C++ libplotter plotting library  MAKLER
+Graphics::Simple          idcO Simple drawing primitives                    NEERI
+Graphics::Turtle          idp  Turtle graphics package                      NEERI
+
+Image::
+Image::Colorimetry     cdpO transform colors between colorspaces         JONO
+Image::DS9             adpO Interface to SAO DS9 image & analysis prog   DJERIUS
+Image::Grab            RdpO Grabbing images off the Internet             MAHEX
+Image::Magick          RdcO Read, query, transform, and write images     JCRISTY
+Image::ParseGIF        RdpO Parse GIF images into component parts        BENL
+Image::Size            Rdpf Measure size of images in common formats     RJRAY
+Image::Info            RdpO Extract meta information from image files    GAAS
+
+Chart::
+Chart::Base            RdpO Business chart widget collection             NINJAZ
+Chart::Gdchart         bdch based on Bruce V's C gdchart distribution    MHEMPEL
+Chart::Graph           Rmpr front-end to gnuplot and XRT                 MHYOUNG
+Chart::PNGgraph        RdpO Package to generate PNG graphs, uses GD.pm   SBONDS
+Chart::Pie             adpO Implements "new Chart::Pie()"                KARLON
+Chart::Plot            bdcO Graph two-dimensional data (uses GD.pm)      SMORTON
+Chart::XMGR            Rdph interface to XMGR plotting package           TJENNESS
+
+Xmms              bdcO Interactive remote control shell for xmms    DOUGM
+Xmms::
+Xmms::Config          bdcO Perl interface to the xmms_cfg_* API         DOUGM
+Xmms::Remote          bdcO Perl interface to the xmms_remote_* API      DOUGM
+Xmms::Plugin          i    Perl interface to the xmms plugin APIs       DOUGM
+
+Flash::
+Flash::SWF             cmpO Read/Write Macromedia Flash SWF files        SABREN
+
+19) Mail and Usenet News
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+Mail::
+Mail::Address         adpf Manipulation of electronic mail addresses    GBARR
+Mail::Alias           bdpO Manipulate E-mail aliases and alias files    ZELT
+Mail::Audit           RdpO Toolkit for constructing mail filters        SIMON
+Mail::Cap             adpO Parse mailcap files as specified in RFC 1524 GBARR
+Mail::CheckUser       bdpf Checking email addresses for validness       ILYAM
+Mail::Ezmlm           bdpO Object methods for ezmlm mailing lists       GHALSE
+Mail::Field           RdpO Base class for handling mail header fields   GBARR
+Mail::Folder          adpO Base-class for mail folder handling          KJOHNSON
+Mail::Freshmeat       RdpO Parses newsletters from http://freshmeat.net ASPIERS
+Mail::Header          RdpO Manipulate mail RFC822 compliant headers     GBARR
+Mail::Internet        adpO Functions for RFC822 address manipulations   GBARR
+Mail::MH              adcr MH mail interface                            MRG
+Mail::Mailer          adpO Simple mail agent interface (see Mail::Send) GBARR
+Mail::POP3Client      RdpO Support for clients of POP3 servers          SDOWD
+Mail::Procmail        Rdpf Procmail-like facility for creating easy mai JV
+Mail::Send            adpO Simple interface for sending mail            GBARR
+Mail::Sender          MdpO socket() based mail with attachments, SMTP   JENDA
+Mail::Sendmail        Rdpf Simple platform independent mailer           MIVKOVIC
+Mail::UCEResponder    i    Spamfilter                                   CHSTROSS
+Mail::Util            adpf Mail utilities (for by some Mail::* modules) GBARR
+Mail::IMAPClient      RdpO An IMAP Client API                           DJKERNEN
+
+Mail::Field::
+Mail::Field::Received        RdpO Parses Received headers as per RFC822        ASPIERS
+
+News::
+News::Article         adpO Module for handling Usenet articles          AGIERTH
+News::Gateway         ampO Mail/news gatewaying, moderation support     RRA
+News::NNTPClient      bdpO Support for clients of NNTP servers          RVA
+News::Newsrc          adpO Manage .newsrc files                         SWMCD
+News::Scan            cdpO Gathers and reports newsgroup statistics     GBACON
+
+NNTP::
+NNTP::Server          i    Support for an NNTP server                   JOEHIL
+
+NNML::
+NNML::Server          adpO An simple RFC 977 NNTP server                ULPFR
+
+IMAP::
+IMAP::Admin           RdpO IMAP Administration                          EESTABROO
+
+Sendmail::
+Sendmail::Milter          Rdch Write mail filters for sendmail in Perl      CYING
+
+20) Control Flow Utilities (callbacks and exceptions etc)
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+AtExit            Rdpr atexit() function to register exit-callbacks BRADAPP
+Callback          RdpO Define easy to use function callback objects MUIR
+Religion          adpr Control where you go when you die()/warn()   KJALB
+
+Hook::
+Hook::PrePostCall     adpO Add actions before and after a routine       PVERD
+
+Memoize           bdpr Automatically cache results of functions     MJD
+Memoize::
+Memoize::ExpireLRU       Rdpr Provide LRU Expiration for Memoize           BPOWERS
+
+21) File Handle, Directory Handle and Input/Output Stream Utilities
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+IO::
+IO::AtomicFile      RdpO Write a file which is updated atomically     ERYQ
+IO::Dir             cdpO Directory handle objects and methods         GBARR
+IO::File            cdpO Methods for disk file based i/o handles      GBARR
+IO::Handle          cdpO Base class for input/output handles          GBARR
+IO::Lines           RdpO I/O handle to read/write to array of lines   ERYQ
+IO::Pipe            cdpO Methods for pipe handles                     GBARR
+IO::Ptty            amcf Pseudo terminal interface functions          RGIERSIG
+IO::Pty             cdpO Methods for pseudo-terminal allocation etc   PEASE
+IO::React           RdpO OO Expect-like communication                 GARROW
+IO::STREAMS         cdcO Methods for System V style STREAMS control   NI-S
+IO::Scalar          RdpO I/O handle to read/write to a string         ERYQ
+IO::ScalarArray     RdpO I/O handle to read/write to array of scalars ERYQ
+IO::Seekable        cdpO Methods for seekable input/output handles    GBARR
+IO::Select          adpO Object interface to system select call       GBARR
+IO::Socket          cdpO Methods for socket input/output handles      GBARR
+IO::Stty            bmpf POSIX compliant stty interface               RGIERSIG
+IO::Tee             RdpO Multiplex output to multiple handles         KENSHAN
+IO::Wrap            RdpO Wrap old-style FHs in standard OO interface  ERYQ
+IO::WrapTie         RdpO Tie your handles & retain full OO interface  ERYQ
+IO::Zlib            adpO IO:: style interface to Compress::Zlib       TOMHUGHES
+
+FileHandle        SupO File handle objects and methods              P5P
+FileCache         Supf Keep more files open than the system permits P5P
+DirHandle         SupO Directory handle objects and methods         CHIPS
+SelectSaver       SupO Save and restore selected file handle        CHIPS
+Selectable        cdpO Event-driven I/O streams                     MUIR
+
+Log::
+Log::Agent           adpO A general logging framework                  RAM
+Log::Dispatch        RdpO Log messages to multiple outputs             DROLSKY
+Log::Topics          Rdpf Control flow of topic based logging messages JARW
+Log::TraceMessages   Rdpf Print developer's trace messages             EDAVIS
+
+Log::Agent::
+Log::Agent::Logger          cdpO Application-level logging interface          RAM
+Log::Agent::Rotate          adpO Logfile rotation config and support          RAM
+
+Expect            RdpO Close relative of Don Libes' Expect in perl  RGIERSIG
+
+22) Microsoft Windows Modules
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+Win32::
+Win32::ADO             adpf ADO Constants and helper functions           MSERGEANT
+Win32::ASP             Rdpr Makes PerlScript ASP development easier      WNODOM
+Win32::AbsPath         Rdpf relative paths to absolute, understands UNCs JENDA
+Win32::AdminMisc       Rdcf Misc admin and net functions                 DAVEROTH
+Win32::COM             cd+O Access to native COM interfaces              JDB
+Win32::ChangeNotify    bdcO Monitor changes to files and directories     CJM
+Win32::Clipboard       Rdch Interaction with the Windows clipboard       ACALPINI
+Win32::Console         Rdch Win32 Console and Character mode functions   ACALPINI
+Win32::Event           bdcO Use Win32 event objects for IPC              CJM
+Win32::EventLog        adcf Interface to Win32 EventLog functions        WIN32
+Win32::FUtils          bdcf Implements missing File Utility functions    JOCASA
+Win32::FileOp          Mdpf file operations + fancy dialogs, INI files   JENDA
+Win32::FileType        RdpO modify Win32 fily type mapping               JENDA
+Win32::GD              RdcO Win32 port of the GD extension (gif module)  DAVEROTH
+Win32::GUI             bmch Perl-Win32 Graphical User Interface          ACALPINI
+Win32::GuiTest         adcf SendKeys, FindWindowLike and more            ERNGUI
+Win32::IPC             bdcO Base class for Win32 synchronization objects CJM
+Win32::Internet        RdcO Perl Module for Internet Extensions          ACALPINI
+Win32::Message         bdcf Network based message passing                DAVEROTH
+Win32::Mutex           bdcO Use Win32 mutex objects for IPC              CJM
+Win32::NetAdmin        adcf Interface to Win32 NetAdmin functions        WIN32
+Win32::NetResource     adcf Interface to Win32 NetResource functions     WIN32
+Win32::ODBC            Rd+O ODBC interface for accessing databases       DAVEROTH
+Win32::OLE             Rm+h Interface to OLE Automation                  JDB
+Win32::Pipe            Rd+O Named Pipes and assorted function            DAVEROTH
+Win32::Process         adcf Interface to Win32 Process functions         WIN32
+Win32::RASE            Rdpf Dialup entries and connections on Win32      MBLAZ
+Win32::Registry        adcf Interface to Win32 Registry functions        WIN32
+Win32::Semaphore       bdcO Use Win32 semaphore objects for IPC          CJM
+Win32::SerialPort      RdpO Win32 Serial functions/constants/interface   BBIRTH
+Win32::Shortcut        Rd+O Manipulate Windows Shortcut files            ACALPINI
+Win32::Sound           Rdch An extension to play with Windows sounds     ACALPINI
+Win32::WinError        adcf Interface to Win32 WinError functions        WIN32
+Win32::SystemInfo      RdpO Memory and Processor information             CJOHNSTON
+Win32::API             RdcO Perl Win32 API Import Facility               ACALPINI
+
+WinNT             cdcf Interface to Windows NT specific functions   WIN32
+NT                cdcf Old name for WinNT - being phased out        WIN32
+Win95             i    Interface to Windows 95 specific functions   WIN32
+
+Win32API::
+Win32API::CommPort        RdpO Win32 Serial functions/constants/interface   BBIRTH
+Win32API::Console         cdcf Win32 Console Window functions/consts        TYEMQ
+Win32API::File            cdcf Win32 file/dir functions/constants           TYEMQ
+Win32API::Registry        adcf Win32 Registry functions/constants           TYEMQ
+Win32API::WinStruct       cdcf Routines for Win32 Windowing data structures TYEMQ
+Win32API::Window          cdcf Win32 Windowing functions/constants          TYEMQ
+
+23) Miscellaneous Modules
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+ARS               Mmhh Interface to Remedy's Action Request API     JMURPHY
+Agent             cdpO Transportable Agent module                   SPURKIS
+Archie            Rdpf Archie queries via Prospero ARDP protocol    GBOSS
+BnP               RdhO Build'n'Play all-purpose batch install. tool STBEY
+Bundle            i    Namespace reserved for modules collections   ANDK
+CPAN              RdpO Perl Archive browse and download             ANDK
+Gedcom            bmpO Interface to genealogy Gedcom files          PJCJ
+Logfile           RdpO Generic methods to analyze logfiles          ULPFR
+NetObj            adpO Module loading in real time over TCP/IP      JDUNCAN
+Neural            ad+O Generic simulation of neural networks        LUKKA
+Nexus             cdcO Interface to Nexus (threads/ipc/processes)   RDO
+Pcap              i    An interface for LBL's packet capture lib    AMOSS
+Roman             Rdpf Convert Roman numbers to and from Arabic     OZAWA
+SDDF              cd+O Interface to Pablo Self Defining Data Format FIS
+
+AI::
+AI::Fuzzy           RdpO Perl extension for Fuzzy Logic               SABREN
+AI::jNeural         RdcO Jet's Neural Architecture                    JETTERO
+AI::NeuralNet       RdpO A simple back-prop neural net                JBRYAN
+
+Astro::
+Astro::Coord           Rdpf Transform telescope and source coordinates   CPHIL
+Astro::Misc            Rdpf Miscellaneous astronomical routines          CPHIL
+Astro::MoonPhase       Rdpf Information about the phase of the Moon.     RPIKKARA
+Astro::SLA             Rdcf Interface to SLALIB positional astronomy lib TJENNESS
+Astro::SunTime         cdpf Calculate sun rise/set times                 ROBF
+Astro::Time            Rdpf General time conversions for Astronomers     CPHIL
+Astro::Sunrise         RdpO Computes sunrise/sunset for a given day      RKHILL
+
+Audio::
+Audio::CD              bdcO Perl interface to libcdaudio (cd + cddb)     DOUGM
+Audio::Sox             i    sox sound library as one or more modules     NI-S
+
+Audio::Play::
+Audio::Play::MPG123          RdcO Generic frontend for MPG123                  MLEHMANN
+
+MPEG::
+MPEG::ID3v1Tag        MdpO ID3v1 MP3 Tag Reader/Writer                  SVANZOEST
+MPEG::ID3v2Tag        bdpO OO, extensible ID3 v2.3 tagging module       MDIMEO
+MPEG::MP3Play         RdhO Create your own MPEG audio player            JRED
+
+MP3::
+MP3::Info            bdpf Manipulate / fetch info from MP3 audio files CNANDOR
+MP3::Tag             bdpO Tag - Module for reading tags of mp3 files   THOGEE
+
+BarCode::
+BarCode::UPC             i    Produce PostScript UPC barcodes              JONO
+
+Bio               i    Utilities for molecular biology              SEB
+
+Business::
+Business::Cashcow         i??? Internet payment with the Danish PBS         GKE
+Business::CreditCard      Rdpf Credit card number check digit test          JONO
+Business::ISBN            RdpO Work with ISBN as objects                    BDFOY
+Business::ISSN            adpO Object and functions to work with ISSN       SAPAPO
+Business::OnlinePayment   RdpO Ecommerce middleware                         JASONK
+Business::UPC             ???? manipulating Universal Product Codes         ROBF
+Business::US_Amort        Mdph US-style loan amortization calculations      SBURKE
+
+Chemistry::
+Chemistry::Elements        RdpO Working with Chemical Elements               BDFOY
+Chemistry::Isotopes        idpO extends Elements to deal with isotopes       BDFOY
+
+Cisco::
+Cisco::Conf            adpO Cisco router administratian via TFTP         JWIED
+
+FAQ::
+FAQ::OMatic          RdpO A CGI-based FAQ/help database maintainer     JHOWELL
+
+FestVox           i??? Build synthetic voices (cf. www.festvox.org) LENZO
+
+Finance::
+Finance::Quote           RmpO Fetch stock prices over the Internet         PJF
+Finance::QuoteHist       bdpO Historical stock quotes from multiple sites  MSISK
+
+Games::
+Games::Cards           adpO Tools to write card games in Perl            AKARGER
+Games::Dice            cdpf Simulates rolling dice                       PNE
+Games::Hex             cdpO Object library for hexmap-based board games  JHKIM
+Games::WordFind        bdpO Generate word-find type puzzles              AJOHNSON
+Games::Alak            Rdpf a simple gomoku-like game                    SBURKE
+Games::Dissociate      Mdpf a Dissociated Press algorithm and filter     SBURKE
+Games::Worms           RdpO A life simulator for Conway/Patterson worms  SBURKE
+
+Geo::
+Geo::METAR           Rdpf Process Aviation Weather (METAR) Data        JZAWODNY
+Geo::Storm_Tracker   i    Retrieves tropical storm advisories          CARPENTER
+Geo::WeatherNOAA     Rdpf Current/forecast weather from NOAA           MSOLOMON
+
+HP200LX::
+HP200LX::DB              cdpO Handle HP 200LX palmtop computer database    GGONTER
+HP200LX::DBgui           cdpO Tk base GUI for HP 200LX db files            GGONTER
+
+LEGO::
+LEGO::RCX             bdpO Control you Lego Mindstorm RCX computer      JQUILLAN
+
+MIDI              Mdph read/edit/compose MIDI files                 SBURKE
+MIDI::
+MIDI::Realtime        cdpO Interacts with MIDI devices in realtime      FOOCHRE
+
+Penguin           RdpO Remote Perl in Secure Environment            AMERZKY
+Penguin::
+Penguin::Easy            RdpO Provides quick, easy access to Penguin API   JDUNCAN
+
+Psion::
+Psion::Db              idpO Handle Psion palmtop computer database files IANPX
+
+Remedy::
+Remedy::AR              adcO Interface to Remedy's Action Request API     RIK
+
+Router::
+Router::LG              bdpO Execute commands on routers (based on lg.pl) CHRISJ
+
+Schedule::        See also Schedule:: in chapter 4
+Schedule::Match           adpf Pattern-based crontab-like schedule          TAIY
+
+Silly::
+Silly::StringMaths     adpf Do maths with letters and strings            SKINGTON
+
+SyslogScan::
+SyslogScan::SyslogEntry     bdpO Parse UNIX syslog                            RHNELSON
+SyslogScan::SendmailLine    bdpO Summarize sendmail transactions              RHNELSON
+
+Video::Capture::
+Video::Capture::V4l             Mdch Video4linux framegrabber interface           MLEHMANN
+
+Watchdog::
+Watchdog::Service         adpO Look for service in process table            PSHARPE
+Watchdog::HTTPService     adpO Test status of HTTP server                   PSHARPE
+Watchdog::MysqlService    adpO Test status of Mysql server                  PSHARPE
+
+24) Interface Modules to Commercial Software
+
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+Resolute::
+Resolute::RAPS            cd+O Interface to Resolute Software's RAPS        CHGOETZE
+
+AltaVista::
+AltaVista::SearchSDK       cdcf Perl Wrapper for AltaVista SDK functionality JTURNER
+
+Real::
+Real::Encode          i    Interface to Progressive Network's RealAudio KMELTZ
+
+HtDig             RdpO Interface for the HtDig indexing system      JTILLMAN
+MQSeries          RdcO IBM's MQSeries messaging product interface   WPMOORE
+PQI               cdcO Perl Queuing Interface, to MQSeries, MSMQ    SIMONJ
+R3                bdcO Interface to SAP R/3 using RFCSDK            SCHOEN
+
+Part 3 - Big Projects Registry
+
+This section of the Module List is devoted to listing "Big Projects". I
+don't want to define Big (or even Project) here. Hopefully the items below
+speak for themselves. Almost all are just ideas, though some have been
+dabbled with and some are active projects.
+
+These are ideas for people with very strong skills and lots of time. Please
+talk, and listen, to Larry and the perl5-porters _before_ starting to do any
+work on projects which relate to the core implementation of Perl.
+
+Ask not when these will be implemented, ask instead how you can help
+implement them.
+
+1) Items in the Todo File
+
+The Todo supplied with Perl lists over 50 items in categories ranging from
+"Would be nice to have" to "Vague possibilities".
+
+Contacts: P5P
+
+2) Multi-threading
+
+This is really two projects. True threads (e.g., POSIX) using multiple
+independant perl interpreter structures and simple timeslicing of 'tasks'
+within a single perl interpreter. True threads requires operating system
+support or an external thread library, simple timeslicing does not (and
+should be portable to all platforms).
+
+Malcolm Beattie < mbeattie@sable.ox.ac.uk > has done extensive work in this
+area and is folding this work into Perl now for version 5.005 or 5.006.
+
+Contacts: MICB P5P
+
+3) Object Management Group CORBA & IDL
+
+Work is underway on the COPE mailing list, led by Bart Schuller, to
+implement a Perl binding for CORBA. See http://www.lunatech.com/cope/
+
+Contacts: COPEML BARTS
+
+4) Expand Tied Array Interface
+
+LEN, PUSH, POP, SHIFT, UNSHIFT and a fallback to SPLICE are needed.
+Complicated by very widespread use of arrays within perl internals.
+
+Contacts: P5P CHIPS
+
+5) Extend Yacc To Write XS Code
+
+To quote Larry, "The right way to integrate yacc with Perl would be to have
+it spit out an XS module, presumably." Some version of yacc, like byacc,
+should be converted to spit out an OO .xs and .pm implementing a parser.
+Jake Donham's work so far is available in his CPAN directory
+http://www.cpan.org/authors/id/JAKE .
+
+Contacts: JAKE NI-S P5P
+
+6) Approximate Matching Regular Expressions
+
+Add support into the core for approximate matching m/.../a (like the agrep
+utility).
+
+Contacts: JHI
+
+Part 4 - Standards Cross-reference
+
+This section aims to provide a cross reference between standards that exist
+in the computing world and perl modules which have been written to implement
+or interface to those standards.
+
+It also aims to encourage module authors to consider any standards that
+might relate to the modules they are developing.
+
+4.1) IETF - Internet Engineering Task Force (RFCs)
+
+Standard   Description                                   Module Name
+--------   -----------                                   -----------
+RFC821     Simple Mail Transfer Protocol                 Net::SMTP
+RFC822     Internet Mail Header                          Mail::Header
+RFC822     Internet Mail addresses                       Mail::Address
+RFC867     Daytime Protocol                              Net::Time
+RFC868     Time Protocol                                 Net::Time
+RFC959     File Transfer Protocol                        Net::FTP
+RFC977     A minimal NNTP Server                         NNML::Server
+RFC977     Network News Transfer Protocol                Net::NNTP
+RFC1035, RFC1183, RFC1706
+           Domain names, implementation & specification  Net::DNS
+RFC1123    Date conversion routines                      HTTP::Date
+RFC1319    MD2 Message-Digest Algorithm                  Digest::MD2
+RFC1321    MD5 Message-Digest Algorithm                  Digest::MD5
+RFC1350    Trivial File Transfer Protocol                TFTP, Net::TFTP
+RFC1413    Identification Protocol                       Net::Ident
+RFC1592    Simple Network Management Protocol            SNMP, Net::SNMP
+RFC1738    Uniform Resource Locators                     URI::URL
+RFC1777    Lightweight Directory Access Protocol         Net::LDAP
+RFC1861    Simple Network Pager Protocol                 Net::SNPP
+RFC1866    Encode/decode HTML entities in a string       HTML::Entities
+RFC1939    Post Office Protocol 3                        Net::POP3
+RFC1950-1952
+           ZLIB, DEFLATE, GZIP                           Compress::Zlib
+RFC1960    String Representation of LDAP Search Filters  Net::LDAP::Filter
+RFC2045-2049
+           MIME - Multipurpose Internet Mail Extensions  MIME::*
+RFC2138    Terminal server authentification and accting  RADIUS
+RFC2229    Dictionary Server                             Net::Dict
+RFC2518    HTTP Extensions for Distributed Authoring     HTTP::DAV
+
+4.2) ITU - International Telegraph Union (X.*)
+
+Standard   Description                                   Module Name
+--------   -----------                                   -----------
+X.209      Basic Encoding Rules for ASN.1                Convert::BER
+
+4.3) ISO - International Standards Organization (ISO*)
+
+Standard   Description                                   Module Name
+--------   -----------                                   -----------
+ISO/R 2015-1971
+           Date calculations for the Gregorian calendar  Date::DateCalc
+ISO639     Two letter codes for language identification  Locale::Language
+ISO3166    Two letter codes for country identification   Locale::Country
+
+Part 5 - Who's Who and What's Where
+
+5.1) Information / Contact Reference Details (in alphabetical order)
+
+The following list of email addresses is based on the credentials stored on
+the automated Perl Authors Upload Server (PAUSE). If any of the details is
+not up to date, you're requested to visit
+http://www.cpan.org/modules/04pause.html , where you will find a pointer to
+a CGI script that lets you edit the database entries yourself.
+
+5.2) Perl Frequently Asked Questions (FAQ)
+
+The FAQ is available on all CPAN sites in the directory doc/FAQs (e.g.,
+
+   * http://www.cpan.org/doc/FAQs/
+
+) as well as from the RTFM server where you can find all posted FAQs:
+
+   * ftp://rtfm.mit.edu/pub/usenet/news.answers/perl-faq/
+   * ftp://rtfm.mit.edu/pub/usenet-by-hierarchy/comp/lang/perl/
+
+RTFM mirror sites: North America:
+
+   * ftp://ftp.uu.net/usenet/news.answers
+   * ftp://mirrors.aol.com/pub/rtfm/usenet
+   * ftp://mirror.seas.gwu.edu/pub/rtfm
+
+Europe:
+
+   * ftp://ftp.uni-paderborn.de/pub/FAQ
+   * ftp://ftp.sunet.se/pub/usenet
+
+Asia:
+
+   * ftp://nctuccca.edu.tw/USENET/FAQ
+   * ftp://hwarang.postech.ac.kr/pub/usenet/news.answers
+   * ftp://ftp.hk.super.net/mirror/faqs

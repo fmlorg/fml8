@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>
+目的
+</TITLE>
+<META http-equiv="Content-Type"
+	content="text/html; charset=EUC-JP">
+</HEAD>
+
+<BODY BGCOLOR="#E6E6FA">
+<!-- ================== body =========================================== -->
+
+<P> fml5 プロジェクトの目的
+
+<UL>
+	<LI> <A HREF="refactoring.ja.html">再構想 (refactoring)</A>
+	<LI> <A HREF="releng.ja.html">新リリースエンジニアリング</A>
+	<LI> 設定ファイルとメニュープログラムの負荷を少なく
+	<LI> 乖離層
+		<UL>
+			<LI> バージョンアップを簡単にできるように
+			<LI> CPAN モジュール使いまくり
+			<BR>
+			 (ただし、できるだけ直接使うより、
+			一層被せておくほうがよい)
+			<LI> 3rd party 用ディレクトリ
+		</UL>
+
+	<LI> 統一化されたメンバーリストなどへのアクセスをできるだけ抽象化する。
+		<UL>
+			<LI> ファイル
+			<LI> /etc/group
+			<LI> NIS
+			<LI> SQL
+			<LI> LDAP
+			<LI> SSRP (?)
+		</UL>
+		実際には効率の問題もあり、
+		あらゆる抽象化は重たくなってしまう。そこで、
+		全部は抽象化できずに SMTP ライブラリにも一部いってしまうが、
+		この二箇所におしこめること。	
+		
+	<LI> CUI (makefml) インターフェイスおよび CGI インターフェイス
+		<BR>
+		これは従来通りのもの。
+		<BR>
+		ただしより統合化され、
+		よりメニューなどが書きやすいものであるように
+
+	<LI> IPv4/IPv6 ready
+</UL>
+
+<!-- =================================================================== -->
+
+<CENTER>
+アーキテクチャア・イメージ
+<IMG SRC="architecture.gif" ALIGH=CENTER>
+</CENTER>
+
+</BODY>
+</HTML>

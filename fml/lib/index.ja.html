@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>
+lib/ ディレクトリ
+</TITLE>
+<META http-equiv="Content-Type"
+	content="text/html; charset=EUC-JP">
+</HEAD>
+
+<BODY BGCOLOR="#E6E6FA">
+<!-- ================== body =========================================== -->
+
+<CENTER>
+lib/ ディレクトリの階層について
+</CENTER>
+
+<P>
+基本方針:
+<BR>
+使えるものは片っ端から使う（例えば CPAN )。
+そうしないと保守する項目が増える一方のためである。
+
+また、保守する人をはっきり区別するためにベンダーごとにディレクトリを分ける。
+例えば CPAN で保守されているものは CPAN/ ディレクトリ以下に入れる。
+
+CPAN/ や 3RDPARTY/ 以下のモジュールを変更したい場合は fml5/ 以下でなん
+らかのラップをするか、パッチをオリジナルに反映してもらって CPAN/ 以下
+をアップデートする。
+
+site_local/ はそのサイト独自のものなので以下なる場合もノータッチ。
+
+
+<TABLE BORDER=4>
+  <TR>
+	<TD>	ベンダー名
+	<TD>	そのディレクトリにおくモジュールの説明
+
+  <TR>
+	<TD>	fml5/		
+	<TD>	fml5 プロジェクト直轄
+		<BR>
+		この下のモデュールについては
+		<PRE>
+		use FML::module;
+		$p = new module;
+		$p->function( { what => this , type => that } );
+		</PRE>
+		などといったクラスの階層をとるか、
+		<PRE>
+		use FML::module;
+		&FML::module::function( \%curproc );
+		</PRE>
+		などといった、書き方をする。
+
+  <TR>
+	<TD>	CPAN/
+	<TD>	CPAN で保守されているもの
+		<BR>
+		この下のモデュールについては CPAN の説明の通り。
+		単に標準モデュールでないため、ないしは
+		fml5 のバージョン管理や保守のために、ここに収容。
+
+		<BR>
+		<A HREF=CPAN/MANIFEST.txt> CPAN/MANIFEST.txt </A>
+		に輸入しているモヂュールの一覧を書き、
+		<A HREF=CPAN/Changes.txt> CPAN/Changes.txt </A>
+		に変更を書く。
+
+  <TR>
+	<TD> 	3RDPARTY/
+	<TD>	サードパーティ用（予約）
+		<BR>
+		予約されているだけで、fml5 プロジェクトとしては使わない。
+
+
+  <TR>
+	<TD> 	site_local/
+	<TD>	そのサイト独自に保守したいモジュールをおくためのディレクトリ
+		（予約）
+		<BR>
+		予約されているだけで、fml5 プロジェクトとしては使わない。
+</TABLE>
+
+
+<!-- =================================================================== -->
+</BODY>
+</HTML>

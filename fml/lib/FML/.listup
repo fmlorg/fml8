@@ -1,0 +1,6 @@
+#!/bin/sh
+
+find . |\
+grep pm |\
+sed 's@./@@' |\
+awk '{print "<LI><A HREF=" $0 ">FML::" $0 "</A>"}'

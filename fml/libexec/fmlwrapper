@@ -1,0 +1,103 @@
+#!/usr/local/bin/perl -w
+#-*- perl -*-
+#
+# Copyright (C) 2000-2001 Ken'ichi Fukamachi
+#          All rights reserved. 
+#
+# $Id$ 
+# $FML$
+#
+
+use vars qw($MainCF);
+use strict;
+use Carp;
+
+# main configuration file for directory switch
+$MainCF = '/etc/fml/main.cf';
+
+eval { &Bootstrap();};
+if ($@) { print STDERR "Error: ", $@, "\n";}
+
+exit 0;
+
+
+BEGIN {
+    use File::Basename;
+    unshift(@INC, dirname($0));
+    require Standalone;
+}
+
+
+sub Bootstrap
+{
+    # 1. main.cf exists and I can open it?
+    -f $MainCF   || die("cannot find ${MainCF}");
+    my $fh = new FileHandle $MainCF;
+    defined($fh) || die("cannot find ${MainCF}");
+
+    # 1.1 o.k. try to load main.cf
+    my $config         = Standalone::load_cf($MainCF);
+    my $libexec_dir    = $config->{ libexec_dir };
+    my $default_config = $config->{ default_config };
+
+    # 2. pick up *.cf files to read and set them to @cf.
+    #    We pass it to fml_loader.
+    # pass *.cf files to libexec/{distribute,command}
+    # for example
+    # @cf = ( /etc/fml/defaults/$VERSION/default_config.cf 
+    #         /etc/fml/domains/$DOMAIN/config.cf
+    #         /var/spool/ml/elena/config.cf
+    #        );
+    my @cf = ($default_config);
+    my %optargs = ();
+    for (@ARGV) {
+	if  ($_ eq '--ctladdr') {
+	   $optargs{ ctladdr } = 1; 
+	}
+	elsif (-d $_) {
+	    push(@cf, "$_/config.cf") if -f "$_/config.cf";
+	}
+	elsif (-f $_) {
+	    push(@cf, "$_");
+	}
+    }
+
+    # 3. reset @INC
+    use lib qw( $config->{ local_lib_dir } $config->{ lib_dir });
+
+    # 4. inspect my mode from $0
+    use File::Basename;
+    my $myname = basename($0);
+
+    # 5. o.k. here we go!
+    require "$libexec_dir/fml";
+    ProcessSwitch( 
+		  {
+		      main_config  => $config,
+		      cf_list      => \@cf,
+		      myname       => $myname,
+		      options      => \%optargs,
+		  });
+}
+
+
+=head1 NAME
+
+fml.pl -- wrapper which executes the real fml5 programs.
+
+=head1 SYNOPSIS
+
+fml.pl C<[-d]> C<[--ctladdr]> $mail_list_address
+
+=head1 DESCRIPTION
+
+C<$mail_list_address>
+    Hmm,,,?
+
+C<-d>
+    debug on.
+
+C<--ctladdr> 
+    execute fml/libexec/command.
+
+=cut

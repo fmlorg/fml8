@@ -1,0 +1,27 @@
+=head2 アクセス制御
+
+# 配列表現には本質的に
+
+# 現在の PERMIT_POST_FROM と REJECT_ADDR をがったいしたもの
+POST_RESTRICTIONS	=	reject_system_accounts
+				permit_members_only
+				reject
+
+# 現在の PERMIT_COMMAND_FROM と REJECT_ADDR をがったいしたもの
+COMMAND_RESTRICTIONS	=	reject_system_accounts
+				permit_members_only
+				reject
+
+member_maps		=	file:$ml_home_dir/members 
+
+#recipient_maps		=	file:w/members
+#				unix.group:fml
+recipient_maps		=	file:w/members
+
+recipient_limit		=	2
+
+mta			=	[::1]:25
+				127.0.0.1:25
+				192.168.148.193:25
+				192.168.148.194:25
+

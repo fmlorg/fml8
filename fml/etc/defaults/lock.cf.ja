@@ -1,0 +1,8 @@
+=head2 ¥í¥Ã¥¯
+
+lock_dir	= $ml_home_dir/var/lock
+
+lock_file	= $lock_dir/simplelock
+
+lock_type	= flock
+
