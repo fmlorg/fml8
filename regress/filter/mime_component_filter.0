@@ -1,4 +1,4 @@
 text/plain	*		permit
 multipart/*	image/*		cutoff
-multipart/*	plain/html	reject
-multipart/*	plain/text	permit
+multipart/*	text/html	reject
+multipart/*	text/plain	permit
