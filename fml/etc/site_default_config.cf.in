@@ -1,0 +1,16 @@
+# $FML$
+#
+#               site default_config.cf EXAMPLE
+#
+# fml-devel loads .cf files in this order for elena ML.
+#      1. @fmlconfdir@/defaults/$VERSION/default_config.cf
+#      2. @fmlconfdir@/site_default_config.cf
+#      3. @fmlconfdir@/domains/$DOMAIN/default_config.cf
+#      4. @mlspooldir@/elena/config.cf
+#
+# This file overrides the default "default_config.cf" configurations
+# in the following way.
+#
+
+# We want to disable the subject tag in articles by default.
+article_header_rewrite_rules	-=	rewrite_subject_tag
