@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: JournaledFile.pm,v 1.4 2001/04/03 09:45:53 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.5 2001/06/17 08:57:11 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -70,12 +70,23 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {};
 
+    # make a cache file if not exists
     $me->{ _file } = $args->{ file };
-
-    if ($args->{ first_match }) {
+    unless (-f $me->{ _file }) {
+	use Time::localtime;
+	my $date = ctime(time);
+	_puts($me, "# format: ^key\\s+value\$");
+	_puts($me, "#              key: should not have spaces in it.");
+	_puts($me, "#            value: may have spaces in it.");
+	_puts($me, "#");
+	_puts($me, "# created at $date");
+    }
+    
+    # define search strategy: first or last match
+    if (defined $args->{ first_match }) {
 	$me->{ _match_style } = 'first';
     }
-    elsif ($args->{ last_match }) {
+    elsif (defined $args->{ last_match }) {
 	$me->{ _match_style } = 'last';
     }
     else {
@@ -104,6 +115,7 @@ sub FETCH
 sub STORE
 {
     my ($self, $key, $value) = @_;
+    $self->_store($key, $value);
 }
 
 
@@ -172,6 +184,10 @@ sub _fetch
     my $fh = new IO::File;
     $fh->open( $self->{ _file }, "r");
 
+    # error (we fail to open cache file).
+    unless (defined $fh) { return undef;}
+
+    # o.k. we open cache file, here we go for searching
     my ($xkey, $xvalue) = ();
     my (@values)        = ();
   SEARCH:
@@ -204,6 +220,50 @@ sub _fetch
     if ($mode eq 'array') {
 	return \@values;
     }    
+}
+
+
+# Descriptions: wrapper to put "key => value" pair to cache file.
+#               It emulates hash value upates.
+#    Arguments: $self $key $value
+#               that is, $key => $value
+# Side Effects: update cache file by _puts()
+# Return Value: return value from _puts()
+sub _store
+{
+    my ($self, $key, $value) = @_;
+    $self->_puts(sprintf("%-20s   %s", $key, $value));
+}
+
+
+
+# Descriptions: append given string to cache file
+#    Arguments: $self $string
+# Side Effects: update cache file
+# Return Value: 1 or throw exception by croak()
+sub _puts
+{
+    my ($self, $string) = @_;
+    my $file = $self->{ _file };
+
+    use IO::File;
+    my $fh = new IO::File;
+    $fh->open($file, "a");
+
+    if (defined $fh) {
+	use Time::localtime;
+	my $date = ctime(time);
+	if (defined $string) {
+	    $fh->print($string);
+	    $fh->print("\n") unless $string =~ /\n$/;
+	}
+	$fh->close;
+	return 1;
+    }
+    else {
+	use Carp;
+	croak "cannot open cache file $file\n";
+    }
 }
 
 
