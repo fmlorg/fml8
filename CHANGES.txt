@@ -1,6 +1,34 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/05/24
+
+   variables
+	reconstruct $newml_command_*_template_files
+	
+   FML::Config::Convert 
+	implement convert_file(srcfile, dstfile, params)
+	
+   FML::Log 
+	print STDERR $msg if Log() fails
+	
+   FML::MTAControl 
+   FML::Command::Admin::newml 
+	use FML::MTAControl ACAP
+
+2002/05/23
+
+   FML::Header::Subject 
+	add mime decode for subject
+	
+   Mail::Message::Decode Encode.pm 
+	FNF-ify, fix documents and @EXPORTS
+	
+2002/05/22
+
+   FML::Mailer 
+	save smtp log at var/mail/outgoing/
+	
 2002/05/21
 
    variables
@@ -2394,4 +2422,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.75 2002/05/18 04:01:45 fukachan Exp $
+$FML: CHANGES.txt,v 1.76 2002/05/21 15:23:07 fukachan Exp $
