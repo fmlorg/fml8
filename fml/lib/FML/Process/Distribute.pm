@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.70 2002/04/12 11:54:38 fukachan Exp $
+# $FML: Distribute.pm,v 1.71 2002/04/15 03:47:23 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -125,16 +125,19 @@ sub _check_filter
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
 
-    use FML::Filter;
-    my $filter = new FML::Filter;
-    $filter->check($curproc, $args);
+    eval q{
+	use FML::Filter;
+	my $filter = new FML::Filter;
+	my $r = $filter->check($curproc, $args);
 
-    # filter traps this message.
-    if ($filter->error()) {
-	# we should stop this process ASAP.
-	$curproc->refuse_further_processing();
-	Log("mail loop detected");
-    }
+	# filter traps this message.
+	if ($r = $filter->error()) {
+	    # we should stop this process ASAP.
+	    $curproc->refuse_further_processing();
+	    Log("rejected by filter due to $r");
+	}
+    };
+    Log($@) if $@;
 }
 
 
