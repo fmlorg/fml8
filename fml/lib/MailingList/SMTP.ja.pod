@@ -20,45 +20,32 @@ MailingList::* に属するクラスは SMTP および LMTP 配送へのインターフェイスを
 MailingList::SMTP は次のように使います。
 
     use MailingList::SMTP;
-    my $service = new MailingList::SMTP {
-	log_function   => $fp,
-	socket_timeout => 2,
-    };
-
-    my $ref_to_array   = [ 'kenken@nuinui.net' ];
-    my $recipient_maps = 'file:/var/spool/ml/elena/actives';
-
-    $service->deliver(
-		      {
-			  'mta'             => 'localhost:25',
-
-			  'smtp_sender'     => 'rudo@nuinui.net',
-			  'recipient_array' => $ref_to_array,
-			  'recipient_maps'  => $recipient_maps,
-
-			  'header'          => $header,
-			  'body'            => $body,
-		      });
+    my $service = new MailingList::SMTP;
     if ($service->error) { Log($service->error); return;}
 
-ここで $header はヘッダで、FML::Header オブジェクトです。
-そして $body   はメール本文で、FML::Body オブジェクトです。
+    $service->deliver(
+                      {
+                          mta             => '127.0.0.1:25',
+
+                          smtp_sender     => 'rudo@nuinui.net',
+                          recipient_maps  => $recipient_maps,
+                          recipient_limit => 1000,
+
+                          header          => $header_object,
+                          body            => $body_object,
+                      });
+
+ここで $header_object はヘッダで、FML::Header オブジェクトです。
+そして $body_oject   はメール本文で、MailingList::Messages オブジェクトです。
 
 =head1	コンポーネント
 
-	MailingList::SMTP >-|
-	               |- MailingList::Utils
-	               |- MailingList::INET4 >--- Socket
-	               |- MailingList::INET6 >--- Socket
-	               |                  |- Socket6
-	               |
-	               |- FML::IO::Map
-	               |
-	               |- IO::Socket
+C<Delivery> は
+C<SMTP>
+C<ESMTP>
+C<LMTP>
+などへのインターフェイスです。
 
-MailingList::SMTP uses MailingList::Utils, MailingList::INET4 and MailingList::INET6.
-MailingList::SMTP also uses FML::IO::Map to resolve $recipient_maps
-operations.
 
 =head1	参照
 
