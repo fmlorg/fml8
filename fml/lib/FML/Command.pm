@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.34 2002/12/22 03:39:43 fukachan Exp $
+# $FML: Command.pm,v 1.35 2002/12/24 10:19:41 fukachan Exp $
 #
 
 # XXX
@@ -17,6 +17,9 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use FML::Log qw(Log LogWarn LogError);
+
+
+my $debug = 0;
 
 
 =head1 NAME
@@ -97,6 +100,15 @@ sub rewrite_prompt
     unless ($@) {
 	if ($command->can('rewrite_prompt')) {
 	    $command->rewrite_prompt($curproc, $command_args, $rbuf);
+	}
+	else {
+	    LogError("call $pkg but rewrite_prompt() not supported") if $debug;
+	}
+    }
+    else {
+	if ($debug) {
+	    LogError($@);
+	    LogError("cannot load $pkg");
 	}
     }
 }
@@ -224,7 +236,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
