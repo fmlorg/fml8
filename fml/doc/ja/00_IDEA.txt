@@ -1,0 +1,269 @@
+
+   *** this is the original idea.
+   *** We save this for the future not to forget the original idea.
+
+
+
+			fml5 project
+
+○ 基本理念
+
+	(仮称) fml5 == Fml Modular Listmanager based on perl 5
+		(recursive definition)
+
+	sendmail -> postfix 的な置き換えプログラム
+	例えば
+		/etc/aliaes や .forward はそのまま使いつづけられる
+		しかし sendmail.cf は解釈しないといったイメージ
+
+		/var/spool/ml
+		/var/spool/ml/ML名
+
+	という構造は残したいとおもうが、
+	それ以外の互換性を保証するかはかなり不明
+
+	Q: ?     ~ユーザ名/fml/ML名 
+	   suEXEC みたいなものかい?
+
+		ユーザが死にそうにいるサーバ上では uniqueness をチェッ
+		クするのがとても大変そう？
+
+
+○ fml.pl は wrapper で
+
+	/usr/local/libexec/fml/$VERSION/ ...
+
+	LDAP とか SQL をしゃべれてほしいですな > Netscape
+
+
+○ メインプログラムディレクトリ階層の例
+	( 現在の /usr/local/local/fml にあたるもの )
+	ports, packages, RPM, .deb フレンドリィに(?)
+
+   /usr/local/libexec/fml/
+
+	/usr/local/libexec/fml/distribute		(配送プログラム)
+	/usr/local/libexec/fml/command		(コマンド処理プログラム)
+	/usr/local/libexec/fml/mead			(エラー解析)
+	/usr/local/libexec/fml/confirmd		
+
+		注: --ctladdr はつかわない。できるだけ DO NOT PARSE
+		    でないと機械的な処理がしにくいため
+		   # 例えば CGI では include-ctl ファイルの編集の際
+		   s/distribute/command/g 
+		   するだけの方が楽などといった具合(?)
+
+   /usr/local/libexec/fml/emul/
+
+	/usr/local/libexec/fml/emul/fml.pl
+		--ctladdr なしは /usr/local/libexec/fml/distribute を
+		--ctladdr つきは /usr/local/libexec/fml/command を実行する
+
+	/usr/local/libexec/fml/emul/XXX
+	 	例: emul/listserv
+
+
+   /usr/local/lib/fml/	
+		ドキュメントや perl module などをおく ?
+
+		/usr/local/lib/fml/doc/text/
+		/usr/local/lib/fml/doc/html/
+		/usr/local/lib/fml/doc/sgml/
+		/usr/local/lib/fml/doc/pod/
+		/usr/local/lib/fml/doc/man/
+		/usr/local/lib/fml/doc/jman/
+
+		/usr/local/lib/fml/lib/base/Proc.pm
+		/usr/local/lib/fml/lib/CPAN/Mail/
+		/usr/local/lib/fml/lib/Jcode/Jcode.pm
+		/usr/local/lib/fml/lib/gnu/
+		/usr/local/lib/fml/lib/3rdparty/
+
+		/usr/local/lib/fml/messages/
+		/usr/local/lib/fml/makefml/
+
+		/usr/local/lib/fml/examples/
+		/usr/local/lib/fml/examples/www/
+		/usr/local/lib/fml/examples/databases/
+
+		/usr/local/lib/fml/contrib/
+		
+
+○ 基本設定の例
+
+   ( makefml が使うため, virtual domain/host を考慮する )
+
+	/etc/fml/$domain/fml.cf
+	/etc/fml/$domain/cgi.cf
+
+	こうすれば
+		# makefml newml elena@fml.org
+		# makefml newml elena@nuinui.net
+	といった操作でバーチャルドメインの場合に簡単にできないか?
+
+   elena ML
+	/var/spool/ml/elena/設定ファイル (仮称: config.cf )
+		# もっと良い名前募集中
+
+
+   :include:/var/spool/ml/elena は
+
+	"| /usr/local/libexec/fml/distribute /var/spool/ml/elena"
+
+   :include:/var/spool/ml/elena-ctl は
+
+	"| /usr/local/libexec/fml/command /var/spool/ml/elena"
+
+   を呼び出す。
+
+   Q: 実は実体は1つで、$0 で処理が分かれるようにしていてもよい
+
+
+○ 再利用可能性
+
+  たとえば confirmation module の例
+
+	subscribe エンジン	---> confirmation module
+	モデレータ		---> confirmation module
+	confirmd		---> confirmation module
+
+		/usr/local/lib/fml/lib/base/Confirm.pm
+
+
+○ 設定ファイル
+
+   問題点
+	perl でかくと parser がかけない(perl が柔軟過ぎるから)
+	1/0 はいやん、yes/no のほうがまし
+	配列が表現できない
+	型チェックをしたいのだが…
+
+
+   config.cf の例 # 段落区切り ( postfix とおなじ形式で )
+
+	# これは自動設定されるはず
+	# myhomedir	= /var/spool/ml/elena
+
+	myfqdn		= ahodori.fml.org
+	mydomain	= fml.org
+
+	mail_list	= elena@$mydomain
+	control_address	= elena-ctl@$mydomain
+
+	# メンバーリスト関係
+	members_maps		=	$myhomedir/members
+	admin_members_maps	=	$myhomedir/members-admin
+
+	# definition of recipients: fml uses recipient lists in this order
+	# [a-z]+: のうち file: だけは省略しても良い 
+	# これで配列の表現ができる
+	recipients_maps = 	$myhomedir/recipients 
+				file:$myhomedir/actives
+				mysql:$sysconfdir/mysql.cf
+
+
+	# makefml add の際にはどの maps をアップデートするか?
+	#    たとえばファイルに追加であって、mysql へではない
+	# XXX この名前づけルールは良くないと思う > postfix
+	# XXX もっとよい名前を
+	recipient_database = $myhomedir/recipients 
+
+
+	# かならず use_* と *_type がこんび(か?)
+	use_verps	= yes
+	verps_type	= qmail
+
+
+	# 配送モード ( REJECT_POST_HANDLER をやめよう )
+	# distribute_mode	= 	forward
+	distribute_mode		= 	forward_if_moderator_allow
+
+	# $PERMIT_POST_FROM
+	allow_post_from		= 	reject_system_accounts
+					members_only
+					reject
+
+	# $PERMIT_COMMAND_FORM (?)
+	allow_command_from	= 	reject_system_accounts
+					members_only
+					ignore
+
+	# 
+	distribute_restrictions	= 	reject_system_accounts
+					members_only
+					reject
+
+	command_restrictions	= 	reject_system_accounts
+					members_only
+					reject
+
+
+	# 逆にモデレータ は use_moderator (にすると変な例?)
+	use_moderator		= 	yes
+	moderator_type		= 	otp
+	moderator_maps		= 	$myhomedir/moderators
+
+	# LDAP
+	LDAP::HOST		=
+	LDAP::PORT		=	
+
+
+
+○ フック？
+
+  別案１
+
+	# hooks
+	hooks			= 	$myhomedir/hooks.ph
+
+  別案２
+
+	=head1 configurations
+
+	postfix スタイル（なんですよ、これは）
+
+	=head1 hooks
+	=cut
+
+	# 現在の LOCAL_CONFIG で別れ目になる行
+	# HOOK 
+
+
+○ 多国語化
+
+	「developpers はメッセージの他国語化は前提にしてくれればいいだ
+	けで、べつに英語の見本を書かなくてもいいですよ〜ん」
+
+	この時代、日本人が運用していてもその ML のメンバーが外国人のば
+	あいはあります。だからサポートしたいです。
+
+	また、IETF では来年あたりに、エラーメッセージなどの多国語化問
+	題とかあるので、MLM (MTA もどき)であっても、多国語かは必要とお
+	もいます。＃なにをもってえらーめっせーじかによりますけど…
+
+
+○ 設定ファイルのロード順
+
+
+	現在の cf ですら設定してる項目が多すぎる
+	「実はこんな項目もconfig.phで設定されちゃっているのね」はだめ
+
+ 	あどれす
+ 	POST_RESTRICTION
+ 	COMMAND_RESTRICTION
+ 	REGISTRATION_TYPE	auto_confirmation (とかか?)	
+ 
+ 以外はデフォルトのままにしたいなぁ。
+ ぼく、差分だけが一画面くらいあるだけなのが希望ですぅ。
+
+ ということは
+
+ 	use FML::LoadConfig;
+ 	my $rcf = new FML::LoadConfig;
+ 	$rcf->load( /usr/local/fml/lib/$VERSION/etc/default_config.cf );
+ 	$rcf->load( /etc/fml/$DOMAIN/default_config.cf );
+ 	$rcf->load( /var/spool/ml/elena/config.cf );
+ 
+  とかいうローディングをしないといけないような気がする
+
+  ＊ メニューで明示的に変更すると、それだけは新たに付け加わる > config.cf
