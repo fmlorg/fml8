@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.100 2002/11/26 14:13:29 fukachan Exp $
+# $FML: Distribute.pm,v 1.101 2002/12/01 13:46:13 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -255,8 +255,8 @@ print <<"_EOF_";
 
 Usage: $0 \$ml_home_prefix/\$ml_name [options]
 
-   For example, distribute of elena ML
-   $0 /var/spool/ml/elena
+   For example, distribute of elena\@fml.org ML
+   $0 elena\@fml.org
 
 _EOF_
 }
@@ -375,6 +375,7 @@ sub _header_rewrite
     my $rules  = $config->{ article_header_rewrite_rules };
     my $id     = $args->{ id };
 
+    # XXX-TODO: use $config->get_as_array_ref()
     for my $rule (split(/\s+/, $rules)) {
 	Log("_header_rewrite( $rule )") if $config->yes('debug');
 
@@ -404,6 +405,7 @@ sub _deliver_article
     my $body    = $curproc->article_message_body();   # Mail::Message object
 
     unless ( $config->yes( 'use_article_delivery' ) ) {
+	Log("not delivery (\$use_article_delivery = no)");
 	return;
     }
 
@@ -418,6 +420,7 @@ sub _deliver_article
     my $sfp = sub { my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;};
     my $handle = undef;
 
+    # overload $sfp log function pointer.
     my $wh = $curproc->open_outgoing_message_channel();
     if (defined $wh) {
 	$sfp = sub { print $wh @_;};
@@ -511,6 +514,8 @@ sub htmlify
     my $article_id     = $pcb->get('article', 'id');
     my $article_file   = $article->filepath($article_id);
     my $index_order    = $config->{ html_archive_index_order_type };
+
+    # XXX-TODO: care for non Japanese.
     my $htmlifier_args = {
 	directory   => $html_dir,
 	charset     => 'euc-jp',

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.145 2002/12/10 12:00:50 fukachan Exp $
+# $FML: Kernel.pm,v 1.146 2002/12/23 14:51:03 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -925,7 +925,7 @@ The restriction rules follows the order of C<command_restrictions>.
 
 # Descriptions: permit this post process
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: none
+# Side Effects: set the error reason at "check_restriction" in pcb.
 # Return Value: NUM(1 or 0)
 sub permit_post
 {
@@ -936,7 +936,7 @@ sub permit_post
 
 # Descriptions: permit this command process
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: none
+# Side Effects: set the error reason at "check_restriction" in pcb.
 # Return Value: NUM(1 or 0)
 sub permit_command
 {
@@ -948,7 +948,7 @@ sub permit_command
 # Descriptions: permit this $type process based on the rules defined
 #               in ${type}_restrictions.
 #    Arguments: OBJ($self) HASH_REF($args) STR($type)
-# Side Effects: none
+# Side Effects: set the error reason at "check_restriction" n pcb.
 # Return Value: NUM(1 or 0)
 sub _check_restrictions
 {
