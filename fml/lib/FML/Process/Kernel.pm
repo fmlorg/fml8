@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.91 2002/04/27 07:23:42 fukachan Exp $
+# $FML: Kernel.pm,v 1.92 2002/04/27 12:27:35 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1093,7 +1093,7 @@ sub clean_up_tmpfiles
 
     if (defined $queue) {
 	for my $q (@$queue) {
-	    Log("unlink $q");
+	    Log("unlink $q") if $debug;
 	    unlink $q;
 	}
     }
