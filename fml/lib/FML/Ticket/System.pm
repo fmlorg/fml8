@@ -48,6 +48,16 @@ sub update_ticket_trace_cache
     my $db_dir    = $config->{ ticket_db_dir };
     my $ml_name   = $config->{ ml_name };
     my $cachefile = $db_dir. $ml_name;
+    my $umask     = $config->{ default_umask } || 0022;
+
+    printf "%o\n", (0777 & $umask);
+
+    unless (-d $db_dir) {
+	use Base::File qw(mkdirhier);
+	mkdirhier($db_dir, 0755);
+	$self->error_reason( Base::File->error() );
+	return;
+    }
 
     use FileHandle;
     my $fh = new FileHandle ">> $cachefile";
@@ -64,7 +74,11 @@ sub update_ticket_trace_cache
 sub AUTOLOAD
 {
     my ($self) = @_;
-    $self->error_reason("FYI: unknown method $AUTOLOAD is called");
+
+    eval q{
+	use FML::Log;
+	Log("FYI: unknown method $AUTOLOAD is called");
+    };
 }
 
 
