@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.2 2001/10/27 04:27:18 fukachan Exp $
+# $FML: @template.pm,v 1.3 2001/12/22 09:27:14 fukachan Exp $
 #
 
 package __MODULE_NAME__;
@@ -35,18 +35,9 @@ sub new
 }
 
 
-=head1 Data IN/OUT among modules
+=head1 CODING STYLE
 
-=head2 Style
-
-    OO
-
-=head2 Data IN  (from File, DBMS et.al.)
-
-    $curproc
-
-=head2 Data OUT (into File, DBMS et.al.)
-
+See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 
