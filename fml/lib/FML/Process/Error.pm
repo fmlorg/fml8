@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.46 2004/07/23 13:00:57 fukachan Exp $
+# $FML: Error.pm,v 1.47 2004/12/05 16:19:10 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -315,6 +315,10 @@ sub _forward_error_message
     my $msg        = $curproc->incoming_message();
 
     if ($maps) {
+	# override Reply-To: and Errors-To: header fields.
+	$config->{ outgoing_mail_header_errors_to } = $fml_owner;
+	$config->{ outgoing_mail_header_reply_to  } = $fml_owner;
+
 	my $maps     = $config->get_as_array_ref('maintainer_recipient_maps');
 	my $msg_args = {
 	    smtp_sender    => $fml_owner,
