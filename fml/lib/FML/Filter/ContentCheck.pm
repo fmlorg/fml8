@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ContentCheck.pm,v 1.1 2002/04/07 15:01:09 tmu Exp $
+# $FML: ContentCheck.pm,v 1.2 2002/04/08 12:44:24 fukachan Exp $
 #
 
 package FML::Filter::ContentCheck;
@@ -130,8 +130,8 @@ sub only_plaintext
 
 	$prevmp = $mp->{ prev };
 	if($prevmp) {
-	    $prev_type = $prevmp->data_type();
-	    if(prev_type eq "multipart.delimiter") {
+	    my $prev_type = $prevmp->data_type();
+	    if ($prev_type eq "multipart.delimiter") {
 		$prevmp->delete_message_part_link();
 	    }
 	}
