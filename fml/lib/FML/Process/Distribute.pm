@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.155 2004/08/13 15:02:49 fukachan Exp $
+# $FML: Distribute.pm,v 1.156 2004/08/15 10:29:42 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -206,10 +206,10 @@ Lastly we unlock the current process.
 =cut
 
 
-# Descriptions: the main routine, kick off _distribute().
+# Descriptions: the main routine, kick off _deliver_article_prep().
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: distribution of articles.
-#               See _distribute() for more details.
+#               See _deliver_article_prep() for more details.
 # Return Value: none
 sub run
 {
@@ -234,7 +234,7 @@ sub run
     # $curproc->lock();
     unless ($curproc->is_refused()) {
 	if ($curproc->permit_post()) {
-	    $curproc->_distribute($args);
+	    $curproc->_deliver_article_prep($args);
 	}
 	else {
 	    $curproc->log("deny article submission");
@@ -352,8 +352,8 @@ sub finish
 }
 
 
-# Descriptions: the top level routine to drive the article spooling and
-#               distribution.
+# Descriptions: the top level routine to prepare article to deliver and
+#               spool and queue-in the article for later delivery process.
 #                  $article->header_rewrite();
 #                  $article->increment_id();
 #                  $article->spool();
@@ -362,7 +362,7 @@ sub finish
 #               the article sequence number is incremanted
 #               article spooling.
 # Return Value: none
-sub _distribute
+sub _deliver_article_prep
 {
     my ($curproc, $args) = @_;
     my $config           = $curproc->config();
