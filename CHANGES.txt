@@ -1,6 +1,102 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/09/06
+
+   ＭＬの消去方法の拡張
+	ＭＬを消した際、ディレクトリを日付名つきのものにする。
+	これで、何度、消しても大丈夫＃って、そんなに何度も消すかな？
+
+		/var/spool/ml/elena
+			->
+		/var/spool/ml/@elena.20030906
+
+   FML::Command::Admin::rmml 
+   FML::Process::Utils 
+	use removed_ml_home_dir_path() method to determine the dir
+	path used as the removed $ml_home_dir.
+
+2003/09/05
+
+   FML::Process::Utils 
+	escape $curproc in eval
+	
+   FML::Process::Kernel 
+	bug fix::we should not use $main_cf in this module.
+	clean up.
+	more comments.
+
+2003/09/04
+
+   FML::Command::Admin::get newml rmml 
+	use $curproc->config()
+
+2003/09/02
+
+   FML::Process::Calendar 
+	bug fix wrong lvalue
+
+2003/08/30
+
+   use $curproc->config(), pcb() not { config }, { pcb } respectively.
+	
+   FML::Process::Kernel 
+	add simple log message queue logic as a prototype.
+
+2003/08/24
+
+   Mail::Message::ToHTML 
+	print STDERR ... if $debug.
+	
+   FML::Config 
+	print STDERR ... -> carp(...)
+	
+   File::Rotate 
+   IO::Adapter::DBI File 
+	remove debug::print STDERR ..
+	
+   FML::Process::CGI::Param 
+	remove debug
+	
+   FML::Process::ConfViewer 
+	save $@ via logwarn() not print STDERR ..
+
+2003/08/23
+
+   use log*() methods	
+	define $curproc->log, logwarn, logerror and log_message() methods.
+	modified to use $curproc->log*() interface.
+	
+   Mail::Message::Checksum 
+	use croak() not FML::Log()
+	
+   FML::Process::Kernel 
+	sort function definitions.
+	
+   FML::Process::QueueManager 
+   FML::Mailer 
+	new FML::Mailer $curproc;
+
+   FML::{Article,Digest,Error,Filter,Header,Mailer}
+   FML::Article::{Sequence,Summary,Thread} 
+   FML::Error::Cache 
+   FML::Filter::MimeComponent3 
+   FML::Process::Utils 
+   FML::Restriction::Post 
+	modified to use $curproc->log*() methods.
+
+2003/08/20
+
+   FML::Process::Utils 
+   Mail::Message::ToHTML 
+	define the detail of address masking against spammers.
+	$use_html_archive_address_mask	=	yes
+	$html_archive_address_mask_type	=	all
+
+   new variables
+	use_html_archive_address_mask  =       yes
+	phtml_archive_address_mask_type =       all
+
 2003/08/18
 
    --quiet オプション創設 (fml と makefml コマンドだけ)
@@ -5136,4 +5232,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.157 2003/08/16 15:40:10 fukachan Exp $
+$FML: CHANGES.txt,v 1.158 2003/08/18 23:46:42 fukachan Exp $
