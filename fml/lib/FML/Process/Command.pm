@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.65 2002/07/15 15:27:14 fukachan Exp $
+# $FML: Command.pm,v 1.66 2002/07/18 23:51:03 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -535,7 +535,6 @@ sub _allow_command
     my $comname = $command_info->{ comname };
     my $config  = $curproc->config();
     my $level   = $status->{ level };
-    my $comlist = $config->get_as_array_ref("commands_for_${level}");
 
     Log("(debug) mode=$mode level=$level");
 
