@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Calender.pm,v 1.2 2002/04/06 01:34:45 fukachan Exp $
+# $FML: Calender.pm,v 1.3 2002/04/12 13:56:04 fukachan Exp $
 #
 
 package FML::CGI::Calender;
@@ -53,16 +53,17 @@ Almost all methods inherits C<FML::Process::CGI> base class.
 sub html_start
 {
     my ($curproc, $args) = @_;
+    my $config  = $curproc->{ config };
     my $user    = $curproc->safe_param_user;
     my $myname  = $curproc->myname();
     my $title   = "$user schedule";
     my $color   = '#E6E6FA';
-    my $charset = 'euc-jp';
+    my $charset = $config->{ cgi_charset } || 'euc-jp';
 
     # o.k start html
-    print start_html(-title=>$title,
-		     -lang => $charset,
-		     -BGCOLOR=>$color);
+    print start_html(-title   => $title,
+		     -lang    => $charset,
+		     -BGCOLOR => $color);
     print "\n";
 
     $curproc->_show_guide($args);
