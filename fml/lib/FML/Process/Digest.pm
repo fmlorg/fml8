@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Digest.pm,v 1.6 2002/12/22 03:46:20 fukachan Exp $
+# $FML: Digest.pm,v 1.7 2003/08/23 04:35:38 fukachan Exp $
 #
 
 package FML::Process::Digest;
@@ -126,7 +126,7 @@ sub verify_request
 }
 
 
-=head2 C<run($args>)
+=head2 run($args)
 
 Firstly it locks (giant lock) the current process.
 

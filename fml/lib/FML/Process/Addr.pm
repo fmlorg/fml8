@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Addr.pm,v 1.7 2003/03/06 09:27:13 fukachan Exp $
+# $FML: Addr.pm,v 1.8 2003/08/23 04:35:37 fukachan Exp $
 #
 
 package FML::Process::Addr;
@@ -193,7 +193,7 @@ _EOF_
 }
 
 
-=head2 C<_fmladdr($args)> (INTERNAL USE)
+=head2 _fmladdr($args)
 
 show all aliases (accounts + aliases).
 show only accounts if -n option specified.

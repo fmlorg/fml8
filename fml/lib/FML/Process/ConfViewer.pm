@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.20 2003/01/11 16:05:17 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.21 2003/08/23 04:35:38 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -210,7 +210,7 @@ sub finish
 }
 
 
-=head2 C<_fmlconf($args)> (INTERNAL USE)
+=head2 _fmlconf($args)
 
 run dump_variables of C<FML::Config>.
 

@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Alias.pm,v 1.8 2003/01/07 08:38:34 fukachan Exp $
+# $FML: Alias.pm,v 1.9 2003/08/23 04:35:37 fukachan Exp $
 #
 
 package FML::Process::Alias;
@@ -186,7 +186,7 @@ _EOF_
 }
 
 
-=head2 C<_fmlalias($args)> (INTERNAL USE)
+=head2 _fmlalias($args)
 
 switch of C<fmlalias> command.
 

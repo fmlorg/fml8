@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.121 2003/08/16 02:46:37 fukachan Exp $
+# $FML: Distribute.pm,v 1.122 2003/08/23 04:35:39 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -172,7 +172,7 @@ sub _check_filter
 }
 
 
-=head2 C<run($args>)
+=head2 run($args)
 
 Firstly it locks (giant lock) the current process.
 

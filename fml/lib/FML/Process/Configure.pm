@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.51 2003/08/18 14:05:03 fukachan Exp $
+# $FML: Configure.pm,v 1.52 2003/08/23 04:35:38 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -248,7 +248,7 @@ _EOF_
 }
 
 
-=head2 C<_makefml($args)> (INTERNAL USE)
+=head2 _makefml($args)
 
 switch of C<makefml> command.
 It kicks off <FML::Command::$command> corrsponding with
