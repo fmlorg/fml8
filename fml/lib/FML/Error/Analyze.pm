@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.2 2002/08/16 03:09:59 fukachan Exp $
+# $FML: Analyze.pm,v 1.3 2002/08/17 02:38:37 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -138,7 +138,7 @@ sub error_continuity
 	while (($addr, $ra) = each %$summary) {
 	    $sum = 0;
 	    for my $v (@$ra) {
-		$sum += 1 if $v >= 4;
+		$sum += 1 if $v >= 2;
 	    }
 
 	    Log("summary: $addr sum=$sum (@$ra)");
