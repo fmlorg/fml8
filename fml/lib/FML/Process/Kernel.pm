@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.90 2002/04/27 05:23:32 fukachan Exp $
+# $FML: Kernel.pm,v 1.91 2002/04/27 07:23:42 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -529,7 +529,7 @@ sub _check_restrictions
 		my $sender = $cred->sender;
 		Log("$sender is not a ML member");
 		Log( $cred->error() );
-		$curproc->reply_message_nl('kern.not_member',
+		$curproc->reply_message_nl('error.not_member',
 					   "you are not a ML member." );
 		$curproc->reply_message( "   your address: $sender" );
 
@@ -733,7 +733,7 @@ If translation fails, $default_msg, English by default, is used.
 We need parameters in some cases.
 They are stored in $args if needed.
 
-	$curproc->reply_message_nl('kern.not_member',
+	$curproc->reply_message_nl('error.not_member',
 				   "you are not a ML member.",
 				   $args);
 
