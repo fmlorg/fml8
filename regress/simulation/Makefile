@@ -10,6 +10,7 @@ update:
 	@ (cd ../..;make update)
 
 link:
+	rm -f etc; ln -s ../../fml/etc
 	rm -f lib; ln -s ../../fml/lib
 	rm -f FML; ln -s ../../fml/lib/FML
 	rm -f IO; ln -s ../../fml/lib/IO
