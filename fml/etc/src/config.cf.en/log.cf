@@ -2,25 +2,28 @@
 
 # Descriptions: user logging function
 #      History: enabled by default
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_log		=	yes
 
 # Descriptions: log file
 #      History: $LOGFILE
-#        Value: filename
+#        Value: FILE
 #     Examples:
 log_file	=	$ml_home_dir/log
 
 # Descriptions: logging type
 #      History: fml 8.0 new
-#        Value: file / syslog
+#        Value: SELECT ( file syslog )
 #     Examples:
 log_type	=	file
 
 # Descriptions: log message format
 #      History:
-#        Value: fml4_compatible
+#        Value: STR
+#		fml4_compatible
+#               process[pid]
+#               process:time.pid ?
 #               process[pid]
 #               process:time.pid ?
 #     Examples: * fml4_compatible example
@@ -33,7 +36,7 @@ log_format_type	=	process[pid]
 
 # Descriptions: log dir
 #      History:
-#        Value: filename
+#        Value: DIR
 #     Examples:
 log_dir		=	$var_dir/log
 
@@ -43,14 +46,14 @@ log_dir		=	$var_dir/log
 
 # Descriptions: rotate log files or not.
 #      History: no if $LOGFILE_NEWSYSLOG_LIMIT == 0, yes if > 0.
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: no
 use_log_rotate		=	no
 
 
 # Descriptions: log rotation policy. 
 #      History: none
-#        Value: size | interval
+#        Value: SELECT ( size interval )
 #     Examples: size
 log_rotate_policy	=	size
 
@@ -82,19 +85,19 @@ log_rotate_num_backlog 	=	4
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( ja en )
 #     Examples:
 log_file_default_charset   =       $log_file_charset_en
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp us-ascii )
 #     Examples:
 log_file_charset_ja        =       euc-jp
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp us-ascii )
 #     Examples:
 log_file_charset_en        =       us-ascii
 
@@ -105,7 +108,7 @@ log_file_charset_en        =       us-ascii
 # Descriptions: domin local log file.
 #               used in admin/*.cgi e.g. when ml_name unspecified.
 #      History: none
-#        Value: filename
+#        Value: FILE
 #     Examples: /var/spool/ml/@log@
 domain_local_log_file	=	$domain_local_dir/@log@
 
@@ -117,13 +120,13 @@ domain_local_log_file	=	$domain_local_dir/@log@
 # Descriptions: if yes, makefml/fml outputs machine friendly log.
 #               --coputer-output option implies "use_log_computer_output = yes".
 #      History: none
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: no
 use_log_computer_output	=	no
 
 
 # Descriptions: specify perl module for output engine.
 #      History: none
-#        Value: CLASS
+#        Value:  CLASS
 #     Examples: FML::Log::Print::Simple
 log_computer_output_engine	=	FML::Log::Print::Simple

@@ -3,14 +3,14 @@
 
 # Descriptions: base directory which locates .cgi for this domain.
 #      History:
-#        Value:
+#        Value: DIR
 #     Examples:
 cgi_base_dir	=	$fml_owner_home_dir/public_html/cgi-bin/fml/$ml_domain
 
 
 # Descriptions: base directory which locates .cgi for this domain.
 #      History:
-#        Value:
+#        Value: DIR
 #     Examples: ~fml/public_admin/cgi-bin/fml/admin/fml.org/elena
 #        Notes: ACL is contorlled by
 #               admin/.htaccess or admin/$domain/.htaccess.
@@ -19,59 +19,59 @@ admin_cgi_base_dir	=	$cgi_base_dir/admin
 
 # Descriptions: base directory which locates .cgi for this ML.
 #      History:
-#        Value:
+#        Value: DIR
 #     Examples: ~fml/public_admin/cgi-bin/fml/admin/fml.org/elena
 ml_admin_cgi_base_dir	=	$cgi_base_dir/ml-admin/$ml_name
 
 
 # Descriptions: default charset
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp us-ascii )
 #     Examples:
 cgi_default_charset	=	us-ascii
 
 # Descriptions: cgi charset in Japanese
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp )
 #     Examples:
 cgi_charset_ja		=	euc-jp
 
 # Descriptions: cgi charset in English
 #      History:
-#        Value:
+#        Value: SELECT ( us-ascii)
 #     Examples:
 cgi_charset_en		=	us-ascii
 
 # Descriptions: language mode of CGI (!= charset) 
 #      History:
-#        Value:
+#        Value: SELECT ( japanese )
 #     Examples:
 cgi_default_language   =       english
 
 # Descriptions: available language mode in CGI
 #      History:
-#        Value:
+#        Value: MIX ( japanese english )
 #     Examples:
 cgi_language_select_list      =	english
 				japanese
 
 # Descriptions: default bgcolor
 #      History:
-#        Value: #%6x
+#        Value: HTML_COLOR
 #     Examples: #FFFFFF
 cgi_main_menu_color		=	#FFFFFF
 
 
 # Descriptions: default bgcolor in navigation menu
 #      History: 
-#        Value: #%6x
+#        Value: HTML_COLOR
 #     Examples: #FFFFFF
 cgi_navigation_bar_color	=	#FFFFFF
 
 
 # Descriptions: choise of address list types in CGI operations.
 #      History: 
-#        Value: member recipient admin_member
+#        Value: MIX ( member recipient admin_member )
 #     Examples: member recipient admin_member
 cgi_menu_address_map_select_list	=	member
 						recipient
@@ -80,6 +80,6 @@ cgi_menu_address_map_select_list	=	member
 
 # Descriptions: default value of list types in CGI operations.
 #      History: 
-#        Value: member recipient admin_member
+#        Value: MIX ( member recipient admin_member )
 #     Examples: member
 cgi_menu_default_address_map		=	recipient

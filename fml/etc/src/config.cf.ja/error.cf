@@ -7,7 +7,7 @@
 #               リモート管理の時は、admin_recipient_maps にしたいなどの
 #               需要があると思われる。
 #      History: 4.0 に該当するものはない
-#        Value: maps
+#        Value: MAP_LIST
 #     Examples: file:$ml_home_dir/recipients-maintainer
 #               $admin_recipient_maps 
 maintainer_recipient_maps	=
@@ -19,7 +19,7 @@ maintainer_recipient_maps	=
 # Descriptions: エラー解析プログラムを使うか？
 #      History: なし
 #		use_error_analyzer_program (fml8 pre alpha)
-#        Value: yes
+#        Value: YES_OR_NO
 #     Examples: yes / no
 use_error_mail_analyzer_function = ${use_error_analyzer_program:-yes}
 
@@ -29,21 +29,21 @@ use_error_mail_analyzer_function = ${use_error_analyzer_program:-yes}
 
 # Descriptions: error messages のキャッシュを格納するディレクトリ
 #      History: /var/spool/ml/mead/errormaillog
-#        Value: directory
+#        Value: DIR
 #     Examples: 
 error_mail_analyzer_cache_dir		=	$db_dir/error
 
 
 # Descriptions: キャッシュのタイプ
 #      History: none
-#        Value: string
+#        Value: CLASS
 #     Examples: File::CacheDir
 error_mail_analyzer_cache_type		=	File::CacheDir
 
 
 # Descriptions: キャッシュのモード
 #      History: none
-#        Value: string
+#        Value: SELECT ( temporal )
 #     Examples: 
 error_mail_analyzer_cache_mode		=	temporal
 
@@ -51,7 +51,7 @@ error_mail_analyzer_cache_mode		=	temporal
 # Descriptions: キャッシュのサイズ
 #		mode が temporal なら日数だ。
 #      History: none
-#        Value: number
+#        Value: NUM
 #     Examples: 
 error_mail_analyzer_cache_size		=	14
 
@@ -61,7 +61,7 @@ error_mail_analyzer_cache_size		=	14
 
 # Descriptions: FML::Error::Analyze 中の関数名。
 #      History: none
-#        Value: simple_count / histgram
+#        Value: MIX ( simple_count histgram )
 #     Examples: simple_count
 error_mail_analyzer_function_select_list	=	simple_count
 						histgram
@@ -69,7 +69,7 @@ error_mail_analyzer_function_select_list	=	simple_count
 
 # Descriptions: FML::Error::Analyze 中の関数名。
 #      History: none
-#        Value: simple_count / histgram
+#        Value: SELECT ( simple_count histgram )
 #     Examples: simple_count
 error_mail_analyzer_function			=	histgram
 
@@ -79,3 +79,5 @@ error_mail_analyzer_function			=	histgram
 #        Value: NUM
 #     Examples: 5
 error_mail_analyzer_simple_count_limit	=	5
+
+

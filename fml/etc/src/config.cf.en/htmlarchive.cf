@@ -3,56 +3,56 @@
 
 # Descriptions: use html converter function ?
 #      History: $AUTO_HTML_GEN
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_html_archive	=	yes
 
 
 # Descriptions: html archive directory of the specific ML.
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: ~fml/public_html/fml/mlarchive/fml.org/elena
 html_archive_dir	= $fml_owner_home_dir/public_html/fml/mlarchive/$ml_domain/$ml_name
 
 
 # Descriptions:
 #      History:
-#        Value: normal / reverse
+#        Value: SELECT ( normal reverse )
 #     Examples: reverse
 html_archive_index_order_type	=	reverse
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: YES_OR_NO
 #     Examples:
 use_html_archive_address_mask	=	yes
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( all )
 #     Examples:
 html_archive_address_mask_type	=	all
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp us-ascii )
 #     Examples:
 html_archive_default_charset	=	$html_archive_charset_en
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp )
 #     Examples:
 html_archive_charset_ja		=	euc-jp
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( us-ascii )
 #     Examples:
 html_archive_charset_en		=	us-ascii
 

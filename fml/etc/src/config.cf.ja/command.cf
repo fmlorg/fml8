@@ -6,7 +6,7 @@
 # Descriptions: コマンドメールを使うか？
 #      History: なし
 #		$use_command_mail_program (fml8 pre alpha)
-#        Value: yes
+#        Value: YES_OR_NO
 #     Examples: yes / no
 use_command_mail_function = ${use_command_mail_program:-yes}
 
@@ -16,7 +16,7 @@ use_command_mail_function = ${use_command_mail_program:-yes}
 
 # Descriptions: command prompt in message reply
 #      History: hard coded in fml (< 4.0)
-#        Value: string without spaces
+#        Value: PROMPT
 #     Examples: >>>
 command_mail_reply_prompt			=	>>>
 
@@ -26,14 +26,14 @@ command_mail_reply_prompt			=	>>>
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: YES_OR_NO
 #     Examples:
 use_command_mail_filter	= 	yes
  
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: MIX ( command_mail_size_filter )
 #     Examples:
 command_mail_filter_functions	=	command_mail_size_filter
 
@@ -43,14 +43,14 @@ command_mail_filter_functions	=	command_mail_size_filter
 
 # Descriptions: フィルタで弾かれたことを教える
 #      History: 4.0 ではハードコードだったような…
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_command_mail_filter_reject_notice	=	yes
 
 
 # Descriptions: エラーのお知らせの受信者
 #      History: 4.0 ではハードコードだったような…
-#        Value: maintainer | sender
+#        Value: MIX ( maintainer sender )
 #     Examples: maintainer sender
 command_mail_filter_reject_notice_recipients	=	maintainer
 							sender
@@ -59,7 +59,7 @@ command_mail_filter_reject_notice_recipients	=	maintainer
 # Descriptions: 弾いたメールをどのようにフォワードするか？
 #               ウィルスなどを考慮すると、文字列がいいとおもう
 #      History: 4.0 では文字列で、これはハードコーディングされていた。
-#        Value: multipart / string
+#        Value: SELECT ( multipart string )
 #     Examples: string
 command_mail_filter_reject_notice_data_type	=	string
 
@@ -69,7 +69,7 @@ command_mail_filter_reject_notice_data_type	=	string
 
 # Descriptions: サイズ情報を根拠にしたフィルタリングをするか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_command_mail_size_filter	=	yes
 
@@ -77,7 +77,13 @@ use_command_mail_size_filter	=	yes
 # Descriptions: フィルタリングのルール。
 #               どのルールにもマッチしないなら、コマンドメールは認められる。
 #      History:
-#        Value:
+#        Value: MIX (
+#			check_header_size
+#			check_body_size
+#			check_command_limit
+#			check_line_length_limit
+#			permit
+#		)
 #     Examples:
 command_mail_size_filter_rules	=	check_header_size
 					check_body_size
@@ -156,21 +162,21 @@ command_mail_line_length_limit	=	128
 
 # Descriptions: listinfo template
 #      History: /usr/local/fml/listinfo/
-#        Value: directory
+#        Value: DIR
 #     Examples: /usr/local/share/fml/$fml_version/listinfo/$language
 listinfo_template_dir	= $fml_share_dir/listinfo/$template_file_default_charset
 
 
 # Descriptions: information をおくディレクトリ (ＭＬごと)
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: ~fml/public_html/fml/listinfo/fml.org/elena
 listinfo_base_dir	= $fml_owner_home_dir/public_html/fml/listinfo
 
 
 # Descriptions: information をおくディレクトリ (ＭＬごと)
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: ~fml/public_html/fml/listinfo/fml.org/elena
 listinfo_dir	= $listinfo_base_dir/$ml_domain/$ml_name
 
@@ -183,7 +189,7 @@ listinfo_dir	= $listinfo_base_dir/$ml_domain/$ml_name
 #      History: fml 4.0 ではデフォルトのコマンド定義一覧に対し
 #               @PERMIT_PROCEDURE @DENY_PROCEDURE などで
 #               変更を加える
-#        Value:
+#        Value: FML_COMMAND_LIST
 #     Examples:
 user_command_mail_allowed_commands	=		help
 					get
@@ -210,6 +216,10 @@ user_command_mail_allowed_commands	=		help
 					summary
 
 
+# Descriptions:
+#      History:
+#        Value: FML_COMMAND_LIST
+#     Examples:
 anonymous_command_mail_allowed_commands	=		guide
 					info
 					add
@@ -218,6 +228,10 @@ anonymous_command_mail_allowed_commands	=		guide
 					$confirm_command_prefix
 
 
+# Descriptions:
+#      History:
+#        Value: FML_COMMAND_LIST
+#     Examples:
 admin_command_mail_allowed_commands	=	subscribe
 					add
 					unsubscribe
@@ -248,6 +262,10 @@ admin_command_mail_allowed_commands	=	subscribe
 					list
 
 
+# Descriptions:
+#      History:
+#        Value: FML_COMMAND_LIST
+#     Examples:
 admin_cgi_allowed_commands	=		adduser
 					deluser
 					addadmin
@@ -259,6 +277,10 @@ admin_cgi_allowed_commands	=		adduser
 					newml
 					rmml
 
+# Descriptions:
+#      History:
+#        Value: FML_COMMAND_LIST
+#     Examples:
 commands_for_ml_admin_cgi	=	adduser
 					deluser
 					addadmin
@@ -273,13 +295,13 @@ commands_for_ml_admin_cgi	=	adduser
 
 
 # Descriptions: confirmation の返事を表す特別なコマンド
-#        Value: STR
+#        Value: FML_COMMAND
 #     Examples:
 confirm_command_prefix		=	confirm
 
 
 # Descriptions: 管理用のコマンドを表す特別なコマンド
-#        Value: STR
+#        Value: FML_COMMAND
 #     Examples:
 privileged_command_prefix	=	admin
 
@@ -297,7 +319,7 @@ get_command_request_limit	=	100
 # Descriptions: subscribe コマンドで confirmation 認証(コールバック認証)
 #               を行なうか否か？
 #      History:
-#        Value:  confirmation / ""
+#        Value: SELECT ( confirmation )
 #     Examples:
 subscribe_command_auth_type	=	confirmation
 
@@ -305,7 +327,7 @@ subscribe_command_auth_type	=	confirmation
 # Descriptions: chaddr コマンドで confirmation 認証(コールバック認証)
 #               を行なうか否か？
 #      History:
-#        Value:  confirmation / ""
+#        Value: SELECT ( confirmation )
 #     Examples:
 chaddr_command_auth_type	=	confirmation
 
@@ -313,7 +335,7 @@ chaddr_command_auth_type	=	confirmation
 # Descriptions: unsubscribe コマンドで confirmation 認証(コールバック認証)
 #               を行なうか否か？
 #      History:
-#        Value:  confirmation / ""
+#        Value: SELECT ( confirmation )
 #     Examples:
 unsubscribe_command_auth_type	=	confirmation
 
@@ -323,7 +345,7 @@ unsubscribe_command_auth_type	=	confirmation
 
 # Descriptions: ＭＬ作成時 (makefml newml)の際に作られる
 #		テンプレートファイル
-#        Value: ARRAY
+#        Value: FILE_LIST
 #     Examples:
 newml_command_template_files 		=	config.cf
 
@@ -331,7 +353,7 @@ newml_command_template_files 		=	config.cf
 # Descriptions: ＭＬ作成時の際に作われる fml_owner の値の指定。
 #               -admin 宛のエラーメールなどが転送される先である。
 #               デフォルトでは main.cf の fml_owner の値(通常ユーザ fml)。
-#        Value: STR
+#        Value: RFC822_USER_OR_RFC822_ADDRESS
 #     Examples:
 newml_command_ml_admin_default_address 	=	$fml_owner
 
@@ -341,7 +363,7 @@ newml_command_ml_admin_default_address 	=	$fml_owner
 
 # Descriptions: 引数で指定しない時に、list コマンドが表示するべきマップ
 #      History: none
-#        Value: ARRAY
+#        Value: MAP_LIST
 #     Examples:
 list_command_default_maps		=	$recipient_maps
 

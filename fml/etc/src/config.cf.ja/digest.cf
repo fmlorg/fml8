@@ -4,13 +4,14 @@
 # Descriptions:
 #      History: none
 #		use_digest_program (fml8 pre alpha)
-#        Value:
+#        Value: YES_OR_NO
 #     Examples:
 use_article_digest_function = ${use_digest_program:-yes}
 
+
 # Descriptions: まとめ送りした最後の記事番号を保存するファイル
 #      History: fml4 では各自それぞれの番号を保存していた。
-#        Value: filename
+#        Value: FILE
 #     Examples:
 digest_sequence_file	= $ml_home_dir/seq-digest
 

@@ -11,25 +11,74 @@
 
 [mysql:fml]
 
+
+# Descriptions:
+#      History:
+#        Value: HOSTNAME
+#     Examples:
 sql_server	=	localhost
+
+
+# Descriptions:
+#      History:
+#        Value: USER
+#     Examples:
 sql_user	=	fml
+
+
+# Descriptions:
+#      History:
+#        Value: PASSWORD
+#     Examples:
 sql_password	=	uja
+
+
+# Descriptions:
+#      History:
+#        Value: SQL_DATABASE
+#     Examples:
 sql_database	=	fml
+
+
+# Descriptions:
+#      History:
+#        Value: SQL_TABLE
+#     Examples:
 sql_table	=	ml
 
+
+# Descriptions:
+#      History:
+#        Value: SQL_STATEMENT
+#     Examples:
 sql_get_next_key =	select fml_address from $sql_table
 			where fml_ml = '$ml_name'
 					and
 				fml_domain = '$ml_domain'
 
+
+# Descriptions:
+#      History:
+#        Value: SQL_STATEMENT
+#     Examples:
 sql_getline	=	select fml_address from $sql_table
 			where fml_ml = '$ml_name'
 					and
 				fml_domain = '$ml_domain'
 
+
+# Descriptions:
+#      History:
+#        Value: SQL_STATEMENT
+#     Examples:
 sql_add		=	insert into $sql_table
 			values ('$ml_name', '$ml_domain', '&address', 1, 1)
 
+
+# Descriptions:
+#      History:
+#        Value: SQL_STATEMENT
+#     Examples:
 sql_delete	=	delete from $sql_table
 			where	fml_ml = '$ml_name'
 					and
@@ -37,6 +86,11 @@ sql_delete	=	delete from $sql_table
 					and
 				fml_address = '&address'
 
+
+# Descriptions:
+#      History:
+#        Value: SQL_STATEMENT
+#     Examples:
 sql_find	=	select fml_address from $sql_table
 			where	fml_ml = '$ml_name'
 					and

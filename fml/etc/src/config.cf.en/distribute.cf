@@ -6,7 +6,7 @@
 # Descriptions: use function of article delivery
 #      History: none
 #		use_distribute_program (fml8 pre alpha)
-#        Value: yes
-#     Examples: yes / no
+#        Value: YES_OR_NO
+#     Examples: yes
 use_article_post_function = ${use_distribute_program:-yes}
 

@@ -6,7 +6,7 @@
 # Descriptions: 記事の配送処理プログラムをそもそも使うか？
 #      History: なし
 #	 	$use_distribute_program (fml8 pre alpha) 
-#        Value: yes
+#        Value: YES_OR_NO
 #     Examples: yes / no
 use_article_post_function = ${use_distribute_program:-yes}
 

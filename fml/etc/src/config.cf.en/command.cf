@@ -6,8 +6,8 @@
 # Descriptions: use commnd mail ?
 #      History: none
 #		use_command_mail_program (fml8 pre alpha)
-#        Value: yes
-#     Examples: yes / no
+#        Value: YES_OR_NO
+#     Examples: yes
 use_command_mail_function = ${use_command_mail_program:-yes}
 
 
@@ -59,14 +59,14 @@ get_command_request_limit	=	100
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: YES_OR_NO
 #     Examples:
 use_command_mail_filter	= 	yes
  
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: MIX ( command_mail_size_filter )
 #     Examples:
 command_mail_filter_functions	=	command_mail_size_filter
 
@@ -76,7 +76,7 @@ command_mail_filter_functions	=	command_mail_size_filter
 
 # Descriptions: use size based filter
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_command_mail_size_filter	=	yes
 
@@ -85,7 +85,13 @@ use_command_mail_size_filter	=	yes
 #               first match.
 #               permit if no rule matched.
 #      History:
-#        Value:
+#        Value: MIX (
+#			check_header_size
+#			check_body_size
+#			check_command_limit
+#			check_line_length_limit
+#			permit
+#		)
 #     Examples:
 command_mail_size_filter_rules	=	check_header_size
 					check_body_size
@@ -123,28 +129,28 @@ command_mail_line_length_limit	=	128
 
 # Descriptions: command prompt in message reply
 #      History: hard coded in fml (< 4.0)
-#        Value: string without spaces
+#        Value: PROMPT
 #     Examples: >>>
 command_mail_reply_prompt			=	>>>
 
 
 # Descriptions: use comnfirmation in subscribe command ?
 #      History:
-#        Value:  confirmation / ""
+#        Value: SELECT ( confirmation )
 #     Examples:
 subscribe_command_auth_type	=	confirmation
 
 
 # Descriptions: use comnfirmation in chaddr command ?
 #      History:
-#        Value:  confirmation / ""
+#        Value: SELECT ( confirmation )
 #     Examples:
 chaddr_command_auth_type	=	confirmation
 
 
 # Descriptions: use comnfirmation in unsubscribe command ?
 #      History:
-#        Value:  confirmation / ""
+#        Value: SELECT ( confirmation )
 #     Examples:
 unsubscribe_command_auth_type	=	confirmation
 
@@ -152,7 +158,7 @@ unsubscribe_command_auth_type	=	confirmation
 
 # Descriptions: effective command in normal commnd mail (for usual users)
 #      History: @PERMIT_PROCEDURE @DENY_PROCEDURE
-#        Value:
+#        Value: FML_COMMAND_LIST
 #     Examples:
 user_command_mail_allowed_commands	=		help
 					get
@@ -179,6 +185,10 @@ user_command_mail_allowed_commands	=		help
 					summary
 
 
+# Descriptions:
+#      History:
+#        Value: FML_COMMAND_LIST
+#     Examples:
 anonymous_command_mail_allowed_commands	=		guide
 					info
 					add
@@ -187,6 +197,10 @@ anonymous_command_mail_allowed_commands	=		guide
 					$confirm_command_prefix
 
 
+# Descriptions:
+#      History:
+#        Value: FML_COMMAND_LIST
+#     Examples:
 admin_command_mail_allowed_commands	=	subscribe
 					add
 					unsubscribe
@@ -217,6 +231,10 @@ admin_command_mail_allowed_commands	=	subscribe
 					list
 
 
+# Descriptions:
+#      History:
+#        Value: FML_COMMAND_LIST
+#     Examples:
 admin_cgi_allowed_commands	=		adduser
 					deluser
 					addadmin
@@ -228,6 +246,11 @@ admin_cgi_allowed_commands	=		adduser
 					newml
 					rmml
 
+
+# Descriptions:
+#      History:
+#        Value: FML_COMMAND_LIST
+#     Examples:
 commands_for_ml_admin_cgi	=	adduser
 					deluser
 					addadmin
@@ -239,13 +262,13 @@ commands_for_ml_admin_cgi	=	adduser
 
 
 # Descriptions: special command name used as confirmation
-#        Value: STR
+#        Value: FML_COMMAND
 #     Examples:
 confirm_command_prefix		=	confirm
 
 
 # Descriptions: special command name used as admin command mail
-#        Value: STR
+#        Value: FML_COMMAND
 #     Examples:
 privileged_command_prefix	=	admin
 
@@ -255,21 +278,21 @@ privileged_command_prefix	=	admin
 
 # Descriptions: listinfo template
 #      History: /usr/local/fml/listinfo/
-#        Value: directory
+#        Value: DIR
 #     Examples: /usr/local/share/fml/$fml_version/listinfo/$language
 listinfo_template_dir	= $fml_share_dir/listinfo/$template_file_charset
 
 
 # Descriptions: base directory for ML information
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: ~fml/public_html/fml/listinfo/fml.org/elena
 listinfo_base_dir	= $fml_owner_home_dir/public_html/fml/listinfo
 
 
 # Descriptions: directory for ML information
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: ~fml/public_html/fml/listinfo/fml.org/elena
 listinfo_dir	= $listinfo_base_dir/$ml_domain/$ml_name
 
@@ -279,14 +302,14 @@ listinfo_dir	= $listinfo_base_dir/$ml_domain/$ml_name
 
 # Descriptions: inform filter rejection ?
 #      History: hard-coded.
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_command_mail_filter_reject_notice	=	yes
 
 
 # Descriptions: recipients to inform
 #      History: hard-coded.
-#        Value: maintainer | sender
+#        Value: MIX ( maintainer sender )
 #     Examples: maintainer sender
 command_mail_filter_reject_notice_recipients	=	maintainer
 							sender
@@ -295,7 +318,7 @@ command_mail_filter_reject_notice_recipients	=	maintainer
 # Descriptions: how fml refer the rejeced message.
 #               We prefer string not multipart to avoid parsing of MUA.
 #      History: string in fml 4.0.
-#        Value: multipart / string
+#        Value: SELECT ( multipart string )
 #     Examples: string
 command_mail_filter_reject_notice_data_type	=	string
 
@@ -304,7 +327,7 @@ command_mail_filter_reject_notice_data_type	=	string
 
 
 # Descriptions: template files used in running "makefml newml"
-#        Value: ARRAY
+#        Value: FILE_LIST
 #     Examples:
 newml_command_template_files 		=	config.cf
 
@@ -312,7 +335,7 @@ newml_command_template_files 		=	config.cf
 # Descriptions: fml_owner value used by newml command.
 #               this value is a destination where error mail are forwardeded.
 #               user "fml" by default (same as $fml_owner in main.cf).
-#        Value: STR
+#        Value: ADDR
 #     Examples:
 newml_command_ml_admin_default_address 	=	$fml_owner
 
@@ -323,7 +346,7 @@ newml_command_ml_admin_default_address 	=	$fml_owner
 
 # Descriptions: default map to show by list command.
 #      History: none
-#        Value: ARRAY
+#        Value: MAP_LIST
 #     Examples:
 list_command_default_maps		=	$recipient_maps
 

@@ -1,40 +1,38 @@
 =head1	記事および記事のスプール
 
+
 # Descriptions: 記事をスプールディレクトリに保存する
 #      History: 4.0 の $NOT_USE_SPOOL
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_spool	= 	yes
 
-# Descriptions: 記事のスプールディレクトリを階層化するか？
+
+# Descriptions: スプールのタイプ
+#		記事のスプールディレクトリを階層化するか？
+#               デフォルトでは平面的にファイルを配置する
 #      History: 4.0 にはない。fml-devel new
-#        Value: plane subdir
+#        Value: SELECT ( plane subdir )
 #     Examples: plane
 spool_type	= 	plane
 
 
+# Descriptions: 記事を保存するディレクトリ
+#      History: 4.0 の $SPOOL_DIR
+#        Value: DIR
+#     Examples:
+spool_dir	= $ml_home_dir/spool
+
+
 # Descriptions:
 #      History:
-#        Value:
+#        Value: NUM
 #     Examples:
 spool_subdir_unit =	1000
 
 
 # Descriptions: 記事番号を保存するファイル
 #      History: $SEQ_FILE
-#        Value: filename
+#        Value: FILE
 #     Examples:
 sequence_file	= $ml_home_dir/seq
-
-# Descriptions: 記事を保存するディレクトリ
-#      History: 4.0 の $SPOOL_DIR
-#        Value: directory
-#     Examples:
-spool_dir	= $ml_home_dir/spool
-
-# Descriptions: スプールのタイプ
-#               デフォルトでは平面的にファイルを配置する
-#      History:
-#        Value: plane
-#     Examples:
-spool_type	= plane

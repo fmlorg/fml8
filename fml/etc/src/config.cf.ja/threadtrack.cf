@@ -3,7 +3,7 @@
 
 # Descriptions: スレッド追跡システムを使うか
 #      History: fml 8.0 new
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_thread_track	=	yes
 
@@ -11,7 +11,7 @@ use_thread_track	=	yes
 # Descriptions: スレッド追跡システムは Subject タグを利用するか？
 #               XXX ん〜でも、使わなくてもいけそうですわ
 #      History: fml 5.0 new
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_thread_subject_tag	=	no
 
@@ -20,7 +20,7 @@ use_thread_subject_tag	=	no
 #               複数のＭＬにまたがったチケットを追跡するために
 #               必要
 #      History: fml 5.0 new
-#        Value: string
+#        Value: ML_NAME
 #     Examples: elena
 thread_subject_tag_name	=	$ml_name
 
@@ -28,7 +28,7 @@ thread_subject_tag_name	=	$ml_name
 # Descriptions: チケット番号のシンタックス
 #               XXX ん〜でも、使わなくてもいけそうですわ
 #      History: fml 5.0 new
-#        Value:
+#        Value: SUBJECT_TAG
 #     Examples: elena_#00001010     $ml_name_#%08d
 #               elena/100           $ml_name/%d
 thread_id_syntax	=	$ml_name/%d
@@ -39,7 +39,7 @@ thread_id_syntax	=	$ml_name/%d
 #               前後につけてもらうとわかりやすそう?
 #               XXX ん〜でも、使わなくてもいけそうですわ
 #      History: fml 5.0 new
-#        Value:
+#        Value: SUBJECT_TAG
 #     Examples: [elena_#00001010]
 #               [elena/100]
 thread_subject_tag	=	[$thread_id_syntax]
@@ -48,7 +48,7 @@ thread_subject_tag	=	[$thread_id_syntax]
 # Descriptions: Subject につけるチケット番号のシンタックスの場所
 #               前につけるか、それとも後ろにつけるか？
 #      History: fml 5.0 new
-#        Value: appended/prepended
+#        Value: SELECT ( appended prepended )
 #     Examples: Subject: [elena/100] ....
 #               Subject: .... [elena/100]
 thread_subject_tag_location	=	appended
@@ -56,7 +56,7 @@ thread_subject_tag_location	=	appended
 
 # Descriptions: チケット番号を保存するファイル
 #      History: fml 5.0 new
-#        Value: filename
+#        Value: FILE
 #     Examples: /var/spool/ml/elena/thread.seq
 thread_sequence_file	=	$ml_home_dir/thread.seq
 
@@ -65,27 +65,27 @@ thread_sequence_file	=	$ml_home_dir/thread.seq
 #               実際にはこの下に elena/article.db のように
 #               ＭＬ名のサブディレクトリがおかれる
 #      History: fml 5.0 new
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/@db@/thread
 thread_db_dir		=	$shared_db_dir/thread
 
 
 # Descriptions: CGI の相対パス
 #      History:
-#        Value:
+#        Value: FILE
 #     Examples:
 thread_cgi_base_url	=	/cgi-bin/fmlthread.cgi
 
 
 # Descriptions: CGI のタイトル
 #      History:
-#        Value:
+#        Value: STR
 #     Examples:
 thread_cgi_title	=	thread tracking system interface
 
 
 # Descriptions: CGI 画面の基本カラー
 #      History:
-#        Value:
+#        Value: HTML_COLOR
 #     Examples:
 thread_cgi_bgcolor	=	#E6E6FA

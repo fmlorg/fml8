@@ -3,20 +3,20 @@
 
 # Descriptions: use loop check based on body information
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_incoming_mail_body_loop_check		=	yes
 
 
 # Descriptions: body loop check rules
 #      History:
-#        Value:
+#        Value: MIX ( check_body_cksum )
 #     Examples:
 incoming_mail_body_loop_check_rules		=	check_body_cksum
 
 
 # Descriptions: Message-ID cache directory
 #      History:
-#        Value:
+#        Value: DIR
 #     Examples:
 incoming_mail_body_cksum_cache_dir		=	$db_dir/body_cksum

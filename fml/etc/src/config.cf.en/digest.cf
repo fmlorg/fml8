@@ -4,14 +4,14 @@
 # Descriptions:
 #      History: none
 #		use_digest_program (fml8 pre alpha)
-#        Value:
+#        Value: YES_OR_NO
 #     Examples:
 use_article_digest_function = ${use_digest_program:-yes}
 
 
 # Descriptions: file to store the last sequence to deliver
 #      History: special file to store the sequence for each recipient
-#        Value: filename
+#        Value: FILE
 #     Examples:
 digest_sequence_file	= $ml_home_dir/seq-digest
 

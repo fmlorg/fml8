@@ -3,14 +3,14 @@
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: YES_OR_NO
 #     Examples:
 use_article_spam_filter		=	no
 
 
 # Descriptions: list up driver names used as spam checker.
 #      History: none
-#        Value: spamassassin | spamc | bogofilter
+#        Value: MIX ( spamassassin spamc bogofilter )
 #     Examples: bogofilter
 article_spam_filter_functions	=	bogofilter
 
@@ -20,14 +20,14 @@ article_spam_filter_functions	=	bogofilter
 
 # Descriptions: exit non-zero status code when spam caught if "-e" specified.
 #      History: none
-#        Value: STR
+#        Value: COMMAND_LINE_OPTIONS
 #     Examples: -e
 article_spam_filter_spamassassin_options	=	-e
 
 
 # Descriptions: spamc optoins. "-c" means check only.
 #      History: none
-#        Value: STR
+#        Value: COMMAND_LINE_OPTIONS
 #     Examples: -c
 article_spam_filter_spamc_options		=	-c
 
@@ -37,7 +37,7 @@ article_spam_filter_spamc_options		=	-c
 
 # Descriptions: "-e" implies embedded mode.
 #      History: none
-#        Value: STR
+#        Value: COMMAND_LINE_OPTIONS
 #     Examples: -e
 article_spam_filter_bogofilter_options		=	-e
 

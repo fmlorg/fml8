@@ -10,30 +10,30 @@
 
 # Descriptions: LDAP server
 #      History:
-#        Value:
+#        Value: HOSTNAME_LIST
 #     Examples:
 ldap_servers		=
 
 # Descriptions: LDAP password
 #      History:
-#        Value:
+#        Value: PASSWORD
 #     Examples:
 ldap_server_password	=
 
 # Descriptions: LDAP search base
 #      History:
-#        Value:
+#        Value: LDAP_SEARCH_BASE
 #     Examples:
 ldap_search_base	=
 
 # Descriptions: LDAP search bind
 #      History:
-#        Value:
+#        Value: LDAP_SERVER_BIND
 #     Examples:
 ldap_server_bind	=
 
 # Descriptions: LDAP filter
 #      History:
-#        Value:
+#        Value: LDAP_QUERY_FILTER 
 #     Examples:
 ldap_query_filter	=	(objectclass=*)

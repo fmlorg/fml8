@@ -5,14 +5,14 @@
 
 # Descriptions: user article delivery function ?
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_delivery	=	yes
 
 # Descriptions: specify transport for article delivery.
 #               try MTA of $smtp_servers incrementary in the case of smtp.
 #      History: none
-#        Value: smtp / lmtp
+#        Value: SELECT ( smtp lmtp )
 #     Examples: smtp
 article_delivery_transport	=	smtp
 
@@ -22,7 +22,7 @@ article_delivery_transport	=	smtp
 
 # Descriptions: file to store sequence number
 #      History: $SEQ_FILE
-#        Value: filename
+#        Value: FILE
 #     Examples:
 article_sequence_file	= $sequence_file
 
@@ -34,7 +34,7 @@ article_sequence_file	= $sequence_file
 #               when the filter system rejects.
 #               We prefer string not mime/multipart to avoid parsing by MUA.
 #      History: string in 4.0.
-#        Value: multipart / string
+#        Value: SELECT ( multipart string )
 #     Examples: string
 article_post_restrictions_reject_notice_data_type	=	string
 
@@ -95,14 +95,22 @@ outgoing_article_body_size_limit	= $default_mail_body_size_limit
 #			$INCOMING_MAIL_SIZE_LIMIT
 #			ADD_CONTENT_HANDLER()
 #		functions.
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_article_filter	= 	yes
  
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: MIX (
+#			article_size_filter
+#			article_header_filter
+#			article_non_mime_filter
+#			article_mime_component_filter
+#			article_text_plain_filter
+#			article_spam_filter
+#			article_virus_filter
+#		)
 #     Examples:
 article_filter_functions	=	article_size_filter
 					article_header_filter
@@ -118,7 +126,7 @@ article_filter_functions	=	article_size_filter
 
 # Descriptions: use size based filter.
 #      History: no
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_size_filter	=	yes
 
@@ -127,7 +135,10 @@ use_article_size_filter	=	yes
 #               first match. 
 #               permit post if no rule matched.
 #      History:
-#        Value:
+#        Value: MIX (	check_header_size
+#			check_body_size
+#			permit
+#		)
 #     Examples:
 article_size_filter_rules	=	check_header_size
 					check_body_size
@@ -140,7 +151,7 @@ article_size_filter_rules	=	check_header_size
 # Descriptions: use header based filter ?
 #      History: disabled by default.
 #               "yes" always if $USE_DISTRIBUTE_FILTER is yes.
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_header_filter		=	yes
 
@@ -149,7 +160,11 @@ use_article_header_filter		=	yes
 #               first match. 
 #               permit post if no rule matched.
 #      History: fml4 has no check_date rule.
-#        Value:
+#        Value: MIX (
+#			check_message_id
+#			check_date
+#			permit
+#		)
 #     Examples:
 article_header_filter_rules		=	check_message_id
 						check_date
@@ -162,28 +177,28 @@ article_header_filter_rules		=	check_message_id
 # Descriptions: dummy
 #      History: disabled by default.
 #		!MIME of 4.0 content filter.
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_non_mime_filter		=	yes
 
 
 # Descriptions: dummy
 #      History:
-#        Value: permit / reject
+#        Value: MIX ( permit reject_empty_content_type )
 #     Examples: permit
 article_non_mime_filter_rules		=	permit
 
 
 # Descriptions: MIME structure based filter
 #      History: 4.0 content filter. disabled by default.
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_mime_component_filter	=	yes
 
 
 # Descriptions: file of filter rules
 #      History: @CONTENT_HANDLER
-#        Value:
+#        Value: FILE
 #     Examples:
 article_mime_component_filter_rules	= $fml_config_dir/mime_component_filter
 
@@ -196,7 +211,7 @@ article_mime_component_filter_rules	= $fml_config_dir/mime_component_filter
 #      History: 4.0's EnvelopeFilter.
 #		half of the following rules applied when
 #		$USE_DISTRIBUTE_FILTER is enabled.
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_text_plain_filter		=	yes
 
@@ -226,7 +241,16 @@ use_article_text_plain_filter		=	yes
 #				<=> FILTER_ATTR_REJECT_MS_GUID
 #
 #         Note: permit by default 
-#        Value:
+#        Value: MIX (
+#			reject_not_iso2022jp_japanese_string
+#			reject_null_mail_body
+#			reject_one_line_message
+#			reject_old_fml_command_syntax
+#			reject_invalid_fml_command_syntax
+#			reject_japanese_command_syntax
+#			reject_ms_guid
+#			permit
+#		)
 #     Examples:
 article_text_plain_filter_rules	=	reject_not_iso2022jp_japanese_string
 					reject_null_mail_body
@@ -245,14 +269,14 @@ article_text_plain_filter_rules	=	reject_not_iso2022jp_japanese_string
 #		disabled by default.
 #		add flag to header and go through if the message looks a spam.
 #      History: none
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: no
 use_article_spam_filter		=	no
 
 
 # Descriptions: action if the message looks a spam.
 #      History: none
-#        Value: reject | ignore | header_rewrite
+#        Value: MIX ( reject ignore header_rewrite )
 #     Examples: header_rewrite
 article_spam_filter_rules	=	header_rewrite
 
@@ -260,7 +284,7 @@ article_spam_filter_rules	=	header_rewrite
 # Descriptions: external spam checker.
 #		if plural drivers specified, try them sequentially.
 #      History: none
-#        Value: spamassasin | spamc | bogofilter
+#        Value: MIX ( spamassasin spamc bogofilter )
 #     Examples: bogofilter
 article_spam_filter_drivers	=	bogofilter
 
@@ -270,14 +294,14 @@ article_spam_filter_drivers	=	bogofilter
 
 # Descriptions: external virus checker. disabled by default.
 #      History: none
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: no
 use_article_virus_filter	=	no
 
 
 # Descriptions: action if virus found.
 #      History: none
-#        Value: reject | ignore | header_rewrite
+#        Value: MIX ( reject ignore header_rewrite )
 #     Examples: reject
 article_virus_filter_rules	=	reject
 
@@ -285,7 +309,7 @@ article_virus_filter_rules	=	reject
 # Descriptions: external virus checker.
 #		if plural drivers specified, try them sequentially.
 #      History: none
-#        Value: clamscan 
+#        Value: MIX ( clamscan )
 #     Examples: clamscan
 article_virus_filter_drivers	=	clamscan
 
@@ -299,7 +323,7 @@ article_virus_filter_drivers	=	clamscan
 #		notice is always sent to maintainer, 
 #		but not to sender by default.
 #		$FILTER_NOTIFY_REJECTION controlls notice to sender.
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_article_filter_reject_notice	=	yes
 
@@ -309,7 +333,7 @@ use_article_filter_reject_notice	=	yes
 #		notice is always sent to maintainer, 
 #		but not to sender by default.
 #		$FILTER_NOTIFY_REJECTION controlls notice to sender.
-#        Value: maintainer | sender
+#        Value: MIX ( maintainer sender )
 #     Examples: maintainer sender
 article_filter_reject_notice_recipients	=	maintainer
 						sender
@@ -318,6 +342,6 @@ article_filter_reject_notice_recipients	=	maintainer
 # Descriptions: how fml refer the rejeced message.
 #               We prefer string not multipart to avoid parsing of MUA.
 #      History: string in fml 4.0.
-#        Value: multipart / string
+#        Value: SELECT ( multipart string )
 #     Examples: string
 article_filter_reject_notice_data_type	=	string

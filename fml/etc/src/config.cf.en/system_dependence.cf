@@ -6,30 +6,30 @@
 
 # Descriptions: has getpwuid(2) ?
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 system_has_getpwuid	=	yes
 
 # Descriptions: has getpwgid(2) ?
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 system_has_getpwgid	=	yes
 
 # Descriptions: has alarm(2) ?
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 system_has_alarm	=	yes
 
 # Descriptions: has select(2) ?
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 system_has_select	=	yes
 
 # Descriptions: has fork(2) ?
 #      History:
-#        Value: yes / no
+#        Value:  YES_OR_NO
 #     Examples:
 system_has_fork	=	yes

@@ -1,32 +1,36 @@
 =head1	article and article spool
 
+
 # Descriptions: store article into spool directory ?
 #      History: $NOT_USE_SPOOL
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_spool	= 	yes
 
+
 # Descriptions: use subdir in spool directory ?
 #      History: 
-#        Value: plane subdir
+#        Value: SELECT ( plane subdir )
 #     Examples: plane
 spool_type	= 	plane
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: NUM
 #     Examples:
 spool_subdir_unit =	1000
 
+
 # Descriptions: file to store article sequence.
 #      History: $SEQ_FILE
-#        Value: filename
+#        Value: FILE
 #     Examples:
 sequence_file	= $ml_home_dir/seq
 
+
 # Descriptions: spool directory
 #      History: $SPOOL_DIR
-#        Value: directory
+#        Value:  DIR
 #     Examples:
 spool_dir	= $ml_home_dir/spool

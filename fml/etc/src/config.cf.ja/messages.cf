@@ -15,7 +15,7 @@
 #		一方、英語のＭＬ(language_preference_order = en)の場合でも、
 #		Accept-Lanaguage: ja なら日本語で返事をするべきであろう。
 #      History: none
-#        Value: ja en
+#        Value: MIX ( ja en )
 #     Examples: ja en
 language_preference_order	=	ja en
 
@@ -24,57 +24,57 @@ language_preference_order	=	ja en
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( iso-2022-jp us-ascii )
 #     Examples:
 report_mail_default_charset	=	$report_mail_charset_ja
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( iso-2022-jp )
 #     Examples:
 report_mail_charset_ja	=	iso-2022-jp
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( us-ascii )
 #     Examples:
 report_mail_charset_en	=	us-ascii
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( iso-2022-jp us-ascii )
 #     Examples:
 template_file_default_charset	=	$template_file_charset_ja
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp )
 #     Examples:
 template_file_charset_ja	=	euc-jp
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( us-ascii )
 #     Examples:
 template_file_charset_en	=	us-ascii
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: MIX ( iso-2022-jp us-ascii )
 #     Examples:
 template_file_charset_select_list	=	euc-jp	
 						us-ascii
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SUBJECT
 #     Examples:
 message_default_subject	=	fml system message ($ml_name ML)
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SUBJECT
 #     Examples:
 report_mail_subject	=	fml results ($ml_name ML)
 
@@ -84,14 +84,14 @@ report_mail_subject	=	fml results ($ml_name ML)
 
 # Descriptions: directory to hold message template files
 #      History: /usr/local/fml/drafts/
-#        Value: directory
+#        Value: DIR
 #     Examples: /usr/local/share/fml/$fml_version/message
 message_template_dir	= $fml_share_dir/message
 
 
 # Descriptions: directory to hold ml specific message template files
 #      History: $DIR/drafts/
-#        Value: directory
+#        Value: DIR
 #     Examples: /usr/local/share/fml/$fml_version/template/$language
 ml_local_message_template_dir	= $ml_local_share_dir/message
 
@@ -101,18 +101,18 @@ ml_local_message_template_dir	= $ml_local_share_dir/message
 
 # Descriptions: ヘルプファイル
 #      History:
-#        Value:
+#        Value: FILE
 #     Examples:
 help_file		=	$ml_home_dir/help
 
 # Descriptions: ヘルプファイル
 #      History:
-#        Value:
+#        Value: FILE
 #     Examples:
 guide_file		=	$ml_home_dir/guide
 
 # Descriptions: ヘルプファイル
 #      History:
-#        Value:
+#        Value: FILE
 #     Examples:
 objective_file		=	$ml_home_dir/objective

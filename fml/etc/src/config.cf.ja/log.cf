@@ -4,25 +4,26 @@
 
 # Descriptions: ログとり機能を有効にする
 #      History: fml 4.0 では有無を言わさずログをとる
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_log		=	yes
 
 # Descriptions: ML 固有のログファイル
 #      History: fml 4.0 の $LOGFILE
-#        Value: filename
+#        Value: FILE
 #     Examples:
 log_file	=	$ml_home_dir/log
 
 # Descriptions: ログとりのタイプ (syslog は未実装)
 #      History: fml 8.0 new
-#        Value: file / syslog
+#        Value: SELECT ( file syslog )
 #     Examples:
 log_type	=	file
 
 # Descriptions: log message format
 #      History:
-#        Value: fml4_compatible
+#        Value: STR
+#		fml4_compatible
 #               process[pid]
 #               process:time.pid ?
 #     Examples: * fml4_compatible の例
@@ -35,7 +36,7 @@ log_format_type	=	process[pid]
 
 # Descriptions: ログファイル
 #      History:
-#        Value: filename
+#        Value: DIR
 #     Examples:
 log_dir		=	$var_dir/log
 
@@ -45,7 +46,7 @@ log_dir		=	$var_dir/log
 
 # Descriptions: ログファイルローテションを行なうか否か
 #      History: $LOGFILE_NEWSYSLOG_LIMIT が 0 なら no、0 でないなら yes
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: no
 use_log_rotate		=	no
 
@@ -54,7 +55,7 @@ use_log_rotate		=	no
 #               サイズが一定値を越えたら行なうのか？(デフォルト)
 #               それても一定時間おきに行なうのか？
 #      History: none
-#        Value: size | interval
+#        Value: SELECT ( size interval )
 #     Examples: size
 log_rotate_policy	=	size
 
@@ -86,19 +87,19 @@ log_rotate_num_backlog 	=	4
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( ja en )
 #     Examples:
 log_file_default_charset   =       $log_file_charset_ja
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp us-ascii )
 #     Examples:
 log_file_charset_ja        =       euc-jp
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp us-ascii )
 #     Examples:
 log_file_charset_en        =       us-ascii
 
@@ -109,7 +110,7 @@ log_file_charset_en        =       us-ascii
 # Descriptions: ドメイン固有のログファイル
 #               admin/*.cgi など ml_name が特定されない場合にだけ使う。
 #      History: none
-#        Value: filename
+#        Value: FILE
 #     Examples: /var/spool/ml/@log@
 domain_local_log_file	=	$domain_local_dir/@log@
 
@@ -121,7 +122,7 @@ domain_local_log_file	=	$domain_local_dir/@log@
 #               コマンドラインオプションで --log-computer-output を指定すると
 #               use_log_computer_output = yes と同じ意味になる。
 #      History: none
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: no
 use_log_computer_output	=	no
 

@@ -3,22 +3,27 @@
 
 # Descriptions: ヘッダ情報を根拠にしたループチェックをするか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_incoming_mail_header_loop_check		=	yes
 
 
 # Descriptions: ヘッダに対するループチェックのルール群
 #      History:
-#        Value:
+#        Value: MIX (
+#			check_message_id
+#			check_x_ml_info
+#			check_list_post
+#		)
 #     Examples:
 incoming_mail_header_loop_check_rules		=	check_message_id
 							check_x_ml_info
 							check_list_post
 
+
 # Descriptions: すべての Message-ID のキャッシュを格納するディレクトリ
 #      History: なし
-#        Value:
+#        Value: DIR
 #     Examples:
 message_id_cache_dir		=	$db_dir/message_id
 
@@ -26,14 +31,14 @@ message_id_cache_dir		=	$db_dir/message_id
 # Descriptions: 記事としてスプールに格納されたメールの 
 #               Message-ID のキャッシュを格納するディレクトリ
 #      History: なし
-#        Value:
+#        Value: DIR
 #     Examples:
 article_message_id_cache_dir	=	$db_dir/article_message_id
 
 
 # Descriptions: ヘッダ書換えの操作をするか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_header_rewrite		=	yes
 
@@ -41,7 +46,18 @@ use_article_header_rewrite		=	yes
 # Descriptions: 記事のヘッダを書き換えるルール群
 #               Re: を切り落とす操作はデフォルトなので指定の必要なし
 #      History:
-#        Value:
+#        Value: MIX (
+#			delete_unsafe_header_fields
+#			rewrite_article_subject_tag
+#			rewrite_reply_to
+#			rewrite_errors_to
+#			add_software_info
+#			add_fml_ml_name
+#			add_fml_traditional_article_id
+#			add_fml_article_id
+#			add_x_sequence
+#			add_rfc2369
+#		)
 #     Examples:
 article_header_rewrite_rules	=	delete_unsafe_header_fields
 					rewrite_article_subject_tag
@@ -57,14 +73,14 @@ article_header_rewrite_rules	=	delete_unsafe_header_fields
 
 # Descriptions: ヘッダ書換えの操作をするか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_digest_header_rewrite		=	yes
 
 
 # Descriptions: 記事のまとめおくりのヘッダを書き換えるルール群
 #      History:
-#        Value:
+#        Value: MIX ( add_software_info add_rfc2369 )
 #     Examples:
 digest_header_rewrite_rules	=	add_software_info
 					add_rfc2369
@@ -72,7 +88,7 @@ digest_header_rewrite_rules	=	add_software_info
 
 # Descriptions: あぶないタグを消す
 #      History: fml 4.0 の SKIP_FIELDS
-#        Value: strings
+#        Value: HEADER_FIELD_LIST
 #     Examples:
 unsafe_header_fields		=	Return-Receipt-To
 
@@ -80,7 +96,7 @@ unsafe_header_fields		=	Return-Receipt-To
 # Descriptions: Subject: のタグ
 #               % の意味は UNIX マニュアルを参照。例えば sprintf 関数など
 #      History:
-#        Value:
+#        Value: SUBJECT_TAG
 #     Examples: [elena:00080]
 article_subject_tag			=	[$ml_name:%05d]
 
@@ -89,6 +105,6 @@ article_subject_tag			=	[$ml_name:%05d]
 #               XXX そこだけ変えたい場合があるかもしれないので、
 #               XXX 一応 $ml_name とは分けておく。
 #      History:
-#        Value:
+#        Value: ML_NAME
 #     Examples: elena
 outgoing_mail_header_x_ml_name			=	$ml_name

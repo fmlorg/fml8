@@ -4,7 +4,7 @@
 
 # Descriptions: いわゆるＭＬの管理者、エラーメールの返る先
 #      History: fml 4.0 の $MAINTAINER
-#        Value: rfc822_address
+#        Value: RFC822_ADDRESS
 #     Examples: elena-admin@fml.org
 maintainer	=
 
@@ -14,7 +14,7 @@ maintainer	=
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: UMASK
 #     Examples:
 default_umask		=	077
 
@@ -24,13 +24,8 @@ default_umask		=	077
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: TIMEZONE
 #     Examples:
 system_timezone		=	+0900
-
-
-
-
-
 
 

@@ -5,7 +5,7 @@
 
 # Descriptions: FML::Credential でアドレスの比較をするか?(当然する)
 #      History: 当然するので、off/on スイッチなぞない
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_address_compare_function = yes
 
@@ -14,7 +14,10 @@ use_address_compare_function = yes
 #               大文字小文字を区別するかしないか？
 #               互換性のため、デフォルトは「しない」 
 #      History: none
-#        Value: user_part_case_sensitive | user_part_case_insensitive
+#        Value: SELECT (
+#			user_part_case_sensitive 
+#			user_part_case_insensitive
+#		)	
 #     Examples: user_part_case_insensitive
 address_compare_function_type = user_part_case_insensitive
 
@@ -24,7 +27,7 @@ address_compare_function_type = user_part_case_insensitive
 
 # Descriptions: 投稿への制限
 #      History: fml 4.0 の PERMIT_POST_FROM と REJECT_ADDR を合体したもの
-#        Value: list of attributes (
+#        Value: MIX (
 #			permit_anyone
 #			permit_member_maps
 #			check_article_thread
@@ -38,7 +41,7 @@ article_post_restrictions	=	reject_system_special_accounts
 
 # Descriptions: コマンドへの制限
 #      History: fml 4.0 の PERMIT_COMMAND_FROM と REJECT_ADDR を合体したもの
-#        Value: list of attributes (
+#        Value: MIX (
 #			permit_anyone
 #			permit_member_maps
 #			permit_anonymous_command
@@ -55,7 +58,7 @@ command_mail_restrictions	=	reject_system_special_accounts
 
 # Descriptions: admin コマンドへの制限
 #      History: fml 4.0 の ?
-#        Value: list of attributes (
+#        Value: MIX (
 #			permit_anyone
 #			permit_admin_member_maps
 #			check_admin_member_password
@@ -79,14 +82,14 @@ admin_command_mail_restrictions	=	reject_system_special_accounts
 #               XXX map のタイプによっては書き込みできないこともある
 #               XXX (例: unix.group )
 #      History: fml 4.0 の $MEMBER_LIST
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/members
 primary_member_map	=	file:$ml_home_dir/members
 
 
 # Descriptions: メンバーかどうか認証する際に検索するすべてのメンバーリスト
 #      History: fml 4.0 の $MEMBER_LIST @MEMBER_LIST 相当
-#         Type:
+#        Value: MAP_LIST
 #     Examples:
 member_maps		=	$primary_member_map
 				$admin_member_maps
@@ -100,7 +103,7 @@ member_maps		=	$primary_member_map
 #               XXX map のタイプによっては書き込みできないこともある
 #               XXX (例: unix.group )
 #      History: fml 4.0 の $ACTIVE_LIST
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/recipients
 primary_recipient_map	=	 file:$ml_home_dir/recipients
 
@@ -108,7 +111,7 @@ primary_recipient_map	=	 file:$ml_home_dir/recipients
 # Descriptions: すべての受信者のリスト
 #               互換性のため actives もサーチの対象 
 #      History: fml 4.0 の $ACTIVE_LIST @ACTIVE_LIST 相当
-#        Value: a list of filenames
+#        Value: MAP_LIST
 #     Examples: file:$ml_home_dir/recipients
 #		unix.group:fml
 recipient_maps		=	$primary_recipient_map
@@ -120,14 +123,14 @@ recipient_maps		=	$primary_recipient_map
 
 # Descriptions: ダミー
 #      History: none
-#        Value: filename
+#        Value: MAP
 #     Examples:
 primary_digest_member_map	=	$primary_member_map
 
 
 # Descriptions: ダミー
 #      History: none
-#        Value: list of filenames
+#        Value: MAP_LIST
 #     Examples:
 digest_member_maps		=	$primary_member_maps
 
@@ -136,14 +139,14 @@ digest_member_maps		=	$primary_member_maps
 #               XXX map のタイプによっては書き込みできないこともある
 #               XXX (例: unix.group )
 #      History: fml 4.0 では $ACTIVE_LIST のオプションとして実装
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/recipients-digest
 primary_digest_recipient_map	=	 file:$ml_home_dir/recipients-digest
 
 
 # Descriptions: すべてのまとめ送りをするべき受信者のリスト
 #      History: fml 4.0 の $ACTIVE_LIST @ACTIVE_LIST のオプションとして実装
-#        Value: a list of filenames
+#        Value: MAP_LIST
 #     Examples: file:$ml_home_dir/recipients-digest
 #		unix.group:fml
 digest_recipient_maps		=	$primary_digest_recipient_map
@@ -155,35 +158,35 @@ digest_recipient_maps		=	$primary_digest_recipient_map
 #               XXX map のタイプによっては書き込みできないこともある
 #               XXX (例: unix.group )
 #      History: fml 4.0 の $ADMIN_MEMBER_LIST
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/members-admin
 primary_admin_member_map	=	file:$ml_home_dir/members-admin
 
 
 # Descriptions: メンバーかどうか認証する際に検索するすべてのメンバーリスト
 #      History: fml 4.0 の $ADMIN_MEMBER_LIST @ADMIN_MEMBER_LIST 相当
-#         Type:
+#        Value: MAP_LIST
 #     Examples:
 admin_member_maps		=	$primary_admin_member_map
 
 
 # Descriptions: とりあえず定義してあるけど、使われてはいない
 #      History: 4.0 にはない
-#        Value: file
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/recipients-admin
 primary_admin_recipient_map	=	file:$ml_home_dir/recipients-admin
 
 
 # Descriptions: とりあえず定義してあるけど、使われてはいない
 #      History: 4.0 にはない
-#        Value: file
+#        Value: MAP_LIST
 #     Examples: /var/spool/ml/elena/recipients-admin
 admin_recipient_maps		=	$primary_admin_recipient_map
 
 
 # Descriptions: リモート管理者のパスワードファイル
 #      History: 4.0 の $PASSWD_FILE
-#        Value: file
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/etc/passwd
 primary_admin_member_password_map = file:$etc_dir/passwd-admin
 
@@ -191,7 +194,7 @@ primary_admin_member_password_map = file:$etc_dir/passwd-admin
 # Descriptions: リモート管理者のパスワードファイル(群)
 #               互換性のため etc/passwd もサーチの対象 
 #      History: 4.0 にはない
-#        Value:
+#        Value: MAP_LIST
 #     Examples:
 admin_member_password_maps	=	$primary_admin_member_password_map
 					file:$etc_dir/passwd
@@ -203,28 +206,28 @@ admin_member_password_maps	=	$primary_admin_member_password_map
 #               XXX map のタイプによっては書き込みできないこともある
 #               XXX (例: unix.group )
 #      History: fml 4.0 の $MODERATOR_MEMBER_LIST
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/members-moderator
 primary_moderator_member_map	=	file:$ml_home_dir/members-moderator
 
 
 # Descriptions: メンバーかどうか認証する際に検索するすべてのメンバーリスト
 #      History: fml 4.0 には相当物がない、$MODERATOR_MEMBER_LIST のみだった
-#        Value: 
+#        Value: MAP_LIST
 #     Examples: 
 moderator_member_maps		=	$primary_moderator_member_map
 
 
 # Descriptions: とりあえず定義してあるけど、使われてはいない
 #      History: 4.0 にはない
-#        Value: file
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/recipients-moderator
 primary_moderator_recipient_map	=	file:$ml_home_dir/recipients-moderator
 
 
 # Descriptions: とりあえず定義してあるけど、使われてはいない
 #      History: 4.0 にはない
-#        Value: file
+#        Value: MAP_LIST
 #     Examples: /var/spool/ml/elena/recipients-moderator
 moderator_recipient_maps	=	$primary_moderator_recipient_map
 
@@ -238,7 +241,7 @@ moderator_recipient_maps	=	$primary_moderator_recipient_map
 #                    メールループなどをひきおこしうる。
 #               これらの理由により望ましくないアカウントたちと思われる。
 #      History: fml 4.0 の $REJECT_ADDR
-#        Value: a list of strings
+#        Value: REGEXP_LIST
 #     Examples: see below
 system_special_accounts		=	root
 					postmaster
@@ -260,7 +263,7 @@ system_special_accounts		=	root
 #               たとえば、libexec/error は、これらのアドレスを
 #               削除しちゃいけない。
 #      History: none
-#        Value: a list of strings
+#        Value: RFC822_ADDRESS_LIST
 #     Examples: (elena-ctl@fml.org elena-ctl@fml.org ...)
 list_addresses	=	$maintainer
 			$article_post_address
@@ -268,13 +271,15 @@ list_addresses	=	$maintainer
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: RFC822_ADDRESS
 #     Examples:
 article_post_address	=	$address_for_post
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: RFC822_ADDRESS
 #     Examples:
 command_mail_address	=	$address_for_command
+
+

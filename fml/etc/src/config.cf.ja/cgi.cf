@@ -3,7 +3,7 @@
 
 # Descriptions: CGI を置くトップディレクトリ
 #      History:
-#        Value:
+#        Value: DIR
 #     Examples:
 cgi_base_dir	=	$fml_owner_home_dir/public_html/cgi-bin/fml/$ml_domain
 
@@ -11,7 +11,7 @@ cgi_base_dir	=	$fml_owner_home_dir/public_html/cgi-bin/fml/$ml_domain
 # Descriptions: このＭＬの admin CGI を置くディレクトリ
 #               注意: ドメインごと、ＭＬごとに別のディレクトリになる
 #      History:
-#        Value:
+#        Value: DIR
 #     Examples: ~fml/public_admin/cgi-bin/fml/admin/fml.org/elena
 #        Notes: admin/.htaccess か admin/$domain/.htaccess で ACL する
 admin_cgi_base_dir	=	$cgi_base_dir/admin
@@ -20,42 +20,42 @@ admin_cgi_base_dir	=	$cgi_base_dir/admin
 # Descriptions: このＭＬの admin CGI を置くディレクトリ
 #               注意: ドメインごと、ＭＬごとに別のディレクトリになる
 #      History:
-#        Value:
+#        Value: DIR
 #     Examples: ~fml/public_admin/cgi-bin/fml/admin/fml.org/elena
 ml_admin_cgi_base_dir	=	$cgi_base_dir/ml-admin/$ml_name
 
 
 # Descriptions: CGI の表示の CHARSET
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp us-ascii )
 #     Examples:
 cgi_default_charset	=	$cgi_charset_ja
 
 
 # Descriptions: CGI の表示の CHARSET
 #      History:
-#        Value:
+#        Value: SELECT ( euc-jp )
 #     Examples:
 cgi_charset_ja	=	euc-jp
 
 
 # Descriptions: CGI の表示の CHARSET
 #      History:
-#        Value:
+#        Value: SELECT ( us-ascii)
 #     Examples:
 cgi_charset_en	=	us-ascii
 
 
 # Descriptions: CGI の言語モード (!= charset) 
 #      History:
-#        Value:
+#        Value: SELECT ( japanese )
 #     Examples:
 cgi_default_language	=	japanese
 
 
 # Descriptions: CGI で利用可能な言語モード (!= charset) 
 #      History:
-#        Value:
+#        Value: MIX ( japanese english )
 #     Examples:
 cgi_language_select_list	=	japanese
 					english
@@ -63,30 +63,30 @@ cgi_language_select_list	=	japanese
 
 # Descriptions: デフォルトの bgcolor
 #      History:
-#        Value: #%6x
+#        Value: HTML_COLOR
 #     Examples: #FFFFFF
 cgi_main_menu_color		=	#FFFFFF
 
 
 # Descriptions: デフォルトの bgcolor
 #      History: 4.0 には該当する変数はない
-#        Value: #%6x
+#        Value: HTML_COLOR
 #     Examples: #FFFFFF
 cgi_navigation_bar_color	=	#FFFFFF
 
 
 # Descriptions: CGI のアドレス操作の際に選べる種類
 #      History: 4.0 には該当する変数はない
-#        Value: member recipient admin_member
+#        Value: MIX ( member recipient admin_member )
 #     Examples: member recipient admin_member
 cgi_menu_address_map_select_list		=	member
-					recipient
-					admin_member
+							recipient
+							admin_member
 
 
 # Descriptions: CGI のアドレス操作の際に選べる種類のデフォルト値
 #      History: 4.0 には該当する変数はない
-#        Value: member recipient admin_member
+#        Value: MIX ( member recipient admin_member )
 #     Examples: member
 cgi_menu_default_address_map		=	recipient
 

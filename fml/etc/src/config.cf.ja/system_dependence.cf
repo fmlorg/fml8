@@ -6,30 +6,30 @@
 
 # Descriptions: getpwuid(2) があるか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 system_has_getpwuid	=	yes
 
 # Descriptions: getpwgid(2) があるか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 system_has_getpwgid	=	yes
 
 # Descriptions: alarm(2) があるか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 system_has_alarm	=	yes
 
 # Descriptions: select(2) があるか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 system_has_select	=	yes
 
 # Descriptions: fork(2) があるか？
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 system_has_fork	=	yes

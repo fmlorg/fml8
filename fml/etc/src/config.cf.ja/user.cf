@@ -5,24 +5,24 @@
 
 # Descriptions: primary { address => gecos_field } map.
 #      History: none
-#        Value: map
+#        Value: MAP
 #     Examples:
 primary_user_db_gecos_map	=	$db_dir/gecos
 
 # Descriptions: { address => gecos_field } maps.
 #      History: none
-#        Value: map
+#        Value: MAP_LIST
 #     Examples:
 user_db_gecos_maps		=	$primary_user_db_gecos_map
 
 # Descriptions: primary { address => unix time when subscribed } map.
 #      History: none
-#        Value: map
+#        Value: MAP
 #     Examples:
 primary_user_db_subscribe_date_map	=	$db_dir/subscribe_date
 
 # Descriptions: { address => unix time when subscribed } maps.
 #      History: none
-#        Value: map
+#        Value: MAP_LIST
 #     Examples:
 user_db_subscribe_date_maps	=	$primary_user_db_subscribe_date_map

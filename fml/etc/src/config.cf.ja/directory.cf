@@ -4,19 +4,19 @@
 
 # Descriptions: ディレクトリを作成する時のデフォルトモード
 #      History:
-#        Value:
+#        Value: FILE_MODE
 #     Examples:
 directory_default_mode	=	0755
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: FILE_MODE
 #     Examples:
 directory_public_mode	=	0755
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: FILE_MODE
 #     Examples:
 directory_private_mode	=	0700
 
@@ -24,6 +24,10 @@ directory_private_mode	=	0700
 =head2 newml で初期化する
 
 
+# Descriptions:
+#      History:
+#        Value: DIR_LIST
+#     Examples:
 newml_command_init_public_directories	=	$domain_config_base_dir
 						$domain_mail_config_dir
 						$domain_postfix_config_dir
@@ -34,6 +38,11 @@ newml_command_init_public_directories	=	$domain_config_base_dir
 						$shared_db_dir
 						$udb_base_dir
 
+
+# Descriptions:
+#      History:
+#        Value: DIR_LIST
+#     Examples:
 newml_command_init_private_directories	=	$etc_dir
 						$tmp_dir
 						$spool_dir
@@ -47,7 +56,7 @@ newml_command_init_private_directories	=	$etc_dir
 
 # Descriptions: ユーザ fml のホーム
 #      History: fml 4.0 にはない
-#        Value: directory
+#        Value: DIR
 #     Examples: /home/fml
 #               なお、この値はプロセスの UID から動的に決定される
 #		くわしくは FML::Process::Kernel を参照のこと
@@ -58,7 +67,7 @@ newml_command_init_private_directories	=	$etc_dir
 #               $ml_home_dir は起動時に渡されるアーギュメントを元に
 #               FML::Process::Switch が決める
 #      History: fml 4.0 の $DIR にあたるもの
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena
 # ml_home_dir	=
 
@@ -68,14 +77,14 @@ newml_command_init_private_directories	=	$etc_dir
 
 # Descriptions: fml からシステムに教えるデータを置くためのディレクトリ
 #      History: fml 4.0 ではきめうち
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/etc
 domain_config_base_dir	= $ml_home_prefix/etc
 
 
 # Descriptions: ML 間でシェアするデータベースをおくホームディレクトリ
 #      History: fml 4.0 に該当するものはない
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/@db@
 shared_db_dir	= $ml_home_prefix/@db@
 
@@ -84,7 +93,7 @@ shared_db_dir	= $ml_home_prefix/@db@
 #               $shared_db_dir は使われなくなる。
 #               udb は unified database の略称。
 #      History: $shared_db_dir の後継にあたる
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/@udb@
 udb_base_dir	= $ml_home_prefix/@udb@
 
@@ -94,7 +103,7 @@ udb_base_dir	= $ml_home_prefix/@udb@
 
 # Descriptions: パスワードファイルなどを置くディレクトリ
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/etc
 etc_dir		= $ml_home_dir/etc
 
@@ -102,21 +111,21 @@ etc_dir		= $ml_home_dir/etc
 # Descriptions: さまざまな目的につかう
 #               multi-purpose log, temporary, transient, and spool files
 #      History: $VAR_DIR
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var
 var_dir		= $ml_home_dir/var
 
 
 # Descriptions: 一時的な中間ファイルを置くディレクトリ
 #      History: $TMP_DIR
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/tmp
 tmp_dir		= $ml_home_dir/tmp
 
 
 # Descriptions: 各種データファイルを置くディレクトリ
 #      History: $VARDB_DIR
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/db
 db_dir		= $var_dir/db
 
@@ -126,21 +135,21 @@ db_dir		= $var_dir/db
 
 # Descriptions: 各ＭＬローカルのディレクトリ
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/local
 ml_local_dir		=	$ml_home_dir/local
 
 
 # Descriptions: 各ＭＬローカルの lib/ ディレクトリ
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/local/lib
 ml_local_lib_dir	=	$ml_local_dir/lib
 
 
 # Descriptions: 各ＭＬローカルの share/ ディレクトリ
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/local/share
 ml_local_share_dir	=	$ml_local_dir/share
 
@@ -154,14 +163,14 @@ ml_local_share_dir	=	$ml_local_dir/share
 # Descriptions: domian local なディレクトリ。
 #               admin/*.cgi など ml_name が特定されない場合にだけ使う。
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml
 domain_local_dir	=	$ml_home_prefix
 
 # Descriptions: domian local な tmp ディレクトリ。
 #               admin/*.cgi など ml_name が特定されない場合にだけ使う。
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/@tmp@
 domain_local_tmp_dir	=	$ml_home_prefix/@tmp@
 
@@ -171,6 +180,6 @@ domain_local_tmp_dir	=	$ml_home_prefix/@tmp@
 
 # Descriptions: イヴェントのキューディレクトリ
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/event
 event_queue_dir	= $var_dir/event/queue

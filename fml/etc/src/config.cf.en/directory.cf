@@ -4,19 +4,19 @@
 
 # Descriptions: default mode in creating directory.
 #      History:
-#        Value:
+#        Value: FILE_MODE
 #     Examples:
 directory_default_mode	=	0755
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: FILE_MODE
 #     Examples:
 directory_public_mode	=	0755
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: FILE_MODE
 #     Examples:
 directory_private_mode	=	0700
 
@@ -24,6 +24,10 @@ directory_private_mode	=	0700
 =head2 directories "makefml newml" initializes 
 
 
+# Descriptions:
+#      History:
+#        Value: DIR_LIST
+#     Examples:
 newml_command_init_public_directories	=	$domain_config_base_dir
 						$domain_mail_config_dir
 						$domain_postfix_config_dir
@@ -34,6 +38,11 @@ newml_command_init_public_directories	=	$domain_config_base_dir
 						$shared_db_dir
 						$udb_base_dir
 
+
+# Descriptions:
+#      History:
+#        Value: DIR_LIST
+#     Examples:
 newml_command_init_private_directories	=	$etc_dir
 						$tmp_dir
 						$spool_dir
@@ -47,14 +56,14 @@ newml_command_init_private_directories	=	$etc_dir
 
 # Descriptions: home directory of user fml
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /home/fml
 # fml_owner_home_dir =
 
 
 # Descriptions: home directory of this ML
 #      History: $DIR
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena
 # ml_home_dir	=
 
@@ -64,14 +73,14 @@ newml_command_init_private_directories	=	$etc_dir
 
 # Descriptions: system data directory provided by fml
 #      History: hard-coded in fml 4.0
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/etc
 domain_config_base_dir	= $ml_home_prefix/etc
 
 
 # Descriptions: database directory shared among ML's
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/@db@
 shared_db_dir	= $ml_home_prefix/@db@
 
@@ -79,7 +88,7 @@ shared_db_dir	= $ml_home_prefix/@db@
 # Descriptions: database directory shared among ML's.
 #               udb == unified database.
 #      History: inherit $shared_db_dir
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/@udb@
 udb_base_dir	= $ml_home_prefix/@udb@
 
@@ -89,7 +98,7 @@ udb_base_dir	= $ml_home_prefix/@udb@
 
 # Descriptions: etc directory
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /etc/spool/ml/elena/etc
 etc_dir		= $ml_home_dir/etc
 
@@ -97,21 +106,21 @@ etc_dir		= $ml_home_dir/etc
 # Descriptions: directory hoding
 #               multi-purpose log, temporary, transient, and spool files
 #      History: $VAR_DIR
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var
 var_dir		= $ml_home_dir/var
 
 
 # Descriptions: directory to hold temporary files
 #      History: $TMP_DIR
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/tmp
 tmp_dir		= $ml_home_dir/tmp
 
 
 # Descriptions: directoy to hold several data files
 #      History: $VARDB_DIR
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/db
 db_dir		= $var_dir/db
 
@@ -121,21 +130,21 @@ db_dir		= $var_dir/db
 
 # Descriptions: ML local directory
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/local
 ml_local_dir		=	$ml_home_dir/local
 
 
 # Descriptions: ML local library path
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/local/lib
 ml_local_lib_dir	=	$ml_local_dir/lib
 
 
 # Descriptions: ML local share/
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/local/share
 ml_local_share_dir	=	$ml_local_dir/share
 
@@ -149,14 +158,14 @@ ml_local_share_dir	=	$ml_local_dir/share
 # Descriptions: domian local directory.
 #               used in admin/*.cgi e.g. when ml_name unspecified.
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml
 domain_local_dir	=	$ml_home_prefix
 
 # Descriptions: domian local temporary directory.
 #               used in admin/*.cgi e.g. when ml_name unspecified.
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/@tmp@
 domain_local_tmp_dir	=	$ml_home_prefix/@tmp@
 
@@ -165,6 +174,6 @@ domain_local_tmp_dir	=	$ml_home_prefix/@tmp@
 
 # Descriptions: event queue directory for scheduler
 #      History: none
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/event
 event_queue_dir	= $var_dir/event/queue

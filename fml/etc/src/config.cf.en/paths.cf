@@ -1,99 +1,263 @@
 =head1 program paths
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_perl                 = @PERL@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_cksum                = @CKSUM@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_sum                  = @SUM@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_md5                  = @MD5@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_tar                  = @TAR@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_gzip                 = @GZIP@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_zcat                 = @ZCAT@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_gzcat                = @GZCAT@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_gunzip               = @GUNZIP@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_lha                  = @LHA@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_ls                   = @LS@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_ish                  = @ISH@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_bzip2                = @BZIP2@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_bunzip2              = @BUNZIP2@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_uuencode             = @UUENCODE@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_compress             = @COMPRESS@
 
 
 =head2 MTA related program paths
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_sendmail             = @SENDMAIL@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_makemap              = @MAKEMAP@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_newaliases           = @NEWALIASES@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_postfix              = @POSTFIX@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_postalias            = @POSTALIAS@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_postconf             = @POSTCONF@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_postmap              = @POSTMAP@
 
 
 =head2 encryption/decryption
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_pgp                  = @PGP@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_pgp5                 = @PGP5@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_pgpe                 = @PGPe@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_pgpk                 = @PGPK@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_pgps                 = @PGPS@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_pgpv                 = @PGPV@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_gpg                  = @GPG@
 
 
 =head2	utilities
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_nkf                  = @NKF@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_kakasi               = @KAKASI@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_namazu               = @NAMAZU@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_less                 = @LESS@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_more                 = @MORE@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_w3m                  = @W3M@
 
 
 =head2 spam related utilities
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_spamassassin         = @SPAMASSASSIN@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_spamd                = @SPAMD@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_spamc                = @SPAMC@
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_bogofilter           = @BOGOFILTER@
 
 
 =head2 virus checker
 
 
+# Descriptions:
+#      History:
+#        Value: FILE
+#     Examples:
 path_clamscan             = @CLAMSCAN@

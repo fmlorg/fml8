@@ -11,30 +11,34 @@
 
 # Descriptions: LDAP サーバ
 #      History:
-#        Value:
+#        Value: HOSTNAME_LIST
 #     Examples:
 ldap_servers		=
 
+
 # Descriptions: LDAP サーバにログインするためのパスワード
 #      History:
-#        Value:
+#        Value: PASSWORD
 #     Examples:
 ldap_server_password	=
 
+
 # Descriptions: LDAP の search base
 #      History:
-#        Value:
+#        Value: LDAP_SEARCH_BASE
 #     Examples:
 ldap_search_base	=
 
+
 # Descriptions: LDAP の search bind
 #      History:
-#        Value:
+#        Value: LDAP_SEVERVER_BIND
 #     Examples:
 ldap_server_bind	=
 
+
 # Descriptions: LDAP のフィルタ
 #      History:
-#        Value:
+#        Value: LDAP_QUERY_FILTER
 #     Examples:
 ldap_query_filter	=	(objectclass=*)

@@ -1,4 +1,17 @@
 # Descriptions:
 #      History:
-#        Value:
+#        Value: YES_OR_NO
+#        Value: CF_FILE		注: .cf スタイルのファイル
+#        Value: UNIX_SS_FILE	注: Unix伝統のスペース区切り形式ファイル
+#        Value: SELECT ( ... )	注: 選択肢から一つを選ぶ場合
+#        Value: MIX ( ... )	注: 選択肢を適当に組み合わせる場合
+#        Value: NUM
+#        Value: STR
+#        Value: STR_LIST	注: 正規表現は含まない
+#        Value: MAP
+#        Value: MAP_LIST
+#        Value: REGEXP		注: REGEXP = STR + 正規表現
+#        Value: REGEXP_LIST	注: REGEXP = STR + 正規表現
+#        Value: ADDR		注: ADDR は 822 形式
+#        Value: ADDR_LIST	注: ADDR は 822 形式
 #     Examples:

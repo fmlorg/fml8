@@ -2,24 +2,24 @@
 
 # Descriptions: ロックをするか？
 #      History:
-#        Value: yes /no
+#        Value: YES_OR_NO
 use_lock	= yes
 
 # Descriptions: ロックファイルを置くディレクトリ
 #      History:
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/lock
 lock_dir	= $var_dir/lock
 
 # Descriptions: ロックファイル (ジャイアントロック用のファイル）
 #      History: fml 4.0 ではスプールディレクトリ $SPOOL_DIR
 #               をロックしていた。
-#        Value: filename
+#        Value: FILE
 #     Examples: /var/spool/ml/elena/var/lock/giantlock
 lock_file	= $lock_dir/giantlock
 
 # Descriptions: ロックのタイプ
 #      History: fml 4.0 の $USE_FLOCK
-#        Value: flock
+#        Value: SELECT ( flock )
 #     Examples:
 lock_type	= flock

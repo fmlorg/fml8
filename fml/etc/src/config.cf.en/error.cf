@@ -6,7 +6,7 @@
 # 		it is useful to use mysql to control recipients of 
 #               error messages.
 #      History: none
-#        Value: maps
+#        Value: MAP_LIST
 #     Examples: file:$ml_home_dir/recipients-maintainer
 #               $admin_recipient_maps 
 maintainer_recipient_maps	=
@@ -18,7 +18,7 @@ maintainer_recipient_maps	=
 # Descriptions: use error message analyzer ?
 #      History: none
 #		use_error_analyzer_program (fml8 pre alpha)
-#        Value: yes
+#        Value: YES_OR_NO
 #     Examples: yes / no
 use_error_mail_analyzer_function = ${use_error_analyzer_program:-yes}
 
@@ -27,21 +27,21 @@ use_error_mail_analyzer_function = ${use_error_analyzer_program:-yes}
 
 # Descriptions: directory to cache error messages.
 #      History: /var/spool/ml/mead/errormaillog
-#        Value: directory
+#        Value: DIR
 #     Examples: 
 error_mail_analyzer_cache_dir		=	$db_dir/error
 
 
 # Descriptions: module as cache engine
 #      History: none
-#        Value: string
+#        Value: CLASS
 #     Examples: File::CacheDir
 error_mail_analyzer_cache_type		=	File::CacheDir
 
 
 # Descriptions: mode of cache expiration
 #      History: none
-#        Value: string
+#        Value: SELECT ( temporal )
 #     Examples: 
 error_mail_analyzer_cache_mode		=	temporal
 
@@ -49,7 +49,7 @@ error_mail_analyzer_cache_mode		=	temporal
 # Descriptions: cache size.
 #		it implies days if the cache mode is temporal.
 #      History: none
-#        Value: number
+#        Value: NUM
 #     Examples: 
 error_mail_analyzer_cache_size		=	14
 
@@ -59,7 +59,7 @@ error_mail_analyzer_cache_size		=	14
 
 # Descriptions: functions defined in FML::Error::Analyze
 #      History: none
-#        Value: simple_count / histgram
+#        Value: MIX ( simple_count histgram )
 #     Examples: simple_count
 error_mail_analyzer_function_select_list	=	simple_count
 						histgram
@@ -67,13 +67,13 @@ error_mail_analyzer_function_select_list	=	simple_count
 
 # Descriptions: function in FML::Error::Analyze to analyze.
 #      History: none
-#        Value: simple_count / histgram
+#        Value: SELECT ( simple_count histgram )
 #     Examples: simple_count
 error_mail_analyzer_function			=	histgram
 
 
 # Descriptions: error limit in using simple_count as anlyzer function.
 #      History: none
-#        Value: NUM
+#        Value:  NUM
 #     Examples: 5
 error_mail_analyzer_simple_count_limit	=	5

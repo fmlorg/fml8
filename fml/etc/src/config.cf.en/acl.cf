@@ -4,14 +4,17 @@
 
 # Descriptions: FML::Credential checks address comparison
 #      History: always enabled
-#        Value: yes | no
+#        Value: YES_OR_NO
 #     Examples: yes
 use_address_compare_function = yes
 
 
 # Descriptions: case insensitive comparison of user part of mail address.
 #      History: none
-#        Value: user_part_case_sensitive | user_part_case_insensitive
+#        Value: SELECT (
+#			user_part_case_sensitive 
+#			user_part_case_insensitive
+#		)	
 #     Examples: user_part_case_insensitive
 address_compare_function_type = user_part_case_insensitive
 
@@ -20,7 +23,7 @@ address_compare_function_type = user_part_case_insensitive
 
 # Descriptions: restrictions for post
 #      History: fml 4.0's PERMIT_POST_FROM + REJECT_ADDR
-#        Value: list of attributes (
+#        Value: MIX (
 #			permit_anyone
 #			permit_member_maps
 #			check_article_thread
@@ -34,7 +37,7 @@ article_post_restrictions	=	reject_system_special_accounts
 
 # Descriptions: restrictions for command mail
 #      History: fml 4.0's PERMIT_COMMAND_FROM + REJECT_ADDR
-#        Value: list of attributes (
+#        Value: MIX (
 #			permit_anyone
 #			permit_member_maps
 #			permit_anonymous_command
@@ -51,7 +54,7 @@ command_mail_restrictions	=	reject_system_special_accounts
 
 # Descriptions: restrictions for admin command mail
 #      History: fml 4.0's ?
-#        Value: list of attributes (
+#        Value: MIX (
 #			permit_anyone
 #			permit_admin_member_maps
 #			check_admin_member_password
@@ -75,7 +78,7 @@ admin_command_mail_restrictions	=	reject_system_special_accounts
 #               fml (CUI,GUI,command mail) modifies this map.
 #               XXX some map e.g. uni.group is read only
 #      History: fml 4.0's $MEMBER_LIST
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/members
 primary_member_map	=	file:$ml_home_dir/members
 
@@ -83,6 +86,7 @@ primary_member_map	=	file:$ml_home_dir/members
 # Descriptions: all maps used to check member list.
 #      History: fml 4.0's $MEMBER_LIST + @MEMBER_LIST
 #         Type:
+#        Value: MAP_LIST
 #     Examples:
 member_maps		=	$primary_member_map
 				$admin_member_maps
@@ -96,7 +100,7 @@ member_maps		=	$primary_member_map
 #               fml (CUI,GUI,command mail) modifies this map.
 #               XXX some map e.g. uni.group is read only
 #      History: fml 4.0's $ACTIVE_LIST
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/recipients
 primary_recipient_map	=	 file:$ml_home_dir/recipients
 
@@ -104,7 +108,7 @@ primary_recipient_map	=	 file:$ml_home_dir/recipients
 # Descriptions: all maps used as recipient list.
 #               actives is added for backward compability.
 #      History: fml 4.0's $ACTIVE_LIST + @ACTIVE_LIST
-#        Value: a list of filenames
+#        Value: MAP_LIST
 #     Examples: file:$ml_home_dir/recipients
 #		unix.group:fml
 recipient_maps		=	$primary_recipient_map
@@ -116,14 +120,14 @@ recipient_maps		=	$primary_recipient_map
 
 # Descriptions: dummy
 #      History: none
-#        Value: filename
+#        Value: MAP
 #     Examples:
 primary_digest_member_map	=	$primary_member_map
 
 
 # Descriptions: dummy
 #      History: none
-#        Value: list of filenames
+#        Value: MAP_LIST
 #     Examples:
 digest_member_maps		=	$primary_member_maps
 
@@ -131,14 +135,14 @@ digest_member_maps		=	$primary_member_maps
 # Descriptions: primary list of digest recipients.
 #               fml (CUI,GUI,command mail) modifies this map.
 #      History: In fml 4.0, options of $ACTIVE_LIST.
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/recipients-digest
 primary_digest_recipient_map	=	 file:$ml_home_dir/recipients-digest
 
 
 # Descriptions: all maps of digest recipients.
 #      History: In fml 4.0, options of $ACTIVE_LIST.
-#        Value: a list of filenames
+#        Value: MAP_LIST
 #     Examples: file:$ml_home_dir/recipients-digest
 #		unix.group:fml
 digest_recipient_maps		=	$primary_digest_recipient_map
@@ -151,28 +155,28 @@ digest_recipient_maps		=	$primary_digest_recipient_map
 #               fml (CUI,GUI,command mail) modifies this map.
 #               XXX some map e.g. uni.group is read only
 #      History: fml 4.0's $ADMIN_MEMBER_LIST
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/members-admin
 primary_admin_member_map	=	file:$ml_home_dir/members-admin
 
 
 # Descriptions: all remote administrator lists
 #      History: fml 4.0's $ADMIN_MEMBER_LIST + @ADMIN_MEMBER_LIST
-#         Type:
+#        Value: MAP_LIST
 #     Examples:
 admin_member_maps		=	$primary_admin_member_map
 
 
 # Descriptions: dummy
 #      History: none
-#        Value: file
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/recipients-admin
 primary_admin_recipient_map	=	file:$ml_home_dir/recipients-admin
 
 
 # Descriptions: dummy
 #      History: none
-#        Value: file
+#        Value: MAP_LIST
 #     Examples: /var/spool/ml/elena/recipients-admin
 admin_recipient_maps		=	$primary_admin_recipient_map
 
@@ -181,7 +185,7 @@ admin_recipient_maps		=	$primary_admin_recipient_map
 #               in password auth (detault).
 #               fml (CUI,GUI,command mail) modifies this map.
 #      History: 4.0's $PASSWD_FILE
-#        Value: file
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/etc/passwd
 primary_admin_member_password_map = file:$etc_dir/passwd-admin
 
@@ -189,7 +193,7 @@ primary_admin_member_password_map = file:$etc_dir/passwd-admin
 # Descriptions: all password files.
 #               For backward compatibility, etc/passwd is included.
 #      History: none
-#        Value:
+#        Value: MAP_LIST
 #     Examples:
 admin_member_password_maps	=	$primary_admin_member_password_map
 					file:$etc_dir/passwd
@@ -201,28 +205,28 @@ admin_member_password_maps	=	$primary_admin_member_password_map
 #               fml (CUI,GUI,command mail) modifies this map.
 #               XXX some map e.g. uni.group is read only
 #      History: fml 4.0's $MODERATOR_MEMBER_LIST
-#        Value: filename
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/members-moderator
 primary_moderator_member_map	=	file:$ml_home_dir/members-moderator
 
 
 # Descriptions: all list of moderator lists.
 #      History: $MODERATOR_MEMBER_LIST
-#        Value: 
+#        Value: MAP_LIST
 #     Examples: 
 moderator_member_maps		=	$primary_moderator_member_map
 
 
 # Descriptions: dummy
 #      History: none
-#        Value: file
+#        Value: MAP
 #     Examples: /var/spool/ml/elena/recipients-moderator
 primary_moderator_recipient_map	=	file:$ml_home_dir/recipients-moderator
 
 
 # Descriptions: dummy
 #      History: none
-#        Value: file
+#        Value: MAP_LIST
 #     Examples: /var/spool/ml/elena/recipients-moderator
 moderator_recipient_maps	=	$primary_moderator_recipient_map
 
@@ -235,7 +239,7 @@ moderator_recipient_maps	=	$primary_moderator_recipient_map
 #               It may cause mail loop.
 #               Hence it is safe to reject such a sender.
 #      History: fml 4.0's $REJECT_ADDR
-#        Value: a list of strings
+#        Value: REGEXP_LIST
 #     Examples: see below
 system_special_accounts		=	root
 				postmaster
@@ -255,7 +259,7 @@ system_special_accounts		=	root
 # Descriptions: addresses fml uses: e.g. elena, elena-ctl
 #               libexec/error ignores these addresses.
 #      History: none
-#        Value: a list of strings
+#        Value: RFC822_ADDRESS_LIST
 #     Examples: (elena-ctl@fml.org elena-ctl@fml.org ...)
 list_addresses	=	$maintainer
 			$article_post_address
@@ -263,13 +267,13 @@ list_addresses	=	$maintainer
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: RFC822_ADDRESS
 #     Examples:
 article_post_address	=	$address_for_post
 
 
 # Descriptions:
 #      History:
-#        Value:
+#        Value: RFC822_ADDRESS
 #     Examples:
 command_mail_address	=	$address_for_command

@@ -5,7 +5,7 @@
 
 # Descriptions: default mode in creating file
 #      History:
-#        Value:
+#        Value: FILE_MODE
 #     Examples:
 file_default_mode	=	0600
 

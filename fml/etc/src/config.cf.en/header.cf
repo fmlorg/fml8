@@ -3,43 +3,58 @@
 
 # Descriptions: use loop check based on header information ?
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_incoming_mail_header_loop_check		=	yes
 
 
 # Descriptions: loop check rules
 #      History:
-#        Value:
+#        Value: MIX (
+#			check_message_id
+#			check_x_ml_info
+#			check_list_post
+#		)
 #     Examples:
 incoming_mail_header_loop_check_rules		=	check_message_id
-					check_x_ml_info
-					check_list_post
+							check_x_ml_info
+							check_list_post
 
 # Descriptions: Message-ID cache directory
 #      History:
-#        Value:
+#        Value: DIR
 #     Examples:
 message_id_cache_dir		=	$db_dir/message_id
 
 
 # Descriptions: article Message-ID cache directory
 #      History:
-#        Value:
+#        Value: DIR
 #     Examples:
 article_message_id_cache_dir	=	$db_dir/article_message_id
 
 
 # Descriptions: use article header rewrite function ?
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_article_header_rewrite		=	yes
 
 
 # Descriptions: header rewriting rules
 #      History:
-#        Value:
+#        Value: MIX (
+#			delete_unsafe_header_fields
+#			rewrite_article_subject_tag
+#			rewrite_reply_to
+#			rewrite_errors_to
+#			add_software_info
+#			add_fml_ml_name
+#			add_fml_traditional_article_id
+#			add_fml_article_id
+#			add_x_sequence
+#			add_rfc2369
+#		)
 #     Examples:
 article_header_rewrite_rules	=	delete_unsafe_header_fields
 					rewrite_article_subject_tag
@@ -55,14 +70,14 @@ article_header_rewrite_rules	=	delete_unsafe_header_fields
 
 # Descriptions: use digest article header rewrite function ?
 #      History:
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples:
 use_digest_header_rewrite		=	yes
 
 
 # Descriptions: digest article header rewrite rules
 #      History:
-#        Value:
+#        Value: MIX ( add_software_info add_rfc2369 )
 #     Examples:
 digest_header_rewrite_rules	=	add_software_info
 					add_rfc2369
@@ -70,7 +85,7 @@ digest_header_rewrite_rules	=	add_software_info
 
 # Descriptions: remove unsafe header fields
 #      History: $SKIP_FIELDS
-#        Value: strings
+#        Value: HEADER_FIELD_LIST
 #     Examples:
 unsafe_header_fields		=	Return-Receipt-To
 
@@ -78,13 +93,13 @@ unsafe_header_fields		=	Return-Receipt-To
 # Descriptions: Subject: tag.
 #               see sprintf(3) on the usage of % et.al.
 #      History:
-#        Value:
+#        Value: SUBJECT_TAG
 #     Examples: [elena:00080]
 article_subject_tag			=	[$ml_name:%05d]
 
 
 # Descriptions: ml name in both X-ML-Name: and X-Sequence header fields.
 #      History:
-#        Value:
+#        Value: ML_NAME
 #     Examples: elena
 outgoing_mail_header_x_ml_name			=	$ml_name

@@ -6,21 +6,21 @@
 #               デフォルトは postfix にあわせて 1000
 #      History: 4.0 で直接対応するものはない。
 #               $MCI_SMTP_HOSTS は似ているがちょっと違う
-#        Value: number
+#        Value: NUM
 #     Examples:
 smtp_recipient_limit		=	1000
 
 # Descriptions: デフォールトの MTA は自分自身( localhost )
 #               IPv6 の loopback がデフォルトなのがおしゃれ :-)
 #      History: fml 4.0 の $HOST
-#        Value: host:port
+#        Value: TRANSPORT_LIST
 #     Examples:
 smtp_servers		=	[::1]:25
 				127.0.0.1:25
 
 # Descriptions: SMTP の MAIL FROM:<$smtp_sender> で使うパラメータ
 #      History: fml 4.0 の $SMTP_SENDER
-#        Value: mail_address (RFC822 の addrspec)
+#        Value: RFC822_ADDRESS
 #     Examples: elena-admin@fml.org
 smtp_sender		=	$maintainer
 
@@ -30,7 +30,7 @@ smtp_sender		=	$maintainer
 # Descriptions: mail queue のディレクトリ
 #      History: 似たような目的に tmp/ が使われていたが、
 #               fml 4.0 には直接該当するものはない。
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/mail/queue
 mail_queue_dir	= $var_dir/mail/queue
 
@@ -42,14 +42,14 @@ mail_queue_dir	= $var_dir/mail/queue
 
 # Descriptions: 入力されるメールをキャッシュするか？
 #      History: $NUM_LOG_MAIL
-#        Value: yes / no
+#        Value: YES_OR_NO
 #     Examples: y
 use_incoming_mail_cache	=	yes
 
 
 # Descriptions: 入力されるメールを置くディレクトリ
 #      History: LOG_MAIL_DIR ($DIR/var/Mail/)
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/mail/incoming
 incoming_mail_cache_dir	= $var_dir/mail/incoming
 
@@ -66,14 +66,14 @@ incoming_mail_cache_size	=	128
 
 # Descriptions: 出力(配送)されるメールをキャッシュするか？
 #      History: $NUM_LOG_MAIL
-#        Value: yes / no
-#     Examples: y
+#        Value: YES_OR_NO
+#     Examples: yes
 use_outgoing_mail_cache	=	yes
 
 
 # Descriptions: deliver されるメールを置くディレクトリ
 #      History: LOG_MAIL_DIR ($DIR/var/Mail/)
-#        Value: directory
+#        Value: DIR
 #     Examples: /var/spool/ml/elena/var/mail/outgoing
 outgoing_mail_cache_dir	= $var_dir/mail/outgoing
 

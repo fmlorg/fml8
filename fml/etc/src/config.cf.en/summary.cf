@@ -2,20 +2,20 @@
 
 # Descriptions: article summary file.
 #      History:
-#        Value:
+#        Value: FILE
 #     Examples:
 article_summary_file		=	$ml_home_dir/summary
 
 
 # Descriptions: format style.
 #      History:
-#        Value: fml4_compatible
+#        Value: SELECT ( fml4_compatible )
 #     Examples:
 article_summary_file_format_style	=	fml4_compatible
 
 
 # Descriptions: save the first N bytes of the address in summary.
 #      History:
-#        Value: \d+
+#        Value:  NUM
 #     Examples: 15
 article_summary_file_format_address_length	=	15
