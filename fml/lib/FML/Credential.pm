@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.31 2002/08/08 03:09:45 fukachan Exp $
+# $FML: Credential.pm,v 1.32 2002/08/26 03:40:44 fukachan Exp $
 #
 
 package FML::Credential;
@@ -148,6 +148,12 @@ are same since the last 3 top level domains are same.
 sub is_same_address
 {
     my ($self, $xaddr, $yaddr, $max_level) = @_;
+
+    # both should be defined !
+    unless (defined($xaddr) && defined($yaddr)) {
+	return 0;
+    }
+
     my ($xuser, $xdomain) = split(/\@/, $xaddr);
     my ($yuser, $ydomain) = split(/\@/, $yaddr);
     my $level             = 0;
