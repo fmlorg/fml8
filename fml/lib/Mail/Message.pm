@@ -4,12 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.67 2002/09/11 23:18:21 fukachan Exp $
+# $FML: Message.pm,v 1.68 2002/09/22 14:57:00 fukachan Exp $
 #
 
 package Mail::Message;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
+	    $override_log_function);
 use Carp;
 
 my $debug = 0;
@@ -1039,7 +1040,7 @@ sub _print_messsage_on_memory
     my $type  = $self->{ data_type } || croak("no data_type");
     my $pp    = $self->{ offset_begin };
     my $p_end = $self->{ offset_end };
-    my $logfp = $self->{ _log_function };
+    my $logfp = $override_log_function || $self->{ _log_function };
     $logfp    = ref($logfp) eq 'CODE' ? $logfp : undef;
 
     # 1. print content header if exists
@@ -1150,7 +1151,7 @@ sub _print_messsage_on_disk
     my $raw_print_mode = 1 if $self->{ _print_mode } eq 'raw';
     my $header   = $self->{ header }   || undef;
     my $filename = $self->{ filename } || undef;
-    my $logfp    = $self->{ _log_function };
+    my $logfp    = $override_log_function || $self->{ _log_function };
     $logfp       = ref($logfp) eq 'CODE' ? $logfp : undef;
 
     # 1. print content header if exists
@@ -2090,17 +2091,35 @@ sub find_first_plaintext_message
 
 internal use. set CODE REFERENCE to the log function
 
+=head2 unset_log_function()
+
+unset CODE REFERENCE used as log functions.
+
 =cut
 
 
 # Descriptions: set log function pointer (CODE REFERNCE)
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) CODE_REF($fp) CODE_REF($fp_override)
 # Side Effects: set log function pointer to $self object
 # Return Value: REF_CODE
 sub set_log_function
 {
-    my ($self, $fp) = @_;
+    my ($self, $fp, $fp_override) = @_;
     $self->{ _log_function } = $fp;
+    $override_log_function   = $fp_override if defined $fp_override;
+}
+
+
+# Descriptions: unset log function pointers
+#    Arguments: OBJ($self)
+# Side Effects: unset log function pointer to $self object and global one
+# Return Value: none
+sub unset_log_function
+{
+    my ($self) = @_;
+
+    delete $self->{ _log_function } if defined $self->{ _log_function };
+    undef $override_log_function    if defined $override_log_function;
 }
 
 

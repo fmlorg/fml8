@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.18 2002/09/11 23:18:24 fukachan Exp $
+# $FML: SMTP.pm,v 1.19 2002/09/22 14:57:02 fukachan Exp $
 #
 
 
@@ -757,13 +757,15 @@ sub _send_body_to_mta
     my ($self, $socket, $msg) = @_;
 
     # XXX $msg is Mail::Message object.
-    $msg->set_log_function( $SmtpLogFunctionPointer );
+    $msg->set_log_function($SmtpLogFunctionPointer, $SmtpLogFunctionPointer);
     $msg->set_print_mode('smtp');
     $msg->print($socket);
 
     if (defined $self->{ _smtp_log_handle }) {
 	$msg->print( $self->{ _smtp_log_handle });
     }
+
+    $msg->unset_log_function();
 }
 
 
