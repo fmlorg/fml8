@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.161 2003/03/05 15:47:21 fukachan Exp $
+# $FML: Kernel.pm,v 1.162 2003/03/06 04:17:19 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -983,58 +983,29 @@ sub _check_restrictions
     my $sender = $cred->sender();
     my $rules  = $config->get_as_array_ref( "${type}_restrictions" );
 
-    # XXX-TODO: method()-ify these functions for further enhancement.
+    use FML::Restriction::Post;
+    my $acl = new FML::Restriction::Post $curproc;
+
+    my ($match, $result) = (0, 0);
     for my $rule (@$rules) {
-	if ($rule eq 'reject_system_accounts') {
-	    my $match = $cred->match_system_accounts($sender);
-	    if ($match) {
-		Log("${rule}: $match matches sender address");
-		$pcb->set("check_restrictions", "deny_reason", $rule);
-		return 0;
-	    }
-	}
-	elsif ($rule eq 'permit_anyone') {
-		return 1;
-	}
-	elsif ($rule eq 'permit_member_maps') {
-	    # Q: the mail sender is a ML member?
-	    if ($cred->is_member($sender)) {
-		# A: Yes, we permit to distribute this article.
-		return 1;
-	    }
-	    else {
-		# A: No, deny distribution
-		LogError("$sender is not an ML member");
-		LogError( $cred->error() );
-
-		# reply this info in each FML::Process::* module.
-		# $curproc->reply_message_nl('error.not_member',
-		#			   "you are not a ML member." );
-		# $curproc->reply_message( "   your address: $sender" );
-
-		$pcb->set("check_restrictions", "deny_reason", $rule);
-		return 0;
-	    }
-	}
-	elsif ($rule eq 'permit_commands_for_stranger') {
-	    use FML::Command::DataCheck;
-	    my $check = new FML::Command::DataCheck;
-	    if ($check->find_commands_for_stranger($curproc)) {
-		Log("$rule matched. accepted.");
-		return 1;
-	    }
-	}
-	elsif ($rule eq 'reject') {
-	    $pcb->set("check_restrictions", "deny_reason", $rule);
-	    return 0;
+	if ($acl->can($rule)) {
+	    # match  = matched. return as soon as possible from here.
+	    #          ASAP or RETRY the next rule, depends on the rule. 
+	    # result = action determined by matched rule.
+	    ($match, $result) = $acl->$rule($rule, $sender);
 	}
 	else {
+	    ($match, $result) = (0, undef);
 	    LogWarn("unknown rule=$rule");
+	}
+
+	if ($match) {
+	    Log("match rule=$rule sender=$sender");
+	    return($result eq "permit" ? 1 : 0);
 	}
     }
 
-    # deny by default
-    return 0;
+    return 0; # deny by default
 }
 
 
