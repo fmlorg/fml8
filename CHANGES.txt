@@ -1,6 +1,34 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/03/17
+
+   chaddr コマンドが動くようになった！
+		chaddr
+		admin chaddr
+		makefml chaddr 
+	この３つ全部です。
+	
+   FML::Command::User::chaddr 
+	works again!
+	if either old or new addresses in chaddr arguments is an ML member,
+	try to confirm this request irrespective of "From:" address.
+	
+   FML::Command::Admin::subscribe unsubscribe.pm 
+   FML::Command::User::chaddr confirm.pm 
+	change $command_args argument:
+	$command_args->{ adddress } =>  $command_args->{ command_data }
+
+   FML::Process::Kernel 
+	reply_message::append \n to message if \n$ is missing
+
+	reconstruct message queue subsystem internal.
+	we can handle output styles for message queue input properly.
+
+	メッセージキューイングシステム再構築
+	受信者ベースでのまとめあげ処理などを正しく処理する
+	XXX これで chaddr コマンドが書けます。
+
 2002/03/16
 
    FML::Process::Kernel 
@@ -1651,4 +1679,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.54 2002/02/24 20:35:04 fukachan Exp $
+$FML: CHANGES.txt,v 1.55 2002/03/16 10:54:41 fukachan Exp $
