@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.19 2002/08/17 23:27:33 fukachan Exp $
+# $FML: SendFile.pm,v 1.20 2002/08/19 13:58:43 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -96,7 +96,7 @@ sub send_article
     }
 
     if ($is_error) {
-	$curproc->reply_message_nl('command.get.invalid.args',
+	$curproc->reply_message_nl('command.get_invalid_args',
 				   "invalid argument");
 	croak("send_article() fails");
     }
