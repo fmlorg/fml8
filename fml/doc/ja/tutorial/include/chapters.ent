@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.50 2002/09/15 01:45:39 fukachan Exp $
+	$FML: chapters.ent,v 1.51 2002/09/15 02:11:24 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -7,8 +7,8 @@
 <!-- ポインタ -->
 <!entity fmlbible    "『fml バイブル』(オライリージャパン刊)">
 <!entity www.fml.org "http://www.fml.org/software/fml/">
-<!entity fml4        "fml 4.0">
-<!entity fmldevel    "fml-devel">
+<!entity fml4        "fml 4">
+<!entity fmldevel    "fml 8">
 
 
 <!-- 画像 -->
@@ -93,6 +93,8 @@
 <!entity chapter.dbms             SYSTEM "internals/dbms.sgml">
 <!entity chapter.hook             SYSTEM "internals/hook.sgml">
 <!entity chapter.policy           SYSTEM "policy.sgml">
+
+<!entity chapter.filename         SYSTEM "internals/filename.sgml">
 
 
 <!-- 配送 -->
