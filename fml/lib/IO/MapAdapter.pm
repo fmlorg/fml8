@@ -98,6 +98,11 @@ sub new
     elsif ( ref($map) eq 'ARRAY' ) {
 	$me->{_type}            = 'array_reference';
 	$me->{_array_reference} = $map;
+
+	my $pkg = 'IO::Adapter::Array';
+	unshift(@ISA, $pkg);
+	eval qq{ require $pkg; $pkg->import();};
+	_error_reason($me, $@) if $@;
     }
     else {
 	if ($map =~ /file:(\S+)/ || $map =~ m@^(/\S+)@) {
@@ -107,6 +112,11 @@ sub new
 	elsif ($map =~ /unix\.group:(\S+)/) {
 	    $me->{_name} = $1;
 	    $me->{_type} = 'unix.group';
+
+	    my $pkg = 'IO::Adapter::Array';
+	    unshift(@ISA, $pkg);
+	    eval qq{ require $pkg; $pkg->import();};
+	    _error_reason($me, $@) if $@;
 	}
 	elsif ($map =~ /(ldap|mysql|postgresql):(\S+)/) {
 	    $me->{_type}   = $1;
@@ -174,26 +184,15 @@ sub open
     elsif ($self->{'_type'} eq 'unix.group') {
 	my (@x)       = getgrnam( $self->{_name} );
 	my (@members) = split ' ', $x[3];
-	$self->{_members}     = \@members;
-	$self->{_num_members} = $#members;
-	$self->{_counter}     = 0;
-	return defined @members ? \@members : undef;
+	$self->{_array_reference} = \@members;
+	$self->SUPER::open( { flag => $flag } );
     }
     elsif ($self->{'_type'} eq 'array_on_memory_by_code') {
-	my $r_array = $self->{ _recipients_array_on_memory };
-	my @members = @$r_array;
-	$self->{_members}     = $r_array;
-	$self->{_num_members} = $#members;
-	$self->{_counter}     = 0;
-	return defined @members ? \@members : undef;
+	$self->{_array_reference} = $self->{ _recipients_array_on_memory };
+	$self->SUPER::open( { flag => $flag } );
     }
     elsif ($self->{'_type'} eq 'array_reference') {
-	my $r_array = $self->{ _array_reference};
-	my @members = @$r_array;
-	$self->{_members}     = $r_array;
-	$self->{_num_members} = $#members;
-	$self->{_counter}     = 0;
-	return defined @members ? \@members : undef;
+	$self->SUPER::open( { flag => $flag } );
     }
     elsif ($self->{'_type'} eq 'ldap' ||
 	   $self->{'_type'} eq 'mysql' ||
@@ -247,20 +246,10 @@ sub _get_address
 	}
 	return undef;
     }
-    elsif ($self->{'_type'} eq 'unix.group') {
-	my $i  = $self->{_counter}++;
-	my $ra = $self->{_members};
-	defined $$ra[ $i ] ? $$ra[ $i ] : undef;
-    }
-    elsif ($self->{'_type'} eq 'array_on_memory_by_code') {
-	my $i  = $self->{_counter}++;
-	my $ra = $self->{_members};
-	defined $$ra[ $i ] ? $$ra[ $i ] : undef;
-    }
-    elsif ($self->{'_type'} eq 'array_reference') {
-	my $i  = $self->{_counter}++;
-	my $ra = $self->{_members};
-	defined $$ra[ $i ] ? $$ra[ $i ] : undef;
+    elsif ($self->{'_type'} eq 'unix.group' ||
+	   $self->{'_type'} eq 'array_on_memory_by_code' ||
+	   $self->{'_type'} eq 'array_reference') {
+	$self->SUPER::get_next_value();
     }
     elsif ($self->{'_type'} eq 'ldap' ||
 	   $self->{'_type'} eq 'mysql' ||
@@ -311,14 +300,10 @@ sub getpos
 	my $fh = $self->{_fh};
 	defined $fh ? tell($fh) : undef;
     }
-    elsif ($self->{'_type'} eq 'unix.group') {
-	$self->{_counter};
-    }
-    elsif ($self->{'_type'} eq 'array_on_memory_by_code') {
-	$self->{_counter};
-    }
-    elsif ($self->{'_type'} eq 'array_reference') {
-	$self->{_counter};
+    elsif ($self->{'_type'} eq 'unix.group' ||
+	   $self->{'_type'} eq 'array_on_memory_by_code' ||
+	   $self->{'_type'} eq 'array_reference') {
+	$self->SUPER::getpos();
     }
     else {
 	$self->_error_reason("Error: type=$self->{_type} is unknown type.");
@@ -334,14 +319,10 @@ sub setpos
 	my $fh = $self->{_fh};
 	seek($fh, $pos, 0);
     }
-    elsif ($self->{'_type'} eq 'unix.group') {
-	$self->{_counter} = $pos;
-    }
-    elsif ($self->{'_type'} eq 'array_on_memory_by_code') {
-	$self->{_counter} = $pos;
-    }
-    elsif ($self->{'_type'} eq 'array_reference') {
-	$self->{_counter} = $pos;
+    elsif ($self->{'_type'} eq 'unix.group' ||
+	   $self->{'_type'} eq 'array_on_memory_by_code' ||
+	   $self->{'_type'} eq 'array_reference') {
+	$self->SUPER::getpos($pos);
     }
     else {
 	$self->_error_reason("Error: type=$self->{_type} is unknown type.");
@@ -357,14 +338,10 @@ sub eof
 	my $fh = $self->{_fh};
 	$fh->eof if defined $fh;
     }
-    elsif ($self->{'_type'} eq 'unix.group') {
-	$self->{_counter} > $self->{_num_members} ? 1 : 0;
-    }
-    elsif ($self->{'_type'} eq 'array_on_memory_by_code') {
-	$self->{_counter} > $self->{_num_members} ? 1 : 0;
-    }
-    elsif ($self->{'_type'} eq 'array_reference') {
-	$self->{_counter} > $self->{_num_members} ? 1 : 0;
+    elsif ($self->{'_type'} eq 'unix.group' ||
+	   $self->{'_type'} eq 'array_on_memory_by_code' ||
+	   $self->{'_type'} eq 'array_reference') {
+	$self->SUPER::eof();
     }
     else {
 	$self->_error_reason("Error: type=$self->{_type} is unknown type.");
@@ -379,13 +356,9 @@ sub close
     if ($self->{'_type'} eq 'file') {
 	$self->{_fh}->close if defined $self->{_fh};
     }
-    elsif ($self->{'_type'} eq 'unix.group') {
-	;
-    }
-    elsif ($self->{'_type'} eq 'array_on_memory_by_code') {
-	;
-    }
-    elsif ($self->{'_type'} eq 'array_reference') {
+    elsif ($self->{'_type'} eq 'unix.group' ||
+	   $self->{'_type'} eq 'array_on_memory_by_code' ||
+	   $self->{'_type'} eq 'array_reference') {
 	;
     }
     else {
