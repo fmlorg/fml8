@@ -400,7 +400,7 @@ sub _print_messsage_on_memory
     }
 
     # 2. print content body: write each line in buffer
-    my ($p, $len, $buf, $pbuf, $pe);
+    my ($p, $len, $buf, $pbuf);
   SMTP_IO:
     while (1) {
 	$p = index($$r_body, "\n", $pp);
@@ -408,8 +408,10 @@ sub _print_messsage_on_memory
 
 	$len = $p - $pp + 1;
 	$len = ($p < 0 ? ($maxlen - $pp) : $len);
-	$pe  = $pp + $len;
 	$buf = substr($$r_body, $pp, $len);
+
+	# do nothing, get away from here 
+	last SMTP_IO if $len == 0;
 
 	unless (defined $raw_print_mode) {
 	    # fix \n -> \r\n in the end of the line
