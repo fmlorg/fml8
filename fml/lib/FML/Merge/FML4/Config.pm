@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.8 2004/01/01 07:29:27 fukachan Exp $
+# $FML: Config.pm,v 1.1.1.1 2004/03/16 12:58:21 fukachan Exp $
 #
 
 package FML::Merge::FML4::Config;
@@ -165,6 +165,25 @@ my $ml_home_dir_backup_target_files = {
 
 
     # 
+    # log et.al.
+    # 
+    'summary' => {
+	'backup_mode' => 'copy',
+	'continue'    => 'yes',
+    },
+
+    'seq' => {
+	'backup_mode' => 'copy',
+	'continue'    => 'yes',
+    },
+
+    'log' => {
+	'backup_mode' => 'copy',
+	'continue'    => 'yes',
+    },
+
+
+    # 
     # misc
     # 
     'Makefile' => {
@@ -218,6 +237,26 @@ sub get_old_list_files
     for my $f (keys %$ml_home_dir_backup_target_files) {
 	my $type = $ml_home_dir_backup_target_files->{ $f }->{ type } || '';
 	if ($type eq 'list') {
+	    push(@files, $f);
+	}
+    }
+
+    return \@files
+}
+
+
+# Descriptions: return list of files we use continuously.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub get_continuous_use_files
+{
+    my ($self)  = @_;
+    my (@files) = ();
+
+    for my $f (keys %$ml_home_dir_backup_target_files) {
+	my $cnt = $ml_home_dir_backup_target_files->{ $f }->{ continue } || '';
+	if ($cnt eq 'yes') {
 	    push(@files, $f);
 	}
     }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Merge.pm,v 1.4 2004/03/17 06:08:23 fukachan Exp $
+# $FML: Merge.pm,v 1.5 2004/03/17 08:38:31 fukachan Exp $
 #
 
 package FML::Merge;
@@ -114,6 +114,16 @@ sub backup_old_config_files
 		print STDERR "error:   unknown mode (DO NOTHING).\n";
 	    }
 	}
+    }
+
+    # continuous use: summary, log, seq ...
+    my $cont_files = $config->get_continuous_use_files();
+    for my $f (@$cont_files) {
+	my $src  = $self->backup_file_path($f);
+	my $dst  = $self->new_file_path($f);
+	printf STDERR "copying: %-30s -> %-30s\n", $src, $dst;
+	use IO::Adapter::AtomicFile;
+        IO::Adapter::AtomicFile->copy($src, $dst);	
     }
 }
 
