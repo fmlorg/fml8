@@ -266,11 +266,6 @@ III部　fmlのカスタマイズ
 		ファイル名は /etc/fml/mime_component_filter
 		デフォルト値は  /etc/fml/mime_component_filter
 
-	[TOOD] 入力サイズ制限
-
-		header_size_limit = 102400
-		message_size_limit = 10240000
-
 	[TODO] 統計をとりたい(どのルールにどのくらい引っかかったか？)
 		
 	[TODO] 統計を見せるコマンド（必要？）
@@ -447,4 +442,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.26 2003/02/18 12:40:29 fukachan Exp $
+$FML: STATUS.txt,v 1.27 2003/03/02 16:38:46 fukachan Exp $
