@@ -1,0 +1,124 @@
+			IMGET マニュアル
+
+
+オプション:
+
+	--help=<sw>	on: ヘルプメッセージを表示する。
+	--quiet=<sw>	on: get した総メッセージ数などの情報を表示しない。
+	--verbose=<sw>	on: 処理に関するさまざまな情報を表示する。
+	--debug=<sw>	on: デバッグメッセージを表示する。
+	--noscan=<sw>	on: get の際に scan 表示を行わない。
+	--scaninboxonly=<sw>
+			on: InboxFolder と --dst に指定された格納先フォルダが
+			    等しい場合にのみ scan 表示を行う
+	--form=<string> scan 表示用のフォーマットを記述する。
+	--jissafe=<sw>	on: scan 表示のフォーマット処理の際に、ISO-2022-JP
+			    等のエスケープシーケンスを考慮する。
+	--width=<num>	scan 表示の際の一行の幅を指定する。
+	--lock=<string>	ローカルのメールボックス(ファイル)から get する際に
+			行う排他制御(ロック)の方式を指定する。
+			none:  ロックを行わない。
+			flock: flock() によるロックを行う。
+			file:  mailbox というファイルを扱う際に、そのファイル
+			       が置かれているディレクトリに mailbox.lock と
+			       いうロックファイルを作成する。
+			flock と file を併用する場合は、flock+file などの
+			ように指定する。
+	--rpath=<string>UNIX From 行を Return-Path: に変化する方法を指定する。
+			ignore:  UNIX From 行の情報は捨てる
+			append:  UNIX From 行の情報を Return-Path: として残す
+			replace: 既存の Return-Path: を削除して append
+	--keep=<num>	get した後のメールの扱いについて指定する。
+			-1: get した後も削除しない。
+			 0: get の後ただちに削除する。
+			 n: get した後、n 日経過してから削除する(POPのみ)。
+			    n は、get した時点から起算するものであり、
+			    メッセージの発信時間とは関係ない。
+			    ただし、POP を使用する場合でも、--protokeep の
+			    設定により機能しない場合がある。
+	--protokeep=<string>
+			POP において、メッセージをすぐに削除せず、サーバに
+			保存しておく場合に、既読のメッセージと未読の
+			メッセージを識別する方法を指定する。
+			UIDL: popd が UIDL コマンドを受理し、popd 側で一意な
+			      メッセージ識別子を付与することができる場合に
+			      指定する。複数のクライアントから同じメールを
+			      取り込みたい場合に有効。
+			LAST: popd が保存する最近アクセスしたメッセージを
+			      LAST コマンドで知り、その後に到着したメッセー
+			      ジのみを get する。これを指定した場合、日数
+			      指定によるメッセージの削除はサポートされない。
+			      また、複数のクライアントからは同じメールを
+			      取り込むことは困難である。
+			STATUS: メッセージのヘッダの Status: 行によって、
+			      未読・既読の判別を行う方法を利用する。日数指定
+			      によるメッセージの削除は、Message-Id: 行の
+			      情報によって行う。複数のクライアントからは同じ
+			      メールを取り込むことは困難である。
+			MSGID: メッセージのヘッダの Message-Id: 行によって、
+			      未読・既読の判別を行う方法を利用する。複数の
+			      クライアントから同じメッセージを取り込むことも
+			      可能。ただし、同一メッセージIDのメッセージが
+			      複数サーバに存在している場合は、最初にアクセス
+			      したメッセージのみしか get できないことに注意。
+	--count=<num>	ニュースから一度に取り込むメッセージの数の上限を指定
+			する。
+	--src=<string>	メッセージを取り込む元やプロトコルを指定する。
+			プロトコルとしては次の4つがサポートされている。
+			local	ローカルのファイルから get する。
+				<string> への指定の形式は、local[:file]。
+				[] は、その中の記述が省略できることを示す。
+				省略した場合は、/var/mail/${USER} などを
+				自動的にサーチする。
+				file として扱える形式は、以下の3つ。
+				・MHのフォルダ形式(ディレクトリの中に、複数の
+				  メッセージがファイル毎に分離され、連番の
+				  ファイル名がついたもの)
+				  この場合、file にはディレクトリを指定する。
+				・UNIXのmailbox形式ファイル
+				・MMDF形式ファイル(^A^A^A^A で始まる)
+				これらは自動判別される。
+			pop	POP を用いて get する。
+				<string> への指定の形式は、
+					pop[/auth][:user][@host[/port]]
+				[] は、その中の記述が省略できることを示す。
+				auth には、POP, APOP, RPOP のうちのいずれかを
+				指定する。デフォルトは APOP。
+				RPOP を使用する場合は、imget を SetUID root
+				としてインストールしておく必要がある。
+				configure で --enable-rpop を指定すること。
+			imap	IMAP を用いて get する。
+				<string> への指定の形式は、
+					imap[/auth][:user][@host[/port]]
+				[] は、その中の記述が省略できることを示す。
+				auth には、AUTH, LOGIN のうちのいずれかを
+				指定する。デフォルトは AUTH。
+			nntp	NNTP を用いて get する。
+				<string> への指定の形式は、
+					nntp:group[@host]
+				[] は、その中の記述が省略できることを示す。
+			いずれの場合も、user を省略した場合は、クライアント
+			で使用中の login 名、host を省略した場合は localhost
+			が仮定される。また、Config ファイルにて
+				PopAccount=/POP:user@server
+				ImapAccount=/LOGIN:user@server
+				NntpServers=server1
+			のようにデフォルトを指定しておくこともできる。
+			これらにはさらに「%ローカルポート」を付加できる。
+			この場合 SSH ポート転送機能を利用する。
+			これらの POP, IMAP に関するデフォルトは、--src に
+			pop あるいは imap とのみ記述した場合に参照され、
+			オプションを一つでも続けて指定した場合は無視される。
+	--dst=<string>	get 先のフォルダを指定する。
+			省略時のデフォルトは Config の InboxFolder に従う。
+	--mode=<string>	imget の動作を指定する。
+			get:   新着メッセージをフォルダに取り込む。
+			from:  新着メッセージの From: 行を表示する。
+			check: 新着メッセージの有無を確認する。
+	--assoc=<string> 一回の起動で複数の取り込み処理を行いたい場合に
+			指定する。区切りには ; を用いる。例:
+			=mail=nntp:fj.mail.system.sendmail;=mail=nntp:fj.mail
+	--ignorepostpet=<sw> PostPet クライアントが受信すべきメールを get せ
+			ず、サーバ側のメールボックスに残します。POP を利用し
+			ている場合にのみ意味を持ちます。
+	 --SSHServer=<string> 指定されたホストを SSH 中継サーバとして利用する。

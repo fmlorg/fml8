@@ -1,0 +1,315 @@
+#! @im_path_perl@
+################################################################
+###
+###				 imjoin
+###
+### Author:  Internet Message Group <img@mew.org>
+### Created: May  5, 1997
+### Revised: Feb 28, 2000
+###
+
+BEGIN {
+    @im_my_siteperl@
+    @im_src_siteperl@
+};
+
+my $VERSION = "imjoin version 20000228(IM140)";
+
+$Prog = 'imjoin';
+
+##
+## Require packages
+##
+
+use IM::MsgStore qw(store_message);
+use IM::Config;
+use IM::Util;
+use integer;
+use strict;
+use vars qw($Prog $EXPLANATION @EnvConfig @OptConfig $opt_noscan
+	    $opt_src $opt_dst $opt_verbose $opt_debug $opt_help);
+
+##
+## Environments
+##
+
+$EXPLANATION = "
+imjoin :: Join Message/partial Messages
+$VERSION
+
+Usage: imjoin [options] msg
+";
+
+@OptConfig = (
+	      'src;f;;'     => "Folder.",
+	      'dst;s;+inbox;' => "Folder.",
+	      'verbose;b;;' => 'With verbose messages.',
+	      'debug;d;;'   => "With debug message.",
+	      'help;b;;'    => "Show this message.",
+	      );
+
+##
+## Profile and option processing
+##
+
+init_opt(\@OptConfig);
+read_env(\@EnvConfig);
+read_cfg();
+read_opt(\@ARGV); # help?
+help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
+
+debug_option($opt_debug) if $opt_debug;
+
+##
+## Main
+##
+
+my @msgs = @ARGV;
+my $msg = $msgs[0];
+
+my @Message = join_msg(@msgs);
+
+if ($opt_dst eq "stdout") {
+    print join('', @Message);
+} else {
+    store_message(\@Message, $opt_dst, 1);
+}
+
+exit $EXIT_SUCCESS;
+
+sub join_msg ($) {
+    my @msgs = @_;
+    my @paths;
+    my @index;
+    my @Message;
+    local $_;
+
+    if ($#msgs == 0) {
+	# search partial messages using history_db
+	@paths = get_paths("$opt_src/$msgs[0]");
+    } else {
+	# all partial message is specified by command line
+	require IM::Folder && import IM::Folder qw(message_name);
+	my $msg;
+	foreach $msg (@msgs) {
+	    if ($msg =~ /^\//) {
+		push(@paths, $msg);
+	    } elsif ($msg =~ /(.*)\/(\d+)/) {
+		push(@paths, message_name($1, $2));
+	    } else {
+		push(@paths, message_name($opt_src, $msg));
+	    }
+	}
+    }
+
+    # sort each part number on each part
+    my $total = 0;
+    my ($path, $header);
+    foreach $path (@paths) {
+	if (im_open(\*MSG, "<$path")) {
+	    $/ = "\n\n";
+	    $header = <MSG>;
+	    $/ = "\n";
+	    close(MSG);
+	}
+
+	$header =~ s/\n\s+//g;
+	$header =~ s/[ \t]+//g;
+	$header =~ s/\n/;\n/g;
+	$header = "\n$header;\n";
+
+	my $number = 0;
+	my $this_total = 0;
+	if ($header =~ /\nContent-Type:Message\/partial(;[^\n]+)\n/i) {
+	    my $rest = $1;
+	    if ($rest =~ /;number=(\d+);/i) {
+		$number = $1;
+	    }
+	    if ($rest =~ /;total=(\d+);/i) {
+		$this_total = $1;
+	    }
+	}
+	if ($number == 0 || $this_total == 0) {
+	    im_warn("$_: not a partial message, skipping.\n");
+	    next;
+	}
+	if ($total) {
+	    if ($total != $this_total) {
+		im_warn("$_: total of partial messages mismatch, skipping.\n");
+		next;
+	    }
+	} else {
+	    $total = $this_total;
+	}
+	$index[$number] = $path;
+	im_notice("$path is part $number.\n");
+    }   
+
+    # check existance of all partial messages
+    my $missing = 0;
+    my $i;
+    for ($i = 1; $i <= $#index; $i++) {
+	if ($index[$i] eq '') {
+	    im_err("part $i is missing.\n");
+	    exit $EXIT_SUCCESS;
+	}
+    }
+
+    # show in sequence
+    for ($i = 1; $i <= $#index; $i++) {
+	if (im_open(\*MSG, "<$index[$i]")) {
+	    $/ = "\n\n";
+	    if ($i == 1) {		# first partial message
+		my $header = <MSG>;	# header of enclosing message
+		my $skip = 0;
+		foreach (split("\n", $header)) {
+		    next if (/^[ \t]/ && $skip);
+		    $skip = 0;
+		    if (/^(Content|Message-ID|Subject|Encrypted|MIME-Version)/i) {
+			$skip = 1;
+			next;
+		    }
+		    last if (/^$/);
+		    push (@Message, "$_\n");
+		}
+		$header = <MSG>;
+		$skip = 0;
+		foreach (split("\n", $header)) {
+		    next if (/^[ \t]/ && $skip);
+		    $skip = 0;
+		    unless (/^(Content-|Subject|Message-ID|Encrypted|MIME-Version)/i || /^[ \t]/) {
+			$skip = 1;
+			next;
+		    }
+		    last if (/^$/);
+		    push (@Message, "$_\n");
+		}
+		push (@Message, "\n");
+	    } else {
+		# skip header part
+		<MSG>;
+	    }
+	    $/ = "\n";
+	    while (<MSG>) {
+		push(@Message, $_);
+	    }
+	    close(MSG);
+	}
+    }
+
+    return @Message;
+}
+
+sub get_paths ($) {
+    my $msg = shift;
+    my $path;
+    local $_;
+
+    unless (msgdbfile()) {
+	im_die("need history database to join by one message.\n");
+	exit $EXIT_ERROR;
+    }
+
+    require IM::History;
+    import IM::History qw(history_open history_lookup history_close);
+
+    # get master Message-ID
+    my $header = '';
+    if ($msg =~ /^\+/) {
+	$path = &expand_path($msg);
+    } else {
+	$path = $msg;
+    }
+
+    if (im_open(\*MSG, "<$path")) {
+	$/ = "\n\n";
+	$header = <MSG>;
+	$/ = "\n";
+	close(MSG);
+    }
+
+    if ($header eq '') {
+	im_err("specified message is not found at $path.\n");
+	exit $EXIT_ERROR;
+    }
+
+    $header =~ s/\n\s+//g;
+    $header =~ s/[ \t]+//g;
+    $header =~ s/\n/;\n/g;
+    $header = "\n$header";
+
+    my $master = '';
+
+    if ($header =~ m|\nContent-Type:Message/partial;(.*;)?id=([^;]+);|i) {
+	$master = $2;
+	$master =~ s/^"(.*)"$/$1/;
+    } else {
+	im_err("specified message is not a partial.\n");
+	exit $EXIT_ERROR;
+    }
+
+    im_notice("Master Message-ID: $master.\n");
+
+    # get Message-IDs of partial
+    if (history_open(0) < 0) {
+	im_err("can not open history.\n");
+	exit $EXIT_ERROR;
+    }
+    my $ids = history_lookup("partial:$master", 'LookUpMsg');
+    if ($ids eq '') {
+	im_err("information on partial messages is not found in history.\n");
+	exit $EXIT_ERROR;
+    }
+    im_notice("partial Message-IDs: $ids.\n");
+
+    # get path and part number on each part
+    my @paths;
+    foreach (split(',', $ids)) {
+	my $locate = history_lookup($_, 'LookUpMsg');
+	if ($locate eq '') {
+	    im_warn("message $_ not found, skipping.\n");
+	    next;
+	}
+	my $path = &expand_path($locate);
+	if ($path eq '') {
+	    im_warn("no path for message $locate, skipping.\n");
+	    next;
+	}
+	push(@paths, $path);
+    }
+    history_close();
+
+    return @paths;
+}
+
+### Copyright (C) 1997, 1998, 1999 IM developing team
+### All rights reserved.
+### 
+### Redistribution and use in source and binary forms, with or without
+### modification, are permitted provided that the following conditions
+### are met:
+### 
+### 1. Redistributions of source code must retain the above copyright
+###    notice, this list of conditions and the following disclaimer.
+### 2. Redistributions in binary form must reproduce the above copyright
+###    notice, this list of conditions and the following disclaimer in the
+###    documentation and/or other materials provided with the distribution.
+### 3. Neither the name of the team nor the names of its contributors
+###    may be used to endorse or promote products derived from this software
+###    without specific prior written permission.
+### 
+### THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+### ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+### IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+### PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+### LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+### CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+### SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+### BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+### WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+### OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+### IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### Local Variables:
+### mode: perl
+### End:

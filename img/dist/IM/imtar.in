@@ -1,0 +1,150 @@
+#! @im_path_perl@
+################################################################
+###
+###				imtar
+###
+### Author:  Internet Message Group <img@mew.org>
+### Created: Apr 08, 1998
+### Revised: Feb 28, 2000
+###
+
+BEGIN {
+    @im_my_siteperl@
+    @im_src_siteperl@
+};
+
+my $VERSION = "imtar version 20000228(IM140)";
+
+$Prog = 'imtar';
+
+##
+## Require packages
+##
+
+use IM::Config;
+use IM::Folder;
+use IM::Util;
+use integer;
+use strict;
+use vars qw($Prog $EXPLANATION @OptConfig
+	    $opt_src $opt_dst $opt_noharm $opt_verbose $opt_debug $opt_help);
+
+##
+## Environments
+##
+
+$EXPLANATION = "
+$Prog :: compress folder into a single file.
+$VERSION
+
+usage: $Prog [options] [+folder] [msg(s)]
+";
+
+@OptConfig =(
+    'src;F;;'     => "Set source folder.",
+    'dst;s;./msgbox;' => "Destination MMDF file.",
+    'noharm;b;;'  => "No operation. Show what will happen.",
+    'verbose;b;;' => 'With verbose messages.',
+    'debug;d;;'   => "With debug message.",
+    'help;b;;'    => "Show this message.",
+    );
+
+##
+## Profile and option processing
+##
+
+init_opt(\@OptConfig);
+read_cfg();
+read_opt(\@ARGV); # help?
+help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
+
+debug_option($opt_debug) if $opt_debug;
+
+##
+## Main
+##
+
+
+my @msgs = @ARGV;
+@msgs = ('all') if (!@ARGV);
+
+$opt_dst = "stdout" if ($opt_noharm);
+
+make_mmdf($opt_src, $opt_dst, \@msgs);
+exit $EXIT_SUCCESS;
+
+##################################################
+##
+## Work horse
+##
+sub make_mmdf ($$$) {
+    my ($src, $dst, $msgs) = @_;
+    my $msg;
+    my @msg_paths;
+
+    @msg_paths = get_impath($src, @{$msgs});
+#   im_notice("\@msg_paths=\"@msg_paths\"\n");
+    im_die("no message.\n") if (@msg_paths == "");
+
+    if ($dst eq "stdout") {
+        binmode(STDOUT);
+    } else {
+        if (im_open(\*MMDF,">>$dst")) {
+            select MMDF;   # xxx
+        } else {
+            im_die("cannot open $dst\n");
+        }
+    }
+    foreach (@msg_paths){
+        $msg = $_;
+        im_notice("source file: \"$msg\"\n");
+        &open_msg($msg);
+    }
+    close(MMDF) if ($dst ne "stdout");
+    print STDERR "done\n" unless $opt_noharm;
+}
+
+sub open_msg ($) {
+    my $msg = $_;
+    my $mmdf_delimiter="\001\001\001\001";
+    if (im_open(\*ART, "<$msg")) {
+        print "$mmdf_delimiter\n";
+        print while(<ART>);
+        print "$mmdf_delimiter\n";
+        close(ART);
+    } else {
+        im_die("cannot open $msg\n");
+    }
+}
+
+### Copyright (C) 1997, 1998, 1999 IM developing team
+### All rights reserved.
+### 
+### Redistribution and use in source and binary forms, with or without
+### modification, are permitted provided that the following conditions
+### are met:
+### 
+### 1. Redistributions of source code must retain the above copyright
+###    notice, this list of conditions and the following disclaimer.
+### 2. Redistributions in binary form must reproduce the above copyright
+###    notice, this list of conditions and the following disclaimer in the
+###    documentation and/or other materials provided with the distribution.
+### 3. Neither the name of the team nor the names of its contributors
+###    may be used to endorse or promote products derived from this software
+###    without specific prior written permission.
+### 
+### THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+### ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+### IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+### PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+### LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+### CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+### SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+### BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+### WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+### OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+### IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### Local Variables:
+### mode: perl
+### End:

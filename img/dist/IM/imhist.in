@@ -1,0 +1,230 @@
+#! @im_path_perl@
+################################################################
+###
+###				 imhist
+###
+### Author:  Internet Message Group <img@mew.org>
+### Created: Jul  6, 1997
+### Revised: Feb 28, 2000
+###
+
+BEGIN {
+    @im_my_siteperl@
+    @im_src_siteperl@
+};
+
+my $VERSION = "imhist version 20000228(IM140)";
+
+$Prog = 'imhist';
+
+##
+## Require packages
+##
+
+use IM::Config;
+use IM::Address;
+use IM::History;
+use IM::Message;
+use IM::Util;
+use integer;
+use strict;
+use vars qw($Prog $EXPLANATION @OptConfig
+	    @Hdr
+	    $opt_lookup $opt_remove $opt_msg $opt_dump $opt_add
+	    $opt_subfolders $opt_verbose $opt_debug $opt_help);
+
+##
+## Environments
+##
+
+$EXPLANATION = "
+imhist :: Manage History Database
+$VERSION
+
+Usage: imhist [options]
+";
+
+@OptConfig = (
+    'lookup;s;;'     => 'Look up an entry for specified message-id.',
+    'remove;s;;'     => 'Remove whole information on specified message-id.',
+    'msg;s;;'        => 'Message to be deleted if multiple in database.',
+    'dump;b;;'       => 'Dump database just for debugging.',
+    'add;f;;'        => 'Add information of messages in a specified folder.',
+    'subfolders;b;;' => 'Descend sub folders recursively (option for --add).',
+    'verbose;b;;'    => 'With verbose messages.',
+    'debug;d;;'      => "With debug message.",
+    'help;b;;'       => "Show this message.",
+    );
+
+##
+## Profile and option processing
+##
+
+init_opt(\@OptConfig);
+read_cfg();
+read_opt(\@ARGV); # help?
+help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
+
+debug_option($opt_debug) if $opt_debug;
+
+##
+## Main
+##
+
+if (msgdbfile() eq '') {
+    im_die("MsgDBFile is not defined.\n");
+}
+if ($opt_lookup ne '') {
+    exit $EXIT_ERROR if (history_open(1) < 0);
+#   unless ($opt_lookup =~ /^<.*>$/) {
+#	im_warn("Message-ID should be surrounded by <>.\n");
+#	exit $EXIT_ERROR;
+#   }
+    my $msg = history_lookup($opt_lookup, LookUpMsg);
+    if ($msg eq '') {
+	im_info("no entry found for $opt_lookup\n");
+	exit $EXIT_ERROR;
+    } else {
+	print $msg . "\n";
+    }
+    history_close();
+} elsif ($opt_remove ne '') {
+    exit $EXIT_ERROR if (history_open(1) < 0);
+#   unless ($opt_lookup =~ /^<.*>$/) {
+#	im_warn("Message-ID should be surrounded by <>.\n");
+#	exit $EXIT_ERROR;
+#   }
+    my $num = history_delete($opt_remove, $opt_msg);
+    if ($num < 0) {
+	im_warn("no entry found for $opt_remove\n");
+	exit $EXIT_ERROR;
+    }
+    if ($opt_msg ne '' && $num > 0) {
+	im_info("message $opt_msg for $opt_remove deleted\n");
+    } else {
+	im_info("entry for $opt_remove deleted\n");
+    }
+    history_close();
+} elsif ($opt_dump) {
+    exit $EXIT_ERROR if (history_open(0) < 0);
+    history_dump();
+    history_close();
+} elsif ($opt_add ne '') {
+    my $p = expand_path($opt_add);
+    if (-f $p) {
+	# single file
+	if (history_open(1) < 0) {
+	    exit $EXIT_ERROR;
+	}
+	add_msg_info($p, $opt_add);
+	history_close();
+    } elsif (-d $p) {
+	# folder
+	if (history_open(1) < 0) {
+	    exit $EXIT_ERROR;
+	}
+	add_folder_info($p, $opt_add);
+	history_close();
+    } else {
+	im_warn("no message found to add.\n");
+	exit $EXIT_ERROR;
+    }
+} else {
+    im_warn("no option specified.\n");
+    exit $EXIT_ERROR;
+}
+
+exit $EXIT_SUCCESS;
+
+sub add_msg_info ($$) {
+    my ($path, $msg) = @_;
+    local (@Hdr) = ();
+    if (im_open(\*MSG, "<$path")) {
+	&read_header(\*MSG, \@Hdr, 0);
+	my $mid = &header_value(\@Hdr, 'Message-ID');
+#	my $dt = &header_value(\@Hdr, 'Date');
+	my $ver = &extract_addr(&header_value(\@Hdr, 'Mime-Version'));
+	$ver =~ s/\s//g;
+	my $master = '';
+	if ($ver eq '1.0') {
+	    my $ct = &header_value(\@Hdr, 'Content-Type') . ';';
+	    $ct =~ s/\s//g;
+	    if ($ct =~ m|^Message/partial;(.*;)?id=([^;]+);|i) {
+		$master = $2;
+		$master =~ s/^"(.*)"$/$1/;
+	    }
+	}
+	if ($mid ne '') {
+	    history_store($mid, $msg);
+	    history_store("partial:$master", $mid) if ($master ne '');
+	}
+	close (MSG);
+	return 0;
+    }
+    return -1;
+}
+
+sub add_folder_info ($$) {
+    my ($dir, $folder) = @_;
+    $dir =~ s|/$||;
+    im_info("Entering folder $dir\n");
+    chdir ($dir);
+    unless (opendir(FOLDER, $dir)) {
+	im_warn("can't read $dir\n");
+	return -1;
+    }
+    my @lower = ();
+    my $f;
+    foreach $f (readdir(FOLDER)) {
+	if ($f eq '.' || $f eq '..') {
+	} elsif ($f =~ /^\d+$/ && -f $f) {
+	    print(" $f\n");
+	    add_msg_info($f, "$folder/$f");
+	} elsif (-d $f) {
+	    push(@lower, $f);
+	}
+    }
+    closedir(FOLDER);
+    if($opt_subfolders eq '1'){
+	my $l;
+	foreach $l (@lower) {
+	    if ($folder eq '+') {
+		add_folder_info("$dir/$l", "+$l");
+	    } else {
+		add_folder_info("$dir/$l", "$folder/$l");
+	    }
+	}
+    }
+}
+
+### Copyright (C) 1997, 1998, 1999 IM developing team
+### All rights reserved.
+### 
+### Redistribution and use in source and binary forms, with or without
+### modification, are permitted provided that the following conditions
+### are met:
+### 
+### 1. Redistributions of source code must retain the above copyright
+###    notice, this list of conditions and the following disclaimer.
+### 2. Redistributions in binary form must reproduce the above copyright
+###    notice, this list of conditions and the following disclaimer in the
+###    documentation and/or other materials provided with the distribution.
+### 3. Neither the name of the team nor the names of its contributors
+###    may be used to endorse or promote products derived from this software
+###    without specific prior written permission.
+### 
+### THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+### ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+### IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+### PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+### LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+### CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+### SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+### BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+### WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+### OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+### IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### Local Variables:
+### mode: perl
+### End:

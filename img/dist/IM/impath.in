@@ -1,0 +1,204 @@
+#! @im_path_perl@
+################################################################
+###
+###				  impath
+###
+### Author:  Internet Message Group <img@mew.org>
+### Created: Apr 23, 1997
+### Revised: Feb 28, 2000
+###
+
+BEGIN {
+    @im_my_siteperl@
+    @im_src_siteperl@
+};
+
+my $VERSION = "impath version 20000228(IM140)";
+
+$Prog = 'impath';
+
+##
+## Require packages
+##
+
+use IM::Config;
+use IM::Util;
+use IM::Folder qw(cur_folder get_impath);
+use integer;
+use strict;
+use vars qw($Prog $EXPLANATION @OptConfig
+	    $opt_src $opt_list $opt_path $opt_verbose $opt_debug $opt_help);
+
+##
+## Environments
+##
+
+$EXPLANATION = "
+$Prog :: Internet Message Path
+$VERSION
+
+usage: $Prog [options] [folder]
+";
+
+@OptConfig =(
+    'src;F;;'     => "Set source folder.",
+    'list;b;;'    => "Show list of folders.",
+    'path;b;;'    => "Show important paths.",
+    'verbose;b;;' => 'With verbose messages.',
+    'debug;d;;'   => "With debug message.",
+    'help;b;;'    => "Show this message.",
+   );
+
+##
+## Profile and option processing
+##
+
+init_opt(\@OptConfig);
+read_cfg();
+read_opt(\@ARGV); # help?
+help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
+
+debug_option($opt_debug) if $opt_debug;
+
+##
+## Main
+##
+
+my $FOLDER_ROOT;
+
+my $folder = &cur_folder();
+$folder = $opt_src if (defined $opt_src);
+
+if ($opt_path) {
+    show_path();
+    exit $EXIT_SUCCESS;
+}
+
+if ($opt_list) {
+    if ($folder =~ /^([+=])/) {
+	imfolders($folder, $1);
+	exit $EXIT_SUCCESS;
+    } else {
+	im_die("can't get list for $folder\n");
+    }
+}
+
+my @msgs;
+
+foreach (@ARGV) {
+    if (/^[+=%]/) {
+	$folder = $_;
+    } else {
+	push(@msgs, $_);
+    }
+}
+
+if ($folder =~ /^%/) {
+    require IM::Imap && import IM::Imap qw(imap_folder_regname);
+    print imap_folder_regname($folder), "\n";
+} else {
+    impath($folder, @msgs);
+}
+
+exit $EXIT_SUCCESS;
+
+##################################################
+##
+## Work horse
+##
+
+##
+## --path
+##
+
+sub show_path () {
+    print "MailPath=" . mail_path() . "\n";
+    print "NewsPath=" . news_path() . "\n";
+    print "InboxFolder=" . inbox_folder() . "\n";
+    print "DraftFolder=" . draft_folder() . "\n";
+    print "TrashFolder=" . trash_folder() . "\n";
+    print "AddrBookFile=" . addrbook_file() . "\n";
+    print "AliasFile="    . aliases_file() . "\n";
+    print "PetnameFile="  . petname_file() . "\n";
+    print "QueuePath=" . queue_path() . "\n";
+    print "ImapAccount=" . imapaccount() . "\n";
+    print "ConfigCases=" . config_cases() . "\n";
+    print "ConfigCaseInbox=" . config_case_inbox() . "\n";
+}
+
+##
+## --list
+##
+
+sub imfolders ($$) {
+    my ($folder, $prefix) = @_;
+    $FOLDER_ROOT = get_impath($folder);
+    $FOLDER_ROOT =~ s:/$::;
+    dig_dir($FOLDER_ROOT, $prefix);
+}
+
+sub dig_dir ($$) {
+    my ($abs_dir, $p) = @_;
+    my @direntries;
+    my ($child, $rel_dir);
+
+    opendir(DIR, $abs_dir);
+    @direntries = sort(grep(-d "$abs_dir/$_" && $_ ne '.' && $_ ne '..',
+                            readdir(DIR)));
+    closedir(DIR);
+
+    foreach (@direntries) {
+        $child = $rel_dir = "$abs_dir/$_";
+        $rel_dir =~ s:$FOLDER_ROOT/*::;
+        print "$p$rel_dir\n";
+	dig_dir($child, $p) if win95p() || os2p() || ((stat($child))[3] != 2);
+    }
+}
+
+###
+### do things like mhpath.
+###
+sub impath ($@) {
+    my $folder = shift;
+    my @msgs   = @_;
+
+    my @paths = get_impath($folder, @msgs);
+
+    die $@ if (scalar(@paths) == 0); # XXX
+
+    foreach (@paths) {
+	print "$_\n";
+    }
+}
+
+### Copyright (C) 1997, 1998, 1999 IM developing team
+### All rights reserved.
+### 
+### Redistribution and use in source and binary forms, with or without
+### modification, are permitted provided that the following conditions
+### are met:
+### 
+### 1. Redistributions of source code must retain the above copyright
+###    notice, this list of conditions and the following disclaimer.
+### 2. Redistributions in binary form must reproduce the above copyright
+###    notice, this list of conditions and the following disclaimer in the
+###    documentation and/or other materials provided with the distribution.
+### 3. Neither the name of the team nor the names of its contributors
+###    may be used to endorse or promote products derived from this software
+###    without specific prior written permission.
+### 
+### THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+### ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+### IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+### PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+### LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+### CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+### SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+### BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+### WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+### OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+### IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### Local Variables:
+### mode: perl
+### End:

@@ -1,0 +1,43 @@
+# -*-Perl-*-
+
+# A user customizable subroutine for imget.
+# 'get_sub' is called if "GetSbr=get.sbr" is specified in your "Config".
+# The argments are the folder name, the start of the range, and the end
+# of the range.
+
+%hash = ();
+
+sub get_sub ($$$) {
+    my ($folder, $first, $last) = @_;
+
+    my $dir = expand_path($folder);
+    my ($name, $val);
+
+    open(SEQ, "$dir/.mh_sequences") || return;
+
+    while (<SEQ>) {
+	chomp;
+	($name, $val) = split(': ');
+	$hash{$name} = $val;
+    }
+
+    close(SEQ);
+
+    if (defined($hash{'unseen'})) {
+	if ($first == $last) {
+	    $hash{'unseen'} .= " $first";
+	} else {
+	    $hash{'unseen'} .= " $first-$last";
+	}
+
+	open(SEQ, ">$dir/.mh_sequences");
+
+	foreach (keys %hash) {
+	    print SEQ "$_: $hash{$_}\n";
+	}
+
+	close (SEQ);
+    }
+}
+
+1;

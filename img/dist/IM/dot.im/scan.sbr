@@ -1,0 +1,30 @@
+
+# raw header fields does not have ':' in its name (e.g. $href->{'from'})
+# processed header fields should have ':' in its name (e.g. $href->{'from:'})
+$symbol_table{'x'} = 'anno:';		# can be referenced with %x in Form
+$symbol_table{'{from}'} = 'fromaddr:';	# can be referenced with %{from} in Form
+
+# in case JIS version of substr() is required to handle this field.
+#$NEEDSAFE_HASH{'fromaddr:'} = 1;
+
+# in case definition of $href->{'from:'} is omitted
+# because there is no reference for %f in Form option parameter.
+#$REF_SYMBOL{'from:'} = 1;
+
+sub scan_sub {
+    local ($href) = shift;
+
+    # annotation mark
+    if ($href->{'replied'} ne '') {
+	$href->{'anno:'} = 'R';
+    } elsif ($href->{'forwarded'} ne '') {
+	$href->{'anno:'} = 'F';
+    } elsif ($href->{'resent'} ne '') {
+	$href->{'anno:'} = 'r';
+    } else {
+	$href->{'anno:'} = ' ';
+    }
+
+    # extract pure address portion of sender header address (From:)
+    $href->{'fromaddr:'} = &extract_addr($href->{'from'});
+}

@@ -1,0 +1,77 @@
+			      Perl5 FAQ
+
+			<<<Obtaining Perl5>>>
+
+You can find the latest and greatest release of Perl5 from the
+following CPAN URL, which directs you to the nearest site from you
+maybe:
+
+	http://www.perl.com/CPAN/src/5.0/
+
+			<<<Installing Perl5>>>
+
+(1) Type "./Configure -d" to let "Configure" check your system
+configuration. The "-d" option lets Perl5 choose default values rather
+than asking questions to you. "Configure" creates the "config.sh" file
+as a result.
+
+	% cd _somewhere_perl5_locates_
+	% ./Configure -d
+
+(2) Edit "config.sh" at the final stage of "Configure" using shell escape.
+
+	e.g.	!vi config.sh
+
+If you want to use RPOP, "sperl" is required. To gain "sperl", ensure
+that "d_dosuid" is 'defined' in "config.sh".
+
+	e.g.	d_dosuid='define'
+
+Unfortunately dynamic loading doesn't work on some OSes. In this case, 
+ensure that Perl5 uses static loading instead.
+
+	e.g.	dynamic_ext=''
+		static_ext='DB_File Fcntl IO NDBM_File Opcode POSIX SDBM_File Socket'
+
+You may want to modify "libs" to pacify warning concerned with locale. 
+See below.
+
+(3) When you finish editing, "Configure" reflects "config.sh" to all
+Makefiles and etc. Then type "make", "make test", and "make install".
+
+	% make
+	% make test
+	% su
+	# make install
+
+
+		    <<<Pacifying Perl5 Warning>>>
+
+Perl5 warns if appropriate locale for "LANG" is not found.
+
+On FreeBSD, you should link Perl5 to the "xpg4" library. This is
+accomplished by adding "-libxpg4" to "libs" in "config.sh". An example
+is as follows:
+
+	libs='-lxpg4 -lm -lc -lcrypt'
+
+Ensure that "-lxpg4" is on the top of the list. Of course, you need to
+reflect this modification to all sub-directory files and make Perl5.
+
+Even if your Perl5 is locale ready, Perl5 warns. This is because path
+is missing.
+
+Suppose that you set "LANG" "japanese" on BSD/OS 3.0. Perl5 warns as
+follows:
+
+	warning: setlocale(LC_CTYPE, "") failed.
+	warning: LC_ALL = "(null)", LC_CTYPE = "(null)", LANG = "japanese",
+	warning: falling back to the "C" locale.
+
+The best solution is to create an alias link to one of existing
+locales. For instance, BSD/OS has /usr/share/locale/Japanese-EUC. So,
+create "japanese" link, which is the value of "LANG", to it.
+
+	% su
+	# cd /usr/share/locale
+	# ln -s Japanese-EUC japanese

@@ -1,0 +1,242 @@
+#! @im_path_perl@
+################################################################
+###
+###				 imsort
+###
+### Author:  Internet Message Group <img@mew.org>
+### Created: Jul  2, 1997
+### Revised: Feb 28, 2000
+###
+
+BEGIN {
+    @im_my_siteperl@
+    @im_src_siteperl@
+};
+
+my $VERSION = "imsort version 20000228(IM140)";
+
+$Prog = 'imsort';
+
+##
+## Require packages
+##
+
+use IM::Config;
+use IM::Folder;
+use IM::File;
+use IM::Util;
+use integer;
+use strict;
+use vars qw($Prog $EXPLANATION @OptConfig
+	    $opt_field $opt_mode $opt_noharm $opt_src
+	    $opt_verbose $opt_debug $opt_help);
+
+##
+## Environments
+##
+
+$EXPLANATION = "
+$Prog :: Internet Message Sort
+$VERSION
+
+Usage: $Prog [options] +folder [msgs...]
+";
+
+@OptConfig = (
+    'src;F;;'      => "Set source folder.",
+    'field;s;date;'=> "Sort by the specified field.",
+    'mode;s;date;' => "Set sort mode to date, num, text or ml.",
+    'noharm;b;;'   => "Display the commands but do not actually execute them.",
+    'verbose;b;;'  => 'With verbose messages.',
+    'debug;d;;'    => "With debug message.",
+    'help;b;;'     => "Show this message.",
+    );
+
+##
+## Profile and option processing
+##
+
+init_opt(\@OptConfig);
+read_cfg();
+read_opt(\@ARGV); # help?
+help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
+
+debug_option($opt_debug) if $opt_debug;
+
+##
+## Main
+##
+
+my @msgs   = @ARGV;
+@msgs   = ('all') if (!@ARGV);
+my $msgs   = \@msgs;
+
+$opt_src   || im_die "no folder specified.\n";
+@msgs      || im_die "no message specified.\n";
+$opt_field || im_die "no field specified.\n";
+$opt_mode =~ /^(date|num|text|ml)$/
+    || im_die "Wrong mode $opt_mode.\n";
+
+#
+# Set date relative magic values.
+#
+my @TBL = (0, 306, 337, 0, 31, 61, 92, 122, 153, 184, 214, 245, 275);
+
+my %ZONE  = ('PST', -8, 'PDT', -7, 'MST', -7, 'MDT', -6,
+	     'CST', -6, 'CDT', -5, 'EST', -5, 'EDT', -4,
+	     'AST', -4, 'NST', -3, 'UT' , +0, 'GMT', +0,
+	     'BST', +1, 'MET', +1, 'EET', +2, 'JST', +9,);
+
+my %MONTH = ('Jan',  1, 'Feb',  2, 'Mar',  3, 'Apr',  4,
+	     'May',  5, 'Jun',  6, 'Jul',  7, 'Aug',  8,
+	     'Sep',  9, 'Oct', 10, 'Nov', 11, 'Dec', 12);
+
+sub rxp_or  { join('|', @_); }
+my $m_rxp = rxp_or(keys(%MONTH));
+my $z_rxp = rxp_or(keys(%ZONE), '[-+]\d{4}');
+
+#
+# do it.
+#
+imsort($opt_src, $msgs, $opt_mode, $opt_field);
+exit $EXIT_SUCCESS;
+
+##################################################
+##
+## Work horse
+##
+
+sub imsort ($$$$) {
+    my ($src, $msgs, $mode, $field) = @_;
+    my ($i, $path, $from, $to, $tmp, @msg_all, @msg_paths, @sorted_index);
+    my @param = ();
+
+    my $HOLE_PATH = get_impath($src, 'new');
+
+    @msg_all = get_impath($src, @{$msgs});
+
+    foreach $path (@msg_all) {
+	if (-f $path) {
+	    push(@msg_paths, $path);
+	    push(@param, get_field_value($path, $field, $mode));
+	}
+    }
+    if (($mode eq 'text') || ($mode eq 'ml')) {
+	@sorted_index = sort { $param[$a] cmp $param[$b] } 0 .. $#msg_paths;
+    } else {
+	@sorted_index = sort { $param[$a] <=> $param[$b] } 0 .. $#msg_paths;
+    }
+
+    $tmp = $#msg_paths + 1;
+
+    for $i (0 .. $#msg_paths) {
+	next if $i == $sorted_index[$i] or $sorted_index[$i] < 0;
+
+	$msg_paths[$tmp] = $HOLE_PATH;
+	$sorted_index[$tmp] = $i;
+	$to = $tmp;
+
+	do {
+	    $from = $sorted_index[$to];
+	    if ($sorted_index[$from] < 0) {
+		$from = $tmp;
+	    }
+	    $sorted_index[$to] = -1;
+
+	    im_rename($msg_paths[$from], $msg_paths[$to]) || die;
+	} while ($to = $from) != $tmp;
+
+	$#msg_paths = $#sorted_index = $tmp - 1;
+    }
+    touch_folder($src) unless $opt_noharm;
+}
+
+sub get_field_value ($$$) {
+    my ($path, $field, $smode) = @_;
+    local $_;
+    local $/ = '';
+    my ($ml, $num);
+
+    if (im_open(\*MSG, "< $path")){
+	($_ = <MSG>) =~ s/\n\s+/ /g;
+	close(MSG);
+    } else {
+	im_die("Can't open $path. (Nothing was done.)\n");
+    }
+
+    ($_) = /^$field:\s+([^\n]*)/imo;
+    if (lc($field) eq 'subject') {
+	if ($smode eq 'ml') {
+	  if(s/^[\[\(]([^\]\)]*)[\]\)]\s*//i){
+	    $1 =~ /^(.*)[:,\s](.*)$/;       $ml=$1; $num=$2;
+	    s/^(re:\s*)(.*)$/$2$1/i;
+	    $_ = $ml . $_ . $num;
+	  }
+	} else {
+	    s/^(re:\s*)(.*)$/$2$1/i;
+	}
+    }
+    if ($smode eq 'num') {
+	m/(\d+)\D*$/;
+	$_ = $1;
+    }
+    if ($smode eq 'date'){
+	if (/(\d+)\s+($m_rxp)\s+(\d+)\s+(\d+):(\d+)(:(\d+))?\s*($z_rxp)?/io){
+	    ## Y2K: conform to drums
+	    if ($3 < 50) {
+		return sec_from_epoc($3 + 2000, $MONTH{$2}, $1,
+				     $4, $5, $7+0, $8);
+	    } elsif ($3 < 100) {
+		return sec_from_epoc($3 + 1900, $MONTH{$2}, $1,
+				     $4, $5, $7+0, $8);
+	    } else {
+		return sec_from_epoc($3, $MONTH{$2}, $1,
+				     $4, $5, $7+0, $8);
+	    }
+	}
+	return (stat($path))[9];
+    }
+    return $_;
+}
+
+sub sec_from_epoc ($$$$$$$) {
+    my ($y, $m, $d, $hh, $mm, $ss, $tz) = @_;
+
+    $tz = ($ZONE{$tz} * 3600) || (int($tz/100)*3600 + ($tz%100)*60);
+
+    $y-- if ($m < 3);
+    ($y * 365 + int($y/4) - int($y/100) + int($y/400) + $TBL[$m] + $d - 719469)
+	* 86400	+ $hh * 3600 + $mm * 60 + $ss - $tz;
+}
+
+### Copyright (C) 1997, 1998, 1999 IM developing team
+### All rights reserved.
+### 
+### Redistribution and use in source and binary forms, with or without
+### modification, are permitted provided that the following conditions
+### are met:
+### 
+### 1. Redistributions of source code must retain the above copyright
+###    notice, this list of conditions and the following disclaimer.
+### 2. Redistributions in binary form must reproduce the above copyright
+###    notice, this list of conditions and the following disclaimer in the
+###    documentation and/or other materials provided with the distribution.
+### 3. Neither the name of the team nor the names of its contributors
+###    may be used to endorse or promote products derived from this software
+###    without specific prior written permission.
+### 
+### THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+### ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+### IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+### PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+### LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+### CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+### SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+### BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+### WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+### OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+### IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### Local Variables:
+### mode: perl
+### End:

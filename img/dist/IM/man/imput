@@ -1,0 +1,616 @@
+			Manual for IMPUT
+
+1. Outline 
+
+* Messages of mail and news are dispatched by way of SMTP/NNTP. 
+  (If there is header field such as To: or Cc:, imput dispatches as mail
+  by way of SMTP. If there is header field such as Newsgroups:, imput
+  dispatches as news 
+* Multiple SMTP/NNTP servers can be specified in the configuration
+  file. Imput try one server at a time, and select next server on
+  failure, continuously select servers until it successfully post the
+  message. The service port of each server can be configured.
+* Japanese in header field can be converted into the MIME(RFC2047) form.
+* Japanese written with EUC/SJIS can be converted into JIS(ISO-2022-JP).
+* Text of a message which contains 8bit code is converted into
+  quoted-printable or base64 (RFC2045). 
+* When error occurs while dispatching, error message of Delivery Status
+  Notification form (RFC1891,RFC1892,RFC1894) is generated. 
+* BCC (blind carbon copy) is sent with MIME Message/rfc822 capsulated form
+  (RFC2045).
+* DCC (distribution carbon copy) is supported. (Addresses will not be show
+  in header field and messages are not capsulated like BCC.)
+* FCC (folder carbon copy) is also supported. 
+* Message-Id:/Date: header fields are generated automatically.
+  (Therefore, same Message-Id:/Date remains in the message which saved by FCC)
+* "List:;" (RFC822) style addressing is supported.
+* "Group:u1,u2;" (RFC822) style addressing is also supported.
+  (The message will be sent to u1 and u2, and the address will be rewritten
+  into "group:;" form)
+* "Group:/file;" (non-standard) style addressing is supported.
+  (/file is a path of local file and addresses described in the file is
+  read and mail is sent aiming at those addresses. The address will be
+  rewritten into "group:;" form.)
+* A big size message can be divided into MIME Message/partial form (RFC2045).
+* Aliasing for mail addresses at individual level is supported (like MH). 
+* Aliasing for domain part of addresses at individual level is supported.
+  (hostalias form of BIND.)
+* History of all dispatched messages are recorded (like syslog of sendmail).
+* MH style Annotation is supported (except Forwarded:).
+* SIZE and DSN (new plan of Return-Receipt-To:) in ESMTP are supported.
+* imput can be used as replacement of send in MH or sendmail which is
+  called from UCBMAIL or something else.
+
+
+2. Usage
+
+* with Mew 
+	Please read the document of Mew. 
+
+* Direct use from "shell"s
+	imput [options] [list of destinations|path of a message to be sent]
+
+	Parameters between [ and ] are optional.
+	The option is described later. 
+	"list of destinations" are mail addresses delimited by the blank.
+	If list of destinations are specified and no message file is
+	specified by the option, the message is read from a standard input. 
+	Path of a message should be absolute-path form.
+
+* with MH 
+	Please specify imput for sendproc of ~/.mh_profile.
+	Example:
+		sendproc: /home/motonori/cmd/imput
+
+* with mh-e (Ver.4 or later) 
+	Please execute (setq mh-send-prog "imput"). 
+
+* with UCB Mail 
+	Please set an environment variable, "sendmail".
+	Example:
+		setenv sendmail /home/motonori/cmd/imput (For csh etc.).
+	It is possible to describe in mailrc. 
+	Example:
+		set sendmail /home/motonori/cmd/imput
+
+* with Mail clients which directly executes the sendmail
+	Please replace /usr/lib/sendmail with imput. (/usr/lib/sendmail
+	may be /usr/sbin/sendmail or something else. This is different
+	in dependence on OS).
+	Please devise on location when it is necessary to leave original
+	sendmail for the reception of messages.
+
+* with News clients which executes "inews"
+	Please replace inews with imput.
+	Note: Options other than -h are not supported. 
+
+
+3. Options
+
+   Options which can be specified with a command line or environment variables
+   are shown below. Current settings are displayed with imput --help.
+   Case of letters in option names are insensitive.
+
+   The form of the argument when the option is accompanied by the argument
+   is shown by the following signs. 
+
+	<sw>	"on" or "off" (can be omitted)
+	<num>	numerics 
+	<str>	character string
+	<str,>	character strings delimited with ","
+
+   The descriptions below are based on forms as command line options.
+   But all options "--Option=value" can also be described in Config file
+   like "Option=value".
+
+
+[Options concerning setting]
+
+  --Help=<sw>		help message is displayed. 
+  --Config=<str,>	block name which should be referred in configuration
+			files. specify WORD at <str,> to select a block
+			which starts from the line labeled "case WORD"
+			in configuration file. If multiple names are specified,
+			each block is sequentially evaluated. 
+			If address information of a message is extracted
+			from header part of the message (by using --ObeyHeader
+			or --Message option), block name can be specified as
+			a value for "Config:" header field.
+			"Config:" header field will be stripped from the
+			message when it dispatched.
+  --Require=<str>	path of a perl script which will be evaluated at
+			initialization. (c.f. Hooks)
+  --Debug=<sw>		debugging mode (every modules run in debugging mode).
+  --DebugFlag=<str,>	module names to be set in debugging mode.
+			specify XXX to make &debug("xxx") in the script true.
+  --Verbose		verbose mode.
+
+[Options concerning server information]
+
+  --SMTPservers=<str,>	SMTP servers (and port numbers) are specified
+			(in server_name[/remote_port][%local_port] forms).
+			When /remote_port is omitted, SMTP(25) will be assumed.
+			If local_port is specified, use SSH port forwarding.
+  --TryNextOnFatal=<sw>	on: Even if permanent error is detected, try to the
+			next server specified with --SMTPservers option.
+			off: If permanent error is detected, rest of servers
+			are not tried.
+  --NNTPservers=<str,>	NNTP servers (and port numbers) are specified
+			(in server_name[/remote_port][%local_port] forms).
+			When /remote_port is omitted, NNTP(119) will be
+			assumed. If local_port is specified, use SSH port 
+			forwarding.
+  --EmgSMTPsvrs=<str,>	SMTP servers which should be tried when a message
+			has a permanent error and cannot bounce back to
+			any servers specified with --SMTPservers.
+  --Clientname=<str>	host name to be used when imput introduces oneself
+			with HELO of SMTP.
+  --ESMTP=<sw>		on: try ESMTP first even when a SMTP server does not
+			show it can communicate with ESMTP.
+			off: only when a SMTP server shows that it can accept
+			ESMTP.
+  --NewsPost=<sw>	on: posting of news is permitted
+			(messages are posted if necessary).
+			off: posting of news is prohibited. 
+  --SSHServer=<str>     Use the specified host as an SSH port relay server.
+
+[Options concerning header field generation]
+
+  --User=<str>		local part (user name) of sender's address.
+			The login name is used in default.
+  --Name=<str>		full name of sender.
+			used for "Full Name" of Full Name <User@FromDomain>. 
+			In default, content of the GCOS field of password file
+			is used. 
+  --NameInComment=<sw>	off: From: Full Name <User@FromDomain> is generated. 
+			on:  From: User@FromDomain (Full Name) is generated. 
+  --Org=<str>		Information applied to Organization: header field.
+  --FromDomain=<str>	default domain part of sender.
+  --ToDomain=<str>	default domain part of recipient.
+			When @domain part of recipient is not specified,
+			this @value is supplemented. 
+  --ObeyMTAdomain=<sw>	on: default domain part should be supplied at MTA
+			(sendmail etc.) and imput should not supply it.
+  --MsgIdDomain=<str>	domain part to be used in a value of Message-Id:
+			header field.
+			domain part specified by --FromDomain option will be
+			used when --MsgIdDomain option is not specified.
+  --MsgId=<sw>		on:  Message-Id: will be generated by imput.
+			off: Message-Id: will not be generated by imput.
+			(it will be generated by MTA). 
+  --PidMsgId=<sw>	on: process ID will be included to a character string
+			in Message-ID: header value. 
+			This option is preferable to specify when two or more
+			messages will be occasionally sent in one second. 
+  --NoMsgIdForNews	on:  make Message-Id: header generated by NNTP server
+			     for messages which posted with NNTP.
+  --Date=<sw>		on:  Date: is generated automatically by imput. 
+			off: Date: is not generated automatically by imput.
+			(it will be supplemented with MTA) 
+  --NewsGMTdate=<sw>	on: generate the date information by GMT. 
+			GMT might be recommended in news (RFC1036). 
+			off: local timezone is used.
+  --NScmpl=<sw>		on: completion of domain part by using name server is
+			enabled. parameter of domain or search defined in
+			/etc/resolv.conf will be used by the resolver.
+			off: completion by using name server is disabled.
+  --AliasesFile=<str,>	path of alias files for mail addresses.
+			Example: 
+				alias1:  u1
+				alias2:  u2@domain
+				alias3:  User-Three <u3@domain>
+				alias4:  u4,u5
+				alias5:  group:u6,u7;
+				alias6:  group:/address/list/file;
+				 :
+  --HostAliases=<str,>	path of alias files for domain part completion.
+			Example: 
+				alias1 realname1.domain
+				alias2 realname2.domain
+				 :
+  --ShowRcpts=<sw>	on:  Apparently-To: header field will be added by MTA. 
+			off: To: undisclosed-recipients:; header field will
+			be added by imput not to be added Apparently-To:
+			header field by MTAs.
+  --Subj=<str>(-s)	a character string to be added as a value of Subject:.
+			ignored if a message has a Subject: header already.
+  --ObeyHeader=<sw>(-t)	on: extract addresses of recipients from header part of
+			a message. the message will be posted if Newsgroups:
+			header field is found.
+			recipients specified in the command line will be
+			ignored.
+			off: To:, Cc:, Newsgroups: of header will not be
+			interpreted. It is necessary to specify the address
+			etc. in the command line. 
+  --AddHeader=<str,>	Any header to be added.
+			e.g.: --AddHeader='X-Header: value'
+
+[Options concerning delivery operation of message]
+
+  --MeToo=<sw>(-om)	on: send messages also to the sender.
+			(equivalent to specify "Dcc: the sender").
+  --Receipt=<sw>	on: request to send back the delivery status
+			notification (depend on RFC1891). 
+  --MIMEbcc=<sw>	on: dispatch BCC by MIME Message/rfc822 style
+			encapsulation (RFC2045). 
+			off: dispatch BCC without encapsulation.
+  --NewsCheck=<sw>	on: when To: or Cc: header field exists, no posting is
+			performed for news. 
+			off: the message will be posted if Newsgroups: header
+			exists.
+  --Group=<str,>	news groups which should be posted.
+			this overrides Newsgroups: header field in original
+			messages.
+  --Dist=<sw>		on: changes to the redistribution mode. 
+			Resent-*: style header fields are used.
+  --DistMsg=<str>	path of a message to be redistributed.
+			recipients should be specified in the command line
+			or in header part of a file specified with --Message
+			option.
+  --SMTP=<sw>(-bs)	on: interactive SMTP mode (like sendmail -bs).
+
+[Options concerning message filing]
+
+  --Folder=<str>	draft folder in which a draft message to be dispatched
+			located.
+  --TrashMark=<str>	a character which should be added before the name of
+			a draft message file when the message is dispatched
+			successfully.
+  --Message=<str>	Path of a message to be dispatched.
+			if relative path is specified, it will be considered
+			as relative from a folder specified with --Folder
+			option.
+  --Fcc=<str>		folder name in which dispatched message should be
+			preserved.
+  --FccPartial=<sw>	on: divided with multipart/partial form when
+			preserving.
+# --FccDir=<sw>		preserved in MH (directory) style.
+# --FccFile=<sw>	preserved in mbox (single file) style.
+
+[Options concerning Japanese Handling]
+
+  --JPheader=<sw>	on:  JIS(ISO-2022-JP) characters in header fields are
+			encoded with the MIME
+			(RFC2047) form.
+			off: JIS characters are preserved as is.
+  --HdrQEncoding=<sw>	on:  JIS characters are encoded with Q-encoding
+			method. 
+			off: JIS characters are encoded by B-encoding method. 
+  --NoHdrFolding=<sw>	on:  no line folding
+			off: line folding of about 72 characters a line.
+  --JPconv=<sw>		on:  EUC/SJIS->JIS conversion allowed.
+			off: EUC/SJIS->JIS conversion prohibited.
+  --DefCode=<str>	The default code when it is not possible to
+			distinguish automatically (EUC/SJIS/8BIT).
+  --8to7=<sw>		on:  The message body which includes 8bit codes should
+			be encoded to 7bit. 
+			Either base64 or quoted-printable is automatically
+			selected by the rate of 8bit codes. 
+			off: The message body which includes 8bit codes will
+			not be encoded to 7bit. 
+  --8BitLabel=<str>	value for Content-Type: when body has 8bit codes and
+			Mime-Version is not found in header part.
+
+[Options concerning processing of message body]
+
+  --IgnoreDot=<sw>(-oi)	on:  not to interpret a line only of '.' as the
+			terminal of a message. 
+			off: interpret a line only of '.' as the terminal
+			of a message. 
+  --MultipartAdd=<str>	files to be added as a part of multiparted message.
+			if this option specified multiple times, each file
+			is added as a separate part in that order.
+			If original message is not a multiparted message,
+			the message becomes a multiparted automatically. 
+			If original message is a multiparted message, a new
+			part is simply added. 
+
+[Options concerning message division]
+
+  --Lines=<num>		number of lines by which large mail is divided.
+			(divided with MIME Message/partial form (RFC2045).)
+			when 0 is specified, division is not done. 
+  --Sleep=<num>		interval of transmissions of divided messages
+			(in seconds).
+
+[Options concerning queue processing]
+
+  --QueueDir=<str>	path of a directory to be used as queue.
+			When the directory does not exist, it will be created
+			automatically (default is ~/.im/queue).
+  --JustQueuing=<sw>(-odq)
+			on:  message is preserved in the queue without
+			dispatching attempt.
+  --Queuing=<sw>	on:  When a message cannot be passed to the server,
+			the message is preserved in the queue instead of
+			bouncing back.
+  --ProcessQueue=<sw>(-q)
+			on:  messages preserved in the queue are processed
+			to be dispatched.
+  --QueueStatus=<sw>(-bp)
+			on:  list of preserved messages is displayed. 
+
+[Options concerning error processing]
+
+  --Report=<sw>		on:  notify the error by mail when transmission error
+			occurs. 
+			off: display messages on transmission error.
+  --Dead=<str>		path of a file in which a message will be preserved
+			when the message cannot be sent (mbox form, default
+			is ~/.im/dead.letter).
+
+[Options concerning recording history of dispatching activities]
+
+  --Annotate=<sw>	on:  Replied: or Resent: header fields will be
+			prepended on a message which is referenced with
+			References: or In-Reply-To: field.
+			(Forwarded: is not yet supported.)
+  --Log=<str>		path of file which records history.
+			If <str> is NULL, nothing recorded
+			(default is ~/.im/putlog).
+  --Syslog=<sw>		on:  recorded via syslog with MAIL/INFO. 
+
+  Besides above, some compatible options with the send command of MH
+and inews exist. 
+
+
+4. Interpreted environment variable 
+
+  HOSTALIASES	equivalent to --HostAliases option
+  SMTPSERVERS	equivalent to --SMTPservers option
+  NNTPSERVERS	equivalent to --NNTPservers option
+  ORGANIZATION	equivalent to --Org option
+  MSGIDDOMAIN	equivalent to --Msgid option
+  FROMDOMAIN	equivalent to --FromDomain option
+  TODOMAIN	equivalent to --ToDomain option
+  NAME		used for comment part of From:
+  SIGNATURE	used for comment part of From: (overrides NAME)
+
+
+5. Handling of header field
+
+5.1 Destinations of messages
+
+  When it is specified to extract address information from header part of a
+message, the following header field will be referred:
+	To:, Cc:, Dcc:, Bcc: 
+Copies of a messages for recipients specified in Bcc: are encapsulated with
+MIME message/rfc822. @MYSELF@ or @ME@ can be specified in these header field
+for a value. When these values are specified, it will be replaced with
+the address of sender (which will be shown in From:) of a message.
+
+5.2 expansion of aliases and completion of addresses
+
+  As for the address of following header field, rewritten by the definition
+under files which are specified by --HostAliases or --AliasesFile:
+	To:, Cc:, Bcc:, Dcc:, Resent-To:, Resent-Cc:, Resent-Bcc:, Resent-Dcc:
+When @domain part does not exist in addresses, domain name specified with
+--ToDomain is appended. (Only when you do not specify the --ObeyMTAdomain
+option). 
+
+  As for the address of following header field, rewritten by the definition
+under files which are specified by --HostAliases or --AliasesFile:
+	From:, Resent-From:, Reply-To, Resent-Reply-To, Errors-To,
+	Return-Receipt-To: 
+When @domain part does not exist in addresses, domain name specified with
+--FromDomain is appended (Only when you do not specify the --ObeyMTAdomain
+option). 
+
+5.3 Fcc: 
+
+  If Fcc: header field (or --Fcc command line option) is specified, a copy of
+of the message is preserved in the folder specified after dispatching.
+
+5.4 Date: and Message-Id: 
+
+  In some UA (User Agent; user's application for mail transmitting and
+receiving), Date: and Message-Id: field are not generated and it is expected
+to be generated by MTA (Mail Transfer Agent). In that case, a copy of message
+(preserved with Fcc:) does not have Date: or Message-Id: header field,
+and there is no way to identify message by specifying unique message ID.
+With imput, all copies of message will have Date: and Message-Id: field
+by default.
+
+5.5 Sender: and Originator: 
+
+  If there is From: header field in a message to be sent and the value of
+From: header field is different from an address which is configured to
+be added automatically, Sender: header field with the configured address
+is added automatically. When the message is sent as news, Originator:
+field name is used instead of Sender:.
+
+5.6 Redistribute and Resent-*: header fields
+
+  When a message is dispatched in redistribution mode, addresses etc.
+concerning to redistribution are shown in Resent-To:, Resent-Cc:, Resent-Dcc:,
+Resent-Bcc:, Resent-From:, Resent-Reply-To:, Resent-Sender:, Resent-Date: and
+Resent-Message-Id: instead of To:, Cc:, Dcc:, Bcc:, From:, Reply-To:, Sender:,
+Date: and Message-Id:. If Resent-*: header fields exist already, they are
+rewritten to Prev-Resent-*: and new Resent-*: header fields for this redistri-
+bution are added.
+
+5.7 Return-Receipt-To:
+
+  So far, Return-Receipt-To: header field is used to request notification of
+successful delivery. Return-Receipt-To: is obsolete and SMTP extension for
+DSN (Delivery Status Notification) is defined in RFC1891 which can be used
+for telling to the receiver to respond about result of delivery.
+With imput, Return-Receipt-To: header field is deleted but the request is
+passed to the receiver in RFC1891 way. However, it is likely not to function
+if any MTA in a route to destination does not support RFC1891.
+
+5.8 posting to news
+
+  When Newsgroups: header field exists or newsgroups are specified with --Group
+option, the message is posted to news system.
+  It fails unless all of the following header field exist:
+	From: ,Subject: ,Newsgroups:
+since news system will check the existence of these header fields. Moreover,
+message body should not be empty.
+
+  When following header fields already exist when dispatching to news system,
+the message will rejected (for instance, INN1.4 etc.):
+	Path:, Received:, Return-Path:, NNTP-Posting-Host:, Xref:
+Therefore, these header fields are automatically deleted with imput for
+posting to news system. Moreover, when --NewsCheck option specified,
+even if Newsgroups: header field exists:, imput will not attempt to post
+if the following header fields are exist:
+	To: ,Cc: ,Apparently-To:
+
+  Newsgroups: header in a message will be converted into X-Newsgroups:
+header when sending the message as mail at the same time. Moreover,
+to avoid sending X-Newsgroups: header information to recipients of the
+message as mail, use BNewsgroups: header to specify news group name instead.
+
+5.9 Config: 
+
+  value of Config: header field will be taken and specified configuration
+block will be used in configuration files if it is specified to extract
+addresses etc. information from header part of the message.
+
+5.10 additional header fields
+
+  Lines: header field which indicates number of lines of the message is
+generated automatically. Version information on imput will be shown in
+X-Dispatcher: header field.
+
+
+6. Error processing 
+
+  When an error occurs when a message was about to be passed to a SMTP server
+or a NNTP server, error processing is done. When --Queuing option is specified
+at a case of temporary failure, the message is preserved in the queue.
+  When --Queuing option is not specified and temporary failure or permanent
+error occurs, it is reported to the sender.
+  When --Report=yes option is specified, the error is notified to the sender
+by mail. If a draft message is specified by --Message option (or equivalent
+options), trash-processing (The character specified with --TrashMark will be
+prepended to the file name) is done. 
+  When --Report=no option is specified, the error message is written to
+display and the message is preserved in the dead.letter file. However, when
+draft message is specified by --Message option (or equivalent options), the
+trash-processing is not done and the message file is left as it is and
+the message is not preserved even in dead.letter.
+  In any case, the error is recorded in the dispatch log file (unless
+recording to log file is suppressed).
+
+
+7. Environmental, set file 
+
+A personal configuration file is ~/.im/Config and system wide one is
+/usr/local/lib/im/Config by default. The configuration method is common
+in all the "im" commands. However, a definition block which is delimited by
+the "case" line can be defined to select special configuration.
+The "case" line shows that a definition block starts there and the name of
+the block is described after the word "case". Settings between from top of
+the configuration file to the first "case" line of the file are treated as
+default definition. To write default definitions behind "case" lines,
+specify "case default". Definitions which can be shared by two or more block
+are started with "case blockname1,blockname2" line.
+
+A sample of configuration file is shown below:
+
+	Lines=3000 
+	#Name=NAKAMURA Motonori
+
+	SMTPservers=mail.econ.kyoto-u.ac.jp
+	NNTPservers=news.kuis.kyoto-u.ac.jp
+	EmgSMTPsvrs=localhost 
+	FromDomain=econ.kyoto-u.ac.jp
+	ToDomain=econ.kyoto-u.ac.jp 
+	Org=Faculty of Economics, Kyoto University, Japan
+
+	case mew 
+	FromDomain=mew.org
+	ToDomain=mew.org 
+	Org=Internet Message Group 
+
+
+8. Format of queue file
+
+  When --JustQueuing option is specified or when --Queuing options is specified
+and dispatch of a message fails (temporary failure), the message is preserved
+in the queue. A preserved message is stored in a file and numbered from 1
+sequentially. Content of a file is:
+
+	internal state
+	< empty line >
+	RFC822 header part
+	< empty line >
+	RFC822 body part
+
+When imput is started with --QueueStatus option, information on preserved
+messages is displayed. When imput is started with --ProcessQueue option,
+delivery is attempted sequentially from the file of a small number.
+Messages in which the delivery fails are left in the queue as it is as
+long as it has not a permanent failure. 
+
+
+9. Format of dispatch log file 
+
+Dispatching activities are recorded in a file by one action one line. 
+Form is:
+
+	date time proto=[p] server=[s] id=[m] from=[f] to=[t] stat=[r]
+
+and [p], [s], [m], [t], and [r] are as follows:
+
+[p]:	smtp	processed with SMTP
+	esmtp	processed with ESMTP
+	nntp	processed with NNTP
+	fcc	saved into FCC folder
+	queue	queued in queue directory
+	dead-letter	saved into dead.letter file on failure
+	draft	processing on a draft message
+
+[s]:	server/port to connect
+	port information will be omitted when the port of default is used.
+	The final server will be recorded if all attempt to servers are
+	failed.
+
+[m]:	value of Message-Id: header
+
+[f]:	sender address (config)
+	"config" is a case name specified with Config: or --config option.
+	(config) is omitted if Config: or --config option is not specified.
+
+[t]:	recipient addresses, folder name or file name
+	delimited with ',' if there are multiple recipients.
+	addresses specified in BCC are enclosed with <>.
+
+[r]:	sent	dispatched successfully
+		information on reception process ID etc are shown in ().
+	skipped	skipped to the next server
+	failed	was not dispatched successfully
+		reason of the failure is shown in ().
+	queued	preservation to message queue
+	preserved	the draft message was left as it is
+
+
+10. Hooks
+
+  To want to make a special processing done personally in imput, the following
+are prepared as hooks in the imput script. 
+
+	$Hook_PreHeaderconv		Just before the processing of the
+					ISO-2022-JP header conversion.
+	$Hook_PreFinalHeaderProc	Just before the processing of the
+					final adjustment of headers.
+	$Hook_PreDispatching		Just before the processing of the
+					delivery
+
+  Define a name of function to be called at that point.
+The variables should be defined in script specified with --Require option.
+
+
+11.  Known Bugs 
+
+  There might be a problem that the message cannot be dispatched on some
+IRIX systems of SGI. In such case, remove the # (comment) mark in the middle
+line of following lines in TcpTransaction.pm to activate 'print $CHAN " ";'.
+
+	## if you have mysterious TCP/IP bug on IRIX/SGI
+	#		print $CHAN " ";
+	## endif
+
+[end of document]

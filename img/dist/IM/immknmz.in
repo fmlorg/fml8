@@ -1,0 +1,167 @@
+#! @im_path_perl@
+################################################################
+###
+###			       immknmz
+###	     "mew-nmz-mknmz-all-folders" (in mew-nmz.el)
+###
+### Author:  Shuichi Kitaguchi <kit@Mew.org>
+### Created: Sep 23, 1999
+### Revised: Feb 28, 2000
+###
+
+BEGIN {
+    @im_my_siteperl@
+    @im_src_siteperl@
+};
+
+my $VERSION = "immknmz version 20000228(IM140)";
+
+$Prog = 'immknmz';
+
+###
+### Modify these variables if you need.
+###
+my $nmzdir        = "Namazu";	# "~/$nmzdir"
+my $mknmz_include = "mknmz-inc.pl";	# mknmz -I <file>
+my @ignorefolders = ( "draft", "trash", "schedule", "queue", );
+
+
+# Code:
+
+use IM::Config;
+use IM::Util;
+use IM::Folder;
+use strict;
+use vars qw($Prog $EXPLANATION @OptConfig $opt_help $opt_gcnmz $opt_verbose);
+
+$EXPLANATION = "
+$Prog :: mew-nmz-mknmz-all-folders
+$VERSION
+
+Usage: $Prog [options]
+";
+
+@OptConfig = (
+	      'gcnmz;b;;'   => "Use gcnmz after mknmz (Garbage Collection for Namazu index).",
+	      'verbose;b;;' => "With verbose messages.",
+	      'help;b;;'    => "Show this message.",
+	      );
+
+init_opt(\@OptConfig);
+read_cfg();
+read_opt(\@ARGV);
+help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
+
+my $mailpath = mail_path()."/";
+my $namazupath = home_dir()."/$nmzdir/".mail_dir()."/";
+my $mknmz_args = "-q";
+
+my $incfile = home_dir()."/$nmzdir/$mknmz_include";
+if ( ! -f $incfile ){
+    $incfile = "";
+}
+my $folderspath = $mailpath."/.folders";
+my $msgfolder;
+my $msgdir;
+my $flag;
+my $nmzfolder;
+my $gcnmztgt;
+my $ret;
+my @filelist;
+my $tempfile;
+if ( $ENV{'TEMP'} eq "" ){
+    if ( $ENV{'TMP'} eq "" ){
+	$tempfile = "/tmp"; # UNIX system, may be.
+    } else {
+	$tempfile = $ENV{'TMP'};
+    }
+} else {
+    $tempfile = $ENV{'TEMP'};
+}
+$tempfile =~ s:\\:/:g;
+$tempfile =~ s/\/$//;
+$tempfile = "$tempfile/immknmz_temporary_file";
+$mknmz_args = "" if $opt_verbose;
+
+im_open(\*FILE, "<$folderspath" );
+while ( <FILE> ){
+    s/\r$// if &win95p() || &os2p();
+    chomp;
+    $msgfolder = $_;
+    $flag = 0;
+    foreach ( @ignorefolders ){
+	if ( $msgfolder !~ /^\+/ ){		# ! local folder
+	    $flag=1;
+	    last;
+	} elsif ( $msgfolder =~ /^\+$_/ ){	# == @ignorefolders
+	    $flag=1;
+	    last;
+	}
+    }
+    if ( $flag != 0 ){
+	print "skipping $msgfolder...\n";
+    } else {
+	$nmzfolder = $msgfolder;
+	$msgfolder =~ s/^\+/$mailpath/g;
+	$msgdir = $msgfolder;
+	$nmzfolder =~ s/^\+/$namazupath/g;
+
+	opendir(DIR,$msgfolder);
+	@filelist = grep(/^[0-9]*$/ && -f "$msgfolder/$_",readdir(DIR));
+	closedir(DIR);
+
+	if ((&win95p() || &os2p()) && !&namazuv2()){
+	    $msgfolder =~ s:/:\\:g;
+	}
+
+	if ( scalar(@filelist) > 0 ){
+	    im_open(\*TEMPFILE,">$tempfile");
+	    foreach ( @filelist ){
+		if (!-d "$msgdir/$_"){
+		    if ((&win95p() || &os2p()) && !&namazuv2()){
+			print TEMPFILE "$msgfolder\\$_\n";
+		    } else {
+			print TEMPFILE "$msgfolder/$_\n";
+		    }
+		}
+	    }
+	    close(TEMPFILE);
+
+	    create_folder($nmzfolder);
+	    $gcnmztgt = "$nmzfolder" . "/NMZ";
+	    
+	    print "$Prog: processing $msgfolder ...\n";
+	    if ( $incfile eq "" ){
+		$ret = system "mknmz -Uh $mknmz_args -O $nmzfolder -F $tempfile";
+	    } else {
+		$ret = system "mknmz -Uh $mknmz_args -O $nmzfolder -F $tempfile -I $incfile";
+	    }
+	    unlink $tempfile;
+	    if ( $ret == 2 ){
+		print "$Prog: abort.\n";
+		last;
+	    } elsif ($opt_gcnmz) {
+		print "$Prog: gcnmz $msgfolder ...\n" if $opt_verbose;
+		if (&namazuv2()) {
+		    system "gcnmz --no-backup $gcnmztgt";
+		} else {
+		    system "gcnmz $gcnmztgt";
+		    opendir(DIR,$nmzfolder);
+		    @filelist = grep(/^.*.BAK$/ && -f "$nmzfolder/$_",readdir(DIR));
+		    closedir(DIR);
+		    if ( scalar(@filelist) > 0 ){
+			foreach ( @filelist ){
+			    unlink "$nmzfolder" . "/$_";
+			}
+		    }
+		}
+	    }
+	}
+    }
+}
+close(FILE);
+
+# immknmz ends here.
+### Local Variables:
+### mode: perl
+### End:

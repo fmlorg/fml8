@@ -1,0 +1,2110 @@
+#! @im_path_perl@
+################################################################
+###
+###				imput
+###
+### Author:  Internet Message Group <img@mew.org>
+### Created: Aug 31, 1995
+### Revised: Feb 28, 2000
+###
+
+BEGIN {
+    @im_my_siteperl@
+    @im_src_siteperl@
+};
+
+$VERSION = "imput version 20000228(IM140)";
+
+$Prog = 'imput';
+
+# Usage:
+#  o With UCB Mail
+#	define "sendmail" environment variable with value "imput".
+#  o With Mew
+#	eval (setq mew-prog-imput "imput")
+#  o With MH
+#	define sendproc in ~/.mh_profile like "sendproc: imput"
+#  o With sendmail.el (if you are using VM or ....)
+#	eval (setq sendmail-program "imput")
+#  o With mh-e (4 or later)
+#	eval (setq mh-send-prog "imput")
+#  o With pine
+#	define "sendmail-path" in ~/.pinerc, for example:
+#	sendmail-path=/usr/local/bin/imput -Report -ObeyHeader -IgnoreDot
+#  o With applications which use sendmail
+#	replace sendmail to this program but if daemon sendmail is required,
+#	original sendmail should be renamed to sendmail.bin or something else
+#	for starting daemon mode sendmail and for newaliasing
+#  o With applications which use inews
+#	header generation by command line option not supported
+
+
+require 5.003;
+
+use IM::Address;
+use IM::Alias;
+use IM::Config;
+use IM::Folder qw(touch_folder);
+use IM::GetPass;
+use IM::History;
+use IM::Iso2022jp;
+use IM::Japanese;
+use IM::Log;
+use IM::Message;
+use IM::MsgStore;
+use IM::Nntp;
+use IM::Recipient;
+use IM::Smtp;
+use IM::TcpTransaction;
+use IM::Util;
+use integer;
+use strict 'refs';
+use strict 'subs';
+use vars qw($DebugAll $QueueStatus $Subject $Ignore_Dot $Fcc_partial
+	    $News_severe_check $PreserveMessage $Queuing $Comment_Name
+	    $Help $JustQueuing $Me_too $Dcc_Address $PGP_Sign);
+
+$EXPLANATION = "
+$Prog :: Put Messages into Networks
+$VERSION
+
+Usage: $Prog [options] msg
+";
+
+# table of environment variables
+@EnvConfig = (
+    # env. var. name	option name
+    'NAME;s;;Name'                => '',
+    'SIGNATURE;s;;Name'           => '',
+    'SMTPSERVERS;s;;Smtp_servers' => '',
+    'NNTPSERVERS;s;;Nntp_servers' => '',
+    'ORGANIZATION;s;;Org'         => '',
+    'HOSTALIASES;s;;hostAliases'  => '',
+    'MSGIDDOMAIN;s;;MsgIdDomain'  => '',
+    'FROMDOMAIN;s;;FromDomain'    => '',
+    'TODOMAIN;s;;ToDomain'	  => '',
+
+    'mhaltmsg;s;;Dist_file'	  => '',
+    'mhdist;s;;Dist_flag'	  => '',
+    );
+
+@OptConfig = (
+    # table of commandline options
+    'Help;b;;Help'
+	=> 'Show this message.',
+    'Debug;b;;DebugAll'
+	=> 'Set all debug options.',
+    'DebugFlag;s;;DebugFlag'
+	=> "Set specific debug options (separated with ',').",
+    'Verbose;b;;opt_verbose'
+	=> 'Set verbose mode.',
+    ## late evaluated options
+    'Require;s;;User_require'
+	=> 'User defined perl script to be required.',
+    'SMTPservers;s;localhost;Smtp_servers'
+	=> "List of SMTP servers (separated with ',')
+		Each element should be server[/remote_port][%local_port]",
+    'EmgSMTPsvrs;s;;Emg_Smtp_servers'
+	=> 'List of SMTP servers for Emergency Use (i.e. error reporting).',
+    'TryNextOnFatal;b;;Smtp_fatal_next'
+	=> 'Try next SMTP server evenif permanent failure.',
+    'NNTPservers;s;localhost;Nntp_servers'
+	=> "List of NNTP servers (separated with ',').
+		Each element should be server[/remote_port][%local_port]",
+    'ClientName;s;localhost;Client_name'
+	=> 'Name as a SMTP client (used for SMTP HELO).',
+    'SSHServer;s;localhost;SSH_server'
+	=> 'SSH port relay server.',
+    'ObeyMTAdomain;b;;Obey_MTA_domain'
+	=> 'Do not qualify local addresses with default domain.',
+    'FromDomain;s;;Default_from_domain_name'
+	=> 'Default domain name for sender.',
+    'ToDomain;s;;Default_to_domain_name'
+	=> 'Default domain name for recipients.',
+    'MsgIdDomain;s;;Message_id_domain_name'
+	=> 'Default domain name for Message-Id generation.',
+    'NoMsgIdForNews;s;;NoMsgIdForNews'
+	=> 'Strip Message-Id when posting to news system.',
+    'User;s;;User_name'
+	=> "Local part of the sender's address.",
+    'Address;s;;Mail_Address'
+	=> 'Address used in From: header; equivalent to User@FromDomain',
+    'Name;s;;Sender_name'
+	=> 'Commentary name for sender',
+    'NameInComment;b;;Comment_Name'
+    	=> 'Show commentary name in () on From: header.',
+    'Org;s;;Organization'
+    	=> 'Name of organization for news posting.',
+    'Subj;s;;Subject'
+    	=> 'A string for subject field.',
+    'NScmpl;b;;Cmpl_with_gethostbyname'
+    	=> 'Use domain-part completion with nameserver.',
+    'ShowRcpts;b;1;Show_Rcpts_Header'
+    	=> 'Allow to show recipients in header as To: if no To: in original.',
+    'MeToo;b;;Me_too'
+    	=> 'Request DCC to me.',
+    'Dcc;s;;Dcc_Address'
+    	=> 'Supplemental DCC address.',
+    'Fcc;s;;Fcc_folder'
+	=> 'Folder name to save FCC.',
+    'Receipt;b;;Dsn_success_report'
+    	=> 'Need a report of successful delivery.',
+    'Group;s;;Newsgroups'
+	=> 'Newsgroup names to be posted in.',
+## if ISO2022JP
+    'JPconv;b;;Iso2022jp_code_conversion'
+	=> 'Convert japanese character encoding from EUC/SJIS to JIS.',
+    'DefCode;s;8BIT;Default_code'
+	=> 'Default classification of japanese character code (EUC/SJIS/8BIT).',
+    'JPheader;b;1;Iso2022jp_header_mime_conv'
+	=> 'Encode japanese JIS characters to MIME style at header.',
+    'HdrQEncoding;b;;HdrQEncoding'
+	=> 'Header encoding type: 0 is B; 1 is Q.',
+## endif
+    'NoHdrFolding;b;;NoFolding'
+	=> 'Do not fold long header lines.',
+    'SortHeader;s;;HeaderSeq'
+	=> "Header sequence for sorting (labels separated with ',').",
+    '8to7;b;;Conv_8to7'
+	=> 'Convert 8bit body to 7bit by base64/quoted-printable encoding.',
+    '8BitLabel;s;unknown-8bit;Unknown8bit_label'
+	=> 'Sub-type label for unknown 8bit body on Content-Type:.',
+    'Lines;i;;Lines_to_partial'	# XXX
+	=> 'Line numbers for splitting into partial messages.',
+    'Sleep;i;10;Partial_sleep'
+	=> 'Sleep interval for dispatching each splitted messages.',
+    'Log;s;putlog;Log_file'	# XXX
+	=> 'File name to write delivery log.',
+    'Syslog;b;;'
+	=> 'Use SYSLOG feature instead of writing to a file directly.',
+    'Report;b;1;Error_report_by_mail'
+    	=> 'Report errors via mail.',
+    'MsgId;b;1;Generate_message_id'
+	=> 'Generate Message-Id header line.',
+    'PidMsgId;b;;Message_id_PID'
+	=> 'Generate Message-Id with Process ID.',
+    'UidMsgId;b;;Message_id_UID'
+	=> 'Generate Message-Id with User ID instead of login name.',
+    'Date;b;1;Generate_date'
+    	=> 'Generate Date header line.',
+    'NewsGMTdate;b;;NewsGMTdate'
+	=> 'Generate date field in GMT for posting news.',
+    'UseLines;b;1;UseLines'
+	=> 'Generate Lines header line.',
+    'AliasesFile;s;;Mail_aliases'	# XXX
+	=> 'List of files for mail address aliasing.',
+    'Addrbook;s;;addrbooks'
+	=> 'List of Addrbook files.',
+    'HostAliases;s;;Host_aliases'	# XXX
+	=> 'List of files for domain part completion.',
+    'FccPartial;b;;Fcc_partial'
+    	=> 'Save FCC with partial format.',
+    'Dead;s;dead.letter;Dead_letter'	# XXX
+    	=> 'Path of file to save unsent message as a deadletter.',
+    'JustQueuing;b;;JustQueuing'
+	=> 'Just store message into queue without attempt of delivery.',
+    'Queuing;b;;Queuing'
+	=> 'Store message into queue on delivery failure.',
+    'ProcessQueue;b;;ProcessQueue'
+	=> 'Process queued messages.',
+    'QueueStatus;b;;QueueStatus'
+	=> 'Show list of queued messages.',
+    'Folder;s;;Draft_folder'
+	=> 'Path of draft folder directory.',
+    'MIMEbcc;b;1;Mime_bcc'
+	=> 'Use MIME (message/rfc822) style BCC.',
+    'TrashMark;s;#;Trashmark'
+	=> 'Prefix character for draft message file renaming.',
+    'Preserve;b;;PreserveMessage'
+	=> 'Preserve draft message as is even if dispatched successfully.',
+    'Message;s;;Draft_message'
+	=> 'Path/name of draft message.',
+    'PGPsign;b;;PGP_Sign'
+	=> 'Generate PGP signature for body-part.',
+    'MultipartAdd;s@;;Mulipart_messages'
+	=> 'Path/name of message to be added as a part of multipart message.',
+    'FilenameAdd;b;;Filename_Add'
+	=> 'Add filename field at Content-Disposition header.',
+    'SMTP;b;;Smtp_input_mode'
+	=> 'Perform SMTP style input mode.',
+    'Annotate;b;;Anno_flag'
+	=> 'Annotate on the parent message (MsgDB required).',
+    'Dist;b;;Dist_flag'
+	=> 'Redistribution mode (using Resent-*:).',
+    'DistMsg;s;;Dist_file'
+    	=> 'Path of message for redistribution.',
+    'ObeyHeader;b;;Obey_header'
+	=> 'Collect recipients from message header.',
+    'IgnoreDot;b;;Ignore_Dot'
+	=> 'Ignore DOT for message termination.',
+    'NewsCheck;b;;News_severe_check'
+	=> 'No news posting if To, Cc header found evenif Newsgroups: exists.',
+    'ESMTP;b;;Esmtp_flag'
+	=> 'Enforce ESMTP (always begins with EHLO).',
+    'NewsPost;b;1;News_flag'
+	=> 'Enable NNTP.',
+    'AddHeader;s@;;Add_headers'
+	=> 'Header lines to be added.',
+);
+
+@CmpConfig = (
+    ## for compatibility with send/MH
+    'mime;B;;Mime_bcc'				=> '',
+    'watch;b;;opt_verbose'			=> '',
+    'draftmessage;s;;Draft_message'		=> '',
+    'draftf;s;;Draft_folder'			=> '',
+    'verbose;b;;opt_verbose'			=> '',
+    'draftfolder;s;;Draft_folder'		=> '',
+    'nowatch;B;;opt_verbose'			=> '',
+    'nodraftfolder;s;;Dummy'			=> '',
+    'draftm;s;;Draft_message'			=> '',
+    'draft;B;;Dummy'				=> '',
+    'alias;s;;Mail_aliases'			=> '',
+    'aliasesfile;s;;Mail_aliases'		=> '',
+    'filter;s;;Dummy'				=> '',
+    'nofilter;B;;Dummy'				=> '',
+    'format;b;;Dummy'				=> '',
+    'noformat;B;;Dummy'				=> '',
+    'forward;b;;Dummy'				=> '',
+    'noforward;B;;Dummy'			=> '',
+    'push;b;;Error_report_by_mail'		=> '',
+    'nopush;B;;Error_report_by_mail'		=> '',
+    'width;i;;Dummy'				=> '',
+    'library;s;;Dummy'				=> '',
+## if ISO2022JP
+    'hencode;b;;Iso2022jp_header_mime_conv'	=> '',
+    'nohencode;B;;Iso2022jp_header_mime_conv'	=> '',
+## endif
+    'split;i;;Partial_sleep'			=> '',
+    'server;s;;Smtp_servers'			=> '',
+    'client;s;;Client_name'			=> '',
+    ## temporary solution for compatibility with sendmail
+    'bs;b;;Smtp_input_mode'			=> '',
+    'f;s;;Dummy'				=> '',
+    't;b;;Obey_header'				=> '',
+    'v;b;;opt_verbose'				=> '',
+    'odb;B;;Dummy'				=> '',
+    'odi;B;;Dummy'				=> '',
+    'oem;B;;Error_report_by_mail'		=> '',
+    'oi;B;;Ignore_Dot'				=> '',
+    'i;B;;Ignore_Dot'				=> '',
+    'om;b;;Me_too'				=> '',
+    'm;b;;Me_too'				=> '',
+    'odq;b;;JustQueuing'			=> '',
+    'q;b;;ProcessQueue'				=> '',
+    'bp;b;;QueueStatus'				=> '',
+    ## compatibility for sendmail on Sony NEWS
+    'J;b;;Iso2022jp_code_conversion'		=> '',
+    ## temporary solution for compatibility with inews
+    'h;b;;Obey_header'				=> '',
+    ## temporary solution for compatibility with ucbmail
+    's;s;;Subject'				=> '',
+    );
+
+##
+## Profile and option processing
+##
+
+$selector = read_cfg_selector(\@ARGV);
+init_opt(\@OptConfig, \@CmpConfig);
+read_env(\@EnvConfig);
+read_cfg();
+if ($selector ne '') {
+    $error = 1 if (set_selector($selector) < 0);
+}
+read_opt(\@ARGV);
+help($EXPLANATION) && exit $EXIT_SUCCESS if $Help;
+
+##
+## Main
+##
+
+    &initialize;
+
+    @arg_rest = @ARGV;
+
+    $DebugFlag = 'all' if ($DebugAll);
+    &debug_option($DebugFlag);
+
+    if ($ProcessQueue || $QueueStatus) {
+	&init_final;
+	&process_queue(queue_path(), $ProcessQueue);
+	exit $EXIT_SUCCESS;
+    }
+
+    alias_read($Mail_aliases, $addrbooks);
+    hosts_read($Host_aliases);
+
+    if ($Draft_message eq '' && $#arg_rest == 0 && $arg_rest[0] !~ /\@/ &&
+        ($arg_rest[0] =~ /^\// || $arg_rest[0] =~ /^\w:\//)) {
+	# absolute path expression: a draft message
+	$Draft_message = $arg_rest[0];
+    }
+    $Obey_header = 1 if ($Draft_message);
+    if (!$Obey_header && !$Smtp_input_mode) {
+	foreach $arg (@arg_rest) {
+	    if ($arg !~ /\@/ && ($arg =~ /^\// || $arg =~ /^\w:\//)) {
+		# bad address list
+		$error = 1;
+		last;
+#		&error_exit;
+	    } else {
+		# otherwise: a mail address (not a news group)
+		if (&parse_rcpt(0, $arg) < 0) {
+		    $error = 1;
+		    last;
+#		    &error_exit;
+		}
+		$News_flag = 0;	# XXX
+	    }
+	}
+    } else {
+	# a draft message is specified or SMTP input mode
+	# XXX arguments ignored
+    }
+
+    unless ($Obey_header || $Draft_message || $Smtp_input_mode) {
+	# recipients should be specified at command line
+	if ($#Recipients < 0 && $Newsgroups eq '') {
+	    im_info("message was not delivered.\n");
+	    im_info("Recipient names must be specified.\n");
+	    exit $EXIT_ERROR;
+#	    &error_exit;
+	}
+    }
+
+##### GET A MESSAGE #####
+    if ($Draft_message || $Dist_file) {
+	# read whole message from draft message file
+	if ($Dist_flag && $Dist_file) {
+	    &read_message(1);	# read altmsg to resend
+	} else {
+	    &read_message(0);	# read normal message
+	}
+    } elsif ($Smtp_input_mode) {
+	# read message with SMTP
+	&smtp_get_mail;
+    } else {
+	# read message from STDIN
+	if (&read_header('STDIN', \@Header, 0) < 0) {
+	    $error = 1;
+	} else {
+	    &read_body('STDIN', \@Body, 0, !$Ignore_Dot);
+	}
+    }
+    im_notice("message accepted.\n");
+
+##### SET SIGNAL HANDLING FUNCTIONS #####
+#   $SIG{'ALRM'} = \&alarm_func;
+    $SIG{'TERM'} = \&term_func;
+    $SIG{'INT'} = \&int_func;
+
+##### OPTIONAL CONFIGURATION #####
+    if ($Obey_header && ($selector = &header_value(\@Header, 'Config')) ne '') {
+	$selector =~ s/\s+//g;
+	if ($selector ne '') {
+	    $error = 1 if (set_selector($selector) < 0);
+	}
+	&kill_header(\@Header, 'Config', 0);
+	alias_read($Mail_aliases, $addrbooks);
+	hosts_read($Host_aliases);
+    }
+
+    &init_final;
+
+    my ($h);
+    foreach $h (@Add_headers) {
+	if ($h =~ /^([\w\-]+):\s*(.*)/s) {
+	    &add_header(\@Header, 0, $1, $2);
+	}
+    }
+
+##### HEADER PROCESSING #####
+    if ($Obey_header && &header_value(\@Header, 'Return-Receipt-To')) {
+	$Dsn_success_report = 1;
+	&kill_header(\@Header, 'Return-Receipt-To', 0);
+    }
+
+    # Resent-*: checking
+    if ($Newsgroups eq ''
+     && (($Dist_flag && $Dist_file)
+      || ($Obey_header
+       && (&header_value(\@Header, 'Resent-To')
+        || &header_value(\@Header, 'Resent-Cc'))))) {
+	$resend_mode = 1;
+	$Resend_prefix = 'Resent-';
+	$News_flag = 0;
+	im_notice("NNTP disabled (resend is only for mailing).\n");
+    } else {
+	$resend_mode = 0;
+	$Resend_prefix = '';
+    }
+
+    # verify invalid headers for posting news
+    if ($resend_mode == 0 && $Newsgroups ne '') {
+	&add_header(\@Header, 1, 'Newsgroups', $Newsgroups);
+	&kill_header(\@Header, 'Path', 0);
+	&kill_header(\@Header, 'Followup-To', 0);
+	&kill_header(\@Header, 'Received', 0);
+	&kill_header(\@Header, 'Return-Path', 0);
+	&kill_header(\@Header, 'NNTP-Posting-Host', 0);
+	&kill_header(\@Header, 'Xref', 0);
+	&kill_header(\@Header, 'Resent-To', 0);
+	&kill_header(\@Header, 'Resent-Cc', 0);
+	&kill_header(\@Header, 'Resent-From', 0);
+	$News_flag = 1;
+    } elsif ($News_flag
+     && (&header_value(\@Header, 'Newsgroups')
+      || &header_value(\@Header, 'BNewsgroups'))
+     && !&header_value(\@Header, 'Path')
+     && !&header_value(\@Header, 'Received')
+     && !&header_value(\@Header, 'Return-Path')
+     && !&header_value(\@Header, 'NNTP-Posting-Host')
+     && !&header_value(\@Header, 'Xref')
+     && (!$News_severe_check
+       || !&header_value(\@Header, 'Apparently-To')
+       && !&header_value(\@Header, 'To')
+       && !&header_value(\@Header, 'Cc'))) {
+#	$News_flag = 1;
+#	im_notice("NNTP will performed.\n");
+    } else {
+	$News_flag = 0;
+	im_notice("NNTP disabled (header format is not fit).\n");
+    }
+
+    if ($Dist_flag && $Dist_file) {
+	&rewrite_resend_header;
+	&append_dist_header;
+    }
+
+## if ISO2022JP
+    # hook before convert header
+    &$Hook_PreHeaderconv if ($Hook_PreHeaderconv);
+
+    if ($Iso2022jp_header_mime_conv) {
+#	if (debug{'header'}) {
+#	    open(NULL, '>/dev/null');
+#	    &im_debug("=== before header_iso2022jp_conv ===\n");
+#	    &put_header(\*NULL, \@Header, 'smtp', 'original');
+#	    &im_debug("====================================\n");
+#	    close(NULL);
+#	}
+
+	if (&header_iso2022jp_conv(\@Header, $Iso2022jp_code_conversion) < 0) {
+	    $error = 1;
+	}
+    }
+## endif
+
+    # XXX just for NetNews ?
+    if ($News_flag && $Organization && !&header_value(\@Header, 'Organization'))
+    {
+## if ISO2022JP
+	if ($Iso2022jp_code_conversion) {
+#	    $c = &code_check($Organization);
+#	    if ($c eq 'sjis' || $c eq 'euc' || $c eq 'sORe') { # XXX
+		$Organization = &conv_iso2022jp($Organization);
+#	    }
+	}
+	$Organization = &line_iso2022jp_mimefy($Organization)
+	  if ($Iso2022jp_header_mime_conv);
+## endif
+	&add_header(\@Header, 0, 'Organization', $Organization);
+    }
+    if ($Generate_message_id
+     && !&header_value(\@Header, $Resend_prefix.'Message-Id')) {
+	$Cur_mid = &gen_message_id(0);
+	&add_header(\@Header, 0, $Resend_prefix.'Message-Id', $Cur_mid);
+    }
+    if ($Generate_date && !&header_value(\@Header, $Resend_prefix.'Date')) {
+	&add_header(\@Header, 0, $Resend_prefix.'Date', &gen_date(!$News_flag));
+    }
+    if ($Sender_name) {
+	if ($Comment_Name) {
+	    $Sender_line = "$Sender ($Sender_name)";
+	} else {
+	    $Sender_line = "$Sender_name <$Sender>";
+	}
+## if ISO2022JP
+	if ($Iso2022jp_code_conversion) {
+#	    $c = &code_check($Sender_line);
+#	    if ($c eq 'sjis' || $c eq 'euc' || $c eq 'sORe') { # XXX
+		$Sender_line = &conv_iso2022jp($Sender_line)
+#	    }
+	}
+	$Sender_line = &struct_iso2022jp_mimefy($Sender_line)
+	    if ($Iso2022jp_header_mime_conv);
+## endif
+    } else {
+	$Sender_line = $Sender;
+    }
+    im_debug("Sender: $Sender_line\n") if (&debug('from'));
+    unless ($from = &header_value(\@Header, $Resend_prefix.'From')) {
+	&add_header(\@Header, 0, $Resend_prefix.'From', $Sender_line);
+    } else {
+	my $rc = &parse_rcpt(-1, $from);
+	if ($rc < 0) {
+	    $error = 1;
+	} elsif ($rc != 1 || &extract_addr($from) ne $Sender) {
+	    &add_header(\@Header, 1, $Resend_prefix.'Sender', $Sender_line);
+#	    &add_header(\@Header, 1, 'Originator', $Sender_line)
+#		if ($News_flag);
+	}
+    }
+    if (&header_value(\@Header, 'Subject') eq '') {
+	&add_header(\@Header, 1, 'Subject', $Subject);
+    }
+
+##### BODY PROCESSING #####
+    unless (&header_value(\@Header, 'Mime-Version')) {
+	$Body_code = code_check_body(\@Body);
+	im_debug("Body code is $Body_code\n") if (&debug('code'));
+	$do_conv_8to7 = 0;
+	if ($Body_code eq '8BIT') {
+	    $Need_mime_version_header = 1;
+	    $Has_8bit_body = 1;
+	    $do_conv_8to7 = 1 if ($Conv_8to7);
+	}
+## if ISO2022JP
+	elsif ($Body_code eq 'JIS') {
+	    $Need_mime_version_header = 1;
+	    $Has_iso2022jp_body = 1;
+	} elsif ($Body_code eq 'SJIS' || $Body_code eq 'EUC') {
+	    $Need_mime_version_header = 1;
+	    if ($Iso2022jp_code_conversion) {
+		$Has_iso2022jp_body = 1;
+		convert_iso2022jp_body(\@Body, $Body_code);
+		if ($Has_Hankaku_kana) {
+		    $Body_code = '8BIT';
+		    $Has_8bit_body = 1;
+		    $do_conv_8to7 = 1 if ($Conv_8to7);
+		}
+	    } else {
+		$Has_8bit_body = 1;
+		$do_conv_8to7 = 1 if ($Conv_8to7);
+	    }
+	}
+	if ($do_conv_8to7) {
+	    if ($Need_base64_encoded) {
+		&body_base64_encode(\@Body);
+		$Body_encoding = 'base64';
+	    } else {
+		&body_qp_encode(\@Body);
+		$Body_encoding = 'quoted-printable';
+	    }
+	}
+## endif
+    }
+
+##### HEADER REWRITING #####
+#   if (debug{'header'}) {
+#	open(NULL, '>/dev/null');
+#	&im_debug("=== before rewrite_header ===\n");
+#	&put_header(\*NULL, \@Header, 'smtp', 'original');
+#	&im_debug("=============================\n");
+#	close(NULL);
+#   }
+
+    if (&rewrite_header(\@Header) < 0) {
+	$error = 1;
+    }
+
+#   if (debug{'header'}) {
+#	open(NULL, '>/dev/null');
+#	&im_debug("=== after rewrite_header ===\n");
+#	&put_header(\*NULL, \@Header, 'smtp', 'original');
+#	&im_debug("============================\n");
+#	close(NULL);
+#   }
+
+    &error_exit if ($error);
+
+##### GET RECIPIENTS #####
+    if ($Obey_header || $Draft_message) {
+	if (&rcpt_pickup(\@Header, $resend_mode, 0) < 0) {
+	    &error_exit;
+	}
+    }
+
+#   if (debug{'header'}) {
+#	open(NULL, '>/dev/null');
+#	&im_debug("=== after rcpt_pickup ===\n");
+#	&put_header(\*NULL, \@Header, 'smtp', 'original');
+#	&im_debug("=========================\n");
+#	close(NULL);
+#   }
+
+##### VERIFY FORMAT OF THE MESSAGE #####
+    if ($News_flag) {
+	if (&header_value(\@Header, 'Newsgroups') eq ''
+	 && &header_value(\@Header, 'BNewsgroups') eq '') {
+	    im_err("Bad message format (no Newsgroups:).\n");
+	    &error_exit;
+	}
+	if (&header_value(\@Header, 'Subject') eq '') {
+	    im_err("Bad message format (no Subject:).\n");
+	    &error_exit;
+	}
+	if ($#Body < 0) {
+	    im_err("No message body.\n");
+	    &error_exit;
+	}
+    } else {
+	if ($#Recipients < 0) {
+	    im_err("No recipients collected.\n");
+	    &error_exit;
+	}
+    }
+
+    if ($Me_too) {
+	&error_exit if (&add_to_rcpt(0, $Sender) < 0);
+    }
+    my ($d);
+    foreach $d (split(',', $Dcc_Address)) {
+	&error_exit if (&add_to_rcpt(0, $d) < 0);
+    }
+
+    # hook before final header processing
+    &$Hook_PreFinalHeaderProc if ($Hook_PreFinalHeaderProc);
+
+#   if (debug{'header'}) {
+#	open(NULL, '>/dev/null');
+#	&im_debug("=== before final header processing ===\n");
+#	&put_header(\*NULL, \@Header, 'smtp', 'original');
+#	&im_debug("======================================\n");
+#	close(NULL);
+#   }
+
+##### FINAL HEADER PROCESSING #####
+    &add_header(\@Header, 1, 'X-'.$Resend_prefix.'Dispatcher', $VERSION);
+    &kill_header(\@Header, 'Bcc', 0);
+    &kill_header(\@Header, 'Dcc', 0);
+    &kill_header(\@Header, 'Fcc', 0);
+    &kill_header(\@Header, 'Resent-Bcc', 0);
+    &kill_header(\@Header, 'Resent-Dcc', 0);
+    &kill_header(\@Header, 'Resent-Fcc', 0);
+    if ($resend_mode) {
+	&kill_header(\@Header, 'Resent-Sender', 1);
+	&kill_header(\@Header, 'Resent-From', 1);
+	&kill_header(\@Header, 'Resent-Message-Id', 1);
+    } else {
+	&kill_header(\@Header, 'Sender', 1);
+	&kill_header(\@Header, 'From', 1);
+	&kill_header(\@Header, 'Message-Id', 1);
+    }
+    if ($Draft_message) {
+	# annotation headers
+	&kill_header(\@Header, 'Replied', 0);
+	&kill_header(\@Header, 'Forwarded', 0);
+	&kill_header(\@Header, 'Resent', 0);
+    }
+
+    if ($Need_mime_version_header && !&header_value(\@Header, 'Mime-Version')) {
+	&add_header(\@Header, 1, 'Mime-Version', '1.0');
+	if ($Has_8bit_body) {
+	    &add_header(\@Header, 1, 'Content-Type',
+		"Text/plain; charset=$Unknown8bit_label");
+## if ISO2022JP
+	} elsif ($Has_iso2022jp_body) {
+	    if ($Body_code eq 'SJIS' || $Body_code eq 'EUC') {
+		&add_header(\@Header, 1, 'Content-Type',
+		    "Text/plain; charset=iso-2022-jp"
+		    ." (auto-converted from $Body_code)");
+	    } else {
+		&add_header(\@Header, 1, 'Content-Type',
+		    'Text/plain; charset=iso-2022-jp');
+	    }
+## endif
+	} else {
+	    &add_header(\@Header, 1, 'Content-Type',
+		'Text/plain; charset=us-ascii');
+	}
+	if ($Body_encoding) {
+	    &add_header(\@Header, 1, 'Content-Transfer-Encoding',
+	      $Body_encoding);
+	}
+    }
+
+#   if (debug{'header'}) {
+#	open(NULL, '>/dev/null');
+#	&im_debug("=== after final header processing ===\n");
+#	&put_header(\*NULL, \@Header, 'smtp', 'original');
+#	&im_debug("=====================================\n");
+#	close(NULL);
+#   }
+
+##### PGP HANDLING #####
+    if ($PGP_Sign) {
+	&pgp_process;
+    }
+
+##### MULTIPART HANDLING #####
+    &add_multipart if (@Mulipart_messages);
+
+##### SIZE OF MESSAGE BODY FIXED #####
+    if ($UseLines && &header_value(\@Header, 'Lines') eq '') {
+	if ($#Body >= 0) {
+	    &add_header(\@Header, 1, 'Lines', $#Body);
+	} else {
+	    &add_header(\@Header, 1, 'Lines', '0');
+	}
+    }
+    if ($Lines_to_partial > 0 && $#Body > $Lines_to_partial) {
+	$partial_total = int(($#Body+$Lines_to_partial-1) / $Lines_to_partial);
+    } else {
+	$partial_total = 0;
+    }
+
+    &kill_empty_header(\@Header);
+    &sort_header(\@Header, $HeaderSeq) if ($HeaderSeq);
+
+##### SAVE INTO FOLDER #####
+    if ($Fcc_folder) {
+	&set_command_response();	# XXX
+	foreach $f (split(',', $Fcc_folder)) {
+	    $f = '+' . $f if ($f !~ /^\+/);
+	    my $p = &save_fcc($f, 1, $partial_total);
+	    next if ($p ne '');
+	    im_err("folder carbon copy (into $f) failed.\n");
+	    &log_action('fcc', &get_cur_server(), $f, 'failed');
+	    &error_exit;
+	}
+    }
+
+##### QUEUING IF NEEDED #####
+    if ($JustQueuing) {
+	if (&queue_message(queue_path(), \@Header, \@Body) == 0) {
+	    if ($Draft_message) {
+		&trash_message;
+	    }
+	    im_notice("message queued.\n");
+	    exit $EXIT_SUCCESS;
+	}
+	im_err("Queuing failed.\n");
+	&error_exit;
+    }
+
+##### DISPATCH THE MESSAGE #####
+    $rcode = &send_message($News_flag, $partial_total);
+    if ($rcode == 0) {
+	if ($Smtp_input_mode) {
+	    &smtp_get_mail_final(0) unless ($Error_report_by_mail);
+	} elsif (&verbose) {
+	    if ($Info) {
+		print STDERR "\n";
+		print STDERR $Info;
+	    }
+	    my $session_log = &get_session_log();
+	    if ($session_log) {
+		print STDERR "\n";
+		print STDERR $session_log;
+	    }
+	}
+	if ($Draft_message) {
+	    &trash_message;
+	}
+	&exit_($EXIT_SUCCESS);
+    } else {
+	if ($rcode > 0 && $Queuing) {
+	    if (&queue_message(queue_path(), \@Header, \@Body) == 0) {
+		if ($Draft_message) {
+		    &trash_message;
+		}
+		im_info("message queued.\n");
+		exit $EXIT_SUCCESS;
+	    }
+	}
+	im_err("delivery failed.\n");
+	&error_exit;
+    }
+# end of main
+
+
+##### INITIALIZATION #####
+#
+# initialize()
+#	return value: none
+#
+sub initialize {
+
+    # Constants
+    $Folding_length = 72;
+
+    # Variables
+#   @Del_headers_on_mail = ('Originator');
+    @Del_headers_on_news = ('To', 'Cc');
+    &set_crlf("\n");
+
+    # user's information
+
+    if (unixp()) {
+	my ($pw_name, $pw_passwd, $pw_uid, $pw_gid, $pw_quota,
+	  $pw_comment, $pw_gcos, $pw_dir, $pw_shell) = getpwuid($<);
+
+	$Home = $pw_dir;
+
+	local (@cap) = unpack('aa*', $pw_name);
+	$cap[0] =~ tr/a-z/A-Z/;
+	local ($cap) = join('', @cap);
+	if (!$Sender_name) {
+	    ($Sender_name = $pw_gcos) =~ s/,.*$//;
+	    $Sender_name =~ s/&/$cap/g;
+	}
+    }
+
+    $Login = im_getlogin();
+    $Home = $ENV{'HOME'} if ($ENV{'HOME'});
+
+    srand(time+$$);
+#   binmode(STDIN);
+}
+
+##### SIGNAL HANDLERS #####
+#sub alarm_func {
+##   no operation
+#}
+
+sub int_func {
+    im_info("Terminated by interrupt (SIGINT).\n");
+    &error_exit;
+}
+
+sub term_func {
+    im_info("Terminated by interrupt (SIGTERM).\n");
+    &error_exit;
+}
+
+##### FINAL INITIALIZATION #####
+#
+# init_final()
+#	return value: none
+#
+sub init_final {
+    # sender information
+    if ($Mail_Address ne '' && $Default_from_domain_name eq '') {
+	my $a = &extract_addr($Mail_Address);
+	if ($a =~ /(.*)\@(.*)/s) {
+	    my ($u, $h) = ($1, $2);
+	    $Default_from_domain_name = $h;
+	    $User_name = $u unless ($User_name);
+	}
+    }
+
+    $Login = $User_name if ($User_name);	# XXX
+    unless ($Sender) {
+	if ($Default_from_domain_name && !$Obey_MTA_domain) {
+	    $Sender = "$Login\@$Default_from_domain_name";
+	} else {
+	    $Sender = $Login;
+	}
+    }
+
+    unless ($Message_id_domain_name) {
+	if ($Default_from_domain_name) {
+	    $Message_id_domain_name = $Default_from_domain_name;
+	} else {
+	    $Message_id_domain_name = 'unknown-domain';
+	}
+    }
+
+    @Smtp_servers = split(',', $Smtp_servers);
+    @Nntp_servers = split(',', $Nntp_servers);
+
+    &log_transaction;
+
+    # user's require file
+    if($User_require) {
+	require $User_require;
+    }
+}
+
+##### SEND A MESSAGE WITH SMTP/NNTP #####
+#
+# send_message(news_flag, split_flag)
+#	news_flag: news mode if true
+#	split_flag: splitting into multiple messages with "partial" format
+#			is required if true
+#	return value:
+#		 0: success
+#		 1: recoverable error (should be retried)
+#		-1: unrecoverable error
+#
+sub send_message {
+    local ($news_flag, $split) = @_;
+    local ($normal, $bcc, $i, $rcode);
+
+    # hook before dispatching the message
+    &$Hook_PreDispatching if ($Hook_PreDispatching);
+
+    if ($news_flag) {
+	if ($split) {
+	    for ($i = 1; $i <= $split; $i++) {
+		sleep($Partial_sleep) if ($i > 1);
+		$rcode = &nntp_transaction(\@Nntp_servers, \@Header, \@Body,
+		  $Newsgroups, $i, $split);
+		return $rcode if ($rcode);
+	    }
+	} else {
+	    $rcode = &nntp_transaction(\@Nntp_servers, \@Header, \@Body,
+	      $Newsgroups, 0, 0);
+	    return $rcode if ($rcode);
+	}
+	# XXX should be controlable? --- yes, of course!
+#	&add_header(\@Header, 0, 'X-NNTP-Posting-Status',
+#	    "posting successful via " . &get_cur_server");
+	im_notice("posting succeeded.\n");
+    }
+
+    # header management only for SMTP message
+    if (!&header_value(\@Header, 'To')
+     && !&header_value(\@Header, 'Cc')
+     && !&header_value(\@Header, 'Resent-To')
+     && !&header_value(\@Header, 'Resent-Cc')
+     && !&header_value(\@Header, 'Apparently-To')) {
+	unless ($Show_Rcpts_Header) {
+	    &add_header(\@Header, 0, 'To', 'undisclosed-recipients:;');
+#	} else {
+#	    foreach $rec (@Recipients) {
+#		if ($rec =~ /<(.+)>/) {
+#		    &add_header(\@Header, 0, 'To', $1);
+#		}
+#	    }
+	}
+    }
+
+    foreach $rec (@Recipients) {
+	if ($rec =~ /<.+>/) {
+	    $normal = 1;
+	} else {
+	    $bcc = 1;
+	}
+    }
+
+    if ($normal) {
+	if ($split) {
+	    for ($i = 1; $i <= $split; $i++) {
+		sleep($Partial_sleep) if ($i > 1);
+		$rcode = &smtp_transaction(\@Smtp_servers, \@Header, \@Body,
+		  0, $i, $split);
+		return $rcode if ($rcode);
+	    }
+	} else {
+	    $rcode = &smtp_transaction(\@Smtp_servers, \@Header, \@Body,
+	      0, 0, 0);
+	    return $rcode if ($rcode);
+	}
+    }
+    if ($bcc) {
+	if ($split) {
+	    for ($i = 1; $i <= $split; $i++) {
+		sleep($Partial_sleep) if ($i > 1);
+		$rcode = &smtp_transaction(\@Smtp_servers, \@Header, \@Body,
+		  1, $i, $split);
+		return $rcode if ($rcode);
+	    }
+	} else {
+	    $rcode = &smtp_transaction(\@Smtp_servers, \@Header, \@Body,
+	      1, 0, 0);
+	    return $rcode if ($rcode);
+	}
+    }
+    im_notice("delivery succeeded.\n");
+    if ($Anno_flag) {
+	my $ref;
+	if ($Dist_flag) {
+	    $ref = &header_value(\@Header, 'Message-Id');
+	    &annotate('Resent', $ref) if ($ref ne '');
+	} elsif (&header_value(\@Header, 'Subject') =~ /Forward:/) { # XXX
+	    my $rfc822;
+	    foreach (@Body) {
+		if (/^--/) {
+		    $ref = '';
+		    $rfc822 = 0;
+		} elsif (/^Message-Id:\s*(.*)/i) {
+		    chomp($ref = $1);
+		} elsif (/^Content-Type:\s*Message\/rfc822/i) {
+		    $rfc822 = 1;
+		} elsif (/^\n$/ && $ref ne '' && $rfc822) {
+		    &annotate('Forwarded', $ref);
+		    $ref = '';
+		    $rfc822 = 0;
+		}
+	    }
+	} else {
+	    $ref = &header_value(\@Header, 'References');
+	    if ($ref ne '') {
+		if ($ref =~ /(<[\w\%_\/\-\.\@]+>)\s+$/) {
+		    $ref = $1;
+		}
+	    } else {
+		$ref = &header_value(\@Header, 'In-Reply-To');
+		if ($ref =~ /(<[\w\%_\/\-\.\@]+>)/) {
+		    $ref = $1;
+		} else {
+		    $ref = '';
+		}
+	    }
+	    &annotate('Replied', $ref) if ($ref ne '');
+	}
+    }
+    return 0;
+}
+
+##### SERVER SIDE SMTP PROCESSING (BEFORE GETTING MAIL) #####
+#
+# smtp_get_mail()
+#	return value: none
+#
+sub smtp_get_mail {
+    local ($state) = 0;
+    print STDOUT "220 Server ready ($VERSION)\r\n";
+    while (<STDIN>) {
+	if (/^NOOP\s/i) {
+	    print STDOUT "250 OK\r\n";
+	} elsif (/^QUIT\s/i) {
+	    print STDOUT "221 Closing connection\r\n";
+	    close(STDOUT);
+	    last;
+	} elsif (/^HELO\s/i) {
+	    print STDOUT "250 Hello, pleased to meet you\r\n";
+	    $state = 1;
+	} elsif (/^MAIL FROM:(.*)/i) {
+	    $Sender = &extract_addr($1);
+	    if ($Default_from_domain_name ne ''
+	     && !$Obey_MTA_domain	# XXX
+	     && $Sender !~ /[\@%!:]/o) {
+		$Sender .= "\@$Default_from_domain_name";
+	    }
+	    $Sender_name = '';
+	    print STDOUT "250 Sender ok\r\n";
+	    $state = 2;
+	} elsif (/^RCPT TO:(.*)/i) {
+	    if ($state != 2) {
+		print STDOUT "503 Need MAIL before RCPT\r\n";
+		next;
+	    }
+	    &error_exit if (&add_to_rcpt(0, $1) < 0);
+	    print STDOUT "250 Recipient ok\r\n";
+	    $state = 3;
+	} elsif (/^DATA\s/i) {
+	    if ($state != 3) {
+		print STDOUT "503 No recipient\r\n";
+		next;
+	    }
+	    print STDOUT "354 End with '.' on a line by itself\r\n";
+	    if (&read_header('STDIN', \@Header, 1) < 0) {
+		&error_exit;
+	    }
+	    &read_body("STDIN", \@Body, 1, 0);
+	    unless ($Error_report_by_mail) {
+		last;
+	    } else {
+		print STDOUT "250 Message accepted\r\n";
+	    }
+	} elsif (/^RSET\s/i) {
+	    print STDOUT "503 Not supported\r\n";
+	} elsif (/^HELP\s/i) {
+	    print STDOUT "250 No information\r\n";
+	} elsif (/^VRFY\s/i || /^EXPN\s/i) {
+	    print STDOUT "503 Not supported\r\n";
+	} elsif (/^ONEX\s/i) {
+	    print STDOUT "250 Treated as NOOP\r\n";
+	} elsif (/^VERB\s/i) {
+	    print STDOUT "250 Verbose mode\r\n";
+	    &set_verbose(1);
+	} else {
+	    print STDOUT "500 Command unrecognized\r\n";
+	}
+    }
+}
+
+##### SERVER SIDE SMTP PROCESSING (AFTER GETTING MAIL) #####
+#
+# smtp_get_mail_final(error_status)
+#	error_status: status of delivery to be reported
+#	return value: none
+#
+sub smtp_get_mail_final {
+    local ($error) = @_;
+    return unless (fileno(STDOUT));
+    unless ($error) {
+	print STDOUT "250 Message accepted for delivery\n";
+    }
+    while (<STDIN>) {
+	if (/^QUIT\s/i) {
+	    print STDOUT "221 Closing connection\r\n";
+	    close(STDOUT);
+	    last;
+	} elsif (/^HELO\s/i || /^EHLO\s/i) {
+	    print STDOUT "250 Hello\r\n";
+	} elsif (/^MAIL\s/i || /^RCPT\s/i || /^DATA\s/i) {
+	    print STDOUT "503 Invalid sequence\r\n";
+	} elsif (/^NOOP\s/i) {
+	    print STDOUT "250 OK\r\n";
+	} elsif (/^RSET\s/i) {
+	    print STDOUT "503 Not supported\r\n";
+	} elsif (/^HELP\s/i) {
+	    print STDOUT "250 No information\r\n";
+	} elsif (/^VRFY\s/i || /^EXPN\s/i) {
+	    print STDOUT "503 Not supported\r\n";
+	} elsif (/^ONEX\s/i) {
+	    print STDOUT "250 Treated as NOOP\r\n";
+	} elsif (/^VERB\s/i) {
+	    print STDOUT "250 Verbose mode\r\n";
+	    &set_verbose(1);
+	} else {
+	    print STDOUT "500 Command unrecognized\r\n";
+	}
+    }
+}
+
+##### READ MESSAGE FROM MESSAGE FILE #####
+#
+# read_message(dist_mode)
+#	dist_mode: redistribution mode if ture
+#	return value: none
+#
+sub read_message {
+    local ($dist_mode) = @_;
+    local ($message_file);
+    local (*READ);
+    if ($dist_mode) {
+	$message_file = &expand_path($Dist_file);
+    } else {
+	my $d;
+	if ($Draft_folder ne '') {
+	    $d = "$Draft_folder/$Draft_message";
+	} else {
+	    $d = $Draft_message;
+	}
+	$message_file = &expand_path($d);
+    }
+    unless (im_open(\*READ, "<$message_file")) {
+	im_err("Can not open: $message_file\n");
+	&error_exit;
+    }
+    if (&read_header(\*READ, \@Header, 0) < 0) {
+	&error_exit;
+    }
+    &read_body(\*READ, \@Body, 0, 0);
+    close(READ);
+}
+
+##### READ MESSAGE FROM MESSAGE FILE FOR MULTIPART ADDITIONALS #####
+#
+# read_mp_message(file, content)
+#	file: message file name to be read
+#	return value: none
+#
+sub read_mp_message {
+    (my $file, local *content) = @_;
+    local ($message_file);
+    local (*MP_READ);
+    if ($file eq '-') {
+	$message_file = '/dev/tty';	# get from STDIN
+    } else {
+	$message_file = &expand_path($file);
+    }
+    unless (im_open(\*MP_READ, "<$message_file")) {
+	im_err("Can not open: $message_file\n");
+	&error_exit;
+    }
+    @content = ();
+    while (<MP_READ>) {
+	push (@content, $_);
+    }
+    close(MP_READ);
+}
+
+##### ENCAPSULATE MESSAGE BODY #####
+#
+# encapsulate_body(boundary)
+#	boundary: boundary of multipart message
+#	return value: none
+#
+sub encapsulate_body {
+    local ($boundary) = @_;
+    local ($l);
+#   unshift(@Body, "\n");
+    # pull down Content-* header lines into body part
+    foreach $l (@Header) {
+	if ($l =~ /^(Content-[\w-]+):/i) {
+	    unshift(@Body, $l);
+	    &kill_header(\@Header, $1, 0);
+	}
+    }
+    foreach $l (@Body) {
+	if ($l !~ /^\n?$/) {
+	    unshift(@Body, "--$boundary\n");
+	    last;
+	}
+    }
+    unshift(@Body, "\n");
+}
+
+##### ADDING EXTRA MESSAGES AS MULTIPART #####
+#
+# add_multipart()
+#	return value: none
+#
+sub add_multipart {
+    local ($part_code);
+    local($mp_boundary) = &gen_message_id(0);
+    $mp_boundary =~ y/<@>/-_-/;
+    &encapsulate_body($mp_boundary);
+    &add_header(\@Header, 1, 'Mime-Version', '1.0')
+	if (!&header_value(\@Header, 'Mime-Version'));
+    &add_header(\@Header, 1, 'Content-Type', "Multipart/mixed;\n"
+	."\tboundary=\"$mp_boundary\"");
+    foreach $mp_msg (@Mulipart_messages) {
+	im_debug("adding message: $mp_msg\n") if (&debug('multipart'));
+	push(@Body, "--$mp_boundary\n");
+	&read_mp_message($mp_msg, \@Part);
+	$part_code = code_check_body(\@Part);
+	im_debug("code = $part_code\n") if (&debug('multipart'));
+	# add internal header
+	if ($part_code eq 'ASCII') {
+	    push(@Body, "Content-Type: Text/plain; charset=us-ascii\n");
+## if ISO2022JP
+	} elsif ($part_code eq 'JIS') {
+	    push(@Body, "Content-Type: Text/plain; charset=iso-2022-jp\n");
+	} elsif ($part_code eq 'SJIS' || $part_code eq 'EUC') {
+	    if ($Iso2022jp_code_conversion) {
+		convert_iso2022jp_body(\@Part, $part_code);
+		if ($Has_Hankaku_kana) {
+			$part_code = '8BIT';
+		} else {
+		    push(@Body, "Content-Type: Text/plain; charset=iso-2022-jp"
+		      . " (auto-converted from $part_code)\n");
+		}
+	    } else {
+		$part_code = '8BIT';
+	    }
+## endif
+	}
+	if ($part_code eq '8BIT') {
+	    local ($part_encoding);
+	    push(@Body, "Content-Type: Text/plain; "
+	      . "charset=$Unknown8bit_label\n");
+	    if ($Conv_8to7) {
+		if ($Need_base64_encoded) {
+		    &body_base64_encode(\@Part);
+		    $part_encoding = 'base64';
+		} else {
+		    &body_qp_encode(\@Part);
+		    $part_encoding = 'quoted-printable';
+		}
+		push(@Body, "Content-Transfer-Encoding: $part_encoding\n");
+	    }
+	}
+	if ($Filename_Add) {
+	    ($mp_msg_name = $mp_msg) =~ s/^.*\///;
+	    push(@Body, "Content-Disposition: attachment; " .
+		 "filename=$mp_msg_name\n");
+	}
+	push(@Body, "\n");
+	push(@Body, @Part);
+    }
+    push(@Body, "--$mp_boundary--\n");
+}
+
+##### PGP HANDLING #####
+#
+# pgp_process()
+#	return value: none
+#
+sub pgp_process {
+    local($b, $flg, @Sign);
+    $flg = 0;
+    foreach $b (@Body) {
+	if ($b !~ /^\n?$/) {
+	    $flg = 1;
+	    last;
+	}
+    }
+    if ($flg == 0) {
+	# no message body to be signed
+	return;
+    }
+    local($mp_boundary) = &gen_message_id(0);
+    $mp_boundary =~ y/<@>/-_-/;
+    &encapsulate_body($mp_boundary);
+    &add_header(\@Header, 1, 'Mime-Version', '1.0')
+      if (!&header_value(\@Header, 'Mime-Version'));
+    &add_header(\@Header, 1, 'Content-Type', "Multipart/signed;\n"
+	."\tprotocol=\"application/pgp-signature\";\n"
+	."\tmicalg=\"pgp-md5\";\n"
+	."\tboundary=\"$mp_boundary\"");
+
+    local($got_sign, $retry);
+    $retry = 0;
+
+    do {
+	pipe('ReadHandle1', 'WriteHandle1');
+	pipe('ReadHandle2', 'WriteHandle2');
+	pipe('ReadPassPhrase', 'WritePassPhrase');
+	$ENV{'PGPPASSFD'} = fileno(ReadPassPhrase);
+	im_debug("FD $ENV{'PGPPASSFD'} is allocated "
+	  . "for PGP PassPhrase passing\n")
+	     if (&debug('pgp'));
+
+	local ($f) = fork;
+	if ($f < 0) {
+	    im_err("Can not fork to exec PGP program.\n");
+	    &error_exit;
+	}
+	if ($f > 0) {
+	    # parents
+	    close('ReadHandle1');
+	    close('WriteHandle2');
+	    close('ReadPassPhrase');
+	    select('ReadHandle2'); $| = 1;
+	    select('WriteHandle1'); $| = 1;
+	    select('WritePassPhrase'); $| = 1;
+	    select(STDOUT);
+	} else {
+	    # child
+	    close('WriteHandle1');
+	    close('ReadHandle2');
+	    close('WritePassPhrase');
+	    close (STDIN);
+	    open(STDIN, "<&ReadHandle1");
+	    close (STDOUT);
+	    open(STDOUT, ">&WriteHandle2");
+	    close (STDERR) unless (&debug('pgp'));
+	    select('ReadHandle1'); $| = 1;
+	    select('WriteHandle2'); $| = 1;
+	    select('ReadPassPhrase'); $| = 1;
+	    exec ('pgp', '-saf', '+batchmode');
+	    exit $EXIT_SUCCESS;
+	}
+	$flg = 2;
+	foreach $b (@Body) {
+	    if ($flg > 1 && $b =~ /^--$mp_boundary\n$/) {
+		$flg = 1;
+		next;
+	    }
+	    next if ($flg > 1);
+	    if ($flg > 0 && $b =~ /^\n$/) {
+		$flg = 0;
+		next;
+	    }
+	    next if ($flg > 0);
+	    last if ($b =~ /^--$mp_boundary\n$/);
+	    print WriteHandle1 $b;
+	}
+	close('WriteHandle1');
+
+	# passphrase required by child process
+	local($phrase) = &getpass_intract('PGP passphrase: ');
+	print WritePassPhrase "$phrase\n";
+	# get the result
+
+	$got_sign = 0;
+	while (<ReadHandle2>) {
+	    $got_sign = 1;
+	    push(@Sign, $_);
+	}
+	close(ReadHandle2);
+	close(WritePassPhrase);
+    } while ($got_sign == 0 && ++$retry < 3);
+
+    push(@Body, "--$mp_boundary\n");
+    push(@Body, "Content-Type: Application/Pgp-Signature\n");
+    push(@Body, "Content-Transfer-Encoding: 7bit\n");
+    push(@Body, "\n");
+
+    push(@Body, @Sign);
+
+    push(@Body, "--$mp_boundary--\n");
+    unless ($got_sign) {
+	im_err("Bad pass-phrase\n");
+	&error_exit;
+    }
+}
+
+##### SAVE MESSAGE FOR FCC #####
+#
+# save_fcc(folder_name, save_style, partial_total)
+#	folder_name: folder name to be saved in
+#	save_style:
+#		0 = messages in a file
+#		1 = separated messages in a directory
+#	partial_total: total number of partial messages
+#	return value:
+#		NULL: failed
+#		path_of_file: success
+#
+sub save_fcc {
+    my ($folder, $dir_style, $total) = @_;
+    my ($fcc_dir, $err_remove, $i, $msg, $dead);
+    my ($FCC);
+    &set_crlf("\n");
+    $total = 0 unless ($Fcc_partial);
+    if ($folder eq '') {
+	$folder = $Dead_letter;
+	$dead = 1;
+    }
+    unless ($total) {
+	im_debug("FCC with no spliting.\n") if (&debug('fcc'));
+	($FCC, $fcc_dir, $msg, $err_remove) = &open_fcc($folder, $dir_style);
+	unless (defined($FCC)) {
+	    im_debug("FCC open failed.\n") if (&debug('fcc'));
+	    unlink($err_remove) if ($err_remove);
+	    return '';
+	}
+	if (&put_header($FCC, \@Header, 'internal', 'original') < 0
+	 || &put_body($FCC, \@Body, 0, 0) < 0) {
+	    im_err("FCC write failed ($!).\n");
+	    close($FCC);
+	    unlink($err_remove) if ($err_remove);
+	    return '';
+	}
+	unless ($fcc_dir) {
+	    unless (print $FCC "\n") {
+		im_err("FCC write failed ($!).\n");
+		close($FCC);
+		return '';
+	    }
+	}
+	if (&unixp() && !&no_sync()) {
+	    if (fsync(fileno($FCC)) < 0) {
+		im_err("FCC write failed ($!).\n");
+		close($FCC);
+		return '';
+	    }
+	}
+	unless (close($FCC)) {
+	    im_err("FCC write failed ($!).\n");
+	    return '';
+	}
+	if ($dead) {
+	    &log_action('dead-letter', &get_cur_server(), $d, 'sent');
+	} else {
+	    &log_action('fcc', &get_cur_server(), $msg, 'sent');
+	    unless ($Cur_mid ne '' && history_open(1) < 0) {
+		history_store($Cur_mid, $msg);
+		history_close();
+	    }
+	    touch_folder($folder);
+	}
+	return $msg;
+    }
+
+    im_debug("FCC with spliting into $total.\n") if (&debug('fcc'));
+    for ($i = 1; $i <= $total; $i++) {
+	($FCC, $fcc_dir, $msg, $err_remove) = &open_fcc($folder, $dir_style);
+	unless (defined($FCC)) {
+	    im_debug("FCC open failed.\n") if (&debug('fcc'));
+	    unlink($err_remove) if ($err_remove);
+	    return '';
+	}
+	if (&put_mimed_partial($FCC, \@Header, \@Body, 0, $i, $total) < 0) {
+	    im_err("FCC write failed ($!).\n");
+	    close($FCC);
+	    unlink($err_remove) if ($err_remove);
+	    return '';
+	}
+	unless ($fcc_dir) {
+	    unless (print $FCC "\n") {
+		im_err("FCC write failed ($!).\n");
+		close($FCC);
+		unlink($err_remove) if ($err_remove);
+		return '';
+	    }
+	}
+	if (&unixp() && !&no_sync()) {
+	    if (fsync(fileno($FCC)) < 0) {
+		im_err("FCC write failed ($!).\n");
+		close($FCC);
+		unlink($err_remove) if ($err_remove);
+		return '';
+	    }
+	}
+	unless (close($FCC)) {
+	    im_err("FCC write failed ($!).\n");
+	    unlink($err_remove) if ($err_remove);
+	    return '';
+	}
+	if ($dead) {
+	    &log_action('dead-letter', &get_cur_server(), $d, 'sent');
+	} else {
+	    &log_action('fcc', &get_cur_server(), $msg, 'sent');
+	    unless ($Cur_mid ne '' && history_open(1) < 0) {
+		history_store($Cur_mid, $msg);
+		history_close();
+	    }
+	    touch_folder($folder);
+	}
+    }
+    return $msg;
+}
+
+##### MAKE THE INPUT MESSAGE TRASH #####
+#
+# trash_message()
+#	return value: none
+#
+sub trash_message {
+    return if ($PreserveMessage);
+    my $d;
+    if ($Draft_folder ne '') {
+	$d = "$Draft_folder/$Draft_message";
+    } else {
+	$d = $Draft_message;
+    }
+    my $message_file = &expand_path($d);
+    if ($message_file =~ /^(.*\D)(\d+)$/) {
+	my ($dir, $file) = ($1, $2);
+	if ($Trashmark) {
+	    if (-f "$dir$Trashmark$file") {
+		unlink ("$dir$Trashmark$file");
+	    }
+	    if (!rename ("$dir$file", "$dir$Trashmark$file")) {
+		im_err("Can not rename: $dir$file as $dir$Trashmark$file\n");
+		&error_exit;
+	    }
+	    im_notice("$dir$file was renamed to $dir$Trashmark$file");
+	} else {
+	    unlink ("$dir$file");
+	}
+    }
+}
+
+##### APPEND DIST HEADER #####
+#
+# append_dist_header()
+#	return value: none
+#
+sub append_dist_header {
+    my $d;
+    if ($Draft_folder ne '') {
+	$d = "$Draft_folder/$Draft_message";
+    } else {
+	$d = $Draft_message;
+    }
+    my ($message_file) = &expand_path($d);
+    local (*DIST);
+    unless (im_open(\*DIST, "<$message_file")) {
+	im_err("Can not open: $message_file\n");
+	&error_exit;
+    }
+    if (&read_header(\*DIST, \@Header, 1) < 0) {
+	&error_exit;
+    }
+    close(DIST);
+}
+
+##### MH ANNOTATION #####
+#
+# annotate()
+#	return value: none
+#
+sub annotate {
+    my ($label, $ref) = @_;
+    local $_;
+    im_notice("annotating messages ($ref).\n");
+    return if (history_open(0) < 0);
+    my $msg = history_lookup($ref, LookUpMsg);
+    history_close();
+    return -1 if ($msg eq '');
+    my $first = "$label: Date: " . &gen_date(1) . "\n";
+    my $second = '';
+    $second = "$label: To: " . join(',', @Recipients) . "\n"
+	unless ($#Recipients < 0);
+    $second .= "$label: Newsgroups: $Newsgroups\n"
+	if ($Newsgroups ne '');
+    $second .= "$label: Message-Id: $Cur_mid\n" if ($Cur_mid ne '');
+    EACH: foreach (split(',', $msg)) {
+	im_notice("annotating $_.\n");
+	my $cur = &expand_path($_);
+	my $tmp = &conf_dir . "/anno$$\_"
+			. substr($cur,rindex($cur,"/")+1,-1) . ".tmp";
+	# copy to temporary file
+	unless (im_open(\*ORIGINAL, "<$cur")) {
+	    im_notice("anno: open failed(1): $cur ($!).\n");
+	    next;
+	}
+	unless (im_open(\*TMP, ">$tmp")) {
+	    im_err("anno: creation failed: $tmp ($!).\n");
+	    close(ORIGINAL);
+	    return -1;
+	}
+	print TMP $first . $second;
+	my $checked = 0;
+	my $inheader = 1;
+	while (<ORIGINAL>) {
+	    # check first line
+	    unless ($checked) {
+		if ($_ eq $first) {
+		    im_debug("already annotated.\n")
+		      if (&debug('anno'));
+		    # already annotated
+		    close(ORIGINAL);
+		    close(TMP);
+		    unlink($tmp);
+		    next EACH;
+		}
+		$checked = 1;
+	    }
+	    $inheader = 0 if ($inheader && /^\r?\n$/);
+	    if ($inheader && /^Message-Id:\s*(<.*>)/i) {
+		if ($ref ne $1) {
+		    im_debug("message-id mismatch.\n")
+		      if (&debug('anno'));
+		    # Message-ID mismatch
+		    close(ORIGINAL);
+		    close(TMP);
+		    unlink($tmp);
+		    next EACH;
+		}
+	    }
+	    unless (print TMP $_) {
+		im_err("anno: write failed: $tmp ($!).\n");
+		close(ORIGINAL);
+		close(TMP);
+		unlink($tmp);
+		return -1;
+	    }
+	}
+	close(ORIGINAL);
+	unless (close(TMP)) {
+	    im_err("anno: write failed: $tmp ($!).\n");
+	    unlink($tmp);
+	    return -1;
+	}
+	# copy back to original file (in case of links)
+	unless (im_open(\*TMP, "<$tmp")) {
+	    im_err("anno: open failed(2): $tmp ($!).\n");
+	    unlink($tmp);
+	    return -1;
+	}
+	unless (im_open(\*ORIGINAL, "+<$cur")) {
+	    im_err("anno: open failed(3): $cur ($!).\n");
+	    close(TMP);
+	    unlink($tmp);
+	    return -1;
+	}
+	my $size = -s ORIGINAL;
+	seek(ORIGINAL, 0, 2);
+	unless (print ORIGINAL $first . $second) {
+	    im_err("anno: can't expand file size: $cur ($!).\n");
+	    truncate(ORIGINAL, $size);
+	    close(ORIGINAL);
+	    close(TMP);
+	    unlink($tmp);
+	    return -1;
+	}
+#	seek(ORIGINAL, 0, 0);
+	unless (close(ORIGINAL)) {
+	    im_err("anno: can't expand file size: $cur ($!).\n");
+	    close(TMP);
+	    unlink($tmp);
+	    return -1;
+	}
+	unless (im_open(\*ORIGINAL, "+<$cur")) {
+	    im_err("anno: open failed(4): $cur ($!).\n");
+	    close(TMP);
+	    unlink($tmp);
+	    return -1;
+	}
+	while (<TMP>) {
+	    unless (print ORIGINAL $_) {
+		close(TMP);
+		close(ORIGINAL);
+		im_err("anno: $cur may be broken ($!). recover from $tmp!\n");
+		return -1;
+	    }
+	}
+	unless (close(ORIGINAL)) {
+	    close(TMP);
+	    im_err("anno: $cur may be broken ($!). recover from $tmp!\n");
+	    return -1;
+	}
+	close(TMP);
+	unlink ($tmp);
+    }
+    return 0;
+}
+
+
+##### PROCESS QUEUED MESSAGES #####
+#
+# process_queue(dir, deliver)
+#	dir: queue directory
+#	deliver: try delivery
+#	reutrn value: none
+#
+sub process_queue {
+    my ($queue_dir, $deliver) = @_;
+    my ($q, $found);
+    unless ($deliver) {
+	require IM::EncDec && import IM::EncDec;
+    }
+    unless (-d $queue_dir) {
+	im_warn("no queue directory\n");
+	return;
+    }
+    unless (opendir(QUEUEDIR, $queue_dir)) {
+	im_warn("can't read $queue_dir\n");
+	return;
+    }
+    foreach $q (sort {$a <=> $b} readdir(QUEUEDIR)) {
+	next unless ($q =~ /^\d+$/);
+#	$QUEUE = 'QUEUE';
+	rename ("$queue_dir/$q", "$queue_dir/$q.wrk");
+	unless (im_open(\*QUEUE, "<$queue_dir/$q.wrk")) {
+	    im_err("can't open $queue_dir/$q.wrk\n");
+	    rename ("$queue_dir/$q.wrk", "$queue_dir/$q");
+	    return;
+	}
+	im_notice("processing $queue_dir/$q.wrk ...\n");
+	while (<QUEUE>) {
+	    chomp;
+	    last if (/^$/);
+	    im_debug("ENV>$_\n") if (&debug('queue'));
+	    if (/^AF:(.*)/)  { $Anno_flag = $1; next; }
+	    if (/^NF:(.*)/)  { $News_flag = $1; next; }
+	    if (/^PS:(.*)/)  { $Partial_sleep = $1; next; }
+	    if (/^SRH:(.*)/) { $Show_Rcpts_Header = $1; next; }
+	    if (/^SFN:(.*)/) { $Smtp_fatal_next = $1; next; }
+	    if (/^DSR:(.*)/) { $Dsn_success_report = $1; next; }
+	    if (/^MID:(.*)/) { $Cur_mid = $1; next; }
+	    if (/^CFG:(.*)/) { $Config_opt = $1; next; }
+	    if (/^PT:(.*)/)  { $partial_total = $1; next; }
+	    if (/^S:(.*)/)   { $Sender = $1; next; }
+	    if (/^SSV:(.*)/) { @Smtp_servers = split(',', $1); next; }
+	    if (/^NSV:(.*)/) { @Nntp_servers = split(',', $1); next; }
+	    if (/^SSH:(.*)/) { $SSH_server = $1; next; }
+	    if (/^R:(.*)/)   { @Recipients = split(',', $1); next; }
+	    if (/^RQ:(.*)/)  { $User_require = $1; next; }
+	    im_warn("unknown environment: $_\n");
+	}
+
+	im_debug("reading message\n") if (&debug('queue'));
+	&read_header(\*QUEUE, \@Header, 0);
+	&read_body(\*QUEUE, \@Body, 0, 0) if ($deliver);
+	close(QUEUE);
+
+	if ($deliver) {
+	    im_debug("sending message\n") if (&debug('queue'));
+	    $rcode = &send_message($News_flag, $partial_total);
+	    if ($rcode == 0) {
+		unlink("$queue_dir/$q.wrk");
+		im_info("$queue_dir/$q: sent\n");
+	    } elsif ($rcode > 0) {
+		rename ("$queue_dir/$q.wrk", "$queue_dir/$q");
+		im_info("$queue_dir/$q: preserved\n");
+	    } else {
+		unlink("$queue_dir/$q.wrk");
+		im_warn("$queue_dir/$q: delivery failed\n");
+		&error_report;
+	    }
+	} else {
+	    my ($r, $t);
+	    rename ("$queue_dir/$q.wrk", "$queue_dir/$q");
+	    print "Message queued in $queue_dir/$q";
+	    if ($Config_opt ne '') {
+		print " (Config: $Config_opt)\n";
+	    } else {
+		print "\n";
+	    }
+	    if ($t = &header_value(\@Header, 'Message-ID')) {
+		print "    Message-ID: $t\n";
+	    }
+	    if ($t = &header_value(\@Header, 'Date')) {
+		print "    Date: $t\n";
+	    }
+	    if (($t = &header_value(\@Header, 'Subject')) ne '') {
+## if ISO2022JP
+		$t =~ s/\?=\s*=\?/\?==?/;
+		$t = &mime_decode_string($t);
+		$t =~ s/\n\s*//;
+## endif
+		print "    Subject: $t\n";
+	    }
+	    if ($News_flag) {
+	        my $ng = &header_value(\@Header, 'Newsgroups');
+	        $ng = &header_value(\@Header, 'BNewsgroups')
+		    if ($ng eq '');
+		print "    Will be posted in $ng\n";
+	    }
+	    print "    Recipients:\n";
+	    foreach $r (@Recipients) {
+		print "\t$r\n";
+	    }
+	}
+
+	@Header = ();
+	@Body = ();
+	$found = 1;
+    }
+    closedir(QUEUEDIR);
+    unless ($found) {
+	im_notice("no messages found in queue\n");
+    }
+    return;
+}
+
+##### QUEUE THE MESSAGE #####
+#
+# queue_message(dir)
+#	dir: queue directory
+#	reutrn value:
+#		-1: failure
+#		 0: success
+#
+sub queue_message {
+    local ($queue_dir, *Header, *Body) = @_;
+    my ($q);
+    local (*QUEUE);
+    unless (-d $queue_dir) {
+	unless (mkdir($queue_dir, &folder_mode(0))) {
+	    im_err("can't create directory $queue_dir\n");
+	    return -1;
+	}
+    }
+    unless (opendir(QUEUEDIR, $queue_dir)) {
+	im_err("can't read $queue_dir\n");
+	return -1;
+    }
+    $max = 0;
+    foreach $q (readdir(QUEUEDIR)) {
+	$q =~ s/\.wrk$//;
+	if ($q =~ /^\d+$/) {
+	    $max = $q if ($max < $q);
+	}
+    }
+    closedir(QUEUEDIR);
+    $max++;
+    my ($fail_cnt) = 0;
+    im_notice("QUEUE creating $queue_dir/$max\n");
+    msg_mode(1);
+    while (&excl_create(\*QUEUE, "$queue_dir/$max") < 0) {
+	$max++;
+	if ($fail_cnt++ > 10) {
+	    im_err("too many failures creating QUEUE\n");
+	    return -1;
+	}
+    }
+    # dumping variables
+    print QUEUE "AF:$Anno_flag\n";
+    print QUEUE "NF:$News_flag\n";
+    print QUEUE "PS:$Partial_sleep\n";
+    print QUEUE "SRH:$Show_Rcpts_Header\n";
+    print QUEUE "SFN:$Smtp_fatal_next\n";
+    print QUEUE "DSR:$Dsn_success_report\n";
+    print QUEUE "MID:$Cur_mid\n";
+    print QUEUE "CFG:$Config_opt\n";
+    print QUEUE "PT:$partial_total\n";
+    print QUEUE "S:$Sender\n";
+    print QUEUE "RQ:$User_require\n";
+    print QUEUE "SSV:$Smtp_servers\n";
+    print QUEUE "NSV:$Nntp_servers\n";
+    print QUEUE "SSH:$SSH_server\n";
+    print QUEUE "R:".join(',', @Recipients)."\n";
+    print QUEUE "\n";
+
+    &set_crlf("\n");
+    if (&put_header(\*QUEUE, \@Header, 'internal', 'all') < 0
+      || &put_body(\*QUEUE, \@Body, 0, 0) < 0) {
+	close(QUEUE);
+	im_err("queuing to $queue_dir/$max failed ($!).\n");
+	unlink("$queue_dir/$max");
+	return -1;
+    }
+    unless (close (QUEUE)) {
+	im_err("queuing to $queue_dir/$max failed ($!).\n");
+	unlink("$queue_dir/$max");
+	return -1;
+    }
+    im_notice("queued in $queue_dir/$max\n");
+    &log_action('queue', &get_cur_server(), $max, 'queued');
+    touch_folder($queue_dir);
+    return 0;
+}
+
+##### ERROR REPORT #####
+#
+# error_report()
+#
+sub error_report {
+    my ($rc);
+    local ($errlog) = &im_saved_errors();
+    # reset the server list
+    @Smtp_servers = split(',', $Smtp_servers);
+    push(@Smtp_servers, split(',', $Emg_Smtp_servers));
+
+    for (my $i = 0; $i <= $#Smtp_servers; $i++) {
+	$rc = smtp_transaction_for_error_notify($Smtp_servers[$i],
+					\@Smtp_servers, \@Header, \@Body);
+	return 0 if ($rc == 0);
+
+	smtp_close();
+	log_action($Esmtp_flag ? 'esmtp' : 'smtp', get_cur_server(),
+		   join(',', @Recipients), 'skipped', command_response());
+    }
+    if ($rc) {
+	im_warn($errlog);
+	&set_command_response;
+	&set_cur_server('');
+	my $d = &save_fcc($Dead_letter, 0, 0);	# XXX
+	&log_action("dead-letter", '', $d, 'sent');
+	im_warn("Message was saved in $d\n");
+	return -1;
+    }
+    return 0;
+}
+
+##### EXIT WITH ERROR REPORT #####
+#
+# error_exit()
+#
+sub error_exit {
+    local ($rc);
+#   if (!$Error_report_by_mail && !$Smtp_input_mode) {
+#	$Error_report_by_mail = 1 unless (-t STDERR); # unless TTY
+#   }
+    local ($errlog) = &im_saved_errors();
+    if ($Error_report_by_mail) {
+	# reset the server list
+	@Smtp_servers = split(',', $Smtp_servers);
+	push(@Smtp_servers, split(',', $Emg_Smtp_servers));
+
+	for (my $i = 0; $i <= $#Smtp_servers; $i++) {
+	    $rc = &smtp_transaction_for_error_notify($Smtp_servers[$i],
+					     \@Smtp_servers, \@Header, \@Body);
+	    last if ($rc == 0);
+
+	    smtp_close();
+	    log_action($Esmtp_flag ? 'esmtp' : 'smtp', get_cur_server(),
+		       join(',', @Recipients), 'skipped', command_response());
+
+	}
+	if ($rc) {
+#	    im_warn($errlog);
+	    &set_command_response;
+	    &set_cur_server('');
+	    if ($Draft_message eq '') {
+		my $d = &save_fcc('', 0, 0); # XXX
+		im_warn("Message was saved in $d\n");
+	    } else {
+		&log_action("draft", '', $Draft_message, 'preserved');
+		im_warn("Draft file $Draft_message preserved.\n");
+	    }
+	    &exit_($EXIT_ERROR);
+	}
+	&exit_($EXIT_SUCCESS);
+    }
+    if ($Smtp_input_mode) {
+	while ($errlog) {
+	    $errlog =~ /^([^\n]+)/;
+	    print STDOUT "554-$1\n";
+	    $errlog =~ s/^[^\n]+\n//;
+	}
+	while ($Info) {
+	    $Info =~ /^([^\n]+)/;
+	    print STDOUT "554- $1\n";
+	    $Info =~ s/^[^\n]+\n//;
+	}
+	my $session_log = &get_session_log();
+	while ($session_log) {
+	    $session_log =~ /^([^\n]+)/;
+	    print STDOUT "554- $1\n";
+	    $session_log =~ s/^[^\n]+\n//;
+	}
+	print STDOUT "554 Message was not accepted\n";
+	&smtp_get_mail_final(1);
+	&exit_($EXIT_ERROR);
+    } else {
+	# notify to the terminal
+#	im_err("delivery failed.\n");
+#	if ($errlog) {
+#	    print STDERR "\n";
+#	    print STDERR "Reason:\n";
+#	    print STDERR "$errlog\n";
+#	}
+	if ($Info) {
+	    print STDERR "\n";
+	    print STDERR $Info;
+	}
+	my $session_log = &get_session_log();
+	if ($session_log) {
+	    print STDERR "\n";
+	    print STDERR $session_log;
+	}
+	&set_command_response;
+	&set_cur_server('');
+	if ($Draft_message eq '') {
+	    # save in dead_letter unless the message was prepared
+	    # as a draft file.
+	    my $d = &save_fcc('', 0, 0); # XXX
+	    im_warn("the message was saved in $d\n");
+	} else {
+	    &log_action('draft', '', $Draft_message, 'preserved');
+	    im_warn("Draft file $Draft_message preserved.\n");
+	}
+	&exit_($EXIT_ERROR);
+    }
+}
+
+##### EXIT #####
+#
+# exit_(stat)
+#	stat: exit status
+#
+sub exit_ {
+    local ($stat) = @_;
+    &smtp_close;
+    &nntp_close;
+    exit $stat;
+}
+
+##### END OF SCRIPT #####
+
+### ToDo list
+# PGP encription
+# MCI for error respose
+# 75 char len (1522)
+# select SMTP server on each addresses
+# connection timed out (signal)
+# refusing large size messgae
+# deliverability
+# header MIME full encoding
+# file locking for appending
+# sender name config
+# draft all
+# @HOSTNAME@
+# sgid mail
+
+### Copyright (C) 1997, 1998, 1999 IM developing team
+### All rights reserved.
+### 
+### Redistribution and use in source and binary forms, with or without
+### modification, are permitted provided that the following conditions
+### are met:
+### 
+### 1. Redistributions of source code must retain the above copyright
+###    notice, this list of conditions and the following disclaimer.
+### 2. Redistributions in binary form must reproduce the above copyright
+###    notice, this list of conditions and the following disclaimer in the
+###    documentation and/or other materials provided with the distribution.
+### 3. Neither the name of the team nor the names of its contributors
+###    may be used to endorse or promote products derived from this software
+###    without specific prior written permission.
+### 
+### THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+### ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+### IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+### PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+### LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+### CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+### SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+### BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+### WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+### OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+### IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### Local Variables:
+### mode: perl
+### End:

@@ -1,0 +1,202 @@
+#! @im_path_perl@
+################################################################
+###
+###		  imgrep :: Internet Message g/RE/p
+###
+### Author:  Internet Message Group <img@mew.org>
+### Created: Apr 23, 1997
+### Revised: Feb 28, 2000
+###
+
+BEGIN {
+    @im_my_siteperl@
+    @im_src_siteperl@
+};
+
+my $VERSION = "imgrep version 20000228(IM140)";
+
+$Prog = 'imgrep';
+
+##
+## Require packages
+##
+
+use IM::Config;
+use IM::Folder;
+use IM::Grep;
+use IM::Util;
+use integer;
+use strict;
+use vars qw($Prog $EXPLANATION @OptConfig
+	    $opt_format @opt_src $opt_casefold $opt_expression
+	    $opt_delimiter $opt_dupchecktarget $opt_verbose $opt_debug
+	    $opt_quiet $opt_help);
+
+##
+## Environments
+##
+
+$opt_format = 'number';		# use number, folder, or path
+$opt_casefold = 'yes';		# default case-insensitive
+
+my @default_ranges = ();
+my @opt_folders = ();
+
+my $eval_string = '';		# store search engine
+
+# regexp for range syntax (sequence not supported)
+my $range_element = '(\\d+|cur|first|last|next|prev|new)';
+my $range_regexp = "($range_element(-$range_element|:[+-]?\\d+)?|all)";
+my $ranges_regexp = "$range_regexp(,$range_regexp)?";
+
+$EXPLANATION = "
+$Prog :: Internet Message GREP
+$VERSION
+
+Usage :: $Prog [options] [+folder] [range]
+
+";
+
+@OptConfig = (
+    'src;F@;;' => 'msg source: "+folder:[range[,range..]]"',
+    'format;s;;' => 'Output format: "number", "folder", or "path"'.
+	"\n\t\t(default: \"number\" for single target folder".
+	"\n\t\t	     \"path\" for multiple target folders)",
+    'casefold;b;on;' => 'Case sensitivity'.
+	"\n\t\t(This option affects both fieldname and pattern.)",
+    'expression;s;;' => 'Search expression:'.
+	"\n\n\t\tUsable keyword".
+        "\n\t\t\t& &&		     logical AND".
+        "\n\t\t\t| ||		     logical OR".
+        "\n\t\t\t!		     logical NOT".
+        "\n\t\t\t( )		     parens".
+        "\n\t\t\tfieldname=pattern	     search pattern for the field".
+        "\n\n\t\tSpecial fieldname:".
+        "\n\t\t\thead	     Entire header".
+        "\n\t\t\tbody	     Entire body".
+        "\n\t\t\tall	     Entire message",
+    'delimiter;s;\n\n|\n----\n;' => 'Mail header delimiter',
+    'dupchecktarget,D;s;none;' => 'Duplicate Check Target',
+    'quiet;b;;'   => 'Suppress informational messages.',
+    'verbose;b;;' => 'With diagnostic messages.',
+    'debug;d;;'   => 'With debug messages.',
+    'help;b;;'    => 'Show this messages.',
+    );
+
+##
+## Profile and option processing
+##
+
+init_opt(\@OptConfig);
+read_cfg();
+read_opt(\@ARGV); # help?
+help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
+
+debug_option($opt_debug) if $opt_debug;
+
+##
+## Main
+##
+
+my $default_folder = cur_folder(); # must set here
+
+#
+# Fix some valuables
+#
+
+@opt_src = sortuniq(@opt_src);
+
+@opt_src or @opt_src = ( $default_folder );
+@default_ranges = ( @ARGV ? @ARGV : 'all' );
+
+if ( $opt_format eq 'number' and @opt_src > 1 ) {
+    $opt_format = 'path';
+}
+
+#
+# Compile expression
+#
+
+$eval_string = parse_expression($opt_expression, $opt_casefold);
+
+#
+# Iterate each folder
+#
+my $matched = 0;
+
+ FOLDER:
+    foreach (@opt_src) {
+	my ($folder, $ranges) = (/^(.*?)(:$ranges_regexp)?$/);
+	$ranges =~ s/^:(.*)$/$1/;
+	my $folder_dir;
+	my @ranges = split(',', $ranges);
+	my @messages = ();
+
+	if ( $folder =~ /^\-/ ) {
+	    im_warn("Newsspool $folder search not supported (ignored)\n");
+	    next FOLDER;
+	}
+
+	@ranges = ( $ranges ? @ranges : @default_ranges );
+
+	$folder_dir = expand_path($folder);
+
+	@messages = grep_folder($folder_dir, $eval_string, 
+				$opt_dupchecktarget, @ranges);
+	if ( @messages ) {
+	    $matched += @messages;
+	    foreach ( @messages ) {
+		print "$folder:" if ($opt_format eq 'folder');
+		print "$folder_dir/" if ($opt_format eq 'path');
+		print "$_\n";
+		# flush('STDOUT');
+	    }
+	}
+    }
+
+$matched
+    or do {
+	if ($opt_quiet) {
+	    exit $EXIT_ERROR;
+	} else {
+	    im_die2("no message matches specifications\n");
+	}
+    };
+exit $EXIT_SUCCESS;
+
+##
+## End of Main
+##
+##################################################
+
+### Copyright (C) 1997, 1998, 1999 IM developing team
+### All rights reserved.
+### 
+### Redistribution and use in source and binary forms, with or without
+### modification, are permitted provided that the following conditions
+### are met:
+### 
+### 1. Redistributions of source code must retain the above copyright
+###    notice, this list of conditions and the following disclaimer.
+### 2. Redistributions in binary form must reproduce the above copyright
+###    notice, this list of conditions and the following disclaimer in the
+###    documentation and/or other materials provided with the distribution.
+### 3. Neither the name of the team nor the names of its contributors
+###    may be used to endorse or promote products derived from this software
+###    without specific prior written permission.
+### 
+### THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+### ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+### IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+### PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+### LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+### CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+### SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+### BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+### WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+### OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+### IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### Local Variables:
+### mode: perl
+### End:

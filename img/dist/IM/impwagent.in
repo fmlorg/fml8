@@ -1,0 +1,255 @@
+#! @im_path_perl@
+################################################################
+###
+###                             impwagent
+###
+### Author:  Internet Message Group <img@mew.org>
+### Created: Sep 13, 1997
+### Revised: Feb 28, 2000
+###
+
+BEGIN {
+    @im_my_siteperl@
+    @im_src_siteperl@
+};
+
+my $VERSION = "impwagent version 20000228(IM140)";
+
+$Prog = 'impwagent';
+
+##
+## Require packages
+##
+
+require 5.003;
+use Socket;
+use IM::Config;
+use IM::GetPass;
+use IM::Util;
+
+##
+## Main
+##
+
+@OptConfig = ();
+init_opt(\@OptConfig);
+read_cfg();
+
+# server termination
+if ($ARGV[0] =~ /stop|quit/i) {
+    $res = &connect_agent(1);
+    $res = &talk_agent("QUIT\n") if ($res ne '');
+    if ($res eq '') {
+	print "$Prog: server is not running\n";
+    } else {
+	print "$Prog: exit message: $res\n";
+    }
+    exit 0;
+}
+
+# clear password cache
+if ($ARGV[0] =~ /clear/i) {
+    $res = &connect_agent(1);
+    $res = &talk_agent("CLEAR\n") if ($res ne '');
+    if ($res eq '') {
+	print "$Prog: server is not running\n";
+    } else {
+	print "$Prog: exit message: $res\n";
+    }
+    exit 0;
+}
+
+if ($ARGV[0] !~ /start/i && @ARGV > 0) {
+    print <<EOF;
+$Prog: IM Password Agent -- hold passwords to reuse on later sessions.
+
+Usage:
+	$Prog help		show this message
+	$Prog [start]	start $Prog
+	$Prog stop/quit	terminate $Prog
+	$Prog clear		clear passwords held by $Prog
+
+If you wish to use the feature supplied by $Prog, put "UsePwAgent=yes"
+in your Config file, and start $Prog manually before using IM-commands
+which require passwords.
+
+EOF
+    exit 0;
+}
+
+# duplicate check
+$res = &connect_agent(1);
+$res = &talk_agent("PING\n") if ($res ne '');
+if ($res eq 'PONG') {
+    print STDERR "$Prog: already running.\n";
+    exit 1;
+}
+
+# preparing socket directory
+my $realuser = im_getlogin();
+unless ($realuser) {
+    print STDERR "$Prog: can not get login name.\n";
+    exit 1;
+}
+
+my $dir = "/tmp/im-$realuser";
+
+my $port = &pwagentport();
+if ($port > 0) {
+    rmdir ($dir);
+
+    if (-e $dir) {
+	print STDERR "$Prog: can not re-create directory: $dir.\n";
+	exit 1;
+    }
+
+    mkdir ($dir, 0700);
+
+    unless (socket(SOCK, &AF_INET, &SOCK_STREAM, 0)) {
+	print STDERR "$Prog: socket: $!\n";
+	exit 1;
+    }
+    my $sin = sockaddr_in($port, inet_aton('127.0.0.1'));
+    unless (bind(SOCK, $sin)) {
+	print STDERR "$Prog: bind: $!\n";
+	exit 1;
+    }
+} else {
+    $sockname = "$dir/pw";
+
+    # be sure the dir is not a link
+    unlink ($sockname);
+    rmdir ($dir);
+
+    if (-e $dir) {
+	print STDERR "$Prog: can not re-create directory: $dir.\n";
+	exit 1;
+    }
+
+    mkdir ($dir, 0700);
+
+    unless (socket(SOCK, &AF_UNIX, &SOCK_STREAM, 0)) {
+	print STDERR "$Prog: socket: $!\n";
+	exit 1;
+    }
+    my $sun = sockaddr_un($sockname);
+    unless (bind(SOCK, $sun)) {
+	print STDERR "$Prog: bind: $!\n";
+	exit 1;
+    }
+
+    chmod(0600, $sockname);
+}
+
+listen(SOCK, 5);
+select(SOCK); $| = 1; select(STDOUT);
+
+$SIG{'ALRM'} = \&alarm_func;
+
+#my $ppid = getppid();
+my $id = fork();
+if ($id < 0) {
+    print STDERR "$Prog: can not fork: $!\n";
+    exit 1;
+}
+
+if ($id) {
+    print STDERR "$Prog: started (pid: $id)\n";
+    exit 0;
+}
+
+chdir($dir);
+
+@_ = unpack('C2', pack('L', rand(time * $$)));
+foreach (@_) {
+    $_ |= 0x20 if ($_ < 0x20);
+}
+my $key = pack('C2', @_);
+
+for (;;) {
+    unless (accept(REQ, SOCK)) {
+	print STDERR "$Prog: accept: $!\n";
+	exit 1;
+    }
+    if ($port > 0) {
+	my $sa = getpeername(REQ);
+	my ($fa, $po, $ad) = sockaddr_in($sa);
+	next if ($ad != inet_aton('127.0.0.1'));
+    }
+    select(REQ); $| = 1; select(STDOUT);
+    print REQ "$key\n";
+    alarm(3);
+    $_ = <REQ>;
+    alarm(0);
+    chomp;
+    if (/^PING$/) {
+	print REQ "PONG\n";
+    } elsif (/^CLEAR$/) {
+	undef %pwcache;
+	print REQ "CLEARED\n";
+    } elsif (/^SAVE\t(.*)/) {
+	my $param = $1;
+	alarm(3);
+	$_ = <REQ>;
+	alarm(0);
+	chomp;
+	if (/^PASS\t/) {
+	    # decode from HEX string
+	    $pwcache{$param} = pack('H*', substr($_, 5));
+	    print REQ "OK\n";
+	} else {
+	    print REQ "ERROR\n";
+	}
+    } elsif (/^LOAD\t(.*)/) {
+	# encode to HEX string
+	$_ = "PASS\t" . unpack('H*', $pwcache{$1}) . "\n";
+	print REQ $_;
+    } else {
+	# protocol error (including QUIT)
+	print REQ "BYE\n";
+	shutdown (REQ, 2);
+	close (REQ);
+	close (SOCK);
+	unlink ($sockname) if ($sockname);
+	exit 1;
+    }
+    substr($_, 0, length($_)) = '0123456789abcdef';
+    shutdown (REQ, 2);
+    close (REQ);
+}
+
+sub alarm_func {
+#   no operation
+}
+
+### Copyright (C) 1997, 1998, 1999 IM developing team
+### All rights reserved.
+### 
+### Redistribution and use in source and binary forms, with or without
+### modification, are permitted provided that the following conditions
+### are met:
+### 
+### 1. Redistributions of source code must retain the above copyright
+###    notice, this list of conditions and the following disclaimer.
+### 2. Redistributions in binary form must reproduce the above copyright
+###    notice, this list of conditions and the following disclaimer in the
+###    documentation and/or other materials provided with the distribution.
+### 3. Neither the name of the team nor the names of its contributors
+###    may be used to endorse or promote products derived from this software
+###    without specific prior written permission.
+### 
+### THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+### ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+### IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+### PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+### LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+### CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+### SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+### BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+### WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+### OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+### IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### Local Variables:
+### mode: perl
+### End:

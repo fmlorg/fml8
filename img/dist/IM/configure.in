@@ -1,0 +1,155 @@
+dnl
+dnl			     configure.in
+dnl
+dnl Author:  Internet Message Group <img@mew.org>
+dnl Created: Apr 23, 1997
+dnl Revised: Sep  3, 1998
+dnl
+
+AC_INIT(imget.in)
+
+dnl Checks for programs.
+AC_PROG_INSTALL()
+AC_CANONICAL_HOST
+AC_PROG_CC
+AC_PROG_CPP
+
+im_file_attr="Fcntl::O_RDWR()|Fcntl::O_CREAT()|Fcntl::O_EXCL()"
+im_nosync="no"
+
+AC_SUBST(im_rpop)
+AC_SUBST(im_db_type)
+AC_SUBST(im_file_attr)
+AC_SUBST(im_src_siteperl)
+AC_SUBST(im_my_siteperl)
+AC_SUBST(im_usecl)
+AC_SUBST(im_nosync)
+AC_SUBST(im_fsync_no)
+AC_SUBST(im_hostname)
+AC_SUBST(im_path_ssh)
+IM_PATH_PERLV_PROGS(im_path_perl, perl perl5, PERL5_NOT_FOUND)
+case "$im_path_perl" in
+""|PERL5_NOT_FOUND)
+   echo "fatal error: perl 5.004 not found. install perl 5.004 or later." 1>&2
+   exit 1
+esac
+IM_PATH_SITEPERL(im_path_siteperl, "$im_path_perl", missing_siteperl)
+AC_PATH_PROGS(im_path_chmod, chmod, missing_chmod)
+AC_PATH_PROGS(im_path_mkdir, mkdir, missing_mkdir)
+AC_PATH_PROGS(im_path_rm, rm, missing_rm)
+AC_PATH_PROGS(im_path_mv, mv, missing_mv)
+AC_PATH_PROGS(im_path_sed, sed, missing_sed)
+IM_DB_TYPE(im_db_type, $im_path_perl)
+
+dnl Checks for libraries.
+
+dnl Checks for header files.
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+
+dnl Checks for library functions.
+
+AC_ARG_ENABLE(rpop,
+[  --enable-rpop           Use RPOP (suidperl is needed)],
+[im_rpop="-o root -m 4555"],
+[im_rpop="-m 555"],)
+
+dnl check fsync() is in sys/syscall.h
+im_nosync="undefined"
+AC_CHECK_HEADER(sys/syscall.h)
+if test "$ac_cv_header_sys_syscall_h" = yes ; then
+  cat > conftest.c << EOF
+#include <sys/syscall.h>
+#ifdef SYS_fsync
+IM_FSYNC_NO=SYS_fsync
+#else
+IM_FSYNC_NO=undef
+#endif
+EOF
+
+  im_fsync_no=`eval $ac_cpp conftest.c | sed -n -e "s/^IM_FSYNC_NO=//p"`
+  rm -f conftest.c
+else
+  im_fsync_no=undef
+fi
+if test "x$im_fsync_no" = "xundef"; then
+  im_nosync="yes"
+else
+  im_nosync="no"
+fi
+
+im_src_siteperl="use lib '`pwd`';	###DELETE-ON-INSTALL###"
+AC_ARG_WITH(perldir,
+[  --with-perldir=DIR     Use DIR as site_perl directory],
+[im_path_siteperl="${withval}"
+  im_my_siteperl="use lib '${withval}';"],
+[if test "${prefix}" != "NONE" ; then
+dnl prefix is equal to exec_prefix
+    im_my_siteperl="use lib '${prefix}/lib';"
+    im_path_siteperl='${exec_prefix}/lib'
+  fi])
+
+AC_MSG_CHECKING([OS type])
+case "$host" in
+  *-*-solaris2*)
+    AC_MSG_RESULT([Seems to be a Solaris; Content-Length: should be checked])
+    im_usecl=yes ;;
+  *)
+    AC_MSG_RESULT([Not a Solaris; Content-Length: can be ignored])
+    im_usecl=no ;;
+esac
+
+im_path_ssh='yes'
+AC_ARG_WITH(ssh,
+[  --with-ssh=PATH        Use PATH as SSH location],
+[im_path_ssh="${withval}"])
+if test "x$im_path_ssh" = 'xyes'; then
+    AC_PATH_PROG(im_path_ssh, ssh, '/usr/local/bin/ssh')
+fi
+
+AC_MSG_CHECKING([domain for mail-address])
+im_hostname=`hostname`
+AC_MSG_RESULT([$im_hostname])
+
+AC_OUTPUT(imali:imali.in imcat:imcat.in imcd:imcd.in imclean:imclean.in \
+	imget:imget.in imgrep:imgrep.in \
+	imhist:imhist.in imhsync:imhsync.in \
+	imjoin:imjoin.in imls:imls.in immv:immv.in \
+	impack:impack.in impath:impath.in imput:imput.in \
+	impwagent:impwagent.in \
+	imrm:imrm.in imsetup:imsetup.in imsort:imsort.in \
+	imstore:imstore.in imtar:imtar.in immknmz:immknmz.in\
+	Makefile:Makefile.in \
+	cnf.im/SiteConfig:cnf.im/SiteConfig.in \
+	IM/Config.pm:IM/Config.pm.in \
+	, chmod 555 imali imcat imcd imclean imget imgrep imhist imjoin\
+	imls immv impack impath imput impwagent imrm imsetup imsort imstore\
+	imtar)
+
+dnl Copyright (C) 1997, 1998, 1999 IM developing team.
+dnl All rights reserved.
+dnl 
+dnl Redistribution and use in source and binary forms, with or without
+dnl modification, are permitted provided that the following conditions
+dnl are met:
+dnl 
+dnl 1. Redistributions of source code must retain the above copyright
+dnl    notice, this list of conditions and the following disclaimer.
+dnl 2. Redistributions in binary form must reproduce the above copyright
+dnl    notice, this list of conditions and the following disclaimer in the
+dnl    documentation and/or other materials provided with the distribution.
+dnl 3. Neither the name of the team nor the names of its contributors
+dnl    may be used to endorse or promote products derived from this software
+dnl    without specific prior written permission.
+dnl 
+dnl THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+dnl ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+dnl IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+dnl PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+dnl LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+dnl CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+dnl SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+dnl BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+dnl WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+dnl OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+dnl IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

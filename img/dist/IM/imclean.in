@@ -1,0 +1,182 @@
+#! @im_path_perl@
+################################################################
+###
+###				 imclean
+###
+### Author:  Internet Message Group <img@mew.org>
+### Created: Apr 23, 1997
+### Revised: Feb 28, 2000
+###
+
+BEGIN {
+    @im_my_siteperl@
+    @im_src_siteperl@
+};
+
+my $VERSION = "imclean version 20000228(IM140)";
+
+$Prog = 'imclean';
+
+##
+## Require packages
+##
+
+use IM::Config;
+use IM::Util;
+use IM::Folder;
+use IM::File;
+use integer;
+use strict;
+use vars qw($Prog $EXPLANATION @OptConfig
+	    $opt_src $opt_noharm $opt_quiet $opt_verbose $opt_debug $opt_help);
+
+##
+## Environments
+##
+
+$EXPLANATION = "
+$Prog :: Internet Message Garbage Cleanup
+$VERSION
+
+Usage: $Prog [options] [msgs...]
+";
+
+@OptConfig = (
+    'src;F;;'     => "Set a folder to be cleaned up.",
+    'noharm;b;;'  => "Do not delete files, show what will be performed.",
+    'quiet;b;;'   => "Do not show any messages.",
+    'verbose;b;;' => 'With verbose messages.',
+    'debug;d;;'   => "With debug message.",
+    'help;b;;'    => "Show this message.",
+    'SSHServer,S;s;localhost;SSH_server'
+                       => 'SSH port relay server.',
+    );
+
+##
+## Profile and option processing
+##
+
+init_opt(\@OptConfig);
+read_cfg();
+read_opt(\@ARGV); # help?
+help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
+
+debug_option($opt_debug) if $opt_debug;
+
+##
+## Main
+##
+
+my @msgs = @ARGV;
+@msgs = ('all') if (!@ARGV);
+
+imclean($opt_src, @msgs);
+exit $EXIT_SUCCESS;
+
+##
+## work horse
+
+sub imclean ($@) {
+    my ($folder, @msgs) = @_;
+    my (@paths, $set, $HANDLE);
+
+    if ($folder !~ /^%/) {
+	@paths = get_message_paths($folder, @msgs);
+	if (scalar(@paths) == 0) {
+	    im_warn("no msgs in $folder\n");
+	    return;
+	}
+    } else {
+	# IMAP folder (%folder[:[user[/auth]]@server])
+	require IM::Imap && import IM::Imap;
+	require IM::GetPass && import IM::GetPass;
+	my ($ifld, $auth, $user, $host);
+
+	$ifld = $folder;
+	if ($ifld !~ /[:\@]/) {
+	    # Use ImapAccount spec, unless user or host is specified.
+	    (my $dummy, $auth, $user, $host) = imap_spec('');
+	    $ifld =~ s/^%//;
+	} else {
+	    ($ifld, $auth, $user, $host) = imap_spec($ifld);
+	}
+
+	my ($pass, $agtfound, $interact) = getpass('imap', $auth, $host, $user);
+	im_warn("accessing IMAP/$auth:$user\@$host\n") if (&verbose);
+
+	(my $rc, $HANDLE) = imap_open($auth, $host, $user, $pass);
+	if ($rc < 0) {
+	    my $prompt = lc("imap/$auth:$user\@$host");
+	    im_err("invalid password ($prompt).\n");
+	    &savepass('imap', $auth, $host, $user, '')
+		if ($agtfound && &usepwagent());
+	    exit $EXIT_ERROR;
+	}
+	&savepass('imap', $auth, $host, $user, $pass)
+	    if ($interact && $pass ne '' && &usepwagent());
+	my $exists = imap_select($HANDLE, $ifld, 1);
+	if ($exists < 0) {
+	    imap_close($HANDLE);
+	    im_die("can't access to $folder\n");
+	} elsif ($exists == 0) {
+	    imap_close($HANDLE);
+	    im_warn("no msgs in $folder\n");
+	    return;
+	}
+	$set = imap_range2set($HANDLE, @msgs);
+    }
+
+    print "unlinking msgs in $folder ... " unless ($opt_noharm || $opt_quiet);
+    print "\n" if $opt_verbose;
+    flush('STDOUT') unless $opt_noharm;
+
+    if ($folder !~ /^%/) {
+	my $i = 0;
+	foreach (@paths) {
+	    im_die("invalid message specification (unlinked $i message(s))\n")
+		if (!-f $_);
+	    im_unlink($_);
+	    $i++;
+	}
+    } else {
+	imap_delete($HANDLE, $set);
+	imap_close($HANDLE);
+    }
+
+    print "done\n" unless ($opt_noharm || $opt_quiet);
+    if ($folder !~ /^%/) {
+	touch_folder($folder) unless $opt_noharm;
+    }
+}
+
+### Copyright (C) 1997, 1998, 1999 IM developing team
+### All rights reserved.
+### 
+### Redistribution and use in source and binary forms, with or without
+### modification, are permitted provided that the following conditions
+### are met:
+### 
+### 1. Redistributions of source code must retain the above copyright
+###    notice, this list of conditions and the following disclaimer.
+### 2. Redistributions in binary form must reproduce the above copyright
+###    notice, this list of conditions and the following disclaimer in the
+###    documentation and/or other materials provided with the distribution.
+### 3. Neither the name of the team nor the names of its contributors
+###    may be used to endorse or promote products derived from this software
+###    without specific prior written permission.
+### 
+### THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+### ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+### IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+### PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+### LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+### CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+### SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+### BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+### WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+### OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+### IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### Local Variables:
+### mode: perl
+### End:

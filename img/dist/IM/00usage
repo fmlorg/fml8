@@ -1,0 +1,198 @@
+			       IM Usage
+
+		     <<<Message Spool Keyword>>>
+
+IM treats local mail folders, local/remote newsgroup spools, and local
+news folders. For historical reasons, mail folders start with "+"
+(e.g. "+inbox). Newsgroup spools are identified by the "-" keyword
+(e.g. "-gnu.emacs.sources"). Directories to store locally saved news
+messages are indicated by the "=" keyword (e.g. "=comp.lang.perl").
+
+		       <<<Option Convention>>>
+
+(0) Options are categorized into canonical, abbreviate, and
+compatible. Many options takes "value". "value" categorized into
+string(s), boolean(b|B), number(i), and folder(f|F). (For more
+information, see "IM/Config.pm")
+
+(1) Canonical options conform the "--key=value" style.
+
+"=value" can be omitted. If omitted, the following rules are applied:
+
+	boolean(b)	-> "on"
+	boolean(B)	-> "off"
+	string(s)	-> ""
+	folder(f|F)	-> undef
+
+For example, the "--help" option is boolean(b). Its canonical form is
+"--help=on" or "--help=off". "--help" is treated as "--help=on".
+
+(Please note that you can use "yes", "true" and "1" instead of
+"on". As well, "no", "false" and "0" instead of "off")
+
+(2) Abbreviate and compatible options conform "-k value" for string(s)
+and folder(f|F) OR "-k" for boolean(b|B).
+
+If abbreviate option, it is an abbreviation of a canonical option. For
+example, "-h" means "--help" whereas "-n" indicates "--noharm".
+
+Compatible options are provided to maintain backward compatibility to 
+good old commands. One compatible option may have the same effect
+of regarding canonical options.
+
+(3) All command supports canonical options. Each command chooses
+abbreviate or compatible, not both!
+
+The current program which chooses compatible options is only "imput".
+(Maybe "imget" in the future.)
+
+(4) The "+" keyword means "--src=+" or "--dst=+" while the "=" keyword
+means "--src==" or "--dst==" if folder(F) options is
+specified. Examples are shown below:
+
+	+inbox             -> --src=+inbox
+	=comp.lang.perl    -> --src==comp.lang.perl
+
+Also "-", "/", "~", "%", and "[a-z]:" will be expanded in this manner.
+
+To know these keywords are treated as "--src=" or "--dst=", see the
+help message of each command.
+
+(5) Environment variables, config parameters and command line options
+but backward compatibility ones are equivalent and are evaluated in
+order.
+
+			  <<<Help Message>>>
+
+Every command has "--help" option to display its version, name, and
+options.
+
+Help displays actual configuration/option value. For example,
+'imls --help' returns:
+        --src=<folder> (-s)(+inbox)
+while 'imls --help --src=+draft' shows:
+        --src=<folder> (-s)(+draft)
+
+For this reason, "--help" is always "on" when displaying help message.
+
+Some commands have "--noharm" or "-n" option. If specified, the
+command tells you what will happen if not specified. It's like 
+"make -n".
+
+			  <<<IM Commands>>>
+
+'imput' ('send')
+	Post a message by mail and/or news.
+
+'imget' ('inc')
+	Get message(s) in the mail spool 
+
+'imls' ('scan')
+	List up the contents of the folder.
+
+'imcat' ('show')
+	Show the contents of the message.
+
+'imcd' ('folder')
+	Change the current folder.
+
+'immv' ('refile')
+	Move message(s) from the source folder to the destination folder(s).
+
+'imrm'
+	Move message(s) from the source folder to the +trash folder.
+
+'imclean'
+	Remove message(s).	
+
+'imgrep' ('pick')
+	Enumerate message(s) matched given patterns.
+
+'impath' ('mhpath' and 'folder -all')
+	Expand a folder to a file path.
+	List up folders.
+
+'imali' ('ali')
+	Expand an alias given in .im/Aliases.
+
+'impack' ('folder -pack')
+	Pack messages in a folder.
+
+'imsort' ('sortm')
+	Sort messages in a folder.
+
+'imhist'
+	Treat history database.
+
+'imstore' ('rcvstore')
+	Store a message from stdin to a folder.
+
+'imsetup' ('install-mh')
+	Set up for IM.
+
+			  <<<Config Files>>>
+
+The config syntax is equivalent to the options style. That is, each
+line is in the "key=value" form. For more details, see
+"cnf.im/SiteConfig" and "dot.im/Config".
+
+Each command reads config the following order.
+
+	"/usr/local/lib/im/SiteConfig" (for site-wide configuration)
+	"~/.im/Config"                 (for private configuration)
+
+Next it evaluates environment variables if required then the command
+options. 
+
+			  <<<Scan Format>>>
+
+The '%{width}{header-type}' syntax is available. You can define any
+header-type as you want. Default valid 'header-type's are:
+
+      %n    message number
+      %d    raw Date: field
+      %f    MIME decoded From: field
+      %t    MIME decoded To: filed
+      %g    raw Newsgroups: field
+      %a    friendly From: field
+      %A    If this message is originated by yourself, friendly To: 
+	    or raw Newsgroups: is displayed in 'To:xxx' or 'Ng:xxx' 
+	    format, respectively. Otherwise, friendly From: field is 
+	    displayed.
+      %P    Similar to %A, but diplay row address of mail sender
+            instead of friendly From: field, just like mh-e.            
+      %i    indent to display thread
+      %s    MIME decoded Subject: field
+      %S    indented MIME decoded Subject (same as %i+%s)
+      %b    a part of body extracted with heuristic
+      %m    Multipart type
+		'S'igned, 'E'ncrypt, 'M'ultipart, 'P'artial or none
+      %p    mark '*' if the message is destined to you
+      %D    mark 'D' if the message is duplicated
+      %M    %p+%D
+      %F    folder path
+      %K    file block size (1024 bytes/block)
+
+      %y    year
+      %c    month (digit)
+      %C    month (string)
+      %e    mday
+      %h    hour
+      %E    min
+      %G    sec
+    
+Examples:
+
+(1) Form="%5n %m%d %-14A %-18S %b"
+
+   87 M04/07 Kazu Yamamoto  Subject            This is body.
+
+(2) Form=%5n%M%m%d %-14A %-18S %b"
+
+   87 M04/07 Kazu Yamamoto  multipart          This is duplicated.
+   87*S04/07 Motonori Naka  signed             This is for you.
+   89DM04/07 Kazu Yamamoto  multipart          This is duplicated.
+
+If you don't find favorite header-types, you can define your original
+header-types by yourself. For more information, see "dot.im/scan.sbr"
+and "IM/Scan.pm".

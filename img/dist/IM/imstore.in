@@ -1,0 +1,134 @@
+#! @im_path_perl@
+################################################################
+###
+###                              imstore
+###
+### Author:  Internet Message Group <img@mew.org>
+### Created: Dec 31, 1995
+### Revised: Feb 28, 2000
+###
+
+BEGIN {
+    @im_my_siteperl@
+    @im_src_siteperl@
+};
+
+my $VERSION = "imstore version 20000228(IM140)";
+
+$Prog = 'imstore';
+
+use IM::Config;
+use IM::MsgStore;
+use IM::Util;
+use integer;
+use strict;
+use vars qw($Prog $EXPLANATION @OptConfig
+	    $opt_dst $opt_verbose $opt_debug $opt_help $opt_noscan);
+
+##
+## Environments
+##
+
+$EXPLANATION = "
+$Prog :: Internet Message Store
+$VERSION
+
+Usage :: $Prog [options]
+";
+
+@OptConfig = (
+    'dst;s;+inbox;' => 'Set destination folder',
+    'verbose;b;;'   => 'With verbose messages.',
+    'debug;d;;'     => "With debug message.",
+    'help;b;;'      => 'Show this message'
+    );
+
+##
+## Profile and option processing
+##
+
+init_opt(\@OptConfig);
+read_cfg();
+read_opt(\@ARGV); # help?
+help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
+
+debug_option($opt_debug) if $opt_debug;
+
+&process_stdin();
+
+sub process_stdin () {
+    my @Message = ();
+
+    while (<STDIN>) {
+	push (@Message, $_);
+    }
+
+    &store_message(\@Message, $opt_dst, 1);
+    &exec_getsbrfile($opt_dst);
+}
+
+__END__
+
+=head1 NAME
+
+imstore - Store a message to a folder
+
+=head1 SYNOPSIS
+
+B<imstore> [B<--dst=+folder>] [B<--help>]
+
+=head1 DESCRIPTION
+
+I<Imstore> get a message from the standard input into an IM folder.
+If `--dst=+folder' isn't specified, +inbox is assumed as the folder.
+The new message being incorporated is assigned the next highest number
+in the folder.
+
+=head1 OPTIONS
+
+=over 5
+
+=item I<-d, --dst = +folder>
+
+Use I<+folder> as a target folder.
+Default is +inbox.
+
+=item I<-h, --help>
+
+Print a usage message on standard output and exit successfully.
+
+=back
+
+=cut
+
+### Copyright (C) 1997, 1998, 1999 IM developing team
+### All rights reserved.
+### 
+### Redistribution and use in source and binary forms, with or without
+### modification, are permitted provided that the following conditions
+### are met:
+### 
+### 1. Redistributions of source code must retain the above copyright
+###    notice, this list of conditions and the following disclaimer.
+### 2. Redistributions in binary form must reproduce the above copyright
+###    notice, this list of conditions and the following disclaimer in the
+###    documentation and/or other materials provided with the distribution.
+### 3. Neither the name of the team nor the names of its contributors
+###    may be used to endorse or promote products derived from this software
+###    without specific prior written permission.
+### 
+### THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+### ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+### IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+### PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+### LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+### CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+### SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+### BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+### WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+### OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+### IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### Local Variables:
+### mode: perl
+### End:

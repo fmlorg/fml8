@@ -1,0 +1,42 @@
+
+                  Installing IM under OS/2.
+
+                      OKUNISHI Fujikazu
+              <fuji0924@mbox.kyoto-inet.or.jp>
+
+                       Sep 07, 1998
+
+* Install Perl 5.004_03 if not installed.
+
+   !!!!!!!!!!!!!!!!!!!!!!   IMPORTANT   !!!!!!!!!!!!!!!!!!!!!!
+   OS/2 EMX port of Perl 5.004_04(or later) has a fatal bug in
+   gethostbyname() , the latest version - 5.005_01 -, too.
+   It means that those BUGGY version can't treat FQDN.
+
+* Apply OS/2 patch to "configure.in".
+
+	 gpatch -p1 < OS2\configure.in.diff.OS2
+
+* Execute "configure.OS2" or "Makefile.PL", and install.
+
+	[ configure ] -- shell script
+	 copy OS2\configure.OS2 .
+	 ksh ./configure.OS2 --host=your_host_name
+	 make install
+
+	[ Makefile.PL ] -- perl script(ExtUtils::MakeMaker)
+	 perl ./Makefile.PL
+	 make
+	 make install
+
+* Create "im*.cmd" and install them, if necessary.
+
+	OS2\fix-im.cmd REXX		(REXX version)
+	  or
+	OS2\fix-im.cmd EXTPROC		(Perl version)
+
+	copy im*.cmd <<BINDIR>>
+
+For more information, see {im-topdir}/00readme.
+
+<<EOF>>

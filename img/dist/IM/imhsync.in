@@ -1,0 +1,246 @@
+#! @im_path_perl@
+################################################################
+###
+###				 imhsync
+###
+### Author:  Internet Message Group <img@mew.org>
+### Created: Jul 02, 1998
+### Revised: Feb 28, 2000
+###
+
+BEGIN {
+    @im_my_siteperl@
+    @im_src_siteperl@
+};
+
+my $VERSION = "imhsync version 20000228(IM140)";
+
+$Prog = 'imhsync';
+
+##
+## Require packages
+##
+
+use Fcntl;
+use IM::Config;
+use IM::History;
+use IM::Message;
+use IM::Util;
+use integer;
+use strict;
+use vars qw($Prog $EXPLANATION @OptConfig @Hdr %Folder
+	    $opt_db $opt_folder $opt_verbose $opt_debug $opt_help);
+
+##
+## Environments
+##
+
+$EXPLANATION = "
+imhsync :: Refile by another DB
+$VERSION
+
+Usage: imhsync [options]
+";
+
+@OptConfig = (
+    'db;s;;'         => 'reference DB.',
+    'folder;s;;'     => 'folder to be refiled.',
+    'verbose;b;;'    => 'With verbose messages.',
+    'debug;d;;'      => "With debug message.",
+    'help;b;;'       => "Show this message.",
+    );
+
+##
+## Profile and option processing
+##
+
+init_opt(\@OptConfig);
+read_cfg();
+read_opt(\@ARGV); # help?
+help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
+
+debug_option($opt_debug) if $opt_debug;
+
+##
+## Main
+##
+
+if (msgdbfile() eq '') {
+    im_die("MsgDBFile is not defined.\n");
+}
+if ($opt_db eq '') {
+    im_die("--db option is not specified.\n");
+}
+if (! -f $opt_db) {
+    im_die("$opt_db is not found.\n");
+}
+if ($opt_folder eq '') {
+    im_die("--folder is not specified.\n");
+}
+
+{
+    my $p = expand_path($opt_folder);
+    if (-d $p) {
+	# folder
+	if (my_history_open($opt_db) < 0) {
+	    exit $EXIT_ERROR;
+	}
+	folder_db_refile($p, $opt_folder);
+	my_history_close();
+    } else {
+	im_warn("no message found to refile.\n");
+	exit $EXIT_ERROR;
+    }
+}
+
+exit $EXIT_SUCCESS;
+
+sub db_refile ($$) {
+    my ($msg, $folder) = @_;
+    my ($multi_folder);
+    local (@Hdr) = ();
+    if (im_open(\*MSG, "<$msg")) {
+	&read_header(\*MSG, \@Hdr, 0);
+	close (MSG);
+	my $mid = &header_value(\@Hdr, 'Message-ID');
+	my $dest = my_history_lookup($mid, 0);
+	my ($f, $df);
+	$multi_folder = 0;
+	$df = '';
+	foreach $f (split(',', $dest)) {
+	    $f =~ s|/[^/]*$||;
+	    if ($df eq '') {
+		$df = $f;
+	    } elsif ($df ne $f) {
+		$multi_folder = 1;
+	    }
+	}
+	if ($df ne '') {
+	    if ($folder ne $df &&  $multi_folder == 0) {
+#		system("immv --src=$folder $df $msg");
+		$Folder{$df} .= " $msg";
+	    } else {
+		print "keep $folder/$msg\n";
+	    }
+	}
+	return 0;
+    }
+    return -1;
+}
+
+sub folder_db_refile ($$) {
+    my ($dir, $folder) = @_;
+    $dir =~ s|/$||;
+    im_info("Refiling folder $dir\n");
+    chdir ($dir);
+    unless (opendir(FOLDER, $dir)) {
+	im_warn("can't read $dir\n");
+	return -1;
+    }
+    my @lower = ();
+    my $f;
+    foreach $f (readdir(FOLDER)) {
+	if ($f eq '.' || $f eq '..') {
+	} elsif ($f =~ /^\d+$/ && -f $f) {
+#	    print(" $f\n");
+	    db_refile($f, $folder);
+	}
+    }
+    foreach $f (keys %Folder) {
+	my $m = join(' ', sort(split(' ', $Folder{$f})));
+	im_info("$f:$Folder{$f}\n");
+	system("immv --src=$folder $f $Folder{$f}");
+    }
+    closedir(FOLDER);
+}
+
+use vars qw($DBtype $nodbfile $DB_HASH %History);
+
+sub my_history_open ($$) {
+    my ($dbfile) = @_;
+    $DBtype = msgdbtype();	# package global
+    unless ($DBtype) {
+	$DBtype = 'DB';
+    }
+
+    if ($dbfile eq '') {
+	$nodbfile = 1;
+	return -2;
+    }
+
+    if ($DBtype eq 'DB') {
+	require DB_File && import DB_File;
+	$DB_HASH->{'cachesize'} = 100000 ;
+    } elsif ($DBtype eq 'NDBM') {
+	require NDBM_File && import NDBM_File;
+    } elsif ($DBtype eq 'SDBM') {
+	require SDBM_File && import SDBM_File;
+    } elsif ($DBtype eq '') {
+	im_err("no DB type defined.\n");
+	return -2;
+    } else {
+	im_err("DB type $DBtype is not supported.\n");
+	return -2;
+    }
+
+    im_debug("history database: $dbfile\n") if (&debug('history'));
+
+    my ($db, $fd);
+    if ($DBtype eq 'DB') {
+	$db = tie %History, 'DB_File', $dbfile, O_RDONLY(), 0444;
+    } elsif ($DBtype eq 'NDBM') {
+	$db = tie %History, 'NDBM_File', $dbfile, O_RDONLY(), 0444;
+    } elsif ($DBtype eq 'SDBM') {
+	if (&win95p || &os2p){
+	    $db = tie %History, 'SDBM_File', $dbfile, O_RDONLY(), 0444;
+	} else {
+	    $db = tie %History, 'SDBM_File', $dbfile, O_RDONLY(), 0444;
+	}
+    }
+
+    unless ($db) {
+	im_err "history: can not access $dbfile ($!)\n";
+	return -1;
+    }
+    if ($DBtype eq 'DB') {
+	$fd = $db->fd;
+	if ($fd < 0) {
+	    im_err "history: can not access $dbfile (fd = $fd)\n";
+	    return -1;
+	}
+    }
+    return 0;
+}
+
+
+sub my_history_close () {
+    if ($nodbfile) {
+	im_err("no database specified.\n");
+	return;
+    }
+    untie %History;
+}
+
+
+sub my_history_lookup ($$) {
+    if ($nodbfile) {
+	im_err("no database specified.\n");
+	return ();
+    }
+    my ($msgid, $field) = @_;
+    $msgid =~ s/^<(.*)>$/$1/;
+    if (defined($History{$msgid})) {
+	if ($field == LookUpAll) {
+	    return split("\t", $History{$msgid});
+	} else {
+	    my @flds = split("\t", $History{$msgid});
+	    return $flds[$field];
+	}
+    } else {
+	if ($field == LookUpAll) {
+	    return ();
+	} else {
+	    return '';
+	}
+    }
+}

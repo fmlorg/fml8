@@ -1,0 +1,132 @@
+#! @im_path_perl@
+################################################################
+###
+###				impack
+###
+### Author:  Internet Message Group <img@mew.org>
+### Created: Apr 23, 1997
+### Revised: Feb 28, 2000
+###
+
+BEGIN {
+    @im_my_siteperl@
+    @im_src_siteperl@
+};
+
+my $VERSION = "impack version 20000228(IM140)";
+
+$Prog = 'impack';
+
+##
+## Require packages
+##
+
+use IM::Config;
+use IM::Folder;
+use IM::File;
+use IM::Util;
+use integer;
+use strict;
+use vars qw($Prog $EXPLANATION @OptConfig
+	    $opt_src $opt_noharm $opt_verbose $opt_debug $opt_help);
+
+##
+## Environments
+##
+
+$EXPLANATION = "
+$Prog :: Internet Message Pack
+$VERSION
+
+usage: $Prog [options] [+folder]
+";
+
+@OptConfig =(
+    'src;F;;'     => "Set source folder.",
+    'noharm;b;;'  => "No packing. Show what will happen.",
+    'verbose;b;;' => 'With verbose messages.',
+    'debug;d;;'   => "With debug message.",
+    'help;b;;'    => "Show this message.",
+    );
+
+##
+## Profile and option processing
+##
+
+init_opt(\@OptConfig);
+read_cfg();
+read_opt(\@ARGV); # help?
+help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
+
+debug_option($opt_debug) if $opt_debug;
+
+##
+## Main
+##
+
+impack($opt_src);
+exit $EXIT_SUCCESS;
+
+##################################################
+##
+## Work horse
+##
+sub impack ($) {
+    my $folder = shift;
+    my $msg = 1;
+    my $dst;
+
+    chk_folder_existance($folder);          # not return in case false.
+
+    my @paths = get_impath($folder, 'all');
+
+    print "packing messages in $opt_src ... " unless $opt_noharm;
+    flush('STDOUT') unless $opt_noharm;
+
+    foreach (@paths) {
+	$dst = $_;
+	if (-f $dst) {
+	    do {
+		$dst =~ s|[^/]+$|$msg++|e;
+	    } while ($_ ne $dst && -e $dst);
+	    if ($_ ne $dst){
+		im_rename($_, $dst) || die $@;   # XXX
+	    }
+	}
+    }
+
+    print "done\n" unless $opt_noharm;
+    touch_folder($folder) unless $opt_noharm;
+}
+
+### Copyright (C) 1997, 1998, 1999 IM developing team
+### All rights reserved.
+### 
+### Redistribution and use in source and binary forms, with or without
+### modification, are permitted provided that the following conditions
+### are met:
+### 
+### 1. Redistributions of source code must retain the above copyright
+###    notice, this list of conditions and the following disclaimer.
+### 2. Redistributions in binary form must reproduce the above copyright
+###    notice, this list of conditions and the following disclaimer in the
+###    documentation and/or other materials provided with the distribution.
+### 3. Neither the name of the team nor the names of its contributors
+###    may be used to endorse or promote products derived from this software
+###    without specific prior written permission.
+### 
+### THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+### ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+### IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+### PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+### LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+### CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+### SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+### BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+### WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+### OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+### IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### Local Variables:
+### mode: perl
+### End:

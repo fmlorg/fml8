@@ -1,0 +1,19 @@
+/*
+ *	im*.cmd   for IMG's Internet Message scripts
+ *
+ *	  02/15/1997 KONDO Hiroyasu    <hirokon@homi.toyota.aichi.jp>
+ *	  09/25/1997 OKUNISHI Fujikazu <fuji0924@mbox.kyoto-inet.or.jp>
+ */
+
+ perl5 = Translate('@im_path_perl@','\','/')
+ Parse Arg inarg
+
+/*   get scriptname   */
+ Parse Source . . scr
+ ep  = Length(scr) -4  /* 4: '.cmd' */
+ scr = Left(scr,ep)
+
+ rc=Value("PERL_BADLANG",0,"OS2ENVIRONMENT")
+ rc=Value("PERL_BADFREE",0,"OS2ENVIRONMENT")
+ '@'perl5 scr inarg
+Exit

@@ -1,0 +1,13 @@
+# do not get messages from PostPet
+
+sub getchk_sub {
+    local ($href) = shift;
+
+    if ($href->{'x-mailer'} =~ /PostPet/i
+     && $href->{'content-type'} =~ /multipart.+kiritorisen/i) {
+	return 0;	# skip it
+    }
+    return 1;		# get it
+}
+
+1;

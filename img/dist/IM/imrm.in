@@ -1,0 +1,273 @@
+#! @im_path_perl@
+################################################################
+###
+###				 imrm
+###
+### Author:  Internet Message Group <img@mew.org>
+### Created: Apr 23, 1997
+### Revised: Feb 28, 2000
+###
+
+BEGIN {
+    @im_my_siteperl@
+    @im_src_siteperl@
+};
+
+my $VERSION = "imrm version 20000228(IM140)";
+
+$Prog = 'imrm';
+
+##
+## Require packages
+##
+
+use IM::Config;
+use IM::Folder;
+use IM::File;
+use IM::MsgStore;
+use IM::Util;
+use integer;
+use strict;
+use vars qw($Prog $EXPLANATION @OptConfig
+	    @msgs
+	    $opt_noharm $opt_src @opt_dst
+	    $opt_verbose $opt_debug $opt_help);
+
+##
+## Environments
+##
+
+my %NewMsgCache = ();
+
+$EXPLANATION = "
+$Prog :: Internet Message Remove
+$VERSION
+
+Usage: $Prog [options] +folder... msgs...
+";
+
+@OptConfig = (
+    'src;F;;'     => "Set source folder.",
+    'dst;f@;;'    => "Set destination folder.",
+    'noharm;b;;'  => "Display the commands but do not actually execute them.",
+    'verbose;b;;' => 'With verbose messages.',
+    'debug;d;;'   => "With debug message.",
+    'help;b;;'    => "Show this message.",
+    'SSHServer,S;s;localhost;SSH_server'
+                       => 'SSH port relay server.',
+    );
+
+##
+## Profile and option processing
+##
+
+init_opt(\@OptConfig);
+read_cfg();
+read_opt(\@ARGV); # help?
+help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
+
+debug_option($opt_debug) if $opt_debug;
+
+##
+## Main
+##
+
+@opt_dst = uniq(@opt_dst);
+
+@ARGV    || im_die "no message specified.\n";
+
+@msgs  = @ARGV;
+
+imrm($opt_src, \@opt_dst, \@msgs);
+exit $EXIT_SUCCESS;
+
+##################################################
+##
+## Work horse
+##
+sub imrm ($$$) {
+    my ($src, $dsts, $msgs) = @_;
+    my (@imap_dsts, @local_dsts);
+    my ($imap_src, $imap_dst, $news_src, $news_dst) = (0, 0, 0, 0);
+
+    if ($src =~ /^-/) {
+	$news_src = 1;
+    } elsif ($src =~ /^%/) {
+	$imap_src = 1;
+    }
+    foreach (@$dsts) {
+        if (/^-/) {
+	    $news_dst = 1;
+	} elsif (/^%/) {
+	    $imap_dst = 1;
+	    push(@imap_dsts, $_);
+	} else {
+	    push(@local_dsts, $_);
+	}
+    }
+
+    if ($news_dst) {
+	im_die "refile to News folder is not permitted.\n";
+    }
+
+    if ($news_src) {
+	require IM::Nntp && import IM::Nntp qw(nntp_get_message);
+    }
+
+    if ($imap_src || $imap_dst) {
+	require IM::Imap && import IM::Imap;
+	require IM::GetPass && import IM::GetPass;
+    }
+
+    chk_folder_existance($src, @{$dsts});
+
+    if (($imap_src && imap_open_folders(0, $src) < 0) ||
+	($imap_dst && imap_open_folders(1, @imap_dsts) < 0))
+    {
+	exit($EXIT_ERROR);
+    }
+
+    if ($src =~ /^%/) {
+	imap2local($src, \@local_dsts, $msgs) if (scalar(@local_dsts) > 0);
+	imap2imap($src, \@imap_dsts, $msgs) if (scalar(@imap_dsts) > 0);
+    } elsif ($src =~ /^-/) {
+	news2local($src, \@local_dsts, $msgs) if (scalar(@local_dsts) > 0);
+	news2imap($src, \@imap_dsts, $msgs) if (scalar(@imap_dsts) > 0);
+    } else {
+	local2local($src, \@local_dsts, $msgs) if (scalar(@local_dsts) > 0);
+	local2imap($src, \@imap_dsts, $msgs) if (scalar(@imap_dsts) > 0);
+    }
+
+    if ($imap_src || $imap_dst) {
+	imap_close_folders();
+    }
+    return 0;
+}
+
+sub local2local($$$) {
+    my ($src, $dsts, $msgs) = @_;
+
+    my @msg_paths = get_impath($src, @$msgs);
+    foreach (@msg_paths) {
+	refile_one($src, $dsts, $_) if (-f $_);
+    }
+}
+
+sub imap2local($$$) {
+    my ($src, $dsts, $msgs) = @_;
+    my ($msg, $Message);
+
+    foreach $msg (@$msgs) {
+	$Message = imap_get_message($src, $msg);
+	refile_one("", $dsts, $Message);
+    }
+    imap_delete_message($src, @$msgs);
+}
+
+sub news2local($$$) {
+    my ($src, $dsts, $msgs) = @_;
+    my ($msg, $rc, $Message);
+
+    foreach $msg (@$msgs) {
+	($rc, $Message) = nntp_get_message($src, $msg);
+	im_die($Message) if ($rc < 0);
+	refile_one("", $dsts, $Message);
+    }
+}
+
+sub refile_one ($$$) {
+    my ($src, $dsts, $msg) = @_;
+    my ($dst, $dst_path, $link_it);
+
+    foreach $dst (@{$dsts}) {
+	if ($NewMsgCache{$dst}){
+	    $NewMsgCache{$dst} =~ s|([^/]+)$|$1+1|e; # increment cache
+	    $dst_path = $NewMsgCache{$dst};
+	    } else {
+		$dst_path = $NewMsgCache{$dst} = get_impath($dst, 'new');
+	    }
+	if ($link_it) {
+	    im_link($link_it, $dst_path) || die $@;
+	} else {
+	    if ($src eq "") {
+		if (store_message($msg, $dst, 1) < 0) {
+		    im_warn("can't store msg to $dst folder.\n");
+		}
+	    } else {
+		im_rename($msg, $dst_path) || die $@;
+	    }
+	    $link_it = $dst_path;
+	}
+	touch_folder($dst_path) unless ($opt_noharm);
+    }
+}
+
+sub local2imap ($$$) {
+    my ($src, $dsts, $msgs) = @_;
+    my $msg;
+
+    foreach $msg (@$msgs) {
+	my $src_path = get_impath($src, ($msg));
+	if (-f $src_path) {
+	    imap_put_file($src, $dsts, $src_path);
+	    im_unlink($src_path);
+	}
+    }
+}
+
+sub news2imap ($$$) {
+    my ($src, $dsts, $msgs) = @_;
+    my ($msg, $rc, $Message);
+
+    foreach $msg (@$msgs) {
+	($rc, $Message) = nntp_get_message($src, $msg);
+	im_die($Message) if ($rc < 0);
+	imap_put_message($Message, $dsts);
+    }
+}
+
+sub imap2imap ($$$) {
+    imap_refile(@_);
+}
+
+sub uniq (@) {
+    my @array = @_;
+    my %hash;
+
+    foreach (@array){
+	$hash{$_} = $_;
+    }
+    return keys(%hash);
+}
+
+### Copyright (C) 1997, 1998, 1999 IM developing team
+### All rights reserved.
+### 
+### Redistribution and use in source and binary forms, with or without
+### modification, are permitted provided that the following conditions
+### are met:
+### 
+### 1. Redistributions of source code must retain the above copyright
+###    notice, this list of conditions and the following disclaimer.
+### 2. Redistributions in binary form must reproduce the above copyright
+###    notice, this list of conditions and the following disclaimer in the
+###    documentation and/or other materials provided with the distribution.
+### 3. Neither the name of the team nor the names of its contributors
+###    may be used to endorse or promote products derived from this software
+###    without specific prior written permission.
+### 
+### THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+### ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+### IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+### PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+### LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+### CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+### SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+### BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+### WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+### OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+### IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### Local Variables:
+### mode: perl
+### End:

@@ -1,0 +1,621 @@
+#! @im_path_perl@
+################################################################
+###
+###				 imls
+###
+### Author:  Internet Message Group <img@mew.org>
+### Created: Dec 31, 1995
+### Revised: Feb 28, 2000
+###
+
+BEGIN {
+    @im_my_siteperl@
+    @im_src_siteperl@
+};
+
+my $VERSION = "imls version 20000228(IM140)";
+
+$Prog = 'imls';
+
+##
+## Require packages
+##
+
+use IM::Config;
+use IM::Util;
+use IM::Scan;
+use integer;
+use strict;
+use vars qw($Prog $EXPLANATION @OptConfig
+	    @servers
+	    $opt_form $opt_jissafe $opt_width $opt_thread @opt_src
+	    $opt_indent $opt_grep $opt_namazu $opt_delimiter $opt_casefold
+	    $opt_verbose $opt_debug $opt_quiet $opt_help $opt_buffer);
+
+##
+## Environments
+##
+
+$opt_casefold = 'yes';	# default case-insensitive
+
+my $FIRST = 0;
+my $LAST = 100000; #xxx
+my $scan_count = 0;		# number of scaning count
+
+my %ID2FLD = ();
+my $START = 0;
+#my $LAST = 0;
+
+my $THREAD_INDENT;
+
+$EXPLANATION = "
+$Prog :: Internet Message List
+$VERSION
+
+Usage :: $Prog [options] [+folder] [range]
+";
+
+@OptConfig = (
+    'src;F@;;'    => 'Message source',
+    'form;s;;'    => 'Scan format',
+    'buffer;B;;'  => 'Make output data buffered',
+    'jissafe;b;;' => 'Safe manner for JIS',
+    'width;i;;'   => 'Width of result',
+    'thread;b;;'  => 'Make threads',
+    'indent;i;;'  => "Width of thread indent",
+    'grep;s;;'    => "Grep pattern for vscan",
+    'namazu;b;;'  => "Use namazu for vscan",
+    'casefold;b;on;' => 'Case sensitivity'.
+	"\n\t\t(This option affects both fieldname and pattern.)",
+    'delimiter;s;\n\n|\n----\n;' => 'Mail header delimiter',
+    'dupchecktarget,D;s;;'    => 'Duplicate Check Target',
+    'mimedecodequoted,x;b;;' => 'Decode broken mime-encoded strings',
+    'quiet;b;;'   => 'Suppress informational messages.',
+    'verbose;b;;' => 'With verbose messages.',
+    'debug;d;;'   => "With debug message.",
+    'help;b;;'    => 'Show this message',
+    'SSHServer,S;s;localhost;SSH_server'
+                       => 'SSH port relay server.',
+    );
+
+##
+## Profile and option processing
+##
+
+init_opt(\@OptConfig);
+read_cfg();
+read_opt(\@ARGV); # help?
+help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
+
+debug_option($opt_debug) if $opt_debug;
+
+##
+## Main
+##
+
+&read_petnames();
+
+&set_scan_form($opt_form, $opt_width, $opt_jissafe);
+
+@ARGV = ('all') if $#ARGV == -1;
+@opt_src = uniq(@opt_src);
+
+if (scalar(@opt_src) < 1) {
+    im_die("must specify one or more folders.\n");
+} elsif ($opt_grep) {
+    require IM::Folder && import IM::Folder;
+    require IM::Grep && import IM::Grep;
+    if ($opt_namazu){
+	&vscan_namazu(@ARGV);
+    } else {
+	&vscan();
+    }
+    if ($scan_count == 0) {
+	im_warn("no messages.\n");
+    }
+    exit $EXIT_SUCCESS;
+} else {
+    if (scalar(@opt_src) != 1) {
+	im_die("must specify just one folder.\n");
+    }
+    $_ = $opt_src[0];
+    if (/(^[+=.\/~])|(^[a-zA-Z]:)/) {
+	require IM::Folder && import IM::Folder qw(get_message_paths);
+	local_files($_, @ARGV);
+    } elsif (/^-(.*)$/) {
+	require IM::Nntp && import IM::Nntp;
+	nntp_messages($1, @ARGV);
+    } elsif (/^(\%.*)$/) {
+	require IM::Imap && import IM::Imap;
+	require IM::GetPass && import IM::GetPass;
+	&imap_messages($1, @ARGV);
+    } else {
+	im_die("doesn't support $_\n");
+    }
+    if ($opt_thread) {
+        $THREAD_INDENT = ' ' x $opt_indent;
+        &disp_thread ($START, '');
+    }
+    if ($scan_count == 0) {
+	im_warn("no messages in $_\n");
+    }
+    exit $EXIT_SUCCESS;
+}
+
+##
+## End of Main
+##
+############################################
+
+
+############################################
+##
+## Local Mail and News
+##
+
+sub local_files ($@) {
+    my $folder = shift;
+    my @arg = @_;
+    my %Head = ();
+    my $num;
+
+    foreach $num (get_message_paths($folder, @arg)) {
+	if ( -f $num ) {
+	    %Head = &get_header($num);
+	    $FIRST = $Head{'number:'} if $FIRST == 0;
+	    if ($opt_thread) {
+		&make_thread(%Head);
+	    } else {
+		&disp_msg(\%Head);
+		$scan_count++;
+	    }
+	}
+    }
+    $LAST = $Head{'number:'} if ($LAST == 100000);
+}
+
+############################################
+##
+## News by NNTP
+##
+
+sub nntp_messages ($@) {
+    my ($newsgroup, @ranges) = @_;
+    my ($resp, $start, $end, $rc);
+#   my ($num, $subj, $from, $date, $id, $ref, $num1, $num2);
+
+    ($newsgroup, my $srvs) = nntp_spec($newsgroup, nntpservers());
+    local(@servers) = split(',', $srvs);
+    do {
+	if (($rc = &nntp_open(\@servers, 0)) < 0) {
+	    im_die("can not connect $srvs.\n");
+	}
+	if (($rc = &nntp_command("GROUP $newsgroup", 1)) < 0) {
+	    im_die("can not access $newsgroup.\n");
+	}
+    } while (@servers > 0 && $rc > 0);
+    im_die("can not access $newsgroup on $srvs.\n") if ($rc);
+    my (@resp) = &nntp_command_response;
+    my $error = 0;
+    my $i;
+    for ($i = 0; $i <= $#resp; $i++) {
+	if ($resp[$i] =~ /^211 (\d+) (\d+) (\d+) (.*)$/) {
+#	    if ($newsgroup =~ /$4/) {
+#		# Should not occur
+#		$error = 1;
+#	    } else {
+		$start = $2;
+		$end = $3;
+#	    }
+	    last;
+	}
+    }
+
+    if ($error) {
+	nntp_close();
+	im_err("GROUP command failed.\n");
+	return;
+    }
+
+#   if ($end < $FIRST)  { exit $EXIT_SUCCESS;}
+#   if ($LAST < $start) { exit $EXIT_SUCCESS;}
+
+#   if ($start < $FIRST) { $start = $FIRST; }
+#   if ($LAST < $end)    { $end = $LAST; }
+
+    if ($ranges[0] ne 'all') {
+	@ranges = get_nntp_message_range($start, $end, @ranges);
+	($start, $end) = ($ranges[0], $ranges[$#ranges]);
+#	printf "%s -> %s\n", $ARGV[0], join(',', @ranges);
+    }
+
+    if (&nntp_command("XOVER $start-$end", '')) {
+	im_err("XOVER command failed.\n");
+	im_warn("trying HEAD command.\n");
+
+	my %Head;
+	foreach $i ($start..$end) {
+	    undef %Head;
+	    my $h = nntp_head_as_string($i);
+	    &store_header(\%Head, $h);
+	    $Head{'number:'} = $i;
+	    $Head{'folder:'} = "-$newsgroup/$i";
+	    &parse_header(\%Head);
+	    $Head{'body:'}      = '';
+	    if ($opt_thread) {
+		&make_thread(%Head);
+	    } else {
+		&disp_msg(\%Head);
+		$scan_count++;
+	    }
+	}
+
+	return;
+    } else {
+	while (($resp = &nntp_next_response) !~ /^\.$/) {
+	    my %Head;
+	    undef %Head;
+	    my @overview = split('\t', $resp);
+
+	    $Head{'number:'}    = $overview[0];
+	    $Head{'subject'}    = $overview[1];
+	    $Head{'from'}       = $overview[2];
+	    $Head{'date'}       = $overview[3];
+	    $Head{'message-id'} = $overview[4];
+	    $Head{'references'} = $overview[5];
+	    $Head{'num1'}       = $overview[6];
+	    $Head{'num2'}       = $overview[7];
+	    &parse_header(\%Head);
+	    $Head{'body:'}      = '';
+#	    if ($ref && ($ref =~ /^.*(<[^<]*>)$/)) {
+#		$ref = $1;
+#	    } else {
+#		$ref = 0;
+#	    }
+	    if ($opt_thread) {
+		&make_thread(%Head);
+	    } else {
+		&disp_msg(\%Head);
+		$scan_count++;
+	    }
+	}
+    }
+    nntp_close();
+}
+
+############################################
+##
+## Threads
+##
+
+sub make_thread {
+    my %Head = @_;
+    my $ref = $Head{'references:'};
+    my $id  = $Head{'message-id'}; # not cooked
+    my $num = $Head{'number:'};
+
+    my($x, $y);
+
+    ## Construct a hash for the message
+    $x = {
+	head => \%Head,
+    };
+
+    if ($START == 0) {
+	$START = $x;
+	$LAST = $START;
+	# display the first message ASAP!
+	&disp_msg(\%Head);
+	$scan_count++;
+    } elsif ($ref && ($y = $ID2FLD{$ref})) {
+	## a parents is found
+	unless ($y->{'child'}) {	## first child
+	    $y->{'child'} = $x;
+	} else {			## second or later child
+	    $y = $y->{'child'};
+	    while ($y->{'next'}) {
+		$y = $y->{'next'};
+	    }
+	    $y->{'next'} = $x;
+	}
+    } else { ## no parents
+	$LAST->{'next'} = $x;
+	$LAST = $x;
+    }
+
+    ##
+    ## Rehash the hash and the message for later messages
+    ##
+    $ID2FLD{$id} = $x;
+}
+
+
+############################################
+##
+## Display subroutines
+##
+
+sub disp_thread ($$) {
+    my ($point, $indent) = @_;
+
+    if ($point != $START) {
+	my $c = $point->{'head'};
+	my $ref = $c->{'references:'} || "x";
+	$c->{'indent:'} = $indent;
+
+	&disp_msg(\%{$c});
+	$scan_count++;
+    }
+    if ($point->{'child'}) {
+	disp_thread ($point->{'child'}, $indent . $THREAD_INDENT);
+    }
+    if ($point->{'next'}) {
+	disp_thread ($point->{'next'}, $indent);
+    }
+}
+
+
+###
+### vscan
+###
+
+sub vscan () {
+    my $num = 1;
+    my $folder;
+    my $eval_string;
+
+    $eval_string = parse_expression($opt_grep, $opt_casefold);
+
+    foreach (@opt_src) {
+	my ($folder, $ranges) = (/([^:]+)(?::)?(.*)?/);
+	my $folder_dir;
+	my @ranges = split(',', $ranges);
+	my @messages = ();
+
+	if ( $folder =~ /^\-/ ) {
+	    im_warn("Newsspool $folder search not supported (ignored)\n");
+	    next FOLDER;
+	}
+
+	@ranges = ( $ranges ? @ranges : 'all' );
+
+	$folder_dir = expand_path($folder);
+
+	@messages = grep_folder($folder_dir, $eval_string, 'none', @ranges);
+	foreach ( @messages ) {
+	    if ( -f "$folder_dir/$_" ) {
+		my %Head = &get_header("$folder_dir/$_");
+		$Head{'pnum'} = $Head{'number:'};
+		$Head{'number:'} = $num;
+		disp_msg(\%Head, $opt_grep);
+  		$num++;
+	    }
+	}
+    }
+    $scan_count = $num - 1;
+}
+
+
+###
+### vscan_namazu
+###
+sub vscan_namazu (@) {
+    my $num = shift;
+    my $nmzidx;
+    my $nmzargs;
+
+    $num = 1 if($num eq 'all');
+    if (&namazuv2()) {
+	$nmzargs = "--all --list --early";
+    } else {
+	$nmzargs = "-aeS";
+    }
+
+    binmode(STDOUT);
+    foreach (@opt_src) {
+	my $nmzidx = expand_path($_);
+	my @messages = ();
+
+	im_open(\*NMZ, "namazu $nmzargs \"$opt_grep\" $nmzidx|") 
+	    || im_err( "namazu error\n");
+	@messages = sort {$a <=> $b} <NMZ>;
+	close( NMZ );
+
+	foreach ( @messages ) {
+	    chop;
+	    s/^\/([a-zA-Z])\|/\1:/;
+	    $_ = expand_path($_);
+	    if ( -f $_ ) {
+		my %Head = &get_header($_);
+		$Head{'pnum'} = $Head{'number:'};
+		$Head{'number:'} = $num;
+		disp_msg(\%Head, $opt_grep);
+		$scan_count++;
+  		$num++;
+	    }
+	}
+    }
+}
+
+
+###
+### nntp_message_number
+###
+
+sub nntp_message_number ($$$) {
+    my ($min, $max, $num) = @_;
+    $num =~ /^\d+$/   && return $num;
+    $num =~ /^first$/ && return $min;
+    $num =~ /^last$/  && return $max;
+    return '';
+}
+
+###
+### nntp_message_range
+###
+
+sub nntp_message_range ($$$) {
+    my ($range, $min, $max) = @_;
+    my ($start, $end, $n) = ('', '', '');
+    my (@filesinfolder) = ($min..$max);
+    my $dir;
+
+    if ($range eq 'all') {
+	$range = 'first-last';
+    }
+
+    if ($range =~ /^(\d+|first|last)-(\d+|first|last)$/) {
+	$start = &nntp_message_number($min, $max, $1);
+	$end   = &nntp_message_number($min, $max, $2);
+
+	return () if ($start !~ /^\d+$/);
+	return () if ($end !~ /^\d+$/);
+	return () if ($start > $end);
+
+	@filesinfolder = grep($start<=$_ && $_<=$end, @filesinfolder);
+	return (&sort_uniq(@filesinfolder));
+    }
+    if ($range =~ /^(\d+|last|first):([+-]?)(\d+)$/) {
+	($start, $n) = ($1, $3);
+	if ($start eq 'last') {
+	    $dir = ($2 eq '' || $2 eq '-') ? -1 : +1;
+	} else {
+	    $dir = ($2 eq '' || $2 eq '+') ? +1 : -1;
+	}
+	$start = &nntp_message_number($min, $max, $1);
+	return ($range) if ($start !~ /^\d+$/);
+
+	if ($dir == 1) {
+	    @filesinfolder = grep($start <= $_, @filesinfolder);
+	    @filesinfolder = &sort_uniq(@filesinfolder);
+	} else {
+	    @filesinfolder = grep($_ <= $start, @filesinfolder);
+	    @filesinfolder = &sort_uniq(@filesinfolder);
+	    @filesinfolder = sort {$b <=> $a} @filesinfolder;
+	}
+	$n = scalar(@filesinfolder)
+	    if ($n > scalar(@filesinfolder));
+	@filesinfolder = sort {$a <=> $b} (@filesinfolder[0 .. $n - 1]);
+	return @filesinfolder;
+    }
+
+    return (&nntp_message_number($min, $max, $range));
+}
+
+sub get_nntp_message_range ($$@) {
+    my ($min, $max, @ranges) = (shift, shift, @_);
+    my (@filesinfolder) = ();
+    my $range;
+
+    foreach $range (@ranges) {
+	push(@filesinfolder, nntp_message_range($range, $min, $max));
+    }
+    return (&sort_uniq(@filesinfolder));
+}
+
+############################################
+##
+## IMAP
+##
+
+sub imap_messages ($@) {
+    my ($folder, @ranges) = @_;
+    my ($auth, $user, $host);
+
+    if ($folder !~ /[:\@]/) {
+	# Use ImapAccount spec, unless user or host is specified.
+	(my $dummy, $auth, $user, $host) = imap_spec('');
+	$folder =~ s/^%//;
+    } else {
+	($folder, $auth, $user, $host) = imap_spec($folder);
+    }
+
+    my ($pass, $agtfound, $interact) = getpass('imap', $auth, $host, $user);
+    im_warn("accessing IMAP/$auth:$user\@$host\n") if (&verbose);
+
+    my ($rc, $HANDLE) = &imap_open($auth, $host, $user, $pass);
+    if ($rc < 0) {
+	my $prompt = lc("imap/$auth:$user\@$host");
+	im_err("invalid password ($prompt).\n");
+	&savepass('imap', $auth, $host, $user, '')
+	    if ($agtfound && &usepwagent());
+	$scan_count = -1;
+	return -1;
+    }
+    &savepass('imap', $auth, $host, $user, $pass)
+	if ($interact && $pass ne '' && &usepwagent());
+    my $exists = &imap_select($HANDLE, $folder, 1);
+    if ($exists < 0) {
+	&imap_close($HANDLE);
+	im_warn("can't select $folder\@$host.\n");
+	$scan_count = -1;
+	return -1;
+    }
+    if ($exists > 0) {
+	if (($scan_count = &imap_scan_folder($HANDLE, $folder, @ranges)) < 0) {
+	    &imap_close($HANDLE);
+	    im_warn("IMAP folder scanning error.\n");
+	    return -1;
+	}
+    }
+    &imap_close($HANDLE);
+    return 0;
+}
+
+sub sort_uniq (@) {
+    my(@target) = @_;
+    my(%tmp);
+    my($i);
+
+    undef %tmp;
+    foreach $i (@target) {
+	$tmp{$i}++;
+    }
+    return sort {$a <=> $b} keys %tmp;
+}
+
+sub uniq (@) {
+    my @array = @_;
+    my %hash;
+
+    foreach (@array){
+	$hash{$_} = $_;
+    }
+    return keys(%hash);
+}
+
+##
+## End of imls
+##
+
+### Copyright (C) 1997, 1998, 1999 IM developing team
+### All rights reserved.
+### 
+### Redistribution and use in source and binary forms, with or without
+### modification, are permitted provided that the following conditions
+### are met:
+### 
+### 1. Redistributions of source code must retain the above copyright
+###    notice, this list of conditions and the following disclaimer.
+### 2. Redistributions in binary form must reproduce the above copyright
+###    notice, this list of conditions and the following disclaimer in the
+###    documentation and/or other materials provided with the distribution.
+### 3. Neither the name of the team nor the names of its contributors
+###    may be used to endorse or promote products derived from this software
+###    without specific prior written permission.
+### 
+### THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+### ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+### IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+### PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+### LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+### CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+### SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+### BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+### WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+### OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+### IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### Local Variables:
+### mode: perl
+### End:

@@ -1,0 +1,35 @@
+# get messages sent to me directly
+
+sub getchk_sub {
+    local ($href) = shift;
+
+#   if (my_addr($href->{'to'}, $href->{'cc'}) {
+    if ($href->{'to'} =~ /motonori/i || $href->{'cc'} =~ /motonori/i) {
+	return 1;	# get it
+    }
+    return 0;		# skip it
+}
+
+sub my_addr (@) {
+    my @addrs = @_;
+    my $addr;
+
+    unless (defined($ADDRESS_HASH{'init'})) {
+	$ADDRESS_HASH{'addr'} = addresses_regex();
+	unless ($ADDRESS_HASH{'addr'}) {
+	    $ADDRESS_HASH{'addr'} = '^' . quotemeta(address()) . '$';
+	    $ADDRESS_HASH{'addr'} =~ s/(\\\s)*\\,(\\\s)*/\$|\^/g;
+	}
+	    $ADDRESS_HASH{'init'} = 1;
+    }
+    return 0 if ($ADDRESS_HASH{'addr'} eq "");
+    foreach $addr (@addrs) {
+	my $a;
+	while (($a, $addr) = fetch_addr($addr, 1), $a ne "") {
+	    return 1 if ($a =~ /$ADDRESS_HASH{'addr'}/io);
+	}
+    }
+    return 0;
+}
+
+1;

@@ -1,0 +1,102 @@
+			   Internet Message
+
+			    Kazu Yamamoto
+			     Sep  5, 1999
+
+			   <<<Copyright>>>
+
+This package provides a series of user interface commands (im*
+commands) and backend Perl5 libraries to integrate Email and NetNews
+handling. They are designed to be used both from Mew and on command
+line.
+
+The folder style of Mew is exactly the same as that of MH. So, you can
+replace MH with this package without any migration works. Moreover,
+you are able to operate your messages both by IM and MH with
+consistent manner.
+
+All programs/libraries conforms the BSD like "AS IS" copyright. This
+means, in short words, free but no warranty. 
+
+	      <<<Installing under the root privilege>>>
+
+* Install Perl 5.004_04 or later if not installed. For more
+information, see 00perl. Please note that Perl 5.004 is buggy.
+
+* Execute "configure".
+
+	% ./configure
+
+If you want to use RPOP, execute "configure" with the "--enable-rpop"
+option.
+
+	% ./configure --enable-rpop
+
+If you specify this option, "imget" will be made as "setuid root" for
+RPOP. APOP is the default. (Set Imget.Src as you like according the
+syntax that "imget -h" displays.)
+
+* To set the im commands, just type it. (You can run the current
+ commands in place!)
+
+	% ./imls
+
+* Install them if necessary.
+
+If you have the root privilege or the Perl directory is writable for
+you, type as follows:
+
+	% su
+	# make install
+
+* Setup "/usr/local/lib/im/SiteConfig" and "~/.im/Config". An example is
+found in "cnf.im/SiteConfig" and "dot.im/Config",
+respectively. 'imsetup' would help you.
+
+
+		       <<<Installing by user>>
+
+* Install Perl 5.004 or later to a writable directory if not
+installed. For more information, see 00perl.
+
+* If you want to install 
+	the im* commands    to /your/home/bin,
+	the IM perl modules to /your/home/lib/IM, 
+	SiteConfig          to /your/home/lib/im,
+specify the "--prefix" option as follows:
+
+	% ./configure --prefix=/your/home
+
+The "--bindir", "--with-perldir", and "--libdir" option overrides for
+each. For instance, if you want install the IM perl modules to
+"/other/place/perl/IM", do as follows:
+
+	% ./configure --prefix=/your/home --with-perldir=/other/place/perl
+
+Note that the "--enable-rpop" option is meaningless because you don't
+have the root privilege.
+
+* Install them by "make install".
+
+	% make install
+
+
+		 <<<Contributions and Bug Reports>>>
+
+Please send comments, bug reports, and patches to "img@mew.org".
+
+
+			  <<<Programmers>>>
+
+		Junichiro ITO           <itojun@mew.org>
+		 Yoshiaki KASAHARA    <kasahara@mew.org>
+		 Motonori NAKAMURA    <motonori@mew.org>
+		 Kazunori NISHI       <kazunori@mew.org>
+		Yoshinari NOMURA           <nom@mew.org>
+		 Hidenori OHTA            <hide@mew.org>
+                 Fujikazu OKUNISHI    <fuji0924@mbox.kyoto-inet.or.jp>
+                 Kiyotaka SAKAI         <ksakai@mew.org>
+                Toshihiko SHIMOKAWA      <toshi@mew.org>
+                Fumitoshi UKAI            <ukai@jp.hpl.hp.com>
+                 Kazumasa UTASHIRO    <utashiro@mew.org>
+		     Kazu YAMAMOTO        <kazu@mew.org>

@@ -1,0 +1,28 @@
+$symbol_table{'W'} = 'wdate:';
+$NEEDSAFE_HASH{'wdate:'} = 1;    # if the field contains JIS characters
+
+sub scan_sub {
+	local ($href) = shift;
+
+    if (${$href}{'date'} =~ /([A-Z][a-z][a-z]), /) {
+        if ($+ eq 'Mon') {
+            ${$href}{'wdate:'} = '月';
+        } elsif ($+ eq 'Tue') {
+            ${$href}{'wdate:'} = '火';
+        } elsif ($+ eq 'Wed') {
+            ${$href}{'wdate:'} = '水';
+        } elsif ($+ eq 'Thu') {
+            ${$href}{'wdate:'} = '木';
+        } elsif ($+ eq 'Fri') {
+            ${$href}{'wdate:'} = '金';
+        } elsif ($+ eq 'Sat') {
+            ${$href}{'wdate:'} = '土';
+        } elsif ($+ eq 'Sun') {
+            ${$href}{'wdate:'} = '日';
+        } else {
+            ${$href}{'wdate:'} = "$+";
+        }
+    } else {
+        ${$href}{'wdate:'} = '??';
+    }
+}

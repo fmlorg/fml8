@@ -1,0 +1,530 @@
+#! @im_path_perl@
+################################################################
+###
+###		    imsetup: setup command for IM
+###
+### Author:  Internet Message Group <img@mew.org>
+### Created: May  9, 1997
+### Revised: Feb 28, 2000
+###
+
+BEGIN {
+    @im_my_siteperl@
+    @im_src_siteperl@
+};
+
+my $VERSION = "imsetup version 20000228(IM140)";
+
+$Prog = 'imsetup';
+
+##
+## Require packages
+##
+
+use File::Copy;
+use Sys::Hostname;
+use IM::Config qw(init_opt read_opt read_cfg help);
+use IM::Util;
+use IM::Address qw(extract_addr);
+use integer;
+use strict;
+use vars qw($Prog $EXPLANATION @OptConfig
+	    $opt_fromdomain $opt_noharm $opt_help);
+
+##
+## Environments
+##
+
+my $imdir = ".im";
+my $config = "Config";
+my $alias = "Aliases";
+
+my $home = $ENV{'HOME'};
+my $address;
+my $mail = "Mail";
+my $news = "News";
+my $usecl  = "@im_usecl@";
+my $nosync = "@im_nosync@";
+my $src = "local";
+my $auth = "";
+my ($user, $host) = split(/\@/, $address);
+my $keep = 0;
+my $smtpserver = "localhost";
+
+my ($mhdir, $mhalias, $domain, $nntpservers);
+
+$EXPLANATION = "
+$Prog :: Setup command for IM series
+$VERSION
+
+Usage :: $Prog [options]
+";
+
+@OptConfig = (
+    'FromDomain;s;;' => 'Default domain name for mail address.',
+    'noharm;b;;' => "Do execute setup, show what will be performed.",
+    'help;b;;'   => "Show this message.",
+    );
+
+##
+## Profile and option processing
+##
+
+init_opt(\@OptConfig);
+read_cfg();
+read_opt(\@ARGV); # help?
+help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
+
+##
+## Main
+##
+
+if ($opt_fromdomain =~ /\./) {
+    $address = im_getlogin() . "\@" . $opt_fromdomain;
+} else {
+    $address = im_getlogin() . "\@" . get_domain_name();
+}
+
+&read_conf();
+&check_im_directory();
+&make_conf_file();
+&copy_alias_file();
+
+sub get_domain_name () {
+    my $hostname = hostname();
+    unless ($hostname =~ /\./) {
+	my ($h) = gethostbyname($hostname);
+	$hostname = $h if ($h);
+    }
+    $hostname =~ s/^[^.]+\.//;
+
+    return $hostname;
+}
+
+sub read_conf () {
+    $home = &input_config("Where is your home directory?", $home);
+    &scan_mh_conf();
+
+    my $mymail = "$home/$mail";
+    my $mynews = "$home/$news";
+    my $qhome = quotemeta($home);
+
+    do {
+	do {
+	    $mymail = &input_config("Where is your Mail directory?", $mymail);
+	} until (($mail = $mymail) =~ s!^$qhome/!!e
+		 || &input_confirm("Sure to use $mail which is not beneath "
+				   . "your home directory?"));
+    } while (! &check_and_create_directory($mymail));
+
+    do {
+	do {
+	    $mynews = &input_config("Where is your News directory?", $mynews);
+	} until (($news = $mynews) =~ s!^$qhome/!!e
+		 || &input_confirm("Sure to use $news which is not beneath "
+				   . "your home directory?"));
+    } while (! &check_and_create_directory($mynews));
+
+    $address = &input_config("What is your E-mail address(es)?", $address);
+
+    do {
+        $src = &input_config("What kind of mail spool do you use? (local/POP/IMAP)", $src);
+    } while (! ($src =~ /^local$|^pop$|^imap$/i));
+  
+    if ($src =~ /^pop|^imap/i) {
+        if ($src =~ /^pop/i) {
+            $auth = "POP";
+            do {
+                $auth = &input_config("What kind of POP authentication mechanism? (POP/APOP/RPOP)", $auth);
+            } while (! ($auth =~ /^pop$|^apop$|^rpop$/i));
+        } else {
+            $auth = "AUTH";
+            do {
+                $auth = &input_config("What kind of IMAP authentication mechanism? (AUTH/LOGIN)", $auth);
+            } while (! ($auth =~ /^auth$|^login$/i));
+        }
+        ($user, $host) = split(/\@/, $address);
+        $host = "mail." . $host;
+        $user = &input_config("What is your $src account name?", $user);
+        $host = &input_config("What is your $src server name or IP address?", $host);
+
+    } 
+
+    if ($src =~ /^pop/i) {
+	$keep = &input_config("Do you want to preserve messages?\n"
+                        . "0 (delete immediately), -1 (preserve forever),\n"
+			. "N > 0 (delete messages after N days) "
+			, $keep);
+    }
+
+    if ($src =~ /^pop|^imap/i) { $smtpserver = $host; }
+    $smtpserver = &input_config("What is your SMTP server name or IP address?", $smtpserver);
+
+    $usecl = &input_config("Do you want to use value of Content-Length"
+			   . " header for delimitation for local\nmail?"
+			   . " (Answer yes if your OS supports Content-Length"
+			   . " header like Solaris 2.x,\notherwise answer no.)"
+			   , $usecl);
+
+    $nosync = &input_config("Does your system can detect write errors without"
+			    . " fsync(2)? (You can answer yes,\n"
+			    . "if your home directory is on local file system,"
+			    . " otherwise answer no.)"
+			    , $nosync eq 'undefined' ? 'no' : $nosync)
+			    if ($nosync ne 'yes');
+
+    print "\n";
+}
+
+sub input_config ($$) {
+    my ($msg, $default) = @_;
+    my $ret;
+
+    print "$msg [$default] ";
+    chomp($ret = <STDIN>);
+    $ret = $default if ($ret =~ /^\s*$/);
+    return $ret;
+}
+
+sub input_confirm($;$) {
+    my ($msg, $default) = @_;
+    my $ret;
+
+    $default = "yes" if $default eq "";
+
+    print "$msg [$default] ";
+    chomp($ret = <STDIN>);
+    $ret = $default if ($ret =~ /^\s*$/);
+    return $ret =~ m/^y/i;
+}
+
+sub scan_mh_conf () {
+    my $mh_profile = "$home/.mh_profile";
+    if ( -f $mh_profile ) {
+	open(MH_PROFILE, $mh_profile);
+	while(<MH_PROFILE>) {
+	    chomp;
+	    if (/^Path:\s*(.*)/i) {
+		$mhdir = $mail =  $1;
+		$mail =~ s/($home|~)\///;
+	    }
+	    if (/^Aliasfile:\s*(.*)/i) {
+		$mhalias = $1;
+	    }
+	    if (!$mhalias && /^ali:\s*-alias\s*(.*)/i) {
+		$mhalias = $1;
+	    }
+	    if (/^Alternate-Mailboxes:\s*(.*)/i) {
+		$address = $1;
+	    }
+	}
+    } else {
+	$mhdir = $mail;
+	$mhalias = 'aliases';
+    }
+}
+
+sub check_im_directory () {
+    if ( -x "$home/$imdir" ) {
+	print "$home/$imdir is already exist.\n";
+    } else {
+	if (!$opt_noharm) {
+	    if (mkdir("$home/$imdir", 0700) == 0) {
+		die "Fail to create $home/$imdir directory: $!\n";
+	    }
+	    print "Directory $home/$imdir created.\n";
+	}
+    }
+}
+
+sub check_and_create_directory ($) {
+    my $dir = shift;
+
+    if ( ! -x $dir ) {
+	if (&input_confirm("$dir does not exist. Create it?")) {
+	    print "Creating $dir directory.\n";
+	    if (!$opt_noharm) {
+		if (mkdir("$dir", 0700) == 0) {
+		    die "Fail to create $dir directory: $!\n";
+		}
+		print "Directory $dir created.\n";
+	    }
+	    return 1;
+	}
+	else {
+	    return 0;
+	}
+    }
+    return 1;
+}
+
+sub copy_alias_file () {
+    my $im_alias = "$home/$imdir/$alias";
+    my $mh_alias = "$home/$mhdir/$mhalias";
+
+    if ( ! -f $mh_alias ) {
+	$mh_alias = $mhalias;
+    }
+
+    if ( -f $mh_alias && ! -f $im_alias ) {
+	print "Copy $mh_alias to $im_alias.\n";
+	if (!$opt_noharm) {
+	    copy($mh_alias, $im_alias);
+	}
+    }
+}
+
+sub make_conf_file () {
+    my $im_config = "$home/$imdir/$config";
+
+    if ( -f $im_config ) {
+	print "Backup $im_config to $im_config.bak.\n";
+	if (!$opt_noharm) {
+	    rename ("$im_config", "$im_config.bak");
+	}
+    }
+
+    print "Setup $im_config.\n";
+    if (!$opt_noharm) {
+	my $a = extract_addr($address);
+	if ($a =~ /\@(.*)/) {
+	    $domain = $1;
+	}
+	$nntpservers = $ENV{'NNTPSERVER'} || "localhost";
+	open(CONFIG, ">$im_config");
+	print CONFIG <<"---";
+################################################################
+###
+### Sample ~/.im/Config
+###
+### Syntax::
+###	key=value
+###
+###  * "key=value" is equivalent to "--key=value" style command option.
+###  * "key" must start at the beginning of the line.
+###  * "=" must follow after "key" without white spaces.
+###  * White spaces are allowed between "=" and "value".
+###  * ":" can be used instead of "=".
+###  * Characters after "#" are ignored.
+###
+### The following examples are all the same:
+###	key=value
+###	key=  value
+###	key:value
+###     key:  value
+###
+### \$variable will be expanded.
+### '~' will be expanded.
+###
+
+##
+## Individual information
+##
+
+Address=$address
+FromDomain=$domain
+ToDomain=$domain
+#Name=Full Name			# commentary name for my mail address
+				# should not contain 8bit characters
+#AddrRegex=
+#Org=The Mew Organization	# for news posting
+#User=user_name
+
+##
+## Default global parameters
+##
+
+### Directories (relative to ~/)
+MailDir=$mail
+NewsDir=$news			# for saved news
+
+### Folders in \$MailDir
+#InboxFolder=+inbox		# default destination of imget
+#DraftFolder=+draft
+#TrashFolder=+trash		# default destination of message removal in Mew
+
+### Folder style in \$NewsDir (saved news articles)
+#PreserveDot=off		# off: /news/group/, on: /news.group/
+
+### Mode for creation
+#FolderMode=0700
+#MsgMode=0600
+
+### To keep state of IM commands (CurrentFolder, etc.)
+#ContextFile=Context		# relative to ~/.im/
+
+
+##
+## Default settings
+##
+
+## Address Book
+#AddrBookFile=Addrbook		# relative to ~/.im/
+## Mail address aliases
+#AliasesFile=Aliases		# relative to ~/.im/
+## PetName: mail address aliases for displaying
+#PetnameFile=Petnames		# relative to ~/.im/
+
+## Message-ID database
+#MsgDBFile=msgiddb		# location (relative to ~/.im/)
+#MsgDBType=DB			# type of database (DB, NDBM, SDBM)
+
+## To call user defined subroutines (relative to ~/.im/)
+#GetChkSbr=getchk.sbr		# hooks for imget
+#GetSbr=get.sbr			# hooks for imget
+#ScanSbr=scan.sbr		# hooks for imget/imls
+
+## Working folders
+#Src=\$InboxFolder		# default source of most commands
+#Imrm.Src=\$TrashFolder		# default source for message cleanups
+
+## imget/imls specific
+#ScanSbr=scan.sbr		# hook for special processing (rel. to ~/.im/)
+#Form=%+5n %m%d %-14A %S || %b	# default format for scanning
+#AllowCRLF=no			# saved messages may contain CRLF (DOS style)
+#Width=80			# default width for scanning
+#JisSafe=on			# escape seq. of JIS char. should be managed
+#Indent=2			# indent step for threading
+
+## Servers
+Smtpservers=$smtpserver
+#Smtpservers=localhost		# default server for SMTP
+#EmgSmtpSvrs=12.34.56.78,localhost	# SMTP server just for error return
+#NntpServers=localhost		# default server for NNTP
+
+## imget specific
+#GetSbr=get.sbr			# hook for special processing (rel. to ~/.im/)
+---
+
+        if ($src =~ /^local/i ) {
+            print CONFIG <<"---";
+Imget.Src=local
+keep=$keep
+---
+        }
+        print CONFIG <<"---";
+#Imget.Src=local		# default source of imget (local mailbox)
+#lock=flock			# locking style of local mailbox
+#rpath=append			# conversion of UNIX From into Return-Path:
+#PopHistory=pophist-{POPSERVERID}	# to save last state (relative to ~/.im/)
+#NntpHistory=newshist		# to save last state (relative to ~/.im/)
+#MBoxStyle=qmail		# if folder style mbox of qmail is used
+#Imget.Src=local:\${HOME}/MailDir# in case of qmail
+UseCL=$usecl			# Use value of Content-Length header
+NoSync=$nosync			# Do not need fsync(2) on writing file
+
+---
+        if ($src =~ /^pop/i) {
+            print CONFIG <<"---";
+Imget.Src=pop
+PopAccount=/$auth:$user\@$host
+keep=$keep
+---
+        }
+        print CONFIG <<"---";
+#Imget.Src=pop
+#PopAccount=/APOP\@localhost	# account info for POP access
+#PopAccount=/APOP:user\@host	# account info with user name
+#PopAccount=/APOP:user\@host/110	# account info with user name and port number
+#Keep=7				# preserve read messages on server
+#ProtoKeep=UIDL			# how to know which message is unread
+				# (UIDL, LAST, STATUS, MSGID)
+#IgnorePostPet=yes		# leave messages for PostPet on mbox (POP only)
+
+---
+        if ($src =~ /^imap/i) {
+            print CONFIG <<"---";
+Imget.Src=imap
+ImapAccount=/$auth:$user\@$host
+keep=$keep
+---
+        }
+        print CONFIG <<"---";
+#Imget.Src=imap
+#ImapAccount=/AUTH\@localhost	# account info for IMAP access
+#ImapAccount=/AUTH:user\@host	# account info with user name
+#HttpProxy=proxy-server:8080	# proxy server for HTTP access
+#NoProxy=http://.*my.domain/	# URL regex not to use Proxy server
+#UsePwAgent=yes			# use password agent
+#PwAgentPort=6543		# Port to connect pwagent with TCP/IP
+				# (Insecure for multi-user system!)
+				# 0 to use UNIX domain socket (more secure)
+
+# be careful on security if you wish to use PwFiles!
+#UsePwFiles=yes			# use password files
+#PwFiles=password		# password files (relative to ~/.im/)
+
+## imput specific
+#FccDir=\$MailDir		# directory for FCC folders
+#QueueDir=queue			# directory for to store messages to be sent
+#MsgIdDomain=\${HOST}		# if you want to use FQDN of dispatching host
+#ObeyMTAdomain=yes		# do not append domainpart to addresses by imput
+#NoMsgIdForNews=yes		# do not insert Message-Id: when posting as news
+#NewsGMTdate=yes		# use GMT for Date: when posting as news
+#UseLines=yes			# generate Lines header line
+#JPheader=yes			# encode ISO-2022-JP with RFC2047
+#Defcode=EUC			# default code in case no way to judge SJIS/EUCj
+#JPconv=yes			# convert SJIS/EUCj to ISO-2022-JP
+#NoHdrFolding=yes		# do not fold long header line when encoding
+#HdrQEncoding=yes		# use Q-encoding to encode ISO-2022-JP
+#NameInComment=yes		# yes: (Full Name) Addr, no: Full Name <Addr>
+#Lines=3000			# unit to split a message to partial
+#Annotate=yes			# annotate on parent messages (MsgDB required)
+
+# Common operational settings
+#Help=no
+#Quiet=no
+#Noharm=no
+#Verbose=no
+#Debug=
+
+
+#case mew
+#FromDomain=mew.org
+
+#case queue
+#JustQueuing=yes
+#Queuing=yes
+
+#case news
+#Assoc=	+inbox=nntp:fj.mail.system.sendmail;\\
+#	+inbox=nntp:fj.mail
+#Count=10
+
+#case default
+# -- global setting again --
+---
+    }
+}
+
+### Copyright (C) 1997, 1998, 1999 IM developing team
+### All rights reserved.
+### 
+### Redistribution and use in source and binary forms, with or without
+### modification, are permitted provided that the following conditions
+### are met:
+### 
+### 1. Redistributions of source code must retain the above copyright
+###    notice, this list of conditions and the following disclaimer.
+### 2. Redistributions in binary form must reproduce the above copyright
+###    notice, this list of conditions and the following disclaimer in the
+###    documentation and/or other materials provided with the distribution.
+### 3. Neither the name of the team nor the names of its contributors
+###    may be used to endorse or promote products derived from this software
+###    without specific prior written permission.
+### 
+### THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+### ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+### IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+### PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+### LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+### CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+### SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+### BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+### WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+### OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+### IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### Local Variables:
+### mode: perl
+### End:

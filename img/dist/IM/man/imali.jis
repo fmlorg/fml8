@@ -1,0 +1,16 @@
+			IMALI マニュアル
+
+
+機能:
+
+	alias の表示
+
+オプション:
+
+	--host=<sw>	on: mail の alias ではなくて host の alias を
+			表示する。
+	--file=<string>	デフォルトの alias ファイルの代わりに使用する
+			alias ファイルを指定する。
+	--verbose=<sw>	on: 処理に関するさまざまな情報を表示する。
+	--debug=<sw>	on: デバッグメッセージを表示する。
+	--help=<sw>	on: ヘルプメッセージを表示する。
