@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: basic_io.pl,v 1.1.1.1 2001/04/07 12:47:01 fukachan Exp $
+# $FML: basic_io.pl,v 1.2 2001/04/08 05:05:10 fukachan Exp $
 #
 
 use strict;
@@ -22,6 +22,7 @@ for my $f (@ARGV) {
 
     $wh->autoflush(1);
     $obj->print($wh);
+    $wh->close;
 
     print "\n<< $f\n";
 
