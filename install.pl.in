@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: install.pl.in,v 1.5 2004/06/07 16:04:41 fukachan Exp $
+# $FML: install.pl.in,v 1.6 2004/07/27 15:48:09 fukachan Exp $
 #
 
 use strict;
@@ -92,6 +92,7 @@ sub _install
 	$installer->install_sample_cf_files();
 	$installer->install_default_config_files();
 	$installer->install_mtree_dir();
+	$installer->install_compat_dir();
 	$installer->install_lib_dir();
 	$installer->install_libexec_dir();
 	$installer->install_data_dir();
