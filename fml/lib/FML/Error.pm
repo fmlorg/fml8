@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.30 2004/04/23 04:10:27 fukachan Exp $
+# $FML: Error.pm,v 1.31 2004/05/22 06:19:51 fukachan Exp $
 #
 
 package FML::Error;
@@ -42,7 +42,7 @@ constructor.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($curproc)
 # Side Effects: none
 # Return Value: none
@@ -91,7 +91,7 @@ sub get_lock_channel_name
 =cut
 
 
-# Descriptions: lock
+# Descriptions: lock.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: none
@@ -104,7 +104,7 @@ sub lock
 }
 
 
-# Descriptions: unlock
+# Descriptions: unlock.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: none
@@ -246,7 +246,7 @@ get the current function.
 =cut
 
 
-# Descriptions: set analyzer function name
+# Descriptions: set analyzer function name.
 #    Arguments: OBJ($self) STR($fp)
 # Side Effects: one
 # Return Value: STR
@@ -257,7 +257,7 @@ sub set_analyzer_function
 }
 
 
-# Descriptions: set analyzer function name
+# Descriptions: get analyzer function name.
 #    Arguments: OBJ($self)
 # Side Effects: one
 # Return Value: STR
@@ -273,6 +273,9 @@ sub get_analyzer_function
 =head2 is_list_address($addr)
 
 check whether $addr is one of addresses this ML uses.
+
+we need this function to exclude list related addresses from removal
+target.
 
 =cut
 
@@ -313,7 +316,7 @@ sub is_list_address
 
 =head2 remove_bouncers()
 
-delete mail addresses which analyze() determined as bouncers by
+delete mail addresses, which analyze() determined as bouncers, by
 deluser() method.
 
 You need to call analyze() method before calling remove_bouncers() to
@@ -322,7 +325,7 @@ list up addresses to remove.
 =cut
 
 
-# Descriptions: delete addresses analyze() determined as bouncers
+# Descriptions: delete addresses analyze() determined as bouncers.
 #    Arguments: OBJ($self)
 # Side Effects: update user address lists.
 # Return Value: none
@@ -395,7 +398,7 @@ sub deluser
 	$curproc->log("deluser <$address>");
     }
     else {
-	$curproc->logerror("deluser: invalid address syntax");
+	$curproc->logerror("deluser: invalid address syntax: <$address>");
 	return;
     }
 
@@ -447,7 +450,7 @@ print list of addresses and the corresponding point.
 =cut
 
 
-# Descriptions: dump { address => the current point }
+# Descriptions: list up addresses.
 #    Arguments: OBJ($self) HANDLE($handle)
 # Side Effects: none
 # Return Value: none
