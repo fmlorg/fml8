@@ -1,11 +1,18 @@
 #!/usr/bin/env perl
 #
-# $FML: convert.pl,v 1.1 2004/03/14 13:29:25 fukachan Exp $
+# $FML: convert.pl,v 1.2 2004/03/15 08:17:49 fukachan Exp $
 #
 
 use strict;
 use Carp;
-use vars qw($count %stab);
+use vars qw($count %stab %option $default_config_ph);
+use Getopt::Long;
+
+GetOptions(\%option, qw(c=s));
+
+if (defined $option{ c }) {
+   $default_config_ph = $option{ c } || "/usr/local/fml/default_config.ph";
+}
 
 load_default();
 
@@ -33,7 +40,7 @@ sub load_default
     $BRACKET         = '$ml_name';
     $ML_FN           = '($ml_name ML)';
 
-    require "/usr/local/fml/default_config.ph";
+    require $main::default_config_ph;
 
     $DIR             = '$DIR';
     $DOMAINNAME      = '$ml_domain';
