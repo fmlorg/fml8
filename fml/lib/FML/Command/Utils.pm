@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.3 2001/12/22 09:27:14 fukachan Exp $
+# $FML: Utils.pm,v 1.2 2001/12/22 16:10:50 fukachan Exp $
 #
 
 package FML::Command::Utils;
@@ -27,6 +27,10 @@ FML::Command::Utils - command utilities
 =cut
 
 
+# Descriptions: standard constructor
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self) = @_;

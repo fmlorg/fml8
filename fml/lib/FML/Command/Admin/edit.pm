@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: edit.pm,v 1.3 2001/10/14 00:44:39 fukachan Exp $
+# $FML: edit.pm,v 1.4 2001/12/22 09:21:03 fukachan Exp $
 #
 
 package FML::Command::Admin::edit;
@@ -17,15 +17,17 @@ use FML::Command::Utils;
 
 =head1 NAME
 
-FML::Command::Admin::edit - edit a new member
+FML::Command::Admin::edit - edit config.cf
 
 =head1 SYNOPSIS
 
-=head1 DESCRIPTION
-
 See C<FML::Command> for more details.
 
-=head1 METHODS
+=head1 DESCRIPTION
+
+Tool to edit config.cf.
+
+     not implemented
 
 =head1 METHODS
 

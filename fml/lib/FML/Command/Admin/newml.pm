@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.6 2001/12/11 15:38:01 fukachan Exp $
+# $FML: newml.pm,v 1.7 2001/12/22 09:21:03 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -19,7 +19,7 @@ use FML::Command::Utils;
 
 =head1 NAME
 
-FML::Command::Admin::newml - make a new mailing list
+FML::Command::Admin::newml - set up a new mailing list
 
 =head1 SYNOPSIS
 
@@ -31,6 +31,10 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
+set up a new mailing list
+create mailing list directory,
+install config.cf, include, include-ctl et. al.
+
 =head1 METHODS
 
 =head2 C<process($curproc, $command_args)>
@@ -38,6 +42,11 @@ See C<FML::Command> for more details.
 =cut
 
 
+# Descriptions: set up a new mailing list
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: create mailing list directory,
+#               install config.cf, include, include-ctl et. al.
+# Return Value: none
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
@@ -56,7 +65,7 @@ sub process
     };
 
     # fundamental check
-    croak("\$ml_name is not specified")    unless $ml_name;
+    croak("\$ml_name is not specified") unless $ml_name;
 
     unless (-d $ml_home_dir) {
 	eval q{
@@ -83,6 +92,10 @@ sub process
 }
 
 
+# Descriptions: install $dst with variable expansion of $src
+#    Arguments: STR($src) STR($dst) HASH_REF($config)
+# Side Effects: create $dst 
+# Return Value: none
 sub _install
 {
     my ($src, $dst, $config) = @_;

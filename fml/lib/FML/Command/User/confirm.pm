@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.2 2001/10/14 00:32:29 fukachan Exp $
+# $FML: confirm.pm,v 1.3 2001/12/22 09:21:04 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -24,9 +24,11 @@ FML::Command::User::confirm - allow action after confirmation
 
 =head1 SYNOPSIS
 
+See C<FML::Command> for more details.
+
 =head1 DESCRIPTION
 
-See C<FML::Command> for more details.
+real process after confirmation succeeds.
 
 =head1 METHODS
 
@@ -35,6 +37,11 @@ See C<FML::Command> for more details.
 =cut
 
 
+# Descriptions: real process after confirmation succeeds.
+#               run _switch_command() for real process.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: none
+# Return Value: none
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
@@ -78,6 +85,13 @@ sub process
 }
 
 
+# Descriptions: load module for real process and
+#               switched to it.
+#               We support only {subscribe,unsubscribe,chaddr} now.
+#    Arguments: OBJ($self) STR($class) STR($address)
+#               OBJ($curproc) HASH_REF($command_args)
+# Side Effects: module loaded
+# Return Value: none
 sub _switch_command
 {
     my ($self, $class, $address, $curproc, $command_args) = @_;

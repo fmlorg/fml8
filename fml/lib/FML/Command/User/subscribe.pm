@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.6 2001/10/14 00:32:30 fukachan Exp $
+# $FML: subscribe.pm,v 1.7 2001/12/22 09:21:05 fukachan Exp $
 #
 
 package FML::Command::User::subscribe;
@@ -24,9 +24,12 @@ FML::Command::User::subscribe - subscribe a new member
 
 =head1 SYNOPSIS
 
+See C<FML::Command> for more details.
+
 =head1 DESCRIPTION
 
-See C<FML::Command> for more details.
+Firstly apply confirmation before subscribe.
+After confirmation succeeds, subcribe process proceeds.
 
 =head1 METHODS
 
@@ -35,6 +38,11 @@ See C<FML::Command> for more details.
 =cut
 
 
+# Descriptions: subscribe adapter: confirm before subscribe
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: update database for confirmation.
+#               prepare reply message.
+# Return Value: none
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
