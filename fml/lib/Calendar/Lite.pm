@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.14 2003/02/01 08:49:17 fukachan Exp $
+# $FML: Lite.pm,v 1.15 2003/08/23 04:35:26 fukachan Exp $
 #
 
 package Calendar::Lite;
@@ -56,9 +56,9 @@ e.g. "w3m".
 The standard constructor.
 
 It speculates C<user> by $args->{ user } or $ENV{'USER'} or UID
-and determine the path for ~user/.schedule/.
+and determines the path for ~user/.schedule/.
 
-$args can take the following variables:
+C<$args> can take the following variables:
 
    $args = {
        schedule_dir   => DIR,
@@ -86,7 +86,7 @@ sub new
     my ($self, $args) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
-    my $user   = defined $args->{ user } ? $args->{ user } : $ENV{'USER'};
+    my $user   = $args->{ user } || $ENV{'USER'};
 
     # default directory to hold schdule file(s): ~/.schedule/ by default
     use User::pwent;
@@ -112,6 +112,7 @@ sub new
     $me->{ _schedule_dir }  = File::Spec->catfile($home_dir, ".schedule");
     $me->{ _schedule_file } = undef;
 
+    # import value from $args if specified.
     for my $key ('schedule_dir', 'schedule_file', 'mode') {
 	if (defined $args->{ $key }) {
 	    $me->{ "_$key" } = $args->{ $key };
@@ -148,19 +149,15 @@ sub tmpfilepath
 	$tmpdir = $dir;
     }
     else {
-	croak("$dir not exists\n")      unless -d $dir;
-	croak("$dir is not writable\n") unless -w $dir;
+	croak("$dir not exists\n")   unless -d $dir;
+	croak("$dir not writable\n") unless -w $dir;
     }
 
     # XXX we should not create a temporary file in the public area
     # XXX such as /tmp/, so create it in ~/.schedule/.
     if (defined $tmpdir) {
-	eval q{
-	    use File::Spec;
-	    $self->{ _tmpfile } = File::Spec->catfile($tmpdir, ".tmp.$$.html");
-	};
-	croak($@) if $@;
-
+	use File::Spec;
+	$self->{ _tmpfile } = File::Spec->catfile($tmpdir, ".tmp.$$.html");
 	return $self->{ _tmpfile };
     }
     else {
@@ -176,7 +173,7 @@ Parse files in ~/.schedule/ or the specified schedule file.
 =cut
 
 
-# Descriptions: parse filee(s).
+# Descriptions: parse file(s).
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: update calendar entries in $self object
 #               (actually by _add_entry() calleded here)
@@ -187,8 +184,8 @@ sub parse
     my ($sec,$min,$hour,$mday,$month,$year,$wday) = localtime(time);
 
     # get the date to show
-    $year  = defined $args->{ year }  ? $args->{ year }  : (1900 + $year);
-    $month = defined $args->{ month } ? $args->{ month } : ($month + 1);
+    $year  = $args->{ year }  || (1900 + $year);
+    $month = $args->{ month } || ($month + 1);
 
     # schedule file
     my $data_dir  = $self->{ _schedule_dir };
@@ -210,7 +207,7 @@ sub parse
 	$self->{ _schedule } = $cal;
     }
     else {
-	croak("cannot get object");
+	croak("cannot create calender object");
     }
 
     $cal->width('70%');
@@ -226,8 +223,6 @@ sub parse
 	my $dh = new DirHandle $data_dir;
 
 	if (defined $dh) {
-	    use File::Spec;
-
 	    my $xdir;
 
 	  DIR:
@@ -235,6 +230,7 @@ sub parse
 		next DIR if $xdir =~ /~$/o;
 		next DIR if $xdir =~ /^\./o;
 
+		use File::Spec;
 		my $schedule_file = File::Spec->catfile($data_dir, $xdir);
 		if (-f $schedule_file) {
 		    $self->_analyze($schedule_file, \@pat);
@@ -269,7 +265,8 @@ sub _analyze
       LINE:
 	while ($buf = <$fh>) {
 	    for my $pat (@$pattern) {
-		if ($buf =~ /$pat(.*)/) {
+		# XXX $pat is /($re_date)(.*)/.
+		if ($buf =~ /$pat/) {
 		    $self->_add_entry($1, $2);
 		    next LINE;
 		}
@@ -306,6 +303,9 @@ print out the result as HTML.
 You can specify the output channel by file descriptor C<$fd>.
 
 =cut
+
+
+# XXX-TODO: print() -> print_as_html() ?
 
 
 # Descriptions: print Calendar by HTML::CalendarMonthSimple::as_HTML()
@@ -372,7 +372,7 @@ sub print_specific_month
 }
 
 
-=head2 get_mode( $mode )
+=head2 get_mode( )
 
 show mode (string).
 
@@ -382,7 +382,7 @@ override mode.
 The mode is either of 'text' or 'html'.
 
 XXX: The mode is not used in this module itsef.
-     This is a pragma for other module use..
+     This is a pragma for other module use.
 
 =cut
 

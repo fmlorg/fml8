@@ -3,7 +3,7 @@
 # Copyright (C) 2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.2 2003/03/28 10:32:21 fukachan Exp $
+# $FML: Spool.pm,v 1.3 2003/08/23 04:35:28 fukachan Exp $
 #
 
 package FML::Article::Spool;
@@ -14,21 +14,18 @@ use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
 
-use FML::Process::Kernel;
-@ISA = qw(FML::Process::Kernel);
-
 my $debug = 0;
 
 
 =head1 NAME
 
-FML::Article::Spool -- utilities for small maintenance jobs on the spool directory
+FML::Article::Spool -- utilities to maintain the spool directory
 
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
 
-This class provides utilitiy functions for the spool directory.
+This class provides utilitiy functions to maintain the spool directory.
 
 =head1 METHODS
 
@@ -51,8 +48,7 @@ sub new
     # we use methods provided by article object.
     use FML::Article;
     my $article = new FML::Article $curproc;
-
-    my $me = {
+    my $me      = {
 	_curproc => $curproc,
 	_article => $article,
     };
@@ -70,6 +66,7 @@ sub get_lock_channel_name
     my ($self) = @_;
     my $obj = $self->{ _article };
 
+    # inherit lock channel name from FML::Article;
     return $obj->get_lock_channel_name();
 }
 
@@ -93,6 +90,7 @@ sub convert
 
     print $wh "convert spool of $ml_name ML.\n\n";
 
+    # XXX-TODO: more restricted checks.
     if ($src_dir eq $dst_dir) {
 	$src_dir .= ".old";
 	rename($dst_dir, $src_dir);
@@ -109,8 +107,9 @@ sub convert
 	my $source = '';
 	my $dir;
 
+      ENTRY:
 	while (defined($dir = $dh->read)) {
-	    next if $dir =~ /^\./o;
+	    next ENTRY if $dir =~ /^\./o;
 
 	    $source = File::Spec->catfile($src_dir, $dir);
 
@@ -121,10 +120,10 @@ sub convert
 		my $subdirpath = $article->subdirpath($dir);
 		my $filepath   = $article->filepath($dir);
 
-		next if -f $filepath;
+		next ENTRY if -f $filepath;
 
 		# may conflict $subdirpath (directory) name with
-		# $source file name.
+		# $source file name. e.g. spool/1 (file) vs spool/1 (subdir)
 		if (-f $subdirpath) {
 		    croak("$subdirpath file/dir conflict");
 		}
@@ -151,7 +150,7 @@ sub convert
 		    print $wh "   $source -> $filepath\n";
 		}
 		else {
-		    print $wh "   Error: fail $source -> $filepath\n";
+		    print $wh "   Error: fail to move $source -> $filepath\n";
 		}
 	    }
 	}
@@ -201,8 +200,10 @@ sub _scan_dir
     my $dh = new DirHandle $dir;
     if (defined $dh) {
 	my ($file, $entry);
+
+      ENTRY:
 	while (defined($entry = $dh->read)) {
-	    next if $entry =~ /^\./o;
+	    next ENTRY if $entry =~ /^\./o;
 
 	    $file = File::Spec->catfile($dir, $entry);
 	    if (-f $file) {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.14 2003/08/23 14:37:59 fukachan Exp $
+# $FML: Summary.pm,v 1.15 2003/10/18 05:07:41 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -56,7 +56,6 @@ sub print
     my ($self, $wh, $id) = @_;
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
-    my $file    = $config->{ 'article_summary_file' };
 
     # XXX last resort == STDOUT.
     $wh ||= \*STDOUT;
@@ -88,6 +87,9 @@ sub _prepare_info
 	$article = $self->{ _article };
     }
     else {
+	# XXX-TODO: why we run "new FML::Article" here?
+	# XXX-TODO: how do we know if this $article is proper (e.g. latest)?
+	# XXX-TODO: we should use e.g. $curproc->last_article() ?
 	use FML::Article;
 	$article = new FML::Article $curproc;
     }
@@ -99,18 +101,27 @@ sub _prepare_info
 	my $header   = $msg->whole_message_header();
 	my $address  = $header->get( 'from' ) || '';
 	my $date     = $header->get( 'date' ) || '';
+
+	# XXX-TODO: not object-flavor,
+	# XXX-TODO: $date = new Mail::Message::Date; 
+	# XXX-TODO: $date->set("Tue Dec 30 17:06:34 JST 2003");
+	# XXX-TODO: $date->to_unixtime();
 	my $obj      = new Mail::Message::Date;
 	my $unixtime = $obj->date_to_unixtime( $date );
 
 	# log the first 15 bytes of user@domain in From: header field.
 	if (defined $address) {
+	    # XXX-TODO: implement FML::Address class
+	    # XXX-TODO: $addr = FML::Address $from; $addr->cleanup().
 	    use FML::Header;
 	    my $hdr  = new FML::Header;
 	    my $addr = $hdr->address_clean_up($address);
 	    $address = defined $addr ? substr($addr, 0, $addrlen) : '';
 	}
 
-	# XXX-TODO $subject->clean_up() (object flavour?)
+	# XXX-TODO $subject->clean_up() ? (object flavour?)
+	# XXX-TODO $subject = new FML::Header::Subject $subject_string; 
+	# XXX-TODO $subject->clean_up();
 	use FML::Header::Subject;
 	my $subjobj = new FML::Header::Subject;
 	my $subject = $subjobj->clean_up($header->get('subject'), $tag);
@@ -118,10 +129,12 @@ sub _prepare_info
 	$subject =~ s/\s+/ /g;
 
 	# XXX-TODO "jis-jp" and "euc-jp" is hard-coded.
+	# XXX-TODO: $in_code = subject->code(); $out_code = $config->{ ? }
 	use Mail::Message::Encode;
 	my $enc  = new Mail::Message::Encode;
 	$subject = $enc->convert($subject, "jis-jp", "euc-jp");
 
+	# XXX-TODO: $address->str() ? $subject->str() ?
 	my $info = {
 	    id       => $id,
 	    address  => $address,
@@ -236,6 +249,7 @@ sub rebuild
     use FileHandle;
     my $wh = new FileHandle ">> $tmp";
 
+    # XXX-TODO: $min, $max is mandatory
     if (defined $wh) {
 	$wh->autoflush(1);
 
@@ -261,8 +275,8 @@ sub rebuild
 sub dump
 {
     my ($self, $wh) = @_;
-    my $curproc      = $self->{ _curproc };
-    my $config       = $curproc->config();
+    my $curproc     = $self->{ _curproc };
+    my $config      = $curproc->config();
     my $article_summary_file = $config->{ "article_summary_file" };
 
     if (-f $article_summary_file) {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.4 2003/08/23 07:24:41 fukachan Exp $
+# $FML: Sequence.pm,v 1.5 2003/08/23 14:37:59 fukachan Exp $
 #
 
 package FML::Article::Sequence;
@@ -42,10 +42,12 @@ This routine uses C<File::Sequence> module.
 # Return Value: NUM(sequence identifier)
 sub increment_id
 {
-    my ($self) = @_;
-    my $curproc  = $self->{ _curproc };
-    my $config   = $curproc->config();
-    my $pcb      = $curproc->pcb();
+    my ($self)  = @_;
+    my $curproc = $self->{ _curproc };
+    my $config  = $curproc->config();
+    my $pcb     = $curproc->pcb();
+
+    # XXX-TODO: sequence_file -> article_sequence_file
     my $seq_file = $config->{ sequence_file };
 
     $curproc->lock($lock_channel);
@@ -78,10 +80,10 @@ return the current article sequence number.
 # Return Value: NUM(sequence number)
 sub id
 {
-    my ($self) = @_;
-    my $curproc  = $self->{ _curproc };
-    my $config   = $curproc->config();
-    my $pcb      = $curproc->pcb();
+    my ($self)  = @_;
+    my $curproc = $self->{ _curproc };
+    my $config  = $curproc->config();
+    my $pcb     = $curproc->pcb();
 
     my $n = $pcb->get('article', 'id');
 
@@ -91,6 +93,7 @@ sub id
     }
     # processes not Process::Distribute
     else {
+	# XXX-TODO: sequence_file -> article_sequence_file
 	my $seq_file = $config->{ sequence_file };
 	my $n        = 0;
 
@@ -166,8 +169,9 @@ sub speculate_max_id
 	my $max = 0;
 	my $fn  = ''; # file name
 
+	ENTRY
 	while (defined($fn = $dh->read)) {
-	    next unless $fn =~ /^\d+$/;
+	    next ENTRY unless $fn =~ /^\d+$/;
 	    $max = $max < $fn ? $fn : $max;
 	}
 
