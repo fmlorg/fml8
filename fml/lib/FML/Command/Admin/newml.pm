@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.17 2002/02/24 08:28:33 fukachan Exp $
+# $FML: newml.pm,v 1.18 2002/03/19 13:18:16 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -125,8 +125,7 @@ sub process
     $self->_install_template_files($curproc, $command_args, $params);
     $self->_update_aliases($curproc, $command_args, $params);
     $self->_setup_mail_archive_dir($curproc, $command_args, $params);
-    $self->_setup_menu_cgi_interface($curproc, $command_args, $params);
-    $self->_setup_thread_cgi_interface($curproc, $command_args, $params);
+    $self->_setup_cgi_interface($curproc, $command_args, $params);
 }
 
 
@@ -184,12 +183,15 @@ sub _setup_mail_archive_dir
 }
 
 
-sub _setup_menu_cgi_interface
+sub _setup_cgi_interface
 {
     my ($self, $curproc, $command_args, $params) = @_;
     my $template_dir = $curproc->template_files_dir_for_newml();
     my $config       = $curproc->{ config };
 
+    # 
+    # 1. create directory path if needed
+    # 
     eval q{ use File::Utils qw(mkdirhier);};
     croak($@) if $@;
 
@@ -203,37 +205,52 @@ sub _setup_menu_cgi_interface
 	}
     }
 
-    use File::Spec;
-    my $src   = File::Spec->catfile($template_dir, 'dot_htaccess');
-    my $dst   = File::Spec->catfile($cgi_base_dir, '.htaccess');
+    # 
+    # 2. disable CGI access by creating a dummy .htaccess
+    # 
+    {
+	use File::Spec;
+	my $src   = File::Spec->catfile($template_dir, 'dot_htaccess');
+	my $dst   = File::Spec->catfile($cgi_base_dir, '.htaccess');
 
-    print STDERR "creating $dst\n";
-    print STDERR "         (a dummy to disable cgi interface by default)\n";
-    _install($src, $dst, $params);
-}
-
-
-sub _setup_thread_cgi_interface
-{
-    my ($self, $curproc, $command_args, $params) = @_;
-    my $template_dir = $curproc->template_files_dir_for_newml();
-    my $config       = $curproc->{ config };
-
-    eval q{ use File::Utils qw(mkdirhier);};
-    croak($@) if $@;
-
-    return;
+	print STDERR "creating $dst\n";
+	print STDERR "         (a dummy to disable cgi by default)\n";
+	_install($src, $dst, $params);
+    }
 
     # 
-    # XXX not implemented ...
+    # 3. install admin/{menu,config,thread}.cgi
     # 
-    use File::Spec;
-    my $src   = File::Spec->catfile($template_dir, 'dot_htaccess');
-    my $dst   = ''; # File::Spec->catfile($cgi_base_dir, '.htaccess');
+    {
+	use File::Spec;
+	my $libexec_dir = $config->{ fml_libexec_dir };
+	my $src = File::Spec->catfile($libexec_dir, 'loader');
 
-    print STDERR "creating $dst\n";
-    print STDERR "         (a dummy to disable cgi interface by default)\n";
-    _install($src, $dst, $params);
+	# hints
+	my $ml_name   = $self->{ _ml_name };
+	my $ml_domain = $self->{ _ml_domain };
+	$params->{ __hints_for_fml_process__ } = qq{
+	    \$hints = {
+		cgi_mode  => 'admin',
+		ml_name   => '$ml_name',
+		ml_domain => '$ml_domain',
+	    };
+	};
+
+	for my $dst (
+		   File::Spec->catfile($admin_cgi_dir, 'menu.cgi'),
+		   File::Spec->catfile($admin_cgi_dir, 'config.cgi'),
+		   File::Spec->catfile($admin_cgi_dir, 'thread.cgi')
+		     ) {
+	    print STDERR "creating $dst\n";
+	    _install($src, $dst, $params);
+	    chmod 0755, $dst;
+	}
+    }
+
+    # 
+    # 4. install ml-admin/
+    # 
 }
 
 
