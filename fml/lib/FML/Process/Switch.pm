@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.85 2003/01/31 15:01:25 fukachan Exp $
+# $FML: Switch.pm,v 1.86 2003/03/06 11:25:10 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -105,11 +105,12 @@ sub main::Bootstrap2
 
     # 1.1 parse command line options (preliminary)
     {
-	my (@options) = _module_specific_options($myname);
-	if (@options) {
+	my $options = _module_specific_options($main_cf, $myname);
+
+	if (@$options) {
 	    eval q{
 		use Getopt::Long;
-		GetOptions(\%options, @options);
+		GetOptions(\%options, @$options);
 	    };
 	    croak($@) if $@;
 	}
@@ -291,77 +292,33 @@ sub ProcessSwitch
 # Return Value: ARRAY (getopt parameters)
 sub _module_specific_options
 {
-    my ($myname) = @_;
+    my ($main_cf, $myname) = @_;
+    my $modules = $main_cf->{ default_command_line_option_config };
 
-    # XXX Caution!
-    # XXX xxx.cgi SHOULD NOT ACCPET the same options as command line
-    # XXX program xxx does.
-    if ($myname eq 'fml.pl'     ||
-	$myname eq 'distribute' ||
-	$myname eq 'command'    ||
-	$myname eq 'digest'     ||
-	$myname eq 'mead'       ||
-	$myname eq 'error'      ||
-	$myname eq 'loader' ) {
-	return qw(ctladdr! debug! help! params=s -c=s);
-    }
-    elsif ($myname eq 'fmlthread') {
-	return qw(debug! help!
-		  article_id_max=i
-		  spool_dir=s
-		  base_url=s
-		  msg_base_url=s
-		  reverse!
-		  params=s -f=s -c=s);
-    }
-    elsif ($myname eq 'thread.cgi'    ||
-	   $myname eq 'fmlthread.cgi' ||
-	   $myname eq 'threadview.cgi') {
-	return ();
-    }
-    elsif ($myname eq 'fmlconf') {
-	return qw(debug! help! params=s -c=s n!);
-    }
-    elsif ($myname eq 'fmldoc') {
-	# perldoc [-h] [-v] [-t] [-u] [-m] [-l]
-	return qw(debug! help! params=s -c=s v! t! u! m! l!);
-    }
-    elsif ($myname eq 'makefml' || $myname eq 'fml') {
-	return qw(debug! help! force! params=s -c=s);
-    }
-    elsif ($myname eq 'fmladdr') {
-	return qw(debug! help! -c=s n!);
-    }
-    elsif ($myname eq 'fmlalias') {
-	return qw(debug! help! -c=s n!);
-    }
-    elsif ($myname eq 'fmlsummary') {
-	return qw(debug! help! -c=s n!);
-    }
-    elsif ($myname eq 'config.cgi' || $myname eq 'menu.cgi') {
-	return ();
-    }
-    elsif ($myname eq 'fmlsch') {
-	return qw(debug! help! -D=s -F=s -m=s a! h!);
-    }
-    elsif ($myname eq 'fmlsch.cgi') {
-	return ();
-    }
-    elsif ($myname eq 'fmlhtmlify') {
-	return qw(debug! help! -I=s);
-    }
-    elsif ($myname eq 'fmlspool') {
-	return qw(debug! help! -I=s convert! style=s srcdir=s);
-    }
-    elsif ($myname eq 'fmlsuper') {
-	return qw(debug! help!);
-    }
-    elsif ($myname eq 'fmlerror') {
-	return qw(debug! help!);
+    use FileHandle;
+    my $fh = new FileHandle $modules;
+    if (defined $fh) {
+	my $buf;
+      LINE:
+	while ($buf = <$fh>) {
+	    next LINE if $buf =~ /^\#/o;
+	    chomp $buf;
+
+	    if (defined $buf && $buf) {
+		my ($program, @opts) = split(/\s+/, $buf);
+		if ($program eq $myname) {
+		    return( \@opts || [] );
+		    last LINE;
+		}
+	    }
+	}
+	$fh->close();
     }
     else {
-	croak "no such program $myname.\n";
+	croak("cannot open comman_line_options config");
     }
+
+    croak "no such program $myname.\n";
 }
 
 
@@ -387,7 +344,7 @@ sub _module_we_use
     my ($args)  = @_;
     my $main_cf = $args->{ main_cf }; 
     my $name    = $args->{ myname };
-    my $modules = $main_cf->{ default_module_maps };
+    my $modules = $main_cf->{ default_module_config };
     my $pkg     = undef;
     my $pkgopts = undef;
 
@@ -417,7 +374,7 @@ sub _module_we_use
 	$fh->close();
     }
     else {
-	croak("cannot open module_map");
+	croak("cannot open module config");
     }
 
     print STDERR "module = $pkg (for $0)\n" if $debug;
