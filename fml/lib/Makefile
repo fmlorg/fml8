@@ -12,6 +12,7 @@ _subdir: [A-Z]*
 	(cd IO; make html)
 	(cd MailingList; make html)
 	(cd Tie; make html)
+	(cd SQL; make html)
 	(cd ErrorMessages; make html)
 
 _clean:
