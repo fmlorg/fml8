@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# $FML$
+#
+
+lib=''
+
+for dir in ../../*/lib
+do
+	lib="$lib -I $dir"
+done
+
+for x in $*
+do
+   perl $lib -cw $x
+done
+
+exit 0;
