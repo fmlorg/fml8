@@ -7,7 +7,7 @@
 #      History: string in 4.0.
 #        Value: multipart / string
 #     Examples: string
-post_restrictions_reject_notice_data_type	=	string
+article_post_restrictions_reject_notice_data_type	=	string
 
 
 =head2	filter

@@ -15,7 +15,8 @@ address {
 admin {
 
    admin_command { 
-          $admin_command_restrictions
+    ?     $admin_command_mail_allowed_commands
+          $admin_command_mail_restrictions
    }
 
    admin_member { 
@@ -34,6 +35,7 @@ admin {
    }
 
    admin_* {
+    ?     $admin_cgi_allowed_commands
           $admin_cgi_base_dir
    }
 }
@@ -42,6 +44,10 @@ article {
 
    article_delivery { 
           $use_article_delivery
+   }
+
+   article_digest { 
+          $use_article_digest_function
    }
 
    article_filter { 
@@ -73,6 +79,13 @@ article {
    article_non_mime_filter { 
           $article_non_mime_filter_rules
           $use_article_non_mime_filter
+   }
+
+   article_post { 
+    ?     $article_post_address
+          $article_post_restrictions
+          $article_post_restrictions_reject_notice_data_type
+          $use_article_post_function
    }
 
    article_size_filter { 
@@ -113,9 +126,12 @@ cgi {
 command {
 
    command_mail { 
+    ?     $command_mail_address
           $command_mail_line_length_limit
     ?     $command_mail_reply_prompt
-          $use_command_mail_program
+          $command_mail_restrictions
+          $use_command_mail_function
+    ?     $user_command_mail_allowed_commands
    }
 
    command_mail_filter { 
@@ -141,15 +157,18 @@ command {
    command_mail_valid_command { 
           $command_mail_valid_command_limit
    }
-
-   command_* {
-          $command_restrictions
-   }
 }
 
 admin_command {
 
    admin_command { 
+   }
+}
+
+anonymous_command {
+
+   anonymous_command { 
+    ?     $anonymous_command_mail_allowed_commands
    }
 }
 
@@ -232,6 +251,12 @@ unsubscribe_command {
    }
 }
 
+user_command {
+
+   user_command { 
+   }
+}
+
 default {
 
    default_* {
@@ -242,11 +267,6 @@ default {
 }
 
 digest {
-
-   digest { 
-          $digest_sequence_file
-          $use_digest_program
-   }
 
    digest_header_rewrite { 
           $digest_header_rewrite_rules
@@ -262,6 +282,10 @@ digest {
           $digest_recipient_maps
           $primary_digest_recipient_map
    }
+
+   digest_* {
+          $digest_sequence_file
+   }
 }
 
 directory {
@@ -270,13 +294,6 @@ directory {
     ?     $directory_default_mode
     ?     $directory_private_mode
     ?     $directory_public_mode
-   }
-}
-
-distribute {
-
-   distribute { 
-          $use_distribute_program
    }
 }
 
@@ -297,7 +314,11 @@ domain {
 
 error {
 
-   error_analyzer { 
+   error_mail_analyzer { 
+          $use_error_mail_analyzer_function
+   }
+
+   error_* {
           $error_analyzer_cache_dir
     ?     $error_analyzer_cache_mode
     ?     $error_analyzer_cache_size
@@ -305,7 +326,6 @@ error {
     ?     $error_analyzer_function
     ?     $error_analyzer_function_list
           $error_analyzer_simple_count_limit
-          $use_error_analyzer_program
    }
 }
 
@@ -541,11 +561,6 @@ path {
 }
 
 post {
-
-   post_* {
-          $post_restrictions
-          $post_restrictions_reject_notice_data_type
-   }
 }
 
 postfix {
@@ -683,6 +698,9 @@ thread {
 
 user {
 
+   user_command { 
+   }
+
    user_db_gecos { 
           $primary_user_db_gecos_map
           $user_db_gecos_maps
@@ -720,12 +738,7 @@ _dir$ {
 
 
 *** unclassified ***
-    ?     $commands_for_admin
-    ?     $commands_for_admin_cgi
     ?     $commands_for_ml_admin_cgi
-    ?     $commands_for_privileged_user
-    ?     $commands_for_stranger
-    ?     $commands_for_user
     ?     $file_default_mode
     ?     $language_preference_order
     ?     $unsafe_header_fields

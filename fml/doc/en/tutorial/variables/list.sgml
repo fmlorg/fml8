@@ -32,7 +32,7 @@ $cgi_base_dir/admin
 </row>
 <row>
 <entry>
-admin_command_restrictions</entry>
+admin_command_mail_restrictions</entry>
 <entry>
  restrictions for admin command mail</entry>
 <entry>
@@ -133,6 +133,26 @@ article_non_mime_filter_rules</entry>
  dummy</entry>
 <entry>
 permit
+   </entry>
+</row>
+<row>
+<entry>
+article_post_restrictions</entry>
+<entry>
+ restrictions for post</entry>
+<entry>
+reject_system_special_accounts
+   permit_member_maps
+   reject
+   </entry>
+</row>
+<row>
+<entry>
+article_post_restrictions_reject_notice_data_type</entry>
+<entry>
+ how to inform the rejected message </entry>
+<entry>
+string
    </entry>
 </row>
 <row>
@@ -357,6 +377,18 @@ command_mail_reply_prompt</entry>
 </row>
 <row>
 <entry>
+command_mail_restrictions</entry>
+<entry>
+ restrictions for command mail</entry>
+<entry>
+reject_system_special_accounts
+   permit_anonymous_command_mail
+   permit_member_maps
+   reject
+   </entry>
+</row>
+<row>
+<entry>
 command_mail_size_filter_rules</entry>
 <entry>
  size based filter rules.</entry>
@@ -375,49 +407,6 @@ command_mail_valid_command_limit</entry>
  the numfer of effective commands in one command mail.</entry>
 <entry>
 100
-   </entry>
-</row>
-<row>
-<entry>
-command_restrictions</entry>
-<entry>
- restrictions for command mail</entry>
-<entry>
-reject_system_special_accounts
-   permit_commands_for_stranger
-   permit_member_maps
-   reject
-   </entry>
-</row>
-<row>
-<entry>
-commands_for_user</entry>
-<entry>
- effective command in normal commnd mail (for usual users)</entry>
-<entry>
-help
-   get
-   mget
-   get
-   mget
-   send
-   subscribe
-   add
-   unsubscribe
-   bye
-   on
-   off
-   digest
-   remove
-   resign
-   signoff
-   chaddr
-   confirm
-   guide
-   info
-   admin
-   objective
-   summary
    </entry>
 </row>
 <row>
@@ -808,9 +797,9 @@ list_addresses</entry>
 <entry>
  addresses fml uses: e.g. elena, elena-ctl</entry>
 <entry>
-$address_for_post
-   $address_for_command
-   $maintainer
+$maintainer
+   $article_post_address
+   $command_mail_address
    </entry>
 </row>
 <row>
@@ -1133,26 +1122,6 @@ outgoing_mail_header_x_ml_name</entry>
  ml name in both X-ML-Name: and X-Sequence header fields.</entry>
 <entry>
 $ml_name
-   </entry>
-</row>
-<row>
-<entry>
-post_restrictions</entry>
-<entry>
- restrictions for post</entry>
-<entry>
-reject_system_special_accounts
-   permit_member_maps
-   reject
-   </entry>
-</row>
-<row>
-<entry>
-post_restrictions_reject_notice_data_type</entry>
-<entry>
- how to inform the rejected message </entry>
-<entry>
-string
    </entry>
 </row>
 <row>
@@ -1656,6 +1625,15 @@ yes
 </row>
 <row>
 <entry>
+use_article_post_function</entry>
+<entry>
+ use function of article delivery</entry>
+<entry>
+${use_distribute_program:-yes}
+   </entry>
+</row>
+<row>
+<entry>
 use_article_size_filter</entry>
 <entry>
  use size based filter</entry>
@@ -1683,11 +1661,11 @@ yes
 </row>
 <row>
 <entry>
-use_command_mail_program</entry>
+use_command_mail_function</entry>
 <entry>
  use commnd mail ?</entry>
 <entry>
-yes
+${use_command_mail_program:-yes}
    </entry>
 </row>
 <row>
@@ -1710,20 +1688,11 @@ yes
 </row>
 <row>
 <entry>
-use_distribute_program</entry>
-<entry>
- use function of article delivery</entry>
-<entry>
-yes
-   </entry>
-</row>
-<row>
-<entry>
-use_error_analyzer_program</entry>
+use_error_mail_analyzer_function</entry>
 <entry>
  use error message analyzer ?</entry>
 <entry>
-yes
+${use_error_analyzer_program:-yes}
    </entry>
 </row>
 <row>
@@ -1823,6 +1792,37 @@ use_thread_track</entry>
  user thread tracking system ?</entry>
 <entry>
 yes
+   </entry>
+</row>
+<row>
+<entry>
+user_command_mail_allowed_commands</entry>
+<entry>
+ effective command in normal commnd mail (for usual users)</entry>
+<entry>
+help
+   get
+   mget
+   get
+   mget
+   send
+   subscribe
+   add
+   unsubscribe
+   bye
+   on
+   off
+   digest
+   remove
+   resign
+   signoff
+   chaddr
+   confirm
+   guide
+   info
+   admin
+   objective
+   summary
    </entry>
 </row>
 <row>
