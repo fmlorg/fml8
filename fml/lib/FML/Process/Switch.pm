@@ -139,6 +139,8 @@ sub main::Bootstrap2
 	argv           => \@argv, # pass the original @ARGV
 	ARGV           => \@ARGV, # @ARGV after getopts()
 
+	main_cf        => $main_cf,
+
 	# options
 	need_ml_name   => _ml_name_is_required($myname),
     };
