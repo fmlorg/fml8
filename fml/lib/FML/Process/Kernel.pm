@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.75 2002/02/18 12:30:48 fukachan Exp $
+# $FML: Kernel.pm,v 1.76 2002/02/20 14:11:37 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -545,22 +545,18 @@ If you attach a plain text with the charset = iso-2022-jp,
 
 sub reply_message
 {
-    my ($curproc, $msg) = @_;
+    my ($curproc, $msg, $args) = @_;
+    my $rcpt     = $curproc->{ credential }->sender();
     my $pcb      = $curproc->{ pcb };
     my $category = 'reply_message';
+    my $class    = (ref($msg) eq 'HASH') ? 'queue' : 'text';
 
-    if (ref($msg) eq 'HASH') {
-	my $rarray = $pcb->get($category, 'queue') || [];
-	$rarray->[ $#$rarray + 1 ] = $msg;
-	$pcb->set($category, 'queue', $rarray);
-    }
-    # XXX treat $msg string in separete way.
-    # XXX collect all text messages at one special area by default.
-    else {
-	my $msg0 = $pcb->get($category, 'text') || undef;
-	$msg    .= "\n" unless $msg =~ /\n$/;
-	$pcb->set($category, 'text', $msg0.$msg);
-    }
+    my $rarray = $pcb->get($category, $class) || [];
+    $rarray->[ $#$rarray + 1 ] = {
+	message   => $msg,
+	recipient => $rcpt,
+    };
+    $pcb->set($category, $class, $rarray);
 }
 
 
@@ -708,7 +704,7 @@ sub queue_in
     croak($@) if $@;
 
     my $pcb          = $curproc->{ pcb };
-    my $string       = $pcb->get($category, 'text') || undef;
+    my $textq        = $pcb->get($category, 'text') || undef;
     my $is_multipart = $pcb->get($category, 'queue') ? 1 : 0;
     my $msg;
 
@@ -723,14 +719,15 @@ sub queue_in
 	$msg->add('Reply-To' => $reply_to);
 	_add_info_on_header($config, $msg);
 
-	if (defined $string) {
+	if (defined $textq) {
 	    $msg->attach(Type => "text/plain; charset=$charset",
-			 Data => $string,
+			 Data => $textq->{ message },
 			 );
 	}
 
 	my $a = $pcb->get($category, 'queue');
-	for my $q ( @$a ) {
+	for my $m ( @$a ) {
+	    my $q = $m->{ message };
 	    $msg->attach(Type        => $q->{ type },
 			 Path        => $q->{ path },
 			 Filename    => $q->{ filename },
@@ -739,12 +736,20 @@ sub queue_in
     }
     # text/plain format message (by default).
     else {
+	my $buf  = '';
+	my $a    = $pcb->get($category, 'text');
+	for my $m ( @$a ) {
+	    if ($m->{ message }) {
+		$buf .= $m->{ message };
+	    }
+	}
+
 	eval q{
 	    $msg = new Mail::Message::Compose
 		From     => $sender,
 		To       => $recipient,
 		Subject  => $subject,
-		Data     => $string;
+		Data     => $buf,
 	};
 	$msg->attr('content-type.charset' => $charset);
 	$msg->add('Reply-To' => $reply_to);
