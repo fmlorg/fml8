@@ -3,15 +3,8 @@
 
 2003/11/16
 
-   FML::Process::Debug 
-	we use this module as simplified FML::Process::Kernel for debug.
-	define simplified version of some following methods:
-	+mkdir
-	+log
-	+logwarn
-	+logerror
-	+ml_home_prefix
-	
+   ドメインの扱い(デフォルトおよびバーチャルドメイン)の拡張(その１終了)
+
    FML::Command::Admin::newdomain rmdomain 
    FML::Process::Utils 
    FML::HomeDir::Prefix 
@@ -24,28 +17,44 @@
 	o makefml method domain
 	o fml domain method
 
+   FML::Process::Debug 
+	we use this module as simplified FML::Process::Kernel for debug.
+	define simplified version of some following methods:
+	+mkdir
+	+log
+	+logwarn
+	+logerror
+	+ml_home_prefix
+	
 2003/11/11
 
    FML::Header::MessageID 
-	change message-id format for match RFC2822
+	change message-id format to match RFC2822
 
 2003/11/08
 
    Mail::Message::Encode 
-	disable Encode use even on >= 5.008 since we are not ready
+	disable Encode use even on >= 5.008 since we are not ready.
+
+	perl 5.8 では Encode をつかうべきなんだろうけど、今は Jcode を
+	使うコードしかないので、「if 5.8 …」の部分を一旦、使わないこ
+	とにする。
 	
    FML::Command::UserControl 
 	call croak() if address to remove not found
 
 2003/11/07
 
-   Mail::Message::ToHTML 
+   Mail::Message::ToHTML
+	Mail::Message::ToHTML の拡張 
 	add $versionid
 	add new comment tag at html_begin() for file magic
 	change @header_field remove same information (X-xxx) and add
 	Message-Id
 
 2003/11/05
+
+   ドメインの扱い(デフォルトおよびバーチャルドメイン)の拡張のはじまり
 
    FML::Process::Kernel 
    etc/main.cf.in 
@@ -87,7 +96,7 @@
 		report_mail_何とか
 
 	この例でも、厳密には outgoing_report_mail とかするべきなんでしょ
-	うけど、そこまではやらないのが程ほどってところでしょうね。
+	うけど、そこまではやらないのがほどほどってところでしょうね。
 
 2003/10/30
 
@@ -5660,4 +5669,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.170 2003/11/02 14:41:00 fukachan Exp $
+$FML: CHANGES.txt,v 1.171 2003/11/16 14:37:32 fukachan Exp $
