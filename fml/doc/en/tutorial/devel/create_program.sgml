@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: create_program.sgml,v 1.1 2003/08/02 01:19:11 fukachan Exp $
    $jaFML: create_program.sgml,v 1.6 2003/04/15 14:51:38 fukachan Exp $
 -->
 
@@ -11,12 +11,12 @@
 
 <sect1>
 	<title>
-	Create a pgoram (CUI)
+	Create a program (CUI)
 	</title>
 
 <para>
 Firstly, prepare a new module in FML::Process class. See
-FML::Process::Scheduler as the least model, see
+FML::Process::Scheduler as the least functional model and see
 FML::Process::Distribute for the most complicated class.
 </para>
 
@@ -32,7 +32,6 @@ verify_request()
 run()
 finish()
 </screen>
-See FML::Process::Distribute as a complicated example.
 </para>
 
 <para>
@@ -41,7 +40,7 @@ See FML::Process::Distribute as a complicated example.
                 |       uses-a FML::Process::{Flow,Utils} FML::Parse ...
                 |
                 A
-        FML::Process::???
+        FML::Process::MODULE
                         uses-a FML::Something
                         uses-a CPAN module
                         uses-a ...
@@ -49,13 +48,13 @@ See FML::Process::Distribute as a complicated example.
 </para>
 
 <para>
-If you have prepared FML::Process::MODULE, define relation at
-etc/modules. Define available command line options at
-etc/command_line_options if needed.
+If you have prepared FML::Process::MODULE, define relation between the
+program name and the module at fml/etc/modules. Also, define available
+command line options at fml/etc/command_line_options if needed.
 </para>
 
 <para>
-The preparation is done. Symlink loader and the new program name.
+After it is prepared, symlink the loader and the new program name.
 For example, 
 <screen>
 % ls -l /usr/local/libexec/fml
@@ -77,6 +76,9 @@ lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 fmlserv@ -> loader
 lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 makefml@ -> loader
 lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 mead@ -> loader
 </screen>
+As a test, you symlink it explicitly. For the canonical programs, fml
+installer symlinks them according to fml/etc/install.cf. You need to
+define the program as $bin_programs or $exec_programs in install.cf.in.
 </para>
 
 </sect1>
@@ -88,8 +90,8 @@ lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 mead@ -> loader
 	</title>
 
 <para>
-The main CGI program locates at FML::CGI::XXX class.
-These modules has the following relation.
+The main part of CGI program is implemented as an FML::CGI::XXX class.
+These modules have the following relation.
 <screen>
         FML::Process::Kernel
                 |
@@ -105,14 +107,14 @@ These modules has the following relation.
 </para>
 
 <para>
-How to write CGI programs are same as one of CUI.
-CUI modules locates under FML::CGI to clarifyd CUI and GUI.
+How to write CGI programs is same as one of CUI. CUI modules locate
+under FML::CGI to clarify the difference between CUI and GUI.
 </para>
 
 
 <para>
-In the case of CGI, 
-prepare the following methods for looks on screen:
+In the case of CGI, prepare the following methods for screen control
+in FML::CGI::MODULE.
 <screen>
 html_start()
 html_end()

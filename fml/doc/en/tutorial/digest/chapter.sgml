@@ -1,11 +1,11 @@
 <!--
-   $FML$
+   $FML: chapter.sgml,v 1.1 2003/07/28 15:20:17 fukachan Exp $
    $jaFML: chapter.sgml,v 1.3 2003/04/15 14:51:39 fukachan Exp $
 -->
 
 <chapter id="digest">
 	<title>
-	digest
+	Digest delivery
 	</title>
 
 <para>
@@ -13,19 +13,20 @@ run
 <screen>
 /usr/local/libexec/fml/digest $ml_name
 </screen>
-periodically for digest delivery.
+periodically for digest delivery. It aggregates articles into one
+message and send it to members defined by $digest_recipient_maps.
 </para>
 
 <warning>
 <para>
-simple version yet now.
+Digest delivery program is a simple version yet now.
 </para>
 </warning>
 
 
 <sect1 id="digest.config.files">
 	<title>
-	files userd by digest delivery
+	Files used for digest delivery control
 	</title>
 
 <para>
@@ -44,11 +45,12 @@ seq-digest holds the last sequence delivered as digest.
 <para>
 members-digest is dummy.
 recipients-digest is a recipient list.
+$digest_recipient_maps is this recipients-digest file only by default.
 </para>
 
 <para>
-The argument of $digest_recipient_maps is IO::Adapter, so you can use
-mysql here.
+The argument of $digest_recipient_maps is IO::Adapter, 
+so you can use mysql here.
 </para>
 
 </sect1>
@@ -56,7 +58,7 @@ mysql here.
 
 <sect1 id="digest.command">
 	<title>
-	idea: digest related commands
+	Idea: digest related commands
 	</title>
 
 
@@ -87,7 +89,7 @@ makefml digeston  $ml $address
 makefml digest    $ml $address off
 makefml digestoff $ml $address
 </screen>
-(These commnds are implemented already).
+(These commands are implemented already).
 </para>
 
 <para>
@@ -106,7 +108,7 @@ makefml digestoff $ml $address
 admin digest $address on
 admin digest $address off
 </screen>
-(These commnds are implemented already).
+(These commands are implemented already).
 </para>
 
 </sect2>
@@ -118,12 +120,11 @@ admin digest $address off
 	</title>
 
 <para>
-(not implemented).
+(not yet implemented).
 <screen>
 digest on
 digest off
 </screen>
-Enforce confirmation ?
 </para>
 
 <para>
@@ -146,7 +147,7 @@ as could as possible.
 digeston
 digestoff
 </screen>
-?
+ok?
 </para>
 
 </sect2>
