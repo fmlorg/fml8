@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.10 2002/03/17 06:24:31 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.11 2002/04/07 05:08:24 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -71,6 +71,9 @@ sub prepare
 	eval qq{ $eval; };
 	print STDERR $@ if $@;
     }
+
+    $curproc->resolve_ml_specific_variables( $args );
+    $curproc->load_config_files( $args->{ cf_list } );
 
     $eval = $config->get_hook( 'fmlconf_prepare_end_hook' );
     if ($eval) {

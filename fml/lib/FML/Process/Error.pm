@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.7 2002/06/01 05:09:26 fukachan Exp $
+# $FML: Error.pm,v 1.8 2002/06/01 14:53:40 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -74,7 +74,10 @@ sub prepare
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
     if ($config->yes('use_error_analyzer')) {
-	$self->SUPER::prepare($args);
+	$curproc->resolve_ml_specific_variables( $args );
+	$curproc->load_config_files( $args->{ cf_list } );
+	$curproc->parse_incoming_message($args);
+
 	$config->{ log_format_type } = 'new_style';
     }
     else {

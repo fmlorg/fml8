@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.4 2002/04/19 13:33:20 fukachan Exp $
+# $FML: Spool.pm,v 1.5 2002/06/01 05:02:33 fukachan Exp $
 #
 
 package FML::Process::Spool;
@@ -68,6 +68,9 @@ sub prepare
 
     my $eval = $config->get_hook( 'fmlspool_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
+    $curproc->resolve_ml_specific_variables( $args );
+    $curproc->load_config_files( $args->{ cf_list } );
 
     $eval = $config->get_hook( 'fmlspool_prepare_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.69 2002/05/29 16:34:26 fukachan Exp $
+# $FML: Switch.pm,v 1.70 2002/06/01 05:09:27 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -53,8 +53,10 @@ For example, libexec/distribute (fml.pl) runs in this way.
             V
        ProcessSwitch()          Process::Switch
             |
-            V
-       FML::Process:Distribute  FML::Process::Distribute
+            |  <---  $obj = FML::Process:Distribute
+            |
+            V                   
+       ProcessStart($obj,$args) Process::Flow
 
 
 =head1 FUNCTIONS
@@ -97,7 +99,7 @@ sub main::Bootstrap2
     print STDERR "\nsetgid is not set $( != $)\n\n" if $( ne $);
 
     # 0.2
-    if ($0 =~ /loader/) {
+    if ($myname eq 'loader') {
 	print "ARGV: @ARGV\n";
     }
 
@@ -107,21 +109,26 @@ sub main::Bootstrap2
 	if (@options) {
 	    eval q{
 		use Getopt::Long;
-		GetOptions(\%options, _module_specific_options($myname));
+		GetOptions(\%options, @options);
 	    };
 	    croak($@) if $@;
 	}
     }
 
-    # 2.1 analyze main.cf and get the result in $main_cf
-    #     removed.
+    # 2.1 removed.
+    #     analyze main.cf and set the result into $main_cf
 
-    # 2.2 parse @ARGV and get a list of configuration files
+
+    # 2.2 parse @ARGV to get a list of configuration files.
     #     XXX $main_cf{ ml_home_dir } (e.g. /var/spool/ml/elena) is defined
-    #         if possible.
+    #         if possible. WHY ?
     #     a) resolve $ml_name (e.g. expand "elena" to "/var/spool/ml/elena")
     #     b) but we need special treatment in some cases e.g. makefml
-    my $cf = _parse_argv($myname, $main_cf);
+    #
+    #     XXX CAN WE MOVE PARSER TO Process::{Kernel,CGI::Kernel} ?
+    #     XXX ml_name, ml_domain, ml_home_prefix, ml_home_dir
+    # my $cf = _parse_argv($myname, $main_cf);
+    my $cf = ();
 
     # 2.3 prepare @$cf
     #     XXX hmm, .. '/etc/fml/site_default_config.cf' is good ???
@@ -138,33 +145,42 @@ sub main::Bootstrap2
     $ENV{'PERL5LIB'} = $main_cf->{ lib_dir };
 
     # 4. debug
-    if ($0 =~ /loader/) {
+    if ($myname eq 'loader') {
 	eval q{
 	    require Data::Dumper; Data::Dumper->import();
 	    $Data::Dumper::Varname = 'main_cf';
 	    print Dumper( $main_cf );
 	    sleep 3;
 	};
-	if ($@) { print STDERR $@;}
+	if ($@) { print STDERR $@; sleep 3;}
     }
 
-    # 5. o.k. here we go!
-    use FML::Process::Utils;
-    my $ml_home_prefix =
-      FML::Process::Utils::__ml_home_prefix_from_main_cf($main_cf);
+    # 5. resolve $ml_home_prefix
+    #    XXX CAN WE MOVE PARSER TO Process::{Kernel,CGI::Kernel} ?
+    #    XXX ml_name, ml_domain, ml_home_prefix, ml_home_dir
+    # use FML::Process::Utils;
+    # my $ml_home_prefix =
+    #    FML::Process::Utils::__ml_home_prefix_from_main_cf($main_cf);
+
+    # 6. o.k. here we go!
+    #    XXX CAN WE MOVE PARSER TO Process::{Kernel,CGI::Kernel} ?
+    #    XXX ml_name, ml_domain, ml_home_prefix, ml_home_dir
     my $args = {
 	fml_version    => $main_cf->{ fml_version },
 
 	myname         => $myname,
 	program_name   => $myname,
-	ml_home_prefix => $ml_home_prefix,
-	ml_home_dir    => $main_cf->{ ml_home_dir },
 
-	cf_list        => $cf,
-	options        => \%options,
+	#    XXX CAN WE MOVE PARSER TO Process::{Kernel,CGI::Kernel} ?
+	#    XXX ml_name, ml_domain, ml_home_prefix, ml_home_dir
+	# ml_home_prefix => $ml_home_prefix,
+	# ml_home_dir    => $main_cf->{ ml_home_dir },
 
-	argv           => \@argv, # pass the original @ARGV
-	ARGV           => \@ARGV, # @ARGV after getopts()
+	cf_list        => $cf,       # site_default + default
+	options        => \%options, # options parsed by getopt()
+
+	argv           => \@argv,    # pass the original @ARGV
+	ARGV           => \@ARGV,    # @ARGV after getopts()
 
 	main_cf        => $main_cf,
 
@@ -173,7 +189,7 @@ sub main::Bootstrap2
     };
 
     # get the object. The suitable module is speculcated by $0.
-    my $obj = ProcessSwitch($args);
+    my $obj = ProcessSwitch($myname, $args);
 
     # start the process.
     eval q{
@@ -183,7 +199,7 @@ sub main::Bootstrap2
 	my $reason = $@;
 	if ($obj->can('help')) { eval $obj->help();};
 
-	eval q{ __log($args, $reason);};
+	eval q{ __log($main_cf, $reason);};
 
 	if (defined( $main_cf->{ debug } ) ||
 	    defined $options{debug}) {
@@ -198,17 +214,17 @@ sub main::Bootstrap2
 
 
 # Descriptions: try to save the error message
-#    Arguments: STR($s)
-# Side Effects: save message to log file if could
+#    Arguments: HASH_REF($main_cf) STR($s)
+# Side Effects: save message to a log file if could
 # Return Value: none
 sub __log
 {
-    my ($args, $s) = @_;
+    my ($main_cf, $s) = @_;
 
     eval q{
 	use File::Spec;
 	use FileHandle;
-	my $dir  = $args->{ ml_home_prefix };
+	my $dir  = $main_cf->{ ml_home_prefix };
 	my $logf = File::Spec->catfile($dir, '@log.crit@');
 	my $wh   = new FileHandle ">> $logf";
 	if (defined $wh) {
@@ -216,121 +232,6 @@ sub __log
 	    $wh->close;
 	}
     };
-}
-
-
-# Descriptions: analyze argument vector
-#    Arguments: STR($myname) HASH_REF($main_cf)
-# Side Effects: none
-# Return Value: ARRAY_REF (list of config.cf's)
-sub _parse_argv
-{
-    my ($myname, $main_cf) = @_;
-
-    if ($myname eq 'makefml') {
-	_makefml_parse_argv($myname, $main_cf);
-    }
-    else {
-	_usual_parse_argv($myname, $main_cf);
-    }
-}
-
-
-# Descriptions: analyze argument vector
-#    Arguments: STR($myname) HASH_REF($main_cf)
-# Side Effects: none
-# Return Value: ARRAY_REF (list of config.cf's)
-sub _usual_parse_argv
-{
-    my ($myname, $main_cf) = @_;
-    use FML::Process::Utils;
-    my $ml_home_prefix =
-      FML::Process::Utils::__ml_home_prefix_from_main_cf($main_cf);
-    my $ml_home_dir    = '';
-    my $found_cf       = 0;
-    my @cf             = ();
-
-    # "elena" is translated to "/var/spool/ml/elena"
-    for (@ARGV) {
-	# 1. for the first time
-	#   a) speculate "/var/spool/ml/$_" looks a $ml_home_dir ?
-	unless ($found_cf) {
-	    my $x  = File::Spec->catfile($ml_home_prefix, $_);
-	    my $cf = File::Spec->catfile($x, "config.cf");
-	    if (-d $x && -f $cf) {
-		$found_cf    = 1;
-		$ml_home_dir = $x;
-		push(@cf, $cf);
-	    }
-	}
-
-	last if $found_cf;
-
-	# 2. /var/spool/ml/elena looks a $ml_home_dir ?
-	if (-d $_) {
-	    $ml_home_dir = $_;
-	    my $cf = File::Spec->catfile($_, "config.cf");
-	    if (-f $cf) {
-		push(@cf, $cf);
-		$found_cf = 1;
-	    }
-	}
-	# 3. looks a file, so /var/spool/ml/elena/config.cf ?
-	elsif (-f $_) {
-	    push(@cf, $_);
-	}
-    }
-
-    # save $ml_home_dir value in $main_cf directly
-    $main_cf->{ ml_home_dir } = $ml_home_dir;
-
-    \@cf;
-}
-
-
-# Descriptions: analyze argument vector
-#    Arguments: STR($myname) HASH_REF($main_cf)
-# Side Effects: none
-# Return Value: ARRAY_REF (list of config.cf's)
-sub _makefml_parse_argv
-{
-    my ($myname, $main_cf) = @_;
-    use FML::Process::Utils;
-    my $ml_home_prefix =
-      FML::Process::Utils::__ml_home_prefix_from_main_cf($main_cf);
-
-    # makefml specific syntax.
-    if (@ARGV) {
-	my @cf = ();
-	my ($command, $ml_name, @options) = @ARGV;
-
-	if ($command =~ /\-\>/) {
-	    ($command, @options) = @ARGV;
-	    ($ml_name, $command) = split('->', $command);
-	}
-	elsif ($command =~ /::/) {
-	    ($command, @options) = @ARGV;
-	    ($ml_name, $command) = split('::', $command);
-	}
-
-	# save $ml_home_dir value in $main_cf directly
-	if (defined $ml_name) {
-	    $main_cf->{ ml_home_dir } =
-	      File::Spec->catfile($ml_home_prefix, $ml_name);
-	    # config.cf
-	    my $cf =
-	      File::Spec->catfile($ml_home_prefix, $ml_name, "config.cf");
-	    @cf = ($cf);
-	}
-	else {
-	    warn("\$ml_name not specified") if $debug;
-	}
-
-	return \@cf;
-    }
-    else {
-	return [];
-    }
 }
 
 
@@ -381,7 +282,7 @@ C<$args> is like this:
 # Return Value: STR(package name)
 sub ProcessSwitch
 {
-    my ($args) = @_;
+    my ($myname, $args) = @_;
 
     # Firstly, create process
     # $pkg is a  package name, for exampl,e "FML::Process::Distribute".
@@ -391,7 +292,7 @@ sub ProcessSwitch
     }
 
     # debug, ignore this
-    if ($0 =~ /loader/) { print "use $pkg\n"; sleep 2;}
+    if ($myname eq 'loader') { print "use $pkg\n"; sleep 2;}
 
     eval qq{ require $pkg; $pkg->import();};
     croak($@) if $@;
@@ -485,6 +386,9 @@ sub _ml_name_is_required
 	return 0;
     }
     elsif ($myname eq 'fmlalias') {
+	return 0;
+    }
+    elsif ($myname eq 'fmlhtmlify') {
 	return 0;
     }
     elsif ($myname eq 'menu.cgi'   ||

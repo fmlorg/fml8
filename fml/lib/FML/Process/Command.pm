@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.60 2002/06/01 05:02:33 fukachan Exp $
+# $FML: Command.pm,v 1.61 2002/06/01 05:09:25 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -67,18 +67,20 @@ forward the request to SUPER CLASS.
 =cut
 
 # Descriptions: dummy
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub prepare
 {
-    my ($self, $args) = @_;
-    my $config = $self->{ config };
+    my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'command_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
-    $self->SUPER::prepare($args);
+    $curproc->resolve_ml_specific_variables( $args );
+    $curproc->load_config_files( $args->{ cf_list } );
+    $curproc->parse_incoming_message($args);
 
     $eval = $config->get_hook( 'command_prepare_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }

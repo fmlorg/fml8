@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.34 2002/06/25 02:21:20 fukachan Exp $
+# $FML: Kernel.pm,v 1.35 2002/06/25 04:10:51 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -60,56 +60,13 @@ sub new
     my ($self, $args) = @_;
     my $type = ref($self) || $self;
 
-    # ml_name: we should get $ml_name from HTTP.
-    use FML::Process::Utils;
-    my $ml_name = safe_param_ml_name($self) || do {
-	my $is_need_ml_name = $args->{ 'need_ml_name' };
-	if ($is_need_ml_name) {
-	    my $r = "fail to get ml_name from HTTP";
-	    croak("__ERROR_cgi.fail_to_get_ml_name__: $r");
-	}
-    };
-
-    # set up $curproc for further steps
-    # XXX set up the dummy value for $ml_home_prefix (default value)
-    #     anyway to avoid the error of "new FML::Process::Kernel".
-    $args->{ ml_home_prefix } = $args->{ main_cf }->{ default_ml_home_prefix };
+    # create kernel object and redefine $curproc as the object $type.
     my $curproc = new FML::Process::Kernel $args;
-
-    # ml_domain
-    my $hints     = $curproc->hints();
-    my $ml_domain = $hints->{ ml_domain };
-
-    # ml_home_prefix
-    my $ml_home_prefix = $curproc->ml_home_prefix( $ml_domain );
-
-    # ml_home_dir
-    my ($ml_home_dir, $config_cf);
-    if ($ml_name) {
-	use File::Spec;
-	$ml_home_dir = $curproc->ml_home_dir($ml_name, $ml_domain);
-	$config_cf   = File::Spec->catfile($ml_home_dir, 'config.cf');
-
-	# fix $args { cf_list, ml_home_dir };
-	my $cflist = $args->{ cf_list };
-	push(@$cflist, $config_cf);
-	$args->{ ml_home_dir } =  $ml_home_dir;
-    }
-
-    # reset $ml_domain to handle virtual domains
-    my $config = $curproc->{ config };
-    $config->set('ml_domain',       $ml_domain);
-    $config->set('ml_home_prefix',  $ml_home_prefix);
-    if (defined $ml_home_dir && $ml_home_dir) {
-	$config->set('ml_home_dir', $ml_home_dir);
-    }
-
-    # redefine $curproc as the object $type.
     return bless $curproc, $type;
 }
 
 
-=head2 C<prepare()>
+=head2 C<prepare($args)>
 
 print HTTP header.
 The charset is C<euc-jp> by default.
@@ -117,21 +74,76 @@ The charset is C<euc-jp> by default.
 =cut
 
 
-# Descriptions: html header.
-#               FML::Process::Kernel::prepare() parses incoming_message
-#               CGI do not parse incoming_message;
-#    Arguments: OBJ($curproc)
+# Descriptions: print html header.
+#               analyze cgi data to determine ml_name et.al.
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub prepare
 {
-    my ($curproc) = @_;
+    my ($curproc, $args) = @_;
     my $config    = $curproc->{ config };
     my $charset   = $config->{ cgi_charset } || 'euc-jp';
+
+    $curproc->_cgi_resolve_ml_specific_variables( $args );
+    $curproc->load_config_files( $args->{ cf_list } );
 
     print header(-type    => "text/html; charset=$charset",
 		 -charset => $charset,
 		 -target  => "_top");
+}
+
+
+# Descriptions: analyze data input from CGI
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: update $config{ ml_* }, $args->{ cf_list }
+# Return Value: none
+sub _cgi_resolve_ml_specific_variables
+{
+    my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
+    my ($ml_home_dir, $config_cf);
+
+    # inherit ml_domain from $hints
+    # which is defined/hard-coded in *.cgi (libexec/loader) script.
+    my $hints          = $curproc->hints();
+    my $ml_domain      = $hints->{ ml_domain };
+    my $ml_home_prefix = $curproc->ml_home_prefix( $ml_domain );
+
+    # cheap sanity
+    unless ($ml_home_prefix) {
+	my $r = "ml_home_prefix undefined";
+	croak("__ERROR_cgi.fail_to_get_ml_home_prefix__: $r");
+    }
+
+    # reset
+    $config->set('ml_domain',       $ml_domain);
+    $config->set('ml_home_prefix',  $ml_home_prefix);
+
+    # speculate ml_name, which is not used in some cases.
+    my $ml_name = $curproc->safe_param_ml_name() || do {
+	my $is_need_ml_name = $args->{ 'need_ml_name' };
+	if ($is_need_ml_name) {
+	    my $r = "fail to get ml_name from HTTP";
+	    croak("__ERROR_cgi.fail_to_get_ml_name__: $r");
+	}
+    };
+
+    # speculate $ml_home_dir when $ml_name is determined.
+    if ($ml_name) {
+	use File::Spec;
+	$ml_home_dir = $curproc->ml_home_dir($ml_name, $ml_domain);
+
+	$config->set('ml_name',     $ml_name);
+	$config->set('ml_home_dir', $ml_home_dir);
+
+	# fix $args { cf_list, ml_home_dir };
+	$config_cf = File::Spec->catfile($ml_home_dir, 'config.cf');
+	my $cflist = $args->{ cf_list };
+	push(@$cflist, $config_cf);
+    }
+
+    $curproc->__debug_ml_xxx('cgi:');
 }
 
 

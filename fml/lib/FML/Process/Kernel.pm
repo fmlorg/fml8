@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.106 2002/06/01 14:53:40 fukachan Exp $
+# $FML: Kernel.pm,v 1.107 2002/06/24 09:43:24 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -74,41 +74,26 @@ parameters.
 
 # Descriptions: constructor
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: none
-# Return Value: FML::Process::Kernel object
+# Side Effects: allocate the current process table on memory
+# Return Value: OBJ(FML::Process::Kernel object)
 sub new
 {
     my ($self, $args) = @_;
     my ($curproc)     = {}; # alloc memory as the struct current_process.
     my ($cfargs)      = {};
 
-    # import variables
-    my (@import_vars) = qw(ml_home_prefix ml_home_dir program_name);
-    my $var;
+    # XXX [CAUTION]
+    # XXX MOVE PARSER FROM Process::Switch to HERE
+    # XXX
 
-  IMPORT_CHECK:
-    for $var (@import_vars) {
+    # 1.1 import variables
+    for my $var (qw(program_name)) {
 	if (defined $args->{ $var }) {
 	    $cfargs->{ $var } = $args->{ $var };
 	}
-	else {
-	    if ($var eq 'ml_home_dir') {
-		next IMPORT_CHECK unless $args->{ need_ml_name };
-	    }
-
-	    # critical error
-	    croak("Error: variable=$var is not defined");
-	}
     }
 
-    # error if we need $ml_home_dir but is not specified.
-    if ($args->{ need_ml_name }) {
-	unless ($cfargs->{ ml_home_dir }) {
-	    croak("specify ml_home_dir or ml_name");
-	}
-    }
-
-    # import XXX_dir variables from /etc/fml/main.cf
+    # 1.2 import XXX_dir variables from /etc/fml/main.cf
     for my $dir_var (qw(
 			config_dir
 			default_config_dir
@@ -122,40 +107,51 @@ sub new
 	}
     }
 
-    # speculate $fml_owner_home_dir by the current process uid
+    # 1.3 import $fml_version
+    if (defined $args->{ fml_version }) {
+	$cfargs->{ fml_version } = "fml-devel ". $args->{ fml_version };
+    }
+
+    # 2.1 speculate $fml_owner_home_dir by the current process uid
     {
 	my $dir = (getpwuid($<))[7];
 	$cfargs->{ 'fml_owner_home_dir' } = $dir if defined $dir;
     }
 
-    # import $fml_version
-    if (defined $args->{ fml_version }) {
-	$cfargs->{ fml_version } = "fml-devel ". $args->{ fml_version };
-    }
 
-    # for more convenience, save the parent configuration
-    $curproc->{ main_cf } = $args->{ main_cf };
+    # 
+    # 3. create FML::Process::Kernel object
+    # 
+    # 3.1 for more convenience, save the parent configuration
+    $curproc->{ main_cf }       = $args->{ main_cf };
     $curproc->{ __parent_args } = $args;
 
-    # bind FML::Config object to $curproc
+    # 3.2 bind FML::Config object to $curproc
     use FML::Config;
     $curproc->{ config } = new FML::Config $cfargs;
 
-    # initialize PCB
+    # 3.3 initialize PCB
     use FML::PCB;
     $curproc->{ pcb } = new FML::PCB;
 
+    # 3.4
     # object-ify. bless! bless! bless!
     bless $curproc, $self;
 
-    # load config.cf files, which is passed from loader.
-    $curproc->load_config_files( $args->{ cf_list } );
-
-    # initialize signal
+    # 3.5 initialize signal
     $curproc->_signal_init;
 
+    # 4.1 load config.cf files, which is passed from loader.
+    #     XXX we need the following variables are resolved.
+    #     XXX ml_name, ml_domain, ml_home_prefix, ml_home_dir
+    # $curproc->resolve_ml_specific_variables( $args );
+    # $curproc->load_config_files( $args->{ cf_list } );
+
     # debug
-    if ($0 =~ /loader/) {
+    $curproc->__debug_ml_xxx('loaded:');
+
+    # 5.1 debug
+    if ($args->{ myname } eq 'loader') {
 	eval q{
 	    require Data::Dumper; Data::Dumper->import();
 	    print "// FML::Process::Kernel::new()\n";
@@ -224,7 +220,7 @@ a set of the header and the body object.
 sub prepare
 {
     my ($curproc, $args) = @_;
-    $curproc->parse_incoming_message($args);
+    croak('not call Kernel::prepare()');
 }
 
 
@@ -392,6 +388,188 @@ sub simple_loop_check
 	$curproc->refuse_further_processing();
 	Log("mail loop detected for $match");
     }
+}
+
+
+=head2 resolve_ml_specific_variables( $args )
+
+determine ml specific variables
+    $ml_name
+    $ml_domain
+    $ml_home_prefix
+    $ml_home_dir
+by command line arguments or CGI environment variables
+with considering virtual domains.
+
+=cut
+
+
+# Descriptions: 
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: 
+# Return Value: none
+sub resolve_ml_specific_variables
+{
+    my ($curproc, $args) = @_;
+    my ($ml_name, $ml_domain, $ml_home_prefix, $ml_home_dir);
+    my ($command, @options, $config_cf_path);
+    my $config  = $curproc->{ config }; 
+    my $myname  = $args->{ myname };
+    my $ml_addr = '';
+
+    # Example: "| /usr/local/libexec/fml/distribute elena@fml.org"
+    #          makefml COMMAND elena@fml.org ...
+    #    or in the old style
+    #          "| /usr/local/libexec/fml/fml.pl /var/spool/ml/elena"
+    # 
+
+    # 1. virtual domain or not ?
+    # 1.1 search ml@domain syntax arg in @ARGV
+    if ($myname eq 'makefml') {
+	my $default_domain = $curproc->default_domain();
+	($command, $ml_name, @options) = @ARGV;
+
+	# makefml $ml->$command
+	if ($command =~ /\-\>/) {
+	    ($command, @options) = @ARGV;
+	    ($ml_name, $command) = split('->', $command);
+	}
+	# makefml $ml::$command
+	elsif ($command =~ /::/) {
+	    ($command, @options) = @ARGV;
+	    ($ml_name, $command) = split('::', $command);
+	}
+
+	if ($ml_name =~ /\@/) {
+	    $ml_addr = $ml_name;
+	}
+	else {
+	    $ml_addr = $ml_name . '@'. $default_domain;
+	}
+    }
+    else {
+	for my $arg (@ARGV) {
+	    if ($arg =~ /\S+\@\S+/) { $ml_addr = $arg;}
+	}
+    }
+
+    # 1.2 ml@domain may be specified in command line args.
+    if ($ml_addr) {
+	($ml_name, $ml_domain) = split(/\@/, $ml_addr);
+	$config->set( 'ml_name',   $ml_name );
+	$config->set( 'ml_domain', $ml_domain );
+
+	my $prefix   = $curproc->ml_home_prefix( $ml_domain );
+	my $home_dir = $curproc->ml_home_dir( $ml_name, $ml_domain );
+	$config->set( 'ml_home_prefix', $prefix );
+	$config->set( 'ml_home_dir',    $home_dir );
+
+	$config_cf_path = $curproc->config_cf_filepath($ml_name, $ml_domain);
+    }
+    # Example: "| /usr/local/libexec/fml/fml.pl /var/spool/ml/elena"
+    else {
+	my $r = $curproc->_find_ml_home_dir_in_argv($args->{ main_cf });
+	if (defined $r->{ ml_home_dir }) {
+	    use File::Basename;
+	    my $dir    = $r->{ ml_home_dir };
+	    my $prefix = dirname( $dir );
+	    $config->set( 'ml_home_prefix', $prefix);
+	    $config->set( 'ml_home_dir',    $dir);
+
+	    use File::Spec;
+	    $config_cf_path = File::Spec->catfile($dir, "config.cf");
+	}
+    }
+
+    # debug
+    $curproc->__debug_ml_xxx('resolv:');
+
+    # add this ml's config.cf to the .cf list.
+    my $list = $args->{ cf_list };
+    push(@$list, $config_cf_path);
+}
+
+
+# XXX remove this in the future
+my @delayed_buffer = ();
+
+# Descriptions: 
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub __debug_ml_xxx
+{
+    my ($curproc, $str) = @_;
+    my $config = $curproc->{ config };
+
+    if (defined $config->{ log_file } && (-w $config->{ log_file })) {
+	for (@delayed_buffer) { Log( $_ ); }
+	@delayed_buffer = ();
+
+	for my $var (qw(ml_name ml_domain ml_home_prefix ml_home_dir)) {
+	    Log(sprintf("%-25s = %s", '(debug)'.$str. $var, 
+			(defined $config->{ $var } ? $config->{ $var } : '')));
+	}
+    }
+    else {
+	for my $var (qw(ml_name ml_domain ml_home_prefix ml_home_dir)) {
+	    push(@delayed_buffer,
+		 sprintf("%-25s = %s", 
+			 '(debug)'.$str. $var, 
+			 (defined $config->{$var} ? $config->{$var} : '')));
+	}
+    }
+}
+
+
+# Descriptions: analyze argument vector
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: HASH_REF
+sub _find_ml_home_dir_in_argv
+{
+    my ($curproc, $main_cf) = @_;
+    my $ml_home_prefix = $main_cf->{ default_ml_home_prefix };
+    my $ml_home_dir    = '';
+    my $found_cf       = 0;
+    my @cf             = ();
+
+    # "elena" is translated to "/var/spool/ml/elena"
+  ARGV:
+    for (@ARGV) {
+	# 1. for the first time
+	#   a) speculate "/var/spool/ml/$_" looks a $ml_home_dir ?
+	unless ($found_cf) {
+	    my $x  = File::Spec->catfile($ml_home_prefix, $_);
+	    my $cf = File::Spec->catfile($x, "config.cf");
+	    if (-d $x && -f $cf) {
+		$found_cf    = 1;
+		$ml_home_dir = $x;
+		push(@cf, $cf);
+	    }
+	}
+
+	last ARGV if $found_cf;
+
+	# 2. /var/spool/ml/elena looks a $ml_home_dir ?
+	if (-d $_) {
+	    $ml_home_dir = $_;
+	    my $cf = File::Spec->catfile($_, "config.cf");
+	    if (-f $cf) {
+		push(@cf, $cf);
+		$found_cf = 1;
+	    }
+	}
+	# 3. looks a file, so /var/spool/ml/elena/config.cf ?
+	elsif (-f $_) {
+	    push(@cf, $_);
+	}
+    }
+
+    return {
+	ml_home_dir => $ml_home_dir,
+	cf_list     => \@cf,
+    };
 }
 
 

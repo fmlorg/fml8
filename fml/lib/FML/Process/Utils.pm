@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.28 2002/06/24 13:40:07 fukachan Exp $
+# $FML: Utils.pm,v 1.29 2002/06/25 04:02:11 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -379,7 +379,7 @@ sub __ml_home_prefix_from_main_cf
 		return $main_cf->{ default_ml_home_prefix };
 	    }
 	    else {
-		croak("ml_home_prefix: unknown domain");
+		croak("ml_home_prefix: unknown domain ($domain)");
 	    }
 	}
     }
@@ -668,6 +668,26 @@ sub rewrite_config_if_needed
     my $ml_domain      = $curproc->default_domain();
     my $ml_home_prefix = '';
     my $ml_home_dir    = '';
+
+    # debug
+    # XXX remove this function in the future ?
+    if (0) {
+	my @c = caller;
+
+	print STDERR "rewrite_config_if_needed input:\n";
+	print STDERR "   $c[1] $c[2]\n";
+
+	for (qw(ml_name ml_domain ml_home_prefix ml_home_dir)) {
+	    if (defined $config->{ $_ }) {
+		print STDERR "$_ => $config->{ $_ }\n";
+	    }
+	    else {
+		print STDERR "$_ => \n";
+	    }
+	}
+    }
+
+    return;
 
     # ml_domain
     if (defined $params->{ 'ml_domain' }) {
