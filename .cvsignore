@@ -1,8 +1,8 @@
-w
 .version
-config.status
-config.log
 config.cache
+config.log
 config.sh
-install.pl
+config.status
 configure.new.lineno
+install.pl
+w
