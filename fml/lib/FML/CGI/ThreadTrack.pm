@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.8 2001/11/12 02:19:19 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.9 2001/11/13 15:18:07 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -84,7 +84,7 @@ sub run_cgi
     my $config = $curproc->{ config };
     my $myname = $config->{ program_name };
     my $ttargs = $curproc->_build_param($args);
-    my $action = $curproc->safe_param_action();
+    my $action = $curproc->safe_param_action() || '';
 
     use Mail::ThreadTrack;
     my $thread = new Mail::ThreadTrack $ttargs;
@@ -128,6 +128,7 @@ sub _build_param
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
     my $myname = $config->{ program_name };
+    my $option = $curproc->command_line_options();
 
     #  argumente for thread track module
     my $ml_name       = $curproc->safe_param_ml_name();
@@ -144,6 +145,16 @@ sub _build_param
 	reverse_order => 1,
     };
 
+    # import some variables
+    for my $varname (qw(base_url msg_base_url)) { 
+	if (defined $option->{ $varname }) {
+	    $ttargs->{ $varname } = $option->{ $varname };
+	}
+	elsif (defined $config->{ $varname }) {
+	    $ttargs->{ $varname } = $config->{ $varname };
+	}
+    }
+
     return $ttargs;
 }
 
@@ -153,7 +164,7 @@ sub _show_guide
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
     my $action  = $curproc->myname();
-    my $target  = $config->{ thread_cgi_target_window } || 'ThreadCGIWindow';
+    my $target  = $config->{ thread_cgi_target_window } || '_top';
     my $ml_list = $curproc->get_ml_list($args);
     my $ml_name = $config->{  ml_name };
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: HTML.pm,v 1.5 2001/11/11 11:12:28 fukachan Exp $
+# $FML: HTML.pm,v 1.6 2001/11/11 13:37:42 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::HTML;
@@ -72,7 +72,7 @@ sub __start_thread_summary
     my $ml_name = $config->{ ml_name };
     my $fd      = $self->{ _fd } || \*STDOUT;
     my $action  = $config->{ myname };
-    my $target  = "ResultsWindow";
+    my $target  = '_top';
 
     # statistics
     if (defined $self->{ _ticket_id_stat }) {
@@ -138,7 +138,7 @@ sub __print_thread_summary
     my $ml_name   = $config->{ ml_name };
     my $spool_dir = $config->{ spool_dir };
     my $action    = $config->{ myname };
-    my $target    = $config->{ thread_cgi_target_window } || 'ThreadCGIWindow';
+    my $target    = $config->{ thread_cgi_target_window } || '_top';
 
     my $date     = $optargs->{ date };
     my $age      = $optargs->{ age };
@@ -162,11 +162,20 @@ sub __print_thread_summary
 
     print "<TR>\n";
 
-    # thread id
+    # show articles in this thread id
     print "<TD>";
-    print "<A HREF=\"$action&action=show\" TARGET=\"lower\">\n";
-    print $tid;
-    print "\n</A>\n";
+    if (defined $config->{ msg_base_url }) {
+	my $msg_base_url = $config->{ msg_base_url };
+	my $url          = "$msg_base_url/msg$aid.html";
+	print "<A HREF=\"$url\" TARGET=\"article\">\n";
+	print $tid;
+	print "\n</A>\n";
+    }
+    else {
+	print "<A HREF=\"$action&action=show\" TARGET=\"article\">\n";
+	print $tid;
+	print "\n</A>\n";
+    }
 
     # action
     print "<TD>";

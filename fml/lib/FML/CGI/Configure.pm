@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Configure.pm,v 1.4 2001/11/09 03:14:57 fukachan Exp $
+# $FML: Configure.pm,v 1.5 2001/11/13 15:18:31 fukachan Exp $
 #
 
 package FML::CGI::Configure;
@@ -161,7 +161,7 @@ sub _show_menu
 {
     my ($curproc, $args) = @_;
     my $action  = $curproc->myname();
-    my $target  = 'ResultsWindow';
+    my $target  = '_top';
     my $ml_list = $curproc->get_ml_list($args);
     my $address = $curproc->safe_param_address() || '';
     my $command_list = [

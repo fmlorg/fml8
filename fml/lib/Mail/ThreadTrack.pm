@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.17 2001/11/11 13:37:42 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.18 2001/11/16 10:08:18 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -82,7 +82,11 @@ sub new
 	db_type => 'AnyDBM_File',
     };
 
-    my @keys = qw(myname ml_name spool_dir article_id db_base_dir reverse_order);
+    my @keys = qw(myname ml_name spool_dir article_id db_base_dir
+		  reverse_order
+		  base_url msg_base_url
+		  );
+
     my %must = ('ml_name' => 1, 'spool_dir' => 1, 'db_base_dir' => 1);
 
     for my $key (@keys) {
