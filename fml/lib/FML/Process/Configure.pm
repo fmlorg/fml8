@@ -52,7 +52,7 @@ sub run
 	$curproc->_show_conf($args);
     }
     elsif ($myname eq 'fmldoc') {
-	exec 'perldoc', @$argv;
+	exec 'perldoc', '-v', @$argv;
     }
     else {
 	$curproc->lock();

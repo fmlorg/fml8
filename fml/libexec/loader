@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $Id: loader,v 1.9 2001/02/06 12:07:37 fukachan Exp $ 
+# $Id: loader,v 1.10 2001/02/17 01:54:41 fukachan Exp $ 
 # $FML$
 #
 
@@ -14,7 +14,6 @@ eval 'exec /usr/local/bin/perl -S $0 ${1+"$@"}'
 use vars qw($MainCF $running_under_some_shell);
 use strict;
 use Carp;
-use Getopt::Long;
 
 # main configuration file for directory switch
 $MainCF = '/etc/fml/main.cf';
@@ -51,130 +50,27 @@ sub Bootstrap
     my $fh = new FileHandle $MainCF;
     defined($fh) || die("cannot find ${MainCF}");
 
-    # 2. pick up *.cf files to read and set them to @cf.
-    #    We pass it to fml_loader.
-    # pass *.cf files to libexec/{distribute,command}
-    # for example
-    # @cf = ( /etc/fml/defaults/$VERSION/default_config.cf 
-    #         /etc/fml/site_default_config.cf (required ?)
-    #         /etc/fml/domains/$DOMAIN/default_config.cf
-    #         /var/spool/ml/elena/config.cf
-    #        );
-    my @argv    = @ARGV; # save the original arguments
-    my @cf      = ();
-    my %options = ();
-    my $my_default_config = '';
-    my $ml_home_dir       = ''; # e.g. /var/spool/ml/elena
-
-    # inspect my name from $0
-    use File::Basename;
-    my $myname = basename($0);
-
     # parse command line options (preliminary)
-    GetOptions(\%options, FML::prepare_myname_options($myname));
-
-    # 2.1 o.k. try to load main.cf
-    my $main_cf        = Standalone::load_cf($options{'c'} || $MainCF,
-					     $options{'params'}
-					     );
-    my $libexec_dir    = $main_cf->{ libexec_dir };
-    my $default_config = $my_default_config || $main_cf->{ default_config };
-    
-    # 2.2 parse @ARGV ..
-    my $ml_home_prefix = $main_cf->{ ml_home_prefix };
-    my $found_cf       = 0;
-    for (@ARGV) {
-	# elena is translated to "/var/spool/ml/elena"
-	unless ($found_cf) {
-	    my $x = "$ml_home_prefix/$_";
-	    if (-d $x && -f "$x/config.cf") {
-		$found_cf = 1;
-		$ml_home_dir = $x;
-		push(@cf, "$x/config.cf"); 
-	    }
-	}
-
-	if (-d $_) {
-	    $ml_home_dir = $_;
-	    if (-f "$_/config.cf") {
-		push(@cf, "$_/config.cf");
-		$found_cf = 1;
-	    }
-	}
-	elsif (-f $_) {
-	    push(@cf, $_);
-	}
+    my $main_cf_file = $MainCF;
+    my $params;
+    for (my $i = 0; $i <= $#ARGV; $i++) {
+	if ($ARGV[ $i ] =~ /^\-c$/) { $main_cf_file = $ARGV[$i + 1];}
+	if ($ARGV[ $i ] =~ /^\-\-params$/) { $params = $ARGV[$i + 1];}
     }
 
-    # 2.3 prepare @cf
-    # XXX hmm, .. '/etc/fml/site_default_config.cf' is good ???
-    unshift(@cf, '/etc/fml/site_default_config.cf');
-    unshift(@cf, $default_config);
+    # 2.1 o.k. try to load main.cf (1st pass) to resolve $libexec_dir
+    my $main_cf     = Standalone::load_cf($main_cf_file, $params);
+    my $libexec_dir = $main_cf->{ libexec_dir };
 
-    # 3. reset @INC 
-    unshift(@INC, split(/\s+/, $main_cf->{ lib_dir }));	    
-    unshift(@INC, split(/\s+/, $main_cf->{ local_lib_dir }));
-
-    # 4. debug
-    if ($0 =~ /loader/) {
-	eval q#use Data::Dumper; print Dumper( $main_cf ); sleep 3;#;
-    }
-
-    # 5. o.k. here we go!
-    if (-f "$libexec_dir/process_switch") {
-	my ($args, $pkg);
-
-	$args = {
-	    fml_version    => $main_cf->{ fml_version },
-	    
-	    myname         => $myname,
-	    ml_home_prefix => $main_cf->{ ml_home_prefix },
-	    ml_home_dir    => $ml_home_dir,
-	    
-	    cf_list        => \@cf,
-	    options        => \%options,
-
-	    # pass the original information to each process
-	    argv           => \@argv,
-	    ARGV           => \@ARGV,
-	};
-
-	# See libexec/process_switch on ProcessSwitch()
+    # 2.2 load $version depended process_switch
+    eval {
 	require "$libexec_dir/process_switch";
-	$pkg = ProcessSwitch($args);
-
-	# See FML::Process::Kernel module on ProcessStart()
-	ProcessStart($pkg, $args);
+    };
+    unless ($@) {
+	&Bootstrap2($main_cf_file);
     }
     else {
-	croak("$libexec_dir/fml is not found.");
-    }
-}
-
-
-package FML;
-use Carp;
-use strict;
-
-sub prepare_myname_options
-{
-    my ($myname) = @_;
-
-    if ($myname eq 'fml.pl' || 
-	$myname eq 'loader' ) { 
-	return qw(ctladdr! debug! params=s -c=s);
-    }
-    elsif ($myname eq 'fmlticket') {
-	return qw(debug! params=s -c=s -A=s -R=s);
-    }
-    elsif ($myname eq 'fmlconf') {
-	return qw(ctladdr! debug! params=s -c=s n!);
-    }
-    elsif ($myname eq 'fmldoc') {
-	return qw(ctladdr! debug! params=s -c=s n!);	
-    }
-    else {
-	croak "$myname is unknown yet\n";
+	croak("cannot load $libexec_dir/process_switch\n");
     }
 }
 

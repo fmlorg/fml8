@@ -30,7 +30,8 @@ sub new
     my ($cfargs)  = {};
 
     # import variables
-    my (@import_vars) = qw(ml_home_dir ml_home_prefix);
+    my (@import_vars) = qw(ml_home_prefix);
+    push(@import_vars, 'ml_home_dir') if $args->{ need_ml_name };
     for my $var (@import_vars) {
 	if ($args->{ $var }) {
 	    $cfargs->{ $var } = $args->{ $var };
