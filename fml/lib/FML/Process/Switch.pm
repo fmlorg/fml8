@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.71 2002/06/27 08:25:51 fukachan Exp $
+# $FML: Switch.pm,v 1.72 2002/06/30 14:30:16 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -17,7 +17,7 @@ use File::Spec;
 
 =head1 NAME
 
-FML::Process::Switch - dispatch the suitable module
+FML::Process::Switch - dispatch a module suitable with the program name
 
 =head1 SYNOPSIS
 
@@ -115,23 +115,9 @@ sub main::Bootstrap2
 	}
     }
 
-    # 2.1 removed.
-    #     analyze main.cf and set the result into $main_cf
-
-
-    # 2.2 parse @ARGV to get a list of configuration files.
-    #     XXX $main_cf{ ml_home_dir } (e.g. /var/spool/ml/elena) is defined
-    #         if possible. WHY ?
-    #     a) resolve $ml_name (e.g. expand "elena" to "/var/spool/ml/elena")
-    #     b) but we need special treatment in some cases e.g. makefml
-    #
-    #     XXX CAN WE MOVE PARSER TO Process::{Kernel,CGI::Kernel} ?
-    #     XXX ml_name, ml_domain, ml_home_prefix, ml_home_dir
-    # my $cf = _parse_argv($myname, $main_cf);
-    my $cf = ();
-
-    # 2.3 prepare @$cf
+    # 2.1 prepare @$cf
     #     XXX hmm, .. '/etc/fml/site_default_config.cf' is good ???
+    my $cf = ();
     my $sitedef =
       File::Spec->catfile($main_cf->{ config_dir }, 'site_default_config.cf');
     unshift(@$cf, $sitedef);
@@ -155,14 +141,7 @@ sub main::Bootstrap2
 	if ($@) { print STDERR $@; sleep 3;}
     }
 
-    # 5. resolve $ml_home_prefix
-    #    XXX CAN WE MOVE PARSER TO Process::{Kernel,CGI::Kernel} ?
-    #    XXX ml_name, ml_domain, ml_home_prefix, ml_home_dir
-    # use FML::Process::Utils;
-    # my $ml_home_prefix =
-    #    FML::Process::Utils::__ml_home_prefix_from_main_cf($main_cf);
-
-    # 6. o.k. here we go!
+    # 5. o.k. here we go!
     #    XXX CAN WE MOVE PARSER TO Process::{Kernel,CGI::Kernel} ?
     #    XXX ml_name, ml_domain, ml_home_prefix, ml_home_dir
     my $args = {
