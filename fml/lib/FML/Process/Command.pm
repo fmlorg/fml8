@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.54 2002/05/19 04:21:11 fukachan Exp $
+# $FML: Command.pm,v 1.55 2002/05/19 04:57:46 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -93,7 +93,7 @@ verify the sender is a valid member or not.
 
 
 # Descriptions: verify the sender of this process is an ML member.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: 1 or 0
 sub verify_request
@@ -126,7 +126,7 @@ XXX Each command determines need of lock or not.
 
 
 # Descriptions: call _evaluate_command_lines()
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub run
@@ -137,6 +137,9 @@ sub run
     if ($curproc->permit_command($args)) {
 	$curproc->_evaluate_command_lines($args);
     }
+    # XXX reject command use irrespective of requests from admins/users.
+    # XXX rejection of admin use occurs in _evaluate_command_lines() not here.
+    # XXX possible cases are from "system_accounts" or from a not member.
     else {
 	my $reason = $pcb->get("check_restrictions", "deny_reason");
 	if (defined($reason) && ($reason eq 'reject_system_accounts')) {
@@ -191,7 +194,7 @@ _EOF_
 
 # Descriptions: finalize command process.
 #               reply messages, command results et. al.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: queue manipulation
 # Return Value: none
 sub finish
@@ -232,7 +235,7 @@ sub _check_context
 
 # Descriptions: check command (specified in $opts) content:
 #               syntax check, permission of command use et. al.
-#    Arguments: OBJ($self) HASH_REF($args) HASH_REF($opts)
+#    Arguments: OBJ($curproc) HASH_REF($args) STR($level) HASH_REF($opts)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub _is_valid_command
@@ -245,7 +248,10 @@ sub _is_valid_command
     my $command = $opts->{ command };
 
     # use of this command is allowed in FML::Config or not ?
-    unless ($config->has_attribute("commands_for_$level", $comname)) {
+    if ($config->has_attribute("commands_for_$level", $comname)) {
+	return 1; # o.k. accpet this command.
+    }
+    else {
 	if ($level eq 'admin' || $level eq 'user') {
 	    Log("commands_for_$level has no $comname");
 	    $curproc->reply_message("\n$prompt $command");
@@ -254,19 +260,21 @@ sub _is_valid_command
 	}
 	return 0;
     }
-
-    return 1; # o.k. accpet this command.
 }
 
 
+# Descriptions: validate command syntax
+#    Arguments: OBJ($curproc) 
+#               HASH_REF($args) HASH_REF($status) HASH_REF($cominfo)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
 sub _is_valid_syntax
 {
-    my ($curproc, $args, $status, $command) = @_;
-    my $config = $curproc->{ config };
-    my $prompt = $config->{ command_prompt } || '>>>';
-    my $level  = $status->{ level };
-
-    Log("_is_valid_syntax($command) level=$level");
+    my ($curproc, $args, $status, $cominfo) = @_;
+    my $config  = $curproc->{ config };
+    my $prompt  = $config->{ command_prompt } || '>>>';
+    my $level   = $status->{ level };
+    my $command = $cominfo->{ command };
 
     # simple command syntax check
     use FML::Restriction::Command;
@@ -287,16 +295,34 @@ sub _is_valid_syntax
 
 # Descriptions: parse command buffer to make
 #               argument vector after command name
-#    Arguments: STR($command) STR($comname)
+#    Arguments: OBJ($curproc) HASH_REF($args) STR($fixed_command)
 # Side Effects: none
-# Return Value: ARRAY_REF
-sub _parse_command_arguments
+# Return Value: HASH_REF
+sub _parse_command_args
 {
-    my ($command, $comname) = @_;
+    my ($curproc, $args, $fixed_command) = @_;
+    my $config  = $curproc->{ config };
+    my $ml_name = $config->{ ml_name };
+    my $argv    = $curproc->command_line_argv();
+
+    my ($comname, $comsubname) = _get_command_name($fixed_command);
 
     use FML::Command::DataCheck;
     my $check = new FML::Command::DataCheck;
-    $check->parse_command_arguments($command, $comname);
+    my $comoptions = $check->parse_command_arguments($fixed_command, $comname);
+    
+    my $cominfo = {
+	command    => $fixed_command,
+	comname    => $comname,
+	comsubname => $comsubname,
+	options    => $comoptions,
+
+	ml_name    => $ml_name,
+	argv       => $argv,
+	args       => $args,
+    };
+
+    return $cominfo;
 }
 
 
@@ -355,6 +381,11 @@ sub _auth_admin
 }
 
 
+# Descriptions: determine $mode and $level for the current command
+#    Arguments: OBJ($curproc)
+#               HASH_REF($args) HASH_REF($status) HAS_REF($command_info)
+# Side Effects: update $status
+# Return Value: STR
 sub _get_command_mode
 {
     my ($curproc, $args, $status, $command_info) = @_;
@@ -478,7 +509,12 @@ sub _get_command_mode
 }
 
 
-sub _allow_command()
+# Descriptions: this command is allowd under the current $mode and $level
+#    Arguments: OBJ($curproc)
+#               HASH_REF($args) HASH_REF($status) HAS_REF($command_info)
+# Side Effects: none
+# Return Value: NUM
+sub _allow_command
 {
     my ($curproc, $mode, $status, $command_info) = @_;
     my $level = $status->{ level };
@@ -489,6 +525,10 @@ sub _allow_command()
 }
 
 
+# Descriptions: remove the superflous string before the actual command
+#    Arguments: STR($buf)
+# Side Effects: none
+# Return Value: STR
 sub __clean_up
 {
     my ($buf) = @_;
@@ -500,7 +540,7 @@ sub __clean_up
 # Descriptions: scan message body and execute approviate command
 #               with dynamic loading of command definition.
 #               It resolves your customized command easily.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: loading FML::Command::command.
 #               prepare messages to return.
 # Return Value: none
@@ -543,7 +583,7 @@ sub _evaluate_command_lines
     $curproc->reply_message("result for your command requests follows:");
 
     # the main loop to analyze each command at each line.
-    my ($comname, $comsubname, $comoptions, $cominfo, $fixed_command);
+    my ($cominfo, $fixed_command);
     my ($num_total, $num_ignored, $num_processed) = (0, 0, 0);
   COMMAND:
     for my $orig_command (@$command_lines) {
@@ -555,15 +595,8 @@ sub _evaluate_command_lines
 
 	# Example: if orig_command = "# help", comname = "help"
 	$fixed_command = __clean_up($orig_command);
-	($comname, $comsubname) = _get_command_name($fixed_command);
-	$comoptions = _parse_command_arguments($fixed_command, $comname);
-	$cominfo = {
-	    command    => $fixed_command,
-	    comname    => $comname,
-	    comsubname => $comsubname,
-	    comoptions => $comoptions,
-	};
-	$mode = $curproc->_get_command_mode($args, $status, $cominfo);
+	$cominfo       = $curproc->_parse_command_args($args, $fixed_command);
+	$mode          = $curproc->_get_command_mode($args, $status, $cominfo);
 
 	# 1. check $mode if the further processing is allowed
 	if ($mode eq '__NEXT__') {
@@ -583,7 +616,7 @@ sub _evaluate_command_lines
 	}
 
 	# 3. simple syntax check
-	unless ($curproc->_is_valid_syntax($args, $status, $fixed_command)) {
+	unless ($curproc->_is_valid_syntax($args, $status, $cominfo)) {
 	    Log("(debug) ignore $fixed_command");
 	    $num_ignored++;
 	    next COMMAND;
@@ -596,17 +629,10 @@ sub _evaluate_command_lines
 	use FML::Command;
 	my $obj = new FML::Command;
 	if (defined $obj) {
-	    # arguments to pass off to each method
-	    my $command_args = {
-		command_mode => $mode,
-		command      => $fixed_command,
-		comname      => $comname,
-		comsubname   => $comsubname,
-		options      => $comoptions,
-		ml_name      => $ml_name,
-		argv         => $argv,
-		args         => $args,
-	    };
+	    # arguments to pass off into each method
+	    my $command_args = $cominfo;
+	    $command_args->{ command_mode }  = $status->{ mode };
+	    $command_args->{ command_level } = $status->{ level };
 
 	    # rewrite prompt e.g. to hide the password
 	    $obj->rewrite_prompt($curproc, $command_args, \$orig_command);
@@ -617,6 +643,7 @@ sub _evaluate_command_lines
 
 	    # execute command ($comname method) under eval().
 	    # XXX $obj = FML::Command object NOT FML::Command::$mode::$command
+	    my $comname = $cominfo->{ comname };
 	    eval q{
 		$obj->$comname($curproc, $command_args);
 	    };
