@@ -37,7 +37,6 @@ MailingList/Utils.pm
 
 ./fml/doc/architecture.gif
 ./fml/doc/architecture.html
-./fml/doc/built_already.ja.html
 ./fml/doc/components.ja.html
 ./fml/doc/dirhier.ja.html
 ./fml/doc/index.ja.html
@@ -48,12 +47,9 @@ MailingList/Utils.pm
 ./fml/doc/refactoring.ja.html
 ./fml/doc/releng.ja.html
 ./fml/doc/terms.ja.html
-./fml/Makefile
-./fml/TODO
+
 ./fml/index.ja.html
 
-./fml/etc/defaults/@template
-./fml/etc/defaults/Configurations
 ./fml/etc/defaults/NAMING_CONVENTION.txt
 ./fml/etc/defaults/__end__.cf.ja
 ./fml/etc/defaults/acl.cf.ja

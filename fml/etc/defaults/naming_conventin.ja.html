@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>
+defaults/NAMING_CONVENTION.txt
+</TITLE>
+<META http-equiv="Content-Type"
+	content="text/html; charset=EUC-JP">
+</HEAD>
+
+<BODY BGCOLOR="#E6E6FA">
+<PRE>
+		変数名の付け方ルール
+
+○ 標準パターン (例 log.cf lock.cf)
+
+use_変数		=	yes/no
+
+# ディレクトリなら最後に _dir がつくことが望ましい
+変数_dir		=	文字列
+
+# ファイルなら最後に _file がつくことが望ましい
+変数_file		=	文字列
+
+変数_type		=	文字列
+
+変数_format		=	文字列
+
+変数_format_type	=	文字列
+
+変数_limit		=	文字列(数字だけど文字列扱い)
+
+変数_upper_limit	=	文字列(数字だけど文字列扱い)
+
+変数_lower_limit	=	文字列(数字だけど文字列扱い)
+
+
+
+○ パターン２ (例 acl.cf )
+
+変数_restrictions	=	reject_属性 
+				permit_なんとか
+
+属性 			=	パターン1
+				パターン2
+				…
+</PRE>
+</BODY>
+</HTML>

@@ -1,3 +1,5 @@
+CONV = doc/bin/text2html.pl
+
 all: test
 
 install:
@@ -16,4 +18,7 @@ doc: html
 
 html:
 	@ (cd fml/lib/;make html)
+	@ (cd fml/etc/;make html)
 	@ (cd cpan/dist/;make html)
+	@ $(CONV) 00_README.ja.txt > fml/doc/install.ja.html
+
