@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.25 2002/04/21 13:52:02 fukachan Exp $
+# $FML: newml.pm,v 1.26 2002/04/23 09:30:22 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -186,11 +186,18 @@ sub _update_aliases
     }
     else {
 	print STDERR "$ml_name is a new ml. updating aliases ...\n";
-	system "cat $dst >> $alias";
-	unlink $dst;
+	eval q{
+	    use File::Utils qw(append);
+	    append($dst, $alias);
+	    unlink $dst;
 
-	my $prog = $config->{ path_postalias };
-	system "$prog $alias";
+	    use FML::Command::PostfixControl;
+	    my $postfix = new FML::Command::PostfixControl;
+	    $postfix->update_alias($curproc, {
+		alias_maps => [ $alias ],
+	    });
+	};
+	croak($@) if $@;
     }
 }
 
