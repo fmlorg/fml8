@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.20 2002/09/11 23:18:20 fukachan Exp $
+# $FML: DBI.pm,v 1.21 2002/09/22 14:56:58 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -18,7 +18,7 @@ my $debug = 0;
 
 =head1 NAME
 
-IO::Adapter::DBI - DBI
+IO::Adapter::DBI - DBI abstraction layer
 
 =head1 SYNOPSIS
 
@@ -27,9 +27,8 @@ IO::Adapter::DBI - DBI
 This module is a top level driver to talk with a DBI server in SQL
 (Structured Query Language).
 
-The model dependent SQL statement is expected to be holded in
-other modules in such as C<IO::Adapter::SQL::> class.
-Each model name is specified at $args->{ schema } in new($args).
+The model dependent SQL statement is expected to be given as
+parameters.
 
 =head1 METHODS
 
@@ -207,6 +206,8 @@ sub get_next_key
 sub get_next_value
 {
     my ($self, $args) = @_;
+
+    # XXX-TODO 'get_net_value() not implemented. (why ?)
     croak('get_net_value() not implemented');
 }
 
@@ -292,6 +293,7 @@ sub add
 
     $self->open();
 
+    # XXX-TODO: &address hard-coded.
     $query =~ s/\&address/$addr/g;
     $self->execute({ query => $query });
 
@@ -312,6 +314,7 @@ sub delete
 
     $self->open();
 
+    # XXX-TODO: &address hard-coded.
     $query =~ s/\&address/$addr/g;
     $self->execute({ query => $query });
 
@@ -343,11 +346,14 @@ sub md_find
 
     $self->open();
 
+    # XXX-TODO: &regexp hard-coded.
     $query =~ s/\&regexp/$regexp/g;
     $self->execute({ query => $query });
 
     if (defined $self->{ _res }) {
 	my ($row);
+
+      RES:
 	while (defined ($row = $self->{ _res }->fetchrow_arrayref)) {
 	    $x = join(" ", @$row);
 
@@ -361,10 +367,10 @@ sub md_find
 	    }
 	    else {
 		if ($case_sensitive) {
-		    last if $x =~ /$regexp/;
+		    last RES if $x =~ /$regexp/;
 		}
 		else {
-		    last if $x =~ /$regexp/i;
+		    last RES if $x =~ /$regexp/i;
 		}
 	    }
 	}

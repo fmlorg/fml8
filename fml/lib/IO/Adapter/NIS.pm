@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: NIS.pm,v 1.18 2002/09/11 23:18:20 fukachan Exp $
+# $FML: NIS.pm,v 1.19 2002/09/22 14:56:59 fukachan Exp $
 #
 
 package IO::Adapter::NIS;
@@ -60,6 +60,7 @@ sub configure
     my ($self, $me) = @_;
     my ($type) = ref($self) || $self;
 
+    # XXX-TODO: we call "ypmatch" but should use full-path if could.
     # emulate an array on memory
     my $key        = $me->{_name};
     my (@x)        = split(/:/, `ypmatch $key group.byname`);
@@ -82,7 +83,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

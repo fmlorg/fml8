@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Array.pm,v 1.25 2002/09/11 23:18:19 fukachan Exp $
+# $FML: Array.pm,v 1.26 2002/09/22 14:56:58 fukachan Exp $
 #
 
 package IO::Adapter::Array;
@@ -16,7 +16,7 @@ use IO::Adapter::ErrorStatus qw(error_set error error_clear);
 
 =head1 NAME
 
-IO::Adapter::Array - base class for IO emulation for the ARRAY
+IO::Adapter::Array - base class for IO emulation for ARRAY_REF.
 
 =head1 SYNOPSIS
 
@@ -30,7 +30,7 @@ IO::Adapter::Array - base class for IO emulation for the ARRAY
 
 =head1 DESCRIPTION
 
-emulate IO operation for the ARRAY.
+emulate IO operation for the ARRAY_REF on memory.
 One array is similar to a set of primary keys without optional values
 such as a file:
 
@@ -64,7 +64,7 @@ sub new
 
 =item C<open($args)>
 
-open IO for the array. $args is a hash reference.
+open IO for the array ARRAY_REF. $args is a hash reference.
 The option follows:
 
    $args = {
@@ -75,6 +75,7 @@ The option follows:
 $flag is "r" only (read only) now.
 
 =cut
+
 
 # Descriptions: open() emulation
 #    Arguments: OBJ($self) HASH_REF($args)
@@ -88,7 +89,7 @@ sub open
 {
     my ($self, $args) = @_;
     my $flag    = $args->{ flag } || 'r';
-    my $r_array = $self->{ _array_reference};
+    my $r_array = $self->{ _array_reference };
 
     if ($flag ne 'r') {
 	$self->error_set("Error: type=$self->{_type} is read only.");
@@ -112,7 +113,7 @@ the same as get_next_value().
 
 =item C<get_next_key()>
 
-return the next element of the array
+return the next element of the array.
 
 =item C<get_next_value()>
 
@@ -139,7 +140,8 @@ sub get_next_key
     my ($self, $args) = @_;
     my $i  = $self->{_counter}++;
     my $ra = $self->{_elements};
-    defined $$ra[ $i ] ? $$ra[ $i ] : undef;
+
+    return( defined $$ra[ $i ] ? $$ra[ $i ] : undef );
 }
 
 
@@ -155,7 +157,7 @@ sub get_next_value
 
 =head2 C<getpos()>
 
-return the current position in the array
+return the current position in the array.
 
 =head2 C<setpos($pos)>
 

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: LDAP.pm,v 1.12 2002/09/11 23:18:20 fukachan Exp $
+# $FML: LDAP.pm,v 1.13 2002/09/22 14:56:59 fukachan Exp $
 #
 
 package IO::Adapter::LDAP;
@@ -32,6 +32,8 @@ not yet
 
 =cut
 
+# XXX-TODO: NOT IMPLENETED.
+
 
 # Descriptions: standard constructor
 #    Arguments: OBJ($self)
@@ -56,7 +58,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
