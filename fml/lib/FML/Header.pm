@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.78 2004/07/23 15:59:00 fukachan Exp $
+# $FML: Header.pm,v 1.79 2004/10/28 03:34:47 fukachan Exp $
 #
 
 package FML::Header;
@@ -501,8 +501,9 @@ sub rewrite_reply_to
 sub rewrite_errors_to
 {
     my ($header, $config, $rw_args) = @_;
-
-    $header->add('Errors-To', $config->{ maintainer });
+    my $value = $config->{ outgoing_mail_header_errors_to };
+ 
+    $header->add('Errors-To', $value);
 }
 
 
