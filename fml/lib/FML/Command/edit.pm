@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: edit.pm,v 1.3 2001/07/15 11:45:39 fukachan Exp $
+# $FML: edit.pm,v 1.4 2001/07/15 12:03:37 fukachan Exp $
 #
 
 package FML::Command::edit;
@@ -44,10 +44,11 @@ sub edit
     use FML::Config;
     my $c = new FML::Config;
 
+    # read configuration. configuration is holded in FML:Config space.
     $c->read( $config_cf );
 
-    # replace/ovewrite $config_cf
-    # old $config_cf is backup'ed to $config_cf.bak
+    # ovewrite $config_cf
+    # after old $config_cf is backup'ed to $config_cf.bak
     $c->write( $config_cf );
 }
 
