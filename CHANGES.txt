@@ -15,6 +15,31 @@
 	rename $reply_message_* -> $report_mail_*
 	change default vale of $log_command_tail_starting_location
 
+	[*_program -> *_function]
+	
+	$use_command_mail_program   -> $use_command_mail_function
+	$use_digest_program         -> $use_article_digest_function
+	$use_distribute_program	    -> $use_article_post_function
+	$use_error_analyzer_program -> $use_error_mail_analyzer_function
+	
+	[command list]
+	
+	$commands_for_stranger   -> $anonymous_command_mail_allowed_commands
+	$commands_for_user            -> $user_command_mail_allowed_commands
+	$commands_for_privileged_user -> $admin_command_mail_allowed_commands
+	$commands_for_admin_cgi	      -> $admin_cgi_allowed_commands
+	
+	[restrictions]
+	
+	$post_restrictions -> $article_post_restrictions
+	$post_restrictions_reject_notice_data_type
+	-> $article_post_restrictions_reject_notice_data_type
+	
+	$command_restrictions -> $command_mail_restrictions
+	permit_commands_for_stranger -> permit_anonymous_command_mail
+	
+	$admin_command_restrictions -> $admin_command_mail_restrictions
+
 2004/03/04
 
    コマンドメールのコードを全面的に書き直した。
@@ -6354,4 +6379,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.185 2004/03/11 15:48:21 fukachan Exp $
+$FML: CHANGES.txt,v 1.186 2004/03/11 15:53:38 fukachan Exp $
