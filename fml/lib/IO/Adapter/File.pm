@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.55 2004/04/11 12:58:39 fukachan Exp $
+# $FML: File.pm,v 1.56 2004/05/25 04:03:06 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -440,23 +440,32 @@ delete lines with key $key from this map.
 sub delete
 {
     my ($self, $key) = @_;
+    my $found = 0;
 
     $self->open("w");
 
     my $fh = $self->{ _fh };
     my $wh = $self->{ _wh };
 
-    if (defined $fh) {
-	my $key = quotemeta($key);
+    if (defined $fh && defined $wh) {
 	my $buf;
+
+	$wh->autoflush(1);
 
       FILE_IO:
 	while ($buf = <$fh>) {
-	    next FILE_IO if $buf =~ /^$key\s+\S+|^$key\s*$/;
+	    if ($buf =~ /^$key\s+\S+|^$key\s*$/) {
+		$found++;
+		next FILE_IO;
+	    }
 	    print $wh $buf;
 	}
-	$fh->close;
 	$wh->close;
+	$fh->close;
+
+	unless ($found) {
+	    $self->error_set("Error: not match");
+	}
     }
     else {
 	$self->error_set("Error: cannot open file=$self->{ _file }");
