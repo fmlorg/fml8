@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Convert.pm,v 1.12 2002/09/28 09:27:00 fukachan Exp $
+# $FML: Convert.pm,v 1.13 2002/12/20 03:40:48 fukachan Exp $
 #
 
 
@@ -61,9 +61,10 @@ sub convert
    my ($in, $out, $config) = @_;
 
    if (defined $in && defined $out && defined $config) {
-       while (<$in>) {
-	   $_ = _replace($_, $config) if /__/;
-	   print $out $_;
+       my $buf;
+       while ($buf = <$in>) {
+	   $buf = _replace($buf, $config) if $buf =~ /__/;
+	   print $out $buf;
        }
    }
    else {
