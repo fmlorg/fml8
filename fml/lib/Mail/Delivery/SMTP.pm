@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SMTP.pm,v 1.5 2001/05/04 14:32:35 fukachan Exp $
+# $FML: SMTP.pm,v 1.6 2001/06/02 12:38:21 fukachan Exp $
 #
 
 
@@ -751,7 +751,7 @@ sub _send_data_to_mta
 	$self->_send_body_to_mta($socket, $body);
 
 	# end "DATA" transaction
-	$self->_send_command(".");
+	$self->_send_command("\r\n.");
 	$self->_read_reply;
     }
 }
