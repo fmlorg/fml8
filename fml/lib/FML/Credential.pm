@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.41 2003/01/23 21:42:20 fukachan Exp $
+# $FML: Credential.pm,v 1.42 2003/02/01 05:25:51 fukachan Exp $
 #
 
 package FML::Credential;
@@ -323,6 +323,9 @@ sub has_address_in_map
     my ($user, $domain) = split(/\@/, $address);
     my $status          = 0;
 
+    # reset the matched result;
+    $self->_save_address('');
+
     use IO::Adapter;
     my $obj = new IO::Adapter $map, $config;
 
@@ -346,6 +349,7 @@ sub has_address_in_map
 	    if ($self->is_same_address($r, $address)) {
 		print STDERR "\tmatch!\n" if $debug;
 		$status = 1; # found
+		$self->_save_address($r);
 		last LOOP;
 	    }
 	    else {
@@ -360,6 +364,56 @@ sub has_address_in_map
     }
 
     return $status;
+}
+
+
+=head2 matched_address()
+
+return the latest matched address.
+
+=cut
+
+
+# XXX-TODO: matched_address() returns the latest one but
+# XXX-TODO: wrong if x@A.B and x@A.b matches.
+
+
+# Descriptions: return the latest matched address.
+#               used together with has_address_in_map().
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub matched_address
+{
+    my ($self) = @_;
+    return $self->_get_address();
+}
+
+
+# Descriptions: save the last matched address 
+#    Arguments: OBJ($self) STR($address)
+# Side Effects: update $self->{ _last_matched_address };
+# Return Value: STR
+sub _save_address
+{
+    my ($self, $address) = @_;
+    $self->{ _last_matched_address } = $address if defined $address;
+}
+
+
+# Descriptions: return the last matched address 
+#    Arguments: OBJ($self) STR($address)
+# Side Effects: none
+# Return Value: STR
+sub _get_address
+{
+    my ($self, $address) = @_;
+
+    if (defined $self->{ _last_matched_address }) {
+	return $self->{ _last_matched_address };
+    }
+
+    return '';
 }
 
 
