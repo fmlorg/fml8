@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: FileUtils.pm,v 1.2 2002/03/30 11:08:34 fukachan Exp $
+# $FML: FileUtils.pm,v 1.3 2002/04/07 12:13:03 fukachan Exp $
 #
 
 package FML::Command::FileUtils;
@@ -16,7 +16,7 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Command::FileUtils - utilities for file handling
+FML::Command::FileUtils - utilities to handle files
 
 =head1 SYNOPSIS
 
@@ -77,6 +77,7 @@ sub remove
     chdir $ml_home_dir || croak("cannot chdir \$ml_home_dir");
 
     for my $file (@$argv) {
+	# If $file is a safe pattern, o.k. Try to remove it!
 	if ($file =~ /^$file_regexp$/) {
 	    if (-f $file) {
 		unlink $file;
@@ -100,9 +101,11 @@ sub remove
 		$is_error++;
 	    }
 	}
+	# $file filename is unsafe. stop.
 	else {
+	    LogError("<$file> is insecure");
 	    $curproc->reply_message_nl('command.insecure',
-				       "insecure input $file");
+				       "insecure input");
 	    croak("remove: insecure argument");
 	}
     }
