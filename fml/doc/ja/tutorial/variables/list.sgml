@@ -1271,6 +1271,15 @@ outgoing_mail_cache_size</entry>
 </row>
 <row>
 <entry>
+outgoing_mail_header_errors_to</entry>
+<entry>
+ Errors-To: フィールド</entry>
+<entry>
+$maintainer
+   </entry>
+</row>
+<row>
+<entry>
 outgoing_mail_header_x_ml_name</entry>
 <entry>
  X-ML-Name: および X-Sequence にあらわれる ML 名</entry>

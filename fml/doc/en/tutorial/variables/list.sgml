@@ -1279,6 +1279,15 @@ outgoing_mail_cache_size</entry>
 </row>
 <row>
 <entry>
+outgoing_mail_header_errors_to</entry>
+<entry>
+ Errors-To: field</entry>
+<entry>
+$maintainer
+   </entry>
+</row>
+<row>
+<entry>
 outgoing_mail_header_x_ml_name</entry>
 <entry>
  ml name in both X-ML-Name: and X-Sequence header fields.</entry>
