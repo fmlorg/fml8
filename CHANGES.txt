@@ -11,7 +11,40 @@
 	気をつけてください。
 
 
+2004/11/21
+
+   メニュー形式で設定変更を可能にする
+	まだ CUI だけしかできていないし、とりあえず使えるけど準備段階
+
+   variables
+	define $fml_default_{cui,gui}_menu for configuration interfaces.
+
+   installer
+	install menu
+	
+   FML::Config 
+	dump_variables can return results as HASH_REF if get_diff_as_hash_ref
+	mode specified.
+	
+	implement merge_to_file() method to dump hash values into
+	configuration file.
+	
+   FML::Process::Kernel 
+	import default_{cui,gui}_menu from main.cf name space.
+	
+   FML::Process::Utils 
+	implement get_{cui,gui}_menu() methods.
+	
+   FML::Config::Menu 
+	fix menu path from testbed one.
+
 2004/11/14
+
+   Mail::Message::ToHTML 
+	add monthly thread index
+
+   FML::Restriction::Post 
+	define $article_post_article_thread_lifetime anyway (hmm, valid?)
 
    variables
 	article_post_article_thread_lifetime ?
@@ -7821,4 +7854,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.228 2004/10/31 08:38:30 fukachan Exp $
+$FML: CHANGES.txt,v 1.229 2004/11/14 12:06:19 fukachan Exp $
