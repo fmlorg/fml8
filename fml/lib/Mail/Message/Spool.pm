@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #
-# $FML: Spool.pm,v 1.3 2002/03/31 09:42:36 fukachan Exp $
+# $FML: Spool.pm,v 1.4 2002/04/03 11:33:00 fukachan Exp $
 #
 
 package Mail::Message::Spool;
@@ -90,6 +90,39 @@ sub filepath
 	}
 
 	return $file;
+    }
+    else {
+	croak("filepath: invalid input");
+    }
+}
+
+
+# Descriptions: return article dirpath with subdir if needed
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: STR(dir path)
+sub dirpath
+{
+    my ($self, $args) = @_;
+
+    if (defined $args->{ base_dir } && defined $args->{ id }) {
+	my $base_dir = $args->{ base_dir };
+	my $id       = $args->{ id };
+	my $is_hash  = 0;
+	my $dir      = '';
+	my $unit     = 1000;
+	my $subdir   = int($id/$unit);
+
+	if (defined $args->{ use_subdir }) {
+	    $is_hash = 1;
+	    use File::Spec;
+	    $dir = File::Spec->catfile($base_dir, $subdir);
+	}
+	else {
+	    $dir = $base_dir;
+	}
+
+	return $dir;
     }
     else {
 	croak("filepath: invalid input");
