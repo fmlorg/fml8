@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.52 2002/04/19 05:21:58 fukachan Exp $
+# $FML: Message.pm,v 1.53 2002/04/25 04:58:08 fukachan Exp $
 #
 
 package Mail::Message;
@@ -479,7 +479,12 @@ sub parse
     $ref_body->_prev_message_is( $me );
 
     # return information
-    $result->{ body_size } = length($$InComingMessage);
+    if (defined($InComingMessage)) {
+	$result->{ body_size } = length($$InComingMessage);
+    }
+    else {
+	$result->{ body_size } = 0;
+    }
     $me->{ data_info }     = $result;
 
     # return the object
