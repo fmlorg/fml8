@@ -4,14 +4,17 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledDir.pm,v 1.21 2003/08/23 04:35:49 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.22 2004/01/24 09:04:00 fukachan Exp $
 #
 
 package Tie::JournaledDir;
 
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $debug);
 use Carp;
+
+$debug = 0;
+
 
 =head1 NAME
 
@@ -109,9 +112,11 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {};
 
-    my $dir   = $args->{ 'dir' }   || '';
-    my $unit  = $args->{ 'unit' }  || 'day'; # 1 day
-    my $limit = $args->{ 'limit' } || 90;
+    # parameters
+    my $dir    = $args->{ 'dir'    } ||    '';
+    my $unit   = $args->{ 'unit'   } || 'day'; #      day.
+    my $limit  = $args->{ 'limit'  } ||    90; #  90 days.
+    my $expire = $args->{ 'expire' } ||   120; # 120 days.
 
     # sanity.
     unless ($dir) { croak("dir unspecified");}
@@ -123,8 +128,14 @@ sub new
     }
 
     # set up object
-    $me->{ '_dir' }   = $dir;
-    $me->{ '_files' } = \@filelist;
+    $me->{ '_dir' }    = $dir;
+    $me->{ '_files' }  = \@filelist;
+    $me->{ '_limit' }  = $limit;
+    $me->{ '_expire' } = $expire;
+
+    # expire old cache files, firstly.
+    expire($me);
+
     return bless $me, $type;
 }
 
@@ -152,6 +163,40 @@ sub _file_name
 
     use File::Spec;
     return File::Spec->catfile($dir, $fn);
+}
+
+
+# Descriptions: expire too old files.
+#    Arguments: OBJ($self)
+# Side Effects: remove too old files.
+# Return Value: none
+sub expire
+{
+    my ($self) = @_;
+    my $dir    = $self->{ '_dir' };
+    my $limit  = $self->{ '_expire' };
+    my $when   = time - $limit * 24 * 3600;
+    
+    use File::stat;
+    use File::Spec;
+    use DirHandle;
+    my $dh = new DirHandle $dir;
+    if (defined $dh) {
+	my ($e, $f, $st, $mt);
+
+      ENTRY:
+	while ($e = $dh->read()) {
+	    next ENTRY if $e =~ /^\./o;
+
+	    $f  = File::Spec->catfile($dir, $e);
+	    $st = stat($f);
+	    $mt = $st->mtime;
+
+	    if ($mt < $when) {
+		unlink($f) if -f $f;
+	    }
+	}
+    }
 }
 
 
@@ -386,6 +431,19 @@ sub get_all_values_as_hash_ref
     # return all values assigned to the key.
     #        { key => [ value1, value2, ... ] }.
     return $result;
+}
+
+
+#
+# DEBUG
+#
+if ($0 eq __FILE__) {
+    $debug  = 2;
+    my $dir = shift @ARGV || croak("dir unspecified.");
+    my $tie = new Tie::JournaledDir {
+	dir => $dir,
+    };
+    $tie->expire();
 }
 
 
