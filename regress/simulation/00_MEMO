@@ -5,6 +5,12 @@
 ○	$curproc->{ main_cf } のパラメータをむやみに/気軽によびだしてはいけない。
 	きちんとしたアクセスメソッドを用意するべきである。
 
+		FML::Process::Kernel
+		FML::Process::Switch
+		FML::Process::Utils
+
+	以外に main_cf を直接呼び出すべきではない。
+
 
 ○	IO::Adapter::find() の定義を考え直せ
 
@@ -374,4 +380,4 @@ TODO
 
 
 ----------
-$FML$
+$FML: 00_MEMO,v 1.1 2002/02/02 07:03:27 fukachan Exp $
