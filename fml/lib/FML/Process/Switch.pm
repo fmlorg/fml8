@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.49 2001/12/22 16:10:00 fukachan Exp $
+# $FML: Switch.pm,v 1.50 2001/12/23 11:37:07 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -12,7 +12,7 @@ package FML::Process::Switch;
 use strict;
 use Carp;
 use vars qw($debug);
-
+use File::Spec;
 
 =head1 NAME
 
@@ -124,7 +124,6 @@ sub main::Bootstrap2
 
     # 2.3 prepare @$cf
     #     XXX hmm, .. '/etc/fml/site_default_config.cf' is good ???
-    use File::Spec;
     my $sitedef =
       File::Spec->catfile($main_cf->{ config_dir }, 'site_default_config.cf');
     unshift(@$cf, $sitedef);
@@ -227,19 +226,21 @@ sub _usual_parse_argv
 	# 1. for the first time
 	#   a) speculate "/var/spool/ml/$_" looks a $ml_home_dir ?
 	unless ($found_cf) {
-	    my $x = "$ml_home_prefix/$_";
-	    if (-d $x && -f "$x/config.cf") {
-		$found_cf = 1;
+	    my $x  = File::Spec->catfile($ml_home_prefix, $_);
+	    my $cf = File::Spec->catfile($x, "config.cf");
+	    if (-d $x && -f $cf) {
+		$found_cf    = 1;
 		$ml_home_dir = $x;
-		push(@cf, "$x/config.cf");
+		push(@cf, $cf);
 	    }
 	}
 
 	# 2. /var/spool/ml/elena looks a $ml_home_dir ?
 	if (-d $_) {
 	    $ml_home_dir = $_;
-	    if (-f "$_/config.cf") {
-		push(@cf, "$_/config.cf");
+	    my $cf = File::Spec->catfile($_, "config.cf");
+	    if (-f $cf) {
+		push(@cf, $cf);
 		$found_cf = 1;
 	    }
 	}
@@ -278,10 +279,10 @@ sub _makefml_parse_argv
 	}
 
 	# save $ml_home_dir value in $main_cf directly
-	$main_cf->{ ml_home_dir } = "$ml_home_prefix/$ml_name";
+	$main_cf->{ ml_home_dir } = File::Spec->catfile($ml_home_prefix, $ml_name);
 
 	# config.cf
-	my $cf = "$ml_home_prefix/$ml_name/config.cf";
+	my $cf = File::Spec->catfile($ml_home_prefix, $ml_name, "config.cf");
 	my @cf = ($cf);
 
 	return \@cf;
@@ -515,6 +516,23 @@ L<FML::Process::Configure>,
 L<FML::Process::ThreadTrack>,
 L<FML::Process::MailErrorAnalyzer>
 
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself.
+
+=head1 HISTORY
+
+FML::Process::Switch appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
 =cut
+
 
 1;
