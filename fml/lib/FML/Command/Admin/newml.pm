@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.58 2003/01/07 08:38:32 fukachan Exp $
+# $FML: newml.pm,v 1.59 2003/01/25 12:48:39 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -274,13 +274,22 @@ sub _is_mta_alias_maps_has_ml_entry
     eval q{
 	use FML::MTAControl;
 
-	# XXX-TODO: procmail ?
-	for my $mta (@$list) {
-	    my $obj = new FML::MTAControl;
-	    $found = $obj->find_key_in_alias_maps($curproc, $params, {
-		mta_type   => $mta,
-		key        => $ml_name,
-	    });
+	my $obj = new FML::MTAControl;
+	if ($obj->is_user_entry_exist_in_passwd($ml_name)) { 
+	    $found = 1;
+	}
+
+	unless ($found) {
+	    # XXX-TODO: procmail ?
+	  MTA:
+	    for my $mta (@$list) {
+		my $obj = new FML::MTAControl;
+		$found = $obj->find_key_in_alias_maps($curproc, $params, {
+		    mta_type   => $mta,
+		    key        => $ml_name,
+		});
+		last MTA if $found;
+	    }
 	}
     };
     croak($@) if $@;
