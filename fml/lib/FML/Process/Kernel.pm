@@ -19,7 +19,7 @@ use FML::Parse;
 use FML::Header;
 use FML::Config;
 use FML::Log qw(Log);
-use FML::Lock;
+use File::SimpleLock;
 use FML::Messages;
 
 
@@ -117,8 +117,8 @@ sub lock
 	}
     }
 
-    require FML::Lock;
-    my $lockobj = new FML::Lock;
+    require File::SimpleLock;
+    my $lockobj = new File::SimpleLock;
 
     return 0 unless $lock_file ;
     my $r = $lockobj->lock( { file => $lock_file } );
