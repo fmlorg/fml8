@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.42 2002/04/08 12:44:25 fukachan Exp $
+# $FML: Command.pm,v 1.43 2002/04/11 05:24:41 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -132,7 +132,15 @@ XXX Each command determines need of lock or not.
 sub run
 {
     my ($curproc, $args) = @_;
-    $curproc->_evaluate_command($args);
+
+    if ($curproc->permit_command($args)) {
+	$curproc->_evaluate_command($args);
+    }
+    else {
+	$curproc->reply_message_nl("error.system_accounts",
+				   "deny request from system accounts");
+	Log("deny command");
+    }
 }
 
 
