@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML$
+# $FML: varclass.pl,v 1.1 2003/06/15 05:24:03 fukachan Exp $
 # based on 'FML: check_varname.pl,v 1.3 2003/05/30 13:59:17 fukachan Exp'
 #
 
@@ -8,7 +8,7 @@ use strict;
 use Carp;
 use vars qw(@exceptional $debug $varname %varname %base %done %top);
 
-my %option  = ();
+my %option = ();
 use Getopt::Long;
 GetOptions(\%option, qw(debug! d! sgml! html!));
 
@@ -70,7 +70,13 @@ sub _regist
     my ($x) = @_;
     my $s = (split(/_/, $x))[0];
 
-    $top{ $s }  = $s;
+    if ($x =~ /^[a-zA-Z0-9]+_command$/) {
+	$top{ $x } = $x;
+    }
+    else {
+	$top{ $s }  = $s;
+    }
+
     $base{ $x } = $x;
 
     return $x;
