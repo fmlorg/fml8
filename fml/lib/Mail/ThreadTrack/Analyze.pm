@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Analyze.pm,v 1.6 2001/11/03 07:47:31 fukachan Exp $
+# $FML: Analyze.pm,v 1.7 2001/11/03 08:50:38 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -433,38 +433,6 @@ sub _create_thread_id_strings
     # thread_id used as primary key
     my $id_syntax   = $config->{ thread_id_syntax };
     return sprintf($id_syntax, $id);
-}
-
-
-=head2 rewrite_header($msg)
-
-=cut
-
-
-# Descriptions: 
-#    Arguments: $self $msg
-# Side Effects: 
-# Return Value: none
-sub rewrite_header
-{
-    my ($self, $msg) = @_;
-    my $config  = $self->{ _config };
-    my $loctype = $config->{ thread_subject_tag_location } || 'appended';
-    my $header  = $msg->rfc822_message_header();
-    my $tag     = $self->{ _thread_subject_tag };
-
-    # append the thread tag to the subject
-    my $subject = $header->get('subject') || '';
-
-    if ($loctype eq 'appended') {
-	$header->replace('subject', $subject ." ". $tag);
-    }
-    elsif ($loctype eq 'prepended') {
-	$header->replace('subject', $tag ." ". $subject);
-    }
-    else {
-	$self->log("unknown thread_subject_tag_location type");
-    }
 }
 
 
