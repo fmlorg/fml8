@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: edit.pm,v 1.4 2001/07/15 12:03:37 fukachan Exp $
+# $FML: edit.pm,v 1.5 2001/07/15 23:20:29 fukachan Exp $
 #
 
 package FML::Command::edit;
@@ -26,9 +26,17 @@ See C<FML::Command> for more details.
 
 =head2 C<edit( $address )>
 
+  TODO
+
+now we can read and write config.cf, not change it.
+
 =cut
 
 
+# Descriptions: edit config.cf
+#    Arguments: $self $curproc $optargs 
+# Side Effects: update config.cf
+# Return Value: none
 sub edit
 {
     my ($self, $curproc, $optargs) = @_;
@@ -46,6 +54,12 @@ sub edit
 
     # read configuration. configuration is holded in FML:Config space.
     $c->read( $config_cf );
+
+    # modify $c (config) object
+    # XXX TODO
+    # XXX ... snip ... 
+    # $c->set('key', 'value');  # set up
+    # $c->regist('key');        # add list to write into config.cf
 
     # ovewrite $config_cf
     # after old $config_cf is backup'ed to $config_cf.bak

@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.35 2001/07/15 08:38:22 fukachan Exp $
+# $FML: Config.pm,v 1.36 2001/07/15 23:35:37 fukachan Exp $
 #
 
 package FML::Config;
@@ -147,6 +147,12 @@ sub set
     $self->{ $key } = $value;
 }
 
+
+sub regist
+{
+    my ($self, $key) = @_;
+    push(@{ $self->{ _newly_added_keys } }, $key);
+}
 
 
 =head2  C<overload( filename )>
@@ -335,14 +341,18 @@ sub write
     my $fh = IO::File::Atomic->open($file);
 
     # back up config.cf firstly
-    my $st = IO::File::Atomic->copy($file, $file.".bak");
-    unless ($st) {
-	Log("cannot backup $file");
+    my $status = IO::File::Atomic->copy($file, $file.".bak");
+    unless ($status) {
+	croak "cannot backup $file";
     }
 
     if (defined $fh) {
 	$fh->autoflush(1);
-	for my $k (@$order) {
+
+	# XXX it works not well ??? ( regist() not works ??)
+	# XXX get variable list modified in this process
+	my $newkeys = $self->{ _newly_added_keys };
+	for my $k (@$order, @$newkeys) {
 	    print $fh $comment->{$k} if defined $comment->{$k};
 	    print $fh "$k = ";
 	    print $fh join("\n\t", split(/\s+/, $config->{$k}));
