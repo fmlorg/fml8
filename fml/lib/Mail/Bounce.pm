@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Bounce.pm,v 1.7 2001/04/12 13:37:15 fukachan Exp $
+# $FML: Bounce.pm,v 1.8 2001/04/12 14:12:00 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -20,11 +20,42 @@ Mail::Bounce - analye error messages
 
 =head1 SYNOPSIS
 
+    use Mail::Message;
+    my $msg = Mail::Message->parse( { fd => \*STDIN } );
+
+    use Mail::Bounce;
+    my $bouncer = new Mail::Bounce;
+    $bouncer->analyze( $msg );
+
+    # show results
+    for my $a ( $bouncer->address_list ) {
+	print "address: $a\n";
+
+	print " status: ";
+	print $bouncer->status( $a );
+	print "\n";
+
+	print " reason: ";
+	print $bouncer->reason( $a );
+	print "\n";
+	print "\n";
+    }
+
+
 =head1 DESCRIPTION
+
+try to analyze the given error message, which is a Mail::Message
+object.
+
+For non DSN pattern,
+try to analyze it by using modules in C<Mail::Bounce::> 
+which can recognize MTA specific and domian specific patterns.
 
 =head1 METHODS
 
 =head2 C<new()>
+
+standard new() method.
 
 =cut
 
@@ -37,6 +68,19 @@ sub new
     return bless $me, $type;
 }
 
+
+=head2 C<analyze($msg)>
+
+C<$msg> is a C<Mail::Message> object.  
+This routine is a top level switch which provides the entrance 
+for C<Mail::Bounce::> modules, for example, C<Mail::Bounce::DSN>.
+
+C<Mail::Bounce::$model::analyze( \$msg, \$result )> 
+method in each module is the actual model specific analyzer.
+C<$result> has an answer of analyze if the error message pattern is
+already known.
+
+=cut
 
 sub analyze
 {
@@ -76,12 +120,32 @@ sub analyze
 }
 
 
+=head2 C<address_list()>
+
+return ARRAY of addresses found in the error message.
+
+=cut
+
+
 sub address_list
 {
     my ($self) = @_;
     my $result = $self->{ _result };
     return keys %$result;
 }
+
+
+=head2 C<status($addr)>
+
+return status (string) for C<$addr>.
+The status is extracted from C<result> analyze() method gives. 
+
+=head2 C<reason($addr)>
+
+return error reason (string) for C<$addr>.
+It is extracted from C<result> analyze() method gives. 
+
+=cut
 
 
 sub status
@@ -120,6 +184,15 @@ my @REGEXP = (
 	      $RE_JOUT,
 	      );
 
+
+=head2 C<look_japanese(string)>
+
+return 1 if C<string> looks Japanese one.
+return 0 unless.
+
+=cut
+
+
 sub look_japanese
 {
     my ($self, $buf) = @_;
@@ -131,6 +204,15 @@ sub look_japanese
     0;
 }
 
+
+=head2 C<address_clean_up(type, addr)>
+
+clean up C<addr> and return it.
+
+C<type> gives a special hint for some specific MTA or domain.
+It is rarely used.
+
+=cut
 
 sub address_clean_up
 {
