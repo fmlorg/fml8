@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Mailer.pm,v 1.1 2001/05/05 13:50:58 fukachan Exp $
+# $FML: Mailer.pm,v 1.2 2001/05/06 12:59:21 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -94,6 +94,13 @@ sub send
     # recipient(s): expected to be given as string or HASH ARRAY
     my $recipient  = $args->{ recipient }  || undef;
     my $recipients = $args->{ recipients } || [ $recipient ] || undef;
+
+    # error
+    if ((defined($recipient) && ref($recipient) ne '') ||
+	(defined($recipients) && (ref($recipients)) ne 'ARRAY')) {
+	return 0;
+    }
+
 
     # Mail::Message object which is sent
     my $message    = $args->{ message } || undef;
