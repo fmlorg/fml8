@@ -513,12 +513,16 @@ sub _simple_print
     print $fd "-" x60;
     print $fd "\n";
 
-    my (@aid, $tid, $aid, $date, $age, $status) = ();
+    my ($tid, @article_id, $article_id, $date, $age, $status) = ();
     my $dh = new FML::Date;
     for $tid (sort @$ticket_id) {
-	(@aid)  = split(/\s+/, $rh->{ _articles }->{ $tid });
-	$aid    = $aid[0];       # the first one of article_id's
-	$date   = $dh->YYYYxMMxDD( $rh->{ _date }->{ $aid } , '/');
+	# get the first $article_id from the article_id list
+	(@article_id) = split(/\s+/, $rh->{ _articles }->{ $tid });
+	$article_id   = $article_id[0];
+
+	# determine $date for the $article_id
+	# $age and $status for $ticket_id
+	$date   = $dh->YYYYxMMxDD( $rh->{ _date }->{ $article_id } , '/');
 	$age    = $rh_age->{ $tid };
 	$status = $rh->{ _status }->{ $tid };
 
