@@ -93,6 +93,7 @@ sub assign
     # we do not rewrite the subject but save the extracted $ticket_id.
     if ($is_reply && $has_ticket_id) {
 	Log("reply message with ticket_id=$has_ticket_id");
+	$self->{ _status    } = 'going';
 	$self->{ _ticket_id } = $has_ticket_id;
     }
     elsif ($has_ticket_id) {
@@ -129,7 +130,7 @@ sub update_status
     my $content = $body->get_first_plaintext_message();
 
     if ($content =~ /^\s*close/ || $subject =~ /^\s*close/) {
-	$self->{ _status } = "close";
+	$self->{ _status } = "closed";
 	Log("ticket is closed");
     }
     else {
@@ -307,7 +308,7 @@ sub list_up
   TICEKT_LIST:
     while (($tid, $status) = each %$rh_status) {
 	if ($mode eq 'open_only') {
-	    next TICEKT_LIST unless $status eq 'open';
+	    next TICEKT_LIST if $status =~ /close/o;
 	}
 
 	# we get the date by the form 1999/09/13 
@@ -315,7 +316,7 @@ sub list_up
 	my ($aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
 	my $date  = $dh->YYYYxMMxDD( $rh->{ _date }->{ $aid } , '/');
 
-	printf("%10s  %5s  %-20s  %s\n", 
+	printf("%10s  %6s  %-20s  %s\n", 
 	       $date,
 	       $status,
 	       $tid,
