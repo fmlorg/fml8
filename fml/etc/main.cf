@@ -29,11 +29,17 @@ libexec_prefix	=	$default_prefix
 # Example: /usr/local/lib/fml
 lib_prefix	=	$default_prefix
 
+# Example: /usr/local/share/fml
+share_prefix	=	$default_prefix
+
 # Example: /usr/local/libexec/fml/$fml_version
 libexec_dir	= 	$libexec_prefix/libexec/fml/$fml_version
 
 # Example: /usr/local/lib/fml/$fml_version
 lib_dir		=	$lib_prefix/lib/fml/$fml_version
+
+# Example: /usr/local/share/fml/$fml_version
+share_dir	=	$share_prefix/share/fml/$fml_version
 
 # site local library location
 # which is prepared but not used by fml itself
