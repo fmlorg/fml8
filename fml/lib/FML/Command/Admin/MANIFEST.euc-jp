@@ -39,6 +39,7 @@ get		任意のファイルを取り寄せる ( MIME/multipart only )
 
 addadmin	add a new administrator
 byeadmin	remove the specified administrator
+(deladmin)
 
 password	password
 pass
@@ -50,4 +51,4 @@ pass
 help		admin のヘルプファイルを取り寄せる
 
 
-$FML: MANIFEST.euc-jp,v 1.7 2002/07/13 13:09:03 fukachan Exp $
+$FML: MANIFEST.euc-jp,v 1.8 2002/09/28 14:42:31 fukachan Exp $
