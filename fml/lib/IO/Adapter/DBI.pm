@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.14 2002/02/01 12:03:58 fukachan Exp $
+# $FML: DBI.pm,v 1.15 2002/07/23 13:06:36 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -14,6 +14,7 @@ use Carp;
 use IO::Adapter::ErrorStatus qw(error_set error error_clear);
 
 my $debug = 0;
+
 
 =head1 NAME
 
@@ -76,7 +77,7 @@ sub execute
     my $query  = $args->{  query };
     my $config = $self->{ _config };
 
-    print STDERR "execute query={$query}\n" if $debug;
+    print STDERR "\nexecute query={$query}\n\n" if $debug;
 
     undef $self->{ _res };
 
@@ -94,7 +95,8 @@ sub execute
 	}
     }
     else {
-	$self->error_set( $DBI::errstr );
+	print STDERR "no dbh\n" if $debug;
+	$self->error_set( "cannot take \$dbh" );
 	return undef;
     }
 }
@@ -283,9 +285,12 @@ sub add
     my $config = $self->{ _config };
     my $query  = $config->{ sql_add };
 
-    $query =~ s/\&address/$addr/g;
+    $self->open();
 
+    $query =~ s/\&address/$addr/g;
     $self->execute({ query => $query });
+
+    $self->close();
 }
 
 
@@ -300,9 +305,12 @@ sub delete
     my $config = $self->{ _config };
     my $query  = $config->{ sql_delete };
 
-    $query =~ s/\&address/$addr/g;
+    $self->open();
 
+    $query =~ s/\&address/$addr/g;
     $self->execute({ query => $query });
+
+    $self->close();
 }
 
 
@@ -345,14 +353,16 @@ sub replace
 sub md_find
 {
     my ($self, $regexp, $args) = @_;
+    my $config         = $self->{ _config };
+    my $query          = $config->{ sql_find };
     my $case_sensitive = $args->{ case_sensitive } ? 1 : 0;
+    my $want           = $args->{ want } || 'key,value';
     my $show_all       = $args->{ all } ? 1 : 0;
     my (@buf, $x);
 
-    my $query = $self->_build_sql_query({
-	query  => 'search',
-	regexp => $regexp,
-    });
+    $self->open();
+
+    $query =~ s/\&regexp/$regexp/g;
     $self->execute({ query => $query });
 
     if (defined $self->{ _res }) {
@@ -379,10 +389,13 @@ sub md_find
 	}
     }
     else {
+	print STDERR "no _res\n";
 	return undef;
     }
 
-   $show_all ? \@buf : $x;
+    $self->close();
+
+    return( $show_all ? \@buf : $x );
 }
 
 
