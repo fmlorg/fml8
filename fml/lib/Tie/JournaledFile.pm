@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: JournaledFile.pm,v 1.7 2001/08/05 13:03:31 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.8 2001/08/21 03:46:39 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -182,14 +182,15 @@ sub NEXTKEY
 	    print STDERR "   File.NEXTKEY: $key (ignored*)\n" if $debug;
 	    return undef;
 	}
-	# not found
+	# $key is found
 	else {
-	    print STDERR "   File.NEXTKEY: not found\n" if $debug;
+	    print STDERR "   File.NEXTKEY: $key found\n" if $debug;
 	    return $key;
 	}
     }
     # error: file handle is not defined.
-    else { 
+    else {
+	print STDERR "   File.NEXTKEY: file handle exhauseted" if $debug;
 	return undef;
     }
 }
