@@ -1,5 +1,5 @@
 <!--
-   $FML: filesystem.sgml,v 1.1 2004/05/28 05:03:38 fukachan Exp $
+   $FML: filesystem.sgml,v 1.2 2004/06/22 09:30:43 fukachan Exp $
 -->
 
 
@@ -54,15 +54,14 @@ MTA に再挑戦してもらうため、exit(EX_TEMPFAIL)でプロセスを異常終了させます。
 MTA から &fml8; を再呼出してもらうようにします。
 </para>
 
-</sect2>
-
-
 <caution>
 <para>
 記事番号は更新してしまったので、この処理以降、exit(EX_TEMPFAIL)
 で終了してはいけません。
 </para>
 </caution>
+
+</sect2>
 
 
 <sect2>
