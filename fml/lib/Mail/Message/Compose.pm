@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Compose.pm,v 1.6 2002/12/22 03:08:24 fukachan Exp $
+# $FML: Compose.pm,v 1.7 2004/01/02 14:42:48 fukachan Exp $
 #
 
 
@@ -19,7 +19,7 @@ use MIME::Lite;
 
 =head1 NAME
 
-Mail::Message::Compose - message composer
+Mail::Message::Compose - message composer.
 
 =head1 SYNOPSIS
 
