@@ -8,7 +8,7 @@
 # $FML$
 #
 
-package FML::Ticket::Model::toymodel;
+package FML::Ticket::Model::minimal_by_db;
 
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
@@ -21,12 +21,12 @@ require Exporter;
 
 =head1 NAME
 
-FML::Ticket::Model::toymodel - a ticket system toymodel
+FML::Ticket::Model::minimal_by_db - a ticket system minimal_by_db
 
 =head1 SYNOPSIS
 
-   use FML::Ticket::Model::toymodel;
-   my $ticket = FML::Ticket::Model::toymodel->new($curproc, $args);
+   use FML::Ticket::Model::minimal_by_db;
+   my $ticket = FML::Ticket::Model::minimal_by_db->new($curproc, $args);
    if (defined $ticket) {
       $ticket->assign($curproc, $args);
       $ticket->update_status($curproc, $args);
@@ -49,7 +49,7 @@ status.
                 A 
         -----------------
        |        |        |
-    toymodel  model2    ....
+    minimal_by_db  model2    ....
 
 =head1 METHODS
 
@@ -319,7 +319,7 @@ sub _update_index_db
 
 open DB.
 It uses tie() to bind a hash to a DB file.
-Our toymodel uses several DB files for
+Our minimal_by_db uses several DB files for
 C<%ticket_id>,
 C<%date>,
 C<%status>,
@@ -722,7 +722,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Ticket::Model::toymodel appeared in fml5 mailing list driver package.
+FML::Ticket::Model::minimal_by_db appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
