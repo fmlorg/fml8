@@ -2,14 +2,14 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-$FML: fml-devel.sgml,v 1.15 2001/04/26 11:02:39 fukachan Exp $
+$FML: book.sgml,v 1.1 2001/04/28 08:16:09 fukachan Exp $
 -->
 
 <!doctype book public "-//OASIS//DTD DocBook V3.1//EN" [
 	<!entity % include SYSTEM "include.sgml"> %include;
 ]>
 
-<book id="techtips">
+<book id="tips">
 
   &bookinfo;
 
