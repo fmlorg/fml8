@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.80 2003/09/19 13:08:56 fukachan Exp $
+# $FML: Utils.pm,v 1.81 2003/09/25 11:36:25 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1395,6 +1395,37 @@ sub language_of_html_file
 {
     my ($curproc) = @_;
     $curproc->language_default();
+}
+
+
+# Descriptions: set the current charset
+#    Arguments: OBJ($curproc) STR($category) STR($charset)
+# Side Effects: none
+# Return Value: none
+sub set_charset
+{
+    my ($curproc, $category, $charset) = @_; 
+    my $pcb = $curproc->pcb();
+
+    $pcb->set("charset", $category, $charset);
+}
+
+
+# Descriptions: get the current charset.
+#               The default value is given by $template_file_charset.
+#    Arguments: OBJ($curproc) STR($category)
+# Side Effects: none
+# Return Value: STR
+sub get_charset
+{
+    my ($curproc, $category) = @_; 
+    my $config   = $curproc->config();
+    my $pcb      = $curproc->pcb();
+    my $category = $category || "template_file";
+    my $default  = $config->{ "${category}_charset" } || 'us-ascii';
+    my $charset  = $pcb->get("charset", $category) || $default || 'us-ascii';
+
+    return $charset;
 }
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.30 2003/08/23 07:24:42 fukachan Exp $
+# $FML: SendFile.pm,v 1.31 2003/08/29 15:33:57 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -85,7 +85,7 @@ sub send_article
     my $config    = $curproc->config();
     my $ml_name   = $config->{ ml_name };
     my $spool_dir = $config->{ spool_dir };
-    my $charset   = $config->{ template_file_charset };
+    my $charset   = $curproc->get_charset("template_file");
     my $is_error  = 0;
 
     # command buffer = get 1
@@ -179,7 +179,7 @@ sub send_file
 
     # XXX-TODO: handle non Japanese.
     # XXX-TODO: care for Accept-Language: header field.
-    my $charset  = $config->{ reply_message_charset };
+    my $charset  = $curproc->get_charset("reply_message");
 
     # XXX-TODO: who validate $filename and $filepath ?
     $curproc->log("send_file: $filepath");

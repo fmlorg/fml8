@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Digest.pm,v 1.11 2003/08/23 14:37:58 fukachan Exp $
+# $FML: Digest.pm,v 1.12 2003/08/29 15:33:54 fukachan Exp $
 #
 
 package FML::Digest;
@@ -185,7 +185,7 @@ sub create_multipart_message
     my $config    = $curproc->config();
     my $ml_name   = $config->{ ml_name };
     my $ml_addr   = $config->{ address_for_post };
-    my $charset   = $config->{ template_file_charset };
+    my $charset   = $curproc->get_charset("template_file");
     my $seq_file  = $config->{ digest_sequence_file };
     my $rcptmaps  = $config->get_as_array_ref('digest_recipient_maps');
     my $count_ok  = 0;
