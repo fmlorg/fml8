@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SimpleMatch.pm,v 1.4 2001/04/12 03:30:30 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.5 2001/04/12 04:43:05 fukachan Exp $
 #
 
 
@@ -73,6 +73,13 @@ my $address_trap_regexp = {
 	'start' => 'Failed addresses follow:',
 	'end'   => 'Message text follows:',
     },
+
+
+    # XXX what is this ???
+    'smtp32' => {
+	'start' => '.',
+	'end'   => 'original message follows',
+    },
 };
 
 my $reason_trap_regexp = {
@@ -86,48 +93,62 @@ my $reason_trap_regexp = {
 sub analyze
 {
     my ($self, $msg, $result) = @_;
-    my $m;
+
+    # process control block
+    my $args = {
+	state  => 0,
+	result => $result, 
+    };
 
     # skip the first header part and search "text/*" in the body part(s). 
-    $m = $msg->rfc822_message_body_head;
+    my $m = $msg->rfc822_message_body_head;
     $m = $m->find( { data_type_regexp => 'text' } );
 
     if (defined $m) {
 	my $n = $m->num_paragraph;
+	if ($debug) { print "   num_paragraph: $n\n";}
+
 	for (my $i = 0; $i < $n; $i++) {
 	    my $buf = $m->nth_paragraph($i + 1); # 1 not 0 for 1st paragraph
-
-	    # 1. search start pattern
-	    $self->_address_match($result, \$buf);
+	    if ($debug) { print "{$buf}\n";}
+	    $args->{ buf } = \$buf;
+	    $self->_address_match($args);
 	}
+    }
+    else {
+	print "body object not found\n" if $debug;
     }
 }
 
 
 sub _address_match
 {
-    my ($self, $result, $rbuf) = @_;
-    my ($match, $state);
+    my ($self, $args) = @_;
+    my $result = $args->{ result };
+    my $rbuf   = $args->{ buf };
 
-    for my $which (keys %$address_trap_regexp) {
-	next unless $which;
+    unless ($args->{ state }) {
+	for my $mta_type (keys %$address_trap_regexp) {
+	    next unless $mta_type;
 
-	my $start_regexp = $address_trap_regexp->{ $which }->{ 'start' };
-	if ($$rbuf =~ /$start_regexp/) { 
-	    $match = $which;
-	    $state = 1;
+	    my $start_regexp = $address_trap_regexp->{ $mta_type }->{ 'start' };
+	    if ($$rbuf =~ /$start_regexp/) { 
+		$args->{ mta_type  } = $mta_type;
+		$args->{ state }     = 1;
+	    }
 	}
+
+	# not found
+	return unless $args->{ state };
     }
 
-    # not found
-    return unless $match;
-
     # found
-    my $end_regexp  = $address_trap_regexp->{ $match }->{ 'end' };
-    my $addr_regexp = $address_trap_regexp->{ $match }->{ 'regexp' };
-
+    my $mta_type    = $args->{ mta_type };
+    my $end_regexp  = $address_trap_regexp->{ $mta_type }->{ 'end' };
+    my $addr_regexp = $address_trap_regexp->{ $mta_type }->{ 'regexp' };
+    
     # 1.1 o.k. we've found the start pattern !!
-    if ($state == 1) {
+    if ($args->{ state } == 1) {
 	my @buf = split(/\n/, $$rbuf);
 
       SCAN:
@@ -136,30 +157,40 @@ sub _address_match
 	    last SCAN if /$end_regexp/;
 
 	    if (/(\S+\@\S+)/) { 
-		my $addr = $self->_clean_up($match, $1);
-		$result->{ $addr }->{ 'Final-Recipient' } = $addr;
-		$result->{ $addr }->{ 'Status'} = '5.x.y';
+		my $addr = $self->_addr_clean_up($mta_type, $1);
+		if ($addr) {
+		    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
+		    $result->{ $addr }->{ 'Status'}           = '5.x.y';
+		}
 	    }
 
 	    if (/$addr_regexp/) { 
-		my $addr = $self->_clean_up($match, $1);
-		$result->{ $addr }->{ 'Final-Recipient' } = $addr;
-		$result->{ $addr }->{ 'Status'} = '5.x.y';
+		my $addr = $self->_addr_clean_up($mta_type, $1);
+		if ($addr) {
+		    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
+		    $result->{ $addr }->{ 'Status'}           = '5.x.y';
+		}
 	    }
 	}
     }
 }
 
 
-sub _clean_up
+sub _addr_clean_up
 {
     my ($self, $type, $addr) = @_;
 
-    $addr =~ s/^<//;
-    $addr =~ s/>$//;
+    # nuke predecing and trailing strings around user@domain pattern
+    my $prev_addr = $addr;
+    do { 
+	$prev_addr = $addr;
+	$addr      =~ s/\.$//;
+	$addr      =~ s/^<//;
+	$addr      =~ s/>$//;
+    } while ($addr ne $prev_addr);
 
-    if ($type eq 'nifty.ne.jp') {
-	return $addr .'@nifty.ne.jp';
+    if ($type eq 'nifty.ne.jp' && $addr !~ /\@/) {
+	$addr . '@nifty.ne.jp';
     }
     else {
 	$addr;
