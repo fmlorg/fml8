@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: minimal_states.pm,v 1.15 2001/04/14 15:41:05 fukachan Exp $
+# $FML: minimal_states.pm,v 1.16 2001/04/15 05:04:01 fukachan Exp $
 #
 
 package FML::Ticket::Model::minimal_states;
@@ -137,6 +137,7 @@ sub assign
 	$has_ticket_id = $self->_speculate_ticket_id($curproc, $args);
 	if ($has_ticket_id) {
 	    $is_reply = 1;
+	    $self->{ _ticket_id } = $has_ticket_id;
 	    Log("speculated id=$has_ticket_id");
 	}
 	else {
@@ -148,6 +149,7 @@ sub assign
     # we ignore this mail.
     if ($pragma =~ /ignore/i) {
 	$self->{ _pragma } = 'ignore';
+	$self->_set_status_info("ignored");
 	return undef;
     }
     
@@ -155,12 +157,14 @@ sub assign
     # we do not rewrite the subject but save the extracted $ticket_id.
     if ($is_reply && $has_ticket_id) {
 	Log("reply message with ticket_id=$has_ticket_id");
-	$self->{ _status    } = 'going';
 	$self->{ _ticket_id } = $has_ticket_id;
+	$self->{ _status    } = 'going';
+	$self->_set_status_info("going");
     }
     elsif ($has_ticket_id) {
 	Log("usual message with ticket_id=$has_ticket_id");
 	$self->{ _ticket_id } = $has_ticket_id;
+	$self->_set_status_info("found");
     }
     else {
 	# assign a new ticket number for a new message
@@ -173,6 +177,7 @@ sub assign
 
 	    $self->_pcb_set_id($curproc, $id); # save $id info in PCB
 	    $self->_rewrite_header($header, $config, $id);
+	    $self->_set_status_info("newly assigned");
 	}
 	else {
 	    Log( $self->error );
@@ -225,6 +230,13 @@ sub _speculate_ticket_id
 }
 
 
+sub _set_status_info
+{
+    my ($self, $s) = @_;
+    $self->{ _status_info } .= $self->{ _status_info } ? " -> ".$s : $s;
+}
+
+
 sub update_status
 {
     my ($self, $curproc, $args) = @_;
@@ -252,6 +264,7 @@ sub update_status
 	$subject =~ /^\s*close/ || 
 	$pragma  =~ /close/      ) {
 	$self->{ _status } = "closed";
+	$self->_set_status_info("closed");
 	Log("ticket is closed");
     }
     else {
@@ -328,9 +341,6 @@ sub _rewrite_header
     my $subject = $header->get('subject') || '';
     $header->replace('Subject', 
 		     $subject." " . $self->{ _ticket_subject_tag });
-
-    # X-* information
-    $header->add('X-Ticket-ID', $self->{ _ticket_id });
 }
 
 
@@ -373,6 +383,22 @@ sub _update_db
     my $mid = $header->get('message-id');
     $mid    = $header->address_clean_up($mid);
     $rh->{ _message_id }->{ $mid } = $ticket_id;
+
+    # 5. history
+    my $buf    = '';
+    my (@aid)  = split(/\s+/, $rh->{ _articles  }->{ $ticket_id });
+    my $sender = $rh->{ _sender }->{ $aid[0] };
+    my $when   = $rh->{ _date }->{ $aid[0] };
+
+    use FML::Date;
+    $when = FML::Date->new($when)->mail_header_style();
+    
+    $buf .= "\t\n";
+    $buf .= "\tthis ticket/thread is opended at article $aid[0]\n";
+    $buf .= "\tby $sender\n";
+    $buf .= "\ton $when\n";
+    $buf .= "\tarticle references: @aid\n";
+    $self->{ _status_history } = $buf;
 }
 
 
@@ -409,7 +435,7 @@ C<%index>.
 
 =head2 C<close_db($curproc, $args)>
 
-untie() corresponding hashes opended by C<open_db()>.
+untie() corresponding hashes opened by C<open_db()>.
 
 =cut
 
@@ -978,6 +1004,30 @@ sub _show_ticket_by_html_table
     my $buf = $self->_article_summary( $spool_dir ."/". $aid );
     use Language::ISO2022JP qw(STR2EUC);
     print STR2EUC($buf);
+}
+
+
+=head2 C<info($curproc, $args)>
+
+=cut
+
+sub add_info
+{
+    my ($self, $curproc, $args) = @_;
+    my $config = $curproc->{ config };
+    my $header = $curproc->{ article }->{ header };
+
+    if (defined $self->{ _status_info }) {
+	$header->add('X-Ticket-Status', $self->{ _status_info });
+    }
+
+    if (defined $self->{ _ticket_id }) {
+	$header->add('X-Ticket-ID', $self->{ _ticket_id });
+    }
+
+    if (defined $self->{ _status_history }) {
+	$header->add('X-Ticket-History', $self->{ _status_history });
+    }
 }
 
 

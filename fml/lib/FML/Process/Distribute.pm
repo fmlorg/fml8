@@ -4,7 +4,7 @@
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Distribute.pm,v 1.41 2001/04/06 16:25:43 fukachan Exp $
+# $FML: Distribute.pm,v 1.42 2001/04/08 06:13:15 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -328,6 +328,7 @@ sub _ticket_check
 	    $ticket->assign($curproc, $args);
 	    $ticket->update_status($curproc, $args);
 	    $ticket->update_db($curproc, $args);
+	    $ticket->add_info($curproc, $args);
 	}
 	else {
 	    Log("creating ticket object failed");
