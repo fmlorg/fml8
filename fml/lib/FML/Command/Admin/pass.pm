@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: pass.pm,v 1.5 2002/02/18 14:24:11 fukachan Exp $
+# $FML: pass.pm,v 1.1 2002/03/23 14:24:37 fukachan Exp $
 #
 
 package FML::Command::Admin::pass;
@@ -17,7 +17,7 @@ use FML::Command::Admin::password;
 @ISA = qw(FML::Command::Admin::password);
 
 
-# Descriptions: change password
+# Descriptions: authenticate password
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: forward request to password module
 # Return Value: none
@@ -30,7 +30,7 @@ sub process
 
 =head1 NAME
 
-FML::Command::Admin::pass - change password
+FML::Command::Admin::pass - authenticate password
 
 =head1 SYNOPSIS
 
@@ -38,7 +38,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-same as C<password>.
+an alias of C<FML::Command::Admin::password>.
 
 =head1 AUTHOR
 

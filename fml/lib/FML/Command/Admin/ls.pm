@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ls.pm,v 1.5 2002/02/18 14:24:11 fukachan Exp $
+# $FML: ls.pm,v 1.1 2002/03/24 11:26:46 fukachan Exp $
 #
 
 package FML::Command::Admin::ls;
@@ -29,7 +29,7 @@ sub process
 
 =head1 NAME
 
-FML::Command::Admin::ls - ls a new member
+FML::Command::Admin::ls - file operations
 
 =head1 SYNOPSIS
 
@@ -37,7 +37,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-same as C<dir>.
+an alias of C<FML::Command::Admin::dir>.
 
 =head1 AUTHOR
 
