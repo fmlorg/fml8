@@ -1,0 +1,28 @@
+Return-Path: <mailer-daemon@bn.to>
+Received: by ahodori.fml.org (Postfix)
+	id E9AA7867BD; Wed, 26 Mar 2003 00:05:38 +0900 (JST)
+Received: from mail1.karame.net (mail1.karame.net [210.253.209.73])
+	by ahodori.fml.org (Postfix) with SMTP id 36FE2867B5
+	for <elena-admin@fml.org>; Wed, 26 Mar 2003 00:05:37 +0900 (JST)
+Received: (qmail 6560 invoked by alias); 26 Mar 2003 00:14:50 +0900
+Date: 26 Mar 2003 00:14:50 +0900
+Message-ID: <20030325151450.6559.qmail@mail1.karame.net>
+MIME-Version: 1.0
+Content-Type: text/plain;charset="ISO-2022-JP"
+Content-Transfer-Encoding: 7bit
+To: elena-admin@fml.org
+Subject: 空メールアドレス作成完了
+
+
+題名:
+fml results (elena ML)
+の内容に対応したメールアドレスは
+112@subdomain.bn.to
+です
+
+上記アドレスに空メールを送信すると保存した内容がメールで取り寄せできます。
+※メール本文のサイズは2067 bytes(SJIS変換後)でした
+
+この内容を削除する場合は下記URLにアクセスして下さい
+http://bn.to/del.php?id=subdomain&pwd=himitsu&no=112
+
