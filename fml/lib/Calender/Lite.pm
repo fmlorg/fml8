@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.1.1.1 2002/02/13 12:51:48 fukachan Exp $
+# $FML: Lite.pm,v 1.2 2002/02/17 03:13:47 fukachan Exp $
 #
 
 package Calender::Lite;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-Calender::Lite - scheduler with minimal functions
+Calender::Lite - DEMO to show calender
 
 =head1 SYNOPSIS
 
@@ -24,7 +24,7 @@ Calender::Lite - scheduler with minimal functions
     $schedule->parse;
 
     # show table by w3m :-)
-    my $tmp = $schedule->tmpfile;
+    my $tmp = $schedule->tmpfilepath;
     my $fh  = new FileHandle $tmp, "w";
     $schedule->print($fh);
     $fh->close;
@@ -46,7 +46,7 @@ HTML TABLE by default. To see it, you need WWW browser e.g. "w3m".
 
 =head2 new($args)
 
-standard constructor.
+The standard constructor.
 
 It speculates C<user> by $args->{ user } or $ENV{'user'} or uid
 and determine path for ~user/.schedule/.
@@ -91,8 +91,9 @@ sub new
     my $pw                  = getpwnam($user);
     my $home_dir            = $pw->dir;
 
-    # XXX FML::Restriction / Taint
-    # simple check (not enough mature) to avoid -T (taint mode) error ;)
+    # XXX-AUDIT (we should use FML::Restriction ?)
+    # simple check (not enough mature).
+    # This code is not for security but to avoid -T (taint mode) error ;) 
     if ($home_dir =~ /^([\w\d\.\/]+)$/) {
 	$home_dir = $1;
     }
@@ -100,8 +101,10 @@ sub new
 	croak("invalid home directory string");
     }
 
+    # search ~/.schedule/ by default.
+    use File::Spec;
     $me->{ _user }          = $user;
-    $me->{ _schedule_dir }  = "$home_dir/.schedule"; # ~/.schedule/ by default
+    $me->{ _schedule_dir }  = File::Spec->catfile($home_dir, ".schedule");
     $me->{ _schedule_file } = undef;
 
     for my $key ('schedule_dir', 'schedule_file', 'mode') {
@@ -117,9 +120,9 @@ sub new
 }
 
 
-=head2 tmpfile($args)
+=head2 tmpfilepath($args)
 
-return tmpfile path name.
+return a tmpfile path name.
 It creates just a file path not file itself.
 
 =cut
@@ -129,7 +132,7 @@ It creates just a file path not file itself.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: STR(filename)
-sub tmpfile
+sub tmpfilepath
 {
     my ($self, $args) = @_;
     my $user = $self->{ _user };
@@ -237,6 +240,9 @@ sub _analyze
 {
     my ($self, $file, $pattern) = @_;
 
+    # ignore if the file not exists.
+    return unless -f $file;
+
     use FileHandle;
     my $fh = new FileHandle $file;
 
@@ -277,20 +283,27 @@ sub _add_entry
 =head2 C<print($fd)>
 
 print out the result as HTML.
-You can specify the output channel by C<$fd>.
+You can specify the output channel by file descriptor C<$fd>.
 
 =cut
 
 
-# Descriptions: print calender by HTML::CalenderMonthSimple::as_HTML() method
+# Descriptions: print calender by HTML::CalenderMonthSimple::as_HTML()
+#               method.
 #    Arguments: OBJ($self) HANDLE($fd)
 # Side Effects: none
 # Return Value: none
 sub print
 {
     my ($self, $fd) = @_;
-    $fd = $fd || \*STDOUT;
-    print $fd $self->{ _schedule }->as_HTML;
+
+    if (defined $self->{ _schedule }) {
+	$fd = $fd || \*STDOUT;
+	print $fd $self->{ _schedule }->as_HTML;
+    }
+    else {
+	croak("undefined schedule object");
+    }
 }
 
 

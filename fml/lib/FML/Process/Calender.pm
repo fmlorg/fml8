@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calender.pm,v 1.12 2001/12/23 11:39:45 fukachan Exp $
+# $FML: Calender.pm,v 1.1 2002/02/13 13:01:38 fukachan Exp $
 #
 
 package FML::Process::Calender;
@@ -99,7 +99,7 @@ sub run
     my $schedule = new Calender::Lite $schargs;
 
     # prepare output channel
-    my $tmpf     = $schedule->tmpfile;
+    my $tmpf     = $schedule->tmpfilepath;
     my $wh       = new FileHandle $tmpf, "w";
 
     # set output mode
