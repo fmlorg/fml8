@@ -6,7 +6,7 @@ Received: from hikari.fml.org (hikari.fml.org [192.168.1.6])
 Received: by hikari.fml.org (8.9.3/3.4W6+Hikari-2.1) with ESMTP id RAA17788 for <caesar@fml.org>; Tue, 2 Jan 2001 17:08:04 +0900 (JST)
 Received: by iris.fml.org (Postfix, from userid 0)
 	id 1BCBE15024; Tue,  2 Jan 2001 17:08:03 +0900 (JST)
-From: fukachan@fml.org
+From: fukachan@sapporo.iij.ad.jp (Ken'ichi Fukamachi)
 To: elena@nuinui.net
 Reply-To: rudo@nuinui.net
 Subject: [elena:00300] test 01
