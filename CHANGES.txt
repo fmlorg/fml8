@@ -1,6 +1,45 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/10/16
+
+   charset の取り扱いを拡張した。	
+   resutructure/enhance charset definitions:
+	${category}_default_charset and ${category}_charset_{ja,en,...}
+
+   FML::Process::CGI::Kernel 
+   FML::CGI::ThreadTrack Calendar Menu 
+   FML::Command::Admin::log 
+	language_of_cgi_message() -> get_charset("cgi")
+	
+   FML::Process::Kernel 
+   Mail::Message 
+   Mail::Message::Language 
+	consider Accept-Language::(but not used yet now ;-).
+	
+   FML::Process::CGI::Utils 
+	FNF::add comments
+	
+   FML::Process::CGI::Kernel 
+	bug fix charset handling.
+	
+   FML::Command::SendFile 
+   FML::Digest 
+	messager::rfc822 part not need charset ;)
+	
+   FML::Process::Utils 
+	bug fix masking variable definition
+	
+	remove language_of_cgi_message()
+
+	implement set_accept_language_list() and
+	get_accept_language_list().
+	
+	remove obsolete language_of_reply_message().
+	
+	get_charset() can handle accpet-language::and charset requested by
+	other module via PCB.
+
 2003/10/15
 
    FML::Digest 
@@ -5456,4 +5495,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.163 2003/09/27 14:35:33 fukachan Exp $
+$FML: CHANGES.txt,v 1.164 2003/10/15 04:43:26 fukachan Exp $
