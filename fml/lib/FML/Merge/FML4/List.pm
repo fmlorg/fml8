@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.1.1.1 2004/03/16 12:58:20 fukachan Exp $
+# $FML: List.pm,v 1.2 2004/03/17 04:08:35 fukachan Exp $
 #
 
 package FML::Merge::FML4::List;
@@ -130,11 +130,12 @@ sub _write_without_comment
     my $tmp = sprintf("%s.new.%s", $dst, $$);
 
     unless (-f $src) {
-	print STDERR "ignore $src -> $dst\n";
+	print STDERR "warning: $src not found, so not converted.\n";
 	return;
     }
 
-    print STDERR "cat $src > $dst\n";
+    print STDERR "creating $dst\n";
+    print STDERR "    from $src\n";
 
     use FileHandle;
     my $rh = new FileHandle $src;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Merge.pm,v 1.1.1.1 2004/03/16 12:58:20 fukachan Exp $
+# $FML: Merge.pm,v 1.2 2004/03/17 04:08:34 fukachan Exp $
 #
 
 package FML::Merge;
@@ -102,16 +102,16 @@ sub backup_old_config_files
 
 	if (-f $src) {
 	    if ($mode eq 'move') {
-		printf STDERR "moving  %-30s -> %-30s\n", $src, $dst;
+		printf STDERR "renaming %-30s -> %-30s\n", $src, $dst;
 		rename($src, $dst) || croak("cannot rename $src $dst");
 	    }
 	    elsif ($mode eq 'copy') {
-		printf STDERR "copying %-30s -> %-30s\n", $src, $dst;
+		printf STDERR "copying: %-30s -> %-30s\n", $src, $dst;
 		use IO::Adapter::AtomicFile;
 		IO::Adapter::AtomicFile->copy($src, $dst);
 	    }
 	    else {
-		print STDERR "unknown mode (DO NOTHING).\n";
+		print STDERR "error:   unknown mode (DO NOTHING).\n";
 	    }
 	}
     }
@@ -165,8 +165,7 @@ sub disable_old_include_files
 
     for my $f (@$files) {
 	my $file = $self->old_file_path($f);
-	print STDERR "disable $file\n";
-	print STDERR "   cp $file $file.bak\n";
+	print STDERR "disable: $file\n";
 	use IO::Adapter::AtomicFile;
         IO::Adapter::AtomicFile->copy($file, "$file.bak");
 	my $wh = new FileHandle "> $file.tmp";
