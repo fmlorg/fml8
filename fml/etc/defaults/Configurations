@@ -1,4 +1,5 @@
 basic.cf
+directory.cf
 acl.cf
 mta.cf
 header.cf
