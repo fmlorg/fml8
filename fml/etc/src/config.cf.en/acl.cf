@@ -1,5 +1,23 @@
 =head1	ACL
 
+=head2	auth
+
+# Descriptions: FML::Credential checks address comparison
+#      History: always enabled
+#        Value: yes | no
+#     Examples: yes
+use_address_compare_function = yes
+
+
+# Descriptions: case insensitive comparison of user part of mail address.
+#      History: none
+#        Value: user_part_case_sensitive | user_part_case_insensitive
+#     Examples: user_part_case_insensitive
+address_compare_function_type = user_part_case_insensitive
+
+
+=head2 restrictinos
+
 # Descriptions: restrictions for post
 #      History: fml 4.0's PERMIT_POST_FROM + REJECT_ADDR
 #        Value: list of attributes (
