@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: Kernel.pm,v 1.40 2001/04/08 06:13:16 fukachan Exp $
+# $FML: Kernel.pm,v 1.41 2001/04/14 14:44:23 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -312,24 +312,6 @@ sub verify_sender_credential
 }
 
 
-=head2 C<sender_is_member($args)>
-
-not yet implemented.
-
-=cut
-
-# Descriptions: 
-#    Arguments: $self $args
-# Side Effects: 
-# Return Value: none
-sub sender_is_member
-{
-    my ($curproc, $args) = @_;
-    $curproc->{'credential'}->{'sender'}
-    # &IsMailingListMember( $from );
-}
-
-
 =head2 C<simple_loop_check($args)>
 
 loop checks following rules of $config->{ header_check_rules }.
@@ -424,6 +406,68 @@ sub parse_incoming_message
     $curproc->{ incoming_message }->{ message } = $msg;
     $curproc->{ incoming_message }->{ header  } = $msg->rfc822_message_header;
     $curproc->{ incoming_message }->{ body  }   = $msg->rfc822_message_body;
+}
+
+
+=head1 CREDENTIAL
+
+=head2 C<premit_post($args)>
+
+permit posting. 
+The restriction rules are based on C<post_restrictions>.
+
+=head2 C<premit_command($args)>
+
+permit fml command use.
+The restriction rules are based on C<command_restrictions>.
+
+=cut
+
+
+sub permit_post
+{
+    my ($curproc, $args) = @_;
+    $curproc->_check_resitrictions($args, 'post');
+}
+
+sub permit_command
+{
+    my ($curproc, $args) = @_;
+    $curproc->_check_resitrictions($args, 'command');
+}
+
+sub _check_resitrictions
+{
+    my ($curproc, $args, $type) = @_;
+    my $config = $curproc->{ config };
+    my $cred   = $curproc->{ credential }; # user credential
+
+    for my $rule (split(/\s+/, $config->{ "${type}_restrictions" })) {
+	if ($rule eq 'reject_system_accounts') {
+	    my $match = $cred->match_system_accounts($curproc, $args);
+	    if ($match) {
+		Log("${rule}: $match matches sender address");
+		return 0;
+	    }
+	}
+	elsif ($rule eq 'permit_members_only') {
+	    # Q: the mail sender is a ML member?
+	    if ($cred->is_member($curproc, $args)) {
+		# A: If so, we try to distribute this article.
+		return 1;
+	    }
+	    else {
+		Log("not a ML member");
+		Log( $cred->error() );
+	    }
+	}
+	elsif ($rule eq 'reject') {
+	    return 1;
+	}
+	else {
+	    LogWarn("unknown rule=$rule");
+	}
+    }
 }
 
 
