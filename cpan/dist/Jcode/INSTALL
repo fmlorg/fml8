@@ -1,0 +1,48 @@
+#
+# $Id: INSTALL,v 0.61 2000/11/15 05:45:25 dankogai Exp $
+#
+
+To install
+==========
+
+Unix with a compiler
+--------------------
+
+  Do the following via web
+
+  perl Makefile.PL
+  make
+  make test
+  make install
+
+Macintosh
+---------
+
+  Run "mac_install.pl" just once.  Make sure you have "site_perl"
+  folder where your MacPerl folder resides.  If not, create one before
+  you run this script.
+
+Windows (ActivePerl)
+--------------------
+
+  Run "win_install.pl" just once.  Make sure you have "site\lib"
+  folder where your ActivePerl folder resides.  If not, create one 
+  before you run this script.
+
+Mac, Win, RedHat  Linux with just default packages installed...
+---------------------------------------------------------------
+(or any other platforms where no compiler is available)
+
+  Just copy Jcode.pm and Jcode directory (folder) into perl's lib
+directory.
+
+  To find where the heck that lib folder is, run this small perl
+  script.
+
+  print join("\n", @INC);
+
+
+__END__
+
+Dan the Jcoder
+

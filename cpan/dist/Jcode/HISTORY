@@ -1,0 +1,79 @@
+#
+# $Id: HISTORY,v 0.65 2000/12/11 05:35:36 dankogai Exp $
+#
+0.66	2000/12/21
+	* =?iso-2022-jp?b? is now case insensitive
+	  (toshihiro.kayama@toshiba.co.jp)
+	* documentation bug fixed (miyagawa@edge.co.jp)
+	* $mime_header = $j->mime_encode() now accepts optional arguments
+	* \x0a -> \n, \x0d -> \r unless suitable (ohzaki@iod.ricoh.co.jp)
+0.65	2000/12/11
+	* $jcode->mime_(de|en)code debug
+	* t/mime.t added
+0.64	2000/11/24
+	* Same as 0.63; just misuploaded CPAN
+0.63	2000/11/24
+	* $jcode->mime_(de|en)code bugfix
+          (thank you, ohzaki@iod.ricoh.co.jp;
+	   I shamelessly stole your code)
+0.62	2000/11/23
+	* Jcode/Tr.pm -- allows 3-byte tr (maybe slow!)
+        * $jcode->jfold() added
+        * $jcode->mime_(de|en)code is more RFC2045-compliant
+0.61	2000/11/15 (Unreleased)
+	* Unicode/unicode.c -> Unicode/uni.c
+          to avoid namespace breach on windoze
+0.60	1999/10/18
+	* all $& exterminated due to popular demand
+0.59	1999/10/17
+	* fixed jperl incompatibiliy (Thanx, watanabe!)
+0.58	1999/07/28
+	* (mac|win)_install.pl now deletes old files before installing
+	  new ones.
+	* ActivePerl Support (Win_Install.PL)
+	* t/ scripts are now more compatible with Non-unix platforms
+	* *_Install.PL renamed to *_install.pl to prevent MakeMaker
+          from executing these files.
+0.57	1999/07/27
+	* Access Methods to misc. Jcode objecsts added
+	* UTF8 detection supported by getcode
+	* POD correction
+0.56	1999/07/24
+	* Jcode::getcode();  SJIS detection is now faster for MOST cases
+	* POD correction
+0.55	1999/07/23
+	* Due to the popular demands, Non-XS version of modules are back!
+	* Jcode::NKF dropped
+        * Non-XS version of utf8 -> ucs2 conversion is much faster!
+0.50    1999/07/21
+        * Conversion routines are now all XS!
+        * Significant Performance improvement everywhere
+        * Especially Unicode-related routines
+0.40    1999/07/16 (Internal only)
+	* suggestion by ISHINO k16 <k16@softvision.co.jp>
+	*  Unicode conversion now leaves ascii as it is
+	*  unless $Jcode::Unicode::PEDANTIC is set
+	* POD integrated in all .pm files
+0.36    1999/07/15 (Internal only)
+	* All modules has $VERSION now! (to make CPAN.pm happier)
+	* All Octals are gone!
+          (Hiroki Ohzaki <ohzaki@iod.ricoh.co.jp>)
+	* Remarks on jcode.pl is moved from COPYRIGHT to ACKNOWLEDGEMENTS
+        * (C) of Unicode, Inc. added
+0.35	1999/07/15
+	* Jcode now internally stores a reference to string, not string
+	* Furthur performance optimization. Jcode::convert() is now faster
+          than jcode::convert() for most cases.
+	* documentation fixes
+0.30	1999/07/12
+	* Regexp bug fixed (Jcode::Constants, $RE{JIS_0212})
+	* H2Z bug fixed
+	* Significant Code Optimization
+	* Jcode->set() and Jcode->append() added for repeated use
+0.21	1999/07/10
+	* Typo correction
+0.20	1999/07/10	2nd Preview Release
+	* Code optimization
+	* Unicode Support
+	* Lots of Bug Fixes
+0.10	1999/07/08	First Preview Release

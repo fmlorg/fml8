@@ -1,0 +1,20 @@
+#
+# $Id: README,v 0.61 2000/11/15 05:45:25 dankogai Exp $
+#
+
+Jcode:
+------
+
+This is a Perl extension interface to convert Japanese text.
+
+To build the extensions, unpack this distribution somewhere, create
+the Makefile by running 'perl Makefile.PL' and do a 'make', 'make
+test', and if successful 'make install'.
+
+You will need perl version 5.004 or better to install these modules.
+Further documentation is embedded in the individual modules.
+
+Copyright 1999 Dan Kogai.
+
+This library is free software; you can redistribute it
+and/or modify it under the same terms as Perl itself.
