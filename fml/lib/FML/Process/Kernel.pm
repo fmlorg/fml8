@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.242 2004/11/23 04:22:00 fukachan Exp $
+# $FML: Kernel.pm,v 1.243 2004/11/25 12:25:56 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2587,8 +2587,6 @@ sub _append_rfc822_message
 	else {
 	    $curproc->logerror("_append_rfc822_message: cannot open \$tmpfile");
 	}
-
-	$curproc->add_into_clean_up_queue( $tmpfile );
     }
     else {
 	$curproc->logerror("_append_rfc822_message: \$tmpfile not found");
@@ -2600,7 +2598,7 @@ sub _append_rfc822_message
 #    Arguments: OBJ($curproc) STR($file)
 # Side Effects: update $curproc->{ __clean_up_tmpfiles };
 # Return Value: none
-sub add_into_clean_up_queue
+sub _add_into_clean_up_queue
 {
     my ($curproc, $file) = @_;
     my $queue = $curproc->{ __clean_up_tmpfiles };
@@ -2625,7 +2623,7 @@ sub clean_up_tmpfiles
 
     if (defined $queue) {
 	for my $q (@$queue) {
-	    $curproc->log("unlink $q") if $debug;
+	    $curproc->log("unlink $q");
 	    unlink $q;
 	}
     }
@@ -2663,12 +2661,16 @@ sub temp_file_path
 
     if (-d $tmp_dir && -w $tmp_dir) {
 	use File::Spec;
-	return File::Spec->catfile($tmp_dir, $f);
+	my $_file = File::Spec->catfile($tmp_dir, $f);
+	$curproc->_add_into_clean_up_queue($_file);
+	return $_file;
     }
     else {
 	my $tmp_dir = $curproc->global_tmp_dir_path();
 	use File::Spec;
-	return File::Spec->catfile($tmp_dir, $f);
+	my $_file = File::Spec->catfile($tmp_dir, $f);
+	$curproc->_add_into_clean_up_queue($_file);
+	return $_file;
     }
 }
 
@@ -2902,7 +2904,6 @@ sub _reopen_stderr_channel
 	$pcb->set("stderr", "use_log_dup", 1);
 
 	open(STDERR, "> $tmpfile") || croak("fail to open $tmpfile");
-	$curproc->add_into_clean_up_queue($tmpfile);
     }
 }
 
