@@ -1,5 +1,5 @@
 dnl
-dnl $FML: configure.in,v 1.10 2001/12/11 13:40:02 fukachan Exp $
+dnl $FML: configure.in,v 1.11 2001/12/18 12:59:29 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -25,6 +25,7 @@ AC_MSG_RESULT("checking whether optional useful commands are available or not")
 AC_PATH_PROG(CKSUM,    cksum)
 AC_PATH_PROG(MD5,      md5)
 
+AC_PATH_PROG(LS,       ls)
 AC_PATH_PROG(TAR,      tar)
 AC_PATH_PROG(GZIP,     gzip)
 AC_PATH_PROG(ZCAT,     zcat)
