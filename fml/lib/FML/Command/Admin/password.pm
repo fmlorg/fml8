@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: password.pm,v 1.9 2003/03/18 10:42:43 fukachan Exp $
+# $FML: password.pm,v 1.10 2003/08/23 04:35:31 fukachan Exp $
 #
 
 package FML::Command::Admin::password;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::password - authenticate the admin password
+FML::Command::Admin::password - authenticate the remote admin password
 
 =head1 SYNOPSIS
 

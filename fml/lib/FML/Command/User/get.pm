@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.18 2003/08/23 07:24:44 fukachan Exp $
+# $FML: get.pm,v 1.19 2003/10/15 01:03:30 fukachan Exp $
 #
 
 package FML::Command::User::get;
@@ -18,7 +18,7 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Command::User::get - send back articles
+FML::Command::User::get - send back article(s)
 
 =head1 SYNOPSIS
 
@@ -26,7 +26,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-send back articles.
+send back article(s).
 
 =head1 METHODS
 

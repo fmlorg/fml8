@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: adminadd.pm,v 1.2 2002/09/11 23:18:06 fukachan Exp $
+# $FML: adminadd.pm,v 1.3 2002/09/22 14:56:44 fukachan Exp $
 #
 
 package FML::Command::Admin::adminadd;
@@ -17,7 +17,7 @@ use FML::Command::Admin::addadmin;
 @ISA = qw(FML::Command::Admin::addadmin);
 
 
-# Descriptions: add an admin user
+# Descriptions: add a remote administrator
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: forward request to subscribe module
 # Return Value: none
@@ -29,7 +29,7 @@ sub process
 
 =head1 NAME
 
-FML::Command::Admin::adminadd - add a new admin
+FML::Command::Admin::adminadd - add a remote administrator
 
 =head1 SYNOPSIS
 

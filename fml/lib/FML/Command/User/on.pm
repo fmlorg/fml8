@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: on.pm,v 1.12 2003/11/22 05:41:51 fukachan Exp $
+# $FML: on.pm,v 1.13 2003/12/30 03:07:54 fukachan Exp $
 #
 
 package FML::Command::User::on;
@@ -99,6 +99,7 @@ sub process
 	return;
     }
 
+    # XXX-TODO: this message is correct ?
     # if already recipient, on request is wrong.
     if ($cred->is_recipient($address)) {
 	$curproc->reply_message_nl('error.already_recipient',

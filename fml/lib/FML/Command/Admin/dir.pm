@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: dir.pm,v 1.12 2003/08/23 04:35:30 fukachan Exp $
+# $FML: dir.pm,v 1.13 2003/08/29 15:33:58 fukachan Exp $
 #
 
 package FML::Command::Admin::dir;
@@ -83,6 +83,7 @@ sub process
     # XXX-TODO: $du_args->{ options } is used later for what ?
     # $du_args->{ options } = \@argv;
 
+    # XXX-TODO: $dir = new FML::Command::DirUtils $dir_string; $dir->list(). ?
     use FML::Command::DirUtils;
     my $obj = new FML::Command::DirUtils;
     $obj->dir($curproc, $command_args, $du_args);

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: byeadmin.pm,v 1.11 2003/01/27 04:36:29 fukachan Exp $
+# $FML: byeadmin.pm,v 1.12 2003/08/23 04:35:29 fukachan Exp $
 #
 
 package FML::Command::Admin::byeadmin;
@@ -16,7 +16,7 @@ use FML::Command::Admin::deladmin;
 @ISA = qw(FML::Command::Admin::deladmin);
 
 
-# Descriptions: remove the specified user.
+# Descriptions: remove the specified remote administorator.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: forward request to deladmin module
 # Return Value: none
@@ -29,7 +29,7 @@ sub process
 
 =head1 NAME
 
-FML::Command::Admin::byeadmin - remove the specified administrator
+FML::Command::Admin::byeadmin - remove the specified remote administrator
 
 =head1 SYNOPSIS
 

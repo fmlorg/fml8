@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mget.pm,v 1.11 2002/09/22 14:56:47 fukachan Exp $
+# $FML: mget.pm,v 1.12 2002/12/15 13:46:30 fukachan Exp $
 #
 
 package FML::Command::User::mget;
@@ -38,7 +38,8 @@ forwarded C<FML::Command::User::get>.
 
 =head1 DESCRIPTION
 
-an alias of C<FML::Command::User::get>.
+This module sends back article(s).
+An alias of C<FML::Command::User::get>.
 
 =head1 CODING STYLE
 

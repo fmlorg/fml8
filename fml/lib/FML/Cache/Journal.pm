@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Journal.pm,v 1.2 2003/12/06 04:48:18 fukachan Exp $
+# $FML: Journal.pm,v 1.3 2003/12/30 03:47:54 fukachan Exp $
 #
 
 package FML::Cache::Journal;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Cache::Journal - inteface into Tie::JournaledDir
+FML::Cache::Journal - interface into Tie::JournaledDir
 
 =head1 SYNOPSIS
 
@@ -24,9 +24,9 @@ FML::Cache::Journal - inteface into Tie::JournaledDir
 
 =head2 new($curproc)
 
-=head2 open_db()
+=head2 open($cache_dir, $class)
 
-=head2 close_db()
+=head2 close()
 
 =cut
 
@@ -58,7 +58,7 @@ sub open
     my (%db)    = ();
 
     use File::Spec;
-    my $dir  = File::Spec->catfile($cache_dir, $class);
+    my $dir = File::Spec->catfile($cache_dir, $class);
     unless (-d $dir) {
 	$curproc->mkdir($dir, $mode);
     }

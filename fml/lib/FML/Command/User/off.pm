@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: off.pm,v 1.12 2003/11/22 05:41:51 fukachan Exp $
+# $FML: off.pm,v 1.13 2003/12/30 03:07:54 fukachan Exp $
 #
 
 package FML::Command::User::off;
@@ -24,8 +24,8 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-change delivery mode from real time to digest
-after confirmation succeeds.
+change delivery mode from real time to digest after confirmation
+succeeds.
 
 =head1 METHODS
 
