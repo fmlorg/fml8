@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.57 2002/04/28 10:19:23 fukachan Exp $
+# $FML: Message.pm,v 1.58 2002/04/28 10:38:16 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1183,8 +1183,8 @@ sub build_mime_multipart_chain
     my $msglist        = $args->{ message_list };
     my $boundary       = $args->{ boundary } || "--". time ."-$$-";
     my $dash_boundary  = "--". $boundary;
-    my $delbuf         = "\n". $dash_boundary."\n";
-    my $delbuf_end     = "\n". $dash_boundary . "--\n";
+    my $delbuf         = "\n". $dash_boundary       ; # "\n";
+    my $delbuf_end     = "\n". $dash_boundary . "--"; # "\n";
 
     for my $m (@$msglist) {
 	# delimeter: --boundary
@@ -1371,6 +1371,7 @@ sub parse_and_build_mime_multipart_chain
 	#    XXX we malloc(), "my $tmpbuf", to store the delimeter string.
 	if ($pe > $mpb_end) { # check the closing of the blocks or not
 	    if ($broken_close_delimiter) {
+		print "   broken close-delimiter\n" if $debug;
 		; # not close multipart ;)
 	    }
 	    else {
@@ -1388,10 +1389,23 @@ sub parse_and_build_mime_multipart_chain
 	    if ($pb == $pe) {
 		print "   *** broken condition pb=$pb pe=$pe ***\n" if $debug;
 	    }
-	    else {
+	    elsif ($pb < $pe) {
 		print "   delimiter\n" if $debug;
 
 		my $buf = $delimeter."\n";
+		$m[ $i++ ] = $self->_alloc_new_part({
+		    data           => \$buf,
+		    data_type      => $virtual_data_type{'delimiter'},
+		    base_data_type => $base_data_type,
+		});
+	    }
+	    else {
+		# The format of "mulitpart" part must be invalid.
+		# For example without mime header.
+		# We anyway print out only delimiter and exit ASAP.
+		print "  invalid condition ($pb > $pe)\n" if $debug;
+
+		my $buf = $delimeter;
 		$m[ $i++ ] = $self->_alloc_new_part({
 		    data           => \$buf,
 		    data_type      => $virtual_data_type{'delimiter'},
