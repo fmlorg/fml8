@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Command.pm,v 1.13 2001/10/10 10:08:06 fukachan Exp $
+# $FML: Command.pm,v 1.14 2001/10/10 14:56:01 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -141,13 +141,29 @@ sub _evaluate_command
     $curproc->reply_message("result for your command requests follows:");
 
   COMMAND:
-    for my $command (@body) { 
+    for my $command (@body) {
+	# 
+	# cheap diagnostics
+	# 
+
+	# 1. command exists or not 
 	my $comname = (split(/\s+/, $command))[0];
 	my $is_valid = 
 	    $config->has_attribute( "available_commands", $comname )
 		? 'yes' : 'no';
 	Log("command = " . $comname . " (valid?=$is_valid)");
-	next if $is_valid eq 'no';
+
+	# 2. command syntax check
+	use FML::Filter::Utils;
+	unless ( FML::Filter::Utils::is_secure_command_string( $command ) ) {
+	    LogError("insecure command: $command");
+	    $curproc->reply_message("\n$prompt $command");
+	    $curproc->reply_message("insecure, so ignored.");
+	    $is_valid = 'no';
+	}
+
+	# stop.
+	next COMMAND if $is_valid eq 'no';
 
 	# arguments to pass off to each method
 	my @options = ();
