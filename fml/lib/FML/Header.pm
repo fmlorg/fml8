@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.40 2002/04/08 12:44:23 fukachan Exp $
+# $FML: Header.pm,v 1.41 2002/04/28 13:34:15 fukachan Exp $
 #
 
 package FML::Header;
@@ -366,6 +366,11 @@ The actual function definitions exist in C<FML::Header::Subject>.
 
 add or replace C<Reply-To:>.
 
+=head2 C<rewrite_date>
+
+replace original C<Date:> to C<X-Date:>.
+and now fml process time add to C<Date:>.
+
 =cut
 
 
@@ -404,6 +409,26 @@ sub rewrite_reply_to
     else {
 	Log("(debug) not rewrite 'reply-to: $reply_to'");
     }
+}
+
+
+# Descriptions: rewrite Date: to X-Date: if needed
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+# Side Effects: update $header
+# Return Value: none
+sub rewrite_date
+{
+    my ($header, $config, $args) = @_;
+    my $orgdate = $header->get('date') || '';
+
+    use Mail::Message::Date;
+    my $nowdate = new Mail::Message::Date time;
+    my $newdate = $nowdate->{ mail_header_style };
+
+    $header->add('X-Date', $orgdate) if ($orgdate);
+    $header->replace('Date', $newdate);
+    Log("(debug) rewrite Orginal Date to 'X-Date: $orgdate'");
+    Log("(debug) rewrite New Date to 'Date: $newdate'");
 }
 
 
