@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent2.pm,v 1.1 2002/10/21 07:35:43 fukachan Exp $
+# $FML: MimeComponent2.pm,v 1.2 2002/10/21 08:35:45 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -16,13 +16,13 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Filter::MimeComponent - filter based on mail MIME component
+FML::Filter::MimeComponent - filter based on mail MIME components
 
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
 
-C<FML::Filter::MimeComponent> is a MIME content filter.
+C<FML::Filter::MimeComponent> is a mime content based filter.
 
 =head1 INTERNAL PRESENTATION FOR FILTER RULES
 
@@ -113,38 +113,33 @@ sub mime_component_check
 
   RULE:
     for my $rule (@$filter_rules) {
-	print STDERR "\n    rule ${j}: (@$rule)\n";
+	__dprint("\n    rule ${j}: (@$rule)");
 	$j++;
 
       MSG:
 	for ($mp = $msg, $i = 1; $mp; $mp = $mp->{ next }) {
 	    $data_type = $mp->data_type();
 
-	    # skip 
-	    # 1. the header part of the whole RFC822 message.
-	    # 2. parts of Mail::Message internal use.
+	    # ignore the header part of the whole RFC822 message.
+	    #        and parts of Mail::Message internal use.
 	    next MSG if ($data_type eq "text/rfc822-headers");
 	    next MSG if ($data_type =~ "multipart\.");
 
-	    # o.k. apply our filter rules.
-	    print STDERR "\n\tmsg($i) type=$data_type\n"; 
-	    $action = 
-		$self->_rule_match($msg, $rule, $mp, $whole_data_type);
-
+	    __dprint("\n\tmsg($i) $data_type"); 
+	    $action = $self->_rule_match($msg,$rule,$mp,$whole_data_type);
 	    if ($action eq 'reject' || $action eq 'permit') {
-		print STDERR "\n\t! action = $action. stop here.\n";
+		__dprint("\n\t! action = $action. stop here.");
 		$is_match = 1;
 		last RULE;
 	    }
-
-	    # prepare for the next _rule_match().
-	    $i++;
+	    
+	    $i++; # prepare for the next _rule_match().
 	}
     }
 
     my $decision = $is_match ? $action : $default_action;
     my $reason   = $is_match ? "matched action" : "default action";
-    print STDERR "\n   our desicion: $decision ($reason)\n";
+    __dprint("\n   our desicion: $decision ($reason)");
     return $decision;
 }
 
@@ -163,15 +158,15 @@ sub _rule_match
 
     if (__regexp_match($whole_type, $r_whole_type)) {
 	if (__regexp_match($type, $r_type)) {
-	    print STDERR "\t\t* checked. => $r_action\n";
+	    __dprint("\t\t* checked. => $r_action");
 	    return $r_action;
 	}
 	else {
-	    print STDERR "\t\tnot check (type not matched)\n";
+	    __dprint("\t\tnot check (type not matched)");
 	}
     }
     else {
-	print STDERR "\t\tnot check (whole_type not matched)\n";
+	__dprint("\t\tnot check (whole_type not matched)");
     }
 }
 
@@ -276,15 +271,15 @@ sub dump_message_structure
     my ($data_type, $prevmp, $nextmp, $mp, $action, $i);
     my $whole_data_type = $msg->whole_message_header_data_type();
 
-    print STDERR "\t[message structure]\n";
-    print STDERR "\t\twhole_type = $whole_data_type\n";
+    __dprint("\t[message structure]");
+    __dprint("\t\t$whole_data_type");
 
   MSG:
     for ($mp = $msg, $i = 1; $mp; $mp = $mp->{ next }) {
 	$data_type = $mp->data_type();
 	next MSG if ($data_type eq "text/rfc822-headers");
 	next MSG if ($data_type =~ "multipart\.");
-	print STDERR "\t\t$data_type\n";
+	__dprint("\t\t\t$data_type");
 	$i++;
     }
 }
@@ -315,6 +310,20 @@ sub dump_filter_rules
 =cut
 
 
+# Descriptions: print for debug (works if $debug level > 1).
+#    Arguments: STR($s)
+# Side Effects: none
+# Return Value: none
+sub __dprint
+{
+    my ($s) = @_;
+
+    if ($debug > 1) {
+	print STDERR $s, "\n";
+    }
+}
+
+
 # 
 # debug
 #
@@ -327,6 +336,9 @@ if ($0 eq __FILE__) {
 	use Getopt::Long;
 	my $opt = {};
 	GetOptions($opt, qw(debug! -c=s));
+
+	# update debug level
+	$debug = 2;
 
 	# rule ?
 	print STDERR "* current filter rules:\n";
