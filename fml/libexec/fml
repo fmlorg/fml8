@@ -69,10 +69,13 @@ sub _package_we_use
 	$pkg = 'FML::Process::Command';
     }
     elsif ($name eq 'fmlserv') {
-	$pkg = 'FML::Process::Fmlserv';
+	$pkg = 'FML::Process::ListServer';
+    }
+    elsif ($name eq 'fmlconf' || $name eq 'makefml') {
+	$pkg = 'FML::Process::Configure';
     }
     elsif ($name eq 'mead') {
-	$pkg = 'FML::Process::Mead';
+	$pkg = 'FML::Process::MailErrorAnalyzer';
     }
     else {
 	return '';
