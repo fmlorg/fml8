@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DirUtils.pm,v 1.3 2002/12/23 03:50:26 fukachan Exp $
+# $FML: DirUtils.pm,v 1.1 2002/03/24 11:26:44 fukachan Exp $
 #
 
 package FML::Command::DirUtils;
@@ -59,10 +59,6 @@ sub dir
     my $path_ls = $config->{ path_ls };
     my $argv    = $du_args->{ argv };
     my $opt_ls  = '';
-
-    use Data::Dumper;
-    print STDERR Dumper( $du_args );
-    sleep 3;
 
     # option
     if (defined($du_args->{ opt_ls }) && 
