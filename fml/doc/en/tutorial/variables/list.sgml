@@ -155,6 +155,15 @@ permit
 </row>
 <row>
 <entry>
+article_post_article_thread_lifetime</entry>
+<entry>
+ permit post from anyone if the posted message follows</entry>
+<entry>
+86400
+   </entry>
+</row>
+<row>
+<entry>
 article_post_restrictions</entry>
 <entry>
  restrictions for post</entry>

@@ -84,6 +84,7 @@ article {
 
    article_post { 
     ?     $article_post_address
+    ?     $article_post_article_thread_lifetime
           $article_post_restrictions
           $article_post_restrictions_reject_notice_data_type
           $use_article_post_function

@@ -156,6 +156,15 @@ reject_empty_content_type
 </row>
 <row>
 <entry>
+article_post_article_thread_lifetime</entry>
+<entry>
+ 記事の投稿時に、スレッドの続きであるなら、短時間の間、 </entry>
+<entry>
+86400
+   </entry>
+</row>
+<row>
+<entry>
 article_post_restrictions</entry>
 <entry>
  投稿への制限</entry>
