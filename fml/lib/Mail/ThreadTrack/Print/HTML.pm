@@ -1,4 +1,4 @@
-package Mail::ThreadTrack::Print::CGI;
+package Mail::ThreadTrack::Print::HTML;
 
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
@@ -197,4 +197,5 @@ sub run_cgi
 }
 
 
+1;
 1;

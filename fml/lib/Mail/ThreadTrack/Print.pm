@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Print.pm,v 1.10 2001/11/09 10:42:07 fukachan Exp $
+# $FML: Print.pm,v 1.11 2001/11/09 11:30:30 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -65,26 +65,13 @@ It is also larger if $status is C<open>.
 =cut
 
 
-sub _load_library
-{
-    my ($self) = @_;
-
-    require Mail::ThreadTrack::Print::Message;
-    require Mail::ThreadTrack::Print::Sort;
-    unshift(@ISA, qw(
-		   Mail::ThreadTrack::Print::Message
-		   Mail::ThreadTrack::Print::Sort
-		     ));
-}
-
-
 sub summary
 {
     my ($self, @opts) = @_;
 
     $self->_load_library();
     $self->db_open();
-    $self->do_summary(@opts);
+    $self->_do_summary(@opts);
     $self->db_close();
 }
 
@@ -95,13 +82,36 @@ sub review
 
     $self->_load_library();
     $self->db_open();
-    $self->do_review(@opts);
+    $self->_do_review(@opts);
     $self->db_close();
 }
 
 
 
-sub do_summary
+sub _load_library
+{
+    my ($self) = @_;
+    my $mode = $self->get_mode || 'text';
+
+    require Mail::ThreadTrack::Print::Message;
+    require Mail::ThreadTrack::Print::Sort;
+    my @list = 
+	qw(Mail::ThreadTrack::Print::Message Mail::ThreadTrack::Print::Sort);
+
+    if ($mode eq 'text') { 
+	require Mail::ThreadTrack::Print::Text;
+	push(@list, 'Mail::ThreadTrack::Print::Text');
+    }
+    elsif ($mode eq 'html') { 
+	require Mail::ThreadTrack::Print::HTML;
+	push(@list, 'Mail::ThreadTrack::Print::HTML');
+    }
+
+    unshift(@ISA, @list);
+}
+
+
+sub _do_summary
 {
     my ($self) = @_;
     my ($tid, $status, $thread_id);
@@ -112,20 +122,14 @@ sub do_summary
     $thread_id = $self->list_up_thread_id();
 
     if (@$thread_id) {
-	# sort the thread output order it out by cost
-	# and print the thread summary in that order.
-	$self->sort($thread_id);
+	# sort the thread output order by cost and
+	# print the thread summary in that order.
+	$self->sort_thread_id($thread_id);
+	$self->_print_thread_summary($thread_id);
 
-	if ($mode eq 'html') {
-	    print $fd "<TABLE BORDER=4>\n";
-	    $self->_print_thread_summary($thread_id);
-	    print $fd "</TABLE>\n";
-	}
-	else {
-	    $self->_print_thread_summary($thread_id);
-
-	    # show short summary for each article
-	    $self->_print_article_summary($thread_id);
+	# show short summary for each message
+	unless ($mode eq 'html') {
+	    $self->_print_message_summary($thread_id);
 	}
     }
 }
@@ -142,6 +146,7 @@ sub _print_thread_summary
     my $format = "%10s  %5s %8s  %-20s  %s\n";
 
     if ($mode eq 'text') {
+	print $fd "<TABLE BORDER=4>\n";
 	printf($fd $format, 'date', 'age', 'status', 'thread id', 'articles');
 	print $fd "-" x60;
 	print $fd "\n";
@@ -167,14 +172,18 @@ sub _print_thread_summary
 
 	if ($mode eq 'html') {
 	    eval q{
-		use Mail::ThreadTrack::Print::CGI;
-		push(@ISA, qw(Mail::ThreadTrack::Print::CGI));
+		use Mail::ThreadTrack::Print::HTML;
+		push(@ISA, qw(Mail::ThreadTrack::Print::HTML));
 	    };
 	}
 	else {
 	    printf($fd $format, 
 		   $date, $age, $status, $tid, $rh->{ _articles }->{ $tid });
 	}
+    }
+
+    if ($mode eq 'html') {
+	print $fd "</TABLE>\n";
     }
 }
 
@@ -192,7 +201,7 @@ sub _cost_to_indicator
 }
 
 
-sub _print_article_summary
+sub _print_message_summary
 {
     my ($self, $thread_id) = @_;
     my $config = $self->{ _config };
@@ -203,12 +212,9 @@ sub _print_article_summary
 
     if (defined $config->{ spool_dir }) {
 	my ($aid, @aid, $file);
-
-	if ($is_show_cost_indicate) {
-	    print $fd "\n\"!\" mark: stalled? please check and reply it.\n";
-	}
-
 	my $spool_dir  = $config->{ spool_dir };
+
+      THREAD_ID_LIST:
 	for my $tid (@$thread_id) {
 	    if ($is_show_cost_indicate) {
 		my $how_bad = _cost_to_indicator( $cost->{ $tid } );
@@ -232,7 +238,7 @@ sub _print_article_summary
 }
 
 
-sub do_review
+sub _do_review
 {
     my ($self, $str, $min, $max) = @_;
     my $config    = $self->{ _config };

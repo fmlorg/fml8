@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Utils.pm,v 1.1 2001/11/09 10:37:06 fukachan Exp $
+# $FML: Sort.pm,v 1.1 2001/11/09 11:28:42 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Sort;
@@ -13,7 +13,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 
-=head2 sort($thread_id_list)
+=head2 sort_thread_id($thread_id_list)
 
 =cut
 
@@ -22,7 +22,7 @@ use Carp;
 #    Arguments: $self $args
 # Side Effects: 
 # Return Value: none
-sub sort
+sub sort_thread_id
 {
     my ($self, $thread_id_list) = @_;
 
