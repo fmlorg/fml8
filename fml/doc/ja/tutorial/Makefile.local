@@ -1,9 +1,9 @@
 #
-# $FML$
+# $FML: Makefile.local,v 1.1 2001/11/24 06:54:45 fukachan Exp $
 #
 
 FORMATER = ../../../utils/bin/varlist.pl
-SOURCE   =  ../../../etc/default_config.cf.ja
+SOURCE   =  ../../../etc/default_config.cf.ja.in
 
 VARLIST  = internals/list.variables.sgml
 
