@@ -57,6 +57,31 @@ sub AUTOLOAD
 }
 
 
+sub content_type
+{
+    my ($header) = @_;
+    my ($type) = split(/;/, $header->get('content-type'));
+    if (defined $type) {
+	$type =~ s/\s*//g;
+	return $type;
+    }
+}
+
+
+sub mime_boundary
+{
+    my ($header) = @_;
+    my ($m) = split(/;/, $header->get('content-type'));
+
+    if ($m =~ /boundary=\"(.*)\"/) {
+	return "--".$1;
+    }
+    else {
+	undef;
+    }
+}
+
+
 sub add_fml_ml_name
 {
     my ($header, $config, $args) = @_;
