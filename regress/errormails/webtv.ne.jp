@@ -1,0 +1,67 @@
+Return-Path: <>
+Received: from zircon.nuinui.net ([10.20.30.2] helo=topaz.nuinui.net)
+	by gauss.nuinui.net with esmtp id 15MgsC-000MqX-00; Wed, 18 Jul 2001 11:15:36 +0900
+Received: from mailsorter-2.iap.tokyo.webtv.ne.jp ([10.20.30.4])
+	by topaz.nuinui.net with esmtp id 15Mgrg-000A5j-00
+	for elena-admin@nuinui.net; Wed, 18 Jul 2001 11:15:04 +0900
+Received: from postoffice-11.iap.tokyo.webtv.ne.jp (postoffice-11.iap.tokyo.webtv.ne.jp [10.20.30.7]) by mailsorter-2.iap.tokyo.webtv.ne.jp (8.8.8/ms.graham.22Aug97) with ESMTP id LAA17107; Wed, 18 Jul 2001 11:15:05 +0900 (JST)
+Received: from localhost (localhost) by postoffice-11.iap.tokyo.webtv.ne.jp (8.8.8/po.gso.24Feb98) with internal id LAA16563; Wed, 18 Jul 2001 11:15:05 +0900 (JST)
+Date: Wed, 18 Jul 2001 11:15:05 +0900 (JST)
+From: Post Office <postoffice@webtv.ne.jp>
+Subject: Returned mail: Service unavailable
+Message-Id: <200107180215.LAA16563@postoffice-11.iap.tokyo.webtv.ne.jp>
+To: <elena-admin@nuinui.net>
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status;
+	boundary="LAA16563.995422505/postoffice-11.iap.tokyo.webtv.ne.jp"
+Auto-Submitted: auto-generated (failure)
+
+This is a MIME-encapsulated message
+
+--LAA16563.995422505/postoffice-11.iap.tokyo.webtv.ne.jp
+
+The original message was received at Wed, 18 Jul 2001 11:15:04 +0900 (JST)
+from mailsorter-2.iap.tokyo.webtv.ne.jp [10.20.30.24]
+
+   ----- The following addresses had permanent fatal errors -----
+errorperson?user-id=102624708&subscriber-id=94219786&category=normal&spam-enabled=false&service-tier=1@postoffice.webtv.ne.jp
+
+   ----- Transcript of session follows -----
+
+The incoming mailbox is full for user errorperson.
+This person is not able to receive more mail at the present time.
+
+554 errorperson?user-id=102624708&subscriber-id=94219786&category=normal&spam-enabled=false&service-tier=1@postoffice.webtv.ne.jp... Service unavailable
+
+--LAA16563.995422505/postoffice-11.iap.tokyo.webtv.ne.jp
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; postoffice-11.iap.tokyo.webtv.ne.jp
+Received-From-MTA: DNS; mailsorter-2.iap.tokyo.webtv.ne.jp
+Arrival-Date: Wed, 18 Jul 2001 11:15:04 +0900 (JST)
+
+Final-Recipient: RFC822; errorperson?user-id=102624708&subscriber-id=94219786&category=normal&spam-enabled=false&service-tier=1@postoffice.webtv.ne.jp
+Action: failed
+Status: 5.5.0
+Last-Attempt-Date: Wed, 18 Jul 2001 11:15:05 +0900 (JST)
+
+--LAA16563.995422505/postoffice-11.iap.tokyo.webtv.ne.jp
+Content-Type: message/rfc822
+
+Return-Path: <elena-admin@nuinui.net>
+Received: from mailsorter-2.iap.tokyo.webtv.ne.jp (mailsorter-2.iap.tokyo.webtv.ne.jp [10.20.30.52]) by postoffice-11.iap.tokyo.webtv.ne.jp (8.8.8/po.gso.24Feb98) with ESMTP id LAA16561; Wed, 18 Jul 2001 11:15:04 +0900 (JST)
+From: elena-admin@nuinui.net
+Received: from topaz.nuinui.net (zircon.nuinui.net [10.20.30.54]) by mailsorter-2.iap.tokyo.webtv.ne.jp (8.8.8/ms.graham.22Aug97) with ESMTP id LAA17103; Wed, 18 Jul 2001 11:15:04 +0900 (JST)
+Received: from cobalt.nuinui.net
+	by topaz.nuinui.net with esmtp id 15Mgrb-000A11-00
+	for errorperson@webtv.ne.jp; Wed, 18 Jul 2001 11:15:01 +0900
+Message-Id: <1.0.J.20010718105516.875.07e0@turquoise.nuinui.net>
+To: <errorperson@webtv.ne.jp>
+Subject: ???
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="ISO-2022-JP"
+Date: 18 Jul 2001 10:55:17 +0900
+Organization: nuinui.net
+...
+--LAA16563.995422505/postoffice-11.iap.tokyo.webtv.ne.jp--
