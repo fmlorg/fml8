@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.30 2001/10/20 07:44:13 fukachan Exp $
+# $FML: Message.pm,v 1.31 2001/10/21 15:08:50 fukachan Exp $
 #
 
 package Mail::Message;
@@ -713,13 +713,17 @@ sub _header_mime_boundary
 sub _header_data_type
 {
     my ($self, $header) = @_;
-    my ($type) = split(/;/, $header->get('content-type'));
-    if (defined $type) {
-	$type =~ s/\s*//g;
-	$type =~ tr/A-Z/a-z/;
-	return $type;
+
+    if (defined $header->get('content-type')) {
+	my ($type) = split(/;/, $header->get('content-type'));
+	if (defined $type) {
+	    $type =~ s/\s*//g;
+	    $type =~ tr/A-Z/a-z/;
+	    return $type;
+	}
     }
-    undef;
+
+    return undef;
 }
 
 
