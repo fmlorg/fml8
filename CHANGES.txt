@@ -1,6 +1,15 @@
 		CHANGES
 		Last Modified: $Date$
 
+2001/12/18
+
+  記事の HTML 化を可能にする(デフォルトで ON)
+
+	use_html_archive = yes (デフォルト)
+
+	~fml/public_html/mlarchive/ＭＬ名/ 
+
+
 2001/12/16
 
    FML::Messages 
@@ -1273,4 +1282,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.40 2001/12/11 16:14:07 fukachan Exp $
+$FML: CHANGES.txt,v 1.41 2001/12/16 14:42:56 fukachan Exp $
