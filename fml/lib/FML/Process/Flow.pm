@@ -58,7 +58,7 @@ FML::__HERE_IS_YOUR_MODULE_NAME__.pm appeared in fml5.
 # Side Effects: 
 #               ProcessSwtich() is exported to main:: Name Space.
 # Return Value: none
-sub main::ProcessStart
+sub ProcessStart
 {
     my ($pkg, $args) = @_;
 
