@@ -60,6 +60,13 @@ tmp_dir		= $ml_home_dir/tmp
 db_dir		= $var_dir/db
 
 
+# Descriptions: mail queue のディレクトリ
+#      History: 似たような目的に tmp/ が使われていたが、
+#               fml 4.0 には直接該当するものはない。
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var/mqueue
+mqueue_dir	= $var_dir/mqueue
+
 =head1	アクセス制御ルール
 
 # Descriptions: 投稿への制限
