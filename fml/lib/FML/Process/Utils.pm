@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Utils.pm,v 1.8 2001/05/28 16:17:14 fukachan Exp $
+# $FML: Utils.pm,v 1.1 2001/11/04 03:46:50 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -62,6 +62,15 @@ sub command_line_argv
     my $args = $curproc->{ __parent_args };
 
     return $args->{ ARGV };
+}
+
+
+sub command_line_options
+{
+    my ($curproc) = @_;
+    my $args = $curproc->{ __parent_args };
+
+    return $args->{ options };
 }
 
 
