@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.84 2003/10/15 04:20:01 fukachan Exp $
+# $FML: Utils.pm,v 1.85 2003/10/15 08:25:28 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1359,17 +1359,6 @@ sub language_default
     my ($curproc) = @_;
 
     return 'euc-jp'; # default
-}
-
-
-# Descriptions: language used in reply message
-#    Arguments: OBJ($curproc)
-# Side Effects: none
-# Return Value: STR
-sub language_of_reply_message
-{
-    my ($curproc) = @_;
-    $curproc->language_default();
 }
 
 
