@@ -1,6 +1,4 @@
-#
-# $FML: paths.cf.in,v 1.1 2001/11/18 02:35:05 fukachan Exp $
-#
+=head1 program paths
 
 path_perl                 = @PERL@
 
