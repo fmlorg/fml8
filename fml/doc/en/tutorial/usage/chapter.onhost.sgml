@@ -1,0 +1,145 @@
+<!--
+   $FML$
+   $jaFML: chapter.onhost.sgml,v 1.8 2003/04/15 14:51:46 fukachan Exp $
+-->
+
+<chapter id="usage.onhost">
+	<title>
+	What can we do on the mailing list server host ?
+	</title>
+
+
+<para>
+On the host which serves ML driver, 
+you can use CUI and edit all configuration files as you like.
+It implies you are the greatest administrator :)
+</para>
+
+
+<sect1>
+	<title>
+	On the host
+	</title>
+
+<para>
+You need no confirmation in using makefml.
+</para>
+
+<para>
+Person who can login the host of mailing list server has all
+priviledge for all ML's on the host.
+So, He/She can edit all configuration files.
+But He/She may do wrong operations.
+</para>
+
+<para>
+To avoid careless miss operations, in usual cases you should use CUI
+(makefml or fml) to configure fml.  Of course you can edit files
+directly if you can understand fml structures. By default we recommend
+you should use CUI even on the host.
+</para>
+
+<para>
+fml command is same as makefml command except for the argument order.
+<screen>
+makefml COMMAND ML OPTIONS
+fml     ML COMMAND OPTIONS
+</screen>
+Please either as you like.
+</para>
+
+</sect1>
+
+
+<sect1 id="usage.commandpolicy">
+	<title>
+	Policy of command creation
+	</title>
+
+<para>
+&fmldevel; provides command for each function.  Except for some
+special cases, we should unify all functions into makefml/fml command
+since such commands can be shared among CUI, GUI and commmnd mail.
+</para>
+
+
+<sect2>
+	<title>
+	operation may modify the specific ML (read/write).
+	</title>
+
+<para>
+We should implement sub-command of makefml when some operation may
+modify the specific ML.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	operation read only the data of the specific ML (read only).
+	</title>
+
+<para>
+you should implement it as a makefml command since it is related to
+the specific ML.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	see the general data (read only)
+	</title>
+
+<para>
+If the data is not related to the specific ML, for example,
+see the module manual, aliases on the host, 
+we implement specific commands other than makefml/fml.
+This command begins with ^fml.
+<screen>
+fmladdr	 [-n]
+fmlalias [-n]
+fmldoc   MODULE
+fmlconf  [-n] ML
+</screen>
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	misc
+	</title>
+
+<para>
+we implement specific commands other than makefml/fml.
+This command begins with ^fml.
+</para>
+
+<para>
+The conveter from text to html form.
+This command is used to convert both fml spool and MH folders.
+<screen>
+fmlhtmlify [-I DIR] $src_dir $dst_dir
+</screen>
+</para>
+
+</sect2>
+
+
+</sect1>
+
+
+&sect.usage.makefml;
+&sect.usage.fml;
+&sect.usage.fmladdr;
+&sect.usage.fmlalias;
+&sect.usage.fmlconf;
+&sect.usage.fmldoc;
+&sect.usage.fmlhtmlify;
+
+</chapter>

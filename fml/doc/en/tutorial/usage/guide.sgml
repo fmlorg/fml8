@@ -1,0 +1,20 @@
+<!--
+   $FML$
+   $jaFML: guide.sgml,v 1.1 2002/07/28 12:20:20 fukachan Exp $
+-->
+
+<sect1 id="usage.user.guide">
+	<title>
+	get ML guide
+	</title>
+
+<para>
+send the mail with 
+<screen>
+guide
+</screen>
+to elena-ctl@fml.org address.
+fml sends back the guide file to the sender.
+</para>
+
+</sect1>

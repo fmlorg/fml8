@@ -1,0 +1,28 @@
+<!--
+   $FML$
+   $jaFML: fmlconf.sgml,v 1.4 2002/07/28 06:26:58 fukachan Exp $
+-->
+
+<sect1 id="usage.fmlconf">
+	<title>
+	show configuration of one ML
+	</title>
+
+<para>
+fmlconf (/usr/local/bin/fmlconf) takes ML name as an argument.
+It shows all variables of the specified ML.
+If -n option specified, it shows variables different from default ones.
+</para>
+
+<para>
+To list up all variable list,
+<screen>
+% fmlconf elena
+</screen>
+To list up variables different from the default one,
+<screen>
+% fmlconf -n elena
+</screen>
+</para>
+
+</sect1>

@@ -1,0 +1,21 @@
+<!--
+   $FML$
+   $jaFML: get.sgml,v 1.2 2003/04/15 14:51:46 fukachan Exp $
+-->
+
+<sect1 id="usage.user.get">
+	<title>
+	read past articles
+	</title>
+
+<para>
+send the mail with 
+<screen>
+get NUMBER
+</screen>
+to elena-ctl@fml.org address.
+NUMBER is the article number.
+fml sends back articles by mime/multipart form to the sender.
+</para>
+
+</sect1>

@@ -1,0 +1,63 @@
+<!--
+   $FML$
+   $jaFML: command.sgml,v 1.7 2003/04/15 14:51:46 fukachan Exp $
+-->
+
+<sect1 id="fml.command.bymail">
+	<title>
+	command mail (control fml by sendmail mails)
+	</title>
+
+<para>
+fml accepts control commands which is sent as a mail.
+It is called "command mail".
+</para>
+
+<important>
+<para>
+The use of CUI (makefml/fml) is basic in fml world.
+</para>
+
+</important>
+
+
+<sect2 id="fml.command.bymail.flow">
+	<title>
+	flow
+	</title>
+
+<para>
+Consider elena ML.  Send the command mail to elena-ctl@fml.org which
+is the address for command mail.  MTA receives the mail and finally
+kicks off /usr/local/libexec/fml/command program.  This program
+receives the mail (command mail) from STDIN , processes the requests
+and sends back the result to the sender.
+The mail to send back is passed to MTA for delivery via SMTP.
+</para>
+
+<warning>
+<para>
+The result is aggreagated to one msssage as
+<link linkend="message.reply">
+MIME/Multipart
+</link>
+. This is different from &fml4; behaviour.
+</para>
+</warning>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	perl modules of command mails
+	</title>
+
+<para>
+All modules which CUI, GUI and command mail uses are implented as
+FML::Command:: class.
+</para>
+
+</sect2>
+
+</sect1>

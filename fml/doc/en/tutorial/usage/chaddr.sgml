@@ -1,0 +1,32 @@
+<!--
+   $FML$
+   $jaFML: chaddr.sgml,v 1.2 2003/04/15 14:51:45 fukachan Exp $
+-->
+
+<sect1 id="usage.user.chaddr">
+	<title>
+	change registered address
+	</title>
+
+<para>
+In the case of elena@fml.org ML,
+send the mail with 
+<screen>
+chaddr OLD-ADDRESS NEW-ADDRESS
+</screen>
+to elena-ctl@fml.org.
+<screen>
+Example:
+chaddr rudo@nuinui.net rudo-new@nuinui.net
+</screen>
+You can send this mail from both OLD-ADDRESS and NEW-ADDRESS.
+</para>
+
+<para>
+&fml8; sends back confirmation to both addresses.
+Please send back the confirmation to elena-ctl again.
+When you request is confirmed to be valid, 
+&fml8; remove OLD-ADDRESS and add NEW-ADDRESS to member lists.
+</para>
+
+</sect1>

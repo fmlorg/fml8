@@ -1,0 +1,28 @@
+<!--
+   $FML$
+   $jaFML: fmlhtmlify.sgml,v 1.6 2002/11/26 11:16:38 fukachan Exp $
+-->
+
+<sect1 id="usage.fmlhtmlify">
+	<title>
+	convert article to HTML form.
+	</title>
+
+<para>
+By default, fml converts the article to HTML form.
+"fmlhtmlify" command is a tool to convert all articles 
+to initialize the html archive.
+</para>
+
+<para>
+<screen>
+% fmlhtmlify SPOOL_DIRECTORY HTML_ARCHIVE_DIRECTORY
+
+Example:
+
+% fmlhtmlify /var/spool/ml/elena/spool /some/where/mlarchive/elena
+</screen>
+
+</para>
+
+</sect1>

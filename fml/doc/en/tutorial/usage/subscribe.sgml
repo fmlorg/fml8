@@ -1,0 +1,27 @@
+<!--
+   $FML$
+   $jaFML: subscribe.sgml,v 1.1 2002/07/28 12:20:20 fukachan Exp $
+-->
+
+<sect1 id="usage.user.subscribe">
+	<title>
+	subscribe to ML
+	</title>
+
+<para>
+Suppose elena@fml.org ML.
+send the mail with 
+<screen>
+subscribe YOUR-NAME
+</screen>
+to elena-ctl@fml.org ML.
+</para>
+
+<para>
+&fml8; sends back confirmation to both addresses.
+Please send back the confirmation to elena-ctl again.
+When you request is confirmed to be valid, 
+&fml8; remove OLD-ADDRESS and add NEW-ADDRESS to member lists.
+</para>
+
+</sect1>

@@ -1,0 +1,286 @@
+<!--
+   $FML$
+   $jaFML: makefml.sgml,v 1.7 2003/04/15 14:51:46 fukachan Exp $
+-->
+
+
+<sect1 id="usage.makefml.newml">
+	<title>
+	create ML
+	</title>
+
+<para>
+<screen>
+% su fml
+% makefml newml ML
+</screen>
+If ML without @domain part, the domain of the ML is the default
+domain. Both ML and ML@DOMAIN form is o.k. for the default domain. 
+<screen>
+% makefml newml elena
+% makefml newml elena@fml.org
+</screen>
+In the case of virtual domain, you should specify the full address
+user@domain as ML string.
+</para>
+
+<para>
+See the section
+<link linkend="setup.newml">
+<xref linkend="setup.newml">
+</link>
+for more details.
+</para>
+
+</sect1>
+
+
+<sect1 id="usage.makefml.rmml">
+	<title>
+	remove the ML
+	</title>
+
+<para>
+<screen>
+% su fml
+% makefml rmml ML
+</screen>
+fml accepts ML string without @domain as the default domain.
+Both user and user@domain syntax is acceptable.
+<screen>
+% makefml rmml elena
+% makefml rmml elena@fml.org
+</screen>
+use user@domain syntax for virtual domains.
+</para>
+
+<para>
+revert the action newml did.
+It removes ML home directory, alias entries and ~fml/.qmail-*.
+</para>
+
+</sect1>
+
+
+<sect1 id="usage.makefml.user.adddel">
+	<title>
+	subscribe/unsubscribe
+	</title>
+
+<para>
+Use useradd to subscribe the user,
+userdel to unsubscribe the user.
+<screen>
+% su fml
+% makefml useradd ML ADDRESS
+% makefml userdel ML ADDRESS
+</screen>
+fml treats ML without @domain part as one of the default domain.
+<screen>
+% su fml
+% makefml useradd elena rudo@nuinui.net
+% makefml userdel elena rudo@nuinui.net
+% makefml useradd elena@fml.org rudo@nuinui.net
+% makefml userdel elena@fml.org rudo@nuinui.net
+</screen>
+</para>
+
+<para>
+For convenience, useradd is an acronym.
+<screen>	
+useradd
+adduser	
+subscribe
+add
+</screen>	
+are same as useradd.
+In the same way, 
+<screen>
+userdel
+deluser
+bye
+remove
+resign
+signoff
+unsubscribe
+</screen>
+are same as userdel.
+</para>
+
+
+</sect1>
+
+
+<sect1 id="usage.makefml.user.chaddr">
+	<title>
+	change registered address
+	</title>
+
+
+<para>
+<screen>
+% su fml
+% makefml chaddr ML OLD-ADDRESS NEW-ADDRESS
+</screen>
+fml treats ML without @domain part as one of the default domain.
+For example, 
+<screen>
+% su fml
+% makefml chaddr elena rudo@nuinui.net teddy@nuinui.net
+% makefml chaddr elena@fml.org rudo@nuinui.net teddy@nuinui.net
+</screen>
+</para>
+
+
+</sect1>
+
+
+<sect1 id="usage.makefml.off">
+	<title>
+	stop delivery for a user
+	</title>
+
+<para>
+<screen>
+% makefml off elena ADDRESS
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1 id="usage.makefml.on">
+	<title>
+	start delivery for a user
+	</title>
+
+<para>
+<screen>
+% makefml on elena ADDRESS
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1 id="usage.makefml.log">
+	<title>
+	See log of elena ML
+	</title>
+
+<para>
+<screen>
+% makefml log elena
+% makefml log elena@fml.org
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1 id="usage.makefml.list">
+	<title>
+	see the member list of ML
+	</title>
+
+<para>
+<screen>
+% makefml list elena
+</screen>
+It shows addresses who can post this ML. Instead
+<screen>
+% makefml list elena recipient
+</screen>
+lists up recipients of this ML.
+</para>
+
+</sect1>
+
+
+<sect1 id="usage.makefml.config">
+	<title>
+	Modify configuration
+	</title>
+
+<para>
+Edit config.cf directly now.
+Tools are not yet implemented.
+</para>
+
+</sect1>
+
+
+<sect1 id="usage.makefml.admin.adddel">
+	<title>
+	add/remove remote administrator.
+	</title>
+
+<warning>
+<para>
+A remote administor is person who cannot login to the mail server but
+control an ML by sending command mail (admin command).
+</para>
+
+<para>
+CUI can control remote administrators since 
+the use of CUI needs login to this host.
+</para>
+</warning>
+
+<para>
+<screen>
+% su fml
+% makefml addadmin ML ADDRESS
+% makefml deladmin ML ADDRESS
+</screen>
+fml treats ML without @domain part as one of the default domain.
+<screen>
+% su fml
+% makefml addadmin elena rudo@nuinui.net
+% makefml deladmin elena rudo@nuinui.net
+% makefml addadmin elena@fml.org rudo@nuinui.net
+% makefml deladmin elena@fml.org rudo@nuinui.net
+</screen>
+</para>
+
+<para>
+For convenience, 
+<screen>	
+adminadd
+addpriv
+</screen>	
+are asme as addadmin.
+<screen>
+byeadmin
+byepriv
+</screen>
+are same as deladmin.
+</para>
+
+
+</sect1>
+
+
+
+<sect1 id="usage.makefml.moderator.adddel">
+	<title>
+	add/remove a moderator
+	</title>
+
+<para>
+<screen>
+% su fml
+% makefml addmoderator ML ADDRESS
+% makefml delmoderator ML ADDRESS
+</screen>
+fml treats ML without @domain part as one of the default domain.
+<screen>
+% su fml
+% makefml addmoderator elena rudo@nuinui.net
+% makefml delmoderator elena rudo@nuinui.net
+% makefml addmoderator elena@fml.org rudo@nuinui.net
+% makefml delmoderator elena@fml.org rudo@nuinui.net
+</screen>
+</para>
+
+</sect1>

@@ -1,0 +1,21 @@
+<!--
+   $FML$
+   $jaFML: chapter.user.sgml,v 1.2 2002/07/28 12:20:19 fukachan Exp $
+-->
+
+<chapter id="usage.user">
+	<title>
+	What the user can do ?
+	</title>
+
+
+&sect.usage.guide;
+&sect.usage.subscribe;
+&sect.usage.post;
+&sect.usage.help;
+&sect.usage.get;
+&sect.usage.unsubscribe;
+
+&sect.usage.command;
+
+</chapter>
