@@ -1,6 +1,34 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/11/26
+
+   implement fmlsummary program
+
+   new variables
+	define $fmlsummary*hook
+	define $summary_file, $summary_format_type
+	
+   FML::Article::Summary 
+	FNF-ify.
+	clean up.
+	nuke debug.
+	implement $summary->rebuild() to enable "fmlsummary rebuild
+	$ml_name". 
+	
+   FML::Process::Summary 
+	newly added as a main module to run fmlsummary program.
+	implement $summary->rebuild() to enable "fmlsummary rebuild
+	$ml_name". 
+	
+   FML::Header::Subject 
+	define clean_up(), decode(), delete_subject_tag() to separete
+	functions.
+	
+   FML::Process::Kernel 
+	enable fmlsummary $command $ml_name ...
+	more defined() check
+
 2002/11/24
 
    variables
@@ -3623,4 +3651,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.110 2002/11/19 14:31:02 fukachan Exp $
+$FML: CHANGES.txt,v 1.111 2002/11/23 15:27:17 fukachan Exp $
