@@ -1,6 +1,27 @@
 		CHANGES
 		$Date$
 
+2001/08/06
+
+  フィルタ
+	clean up 
+
+  fml/lib/
+  fml/etc/
+	変数名の変更をする。s/header_check/header_loop_check/
+	ループチェックの設定であることを変数名自体ではっきりさせる
+
+  IO::Adapter
+
+	IO::Adapter
+		set @ISA = qw(IO::Adapter::ErrorStatus) to call error_set()
+		check $@ before call configure()
+		add more debug codes
+
+	IO::Adapter::MySQL
+		メインの部分を 	IO::Adapter::SQL:: 以下へ移す
+		IO::Adapter::MySQL は単なるフロントエンドにする
+
 2001/08/02
 
    Mail::Message
@@ -71,5 +92,5 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.4 2001/07/31 14:25:47 fukachan Exp $
+$FML: CHANGES.txt,v 1.5 2001/08/04 02:30:02 fukachan Exp $
 
