@@ -1,0 +1,26 @@
+<!--
+   $FML: chapter.header.sgml,v 1.1 2002/07/28 06:26:56 fukachan Exp $
+-->
+
+<chapter id="customize.message">
+	<title>
+	メッセージの拡張
+	</title>
+
+
+<sect1 id="customize.message.myproc">
+	<title>
+	ケーススタディ: 独自のメッセージを作る
+	</title>
+
+<para>
+<screen>
+/var/spool/ml/elena/local/share/message/euc-jp/クラス
+</screen>
+にファイルをつくって下さい。
+</para>
+
+</sect1>
+
+
+</chapter>

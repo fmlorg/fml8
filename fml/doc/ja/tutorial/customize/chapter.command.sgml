@@ -1,0 +1,37 @@
+<!--
+   $FML: chapter.header.sgml,v 1.1 2002/07/28 06:26:56 fukachan Exp $
+-->
+
+<chapter id="customize.command">
+	<title>
+	コマンドの拡張
+	</title>
+
+
+<sect1 id="customize.command.myproc">
+	<title>
+	ケーススタディ: 独自の help コマンドを作る
+	</title>
+
+<para>
+elena ＭＬの help コマンドを独自のものにしたいとしましょう。
+その場合、オリジナルの help.pm を参考に独自の 
+help.pm を作り、以下のパスにおいてください。
+<screen>
+/var/spool/ml/elena/local/lib/FML/Command/User/help.pm
+</screen>
+この local/ パスのモジュールが優先されるので、
+help コマンドの応答にはこのモジュール help.pm が使われます。
+</para>
+
+<caution>
+<para>
+他のファイルからカット＆ペーストする時は、
+package の名前空間に気をつけてね
+</para>
+</caution>
+
+</sect1>
+
+
+</chapter>
