@@ -4,10 +4,10 @@
 #      History:
 #        Value: yes / no
 #     Examples:
-use_html_archive		=	yes
+use_html_archive	=	yes
 
 # Descriptions: ヘッダ情報を根拠にしたフィルタリングをするか？
 #      History:
 #        Value: yes / no
 #     Examples:
-html_archive_dir		=	$public_html_dir/mlarchive/$ml_name
+html_archive_dir	= $fml_owner_home_dir/public_html/mlarchive/$ml_name

@@ -1,5 +1,14 @@
 =head1	ディレクトリ
 
+# Descriptions: ユーザ fml のホーム
+#      History: fml 4.0 にはない
+#        Value: directory
+#     Examples: /home/fml
+#               なお、この値はプロセスの UID から動的に決定される
+#		くわしくは FML::Process::Kernel を参照のこと
+# fml_owner_home_dir =
+
+
 # Descriptions: ML のホームディレクトリ
 #               $ml_home_dir は起動時に渡されるアーギュメントを元に
 #               FML::Process::Switch が決める
