@@ -51,7 +51,12 @@ This module is a top level driver to talk with a MySQL server in SQL
 
 The model dependent SQL statement is expected to be holded in
 C<SQL::Schema::> modules. 
-Each model name is specified at $args->{ schema } in new($args).
+
+You can specify your own module name at $args->{ driver } in
+new($args). 
+It is expected to provdie C<add()>, C<delete()> and
+C<get_next_value()> method. 
+
 
 =head1 METHODS
 
@@ -66,9 +71,9 @@ customizatoins and functions.
 sub configure
 {
     my ($self, $me, $args) = @_;
-    my $map    = $me->{ _map };
-    my $config = $args->{ $map };
-    my $params = $config->{ params };
+    my $map    = $me->{ _map };       # e.g. "mysql:toymodel"
+    my $config = $args->{ $map };     # { add => 'insert into ..', }
+    my $params = $config->{ params }; #
 
     # import basic DBMS parameters
     $me->{ _config }        = $config;
@@ -85,13 +90,14 @@ sub configure
     });
     
     # load model specific library
-    my $schema = $config->{ schema } || 'toymodel';
-    my $pkg    = "SQL::Schema::". $schema;
+    my $pkg = $config->{ driver } || 'SQL::Schema::toymodel';
     eval qq{ require $pkg; $pkg->import();};
-    print $@;
+
+    # $self->{ _driver } is the $config->{ driver } object.
     unless ($@) {
+	print STDERR "load $pkg\n" if $ENV{ 'debug ' };
 	@ISA = ($pkg, @ISA);
-	$me->{ _schema } = $pkg;
+	$me->{ _driver } = $pkg;
     }
     else {
 	error_set($self, $@);
@@ -124,8 +130,9 @@ sub get_next_value
 
     # for the first time
     unless ($self->{ _res }) {
-	if ( $self->{ _schema }->can('get_next_value') ) {
-	    $self->{ _schema }->get_next_value($args);
+	# $self->{ _driver } is the $config->{ driver } object.
+	if ( $self->{ _driver }->can('get_next_value') ) {
+	    $self->{ _driver }->get_next_value($args);
 	}
 	else {
 	    my $query = $self->build_sql_query({ 
@@ -165,8 +172,9 @@ sub add
 {
     my ($self, $addr) = @_;
 
-    if ( $self->{ _schema }->can('add') ) {
-	$self->{ _schema }->add($addr);
+    # $self->{ _driver } is the $config->{ driver } object.
+    if ( $self->{ _driver }->can('add') ) {
+	$self->{ _driver }->add($addr);
     }
     else {
 	my $query = $self->build_sql_query({ 
@@ -182,8 +190,9 @@ sub delete
 {
     my ($self, $addr) = @_;
 
-    if ( $self->{ _schema }->can('delete') ) {
-	$self->{ _schema }->delete($addr);
+    # $self->{ _driver } is the $config->{ driver } object.
+    if ( $self->{ _driver }->can('delete') ) {
+	$self->{ _driver }->delete($addr);
     }
     else {
 	my $query = $self->build_sql_query({ 

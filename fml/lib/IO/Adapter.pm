@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Adapter.pm,v 1.2 2001/05/30 14:35:10 fukachan Exp $
+# $FML: Adapter.pm,v 1.3 2001/06/09 10:55:49 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -33,11 +33,33 @@ For example, C<$map_params> is:
 
     $map_params = {
 	'mysql:toymodel' => {
+	    sql_server     => 'mysql.fml.org',
+	    database       => 'fml',
+	    table          => 'ml',
+	    user           => 'fml',
+	    user_password  => "secret password :)",
+
+	    # this driver specific SQL statements
 	    getline        => "select ... ",
 	    get_next_value => "select ... ",
 	    add            => "insert ... ",
 	    delete         => "delete ... ",
 	    replace        => "set address = 'value' where ... ",
+	},
+    };
+
+In another way, you can specify your own module to provide
+specific SQL statements.
+
+    $map_params = {
+	'mysql:toymodel' => {
+	    sql_server     => 'mysql.fml.org',
+	    database       => 'fml',
+	    table          => 'ml',
+	    user           => 'fml',
+	    user_password  => "secret password :)",
+
+	    driver         => 'My::Driver::Module::Name',
 	},
     };
 
