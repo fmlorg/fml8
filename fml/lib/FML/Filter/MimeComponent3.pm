@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent3.pm,v 1.2 2002/10/26 04:03:15 fukachan Exp $
+# $FML: MimeComponent3.pm,v 1.3 2002/10/27 02:30:15 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -30,7 +30,7 @@ Our filter rule is a list of the following components:
 
     (whole message type, message type, action)
 
-For example, 
+For example,
 
     $rules = (
 	      (text/plain   *  permit),
@@ -122,7 +122,7 @@ sub mime_component_check
 	next MSG if ($data_type eq "text/rfc822-headers");
 	next MSG if ($data_type =~ "multipart\.");
 
-	__dprint("\n   msg($i) $data_type"); 
+	__dprint("\n   msg($i) $data_type");
 
       RULE:
 	for my $rule (@$filter_rules) {
@@ -143,7 +143,7 @@ sub mime_component_check
 		$is_cutoff = 1;
 		$self->_cutoff($mp);
 	    }
-	    
+
 	    $i++; # prepare for the next _rule_match().
 	}
     }
@@ -172,7 +172,7 @@ sub mime_component_check
 }
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($self) OBJ($msg) ARRAY_REF($rule)
 #               OBJ($mp) STR($whole_type)
 # Side Effects: "reject" and "permit" affects nothing.
@@ -213,8 +213,8 @@ sub __regexp_match
     $type   =~ tr/A-Z/a-z/;
     $regexp =~ tr/A-Z/a-z/;
 
-    if ($regexp =~ /^\!/o) { 
-	$reverse = 1; 
+    if ($regexp =~ /^\!/o) {
+	$reverse = 1;
 	$regexp =~ s/^\!//o;
 	$regexp =~ s/^\(\S+\)/$1/o;
     }
@@ -349,13 +349,13 @@ sub dump_message_structure
 sub dump_filter_rules
 {
     my $i = 0;
-    
+
     for my $rule (@$filter_rules) {
 	$i++;
 	printf STDERR "%15s: %20s %20s %10s\n", "rule ${i}", @$rule;
     }
 
-    printf STDERR "%15s: %20s %20s %10s\n", "default rule", 
+    printf STDERR "%15s: %20s %20s %10s\n", "default rule",
     "*", "*", $default_action;
 }
 
@@ -381,7 +381,7 @@ sub __dprint
 }
 
 
-# 
+#
 # debug
 #
 

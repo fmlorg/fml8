@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Addr.pm,v 1.5 2002/09/22 14:56:51 fukachan Exp $
+# $FML: Addr.pm,v 1.1 2002/11/07 10:53:51 fukachan Exp $
 #
 
 package FML::Process::Addr;
@@ -230,7 +230,7 @@ sub _fmladdr
 	use FileHandle;
 	my $fh = new FileHandle "/etc/passwd";
 	if (defined $fh) {
-	    my ($user); 
+	    my ($user);
 	    while (<$fh>) {
 		($user) = split(/:/, $_);
 

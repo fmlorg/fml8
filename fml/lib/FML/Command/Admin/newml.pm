@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.53 2002/10/29 09:07:39 fukachan Exp $
+# $FML: newml.pm,v 1.54 2002/10/29 10:38:15 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -220,7 +220,7 @@ sub _update_aliases
     my $ml_name   = $config->{ ml_name };
     my $ml_domain = $config->{ ml_domain };
     my $alias     = $config->{ mail_aliases_file };
-    my $mask      = umask( 022 ); 
+    my $mask      = umask( 022 );
 
     # append
     if ($self->_is_mta_alias_maps_has_ml_entry($curproc, $params, $ml_name)) {
