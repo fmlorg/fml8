@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: DataCheck.pm,v 1.1 2002/04/26 09:20:17 fukachan Exp $
 #
 
 package FML::Command::DataCheck;
@@ -109,6 +109,42 @@ sub find_special_keyword
 	confirm_keyword => $confirm_found,
 	admin_keyword   => $admin_found,
     };
+}
+
+
+# Descriptions: check message of the current process
+#               whether it contais keyword e.g. "confirm".
+#    Arguments: OBJ($self) OBJ($curproc) ARRAY_REF($ra_data)
+# Side Effects: none
+# Return Value: NUM( 1 or )
+sub find_commands_for_stranger
+{
+    my ($self, $curproc) = @_;
+    my $config   = $curproc->{ config };
+    my $commands = $config->get_as_array_ref('commands_for_stranger');
+    my $body     = $curproc->{ incoming_message }->{ body };
+    my $msg      = $body->find_first_plaintext_message();
+    my (@body)   = split(/\n/, $msg->message_text );
+    my $comname  = '';
+
+  LINE:
+    for my $buf (@body) {
+	($comname) = $self->parse_command_buffer( $buf );
+	next LINE unless defined($comname) && $comname;
+
+	# $comname matches one of $commands_for_stranger ?
+      COMMAND:
+	for my $proc (@$commands) {
+	    next COMMAND unless defined($proc) && $proc;
+
+	    return 1 if $comname eq $proc;
+	}
+    };
+
+    my $data = $self->find_special_keyword($curproc, \@body);
+    return 1 if $data->{ confirm_keyword };
+
+    return 0;
 }
 
 

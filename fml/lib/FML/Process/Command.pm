@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.50 2002/04/25 04:15:21 fukachan Exp $
+# $FML: Command.pm,v 1.51 2002/04/26 09:20:17 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -139,7 +139,7 @@ sub run
     }
     else {
 	my $reason = $pcb->get("check_restrictions", "deny_reason");
-	if ($reason eq 'reject_system_accounts') {
+	if (defined($reason) && ($reason eq 'reject_system_accounts')) {
 	    $curproc->reply_message_nl("error.system_accounts",
 				       "deny request from system accounts");
 	}
@@ -152,6 +152,7 @@ sub run
 	my $msg  = $curproc->{ incoming_message }->{ message };
 	$curproc->reply_message( $msg );
 
+	unless (defined $reason) { $reason = 'unknown';}
 	Log("deny command. reason=$reason");
     }
 }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.87 2002/04/23 14:10:33 fukachan Exp $
+# $FML: Kernel.pm,v 1.88 2002/04/26 09:19:35 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -538,7 +538,12 @@ sub _check_restrictions
 	    }
 	}
 	elsif ($rule eq 'permit_commands_for_stranger') {
-		return 0;
+	    use FML::Command::DataCheck;
+	    my $check = new FML::Command::DataCheck;
+	    if ($check->find_commands_for_stranger($curproc)) {
+		Log("$rule matched. accepted.");
+		return 1;
+	    }
 	}
 	elsif ($rule eq 'reject') {
 	    $pcb->set("check_restrictions", "deny_reason", $rule);
