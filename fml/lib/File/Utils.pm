@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML$
+# $FML: Utils.pm,v 1.6 2001/05/27 14:27:55 fukachan Exp $
 #
 
 package File::Utils;
@@ -71,9 +71,9 @@ sub mkdirhier
     error_clear();
 
     # XXX $mode (e.g. 0755) should be a numeric not a string
-    eval qq{ 
+    eval q{ 
 	use File::Path;
-	mkpath(\$dir, 0, $mode);
+	mkpath($dir, 0, $mode);
     };
     $ErrorString = $@;
     return ($@ ? undef : 1);
