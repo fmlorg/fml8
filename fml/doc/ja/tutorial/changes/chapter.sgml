@@ -1,0 +1,110 @@
+<!--
+   $FML$
+-->
+
+
+<chapter id="changes">
+	<title>
+	fml4 と fml8 の違い
+	</title>
+
+
+<para>
+本章では、fml4 と fml8 の違いについて解説します。
+</para>
+
+
+<sect1 id="changes.license">
+	<title>
+	fml4 と fml8 の違い: ライセンス
+	</title>
+
+<para>
+大雑把に言えば、GPL か BSD 準拠、もしくは Artistic のどれかになってい
+るはずです。
+</para>
+
+<para>
+fml4 は、ほとんどのコード(.plのもの)が独自に書かれています。このライセ
+ンスは GNU Public License です。jcode.pl が例外で、詳しくは jcode.pl 
+の先頭部分のライセンスを参照して下さい。
+</para>
+
+<para>
+また、perl module (.pm) も使われており、それはソースツリーの module/ 
+の下に入っています。この下のライセンスも各モジュールに従って下さい。
+</para>
+
+<para>
+fml8 では、ソースツリーがプロジェクトもしくはライセンスごとに分かれて
+いますので、各分類ごとのライセンスにしたがってください。fml8 用に書か
+れたコードは fml/ 以下にあり、Artistic License となっています。cpan
+gnu はその名の通りです。img は BSD ライセンス準拠です。詳しくは、それ
+ぞれのライセンスを読んで下さい。
+</para>
+
+</sect1>
+
+
+<sect1 id="changes.cui">
+	<title>
+	fml4 と fml8 の違い: コマンドラインでの操作 (makefml)
+	</title>
+
+<para>
+makefml とシンタックスの異なる fml というコマンドがあります。
+<screen>
+makefml コマンド ＭＬ名 オプション
+fml     ＭＬ名 コマンド オプション
+</screen>
+違いはＭＬ名とコマンドの順番だけで、実行される内容は全く一緒です。
+</para>
+
+<para>
+fml4 のコマンドは、可能な限り、処理の様子を表示し、最後に処理の変更点
+を表示するようになっています。逆に、fml8 のコマンドは、できるだけ静か
+に動きます。
+<footnote>
+<para>
+逆に、makefml/fml を他のスクリプトから呼び出す場合には、コンピュータ処
+理向きの出力をさせるようにすることが出来ます。これは、けっこう出力され
+るものが多く五月蝿いです。
+</para>
+</footnote>
+これは、そのほうが UNIX 風だということと、必ずしも操作対象がファイルと
+は限らないため差分が表示できるわけではないなどといったことがあるためで
+す。
+</para>
+
+<para>
+makefml から実行される各コマンドの相違点は以下の通りです。
+
+  <table>
+    <title>
+    fml4 と fml8 の違い: CUI (makefml もしくは fml コマンド) 
+    </title>
+
+    <tgroup cols=3>
+
+      <thead>
+        <row>
+          <entry> 内容	</entry>
+          <entry> fml4	</entry>
+          <entry> fml8	</entry>
+        </row>
+      </thead>
+
+      <tbody>
+	<!-- テーブル本体スタート -->
+	&table.changes.cui;
+	<!-- テーブル本体エンド -->
+      </tbody>
+
+    </tgroup>
+  </table>
+</para>
+
+</sect1>
+
+
+</chapter>

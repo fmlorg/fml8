@@ -1,0 +1,371 @@
+#
+# ヘルプ
+#
+Q: ヘルプの表示
+4: makefml help ML
+	もしくは makefml info ML を実行するとヘルプが表示される。
+	どちらでも同じ動作。
+	表示の際に、環境変数 PAGER が指定されていれば、それを使う。
+8: 未実装
+
+
+
+#
+# インストール
+#
+
+Q: fml のインストール方法
+4: トップディレクトリで make install (実体は makefml install)を実行する
+8: トップディレクトリで
+	configure および make install (実体は install.pl スクリプト)
+
+Q: インストールスクリプトの挙動
+4: 対話法式がデフォルト。最重要項目は対話的に設定が可能。
+8: 対話法式ではない。最重要項目は configure オプションで指定する。
+
+
+#
+# ＭＬの作成、削除
+#
+
+Q: ＭＬの作成
+4: makefml newml ML もしくは makefml new ML
+8: makefml newml ML 
+
+Q: newml コマンドが作るエイリアス(見本)ファイル
+4: sendmail 用 (互換性があるため postfix 用としても使用可能)
+8: postfix, sendmail, qmail, procmail すべてを作る
+
+Q: newml コマンドが作るエイリアス(見本)ファイルのパス
+4: /var/spool/ml/etc/aliaes
+8: /var/spool/ml/etc/mail/aliaes
+
+Q: qmail 用の設定を作る
+4: makefml qmail-setup ML
+8: 不要 (デフォルトで作成する)
+
+Q: aliaes を再生成する
+4: makefml recollect-aliases ML
+8: 該当するものはない
+
+Q: ML の削除
+4: makefml destructml ML
+8: makefml rmml ML
+
+Q: エラーメール自動解析ツールを設定する
+4: makefml mead ML を実行し、エイリアスも適宜、設定変更する。
+8: 不要、デフォルトで設定されている
+
+Q: fml 自体のテストをしてみる
+4: makefml test ML
+8: 未実装
+
+Q: LISTSERV スタイルのコマンドのセットアップ。
+4: makefml fmlserv ML
+	listserv majordomo でも同じ。
+8: 未実装
+
+
+#
+# アドレスの登録、削除、配送モードの変更
+#
+
+Q: アドレスを(受信者、送信者リスト両方に)追加する
+4: makefml add ML ADDRESS
+	もしくは adduser でもよい。 
+	終了後、ファイルの変更点が表示される。
+	デフォルトの操作対象は actives と members ファイル。
+8: makefml subscribe ML ADDRESS 
+	なお
+	add subscribe adduser useradd
+	コマンドは全て同じ意味である。 
+	エラーにならない限り、画面表示はなく、静かに終る。
+	デフォルトの操作対象は recipients と members ファイル。	
+
+Q: アドレスを(受信者、送信者リスト両方から)削除する
+4: makefml bye ML ADDRESS
+	もしくは byeuser でもよい。 
+	終了後、ファイルの変更点が表示される。
+	デフォルトの操作対象は actives と members ファイル。
+8: makefml unsubscribe ML ADDRESS 
+	なお
+	bye unsubscribe deluser remove resign signoff userdel 
+	コマンドは全て同じ意味である。 
+	エラーにならない限り、画面表示はなく、静かに終る。
+	デフォルトの操作対象は recipients と members ファイル。	
+	
+Q: アドレスを変更する(受信者リスト、メンバーリストともに変更する)
+4: makefml chaddr ML OLD_ADDRESS NEW_ADDRESS
+	終了後、ファイルの変更点が表示される。
+	デフォルトの操作対象は actives と members ファイル。
+8: makefml chaddr ML OLD_ADDRESS NEW_ADDRESS
+	エラーにならない限り、画面表示はなく、静かに終る。
+	デフォルトの操作対象は recipients と members ファイル。	
+
+Q: 受信者リストにのみアドレスを追加する。
+4: makefml addactives ML ADDRESS
+	これは addactive add2active add2actives でも同じ意味。
+	終了後、ファイルの変更点が表示される。
+	デフォルトの操作対象は actives ファイル。
+8: 未実装
+
+Q: メンバーリストにのみアドレスを追加する。
+4: makefml addmembers ML ADDRESS
+	これは addmember add2member add2members でも同じ。
+	終了後、ファイルの変更点が表示される。
+	デフォルトの操作対象は members ファイル。
+8: 未実装
+
+Q: リアルタイム配送を止める
+4: makefml off ML ADDRESS
+	これは skip でもよい。
+	終了後、ファイルの変更点が表示される。
+	デフォルトの操作対象は actives ファイル。
+8: makefml off ML ADDRESS
+
+Q: リアルタイム配送を再開する
+4: makefml on  ML ADDRESS
+	終了後、ファイルの変更点が表示される。
+	デフォルトの操作対象は actives ファイル。
+8: makefml on  ML ADDRESS
+
+Q: まとめおくり配送へ
+4: makefml matome ML ADDRESS
+	コマンドは digest でもよい。 
+	終了後、ファイルの変更点が表示される。
+	デフォルトの操作対象は actives ファイル。
+8: 未実装
+
+
+#
+# リモート管理
+#
+
+Q: リモート管理者を追加する。
+4: makefml addadmin ML ADDRESS
+	終了後、ファイルの変更点が表示される。
+	デフォルトの操作対象は members-admin ファイル。
+8: makefml addadmin ML ADDRESS
+	エラーにならない限り、画面表示はなく、静かに終る。
+	デフォルトの操作対象は recipients-admin と members-admin ファイル。
+
+Q: リモート管理者を削除する。
+4: makefml byeadmin ML ADDRESS
+	終了後、ファイルの変更点が表示される。
+	デフォルトの操作対象は members-admin ファイル。
+8: makefml byeadmin ML ADDRESS
+	エラーにならない限り、画面表示はなく、静かに終る。
+	デフォルトの操作対象は recipients-admin と members-admin ファイル。
+
+Q: リモート管理者のパスワードを設定する(1)
+4: makefml passwd ML
+	対話モードになり、アドレスとパスワードの入力を促される。
+8: 未実装
+
+Q: リモート管理者のパスワードを設定する(2)
+4: makefml passwd ML ADDRESS
+	対話モードになり、パスワードの入力を促される。
+8: 未実装
+
+Q: リモート管理者のパスワードを設定する(3)
+4: makefml passwd ML ADDRESS PASSWORD
+	処理の様子が表示される。
+	デフォルトの操作対象は etc/passwd ファイル。
+8: makefml passwd ML ADDRESS PASSWORD
+	エラーにならない限り、画面表示はなく、静かに終る。
+	デフォルトの操作対象は etc/passwd-admin ファイル。
+
+
+
+#
+# 設定の変更
+#
+Q: メニュー形式で設定を変更する
+4: makefml config ML
+8: 未実装
+
+Q: 設定ファイルを編集する
+4: makefml edit ML
+	使うエディタの入力を促し、
+	そのエディタで config.ph を編集できるようにする。
+	エディタのデフォルトは vi 。
+8: makefml edit ML
+	エディタで config.cf を編集できるようにする。
+	使うエディタを尋ねたりはしない。
+	環境変数 EDITOR が設定されていれば、その値が使われる。
+	エディタのデフォルトは vi 。
+
+Q: fml4 固有の設定ファイル変換( cf から config.ph を再生成する)
+4: makefml update-config ML
+	これは update、config-update、update-config.ph コマンドでも同じ。
+	処理の様子が表示される。	
+8: 設定ファイルは config.cf しかないため該当する操作は不要。
+
+
+#
+# メッセージテンプレートの操作
+#
+Q: メニューを使い、cf のテンプレートファイルを編集する
+4: makefml config-template ML
+8: 未実装
+
+Q: newml の際に使われる各種テンプレートファイルを編集する
+4: makefml edit-template FILE
+	なお FILE なしで実行すると、指定可能なファイル一覧が表示される。
+8: 未実装
+
+Q: ＭＬのホームディレクトリにあるヘルプなどのファイルを再生成する
+4: makefml create-doc-template ML
+8: 不要。存在しない。
+   もし置かれているなら、それは管理者がつくって置いたもののはず。
+
+Q: 引数の SRC ファイルを DST へ、ファイル内の変数を変換しつつ生成する。
+4: makefml conv ML SRC DST
+8: 未実装
+
+
+#
+# ログをみる
+#
+Q: ログをみる。デフォルトでは最後の100行が表示される。
+4: makefml log ML [オプション]
+	これは makefml tail ML でも同じ動作になる。
+8: makefml log ML
+	オプションは未実装
+
+
+#
+# CGI の作成
+#
+Q: admin.cgi のセットアップ(スクリプト生成、apacheの設定支援)
+4: makefml admin.cgi ML
+	対話的に行なわれる。
+8: 半分未実装、半分不要 (スクリプトは makefml newml 時に自動的に作成)
+
+Q: ml-admin.cgi のセットアップ(スクリプト生成、apacheの設定支援)
+4: makefml ml-admin.cgi ML
+	makefml mladmin.cgi ML でも同じ。
+	対話的に行なわれる。
+8: 半分未実装、半分不要 (スクリプトは makefml newml 時に自動的に作成)
+
+Q: admin.cgi の .htpasswd を設定する
+4: makefml html_cgiadmin_passwd ML
+8: 未実装
+
+Q: html_config
+4: makefml html_config ML
+	このコマンドは html_config_set でも同じ。
+	CGI から設定を変更する際に使われている内部用コマンド。
+8: 未実装
+
+Q: リモート管理者のパスワードを設定し、かつ
+ 	ml-admin.cgi の .htpasswd を(リモート管理のパスワードと同じも
+	のに)設定する
+4: makefml html_passwd ML
+8: 未実装
+
+Q: ml-admin.cgi の .htpasswd を設定する
+4: makefml htpasswd ML
+8: 未実装
+
+#
+# PGP, GPP 関連
+#
+Q: pgp コマンド WRAPPER
+4: makefml pgp ML
+8: 未実装
+
+Q: pgp2 コマンド WRAPPER
+4: makefml pgp2 ML
+8: 未実装
+
+Q: pgpe コマンド WRAPPER
+4: makefml pgpe ML
+8: 未実装
+
+Q: pgpk コマンド WRAPPER
+4: makefml pgpk ML
+8: 未実装
+
+Q: pgps コマンド WRAPPER
+4: makefml pgps ML
+8: 未実装
+
+Q: pgpv コマンド WRAPPER
+4: makefml pgpv ML
+8: 未実装
+
+Q: gpg コマンド WRAPPER
+4: makefml gpg ML
+8: 未実装
+
+Q: admin-auth (PGP, GPG KEY RING の操作)
+4: makefml admin-auth ML
+8: 未実装
+
+Q: admin-encrypt (PGP, GPG KEY RING の操作)
+4: makefml admin-encrypt ML
+8: 未実装
+
+Q: dist-auth (PGP, GPG KEY RING の操作)
+4: makefml dist-auth ML
+8: 未実装
+
+Q: dist-encrypt (PGP, GPG KEY RING の操作)
+4: makefml dist-encrypt ML
+8: 未実装
+
+
+#
+# POP エミュレーション
+#
+Q: popfml (POP でMTAとMLをエミュレーションする fml) のセットアップをする
+4: makefml popfml
+8: そもそも popfml 自体が未実装
+
+Q: POP のパスワードを設定する
+4: makefml pop_passwd
+8: そもそも popfml 自体が未実装
+
+
+#
+# その他
+#
+
+Q: ＭＬの動作をロックする
+4: makefml lock ML
+8: 対応するものがない。そもそも giant lock がない。
+
+Q: バグレポートの編集テンプレートを作る
+4: makefml bug-report-template ML
+	send-pr でもよい
+8: 未実装
+
+Q: コマンドの実行
+4: makefml command ML
+8: 未実装
+
+Q: 配送モードの設定
+4: makefml delivery_mode ML
+8: 未実装
+
+Q: makefml 中の変数を変更する
+4: makefml setq ML
+8: 対応するものがない
+
+Q: fml が動いている環境についてサマリを表示する
+4: makefml showconfig ML
+	showconf でもよい
+8: 未実装 / 実装予定なし
+
+Q: 「show コマンド」スタイルの OS 情報を表示する方法
+4: makefml show コマンド
+8: 未実装 / 実装予定なし
+
+Q: ファイルを送る
+4: makefml resend ML
+8: 未実装 / 実装予定なし
+
+Q: upgrade コマンド: fml 2.0 から 3.0 へのコンバート
+4: makefml upgrade ML
+8: 不要
