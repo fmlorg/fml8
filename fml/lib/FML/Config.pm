@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.61 2002/06/24 09:43:23 fukachan Exp $
+# $FML: Config.pm,v 1.62 2002/06/30 14:30:13 fukachan Exp $
 #
 
 package FML::Config;
@@ -164,7 +164,14 @@ set value for key.
 sub get
 {
     my ($self, $key) = @_;
-    $self->{ $key };
+
+    if (defined $key) {
+	if (defined $self->{ $key }) {
+	    return $self->{ $key };
+	}
+    }
+
+    return '';
 }
 
 
@@ -197,12 +204,15 @@ sub get_as_array_ref
 sub set
 {
     my ($self, $key, $value) = @_;
-    $self->{ $key } = $value;
-    $need_expansion_variables = 1;
 
-    if ($debug > 1) {
-	my (@c) = caller;
-	print "XXX $c[1] $c[2] ($key = $value)<br>\n";
+    if (defined $key && defined $value) {
+	$self->{ $key } = $value;
+	$need_expansion_variables = 1;
+
+	if ($debug > 1) {
+	    my (@c) = caller;
+	    print "XXX $c[1] $c[2] ($key = $value)<br>\n";
+	}
     }
 }
 
@@ -215,17 +225,6 @@ sub update
 {
     my ($self) = @_;
     $need_expansion_variables = 1;
-}
-
-
-# Descriptions: ? ( obsolete ?)
-#    Arguments: OBJ($self) STR($key)
-# Side Effects: update internal area
-# Return Value: NUM
-sub regist
-{
-    my ($self, $key) = @_;
-    push(@{ $self->{ _newly_added_keys } }, $key);
 }
 
 
@@ -259,7 +258,7 @@ sub overload
 sub load_file
 {
     my ($self, $file) = @_;
-    my $config        = \%_fml_config;
+    my $config = \%_fml_config;
 
     # read configuration file
     $self->_read_file({
@@ -292,11 +291,14 @@ sub load_file
 sub _read_file
 {
     my ($self, $args) = @_;
-    my $file    = $args->{ 'file' };
-    my $config  = $args->{ 'config' }  || {};
-    my $comment = $args->{ 'comment' } || {};
-    my $order   = $args->{ 'order' }   || [];
-    my $mode    = defined $args->{ 'mode' } ? $args->{ 'mode' } : 'default';
+    my $file    = defined $args->{ 'file' }    ? $args->{ 'file' }    : '';
+    my $config  = defined $args->{ 'config' }  ? $args->{ 'config' }  : {};
+    my $comment = defined $args->{ 'comment' } ? $args->{ 'comment' } : {};
+    my $order   = defined $args->{ 'order' }   ? $args->{ 'order' }   : [];
+    my $mode    = defined $args->{ 'mode' }    ? $args->{ 'mode' } : 'default';
+
+    # sanity
+    return unless $file;
 
     # open the $file by using FileHandle.pm
     use FileHandle;
@@ -325,7 +327,7 @@ sub _read_file
 		if (/^\s*\#/) { $comment_buffer .= $_;}
 	    }
 	    else { # by default, nuke trailing "\n"
-		chop;
+		chomp;
 	    }
 
 	    # case 1. "key = value1"
@@ -333,7 +335,7 @@ sub _read_file
 		/^([A-Za-z0-9_]+)\s*(\+=)\s*(.*)/ ||
 		/^([A-Za-z0-9_]+)\s*(\-=)\s*(.*)/) {
 		my ($key, $xmode, $value) = ($1, $2, $3);
-		$xmode   =~ s/=//;
+		$xmode  =~ s/=//;
 		$value  =~ s/\s*$//o;
 		$curkey = $key;
 
@@ -358,7 +360,7 @@ sub _read_file
 	    elsif (/^\s+(.*)/ && defined($curkey)) {
 		my $value = $1;
 		$value =~ s/\s*$//o;
-		$config->{ $curkey }  .= " ". $value;
+		$config->{ $curkey } .= " ". $value;
 	    }
 	}
 	$fh->close;
@@ -390,17 +392,21 @@ sub _evaluate
 	@buf = split(/\s+/, $config->{ $key });
     }
 
+    # + value = append
     if ($mode eq '+') {
 	push(@buf, $value);
     }
+    # - $value = remove $value from the values of $key
     elsif ($mode eq '-') {
 	my @newbuf = ();
+
       BUF:
 	for my $s (@buf) {
-	    next unless defined $s;
-	    next unless $s;
+	    next BUF unless defined $s;
+	    next BUF unless $s;
 	    push(@newbuf, $s) if $value ne $s;
 	}
+
 	@buf = @newbuf;
     }
 
@@ -422,6 +428,7 @@ appearing order.
 =head2 C<write(file)>
 
 =cut
+
 
 # allocate space to hold
 my $config_hold_space = {};
@@ -479,15 +486,17 @@ sub write
     my $comment = $config_hold_space->{ $object_id }->{ comment };
     my $order   = $config_hold_space->{ $object_id }->{ order  };
 
-    # get handle to update $file
+    # 1. check whether I can open $file or not in atomic way.
+    #    XXX get handle to update $file
     my $fh = IO::File::Atomic->open($file);
 
-    # back up config.cf firstly
+    # 2. back up config.cf firstly
     my $status = IO::File::Atomic->copy($file, $file.".bak");
     unless ($status) {
 	croak "cannot backup $file";
     }
 
+    # 3. write config 
     if (defined $fh) {
 	$fh->autoflush(1);
 
@@ -508,7 +517,8 @@ sub write
 	    print $fh "\n";
 	    print $fh "\n";
 	}
-	$fh->close;
+
+	$fh->close; # XXX $fh is atomic open.
     }
     else {
 	use Carp;
@@ -661,6 +671,7 @@ return 0 if not.
 sub yes
 {
     my ($self, $key) = @_;
+
     if (defined $_fml_config{$key}) {
 	$_fml_config{$key} eq 'yes' ? 1 : 0;
     }
@@ -677,7 +688,13 @@ sub yes
 sub no
 {
     my ($self, $key) = @_;
-    $_fml_config{$key} eq 'no' ? 1 : 0;
+
+    if (defined $_fml_config{$key}) {
+	$_fml_config{$key} eq 'no' ? 1 : 0;
+    }
+    else {
+	0;
+    }
 }
 
 
@@ -689,13 +706,19 @@ sub no
 sub has_attribute
 {
     my ($self, $key, $attribute) = @_;
-    my (@attribute) = split(/\s+/, $_fml_config_result{$key});
 
+    # sanity
     return 0 unless defined $attribute;
 
-    for my $k (@attribute) {
-	next unless defined $k;
-	return 1 if $k eq $attribute;
+    if (defined $_fml_config_result{$key}) {
+	my (@attribute) = split(/\s+/, $_fml_config_result{$key});
+
+      ATTR:
+	for my $k (@attribute) {
+	    next ATTR unless defined $k;
+
+	    return 1 if $k eq $attribute;
+	}
     }
 
     return 0;
@@ -804,6 +827,7 @@ sub get_hook
 {
     my ($self, $hook_name) = @_;
 
+    return undef unless defined $_fml_user_hooks;
     return undef unless $_fml_user_hooks;
 
     my $eval = qq{
@@ -897,7 +921,9 @@ sub STORE
 	$need_expansion_variables = 1;
     }
 
-    $_fml_config{$key} = $value;
+    if (defined $key && defined $value) { 
+	$_fml_config{$key} = $value;
+    }
 }
 
 
