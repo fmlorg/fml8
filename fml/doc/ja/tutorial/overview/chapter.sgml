@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.7 2002/02/04 00:03:57 fukachan Exp $
+   $FML: chapter.sgml,v 1.8 2002/02/26 14:15:28 fukachan Exp $
 -->
 
 <chapter id="overview"> 
@@ -146,114 +146,18 @@ root での作業、 configure の使用、
    <title> ＭＬを作る </title>
 
 <para>
-方法は &fml4; と同様です。 
-現状では 
-config.cf (設定ファイル) と
-fml を起動するために MTA が呼び出すファイルである
-include 
-および
-include-ctl をインストールしてくれます。 
+makefml を使ってＭＬを作成します。
+(デフォルトドメインの場合) makefml 使い方は &fml4; の時と同様です。
 <screen>
 % su fml
 % makefml newml elena
-% ls /var/spool/ml/elena
-config.cf include include-ctl
 </screen>
-カスタマイズは config.cf をエディタで編集して下さい。
-とりあえず config.cf の先頭の ml_domain と ml_name が
-正しいかどうかを確認して下さい。
-<screen>
-config.cf の例
-
-# ドメイン名 (参照: 以下のアドレスを見よ $ml_domain がこの値に展開される)
-ml_domain           = fml.org
-
-# ML の名前
-ml_name		    = elena		
-
-# 管理者のアドレス
-maintainer	    = $ml_name-admin@$ml_domain
-
-# 投稿用のアドレス
-address_for_post    = $ml_name@$ml_domain
-
-# コマンド用のアドレス
-address_for_command = $ml_name-ctl@$ml_domain
-</screen>
+詳しくは
+<link linkend="usage.newml">
+<xref linkend="usage.newml">
+</link>
+を参照してください。
 </para>
-
-<para>
-include include-ctl aliases の書き方は &fml4; と同様です。
-include ファイルの PATH がちょっと違いますが、
-aliases の設定の仕方は一緒です。
-</para>
-
-<para>
-/var/spool/ml/elena/include ファイルは
-<screen>
-"| /usr/local/libexec/fml/fml.pl /var/spool/ml/elena"
-</screen>
-
-/var/spool/ml/elena/include-ctl ファイルは
-<screen>
-"| /usr/local/libexec/fml/fml.pl /var/spool/ml/elena --ctladdr"
-</screen>
-</para>
-
-
-<para>
-aliases への追加は次のようにして下さい。
-<screen>
-elena: :include:/var/spool/ml/elena/include
-elena-ctl: :include:/var/spool/ml/elena/include-ctl
-elena-admin: fml
-owner-elena: fml
-owner-elena-ctl: fml
-</screen>
-aliases はまだ makefml が生成していません
-( &fmldevel; は virtual domain を前提にした扱いなので、
-ディレクトリ構成などをもうちょっと考えたいので、まだ自動生成されていません。
-もうちょっと待って〜)。
-</para>
-
-
-<para>
-aliases のエントリは
-$ml_home_prefix/etc/mail/aliases
-に追加されます。
-<screen>
-### BEGIN-elena@fml.org-ML-aliases ###
-
-# address for post
-elena: :include:/var/spool/ml/elena/include
-owner-elena: fukachan
-
-# address for command
-elena-ctl: :include:/var/spool/ml/elena/include-ctl
-owner-elena-ctl: fukachan
-
-# maintainer
-elena-request: elena-admin
-elena-admin: fukachan
-
-### END-elena@fml.org-ML-aliases ###
-</screen>
-バーチャルドメインの場合、
-$ml_home_prefix の部分は  
-$virtual_maps にしたがって自動的に変化します。
-</para>
-
-<!--
-
-        案１
-        /etc/fml/ドメイン名/aliases
-
-        案２ (prefix は virtual_maps でドメインごとに定義されているの
-                で一意に定まる)
-        /var/spool/ml/etc/mail/aliases
-
--->
-
 
 </sect1>
 

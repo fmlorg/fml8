@@ -1,0 +1,215 @@
+<!--
+   $FML: post.sgml,v 1.2 2001/11/24 03:22:59 fukachan Exp $
+-->
+
+<!--
+
+        案１
+        /etc/fml/ドメイン名/aliases
+
+        案２ (prefix は virtual_maps でドメインごとに定義されているの
+                で一意に定まる)
+        /var/spool/ml/etc/mail/aliases
+
+-->
+
+
+<chapter id="usage.newml">
+	<title>
+	ＭＬを作成する (UNIX 編)
+	</title>
+
+
+<sect1>
+	<title>
+	makefml newml (デフォルトのドメイン)
+	</title>
+
+<para>
+makefml を使ってＭＬを作成します。
+使い方は &fml4; と同様です。
+<screen>
+% su fml
+% makefml newml elena
+</screen>
+</para>
+
+
+<para>
+この時、makefml newml は以下のような処理をします。
+
+<itemizedlist>
+
+   <listitem>
+        <para>
+	/var/spool/ml/elena へ 
+	<screen>
+	config.cf
+	include
+	include-ctl
+	</screen>
+	を作る(適宜、elena やドメインの値を変換しながら)
+        </para>
+   </listitem>
+
+   <listitem>
+        <para>
+	/var/spool/ml/etc/mail/aliases に elena の設定を仕込む
+        </para>
+   </listitem>
+
+   <listitem>
+        <para>
+	<screen>
+	~fml/public_html/$domain/$ml/ 
+	</screen>
+	例えば elena@fml.org なら
+	<screen>
+	~fml/public_html/fml.org/elena/
+	</screen>
+	を用意する。ここに HTML 化された記事が自動的に作られることになる
+        </para>
+   </listitem>
+
+   <listitem>
+        <para>
+	CGI インターフェイスを用意する。
+	ドメインで一番偉いインターフェイス(そのドメインのＭＬは全部操
+	作できる)が
+	<screen>
+	~fml/public_html/cgi-bin/fml/$domain/admin/menu.cgi
+	</screen>
+	また、各ＭＬで一番偉いインターフェイス(そのＭＬの操作ができる)
+	<screen>
+	~fml/public_html/cgi-bin/fml/$domain/ml-admin/menu.cgi
+	</screen>
+        </para>
+   </listitem>
+
+</itemizedlist>
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	設定ファイル config.cf のカスタマイズ
+	</title>
+
+<para>
+makefml は
+config.cf (設定ファイル) と
+fml を起動するために MTA が呼び出すファイルである
+include 
+および
+include-ctl をインストールしてくれます。 
+<screen>
+% su fml
+% makefml newml elena
+   ... snip ...
+% ls /var/spool/ml/elena
+config.cf include include-ctl
+</screen>
+</para>
+
+<para>
+ＭＬのカスタマイズは config.cf をエディタで編集して下さい。
+<warning>
+<para>
+まだ、設定ツールはできていません。
+</para>
+</warning>
+とりあえず config.cf の先頭の ml_domain と ml_name が
+正しいかどうかを確認して下さい。
+<screen>
+config.cf の例
+
+# ドメイン名 (参照: 以下のアドレスを見よ $ml_domain がこの値に展開される)
+ml_domain           = fml.org
+
+# ML の名前
+ml_name		    = elena		
+
+# 管理者のアドレス
+maintainer	    = $ml_name-admin@$ml_domain
+
+# 投稿用のアドレス
+address_for_post    = $ml_name@$ml_domain
+
+# コマンド用のアドレス
+address_for_command = $ml_name-ctl@$ml_domain
+</screen>
+</para>
+
+<para>
+include include-ctl aliases の書き方は &fml4; と同様です。
+include ファイルの PATH がちょっと違いますが、
+aliases の設定の仕方は一緒です。
+</para>
+
+<para>
+/var/spool/ml/elena/include ファイルは
+<screen>
+"| /usr/local/libexec/fml/fml.pl /var/spool/ml/elena"
+</screen>
+
+/var/spool/ml/elena/include-ctl ファイルは
+<screen>
+"| /usr/local/libexec/fml/fml.pl /var/spool/ml/elena --ctladdr"
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	aliaess のカスタマイズ
+	</title>
+
+<para>
+makefml はシステムの aliases を変更することはありませんが、
+$ml_home_prefix/etc/mail/aliases
+への追加が自動的に行なわれているはずです。
+システムへの追加が必要なら、次のようにして下さい。
+<screen>
+elena: :include:/var/spool/ml/elena/include
+elena-ctl: :include:/var/spool/ml/elena/include-ctl
+elena-admin: fml
+owner-elena: fml
+owner-elena-ctl: fml
+</screen>
+</para>
+
+
+<para>
+aliases のエントリは
+$ml_home_prefix/etc/mail/aliases
+に追加されます。
+<screen>
+### BEGIN-elena@fml.org-ML-aliases ###
+
+# address for post
+elena: :include:/var/spool/ml/elena/include
+owner-elena: fukachan
+
+# address for command
+elena-ctl: :include:/var/spool/ml/elena/include-ctl
+owner-elena-ctl: fukachan
+
+# maintainer
+elena-request: elena-admin
+elena-admin: fukachan
+
+### END-elena@fml.org-ML-aliases ###
+</screen>
+バーチャルドメインの場合、
+$ml_home_prefix の部分は  
+$virtual_maps にしたがって自動的に変化します。
+</para>
+
+</sect1>
+
+
+</chapter>
