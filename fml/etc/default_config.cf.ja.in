@@ -231,6 +231,7 @@ primary_member_map	=	file:$ml_home_dir/members
 member_maps		=	$primary_member_map
 				$admin_member_maps
 
+
 =head2 受信者のリスト
 
 
@@ -239,16 +240,18 @@ member_maps		=	$primary_member_map
 #               XXX (例: unix.group )
 #      History: fml 4.0 の $ACTIVE_LIST
 #        Value: filename
-#     Examples: /var/spool/ml/elena/actives
-primary_recipient_map	=	 file:$ml_home_dir/actives
+#     Examples: /var/spool/ml/elena/recipients
+primary_recipient_map	=	 file:$ml_home_dir/recipients
 
 
 # Descriptions: すべての受信者のリスト
+#               互換性のため actives もサーチの対象 
 #      History: fml 4.0 の $ACTIVE_LIST @ACTIVE_LIST 相当
 #        Value: a list of filenames
 #     Examples: file:$ml_home_dir/recipients
 #		unix.group:fml
 recipient_maps		=	$primary_recipient_map
+				file:$ml_home_dir/actives
 
 
 =head2 管理者メンバーとみなされるのは誰か？
@@ -268,10 +271,35 @@ primary_admin_member_map	=	file:$ml_home_dir/members-admin
 #     Examples:
 admin_member_maps		=	$primary_admin_member_map
 
-primary_admin_member_password_map	=	file:$ml_home_dir/etc/passwd
 
+# Descriptions: とりあえず定義してあるけど、使われてはいない
+#      History: 4.0 にはない
+#        Value: file
+#     Examples: /var/spool/ml/elena/recipients-admin
+primary_admin_recipient_map	=	file:$ml_home_dir/recipients-admin
+
+
+# Descriptions: とりあえず定義してあるけど、使われてはいない
+#      History: 4.0 にはない
+#        Value: file
+#     Examples: /var/spool/ml/elena/recipients-admin
+admin_recipient_maps		=	$primary_admin_recipient_map
+
+
+# Descriptions: リモート管理者のパスワードファイル
+#      History: 4.0 の $PASSWD_FILE
+#        Value: file
+#     Examples: /var/spool/ml/elena/etc/passwd
+primary_admin_member_password_map = file:$ml_home_dir/etc/passwd-admin
+
+
+# Descriptions: リモート管理者のパスワードファイル(群)
+#               互換性のため etc/passwd もサーチの対象 
+#      History: 4.0 にはない
+#        Value:
+#     Examples:
 admin_member_password_maps	=	$primary_admin_member_password_map
-
+					file:$ml_home_dir/etc/passwd
 
 =head2 アカウントベースのアクセス制限をかける
 
