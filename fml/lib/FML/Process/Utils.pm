@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.49 2002/11/23 15:21:08 fukachan Exp $
+# $FML: Utils.pm,v 1.50 2002/12/18 04:43:52 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -20,11 +20,25 @@ FML::Process::Utils - convenient utilities for FML::Process:: classes
 
 =head1 SYNOPSIS
 
-See FML::Process::Kernel.
+See L<FML::Process::Kernel>.
 
 =head1 DESCRIPTION
 
+See FML:: classes, which uses these function everywhere.
+
 =head1 access METHODS to handle configuration space
+
+=head2 config()
+
+return FML::Config object.
+
+=head2 pcb()
+
+return FML::PCB object.
+
+=head2 schduler()
+
+return FML::Process::Scheduler object.
 
 =cut
 
@@ -84,6 +98,37 @@ sub scheduler
 
 available all processes which eats message via STDIN.
 
+The following functions return the whole or a part of the incoming
+message corresponding to the current process.
+
+The message is a chain of C<Mail::Message> objects such as
+
+   header -> body
+
+   header -> multipart-preamble -> multipart-separator -> part1 -> ...
+
+See L<Mail::Message> for more details.
+
+=head2 incoming_message_header()
+
+return the header part for the incoming message. 
+It is the head of a chain of Mail::Message objects.
+
+=head2 incoming_message_body()
+
+return the body part for the incoming message. 
+It is the 2nd part of a chain of Mail::Message objects and after.
+For example,
+
+   body
+
+   multipart-preamble -> multipart-separator -> part1 -> ...
+
+=head2 incoming_message()
+
+return the whole message for the incoming message.
+It is the whole parts of a chain.
+
 =cut
 
 
@@ -141,6 +186,17 @@ sub incoming_message
 =head1 access METHODS to handle article
 
 available only in C<libexec/distribute> process.
+
+The usage of these functions is same as that of incoming_message_*()
+methods but article_*() hanldes the article object to distribute now.
+So, incoming_message_*() handles input but article_message_*() handles
+output.
+
+=head2 article_message_header()
+
+=head2 article_message_body()
+
+=head2 article_message()
 
 =cut
 
@@ -211,6 +267,7 @@ create directory $dir if needed.
 # XXX-TODO: $curproc->mkdir() is strage.
 # XXX-TODO: hmm, we create a new subcleass such as $curproc->util->mkdir() ?
 # XXX-TODO: or $utils = $curproc->utils(); $utils->mkdir(dir, mode); ?
+# XXX-TODO: we need FML::Utils class ?
 #
 
 # Descriptions: create directory $dir if needed
@@ -468,7 +525,7 @@ not yet implemenetd properly. (?)
 =cut
 
 
-# Descriptions: return my domain
+# Descriptions: return ml_name
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: STR
@@ -542,6 +599,7 @@ sub is_default_domain
     my ($curproc, $domain) = @_;
     my $default_domain = $curproc->default_domain();
 
+    # XXX domain name is case insensitive.
     if ("\L$domain\E" eq "\L$default_domain\E") {
 	return 1;
     }
@@ -598,12 +656,9 @@ return $ml_home_prefix in main.cf.
 
 =cut
 
-######################################################################
-# XXX
-#    __ml_home_prefix_from_main_cf() is not needed.
-#    since FML::Process::Switch calculate this variable and set it to
-#    $curproc->{ main_cf }.
-######################################################################
+# XXX-TODO: __ml_home_prefix_from_main_cf() is not needed.
+# XXX-TODO: since FML::Process::Switch calculate this variable and 
+# XXX-TODO: set it to $curproc->{ main_cf }.
 
 
 # Descriptions: front end wrapper to retrieve $ml_home_prefix (/var/spool/ml).
@@ -748,7 +803,7 @@ return 1 if config.cf exists. 0 if not.
 =cut
 
 
-# Descriptions: return $ml ML's home directory
+# Descriptions: return $ml ML's config.cf path
 #    Arguments: OBJ($curproc) STR($ml) STR($domain)
 # Side Effects: none
 # Return Value: STR
@@ -766,7 +821,7 @@ sub config_cf_filepath
 }
 
 
-# Descriptions: return $ml ML's home directory
+# Descriptions: return whether $ml ML's config.cf file exists or not.
 #    Arguments: OBJ($curproc) STR($ml) STR($domain)
 # Side Effects: none
 # Return Value: STR
@@ -786,7 +841,7 @@ return virtual maps.
 =cut
 
 
-# Descriptions: options, which is the result by getopts() analyze
+# Descriptions: return virtual maps as array reference.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -827,7 +882,7 @@ get ARRAY_REF of valid mailing lists.
 =cut
 
 
-# Descriptions: list up ML for the specified $ml_domain
+# Descriptions: list up ML's within the specified $ml_domain.
 #    Arguments: OBJ($curproc) HASH_REF($args) STR($ml_domain)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -860,6 +915,8 @@ sub get_ml_list
 	while ($_ = $dh->read()) {
 	    next if /^\./;
 	    next if /^\@/;
+
+	    # XXX-TODO: check $ml_name matches FML::Restriction::Base ?
 	    $cf = File::Spec->catfile($prefix, $_, "config.cf");
 	    push(@dirlist, $_) if -f $cf;
 	}
@@ -913,7 +970,7 @@ sub get_address_list
 
 =head2 which_map_nl($map)
 
-which member of maps is this $map ?
+which this $map belongs to ?
 
 =cut
 
@@ -965,7 +1022,8 @@ sub article_id_max
     my $fh = new FileHandle $seq_file;
     if (defined $fh) {
 	$id = $fh->getline();
-	$id =~ s/^\s*//; $id =~ s/[\n\s]*$//;
+	$id =~ s/^\s*//;
+	$id =~ s/[\n\s]*$//;
 	$fh->close();
     }
 
