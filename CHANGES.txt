@@ -1,6 +1,31 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/08/28
+
+   FML/Process/Kernel 
+	proper handling of "$program /var/spool/ml/elena" case
+
+2002/08/26
+
+   IO::Adapter::File 
+	ensure rollback in calling get_value_*()
+	
+   FML::Error::Analyze 
+	error_continuity::in summation, bad if $v >= 2
+	
+   FML::Credential 
+	is_same_address() validate input data more
+	
+   FML::Process::Kernel 
+	bug fix my ml_name (+ ml_domain) detection code:
+	
+	[back ground detail] "fmlconf -n elena@fml.org" works but
+	"fmlconf -n elena" not works since we ignore the latter case.
+	Regaredless of poorman's strategy but we pick up the first non
+	/^-/ string as a $ml_name and set $ml_domain to the default
+	domain. 
+
 2002/08/21
 
    IO::Adapter 
@@ -3268,4 +3293,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.97 2002/08/18 02:20:25 fukachan Exp $
+$FML: CHANGES.txt,v 1.98 2002/08/21 15:25:10 fukachan Exp $
