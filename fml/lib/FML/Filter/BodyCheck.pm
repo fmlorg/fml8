@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: BodyCheck.pm,v 1.4 2001/08/19 14:59:07 fukachan Exp $
+# $FML: BodyCheck.pm,v 1.5 2001/09/23 09:30:28 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -323,6 +323,28 @@ sub is_signature
     return 0;
 }
 
+
+=head2 C<clean_up_buffer($args)>
+
+remove some special syntax pattern for further check.
+For example, the pattern is a mail address.
+We remove it and check the remained buffer whether it is safe or not.
+
+=cut
+
+sub clean_up_buffer
+{
+    my ($self, $xbuf) = @_;
+
+    # 1. cut off Email addresses (exceptional).
+    $xbuf =~ s/\S+@[-\.0-9A-Za-z]+/account\@domain/g;
+
+    # 2. remove invalid syntax seen in help file with the bug? ;D
+    $xbuf =~ s/^_CTK_//g;
+    $xbuf =~ s/\n_CTK_//g;
+
+    $xbuf;
+}
 
 
 =head1 AUTHOR
