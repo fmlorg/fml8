@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML$
+# $FML: bodycheck.pl,v 1.1.1.1 2001/08/19 14:51:46 fukachan Exp $
 #
 
 use lib qw(../../fml/lib ../../cpan/lib ../../img/lib);
@@ -24,7 +24,7 @@ for my $f (@ARGV) {
 	       ($checker->need_one_line_check($m) ? "yes" : "no"));
 
 	_print("first part =",
-	       ($checker->is_empty($m) ? "empty" : $m->size." bytes"));
+	       ($m->is_empty($m) ? "empty" : $m->size." bytes"));
 		
 	print STDERR "\n";
     }
