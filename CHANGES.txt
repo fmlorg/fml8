@@ -1,6 +1,51 @@
 		CHANGES
 		Last Modified: $Date$
 
+2001/11/03
+
+   remove fmlticket, create fmlthread
+
+   FML::Process:: を Mail::ThreadTrack ベースに切替える
+	FML::Process::TicketSystem は削除し、
+	FML::Process::ThreadTrack が作られた。
+
+   Mail::ThreadTrack を CVS へ入れる。
+	これはスレッドを追跡するためのツールであり、
+	call tracking system の概念のごく一部をなしているといってよい
+
+   Mail::ThreadTrack 
+	change new() parameters
+	nuke pcb
+	$config->{ db_type } = 'AnyDBM_File'; by default
+	$self->{ _index_db } = $db_base_dir::"index"
+	moved set_status() into this module
+	
+   Mail::ThreadTrack::Analyze 
+	nuke pcb
+	bug fix $article_id handling
+	Log() to $self->log()
+	assign()::clean up function names and arguments
+	define {get,set}_thread_id() and modified to use them
+	add commentes for FNF style
+	clarify assign() and rewrite_header() roles
+	define {set,get}_thread_status() and modified to use them
+	message-id is <addr-spec> (RFC822), we use this format also in DB.
+	correct handling of $config->{ thread_subject_tag_location }
+	remove _address_clean_up(), which is not used now.
+	remove set_status()
+	
+   Mail::ThreadTrack::HeaderRewrite 
+	prepare_history_info()
+	
+   Mail::ThreadTrack::DB 
+	make index database in db_base_dir not db_dir
+	
+   Mail::ThreadTrack::Print 
+	build-in decode_mime_string()
+	tune up alignment in printing
+	EUC-ify output
+	define STR2EUC() for convenience
+	
 2001/10/29
 
    Mail::Message 
@@ -747,4 +792,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.27 2001/10/23 07:34:15 fukachan Exp $
+$FML: CHANGES.txt,v 1.28 2001/10/29 15:10:05 fukachan Exp $
