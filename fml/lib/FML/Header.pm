@@ -71,7 +71,7 @@ sub content_type
 sub mime_boundary
 {
     my ($header) = @_;
-    my ($m) = split(/;/, $header->get('content-type'));
+    my $m = $header->get('content-type');
 
     if ($m =~ /boundary=\"(.*)\"/) {
 	return "--".$1;
