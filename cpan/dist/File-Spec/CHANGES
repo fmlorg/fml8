@@ -1,0 +1,13 @@
+CHANGES for File::Spec
+
+
+0.82 Wed Jun 28 11:24:05 EDT 2000
+   - Mac.pm: file_name_is_absolute( '' ) now returns TRUE on all platforms
+   - Spec.pm: unbreak C<$VERSION = '0.xx'> to be C<$VERSION = 0.xx>, so
+     underscores can be used when I want to update CPAN without anyone
+     needing to update the perl repository.
+   - abs2rel, rel2abs doc tweaks
+   - VMS.pm: get $path =~ /\s/ checks from perl repository.
+   - Makefile.PL: added INSTALLDIRS => 'perl', since these are std. modules.
+   - Remove vestigial context prototypes from &rel2abs until some future
+     arrives where method prototypes are honored.

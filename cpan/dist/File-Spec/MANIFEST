@@ -1,0 +1,14 @@
+MANIFEST
+MANIFEST.SKIP
+CHANGES
+Makefile.PL
+README
+Spec.pm
+Spec/Functions.pm
+Spec/Mac.pm
+Spec/OS2.pm
+Spec/Unix.pm
+Spec/VMS.pm
+Spec/Win32.pm
+t/filespec.t
+t/filefunc.t
