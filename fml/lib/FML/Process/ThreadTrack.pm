@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: ThreadTrack.pm,v 1.3 2001/11/04 06:50:41 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.4 2001/11/04 13:41:32 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -97,7 +97,11 @@ sub run
     $curproc->lock();
 
     if ($command eq 'list' || $command eq 'summary') {
-	$thread->show_summary();
+	$thread->summary();
+    }
+    elsif ($command eq 'review') {
+	my $str = defined $argv->[2] ? $argv->[ 2 ] : 'last:100';
+	$thread->review( $str , 1, $max_id );
     }
     elsif ($command eq 'db_mkdb') {
 	$thread->db_mkdb(1, $max_id);

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Print.pm,v 1.4 2001/11/03 01:22:14 fukachan Exp $
+# $FML: Print.pm,v 1.5 2001/11/03 11:53:03 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -24,7 +24,7 @@ Mail::ThreadTrack::Print - print out thread relation
 
 =head1 METHODS
 
-=head2 C<show_summary(>)
+=head2 C<summary(>)
 
 top level entrance for routines to show the thread summary. 
 
@@ -62,7 +62,61 @@ It is also larger if $status is C<open>.
 =cut
 
 
-sub show_summary
+sub review
+{
+    my ($self, $str, $min, $max) = @_;
+    my $config    = $self->{ _config };
+    my $spool_dir = $config->{ spool_dir };
+    my $fd        = $self->{ _fd } || \*STDOUT;
+    my %uniq      = ();
+
+    # modify Print parameters 
+    $self->{ _article_summary_lines } = 5;
+
+    $self->db_open();
+    my $rh = $self->{ _hash_table };
+
+    use Mail::Message::MH;
+    my $ra = Mail::Message::MH->expand($str, $min, $max);
+    my $first = 0;
+    for my $id (@$ra) {
+	if ($id =~ /^\d+$/) { 
+	    my $tid = $self->_create_thread_id_strings($id);
+	    # check thread id $tid exists really ?
+	    if (defined $rh->{ _articles }->{ $tid }) {
+		printf $fd "\n>Thread-Id: %-10s  %s\n", $tid;
+
+		# change treatment for the fisrt article in this thread
+		$first = 1;
+
+		# show all articles in this thread
+	      ARTICLE:
+		for my $aid (split(/\s+/, $rh->{ _articles }->{ $tid })) {
+		    # ensure uniquness
+		    next ARTICLE if $uniq{ $aid };
+		    $uniq{ $aid } = 1;
+
+		    if ($first) {
+			undef $self->{ _no_header_summary };
+			$first = 0;
+		    }
+		    else {
+			$self->{ _no_header_summary } = 1;
+		    }
+
+		    my $file = File::Spec->catfile($spool_dir, $aid);
+		    print $fd $self->__article_summary($file);
+		    print $fd "\n";
+		}
+	    }
+	}
+    }
+
+    $self->db_close();
+}
+
+
+sub summary
 {
     my ($self) = @_;
     my ($tid, $status, $thread_id);
@@ -172,7 +226,7 @@ sub _print_article_summary
     my $rh   = $self->{ _hash_table };
 
     if (defined $config->{ spool_dir }) {
-	my ($aid, @aid);
+	my ($aid, @aid, $file);
 
 	if ($is_show_cost_indicate) {
 	    print $fd "\n\"!\" mark: stalled? please check and reply it.\n";
@@ -188,9 +242,10 @@ sub _print_article_summary
 		printf $fd "\n>Thread-Id: %-10s  %s\n", $tid;
 	    }
 
+	    # show only the first article of this thread $tid
 	    (@aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
-	    $aid   = $aid[0];
-	    my $file = File::Spec->catfile($spool_dir, $aid);
+	    $aid  = $aid[0];
+	    $file = File::Spec->catfile($spool_dir, $aid);
 	    print $fd $self->__article_summary($file);
 	}
     }
@@ -202,8 +257,8 @@ sub __article_summary
     my ($self, $file) = @_;
     my (@header) = ();
     my $buf      = '';
-    my $line     = 3;
-    my $mode    = $self->get_mode || 'text';
+    my $line     = $self->{ _article_summary_lines } || 3;
+    my $mode     = $self->get_mode || 'text';
     my $padding  = $mode eq 'text' ? '   ' : '';
 
     use FileHandle;
@@ -216,9 +271,11 @@ sub __article_summary
 	    next LINE if /^\>/;
 	    next LINE if /^\-/;
 
+	    # header
 	    if (1 ../^$/) {
 		push(@header, $_);
 	    }
+	    # body part
 	    else {
 		next LINE if /^\s*$/;
 
@@ -231,28 +288,50 @@ sub __article_summary
 		next LINE if /^(Message-ID|Date):/i;
 
 		# pick up effetive the first $line lines
-		if ($line-- > 0) {
+		if (_valid_buf($_)) {
+		    $line--;
 		    $buf .= $padding. $_;
 		}
-		else {
-		    last LINE;
-		}
+		last LINE if $line < 0;
 	    }
 	}
 	close($fh);
 
-	use Mail::Header;
-	my $h = new Mail::Header \@header;
-	my $header_info = $self->_header_summary({
-	    header  => $h,
-	    padding => $padding,
-	}); 
-
-	return STR2EUC( $header_info . $buf );
+	if (defined $self->{ _no_header_summary }) {
+	    return STR2EUC( $buf );
+	}
+	else {
+	    use Mail::Header;
+	    my $h = new Mail::Header \@header;
+	    my $header_info = $self->_header_summary({
+		header  => $h,
+		padding => $padding,
+	    });
+	    return STR2EUC( $header_info ."\n". $buf );
+	}
     }
     else {
 	return undef;
     }
+}
+
+
+sub _valid_buf
+{
+    my ($str) = @_;
+    $str = STR2EUC( $str );
+
+    if ($str =~ /^[\>\#\|]/) {
+	return 0;
+    }
+    elsif ($str =~ /^in /) { # quotation ?
+	return 0;
+    }
+    elsif ($str =~ /\w+\@\w+/) { # mail address ?
+	return 0;
+    }
+
+    return 1;
 }
 
 
