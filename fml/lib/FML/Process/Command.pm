@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.69 2002/08/03 10:35:08 fukachan Exp $
+# $FML: Command.pm,v 1.70 2002/08/03 13:13:24 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -651,8 +651,9 @@ sub _evaluate_command_lines
     #     is_admin: whether From: is a member of admin users.
     #      is_auth: authenticated or not by e.g. password
     my $cred      = $curproc->{ credential };
-    my $is_member = $cred->is_member($curproc, $args);
-    my $is_admin  = $cred->is_privileged_member($curproc, $args);
+    my $sender    = $cred->sender();
+    my $is_member = $cred->is_member($sender);
+    my $is_admin  = $cred->is_privileged_member($sender);
     my $is_auth   = 0;
     my $status    = {
 	is_auth        => $is_auth,

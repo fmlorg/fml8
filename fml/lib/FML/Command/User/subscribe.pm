@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.11 2002/02/18 14:14:53 fukachan Exp $
+# $FML: subscribe.pm,v 1.12 2002/04/03 11:33:00 fukachan Exp $
 #
 
 package FML::Command::User::subscribe;
@@ -76,10 +76,10 @@ sub process
     croak("\$recipient_map is not specified") unless $recipient_map;
 
     use FML::Credential;
-    my $cred = new FML::Credential;
+    my $cred = new FML::Credential $curproc;
 
     # if already member, subscriber request is wrong.
-    if ($cred->is_member($curproc, { address => $address })) {
+    if ($cred->is_member($address)) {
 	$curproc->reply_message_nl('error.already_member',
 				   'already member',
 				   {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.122 2002/08/07 03:59:18 fukachan Exp $
+# $FML: Kernel.pm,v 1.123 2002/08/07 14:58:38 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -488,7 +488,8 @@ sub verify_sender_credential
 	# XXX log it anyway
 	Log("sender: $from");
 	use FML::Credential;
-	$curproc->{'credential'} = new FML::Credential;
+	my $cred = new FML::Credential $curproc;
+	$curproc->{'credential'} = $cred;
 	$curproc->{'credential'}->set( 'sender', $from );
     }
     else {
@@ -855,10 +856,11 @@ sub _check_restrictions
     my $config = $curproc->{ config };
     my $cred   = $curproc->{ credential }; # user credential
     my $pcb    = $curproc->{ pcb };
+    my $sender = $cred->sender();
 
     for my $rule (split(/\s+/, $config->{ "${type}_restrictions" })) {
 	if ($rule eq 'reject_system_accounts') {
-	    my $match = $cred->match_system_accounts($curproc, $args);
+	    my $match  = $cred->match_system_accounts($sender);
 	    if ($match) {
 		Log("${rule}: $match matches sender address");
 		$pcb->set("check_restrictions", "deny_reason", $rule);
@@ -870,13 +872,12 @@ sub _check_restrictions
 	}
 	elsif ($rule eq 'permit_member_maps') {
 	    # Q: the mail sender is a ML member?
-	    if ($cred->is_member($curproc, $args)) {
+	    if ($cred->is_member($sender)) {
 		# A: Yes, we permit to distribute this article.
 		return 1;
 	    }
 	    else {
 		# A: No, deny distribution
-		my $sender = $cred->sender;
 		LogError("$sender is not an ML member");
 		LogError( $cred->error() );
 		$curproc->reply_message_nl('error.not_member',

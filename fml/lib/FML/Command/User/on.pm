@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: on.pm,v 1.1 2002/07/22 15:39:55 tmu Exp $
 #
 
 package FML::Command::User::on;
@@ -76,10 +76,10 @@ sub process
     croak("\$recipient_map is not specified") unless $recipient_map;
 
     use FML::Credential;
-    my $cred = new FML::Credential;
+    my $cred = new FML::Credential $curproc;
 
     # if not member, on request is wrong.
-    unless ($cred->is_member($curproc, { address => $address })) {
+    unless ($cred->is_member($address)) {
 	$curproc->reply_message_nl('error.not_member');
 	LogError("on request from not member");
 	croak("not member");
@@ -87,7 +87,7 @@ sub process
     }
 
     # if already recipient, on request is wrong.
-    if ($cred->is_recipient($curproc, { address => $address })) {
+    if ($cred->is_recipient($address)) {
 	$curproc->reply_message_nl('error.already_recipient',
 				   'already recipient',
 				   {

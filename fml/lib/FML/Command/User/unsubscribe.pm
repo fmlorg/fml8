@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.11 2002/04/07 05:35:09 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.12 2002/04/13 13:51:46 fukachan Exp $
 #
 
 package FML::Command::User::unsubscribe;
@@ -75,10 +75,10 @@ sub process
     croak("\$recipient_map is not specified") unless $recipient_map;
 
     use FML::Credential;
-    my $cred = new FML::Credential;
+    my $cred = new FML::Credential $curproc;
 
     # if not member, unsubscriber request is wrong.
-    unless ($cred->is_member($curproc, { address => $address })) {
+    unless ($cred->is_member($address)) {
 	$curproc->reply_message_nl('error.not_member');
 	LogError("unsubscribe request from not member");
 	croak("not member");

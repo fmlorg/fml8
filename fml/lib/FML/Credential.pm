@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.29 2002/07/22 15:33:16 tmu Exp $
+# $FML: Credential.pm,v 1.30 2002/07/24 09:27:15 fukachan Exp $
 #
 
 package FML::Credential;
@@ -51,12 +51,12 @@ has reference as an object.
 # Descriptions: usual constructor
 #               bind $self ($me) to \%Credential, so
 #               you can access the same \%Credential through this object.
-#    Arguments: OBJ($self)
+#    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: bind $self ($me) to \%Credential
 # Return Value: OBJ
 sub new
 {
-    my ($self) = @_;
+    my ($self, $curproc) = @_;
     my ($type) = ref($self) || $self;
     my $me     = \%Credential;
 
@@ -65,6 +65,9 @@ sub new
 
     # case sensitive for user part comparison.
     $me->{ _user_part_case_sensitive } = 1;
+
+    # hold pointer to $curproc
+    $me->{ _curproc } = $curproc if defined $curproc; 
 
     return bless $me, $type;
 }
@@ -189,19 +192,17 @@ return 0 if not.
 
 
 # Descriptions: sender of the current process is an ML member or not.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($self) STR($address)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub is_member
 {
-    my ($self, $curproc, $args) = @_;
+    my ($self, $address) = @_;
+    my $curproc     = $self->{ _curproc };
     my $config      = $curproc->{ config };
     my $member_maps = $config->get_as_array_ref('member_maps');
-    my $address     = (defined $args->{ address } ?
-		       $args->{ address } :
-		       $curproc->{'credential'}->{'sender'});
 
-    $self->_is_member($curproc, $args, {
+    $self->_is_member({
 	address     => $address,
 	member_maps => $member_maps,
     });
@@ -209,38 +210,35 @@ sub is_member
 
 
 # Descriptions: sender of the current process is an ML administrator ?
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($self) STR($address)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub is_privileged_member
 {
-    my ($self, $curproc, $args) = @_;
+    my ($self, $address) = @_;
+    my $curproc     = $self->{ _curproc };
     my $config      = $curproc->{ config };
     my $member_maps = $config->get_as_array_ref('admin_member_maps');
-    my $address     = (defined $args->{ address } ?
-		       $args->{ address } :
-		       $curproc->{'credential'}->{'sender'});
 
-    $self->_is_member($curproc, $args, {
+    $self->_is_member({
 	address     => $address,
 	member_maps => $member_maps,
     });
 }
 
+
 # Descriptions: sender of the current process is an ML recipient or not.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($self) STR($address)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub is_recipient
 {
-    my ($self, $curproc, $args) = @_;
-    my $config      = $curproc->{ config };
+    my ($self, $address) = @_;
+    my $curproc        = $self->{ _curproc };
+    my $config         = $curproc->{ config };
     my $recipient_maps = $config->get_as_array_ref('recipient_maps');
-    my $address     = (defined $args->{ address } ?
-		       $args->{ address } :
-		       $curproc->{'credential'}->{'sender'});
 
-    $self->_is_member($curproc, $args, {
+    $self->_is_member({
 	address     => $address,
 	member_maps => $recipient_maps,
     });
@@ -253,11 +251,12 @@ sub is_recipient
 # Return Value: NUM(1 or 0)
 sub _is_member
 {
-    my ($self, $curproc, $args, $optargs) = @_;
-    my $config = $curproc->config();
-    my $status = 0;
-    my $user   = '';
-    my $domain = '';
+    my ($self, $optargs) = @_;
+    my $curproc = $self->{ _curproc };
+    my $config  = $curproc->config();
+    my $status  = 0;
+    my $user    = '';
+    my $domain  = '';
 
     # cheap sanity
     return 0 unless defined $optargs->{ member_maps };
@@ -328,9 +327,9 @@ sub has_address_in_map
 }
 
 
-=head2 C<match_system_accounts($curproc, $args)>
+=head2 C<match_system_accounts($addr)>
 
-C<sender> ( == $self->sender() ) matches a system account or not.
+C<addr> matches a system account or not.
 The system accounts are given as
 
      $curproc->{ config }->{ system_accounts }.
@@ -338,21 +337,24 @@ The system accounts are given as
 =cut
 
 
-# Descriptions: sender of this process is a system account ?
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args)
+# Descriptions: check if $addr matches a system account ?
+#               return the matched address or NULL.
+#    Arguments: OBJ($self) STR($addr)
 # Side Effects: none
 # Return Value: STR
 sub match_system_accounts
 {
-    my ($self, $curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my ($self, $addr) = @_;
+    my $curproc = $self->{ _curproc };
+    my $config  = $curproc->{ config };
 
     # compare $user part of the sender address
-    my ($user, $domain) = split(/\@/, $self->sender());
+    my ($user, $domain) = split(/\@/, $addr);
 
     # compare $user part with e.g. root, postmaster, ...
     # XXX always case INSENSITIVE
-    for my $addr (split(/\s+/, $config->{ system_accounts })) {
+    my $accounts = $config->get_as_array_ref('system_accounts');
+    for my $addr (@$accounts) {
 	if ($user =~ /^${addr}$/i) { return $addr;}
     }
 

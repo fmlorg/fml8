@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.15 2002/08/07 04:00:40 fukachan Exp $
+# $FML: Error.pm,v 1.16 2002/08/07 15:06:59 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -185,7 +185,11 @@ sub run
 }
 
 
-# run analyzer() if long time spent after the last analyze.
+# Descriptions: run analyzer() if long time spent after the last
+#               analyze.
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: remove addresses which causes bounces
+# Return Value: none
 sub _clean_up_bouncers
 {
     my ($curproc, $args) = @_;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.4 2002/07/23 13:03:13 fukachan Exp $
+# $FML: chaddr.pm,v 1.5 2002/07/24 09:27:16 fukachan Exp $
 #
 
 package FML::Command::Admin::chaddr;
@@ -94,7 +94,7 @@ sub process
     push(@maps, @$member_maps);
     push(@maps, @$recipient_maps);
     for my $map (@maps) {
-	my $cred = new FML::Credential;
+	my $cred = new FML::Credential $curproc;
 
 	# the current member/recipient file must have $old_address
 	# but should not contain $new_address.

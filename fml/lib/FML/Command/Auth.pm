@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.11 2002/07/18 23:17:10 fukachan Exp $
+# $FML: Auth.pm,v 1.12 2002/07/23 13:03:12 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -81,8 +81,9 @@ sub permit_anyone
 sub permit_admin_member_maps
 {
     my ($self, $curproc, $args, $optargs) = @_;
-    my $cred  = $curproc->{ credential };
-    my $match = $cred->is_privileged_member($curproc, $args);
+    my $cred   = $curproc->{ credential };
+    my $sender = $cred->sender();
+    my $match  = $cred->is_privileged_member($sender);
 
     if ($match) {
 	Log("found in admin_member_maps");
@@ -100,8 +101,9 @@ sub permit_admin_member_maps
 sub reject_system_accounts
 {
     my ($self, $curproc, $args, $optargs) = @_;
-    my $cred  = $curproc->{ credential };
-    my $match = $cred->match_system_accounts($curproc, $args);
+    my $cred   = $curproc->{ credential };
+    my $sender = $cred->sender();
+    my $match  = $cred->match_system_accounts($sender);
 
     if ($match) {
 	Log("reject_system_accounts: matches the sender");
@@ -147,7 +149,7 @@ sub check_admin_member_password
     my ($user, $domain) = split(/\@/, $address);
 
     use FML::Credential;
-    my $cred = new FML::Credential;
+    my $cred = new FML::Credential $curproc;
 
     # search $user in password database map, which has a hash of
     # { $user => $encryptd_passwrod }.

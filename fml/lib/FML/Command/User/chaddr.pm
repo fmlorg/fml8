@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.10 2002/03/17 06:24:30 fukachan Exp $
+# $FML: chaddr.pm,v 1.11 2002/04/06 14:46:27 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -79,7 +79,7 @@ sub process
     croak("\$recipient_map is not specified") unless $recipient_map;
 
     use FML::Credential;
-    my $cred = new FML::Credential;
+    my $cred = new FML::Credential $curproc;
 
     # addresses we check and send back confirmation messages to
     my $optargs = {};
@@ -94,8 +94,7 @@ sub process
 
     # if either old or new addresses in chaddr arguments is an ML member,
     # try to confirm this request irrespective of "From:" address.
-    if ($cred->is_member($curproc, { address => $old_addr }) ||
-	$cred->is_member($curproc, { address => $new_addr })) {
+    if ($cred->is_member($old_addr) || $cred->is_member($new_addr)) {
 	Log("chaddr request, try confirmation");
 
 	use FML::Confirm;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.15 2002/07/24 09:27:16 fukachan Exp $
+# $FML: UserControl.pm,v 1.16 2002/08/03 13:13:21 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -61,7 +61,7 @@ sub useradd
     $msg_args->{ _arg_address } = $address;
 
     for my $map (@$maplist) {
-	my $cred = new FML::Credential;
+	my $cred = new FML::Credential $curproc;
 	unless ($cred->has_address_in_map($map, $config, $address)) {
 	    $msg_args->{ _arg_map } = $curproc->which_map_nl($map);
 
@@ -111,7 +111,7 @@ sub userdel
     $msg_args->{ _arg_address } = $address;
 
     for my $map (@$maplist) {
-	my $cred = new FML::Credential;
+	my $cred = new FML::Credential $curproc;
 	if ($cred->has_address_in_map($map, $config, $address)) {
 	    $msg_args->{ _arg_map } = $curproc->which_map_nl($map);
 
