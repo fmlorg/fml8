@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.241 2004/11/21 06:59:42 fukachan Exp $
+# $FML: Kernel.pm,v 1.242 2004/11/23 04:22:00 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -705,12 +705,12 @@ with considering virtual domains.
 
 
 # Descriptions: determine ml_* variables with considering virtual domains.
-#    Arguments: OBJ($curproc)
+#    Arguments: OBJ($curproc) HASH_REF($resolver_args)
 # Side Effects: update $config->{ ml_* } variables.
 # Return Value: none
 sub resolve_ml_specific_variables
 {
-    my ($curproc) = @_;
+    my ($curproc, $resolver_args) = @_;
     my ($ml_name, $ml_domain, $ml_home_prefix, $ml_home_dir);
     my ($command, @options, $config_cf_path);
     my $config  = $curproc->config();
@@ -817,6 +817,26 @@ sub resolve_ml_specific_variables
 
 	    use File::Spec;
 	    $config_cf_path = File::Spec->catfile($home_dir, "config.cf");
+	}
+
+	# we try to fallback something when config.cf not exists.
+	# Example: when fml.pl firstly runs without config.cf (fml8) file,
+	#          fml.pl should generate config.cf and continue to run.
+	unless (-f $config_cf_path) {
+	    my $fallback       = $resolver_args->{ fallback } || undef;
+	    my $fallback_args  = {
+		config_cf_path => $config_cf_path,
+	    };
+	    if (defined $fallback) {
+		eval q{ $curproc->$fallback($fallback_args); };
+		$curproc->logerror($@) if $@;
+	    }
+
+	    unless (-f $config_cf_path) {
+		$curproc->logerror("config.cf not exist");
+		croak("config.cf not exist");
+		return undef;
+	    }
 	}
 
 	# [1.2.b.2]

@@ -3,7 +3,7 @@
 # Copyright (C) 2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Emulate.pm,v 1.1 2004/11/23 04:24:16 fukachan Exp $
+# $FML: Emulate.pm,v 1.2 2004/11/23 13:36:59 fukachan Exp $
 #
 
 package FML::Process::Emulate;
@@ -74,9 +74,17 @@ adjust ml_* and load configuration files.
 sub prepare
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->config();
+    my $config           = $curproc->config();
+    my $resolver_args    = {
+	fallback => "generate_config_cf_from_config_ph",
+    };
 
-    $curproc->resolve_ml_specific_variables();
+    # load only default configuration.
+    my $default_config_cf = $curproc->default_config_cf_filepath();
+    $config->load_file($default_config_cf);
+
+    # go !
+    $curproc->resolve_ml_specific_variables($resolver_args);
     $curproc->load_config_files();
     $curproc->fix_perl_include_path();
     $curproc->scheduler_init();
@@ -160,6 +168,90 @@ sub _fml4_emulate_command_mail_process
 	$curproc->logerror("use of command_mail program prohibited");
 	exit(0);
     }
+}
+
+
+=head1 FALLBACK FOR ERROR RECOVORY
+
+=head2 generate_config_cf_from_config_ph($fallback_args)
+
+When fml.pl runs, it generates config.cf if config.cf does not exist.
+This code is a subset of "fml $ml mergeml" command.
+
+=cut
+
+
+# Descriptions: generate config.cf if it does not exist.
+#    Arguments: OBJ($curproc) HASH_REF($fallback_args)
+# Side Effects: none
+# Return Value: none
+sub generate_config_cf_from_config_ph
+{
+    my ($curproc, $fallback_args) = @_;
+    my $ml_home_dir    = '';
+    my $config_cf_path = $fallback_args->{ config_cf_path };
+    my $config_ph_path = $fallback_args->{ config_cf_path };
+    $config_ph_path    =~ s/config.cf/config.ph/;
+
+    if (-f $config_ph_path && -f $config_cf_path) {
+	# OK, DO NOTHING.
+    }
+    elsif (! -f $config_ph_path && -f $config_cf_path) {
+	# fml8 normal case.
+	# OK, DO NOTHING.
+    }
+    elsif (-f $config_ph_path && ! -f $config_cf_path) {
+	# fml4 -> fml8 case (config.ph -> config.cf).
+	use File::Basename;
+	my $ml_home_dir = dirname($config_cf_path);
+	my $params = {
+	    ml_home_dir   => $ml_home_dir,
+	    src_dir       => $ml_home_dir,
+	    target_system => "fml4",
+	};
+	$curproc->_fml4_merge($params);
+    }
+    else {
+	;
+    }
+}
+
+
+# Descriptions: merge ML configurations.
+#    Arguments: OBJ($curproc) HASH_REF($params)
+# Side Effects: none
+# Return Value: none
+sub _fml4_merge
+{
+    my ($curproc, $params) = @_;
+    my $src_dir = $params->{ src_dir }       || undef;
+    my $system  = $params->{ target_system } || undef;
+
+    # XXX-TODO: configurable.
+    use FML::Merge;
+    my $merge = new FML::Merge $curproc, $params;
+    $merge->set_target_system($system);
+
+    # 1. back up .
+    $merge->backup_old_config_files();
+
+    # XXX mergeml do this, but emulator not need this.
+    #   2. fix include*.
+    #   3. run newml --force.
+    use FML::ML::Control;
+    my $control = new FML::ML::Control;
+    $control->install_template_files($curproc, {}, $params);
+
+    # 4. convert files if needed.
+    $merge->convert_list_files();
+
+    # XXX mergeml do this, but emulator not need this.
+    #   5. analyze fml4 configuration and build diff only.
+    #   6. translate diff into fml8 cf.
+    $merge->merge_into_config_cf();
+
+    # XXX mergeml do this, but emulator not need this.
+    # 7. warning.
 }
 
 
