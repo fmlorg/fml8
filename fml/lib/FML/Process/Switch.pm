@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Switch.pm,v 1.23 2001/11/03 12:23:16 fukachan Exp $
+# $FML: Switch.pm,v 1.24 2001/11/04 04:42:52 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -165,7 +165,13 @@ sub main::Bootstrap2
     my $obj = ProcessSwitch($args);
 
     # start the process.
-    FML::Process::Flow::ProcessStart($obj, $args);
+    eval q{
+      FML::Process::Flow::ProcessStart($obj, $args);
+    };
+    if ($@) {
+	if ($obj->can('help')) { eval $obj->help();};
+	croak($@);
+    }
 }
 
 
