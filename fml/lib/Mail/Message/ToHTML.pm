@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.33 2003/01/11 15:16:35 fukachan Exp $
+# $FML: ToHTML.pm,v 1.34 2003/01/26 05:57:12 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.33 2003/01/11 15:16:35 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.34 2003/01/26 05:57:12 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -675,11 +675,11 @@ sub _print_inline_object_link
     }
 
     if ($inline && $type =~ /image/) {
-	print $wh "<BR><IMG SRC=\"$file\">$desc\n";
+	print $wh "<BR><IMG SRC=\"../$file\">$desc\n";
     }
     else {
 	my $t = $file;
-	print $wh "<BR><A HREF=\"$file\" TARGET=\"$t\"> $type $num </A>";
+	print $wh "<BR><A HREF=\"../$file\" TARGET=\"$t\"> $type $num </A>";
 	print $wh "$desc<BR>\n";
     }
 }
