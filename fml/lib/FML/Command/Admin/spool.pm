@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: spool.pm,v 1.1 2003/03/15 09:07:04 fukachan Exp $
+# $FML: spool.pm,v 1.2 2003/03/16 10:56:00 fukachan Exp $
 #
 
 package FML::Command::Admin::spool;
@@ -49,7 +49,14 @@ sub new
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
-sub need_lock { 0;}
+sub need_lock { 1;}
+
+
+# Descriptions: lock channel
+#    Arguments: none
+# Side Effects: none
+# Return Value: STR
+sub lock_channel { return 'article_spool_modify';}
 
 
 # Descriptions: subcommand dispatch table for "spool" command.

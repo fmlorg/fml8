@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: error.pm,v 1.1 2003/03/14 12:49:47 fukachan Exp $
+# $FML: error.pm,v 1.2 2003/03/14 14:17:59 fukachan Exp $
 #
 
 package FML::Command::Admin::error;
@@ -50,6 +50,13 @@ sub new
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
+
+
+# Descriptions: lock channel
+#    Arguments: none
+# Side Effects: none
+# Return Value: STR
+sub lock_channel { return 'error_analyzer_cache';}
 
 
 # Descriptions: change delivery mode from real time to digest.

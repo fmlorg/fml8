@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: summary.pm,v 1.11 2002/09/22 14:56:48 fukachan Exp $
+# $FML: summary.pm,v 1.12 2002/12/15 13:46:31 fukachan Exp $
 #
 
 package FML::Command::User::summary;
@@ -54,6 +54,13 @@ sub new
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
+
+
+# Descriptions: lock channel
+#    Arguments: none
+# Side Effects: none
+# Return Value: STR
+sub lock_channel { return 'article_spool_modify';}
 
 
 # Descriptions: send summary file by FML::Command::SendFile.

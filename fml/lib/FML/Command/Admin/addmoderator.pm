@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: addmoderator.pm,v 1.3 2002/09/22 14:56:44 fukachan Exp $
+# $FML: addmoderator.pm,v 1.4 2003/01/25 12:48:37 fukachan Exp $
 #
 
 package FML::Command::Admin::addmoderator;
@@ -50,6 +50,13 @@ sub new
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
+
+
+# Descriptions: lock channel
+#    Arguments: none
+# Side Effects: none
+# Return Value: STR
+sub lock_channel { return 'command_serialize';}
 
 
 # Descriptions: addmoderator a new user

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.22 2003/02/09 12:31:41 fukachan Exp $
+# $FML: Auth.pm,v 1.23 2003/03/17 13:24:33 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -12,6 +12,10 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $debug);
 use Carp;
 use FML::Log qw(Log LogWarn LogError);
+
+
+# XXX_LOCK_CHANNEL: auth_map_modify
+my $lock_channel = "auth_map_modify";
 
 
 =head1 NAME
@@ -129,6 +133,7 @@ sub check_admin_member_password
     my ($self, $curproc, $args, $optargs) = @_;
     my $config  = $curproc->{ config };
     my $maplist = $config->get_as_array_ref('admin_member_password_maps');
+    my $status  = 0;
 
     # simple sanity check: verify non empty input or not?
     return 0 unless $optargs->{ address };
@@ -147,6 +152,8 @@ sub check_admin_member_password
 
     use FML::Credential;
     my $cred = new FML::Credential $curproc;
+
+    $curproc->lock($lock_channel);
 
     # search $user in password database map, which has a hash of
     # { $user => $encryptd_passwrod }.
@@ -175,15 +182,18 @@ sub check_admin_member_password
 			if ($debug) {
 			    Log("check_admin_member_password: password match");
 			}
-			return 1;
+			$status = 1;
+			last PASSWORD_ENTRY;
 		    }
 		}
             }
         }
     }
 
-    LogWarn("check_admin_member_password: password not match");
-    return 0;
+    $curproc->unlock($lock_channel);
+
+    LogWarn("check_admin_member_password: password not match") unless $status;
+    return $status;
 }
 
 
@@ -207,6 +217,7 @@ sub change_password
 {
     my ($self, $curproc, $command_args, $up_args) = @_;
     my $maplist  = $up_args->{ maplist  };
+    my $pri_map  = $up_args->{ primary_map };
     my $address  = $up_args->{ address  };
     my $password = $up_args->{ password };
     my $status   = 0;
@@ -215,6 +226,8 @@ sub change_password
     use FML::Crypt;
     my $crypt = new FML::Crypt;
     my $cp    = $crypt->unix_crypt($password, $$);
+
+    $curproc->lock($lock_channel);
 
     # XXX delete entries for address among ALL MAPS.
     use IO::Adapter;
@@ -248,6 +261,8 @@ sub change_password
 	}
 	$obj->close();
     }
+
+    $curproc->unlock($lock_channel);
 
     return $status;
 }

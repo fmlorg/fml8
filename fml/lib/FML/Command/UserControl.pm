@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.27 2003/02/15 02:25:40 fukachan Exp $
+# $FML: UserControl.pm,v 1.28 2003/03/17 13:27:15 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -16,6 +16,11 @@ use FML::Credential;
 use FML::Restriction::Base;
 use FML::Log qw(Log LogWarn LogError);
 use IO::Adapter;
+
+
+# XXX_LOCK_CHANNEL: recipient_map_modify
+my $lock_channel = "recipient_map_modify";
+
 
 #
 # XXX-TODO: we use this module to add/del user anywhere.
@@ -62,6 +67,7 @@ sub useradd
     my $address  = $uc_args->{ address };
     my $maplist  = $uc_args->{ maplist };
     my $trycount = 0;
+    my $reason   = '';
 
     # XXX check if $address is safe (persistent ?).
     my $safe = new FML::Restriction::Base;
@@ -74,6 +80,10 @@ sub useradd
     $msg_args->{ _arg_address } = $address;
 
     my $ml_home_dir = $config->{ ml_home_dir };
+
+    $curproc->lock($lock_channel);
+
+  MAP:
     for my $map (@$maplist) {
 	my $_map = $map;
 	$_map =~ s@$ml_home_dir@\$ml_home_dir@;
@@ -102,13 +112,19 @@ sub useradd
 		$curproc->reply_message_nl('command.add_fail',
 					   "failed to add $address",
 					   $msg_args);
-		croak("fail to add $address to map=$_map");
+		$reason = "fail to add $address to map=$_map";
+		last MAP;
 	    }
 	}
 	else {
-	    croak( "$address is already member (map=$_map)" );
-	    return undef;
+	    $reason = "$address is already member (map=$_map)";
+	    last MAP;
 	}
+    }
+
+    $curproc->unlock($lock_channel);
+    if ($reason) { 
+	croak($reason);
     }
 
     unless ($trycount) {
@@ -129,6 +145,7 @@ sub userdel
     my $address  = $uc_args->{ address };
     my $maplist  = $uc_args->{ maplist };
     my $trycount = 0;
+    my $reason   = '';
 
     # XXX check if $address is safe (persistent ?).
     my $safe = new FML::Restriction::Base;
@@ -141,6 +158,10 @@ sub userdel
     $msg_args->{ _arg_address } = $address;
 
     my $ml_home_dir = $config->{ ml_home_dir };
+
+    $curproc->lock($lock_channel);
+
+  MAP:
     for my $map (@$maplist) {
 	my $_map = $map;
 	$_map =~ s@$ml_home_dir@\$ml_home_dir@;
@@ -172,12 +193,18 @@ sub userdel
 		$curproc->reply_message_nl('command.del_fail',
 					   "failed to remove $address",
 					   $msg_args);
-		croak("fail to remove $address from map=$_map");
+		$reason = "fail to remove $address from map=$_map";
+		last MAP;
 	    }
 	}
 	else {
 	    LogWarn("no such user in map=$_map") if $debug;
 	}
+    }
+
+    $curproc->unlock($lock_channel);
+    if ($reason) {
+	croak($reason);
     }
 
     unless ($trycount) {
@@ -200,10 +227,14 @@ sub user_chaddr
     # save excursion: exatct match as could as possible.
     $cred->set_compare_level( 100 );
 
+    $curproc->lock($lock_channel);
+
     for my $map (@$maplist) {
 	$self->_try_chaddr_in_map($curproc, $command_args, $uc_args, 
 				   $cred, $map);
     }
+
+    $curproc->unlock($lock_channel);
 
     # reset enironment.
     $cred->set_compare_level( $level );
@@ -258,7 +289,7 @@ sub _try_chaddr_in_map
 		Log("delete $old_address from map=$map");
 	    }
 	    else {
-		croak("fail to delete $old_address to map=$map");
+		LogError("fail to delete $old_address to map=$map");
 	    }
 	    $obj->close();	
 	}
@@ -273,7 +304,7 @@ sub _try_chaddr_in_map
 		Log("add $new_address to map=$map");
 	    }
 	    else {
-		croak("fail to add $new_address to map=$map");
+		LogError("fail to add $new_address to map=$map");
 	    }
 	    $obj->close();
 	}
@@ -293,6 +324,8 @@ sub userlist
     my $maplist = $uc_args->{ maplist };
     my $wh      = $uc_args->{ wh };
     my $style   = $curproc->get_print_style();
+
+    $curproc->lock($lock_channel);
 
     for my $map (@$maplist) {
 	my $obj = new IO::Adapter $map, $config;
@@ -316,6 +349,8 @@ sub userlist
 	    LogWarn("canot open $map");
 	}
     }
+
+    $curproc->unlock($lock_channel);
 }
 
 
@@ -329,6 +364,8 @@ sub get_user_list
     my $config = $curproc->config();
     my $r = [];
 
+    $curproc->lock($lock_channel);
+
     for my $map (@$list) {
 	my $io  = new IO::Adapter $map, $config;
 	my $key = '';
@@ -340,6 +377,8 @@ sub get_user_list
 	    $io->close();
 	}
     }
+
+    $curproc->unlock($lock_channel);
 
     return $r;
 }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.17 2003/02/01 05:27:52 fukachan Exp $
+# $FML: subscribe.pm,v 1.18 2003/02/01 06:08:38 fukachan Exp $
 #
 
 package FML::Command::User::subscribe;
@@ -52,6 +52,13 @@ sub new
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
+
+
+# Descriptions: lock channel
+#    Arguments: none
+# Side Effects: none
+# Return Value: STR
+sub lock_channel { return 'command_serialize';}
 
 
 # Descriptions: subscribe adapter.

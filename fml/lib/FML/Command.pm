@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.36 2003/01/03 07:03:35 fukachan Exp $
+# $FML: Command.pm,v 1.37 2003/03/16 10:47:22 fukachan Exp $
 #
 
 # XXX
@@ -185,7 +185,8 @@ sub AUTOLOAD
     my $command = undef;
     eval qq{ use $pkg; \$command = new $pkg;};
     unless ($@) {
-	my $need_lock = 1; # default.
+	my $need_lock    = 0; # no lock by default.
+	my $lock_channel =  'command_serialize';
 
 	# we need to authenticate this ?
 	if ($command->can('auth')) {
@@ -208,12 +209,15 @@ sub AUTOLOAD
 	    $curproc->reply_message("       Please contact the maintainer\n");
 	}
 
+	if ($command->can('lock_channel')) {
+	    $lock_channel = $command->lock_channel() || 'command_serialize';
+	}
+
 	# run the actual process
 	if ($command->can('process')) {
-	    # XXX_LOCK_CHANNEL: default 
-	    $curproc->lock()   if $need_lock;
+	    $curproc->lock($lock_channel)   if $need_lock;
 	    $command->process($curproc, $command_args);
-	    $curproc->unlock() if $need_lock;
+	    $curproc->unlock($lock_channel) if $need_lock;
 	}
 	else {
 	    LogError("${pkg} has no process method");

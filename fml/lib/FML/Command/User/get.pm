@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.14 2002/12/18 04:22:37 fukachan Exp $
+# $FML: get.pm,v 1.15 2003/02/16 08:49:12 fukachan Exp $
 #
 
 package FML::Command::User::get;
@@ -53,6 +53,13 @@ sub new
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
+
+
+# Descriptions: lock channel
+#    Arguments: none
+# Side Effects: none
+# Return Value: STR
+sub lock_channel { return 'article_spool_modify';}
 
 
 # Descriptions: send articles (filename =~ /^\d+/$) by FML::Command::SendFile.

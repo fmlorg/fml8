@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: file.pm,v 1.10 2003/01/25 09:14:05 fukachan Exp $
+# $FML: file.pm,v 1.11 2003/01/25 12:48:38 fukachan Exp $
 #
 
 package FML::Command::Admin::file;
@@ -50,6 +50,13 @@ sub new
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
+
+
+# Descriptions: lock channel
+#    Arguments: none
+# Side Effects: none
+# Return Value: STR
+sub lock_channel { return 'command_serialize';}
 
 
 # Descriptions: needs "command subcommand parameters" style or not

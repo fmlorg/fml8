@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: changepassword.pm,v 1.2 2003/02/09 12:31:41 fukachan Exp $
+# $FML: changepassword.pm,v 1.3 2003/03/17 13:23:22 fukachan Exp $
 #
 
 package FML::Command::Admin::changepassword;
@@ -51,6 +51,13 @@ sub new
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
+
+
+# Descriptions: lock channel
+#    Arguments: none
+# Side Effects: none
+# Return Value: STR
+sub lock_channel { return 'command_serialize';}
 
 
 # Descriptions: change the admin password.
@@ -117,9 +124,10 @@ sub _change_password
     my $maps    = $config->get_as_array_ref('admin_member_password_maps');
     my $pri_map = $config->{ primary_admin_member_password_map };
     my $up_args = {
-	maplist  => $maps,
-	address  => $address,
-	password => $password,
+	primary_map => $pri_map,
+	maplist     => $maps,
+	address     => $address,
+	password    => $password,
     };
     my $r = '';
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.2 2002/12/23 14:45:01 fukachan Exp $
+# $FML: digest.pm,v 1.3 2002/12/24 10:19:45 fukachan Exp $
 #
 
 package FML::Command::User::digest;
@@ -51,6 +51,13 @@ sub new
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
+
+
+# Descriptions: lock channel
+#    Arguments: none
+# Side Effects: none
+# Return Value: STR
+sub lock_channel { return 'command_serialize';}
 
 
 # Descriptions: digest off/on adapter.

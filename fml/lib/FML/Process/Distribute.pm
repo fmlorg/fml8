@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.110 2003/03/16 10:49:51 fukachan Exp $
+# $FML: Distribute.pm,v 1.111 2003/03/17 09:01:17 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -201,7 +201,7 @@ sub run
     my $eval = $config->get_hook( 'distribute_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
-    $curproc->lock(); # XXX_LOCK_CHANNEL: default 
+    # $curproc->lock();
     unless ($curproc->is_refused()) {
 	if ($curproc->permit_post($args)) {
 	    $curproc->_distribute($args);
@@ -249,7 +249,8 @@ sub run
     else {
 	LogError("ignore this request.");
     }
-    $curproc->unlock();
+
+    # $curproc->unlock();
 
     $eval = $config->get_hook( 'distribute_run_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -422,6 +423,7 @@ sub _header_rewrite
 sub _deliver_article
 {
     my ($curproc, $args) = @_;
+    my $cred    = $curproc->{ credential };
     my $config  = $curproc->{ config };               # FML::Config   object
     my $message = $curproc->article_message();        # Mail::Message object
     my $header  = $curproc->article_message_header(); # FML::Header   object
@@ -464,6 +466,9 @@ sub _deliver_article
 
     if ($service->error) { Log($service->error); return;}
 
+    # XXX_LOCK_CHANNEL: recipient_map_modify
+    my $lock_channel = "recipient_map_modify";
+    $curproc->lock($lock_channel);
     $service->deliver(
 		      {
 			  'smtp_servers'    => $config->{'smtp_servers'},
@@ -476,6 +481,8 @@ sub _deliver_article
 
 			  map_params        => $config,
 		      });
+    $curproc->unlock($lock_channel);
+
     if ($service->error) { Log($service->error); return;}
 }
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: off.pm,v 1.7 2003/02/13 13:34:26 fukachan Exp $
+# $FML: off.pm,v 1.8 2003/02/13 14:06:13 fukachan Exp $
 #
 
 package FML::Command::Admin::off;
@@ -50,6 +50,13 @@ sub new
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
+
+
+# Descriptions: lock channel
+#    Arguments: none
+# Side Effects: none
+# Return Value: STR
+sub lock_channel { return 'command_serialize';}
 
 
 # Descriptions: change delivery mode from real time to digest.

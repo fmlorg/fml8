@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.20 2003/01/29 13:32:31 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.21 2003/02/13 14:06:13 fukachan Exp $
 #
 
 package FML::Command::Admin::unsubscribe;
@@ -52,6 +52,13 @@ sub new
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
+
+
+# Descriptions: lock channel
+#    Arguments: none
+# Side Effects: none
+# Return Value: STR
+sub lock_channel { return 'command_serialize';}
 
 
 # Descriptions: remove the specified user.

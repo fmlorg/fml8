@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: delmoderator.pm,v 1.8 2003/01/27 04:36:29 fukachan Exp $
+# $FML: delmoderator.pm,v 1.7 2003/01/27 04:40:21 fukachan Exp $
 #
 
 package FML::Command::Admin::delmoderator;
@@ -50,6 +50,13 @@ sub new
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
+
+
+# Descriptions: lock channel
+#    Arguments: none
+# Side Effects: none
+# Return Value: STR
+sub lock_channel { return 'command_serialize';}
 
 
 # Descriptions: remove the specified moderator
