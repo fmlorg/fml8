@@ -19,7 +19,7 @@ allclean: clean
 	rm -f File
 
 scan:
-	@ (cd ../..; make scan)
+	@ (cd ../..; make scan 2>&1) |tee __scan__ || echo 'nothing changed'
 
 update:
 	@ (cd ../..; make update)
