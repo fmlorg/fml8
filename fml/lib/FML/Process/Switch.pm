@@ -323,6 +323,9 @@ sub _module_specific_options
     elsif ($myname eq 'makefml.cgi') {
 	return qw(debug!);
     }
+    elsif ($myname eq 'fmlsch.cgi' || $myname eq 'fmlsch') {
+	return qw(debug!);
+    }
     else {
 	croak "options for $myname are not defined.\n";
     }
@@ -338,6 +341,9 @@ sub _ml_name_is_required
     my ($myname) = @_;
 
     if ($myname eq 'fmldoc') {
+	return 0;
+    }
+    elsif ($myname eq 'fmlsch' || $myname eq 'fmlsch.cgi') {
 	return 0;
     }
     elsif ($myname eq 'makefml') {
@@ -390,6 +396,12 @@ sub _module_we_use
     }
     elsif ($name eq 'makefml.cgi') {
 	$pkg = 'FML::CGI::Configure';
+    }
+    elsif ($name eq 'fmlsch') {
+	$pkg = 'FML::Process::Scheduler';
+    }
+    elsif ($name eq 'fmlsch.cgi') {
+	$pkg = 'FML::CGI::Scheduler';
     }
     else {
 	return '';

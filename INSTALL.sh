@@ -83,7 +83,7 @@ echo update $libexec_dir/$fml_version/
 cp -pr fml/libexec/*	$libexec_dir/$fml_version/
 
 echo update /usr/local/bin/
-for prog in fmldoc fmlticket fmlconf makefml
+for prog in fmldoc fmlticket fmlconf makefml fmlsch
 do
 	echo update /usr/local/bin/$prog
 	cp fml/bin/$prog /usr/local/bin/$prog.new
@@ -94,6 +94,7 @@ PROGRAMS="fml.pl distribute command ";
 PROGRAMS="$PROGRAMS fmlserv mead fmlconf fmldoc"
 PROGRAMS="$PROGRAMS fmlticket fmlticket.cgi"
 PROGRAMS="$PROGRAMS makefml makefml.cgi"
+PROGRAMS="$PROGRAMS fmlsch fmlsch.cgi"
 
 if [ ! -f $libexec_dir/loader ];then
 
