@@ -158,7 +158,10 @@ sub expand_variables
     my ($self) = @_;
     _expand_variables( \%_default_fml_config );
     _expand_variables( \%_fml_config );
-    _expand_special_syntax( \%_fml_config );
+
+    # disable POSIX strftime() expansion which conflicts
+    # printf() expansion
+    # _expand_special_syntax( \%_fml_config );
 }
 
 
@@ -215,14 +218,14 @@ sub _expand_special_syntax
     my $use_strftime = 0;
 
     for my $x ( @order ) {
-	if ($config->{ $x } =~ /\%/) { $use_strftime = 1;}
+	if ($config->{ $x } =~ /\%[a-zA-Z]/) { $use_strftime = 1;}
     }
 
     if ($use_strftime) {
 	eval qq{ require POSIX; import POSIX qw(strftime);};
 	unless ($@) {
 	    for my $x ( @order ) {
-		if ($config->{ $x } =~ /\%/) { 
+		if ($config->{ $x } =~ /\%[a-zA-Z]/) { 
 		    $config->{ $x } = strftime($config->{ $x }, localtime);
 		}
 	    }    
