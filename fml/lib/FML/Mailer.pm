@@ -1,17 +1,17 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.9 2002/05/22 15:59:57 fukachan Exp $
+# $FML: Mailer.pm,v 1.10 2002/05/27 11:20:00 fukachan Exp $
 #
 
 package FML::Mailer;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log qw(Log LogError);
+use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
@@ -29,7 +29,7 @@ FML::Mailer - Utilities to send mails
 
 where C<$message> is a C<Mail::Message> object to send.
 If you want to sent plural recipinets,
-specify the recipients as ARRAY HASH at C<recipients> parameter.
+specify the recipients as ARRAY REFERENCE at C<recipients> parameter.
 
     $obj->send( {
 	sender     => 'rudo@nuinui.net',
@@ -49,7 +49,7 @@ If you send a file, you can specify the filename as a data to send.
 
 =head1 DESCRIPTION
 
-It sends Mail::Message object.
+It sends Mail::Message objects.
 
 =head1 METHODS
 
@@ -81,7 +81,7 @@ $args can take the following arguments:
    ----------------------------------
    sender             string
    recipient          string
-   recipients         HASH ARRAY
+   recipients         ARRAY_REF
    message            Mail::Message object
    file               string
 
@@ -95,54 +95,88 @@ $args can take the following arguments:
 sub send
 {
     my ($self, $args) = @_;
-    my ($config, $maintainer, $fp, $sfp) = ();
-    my $handle = undef;
+    my $handle     = undef;
+    my $fp         = undef;
+    my $sfp        = undef;
+    my $maintainer = undef;
 
-    # $curproc is given in usual fml processes.
-    # but not in other programs.
+    # 0. fundamental environment
+    #    $curproc is given in usual fml processes.
+    #    but not in other programs.
     if (defined $args->{ curproc }) {
-	$config     = $args->{ curproc }->{ config } || undef;
-	$maintainer = $config->{ maintainer };
+	my $curproc = $args->{ curproc };
+	my $config  = $curproc->{ config };
+	$maintainer = $config->{ maintainer } if defined $config;
 
+	# default log functions
 	$fp  = sub { Log(@_);}; # pointer to the log function
 	$sfp = sub { my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;};
-	$handle = \*STDOUT;
 
-	my $curproc = $args->{ curproc };
-	my $wh      = $curproc->open_outgoing_message_channel();
+	# overwrite smtp log channel
+	$handle = \*STDOUT;
+	my $wh  = $curproc->open_outgoing_message_channel();
 	if (defined $wh) {
 	    $sfp = sub { print $wh @_;};
 	    $handle = $wh;
 	}
     }
 
-    # who is sender
-    my $sender     = $args->{ sender } || $maintainer;
+    # 1. sender
+    my $sender = (defined $args->{sender} ? $args->{sender} : $maintainer);
+    unless ($sender) {
+	LogError("FML::Mailer: no sender");
+	return 0;
+    }    
 
-    # recipient(s): expected to be given as string or HASH ARRAY
-    my $recipient  = $args->{ recipient }  || undef;
-    my $recipients = $args->{ recipients } || [ $recipient ] || undef;
+    # 2. recipient(s)
+    my $recipients = [];
+    if (defined $args->{ recipients }) {
+	$recipients = $args->{ recipients };
+    }
+    elsif (defined $args->{ recipient }) {
+	my $recipient = $args->{ recipient };
+	$recipients = [ $recipient ];
+    }
+    else {
+	LogError("FML::Mailer: no recipient(s)");
+	return 0;
+    }
 
-    # validate input argument
-    if ((defined($recipient) && ref($recipient) ne '') ||
-	(defined($recipients) && (ref($recipients)) ne 'ARRAY') ||
-	(not defined($args->{ message }))) {
+    # 3. message
+    my $message = undef;
+
+    # 3.1 message object
+    if (defined($args->{ message })) {
+	$message = $args->{ message };
+    }
+    else {
+	LogError("FML::Mailer: no message");
+	return 0;
+    }
+
+    # 3.2 file
+    if (defined($args->{ file })) {
+	my $file = $args->{ file };
+	if ($file && -f $file) {
+	    use Mail::Message;
+	    use FileHandle;
+	    my $fh   = new FileHandle $file;
+	    $message = Mail::Message->parse( { fd => $fh } );
+	}
+	else {
+	    LogError("FML::Mailer: no such file ($file)");
+	}
+    }
+
+    unless (defined $message) {
+	LogError("FML::Mailer: no message");
 	return 0;
     }
 
 
-    # Mail::Message object which is sent
-    my $message    = $args->{ message } || undef;
-    my $file       = $args->{ file }    || undef;
-
-    if ($file && -f $file) {
-	use Mail::Message;
-	use FileHandle;
-	my $fh   = new FileHandle $file;
-	$message = Mail::Message->parse( { fd => $fh } );
-    }
-
-    ### main ###
+    #
+    # main
+    #
     use Mail::Delivery;
     my $service = new Mail::Delivery {
 	log_function       => $fp,
@@ -168,7 +202,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
