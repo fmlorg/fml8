@@ -1,5 +1,5 @@
 #
-# $FML: main.cf,v 1.5 2001/04/08 07:21:59 fukachan Exp $
+# $FML: main.cf,v 1.6 2001/06/29 08:36:37 fukachan Exp $
 # 
 
 fml_version	=	__fml_version__
@@ -13,6 +13,8 @@ libexec_dir = 	$prefix_dir/fml/libexec
 lib_dir     =	$prefix_dir/fml/lib
 		$prefix_dir/cpan/lib
 		$prefix_dir/img/lib
+
+share_dir   =	$prefix_dir/fml/share
 
 # site local
 local_lib_dir = $prefix_dir/site_local
