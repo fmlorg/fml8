@@ -26,7 +26,13 @@ Dialect::Japanese::Subject - Japanese specific handling of a subject
 
 =head1 SYNOPSIS
 
+    use Dialect::Japanese::Subject;
+    $is_reply = Dialect::Japanese::Subject::is_reply($subject);
+
 =head1 DESCRIPTION
+
+a collection to handle Japanese specific representations which appears
+in the subject.
 
 =cut
 
@@ -85,8 +91,8 @@ sub is_reply
 
 =head2 C<cut_off_reply_tag($subject)>
 
-cut off C<Re:> in the string C<$subject> like C<Re: ... >, 
-which is a C<Subject:> in typical case.
+cut off C<Re:> in the string C<$subject> like C<Re: ... >
+within C<Subject:>.
 
 =cut
 

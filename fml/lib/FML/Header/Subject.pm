@@ -36,6 +36,10 @@ the usual constructor.
 =cut
 
 
+# Descriptions: usual constructor
+#    Arguments: $self
+# Side Effects: none
+# Return Value: object
 sub new
 {
     my ($self) = @_;
@@ -45,6 +49,16 @@ sub new
 }
 
 
+=head2 C<rewrite_subject_tag($header, $config, $args)>
+
+ add or update the subject tag for C<$header>
+
+=cut
+
+# Descriptions: add or update the subject tag
+#    Arguments: $self $header $config $args
+# Side Effects: the header subject is rewritten
+# Return Value: none
 sub rewrite_subject_tag
 {
     my ($self, $header, $config, $args) = @_;
@@ -70,6 +84,11 @@ sub rewrite_subject_tag
 }
 
 
+# Descriptions: remove tag-like string
+#    Arguments: $subject $args
+#               XXX non OO type function
+# Side Effects: none
+# Return Value: subject string
 sub _delete_subject_tag
 {
     my ($subject, $tag) = @_;
@@ -82,9 +101,27 @@ sub _delete_subject_tag
 }
 
 
+=head2 C<regexp_compile($string)>
+
+build a regular expression to trap C<$string>.
+
+=cut
+
+# Descriptions: wrapper for _regexp_compile
+#    Arguments: $self $args
+# Side Effects: none
+# Return Value: string (regular expression)
+sub regexp_compile
+{
+    my ($self, $string) = @_;
+    _regexp_compile($string);
+}    
+
+
 # Descriptions: create regexp for a subject tag, for example
 #               "[%s %05d]" => "\[\S+ \d+\]"
 #    Arguments: a subject tag string
+#               XXX non OO type function
 # Side Effects: none
 # Return Value: a regexp for the given tag
 sub _regexp_compile
@@ -104,13 +141,19 @@ sub _regexp_compile
 }
 
 
-sub regexp_compile
-{
-    my ($self, $string) = @_;
-    _regexp_compile($string);
-}    
+=head2 C<is_reply($subject_string)>
+
+speculate C<$subject_string> looks a reply message or not?
+It depends on each language specific representations.
+Now we can trap Japanese specific keywords.
+
+=cut
 
 
+# Descriptions: speculate $subject looks a reply message or not?
+#    Arguments: $self $subject
+# Side Effects: none
+# Return Value: 1 (looks reply message) or 0
 sub is_reply
 {
     my ($self, $subject) = @_;
@@ -127,6 +170,11 @@ sub is_reply
 }
 
 
+# Descriptions: cut off reply keywords like "Re:"
+#    Arguments: $self $r_subject
+#               $r_subject is SCALAR REREFENCE to the subject string
+# Side Effects: none
+# Return Value: none
 sub _cut_off_reply
 {
     my ($self, $r_subject) = @_;
