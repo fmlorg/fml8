@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: test_newml.sh,v 1.7 2003/11/16 11:54:46 fukachan Exp $
+# $FML: test_newml.sh,v 1.8 2003/11/16 12:23:46 fukachan Exp $
 #
 
 SHOW () {
@@ -19,6 +19,10 @@ SHOW () {
 
 	echo ""
 	head $HOME/.qmail-*nuinui*
+
+	echo "";
+	echo "ml_home_prefix_maps:"
+	fml rudo@nuinui.net list ml_home_prefix
 
 	echo "";
 	echo "******************* show config end *******************"; 
