@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.34 2002/02/17 09:14:41 fukachan Exp $
+# $FML: Command.pm,v 1.35 2002/02/17 13:51:49 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -235,6 +235,7 @@ sub _can_accpet_command
     my $config  = $curproc->{ config };
     my $cred    = $curproc->{ credential }; # user credential
     my $prompt  = $config->{ command_prompt } || '>>>';
+    my $mode    = $opts->{ mode };
     my $comname = $opts->{ comname };
     my $command = $opts->{ command };
 
@@ -249,7 +250,7 @@ sub _can_accpet_command
     }
 
     # 2. use of this command is allowed in FML::Config or not ?
-    unless ($config->has_attribute("available_commands", $comname)) {
+    unless ($config->has_attribute("available_commands_for_$mode", $comname)) {
 	$curproc->reply_message("\n$prompt $command");
 	$curproc->reply_message_nl('command.not_command',
 				   "not command, ignored.");
@@ -373,6 +374,16 @@ sub _evaluate_command
 
 	    Log("try $comname <$command>");
 	    $command =~ s/^.*$comname/admin $comname/;
+
+	    my $opts = { 
+		mode => 'privileged_user', 
+		comname => $comname, 
+		command => $command };
+	    unless ($curproc->_can_accpet_command($args, $opts)) {
+		# no, we do not accept this command.
+		Log("invalid command = $command");
+		next COMMAND;
+	    }
 	}
 	# Case: commands except for 'admin' nor "confirm" reply message.
 	#       check whether we need to accpet this command ?
@@ -381,7 +392,8 @@ sub _evaluate_command
 	#       validate general command except for confirmation
 	#       if $id is 1, this message must be confirmation reply.
 	else {
-	    my $opts = { comname => $comname, command => $command };
+	    my $opts = { 
+		mode => 'user', comname => $comname, command => $command };
 	    unless ($curproc->_can_accpet_command($args, $opts)) {
 		# no, we do not accept this command.
 		Log("invalid command = $command");
