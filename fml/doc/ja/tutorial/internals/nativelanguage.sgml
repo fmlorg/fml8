@@ -1,5 +1,5 @@
 <!--
-   $FML: nativelanguage.sgml,v 1.1 2001/06/10 10:22:45 fukachan Exp $
+   $FML: nativelanguage.sgml,v 1.2 2001/08/05 12:33:18 fukachan Exp $
 -->
 
 <chapter>
@@ -12,7 +12,7 @@ fml 内部では言語に依存した変換処理が必要です。
 プログラムでは EUC の方が扱いやすいためです。
 </para>
 
-<sect>
+<sect1>
 	<title>
 	何か::Language::
 	</title>
