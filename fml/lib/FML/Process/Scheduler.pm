@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Scheduler.pm,v 1.5 2001/11/23 02:52:24 fukachan Exp $
+# $FML: Scheduler.pm,v 1.6 2001/11/25 09:04:43 fukachan Exp $
 #
 
 package FML::Process::Scheduler;
@@ -74,7 +74,10 @@ sub run
     my $option = $args->{ options };
     my $mode   = 'text';
 
-    if (defined $option->{ h }) { return $self->help();}
+    # -h or --help
+    if (defined $option->{ h } || defined $option->{ help }) { 
+	return $self->help();
+    }
 
     use FileHandle;
     use TinyScheduler;
