@@ -24,6 +24,8 @@ shared_db_dir	= $ml_home_prefix/@db@
 
 var_dir		= $ml_home_dir/var
 
+tmp_dir		= $ml_home_dir/tmp
+
 =head1	アクセス制御ルール
 
 # 投稿への制限
