@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Rotate.pm,v 1.1 2004/04/17 02:07:44 fukachan Exp $
+# $FML: Rotate.pm,v 1.2 2004/04/17 13:23:52 fukachan Exp $
 #
 
 package FML::File::Rotate;
@@ -91,7 +91,7 @@ sub set_max_size
 
 
 # Descriptions: get max_size.
-#    Arguments: OBJ($self)
+#    Arguments: OBJ($self) NUM($size)
 # Side Effects: none
 # Return Value: NUM
 sub get_max_size
