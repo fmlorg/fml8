@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.14 2001/04/12 13:00:49 fukachan Exp $
+# $FML: Message.pm,v 1.15 2001/04/12 15:11:13 fukachan Exp $
 #
 
 package Mail::Message;
@@ -780,6 +780,14 @@ sub _print
 }
 
 
+sub _is_head_message
+{
+    my ($self, $msg) = @_;
+    my $hm = $self->head_message;
+    ($hm eq $self) ? 1 : 0; 
+}
+
+
 # Descriptions: send the body part of the message on memory to socket
 #               replace "\n" in the end of line with "\r\n" on memory.
 #               We should do it to use as less memory as possible.
@@ -804,13 +812,23 @@ sub _print_messsage_on_memory
     $logfp    = ref($logfp) eq 'CODE' ? $logfp : undef;
 
     # 1. print content header if exists
-    my $header = ($type eq 'text/rfc822-headers') ? $data->as_string : $self->{header};
+    my $header = undef;
+    if ($type eq 'text/rfc822-headers' &&
+	(ref($data) eq 'Mail::Header' || ref($data) eq 'FML::Header')) {
+	$header = $data->as_string;
+    }
+    else {
+	$header = $self->{header};
+    }
+		
     if (defined $header) {
 	$header =~ s/\n/\r\n/g unless (defined $raw_print_mode);
 	print $fd $header;
 	print $fd ($raw_print_mode ? "\n" : "\r\n");
     }
-    return if ($type eq 'text/rfc822-headers');
+
+    # skip the first rfc822 header (which is the real header for delivery).
+    return if ($type eq 'text/rfc822-headers') && $self->_is_head_message();
     
 
     # 2. print content body: write each line in buffer
@@ -1011,7 +1029,25 @@ sub parse_and_build_mime_multipart_chain
     $self->_set_pos( $pe + 1 );
 
     # fix the end of multipart block against broken MIME/multipart
-    $mpb_end = ($data_end - 1) if $mpb_end < 0;
+    {
+	print "   ($mpb_begin, $mpb_end)\n" if $debug; 
+	# oops, no delimiter is not found !!!
+	if ($mpb_begin < 0) {
+	    print "   * broken multipart message.\n" if $debug;
+	    my $args = {
+		offset_begin => 0,
+		offset_end   => $data_end,
+		data         => $data,
+	    };
+	    my $m = $self->_alloc_new_part($args);
+	    return next_message($self, $m);
+	}
+	# close-delimiter is not found.
+	elsif ($mpb_end < 0) { 
+	    $mpb_end = ($data_end - 1);
+	}
+    }
+
 
     # prepare lexical variables
     my ($msg, $next_part, $prev_part, @m);
