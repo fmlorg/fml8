@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: delete.pl,v 1.6 2002/08/19 15:19:46 fukachan Exp $
+# $FML: add.pl,v 1.1 2002/09/06 13:17:13 fukachan Exp $
 #
 
 use strict;
@@ -36,18 +36,18 @@ $obj->add( 'rudo' );
 $obj->add( $addr ) || warn("cannot add to $map");
 $obj->add( 'kenken' );
 if ( $obj->error() ) { print $obj->error();}
-show($obj, $addr);
+# show($obj, $addr);
 
 $obj->delete( $addr ); 
 $obj->add( $addr , crypt($addr, $$) ) || warn("cannot add to $map");
 if ( $obj->error() ) { print $obj->error();}
-show($obj, $addr);
+# show($obj, $addr);
 
 my $array = [ 's=skip', 'm=matome', 'r=relayserver', '# comment' ];
 $obj->delete( $addr ); 
 $obj->add( $addr , $array ) || warn("cannot add to $map");
 if ( $obj->error() ) { print $obj->error();}
-show($obj, $addr);
+# show($obj, $addr);
 
 exit 0;
 

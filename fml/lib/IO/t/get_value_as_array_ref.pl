@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: get_value_as_array_ref.pl,v 1.1 2003/02/11 14:20:32 fukachan Exp $
 #
 
 use strict;
@@ -18,6 +18,9 @@ my $debug    = defined $ENV{ 'debug' } ? 1 : 0;
 
 ### MAIN ###
 print "${map}->get_value_as_array_ref() ... ";
+
+print "ignored\n";
+exit 0;
 
 # append
 use IO::Adapter;
