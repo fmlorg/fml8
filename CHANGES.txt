@@ -48,6 +48,12 @@
 		x = a b c d e
 		などとなる。
 
+2001/08/22
+
+   clean up
+	File::Spec を使うように変更
+
+
 2001/08/21
 
    Tie::JournaledDir クラスの創設
@@ -173,5 +179,5 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.8 2001/08/23 14:31:36 fukachan Exp $
+$FML: CHANGES.txt,v 1.9 2001/09/13 11:49:48 fukachan Exp $
 
