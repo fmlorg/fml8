@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.111 2003/03/17 09:01:17 fukachan Exp $
+# $FML: Distribute.pm,v 1.112 2003/03/18 10:42:45 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -197,6 +197,13 @@ sub run
     my $config     = $curproc->{ config };
     my $maintainer = $config->{ maintainer };
     my $sender     = $curproc->{'credential'}->{'sender'};
+    my $data_type  = 
+	$config->{post_restrictions_reject_notice_data_type} || 'string';
+    my $msg_args = {
+	_arg_address => $sender,
+	_arg_sender  => $sender,
+	recipient    => $sender,
+    };
 
     my $eval = $config->get_hook( 'distribute_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -214,36 +221,44 @@ sub run
 	    my $rule = $pcb->get("check_restrictions", "deny_reason");
 	    if ($rule eq 'reject_system_accounts') {
 		my $r = "deny request from a system account";
-		$curproc->reply_message_nl("error.system_accounts", $r);
+		$curproc->reply_message_nl("error.system_accounts", 
+					   $r, $msg_args);
 	    }
 	    elsif ($rule eq 'permit_member_maps') {
 		my $r = "deny request from a not member";
-		$curproc->reply_message_nl("error.not_member", $r);
+		$curproc->reply_message_nl("error.not_member", $r, $msg_args);
 	    }
 	    elsif ($rule eq 'reject') {
 		my $r = "deny your request";
-		$curproc->reply_message_nl("error.reject_post", $r);
+		$curproc->reply_message_nl("error.reject_post", $r, $msg_args);
 	    }
 	    else {
 		my $r = "deny your request due to an unknown reason";
-		$curproc->reply_message_nl("error.reject_post", $r);
+		$curproc->reply_message_nl("error.reject_post", $r, $msg_args);
 	    }
 
+	    # send back deny request with the original message.
 	    my $msg = $curproc->incoming_message();
-	    $curproc->reply_message( $msg );
+	    if ($data_type eq 'string') {
+		my $s = $msg->whole_message_as_str( { indent => '   ' } );
+		$curproc->reply_message(sprintf("\n\n%s", $s), $msg_args);
+	    }
+	    else {
+		$curproc->reply_message( $msg, $msg_args );
+	    }
 
 	    # inform maintainer too.
-	    my $msg_args = {
-		_arg_address => $sender,
-		recipient    => $maintainer,
-	    };
+	    $msg_args->{ recipient } = $maintainer;
 	    $curproc->reply_message_nl("error.post_from_not_member",
 				       "post from not a member",
 				       $msg_args);
-	    $curproc->reply_message( $msg, $msg_args );
-
-	    # add header info.
-	    $curproc->reply_message_add_header_info();
+	    if ($data_type eq 'string') {
+		my $s = $msg->whole_message_as_str( { indent => '   ' } );
+		$curproc->reply_message(sprintf("\n\n%s", $s), $msg_args );
+	    }
+	    else {
+		$curproc->reply_message( $msg, $msg_args );
+	    }
 	}
     }
     else {

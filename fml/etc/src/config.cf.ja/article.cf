@@ -10,6 +10,17 @@
 article_sequence_file	= $sequence_file
 
 
+=head2 ACL
+
+
+# Descriptions: 弾いたメールをどのようにフォワードするか？
+#               ウィルスなどを考慮すると、文字列がいいとおもう
+#      History: 4.0 では文字列で、これはハードコーディングされていた。
+#        Value: multipart / string
+#     Examples: string
+post_restrictions_reject_notice_data_type	=	string
+
+
 =head2	フィルタ
 
 
