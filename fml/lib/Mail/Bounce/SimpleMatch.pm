@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SimpleMatch.pm,v 1.32 2002/12/20 03:49:16 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.33 2002/12/31 11:25:16 fukachan Exp $
 #
 
 
@@ -266,13 +266,16 @@ sub _address_match
 	my @buf = split(/\n/, $$rbuf);
 
       SCAN:
-	for (@buf) {
-	    print STDERR "scan($args->{ mta_type })|state=$args->{state}> $_\n"
-		if $debug;
-	    # XXX in some cases, $end_regexp not defined.
-	    last SCAN if $end_regexp && /$end_regexp/;
+	for my $buf (@buf) {
+	    if ($debug) {
+		print STDERR 
+		    "scan($args->{ mta_type })|state=$args->{state}> $buf\n";
+	    }
 
-	    if (/(\S+\@\S+\w+)/) {
+	    # XXX in some cases, $end_regexp not defined.
+	    last SCAN if $end_regexp && $buf =~ /$end_regexp/;
+
+	    if ($buf =~ /(\S+\@\S+\w+)/) {
 		if ($debug) { print STDERR "trap address ($1)\n";}
 		my $addr = $self->address_clean_up($mta_type, $1);
 		if ($addr) {
@@ -282,7 +285,7 @@ sub _address_match
 		}
 	    }
 
-	    if ($addr_regexp && /$addr_regexp/) {
+	    if ($addr_regexp && $buf =~ /$addr_regexp/) {
 		my $addr = $self->address_clean_up($mta_type, $1);
 		if ($addr) {
 		    $result->{ $addr }->{ 'Final-Recipient' } = $addr;

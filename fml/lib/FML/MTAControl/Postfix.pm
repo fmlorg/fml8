@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.16 2003/01/04 12:20:07 fukachan Exp $
+# $FML: Postfix.pm,v 1.17 2003/01/07 08:38:33 fukachan Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -189,9 +189,10 @@ sub _find_key_in_file
     my $fh = new FileHandle $map;
 
     if (defined $fh) {
+	my $buf;
       LINE:
-	while (<$fh>) {
-	    if (/^$key:/) {
+	while ($buf = <$fh>) {
+	    if ($buf =~ /^$key:/) {
 		$found = 1;
 		last LINE;
 	    }
@@ -239,15 +240,15 @@ sub postfix_get_aliases_as_hash_ref
 	use FileHandle;
 	my $fh = new FileHandle $map;
 	if (defined $fh) {
-	    my ($key, $value);
+	    my ($key, $value, $buf);
 
 	  LINE:
-	    while (<$fh>) {
-		next LINE if /^#/;
-		next LINE if /^\s*$/;
+	    while ($buf = <$fh>) {
+		next LINE if $buf =~ /^#/;
+		next LINE if $buf =~ /^\s*$/;
 
-		chomp;
-		($key, $value)   = split(/:/, $_, 2);
+		chomp $buf;
+		($key, $value)   = split(/:/, $buf, 2);
 		$value =~ s/^\s*//;
 		$value =~ s/s*$//;
 		$aliases->{ $key } = $value;

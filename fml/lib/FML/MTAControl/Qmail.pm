@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.14 2002/12/18 04:03:52 fukachan Exp $
+# $FML: Qmail.pm,v 1.15 2003/01/11 16:05:16 fukachan Exp $
 #
 
 package FML::MTAControl::Qmail;
@@ -195,8 +195,9 @@ sub qmail_install_virtual_map
     my $found = 0;
     my $fh    = new FileHandle $virtual;
     if (defined $fh) {
-	while (<$fh>) {
-	    $found = 1 if /^$ml_domain:/i;
+	my $buf;
+	while ($buf = <$fh>) {
+	    $found = 1 if $buf =~ /^$ml_domain:/i;
 	}
 	$fh->close();
     }
