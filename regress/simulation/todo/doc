@@ -1,6 +1,5 @@
 doc/components.ja.html
 doc/dirhier.ja.html
-doc/index.ja.html
 doc/interfaces.ja.html
 doc/objects.ja.html
 
@@ -10,10 +9,6 @@ etc/defaults/dbms.cf.ja
 etc/defaults/delivery.cf.ja
 etc/defaults/directory.cf.ja
 etc/defaults/header.cf.ja
-etc/defaults/lock.cf.ja
-etc/defaults/log.cf.ja
-etc/defaults/paths.cf.ja
-etc/defaults/spool.cf.ja
 etc/defaults/system_dependence.cf.ja
 etc/defaults/tickets.cf.ja
 etc/defaults/cgi.cf.ja
