@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002 Ken'ichi Fukamachi
+#  Copyright (C) 2002 Takuya MURASHITA
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ContentCheck.pm,v 1.3 2002/04/10 04:28:34 fukachan Exp $
+# $FML: ContentCheck.pm,v 1.4 2002/04/23 23:52:50 tmu Exp $
 #
 
 package FML::Filter::ContentCheck;
@@ -141,11 +141,11 @@ sub only_plaintext
 
 =head1 AUTHOR
 
-Ken'ichi Fukamachi
+Takuya MURASHITA
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Ken'ichi Fukamachi
+Copyright (C) 2002 Takuya MURASHITA
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
