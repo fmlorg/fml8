@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent3.pm,v 1.6 2002/12/24 10:19:46 fukachan Exp $
+# $FML: MimeComponent3.pm,v 1.7 2003/01/08 03:28:31 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -99,12 +99,12 @@ my $default_action = 'permit';
 sub mime_component_check
 {
     my ($self, $msg, $args) = @_;
-    my ($data_type, $prevmp, $nextmp, $mp, $action, $reason);
-    my $is_match  = 0;
-    my $is_cutoff = 0;
+    my ($data_type, $prevmp, $nextmp, $mp, $action, $reject_reason);
+    my $is_cutoff = 0; # debug 
     my $i = 1;
     my $j = 1;
-    my %count = ();
+    my %count  = ();
+    my %reason = ();
 
     # whole message type
     my $whole_data_type = $msg->whole_message_header_data_type();
@@ -123,18 +123,22 @@ sub mime_component_check
 
 	__dprint("\n   msg($i) $data_type");
 
+	# apply all rules for this message $mp.
       RULE:
 	for my $rule (@$filter_rules) {
 	    __dprint("\n\trule ${j}: (@$rule)");
 	    $j++;
 
 	    $action = $self->_rule_match($msg,$rule,$mp,$whole_data_type);
-	    $count{ $action }++;
+	    if (defined $action) {
+		$count{ $action }++;
+		$reason{ $action } = join(" ", @$rule);
+	    }
 
 	    if ($action eq 'reject' || $action eq 'permit') {
 		__dprint("\n\t! action = $action.");
 		if ($action eq 'reject') {
-		    $reason = join(" ", @$rule);
+		    $reject_reason = join(" ", @$rule);
 		}
 	    }
 	    elsif ($action eq 'cutoff') {
@@ -151,16 +155,26 @@ sub mime_component_check
     if ($is_cutoff && $debug) { $self->dump_message_structure($msg);}
 
     # if matched with "reject" at laest once, reject the whole mail.
+    my $decision = $default_action;
+    my $_reason  = undef;
     if (defined $count{ 'reject' } && $count{ 'reject' } > 0) {
-	$is_match = 1;
-	$action   = 'reject';
+	$decision = 'reject';
+	$_reason  = $reject_reason;
     }
     else {
-	$action   = 'permit';
+	# save the reason(s).
+	for my $key (keys %reason) {
+	    if ($key ne 'reject') {
+		$_reason .= $_reason ? " + ".$reason{ $key } : $reason{ $key };
+	    }
+
+	    if ($key eq 'permit') {
+		$decision = 'permit';
+	    }
+	}
     }
 
-    my $decision = $is_match ? $action : $default_action;
-    my $_reason  = $is_match ? $reason : "default action";
+    $_reason ||= "default action";
     Log("mime_component_filter: $decision ($_reason)");
     __dprint("\n   our desicion: $decision ($_reason)");
 
@@ -196,6 +210,8 @@ sub _rule_match
     else {
 	__dprint("\t\tnot check (whole_type not matched)");
     }
+
+    return undef;
 }
 
 
