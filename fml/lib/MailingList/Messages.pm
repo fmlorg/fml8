@@ -13,9 +13,6 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
-require Exporter;
-@ISA = qw(Exporter);
-
 
 # virtual content-type
 my %content_type = 
@@ -729,7 +726,8 @@ return this message has empty content or not.
 
 =cut
 
-    my $total = 0;
+my $total = 0;
+
 sub size
 {
     my ($self) = @_;
@@ -830,8 +828,11 @@ sub get_first_plaintext_message
 {
     my ($self, $args) = @_;
     my $size = $args->{ 'size' } || 512;
+    my $mp ; # mp = message pointer
 
-    my $mp;
+    # Let's go along the chain of message objects.
+    # This routine return the first reference to the message with the
+    # type = ' plain/text'
     for ($mp = $self; 
 	 defined $mp->{ content } || defined $mp->{ 'next' }; 
 	 $mp = $mp->{ 'next' }) {
@@ -852,6 +853,8 @@ sub AUTOLOAD
     my $function = $AUTOLOAD;
     $function =~ s/.*:://;
 
+    return if $function =~ /DESTROY/;
+
     if ($function =~ /^get_(\w+)_reference$/) {
 	return $self->{ $1 };
     }
@@ -859,6 +862,7 @@ sub AUTOLOAD
 	return undef;
     }
 }
+
 
 =head2 C<get_xxx_reference()>
 
@@ -873,14 +877,15 @@ internal use. set CODE REFERENCE to the log function
 
 =cut
 
+# set log function pointer (CODE REFERNCE)
 sub set_log_function
 {
     my ($self, $fp) = @_;
-    $self->{ _log_function } = $fp; # log function pointer
+    $self->{ _log_function } = $fp;
 }
 
 
-# XXX debug, remove here in the future
+# XXX debug, remove this in the future
 sub get_content_type_list
 {
     my ($msg) = @_;
