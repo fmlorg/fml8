@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.10 2002/09/22 14:56:43 fukachan Exp $
+# $FML: HTMLify.pm,v 1.11 2002/10/03 22:10:15 fukachan Exp $
 #
 
 package FML::Command::HTMLify;
@@ -13,6 +13,9 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use File::Spec;
 use FML::Log qw(Log LogWarn LogError);
+
+my $debug = 0;
+
 
 =head1 NAME
 
@@ -52,6 +55,8 @@ sub convert
     #		croak("invalid ML");
     #    }
 
+    print STDERR "  convert\n\t$src_dir =>\n\t$dst_dir\n" if $debug;
+
     my $index_order    = $config->{ html_archive_index_order_type };
     my $htmlifier_args = {
 	directory   => $dst_dir,
@@ -69,7 +74,7 @@ sub convert
 
 	if ($is_subdir_exists) {
 	    my (@x) = sort _sort_subdirs @$subdirs;
-	    print STDERR "subdirs; @x \n";
+	    print STDERR "   subdirs: @x\n";
 	    for my $xdir (sort _sort_subdirs @$subdirs) {
 		eval q{
 		    use Mail::Message::ToHTML;
@@ -80,10 +85,11 @@ sub convert
 	    }
 	}
 	else {
+	    print STDERR "   hmm, looks not subdir style.\n";
 	    eval q{
 		use Mail::Message::ToHTML;
 		my $obj = new Mail::Message::ToHTML $htmlifier_args;
-		&Mail::Message::ToHTML::htmlify_dir($src_dir, $htmlifier_args);
+		$obj->htmlify_dir($src_dir, $htmlifier_args);
 	    };
 	    croak($@) if $@;
 	}

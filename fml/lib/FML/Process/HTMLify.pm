@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.23 2002/09/11 23:18:15 fukachan Exp $
+# $FML: HTMLify.pm,v 1.24 2002/09/22 14:56:53 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -116,7 +116,7 @@ sub run
     my $src_dir = $argv->[0];
     my $dst_dir = $argv->[1];
 
-    print STDERR "htmlify\t$src_dir =>\n\t\t$dst_dir\n" if $debug;
+    print STDERR "htmlify\n\t$src_dir =>\n\t$dst_dir\n" if $debug;
 
     my $eval = $config->get_hook( 'fmlhtmlify_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
