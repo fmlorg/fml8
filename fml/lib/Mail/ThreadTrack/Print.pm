@@ -4,13 +4,14 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Print.pm,v 1.8 2001/11/07 09:28:28 fukachan Exp $
+# $FML: Print.pm,v 1.9 2001/11/08 14:17:39 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+use Mail::ThreadTrack::Print::Utils qw(decode_mime_string STR2EUC);
 
 my $is_show_cost_indicate = 0;
 
@@ -191,14 +192,10 @@ sub _print_thread_summary
 	$status = $rh->{ _status }->{ $tid };
 
 	if ($mode eq 'html') {
-	    $self->_show_thread_by_html_table( {
-		format   => $format,
-		date     => $date, 
-		age      => $age, 
-		status   => $status, 
-		tid      => $tid, 
-		articles => $rh->{ _articles }->{ $tid },
-	    });
+	    eval q{
+		use Mail::ThreadTrack::Print::CGI;
+		push(@ISA, qw(Mail::ThreadTrack::Print::CGI));
+	    };
 	}
 	else {
 	    printf($fd $format, 
@@ -251,7 +248,9 @@ sub _print_article_summary
 	    (@aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
 	    $aid  = $aid[0];
 	    $file = File::Spec->catfile($spool_dir, $aid);
-	    print $fd $self->__article_summary($file);
+	    if (-f $file) {
+		print $fd $self->__article_summary($file);
+	    }
 	}
     }
 }
@@ -346,10 +345,8 @@ sub _valid_buf
 sub _delete_subject_tag_like_string
 {
     my ($str) = @_;
-    $str =~ s/^\s*\W[-\w]+.\s*\d+\W//g;
-    $str =~ s/\s+/ /g;
-    $str =~ s/^\s*//g;
-    $str;
+    use Mail::Message::Utils;
+    return Mail::Message::Utils::remove_subject_tag_like_string($str);
 }
 
 
@@ -375,50 +372,6 @@ sub _header_summary
     $r .= STR2EUC( $padding. "Subject: ". $subject ."$br\n" );
 
     return $r;
-}
-
-
-=head2 C<decode_mime_string(string, [$options])>
-
-decode a base64/quoted-printable encoded string to a plain message.
-The encoding method is automatically detected.
-
-C<$options> is a HASH REFERENCE.
-You can specify the charset of the string to return 
-by $options->{ charset }. 
-
-=cut
-
-sub decode_mime_string
-{
-    my ($str, $options) = @_;
-    my $charset = $options->{ 'charset' } || 'euc-japan';
-
-    if ($charset eq 'euc-japan') {
-        use MIME::Base64;
-        if ($str =~ /=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/i) { 
-            $str =~ s/=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/decode_base64($1)/gie;
-        }
-
-        use MIME::QuotedPrint;
-        if ($str =~ /=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/i) { 
-            $str =~ s/=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/decode_qp($1)/gie;
-        }
-    }
-
-    use Jcode;
-    &Jcode::convert(\$str, 'euc');
-    $str;
-}
-
-
-sub STR2EUC
-{
-    my ($str) = @_;
-
-    use Jcode;
-    &Jcode::convert(\$str, 'euc');
-    return $str;
 }
 
 

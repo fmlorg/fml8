@@ -1,3 +1,11 @@
+package Mail::ThreadTrack::Print::CGI;
+
+use strict;
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
+use Carp;
+use Mail::ThreadTrack::Print::Utils qw(decode_mime_string STR2EUC);
+
+
 sub STR2EUC
 {
     my ($str) = @_;
