@@ -75,7 +75,22 @@ available_commands_for_privileged_user	=	subscribe
 					send
 
 
+# Descriptions: confirmation の返事を表す特別なコマンド
+#        Value: STR
+#     Examples:
 confirm_command_prefix		=	confirm
 
 	
+# Descriptions: 管理用のコマンドを表す特別なコマンド
+#        Value: STR
+#     Examples:
 privileged_command_prefix	=	admin
+
+
+# Descriptions: ＭＬ作成時 (makefml newml )の際に作られる
+#		テンプレートファイル
+#        Value: ARRAY
+#     Examples:
+newml_command_template_files 	=	config.cf
+					include
+					include-ctl
