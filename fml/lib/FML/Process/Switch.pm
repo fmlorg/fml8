@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Switch.pm,v 1.43 2001/11/25 03:54:43 fukachan Exp $
+# $FML: Switch.pm,v 1.44 2001/11/25 05:13:22 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -102,8 +102,16 @@ sub main::Bootstrap2
     }
 
     # 1.1 parse command line options (preliminary)
-    use Getopt::Long;
-    GetOptions(\%options, _module_specific_options($myname));
+    {
+	my $opt = _module_specific_options($myname);
+	if ($opt) {
+	    eval q{
+		use Getopt::Long;
+		GetOptions(\%options, $opt);
+	    };
+	    croak($@) if $@;
+	}
+    }
 
     # 2.1 analyze main.cf and get the result in $main_cf
     use Standalone;
