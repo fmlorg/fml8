@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.13 2002/09/22 14:56:47 fukachan Exp $
+# $FML: get.pm,v 1.14 2002/12/18 04:22:37 fukachan Exp $
 #
 
 package FML::Command::User::get;
@@ -68,8 +68,9 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
 
-    # XXX-TODO: call send_article() without checking here
-    # XXX-TODO: though checked in FML::Process::Command already.
+    # call send_article() without checking here but
+    # Mail::Message::MH checks and expands the specified targets
+    # to HASH_ARRAY of numbers: [ \d+, \d+, ... ].
     $self->send_article($curproc, $command_args);
 }
 
@@ -84,7 +85,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
