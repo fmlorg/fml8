@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.95 2004/06/27 02:39:30 fukachan Exp $
+# $FML: Message.pm,v 1.96 2004/07/23 15:59:14 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1079,7 +1079,7 @@ sub reset_print_mode
 }
 
 
-# Descriptions: set mode of print()
+# Descriptions: set mode of print().
 #               mode is either of 'raw' or 'smtp'.
 #    Arguments: OBJ($self) STR($mode)
 # Side Effects: update object
@@ -1096,6 +1096,19 @@ sub set_print_mode
 	    $override_print_mode = 'smtp';
 	}
     }
+}
+
+
+# Descriptions: get mode of print().
+#               mode is either of 'raw' or 'smtp'.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub get_print_mode
+{
+    my ($self) = @_;
+
+    return( $override_print_mode || 'raw' );
 }
 
 
