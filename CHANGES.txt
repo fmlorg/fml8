@@ -1,6 +1,15 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/05/16
+
+   FML::Process::CGI::Kernel 
+	pick up address_selected not address
+	
+   Mail::Message::ToHTML 
+	not reset @AnyDBM_File::ISA. 
+	It is better for us to use the default @ISA
+
 2002/05/13
 
    FML::Process::Utils 
@@ -2288,4 +2297,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.72 2002/04/28 15:01:52 fukachan Exp $
+$FML: CHANGES.txt,v 1.73 2002/05/13 14:39:56 fukachan Exp $
