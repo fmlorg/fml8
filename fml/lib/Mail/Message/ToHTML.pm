@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.41.2.14 2003/06/15 08:07:16 fukachan Exp $
+# $FML$
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,8 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.41.2.14 2003/06/15 08:07:16 fukachan Exp $;
+my $version = q$FML$;
+
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -1838,7 +1839,7 @@ sub __sprintf_safe_str
 
     if (defined $str) {
 	# $url$trailor => $url $trailor for text2html() incomplete regexp
-	$str =~ s#(http://\S+[\w\d/])#_separete_url($1)#ge;
+	$str =~ s#(http://[^\s\<\>\'\"]+[\w\d/])#_separete_url($1)#ge;
 
 	use HTML::FromText;
 	return text2html($str, urls => 1, pre => $attr_pre);
