@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Adapter.pm,v 1.1 2001/05/04 14:32:33 fukachan Exp $
+# $FML: Adapter.pm,v 1.2 2001/05/30 14:35:10 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -83,7 +83,6 @@ This wrapper provides IO like a usual file for the specified C<$map>.
                    For example, nis.group:fml
 
    mysql           mysql:$schema_name
-                   *** not yet implemented ***
 
    postgresql      postgresql:$schema_name
                    *** not yet implemented ***
