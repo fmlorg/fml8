@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.11 2002/01/13 13:35:25 fukachan Exp $
+# $FML: Utils.pm,v 1.12 2002/04/08 12:44:26 fukachan Exp $
 #
 
 package File::Utils;
@@ -15,7 +15,7 @@ use Carp;
 
 require Exporter;
 @ISA       = qw(Exporter);
-@EXPORT_OK = qw(mkdirhier touch search_program copy);
+@EXPORT_OK = qw(mkdirhier touch search_program copy append);
 
 =head1 NAME
 
@@ -204,6 +204,39 @@ sub copy
     }
     else {
 	undef;
+    }
+}
+
+
+=head2 append($src, $dst)
+
+append content in file $src into file $dst.
+
+=cut
+
+
+# Descriptions: append $src into $dst
+#    Arguments: STR($src) STR($dst)
+# Side Effects: create $dst if needed
+# Return Value: none
+sub append
+{
+    my ($src, $dst) = @_;
+
+    use FileHandle;
+    my $rh = new FileHandle $src;
+    my $wh = new FileHandle ">> $dst";
+
+    if (defined($rh) && defined($wh)) {
+	while (<$rh>) {
+	    print $wh $_;
+	}
+	$wh->close();
+	$rh->close();
+    }
+    else {
+	croak("fail to open $src") unless defined $rh;
+	croak("fail to open $dst") unless defined $wh;
     }
 }
 
