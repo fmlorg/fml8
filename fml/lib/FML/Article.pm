@@ -85,7 +85,7 @@ sub gen_article_id
     $wh->close;
 
     # return value
-    $curproc->{ pcb }->{ article_id } = $id;
+    $curproc->{ pcb }->{ article }->{ id } = $id;
     $id;
 }
 
@@ -94,7 +94,7 @@ sub id
 {
     my ($self) = @_;
     my $curproc = $self->{ curproc };    
-    return $curproc->{ pcb }->{ article_id };
+    return $curproc->{ pcb }->{ article }->{ id };
 }
 
 
