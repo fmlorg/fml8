@@ -15,7 +15,7 @@
 	perl 5.00503 on Redhat Linux 6.2 (sendmail8.11.6)	*
 			smrsh はリンク張る必要はあります。
 
-	(postfix + perl 5.6.1   on Solaris 7)			*
+	postfix       + perl 5.6.1 on Solaris 7			*
 	postfix 2.0.3 + perl 5.6.1 on Solaris 9			*
 
 		[注意]
@@ -436,4 +436,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.23 2003/02/10 09:05:37 fukachan Exp $
+$FML: STATUS.txt,v 1.24 2003/02/11 11:23:44 fukachan Exp $
