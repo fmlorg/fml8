@@ -3,6 +3,7 @@ basic.cf
 directory.cf
 file.cf
 acl.cf
+user.cf
 size.cf
 delivery.cf
 digest.cf
