@@ -33,8 +33,8 @@ sub increment_id
 {
     my ($self, $seq_file) = @_;
 
-    use FML::SequenceFile;
-    my $sfh = new FML::SequenceFile { sequence_file => $seq_file };
+    use File::Sequence;
+    my $sfh = new File::Sequence { sequence_file => $seq_file };
     my $id  = $sfh->increment_id;
     $self->error_reason( $sfh->error );
 
@@ -66,9 +66,9 @@ sub _init_ticket_db_dir
     if (defined $self->{ _db_dir }) {
 	my $db_dir    = $self->{ _db_dir };
 	unless (-d $db_dir) {
-	    use FML::Utils qw(mkdirhier);
+	    use File::Utils qw(mkdirhier);
 	    mkdirhier($db_dir, $config->{ default_directory_mode }) || do {
-		$self->error_reason( FML::Utils->error() );
+		$self->error_reason( File::Utils->error() );
 		return undef;
 	    };
 	}

@@ -8,26 +8,26 @@
 # $FML$
 #
 
-package FML::SequenceFile;
+package File::Sequence;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
-use FML::Errors qw(error_reason error error_reset);
+use File::Errors qw(error_reason error error_reset);
 
 =head1 NAME
 
-FML::SequenceFile - maintain the sequence number
+File::Sequence - maintain the sequence number
 
 =head1 SYNOPSIS
 
-   use FML::SequenceFile;
-   my $sfh = new FML::SequenceFile { sequence_file => $seq_file };
+   use File::Sequence;
+   my $sfh = new File::Sequence { sequence_file => $seq_file };
    my $id  = $sfh->increment_id;
    if ($sfh->error) { use Carp; carp( $sfh->error ); }
 
 If you divide the $id by some modulus, use
 
-   my $sfh = new FML::SequenceFile { 
+   my $sfh = new File::Sequence { 
        sequence_file => $seq_file,
        modulus       => $modules,
    };
@@ -35,7 +35,7 @@ If you divide the $id by some modulus, use
 
 For example, if you do new() with modulus 3,
 
-   my $sfh = new FML::SequenceFile { 
+   my $sfh = new File::Sequence { 
        sequence_file => $seq_file,
        modulus       => 3,
    };
@@ -82,7 +82,7 @@ sub increment_id
 
     # touch the sequence file if it does not exist.
     unless (-f $seq_file) {
-	use FML::Utils qw(touch);
+	use File::Utils qw(touch);
 	touch($seq_file);
     };
 
@@ -131,7 +131,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::SequenceFile appeared in fml5 mailing list driver package.
+File::Sequence appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -190,7 +190,7 @@ sub _deliver_article
 
     { # debug
 	my $dir = $config->{ smtp_log_dir };
-	use FML::Utils qw(mkdirhier);
+	use File::Utils qw(mkdirhier);
 	mkdirhier($dir) unless -d $dir;
 
 	my $f = $config->{ smtp_log_file };

@@ -64,8 +64,8 @@ sub increment_id
     my $pcb      = $curproc->{ pcb };
     my $seq_file = $config->{ sequence_file };
 
-    use FML::SequenceFile;
-    my $sfh = new FML::SequenceFile { sequence_file => $seq_file };
+    use File::Sequence;
+    my $sfh = new File::Sequence { sequence_file => $seq_file };
     my $id  = $sfh->increment_id;
     if ($sfh->error) { Log( $sfh->error ); }
 

@@ -5,10 +5,10 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $File$
 #
 
-package FML::Utils;
+package File::Utils;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $ErrorString);
 use Carp;
@@ -20,11 +20,11 @@ require Exporter;
 
 =head1 NAME
 
-FML::Utils.pm - error handling utilities
+File::Utils.pm - error handling utilities
 
 =head1 SYNOPSIS
 
-   use FML::Utils qw(mkdiehier);
+   use File::Utils qw(mkdiehier);
    mkdirhier($dir, $mode);
 
 =head1 DESCRIPTION
@@ -42,7 +42,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Utils appeared in fml5 mailing list driver package.
+File::Utils appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

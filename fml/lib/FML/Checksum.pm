@@ -64,7 +64,7 @@ sub _init
 	$self->{ _type } = 'native';
     }
     else {
-	eval qq{ require FML::Utils; import FML::Utils qw(search_program);};
+	eval qq{ require File::Utils; import File::Utils qw(search_program);};
 	my $prog = search_program('md5') || search_program('md5sum');
 	if (defined $prog) {
 	    $self->{ _program } = $prog;
