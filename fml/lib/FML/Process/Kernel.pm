@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.132 2002/08/16 15:59:21 fukachan Exp $
+# $FML: Kernel.pm,v 1.133 2002/08/26 05:56:36 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -609,12 +609,19 @@ sub resolve_ml_specific_variables
 	unless ($ml_addr) {
 	    my $default_domain = $curproc->default_domain();
 
+	    use FML::Restriction::Base;
+	    my $safe    = new FML::Restriction::Base;
+	    my $regexp  = $safe->basic_variable();
+	    my $pattern = $regexp->{ ml_name };
+
 	  ARGS:
 	    for my $arg (@ARGV) {	    
 		last ARGS if $ml_addr;
 		next ARGS if $arg =~ /^-/o;
 
-		$ml_addr = $arg. '@' . $default_domain;
+		if ($arg =~ /^($pattern)$/) {
+		    $ml_addr = $arg. '@' . $default_domain;
+		}
 	    }
 	}
     }
@@ -633,8 +640,11 @@ sub resolve_ml_specific_variables
 	$config_cf_path = $curproc->config_cf_filepath($ml_name, $ml_domain);
     }
     # Example: "| /usr/local/libexec/fml/fml.pl /var/spool/ml/elena"
+    #    XXX the following code is true if config.cf has $ml_name definition.
     else {
 	my $r = $curproc->_find_ml_home_dir_in_argv($args->{ main_cf });
+
+	# determine default $ml_home_dir and $hom_home_prefix by main.cf
 	if (defined $r->{ ml_home_dir }) {
 	    use File::Basename;
 	    my $dir    = $r->{ ml_home_dir };
@@ -644,6 +654,32 @@ sub resolve_ml_specific_variables
 
 	    use File::Spec;
 	    $config_cf_path = File::Spec->catfile($dir, "config.cf");
+	}
+
+	# parse the argument such as "fml.pl /var/spool/ml/elena ..."
+	unless ($ml_name) {
+	    Log("(debug) parse @ARGV");
+
+	  ARGS:
+	    for my $arg (@ARGV) {	    
+		last ARGS if $ml_addr;
+		next ARGS if $arg =~ /^-/o;
+
+		# the first directory name e.g. /var/spool/ml/elena
+		if (-d $arg) {
+		    my $default_domain = $curproc->default_domain();
+
+		    use File::Basename;
+		    $ml_name     = basename( $arg );
+		    $ml_home_dir = dirname( $arg );
+
+		    $config->set( 'ml_name',     $ml_name );
+		    $config->set( 'ml_domain',   $default_domain );
+		    $config->set( 'ml_home_dir', $arg );
+
+		    Log("(debug) ml_name=$ml_name ml_home_dir=$ml_home_dir");
+		}
+	    }
 	}
     }
 
@@ -1396,8 +1432,10 @@ sub queue_in
     # cheap sanity check
     unless ($sender && $rcptkey) {
 	my $reason = '';
-	$reason = "no sender specified\n"    unless defined $sender;
-	$reason = "no recipient specified\n" unless defined $rcptkey;
+	$reason = "no sender undefined\n"    unless defined $sender;
+	$reason = "no recipient undefined\n" unless defined $rcptkey;
+	$reason = "no sender specified\n"    unless $sender;
+	$reason = "no recipient specified\n" unless $rcptkey;
 	croak("panic: queue_in()\n\treason: $reason\n");
     }
 
