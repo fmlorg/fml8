@@ -79,6 +79,14 @@ newml_command_postfix_template_files 	=	include
 						include-ctl
 						include-error
 
+
+# Descriptions: verps delimieters used in postfix
+#      History: none
+#        Value: +=
+#     Examples: +=
+postfix_verp_delimiters	=	+=
+
+
 =head2	qmail
 
 
@@ -105,6 +113,14 @@ qmail_virtualdomains_file = /var/qmail/control/virtualdomains
 #        Value: file path
 #     Examples: /var/spool/ml/etc/qmail/virtualdomains
 qmail_virtual_map_file	=	$domain_qmail_config_dir/virtualdomains
+
+
+
+# Descriptions: verps delimieters used in qmail
+#      History: none
+#        Value: -=
+#     Examples: -=
+qmail_verp_delimiters	=	-=
 
 
 =head2	sendmail
