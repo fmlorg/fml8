@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.16 2002/06/24 11:06:11 fukachan Exp $
+# $FML: Menu.pm,v 1.17 2002/06/25 07:50:08 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -113,6 +113,7 @@ sub run_cgi_main
     my $address = $curproc->cgi_try_get_address($args);
     my $ml_name = $curproc->cgi_try_get_ml_name($args);
     my $hints   = $curproc->hints();
+    my $pcb     = $curproc->{ pcb };
 
     # specified command, we need to identify 
     # the command specifined in the cgi_navigation and cgi_mein.
@@ -143,10 +144,8 @@ sub run_cgi_main
 	    args         => undef,
 	};
 
+	$pcb->set('cgi', 'command_args', $command_args);
 	$curproc->cgi_execute_command($args, $command_args);
-
-	print hr;
-	$curproc->run_cgi_menu($args, $command, $command_args);
     }
     elsif ($command && $address) {
 	print "<br>* case 2 <br>\n" if $debug;
@@ -160,10 +159,9 @@ sub run_cgi_main
 	    argv         => undef,
 	    args         => undef,
 	};
-	$curproc->cgi_execute_command($args, $command_args);
 
-	print hr;
-	$curproc->run_cgi_menu($args, $command, $command_args);
+	$pcb->set('cgi', 'command_args', $command_args);
+	$curproc->cgi_execute_command($args, $command_args);
     }
     elsif ($navi_command) {
 	print "<br>* case 3 <br>\n" if $debug;
@@ -177,7 +175,8 @@ sub run_cgi_main
 	    argv         => undef,
 	    args         => undef,
 	};
-	$curproc->run_cgi_menu($args, $navi_command, $command_args);
+
+	$pcb->set('cgi', 'command_args', $command_args);
     }
     elsif ($command) {
 	print "<br>* case 4 <br>\n" if $debug;
@@ -191,19 +190,13 @@ sub run_cgi_main
 	    argv         => undef,
 	    args         => undef,
 	};
-	$curproc->run_cgi_menu($args, $command, $command_args);
+
+	$pcb->set('cgi', 'command_args', $command_args);
     }
     else {
 	print "<br>* case 5 <br>\n" if $debug;
 
-	my $ml_name = $curproc->safe_param_ml_name();
-
-	if ($ml_name) {
-	    $curproc->run_cgi_help($args);
-	}
-	else {
-	    $curproc->run_cgi_help($args);
-	}
+	$pcb->set('cgi', 'command_args', undef);
     }
 }
 

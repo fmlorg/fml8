@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.35 2002/06/25 04:10:51 fukachan Exp $
+# $FML: Kernel.pm,v 1.36 2002/06/27 08:25:51 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -264,7 +264,7 @@ sub _drive_cgi_by_table
 	ne       => '',
 
 	'west'   => 'run_cgi_navigator', 
-	'center' => 'run_cgi_main',
+	'center' => 'run_cgi_menu',
 	'east'   => 'run_cgi_command_help',
 
 	'sw'     => 'run_cgi_options',
@@ -285,6 +285,9 @@ sub _drive_cgi_by_table
 	'south'  => 'rowspan=2 valign="top"',
 	'se'     => 'rowspan=2 valign="top"',
     };
+
+    # firstly, execute command if needed.
+    $curproc->run_cgi_main($args);
 
     print "<table border=0 cellspacing=\"0\" cellpadding=\"5\">\n";
     print "\n<!-- new line -->\n";
@@ -540,17 +543,32 @@ execute cgi_menu() given as FML::Command::*
 # Return Value: none
 sub run_cgi_menu
 {
-    my ($curproc, $args, $comname, $command_args) = @_;
-    my $cmd = "FML::Command::Admin::$comname";
-    my $obj = undef;
+    my ($curproc, $args) = @_;
+    my $pcb          = $curproc->{ pcb };
+    my $command_args = $pcb->get('cgi', 'command_args');
 
-    eval qq{
-	use $cmd;
-	\$obj = new $cmd;
-    };
+    if (defined $command_args) {
+	my $comname = $command_args->{ comname };
+	my $cmd     = "FML::Command::Admin::$comname";
+	my $obj     = undef;
+	eval qq{
+	    use $cmd;
+	    \$obj = new $cmd;
+	};
 
-    if (defined $obj) {
-	$obj->cgi_menu($curproc, $args, $command_args);
+	if (defined $obj) {
+	    $obj->cgi_menu($curproc, $args, $command_args);
+	}
+    }
+    else {
+	my $ml_name = $curproc->safe_param_ml_name();
+
+	if ($ml_name) {
+	    $curproc->run_cgi_help($args);
+	}
+	else {
+	    $curproc->run_cgi_help($args);
+	}
     }
 }
 
