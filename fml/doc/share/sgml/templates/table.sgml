@@ -1,0 +1,27 @@
+<para>
+  <table>
+    <title> table description </title>
+    <tgroup cols=2>
+
+      <thead>
+        <row>
+          <entry> key 		</entry>
+          <entry> value		</entry>
+        </row>
+      </thead>
+
+      <tbody>
+        <row>
+          <entry> key1 		</entry>
+          <entry> value1	 </entry>
+        </row>
+  
+        <row>
+          <entry> key2 		</entry>
+          <entry> value2	 </entry>
+        </row>
+      </tbody>
+
+    </tgroup>
+  </table>
+</para>

@@ -1,0 +1,4 @@
+<!-- Pull in the original DTD -->
+<!ENTITY % orig-docbook PUBLIC "-//OASIS//DTD DocBook V3.1//EN">
+%orig-docbook;
+
