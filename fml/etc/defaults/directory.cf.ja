@@ -41,3 +41,9 @@ db_dir		= $var_dir/db
 #        Value: directory
 #     Examples: /var/spool/ml/elena/var/mqueue
 mqueue_dir	= $var_dir/mqueue
+
+# Descriptions: message template
+#      History: /usr/local/fml/drafts/
+#        Value: directory
+#     Examples: /usr/local/share/fml/$fml_version/template/$language
+message_template_dir	= $fml_share_dir/template/$template_file_charset

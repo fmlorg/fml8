@@ -14,6 +14,12 @@ reply_message_charset	=	$default_charset
 #     Examples:
 system_message_charset	=	$default_charset
 
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+template_file_charset	=	$default_charset
+
 
 # Descriptions:
 #      History:
@@ -34,3 +40,15 @@ reply_message_subject	=	reply from $ml_name ML
 #        Value:
 #     Examples:
 system_message_subject	=	fml system message ($ml_name ML)
+
+
+=head2 テンプレートファイル群
+
+
+# Descriptions: ヘルプファイル
+#      History:
+#        Value:
+#     Examples:
+help_file		=	$message_template_dir/help
+
+

@@ -4,6 +4,12 @@
 # 注意: まだまだ考え中といえます
 #
 
+# Descriptions: command prompt in message reply
+#      History: hard coded in fml (< 4.0)
+#        Value: string without spaces
+#     Examples: >>>
+command_prompot			=	>>>
+
 
 # Descriptions: chaddr コマンドで confirmation 認証(コールバック認証)
 #               を行なうか否か？

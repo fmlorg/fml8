@@ -72,6 +72,12 @@ db_dir		= $var_dir/db
 #     Examples: /var/spool/ml/elena/var/mqueue
 mqueue_dir	= $var_dir/mqueue
 
+# Descriptions: message template
+#      History: /usr/local/fml/drafts/
+#        Value: directory
+#     Examples: /usr/local/share/fml/$fml_version/template/$language
+message_template_dir	= $fml_share_dir/template/$template_file_charset
+
 =head1	アクセス制御ルール
 
 # Descriptions: 投稿への制限
@@ -193,6 +199,12 @@ reply_message_charset	=	$default_charset
 #     Examples:
 system_message_charset	=	$default_charset
 
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+template_file_charset	=	$default_charset
+
 
 # Descriptions:
 #      History:
@@ -213,6 +225,18 @@ reply_message_subject	=	reply from $ml_name ML
 #        Value:
 #     Examples:
 system_message_subject	=	fml system message ($ml_name ML)
+
+
+=head2 テンプレートファイル群
+
+
+# Descriptions: ヘルプファイル
+#      History:
+#        Value:
+#     Examples:
+help_file		=	$message_template_dir/help
+
+
 
 =head1	ヘッダの操作
 
@@ -403,6 +427,12 @@ spool_type	= plane
 #
 # 注意: まだまだ考え中といえます
 #
+
+# Descriptions: command prompt in message reply
+#      History: hard coded in fml (< 4.0)
+#        Value: string without spaces
+#     Examples: >>>
+command_prompot			=	>>>
 
 
 # Descriptions: chaddr コマンドで confirmation 認証(コールバック認証)
