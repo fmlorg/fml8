@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Digest.pm,v 1.13 2004/01/02 02:11:27 fukachan Exp $
+# $FML: Digest.pm,v 1.14 2004/01/02 14:50:34 fukachan Exp $
 #
 
 package FML::Process::Digest;
@@ -45,7 +45,7 @@ we bless it as C<FML::Process::Digest> object again.
 =cut
 
 
-# Descriptions: ordinary constructor.
+# Descriptions: constructor.
 #               sub class of FML::Process::Kernel
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
@@ -141,7 +141,7 @@ Lastly we unlock the current process.
 =cut
 
 
-# Descriptions: the main routine, kick off _digest()
+# Descriptions: the main routine, kick off _digest().
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: distribution of articles.
 #               See _digest() for more details.
@@ -175,7 +175,7 @@ sub run
 =cut
 
 
-# Descriptions: show help
+# Descriptions: show help.
 #    Arguments: none
 # Side Effects: none
 # Return Value: none
@@ -238,7 +238,7 @@ sub _digest
     # run digest proceess if article(s) not to send found.
     if ($aid > $did) {
 	$did++; # start = last digest id + 1
-	my $range  = "$did-$aid";
+	my $range = "$did-$aid";
 
 	# XXX-TODO: $range = "100-200" -> $range = [ 100, 101, ... ]; ?
 	# create multipart of articles as a digest.

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.134 2004/01/02 02:11:27 fukachan Exp $
+# $FML: Distribute.pm,v 1.135 2004/01/02 14:50:34 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -45,7 +45,7 @@ we bless it as C<FML::Process::Distribute> object again.
 =cut
 
 
-# Descriptions: ordinary constructor.
+# Descriptions: standard constructor.
 #               sub class of FML::Process::Kernel
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
@@ -137,7 +137,7 @@ sub verify_request
 }
 
 
-# Descriptions: filter
+# Descriptions: apply several filters.
 #    Arguments: OBJ($curproc)
 # Side Effects: set flag to ignore this process if it should be filtered.
 # Return Value: none
@@ -188,7 +188,7 @@ Lastly we unlock the current process.
 =cut
 
 
-# Descriptions: the main routine, kick off _distribute()
+# Descriptions: the main routine, kick off _distribute().
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: distribution of articles.
 #               See _distribute() for more details.
@@ -218,6 +218,8 @@ sub run
 	}
 	else {
 	    my $pcb = $curproc->pcb();
+
+	    # XXX-TODO: hmm, what is use of $pcb ?
 
 	    $curproc->log("deny article submission");
 
@@ -287,7 +289,7 @@ sub run
 =cut
 
 
-# Descriptions: show help
+# Descriptions: show help.
 #    Arguments: none
 # Side Effects: none
 # Return Value: none
@@ -347,7 +349,7 @@ sub finish
 sub _distribute
 {
     my ($curproc, $args) = @_;
-    my $config       = $curproc->config();
+    my $config           = $curproc->config();
 
     # XXX_LOCK_CHANNEL: article_spool_modify
     # exclusive lock for both sequence updating and spool writing
@@ -404,7 +406,7 @@ sub _distribute
 }
 
 
-# Descriptions: build and return FML::Article object
+# Descriptions: build and return FML::Article object.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: OBJ(FML::Article)
@@ -434,6 +436,7 @@ sub _header_rewrite
     my $rules  = $config->get_as_array_ref('article_header_rewrite_rules');
     my $id     = $hrw_args->{ id };
 
+  RULE:
     for my $rule (@$rules) {
 	$curproc->log("_header_rewrite( $rule )") if $config->yes('debug');
 
@@ -450,7 +453,7 @@ sub _header_rewrite
 }
 
 
-# Descriptions: deliver the article
+# Descriptions: deliver the article.
 #    Arguments: OBJ($curproc)
 # Side Effects: mail delivery, logging
 # Return Value: none
@@ -482,7 +485,7 @@ sub _deliver_article
     # overload $sfp log function pointer.
     my $wh = $curproc->open_outgoing_message_channel();
     if (defined $wh) {
-	$sfp = sub { print $wh @_;};
+	$sfp    = sub { print $wh @_;};
 	$handle = undef; # $wh;
     }
 
@@ -491,9 +494,9 @@ sub _deliver_article
     eval q{
 	use Mail::Delivery;
 	$service = new Mail::Delivery {
-	    log_function       => $fp,
-	    smtp_log_function  => $sfp,
-	    smtp_log_handle    => $handle,
+	    log_function      => $fp,
+	    smtp_log_function => $sfp,
+	    smtp_log_handle   => $handle,
 	};
     };
     croak($@) if $@;
@@ -521,23 +524,23 @@ sub _deliver_article
 }
 
 
-# Descriptions: the top level interface to drive thread tracking system
+# Descriptions: the top level interface to drive thread tracking system.
 #    Arguments: OBJ($curproc)
 # Side Effects: update thread information
 # Return Value: none
 sub _old_thread_check
 {
     my ($curproc) = @_;
-    my $config = $curproc->config();
-    my $pcb    = $curproc->pcb();
-    my $myname = $curproc->myname();
+    my $config    = $curproc->config();
+    my $pcb       = $curproc->pcb();
+    my $myname    = $curproc->myname();
 
     my $ml_name        = $config->{ ml_name };
     my $thread_db_dir  = $config->{ thread_db_dir };
     my $spool_dir      = $config->{ spool_dir };
     my $article_id     = $pcb->get('article', 'id');
     my $is_rewrite_hdr = $config->yes('use_thread_subject_tag') ? 1 : 0;
-    my $ttargs        = {
+    my $ttargs         = {
 	myname         => $myname,
 	logfp          => \&Log,
 	fd             => \*STDOUT,
@@ -560,7 +563,7 @@ sub _old_thread_check
 }
 
 
-# Descriptions: the top level interface to drive thread tracking system
+# Descriptions: the top level interface to drive thread tracking system.
 #    Arguments: OBJ($curproc)
 # Side Effects: update thread information
 # Return Value: none
@@ -587,7 +590,7 @@ sub _new_thread_check
 }
 
 
-# Descriptions: the top level interface to drive thread tracking system
+# Descriptions: the top level interface to drive thread tracking system.
 #    Arguments: OBJ($curproc)
 # Side Effects: update thread information
 # Return Value: none
@@ -615,7 +618,7 @@ sub _new_thread_check_post
 }
 
 
-# Descriptions: the top level entry to create HTML article
+# Descriptions: the top level entry to create HTML article.
 #    Arguments: OBJ($curproc)
 # Side Effects: update html database
 # Return Value: none

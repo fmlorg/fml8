@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.37 2004/01/02 02:11:27 fukachan Exp $
+# $FML: Error.pm,v 1.38 2004/01/02 14:50:35 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -222,6 +222,7 @@ sub _clean_up_bouncers
 	};
 	$curproc->logerror($@) if $@;
 
+	# XXX-TODO: 3600 customizable.
 	$curproc->set_event_timeout($channel, time + 3600);
     }
     else {
@@ -237,7 +238,7 @@ show help.
 =cut
 
 
-# Descriptions: show help
+# Descriptions: show help.
 #    Arguments: none
 # Side Effects: none
 # Return Value: none
@@ -275,9 +276,9 @@ sub finish
     my $eval = $config->get_hook( 'error_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
+    # XXX NOT INFORM ANY RESULTS BUT ONLY LOG IT TO AVOID LOOP.
     if ($pcb->get("error", "found")) {
 	$curproc->log("error message found");
-	# inform ?
     }
     else {
 	$curproc->log("error message not found");

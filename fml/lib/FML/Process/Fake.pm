@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Fake.pm,v 1.5 2004/01/02 14:50:35 fukachan Exp $
+# $FML: Fake.pm,v 1.6 2004/01/04 03:25:09 fukachan Exp $
 #
 
 package FML::Process::Fake;
@@ -53,7 +53,7 @@ lastly, parse incoming message input from \*STDIN channel.
 =cut
 
 
-# Descriptions: ordinary constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: OBJ
@@ -165,7 +165,7 @@ show help.
 =cut
 
 
-# Descriptions: show help
+# Descriptions: show help.
 #    Arguments: none
 # Side Effects: none
 # Return Value: none

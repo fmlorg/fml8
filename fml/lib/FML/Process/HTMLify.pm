@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.32 2004/01/02 10:23:57 fukachan Exp $
+# $FML: HTMLify.pm,v 1.33 2004/01/02 14:50:36 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -23,7 +23,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::Process::HTMLify -- htmlify articles
+FML::Process::HTMLify -- convert articles to html format.
 
 =head1 SYNOPSIS
 
@@ -46,7 +46,7 @@ adjust ml_*, load configuration files and fix @INC.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: standard constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: inherit FML::Process::Kernel
 # Return Value: OBJ
@@ -105,7 +105,7 @@ call &FML::Command::HTMLify::convert().
 =cut
 
 
-# Descriptions: convert text format article to HTML by Mail::Message::ToHTML
+# Descriptions: convert text format article to HTML by Mail::Message::ToHTML.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: load modules, create HTML files and directories
 # Return Value: none
@@ -115,8 +115,8 @@ sub run
     my $config  = $curproc->config();
     my $argv    = $curproc->command_line_argv();
     my $options = $curproc->command_line_options();
-    my $src_dir = $argv->[0];
-    my $dst_dir = $argv->[1];
+    my $src_dir = $argv->[0] || '';
+    my $dst_dir = $argv->[1] || '';
 
     print STDERR "htmlify\n\t$src_dir =>\n\t$dst_dir\n" if $debug;
 
@@ -129,6 +129,7 @@ sub run
 	unshift(@INC, $options->{ I });
     }
 
+    # XXX-TODO: no check of $src_dir, $dst_dir, ok?
     # main converter
     use FML::Command::HTMLify;
     &FML::Command::HTMLify::convert($curproc, {
@@ -141,7 +142,7 @@ sub run
 }
 
 
-# Descriptions: show help
+# Descriptions: show help.
 #    Arguments: none
 # Side Effects: none
 # Return Value: none

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.95 2004/01/02 10:23:56 fukachan Exp $
+# $FML: Command.pm,v 1.96 2004/01/02 14:50:33 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -130,7 +130,7 @@ sub verify_request
 }
 
 
-# Descriptions: filter
+# Descriptions: apply several filters.
 #    Arguments: OBJ($curproc)
 # Side Effects: set flag to ignore this process if it should be filtered.
 # Return Value: none
@@ -181,14 +181,14 @@ XXX Each command determines need of lock or not.
 =cut
 
 
-# Descriptions: call _evaluate_command_lines()
+# Descriptions: call _evaluate_command_lines().
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub run
 {
     my ($curproc, $args) = @_;
-    my $pcb = $curproc->pcb();
+    my $pcb    = $curproc->pcb();
     my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'command_run_start_hook' );
@@ -202,13 +202,15 @@ sub run
 	# XXX reject command use irrespective of requests from admins/users.
 	# XXX rejection of admin use occurs in _evaluate_command_lines()
 	# XXX not here.
-	# XXX possible cases are from "system_special_accounts" or from a not member.
+	# XXX possible cases are from "system_special_accounts" or 
+	# XXX from a not member.
 	else {
 	    # check the error reason by permit_command().
 	    my $reason = $pcb->get("check_restrictions", "deny_reason");
-	    if (defined($reason) && ($reason eq 'reject_system_special_accounts')) {
+	    if (defined($reason) && 
+		($reason eq 'reject_system_special_accounts')) {
 		my $s = "deny request from system accounts";
-		$curproc->reply_message_nl("error.system_special_accounts", $s);
+		$curproc->reply_message_nl("error.system_special_accounts",$s);
 	    }
 	    else {
 		$curproc->reply_message_nl("error.not_member",
@@ -242,7 +244,7 @@ show help.
 =cut
 
 
-# Descriptions: show help
+# Descriptions: show help.
 #    Arguments: none
 # Side Effects: none
 # Return Value: none
@@ -433,7 +435,7 @@ sub _get_command_name
 }
 
 
-# Descriptions: authenticate the currrent process sender as an admin
+# Descriptions: authenticate the currrent process sender as an admin.
 #    Arguments: OBJ($curproc) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
@@ -643,7 +645,7 @@ sub _get_command_mode
 }
 
 
-# Descriptions: this command is allowd under the current $mode and $level
+# Descriptions: this command is allowd under the current $mode and $level.
 #    Arguments: OBJ($curproc)
 #               STR($mode)
 #               HASH_REF($status)
@@ -694,7 +696,7 @@ within $command_args to share some data between modules called in it.
 =cut
 
 
-# Descriptions: build $command_args for FML::Command execution
+# Descriptions: build $command_args for FML::Command execution.
 #    Arguments: OBJ($curproc) HASH_REF($status) HASH_REF($cominfo)
 # Side Effects: none
 # Return Value: HASH_REF
@@ -715,7 +717,7 @@ sub _gen_command_args
 }
 
 
-# Descriptions: remove the superflous string before the actual command
+# Descriptions: remove the superflous string before the actual command.
 #    Arguments: STR($buf)
 # Side Effects: none
 # Return Value: STR
@@ -727,7 +729,7 @@ sub __clean_up
 }
 
 
-# Descriptions: set up error message to inform emergency stop
+# Descriptions: set up error message to inform emergency stop.
 #    Arguments: OBJ($curproc)
 #               HASH_REF($status) HASH_REF($cominfo) STR($orig_command)
 # Side Effects: update reply messages
