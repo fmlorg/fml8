@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.6 2004/04/13 11:28:16 fukachan Exp $
+# $FML: Queue.pm,v 1.7 2004/04/17 06:57:01 fukachan Exp $
 #
 
 package FML::IPC::Queue;
@@ -18,7 +18,7 @@ $debug = 0;
 
 =head1 NAME
 
-FML::IPC::Queue - basic message queue operation
+FML::IPC::Queue - basic message queue operation.
 
 =head1 SYNOPSIS
 
@@ -42,28 +42,36 @@ list up queue et.al.
 
 constructor.
 
-=head2 append($msg)
-
-append user defined message $msg into the message queue.
-
 =cut
 
 
 # Descriptions: constructor.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: create an object
 # Return Value: OBJ
 sub new
 {
-    my ($self, $args) = @_;
-    my ($type) = ref($self) || $self;
-    my $queue  = [];
-    my $me     = { 
+    my ($self, $curproc) = @_;
+    my ($type)   = ref($self) || $self;
+    my $queue    = [];
+    my $me       = {
+	_curproc => $curproc || undef,
 	_queue   => $queue,
 	_on_disk => 0,
     };
     return bless $me, $type;
 }
+
+
+=head2 append($msg)
+
+append user defined message $msg into the message queue.
+
+=head2 list()
+
+list up queue.
+
+=cut
 
 
 # Descriptions: append user defined message $msg into the message queue.
@@ -101,11 +109,6 @@ sub list
 }
 
 
-=head1
-
-=cut
-
-
 # Descriptions: insert message into $queue_dir.
 #    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: create queue file in $queue_dir.
@@ -129,6 +132,9 @@ sub _append_msg_into_queue_dir
 	    if ($msg->can('dump')) {
 		$msg->dump($wh);
 	    }
+	    else {
+		$self->logerror("IPC: fail to dump message");
+	    }
 	}
 	$wh->close();
     }
@@ -137,7 +143,7 @@ sub _append_msg_into_queue_dir
 	# initialized to unlocked state (lock == executable bit).
 	chmod 0644, $tmpfile;
 	unless (rename($tmpfile, $q_file)) {
-	    croak("cannot rename $tmpfile $q_file");
+	    $self->logerror("IPC: cannot rename $tmpfile $q_file");
 	}
 	else {
 	    print STDERR "$q_file created.\n" if $debug;
@@ -150,7 +156,7 @@ sub _append_msg_into_queue_dir
 }
 
 
-# Descriptions: 
+# Descriptions: list up queue.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -171,7 +177,7 @@ sub _list_up_msg_in_queue_dir
       ENTRY:
 	while ($entry = $dh->read()) {
 	    next ENTRY if $entry =~ /^\./o;
-	    next ENTRY if $entry =~ /^\,/o;
+	    next ENTRY if $entry =~ /^\,/o; # ignore temporary file.
 
 	    $file = File::Spec->catfile($queue_dir, $entry);
 	    if (-f $file) {
@@ -191,6 +197,9 @@ sub _list_up_msg_in_queue_dir
 		    push(\@\$queue, \$msg) if defined \$msg;
 		    push(\@\$remove, \$file);
 		};
+		if ($@) {
+		    $self->logerror($@);
+		}
 	    }
 	}
     }
@@ -262,6 +271,24 @@ sub use_object_class
     my ($self, $class) = @_;
 
     $self->{ _module } = $class;
+}
+
+
+# Descriptions: logging wrapper.
+#    Arguments: OBJ($self) STR($error)
+# Side Effects: none
+# Return Value: none
+sub logerror
+{
+    my ($self, $error) = @_;
+    my $curproc        = $self->{ _curproc } || undef;
+
+    if (defined $curproc) {
+	$curproc->logerror($error);
+    }
+    else {
+	warn($error);
+    }
 }
 
 
