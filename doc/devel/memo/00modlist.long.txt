@@ -1,59 +1,60 @@
-The Perl 5 Module List
+The Perl 5 Module List $Revision$ $Date$ -*- coding:utf-8 -*-
+======================
 
-Maintained by Tim Bunce and Andreas König <modules@perl.org>;
-$Revision$ $Date$ -*- coding:utf-8 -*-
+Maintained by Tim Bunce and Andreas König <modules@perl.org>
 
 Contents
 
-Introduction
-Where Are The Modules Kept?
-Playing Your Part
-How To Get a More Recent Copy of the List
-Editorial Information and Copyright
+     Introduction
+     Where Are The Modules Kept?
+     Playing Your Part
+     How To Get a More Recent Copy of the List
+     Editorial Information and Copyright
 
 Part 1 - Modules: Creation, Use and Abuse
 
-1) Perl 5 Module Terminology
-2) Guidelines for Module Creation
-3) Guidelines for Converting Perl 4 Library Scripts into Modules
-4) Guidelines for Reusing Application Code
-5) Namespace Coordination
+1)   Perl 5 Module Terminology
+2)   Guidelines for Module Creation
+3)   Guidelines for Converting Perl 4 Library Scripts into Modules
+4)   Guidelines for Reusing Application Code
+5)   Namespace Coordination
 
 Part 2 - The Perl 5 Module List
 
-1) Module Listing Format
-2) Perl Core Modules, Perl Language Extensions and Documentation Tools
-3) Development Support
-4) Operating System Interfaces, Hardware Drivers
-5) Networking, Device Control (modems) and InterProcess Communication
-6) Data Types and Data Type Utilities
-7) Database Interfaces
-8) User Interfaces
-9) Interfaces to or Emulations of Other Programming Languages
-10) File Names, File Systems and File Locking (see also File Handles)
-11) String Processing, Language Text Processing, Parsing and Searching
-12) Option, Argument, Parameter and Configuration File Processing
-13) Internationalization and Locale
-14) Authentication, Security and Encryption
-15) World Wide Web, HTML, HTTP, CGI, MIME
-16) Server and Daemon Utilities
-17) Archiving, Compression and Conversion
-18) Images, Pixmap and Bitmap Manipulation, Drawing and Graphing
-19) Mail and Usenet News
-20) Control Flow Utilities (callbacks and exceptions etc)
-21) File Handle, Directory Handle and Input/Output Stream Utilities
-22) Microsoft Windows Modules
-23) Miscellaneous Modules
-24) Interface Modules to Commercial Software
+1)   Module Listing Format
+2)   Perl Core Modules, Perl Language Extensions and Documentation Tools
+3)   Development Support
+4)   Operating System Interfaces, Hardware Drivers
+5)   Networking, Device Control (modems) and InterProcess Communication
+6)   Data Types and Data Type Utilities
+7)   Database Interfaces
+8)   User Interfaces
+9)   Interfaces to or Emulations of Other Programming Languages
+10)  File Names, File Systems and File Locking (see also File Handles)
+11)  String Processing, Language Text Processing, Parsing and Searching
+12)  Option, Argument, Parameter and Configuration File Processing
+13)  Internationalization and Locale
+14)  Authentication, Security and Encryption
+15)  World Wide Web, HTML, HTTP, CGI, MIME
+16)  Server and Daemon Utilities
+17)  Archiving, Compression and Conversion
+18)  Images, Pixmap and Bitmap Manipulation, Drawing and Graphing
+19)  Mail and Usenet News
+20)  Control Flow Utilities (callbacks and exceptions etc)
+21)  File Handle, Directory Handle and Input/Output Stream Utilities
+22)  Microsoft Windows Modules
+23)  Miscellaneous Modules
+24)  Interface Modules to Commercial Software
+25)  Bundles
 
 Part 3 - Big Projects Registry
 
-1) Items in the Todo File
-2) Multi-threading
-3) Object Management Group CORBA & IDL
-4) Expand Tied Array Interface
-5) Extend Yacc To Write XS Code
-6) Approximate Matching Regular Expressions
+1)   Items in the Todo File
+2)   Multi-threading
+3)   Object Management Group CORBA & IDL
+4)   Expand Tied Array Interface
+5)   Extend Yacc To Write XS Code
+6)   Approximate Matching Regular Expressions
 
 Part 4 - Standards Cross-reference
 
@@ -66,581 +67,649 @@ Part 5 - Who's Who and What's Where
 5.1) Information / Contact Reference Details
 5.2) Perl Frequently Asked Questions (FAQ) Files
 
-  ------------------------------------------------------------------------
+
+======================================================================
 
 Introduction
 
-This document is a semi-formal list of Perl 5 Modules. The Perl 4 concept of
-packages has been extended in Perl 5 and a new standardised form of reusable
-software component has been defined: the Module.
+This document is a semi-formal list of Perl 5 Modules. The Perl 4
+concept of packages has been extended in Perl 5 and a new standardised
+form of reusable software component has been defined: the Module.
 
 Perl 5 Modules typically conform to certain guidelines which make them
 easier to use, reuse, integrate and extend.
 
 This list has two key aims:
 
-   * FOR DEVELOPERS: To change duplication of effort into cooperation.
-   * FOR USERS: To quickly locate existing software which can be reused.
+   - FOR DEVELOPERS: To change duplication of effort into cooperation.
+   - FOR USERS: To quickly locate existing software which can be reused.
 
-This list includes the Perl 5 standard modules, other completed modules,
-work-in-progress modules and would-be-nice-to-have ideas for modules. It
-also includes guidelines for those wishing to create new modules including
-how to name them.
+This list includes the Perl 5 standard modules, other completed
+modules, work-in-progress modules and would-be-nice-to-have ideas for
+modules. It also includes guidelines for those wishing to create new
+modules including how to name them.
 
 Where Are The Modules Kept?
 
 Most, but not all, of the modules can be found within CPAN, the
-Comprehensive Perl Archive Network of mirrored FTP sites. Within the CPAN
-scheme the modules described in this list can be found in the modules/
-directory below the CPAN root directory. CPAN is a worlswide network of
-mirrors and you can find your closest mirror in the file
+Comprehensive Perl Archive Network of mirrored FTP sites. Within the
+CPAN scheme the modules described in this list can be found in the
+modules/ directory below the CPAN root directory. CPAN is a worlswide
+network of mirrors and you can find your closest mirror in the file
 http://www.cpan.org/SITES.html
 
-NOTE: If you can't find what you want, or wish to check that what you've
-found is the latest version, or wonder why a module mentioned in this list
-is not on CPAN, you should contact the person associated with the module
-(and not the maintainers of the archives or this list). Contact details are
-given at the start of Part 5.
+NOTE: If you can't find what you want, or wish to check that what
+you've found is the latest version, or wonder why a module mentioned in
+this list is not on CPAN, you should contact the person associated with
+the module (and not the maintainers of the archives or this list).
+Contact details are given at the start of Part 5.
 
 Playing Your Part
 
-Perl is a huge collaborative effort. Everyone who uses perl is benefiting
-from the contributions of many hundreds, maybe thousands, of people. How
-much time has perl saved you since you started using it?
+Perl is a huge collaborative effort. Everyone who uses perl is
+benefiting from the contributions of many hundreds, maybe thousands, of
+people. How much time has perl saved you since you started using it?
 
-Do you have any modules you could share with others? For example, you may
-have some perl4 scripts from which generally useful, and reusable, modules
-could be extracted. There may be many people who would find your work very
-useful. Please play your part and contribute to the Perl community where you
-can. [ end of sermon :-]
+Do you have any modules you could share with others? For example, you
+may have some perl4 scripts from which generally useful, and reusable,
+modules could be extracted. There may be many people who would find
+your work very useful. Please play your part and contribute to the Perl
+community where you can. [ end of sermon :-]
 
-Help save the world! Please submit new entries and updates to us so we can
-keep this list up-to-date. Send the new or corrected entry by email to
-modules@perl.org . Please do not send code to this address. Instead upload
-your module, once registered, to the PAUSE site for forwarding on to CPAN.
-See section 2, especially 2.6 and 2.11.
+Help save the world! Please submit new entries and updates to us so we
+can keep this list up-to-date. Send the new or corrected entry by
+email to modules@perl.org. Please do not send code to this address.
+Instead upload your module, once registered, to the PAUSE site for
+forwarding on to CPAN. See section 2, especially 2.6 and 2.11.
 
 How To Get a More Recent Copy of the List
 
-This Module List is fed into CPAN on a semi-regular basis. Its relative path
-within a CPAN mirror is in modules/00modlist.long.html .
+This Module List is fed into CPAN on a semi-regular basis. Its
+relative path within a CPAN mirror is in modules/00modlist.long.html .
 
 Editorial Information and Copyright
 
-This document is Copyright (c) 1997-2000 by Tim Bunce and Andreas König.
-All rights reserved. Permission to distribute this document, in full or
-part, via electronic means (emailed, posted or archived) or printed copy is
-granted providing that no charges are involved, reasonable attempt is made
-to use the most current version, and all credits and copyright notices are
-retained. Requests for other distribution rights, including incorporation in
-commercial products, such as books, magazine articles, or CD-ROMs should be
-made to Tim.Bunce@ig.co.uk and Andreas.Koenig@mind.de .
+This document is Copyright (c) 1997-2000 by Tim Bunce and Andreas
+König. All rights reserved. Permission to distribute this document, in
+full or part, via electronic means (emailed, posted or archived) or
+printed copy is granted providing that no charges are involved,
+reasonable attempt is made to use the most current version, and all
+credits and copyright notices are retained. Requests for other
+distribution rights, including incorporation in commercial products,
+such as books, magazine articles, or CD-ROMs should be made to
+Tim.Bunce@ig.co.uk and Andreas.Koenig@mind.de.
 
 Disclaimer: The content of this document is simply a collection of
-information gathered from many sources with little or no checking. There are
-NO warranties with regard to this information or its use.
+information gathered from many sources with little or no checking.
+There are NO warranties with regard to this information or its use.
 
-A little background information... I (Tim) created the Module List in August
-1994 and maintained it manually till April 1996. By that time Andreas had
-implemented the Perl Authors Upload Server (PAUSE) and it was happily
-feeding modules through to the CPAN archive sites (see
-http://www.cpan.org/modules/04pause.html for details). Since PAUSE held a
-database of module information which could be maintained by module authors
-it made sense for the module listing part of the Module List to be built
-from that database. In April 1996 Andreas took over the automatic posting of
-the Module List and I now maintain the other parts of the text. We plan to
-add value to the automation over time.
+A little background information... I (Tim) created the Module List in
+August 1994 and maintained it manually till April 1996. By that time
+Andreas had implemented the Perl Authors Upload Server (PAUSE) and it
+was happily feeding modules through to the CPAN archive sites (see
+http://www.cpan.org/modules/04pause.html for details). Since PAUSE
+held a database of module information which could be maintained by
+module authors it made sense for the module listing part of the Module
+List to be built from that database. In April 1996 Andreas took over
+the automatic posting of the Module List and I now maintain the other
+parts of the text. We plan to add value to the automation over time.
 
-Part 1 - Modules: Creation, Use and Abuse
 
-1) Perl 5 Module Terminology
+======================================================================
 
-Perl 5 implements a class using a package, but the presence of a package
-doesn't imply the presence of a class. A package is just a namespace. A
-class is a package that provides subroutines that can be used as methods. A
-method is just a subroutine that expects, as its first argument, either the
-name of a package (for "static" methods), or a reference to something (for
-"virtual" methods).
+        Part 1 - Modules: Creation, Use and Abuse
+        =========================================
 
-A module is a file that (by convention) provides a class of the same name
-(sans the .pm), plus an import method in that class that can be called to
-fetch exported symbols. This module may implement some of its methods by
-loading dynamic C or C++ objects, but that should be totally transparent to
-the user of the module. Likewise, the module might set up an AUTOLOAD
-function to slurp in subroutine definitions on demand, but this is also
-transparent. Only the .pm file is required to exist.
+1)   Perl 5 Module Terminology
+     -------------------------
 
-2) Guidelines for Module Creation
+Perl 5 implements a class using a package, but the presence of a
+package doesn't imply the presence of a class. A package is just a
+namespace. A class is a package that provides subroutines that can be
+used as methods. A method is just a subroutine that expects, as its
+first argument, either the name of a package (for "static" methods), or
+a reference to something (for "virtual" methods).
+
+A module is a file that (by convention) provides a class of the same
+name (sans the .pm), plus an import method in that class that can be
+called to fetch exported symbols. This module may implement some of its
+methods by loading dynamic C or C++ objects, but that should be totally
+transparent to the user of the module. Likewise, the module might set
+up an AUTOLOAD function to slurp in subroutine definitions on demand,
+but this is also transparent. Only the .pm file is required to exist.
+
+2)   Guidelines for Module Creation
+     ------------------------------
 
 2.1 Do similar modules already exist in some form?
 
-If so, please try to reuse the existing modules either in whole or by
-inheriting useful features into a new class. If this is not practical try to
-get together with the module authors to work on extending or enhancing the
-functionality of the existing modules. A perfect example is the plethora of
-packages in perl4 for dealing with command line options.
+   If so, please try to reuse the existing modules either in whole or
+   by inheriting useful features into a new class.  If this is not
+   practical try to get together with the module authors to work on
+   extending or enhancing the functionality of the existing modules.
+   A perfect example is the plethora of packages in perl4 for dealing
+   with command line options.
 
-If you are writing a module to expand an already existing set of modules,
-please coordinate with the author of the package. It helps if you follow the
-same naming scheme and module interaction scheme as the original author.
+   If you are writing a module to expand an already existing set of
+   modules, please coordinate with the author of the package.  It
+   helps if you follow the same naming scheme and module interaction
+   scheme as the original author.
+
 
 2.2 Try to design the new module to be easy to extend and reuse.
 
-Use blessed references. Use the two argument form of bless to bless into the
-class name given as the first parameter of the constructor, e.g.:
+   Use blessed references.  Use the two argument form of bless to bless
+   into the class name given as the first parameter of the constructor,
+   e.g.:
 
-     sub new { my $class = shift; return bless {}, $class; }
+     sub new {
+         my $class = shift;
+         return bless {}, $class;
+     }
 
-or even this if you'd like it to be used as either a static or a virtual
-method.
+   or even this if you'd like it to be used as either a static
+   or a virtual method.
 
-     sub new { my $self = shift; my $class = ref($self) || $self;
-     return bless {}, $class; }
+     sub new {
+         my $self  = shift;
+         my $class = ref($self) || $self;
+         return bless {}, $class;
+     }
 
-Pass arrays as references so more parameters can be added later (it's also
-faster). Convert functions into methods where appropriate. Split large
-methods into smaller more flexible ones. Inherit methods from other modules
-if appropriate.
+   Pass arrays as references so more parameters can be added later
+   (it's also faster).  Convert functions into methods where
+   appropriate.  Split large methods into smaller more flexible ones.
+   Inherit methods from other modules if appropriate.
 
-Avoid class name tests like: die "Invalid" unless ref $ref eq 'FOO'.
-Generally you can delete the "eq 'FOO'" part with no harm at all. Let the
-objects look after themselves! If it's vital then you can use the UNIVERSAL
-methods isa and can. Generally, avoid hardwired class names as far as
-possible.
+   Avoid class name tests like: die "Invalid" unless ref $ref eq 'FOO'.
+   Generally you can delete the "eq 'FOO'" part with no harm at all.
+   Let the objects look after themselves! If it's vital then you can
+   use the UNIVERSAL methods isa and can. Generally, avoid hardwired
+   class names as far as possible.
 
-Avoid $r->Class::func() where using @ISA=qw(... Class ...) and $r->func()
-would work (see perlbot man page for more details).
+   Avoid $r->Class::func() where using @ISA=qw(... Class ...) and
+   $r->func() would work (see perlbot man page for more details).
 
-Use autosplit or the SelfLoader module so little used or newly added
-functions won't be a burden to programs which don't use them. Add test
-functions to the module after __END__ either using autosplit or by saying:
+   Use autosplit or the SelfLoader module so little used or newly added
+   functions won't be a burden to programs which don't use them. Add
+   test functions to the module after __END__ either using autosplit or
+   by saying:
 
      eval join('',<main::DATA>) || die $@ unless caller();
 
-Does your module pass the 'empty sub-class' test? If you say "@SUBCLASS::ISA
-= qw(YOURCLASS);" your applications should be able to use SUBCLASS in
-exactly the same way as YOURCLASS. For example, does your application still
-work if you change: $obj = new YOURCLASS; into: $obj = new SUBCLASS; ?
+   Does your module pass the 'empty sub-class' test? If you say
+   "@SUBCLASS::ISA = qw(YOURCLASS);" your applications should be able
+   to use SUBCLASS in exactly the same way as YOURCLASS.  For example,
+   does your application still work if you change:  $obj = new YOURCLASS;
+   into: $obj = new SUBCLASS; ?
 
-Avoid keeping any state information in your packages. It makes it difficult
-for multiple other packages to use yours. Keep state information in objects.
+   Avoid keeping any state information in your packages. It makes it
+   difficult for multiple other packages to use yours. Keep state
+   information in objects.
 
-Always use -w. Try to "use strict;" (or "use strict qw(...);"). Remember
-that you can add "no strict qw(...);" to individual blocks of code which
-need less strictness. Always use -w. Always use -w! Follow the guidelines in
-the perlstyle(1) manual.
+   Always use -w. Try to "use strict;" (or "use strict qw(...);").
+   Remember that you can add "no strict qw(...);" to individual blocks
+   of code which need less strictness. Always use -w. Always use -w!
+   Follow the guidelines in the perlstyle(1) manual.
+
 
 2.3 Some simple style guidelines
 
-The perlstyle manual supplied with perl has many helpful points.
+   The perlstyle manual supplied with perl has many helpful points.
 
-Coding style is a matter of personal taste. Many people evolve their style
-over several years as they learn what helps them write and maintain good
-code. Here's one set of assorted suggestions that seem to be widely used by
-experienced developers:
+   Coding style is a matter of personal taste. Many people evolve their
+   style over several years as they learn what helps them write and
+   maintain good code.  Here's one set of assorted suggestions that
+   seem to be widely used by experienced developers:
 
-Use underscores to separate words. It is generally easier to read
-$var_names_like_this than $VarNamesLikeThis, especially for non-native
-speakers of English. It's also a simple rule that works consistently with
-VAR_NAMES_LIKE_THIS.
+   Use underscores to separate words.  It is generally easier to read
+   $var_names_like_this than $VarNamesLikeThis, especially for
+   non-native speakers of English. It's also a simple rule that works
+   consistently with VAR_NAMES_LIKE_THIS.
 
-Package/Module names are an exception to this rule. Perl informally reserves
-lowercase module names for 'pragma' modules like integer and strict. Other
-modules normally begin with a capital letter and use mixed case with no
-underscores (need to be short and portable).
+   Package/Module names are an exception to this rule. Perl informally
+   reserves lowercase module names for 'pragma' modules like integer
+   and strict. Other modules normally begin with a capital letter and
+   use mixed case with no underscores (need to be short and portable).
 
-You may find it helpful to use letter case to indicate the scope or nature
-of a variable. For example:
+   You may find it helpful to use letter case to indicate the scope
+   or nature of a variable. For example:
 
-     $ALL_CAPS_HERE constants only (beware clashes with perl vars)
-     $Some_Caps_Here package-wide global/static $no_caps_here function
-     scope my() or local() variables
+     $ALL_CAPS_HERE   constants only (beware clashes with perl vars)
+     $Some_Caps_Here  package-wide global/static
+     $no_caps_here    function scope my() or local() variables
 
-Function and method names seem to work best as all lowercase. E.g.,
-$obj->as_string().
+   Function and method names seem to work best as all lowercase.
+   E.g., $obj->as_string().
 
-You can use a leading underscore to indicate that a variable or function
-should not be used outside the package that defined it.
+   You can use a leading underscore to indicate that a variable or
+   function should not be used outside the package that defined it.
 
-For method calls use either
+   For method calls use either
 
-     $foo = new Foo $arg1, $arg2; # no parentheses $foo =
-     Foo->new($arg1, $arg2);
+     $foo = new Foo $arg1, $arg2;     # no parentheses
+     $foo = Foo->new($arg1, $arg2);
 
-but avoid the ambiguous form
+   but avoid the ambiguous form
 
-     $foo = new Foo($arg1, $arg2); # Foo() looks like function call
+     $foo = new Foo($arg1, $arg2);    # Foo() looks like function call
 
-It can be very helpful if the names of the classes that your module uses can
-be specified as parameters. Consider:
+   It can be very helpful if the names of the classes that your module
+   uses can be specified as parameters. Consider:
 
-     $dog_class = $args{dog_class} || 'Dog'; $spot =
-     $dog_class->new(...);
+     $dog_class = $args{dog_class} || 'Dog';
+     $spot = $dog_class->new(...);
 
-This allows the user of your module to specify an alternative class
-(typically a subclass of the one you would normally have used).
+   This allows the user of your module to specify an alternative class
+   (typically a subclass of the one you would normally have used).
 
-On how to report constructor failure, Larry said:
+   On how to report constructor failure, Larry said:
 
-I tend to see it as exceptional enough that I'll throw a real Perl exception
-(die) if I can't construct an object. This has a couple of advantages right
-off the bat. First, you don't have to check the return value of every
-constructor. Just say "$fido = new Doggie;" and presume it succeeded. This
-leads to clearer code in most cases.
+   I tend to see it as exceptional enough that I'll throw a real Perl
+   exception (die) if I can't construct an object.  This has a couple
+   of advantages right off the bat.  First, you don't have to check the
+   return value of every constructor.  Just say "$fido = new Doggie;"
+   and presume it succeeded.  This leads to clearer code in most cases.
 
-Second, if it does fail, you get a better diagnostic than just the
-undefinedness of the return value. In fact, the exception it throws may be
-quite rich in "stacked" error messages, if it's rethrowing an exception
-caught further in.
+   Second, if it does fail, you get a better diagnostic than just the
+   undefinedness of the return value.  In fact, the exception it throws
+   may be quite rich in "stacked" error messages, if it's rethrowing an
+   exception caught further in.
 
-And you can always catch the exception if it does happen using eval {}.
+   And you can always catch the exception if it does happen using eval {}.
 
-If, on the other hand, you expect your constructor to fail a goodly part of
-the time, then you shouldn't use exceptions, but you should document the
-interface so that people will know to check the return value. You don't need
-to use defined(), since a constructor would only return a true reference or
-a false undef. So good Perl style for checking a return value would simply
-say
+   If, on the other hand, you expect your constructor to fail a goodly
+   part of the time, then you shouldn't use exceptions, but you should
+   document the interface so that people will know to check the return
+   value.  You don't need to use defined(), since a constructor would
+   only return a true reference or a false undef.  So good Perl style
+   for checking a return value would simply say
 
-     $conn = new Connection $addr or die "Couldn't create Connection";
+      $conn = new Connection $addr
+         or die "Couldn't create Connection";
 
-In general, make as many things meaningful in a Boolean context as you can.
-This leads to straightforward code. Never write anything like
+   In general, make as many things meaningful in a Boolean context as
+   you can.  This leads to straightforward code.  Never write anything
+   like
 
-     if (do_your_thing() == OK)
+      if (do_your_thing() == OK)
 
-in Perl. That's just asking for logic errors and domain errors. Just write
+   in Perl.  That's just asking for logic errors and domain errors.
+   Just write
 
-     if (do_your_thing())
+      if (do_your_thing())
 
-Perl is designed to help you eschew obfuscation, if that's your thing.
+   Perl is designed to help you eschew obfuscation, if that's your thing.
+
 
 2.4 Select what to export.
 
-Do NOT export method names! Do NOT export anything else by default without a
-good reason!
+   Do NOT export method names!
+   Do NOT export anything else by default without a good reason!
 
-Exports pollute the namespace of the module user. If you must export try to
-use @EXPORT_OK in preference to @EXPORT and avoid short or common names to
-reduce the risk of name clashes.
+   Exports pollute the namespace of the module user.  If you must
+   export try to use @EXPORT_OK in preference to @EXPORT and avoid
+   short or common names to reduce the risk of name clashes.
 
-Generally anything not exported is still accessible from outside the module
-using the ModuleName::item_name (or $blessed_ref->method) syntax. By
-convention you can use a leading underscore on names to informally indicate
-that they are 'internal' and not for public use.
+   Generally anything not exported is still accessible from outside the
+   module using the ModuleName::item_name (or $blessed_ref->method)
+   syntax.  By convention you can use a leading underscore on names to
+   informally indicate that they are 'internal' and not for public use.
 
-(It is actually possible to get private functions by saying: my $subref =
-sub { ... }; &$subref; But there's no way to call that directly as a method,
-since a method must have a name in the symbol table.)
+   (It is actually possible to get private functions by saying:
+   my $subref = sub { ... };  &$subref; But there's no way to call that
+   directly as a method, since a method must have a name in the symbol
+   table.)
 
-As a general rule, if the module is trying to be object oriented then export
-nothing. If it's just a collection of functions then @EXPORT_OK anything but
-use @EXPORT with caution.
+   As a general rule, if the module is trying to be object oriented
+   then export nothing. If it's just a collection of functions then
+   @EXPORT_OK anything but use @EXPORT with caution.
+
 
 2.5 Select a name for the module.
 
-This name should be as descriptive, accurate and complete as possible. Avoid
-any risk of ambiguity. Always try to use two or more whole words. Generally
-the name should reflect what is special about what the module does rather
-than how it does it.
+   This name should be as descriptive, accurate and complete as
+   possible.  Avoid any risk of ambiguity. Always try to use two or
+   more whole words.  Generally the name should reflect what is special
+   about what the module does rather than how it does it.
 
-Having 57 modules all called Sort will not make life easy for anyone (though
-having 23 called Sort::Quick is only marginally better :-). Imagine someone
-trying to install your module alongside many others. If in any doubt ask for
-suggestions in comp.lang.perl.modules or modules@perl.org .
+   Having 57 modules all called Sort will not make life easy for anyone
+   (though having 23 called Sort::Quick is only marginally better :-).
+   Imagine someone trying to install your module alongside many others.
+   If in any doubt ask for suggestions in comp.lang.perl.modules or
+   modules@perl.org.
 
-Please use a nested module name to informally group or categorise a module,
-e.g., placing a sorting module into a Sort:: category. A module should have
-a very good reason not to have a nested name. Please avoid using more than
-one level of nesting for module names (packages or classes within modules
-can, of course, use any number).
+   Please use a nested module name to informally group or categorise
+   a module, e.g., placing a sorting module into a Sort:: category.
+   A module should have a very good reason not to have a nested name.
+   Please avoid using more than one level of nesting for module names
+   (packages or classes within modules can, of course, use any number).
 
-Module names should begin with a capital letter. Lowercase names are
-reserved for special modules such as pragmas (e.g., lib and strict).
+   Module names should begin with a capital letter. Lowercase names are
+   reserved for special modules such as pragmas (e.g., lib and strict).
 
-Note that module names are not related to class hierarchies. A module name
-Foo::Bar does not in any way imply that Foo::Bar inherits from Foo. Nested
-names are simply used to provide some useful categorisation for humans. The
-same is generally true for all package names.
+   Note that module names are not related to class hierarchies.
+   A module name Foo::Bar does not in any way imply that Foo::Bar
+   inherits from Foo.  Nested names are simply used to provide some
+   useful categorisation for humans. The same is generally true for
+   all package names.
 
-Since the CPAN is huge and growing daily, it's essential that module authors
-choose names which lend themselves to browsing. That means minimizing
-acronyms, cute names, and jargon. Also, don't make up a new top level
-category unless you have a good reason; please choose an already-existing
-category when possible. Send mail to modules@perl.org before you upload, so
-we can help you select a name.
+   Since the CPAN is huge and growing daily, it's essential that
+   module authors choose names which lend themselves to browsing.
+   That means minimizing acronyms, cute names, and jargon. Also,
+   don't make up a new top level category unless you have a good
+   reason; please choose an already-existing category when
+   possible. Send mail to modules@perl.org before you upload, so
+   we can help you select a name.
 
-If you insist on a name that we consider inappropriate, we won't prevent you
-from uploading your module -- but it'll remain in your "author" directory
-and won't be directly visible from CPAN/modules/by-module.
+   If you insist on a name that we consider inappropriate, we
+   won't prevent you from uploading your module -- but it'll
+   remain in your "author" directory and won't be directly visible
+   from CPAN/modules/by-module.
 
-We appreciate the efforts of the contributors who have helped make the CPAN
-the world's largest reusable code repository. Please help us enhance it by
-working with us to choose the best name possible.
+   We appreciate the efforts of the contributors who have helped
+   make the CPAN the world's largest reusable code repository.
+   Please help us enhance it by working with us to choose the
+   best name possible.
 
-If you are developing a suite of related modules/classes it's good practice
-to use nested classes with a common prefix as this will avoid namespace
-clashes. For example: Xyz::Control, Xyz::View, Xyz::Model etc. Use the
-modules in this list as a naming guide.
+   If you are developing a suite of related modules/classes it's good
+   practice to use nested classes with a common prefix as this will
+   avoid namespace clashes. For example:  Xyz::Control, Xyz::View,
+   Xyz::Model etc. Use the modules in this list as a naming guide.
 
-If adding a new module to a set, follow the original author's standards for
-naming modules and the interface to methods in those modules.
+   If adding a new module to a set, follow the original author's
+   standards for naming modules and the interface to methods in
+   those modules.
 
-If developing modules for private internal or project specific use, that
-will never be released to the public, then you should ensure that their
-names will not clash with any future public module. You can do this either
-by using the reserved Local::* category or by using an underscore in the top
-level name like Foo_Corp::*.
+   If developing modules for private internal or project specific use,
+   that will never be released to the public, then you should ensure
+   that their names will not clash with any future public module. You
+   can do this either by using the reserved Local::* category or by
+   using an underscore in the top level name like Foo_Corp::*.
 
-To be portable each component of a module name should be limited to 11
-characters. If it might be used on DOS then try to ensure each is unique in
-the first 8 characters. Nested modules make this easier.
+   To be portable each component of a module name should be limited to
+   11 characters. If it might be used on DOS then try to ensure each is
+   unique in the first 8 characters. Nested modules make this easier.
+
 
 2.6 Have you got it right?
 
-How do you know that you've made the right decisions? Have you picked an
-interface design that will cause problems later? Have you picked the most
-appropriate name? Do you have any questions?
+   How do you know that you've made the right decisions? Have you
+   picked an interface design that will cause problems later? Have
+   you picked the most appropriate name? Do you have any questions?
 
-The best way to know for sure, and pick up many helpful suggestions, is to
-ask someone who knows. The comp.lang.perl.modules Usenet newsgroup is read
-by just about all the people who develop modules and it's generally the best
-place to ask first. If you need more help then try modules@perl.org .
+   The best way to know for sure, and pick up many helpful suggestions,
+   is to ask someone who knows. The comp.lang.perl.modules Usenet
+   newsgroup is read by just about all the people who develop modules
+   and it's generally the best place to ask first. If you need more
+   help then try modules@perl.org.
 
-All you need to do is post a short summary of the module, its purpose and
-interfaces. A few lines on each of the main methods is probably enough. (If
-you post the whole module it might be ignored by busy people - generally the
-very people you want to read it!)
+   All you need to do is post a short summary of the module, its
+   purpose and interfaces. A few lines on each of the main methods is
+   probably enough. (If you post the whole module it might be ignored
+   by busy people - generally the very people you want to read it!)
 
-Don't worry about posting if you can't say when the module will be ready -
-just say so in the message. It might be worth inviting others to help you,
-they may be able to complete it for you!
+   Don't worry about posting if you can't say when the module will be
+   ready - just say so in the message. It might be worth inviting
+   others to help you, they may be able to complete it for you!
+
 
 2.7 README and other Additional Files.
 
-It's well known that software developers usually fully document the software
-they write. If, however, the world is in urgent need of your software and
-there is not enough time to write the full documentation please at least
-provide a README file containing:
+   It's well known that software developers usually fully document the
+   software they write. If, however, the world is in urgent need of
+   your software and there is not enough time to write the full
+   documentation please at least provide a README file containing:
 
-   * A description of the module/package/extension etc.
-   * A copyright notice - see below.
-   * Prerequisites - what else you may need to have.
-   * How to build it - possible changes to Makefile.PL etc.
-   * How to install it.
-   * Recent changes in this release, especially incompatibilities
-   * Changes / enhancements you plan to make in the future.
+   - A description of the module/package/extension etc.
+   - A copyright notice - see below.
+   - Prerequisites - what else you may need to have.
+   - How to build it - possible changes to Makefile.PL etc.
+   - How to install it.
+   - Recent changes in this release, especially incompatibilities
+   - Changes / enhancements you plan to make in the future.
 
-If the README file seems to be getting too large you may wish to split out
-some of the sections into separate files: INSTALL, Copying, ToDo etc.
+   If the README file seems to be getting too large you may wish to
+   split out some of the sections into separate files: INSTALL,
+   Copying, ToDo etc.
+
 
 2.8 Adding a Copyright Notice.
 
-How you choose to licence your work is a personal decision. The general
-mechanism is to assert your Copyright and then make a declaration of how
-others may copy/use/modify your work.
+   How you choose to licence your work is a personal decision.
+   The general mechanism is to assert your Copyright and then make
+   a declaration of how others may copy/use/modify your work.
 
-Perl, for example, is supplied with two types of licence: The GNU GPL and
-The Artistic License (see the files README, Copying and Artistic). Larry has
-good reasons for NOT just using the GNU GPL.
+   Perl, for example, is supplied with two types of licence: The GNU
+   GPL and The Artistic License (see the files README, Copying and
+   Artistic).  Larry has good reasons for NOT just using the GNU GPL.
 
-My personal recommendation, out of respect for Larry, Perl and the perl
-community at large is to simply state something like:
+   My personal recommendation, out of respect for Larry, Perl and the
+   perl community at large is to simply state something like:
 
-     Copyright (c) 1997 Your Name. All rights reserved. This program is
-     free software; you can redistribute it and/or modify it under the
-     same terms as Perl itself.
+     Copyright (c) 1997 Your Name. All rights reserved.
+     This program is free software; you can redistribute it and/or
+     modify it under the same terms as Perl itself.
 
-This statement should at least appear in the README file. You may also wish
-to include it in a Copying file and your source files. Remember to include
-the other words in addition to the Copyright.
+   This statement should at least appear in the README file. You may
+   also wish to include it in a Copying file and your source files.
+   Remember to include the other words in addition to the Copyright.
+
 
 2.9 Give the module a version/issue/release number.
 
-To be fully compatible with the Exporter and MakeMaker modules you should
-store your module's version number in a non-my package variable called
-$VERSION. This should be a valid floating point number with at least two
-digits after the decimal (ie hundredths, e.g, $VERSION = "0.01"). See
-Exporter.pm for details.
+   To be fully compatible with the Exporter and MakeMaker modules you
+   should store your module's version number in a non-my package
+   variable called $VERSION.  This should be a valid floating point
+   number with at least two digits after the decimal (ie hundredths,
+   e.g, $VERSION = "0.01").  See Exporter.pm for details.
 
-Don't use a "1.3.2" style version directly. If you use RCS or a similar
-system which supports multilevel versions/branches you can use this (but put
-it all on one line for MakeMaker VERSION_FROM):
+   Don't use a "1.3.2" style version directly. If you use RCS or a
+   similar system which supports multilevel versions/branches you can
+   use this (but put it all on one line for MakeMaker VERSION_FROM):
 
-$VERSION = do { my @r=(q$Revision$=~/\d+/g); sprintf
-"%d."."%02d"x$#r,@r };
+    $VERSION = do { my @r=(q$Revision$=~/\d+/g);
+                    sprintf "%d."."%02d"x$#r,@r };
 
-It may be handy to add a function or method to retrieve the number. Use the
-number in announcements and archive file names when releasing the module
-(ModuleName-1.02.tar.gz). See perldoc ExtUtils::MakeMaker.pm for details.
+   It may be handy to add a function or method to retrieve the number.
+   Use the number in announcements and archive file names when
+   releasing the module (ModuleName-1.02.tar.gz).
+   See perldoc ExtUtils::MakeMaker.pm for details.
+
 
 2.10 Listing Prerequisites in a Bundle module
 
-If your module needs some others that are available on CPAN, you might
-consider creating a 'bundle' module that lists all the prerequisites in a
-standardized way. Automatic installation software such as the CPAN.pm module
-can take advantage of such a listing and enable your users to install all
-prerequisites and your own module with one single command. See the CPAN.pm
-module for details.
+   If your module needs some others that are available on CPAN, you
+   might consider creating a 'bundle' module that lists all the
+   prerequisites in a standardized way. Automatic installation software
+   such as the CPAN.pm module can take advantage of such a listing and
+   enable your users to install all prerequisites and your own module
+   with one single command. See the CPAN.pm module for details.
+
 
 2.11 How to release and distribute a module.
 
-By far the best way to release modules is to register yourself with the Perl
-Authors Upload Server (PAUSE). By registering with PAUSE you will be able to
-easily upload (or mirror) your modules to the PAUSE server from where they
-will be mirrored to CPAN sites across the planet.
+   By far the best way to release modules is to register yourself with
+   the Perl Authors Upload Server (PAUSE). By registering with PAUSE
+   you will be able to easily upload (or mirror) your modules to the
+   PAUSE server from where they will be mirrored to CPAN sites across
+   the planet.
 
-It's good idea to post an announcement of the availability of your module to
-the comp.lang.perl.announce Usenet newsgroup. This will at least ensure very
-wide once-off distribution.
+   It's good idea to post an announcement of the availability of your
+   module to the comp.lang.perl.announce Usenet newsgroup.  This will
+   at least ensure very wide once-off distribution.
 
-If not using PAUSE you should place the module into a major ftp archive and
-include details of it's location in your announcement. Some notes about ftp
-archives: Please use a long descriptive file name which includes the version
-number. Most incoming directories will not be readable/listable, i.e., you
-won't be able to see your file after uploading it. Remember to send your
-email notification message as soon as possible after uploading else your
-file may get deleted automatically. Allow time for the file to be processed
-and/or check the file has been processed before announcing its location.
+   If not using PAUSE you should place the module into a major ftp
+   archive and include details of it's location in your announcement.
+   Some notes about ftp archives: Please use a long descriptive file
+   name which includes the version number. Most incoming directories
+   will not be readable/listable, i.e., you won't be able to see your
+   file after uploading it. Remember to send your email notification
+   message as soon as possible after uploading else your file may get
+   deleted automatically. Allow time for the file to be processed
+   and/or check the file has been processed before announcing its
+   location.
 
-FTP Archives for Perl Modules:
+   FTP Archives for Perl Modules:
 
-Follow the instructions and links on
+   Follow the instructions and links on
 
-http://www.cpan.org/modules/04pause.html
+       http://www.cpan.org/modules/04pause.html
 
-or upload to:
+   or upload to:
 
-ftp://pause.kbx.de/incoming
+       ftp://pause.kbx.de/incoming
 
-and notify upload@pause.kbx.de .
+   and notify upload@pause.kbx.de.
 
-By using the PAUSE WWW interface you can ask the Upload Server to mirror
-your modules from your ftp or WWW site into your own directory on CPAN.
-Please remember to send us an updated entry for the Module list!
+   By using the PAUSE WWW interface you can ask the Upload Server to
+   mirror your modules from your ftp or WWW site into your own
+   directory on CPAN. Please remember to send us an updated entry for
+   the Module list!
+
 
 2.12 Take care when changing a released module.
 
-Always strive to remain compatible with previous released versions (see 2.2
-above) Otherwise try to add a mechanism to revert to the old behaviour if
-people rely on it. Document incompatible changes.
+   Always strive to remain compatible with previous released versions
+   (see 2.2 above) Otherwise try to add a mechanism to revert to the
+   old behaviour if people rely on it. Document incompatible changes.
+
 
 3) Guidelines for Converting Perl 4 Library Scripts into Modules
+   -------------------------------------------------------------
 
 3.1 There is no requirement to convert anything.
 
-If it ain't broke, don't fix it! Perl 4 library scripts should continue to
-work with no problems. You may need to make some minor changes (like
-escaping non-array @'s in double quoted strings) but there is no need to
-convert a .pl file into a Module for just that. See perltrap.pod for details
-of all known perl4-to-perl5 issues.
+   If it ain't broke, don't fix it! Perl 4 library scripts should
+   continue to work with no problems. You may need to make some minor
+   changes (like escaping non-array @'s in double quoted strings) but
+   there is no need to convert a .pl file into a Module for just that.
+   See perltrap.pod for details of all known perl4-to-perl5 issues.
+
 
 3.2 Consider the implications.
 
-All the perl applications which make use of the script will need to be
-changed (slightly) if the script is converted into a module. Is it worth it
-unless you plan to make other changes at the same time?
+   All the perl applications which make use of the script will need to
+   be changed (slightly) if the script is converted into a module.  Is
+   it worth it unless you plan to make other changes at the same time?
+
 
 3.3 Make the most of the opportunity.
 
-If you are going to convert the script to a module you can use the
-opportunity to redesign the interface. The 'Guidelines for Module Creation'
-above include many of the issues you should consider.
+   If you are going to convert the script to a module you can use the
+   opportunity to redesign the interface. The 'Guidelines for Module
+   Creation' above include many of the issues you should consider.
+
 
 3.4 The pl2pm utility will get you started.
 
-This utility will read *.pl files (given as parameters) and write
-corresponding *.pm files. The pl2pm utilities does the following:
+   This utility will read *.pl files (given as parameters) and write
+   corresponding *.pm files. The pl2pm utilities does the following:
+   - Adds the standard Module prologue lines
+   - Converts package specifiers from ' to ::
+   - Converts die(...) to croak(...)
+   - Several other minor changes
+   Being a mechanical process pl2pm is not bullet proof. The converted
+   code will need careful checking, especially any package statements.
+   Don't delete the original .pl file till the new .pm one works!
 
-   * Adds the standard Module prologue lines
-   * Converts package specifiers from ' to ::
-   * Converts die(...) to croak(...)
-   * Several other minor changes
-
-Being a mechanical process pl2pm is not bullet proof. The converted code
-will need careful checking, especially any package statements. Don't delete
-the original .pl file till the new .pm one works!
 
 4) Guidelines for Reusing Application Code
+   ---------------------------------------
 
 4.1 Complete applications rarely belong in the Perl Module Library.
 
-4.2 Many applications contain some perl code which could be reused. Help
-save the world! Share your code in a form that makes it easy to reuse.
+4.2 Many applications contain some perl code which could be reused.
+    Help save the world! Share your code in a form that makes it easy
+    to reuse.
 
 4.3 Break-out the reusable code into one or more separate module files.
 
 4.4 Take the opportunity to reconsider and redesign the interfaces.
 
-4.5 In some cases the 'application' can then be reduced to a small fragment
-of code built on top of the reusable modules. In these cases the application
-could invoked as:
+4.5 In some cases the 'application' can then be reduced to a small
+    fragment of code built on top of the reusable modules. In these
+    cases the application could invoked as:
+
+         perl -MModule::Name -e 'func(@ARGV)'
+
 
 5) Namespace Coordination
 
-The maintainers of the module list are not the Internic for perl namespaces.
-They do neither sell namespaces nor can they establish property rights. What
-they try to do is to minimize namespace clashes and maximize usablility of
-the CPAN archive by setting up a catalogue of modules and control the
-indexers. Time permitting, they will also try to give advice for what they
-think is a proper usage of the namespace.
+The maintainers of the module list are not the Internic for perl
+namespaces. They do neither sell namespaces nor can they establish
+property rights. What they try to do is to minimize namespace clashes
+and maximize usablility of the CPAN archive by setting up a catalogue
+of modules and control the indexers. Time permitting, they will also
+try to give advice for what they think is a proper usage of the
+namespace.
 
 It is an important part of the namespace concept that the module list
-maintainers do not guarantee to you that somebody else won't use the, say,
-Foo::Bar namespace. The upload area is not censored except for abuse. People
-are free to upload any modules they like. Instead, there are several levels
-of protection for your namespaces:
+maintainers do not guarantee to you that somebody else won't use the,
+say, Foo::Bar namespace. The upload area is not censored except for
+abuse. People are free to upload any modules they like. Instead, there
+are several levels of protection for your namespaces:
 
-a) The most important is the module list which actually lists and proclaims
-your namespace.
+a) The most important is the module list which actually lists and
+   proclaims your namespace.
 
-b) The second is the indexing mechanism of the CPAN. Modules are indexed on
-a first-come-first-serve basis. The module namespace that is uploaded for
-the first time ever gets indexed, but not the module of the second one who
-tries to use the same namespace.
+b) The second is the indexing mechanism of the CPAN. Modules are
+   indexed on a first-come-first-serve basis. The module namespace
+   that is uploaded for the first time ever gets indexed, but not the
+   module of the second one who tries to use the same namespace.
 
-c) As the whole process is trying to benefit the community, all parties are
-subject to a wider monitoring within the community. This is sometimes
-referred to as security by visibility.
+c) As the whole process is trying to benefit the community, all
+   parties are subject to a wider monitoring within the community.
+   This is sometimes referred to as security by visibility.
 
-d) So the next level of namespace protection is the common sense. Your own
-common sense. Help to save the world. If you get the impression that
-something goes wrong with regard to namespaces, please write to
-modules@perl.org and let them know.
+d) So the next level of namespace protection is the common sense. Your
+   own common sense. Help to save the world. If you get the impression
+   that something goes wrong with regard to namespaces, please write
+   to modules@perl.org and let them know.
 
-e) The perhaps most interesting namespace protection is provided by the perl
-symbol table itself. A namespace Foo:: is just a package name and its
-relationship to a namespace Foo::Bar:: is not predetermined whatsoever. The
-two namespaces can be closely or loosely related or not related at all, but
-what's most important, they can be writen by different authors who may work
-rather independently from each other. So if you have registered any
-namespace, it does not mean that you own the whole namespace tree that
-starts there. If you are registered as the contact for Foo::Bar, you are not
-necessarily also associated with Foo::Bar::Baz.
+e) The perhaps most interesting namespace protection is provided by
+   the perl symbol table itself. A namespace Foo:: is just a package
+   name and its relationship to a namespace Foo::Bar:: is not
+   predetermined whatsoever. The two namespaces can be closely or
+   loosely related or not related at all, but what's most important,
+   they can be writen by different authors who may work rather
+   independently from each other. So if you have registered any
+   namespace, it does not mean that you own the whole namespace tree
+   that starts there. If you are registered as the contact for
+   Foo::Bar, you are not necessarily also associated with
+   Foo::Bar::Baz.
 
-f) In a few rare cases the module list people restrict indexing of certain
-categories. For example: DBI::* under the control of Tim Bunce Sun::* under
-the control of Sun Microsystems
+f) In a few rare cases the module list people restrict indexing of
+   certain categories. For example:
+     DBI::* under the control of Tim Bunce
+     Sun::* under the control of Sun Microsystems
 
-Part 2 - The Perl 5 Module List
 
-The remainder of this document is divided up into sections. Each section
-deals with a particular topic and lists all known modules related to that
-topic. Modules are only listed in one section so check all sections that
-might related to your particular needs.
+=======================================================================
 
-All the information corresponds to the latest updates we have received. We
-don't record the version number or release dates of the listed Modules. Nor
-do we record the locations of these Modules. Consult the contact, try the
-usual perl CPAN sites or ask in comp.lang.perl.modules. Please do *not* ask
-us directly, we simply don't have the time. Sorry.
+
+              Part 2 - The Perl 5 Module List
+              ===============================
+
+
+The remainder of this document is divided up into sections. Each
+section deals with a particular topic and lists all known modules
+related to that topic.  Modules are only listed in one section so
+check all sections that might related to your particular needs.
+
+All the information corresponds to the latest updates we have received.
+We don't record the version number or release dates of the listed
+Modules. Nor do we record the locations of these Modules. Consult the
+contact, try the usual perl CPAN sites or ask in comp.lang.perl.modules.
+Please do *not* ask us directly, we simply don't have the time. Sorry.
+
 
 1) Module Listing Format
 
-Each Module listing is very short. The main goal is to simply publish the
-existence of the modules, or ideas for modules, and enough contact
-information for you to find out more. Each listing includes some characters
-which convey (approximate) basic status information.
+Each Module listing is very short. The main goal is to simply publish
+the existence of the modules, or ideas for modules, and enough contact
+information for you to find out more. Each listing includes some
+characters which convey (approximate) basic status information.
 
 For example:
 
@@ -650,76 +719,77 @@ Fcntl          Sdcf  Defines fcntl() constants (see File::Lock)   JHI
 
 Where the 'DSLI' characters have the following meanings:
 
-   * D - Development Stage (Note: *NO IMPLIED TIMESCALES*):
-   *
-        o i - Idea, listed to gain consensus or as a placeholder
-        o c - under construction but pre-alpha (not yet released)
-        o a/b - Alpha/Beta testing
-        o R - Released
-        o M - Mature (no rigorous definition)
-        o S - Standard, supplied with Perl 5
+  D - Development Stage  (Note: *NO IMPLIED TIMESCALES*):
+    i   - Idea, listed to gain consensus or as a placeholder
+    c   - under construction but pre-alpha (not yet released)
+    a/b - Alpha/Beta testing
+    R   - Released
+    M   - Mature (no rigorous definition)
+    S   - Standard, supplied with Perl 5
 
-   * S - Support Level:
-   *
-        o m - Mailing-list
-        o d - Developer
-        o u - Usenet newsgroup comp.lang.perl.modules
-        o n - None known, try comp.lang.perl.modules
+  S - Support Level:
+    m   - Mailing-list
+    d   - Developer
+    u   - Usenet newsgroup comp.lang.perl.modules
+    n   - None known, try comp.lang.perl.modules
 
-   * L - Language Used:
-   *
-        o p - Perl-only, no compiler needed, should be platform independent
-        o c - C and perl, a C compiler will be needed
-        o h - Hybrid, written in perl with optional C code, no compiler
-          needed
-        o + - C++ and perl, a C++ compiler will be needed
-        o o - perl and another language other than C or C++
+  L - Language Used:
+    p   - Perl-only, no compiler needed, should be platform independent
+    c   - C and perl, a C compiler will be needed
+    h   - Hybrid, written in perl with optional C code, no compiler needed
+    +   - C++ and perl, a C++ compiler will be needed
+    o   - perl and another language other than C or C++
 
-   * I - Interface Style
-   *
-        o f - plain Functions, no references used
-        o h - hybrid, object and function interfaces available
-        o n - no interface at all (huh?)
-        o r - some use of unblessed References or ties
-        o O - Object oriented using blessed references and/or inheritance
+  I - Interface Style
+    f   - plain Functions, no references used
+    h   - hybrid, object and function interfaces available
+    n   - no interface at all (huh?)
+    r   - some use of unblessed References or ties
+    O   - Object oriented using blessed references and/or inheritance
 
-Where letters are missing they can usually be inferred from the others. For
-example 'i' implies 'id', 'S' implies 'Su'.
+Where letters are missing they can usually be inferred from the
+others.  For example 'i' implies 'id', 'S' implies 'Su'.
 
-The Info column gives a contact reference 'tag'. Lookup this tag in the
-"Information / Contact Reference Details" section in Pert 3 of this
-document. If no contact is given always try asking in
+The Info column gives a contact reference 'tag'. Lookup this tag in
+the "Information / Contact Reference Details" section in Pert 3 of
+this document. If no contact is given always try asking in
 comp.lang.perl.modules.
 
 Most Modules are nested in categories such as IPC::Open2 and IPC::Open3.
-These are shown as 'IPC::' on one line then each module listed below with a
-'::' prefix.
+These are shown as 'IPC::' on one line then each module listed below
+with a '::' prefix.
+
 
 Ideas For Adoption
 
-Modules listed as in the 'i' Development Stage with no contact reference are
-ideas without an owner. Feel free to 'adopt' these but please let me know so
-that we can update the list and thus inform anyone else who might be
-interested. Adoption simply means that you either hope to implement the
-module one day or would like to cooperate with anyone else who might be
-interested in implementing it.
+Modules listed as in the 'i' Development Stage with no contact
+reference are ideas without an owner. Feel free to 'adopt' these but
+please let me know so that we can update the list and thus inform anyone
+else who might be interested. Adoption simply means that you either
+hope to implement the module one day or would like to cooperate with
+anyone else who might be interested in implementing it.
+
 
 Cooperation
 
-Similarly, if an idea that interests you has been adopted by someone please
-contact them so you can share ideas. Just because an idea has been adopted
-does NOT imply that it's going to be implemented. Just because a module is
-listed and being implemented does NOT mean it'll get finished. Waiting
-silently in the hope that the Module will appear one day is unlikely to be
-fruitful! Offer to help. Cooperate. Pool your efforts. Go on, try it!
+Similarly, if an idea that interests you has been adopted by someone
+please contact them so you can share ideas.  Just because an idea has
+been adopted does NOT imply that it's going to be implemented. Just
+because a module is listed and being implemented does NOT mean it'll
+get finished. Waiting silently in the hope that the Module will appear
+one day is unlikely to be fruitful! Offer to help. Cooperate. Pool your
+efforts. Go on, try it!
 
-The same applies to modules in all states. Most modules are developed in
-limited spare time. If you're interested in a module don't just wait for it
-to happen, offer to help.
+The same applies to modules in all states. Most modules are developed
+in limited spare time. If you're interested in a module don't just wait
+for it to happen, offer to help.
 
-Module developers should feel free to announce incomplete work early. If
-you're not going to be able to spend much time on something then say so. If
-you invite cooperation maybe someone will implement it for you!
+Module developers should feel free to announce incomplete work early.
+If you're not going to be able to spend much time on something then say
+so. If you invite cooperation maybe someone will implement it for you!
+
+
+_______________________________________________________________________
 
 2) Perl Core Modules, Perl Language Extensions and Documentation Tools
 
@@ -774,12 +844,12 @@ Regexp            adcO An OO interface to regular expressions       GBARR
 Safe              SdcO Restrict eval'd code to safe subset of ops   MICB
 Softref           bdcf Extension for weak/soft referenced SVs       ILYAZ
 
-Inline            adp? Easy way to use other languages in Perl      INGY
+Inline            bdp? Write Perl subroutines in other languages    INGY
 Inline::
 ::CPR             adpn C Perl Run - Embed Perl in C, ala Inline     INGY
-::C               bdpn Write C extensions in Perl the easy way      INGY
+::C               bdpn Write Perl subroutines in C                  INGY
 ::CPP             adpO Easy implementation of C++ extensions        NEILW
-::Python          adpO Easy implementation of Python extensions     NEILW
+::Python          adcO Easy implementation of Python extensions     NEILW
 
 Exporter::
 ::Import          Rdpn Alternate symbol exporter                    GARROW
@@ -791,14 +861,6 @@ Safe::
 
 Symbol::
 ::Table           RdpO OO interface to package symbols              GARROW
-
-Test              Sdpf Utilities for writing test scripts           JPRIT
-Test::
-::Cmd             RdpO Portable test infrastructure for commands    KNIGHT
-::Harness         Supf Executes perl-style tests                    P5P
-::Unit            adpO simple framework for unit testing            CLEMBURG
-::Suite           cdpO tbs                                          HENKE
-::Case            cdpO tbs                                          HENKE
 
 The Perl Compiler
 
@@ -871,6 +933,8 @@ Pod::
 ::XML             RdpO Generate XML from POD                        MSERGEANT
 ::PP              idpO A Pod pre-processor                          RAM
 
+_______________________________________________________________________
+
 3) Development Support
 
 Name              DSLI Description                                  Info
@@ -902,7 +966,7 @@ Devel::
 ::Coverage        adpf Coverage analysis for Perl code              RJRAY
 ::Datum           cdpf Debugging And Tracing Ultimate Module        CDE
 ::DebugAPI        bdpf Interface to the Perl debug environment      JHA
-::DebugInit       i    Create a .gdbinit or similar file            JASONS
+::DebugInit       bdpf Create a .gdbinit or similar file            JASONS
 ::DProf           Rdcf Execution profiler                           DMR
 ::DumpStack       Rupf Dumping of the current function stack        JACKS
 ::Leak            Rdcf Find perl objects that are not reclaimed     NI-S
@@ -926,6 +990,14 @@ Perf::            Performance measurement other than benchmarks
 Rcs               adcf Alternate RCS interface (see VCS::RCS)       CFRETER
 VCS               ampO Generic interface to Version Control Systems LBROCARD
 
+Test              Sdpf Utilities for writing test scripts           JPRIT
+Test::
+::Cmd             RdpO Portable test infrastructure for commands    KNIGHT
+::Harness         Supf Executes perl-style tests                    P5P
+::Unit            adpO simple framework for unit testing            CLEMBURG
+::Suite           cdpO Represents a collection of Test::Cases       HENKE
+::Case            cdpO Represent a single test case                 HENKE
+
 VCS::
 ::CVS             RdpO Interface to GNU's CVS                       RSAVAGE
 ::PVCS            i    PVCS Version Manager (intersolv.com)         BMIDD
@@ -942,6 +1014,8 @@ Sub::
 Perlbug           RdpO Database driven bug tracking system          RFOLEY
 
 Continuus         adpO Interface to Continuus Code Management tool  HENKE
+
+_______________________________________________________________________
 
 4) Operating System Interfaces, Hardware Drivers
 
@@ -1052,10 +1126,6 @@ MVS::
 NeXTStep::
 ::NetInfo         idcO NeXTStep's NetInfo (like ONC NIS)            PGUEN
 
-Netware::
-::NDS             cd+O Interface to Novell Directory Services       KTHOMAS
-::Bindery         cd+O Interface to Novell Bindery mode calls       KTHOMAS
-
 OS2::
 ::ExtAttr         RdcO (Tied) access to extended attributes         ILYAZ
 ::FTP             bncf Access to ftplib interface                   ILYAZ
@@ -1104,6 +1174,10 @@ VMS::
 ::System          Rdcf VMS-specific system calls                    DSUGAL
 ::User            bdcr Read access to system UAF data               DSUGAL
 
+VMS::Fileutils::
+::Root            RdpO Evade VMS's 8 level directory restrictions   CLANE
+::SafeName        Rdpf Transform filenames to "VMS safe" form       CLANE
+
 Portable Digital Assistants
 
 PDA::
@@ -1121,6 +1195,8 @@ Device::
 
 Device::ISDN::
 ::OCLM            bd?? Perl interface to the 3com OCLM ISDN TA      MERLIN
+
+_______________________________________________________________________
 
 5) Networking, Device Control (modems) and InterProcess Communication
 
@@ -1197,12 +1273,16 @@ Net::
 ::Whois           RdpO Get+parse "whois" domain data from InterNIC  DHUDES
 ::XWhois          RdpO Whois Client Interface for Perl5.            VIPUL
 ::ICQ             bmpO Client interface to ICQ messaging            JMUHLICH
+::SMS             RdpO Send SMS messages to ANY device.             ROOTLEVEL
 
 Net::Daemon::
 ::SSL             RdpO SSL extension for Net::Daemon                MKUL
 
 Net::IMAP::
 ::Simple          bdpO Only implements the basic IMAP features      JPAF
+
+Net::SMS::
+::Genie           RdpO Send SMS messages using the Genie gateway    AWRIGLEY
 
 Net::SNMP::
 ::Interfaces      RdpO Obtain network interface info via SNMP       JSTOWE
@@ -1299,6 +1379,8 @@ RAS::
 ::AS5200          RdpO Interface to Cisco AS5200 dialup server      STIGMATA
 ::HiPerARC        RdpO Interface to 3Com TotalControl HiPerARC      STIGMATA
 
+_______________________________________________________________________
+
 6) Data Types and Data Type Utilities (see also Database Interfaces)
 
 Name              DSLI Description                                  Info
@@ -1341,6 +1423,7 @@ Math::
 ::VecStat         Rdpr Some basic numeric stats on vectors          ASPINELLI
 ::ematica         adcO Interface to the powerful Mathematica system ULPFR
 ::Libm            RdcO Perl extension for the C math library, libm  DSLEWART
+::FFT             adcO Perl extension for Fast Fourier Transforms   RKOBES
 
 Math::Business::
 ::EMA             adcO An Exponential Moving Average Calculator     JETTERO
@@ -1423,6 +1506,7 @@ Set::
 ::Object          bdcO Set of Objects (smalltalkish: IdentitySet)   JLLEROY
 ::Scalar          adpO Set of scalars (inc references)              JHI
 ::Window          bdpO Manages an interval on the integer line      SWMCD
+::CheckList       adph Maintain a list of "to-do" items             MIKO
 
 Graph::
 ::Element         RdpO Base class for element of directed graph     NEILB
@@ -1509,24 +1593,32 @@ Tie::Cache::
 
 Class::
 ::Accessor        bdpO Automated accessor generation                MSCHWERN
+::BlackHole       RdpO treat unhandled method calls as no-op        SBURKE
+::Classless       MdpO Framework for classless OOP                  SBURKE
+::Contract        RdpO Design-by-Contract OO in Perl.               GGOEBEL
 ::DBI             adpO Simple SQL-based object persistance          MSCHWERN
+::Delegate        bdpO Easy-to-use object delegation                KSTAR
 ::Eroot           RdpO Eternal Root - Object persistence            DMR
 ::Fields          bdph Inspect the fields of a class                MSCHWERN
+::ISA             Mdpf Report the search path thru an ISA tree      SBURKE
 ::MethodMaker     bdpO Create generic methods                       FLUFFY
 ::Multimethods    Rdpf A multiple dispatch mechanism for Perl       DCONWAY
 ::Mutator         bdpO Dynamic polymorphism implemented in Perl     GMCCAR
 ::NamedParms      MdpO A named parameter accessor base class        SNOWHARE
+::ObjectTemplate  bdpO Optimized template builder base class        JASONS
+::ParamParser     bdpO Provides complex parameter list parsing      DUNCAND
 ::ParmList        MdpO A named parameter list processor             SNOWHARE
+::PublicInternal  adpO Keep separate hashes of public/internal data MIKO
 ::Singleton       bdpO Implementation of a "Singleton" class        ABW
+::StructTemplate  adpO Facilitates creation of public class-data    HEIKOWU
+::TOM             RmpO Transportable Object Model for perl          JDUNCAN
 ::Template        Rdpr Struct/member template builder               DMR
 ::Translucent     RdpO Translucent (ala perltootc) method creation  GED
 ::Tree            MdpO C++ class hierarchies & disk directories     RSAVAGE
-::TOM             RmpO Transportable Object Model for perl          JDUNCAN
-::Contract        RdpO Design-by-Contract OO in Perl.               DCONWAY
 ::WhiteHole       RdpO Treat unhandled method calls as errors       MSCHWERN
-::BlackHole       RdpO treat unhandled method calls as no-op        SBURKE
-::Classless       MdpO Framework for classless OOP                  SBURKE
-::ISA             Mdpf Report the search path thru an ISA tree      SBURKE
+
+Class::ObjectTemplate::
+::DB              bdpO Template base class for DB objects           JASONS
 
 Object::
 ::Info            Rupf General info about objects (is-a, ...)       JACKS
@@ -1539,6 +1631,7 @@ POE::             Perl Object Environment
 POE::Component::
 ::RSS             bdp? Event based RSS interface                    MSTEVENS
 ::SubWrapper      bdp? Event based Module interface                 MSTEVENS
+::UserBase        RdpO A component to manage user authentication    JGOFF
 
 MOP               bdp  Meta Object Protocol (Tool collection)       ORTALO
 Ref               RdpO Print, compare, and copy perl structures     MUIR
@@ -1582,6 +1675,7 @@ Data::
 ::Walker          RdpO Navigate through Perl data structures        JNOLAN
 ::Random          adpf Generate random sets of data                 ADEO
 ::JavaScript      RdpO Dumps structures into JavaScript code        SCHOP
+::MultiValuedHash bdpO Hash whose keys have multiple ordered values DUNCAND
 
 Tree::
 ::Base            cdpO Defines a basic binary search tree           MSCHWERN
@@ -1600,6 +1694,8 @@ DFA::
 
 Boulder           MdpO Generalized tag/value data objects           LDS
 Thesaurus         RdpO Create associations between related things   DROLSKY
+
+_______________________________________________________________________
 
 7) Database Interfaces (see also Data Types)
 
@@ -1653,6 +1749,7 @@ DBD::
 ::mysql           RmcO Mysql Driver for DBI                         JWIED
 ::pNET            amcO DBD proxy driver                             JWIED
 ::InterBase       amcO DBI driver for InterBase RDBMS server        EDPRATOMO
+::RDB             Rdof DBI driver for Oracle RDB (OpenVMS only)     ASTILLER
 
 Oraperl           Rmpf Oraperl emulation interface for DBD::Oracle  DBIML
 Ingperl           bmpf Ingperl emulation interface for DBD::Ingres  HTOUG
@@ -1676,7 +1773,7 @@ Ace               i    Interface to ACEDB (Popular Genome DB)       LDS
 BBDB              Rdph Insiduous big brother database               LAXEN
 DTREE             cdcf Interface to Faircom DTREE multikey ISAM db  JWAT
 Datascope         Rdcf Interface to Datascope RDBMS                 DANMQ
-Fame              adcO Interface to FAME database and language      TRIAS
+Fame              MdcO Interface to FAME database and language      TRIAS
 LotusNotes        i    Interface to Lotus Notes C/C++ API           MBRECH
 Msql              RmcO Mini-SQL database interface                  JWIED
 Mysql             RmcO mysql database interface                     JWIED
@@ -1767,6 +1864,8 @@ Spreadsheet::
 X500::
 ::DN              MdpO X500 Distinguished Name parser               RSAVAGE
 
+_______________________________________________________________________
+
 8) User Interfaces (Character and Graphical)
 
 Name              DSLI Description                                  Info
@@ -1783,7 +1882,6 @@ Term::
 ::Query           Rdpf Intelligent user prompt/response driver      AKSTE
 ::ReadKey         Rdcf Read keystrokes and change terminal modes    KJALB
 ::ReadLine        Sdcf Common interface for various implementations ILYAZ
-::Scraper         cdpO Drive and scrape terminal applications       INGY
 ::Screen          RdpO Basic screen + input class (uses Term::Cap)  MRKAE
 ::Size            adcf Simple way to get terminal size              TIMPX
 ::TUI             bdpf User interface based on Term::ReadLine       SBECK
@@ -1916,6 +2014,8 @@ Abstract Graphical User Interfaces modules
 GUI::
 ::Guido           i    bd+O Communicate with objects in a GUI       TBRADFUTE
 
+_______________________________________________________________________
+
 9) Interfaces to or Emulations of Other Programming Languages
 
 Name              DSLI Description                                  Info
@@ -1962,6 +2062,11 @@ Python            bmcf Interface Python API (for embedded python)   GAAS
 Python::
 ::Object          bmcO Wrapper for python objects                   GAAS
 ::Err             bmcO Wrapper for python exceptions                GAAS
+
+Shockwave::
+::Lingo           i??? Collection of modules for Lingo processing   MARTIN
+
+_______________________________________________________________________
 
 10) File Names, File Systems and File Locking (see also File Handles)
 
@@ -2029,6 +2134,8 @@ LockFile::        Application-level locking facilities
 Stat::
 ::lsMode          Rdpf Translate mode 0644 to -rw-r--r--            MJD
 
+_______________________________________________________________________
+
 11) String Processing, Language Text Processing, Parsing and Searching
 
 Name              DSLI Description                                  Info
@@ -2061,7 +2168,7 @@ Text::
 ::FillIn          RdpO Fill-in text templates                       KWILLIAMS
 ::Format          RdpO Advanced paragraph formatting                GABOR
 ::Graphics        RdpO Graphics rendering toolkit with text output  SFARRELL
-::Iconv           RdcO Perl interface to the XPG4 iconv() function  MPIOTR
+::Iconv           RdcO Interface to iconv codeset conversion        MPIOTR
 ::Invert          cdpO Create/query inv. index of text entities     NNEUL
 ::Macros          adpO template macro expander (OO)                 JDPORTER
 ::Metaphone       bdcf A modern soundex. Phonetic encoding of words MSCHWERN
@@ -2214,7 +2321,7 @@ XML::
 ::XSLT            RdcO Process XSL Transformational sheets          BRONG
 ::miniXQL         ???? Simplistic XQL-like search using streams     MSERGEANT
 
-Frontier::
+Frontier::             
 ::RPC             ???? Performs Remote Procedure Calls using XML    KMACLEOD
 
 RDF::
@@ -2256,6 +2363,8 @@ dTemplate         bmpO Flexible templating system                   DLUX
 Barcode::
 ::Code128         adpO Generate CODE 128 bar codes                  WRW
 
+_______________________________________________________________________
+
 12) Option, Argument, Parameter and Configuration File Processing
 
 Name              DSLI Description                                  Info
@@ -2290,6 +2399,8 @@ Config::
 ::IniFiles             Read/Write INI-Style configuration files     RBOW
 
 CfgTie            adph Framework for tieing system admin tasks      RANDYM
+
+_______________________________________________________________________
 
 13) Internationalization and Locale
 
@@ -2336,6 +2447,8 @@ Geography::
 
 Sort::
 ::ArbBiLex        Mdpf sort functions for arbitrary sort orders     SBURKE
+
+_______________________________________________________________________
 
 14) Authentication, Security and Encryption (see also Networking)
 
@@ -2413,6 +2526,8 @@ RADIUS::
 
 SSLeay            cdcO Interface to SSLeay                          EAYNG
 
+_______________________________________________________________________
+
 15) World Wide Web, HTML, HTTP, CGI, MIME etc (see Text Processing)
 
 Name              DSLI Description                                  Info
@@ -2442,6 +2557,7 @@ CGI::
 ::LogCarp         Rdph Error, log, bug streams, httpd style format  MIKEKING
 ::MiniSvr         RmpO Fork CGI app as a per-session mini server    CGIP
 ::Minimal         MdpO A micro-sized CGI handler                    SNOWHARE
+::MultiValuedHash bdpO Store and manipulate url-encoded data        DUNCAND
 ::MxScreen        cdpO Screen multi-plexer framework                RAM
 ::Out             adpf Buffer CGI output and report errors          MUIR
 ::PathInfo        RdpO A lightweight PATH_INFO based CGI package    SNOWHARE
@@ -2450,9 +2566,10 @@ CGI::
 ::QuickForm       Rdpf Handles UI & validation for CGI forms        SUMMER
 ::Request         RmpO Parse CGI request and handle form fields     CGIP
 ::Response        ampO Response construction for CGI applications   MGH
+::SSI_Parser      bdpf Implement SSI for Perl CGI                   VADIM
 ::Screen          adpO Create multi screen CGI-scripts              ULPFR
 ::Session         cdpO Persistent storage of complex data in CGI    ZED
-::SpeedyCGI       bdcn Run CGI scripts persistenly                  HORROCKS
+::SpeedyCGI       Mmcn Run perl CGI scripts persistenly             HORROCKS
 ::Validate        adpO Advanced CGI form parser                     ZENIN
 ::WML             RdpO Subclass of CGI.pm for WML output            AWOOD
 ::XML             ampO Convert CGI.pm variables to/from XML         EISEN
@@ -2470,7 +2587,7 @@ HTML::
 ::ElementTable    RmpO Tables as easy HTML element structures       MSISK
 ::Embperl         Rmcf Embed Perl in HTML                           GRICHTER
 ::Entities        Rmpf Encode/decode HTML entities                  LWWWP
-::FillInForm      adpO Fill in HTML forms, separating HTML and code TJMATHER
+::FillInForm      bdpO Fill in HTML forms, separating HTML and code TJMATHER
 ::Formatter       ampO Convert HTML to plain text or Postscript     LWWWP
 ::HeadParser      RmpO  Parse <HEAD> section of HTML documents      LWWWP
 ::LinkExtor       RmpO  Extract links from HTML documents           LWWWP
@@ -2490,6 +2607,8 @@ HTML::
 ::TokeParser      RmpO  Alternative HTML::Parser interface          LWWWP
 ::Validator       bdpO HTML validator utilizing nsgmls and libwww   SAIT
 ::Tagset          Rdpf data tables useful in parsing HTML           SBURKE
+::EasyTags        bdpO Make proper HTML 4 tags/lists/parts          DUNCAND
+::FormTemplate    adpO Store definition, make persist forms, report DUNCAND
 
 HTML::Widgets::
 ::DateEntry       RdpO Creates date entry widgets for HTML forms.   KENNEDYH
@@ -2807,7 +2926,7 @@ Apache::
 ::Mmap            bdcf Share data via Mmap module                   FLETCH
 ::ParseLog        bdpO OO interface to Apache log files             AKIRA
 ::RegistryLoader  SmpO Apache::Registry startup script loader       APML
-::Request         amcO CGI.pm functionality using API methods       APML
+::Request         amcO CGI.pm functionality using API methods       JIMW
 ::Safe            ampO Adaptation of "safecgiperl"                  APML
 ::Session         bmpO Maintain client <-> httpd session/state      JBAKER
 ::Servlet         ampO Interface to the Java Servlet engine         IKLUFT
@@ -2837,7 +2956,6 @@ BizTalk           RdpO Microsoft BizTalk Framework Toolkit          SIMONJ
 CGI_Lite          MnpO Light-weight interface for fast apps         SHGUN
 CIPP              RdpO Preprocessor for embedding Perl, SQL in HTML JRED
 Catalog           bmpO Manage/display resources catalog (URLs etc.) LDACHARY
-PApp              adch Multi-page-state-preserving web applications MLEHMANN
 WDDX              RdpO Allows distributed data exchange via XML     GUELICH
 WING              RmhO Apache based IMAP/NNTP Gateway               MICB
 WOMP              cdpO CGI App Dev Suite: authen/state/html         SPADKINS
@@ -2845,6 +2963,8 @@ WOMP              cdpO CGI App Dev Suite: authen/state/html         SPADKINS
 FCGI              Rdcr Fast CGI                                     SKIMO
 FCGI::
 ::ProcManager     bdpO A FastCGI process manager                    JURACH
+
+_______________________________________________________________________
 
 16) Server and Daemon Utilities
 
@@ -2904,6 +3024,8 @@ Time::
 Spool::
 ::Queue           i    Generic printer spooling facilities          RAM
 
+_______________________________________________________________________
+
 17) Archiving, Compression and Conversion
 
 Name              DSLI Description                                  Info
@@ -2911,8 +3033,9 @@ Name              DSLI Description                                  Info
 Compress::
 ::Bzip2           Rdcf Interface to the Bzip2 compression library   AZEMGI
 ::LZO             Rdcf Interface to the LZO compression library     MFX
-::LZV1            RdcO Leight-weight Lev-Zimpel-Vogt compression    MLEHMANN
+::LZV1            Rdcf Leight-weight Lev-Zimpel-Vogt compression    MLEHMANN
 ::Zlib            RdcO Interface to the Info-Zip zlib library       PMQS
+::LZF             Rdcf Fast/Free/Small data compression library     MLEHMANN
 
 Convert::
 ::ASN1            adpO Standard en/decode of ASN.1 structures       GBARR
@@ -2942,6 +3065,8 @@ RPM::
 ::Constants       adcO Constants for RPM package management         RJRAY
 ::Database        adcO DB interface for RPM package management      RJRAY
 ::Headers         adcO Headers for RPM package management           RJRAY
+
+_______________________________________________________________________
 
 18) Images, Pixmap and Bitmap Manipulation, Drawing and Graphing
 
@@ -3005,6 +3130,8 @@ Xmms::
 Flash::
 ::SWF             cmpO Read/Write Macromedia Flash SWF files        SABREN
 
+_______________________________________________________________________
+
 19) Mail and Usenet News
 
 Name              DSLI Description                                  Info
@@ -3031,6 +3158,9 @@ Mail::
 ::UCEResponder    i    Spamfilter                                   CHSTROSS
 ::Util            adpf Mail utilities (for by some Mail::* modules) GBARR
 ::IMAPClient      RdpO An IMAP Client API                           DJKERNEN
+::VersionTracker  cdpO Parses newsletters from versiontracker.com   AFOXSON
+::Box             adpO Fast mail-folder manager                     MARKOV
+::Vmailmgr        bdpO A Perl module to use Vmailmgr daemon         MARTIN
 
 Mail::Field::
 ::Received        RdpO Parses Received headers as per RFC822        ASPIERS
@@ -3054,6 +3184,8 @@ IMAP::
 Sendmail::
 ::Milter          Rdch Write mail filters for sendmail in Perl      CYING
 
+_______________________________________________________________________
+
 20) Control Flow Utilities (callbacks and exceptions etc)
 
 Name              DSLI Description                                  Info
@@ -3068,6 +3200,8 @@ Hook::
 Memoize           bdpr Automatically cache results of functions     MJD
 Memoize::
 ::ExpireLRU       Rdpr Provide LRU Expiration for Memoize           BPOWERS
+
+_______________________________________________________________________
 
 21) File Handle, Directory Handle and Input/Output Stream Utilities
 
@@ -3113,6 +3247,8 @@ Log::Agent::
 
 Expect            RdpO Close relative of Don Libes' Expect in perl  RGIERSIG
 
+_______________________________________________________________________
+
 22) Microsoft Windows Modules
 
 Name              DSLI Description                                  Info
@@ -3133,7 +3269,7 @@ Win32::
 ::FileType        RdpO modify Win32 fily type mapping               JENDA
 ::GD              RdcO Win32 port of the GD extension (gif module)  DAVEROTH
 ::GUI             bmch Perl-Win32 Graphical User Interface          ACALPINI
-::GuiTest         adcf SendKeys, FindWindowLike and more            ERNGUI
+::GuiTest         Rdcf SendKeys, FindWindowLike and more            ERNGUI
 ::IPC             bdcO Base class for Win32 synchronization objects CJM
 ::Internet        RdcO Perl Module for Internet Extensions          ACALPINI
 ::Message         bdcf Network based message passing                DAVEROTH
@@ -3154,9 +3290,8 @@ Win32::
 ::SystemInfo      RdpO Memory and Processor information             CJOHNSTON
 ::API             RdcO Perl Win32 API Import Facility               ACALPINI
 
-WinNT             cdcf Interface to Windows NT specific functions   WIN32
-NT                cdcf Old name for WinNT - being phased out        WIN32
-Win95             i    Interface to Windows 95 specific functions   WIN32
+Win32::OLE::
+::OPC             RdpO Ole for Process Control Server Interface     MARTINTO
 
 Win32API::
 ::CommPort        RdpO Win32 Serial functions/constants/interface   BBIRTH
@@ -3165,6 +3300,12 @@ Win32API::
 ::Registry        adcf Win32 Registry functions/constants           TYEMQ
 ::WinStruct       cdcf Routines for Win32 Windowing data structures TYEMQ
 ::Window          cdcf Win32 Windowing functions/constants          TYEMQ
+
+WinNT             cdcf Interface to Windows NT specific functions   WIN32
+NT                cdcf Old name for WinNT - being phased out        WIN32
+Win95             i    Interface to Windows 95 specific functions   WIN32
+
+_______________________________________________________________________
 
 23) Miscellaneous Modules
 
@@ -3219,6 +3360,9 @@ BarCode::
 ::UPC             i    Produce PostScript UPC barcodes              JONO
 
 Bio               i    Utilities for molecular biology              SEB
+
+Bio::
+::Genex           bmpO Store, manipulate gene expression data       JASONS
 
 Business::
 ::Cashcow         i??? Internet payment with the Danish PBS         GKE
@@ -3301,7 +3445,9 @@ Watchdog::
 ::HTTPService     adpO Test status of HTTP server                   PSHARPE
 ::MysqlService    adpO Test status of Mysql server                  PSHARPE
 
-24) Interface Modules to Commercial Software
+_______________________________________________________________________
+
+24)  Interface Modules to Commercial Software
 
 Name              DSLI Description                                  Info
 ------------      ---- -------------------------------------------- ----
@@ -3310,6 +3456,7 @@ Resolute::
 
 AltaVista::
 ::SearchSDK       cdcf Perl Wrapper for AltaVista SDK functionality JTURNER
+::PerlSDK         adcf Utilize the AltaVista Search Developer's Kit BWILLIAM
 
 Real::
 ::Encode          i    Interface to Progressive Network's RealAudio KMELTZ
@@ -3319,39 +3466,56 @@ MQSeries          RdcO IBM's MQSeries messaging product interface   WPMOORE
 PQI               cdcO Perl Queuing Interface, to MQSeries, MSMQ    SIMONJ
 R3                bdcO Interface to SAP R/3 using RFCSDK            SCHOEN
 
-Part 3 - Big Projects Registry
+25)  Bundles
 
-This section of the Module List is devoted to listing "Big Projects". I
-don't want to define Big (or even Project) here. Hopefully the items below
-speak for themselves. Almost all are just ideas, though some have been
-dabbled with and some are active projects.
+Name              DSLI Description                                  Info
+------------      ---- -------------------------------------------- ----
+Bundle::
+::Bugzilla        adpn Bundle to load modules for Bugzilla          ZLIPTON
 
-These are ideas for people with very strong skills and lots of time. Please
-talk, and listen, to Larry and the perl5-porters _before_ starting to do any
-work on projects which relate to the core implementation of Perl.
+=======================================================================
+
+
+           Part 3 - Big Projects Registry
+           ==============================
+
+
+This section of the Module List is devoted to listing "Big Projects".
+I don't want to define Big (or even Project) here. Hopefully the items
+below speak for themselves. Almost all are just ideas, though some have
+been dabbled with and some are active projects.
+
+These are ideas for people with very strong skills and lots of time.
+Please talk, and listen, to Larry and the perl5-porters _before_
+starting to do any work on projects which relate to the core
+implementation of Perl.
 
 Ask not when these will be implemented, ask instead how you can help
 implement them.
 
+
 1) Items in the Todo File
 
-The Todo supplied with Perl lists over 50 items in categories ranging from
-"Would be nice to have" to "Vague possibilities".
+The Todo supplied with Perl lists over 50 items in categories ranging
+from "Would be nice to have" to "Vague possibilities".
 
 Contacts: P5P
+
 
 2) Multi-threading
 
 This is really two projects. True threads (e.g., POSIX) using multiple
-independant perl interpreter structures and simple timeslicing of 'tasks'
-within a single perl interpreter. True threads requires operating system
-support or an external thread library, simple timeslicing does not (and
-should be portable to all platforms).
+independant perl interpreter structures and simple timeslicing of
+'tasks' within a single perl interpreter. True threads requires
+operating system support or an external thread library, simple
+timeslicing does not (and should be portable to all platforms).
 
-Malcolm Beattie < mbeattie@sable.ox.ac.uk > has done extensive work in this
-area and is folding this work into Perl now for version 5.005 or 5.006.
+Malcolm Beattie <mbeattie@sable.ox.ac.uk> has done extensive work in
+this area and is folding this work into Perl now for version 5.005 or
+5.006.
 
 Contacts: MICB P5P
+
 
 3) Object Management Group CORBA & IDL
 
@@ -3360,6 +3524,7 @@ implement a Perl binding for CORBA. See http://www.lunatech.com/cope/
 
 Contacts: COPEML BARTS
 
+
 4) Expand Tied Array Interface
 
 LEN, PUSH, POP, SHIFT, UNSHIFT and a fallback to SPLICE are needed.
@@ -3367,33 +3532,39 @@ Complicated by very widespread use of arrays within perl internals.
 
 Contacts: P5P CHIPS
 
+
 5) Extend Yacc To Write XS Code
 
-To quote Larry, "The right way to integrate yacc with Perl would be to have
-it spit out an XS module, presumably." Some version of yacc, like byacc,
-should be converted to spit out an OO .xs and .pm implementing a parser.
-Jake Donham's work so far is available in his CPAN directory
-http://www.cpan.org/authors/id/JAKE .
+To quote Larry, "The right way to integrate yacc with Perl would be to
+have it spit out an XS module, presumably." Some version of yacc, like
+byacc, should be converted to spit out an OO .xs and .pm implementing
+a parser. Jake Donham's work so far is available in his CPAN directory
+http://www.cpan.org/authors/id/JAKE.
 
 Contacts: JAKE NI-S P5P
 
+
 6) Approximate Matching Regular Expressions
 
-Add support into the core for approximate matching m/.../a (like the agrep
-utility).
+Add support into the core for approximate matching m/.../a (like the
+agrep utility).
 
 Contacts: JHI
 
-Part 4 - Standards Cross-reference
 
-This section aims to provide a cross reference between standards that exist
-in the computing world and perl modules which have been written to implement
-or interface to those standards.
+=======================================================================
+
+           Part 4 - Standards Cross-reference
+           ==================================
+
+This section aims to provide a cross reference between standards that
+exist in the computing world and perl modules which have been written
+to implement or interface to those standards.
 
 It also aims to encourage module authors to consider any standards that
 might relate to the modules they are developing.
 
-4.1) IETF - Internet Engineering Task Force (RFCs)
+4.1)   IETF - Internet Engineering Task Force (RFCs)
 
 Standard   Description                                   Module Name
 --------   -----------                                   -----------
@@ -3427,13 +3598,17 @@ RFC2138    Terminal server authentification and accting  RADIUS
 RFC2229    Dictionary Server                             Net::Dict
 RFC2518    HTTP Extensions for Distributed Authoring     HTTP::DAV
 
-4.2) ITU - International Telegraph Union (X.*)
+_______________________________________________________________________
+
+4.2)   ITU - International Telegraph Union (X.*)
 
 Standard   Description                                   Module Name
 --------   -----------                                   -----------
 X.209      Basic Encoding Rules for ASN.1                Convert::BER
 
-4.3) ISO - International Standards Organization (ISO*)
+_______________________________________________________________________
+
+4.3)   ISO - International Standards Organization (ISO*)
 
 Standard   Description                                   Module Name
 --------   -----------                                   -----------
@@ -3442,40 +3617,1405 @@ ISO/R 2015-1971
 ISO639     Two letter codes for language identification  Locale::Language
 ISO3166    Two letter codes for country identification   Locale::Country
 
-Part 5 - Who's Who and What's Where
+=======================================================================
+
+                 Part 5 - Who's Who and What's Where
+                 ===================================
 
 5.1) Information / Contact Reference Details (in alphabetical order)
 
-The following list of email addresses is based on the credentials stored on
-the automated Perl Authors Upload Server (PAUSE). If any of the details is
-not up to date, you're requested to visit
-http://www.cpan.org/modules/04pause.html , where you will find a pointer to
-a CGI script that lets you edit the database entries yourself.
+The following list of email addresses is based on the credentials
+stored on the automated Perl Authors Upload Server (PAUSE). If any of
+the details is not up to date, you're requested to visit
+http://www.cpan.org/modules/04pause.html, where you will find a pointer
+to a CGI script that lets you edit the database entries yourself.
+
+  Ref      Contact Details
+  -----    --------------------------------------------------------------
+  ABARCLAY Alan Barclay <gorilla@elaine.drink.com>
+  ABEROHAM Abraham Ingersoll <abe-cpan@honestabe.net>
+  ABH      Ask Bjørn Hansen <ask-cpan@perl.org>
+  ABIGAIL  Abigail <abigail@foad.org>
+  ABURLISON Alan Burlison <Alan.Burlison@UK.Sun.COM>
+  ABW      Andy Wardley <abw@cre.canon.co.uk>
+  ABYPAUL  Aby Paul <apaul@novell.com>
+  ACALPINI Aldo Calpini <dada@perl.it>
+  ACH      Achim Bohnet <ach@mpe.mpg.de>
+  ACHOUNG  Arthur Choung <arthur_choung@yahoo.com>
+  ADAM     Adam Arakelian <aarakelian@crunchtime.com>
+  ADAVIES  Alex Davies <Alex.Davies@ti.com>
+  ADDI     Arnar Mar Hrafnkelsson <addi@umich.edu>
+  ADEO     Adekunle Olonoh <koolade@yahoo.com>
+  ADESC    Alligator Descartes <descarte@symbolstone.org>
+  ADIRAJ   Adi Fairbank <adi@certsite.com>
+  AEPAGE   Andrew E Page <aep@world.std.com>
+  AFOXSON  Adam J. Foxson <afoxson@guild.net>
+  AFRYER   Anthony Fryer <apfryer@hotmail.com>
+  AGENTML  Mailing List For Perl5 Agents
+           Send email to perl5-agentr@epitome.hawk.igs.net with the
+           body "subscribe <emailaddr>"
+  AGIERTH  Andrew P. J. Gierth <andrew@erlenstar.demon.co.uk>
+  AGUL     Ashish Gulhati <hash@netropolis.org>
+  AJACKSON Alan K. Jackson <alanj@ajackson.org>
+  AJAEKEL  Andreas Jaekel <tabalon@furry.de>
+  AJFRY    Alan J. Fry <afj@afco.demon.co.uk>
+  AJOHNSON Andrew L Johnson <andrew-johnson@home.com>
+  AJPEACOCK Anthony Peacock <a.peacock@chime.ucl.ac.uk>
+  AKARGER  Amir Karger <karger@post.harvard.edu>
+  AKIRA    Akira Hangai <akira@hangai.net>
+  AKSTE    Alan K. Stebbens <aks@software.com>
+  ALANC    Alan Champion <A.Champion@gre.ac.uk>
+  ALANCITT Alan Citterman <alan@mticket.com>
+  ALANSZ   Alan Schwartz <alansz@uic.edu>
+  ALEXIOB  Alessandro Iob <alexiob@iname.com>
+  ALIAN    Alain Barbet <alian@alianwebserver.com>
+  ALISTAIRC Alistair Cunningham <ac212@debian.org>
+  ALLEN    Andrew D. Allen <andrew_d_allen@hotmail.com>
+  ALLENS   Allen Smith <easmith@beatrice.rutgers.edu>
+  ALSCH    Alan Scheinine <scheinin@crs4.it>
+  ALTITUDE Alex Tang <altitude@cic.net>
+  AMALTSEV Andrew Maltsev <am@amsoft.ru>
+  AMAR     Amarendran R. Subramanian <subraman@informatik.uni-tuebingen.de>
+  AMCN     Andrew McNaughton <andrew@squiz.co.nz>
+  AMEDINA  Alejandro Escalante Medina <amedina@msg.com.mx>
+  AMERZKY  Andre Merzky <merzky@physik.hu-berlin.de>
+  AMICHAUER Albert N. Micheev <Albert@f80.n5049.z2.fidonet.org>
+  AMOSS    Amos Shapira <amoss@cs.huji.ac.il>
+  AMUGNOLO Adrian Mugnolo <adrian@mugnolo.com>
+  AMW      Andrew Wilcox <andrew_wilcox@gwi.net>
+  ANATRA   Anand Natrajan <anand@virginia.edu>
+  ANDK     Andreas J. König <andreas.koenig@anima.de>
+  ANDREIN  Andrei Nossov <andrein@andrein.com>
+  ANDREWF  Andrew Ford <A.Ford@ford-mason.co.uk>
+  ANDYD    Andy Dougherty <doughera@lafcol.lafayette.edu>
+  ANDYDUNC Andy Duncan <andy_j_duncan@yahoo.com>
+  ANDYGLEW Andy Glew <glew@cs.wisc.edu>
+  ANDYGROM Andrew Gromozdin <andygrom@zenon.net>
+  ANH      Anh Nguyen-Tuong <nguyen@virginia.edu>
+  ANNO     Anno Siegel <siegel@zrz.tu-berlin.de>
+  ANTRO    Antonio Rosella <anface@yahoo.com>
+  AOCINAR  Ali Onur Cinar <root@zdo.com>
+  APML     The Perl/Apache Mailing List
+           Mail to majordomo@apache.org with body "subscribe modperl"
+  APPEL    Christoph Appel <cappel@debis.com>
+  AQUMSIEH Ala Qumsieh <aqumsieh@hyperchip.com>
+  AQUTIV   Idan Robbins <aqutiv@softhome.net>
+  AREGGIORI Alberto Reggiori <alberto.reggiori@jrc.it>
+  AREIBENS Alfred Reibenschuh <alfredreibenschuh@yahoo.com>
+  ARENSB   Andrew Arensburger <arensb+pause@ooblick.com>
+  ARIF     Anthony Iano-Fletcher <anthony@iano-fletcher.org>
+  ARNDT    Arndt Schönewald <arndt@schoenewald.de>
+  ARSML    The ARSperl Mailing List
+           See http://arsinfo.cit.buffalo.edu/ for mor info.
+  ARVIEGAS Andre Rodrigues Viegas <andre@writeme.com.br>
+  ARYEH    Aryeh Goldsmith <aryeh@ironarmadillo.com>
+  ASANDSTRM Arved H Sandstrom <Arved_37@chebucto.ns.ca>
+  ASHER    Aaron Sherman <ajs@ajs.com>
+  ASHERROD Andrew Sherrod <yaldabaoth@geocities.com>
+  ASHTED   Ted Ashton <ashted@southern.edu>
+  ASIMJALIS Asim Jalis <ajalis@twu.net>
+  ASPA     Marko Asplund <aspa@kronodoc.fi>
+  ASPIDER  Brian Dellert <aspider@pobox.com>
+  ASPIERS  Adam Spiers <adam@spiers.net>
+  ASPINDLER Andreas Spindler <info@prismtk.de>
+  ASPINELLI Andrea Spinelli <aspinelli@etsteam.it>
+  ASTEAM   ActiveState development team <dev@ActiveState.com>
+  ASTILLER Andreas Stiller <andreas.stiller@netsurf.de>
+  ASTUBBS  Adam Stubbs <astubbs@advantagecommunication.com>
+  AUSCHUTZ Austin Schutz <tex@habit.com>
+  AVATAR   Albert K. T. Hui <avatar@deva.net>
+  AVIF     Avi Finkel <avi@finkel.org>
+  AWIN     Ashley Winters <jql@accessone.com>
+  AWOOD    Angus Wood <angus@z-y-g-o.com>
+  AWRIGLEY Ave Wrigley <Ave.Wrigley@itn.co.uk>
+  AYRNIEU  julian fondren <julian@imaji.net>
+  AZEMGI   Gawdi Azem <gawdi@azem.de>
+  AZUL     Alejandro Forero Cuervo <bachue@bachue.com>
+  BARBACHAN Anthony Barbachan <barbacha@Hinako.AMBusiness.com>
+  BARTLEY  Eric Bartley <bartley@purdue.edu>
+  BARTS    Bart Schuller <schuller@lunatech.com>
+  BASKAR   Baskar S <baskar@india.ti.com>
+  BBACKER  Bryan Backer <bryan_backer@hp.com>
+  BBIRTH   Bill Birthisel <wcbirthisel@alum.mit.edu>
+  BBUM     Bill Bumgarner <bbum@friday.com>
+  BCOSELL  Bernie Cosell <bernie@rev.net>
+  BDFOY    brian d foy <brian@smithrenaud.com>
+  BDLILLEY Ben Lilley <blilley@hpu.edu>
+  BEHROOZI Peter Behroozi <behroozi@penguinpowered.com>
+  BELCHAM  Craig R. Belcham <crb@highpoint.co.uk>
+  BENL     Benjamin Low <b.d.low@ieee.org>
+  BENLI    Ben Lindstrom <mouring@netnet.net>
+  BENPAVON Ben Pavon <ben.pavon@hsc.hac.com>
+  BEPPU    John Beppu <beppu 'at' lbox.org>
+  BERRY    Berry Batist <Berry@the-matrixx.com>
+  BETUL    Rajiv Pant <betul@rajiv.org>
+  BEWEGEN  Bertram Wegener <bertram@island.free.de>
+  BGINGERY Bruce Gingery <bgingery@gtcs.com>
+  BHILTON  Brand Hilton <bhilton@home.com>
+  BHOLZMAN Benjamin Holzman <bholzman@earthlink.net>
+  BHORAN   Brian Horan <bhoran@gate.net>
+  BHUGHES  Brad Hughes <brad@tgsmc.com>
+  BIJUA    Biju A <bijuarjunan@mailcity.com>
+  BILLH    William Herrera <wherrera@lynxview.com>
+  BINKLEY  B. K. Oxley (binkley) <binkley@bigfoot.com>
+  BIRNEY   Ewan Birney <birney@sanger.ac.uk>
+  BIWILLIA Bill Williams <biwillia@cisco.com>
+  BJEPS    Brian Jepson <bjepson@conan.ids.net>
+  BKUHN    Bradley M. Kuhn <bkuhn@ebb.org>
+  BLABES   Doug Bloebaum <bloebaum@dma.org>
+  BLACKSTAR BlackStar <marty@blackstar.co.uk>
+  BLANTREWI Boris Lantrewitz <lantrewi@do.isst.fhg.de>
+  BLCKSMTH Dan Campbell <parser@danofsteel.com>
+  BMAVT    Bruno Tavares <bmavt_pause@clix.pt>
+  BMEEKINGS Brian Meekings <meekings@idi-middleware.com>
+  BMIDD    William J. Middleton <wjm@metronet.com>
+  BMILLETT Brian Millett <bpm@techapp.com>
+  BMORGAN  Bruce Morgan <morgan@networks.curtin.edu.au>
+  BOADLER  Bo Adler <thumper@ugcs.caltech.edu>
+  BOBG     Bob Glickstein <bobg@zanshin.com>
+  BOBN     Bob Niederman <bobn@interaccess.com>
+  BOBSIDE  Bob Sidebotham <rns@fore.com>
+  BOESCH   Eric Boesch <ebo@dannet.dk>
+  BOUBAKER Heddy Boubaker <boubaker@tls.cena.fr>
+  BOZZIO   Robert Lehr <bozzio@the-lehrs.com>
+  BPANNIER Benjamin Pannier <karo@artcom.net>
+  BPAULSEN Brian Paulsen <brian@thePaulsens.com>
+  BPETH    Bill Petheram <petheram@acm.org>
+  BPOWERS  Brent B. Powers <cpan@B2Pi.com>
+  BRADAPP  Brad Appleton <bradapp@enteract.com>
+  BRG      Benjamin R. Ginter <bginter@asicommunications.com>
+  BRIAN    Brian H. Dunford-Shore <brian@ibc.wustl.edu>
+  BRIANL   Brian Lalonde <brianl@sd81.k12.wa.us>
+  BRIANNG  Brian Ng <brian@radiation.net>
+  BRIANSP  Brian W. Spolarich <briansp@UU.NET>
+  BROCSEIB Broc Seib <bseib@purdue.edu>
+  BROMAGE  Andrew J. Bromage <bromage@queens.unimelb.edu.au>
+  BRONG    Bron Gondwana <perlcode@brong.net>
+  BRTEAM   Batchrun Team <batchrun@pnl.gov>
+  BRUCEK   Bruce Keeler <bruce@gridpoint.com>
+  BRUJAH   Riccardo Cambiassi <brujah@infodrome.net>
+  BRUNO    Bruno Connelly <bruno@whack.org>
+  BSTURNER Brad Turner <bsturner@sprintparanet.com>
+  BSUGARS  Benjamin Sugars <bsugars@canoe.ca>
+  BTROTT   Benjamin Trott <ben@rhumba.pair.com>
+  BURL     Burl Nyswonger <Burl@Nyswonger.org>
+  BWEILER  Bernard Weiler <Bernard.Weiler@icn.siemens.de>
+  BWILLIAM Brian Williams <Brian.Williams@av.com>
+  BZAJAC   Blair Zajac <blair@akamai.com>
+  CAADAMS  Clifford A. Adams <caadams@zynet.com>
+  CAIDA    CAIDA team
+           This is a closed list.
+  CALEB    Caleb Crome <perl@crome.org>
+  CALLAHAN Ed Callahan <cpan@envstat.com>
+  CARL     Carl Declerck <carl@miskatonic.inbe.net>
+  CARLADLER Carl Adler <carl_adler@idx.com>
+  CARPENTER James Lee Carpenter <nawkboy@flash.net>
+  CASTLE   Peter Goode/Castle Links Ltd <peter@castlelink.co.uk>
+  CBAIL    Charles Bailey <bailey@genetics.upenn.edu>
+  CCWF     Charles C. Fu <ccwf@bacchus.com>
+  CCZ      Chicheng Zhang <chichengzhang@hotmail.com>
+  CDAWSON  Chris Dawson <cdawson@real.com>
+  CDE      Christophe Dehaudt <christophe@dehaudt.org>
+  CDONLEY  Clayton Donley <donley@wwa.com>
+  CDYBED   Calle Dybedahl <calle@lysator.liu.se>
+  CERNEY   John Cerney <j-cerney1@raytheon.com>
+  CEVANS   Carey Evans <c.evans@clear.net.nz>
+  CFRETER  Craig Freter <freter@freter.com>
+  CFUHRMAN Chris Fuhrman <cfuhrman@tfcci.com>
+  CGILMORE Christian Gilmore <cgilmore@nospam.tivoli.com>
+  CGIP     The CGI-Perl Developers mailing list
+           Mailing list is temporarily closed
+  CHAGN    Chris Hagn <Chris.Hagn@pobox.com>
+  CHAMAS   Joshua Chamas <chamas@alumni.stanford.org>
+  CHANG-LIU Chang Liu <liu@ics.uci.edu>
+  CHAOS    Matthew R. Sheahan <chaos@crystal.palace.net>
+  CHARDIN  Chuck Hardin <chardin@savageoasis.fc.net>
+  CHDAG    Chris Dagdigian <cdagdigian@genetics.com>
+  CHESTER  Chester Day <chesterday@netscape.net>
+  CHGEUER  Christian H. Geuer-Pollmann <christian.geuer-pollmann@nue.et-inf.uni-siegen.de>
+  CHGOETZE Christian Goetze <perl@resolute.com>
+  CHIPMUNK Ronald J. Kimball <rjk@linguist.dartmouth.edu>
+  CHIPS    Chip Salzenberg <chip@pobox.com>
+  CHIPT    Chip Turner <chip@zfx.com>
+  CHOGAN   Chad Hogan <chogan@uvphys.phys.uvic.ca>
+  CHOLET   Eric Cholet <cholet@logilune.com>
+  CHOUPT   Chuck Houpt <choupt@world.std.com>
+  CHOWARTH Colin Howarth <colin@muc.de>
+  CHRISCHU Christian Schultze <Christian_Schultze@b.maus.de>
+  CHRISJ   Chris Josephes <chrisj@mr.net>
+  CHRMASTO Christopher Masto <chris@netmonger.net>
+  CHROMATIC chromatic <chromatic@wgz.org>
+  CHRWOLF  Christophe Wolfhugel <wolf@oleane.net>
+  CHSTROSS Charlie Stross <charlie@antipope.org>
+  CHTHORMAN Chris Thorman <chris@thorman.com>
+  CHTTRAX  Christoph T. Traxler <Christoph.T.Traxler@theo.physik.uni-giessen.de>
+  CJM      Christopher J. Madsen <chris_madsen@geocities.com>
+  CJOHNSTON Chad Johnston <cjohnston@rockstardevelopment.com>
+  CKAISER  Cameron Kaiser <ckaiser@stockholm.ptloma.edu>
+  CKONG    Colin Kong <colin.kong@toronto.edu>
+  CLAIRD   Cameron Laird <claird@starbase.neosoft.com>
+  CLANE    Charles Lane <lane@duphy4.physics.drexel.edu>
+  CLEMBURG Christian Lemburg <lemburg@online-club.de>
+  CLINTDW  Clinton Wong <clintdw@netcom.com>
+  CLINTP   Clinton Pierce <clintp@geeksalad.org>
+  CLMS     Claus Schotten <schotten@gmx.de>
+  CLUNIS   Kevin McGowan <clunis@umich.edu>
+  CLWOLFE  Clinton Wolfe <clwolfe@indiana.edu>
+  CMASON   Chris Mason <cmason@ros.res.cmu.edu>
+  CNANDOR  Chris Nandor <cnandor@cpan.org>
+  CNATION  Cnation <opensource@cnation.com>
+  CNLAVY   Chad Lavy <chad@chadlavy.com>
+  COLEMAN  Jordan Coleman <jordan+cpan@netmonger.net>
+  COLINK   Colin Kuskie <ckuskie@cadence.com>
+  COOPERCL Clark Cooper <coopercc@netheaven.com>
+  COPEML   The CORBA Perl Mailinglist
+           To join the list, send a mail with just the word subscribe
+           in the body to cope-request@lunatech.com (See
+           http://www.lunatech.com/cope)
+  CORLISS  Arthur Corliss <corliss@odinicfoundation.org>
+  CPHIL    Chris Phillips <phillips@jive.nl>
+  CPJL     Paul J. Lucas <>
+  CRAFFI   Chris Dagdigian <dag@sonsorol.org>
+  CRAIC    Robert Jones <jones@craic.com>
+  CRAMIREZ Carlos Ramirez <carlos@quantumfx.com>
+  CROMIS   Jacob Davies <jacob@well.com>
+  CTDEAN   Chris Dean <ctdean@aig.jpl.nasa.gov>
+  CTI      Coalescent Technologies Inc. <boris@coalescent.net>
+  CTWETEN  Casey Tweten <crt@kiski.net>
+  CUNNINGT Tom Cunningham <cunningt@primenet.com>
+  CWEVERITT Cass W. Everitt <cass@Objectecture.com>
+  CWINTERS Chris Winters <chris@cwinters.com>
+  CXL      Chris Leach <leachcj@bp.com>
+  CXREG    Dave Olszewski <daveo at osdn point com>
+  CYING    Charles Ying <cying@photonfx.com>
+  CYK      Philippe Chane You Kaye <philippe.cyk@wanadoo.fr>
+  DALEAMON Dale Amon <amon@gpl.com>
+  DALGL    Bob Dalgleish <bob.dalgleish@sk.sympatico.ca>
+  DANB     Dan Bjorkegren <dan_b@mail.com>
+  DANIEL   Daniel Sully <daniel-cpan@electricrain.com>
+  DANKOGAI Dan Kogai <dankogai@dan.co.jp>
+  DANMQ    Daniel M. Quinlan <danq@colorado.edu>
+  DAOT     Thanh Dao <daot@us.ibm.com>
+  DARNOLD  Dean Arnold <darnold@earthlink.net>
+  DAVECROSS Dave Cross <dave@dave.org.uk>
+  DAVEL    Dave Lorand <davel@NOSPAM.src.uchicago.edu>
+  DAVEM    Dave Moore <dave@epals.com>
+  DAVEROTH Dave Roth <rothd@roth.net>
+  DAVIDH   Davíð Helgason <dhns@uti.is>
+  DAVIDNICO David Nicol <DavidNicol@acm.org>
+  DAVIDRA  David Ranvig <davidra@ifi.uio.no>
+  DAVOD    David Scott <dragonstep@geocities.com>
+  DBEAZLEY Dave Beazley <dmb@asator.lanl.gov>
+  DBENNETT David Bennett <dbennett@cpan.org>
+  DBIML    The DBI Mailing Lists
+           Subscribe via http://www.fugue.com/dbi. If you can't do
+           that then mail to dbi-REQUEST@fugue.com and ask (the human,
+           Ted Lemon) to subscribe you to one or more of dbi-announce,
+           dbi-users, or dbi-dev.
+  DBMAKER  dbmaker <dbmaker@mars.syscom.com.tw>
+  DBONNER  David Bonner <dbonner@cs.bu.edu>
+  DBRESH   Doug Breshears <breshear@eonet.com>
+  DBRIAN   Dan Brian <dbrian@cpan.org>
+  DCANTRELL David Cantrell <fromPAUSE@barnyard.co.uk>
+  DCARRAWAY Devin Carraway <cpan@nospam.devin.com>
+  DCARRIGAN Dave Carrigan <dave@rudedog.org>
+  DCEPML   The DCE-Perl mailing list
+           Mail to majordomo@lists.csupomona.edu with body "subscribe
+           dce-perl <your-address>"
+  DCLINTON DeWitt Clinton <dclinton@avacet.com>
+  DCONWAY  Damian Conway <damian@conway.org>
+  DCOPPIT  David Coppit <david@coppit.org>
+  DDUMONT  Dominique Dumont <Dominique_Dumont@hp.com>
+  DEANH    Dean Hudson <dean@ero.com>
+  DELTA    Christian Lackas <delta@clackas.de>
+  DENWA    Dennis Watson <dwatson@netguide.com>
+  DEP      Demetrios E. Paneras <dep@media.mit.edu>
+  DESIMINER Richard DeSimine <richd@centralsoft.com>
+  DEUSX    Leslie Michael Orchard <deus_x@ninjacode.com>
+  DEVEN    Deven T. Corzine <deven@ties.org>
+  DEVONJ   Devon Jones <soulcatcher@evilsoft.org>
+  DEWEG    Douglas E. Wegscheid <wegscd@whirlpool.com>
+  DFAN     Dan Schmidt <dfan@alum.mit.edu>
+  DGRAVES  Darren Graves <darren@iterx.org>
+  DGRIS    Daniel Grisinger <dgris@perrin.dimensional.com>
+  DHARRIS  David Harris <dharris@drh.net>
+  DHUDES   Dana Hudes <dhudes@hudes.org>
+  DHUNT    Douglas Hunt <dhunt@ucar.edu>
+  DIDO     Rafael R. Sevilla <dido@pacific.net.ph>
+  DIMRUB   Dmitry Rubinstein <dimrub@icomverse.com>
+  DIONALM  Dion Almaer <dion@member.com>
+  DIVERDI  Joseph DiVerdi <diverdi@XTRsystems.com>
+  DJASMINE D. Jasmine Merced <djasmine@tnsgroup.com>
+  DJBECKETT Dave Beckett <Dave.Beckett@bristol.ac.uk>
+  DJBERG   Daniel Berger <djberg96@hotmail.com>
+  DJERIUS  Diab Jerius <djerius@cpan.org>
+  DJK      Dirk-Jan Koopman <djk@tobit.co.uk>
+  DJKERNEN David J. Kernen <David.__no.soliciting__Kernen@erols.com>
+  DJPADZ   Dj Padzensky <djpadz@padz.net>
+  DKOCH    Daniel Koch <dkoch@amcity.com>
+  DKUBB    Dan Kubb <dan@mealtips.com>
+  DKUEBLER Daniel Kuebler <dkuebler@mobile-net.ch>
+  DKWILSON Damion K. Wilson <dkw@rcm.bm>
+  DLANE    Derek Lane <dereklane@pobox.com>
+  DLECONTE Denis Leconte <denis_leconte@geocities.com>
+  DLEIGH   David L. Leigh <dleigh@sameasiteverwas.net>
+  DLINCOLN Dan Lincoln <dan@galaxymall.com>
+  DLOWE    J. David Lowe <dlowe@pootpoot.com>
+  DLUGOSZ  John M. Dlugosz <john@dlugosz.com>
+  DLUX     Szabó, Balázs <dlux@kapu.hu>
+  DMACKS   Daniel Macks <dmacks@netspace.org>
+  DMEGG    David Megginson <david@megginson.com>
+  DMO      Darryl Okahata <darrylo@sr.hp.com>
+  DMOW     Dmitry Ovsyanko <do@mobile.ru>
+  DMR      Dean Roehrich <roehrich@cray.com>
+  DMUSGR   Dermot Musgrove <dermot.musgrove@virgin.net>
+  DNAD     Dave Nadler <nadler@ug.eds.com>
+  DNORTH   David North <rold5@tditx.com>
+  DODYSW   Dody Suria Wijaya <dody@neuk.net>
+  DOMO     Dominic Dunlop <domo@computer.org>
+  DONS     Don Schwarz <dons@xnet.com>
+  DOPACKI  Dennis Opacki <dopacki@adotout.com>
+  DOUGB    Doug Bagley <cpan@bagley.org>
+  DOUGL    Douglas Lankshear <DougL@ActiveState.com>
+  DOUGM    Doug MacEachern <dougm@pobox.com>
+  DOUGW    Douglas Wilson <dwilson@gtemail.net>
+  DPARIS   Dave Paris <amused@pobox.com>
+  DROBERTS Dave Roberts <DaveRoberts@iname.com>
+  DROLSKY  Dave Rolsky <autarch@urth.org>
+  DRRHO    Robert Barta <rho@telecoma.net>
+  DRUOSO   Daniel Ruoso <daniel@ruoso.com>
+  DSADINOFF Danny Sadinoff <sadinoff@pobox.com>
+  DSB      David Boyce <dsb@world.std.com>
+  DSHEPP   Doug "Sirilyan" Sheppard <sirilyan@link.ca>
+  DSHERER  Daniel Sherer <perl@salmonriver.com>
+  DSHULTZ  David Shultz <dshultz@redchip.com>
+  DSLEWART Daniel S. Lewart <d-lewart@uiuc.edu>
+  DSOUFLIS Dimitrios Souflis <dsouflis@altera.gr>
+  DSPARLING Douglas Sparling <doug@dougsparling.com>
+  DSTALDER Darren Stalder <torin@daft.com>
+  DSUGAL   Dan Sugalski <dan@sidhe.org>
+  DTOWN    David M. Town <david.town@marconi.com>
+  DUFF     Jonathan Scott Duff <duff@pobox.com>
+  DUNCAND  Darren Duncan <perl@NO.DarrenDuncan.SPAM.net>
+  DURIST   Dan Urist <durist@world.std.com>
+  DVKLEIN  Daniel V. Klein <dan@klein.com>
+  DWINTERS David Winters <winters@bigsnow.org>
+  DYACOB   Daniel Yacob <Yacob@AbyssiniaCyberGateway.Net>
+  EAYNG    Eric Young <eay@mincom.oz.au>
+  EBARLOW  ED BARLOW <sqltech@tiac.net>
+  EBOHLMAN Eric Bohlman <ebohlman@earthlink.net>
+  EBUSBOOM Eric Busboom <ericbusboom@yahoo.com>
+  EDAVIS   Ed Avis <epa98@doc.ic.ac.uk>
+  EDLIU    Edward Liu <dhliu@solar.csie.ntu.edu.tw>
+  EDMONSON Michael Edmonson <edmonson@poboxes.com>
+  EDPRATOMO Edwin Pratomo <edwin@satunet.com>
+  EESTABROO Eric Estabrooks <eric@urbanrage.com>
+  EFIFER   Eric Fifer <efifer@dircon.co.uk>
+  EGROSS   Etienne Grossmann <etienne@isr.isr.ist.utl.pt>
+  EHOOD    Earl Hood <ehood@cpan.org>
+  EISEN    Jonathan Eisenzopf <eisen@pobox.com>
+  ELIJAH   Benjamin Elijah Griffin <eli+cpan@panix.com>
+  ELMAR    Elmar Schalueck <Elmar.Schalueck@rz.ruhr-uni-bochum.de>
+  ENEGAARD Eric Negaard <lmdejn@lmd.ericsson.se>
+  ENNO     Enno Derksen <enno@att.com>
+  ERGOWOLF Tom Monte <tomm02@yahoo.com>
+  ERICA    Eric Arnold <Eric.Arnold@corp.sun.com>
+  ERNGUI   Ernesto Guisado <erngui@acm.org>
+  ERYQ     Eryq <eryq@zeegee.com>
+  ESR      Eric S. Raymond <esr@snark.thyrsus.com>
+  ESUMMERS Ed Summers <ed@cheetahmail.com>
+  EVANPRO  Evangelo Prodromou <evangelo@endcontsw.com>
+  EVO      Matthew Simon Ryan Cavalletto <simonm@evolution.com>
+  EWALKER  Edward Walker <ewalker@platform.com>
+  EZDB     Yingyao Zhou <easydatabase@yahoo.com>
+  FABRVEC  Vecchio Fabrizio <vecchio.fabrizio@payroll.it>
+  FAICHNEY John Faichney <faichney@b2bscene.com>
+  FAISAL   Faisal Nasim <swiftkid@bigfoot.com>
+  FARBER   Alex Farber <eedalf@eed.ericsson.se>
+  FDESAR   Francois Desarmenien <francois@fdesar.net>
+  FGLOCK   Flavio Soibelmann Glock <fglock@pucrs.br>
+  FHOLTRY  Frank Holtry <fholtry@lucent.com>
+  FIJI     Ben Bennett <fiji@limey.net>
+  FIMM     Dennis Taylor <corbeau@execpc.com>
+  FIRASZ   Firas Zureiqat <firasz@hotmail.com>
+  FIS      Frank Ian Smith <frank@ns.array.ca>
+  FISCH    Thomas Fischbacher <tf@cip.physik.uni-muenchen.de>
+  FIVE     v <five@mailroom.com>
+  FIXLER   Eric Fixler <fix@fixler.com>
+  FJH      Frederick Hirsch <fjh@alum.mit.edu>
+  FKOLODNY Fila Kolodny <fila@ibi.com>
+  FKUO     Frey Kuo <frey@engineer.com>
+  FLEITNER Felix von Leitner <leitner@math.fu-berlin.de>
+  FLETCH   Mike Fletcher <fletch+cpan@phydeaux.org>
+  FLIPKIN  David Berk <dberk@mobygames.com>
+  FLUFFY   Martyn J. Pearce <fluffy@engineer.com>
+  FMC      Frederic Chauveau <fmc@pasteur.fr>
+  FONKIE   Armin Obersteiner <armin@xos.net>
+  FOOCHRE  Alex McLean <foochre@slab.org>
+  FOOF     Alex Shinn <foof@debian.org>
+  FORS     The 'Friends of Randal Schwartz' mailing list
+           Mail to majordomo@teleport.com with body "subscribe
+           fors-discuss <your-address>"
+  FPAS     Francesco Pasqualini <f.pasqualini@cpsinformatica.it>
+  FPIVARI  Fabrizio Pivari <pivari@hotmail.com>
+  FPREICH  Frank-Peter Reich <fpreich@cpan.org>
+  FRAJULAC Francis J. Lacoste <frajulac@insu.com>
+  FRAMM    Frederik Ramm <ramm@rz.uni-karlsruhe.de>
+  FRANCOC  Franco Callari <franco@cim.mcgill.ca>
+  FRANKIE  Francesc Guasch <frankie@etsetb.upc.es>
+  FROSTY   Michael Fross <frossm@yahoo.com>
+  FSG      Felix Sebastian Gallo <fsg@ultranet.com>
+  FSORIANO Frederic Soriano <frederic.soriano@alcatel.fr>
+  FTASSIN  Fabien Tassin <fta+cpan@sofaraway.org>
+  FTOBIN   Frank J. Tobin <ftobin@cpan.org>
+  FVULTO   Freddy Vulto <fvu@fvu.myweb.nl>
+  FWILES   Frank Wiles <frank@wiles.org>
+  GAAS     Gisle Aas <gisle@aas.no>
+  GABOR    Gábor Egressy <gabor@vmunix.com>
+  GAND     Greg Anderson <greg@ftp.netgate.net>
+  GARROW   John M. Redford <John.Redford@fmr.com>
+  GARY     Gary Howland <gary@hotlava.com>
+  GBACON   Greg Bacon <gbacon@cs.uah.edu>
+  GBARR    Graham Barr <gbarr@pobox.com>
+  GBAUER   Georg Bauer <gb@hugo.westfalen.de>
+  GBOSS    Greg Bossert <bossert@ecto.org>
+  GCOULOMB Greg Coulombe <Greg.Coulombe@ualberta.ca>
+  GDAMORE  Garrett D'Amore <garrett@yavin.org>
+  GDEWIS   Gordon Dewis <gordon@pinetree.org>
+  GDR      Gareth D. Rees <garethr@cre.canon.co.uk>
+  GED      Michael Granger <ged@faeriemud.org>
+  GEHIC    Gerard Hickey <hickey@ctron.com>
+  GENJISCH Genji Schmeder <genji@jps.net>
+  GEOFF    Geoffrey Young <geoff@cpan.org>
+  GFLOHR   Guido Flohr <gufl0000@stud.uni-sb.de>
+  GGOEBEL  C. Garrett Goebel <ggoebel@cpan.org>
+  GGONTER  Gerhard Gonter <gonter@wu-wien.ac.at>
+  GHALSE   Guy Antony Halse <guy-japh@rucus.ru.ac.za>
+  GHOARE   Graydon Hoare <graydon@groveware.com>
+  GHUTCHIS Geoffrey Hutchison <ghutchis@wso.williams.edu>
+  GJB      Geoffrey Broadwell <habusan2@sprynet.com>
+  GJRUSSEL Geoff Russell <geoff@austrics.com.au>
+  GKE      Gustav Kristoffer Ek <stoffer@netcetera.dk>
+  GKNOPS   Gerd Knops <gerti@BITart.com>
+  GLENNWOOD Glenn Wood <glenn@savesmart.com>
+  GLOVER   Mike Glover <glover@credit.erin.utoronto.ca>
+  GMCCAR   Greg McCarroll <greg@mccarroll.demon.co.uk>
+  GMLEWIS  Glenn M. Lewis <glenn@gmlewis.com>
+  GNAT     Nathan Torkington <gnat@frii.com>
+  GNURD    Michael Stemle <mikes@gnurds.org>
+  GONZO    Sven Kleese <gonzo@cpan.org>
+  GOSSAMER Gossamer <gossamer@tertius.net.au>
+  GOZER    Philippe M. Chiasson <gozer@ectoplasm.dyndns.org>
+  GRANTM   Grant McLean <grantm@web.co.nz>
+  GREGFAST Greg Fast <gdf@imsa.edu>
+  GREGG    Gregg Helt <gregg@fruitfly.berkeley.edu>
+  GREGOR   Gregor N. Purdy <gregor@focusresearch.com>
+  GRICHTER Gerald Richter <richter@ecos.de>
+  GROMMEL  Geoffrey Rommel <grommel@sears.com>
+  GSAR     Gurusamy Sarathy <gsar@ActiveState.com>
+  GSLONDON Greg London <greg42@bellatlantic.net>
+  GSM      Joe Marzot <gmarzot@baynetworks.com>
+  GSPAF    Gene Spafford <spaf@cs.purdue.edu>
+  GSPIVEY  Gary Spivey <spivey@romulus.ncsc.mil>
+  GTHYNI   Göran Thyni <goran@kirra.net>
+  GUELICH  Scott Guelich <scott@scripted.com>
+  GUIDO    Guido Flohr <guido@imperia.net>
+  GUNTHER  Gunther Birznieks <gunther@extropia.com>
+  GUYDX    Guy Decoux <decoux@moulon.inra.fr>
+  GWARD    Greg Ward <gward@python.net>
+  GWELCH   Gerad Welch <welch.119@osu.edu>
+  GWILLIAMS Greg Williams <greg@cnation.com>
+  HAG      Daniel Hagerty <hag@ai.mit.edu>
+  HAGANK   Ken Hagan <ken.hagan+no.spam+@louisville.edu>
+  HAKANARDO Hakan Ardo <hakan@debian.org>
+  HAKESTLER Hans A. Kestler <hans.kestler@medizin.uni-ulm.de>
+  HALLECK  John Halleck <John.Halleck@utah.edu>
+  HALPOM   Hal Pomeranz <pomeranz@netcom.com>
+  HANK     Bill Moseley <mods@hank.org>
+  HARLEY   James Harley Gorrell <harley@bcm.tmc.edu>
+  HASANT   Hasanuddin Tamir <hasant@trabas.com>
+  HAYASHI  Hiroo HAYASHI <hiroo.hayashi@computer.org>
+  HCAMP    Hartmut Camphausen <h.camp@creagen.de>
+  HEIKOWU  Heiko Wundram <ceosg@t-online.de>
+  HENKE    Henrik Joensson <henrik7205@hotmail.com>
+  HENRIK   Henrik Strom <henrik@computer.org>
+  HFB      Elaine M. Ashton <hfb@cpan.org>
+  HIGHTOWE Lester Hightower <hightowe@united-railway.com>
+  HJHELGE  Hans Jorgen Helgesen <hans_helgesen@hotmail.com>
+  HLHAMILT Harlin L. Hamilton Jr. <harlinh@cadence.com>
+  HMBRAND  H. Merijn Brand <h.m.brand@hccnet.nl>
+  HMNIELSEN Henning Michael Møller-Nielsen <hmn@datagraf.dk>
+  HMUELLER Hanno Mueller <hmueller@mail.kabel.de>
+  HOGGARTH Neil Hoggarth <njh@kernighan.demon.co.uk>
+  HOLT     Gary Holt <holt@alumni.caltech.edu>
+  HORNBURG Stefan Hornburg <racke@linuxia.de>
+  HORROCKS Sam Horrocks <sam@daemoninc.com>
+  HOWEN    Howard Owen <hbo@egbok.com>
+  HPALM    Hartmut Palm <palm@gfz-potsdam.de>
+  HTCHAPMAN H. Todd Chapman <htchapma@oakland.edu>
+  HTOUG    Henrik Tougaard <htoug@hotmail.com>
+  HVDS     Hugo van der Sanden <hv@crypt0.demon.co.uk>
+  IANC     Ian Clatworthy <ianc@mincom.co>
+  IANPX    Ian Phillipps <ian@dial.pipex.com>
+  IBMTORDB2 Robert Indrigo <db2perl@ca.ibm.com>
+  ICKHABOD Paul Johnston <johnston.p@worldnet.att.net>
+  IFLAN    Ian Flanigan <flan@cs.wustl.edu>
+  IFROL    Ivan Frolcov <nsome@mail.ru>
+  IGERLACH Ingo Gerlach <IngoGerlach@welfen-netz.com>
+  IGREC    Marino Andres <>
+  IGUTHRIE Ian Guthrie <IGuthrie@aol.com>
+  IKETRIS  Ilya Ketris <ilya@gde.to>
+  IKLUFT   Ian Kluft <ikluft@cisco.com>
+  ILIAL    Ilia Lobsanov <ilia@lobsanov.com>
+  ILTZU    Ilmari Karonen <perl@itz.pp.sci.fi>
+  ILYAM    Ilya Martynov <m_ilya@agava.com>
+  ILYAVERL Ilya Verlinsky <ilya@wsi.net>
+  ILYAZ    Ilya Zakharevich <ilya@math.ohio-state.edu>
+  INFOFLEX Gerard Menicucci <gerard@infoflex.com>
+  INGOMACH Ingo Macherius <Ingo.Macherius@tu-clausthal.de>
+  INGY     Brian Ingerson <INGY@cpan.org>
+  INSTANTK jan giebels <j.giebels@instant-karma.de>
+  IROBERTS Ian Robertson <ian@lugh.uchicago.edu>
+  ISTEEL   Ian Steel <ian@bilstone.co.uk>
+  ISTERIN  Ilya Sterin <isterin@mail.com>
+  IVAN     Ivan Kohler <ivan-pause@sisd.com>
+  IVOZ     Ivo Zdravkov <ivoz@starmail.com>
+  IWOODHEAD Ira Joseph Woodhead <ira@iatlas.com>
+  IX       Brian Moseley <ix@maz.org>
+  JACKS    Jack Shirazi <JackS@GemStone.com>
+  JACM     Jose Machado <jacm@algarve.com>
+  JADAMS   John Adams <jna@retina.net>
+  JAIV     Jan Iven <jiven@gmx.de>
+  JAKE     Jake Donham <jaked@well.com>
+  JAMCC    Jamie McCarthy <jamie@mccarthy.org>
+  JAMES    James Tolley <james@jamestolley.com>
+  JAMESPO  James Powell <perl@jamespo.ukshells.co.uk>
+  JANL     Nicolai Langfeldt <janl@math.uio.no>
+  JANPAZ   Jan Pazdziora <adelton@fi.muni.cz>
+  JANW     Jan Willamowius <jan@willamowius.de>
+  JARIAALTO Jari Aalto <jari.aalto@poboxes.com>
+  JARW     John A.R. Williams <J.A.R.Williams@aston.ac.uk>
+  JASONK   Jason Kohles <jason@mediabang.com>
+  JASONS   Jason E. Stewart <jasons@cs.unm.edu>
+  JAYJ     Jay Jacobs <jay@lach.net>
+  JBAKER   Jeffrey Baker <jwbaker@acm.org>
+  JBODNAR  Jason Bodnar <jason@shakabuku.org>
+  JBRIGGS  James Briggs <james@rf.net>
+  JBRYAN   Josiah Bryan <jdb@wcoil.com>
+  JCHRIS   Juergen Christoffel <jc@gmd.de>
+  JCMURPHY Jeff Murphy <jcmurphy@smurfland.cit.buffalo.edu>
+  JCO      Joshua Colvin <jco@acm.org>
+  JCOSTOM  Jason Costomiris <jcostom@sjis.com>
+  JCRISTY  Cristy <cristy@mystic.es.dupont.com>
+  JCTEBBAL Jean-Claude Tebbal <jct@tebbal.demon.co.uk>
+  JDALLMAN John Dallman <jgd@cix.compulink.co.uk>
+  JDB      Jan Dubois <jand@activestate.com>
+  JDPORTER John D. Porter <jdporter@min.net>
+  JDUNCAN  James A Duncan <jduncan@hawk.igs.net>
+  JEDWARDS Jim Edwards <inmet@altavista.com>
+  JEFFH    Jeffrey Hulten <jeffh@premier1.net>
+  JEGAN    Joseph J. Egan <joseph_egan@hotmail.com>
+  JENDA    Jan Krynicky <Jenda@Krynicky.cz>
+  JEREMIE  Jeremie Miller <jer@jeremie.com>
+  JERLBAUM Jesse Erlbaum <jesse@vm.com>
+  JESSE    Jesse Vincent <jesse@fsck.com>
+  JESSICAQ Jessica Quaintance <j@x25.org>
+  JESUS    Theo Schlossnagle <jesus@cnds.jhu.edu>
+  JETTERO  Jettero Heller <japh@voltar-confed.org>
+  JEV      John Erjavec V <pause@jevonline.com>
+  JFITZ    James FitzGibbon <james@ican.net>
+  JFRIEDL  Jeffrey Friedl <jfriedl@omron.co.jp>
+  JFURNESS James Furness <furn@base6.com>
+  JGAMBLE  John Gamble <jgamble@ripco.com>
+  JGARRISON Jim Garrison <jhg@acm.org>
+  JGBISHOP Jeremy G. Bishop <jeremy@evolution.com>
+  JGILB    Jeremy Gilbert <jgilbert@gtemail.net>
+  JGLICK   Jesse N. Glick <jglick@sig.bsh.com>
+  JGOFF    Jeff Goff <jgoff@blackboard.com>
+  JGROENVEL John D Groenveld <groenveld@acm.org>
+  JHA      John Aughey <jha@aughey.com>
+  JHARDING Joshua Harding <josh@joshuaharding.org>
+  JHELBERG Jens Helberg <jens.helberg@de.bosch.com>
+  JHI      Jarkko Hietaniemi <jhi@iki.fi>
+  JHINKLE  Jason Hinkle <jake67890@hotmail.com>
+  JHKIM    John Hanju Kim <jhkim@fnal.gov>
+  JHORWITZ Jeff Horwitz <jhorwitz75@yahoo.com>
+  JHOWELL  Jon Howell <jonh@cs.dartmouth.edu>
+  JHPB     Joseph H. Buehler <jhpb@sarto.gaithersburg.md.us>
+  JIMT     Jim Thomason <jim3@psynet.net>
+  JIMW     Jim Winstead <jimw@apache.org>
+  JJDG     Hans de Graaff <hans@degraaff.org>
+  JJOAO    Jose Joao Dias de Almeida <jj@di.uminho.pt>
+  JKAST    Jason Kastner <jkastner@oboe.calpoly.edu>
+  JKEGL    Jeffrey Kegler <jeffrey@best.com>
+  JKODIS   John Kodis <kodis@jagunet.com>
+  JLAPEYRE John Lapeyre <lapeyre@physics.arizona.edu>
+  JLATHAN  Jeff Lathan <lathan@pobox.com>
+  JLBEC    Joel Becker <jlbec@ocala.cs.miami.edu>
+  JLEVAN   Jerry LeVan <levan@eagle.eku.edu>
+  JLLEROY  Jean-Louis Leroy <jll@skynet.be>
+  JLOLOFIE Justin Lolofie <justin@lolofie.com>
+  JMAC     Jason McIntosh <jmac@jmac.org>
+  JMAHAN   J. Michael Mahan <mahanm@nextwork.rose-hulman.edu>
+  JMASON   Justin Mason <>
+  JMATES   Jeremy Mates <jmates@sial.org>
+  JMCNAMARA John McNamara <writeexcel@eircom.net>
+  JMM      John Macdonald <jmm@elegant.com>
+  JMOORE   Jason Moore <jmoore@sober.com>
+  JMUHLICH Jeremy Muhlich <jmuhlich@acm.jhu.edu>
+  JMURPHY  Joel Murphy <jmurphy+pause@cnu.acsu.buffalo.edu>
+  JMUSSE   Jama Musse Jama <jama@tecsiel.it>
+  JMV      John M Vinopal <banshee@resort.com>
+  JNEYSTADT John Neystadt <john@neystadt.org>
+  JNH      Joseph N. Hall <joseph@5sigma.com>
+  JNK      John Kirk <johnkirk@dystanhays.com>
+  JNOBLE   Joel Noble <jnoble@mediaone.com>
+  JNOLAN   John Nolan <jpnolan@sonic.net>
+  JNORUSIS Jeff Norusis <jeffnor@hollow.org>
+  JOAOP    João Pedro Gonçalves <joaop@co.sapo.pt>
+  JOCASA   Joe Casadonte <joc@netaxs.com>
+  JOEHIL   Joe Hildebrand <joe.hildebrand@twcable.com>
+  JOEY     Joey Hess <joey@kitenet.net>
+  JOHNH    John Heidemann <johnh@isi.edu>
+  JOHNL    Jonathan Leffler <j.leffler@acm.org>
+  JONAS    Jonas Liljegren <jonas@paranormal.se>
+  JONB     Jonathan Bailey <jonb@cs.stanford.edu>
+  JONG     Jong Park <jong@biosophy.org>
+  JONJAY   Jon Brandon <jon@powells.com>
+  JONO     Jon Orwant <orwant@media.mit.edu>
+  JOS      Jamie O'Shaughnessy <jamie@thanatar.demon.co.uk>
+  JOSERODR Jose A. Rodriguez <Jose.Rodriguez+cpan@ac.upc.es>
+  JOSH     Josh Wilmes <perl@hitchhiker.org>
+  JOSHUA   Joshua Keroes <Joshua_Keroes@eli.net>
+  JOSTEN   Geert Josten <gjosten@sci.kun.nl>
+  JPAF     Joao Fonseca <joao_g_fonseca@yahoo.com>
+  JPC      Jan-Pieter Cornet <johnpc@xs4all.nl>
+  JPEACOCK John Peacock <jpeacock@rowman.com>
+  JPETERSON Jon Peterson <jon@snowdrift.org>
+  JPIERCE  Jerrad Pierce <belg4mit@mit.edu>
+  JPRAVETZ Jim Pravetz <jpravetz@adobe.com>
+  JPRIT    Joshua Nathaniel Pritikin <jpritikin@pobox.com>
+  JQUILLAN John C. Quillan <quillan@doitnow.com>
+  JRED     Jörn Reder <joern@netcologne.de>
+  JRENNIE  Jason Rennie <jrennie@ai.mit.edu>
+  JREPROGLE Jim Reprogle <jreprogle@worldnet.att.net>
+  JROGERS  Jay Rogers <jay@rgrs.com>
+  JROWE    Jeff Rowe <j.p.rowe@larc.nasa.gov>
+  JSIRACUSA John Siracusa <siracusa@mindspring.com>
+  JSLAGEL  Joe Slagel <slagel@geospiza.com>
+  JSMITH   James G Smith <jgsmith@jamesmith.com>
+  JSMYSER  Jim Smyser <jsmyser@bigfoot.com>
+  JSTENZEL Jochen Stenzel <perl@jochen-stenzel.de>
+  JSTEWART John A. Stewart <john.stewart@crc.ca>
+  JSTOF    John Stoffel <john@wpi.edu>
+  JSTOWE   Jonathan Stowe <jns@gellyfish.com>
+  JSWARTZ  Jonathan Swartz <swartz@transbay.net>
+  JTILLMAN James Tillman <jtillman@bigfoot.com>
+  JTOBEY   John Tobey <jtobey@john-edwin-tobey.org>
+  JTURNER  James Turner <james@csmonitor.com>
+  JURACH   James E Jurach Jr. <muaddib@erf.net>
+  JURL     Jeff Urlwin <jurlwin@iamdigex.net>
+  JV       Johan Vromans <jvromans@squirrel.nl>
+  JVB      Jerome V. Braun <jerome.braun@kmri.com>
+  JVENIER  John Venier <venier@mdanderson.org>
+  JWALGENB Josh Walgenbach <jwalgenb@indiana.edu>
+  JWAT     John Watson <jwatson@cnj.digex.net>
+  JWEVELAND Jonathan W. Eveland <jweveland@yahoo.com>
+  JWIED    Jochen Wiedmann <joe@ispsoft.de>
+  JWIEGLEY John Wiegley <johnw@oneworld.new-era.com>
+  JWOODYATT james h. woodyatt <jhw@wetware.com>
+  JZAWODNY Jeremy D. Zawodny <jzawodn@wcnet.org>
+  JZUCKER  Jeff Zucker <jeff@vpservices.com>
+  KAELIN   Kaelin Colclasure <kaelin@acm.org>
+  KAHUNA   Andy Finkenstadt <andy@finkenstadt.com>
+  KAIH     Kai Henningsen <kai-cpan@khms.westfalen.de>
+  KARLON   Karlon West <karlon@netcom.com>
+  KASEI    Marty Pauley <marty@kasei.com>
+  KAUFMANN Rafael Kaufmann <rnedal@olimpo.com.br>
+  KBARBER  Ken Barber <ken@bob.sh>
+  KBROWN   Keith Brown <kbrown@develop.com>
+  KDOWNEY  Kyle Downey <kdowney@xline.com>
+  KENFOX   Ken Fox <fox@vulpes.com>
+  KENHOLM  Kenneth Alexander Holm III <rets@meta3.com>
+  KENMACF  Ken MacFarlane <ksm+cpan@universal.dca.net>
+  KENNEDYH Hugh Kennedy <kennedyh@engin.umich.edu>
+  KENSHAN  Chung-chieh Shan <ken@digitas.harvard.edu>
+  KEVINA   Kevin Atkinson <kevina@clark.net>
+  KFOGEL   Karl Fogel <kfogel@red-bean.com>
+  KGB      Karl Glazebrook <karlglazebrook@yahoo.com>
+  KGREENE  Kevin Greene <kevin@weblab.com>
+  KHAMPTON Kip Hampton <khampton@totalcinema.com>
+  KIMRYAN  Kim Ryan <kimaryan@ozemail.com.au>
+  KINZLER  Steve Kinzler <kinzler@cs.indiana.edu>
+  KJALB    Kenneth Albanowski <kjahds@kjahds.com>
+  KJOHNSON Kevin Johnson <kjj@pobox.com>
+  KKRON    Kenneth Kron <kron@arceneaux.com>
+  KMACLEOD Ken MacLeod <ken@bitsko.slc.ut.us>
+  KMELTZ   Kevin Meltzer <perlguy@perlguy.com>
+  KNIGHT   Steven Knight <knight@baldmt.com>
+  KNOK     NOKUBI Takatsugu <knok@daionet.gr.jp>
+  KOJUN    上野貢潤 <k.ueno@psynet.net>
+  KONDO    Yoshiyuki KONDO <cond@lsi-j.co.jp>
+  KRAEHE   Michael Koehne <kraehe@bakunin.north.de>
+  KRBURTON Kyle R. Burton <mortis@voicenet.com>
+  KRISHPL  Krishna Shamu Sethuraman <krishpl@shamu.corp.sgi.com>
+  KRISTIAN John M. Kristian <kristian@netscape.com>
+  KROW     Brian Aker <brian@tangent.org>
+  KSB      Simon Berg <karl@it.kth.se>
+  KSTAR    Kurt D. Starsinic <kstar-nospam@chapin.edu>
+  KTHOMAS  Kenny Thomas <adminkt@flint.umich.edu>
+  KTORP    Kristian Torp <torp@cs.auc.dk>
+  KULCHENKO Paul Kulchenko <paulclinger@yahoo.com>
+  KVAIL    Kevin Michael Vail <kevin@vailstar.com>
+  KWILLIAMS Ken Williams <ken@forum.swarthmore.edu>
+  KWITKNR  Kawai Takanori <GCD00051@nifty.ne.jp>
+  LAXEN    Henry Laxen <nadine.and.henry@pobox.com>
+  LBORGMAN Lennart Borgman <Lennart.Borgman@draco.se.astra.com>
+  LBROCARD Leon Brocard <leon@astray.com>
+  LDACHARY Loic Dachary <loic@senga.org>
+  LDOMKE   Lorenz Domke <lorenz.domke@gmx.de>
+  LDS      Lincoln D. Stein <lstein@genome.wi.mit.edu>
+  LEAKIN   Lee Eakin <leakin@dfw.nostrum.com>
+  LEIFHED  Leif Hedstrom <leif@netscape.com>
+  LEITE    Pedro Leite <leite@ua.pt>
+  LENNY    Lenny Brenner <lenny@cpan.org>
+  LENZO    Kevin Lenzo <lenzo@cs.cmu.edu>
+  LEON     Leon Avery <leon@eatworms.swmed.edu>
+  LFINI    Luca Fini <lfini@arcetri.astro.it>
+  LGODDARD Lee Goddard <code@leegoddard.com>
+  LHOWARD  Les Howard <lhoward@spamcop.net>
+  LHS      Lee Semel <lee@semel.net>
+  LINDNER  Paul Lindner <plindner@redhat.com>
+  LIRAZ    Liraz Siri <liraz_siri@usa.net>
+  LLAP     Leo Lapworth <lspam@cuckoo.org>
+  LMJM     Lee McLoughlin <lmjm@icparc.ic.ac.uk>
+  LMOLNAR  Laszlo Molnar <molnarl@cdata.tvnet.hu>
+  LORY     Stuart Lory <lorys@access.victoria.bc.ca>
+  LSTAF    Lennart Staflin <lenst@lysator.liu.se>
+  LTHEGLER Lars Thegler <lars@thegler.dk>
+  LUISMUNOZ Luis Munoz <lem@cantv.net>
+  LUKKA    Tuomas J. Lukka <lukka@iki.fi>
+  LUPE     Lupe Christoph <lupe@lupe-christoph.de>
+  LUPUS    Paolo Molaro <lupus@debian.org>
+  LUSOL    Stephen O. Lidie <sol0@Lehigh.EDU>
+  LUTHERH  Luther Huffman <lutherh@stratcom.com>
+  LWALL    Larry Wall. Author of Perl. Busy man. <larry@wall.org>
+  LWWWP    The libwww-perl mailing list
+           Mail to libwww-subscribe@perl.org
+  MACGYVER Habeeb J. Dihu <macgyver@tos.net>
+  MADLINUX Lorance Stinson <lorance@madlinux.cx>
+  MADWOLF  Massimiliano Pala <madwolf@openca.org>
+  MAGICIAN Corbin "Kip" Kohn <crkohn@alumni.princeton.edu>
+  MAGNUS   Magnus Cedergren <datorer.program@esplanaden.lysator.liu.se>
+  MAGORACH Peter Brown <magorach@ihug.com.au>
+  MAHEX    Mark A. Hershberger <mah@everybody.org>
+  MAIRE    Gilles Maire <Gilles.Maire@ungi.net>
+  MAK      Martijn Koster <mak@surfski.webcrawler.com>
+  MAKAROW  Andrew V. Makarow <makarow@mail.com>
+  MAKLER   Piotr Klaban <makler@man.torun.pl>
+  MALPOETA Javier Viveros <smetafora@hotmail.com>
+  MALVARO  Mariana Alvaro <mariana@alvaro.com.ar>
+  MARAIST  Michael Maraist <maraist@hotmail.com>
+  MARAL    Peter Marelas <maral@phase-one.com.au>
+  MARCEL   Marcel Grunauer <marcel@codewerk.com>
+  MARCIN   Marcin Kolbuszewski <marcin@capitalnet.com>
+  MARCLANG Marc Langheinrich <marclang@cs.washington.edu>
+  MARCP    Marc Paquette <Marc.Paquette@crim.ca>
+  MAREKR   Marek Rouchal <Marek.Rouchal@gmx.net>
+  MARKB    Mark Biggar <mab@wdl.loral.com>
+  MARKC    Mark Constable <markc@goldcoast.org>
+  MARKIM   Mark A. Imbriaco <mark.imbriaco@pobox.com>
+  MARKK    Mark Kennedy <mtk@ny.ubs.com>
+  MARKM    Mark Mielke <mark@mielke.cc>
+  MARKOV   Mark Overmeer <ask@ppresenter.org>
+  MARKPRIOR Mark Prior <mrp@connect.com.au>
+  MARMS    Mike Arms <marms@sandia.gov>
+  MARTIN   Martin Langhoff <martin@scim.net>
+  MARTINB  Martin Bartlett <martin@nitram.demon.co.uk>
+  MARTINTO Martin Tomes <martin@tomes.org.uk>
+  MATKIN   Matz Kindahl <matkin@docs.uu.se>
+  MATTBM   Matthew Byng-Maddick <mbm+cpan@colondot.net>
+  MATTMK   Matthew MacKenzie <matt@goxml.com>
+  MATTW    Matthew M. Wright <mattw@worldwidemart.com>
+  MAURICE  Maurice Aubrey <maurice@hevanet.com>
+  MAXM     Max Muzi <maxim@comm2000.it>
+  MBLAZ    Mike Blazer <blazer@mail.nevalink.ru>
+  MBRECH   Martin Brech <Martin.Brech@erl11.siemens.de>
+  MCAFEE   Sean McAfee <mcafee@umich.edu>
+  MCASHNER Matt Cashner <matt@cre8tivegroup.com>
+  MCKAY    Steve McKay <steve@colgreen.com>
+  MCPL     The MacPerl mailing list
+           Mail to macperl-REQUEST@macperl.org with body "subscribe".
+           There is an announcement-only low-volume mailing list too
+           with the subscription address
+           macperl-announce-request@macperl.org. There are also
+           various topic specific lists. See http://w
+  MDARWIN  Matthew Darwin <matthew@davin.ottawa.on.ca>
+  MDEWJONES Malcolm Dew-Jones <73312.2317@compuserve.com>
+  MDIMEO   Matt DiMeo <mjd@mp3.com>
+  MDOWNING Mark A. Downing <mdowning@rdatasys.com>
+  MEDINED  David Medinets <medined@planet.net>
+  MENGEL   Marc W. Mengel <mengel@fnal.gov>
+  MENGWONG meng weng wong <mengwong@pobox.com>
+  MERGL    Edmund Mergl <E.Mergl@bawue.de>
+  MERLIN   Merlin Hughes <merlin.cpan@merlin.org>
+  MERLYN   Randal L. Schwartz <merlyn@stonehenge.com>
+  MERNST   Michael Ernst <mernst@cs.washington.edu>
+  METZZO   Mark Ethan Trostler <mark@zzo.com>
+  MEWILCOX Mark Wilcox <mewilcox@unt.edu>
+  MEWP     Michael Peppler <mpeppler@peppler.org>
+  MFOWLER  Michael Fowler <michael@shoebox.net>
+  MFUHR    Michael Fuhr <mfuhr@dimensional.com>
+  MFX      Markus F.X.J. Oberhumer <markus.oberhumer@jk.uni-linz.ac.at>
+  MGAMMON  Mike Gammon <mgammon@interport.net>
+  MGH      Marc Hedlund <marc@precipice.org>
+  MGRABNAR Matija Grabnar <matija.grabnar@arnes.si>
+  MHALLGREN Michael Hallgren <m.hallgren@free.fr>
+  MHAMILTON Martin Hamilton <martin@net.lut.ac.uk>
+  MHARNISCH Marcus Harnisch <marcus@harnisch.isdn.cs.tu-berlin.de>
+  MHEMPEL  Matt Hempel <matt@aestus.net>
+  MHM      Mike Moran <mhm@cpan.org>
+  MHOSKEN  Martin Hosken <martin_hosken@sil.org>
+  MHYOUNG  Michael Young <mhyoung@ucsd.edu>
+  MICB     Malcolm Beattie <mbeattie@sable.ox.ac.uk>
+  MICHAELD Michael D. Dowling <michaeld@cnet.com>
+  MIJIT    michael j. talarczyk <mjt@mijit.com>
+  MIKEC    Mike Carpenter <mikec@internet-software.com>
+  MIKEDLR  Michael De La Rue <miked@ed.ac.uk>
+  MIKEG    Mike Giles <modules@easyperl.com>
+  MIKEH    Mike Heins <mikeh@minivend.com>
+  MIKEK    Michael Kospach <mike.perl@gmx.at>
+  MIKEKING Michael King <mikeking@cpan.org>
+  MIKEM    Mike McCauley <mikem@open.com.au>
+  MIKEO    Mike Owens <mike.owens@state.nm.us>
+  MIKESTOK Mike Stok <mike@stok.co.uk>
+  MIKO     Miko O'Sullivan <miko@idocs.com>
+  MILES    Philippe Froidevaux <miles@users.sourceforge.net>
+  MILSO    Milan Sorm <sorm@fi.muni.cz>
+  MIRK     Mike Taylor <mike@tecc.co.uk>
+  MIROD    Michel Rodriguez <m.v.rodriguez@ieee.org>
+  MISAKA   Mishka Gorodnitzky <misaka@pobox.com>
+  MIVKOVIC Milivoj Ivkovic <mi@alma.ch>
+  MIYAGAWA MIYAGAWA Tatsuhiko <miyagawa@bulknews.net>
+  MJAEG    Michal Jaegermann <michal@ellpspace.math.ualberta.ca>
+  MJD      Mark-Jason Dominus <mjd@plover.com>
+  MJHARR   Mathew John Harrison <mharriso@rna.bio.mq.edu.au>
+  MJHEWITT Mark J Hewitt <m.hewitt@computer.org>
+  MJS      Michael Smith <mjs@iii.co.uk>
+  MKENNEDY Matt Kennedy <matt@jumpline.com>
+  MKHRAPOV Maksim Khrapov <maksim@recursivemind.com>
+  MKOSSATZ Max Kossatz <kossatz@thing.at>
+  MKRUSE   Matt Kruse <mkruse@netexpress.net>
+  MKUL     Michael Kulakov <mkul@zenon.net>
+  MLEHMANN Marc Lehmann <pcg@goof.com>
+  MLEWINSK Matthew Lewinski <mlewinsk@umich.edu>
+  MLFISHER Mark Leighton Fisher <fisherm@tce.com>
+  MMACHADO Mike Machado <mike@innercite.com>
+  MMML     The MakeMaker mailing list
+           Mail to makemaker-REQUEST@perl.org with body "subscribe"
+  MMORENO  Marco Moreno <Marco.Moreno@pobox.com>
+  MOND     Franz Schaefer <schaefer@mond.at>
+  MORTY    Mordechai Abzug <mabzug1@gl.umbc.edu>
+  MPB      mod_perl book (Doug and Lincoln)
+           Not a mailing list, just a feedback address for the
+           mod_perl book by Doug MacEachern and Lincoln Stein
+  MPECK    Martyn Peck <mwp@mwpnet.com>
+  MPIOTR   Michael Piotrowski <mxp@dynalabs.de>
+  MPOCOCK  Matthew Pocock <mrp@sanger.ac.uk>
+  MRG      Matthew Green <mrg@mame.mu.oz.au>
+  MRJC     Martin R.J. Cleaver <Martin.Cleaver@BCS.org.uk>
+  MRKAE    Mark R. Kaehny <kaehny@execpc.com>
+  MRMIKE   Mike Miller <mrmike@2bit.net>
+  MROGASKI Mark Rogaski <wendigo@pobox.com>
+  MSCHILLI Michael Schilli <michael@perlmeister.com>
+  MSCHLUE  Michael Schlüter <>
+  MSCHOUT  Michael Schout <mschout@gkg.net>
+  MSCHWARTZ Martin Schwartz <martin@nacho.de>
+  MSCHWERN Michael G Schwern <schwern@pobox.com>
+  MSCROGGIN Monty Scroggins <Monty@MasterMindsConsulting.com>
+  MSERGEANT Matt Sergeant <matt@sergeant.org>
+  MSHIMPI  Manoj Shimpi <manoj_shimpi@hotmail.com>
+  MSHLD    Michael Shields <shields@crosslink.net>
+  MSHOYHER Mike Shoyher <msh@apache.lexa.ru>
+  MSISK    Matt Sisk <sisk@mojotoad.com>
+  MSOLOMON Mark Solomon <msolomon@seva.net>
+  MSPENCER Marc D. Spencer <marcs@pobox.com>
+  MSROTH   M. Scott Roth <michael.s.roth@saic.com>
+  MSTEELE  Mark Steele <msteele@belent.com>
+  MSTEVENS Michael Stevens <michael@etla.org>
+  MSULLIVAN Michael P. Sullivan <mps@discomsys.com>
+  MTHURN   Martin Thurn <MartinThurn@iname.com>
+  MTIRAMANI Mark Tiramani <markjt@fredo.co.uk>
+  MUIR     David Muir Sharnoff <muir@idiom.com>
+  MULL     Colin Muller <colin@durbanet.co.za>
+  MUNSINGER Doug Munsinger <doug.munsinger@usa.net>
+  MURRAY   Murray Nesbitt <murray@ActiveState.com>
+  MVERB    Martien Verbruggen <mgjv@tradingpost.com.au>
+  MVORL    Martin Vorlaender <martin@radiogaga.harz.de>
+  MWARD    Martin Ward <Martin.Ward@durham.ac.uk>
+  MWARWICK Michael Warwick <mwarwick@pobox.com>
+  MWS      Markus Winand <mws@cpan.org>
+  MZSANFORD Matt Sanford <goethe222@aol.com>
+  NANDU    Nandu Shah <nandu@cimedia.com>
+  NEDKONZ  Ned Konz <perl@bike-nomad.com>
+  NEERI    Matthias Ulrich Neeracher <neeri@iis.ee.ethz.ch>
+  NEILB    Neil Bowers <neilb@cre.canon.co.uk>
+  NEILW    Neil Watkiss <neilw@ActiveState.com>
+  NEMWS    Nem W Schlecht <nem@abattoir.cc.ndsu.nodak.edu>
+  NI-S     Nick Ing-Simmons <nick@ing-simmons.net>
+  NICO     Nick Gianniotis <nico@acm.org>
+  NIGELM   Nigel Metheringham <nigel@pobox.com>
+  NIKIP    Nikolay Pelov <nikip@iname.com>
+  NINJAZ   Peter Clark <ninjaz@webexpress.com>
+  NISHANT  Nishant Kakani <nishantkakani@hotmail.com>
+  NJENSEN  Neil Jensen <njensen@habaneros.com>
+  NJLEON   Nicholas J. Leon <nicholas@binary9.net>
+  NMONNET  Nicolas Monnet <nico@monnet.to>
+  NNEUL    Nathan Neulinger <nneul@umr.edu>
+  NNMEN    Nuno Miguel Dias Mendes <ndm@isp.novis.pt>
+  NOG      Norbert Gruener <nog@MPA-Garching.MPG.DE>
+  NPADGEN  Neil Padgen <nrp@i.am>
+  NPESKETT Nick Peskett <cpan@peskett.com>
+  NREICHEN Nils Reichen <nreichen@eicndhcpd.ch>
+  NTHIERY  Nicolas Thiéry <Nicolas.Thiery@ens.fr>
+  NVPAT    Nathan V. Patwardhan <nvp@ora.com>
+  NWALSH   Norman Walsh <norm@berkshire.net>
+  NWCLARK  Nicholas Clark <nick@talking.bollo.cx>
+  NWIGER   Nathan Wiger <nate@wiger.org>
+  NWINT    Neil Winton <winton_neil@jpmorgan.com>
+  NWRIGHT  Nigel Wright <nwright@hmc.edu>
+  OCROW    Owen Crow <ocrow@crl.com>
+  ODDFELLOW Robert Bedell <zen@tischer.net>
+  OEVANS   O'Shaughnessy Evans <oevans@acm.org>
+  OKAMOTO  Jeff Okamoto <okamoto@corp.hp.com>
+  OLEKSHY  Tony Olekshy <olekshy@avrasoft.com>
+  OLEPR    Ole Petter Ronningen <olepr@online.no>
+  OLIBOU   Olivier Bouteille <bouteille@dial.oleane.com>
+  OLORYN   Ben Coleman <oloryn@mindspring.com>
+  OLPA     Oleg A. Paraschenko <olpa@cpan.org>
+  OMKELLOGG Oliver M. Kellogg <Oliver.Kellogg@vs.dasa.de>
+  ORENBK   Oren Ben-Kiki <oren@capella.co.il>
+  ORTALO   Rodolphe Ortalo <ortalo@laas.fr>
+  OTAYLOR  Owen Taylor <otaylor@redhat.com>
+  OTISG    Otis Gospodnetic <Otis.Gospodnetic@middlebury.edu>
+  OYAMA    OYAMA Hiroyuki <oyama@crayfish.co.jp>
+  OZAWA    OZAWA Sakuro <crouton@po.shiojiri.ne.jp>
+  P5P      The Perl5 Porters Mailing List
+           Mail perl5-porters-subscribe@perl.org
+  PACKRATS The Packrats Mailing List
+           Mail to majordomo@cise.ufl.edu with body "subscribe
+           perl-packrats <your address>"
+  PANDICH  Stephen Pandich <steve@pandich.com>
+  PARKER   Michael Parker <parkerm@null.net>
+  PATM     Pat Martin <pat@bronco.advance.com>
+  PAULG    Paul Gampe <paulg@apnic.net>
+  PAVELH   Pavel Hlavnicka <cpanuser@seznam.cz>
+  PBRYANT  Patrick W. Bryant <pbryant@gsu.edu>
+  PBWOLF   Phill Wolf <pbwolf@bellatlantic.net>
+  PCOLLINS Patrick Collins <pcollins@web.fairfax.com.au>
+  PDCAWLEY Piers Cawley <pdcawley@bofh.org.uk>
+  PEARCEC  Christian Pearce <pearcec@dml0.wcupa.edu>
+  PEASE    Mark Pease <pease@cpan.org>
+  PEDERST  Peder Stray <pederst@cpan.org>
+  PEISCH   Peter A. Eisch <peter@boku.net>
+  PEM      Peter Murray <pem@po.cwru.edu>
+  PERL4LIB A Mailing List for Librarians Interested in the Perl Programming
+           To subscribe to the list send the command "subscribe
+           perl4lib yourname" as the body of your message to
+           listproc@vims.edu. Please visit
+           http://www.vims.edu/perl4lib for details.
+  PERLDL   The Perl Data Language Mailing List
+           Mail subscription requests to
+           perldl-request@jach.hawaii.edu with body "subscribe"
+  PERSICOM Matthew O. Persico <persicom@acedsl.com>
+  PETEK    Pete Krawczyk <petek@bsod.net>
+  PETER    Peter Thatcher <peterthatcher@yahoo.com>
+  PETERGAL Peter Gallasch <gal@adv.magwien.gv.at>
+  PETERM   Peter Marshall <mitd@mitd.com>
+  PFAUT    Thomas Pfau <pfau@eclipse.net>
+  PFEIFFER Daniel Pfeiffer <occitan@esperanto.org>
+  PFRANCEUS Paul Franceus <paul@raba.com>
+  PGMART   Peter G. Martin <peterm@zeta.org.au>
+  PGPML    The PGP Module Mailing List
+           Mail to majordomo@dbc-mifco.com with body "subscribe
+           perl-pgp <your-address>"
+  PGRIMES  Dave Rolsky <autarch@urth.org>
+  PGUEN    Philip Guenther <guenther@gac.edu>
+  PHENSON  Paul B. Henson <henson@acm.org>
+  PHILIPA  Philip Aston <philipa@parallax.co.uk>
+  PHILIPM  Philip Mikal <>
+  PHOENIX  Tom Phoenix <rootbeer@redcat.com>
+  PHOENIXL Scott <Phoenixl@aol.com>
+  PHOTO    Daniel M. Lipton <photo@tiac.net>
+  PINYAN   Jeff Pinyan <japhy@pobox.com>
+  PJCJ     Paul Johnson <paul.pjcj@ntlworld.com>
+  PJF      Paul Jamieson Fenwick <pjf@internal.schools.net.au>
+  PJONES   Peter J Jones <pjones@cpan.org>
+  PJORDAN  Pete Jordan <japh@horus.cix.co.uk>
+  PKUTS    Peter Kutschera <peter@zditr1.arcs.ac.at>
+  PLDAP    Perl LDAP mailing list
+           Mail subscription requests to
+           perl-ldap-REQUEST@mail.med.cornell.edu with body
+           "subscribe"
+  PLISTER  Peter Lister <p.lister@cranfield.ac.uk>
+  PLONKA   Dave Plonka <plonka@doit.wisc.edu>
+  PMAGNUS  P.D. Magnus <pmagnus@fecundity.com>
+  PMH      Peter Haworth <pmh@edison.ioppublishing.com>
+  PMKANE   Patrick Michael Kane <modus-cpan@pr.es.to>
+  PMOORE   Paul Moore <gustav@morpheus.demon.co.uk>
+  PMQS     Paul Marquess <Paul.Marquess@btinternet.com>
+  PNE      Philip Newton <pne@cpan.org>
+  POHANL   Po-Han Lin <pohanl@hotmail.com>
+  POLGAB   Paul Gaborit <Paul.Gaborit+Perl@enstimac.fr>
+  PRATP    Pratap Pereira <pereira@ee.eng.ohio-state.edu>
+  PRATZLAFF Pete Ratzlaff <pratzlaff@cfa.harvard.edu>
+  PROWELL  Peter Rowell <peter@thirdeye.com>
+  PRYAN    Patrick Ryan <pgryan@geocities.com>
+  PSANTORO Peter Santoro <peter@pscomp.com>
+  PSCM     PETsMART.com <anthonyp@petsmart.com>
+  PSEIBEL  Peter Seibel <seibel@organic.com>
+  PSHARPE  Paul Sharpe <paul@miraclefish.com>
+  PTILL    Peter Tillemans <pti@pandora.be>
+  PTULLY   Patrick Tully <ptully@avatartech.com>
+  PVANDRY  Phillip Vandry <vandry@mlink.net>
+  PVERD    Philippe Verdret <pverdret@dalet.com>
+  PVHP     Peter Prymmer <pvhp@best.com>
+  PWO      Peter W. Osel <pwo@guug.de>
+  QUONG    Russell W Quong <quong@best.com>
+  RA       Roman Kosenko <ra@amk.lg.ua>
+  RADER    Richard Rader <richard.rader@vlsi.com>
+  RAGOFF   Robert Goff <robert@goff.com>
+  RAM      Raphael Manfredi <Raphael_Manfredi@pobox.com>
+  RAMKI    Ramki Balasubramanian <ramki@pinjax.com>
+  RANA     Arvind Ransaria <pushparvind@home.com>
+  RANDERSON Richard Anderson <Richard.Anderson@unixscripts.com>
+  RANDY    Randy Jay Yarger <randy@hs1.hst.msu.edu>
+  RANDYM   Randy Maas <randym@acm.org>
+  RANT     Erik E. Rantapaa <rantapaa@math.umn.edu>
+  RANTCZAK Robert Antczak <rantczak@home.com>
+  RAP      Ryan Alyn Porter <rap@endymion.com>
+  RAT      Karl Schilke ("Rat") <rat-nospam@eli.net>
+  RAVN     Thorbjoern Ravn Andersen <ravn@mip.ou.dk>
+  RBERJON  Robin Berjon <robin@knowscape.com>
+  RBOW     Rich Bowen <rbowen@rcbowen.com>
+  RBS      Barrie Slaymaker <barries@slaysys.com>
+  RCALEY   Richard Caley <R.Caley@ed.ac.uk>
+  RCAPUTO  Rocco Caputo <troc+cpan@netrus.net>
+  RCASHA   Ramon Casha <rcasha!megabyte.net>
+  RCLAMP   Richard Clamp <richardc@unixbeard.net>
+  RCS      Rob Seegel <rcseege@yahoo.com>
+  RDF      Ray Finch <finchray@uswest.net>
+  RDO      Robert Olson <olson@mcs.anl.gov>
+  REATMON  Ryan Eatmon <reatmon@mail.com>
+  REDEN    Robert Eden <rmeden@yahoo.com>
+  REITMEIE Douglas J. Reitmeier <djreitme@eartlhink.net>
+  RFLENS   Ronald F. Lens <ronald@ronaldlens.com>
+  RFOLEY   Richard Foley <rfoley@rfi.net>
+  RGEOFFREY R. Geoffrey Avery <rGeoffrey@PlatypiVentures.com>
+  RGIERSIG Roland Giersig <RGiersig@cpan.org>
+  RHANSON  Robert Hanson <rhanson@blast.net>
+  RHNELSON Rolf Harold Nelson <rolf@usa.healthnet.org>
+  RHOFER   Robert Hofer <hofer@informatik.uni-muenchen.de>
+  RHOOPER  Roy Hooper <help@thetoybox.org>
+  RICHARDC Craig Richards <cpan@CraigRichards.com>
+  RICHARDJ Richard D. Jackson <richardj@1gig.net>
+  RIGBYC   Chris Rigby <chris@savantnet.com>
+  RIK      Rik Harris <rik.harris@fulcrum.com.au>
+  RIOS     Carlos B. Rios <carlos.rios@bms.com>
+  RISCOSML The Risc-OS perl porters mailing list
+           Mail to riscos-request@perl.org with body subscribe
+  RIZAPN   Riza Purwo Nugroho <rizapn@ratelindo.co.id>
+  RJENKS   Robert Jenks <rjenks@cvsroot.org>
+  RJRAY    Randy J Ray <rjray@blackperl.com>
+  RJS      Robert J Seymour <rseymour@rseymour.com>
+  RKHILL   Ron Hill <rkhill@pacbell.net>
+  RKIES    Robert Kiesling <rkiesling@mainmatter.com>
+  RKITOVER Rafael Kitover <caelum@debian.org>
+  RKOBES   Randy Kobes <randy@theory.uwinnipeg.ca>
+  RKS      Russell Standish <R.Standish@unsw.edu.au>
+  RLBJR    Richard Burkholder Jr. <rlb_jr@hotmail.com>
+  RMANGI   Rick Mangi <rmangi@tgix.com>
+  RMITZ    Monte Mitzelfelt <monte-cpan@gonefishing.org>
+  RMOSE    Russell Mosemann <mose@ns.ccsn.edu>
+  RNAIMA   Reza Naima <reza@reza.net>
+  ROBF     Rob Fugina <robf@geeks.com>
+  ROBVANSON Rob van Son <Rob.van.Son@hum.uva.nl>
+  ROLAND   Roland Huß <roland@consol.de>
+  RONALDWS Ronald Schmidt <RonaldWS@software-path.com>
+  ROOTLEVEL Joe Lauer <joelauer@rootlevel.com>
+  ROSCH    Roderick Schertler <roderick@argon.org>
+  ROSSI    Christian Rossi <rossi@loria.fr>
+  RPIKKARA Raino Pikkarainen <raino.pikkarainen@saunalahti.fi>
+  RRA      Russ Allbery <rra@stanford.edu>
+  RRAWLINGS Rachel McGregor Rawlings <rachel@wuxtry.com>
+  RRWO     Robert Rothenberg <wlkngowl@unix.asb.com>
+  RSAVAGE  Ron Savage <rpsavage@ozemail.com.au>
+  RSE      Ralf S. Engelschall <rse@engelschall.com>
+  RSI      Rajappa Iyer <rsi@earthling.net>
+  RSPIER   Robert Spier <rspier@cpan.org>
+  RURBAN   Reini Urban <rurban@sbox.tu-graz.ac.at>
+  RUSCHER  Paul Ruscher <ruscher@met.fsu.edu>
+  RVA      Rodger V. Anderson <rodger@boi.hp.com>
+  RVAZ     Ricardo Vazquez Armenta <rvazquez_a@yahoo.com>
+  RVSUTHERL Richard Sutherland <rvsutherland@yahoo.com>
+  RWAHBY   Riad Wahby <rwahby@cpan.org>
+  RWALKER  Roland Walker <walker@ncbi.nlm.nih.gov>
+  RWMJ     Richard Jones <rich@annexia.org>
+  RYAN     Ryan Fischer <ryan@gigabee.com>
+  SAA      Stephen Mose Aaskov <stephen@netuni.dk>
+  SABREN   Michal Wallace <sabren@manifestation.com>
+  SAIT     Sami Itkonen <si@iki.fi>
+  SALVA    Salvador Fandiño García <salvador@cesat.es>
+  SAM      Simon Matthews <sam@knowledgepool.com>
+  SAMPO    Sampo Kellomaki <sampo@iki.fi>
+  SAMTREGAR Sam Tregar <sam@tregar.com>
+  SANDERSON George Sanderson <Perler@Xorgate.com>
+  SANFACE  SANFACE Sofware <sanface@sanface.com>
+  SAPAPO   Sami Poikonen <sp@iki.fi>
+  SARGIE   Peter Sergeant <pete_sergeant@hotmail.com>
+  SBALA    S Balamurugan <sbm@india.ti.com>
+  SBECK    Sullivan Beck <sbeck@cpan.org>
+  SBERKHOLZ Scott Berkholz <scottb@streamsoftware.com>
+  SBONDS   Steve W Bonds <store0@hotmail.com>
+  SBOSS    Scott Boss <scott at sboss dot net>
+  SBURKE   Sean M. Burke <sburke@cpan.org>
+  SCHAFFTER Gustav Schaffter <gschaffter@cyberjunkie.com>
+  SCHINDER Paul Schinder <schinder@pobox.com>
+  SCHMICKL Thomas Schmickl <schmickl@nextra.at>
+  SCHMUKER Martin Schmuker <martin@schmuker.de>
+  SCHOEN   Johan Schoen <johan.schon@capgemini.se>
+  SCHOP    Ariel Brosh <>
+  SCOOPER  Simon Cooper <sc@sgi.com>
+  SCOTTHOM Scott Thomason <scott@industrial-linux.org>
+  SCOTTVR  Scott VanRavenswaay <scottvr@netcomi.com>
+  SCR      Sheridan C. Rawlins <scr14@cornell.edu>
+  SDAGUE   Sean Dague <sean@NdOaSgPuAeM.net>
+  SDOWD    Sean Dowd <pop3client@dowds.net>
+  SEB      Steven Brenner <S.E.Brenner@bioc.cam.ac.uk>
+  SELKOVJR Gene Selkov, Jr. <selkovjr@mcs.anl.gov>
+  SEMM     Steve Emmerson <support@unidata.ucar.edu>
+  SETHG    Seth Gordon <sgordon@kenan.com>
+  SETHJ    Seth David Johnson <seth@pdamusic.com>
+  SEYN     Yasushi Nakajima <sey@jkc.co.jp>
+  SFARRELL Stephen Farrell <steve@farrell.org>
+  SFINK    Steve A Fink <sfink@cs.berkeley.edu>
+  SGEL     Sergio Gelato <gelato@oort.ap.sissa.it>
+  SGMIANO  Stephen G. Miano <stevem@mindspring.com>
+  SGRANTZ  Steve Grantz <sgrantz@visi.com>
+  SHARI    Davide Migliavacca <davide.migliavacca@inferentia.it>
+  SHARKEY  Nick 'Sharkey' Moore <sharkey+cpan@zoic.org>
+  SHARRIS  Steve Harris <perl@nullspace.com>
+  SHARYANTO steven haryanto <steven@haryan.to>
+  SHAWNPW  Shawn P. Wallace <shawn@as220.org>
+  SHERWOOD Steve Sherwood <pariah@netcomuk.co.uk>
+  SHGUN    Shishir Gundavaram <shishir@ruby.ora.com>
+  SHIGIO   Shigio Yamaguchi <shigio@wafu.netgate.net>
+  SHIKONO  Shinji KONO <kono@ie.u-ryukyu.ac.jp>
+  SHULL    Sean Hull <sean.hull@pobox.com>
+  SHUTTON  Scott Hutton <shutton@pobox.com>
+  SIC      Scott Cruzen <Trental400@yahoo.com>
+  SIFUKURT Kurt Kincaid <sifukurt@yahoo.com>
+  SILVER   silver Harloe <silver@silverchat.com>
+  SIMON    Simon Cozens <simon@brecon.co.uk>
+  SIMONJ   Simon Johnston <sjohnsto@rational.com>
+  SIMONW   Simon Wistow <simon@twoshortplanks.com>
+  SIMRAN   Simran <simran@cse.unsw.edu.au>
+  SKANE    Steve Kane <skane@cse.psu.edu>
+  SKIMO    Sven Verdoolaege <skimo@kotnet.org>
+  SKINGTON Sam Kington <sam@illuminated.co.uk>
+  SKOLYCHEV Sergey V. Kolychev <ksv@al.lg.ua>
+  SKUD     Kirrily 'Skud' Robert <skud@netizen.com.au>
+  SKUNZ    Steven L. Kunz <skunz@iastate.edu>
+  SMALYSHEV Stanislav Malyshev <frodo@sharat.co.il>
+  SMART    Stephen Martina <sm108@hotmail.com>
+  SMARTWORK SmartWorker folks at HBE <gozer@hbesoftware.com>
+  SMAXIME  Soulé Maxime <max@dotcom.fr>
+  SMCCAM   Stephen McCamant <smcc@CSUA.Berkeley.EDU>
+  SMIRNIOS John Smirnios <smirnios@sybase.com>
+  SMORTON  Sanford Morton <smorton@pobox.com>
+  SMPILL   Steve Pillinger <S.M.Pillinger@cs.bham.ac.uk>
+  SNEEX    Bill Jones <sneex@fccj.org>
+  SNOWHARE Benjamin Franz <snowhare@nihongo.org>
+  SOENKE   Soenke J. Peters <peters+perl@opcenter.de>
+  SOLO     Solomon White <solomon_white@hotmail.com>
+  SOMMAR   Erland Sommarskog <sommar@algonet.se>
+  SONDBERG Anders Sonderberg Mortensen <sondberg@indexdata.dk>
+  SOOZ     Susan Lee Wilson <sooz@pobox.com>
+  SORO     Alexandre Sorokine <srk@users.sourceforge.net>
+  SORTIZ   Salvador Ortíz <sortiz@msg.com.mx>
+  SOVA     Vladimir Sovetov <sova@kpbank.ru>
+  SPADKINS Stephen Adkins <spadkins@internetdynamics.com>
+  SPANNRING Craig Spannring <cts@internetcds.com>
+  SPARKS   Scott Parks <junk@levitator.org>
+  SPIDB    Spider Boardman <spiderb@ma.ultranet.com>
+  SPIDERBOY N. Hao Ching <spiderboy@cpan.org>
+  SPLICE   David James <david@jamesgang.com>
+  SPP      Stephen P Potter <spp@colltech.com>
+  SPRAGST  Stephen J. Sprague <stephen.sprague@msdw.com>
+  SPUG     Seattle Perl Users' Group <spug-list@pm.org>
+  SPURKIS  Steve Purkis <spurkis@epn.nu>
+  SREZIC   Slaven Rezic <eserte@cs.tu-berlin.de>
+  SRIEHM   Stephen Riehm <Stephen.Riehm@pc-plus.de>
+  SRIRAM   Sriram Srinivasan <sriram@weblogic.com>
+  SROHIT   Rohit Sharma <rohit.sharma@usa.net>
+  SRZ      Stephen Zander <gibreel@pobox.com>
+  SSCANLON Sean P. Scanlon <sscanlon@cpan.org>
+  SSNODGRA Steve Snodgrass <ssnodgra@fore.com>
+  STANM    Stan Melax <melax@bioware.com>
+  STAS     Stas Bekman <stas@stason.org>
+  STBEY    Steffen Beyer <sb@engelschall.com>
+  STCHER   Steve Chervitz <sac@neomorphic.com>
+  STEPHEN  Stephen Nelson <steven-cpan@jubal.com>
+  STERLING John K. Sterling <sterling@covalent.net>
+  STERLPERL Sterling Levell <sterlperl@netzero.net>
+  STEVE    Steven Pritchard <steve@silug.org>
+  STEVEC   Steve Campbell <steve@computurn.com>
+  STEVEGT  Steve Traugott <stevegt@TerraLuna.Org>
+  STEVENSL Steven Slegel <stevensl@ccpl.carr.lib.md.us>
+  STIGMATA Gregor Mosheh <stigmata@blackangel.net>
+  STLACY   Stacy Lacy <stacy-lacy@worldnet.att.net>
+  STOLKIN  Steven Tolkin <tolkin@mediaone.net>
+  STWIGGER Simon Twigger <simont@mcw.edu>
+  SUMMER   Mark Summerfield <summer@perlpress.com>
+  SUMUS    Jakob Schmidt <sumus@aut.dk>
+  SVANZOEST Sander van Zoest <svanzoest@cpan.org>
+  SVENH    Sven Heinicke <sven@zen.org>
+  SVINTO   Svante Sörmark <svinto@ita.chalmers.se>
+  SWARTIK  Steve Wartik <swartik@ida.org>
+  SWETH    Sweth Chandramouli <sweth+pause@sweth.net>
+  SWILLIAM Steve Williams <swilliam@empress.com>
+  SWMCD    Steven McDougall <swmcd@world.std.com>
+  SYP      Stanislaw Y. Pusep <>
+  SZECK    Steve Zeck <saintly@innocent.com>
+  TAIY     Taisuke Yamada <tai@imasy.or.jp>
+  TAYERS   Tim Ayers <tayers@bridge.com>
+  TBONE    Terrence Brannon <princepawn@yahoo.com>
+  TBOUTELL Thomas Boutell <boutell@boutell.com>
+  TBRADFUTE Todd Bradfute <bradfute@pflugerville.org>
+  TEKE     Torsten Ekedahl <teke@matematik.su.se>
+  TELS     Tels <>
+  TERDOEST Hugo WL ter Doest <terdoest@cs.utwente.nl>
+  TERJE    Terje Bråten <TerjeBr@pvv.ntnu.no>
+  TERRY    Terry Weissman <terry@weissman.org>
+  TEVERETT Toby Everett <teverett@alascom.att.com>
+  TGROSE   Tony G. Rose <tgr@cre.canon.co.uk>
+  TGUMMELS Travis Gummels <travis@gummels.com>
+  THOGEE   Thomas Geffert <thg@users.sourceforge.net>
+  TIBBS    Jason Tibbitts <tibbs@hpc.uh.edu>
+  TIMB     Tim Bunce <Tim.Bunce@ig.co.uk>
+  TIMBU    Tim Burlowski <timbu@timbu.org>
+  TIMM     Tim Meadowcroft <tim@schmerg.com>
+  TIMMY    Tim Hammerquist <tim@dichosoft.com>
+  TIMPOTTER Tim Potter <tpot@frungy.org>
+  TIMPX    Tim Goodwin <tjg@star.le.ac.uk>
+  TJENNESS Tim Jenness <t.jenness@jach.hawaii.edu>
+  TJMATHER T.J. Mather <tjmather@anidea.com>
+  TKISHEL  Thomas Kishel <tkishel@tdlc.com>
+  TKML     The Tk Perl Mailing list
+           Mail to majordomo@lists.stanford.edu with body "subscribe
+           ptk <your-address>"
+  TLINDEN  Thomas Linden <perl@daemon.de>
+  TLP      Travis L Priest <T.L.Priest@LaRC.NASA.GOV>
+  TOBIX    Tobias Brox <tobix@irctos.org>
+  TODD     Torsten Hentschel <todd@bayleys.ping.de>
+  TOMC     Tom Christiansen <tchrist@mox.perl.com>
+  TOMFA    Tom Fawcett <fawcett@nynexst.com>
+  TOMH     Tom Horsley <tom@ssd.csd.harris.com>
+  TOMHUGHES Tom Hughes <tom@compton.nu>
+  TOMZO    Tom Zoerner <Tom.Zoerner@informatik.uni-erlangen.de>
+  TOSTI    Dirk Tostmann <tostmann@tosti.com>
+  TPEDERSE Ted Pedersen <tpederse@d.umn.edu>
+  TRIAS    Fernando Trias <fernando@pedestalsoftware.com>
+  TRIEMER  Thomas Riemer <triemer@apt4g.a3nyc.com>
+  TROCKIJ  Jim Trocki <trockij@transmeta.com>
+  TROYP    Troy R. Pesola <troy.pesola@network.com>
+  TRUESDALE James Truesdale <jtruesdale@primary.net>
+  TSANDERS Tony Sanders <sanders@bsdi.com>
+  TSPIN    Tom Spindler <dogcow@redback.com>
+  TURNERA  Andrew Turner <turner@mikomi.org>
+  TURNERJW Jim Turner <turnerjw2@netscape.net>
+  TWENRICH Thomas Wenrich <wenrich@ping.at>
+  TWIBBLER Trevor Ward <trevor.r.ward@btinternet.com>
+  TYEMQ    Tye McQueen <tye@metronet.com>
+  TYPO     Johnny Lee <typo_pl@hotmail.com>
+  UARUN    Arun Kumar U <u_arunkumar@yahoo.com>
+  UGANSERT Uwe Gansert <ug@suse.de>
+  UGEN     Ugen Antsilevitch <ugen@xonix.com>
+  ULPFR    Ulrich Pfeifer <pfeifer@wait.de>
+  UMEMOTO  Hajimu Umemoto <ume@mahoroba.org>
+  UNCLE    Michael Samanov <mike@vlink.ru>
+  URI      Uri Guttman <uri@sysarch.com>
+  UWEH     Uwe Hollerbach <uweh@bu.edu>
+  VADIM    Vadim Ponomarenko <vp@istc.kiev.ua>
+  VALERIE  Valerie Delane <valerie@savina.com>
+  VINAYSKI Vinayak Sankhe <vinayak.sankhe@cingular.com>
+  VIPUL    Vipul Ved Prakash <mail@vipul.net>
+  VIZDOM   Gennis Emerson <gemerson@vizdom.com>
+  VKHERA   Vivek Khera <vivek@khera.org>
+  VMSML    The VMSPerl Mailing list
+           vmsperl-subscribe@perl.org
+  VOISCHEV Alexander Voischev <voischev@mail.ru>
+  WADG     Jeremy Wadsack <dgsupport@wadsack-allen.com>
+  WARRENM  Warren Matthews <warrenm@slac.stanford.edu>
+  WATANABE WATANABE Hirofumi <eban@os.rim.or.jp>
+  WAYNEDAV Wayne Davison <wayne@clari.net>
+  WAYNEM   Wayne Myers <waz@easynet.co.uk>
+  WIMV     Wim Verhaegen <wimv@cpan.org>
+  WIN32    The Perl for Win32 Mailing lists
+           Visit activestate's webpage at
+           http://www.activestate.com/support/mailing_lists.htm
+  WINKO    Winfried Koenig <win@germany.net>
+  WITTHAUT Michael Witthaut <michael@witthaut@azubi.siemens.de>
+  WKEENAN  Wayne Keenan <wayne@metaverse.fsnet.co.uk>
+  WMARQ    Wayne Marquette <wayne.marquette@ascend.com>
+  WNODOM   Bill Odom <wnodom@intrasection.com>
+  WOODY    Jim Woodgate <woody@bga.com>
+  WORENKD  David C. Worenklein <dcw@gcm.com>
+  WPMOORE  W. Phillip Moore <Phil.Moore@msdw.com>
+  WPS      William Setzer <William_Setzer@ncsu.edu>
+  WRATY    Bill Raty <Bill_Raty@yahoo.com>
+  WRW      William R Ward <wrw@bayview.com>
+  WSANNIS  William S. Annis <annis@biostat.wisc.edu>
+  WSCOT    Wayne Scott <wscott@ichips.intel.com>
+  WSNYDER  Wilson Snyder <wsnyder@world.std.com>
+  WTOMPSON Wayne Tompson <Wayne.Thompson@Ebay.Sun.COM>
+  WYTAN    Wei-Yuen Tan <Wei-Yuen_Tan@hip.com>
+  XCALBET  Xavier Calbet <xcalbet@inm.es>
+  XFIRE    Ilya Obshadko <x-fire@mail.ru>
+  XMLML    Perl-XML Mailing List
+           Send mail to subscribe-perl-xml@lyris.activestate.com
+  XOMINA   ryan mcleish <xomina@bitstream.net>
+  XWOLF    Wolfgang Wiese <xwolf@xwolf.com>
+  YASU     Yasushi Saito <yasushi@cs.washington.edu>
+  YENYA    Jan "Yenya" Kasprzak <kas@informatics.muni.cz>
+  YEWEI    Wei Ye <yw@alabanza.net>
+  YLU      Luke Y. Lu <ylu@mail.utexas.edu>
+  YSTH     Yitzchak Scott-Thoennes <sthoenna@efn.org>
+  YVESP    Yves Paindaveine <yp@gr.osf.org>
+  ZED      Zed Lopez <zed@apricot.com>
+  ZELT     Tom Zeltwanger <perl@ename.com>
+  ZENIN    Byron Brummer <zenin@bawdycaste.org>
+  ZHOUXIN  Xin Zhou <zhouxin@email.com>
+  ZLIPTON  Zach Liption <zach@zachlipton.com>
+  ZOOVY    Brian Horakh <brian@zoovy.com>
+  ZTURK    Ziga TURK <ziga.turk@fagg.uni-lj.si>
 
 5.2) Perl Frequently Asked Questions (FAQ)
 
-The FAQ is available on all CPAN sites in the directory doc/FAQs (e.g.,
-
-   * http://www.cpan.org/doc/FAQs/
-
-) as well as from the RTFM server where you can find all posted FAQs:
-
-   * ftp://rtfm.mit.edu/pub/usenet/news.answers/perl-faq/
-   * ftp://rtfm.mit.edu/pub/usenet-by-hierarchy/comp/lang/perl/
-
-RTFM mirror sites: North America:
-
-   * ftp://ftp.uu.net/usenet/news.answers
-   * ftp://mirrors.aol.com/pub/rtfm/usenet
-   * ftp://mirror.seas.gwu.edu/pub/rtfm
-
+The FAQ is available on all CPAN sites in the directory doc/FAQs
+(e.g., http://www.cpan.org/doc/FAQs/) as well as from the RTFM
+server where you can find all posted FAQs:
+  ftp://rtfm.mit.edu/pub/usenet/news.answers/perl-faq/
+  ftp://rtfm.mit.edu/pub/usenet-by-hierarchy/comp/lang/perl/
+RTFM mirror sites:
+North America:
+  ftp://ftp.uu.net/usenet/news.answers
+  ftp://mirrors.aol.com/pub/rtfm/usenet
+  ftp://mirror.seas.gwu.edu/pub/rtfm
 Europe:
-
-   * ftp://ftp.uni-paderborn.de/pub/FAQ
-   * ftp://ftp.sunet.se/pub/usenet
-
+  ftp://ftp.uni-paderborn.de/pub/FAQ
+  ftp://ftp.sunet.se/pub/usenet
 Asia:
-
-   * ftp://nctuccca.edu.tw/USENET/FAQ
-   * ftp://hwarang.postech.ac.kr/pub/usenet/news.answers
-   * ftp://ftp.hk.super.net/mirror/faqs
+  ftp://nctuccca.edu.tw/USENET/FAQ
+  ftp://hwarang.postech.ac.kr/pub/usenet/news.answers
+  ftp://ftp.hk.super.net/mirror/faqs
