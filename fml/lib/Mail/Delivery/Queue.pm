@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.34 2004/05/18 08:48:29 fukachan Exp $
+# $FML: Queue.pm,v 1.35 2004/05/19 09:04:47 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -12,6 +12,8 @@ use strict;
 use Carp;
 use vars qw($Counter);
 use File::Spec;
+use Mail::Delivery::ErrorStatus qw(error_set error error_clear);
+
 
 =head1 NAME
 
@@ -371,9 +373,13 @@ sub in
     use FileHandle;
     my $fh = new FileHandle "> $qf";
     if (defined $fh) {
+	$fh->clearerr();
 	$fh->autoflush(1);
 	$msg->print($fh);
 	$fh->close;
+	if ($fh->error()) {
+	    $self->error_set("write error");
+	}
     }
 
     # check the existence and the size > 0.
@@ -408,22 +414,32 @@ sub set
     if ($key eq 'sender') {
 	my $fh = new FileHandle "> $qf_sender";
 	if (defined $fh) {
+	    $fh->clearerr();
 	    print $fh $value, "\n";
 	    $fh->close;
+	    if ($fh->error()) {
+		$self->error_set("write error");
+	    }
 	}
     }
     elsif ($key eq 'recipients') {
 	my $fh = new FileHandle ">> $qf_recipients";
 	if (defined $fh) {
+	    $fh->clearerr();
 	    if (ref($value) eq 'ARRAY') {
 		for my $rcpt (@$value) { print $fh $rcpt, "\n";}
 	    }
 	    $fh->close;
+	    if ($fh->error()) {
+		$self->error_set("write error");
+	    }
 	}
     }
     elsif ($key eq 'recipient_maps') {
 	my $fh = new FileHandle ">> $qf_recipients";
 	if (defined $fh) {
+	    $fh->clearerr();
+
 	    if (ref($value) eq 'ARRAY') {
 		for my $map (@$value) {
 		    use IO::Adapter;
@@ -440,13 +456,21 @@ sub set
 		}
 	    }
 	    $fh->close;
+
+	    if ($fh->error()) {
+		$self->error_set("write error");
+	    }
 	}
     }
     elsif ($key eq 'transport') {
 	my $fh = new FileHandle "> $qf_transport";
 	if (defined $fh) {
+	    $fh->clearerr();
 	    print $fh $value, "\n";
 	    $fh->close;
+	    if ($fh->error()) {
+		$self->error_set("write error");
+	    }
 	}
     }
 }
@@ -474,6 +498,11 @@ sub setrunnable
     my $qf_new        = $self->{ _new_qf };
     my $qf_sender     = $self->{ _info }->{ sender };
     my $qf_recipients = $self->{ _info }->{ recipients };
+
+    # something error.
+    if ($self->error()) {
+	return 0;
+    }
 
     # There must be a set of these three files.
     unless (-f $qf_new && -f $qf_sender && -f $qf_recipients) {
@@ -546,6 +575,7 @@ sub valid
 sub DESTROY
 {
     my ($self) = @_;
+
     unlink $self->{ _new_qf } if -f $self->{ _new_qf };
 }
 
