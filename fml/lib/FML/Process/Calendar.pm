@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calendar.pm,v 1.1 2003/01/31 14:55:35 fukachan Exp $
+# $FML: Calendar.pm,v 1.2 2003/02/09 12:31:44 fukachan Exp $
 #
 
 package FML::Process::Calendar;
@@ -148,12 +148,10 @@ sub run
 
     $wh->close;
 
-    # XXX-TODO: use $path_w3m not w3m
     if ($mode eq 'text') {
 	my $w3m = $config->{ path_w3m } || 'w3m';
 	system "$w3m -dump $tmpf";
     }
-    # XXX-TODO: use $path_cat not cat
     else {
 	$curproc->cat( [ $tmpf ] );
     }
