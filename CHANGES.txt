@@ -1,6 +1,15 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/04/15
+
+   Mail::Delivery::Queue 
+	reset alarm after flock()
+
+   FML::Header 
+	mime_boundary() boundary detect change short match and add no
+	quote string
+
 2003/04/09
 
    FML::Header 
@@ -4631,4 +4640,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.138 2003/03/23 15:20:04 fukachan Exp $
+$FML: CHANGES.txt,v 1.139 2003/04/12 13:50:41 fukachan Exp $
