@@ -1,5 +1,5 @@
 <!--
-   $FML: create_program.sgml,v 1.5 2002/07/06 14:55:16 fukachan Exp $
+   $FML: create_program.sgml,v 1.6 2003/04/15 14:51:38 fukachan Exp $
 -->
 
 <chapter id="program.create">
@@ -15,17 +15,17 @@
 
 <para>
 まず FML::Process:: にモジュールを用意します。
-最小構成の見本としては FML::Process::Scheduler 、
-最大構成としては FML::Process::Distribute
+最小構成の見本としては FML::Process::Calender 、
+最大構成としては FML::Process::Distribute (記事配送プログラムの本体)
 を参考にすると良いでしょう。
 </para>
 
 <para>
-用意しなければいけない関数(メソッド)は
+各 FML::Process::* モジュールが用意しなければいけない関数(メソッド)は
 FML::Process::Flow::ProcessStart()
 を見ると分かります。
 FML::Process::Flow::ProcessStart()
-がプロセスを駆動しているからです。
+がプロセスを駆動していますので、その中身を辿ってみて下さい。
 2002/07 現在、これらのメソッドが必須です。
 <screen>
 new()
@@ -33,10 +33,12 @@ prepare()
 verify_request()
 run()
 finish()
+help()
 </screen>
-ダミーでもよいので、これらのメソッドを適宜用意しておいて下さい。
-各メソッドの具体例は、FML::Process を見て下さい。
-メソッドの役割を知るためには最大構成の Distribute が一番適当かも知れません。
+ダミーでもよいので、これらのメソッドを適宜用意しておいて下さい。各メソッ
+ドの具体例は、FML::Process 以下のモジュールを見て下さい。メソッドの役
+割を知るためには最大構成の FML::Process::Distribute が一番適当かも知れ
+ません。
 </para>
 
 <para>
@@ -63,10 +65,19 @@ etc/command_line_options
 </para>
 
 <para>
-この 2 つの準備だけで、新しいプログラムの準備は終りです。
-呼びたい名前のファイルを loader と link もしくは symlink することで
-実行が可能になります。
-例えば、標準のインストールでは、次のようになっています。
+この 2 つの準備だけで、新しいプログラムの実行が可能になります。
+</para>
+
+<para>
+また、インストーラに symlink (後述)を実行してもらうために、
+etc/install.cf.in のbin_programs か libexec_programs にプログラム名を
+定義して下さい。テスト段階では手動で symlink を行なってもかまいません。
+</para>
+
+<para>
+呼びたい名前のファイルを loader と link もしくは symlink することで実
+行が可能になります。例えば、標準のインストールでは、次のようになってい
+ます。
 <screen>
 % ls -l /usr/local/libexec/fml
 lrwxr-xr-x  1 root  wheel     6 Apr 14 18:25 command@ -> loader
@@ -166,8 +177,8 @@ $curproc->html_end($args);
 </para>
 
 <para>
-ちなみに FML::Process::CGI::Kernel 自身は、
-2001/11 現在、プロセスは以下のメソッド
+ちなみに、2001/11 現在、FML::Process::CGI::Kernel プロセス自身は、
+以下のメソッド
 	<footnote>
 	<para>
 	このため、多くの場合
