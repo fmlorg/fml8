@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: HTMLify.pm,v 1.4 2001/11/04 13:41:32 fukachan Exp $
+# $FML: HTMLify.pm,v 1.1 2001/11/05 12:26:38 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -80,8 +80,17 @@ sub run
 {
     my ($curproc, $args) = @_;
     my $argv    = $curproc->command_line_argv();
+    my $options = $curproc->command_line_options();
     my $src_dir = $argv->[0];
     my $dst_dir = $argv->[1];
+
+    print STDERR "htmlify\t$src_dir =>\n\t\t$dst_dir\n";
+
+    # prepend $opt_I as @INC
+    if (defined $options->{ I }) { 
+	print STDERR "\t\tprepend $options->{ I } (\@INC)\n" if $ENV{'debug'};
+	unshift(@INC, $options->{ I });
+    }
 
     unless (-d $src_dir) {
 	croak("no such source directory");
@@ -93,10 +102,13 @@ sub run
             mkdirhier($dst_dir, 0755);
         }
 
-	print STDERR "htmlify\t$src_dir =>\n\t\t$dst_dir\n";
-
-        use Mail::HTML::Lite;
-        &Mail::HTML::Lite::htmlify_dir($src_dir, { directory => $dst_dir });
+	eval q{
+	    use Mail::HTML::Lite;
+	    &Mail::HTML::Lite::htmlify_dir($src_dir, {
+		directory => $dst_dir,
+	    });
+	};
+	croak($@) if $@;
     }
     else {
         croak("no destination directory\n");
@@ -111,7 +123,11 @@ sub help
 
 print <<"_EOF_";
 
-Usage: $name src_dir dst_dir
+Usage: $name [-I dir] src_dir dst_dir
+
+options:
+
+-I dir      prepend dir into include path
 
 _EOF_
 }
