@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2004 Ken'ichi Fukamachi
 #
-# $FML: Subject.pm,v 1.2 2004/02/06 13:16:27 fukachan Exp $
+# $FML: Subject.pm,v 1.3 2004/03/28 11:11:55 fukachan Exp $
 #
 
 package Mail::Message::Subject;
@@ -63,10 +63,11 @@ sub delete_dup_reply_tag
 {
     my ($self)  = @_;
     my $subject = $self->as_str();
-    my $charset = $self->get_mime_charset();
 
     # XXX-TODO: care for not Japanese string!
-    if ($charset =~ /iso-2022-jp/io) {
+    # XXX-TODO: call this module if $subject is Japanese or English.
+    # XXX-TODO: but what should we do when the code is not the two ?
+    if (1) {
 	use Mail::Message::Language::Japanese::Subject;
 	my $sbj  = new Mail::Message::Language::Japanese::Subject;
 	$subject = $sbj->cut_off_reply_tag($subject);
