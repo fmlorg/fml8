@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.170 2003/07/21 14:31:51 fukachan Exp $
+# $FML: Kernel.pm,v 1.171 2003/08/16 02:45:23 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1089,6 +1089,21 @@ sub is_refused
     }
 
     return 0;
+}
+
+
+# Descriptions: close STDERR channel.
+#    Arguments: OBJ($curproc)
+# Side Effects: close(STDERR)
+# Return Value: none
+sub close_stderr_channel_if_quiet_option_specified
+{
+    my ($curproc) = @_;
+    my $option = $curproc->command_line_options();
+
+    if (defined $option->{ quiet } || defined $option->{ q }) {
+	close(STDERR);
+    }
 }
 
 
