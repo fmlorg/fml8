@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Scheduler.pm,v 1.3 2001/06/17 08:57:09 fukachan Exp $
+# $FML: Scheduler.pm,v 1.4 2001/06/28 09:06:43 fukachan Exp $
 #
 
 package FML::CGI::Scheduler;
@@ -62,11 +62,10 @@ This module has routines needed for CGI.
 sub run
 {
     my ($curproc, $args) = @_;
+    my $user = $curproc->safe_param_user;
 
-    use FileHandle;
     use TinyScheduler;
-
-    my $schedule = new TinyScheduler { user => param('user') };
+    my $schedule = new TinyScheduler { user => $user };
 
     for my $n ('this', 'next', 'last') {
 	print "<A HREF=\"\#$n\">[$n month]</A>\n";

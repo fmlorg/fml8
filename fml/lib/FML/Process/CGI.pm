@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: CGI.pm,v 1.15 2001/08/22 03:07:59 fukachan Exp $
+# $FML: CGI.pm,v 1.16 2001/11/04 03:36:55 fukachan Exp $
 #
 
 package FML::Process::CGI;
@@ -22,6 +22,8 @@ FML::Process::CGI - CGI basic functions
    my $obj = new FML::Process::CGI;
    $obj->prepare($args);
       ... snip ...
+
+This new() creates CGI object which wraps C<FML::Process::Kernel>.
 
 =head1 DESCRIPTION
 
@@ -56,7 +58,7 @@ sub new
 
     # we should get $ml_name from HTTP.
     my $ml_home_prefix = $args->{ ml_home_prefix };
-    my $ml_name        = param('ml_name') || do {
+    my $ml_name        = safe_param_ml_name($self) || do {
 	croak("not get ml_name from HTTP") if $args->{ need_ml_name };
     };
 
@@ -139,9 +141,9 @@ sub run
 sub _makefml
 {
     my ($curproc, $args) = @_;
-    my $method  = param('method');
-    my $ml_name = param('ml_name');
-    my $address = param('address') || '';
+    my $method  = $curproc->safe_param_method;
+    my $ml_name = $curproc->safe_param_ml_name;
+    my $address = $curproc->safe_param_address || '';
     my $argv    = $curproc->command_line_argv();
     my @options = ();
 
@@ -161,6 +163,76 @@ sub _makefml
     require FML::Command;
     my $obj = new FML::Command;
     $obj->$method($curproc, $optargs);
+}
+
+
+=head1 Input Data Diagnostic
+
+=head2 safe_param(str, filter)
+
+=cut
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+#      History: fml 4.0's SecureP()
+# Return Value: none
+sub safe_param
+{
+    my ($key, $filter) = @_;
+    my $value = param($key);
+
+    if (defined $filter && defined $value) {
+	if ($value =~ /^$filter$/) {
+	    return $value;
+	}
+	else {
+	    return undef;
+	}
+    }
+    else {
+	return undef;
+    }
+}
+
+
+=head2 safe_param_xxx()
+
+get and filter param('xxx') via AUTOLOAD().
+
+=cut
+
+
+my %allow_regexp = (
+		    'address' => '[-a-z0-9_]@[-A-Z0-9\.]+',
+		    'ml_name' => '[-a-z0-9_]+',
+		    'method'  => '[a-z]+',
+		    'user'    => '[-a-z0-9_]+',
+		    );
+
+
+sub AUTOLOAD
+{
+    my ($curproc) = @_;
+
+    return if $AUTOLOAD =~ /DESTROY/;
+
+    my $comname = $AUTOLOAD;
+    $comname =~ s/.*:://;
+
+    if ($comname =~ /^safe_param_(\S+)/) {
+	my $varname = $1;
+
+	# diagnostic
+	unless (defined $allow_regexp{ $varname }) {
+	    croak("no allow_regexp for $comname");
+	}
+	return safe_param($varname, $allow_regexp{ $varname });
+    }
+    else {
+	croak("unknown method $comname");
+    }
 }
 
 
