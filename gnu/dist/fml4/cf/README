@@ -1,0 +1,15 @@
+The scripts and configurations under cf/ is the base of fml configurations.
+
+* fml (after fml 2.2.1) defines available values for each variable.
+  We use "# value: xxx" format in cf/MANIFEST, and the available values
+  follows:
+
+	# value: directory string
+	# value: filename string
+	# value: 1/0
+	# value: number
+	# value: string
+	# value: regexp string
+	# value: perl statement
+
+$Id: README,v 1.2 2000/10/28 14:37:42 fukachan Exp $

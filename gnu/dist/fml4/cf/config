@@ -1,0 +1,807 @@
+#!/usr/local/bin/perl
+#-*- perl -*-
+#
+# Copyright (C) 1993-1998 Ken'ichi Fukamachi
+#          All rights reserved. 
+#               1993-1996 fukachan@phys.titech.ac.jp
+#               1996-1998 fukachan@sapporo.iij.ad.jp
+# 
+# FML is free software; you can redistribute it and/or modify
+# it under the terms of GNU General Public License.
+# See the file COPYING for more details.
+#
+# $Id: config,v 2.10 2003/01/15 16:00:52 fukachan Exp $
+
+
+# Init;
+$ERROR_LOG = "etc/motd.error";
+unlink $ERROR_LOG if -f $ERROR_LOG;
+
+require 'getopts.pl';
+&Getopts("m:hdDr:csnfrFiI:v");
+
+$no_dns  = $opt_n;
+$debug   = $opt_d;
+$debug2  = $opt_D;
+$compat  = $opt_c;
+$reverse = $opt_r;
+$install = $opt_i;
+$verbose = $rv'verbose = 1 if $opt_v; #';
+$file_substitute = $opt_F;
+
+#############################################################################
+
+
+
+$HEADER = q%# -*-Perl-*-
+#
+# FML Configuration File
+#
+# Copyright (C) 1993-2000 Ken'ichi Fukamachi
+#          All rights reserved. 
+#               1993-1996 fukachan@phys.titech.ac.jp
+#               1996-2000 fukachan@sapporo.iij.ad.jp
+# 
+# FML is free software; you can redistribute it and/or modify
+# it under the terms of GNU General Public License.
+# See the file COPYING for more details.
+#
+%;
+
+&SetDefaults($opt_m);
+&SetIgnoredFields;
+
+if ($opt_r) {
+    &reverse($opt_r);
+}
+elsif ($opt_c) { 
+    &SetIgnoredFields_Compat($opt_I);
+    &compat_output;
+}
+elsif ($opt_s) { 
+    &show_entry;
+}
+elsif ($opt_f) { 
+    &FixEnv;
+}
+else {
+    &readfile(@ARGV) unless $install;
+    &output;
+}
+
+
+exit 0;
+########################################################################
+
+sub SetIgnoredFields
+{
+    @Ignore =  (PORT,TAR,UUENCODE,COMPRESS,ZCAT,HOST,LHA,ISH,
+		'MAIL_LIST', ML_FN, MAINTAINER, XML,
+		'PRECEDENCE', 'PROC_GEN');
+
+    for (@Ignore) {
+	$skip_key .= $skip_key ? "|$_" : $_;
+    }
+}
+
+
+sub SetIgnoredFields_Compat
+{
+    local($file) = @_;  
+    local(@ignore);
+
+    ($file && -f $file) || (die "cannot open $file\n");
+
+    if (open(F, $file)) {
+	while (<F>) {
+	    chop;
+	    next if /^\s*$/; 
+	    push(@ignore, $_);
+	}
+	close(F);
+    }
+    else {
+	@ignore =  (ML_MEMBER_CHECK,AUTO_REGISTERED_UNDELIVER_P,
+		    ERRORS_TO,REJECT_ADDR,SKIP_FIELDS,SENDMAIL,
+		    COMMAND_SYNTAX_EXTENSION,COMMAND_CHECK_LIMIT,
+		    GUIDE_CHECK_LIMIT,PROHIBIT_COMMAND_FOR_STRANGER,
+		    NEWSYSLOG_MAX,WHOIS_JCODE_P,CRON_NOTIFY,
+		    REMOTE_ADMINISTRATION_REQUIRE_PASSWORD);
+    }
+
+    for (@ignore) { $skip_key .= $skip_key ? "|$_" : $_;}
+}
+
+
+sub readfile
+{
+    local($file) = @_;
+    local(@local_order);
+
+    ($file && open(F, $file)) || die "cannot open $file";
+
+    while (<F>) {
+	/^LOCAL_CONFIG/ && ($local_config = 1) && next;
+
+	if ($local_config) {
+	    $LOCAL .= $_;
+	}
+	else {
+	    next if /^\#/o;		# skip  "^# line" outside the LOCAL_...
+	    s/^\$//;		# strip '$' of "$VARIABLE"
+
+	    if (/(\S+)\s+(.*)/) {	# VARIABLE VALUE
+		local($key, $str) = ($1, $2);
+		$key =~ s/:$//;
+
+		push(@local_order, $key);
+
+		# SPECIAL FUNCTIONS
+		if ($str =~ /^&path\((\S+)\)(.*)/) { 
+		    local($opt) = $2;
+		    eval("\$str = &search_path($1);");
+		    $str = "$str$opt";
+		}
+
+		$str =~ s/@/\\@/g;
+		while ($str =~ s/\\\\@/\\@/g) { 1;}
+
+		# special handling of timezone 
+		if ($key eq 'TZone' || 
+		    $key eq 'TZONE_DST' ||
+		    $key eq 'BRACKET') {
+		    $str = "\"$str\""; # enforce "string" sytanx.
+		}
+		else {
+		    $str = ($str =~ /^(\-\d+|\d+)$/) ? $str : "\"$str\"";
+		}
+
+		# print STDERR 
+		# "Overwrite $key as $str\n\t(original $value{$key})\n";
+		$value{$key} = $str;
+		$rewritten{$key} = 1;
+	    }
+	}
+    }
+
+    close(F);
+
+    # RESET
+    if ($file_substitute) { @order = @local_order;}
+    @CFDefiend = @local_order;
+}
+
+
+sub show_entry
+{
+    for $k (sort keys %value) {
+	next if $k =~ /^INFO:/;
+	next if $k =~ /^LOCAL_/;
+	printf "%-30s\t%s\n", $k, $value{$k};
+	printf "%s\n\n", $comment{$k};
+    }
+
+    $k = "LOCAL_CONFIG";
+    printf "%-30s\n%s\n", $k, $value{$k};
+}
+
+
+sub compat_output
+{
+    print $HEADER;
+
+    foreach $key (@order) {
+	next if $key eq 'debug';
+
+	if ($value{$key} eq "\"\"" ||
+	    $value{$key} eq "''"   ||
+	    $value{$key} eq "0") {
+	    next ;
+	}
+
+	if ($key eq 'LOCAL_CONFIG') {
+	    print "\n\#\#\#LOCAL_CONFIG\n";
+	    print $value{"LOCAL_CONFIG"};
+	}
+	elsif ($key !~ /^INFO:/ && 
+	       (! ($value{$key} eq "0" || $value{$key} eq "\"\""))
+		) { # non-nil variables
+
+	    next if $key =~ /$skip_key/;
+
+	    printf "%-20s || (%s = %s);\n", "\$$key", "\$$key", $value{$key};
+	}
+    }
+
+    print "\n1;\n";
+}
+
+
+sub output
+{
+    local($cf);	# comment out flag;
+
+    print $HEADER;
+
+    foreach $key (@order) {
+	#print STDERR "key\t$key => $value{$key}\n";
+
+	undef $cf;
+	undef $ncr;
+	undef $comment;
+
+	next if $key eq "_SKIP_LINE_" && $prev_key eq "_SKIP_LINE_";
+	$prev_key = $key;
+
+	if ($key eq "_SKIP_LINE_") { 
+	    print "\n";
+	    next;
+	}
+
+	# here may be overwritten!
+	# patched by racsho@cpdc.canon.co.jp (96/11/14)
+	if (!$install && !$rewritten{$key}) {
+	    $cf = '# ';
+	}
+
+	# dependent on keys in "cf"
+	if (($key ne 'LOCAL_CONFIG') && (! $rewritten{$key})) {
+	    local($xkey);
+	    for $xkey (@CFDefiend) {
+		next if $xkey =~ /^_/;
+		next if $xkey =~ /^LOCAL_CONFIG/;
+
+		if ($value{$key} =~ /\$${xkey}/) {
+		    printf STDERR "   %-25s depends %s\n", 
+			$key, $xkey if $debug;
+		    undef $cf;
+		}
+	    }
+	}
+
+	#print STDERR "[$cf]$key\t$value{$key}\n";
+
+	if ($key =~ /^INFO:/) { print "\n\n\n";}
+
+	if ($_ = $comment{$key}) { $ncr = tr/\n/\n/; $add_n++;}
+	
+	if ($ncr <= 1) {
+	    $s = sprintf("%-30s = %s; %s\n", 
+			 "${cf}\$${key}", $value{$key}, $_);
+	    $s = length($s);
+	    if ($s < 80) { $comment = "$_"; undef $add_n;}
+
+	}
+
+	if ($_ && (! $comment)) {
+	    # add \n?
+	    # $_ .= "\n";
+	    # while (s/\n\n$/\n/) {;}
+
+	    print $_;
+##	    print "\n"; # null line after the comments
+	}
+
+	if ($key eq "LOCAL_CONFIG") {
+	    print "\n";
+	    print ('#' x 70); print "\n";
+	    print "\# \#\#\# Section: LOCAL CONFIG \#\#\#\n";
+	    print $value{$key};
+	    print "\n";
+	}
+	elsif ($key !~ /^INFO:/) {
+#	    printf "%-30s = %s;", "\$$key", $value{$key};
+	    printf "%-30s = %s;", "${cf}\$$key", $value{$key};
+	    print " $comment" if $comment;
+	    print "\n";
+#	    print "\n" if $add_n; # cf version 3; not add "\n";
+	}
+    }
+
+
+    ##### LOCAL CONFIG #####
+    if ($LOCAL) {
+	print "\n\n\n";
+	print ('#' x 35); print "\n";
+	print "\#\ LOCAL CONFIG YOU CONFIGURED\n";
+	# print ('#' x 35); print "\n";
+	print $LOCAL;
+    }
+
+    print "\n1;\n";
+
+    # fml-support: 04205; Masayuki FUKUI <fukui@sonic.nm.fujitsu.co.jp>
+    return if $file_substitute;
+
+    for (keys %value) {
+	print STDERR "WARNING: $ARGV[0]: invalid keyword \`$_\' (ignored)\n" 
+	    unless $OrderHash{$_};
+    }
+}
+
+
+sub DNS
+{
+    if ($no_dns) { 
+	print STDERR "No DNS Reconfigure\n"; 
+	$FQDN       = 'aoi.domain.uja';
+	$DOMAINNAME = 'domain.uja';
+	return;
+    }
+
+    # fml 4.0
+    local($system) = $0;
+    $system  =~ s/config$//;
+    $system .= ($ENV{'OS'} =~ /Windows_NT/) ? "..\\_fml\\" : "../.fml/";
+    $system .= 'system';
+    if (-f $system) {
+	print STDERR "use system = $system\n" if $debug0;
+	package __system;
+	eval require $main::system;
+	$main::HOSTNAME = $main::FQDN = $FQDN;
+	$main::DOMAINNAME = $DOMAIN;
+	package main;
+	if ($@) { 
+	    print STDERR $@;
+	}
+	else {
+	    return ;
+	}
+    }
+ 
+    print STDERR "Verifying DNS...\n" if $debug;
+
+    local(@n, $hostname, $list);
+    chop($hostname = `hostname`); # beth or beth.domain may be possible
+    $HOSTNAME = $FQDN = $hostname;
+    @n    = (gethostbyname($hostname))[0,1]; $list .= " @n ";
+    @n    = split(/\./, $hostname); $hostname = $n[0]; # beth.domain -> beth
+    @n    = (gethostbyname($hostname))[0,1]; $list .= " @n ";
+
+    foreach (split(/\s+/, $list)) { /^$hostname\.\w+/ && ($FQDN = $_);}
+    $FQDN       =~ s/\.$//; # for e.g. NWS3865
+    $DOMAINNAME = $FQDN;
+    $DOMAINNAME =~ s/^$hostname\.//;
+
+    printf STDERR "%-10s  %s\n", "HOSTNAME", $HOSTNAME     if $debug;
+    printf STDERR "%-10s  %s\n", "DOMAINNAME", $DOMAINNAME if $debug;
+    printf STDERR "%-10s  %s\n", "FQDN", $FQDN             if $debug;
+}
+
+sub host { $HOSTNAME;}
+sub dn   { $DOMAINNAME;}
+sub fqdn { $FQDN;}
+
+sub SetDefaults
+{
+    local($file) = @_;
+    local($key, $local_config);
+
+    foreach ($file, './cf/MANIFEST', './MANIFEST') { 
+	-f $_ && ($file = $_, last);
+    }
+
+    open(MANIFEST, $file) || die "CANNOT OPEN MANIFEST[$file]\n";
+    select(MANIFEST); $| = 1; select(STDOUT);
+
+    print STDERR "MANIFEST: $file\n\n" if $debug2;
+
+    &DNS;
+
+    while (<MANIFEST>) {
+	next if /^\#C\s+/i;
+
+	if (/MANIFEST,v ([\d\.]+) /) {
+	    $Manifest_Version = $1;
+	}
+
+	if (/\# \#\#\# Section:\s*(.*)\s*\#\#\#\s*$/) {
+	    $Index .= "\#   $1\n";
+	}
+
+	if (/^\s*$/) {
+	    undef $comment_key;
+	    push(@order, "_SKIP_LINE_");
+	}
+	    
+	undef $local_config if /^(INFO|FML_CONFIG|LOCAL_CONFIG):/;
+
+
+	if (/^LOCAL_CONFIG/) {
+	    $local_config = 1;
+	    push(@order, "LOCAL_CONFIG");
+	    next;
+	}
+
+	if ($local_config) {
+	    $value{"LOCAL_CONFIG"} .= $_;
+	    next;
+	}
+	elsif (/^(\S+):\s*(.*)/) {	# VARIABLE NAME: DEFAULT VALUE
+	    $key = $1;
+	    $str = $2;
+	    $attach++;
+
+	    # keyword
+	    print STDERR "define \$comment_key = $key;\n" if $verbose;
+	    $comment_key = $key;
+
+
+	    if ($str =~ /^&path\((\S+)\)(.*)/) { 
+		$str = &search_path($1);
+		$FixError{$key} = 1 unless $str;
+		$str = $str . $2;
+
+		printf STDERR "%-10s  %s\n", $key, $str if $opt_d;
+		$FixPath{$key} = $str;
+	    }
+
+	    if ($str =~ /^&fix:(\S+)\s+(\S+)/) { 
+		$f   = $1;
+		$str = $org = $2;
+		$str = &$f($str);
+
+		local($fqdn, $dn, $hostname) = &CheckDNS;
+		$FixDNS{'FQDN'}      = $fqdn;
+		$FixDNS{'DOMAINNAME'}= $dn;
+		$FixError{$key}      = 1 unless $str;
+	    }
+
+	    if ($str =~ /^&is_unix/) {
+		$str = ($ENV{'OS'} =~ /Windows_NT/) ? 0 : 1;
+	    }
+
+	    if ($key eq 'INFO') {
+		$INFO++;
+		$key = "INFO:$INFO";
+	    }
+
+	    push(@order, $key);
+
+	    $str =~ s/@/\\@/g;
+	    while ($str =~ s/\\\\@/\\@/g) { 1;}
+	    $value{$key} = ($str =~ /^\d+$/) ? $str : "\"$str\"";
+
+	    ##  XXX 3.0B bug?
+	    ##  It is needed to avoid default_config.ph overwrites
+	    ##  config.ph definitions. For example $CONTROL_ADDRESS
+	    ##  in default_config.ph overwrites config.ph commnted-out
+	    ##  '# $CONTROL_ADDRESS' in config.ph ???
+	    ##  If $install mode (cf/config -i), WE SHOULD NOT
+	    ##    load value like acct@domain form to default_config.ph.
+	    ##  or SHOULD MODIFY cf/MANIFEST ???
+	    # if ($install) {
+	    #   if ($str =~ /\@/) { $value{$key} = "''";}
+	    # }
+
+	    # next; # not next for comments
+	}
+
+	# comments buffer supported for version 3
+	if ($comment_key) {
+	    if ($comment_buf) {
+		#print STDERR "$comment_key < allcated \$comment_buf\n";
+		#print STDERR "\$comment_buf line=($_)\n";
+
+		$comment{$comment_key} .= "$comment_buf";
+		undef $comment_buf;
+	    }
+
+	    /^\s*(\#.*)/ && ($comment{$comment_key} .= "$1\n");
+	}
+	else {
+	    print STDERR "alloc \$comment_buf($_)\n" if $_ && $verbose;
+	    /^\s*(\#.*)/ && ($comment_buf .= "$1\n");
+	}
+
+    } # while;
+    
+    close(MANIFEST);
+
+    # making the hash 
+    for (@order) { $OrderHash{$_} = 1;}
+
+    print STDERR "SetDefaults Done.\n\n" if $verbose;
+
+    $HEADER .= "\# Section Index (cf/MANIFEST $Manifest_Version)\n$Index\n";
+}
+
+
+sub CheckDNS
+{
+    local($fqdn, @fqdn, $hostname, $dn);
+
+    chop($fqdn = `hostname`);
+
+    if ($fqdn =~ /(\S+)\.(\S+)/) { # hostname gives FQDN
+	@fqdn       = split(/\./, $fqdn);
+	$hostname   = shift @fqdn;
+	$dn         = join('.', @fqdn);
+    }
+    else {
+	$hostname = $fqdn;
+	local($name, $aliases, @opt) = gethostbyname($fqdn);
+	local($e) = "$name $aliases ";
+
+	if ($e =~ /$hostname\.([\S+\.]+)\. / || 
+		$e =~ /$hostname\.([\S+\.]+) /) {
+	    $hostname = $hostname;
+	    $dn       = $1;
+	    $fqdn     = "$hostname\.$dn";
+	}
+    }
+
+    ($fqdn, $dn, $hostname);
+}
+
+
+sub FixEnv
+{
+    while (<>) {
+	chop;
+
+	if (/^\$(\S+)(\s*=\s*)\"(.*)\"(;.*)/) {	# VARIABLE NAME: DEFAULT VALUE
+	    $key = $1;
+	    $eq  = $2;
+	    $str = $3;
+	    $pad = $4;
+
+	    if ($FixError{$key}) {
+		printf STDERR "Hmm... %-10s    %s\n", $key, "NOT FOUND";
+		printf STDERR "       Please fix it manually if you need\n";
+		&ErrorLog("\t$key NOT FOUND");
+	    }
+
+	    if ($newstr = ($FixPath{$key} || $FixDNS{$key})) {
+		if ($newstr ne $str) { 
+		    if ($newstr) {
+			printf STDERR "Fixing %-10s => %s\n", $key, $newstr;
+		    }
+
+		    $_ = "\$$key$eq\"$newstr\"$pad";
+		}
+		else {
+		    printf STDERR "O.K.   %-10s    %s\n", $key, $str;
+		}
+	    }
+	}
+
+	print "$_\n";
+    }
+}
+
+
+sub search_path
+{
+    local($f) = @_;
+    local($path) = $ENV{'PATH'};
+    local($prog, $dir, $p);
+
+    for $prog (split(/:/, $f)) {
+	($p)  = split(/\\s/, $prog);
+	$prog =~ s#\\s# #g;
+
+	for $dir (split(/:/, $path)) { 
+	    if (-f "$dir/$p") { return "$dir/$prog";}
+	}
+
+	print STDERR "search_prog; $prog is not found\n" if $debug;
+    }
+
+    "";
+}
+
+
+sub ErrorLog
+{
+    print STDERR "open(APP, >> $motd) < @_\n";
+
+    local($motd) = $ERROR_LOG || "etc/motd.error";
+    open(APP, ">> $motd") || retunr;
+    select(APP); $| = 1; select(STDOUT);
+    print APP "@_\n";
+    close(APP);
+
+    1;
+}
+
+
+
+package rv;
+
+
+sub main'reverse
+{
+    local($file) = @_;
+
+    # &PreScanConfigPH($file);
+
+    ########################################################################
+    #  TRICKY; (but why?)
+    for (DIR, CACHE_DIR, FTP_DIR) {
+	eval "\$$_ = '\$${_}';\n";
+    }
+
+    print STDERR "=== do $file in 'rv' Name Space ===\n" if $verbose;
+
+    do $file;
+
+    for (DIR, CACHE_DIR, FTP_DIR) {
+	eval "undef \$${_};";
+    }
+
+    undef $rv'RM; undef $rv'CP; undef $rv'LOCKFILE; undef $rv'LOCKDIR;
+    ########################################################################
+
+
+
+    if ($] =~ /5.\d\d\d/) {
+	*stab = *{"rv::"};
+    }
+    else {
+	(*stab) = eval("*_rv");
+    }
+
+    while (($key, $val) = each(%stab)) {
+	if ($verbose) {
+	    print STDERR "\n".('-'x50);   
+	    print STDERR "\nTRY\t$key\n";
+	    print STDERR "\t$key != [A-Z0-9_]\n" if $key !~ /^[A-Z0-9\_]+$/;
+	}
+
+	next if $key !~ /^[A-Z0-9\_]+$/;
+
+	local(*entry) = $val;
+
+	if ($verbose) {
+	    if (defined $entry) {
+		print STDERR "GO \$\t$key\n";
+	    }
+	    elsif (defined @entry) {
+		print STDERR "GO \@\t$key\n";
+	    }
+	    elsif (defined %entry) {
+		print STDERR "GO \%\t$key\n";
+	    }
+	    elsif (defined &entry) {
+		print STDERR "GO \&\t$key\n";
+	    }
+	    else {
+		print STDERR "GO !=\t$key\n";
+	    }
+	}
+
+	if (defined($entry)) { 
+	    print STDERR "   ? $entry == $main'value{$key}\n" if $verbose;#';
+	    
+	    next if "$entry"     eq $main'value{$key};
+	    next if "\"$entry\"" eq $main'value{$key};
+	    
+	    print STDERR "\n\tDIFF $key\n\n" if $verbose;
+
+	    if ($key  =~ /HOOK/) {
+		if ($entry  !~ /\#/) {
+		    $OUT'HOOK .= "\$$key = q\#$entry\#;\n"; #';
+		}
+		elsif ($entry  !~ /\%/) {
+		    $OUT'HOOK .= "\$$key = q%$entry%;\n"; #';
+		}
+		elsif ($entry  !~ /\@/) {
+		    $OUT'HOOK .= "\$$key = q@$entry@;\n"; #';
+		}
+		else {
+		    print STDERR "CONVERSION ERROR: ";
+                    print STDERR "plaese define [$key]:\n$entry;\n";
+		}
+	    }
+	    else {
+		$entry =~ s/\012/\\n/g;
+		$value{$key} = $entry;
+		$other_value{$key} = $entry;
+	    }
+
+	    next;
+	}
+
+	if (defined @entry) {
+	    undef $num;
+	    $OUT'LOCAL .=  "\@$key = (";
+	    foreach (@entry) {
+		$OUT'LOCAL .= "," if $num++ > 0;
+		$OUT'LOCAL .= "'$_'";
+	    }
+	    $OUT'LOCAL .=  ");\n";
+
+	    next;
+	}
+
+	# Is there an associative array that isn't the one
+	# we're currently iterating through?
+	
+	if ($key ne "_$package" && defined %entry) {
+	    $OUT'LOCAL .= "\%$key = (\n"; #';
+	    foreach $key (sort keys(%entry)) {
+		$OUT'LOCAL .= "'$key', '". $entry{$key} ."',\n";#';
+	    }
+	    $OUT'LOCAL .=  ");\n"; #';
+		
+	    next;
+	}
+
+	$OUT'UNMATCH .= "$key ;\n";
+
+    } # %stab;
+
+
+
+    for $key (@main'order) {
+	if ($key =~ /INFO:/) {
+	    print "\n" if $match;
+	    undef $match;
+	    next;
+	}
+
+	if (defined $value{$key}) {
+	    printf "%-20s    %s\n", "$key", $value{$key};
+	    $match++;
+	}
+    }
+
+    undef $buffer;
+
+    for (keys %other_value) {
+	$v = $other_value{$_};
+	next if $main'OrderHash{$_}; #';
+	$buffer .= sprintf("\$%-20s = \"%s\";\n", $_, $v);
+    }
+
+
+    print "\n\nLOCAL_CONFIG\n\n";
+    print $OUT'HOOK;
+    print "\n";
+    print $OUT'LOCAL;
+
+
+    print "\n";
+    print "\#\#\# cf/config (reverse-mode) generates below    \#\#\#\n";
+    print "\#\#\# NOT DEFINED ENTRIES in cf/MANIFEST ARE HERE \#\#\#\n";
+    print $buffer;
+}
+
+
+package dumpvar;
+
+sub rv'PreScanConfigPH #';
+{
+    local($file) = @_;
+
+    do $file;
+
+    if ($] =~ /5.\d\d\d/) {
+	*stab = *{"dumpvar::"};
+    }
+    else {
+	(*stab) = eval("*_dumpvar");
+    }
+
+    while (($key,$val) = each(%stab)) {
+	next if @vars && !grep($key eq $_,@vars);
+	local(*entry) = $val;
+
+	if (defined $entry) {
+	    eval("$rv'\$$key = 1; undef $rv'\$$key");
+	}
+	elsif (defined @entry) {
+	    eval("$rv'\@$key = 1; undef $rv'\@$key");
+	}
+	elsif ($key ne "_$package" && $key ne "_DB" && defined %entry) {
+	    eval("$rv'\%$key = 1; undef $rv'\%$key");
+	}
+	else {
+	    print STDERR "not match $key\n" if $verbose;
+	}
+    }
+}
+
+
+1;
