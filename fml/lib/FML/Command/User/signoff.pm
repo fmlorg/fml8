@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: signoff.pm,v 1.10 2002/09/11 23:18:10 fukachan Exp $
+# $FML: signoff.pm,v 1.11 2002/09/22 14:56:48 fukachan Exp $
 #
 
 package FML::Command::User::signoff;
@@ -17,7 +17,7 @@ use FML::Command::User::unsubscribe;
 @ISA = qw(FML::Command::User::unsubscribe use);
 
 
-# Descriptions: unsubscribe user
+# Descriptions: unsubscribe request, forwarded to "unsubscribe" command.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: forward request to unsubscribe module
 # Return Value: none

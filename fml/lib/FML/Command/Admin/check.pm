@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: check.pm,v 1.4 2002/09/22 14:56:44 fukachan Exp $
+# $FML: check.pm,v 1.5 2002/09/24 14:23:12 fukachan Exp $
 #
 
 package FML::Command::Admin::check;
@@ -16,7 +16,7 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Command::Admin::check - checknostic
+FML::Command::Admin::check - cheap diagnostic check.
 
 =head1 SYNOPSIS
 
@@ -24,7 +24,7 @@ See C<FML::Command> for more detaicheck.
 
 =head1 DESCRIPTION
 
-show user check(s).
+cheap diagnostic check.
 
 =cut
 
@@ -62,6 +62,8 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config = $curproc->{ config };
+
+    # XXX-TODO validate $ml_name existence firstly.
 
     for my $rule (@rules) {
 	$self->$rule($curproc, $command_args);
@@ -131,56 +133,56 @@ sub _dir_mode
 }
 
 
-# Descriptions: check $dir mode is 0700
+# Descriptions: check if $dir mode is 0700
 #    Arguments: STR($dir)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub _is_700
 {
     my ($dir) = @_;
-    my $mode = _dir_mode($dir);
+    my $mode  = _dir_mode($dir);
 
     my $smode = sprintf("%o", $mode);
     return ($smode eq '700' ? 1 : 0);
 }
 
 
-# Descriptions: check $dir mode is 0770
+# Descriptions: check if $dir mode is 0770
 #    Arguments: STR($dir)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub _is_770
 {
     my ($dir) = @_;
-    my $mode = _dir_mode($dir);
+    my $mode  = _dir_mode($dir);
 
     my $smode = sprintf("%o", $mode);
     return ($smode eq '770' ? 1 : 0);
 }
 
 
-# Descriptions: check $dir mode is 0777
+# Descriptions: check if $dir mode is 0777
 #    Arguments: STR($dir)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub _is_777
 {
     my ($dir) = @_;
-    my $mode = _dir_mode($dir);
+    my $mode  = _dir_mode($dir);
 
     my $smode = sprintf("%o", $mode);
     return ($smode eq '777' ? 1 : 0);
 }
 
 
-# Descriptions: check $dir mode is 0755
+# Descriptions: check if $dir mode is 0755
 #    Arguments: STR($dir)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub _is_755
 {
     my ($dir) = @_;
-    my $mode = _dir_mode($dir);
+    my $mode  = _dir_mode($dir);
 
     my $smode = sprintf("%o", $mode);
     return ($smode eq '755' ? 1 : 0);

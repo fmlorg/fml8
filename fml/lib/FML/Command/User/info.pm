@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: info.pm,v 1.6 2002/09/11 23:18:10 fukachan Exp $
+# $FML: info.pm,v 1.7 2002/09/22 14:56:47 fukachan Exp $
 #
 
 package FML::Command::User::info;
@@ -37,6 +37,8 @@ FML::Command::User::info - send back guide file
 See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
+
+an alias of "guide" module.
 
 =head1 CODING STYLE
 

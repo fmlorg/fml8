@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: deluser.pm,v 1.2 2002/09/11 23:18:07 fukachan Exp $
+# $FML: deluser.pm,v 1.3 2002/09/22 14:56:44 fukachan Exp $
 #
 
 package FML::Command::Admin::deluser;
@@ -17,7 +17,7 @@ use FML::Command::Admin::unsubscribe;
 @ISA = qw(FML::Command::Admin::unsubscribe);
 
 
-# Descriptions: unsubscribe user
+# Descriptions: remove the specified user.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: forward request to unsubscribe module
 # Return Value: none

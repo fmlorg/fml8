@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: deladmin.pm,v 1.3 2002/09/11 23:18:07 fukachan Exp $
+# $FML: deladmin.pm,v 1.4 2002/09/22 14:56:44 fukachan Exp $
 #
 
 package FML::Command::Admin::deladmin;
@@ -23,7 +23,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-deladmin a new user.
+remove the specified administrator.
 
 =head1 METHODS
 
@@ -60,6 +60,10 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ config };
+
+    # 
+    # XXX-TODO: remove targets are a set of admin_*_maps
+    # 
     my $member_map    = $config->{ primary_admin_member_map };
     my $recipient_map = $config->{ primary_admin_recipient_map };
     my $options       = $command_args->{ options };

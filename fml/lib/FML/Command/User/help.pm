@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: help.pm,v 1.13 2002/09/11 23:18:10 fukachan Exp $
+# $FML: help.pm,v 1.14 2002/09/22 14:56:47 fukachan Exp $
 #
 
 package FML::Command::User::help;
@@ -56,7 +56,7 @@ sub new
 sub need_lock { 1;}
 
 
-# Descriptions: send file by FML::Command::SendFile.
+# Descriptions: send help file by FML::Command::SendFile.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
 # Return Value: none

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.2 2002/11/23 13:12:47 fukachan Exp $
+# $FML: digestoff.pm,v 1.1 2002/11/24 02:52:43 fukachan Exp $
 #
 
 package FML::Command::Admin::digestoff;
@@ -15,7 +15,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 
 =head1 NAME
 
-FML::Command::Admin::digest - digest mode on
+FML::Command::Admin::digest - digest mode off
 
 =head1 SYNOPSIS
 
@@ -23,7 +23,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-change digest mode for the specified address to off/on.
+disable digest mode for the specified address.
 
 =head1 METHODS
 
@@ -52,7 +52,7 @@ sub new
 sub need_lock { 1;}
 
 
-# Descriptions: change on or off digest mode
+# Descriptions: disable digest mode for the specified user.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $recipient_map,$digest_recipient_maps
 sub process
@@ -70,7 +70,7 @@ sub process
 }
 
 
-# Descriptions: show cgi menu for on
+# Descriptions: show cgi menu for digestoff.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $recipient_map
 # Return Value: none
