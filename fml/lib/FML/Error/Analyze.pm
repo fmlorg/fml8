@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.9 2002/12/12 04:57:53 fukachan Exp $
+# $FML: Analyze.pm,v 1.10 2002/12/18 04:23:41 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -169,7 +169,9 @@ sub error_continuity
 
     # debug info
     {
-	my ($addr, $ra, $sum);
+	my $addr = '';
+	my $sum  = 0;
+	my $ra   = ();
 	while (($addr, $ra) = each %$summary) {
 	    $sum = 0;
 	    for my $v (@$ra) {
@@ -179,13 +181,31 @@ sub error_continuity
 		}
 	    }
 
-	    Log("summary: $addr sum=$sum (@$ra)");
-
+	    my $array = __debug_printable_array($ra);
+	    Log("summary: $addr sum=$sum ($array)");
 	    push(@removelist, $addr) if $sum >= $limit;
 	}
     }
 
     return \@removelist;
+}
+
+
+# Descriptions: return array list with 0 padding (debug)
+#    Arguments: ARRAY_REF($ra)
+# Side Effects: none
+# Return Value: STR
+sub __debug_printable_array
+{
+    my ($ra) = @_;
+    my $s    = '';
+
+    for my $x (@$ra) {
+	$s .= defined $x ? $x : 0;
+	$s .= " ";
+    }
+
+    return $s;
 }
 
 
