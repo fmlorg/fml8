@@ -1,5 +1,5 @@
 <!--
-   $FML: merge.fml4to8.sgml,v 1.3 2004/03/31 06:28:19 fukachan Exp $
+   $FML: merge.fml4to8.sgml,v 1.4 2004/04/07 11:07:11 fukachan Exp $
 -->
 
 
@@ -9,18 +9,24 @@
 	</title>
 
 <para>
-2004/03: 
-fml4 の $DIR ($ml_home_dirにあたるもの)、
-たとえば /var/spool/ml/elena、
-を fml8 形式の構成へ自動変換するコマンドを実装しました。
-ただ、まだ設定ファイルの翻訳機能は予備的なもので、
-順次、改良されていく予定です。
+2004/03: fml4 の $DIR ($ml_home_dirにあたるもの)、たとえば 
+/var/spool/ml/elena、を fml8 形式の構成へ自動変換するコマンドを実装し
+ました。ただ、まだ設定ファイルの翻訳機能は予備的なもので、順次、改良さ
+れていく予定です。
+</para>
+
+<para>
+2004/11: 
+<link linkend="mergeml.fml4.overview">
+fml4 の fml.pl を fml8 の fml.pl と入れ換え可能
+</link>
+としました。
 </para>
 
 
 <sect1 id="mergeml.fml4to8.overview">
 	<title>
-	概要: fml4 から fml8 へ
+	概要: fml4 から fml8 への移行(1) fml8 形式への変換
 	</title>
 
 <para>
@@ -73,6 +79,47 @@ config.ph であれば、fml8 の config.cf へ全自動で変換できる予定です。な
 お、簡単な config.ph とは、たとえば、Subjectのタグと投稿制限の設定など
 の、makefml config (メニュー)で設定変更ができたレベルのものを想定して
 います。
+</para>
+
+</sect1>
+
+
+<sect1 id="mergeml.fml4.overview">
+	<title>
+	概要: fml4 から fml8 への移行(2) 
+	fml4 の実行ファイルを入れ換え、そのまま使う
+	</title>
+
+<para>
+2004/11: fml4 の fml.pl を fml8 の fml.pl と入れ換え可能としました。
+いわば、Postfix の /usr/sbin/sendmail (sendmail 互換コマンド)みたいな
+扱い方と考えればよいでしょう。
+</para>
+
+<para>
+たとえば、次のように link を張ってください。
+<screen>
+% su fml
+% make configure
+% su root
+# make install
+# mv /usr/local/fml/fml.pl /usr/local/fml/fml.pl.orig
+# ln -s /usr/local/libexec/fml/fml.pl   /usr/local/fml/fml.pl
+# ln -s /usr/local/libexec/fml/msend.pl /usr/local/fml/msend.pl
+# ln -s /usr/local/libexec/fml/mead.pl  /usr/local/fml/libexec/mead.pl
+</screen>
+</para>
+
+<para>
+正確には fml4 の設定ファイルをそのまま使っているわけではありません。
+fml.pl (fml8) が起動された時に config.cf が見つからないと、ＭＬのホー
+ムディレクトリにある config.ph から config.cf を自動生成し、そのファイ
+ルを読み込んで fml8 プロセスとして動作します。
+</para>
+
+<para>
+設定ファイルの自動変換が可能な範囲は限られていますが、fml4 のメニュー
+で設定可能な(単純な)ものなら自動変換して何とかなるようになっています。
 </para>
 
 </sect1>
