@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.82 2004/02/26 10:36:05 fukachan Exp $
+	$FML: chapters.ent,v 1.83 2004/03/18 08:59:34 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -120,6 +120,8 @@
 <!entity chapter.filename            SYSTEM "internals/filename.sgml">
 
 <!entity chapter.userctl             SYSTEM "internals/userctl.sgml">
+
+<!entity chapter.merge.internal      SYSTEM "internals/merge.sgml">
 
 
 
