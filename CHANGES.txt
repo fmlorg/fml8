@@ -1,6 +1,26 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/03/05
+
+   FML::Process::Command Distribute 
+	return header for debug in error
+	
+   FML::Process::Kernel 
+	implement reply_message_add_header_info().
+
+	disable reply_message() in _check_restrictions().
+	
+	add "$curproc->caller_info($msg, caller) if $debug;" at a few places.
+	implement caller_info().
+	
+   FML::Filter 
+	「フィルタに弾かれたぞ」とメッセージを返す (プロトタイプ)
+	
+   messages
+	「メンバーじゃない」時のメッセージを改良
+	ウィルスかもよ？などとヒントも解説する。
+
 2003/03/03
 
    FML::Article 
@@ -4378,4 +4398,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.131 2003/03/02 16:39:34 fukachan Exp $
+$FML: CHANGES.txt,v 1.132 2003/03/04 02:54:49 fukachan Exp $
