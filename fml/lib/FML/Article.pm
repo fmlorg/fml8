@@ -134,7 +134,7 @@ sub spool_in
 	}
     }
     else {
-	Log("not spool");
+	Log("not spool article");
     }
 }
 
