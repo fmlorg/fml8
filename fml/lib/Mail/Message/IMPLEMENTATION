@@ -1,0 +1,19 @@
+
+        OBJ(Mail::Message)
+                A
+                |
+                V
+----->  OBJ(Mail::Message::ToHTML) -------> Mail::Message::DB
+                |                             A     |
+                V                             |     |
+            Mail::Message::Thread ------------+     |
+            A                                       V
+            |                                    Tie::* --> AnyDBM
+            |
+            |      +---------------------------> cache with time limit
+            |      |
+            |      |
+<< unified cache database interface >>
+              A
+              |
+              |
