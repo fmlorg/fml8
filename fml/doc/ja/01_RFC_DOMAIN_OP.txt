@@ -2,26 +2,46 @@
 		RFC: ドメイン(default + virtual)の操作の統合
 
 [ビジョン]
+
 	利点:
-		設定を、ＭＬを用意するのに必要な操作のほぼ全部をコマンド
+		MLを用意するのに必要な操作のほぼ全部をコマンド
 		操作にすることで自動チェックが効く。
 
-		誤操作相談が減る（かも）。
+		誤操作相談が減る(かも)。
 
-		ひっこしが楽になる（はず）。
+		ひっこしが楽になる(はず)。
 
 		/etc/fml/ と/var/spool/ml/$ml_name/ 以下のファイルについて
-		この構成がminimumと言えるか？がこれを実装してみると分かる。
+		この構成がminimumと言えるか?がこれを実装してみると分かる。
 
 	欠点:	ツールを作る時(最初)だけは気合いが要るねぇ;-)
-
+		
 
 [使い方]
+
+   0. ml_home_prefix のディレクトリ群は入れ子にしてはいけない
+	入れ子にしてしまうとchange*コマンドが使えない
+
+	例: 禁止
+		/var/spool/ml			(fml.org)
+		/var/spool/ml/nuinui.net	(nuinui.net)	
+
+   1. デフォルトドメインしか使わない人
+
+	いままで通りなので、気にしないで〜
+	＃ principle of least surprise
+
+   1.1 デフォルトドメインしか使わないが、/var/spool/ml 以外を使いたい
+	1.1.1	configure で指定する。
+	1.1.2	インストール後、makefml newdomain で設定する。
+
+   2. 複数ドメインを使う可能性を考えている人
+
 	一連の作業がこのように変更される（と予想している）。
 	ＭＬの作成は、「ドメインの宣言」＋「ＭＬの作成」の二段階にする。
 	＃もちろん「ドメインの宣言」は最初の一回だけです。
 
-	% makefml newdomain fml.org
+	% makefml newdomain fml.org (デフォルトドメインの場合は省略可)
 	% makefml newml elena もしくは makefml newml elena@fml.org
 	
 	ＭＬの削除は今までどおり
@@ -53,6 +73,7 @@ I. あらたに「makefml newdomain」コマンドを創設する。
 	注意:	/var/spool/ml および ml_home_prefix ファイルに 
 		writable permission がないとエラーになる。
 
+
   例: 各ドメインごとに使うディレクトリを用意する
 
 	% makefml newdomain fml.org    /var/spool/ml/fml.org
@@ -64,13 +85,39 @@ I. あらたに「makefml newdomain」コマンドを創設する。
 	% makefml newdomain fml.org /var/spool/ml
 
 
+	注意:	同じディレクトリに複数のドメインをマップすることが可能。
+
+  例: 
+	ドメインＡ	ディレクトリＡ
+	ドメインＢ	ディレクトリＢ
+
+	という定義をした場合、つまり次のようなコマンド列を打った場合を
+	考える。
+
+	% makefml newdomain example.org /var/spool/ml/example.org
+	% makefml newdomain example.jp  /var/spool/ml/example.org
+	% makefml newml info@example.org
+	(この後 makefml newml info@example.jp を実行するとエラー)
+
+	この場合、info@example.jp は example.org の include ファイルを
+	叩くようにすると思います。To: とか Cc: は素通りなので、まぁい
+	いですが、List-* は .org の方になってるという具合いでしょう。
+	まぁ、それはしょうがない。
+
+	TODO: makefml newml がよろしく newdomain も呼ぶケースがある？
+		まぁ、ありえるのはわかるけど、
+		permission の問題が解決できるかなぁ？
+
+
 II. あらたに「makefml rmdomain」コマンドを創設する。
 
 	% makefml rmdomain ドメイン
 
 	このコマンドは、/etc/fml/ml_home_prefix ファイルから該当するド
 	メイン行を削除する。
+
 	ディレクトリには何もしない。
+	オプションで、ＭＬのホームディレクトリ群も消す(-r?)。
 
 	~fml/.qmail-ドメイン-* ファイル群を消す。
 
@@ -79,6 +126,9 @@ III. では、引越しのために、「makefml changemlhomeprefix」は作れるか？
 
 	- ん〜難しいかな?;-)
 	- こんな長いコマンド名はちょっと…良い案募集
+	- めったに使うものでもないので、長い名前でも良いとも思える。
+	- 諸般の事情により、ディレクトリパス名を変更したい場合
+	- 容量がなくなって/var/mlから/home/user/ml/以下に移したい場合
 
 	% makefml changemlhomeprefix ドメイン 旧ディレクトリ 新ディレクトリ
 
@@ -137,8 +187,85 @@ IV. では、ドメイン名を変更したい場合は？
 
 		postfix の場合、virtual_maps と alias_maps 
 
-	(4. MTA リスタート)
+	4. *.cgi を再生成する
+		ドメイン名などは .cgi 内にハードコードされているため。
 
+	(5. MTA リスタート)
+
+
+	TODO: 
+		map の中も頑張って書き換える？
+		やりすぎの予感もあるが、それよりも map に書き込めない
+		場合も考えないといけないのが難しい。
+
+
+V.	ドメインとディレクトリ両方を変更したい場合
+
+	% makefml changedomain 旧ドメイン 新ドメイン
+	% makefml changemlhomeprefix 新ドメイン 旧ディレクトリ 新ディレクトリ
+
+	とせずとも、これに相当することを一発で行なえるコマンドにしておく。
+
+	この真意は、ディレクトリのマップは ml_home_prefix_maps に書い
+	てあるはずなので、明示的にコマンドラインで指定されなくても可能
+	なはずであるということにある。その方がミスが減るだろう。
+
+
+VI.	ml_home_prefix_maps を表示するコマンドを用意する。なんだろう？
+
+	% makefml ?
+
+	いや、このさい *_maps を表示する汎用コマンドを作るのがいいのかも？
+
+	% makefml listmap $ml_name $map_name
+	% fml $ml_name listmap $map_name
+
+	って、list が、そもそも recipient_maps の中身を表示するものでしたね。
+	引数を拡張するのがいいのかな
+
+
+[ケーススタディ]
+
+Q: ＭＬ名もディレクトリ名も変更しない。
+A: 作業は不要。
+	例: 単に物理的に引っ越す場合
+	例: IP アドレスが変わるだけ
+
+Q: ドメイン名の変更をするが、ディレクトリ名は変わらない。
+A: changedomain コマンド一発
+
+
+Q: ドメイン名は変更せず、ディレクトリは変更する。
+A: changemlhomeprefix コマンド一発
+
+Q: 両方やる場合
+A: うーん… コマンドが頑張るしかないわねぇ
+
+
+[その他、雑多な考察]
+
+Q: これ以上、小さな仕様になるか？
+	
+	include ファイルや aliaes にはディレクトリかＭＬ名が現れるが、
+	これ以上設定項目を減らすことは無理だろう。
+
+
+Q: ＭＬ名はプライマリキー？
+
+	yes
+
+	aliases や virtual ファイルで定義の固まりを示している。
+	include ファイルは「プログラム ＭＬ名」という使い方をしている。
+
+
+Q: IPアドレスの変更は?
+
+	無関係
+
+
+[リファレンス]
+
+	fml-devel の 2003/10末、600 番台あたりの議論を読もう。
 
 ------------------------------------------------
-$FML: 01_RFC_DOMAIN_OP.txt,v 1.2 2003/10/26 04:38:08 fukachan Exp $
+$FML: 01_RFC_DOMAIN_OP.txt,v 1.3 2003/10/28 04:38:53 fukachan Exp $
