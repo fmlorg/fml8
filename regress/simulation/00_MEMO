@@ -8,6 +8,28 @@
 	XXX
 
 
+¡û	¥¤¥ó¥¹¥È¡¼¥é¤â perl version ¤ò (fml-devel:330)
+
+
+¡û	too old date mail must be a spam
+
+
+¡û	input check ?
+
+		FML/Error.pm
+		FML/Process/Kernel.pm
+		FML/Process/CGI/Param.pm
+		FML/Process/Command.pm
+		FML/Command/Admin/file.pm
+		FML/Command/Admin/dir.pm
+		FML/Command/DirUtils.pm
+		FML/Command/FileUtils.pm
+		FML/Restriction/Base.pm
+		FML/Restriction/CGI.pm
+		FML/Restriction/Command.pm
+		Calender/Lite.pm
+
+
 ¡û	fmlerror
 
 	error summary ?
@@ -195,4 +217,4 @@ sub compare_euc_string
 
 
 ----------
-$FML: 00_MEMO,v 1.53 2002/10/22 02:15:36 fukachan Exp $
+$FML: 00_MEMO,v 1.54 2002/11/26 14:15:25 fukachan Exp $
