@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DB.pm,v 1.6 2001/11/04 04:46:40 fukachan Exp $
+# $FML: DB.pm,v 1.7 2001/11/04 05:02:41 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -44,17 +44,12 @@ untie() corresponding hashes opened by C<db_open()>.
 
 =cut
 
-
-my @kind_of_databases = qw(thread_id
-                           date
-			   status
-			   sender
-			   articles
-			   message_id);
+my @kind_of_databases = qw(thread_id date status sender articles
+                           message_id);
 
 
 # Descriptions: 
-#    Arguments: $self $args
+#    Arguments: $self
 # Side Effects: 
 # Return Value: none
 sub db_open
@@ -93,7 +88,7 @@ sub db_open
 
 
 # Descriptions: 
-#    Arguments: $self $args
+#    Arguments: $self
 # Side Effects: 
 # Return Value: none
 sub db_clear
@@ -109,6 +104,10 @@ sub db_clear
 }
 
 
+# Descriptions: 
+#    Arguments: $directory
+# Side Effects: 
+# Return Value: none
 sub _db_clear
 {
     my ($db_dir) = @_;
@@ -136,7 +135,7 @@ sub _db_clear
 
 
 # Descriptions: 
-#    Arguments: $self $args
+#    Arguments: $self
 # Side Effects: 
 # Return Value: none
 sub db_close
@@ -154,6 +153,42 @@ sub db_close
 
     my $index = $self->{ _hash_table }->{ _index };
     untie %$index;
+}
+
+
+=head2 db_mkdb($min, $max)
+
+=cut
+
+my $debug = defined $ENV{'debug'} ? 1 : 0;
+
+
+sub db_mkdb
+{
+    my ($self, $min_id, $max_id) = @_;
+    my $config    = $self->{ _config };
+    my $spool_dir = $config->{ spool_dir };
+    my $args = {};
+
+    use Mail::Message;
+    use File::Spec;
+
+    for my $key (qw(fd db_base_dir ml_name spool_dir)) {
+	$args->{ $key } = $self->{ $key };
+    }
+
+    for my $id ( $min_id .. $max_id ) {
+	print STDERR "process $id\n" if $debug;
+
+	# XXX overwrite (tricky)
+	$self->{ _config }->{ article_id } = $id;
+
+	# analyze
+	my $file = File::Spec->catfile($spool_dir, $id);
+	my $fh   = new FileHandle $file;
+	my $msg  = Mail::Message->parse({ fd => $fh });
+	$self->analyze($msg);
+    }
 }
 
 
