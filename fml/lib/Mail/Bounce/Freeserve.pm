@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003 MURASHITA Takuya
+#  Copyright (C) 2003,2004 MURASHITA Takuya
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Freeserve.pm,v 1.4 2003/10/15 01:03:39 fukachan Exp $
+# $FML: Freeserve.pm,v 1.5 2004/06/30 03:05:16 fukachan Exp $
 #
 
 #
@@ -84,7 +84,7 @@ MURASHITA Takuya
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003 MURASHITA Takuya
+Copyright (C) 2003,2004 MURASHITA Takuya
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
