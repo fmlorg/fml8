@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Sort.pm,v 1.2 2001/11/09 12:08:46 fukachan Exp $
+# $FML: Sort.pm,v 1.3 2001/11/09 15:09:03 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Sort;
@@ -32,13 +32,17 @@ sub sort_thread_id
     $self->{ _cost } = $cost;
 
     @$thread_id_list = sort { 
-	(defined($cost->{$b}) ? $cost->{$b} : '') 
-	    cmp 
-		(defined($cost->{$a}) ? $cost->{$a} : '')
+	$cost->{$b} <=> $cost->{$a}
     } @$thread_id_list;
 
     return $thread_id_list;
 }
+
+
+my $status_cost = {
+    open     => ( 1 << 10 ),
+    analyzed => ( 1 <<  9 ),
+};
 
 
 # Descriptions: 
@@ -67,7 +71,8 @@ sub _calculate_age
 	$age{ $tid } = $age;
 
 	# evaluate cost hash table which is { $thread_id => $cost }
-	$cost{ $tid } = $rh->{ _status }->{ $tid }.'-'. $age;
+	my $status = $rh->{ _status }->{ $tid };
+	$cost{ $tid } = $status_cost->{ $status } + $age;
     }
 
     return (\%age, \%cost);
