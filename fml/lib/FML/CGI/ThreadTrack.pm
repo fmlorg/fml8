@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.1 2001/11/09 00:13:53 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.2 2001/11/11 01:12:44 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -148,6 +148,7 @@ sub _show_guide
     print popup_menu(-name   => 'order', -values => $order );
 
     print submit(-name => 'change target');
+    print reset(-name => 'reset');
 
     print end_form;
     print "<HR>\n";
