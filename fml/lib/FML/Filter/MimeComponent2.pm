@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent2.pm,v 1.2 2002/10/21 08:35:45 fukachan Exp $
+# $FML: MimeComponent2.pm,v 1.3 2002/10/21 09:03:09 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -101,7 +101,8 @@ sub mime_component_check
 {
     my ($self, $msg, $args) = @_;
     my ($data_type, $prevmp, $nextmp, $mp, $action);
-    my $is_match = 0;
+    my $is_match  = 0;
+    my $is_cutoff = 0;
     my $i = 1;
     my $j = 1;
 
@@ -132,10 +133,17 @@ sub mime_component_check
 		$is_match = 1;
 		last RULE;
 	    }
+	    elsif ($action eq 'cutoff') {
+		$is_cutoff = 1;
+		$self->_cutoff($mp);
+	    }
 	    
 	    $i++; # prepare for the next _rule_match().
 	}
     }
+
+    # debug info
+    if ($is_cutoff) { $self->dump_message_structure($msg);}
 
     my $decision = $is_match ? $action : $default_action;
     my $reason   = $is_match ? "matched action" : "default action";
@@ -205,22 +213,25 @@ sub __regexp_match
 }
 
 
-#
-#sub _cutoff
-#{
-#	$prevmp = $mp->{ prev };
-#	if ($prevmp) {
-#	    my $prev_type = $prevmp->data_type();
-#	    if ($prev_type eq "multipart.delimiter") {
-#		$prevmp->delete_message_part_link();
-#		Log("only_plaintext delete multipart delimiter");
-#	    }
-#	}
-#	$mp->delete_message_part_link();
-#	Log("only_plaintext delete not plain $data_type");
-#    }
-#}
-#
+
+sub _cutoff
+{
+    my ($self, $mp) = @_;
+    my $data_type = $mp->data_type();
+    my $prevmp    = $mp->{ prev };
+
+    if ($prevmp) {
+	my $prev_type = $prevmp->data_type();
+	if ($prev_type eq "multipart.delimiter") {
+	    $prevmp->delete_message_part_link();
+	    Log("delete multipart delimiter");
+	}
+    }
+
+    $mp->delete_message_part_link();
+
+    Log("delete $data_type");
+}
 
 
 =head1 utilities
