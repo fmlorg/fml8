@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MTAControl.pm,v 1.13 2002/09/22 14:56:41 fukachan Exp $
+# $FML: MTAControl.pm,v 1.14 2002/12/18 04:12:47 fukachan Exp $
 #
 
 package FML::MTAControl;
@@ -15,9 +15,11 @@ use Carp;
 use FML::MTAControl::Postfix;
 use FML::MTAControl::Qmail;
 use FML::MTAControl::Procmail;
+use FML::MTAControl::Sendmail;
 @ISA = qw(FML::MTAControl::Postfix
 	  FML::MTAControl::Qmail
 	  FML::MTAControl::Procmail
+	  FML::MTAControl::Sendmail
 	  );
 
 my $debug = 0;
@@ -76,8 +78,9 @@ sub is_valid_mta_type
 {
     my ($self, $mta_type) = @_;
 
-    if ($mta_type eq 'postfix' ||
-	$mta_type eq 'qmail'   ||
+    if ($mta_type eq 'postfix'  ||
+	$mta_type eq 'qmail'    ||
+	$mta_type eq 'sendmail' ||
 	$mta_type eq 'procmail') {
 	return 1;
     }
@@ -246,7 +249,8 @@ sub remove_virtual_map
 
 
 # Descriptions: update virtual_map
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
+#    Arguments: OBJ($self) 
+#               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update virtual_map
 # Return Value: none
 sub update_virtual_map
@@ -277,6 +281,60 @@ sub _install
 	&FML::Config::Convert::convert_file($src, $dst, $config);
     };
     croak($@) if $@;
+}
+
+
+# Descriptions: remove the specified entry in the postfix style map
+#    Arguments: OBJ($self) 
+#               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
+# Side Effects: update virtual_map
+# Return Value: none
+sub _remove_postfix_style_virtual
+{
+    my ($self, $curproc, $params, $optargs, $p) = @_;
+    my $removed = 0;
+    my $key     = $p->{ key };
+
+    use File::Spec;
+    my $virtual     = $p->{ map };
+    my $virtual_new = $virtual . 'new'. $$;
+
+    if (-f $virtual) {
+	print STDERR "removing $key in $virtual\n";
+    }
+    else {
+	return;
+    }
+
+    use FileHandle;
+    my $rh = new FileHandle $virtual;
+    my $wh = new FileHandle "> $virtual_new";
+    if (defined $rh && defined $wh) {
+      LINE:
+	while (<$rh>) {
+	    if (/\<VIRTUAL\s+$key\@/ .. /\<\/VIRTUAL\s+$key\@/) {
+		$removed++;
+		next LINE;
+	    }
+
+	    print $wh $_;
+	}
+	$wh->close;
+	$rh->close;
+
+	if ($removed > 3) {
+	    if (rename($virtual_new, $virtual)) {
+		print STDERR "\tremoved.\n";
+	    }
+	    else {
+		print STDERR "\twarning: fail to rename virtual files.\n";
+	    }
+	}
+    }
+    else {
+	warn("cannot open $virtual")     unless defined $rh;
+	warn("cannot open $virtual_new") unless defined $wh;
+    }
 }
 
 
