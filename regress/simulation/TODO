@@ -4,23 +4,29 @@ kern/fml.pl                    13.30
 kern/liblmtp.pl                0.24	
 	kern/libloadconfig.pl          2.12	removed
 	kern/libsmtp.pl                4.22	done
-kern/libsmtphack.pl            0.39	
+	kern/libsmtphack.pl            0.39	removed?
+
+		* OUTGOING_ADDRESS is needed ?
+
 	kern/libsmtpmci.pl             0.29	done
-kern/libsmtpsubr.pl            0.70	
+	kern/libsmtpsubr.pl            0.70	done/removed
 	kern/libsmtpsubr2.pl           0.37	done?
-kern/libsmtputils.pl           1.22	
+	kern/libsmtputils.pl           1.22	done?
+
+		* DoGenerateHeader() is not yet ?
+
 	kern/libtrap.pl                0.23	removed
 kern/msend.pl                  3.42	
 	proc/libMIME.pl                0.73	done
 proc/libamctl.pl               5.14	
 proc/libarchive.pl             0.47	
 	proc/libcksum.pl               0.57	done
-proc/libconfirm.pl             3.99	
+	proc/libconfirm.pl             3.99	done (half done?)
 	proc/libcrosspost.pl           1.17	removed
 proc/libcrypt.pl               0.98	
 	proc/libdatabases.pl           0.72	done
 	proc/libdebug.pl               0.53	removed?
-proc/libdist.pl                2.03	
+	proc/libdist.pl                2.03	done?
 proc/libdisthack.pl            1.25	
 proc/liberror.pl               0.38	
 proc/libexpire.pl              0.66	
@@ -36,24 +42,29 @@ proc/libhtmlsubr.pl            1.77
 	proc/libmesgle.pl              1.06	done?
 	proc/libmgrdom.pl              0.24	removed
 	proc/libmladdr.pl              0.20	removed
-proc/libmodedef.pl             1.12	
+	proc/libmodedef.pl             1.12	removed
 proc/libmoderated.pl           1.86	
 	proc/libmodeutils.pl           0.64	removed?
 proc/libmti.pl                 2.03	
-proc/libnewsyslog.pl           0.69	
+	proc/libnewsyslog.pl           0.69	done
 proc/libpgp.pl                 2.74	
 	proc/libpop.pl                 0.98	removed?
 proc/libqmail.pl               0.19	
 proc/libra.pl                  6.35	
 proc/librcs.pl                 0.27	
 	proc/librelayhack.pl           0.37	removed
-proc/libremote.pl              0.06	
+	proc/libremote.pl              0.06	removed
 	proc/librfc1153.pl             0.81	removed
 	proc/libsendfile.pl            4.08	removed almost
 	proc/libsmtpsd.pl              0.43	removed
 	proc/libstardate.pl            0.21	done
 proc/libsynchtml.pl            7.80	
-proc/libtagdef.pl              0.48	
-proc/libutils.pl               2.27	
+	proc/libtagdef.pl              0.48	done?
+	proc/libutils.pl               2.27	done?
+
+		* TarZXF() needed ?
+		* system() needed ?
+		* daemon() needed ?
+
 	proc/libviruschk.pl            0.39	done
 	proc/libwhois.pl               1.53	removed
