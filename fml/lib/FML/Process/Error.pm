@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.55 2002/05/19 04:57:46 fukachan Exp $
+# $FML: Error.pm,v 1.1 2002/05/19 09:44:00 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -98,8 +98,6 @@ sub verify_request
 
     my $eval = $config->get_hook( 'error_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
-
-    $curproc->verify_sender_credential();
 
     $eval = $config->get_hook( 'error_verify_request_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
