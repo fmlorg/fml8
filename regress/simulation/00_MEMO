@@ -17,6 +17,8 @@
 	IO/Adapter/ErrorStatus.pm
 	Mail/Delivery/ErrorStatus.pm
 
+	ErrorStatus による error() はどうするよ？
+
 
 ○	ファイルを用意しただけやんシリーズ;) 
 	これから改造するので、ほとんど未修正のままのこす
@@ -266,4 +268,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.19 2002/04/23 12:23:51 fukachan Exp $
+$FML: 00_MEMO,v 1.20 2002/04/25 14:37:11 fukachan Exp $
