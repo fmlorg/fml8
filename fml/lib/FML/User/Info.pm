@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Info.pm,v 1.1 2003/11/23 14:18:23 fukachan Exp $
+# $FML: Info.pm,v 1.2 2004/01/21 03:40:44 fukachan Exp $
 #
 
 package FML::User::Info;
@@ -30,16 +30,18 @@ FML::User::Info - maintain user information.
 
 =head2 C<new()>
 
+constuctor.
+
 =cut
 
 
 # Descriptions: constructor.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($Infoargs)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($infoargs)
 # Side Effects: create object
 # Return Value: OBJ
 sub new
 {
-    my ($self, $curproc, $Infoargs) = @_;
+    my ($self, $curproc, $infoargs) = @_;
     my ($type) = ref($self) || $self;
     my $me     = { _curproc => $curproc };
 
@@ -58,9 +60,9 @@ information.
 =cut
 
 
-# Descriptions: update user database.
+# Descriptions: update user database based on header infomation.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($info)
-# Side Effects: update maps
+# Side Effects: update db.
 # Return Value: none
 sub import_from_mail_header
 {
@@ -97,7 +99,7 @@ sub import_from_mail_header
 =cut
 
 
-# Descriptions: update gecos database
+# Descriptions: update gecos database.
 #    Arguments: OBJ($self) STR($address) STR($gecos)
 # Side Effects: update gecos database
 # Return Value: none
@@ -109,7 +111,7 @@ sub set_gecos
 }
 
 
-# Descriptions: update gecos database
+# Descriptions: get gecos info from database.
 #    Arguments: OBJ($self) STR($address)
 # Side Effects: update gecos database
 # Return Value: none
@@ -130,7 +132,7 @@ sub get_gecos
 =cut
 
 
-# Descriptions: update subscribe_date database
+# Descriptions: update subscribe_date database.
 #    Arguments: OBJ($self) STR($address) STR($subscribe_date)
 # Side Effects: update subscribe_date database
 # Return Value: none
@@ -142,7 +144,7 @@ sub set_subscribe_date
 }
 
 
-# Descriptions: update subscribe_date database
+# Descriptions: get info from subscribe_date database.
 #    Arguments: OBJ($self) STR($address)
 # Side Effects: update subscribe_date database
 # Return Value: none
