@@ -5,3 +5,10 @@
 #        Value: yes
 #     Examples: yes / no
 use_error_analyzer	=	yes
+
+
+# Descriptions: error messages のキャッシュを格納するディレクトリ
+#      History: /var/spool/ml/mead/errormaillog
+#        Value: directory
+#     Examples: 
+error_cache_dir		=	$db_dir/error
