@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.1 2002/03/17 05:47:27 fukachan Exp $
+# $FML: chaddr.pm,v 1.2 2002/04/07 04:59:45 fukachan Exp $
 #
 
 package FML::Command::Admin::chaddr;
@@ -132,7 +132,7 @@ sub process
 		}
 	    }
 	    else {
-		$self->error_set("$new_address is already member (map=$map)");
+		croak("$new_address is already member (map=$map)");
 		return undef;
 	    }
 	}
