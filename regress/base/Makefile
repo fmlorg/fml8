@@ -1,4 +1,4 @@
-PERL = perl -I ../../fml/lib -I ../../cpan/lib
+PERL = perl -I ../../fml/lib -I ../../cpan/lib -I ../../img/lib
 
 test:
 	@ echo "* mime"
