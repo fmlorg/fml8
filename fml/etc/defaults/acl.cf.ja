@@ -12,15 +12,29 @@ command_restrictions	=	reject_system_accounts
 				permit_members_only
 				reject
 
-# メンバーとみなされるのは誰か？
+=head2 メンバーとみなされるのは誰か？
+
+
+# 登録などの際に対象となるメンバーリスト
+# XXX タイプによっては書き込みできないこともある(例: unix.group )
+primary_member_map	=	file:$ml_home_dir/members
+
+# メンバーかどうか認証する際に検索するすべてのメンバーリスト 
 # fml 4.0 の $MEMBER_LIST @MEMBER_LIST 相当
-member_maps		=	file:$ml_home_dir/members 
+member_maps		=	$primary_member_map
 
 
-# 受信者のリスト
+=head2 受信者のリスト
+
+
+# 登録などの際に対象とする受信者のリスト
+# XXX タイプによっては書き込みできないこともある(例: unix.group )
+primary_recipient_map	=	 file:$ml_home_dir/actives
+
+# すべての受信者のリスト
 # fml 4.0 の $ACTIVE_LIST @ACTIVE_LIST 相当
-recipient_maps		=	file:$ml_home_dir/recipients
-				file:$ml_home_dir/actives
+recipient_maps		=	$primary_recipient_map
+				file:$ml_home_dir/recipients
 				unix.group:fml
 
 # system accounts
