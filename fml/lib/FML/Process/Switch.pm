@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.94 2003/09/13 06:14:38 fukachan Exp $
+# $FML: Switch.pm,v 1.95 2003/09/13 09:06:10 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -174,6 +174,9 @@ sub main::Bootstrap2
 
 	# options
 	need_ml_name     => 0,         # defined in _module_we_use()
+
+	# curproc back pointer, used in emergency.
+	curproc          => {},
     };
 
     # get the object. The suitable module is speculcated by $0.
@@ -184,18 +187,27 @@ sub main::Bootstrap2
       FML::Process::Flow::ProcessStart($obj, $args);
     };
     if ($@) {
-	my $reason = $@;
-	if ($obj->can('help')) { eval $obj->help();};
+	my $reason   = $@;
+	my $curproc  = $args->{ curproc };
+	my $be_quiet = 0;
+	eval q{ $be_quiet = $curproc->be_quiet(); };
 
 	eval q{ __log($main_cf, $reason);};
 
-	if (defined( $main_cf->{ debug } ) ||
-	    defined $options{debug}) {
-	    croak($reason);
+	if ($be_quiet) {
+	    eval q{ $curproc->finalize();};
 	}
 	else {
-	    $reason =~ s/[\n\s]*\s+at\s+.*$//m;
-	    croak($reason);
+	    if ($obj->can('help')) { eval $obj->help();};
+
+	    if (defined( $main_cf->{ debug } ) ||
+		defined $options{debug}) {
+		croak($reason);
+	    }
+	    else {
+		$reason =~ s/[\n\s]*\s+at\s+.*$//m;
+		croak($reason);
+	    }
 	}
     }
 }

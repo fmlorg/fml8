@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Flow.pm,v 1.21 2003/03/14 03:51:48 fukachan Exp $
+# $FML: Flow.pm,v 1.22 2003/09/13 13:05:18 fukachan Exp $
 #
 
 package FML::Process::Flow;
@@ -75,6 +75,9 @@ sub ProcessStart
 
     # create a new process object
     my $process = $pkg->new($args);
+
+    # curproc back pointer, used in emergency.
+    $args->{ curproc } = $process;
 
     # XXX private method to show help ASAP
     # XXX we need to trap here since $process object is clarified after

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.179 2003/09/13 09:09:48 fukachan Exp $
+# $FML: Kernel.pm,v 1.180 2003/09/13 13:05:18 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1156,9 +1156,12 @@ sub _log_message_print
     my ($curproc) = @_;
     my $msg_queue = $curproc->{ log_message_queue };
     my $msg_list  = $msg_queue->list();
+    my ($buf);
 
     for my $m (@$msg_list) {
-	printf "%10d %10s %s\n", $m->{ time }, $m->{ level }, $m->{ buf };
+	$buf = $m->{ buf } || '';
+	$buf =~ s/\n/ /g;
+	printf "%10d %5s %s\n", $m->{ time }, $m->{ level }, $buf;
     }
 }
 
@@ -1195,7 +1198,7 @@ sub log_message
     if ($level eq 'info') { 
 	Log($msg);
     }
-    elsif ($level eq 'warning') { 
+    elsif ($level eq 'warn') { 
 	LogWarn($msg);
     }
     elsif ($level eq 'error') {
@@ -1243,7 +1246,7 @@ sub logwarn
 
     $curproc->log_message($msg, {
 	msg_args => $msg_args,
-	level    => 'warning',
+	level    => 'warn',
 	caller   => \@c,
     });
 }
@@ -2100,9 +2103,40 @@ sub temp_file_path
     my $tmp_dir = $config->{ tmp_dir };
 
     $TmpFileCounter++; # ensure uniqueness
+    my $f = sprintf("tmp.%s.%s.%s", $$, time, $TmpFileCounter);
+
+    if (-d $tmp_dir && -w $tmp_dir) {
+	use File::Spec;
+	return File::Spec->catfile($tmp_dir, $f);
+    }
+    else {
+	my $tmp_dir = $curproc->global_tmp_dir_path();
+	use File::Spec;
+	return File::Spec->catfile($tmp_dir, $f);
+    }
+}
+
+
+# Descriptions: generate string $ml_home_prefix/@tmp@.
+#               Also, create it if not exists.
+#    Arguments: OBJ($curproc) STR($ml_domain)
+# Side Effects: create $ml_home_prefix/@tmp@ if not exists.
+# Return Value: STR
+sub global_tmp_dir_path
+{
+    my ($curproc, $ml_domain) = @_;
+    my $config = $curproc->config();
+    my $domain = $ml_domain || $config->{ ml_domain } || '';
 
     use File::Spec;
-    return File::Spec->catfile( $tmp_dir, "tmp.$$.". time . $TmpFileCounter);
+    my $ml_home_prefix = $curproc->ml_home_prefix($domain);
+    my $global_tmp_dir = File::Spec->catfile($ml_home_prefix, '@tmp@');
+
+    unless (-d $global_tmp_dir) {
+	$curproc->mkdir($global_tmp_dir, "mode=private");
+    }
+
+    return $global_tmp_dir;
 }
 
 
@@ -2289,14 +2323,17 @@ sub parse_exception
 sub _reopen_stderr_channel
 {
     my ($curproc) = @_;
+    my $config    = $curproc->config(); 
     my $option    = $curproc->command_line_options();
 
-    if ($curproc->is_cgi_process()       || 
+    if ($curproc->is_cgi_process()       ||
 	$curproc->is_under_mta_process() ||
-	defined $option->{ quiet } || defined $option->{ q }) {
+	defined $option->{ quiet }  || defined $option->{ q } ||
+	$config->yes('use_log_dup') || $option->{ 'log-dup' } ) {
 	my $tmpfile = $curproc->temp_file_path();
 	my $pcb     = $curproc->pcb();
 	$pcb->set("stderr", "logfile", $tmpfile);
+	$pcb->set("stderr", "use_log_dup", 1);
 
 	open(STDERR, "> $tmpfile") || croak("fail to open $tmpfile");
 	$curproc->add_into_clean_up_queue($tmpfile);
@@ -2311,13 +2348,19 @@ sub _reopen_stderr_channel
 sub _finalize_stderr_channel
 {
     my ($curproc) = @_;
+    my $config    = $curproc->config();
     my $option    = $curproc->command_line_options();
     my $pcb       = $curproc->pcb();
     my $tmpfile   = $pcb->get("stderr", "logfile");
+    my $is_logdup = $pcb->get("stderr", "use_log_dup") || 0;
+
+    # avoid duplicated calls.
+    return unless $is_logdup;
 
     if ($curproc->is_cgi_process()       ||
 	$curproc->is_under_mta_process() ||
-	defined $option->{ quiet } || defined $option->{ q }) {
+	defined $option->{ quiet }  || defined $option->{ q } ||
+	$config->yes('use_log_dup') || $option->{ 'log-dup' } ) {
 
 	close(STDERR);
 	open(STDERR, ">&STDOUT");
@@ -2335,6 +2378,8 @@ sub _finalize_stderr_channel
 	    }
 	}
     }
+
+    $pcb->set("stderr", "use_log_dup", 0);
 }
 
 
@@ -2375,6 +2420,29 @@ sub reset_umask
 }
 
 
+# Descriptions: close.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub be_quiet
+{
+    my ($curproc) = @_;
+    my $debug     = $curproc->debug_level();
+    my $config    = $curproc->config();
+    my $option    = $curproc->command_line_options();
+
+    if ($curproc->is_cgi_process()       ||
+	$curproc->is_under_mta_process() ||
+	defined $option->{ quiet }  || defined $option->{ q } ||
+	$config->yes('use_log_dup') || $option->{ 'log-dup' } ) {
+	return 1;
+    }
+    else {
+	return 0;
+    }
+}
+
+
 # Descriptions: finalize curproc.
 #    Arguments: OBJ($curproc)
 # Side Effects: non
@@ -2384,8 +2452,10 @@ sub finalize
     my ($curproc) = @_;
     my $debug     = $curproc->debug_level();
     my $config    = $curproc->config();
+    my $option    = $curproc->command_line_options();
 
-    if ($config->yes('use_log_message_queue')) {
+    if ($config->yes('use_log_dup') || $option->{ 'log-dup' } ) {
+	$curproc->_finalize_stderr_channel();
 	$curproc->_log_message_print();
     }
 
