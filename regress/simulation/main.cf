@@ -1,8 +1,10 @@
 #
-# $FML: main.cf,v 1.7 2001/10/09 14:33:36 fukachan Exp $
+# $FML: main.cf,v 1.8 2001/11/26 12:23:35 fukachan Exp $
 # 
 
 fml_version	=	__fml_version__
+
+debug		=	1
 
 default_config_dir  = 	$pwd/fml/etc
 config_dir  = 	$pwd/fml/etc
