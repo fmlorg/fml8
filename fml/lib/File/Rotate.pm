@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Rotate.pm,v 1.11 2002/09/11 23:18:18 fukachan Exp $
+# $FML: Rotate.pm,v 1.12 2002/09/22 14:56:57 fukachan Exp $
 #
 
 package File::Rotate;
@@ -183,7 +183,6 @@ See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 =head1 AUTHOR
 
 Ken'ichi Fukamachi
-
 
 =head1 COPYRIGHT
 
