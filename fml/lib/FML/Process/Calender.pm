@@ -3,10 +3,10 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Scheduler.pm,v 1.11 2001/12/23 07:04:30 fukachan Exp $
+# $FML: Calender.pm,v 1.12 2001/12/23 11:39:45 fukachan Exp $
 #
 
-package FML::Process::Scheduler;
+package FML::Process::Calender;
 
 use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use strict;
@@ -17,20 +17,20 @@ use FML::Process::Kernel;
 
 =head1 NAME
 
-FML::Process::Scheduler -- demonstration of FML module usage
+FML::Process::Calender -- demonstration of FML module usage
 
 =head1 SYNOPSIS
 
-    use FML::Process::Scheduler;
-    $curproc = new FML::Process::Scheduler;
+    use FML::Process::Calender;
+    $curproc = new FML::Process::Calender;
     $curproc->run();
 
 =head1 DESCRIPTION
 
-FML::Process::Scheduler is demonstration module to show fml module
+FML::Process::Calender is demonstration module to show fml module
 usage.
 This module provides calender presentation for simple scheduler,
-TinyScheduler calss.
+Calender::Lite calss.
 
 =head1 METHODS
 
@@ -68,7 +68,7 @@ sub verify_request { 1; }
 sub finish         { 1; }
 
 
-# Descriptions: prepare parameters and call TinyScheduler module.
+# Descriptions: prepare parameters and call Calender::Lite module.
 #               we use w3m to show calender (HTML table).
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: create temporary file and remove it in the last
@@ -86,7 +86,7 @@ sub run
     }
 
     use FileHandle;
-    use TinyScheduler;
+    use Calender::Lite;
 
     # prepare new() argument
     $mode             = $option->{ m } if defined $option->{ m };
@@ -96,7 +96,7 @@ sub run
 	schedule_dir  => $schedule_dir,
 	schedule_file => undef,
     };
-    my $schedule = new TinyScheduler $schargs;
+    my $schedule = new Calender::Lite $schargs;
 
     # prepare output channel
     my $tmpf     = $schedule->tmpfile;
@@ -178,7 +178,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::Scheduler appeared in fml5 mailing list driver package.
+FML::Process::Calender appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

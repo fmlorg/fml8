@@ -4,10 +4,10 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Scheduler.pm,v 1.8 2001/12/23 09:20:42 fukachan Exp $
+# $FML: Calender.pm,v 1.9 2001/12/23 11:39:45 fukachan Exp $
 #
 
-package FML::CGI::Scheduler;
+package FML::CGI::Calender;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
@@ -19,11 +19,11 @@ use FML::Process::CGI;
 
 =head1 NAME
 
-FML::CGI::Scheduler - demonstration CGI module to show schedule (HTML TABLE)
+FML::CGI::Calender - demonstration CGI module to show schedule (HTML TABLE)
 
 =head1 SYNOPSIS
 
-    $obj = new FML::CGI::Scheduler;
+    $obj = new FML::CGI::Calender;
     $obj->prepare();
     $obj->verify_request();
     $obj->run();
@@ -37,7 +37,7 @@ See L<FML::Process::Flow> for flow details.
 
 =head2 CLASS HIERARCHY
 
-C<FML::CGI::Scheduler> is a subclass of C<FML::Process::CGI>.
+C<FML::CGI::Calender> is a subclass of C<FML::Process::CGI>.
 
 =head1 METHODS
 
@@ -115,8 +115,8 @@ sub run_cgi
     my ($curproc, $args) = @_;
     my $user = $curproc->safe_param_user;
 
-    use TinyScheduler;
-    my $schedule = new TinyScheduler { user => $user };
+    use Calender::Lite;
+    my $schedule = new Calender::Lite { user => $user };
 
     for my $n ('this', 'next', 'last') {
 	$schedule->print_specific_month(\*STDOUT, $n);
@@ -144,7 +144,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::CGI::Scheduler appeared in fml5 mailing list driver package.
+FML::CGI::Calender appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
