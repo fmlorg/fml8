@@ -1,6 +1,13 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/09/08
+
+   Mail::Message
+   Mail::Message::{ToHTML,Encode}
+	=?shift_jis? ... メールの取り扱いを修正
+	各オブジェクトにおける charset と encoding の扱いを修正
+
 2003/09/06
 
    ＭＬの消去方法の拡張
@@ -5232,4 +5239,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.158 2003/08/18 23:46:42 fukachan Exp $
+$FML: CHANGES.txt,v 1.159 2003/09/06 15:15:36 fukachan Exp $
