@@ -1,8 +1,8 @@
 #
-# $FML$
+# $FML: Makefile,v 1.7 2001/04/27 05:10:26 fukachan Exp $
 #
 
-PERL = perl -w -I ../cpan/lib -I ./lib -I ./libexec
+PERL = perl -w -I ../img/lib -I ../cpan/lib -I ./lib -I ./libexec
 
 all: test
 
