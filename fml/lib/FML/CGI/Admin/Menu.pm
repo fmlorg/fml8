@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.1.1.1 2002/03/18 13:46:10 fukachan Exp $
+# $FML: Menu.pm,v 1.2 2002/03/18 14:07:38 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -71,7 +71,7 @@ sub html_start
     my $myname  = $curproc->myname();
     my $ml_name = $curproc->safe_param_ml_name();
     my $title   = "$ml_name configuration interface";
-    my $color   = '#E6E6FA';
+    my $color   = '#FFFFFF';
     my $charset = 'euc-jp';
 
     # o.k start html
