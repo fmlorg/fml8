@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.143 2004/04/23 04:10:36 fukachan Exp $
+# $FML: Distribute.pm,v 1.144 2004/05/18 00:36:44 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -202,7 +202,7 @@ sub run
     my $config     = $curproc->config();
     my $maintainer = $config->{ maintainer };
     my $sender     = $curproc->{'credential'}->{'sender'};
-    my $_data_type = 
+    my $_data_type =
 	$config->{ article_post_restrictions_reject_notice_data_type };
     my $data_type  = $_data_type || 'string';
     my $size       = 2048;
@@ -312,8 +312,14 @@ sub finish
     my $eval = $config->get_hook( 'distribute_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
+    # XXX [queue-based-distrbute] HACK
+    # deferred delivery starts !
+    $curproc->_deliver_article();
+
     $curproc->inform_reply_messages();
-    $curproc->queue_flush();
+    unless ($curproc->smtp_server_state_get_error()) {
+	$curproc->queue_flush();
+    }
 
     $eval = $config->get_hook( 'distribute_finish_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
@@ -348,6 +354,7 @@ sub _distribute
 
     # get sequence number
     my $id = $article->increment_id;
+    $curproc->set_article_id($id);
 
     # XXX debug, remove here in the future
     if ($debug) {
@@ -380,8 +387,9 @@ sub _distribute
 
     $curproc->unlock($lock_channel);
 
+    # XXX [queue-based-distrbute] HACK
     # delivery starts !
-    $curproc->_deliver_article();
+    # $curproc->_deliver_article();
 
     if ($config->yes('use_html_archive')) {
 	$curproc->log("htmlify article $id");
@@ -446,10 +454,14 @@ sub _deliver_article
 {
     my ($curproc) = @_;
     my $cred    = $curproc->{ credential };
-    my $config  = $curproc->config();               # FML::Config   object
+    my $config  = $curproc->config();                 # FML::Config   object
     my $message = $curproc->article_message();        # Mail::Message object
     my $header  = $curproc->article_message_header(); # FML::Header   object
     my $body    = $curproc->article_message_body();   # Mail::Message object
+
+    #
+    # SANITY
+    #
 
     unless ( $config->yes( 'use_article_delivery' ) ) {
 	$curproc->log("not delivery (\$use_article_delivery = no)");
@@ -462,7 +474,28 @@ sub _deliver_article
 	return;
     }
 
-    # distribute article
+    #
+    # MAIN ### XXX [queue-based-distrbute] HACK ###
+    #
+    # 1. queue in (which is a little different from ordinary queue-in)
+    use Mail::Delivery::Queue;
+    my $queue_dir = $config->{ mail_queue_dir };
+    my $queue     = new Mail::Delivery::Queue { directory => $queue_dir };
+    my $qid       = $queue->id();
+    if (defined $queue) {
+	$curproc->log("article queue=$qid");
+
+	$queue->set('sender', $config->{ smtp_sender });
+
+	my $maps = $config->get_as_array_ref('recipient_maps');
+	$queue->set('recipient_maps', $maps);
+
+	$queue->in($message);
+	$queue->lock( { lock_before_runnable => "yes" } );
+	$queue->setrunnable();
+    }
+
+    # 2. distribute article
     my $fp  = sub { $curproc->log(@_);}; # pointer to the log function
     my $sfp = sub { my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;};
     my $handle = undef;
@@ -486,10 +519,20 @@ sub _deliver_article
     };
     croak($@) if $@;
 
-    if ($service->error) { $curproc->log($service->error); return;}
+    if ($service->error) {
+	$curproc->logerror($service->error);
+	$curproc->logerror("left queue=$qid for later delivery");
+	$curproc->smtp_server_state_set_error();
+	return;
+    }
+
+    # recipient_maps;
+    my $recipient_maps = $config->{recipient_maps};
+    if (defined $queue) {
+	$recipient_maps = $queue->recipients_file_path($qid);
+    }
 
     # XXX_LOCK_CHANNEL: recipient_map_modify
-    my $queue_dir    = $config->{ mail_queue_dir };
     my $lock_channel = "recipient_map_modify";
     $curproc->lock($lock_channel);
     $service->deliver(
@@ -497,7 +540,7 @@ sub _deliver_article
 			  'smtp_servers'    => $config->{'smtp_servers'},
 
 			  'smtp_sender'     => $config->{'smtp_sender'},
-			  'recipient_maps'  => $config->{recipient_maps},
+			  'recipient_maps'  => $recipient_maps,
 			  'recipient_limit' => $config->{smtp_recipient_limit},
 
 			  'message'         => $message,
@@ -510,7 +553,20 @@ sub _deliver_article
 		      });
     $curproc->unlock($lock_channel);
 
-    if ($service->error) { $curproc->log($service->error); return;}
+    if ($service->error) { 
+	$curproc->log($service->error);
+	$curproc->smtp_server_state_set_error();
+    }
+
+    # XXX [queue-based-distrbute] HACK ###
+    # here, Mail::Delivery already processes whole or a part of delivery.
+    # So, we can remove queue since Mail::Delivery supports fallback
+    # and creats a new queue for recipients not sent to.
+    if (defined $queue) {
+	$queue->remove();
+	$queue->unlock();
+	$curproc->log("remove article queue=$qid");
+    }
 }
 
 
