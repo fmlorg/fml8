@@ -13,35 +13,17 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
+@ISA = qw(FML::Command::unsubscribe);
+
 =head1 NAME
 
-FML::Command::resign - what is this
+FML::Command::resign - alias of "unsubscribe" command
 
 =head1 SYNOPSIS
 
-not yet implemented
-
 =head1 DESCRIPTION
 
-=head1 METHODS
-
-=head2 C<new()>
-
-=cut
-
-
-require Exporter;
-@ISA = qw(Exporter);
-
-
-sub new
-{
-    my ($self) = @_;
-    my ($type) = ref($self) || $self;
-    my $me     = {};
-    return bless $me, $type;
-}
-
+all requests are forwarded to C<FML::Command::unsubscribe>.
 
 =head1 AUTHOR
 
