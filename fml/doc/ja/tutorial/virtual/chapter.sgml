@@ -1,0 +1,103 @@
+<chapter id="virtualdomain">
+	<title>
+	バーチャルドメインの取り扱いについて
+	</title>
+
+<para>
+virtual domain のサポートをどう実装するか？が問題の一です。
+できるだけ fml 全体で統一的に扱えるようにするべきです。
+</para>
+
+<para>
+そして問題のその２は、場変(ホストを新しくする、ドメインを変更する)場合に
+いかに簡単に設定変更ができるか？という設問です。
+</para>
+
+
+<sect1 id="virtualdomain.fml8.overview">
+	<title>
+	概要: &fmldevel; におけるバーチャルドメインの取り扱い
+	</title>
+
+<para>
+最初に一回 
+<link linkend="install.virtual">
+/etc/fml/virtual を手で編集
+</link>
+してください。これだけです。あとは fml がよろしく頑張ります。
+ただし、いろいろな操作でＭＬ名を＠ドメインつきで行なって下さい。
+</para>
+
+<para>
+例えば、コマンドの操作はＭＬではなく、ＭＬ＠ドメイン名を使うことになり
+ます。つまり
+<screen>
+makefml newml	ML@virtualdomain
+makefml add	ML@virtualdomain	address
+makefml bye	ML@virtualdomain	address
+</screen>
+などという具合いになります。
+</para>
+
+<para>
+なお、CGI での操作ではドメイン名の指定は不要です。
+これは、config.cgi 生成時にドメインがスクリプト中に埋め込まれているためです。
+</para>
+
+<warning>
+<para>
+CGI の URL にはドメインが入っているのは操作する人が分かりやすいようにという
+配慮であって、URL を元にドメイン名を決めているわけではありません。
+<screen>
+http://lists/~fml/cgi-bin/fml/$domain/admin/config.cgi
+</screen>
+</para>
+</warning>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	ケーススタディ: 場変？ (XXX 書きかけ↓つづきを！)
+	</title>
+
+<!--
+	レシピ化を！
+-->
+
+<para>
+ホストを新しくする？ ドメインを変更する？ 他には何かある？
+</para>
+
+<para>
+ドメインの変更は考えなくても良いか？
+ドメインの変更なんてそんなにあるか？
+変更するならＭＬも作りなおすような気がする（嘘？）。
+いずれにせよ、ドメインの移行はいっぱい直すところが
+あるので、そんなに簡単じゃない。
+</para>
+
+<para>
+ホストを新しくするか？
+うむ、これは割とありそうだ。
+</para>
+
+<para>
+解決しないといけない問題はディレクトリのパスが変わること。
+/etc/fml/ の変更だけで解決できないか？
+
+いや、include ファイルがこんな風になっているが、
+<screen>
+"| /some/where/libexec/distribute elena@fml.org"
+</screen>
+書式変更が必要ではないのか？
+一応、fml.pl は互換性のため fml.pl $DIR でも可で、
+libexec/distribute libexec/command など新しいコマンドは
+ＭＬ名を引数にとるということにしてある。
+</para>
+
+</sect1>
+
+
+</chapter>
