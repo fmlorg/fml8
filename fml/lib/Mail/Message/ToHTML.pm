@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.41.2.10 2003/06/14 12:44:12 fukachan Exp $
+# $FML: ToHTML.pm,v 1.41.2.11 2003/06/14 14:54:22 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 1;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.41.2.10 2003/06/14 12:44:12 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.41.2.11 2003/06/14 14:54:22 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -969,68 +969,6 @@ sub __str2array
 }
 
 
-# Descriptions: speculate head of the next thread list.
-#    Arguments: HASH_REF($db) STR($id)
-# Side Effects: none
-# Return Value: STR
-sub _search_default_next_thread_id
-{
-    my ($self, $db, $id) = @_;
-    my $list = __str2array( $self->{ _thread_list }->{ $id } );
-    my (@ra, @c0, @c1) = ();
-    @ra = reverse @$list if defined $list;
-
-    for my $_id (1 .. 10) { push(@c0, $id + $_id);}
-
-    # prepare thread list to search
-    # 1. thread includes $id
-    # 2. thread(s) begining at each id in thread 1.
-    # 3. last resort: thread includes ($id+1),
-    #                 thread includes ($id+2), ...
-    for my $xid ($id, @ra, @c0) {
-	my $default = $self->__search_default_next_id_in_thread($db, $xid);
-	return $default if defined $default;
-    }
-}
-
-
-# Descriptions: speculate the next id of $id.
-#    Arguments: HASH_REF($db) STR($id)
-# Side Effects: none
-# Return Value: STR
-sub __search_default_next_id_in_thread
-{
-    my ($self, $db, $id) = @_;
-    my $list = [];
-    my $prev = 0;
-
-    # thread_list HASH { $id => $id1 $id2 $id3 ... }
-    if (defined $self->{ _thread_list }->{ $id }) {
-	$list = __str2array( $self->{ _thread_list }->{ $id } );
-	return undef unless $#$list > 1;
-
-	# thread_list HASH { $id => $id1 $id2 $id3 ... $id $prev ... }
-	#                           <---- search ---
-      SEARCH:
-	for my $xid (reverse @$list) {
-	    last SEARCH if $xid == $id;
-	    $prev = $xid;
-	}
-    }
-
-    # found
-    # XXX we use $prev in reverse order, so this $prev means "next"
-    if ($prev > 0) {
-	_PRINT_DEBUG("default thread: $id => $prev (@$list)");
-	return $prev;
-    }
-    else {
-	_PRINT_DEBUG("default thread: $id => none (@$list)");
-	return undef;
-    }
-}
-
-
 =head2 C<update_msg_html_links($id)>
 
 update link relation around C<$id>.
@@ -1192,62 +1130,9 @@ sub _msg_file_rewrite_links
 sub evaluate_links_relation
 {
     my ($self, $id) = @_;
-    my $ndb            = $self->ndb();
-    my $summary        = $ndb->thread_summary($id);
-    my $prev_id        = $summary->{ prev_id };
-    my $next_id        = $summary->{ next_id };
-    my $prev_thread_id = $summary->{ prev_thread_id };
-    my $next_thread_id = $summary->{ next_thread_id };
+    my $ndb = $self->ndb();
 
-    # diagnostic
-    my $next_file = $self->html_filepath( $next_id );
-    undef $next_file unless -f $next_file;
-
-    unless ($next_thread_id) {
-	my $xid = $self->_search_default_next_thread_id($ndb, $id);
-	if ($xid && ($xid != $id)) {
-	    $next_thread_id = $xid;
-	    _PRINT_DEBUG("override next_thread_id = $next_thread_id");
-	}
-    }
-
-    my $fn_prev_id        = $summary->{ html_filename_prev_id };
-    my $fn_next_id        = $summary->{ html_filename_next_id };
-    my $fn_prev_thread_id = $summary->{ html_filename_prev_thread_id };
-    my $fn_next_thread_id = $summary->{ html_filename_next_thread_id };
-
-    my $subject = {};
-    if (defined $prev_id) {
-	$subject->{ prev_id } = $ndb->get('subject', $prev_id);
-    }
-    if (defined $next_id) {
-	$subject->{ next_id } = $ndb->get('subject', $next_id);
-    }
-    if (defined $prev_thread_id) {
-	$subject->{ prev_thread_id } = $ndb->get('subject', $prev_thread_id);
-    }
-    if (defined $next_thread_id) {
-	$subject->{ next_thread_id } = $ndb->get('subject', $next_thread_id);
-    }
-
-    my $path = $ndb->get('html_filepath', $id) || $self->html_filepath($id);
-    my $args = {
-	id                  => $id,
-	filepath            => $path,
-	prev_id             => $prev_id,
-	next_id             => $next_id,
-	prev_thread_id      => $prev_thread_id,
-	next_thread_id      => $next_thread_id,
-	link_prev_id        => $fn_prev_id,
-	link_next_id        => $fn_next_id,
-	link_prev_thread_id => $fn_prev_thread_id,
-	link_next_thread_id => $fn_next_thread_id,
-	subject             => $subject,
-    };
-    _PRINT_DEBUG("$id link relation");
-    _PRINT_DEBUG_DUMP_HASH( $args );
-
-    return $args;
+    return $ndb->tohtml_thread_summary($id);
 }
 
 

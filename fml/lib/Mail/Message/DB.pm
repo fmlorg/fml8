@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.1.2.8 2003/06/14 10:42:51 fukachan Exp $
+# $FML: DB.pm,v 1.1.2.9 2003/06/14 14:48:33 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -21,7 +21,7 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.1.2.8 2003/06/14 10:42:51 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.1.2.9 2003/06/14 14:48:33 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 my $debug = 1;
@@ -408,51 +408,71 @@ For example, supporse $id 5 and the thread link is (3 5 6):
 sub thread_summary
 {
     my ($self, $id)    = @_;
+    my ($fn_prev_id, $fn_next_id, $fn_prev_thread_id,
+	$fn_next_thread_id, $fp_prev_id, $fp_next_id,
+	$fp_prev_thread_id, $fp_next_thread_id);
     my $db             = $self->db_open();
     my $prev_id        = $id > 1 ? $id - 1 : undef;
     my $next_id        = $id + 1;
-    my $prev_thread_id = $self->_db_get($db, 'prev_key', $id);
-    my $next_thread_id = $self->_db_get($db, 'next_key', $id);
+    my $prev_thread_id = $self->_db_get($db, 'prev_key', $id) || $prev_id;
+    my $next_thread_id = $self->_db_get($db, 'next_key', $id) || $next_id;
 
     # diagnostic
-    if ($prev_thread_id) {
+    if (defined $prev_thread_id && $prev_thread_id) {
 	undef $prev_thread_id if $prev_thread_id == $id;
     }
-    if ($next_thread_id) {
+    if (defined $next_thread_id && $next_thread_id) {
 	undef $next_thread_id if $next_thread_id == $id;
     }
 
-    # default
-    $prev_thread_id ||= $prev_id;
-    $next_thread_id ||= $next_id;
+    # file name (fn_*) and file path (fp_*)
+    if (defined $prev_id) {
+	$fn_prev_id = $self->_db_get($db, 'html_filename', $prev_id);
+	$fp_prev_id = $self->_db_get($db, 'html_filepath', $prev_id);
+    }
 
-    # file name
-    my $fn_prev_id        = $self->_db_get($db, 'html_filename', $prev_id);
-    my $fn_next_id        = $self->_db_get($db, 'html_filename', $next_id);
-    my $fn_prev_thread_id = 
-	$self->_db_get($db, 'html_filename', $prev_thread_id);
-    my $fn_next_thread_id = 
-	$self->_db_get($db, 'html_filename', $next_thread_id);
+    if (defined $next_id) {
+	$fp_next_id = $self->_db_get($db, 'html_filepath', $next_id);
+	$fn_next_id = $self->_db_get($db, 'html_filepath', $next_id);
 
-    # file path
-    my $fp_prev_id        = $self->_db_get($db, 'html_filepath', $prev_id);
-    my $fp_next_id        = $self->_db_get($db, 'html_filepath', $next_id);
-    my $fp_prev_thread_id = 
-	$self->_db_get($db, 'html_filepath', $prev_thread_id);
-    my $fp_next_thread_id = 
-	$self->_db_get($db, 'html_filepath', $next_thread_id);
+	unless (-f $fp_next_id) {
+	    undef $next_id;
+	    $fp_next_id = '';
+	    $fn_next_id = '';
+	}
+    }
+
+    if (defined $prev_thread_id) {
+	$fn_prev_thread_id = 
+	    $self->_db_get($db, 'html_filename', $prev_thread_id);
+	$fp_prev_thread_id = 
+	    $self->_db_get($db, 'html_filepath', $prev_thread_id);
+    }
+
+    if (defined $next_thread_id) {
+	$fp_next_thread_id = 
+	    $self->_db_get($db, 'html_filepath', $next_thread_id);
+	$fn_next_thread_id = 
+	    $self->_db_get($db, 'html_filename', $next_thread_id);
+
+	unless(-f $fp_next_thread_id) {
+	    undef $next_thread_id;
+	    $fn_next_thread_id = '';
+	    $fp_next_thread_id = '';
+	}
+    }
 
     # XXX this routine returns information expected straight forwardly, so
     # XXX $summary may be invalid since $next*id not yet exists.
     # XXX we expect the program calling this method validates this info.
     # XXX For examle, check the existence of msg${next_id}.html before use.
     my $summary = {
-	id             => $id,
+	id                           => $id,
 
-	prev_id        => $prev_id,
-	next_id        => $next_id,
-	prev_thread_id => $prev_thread_id,
-	next_thread_id => $next_thread_id,
+	prev_id                      => $prev_id,
+	next_id                      => $next_id,
+	prev_thread_id               => $prev_thread_id,
+	next_thread_id               => $next_thread_id,
 
 	# file relative path info
 	html_filename_prev_id        => $fn_prev_id,
@@ -468,6 +488,150 @@ sub thread_summary
     };
 
     return $summary;
+}
+
+
+# Descriptions: return thread summary around key $id.
+#    Arguments: OBJ($self) NUM($id)
+# Side Effects: none
+# Return Value: HASH_REF
+sub tohtml_thread_summary
+{
+    my ($self, $id) = @_;
+    my $db             = $self->db_open();
+    my $summary        = $self->thread_summary($id);
+    my $prev_id        = $summary->{ prev_id };
+    my $next_id        = $summary->{ next_id };
+    my $prev_thread_id = $summary->{ prev_thread_id };
+    my $next_thread_id = $summary->{ next_thread_id };
+
+    #
+    # XXX-TODO: we should get back this method to Mail::Message::ToHTML ?
+    #
+
+    unless (defined $next_thread_id || $next_thread_id) {
+	my $xid = $self->_search_default_next_thread_id($db, $id);
+	if ($xid && ($xid != $id)) {
+	    $next_thread_id = $xid;
+	    _PRINT_DEBUG("override next_thread_id = $next_thread_id");
+	}
+    }
+
+    my $subject = {};
+    if (defined $prev_id && $prev_id) {
+	$subject->{ prev_id } = $self->_db_get($db, 'subject', $prev_id);
+    }
+    if (defined $next_id && $next_id) {
+	$subject->{ next_id } = $self->_db_get($db, 'subject', $next_id);
+    }
+    if (defined $prev_thread_id && $prev_thread_id) {
+	$subject->{ prev_thread_id } = 
+	    $self->_db_get($db, 'subject', $prev_thread_id);
+    }
+    if (defined $next_thread_id && $next_thread_id) {
+	$subject->{ next_thread_id } = 
+	    $self->_db_get($db, 'subject', $next_thread_id);
+    }
+
+    # filename (relative file path)
+    my $fn_prev_id        = $summary->{ html_filename_prev_id };
+    my $fn_next_id        = $summary->{ html_filename_next_id };
+    my $fn_prev_thread_id = $summary->{ html_filename_prev_thread_id };
+    my $fn_next_thread_id = $summary->{ html_filename_next_thread_id };
+    my $path              = $self->_db_get($db, 'html_filepath', $id);
+    my $tohtml_thread_summary = {
+	# myself
+	id                  => $id,
+	filepath            => $path,
+
+	# other links
+	prev_id             => $prev_id,
+	next_id             => $next_id,
+	prev_thread_id      => $prev_thread_id,
+	next_thread_id      => $next_thread_id,
+
+	link_prev_id        => $fn_prev_id,
+	link_next_id        => $fn_next_id,
+	link_prev_thread_id => $fn_prev_thread_id,
+	link_next_thread_id => $fn_next_thread_id,
+
+	subject             => $subject,
+    };
+
+    _PRINT_DEBUG("$id link relation");
+    _PRINT_DEBUG_DUMP_HASH( $tohtml_thread_summary );
+    return $tohtml_thread_summary;
+}
+
+
+# Descriptions: speculate head of the next thread list.
+#    Arguments: HASH_REF($db) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub _search_default_next_thread_id
+{
+    my ($self, $db, $id) = @_;
+    my (@ra, @c0) = ();
+    my $list = $self->get_as_array_ref('ref_key_list', $id);
+
+    # 1. @ra (id list for $id thread relations)
+    @ra = reverse @$list if defined $list;
+
+    # 2. @c0 (gamble :-)
+    for my $_id (1 .. 10) { push(@c0, $id + $_id);}
+
+    # prepare thread list to search
+    # 1. thread includes $id
+    # 2. thread(s) begining at each id in thread 1.
+    # 3. last resort: thread includes ($id+1),
+    #                 thread includes ($id+2), ...
+    for my $xid ($id, @ra, @c0) {
+	my $default = $self->__search_default_next_id_in_thread($db, $xid);
+	return $default if defined $default;
+    }
+
+    return 0;
+}
+
+
+# Descriptions: speculate the next id of $id.
+#    Arguments: HASH_REF($db) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub __search_default_next_id_in_thread
+{
+    my ($self, $db, $id) = @_;
+    my $list = [];
+    my $prev = 0;
+
+    _PRINT_DEBUG("__search_default_next_id_in_thread($id)");
+
+    # thread_list HASH { $id => $id1 $id2 $id3 ... }
+    $list = $self->get_as_array_ref('ref_key_list', $id);
+    if (@$list) {
+	return undef unless $#$list > 1;
+
+	# thread_list HASH { $id => $id1 $id2 $id3 ... $id $prev ... }
+	#                           <---- search ---
+      SEARCH:
+	for my $xid (reverse @$list) {
+	    last SEARCH if $xid == $id;
+	    $prev = $xid;
+	}
+    }
+
+    # found
+    # XXX we use $prev in reverse order, so this $prev means "next"
+    if ($prev > 0) {
+	_PRINT_DEBUG("default thread: $id => $prev (@$list)");
+	return $prev;
+    }
+    else {
+	_PRINT_DEBUG("default thread: $id => none (@$list)");
+	return undef;
+    }
+
+    return undef;
 }
 
 
