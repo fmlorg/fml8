@@ -1,5 +1,5 @@
 <!--
-   $FML: cgi.sgml,v 1.6 2004/10/02 14:29:46 fukachan Exp $
+   $FML: cgi.sgml,v 1.7 2004/10/06 09:07:42 fukachan Exp $
 -->
 
 
@@ -236,6 +236,26 @@ submit ボタンを押して下さい。
 
 <para>
 <graphic entityref="image.cgi.useradd"></graphic>
+</para>
+
+</sect1>
+
+
+<sect1 id="setupcgi.admin.cgi.skin">
+	<title>
+	CGI スキンの選択
+	</title>	
+
+<para>
+config.cgi では TABLE と SELECT が基本です。
+もう少し、昔風の画面にしたいなら、menu.cgi のほうを使ってみて下さい。
+<screen>
+そのドメインのＭＬ全部の管理者用
+~fml/public_html/fml/ドメイン/admin/menu.cgi
+
+ＭＬごとの管理者用
+~fml/public_html/fml/ドメイン/ml-admin/menu.cgi
+</screen>
 </para>
 
 </sect1>
