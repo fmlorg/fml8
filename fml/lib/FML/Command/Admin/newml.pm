@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: newml.pm,v 1.2 2001/08/26 13:05:04 fukachan Exp $
+# $FML: newml.pm,v 1.3 2001/10/14 00:44:39 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -46,6 +46,11 @@ sub process
     my $member_map    = $config->{ 'primary_member_map' };
     my $recipient_map = $config->{ 'primary_recipient_map' };
     my $ml_name       = $command_args->{ 'ml_name' };
+    my $ml_domain     = $main_cf->{ 'default_domain' };
+    my $params        = {
+	ml_name   => $ml_name,
+	ml_domain => $ml_domain,
+    };
 
     # fundamental check
     croak("\$ml_name is not specified")    unless $ml_name;
@@ -53,21 +58,51 @@ sub process
     my $ml_home_prefix     = $main_cf->{ 'ml_home_prefix' };
     my $ml_home_dir        = "$ml_home_prefix/$ml_name";
 
-    use File::Utils qw(mkdirhier copy);
     unless (-d $ml_home_dir) {
-	mkdirhier( $ml_home_dir, $config->{ default_dir_mode } || 0755 );
+	eval q{ 
+	    use File::Utils qw(mkdirhier);
+	    use File::Spec;
+	};
+	croak($@) if $@;
 
-	use File::Spec;
+	mkdirhier( $ml_home_dir, $config->{ default_dir_mode } || 0755 );
 
 	my $default_config_dir = $main_cf->{ 'default_config_dir' };
 	my $src = File::Spec->catfile($default_config_dir, "config.cf");
 	my $dst = File::Spec->catfile($ml_home_dir, 'config.cf');
 
-	print STDERR "install $dst\n";
-	copy($src, $dst);
+	print STDERR "installing $dst\n";
+	_install($src, $dst, $params);
     }
     else {
 	warn("$ml_name already exists");
+    }
+}
+
+
+sub _install
+{
+    my ($src, $dst, $config) = @_;
+
+    eval q{ 
+	use FileHandle;
+	use FML::Config::Convert;
+    };
+    croak($@) if $@;
+
+    my $in  = new FileHandle $src;
+    my $out = new FileHandle "> $dst.$$";
+
+    if (defined $in && defined $out) {
+	&FML::Config::Convert::convert($in, $out, $config);
+
+	$out->close();
+	$in->close();
+
+	rename("$dst.$$", $dst) || croak("fail to rename $dst");
+    }
+    else {
+	croak("fail to open");
     }
 }
 
