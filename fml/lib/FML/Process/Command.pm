@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.35 2002/02/17 13:51:49 fukachan Exp $
+# $FML: Command.pm,v 1.36 2002/02/23 11:02:17 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -202,7 +202,7 @@ sub _pre_scan
 
     # special traps
     my $confirm_prefix = $config->{ confirm_command_prefix };
-    my $admin_prefix   = $config->{ privileged_command_prefix }; 
+    my $admin_prefix   = $config->{ privileged_command_prefix };
     my $confirm_found  = '';
     my $admin_found    = '';
 
@@ -335,9 +335,9 @@ sub _evaluate_command
     # preliminary scanning for message to find "confirm" or "admin"
     my ($id, $admin_password) = $curproc->_pre_scan( \@body );
 
-    # special traps are needed for "confirm" and "admin" commands. 
+    # special traps are needed for "confirm" and "admin" commands.
     my $confirm_prefix = $config->{ confirm_command_prefix };
-    my $admin_prefix   = $config->{ privileged_command_prefix }; 
+    my $admin_prefix   = $config->{ privileged_command_prefix };
 
     my $eval = $config->get_hook( 'command_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -375,9 +375,9 @@ sub _evaluate_command
 	    Log("try $comname <$command>");
 	    $command =~ s/^.*$comname/admin $comname/;
 
-	    my $opts = { 
-		mode => 'privileged_user', 
-		comname => $comname, 
+	    my $opts = {
+		mode => 'privileged_user',
+		comname => $comname,
 		command => $command };
 	    unless ($curproc->_can_accpet_command($args, $opts)) {
 		# no, we do not accept this command.
@@ -392,7 +392,7 @@ sub _evaluate_command
 	#       validate general command except for confirmation
 	#       if $id is 1, this message must be confirmation reply.
 	else {
-	    my $opts = { 
+	    my $opts = {
 		mode => 'user', comname => $comname, command => $command };
 	    unless ($curproc->_can_accpet_command($args, $opts)) {
 		# no, we do not accept this command.

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: htmlify.pm,v 1.7 2002/02/18 14:24:12 fukachan Exp $
+# $FML: htmlify.pm,v 1.8 2002/02/20 14:10:37 fukachan Exp $
 #
 
 package FML::Command::Admin::htmlify;
@@ -40,7 +40,7 @@ or
     --outdir=/var/www/htdocs/mlarchives/elena
 
 if --srcdir is not specified, the source is taken from
-/var/spool/ml/$ml_name/spool/. 
+/var/spool/ml/$ml_name/spool/.
 
 =head1 METHODS
 

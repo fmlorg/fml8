@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.79 2002/03/17 02:44:09 fukachan Exp $
+# $FML: Kernel.pm,v 1.80 2002/03/17 04:20:03 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -657,7 +657,7 @@ sub reply_message_nl
     }
     else {
 	LogWarn("no such file: $file");
-    }	
+    }
 
     if (defined $buf) {
 	eval q{
@@ -707,7 +707,7 @@ sub inform_reply_messages
 
     # We should classify reply messages by
     # a set of ( category,  recipient(s) , + more ? what ??? );
-    # Hmm, it is better to sort message by 
+    # Hmm, it is better to sort message by
     #    1. recipients
     #    2. pick up messages for it/them.
     #       merge messages by types if needed.
@@ -751,7 +751,7 @@ sub queue_in
     my $is_multipart = 0;
     my $rcptkey    = '';
     my $rcptlist     = [];
-    my $msg          = ''; 
+    my $msg          = '';
 
     # override parameters (may be processed here always)
     if (defined $optargs) {
@@ -847,7 +847,7 @@ sub queue_in
 	    my $t = $m->{ type };
 	    my $r = _gen_recipient_key( $m->{ recipient } );
 
-	    next QUEUE unless $r eq $rcptkey;  
+	    next QUEUE unless $r eq $rcptkey;
 
 	    unless ($t eq 'text') {
 		$msg->attach(Type        => $q->{ type },
@@ -869,7 +869,7 @@ sub queue_in
 	    my $t = $m->{ type };
 	    my $r = _gen_recipient_key( $m->{ recipient } );
 
-	    next QUEUE unless $r eq $rcptkey;  
+	    next QUEUE unless $r eq $rcptkey;
 
 	    if ($t eq 'text') {
 		$s .= $q;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.8 2002/03/17 04:21:38 fukachan Exp $
+# $FML: chaddr.pm,v 1.9 2002/03/17 05:27:32 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -35,7 +35,7 @@ After confirmation succeeds, chaddr process proceeds.
 
 =head2 C<process($curproc, $command_args)>
 
-if the old address in chaddr arguments is a member, 
+if the old address in chaddr arguments is a member,
 try to confirm this request irrespective of "From:" address.
 
 =cut
@@ -96,7 +96,7 @@ sub process
     my $prompt  = $config->{ command_prompt } || '>>>';
     $curproc->reply_message("\n$prompt $command", $optargs);
 
-    # if either old or new addresses in chaddr arguments is an ML member, 
+    # if either old or new addresses in chaddr arguments is an ML member,
     # try to confirm this request irrespective of "From:" address.
     if ($cred->is_member($curproc, { address => $old_addr }) ||
 	$cred->is_member($curproc, { address => $new_addr })) {

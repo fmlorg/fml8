@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.12 2002/02/17 03:13:48 fukachan Exp $
+# $FML: Utils.pm,v 1.13 2002/02/24 08:23:59 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -269,7 +269,7 @@ sub __ml_home_prefix_from_main_cf
     if (defined $domain) {
 	my ($virtual_maps) = __get_virtual_maps($main_cf);
 	if (@$virtual_maps) {
-	    __ml_home_prefix_search_in_virtual_maps($main_cf, 
+	    __ml_home_prefix_search_in_virtual_maps($main_cf,
 						    $domain,
 						    $virtual_maps);
 	}

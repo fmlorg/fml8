@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ThreadTrack.pm,v 1.23 2002/02/17 13:45:10 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.24 2002/02/27 09:20:33 tmu Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -64,7 +64,7 @@ sub new
 sub prepare
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config }; 
+    my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmlthread_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -82,7 +82,7 @@ sub verify_request
 {
     my ($curproc, $args) = @_;
     my $argv = $curproc->command_line_argv();
-    my $config = $curproc->{ config }; 
+    my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmlthread_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -383,7 +383,7 @@ _EOF_
 sub finish
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config }; 
+    my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmlthread_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
