@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: test_newml.sh,v 1.5 2003/01/04 14:08:54 fukachan Exp $
+# $FML: test_newml.sh,v 1.6 2003/04/18 15:58:57 fukachan Exp $
 #
 
 SHOW () {
@@ -8,7 +8,9 @@ SHOW () {
 	echo "******************* show config *******************"; 
 	echo "";
 
-	head -30 /tmp/nuinui/*rudo/include* \
+	head -30 \
+		/etc/fml/ml_home_prefix \
+		/tmp/nuinui/*rudo/include* \
 		/tmp/nuinui/etc/mail/aliases \
 		/tmp/nuinui/etc/postfix/virtual \
 		/tmp/nuinui/etc/sendmail/virtusertable \
@@ -25,8 +27,13 @@ SHOW () {
 
 
 (
-	rm -fr /tmp/nuinui 
+	test -d /tmp/nuinui || mv /tmp/nuinui /tmp/nuinui.$$
+
+	rm -fr /tmp/nuinui
 	sh reset_lib.sh 
+
+	printf "\n*** newdomain *** \n\n"
+	makefml newdomain - nuinui.net /tmp/nuinui
 
 	printf "\n*** newml *** \n\n"
 
@@ -43,6 +50,11 @@ SHOW () {
 
 	printf "\n\n\n" > /dev/stderr 
 	makefml rmml rudo@nuinui.net 
+
+	printf "\n*** rmdomain *** \n\n"
+	makefml rmdomain - nuinui.net
+
+	printf "\n\n\n" > /dev/stderr 
 	SHOW
 
 ) 2>&1 | tee /tmp/rr
