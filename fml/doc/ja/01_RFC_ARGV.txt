@@ -13,8 +13,10 @@
 	fmlalias [-n]
 	fmldoc   モジュール名
 	fmlconf  [-n] $ml
+
+   うーむ？
 	fmlerror $ml
-	fmllog   $ml
+	fmlerror $ml [アルゴリズム？]
 
 
 ＊ 何らかの操作をするもの
@@ -22,10 +24,32 @@
 	makefml    $command $ml
 	fml        $ml $command	(makefml と一緒)
 
+
+＊ 何らかの操作をするもの (の特殊なもの)
 	fmlhtmlify [-I DIR] $src_dir $dst_dir
 
-   [バラバラにしにあで makefml に統合するべきかな〜とおもうもの]
+
+＊ バラバラなので、makefml に統合するべきかな〜とおもうもの
 	fmlsummary $command $ml
 	fmlthread  $command $ml
 	fmlspool   [options] $command $ml
 	fmlsuper   $command $ml
+
+		->
+
+	* admin summary と user summary
+	fml $ml summary			単なる表示 (user summary はこれだけ)
+	fml $ml summary $subcommand
+
+	fml $ml thread			単なる表示
+	fml $ml thread  $subcommand
+
+	fml $ml spool			単なる表示
+	fml $ml spool	$subcommand
+
+	fml $ml mailq			単なる表示
+	fml $ml mailq	$subcommand
+
+
+--------------------
+$FML$
