@@ -723,9 +723,15 @@ log_type	=	file
 # Descriptions: log message format
 #      History:
 #        Value: fml4_compatible
-#     Examples: fml4_compatible の例
+#               process[pid]
+#               process:time.pid ?
+#     Examples: * fml4_compatible の例
 #               01/01/28 00:53:57 IPv6 is ready (fukachan@fml.org)
-log_format_type	=	fml4_compatible
+#               * process[pid] 
+#               02/07/31 00:56:19 loader[29507] try mta=127.0.0.1:25 by IPv6
+#               * process:time.pid ?
+#               02/07/31 00:56:19 loader: 1028074827.29507 try ...
+log_format_type	=	process[pid]
 
 # Descriptions: ログファイル
 #      History:
