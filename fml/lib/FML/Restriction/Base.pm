@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.26 2004/01/02 14:42:44 fukachan Exp $
+# $FML: Base.pm,v 1.27 2004/01/21 03:41:27 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -134,6 +134,8 @@ my %basic_variable =
 =head2 basic_variable()
 
 return basic variable regexp list as HASH_REF.
+
+NOT USE THIS OUTSIDE FML::Restiction::* classes.
 
 =cut
 
