@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: __template.pm,v 1.5 2001/04/03 09:45:39 fukachan Exp $
+# $FML: DSN.pm,v 1.1 2001/04/08 16:17:29 fukachan Exp $
 #
 
 
@@ -22,29 +22,73 @@ Mail::Bounce::DSN - DNS error message format parser
 
 =head1 DESCRIPTION
 
+
+ $result = {
+      addr => {
+             Original-Recipient => 'rfc822; addr'
+             Final-Recipient    => 'rfc822; addr'
+             Diagnostic-Code    => 'reason ...'
+             Action             => 'failed'
+             Status             => '4.0.0'
+          }
+      }
+
 =head1 METHODS
 
 =head2 C<new()>
 
 =cut
 
-
 sub analyze
 {
     my ($self, $msg) = @_;
+    my $result = {};
     my $m;
 
     if ($m = $msg->find( { data_type => 'message/delivery-status' } )) {
 	# data in the part
 	my $data = $m->data;
-	print "// ", $m->num_paragraph, " paragraph(s)\n";
-	print $data;
+	my $n    = $m->num_paragraph;
+
+	for (my $i = 0; $i < $n; $i++) {
+	    my $buf = $m->nth_paragraph($i + 1); # 1 not 0 for 1st paragraph
+	    if ($buf =~ /Recipient/) {
+		$self->_parse_dsn_format($buf, $result);
+	    }
+	}
     }
     else {
 	return undef;
     }
+
+    $result;
 }
 
+
+# DSN Example:
+#    Final-Recipient: rfc822; rudo@nuinui.net
+#    Action: failed
+#    Status: 4.0.0
+#    Diagnostic-Code: X-Postfix; connect to mx.nuinui.net[10.1.1.1]:
+#                     Connection refused
+sub _parse_dsn_format
+{
+    my ($self, $buf, $result) = @_;
+
+    use Mail::Header;
+    my @h      = split(/\n/, $buf);
+    my $header = new Mail::Header \@h;
+    my $addr   = $header->get('Final-Recipient');
+
+    if ($addr =~ /.*;\s*(\S+\@\S+)/) { $addr = $1;}
+
+    # set up return buffer
+    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
+    for ('Final-Recipient', 'Original-Recipient',
+	 'Action', 'Status', 'Diagnostic-Code') {
+	$result->{ $addr }->{ $_ } = $header->get($_) || undef;
+    }
+}
 
 =head1 AUTHOR
 
