@@ -1,8 +1,8 @@
 <!--
-   $FML: Mail::Message.sgml,v 1.1.1.1 2001/09/23 10:56:33 fukachan Exp $
+   $FML: Mail::Message.sgml,v 1.2 2001/09/23 12:18:17 fukachan Exp $
 -->
 
-<chapter id=="module.mail.message">
+<chapter id="module.mail.message">
 	<title>
 	Mail::Message モジュール
 	</title>
@@ -104,11 +104,11 @@ new() メソッドは通常、新しいメッセージを作る際に使われます。
 
 <para>
 MIME/multipart 専用のためのメソッドもあります。
-<sceen>
+<screen>
 build_mime_multipart_chain($args)
 parse_and_build_mime_multipart_chain($args)
 build_mime_header($args)
-</sceen>
+</screen>
 しかしながら、MIME/mulitpart の作成には
 Mail::Message::Compose クラスがあります。
 実のところ、このクラスの実態は MIME::Lite そのものです :-)
