@@ -1,0 +1,17 @@
+#! @SHELL@
+#
+#  Copyright (C) 2003 Ken'ichi Fukamachi
+#   All rights reserved. This program is free software; you can
+#   redistribute it and/or modify it under the same terms as Perl itself.
+#
+# $FML: fmlerror.in,v 1.1 2002/11/07 10:53:53 fukachan Exp $
+#
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libexec_dir=@libexecdir@/fml
+
+exec $libexec_dir/fmlerror $*
+
+echo 'not reach here'
+exit 0;

@@ -1,11 +1,12 @@
 fmladdr
+fmlalias
 fmlconf
 fmldoc
+fmlerror
 fmlhtmlify
 fmlsch
-fmlthread
-makefml
 fmlspool
-fmlalias
 fmlsummary
 fmlsuper
+fmlthread
+makefml
