@@ -1,12 +1,11 @@
 use File::RingBuffer;
 
 my $obj = new File::RingBuffer {
-    directory => "/tmp"
+    directory => "/tmp/b"
 };
 
 my $fh = $obj->open;
-
-chop($_ = `date`);
+$_ = `date`;
 print $fh $_;
 close($fh);
 

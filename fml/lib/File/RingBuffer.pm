@@ -70,36 +70,57 @@ BEGIN {}
 END   {}
 
 
+# Descriptions: constructor
+#               forward new() request to superclass (IO::File)
+#    Arguments: $class_name
+# Side Effects: none
+# Return Value: class object
+#               XXX $self is blessed file handle.
 sub new
 {
     my ($self, $args) = @_;
-    my ($type) = ref($self) || $self;
-    my $me     = {};
-
-    $me->{ _directory }          = $args->{ directory };
-    $me->{ _modulus }            = $args->{ modulus } || 128;
-    $me->{ _sequence_file_name } = $args->{ sequence_file_name } || '.seq';
-
-    return bless $me, $type;
+    my $me = $self->SUPER::new();
+    _take_file_name($me, $args);
+    $me;
 }
 
 
-sub open
+sub _take_file_name
 {
-    my ($self) = @_;
-    my $seq_file = $self->{ _directory } ."/". $self->{ _sequence_file_name };
-    my $modulus  = $self->{ _modulus } || 128;
+    my ($self, $args) = @_;
+    my $sequence_file_name = $args->{ sequence_file_name } || '.seq';
+    my $modulus            = $args->{ modulus } || 128;
 
+    use File::Spec;
+    my $seq_file = 
+      File::Spec->catfile($args->{ directory }, $sequence_file_name);
+			  
     use File::Sequence;
     my $sfh = new File::Sequence {
 	sequence_file => $seq_file,
 	modulus       => $modulus,
     };
     my $id   = $sfh->increment_id;
-    my $file = $self->{ _directory } ."/". $id;
-    my $mode = 'w';
+    my $file = File::Spec->catfile($args->{ directory }, $id);
+    ${*$self}{ _file } = $file;
+}
 
-    new IO::File $file, $mode;
+
+# Descriptions: open() a file in the buffer
+#    Arguments: $self
+#               XXX $self is blessed file handle.
+# Side Effects: create ${ *$self } hash to save status information
+# Return Value: write file handle (for $file.new.$$)
+sub open
+{
+    my ($self) = @_;
+
+    # temporary file
+    my $file = ${*$self}{ _file};
+
+    # real open with $mode
+    $self->autoflush;
+    $self->SUPER::open($file, "w") ? $self : undef;
 }
 
 
