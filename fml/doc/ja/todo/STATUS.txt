@@ -11,6 +11,7 @@
 	perl ?       on FreeBSD 4.6 RELEASE
 	perl 5.00503 on FreeBSD 4.7 RELEASE-p3
 	perl 5.00503 on FreeBSD 4.6.2 RELEASE			*
+	perl 5.6.1   on FreeBSD 5.2.1
 	perl 5.6.1   on Turbolinux Server 8 (qmail)		*
 	perl 5.6.1   on Redhat Linux 7.2 (postfix)		*
 	perl 5.00503 on Redhat Linux 6.2 (sendmail8.11.6)	*
@@ -123,19 +124,21 @@ II部　fmlのセットアップ〜MLの作成
 III部　fmlのカスタマイズ
 10章　MLのメンバーができること
 
-	$commands_for_user および
-	$commands_for_stranger という変数で定義されています。
+	コマンドメールで利用可能なコマンドは
+		$user_command_mail_allowed_commands
+		$anonymous_command_mail_allowed_commands 
+	という２つの変数で定義されています。後者は guide や subscribe
+	など、メンバーでなくても使えないといけないコマンドのリストです。
 
-	一般ユーザ向けのコマンド
+	一般ユーザ向けのコマンドの例 ($user_command_mail_allowed_commands)
 		help get mget get mget send subscribe add unsubscribe
 		bye remove resign signoff chaddr confirm guide info
 		objective summary
 
-	誰でも使えるコマンド
+	誰でも使えるコマンドの例 ($anonymous_command_mail_allowed_commands)
 		guide info add subscribe chaddr confirm
 
 	＊これらは FML::Command::User:: クラスで定義されています。
-
 
 	[TODO] get: ファイル数が多い場合、分割して送返(fml-devel 485)
 		reply_message() によろしくねーとしかしてないので、
@@ -151,19 +154,22 @@ III部　fmlのカスタマイズ
 		ＭＬのメンバーの登録と削除	OK
 		登録しているアドレスの変更	OK
 		off/on				OK
+
 	簡単なまとめおくりはできます。
 
-		use_digest_program = yes / no
+		use_article_digest_function = yes / no
 
 		により使う/使わないが指定できます(yes by default)。
 
 	[TODO]	まとめおくり (fml 4 のような複雑なバージョン)
 
-	リモート管理は現在パスワード認証だけできます。			
-			パスワード変更は？
+	[TODO]	リモート管理
+			現在パスワード認証だけできます。
+			その他の認証方式は未実装
+
 	[TODO]	ＭＬのカスタマイズはファイルの編集あるのみ
 
-		注意: 当然リモートコマンドよりいろいろなことができます。
+		注意: 当然リモートコマンドより、いろいろなことができます。
 
 
 	[TODO]	rmml したＭＬをふっかつさせることは？ → renew コマンドだ
@@ -202,70 +208,76 @@ III部　fmlのカスタマイズ
 
 12章　fmlの設定ファイルを変更する
 
-	[TODO] 設定ファイルのフォーマットの説明
-	[TODO] 設定ファイルの変更方法
+	すべてのＭＬに同じ設定を強制する (fml4 の site_force.ph)
+		/etc/fml/site_default_config.cf
 
+	各ＭＬの設定変更方法
 		各ＭＬのホームディレクトリにある config.cf を編集して
 		ください。
 
-	[TODO] メニューでの操作
+	[TODO] メニューでの操作  (未実装)
 		設定支援ツールはまだありません。
 
-	[TODO] すべてのＭＬに同じ設定を強制する
+	[TODO]	fml4 の site_init.ph にあたるものは？
 
-	/etc/fml/ (とか /usr/local/etc/fml/ とか) 以下に
-	デフォルトの .cf がおかれますし、サイト依存、ドメイン依存
-	の .cf を作ることでサイト、ドメインごとの全ＭＬの
-	デフォルトを変更することもできます。
-
-	[TODO] etc/src/config.cf.ja/ の説明文ってこれでよい？
+		って必要なのかなぁ…？？？
 
 
 13章　MLのスタイルのカスタマイズ (ケーススタディ)
 
+	投稿の制御: $article_post_restrictions で制御
+		
+	コマンドメールの制御: $command_mail_restrictions で制御
+
+	コマンドメールの禁止:
+		$use_command_mail_function を no にすると
+		コマンドメールの機能自体を停止できる。
+
+		$command_mail_restrictions で reject とだけ指定するも可。
+
+	誰でも投稿可能:
+		$article_post_restrictions で permit_anyone
+
+	メールマガジン型:
+		$member_maps から $primary_member_map をはずす
+		$member_maps に投稿可能なメンバーのリストを追加
+		さらに MTA の設定で IP アドレス制限などかけてね
+
+	階層化されたＭＬ:
+		 $member_maps $recipient_maps をよろしく書く
+
+	procmail:
+		4.0 と同様だ。
+		makefml newml が見本を作るので参考にしてね。
+
 	[TODO] デフォルトのポリシーの説明 (D)C
 
-	投稿の制御: $post_restrictions で制御
-		
-	コマンドメールの制御: $command_restrictions で制御
-
-	コマンドメールの禁止: $command_restrictions で reject とだけ指定
-
 	[TODO] 自動とか手動登録とかをどこで指定するの？
+
+		うーん、コマンドごとに指定できるようにしないとか？
 
 		$subscribe_command_mode	=	auto / manual
 		$chaddr_command_mode	=	auto / manual
 		$unsubscribe_command_mode =	auto / manual
 
-	[TODO] 手動登録？
+	[TODO] コマンドメール（の手動登録モード）
 
-	[TODO] 自動登録
+		confirmation は fml8 で、登録作業は makefml コマンドで
+
+	[TODO] 自動登録の confirmation 以外のモード 
+
 		今はデフォルトで自動登録ですわ :-)
 		まだ confirmation タイプしかありません。
 
-	誰でも投稿可能:	$post_restrictions で permit_anyone
-
-	メールマガジン型:
-		$member_maps から $primary_member_map をはずす
-		$member_maps に投稿可能なメンバーのリストを追加
-		IP アドレスで制限しなさいね
-
 	[TODO] モデレータ 
-
-	自動ファイル返送
-		[ TODO ] multipart 以外はなしだよな？ なし
 
 	[TODO] 複数の管理者による運用
 
-	登録と削除をまとめておこなう
+	[TODO] 登録と削除をまとめておこなう
 
 	[TODO] listserv 風のコマンドアドレス
 
 	[TODO] qmail-ext によるコマンド
-
-	階層化されたＭＬ: $member_maps $recipient_maps をよろしく書く
-
-	procmail:	4.0 と同様だ
 
 	[削除] ＭＬ本体でコマンドメールも受けられる機能
 
@@ -284,6 +296,10 @@ III部　fmlのカスタマイズ
 	/usr/local/share/fml/$fml_version/message/$charset/
 	にあります。
 
+	Accept-Language: X-Accept-Language: Content-Type: 
+	などを見て、返すメッセージの言語を決めています。
+	曖昧な時は複数言語で返します(mime/multipartになります)。
+
 	[TODO] site local のディレクトリを決める
 		/etc/fml/ 以下?
 		site_local/ ?
@@ -291,21 +307,25 @@ III部　fmlのカスタマイズ
 
 	Q: ML LOCAL なメッセージの変更は？
 
-	例えば、文字コードが euc-jp のメッセージ・テンプレートは
+		例えば、文字コードが euc-jp のメッセージ・テンプレートは
 
-		$ml_home_dir/local/share/message/euc-jp/
-
-	に置くとそちらが優先される
+			$ml_home_dir/local/share/message/euc-jp/
+	
+		に置くとそちらが優先される
 
 
 16章　記事のフィルタリング
 
-	実装済み (FML::Filter)
-		検出できるルール: ヘッダ、本文、特殊なウィルス
-		content filter
+	実装済み (FML::Filter クラス)
+		ヘッダフィルタ
+		本文に対するフィルタ
+		text/plain に対するフィルタ
+		MIME 構造に基づくフィルタ
+		その他
+			特殊なウィルスなども含む
 
-	4.0 の ContertFilter 相当機能は mime_component_filter
-		ファイル名は /etc/fml/mime_component_filter
+	4.0 の ContertFilter 相当機能は mime_component_filter です。
+		ファイル名は	/etc/fml/mime_component_filter
 		デフォルト値は  /etc/fml/mime_component_filter
 
 	[TODO] 統計をとりたい(どのルールにどのくらい引っかかったか？)
@@ -314,48 +334,55 @@ III部　fmlのカスタマイズ
 
 	[TODO] 統計のためのデータベース
 
-	[TODO]	フィルタの拡張機能？
+	[TODO] フィルタの拡張機能？ content-type が正しいかどうかを調べる
 
-	Q: content-type が正しいかどうかを調べる
-		image/gif なら本当に gif ?
+		Q: content-type が正しいかどうかを調べる
+			image/gif なら本当に gif ?
 
-	A: ん〜全部は無理だなぁ。File::なんとかで、
-	   ファイルのタイプを識別するモジュールとかあれば OK なのかも
-	   しれず(?)
+		A: ん〜全部は無理だなぁ。File::なんとかで、
+		   ファイルのタイプを識別するモジュールとかあれば OK 
+		   なのかもしれず(?)
 
-	Q: まだ、text/plain 部分は言語依存パートになってない。
+		Q: まだ、text/plain 部分は言語依存パートになってない（？）
 
-	だいたい言語依存とかいうなら virus checker を切り離せよ ＞ お
-	れなど、てんこもりなので、text_plain_filter ってちょっと整理が
-	大変だなと。
+			だいたい言語依存とかいうなら virus checker を
+			切り離せよ ＞ おれ
 
-	Q: 古いメールは SPAM に違いない
+			など、てんこもりなので、text_plain_filter って
+			ちょっと整理が大変だなと。
+
+		Q: 古いメールは SPAM に違いない
 
 
 17章　トラフィックを制限する（メール爆弾対策）
 
-	[TODO] 未実装
+	コマンドメールで、コマンドごとのリクエスト数制限は実装されている。
 
-	[TODO] トラフィック統計を取るために、あらかじめいろんなデータを
-		DB に取りまくるべき？ 
-		thread db とデータを共有する？ 
+	ＭＬ全体で同じデータベースを使う。
+		下準備はしてある → UDB 
+	
+	[TODO] トラフィックフィルタ自体は未実装
 
 
 18章　リモート管理（メールでfmlを操作する）
 
 	管理者がコマンドメールで使える特権コマンドつまり admin コマン
-	ドは $commands_for_privileged_user という変数で定義
+	ドは $admin_command_mail_allowed_commands という変数で定義
 	されているものが利用可能です。
 
 	利用可能なコマンドは FML::Command::Admin:: クラスの部分集合です
+
+	etc/passwd-admin
+		fml4 の etc/passwd は fml8 の etc/passwd-admin です。
+		フォーマットが微妙に違います（拡張されている）
+		操作ツール、コマンドは fml4 と同じです。
 
 	[TODO] "approve パスワード コマンド"型構文サポート
 
 	[TODO] 非対称鍵暗号認証
 
-	[TODO] etc/passwd-admin の操作ツール、コマンド
 
-19章　MLの暗号化
+19章　MLの暗号化 (配送時の暗号化)
 
 	[TODO] 未実装
 
@@ -371,24 +398,15 @@ III部　fmlのカスタマイズ
 
 	[TODO] permission はこれでいい？
 
-
 	[TODO]	Mail::Message::ToHTML
 		X-Sequence: fml-devel 515
 
-	1) spam対策の表示処理について
+		2) indexの要、不要について
 
-	今メールアドレスとかを名前の部分だけか address@xxx.xxx.xxx み
-	たいな感じで処理をしていますが、ヘッダ部分のTo:とかCC:とかはそ
-	のままなので、これも直した方がいいかも。また逆にこの機能は会社
-	のwebではそのまま表示されるのが望ましいので変数で処理できるよ
-	うにしたい
+		現状ではall,monthly,threadが出来るが、これらも選択できるほうが
+		良いかも#２万通以上のMLがあるとallは不要と思えてくる...
 
-	2) indexの要、不要について
-
-	現状ではall,monthly,threadが出来るが、これらも選択できるほうが
-	良いかも#２万通以上のMLがあるとallは不要と思えてくる...
-
-	3) thread.htmlの月別の作成＆出来れば逆順のもの
+		3) thread.htmlの月別の作成＆出来れば逆順のもの
 
 
 
@@ -397,14 +415,15 @@ III部　fmlのカスタマイズ
 	簡易版のまとめおくりはサポートされている。
 
 	[TODO] fml 4 のような粒度の細かなまとめ送り
-	[TODO] それを踏まえた
 
 
 IV部　トラブルシューティング
 
 	[TODO] トラブルシューティング事例を集める
 
+
 V部　その他のトピック
+
 26章　日々の運用について
 
 	スプールは真っ平ら or 一階層構造のどちらでもとれます。
@@ -412,23 +431,29 @@ V部　その他のトピック
 
 	受けとったメールを保存する。
 		var/mail/incoming/ 以下に保存します。
+		fml4 と異なり保存がデフォルトの挙動です。
+
+	出ていくメールを保存する。
+		var/mail/outgoing/ 以下に保存します。
+		fml4 と異なり保存がデフォルトの挙動です。
 
 	自分が出したメールは
 		var/mail/outgoing/ 以下に保存します。
+
+	ログファイルへの newsyslog (fml4 の $LOGFILE_NEWSYSLOG_LIMIT)
+		use_log_rotate = yes
+
+		log_rotate_size = バイト数
+
 	[削除]	var/log/_smtplog.数字ではなくなりました。
 
-
-	[TODO] ログファイルの expire
 	[TODO] スプールの圧縮
 	[TODO] スプールを tar などにまとめる (mode_archive)
 	[TODO] スプールの expire (mode_expire)
 	[TODO] 設定ファイルなどの RCS 管理
 	[TODO] 設定ファイルなどの CVS 管理
-	[TODO] ログファイルなどへの newsyslog
-		File::Rotate に実装されているが	組み込まれてはいない。
 	[TODO] log suffix extension
-
-	[TODO]	「このＭＬはもうありません」オプション
+	[TODO] 「このＭＬはもうありません」オプション
 
 		libexec/ の下の全部のプログラム全部が対応して、
 		ml や ml-ctl 宛に来たメールにみんな返事を返すべきだ。
@@ -453,9 +478,11 @@ V部　その他のトピック
 		＋（ヘッダ情報＋そのエラーメールのアドレスの分析レポー
 		ト）とかなんか付けると便利？
 
+
 28章　メールサーバの変更/引越し
 
 	手間は 4.0 とほとんど同じかな
+
 
 29章　バーチャルドメイン
 
@@ -465,12 +492,22 @@ V部　その他のトピック
 VI部　fmlの内部構造と機能拡張
 
 30章　変数と関数
+
+	変数一覧は常に更新されている。fml8 チュートリアルを参照。
+
+
 31章　リストファイルのフォーマット
+
+	fml8 チュートリアルを参照。
+
+
 32章　fml.plプロセスの動作
 
-	[TODO]	エラーをどのように呼びだし側へ組織的に伝えるか？
+	[TODO] 汎用エラートラップフレームワーク
+		CGI も含めて汎用のフレームワークがほしい
 
-		エラートラップフレーム？
+		エラーをどのように呼びだし側へ組織的に伝えるか？
+
 		$curproc->error_regist( { キー => オブジェクト } );
 		croak(エラーのキー);
 
@@ -479,12 +516,14 @@ VI部　fmlの内部構造と機能拡張
 		エラーをどのように呼びだし側へ組織的に伝えるか？
 		オブジェクトか HASH_REF ごとわたせないか？
 
+
 33章　デバッグをする
 
 	モジュール単位で $debug という変数がある場合がある。
 	デバッグの時はモジュールを直接書き換えるしかないけど
 
 	デバッグ用のディレクトリを作って main.cf で制御してもよいね
+
 
 34章　コマンドメールのカスタマイズ
 
@@ -496,18 +535,23 @@ VI部　fmlの内部構造と機能拡張
 
 		を作ると、そのＭＬ独自のヘルプコマンドとなる
 
+
 35章　ケーススタディ：HOOKによる拡張
 
 	[レシピ] subject: によってフォワード先を変えられる？
 
 
 VII部　Advanced Study
+
 36章　fmlからデータベースへのアクセス
 
 	はじめから前提です。
 		IO::Adapter に組み込まれている
 
 	[削除] replace メソッドは削除した
+
+	[TODO] PostgreSQL 対応
+
 
 37章　配送の高速化について (+ 配送関係の TIPS )
 
@@ -548,4 +592,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.32 2003/11/25 11:36:11 fukachan Exp $
+$FML: STATUS.txt,v 1.33 2003/11/30 04:45:00 fukachan Exp $
