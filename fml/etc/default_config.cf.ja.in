@@ -95,14 +95,14 @@ db_dir		= $var_dir/db
 #      History: LOG_MAIL_DIR ($DIR/var/Mail/)
 #        Value: directory
 #     Examples: /var/spool/ml/elena/var/mail/incoming
-mail_incoming_dir	= $var_dir/mail/incoming
+incoming_message_dir	= $var_dir/mail/incoming
 
 
 # Descriptions: deliver されるメールを置くディレクトリ
 #      History: LOG_MAIL_DIR ($DIR/var/Mail/)
 #        Value: directory
 #     Examples: /var/spool/ml/elena/var/mail/outgoing
-mail_outgoing_dir	= $var_dir/mail/outgoing
+outgoing_message_dir	= $var_dir/mail/outgoing
 
 
 # Descriptions: mail queue のディレクトリ
