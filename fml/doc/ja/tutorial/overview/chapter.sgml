@@ -1,11 +1,24 @@
 <!--
-	$FML: chapter.sgml,v 1.5 2001/11/23 15:00:48 fukachan Exp $
+   $FML: chapter.sgml,v 1.6 2001/11/24 03:22:56 fukachan Exp $
 -->
 
 <chapter id="overview"> 
 	<title>
-	fml の概要
+	&fmldevel; の概要
 	</title>
+
+<important>
+
+<para>
+&fmldevel; は &fml4; 相当のものを完全に一から書き直すプロジェクトです。
+使い方の見かけは &fml4; に"似せて"います。
+主な注意点は 
+root での作業、 configure の使用、
+そして /etc/fml/ 以下のファイル、
+特に /etc/fml/main.cf というグローバルな設定ファイルです。
+</para>
+
+</important>
 
 <sect1>
 	<title>
@@ -13,14 +26,14 @@
 	</title>
 
 <para>
-以下で、特に触れていない概念(例: ＭＬとは？)については &fml4; と同様
-です。4.0 の資料(
+以下で、特に触れていない概念(例: ＭＬとは？)については &fml4; と同様です。
+くわしくは &fml4; の資料(
 	<ulink url="http://www.fml.org/fml/">
 	http://www.fml.org/fml/
 	</ulink>
 	や
 	&fmlbible;
-)を適宜参照して下さい。
+)を適宜、参照して下さい。
 </para>
 
 <para>
@@ -32,44 +45,61 @@
 <orderedlist>
    <listitem>
 	<para>
-		<link linkend="download">
-		ソースをダウンロードする。
-		</link>
+	<link linkend="download">
+	ソースをダウンロードして、展開して下さい。
+	</link>
 	</para>
    </listitem>
 
    <listitem>
 	<para>
-		<link linkend="install">
-		ユーザ root でインストールをする。
-		</link>
+	<link linkend="install">
+	ユーザ root でインストールをする。
+	まず、ユーザ fml とグループ fml を作成し、
+	<link linkend="install.configure">
+	configure
+	</link>
+	および make を実行して下さい。
+	</link>
 <screen>
+% su root
+# groupadd fml
+# useradd -m -g fml fml
 # ./configure
 # make install
 </screen>
 	</para>
 
 	<para>
-		(デフォルトでは)インストーラは /usr/local/bin に 
-		fmldoc fmlconf fmlthread makefml fmlhtmlify fmlsch
-		などをインストールします。
-	</para>
-
-	<para>
-		実は、
-		これらは
-		/usr/local/libexec/fml の下の実体を呼び出す単なる
-		wrapper です。
+	(デフォルトでは)インストーラは /usr/local/bin 
+		<footnote>
+		<para>
+		デフォルトでは /usr/local ディレクトリ以下に
+		適宜サブディレクトリが作られます。
+		<link linkend="install.configure">
+		configure のオプション 
+		</link>
+		で変更が可能です。
+		</para>
+		</footnote>
+	に 
+	fmldoc fmlconf fmlthread makefml fmlhtmlify fmlsch
+	などをインストールします。
+	実は、
+	これらは
+	/usr/local/libexec/fml の下の実体を呼び出す単なる
+	wrapper です。
 	</para>
    </listitem>
 
 
    <listitem>
 	<para>
-		<link linkend="guide.newml">
-		ユーザ fml で elena ＭＬを作る。 
-		</link>
+	<link linkend="guide.newml">
+	ユーザ fml で elena ＭＬを作る。 
+	</link>
 <screen>
+% su fml
 % makefml newml elena
 </screen>
 	</para>
@@ -78,23 +108,24 @@
 
    <listitem>
 	<para>
-		/etc/mail/aliases の設定などをする
+	MTA から fml を起動するために
+	/etc/mail/aliases の設定などをしてください。
 	</para>
    </listitem>
 
 
    <listitem>
 	<para>
-		ＭＬ の動作テストをする。
+	ＭＬ の動作テストをしてください。
 	</para>
    </listitem>
 
 
    <listitem>
 	<para>
-		<link linkend="guide.config.cf">
-		ＭＬ のカスタマイズをする。 
-		</link>
+	<link linkend="guide.config.cf">
+	ＭＬ のカスタマイズをする。 
+	</link>
 	</para>
    </listitem>
 
@@ -102,7 +133,7 @@
 
 <warning>
 <para>
-	&fml4; と異なり root でインストールすることに注意して下さい。
+&fml4; と異なり root でインストールすることに注意して下さい。
 </para>
 </warning>
 
@@ -116,22 +147,21 @@
 
 <para>
 方法は &fml4; と同様です。 
-ですが、
-現状では config.cf という設定ファイルをインストールしてくれるだけです。
+現状では 
+config.cf (設定ファイル) と
+fml を起動するために MTA が呼び出すファイルである
+include 
+および
+include-ctl をインストールしてくれます。 
 <screen>
 % su fml
 % makefml newml elena
 % ls /var/spool/ml/elena
-config.cf
+config.cf include include-ctl
 </screen>
 カスタマイズは config.cf をエディタで編集して下さい。
-とりあえず config.cf の先頭の ml_domain と ml_name を
-自分のＭＬに変更して下さい。
-まだ自動変換できません(そのうちできるようにします ;-)。
-</para>
-
-
-<para>
+とりあえず config.cf の先頭の ml_domain と ml_name が
+正しいかどうかを確認して下さい。
 <screen>
 config.cf の例
 
@@ -153,8 +183,7 @@ address_for_command = $ml_name-ctl@$ml_domain
 </para>
 
 <para>
-include include-ctl aliases も &fml4; と同様です。
-まだ、makefml newml で自動生成できるようになっていません _o_
+include include-ctl aliases の書き方は &fml4; と同様です。
 include ファイルの PATH がちょっと違いますが、
 aliases の設定の仕方は一緒です。
 </para>
@@ -181,6 +210,10 @@ elena-admin: fml
 owner-elena: fml
 owner-elena-ctl: fml
 </screen>
+aliases はまだ makefml が生成していません
+( &fmldevel; は virtual domain を前提にした扱いなので、
+ディレクトリ構成などをもうちょっと考えたいので、まだ自動生成されていません。
+もうちょっと待って〜)。
 </para>
 
 </sect1>
@@ -188,14 +221,15 @@ owner-elena-ctl: fml
 
 
 <sect1 id="guide.config.cf">
-
-<title> カスタマイズをする </title>
+	<title>
+	カスタマイズをする
+	</title>
 
 <para>
 elena ＭＬの設定のカスタマイズは /var/spool/ml/elena/config.cf を編集
 して下さい。
-フォーマットは &fml4; の cf に近いですが、
-postfix の設定ファイルと同様という方が良いでしょう。
+フォーマットは postfix の設定ファイルと同様というとわかりやすいでしょう。
+(&fml4; の config.ph よりは cf にやや近いですが)
 </para>
 
 <para>
