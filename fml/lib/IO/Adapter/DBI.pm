@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.29 2003/11/26 11:00:32 fukachan Exp $
+# $FML: DBI.pm,v 1.30 2004/01/24 09:03:55 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -18,7 +18,7 @@ my $debug = 0;
 
 =head1 NAME
 
-IO::Adapter::DBI - DBI abstraction layer
+IO::Adapter::DBI - DBI abstraction layer.
 
 =head1 SYNOPSIS
 
@@ -212,7 +212,7 @@ sub get_next_key
 }
 
 
-# Descriptions: get from DBI map.
+# Descriptions: get data from cache obtained from DBI.
 #    Arguments: OBJ($self) HASH_REF($args) STR($mode)
 # Side Effects: none
 # Return Value: STR
@@ -253,11 +253,12 @@ sub _get_data_from_cache
 	}
 	else {
 	    warn("DBI: invalid option");
+	    return undef;
 	}
     }
     else {
 	$self->error_set( $DBI::errstr );
-	undef;
+	return undef;
     }
 }
 
@@ -386,6 +387,7 @@ sub md_find
 
     $self->close();
 
+    # XXX-TODO: $x = "STR STR STR" ? should be $x => [] ?
     return( $show_all ? \@buf : $x );
 }
 

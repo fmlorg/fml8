@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: AtomicFile.pm,v 1.12 2004/05/25 04:03:49 fukachan Exp $
+# $FML: AtomicFile.pm,v 1.13 2004/06/27 05:51:22 fukachan Exp $
 #
 
 package IO::Adapter::AtomicFile;
@@ -19,7 +19,7 @@ END   {}
 
 =head1 NAME
 
-IO::Adapter::AtomicFile - atomic IO operation
+IO::Adapter::AtomicFile - atomic IO operation.
 
 =head1 SYNOPSIS
 
@@ -41,7 +41,7 @@ In usual cases, you use this module in the following way.
     # get read handle for $file
     my $rh = new FileHandle $file;
 
-    # get  handle to update $file
+    # get handle to update $file
     my $wh = IO::Adapter::AtomicFile->open($file);
     if (defined $rh && defined $wh) {
 	while (<$rh>) {

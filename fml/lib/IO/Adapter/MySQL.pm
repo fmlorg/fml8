@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: MySQL.pm,v 1.26 2003/08/23 04:35:44 fukachan Exp $
+# $FML: MySQL.pm,v 1.27 2004/01/24 09:03:56 fukachan Exp $
 #
 
 
@@ -21,7 +21,7 @@ push(@ISA, 'IO::Adapter::DBI');
 
 =head1 NAME
 
-IO::Adapter::MySQL - interface to talk with a MySQL server
+IO::Adapter::MySQL - interface to talk with a MySQL server.
 
 =head1 SYNOPSIS
 
@@ -170,6 +170,7 @@ sub eof
 {
     my ($self) = @_;
 
+    # XXX-TODO: correct ?
     return( $self->{ _row_pos } < $self->{ _row_max } ? 0 : 1 );
 }
 

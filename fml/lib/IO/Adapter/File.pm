@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.56 2004/05/25 04:03:06 fukachan Exp $
+# $FML: File.pm,v 1.57 2004/06/27 05:59:10 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -21,7 +21,7 @@ my $debug = 0;
 
 =head1 NAME
 
-IO::Adapter::File - IO functions for a file
+IO::Adapter::File - IO functions for a file.
 
 =head1 SYNOPSIS
 
@@ -56,12 +56,12 @@ prefix.
 
 =head2 new()
 
-standard constructor.
+constructor.
 
 =cut
 
 
-# Descriptions: standard constructor.
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -119,7 +119,7 @@ sub _read_open
 	return $fh;
     }
     else {
-	$self->error_set("Error: cannot open file=$file flag=$flag");
+	$self->error_set("cannot open file=$file flag=$flag");
 	return undef;
     }
 }
@@ -139,7 +139,8 @@ sub _rw_open
     my ($rh, $wh)  = IO::Adapter::AtomicFile->rw_open($file);
     $self->{ _fh } = $rh;
     $self->{ _wh } = $wh;
-    $rh;
+
+    return $rh;
 }
 
 
@@ -260,16 +261,16 @@ sub _get_next_xxx
 	    $buf =~ s/[\r\n]*$//o;
 	    my ($key, $value) = split(/\s+/, $buf, 2);
 	    if ($mode eq 'key') {
-		$buf = $key;
+		$buf = $key || '';
 	    }
 	    elsif ($mode eq 'value_as_str') {
-		$buf = $value;
+		$buf = $value || '';
 	    }
 	    elsif ($mode eq 'value_as_array_ref') {
 		$value =~ s/^\s*//;
 		$value =~ s/\s*$//;
 		(@buf) = split(/\s+/, $value);
-		$buf = \@buf;
+		$buf = \@buf || [];
 	    }
 	    elsif ($mode eq 'key,value_as_array_ref') {
 		@buf = (); # reset;
@@ -281,7 +282,7 @@ sub _get_next_xxx
 			(@buf) = split(/\s+/, $value);
 		    }
 		    unshift(@buf, $key);
-		    $buf = \@buf;
+		    $buf = \@buf || [];
 		}
 		else {
 		    $buf = [];
@@ -384,6 +385,7 @@ sub add
 {
     my ($self, $addr, $argv) = @_;
 
+    # XXX-TODO: open only if not opened ?
     $self->open("w");
 
     my $fh = $self->{ _fh };
@@ -408,7 +410,7 @@ sub add
 		print $wh $addr, "\t", $argv, "\n";
 	    }
 	    else {
-		$self->error_set("Error: add: invalid args");
+		$self->error_set("add: invalid args");
 		$wh->close;
 		return undef;
 	    }
@@ -420,7 +422,7 @@ sub add
 	$wh->close;
     }
     else {
-	$self->error_set("Error: cannot open file=$self->{ _file }");
+	$self->error_set("cannot open file=$self->{ _file }");
 	return undef;
     }
 }
@@ -433,7 +435,7 @@ delete lines with key $key from this map.
 =cut
 
 
-# Descriptions: delete address(es) matching $reexp from map.
+# Descriptions: delete address(es) matching $regexp from map.
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: update map
 # Return Value: same as close()
@@ -442,6 +444,7 @@ sub delete
     my ($self, $key) = @_;
     my $found = 0;
 
+    # XXX-TODO: open only if not opened ?
     $self->open("w");
 
     my $fh = $self->{ _fh };
@@ -464,11 +467,11 @@ sub delete
 	$fh->close;
 
 	unless ($found) {
-	    $self->error_set("Error: not match");
+	    $self->error_set("not match");
 	}
     }
     else {
-	$self->error_set("Error: cannot open file=$self->{ _file }");
+	$self->error_set("cannot open file=$self->{ _file }");
 	return undef;
     }
 }
@@ -496,7 +499,7 @@ sub lock
 }
 
 
-# Descriptions: un-flock file (create a file if needed).
+# Descriptions: un-flock file.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -549,7 +552,7 @@ sub _simple_flock
 # Descriptions: try unlock by flock(2) for $file.
 #    Arguments: OBJ($self) STR($file)
 # Side Effects: flock for $file
-# Return Value: 1 or 0
+# Return Value: NUM( 1 or 0 )
 sub _simple_funlock
 {
     my ($self, $file) = @_;
@@ -631,9 +634,10 @@ For example, to set sequence number to the specified value $new_id:
 
 
 # Descriptions: increment value in the specified file.
+#               return new sequence number.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: create a file if needed.
-# Return Value: none
+# Return Value: NUM
 sub sequence_increment
 {
     my ($self, $args) = @_;
@@ -728,6 +732,7 @@ sub sequence_replace
 	if ($wh->error()) {
 	    $self->error_set("write error");
 	    $wh->rollback();
+	    return 0;
 	}
 	else {
 	    $wh->close;
@@ -735,6 +740,7 @@ sub sequence_replace
     }
     else {
 	$self->error_set("cannot save id");
+	return 0;
     }
 
     # verify if the value is writtern.

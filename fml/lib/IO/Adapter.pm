@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.33 2004/04/27 13:31:54 fukachan Exp $
+# $FML: Adapter.pm,v 1.34 2004/06/30 03:05:14 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -494,6 +494,7 @@ sub find
 
     $self->close;
 
+    # XXX-TODO: $x = "STR STR STR" ? should be $x => [] ?
     $show_all ? \@buf : $x;
 }
 
