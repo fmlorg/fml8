@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.1.1.1 2002/11/26 07:42:19 fukachan Exp $
+# $FML: Summary.pm,v 1.2 2002/11/26 09:44:37 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -46,23 +46,21 @@ sub new
 
 
 # Descriptions: append summary to $summary_file
-#    Arguments: OBJ($self) NUM($id)
+#    Arguments: OBJ($self) HANDLE($wh) NUM($id)
 # Side Effects: append summary to $summary_file
 # Return Value: none
 sub print
 {
-    my ($self, $id) = @_;
+    my ($self, $wh, $id) = @_;
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
     my $file    = $config->{ 'summary_file' };
 
-    use FileHandle;
-    my $wh = new FileHandle ">> $file";
     if (defined $wh) {
-	$wh->autoflush(1);
 	my $info = $self->_prepare_info($id);
-	$self->print_one_line_summary($wh, $info);
-	$wh->close();
+	if (defined $info) {
+	    $self->print_one_line_summary($wh, $info);
+	}
     }
 }
 
@@ -83,30 +81,36 @@ sub _prepare_info
     my $article = new FML::Article $curproc;
     my $file    = $article->filepath($id);
 
-    use Mail::Message;
-    my $msg     = new Mail::Message->parse( { file => $file } );
-    my $header  = $msg->whole_message_header();
-    my $address = $header->get( 'from' );
+    if (-f $file) {
+	use Mail::Message;
+	my $msg     = new Mail::Message->parse( { file => $file } );
+	my $header  = $msg->whole_message_header();
+	my $address = $header->get( 'from' );
 
-    # extract the first 15 bytes of user@domain part from From: header field.
-    use FML::Header;
-    my $hdrobj = new FML::Header;
-    $address = substr($hdrobj->address_clean_up( $address ), 0, 15);
+	# extract the first 15 bytes of user@domain part 
+	# from From: header field.
+	use FML::Header;
+	my $hdrobj = new FML::Header;
+	$address = substr($hdrobj->address_clean_up( $address ), 0, 15);
 
-    # fold "\n"
-    use FML::Header::Subject;
-    my $obj     = new FML::Header::Subject;
-    my $subject = $obj->clean_up($header->get('subject'), $tag);
-    $subject =~ s/\s*\n/ /g;   
-    $subject =~ s/\s+/ /g;
+	# fold "\n"
+	use FML::Header::Subject;
+	my $obj     = new FML::Header::Subject;
+	my $subject = $obj->clean_up($header->get('subject'), $tag);
+	$subject =~ s/\s*\n/ /g;   
+	$subject =~ s/\s+/ /g;
 
-    my $info = {
-	id       => $id,
-	address  => $address,
-	subject  => $subject,
-    };
+	my $info = {
+	    id       => $id,
+	    address  => $address,
+	    subject  => $subject,
+	};
 
-    return $info;
+	return $info;
+    }
+    else {
+	return undef;
+    }
 }
 
 
@@ -155,6 +159,44 @@ sub _fml4_compatible_style_one_line_summary
     }
     else {
 	LogError("date object undefined.");
+    }
+}
+
+
+=head1 UTILITIES
+
+=cut
+
+
+# Descriptions: re-genearete summary from $min to $max.
+#    Arguments: OBJ($self) NUM(min) NUM($max)
+# Side Effects: re-create $summary file.
+# Return Value: none
+sub rebuild
+{
+    my ($self, $min, $max) = @_;
+    my $curproc = $self->{ _curproc };
+    my $config  = $curproc->config();
+    my $file    = $config->{ 'summary_file' };
+    my $tmp     = "$file.new.$$";
+
+    use FileHandle;
+    my $wh = new FileHandle ">> $tmp";
+
+    if (defined $wh) {
+	$wh->autoflush(1);
+
+	for my $id ($min .. $max) {
+	    $self->print($wh, $id);
+	}
+	$wh->close();
+    }
+
+    if (-s $tmp) {
+	rename($tmp, $file);
+    }
+    else {
+	LogError("fail to write $tmp");
     }
 }
 

@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Summary.pm,v 1.5 2002/09/22 14:56:51 fukachan Exp $
+# $FML: Summary.pm,v 1.1 2002/11/26 09:45:34 fukachan Exp $
 #
 
 package FML::Process::Summary;
@@ -212,6 +212,7 @@ sub _fmlsummary
     my $config  = $curproc->{ config };
     my $myname  = $curproc->myname();
     my $argv    = $curproc->command_line_argv();
+    my $id_max  = $curproc->article_id_max();
 
     my $eval = $config->get_hook( 'fmlsummary_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -222,10 +223,10 @@ sub _fmlsummary
     my ($method, $argv_ml_name, @options) =  @$argv;
 
     if ($method eq 'update') {
-	$curproc->_update($summary);
+	LogError("update not implemented");
     }
     elsif ($method eq 'rebuild') {
-	$curproc->_update($summary);
+	$summary->rebuild(1, $id_max);
     }
     else {
 	LogError("unknown method=$method");
