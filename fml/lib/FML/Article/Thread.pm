@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Thread.pm,v 1.6 2004/03/29 14:22:17 fukachan Exp $
+# $FML: Thread.pm,v 1.7 2004/03/31 02:49:48 fukachan Exp $
 #
 
 package FML::Article::Thread;
@@ -207,7 +207,7 @@ sub _print_summary
     }
 
     my $pfp = $print_switch{ $print_mode }->{ summary };
-    $self->$pfp($queue);
+    $self->$pfp($curproc, $queue);
 }
 
 
@@ -251,7 +251,7 @@ sub print_list
     }
 
     my $pfp = $print_switch{ $print_mode }->{ list };
-    $self->$pfp($queue);
+    $self->$pfp($curproc, $queue);
 }
 
 
@@ -469,7 +469,7 @@ sub open_thread_status
 {
     my ($self, $thread_args) = @_;
 
-    $self->_change_thread_status($thread_args, $state_open);
+    $self->_change_thread_status("open", $thread_args, $state_open);
 }
 
 
@@ -481,17 +481,17 @@ sub close_thread_status
 {
     my ($self, $thread_args) = @_;
 
-    $self->_change_thread_status($thread_args, $state_closed);
+    $self->_change_thread_status("close", $thread_args, $state_closed);
 }
 
 
 # Descriptions: open/close thread with the specified range.
-#    Arguments: OBJ($self) HASH_REF($thread_args) STR($state)
+#    Arguments: OBJ($self) STR($action) HASH_REF($thread_args) STR($state)
 # Side Effects: update UDB.
 # Return Value: none
 sub _change_thread_status
 {
-    my ($self, $thread_args, $state) = @_;
+    my ($self, $action, $thread_args, $state) = @_;
     my $curproc = $self->{ _curproc };
     my $thread  = $self->{ _thread_object };
     my $article = $self->{ _article_object };
@@ -504,7 +504,7 @@ sub _change_thread_status
     my $tail_id = $id_list->[ 0 ] || 1;
 
     for my $id (@$id_list) {
-	$curproc->log("close thread $id");
+	$curproc->log("$action thread $id");
 	$thread->set_thread_status($id, $state);
     }
 }
@@ -540,7 +540,7 @@ sub set_print_function
     my ($self, $key, $value) = @_;
 
     if (ref($value) eq 'CODE') {
-	$print_switch{ $key } = $value;
+	$print_switch{ $print_mode }->{ $key } = $value;
     }
     else {
 	croak("set_print_function: invalid data");
@@ -549,12 +549,12 @@ sub set_print_function
 
 
 # Descriptions: default print engine for summary.
-#    Arguments: OBJ($self) ARRAY_REF($queue)
+#    Arguments: OBJ($self) OBJ($curproc) ARRAY_REF($queue)
 # Side Effects: none
 # Return Value: none
 sub psw_message_queue_text_summary_print
 {
-    my ($self, $queue) = @_;
+    my ($self, $curproc, $queue) = @_;
 
     for my $q (@$queue) {
 	my $cur_id  = $q->{ cur_id }  || '';
@@ -587,12 +587,12 @@ sub psw_message_queue_text_summary_print
 
 
 # Descriptions: default print engine for list.
-#    Arguments: OBJ($self) ARRAY_REF($queue)
+#    Arguments: OBJ($self) OBJ($curproc) ARRAY_REF($queue)
 # Side Effects: none
 # Return Value: none
 sub psw_message_queue_text_list_print
 {
-    my ($self, $queue) = @_;
+    my ($self, $curproc, $queue) = @_;
 
     for my $q (@$queue) {
 	my $head_id = $q->{ head_id } || '';	
@@ -612,12 +612,12 @@ sub psw_message_queue_text_list_print
 
 
 # Descriptions: default print engine for summary.
-#    Arguments: OBJ($self) ARRAY_REF($queue)
+#    Arguments: OBJ($self) OBJ($curproc) ARRAY_REF($queue)
 # Side Effects: none
 # Return Value: none
 sub psw_message_queue_html_summary_print
 {
-    my ($self, $queue) = @_;
+    my ($self, $curproc, $queue) = @_;
     my $q  = $queue->[ 0 ] || {};
     my $wh = $q->{ output_channel } || \*STDOUT;
 
@@ -662,12 +662,12 @@ sub psw_message_queue_html_summary_print
 
 
 # Descriptions: default print engine for list.
-#    Arguments: OBJ($self) ARRAY_REF($queue)
+#    Arguments: OBJ($self) OBJ($curproc) ARRAY_REF($queue)
 # Side Effects: none
 # Return Value: none
 sub psw_message_queue_html_list_print
 {
-    my ($self, $queue) = @_;
+    my ($self, $curproc, $queue) = @_;
     my $q  = $queue->[ 0 ] || {};
     my $wh = $q->{ output_channel } || \*STDOUT;
 
