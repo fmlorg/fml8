@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: list.pm,v 1.18 2003/11/23 03:54:45 fukachan Exp $
+# $FML: list.pm,v 1.19 2003/11/26 09:19:10 fukachan Exp $
 #
 
 package FML::Command::Admin::list;
@@ -56,7 +56,7 @@ sub need_lock { 0;}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $options = [ 'member' ];
+    my $options = [];
 
     # import makefml options
     if (defined $command_args->{ options } &&
@@ -79,7 +79,7 @@ sub _show_list
 {
     my ($self, $curproc, $command_args, $options) = @_;
     my $config  = $curproc->config();
-    my $maplist = $config->get_as_array_ref( 'recipient_maps' ); # default
+    my $maplist = $config->get_as_array_ref( 'list_command_default_maps');
 
     # XXX first match is ok ?
   ARGV:
