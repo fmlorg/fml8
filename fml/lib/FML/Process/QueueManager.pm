@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.13 2003/08/23 04:35:40 fukachan Exp $
+# $FML: QueueManager.pm,v 1.14 2003/08/23 07:24:48 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -121,7 +121,7 @@ sub _send
     my $msg = Mail::Message->parse( { file => $qfile } );
 
     use FML::Mailer;
-    my $obj = new FML::Mailer;
+    my $obj = new FML::Mailer $curproc;
 
     # XXX queue is already locked and need no lock for recipient maps here.
     my $r   = $obj->send({
