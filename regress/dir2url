@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# $Id$
+#
+
+SHOW () {
+   echo "<UL>"
+   for x in *[a-z0-9A-Z]
+   do
+	if [ "X$x" = XCVS ]; then continue; fi
+	if [ "X$x" = Xindex.ja.html ]; then continue; fi
+	if [ "X$x" = Xindex.en.html ]; then continue; fi
+	if [ "X$x" = Xindex.html ]; then continue; fi
+
+	echo "	<LI>";
+	if [ -d $x ];then
+		echo "	<A HREF=$x/index.ja.html>$x::</A>"
+	else
+		echo "	<A HREF=$x>$x</A>"
+	fi
+	echo ""
+   done
+   echo "</UL>"
+}
+
+SHOW
+
+exit 0;
