@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.54 2002/02/17 09:31:10 fukachan Exp $
+# $FML: Config.pm,v 1.55 2002/02/17 13:31:29 fukachan Exp $
 #
 
 package FML::Config;
@@ -163,6 +163,7 @@ sub get
 
 
 # Descriptions: set vaule for $key
+#               flag on we need to re-evaludate variable expansion.
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: update internal area
 # Return Value: STR
@@ -170,9 +171,25 @@ sub set
 {
     my ($self, $key, $value) = @_;
     $self->{ $key } = $value;
+    $need_expansion_variables = 1;
 }
 
 
+# Descriptions: inform we need to expand variables again.
+#    Arguments: OBJ($self)
+# Side Effects: update internal area
+# Return Value: NUM(1)
+sub update
+{
+    my ($self) = @_;
+    $need_expansion_variables = 1;
+}
+
+
+# Descriptions: ? ( obsolete ?)
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: update internal area
+# Return Value: NUM
 sub regist
 {
     my ($self, $key) = @_;
