@@ -1,37 +1,8 @@
 <!--
-	$FML: chapters.ent,v 1.1 2001/05/01 14:49:18 fukachan Exp $
+	$FML: chapters.ent,v 1.2 2001/05/01 15:16:26 fukachan Exp $
 -->
 
 <!entity versin "1.1">
-
-<!-- include する SGML ファイル群 -->
-<!entity bookinfo SYSTEM "include/bookinfo.sgml">
-<!entity preface  SYSTEM "preface.sgml">
-<!entity terms     SYSTEM "include/terms.sgml">
-
-
-<!entity available SYSTEM "available.sgml">
-<!entity docbook   SYSTEM "docbook.sgml">
-<!entity download  SYSTEM "download.sgml">
-<!entity install   SYSTEM "install/chapter.sgml">
-<!entity install   SYSTEM "install.sgml">
-
-<!entity fmlcommands SYSTEM "commands.sgml">
-<!entity overview    SYSTEM "overview.sgml">
-
-
-<!entity reference       SYSTEM "reference.sgml">
-
-<!entity delivery         SYSTEM "delivery/chapter.sgml">
-<!entity modules          SYSTEM "modules.sgml">
-
-
-<!entity appendix SYSTEM "appendix.sgml">
-<!entity glossary SYSTEM "glossary.sgml">
-<!entity cvstree  SYSTEM "devel/cvstree.sgml">
-<!entity cvstags  SYSTEM "devel/cvstags.sgml">
-
-
 
 <!-- ポインタ -->
 <!entity fmlbible    "『fml バイブル』(オライリージャパン刊)">
@@ -42,11 +13,38 @@
 <!entity architecture SYSTEM "architecture.gif" ndata gif>
 
 
+<!-- メタレベル -->
+<!entity bookinfo SYSTEM "include/bookinfo.sgml">
+<!entity terms    SYSTEM "include/terms.sgml">
+<!entity preface  SYSTEM "preface.sgml">
+
+
+<!-- overview: introduction 〜 インストール、テストまで -->
+<!entity overview    SYSTEM "overview/chapter.sgml">
+<!entity download    SYSTEM "overview/download.sgml">
+<!entity available   SYSTEM "overview/available.sgml">
+<!entity install     SYSTEM "install/chapter.sgml">
+
+
+<!-- う〜ん、分類は…？;-) -->
+<!entity fmlcommands SYSTEM "commands.sgml">
+<!entity modules     SYSTEM "modules.sgml">
+
+
 <!-- 内部構造 -->
-<!entity chapter.bootloader   SYSTEM "internals/bootloader.sgml">
-<!entity sect.main.cf         SYSTEM "internals/main.cf.sgml">
+<!entity chapter.bootloader      SYSTEM "internals/bootloader.sgml">
+<!entity sect.main.cf            SYSTEM "internals/main.cf.sgml">
 <!entity chapter.programingstyle SYSTEM "internals/style.sgml">
-<!entity design          SYSTEM "internals/design.sgml">
+<!entity design                  SYSTEM "internals/design.sgml">
+
+
+<!-- 配送 -->
+<!entity delivery  SYSTEM "delivery/chapter.sgml">
+
+
+<!-- 開発 -->
+<!entity cvstree   SYSTEM "devel/cvstree.sgml">
+<!entity cvstags   SYSTEM "devel/cvstags.sgml">
 
 
 <!-- プログラムの説明 -->
@@ -55,3 +53,10 @@
 <!entity sect.fmldoc      SYSTEM "programs/fmldoc.sgml">
 <!entity sect.fmlticket   SYSTEM "programs/fmlticket.sgml">
 <!entity sect.makefml     SYSTEM "programs/makefml.sgml">
+
+
+<!-- Appendix -->
+<!entity reference SYSTEM "reference.sgml">
+<!entity appendix  SYSTEM "appendix.sgml">
+<!entity glossary  SYSTEM "glossary.sgml">
+<!entity docbook   SYSTEM "docbook.sgml">
