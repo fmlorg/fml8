@@ -19,6 +19,12 @@ FML::CGI::TicketSystem - CGI details to control ticket system
 
 =head1 SYNOPSIS
 
+    $ticket = new FML::CGI::TicketSystem;
+    $ticket->new();
+    $ticket->run();
+
+See L<FML::Process::Flow> for flow methods details.
+
 =head1 DESCRIPTION
 
 =head2 CLASS HIERARCHY
@@ -27,8 +33,6 @@ C<FML::CGI::TicketSystem> is a subclass of C<FML::Process::CGI>.
 
 =head1 METHODS
 
-=head2 C<new()>
-
 =cut
 
 use CGI qw/:standard/; # load standard CGI routines
@@ -36,6 +40,10 @@ use FML::Process::CGI;
 
 @ISA = qw(FML::Process::CGI Exporter);
 
+
+=head2 C<run()>
+
+=cut
 
 # See CGI.pm for more details
 sub run
@@ -52,6 +60,12 @@ sub run
 }
 
 
+=head1 SEE ALSO
+
+L<CGI>,
+L<FML::Process::CGI>
+and 
+L<FML::Process::Flow>
 
 =head1 AUTHOR
 
