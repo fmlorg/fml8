@@ -66,6 +66,7 @@ sub generate_manual
 	-d '@@doc' || mkdir('@@doc', 0755);
 	$manual = '@@doc/'.$pathname;
 	$manual =~ s/pm$/txt/;
+	$manual =~ s/$/.txt/ unless $manual =~ /txt$/;
 
 	print STDERR "\tpod2text $pathname > $manual\n";
 	system "pod2text $pathname > $manual";
@@ -102,10 +103,13 @@ sub Show
 	next if $pathname eq 'Makefile';
 
 	my $module = $pathname;
-	if ($module =~ /\.pm$/) { generate_manual($pathname);}
+	if ($module =~ /\.pm$/ || $module eq 'loader') { 
+	   generate_manual($pathname);
+	}
 
 	$manual = '@@doc/'.$pathname;
 	$manual =~ s/pm$/txt/;
+	$manual =~ s/$/.txt/ unless $manual =~ /txt$/;
 
 	if (-d $pathname) {
 	    print ($TableMode ? "<TR>\n" : "<LI>\n");
@@ -134,7 +138,7 @@ sub Show
 		print "${pathname}/\n";
 	    }
 	}
-	elsif ($pathname =~ /\.pm$/) {
+	elsif ($pathname =~ /\.pm$/ || $pathname eq 'loader') {
 	    print ($TableMode ? "<TR>\n" : "<LI>\n");
 	    print "<TD>\n" if $TableMode;
 	    print " $module ";
