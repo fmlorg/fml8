@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.18 2002/03/19 08:02:06 fukachan Exp $
+# $FML: Kernel.pm,v 1.19 2002/03/20 07:31:09 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -230,7 +230,7 @@ sub _drive_cgi_by_table
     print "</td>\n";
     print "<td rowspan=2 valign=\"top\">\n";
 
-    eval q{ $curproc->run_cgi_help($args);};
+    eval q{ $curproc->run_cgi_options($args);};
     if ($r = $@) { _error_string($r);}
 
     print "</td>\n";
@@ -382,6 +382,13 @@ sub run_cgi_title
 }
 
 
+=head2 run_cgi_help($args)
+
+help.
+
+=cut
+
+
 # Descriptions: show help
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
@@ -395,6 +402,40 @@ sub run_cgi_help
     print "<CENTER>fml CGI interface for \@$domain ML's</CENTER><BR>\n";
     print "help<BR>\n";
     print "</B>\n";
+}
+
+
+=head2 run_cgi_options($args)
+
+show options.
+
+=cut
+
+
+# Descriptions: show options
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
+sub run_cgi_options
+{
+    my ($curproc, $args) = @_;
+    my $domain = $curproc->ml_domain();
+    my $action = $curproc->myname();
+
+    print "<B><CENTER> OPTIONS </CENTER></B>\n";
+
+    print start_form(-action=>$action);
+
+    print "Language:\n";
+    my $langlist = [ 'Japanese', 'English' ];
+    print scrolling_list(-name    => 'language', 
+			 -values  => $langlist,
+			 -size    => 1);
+
+    print submit(-name => 'change');
+    # print reset(-name  => 'reset');
+
+    print end_form;
 }
 
 
