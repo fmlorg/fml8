@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.31 2004/04/10 07:40:01 fukachan Exp $
+# $FML: Adapter.pm,v 1.32 2004/04/11 12:58:38 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -451,8 +451,9 @@ sub find
 	return $self->md_find($regexp, $args);
     }
 
+    # XXX NO, quotemeta $regexp before call find() method.
     # we may need quote for special address e.g. a+b@domain.
-    $regexp = quotemeta($regexp);
+    # $regexp = quotemeta($regexp);
 
     # What we want, key or  key+value ?
     if (defined $args->{ want }) {
