@@ -284,44 +284,6 @@ sub _update_index_db
 }
 
 
-=head2 C<list_up($curproc, $args>)
-
-show the ticket summary. 
-See L<_simple_print()> for more detail.
-
-=cut
-
-
-sub list_up
-{
-    my ($self, $curproc, $args) = @_;
-    my ($tid, $status, @ticket_id);
-
-    # self->{ _hash_table } is tied to DB's.
-    $self->open_db($curproc, $args);
-
-    # XXX $rh = Reference to Hash table, which is tied to db_dir/*db's
-    my $rh             = $self->{ _hash_table };
-    my $rh_status      = $rh->{ _status };
-    my $mode           = $args->{ mode } || 'default';
-
-  TICEKT_LIST:
-    while (($tid, $status) = each %$rh_status) {
-	if ($mode eq 'default') {
-	    next TICEKT_LIST if $status =~ /close/o;
-	}
-
-	push(@ticket_id, $tid);
-    }
-
-    $self->_simple_print($curproc, $args, \@ticket_id);
-
-    # self->{ _hash_table } is untied from DB's.
-    $self->close_db($curproc, $args);
-}
-
-
-
 =head1 METHOD on DB IO
 
 methods to manipulate data in DB.
@@ -454,7 +416,12 @@ sub _set_status
 
 =head1 OUTPUT ROUTINES
 
-show summary output. Intenally
+=head2 C<show_summary($curproc, $args>)
+
+show the ticket summary. 
+See L<_simple_print()> for more detail.
+
+Intenally
 C<_simple_print()> 
 or
 C<_summary_print()>
@@ -480,35 +447,80 @@ C<articles>, which is a list of articles with the ticket-id.
 =cut
 
 
-sub _simple_print
+sub show_summary
+{
+    my ($self, $curproc, $args) = @_;
+    my ($tid, $status, @ticket_id);
+
+    # self->{ _hash_table } is tied to DB's.
+    $self->open_db($curproc, $args);
+
+    # XXX $rh = Reference to Hash table, which is tied to db_dir/*db's
+    my $rh             = $self->{ _hash_table };
+    my $rh_status      = $rh->{ _status };
+    my $mode           = $args->{ mode } || 'default';
+
+  TICEKT_LIST:
+    while (($tid, $status) = each %$rh_status) {
+	if ($mode eq 'default') {
+	    next TICEKT_LIST if $status =~ /close/o;
+	}
+
+	push(@ticket_id, $tid);
+    }
+
+    my $age = $self->_calculate_age($curproc, $args, \@ticket_id);
+
+    $self->_simple_print($curproc, $args, \@ticket_id, $age);
+
+    # self->{ _hash_table } is untied from DB's.
+    $self->close_db($curproc, $args);
+}
+
+
+sub _calculate_age
 {
     my ($self, $curproc, $args, $ticket_id) = @_;
+    my (%age) = ();
+    my $now   = time; # save the current UTC for convenience
+    my $rh    = $self->{ _hash_table };
+    my $day   = 24*3600;
 
-    # XXX $dh: date object handle
-    use FML::Date;
-    my $dh  = new FML::Date;
-    my $now = time; # save the current UTC for convenience
-    my $fd  = $self->{ _fd } || \*STDOUT;
+    # $age hash referehence = { $ticket_id => $age };
+    my (@aid, $last, $age, $date, $status);
+    for my $tid (sort @$ticket_id) {
+	# $last: get the latest one of article_id's
+	(@aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
+	$last  = $aid[ $#aid ];
 
-    # 
-    my $rh        = $self->{ _hash_table };
-    $|            = 1;
-    my $day       = 24*3600;
-    my $format    = "%10s  %5s %6s  %-20s  %s\n";
+	# how long this ticket is not concerned ?
+	$age{ $tid } = 
+	    sprintf("%2.1f%s", ($now - $rh->{ _date }->{ $last })/$day);
+    }
+
+    return \%age;
+}
+
+
+sub _simple_print
+{
+    my ($self, $curproc, $args, $ticket_id, $rh_age) = @_;
+    my $fd     = $self->{ _fd } || \*STDOUT;
+    my $rh     = $self->{ _hash_table };
+    my $format = "%10s  %5s %6s  %-20s  %s\n";
 
     printf($fd $format, 'date', 'age', 'status', 'ticket id', 'articles');
     print $fd "-" x60;
     print $fd "\n";
 
-    for my $tid (sort @$ticket_id) {
-	# we get the date by the form 1999/09/13 
-	# for the oldest article assigned to this ticket ($tid)
-	my (@aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
-	my $aid   = $aid[0];
-	my $laid  = $aid[ $#aid ];
-	my $age   = sprintf("%2.1f%s", ($now - $rh->{ _date }->{ $laid })/$day);
-	my $date  = $dh->YYYYxMMxDD( $rh->{ _date }->{ $aid } , '/');
-	my $status = $rh->{ _status }->{ $tid };
+    my (@aid, $tid, $aid, $date, $age, $status) = ();
+    my $dh = new FML::Date;
+    for $tid (sort @$ticket_id) {
+	(@aid)  = split(/\s+/, $rh->{ _articles }->{ $tid });
+	$aid    = $aid[0];       # the first one of article_id's
+	$date   = $dh->YYYYxMMxDD( $rh->{ _date }->{ $aid } , '/');
+	$age    = $rh_age->{ $tid };
+	$status = $rh->{ _status }->{ $tid };
 
 	printf($fd $format, 
 	       $date, $age, $status, $tid, $rh->{ _articles }->{ $tid });
