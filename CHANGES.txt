@@ -1,11 +1,52 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/10/17
+
+   変数名の変更
+	command_prompt       -> command_mail_reply_prompt
+	cgi_menu_map_list    -> cgi_menu_address_map_list
+	cgi_menu_default_map -> cgi_menu_default_address_map
+
+	command_prompt -> command_mail_reply_prompt
+
+	summary_file                  -> article_summary_file
+	summary_format_style          -> article_summary_file_format_style
+	summary_format_address_length -> article_summary_file_format_address_length
+
+	default_file_mode      -> file_default_mode
+	default_directory_mode -> directory_default_mode
+	
+	move *_mode definitions from basic.cf to file.cf.
+	
+	remove duplicated $default_directory_mode.
+
+   FML::Process::CGI::Kernel 
+   Mail::Message::Charset 
+	Mail::Message::Charset has tables on code, charset and languge.
+	FML::Process::CGI::Kernel is modified to use it.
+
+   FML::Command::Admin::log 
+	define log_file_*_charset and modify log module to use it.
+
 2003/10/16
 
    charset の取り扱いを拡張した。	
    resutructure/enhance charset definitions:
 	${category}_default_charset and ${category}_charset_{ja,en,...}
+
+   FML::Process::CGI::Utils 
+	cgi_var_language() returns '' not 'japanese' if language info
+	not found. 
+	
+   FML::Process::CGI::Kernel 
+	bug fix _cgi_resolve_ml_specific_variables() for correct ml_*
+	handling. 
+	
+	follow HTTP_ACCEPT_LANGUAGE information.
+	fix log_file when admin::*.cgi runs.
+	add $domain_local_log_file
+	add $domain_local_log_file
 
    FML::Process::CGI::Kernel 
    FML::CGI::ThreadTrack Calendar Menu 
@@ -5495,4 +5536,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.164 2003/10/15 04:43:26 fukachan Exp $
+$FML: CHANGES.txt,v 1.165 2003/10/16 05:26:09 fukachan Exp $
