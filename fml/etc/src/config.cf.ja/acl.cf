@@ -7,7 +7,7 @@
 #      History: 当然するので、off/on スイッチなぞない
 #        Value: yes | no
 #     Examples: yes
-use_address_compare = yes
+use_address_compare_function = yes
 
 
 # Descriptions: メンバーチェックをする際に、ユーザパートの比較で
@@ -16,7 +16,7 @@ use_address_compare = yes
 #      History: none
 #        Value: user_part_case_sensitive | user_part_case_insensitive
 #     Examples: user_part_case_insensitive
-address_compare_type = user_part_case_insensitive
+address_compare_function_type = user_part_case_insensitive
 
 
 =head2	各機能における制限( ***_restrictions )
