@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.15 2001/12/23 11:37:06 fukachan Exp $
+# $FML: Log.pm,v 1.16 2001/12/23 11:39:44 fukachan Exp $
 #
 
 package FML::Log;
@@ -148,7 +148,13 @@ sub LogWarn
 sub LogError
 {
     my ($mesg, $args) = @_;
-    Log("error: ".$mesg, $args);
+
+    eval q{
+	Log("error: ".$mesg, $args);
+    };
+    if ($@) {
+	print STDERR "error: ", $mesg, "\n";
+    }
 }
 
 
