@@ -88,19 +88,23 @@ sub Bootstrap
 
     # debug;
     if ($0 =~ /fmlwrapper/) {
-	use Data::Dumper; print Dumper( $main_cf ); exit 1;
+	use Data::Dumper; print Dumper( $main_cf ); sleep 5;
     }
 
     # 5. o.k. here we go!
-    require "$libexec_dir/fml";
-    ProcessSwitch( 
-		  {
-		      cf_list      => \@cf,
-		      myname       => $myname,
-		      ml_home_dir  => $ml_home_dir,
-		      options      => \%options,
-		  });
-
+    if (-f "$libexec_dir/fml") {
+	require "$libexec_dir/fml";
+	ProcessSwitch( 
+		      {
+			  cf_list      => \@cf,
+			  myname       => $myname,
+			  ml_home_dir  => $ml_home_dir,
+			  options      => \%options,
+		      });
+    }
+    else {
+	croak("$libexec_dir/fml is not found.");
+    }
 }
 
 

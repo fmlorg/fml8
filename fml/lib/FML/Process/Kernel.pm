@@ -43,6 +43,9 @@ sub new
     # load config.cf files, which is passed from fmlwrapper.
     $curproc->load_config_files( $args->{ cf_list } );
 
+    # debug
+    if ($0 =~ /fmlwrapper/) { $curproc->debug; sleep 5;}
+
     return $curproc;
 }
 
