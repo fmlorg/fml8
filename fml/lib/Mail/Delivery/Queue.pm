@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.19 2002/09/28 09:27:44 fukachan Exp $
+# $FML: Queue.pm,v 1.20 2002/11/17 14:07:34 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -393,14 +393,14 @@ sub set
 	}
     }
     elsif ($key eq 'recipients') {
-	my $fh = new FileHandle "> $qf_recipients";
+	my $fh = new FileHandle ">> $qf_recipients";
 	if (defined $fh) {
 	    for (@$value) { print $fh $_, "\n";}
 	    $fh->close;
 	}
     }
     elsif ($key eq 'recipient_maps') {
-	my $fh = new FileHandle "> $qf_recipients";
+	my $fh = new FileHandle ">> $qf_recipients";
 	if (defined $fh) {
 	    use IO::Adapter;
 	    for my $map (@$value) {
