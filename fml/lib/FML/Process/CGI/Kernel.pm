@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.79 2004/04/18 05:59:43 fukachan Exp $
+# $FML: Kernel.pm,v 1.80 2004/04/23 04:10:34 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -23,7 +23,7 @@ use FML::Process::CGI::Utils;
 
 =head1 NAME
 
-FML::Process::CGI::Kernel - CGI core functions
+FML::Process::CGI::Kernel - CGI core functions.
 
 =head1 SYNOPSIS
 
@@ -43,12 +43,12 @@ It provides basic functions and flow.
 
 =head2 new()
 
-ordinary constructor which is used widely in FML::Process classes.
+constructor.
 
 =cut
 
 
-# Descriptions: ordinary constructor.
+# Descriptions: constructor.
 #               now we re-evaluate $ml_home_dir and @cf again.
 #               but we need the mechanism to re-evaluate $args passed from
 #               libexec/loader.
@@ -109,7 +109,7 @@ sub prepare
 }
 
 
-# Descriptions: update the current charset
+# Descriptions: update the current charset.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -165,7 +165,7 @@ sub _http_accept_language
 }
 
 
-# Descriptions: analyze data input from CGI
+# Descriptions: analyze data input from CGI.
 #    Arguments: OBJ($curproc)
 # Side Effects: update $config{ ml_* }, $args->{ cf_list }
 # Return Value: none
@@ -217,7 +217,7 @@ sub _cgi_resolve_ml_specific_variables
 }
 
 
-# Descriptions: fix logging system for admin/*.cgi
+# Descriptions: fix logging system for admin/*.cgi.
 #    Arguments: OBJ($curproc)
 # Side Effects: update variables.
 # Return Value: none
@@ -242,13 +242,13 @@ dummy method now.
 
 =cut
 
-# Descriptions: dummy
+# Descriptions: dummy.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub verify_request { 1;}
 
-# Descriptions: dummy
+# Descriptions: dummy.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -281,7 +281,7 @@ You can specify the location by configure() access method.
 =cut
 
 
-# Descriptions: run FML::CGI::* methods
+# Descriptions: run FML::CGI::* methods:
 #                  html_start()
 #                  run_cgi()
 #                  html_end()
@@ -298,7 +298,7 @@ sub run
 }
 
 
-# Descriptions: show error string
+# Descriptions: show error string.
 #    Arguments: OBJ($curproc) STR($r)
 # Side Effects: none
 # Return Value: none
@@ -317,7 +317,12 @@ sub _error_string
 	}
     }
     else {
-	print "<B>Error! unknown reason.</B>\n";
+	if ($nlmsg) {
+	    print "<B>Error! $nlmsg </B>\n";
+	}
+	else {
+	    print "<B>Error! unknown reason.</B>\n";
+	}
     }
 
     eval q{
@@ -328,7 +333,7 @@ sub _error_string
 }
 
 
-# Descriptions: show menu table
+# Descriptions: show menu table.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -412,7 +417,7 @@ execute specified command given as FML::Command::*
 =cut
 
 
-# Descriptions: execute FML::Command
+# Descriptions: execute FML::Command.
 #    Arguments: OBJ($curproc) HASH_REF($command_args)
 # Side Effects: load module
 # Return Value: none
@@ -455,7 +460,7 @@ sub cgi_execute_command
 	    # XXX-TODO: NL
 	    print "Error! $comname fails.\n<BR>\n";
 	    if ($@ =~ /^(.*)\s+at\s+/) {
-		my $reason    = $@;
+		my $reason    = $1;
 		my ($key, $r) = $curproc->parse_exception($reason);
 		my $buf       = $curproc->message_nl($key);
 
@@ -476,7 +481,7 @@ show title.
 =cut
 
 
-# Descriptions: show title
+# Descriptions: show title,
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -503,7 +508,7 @@ sub run_cgi_title
 
 =head2 run_cgi_log()
 
-log.
+show log.
 
 =cut
 
@@ -527,7 +532,7 @@ dummy.
 =cut
 
 
-# Descriptions: show dummy
+# Descriptions: dummy.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -546,7 +551,7 @@ date.
 =cut
 
 
-# Descriptions: show date
+# Descriptions: show date.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -566,7 +571,7 @@ show options.
 =cut
 
 
-# Descriptions: show options
+# Descriptions: show options.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -578,6 +583,10 @@ sub run_cgi_options
     my $lang      = $curproc->cgi_var_language();
     my $config    = $curproc->config();
     my $langlist  = $config->get_as_array_ref('cgi_language_select_list');
+
+    # 
+    # XXX-TODO: STYLE? safe_cgi_* vs cgi_-var_* vs safe_param_*
+    # 
 
     if ($#$langlist > 0) {
 	# natural language-ed name
@@ -611,7 +620,7 @@ execute cgi_menu() given as FML::Command::*
 =cut
 
 
-# Descriptions: execute FML::Command
+# Descriptions: execute FML::Command.
 #    Arguments: OBJ($curproc)
 # Side Effects: load module
 # Return Value: none
@@ -679,7 +688,7 @@ return input address after validating the input
 =cut
 
 
-# Descriptions: return input address after validating the input
+# Descriptions: return input address after validating the input.
 #    Arguments: OBJ($curproc)
 # Side Effects: longjmp() if critical error occurs.
 # Return Value: STR
@@ -733,7 +742,7 @@ return input address after validating the input
 =cut
 
 
-# Descriptions: return input ml_name after validating the input
+# Descriptions: return input ml_name after validating the input.
 #    Arguments: OBJ($curproc)
 # Side Effects: longjmp() if critical error occurs.
 # Return Value: STR
@@ -815,7 +824,7 @@ get and filter param('xxx') via AUTOLOAD().
 =cut
 
 
-# Descriptions: trap safe_param_XXX()
+# Descriptions: trap safe_param_XXX().
 #    Arguments: OBJ($curproc)
 # Side Effects: callback to safe_param*().
 # Return Value: depend on safe_param*() return value
