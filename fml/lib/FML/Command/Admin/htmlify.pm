@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: htmlify.pm,v 1.4 2001/10/14 00:44:13 fukachan Exp $
+# $FML: htmlify.pm,v 1.1 2001/10/21 14:46:55 fukachan Exp $
 #
 
 package FML::Command::Admin::htmlify;
@@ -43,12 +43,13 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $command   = $command_args->{ 'command' };
     my $config    = $curproc->{ 'config' };
-    my $spool_dir = $config->{ spool_dir };
+    my $src_dir   = $config->{ spool_dir };
     my $options   = $command_args->{ options };
     my $dst_dir   = undef;
 
     for (@$options) {
 	if (/outdir=(\S+)/) { $dst_dir = $1;}
+	if (/srcdir=(\S+)/) { $src_dir = $1;}
     }
 
     if (defined $dst_dir) {
@@ -58,7 +59,7 @@ sub process
 	}
 
 	use Mail::HTML::Lite;
-	&Mail::HTML::Lite::htmlify_dir($spool_dir, { directory => $dst_dir });
+	&Mail::HTML::Lite::htmlify_dir($src_dir, { directory => $dst_dir });
     }
     else {
 	croak("no destination directory\n");
