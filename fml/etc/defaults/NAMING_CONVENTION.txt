@@ -1,0 +1,32 @@
+		変数名の付け方ルール
+
+○ 標準パターン (例 log.cf lock.cf)
+
+use_変数		=	yes/no
+
+変数_type		=	文字列
+
+変数_format		=	文字列
+
+変数_format_type	=	文字列
+
+変数_file		=	文字列
+
+変数_dir		=	文字列
+
+変数_limit		=	文字列(数字だけど文字列扱い)
+
+変数_upper_limit	=	文字列(数字だけど文字列扱い)
+
+変数_lower_limit	=	文字列(数字だけど文字列扱い)
+
+
+
+○ パターン２ (例 acl.cf )
+
+変数_restrictions	=	reject_属性 
+				permit_なんとか
+
+属性 			=	パターン1
+				パターン2
+				…
