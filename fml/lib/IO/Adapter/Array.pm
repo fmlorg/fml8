@@ -22,7 +22,7 @@ IO::Adapter::Array.pm - emulation of IO for the ARRAY
 
     use IO::Adapter::Array;
 
-    $map = [ 1, 2, 3];
+    $map = [ 1, 2, 3 ];
     $obj = new IO::Adapter::Array $map;
     $obj->open;
     while ($x = $obj->get_next_value) { print $x;}
