@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.3 2003/03/28 10:32:24 fukachan Exp $
+# $FML: Post.pm,v 1.4 2003/08/01 05:00:58 tmu Exp $
 #
 
 package FML::Restriction::Post;
@@ -56,7 +56,9 @@ sub reject_system_accounts
 
     if ($match) {
 	Log("${rule}: $match matches sender address");
-	$pcb->set("check_restrictions", "deny_reason", $rule) unless $pcb->get("check_restrictions", "deny_reason");
+	unless ($pcb->get("check_restrictions", "deny_reason")) {
+	    $pcb->set("check_restrictions", "deny_reason", $rule);
+	}
 	return("matched", "deny");
     }
 
@@ -103,7 +105,9 @@ sub permit_member_maps
 	# $curproc->reply_message( "   your address: $sender" );
 
 	# save reason for later use.
-	$pcb->set("check_restrictions", "deny_reason", $rule) unless $pcb->get("check_restrictions", "deny_reason");
+	unless ($pcb->get("check_restrictions", "deny_reason")) {
+	    $pcb->set("check_restrictions", "deny_reason", $rule);
+	}
 
 	# XXX "deny ASAP if this method fails." ? NO, wrong!
 	# XXX permit_XXX() allows the trial match of another rules.
@@ -145,7 +149,9 @@ sub reject
     my $curproc = $self->{ _curproc };
     my $pcb     = $curproc->{ pcb };
 
-    $pcb->set("check_restrictions", "deny_reason", $rule) unless $pcb->get("check_restrictions", "deny_reason");
+    unless ($pcb->get("check_restrictions", "deny_reason")) {
+	$pcb->set("check_restrictions", "deny_reason", $rule);
+    }
     return("matched", "deny");
 }
 
