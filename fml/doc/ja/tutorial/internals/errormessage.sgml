@@ -1,0 +1,97 @@
+<!--
+   $FML$
+-->
+
+<sect1>
+   <title> エラーメッセージを返す </title>
+
+<para>
+適宜、エラーメッセージを送信者に返す必要があります。
+それもエラーメッセージは言語依存です。
+何らかの形で言語変換をしてから送り出すわけです。
+</para>
+
+
+<!-- ===================================================== -->
+<sect2>
+   <title> fml 4.0 の場合 </title>
+
+<para>
+fml 4.0 では
+<screen> 
+   Mesg(*e, キーワード, デフォルトのメッセージ, 変換に使う引数);
+</screen> 
+の形で呼び出します。
+</para>
+
+<para>
+/usr/local/fml/messages/Japanese/ 
+以下にあるファイル群に対して、
+キーワード検索を行ないます。
+各ファイルにはカテゴリごとに分類されたキーワードとメッセージが
+定義されています。
+つまり各ファイルに複数のキーワードが定義されています。
+</para>
+
+<para>
+例えば、キーワードが not_found の場合、
+/usr/local/fml/messages/Japanese/kern
+の not_found という欄が該当します。 
+</para>
+
+</sect2>
+
+
+
+<!-- ===================================================== -->
+<sect2>
+   <title> fml 5.0 はどうするべきか？ </title>
+
+<para>
+一つのファイルに一つのキーワードを持つのと、
+カテゴリごとに複数のキーワードを持つのとどちらが
+カスタマイズしやすいのでしょうか？
+僕には良くわかりません。
+</para>
+
+<sect3>
+   <title>
+    X/Open Portability Guide Issue 4 Version 2 (``XPG4.2'')
+   </title>
+
+<para>
+XPG (X/Open の規格)を使う場合は
+<screen>
+catgets(catd, set_id, msg_id, char *s);
+</screen>
+で、LOCALE_○○ で指定された言語へ変換しています。
+	<footnote>
+	<para>
+	ここで s はデフォルトのメッセージとなります。
+	</para>
+	</footnote>
+例えば、次のような使い方をします。
+<example>
+<screen>
+printf(catgets(catd, 30,  4,  "%s: Internal match error.\n"), progname);
+</screen>
+</example>
+この時、
+locale の定義ファイル(
+例: /usr/pkg/share/nls/ja_JP.EUC/プログラム名.cat
+)
+の中の se 30、エントリ 4 のメッセージに変換してくれます。
+</para>
+
+</sect3>
+
+<sect3>
+   <title>
+   </title>
+
+</sect3>
+
+
+</sect2>
+
+</sect1>
