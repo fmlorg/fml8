@@ -40,12 +40,15 @@ sub assign
     my $subject = $header->get('subject');
 
     use FML::Header::Subject;
+    my $replied_message = FML::Header::Subject->is_reply( $subject );
 
-    # if the header carries "Subject: Re: ...", we do not rewrite
-    # the subject but extract $id.
-    if ( FML::Header::Subject->is_reply( $subject ) ) {
-	my $id = $self->_extract_ticket_id($header, $config);
-	$self->{ _ticket_id } = $id;
+    # ticket-id
+    my $ticket_id       = $self->_extract_ticket_id($header, $config);
+    
+    # if the header carries "Subject: Re: ..." with ticket-id, 
+    # we do not rewrite the subject but save the extracted $ticket_id.
+    if ($replied_message && $ticket_id) {
+	$self->{ _ticket_id } = $ticket_id;
     }
     else {
 	# call SUPER class's FML::Ticket::System::increment_id()
