@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Bounce.pm,v 1.15 2001/10/19 13:14:27 fukachan Exp $
+# $FML: Bounce.pm,v 1.16 2001/12/22 09:21:14 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -91,6 +91,10 @@ standard new() method.
 =cut
 
 
+# Descriptions: constructor
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self) = @_;
@@ -113,6 +117,11 @@ already known.
 
 =cut
 
+
+# Descriptions: top level dispatcher
+#    Arguments: OBJ($self) OBJ($msg)
+# Side Effects: update $self->{ _result }, which holds several info
+# Return Value: none
 sub analyze
 {
     my ($self, $msg) = @_;
@@ -162,6 +171,10 @@ return ARRAY of addresses found in the error message.
 =cut
 
 
+# Descriptions: return ARRAY of addresses found in the error message.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: ARRAY
 sub address_list
 {
     my ($self) = @_;
@@ -183,6 +196,10 @@ It is extracted from C<result> analyze() method gives.
 =cut
 
 
+# Descriptions: return status (string) for $addr
+#    Arguments: OBJ($self) STR($addr)
+# Side Effects: none
+# Return Value: STR
 sub status
 {
     my ($self, $addr) = @_;
@@ -193,6 +210,10 @@ sub status
 }
 
 
+# Descriptions: return reason (string) for $addr
+#    Arguments: OBJ($self) STR($addr)
+# Side Effects: none
+# Return Value: STR
 sub reason
 {
     my ($self, $addr) = @_;
@@ -203,6 +224,10 @@ sub reason
 }
 
 
+# Descriptions: return hints (string) for $addr
+#    Arguments: OBJ($self) STR($addr)
+# Side Effects: none
+# Return Value: STR
 sub hints
 {
     my ($self, $addr) = @_;
@@ -234,6 +259,11 @@ my @REGEXP = (
 	      $RE_JOUT,
 	      );
 
+
+# Descriptions: $buf looks like Japanese ?
+#    Arguments: OBJ($self) STR($buf)
+# Side Effects: none
+# Return Value: 1 or 0
 sub look_like_japanese
 {
     my ($self, $buf) = @_;
@@ -255,6 +285,11 @@ It is rarely used.
 
 =cut
 
+
+# Descriptions: clean up address for further use
+#    Arguments: OBJ($self) STR($hint) STR($addr)
+# Side Effects: none
+# Return Value: STR
 sub address_clean_up
 {
     my ($self, $hint, $addr) = @_;
