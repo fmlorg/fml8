@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.222 2004/03/23 06:34:16 fukachan Exp $
+# $FML: Kernel.pm,v 1.223 2004/04/02 11:56:26 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -14,7 +14,7 @@ use Carp;
 use vars qw(@ISA @Tmpfiles $TmpFileCounter %LockInfo);
 use File::Spec;
 
-use File::SimpleLock;
+use IO::Adapter;
 use FML::Process::Flow;
 use FML::Parse;
 use FML::Header;
@@ -319,17 +319,19 @@ sub lock
     # initialize
     ($channel, $lock_file) = $curproc->_lock_init($channel);
 
-    require File::SimpleLock;
-    my $lockobj = $pcb->get('lock', $channel) || new File::SimpleLock;
+    # require File::SimpleLock;
+    # my $lockobj = $pcb->get('lock', $channel) || new File::SimpleLock;
+    my $map = sprintf("file:%s", $lock_file);
+    my $io  = $pcb->get('lock', $channel) || new IO::Adapter $map;
 
-    my $r = $lockobj->lock( { file => $lock_file } );
+    my $r = $io->lock( { file => $lock_file } );
     if ($r) {
 	my $t = time - $time_in;
 	if ($t > 1) {
-	    $curproc->log("lock requires $t sec.");
+	    $curproc->log("lock channel=$channel requires $t sec.");
 	}
 
-	$pcb->set('lock', $channel, $lockobj);
+	$pcb->set('lock', $channel, $io);
 	$LockInfo{ $channel } = 1;
 	$curproc->log("lock channel=$channel");
     }
@@ -353,11 +355,11 @@ sub unlock
     # initialize
     ($channel, $lock_file) = $curproc->_lock_init($channel);
 
-    my $pcb     = $curproc->pcb();
-    my $lockobj = $pcb->get('lock', $channel);
+    my $pcb = $curproc->pcb();
+    my $io  = $pcb->get('lock', $channel);
 
-    if (defined $lockobj) {
-	my $r = $lockobj->unlock( { file => $lock_file } );
+    if (defined $io) {
+	my $r = $io->unlock( { file => $lock_file } );
 	if ($r) {
 	    my $t = time - $time_in;
 	    if ($t > 1) {
