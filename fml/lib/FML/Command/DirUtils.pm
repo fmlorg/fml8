@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DirUtils.pm,v 1.11 2003/01/03 07:05:04 fukachan Exp $
+# $FML: DirUtils.pm,v 1.12 2003/01/25 09:14:05 fukachan Exp $
 #
 
 package FML::Command::DirUtils;
@@ -62,12 +62,12 @@ sub dir
     my $argv    = $du_args->{ argv };
     my $opt_ls  = '';
 
-    # XXX-TODO: define and use safe "option" regexp in FML::Restriction?
-    # XXX-TODO: safe "option" regexp [-A-Za-z0-9] ?
     # option: permit "ls [-A-Za-z]" syntax
     if (defined($du_args->{ opt_ls })) {
-	my $opt = $du_args->{ opt_ls };
-	if ($opt =~ /^-[A-Za-z]+$/) {
+	use FML::Restriction::Base;
+	my $safe = new FML::Restriction::Base;
+	my $opt  = $du_args->{ opt_ls };
+	if ($safe->regexp_match('command_line_options', $opt)) {
 	    $opt_ls = $opt;
 	}
 	else {
@@ -97,7 +97,8 @@ sub dir
 	use FileHandle;
 	my $fh = new FileHandle "$eval|";
 	if (defined $fh) {
-	    while (<$fh>) { $curproc->reply_message($_);}
+	    my $buf = undef;
+	    while ($buf = <$fh>) { $curproc->reply_message($buf);}
 	    $fh->close();
 	}
 	else {
