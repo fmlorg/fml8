@@ -1,5 +1,6 @@
 basic.cf
 directory.cf
+file.cf
 acl.cf
 delivery.cf
 messages.cf

@@ -47,6 +47,18 @@ default_directory_mode	=	0755
 #     Examples: /var/spool/ml/elena
 # ml_home_dir	=
 
+# Descriptions: fml からシステムに教えるデータを置くためのディレクトリ
+#      History: fml 4.0 ではきめうち
+#        Value: directory
+#     Examples: /var/spool/ml/etc
+sysconf_dir	= $ml_home_prefix/etc
+
+# Descriptions: MTA 用に教えるための設定ファイルを置くディレクトリ
+#      History: fml 4.0 ではきめうち
+#        Value: directory
+#     Examples: /var/spool/ml/etc/mail
+mailconf_dir	= $sysconf_dir/mail
+
 # Descriptions: ML 間でシェアするデータベースをおくホームディレクトリ
 #      History: fml 4.0 に該当するものはない
 #        Value: directory
@@ -92,6 +104,14 @@ message_template_dir	= $fml_share_dir/template/$template_file_charset
 #        Value: directory
 #     Examples: /usr/local/share/fml/$fml_version/message/$language
 message_message_dir	= $fml_share_dir/message/$template_file_charset
+
+=head1	ファイル
+
+# Descriptions: MTA に教えるための aliases ファイル
+#      History: fml 4.0 ではきめうち
+#        Value: file path
+#     Examples: /var/spool/ml/etc/mail/aliases
+mail_aliases_file	=	$mailconf_dir/aliases
 
 =head1	アクセス制御ルール
 
