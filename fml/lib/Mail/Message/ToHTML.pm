@@ -4,21 +4,20 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.44 2003/07/19 10:23:35 fukachan Exp $
+# $FML: ToHTML.pm,v 1.45 2003/07/19 12:58:47 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use File::Spec;
 
 my $is_strict_warn = 0;
 my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.44 2003/07/19 10:23:35 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.45 2003/07/19 12:58:47 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -93,8 +92,8 @@ stored.
 sub new
 {
     my ($self, $args) = @_;
-    my ($type)  = ref($self) || $self;
-    my $me      = {};
+    my ($type) = ref($self) || $self;
+    my $me     = {};
 
     $me->{ _charset }             = $args->{ charset } || 'us-ascii';
     $me->{ _html_base_directory } = $args->{ output_dir };
@@ -108,25 +107,9 @@ sub new
     $me->{ _subdir_style }        = 'yyyymm';
     $me->{ _html_id_order }       = $args->{ index_order } || 'normal';
 
-    my $db_type  = $me->{ _db_type };
-    my $db_base  = $me->{ _db_base_dir } || croak("specify db_base_dir\n");
-    my $db_name  = $me->{ _db_name }     || croak("specify db_name\n");
-    my $db_dir   = File::Spec->catfile($db_base, $db_name);
-    unless (-d $db_base) { mkdir($db_base, 0755);}
-    unless (-d $db_dir)  { mkdir($db_dir,  0755);}
-    my $_db_args = {
-	db_module       => $db_type,
-	db_base_dir     => $db_dir,
-	db_name         => $db_name, # mailing list identifier
-
-	# db_dir for non UDB
-	old_db_base_dir => $args->{ output_dir },
-    };
-
-    # Firstly, prepare db object.
-    use Mail::Message::DB;
-    my $ndb = new Mail::Message::DB $_db_args;
-    $me->{ _ndb } = $ndb;
+    use Mail::Message::Thread;
+    my $t = new Mail::Message::Thread $args;
+    $me->{ _thread_object } = $t;
 
     return bless $me, $type;
 }
@@ -944,7 +927,10 @@ sub cache_message_info
     $ndb->set('html_filename', $id, $self->html_filename($id));
     $ndb->set('html_filepath', $id, $dst);
 
-    $ndb->analyze($msg);
+    unless ($ndb->get('message_id', $id)) {
+	# analyze $msg only if not yet analyzed.
+	$ndb->analyze($msg);
+    }
 }
 
 
@@ -955,7 +941,9 @@ sub cache_message_info
 sub ndb
 {
     my ($self) = @_;
-    return $self->{ _ndb };
+    my $t = $self->{ _thread_object };
+
+    return $t->db();
 }
 
 
