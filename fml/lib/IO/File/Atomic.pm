@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Atomic.pm,v 1.14 2002/04/08 12:44:27 fukachan Exp $
+# $FML: Atomic.pm,v 1.15 2002/06/01 03:01:55 fukachan Exp $
 #
 
 package IO::File::Atomic;
@@ -93,7 +93,7 @@ sub new
     my ($self, @argv) = shift;
     my $me = $self->SUPER::new();
     if (defined $me) {
-	$me->open(@argv) if defined @argv;
+	$me->open(@argv) if @argv;
 	return $me;
     }
     elese {
