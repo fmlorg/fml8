@@ -1,0 +1,18 @@
+		CHANGES
+		$Date$
+
+
+2001/07/15
+
+   設定変数
+
+	pid を _pid へ変更
+
+   FML::Config
+
+	enable read and write configuration file
+
+
+
+$FML$
+
