@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mergeml.pm,v 1.4 2004/09/06 07:06:04 fukachan Exp $
+# $FML: mergeml.pm,v 1.5 2004/11/24 12:24:32 fukachan Exp $
 #
 
 package FML::Command::Admin::mergeml;
@@ -75,6 +75,9 @@ sub process
 
 	# old ml_home_dir path (e.g. /var/spool/ml/elena).
 	src_dir        => $src_dir,
+
+	# fml4
+	target_system  => "fml4",
     };
 
 
@@ -116,11 +119,12 @@ sub merge
 {
     my ($self, $curproc, $command_args, $params) = @_;
     my $src_dir = $params->{ src_dir } || undef;
+    my $system  = $params->{ target_system } || undef;
 
     # XXX-TODO: configurable.
     use FML::Merge;
     my $merge = new FML::Merge $curproc, $params;
-    $merge->set_target_system("fml4");
+    $merge->set_target_system($system);
 
     # 1. back up .
     $merge->backup_old_config_files();
