@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.25 2002/03/31 01:59:00 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.26 2002/03/31 02:25:43 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -139,6 +139,10 @@ sub new
 }
 
 
+# Descriptions: dummy
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub DESTROY {}
 
 

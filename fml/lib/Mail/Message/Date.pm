@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.9 2002/01/13 13:35:29 fukachan Exp $
+# $FML: Date.pm,v 1.10 2002/01/30 14:51:16 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -265,9 +265,15 @@ my %zone = ("JST", "+0900",
 	    "Z",   "+0000",
 	    );
 
+
+# Descriptions: dummy log function
+#    Arguments: STR($s)
+# Side Effects: none
+# Return Value: none
 sub _log
 {
-    print STDERR @_, "\n";
+    my ($s) = @_;
+    print STDERR $s, "\n";
 }
 
 

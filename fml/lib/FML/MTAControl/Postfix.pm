@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.1.1.1 2002/05/24 06:30:04 fukachan Exp $
+# $FML: Postfix.pm,v 1.2 2002/05/27 08:53:24 fukachan Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -180,12 +180,14 @@ sub postfix_setup
 }
 
 
+# Descriptions: rewrite $params
+#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($params)
+# Side Effects: update $params
+# Return Value: none
 sub postfix_virtual_params
 {
     my ($self, $curproc, $params) = @_;
-    my $config         = $curproc->{ config };
-
-    # rewrite $curproc->{ config };
+    my $config    = $curproc->{ config };
     my $ml_name   = $config->{ ml_name  };
     my $ml_domain = $config->{ ml_domain };
 

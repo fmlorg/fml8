@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.23 2002/04/03 11:32:58 fukachan Exp $
+# $FML: Credential.pm,v 1.24 2002/05/28 13:36:18 fukachan Exp $
 #
 
 package FML::Credential;
@@ -64,6 +64,10 @@ sub new
 }
 
 
+# Descriptions: dummy
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub DESTROY {}
 
 

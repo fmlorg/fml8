@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.28 2002/01/27 13:11:58 fukachan Exp $
+# $FML: File.pm,v 1.29 2002/06/01 03:01:55 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -166,7 +166,17 @@ sub touch
 # debug tools
 my $c  = 0;
 my $ec = 0;
-sub line_count { my ($self) = @_; return "${ec}/${c}";}
+
+
+# Descriptions: line couter (for debug).
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
+sub line_count
+{ 
+    my ($self) = @_;
+    return "${ec}/${c}";
+}
 
 
 =head2 C<getline()>

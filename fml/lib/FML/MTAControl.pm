@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MTAControl.pm,v 1.5 2002/05/24 06:39:38 fukachan Exp $
+# $FML: MTAControl.pm,v 1.6 2002/05/27 08:53:24 fukachan Exp $
 #
 
 package FML::MTAControl;
@@ -58,6 +58,10 @@ sub new
 }
 
 
+# Descriptions: load a sub module and update @ISA
+#    Arguments: OBJ($self) HASH_REF($optargs)
+# Side Effects: load FML::Control::$MTA and update @ISA
+# Return Value: none
 sub _update_isa
 {
     my ($self, $optargs) = @_;

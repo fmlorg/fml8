@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: check.pm,v 1.4 2002/04/07 05:01:33 fukachan Exp $
+# $FML: check.pm,v 1.1 2002/04/30 16:17:14 fukachan Exp $
 #
 
 package FML::Command::Admin::check;
@@ -118,16 +118,23 @@ sub check_html_archive_dir
 }
 
 
+# Descriptions: return directory mode
+#    Arguments: STR($dir)
+# Side Effects: none
+# Return Value: NUM(%o)
 sub _dir_mode
 {
     my ($dir) = @_;
-    my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
-	$atime,$mtime,$ctime,$blksize,$blocks) = stat($dir);
+    my ($dev,$ino,$mode) = stat($dir);
 
     return ($mode & 0777);
 }
 
 
+# Descriptions: check $dir mode is 0700
+#    Arguments: STR($dir)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
 sub _is_700
 {
     my ($dir) = @_;
@@ -138,6 +145,10 @@ sub _is_700
 }
 
 
+# Descriptions: check $dir mode is 0770
+#    Arguments: STR($dir)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
 sub _is_770
 {
     my ($dir) = @_;
@@ -148,6 +159,10 @@ sub _is_770
 }
 
 
+# Descriptions: check $dir mode is 0777
+#    Arguments: STR($dir)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
 sub _is_777
 {
     my ($dir) = @_;
@@ -158,6 +173,10 @@ sub _is_777
 }
 
 
+# Descriptions: check $dir mode is 0755
+#    Arguments: STR($dir)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
 sub _is_755
 {
     my ($dir) = @_;

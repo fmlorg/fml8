@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.4 2002/05/19 11:53:43 fukachan Exp $
+# $FML: Error.pm,v 1.5 2002/05/21 08:37:52 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -231,6 +231,10 @@ sub finish
 }
 
 
+# Descriptions: open the cache dir for File::CacheDir
+#    Arguments: OBJ($cuproc)
+# Side Effects: none
+# Return Value: OBJ
 sub __open_cache
 {
     my ($curproc) = @_;

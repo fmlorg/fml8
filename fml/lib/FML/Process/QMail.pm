@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QMail.pm,v 1.10 2001/12/23 07:04:30 fukachan Exp $
+# $FML: QMail.pm,v 1.11 2001/12/23 11:39:45 fukachan Exp $
 #
 
 package FML::Process::QMail;
@@ -14,6 +14,10 @@ use Carp;
 use FML::Log qw(Log LogWarn LogError);
 
 
+# Descriptions: standard contructor
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self) = @_;
@@ -98,7 +102,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

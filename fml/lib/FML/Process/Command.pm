@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.58 2002/05/19 11:49:24 fukachan Exp $
+# $FML: Command.pm,v 1.59 2002/05/27 08:59:14 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -567,6 +567,11 @@ sub __clean_up
 }
 
 
+# Descriptions: set up error message to inform emergency stop
+#    Arguments: OBJ($curproc) HASH_REF($args)
+#               HASH_REF($status) HASH_REF($cominfo) STR($orig_command)
+# Side Effects: update reply messages
+# Return Value: none
 sub __stop_here
 {
     my ($curproc, $args, $status, $cominfo, $orig_command) = @_;

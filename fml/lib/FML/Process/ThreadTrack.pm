@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ThreadTrack.pm,v 1.26 2002/04/10 09:00:08 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.27 2002/04/10 09:57:24 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -396,6 +396,10 @@ sub finish
 }
 
 
+# Descriptions: dummy
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub DESTROY {}
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Array.pm,v 1.22 2002/01/27 13:11:58 fukachan Exp $
+# $FML: Array.pm,v 1.23 2002/02/17 03:13:50 fukachan Exp $
 #
 
 package IO::Adapter::Array;
@@ -143,6 +143,10 @@ sub get_next_key
 }
 
 
+# Descriptions: undefined function
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: UNDEF
 sub get_next_value
 {
     return undef;

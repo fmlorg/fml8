@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.3 2002/04/19 05:21:54 fukachan Exp $
+# $FML: Spool.pm,v 1.4 2002/04/19 13:33:20 fukachan Exp $
 #
 
 package FML::Process::Spool;
@@ -103,6 +103,7 @@ call the actual thread tracking system.
 
 =cut
 
+
 # Descriptions: convert text format article to HTML by Mail::Message::ToHTML
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: load modules, create HTML files and directories
@@ -145,6 +146,10 @@ sub run
 }
 
 
+# Descriptions: convert files from src_dir/ to dst_dir/
+#    Arguments: OBJ($curproc) HASH_REF($args) HASH_RER($optargs)
+# Side Effects: none
+# Return Value: none
 sub _convert
 {
     my ($curproc, $args, $optargs) = @_;
@@ -220,6 +225,10 @@ sub _convert
 }
 
 
+# Descriptions: show file information
+#    Arguments: OBJ($curproc) HASH_REF($args) HASH_RER($optargs)
+# Side Effects: none
+# Return Value: none
 sub _check
 {
     my ($curproc, $args, $optargs) = @_;
@@ -238,6 +247,10 @@ sub _check
 }
 
 
+# Descriptions: return directory information
+#    Arguments: STR($dir)
+# Side Effects: none
+# Return Value: ARRAY(NUM, NUM)
 sub _scan_dir
 {
     my ($dir) = @_;

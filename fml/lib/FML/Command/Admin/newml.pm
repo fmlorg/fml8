@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.37 2002/05/28 14:39:56 fukachan Exp $
+# $FML: newml.pm,v 1.38 2002/05/28 14:55:31 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -230,6 +230,10 @@ sub _update_aliases
 }
 
 
+# Descriptions: install postfix virtual_maps
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params)
+# Side Effects: install/udpate postfix virtual_maps and the .db
+# Return Value: none
 sub _install_postfix_virtual_map
 {
     my ($self, $curproc, $params) = @_;
