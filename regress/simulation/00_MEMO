@@ -26,6 +26,11 @@
 	IO::Adapter::LDAP
 
 
+○ Language::Japanese::Subject のマージが中途半端?
+
+   "Language::Japanese::Subject::CUT_OFF_RERERE_PATTERN" used only once: 
+
+
 ○	FML::Language:: はどうよ
 
 	これ自体はまぁいいとはおもうけど、他のモジュールで使うにはちょっと
@@ -36,6 +41,54 @@
 	などをトップレベルインターフェイスにするべきじゃないかな	
 
 	だめ、ぶつかるだろうってば;)
+
+
+○ mail-message-0-2 タグの後に付け加えられたコードについて再考
+
+	s/content/data/g;
+
+	we need our own MIME generator ???
+
+○ pre-cgi タグの後に付け加えられたコードについて再考
+
+   relocate codes added after "pre-cgi" tag.
+   Especially the relation amon
+
+	fml/lib/FML/Process/CGI.pm
+	fml/libexec/loader
+
+○ MailCacheDir
+
+    $LOG_MAIL_DIR = $LOG_MAIL_DIR || "$VAR_DIR/Mail";
+    $LOG_MAIL_SEQ = $LOG_MAIL_SEQ || "$LOG_MAIL_DIR/.seq";
+    $LOG_MAIL_FILE_SIZE_MAX = $LOG_MAIL_FILE_SIZE_MAX || 2048;
+
+	へっだをかく
+
+	せんとうの２０４８ばいとだけかく
+	for ($p = 0; $p < $LOG_MAIL_FILE_SIZE_MAX; ) {
+	    $p = index($Envelope{'Body'}, "\n", $p + 1);
+	    if ($p < 0) {
+		last;
+	    }
+	    else {
+		print F substr($Envelope{'Body'}, $pp, $p + 1 - $pp);
+		$pp = $p + 1;
+	    }
+	}
+	close(F);
+
+
+○	ループチェック
+
+	MAIL_LIST != MAINTAINER
+
+
+○	必要かしら？
+
+	$default_umask
+
+	time_zone config?
 
 
 ====================================================================
@@ -213,4 +266,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.18 2002/04/12 15:04:07 fukachan Exp $
+$FML: 00_MEMO,v 1.19 2002/04/23 12:23:51 fukachan Exp $

@@ -42,6 +42,8 @@ II部　fmlのセットアップ〜MLの作成
 	main.cf の編集をするだけでアップグレードもダウングレードも
 	思いのままです。
 
+	★ レシピ のアップグレードの節を見てね
+
 8章　Unix上でのCGIのセットアップ
 
 	デフォルトで CGI スクリプトが用意されます。
@@ -82,7 +84,7 @@ III部　fmlのカスタマイズ
 	コマンドすべてです。
 
 		ＭＬの作成			OK
-	[TODO]	ＭＬの削除
+		ＭＬの削除			OK
 		ＭＬのメンバーの登録と削除	OK
 		登録しているアドレスの変更	OK
 	[TODO]	off/on
@@ -113,7 +115,7 @@ III部　fmlのカスタマイズ
 
 	[TODO] 自動登録
 		今はデフォルトで自動登録ですわ :-)
-		まだ confirmation タイプしかありません。
+	[TODO]	まだ confirmation タイプしかありません。
 
 	誰でも投稿可能:	$post_restrictions で permit_anyone
 
@@ -200,6 +202,8 @@ III部　fmlのカスタマイズ
 	というディレクトリに作ります。このまま作るなり、適宜
 	alias を切るなりして使うとよいでしょう。
 
+	[TODO] permission はこれでいい？
+
 
 21章　まとめ送り
 
@@ -214,10 +218,18 @@ V部　その他のトピック
 26章　日々の運用について
 
 	[TODO] ログファイルの expire
+
+	スプールは真っ平ら or 一階層構造のどちらでもとれます。
+	一階層構造がお薦めです。
+
 	[TODO] スプールの圧縮
-	[TODO] スプールの expire
+	[TODO] スプールを tar などにまとめる (mode_archive)
+	[TODO] スプールの expire (mode_expire)
 	[TODO] 設定ファイルなどの RCS 管理
 	[TODO] 設定ファイルなどの CVS 管理
+	[TODO] ログファイルなどへの newsyslog
+		File::Rotate に実装されているが	組み込まれてはいない。
+	[TODO] log suffix extension
 
 
 27章　エラーメールを自動解析する
@@ -247,9 +259,15 @@ VII部　Advanced Study
 
 	はじめから前提だぜ
 
+	[TODO] replace メソッドを賢く
+
 37章　配送の高速化について
 
 	[TODO] Mail::Delivery の LMTP モード
+
+	[TODO] outgoing address hack
+
+	[TODO] execute $program on the disk NOT IPC.
 
 
 38章　試論：現代的サーバデザインについて
@@ -257,5 +275,12 @@ VIII部　付録
 付録D　virus_check.phの例
 
 
+---------------
+○ いまひとつ分類できないかな？
+
+* スケジューラ
+	alarm() によるスケジューラ
+	queue manager for LMTP ? 
+
 ---
-$FML: STATUS.txt,v 1.4 2002/04/13 12:13:53 fukachan Exp $
+$FML: STATUS.txt,v 1.7 2002/04/25 04:15:23 fukachan Exp $
