@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: varclass.pl,v 1.2 2003/06/23 04:40:32 fukachan Exp $
+# $FML: varclass.pl,v 1.3 2003/07/03 00:11:06 fukachan Exp $
 # based on 'FML: check_varname.pl,v 1.3 2003/05/30 13:59:17 fukachan Exp'
 #
 
@@ -45,11 +45,14 @@ sub init
 	    default
 	    domain 
 	    cgi 
-	    sql ldap
-	    report_mail
-	    message_template
+	    sql
+	    ldap
+	    message
+	    reply_message
+	    template_file
 	    ml_local
 	    x
+	    post
 	    smtp mail postfix qmail sendmail procmail)) {
 	$top{ $_ } = $_;
     }
@@ -182,7 +185,7 @@ sub classfied
 	$b{ $base }  = \@x;
     }
 
-    for my $top (sort keys %top) {
+    for my $top (sort _sort_top keys %top) {
 	print "$top {\n";
 
 	for my $base (sort keys %b) {
@@ -206,6 +209,18 @@ sub classfied
 	print "}\n";
 	print "\n"; 
     }
+}
+
+
+sub _sort_top
+{
+   my $xa = $a;
+   my $xb = $b;
+
+   if ($xa =~ /_command$/) { $xa = "command_$xa";}
+   if ($xb =~ /_command$/) { $xb = "command_$xb";}
+
+   $xa cmp $xb;
 }
 
 
