@@ -41,4 +41,3 @@ MailingList/SMTP.pm
 MailingList/Delivery.pm
 MailingList/Utils.pm
 MailingList/ESMTP.pm
-Tie/JournaledFile.pm

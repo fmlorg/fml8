@@ -52,12 +52,19 @@ file) for the $key
    tie %db, 'Tie::JournaledFile', { last_match => 1, file => 'cache.txt' };
    print $db{ rudo }, "\n";
 
+=head1 METHODS
+
+=head2 TIEHASH, FETCH, STORE, FIRSTKEY, NEXTKEY
+
+standard hash functions.
+
 =cut
 
 
-require Exporter;
-@ISA = qw(Exporter);
-
+# Descriptions: constructor
+#    Arguments: $self $args
+# Side Effects: import _match_style into $self
+# Return Value: object
 sub new
 {
     my ($self, $args) = @_;
@@ -85,14 +92,6 @@ sub TIEHASH
     my ($self, $args) = @_;
     my ($type) = ref($self) || $self;
     new($self, $args);
-}
-
-
-sub grep
-{
-    my ($self, $key) = @_;
-    my $rarray = $self->_fetch($key, 'array');
-    return @$rarray;
 }
 
 
@@ -134,6 +133,34 @@ sub NEXTKEY
 }
 
 
+=head2 C<grep(key)>
+
+return the line with the C<key>. 
+The line is either first or last mached line.
+It is determined by C<last_match> or C<first_match> parameter at
+C<new()> method. 
+C<first_match> by default.
+
+=cut
+
+sub grep
+{
+    my ($self, $key) = @_;
+    my $rarray = $self->_fetch($key, 'array');
+    return @$rarray;
+}
+
+
+# Descriptions: real function to search $key.
+#               This routine is used at grep() and FETCH() methods.
+#               return the value with the $key
+#               $self->{ _match_style } conrolls the matching algorithm
+#               is either of the fist or last match.
+#    Arguments: $self $key $mode
+#               $key is the string to search.
+#               $mode selects the return value style, scalar or array.
+# Side Effects: none
+# Return Value: SCALAR or ARRAY with the key
 sub _fetch
 {
     my ($self, $key, $mode) = @_;
