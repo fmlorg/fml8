@@ -5,12 +5,18 @@
 fml 5 project home page
 </TITLE>
 <META http-equiv="Content-Type"
-	content="text/html; charset=us-ascii">
+	content="text/html; charset=EUC-JP">
 </HEAD>
 
-<BODY BGCOLOR="#E6E6FA">
-
-<A HREF="index.html.ja">[Japanese]</A>
-
-</BODY>
+<FRAMESET COLS="25%,*" BORDERSPACING=0 FRAMEBORDER=0 BODER=0 BORDERCOLOR="#E6E6FA">
+     	<FRAME SRC="fml/doc/en/htdocs/menubar.html" NAME="left">
+      	<FRAME SRC="fml/doc/en/htdocs/menu.html" NAME="right">
+  <NOFRAMES>
+	<A HREF="fml/doc/en/htdocs/menu.html">
+	fml5 project (fml/doc/)
+	</A>
+	(if your browser not support frameset).
+  </NOFRAMES>
+</FRAMESET>
 </HTML>
+
