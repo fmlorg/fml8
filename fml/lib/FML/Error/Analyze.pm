@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.15 2003/01/05 05:15:21 fukachan Exp $
+# $FML: Analyze.pm,v 1.16 2003/01/07 08:38:32 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -254,6 +254,11 @@ sub error_continuity
     return \@removelist;
 }
 
+
+# Descriptions: error continuity based cost counting
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($data)
+# Side Effects: none
+# Return Value: ARRAY_REF
 sub error_continuity2
 {
     my ($self, $curproc, $data) = @_;

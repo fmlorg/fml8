@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002 MURASHITA Takuya
+#  Copyright (C) 2002,2003 MURASHITA Takuya
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: off.pm,v 1.4 2002/12/20 03:40:12 fukachan Exp $
+# $FML: off.pm,v 1.5 2002/12/24 10:19:44 fukachan Exp $
 #
 
 package FML::Command::Admin::off;
@@ -91,7 +91,8 @@ sub process
 
 
 # Descriptions: show cgi menu for off
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self)
+#               OBJ($curproc) HASH_REF($args) HASH_REF($command_args)
 # Side Effects: update $recipient_map
 # Return Value: none
 sub cgi_menu
@@ -120,7 +121,7 @@ MURASHITA Takuya
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 MURASHITA Takuya
+Copyright (C) 2002,2003 MURASHITA Takuya
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

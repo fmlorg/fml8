@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: TrafficMonitor.pm,v 1.8 2002/09/22 14:56:50 fukachan Exp $
+# $FML: TrafficMonitor.pm,v 1.9 2002/12/20 03:44:05 fukachan Exp $
 #
 
 package FML::Filter::TrafficMonitor;
@@ -36,10 +36,10 @@ use File::CacheDir;
 #
 
 
-# Descriptions:
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects:
-# Return Value: none
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self, $args) = @_;
@@ -50,8 +50,8 @@ sub new
 
 
 # Descriptions: open cache and return C<File::CacheDir> object.
-#    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects:
+#    Arguments: OBJ($self) STR($db) HASH_REF($args)
+# Side Effects: update $self->{ _obj }
 # Return Value: none
 sub _open_cache
 {
@@ -85,7 +85,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

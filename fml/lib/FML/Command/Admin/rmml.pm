@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmml.pm,v 1.12 2003/01/03 07:06:14 fukachan Exp $
+# $FML: rmml.pm,v 1.13 2003/01/07 08:38:32 fukachan Exp $
 #
 
 package FML::Command::Admin::rmml;
@@ -162,7 +162,8 @@ sub _remove_aliases
 
 
 # Descriptions: show cgi menu for rmml
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+#    Arguments: OBJ($self)
+#               OBJ($curproc) HASH_REF($args) HASH_REF($command_args)
 # Side Effects: create home directories, update aliases, ...
 # Return Value: none
 sub cgi_menu

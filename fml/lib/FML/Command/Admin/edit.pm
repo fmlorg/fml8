@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: edit.pm,v 1.12 2002/09/28 14:42:01 fukachan Exp $
+# $FML: edit.pm,v 1.13 2002/12/15 14:09:27 fukachan Exp $
 #
 
 package FML::Command::Admin::edit;
@@ -58,7 +58,7 @@ sub need_lock { 1;}
 
 
 # Descriptions: run "vi" or the specified editor to edit config.cf.
-#    Arguments: $self $curproc $command_args
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update config.cf
 # Return Value: none
 sub process
@@ -94,7 +94,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
