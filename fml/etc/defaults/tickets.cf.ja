@@ -30,8 +30,9 @@ ticket_subject_tag_name	=	$ml_name
 # Descriptions: チケット番号のシンタックス
 #      History: fml 5.0 new
 #        Value:
-#     Examples: elena_#00001010
-ticket_id_syntax	=	$ml_name_#%08d
+#     Examples: elena_#00001010     $ml_name_#%08d
+#               elena/100           $ml_name/%d
+ticket_id_syntax	=	$ml_name/%d
 
 # Descriptions: Subject につけるチケット番号のシンタックス
 #               []  ()  {} などを $ticket_id_syntax の
@@ -39,7 +40,16 @@ ticket_id_syntax	=	$ml_name_#%08d
 #      History: fml 5.0 new
 #        Value:
 #     Examples: [elena_#00001010]
+#               [elena/100]
 ticket_subject_tag	=	[$ticket_id_syntax]
+
+# Descriptions: Subject につけるチケット番号のシンタックスの場所
+#               前につけるか、それとも後ろにつけるか？
+#      History: fml 5.0 new
+#        Value: appended/prepended
+#     Examples: Subject: [elena/100] ....
+#               Subject: .... [elena/100]
+ticket_subject_tag_location	=	appended
 
 # Descriptions: チケット番号を保存するファイル
 #      History: fml 5.0 new
