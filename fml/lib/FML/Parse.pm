@@ -57,7 +57,6 @@ FML::Parse.pm appeared in fml5.
 =cut
 
 
-use lib qw(./lib/fml5 ./lib/CPAN ./lib/3RDPARTY ./lib);
 use vars qw($InComingMessage);
 use strict;
 use Carp;
