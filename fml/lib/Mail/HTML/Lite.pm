@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.12 2001/10/21 04:17:17 fukachan Exp $
+# $FML: Lite.pm,v 1.13 2001/10/21 05:22:10 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -1286,19 +1286,33 @@ sub _update_id_montly_index_master
     $self->_db_open();
     my $db = $self->{ _db };
     my $mlist = $db->{ _monthly_idlist };
-    my (@list) = keys %$mlist;
+    my (@list) = sort __sort_yyyymm keys %$mlist;
 
     $self->_print_ul($wh, $db, $code);
     for my $id (@list) { # ( YYYY/MM YYYY/MM ... )
 	my $xx = $id; $xx =~ s@/@@g; 
 	my $fn = "month.$xx.html";
-	_print($wh, "<LI>", $code);
-	_print($wh, "<A HREF=\"$fn\"> $id </A>", $code);
+
+	use File::Spec;
+	my $file = File::Spec->catfile($html_base_dir, $fn);
+	if (-f $file) {
+	    _print($wh, "<LI>", $code);
+	    _print($wh, "<A HREF=\"$fn\"> $id </A>", $code);
+	}
     }
     $self->_print_end_of_ul($wh, $db, $code);
     
     $self->_db_close();
     $self->_print_index_end( $htmlinfo );
+}
+
+
+sub __sort_yyyymm
+{
+    my ($xa, $xb) = ($a, $b);
+    $xa =~ s@/@@;
+    $xb =~ s@/@@;
+    $a <=> $b;
 }
 
 
