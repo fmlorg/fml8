@@ -15,8 +15,8 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
 use IO::Socket;
 use MailingList::Utils;
-use MailingList::INET4;
-use MailingList::INET6;
+use MailingList::Net::INET4;
+use MailingList::Net::INET6;
 
 require Exporter;
 @ISA = qw(Exporter);
