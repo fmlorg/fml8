@@ -1,6 +1,17 @@
 		CHANGES
 		Last Modified: $Date$
 
+2001/10/22
+
+   Mail::HTML::Lite 
+	add (X-ML-Name X-Mail-Count X-Sequence) into @header_field (default
+	header to show)
+	
+	defined() check before calling Jcode::XXX()
+	
+   FML::Command::Admin::htmlify 
+	accept command line option::srcdir=$srcdir
+
 2001/10/21
 
    makefml htmlify $ml_name outdir=$out_dir
@@ -673,4 +684,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.24 2001/10/21 08:02:08 fukachan Exp $
+$FML: CHANGES.txt,v 1.25 2001/10/21 14:49:43 fukachan Exp $
