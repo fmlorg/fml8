@@ -6,6 +6,8 @@
 ○ 実装済み
 
 help		ヘルプファイルを取り寄せる
+guide		guide ファイルを取り寄せる
+summary		summary ファイルを取り寄せる
 
 subscribe	ＭＬへの入会
 (add)
@@ -40,9 +42,6 @@ get		過去の記事を取り寄せる ( MIME/multipart only )
 
 ○ 未実装
 
-guide
-summary
-
 members
 actives
 
@@ -50,4 +49,4 @@ off
 on
 
 
-$FML$
+$FML: MANIFEST.euc-jp,v 1.1 2001/10/13 02:55:51 fukachan Exp $
