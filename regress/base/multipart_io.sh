@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id$
+# $FML: multipart_io.sh,v 1.9 2001/04/13 04:32:30 fukachan Exp $
 #
 
 dir=`dirname $0`

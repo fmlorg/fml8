@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: signoff.pm,v 1.5 2001/04/03 09:45:42 fukachan Exp $
+# $FML: signoff.pm,v 1.1 2001/04/05 10:39:08 fukachan Exp $
 #
 
 package FML::Command::signoff;

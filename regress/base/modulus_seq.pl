@@ -1,6 +1,6 @@
 #!/usr/local/bin/perl
 #
-# $Id$
+# $FML: modulus_seq.pl,v 1.1 2001/02/21 03:41:18 fukachan Exp $
 #
 
 $seq_file = "/tmp/.seq";

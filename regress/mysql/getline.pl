@@ -1,6 +1,6 @@
 #!/usr/pkg/bin/perl
 #
-# $Id$
+# $FML: getline.pl,v 1.8 2001/05/04 14:32:36 fukachan Exp $
 #
 
 use strict;

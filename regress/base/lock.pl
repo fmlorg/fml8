@@ -1,6 +1,6 @@
 #!/usr/local/bin/perl
 #
-# $Id$
+# $FML: lock.pl,v 1.3 2001/02/20 08:30:12 fukachan Exp $
 #
 
 use File::SimpleLock;

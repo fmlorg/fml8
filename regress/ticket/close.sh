@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id$
+# $FML: close.sh,v 1.1 2001/02/16 11:31:11 fukachan Exp $
 #
 
 tmp=/tmp/$$

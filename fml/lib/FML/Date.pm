@@ -2,8 +2,7 @@
 #
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #
-# $Id$
-# $FML$
+# $FML: Date.pm,v 1.7 2001/04/03 09:45:40 fukachan Exp $
 #
 
 package FML::Date;

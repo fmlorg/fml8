@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: get.pm,v 1.3 2001/04/03 09:45:42 fukachan Exp $
 #
 
 package FML::Command::get;

@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: CacheDir.pm,v 1.5 2001/04/14 14:47:56 fukachan Exp $
+# $FML: CacheDir.pm,v 1.6 2001/04/15 04:58:05 fukachan Exp $
 #
 
 package File::CacheDir;

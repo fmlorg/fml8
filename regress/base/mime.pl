@@ -1,6 +1,6 @@
 #!/usr/local/bin/perl
 #
-# $Id$
+# $FML: mime.pl,v 1.5 2001/03/26 11:41:09 fukachan Exp $
 #
 
 

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $Id$
+# $FML$
 #
 
 package IO::Adapter::DBI;

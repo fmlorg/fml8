@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id$
+# $FML: cgi.sh,v 1.3 2001/03/25 08:27:07 fukachan Exp $
 #
 
 tmp=/tmp/$$
