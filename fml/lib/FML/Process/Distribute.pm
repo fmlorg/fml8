@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.124 2003/08/23 07:24:46 fukachan Exp $
+# $FML: Distribute.pm,v 1.125 2003/08/29 15:34:07 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -368,7 +368,7 @@ sub _distribute
 
     # thread system checks the message before header rewritings.
     if ($config->yes('use_thread_track')) {
-	$curproc->_old_thread_check($args);
+	# $curproc->_old_thread_check($args);
 	$curproc->_new_thread_check($args);
     }
 
