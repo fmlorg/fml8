@@ -12,16 +12,14 @@ my $map = 'mysql:toymodel';
 
 my $map_params = {
     $map => {
-	config => {
-	    sql_server    => 'localhost',
-	    user          => 'fukachan',
-	    user_password => 'uja',
-	    database      => 'fml',
-	    table         => 'ml',
-	},
-	params  => {
-	    ml_name       => 'elena',
-	    file          => 'members',
+	sql_server    => 'localhost',
+	user          => 'fukachan',
+	user_password => 'uja',
+	database      => 'fml',
+	table         => 'ml',
+	params        => {
+	    ml_name   => 'elena',
+	    file      => 'members',
 	},
     },
 };
@@ -32,13 +30,13 @@ my $obj = new IO::MapAdapter ($map, $map_params);
 _dump($obj); print "\n";
 
 $obj->open();
-$obj->add( 'rudo' );
+$obj->add( 'rudo@nuinui.net' );
 $obj->close();
 
 _dump($obj); print "\n";
 
 $obj->open();
-$obj->delete( 'rudo' );
+$obj->delete( 'rudo@nuinui.net' );
 $obj->close();
 
 _dump($obj); print "\n";

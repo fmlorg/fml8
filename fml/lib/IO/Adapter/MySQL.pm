@@ -41,8 +41,8 @@ sub configure
 {
     my ($self, $me, $args) = @_;
     my $map    = $me->{ _map };
-    my $config = $args->{ $map }->{ config };
-    my $params = $args->{ $map }->{ params };
+    my $config = $args->{ $map };
+    my $params = $config->{ params };
 
     # import basic DBMS parameters
     $me->{ _config }        = $config;
