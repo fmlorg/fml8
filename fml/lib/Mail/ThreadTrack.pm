@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.3 2001/11/03 00:18:00 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.4 2001/11/03 01:22:13 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use Mail::ThreadTrack::ErrorStatus qw(error_set error error_clear);
 
 use Mail::ThreadTrack::Analyze;
 use Mail::ThreadTrack::HeaderRewrite;
@@ -126,8 +125,6 @@ sub _mkdirhier
     my ($dir, $mode) = @_;
     $mode = defined $mode ? $mode : 0700;
 
-    error_clear();
-
     # XXX $mode (e.g. 0755) should be a numeric not a string
     eval q{ 
         use File::Path;
@@ -205,7 +202,11 @@ return @thread_id ARRAY
 
 =cut
 
-# return @thread_id ARRAY
+
+# Descriptions: return @thread_id ARRAY
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub list_up_thread_id
 {
     my ($self) = @_;
@@ -237,6 +238,10 @@ sub list_up_thread_id
 =cut
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub sort
 {
     my ($self, $thread_id_list) = @_;
@@ -250,6 +255,10 @@ sub sort
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub _sort_thread_id
 {
     my ($self, $thread_id_list, $cost) = @_;
@@ -260,6 +269,10 @@ sub _sort_thread_id
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub _calculate_age
 {
     my ($self, $thread_id_list) = @_;
@@ -326,6 +339,10 @@ sub get_mode
 
 =cut
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub log
 {
     my ($self, $str) = @_;
