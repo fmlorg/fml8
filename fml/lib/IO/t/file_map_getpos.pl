@@ -57,7 +57,7 @@ $obj->close;
 
 
 if ($prev_buf eq $buf) {
-    print STDERR "roll back test ... ok\n";
+    print STDERR "$map roll back test ... ok\n";
     exit 0;
 }
 else {
