@@ -1,5 +1,5 @@
 dnl
-dnl $FML: configure.in,v 1.16 2002/04/15 10:28:08 fukachan Exp $
+dnl $FML: configure.in,v 1.17 2002/04/20 11:18:21 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -52,10 +52,9 @@ AC_PATH_PROG(PGPV,     pgpv)
 AC_PATH_PROG(GPG,      gpg)
 dnl path_check_end
 
-
-use_warning=0
+use_warning=yes
 AC_ARG_WITH(warning, 
-[  --with-warning          run perl as perl -w],
+[  --without-warning       run perl as perl without -w],
     use_warning=$withval)
 
 
