@@ -177,8 +177,8 @@ get_command {
 newml_command {
 
    newml_command { 
-          $newml_command_init_private_dirs
-          $newml_command_init_public_dirs
+    ?     $newml_command_init_private_directories
+    ?     $newml_command_init_public_directories
     ?     $newml_command_mta_config_list
           $newml_command_postfix_template_files
           $newml_command_qmail_template_files
@@ -610,6 +610,7 @@ system {
     ?     $system_has_getpwuid
     ?     $system_has_select
     ?     $system_special_accounts
+    ?     $system_timezone
    }
 }
 
