@@ -199,6 +199,61 @@
 	どうやってシンクロするの？
 
 
+[TODO]	ドキュメント( tutorial/internals )
+
+
+   $curproc
+
+	$curproc->$object_$action
+
+		$curproc->message_create();
+		$curproc->message_XXX();
+
+   object
+
+	$object->$action;
+
+		$object->create();
+		$object->create_XXX();
+
+[TODO]	FML::Process::* rules
+
+		FML::Process::* rules
+
+  1) reference to $main_cf
+
+  $main_cf should be referenced only from within
+	FML::Process::Kernel
+	FML::Process::Switch
+	FML::Process::Utils
+  classes.
+
+
+  2) reference to pcb (process control block) area.
+
+  $pcb should be referenced only from within
+
+	FML::Process::Kernel
+	FML::Process::Switch
+	FML::Process::Utils
+	FML::PCB
+
+  classes ? currently, no. referenced from the following other modules:
+
+	FML::Article::Sequence
+	FML::Parse
+	FML::CGI::Menu
+	FML::Command::User::get
+	FML::Process::CGI::Kernel
+	FML::Process::Command
+	FML::Process::Distribute
+	FML::Process::Error
+	FML::Process::Fake
+
+
+
+
+
 [TODO]	2002,2003 年のオーバホールの残り
 
   ＊おもたい
@@ -236,5 +291,5 @@
 
 
 ----------
-$FML: 00_MEMO,v 1.110 2004/04/24 01:07:07 fukachan Exp $
+$FML: 00_MEMO,v 1.111 2004/06/21 13:37:36 fukachan Exp $
 
