@@ -1,5 +1,5 @@
 #
-# $FML: main.cf.in,v 1.15 2003/03/06 12:34:04 fukachan Exp $
+# $FML: main.cf.in,v 1.16 2003/10/25 04:06:37 fukachan Exp $
 #
 
 # fml version
@@ -49,11 +49,33 @@ share_dir		=	@datadir@/fml/$fml_version
 local_lib_dir		=	@libdir@/fml/site_local
 
 
+###
+### DOMAIN AND MAP BETWEEN DOMAIN AND DIRECTORY
+###
+
+
+# default domain
+default_domain		=	@default_domain@
+
+
 # ml's home directories
 # $ml_home_dir (e.g. /var/spool/ml/elena ) is taken from loader's @ARGV.
 # This is compatible with fml 4.0.
 # Example: /var/spool/ml
 default_ml_home_prefix	=	@mlspooldir@
+
+
+# map of { $ml_name => $ml_home_dir }
+# Example: /etc/fml/ml_home_prefix
+ml_home_prefix_maps	=	$config_dir/ml_home_prefix
+				$virtual_maps
+
+
+# virtual format: domain directory
+# for example,
+#   fml.org	/var/spool/ml/fml.org
+#   nuinui.net	/var/spool/ml/nuinui.net
+virtual_maps		=	$config_dir/virtual
 
 
 
@@ -62,13 +84,14 @@ default_ml_home_prefix	=	@mlspooldir@
 ###
 
 
-# default domain
-default_domain		=	@default_domain@
-
-
 # version dependent default_config.cf location
 # Example: /etc/fml/defaults/8.0/default_config.cf
 default_config_cf	=	$default_config_dir/default_config.cf
+
+
+# site local default configuration file
+# Example: /etc/fml/site_default_config.cf
+site_default_config_cf	=	$config_dir/site_default_config.cf
 
 
 # domain specific configurations
@@ -84,10 +107,3 @@ default_module_config	=	$default_config_dir/modules
 # map between programs name and command line options
 # Example: /etc/fml/defaults/8.0/command_line_options
 default_command_line_option_config = $default_config_dir/command_line_options
-
-
-# virtual format: domain directory
-# for example,
-#   fml.org	/var/spool/ml/fml.org
-#   nuinui.net	/var/spool/ml/nuinui.net
-virtual_maps		=	$config_dir/virtual

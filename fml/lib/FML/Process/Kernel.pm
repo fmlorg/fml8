@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.187 2003/10/15 09:09:11 fukachan Exp $
+# $FML: Kernel.pm,v 1.188 2003/10/15 10:06:46 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -93,23 +93,31 @@ sub new
 	}
     }
 
-    # 1.2 import XXX_dir variables from /etc/fml/main.cf
-    for my $dir_var (qw(
-			config_dir
-			default_config_dir
-			lib_dir
-			libexec_dir
-			share_dir
-			local_lib_dir
+    # 1.2 import XXX_dir variables as fml_XXX_dir from /etc/fml/main.cf.
+    #     ( *_dir *_maps *_cf ).
+    for my $main_cf_var (qw(
+			    config_dir
+			    default_config_dir
+			    lib_dir
+			    libexec_dir
+			    share_dir
+			    local_lib_dir
+
+			    ml_home_prefix_maps
+			    default_config_cf
+			    site_default_config_cf 
+			    
 			)) {
-	if (defined $args->{ main_cf }->{ $dir_var }) {
-	    $cfargs->{ 'fml_'.$dir_var } = $args->{ main_cf }->{ $dir_var };
+	if (defined $args->{ main_cf }->{ $main_cf_var }) {
+	    my $key = sprintf("fml_%s", $main_cf_var);
+	    $cfargs->{ $key } = $args->{ main_cf }->{ $main_cf_var };
 	}
     }
 
     # 1.3 import $fml_version
     if (defined $args->{ fml_version }) {
-	$cfargs->{ fml_version } = "fml-devel ". $args->{ fml_version };
+	$cfargs->{ fml_version } = 
+	    sprintf("fml-devel %s", $args->{ fml_version });
     }
 
     # 2.1 speculate $fml_owner_home_dir by the current process uid
