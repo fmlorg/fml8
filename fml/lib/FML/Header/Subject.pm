@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.43 2004/01/22 12:34:22 fukachan Exp $
+# $FML: Subject.pm,v 1.44 2004/03/28 11:11:54 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -77,9 +77,8 @@ sub rewrite_article_subject_tag
     # cut off Re: Re: Re: ...
     $self->_cut_off_reply(\$subject);
 
-    # XXX-TODO: method-ify _delete_subject_tag() ?
     # de-tag
-    $subject = _delete_subject_tag( $subject, $tag );
+    $subject = $self->delete_subject_tag($subject, $tag);
 
     # cut off Re: Re: Re: ...
     $self->_cut_off_reply(\$subject);
@@ -143,27 +142,14 @@ sub decode
 }
 
 
-# Descriptions: delete subject tag
-#    Arguments: OBJ($self) STR($subject) STR($tag)
-# Side Effects: none
-# Return Value: STR
-sub delete_subject_tag
-{
-    my ($self, $subject, $tag) = @_;
-
-    # XXX-TODO: method-fy ?
-    return _delete_subject_tag($subject, $tag);
-}
-
-
 # Descriptions: remove tag-like string
-#    Arguments: STR($subject) STR($tag)
+#    Arguments: OZBJ($self) STR($subject) STR($tag)
 #               XXX non OO type function
 # Side Effects: none
 # Return Value: STR(subject string)
-sub _delete_subject_tag
+sub delete_subject_tag
 {
-    my ($subject, $tag) = @_;
+    my ($self, $subject, $tag) = @_;
     my $retag = _regexp_compile($tag);
 
     $subject =~ s/$retag//g;
