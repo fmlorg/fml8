@@ -1,6 +1,7 @@
 <!--
-   $FML: chapter.sgml,v 1.1 2001/10/22 11:07:45 fukachan Exp $
+   $FML: chapter.sgml,v 1.1.1.1 2001/11/17 13:09:40 fukachan Exp $
 -->
+
 
 <chapter id="threadtrack.fml.usage">
 	<title>
@@ -28,6 +29,14 @@ fml 5.0 の問題意識は
 この第一段階があって、はじめて適正な knowledge base やticket system を
 構築/購入することができるに違いありません。
 もちろん、こんなもんで十分有用という場合もありえます:D
+</para>
+
+
+<para>
+<link linkend="threadtrack.pmtools.summary">
+Problem Report System のまとめ
+</link>
+については付録を参照して下さい。
 </para>
 
 

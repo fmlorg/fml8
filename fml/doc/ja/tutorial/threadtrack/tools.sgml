@@ -1,8 +1,8 @@
 <!--
-   $FML: tools.sgml,v 1.2 2001/10/22 11:07:45 fukachan Exp $
+   $FML: tools.sgml,v 1.1.1.1 2001/11/17 13:09:40 fukachan Exp $
 -->
 
-<chapter id="threadtrack.pmtools.summary">
+<appendix id="threadtrack.pmtools.summary">
 	<title>
 	Problem Report 関連ツールのまとめ
 	</title>
@@ -288,4 +288,4 @@ http://www.ravenbrook.com/project/p4dti/
 
 </sect1>
 
-</chapter>
+</appendix>

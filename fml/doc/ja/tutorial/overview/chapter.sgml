@@ -1,14 +1,16 @@
 <!--
-	$FML: chapter.sgml,v 1.3 2001/10/13 08:47:57 fukachan Exp $
+	$FML: chapter.sgml,v 1.4 2001/11/19 14:55:16 fukachan Exp $
 -->
 
 <chapter id="overview"> 
 	<title>
-	おおまかな流れ
+	fml の概要
 	</title>
 
 <sect1>
-	<title> 概要 </title>
+	<title>
+	インストール作業の概略 
+	</title>
 
 <para>
 以下で、特に触れていない概念(例: ＭＬとは？)については &fml4; と同様
@@ -23,7 +25,7 @@
 
 <para>
 さて、いつものように elena ＭＬの作成過程を例にとりましょう。
-おおまかな流れは次のようになります。
+インストールのおおまかな流れは次のようになります。
 </para>
 
 
@@ -50,7 +52,7 @@
 	<para>
 		(デフォルトでは)インストーラは /usr/local/bin に 
 		<link linkend="available">
-		fmldoc fmlconf fmlthread makefml fmlhtmlify
+		fmldoc fmlconf fmlthread makefml fmlhtmlify fmlsch
 		</link>
 		などをインストールします。
 	</para>
@@ -85,7 +87,7 @@
 
    <listitem>
 	<para>
-		テストをする。
+		ＭＬ の動作テストをする。
 	</para>
    </listitem>
 
@@ -93,7 +95,7 @@
    <listitem>
 	<para>
 		<link linkend="guide.config.cf">
-		カスタマイズをする。 
+		ＭＬ のカスタマイズをする。 
 		</link>
 	</para>
    </listitem>
@@ -115,24 +117,19 @@
    <title> ＭＬを作る </title>
 
 <para>
-&fml4; と同様です。 
+方法は &fml4; と同様です。 
 ですが、
 現状では config.cf という設定ファイルをインストールしてくれるだけです。
-
-インストール後は、次のようになるはずです。
 <screen>
 % su fml
 % makefml newml elena
 % ls /var/spool/ml/elena
 config.cf
 </screen>
-</para>
-
-
-<para>
+カスタマイズは config.cf をエディタで編集して下さい。
 とりあえず config.cf の先頭の ml_domain と ml_name を
 自分のＭＬに変更して下さい。
-まだ自動変換できません（そのうちできるようにします）。
+まだ自動変換できません(そのうちできるようにします ;-)。
 </para>
 
 
@@ -157,10 +154,11 @@ address_for_command = $ml_name-ctl@$ml_domain
 </screen>
 </para>
 
-
 <para>
 include include-ctl aliases も &fml4; と同様です。
-が、まだ、makefml newml で自動生成できるようになっていません _o_
+まだ、makefml newml で自動生成できるようになっていません _o_
+include ファイルの PATH がちょっと違いますが、
+aliases の設定の仕方は一緒です。
 </para>
 
 <para>
@@ -197,28 +195,26 @@ owner-elena-ctl: fml
 
 <para>
 elena ＭＬの設定のカスタマイズは /var/spool/ml/elena/config.cf を編集
-して下さい。フォーマットは &fml4; の cf に近いです。
-むしろ postfix の設定ファイルと同様という方が良いでしょう。
+して下さい。
+フォーマットは &fml4; の cf に近いですが、
+postfix の設定ファイルと同様という方が良いでしょう。
 </para>
 
 <para>
-適宜必要な項目を追加して下さい。
+適宜必要な項目だけを追加して下さい。
 指定しない場合はデフォルト値が使われます。
-デフォルト値はインストールしたバージョンに依存し、
+デフォルト値はインストールしたバージョンに依存しており、
 <screen>
 /etc/fml/defaults/バージョン番号/default_config.cf
 </screen>
-というファイルで定義されています。
-</para>
-
-<para>
+というファイル中で定義されています。
 これは perl のライブラリが /usr/local/lib/perl/5.00503/ のように
-バージョン番号付のディレクトリに置かれるのと同様です。
+バージョン番号付のディレクトリに置かれるのと似ています。
 </para>
 
 <para>
-インストール先も fml のバージョンごとに
-別のディレクトリになることに注意して下さい。
+また、ライブラリなどのインストール先も fml のバージョンごとに
+別のディレクトリになっていることに注意して下さい。
 この仕組みのおかげでアップグレードしても元に戻すのが簡単です。
 これは &fml5; の特徴です。
 </para>

@@ -1,5 +1,5 @@
 <!--
-	$FML: chapter.sgml,v 1.5 2001/10/13 08:47:56 fukachan Exp $
+	$FML: chapter.sgml,v 1.6 2001/11/19 14:55:16 fukachan Exp $
 -->
 
 <chapter id="installation">
@@ -19,6 +19,7 @@ configure (GNU autoconf) および make を実行して下さい。
 # ./configure
 # make install
 </screen>
+configure が適宜、変数を書き換えてくれます。
 make install はシェルスクリプト INSTALL.sh を実行するだけです :-)
 </para>
 
@@ -58,6 +59,53 @@ fml_owner       fml                         fml
 で上書きすることができます。
 </para>
 
+
+<para>
+サンプル
+<screen>
+# ./configure --sysconfdir=/etc/fml
+creating cache ./config.cache
+checking for perl... perl
+checking for perl... /usr/local/bin/perl
+checking whether optional useful commands are available
+checking for cksum... /usr/bin/cksum
+checking for md5... /usr/bin/md5
+checking for tar... /usr/bin/tar
+checking for gzip... /usr/bin/gzip
+checking for zcat... /usr/bin/zcat
+checking for gunzip... /usr/bin/gunzip
+checking for lha... no
+checking for ish... no
+checking for bzip2... /usr/bin/bzip2
+checking for bunzip2... /usr/bin/bunzip2
+checking for uuencode... /usr/bin/uuencode
+checking for compress... /usr/bin/compress
+checking for sendmail... /usr/sbin/sendmail
+checking for nkf... /usr/pkg/bin/nkf
+checking for kakasi... no
+checking for namazu... no
+checking for pgp... no
+checking for pgp5... no
+checking for pgpe... no
+checking for pgpk... no
+checking for pgps... no
+checking for pgpv... no
+checking for gpg... no
+updating cache ./config.cache
+creating ./config.status
+creating config.sh
+creating fml/etc/main.cf
+creating fml/etc/paths.cf
+creating fml/libexec/loader
+creating fml/bin/fmlconf
+creating fml/bin/fmldoc
+creating fml/bin/fmlhtmlify
+creating fml/bin/fmlsch
+creating fml/bin/fmlthread
+creating fml/bin/makefml
+</screen>
+</para>
+
 </sect1>
 
 
@@ -67,7 +115,7 @@ fml_owner       fml                         fml
 
 <para>
 それぞれのディレクトリの役割は次の通りです。
-なお、デフォルトは /usr/local 以下にインストールされます。
+なお、デフォルトでは /usr/local 以下にインストールされます。
 </para>
 
 <para>
@@ -168,8 +216,13 @@ fml_owner       fml                         fml
 	<title> ダウングレード </title>
 
 <para>
-	/etc/fml/main.cf の fml_verison をアップグレード前のものに
-	戻して下さい。
+ソースのインストールし直しなどは必要ありません。
+/etc/fml/main.cf の編集だけです。
+</para>
+
+<para>
+/etc/fml/main.cf の fml_verison をアップグレード前のものに
+戻して下さい。
 </para>
 
 </sect1>

@@ -1,5 +1,5 @@
 <!--
-	$FML: available.sgml,v 1.1 2001/05/01 15:38:05 fukachan Exp $
+   $FML: available.sgml,v 1.2 2001/10/13 08:47:57 fukachan Exp $
 -->
 
 <chapter id="available">
@@ -8,8 +8,9 @@
 	</title>
 
 <para>
+プログラムには
 /usr/local/bin 以下にインストールされるものと、
-/usr/local/libexec/fml 以下にインストールされるものと両方あります。
+/usr/local/libexec/fml 以下にインストールされるものがあります。
 </para>
 
 <para>
@@ -18,19 +19,18 @@
 そして、
 /usr/local/libexec/fml 以下のファイルは
 /usr/local/libexec/fml/loader へのリンクです。
-起動される時の名前で振舞いが変わります。
 </para>
 
 <para>
-注意: fml5 ではすべてのプログラムは /usr/local/libexec/fml/loader を経
-由して起動されます。バージョン依存性を処理するために、つねにこの 
-loader を通して起動していくことになっています。
+fml5 ではすべてのプログラムは /usr/local/libexec/fml/loader を経由して
+起動されます。バージョン依存性を処理するためです。
+</para>
+
+<para>
+loader は起動される時の名前で振舞いを変えています。
 </para>
 
 
-<!-- 
-	###########################
- -->
 <sect1 id="usr.local.libexec.fml">
 
 	<title> /usr/local/libexec/fml/ のプログラム </title>
@@ -42,7 +42,7 @@ loader を通して起動していくことになっています。
 	<title>	/usr/local/libexec/fml/distribute </title>
 
 <para>
-配送処理をする。
+配送処理をするプログラムです。
 subject を書き換える。
 スプールに記事として溜める。
 IPv6 をしゃべる。

@@ -2,7 +2,7 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-$FML: book.sgml,v 1.18 2001/10/22 11:08:05 fukachan Exp $
+$FML: book.sgml,v 1.19 2001/11/19 14:55:15 fukachan Exp $
 -->
 
 <!doctype book public "-//FML//DTD DocBook V3.1-Based Extension//EN" [
@@ -18,7 +18,7 @@ $FML: book.sgml,v 1.18 2001/10/22 11:08:05 fukachan Exp $
   <toc></toc>
 
   <part>
-	<title> 基本的な使い方 </title>
+	<title> fml の基本的な使い方 </title>
 	<partintro>
 	<para>
 	本パートは初心者向けの設定ガイドを目指しています。
@@ -38,36 +38,29 @@ $FML: book.sgml,v 1.18 2001/10/22 11:08:05 fukachan Exp $
 	&chapter.overview;
 	&chapter.download;
 	&chapter.install;
-	&chapter.available;
   </part>
 
 
+	<!--
+	&chapter.available;
+	は第 2 部に移して、分離するべきかな？
+	-->
+
   <part>
-	<title> 技術的解説 </title>
+	<title> 各論およびカスタマイズ </title>
 	<partintro>
 	<para>
-	本パートでは…
+	トピックスごとに、まとめます。
 	</para>
 	</partintro>
 
-	<!-- 以下、各章が並ぶ -->
-	&chapter.bootloader;
+	&chapter.available;
 	&chapter.programs;
-        &chapter.config.cf;
-
-	<!-- 記事の配送とコマンドの処理 -->
-        &chapter.delivery;
-        &chapter.replybyfml;
-	&chapter.fmlcommand;
-
-	<!-- スレッド追跡システム -->
-	&chapter.threadtrack.usage;
-	&chapter.threadtrack.tools;
   </part>
 
 
   <part>
-	<title> 開発者向けの話題 </title>
+	<title> 内部構造 </title>
 	<partintro>
 	<para>
 	本パートでは開発者向けの内容についてまとめます。
@@ -83,6 +76,18 @@ $FML: book.sgml,v 1.18 2001/10/22 11:08:05 fukachan Exp $
 	&chapter.db;
 	&chapter.dbms;
 	&chapter.nl;
+
+	<!-- 以下、各章が並ぶ -->
+	&chapter.bootloader;
+        &chapter.config.cf;
+
+	<!-- 記事の配送とコマンドの処理 -->
+        &chapter.delivery;
+        &chapter.replybyfml;
+	&chapter.fmlcommand;
+
+	<!-- スレッド追跡システム -->
+	&chapter.threadtrack.usage;
   </part>
 
 
@@ -105,10 +110,14 @@ $FML: book.sgml,v 1.18 2001/10/22 11:08:05 fukachan Exp $
   <part>
 	<title> 付録 </title>
 	&chapter.glossary;
+
 	&chapter.docbook;
 	&chapter.cvstags;
 	&chapter.inet6;
+
+	<!-- スレッド追跡システム -->
+	&chapter.threadtrack.tools;
   </part>
 
-</book>
 
+</book>
