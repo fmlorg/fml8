@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.15 2003/12/21 06:51:19 fukachan Exp $
+# $FML: Makefile,v 1.16 2003/12/21 06:53:32 fukachan Exp $
 #
 
 OBJ		=	default_config.cf.ja.in \
@@ -21,3 +21,11 @@ default_config.cf.en.in: src/config.cf.en/*.cf
 clean:
 	rm -f $(CLEANUP_OBJ)
 	rm -f main.cf
+
+check:
+	@ echo // check .ja definitions.
+	@ cat src/config.cf.ja/*cf |\
+		../../regress/variable/definition_check.pl
+	@ echo // check .en definitions.
+	@ cat src/config.cf.en/*cf |\
+		../../regress/variable/definition_check.pl
