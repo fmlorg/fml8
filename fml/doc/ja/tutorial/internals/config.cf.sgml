@@ -1,5 +1,5 @@
 <!--
-	$FML: config.cf.sgml,v 1.1 2001/05/05 03:53:40 fukachan Exp $	
+	$FML: config.cf.sgml,v 1.2 2001/05/10 03:11:43 fukachan Exp $	
 -->
 
 <chapter>
@@ -154,6 +154,23 @@ $config->{ another_key }
 </screen>
 (キーはなんでもよい)メソッドが呼ばれた際に再評価されることになります。
 </para>
+
+
+<sect2>
+   <title>  内部構造: 変数展開 </title>
+
+<para>
+内部構造の話をすると、
+まず %_fml_config に キーと値 の組が保存されます。
+これは $dir/$file のような形式のままです。
+
+get() はこのハッシュではなく %_fml_config_result の値を返しています。
+これは $dir などが展開された後の値で、
+/var/spool/ml/elena/file などとなっています。
+この変数の値の展開は get() なりで呼ばれた時に始めて行なわれます。
+</para>
+
+</sect2>
 
 </sect1>
 

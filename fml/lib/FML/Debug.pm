@@ -3,7 +3,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML$
+# $FML: Debug.pm,v 1.4 2001/04/03 09:45:40 fukachan Exp $
 #
 
 package FML::Debug;
@@ -19,9 +19,9 @@ FML::Debug -- debug utilities
 
 =head1 METHODS
 
-=item show_structure()
+=head2 C<show_structure($x)>
 
-It shows the data structure for the given variable.
+It shows the data structure for the given variable C<$x>.
 It is just a wrapper for L<Data::Dumper>.
 
 =cut

@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: Article.pm,v 1.20 2001/04/07 06:41:31 fukachan Exp $
+# $FML: Article.pm,v 1.21 2001/04/08 06:42:59 fukachan Exp $
 #
 
 package FML::Article;
@@ -18,7 +17,7 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Article - article manipulation components
+FML::Article - manipulate ML article
 
 =head1 SYNOPSIS
 
@@ -29,17 +28,18 @@ FML::Article - article manipulation components
 
 =head1 DESCRIPTION
 
-$article object is just a container which holds 
+C<$article> object is just a container which holds 
 C<header> and C<body> object as hash keys.
-The C<header> is an FML::Header object and
-the C<body> is a Mail::Message object.
+The C<header> is an C<FML::Header> object 
+and
+the C<body> is a C<Mail::Message> object.
 
 =head1 METHODS
 
 =head2 C<new(curproc)>
 
-prepare a message duplicated from the incoming message holded in
-C<$curproc->{ incoming_message }>.
+prepare an article message, which is duplicated from the incoming
+message C<$curproc->{ incoming_message }>.
 
 =cut
 
@@ -84,14 +84,10 @@ sub _setup_article_template
 
 =head2 C<increment_id()>
 
-increment article sequence number and 
+increment the sequence number of this article C<$self> and 
 save it to C<$sequence_file>.
 
 This routine uses C<File::Sequence> module. 
-
-=head2 C<id()>
-
-return the current article sequence number.
 
 =cut
 
@@ -118,6 +114,12 @@ sub increment_id
     $id;
 }
 
+
+=head2 C<id()>
+
+return the current article sequence number.
+
+=cut
 
 # Descriptions: return the article id (sequence number)
 #    Arguments: $self

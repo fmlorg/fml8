@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: Atomic.pm,v 1.9 2001/04/03 09:45:46 fukachan Exp $
 #
 
 package IO::File::Atomic;
@@ -14,7 +13,6 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
 use IO::File;
 
-require Exporter;
 @ISA = qw(IO::File);
 
 BEGIN {}
@@ -74,8 +72,8 @@ The C<atomic> feature is based on C<rename(2)> system call.
 
 =head2 C<new()>
 
-The usual constructor. 
-The request is forwarded to SUPERCLASS new().
+The ordinary constructor. 
+The request is forwarded to SUPER CLASS's new().
 
 =cut
 
@@ -99,15 +97,14 @@ sub new
 open C<file> with C<mode>. 
 If C<mode> is not specified, open C<file> with writable mode by default.
 
-Actually this method openes a new temporary file for write.
+Actually this method opens a new temporary file for write.
 So to write this C<file> is to write the temporary file.
-When close() method sucesses, the file is replaced with this temporary file,
-so updated.
+When close() method sucesses, the file is replaced with this temporary file.
 
 =head2 C<rw_open(file[, mode])>
 
-return the read and write file descriptor. 
-This is a wrapper for C<open()> method above for conveninece.
+return the file descriptor for both to read and write C<file>.
+This is a wrapper for C<open()> method described above for conveninece.
 
 =head2 C<close()>
 
@@ -228,7 +225,8 @@ return the error.
 
 =head2 C<rollback()>
 
-stop the operation. remove the temporary file.
+stop the operation and remove the temporary file to back to the first
+state.
 
 =cut
 

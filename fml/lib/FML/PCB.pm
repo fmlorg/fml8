@@ -1,8 +1,7 @@
 #-*- perl -*-
-# Copyright (C) 2000 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #
-# $Id$
-# $FML$ # 注意: cvs のタグを $FML$ にする
+# $FML: PCB.pm,v 1.5 2001/04/03 09:45:40 fukachan Exp $ 
 #
 
 package FML::PCB;
@@ -14,7 +13,7 @@ use vars qw(%_fml_PCB); # PCB: Process Control Block (malloc it here)
 
 =head1 NAME
 
-FML::PCB -- manipulate Process Control Block
+FML::PCB -- hold some information for the current process
 
 =head1 SYNOPSIS
 
@@ -26,20 +25,19 @@ FML::PCB -- manipulate Process Control Block
 
 =head2 DATA STRUCTURE
 
-C<$CurProc>->C<{ pcb }> area holds the CURrent PROCess information.
-The hash holds several references to other data structures,
-which are mainly hashes.
+C<$curproc>->C<{ pcb }> area holds some information on the current process.
+The hash holds several references to other data structures.
 
-    $CurProc = {
+Typically, $curproc is composed like this:
+
+    $curproc = {
 		pcb => {
 		    key => value,
 		},
 
 		incoming_message => $r_msg,
 		article          => $r_msg,
-
-		... snip ...
-
+		          ... snip ...
 		};
 
 =head1 METHODS
@@ -47,8 +45,7 @@ which are mainly hashes.
 =head2 C<new( $args )>
 
 initialize the C<pcb> memory area. 
-If $args HASH REFERENCE is specified, 
-copy the hash content in it to C<pcb> area.
+If $args HASH REFERENCE is specified, initialize C<pcb> area by it.
 
 =cut
 

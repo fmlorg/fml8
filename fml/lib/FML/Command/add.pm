@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: add.pm,v 1.5 2001/04/03 09:45:41 fukachan Exp $
 #
 
 package FML::Command::add;
@@ -27,6 +26,8 @@ sub add
 FML::Command::add - add a new member
 
 =head1 SYNOPSIS
+
+See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 

@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: Command.pm,v 1.4 2001/04/03 09:45:40 fukachan Exp $
 #
 
 package FML::Command;
@@ -22,9 +21,21 @@ FML::Command - dispacher of fml commands
 
 =head1 DESCRIPTION
 
+C<FML::Commands> is a wrapper and dispathcer for fml commands.
+AUTOLOAD() picks up the command request and dispatches
+C<FML::Command::somoting> for the request.
+
 =head1 METHODS
 
 =head2 C<new()>
+
+ordinary constructor.
+
+=head2 C<AUTOLOAD()>
+
+dispatcher. 
+It hooks up the C<command> request and loads the module
+C<FML::Command::command>.
 
 =cut
 
@@ -68,6 +79,13 @@ sub AUTOLOAD
     }
 }
 
+
+=head2 C<require_lock(command)>
+
+specifield C<command> requires lock (giant lock) ?
+return 1 by default (almost all command requires lock).
+
+=cut
 
 sub require_lock
 {

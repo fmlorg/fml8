@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: unsubscribe.pm,v 1.7 2001/04/03 09:45:42 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.8 2001/05/04 14:32:32 fukachan Exp $
 #
 
 package FML::Command::unsubscribe;
@@ -18,6 +17,8 @@ use Carp;
 FML::Command::unsubscribe - remove the specified member
 
 =head1 SYNOPSIS
+
+See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 

@@ -1,11 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2000 Ken'ichi Fukamachi
+#  Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: Parse.pm,v 1.14 2001/04/08 06:43:49 fukachan Exp $
+# $FML: Parse.pm,v 1.15 2001/05/05 15:41:43 fukachan Exp $
 #
 
 package FML::Parse;
@@ -33,8 +32,8 @@ C<new()> analyses the data injected from STDIN channel and
 split it to a set of mail header and body.
 C<new()> returns a set of hash references.
 
-C<$r_header> is the reference to a header object, which is
-C<Mail::Header> object. 
+The returned C<$r_header> is the reference to a header object, 
+which is C<Mail::Header> object. 
 C<$r_body> is reference to the scalar mail body variable, which is
 C<Mail::Message> object.
 
@@ -85,9 +84,9 @@ sub _parse
 
 =head1 SEE ALSO
 
+L<Mail::Message>,
 L<Mail::Header>,
 L<FML::Header>,
-L<Mail::Message>,
 L<FML::Config>,
 L<FML::Log>
 

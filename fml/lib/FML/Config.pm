@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.28 2001/05/05 04:01:55 fukachan Exp $
+# $FML: Config.pm,v 1.29 2001/05/18 17:30:09 fukachan Exp $
 #
 
 package FML::Config;
@@ -38,29 +38,28 @@ FML::Config -- manipulate fml5 configuration
 
 =head2 DATA STRUCTURE
 
-C<%CurProc> holds the CURrent PROCess information.
-The hash holds several references to other data structures,
-which are mainly hashes.
+C<$curproc> hash holds the CURrent PROCess information.
+It contains several references to other data structures.
 
-    $CurProc = {
+    $curproc = {
 	# configurations
 	config => {
 	    key => value,
 	},
-
-	# emulator mode though fml mode in fact
-	emulator => $emulator,
 
 	# struct incoming_message holds the mail input from STDIN.
 	incoming_message => $r_msg,
 	article          => $r_msg,
     };
 
-We use r_variable_name syntax where "r_" implies "reference to" here.
-C<$r_msg> is the reference to "struct message".
+where we use r_variable_name syntax where "r_" implies "reference to"
+here.
+
+For exapmle, this C<$r_msg> is the reference to a hash to represent a
+mail message. It composes of header, body and several information.
 
     $r_msg = {
-	r_header => \$header,
+	r_header => \$header,p
 	r_body   => \$body,
 	info   => {
 	    mime-version => 1.0, 
@@ -75,12 +74,27 @@ where $header is the object returned by Mail::Header class (CPAN
 module) and the $body is the reference to the mail body region on
 memory which locates within FML::Parse name space.
 
+=head2 DELAYED VALUE EXPANSION
+
+data manipulation of set() and get() is assymetric and asynchronous.
+
+C<set(key,value)> saves the value for a key in C<%fml_config>.
+
+C<get(key)> returns the value for a key in C<%fml_config_result>,
+which is value expanded C<%fml_config>.
+The expansion is done when C<get()> is called not when C<set()> is
+called.
+
 =head1 METHODS
 
 =head2  C<new( ref_to_curproc )>
 
-special method only used in the initialization phase.
-This method binds $curproc and the %_fml_config memory area.
+special method used only in the fml initialization phase.
+This method binds $curproc and the %_fml_config hash on memory.
+
+Internally this method uses C<tie()> to get and set a key to a value.
+For example, C<get()> and C<set()> described below is a wrapper for
+tie() IO.
 
 =cut
 
@@ -133,8 +147,8 @@ alias of C<load_file( filename )>.
 
 =head2  C<load_file( filename )>
 
-read the configuration file, split key and value and set them to
-%_fml_config.
+read the configuration file, split keys and the values in it and set
+them to %_fml_config.
 
 =cut
 
@@ -270,9 +284,17 @@ sub _expand_variables
 
 =head2 C<yes( key )>
 
+useful method to return 1 or 0 according the value to the given key.
+
 =head2 C<no( key )>
 
-=head2 C<has_attribute( key )>
+useful method to return 1 or 0 according the value to the given key.
+
+=head2 C<has_attribute( key, attribute )>
+
+Some types of C<key> has a list as a value.
+If C<key> has the C<attribute> in the list, return 1. 
+return 0 if not.
 
 =cut
 
@@ -354,8 +376,11 @@ sub dump_variables
 }
 
 
-
 =head1 TIEED HASH
+
+tie() operations for hash are binded to \%_fml_config.
+For example, C<get()> and C<set()> described above is a wrapper for
+tie() IO.
 
 =cut
 

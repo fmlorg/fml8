@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: Header.pm,v 1.35 2001/05/19 03:24:51 fukachan Exp $
+# $FML: Header.pm,v 1.36 2001/05/19 14:15:20 fukachan Exp $
 #
 
 package FML::Header;
@@ -44,7 +43,11 @@ C<as_string()>, C<fold_length()>, C<tags()>, C<dup()>, C<cleanup()>,
 C<unfold()>.
 
 CAUTION: Pay attention! 
-C<FML::Header> overload C<get()> to remove the trailing "\n".
+C<FML::Header> overloads C<get()> to remove the trailing "\n".
+
+=head2 C<new()>
+
+forward the request up to superclass C<Mail::header::new()>.
 
 =cut
 
@@ -102,6 +105,14 @@ sub set
 }
 
 
+=head2 C<address_clean_up(address)>
+
+clean up given C<address>.
+It parse it by C<Mail::Address::parse()> and nuke < and >.
+
+=cut
+
+
 sub address_clean_up
 {
     my ($self, $addr) = @_;
@@ -122,6 +133,7 @@ sub address_clean_up
 =head2 C<data_type()>
 
 return the C<type> defind in the header's Content-Type field.
+For example, C<text/plain>, C<mime/multipart> and et. al.
 
 =head2 C<mime_boundary()>
 
@@ -207,11 +219,17 @@ sub add_fml_article_id
 
 =head2 C<add_software_info($config, $args)>
 
-add X-MLServer: and List-Software:
+add X-MLServer: and List-Software:.
+
+C<MIME::Lite> object as a $args->{ message } can be handled
+when $args->{type} is 'MIME::Lite'.
 
 =head2 C<add_rfc2369($config, $args)>
 
-add List-* sereies defined in RFC2369.
+add List-* sereies defined in RFC2369 and RFC2919.
+
+C<MIME::Lite> object as a $args->{ message } can be handled
+when $args->{type} is 'MIME::Lite'.
 
 =head2 C<add_x_sequence($config, $args)>
 
@@ -294,8 +312,8 @@ sub add_x_sequence
 
 =head2 C<rewrite_subject_tag($config, $args)>
 
-add subject tag e.g. [elena:00010]. 
-The real function exists in C<FML::Header::Subject>.
+add subject tag like [elena:00010]. 
+The actual function definitions exist in C<FML::Header::Subject>.
 
 =head2 C<rewrite_reply_to>
 
@@ -337,6 +355,10 @@ sub rewrite_reply_to
 =head2 C<delete_unsafe_header_fields($config, $args)>
 
 remove header fields defiend in C<$unsafe_header_fields>.
+C<$unsafe_header_fields> is a list of keys.
+The keys are space separeted.
+
+   unsafe_header_fields		=	Return-Receipt-To
 
 =cut
 
@@ -352,12 +374,13 @@ sub delete_unsafe_header_fields
 
 =head2 C<delete_subject_tag_like_string($string)>
 
-remove subject tag like string in C<$string>.
+remove subject tag like the string given as C<$string>.
 
 =head2 C<extract_message_id_references()>
 
-return message-id list (ARRAY REFERENCE) from the header (self).
-It extracts message-id(s) from In-Reply-To: and References: fields.
+return message-id list (ARRAY REFERENCE) extracted from the header
+(C<$self>).  It extracts message-id(s) from In-Reply-To: and
+References: fields.
 
 =cut
 
@@ -400,7 +423,8 @@ sub extract_message_id_references
 =head2 C<verify_message_id_uniqueness($config, $args)>
 
 check whether message-id is unique or not. If the message-id is found
-in our past message-id cache, the injected message loops.
+in the past message-id cache, the injected message must causes a mail
+loop.
 
 =head2 C<verify_x_ml_info_uniqueness($config, $args)>
 

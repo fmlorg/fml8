@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $File$
+# $FML$
 #
 
 package File::Utils;
@@ -20,7 +19,7 @@ require Exporter;
 
 =head1 NAME
 
-File::Utils - utilities to handle files
+File::Utils - utilities to handle files or directories
 
 =head1 SYNOPSIS
 
@@ -83,7 +82,7 @@ sub mkdirhier
 
 =head2 C<touch($file, $mode)>
 
-create a file which is size zero if the file not exists.
+create a file (which size is 0) if the file not exists.
 
 =cut
 
@@ -172,7 +171,7 @@ sub search_program
 
 =head2 C<copy($src, $dst)>
 
-copy C<$src> to C<$dst> in the atomic way.
+copy C<$src> to C<$dst> in atomic way.
 This routine uses C<IO::File::Atomic> module.
 
 =cut

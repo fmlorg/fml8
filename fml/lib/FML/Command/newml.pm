@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: newml.pm,v 1.5 2001/04/03 09:45:42 fukachan Exp $
 #
 
 package FML::Command::newml;
@@ -22,6 +21,8 @@ FML::Command::newml - make a new mailing list
     use FML::Command::newml;
     $obj = new FML::Command::newml;
     $obj->newml($curproc, $args);
+
+See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Postfix19991231.pm,v 1.6 2001/05/20 12:12:04 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.7 2001/05/20 12:19:59 fukachan Exp $
 #
 
 
@@ -22,22 +22,17 @@ Mail::Bounce::Postfix19991231 - Postfix-19991231 error message format parser
 
 =head1 SYNOPSIS
 
+See C<Mail::Bounce> for more details.
+
 =head1 DESCRIPTION
 
-
- $result = {
-      addr => {
-             Original-Recipient => 'rfc822; addr'
-             Final-Recipient    => 'rfc822; addr'
-             Diagnostic-Code    => 'reason ...'
-             Action             => 'failed'
-             Status             => '4.0.0'
-          }
-      }
+sub class used in C<Mail::Bounce>.
 
 =head1 METHODS
 
 =head2 C<analyze($msg, $result)>
+
+See C<Mail::Bounce> for more details.
 
 =cut
 

@@ -2,8 +2,7 @@
 #
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #
-# $Id$
-# $FML$
+# $FML: Log.pm,v 1.10 2001/04/03 09:45:40 fukachan Exp $
 #
 
 package FML::Log;
@@ -39,10 +38,9 @@ or specify arguments in the hash reference
        level    => $level,
    });
 
-
 =head1 DESCRIPTION
 
-FML::Log.pm contains several interfaces for several files,
+FML::Log.pm contains several interfaces to write log,
 for example, log files, syslog() (not yet implemented).
 
 =head2 Log( $message [, $args])
@@ -60,6 +58,9 @@ You can specify C<log_file>, C<facility> and C<level> as an optional.
 This routine depends on C<FML::Config> and C<FML::Credential>.
 $config->{ log_format_type } defines the format sytle.
 C<sender> to log is taken from C<FML::Credential> object.
+
+Key C<log_format_type> changes the log format.
+By default our log format is same as one of fml 4.0.
 
 =head2 LogWarn( $message [, $args])
 
@@ -143,7 +144,7 @@ Ken'ichi Fukamachi <F<fukachan@fml.org>>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000 Ken'ichi Fukamachi
+Copyright (C) 2000,2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself. 

@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.34 2001/05/06 14:03:48 fukachan Exp $
+# $FML: Makefile,v 1.35 2001/05/20 13:19:59 fukachan Exp $
 #
 
 all: link
@@ -57,7 +57,7 @@ link:
 	rm -f Mail; ln -s ../../fml/lib/Mail
 	rm -f libexec; ln -s ../../fml/libexec
 	rm -f log; ln -s /var/spool/ml/elena/log
-	rm -f doc-devel; ln -s ../../doc/devel/memo doc-devel
+	rm -f doc-devel; ln -s ../../cpan/doc doc-devel
 	rm -f tutorial; ln -s ../../fml/doc/ja/tutorial tutorial
 
 

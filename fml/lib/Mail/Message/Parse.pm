@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: __template.pm,v 1.5 2001/04/03 09:45:39 fukachan Exp $
+# $FML: Parse.pm,v 1.1 2001/05/06 08:21:05 fukachan Exp $
 #
 
 
@@ -23,6 +23,21 @@ sub new
     return Mail::Message->parse($args);
 }
 
+
+=head1 NAME
+
+Mail::Message::Parse - parse a mail message
+
+=head1 SYNOPSIS
+
+    use Mail::Message::Parse;
+    my $fh = new Mail::Message::Parse $args;
+
+where C<$args> is same as one of C<Mail::Message>'s C<parse()>.
+
+=head1 DESCRIPTION
+
+just a wrapper for C<Mail::Message> parser function.
 
 =head1 AUTHOR
 

@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: bye.pm,v 1.6 2001/04/03 09:45:41 fukachan Exp $
 #
 
 package FML::Command::bye;
@@ -28,6 +27,8 @@ sub bye
 FML::Command::bye - remove the specified member
 
 =head1 SYNOPSIS
+
+See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 

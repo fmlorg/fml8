@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: Sequence.pm,v 1.6 2001/04/03 09:31:27 fukachan Exp $
+# $FML: Sequence.pm,v 1.7 2001/04/08 13:25:39 fukachan Exp $
 #
 
 package File::Sequence;
@@ -45,7 +44,7 @@ $id becomes 0, 1, 2, 0, 1, 2...
 =head1 DESCRIPTION
 
 File::Sequence module maintains the sequence number for something, 
-for example, the article number.
+for example, the article number typically.
 
 As an extension, you can generate a cyclic number by this module.
 Please specify C<modulus> parameter in new() method if you want to get
@@ -63,9 +62,6 @@ number.
 increment the sequence number.
 
 =cut
-
-require Exporter;
-@ISA = qw(Exporter);
 
 
 # Descriptions: constructor
