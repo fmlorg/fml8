@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.67 2002/07/19 03:11:01 fukachan Exp $
+# $FML: Command.pm,v 1.68 2002/07/25 00:10:11 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -82,6 +82,7 @@ sub prepare
 
     $curproc->resolve_ml_specific_variables( $args );
     $curproc->load_config_files( $args->{ cf_list } );
+    $curproc->scheduler_init();
     $curproc->parse_incoming_message($args);
 
     $eval = $config->get_hook( 'command_prepare_end_hook' );

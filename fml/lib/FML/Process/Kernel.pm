@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.119 2002/07/30 04:02:33 fukachan Exp $
+# $FML: Kernel.pm,v 1.120 2002/07/31 13:22:03 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -190,6 +190,20 @@ sub _print_init
 {
     my ($curproc, $args) = @_;
     $curproc->set_print_style( 'text' );
+}
+
+
+# Descriptions: activate scheduler
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
+sub scheduler_init
+{
+    my ($curproc, $args) = @_;
+
+    use FML::Process::Scheduler;
+    my $scheduler = new FML::Process::Scheduler $curproc;
+    $curproc->{ _scheduler } = $scheduler;
 }
 
 
@@ -655,6 +669,7 @@ sub parse_incoming_message
     if ($config->yes('use_incoming_mail_cache')) {
 	my $dir     = $config->{ incoming_mail_cache_dir };
 	my $modulus = $config->{ incoming_mail_cache_size };
+	use File::CacheDir;
         my $obj     = new File::CacheDir {
             directory  => $dir,
 	    modulus    => $modulus,
@@ -1548,6 +1563,7 @@ sub open_outgoing_message_channel
     if ($config->yes('use_outgoing_mail_cache')) {
 	my $dir     = $config->{ outgoing_mail_cache_dir };
 	my $modulus = $config->{ outgoing_mail_cache_size };
+	use File::CacheDir;
         my $obj     = new File::CacheDir {
             directory  => $dir,
 	    modulus    => $modulus,

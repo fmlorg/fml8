@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.86 2002/07/31 13:02:54 fukachan Exp $
+# $FML: Distribute.pm,v 1.87 2002/07/31 13:22:03 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -82,6 +82,7 @@ sub prepare
 
     $curproc->resolve_ml_specific_variables( $args );
     $curproc->load_config_files( $args->{ cf_list } );
+    $curproc->scheduler_init();
     $curproc->parse_incoming_message($args);
 
     $eval = $config->get_hook( 'distribute_prepare_end_hook' );
