@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Merge.pm,v 1.5 2004/03/17 08:38:31 fukachan Exp $
+# $FML: Merge.pm,v 1.6 2004/03/17 12:55:03 fukachan Exp $
 #
 
 package FML::Merge;
@@ -284,7 +284,7 @@ sub _inject_into_config_cf
 sub _inject_diff_into_config_cf
 {
     my ($self, $wh, $diff) = @_;
-    my ($k, $v, $x);
+    my ($k, $v, $x, $y);
 
     print $wh "\n";
     print $wh "# BEGIN OF CONFIG CONVERSION\n";
@@ -293,16 +293,34 @@ sub _inject_diff_into_config_cf
     use FML::Merge::FML4::config_ph;
     my $config_ph = new FML::Merge::FML4::config_ph;
 
-    while (($k, $v) = each %$diff) {
-	print $wh "# $k => $v\n";
+    for my $k (sort _sort_order keys %$diff) {
+	$v = $diff->{ $k };
+	$y = $v;
+	$y =~ s/\n/\n# /gm;
+	print $wh "# $k => $y\n";
+
 	if ($x = $config_ph->translate($k, $v)) {
-	    print $wh $x ,"\n\n";
+	    print $wh $x ,"\n";
 	}
     }
 
     print $wh "\n";
     print $wh "# END OF CONFIG CONVERSION\n";
     print $wh "\n";
+}
+
+
+sub _sort_order
+{
+    my $x = $a;
+    my $y = $b;
+
+    $x = "zz_$x"  if $x =~ /^PROC__/o;
+    $y = "zz_$y"  if $y =~ /^PROC__/o;
+    $x = "zzz_$x" if $x =~ /HOOK/o;
+    $y = "zzz_$y" if $y =~ /HOOK/o;
+
+    $x cmp $y;
 }
 
 
