@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.26 2002/06/24 07:00:12 fukachan Exp $
+# $FML: Utils.pm,v 1.27 2002/06/24 09:42:52 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -362,17 +362,25 @@ sub __ml_home_prefix_from_main_cf
     my $default_domain = $main_cf->{ default_domain };
 
     if (defined $domain) {
+	my $found = '';
+
 	my ($virtual_maps) = __get_virtual_maps($main_cf);
 	if (@$virtual_maps) {
-	    __ml_home_prefix_search_in_virtual_maps($main_cf,
-						    $domain,
-						    $virtual_maps);
+	    $found = __ml_home_prefix_search_in_virtual_maps($main_cf,
+							     $domain,
+							     $virtual_maps);
 	}
-	elsif ("\L$domain\E" eq "\L$default_domain\E") {
-	    return $main_cf->{ default_ml_home_prefix };
+
+	if ($found) {
+	    return $found;
 	}
 	else {
-	    croak("ml_home_prefix: unknown domain");
+	    if ("\L$domain\E" eq "\L$default_domain\E") {
+		return $main_cf->{ default_ml_home_prefix };
+	    }
+	    else {
+		croak("ml_home_prefix: unknown domain");
+	    }
 	}
     }
     else {
@@ -686,7 +694,8 @@ sub rewrite_config_if_needed
 
     # cheap sanity
     unless ($ml_home_prefix) {
-	croak("rewrite_config_if_needed: ml_home_prefix is undefined");
+	croak("rewrite_config_if_needed: ml_home_prefix is undefined".
+	      "\n\tfor domain=$ml_domain");
     }
 
     eval q{ use File::Spec;};
