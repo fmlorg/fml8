@@ -23,6 +23,7 @@
 	Netscape Messaging Server 3.62
 	InterMail   (broken DSN)
 	MailSweeper (broken DSN)
+	SMTP32
 
    ISP specific
 
@@ -30,6 +31,7 @@
 		DoCoMo
 		MSN
 		*.ezweb.ne.jp ∥au(蛙ezweb)
+		PDX.NE.JP
 
 	InterMail
 		ezweb.ne.jp ∥au(蕙ezweb)
@@ -116,4 +118,4 @@
 		漆反 sendmail 心凶中分
 
 
-$FML: STATUS.ja.txt,v 1.7 2001/04/13 04:55:48 fukachan Exp $
+$FML: STATUS.ja.txt,v 1.8 2001/04/13 04:57:58 fukachan Exp $
