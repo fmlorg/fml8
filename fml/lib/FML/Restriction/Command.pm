@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.3 2002/07/02 04:01:29 fukachan Exp $
+# $FML: Command.pm,v 1.4 2002/07/18 23:14:12 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -54,7 +54,10 @@ sub is_secure_command_string
    #           command = [-\d\w]+
    #      mail address = [-_\w]+@[\w\-\.]+
    #   command options = last:30
-   if ($s =~/^[-\d\w]+\s+[\s\w\_\-\.\,\@\:]+$/o) {
+   if ($s =~/^[-\d\w]+\s*$/o) {
+       return 1;
+   }
+   elsif ($s =~/^[-\d\w]+\s+[\s\w\_\-\.\,\@\:]+$/o) {
        return 1;
    }
 
