@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent3.pm,v 1.10 2003/01/09 03:49:44 fukachan Exp $
+# $FML: MimeComponent3.pm,v 1.11 2003/01/11 16:05:15 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -449,7 +449,7 @@ sub dump_filter_rules
 
 =head1 DEBUG
 
-    perl -I PERL_INCLUDE_PATH MimeComponent2.pm -c RULE_FILE @FILES
+    perl -I PERL_INCLUDE_PATH MimeComponent3.pm -c RULE_FILE @FILES
 
 =cut
 
