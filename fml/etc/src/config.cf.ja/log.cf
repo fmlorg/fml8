@@ -1,4 +1,6 @@
-=head1	ログのとり方
+=head1 ログのとり方
+
+=head2 普通のログファイル
 
 # Descriptions: ログとり機能を有効にする
 #      History: fml 4.0 では有無を言わさずログをとる
@@ -6,7 +8,7 @@
 #     Examples:
 use_log		=	yes
 
-# Descriptions: ログファイル
+# Descriptions: ML 固有のログファイル
 #      History: fml 4.0 の $LOGFILE
 #        Value: filename
 #     Examples:
@@ -36,3 +38,14 @@ log_format_type	=	process[pid]
 #        Value: filename
 #     Examples:
 log_dir		=	$var_dir/log
+
+
+=head2 ドメイン固有
+
+
+# Descriptions: ドメイン固有のログファイル
+#               admin/*.cgi など ml_name が特定されない場合にだけ使う。
+#      History: none
+#        Value: filename
+#     Examples: /var/spool/ml/@log@
+domain_local_log_file	=	$domain_local_dir/@log@

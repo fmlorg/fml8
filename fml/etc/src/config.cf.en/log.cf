@@ -36,3 +36,13 @@ log_format_type	=	process[pid]
 #        Value: filename
 #     Examples:
 log_dir		=	$var_dir/log
+
+=head2 domain local
+
+
+# Descriptions: domin local log file.
+#               used in admin/*.cgi e.g. when ml_name unspecified.
+#      History: none
+#        Value: filename
+#     Examples: /var/spool/ml/@log@
+domain_local_log_file	=	$domain_local_dir/@log@
