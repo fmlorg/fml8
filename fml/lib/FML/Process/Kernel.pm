@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.228 2004/05/19 10:19:19 fukachan Exp $
+# $FML: Kernel.pm,v 1.229 2004/05/24 13:59:45 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1001,13 +1001,37 @@ The C<body> is C<Mail::Message> object.
 sub parse_incoming_message
 {
     my ($curproc) = @_;
+    my $config    = $curproc->config();
+
+    # XXX firstly, mail queue in.
+    my $use_mail_queue = 1;
+    my $queue          = undef;
+    my $queue_id       = undef;
+    my $queue_file     = undef;
+    if ($use_mail_queue) {
+	$queue      = $curproc->_store_message_into_incoming_queue();
+	$queue_id   = $queue->id();
+	$queue_file = $queue->incoming_file_path($queue_id);
+    }
+
+    # open input stream.
+    my $incoming_channel = undef;
+    if ($use_mail_queue && (defined $queue)) {
+	$incoming_channel = new FileHandle $queue_file;
+    }
+    else {
+	$incoming_channel = *STDIN{IO};
+    }
+
+    unless (defined $incoming_channel) {
+	$curproc->logerror("cannot open incoming stream");
+	$curproc->exit_as_tempfail();
+    }
 
     # parse incoming mail to cut off it to the header and the body.
-    use FML::Parse;
-
     # malloc the incoming message on memory.
-    # $r_msg is the reference to the memory area.
-    my $msg = new FML::Parse $curproc, \*STDIN;
+    use FML::Parse;
+    my $msg = new FML::Parse $curproc, $incoming_channel;
 
     # store the message to $curproc
     $curproc->{ incoming_message }->{ message } = $msg;
@@ -1015,7 +1039,6 @@ sub parse_incoming_message
     $curproc->{ incoming_message }->{ body  }   = $msg->whole_message_body;
 
     # save input message for further investigation
-    my $config = $curproc->config();
     if ($config->yes('use_incoming_mail_cache')) {
 	my $dir     = $config->{ incoming_mail_cache_dir };
 	my $modulus = $config->{ incoming_mail_cache_size };
@@ -1026,11 +1049,26 @@ sub parse_incoming_message
         };
 
 	if (defined $obj) {
-	    my $wh = $obj->open();
-	    if (defined $wh) {
-		$msg->print($wh);
-		$wh->close();
-		$obj->close();
+	    my $r = 0; # result code.
+
+	    # 1. try link(2)
+	    if ($use_mail_queue) {
+		$obj->open();
+		$r = $obj->import_data_from({
+		    file     => $queue_file,
+		    try_link => 'yes',
+		});
+	    }
+
+	    # 2. copy if link(2) failed.
+	    unless ($r) {
+		$curproc->logwarn("link(2) error");
+		my $wh = $obj->open();
+		if (defined $wh) {
+		    $msg->print($wh);
+		    $wh->close();
+		    $obj->close();
+		}
 	    }
 
 	    # save the cache file path.
@@ -1042,6 +1080,54 @@ sub parse_incoming_message
     # use Content-Type: and Accept-Language: as hints.
     if (defined $msg) {
 	$curproc->_inject_charset_hints($msg);
+    }
+}
+
+
+# Descriptions:
+#    Arguments: OBJ($curproc)
+# Side Effects: exit_as_tempfail() if error.
+# Return Value: OBJ
+sub _store_message_into_incoming_queue
+{
+    my ($curproc) = @_;
+    my $config    = $curproc->config();
+
+    use Mail::Delivery::Queue;
+    my $queue_dir  = $config->{ mail_queue_dir };
+    my $queue      = new Mail::Delivery::Queue { directory => $queue_dir };
+    my $queue_id   = $queue->id();
+    my $queue_file = $queue->incoming_file_path($queue_id);
+    my $total      = 0;
+    my $fatal      = 0;
+
+    # write to queue file.
+    my $wh = new FileHandle "> $queue_file";
+    if (defined $wh) {
+	my ($n, $w, $buf);
+
+	$wh->autoflush(1);
+	while ($n = sysread(*STDIN{IO}, $buf, 8192)) {
+	    $total += $n;
+	    $w = syswrite($wh, $buf, 8192);
+	    unless ($w == $n) {
+		$fatal = 1;
+	    }
+	}
+	$wh->close();
+    }
+    else {
+	$curproc->logerror("cannot open queue_file $queue_file");
+	$fatal = 1;
+    }
+
+    unless ($fatal) {
+	$curproc->log("queued/incoming: qid=$queue_id read=$total");
+	$curproc->mail_queue_set_incoming_queue($queue);
+    }
+    else {
+	$curproc->logerror("failted to store incoming message");
+	$curproc->exit_as_tempfail();
     }
 }
 
@@ -1059,7 +1145,7 @@ sub _inject_charset_hints
 
     $curproc->log("hints: charset=\"$charset\" accept_language=[$liststr]");
 
-    # 1. prefer Accept-Language: alyways, ignore Content-Type: in this case. 
+    # 1. prefer Accept-Language: alyways, ignore Content-Type: in this case.
     #    set $list even if $list == [] to avoid further warning.
     $curproc->set_accept_language_list($list);
 
@@ -1364,7 +1450,7 @@ sub logerror
 }
 
 
-# Descriptions: informational message CUI shows logged 
+# Descriptions: informational message CUI shows logged
 #               and forwarded into STDERR.
 #    Arguments: OBJ($curproc) STR($msg) HASH_REF($msg_args)
 # Side Effects: none
@@ -1423,7 +1509,7 @@ If given, makefml/fml ignores message output.
 
 # Descriptions: reply message interface.
 #               It injects messages into message queue on memory in fact.
-#               inform_reply_messages() recollects them and send it later. 
+#               inform_reply_messages() recollects them and send it later.
 #    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($rm_args)
 # Side Effects: none
 # Return Value: none
@@ -1437,7 +1523,7 @@ sub reply_message
 	my $tf_charset = $curproc->lang_to_charset("template_file", $lang);
 	my $charsets = {
 	    reply_message_charset => $rm_charset,
-	    template_file_charset => $tf_charset, 
+	    template_file_charset => $tf_charset,
 	};
 
 	$curproc->_reply_message_queuein($msg, $rm_args, $charsets);
@@ -1447,7 +1533,7 @@ sub reply_message
 
 # Descriptions: reply message interface.
 #               It injects messages into message queue on memory in fact.
-#               inform_reply_messages() recollects them and send it later. 
+#               inform_reply_messages() recollects them and send it later.
 #    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($rm_args) HASH_REF($charsets)
 # Side Effects: none
 # Return Value: none
@@ -1776,7 +1862,7 @@ sub reply_message_nl
 	my $tf_charset = $curproc->lang_to_charset("template_file", $lang);
 	my $charsets = {
 	    reply_message_charset => $rm_charset,
-	    template_file_charset => $tf_charset, 
+	    template_file_charset => $tf_charset,
 	};
 
 	my $s = "lang=$lang charset=($rm_charset, $tf_charset) class=$class";
@@ -1796,8 +1882,8 @@ sub _reply_message_nl
 {
     my ($curproc, $class, $default_msg, $rm_args, $charsets) = @_;
     my $buf = $curproc->__convert_message_nl($class,
-					     $default_msg, 
-					     $rm_args, 
+					     $default_msg,
+					     $rm_args,
 					     $charsets);
 
     $curproc->caller_info($class, caller) if $debug;
@@ -1849,7 +1935,7 @@ sub message_nl
     my ($curproc, $class, $default_msg, $m_args) = @_;
     my $charset  = $curproc->get_charset("template_file");
     my $charsets = {
-	template_file_charset => $charset, 
+	template_file_charset => $charset,
     };
 
     $curproc->__convert_message_nl($class, $default_msg, $m_args, $charsets);
@@ -1857,7 +1943,7 @@ sub message_nl
 
 
 # Descriptions: translate template message in natual language.
-#    Arguments: OBJ($curproc) 
+#    Arguments: OBJ($curproc)
 #               STR($class) STR($default_msg) HASH_REF($m_args)
 #               HASH_REF($charsets)
 # Side Effects: none
@@ -1941,8 +2027,8 @@ sub get_preferred_languages
     my $mime_lang      = $curproc->get_language_hint('reply_message') || 'en';
 
     # return = [ ja ] or [ ja en ] ...
-    my $p = $curproc->__find_preferred_languages($pref_order, 
-						 $acpt_lang_list, 
+    my $p = $curproc->__find_preferred_languages($pref_order,
+						 $acpt_lang_list,
 						 $mime_lang);
     $curproc->log("hints: preferred language = [ @$p ]") unless $first_time++;
     return $p;
@@ -1986,7 +2072,7 @@ sub __find_preferred_languages
     # 0. fix
     $mime_lang ||= 'en';
 
-    # 1. prefer Accept-Languge: always. 
+    # 1. prefer Accept-Languge: always.
     if (@$acpt_lang_list) {
 	if ($acpt_lang_list->[ 0 ]) {
 	    my $x = $acpt_lang_list->[ 0 ];
@@ -2062,7 +2148,7 @@ sub inform_reply_messages
     #    2. pick up messages for it/them.
     #       merge messages by types if needed.
     #
-    my ($attr, $list, $maps, $hdr, $smtp_sender) = 
+    my ($attr, $list, $maps, $hdr, $smtp_sender) =
 	$curproc->_reply_message_recipient_keys();
     my $need_multipart = 0;
 
@@ -2341,12 +2427,12 @@ sub queue_in
 	    $queue->set('recipient_maps', $rcptmaps);
 	}
 
-	$queue->in( $msg ) && $curproc->log("queue=$qid in");
+	$queue->in( $msg ) && $curproc->log("queued/new: qid=$qid");
 	if ($queue->setrunnable()) {
-	    $curproc->log("queue=$qid runnable");
+	    $curproc->log("queued/active: qid=$qid runnable");
 	}
 	else {
-	    $curproc->log("queue=$qid broken");
+	    $curproc->log("queue: qid=$qid broken");
 	}
 
 	# return queue object
@@ -2430,6 +2516,22 @@ sub clean_up_tmpfiles
 	    $curproc->log("unlink $q") if $debug;
 	    unlink $q;
 	}
+    }
+}
+
+
+# Descriptions: remove incoming queue managed by Mail::Delivery::Queue.
+#    Arguments: OBJ($curproc)
+# Side Effects: remove incoming queue.
+# Return Value: none
+sub clean_up_incoming_queue
+{
+    my ($curproc) = @_;
+
+    # Mail::Delivery::Queue object.
+    my $queue = $curproc->mail_queue_get_incoming_queue() || undef;
+    if (defined $queue) {
+	$queue->remove();
     }
 }
 
@@ -2825,7 +2927,7 @@ sub finalize
 }
 
 
-=head1 EXIT AS SPECIAL CODE 
+=head1 EXIT AS SPECIAL CODE
 
 =head2 exit_as_tempfail()
 
