@@ -17,6 +17,7 @@ default_directory_mode	=	0755
 
 shared_db_dir	= $ml_home_prefix/@db@
 
+var_dir		= $ml_home_dir/var
 
 =head1	アクセス制御ルール
 
@@ -117,7 +118,7 @@ subject_tag		=	[$ml_name:%05d]
 
 use_lock	= yes
 
-lock_dir	= $ml_home_dir/var/lock
+lock_dir	= $var_dir/lock
 
 lock_file	= $lock_dir/simplelock
 
@@ -138,6 +139,12 @@ log_type	=	file
 
 # log message format
 log_format_type	=	fml4_compatible
+
+log_dir		=	$var_dir/log
+
+smtp_log_dir	=	$log_dir
+
+smtp_log_file	=	$smtp_log_dir/_smtplog
 
 =head1	記事および記事のスプール
 

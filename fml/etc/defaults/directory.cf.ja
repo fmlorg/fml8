@@ -5,3 +5,4 @@
 
 shared_db_dir	= $ml_home_prefix/@db@
 
+var_dir		= $ml_home_dir/var

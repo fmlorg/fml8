@@ -12,3 +12,9 @@ log_type	=	file
 
 # log message format
 log_format_type	=	fml4_compatible
+
+log_dir		=	$var_dir/log
+
+smtp_log_dir	=	$log_dir
+
+smtp_log_file	=	$smtp_log_dir/_smtplog

@@ -2,7 +2,7 @@
 
 use_lock	= yes
 
-lock_dir	= $ml_home_dir/var/lock
+lock_dir	= $var_dir/lock
 
 lock_file	= $lock_dir/simplelock
 
