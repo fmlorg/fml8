@@ -24,3 +24,8 @@ link:
 
 diff:
 	@ (cd ../..;cvs diff -ub)
+
+
+test:
+	@ echo "* IO::* class test"
+	@ apply perl IO/t/*pl
