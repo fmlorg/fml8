@@ -1,0 +1,1167 @@
+# ==================================================
+/
+
+	_item_ END
+	_item_ ARTICLE_POST_POLICY
+	_item_ COMMAND_MAIL_POLICY
+	_item_ ADMIN_COMMAND_MAIL_POLICY
+	_item_ HEADER_REWRITE_POLICY
+	_item_ FILTER_POLICY
+	_item_ OTHER
+
+
+
+# ==================================================
+
+/ARTICLE_POST_POLICY
+
+	_item_ END
+	_item_ PERMIT_ANYONE
+	_set_  {
+		article_post_restrictions =
+			permit_anyone
+	}
+
+	_item_ PERMIT_ANYONE_WITHOUT_SYSTEM_SPECIAL_ACCOUNTS
+	_set_  {
+		article_post_restrictions =
+			reject_system_special_accounts
+			permit_anyone
+	}
+
+	_item_ PERMIT_MEMBERS_ONLY
+	_set_  {
+		article_post_restrictions =
+			reject_system_special_accounts
+			permit_members_only
+			reject
+	}
+
+	_item_ REJECT
+	_set_  {
+		article_post_restrictions = reject
+	}
+
+
+# ==================================================
+
+/COMMAND_MAIL_POLICY
+
+	_item_ END
+	_item_ PERMIT_ANYONE
+	_set_  {
+		command_mail_restrictions =
+			permit_anyone
+	}
+
+	_item_ PERMIT_ANYONE_WITHOUT_SYSTEM_SPECIAL_ACCOUNTS
+	_set_  {
+		command_mail_restrictions =
+			reject_system_special_accounts
+			permit_anyone
+	}
+
+	_item_ PERMIT_MEMBERS_ONLY
+	_set_  {
+		command_mail_restrictions =
+			reject_system_special_accounts
+			permit_members_only
+			reject
+	}
+
+	_item_ REJECT
+	_set_  {
+		command_mail_restrictions = reject
+	}
+
+
+# ==================================================
+
+/ADMIN_COMMAND_MAIL_POLICY
+
+	_item_ END
+	_item_ PERMIT_ANYONE
+	{
+		admin_command_mail_restrictions =
+			permit_anyone
+	}
+
+	_item_ PERMIT_ANYONE_WITHOUT_SYSTEM_SPECIAL_ACCOUNTS
+		(rootなどの特別なアドレスは除く)
+	{
+		admin_command_mail_restrictions =
+			reject_system_special_accounts
+			permit_anyone
+	}
+
+	_item_ PERMIT_MEMBERS_ONLY
+	{
+		admin_command_mail_restrictions =
+			reject_system_special_accounts
+			permit_members_only
+			reject
+	}
+
+	_item_ REJECT
+	{
+		admin_command_mail_restrictions = reject
+	}
+
+
+# ======================================================================
+
+/HEADER_REWRITE_POLICY
+
+	_item_ END
+
+	_item_ SUBJECT_TAG_TYPE
+
+
+/HEADER_REWRITE_POLICY/SUBJECT_TAG_TYPE
+
+	_item_ END
+
+	_item_ NO_SUBJECT_TAG
+	_set_ {
+		article_header_rewrite_rules -= rewrite_article_subject_tag
+	}
+
+	_item_ [$ml_name:00100]
+	_set_  {
+		article_header_rewrite_rules += rewrite_article_subject_tag
+
+		article_subject_tag = [$ml_name:%05d]
+	}
+
+	_item_ ($ml_name:00100)
+	_set_  {
+		article_header_rewrite_rules += rewrite_article_subject_tag
+
+		article_subject_tag = ($ml_name:%05d)
+	}
+
+	_item_ [$ml_name 00100]
+	_set_  {
+		article_header_rewrite_rules += rewrite_article_subject_tag
+
+		article_subject_tag = [$ml_name %05d]
+	}
+
+	_item_ ($ml_name 00100)
+	_set_  {
+		article_header_rewrite_rules += rewrite_article_subject_tag
+
+		article_subject_tag = ($ml_name %05d)
+	}
+
+	_item_ [$ml_name,00100]
+	_set_  {
+		article_header_rewrite_rules += rewrite_article_subject_tag
+
+		article_subject_tag = [$ml_name,%05d]
+	}
+
+	_item_ ($ml_name,00100)
+	_set_  {
+		article_header_rewrite_rules += rewrite_article_subject_tag
+
+		article_subject_tag = ($ml_name,%05d)
+	}
+
+	_item_ ($ml_name)
+	_set_  {
+		article_header_rewrite_rules += rewrite_article_subject_tag
+
+		article_subject_tag = ($ml_name)
+	}
+
+	_item_ [$ml_name]
+	_set_  {
+		article_header_rewrite_rules += rewrite_article_subject_tag
+
+		article_subject_tag = [$ml_name]
+	}
+
+	_item_ (00100)
+	_set_  {
+		article_header_rewrite_rules += rewrite_article_subject_tag
+
+		article_subject_tag = (%05d)
+	}
+
+	_item_ [00100]
+	_set_  {
+		article_header_rewrite_rules += rewrite_article_subject_tag
+
+		article_subject_tag = [%05d]
+	}
+
+
+
+.end.
+
+
+# ======================================================================
+
+/FILTER_POLICY
+
+	_item_ END
+
+	* Filter
+	_item_ USE_DISTRIBUTE_FILTER             $SUMMARY{'USE_DISTRIBUTE_FILTER'}
+	_item_ FILTER_ATTRRIBUTE                 # filtering options
+
+	* loop
+	_item_ CHECK_MAILBODY_CKSUM              $SUMMARY{'CHECK_MAILBODY_CKSUM'}
+
+	* Traffic Monitor
+	_item_ USE_MTI                           $SUMMARY{'USE_MTI'}
+
+	* Mail size limit
+	_item_ MAX_MAIL_SIZE                     $config{'INCOMING_MAIL_SIZE_LIMIT'}
+	_item_ NOTIFY_MAIL_SIZE_OVERFLOW         $SUMMARY{'NOTIFY_MAIL_SIZE_OVERFLOW'}
+	_item_ ANNOUNCE_MAIL_SIZE_OVERFLOW       $SUMMARY{'ANNOUNCE_MAIL_SIZE_OVERFLOW'}
+
+	* Other Limits
+	_item_ ADDR_CHECK_MAX                    $config{'ADDR_CHECK_MAX'}
+	_item_ MAXNUM_COMMAND_INPUT              $config{'MAXNUM_COMMAND_INPUT'}
+
+	* Reject system accounts (e.g. to avoid loop)
+	_item_ REJECT_ADDR                       $config{'REJECT_ADDR'}
+
+	* debug
+	_item_ USE_LOG_MAIL                      $SUMMARY{'USE_LOG_MAIL'}
+
+#	* Setup (*** You cannot reverse this process in makefml menu ***)
+#	  Secureity Recommendation
+#	_item_ SECURE_SETUP		
+
+	*** PGP Encrypted ML FOR DISTRIBUTION ***
+	_item_ USE_ENCRYPTED_DISTRIBUTION        $config{'USE_ENCRYPTED_DISTRIBUTION'}
+	_item_ ENCRYPTED_DISTRIBUTION_TYPE       $config{'USE_ENCRYPTED_DISTRIBUTION'}
+
+=query
+	type:	select
+
+/FILTER_POLICY/MORE_SECURE
+
+=menu
+	Apply more secure configurations ?
+	For example
+		input mail size limit
+		enable filtering
+		enable traffic monitor system
+		log all input mails
+		disable some commands (e.g. actives, members, ...)
+
+=query
+	type:		y-or-n
+	menu: apply more secure configuration
+
+=hook
+	local($k, $v);
+	print STDERR "\n\t -- configure some variables for more security\n\n";
+	require 'etc/makefml/secure_config.ph';
+	while (($k, $v) = each %SecureConfig) {
+	   $config{$k} = $v;
+	   print STDERR "\t\$${k} => $v\n";
+	}
+	sleep 1;
+	print STDERR "\n\t -- disable some commands\n";
+	print STDERR   "\t    appends the following statements:\n";
+	$v = &GetFile('etc/makefml/secure_local_config');
+	print STDERR $v;
+	$USER_DEFINED_LOCAL_CONFIG .= $v;
+	sleep 1;
+
+/FILTER_POLICY/USE_DISTRIBUTE_FILTER
+
+=config
+	USE_DISTRIBUTE_FILTER	
+
+=menu
+	Filtering for distribute mails.
+	For example, rejects the following mails
+		no content body
+		only  'unsubscribe' word
+		invalid Message-Id
+		...
+
+	USE_DISTRIBUTE_FILTER	$config{'USE_DISTRIBUTE_FILTER'}
+
+=query
+	type:		y-or-n
+	menu:		USE ENVELOPE FILTER OR NOT
+
+
+/FILTER_POLICY/FILTER_ATTRRIBUTE
+
+=name
+	FILTERING ATTRIBUTES
+
+=menu
+	FILTERING ATTRIBUTES
+
+	_item_ END
+
+	_item_ FILTER_ATTR_REJECT_COMMAND           $SUMMARY{'FILTER_ATTR_REJECT_COMMAND'}
+
+	* reject 2 bytes \"unsubscribe\" commands
+	_item_ FILTER_ATTR_REJECT_2BYTES_COMMAND    $SUMMARY{'FILTER_ATTR_REJECT_2BYTES_COMMAND'}
+
+	* tell the sender \"your mail is discarded.\"
+	_item_ FILTER_NOTIFY_REJECTION              $SUMMARY{'FILTER_NOTIFY_REJECTION'}
+
+#	_item_ FILTER_ATTR_REJECT_NULL_BODY        $SUMMARY{'FILTER_ATTR_REJECT_NULL_BODY'}
+#	_item_ FILTER_ATTR_REJECT_ONE_LINE_BODY    $SUMMARY{'FILTER_ATTR_REJECT_ONE_LINE_BODY'}
+#	_item_ FILTER_ATTR_REJECT_INVALID_COMMAND  $SUMMARY{'FILTER_ATTR_REJECT_INVALID_COMMAND'}
+
+	* reject special files with macro (e.g. Melissa familly virus)
+	_item_ FILTER_ATTR_REJECT_MS_GUID          $SUMMARY{'FILTER_ATTR_REJECT_MS_GUID'}
+
+
+=query
+	type:	select
+
+
+/FILTER_POLICY/FILTER_ATTRRIBUTE/FILTER_ATTR_REJECT_COMMAND
+
+=config
+	FILTER_ATTR_REJECT_COMMAND
+
+=name
+	REJECT \"\# command\" SYNTAX
+
+=menu
+	Filtering: reject \"\# command \" syntax for distribute mails
+
+	FILTER_ATTR_REJECT_COMMAND $config{'FILTER_ATTR_REJECT_COMMAND'}
+
+=query
+	type:		y-or-n
+	menu:		REJECT \"\# command\" syntax
+
+
+/FILTER_POLICY/FILTER_ATTRRIBUTE/FILTER_ATTR_REJECT_2BYTES_COMMAND
+
+=config
+	FILTER_ATTR_REJECT_2BYTES_COMMAND
+
+=name
+	REJECT \"\# 2-bytes command\" SYNTAX (Japanese)
+
+=menu
+	Filtering: reject \"\# command \" syntax for distribute mails
+
+	FILTER_ATTR_REJECT_2BYTES_COMMAND $config{'FILTER_ATTR_REJECT_2BYTES_COMMAND'}
+
+=query
+	type:		y-or-n
+	menu:		REJECT \"\# 2-bytes command\" syntax
+
+
+/FILTER_POLICY/FILTER_ATTRRIBUTE/FILTER_NOTIFY_REJECTION
+
+=config
+	FILTER_NOTIFY_REJECTION
+
+=menu
+	notify \"fml filter rejects your mail for some reason\" to the sender.
+
+=query
+	type:		y-or-n
+	menu:		REJECT \"\# command\" syntax
+
+
+/FILTER_POLICY/FILTER_ATTRRIBUTE/FILTER_ATTR_REJECT_NULL_BODY
+
+=config
+	FILTER_ATTR_REJECT_NULL_BODY
+
+=menu
+	reject null body (no content body) mail
+
+=query
+	type:		y-or-n
+	menu:		reject no content mail
+
+
+/FILTER_POLICY/FILTER_ATTRRIBUTE/FILTER_ATTR_REJECT_ONE_LINE_BODY
+
+=config
+	FILTER_ATTR_REJECT_ONE_LINE_BODY
+
+=query
+	type:		y-or-n
+	menu:		reject one line mail
+
+
+/FILTER_POLICY/FILTER_ATTRRIBUTE/FILTER_ATTR_REJECT_INVALID_COMMAND
+
+=config
+	FILTER_ATTR_REJECT_INVALID_COMMAND
+
+=query
+	type:		y-or-n
+	menu:		reject invalid command syntax
+
+
+/FILTER_POLICY/FILTER_ATTRRIBUTE/FILTER_ATTR_REJECT_MS_GUID
+
+=config
+	FILTER_ATTR_REJECT_MS_GUID
+
+=menu
+	check and reject special files with Microsoft Macro
+	for example, Melissa familly virus (must be too may rejected)
+
+=query
+	type:		y-or-n
+	menu:		reject special files
+
+
+
+/FILTER_POLICY/USE_MTI
+
+=config
+	USE_MTI
+
+=menu
+	    MTI (Mail Traffic Information)
+	--- FML Traffic Monitor System ---
+
+	FML checks the current traffic and automatically
+	rejects and add FML's spamlist from bombers.
+	
+	USE_MTI		$config{'USE_MTI'}
+
+=query
+	type:		y-or-n
+	menu:		USE MTI, TRAFFIC MONITOR
+
+
+/FILTER_POLICY/PERMIT_MEMBER_LIST_COMMANDS
+
+=config
+	PERMIT_MEMBER_LIST_COMMANDS
+
+=menu
+	Permit member/active commands?
+	For security we unrecommend it.
+
+	PERMIT_MEMBER_LIST_COMMANDS	$config{'PERMIT_MEMBER_LIST_COMMANDS'}
+
+=query
+	type:		y-or-n
+	menu:		Permit member/active commans?
+
+
+/FILTER_POLICY/MAX_MAIL_SIZE
+
+=config
+	INCOMING_MAIL_SIZE_LIMIT
+
+=menu
+	The maximum of input mail size.
+	The current value is $config{'INCOMING_MAIL_SIZE_LIMIT'}.
+
+	_item_ END
+	_item_ 0		accept all sizes.
+	_item_ 2K
+	_item_ 4K
+	_item_ 8K
+	_item_ 16K
+	_item_ 32K
+	_item_ 64K
+	_item_ 128K
+	_item_ 256K
+	_item_ 512K
+	_item_ 1M
+	_item_ 2M
+	_item_ 4M
+
+=query
+	type:		select
+
+=map
+	 1 	 0
+	 2 	 2K
+	 3 	 4K
+	 4 	 8K
+	 5 	 16K
+	 6 	 32K
+	 7 	 64K
+	 8 	 128K
+	 9 	 256K
+	 10 	 512K
+	 11 	 1M
+	 12 	 2M
+	 13 	 4M
+
+
+/FILTER_POLICY/NOTIFY_MAIL_SIZE_OVERFLOW
+
+=config
+	NOTIFY_MAIL_SIZE_OVERFLOW
+
+=menu
+	When fml receives a mail size, fml notifies it to the sender
+	to avoid further resending.
+	The current configuration: notify?     $SUMMARY{'NOTIFY_MAIL_SIZE_OVERFLOW'}
+
+=query
+	type: y-or-n
+
+
+/FILTER_POLICY/ANNOUNCE_MAIL_SIZE_OVERFLOW
+
+=config
+	ANNOUNCE_MAIL_SIZE_OVERFLOW
+
+=menu
+	When fml receives a mail size, fml announces the received mail
+	is too big to the ML (with the received mail header).
+	# SARASIMONO? :-)
+
+	The current configuration: ANNOUNCE?     $SUMMARY{'ANNOUNCE_MAIL_SIZE_OVERFLOW'}
+
+=query
+	type: y-or-n
+
+
+/FILTER_POLICY/REJECT_ADDR
+
+=config
+	REJECT_ADDR
+
+=menu
+	FML rejects addresses which matches \$REJECT_ADDR in default.
+	For example, FML rejects mails from MAILER-DAMON.
+	If you do not need this function, unset \$REJECT_ADDR
+	The current value is
+
+	$config{'REJECT_ADDR'}
+
+	_item_ END
+	_item_ reject (reject addresses in \$REJECT_ADDR)
+	_item_ accept all accounts
+
+=query
+	type:		select
+
+=map
+	1	$MANIFEST{'REJECT_ADDR'}
+	2	$NULL
+
+
+/FILTER_POLICY/ADDR_CHECK_MAX
+
+=config
+	ADDR_CHECK_MAX
+
+=menu
+	FML checks the indentity of From: address as an authentication
+	up to \$ADDR_CHECK_MAX (default 3) levels domain.
+	If 3, we compare fukachan\@sapporo.iij.ad.jp and
+	kfuka\@sapporo.iij.ad.jp in the following order:
+	jp, ad.jp, iij.ad.jp
+		
+	The current \$ADDR_CHECK_MAX is $config{'ADDR_CHECK_MAX'}
+	
+
+	_item_ END
+	_item_ 1	        aoi\@panic
+	_item_ 2	        aoi\@chan.panic
+	_item_ 3	        aoi\@c.chan.panic
+	_item_ 4	        aoi\@d.c.chan.panic
+	_item_ 5	        aoi\@e.d.c.chan.panic
+	_item_ 6	        aoi\@f.e.d.c.chan.panic
+	_item_ 7	        aoi\@g.f.e.d.c.chan.panic
+	_item_ 8	        aoi\@h.g.f.e.d.c.chan.panic
+	_item_ 9	        aoi\@i.h.g.f.e.d.c.chan.panic
+	_item_ 10	        aoi\@j.i.h.g.f.e.d.c.chan.panic
+	_item_ 100	        aoi\@x.y.................................chan.panic
+
+=query
+	type:		select
+
+=map
+	 1 	 1
+	 2 	 2
+	 3 	 3
+	 4 	 4
+	 5 	 5
+	 6 	 6
+	 7 	 7
+	 8 	 8
+	 9 	 9
+	 10 	 10
+	 11 	 100
+
+
+/FILTER_POLICY/MAXNUM_COMMAND_INPUT
+
+=config
+	MAXNUM_COMMAND_INPUT
+
+=menu
+	The maximum number of commands in one command mail.
+	The variable \$MAXNUM_COMMAND_INPUT controls this.
+	The current number is \"$config{'MAXNUM_COMMAND_INPUT'}\".
+	0 or NULL implies \"infinite\".
+
+=query	
+	type:	number
+
+/FILTER_POLICY/USE_LOG_MAIL
+
+=config
+	USE_LOG_MAIL
+
+=menu
+	If you set \$USE_LOG_MAIL,
+	LOGGING THE LATEST IN-COMING MAILS
+
+	Logs an in-coming mail to \$LOG_MAIL_DIR/\$id
+	where (\$id = `cat \$LOG_MAIL_SEQ`; \$id % \$NUM_LOG_MAIL; \$id++).
+	Latest \$NUM_LOG_MAIL files are stored in \$LOG_MAIL_DIR
+	and each file size is limited up to
+	\$LOG_MAIL_FILE_SIZE_MAX bytes to save disk.
+
+	Now \$USE_LOG_MAIL = $SUMMARY{'USE_LOG_MAIL'};
+=query
+	type: y-or-n
+
+
+/FILTER_POLICY/USE_ENCRYPTED_DISTRIBUTION
+
+=config
+	USE_ENCRYPTED_DISTRIBUTION
+
+=menu
+	If you set \$USE_ENCRYPTED_DISTRIBUTION,
+	distribution of ML is encrypted. The default is PGP.
+	Now \$USE_ENCRYPTED_DISTRIBUTION: $config{'USE_ENCRYPTED_DISTRIBUTION'}
+
+	YOU NEED ANOTHER SETTINGS on PGP. Please see http://www.fml.org/
+	or doc/tutorial*/ in the fml package for more details.
+
+=query
+	type: y-or-n
+
+/FILTER_POLICY/ENCRYPTED_DISTRIBUTION_TYPE
+
+=config
+	ENCRYPTED_DISTRIBUTION_TYPE
+
+=menu
+	ENCRYPTED_DISTRIBUTION_TYPE $config{'ENCRYPTED_DISTRIBUTION_TYPE'}
+	If not defined, we use pgp2 (PGP versoin 2).
+
+	_item_ END		
+	_item_ pgp2	PGP version 2
+	_item_ pgp5	PGP versoin 5
+	_item_ gpg	GNU Privacy Guard (not yet implemented)
+
+=query
+	type:	select
+
+=map
+	1	pgp2
+	2	pgp5
+	3	gpg
+
+
+/FILTER_POLICY/CHECK_MAILBODY_CKSUM
+
+=config
+	CHECK_MAILBODY_CKSUM
+
+=menu
+	If you set \$CHECK_MAILBODY_CKSUM
+	fml checks article duplication based on MD5 cksum of input article.
+
+=query
+	type: y-or-n
+
+
+
+======================================================================
+###### /OPTION
+==================================================
+
+
+/OPTION
+
+=menu
+	OTHER OPTIONAL VARIABLES
+
+	_item_ END		
+#	_item_ MIME                          $SUMMARY{'USE_MIME'}
+	_item_ HTML_GENERATION               $SUMMARY{'AUTO_HTML_GEN'}
+	_item_ SPOOLING                      $SUMMARY{'SPOOLING'}
+	_item_ FLOCK                         $SUMMARY{'USE_FLOCK'}
+	_item_ SMTP
+	_item_ USE_MEMBER_NAME               $SUMMARY{'USE_MEMBER_NAME'}
+	_item_ LANGUAGE
+	_item_ VARIABLE_OFF_ON               off/on toggle variables
+
+#	-----------------------
+#	TURN OVER old/too big files (NewSyslog(8) like)
+#	     * to turn over \$DIR/log.
+#	_item_ LOGFILE_NEWSYSLOG_LIMIT   $config{'LOGFILE_NEWSYSLOG_LIMIT'} bytes
+#
+#	     * to turn over too big \$DIR/actives.bak and \$DIR/members.bak.
+#	_item_ AMLIST_NEWSYSLOG_LIMIT    $config{'AMLIST_NEWSYSLOG_LIMIT'} bytes
+
+=query
+	type:	select
+
+
+==================================================
+
+/OPTION/HTML_GENERATION
+
+=name
+	Create HTML articles
+
+=menu
+	Creating HTML articles automatically
+
+	_item_ END		
+	_item_ AUTO_HTML_GEN		$config{'AUTO_HTML_GEN'}
+	_item_ HTML_THREAD_REF_TYPE   	$config{'HTML_THREAD_REF_TYPE'}
+	_item_ HTML_STYLESHEET_BASENAME	$config{'HTML_STYLESHEET_BASENAME'}
+	_item_ HTML_INDEX_UNIT		$config{'HTML_INDEX_UNIT'}
+	_item_ HTML_INDENT_STYLE		$config{'HTML_INDENT_STYLE'}
+
+	use new module ?
+	_item_ USE_NEW_HTML_GEN		$config{'USE_NEW_HTML_GEN'}
+
+=query
+	type:	select
+
+
+/OPTION/HTML_GENERATION/AUTO_HTML_GEN
+
+=name
+	Create HTML articles
+
+=config
+	AUTO_HTML_GEN
+
+=menu
+	Create HTML articles	$config{'AUTO_HTML_GEN'}
+
+=query
+	type:		y-or-n
+	menu:		AUTOMATIC HTML GENERATION
+
+/OPTION/HTML_GENERATION/USE_NEW_HTML_GEN
+
+=name
+	use new HTML generator
+
+=config
+	USE_NEW_HTML_GEN
+
+=menu
+	use new HTML generator	$config{'AUTO_HTML_GEN'}
+
+=query
+	type:		y-or-n
+	menu:		AUTOMATIC HTML GENERATION
+
+/OPTION/HTML_GENERATION/HTML_THREAD_REF_TYPE
+
+=name
+	thread reference releation type
+
+=config
+	HTML_THREAD_REF_TYPE
+
+=menu
+	Thread reference releation type: $config{'HTML_THREAD_REF_TYPE'}
+
+	_item_ END		
+	_item_ In-Reply-To: and References:
+	_item_ In-Reply-To: or the last of References:
+
+=query
+	type:	select
+
+=map
+	1	default
+	2	prefer-in-reply-to
+
+/OPTION/HTML_GENERATION/HTML_STYLESHEET_BASENAME
+
+=name
+	USE STYLESHEET ?
+
+=config
+	HTML_STYLESHEET_BASENAME
+
+=menu
+	You use stylesheet 1.0 (HTML 4.0)?
+	If you use it, define stylesheet.
+	Sytlesheet: $config{'HTML_STYLESHEET_BASENAME'}
+
+	_item_ END		
+	_item_ fml.css (default example)
+	_item_ NOT USE HTML 4.0 STYLE SHEET
+
+=query
+	type:	select
+
+=map
+	1	fml.css
+	2	$NULL
+
+/OPTION/HTML_GENERATION/HTML_INDEX_UNIT
+
+=name
+	UNIT OF DIRECTORY
+
+=menu
+	the unit of htdocs/'sub-directory'/1000.html
+	THE PRESENT UNIT is \"$config{'HTML_INDEX_UNIT'}\".
+	(default \"$MANIFEST{'HTML_INDEX_UNIT'}\").
+
+	sub-directory is like a
+		19980301/	(the directory of 1998/03/01)
+	or
+		100/		(articles with the number 1-100)	
+		200/		(articles with the number 101-200)
+
+	_item_ END
+	_item_ TIME_RANGE		e.g. day, week, month
+	_item_ NUMBER_OF_ARTICLES	e.g. 100, 1000, ...
+
+=query
+	type:	select
+
+
+/OPTION/HTML_GENERATION/HTML_INDEX_UNIT/TIME_RANGE
+
+=name
+	UNIT OF DIRECTORY
+
+=config
+	HTML_INDEX_UNIT
+
+=menu
+	the unit of htdocs/'sub-directory'/1000.html
+	THE PRESENT UNIT is \"$config{'HTML_INDEX_UNIT'}\".
+
+
+	sub-directory is like a
+		19980301/	(the directory of 1998/03/01)
+	or
+		100/		(articles with the number 1-100)	
+		200/		(articles with the number 101-200)
+
+	_item_ END
+	_item_ day
+	_item_ week
+	_item_ month
+	_item_ infinite
+
+=query
+	type:	select
+
+=map
+	1  day
+	2  week
+	3  month
+	4  infinite
+
+
+/OPTION/HTML_GENERATION/HTML_INDEX_UNIT/NUMBER_OF_ARTICLES
+
+=name
+	UNIT OF DIRECTORY
+
+=config
+	HTML_INDEX_UNIT
+
+=menu
+	the unit of htdocs/'sub-directory'/1000.html
+	THE PRESENT UNIT is \"$config{'HTML_INDEX_UNIT'}\".
+
+	sub-directory is like a
+		19980301/	(the directory of 1998/03/01)
+	or
+		100/		(articles with the number 1-100)	
+		200/		(articles with the number 101-200)
+
+	PLEASE INPUT THE UNIT (NUMBER), for example
+		100
+		1000
+		...
+
+=query
+	type: number
+	query: number e.g. 100, 1000
+
+
+
+/OPTION/HTML_GENERATION/HTML_INDENT_STYLE
+
+=name
+	Thread Style
+
+=config
+	HTML_INDENT_STYLE
+
+=menu
+	Threading style.
+	Indent Style: $config{'HTM_INDENT_STYLE'}
+
+	_item_ END		
+	_item_ UL
+	_item_ fml 2.2 Release style
+
+=query
+	type:	select
+
+=map
+	1	UL
+	2	$NULL
+
+
+
+==================================================
+
+/OPTION/MIME
+
+=config
+	USE_MIME
+
+=menu
+	USE MIME	$config{'USE_MIME'}
+
+=query
+	type:		y-or-n
+	menu:		USE MIME
+
+==================================================
+
+/OPTION/SPOOLING
+
+=config
+	NOT_USE_SPOOL
+
+=menu
+	SPOOLING	$SUMMARY{'SPOOLING'}
+
+=query
+	type:		reverse-y-or-n
+	menu:		Do you spool ML articles?
+
+
+==================================================
+/OPTION/FLOCK
+
+=config
+	USE_FLOCK
+
+=menu
+	USE FLOCK	$config{'USE_FLOCK'}
+
+=query
+	type:		y-or-n
+	menu:		USE FLOCK
+
+==================================================
+/OPTION/USE_MEMBER_NAME
+
+=config
+	USE_MEMBER_NAME
+
+=menu
+	USE MEMBER_NAME		$config{'USE_MEMBER_NAME'}
+
+=query
+	type:		y-or-n
+	menu:		USE USE_MEMBER_NAME
+
+==================================================
+/OPTION/LOGFILE_NEWSYSLOG_LIMIT
+
+=config
+	LOGFILE_NEWSYSLOG_LIMIT
+
+=menu
+	Threshold file size whether fml should turn over too big log file.
+	\$LOGFILE_NEWSYSLOG_LIMIT   $config{'LOGFILE_NEWSYSLOG_LIMIT'} bytes.
+	IF 0, disables this function.
+
+
+=query
+	type: number
+
+==================================================
+/OPTION/AMLIST_NEWSYSLOG_LIMIT
+
+=config
+	AMLIST_NEWSYSLOG_LIMIT
+
+=menu
+	Threshold file size whether fml should turn over too big log file.
+	\$AMLIST_NEWSYSLOG_LIMIT   $config{'AMLIST_NEWSYSLOG_LIMIT'} bytes.
+	IF 0, disables this function.
+
+=query
+	type: number
+
+
+==================================================
+/OPTION/SMTP
+
+=name
+	SMTP (Simple Mail Transfer Protocol) options
+
+=menu
+	SMTP (Simple Mail Transfer Protocol) options
+
+	_item_ END		
+	_item_ USE_OUTGOING_ADDRESS	$SUMMARY{'USE_OUTGOING_ADDRESS'}
+	_item_ USE_VERP			$SUMMARY{'USE_VERP'}
+	_item_ USE_SMTPFEED_F_OPTION	$SUMMARY{'USE_SMTPFEED_F_OPTION'}
+
+=query
+	type:	select
+
+
+/OPTION/SMTP/USE_OUTGOING_ADDRESS
+
+=name
+	USE_OUTGOING_ADDRESS
+
+=config
+	USE_OUTGOING_ADDRESS
+
+=menu
+	USE_OUTGOING_ADDRESS	$config{'USE_OUTGOING_ADDRESS'}
+
+	When you have less memory and less cpu machine, it may be useful
+	to shorten running perl life time.
+
+	If \$USE_OUTGOING_ADDRESS is defined, fml sends article to
+	only one address
+		<$config{'_ML_'}-outgoing\@$config{'DOMAINNAME'}>.
+	MTA expands $config{'_ML_'}-outgoing and deliver the article.
+
+	[CAUTION]
+	YOU SHOULD PROTECT $config{'_ML_'}-outgoing FROM e.g. SPAMMERS.
+
+	Please run 'make outgoing' and see generated 'include-outgoing'.
+	Also don't forget to add list-outgoing entry to /etc/aliases.
+
+=query
+	type:	y-or-n
+
+
+/OPTION/SMTP/USE_VERP
+
+=name
+	USE_VERP
+
+=config
+	USE_VERP
+
+=menu
+	USE_VERP	$config{'USE_VERP'}
+
+	If \$USE_VERP is defined, use VERPs
+	See qmail documents for more details on VERPs.
+
+=query
+	type:	y-or-n
+
+
+/OPTION/SMTP/USE_SMTPFEED_F_OPTION
+
+=name
+	USE_SMTPFEED_F_OPTION
+
+=config
+	USE_SMTPFEED_F_OPTION
+
+=menu
+	USE_SMTPFEED_F_OPTION	$config{'USE_SMTPFEED_F_OPTION'}
+
+	If you use smtpfeed -1 -F,  set \$USE_SMTPFEED_F_OPTION on.
+	fml passes X-smtpfeed: 1 to sendmail once 100 articles.
+
+=query
+	type:	y-or-n
+
+
+/OPTION/LANGUAGE
+
+=name
+
+=menu
+	Language Configurations
+
+	_item_ END		
+	_item_ LANGUAGE
+	_item_ MESSAGE_LANGUAGE
+
+=query
+	type:	select
+
+
+/OPTION/LANGUAGE/LANGUAGE
+
+=name
+	LANGUAGE
+
+=config
+	LANGUAGE
+
+=menu
+	Use the specified language's files when copying several
+	template message files (ex. help).
+
+	The current language is $config{'LANGUAGE'}.
+
+	*** Run 'make fml create-doc-template' after changed ***
+
+	_item_ END		
+	_item_ Japanese
+	_item_ English
+
+=query
+	type:	select
+
+=map
+	1	Japanese
+	2	English
+
+
+/OPTION/LANGUAGE/MESSAGE_LANGUAGE
+
+=name
+	MESSAGE_LANGUAGE
+
+=config
+	MESSAGE_LANGUAGE
+
+=menu
+	Translate message logged by &Mesg() into language \$MESSAGE_LANGUAGE
+	The current language is $config{'MESSAGE_LANGUAGE'}.
+
+	_item_ END		
+	_item_ Japanese
+	_item_ English	(in fact dummy to do nothing)
+
+=query
+	type:	select
+
+=map
+	1	Japanese
+	2	English
+
