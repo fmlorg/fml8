@@ -19,11 +19,20 @@ FML::Process::CGI - CGI basic functions
 
 =head1 SYNOPSIS
 
+   use FML::Process::CGI;
+   my $obj = new FML::Process::CGI;
+   $obj->prepare($args);
+      ... snip ...
+
 =head1 DESCRIPTION
+
+the base class of CGI programs
 
 =head1 METHODS
 
 =head2 C<new()>
+
+constructor which is usual in FML::Process classes.
 
 =cut
 
@@ -45,6 +54,12 @@ sub new
     return bless $curproc, $type;
 }
 
+
+=head2 C<prepare()>
+
+print HTTP header.
+
+=cut
 
 # XXX FML::Process::Kernel::prepare() parses incoming_message
 # XXX CGI do not parse incoming_message;
