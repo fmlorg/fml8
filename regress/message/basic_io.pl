@@ -1,11 +1,11 @@
 #!/usr/bin/env perl
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: basic_io.pl,v 1.4 2001/04/13 04:34:07 fukachan Exp $
+# $FML: basic_io.pl,v 1.5 2002/04/18 14:18:09 fukachan Exp $
 #
 
 use strict;
@@ -28,7 +28,7 @@ for my $f (@ARGV) {
 
     unless ($test_mode) {
 	print "\n<< $f\n";
-	my $h = $obj->get_data_type_list;
+	my $h = $obj->data_type_list;
 	for (@$h) { print "  ", $_, "\n";}
 	print "\n";
     }
