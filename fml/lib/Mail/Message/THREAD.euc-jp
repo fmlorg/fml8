@@ -1,4 +1,7 @@
-○ _analyze_thread()
+		スレッドについて
+
+
+○ Mail::Message::DB::_analyze_thread()
 
 スレッドの依存関係を調べる処理は _thread_analyze() が真髄の一つです。
 この関数は 
@@ -13,6 +16,8 @@
 相互リンクを表しています。
 
 さて、HASH_REF(ref_key_list) は、次のように更新されます。
+
+ref_key_list に自分の ID を設定する( { id => id } )。
 
 for $message_id (In-Reply-To と References にふくまれるID) {
 
@@ -65,3 +70,33 @@ ref_key_list = {
 	for $message_id (In-Reply-To と References にふくまれるID) {
 
 の処理の順番はどうでもいいはずです。
+
+
+
+
+○ Mail::Message::ToTHML::_print_thread()
+
+これが実際にスレッドの依存関係を HTML 化する関数です。
+
+概念的には
+
+   _print_thread() {
+   
+      for (ref_key_list id のリスト) {
+            if (リストの中身が複数) {
+		# あとで使うためにキャッシュしておく
+                $self->{ _thread_list }->{ $id } = $buf;
+            }
+
+           print_ul()
+           print_li()
+           _print_thread() (recursive call)
+      }
+   
+      print_ul_end() # recursive の回数だけ </UL> を出力する
+   }
+
+
+  [TODO]
+	$self->{ _thread_list } はオンメモリだけど、
+	次回の処理のために db に書いておくべきじゃないのか？
