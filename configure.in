@@ -1,5 +1,5 @@
 dnl
-dnl $FML: configure.in,v 1.15 2002/04/01 10:08:04 fukachan Exp $
+dnl $FML: configure.in,v 1.16 2002/04/15 10:28:08 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -51,6 +51,12 @@ AC_PATH_PROG(PGPS,     pgps)
 AC_PATH_PROG(PGPV,     pgpv)
 AC_PATH_PROG(GPG,      gpg)
 dnl path_check_end
+
+
+use_warning=0
+AC_ARG_WITH(warning, 
+[  --with-warning          run perl as perl -w],
+    use_warning=$withval)
 
 
 fmlconfdir=${sysconfdir}/fml
@@ -105,6 +111,14 @@ AC_OUTPUT(\
 	fml/bin/fmlspool \
 	fml/bin/makefml \
 	)
+
+if test "X$use_warning" = "Xyes" ; then
+	echo "enabled perl -w"
+else
+	echo "disabled warning (perl -w)"
+	sed '1s/-w//' fml/libexec/loader > fml/libexec/loader.new.$$
+	mv fml/libexec/loader.new.$$ fml/libexec/loader
+fi
 
 if test -f fml/libexec/loader ; then
    chmod 755 fml/libexec/loader
