@@ -549,6 +549,23 @@ outgoing_mail_cache_dir	= $var_dir/mail/outgoing
 #     Examples: 128
 outgoing_mail_cache_size	=	128
 
+=head1	Digest
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+use_digest_program		=	yes
+
+
+# Descriptions: まとめ送りした最後の記事番号を保存するファイル
+#      History: fml4 では各自それぞれの番号を保存していた。
+#        Value: filename
+#     Examples:
+digest_sequence_file	= $ml_home_dir/seq-digest
+
+
 =head1 メッセージ操作
 
 =head2 言語
@@ -825,6 +842,15 @@ use_distribute_program	=	yes
 
 
 =head1	記事の処理
+
+=head2	記事番号
+
+
+# Descriptions: 記事番号を保存するファイル (ダミー？)
+#      History: $SEQ_FILE
+#        Value: filename
+#     Examples:
+article_sequence_file	= $sequence_file
 
 
 =head2	フィルタ
