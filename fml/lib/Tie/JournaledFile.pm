@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledFile.pm,v 1.15 2002/06/01 03:01:56 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.16 2002/06/30 14:27:50 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -139,31 +139,32 @@ sub STORE
 }
 
 
-# Descriptions: tie() keys op
+# Descriptions: op for keys() and each()
 #    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: STR
+# Return Value: ARRAY(STR, STR)
 sub FIRSTKEY
 {
     my ($self) = @_;
+    my $file = $self->{ '_file' };
+    my $hash = {};
 
     use IO::File;
-    my $fh = new IO::File;
-    if ($fh->open( $self->{ '_file' }, "r")) {
-	$self->{ _fh } = $fh;
-
-	my $r   = <$fh>;
-	my $key = (split(/\s+/, $r))[0];
-
-	# negative cache
-	$self->{ '_key_negative_cache' }->{ $key } = 1;
-
-	print STDERR "   File.FIRSTKEY: $key (return)\n" if $debug;
-	return $key;
+    my $fh = new IO::File $file;
+    if (defined $fh) {
+	my ($k, $v);
+	while (<$fh>) { 
+	    ($k, $v) = split(/\s+/, $_, 2);
+	    $hash->{ $k } = $v if $k;
+	}
+	$fh->close();
     }
     else {
 	return undef; # error: cannot open file
     }
+
+    $self->{ _hash } = $hash;
+    return each %$hash;
 }
 
 
@@ -174,48 +175,13 @@ sub FIRSTKEY
 sub NEXTKEY
 {
     my ($self) = @_;
-    my $fh = $self->{ _fh };
+    my $hash = $self->{ _hash };
 
-    if (defined $fh) {
-	my ($r, $key);
-
-      LOOP:
-	while (defined ($r = <$fh>)) {
-	    $key = (split(/\s+/, $r))[0];
-
-	    # duplicated (already returned key)
-	    if (defined $self->{ '_key_negative_cache' }->{ $key }) {
-		if ($debug) {
-		    print STDERR "   File.NEXTKEY: $key (dup, ignored)\n";
-		}
-
-		next LOOP;
-	    }
-	    else {
-		print STDERR "   File.NEXTKEY: $key (found)\n" if $debug;
-	    }
-
-	    # negative cache
-	    $self->{ '_key_negative_cache' }->{ $key }++;
-	    last LOOP;
-	}
-
-	# duplicated key ( > 1 ) is found. ignore it.
-	# XXX "> 1" is important to clarify duplication or not.
-	if ((defined $self->{ '_key_negative_cache' }->{ $key }) &&
-	    ($self->{ '_key_negative_cache' }->{ $key } > 1)) {
-	    print STDERR "   File.NEXTKEY: $key (ignored*)\n" if $debug;
-	    return undef;
-	}
-	# $key is found
-	else {
-	    print STDERR "   File.NEXTKEY: $key found\n" if $debug;
-	    return $key;
-	}
+    if (defined $hash) {
+	return each %$hash;
     }
     # error: file handle is not defined.
     else {
-	print STDERR "   File.NEXTKEY: file handle exhauseted" if $debug;
 	return undef;
     }
 }
@@ -349,6 +315,13 @@ sub _puts
 	croak "cannot open cache file $file\n";
     }
 }
+
+
+=head1 LOG
+
+$Log$
+Revision 1.17  2002/08/03 04:18:17  fukachan
+bug fix FIRSTKEY() and NEXTKEY(), modified to use hash on memory
 
 
 =head1 AUTHOR
