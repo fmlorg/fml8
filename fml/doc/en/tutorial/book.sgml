@@ -2,8 +2,8 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-# $FML$
-$jaFML: book.sgml,v 1.58 2003/05/31 08:51:07 fukachan Exp $
+   $FML: book.sgml,v 1.1 2003/07/24 15:37:34 fukachan Exp $
+   $jaFML: book.sgml,v 1.58 2003/05/31 08:51:07 fukachan Exp $
 -->
 
 <!doctype book public "-//FML//DTD DocBook V3.1-Based Extension//EN" [
