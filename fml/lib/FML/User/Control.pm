@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.11 2004/04/30 13:41:54 fukachan Exp $
+# $FML: Control.pm,v 1.12 2004/05/16 02:42:11 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -95,7 +95,9 @@ sub useradd
 	$cred->set_compare_level( 100 );
 
 	unless ($cred->has_address_in_map($map, $config, $address)) {
-	    $msg_args->{ _arg_map } = $curproc->which_map_nl($map);
+	    # $msg_args->{ _arg_map } = $curproc->which_map_nl($map);
+	    $msg_args->{ _arg_map }   = sprintf("TERM_NL(%s)",
+						$curproc->which_map($map));
 
 	    $trycount++;
 
@@ -198,23 +200,26 @@ sub userdel
 	    # we need to use $address_in_map which is the matched string.
 	    my $address_in_map = $cred->matched_address();
 
-	    $msg_args->{ _arg_map } = $curproc->which_map_nl($map);
+	    # $msg_args->{ _arg_map } = $curproc->which_map_nl($map);
+	    $msg_args->{ _arg_map }   = sprintf("TERM_NL(%s)",
+						$curproc->which_map($map));
 
 	    $trycount++;
 
 	    my $obj = new IO::Adapter $map, $config;
 	    $obj->delete( $address_in_map );
 	    unless ($obj->error()) {
-		$curproc->log("remove $address from map=$_map");
+		$obj->close();
+		$curproc->log("remove $address_in_map from map=$_map");
 		$curproc->reply_message_nl('command.del_ok',
-					   "$address removed.",
+					   "$address_in_map removed.",
 					   $msg_args);
 	    }
 	    else {
 		$curproc->reply_message_nl('command.del_fail',
-					   "failed to remove $address",
+					   "failed to remove $address_in_map",
 					   $msg_args);
-		$reason = "fail to remove $address from map=$_map";
+		$reason = "fail to remove $address_in_map from map=$_map";
 		last MAP;
 	    }
 	}
@@ -301,7 +306,9 @@ sub _try_chaddr_in_map
     else {
 	my $msg_args = {};
 	$msg_args->{ _arg_address } = $old_address;
-	$msg_args->{ _arg_map }     = $curproc->which_map_nl($map);
+	# $msg_args->{ _arg_map }   = $curproc->which_map_nl($map);
+	$msg_args->{ _arg_map }     = sprintf("TERM_NL(%s)",
+					      $curproc->which_map($map));
 
 	$curproc->logerror("$old_address not found in map=$map");
 	$curproc->reply_message_nl('error.no_such_address_in_map',
@@ -316,7 +323,9 @@ sub _try_chaddr_in_map
     else {
 	my $msg_args = {};
 	$msg_args->{ _arg_address } = $new_address;
-	$msg_args->{ _arg_map }     = $curproc->which_map_nl($map);
+	# $msg_args->{ _arg_map }   = $curproc->which_map_nl($map);
+	$msg_args->{ _arg_map }     = sprintf("TERM_NL(%s)",
+					      $curproc->which_map($map));
 
 	$curproc->logerror("$new_address is already member (map=$map)");
 	$curproc->reply_message_nl('error.already_subscribed_in_map',
@@ -360,12 +369,12 @@ sub _try_chaddr_in_map
 	    $obj->open();
 	    $obj->delete( $old_address_in_map );
 	    unless ($obj->error()) {
+		$obj->close();
 		$curproc->log("delete $old_address from map=$map");
 	    }
 	    else {
 		$curproc->logerror("fail to delete $old_address to map=$map");
 	    }
-	    $obj->close();
 	}
     }
     else {
