@@ -13,10 +13,35 @@
 	気をつけてください。
 
 
+2004/04/23
+
+   BUG FIX: パスワードファイルの初期化バグ修正
+
 2004/04/22
 
    コマンドメールの返事を、もっと静かに
 
+   FML::Command::User::confirm 
+	when unsubscribe command, stop the current process since
+	no more processing is required.
+	XXX ? hmm, wrong in some cases e.g. unsubscribe + guide.
+	XXX   but ignore it ;-)
+	
+   FML::Process::Command 
+	check $context if it is well defined. if ok, call command. 
+	check value by command_context_get_normal_stop() to stop this
+	process. 
+	
+   FML::Process::State 
+	command_context_init() returns empty HASH_REF where it includes valid
+	command as the first valid argument.
+
+	define command_context_set_normal_stop(),
+	command_context_get_normal_stop(). 
+
+   FML::Article::Sequence 
+	bug fix::need open() before getline()
+	
 2004/04/21
 
    FML::Process::Utils 
@@ -6796,4 +6821,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.197 2004/04/21 14:26:58 fukachan Exp $
+$FML: CHANGES.txt,v 1.198 2004/04/22 13:11:49 fukachan Exp $
