@@ -228,7 +228,7 @@ sub _deliver_article
 
     $service->deliver(
 		      {
-			  'mta'             => $config->{'mta'},
+			  'smtp_servers'    => $config->{'smtp_servers'},
 
 			  'smtp_sender'     => 'rudo',
 			  'recipient_maps'  => $config->{recipient_maps},

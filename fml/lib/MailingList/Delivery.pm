@@ -66,7 +66,7 @@ MailingList::Delivery - mail delivery system interface
 
     $service->deliver(
                       {
-                          mta             => '[::1]:25 127.0.0.1:25',
+                          smtp_servers    => '[::1]:25 127.0.0.1:25',
 
                           smtp_sender     => 'rudo@nuinui.net',
                           recipient_maps  => $recipient_maps,

@@ -5,6 +5,6 @@
 recipient_limit		=	1000
 
 # デフォールトの MTA は自分自身( localhost ) 
-mta			=	[::1]:25
+smtp_servers		=	[::1]:25
 				127.0.0.1:25
 

@@ -48,7 +48,7 @@ To start delivery, use deliver() method in this way.
 
     $service->deliver(
                       {
-                          mta             => '127.0.0.1:25',
+                          smtp_servers    => '127.0.0.1:25',
 
                           smtp_sender     => 'rudo@nuinui.net',
                           recipient_maps  => $recipient_maps,
@@ -65,7 +65,7 @@ You can use ARRAY REFERENCE.
 
     $service->deliver(
                       {
-                          mta             => '127.0.0.1:25',
+                          smtp_servers    => '127.0.0.1:25',
 
                           smtp_sender     => 'rudo@nuinui.net',
                           recipient_array_reference => $rarray,
@@ -298,14 +298,14 @@ start delivery process.
 
     hash key           value
     --------------------------------------------
-    mta                127.0.0.1:25 [::1]:25
+    smtp_servers       127.0.0.1:25 [::1]:25
     smtp_sender        sender's mail address
     recipient_maps     $recipient_maps
     recipient_limit    recipients in one SMTP transactions
     header             FML::Header object
     body               MailingList::Messages object
 
-C<mta> is a list of MTA's.
+C<smtp_servers> is a list of MTA's.
 The syntax of each MTA is address:port style. 
 If you use a raw IPv6 address, use [address]:port syntax. 
 For example, [::1]:25 (v6 loopback).
@@ -363,7 +363,7 @@ sub deliver
     my %used_map = ();
 
     # prepare loop for each mta and map 
-    my @mta  = split(/\s+/, $args->{ mta } || '127.0.0.1:25');
+    my @mta  = split(/\s+/, $args->{ smtp_servers } || '127.0.0.1:25');
     my @maps = ();
     if ( $args->{ recipient_maps } ) {
 	@maps = split(/\s+/, $args->{ recipient_maps });
