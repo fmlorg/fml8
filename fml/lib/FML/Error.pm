@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.6 2002/09/11 23:18:02 fukachan Exp $
+# $FML: Error.pm,v 1.7 2002/09/22 14:56:40 fukachan Exp $
 #
 
 package FML::Error;
@@ -19,7 +19,7 @@ my $debug = 1;
 
 =head1 NAME
 
-FML::Error - error manipulation
+FML::Error - analyze error messages.
 
 =head1 SYNOPSIS
 
@@ -45,7 +45,7 @@ sub new
 }
 
 
-# Descriptions: analyzer
+# Descriptions: error message analyzer
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: none
@@ -153,7 +153,7 @@ sub deluser
             $obj->$method($curproc, $command_args);
         };
         unless ($@) {
-            ; # not show anything
+            ; # log nothing.
         }
         else {
             my $r = $@;
@@ -168,10 +168,6 @@ sub deluser
     }
 }
 
-
-=head1 CODING STYLE
-
-See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 CODING STYLE
 
