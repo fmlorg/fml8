@@ -29,7 +29,8 @@ sub main::ProcessSwitch
 {
     my ($args) = @_;
 
-    # 1. create process
+    # 1. create process 
+    # $pkg is a  package name, for exampl,e "FML::Process::Distribute".
     my $pkg = _package_we_use($args);
     croak("$args->{ myname } is unknown program\n") unless ($pkg);
 
