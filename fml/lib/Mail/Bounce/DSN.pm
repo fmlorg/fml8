@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DSN.pm,v 1.12 2001/12/22 09:21:15 fukachan Exp $
+# $FML: DSN.pm,v 1.13 2001/12/23 15:03:27 fukachan Exp $
 #
 
 
@@ -111,7 +111,7 @@ sub analyze
 }
 
 
-# Descriptions: DSN parser 
+# Descriptions: DSN parser
 #               [DSN Example]
 #               Final-Recipient: rfc822; rudo@nuinui.net
 #               Action: failed
