@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.25 2003/12/30 03:07:54 fukachan Exp $
+# $FML: chaddr.pm,v 1.26 2003/12/31 04:05:45 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -99,7 +99,6 @@ sub process
     my $compare_level = $cred->get_compare_level();
     $cred->set_compare_level( 100 );
 
-    # XXX-TODO: syntax checks of addresses
     # addresses we check and send back confirmation messages to
     my $optargs = {};
     my $x = $command_args->{ command };
@@ -107,6 +106,18 @@ sub process
     my ($old_addr, $new_addr) = split(/\s+/, $x);
     $optargs->{ recipient } = [ $sender, $old_addr, $new_addr ];
 
+    # simple checks.
+    use FML::Restriction::Base;
+    my $safe = new FML::Restriction::Base;
+    unless ($safe->regexp_match('address', $old_addr)) {
+	$curproc->logerror("chaddr: unsafe address <$old_addr>");
+	croak("chaddr: unsafe address");
+    }
+    unless ($safe->regexp_match('address', $new_addr)) {
+	$curproc->logerror("chaddr: unsafe address <$new_addr>");
+	croak("chaddr: unsafe address");
+    }
+ 
     # prompt again (since recipient differs)
     my $prompt = $config->{ command_mail_reply_prompt } || '>>>';
     $curproc->reply_message("\n$prompt $command", $optargs);
