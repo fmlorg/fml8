@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.88 2003/03/06 12:36:33 fukachan Exp $
+# $FML: Switch.pm,v 1.89 2003/03/09 03:52:13 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -103,6 +103,12 @@ sub main::Bootstrap2
 	print "ARGV: @ARGV\n";
     }
 
+    # 0.3 overload main.cf (defaults/$version/main.cf + main.cf)
+    #     to inherit $default_* variables defined later.
+    #     installer should merget the changes except for $default_*.
+    $main_cf = _overload_main_cf($main_cf);
+
+    # 1.0 $main_cf is already o.k. here.
     # 1.1 parse command line options (preliminary)
     {
 	my $options = _module_specific_options($main_cf, $myname);
@@ -278,6 +284,40 @@ sub ProcessSwitch
     croak($@) if $@;
 
     return $pkg;
+}
+
+
+# Descriptions: read defaults/$version/main.cf if exists and merge it
+#               with the specified $main_cf.
+#    Arguments: HASH_REF($main_cf)
+# Side Effects: none
+# Return Value: HASH_REF
+sub _overload_main_cf
+{
+    my ($main_cf) = @_;
+    my $new_main_cf = {};
+    my $config_dir  = $main_cf->{ default_config_dir };
+
+    use File::Spec;
+    my $default_main_cf = File::Spec->catfile($config_dir, 'main.cf');
+    if (-f $default_main_cf) {
+	my ($k, $v);
+
+	use FML::Config::Tiny;
+	my $tinyconfig = new FML::Config::Tiny;
+	$new_main_cf = $tinyconfig->read($default_main_cf);
+
+	# overwrittern by the specified $main_cf (e.g. /etc/fml/main.cf)
+	while (($k, $v) = each %$main_cf) {
+	    $new_main_cf->{ $k } = $v;
+	}
+
+	# variable expansion by the function in libexec/loader.
+	main::loader_expand_variables( $new_main_cf );
+	$main_cf = $new_main_cf;
+    }
+
+    return $main_cf;
 }
 
 
