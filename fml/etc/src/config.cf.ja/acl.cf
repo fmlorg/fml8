@@ -90,7 +90,7 @@ recipient_maps		=	$primary_recipient_map
 				file:$ml_home_dir/actives
 
 
-=head2 管理者メンバーとみなされるのは誰か？
+=head2 リモート管理者メンバーとみなされるのは誰か？
 
 # Descriptions: 登録などの際に対象となるメンバーリスト
 #               XXX map のタイプによっては書き込みできないこともある
@@ -136,6 +136,38 @@ primary_admin_member_password_map = file:$ml_home_dir/etc/passwd-admin
 #     Examples:
 admin_member_password_maps	=	$primary_admin_member_password_map
 					file:$ml_home_dir/etc/passwd
+
+
+=head2 モデレータメンバーとみなされるのは誰か？
+
+# Descriptions: 登録などの際に対象となるメンバーリスト
+#               XXX map のタイプによっては書き込みできないこともある
+#               XXX (例: unix.group )
+#      History: fml 4.0 の $MODERATOR_MEMBER_LIST
+#        Value: filename
+#     Examples: /var/spool/ml/elena/members-moderator
+primary_moderator_member_map	=	file:$ml_home_dir/members-moderator
+
+
+# Descriptions: メンバーかどうか認証する際に検索するすべてのメンバーリスト
+#      History: fml 4.0 には相当物がない、$MODERATOR_MEMBER_LIST のみだった
+#        Value: 
+#     Examples: 
+moderator_member_maps		=	$primary_moderator_member_map
+
+
+# Descriptions: とりあえず定義してあるけど、使われてはいない
+#      History: 4.0 にはない
+#        Value: file
+#     Examples: /var/spool/ml/elena/recipients-moderator
+primary_moderator_recipient_map	=	file:$ml_home_dir/recipients-moderator
+
+
+# Descriptions: とりあえず定義してあるけど、使われてはいない
+#      History: 4.0 にはない
+#        Value: file
+#     Examples: /var/spool/ml/elena/recipients-moderator
+moderator_recipient_maps	=	$primary_moderator_recipient_map
 
 
 =head2 アカウントベースのアクセス制限をかける
