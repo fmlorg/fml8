@@ -1,5 +1,5 @@
 <!--
-	$FML: preface.sgml,v 1.3 2001/04/24 13:33:34 fukachan Exp $
+	$FML: preface.sgml,v 1.4 2001/04/25 02:55:56 fukachan Exp $
 -->
 
 <preface>
@@ -152,6 +152,56 @@ fml-devel で作られたモジュールのマージおよび
               |      |
             4.0.1   4.0.2 .... (リリース / 4.0-stable バージョン)
 </screen>
+
+</sect1>
+
+
+<!-- ======================================================== -->
+<sect1 id="mailinglist">
+
+	<title> メーリングリスト </title>
+
+<para>
+fml 5 の議論のためのメーリングリストを用意してあります。
+</para>
+
+<para>
+登録の仕方はいつもと一緒です。
+
+fml-devel MLへの自動登録は fml-devel-ctl@ffs.fml.org へ 
+subscribe の後に自分の名前をローマ字で続けたフレーズをメールの"本文"
+(注意: メールの本文)に書いて送って下さい。例えば次のようになります。
+
+<screen>
+To: fml-devel-ctl@ffs.fml.org
+
+subscribe Kinomoto Sakura
+</screen>
+
+このメールに対し、登録意志確認のメールが送り返されてきます。
+そのメールに返事をしてください。
+ＭＬに登録されます。
+</para>
+
+<para>
+fml-devel ＭＬのログは
+	<ulink url="http://www.fml.org/mlarchives/">
+	http://www.fml.org/mlarchives/
+	</ulink>
+で公開しています。
+</para>
+
+<para>
+ＭＬに参加しないが、要望等を送りたいという場合、ＭＬではなく 
+
+	<ulink url="mailto:fml-request@fml.org">
+	fml-request@fml.org
+	</ulink>
+
+へメールを送って下さい。このメールは適宜 fml-devel 等に流して議論した
+いと思います。他にフォワードなどされたくない場合はその旨を一筆書いてお
+いて下さい。
+</para>
 
 </sect1>
 
