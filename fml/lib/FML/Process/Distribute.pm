@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.84 2002/07/15 15:27:14 fukachan Exp $
+# $FML: Distribute.pm,v 1.85 2002/07/23 13:03:13 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -307,7 +307,7 @@ sub _distribute
     my $id = $article->increment_id;
 
     # XXX debug, remove here in the future
-    {
+    if ($debug) {
 	my $ha_msg = $curproc->{ article }->{ body }->data_type_list;
 	for (@$ha_msg) { Log("debug: $_");}
     }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.24 2002/01/16 13:43:22 fukachan Exp $
+# $FML: Analyze.pm,v 1.25 2002/02/01 12:04:03 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -102,7 +102,7 @@ sub assign
 	    $self->log("speculated id=$thread_id");
 	}
 	else {
-	    $self->log("(debug) fail to spelucate thread_id");
+	    $self->log("(debug) fail to spelucate thread_id") if $debug;
 	}
     }
 
@@ -131,7 +131,7 @@ sub assign
 	$self->_append_thread_status_info("found");
     }
     else {
-	$self->log("message without thread_id");
+	$self->log("message without thread_id") if $debug;
 
 	my $id = $self->_assign_new_thread_id_number();
 
@@ -163,7 +163,7 @@ sub _assign_new_thread_id_number
 	$id = $self->increment_id();
     }
 
-    $self->log("assign thread_id=$id");
+    $self->log("assign thread_id=$id") if $debug;
     return $id;
 }
 
@@ -415,7 +415,7 @@ sub _extract_thread_id_in_subject
 	return $id;
     }
     else {
-	$self->log("no thread id /$regexp/ in subject");
+	$self->log("no thread id /$regexp/ in subject") if $debug;
 	return 0;
     }
 }
@@ -465,7 +465,9 @@ sub _speculate_thread_id_from_header
 	$self->db_close();
     }
 
-    $self->log("(debug) not speculated") unless $result;
+    if ($debug) {
+        $self->log("(debug) not speculated") unless $result;
+    }
     $result;
 }
 
@@ -553,7 +555,7 @@ sub _update_db
     my $thread_id  = $self->get_thread_id();
 
     # 0. logging
-    $self->log("article_id=$article_id thread_id=$thread_id");
+    $self->log("article_id=$article_id thread_id=$thread_id") if $debug;
 
     # prepare hash table tied to db_dir/*db's
     my $rh = $self->{ _hash_table };
