@@ -5,12 +5,12 @@ actives
 add2actives
 add2members
 addactives
-addadmin
+		addadmin		done
 addmembers
-addpriv
+		addpriv			done
 		bye			done
-byeadmin
-byepriv
+		byeadmin		done
+		byepriv			done
 		chaddr			done
 		change			removed
 		change-address		removed
@@ -21,7 +21,7 @@ help
 iam
 initpass
 initpasswd
-log
+		log			half done
 ls
 matome
 members
