@@ -1,0 +1,37 @@
+○ 状態遷移
+
+   open
+	チケット番号らしきものを含まないメールが投稿されたら
+	自動的に open
+
+  going
+	誰か返事をしたら、対応中
+
+  closed
+	close 宣言がなされたら、クローズ
+
+
+○ close 宣言は以下のいずれかの実行である。
+
+   1)	Subject: が close ではじまる
+
+   2)	メール本文の行頭が close ではじまる。
+		先頭の空白は無視されます。
+		正規表現では \s*close です。
+		
+		multipart メールの場合は最初の text/plain パートの
+		行頭が close で始まる場合です。
+
+   3)	メールヘッダで X-Ticket-Pragma: close が指定されていた時
+
+
+○ 特別なヘッダ
+
+X-Ticket-Pragma: ignore
+
+	新たにチケットを割り当てない
+	すべてのチケットに関する操作を抑制する。
+
+X-Ticket-Pragma: close
+
+	チケットをクローズする。

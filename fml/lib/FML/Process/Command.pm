@@ -14,7 +14,7 @@ use strict;
 use Carp;
 
 use FML::Process::Kernel;
-use FML::Log qw(Log);
+use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
 
 =head1 NAME

@@ -16,7 +16,7 @@ use Carp;
 use FML::Header;
 use MailingList::Messages;
 use FML::Config;
-use FML::Log qw(Log);
+use FML::Log qw(Log LogWarn LogError);
 
 
 =head1 NAME

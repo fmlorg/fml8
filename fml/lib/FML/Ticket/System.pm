@@ -14,7 +14,7 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use FML::Errors qw(error_reason error error_reset);
-use FML::Log qw(Log);
+use FML::Log qw(Log LogWarn LogError);
 
 
 =head1 NAME

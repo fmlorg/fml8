@@ -12,7 +12,7 @@ package FML::Process::QMail;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log;
+use FML::Log qw(Log LogWarn LogError);
 
 
 sub new

@@ -57,7 +57,7 @@ use FML::Process::Flow;
 use FML::Parse;
 use FML::Header;
 use FML::Config;
-use FML::Log qw(Log);
+use FML::Log qw(Log LogWarn LogError);
 use File::SimpleLock;
 use FML::Messages;
 

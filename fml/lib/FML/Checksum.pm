@@ -12,7 +12,7 @@ package FML::Checksum;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log qw(Log);
+use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 

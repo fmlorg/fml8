@@ -13,7 +13,7 @@ package FML::Article;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
-use FML::Log qw(Log);
+use FML::Log qw(Log LogWarn LogError);
 
 
 =head1 NAME

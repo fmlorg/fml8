@@ -13,7 +13,7 @@ package FML::Ticket::Model::minimal_by_db;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
-use FML::Log qw(Log);
+use FML::Log qw(Log LogWarn LogError);
 use FML::Ticket::System;
 
 require Exporter;

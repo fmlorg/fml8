@@ -37,7 +37,7 @@ constructor which is usual in FML::Process classes.
 =cut
 
 use FML::Process::Kernel;
-use FML::Log qw(Log);
+use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
 
 # load standard CGI routines
