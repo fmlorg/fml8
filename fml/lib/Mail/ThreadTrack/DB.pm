@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DB.pm,v 1.5 2001/11/03 08:50:57 fukachan Exp $
+# $FML: DB.pm,v 1.6 2001/11/04 04:46:40 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -99,7 +99,19 @@ sub db_open
 sub db_clear
 {
     my ($self) = @_;
-    my $db_dir  = $self->{ _db_dir };
+    my $db_dir = '';
+
+    $db_dir = $self->{ _db_dir };
+    _db_clear($db_dir) if -d $db_dir;
+
+    $db_dir = $self->{ _db_base_dir };
+    _db_clear($db_dir) if -d $db_dir;
+}
+
+
+sub _db_clear
+{
+    my ($db_dir) = @_;
 
     eval q{ 
 	use DirHandle;
@@ -111,8 +123,10 @@ sub db_clear
 	    while (defined($f = $dh->read)) {
 		next if $f =~ /^\./;
 		my $file = File::Spec->catfile($db_dir, $f);
-		print STDERR "unlink $file;\n";
-		unlink $file;
+		if (-f $file) {
+		    print STDERR "unlink $file\n";
+		    unlink $file;
+		}
 	    }
 	    $dh->close;
 	}
