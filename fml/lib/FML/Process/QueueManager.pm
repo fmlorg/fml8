@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.21 2004/07/23 13:01:29 fukachan Exp $
+# $FML: QueueManager.pm,v 1.22 2004/08/13 11:48:23 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -163,20 +163,24 @@ sub cleanup
     my $queue_dir = $self->{ _directory };
 
     use Mail::Delivery::Queue;
-    my $queue   = new Mail::Delivery::Queue { directory => $queue_dir };
-    my $classes = $queue->get_class_list() || []; # new, incoming, ...
+    my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
+    my $list  = $queue->list_all() || [];
+    my $limit = 5 * 24 * 3600; # 5 days.
+    my $now   = time;
 
-    for my $class (@$classes) {
-	my $ra = $queue->list($class);
-	for my $qid (@$ra) {
-	    my $q = new Mail::Delivery::Queue {
-		id        => $qid,
-		directory => $queue_dir,
-	    };
+    for my $qid (@$list) {
+	my $q = new Mail::Delivery::Queue {
+	    id        => $qid,
+	    directory => $queue_dir,
+	};
 
-	    unless ( $q->is_valid_queue() ) {
+	unless ( $q->is_valid_queue() ) {
+	    my $mtime = $q->last_modified_time();
+
+	    # enough old.
+	    if ($mtime < $now - $limit) {
 		$curproc->log("qmgr: remove invalid queue qid=$qid");
-		# $q->remove();
+		$q->remove();
 	    }
 	}
     }
