@@ -27,7 +27,8 @@ admin_command_restrictions</entry>
 <entry>
  admin コマンドへの制限</entry>
 <entry>
-check_password
+reject_system_accounts
+   check_admin_member_password
    reject
    </entry>
 </row>
@@ -42,12 +43,36 @@ $primary_admin_member_map
 </row>
 <row>
 <entry>
+article_body_filter_rules</entry>
+<entry>
+ フィルタリングのルール</entry>
+<entry>
+reject_not_iso2022jp_japanese_string
+   reject_null_mail_body
+   reject_one_line_message
+   reject_old_fml_command_syntax
+   reject_invalid_fml_command_syntax
+   reject_japanese_command_syntax
+   reject_ms_guid
+   </entry>
+</row>
+<row>
+<entry>
+article_header_filter_rules</entry>
+<entry>
+ フィルタリングのルール</entry>
+<entry>
+check_message_id
+   </entry>
+</row>
+<row>
+<entry>
 article_header_rewrite_rules</entry>
 <entry>
  記事のヘッダを書き換えるルール群</entry>
 <entry>
 delete_unsafe_header_fields
-   rewrite_subject_tag
+   rewrite_article_subject_tag
    rewrite_reply_to
    add_software_info
    add_fml_ml_name
@@ -55,6 +80,99 @@ delete_unsafe_header_fields
    add_fml_article_id
    add_x_sequence
    add_rfc2369
+   </entry>
+</row>
+<row>
+<entry>
+article_subject_tag</entry>
+<entry>
+ Subject: のタグ</entry>
+<entry>
+[$ml_name:%05d]
+   </entry>
+</row>
+<row>
+<entry>
+body_cksum_cache_dir</entry>
+<entry>
+ Message-ID のキャッシュを格納するディレクトリ</entry>
+<entry>
+$db_dir/body_cksum
+   </entry>
+</row>
+<row>
+<entry>
+body_loop_check_rules</entry>
+<entry>
+ ヘッダに対するループチェックのルール群</entry>
+<entry>
+check_body_cksum
+   </entry>
+</row>
+<row>
+<entry>
+cgi_base_dir</entry>
+<entry>
+ CGI を置くトップディレクトリ</entry>
+<entry>
+$fml_owner_home_dir/public_html/cgi-bin/fml/$ml_domain
+   </entry>
+</row>
+<row>
+<entry>
+cgi_charset</entry>
+<entry>
+ CGI の表示の CHARSET</entry>
+<entry>
+$default_cgi_charset
+   </entry>
+</row>
+<row>
+<entry>
+cgi_main_menu_color</entry>
+<entry>
+ デフォルトの bgcolor</entry>
+<entry>
+#FFFFFF
+   </entry>
+</row>
+<row>
+<entry>
+cgi_navigation_bar_color</entry>
+<entry>
+ デフォルトの bgcolor</entry>
+<entry>
+#FFFFFF
+   </entry>
+</row>
+<row>
+<entry>
+chaddr_command_auth_type</entry>
+<entry>
+ chaddr コマンドで confirmation 認証(コールバック認証)</entry>
+<entry>
+confirmation
+   </entry>
+</row>
+<row>
+<entry>
+command_prompt</entry>
+<entry>
+ command prompt in message reply</entry>
+<entry>
+>>>
+   </entry>
+</row>
+<row>
+<entry>
+command_restrictions</entry>
+<entry>
+ コマンドへの制限</entry>
+<entry>
+reject_system_accounts
+   permit_commands_for_stranger
+   permit_member_maps
+   reject
    </entry>
 </row>
 <row>
@@ -83,122 +201,6 @@ help
    admin
    objective
    summary
-   </entry>
-</row>
-<row>
-<entry>
-body_cksum_cache_dir</entry>
-<entry>
- Message-ID のキャッシュを格納するディレクトリ</entry>
-<entry>
-$db_dir/body_cksum
-   </entry>
-</row>
-<row>
-<entry>
-body_filter_rules</entry>
-<entry>
- フィルタリングのルール</entry>
-<entry>
-reject_not_iso2022jp_japanese_string
-   reject_null_mail_body
-   reject_one_line_message
-   reject_old_fml_command_syntax
-   reject_invalid_fml_command_syntax
-   reject_japanese_command_syntax
-   reject_ms_guid
-   </entry>
-</row>
-<row>
-<entry>
-body_loop_check_rules</entry>
-<entry>
- ヘッダに対するループチェックのルール群</entry>
-<entry>
-verify_body_cksum_uniqueness
-   </entry>
-</row>
-<row>
-<entry>
-cgi_base_dir</entry>
-<entry>
- CGI を置くトップディレクトリ</entry>
-<entry>
-$fml_owner_home_dir/public_html/cgi-bin/fml/$ml_domain
-   </entry>
-</row>
-<row>
-<entry>
-cgi_charset</entry>
-<entry>
- CGI の表示の CHARSET</entry>
-<entry>
-$cgi_default_charset
-   </entry>
-</row>
-<row>
-<entry>
-cgi_default_charset</entry>
-<entry>
- デフォルトの CHARSET</entry>
-<entry>
-euc-jp
-   </entry>
-</row>
-<row>
-<entry>
-cgi_main_menu_color</entry>
-<entry>
- デフォルトの bgcolor</entry>
-<entry>
-#FFFFFF
-   </entry>
-</row>
-<row>
-<entry>
-cgi_navigation_bar_color</entry>
-<entry>
- デフォルトの bgcolor</entry>
-<entry>
-#FFFFFF
-   </entry>
-</row>
-<row>
-<entry>
-command_chaddr_type</entry>
-<entry>
- chaddr コマンドで confirmation 認証(コールバック認証)</entry>
-<entry>
-confirmation
-   </entry>
-</row>
-<row>
-<entry>
-command_prompot</entry>
-<entry>
- command prompt in message reply</entry>
-<entry>
->>>
-   </entry>
-</row>
-<row>
-<entry>
-command_restrictions</entry>
-<entry>
- コマンドへの制限</entry>
-<entry>
-reject_system_accounts
-   permit_members_only
-   reject
-   </entry>
-</row>
-<row>
-<entry>
-command_unsubscribe_type</entry>
-<entry>
- unsubscribe コマンドで confirmation 認証(コールバック認証)</entry>
-<entry>
-confirmation
    </entry>
 </row>
 <row>
@@ -239,6 +241,15 @@ $var_dir/db
 </row>
 <row>
 <entry>
+default_cgi_charset</entry>
+<entry>
+ デフォルトの CHARSET</entry>
+<entry>
+euc-jp
+   </entry>
+</row>
+<row>
+<entry>
 default_directory_mode</entry>
 <entry>
  ディレクトリを作成する時のデフォルトモード</entry>
@@ -267,6 +278,69 @@ add_software_info
 </row>
 <row>
 <entry>
+domain_config_base_dir</entry>
+<entry>
+ fml からシステムに教えるデータを置くためのディレクトリ</entry>
+<entry>
+$ml_home_prefix/etc
+   </entry>
+</row>
+<row>
+<entry>
+domain_exim_config_dir</entry>
+<entry>
+ exim 用に教えるための設定ファイルを置くディレクトリ</entry>
+<entry>
+$domain_config_base_dir/exim
+   </entry>
+</row>
+<row>
+<entry>
+domain_mail_config_dir</entry>
+<entry>
+ MTA 用に教えるための設定ファイルを置くディレクトリ</entry>
+<entry>
+$domain_config_base_dir/mail
+   </entry>
+</row>
+<row>
+<entry>
+domain_postfix_config_dir</entry>
+<entry>
+ postfix 用に教えるための設定ファイルを置くディレクトリ</entry>
+<entry>
+$domain_config_base_dir/postfix
+   </entry>
+</row>
+<row>
+<entry>
+domain_qmail_config_dir</entry>
+<entry>
+ qmail 用に教えるための設定ファイルを置くディレクトリ</entry>
+<entry>
+$domain_config_base_dir/qmail
+   </entry>
+</row>
+<row>
+<entry>
+domain_sendmail_config_dir</entry>
+<entry>
+ sendmail 用に教えるための設定ファイルを置くディレクトリ</entry>
+<entry>
+$domain_mail_config_dir
+   </entry>
+</row>
+<row>
+<entry>
+error_analyzer_cache_dir</entry>
+<entry>
+ error messages のキャッシュを格納するディレクトリ</entry>
+<entry>
+$db_dir/error
+   </entry>
+</row>
+<row>
+<entry>
 guide_file</entry>
 <entry>
  ヘルプファイル</entry>
@@ -279,6 +353,15 @@ $ml_home_dir/guide
 has_alarm</entry>
 <entry>
  alarm(2) があるか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+has_fork</entry>
+<entry>
+ fork(2) があるか？</entry>
 <entry>
 yes
    </entry>
@@ -312,22 +395,13 @@ yes
 </row>
 <row>
 <entry>
-header_filter_rules</entry>
-<entry>
- フィルタリングのルール</entry>
-<entry>
-is_valid_message_id
-   </entry>
-</row>
-<row>
-<entry>
 header_loop_check_rules</entry>
 <entry>
  ヘッダに対するループチェックのルール群</entry>
 <entry>
-verify_message_id_uniqueness
-   verify_x_ml_info_uniqueness
-   verify_list_post_uniqueness
+check_message_id
+   check_x_ml_info
+   check_list_post
    </entry>
 </row>
 <row>
@@ -350,6 +424,24 @@ $fml_owner_home_dir/public_html/fml/mlarchive/$ml_domain/$ml_name
 </row>
 <row>
 <entry>
+incoming_mail_cache_dir</entry>
+<entry>
+ 入力されるメールを置くディレクトリ</entry>
+<entry>
+$var_dir/mail/incoming
+   </entry>
+</row>
+<row>
+<entry>
+incoming_mail_cache_size</entry>
+<entry>
+ 入力されるメールを最大何通キャッシュするか</entry>
+<entry>
+128
+   </entry>
+</row>
+<row>
+<entry>
 ldap_query_filter</entry>
 <entry>
  LDAP のフィルタ</entry>
@@ -359,11 +451,20 @@ ldap_query_filter</entry>
 </row>
 <row>
 <entry>
+listinfo_base_dir</entry>
+<entry>
+ information をおくディレクトリ (ＭＬごと)</entry>
+<entry>
+$fml_owner_home_dir/public_html/fml/listinfo
+   </entry>
+</row>
+<row>
+<entry>
 listinfo_dir</entry>
 <entry>
  information をおくディレクトリ (ＭＬごと)</entry>
 <entry>
-$fml_owner_home_dir/public_html/fml/listinfo/$ml_domain/$ml_name
+$listinfo_base_dir/$ml_domain/$ml_name
    </entry>
 </row>
 <row>
@@ -444,16 +545,16 @@ mail_aliases_file</entry>
 <entry>
  MTA に教えるための aliases ファイル</entry>
 <entry>
-$mailconf_dir/aliases
+$domain_mail_config_dir/aliases
    </entry>
 </row>
 <row>
 <entry>
-mailconf_dir</entry>
+mail_queue_dir</entry>
 <entry>
- MTA 用に教えるための設定ファイルを置くディレクトリ</entry>
+ mail queue のディレクトリ</entry>
 <entry>
-$sysconf_dir/mail
+$var_dir/mail/queue
    </entry>
 </row>
 <row>
@@ -463,6 +564,7 @@ member_maps</entry>
  メンバーかどうか認証する際に検索するすべてのメンバーリスト</entry>
 <entry>
 $primary_member_map
+   $admin_member_maps
    </entry>
 </row>
 <row>
@@ -494,22 +596,35 @@ $cgi_base_dir/ml-admin/$ml_name
 </row>
 <row>
 <entry>
-mqueue_dir</entry>
+newml_command_postfix_template_files</entry>
 <entry>
- mail queue のディレクトリ</entry>
+ ＭＬ作成時 (makefml newml)の際に作られる</entry>
 <entry>
-$var_dir/mqueue
+include
+   include-ctl
+   include-error
+   </entry>
+</row>
+<row>
+<entry>
+newml_command_qmail_template_files</entry>
+<entry>
+ ＭＬ作成時 (makefml newml)の際に作られる</entry>
+<entry>
+dot-qmail
+   dot-qmail-ctl
+   dot-qmail-admin
+   dot-qmail-request
+   dot-qmail-default
    </entry>
 </row>
 <row>
 <entry>
 newml_command_template_files</entry>
 <entry>
- ＭＬ作成時 (makefml newml )の際に作られる</entry>
+ ＭＬ作成時 (makefml newml)の際に作られる</entry>
 <entry>
 config.cf
-   include
-   include-ctl
    </entry>
 </row>
 <row>
@@ -523,13 +638,40 @@ $ml_home_dir/objective
 </row>
 <row>
 <entry>
+outgoing_mail_cache_dir</entry>
+<entry>
+ deliver されるメールを置くディレクトリ</entry>
+<entry>
+$var_dir/mail/outgoing
+   </entry>
+</row>
+<row>
+<entry>
+outgoing_mail_cache_size</entry>
+<entry>
+ 出力(配送)されるメールを最大何通キャッシュするか</entry>
+<entry>
+128
+   </entry>
+</row>
+<row>
+<entry>
 post_restrictions</entry>
 <entry>
  投稿への制限</entry>
 <entry>
 reject_system_accounts
-   permit_members_only
+   permit_member_maps
    reject
+   </entry>
+</row>
+<row>
+<entry>
+postfix_virtual_map_file</entry>
+<entry>
+ MTA に教えるための virtual map ファイル</entry>
+<entry>
+$domain_postfix_config_dir/virtual
    </entry>
 </row>
 <row>
@@ -570,11 +712,11 @@ admin
 </row>
 <row>
 <entry>
-recipient_limit</entry>
+qmail_virtualdomains_file</entry>
 <entry>
- ひとつの SMTP トランザクションで MTA に渡す受信者の数の上限</entry>
+ virtual domain configurations for qmail</entry>
 <entry>
-1000
+/var/qmail/control/virtualdomains
    </entry>
 </row>
 <row>
@@ -606,20 +748,11 @@ $ml_home_prefix/@db@
 </row>
 <row>
 <entry>
-smtp_log_dir</entry>
+smtp_recipient_limit</entry>
 <entry>
- ログファイルがおかれるディレクトリ</entry>
+ ひとつの SMTP トランザクションで MTA に渡す受信者の数の上限</entry>
 <entry>
-$log_dir
-   </entry>
-</row>
-<row>
-<entry>
-smtp_log_file</entry>
-<entry>
- メールサーバとのやりとりを記録するファイル</entry>
-<entry>
-$smtp_log_dir/_smtplog
+1000
    </entry>
 </row>
 <row>
@@ -679,20 +812,11 @@ fml
 </row>
 <row>
 <entry>
-subject_tag</entry>
+subscribe_command_auth_type</entry>
 <entry>
- Subject: のタグ</entry>
+ subscribe コマンドで confirmation 認証(コールバック認証)</entry>
 <entry>
-[$ml_name:%05d]
-   </entry>
-</row>
-<row>
-<entry>
-subject_tag_name</entry>
-<entry>
- Subject: につけるタグの制御</entry>
-<entry>
-$ml_name
+confirmation
    </entry>
 </row>
 <row>
@@ -702,15 +826,6 @@ summary_file</entry>
  ヘルプファイル</entry>
 <entry>
 $ml_home_dir/summary
-   </entry>
-</row>
-<row>
-<entry>
-sysconf_dir</entry>
-<entry>
- fml からシステムに教えるデータを置くためのディレクトリ</entry>
-<entry>
-$ml_home_prefix/etc
    </entry>
 </row>
 <row>
@@ -731,6 +846,33 @@ root
    \S+\-help
    \S+\-subscribe
    \S+\-unsubscribe
+   </entry>
+</row>
+<row>
+<entry>
+thread_cgi_base_url</entry>
+<entry>
+ CGI の相対パス</entry>
+<entry>
+/cgi-bin/fmlthread.cgi
+   </entry>
+</row>
+<row>
+<entry>
+thread_cgi_bgcolor</entry>
+<entry>
+ CGI 画面の基本カラー</entry>
+<entry>
+#E6E6FA
+   </entry>
+</row>
+<row>
+<entry>
+thread_cgi_title</entry>
+<entry>
+ CGI のタイトル</entry>
+<entry>
+thread tracking system interface
    </entry>
 </row>
 <row>
@@ -807,6 +949,24 @@ Return-Receipt-To
 </row>
 <row>
 <entry>
+unsubscribe_command_auth_type</entry>
+<entry>
+ unsubscribe コマンドで confirmation 認証(コールバック認証)</entry>
+<entry>
+confirmation
+   </entry>
+</row>
+<row>
+<entry>
+use_article_body_filter</entry>
+<entry>
+ ヘッダ情報を根拠にしたフィルタリングをするか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
 use_article_delivery</entry>
 <entry>
  記事を配送する機能を使うか否か？</entry>
@@ -816,9 +976,18 @@ yes
 </row>
 <row>
 <entry>
-use_body_filter</entry>
+use_article_header_filter</entry>
 <entry>
  ヘッダ情報を根拠にしたフィルタリングをするか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_article_header_rewrite</entry>
+<entry>
+ ヘッダ書換えの操作をするか？</entry>
 <entry>
 yes
    </entry>
@@ -843,9 +1012,18 @@ no
 </row>
 <row>
 <entry>
-use_header_filter</entry>
+use_digest_header_rewrite</entry>
 <entry>
- ヘッダ情報を根拠にしたフィルタリングをするか？</entry>
+ ヘッダ書換えの操作をするか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_error_analyzer</entry>
+<entry>
+ use libexe/fml/{error,mead} or not</entry>
 <entry>
 yes
    </entry>
@@ -861,18 +1039,18 @@ yes
 </row>
 <row>
 <entry>
-use_header_rewrite</entry>
+use_html_archive</entry>
 <entry>
- ヘッダ書換えの操作をするか？</entry>
+ 記事を HTML 化するか否か</entry>
 <entry>
 yes
    </entry>
 </row>
 <row>
 <entry>
-use_html_archive</entry>
+use_incoming_mail_cache</entry>
 <entry>
- 記事を HTML 化するか否か</entry>
+ 入力されるメールをキャッシュするか？</entry>
 <entry>
 yes
    </entry>
@@ -897,20 +1075,20 @@ yes
 </row>
 <row>
 <entry>
-use_spool</entry>
+use_outgoing_mail_cache</entry>
 <entry>
- 記事をスプールディレクトリに保存する</entry>
+ 出力(配送)されるメールをキャッシュするか？</entry>
 <entry>
 yes
    </entry>
 </row>
 <row>
 <entry>
-use_spool_subdir</entry>
+use_spool</entry>
 <entry>
- 記事のスプールディレクトリを階層化するか？</entry>
+ 記事をスプールディレクトリに保存する</entry>
 <entry>
-no
+yes
    </entry>
 </row>
 <row>
