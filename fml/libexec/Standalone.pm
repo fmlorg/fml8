@@ -65,15 +65,46 @@ sub load_cf
 sub _expand_variables
 {
     my ($config) = @_;
+    my @order  = keys %$config;
 
-    # expand $xxx style variables
-    no strict 'refs';
-    for my $x (keys %$config) { $$x = $config->{ $x };}
-    for (keys %$config) {
-	$config->{ $_ } =~ s/\$([a-z_]+)/${$1}/g;
+    # check whether the variable definition is recursive.
+    # For example, definition "var_a = $var_a/b/c" causes a loop.
+    for my $x ( @order ) {
+	if ($config->{ $x } =~ /\$$x/) {
+	    croak("loop1: definition of $x is recursive\n");
+	}
+    }
+
+    # main expansion loop
+    my $org = '';
+    my $max = 0;
+  KEY:
+    for my $x ( @order ) {
+	next KEY if $config->{ $x } !~ /\$/o;
+
+	# we need a loop to expand nested variables, for example, 
+	# a = $x/y and b = $a/c/0
+	# 
+	$max = 0;
+      EXPANSION_LOOP:
+	while ($max++ < 16) {
+	    $org = $config->{ $x };
+
+	    $config->{ $x } =~ s/\$([a-z_]+)/$config->{$1}/g;
+
+	    last EXPANSION_LOOP if $config->{ $x } !~ /\$/o;
+	    last EXPANSION_LOOP if $org eq $config->{ $x };
+
+	    if ($config->{ $x } =~ /\$$x/) {
+		croak("loop2: definition of $x is recursive\n");
+	    }
+        }
+
+	if ($max >= 16) {
+	    croak("variable expansion of $x causes infinite loop\n");
+	} 
     }
 }
-
 
 
 sub _parse_params

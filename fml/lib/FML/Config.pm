@@ -117,8 +117,14 @@ sub load_file
 sub expand_variables
 {
     my ($self) = @_;
-    my $config = \%_fml_config;
-    my @order  = keys %_fml_config;
+    _expand_variables( \%_fml_config );
+}
+
+
+sub _expand_variables
+{
+    my ($config) = @_;
+    my @order  = keys %$config;
 
     # check whether the variable definition is recursive.
     # For example, definition "var_a = $var_a/b/c" causes a loop.
