@@ -21,952 +21,2478 @@ sub translate
     my $fp_rule_convert           = $dispatch->{ rule_convert };
     my $fp_rule_prefer_fml4_value = $dispatch->{ rule_prefer_fml4_value };
     my $fp_rule_prefer_fml8_value = $dispatch->{ rule_prefer_fml8_value };
+    my $fp_rule_ignore            = $dispatch->{ rule_ignore };
     my $s;
 
+    
+    if ($key eq 'LANGUAGE' && $value eq 'Japanese') {
+    $s = undef;
 
-   if ($key eq 'USE_DISTRIBUTE_FILTER' && $value == 1) {
-      $s = undef;
-      $s .= "use_article_filter = yes";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'USE_DISTRIBUTE_FILTER' && $value == 0) {
-      $s = undef;
-      $s .= "use_article_filter = no";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'FILTER_ATTR_REJECT_NULL_BODY' && $value == 1) {
-      $s = undef;
-      $s .= "article_text_plain_filter_rules += reject_null_mail_body";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'FILTER_ATTR_REJECT_NULL_BODY' && $value == 0) {
-      $s = undef;
-      $s .= "article_text_plain_filter_rules -= reject_null_mail_body";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'FILTER_ATTR_REJECT_COMMAND' && $value == 1) {
-      $s = undef;
-      $s .= "article_text_plain_filter_rules += reject_old_fml_command_syntax";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'FILTER_ATTR_REJECT_COMMAND' && $value == 0) {
-      $s = undef;
-      $s .= "article_text_plain_filter_rules -= reject_old_fml_command_syntax";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'FILTER_ATTR_REJECT_2BYTES_COMMAND' && $value == 1) {
-      $s = undef;
-      $s .= "article_text_plain_filter_rules += reject_japanese_command_syntax";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'FILTER_ATTR_REJECT_2BYTES_COMMAND' && $value == 0) {
-      $s = undef;
-      $s .= "article_text_plain_filter_rules -= reject_japanese_command_syntax";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'FILTER_ATTR_REJECT_INVALID_COMMAND' && $value == 1) {
-      $s = undef;
-      $s .= "article_text_plain_filter_rules += reject_invalid_fml_command_syntax";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'FILTER_ATTR_REJECT_INVALID_COMMAND' && $value == 0) {
-      $s = undef;
-      $s .= "article_text_plain_filter_rules -= reject_invalid_fml_command_syntax";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'FILTER_ATTR_REJECT_ONE_LINE_BODY' && $value == 1) {
-      $s = undef;
-      $s .= "article_text_plain_filter_rules += reject_one_line_message";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'FILTER_ATTR_REJECT_ONE_LINE_BODY' && $value == 0) {
-      $s = undef;
-      $s .= "article_text_plain_filter_rules -= reject_one_line_message";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'FILTER_ATTR_REJECT_MS_GUID' && $value == 1) {
-      $s = undef;
-      $s .= "article_text_plain_filter_rules += reject_ms_guid";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'FILTER_ATTR_REJECT_MS_GUID' && $value == 0) {
-      $s = undef;
-      $s .= "article_text_plain_filter_rules -= reject_ms_guid";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'FILTER_ATTR_REJECT_INVALID_JAPANESE' && $value == 0) {
-      $s = undef;
-      $s .= "article_text_plain_filter_rules -= reject_not_iso2022jp_japanese_string";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'FILTER_ATTR_REJECT_INVALID_JAPANESE' && $value == 1) {
-      $s = undef;
-      $s .= "article_text_plain_filter_rules += reject_not_iso2022jp_japanese_string";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'CONTENT_HANDLER_CUTOFF_EMPTY_MESSAGE' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'CONTENT_HANDLER_REJECT_EMPTY_MESSAGE' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'HTML_MAIL_DEFAULT_HANDLER' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'CONTROL_ADDRESS' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'USE_LOG_MAIL' && $value == 0) {
-      $s = undef;
-      $s .= "use_incoming_mail_cache = no";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'USE_LOG_MAIL' && $value == 1) {
-      $s = undef;
-      $s .= "use_incoming_mail_cache = yes";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'LOG_MAIL_DIR' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'LOG_MAIL_SEQ' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'PERMIT_COMMAND_FROM' && $value eq 'anyone') {
-      $s = undef;
-      $s .= "command_mail_restrictions = reject_system_special_accounts permit_anyone";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'XMLNAME' && $value eq 'X-ML-Name:') {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'XMLCOUNT' && $value eq 'X-Mail-Count') {
-      $s = undef;
-      $s .= "article_header_rewrite_rules += add_fml_traditional_article_id";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'SUBJECT_TAG_TYPE' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'BRACKET' && $value eq 'Elena') {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'BRACKET_SEPARATOR' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'SUBJECT_FREE_FORM' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'SUBJECT_FREE_FORM_REGEXP' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'SUBJECT_FORM_LONG_ID' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'USE_ERRORS_TO' && $value == 1) {
-      $s = undef;
-      $s .= "article_header_rewrite_rules += rewrite_errors_to";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'USE_ERRORS_TO' && $value == 0) {
-      $s = undef;
-      $s .= "article_header_rewrite_rules -= rewrite_errors_to";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'USE_RFC2369' && $value == 1) {
-      $s = undef;
-      $s .= "article_header_rewrite_rules += add_rfc2369";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'USE_RFC2369' && $value == 0) {
-      $s = undef;
-      $s .= "article_header_rewrite_rules -= add_rfc2369";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'TZone' && $value eq '+0900') {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'TZone' && $value eq 'JST') {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'TZONE_DST' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'SKIP_FIELDS' && $value eq 'Return-Receipt-To') {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'LANGUAGE' && $value eq 'Japanese') {
-      $s = undef;
-      $s .= "language_preference_order = ja en";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'MAXLEN_COMMAND_INPUT' && $value == 128) {
-      $s = undef;
-      $s .= "command_mail_line_length_limit = MAXLEN_COMMAND_INPUT";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'MAXNUM_COMMAND_INPUT' && defined $value) {
-      $s = undef;
-      $s .= "command_mail_valid_command_limit = MAXNUM_COMMAND_INPUT";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'CHADDR_KEYWORD' && $value eq 'chaddr|change\-address|change') {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'MAINTAINER' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'MSEND_RC' && $value eq '$VARLOG_DIR/msendrc') {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'LOG_MESSAGE_ID' && $value eq '$VARRUN_DIR/msgidcache') {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'MESSAGE_ID_CACHE_BUFSIZE' && $value == 6000) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'LOG_MAILBODY_CKSUM' && $value eq '$VARRUN_DIR/bodycksumcache') {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'MEMBER_LIST' && $value ne '$DIR/members') {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'ACTIVE_LIST' && $value ne '$DIR/actives') {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'GUIDE_FILE' && $value ne '$DIR/guide') {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'OBJECTIVE_FILE' && $value ne '$DIR/objective') {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'SPOOL_DIR' && $value eq 'spool') {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'LOGFILE' && $value ne '$DIR/log') {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'LOGFILE_SUFFIX' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'SUMMARY_FILE' && $value ne '$DIR/summary') {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'SEQUENCE_FILE' && $value ne '$DIR/seq') {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'TMP_DIR' && $value eq 'tmp') {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'HOST' && $value ne 'localhost') {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'PORT' && $value != 25) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'SMTP_SENDER' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'SMTP_LOG' && $value eq '$VARLOG_DIR/_smtplog') {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'USE_SMTP_LOG_ROTATE' && $value == 1) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'SMTP_LOG_ROTATE_EXPIRE_LIMIT' && $value == 90) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'NUM_SMTP_LOG_ROTATE' && $value == 8) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'SMTP_LOG_ROTATE_TYPE' && $value eq 'number') {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'VAR_DIR' && $value eq 'var') {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'MCI_SMTP_HOSTS' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'OUTGOING_ADDRESS' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'VARLOG_DIR' && $value eq 'var/log') {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'POSTFIX_VERP_DELIMITERS' && $value eq '+=') {
-      $s = undef;
-      $s .= "postfix_verp_delimiters = POSTFIX_VERP_DELIMITERS";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'VARRUN_DIR' && $value eq 'var/run') {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'NOT_USE_SPOOL' && $value == 1) {
-      $s = undef;
-      $s .= "use_spool = no";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'NOT_USE_SPOOL' && $value == 0) {
-      $s = undef;
-      $s .= "use_spool = yes";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'VARDB_DIR' && $value eq 'var/db') {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'LANGUAGE' && $value eq 'English') {
-      $s = undef;
-      $s .= "language_preference_order = en ja";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'AUTO_HTML_GEN' && $value == 1) {
-      $s = undef;
-      $s .= "use_html_archive = yes";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'AUTO_HTML_GEN' && $value == 0) {
-      $s = undef;
-      $s .= "use_html_archive = no";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'USE_NEW_HTML_GEN' && $value == 1) {
-      $s = undef;
-      $s .= "use_html_archive = yes";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'USE_NEW_HTML_GEN' && $value == 0) {
-      $s = undef;
-      $s .= "use_html_archive = no";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'CPU_TYPE_MANUFACTURER_OS' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'STRUCT_SOCKADDR' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'LOCK_SH' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'LOCK_EX' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'LOCK_NB' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'LOCK_UN' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'COMPAT_SOLARIS2' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'NOT_USE_TIOCNOTTY' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'HAS_GETPWUID' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'HAS_GETPWGID' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'HAS_ALARM' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'UNISTD' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'SENDMAIL' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'TAR' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'UUENCODE' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'COMPRESS' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'ZCAT' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'LHA' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'ISH' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'ZIP' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'BZIP2' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'PGP' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'PGP5' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'PGPE' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'PGPK' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'PGPS' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'PGPV' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'GPG' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'RCS' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'CI' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'BASE64_DECODE' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'BASE64_ENCODE' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'MD5' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'SMTPLOG' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'CP' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'RM' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'AUTO_REGISTRATION_DEFAULT_MODE' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'MESSAGE_LANGUAGE' && $value eq 'Japanese') {
-      $s = undef;
-      $s .= "language_preference_order = ja en";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'CONFIRMATION_LIST' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'MESSAGE_LANGUAGE' && $value eq 'English') {
-      $s = undef;
-      $s .= "language_preference_order = en ja";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'FILE_TO_REGIST' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'DOMAINNAME' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'REMOTE_ADMINISTRATION' && $value == 0) {
-      $s = undef;
-      $s .= "use_admin_command_mail_fucntion = no";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'REMOTE_ADMINISTRATION' && $value == 1) {
-      $s = undef;
-      $s .= "use_admin_command_mail_fucntion = yes";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'REMOTE_ADMINISTRATION_AUTH_TYPE' && $value eq 'crypt') {
-      $s = undef;
-      $s .= "admin_command_mail_restrictions += check_admin_member_password";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'FQDN' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'ADMIN_MEMBER_LIST' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'PASSWD_FILE' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'ADMIN_LOG_DEFAULT_LINE_LIMIT' && defined $value) {
-      $s = undef;
-      $s .= "log_command_tail_starting_location = ADMIN_LOG_DEFAULT_LINE_LIMIT";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'MAIL_LIST' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   if ($key eq 'REJECT_ADDR' && defined $value) {
-      $s = undef;
-      $s .= &$fp_rule_convert($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'PERMIT_POST_FROM' && $value eq 'anyone') {
-      $s = undef;
-      $s .= "article_post_restrictions = reject_system_special_accounts permit_anyone";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'CHECK_MESSAGE_ID' && $value == 0) {
-      $s = undef;
-      $s .= "incoming_mail_header_loop_check_rules -= check_message_id";
-      $s .= "\n";
-      return $s if defined $s;
-   }
-   
-   
-   if ($key eq 'INCOMING_MAIL_SIZE_LIMIT' && $value != 0) {
-      $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
-      return $s if defined $s;
-   }
-   
-   
-      if ($key eq 'PERMIT_POST_FROM' && $value eq 'members_only') {
-         $s = undef;
-         
-         if ($key eq 'REJECT_POST_HANDLER' && $value eq 'reject') {
-            $s = undef;
-            $s .= "article_post_restrictions = reject_system_special_accounts permit_member_maps reject";
-         $s .= "\n";
-         }
-      return $s if defined $s;
-   }
-   
-   
+    $s .= "language_preference_order = ja en";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LANGUAGE' && $value eq 'English') {
+    $s = undef;
+
+    $s .= "language_preference_order = en ja";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MESSAGE_LANGUAGE' && $value eq 'Japanese') {
+    $s = undef;
+
+    $s .= "language_preference_order = ja en";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MESSAGE_LANGUAGE' && $value eq 'English') {
+    $s = undef;
+
+    $s .= "language_preference_order = en ja";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'DOMAINNAME' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'FQDN' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MAIL_LIST' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'PERMIT_POST_FROM' && $value eq 'anyone') {
+    $s = undef;
+
+    $s .= "article_post_restrictions = reject_system_special_accounts permit_anyone";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'PERMIT_POST_FROM' && $value eq 'members_only') {
+    $s = undef;
+
+        
+        if ($key eq 'REJECT_POST_HANDLER' && $value eq 'reject') {
+        $s = undef;
+
+        $s .= "article_post_restrictions = reject_system_special_accounts permit_member_maps reject";
+        }
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'PERMIT_POST_FROM' && $value eq 'members_only') {
+    $s = undef;
+
+        
+        if ($key eq 'REJECT_POST_HANDLER' && $value eq 'auto_subscribe') {
+        $s = undef;
+
+        $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+        }
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CONTROL_ADDRESS' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'PERMIT_COMMAND_FROM' && $value eq 'anyone') {
+    $s = undef;
+
+    $s .= "command_mail_restrictions = reject_system_special_accounts permit_anyone";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'PERMIT_COMMAND_FROM' && $value eq 'members_only') {
+    $s = undef;
+
+        
+        if ($key eq 'REJECT_COMMAND_HANDLER' && $value eq 'reject') {
+        $s = undef;
+
+        $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+        }
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'PERMIT_COMMAND_FROM' && $value eq 'members_only') {
+    $s = undef;
+
+        
+        if ($key eq 'REJECT_COMMAND_HANDLER' && $value eq 'auto_subscribe') {
+        $s = undef;
+
+        $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+        }
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MAIL_LIST_ACCEPT_COMMAND' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MAINTAINER' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MAINTAINER_SIGNATURE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'ML_FN' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SPOOL_DIR' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'TMP_DIR' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'VAR_DIR' && $value eq 'var') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'VARLOG_DIR' && $value eq 'var/log') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'VARRUN_DIR' && $value eq 'var/run') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'VARDB_DIR' && $value eq 'var/db') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'AUTO_REGISTRATION_TYPE' && $value eq 'confirmation') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'AUTO_REGISTRATION_KEYWORD' && $value eq 'subscribe') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'AUTO_REGISTRATION_KEYWORD' && $value ne 'subscribe') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'AUTO_REGISTRATION_DEFAULT_MODE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CONFIRMATION_ADDRESS' && $value eq 'CONTROL_ADDRESS') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CONFIRMATION_ADDRESS' && $value ne 'CONTROL_ADDRESS') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CONFIRMATION_SUBSCRIBE' && $value eq 'subscribe') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CONFIRMATION_SUBSCRIBE' && $value ne 'subscribe') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CONFIRMATION_KEYWORD' && $value eq 'confirm') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CONFIRMATION_KEYWORD' && $value ne 'confirm') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CONFIRMATION_WELCOME_STATEMENT' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CONFIRMATION_SUBSCRIBE_NEED_YOUR_NAME' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CONFIRMATION_FILE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CONFIRMATION_LIST' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'DEFAULT_SUBSCRIBE' && $value eq 'subscribe') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'DEFAULT_SUBSCRIBE' && $value ne 'subscribe') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'WELCOME_FILE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'WELCOME_STATEMENT' && $value eq 'Welcome') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'FILE_TO_REGIST' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'AUTO_REGISTERED_UNDELIVER_P' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'AUTO_REGISTERED_UNDELIVER_P' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'AUTO_REGISTRATION_LINES_LIMIT' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'AUTO_REGISTRATION_LINES_LIMIT' && $value > 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'REMOTE_ADMINISTRATION' && $value == 0) {
+    $s = undef;
+
+    $s .= "use_admin_command_mail_fucntion = no";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'REMOTE_ADMINISTRATION' && $value == 1) {
+    $s = undef;
+
+    $s .= "use_admin_command_mail_fucntion = yes";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'REMOTE_ADMINISTRATION_AUTH_TYPE' && $value eq 'crypt') {
+    $s = undef;
+
+    $s .= "admin_command_mail_restrictions += check_admin_member_password";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'ADMIN_MEMBER_LIST' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'ADMIN_HELP_FILE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'PASSWD_FILE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'ADMIN_ADD_SEND_WELCOME_FILE' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'ADMIN_LOG_DEFAULT_LINE_LIMIT' && defined $value) {
+    $s = undef;
+
+    $s .= "log_command_tail_starting_location = ADMIN_LOG_DEFAULT_LINE_LIMIT";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'REJECT_ADDR' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'NOT_USE_UNIX_FROM_LOOP_CHECK' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'NOT_USE_UNIX_FROM_LOOP_CHECK' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CHECK_MESSAGE_ID' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CHECK_MESSAGE_ID' && $value == 0) {
+    $s = undef;
+
+    $s .= "incoming_mail_header_loop_check_rules -= check_message_id";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LOG_CONNECTION' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'ADDR_CHECK_MAX' && $value == 3) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'INCOMING_MAIL_SIZE_LIMIT' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'INCOMING_MAIL_SIZE_LIMIT' && $value != 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'NOTIFY_MAIL_SIZE_OVERFLOW' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_DISTRIBUTE_FILTER' && $value == 1) {
+    $s = undef;
+
+    $s .= "use_article_filter = yes";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_DISTRIBUTE_FILTER' && $value == 0) {
+    $s = undef;
+
+    $s .= "use_article_filter = no";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'DISTRIBUTE_FILTER_HOOK' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'FILTER_NOTIFY_REJECTION' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'FILTER_ATTR_REJECT_NULL_BODY' && $value == 1) {
+    $s = undef;
+
+    $s .= "article_text_plain_filter_rules += reject_null_mail_body";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'FILTER_ATTR_REJECT_NULL_BODY' && $value == 0) {
+    $s = undef;
+
+    $s .= "article_text_plain_filter_rules -= reject_null_mail_body";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'FILTER_ATTR_REJECT_COMMAND' && $value == 1) {
+    $s = undef;
+
+    $s .= "article_text_plain_filter_rules += reject_old_fml_command_syntax";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'FILTER_ATTR_REJECT_COMMAND' && $value == 0) {
+    $s = undef;
+
+    $s .= "article_text_plain_filter_rules -= reject_old_fml_command_syntax";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'FILTER_ATTR_REJECT_2BYTES_COMMAND' && $value == 1) {
+    $s = undef;
+
+    $s .= "article_text_plain_filter_rules += reject_japanese_command_syntax";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'FILTER_ATTR_REJECT_2BYTES_COMMAND' && $value == 0) {
+    $s = undef;
+
+    $s .= "article_text_plain_filter_rules -= reject_japanese_command_syntax";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'FILTER_ATTR_REJECT_INVALID_COMMAND' && $value == 1) {
+    $s = undef;
+
+    $s .= "article_text_plain_filter_rules += reject_invalid_fml_command_syntax";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'FILTER_ATTR_REJECT_INVALID_COMMAND' && $value == 0) {
+    $s = undef;
+
+    $s .= "article_text_plain_filter_rules -= reject_invalid_fml_command_syntax";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'FILTER_ATTR_REJECT_ONE_LINE_BODY' && $value == 1) {
+    $s = undef;
+
+    $s .= "article_text_plain_filter_rules += reject_one_line_message";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'FILTER_ATTR_REJECT_ONE_LINE_BODY' && $value == 0) {
+    $s = undef;
+
+    $s .= "article_text_plain_filter_rules -= reject_one_line_message";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'FILTER_ATTR_REJECT_MS_GUID' && $value == 1) {
+    $s = undef;
+
+    $s .= "article_text_plain_filter_rules += reject_ms_guid";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'FILTER_ATTR_REJECT_MS_GUID' && $value == 0) {
+    $s = undef;
+
+    $s .= "article_text_plain_filter_rules -= reject_ms_guid";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'FILTER_ATTR_REJECT_INVALID_JAPANESE' && $value == 0) {
+    $s = undef;
+
+    $s .= "article_text_plain_filter_rules -= reject_not_iso2022jp_japanese_string";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'FILTER_ATTR_REJECT_INVALID_JAPANESE' && $value == 1) {
+    $s = undef;
+
+    $s .= "article_text_plain_filter_rules += reject_not_iso2022jp_japanese_string";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CONTENT_HANDLER_CUTOFF_EMPTY_MESSAGE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CONTENT_HANDLER_REJECT_EMPTY_MESSAGE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'HTML_MAIL_DEFAULT_HANDLER' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'UNSUBSCRIBE_AUTH_TYPE' && $value eq 'confirmation') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CHADDR_AUTH_TYPE' && $value eq 'confirmation') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_LOG_MAIL' && $value == 0) {
+    $s = undef;
+
+    $s .= "use_incoming_mail_cache = no";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_LOG_MAIL' && $value == 1) {
+    $s = undef;
+
+    $s .= "use_incoming_mail_cache = yes";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LOG_MAIL_DIR' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LOG_MAIL_SEQ' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'DATE_TYPE' && $value eq 'original-date') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'DATE_TYPE' && $value ne 'original-date') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'XMLNAME' && $value eq 'X-ML-Name:') {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'XMLCOUNT' && $value eq 'X-Mail-Count') {
+    $s = undef;
+
+    $s .= "article_header_rewrite_rules += add_fml_traditional_article_id";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SUBJECT_TAG_TYPE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'BRACKET' && $value eq 'Elena') {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'STRIP_BRACKETS' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'BRACKET_SEPARATOR' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SUBJECT_FREE_FORM' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SUBJECT_FREE_FORM_REGEXP' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SUBJECT_FORM_LONG_ID' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_ERRORS_TO' && $value == 1) {
+    $s = undef;
+
+    $s .= "article_header_rewrite_rules += rewrite_errors_to";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_ERRORS_TO' && $value == 0) {
+    $s = undef;
+
+    $s .= "article_header_rewrite_rules -= rewrite_errors_to";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_ORIGINAL_MESSAGE_ID' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_RFC2369' && $value == 1) {
+    $s = undef;
+
+    $s .= "article_header_rewrite_rules += add_rfc2369";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_RFC2369' && $value == 0) {
+    $s = undef;
+
+    $s .= "article_header_rewrite_rules -= add_rfc2369";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'REWRITE_TO' && $value == 2) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'REWRITE_TO' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'REWRITE_TO' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'Subject' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'From_address' && $value eq 'not.found') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'User' && $value eq 'not.found') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'Date' && $value eq 'not.found') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'TZone' && $value eq '+0900') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'TZone' && $value ne '+0900') {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'TZONE_DST' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'PASS_ALL_FIELDS_IN_HEADER' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SUPERFLUOUS_HEADERS' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SKIP_FIELDS' && $value eq 'Return-Receipt-To') {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'ALLOW_WRONG_LINES_IN_HEADER' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'COMMAND_SYNTAX_EXTENSION' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_SUBJECT_AS_COMMANDS' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_WARNING' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_WARNING' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'COMMAND_ONLY_SERVER' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'COMMAND_CHECK_LIMIT' && $value == 3) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'GUIDE_CHECK_LIMIT' && $value == 3) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'GUIDE_KEYWORD' && $value eq 'guide') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MAXLEN_COMMAND_INPUT' && $value == 128) {
+    $s = undef;
+
+    $s .= "command_mail_line_length_limit = MAXLEN_COMMAND_INPUT";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MAXNUM_COMMAND_INPUT' && defined $value) {
+    $s = undef;
+
+    $s .= "command_mail_valid_command_limit = MAXNUM_COMMAND_INPUT";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CHADDR_KEYWORD' && $value eq 'chaddr|change\-address|change') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MGET_MODE_DEFAULT' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MGET_TEXT_MODE_DEFAULT' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SLEEPTIME' && $value == 60) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MIME_VERSION' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MIME_CONTENT_TYPE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MIME_MULTIPART_BOUNDARY' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MIME_MULTIPART_CLOSE_DELIMITER' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MIME_MULTIPART_DELIMITER' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MIME_MULTIPART_PREAMBLE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MIME_MULTIPART_TRAILER' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_SJIS_IN_ISH' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'RFC1153_ISSUE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'RFC1153_VOL' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'RFC1153_SEQUENCE_FILE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MGET_SUBJECT_TEMPLATE' && $value eq 'result') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MESSAGE_RETURN_ADDR_POLICY' && $value eq 'reply-to') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MSEND_SUBJECT_TEMPLATE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MSEND_RC' && $value ne '$VARLOG_DIR/msendrc') {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MSEND_MODE_DEFAULT' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MSEND_DEFAULT_SUBJECT' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LOG_MESSAGE_ID' && $value eq '$VARRUN_DIR/msgidcache') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MESSAGE_ID_CACHE_BUFSIZE' && $value == 6000) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LOG_MAILBODY_CKSUM' && $value eq '$VARRUN_DIR/bodycksumcache') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MEMBER_LIST' && $value ne '$DIR/members') {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'ACTIVE_LIST' && $value ne '$DIR/actives') {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'GUIDE_FILE' && $value ne '$DIR/guide') {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'OBJECTIVE_FILE' && $value ne '$DIR/objective') {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'HELP_FILE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'DENY_FILE' && $value ne '$DIR/deny') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LOGFILE' && $value ne '$DIR/log') {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MGET_LOGFILE' && $value ne '$DIR/log') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LOGFILE_SUFFIX' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'DEBUG_LOGFILE' && $value eq '$DIR/log.debug') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SUMMARY_FILE' && $value ne '$DIR/summary') {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SEQUENCE_FILE' && $value ne '$DIR/seq') {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LOCK_FILE' && $value eq '$VARRUN_DIR/lockfile.v7') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LOCK_DIR' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LOCKDIR' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LOCKFILE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_INET6' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_INET6' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'HOST' && $value ne 'localhost') {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'PORT' && $value != 25) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SMTP_SENDER' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SMTP_LOG' && $value eq '$VARLOG_DIR/_smtplog') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_SMTP_LOG_ROTATE' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SMTP_LOG_ROTATE_EXPIRE_LIMIT' && $value == 90) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'NUM_SMTP_LOG_ROTATE' && $value == 8) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SMTP_LOG_ROTATE_TYPE' && $value eq 'number') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'NOT_TRACE_SMTP' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'NOT_TRACE_SMTP' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'TRACE_SMTP_DELAY' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_SMTP_PROFILE' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MCI_SMTP_HOSTS' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'DEFAULT_RELAY_SERVER' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'RELAY_HACK' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CF_DEF' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'OUTGOING_ADDRESS' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'POSTFIX_VERP_DELIMITERS' && $value eq '+=') {
+    $s = undef;
+
+    $s .= "postfix_verp_delimiters = POSTFIX_VERP_DELIMITERS";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_MIME' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_MIME' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MIME_DECODED_ARTICLE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'PREAMBLE_MAILBODY' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'TRAILER_MAILBODY' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'GOOD_BYE_PHRASE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'FACE_MARK' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'PROC_GEN_INFO' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_FLOCK' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_FLOCK' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MAX_TIMEOUT' && $value == 200) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'NOT_USE_SPOOL' && $value == 1) {
+    $s = undef;
+
+    $s .= "use_spool = no";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'NOT_USE_SPOOL' && $value == 0) {
+    $s = undef;
+
+    $s .= "use_spool = yes";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'COMPAT_FML15' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CRONTAB' && $value eq 'etc/crontab') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CRON_PIDFILE' && $value eq 'var/run/cron.pid') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CRON_NOTIFY' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_CROSSPOST' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_ARCHIVE' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'ARCHIVE_UNIT' && $value == 100) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'DEFAULT_ARCHIVE_UNIT' && $value == 100) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'ARCHIVE_DIR' && $value eq 'var/archive') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'INDEX_FILE' && $value eq '$DIR/index') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'INDEX_SHOW_DIRNAME' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LIBRARY_DIR' && $value eq 'var/library') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LIBRARY_ARCHIVE_DIR' && $value eq 'archive') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'AMLIST_NEWSYSLOG_LIMIT' && $value eq '150K') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'AUTO_HTML_GEN' && $value == 1) {
+    $s = undef;
+
+    $s .= "use_html_archive = yes";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'AUTO_HTML_GEN' && $value == 0) {
+    $s = undef;
+
+    $s .= "use_html_archive = no";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_NEW_HTML_GEN' && $value == 1) {
+    $s = undef;
+
+    $s .= "use_html_archive = yes";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_NEW_HTML_GEN' && $value == 0) {
+    $s = undef;
+
+    $s .= "use_html_archive = no";
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'HTML_THREAD' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'HTML_INDEX_REVERSE_ORDER' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'HTML_DIR' && $value eq 'htdocs') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'HTML_THREAD_REF_TYPE' && $value eq 'prefer-in-reply-to') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'HTML_THREAD_SORT_TYPE' && $value eq 'reverse-number') {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_DATABASE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'DATABASE_METHOD' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'DATABASE_CACHE_FILE_SUFFIX' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'DATABASE_DRIVER' && $value eq 'toymodel.pl') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'DATABASE_DRIVER_ATTRIBUTES' && $value eq 'always_lower_domain') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SQL_SERVER_HOST' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SQL_SERVER_PORT' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SQL_SERVER_USER' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SQL_DATABASE_NAME' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SQL_SERVER_PASSWORD' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SQL_DATABASE_NAME' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LDAP_SERVER_HOST' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LDAP_SERVER_PASSWORD' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LDAP_SEARCH_BASE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LDAP_SERVER_BIND' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LDAP_QUERY_FILTER' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_WHOIS' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'DEFAULT_WHOIS_SERVER' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'WHOIS_DB' && $value eq '$VARDB_DIR/whoisdb') {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'WHOIS_HELP_FILE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'WHOIS_JCODE_P' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CPU_TYPE_MANUFACTURER_OS' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'STRUCT_SOCKADDR' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LOCK_SH' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LOCK_EX' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LOCK_NB' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LOCK_UN' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'COMPAT_SOLARIS2' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'NOT_USE_TIOCNOTTY' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'HAS_GETPWUID' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'HAS_GETPWGID' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'HAS_ALARM' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'UNISTD' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SENDMAIL' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'TAR' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'UUENCODE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'COMPRESS' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'ZCAT' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LHA' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'ISH' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'ZIP' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'BZIP2' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'PGP' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'PGP5' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'PGPE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'PGPK' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'PGPS' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'PGPV' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'GPG' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'RCS' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CI' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'BASE64_DECODE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'BASE64_ENCODE' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'MD5' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SMTPLOG' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'PROHIBIT_COMMAND_FOR_STRANGER' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'PROHIBIT_COMMAND_FOR_STRANGER' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_LIBMIME' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'USE_LIBMIME' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LIBMIMEDIR' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'RPG_ML_FORM_FLAG' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'RPG_ML_FORM_FLAG' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SUN_OS_413' && $value == 1) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SUN_OS_413' && $value == 0) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'SUBJECT_HML_FORM' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'HML_FORM_LONG_ID' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'ML_MEMBER_CHECK' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'DEFAULT_HTTP_PORT' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'DEFAULT_GOPHER_PORT' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'DEFAULT_HTML_FIELD' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'CP' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'RM' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'FML' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'LOAD_LIBRARY' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_convert($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'STORED_BOUNDARY' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq 'AGAINST_NIFTY' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq '_Ds' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+    
+    if ($key eq '_Dm' && defined $value) {
+    $s = undef;
+
+    $s .= &$fp_rule_ignore($self, $diff, $key, $value);
+    return $s if defined $s;
+    }
+    
+
    return '';
 } # sub translate
 
