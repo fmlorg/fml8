@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.56 2001/10/12 00:02:04 fukachan Exp $
+# $FML: Kernel.pm,v 1.57 2001/10/13 03:11:08 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -521,7 +521,7 @@ sub reply_message
     # XXX collect all text messages at one special area by default.
     else {
 	my $msg0 = $pcb->get($category, 'text') || undef;
-	$msg    .= "\n" unless /\n$/;
+	$msg    .= "\n" unless $msg =~ /\n$/;
 	$pcb->set($category, 'text', $msg0.$msg);
     }
 }
