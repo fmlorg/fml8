@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.27 2002/06/30 14:30:12 fukachan Exp $
+# $FML: Command.pm,v 1.28 2002/07/14 15:15:27 fukachan Exp $
 #
 
 package FML::Command;
@@ -140,6 +140,7 @@ C<FML::Command::command>.
 sub AUTOLOAD
 {
     my ($self, $curproc, $command_args) = @_;
+    my $myname = $curproc->myname();
 
     # we need to ignore DESTROY()
     return if $AUTOLOAD =~ /DESTROY/;
@@ -156,7 +157,7 @@ sub AUTOLOAD
     $comname =~ s/.*:://;
     my $pkg = "FML::Command::${mode}::${comname}";
 
-    Log("load $pkg") if $0 =~ /loader/; # debug
+    Log("load $pkg") if $myname eq /loader/; # debug
 
     my $command = undef;
     eval qq{ use $pkg; \$command = new $pkg;};
