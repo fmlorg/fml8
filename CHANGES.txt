@@ -1,6 +1,11 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/07/11
+
+   FML::MTAControl::Qmail 
+	remove ~fml::.qmail-* when the ML is removed.
+
 2002/07/10
 
    CPAN modules
@@ -2712,4 +2717,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.84 2002/06/30 14:37:41 fukachan Exp $
+$FML: CHANGES.txt,v 1.85 2002/07/11 15:09:12 fukachan Exp $
