@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.43 2003/02/01 13:50:59 fukachan Exp $
+# $FML: Credential.pm,v 1.44 2003/02/09 12:31:40 fukachan Exp $
 #
 
 package FML::Credential;
@@ -298,8 +298,6 @@ sub _is_member
 	return $status;
     }
 
-    use IO::Adapter;
-
   MAP:
     for my $map (@$member_maps) {
 	if (defined $map) {
@@ -322,6 +320,7 @@ sub has_address_in_map
     my ($self, $map, $config, $address) = @_;
     my ($user, $domain) = split(/\@/, $address);
     my $status          = 0;
+    my $curproc         = $self->{ _curproc };
 
     # reset the matched result;
     $self->_save_address('');
@@ -334,7 +333,10 @@ sub has_address_in_map
     if ($debug) {
 	print STDERR "find( $user , { want => 'key', all => 1 });\n";
     }
+
+    # $curproc->lock($lock_channel);   # READER LOCK
     my $addrs = $obj->find( $user , { want => 'key', all => 1 });
+    # $curproc->unlock($lock_channel); # READER LOCK
 
     if (ref($addrs) && $debug) {
 	print STDERR "cred: match? [ @$addrs ]\n";
