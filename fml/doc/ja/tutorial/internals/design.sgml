@@ -1,5 +1,5 @@
 <!-- 
-	$FML: design.sgml,v 1.1 2001/05/01 15:16:27 fukachan Exp $
+	$FML: design.sgml,v 1.2 2001/05/10 03:11:43 fukachan Exp $
 -->
 
 <chapter id="design">
@@ -338,7 +338,7 @@ fml をリファクトリングするアイデア
 
 
 <!-- ======================================================== -->
-<sect1>
+<sect1 id="design.architecture.image">
 
 <title> アーキテクチャア・イメージ </title>
 
