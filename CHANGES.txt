@@ -1,7 +1,49 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/05/05
+
+   variables and configure
+	search spamassassin, spamd and spamc, and set path_${it} for further
+	extension.
+
+2003/05/04
+
+   Mail::Bounce::SimpleMatch 
+	E500 SMTP Mail Service ?
+
+2003/05/03
+
+   FML::Process::Error 
+	fix comments (FNF).
+	
+   FML::Header 
+	style, aligned with FNF.
+
+2003/05/01
+
+   variables	
+	define article_filter_reject_notice_data_type
+	
+   FML::Process::Utils 
+	fix typo::maitainer->maintainer
+	
+   FML::Filter 
+	forward the rejected message by string or multipart?
+	It is determined by $article_filter_reject_notice_data_type.
+	
+   Mail::Message 
+	implement whole_message_header_as_str()
+
+	remove whole_message_as_string_ref().
+	
+	implement whole_message_as_str() to extract the first part of this
+	message as a string.
+
 2003/04/29
+
+   FML::Restriction::Base 
+	permit user+ext@domain
 
    libexec/error がエラーメッセージを再転送可能にした。
 	転送先は $maintainer_recipient_maps に従う。デフォルトは未定義
@@ -4716,4 +4758,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.141 2003/04/18 15:58:09 fukachan Exp $
+$FML: CHANGES.txt,v 1.142 2003/04/29 12:44:00 fukachan Exp $
