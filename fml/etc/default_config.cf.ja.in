@@ -743,27 +743,6 @@ confirm_command_prefix		=	confirm
 privileged_command_prefix	=	admin
 
 
-# Descriptions: ＭＬ作成時 (makefml newml)の際に作られる
-#		postfix テンプレートファイル
-#        Value: ARRAY
-#     Examples:
-newml_command_postfix_template_files 	=	config.cf
-						include
-						include-ctl
-						include-error
-
-# Descriptions: ＭＬ作成時 (makefml newml)の際に作られる
-#		qmail テンプレートファイル
-#        Value: ARRAY
-#     Examples:
-newml_command_qmail_template_files 	=	dot-qmail
-						dot-qmail-ctl
-						dot-qmail-admin
-						dot-qmail-request
-						dot-qmail-default
-
-
-
 =head2	CGI
 
 
@@ -779,6 +758,18 @@ listinfo_base_dir	= $fml_owner_home_dir/public_html/fml/listinfo
 #        Value: directory
 #     Examples: ~fml/public_html/fml/listinfo/fml.org/elena
 listinfo_dir	= $listinfo_base_dir/$ml_domain/$ml_name
+
+
+=head2	newml
+
+
+# Descriptions: ＭＬ作成時 (makefml newml)の際に作られる
+#		テンプレートファイル
+#        Value: ARRAY
+#     Examples:
+newml_command_template_files 	=	config.cf
+
+
 
 =head1	
 
@@ -1028,6 +1019,46 @@ cgi_main_menu_color		=	#FFFFFF
 #     Examples:
 cgi_navigation_bar_color	=	#FFFFFF
 
+
+=head1	MTA に依存する設定のヒント
+
+=head2	postfix
+
+
+# Descriptions: ＭＬ作成時 (makefml newml)の際に作られる
+#		postfix テンプレートファイル
+#        Value: ARRAY
+#     Examples:
+newml_command_postfix_template_files 	=	include
+						include-ctl
+						include-error
+
+=head2	qmail
+
+
+# Descriptions: ＭＬ作成時 (makefml newml)の際に作られる
+#		qmail テンプレートファイル
+#        Value: ARRAY
+#     Examples:
+newml_command_qmail_template_files 	=	dot-qmail
+						dot-qmail-ctl
+						dot-qmail-admin
+						dot-qmail-request
+						dot-qmail-default
+
+
+# Descriptions: virtual domain configurations for qmail
+#      History: none
+#        Value: file path
+#     Examples: /var/qmail/control/virtualdomains
+qmail_control_virtualdomains_file = /var/qmail/control/virtualdomains
+
+
+=head2	sendmail
+
+#
+# 特になし
+#
 
 =head1 program paths
 

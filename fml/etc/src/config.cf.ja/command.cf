@@ -118,27 +118,6 @@ confirm_command_prefix		=	confirm
 privileged_command_prefix	=	admin
 
 
-# Descriptions: ＭＬ作成時 (makefml newml)の際に作られる
-#		postfix テンプレートファイル
-#        Value: ARRAY
-#     Examples:
-newml_command_postfix_template_files 	=	config.cf
-						include
-						include-ctl
-						include-error
-
-# Descriptions: ＭＬ作成時 (makefml newml)の際に作られる
-#		qmail テンプレートファイル
-#        Value: ARRAY
-#     Examples:
-newml_command_qmail_template_files 	=	dot-qmail
-						dot-qmail-ctl
-						dot-qmail-admin
-						dot-qmail-request
-						dot-qmail-default
-
-
-
 =head2	CGI
 
 
@@ -154,3 +133,15 @@ listinfo_base_dir	= $fml_owner_home_dir/public_html/fml/listinfo
 #        Value: directory
 #     Examples: ~fml/public_html/fml/listinfo/fml.org/elena
 listinfo_dir	= $listinfo_base_dir/$ml_domain/$ml_name
+
+
+=head2	newml
+
+
+# Descriptions: ＭＬ作成時 (makefml newml)の際に作られる
+#		テンプレートファイル
+#        Value: ARRAY
+#     Examples:
+newml_command_template_files 	=	config.cf
+
+
