@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.128 2002/08/14 14:17:09 fukachan Exp $
+# $FML: Kernel.pm,v 1.129 2002/08/14 14:22:14 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -454,14 +454,16 @@ sub _init_timeout
 
 =head2 C<verify_sender_credential($args)>
 
-verify the mail sender is valid or not.
-If valid, it sets the adddress within $curproc->{ credential } object.
+validate the mail sender (From: in the header not SMTP SENEDER).  If
+valid, it sets the adddress within $curproc->{ credential } object as
+a side effect.
 
 =cut
 
-# Descriptions:
+# Descriptions: validate the sender address and do a few things
+#               as a side effect
 #    Arguments: OBJ($curproc) HASH_REF($args)
-# Side Effects:
+# Side Effects: set the return value of $curproc->sender().
 # Return Value: none
 sub verify_sender_credential
 {
@@ -747,6 +749,19 @@ sub load_config_files
     # XXX We need to expand variables after we load all *cf files.
     # XXX 2001/05/05 changed to dynamic expansion for hook
     # $curproc->{ config }->expand_variables();
+
+    # XXX simple sanity check
+    #     MAIL_LIST != MAINTAINER
+    my $config     = $curproc->config();
+    my $maintainer = $config->{ maintainer };
+    my $ml_address = $config->{ address_for_post };
+
+    use FML::Credential;
+    my $cred = new FML::Credential $curproc;
+    if ($cred->is_same_address($maintainer, $ml_address)) {
+	LogError("invalid configuration: \$maintainer == \$address_for_post");
+	$curproc->stop_this_process("configuration error");
+    }
 }
 
 
