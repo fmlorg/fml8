@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.6 2001/10/20 15:53:03 fukachan Exp $
+# $FML: Lite.pm,v 1.7 2001/10/20 17:02:34 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -117,6 +117,13 @@ sub htmlfy_rfc822_message
 
     # initialize basic information
     my ($id, $src, $dst) = $self->_init_htmlfy_rfc822_message($args);
+
+    # already exists
+    if (-f $dst) {
+	$self->{ _ignore_list }->{ $id } = 1; # ignore flag
+	warn("html file for $id already exists") if $debug;
+	return undef;
+    }
 
     use Mail::Message;
     use FileHandle;
@@ -820,6 +827,11 @@ sub update_relation
 {
     my ($self, $id) = @_;
     my $args = $self->evaluate_relation($id);
+
+    if (defined $self->{ _ignore_list }->{ $id }) { # ignore flag
+	warn("no action for $id") if $debug;
+	return undef;
+    }
 
     # update target itself, of course
     $self->_update_relation($id);
