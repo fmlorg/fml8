@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.10 2002/07/02 03:55:54 fukachan Exp $
+# $FML: UserControl.pm,v 1.11 2002/07/14 04:13:11 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -51,27 +51,29 @@ sub new
 sub useradd
 {
     my ($self, $curproc, $command_args, $uc_args) = @_;
-    my $address = $uc_args->{ address };
-    my $maplist = $uc_args->{ maplist };
+    my $address  = $uc_args->{ address };
+    my $maplist  = $uc_args->{ maplist };
+    my $msg_args = $command_args->{ msg_args };
+    $msg_args->{ _arg_address } = $address;
 
     for my $map (@$maplist) {
 	my $cred = new FML::Credential;
 	unless ($cred->has_address_in_map($map, $address)) {
-	    my $obj = new IO::Adapter $map;
+	    $msg_args->{ _arg_map } = $curproc->which_map_nl($map);
+
+	    my $obj    = new IO::Adapter $map;
 	    $obj->touch(); # create a new map entry (e.g. file) if needed.
 	    $obj->add( $address );
 	    unless ($obj->error()) {
 		Log("add $address to map=$map");
-		$curproc->reply_message('command.add_ok',
-					"$address added.",
-					{ _arg_address => $address,}
-					);
+		$curproc->reply_message_nl('command.add_ok',
+					   "$address added.",
+					   $msg_args);
 	    }
 	    else {
-		$curproc->reply_message('command.add_fail',
-					"failed to add $address",
-					{ _arg_address => $address,}
-					);
+		$curproc->reply_message_nl('command.add_fail',
+					   "failed to add $address",
+					   $msg_args);
 		croak("fail to add $address to map=$map");
 	    }
 	}
@@ -91,27 +93,29 @@ sub useradd
 sub userdel
 {
     my ($self, $curproc, $command_args, $uc_args) = @_;
-    my $address = $uc_args->{ address };
-    my $maplist = $uc_args->{ maplist };
+    my $address  = $uc_args->{ address };
+    my $maplist  = $uc_args->{ maplist };
+    my $msg_args = $command_args->{ msg_args };
+    $msg_args->{ _arg_address } = $address;
 
     for my $map (@$maplist) {
 	my $cred = new FML::Credential;
 	if ($cred->has_address_in_map($map, $address)) {
-	    my $obj = new IO::Adapter $map;
+	    $msg_args->{ _arg_map } = $curproc->which_map_nl($map);
+	    
+	    my $obj    = new IO::Adapter $map;
 	    $obj->delete( $address );
 	    unless ($obj->error()) {
 		Log("removed $address from map=$map");
-		$curproc->reply_message('command.del_ok',
-					"$address added.",
-					{ _arg_address => $address,}
-					);
+		$curproc->reply_message_nl('command.del_ok',
+					   "$address removed.",
+					   $msg_args);
 	    }
 	    else {
+		$curproc->reply_message_nl('command.del_fail',
+					   "failed to remove $address",
+					   $msg_args);
 		croak("fail to remove $address from map=$map");
-		$curproc->reply_message('command.del_ok',
-					"$address added.",
-					{ _arg_address => $address,}
-					);
 	    }
 	}
 	else {

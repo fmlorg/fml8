@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.81 2002/06/27 08:25:49 fukachan Exp $
+# $FML: Distribute.pm,v 1.82 2002/07/02 12:40:37 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -173,7 +173,9 @@ Lastly we unlock the current process.
 sub run
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
+    my $config     = $curproc->{ config };
+    my $maintainer = $config->{ maintainer };
+    my $sender     = $curproc->{'credential'}->{'sender'};
 
     my $eval = $config->get_hook( 'distribute_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -208,6 +210,16 @@ sub run
 
 	    my $msg = $curproc->{ incoming_message }->{ message };
 	    $curproc->reply_message( $msg );
+
+	    # inform maintainer too.
+	    my $msg_args = { 
+		_arg_address => $sender,
+		recipient    => $maintainer,
+	    };
+	    $curproc->reply_message_nl("error.post_from_not_member",
+				       "post from not a member",
+				       $msg_args);
+	    $curproc->reply_message( $msg, $msg_args );
 	}
     }
     else {

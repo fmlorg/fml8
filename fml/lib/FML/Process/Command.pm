@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.62 2002/06/27 08:25:49 fukachan Exp $
+# $FML: Command.pm,v 1.63 2002/07/02 03:58:32 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -324,6 +324,8 @@ sub _parse_command_args
 	ml_name    => $ml_name,
 	argv       => $argv,
 	args       => $args,
+
+	msg_args   => {},
     };
 
     return $cominfo;
@@ -645,6 +647,8 @@ sub _evaluate_command_lines
     # the main loop to analyze each command at each line.
     my ($cominfo, $fixed_command);
     my ($num_total, $num_ignored, $num_processed) = (0, 0, 0);
+    my $is_cc_recipient = 1;
+    my %cc_recipient    = ();
   COMMAND:
     for my $orig_command (@$command_lines) {
 	next COMMAND if $orig_command =~ /^\s*$/; # ignore empty lines
@@ -691,13 +695,28 @@ sub _evaluate_command_lines
 	my $obj = new FML::Command;
 	if (defined $obj) {
 	    # arguments to pass off into each method
+	    my $sender       = $curproc->{'credential'}->{'sender'};
 	    my $command_args = $curproc->_gen_command_args($status, $cominfo);
+	    my $msg_args     = $command_args->{ msg_args };
+	    $msg_args->{ always_cc } = $sender;
 
 	    # rewrite prompt e.g. to hide the password
 	    $obj->rewrite_prompt($curproc, $command_args, \$orig_command);
 
+	    # check if addresses to notice defined ?
+	    # XXX The recipients are dependent on each command.
+	    # XXX Defined in each command module (e.g. FML::Command::User::*)
+	    {
+		my $a = $obj->notice_cc_recipient($curproc, $command_args);
+		if (defined $a) {
+		    $msg_args->{ recipient } = $a;
+		    $is_cc_recipient = 1;
+		    $cc_recipient{ join("-", @$a) } = $a;
+		}
+	    }
+
 	    # reply buffer
-	    $curproc->reply_message("\n$prompt $orig_command");
+	    $curproc->reply_message("\n$prompt $orig_command", $msg_args);
 	    Log($orig_command);
 
 	    # execute command ($comname method) under eval().
@@ -707,13 +726,13 @@ sub _evaluate_command_lines
 		$obj->$comname($curproc, $command_args);
 	    };
 	    unless ($@) {
-		$curproc->reply_message_nl('command.ok', "ok.");
+		$curproc->reply_message_nl('command.ok', "ok.", $msg_args);
 	    }
 	    else { # error trap
 		my $reason = $@;
 		Log($reason);
 
-		$curproc->reply_message_nl('command.fail', "fail.");
+		$curproc->reply_message_nl('command.fail', "fail.", $msg_args);
 		LogError("command ${comname} fail");
 
 		if ($reason =~ /^(.*)\s+at\s+/) {
@@ -733,11 +752,23 @@ sub _evaluate_command_lines
     $curproc->reply_message("   ignored   = $num_ignored");
     $curproc->reply_message("   total     = $num_total");
 
-    # in the case "confirm"
-    if ( $status->{ context }->{ under_confirmation } ) {
-	# send back original message as a reference
+    # send bak the original input message if needed
+    {
 	my $msg = $curproc->{ incoming_message }->{ message };
-	$curproc->reply_message( $msg );
+
+	# in the case "confirm"
+	if ($status->{ context }->{ under_confirmation }) {
+	    # send back original message as a reference
+	    $curproc->reply_message( $msg );
+	}
+
+	if (keys %cc_recipient) {
+	    for my $k (keys %cc_recipient) {
+		my $ra_addr = $cc_recipient{ $k };
+		Log("msg.cc: [ @$ra_addr ]");
+		$curproc->reply_message( $msg , { recipient => $ra_addr });
+	    }
+	}
     }
 }
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.111 2002/07/13 13:08:08 fukachan Exp $
+# $FML: Kernel.pm,v 1.112 2002/07/14 04:13:58 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -864,6 +864,43 @@ sub reply_message
     }
 
     $curproc->_append_message_into_queue($msg, $args, $recipient);
+
+    if (defined $args->{ always_cc }) {
+	# only if $recipient above != always_cc, duplicate $msg message.
+	my $sent = $recipient;
+	my $cc   = $args->{ always_cc };
+
+	my $recipient = [];
+	if (ref($cc) eq 'ARRAY') {
+	    $recipient = $cc;
+	}
+	else {
+	    $recipient = [ $cc ];
+	}
+
+	if (_array_is_different($sent, $recipient)) {
+	    Log("cc: [ @$recipient ]");
+	    $curproc->_append_message_into_queue($msg, $args, $recipient);
+	}
+    }
+}
+
+
+sub _array_is_different
+{
+    my ($a, $b) = @_;
+    my $diff = 0;
+    my $i    = 0;
+
+    # 1. number of array elements differs.
+    return 1 if $#$a != $#$b;
+
+    # 2. some elements in arrays differ.
+    for ($i = 0; $i <= $#$a ; $i++)  {
+	$diff++ if $a->[ $i ] ne $b->[ $i ];
+    }
+
+    return $diff;
 }
 
 

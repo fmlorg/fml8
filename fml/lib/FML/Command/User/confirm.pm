@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.9 2002/04/06 14:46:28 fukachan Exp $
+# $FML: confirm.pm,v 1.10 2002/04/11 15:39:42 tmu Exp $
 #
 
 package FML::Command::User::confirm;
@@ -50,6 +50,20 @@ sub new
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
+
+
+# Descriptions: addresses to inform a message copy to
+#    Arguments: none
+# Side Effects: none
+# Return Value: ARREY_REF
+sub notice_cc_recipient
+{
+   my ($self, $curproc, $command_args) = @_;
+   my $config     = $curproc->{ config };
+   my $maintainer = $config->{ maintainer };
+
+   return [ $maintainer ];
+}
 
 
 # Descriptions: execute the actual process if this confirmation succeeds.

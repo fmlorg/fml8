@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.26 2002/06/30 14:27:47 fukachan Exp $
+# $FML: Command.pm,v 1.27 2002/06/30 14:30:12 fukachan Exp $
 #
 
 package FML::Command;
@@ -72,7 +72,8 @@ buffer.
 
 
 # Descriptions: rewrite prompt buffer
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args) STR_REF($rbuf)
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($command_args) STR_REF($rbuf)
 # Side Effects: none
 # Return Value: none
 sub rewrite_prompt
@@ -88,6 +89,36 @@ sub rewrite_prompt
     unless ($@) {
 	if ($command->can('rewrite_prompt')) {
 	    $command->rewrite_prompt($curproc, $command_args, $rbuf);
+	}
+    }
+}
+
+
+
+=head2 C<notice_cc_recipient($curproc, $command_args, $rbuf)>
+
+return addresses to inform for the command reply.
+
+=cut
+
+
+# Descriptions: return addresses to inform
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub notice_cc_recipient
+{
+    my ($self, $curproc, $command_args) = @_;
+    my $command = undef;
+    my $comname = $command_args->{ comname };
+    my $mode    =
+	$command_args->{'command_mode'} =~ /admin/i ? 'Admin' : 'User';
+    my $pkg     = "FML::Command::${mode}::${comname}";
+
+    eval qq{ use $pkg; \$command = new $pkg;};
+    unless ($@) {
+	if ($command->can('notice_cc_recipient')) {
+	    $command->notice_cc_recipient($curproc, $command_args);
 	}
     }
 }
