@@ -2,6 +2,7 @@ all: link
 
 clean:
 	@ (cd ../..; make clean)
+	rm -f __scan__
 
 allclean: clean
 	rm -f doc
@@ -17,6 +18,8 @@ allclean: clean
 	rm -f libexec
 	rm -f log
 	rm -f File
+	rm -f CGI
+	rm -f Command
 
 scan:
 	@ (cd ../..; make scan 2>&1) |tee __scan__ || echo 'nothing changed'
