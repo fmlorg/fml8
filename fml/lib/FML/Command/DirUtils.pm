@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DirUtils.pm,v 1.17 2004/03/23 07:12:21 fukachan Exp $
+# $FML: DirUtils.pm,v 1.18 2004/04/23 04:10:30 fukachan Exp $
 #
 
 package FML::Command::DirUtils;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::DirUtils - utilities for directory handlings
+FML::Command::DirUtils - utilities for directory handlings.
 
 =head1 SYNOPSIS
 
@@ -25,10 +25,12 @@ FML::Command::DirUtils - utilities for directory handlings
 
 =head2 new()
 
+constructor.
+
 =cut
 
 
-# Descriptions: standard constructor.
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -107,12 +109,12 @@ sub dir
 	    $fh->close();
 	}
 	else {
-	    $curproc->logerror("tail to run '$eval'");
+	    $curproc->logerror("fail to run '$eval'");
 	}
     }
     else {
-	$curproc->logerror("\$path_ls is not found");
-	croak("\$path_ls is not found");
+	$curproc->logerror("\$path_ls not found");
+	croak("\$path_ls not found");
     }
 }
 
