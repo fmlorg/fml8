@@ -1,6 +1,6 @@
 #!/usr/local/bin/perl
 #
-# $FML: message_id.pl,v 1.1 2001/04/15 05:05:06 fukachan Exp $
+# $FML: message_id.pl,v 1.2 2001/04/15 13:28:46 fukachan Exp $
 #
 
 use strict;
@@ -28,8 +28,8 @@ sub test
 
     my $dir;
     chop($dir = `mktemp -d -t /tmp`);
-    $dir = $dir || "/tmp/a";
-    -d $dir || system "mkdir /tmp/a";
+    $dir = $dir || "/tmp/fml5";
+    -d $dir || system "mkdir /tmp/fml5";
     $obj->open_cache( { directory => $dir } );
 
     my $key = time . "-$$";
