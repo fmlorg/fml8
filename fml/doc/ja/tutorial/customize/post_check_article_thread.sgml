@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: post_check_article_thread.sgml,v 1.1 2004/10/28 13:18:25 fukachan Exp $
 -->
 
 
@@ -68,6 +68,19 @@ article_post_restrictions       =       reject_system_special_accounts
 
 <para>
 1) 許す時間の長さを、どのくらいまで短くするのが適正か？
+<screen>
+article_post_article_thread_lifetime = 86400
+</screen>
+$article_post_article_thread_lifetime という変数で制御できるようにして
+みました。デフォルトでは一日です。
+</para>
+
+<para>
+それより、時間制限って、いつからいつまでだ？
+スレッドの始まった時からＮ秒？
+それとも
+スレッドで最後に投稿された記事からＮ秒？
+どちらが妥当だろうか？
 </para>
 
 <para>
@@ -80,13 +93,17 @@ article_post_restrictions       =       reject_system_special_accounts
 誰かやりたい人がいたら、御一報を:-)
 </para>
 </footnote>
+</para>
 
-	もっとも、たいてい message-id の方が長いことが多いから、From: 
-	偽造よりこっちのほうが突破は難しいですかね？
+<para>
+もっとも、たいてい message-id の方が長いことが多いから、From: 
+偽造よりこっちのほうが突破は難しいですかね？
+</para>
 
-	でもでも、駄目駄目な message-id をつける mailer だと、逆に弱く
-	なるけどねぇ。UNIXタイム@ホスト(FQDNじゃない) みたいなへぼいや
-	つだと、予測する範囲がすごく小さいや。
+<para>
+でもでも、駄目駄目な message-id をつける mailer だと、逆に弱く
+なるけどねぇ。UNIXタイム@ホスト(FQDNじゃない) みたいなへぼいや
+つだと、予測する範囲がすごく小さいや。
 </para>
 
 </sect2>
@@ -94,7 +111,7 @@ article_post_restrictions       =       reject_system_special_accounts
 
 <sect2>
 	<title>
-	応用例: 特定招集の人だけがスレッドをたてられるＭＬ
+	応用例: 特定少数の人だけがスレッドをたてられるＭＬ
 	</title>
 
 <para>
@@ -105,14 +122,18 @@ article_post_restrictions       =       reject_system_special_accounts
                                         check_article_thread
                                         reject
 </screen>
-とか設定すると疑似的に「スレッドをたてる小数の人(管理者) + スレッドへ
-のリプライをする管理者以外の人たち」という運用になりますね。
+などと設定すると、疑似的に「スレッドをたてる小数の人(管理者) + スレッ
+ドへのリプライをする管理者以外の人たち」という運用になりますね。
 </para>
 
 <para>
 つまり、最初に管理者の人が話題をふる。その話題へのフォローだけはＭＬに
-ながれる。ようするに、新規の話題は管理者の人しかふれない。
+流れる。ようするに、新規の話題は管理者の人しかふれない。
 モデレータ風だけど、ちっと違う感じです。
+</para>
+
+<para>
+いや、このほうがモデレータより簡単で良い？
 </para>
 
 </sect2>
