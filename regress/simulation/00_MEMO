@@ -290,13 +290,6 @@ FileHandle と IO::File 両方 use しちゃうからか？
 	なくて admin コマンドの時は考えなくてもいいからだな、それは …
 
 
-[TODO]	.cgi の英語版;-)
-
-	切替えメニューだけあるのに切替えられないってのはどうよ？
-
-[TODO]	.cgi の ml-admin の階層 ;-)
-
-
 [TODO]	Mail::Message::ToHTML
 
 	X-Sequence: fml-devel 515
@@ -417,4 +410,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.86 2003/08/04 14:15:02 fukachan Exp $
+$FML: 00_MEMO,v 1.87 2003/10/15 02:40:29 fukachan Exp $
