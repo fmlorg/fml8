@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.148 2004/05/22 06:42:11 fukachan Exp $
+# $FML: Distribute.pm,v 1.149 2004/05/25 03:54:28 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -470,6 +470,25 @@ sub _header_rewrite
 	else {
 	    $curproc->logerror("header->$rule is undefined");
 	}
+    }
+
+    # spam/virus checker
+    my $is_spam  = $curproc->filter_state_spam_checker_get_error()  || '';
+    my $is_virus = $curproc->filter_state_virus_checker_get_error() || '';
+    if ($is_spam || $is_virus) {
+	my $r = '';
+	if ($is_spam) {
+	    $r .= $r ? " " : '';
+	    $r .= "SPAM=YES ($is_spam)";
+	}
+	if ($is_virus) {
+	    $r .= $r ? ", " : '';
+	    $r .= "VIRUS=YES ($is_virus)";
+	}
+	$header->add("X-ML-Content-Filter", $r) if $r;
+    }
+    else {
+	$header->add("X-ML-Content-Filter", "SPAM=NO VIRUS=NO") if 0;
     }
 
     $eval = $config->get_hook( 'article_header_rewrite_end_hook' );

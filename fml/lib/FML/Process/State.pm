@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.9 2004/05/19 09:15:15 fukachan Exp $
+# $FML: State.pm,v 1.10 2004/05/25 04:18:50 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -511,6 +511,62 @@ sub filter_state_set_error
 sub filter_state_get_error
 {
     my ($curproc, $category) = @_;
+    my $pcb = $curproc->pcb();
+
+    return( $pcb->get("filter_state", $category) || 0 );
+}
+
+
+# Descriptions: save the spam filter error for later use.
+#    Arguments: OBJ($curproc) STR($category) STR($code)
+# Side Effects: update pcb.
+# Return Value: none
+sub filter_state_spam_checker_set_error
+{
+    my ($curproc, $code) = @_;
+    my $category = "spam_checker";
+    my $pcb = $curproc->pcb();
+
+    $pcb->set("filter_state", $category, $code || 0);
+}
+
+
+# Descriptions: get the spam filter error.
+#    Arguments: OBJ($curproc) STR($category)
+# Side Effects: update pcb.
+# Return Value: none
+sub filter_state_spam_checker_get_error
+{
+    my ($curproc) = @_;
+    my $category  = "spam_checker";
+    my $pcb = $curproc->pcb();
+
+    return( $pcb->get("filter_state", $category) || 0 );
+}
+
+
+# Descriptions: save the virus filter error for later use.
+#    Arguments: OBJ($curproc) STR($category) STR($code)
+# Side Effects: update pcb.
+# Return Value: none
+sub filter_state_virus_checker_set_error
+{
+    my ($curproc, $code) = @_;
+    my $category = "virus_checker";
+    my $pcb = $curproc->pcb();
+
+    $pcb->set("filter_state", $category, $code || 0);
+}
+
+
+# Descriptions: get the virus filter error.
+#    Arguments: OBJ($curproc) STR($category)
+# Side Effects: update pcb.
+# Return Value: none
+sub filter_state_virus_checker_get_error
+{
+    my ($curproc) = @_;
+    my $category = "virus_checker";
     my $pcb = $curproc->pcb();
 
     return( $pcb->get("filter_state", $category) || 0 );

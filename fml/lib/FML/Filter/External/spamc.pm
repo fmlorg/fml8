@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.8 2004/01/01 07:29:27 fukachan Exp $
+# $FML: spamc.pm,v 1.1 2004/05/25 03:39:50 fukachan Exp $
 #
 
 package FML::Filter::External::spamc;
@@ -74,15 +74,19 @@ sub process
 sub _check
 {
     my ($self, $curproc, $msg, $program) = @_;
+    my $opts = "-c";
 
     use FileHandle;
-    my $wh = new FileHandle "| $program";
+    my $wh = new FileHandle "| $program $opts ";
     if (defined $wh) {
 	$wh->autoflush(1);
 	$msg->print($wh);
 	$wh->close();
 	if ($?) {
-	    $curproc->logerror("determined as SPAM (exit code = $?)");
+	    my $code = $?;
+	    my $r    = "SPAM determined by spamassassin";
+	    $curproc->logerror($r);
+	    $curproc->filter_state_spam_checker_set_error($r);
 	    return 1;
 	}
 	else {
