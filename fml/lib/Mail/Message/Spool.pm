@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #
-# $FML: Spool.pm,v 1.6 2002/04/18 22:24:54 fukachan Exp $
+# $FML: Spool.pm,v 1.7 2002/04/19 05:22:01 fukachan Exp $
 #
 
 package Mail::Message::Spool;
@@ -81,7 +81,7 @@ sub filepath
 	    defined($args->{ subdir_unit }) ?  $args->{ subdir_unit } : 1000;
 	my $subdir   = int($id/$unit);
 
-	if (defined $args->{ use_subdir }) {
+	if (defined $args->{ use_subdir } && $args->{ use_subdir }) {
 	    $is_hash = 1;
 	    use File::Spec;
 	    $file = File::Spec->catfile($base_dir, $subdir, $id);
