@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.24 2002/09/28 09:27:44 fukachan Exp $
+# $FML: ToHTML.pm,v 1.25 2002/10/02 15:01:50 tmu Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.24 2002/09/28 09:27:44 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.25 2002/10/02 15:01:50 tmu Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -96,14 +96,14 @@ sub new
     my $me     = {};
 
     $me->{ _html_base_directory } = $args->{ directory };
-    $me->{ _charset }        = $args->{ charset } || 'us-ascii';
-    $me->{ _is_attachment }  = defined($args->{ attachment }) ? 1 : 0;
-    $me->{ _db_type }        = $args->{ db_type };
-    $me->{ _args }           = $args;
-    $me->{ _num_attachment } = 0; # for child process
-    $me->{ _use_subdir }     = 'yes';
-    $me->{ _subdir_style }   = 'yyyymm';
-    $me->{ _html_id_order }  = $args->{ html_id_order} || 'normal';
+    $me->{ _charset }             = $args->{ charset } || 'us-ascii';
+    $me->{ _is_attachment }       = defined($args->{ attachment }) ? 1 : 0;
+    $me->{ _db_type }             = $args->{ db_type };
+    $me->{ _args }                = $args;
+    $me->{ _num_attachment }      = 0; # for child process
+    $me->{ _use_subdir }          = 'yes';
+    $me->{ _subdir_style }        = 'yyyymm';
+    $me->{ _html_id_order }       = $args->{ index_order } || 'normal';
 
     return bless $me, $type;
 }
@@ -2421,7 +2421,7 @@ try to convert all rfc822 messages to HTML in C<$dir> directory.
 # Return Value: none
 sub htmlify_file
 {
-    my ($file, $args) = @_;
+    my ($self, $file, $args) = @_;
     my $dst_dir = $args->{ directory };
 
     unless (-f $file) {
@@ -2436,10 +2436,7 @@ sub htmlify_file
 
     use File::Basename;
     my $id   = basename($file);
-    my $html = new Mail::Message::ToHTML {
-	charset   => "euc-jp",
-	directory => $dst_dir,
-    };
+    my $html = new Mail::Message::ToHTML $args;
 
     if ($debug) {
 	printf STDERR "htmlify_file( id=%-6s src=%s )\n", $id, $file;
@@ -2476,7 +2473,7 @@ sub htmlify_file
 # Return Value: none
 sub htmlify_dir
 {
-    my ($src_dir, $args) = @_;
+    my ($self, $src_dir, $args) = @_;
     my $dst_dir  = $args->{ directory };
     my $min      = 0;
     my $max      = 0;
@@ -2501,7 +2498,7 @@ sub htmlify_dir
 
     # overwride
     $has_fork = $args->{ has_fork } if defined $args->{ has_fork };
-    $max      = $args->{ max } if defined $args->{ max };
+    $max      = $args->{ max }      if defined $args->{ max };
 
     print STDERR "   scan ( $min .. $max ) for $src_dir\n";
     for my $id ( $min .. $max ) {
@@ -2509,7 +2506,7 @@ sub htmlify_dir
 	my $file = File::Spec->catfile($src_dir, $id);
 
 	unless ( $has_fork ) {
-	    htmlify_file($file, { directory => $dst_dir });
+	    htmlify_file($file, $args);
 	}
 	else {
 	    my $pid = fork();
@@ -2517,7 +2514,7 @@ sub htmlify_dir
 		croak("cannot fork");
 	    }
 	    elsif ($pid == 0) {
-		htmlify_file($file, { directory => $dst_dir });
+		htmlify_file($file, $args);
 		exit 0;
 	    }
 
@@ -2538,17 +2535,24 @@ if ($0 eq __FILE__) {
     my $dir      = "/tmp/htdocs";
     my $has_fork = defined $ENV{'HAS_FORK'} ? 1 : 0;
     my $max      = defined $ENV{'MAX'} ? $ENV{'MAX'} : 1000;
+    my $charset  = 'euc-jp';
 
     eval q{
+	my $obj = new Mail::Message::ToHTML:
+
 	for my $x (@ARGV) {
 	    if (-f $x) {
-		htmlify_file($x, { directory => $dir });
+		$obj->htmlify_file($x, { 
+		    directory => $dir 
+		    charset   => $charset,
+		    });
 	    }
 	    elsif (-d $x) {
-		htmlify_dir($x, {
+		$obj->htmlify_dir($x, {
 		    directory => $dir,
 		    has_fork  => $has_fork,
 		    max       => $max,
+		    charset   => $charset,
 		});
 	    }
 	}

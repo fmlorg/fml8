@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.97 2002/09/22 14:56:52 fukachan Exp $
+# $FML: Distribute.pm,v 1.98 2002/09/29 12:40:48 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -505,6 +505,12 @@ sub htmlify
     my $article        = $curproc->_build_article_object($args);
     my $article_id     = $pcb->get('article', 'id');
     my $article_file   = $article->filepath($article_id);
+    my $index_order    = $config->{ html_archive_index_order_type };
+    my $htmlifier_args = {
+	directory   => $html_dir,
+	charset     => 'euc-jp',
+	index_order => $index_order,
+    };
 
     $curproc->set_umask_as_public();
 
@@ -518,9 +524,8 @@ sub htmlify
 	}
 
 	eval q{
-	    &Mail::Message::ToHTML::htmlify_file($article_file, {
-		directory => $html_dir,
-	    });
+	    my $obj = new Mail::Message::ToHTML $htmlifier_args;
+	    $obj->htmlify_file($article_file, $htmlifier_args);
 	};
 	LogError($@) if $@;
     }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.9 2002/09/15 00:11:42 fukachan Exp $
+# $FML: HTMLify.pm,v 1.10 2002/09/22 14:56:43 fukachan Exp $
 #
 
 package FML::Command::HTMLify;
@@ -37,8 +37,10 @@ and file in C<$ml_home_dir>.
 sub convert
 {
     my ($curproc, $args, $optargs) = @_;
+    my $config  = $curproc->config();
     my $src_dir = $optargs->{ src_dir };
     my $dst_dir = $optargs->{ dst_dir };
+    my $charset = 'euc-jp';
 
     croak("src_dir not defined") unless defined $src_dir;
     croak("src_dir not exists")  unless -d $src_dir;
@@ -49,6 +51,13 @@ sub convert
     #     unless ($curproc->is_config_cf_exist()) {
     #		croak("invalid ML");
     #    }
+
+    my $index_order    = $config->{ html_archive_index_order_type };
+    my $htmlifier_args = {
+	directory   => $dst_dir,
+	charset     => $charset,
+	index_order => $index_order,
+    };
 
     my ($is_subdir_exists, $subdirs) = _check_subdir_exists($src_dir);
     if ($is_subdir_exists) { Log("looks subdir exists");}
@@ -64,9 +73,8 @@ sub convert
 	    for my $xdir (sort _sort_subdirs @$subdirs) {
 		eval q{
 		    use Mail::Message::ToHTML;
-		    &Mail::Message::ToHTML::htmlify_dir($xdir, {
-			directory => $dst_dir,
-		    });
+		    my $obj = new Mail::Message::ToHTML $htmlifier_args;
+		    $obj->htmlify_dir($xdir, $htmlifier_args);
 		};
 		croak($@) if $@;
 	    }
@@ -74,9 +82,8 @@ sub convert
 	else {
 	    eval q{
 		use Mail::Message::ToHTML;
-		&Mail::Message::ToHTML::htmlify_dir($src_dir, {
-		    directory => $dst_dir,
-		});
+		my $obj = new Mail::Message::ToHTML $htmlifier_args;
+		&Mail::Message::ToHTML::htmlify_dir($src_dir, $htmlifier_args);
 	    };
 	    croak($@) if $@;
 	}
