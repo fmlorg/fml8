@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.42 2004/01/02 14:50:32 fukachan Exp $
+# $FML: Subject.pm,v 1.43 2004/01/22 12:34:22 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -243,11 +243,10 @@ sub is_reply
     return 1 if $subject =~ /^\s*Re:/i;
 
     # XXX-TODO: care for not Japanese string!
-    # XXX-TODO: method-ify ?
-    my $pkg = 'Mail::Message::Language::Japanese::Subject';
-    eval qq{ require $pkg; $pkg->import();};
-    unless ($@) {
-	return 1 if &Mail::Message::Language::Japanese::Subject::is_reply($subject);
+    eval q{
+	use Mail::Message::Language::Japanese::Subject;
+	my $sbj  = new Mail::Message::Language::Japanese::Subject;
+	return 1 if $sbj->is_reply($subject);
     };
 
     return 0;
@@ -264,15 +263,9 @@ sub _cut_off_reply
     my ($self, $r_subject) = @_;
 
     # XXX-TODO: care for not Japanese string!
-    my $pkg = 'Mail::Message::Language::Japanese::Subject';
-    eval qq{ require $pkg; $pkg->import();};
-    unless ($@) {
-	my $obj = new Mail::Message::Language::Japanese::Subject;
-	$$r_subject = $obj->cut_off_reply_tag($$r_subject);
-    }
-    else  {
-	Log($@);
-    }
+    use Mail::Message::Language::Japanese::Subject;
+    my $obj = new Mail::Message::Language::Japanese::Subject;
+    $$r_subject = $obj->cut_off_reply_tag($$r_subject);
 }
 
 

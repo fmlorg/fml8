@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2004 Ken'ichi Fukamachi
 #
-# $FML: Subject.pm,v 1.1 2004/02/04 15:11:38 fukachan Exp $
+# $FML: Subject.pm,v 1.2 2004/02/06 13:16:27 fukachan Exp $
 #
 
 package Mail::Message::Subject;
@@ -90,9 +90,9 @@ sub has_reply_tag
     # XXX anyway, we use this method always :-)
     # XXX-TODO: care for not Japanese string!
     if (1 || $charset =~ /iso-2022-jp/io) {
-	# XXX-TODO: method-ify ?
 	use Mail::Message::Language::Japanese::Subject;
-	if (&Mail::Message::Language::Japanese::Subject::is_reply($subject)) {
+	my $sbj  = new Mail::Message::Language::Japanese::Subject;
+	if ($sbj->is_reply($subject)) {
 	    return 1;
 	}
     }
