@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.117 2004/04/28 04:07:09 fukachan Exp $
+# $FML: Utils.pm,v 1.118 2004/05/02 00:04:43 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1174,7 +1174,7 @@ sub ___search_in_ml_home_prefix_maps
 		my $obj = new IO::Adapter $map;
 		if (defined $obj) {
 		    $obj->open();
-		    
+		
 		    my $_domain = quotemeta($domain);
 		    my ($domainlist) = $obj->find($_domain, { all => 1 });
 		  DIR:
@@ -1492,7 +1492,7 @@ sub get_address_list
 }
 
 
-=head2 which_map_nl($map)
+=head2 which_map($map)
 
 which this $map belongs to ?
 
@@ -1503,7 +1503,7 @@ which this $map belongs to ?
 #    Arguments: OBJ($curproc) STR($map)
 # Side Effects: none
 # Return Value: STR
-sub which_map_nl
+sub which_map
 {
     my ($curproc, $map) = @_;
     my $config = $curproc->config();
@@ -1512,9 +1512,9 @@ sub which_map_nl
     # XXX try longer term firstly.
   SEARCH_MAPS:
     for my $mode (qw(digest_member    digest_recipient
-		     admin_member     admin_recipient 
+		     admin_member     admin_recipient
 		     moderator_member moderator_recipient
-		     member recipient 
+		     member recipient
 		     )) {
 	my $maps = $config->get_as_array_ref("${mode}_maps");
 	for my $m (@$maps) {
@@ -1525,7 +1525,29 @@ sub which_map_nl
 	}
     }
 
-    my $term = $curproc->message_nl("term.$found", $found) || $found;
+    my $term = $found;
+    $term =~ s/[\s\n]*$//;
+    return $term;
+}
+
+
+=head2 which_map_nl($map)
+
+return which member of maps is this $map as natural language.
+
+=cut
+
+
+# Descriptions: return which member of maps is this $map as natural language.
+#    Arguments: OBJ($curproc) STR($map)
+# Side Effects: none
+# Return Value: STR
+sub which_map_nl
+{
+    my ($curproc, $map) = @_;
+
+    my $found = $curproc->which_map($map);
+    my $term  = $curproc->message_nl("term.$found", $found) || $found;
     $term =~ s/[\s\n]*$//;
     return $term;
 }
@@ -1637,7 +1659,7 @@ sub language_of_html_file
 {
     my ($curproc) = @_;
     my $config    = $curproc->config();
-    my $language  = $config->{ html_archive_default_charset } || 'us-ascii';   
+    my $language  = $config->{ html_archive_default_charset } || 'us-ascii';
 
     return $language;
 }
