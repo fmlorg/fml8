@@ -1,0 +1,168 @@
+<!--
+   $FML$
+-->
+
+<chapter id="module.create">
+	<title>
+	例題: 新しいプログラムを作る
+	</title>
+
+
+<para>
+ここでは、単純なスケジュール表示ソフトを例にとり、fml8 フレームワーク
+の中で新しいプログラムを追加するにはどうすれば良いのかを説明します。 
+以下、プログラム名は fmlsch とし、その CGI 版が fmlsch.cgi です。
+</para>
+
+
+<sect1>
+	<title>
+	ケーススタディ: fmlsch を作る。
+	</title>
+
+
+<sect2>
+	<title>
+	ステップ 1: インストーラに fmlsch を付け加える
+	</title>
+
+<para>
+fml/etc/install.cf.in の bin_programs 変数に fmlsch を追加します。
+fml/etc/install.cf を再生成するために
+configure を再実行してください。 
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	ステップ 2: モジュールを作る
+	</title>
+
+
+<para>
+fmlsch の実体のモジュールとして、
+fml/lib/Calender/Lite.pm を書きます。
+</para>
+
+<para>
+また、必要な他にライブラリがあれば適宜輸入してください。
+今回は CPAN から
+HTML-CalendarMonthSimple-1.02.tar.gz
+を輸入します。
+</para>
+
+<para>
+Date-Calc も必要なので適宜インストールしてください。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	ステップ 3: FML::Process:: を修正
+	</title>
+
+<para>
+仕事のほとんどの部分は TinyCalender が実行しますが、
+fml8 のブートローダから TinyCalender を呼び出すために
+FML::Process:: クラスを修正する必要があります。
+</para>
+
+<para>
+まず、fmlsch プロセスの初期化から実行といった大まかな一連の手順を
+fml/lib/FML/Process/Calender.pm 
+に書きます。このファイルは新規に作成して下さい。
+</para>
+
+<para>
+そして、
+ブートローダーへ fmlsch の場合は FML::Process::Calender を呼び出せば
+良いことを教えるために
+fml/lib/FML/Process/Switch.pm
+へ fmlsch のモジュール名などを追加します。
+</para>
+
+
+<para>
+FML::Process::Calender は同じディレクトリのモジュールを適当にぱくって 
+hack してください :-)
+
+なお、fmlsch は機能が最小なので、FML::Process::Calender では
+FML::Process::Calender::run() メソッドだけ用意すればおしまいです。
+
+未定義の関数は FML::Process::Kernel のメソッドが使われます(継承)。
+</para>
+
+<para>
+FML::Process::Switch には以下のルール群を追加します。
+ここで追加するのは
+	getopt() のオプション
+	ML 名は必須か？
+	呼び出すモジュール名
+です。
+<screen>
+   --- Switch.pm	2001/03/25 04:09:00	1.14
+   +++ Switch.pm	2001/03/27 15:27:00
+   @@ -323,6 +323,9 @@
+        elsif ($myname eq 'makefml.cgi') {
+    	return qw(debug!);
+        }
+   +    elsif ($myname eq 'fmlsch') {
+   +	return qw(debug!);
+   +    }
+        else {
+    	croak "options for $myname are not defined.\n";
+        }
+   @@ -340,6 +343,9 @@
+        if ($myname eq 'fmldoc') {
+    	return 0;
+        }
+   +    elsif ($myname eq 'fmlsch') {
+   +	return 0;
+   +    }
+        elsif ($myname eq 'makefml') {
+    	return 0;
+        }
+   @@ -390,6 +396,12 @@
+        }
+        elsif ($name eq 'makefml.cgi') {
+    	$pkg = 'FML::CGI::Configure';
+   +    }
+   +    elsif ($name eq 'fmlsch') {
+   +	$pkg = 'FML::Process::Calender';
+        }
+        else {
+    	return '';
+</screen>
+</para>   
+
+</sect2>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	ケーススタディ: fmlsch.cgi
+	</title>
+
+
+<para>
+改造の仕方はモジュールが FML::CGI:: クラスになる以外は fmlsch の場合と
+同様です。FML::CGI::Calender は FML::Process::CGI のサブクラスです。
+</para>
+
+<para>
+未定義のものについては FML::Process::CGI や FML::Process::Kernel がよ
+きにはからいます。また、CGI.pm は FML::Process::CGI が使い、HTTP
+header を生成しています。あくまでも最低限の処理なので
+FML::CGI:: のモジュールで適宜 HTML の出力を補佐してあげます。 
+</para>
+
+</sect1>
+
+
+</chapter>
