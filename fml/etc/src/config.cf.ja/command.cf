@@ -92,6 +92,8 @@ available_commands_for_admin_cgi	=	subscribe
 						addadmin
 						byeadmin
 						log
+						newml
+						rmml
 
 
 # Descriptions: confirmation の返事を表す特別なコマンド
