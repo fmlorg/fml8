@@ -167,6 +167,30 @@ tmp_dir		= $ml_home_dir/tmp
 db_dir		= $var_dir/db
 
 
+=head2 ml local
+
+
+# Descriptions: 各ＭＬローカルのディレクトリ
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml/elena/local
+ml_local_dir		=	$ml_home_dir/local
+
+
+# Descriptions: 各ＭＬローカルの lib/ ディレクトリ
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml/elena/local/lib
+ml_local_lib_dir	=	$ml_local_dir/lib
+
+
+# Descriptions: 各ＭＬローカルの share/ ディレクトリ
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml/elena/local/share
+ml_local_share_dir	=	$ml_local_dir/share
+
+
 =head2 スケジューラ
 
 # Descriptions: イヴェントのキューディレクトリ
@@ -507,11 +531,18 @@ system_message_subject	=	fml system message ($ml_name ML)
 =head2 テンプレートファイル群
 
 
-# Descriptions: message template (paragraph)
+# Descriptions: directory to hold message template files
 #      History: /usr/local/fml/drafts/
 #        Value: directory
+#     Examples: /usr/local/share/fml/$fml_version/message
+message_template_dir	= $fml_share_dir/message
+
+
+# Descriptions: directory to hold ml specific message template files
+#      History: $DIR/drafts/
+#        Value: directory
 #     Examples: /usr/local/share/fml/$fml_version/template/$language
-message_template_dir	= $fml_share_dir/message/$template_file_charset
+ml_local_message_template_dir	= $ml_local_share_dir/message
 
 
 =head2 テンプレートファイル群 for user
