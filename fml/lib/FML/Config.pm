@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.65 2002/07/22 09:40:07 fukachan Exp $
+# $FML: Config.pm,v 1.66 2002/07/23 13:25:29 fukachan Exp $
 #
 
 package FML::Config;
@@ -392,10 +392,10 @@ sub __update_config
     if ($mode) {
 	if ($name_space) {
 	    $config->{ $name_space }->{ $key } = 
-		_evaluate($config, $key, $mode, $value);
+		_evaluate($config, $key, $mode, $value, $name_space);
 	}
 	else {
-	    $config->{ $key } = _evaluate($config, $key, $mode, $value);
+	    $config->{ $key } = _evaluate($config, $key, $mode, $value, 0);
 	}
     }
     else { # by default
@@ -439,11 +439,18 @@ sub __append_config
 # Return Value: STR(new value for $config{ $key })
 sub _evaluate
 {
-    my ($config, $key, $mode, $value) = @_;
+    my ($config, $key, $mode, $value, $name_space) = @_;
     my @buf = ();
 
-    if (defined $config->{ $key }) {
-	@buf = split(/\s+/, $config->{ $key });
+    if ($name_space) {
+	if (defined $config->{ $name_space }->{ $key }) {
+	    @buf = split(/\s+/, $config->{ $name_space }->{ $key });
+	}
+    }
+    else {
+	if (defined $config->{ $key }) {
+	    @buf = split(/\s+/, $config->{ $key });
+	}
     }
 
     # + value = append
