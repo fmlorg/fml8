@@ -18,11 +18,11 @@ END   {}
 
 =head1 NAME
 
-IO::Rotate - IO with rotate operations
+FILE::Rotate - IO with rotate operations
 
 =head1 SYNOPSIS
 
-    $obj = new IO::Rotate {
+    $obj = new FILE::Rotate {
 	max_size    => 10000,
 	num_backlog => 4,
     };
