@@ -1,0 +1,17 @@
+<!--
+   $FML: perl.sgml,v 1.1 2001/04/28 08:16:09 fukachan Exp $
+-->
+
+<chapter id="perl">
+
+<title> perl  </title>
+
+
+<sect1>
+<title> PERL のバージョン </title>
+
+&osandperl;
+
+</sect1>
+
+</chapter>
