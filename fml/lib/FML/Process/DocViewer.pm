@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: DocViewer.pm,v 1.4 2001/11/04 03:44:46 fukachan Exp $
+# $FML: DocViewer.pm,v 1.5 2001/11/25 03:13:50 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -75,6 +75,22 @@ sub new
 sub prepare { ; }
 
 
+# Descriptions: check @ARGV
+#    Arguments: $self $args
+# Side Effects: longjmp() to help() if appropriate
+# Return Value: none
+sub verify_request
+{
+    my ($curproc, $args) = @_;
+    my $argv = $curproc->command_line_argv();
+
+    if (length(@$argv) == 1) {
+	$curproc->help();
+	exit(0);
+    }
+}
+
+
 =head2 C<run($args)>
 
 the main top level dispatcher.
@@ -94,12 +110,7 @@ sub run
     my $myname  = $curproc->myname();
     my $argv    = $curproc->command_line_argv();
 
-    if ($myname eq 'fmldoc') {
-        $curproc->_fmldoc($args);
-    }
-    else {
-	my $command = $argv->[ 0 ] || croak("command not specified\n");
-    }
+    $curproc->_fmldoc($args);
 }
 
 
@@ -122,12 +133,10 @@ sub help
 
 print <<"_EOF_";
 
-Usage: $name \$command \$ml_name [options]
+Usage: $name MODULE
 
-$name help         \$ml_name                   show this help
-
-$name subscribe    \$ml_name ADDRESS
-$name unsubscribe  \$ml_name ADDRESS
+   For example,
+   $name FML::Process::Kernel
 
 _EOF_
 }

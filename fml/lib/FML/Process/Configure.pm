@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Configure.pm,v 1.28 2001/11/04 03:44:46 fukachan Exp $
+# $FML: Configure.pm,v 1.29 2001/11/25 03:13:50 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -76,6 +76,22 @@ sub new
 # Side Effects: none
 # Return Value: none
 sub prepare { ; }
+
+
+# Descriptions: check @ARGV
+#    Arguments: $self $args
+# Side Effects: longjmp() to help() if appropriate
+# Return Value: none
+sub verify_request
+{
+    my ($curproc, $args) = @_;
+    my $argv = $curproc->command_line_argv();
+
+    if (length(@$argv) == 1) {
+	$curproc->help();
+	exit(0);
+    }
+}
 
 
 =head2 C<run($args)>
