@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.6 2002/06/01 14:53:39 fukachan Exp $
+# $FML: Qmail.pm,v 1.7 2002/06/27 08:24:09 fukachan Exp $
 #
 
 package FML::MTAControl::Qmail;
@@ -159,7 +159,7 @@ sub qmail_setup
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params)
 #         bugs: we cannot update /var/qmail/control/virtualdomains
 #               since it needs root priviledge.
-#               So, we can only update our templates for qmail. 
+#               So, we can only update our templates for qmail.
 # Side Effects: update template not /var/qmail/control/virtualdomains
 # Return Value: none
 sub qmail_install_virtual_map

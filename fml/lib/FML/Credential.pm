@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.25 2002/06/01 05:02:31 fukachan Exp $
+# $FML: Credential.pm,v 1.26 2002/06/30 14:27:47 fukachan Exp $
 #
 
 package FML::Credential;
@@ -158,7 +158,7 @@ sub is_member
     my ($self, $curproc, $args) = @_;
     my $config      = $curproc->{ config };
     my $member_maps = $config->get_as_array_ref('member_maps');
-    my $address     = (defined $args->{ address } ? 
+    my $address     = (defined $args->{ address } ?
 		       $args->{ address } :
 		       $curproc->{'credential'}->{'sender'});
 
@@ -178,7 +178,7 @@ sub is_privileged_member
     my ($self, $curproc, $args) = @_;
     my $config      = $curproc->{ config };
     my $member_maps = $config->get_as_array_ref('admin_member_maps');
-    my $address     = (defined $args->{ address } ? 
+    my $address     = (defined $args->{ address } ?
 		       $args->{ address } :
 		       $curproc->{'credential'}->{'sender'});
 
@@ -201,7 +201,7 @@ sub _is_member
     my $domain = '';
 
     # cheap sanity
-    return 0 unless defined $optargs->{ member_maps }; 
+    return 0 unless defined $optargs->{ member_maps };
     return 0 unless defined $optargs->{ address };
 
     my $member_maps = $optargs->{ member_maps };

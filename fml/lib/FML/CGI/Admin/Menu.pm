@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.17 2002/06/25 07:50:08 fukachan Exp $
+# $FML: Menu.pm,v 1.18 2002/06/28 03:40:55 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -115,14 +115,14 @@ sub run_cgi_main
     my $hints   = $curproc->hints();
     my $pcb     = $curproc->{ pcb };
 
-    # specified command, we need to identify 
+    # specified command, we need to identify
     # the command specifined in the cgi_navigation and cgi_mein.
     my $navi_command = $curproc->safe_param_navi_command() || '';
     my $command      = $curproc->safe_param_command() || '';
 
     print "command = $command, navi_command = $navi_command<br>\n" if $debug;
 
-    # update config on memory to hadlne 
+    # update config on memory to hadlne
     # 1. ml_name specified here
     # 2. virtual domain
     $config->set('ml_name', $ml_name);
@@ -230,7 +230,7 @@ sub run_cgi_navigator
 			 -size    => 5);
     print "\n<BR>\n";
 
-    my $command_default = $curproc->safe_param_navi_command() || 
+    my $command_default = $curproc->safe_param_navi_command() ||
 	$curproc->safe_param_command();
 
     print "  command:\n";

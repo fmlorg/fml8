@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.60 2002/06/22 14:25:11 fukachan Exp $
+# $FML: Config.pm,v 1.61 2002/06/24 09:43:23 fukachan Exp $
 #
 
 package FML::Config;
@@ -893,7 +893,7 @@ sub STORE
 
     # inform fml we need to expand variable again when FETCH() is
     # called.
-    if (defined $value && $value =~ /\$/) { 
+    if (defined $value && $value =~ /\$/) {
 	$need_expansion_variables = 1;
     }
 

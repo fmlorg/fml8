@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.25 2002/04/07 05:35:08 fukachan Exp $
+# $FML: Command.pm,v 1.26 2002/06/30 14:27:47 fukachan Exp $
 #
 
 package FML::Command;
@@ -80,7 +80,7 @@ sub rewrite_prompt
     my ($self, $curproc, $command_args, $rbuf) = @_;
     my $command = undef;
     my $comname = $command_args->{ comname };
-    my $mode    = 
+    my $mode    =
 	$command_args->{'command_mode'} =~ /admin/i ? 'Admin' : 'User';
     my $pkg     = "FML::Command::${mode}::${comname}";
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.70 2002/06/01 05:09:27 fukachan Exp $
+# $FML: Switch.pm,v 1.71 2002/06/27 08:25:51 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -55,7 +55,7 @@ For example, libexec/distribute (fml.pl) runs in this way.
             |
             |  <---  $obj = FML::Process:Distribute
             |
-            V                   
+            V
        ProcessStart($obj,$args) Process::Flow
 
 

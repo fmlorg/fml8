@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.107 2002/06/24 09:43:24 fukachan Exp $
+# $FML: Kernel.pm,v 1.108 2002/06/27 08:25:50 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -119,9 +119,9 @@ sub new
     }
 
 
-    # 
+    #
     # 3. create FML::Process::Kernel object
-    # 
+    #
     # 3.1 for more convenience, save the parent configuration
     $curproc->{ main_cf }       = $args->{ main_cf };
     $curproc->{ __parent_args } = $args;
@@ -404,16 +404,16 @@ with considering virtual domains.
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($curproc) HASH_REF($args)
-# Side Effects: 
+# Side Effects:
 # Return Value: none
 sub resolve_ml_specific_variables
 {
     my ($curproc, $args) = @_;
     my ($ml_name, $ml_domain, $ml_home_prefix, $ml_home_dir);
     my ($command, @options, $config_cf_path);
-    my $config  = $curproc->{ config }; 
+    my $config  = $curproc->{ config };
     my $myname  = $args->{ myname };
     my $ml_addr = '';
 
@@ -421,7 +421,7 @@ sub resolve_ml_specific_variables
     #          makefml COMMAND elena@fml.org ...
     #    or in the old style
     #          "| /usr/local/libexec/fml/fml.pl /var/spool/ml/elena"
-    # 
+    #
 
     # 1. virtual domain or not ?
     # 1.1 search ml@domain syntax arg in @ARGV
@@ -493,7 +493,7 @@ sub resolve_ml_specific_variables
 # XXX remove this in the future
 my @delayed_buffer = ();
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -507,15 +507,15 @@ sub __debug_ml_xxx
 	@delayed_buffer = ();
 
 	for my $var (qw(ml_name ml_domain ml_home_prefix ml_home_dir)) {
-	    Log(sprintf("%-25s = %s", '(debug)'.$str. $var, 
+	    Log(sprintf("%-25s = %s", '(debug)'.$str. $var,
 			(defined $config->{ $var } ? $config->{ $var } : '')));
 	}
     }
     else {
 	for my $var (qw(ml_name ml_domain ml_home_prefix ml_home_dir)) {
 	    push(@delayed_buffer,
-		 sprintf("%-25s = %s", 
-			 '(debug)'.$str. $var, 
+		 sprintf("%-25s = %s",
+			 '(debug)'.$str. $var,
 			 (defined $config->{$var} ? $config->{$var} : '')));
 	}
     }

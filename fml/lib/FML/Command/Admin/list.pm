@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: list.pm,v 1.5 2002/06/25 03:53:31 fukachan Exp $
+# $FML: list.pm,v 1.6 2002/06/25 07:52:12 fukachan Exp $
 #
 
 package FML::Command::Admin::list;
@@ -58,7 +58,7 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $options = [ 'member' ];
 
-    # import makefml options  
+    # import makefml options
     if (defined $command_args->{ options } &&
 	ref($command_args->{ options }) eq 'ARRAY') {
 	my $xopt = $command_args->{ options };
@@ -98,7 +98,7 @@ sub _show_list
 
     # cheap sanity
     unless (defined $maplist) { croak("list: map undeflined");}
-    unless ($maplist)         { croak("list: map undeflined");}	
+    unless ($maplist)         { croak("list: map undeflined");}
 
     # FML::Command::UserControl specific parameters
     my $uc_args = {

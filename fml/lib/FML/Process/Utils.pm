@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.29 2002/06/25 04:02:11 fukachan Exp $
+# $FML: Utils.pm,v 1.30 2002/06/27 08:25:51 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -407,7 +407,7 @@ sub __ml_home_prefix_from_main_cf
 #               STR($virtual_domain)
 #               ARRAY_REF($virtual_maps)
 #         bugs: currently support the only file type of IO::Adapter.
-#               This limit comes from the architecture 
+#               This limit comes from the architecture
 #               since this function may be used
 #               before $curproc and $config is allocated.
 # Side Effects: none
@@ -415,7 +415,7 @@ sub __ml_home_prefix_from_main_cf
 sub __ml_home_prefix_search_in_virtual_maps
 {
     my ($main_cf, $virtual_domain, $virtual_maps) = @_;
-    
+
     if (@$virtual_maps) {
 	my $dir = '';
 	eval q{ use IO::Adapter; };

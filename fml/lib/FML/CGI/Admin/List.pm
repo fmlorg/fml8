@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.1 2002/06/25 07:52:13 fukachan Exp $
+# $FML: List.pm,v 1.2 2002/06/25 08:42:51 fukachan Exp $
 #
 
 package FML::CGI::Admin::List;
@@ -54,7 +54,7 @@ sub cgi_menu
 		Tr( undef,
 		   td([
 		       "ML:",
-		       textfield(-name => 'ml_name', 
+		       textfield(-name => 'ml_name',
 				 -default => $ml_name),
 		       ])
 		   ),

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.7 2002/06/21 09:25:39 fukachan Exp $
+# $FML: UserControl.pm,v 1.8 2002/06/25 04:11:30 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -125,10 +125,10 @@ sub userlist
 	    $obj->open;
 	    while ($x = $obj->get_next_key()) {
 		if ($is_cgi) {
-		    print $wh $x, "<br>\n"; 
+		    print $wh $x, "<br>\n";
 		}
 		else {
-		    print $wh $x, "\n"; 
+		    print $wh $x, "\n";
 		}
 	    }
 	    $obj->close;

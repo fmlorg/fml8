@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.4 2002/06/24 16:25:33 tmu Exp $
+# $FML: Postfix.pm,v 1.5 2002/06/27 08:24:09 fukachan Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -33,7 +33,7 @@ FML::MTAControl - postfix utilities
 
 
 # Descriptions: install new alias entries
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
@@ -63,7 +63,7 @@ sub postfix_install_alias
 
 
 # Descriptions: remove alias
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
@@ -119,7 +119,7 @@ sub postfix_remove_alias
 
 
 # Descriptions: regenerate aliases.db
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
@@ -136,7 +136,7 @@ sub postfix_update_alias
 
 
 # Descriptions: find key in aliases
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
@@ -167,7 +167,7 @@ sub postfix_find_key_in_alias_maps
 
 
 # Descriptions: get { key => value } in aliases
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: HASH_REF
@@ -217,7 +217,7 @@ sub postfix_get_aliases_as_hash_ref
 
 
 # Descriptions: return alias_maps as ARRAY_REF
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -240,7 +240,7 @@ sub postfix_alias_maps
 
 
 # Descriptions: install configuratin templates
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: create include*
 # Return Value: none
@@ -266,7 +266,7 @@ sub postfix_setup
 
 
 # Descriptions: rewrite $params
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update $params
 # Return Value: none
@@ -284,7 +284,7 @@ sub _postfix_rewrite_virtual_params
 
 
 # Descriptions: install postfix virtual_maps
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: install/udpate postfix virtual_maps and the .db
 # Return Value: none
@@ -326,7 +326,7 @@ sub postfix_install_virtual_map
 
 
 # Descriptions: remove postfix virtual_maps
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: remove/udpate postfix virtual_maps and the .db
 # Return Value: none
@@ -378,7 +378,7 @@ sub postfix_remove_virtual_map
 
 
 # Descriptions: regenerate virtual.db
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
