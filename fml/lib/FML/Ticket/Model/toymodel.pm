@@ -433,16 +433,24 @@ C<articles>, which is a list of articles with the ticket-id.
 
 =head2 C<_simple_print()>
 
-         date    age status  ticket id             articles
-   ------------------------------------------------------------
-   2001/02/07    3.1   open  elena_#00000451       810 
-   2001/02/07    3.0   open  elena_#00000452       812 
-   2001/02/07    2.9   open  elena_#00000453       813 
-   2001/02/10    0.1   open  elena_#00000456       821 
-   2001/02/07    3.5  going  elena_#00000450       807 808 809 
-   2001/02/07    2.9  going  elena_#00000454       814 815 
+show entries by the ticket_id order. 
+
+       date    age status  ticket id             articles
+ ------------------------------------------------------------
+ 2001/02/07    3.6  going  elena_#00000450       807 808 809 
+ 2001/02/07    3.1   open  elena_#00000451       810 
+ 2001/02/07    3.0   open  elena_#00000452       812 
+ 2001/02/07    3.0   open  elena_#00000453       813 
+ 2001/02/07    3.0  going  elena_#00000454       814 815 
+ 2001/02/10    0.1   open  elena_#00000456       821 
 
 =head2 C<_summary_print()> 
+
+show entries in the C<cost> larger order.
+The cost is evaluated by $status and $age.
+The cost is larger as $age is larger.
+It is also larger if $status is C<open>.
+
 
 =cut
 
@@ -469,21 +477,39 @@ sub show_summary
 	push(@ticket_id, $tid);
     }
 
-    # age HASH TABLE
-    my $rh_age = $self->_calculate_age($curproc, $args, \@ticket_id);
+    if (@ticket_id) {
+	# age HASH TABLE
+	my ($rh_age, $rh_cost) = 
+	    $self->_calculate_age($curproc, $args, \@ticket_id);
 
-    # print out
-    $self->_simple_print($curproc, $args, \@ticket_id, $rh_age);
+	# sort the ticket output order and print it out
+	$self->_sort_ticket_id($curproc, \@ticket_id, $rh_cost);
+	$self->_print_ticket_summary($curproc, $args, \@ticket_id, $rh_age);
+
+	# show short summary for each article
+	$self->_print_article_summary($curproc, $args, \@ticket_id, 
+				      $rh_age, $rh_cost);
+    }
 
     # self->{ _hash_table } is untied from DB's.
     $self->close_db($curproc, $args);
 }
 
 
+sub _sort_ticket_id
+{
+    my ($self, $curproc, $ticket_id, $cost) = @_;
+
+    @$ticket_id = sort { 
+	$cost->{$b} cmp $cost->{$a};
+    } @$ticket_id;
+}
+
+
 sub _calculate_age
 {
     my ($self, $curproc, $args, $ticket_id) = @_;
-    my (%age) = ();
+    my (%age, %cost) = ();
     my $now   = time; # save the current UTC for convenience
     my $rh    = $self->{ _hash_table };
     my $day   = 24*3600;
@@ -496,15 +522,18 @@ sub _calculate_age
 	$last  = $aid[ $#aid ];
 
 	# how long this ticket is not concerned ?
-	$age{ $tid } = 
-	    sprintf("%2.1f%s", ($now - $rh->{ _date }->{ $last })/$day);
+	$age = sprintf("%2.1f%s", ($now - $rh->{ _date }->{ $last })/$day);
+	$age{ $tid } = $age;
+
+	# evaluate cost hash table which is { $ticket_id => $cost }
+	$cost{ $tid } = $rh->{ _status }->{ $tid }.'-'. $age;
     }
 
-    return \%age;
+    return (\%age, \%cost);
 }
 
 
-sub _simple_print
+sub _print_ticket_summary
 {
     my ($self, $curproc, $args, $ticket_id, $rh_age) = @_;
     my $fd     = $self->{ _fd } || \*STDOUT;
@@ -517,7 +546,7 @@ sub _simple_print
 
     my ($tid, @article_id, $article_id, $date, $age, $status) = ();
     my $dh = new FML::Date;
-    for $tid (sort @$ticket_id) {
+    for $tid (@$ticket_id) {
 	# get the first $article_id from the article_id list
 	(@article_id) = split(/\s+/, $rh->{ _articles }->{ $tid });
 	$article_id   = $article_id[0];
@@ -534,9 +563,88 @@ sub _simple_print
 }
 
 
-sub _summary_print
+sub _cost_to_indicator
 {
-    ;
+    my ($cost) = @_;
+    my $how_bad = 0;
+
+    if ($cost =~ /(\w+)\-(\d+)/) { 
+	$how_bad += $2;
+	$how_bad += 2 if $1 =~ /open/;
+	$how_bad  = "!" x ($how_bad > 6 ? 6 : $how_bad);
+    }
+}
+
+
+sub _print_article_summary
+{
+    my ($self, $curproc, $args, $ticket_id, $age, $cost) = @_;
+    my $fd     = $self->{ _fd } || \*STDOUT;
+    my $rh     = $self->{ _hash_table };
+    my $wd     = $self->{ _wd } || \*STDOUT;
+
+    # 
+    my ($aid, @aid);
+    my $spool_dir  = $curproc->{ config }->{ spool_dir };
+
+    print $wd "\n\"!\" mark: stalled? please check and reply it.\n";
+
+    for my $tid (@$ticket_id) {
+	my $how_bad = _cost_to_indicator( $cost->{ $tid } );
+	printf $wd "\n%6s  %-10s  %s\n", $how_bad, $tid;
+
+	(@aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
+	$aid   = $aid[0];
+	print $wd $self->_article_summary( $spool_dir ."/". $aid );
+    }
+}
+
+
+sub _article_summary
+{
+    my ($self, $file) = @_;
+    my $buf     = '';
+    my $line    = 5;
+    my $padding = '      > ';
+
+    use FileHandle;
+    my $fh = new FileHandle $file;
+
+    if (defined $fh) {
+	use Jcode;
+
+	while (<$fh>) {
+	    if (1 ../^$/) {
+		if (/^(Subject:.*)=\?ISO\S+B\?(\S+)=\?=/) { 
+		    my ($x, $y) = ($1, $2);
+		    $y = decode_base64($y);
+		    $buf .= $padding;
+		    $buf .= $x. Jcode::convert(\$y, 'euc')."\n";
+		    $buf .= $padding."\n";
+		}
+		elsif (/^(Subject:.*)/) {
+		    $buf .= $padding. $_;
+		    $buf .= $padding."\n";
+		}
+		next;
+	    }
+
+	    # nuke useless lines
+	    next if /^\s*$/;
+	    next if /^\>/;
+	    next if /^\-/;
+
+	    # pick up effetive the first $line lines
+	    if ($line--> 0) {
+		$buf .= $padding. $_;
+	    }
+	    else {
+		last;
+	    }
+	}
+    }
+
+    $buf;
 }
 
 
