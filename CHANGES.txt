@@ -1,6 +1,54 @@
 		CHANGES
 		$Date$
 
+2001/10/20
+
+   Mail::HTML::Lite 
+	メールを HTML 化するモジュール
+	mhonarc のように凝ってはいないが必要十分な最低限の機能は持つ
+	(だから Lite なんだよん)
+
+	cache information in .ht_hml_* in html article directory
+	rewrite links using these data among articles needed to rewrite.
+	links contains prev::next by ID (article ID) and prev::next by Thread.
+	
+	bug fix target lists to update, modified to use the result by
+	evaluation_relation()
+	
+	clean up debug code
+	more debug information
+
+	show <META> and <LINK> information in <HEAD> if could
+	new() takes charset as argument
+	change _decode_mime_string() to method
+	modify ifdef in_chaset_to_code() to be more suitable
+
+   Mail::Message 
+	
+	bug fix::$InComingMessage should not local scope. modify it to
+	SCALAR REF
+	
+	bug fix::data_in_body_part() returns whole data not the first
+	512 bytes. if $size is specified as argument, return the first
+	$size bytes. 
+	
+	feature::get_data_type_list() returns ARRAY of xxx::yyy by
+	default for other method use. If under $debug mdoe, it shows
+	verbose output. 
+
+2001/10/19
+
+   import HTML::FromText 1.005
+	
+   Mail::Bounce 
+	Mail::Message::get_data_type_list() is changed. To sync with it,
+	use $msg->get_data_type_list( { debug => 1 } ) for debug.
+	
+2001/10/18
+
+   Tie::JournaledDir 
+	change default unit to "day" not number (unix time).
+
 2001/10/17
 
    variables
@@ -571,4 +619,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.19 2001/10/14 23:09:57 fukachan Exp $
+$FML: CHANGES.txt,v 1.20 2001/10/17 15:42:45 fukachan Exp $
