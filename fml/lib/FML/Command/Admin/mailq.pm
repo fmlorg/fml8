@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003 MURASHITA Takuya
+#  Copyright (C) 2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mailq.pm,v 1.8 2003/02/13 14:06:13 fukachan Exp $
+# $FML: mailq.pm,v 1.1 2003/03/14 03:44:16 fukachan Exp $
 #
 
 package FML::Command::Admin::mailq;
@@ -96,11 +96,11 @@ See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 
-MURASHITA Takuya
+Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003 MURASHITA Takuya
+Copyright (C) 2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
