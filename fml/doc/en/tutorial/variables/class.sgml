@@ -276,6 +276,13 @@ user_command {
    }
 }
 
+debug {
+
+   debug { 
+          $use_debug
+   }
+}
+
 default {
 
    default_* {
@@ -772,7 +779,6 @@ _dir$ {
 
 *** unclassified ***
     ?     $commands_for_ml_admin_cgi
-    ?     $debug
     ?     $file_default_mode
     ?     $language_preference_order
     ?     $unsafe_header_fields

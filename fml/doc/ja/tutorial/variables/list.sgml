@@ -511,15 +511,6 @@ $var_dir/db
 </row>
 <row>
 <entry>
-debug</entry>
-<entry>
- デバッグ、デフォルトは NO にしてある。</entry>
-<entry>
-no
-   </entry>
-</row>
-<row>
-<entry>
 default_mail_body_size_limit</entry>
 <entry>
  本文サイズの上限のデフォルト値</entry>
@@ -1856,6 +1847,15 @@ use_command_mail_size_filter</entry>
  サイズ情報を根拠にしたフィルタリングをするか？</entry>
 <entry>
 yes
+   </entry>
+</row>
+<row>
+<entry>
+use_debug</entry>
+<entry>
+ デバッグ、デフォルトは NO にしてある。</entry>
+<entry>
+no
    </entry>
 </row>
 <row>
