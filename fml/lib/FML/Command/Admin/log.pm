@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.1 2002/03/19 11:13:45 fukachan Exp $
+# $FML: log.pm,v 1.2 2002/03/30 11:08:35 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -23,7 +23,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-log a new address.
+show log file(s).
 
 =head1 METHODS
 
@@ -52,7 +52,7 @@ sub new
 sub need_lock { 0;}
 
 
-# Descriptions: log a new user
+# Descriptions: show log files
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
@@ -70,7 +70,7 @@ sub process
 }
 
 
-# Descriptions: log a new user
+# Descriptions: show cgi menu
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
@@ -86,6 +86,10 @@ sub cgi_menu
 }
 
 
+# Descriptions: show log file
+#    Arguments: STR($log_file) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub _show_log
 {
     my ($log_file, $args) = @_;
@@ -106,6 +110,7 @@ sub _show_log
 	my $s = '';
 	$maxline -= $last_n_lines;
 
+	# show the last $last_n_lines lines by default.
       LINE:
 	while (<$fh>) {
 	    next LINE if $linecount++ < $maxline;
@@ -113,11 +118,7 @@ sub _show_log
 	    $s = STR2EUC($_);
 
 	    if ($is_cgi) {
-		$s =~ s/&/&amp;/g;
-		$s =~ s/</&lt;/g;
-		$s =~ s/>/&gt;/g;
-		$s =~ s/\"/&quot;/g;
-		print $s;
+		print _html_to_text($s);
 		print "<BR>\n";
 	    }
 	    else {
@@ -125,6 +126,26 @@ sub _show_log
 	    }
 	}
 	$fh->close;
+    }
+}
+
+
+# Descriptions: convert text to html
+#    Arguments: STR($str)
+# Side Effects: none
+# Return Value: STR
+sub _html_to_text
+{
+    my ($str) = @_;
+
+    eval q{ 
+	use HTML::FromText;
+    };
+    unless ($@) {
+	return text2html($str, urls => 1, pre => 1);
+    }
+    else {
+	croak($@);
     }
 }
 
