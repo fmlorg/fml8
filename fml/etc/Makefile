@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.9 2001/12/09 10:18:17 fukachan Exp $
+# $FML: Makefile,v 1.10 2001/12/18 11:36:32 fukachan Exp $
 #
 
 OBJ		=	main.cf	default_config.cf.ja
@@ -11,7 +11,7 @@ CONV		=	$(PERL) ../../fml/utils/bin/text2html.pl
 
 all: default_config.cf.ja.in
 
-default_config.cf.ja.in: src/*cf src/*/*cf*
+default_config.cf.ja.in: src/config.cf.ja/*.cf
 	sh .gen.sh
 
 clean:
