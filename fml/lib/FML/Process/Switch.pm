@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.103 2003/12/30 03:56:00 fukachan Exp $
+# $FML: Switch.pm,v 1.104 2004/01/02 14:42:44 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -547,7 +547,6 @@ L<FML::Process::Distribute>,
 L<FML::Process::Command>,
 L<FML::Process::ListServer>,
 L<FML::Process::Configure>,
-L<FML::Process::ThreadTrack>,
 L<FML::Process::MailErrorAnalyzer>
 
 =head1 CODING STYLE

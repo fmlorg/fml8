@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.140 2004/03/17 10:27:35 fukachan Exp $
+# $FML: Distribute.pm,v 1.141 2004/03/28 10:33:35 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -507,45 +507,6 @@ sub _deliver_article
     $curproc->unlock($lock_channel);
 
     if ($service->error) { $curproc->log($service->error); return;}
-}
-
-
-# Descriptions: the top level interface to drive thread tracking system.
-#    Arguments: OBJ($curproc)
-# Side Effects: update thread information
-# Return Value: none
-sub _old_thread_check
-{
-    my ($curproc) = @_;
-    my $config    = $curproc->config();
-    my $pcb       = $curproc->pcb();
-    my $myname    = $curproc->myname();
-
-    my $ml_name        = $config->{ ml_name };
-    my $thread_db_dir  = $config->{ thread_db_dir };
-    my $spool_dir      = $config->{ spool_dir };
-    my $article_id     = $pcb->get('article', 'id');
-    my $is_rewrite_hdr = $config->yes('use_thread_subject_tag') ? 1 : 0;
-    my $ttargs         = {
-	myname         => $myname,
-	logfp          => \&Log,
-	fd             => \*STDOUT,
-	db_base_dir    => $thread_db_dir,
-	ml_name        => $ml_name,
-	spool_dir      => $spool_dir,
-	article_id     => $article_id,
-	rewrite_header => $is_rewrite_hdr,
-    };
-
-    my $msg = $curproc->article_message();
-
-    # old thread engine
-    eval q{
-	use Mail::ThreadTrack;
-	my $thread = new Mail::ThreadTrack $ttargs;
-	$thread->analyze($msg);
-    };
-    $curproc->log($@) if $@;
 }
 
 
