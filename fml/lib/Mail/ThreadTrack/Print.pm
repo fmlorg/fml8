@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Print.pm,v 1.15 2001/11/11 00:57:35 fukachan Exp $
+# $FML: Print.pm,v 1.16 2001/11/11 11:12:28 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -46,6 +46,21 @@ summary show entries by the thread_id order. For example,
 show a chain of article summary in each thread.
 
 =cut
+
+
+# Descriptions: top level entrance for "show" mode
+#    Arguments: $self varargs ...
+# Side Effects: none
+# Return Value: none
+sub list
+{
+    my ($self, @opts) = @_;
+
+    $self->_load_library();
+    $self->db_open();
+    $self->_do_list(@opts);
+    $self->db_close();
+}
 
 
 # Descriptions: top level entrance for "show" mode
@@ -110,15 +125,28 @@ sub _load_library
 # SUMMARY MODE
 #
 
+sub _do_summary
+{
+    my ($self) = @_;
+    $self->__do_summary( { mode => 'summary' });
+}
+
+
+sub _do_list
+{
+    my ($self) = @_;
+    $self->__do_summary( { mode => 'list' });
+}
+
 
 # Descriptions: get thread id list with status != 'open' and
 #               show summary for the list
 #    Arguments: $self
 # Side Effects: none
 # Return Value: none
-sub _do_summary
+sub __do_summary
 {
-    my ($thread) = @_;
+    my ($thread, $option) = @_;
     my $mode = $thread->get_mode || 'text';
 
     # rh: thread id list picked from status.db
@@ -130,7 +158,10 @@ sub _do_summary
     if (@$thread_id_list) {
 	$thread->sort_thread_id($thread_id_list);
 	$thread->_print_thread_summary($thread_id_list);
-	$thread->_print_message_summary($thread_id_list);
+
+	if ($option->{ mode } eq 'summary') {
+	    $thread->_print_message_summary($thread_id_list);
+	}
     }
 }
 

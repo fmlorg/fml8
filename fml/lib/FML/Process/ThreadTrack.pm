@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: ThreadTrack.pm,v 1.13 2001/11/18 06:42:17 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.14 2001/11/18 08:57:29 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -92,6 +92,7 @@ sub run
 	db_base_dir   => $thread_db_dir,
 	ml_name       => $ml_name,
 	spool_dir     => $spool_dir,
+	max_id        => $max_id,
 	reverse_order => (defined $options->{ reverse } ? 1 : 0),
     };
 
@@ -106,7 +107,10 @@ sub run
 
     $curproc->lock();
 
-    if ($command eq 'list' || $command eq 'summary') {
+    if ($command eq 'list') {
+	$thread->list();
+    }
+    elsif ($command eq 'summary') {
 	$thread->summary();
     }
     elsif ($command eq 'review') {
@@ -138,7 +142,14 @@ sub run
 	}
     }
     else {
-	help();
+	if ($argv->[ 0 ] ne '') {
+	    push(@ISA, 'FML::Process::ThreadTrack::CUI');
+	    $ttargs->{ ml_name } = $argv->[ 0 ];
+	    $curproc->interactive($args, $thread, $ttargs);
+	}
+	else {
+	    help();
+	}
     }
 
     $curproc->unlock();
@@ -247,6 +258,7 @@ $name db_clear   \$ml_name          clear thread database for \$ml_name ML
 _EOF_
 }
 
+
 sub DESTROY {}
 
 # Descriptions: dummy routine to avoid errors
@@ -258,6 +270,113 @@ sub AUTOLOAD
 {
     my ($curproc, $args) = @_;
     1;
+}
+
+
+package FML::Process::ThreadTrack::CUI;
+
+use vars qw($debug @ISA @EXPORT @EXPORT_OK);
+use strict;
+use Carp;
+
+
+sub interactive
+{
+    my ($curproc, $args, $thread, $ttargs) = @_;
+
+    eval q{
+	use Term::ReadLine;
+	my $term    = new Term::ReadLine "fmlthread";
+	my $ml_name = $ttargs->{ ml_name };
+	my $prompt  = "$ml_name thread> ";
+	my $OUT     = $term->OUT || \*STDOUT;
+	my $res     = '';
+
+	# main loop;
+	no strict;
+	while ( defined ($_ = $term->readline($prompt)) ) {
+	    _exec($curproc, $args, $thread, $ttargs, $_);
+	    warn $@ if $@;
+	    $term->addhistory($_) if /\S/;
+	}
+    };
+    carp($@) if $@;
+}
+
+
+sub _exec
+{
+    my ($curproc, $args, $xthread, $ttargs, $buf) = @_;
+    my ($command, @argv) = ();
+
+    use Mail::ThreadTrack;
+    my $thread = new Mail::ThreadTrack $ttargs;
+    $thread->set_mode('text');
+
+    # clean up
+    if (defined $buf && $buf) {
+	$buf =~ s/^\s*//;
+	$buf =~ s/\s*$//;
+	($command, @argv) = split(/\s+/, $buf);
+    }
+
+    if ($command eq '') {
+	help();
+    }
+    elsif ($command eq 'quit' || $command eq 'exit' || $command eq 'end') {
+	exit(0);
+    }
+    elsif ($command eq 'list') {
+	$thread->list();
+    }
+    elsif ($command eq 'show') {
+	for my $id (@argv) {
+	    if ($id =~ /^\d+$/) { 
+		my $xid = $thread->_create_thread_id_strings($id);
+		use FileHandle;
+		my $wh = new FileHandle "| less";
+		my $saved_fd = $thread->get_fd( $wh );
+		$thread->set_fd( $wh );
+		$thread->show($xid);
+		$thread->set_fd( $saved_fd );
+	    }
+	    else {
+		print "sorry, cannot show $id\n";
+	    }
+	}
+    }
+    elsif ($command eq 'close') {
+	my $max_id = $ttargs->{ max_id };
+	for my $id (@argv) {
+	    print "close $id\n";
+	    &FML::Process::ThreadTrack::_close($thread, $id, 1, $max_id);
+	}
+    }
+    else {
+	help();
+    }
+}
+
+
+#
+# commands
+#
+
+sub help 
+{ 
+    print "Usage: $0\n\n";
+
+    print "list         show thread summary (without article summary)\n";
+    print "show  id(s)  show articles in thread_id\n";
+    print "close id(s)  close thread specified by thread_id\n";
+    print "quit         to end\n";
+    print "Ctl-D        to end\n";
+    print "\n";
+    print "Typical Usage:\n";
+    print "  > list\n ... \n";
+    print "  > show 100\n";
+    print "  > close 100\n";
+    print "\n";
 }
 
 
