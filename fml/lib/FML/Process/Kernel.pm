@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.210 2004/02/26 13:22:25 fukachan Exp $
+# $FML: Kernel.pm,v 1.211 2004/02/27 04:01:37 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1435,7 +1435,7 @@ sub reply_message
     $curproc->caller_info($msg, caller) if $debug;
 
     # process running under MTA can handle reply messages by mail.
-    unless ($curproc->is_under_mta_process()) {
+    unless ($curproc->is_under_mta_process() || $myname eq 'loader') {
 	$curproc->logwarn("(debug) $myname disables reply_message()");
 	return;
     }
@@ -1730,9 +1730,6 @@ sub reply_message_nl
     $curproc->caller_info($class, caller) if $debug;
 
     if (defined $buf) {
-	my $charset = $curproc->get_charset('reply_message');
-	$curproc->log("hints: reply charset=\"$charset\"");
-
 	if ($buf =~ /\$/o) {
 	    $config->expand_variable_in_buffer(\$buf, $rm_args);
 	}
@@ -1770,17 +1767,31 @@ sub reply_message_add_header_info
 }
 
 
-# Descriptions: get template message in natual language
+# Descriptions: translate template message in natual language.
 #    Arguments: OBJ($curproc) STR($class) STR($default_msg) HASH_REF($m_args)
 # Side Effects: none
 # Return Value: STR
 sub message_nl
 {
     my ($curproc, $class, $default_msg, $m_args) = @_;
+    my $charset = $curproc->get_charset("template_file");
+
+    $curproc->__convert_message_nl($class, $default_msg, $m_args, $charset);
+}
+
+
+# Descriptions: translate template message in natual language.
+#    Arguments: OBJ($curproc) 
+#               STR($class) STR($default_msg) HASH_REF($m_args)
+#               STR($charset)
+# Side Effects: none
+# Return Value: STR
+sub __convert_message_nl
+{
+    my ($curproc, $class, $default_msg, $m_args, $charset) = @_;
     my $config    = $curproc->config();
     my $dir       = $config->{ message_template_dir };
     my $local_dir = $config->{ ml_local_message_template_dir };
-    my $charset   = $curproc->get_charset("template_file");
     my $buf       = '';
 
     use File::Spec;
