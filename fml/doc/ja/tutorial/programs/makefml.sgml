@@ -1,10 +1,10 @@
 <!--
-	$FML$
+	$FML: makefml.sgml,v 1.1.1.1 2001/04/26 08:33:58 fukachan Exp $
 -->
 
-<sect1 id="fmldoc">
+<sect1 id="makefml">
 
-<title> fmldoc (/usr/local/bin/fmldoc) </title>
+<title> makefml (/usr/local/bin/makefml) </title>
 
 <para>
 makefml の使い方は fml 4.0 の makefml と同様です。

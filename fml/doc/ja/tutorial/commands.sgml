@@ -1,10 +1,10 @@
 <!--
-	$FML$
+	$FML: commands.sgml,v 1.1 2001/04/24 15:19:14 fukachan Exp $
 -->
 
 <chapter id="commands">
 
-<title>	コマンド </title>
+<title>	fml を操作するコマンド </title>
 
 <sect1>
    <title>	コマンドの拡張の仕方の例 </title>

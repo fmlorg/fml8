@@ -1,5 +1,5 @@
 <!--
-	$FML$
+	$FML: fmlticket.sgml,v 1.1.1.1 2001/04/26 08:33:58 fukachan Exp $
 -->
 
 <sect1 id="fmlticket">
@@ -12,19 +12,15 @@ fmlticket は引数にコマンドとＭＬ名をとります。
 チケットシステムへのインターフェイスです。
 まだ製作途中です。
 
-<example>
 close されていないチケット一覧を表示
 <screen>
 % fmlticket list elena
 </screen>
-</example>
 
-<example>
 チケットを close する。
 <screen>
 % fmlticket close elena チケット番号
 </screen>
-</example>
 
 </para>
 
