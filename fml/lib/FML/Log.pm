@@ -1,8 +1,8 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.17 2002/05/24 06:36:58 fukachan Exp $
+# $FML: Log.pm,v 1.18 2002/06/22 14:22:09 fukachan Exp $
 #
 
 package FML::Log;
@@ -18,19 +18,19 @@ use FML::Credential;
 
 =head1 NAME
 
-FML::Log - several interfaces to open several files
+FML::Log - logging functions
 
 =head1 SYNOPSIS
 
 To import Log(),
 
    use FML::Log qw(Log LogWarn LogError);
-   &Log( $log_message );
+   Log( $log_message );
 
 or specify arguments in the hash reference
 
    use FML::Log qw(Log LogWarn LogError);
-   &Log( $log_message , {
+   Log( $log_message , {
        log_file => $log_file,
        priority => $priority,
        facility => $facility,
@@ -39,8 +39,8 @@ or specify arguments in the hash reference
 
 =head1 DESCRIPTION
 
-FML::Log.pm contains several interfaces to write log,
-for example, log files, syslog() (not yet implemented).
+FML::Log contains several interfaces to write log messages, for
+example, log files, syslog() (not yet implemented).
 
 =head2 Log( $message [, $args])
 
@@ -130,7 +130,8 @@ sub Log
 }
 
 
-# Descriptions: write message "warn: $msg", call Log() ASAP
+# Descriptions: write message "warn: $msg", call Log() ASAP.
+#               send the message into stderr if Log() failed.
 #    Arguments: STR($msg) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -147,7 +148,8 @@ sub LogWarn
 }
 
 
-# Descriptions: write message "error: $msg", call Log() ASAP
+# Descriptions: write message "error: $msg", call Log() ASAP.
+#               send the message into stderr if Log() failed.
 #    Arguments: STR($msg) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -176,7 +178,7 @@ Ken'ichi Fukamachi <F<fukachan@fml.org>>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
