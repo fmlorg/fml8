@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.5 2001/12/22 09:21:05 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.6 2001/12/23 03:50:28 fukachan Exp $
 #
 
 package FML::Command::User::unsubscribe;
@@ -36,6 +36,13 @@ After confirmation succeeds, unsubcribe process proceeds.
 =head2 C<process($curproc, $command_args)>
 
 =cut
+
+
+# Descriptions: need lock or not
+#    Arguments: none
+# Side Effects: none
+# Return Value: NUM( 1 or 0)
+sub need_lock { 1;}
 
 
 # Descriptions: unsubscribe adapter: confirm before unsubscribe
@@ -90,7 +97,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

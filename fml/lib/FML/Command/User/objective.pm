@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: objective.pm,v 1.8 2002/02/11 10:24:13 fukachan Exp $
+# $FML: objective.pm,v 1.1 2002/02/11 10:59:37 fukachan Exp $
 #
 
 package FML::Command::User::objective;
@@ -38,6 +38,13 @@ See C<FML::Command> for more details.
 =cut
 
 
+# Descriptions: need lock or not
+#    Arguments: none
+# Side Effects: none
+# Return Value: NUM( 1 or 0)
+sub need_lock { 1;}
+
+
 # Descriptions: send file by FML::Command::SendFile.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
@@ -56,7 +63,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

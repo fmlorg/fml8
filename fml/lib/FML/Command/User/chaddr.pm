@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.3 2001/12/22 09:21:04 fukachan Exp $
+# $FML: chaddr.pm,v 1.4 2001/12/23 03:50:27 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -36,6 +36,13 @@ After confirmation succeeds, chaddr process proceeds.
 =head2 C<process($curproc, $command_args)>
 
 =cut
+
+
+# Descriptions: need lock or not
+#    Arguments: none
+# Side Effects: none
+# Return Value: NUM( 1 or 0)
+sub need_lock { 1;}
 
 
 # Descriptions: chaddr adapter: confirm before chaddr operation
@@ -90,7 +97,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

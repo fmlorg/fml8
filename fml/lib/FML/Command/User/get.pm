@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.7 2001/12/22 16:10:51 fukachan Exp $
+# $FML: get.pm,v 1.8 2002/01/27 09:27:11 fukachan Exp $
 #
 
 package FML::Command::User::get;
@@ -35,6 +35,13 @@ send back articles.
 =head2 C<process()>
 
 =cut
+
+
+# Descriptions: need lock or not
+#    Arguments: none
+# Side Effects: none
+# Return Value: NUM( 1 or 0)
+sub need_lock { 1;}
 
 
 # Descriptions: send articles (filename =~ /^\d+/$) by FML::Command::SendFile.

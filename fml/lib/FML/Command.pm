@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.16 2002/01/20 13:50:22 fukachan Exp $
+# $FML: Command.pm,v 1.17 2002/01/30 14:51:14 fukachan Exp $
 #
 
 package FML::Command;
@@ -13,8 +13,6 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use FML::Log qw(Log LogWarn LogError);
 
-use FML::Command::Attribute;
-@ISA = qw(FML::Command::Attribute);
 
 =head1 NAME
 
@@ -87,16 +85,22 @@ sub AUTOLOAD
 
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
-	my $command = $pkg->new();
+	my $command   = $pkg->new();
+	my $need_lock = 1; # default.
 
 	if ($command->can('auth')) {
 	    $command->auth($curproc, $command_args);
 	}
 
+	# this command needs lock (currently giant lock) ?
+	if ($command->can('need_lock')) { 
+	    $need_lock = $command->need_lock($mode);
+	}
+
 	if ($command->can('process')) {
-	    $curproc->lock() if $self->require_lock($mode, $comname);
+	    $curproc->lock()   if $need_lock;
 	    $command->process($curproc, $command_args);
-	    $curproc->unlock() if $self->require_lock($mode, $comname);
+	    $curproc->unlock() if $need_lock;
 
 	    if ($command->error()) { Log($command->error());}
 	}
