@@ -8,6 +8,15 @@
 	XXX
 
 
+○ off/on の問題
+
+	on は primary_recipient_map にだけ作用するが、
+	off は recipient_maps すべてに作用する(マッチする全ての map を
+	変化させる)
+
+	unsubscribe はすべての map をサーチし、該当するもの全てを
+	削除する。	 
+
 ○ reply-to: special hack
 
 
@@ -348,4 +357,4 @@ sub compare_euc_string
 
 
 ----------
-$FML: 00_MEMO,v 1.58 2003/01/07 11:45:31 fukachan Exp $
+$FML: 00_MEMO,v 1.59 2003/01/07 11:56:57 fukachan Exp $
