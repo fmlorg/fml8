@@ -30,171 +30,25 @@ sub new
 }
 
 
+# dummy
 sub prepare
 {
-    my ($self, $args) = @_;
-    $self->SUPER::prepare($args);
+    ;
 }
-
 
 sub run
 {
     my ($curproc, $args) = @_;
 
-    $curproc->verify_sender_credential();
-
     $curproc->lock();
     {
-	# user credential
-	my $cred = $curproc->{ credential };
-
-	# Q: the mail sender is a ML member?
-	if ($cred->is_member) {
-	    # A: If so, we try to distribute this article.
-	    _distribute( $curproc ); 
-	}
+	$curproc->_ticket_list_up($args);
     }
     $curproc->unlock();
 }
 
 
-sub finish
-{
-    my ($curproc, $args) = @_;
-
-    $curproc->inform_reply_messages();
-}
-
-
-# $article->header_rewrite;
-# $article->increment_id;
-# $article->spool;
-# distribute( $article );
-sub _distribute
-{
-    my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
-
-    # XXX   $ah is "article handler" object.
-    # XXX   $ah != $curproc->{ article } (which is just a key)
-    # XXX   $curproc->{ article } is prepared as a side effect.
-    my $ah = $curproc->_prepare_article($args);
-
-    # get sequence number
-    my $id = $ah->increment_id;
-
-    # ticket system checks the message before header rewritings.
-    $curproc->_ticket_check($args) if $config->yes('use_ticket');
-
-    # header operations
-    # XXX we need $curproc->{ article }, which is prepared above.
-    $curproc->_header_rewrite({ id => $id });
-
-    # spool in the article before delivery
-    $ah->spool_in($id);
-
-    # delivery starts !
-    $curproc->_deliver_article($args);
-}
-
-
-sub _prepare_article
-{
-    my ($curproc, $args) = @_;
-
-    # create aritcle to distribute
-    use FML::Article;
-
-    # Side Effects: $article->{ curproc } = $curproc;
-    return new FML::Article $curproc;
-}
-
-
-sub _header_rewrite
-{
-    my ($curproc, $args) = @_;
-
-    my $config = $curproc->{ config };
-    my $header = $curproc->{ article }->{ header };
-    my $rules  = $curproc->{ config }->{ header_rewrite_rules };
-    my $id     = $args->{ id };
-
-    for my $rule (split(/\s+/, $rules)) {
-	Log("_header_rewrite( $rule )") if $config->yes('debug');
-
-	if ($rule eq 'rewrite_subject_tag') {
-	    $header->rewrite_subject_tag($config, { id => $id } );
-	}
-
-	if ($rule eq 'rewrite_reply_to') {
-	    $header->rewrite_reply_to($config);
-	}
-
-	if ($rule eq 'add_software_info') {
-	    $header->add_software_info($config, { id => $id } );
-	}
-
-	if ($rule eq 'add_fml_ml_name') {
-	    $header->add_fml_ml_name($config, { id => $id } );
-	}
-
-	if ($rule eq 'add_fml_article_id') {
-	    $header->add_fml_article_id($config, { id => $id } );
-	}
-
-	if ($rule eq 'add_x_sequence') {
-	    $header->add_x_sequence($config, { 
-		name => $config->{ address_for_post },
-		id   => $id,
-	    });
-	}
-
-	if ($rule eq 'add_rfc2369') {
-	    $header->add_rfc2369($config, {
-		id   => $id,
-		mode => 'distribute',
-	    });
-	}
-    }
-}
-
-
-sub _deliver_article
-{
-    my ($curproc, $args) = @_;
-
-    my $config  = $curproc->{ config };  # FML::Config object
-    my $body    = $curproc->{ article }->{ body };  # MailingList::Messages
-    my $header  = $curproc->{ article }->{ header };# FML::Header
-
-    # distribute article
-    use MailingList::Delivery;
-
-    my $fp  = sub { Log(@_);}; # pointer to the log function
-    my $sfp = sub { my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;};
-    my $service = new MailingList::Delivery {
-	log_function       => $fp,
-	smtp_log_function  => $sfp,
-	socket_timeout     => 2,     # XXX 2 for debug but 10 by default
-    };
-    if ($service->error) { Log($service->error); return;}
-
-    $service->deliver(
-		      {
-			  'mta'             => $config->{'mta'},
-
-			  'smtp_sender'     => 'rudo',
-			  'recipient_maps'  => $config->{recipient_maps},
-			  'recipient_limit' => $config->{recipient_limit},
-
-			  'header'          => $header,
-			  'body'            => $body,
-		      });
-    if ($service->error) { Log($service->error); return;}
-}
-
-
-sub _ticket_check
+sub _ticket_list_up
 {
     my ($curproc, $args) = @_;    
     my $config = $curproc->{ config };
@@ -212,14 +66,19 @@ sub _ticket_check
     # fake use() to do "use FML::Ticket::$model;"
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
-	my $ticket = $pkg->new;
-	$ticket->assign($curproc, $args);
-	$ticket->update_status($curproc, $args);
-	$ticket->update_cache($curproc, $args);
+	my $ticket = $pkg->new($curproc, $args);
+	$ticket->list_up($curproc, $args);
     }
     else {
 	Log($@);
     }
+}
+
+
+sub AUTOLOAD
+{
+    my ($curproc, $args) = @_;
+    ;
 }
 
 

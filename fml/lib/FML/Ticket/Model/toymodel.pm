@@ -22,9 +22,17 @@ require Exporter;
 
 sub new
 {
-    my ($self) = @_;
+    my ($self, $curproc, $args) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
+    bless $me, $type;
+
+    # initialize directory for DB files for further work
+    my $config  = $curproc->{ config };
+    my $ml_name = $config->{ ml_name };
+    $me->{ _db_dir } = $config->{ ticket_db_dir } ."/". $ml_name;
+    $me->_init_ticket_db_dir($curproc, $args) || do { return undef;};
+
     return bless $me, $type;
 }
 
@@ -87,10 +95,6 @@ sub update_db
     my ($self, $curproc, $args) = @_;
     my $config    = $curproc->{ config };
     my $ml_name   = $config->{ ml_name };
-
-    # initialize directory for DB files for further work
-    $self->{ _db_dir } = $config->{ ticket_db_dir } ."/". $ml_name;
-    $self->_init_ticket_db_dir($curproc, $args) || do { return undef;};
 
     # save $ticke_id et.al. in db_dir/
     $self->_update_db($curproc, $args);
@@ -181,6 +185,32 @@ sub _update_db
 
     if (defined $self->{ _status }) {
 	$rh_status->{ $ticket_id } = $self->{ _status };
+    }
+
+    $self->_close_db($curproc, $args);
+}
+
+
+sub list_up
+{
+    my ($self, $curproc, $args) = @_;
+    my $config    = $curproc->{ config };
+    my $pcb       = $curproc->{ pcb };
+    my $ml_name   = $config->{ ml_name };
+
+    $self->_open_db($curproc, $args);
+
+    # prepare hash table tied to db_dir/*db's
+    my $rh_ticket_id = $self->{ _hash_table }->{ _ticket_id };
+    my $rh_date      = $self->{ _hash_table }->{ _date };
+    my $rh_status    = $self->{ _hash_table }->{ _status };
+    my $rh_articles  = $self->{ _hash_table }->{ _articles };
+
+    my ($tid, $status) = ();
+    while (($tid, $status) = each %$rh_status) {
+	my ($aid) = split(/\s+/, $rh_articles->{ $tid });
+	printf "%5s  %-20s  %s\n", 
+	   $status, $tid, $rh_articles->{ $tid },
     }
 
     $self->_close_db($curproc, $args);

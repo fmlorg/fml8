@@ -212,7 +212,7 @@ sub _ticket_check
     # fake use() to do "use FML::Ticket::$model;"
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
-	my $ticket = $pkg->new;
+	my $ticket = $pkg->new($curproc, $args);
 	$ticket->assign($curproc, $args);
 	$ticket->update_status($curproc, $args);
 	$ticket->update_db($curproc, $args);
