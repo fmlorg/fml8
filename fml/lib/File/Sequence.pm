@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.31 2003/01/26 05:57:12 fukachan Exp $
+# $FML: Sequence.pm,v 1.32 2003/01/27 03:53:53 fukachan Exp $
 #
 
 package File::Sequence;
@@ -130,7 +130,7 @@ sub increment_id
     # XXX-TODO: share codes between get_id() and increment_id() .
     # read the current sequence number
     if (defined $rh) {
-	$id = $rh->getline;
+	$id = $rh->getline() || 0;
 	$id =~ s/[\s\r\n]*$//;
 	$rh->close;
     }
