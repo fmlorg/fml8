@@ -34,6 +34,7 @@ $BRACKET                       = "elena";
 $BASE_DIR                      = "/tmp";
 $GUIDE_FILE                    = "$BASE_DIR/guide";
 
+$DEFAULT_WHOIS_SERVER		= "localhost";
 
 $DISTRIBUTE_FILTER_HOOK = q#
 	print STDERR "test of hook\n";
