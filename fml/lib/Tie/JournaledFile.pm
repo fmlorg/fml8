@@ -8,7 +8,7 @@
 # $FML$
 #
 
-package Tie::LogFileDB;
+package Tie::JournaledFile;
 
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
@@ -16,20 +16,20 @@ use Carp;
 
 =head1 NAME
 
-Tie::LogFileDB - hash emulation for a log structered file
+Tie::JournaledFile - hash emulation for a log structered file
 
 =head1 SYNOPSIS
 
-   use Tie::LogFileDB;
-   $db = new Tie::LogFileDB { file => 'cache.txt' };
+   use Tie::JournaledFile;
+   $db = new Tie::JournaledFile { file => 'cache.txt' };
 
    # all entries with the key = 'rudo'
    @values = $db->grep( rudo );
 
 or
 
-   use Tie::LogFileDB;
-   tie %db, 'Tie::LogFileDB', { file => 'cache.txt' };
+   use Tie::JournaledFile;
+   tie %db, 'Tie::JournaledFile', { file => 'cache.txt' };
    print $db{ rudo }, "\n";
 
 where cache file "cache.txt" format is "key value" for each line.
@@ -41,15 +41,15 @@ For example
 
 By default, FETCH() returns the first value with the key.
 
-   use Tie::LogFileDB;
-   tie %db, 'Tie::LogFileDB', { first_match => 1, file => 'cache.txt' };
+   use Tie::JournaledFile;
+   tie %db, 'Tie::JournaledFile', { first_match => 1, file => 'cache.txt' };
    print $db{ rudo }, "\n";
 
 if you find the latest value (so at the later line somewhere in the
 file) for the $key
 
-   use Tie::LogFileDB;
-   tie %db, 'Tie::LogFileDB', { last_match => 1, file => 'cache.txt' };
+   use Tie::JournaledFile;
+   tie %db, 'Tie::JournaledFile', { last_match => 1, file => 'cache.txt' };
    print $db{ rudo }, "\n";
 
 =cut
@@ -194,7 +194,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Tie::LogFileDB appeared in fml5 mailing list driver package.
+Tie::JournaledFile appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
