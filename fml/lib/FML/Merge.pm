@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Merge.pm,v 1.15 2004/12/09 03:35:36 fukachan Exp $
+# $FML: Merge.pm,v 1.16 2004/12/29 08:21:50 fukachan Exp $
 #
 
 package FML::Merge;
@@ -416,10 +416,13 @@ sub _inject_diff_into_config_cf
 	$v = $diff->{ $k };
 	$y = $v;
 	$y =~ s/\n/\n# /gm;
-	print $wh "# $k => $y\n";
+	print $wh "# \$$k => $y\n";
 
 	if ($x = $config_ph->translate($diff, $k, $v)) {
 	    print $wh $x ,"\n\n";
+	}
+	else {
+	    print $wh "\n";
 	}
     }
 
