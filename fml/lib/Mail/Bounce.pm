@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Bounce.pm,v 1.13 2001/07/31 12:58:33 fukachan Exp $
+# $FML: Bounce.pm,v 1.14 2001/09/18 03:31:31 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -119,7 +119,7 @@ sub analyze
     my $result = {};
 
     if ($debug) {
-	my $h = $msg->get_data_type_list;
+	my $h = $msg->get_data_type_list( { debug => 1 } );
 	print STDERR "   ----- dump msg -----\n";
 	for (@$h) { print STDERR "   ", $_, "\n";}
 	print STDERR "   ----- dump msg end -----\n";
