@@ -1,6 +1,26 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/05/18
+
+   FML::Filter::BodyCheck 
+	add reject_uuencode()
+
+2002/05/17
+
+   FML::Process::Kernel 
+	check whether $use_incoming_message_cache is yes
+	use $mincoming_cache_size as cache modulus
+	save incoming message at $ml_home_dir/var/mincoming/
+	
+   File::CacheDir 
+	update document on new() arguments
+	bug fix eval{} should do eval { use()&&new() }
+
+   new variables: (etc/)
+	use_incoming_message_cache	=	yes
+	incoming_message_cache_size	=	128
+
 2002/05/16
 
    FML::Process::CGI::Kernel 
@@ -2297,4 +2317,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.73 2002/05/13 14:39:56 fukachan Exp $
+$FML: CHANGES.txt,v 1.74 2002/05/16 15:01:40 fukachan Exp $
