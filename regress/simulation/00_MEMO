@@ -129,6 +129,12 @@
 ○	postconf で file じゃないものは無視しないとだね
 
 
+○	コマンド拡張の仕方
+
+
+○	メッセージの拡張の仕方
+
+
 ○	filter
 
    * filter statistics
@@ -454,4 +460,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.27 2002/06/25 08:13:31 fukachan Exp $
+$FML: 00_MEMO,v 1.28 2002/07/02 03:37:43 fukachan Exp $
