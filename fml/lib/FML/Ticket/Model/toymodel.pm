@@ -455,11 +455,11 @@ sub show_summary
     # self->{ _hash_table } is tied to DB's.
     $self->open_db($curproc, $args);
 
-    # XXX $rh = Reference to Hash table, which is tied to db_dir/*db's
-    my $rh             = $self->{ _hash_table };
-    my $rh_status      = $rh->{ _status };
+    # rh: Reference to Hash table, which is tied to db_dir/*db's
+    my $rh_status      = $self->{ _hash_table }->{ _status };
     my $mode           = $args->{ mode } || 'default';
 
+    # @ticket_id ARRAY
   TICEKT_LIST:
     while (($tid, $status) = each %$rh_status) {
 	if ($mode eq 'default') {
@@ -469,9 +469,11 @@ sub show_summary
 	push(@ticket_id, $tid);
     }
 
-    my $age = $self->_calculate_age($curproc, $args, \@ticket_id);
+    # age HASH TABLE
+    my $rh_age = $self->_calculate_age($curproc, $args, \@ticket_id);
 
-    $self->_simple_print($curproc, $args, \@ticket_id, $age);
+    # print out
+    $self->_simple_print($curproc, $args, \@ticket_id, $rh_age);
 
     # self->{ _hash_table } is untied from DB's.
     $self->close_db($curproc, $args);
