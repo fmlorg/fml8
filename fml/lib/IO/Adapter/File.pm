@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.33 2002/07/24 09:29:39 fukachan Exp $
+# $FML: File.pm,v 1.34 2002/07/24 11:05:50 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -201,7 +201,13 @@ sub getline
 {
     my ($self) = @_;
     my $fh = $self->{_fh};
-    $fh->getline;
+
+    if (defined $fh) {
+	$fh->getline;
+    }
+    else {
+	return undef;
+    }
 }
 
 
