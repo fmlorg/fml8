@@ -10,7 +10,8 @@ perl -w fml/libexec/fmlwrapper \
 	--params pwd=$PWD \
 	-c $PWD/regress/main.cf \
 	/var/spool/ml/elena
-echo $?
+
+echo "-- exit code: $?"
 
 exit 0
 
