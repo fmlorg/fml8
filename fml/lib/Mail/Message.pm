@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.28 2001/09/23 12:18:13 fukachan Exp $
+# $FML: Message.pm,v 1.29 2001/09/23 14:28:17 fukachan Exp $
 #
 
 package Mail::Message;
@@ -237,6 +237,10 @@ sub new
     my ($self, $args) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
+    my $data   = '';
+
+    # alloc memory area to hold the whole message.
+    $InComingMessage = \$data;
 
     bless $me, $type;
 
@@ -459,7 +463,7 @@ sub parse
     $ref_body->prev_message( $me );
 
     # return information
-    $result->{ body_size } = length($InComingMessage);
+    $result->{ body_size } = length($$InComingMessage);
     $me->{ data_info }     = $result;
 
     # return the object
@@ -483,19 +487,19 @@ sub _parse
 	if (($p = index($buf, "\n\n", 0)) > 0) {
 	    $header      = substr($buf, 0, $p + 1);
 	    $header_size = $p + 1;
-	    $InComingMessage = substr($buf, $p + 2);
+	    $$InComingMessage = substr($buf, $p + 2);
 	    last;
 	}
     }
 
-    # extract mail body and put it to $InComingMessage
+    # extract mail body and put it to $$InComingMessage
     while ($p = sysread($fd, $_, 1024)) {
 	$total_buffer_size += $p;
-	$InComingMessage   .= $_;
+	$$InComingMessage   .= $_;
     }
 
     # read the message (mail body) from the incoming mail
-    my $body_size = length($InComingMessage);
+    my $body_size = length($$InComingMessage);
 
     if ($debug > 2) {
 	print STDERR "  (debug) header_size: $header_size\n";
@@ -572,7 +576,7 @@ sub _build_body_object
     return new Mail::Message {
 	boundary  => $self->_header_mime_boundary($result->{ header }),
 	data_type => $self->_header_data_type($result->{ header }),
-	data      => \$InComingMessage,
+	data      => $InComingMessage,
     };
 }
 
@@ -1725,7 +1729,7 @@ sub data
 }
 
 
-=head2 C<header_in_body_part($size)>
+=head2 C<header_in_body_part()>
 
 return header in the message content.
 It is not mail header but header for each message such as
@@ -1733,8 +1737,10 @@ mime header information of one part in a multipart.
 
 =head2 C<data_in_body_part($size)>
 
-get body part in the message content, 
-which is the whole mail (plain text) or a part of multipart.
+get body part in the message content, which is the whole mail (plain
+text) or body part of a block of multipart.
+
+If C<$size> is specified, return the first $size bytes in the body.
 
 =cut
 
@@ -1773,9 +1779,12 @@ sub data_in_body_part
 	$msglen    = length($$data);
     }
 
-    $size ||= 512;
-    if ($msglen < $size) { $size = $msglen;}
-    return substr($$data, $pos_begin, $size);
+    if (defined $size) {
+	return substr($$data, $pos_begin, $size);
+    }
+    else {
+	return substr($$data, $pos_begin, $msglen);
+    }
 }
 
 
@@ -1848,14 +1857,20 @@ This is defined for debug and removed in the future.
 # Return Value: none
 sub get_data_type_list
 {
-    my ($msg) = @_;
+    my ($msg, $args) = @_;
     my ($m, @buf, $i);
+    my $debug = defined $args->{ debug } ? 1 : 0;
 
     for ($i = 0, $m = $msg; defined $m ; $m = $m->{ 'next' }) {
 	$i++;
 	my $data = $m->{'data'};
-	push(@buf, sprintf("type[%2d]: %-25s | %s", 
-			   $i, $m->{'data_type'}, $m->{'base_data_type'}));
+	if ($debug) {
+	    push(@buf, sprintf("type[%2d]: %-25s | %s", 
+			       $i, $m->{'data_type'}, $m->{'base_data_type'}));
+	}
+	else {
+	    push(@buf, $m->{'data_type'});
+	}
     }
     \@buf;
 }
