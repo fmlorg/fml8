@@ -1,0 +1,434 @@
+<!--
+   $FML$
+   $jaFML: fml.sgml,v 1.4 2003/04/15 14:51:43 fukachan Exp $
+-->
+
+<chapter id="overview.fml">
+	<title>
+	&fmldevel; overview
+	</title>
+
+
+<!-- ======================================================== -->
+<sect1 id="overview.fml8">
+	<title>
+	&fmldevel; features
+	</title>
+
+<para>
+    <itemizedlist>
+
+
+    <listitem>
+	<para>
+	new postfix style format configuration files (.cf files).
+	</para>
+    </listitem>
+
+
+    <listitem>
+	<para>
+	usage of CUI is same as one unser &fml4; .
+	You can use CUI(makefml and fml command)
+		to create/remove ML,
+		to add/remove/change addresses of ML members,
+		to add/remove/change address of remote administrators,
+		to see logs,
+		to see member list 
+		et.al.
+	</para>
+    </listitem>
+
+    <listitem>
+	<para>
+	CGI interface.
+	The functions are a subset of CUI.
+	</para>
+    </listitem>
+
+
+    <listitem>
+	<para>
+	article delivery,
+	header rewriting
+	and
+	several filters.
+	</para>
+    </listitem>
+
+    <listitem>
+	<para>
+	command mail for users.
+	</para>
+    </listitem>
+
+    <listitem>
+	<para>
+	command mail (admin command) for remote administratoin by mail.
+	</para>
+    </listitem>
+
+    <listitem>
+	<para>
+	automatic analyzer of error messages.
+	</para>
+    </listitem>
+
+
+    <listitem>
+	<para>
+	IPv6 ready.
+	</para>
+    </listitem>
+
+
+    <listitem>
+	<para>
+	thread track system.
+	</para>
+    </listitem>
+
+
+    <listitem>
+	<para>
+	built-in HTML converter of articles.
+	</para>
+    </listitem>
+
+
+    <listitem>
+	<para>
+	main programs (fml/libexec):
+	fml.pl distribute command error
+	</para>
+    </listitem>
+
+
+    <listitem>
+	<para>
+	utilities:
+	fmladdr
+	fmlailas
+	fmlconf
+	fmldoc
+	fmlhtmlify
+	fmlsch
+	makefml
+	fml
+	</para>
+    </listitem>
+
+
+    <listitem>
+	<para>
+	<link linkend="module.io.adapter">
+	Abstracted IO
+	</link>
+	to get member list in unified way from 
+		a file,
+		/etc/group,
+		NIS,
+		SQL.
+	</para>
+    </listitem>
+    </itemizedlist>
+</para>
+
+</sect1>
+
+
+<!-- ======================================================== -->
+<sect1 id="overview.fml8.install">
+	<title>
+	installation overview
+	</title>
+
+
+<important>
+
+<para>
+You run GNU autoconf firstly, and "make install".  It is standard in
+the world of open sources.  This procedure is not similar to &fml4;
+installation steps.  It confuses you but it is friendly for package
+systems of free unix like systems.
+</para>
+
+<para>
+The main differece between &fml4; and &fml8; in installation is
+"work by root",
+"use of configure",
+and 
+editing of configuration files:
+/usr/local/etc/fml/main.cf 
+and
+/usr/local/etc/fml/site_default_config.ph.
+</para>
+
+</important>
+
+
+<para>
+Suppse we craete a new ML named elena ML (elena@fml.org).
+The brief flow of installation is as follows:
+</para>
+
+
+<orderedlist>
+   <listitem>
+	<para>
+	<link linkend="download">
+	download &fml8; source and expand it.
+	</link>
+	</para>
+   </listitem>
+
+   <listitem>
+	<para>
+	<link linkend="install.fml.unix">
+	install by user root.
+	Firstly, change user to "root" and create the user "fml" and
+	the group "fml".
+	Secondly, run
+	<link linkend="install.fml.unix.configure">
+	configure
+	</link>
+	and  "make install".
+	</link>
+<screen>
+% su root
+# groupadd fml
+# useradd -m -g fml fml
+# ./configure
+# make install
+</screen>
+	</para>
+
+	<para>
+	By default, installer installs utility programs to 
+	/usr/local/bin.
+		<footnote>
+		<para>
+		You can control paths by
+		<link linkend="install.fml.unix.configure">
+		configure options.
+		</link>
+		</para>
+		</footnote>
+	These are wrappers to call real programs at /usr/local/libexec/fml/.
+	</para>
+   </listitem>
+
+
+   <listitem>
+	<para>
+	<link linkend="guide.newml">
+	change user to "fml", create elena ML.
+	</link>
+<screen>
+% su fml
+% makefml newml elena
+</screen>
+You can use "fml" instead of makefml. 
+Both are same except for the syntax.
+<screen>
+% su fml
+% fml elena newml
+</screen>
+	</para>
+   </listitem>
+
+
+   <listitem>
+	<para>
+	Set up MTA.
+	</para>
+   </listitem>
+
+
+   <listitem>
+	<para>
+	test.
+	</para>
+   </listitem>
+
+
+   <listitem>
+	<para>
+	<link linkend="guide.config.cf">
+	cutomize.
+	</link>
+	</para>
+   </listitem>
+
+</orderedlist>
+
+<warning>
+<para>
+Please install by user root.
+It is differ from &fml4;.
+</para>
+</warning>
+
+</sect1>
+
+
+<!-- ============================================================= -->
+<sect1 id="guide.newml">
+	<title>
+	Create an ML
+	</title>
+
+<para>
+create an ML by CUI (makefml).
+To create elena@fml.org ML (fml.org is the default domain), 
+run
+<screen>
+% su fml
+% makefml newml elena
+</screen>
+. See the section
+<link linkend="setup.newml">
+<xref linkend="setup.newml">
+</link>
+for more details.
+</para>
+
+<para>
+Instead, consider a virtual domain nuinui.net.
+In this case, specify the whole address. 
+To create an ML elena@nuinui.net, run the following:
+<screen>
+% su fml
+% makefml newml elena@nuinui.net
+</screen>
+</para>
+
+</sect1>
+
+
+<!-- ============================================================= -->
+<sect1 id="guide.subscribe">
+	<title>
+	add a new user to ML
+	</title>
+
+<para>
+In the case of the default domain (fml.org)
+<screen>
+% su fml
+% makefml subscribe elena rudo@nuinui.net
+</screen>
+in the case of virtual domain (nuinui.net), 
+specify the whole adress of ML.
+<screen>
+% su fml
+% makefml subscribe elena@nuinui.net fukachan@sapporo.iij.ad.jp
+</screen>
+</para>
+
+</sect1>
+
+
+<!-- ============================================================= -->
+<sect1 id="guide.unsubscribe">
+	<title>
+	remove the user
+	</title>
+
+<para>
+In the case of the default domain (fml.org), 
+<screen>
+% su fml
+% makefml unsubscribe elena rudo@nuinui.net
+</screen>
+in the case of virtual domain (nuinui.net), 
+specify the whole adress of ML.
+<screen>
+% su fml
+% makefml unsubscribe elena@nuinui.net fukachan@sapporo.iij.ad.jp
+</screen>
+</para>
+
+</sect1>
+
+
+<!-- ============================================================= -->
+<sect1 id="guide.config.cf">
+	<title>
+	customize
+	</title>
+
+<warning>
+<para>
+"makefml config" is a CUI to customize ML by menu form.
+BUT NOT yet implemented.
+</para>
+
+<para>
+Edit files anyway.
+</para>
+
+</warning>
+
+
+<sect2>
+	<title>
+	common configurations on this host
+	</title>
+
+<para>
+/usr/local/etc/fml/site_default_config.cf
+affects all ML on this host 
+irrespective of the default domain or virtual domains.
+<footnote>
+<para>
+This corresponds to site_init.ph of &fml4;.
+</para>
+</footnote>
+</para>
+
+<para>
+The format of site_default_config.cf is same as config.cf described
+below.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	elena ML's configuration
+	</title>
+
+<para>
+To customize elena ML, edit 
+/var/spool/ml/elena/config.cf
+file.
+The format is a little modified postfix style.
+It is differ from both &fml4;'s config.ph and cf.
+</para>
+
+<para>
+Add or modify the least variables.
+If unspecified, the default value is used.
+The default value depends fml version and is defined at
+<screen>
+/usr/local/etc/fml/defaults/${fml_version}/default_config.cf
+</screen>
+</para>
+
+<para>
+The library path depends fml version.
+<link linkend="bootloader">
+This technique
+</link>
+ensures the easy upgrade/downgrade procedure.
+This is a feature of &fml8;.
+</para>
+
+</sect2>
+
+</sect1>
+
+
+</chapter>
