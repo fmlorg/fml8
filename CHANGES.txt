@@ -1,6 +1,65 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/06/01
+
+   major variable naming overhaul
+
+	relocating variable definitions in etc/src/
+	
+	align convention: for example, 
+		use_XXX
+		XXX_rules
+		XXX_dir
+		XXX_cache_dir
+	
+	rename:
+	$recipient_limit -> $smtp_recipient_limit
+	$incoming_mail_dir -> $incoming_mail_cache_dir
+	$outgoing_mail_dir -> $outgoing_mail_cache_dir
+	$qmail_control_virtualdomains_file -> $qmail_virtualdomains_file
+	
+	s/header_filter/article_header_filter/
+	s/header_rewrite/article_header_rewrite/
+	s/body_filter/article_body_filter/
+	
+	s/subject_tag/article_subject_tag/
+	
+	verify_XXX_* -> check_XXX
+	
+	newly defined:
+		$use_digest_header_rewrite
+	
+	removed:
+		$smtp_log_dir
+		$smtp_log_file
+
+   overhaul
+	variable naming convention
+	defined check
+	FNF-ify
+	fix argument declarations
+
+   FML::Command::Auth 
+	permit_admin_member_maps() return 0 if not match
+	
+   FML::Process::Kernel 
+	temp_file_path() ensures temp file name uniqueness by counting the
+	number of times this function is called.
+
+2002/05/31
+
+   FML::Header 
+	add rewrite_date() for header rewrite Date::to X-Date:
+	
+2002/05/29
+
+   FML::Command::Admin::chaddr 
+	bug fix::error_set() -> croak()
+
+   FML::Process::Switch 
+	try to save the critical error message at $ml_home_prefix/ if could
+	
 2002/05/28
 
    rename/reconstruct variables
@@ -2495,4 +2554,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.78 2002/05/25 15:09:10 fukachan Exp $
+$FML: CHANGES.txt,v 1.79 2002/05/28 15:10:44 fukachan Exp $
