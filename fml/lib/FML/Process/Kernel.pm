@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.99 2002/05/21 14:20:46 fukachan Exp $
+# $FML: Kernel.pm,v 1.100 2002/05/21 15:06:38 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -257,7 +257,8 @@ sub lock
 
     unless (-d $lock_dir) {
 	use File::Path;
-	mkpath($lock_dir, 0, 0755);
+	# only user "fml" should read lock files.
+	mkpath($lock_dir, 0, 0700);
     }
 
     unless (-f $lock_file) {
@@ -463,9 +464,9 @@ sub parse_incoming_message
 
     # save input message for further investigation
     my $config  = $curproc->{ config };
-    if ($config->yes('use_incoming_message_cache')) { 
-	my $dir     = $config->{ incoming_message_dir };
-	my $modulus = $config->{ incoming_message_cache_size };
+    if ($config->yes('use_incoming_mail_cache')) { 
+	my $dir     = $config->{ incoming_mail_dir };
+	my $modulus = $config->{ incoming_mail_cache_size };
         my $obj     = new File::CacheDir {
             directory  => $dir,
 	    modulus    => $modulus,
@@ -539,7 +540,7 @@ sub _check_restrictions
 	elsif ($rule eq 'permit_anyone') {
 		return 1;
 	}
-	elsif ($rule eq 'permit_members_only') {
+	elsif ($rule eq 'permit_member_maps') {
 	    # Q: the mail sender is a ML member?
 	    if ($cred->is_member($curproc, $args)) {
 		# A: Yes, we permit to distribute this article.
@@ -1255,9 +1256,9 @@ sub open_outgoing_message_channel
     my $config = $curproc->{ config };
 
     # save message for further investigation
-    if ($config->yes('use_outgoing_message_cache')) { 
-	my $dir     = $config->{ outgoing_message_dir };
-	my $modulus = $config->{ outgoing_message_cache_size };
+    if ($config->yes('use_outgoing_mail_cache')) { 
+	my $dir     = $config->{ outgoing_mail_dir };
+	my $modulus = $config->{ outgoing_mail_cache_size };
         my $obj     = new File::CacheDir {
             directory  => $dir,
 	    modulus    => $modulus,
