@@ -1,0 +1,49 @@
+Received: by hikari.fml.org (8.9.2/3.4W6+Hikari-2.1) with ESMTP id TAA17416 for <fukachan@fml.org>; Tue, 5 Oct 1999 19:25:43 +0900 (JST)
+Received: by beth.fml.org (Postfix) via BOUNCE
+	id 141A1A6838; Tue,  5 Oct 1999 19:25:43 +0900 (JST)
+Date: Tue,  5 Oct 1999 19:25:43 +0900 (JST)
+From: MAILER-DAEMON@fml.org (Mail Delivery System)
+Subject: Undelivered Mail Returned to Sender
+To: elena-admin@fml.org
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+	boundary="A70C0A6837.939119143/beth.fml.org"
+Message-Id: <19991005102543.141A1A6838@beth.fml.org>
+X-UIDL: cdb9871c9ad7d55c06744625bf2ca1d5
+
+This is a MIME-encapsulated message.
+
+--A70C0A6837.939119143/beth.fml.org
+Content-Description: Notification
+Content-Type: text/plain
+
+This is the Postfix program at host beth.fml.org.
+
+I'm sorry to have to inform you that the message returned
+below could not be delivered to one or more destinations.
+
+For further assistance, please contact <postmaster@beth.fml.org>
+
+If you do so, please include this problem report. You can
+delete your own text from the message returned below.
+
+			The Postfix program
+
+<uja@beth.fml.org>: unknown user: "uja"
+
+
+--A70C0A6837.939119143/beth.fml.org
+Content-Description: Undelivered Message
+Content-Type: message/rfc822
+
+Received: by beth.fml.org (Postfix, from userid 1106)
+	id A70C0A6837; Tue,  5 Oct 1999 19:25:42 +0900 (JST)
+To: uja@fml.org
+Message-Id: <19991005102542.A70C0A6837@beth.fml.org>
+Date: Tue,  5 Oct 1999 19:25:42 +0900 (JST)
+From: fukachan@fml.org (Ken'ichi Fukamachi)
+
+test
+
+--A70C0A6837.939119143/beth.fml.org--
+
