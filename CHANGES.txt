@@ -1,6 +1,36 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/10/21
+
+   MIME component フィルタの描き直し
+
+   FML::Filter 
+	re-enable mime component filter based on
+	Filter::MimeComponent2
+
+   FML::Filter::MimeComponent2 
+	
+	fix rule appling algorithm:
+	 for rule (rules) {
+	    for mp (message) {
+	       check mp by $rule
+	   }
+	 }
+	
+	enable to read filter rules from the specified file (-c file).
+	
+	show more debug info.
+	
+	clean up debug info. debug info changes with debug level
+
+	implement "cutoff" action
+
+	clarify reason in log message
+	
+	enhance filter rule to use the reverse condition.
+	e.g. (whole_type, !type, action).
+
 2002/10/12
 
    Mail::Message::ToHTML 
@@ -3427,4 +3457,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.103 2002/09/23 15:02:34 fukachan Exp $
+$FML: CHANGES.txt,v 1.104 2002/10/20 13:29:45 fukachan Exp $
