@@ -247,6 +247,13 @@ sub test_tie {
 	   Lines=> "0..$#lines",
 	   Match=> $nmatched);
 
+#    $M = "TIE/TELL: telling data";
+#    my $tell_oo  = tied(*OUT)->tell;
+#    my $tell_tie = tell OUT;
+#    $T->ok(($tell_oo == $tell_tie), $M,
+#	   Want => $tell_oo,
+#	   Gotl => $tell_tie);
+
 }
 
 #------------------------------

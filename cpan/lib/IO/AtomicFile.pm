@@ -17,7 +17,7 @@ use IO::File;
 use vars qw($VERSION @ISA);
 
 # The package version, both in 1.23 style *and* usable by MakeMaker:
-$VERSION = substr q$Revision: 1.105 $, 10;
+$VERSION = substr q$Revision: 1.106 $, 10;
 
 # Inheritance:
 @ISA = qw(IO::File);
@@ -134,17 +134,17 @@ IO::AtomicFile - write a file which is updated atomically
 =head1 SYNOPSIS
 
     use IO::AtomicFile;
-    
+
     # Write a temp file, and have it install itself when closed:
     my $FH = IO::AtomicFile->open("bar.dat", "w");
     print $FH "Hello!\n";
     $FH->close || die "couldn't install atomic file: $!";    
-    
+
     # Write a temp file, but delete it before it gets installed:
     my $FH = IO::AtomicFile->open("bar.dat", "w");
     print $FH "Hello!\n";
     $FH->delete; 
-   
+
     # Write a temp file, but neither install it nor delete it:
     my $FH = IO::AtomicFile->open("bar.dat", "w");
     print $FH "Hello!\n";
@@ -185,6 +185,6 @@ President, ZeeGee Software Inc (F<http://www.zeegee.com>).
 
 =head1 REVISION
 
-$Revision: 1.105 $
+$Revision: 1.106 $
 
 =cut 

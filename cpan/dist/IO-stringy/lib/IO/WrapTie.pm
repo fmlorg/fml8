@@ -12,7 +12,7 @@ use Exporter;
 # Inheritance, exporting, and package version:
 @ISA     = qw(Exporter);
 @EXPORT  = qw(wraptie);
-$VERSION = substr q$Revision: 1.108 $, 10;
+$VERSION = substr q$Revision: 1.109 $, 10;
 
 # Function, exported.
 sub wraptie {
@@ -164,12 +164,12 @@ Use this with any existing class...
 
    use IO::WrapTie;
    use FooHandle;                  # implements TIEHANDLE interface
-    
+
    # Suppose we want a "FooHandle->new(&FOO_RDWR, 2)".
    # We can instead say...
-    
+
    $FH = wraptie('FooHandle', &FOO_RDWR, 2); 
-    
+
    # Now we can use...    
    print $FH "Hello, ";            # traditional operator syntax...
    $FH->print("world!\n");         # ...and OO syntax as well!
@@ -180,15 +180,15 @@ nifty C<new_tie()> constructor...
 
    #------------------------------    
    package FooHandle;                        # a class which can TIEHANDLE
-   
+
    use IO::WrapTie;  
    @ISA = qw(IO::WrapTie::Slave);            # inherit new_tie()
    ...
-   
-    
+
+
    #------------------------------    
    package main; 
-   
+
    $FH = FooHandle->new_tie(&FOO_RDWR, 2);   # $FH is an IO::WrapTie::Master
    print $FH "Hello, ";                      # traditional operator syntax
    $FH->print("world!\n");                   # OO syntax
@@ -268,7 +268,7 @@ Consider this example code, using classes in this distribution:
 
     use IO::Scalar;
     use IO::WrapTie;
-     
+
     $WT = wraptie('IO::Scalar',\$s);
     print $WT "Hello, ";
     $WT->print("world!\n");
@@ -407,10 +407,10 @@ which will attempt to use those operators:
 
     $O = FooHandle->new(&FOO_RDWR, 2);
     $O->print("Hello, world\n");  # OO syntax is okay, BUT....
-    
+
     sub nope { print $_[0] "Nope!\n" }
  X  nope($O);                     # ERROR!!! (not a glob ref)
-    
+
 
 B<Why not simply use tie()?> 
     Because (1) you have to use tied() to invoke methods in the
@@ -420,9 +420,9 @@ it in an OO-way... and that will break it:
 
     tie *T, 'FooHandle', &FOO_RDWR, 2; 
     print T "Hello, world\n";     # Operator is okay, BUT... 
-    
+
     tied(*T)->other_stuff;        # yuck! AND...
-    
+
     sub nope { shift->print("Nope!\n") }
  X  nope(\*T);                    # ERROR!!! (method "print" on unblessed ref)
 

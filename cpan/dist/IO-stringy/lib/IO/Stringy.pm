@@ -1,7 +1,7 @@
 package IO::Stringy;
 
 use vars qw($VERSION);
-$VERSION = substr q$Revision: 1.216 $, 10;
+$VERSION = substr q$Revision: 1.220 $, 10;
 
 1;
 __END__
@@ -48,23 +48,117 @@ handed you a string, a globref, or a FileHandle.
 
 =head1 INSTALLATION
 
-You know the drill...
+Most of you already know the drill...
 
     perl Makefile.PL
     make test
     make install
 
+For everyone else out there...
+if you've never installed Perl code before, or you're trying to use
+this in an environment where your sysadmin or ISP won't let you do
+interesting things, B<relax:> since this module contains no binary 
+extensions, you can cheat.  That means copying the directory tree
+under my "./lib" directory into someplace where your script can "see" 
+it.  For example, under Linux:
+
+    cp -r IO-stringy-1.234/lib/* /path/to/my/perl/
+
+Now, in your Perl code, do this:
+
+    use lib "/path/to/my/perl";
+    use IO::Scalar;                   ### or whatever
+
+Ok, now you've been told.  At this point, anyone who whines about
+not being given enough information gets an unflattering haiku 
+written about them in the next change log.  I'll do it.  
+Don't think I won't.
+
 
 
 =head1 VERSION
 
-$Id: Stringy.pm,v 1.216 2000/09/28 06:32:28 eryq Exp $
+$Id: Stringy.pm,v 1.220 2001/04/04 05:37:51 eryq Exp $
+
+
+
+=head1 TO DO
+
+=over 4
+
+=item (2000/08/02)  Finalize $/ support
+
+Graham Barr submitted this patch half a I<year> ago; 
+Like a moron, I lost his message under a ton of others,
+and only now have the experimental implementation done.
+
+Will the sudden sensitivity to $/ hose anyone out there?
+I'm worried, so you have to enable it explicitly.
+
+
+=item (2000/09/28)  Separate read/write cursors?
+
+Binkley sent me a very interesting variant of IO::Scalar which
+maintains two separate cursors on the data, one for reading
+and one for writing.  Quoth he:
+
+    Isn't it the case that real operating system file descriptors 
+    maintain an independent read and write file position (and 
+    seek(2) resets them both)? 
+
+He also pointed out some issues with his implementation:  
+
+    For example, what does eof or tell return?  The read position or 
+    the write position?  (I assumed read position was more important). 
+
+Your opinions on this are most welcome.
+(Me, I'm just squeamish that this will break some code
+which depends on the existing behavior, and that attempts to
+maintain backwards-compatibility will slow down the code.
+But I'll give it a shot.) 
+
+=back
 
 
 
 =head1 CHANGE LOG 
 
 =over 4
+
+=item Version 1.220   (2001/04/03)
+
+Added untested SEEK, TELL, and EOF methods to IO::Scalar 
+and IO::ScalarArray to support corresponding functions for
+tied filehandles: untested, because I'm still running 5.00556 
+and Perl is complaining about "tell() on unopened file".
+I<Thanks to Graham Barr for the suggestion.>
+
+Removed not-fully-blank lines from modules; these were causing
+lots of POD-related warnings.  
+I<Thanks to Nicolas Joly for the suggestion.>
+
+
+=item Version 1.219   (2001/02/23)
+
+IO::Scalar objects can now be made sensitive to $/ .
+Pains were taken to keep the fast code fast while adding this feature.
+I<Cheers to Graham Barr for submitting his patch; 
+jeers to me for losing his email for 6 months.>
+
+
+=item Version 1.218   (2001/02/23)
+
+IO::Scalar has a new sysseek() method.
+I<Thanks again to Richard Jones.>
+
+New "TO DO" section, because people who submit patches/ideas should 
+at least know that they're in the system... and that I won't lose
+their stuff.  Please read it.  
+
+New entries in L<"AUTHOR">.  
+Please read those too.
+
+
 
 =item Version 1.216   (2000/09/28)
 
@@ -86,7 +180,7 @@ For you, Rich, a double-length haiku:>
        Newspaper headline
           typeset by dyslexic man
        loses urgency
-        
+
        BABY EATS FISH is
           simply not equivalent   
        to FISH EATS BABY
@@ -176,18 +270,27 @@ No real changes; just upgraded IO::Wrap to have a $VERSION string.
 
 =head1 AUTHOR
 
+=over 4
+
+=item Primary Maintainer 
+
 Eryq (F<eryq@zeegee.com>).
 President, ZeeGee Software Inc (F<http://www.zeegee.com>).
+
+=item Unofficial Co-Authors
+
+For all their bug reports and patch submissions, the following
+are officially recognized:
+
+     Richard Jones
+     B. K. Oxley (binkley) 
+     Doru Petrescu 
+
+
+=back
 
 Enjoy.  Yell if it breaks.
 
 
 =cut
-
-
-
-
-
-
-
 

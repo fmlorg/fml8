@@ -27,17 +27,20 @@
 
 <FONT SIZE=3 FACE="courier"><PRE>
     use IO::AtomicFile;
-    
+</PRE></FONT>
+<FONT SIZE=3 FACE="courier"><PRE>
     # Write a temp file, and have it install itself when closed:
     my $FH = IO::AtomicFile-&gt;open(&quot;bar.dat&quot;, &quot;w&quot;);
     print $FH &quot;Hello!\n&quot;;
     $FH-&gt;close || die &quot;couldn't install atomic file: $!&quot;;    
-    
+</PRE></FONT>
+<FONT SIZE=3 FACE="courier"><PRE>
     # Write a temp file, but delete it before it gets installed:
     my $FH = IO::AtomicFile-&gt;open(&quot;bar.dat&quot;, &quot;w&quot;);
     print $FH &quot;Hello!\n&quot;;
     $FH-&gt;delete; 
-   
+</PRE></FONT>
+<FONT SIZE=3 FACE="courier"><PRE>
     # Write a temp file, but neither install it nor delete it:
     my $FH = IO::AtomicFile-&gt;open(&quot;bar.dat&quot;, &quot;w&quot;);
     print $FH &quot;Hello!\n&quot;;
@@ -91,11 +94,11 @@ President, ZeeGee Software Inc (<I><FILE><A HREF="http://www.zeegee.com">http://
 <A NAME="REVISION"><H2><A HREF="#__TOP__"><IMG SRC="icons/h1bullet.gif" ALT="Top" BORDER="0"></A> REVISION</H2></A>
 
 
-<P>$Revision: 1.105 $
+<P>$Revision: 1.106 $
 
 <P><HR>
 <ADDRESS><FONT SIZE=-1>
-Generated Thu Sep 28 02:35:44 2000 by cvu_pod2html
+Generated Wed Apr  4 01:38:08 2001 by cvu_pod2html
 </FONT></ADDRESS>
 </FONT></BODY>
 </HTML>

@@ -40,32 +40,39 @@
 
 <FONT SIZE=3 FACE="courier"><PRE>
     use IO::ScalarArray;
-    
+</PRE></FONT>
+<FONT SIZE=3 FACE="courier"><PRE>
     # Open a handle on an array-of-scalars:
     $AH = new IO::ScalarArray;
     $AH-&gt;open(\@a);
-    
+</PRE></FONT>
+<FONT SIZE=3 FACE="courier"><PRE>
     # Open a handle on an array-of-scalars, read it line-by-line, 
     # then close it:
     $AH = new IO::ScalarArray \@a;
     while ($_ = $AH-&gt;getline) { print &quot;Line: $_&quot; }
     $AH-&gt;close;
-        
+</PRE></FONT>
+<FONT SIZE=3 FACE="courier"><PRE>
     # Open a handle on an array-of-scalars, and slurp in all the lines:
     $AH = new IO::ScalarArray \@a;
     print $AH-&gt;getlines; 
-     
+</PRE></FONT>
+<FONT SIZE=3 FACE="courier"><PRE>
     # Open a handle on an array-of-scalars, and append to it:
     $AH = new IO::ScalarArray \@a;
     $AH-&gt;print(&quot;bar\n&quot;);
     print &quot;some string is now: &quot;, $somestring, &quot;\n&quot;;
-      
+</PRE></FONT>
+<FONT SIZE=3 FACE="courier"><PRE>
     # Get the current position:
     $pos = $AH-&gt;getpos;         ### $AH-&gt;tell() also works
-     
+</PRE></FONT>
+<FONT SIZE=3 FACE="courier"><PRE>
     # Set the current position:
     $AH-&gt;setpos($pos);          ### $AH-&gt;seek(POS,WHENCE) also works
-      
+</PRE></FONT>
+<FONT SIZE=3 FACE="courier"><PRE>
     # Open an anonymous temporary scalar array:
     $AH = new IO::ScalarArray;
     $AH-&gt;print(&quot;Hi there!\nHey there!\n&quot;);
@@ -85,7 +92,8 @@ interface, and read/write as array-of-scalars just like files:
     tie *OUT, 'IO::ScalarArray', \@a;
     print OUT &quot;line 1\nline 2\n&quot;, &quot;line 3\n&quot;;
     print &quot;s is now... [&quot;, join('', @a), &quot;]\n&quot;; 
-     
+</PRE></FONT>
+<FONT SIZE=3 FACE="courier"><PRE>
     # Reading and writing an anonymous scalar array... 
     tie *OUT, 'IO::ScalarArray';
     print OUT &quot;line 1\nline 2\n&quot;, &quot;line 3\n&quot;;
@@ -293,7 +301,7 @@ Return a reference to the underlying array.
 <A NAME="VERSION"><H2><A HREF="#__TOP__"><IMG SRC="icons/h1bullet.gif" ALT="Top" BORDER="0"></A> VERSION</H2></A>
 
 
-<P>$Id: ScalarArray.pm,v 1.117 2000/09/28 06:32:28 eryq Exp $
+<P>$Id: ScalarArray.pm,v 1.118 2001/04/04 05:37:51 eryq Exp $
 
 
 
@@ -332,7 +340,7 @@ for his offset-using read() and write() implementations.
 
 <P><HR>
 <ADDRESS><FONT SIZE=-1>
-Generated Thu Sep 28 02:35:53 2000 by cvu_pod2html
+Generated Wed Apr  4 01:38:24 2001 by cvu_pod2html
 </FONT></ADDRESS>
 </FONT></BODY>
 </HTML>

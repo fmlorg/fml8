@@ -30,7 +30,7 @@ can open an IO::InnerFile on a range of the underlying file.
 use Symbol;
 
 # The package version, both in 1.23 style *and* usable by MakeMaker:
-$VERSION = substr q$Revision: 1.103 $, 10;
+$VERSION = substr q$Revision: 1.104 $, 10;
 
 #------------------------------
 
@@ -194,7 +194,7 @@ sub GETC   {
     ### ...read...
     my $lg = $self->{FH}->read($data, 1);
     $self->{CRPOS} += $lg;
-    
+
     ### ...and restore:
     $self->{FH}->seek($old_pos, 0);
 
@@ -217,7 +217,7 @@ sub READ   {
     ### ...read...
     $lg = $self->{FH}->read($_[1], $lg, $_[3] );
     $self->{CRPOS} += $lg;
-    
+
     ### ...and restore:
     $self->{FH}->seek($old_pos, 0);
 

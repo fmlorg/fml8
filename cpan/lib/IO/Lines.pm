@@ -9,7 +9,7 @@ IO::Lines - IO:: interface for reading/writing an array of lines
 =head1 SYNOPSIS
 
     use IO::Lines;
-     
+
     # See IO::ScalarArray for details 
 
 
@@ -40,7 +40,7 @@ use IO::ScalarArray;
 use vars qw($VERSION @ISA);
 
 # The package version, both in 1.23 style *and* usable by MakeMaker:
-$VERSION = substr q$Revision: 1.110 $, 10;
+$VERSION = substr q$Revision: 1.111 $, 10;
 
 # Inheritance:
 @ISA = qw(IO::ScalarArray);     # also gets us new_tie  :-)
@@ -124,7 +124,7 @@ __END__
 
 =head1 VERSION
 
-$Id: Lines.pm,v 1.110 2000/08/16 04:59:02 eryq Exp $
+$Id: Lines.pm,v 1.111 2001/04/04 05:37:51 eryq Exp $
 
 
 =head1 AUTHORS

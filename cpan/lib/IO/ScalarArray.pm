@@ -11,32 +11,32 @@ IO::ScalarArray - IO:: interface for reading/writing an array of scalars
 If you have any Perl5, you can use the basic OO interface...
 
     use IO::ScalarArray;
-    
+
     # Open a handle on an array-of-scalars:
     $AH = new IO::ScalarArray;
     $AH->open(\@a);
-    
+
     # Open a handle on an array-of-scalars, read it line-by-line, 
     # then close it:
     $AH = new IO::ScalarArray \@a;
     while ($_ = $AH->getline) { print "Line: $_" }
     $AH->close;
-        
+
     # Open a handle on an array-of-scalars, and slurp in all the lines:
     $AH = new IO::ScalarArray \@a;
     print $AH->getlines; 
-     
+
     # Open a handle on an array-of-scalars, and append to it:
     $AH = new IO::ScalarArray \@a;
     $AH->print("bar\n");
     print "some string is now: ", $somestring, "\n";
-      
+
     # Get the current position:
     $pos = $AH->getpos;         ### $AH->tell() also works
-     
+
     # Set the current position:
     $AH->setpos($pos);          ### $AH->seek(POS,WHENCE) also works
-      
+
     # Open an anonymous temporary scalar array:
     $AH = new IO::ScalarArray;
     $AH->print("Hi there!\nHey there!\n");
@@ -53,7 +53,7 @@ interface, and read/write as array-of-scalars just like files:
     tie *OUT, 'IO::ScalarArray', \@a;
     print OUT "line 1\nline 2\n", "line 3\n";
     print "s is now... [", join('', @a), "]\n"; 
-     
+
     # Reading and writing an anonymous scalar array... 
     tie *OUT, 'IO::ScalarArray';
     print OUT "line 1\nline 2\n", "line 3\n";
@@ -103,7 +103,7 @@ use vars qw($VERSION @ISA);
 use IO::Handle;
 
 # The package version, both in 1.23 style *and* usable by MakeMaker:
-$VERSION = substr q$Revision: 1.117 $, 10;
+$VERSION = substr q$Revision: 1.118 $, 10;
 
 # Inheritance:
 @ISA = qw(IO::Handle);
@@ -322,7 +322,7 @@ sub read {
     my $justread;
     my $len;
     ($off ? substr($_[1], $off) : $_[1]) = '';
-    
+
     # Stop when we have zero bytes to go, or when we hit EOF:
     until (!$n or $self->eof) {       
         # If at end of current string, go forward to next one (won't be EOF):
@@ -546,6 +546,9 @@ sub READ      { shift->read(@_) }
 sub READLINE  { wantarray ? shift->getlines(@_) : shift->getline(@_) }
 sub WRITE     { shift->write(@_); }
 sub CLOSE     { shift->close(@_); }
+sub SEEK      { shift->seek(@_); }
+sub TELL      { shift->tell(@_); }
+sub EOF       { shift->eof(@_); }
 
 #------------------------------------------------------------
 
@@ -566,7 +569,7 @@ __END__
 
 =head1 VERSION
 
-$Id: ScalarArray.pm,v 1.117 2000/09/28 06:32:28 eryq Exp $
+$Id: ScalarArray.pm,v 1.118 2001/04/04 05:37:51 eryq Exp $
 
 
 =head1 AUTHOR

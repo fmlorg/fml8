@@ -21,6 +21,7 @@
 <LI> <A HREF="#Principal_author">Principal author</A>
 <LI> <A HREF="#Other_contributors">Other contributors</A>
 </UL>
+<LI> <A HREF="#SEE_ALSO">SEE ALSO</A>
 </UL>
 </A>
 
@@ -40,30 +41,37 @@
 
 <FONT SIZE=3 FACE="courier"><PRE>
     use IO::Scalar;
-    
+</PRE></FONT>
+<FONT SIZE=3 FACE="courier"><PRE>
     ### Open a handle on a string:
     $SH = new IO::Scalar;
     $SH-&gt;open(\$somestring);
-    
+</PRE></FONT>
+<FONT SIZE=3 FACE="courier"><PRE>
     ### Open a handle on a string, read it line-by-line, then close it:
     $SH = new IO::Scalar \$somestring;
     while ($_ = $SH-&gt;getline) { print &quot;Line: $_&quot; }
     $SH-&gt;close;
-        
+</PRE></FONT>
+<FONT SIZE=3 FACE="courier"><PRE>
     ### Open a handle on a string, and slurp in all the lines:
     $SH = new IO::Scalar \$somestring;
     print $SH-&gt;getlines; 
-     
+</PRE></FONT>
+<FONT SIZE=3 FACE="courier"><PRE>
     ### Open a handle on a string, and append to it:
     $SH = new IO::Scalar \$somestring
     $SH-&gt;print(&quot;bar\n&quot;);        ### will add &quot;bar\n&quot; to the end   
-      
+</PRE></FONT>
+<FONT SIZE=3 FACE="courier"><PRE>
     ### Get the current position:
     $pos = $SH-&gt;getpos;         ### $SH-&gt;tell() also works
-     
+</PRE></FONT>
+<FONT SIZE=3 FACE="courier"><PRE>
     ### Set the current position:
     $SH-&gt;setpos($pos);          ### $SH-&gt;seek(POS,WHENCE) also works
-        
+</PRE></FONT>
+<FONT SIZE=3 FACE="courier"><PRE>
     ### Open an anonymous temporary scalar:
     $SH = new IO::Scalar;
     $SH-&gt;print(&quot;Hi there!&quot;);
@@ -82,7 +90,8 @@ interface, and read/write scalars just like files:
     tie *OUT, 'IO::Scalar', \$s;
     print OUT &quot;line 1\nline 2\n&quot;, &quot;line 3\n&quot;;
     print &quot;s is now... $s\n&quot;
-     
+</PRE></FONT>
+<FONT SIZE=3 FACE="courier"><PRE>
     ### Reading and writing an anonymous scalar... 
     tie *OUT, 'IO::Scalar';
     print OUT &quot;line 1\nline 2\n&quot;, &quot;line 3\n&quot;;
@@ -97,6 +106,17 @@ interface, and read/write scalars just like files:
     $SH-&gt;print(&quot;Hello, &quot;);
     $SH-&gt;print(&quot;world!&quot;);
     print &quot;I've got: &lt;$SH&gt;\n&quot;;
+</PRE></FONT>
+
+<P>You can also make the objects sensitive to the $/ setting,
+just like IO::Handle wants them to be:
+
+<FONT SIZE=3 FACE="courier"><PRE>
+    my $SH = new IO::Scalar \$somestring;
+    $SH-&gt;use_RS(1);           ### perlvar's short name for $/
+    ...
+    local $/ = &quot;&quot;;            ### read paragraph-at-a-time
+    $nextpar = $SH-&gt;getline;
 </PRE></FONT>
 
 
@@ -277,10 +297,20 @@ No-op, provided for OO compatibility.
 <DD>
 <I>Instance method.</I>  Seek to a given position in the stream.
 
+<P><DT><B><A NAME="item:sysseek">sysseek OFFSET, WHENCE</A></B></DT>
+<DD>
+<I>Instance method.</I> Identical to <CODE>seek OFFSET, WHENCE</CODE>, <I>q.v.</I>
+
 <P><DT><B><A NAME="item:tell">tell</A></B></DT>
 <DD>
 <I>Instance method.</I>
 Return the current position in the stream, as a numeric offset.
+
+<P><DT><B><A NAME="item:use_RS">use_RS [YESNO]</A></B></DT>
+<DD>
+<I>Instance method.</I>
+Obey the curent setting of $/, like IO::Handle does?
+Default is false.
 
 <P><DT><B><A NAME="item:setpos">setpos POS</A></B></DT>
 <DD>
@@ -305,7 +335,7 @@ Return a reference to the underlying scalar.
 <A NAME="VERSION"><H2><A HREF="#__TOP__"><IMG SRC="icons/h1bullet.gif" ALT="Top" BORDER="0"></A> VERSION</H2></A>
 
 
-<P>$Id: Scalar.pm,v 1.122 2000/09/28 06:32:28 eryq Exp $
+<P>$Id: Scalar.pm,v 1.126 2001/04/04 05:37:51 eryq Exp $
 
 
 
@@ -349,13 +379,30 @@ for finding and fixing the bug in <CODE>PRINTF()</CODE>.
 for his offset-using read() and write() implementations. 
 
 
-<P><I>Richard Jones</I> (<I><FILE><A HREF="mailto:rich@annexia.org">rich@annexia.org</A></FILE></I>),
+<P><I>Richard Jones,</I>
 for his patches to massively improve the performance of <CODE>getline()</CODE>
 and add <CODE>sysread</CODE> and <CODE>syswrite</CODE>.
 
+
+<P><I>B. K. Oxley (binkley),</I>
+for stringification and inheritance improvements,
+and sundry good ideas.
+
+
+
+<P><HR>
+<A NAME="SEE_ALSO"><H2><A HREF="#__TOP__"><IMG SRC="icons/h1bullet.gif" ALT="Top" BORDER="0"></A> SEE ALSO</H2></A>
+
+
+<P><A HREF="../IO/String.pm.html">IO::String</A>, which is quite similar but which was designed
+more-recently and with an IO::Handle-like interface in mind, 
+so you can mix OO- and native-filehandle usage without using tied().  
+<I>Note:</I> if anyone can make IO::Scalar do that without breaking
+the regression tests, I'm all ears.
+
 <P><HR>
 <ADDRESS><FONT SIZE=-1>
-Generated Thu Sep 28 02:35:51 2000 by cvu_pod2html
+Generated Wed Apr  4 01:38:21 2001 by cvu_pod2html
 </FONT></ADDRESS>
 </FONT></BODY>
 </HTML>
