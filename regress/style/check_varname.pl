@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: check_varname.pl,v 1.1 2003/05/29 13:38:17 fukachan Exp $
+# $FML: check_varname.pl,v 1.2 2003/05/30 00:21:17 fukachan Exp $
 #
 
 use strict;
@@ -9,14 +9,16 @@ use vars qw(@exceptional $debug $varname %varname %base %done %top);
 
 init();
 parse();
-base();
-exceptional();
-inherit();
+find_base();
 
-last_match('file');
-last_match('dir');
-
-unclassified();
+# print
+{
+    exceptional();
+    classfied();
+    suffix('file');
+    suffix('dir');
+    unclassified();
+}
 
 exit 0;
 
@@ -54,7 +56,7 @@ sub parse
 }
 
 
-sub regist
+sub _regist
 {
     my ($x) = @_;
     my $s = (split(/_/, $x))[0];
@@ -66,38 +68,38 @@ sub regist
 }
 
 
-sub base
+sub find_base
 {
     for my $varname (sort keys %varname) {
 	if ($varname =~ /^use_(\S+)_program/) {
-	    regist($1);
+	    _regist($1);
 	}
 	elsif ($varname =~ /^use_([a-z_]+)/) {
-	    regist($1);
+	    _regist($1);
 	}
 	elsif ($varname =~ /(\S+_restrictions)$/) {
-	    regist($1);
+	    _regist($1);
 	}
 	elsif ($varname =~ 
 	       /^(incoming_command_mail|outgoing_command_mail)_\S+/) {
-	    regist($1);
+	    _regist($1);
 	}
 	elsif ($varname =~ /^(incoming_article|outgoing_article)_\S+/) {
-	    regist($1);
+	    _regist($1);
 	}
 	elsif ($varname =~ /^(\w+_command)_\S+/) {
-	    regist($1);
+	    _regist($1);
 	}
     }
 
     for my $varname (sort _longest keys %varname) {
 	if ($varname =~ /^(\S+_password)_maps/) {
-	    regist($1);
+	    _regist($1);
 	    next;
 	}
 
 	if ($varname =~ /^(\S+)_maps/) {
-	    regist($1);
+	    _regist($1);
 	}
     }
 }
@@ -125,7 +127,7 @@ sub exceptional
 }
 
 
-sub inherit
+sub classfied
 {
     my %b = ();
 
@@ -187,7 +189,7 @@ sub first_match
 }
 
 
-sub last_match
+sub suffix
 {
     my ($x) = @_;
     my $pat = sprintf("_%s", $x);
