@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: INSTALL.sh,v 1.42 2002/02/24 08:16:00 fukachan Exp $
+# $FML: INSTALL.sh,v 1.43 2002/03/18 13:55:10 fukachan Exp $
 #
 
 # Run this from the top-level fml source directory.
@@ -48,6 +48,7 @@ for dir in 	$config_dir \
 		$lib_dir/$fml_version	\
 		$libexec_dir	\
 		$libexec_dir/$fml_version \
+		$data_dir/$fml_version \
 		$bindir \
 		$ml_spool_dir
 do
@@ -79,6 +80,9 @@ cp -pr img/lib/*	$lib_dir/$fml_version/
 
 echo updating $libexec_dir/$fml_version/
 cp -pr fml/libexec/*	$libexec_dir/$fml_version/
+
+echo updating $data_dir/$fml_version/
+cp -pr fml/share/*	$data_dir/$fml_version/
 
 echo updating ${bindir}/
 for prog in fmldoc fmlthread fmlconf makefml fmlsch fmlhtmlify
