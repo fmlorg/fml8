@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: edit.pm,v 1.17 2003/09/13 09:16:59 fukachan Exp $
+# $FML$
 #
 
 package FML::Command::Admin::edit;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::edit - edit config.cf (not yet implemented)
+FML::Command::Admin::edit - edit config.cf (not yet implemented).
 
 =head1 SYNOPSIS
 
@@ -37,7 +37,7 @@ now we can read and write config.cf, but can not change it.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -50,7 +50,7 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
@@ -74,13 +74,15 @@ sub process
     my $orig_path = $ENV{ 'PATH' };
 
     if (-f $config_cf) {
-	$ENV{'PATH'} = '/bin/:/usr/bin:/usr/pkg/bin:/usr/local/bin';
+	$ENV{'PATH'} = '/bin:/usr/bin:/usr/pkg/bin:/usr/local/bin';
 	$curproc->ui_message("$editor $config_cf");
 	system $editor, $config_cf;
 	$ENV{'PATH'} = $orig_path;
     }
     else {
-	warn("$config_cf not found\n");
+	my $r = "$config_cf not found";
+	$curproc->ui_message("error: $r");
+	croak($r);
     }
 }
 
@@ -95,7 +97,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
