@@ -1,33 +1,34 @@
 <!--
-   $FML: IO::Adapter.sgml,v 1.3 2002/04/01 23:41:05 fukachan Exp $
+   $FML: IO::Adapter.sgml,v 1.4 2002/07/02 10:39:36 fukachan Exp $
 -->
 
 <chapter id="module.io.adapter">
 	<title>
-	IO::Adapter
+	IO へのアダプター層 (IO::Adapter クラス)
 	</title>
 
-<sect1>
+
+<sect1 id="module.io.adapter.overview">
 	<title>
-	IO へのアダプター層 (IO::Adapter)
+	IO::Adapter の概要
 	</title>
 
 <para>
-&fmldevel; でのメンバーリストの読み書きは
-IO::Adapter という抽象クラスを通じて、
-アドレスの登録/削除を行なうようになっています。
+&fmldevel; でのメンバーリストの読み書き、
+例えばアドレスの登録/削除、は
+IO::Adapter という抽象クラスを通じて行ないます。
+例えば次のように使います。
+<screen>
+use IO::Adapter;
+$obj = new IO::Adapter $map, $map_params;
+$obj->open || croak("cannot open $map");
+while ($x = $obj->get_next_key()) { ... }
+$obj->close;
+</screen>
 </para>
 
 <para>
-例えば次のように使っています。
-<screen>
-use IO::Adapter;
-$obj = new IO::Adapter ($map, $map_params);
-$obj->open || croak("cannot open $map");
-while ($x = $obj->getline) { ... }
-$obj->close;
-</screen>
-ここで $map は次のようなものが使えます。
+$map は次のようなものが使えます。
 <screen>
 file:/var/spool/ml/elena/actives
 unix.group:root
@@ -42,33 +43,172 @@ ldap:id        (未実装)
 file: は通常のファイルです。
 unix.group:root は /etc/group の root のエントリにあるユーザのリストを、
 nis.group:root は NIS の root のエントリにあるユーザのリストです。
-</para>
-
-<para>
 mysql:id は MySQL へのアクセスです。
 mysql:id で指定されたパラメータを用います。
 このパラメータは new() を実行する際に別途与える必要があります。
-<screen>
-my $map        = 'mysql:toymodel';
-my $map_params = {
-    $map => {
-     sql_server    => 'localhost',
-     user          => 'fukachan',
-     user_password => 'uja',
-     database      => 'fml',
-     table         => 'ml',
-     params        => {
-         ml_name   => 'elena',
-         file      => 'members',
-     },
-    },
-};
+</para>
 
-my $obj = new IO::Adapter ($map, $map_params);
-$obj->open();
-$obj->add( 'rudo@nuinui.net' );
-$obj->close();
+</sect1>
+
+
+<sect1 id="module.io.adapter.methods">
+	<title>
+	メソッド
+	</title>
+
+<para>
+IO::Adapter の提供する公式なメソッドは次の通りです。
+<screen>
+new()
+open()
+close()
+
+get_next_key()
+
+add(KEY)
+delete(KEY)
+
+getpos()
+setpos(NUM)
+eof()
+
+touch()
+
+find(REGEXP, $args)
 </screen>
+です。
+KEY はデータベースのプライマリキーで、
+通常メールアドレスです。
+REGEXP は正規表現ですが、たいていはメールアドレスです。
+</para>
+
+<para>
+多くのマップを同じように扱うために、
+メソッドは極力最小限にものに限定する必要があります。
+</para>
+
+<para>
+最低限のメソッド群の定義は実際に実装してみる実験を通じて選ばれました。
+そして、むしろファイルより SQL との IO を想定しつつ、選びました。
+そのため、&fml4; のファイルを前提にした様々な処理にくらべ、
+やや不自由に思えるでしょうが、そうしないとうまく抽象化ができません。
+</para>
+
+</sect1>
+
+
+<sect1 id="module.io.adapter.map.file">
+	<title>
+	file マップ	
+	</title>
+
+<para>
+『file:ファイル名』もしくは単なる『ファイル名』は
+ごく普通のテキストファイルへの IO を抽象化したものです。
+</para>
+
+</sect1>
+
+
+<sect1 id="module.io.adapter.map.unixgroup">
+	<title>
+	unixgroup マップ	
+	</title>
+
+<para>
+/etc/group を抽象化します。
+当然 READ ONLY です。
+</para>
+
+<para>
+/etc/group の
+<screen>
+wheel:*:0:root,rudo,kenken
+</screen>
+は IO::Adapter では unixgroup:wheel としてアクセスできます。
+<screen>
+$obj = new IO::Adapter "unixgroup:wheel";
+</screen>
+というオブジェクトに対し get_next_key() すると
+グループのメンバーが順に返されます。
+つまり 3 行のファイルを読みだすものとして、
+<screen>
+root
+rudo
+kenken
+</screen>
+のようなファイルとみなされます。
+</para>
+
+</sect1>
+
+
+<sect1 id="module.io.adapter.map.nis">
+	<title>
+	NIS マップ	
+	</title>
+
+<para>
+/etc/group とほぼ同様ですが、ソースが
+NIS/YP から group にあたるものを引っ張ってくるところだけが異なります。
+</para>
+
+</sect1>
+
+
+<sect1 id="module.io.adapter.map.mysql">
+	<title>
+	MySQL マップ	
+	</title>
+
+<para>
+&fmldevel; の設定では .cf の中にSQL の設定を書いておきたいと思います。
+つまり一つの cf ファイルにいろいろ書けるようにしておきたい。
+</para>
+
+<para>
+そこで、[mysql:members] (から終りまで、もしくは次の =head 文まで)の
+ブロックで、マップのタイプと識別子を表現しています。
+<screen>
+config.cf の例
+
+member_maps     =       mysql:members
+
+recipient_maps  =       mysql:recipients
+
+[mysql:members]
+
+sql_server      =       localhost
+sql_user        =       fml
+sql_password    =       uja
+sql_database    =       fml
+sql_table       =       ml
+
+sql_find	=	select * from ...
+
+		...
+</screen>
+</para>
+
+<para>
+IO::Adapter は
+<screen>
+new IO::Adapter "mysql:members", $config;
+</screen>
+のように呼び出します。
+この $config は次のようなハッシュ・リファレンスになっていることが
+期待されています。
+<screen>
+$config => {
+	[mysql:members] => {
+		sql_sever => localhost
+			...	
+	}
+}
+</screen>
+FML::Config は .cf から上のようなハッシュを構成します。
+よって IO::Adapter の new() の際には、
+FML::Config のオブジェクトを引数で渡せば OK です。
 </para>
 
 </sect1>

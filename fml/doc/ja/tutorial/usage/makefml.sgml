@@ -1,98 +1,246 @@
 <!--
-   $FML: makefml.sgml,v 1.3 2002/07/02 10:39:39 fukachan Exp $
+   $FML: makefml.sgml,v 1.4 2002/07/07 01:57:12 fukachan Exp $
 -->
 
-<sect1 id="usage.makefml">
+
+<sect1 id="usage.makefml.newml">
 	<title>
-	makefml を使って、ユーザの登録/削除他(あらゆる:)
+	ＭＬの作成
 	</title>
 
 <para>
-makefml の基本的な使い方は &fml4; の makefml と同様です。
-というより、できるだけ互換性を保つように構築する予定です。
+<screen>
+% su fml
+% makefml newml ＭＬ名
+</screen>
+ＭＬ名は @ 抜きの場合デフォルトのドメイン、
+アドレスを完全に指定すればバーチャルドメインまで含めて
+makefml がよろしくがんばります。
+例えば
+<screen>
+% makefml newml elena
+% makefml newml elena@fml.org
+</screen>
 </para>
 
 <para>
-現状 makefml に命令を与えると admin コマンドと同じ動作をするようになっ
-ています。
-つまり特権的な動作ということです。
-例えば、メンバーの登録に confirmation は必要ありません。
+くわしくは
+<link linkend="setup.newml">
+<xref linkend="setup.newml">
+</link>
+を参照して下さい。
 </para>
 
-<para>
-現在使えるコマンドは以下のものです。
-<itemizedlist>
-	<listitem>
-	<para>
-	メンバーの登録
-	(
-		subscribe
-		add
-	)
-	</para>
-	</listitem>
+</sect1>
 
-	<listitem>
-	<para>
-	メンバーの削除
-	(
-		bye
-		remove
-		resign
-		signoff
-		unsubscribe
-	)
-	</para>
-	</listitem>
 
-	<listitem>
-	<para>
-	アドレスの変更
-	(
-		chaddr
-	)	
-	</para>
-	</listitem>
-
-	<listitem>
-	<para>
-	リモート管理者の登録
-	(
-		addadmin
-		addpriv	
-	)	
-	</para>
-	</listitem>
-
-	<listitem>
-	<para>
-	リモート管理者の削除
-	(
-		byeadmin
-		byepriv	
-	)	
-	</para>
-	</listitem>
-
-	<listitem>
-	<para>
-	ＭＬの作成
-	(
-		newml
-	)
-	</para>
-	</listitem>
-
-	<listitem>
-	<para>
+<sect1 id="usage.makefml.rmml">
+	<title>
 	ＭＬの削除
-	(
-		rmml
-	)
-	</para>
-	</listitem>
+	</title>
 
-</itemizedlist>
+<para>
+<screen>
+% su fml
+% makefml rmml ＭＬ名
+</screen>
+ＭＬ名は @ 抜きの場合デフォルトのドメイン、
+アドレスを完全に指定すればバーチャルドメインまで含めて
+makefml がよろしくがんばります。
+例えば
+<screen>
+% makefml rmml elena
+% makefml rmml elena@fml.org
+</screen>
+</para>
+
+<para>
+できるだけ newml の反対の動作をします。
+ホームディレクトリを消すとか
+MTA の alias の該当エントリを消すといったことなども
+できそうなことは全て頑張ります。
+</para>
+
+</sect1>
+
+
+<sect1 id="usage.makefml.user.adddel">
+	<title>
+	ＭＬメンバーの登録と削除
+	</title>
+
+<para>
+一般のＭＬメンバーの登録は useradd 削除は userdel です。
+<screen>
+% su fml
+% makefml useradd ＭＬ名 メールアドレス
+% makefml userdel ＭＬ名 メールアドレス
+</screen>
+ＭＬ名は @ 抜きの場合デフォルトのドメイン、
+アドレスを完全に指定すればバーチャルドメインまで含めて
+makefml がよろしくがんばります。
+例えば
+<screen>
+% su fml
+% makefml useradd elena rudo@nuinui.net
+% makefml userdel elena rudo@nuinui.net
+% makefml useradd elena@fml.org rudo@nuinui.net
+% makefml userdel elena@fml.org rudo@nuinui.net
+</screen>
+</para>
+
+<para>
+なお、便利なように 
+useradd コマンドは  
+<screen>	
+useradd
+adduser	
+subscribe
+add
+</screen>	
+どれを使っても同じです。
+また、userdel は
+<screen>
+userdel
+deluser
+bye
+remove
+resign
+signoff
+unsubscribe
+</screen>
+でも同様です。
+</para>
+
+
+</sect1>
+
+
+<sect1 id="usage.makefml.user.chaddr">
+	<title>
+	ＭＬメンバーのアドレス変更
+	</title>
+
+
+<para>
+<screen>
+% su fml
+% makefml useradd ＭＬ名 古いメールアドレス 新しいメールアドレス
+</screen>
+ＭＬ名は @ 抜きの場合デフォルトのドメイン、
+アドレスを完全に指定すればバーチャルドメインまで含めて
+makefml がよろしくがんばります。
+例えば
+<screen>
+% su fml
+% makefml chaddr elena rudo@nuinui.net teddy@nuinui.net
+% makefml chaddr elena@fml.org rudo@nuinui.net teddy@nuinui.net
+</screen>
+</para>
+
+
+</sect1>
+
+
+
+<sect1 id="usage.makefml.admin.adddel">
+	<title>
+	リモート管理者の登録と削除
+	</title>
+
+<para>
+一般のＭＬメンバーの登録は addadmin 削除は deladmin です。
+<screen>
+% su fml
+% makefml addadmin ＭＬ名 メールアドレス
+% makefml deladmin ＭＬ名 メールアドレス
+</screen>
+ＭＬ名は @ 抜きの場合デフォルトのドメイン、
+アドレスを完全に指定すればバーチャルドメインまで含めて
+makefml がよろしくがんばります。
+例えば
+<screen>
+% su fml
+% makefml addadmin elena rudo@nuinui.net
+% makefml deladmin elena rudo@nuinui.net
+% makefml addadmin elena@fml.org rudo@nuinui.net
+% makefml deladmin elena@fml.org rudo@nuinui.net
+</screen>
+</para>
+
+<para>
+なお、便利なように 
+addadmin コマンドは  
+<screen>	
+addadmin	
+addpriv
+</screen>	
+どれを使っても同じです。
+また、deladmin は
+<screen>
+byeadmin
+byepriv
+</screen>
+でも同様です。
+</para>
+
+
+</sect1>
+
+
+
+<sect1 id="usage.makefml.moderator.adddel">
+	<title>
+	モデレータの登録と削除
+	</title>
+
+<para>
+一般のＭＬメンバーの登録は addmoderator 削除は delmoderator です。
+<screen>
+% su fml
+% makefml addmoderator ＭＬ名 メールアドレス
+% makefml delmoderator ＭＬ名 メールアドレス
+</screen>
+ＭＬ名は @ 抜きの場合デフォルトのドメイン、
+アドレスを完全に指定すればバーチャルドメインまで含めて
+makefml がよろしくがんばります。
+例えば
+<screen>
+% su fml
+% makefml addmoderator elena rudo@nuinui.net
+% makefml delmoderator elena rudo@nuinui.net
+% makefml addmoderator elena@fml.org rudo@nuinui.net
+% makefml delmoderator elena@fml.org rudo@nuinui.net
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1 id="usage.makefml.log">
+	<title>
+	ログを見る
+	</title>
+
+<para>
+<screen>
+% makefml log elena
+% makefml log elena@fml.org
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1 id="usage.makefml.list">
+	<title>
+	メンバーリスト見る
+	</title>
+
+<para>
+<screen>
+% makefml list elena
+</screen>
 </para>
 
 </sect1>

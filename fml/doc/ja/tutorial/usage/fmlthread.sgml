@@ -1,10 +1,10 @@
 <!--
-	$FML: fmlthread.sgml,v 1.1 2001/11/24 03:22:58 fukachan Exp $
+	$FML: fmlthread.sgml,v 1.2 2002/07/07 01:57:12 fukachan Exp $
 -->
 
 <sect1 id="usage.fmlthread">
 	<title>
-	スレッドを表示する (fmlthread)
+	スレッドを表示する (fmlthread コマンド)
 	</title>
 
 <para>

@@ -1,0 +1,15 @@
+<!--
+   $FML$
+-->
+
+<chapter id="customize.header">
+	<title>
+	ヘッダの書き換え
+	</title>
+
+<para>
+ヘッダ情報は Mail::Header クラスのオブジェクトに収納されています。
+Mail::Header で操作可能なことは何でもできます。
+</para>
+
+</chapter>
