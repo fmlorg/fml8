@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix19991231.pm,v 1.11 2001/12/23 15:03:27 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.12 2002/01/13 06:23:27 fukachan Exp $
 #
 
 
@@ -58,7 +58,7 @@ subclass used in C<Mail::Bounce>.
 sub analyze
 {
     my ($self, $msg, $result) = @_;
-    my $data_type = $msg->header_data_type();
+    my $data_type = $msg->rfc822_message_header_data_type();
 
     if ($data_type =~ /multipart/i) {
 	$self->_analyze_broken_dsn($msg, $result);

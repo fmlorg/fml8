@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.39 2002/01/13 11:49:28 fukachan Exp $
+# $FML: Message.pm,v 1.40 2002/01/13 12:50:52 fukachan Exp $
 #
 
 package Mail::Message;
@@ -712,7 +712,7 @@ sub find
 }
 
 
-=head2 header_data_type()
+=head2 rfc822_message_header_data_type()
 
 return the C<type> string. It is the whole message type which is
 speculated from header C<Content-Type:>.
@@ -725,7 +725,7 @@ speculated from header C<Content-Type:>.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
-sub header_data_type
+sub rfc822_message_header_data_type
 {
     my ($self) = @_;
     my $hdr = $self->rfc822_message_header();
@@ -1690,7 +1690,7 @@ get whole body size for this object ($self)
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM
-sub whole_message_header_size
+sub rfc822_message_header_size
 {
     my ($self) = @_;
     $self->{ data_info }->{ header_size };
@@ -1701,7 +1701,7 @@ sub whole_message_header_size
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM
-sub whole_message_body_size
+sub rfc822_message_body_size
 {
     my ($self) = @_;
     $self->{ data_info }->{ body_size };
