@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.24 2001/08/26 05:52:08 fukachan Exp $
+# $FML: File.pm,v 1.25 2001/12/22 09:21:13 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -56,6 +56,10 @@ standard constructor.
 =cut
 
 
+# Descriptions: standard constructor.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self) = @_;
@@ -74,6 +78,10 @@ C<flag> is the mode of open().
 =cut
 
 
+# Descriptions: open map
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: file opened
+# Return Value: HANDLE
 sub open
 {
     my ($self, $args) = @_;
@@ -90,9 +98,9 @@ sub open
 
 
 # Descriptions: open file in "read only" mode
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: file is opened for read
-# Return Value: file descriptor
+# Return Value: HANDLE
 sub _read_open
 {
     my ($self, $args) = @_;
@@ -112,6 +120,10 @@ sub _read_open
 }
 
 
+# Descriptions: open file in "read/write" mode
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: file is opened for read
+# Return Value: HANDLE
 sub _rw_open
 {
     my ($self, $args) = @_;
@@ -132,9 +144,14 @@ create a file if not exists.
 
 =cut
 
+
+# Descriptions: touch (create a file if needed)
+#    Arguments: OBJ($self)
+# Side Effects: create a file
+# Return Value: same as close()
 sub touch
 {
-    my ($self, $flag) = @_;
+    my ($self) = @_;
     my $file = $self->{_file};
 
     use IO::File;
@@ -163,6 +180,10 @@ This is used in C<fml5>.
 =cut
 
 
+# Descriptions: get string for new line
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub getline
 {
     my ($self) = @_;
@@ -171,6 +192,11 @@ sub getline
 }
 
 
+# Descriptions: get string for new line after
+#               clean up for fml
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub get_next_value
 {
     my ($self) = @_;
@@ -214,6 +240,10 @@ set the position in the opened file.
 =cut
 
 
+# Descriptions: return current postion in file descriptor
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
 sub getpos
 {
     my ($self) = @_;
@@ -222,6 +252,10 @@ sub getpos
 }
 
 
+# Descriptions: reset postion in file descriptor
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
 sub setpos
 {
     my ($self, $pos) = @_;
@@ -241,6 +275,10 @@ close the opended file.
 =cut
 
 
+# Descriptions: EOF or not 
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: same as eof()
 sub eof
 {
     my ($self) = @_;
@@ -249,6 +287,10 @@ sub eof
 }
 
 
+# Descriptions: close map
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: same as close()
 sub close
 {
     my ($self) = @_;
@@ -262,6 +304,11 @@ add (append) $address to this map.
 
 =cut
 
+
+# Descriptions: add $addr into map
+#    Arguments: OBJ($self) STR($addr)
+# Side Effects: update map
+# Return Value: same as close()
 sub add
 {
     my ($self, $addr) = @_;
@@ -294,6 +341,11 @@ delete lines which matches $regexp from this map.
 
 =cut
 
+
+# Descriptions: delete address(es) matching $reexp from map
+#    Arguments: OBJ($self) STR($regexp)
+# Side Effects: update map
+# Return Value: same as close()
 sub delete
 {
     my ($self, $regexp) = @_;
@@ -325,6 +377,11 @@ replace lines which matches $regexp with $value.
 
 =cut
 
+
+# Descriptions: replace address(es) matching $reexp with $value
+#    Arguments: OBJ($self) STR($regexp) STR($value)
+# Side Effects: update map
+# Return Value: same as close()
 sub replace
 {
     my ($self, $regexp, $value) = @_;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.9 2001/09/17 11:59:23 fukachan Exp $
+# $FML: Adapter.pm,v 1.10 2001/12/22 09:21:12 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -109,10 +109,10 @@ the constructor. The first argument is a map decribed above.
 
 # Descriptions: a constructor, which prepare IO operations for the
 #               given $map
-#    Arguments: $self $map $args
+#    Arguments: OBJ($self) STR($map) HASH_REF($args)
 # Side Effects: @ISA is modified
 #               load and import sub-class
-# Return Value: object
+# Return Value: OBJ
 sub new
 {
     my ($self, $map, $args) = @_;
@@ -189,12 +189,13 @@ C<open()> is a dummy function in other maps now.
 
 =cut
 
+
 # Descriptions: open IO, each request is forwraded to each sub-class
-#    Arguments: $self $flag
+#    Arguments: OBJ($self) STR($flag)
 #               $flag is the same as open()'s flag for file: map but
 #               "r" only for other maps.
 # Side Effects: none
-# Return Value: file handle
+# Return Value: HANDLE
 sub open
 {
     my ($self, $flag) = @_;
@@ -222,9 +223,15 @@ sub open
 
 create a file if not exists.
 This method is avaialble for file: type.
+It is dummy for maps other than file: type.
 
 =cut
 
+
+# Descriptions: create a file if not exists.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create $map if needed or possible
+# Return Value: none
 sub touch
 {
     my ($self) = @_;
@@ -266,9 +273,9 @@ an alias of C<get_next_value()> now.
 
 # Descriptions: aliases for convenience
 #               request is forwarded to get_next_value() method.
-#    Arguments: $self
+#    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: none
+# Return Value: STR
 sub get_member    { my ($self) = @_; $self->get_next_value;}
 sub get_active    { my ($self) = @_; $self->get_next_value;}
 sub get_recipient { my ($self) = @_; $self->get_next_value;}
@@ -289,10 +296,10 @@ replace lines which matches $regexp with $value.
 =cut
 
 
-# Descriptions:
-#    Arguments: $self $address
-# Side Effects:
-# Return Value: none
+# Descriptions: add $address to the current map
+#    Arguments: OBJ($self) STR($address)
+# Side Effects: modify map content
+# Return Value: same as add()
 sub add
 {
     my ($self, $address) = @_;
@@ -307,10 +314,10 @@ sub add
 }
 
 
-# Descriptions:
-#    Arguments: $self $address
-# Side Effects:
-# Return Value: none
+# Descriptions: delete $address from the current map
+#    Arguments: OBJ($self) STR($regexp)
+# Side Effects: moidfy map content
+# Return Value: same as delete()
 sub delete
 {
     my ($self, $regexp) = @_;
@@ -325,10 +332,10 @@ sub delete
 }
 
 
-# Descriptions:
-#    Arguments: $self $regexp $value
-# Side Effects:
-# Return Value: none
+# Descriptions: replace $value for key matching $regexp
+#    Arguments: OBJ($self) STR($regexp) STR($value)
+# Side Effects: modify map content
+# Return Value: replace()
 sub replace
 {
     my ($self, $regexp, $value) = @_;
@@ -359,6 +366,11 @@ If you specify C<all>, you get the result(s) as ARRAY REFERENCE.
 
 =cut
 
+
+# Descriptions: search method
+#    Arguments: OBJ($self) STR($regexp) HASH_REF($args)
+# Side Effects: none
+# Return Value: STR or ARRAY_REF
 sub find
 {
     my ($self, $regexp, $args) = @_;
@@ -404,7 +416,7 @@ sub find
 
 # Descriptions: destructor
 #               request is forwarded to close() method.
-#    Arguments: $self $args
+#    Arguments: OBJ($self)
 # Side Effects: object is undef'ed.
 # Return Value: none
 sub DESTROY
@@ -418,8 +430,15 @@ sub DESTROY
 
 =head2 C<AUTOLOAD(@varargs)>
 
+hook extension for map dependent methods
+
 =cut
 
+
+# Descriptions: hook extension for map dependent methods
+#    Arguments: OBJ($self) ARRAY(@varargs)
+# Side Effects: depend on loaded module
+# Return Value: depend on loaded module
 sub AUTOLOAD
 {
     my ($self, @varargs) = @_;

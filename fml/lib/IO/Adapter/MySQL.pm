@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: MySQL.pm,v 1.16 2001/09/17 11:35:21 fukachan Exp $
+# $FML: MySQL.pm,v 1.17 2001/12/22 09:21:13 fukachan Exp $
 #
 
 
@@ -48,6 +48,7 @@ IO::Adapter::MySQL - interface to talk with a MySQL server
 
 This module is a top level driver to talk with a MySQL server in SQL
 (Structured Query Language).
+This module inherits C<IO::Adapter::DBI> class.
 
 The model dependent SQL statement is expected to be holded in
 C<IO::Adapter::SQL::> modules.
@@ -56,7 +57,6 @@ You can specify your own module name at $args->{ driver } in
 new($args).
 It is expected to provdie C<add()>, C<delete()> and
 C<get_next_value()> method.
-
 
 =head1 METHODS
 
@@ -68,6 +68,11 @@ customizatoins and functions.
 
 =cut
 
+
+# Descriptions: initialize MySQL specific configuration
+#    Arguments: OBJ($self) HASH_REF($me) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub configure
 {
     my ($self, $me, $args) = @_;
@@ -117,6 +122,10 @@ After re-opening, we moved to the specified $pos.
 =cut
 
 
+# Descriptions: set position in database handle
+#    Arguments: OBJ($self) NUM($pos)
+# Side Effects: none
+# Return Value: none
 sub setpos
 {
     my ($self, $pos) = @_;
@@ -145,6 +154,10 @@ sub setpos
 =cut
 
 
+# Descriptions: get position in database handle
+#    Arguments: OBJ($self) NUM($pos)
+# Side Effects: none
+# Return Value: NUM
 sub getpos
 {
     my ($self) = @_;
@@ -157,6 +170,10 @@ sub getpos
 =cut
 
 
+# Descriptions: EOF or not?
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: 1 or 0
 sub eof
 {
     my ($self) = @_;

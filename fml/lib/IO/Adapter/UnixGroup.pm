@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UnixGroup.pm,v 1.13 2001/05/30 14:35:11 fukachan Exp $
+# $FML: UnixGroup.pm,v 1.14 2001/12/22 09:21:13 fukachan Exp $
 #
 
 package IO::Adapter::UnixGroup;
@@ -38,6 +38,7 @@ IO::Adapter::UnixGroup - IO wrapper to read /etc/group
 =head1 DESCRIPTION
 
 See L<IO::Adapter::Array> for more details.
+It inherits C<IO::Adapter::Array> class.
 
 C<CAUTION: this map is read only>.
 
@@ -50,6 +51,10 @@ Configure object for array IO operation.
 =cut
 
 
+# Descriptions: initialize /etc/group specific configuration
+#    Arguments: OBJ($self) HASH_REF($me)
+# Side Effects: none
+# Return Value: ARRAY_REF
 sub configure
 {
     my ($self, $me) = @_;
