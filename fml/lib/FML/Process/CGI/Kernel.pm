@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.15 2002/02/02 15:24:19 fukachan Exp $
+# $FML: Kernel.pm,v 1.16 2002/03/18 13:52:20 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -308,6 +308,87 @@ sub get_recipient_list
     }
 
     return [];
+}
+
+
+=head2 cgi_execute_command($args, $command_args)
+
+execute specified command given as FML::Command::*
+
+=cut
+
+
+# Descriptions: execute FML::Command
+#    Arguments: OBJ($curproc) HASH_REF($args) HASH_REF($command_args)
+# Side Effects: load module
+# Return Value: none
+sub cgi_execute_command
+{
+    my ($curproc, $args, $command_args) = @_;
+
+    use FML::Command;
+    my $obj = new FML::Command;
+    if (defined $obj) {
+	my $comname = $command_args->{ comname };
+	eval q{
+	    $obj->$comname($curproc, $command_args);
+	};
+	unless ($@) {
+	    print "OK! $comname succeed.\n";
+	}
+	else {
+	    print "Error! $comname fails.\n<BR>\n";
+	    if ($@ =~ /^(.*)\s+at\s+/) {
+		my $reason = $@;
+		print "<BR>\n";
+		print $1;
+		print "<BR>\n";
+		print $reason;
+		print "<BR>\n";
+	    }
+	}
+    }
+}
+
+
+=head2 try_get_address()
+
+return input address after validating the input
+
+=cut
+
+
+# Descriptions: return input address after validating the input
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: longjmp() if critical error occurs.
+# Return Value: STR
+sub try_get_address
+{
+    my ($curproc, $args) = @_;
+    my $address = '';
+    my $a = '';
+
+    eval q{ $a = $curproc->safe_param_address_specified();};
+    unless ($@) {
+	$address = $a;
+    }
+    else {
+	# XXX longjmp() if insecure input is given.
+	my $r = $@;
+	if ($r =~ /ERROR\.INSECURE/) { croak($r);}
+
+	eval q{ $a = $curproc->safe_param_address_selected();};
+	unless ($@) {
+	    $address = $a;
+	}
+	else {
+	    # XXX longjmp() if insecure input is given.
+	    my $r = $@;
+	    if ($r =~ /ERROR\.INSECURE/) { croak($r);}
+	}
+    }
+
+    return $address;
 }
 
 

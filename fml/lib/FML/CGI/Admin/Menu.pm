@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.2 2002/03/18 14:07:38 fukachan Exp $
+# $FML: Menu.pm,v 1.3 2002/03/18 14:19:41 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -68,16 +68,18 @@ This module has routines needed for CGI.
 sub html_start
 {
     my ($curproc, $args) = @_;
+    my $config  = $curproc->{ config };
     my $myname  = $curproc->myname();
+    my $domain  = $curproc->ml_domain();
     my $ml_name = $curproc->safe_param_ml_name();
-    my $title   = "$ml_name configuration interface";
-    my $color   = '#FFFFFF';
-    my $charset = 'euc-jp';
-
+    my $title   = "${ml_name}\@${domain} configuration interface";
+    my $color   = $config->{ cgi_main_menu_color } || '#FFFFFF';
+    my $charset = $config->{ cgi_charset } || 'euc-jp';
+    
     # o.k start html
-    print start_html(-title=>$title,
-		     -lang => $charset,
-		     -BGCOLOR=>$color);
+    print start_html(-title   => $title,
+		     -lang    => $charset,
+		     -BGCOLOR => $color);
     print "\n";
 }
 
@@ -96,37 +98,6 @@ sub html_end
 }
 
 
-sub _try_get_address
-{
-    my ($curproc, $args) = @_;
-    my $address = '';
-    my $a = '';
-
-    eval q{ $a = $curproc->safe_param_address_specified();};
-    unless ($@) {
-	$address = $a;
-    }
-    else {
-	# XXX longjmp() if insecure input is given.
-	my $r = $@;
-	if ($r =~ /ERROR\.INSECURE/) { croak($r);}
-
-	eval q{ $a = $curproc->safe_param_address_selected();};
-	unless ($@) {
-	    $address = $a;
-	}
-	else {
-	    # XXX longjmp() if insecure input is given.
-	    my $r = $@;
-	    if ($r =~ /ERROR\.INSECURE/) { croak($r);}
-	}
-    }
-
-    return $address;
-}
-
-
-
 # Descriptions: show help
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
@@ -134,7 +105,7 @@ sub _try_get_address
 sub run_cgi_help
 {
     my ($curproc, $args) = @_;
-    my $domain = $curproc->default_domain();
+    my $domain = $curproc->ml_domain();
 
     print "<B>\n";
     print "fml CGI interface for \@$domain ML's\n";
@@ -143,7 +114,8 @@ sub run_cgi_help
 
 
 # Descriptions: main routine for makefml.cgi.
-#               kick off suitable FML::Command finally via _execulte_command().
+#               kick off suitable FML::Command finally
+#               via cgi_execulte_command().
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -151,7 +123,7 @@ sub run_cgi_main
 {
     my ($curproc, $args) = @_;
     my $command = $curproc->safe_param_command() || '';
-    my $address = $curproc->_try_get_address($args);
+    my $address = $curproc->try_get_address($args);
 
     if ($command && $address) {
 	my $ml_name      = $curproc->safe_param_ml_name();
@@ -164,7 +136,7 @@ sub run_cgi_main
 	    argv         => undef,
 	    args         => undef,
 	};
-	$curproc->_execute_command($args, $command_args);
+	$curproc->cgi_execute_command($args, $command_args);
 
 	print hr;
 	$curproc->_show_menu($args);
@@ -177,39 +149,6 @@ sub run_cgi_main
 	}
 	else {
 	    $curproc->run_cgi_help($args);
-	}
-    }
-}
-
-
-# Descriptions: execute FML::Command
-#    Arguments: OBJ($curproc) HASH_REF($args) HASH_REF($command_args)
-# Side Effects: load module
-# Return Value: none
-sub _execute_command
-{
-    my ($curproc, $args, $command_args) = @_;
-
-    use FML::Command;
-    my $obj = new FML::Command;
-    if (defined $obj) {
-	my $comname = $command_args->{ comname };
-	eval q{
-	    $obj->$comname($curproc, $command_args);
-	};
-	unless ($@) {
-	    print "OK! $comname succeed.\n";
-	}
-	else {
-	    print "Error! $comname fails.\n<BR>\n";
-	    if ($@ =~ /^(.*)\s+at\s+/) {
-		my $reason = $@;
-		print "<BR>\n";
-		print $1;
-		print "<BR>\n";
-		print $reason;
-		print "<BR>\n";
-	    }
 	}
     }
 }
