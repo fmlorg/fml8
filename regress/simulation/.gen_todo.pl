@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML$
+# $FML: .gen_todo.pl,v 1.1 2003/01/11 16:10:03 fukachan Exp $
 #
 
 use strict;
@@ -9,6 +9,7 @@ use Carp;
 my $function;
 my $todo = {};
 my $KEY  = "__FILE_GLOBAL__";
+my $all  = 0;
 
 while (<>) {
     if (/^sub (\S+)/o) {
@@ -18,6 +19,8 @@ while (<>) {
     if (/^sub .*\}/o || /^\}/o) {
 	$function = $KEY;
     }
+
+    next if /XXX-TODO.*curproc->util->/ && (! $all);
 
     if (/(XXX-TODO:|XXX-TODO)\s*(.*)\s*$/o) {
 	my ($xtodo) = $2;
