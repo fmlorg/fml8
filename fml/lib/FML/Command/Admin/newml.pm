@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.29 2002/04/24 04:35:39 fukachan Exp $
+# $FML: newml.pm,v 1.30 2002/04/27 05:25:02 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -152,7 +152,7 @@ sub _install_template_files
     my $ml_home_dir  = $params->{ ml_home_dir };
 
     my $newml_template_files =
-	$config->get_as_array_ref('newml_command_template_files');
+	$config->get_as_array_ref('newml_command_postfix_template_files');
     for my $file (@$newml_template_files) {
 	my $src = File::Spec->catfile($template_dir, $file);
 	my $dst = File::Spec->catfile($ml_home_dir, $file);
