@@ -4,13 +4,16 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: String.pm,v 1.3 2004/02/06 13:42:40 fukachan Exp $
+# $FML: String.pm,v 1.4 2004/02/15 04:38:37 fukachan Exp $
 #
 
 package Mail::Message::String;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $debug);
 use Carp;
+
+
+$debug = 0;
 
 
 =head1 NAME
@@ -19,9 +22,14 @@ Mail::Message::String - base class of string used in message (header).
 
 =head1 SYNOPSIS
 
-    package Mail::Message::Subject:
-    use Mail::Message::String;
-    @ISA = qw(Mail::Message::String);
+    use Mail::Message::String $subject;
+    my $sbj = new Mail::Message::String $subject;
+    $sbj->mime_decode();                          # euc-jp
+    $sbj->unfold();
+     ... delte tag et.al. ...
+    $sbj->unfold();
+    $sbj->charcode_convert_to_external_charset(); # e.g. iso-2022-jp
+    $subject = $sbj->as_str();
 
 =head1 DESCRIPTION
 
@@ -144,6 +152,11 @@ sub mime_encode
     # speculate charset by a few hints.
     $out_code ||= $self->_speculate_external_charset();
 
+    if ($debug) {
+	print "\tencode($str, $encode, $out_code, $in_code)\n";
+    }
+
+    # XXX-TODO: we cannot mime-encode not iso-2022-jp string.
     use Mail::Message::Encode;
     my $obj = new Mail::Message::Encode;
     $str    = $obj->encode_mime_string($str, $encode, $out_code, $in_code);
@@ -176,7 +189,6 @@ sub mime_decode
 #    Arguments: OBJ($self) STR($charset)
 # Side Effects: none
 # Return Value: none
-
 sub set_mime_charset
 {
     my ($self, $charset) = @_;
@@ -206,6 +218,12 @@ sub get_mime_charset
 
 =head1 CHAR CODE CONVERSION UTILITIES
 
+We need to identify internal and external char codes in fml8. 
+It is defined in C<Mail::Message::Charset>.
+
+For example, if the original data is "=?iso-2022-jp?....", external
+code is "iso-2022-jp" but internal code is "euc-jp".
+
 =head2 charcode_convert($out_code, [$in_code])
 
 convert charactor code to $out_code and return it.
@@ -216,14 +234,31 @@ if $in_code is not given, speculate the code.
 if $out_code is not given, try to resolve the out code
 based on the initial data (e.g. =?ISO-2022-JP? part).
 
+=head2 charcode_convert_to_internal_code().
+
+convert (internal) string to code internally used in fml8.
+same as charcode_convert() in fact.
+
+=head2 charcode_convert_to_external_charset()
+
+convert (internal) string to code externally used in fml8.
+It implies original code almot cases.
+
+We should ignore the original mime chaset in some cases. For example,
+consider invalid "=?sjis? ..." mime string is given. How should we do?
+
+In fact, this module return the mime encoded string as iso-2022-jp
+(valid) not original sjis (invalid) charset.
+
 =cut
 
 
 # Descriptions: convert charactor code to $out_code and return it.
 #               if $in_code is given, it is used as a hint.
+#               if $out_code is not given, coverted to internal char code.
 #    Arguments: OBJ($self) STR($out_code) STR($in_code)
 # Side Effects: none
-# Return Value: none
+# Return Value: STR
 sub charcode_convert
 {
     my ($self, $out_code, $in_code) = @_;
@@ -238,6 +273,39 @@ sub charcode_convert
     $self->set($str);
     return $str;
 }
+
+
+# Descriptions: convert charactor code to internal code.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub charcode_convert_to_internal_code
+{
+    my ($self) = @_;
+
+    my $out_code = $self->_speculate_internal_code();
+    $self->charcode_convert($out_code);
+}
+
+
+# Descriptions: convert charactor code to external code, which is original.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub charcode_convert_to_external_charset
+{
+    my ($self) = @_;
+
+    my $out_code = $self->_speculate_external_charset();
+    $self->charcode_convert($out_code);
+}
+
+
+=head2 get_charcode($str)
+
+regturn char code of $str.
+
+=cut
 
 
 # Descriptions: get char code of $str.
@@ -281,21 +349,27 @@ sub _speculate_internal_code
 sub _speculate_external_charset
 {
     my ($self)    = @_;
-    my $hint_code = $self->{ _orig_mime_charset };
     my $str       = $self->as_str();
 
     # speculate public code: euc-jp -> iso-2022-jp.
-    if ($hint_code) {
-	return $hint_code;
+    # we should ignore =?sjis? or =?euc? but use iso-2022-jp as output.
+    use Mail::Message::Encode;
+    use Mail::Message::Charset;
+    my $encode  = new Mail::Message::Encode;
+    my $charset = new Mail::Message::Charset;
+
+    # XXX internal code to natural charset we should use in message header.
+    # XXX So, if "=?sjis=..." is input, we return it as "=?iso-2022-jp...".
+    my $code  = $encode->detect_code($str);                   # e.g. euc
+    my $lang  = $charset->message_charset_to_language($code); # ja
+    my $r     = $charset->language_to_message_charset($lang); # iso-2022-jp
+
+    if ($r) {
+	return $r;
     }
     else {
-	use Mail::Message::Encode;
-	use Mail::Message::Charset;
-	my $encode   = new Mail::Message::Encode;
-	my $charset  = new Mail::Message::Charset;
-	my $cur_code = $encode->detect_code($str);               # e.g. euc
-	my $language = $charset->message_charset_to_language($cur_code); #ja
-	return $charset->language_to_message_charset($language); # iso-2022-jp
+	my $hint_code = $self->{ _orig_mime_charset };
+	return( $hint_code || '' );
     }
 }
 
@@ -328,24 +402,38 @@ sub unfold
 
 
 
-
 #
 # debug
 #
 if ($0 eq __FILE__) {
-    my $_str = '=?ISO-2022-JP?B?GyRCJDckRCRiJHMbKEI=?=';
-    my $str  = new Mail::Message::String $_str;
-    print $str->get_mime_charset() ,"\n";
-    $str->mime_decode();
-    $str->charcode_convert();
-    print $str->as_str(), "\t(CONVERTED TO ";
-    print $str->get_charcode(), ")\n";
-    $str->mime_encode();
-    print $str->as_str(), "\n";
-    print $_str, " (ORIGINAL)\n";
-    print $str->get_charcode(), "\n";
-    $str->mime_decode();
-    print $str->get_charcode(), "\n";
+    $debug = 1;
+
+    for my $_str ('=?ISO-2022-JP?B?GyRCJDckRCRiJHMbKEI=?=', 
+		  '=?ISO-2022-JP?B?GyRCJSshPCVJJS0lYyVXJT8hPCQ1JC8kaRsoQg==?=',
+		  '=?SJIS?B?g0qBW4Nog0yDg4N2g16BW4Kzgq2C5w==?=',
+		  'card captor sakura') {
+	print "\nDATA: $_str\n";
+	my $str  = new Mail::Message::String $_str;
+	print "\tmime charset  = ", $str->get_mime_charset() ,"\n";
+	print "\texternal code = ", $str->_speculate_external_charset(), "\n";
+	print "\tinternal code = ", $str->_speculate_internal_code(), "\n";
+
+	# decode
+	$str->mime_decode();
+	$str->charcode_convert();
+	print " DECODED:", $str->as_str(), "\n";
+	print "\tcurrent code = ", $str->get_charcode(), " (decoded)\n";
+
+	# encode
+	$str->mime_encode();
+	print " ENCODED: ", $str->as_str(), "\n";
+	print "ORIGINAL: ", $_str, "\n";
+	print "\tcurrent code = ", $str->get_charcode(), " (encoded)\n";
+
+	# decode
+	$str->mime_decode();
+	print "\tcurrent code = ", $str->get_charcode(), " (decoded again)\n";
+    }
 }
 
 
