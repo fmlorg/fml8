@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Analyze.pm,v 1.7 2001/11/03 08:50:38 fukachan Exp $
+# $FML: Analyze.pm,v 1.8 2001/11/03 11:58:45 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -135,8 +135,8 @@ sub assign
 
 	# side effect: 
 	# define $self->{ _thread_subject_tag } and $self->{ _thread_id }
-	my $ticket_id = $self->_create_thread_id_strings($id);
-	$self->set_thread_id($ticket_id);
+	my $thread_id = $self->_create_thread_id_strings($id);
+	$self->set_thread_id($thread_id);
 	$self->_append_thread_status_info("newly assigned");
     }
 }

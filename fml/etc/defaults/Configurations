@@ -9,7 +9,7 @@ lock.cf
 log.cf
 spool.cf
 command.cf
-tickets.cf
+threadtrack.cf
 dbms.cf
 cgi.cf
 paths.cf

@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Distribute.pm,v 1.49 2001/10/08 20:26:26 fukachan Exp $
+# $FML: Distribute.pm,v 1.50 2001/11/03 09:57:32 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -179,8 +179,8 @@ sub _distribute
 	for (@$ha_msg) { Log($_);}
     }
 
-    # ticket system checks the message before header rewritings.
-    $curproc->_ticket_check($args) if $config->yes('use_ticket');
+    # thread system checks the message before header rewritings.
+    $curproc->_thread_check($args) if $config->yes('use_thread_track');
 
     # header operations
     # XXX we need $curproc->{ article }, which is prepared above.
@@ -308,24 +308,24 @@ sub _deliver_article
 }
 
 
-# Descriptions: the top level interface to drive ticket system
+# Descriptions: the top level interface to drive thread tracking system
 #    Arguments: $self $args
-# Side Effects: update ticket information
+# Side Effects: update thread information
 # Return Value: none
-sub _ticket_check
+sub _thread_check
 {
     my ($curproc, $args) = @_;    
     my $config = $curproc->{ config };
     my $pcb    = $curproc->{ pcb };
 
     my $ml_name       = $config->{ ml_name };
-    my $ticket_db_dir = $config->{ ticket_db_dir };
+    my $thread_db_dir = $config->{ thread_db_dir };
     my $spool_dir     = $config->{ spool_dir };
     my $article_id    = $pcb->get('article', 'id');
     my $ttargs        = {
 	logfp       => \&Log,
 	fd          => \*STDOUT,
-	db_base_dir => $ticket_db_dir,
+	db_base_dir => $thread_db_dir,
 	ml_name     => $ml_name,
 	spool_dir   => $spool_dir,
 	article_id  => $article_id,
