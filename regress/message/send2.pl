@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: send2.pl,v 1.1 2001/05/06 13:00:11 fukachan Exp $
+# $FML: send2.pl,v 1.2 2001/05/06 13:28:46 fukachan Exp $
 #
 
 use strict;
@@ -42,7 +42,7 @@ print "-" x 60; print "\n";
 use Mail::Message::Queue;
 my $obj = new Mail::Message::Queue { directory => "/tmp" };
 $obj->in( $msg ) || croak("fail to queue in");
-$obj->activate() || croak("fail to activate queue");
+$obj->setrunnable() || croak("fail to activate queue");
 
 use FML::Mailer;
 my $m = new FML::Mailer;

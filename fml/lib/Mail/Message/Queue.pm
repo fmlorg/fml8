@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Queue.pm,v 1.1 2001/05/06 12:56:22 fukachan Exp $
+# $FML: Queue.pm,v 1.2 2001/05/06 13:28:07 fukachan Exp $
 #
 
 package Mail::Message::Queue;
@@ -29,7 +29,7 @@ Mail::Message::Queue - hashed directory holding queue files
     $queue->in( $msg ) || croak("fail to queue in");
 
     # ok to deliver this queue !
-    $queue->activate() || croak("fail to activate queue");
+    $queue->setrunnable() || croak("fail to set queue deliverable");
 
 =head1 DESCRIPTION
 
@@ -45,7 +45,7 @@ C<in()> method creates a new queue file C<$qf>. So, C<$qf> follows:
    $qf = "$queue_dir/new/$qid"
 
 When C<$qid> is prepared to be deliverd, you must move the queue file
-from new/ to active/ by C<rename(2)>. You can do it by C<activate()>
+from new/ to active/ by C<rename(2)>. You can do it by C<setrunnable()>
 method.
 
    $queue_dir/new/$qid  --->  $queue_dir/active/$qid
@@ -130,17 +130,18 @@ You specify C<$msg>, which is C<Mail::Message> object.
 C<in()> creates a queue file in C<new/> directory 
 (C<queue_directory/new/>.
 
-If you not C<activate()> it, the queue file is removed by
+If you not C<setrunnable()> it, the queue file is removed by
 C<DESTRUCTOR>. 
-C<REMEMBER YOU MUST ACTIVATE THE QUEUE>.
+REMEMBER YOU MUST SET THE QUEUE C<setrunnable()>.
 
-=head2 C<activate()>
+=head2 C<setrunnable()>
 
-activate the queue assigned to this object C<$self>.
+set the status of the queue assigned to this object C<$self>
+deliverable. 
 This file is scheduled to be delivered (in near future).
 
-In fact activate() C<rename>s the queue id file from C<new/> directory
-to C<active/> directory like C<postfix> queue strategy.
+In fact setrunnable() C<rename>s the queue id file from C<new/>
+directory to C<active/> directory like C<postfix> queue strategy.
 
 =head2 C<remove()>
 
@@ -165,11 +166,11 @@ sub in
 }
 
 
-# Descriptions: activate this object queue
+# Descriptions: deliverable this object queue
 #    Arguments: $self $args
 # Side Effects: move $queue_id file from new/ to active/
 # Return Value: 1 (success) or 0 (fail)
-sub activate
+sub deliverable
 {
     my ($self) = @_;
     rename( $self->{ _new_qf }, $self->{ _active_qf } );
