@@ -1,6 +1,81 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/03/16k5
+
+   removed "fmlthread".
+	instead of these, use the following commands: 
+		makefml thread $ml [options]
+
+   FML::Article 
+   FML::Article::Sequence 
+	define new lock channel::article_spool
+	move id related functions to FML::Article::Sequence	
+
+   FML::Article::Thread 
+	fixe to meethod style.
+	FNF::fix comments.
+	
+   FML::Command::SendFile 
+	use $curproc->article_id_max() to get the last article id.
+	
+   FML::Command::Admin::spool 
+	need no giant lock.
+	FML::Spool -> FML::Article::Spool
+	fix argument handling.
+	
+   FML::Digest 
+	define lock channel for digest_sequence_*.
+	use $curproc->article_id_max() if could.
+	clean up handling of digest_sequenc_file.
+
+   FML::Error 
+   FML::Process::Error 
+	clean up lock on error cache.
+	move lock mechanism into only FML::Error module.
+	XXX lock channel name is changed but hard-coded yet now.
+	
+   FML::Error 
+	fix lock channel name
+	
+   FML::Process::Utils 
+	article_id_max() is just a wrapper for FML::Article::id().
+
+2003/03/15
+
+   removed "fmlspool".
+	instead of these, use the following commands: 
+		makefml spool   $ml
+
+   File::Sequence 
+	return 0 if sequence file not found
+	
+   FML::Process::Command 
+	specify the definition on $command_args HASH STRUCTURE.
+
+2003/03/14
+
+   removed "fmlerror", "fmlsummary" and "fmlsuper".
+	instead of these, use the following commands: 
+		makefml error   $ml
+		makefml summary $ml
+		makefml mailq   $ml
+
+   FML::Process::Utils 
+	imlement debug_level()
+	
+   FML::Process::{Flow,Kernel}
+	define finalize() at the last of flow.
+	finalize() is only used for debug now.
+
+   FML::Header::Subject 
+   Mail::Message::Date 
+	validate input
+	
+   FML::Article::Summary 
+	validate input.
+	implement dump() method to show the whole summary_file.
+
 2003/03/11
 
    FML::Sys::Alias
@@ -4483,4 +4558,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.134 2003/03/06 14:35:30 fukachan Exp $
+$FML: CHANGES.txt,v 1.135 2003/03/11 16:14:23 fukachan Exp $
