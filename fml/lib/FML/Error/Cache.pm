@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.4 2002/09/11 23:18:11 fukachan Exp $
+# $FML: Cache.pm,v 1.5 2002/09/22 14:56:49 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -49,6 +49,13 @@ sub new
     my ($self, $curproc) = @_;
     my ($type) = ref($self) || $self;
     my $me     = { _curproc => $curproc };
+    my $config = $curproc->config();
+    my $db_dir = $config->{ error_analyzer_cache_dir };
+
+    unless (-d $db_dir) {
+	$curproc->mkdir($db_dir, "mode=private");
+    }
+
     return bless $me, $type;
 }
 
