@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent.pm,v 1.8 2004/01/02 14:50:31 fukachan Exp $
+# $FML: MimeComponent.pm,v 1.9 2004/01/21 03:53:18 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -51,12 +51,23 @@ usual constructor.
 my $debug = 0;
 
 
-# default rules
+# default rules for convenience.
 my $filter_rules = [
 		    ['text/plain',   '*',  'permit'],
 		    ['text/html' ,   '*',  'reject'],
 		    ['multipart/*',  '*',  'reject'],
 		    ];
+
+
+# XXX-TODO: $default_action customizable ?
+my $default_action = 'permit';
+
+# XXX-TODO: $opt_cut_off_empty_part customizable ?
+my $opt_cut_off_empty_part = 1;
+
+# XXX-TODO: $recursive_max_level customizable ?
+my $recursive_max_level    = 10;
+
 
 
 # Descriptions: constructor.
@@ -95,79 +106,6 @@ C<Usage>:
     }
 
 =cut
-
-
-# XXX-TODO: $default_action customizable ?
-my $default_action = 'permit';
-
-# XXX-TODO: $opt_cut_off_empty_part customizable ?
-my $opt_cut_off_empty_part = 1;
-
-# XXX-TODO: $recursive_max_level customizable ?
-my $recursive_max_level    = 10;
-
-
-# Descriptions: parser of child multipart
-#    Arguments: OBJ($self) OBJ($msg)
-# Side Effects: update $recursive_level
-# Return Value: NUM
-sub _rfc822_mime_component_check
-{
-    my ($self, $msg) = @_;
-    my $curproc      = $self->{ _curproc };
-
-    $recursive_level ||= 0;
-    $recursive_level++;
-
-    if ($debug) {
-	print STDERR "\t_rfc822_mime_component_check ($recursive_level)\n";
-    }
-
-    if ($recursive_level > $recursive_max_level) {
-	croak("too deep recursive call");
-    }
-    else {
-	my $tmpf = $self->_temp_file_path();
-
-	use FileHandle;
-	my $wh = new FileHandle "> $tmpf";
-	if (defined $wh) {
-	    $msg->print($wh);
-	    $wh->close();
-	}
-
-	my $rh = new FileHandle $tmpf;
-	if (defined $rh) {
-	    use Mail::Message;
-	    my $msg0 = new Mail::Message->parse( { fd => $rh } );
-	    $self->mime_component_check($msg0);
-	}
-    }
-
-    $recursive_level--;
-}
-
-
-# Descriptions: return temporary file path to be used.
-#    Arguments: OBJ($self)
-# Side Effects: none
-# Return Value: none
-sub _temp_file_path
-{
-    my ($self) = @_;
-    my $curproc = $self->{ _curproc };
-
-    if (defined $curproc) {
-	return $curproc->temp_file_path();
-    }
-    elsif ($debug) {
-	return "./fileter.debug.$$";
-    }
-    else {
-	$curproc->logerror("\$curproc is mandatory");
-	croak("\$curproc undefined");
-    }
-}
 
 
 # Descriptions: top level dispatcher
@@ -448,6 +386,69 @@ sub _has_effective_part
     }
 
     return( $i ? 1 : 0 );
+}
+
+
+# Descriptions: parser of child multipart
+#    Arguments: OBJ($self) OBJ($msg)
+# Side Effects: update $recursive_level
+# Return Value: NUM
+sub _rfc822_mime_component_check
+{
+    my ($self, $msg) = @_;
+    my $curproc      = $self->{ _curproc };
+
+    $recursive_level ||= 0;
+    $recursive_level++;
+
+    if ($debug) {
+	print STDERR "\t_rfc822_mime_component_check ($recursive_level)\n";
+    }
+
+    if ($recursive_level > $recursive_max_level) {
+	croak("too deep recursive call");
+    }
+    else {
+	my $tmpf = $self->_temp_file_path();
+
+	use FileHandle;
+	my $wh = new FileHandle "> $tmpf";
+	if (defined $wh) {
+	    $msg->print($wh);
+	    $wh->close();
+	}
+
+	my $rh = new FileHandle $tmpf;
+	if (defined $rh) {
+	    use Mail::Message;
+	    my $msg0 = new Mail::Message->parse( { fd => $rh } );
+	    $self->mime_component_check($msg0);
+	}
+    }
+
+    $recursive_level--;
+}
+
+
+# Descriptions: return temporary file path to be used.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
+sub _temp_file_path
+{
+    my ($self) = @_;
+    my $curproc = $self->{ _curproc };
+
+    if (defined $curproc) {
+	return $curproc->temp_file_path();
+    }
+    elsif ($debug) {
+	return "./fileter.debug.$$";
+    }
+    else {
+	$curproc->logerror("\$curproc is mandatory");
+	croak("\$curproc undefined");
+    }
 }
 
 

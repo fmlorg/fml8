@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.2 2003/08/23 07:24:42 fukachan Exp $
+# $FML: Filter.pm,v 1.3 2004/01/02 14:42:43 fukachan Exp $
 #
 
 package FML::Command::Filter;
@@ -38,41 +38,42 @@ dummy :-)
 
 
 # Descriptions: constructor.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: OBJ
 sub new
 {
-    my ($self, $args) = @_;
+    my ($self, $curproc, $args) = @_;
     my ($type) = ref($self) || $self;
-    my $me     = {};
+    my $me     = { _curproc => $curproc };
     return bless $me, $type;
 }
 
 
 # Descriptions: virtual reject handler, just return __LAST__ :-)
-#    Arguments: OBJ($self) OBJ($curproc) OBJ($msg)
+#    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: none
 # Return Value: STR (__LAST__, a special upcall)
 sub reject
 {
-    my ($self, $curproc, $msg) = @_;
+    my ($self, $msg) = @_;
 
     return '__LAST__';
 }
 
 
 # Descriptions:
-#    Arguments: OBJ($self) OBJ($curproc) OBJ($msg)
+#    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: admin password modified.
 # Return Value: NUM
 sub check_command_limit
 {
-    my ($self, $curproc, $msg) = @_;
-    my $config = $curproc->config();
-    my $limit  = $config->{ command_mail_valid_command_limit } || 1024;
-    my $lines  = $msg->message_text_as_array_ref();
-    my $count  = 0;
+    my ($self, $msg) = @_;
+    my $curproc = $self->{ _curproc };
+    my $config  = $curproc->config();
+    my $limit   = $config->{ command_mail_valid_command_limit } || 1024;
+    my $lines   = $msg->message_text_as_array_ref();
+    my $count   = 0;
 
   LINE:
     for my $buf (@$lines) {
@@ -90,16 +91,17 @@ sub check_command_limit
 
 
 # Descriptions:
-#    Arguments: OBJ($self) OBJ($curproc) OBJ($msg)
+#    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: admin password modified.
 # Return Value: NUM
 sub check_line_length_limit
 {
-    my ($self, $curproc, $msg) = @_;
-    my $config = $curproc->config();
-    my $limit  = $config->{ command_mail_line_length_limit } || 999;
-    my $lines  = $msg->message_text_as_array_ref();
-    my $match  = 0;
+    my ($self, $msg) = @_;
+    my $curproc = $self->{ _curproc };
+    my $config  = $curproc->config();
+    my $limit   = $config->{ command_mail_line_length_limit } || 999;
+    my $lines   = $msg->message_text_as_array_ref();
+    my $match   = 0;
     my $len;
 
   LINE:

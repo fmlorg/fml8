@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: TextPlain.pm,v 1.8 2004/01/02 14:50:31 fukachan Exp $
+# $FML: TextPlain.pm,v 1.9 2004/01/21 03:43:30 fukachan Exp $
 #
 
 package FML::Filter::TextPlain;
@@ -34,8 +34,7 @@ constructor.
 =cut
 
 
-# default rules to apply
-# XXX-TODO: need this default rules here ? (principle of least surprise?)
+# default rules for convenience.
 my (@default_rules) = qw(reject_not_iso2022jp_japanese_string
 			 reject_null_mail_body
 			 reject_one_line_message
@@ -62,7 +61,7 @@ sub new
 }
 
 
-=head2 rules( $rules )
+=head2 set_rules( $rules )
 
 overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 
@@ -73,7 +72,7 @@ overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 #    Arguments: OBJ($self) ARRAY_REF($rarray)
 # Side Effects: overwrite info in object
 # Return Value: ARRAY_REF
-sub rules
+sub set_rules
 {
     my ($self, $rarray) = @_;
 
@@ -451,17 +450,16 @@ sub is_signature
 {
     my ($self, $data) = @_;
 
-    # XXX-TODO: //o
-    if ($data =~ /\@/    ||
-	$data =~ /TEL:/i ||
-	$data =~ /FAX:/i ||
-	$data =~ /:\/\// ) {
+    if ($data =~ /\@/o    ||
+	$data =~ /TEL:/oi ||
+	$data =~ /FAX:/oi ||
+	$data =~ /:\/\//o ) {
 	return 1;
     }
 
     # -- fukachan ( usenet style signature ? )
     # // fukachan ( signature derived from what ? )
-    if ($data =~ /^--/ || $data =~ /^\/\//) {
+    if ($data =~ /^--/o || $data =~ /^\/\//o) {
 	return 1;
     }
 
@@ -471,7 +469,7 @@ sub is_signature
     $data   = $obj->convert( $data, 'euc-jp' );
 
     # "2-byte @"domain where "@" is a 2-byte "@" character.
-    if ($data =~ /[-A-Za-z0-9]\241\367[-A-Za-z0-9]/) {
+    if ($data =~ /[-A-Za-z0-9]\241\367[-A-Za-z0-9]/o) {
 	return 1;
     }
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.7 2004/01/02 14:50:30 fukachan Exp $
+# $FML: Header.pm,v 1.8 2004/01/21 03:52:00 fukachan Exp $
 #
 
 package FML::Filter::Header;
@@ -37,7 +37,7 @@ constructor.
 my $debug = 0;
 
 
-# XXX-TODO: need this default rules here ? (principle of least surprise?)
+# default rules for convenience.
 my (@default_rules) = qw(check_message_id);
 
 
@@ -59,7 +59,7 @@ sub new
 
 
 
-=head2 rules( $rules )
+=head2 set_rules( $rules )
 
 overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 
@@ -70,7 +70,7 @@ overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 #    Arguments: OBJ($self) ARRAY_REF($rarray)
 # Side Effects: overwrite info in object
 # Return Value: ARRAY_REF
-sub rules
+sub set_rules
 {
     my ($self, $rarray) = @_;
 

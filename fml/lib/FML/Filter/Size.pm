@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Size.pm,v 1.7 2004/01/02 14:50:31 fukachan Exp $
+# $FML: Size.pm,v 1.8 2004/01/21 03:43:30 fukachan Exp $
 #
 
 package FML::Filter::Size;
@@ -37,7 +37,7 @@ constructor.
 my $debug = 0;
 
 
-# XXX-TODO: need this default rules here ? (principle of least surprise?)
+# default rules for convenience.
 my (@default_rules) = qw(check_header_size check_body_size);
 
 
@@ -61,21 +61,18 @@ sub new
 }
 
 
-# XXX-TODO rules() -> set_rules() ?
-
-
-=head2 rules( $rules )
+=head2 set_rules( $rules )
 
 overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 
 =cut
 
 
-# Descriptions: access method to overwrite rule
+# Descriptions: overwrite rules.
 #    Arguments: OBJ($self) ARRAY_REF($rarray)
 # Side Effects: overwrite info in object
 # Return Value: ARRAY_REF
-sub rules
+sub set_rules
 {
     my ($self, $rarray) = @_;
 
@@ -124,7 +121,7 @@ C<Usage>:
 =cut
 
 
-# Descriptions: top level dispatcher
+# Descriptions: top level dispatcher.
 #    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: none
 # Return Value: none
@@ -236,7 +233,7 @@ check the length limit of one command request.
 =cut
 
 
-# Descriptions: check the total number of command requests
+# Descriptions: check the total number of command requests.
 #    Arguments: OBJ($self) OBJ($msg) STR($type)
 # Side Effects: croak() if condition matched.
 # Return Value: none
@@ -247,10 +244,8 @@ sub check_command_limit
 
     use FML::Command::Filter;
     my $_msg   = $curproc->incoming_message_body();
-
-    # XXX-TODO new FML::Command::Filter $curproc ?
-    my $obj    = new FML::Command::Filter;
-    my $reason = $obj->check_command_limit($curproc, $_msg);
+    my $obj    = new FML::Command::Filter $curproc;
+    my $reason = $obj->check_command_limit($_msg);
 
     if ($reason) {
 	$self->error_set($reason);
@@ -270,10 +265,8 @@ sub check_line_length_limit
 
     use FML::Command::Filter;
     my $_msg   = $curproc->incoming_message_body();
-
-    # XXX-TODO new FML::Command::Filter $curproc ?
-    my $obj    = new FML::Command::Filter;
-    my $reason = $obj->check_line_length_limit($curproc, $_msg);
+    my $obj    = new FML::Command::Filter $curproc;
+    my $reason = $obj->check_line_length_limit($_msg);
 
     if ($reason) {
 	$self->error_set($reason);
