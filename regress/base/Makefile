@@ -1,3 +1,7 @@
+#
+# $FML$
+#
+
 PERL = perl -I ../../fml/lib -I ../../cpan/lib -I ../../img/lib
 
 test:
@@ -7,6 +11,8 @@ test:
 	@ $(PERL) ../base/lock.pl
 	@ echo "* checksum test"
 	@ $(PERL) ../base/md5.pl
+	@ echo "* FML::Date test"
+	@ $(PERL) ../base/date2unixtime.pl
 	@ echo "* Mail::Message module IO test"
 	@ sh ../base/multipart_io.sh
 	@ sh ../base/multipart_maker.sh
