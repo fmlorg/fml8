@@ -1,0 +1,15 @@
+./config.cf		type=file	mode=0600
+
+./include		type=file	mode=0644
+
+./include-ctl		type=file	mode=0644
+
+./include-error		type=file	mode=0644
+
+./etc			type=dir	mode=0700
+
+./var			type=dir	mode=0700
+
+./tmp			type=dir	mode=0700
+
+./spool			type=dir	mode=0700
