@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Freeserve.pm,v 1.1 2003/08/05 10:45:17 tmu Exp $
+# $FML: Freeserve.pm,v 1.2 2003/08/06 11:20:04 fukachan Exp $
 #
 
 #
@@ -60,7 +60,7 @@ sub analyze
     my $hdr   = $msg->whole_message_header();
     my $xloop = $hdr->get('x-loop');
 
-    if ($xloop =~ /^X-Loop:\s+([^\s\@]+@\S+\.freeserve\.ne\.jp)$/) {
+    if ($xloop =~ /([^\s\@]+@\S+\.freeserve\.ne\.jp)$/) {
 	my $addr = $1;
 
 	# set up return buffer if $addr is found.
