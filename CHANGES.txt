@@ -1,7 +1,36 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/11/24
+
+   variables
+	$commands_for_privileged_user += digest
+	
+	define $commands_for_admin = $commands_for_privileged_user for
+	conveninence.
+	XXX remove either in the future.
+	
+   FML::Command::Admin::digest 
+	clean up
+	
+   FML::Command::Admin::{dir,file}
+	basic_variables() -> basic_variable() for FML::Restriction::Base
+	
+   FML::Process::Utils 
+	enable to handle digest_recipient in which_map_nl().
+
+2002/11/20
+
+   FML::Error::Cache 
+	mkdir $error_analyzer_cache_dir if not exists
+
+   variables
+	mkdir $error_analyzer_cache_dir in initialization phase
+
 2002/11/19
+
+   FML::Command::Admin::digest 
+	init digest on off for admin
 
    FML::Process::Kernel 
 	bug fix queue identifier generation
@@ -3594,4 +3623,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.109 2002/11/18 14:36:48 fukachan Exp $
+$FML: CHANGES.txt,v 1.110 2002/11/19 14:31:02 fukachan Exp $
