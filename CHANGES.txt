@@ -1,6 +1,24 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/02/12
+
+   define access method need_lock().
+        each command module determins whether it needs lock or not.
+
+	FML::Command と FML::Command::* 以下の変更いろいろ
+	各コマンドは各自 need_lock() というアクセスメソッドで
+	ロックが必要かどうかを FML::Command に教えるべし
+	XXX 拡張を考慮の上、こうしてみた
+
+   FML::Command::SendFile 
+	remove import of ErrorStatus
+	
+   rename module::TinyScheduler -> Calender::Lite
+	FML::Process::Switch 
+	FML::CGI::Scheduler -> FML::CGI::Calender 
+	FML::Process::Scheduler -> FML::Process::Calender 
+
 2002/02/11
 
    create FML::Restriction::Command class
@@ -199,6 +217,9 @@
 		FML::Messages
 		FML::MIME
 		FML::Language::Japanese::Subject
+
+	FML::MIME は Mail::Message::Decode および 
+	Mail::Message::Encode の２つにわかれたよ
 
    renamed
 	FML::Checksum -> Mail::Message::Checksum
@@ -1497,4 +1518,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.49 2002/01/27 15:08:23 fukachan Exp $
+$FML: CHANGES.txt,v 1.50 2002/02/11 13:33:07 fukachan Exp $
