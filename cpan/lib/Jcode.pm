@@ -1,5 +1,5 @@
 #
-# $Id: Jcode.pm,v 0.79 2002/01/16 02:16:39 dankogai Exp dankogai $
+# $Id: Jcode.pm,v 0.83 2003/03/16 16:15:34 dankogai Exp dankogai $
 #
 
 =head1 NAME
@@ -39,8 +39,8 @@ use Carp;
 use strict;
 use vars qw($RCSID $VERSION $DEBUG);
 
-$RCSID = q$Id: Jcode.pm,v 0.79 2002/01/16 02:16:39 dankogai Exp dankogai $;
-$VERSION = do { my @r = (q$Revision: 0.79 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
+$RCSID = q$Id: Jcode.pm,v 0.83 2003/03/16 16:15:34 dankogai Exp dankogai $;
+$VERSION = do { my @r = (q$Revision: 0.83 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
 $DEBUG = 0;
 
 use Exporter;
@@ -221,9 +221,27 @@ sub jfold{
 	$lines[$i] .= $1;
 	$len += length($1);
     }
-    $lines[$i] or pop @lines;
+    defined($lines[$i]) or pop @lines;
     $$r_str = join($nl, @lines);
     return wantarray ? @lines : $self;
+}
+
+=pod
+
+=over 4
+
+=item $length = $jcode-E<gt>jlength();
+
+returns character length properly, rather than byte length.
+
+=back
+
+=cut
+
+sub jlength {
+    my $self = shift;
+    my $r_str = $self->[0];
+    return scalar (my @char = $$r_str =~ m/($RE{EUC_0212}|$RE{EUC_KANA}|$RE{EUC_C}|[\x00-\xff])/sgo);
 }
 
 =head2 Methods that use MIME::Base64
@@ -282,9 +300,13 @@ sub _add_encoded_word {
 	    $line = ' ';
 	}
 	while (1) {
+	    my $iso_2022_jp = jcode($target, 'euc')->iso_2022_jp;
+	    if (my $count = ($iso_2022_jp =~ tr/\x80-\xff//d)){
+		$DEBUG and warn $count;
+		$target = jcode($iso_2022_jp, 'iso_2022_jp')->euc;
+	    }
 	    my $encoded = '=?ISO-2022-JP?B?' .
-	      MIME::Base64::encode_base64(
-					  jcode($target, 'euc')->iso_2022_jp, '') 
+	      MIME::Base64::encode_base64($iso_2022_jp, '')
 		  . '?=';
 	    if (length($encoded) + length($line) > $bpl) {
 		$target =~ 
@@ -375,7 +397,7 @@ You can retrieve the number of matches via $j->nmatch;
 
 =item $j-E<gt>z2h;
 
-Converts X208 kana (Zenkaku) to X201 kana (Hankazu).
+Converts X208 kana (Zenkaku) to X201 kana (Hankaku).
 
 You can retrieve the number of matches via $j->nmatch;
 
@@ -600,7 +622,7 @@ sub convert{
     my $nmatch;
     ($icode, $nmatch) = getcode($r_str) unless $icode;
 
-    return $$r_str if $icode eq $ocode; # do nothin'
+    return $$r_str if $icode eq $ocode and !defined $opt; # do nothin'
 
     no strict qw(refs);
     my $method;

@@ -1,5 +1,5 @@
 #
-# $Id: Constants.pm,v 1.2 2001/05/18 05:14:38 dankogai Exp dankogai $
+# $Id: Constants.pm,v 1.2 2001/05/18 05:14:38 dankogai Exp $
 #
 
 package Jcode::Constants;
@@ -7,7 +7,7 @@ package Jcode::Constants;
 use strict;
 use vars qw($RCSID $VERSION);
 
-$RCSID = q$Id: Constants.pm,v 1.2 2001/05/18 05:14:38 dankogai Exp dankogai $;
+$RCSID = q$Id: Constants.pm,v 1.2 2001/05/18 05:14:38 dankogai Exp $;
 $VERSION = do { my @r = (q$Revision: 1.2 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r };
 
 use Carp;

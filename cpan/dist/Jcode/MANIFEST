@@ -23,12 +23,13 @@ t/getcode.t
 t/h2z.t
 t/hankaku.euc
 t/hiragana.euc
+t/length.t
 t/mime.t
 t/new.t
+t/stripped.euc
 t/table.euc
 t/tr.t
 t/unibench.pl
 t/x0212.euc
-t/stripped.euc
 t/zenkaku.euc
 win_install.pl
