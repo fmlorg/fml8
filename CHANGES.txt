@@ -1,6 +1,12 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/08/03
+
+   FML::Process::Distribute 
+	fix arguments used in the case of key
+	"error.reject_notice_preamble" (PR by fml-devel:503).
+
 2003/08/02
 
   Document translation to English completed up to 70 % ?
@@ -5081,4 +5087,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.154 2003/07/26 14:45:22 fukachan Exp $
+$FML: CHANGES.txt,v 1.155 2003/08/02 03:08:38 fukachan Exp $
