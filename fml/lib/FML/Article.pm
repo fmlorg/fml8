@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.63 2004/04/23 04:10:26 fukachan Exp $
+# $FML: Article.pm,v 1.64 2004/05/18 08:36:05 fukachan Exp $
 #
 
 package FML::Article;
@@ -162,6 +162,9 @@ sub spool_in
 	}
 
 	unless (-f $file) {
+	    my $error = 0;
+
+	    # XXX-TODO: IO::Adapter::AtomicFile
 	    use FileHandle;
 	    my $fh = new FileHandle;
 	    if (defined $fh) {
@@ -170,12 +173,25 @@ sub spool_in
 
 		my $header = $curproc->article_message_header();
 		my $body   = $curproc->article_message_body();
-		$header->print($fh);
-		print $fh "\n";
-		$body->print($fh);
 
-		$fh->close;
-		$curproc->log("article $id");
+		$fh->clearerr();
+		$header->print($fh);
+		$error++ if $fh->error();
+
+		print $fh "\n";
+
+		$fh->clearerr();
+		$body->print($fh);
+		$error++ if $fh->error();
+
+		if ($error) {
+			$fh->close;
+		   $curproc->logerror("failed to create article");
+		}
+		else {		
+			$fh->close;
+		   $curproc->log("article $id");
+		}
 	    }
 	}
 	else {
