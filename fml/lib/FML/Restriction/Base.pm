@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML$
+# $FML: Base.pm,v 1.17 2003/01/03 07:04:08 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -147,6 +147,44 @@ sub regexp
 
     if (defined $basic_variable{ $class }) {
 	return $basic_variable{ $class };
+    }
+    else {
+	return undef;
+    }
+}
+
+
+=head2 regexp_match( class, string )
+
+check if C<string> matches regexp specified by C<class>.
+return 1 or undef.
+
+    my $obj = new FML::Restriction::Base;
+    if ($obj->regexp_match( "address", $address ) {
+	... do something ...
+    }
+
+=cut
+
+
+# Descriptions: return allowed regexp for $class.
+#    Arguments: OBJ($self) STR($class) STR($string)
+# Side Effects: none
+# Return Value: 1 or UNDEF
+sub regexp_match
+{
+    my ($self, $class, $string) = @_;
+
+    if (defined $basic_variable{ $class }) {
+	my $regexp = $basic_variable{ $class };
+
+	if ($string =~ /^($regexp)$/) {
+	    return 1;
+	}
+	else {
+	    return undef;
+	}
+
     }
     else {
 	return undef;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: file.pm,v 1.8 2002/12/20 03:40:12 fukachan Exp $
+# $FML: file.pm,v 1.9 2003/01/03 07:05:11 fukachan Exp $
 #
 
 package FML::Command::Admin::file;
@@ -73,8 +73,7 @@ sub process
     my @argv     = ();
 
     use FML::Restriction::Base;
-    my $safe    = new FML::Restriction::Base;
-    my $filereg = $safe->regexp( 'file' );
+    my $safe = new FML::Restriction::Base;
 
     # argv = command subcommand args ... = command options
     my ($subcommand, @args)= @$options;
@@ -83,7 +82,7 @@ sub process
 	$subcommand eq 'delete' ||
 	$subcommand eq 'unlink') {
 	for my $x (@args) {
-	    if ($x =~ /^($filereg)$/) {
+	    if ($safe->regexp_match('file', $x)) {
 		push(@argv, $x);
 	    }
 	}

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.151 2003/01/05 05:13:49 fukachan Exp $
+# $FML: Kernel.pm,v 1.152 2003/01/07 08:38:34 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -616,16 +616,14 @@ sub resolve_ml_specific_variables
     }
     else {
 	use FML::Restriction::Base;
-	my $safe    = new FML::Restriction::Base;
-	my $regexp  = $safe->basic_variable();
-	my $pattern = $regexp->{ address };
+	my $safe = new FML::Restriction::Base;
 
 	# XXX-TODO: searching ml_addr should be first match. ok?
 	# XXX "fmlconf -n elena@fml.org" works ?
 	# XXX yes, but "fmlconf -n elena" works ? no ;-)
       ARGV:
 	for my $arg (@ARGV) {
-	    if ($arg =~ /^($pattern)$/) {
+	    if ($safe->regexp_match('address', $arg)) {
 		$ml_addr = $arg;
 		last ARGV;
 	    }
@@ -634,14 +632,13 @@ sub resolve_ml_specific_variables
 	# not found. Hmm, "fmlconf -n elena" case ?
 	unless ($ml_addr) {
 	    my $default_domain = $curproc->default_domain();
-	    my $pattern        = $regexp->{ ml_name };
 
 	  ARGS:
 	    for my $arg (@ARGV) {
 		last ARGS if $ml_addr;
 		next ARGS if $arg =~ /^-/o; # options
 
-		if ($arg =~ /^($pattern)$/) {
+		if ($safe->regexp_match('ml_name', $arg)) {
 		    $ml_addr = $arg. '@' . $default_domain;
 		}
 	    }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: dir.pm,v 1.8 2002/12/15 14:13:16 fukachan Exp $
+# $FML: dir.pm,v 1.9 2003/01/03 07:05:09 fukachan Exp $
 #
 
 package FML::Command::Admin::dir;
@@ -66,14 +66,13 @@ sub process
     my @argv     = ();
 
     use FML::Restriction::Base;
-    my $safe   = new FML::Restriction::Base;
-    my $dirreg = $safe->regexp( 'directory' );
+    my $safe = new FML::Restriction::Base;
 
     # analyze ...
     # XXX-TODO: "admin ls -i -a tmp" ignores "tmp" but not inform the error.
     for my $x (@$options) {
 	# XXX-TODO: correct? we restrict the "ls" option pattern here.
-	if ($x =~ /^($dirreg)$/) {
+	if ($safe->regexp_match('directory', $x)) {
 	    $du_args->{ opt_ls } = $1;
 	}
 	else {

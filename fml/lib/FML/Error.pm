@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.10 2003/01/03 07:05:34 fukachan Exp $
+# $FML: Error.pm,v 1.11 2003/01/05 05:15:21 fukachan Exp $
 #
 
 package FML::Error;
@@ -138,13 +138,12 @@ sub remove_bouncers
     my $cred = new FML::Credential $curproc;
 
     use FML::Restriction::Base;
-    my $safe    = new FML::Restriction::Base;
-    my $addrreg = $safe->regexp( 'address' );
+    my $safe = new FML::Restriction::Base;
 
   ADDR:
     for my $addr (@$list) {
 	# check if $address is a safe string.
-	if ($addr =~ /^($addrreg)$/) {
+	if ($safe->regexp_match('address', $addr)) {
 	    if ($cred->is_member( $addr ) || $cred->is_recipient( $addr )) {
 		$self->deluser( $addr );
 	    }
@@ -179,11 +178,10 @@ sub deluser
     my $ml_name = $config->{ ml_name };
 
     use FML::Restriction::Base;
-    my $safe    = new FML::Restriction::Base;
-    my $addrreg = $safe->regexp( 'address' );
+    my $safe = new FML::Restriction::Base;
 
     # check if $address is a safe string.
-    if ($address =~ /^($addrreg)$/) {
+    if ($safe->regexp_match('address', $address)) {
 	Log("deluser <$address>");
     }
     else {

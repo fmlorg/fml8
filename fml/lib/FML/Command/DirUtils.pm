@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DirUtils.pm,v 1.10 2002/12/18 04:46:01 fukachan Exp $
+# $FML: DirUtils.pm,v 1.11 2003/01/03 07:05:04 fukachan Exp $
 #
 
 package FML::Command::DirUtils;
@@ -76,7 +76,7 @@ sub dir
     }
 
     # regexp allowed to use here
-    my $dir_regexp = $self->{ _safe }->regexp( 'directory' );
+    my $safe = $self->{ _safe };
 
     # chdir the ml's home dir
     my $ml_home_dir    = $config->{ ml_home_dir };
@@ -85,7 +85,7 @@ sub dir
     # build safe arguments
     my $y = '';
     for my $x (@$argv) {
-	if ($x =~ /^$dir_regexp$/ || $x =~ /^\s*$/) {
+	if ($safe->regexp_match('directory', $x) || $x =~ /^\s*$/) {
 	    $y .= " ". $x;
 	}
     }
