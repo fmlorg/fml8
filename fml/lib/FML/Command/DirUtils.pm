@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DirUtils.pm,v 1.3 2002/03/26 04:01:12 fukachan Exp $
+# $FML: DirUtils.pm,v 1.4 2002/03/30 11:08:34 fukachan Exp $
 #
 
 package FML::Command::DirUtils;
@@ -58,32 +58,47 @@ sub dir
     my $argv    = $du_args->{ argv };
     my $opt_ls  = '';
 
-    # option
-    if (defined($du_args->{ opt_ls }) &&
-	$du_args->{ opt_ls } =~ /^-[A-Za-z]+$/) {
-	$opt_ls = $du_args->{ opt_ls };
+    # option: permit "ls [-A-Za-z]" syntax
+    if (defined($du_args->{ opt_ls })) {
+	my $opt = $du_args->{ opt_ls };
+	if ($opt =~ /^-[A-Za-z]+$/) {
+	    $opt_ls = $opt;
+	}
+	else {
+	    LogWarn("deny ls options '$opt'");
+	}
     }
 
     # regexp
     my $basic_variable = $self->{ _basic_variable };
-    my $regexp = $basic_variable->{ directory };
+    my $dir_regexp     = $basic_variable->{ directory };
+    my $ml_home_dir    = $config->{ ml_home_dir };
 
-    my $ml_home_dir = $config->{ ml_home_dir };
-    chdir $ml_home_dir;
+    # chdir
+    chdir $ml_home_dir || croak("cannot chdir \$ml_home_dir");
 
     my $y = '';
     for my $x (@$argv) {
-	if ($x =~ /^$regexp$/ || $x =~ /^\s*$/) {
+	if ($x =~ /^$dir_regexp$/ || $x =~ /^\s*$/) {
 	    $y .= " ". $x;
 	}
     }
 
     if (-x $path_ls) {
 	Log("$path_ls $opt_ls $y");
-	my $buf = `$path_ls $opt_ls $y`;
-	$curproc->reply_message($buf);
+
+	use FileHandle;
+	my $fh = new FileHandle "$path_ls $opt_ls $y|";
+	if (defined $fh) {
+	    while (<$fh>) { $curproc->reply_message($_);}
+	    $fh->close();
+	}
+	else {
+	    LogError("tail to run '$path_ls $opt_ls $y'");
+	}
     }
     else {
+	LogError("\$path_ls is not found");
 	croak("\$path_ls is not found");
     }
 }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.2 2002/03/23 14:24:35 fukachan Exp $
+# $FML: Auth.pm,v 1.3 2002/03/30 11:08:34 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -28,31 +28,57 @@ FML::Command::Auth - authentication functions
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
+
+=head2 reject()
+
+return 0 :-) (dummy)
 
 =cut
 
 
+# Descriptions: ordinary constructor
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
-    my ($self) = @_;
+    my ($self, $args) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
     return bless $me, $type;
 }
 
 
+# Descriptions: virtual reject handler, just return 0 :-)
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: NUM
 sub reject
 {
     return 0;
 }
 
 
+=head2 check_password($curproc, $args, $optargs)
+
+check the password if it is valid or not.
+
+=cut
+
+
+# Descriptions: check the password if it is valid or not.
+#    Arguments: OBJ($self)
+#               HASH_REF($curproc)
+#               HASH_REF($args)
+#               HASH_REF($optargs)
+# Side Effects: none
+# Return Value: NUM
 sub check_password
 {
     my ($self, $curproc, $args, $optargs) = @_;
     my $config   = $curproc->{ config };
-    my $maplist  = $config->get_as_array_ref('admin_member_passwd_maps');
+    my $maplist  = $config->get_as_array_ref('admin_member_password_maps');
     my $address  = $optargs->{ address };
     my $password = $optargs->{ password };
 
@@ -66,11 +92,13 @@ sub check_password
 
     for my $map (@$maplist) {
 	use IO::Adapter;
-	my $obj = new IO::Adapter $map;
-	my $addrs = $obj->find( $user , { want => 'key,value', all => 1 });
+	my $mapobj = new IO::Adapter $map;
+	my $addrs  = $mapobj->find( $user , { want => 'key,value', all => 1 });
 
+	# if this $map has this $user entry, 
+	# try to check { user => password } relation.
 	if (defined $addrs) {
-	  LOOP:
+	  PASSWORD_ENTRY:
 	    for my $r (@$addrs) {
 		my ($u, $p_infile) = split(/\s+/, $r);
 		my $p_input        = crypt( $password, $p_infile );

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.2 2002/03/30 11:08:34 fukachan Exp $
+# $FML: UserControl.pm,v 1.3 2002/04/01 12:41:40 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -12,7 +12,10 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use File::Spec;
+use FML::Credential;
 use FML::Log qw(Log LogWarn LogError);
+use IO::Adapter;
+
 
 =head1 NAME
 
@@ -25,10 +28,6 @@ FML::Command::UserControl - utility functions to send back file(s)
 =head1 METHODS
 
 =cut
-
-use IO::Adapter;
-use FML::Credential;
-use FML::Log qw(Log LogWarn LogError);
 
 
 # Descriptions: standard constructor
@@ -59,7 +58,7 @@ sub useradd
 	my $cred = new FML::Credential;
 	unless ($cred->has_address_in_map($map, $address)) {
 	    my $obj = new IO::Adapter $map;
-	    $obj->touch();
+	    $obj->touch(); # create a new map entry (e.g. file) if needed. 
 	    $obj->add( $address );
 	    unless ($obj->error()) {
 		Log("add $address to map=$map");

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.13 2002/02/23 10:22:16 fukachan Exp $
+# $FML: SendFile.pm,v 1.14 2002/03/30 13:48:26 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -66,21 +66,21 @@ sub send_article
     for my $fn (@files) {
 	my $filelist = $self->_is_valid_argument($curproc, $fn);
 	if (defined $filelist) {
-	    for my $fn (@$filelist) {
+	    for my $filename (@$filelist) {
 		use FML::Article;
 		my $article = new FML::Article $curproc;
-		my $file    = $article->filepath($fn);
-		if (-f $file) {
-		    Log("send back article $fn");
+		my $filepath    = $article->filepath($filename);
+		if (-f $filepath) {
+		    Log("send back article $filename");
 		    $curproc->reply_message( {
 			type        => "message/rfc822; charset=$charset",
-			path        => $file,
-			filename    => $fn,
-			disposition => "$ml_name ML article $fn",
+			path        => $filepath,
+			filename    => $filename,
+			disposition => "$ml_name ML article $filename",
 		    });
 		}
 		else {
-		    Log("no such file: $file");
+		    Log("no such file: $filepath");
 		}
 	    }
 	}
@@ -153,8 +153,8 @@ sub _is_valid_argument
 sub _expand_range
 {
     my ($first, $last) = @_;
+    my (@fn) = ();
 
-    my (@fn);
     for ($first .. $last) { push(@fn, $_);}
     return \@fn;
 }
@@ -162,7 +162,7 @@ sub _expand_range
 
 =head2 C<send_file($curproc, $command_args)>
 
-send back file specified as C<$command_args->{ _file_to_send }>.
+send back file specified as C<$command_args->{ _filepath_to_send }>.
 
 =cut
 
@@ -175,14 +175,14 @@ send back file specified as C<$command_args->{ _file_to_send }>.
 sub send_file
 {
     my ($self, $curproc, $command_args) = @_;
-    my $file_name = $command_args->{ _filename_to_send };
-    my $what_file = $command_args->{ _file_to_send };
-    my $config    = $curproc->{ config };
-    my $charset   = $config->{ reply_message_charset };
+    my $filename = $command_args->{ _filename_to_send };
+    my $filepath = $command_args->{ _filepath_to_send };
+    my $config   = $curproc->{ config };
+    my $charset  = $config->{ reply_message_charset };
 
     # template substitution: kanji code, $varname expansion et. al.
     my $params = {
-	src         => $what_file,
+	src         => $filepath,
 	charset_out => $charset,
     };
     my $xxxx_template = $curproc->prepare_file_to_return( $params );
@@ -191,12 +191,12 @@ sub send_file
 	$curproc->reply_message( {
 	    type        => "text/plain; charset=$charset",
 	    path        => $xxxx_template,
-	    filename    => $file_name,
-	    disposition => $file_name,
+	    filename    => $filename,
+	    disposition => $filename,
 	});
     }
     else {
-	croak("$what_file not found\n");
+	croak("$filepath not found\n");
     }
 
 }
@@ -224,7 +224,7 @@ sub send_user_xxx_message
     # if "help" is found in $ml_home_dir (e.g. /var/spool/ml/elena),
     # send it.
     if (-f $config->{ "${type}_file" }) {
-	$command_args->{ _file_to_send } = $config->{ "${type}_file" };
+	$command_args->{ _filepath_to_send } = $config->{ "${type}_file" };
 	$self->send_file($curproc, $command_args);
     }
     # if "help" is not found, use the default help message.

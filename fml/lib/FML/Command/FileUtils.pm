@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: FileUtils.pm,v 1.1 2002/03/26 04:01:35 fukachan Exp $
+# $FML: FileUtils.pm,v 1.2 2002/03/30 11:08:34 fukachan Exp $
 #
 
 package FML::Command::FileUtils;
@@ -45,6 +45,10 @@ sub new
 }
 
 
+# Descriptions: remove files
+#    Arguments: OBJ($self) ... varargs ...
+# Side Effects: remove files
+# Return Value: same as remove()
 sub delete
 {
     my ($self, @p) = @_;
@@ -60,25 +64,26 @@ sub delete
 sub remove
 {
     my ($self, $curproc, $command_args, $du_args) = @_;
-    my $config  = $curproc->{ config };
-    my $argv    = $du_args->{ options };
-    my $is_warn = 0;
+    my $config   = $curproc->{ config };
+    my $argv     = $du_args->{ options };
+    my $is_error = 0;
 
     # regexp
     my $basic_variable = $self->{ _basic_variable };
-    my $regexp = $basic_variable->{ file };
+    my $file_regexp    = $basic_variable->{ file };
+    my $ml_home_dir    = $config->{ ml_home_dir };
 
-    my $ml_home_dir = $config->{ ml_home_dir };
-    chdir $ml_home_dir;
+    # chdir $ml_home_dir firstly. return ASAP if failed.
+    chdir $ml_home_dir || croak("cannot chdir \$ml_home_dir");
 
     for my $file (@$argv) {
-	if ($file =~ /^$regexp$/) {
+	if ($file =~ /^$file_regexp$/) {
 	    if (-f $file) {
 		unlink $file;
 
 		if (-f $file) {
 		    LogError("fail to remove $file");
-		    $is_warn++;
+		    $is_error++;
 		}
 		else {
 		    Log("remove $file");
@@ -88,11 +93,11 @@ sub remove
 		}
 	    }
 	    else {
+		LogWarn("no such file $file");
 		$curproc->reply_message_nl("command.no_such_file",
 					   "no such file $file",
 					   { _arg_file => $file } );
-		LogWarn("no such file $file");
-		$is_warn++;
+		$is_error++;
 	    }
 	}
 	else {
@@ -102,7 +107,7 @@ sub remove
 	}
     }
 
-    if ($is_warn) {
+    if ($is_error) {
 	croak("remove: something fail.");
     }
 }
