@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.21 2002/02/01 12:04:03 fukachan Exp $
+# $FML: DB.pm,v 1.22 2002/02/02 07:55:46 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -254,6 +254,34 @@ sub db_hash
     else {
 	return undef;
     }
+}
+
+
+=head2 db_last_modified()
+
+return the last modified time of our dateabase as unix time.  
+This time is the latest modified time among all database files.
+
+=cut
+
+
+# Descriptions: return the last modified time (unix time) of database
+#    Arguments: OBJ($self) STR($db_type)
+# Side Effects: none
+# Return Value: STR or UNDEF
+sub db_last_modified
+{
+    my ($self, $db_type) = @_;
+    my $db_dir        = $self->{ _db_dir };
+    my $last_modified = 0;
+
+    use File::Spec;
+    my $file = File::Spec->catfile($db_dir, "date.db");
+    if (-f $file) {
+	$last_modified = (stat($file))[8];
+    }
+
+    return $last_modified;
 }
 
 
