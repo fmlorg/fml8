@@ -10,6 +10,7 @@ cd ../.. || exit 1
 
 find fml cpan -type f -print | egrep '\.pm$' > $tmp
 find fml/libexec -type f -print | grep -v CVS >> $tmp
+find regress -type f -print | grep -v CVS >> $tmp
 
 for key in $*
 do
