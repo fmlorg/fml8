@@ -204,11 +204,13 @@ sub print
 	    print $fd $$r_body;
 	}
 	else {
-	    $self->_print($fd, $msg->{ content });
+	    if (defined $msg->{ content }) {
+		$msg->_print($fd, $msg->{ content });
+	    }
 	}
 
 	last MSG unless $msg->{ next };
-	$msg = $self->{ next };
+	$msg = $msg->{ next };
     }
 }
 
@@ -224,21 +226,20 @@ sub _print
 {
     my ($self, $fd, $r_body) = @_;
 
-    my $pp     = 0;
+    # set up offset for the buffer
+    my $pp     = $self->{ offset_begin };
+    my $p_end  = $self->{ offset_end };
     my $maxlen = length($$r_body);
     my $logfp  = $self->{ _log_function };
     $logfp     = ref($logfp) eq 'CODE' ? $logfp : undef;
-
-    # set up offset on $fd
-    my $offset_begin  = $self->{ offset_begin };
-    my $offset_end    = $self->{ offset_end };
-    seek($fd, $offset_begin, 0);
 
     # write each line in buffer
     my ($p, $len, $buf, $pbuf, $pe);
   SMTP_IO:
     while (1) {
 	$p   = index($$r_body, "\n", $pp);
+	last SMTP_IO if $p >= $p_end;
+
 	$len = $p - $pp + 1;
 	$len = ($p < 0 ? ($maxlen - $pp) : $len);
 	$pe  = $pp + $len;
@@ -251,12 +252,6 @@ sub _print
 	print $fd    $buf;
 	&$logfp($buf) if $logfp;
 
-	# XXX debug (remove this in the future) 
-	{
-	    print STDERR "buf: $pp,$pe < $offset_end = {$buf}\n";
-	    last SMTP_IO if $pe >= $offset_end;
-	}
-
 	last SMTP_IO if $p < 0;
 	$pp = $p + 1;
     }
@@ -264,64 +259,121 @@ sub _print
 
 
 =head2 C<parse_mime_multipart()>
-
+    
 parse the multipart mail. Actually it calculates the begin and end
 offset for each part of content, not split() and so on.
 C<new()> calls this routine if the message looks MIME multipart.
 
 =cut
 
+
 # CAUTION: $args must be the same as it of new().
+#
+#         ... preamble ...
+#      V $buf_begin
+#      ---boundary
+#         ... message 1 ...
+#      ---boundary
+#         ... message 2 ...
+#      V $buf_end  (V here is not $buf_end)
+#      ---boundary--
+#         ... trailor ...
+#
 sub parse_mime_multipart
 {
     my ($self, $args) = @_;
 
-    # the MIME boundary and the content to parse
-    my $boundary = $args->{ boundary };
-    my $content  = $args->{ content };
-
     # check input parameters
-    return undef unless $boundary;
-    return undef unless $content;
+    return undef unless $args->{ boundary };
+    return undef unless $args->{ content  };
 
-    # V
-    # ---boundary
-    #    ... message 1 ...
-    # ---boundary
-    #    ... message 2 ...
-    # V here       V X not here
-    # ---boundary--
-    # 
+    # boundaries of the continuous multipart blocks
+    my $content   = $args->{ content };
+    my $boundary  = $args->{ boundary };
     my $buf_begin = index($$content, $boundary     , 0);
     my $buf_end   = index($$content, $boundary."--", 0);
 
     # prepare lexical variables
-    my $p   = 0;
-    my $pp  = 0;
+    # pb = position of the beginning, pe = position of the end
+    my ($msg, $next_part, $prev_part, @m);
+    my $i   = 0;
     my $pb  = 0;
     my $pe  = $buf_begin;
     $self->_set_pos( $pe + 1 );
 
     do {
-	# alloc new message block
-	_new_block({
+	$m[ $i++ ] = _alloc_new_part($self, {
 	    boundary     => $boundary,
-
 	    offset_begin => $pb,
 	    offset_end   => $pe,
 	    content      => $content,
-
-	    debug        => $args->{ debug },
 	});
 
-	print $boundary;
+	($pb, $pe) = $self->_next_part_pos($content, $boundary);
 
-	($pb, $pe) = $self->_next_block($content, $boundary);
+	if ($pe > $buf_end) { $boundary .= "--";}
 
-	print "--" if $pe > $buf_end;
-	print "\n";
-
+	my $buf = $boundary."\n";
+	$m[ $i++ ] = _alloc_new_part($self, {
+	    content => \$buf
+	});	
     } while ($pe <= $buf_end);
+
+    my $j = 0;
+    for ($j = 0; $j < $i; $j++) {
+	if (defined $m[ $j + 1 ]) {
+	    next_chain( $m[ $j ], $m[ $j + 1 ] );
+	}
+	if (($j > 1) && defined $m[ $j - 1 ]) {
+	    prev_chain( $m[ $j ], $m[ $j - 1 ] );
+	}
+    }
+
+    next_chain($self, $m[0]);
+
+    # use Data::Dumper; print Dumper( $self );
+}
+
+
+# XXX $buf contains no MIME boundary, acutual message itself:
+#     {Content-Type: ...
+#
+#       ... body ...}
+sub _alloc_new_part
+{
+    my ($self, $args) = @_;
+    my $me = {};
+
+    _create($me, {
+	next         => $args->{ next } || undef,
+	prev         => $args->{ prev } || undef,
+
+	offset_begin => $args->{ offset_begin },
+	offset_end   => $args->{ offset_end },
+	content      => $args->{ content },
+    });
+
+    return bless $me, ref($self);
+}
+
+
+sub _next_part_pos
+{
+    my ($self, $content, $boundary) = @_;
+    my ($len, $p, $pb, $pe, $pp);
+    my $maxlen = length($$content);
+
+    # get the next boundary position
+    $pp  = $self->_get_pos();
+    $p   = index($$content, $boundary, $pp);
+    $self->_set_pos( $p + 1 );
+
+    # determine the begin and end of the next block without delimiter
+    $len = $p > 0 ? ($p - $pp) : ($maxlen - $pp);
+    $pb  = $pp + length($boundary);
+    $pe  = $pb + $len - length($boundary);
+
+    return ($pb, $pe);
 }
 
 
@@ -336,57 +388,6 @@ sub _set_pos
 {
     my ($self, $pos) = @_;
     $self->{ _current_pos } = $pos;
-}
-
-
-sub _next_block
-{
-    my ($self, $content, $boundary) = @_;
-    my ($len, $p, $pb, $pe, $pp);
-    my $maxlen = length($$content);
-
-    # get the next boundary position
-    $pp  = $self->_get_pos();
-    $p   = index($$content, $boundary, $pp);
-    $self->_set_pos( $p + 1 );
-
-    # determine the begin and end of the next block without delimiter
-    $len       = $p > 0 ? ($p - $pp) : ($maxlen - $pp);
-    $pb        = $pp + length($boundary);
-    $pe        = $pb + $len - length($boundary);
-
-    return ($pb, $pe);
-}
-
-
-# XXX $buf contains no MIME boundary, acutual message itself:
-#     {Content-Type: ...
-#
-#       ... body ...}
-sub _new_block
-{
-    my ($args) = @_;
-    my $me = {};
-    my $content = $args->{ content }; 
-    my $begin   = $args->{ offset_begin };
-    my $end     = $args->{ offset_end };
-
-    if (defined $args->{ debug }) {
-	my $buf = substr($$content, $begin, $end - $begin);
-	print STDERR "[$args->{ offset_begin },$args->{ offset_end }]";
-	print STDERR "{";
-	print $buf;
-	print STDERR "}\n";
-    }
-
-    _create($me, {
-	next         => $args->{ next },
-	prev         => $args->{ prev },
-
-	offset_begin => $args->{ offset_begin },
-	offset_end   => $args->{ offset_end },
-	content      => $content,
-    });
 }
 
 

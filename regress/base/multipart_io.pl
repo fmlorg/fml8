@@ -34,4 +34,6 @@ my $m = new MailingList::Messages {
     debug          => 1,
 };
 
+$m->print;
+
 exit 0;
