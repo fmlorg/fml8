@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.51 2003/08/23 07:24:49 fukachan Exp $
+# $FML: Kernel.pm,v 1.52 2003/08/29 15:34:09 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -140,12 +140,12 @@ sub _cgi_resolve_ml_specific_variables
     if ($ml_name) {
 	use File::Spec;
 	$ml_home_dir = $curproc->ml_home_dir($ml_name, $ml_domain);
+	$config_cf   = $curproc->config_cf_filepath($ml_name, $ml_domain);
 
 	$config->set('ml_name',     $ml_name);
 	$config->set('ml_home_dir', $ml_home_dir);
 
 	# fix $args { cf_list, ml_home_dir };
-	$config_cf = File::Spec->catfile($ml_home_dir, 'config.cf');
 	my $cflist = $args->{ cf_list };
 	push(@$cflist, $config_cf);
     }
