@@ -2,6 +2,10 @@
 ### Section: Header Manipulations
 ###
 
+#
+# XXX: The action to cut off "Re:" is default. need not specified.
+#
+
 header_checks        =	validate_message_id
 			verify_unique_x_ml_info
 			verify_unique_list_post

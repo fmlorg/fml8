@@ -26,6 +26,13 @@ sub new
 }
 
 
+sub rewrite_subject_tag
+{
+    my ($header, $config, $args) = @_;
+
+}
+
+
 =head1 NAME
 
 FML::Header::Subject.pm - what is this
