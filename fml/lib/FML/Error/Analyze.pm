@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.12 2003/01/04 12:55:53 tmu Exp $
+# $FML: Analyze.pm,v 1.13 2003/01/04 13:09:17 tmu Exp $
 #
 
 package FML::Error::Analyze;
@@ -73,6 +73,7 @@ sub simple_count
 {
     my ($self, $curproc, $data) = @_;
     my ($addr, $bufarray, $count);
+    my ($time, $status, $reason);
     my @removelist = ();
     my $summary    = {};
     my $config     = $curproc->config();
@@ -120,6 +121,7 @@ sub simple_count2
 {
     my ($self, $curproc, $data) = @_;
     my ($addr, $bufarray, $count);
+    my ($time, $status, $reason);
     my @removelist = ();
     my $summary    = {};
     my $config     = $curproc->config();
