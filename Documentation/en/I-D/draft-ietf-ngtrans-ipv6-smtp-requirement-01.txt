@@ -1,0 +1,354 @@
+
+
+
+Internet Engineering Task Force                        Motonori Nakamura
+INTERNET-DRAFT                                          Kyoto University
+Expires: January 5, 2002                        Jun-ichiro itojun Hagino
+                                                 IIJ Research Laboratory
+                                                            July 5, 2001
+
+
+                   IPv6 SMTP operational requirements
+            draft-ietf-ngtrans-ipv6-smtp-requirement-01.txt
+
+Status of this Memo
+
+
+This document is an Internet-Draft and is in full conformance with all
+provisions of Section 10 of RFC2026.
+
+Internet-Drafts are working documents of the Internet Engineering Task
+Force (IETF), its areas, and its working groups.  Note that other groups
+may also distribute working documents as Internet-Drafts.
+
+Internet-Drafts are draft documents valid for a maximum of six months
+and may be updated, replaced, or obsoleted by other documents at any
+time.  It is inappropriate to use Internet-Drafts as reference material
+or to cite them other than as ``work in progress.''
+
+To view the list Internet-Draft Shadow Directories, see
+http://www.ietf.org/shadow.html.
+
+Distribution of this memo is unlimited.
+
+The internet-draft will expire in 6 months.  The date of expiration will
+be January 5, 2002.
+
+
+Abstract
+
+The memo lists operational requirements for IPv6 SMTP, and IPv6-capable
+MX DNS records.  As we deploy IPv6 SMTP servers, it became apparent that
+we need certain configuration in IPv6-capable MX DNS record, for stable
+dual-stack (IPv4 and IPv6) SMTP operations.  The document tries to
+clarify the problems we have in transition period between IPv4 SMTP and
+IPv6 SMTP, and operational requirements for stable IPv4/v6 SMTP
+operation.
+
+The document does not try to define any new protocol.
+
+
+1.  Summary of IPv4 MX operation
+
+For reference purpose, the section outlines how mail message delivery is
+performed in IPv4-only environment [Partridge, 1986] .
+
+
+
+NAKAMURA, HAGINO        Expires: January 5, 2002                [Page 1]
+
+
+DRAFT              IPv6 SMTP operational requirements          July 2001
+
+In IPv4 SMTP operation, we register MX records like below, for
+"sample.org."  domain:
+
+     sample.org.             IN MX   1  mx1.sample.org.
+                             IN MX   10 mx10.sample.org.
+     mx1.sample.org.         IN A    1.0.0.1
+     mx10.sample.org.        IN A    1.0.0.2
+
+When an MTA delivers a message to a particular destination (say it is to
+foo@sample.org), the MTA would send DNS queries to lookup DNS database
+in the following order:
+
+o Lookup MX record for "sample.org.".
+
+  o If an MX record is returned, try to lookup A record on the righthand
+    side of the MX record.
+
+  o If a CNAME record is returned, try to chase the CNAME chain.
+    Eventually we will reach some A record.
+
+  o If MX lookup failed with NO_DATA, it means that there is no MX
+    record but there can be other record for "sample.org.".  Lookup A
+    record for "sample.org.".
+
+  o If MX lookup failed with HOST_NOT_FOUND, it means that there is no
+    record at all for "sample.org.".  This means a delivery failure.
+
+
+2.  MX records and IPv6 SMTP operation
+
+The following sections talk about how to make IPv4 SMTP and IPv6 SMTP
+coexist, under dual-stack environment during the transition period
+between IPv4 to IPv6.  In the future, when we have completely migrated
+to IPv6-only network, we can forget about IPv4/v6 SMTP interaction.
+
+As IPv6 DNS lookup RFCs [Thomson, 1995; Crawford, 2000] use IN class for
+both IPv4 and IPv6, we will use IN MX records for both IPv4 and IPv6.
+
+For simplicity, the document lists DNS records for IPv6 address as AAAA
+records, not as A6 records [Crawford, 2000] .  In reality, we can use a
+chain of A6 records, instead of AAAA records.
+
+There are couple of technologies defined for IPv4 and IPv6 transition.
+The document concentrates on issues with dual stack environment.
+Translators do not need special consideration from SMTP point of view;
+If we have SMTP traffic from IPv6 MTA to IPv4 MTA over an IPv6-to-IPv4
+translator, the traffic will be considered as a normal IPv4 SMTP
+traffic, from the IPv4 MTA point of view.  We may, however, need some
+consideration on translators for protocols like IDENT [StJohns, 1993] .
+
+
+
+
+
+NAKAMURA, HAGINO        Expires: January 5, 2002                [Page 2]
+
+
+DRAFT              IPv6 SMTP operational requirements          July 2001
+
+3.  SMTP sender algorithm in dual stack environment
+
+When we lookup MX records for the domain in IPv4/v6 dual stack
+environment, we will see records like below:
+
+     sample.org.             IN MX   1  mx1.sample.org.
+                             IN MX   10 mx10.sample.org.
+     mx1.sample.org.         IN A    1.0.0.1          ; IPv4/v6 dual stack
+                             IN AAAA 3ffe:501:ffff::1
+     mx10.sample.org.        IN AAAA 3ffe:501:ffff::2 ; IPv6 only
+
+For single MX record, we have many possibility for the final lookup
+result, including: (a) single, or multiple A records for IPv4
+destination, (b) single, or multiple AAAA records for IPv6 destination,
+(c) mixture of A and AAAA records.  As we can define multiple MX records
+with different preference value, we also need to go through multiple
+addresses based on multiple MXes.  We need to cope with domains without
+MX records, and failure recovery cases too.
+
+The algorithm for a SMTP sender would be like this.
+
+(1)  Lookup MX record for the destination domain.  If a CNAME record is
+     returned, go back to step (1) with the queried result.  If MX
+     records are returned, go to step (2) with the result.  If NO_DATA
+     is returned, go to step (3) as there is no MX record.  If
+     HOST_NOT_FOUND is returned, there is no domain, raise permanent
+     email delivery failure (finish).
+
+(2)  We have multiple MX records with us.  Loop steps from (3) to (8),
+     based on MX preference values, in ascending order.
+
+(3)  If the source MTA has IPv4 capability, lookup A record.  Keep the
+     resulting address till step (5).
+
+(4)  If the source MTA has IPv6 capability, lookup AAAA record.
+
+(5)  Reorder queried result based on implementation-dependent preference
+     between A and AAAA records.  If you would like to encourage the
+     transition from IPv4 SMTP to IPv6 SMTP, AAAAs should take
+     precedence.
+
+(6)  Loop steps from (7) to (8), for all the addresses (or part of the
+     list of addresses) we have.  If no reachable destination is found,
+     and if we are going through a list of MX records, go back to (3)
+     and try the next MX record.  If we do not have a list of MX
+     records, or we have reached the end of the list of MX records,
+     raise temporary delivery failure (finish).
+
+(7)  Try to make a TCP connection to the destination.  If it fails, try
+     the next address we have.  If it succeeds, go to step (8).
+
+
+
+
+NAKAMURA, HAGINO        Expires: January 5, 2002                [Page 3]
+
+
+DRAFT              IPv6 SMTP operational requirements          July 2001
+
+(8)  Try a SMTP protocol negotiation.  If SMTP protocol negotiation
+     fails with TEMPFAIL (4xx), go back to (3) and try the next MX
+     record.  If it succeeds, SMTP delivery was successful (finish).
+
+
+4.  MX configuration in receipient domain
+
+4.1.  Ensuring reachability for both protocol versions
+
+If a site has IPv4/v6 dual stack reachability, the site SHOULD configure
+both A and AAAA records onto its MX hosts.  It will help both IPv4 and
+IPv6 senders to reach the site efficienlty.
+
+4.2.  Reachability between primary and secondary MX
+
+When we configure MX records onto DNS database in dual-stack
+environment, we need to be careful about reachability between MX hosts.
+Suppose we try to gather all inbound email to primary MX host,
+mx1.sample.org.
+
+     sample.org.     IN MX   1   mx1.sample.org.
+                     IN MX   10  mx10.sample.org.
+                     IN MX   100 mx100.sample.org.
+
+If mx1.sample.org is an IPv6 only node and the rest are IPv4 only node,
+we have no reachability between primary MX host and the rest.  Once an
+email reaches one of secondary MX host, the email will never reach the
+primary MX.
+
+     ; the configuration is troublesome.
+     ; no secondary MX can reach mx1.sample.org.
+     sample.org.     IN MX   1   mx1.sample.org.     ; IPv6 only
+                     IN MX   10  mx10.sample.org.    ; IPv4 only
+                     IN MX   100 mx100.sample.org.   ; IPv4 only
+
+The easiest possible configuration is to configure the primary MX host
+as an IPv4/v6 dual stack node.  By doing so, secondaries will have no
+problem reaching the primary MX host.
+
+     ; the configuration works just fine.
+     ; emails reaches from secondary MX to primary with no trouble.
+     sample.org.     IN MX   1   mx1.sample.org.     ; IPv4/v6 dual stack
+                     IN MX   10  mx10.sample.org.    ; IPv4 only
+                     IN MX   100 mx100.sample.org.   ; IPv6 only
+
+There are many other ways to ensure the reachability between secondary
+MX and primary MX.  For example, we could configure secondary MX to
+route emails statically, without considering DNS MX configuration.  Or
+we could estalish alternative email routing path (i.e. UUCP, or via
+IPv4/v6 translator) between secondary MX and the primary MX.
+
+
+
+
+NAKAMURA, HAGINO        Expires: January 5, 2002                [Page 4]
+
+
+DRAFT              IPv6 SMTP operational requirements          July 2001
+
+5.  Open issues
+
+o How to interpret scoped address on MTAs.  As we relay emails between
+  MTAs, interpretation of scoped address can be different between MTAs,
+  as intermediate MTAs may be in different scope zone as the originator.
+  If we get scoped IPv6 address as a result of DNS lookups, how MTAs
+  should behave?  If we consider scoped address in ``route-addr''
+  specification [Crocker, 1982] like
+
+                 <@kame.net,@[fec0::1]:itojun@itojun.org>
+
+  it gets more trickier.
+
+
+6.  Security consideration
+
+As presented in ``Open issues'' section, it could be problematical if
+route-addr email address format is used across multiple scope zones.
+MTAs would need to reject emails with improper route-addr email address
+formats.  A possible example of improper route-addr format would be like
+this: an email from outside of the site border, which carries numeric
+site-local address in route-addr format.
+
+
+References
+
+Partridge, 1986.
+C. Partridge, "Mail routing and the domain system" in RFC974 (January
+1986). ftp://ftp.isi.edu/in-notes/rfc974.txt.
+
+Thomson, 1995.
+S. Thomson and C. Huitema, "DNS Extensions to support IP version 6" in
+RFC1886 (December 1995). ftp://ftp.isi.edu/in-notes/rfc1886.txt.
+
+Crawford, 2000.
+M. Crawford, C. Huitema, and S. Thomson, "DNS Extensions to Support IPv6
+Address Aggregation and Renumbering" in RFC2874 (July 2000).
+ftp://ftp.isi.edu/in-notes/rfc2874.txt.
+
+StJohns, 1993.
+M. StJohns, "Identification Protocol" in RFC1413 (January 1993).
+ftp://ftp.isi.edu/in-notes/rfc1413.txt.
+
+Crocker, 1982.
+D. Crocker, "Standard for the format of ARPA Internet text messages" in
+RFC822 (August 1982). ftp://ftp.isi.edu/in-notes/rfc822.txt.
+
+
+Change history
+
+00 -> 01
+     Correct email address notation for source-routed emails, based on a
+
+
+NAKAMURA, HAGINO        Expires: January 5, 2002                [Page 5]
+
+
+DRAFT              IPv6 SMTP operational requirements          July 2001
+
+     comment from Gregory Neil Shapiro.
+
+
+Acknowledgements
+
+The draft was written based on discussions with Japanese IPv6 users, and
+help from WIDE research group.
+
+
+Author's address
+
+     Motonori NAKAMURA
+     Center for Information and Multimedia Studies, Kyoto University
+     Yoshida-nihonmatsu-cho, Sakyo, Kyoto 606-8501, JAPAN
+     Tel: +81-75-753-9063
+     Fax: +81-75-753-9056
+     Email: motonori@media.kyoto-u.ac.jp
+
+     Jun-ichiro itojun HAGINO
+     Research Laboratory, Internet Initiative Japan Inc.
+     Takebashi Yasuda Bldg.,
+     3-13 Kanda Nishiki-cho,
+     Chiyoda-ku,Tokyo 101-0054, JAPAN
+     Tel: +81-3-5259-6350
+     Fax: +81-3-5259-6351
+     Email: itojun@iijlab.net
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+NAKAMURA, HAGINO        Expires: January 5, 2002                [Page 6]
+
