@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML$
+# $FML: test.sh,v 1.7 2001/04/08 07:21:59 fukachan Exp $
 #
 
 DO () {
@@ -11,7 +11,7 @@ DO () {
 
 	test -f $msg || return;
 
-	cat $msg |\
+	regress/message/scramble.pl $msg |\
 	${PERL:-perl} -w fml/libexec/loader \
 		--params pwd=$PWD \
 		-c $pwd/main.cf \
