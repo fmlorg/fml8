@@ -1,0 +1,34 @@
+<!--
+   $FML: recipe.version.sgml,v 1.2 2002/10/29 04:10:08 fukachan Exp $
+-->
+
+<qandaentry>
+<question>
+<para>
+定義されている alias 一覧を見たい。
+</para>
+</question>
+
+<answer>
+
+<para>
+fmlalias が aliases ファイル(群)に設定されている全アドレスを表示してく
+れます。
+<screen>
+% fmlalias
+</screen>
+</para>
+
+<para>
+<warning>
+<para>
+fmladdr と fmlalias の違いは、一覧に
+ユーザ( /etc/passwd で定義されているもの )を含むか否か？という点です。
+fmladdr は含みます、fmlalias は含みません。 
+fmlalias は純粋に alias 群を表示します。
+</para>
+</warning>
+</para>
+
+</answer>
+</qandaentry>

@@ -69,8 +69,9 @@ primary_recipient_maps	=	recipients
 
 # 互換性のため actives をいれておく
 recipient_maps	=	recipients
+			actives
 </screen>
-</para>				actives
+</para>
 
 <para>
 [TODO] warning 出るところがあるので、なんとかせな

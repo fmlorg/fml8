@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: chapter.sgml,v 1.2 2002/10/29 04:10:03 fukachan Exp $
 -->
 
 
@@ -12,6 +12,8 @@
 <qandaset>
 
 &recipe.version;
+&recipe.listup.addresses;
+&recipe.listup.aliases;
 
 </qandaset>
 
