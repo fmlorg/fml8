@@ -1,6 +1,78 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/03/23
+
+   FML::Command::Auth 
+	admin コマンドのパスワード認証を有効にする
+
+   FML::Command 
+	implement rewrite_prompt(). It is used to hide password et. al.
+	
+   FML::Process::Command 
+	clean up
+	use rewrite_prompt() by FML::Command to hide admin password.
+
+   variables
+	define $admin_member_passwd_maps.
+	admin password
+	admin pass
+	
+   new modules from CPAN
+	import Crypt-UnixCrypt-1.0, perl-only implementation of the
+	crypt(3).
+
+2002/03/21
+
+   コマンドの認証について改良
+
+   FML::Credential 
+	reconstruct is*member() functions
+	implement primitive is_privileged_member()
+	
+   FML::Process::Command 
+	clean up :::clarify the logic:
+	o valid command syntax
+	o command mode for a user, admin and stranger
+	o add prototype of admin command auth
+
+   variable:
+	define $admin_command_restrictions
+	
+   FML::Command::Auth 
+	add prototype of admin command auth
+
+2002/03/20
+
+   CGI の再構成: clean up's
+
+   loader
+	prepare a hook to inform some hints via $main_cf
+	
+   FML::Process::Utils 
+	implement hints()
+
+   FML::Command::Admin::newml 
+	setup admin::{thread,config,menu}.cgi based on libexec::loader
+	and hints
+	
+   FML::Config::Convert 
+	replace __hints_for_fml_process__
+	
+   FML::Process::Switch 
+	enable config.cgi , remove makefml.cgi
+	
+   FML::CGI::ThreadTrack 
+	vertical align of menus
+
+   FML::Process::CGI::Kernel 
+	change layout in table a little.
+	define run_cgi_title() and run_cgi_help()
+	add options bar to switch the language (dummy yet :-)
+	
+   FML::CGI::Admin::Menu 
+	remove run_cgi_help() once
+	
 2002/03/19
 
    CGI の再構成: FML::CGI と FML::Command 間のトランポリン機構
@@ -1740,4 +1812,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.57 2002/03/18 13:55:48 fukachan Exp $
+$FML: CHANGES.txt,v 1.58 2002/03/19 14:10:51 fukachan Exp $
