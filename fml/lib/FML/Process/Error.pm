@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.40 2004/01/31 04:06:33 fukachan Exp $
+# $FML: Error.pm,v 1.41 2004/03/12 11:45:51 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -115,9 +115,6 @@ sub verify_request
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # set dummy sender to avoid unexpected error
-    use FML::Credential;
-    my $cred = new FML::Credential $curproc;
-    $curproc->{'credential'} = $cred;
     $curproc->{'credential'}->set( 'sender', $maintainer );
 
     $eval = $config->get_hook( 'error_verify_request_end_hook' );

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.216 2004/03/12 04:22:55 fukachan Exp $
+# $FML: Kernel.pm,v 1.217 2004/03/12 11:45:51 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -168,6 +168,9 @@ sub new
     # 3.7 set up message queue for logging. (moved to each program)
     # $curproc->_log_message_init();
 
+    # 3.8 prepare credential object
+    $curproc->_credential_init();
+
     # 4.1 debug. XXX remove this in the future !
     $curproc->__debug_ml_xxx('loaded:');
 
@@ -213,6 +216,20 @@ sub _print_init
 {
     my ($curproc) = @_;
     $curproc->set_print_style( 'text' );
+}
+
+
+# Descriptions: alloc credential area.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub _credential_init
+{
+    my ($curproc) = @_;
+
+    use FML::Credential;
+    my $cred = new FML::Credential $curproc;
+    $curproc->{'credential'} = $cred;
 }
 
 
@@ -554,9 +571,6 @@ sub verify_sender_credential
 	my $safe = new FML::Restriction::Base;
 	if ($safe->regexp_match('address', $from)) {
 	    # o.k. From: is proven to be valid now.
-	    use FML::Credential;
-	    my $cred = new FML::Credential $curproc;
-	    $curproc->{'credential'} = $cred;
 	    $curproc->{'credential'}->set( 'sender', $from );
 	}
 	else {
@@ -921,7 +935,7 @@ sub load_config_files
 	}
 
 	use FML::Credential;
-	my $cred = new FML::Credential $curproc;
+	my $cred = $curproc->{ credential };
 	if ($cred->is_same_address($maintainer, $ml_address)) {
 	    my $s = "configuration error: \$maintainer == \$article_post_address";
 	    $curproc->logerror($s);
