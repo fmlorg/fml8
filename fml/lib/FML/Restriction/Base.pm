@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.20 2003/01/26 03:11:59 fukachan Exp $
+# $FML: Base.pm,v 1.21 2003/02/09 12:31:46 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -89,7 +89,7 @@ Of cource, "user@domain", described above.
 =cut
 
 my $domain_regexp  = '[-A-Za-z0-9\.]+';
-my $user_regexp    = '[-A-Za-z0-9\._]+';
+my $user_regexp    = '[-A-Za-z0-9\._\+]+';
 my $command_regexp = '[-A-Za-z0-9_]+';
 my $file_regexp    = '[-A-Za-z0-9_]+';
 my $dir_regexp     = '[-A-Za-z0-9_]+';
