@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CacheDir.pm,v 1.12 2002/01/13 06:59:49 fukachan Exp $
+# $FML: CacheDir.pm,v 1.13 2002/01/13 13:35:25 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -144,10 +144,12 @@ sub _take_file_name
     elsif ($cache_type eq 'cyclic') {
 	my $seq_file = File::Spec->catfile($directory, $sequence_file_name);
 
-	eval q{ use File::Sequence;};
-	my $sfh = new File::Sequence {
-	    sequence_file => $seq_file,
-	    modulus       => $modulus,
+	my $sfh = undef;
+	eval q{ use File::Sequence;
+		$sfh = new File::Sequence {
+		    sequence_file => $seq_file,
+		    modulus       => $modulus,
+		};
 	};
 	my $id = $sfh->increment_id;
 	$file  = File::Spec->catfile($directory, $file_name.$id);
