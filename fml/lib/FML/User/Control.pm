@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.10 2004/04/28 04:06:11 fukachan Exp $
+# $FML: Control.pm,v 1.11 2004/04/30 13:41:54 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -384,10 +384,12 @@ sub _try_chaddr_in_map
 sub print_userlist
 {
     my ($self, $curproc, $command_args, $uc_args) = @_;
-    my $config  = $curproc->config();
-    my $maplist = $uc_args->{ maplist };
-    my $wh      = $uc_args->{ wh };
-    my $style   = $curproc->get_print_style();
+    my $config   = $curproc->config();
+    my $maplist  = $uc_args->{ maplist };
+    my $wh       = $uc_args->{ wh };
+    my $style    = $curproc->get_print_style()      || '';
+    my $is_mta   = $curproc->is_under_mta_process() || 0;
+    my $msg_args = $command_args->{ msg_args };
 
     $curproc->lock($lock_channel);
 
@@ -405,7 +407,10 @@ sub print_userlist
 		next LINE unless defined $buf;
 		next LINE unless $buf;
 
-		if ($style eq 'html') {
+		if ($is_mta) {
+		    $curproc->reply_message($buf, $msg_args);
+		}
+		elsif ($style eq 'html') {
 		    # XXX-TODO: html-ify address ?
 		    print $wh $buf, "<br>\n";
 		}
