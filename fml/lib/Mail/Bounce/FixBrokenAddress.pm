@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DSN.pm,v 1.8 2001/07/30 23:09:04 fukachan Exp $
+# $FML: FixBrokenAddress.pm,v 1.1 2001/07/31 12:58:34 fukachan Exp $
 #
 
 
@@ -40,8 +40,6 @@ See C<Mail::Bounce> for more details.
 sub FixIt
 {
     my ($hint, $addr) = @_;
-
-    print STDERR "Fixit($hint, $addr)\n";
 
     # error address from nifty.ne.jp has no domain part ;)
     if ($hint eq 'nifty.ne.jp' && $addr !~ /\@/) {
