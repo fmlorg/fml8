@@ -16,6 +16,7 @@ link:
 	rm -f Ticket; ln -s ../../fml/lib/FML/Ticket
 	rm -f Process; ln -s ../../fml/lib/FML/Process
 	rm -f IO; ln -s ../../fml/lib/IO
+	rm -f Tie; ln -s ../../fml/lib/Tie
 	rm -f Dialect; ln -s ../../fml/lib/Dialect
 	rm -f MailingList; ln -s ../../fml/lib/MailingList
 	rm -f libexec; ln -s ../../fml/libexec
