@@ -79,12 +79,14 @@ sub _distribute
     # XXX   $curproc->{ article } is prepared as a side effect.
     my $ah = $curproc->_prepare_article($args);
 
+    # get sequence number
+    my $id = $ah->increment_id;
+
     # header operations
     # XXX we need $curproc->{ article }, which is prepared above.
-    $curproc->_header_rewrite($args);
+    $curproc->_header_rewrite({ id => $id });
 
     # spool in the article before delivery
-    my $id = $ah->increment_id;
     $ah->spool_in($id);
 
     # delivery starts !
@@ -111,12 +113,27 @@ sub _header_rewrite
     my $config = $curproc->{ config };
     my $header = $curproc->{ article }->{ header };
     my $rules  = $curproc->{ config }->{ header_rewrite_rules };
+    my $id     = $args->{ id };
 
     for my $rule (split(/\s+/, $rules)) {
 	Log("_header_rewrite( $rule )");
+
+	if ($rule eq 'add_fml_article_id') {
+	    $header->add_fml_article_id($config, { id => $id } );
+	}
+
+	if ($rule eq 'add_x_sequence') {
+	    $header->add_x_sequence($config, { 
+		name => $config->{ address_for_post },
+		id   => $id,
+	    });
+	}
+
 	if ($rule eq 'add_rfc2369') {
-	    $header->_add_rfc2369_to_header($config, 
-					    { mode => 'distribute' });
+	    $header->add_rfc2369($config, {
+		id   => $id,
+		mode => 'distribute',
+	    });
 	}
     }
 }

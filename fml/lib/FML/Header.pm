@@ -88,7 +88,15 @@ sub check
 }
 
 
-sub _add_rfc2369_to_header
+sub add_fml_article_id
+{
+    my ($header, $config, $args) = @_;
+
+    $header->add('X-Mail-Count', $args->{ id });
+}
+
+
+sub add_rfc2369
 {
     my ($header, $config, $args) = @_;
 
@@ -100,6 +108,14 @@ sub _add_rfc2369_to_header
     # RFC2369
     $header->add('list-post',  "<mailto:${post}>")       if $post;
     $header->add('list-owner', "<mailto:${maintainer}>") if $maintainer;
+}
+
+
+sub add_x_sequence
+{
+    my ($header, $config, $args) = @_;
+
+    $header->add('x-sequence',  "$args->{ name } $args->{ id }");
 }
 
 

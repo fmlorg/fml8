@@ -7,3 +7,5 @@ header_checks        =	validate_message_id
 			verify_unique_list_post
 
 header_rewrite_rules =	add_rfc2369
+			add_fml_article_id
+			add_x_sequence
