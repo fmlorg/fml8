@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.26 2003/11/22 05:41:51 fukachan Exp $
+# $FML: confirm.pm,v 1.27 2003/12/30 03:07:54 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -81,7 +81,8 @@ sub notice_cc_recipient
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config        = $curproc->config();
+    my $config = $curproc->config();
+    my ($class, $id);
 
     # XXX We should always add/rewrite only $primary_*_map maps via 
     # XXX command mail, CUI and GUI.
@@ -97,17 +98,21 @@ sub process
     my $expire_limit  = $config->{ confirm_expire_limit } || 14*24*3600;
     my $command       = $command_args->{ command };
 
-    my ($class, $id);
+
+    # XXX-TODO: sanity
+
 
     # get class and id from buffer, for example,
     # "confirm subscribe 813f42fa2aa84bbba500ed3d2781dea6"
     # XXX $keyword not starts at the begining of this line.
     # XXX for example, "confirm", "> confirm" and "xxx> confirm ..."
-    # XXX-TODO: we should move this check to FML::Command::__SOME_WHERE_ ?
+    # XXX-TODO: we should move this check to FML::Command::__SOME_WHERE__ ?
     if ($command =~ /$keyword\s+(\w+)\s+([\w\d]+)/) {
 	($class, $id) = ($1, $2);
     }
 
+    # XXX-TODO: ($class, $id) sanity check ?
+    # XXX-TODO: if ($class && $id) { ... }
     use FML::Confirm;
     my $confirm = new FML::Confirm $curproc, {
 	keyword   => $keyword,
@@ -157,6 +162,7 @@ sub _switch_command
     my $obj = new FML::Command;
 
     # XXX-TODO: command names which need confirmation are hard-coded.
+    # XXX-TODO: define available command list in $config.
     if ($class eq 'subscribe'   ||
 	$class eq 'unsubscribe' ||
 	$class eq 'chaddr' ||
@@ -168,7 +174,7 @@ sub _switch_command
 	$obj->$class($curproc, $command_args);
     }
     else {
-	$curproc->logerror("no such rule confirm for '$class' command");
+	$curproc->logerror("no such confirmation rule for '$class' command");
 	$curproc->reply_message_nl('error.no_such_confirmation_for_command',
 				   "no such confirmation for command $class",
 				   { _arg_command => $class });
