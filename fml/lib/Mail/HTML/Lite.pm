@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.25 2001/10/28 11:54:40 fukachan Exp $
+# $FML: Lite.pm,v 1.26 2001/10/28 12:32:05 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.25 2001/10/28 11:54:40 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.26 2001/10/28 12:32:05 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -167,7 +167,10 @@ sub htmlfy_rfc822_message
     for ($m = $msg; defined($m) ; $m = $m->{ 'next' }) {
 	$type = $m->get_data_type;
 
-	if ($type =~ /^\w+\/[-\w\d\.]+$/) { croak("invalid type");}
+	unless ($type =~ /^\w+\/[-\w\d\.]+$/) { 
+	    warn("invalid type={$type}");
+	    next CHAIN;
+	}
 	last CHAIN if $type eq 'multipart.close-delimiter'; # last of multipart
 	next CHAIN if $type =~ /^multipart/;
 
@@ -864,15 +867,18 @@ sub cache_message_info
 		_PRINT_DEBUG("no \$db->{ _prev_id }");
 	    }
 
-	    # XXX we should not overwrite " id => next_id " hash.
+	    # XXX we should not overwrite already " id => next_id " exists
 	    # XXX we preserve the first " id => next_id " value.
-	    unless (defined $db->{ _next_id }->{ $idp }) {
+	    # XXX but we overwride it if "id => id (itself)", wrong link.
+	    unless ((defined $db->{ _next_id }->{ $idp }) &&
+		    ($db->{ _next_id }->{ $idp } != $idp)) {
 		$db->{ _next_id }->{ $idp } = $id;
-		_PRINT_DEBUG("\$db->{ _next_id }->{ $idp } = $id");
+		_PRINT_DEBUG("override \$db->{ _next_id }->{ $idp } = $id");
 	    }
 	    else {
 		my $thread_head_id  = _thread_head( $db, $id );
-		_PRINT_DEBUG("no \$db->{ _next_id } override");
+		_PRINT_DEBUG("no \$db->{ _next_id }->{ $idp } override");
+		_PRINT_DEBUG("   = $db->{ _next_id }->{ $idp }");
 	    }
 	}
 	else {
@@ -932,43 +938,41 @@ sub _thread_head
 sub _search_default_next_thread_id
 {
     my ($db, $id) = @_;
-    my (%eatup) = ();
-    my $thread_head_id = _thread_head( $db, $id );
-    my $ra = __str2array( $db->{ _idref }->{ $thread_head_id } );
+    my $list = __str2array( $db->{ _thread_list }->{ $id } );
+    my (@ra, @c0, @c1) = ();
+    @ra = reverse @$list;
 
-    # try to eat up all idref hash { id(myself) => (id1 id2 id3 ...) }
+    for (1 .. 10) { push(@c0, $id + $_);}
+    for my $xid ($id, @ra, @c0) {
+	my $default = __search_default_next_thread_id($db, $xid);
+	return $default if defined $default;
+    }
+}
+
+
+sub __search_default_next_thread_id
+{
+    my ($db, $id) = @_;
+    my $list = __str2array( $db->{ _thread_list }->{ $id } );
+    my $prev = 0;
+
+    return undef unless $#$list > 1;
+
   SEARCH:
-    for my $xid (reverse @$ra) {
-	next SEARCH if $xid == $id;
-	my $ra = __str2array( $db->{ _idref }->{ $xid } );
-	_PRINT_DEBUG("($xid)? reverse @$ra");
-
-	# pushed into @eatup
-	for my $yid (@$ra) { 
-	    $eatup{$yid} = $yid;
-	    my $ra = __str2array( $db->{ _idref }->{ $yid } );
-	    _PRINT_DEBUG("($yid)? reverse @$ra");
-	    for my $zid (@$ra) { $eatup{$zid} = $zid;}
-	}
-
-	# _next ?
-	for my $yid (@$ra) {
-	    my $max = 128;
-	    my $prev_id = $yid;
-	    while (($prev_id = $db->{_prev_id}->{$prev_id}) && ($max-->0)) {
-		$eatup{ $prev_id } = $prev_id;
-	    }
-	}
+    for my $xid (reverse @$list) {
+	last SEARCH if $xid == $id;
+	$prev = $xid;
     }
 
-    # remove id's of the original thread $ra
-    for (@$ra) { delete $eatup{ $_ };}
-
-    my (@eatup) = keys %eatup;
-    _PRINT_DEBUG("search = @eatup");
-
-    @eatup = sort {$b <=> $a} @eatup;
-    return( @eatup ? $eatup[0] : undef);
+    # found ( XXX we use $prev in reverse order, so this $prev means "next")
+    if ($prev > 0) {
+	_PRINT_DEBUG("default thread: $id => $prev (@$list)");
+	return $prev;
+    }
+    else {
+	_PRINT_DEBUG("default thread: $id => none (@$list)");
+	return undef;
+    }
 }
 
 
@@ -1001,11 +1005,25 @@ sub update_relation
     # rewrite links of files for 
     #      prev/next id (article id) and
     #      prev/next by thread
+    my $db = $self->{ _db };
+    my $thread_list = __str2array( $db->{ _thread_list }->{ $id } );
+    my %uniq = ( $id => 1 );
+
+  UPDATE:
     for my $id (qw(prev_id next_id prev_thread next_thread)) {
 	if (defined $args->{ $id }) {
+	    next UPDATE if $uniq{ $args->{$id} }; $uniq{ $args->{$id} } = 1;
+
 	    $self->_update_relation( $args->{ $id });
 	    push(@$list, $args->{ $id });
 	}
+    }
+
+    # update all articles in this thread.
+    for my $id (@$thread_list) {
+	next UPDATE if $uniq{ $id}; $uniq{ $id } = 1;
+	$self->_update_relation( $id );
+	push(@$list, $id);
     }
 }
 
@@ -1026,6 +1044,8 @@ sub _update_relation
     my $pat_preamble_end   = quotemeta($preamble_end);
     my $pat_footer_begin   = quotemeta($footer_begin);
     my $pat_footer_end     = quotemeta($footer_end);
+
+    _PRINT_DEBUG("_update_relation $id");
 
     use FileHandle;
     my $file        = $args->{ file };
@@ -1088,6 +1108,7 @@ sub evaluate_relation
 	my $xid = _search_default_next_thread_id($db, $id);
 	if ($xid && ($xid != $id)) {
 	    $next_thread_id = $xid;
+	    print STDERR "override next_thread_id = $next_thread_id\n";
 	    _PRINT_DEBUG("override next_thread_id = $next_thread_id");
 	}
     }
@@ -1127,6 +1148,7 @@ sub evaluate_relation
 	link_next_thread => $link_next_thread,
 	subject          => $subject, 
     };
+    _PRINT_DEBUG_DUMP_HASH( $args );
 
     $self->_db_close();
 
@@ -1166,14 +1188,24 @@ sub evaluate_safe_preamble
 	$preamble .= "<A HREF=\"$link_prev_thread\">[Prev by Thread]</A>\n";
     }
     else {
-	$preamble .= "[No Prev Thread]\n";
+	if (defined $link_prev_id) {
+	    $preamble .= "<A HREF=\"$link_prev_id\">[Prev by Thread]</A>\n";
+	}
+	else {
+	    $preamble .= "[No Prev Thread]\n";
+	}
     }
     
     if (defined $link_next_thread) {
 	$preamble .= "<A HREF=\"$link_next_thread\">[Next by Thread]</A>\n";
     }
     else {
-	$preamble .= "[No Next Thread]\n";
+	if (defined $link_next_id) {
+	    $preamble .= "<A HREF=\"$link_next_id\">[Next by Thread]</A>\n";
+	}
+	else {
+	    $preamble .= "[No Next Thread]\n";
+	}
     }
 
     $preamble .= _format_index_navigator();
@@ -1293,6 +1325,7 @@ my @kind_of_databases = qw(from date subject message_id references
 			   msgidref idref next_id prev_id
 			   filename filepath
 			   unixtime month monthly_idlist
+			   thread_list
 			   who info);
 
 
@@ -1701,6 +1734,13 @@ sub _print_thread
 
       IDLIST:
 	for my $id (@idlist) {
+	    # save $id => " @idlist " for further use
+	    # XXX override occurs but select latest information (no reason;)
+	    if ($#idlist > 1) {
+		$db->{ _thread_list }->{ $id } = $buf;
+		_PRINT_DEBUG("\$db->{ _thread_list }->{ $id } = $buf");
+	    }
+
 	    # @idlist = (number's)
 	    _print_raw_str($wh, "<!-- thread (@idlist) -->\n", $code);
 
@@ -1858,6 +1898,19 @@ sub _PRINT_DEBUG
 {
     my ($str) = @_;
     print STDERR "(debug) $str\n" if $ENV{'DEBUG'} == 100 || $debug;
+}
+
+
+sub _PRINT_DEBUG_DUMP_HASH
+{
+    my ($hash) = @_;
+    my ($k,$v);
+
+    if ($ENV{'DEBUG'} == 100 || $debug) {
+	while (($k, $v) = each %$hash) {
+	    print STDERR "   $k => $v\n";
+	}
+    }
 }
 
 
