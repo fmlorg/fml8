@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.8 2002/06/01 04:57:51 fukachan Exp $
+# $FML: Auth.pm,v 1.9 2002/06/01 05:09:23 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -53,7 +53,7 @@ sub new
 # Descriptions: virtual reject handler, just return 0 :-)
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
-# Return Value: NUM
+# Return Value: STR (__LAST__, a special upcall)
 sub reject
 {
     my ($self, $curproc, $args, $optargs) = @_;
@@ -96,7 +96,7 @@ sub permit_admin_member_maps
 # Descriptions: virtual reject handler, just return 0 :-)
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
-# Return Value: NUM
+# Return Value: NUM or STR (__LAST__, a special upcall)
 sub reject_system_accounts
 {
     my ($self, $curproc, $args, $optargs) = @_;
@@ -129,12 +129,16 @@ check the password if it is valid or not.
 sub check_admin_member_password
 {
     my ($self, $curproc, $args, $optargs) = @_;
-    my $config   = $curproc->{ config };
-    my $maplist  = $config->get_as_array_ref('admin_member_password_maps');
-    my $address  = $optargs->{ address };
-    my $password = $optargs->{ password };
+    my $config  = $curproc->{ config };
+    my $maplist = $config->get_as_array_ref('admin_member_password_maps');
 
     # simple sanity check: verify non empty input or not?
+    return 0 unless $optargs->{ address };
+    return 0 unless $optargs->{ password };
+
+    # get a set of address and password
+    my $address  = $optargs->{ address };
+    my $password = $optargs->{ password };
     unless ($address && $password) {
 	return 0;
     }
@@ -142,16 +146,18 @@ sub check_admin_member_password
     # get candidates
     my ($user, $domain) = split(/\@/, $address);
 
+    # search $user in password database map, which has a hash of
+    # { $user => $encryptd_passwrod }.
     for my $map (@$maplist) {
 	use IO::Adapter;
-	my $mapobj = new IO::Adapter $map;
-	my $addrs  = $mapobj->find( $user , { want => 'key,value', all => 1 });
+	my $obj   = new IO::Adapter $map;
+	my $pwent = $obj->find( $user , { want => 'key,value', all => 1 });
 
 	# if this $map has this $user entry,
 	# try to check { user => password } relation.
-	if (defined $addrs) {
+	if (defined $pwent) {
 	  PASSWORD_ENTRY:
-	    for my $r (@$addrs) {
+	    for my $r (@$pwent) {
 		my ($u, $p_infile) = split(/\s+/, $r);
 		my $p_input        = crypt( $password, $p_infile );
 
