@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.16 2003/01/27 03:23:17 fukachan Exp $
+# $FML: Qmail.pm,v 1.17 2003/08/29 15:34:05 fukachan Exp $
 #
 
 package FML::MTAControl::Qmail;
@@ -70,9 +70,11 @@ sub qmail_remove_alias
 	my $dst   = File::Spec->catfile($fml_owner_home_dir, $xfile);
 
 	if (-f $dst) {
-	    print STDERR "removing $dst\n";
+	    $curproc->ui_message("removing $dst");
 	    unlink $dst || do {
-		print STDERR "   failed to remove $dst !!!\n";
+		my $s = "failed to remove $dst";
+		$curproc->ui_message("error: $s");
+		$curproc->logerror($s);		
 	    };
 	}
     }
@@ -158,16 +160,15 @@ sub qmail_setup
 	my $src   = File::Spec->catfile($template_dir, $file);
 	my $dst   = File::Spec->catfile($fml_owner_home_dir, $xfile);
 
-	print STDERR "creating $dst\n";
+	$curproc->ui_message("creating $dst");
 	$self->_install($src, $dst, $params);
     }
 
     my $virtual_domain_conf = $config->{ qmail_virtualdomains_file };
     unless (-f $virtual_domain_conf) {
 	if (0) {
-	    print STDERR "  XXX We assume $ml_domain:fml-$ml_domain\n";
-	    print STDERR "  XXX in $virtual_domain_conf\n";
-	    print STDERR "  XXX\n";
+	    $curproc->ui_message("  XXX We assume $ml_domain:fml-$ml_domain");
+	    $curproc->ui_message("  XXX in $virtual_domain_conf");
 	}
     }
 
@@ -204,7 +205,7 @@ sub qmail_install_virtual_map
 
     # 2. if not found
     unless ($found) {
-	print STDERR "updating $virtual\n";
+	$curproc->ui_message("updating $virtual");
 
 	my $fh = new FileHandle ">> $virtual";
 	if (defined $fh) {
@@ -213,7 +214,7 @@ sub qmail_install_virtual_map
 	}
     }
     else {
-	print STDERR "skip updating $virtual\n";
+	$curproc->ui_message("skip updating $virtual");
     }
 }
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: edit.pm,v 1.15 2003/03/18 10:35:13 fukachan Exp $
+# $FML: edit.pm,v 1.16 2003/08/23 04:35:30 fukachan Exp $
 #
 
 package FML::Command::Admin::edit;
@@ -75,7 +75,7 @@ sub process
     my $editor = $ENV{ 'EDITOR' } || 'vi';
 
     if (-f $config_cf) {
-	print STDERR "$editor $config_cf\n";
+	$curproc->ui_message("$editor $config_cf");
 	system $editor, $config_cf;
     }
     else {

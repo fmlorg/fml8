@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mailq.pm,v 1.4 2003/04/29 11:29:29 fukachan Exp $
+# $FML: mailq.pm,v 1.5 2003/08/23 04:35:31 fukachan Exp $
 #
 
 package FML::Command::Admin::mailq;
@@ -94,7 +94,7 @@ sub _queue
     }
 
     unless ($count) {
-	print STDERR "Mail queue is empty\n";
+	$curproc->ui_message("Mail queue is empty");
     }
 }
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.21 2003/08/29 15:34:05 fukachan Exp $
+# $FML: Postfix.pm,v 1.22 2003/09/12 00:02:09 fukachan Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -52,7 +52,7 @@ sub postfix_install_alias
     $self->_postfix_rewrite_virtual_params($curproc, $xparams);
     $self->_install($src, $dst, $xparams);
 
-    print STDERR "updating $alias\n";
+    $curproc->ui_message("updating $alias");
 
     # XXX-TODO: we should prepare methods such as $curproc->util->append() ?
     use File::Utils qw(append);
@@ -83,7 +83,7 @@ sub postfix_remove_alias
 
     my $key = $xparams->{ ml_name };
 
-    print STDERR "removing $key in $alias\n";
+    $curproc->ui_message("removing $key in $alias");
 
     use FileHandle;
     my $rh = new FileHandle $alias;
@@ -107,10 +107,12 @@ sub postfix_remove_alias
 
 	if ($removed > 3) {
 	    if (rename($alias_new, $alias)) {
-		print STDERR "\tremoved.\n";
+		$curproc->ui_message("removed");
 	    }
 	    else {
-		print STDERR "\twarning: fail to rename alias files.\n";
+		my $s = "fail to rename alias files";
+		$curproc->ui_message("error: $s");
+		$curproc->logerror($s);
 	    }
 	}
     }
@@ -133,7 +135,7 @@ sub postfix_update_alias
     my $prog   = $config->{ path_postalias };
     my $alias  = $config->{ mail_aliases_file };
 
-    print STDERR "updating $alias database\n";
+    $curproc->ui_message("updating $alias database");
     if (-x $prog) {
 	system "$prog $alias";
     }
@@ -167,23 +169,25 @@ sub postfix_find_key_in_alias_maps
 
     # search
     for my $map (@$maps, $map) {
-	print STDERR "scan key = $key/$key_virtual, map = $map\n" if $debug;
+	if ($debug) {
+	    $curproc->ui_message("scan key = $key/$key_virtual, map = $map");
+	}
 
 	# default domain case
 	if ($curproc->is_default_domain($domain)) {
-	    print STDERR "   search $key (default domain).\n" if $debug;
+	    $curproc->ui_message("search $key (default domain)") if $debug;
 	    if ($self->_find_key_in_file($map, $key)) {
-		print STDERR "\tkey=$key found\n" if $debug;
+		$curproc->ui_message("\tkey=$key found") if $debug;
 		return 1;
 	    }
 	}
 	# virtual domain case
 	else {
 	    if ($debug) {
-		print STDERR "   search $key_virtual (virtual domain).\n";
+		$curproc->ui_message("search $key_virtual (virtual domain)");
 	    }
 	    if ($self->_find_key_in_file($map, $key_virtual)) {
-		print STDERR "\tkey=$key_virtual found\n" if $debug;
+		$curproc->ui_message("key=$key_virtual found") if $debug;
 		return 1;
 	    }
 	}
@@ -250,10 +254,10 @@ sub postfix_get_aliases_as_hash_ref
 
   MAP:
     for my $map (@$maps) {
-	print STDERR "scan key = $key, map = $map\n" if $debug;
+	$curproc->ui_message("scan key = $key, map = $map") if $debug;
 
 	if ($map =~ /^\w+:/) {
-	    print STDERR "* ignored $map\n";
+	    $curproc->ui_message("* ignored $map");
 	    next MAP;
 	}
 
@@ -334,7 +338,7 @@ sub postfix_setup
 	my $src = File::Spec->catfile($template_dir, $file);
 	my $dst = File::Spec->catfile($ml_home_dir, $file);
 
-	print STDERR "creating $dst\n";
+	$curproc->ui_message("creating $dst");
 	$self->_install($src, $dst, $params);
     }
 }
@@ -376,7 +380,7 @@ sub postfix_install_virtual_map
     my $virtual = $config->{ postfix_virtual_map_file };
     my $src     = File::Spec->catfile($template_dir, 'postfix_virtual');
     my $dst     = $virtual . "." . $$;
-    print STDERR "updating $virtual\n";
+    $curproc->ui_message("updating $virtual");
 
     # at the first time
     unless( -f $virtual) {
@@ -431,7 +435,7 @@ sub postfix_update_virtual_map
     my $virtual = $config->{ postfix_virtual_map_file };
 
     if (-f $virtual) {
-	print STDERR "updating $virtual database\n";
+	$curproc->ui_message("updating $virtual database");
 	if (-x $postmap) {
 	    system "$postmap $virtual";
 	}

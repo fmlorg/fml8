@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Procmail.pm,v 1.12 2003/08/29 15:34:05 fukachan Exp $
+# $FML: Procmail.pm,v 1.13 2003/09/12 04:37:15 fukachan Exp $
 #
 
 package FML::MTAControl::Procmail;
@@ -48,7 +48,7 @@ sub procmail_install_alias
 
     $self->_install($src, $dst, $params);
 
-    print STDERR "updating $alias\n";
+    $curproc->ui_message( "updating $alias\n");
 
     use File::Utils qw(append);
     append($dst, $alias);
@@ -73,7 +73,7 @@ sub procmail_remove_alias
 
     my $key = $params->{ ml_name };
 
-    print STDERR "removing $key in $alias\n";
+    $curproc->ui_message( "removing $key in $alias\n");
 
     use FileHandle;
     my $rh = new FileHandle $alias;
@@ -97,10 +97,10 @@ sub procmail_remove_alias
 
 	if ($removed > 3) {
 	    if (rename($alias_new, $alias)) {
-		print STDERR "\tremoved.\n";
+		$curproc->ui_message( "\tremoved.\n");
 	    }
 	    else {
-		print STDERR "\twarning: fail to rename alias files.\n";
+		$curproc->ui_message( "\twarning: fail to rename alias files.\n");
 	    }
 	}
     }
@@ -136,7 +136,7 @@ sub procmail_find_key_in_alias_maps
     my $addr = sprintf("%s\@%s", $params->{ ml_name }, $params->{ ml_domain });
 
     for my $map (@$maps) {
-	print STDERR "scan key = $key, map = $map\n" if $debug;
+	$curproc->ui_message( "scan key = $key, map = $map\n" if $debug);
 
 	if (-f $map) {
 	    use FileHandle;
@@ -179,7 +179,7 @@ sub procmail_get_aliases_as_hash_ref
     }
 
     for my $map (@$maps) {
-	print STDERR "scan key = $key, map = $map\n" if $debug;
+	$curproc->ui_message( "scan key = $key, map = $map\n" if $debug);
 
 	use FileHandle;
 	my $fh = new FileHandle $map;

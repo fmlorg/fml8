@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.67 2003/09/04 12:27:53 fukachan Exp $
+# $FML: newml.pm,v 1.68 2003/09/12 00:01:09 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -202,7 +202,7 @@ sub _init_ml_home_dir
     my $dirlist = $config->get_as_array_ref('newml_command_init_public_dirs');
     for my $_dir (@$dirlist) {
 	unless (-d $_dir) {
-	    print STDERR "creating ", $_dir, "\n";
+	    $curproc->ui_message("creating $_dir");
 	    $curproc->mkdir( $_dir, "mode=public");
 	}
     }
@@ -210,7 +210,7 @@ sub _init_ml_home_dir
     $dirlist = $config->get_as_array_ref('newml_command_init_private_dirs');
     for my $_dir (@$dirlist) {
 	unless (-d $_dir) {
-	    print STDERR "creating ", $_dir, "\n";
+	    $curproc->ui_message("creating $_dir");
 	    $curproc->mkdir( $_dir, "mode=private");
 	}
     }
@@ -239,7 +239,7 @@ sub _install_template_files
 	my $src = File::Spec->catfile($template_dir, $file);
 	my $dst = File::Spec->catfile($ml_home_dir, $file);
 
-	print STDERR "creating ", $dst, "\n";
+	$curproc->ui_message("creating $dst");
 	_install($src, $dst, $params);
     }
 
@@ -274,8 +274,9 @@ sub _update_aliases
 
     # append
     if ($self->_is_mta_alias_maps_has_ml_entry($curproc, $params, $ml_name)) {
-	print STDERR "warning: $ml_name already defined!\n";
-	print STDERR "         ignore aliases updating.\n";
+	$curproc->ui_message("warning: $ml_name already defined!");
+	$curproc->ui_message("         ignore aliases updating");
+	$curproc->logwarn("$ml_name ml already defined");
     }
     else {
 	my $list = $config->get_as_array_ref('newml_command_mta_config_list');
@@ -298,7 +299,7 @@ sub _update_aliases
 		}
 
 		if ($found) {
-		    print STDERR "skipping alias update for $mta\n";
+		    $curproc->ui_message("skipping alias update for $mta");
 		}
 		else {
 		    $obj->install_alias($curproc, $params, $optargs);
@@ -329,7 +330,9 @@ sub _is_mta_alias_maps_has_ml_entry
 
 	my $obj = new FML::MTAControl;
 	if ($obj->is_user_entry_exist_in_passwd($ml_name)) {
-	    print STDERR "error: $ml_name is found in passwd\n";
+	    my $s = "ml_name=$ml_name is found in passwd";
+	    $curproc->ui_message("error: $s");
+	    $curproc->logerror($s);
 	    $found = 1;
 	}
 
@@ -343,7 +346,9 @@ sub _is_mta_alias_maps_has_ml_entry
 		});
 
 		if ($found) {
-		    print STDERR "error: $ml_name is found in $mta aliases\n";
+		    my $s = "ml_name=$ml_name is found in $mta aliases";
+		    $curproc->ui_message("error: $s");
+		    $curproc->logerror($s);
 		    last MTA;
 		}
 	    }
@@ -369,7 +374,7 @@ sub _setup_mail_archive_dir
     my $dir    = $config->{ html_archive_dir };
 
     unless (-d $dir) {
-	print STDERR "creating ", $dir, "\n";
+	$curproc->ui_message("creating $dir");
 	$curproc->mkdir($dir, "mode=public");
     }
 }
@@ -398,7 +403,7 @@ sub _setup_cgi_interface
     my $ml_admin_cgi_dir = $config->{ ml_admin_cgi_base_dir };
     for my $dir ($cgi_base_dir, $admin_cgi_dir, $ml_admin_cgi_dir) {
 	unless (-d $dir) {
-	    print STDERR "creating ", $dir, "\n";
+	    $curproc->ui_message("creating $dir");
 	    $is_dir_exists{ $dir } = 0;
 	    $curproc->mkdir($dir, "mode=public");
 	}
@@ -416,8 +421,8 @@ sub _setup_cgi_interface
 	my $src   = File::Spec->catfile($template_dir, 'dot_htaccess');
 	my $dst   = File::Spec->catfile($cgi_base_dir, '.htaccess');
 
-	print STDERR "creating ", $dst, "\n";
-	print STDERR "         (a dummy to disable cgi by default)\n";
+	$curproc->ui_message("creating $dst");
+	$curproc->ui_message("         (a dummy to disable cgi by default)");
 	_install($src, $dst, $params);
     }
 
@@ -446,7 +451,7 @@ sub _setup_cgi_interface
 		   File::Spec->catfile($admin_cgi_dir, 'config.cgi'),
 		   File::Spec->catfile($admin_cgi_dir, 'thread.cgi')
 		     ) {
-	    print STDERR "creating ", $dst, "\n";
+	    $curproc->ui_message("creating $dst");
 	    _install($src, $dst, $params);
 	    chmod 0755, $dst;
 	}
@@ -507,7 +512,7 @@ sub _setup_listinfo
 	    my $src   = File::Spec->catfile($template_dir, $file);
 	    my $dst   = File::Spec->catfile($listinfo_dir, $file);
 
-	    print STDERR "creating ", $dst, "\n";
+	    $curproc->ui_message("creating $dst");
 	    _install($src, $dst, $params);
 	}
     }
