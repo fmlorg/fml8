@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.7 2003/08/23 04:35:46 fukachan Exp $
+# $FML: DB.pm,v 1.8 2003/10/01 03:27:13 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -16,6 +16,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 	    %old_db_to_udb_map
 	    %udb_to_old_db_map
 	    %header_field_type
+	    $mime_decode_filter
 	    );
 use Carp;
 use File::Spec;
@@ -25,13 +26,13 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.7 2003/08/23 04:35:46 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.8 2003/10/01 03:27:13 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
 $NULL_VALUE = '___NULL___';
 
-my $debug             = 10;
+my $debug             = 0;
 my $is_keepalive      = 1;
 my $is_demand_copying = 1;
 
@@ -50,6 +51,9 @@ my $is_demand_copying = 1;
 		      reply_to    => 'ADDR_LIST',
 		      message_id  => 'ADDR,INVERSE_MAP',
 		      references  => 'ADDR_LIST',
+
+		      # article_*
+		      article_subject => 'STR,MIME_DECODE',
 
 		      # save info for filter system.
 		      return_path => 'ADDR',
@@ -96,11 +100,20 @@ my $is_demand_copying = 1;
 			subdir              subdir
 			info                hint
 			);
-# reverse map
+
 {
     my ($k, $v);
+
+    # set up reverse map
     while (($k, $v) = each %old_db_to_udb_map) {
 	$udb_to_old_db_map{ $v } = $k;
+    }
+
+    # set up filter
+    while (($k, $v) = each %header_field_type) {
+	if ($v =~ /MIME_DECODE/) {
+	    $mime_decode_filter .= $mime_decode_filter ? "|$k" : $k;
+	}
     }
 }
 
@@ -852,8 +865,28 @@ sub _who_of_address
 sub db_open
 {
     my ($self, $args) = @_;
+    my (@table) = ();
 
-    return $self->{ _db } if defined $self->{ _db };
+    if (defined $args->{ table }) {
+	my $table = $args->{ table };
+
+	if ($self->{ _db_opened }->{ "_$table" }) {
+	    return;
+	}
+	else {
+	    @table = ($table);
+	}
+    }
+    else {
+	return $self->{ _db } if defined $self->{ _db };
+
+	# @table = (@orig_header_fields, 
+	# @header_fields, 
+	# @article_header_fields,
+	# @table_list);
+	@table = (@table_list); 
+    }
+    _PRINT_DEBUG("db_open(on demand): @table");
 
     my $db_type   = $self->get_db_module_name();
     my $db_dir    = $self->get_db_base_dir();
@@ -864,15 +897,13 @@ sub db_open
     eval qq{ use $db_type; use Fcntl;};
     unless ($@) {
 	my ($file, $str);
- 	for my $db (@orig_header_fields,
-		    @header_fields,
-		    @article_header_fields,
-		    @table_list) {
+ 	for my $db (@table) {
 	    $file = File::Spec->catfile($db_dir, $db);
 	    $str  = qq{
 		my \%$db = ();
 		tie \%$db, \$db_type, \$file, O_RDWR|O_CREAT, $file_mode;
 		\$self->{ _db }->{ '_$db' } = \\\%$db;
+		\$self->{ _db_opened }->{ '_$db' } = 1;
 	    };
 	    eval $str;
 	    croak($@) if $@;
@@ -894,18 +925,29 @@ sub db_open
 sub db_close
 {
     my ($self, $args) = @_;
+    my (@table) = ();
+
+    if (defined $args->{ table }) {
+	@table = ($args->{ table });
+    }
+    else {
+	return $self->{ _db } if defined $self->{ _db };
+
+	@table = (@orig_header_fields, @header_fields, @article_header_fields,
+		  @table_list);
+    }
+    _PRINT_DEBUG("db_close(on demand): @table");
+
     my $db_type = $args->{ db_type } || $self->{ _db_type } || 'AnyDBM_File';
     my $db_dir  = $self->{ _html_base_directory };
 
     _PRINT_DEBUG("db_close()");
 
-    for my $db (@orig_header_fields,
-		@header_fields,
-		@article_header_fields,
-		@table_list) {
+    for my $db (@table) {
 	my $str = qq{
 	    my \$${db} = \$self->{ _db }->{ '_$db' };
 	    untie \%\$${db};
+	    \$self->{ _db_opened }->{ '_$db' } = 0;
 	};
 	eval $str;
 	croak($@) if $@;
@@ -953,7 +995,7 @@ sub get_as_array_ref
 
     _PRINT_DEBUG("get_as_array_ref($table, $key)");
 
-    my $db  = $self->db_open();
+    my $db  = $self->db_open( { table => $table } );
     my $val = $self->_db_get($db, $table, $key);
     $val =~ s/^\s*//;
     $val =~ s/\s*$//;
@@ -976,6 +1018,17 @@ sub _db_set
     my ($self, $db, $table, $key, $value) = @_;
 
     if (defined $value && $value) {
+	unless ($self->{ _db_opened }->{ "_$table" }) {
+	    $self->db_open( { table => $table } );
+	}
+
+	print "table=$table key=$key /^($mime_decode_filter)$/\n";
+	if ($table =~ /^($mime_decode_filter)$/) {
+	    if ($value =~ /ISO.*\?[BQ]/i) {
+		$value = $self->_decode_mime_string($value);
+	    }
+	}
+
 	_PRINT_DEBUG("_db_set: table=$table { $key => $value }");
 	$db->{ "_$table" }->{ $key } = $value;
     }
@@ -996,6 +1049,10 @@ sub _db_get
     }
 
     unless ($v) {
+	if ($self->{ _db_opened }->{ "_$table" }) {
+	    $self->db_open( { table => $table } );
+	}
+
 	if ($is_demand_copying) {
 	    _PRINT_DEBUG("_old_db_copyin(\$db, $table, $key)");
 	    $self->_old_db_copyin($db, $table, $key);
@@ -1123,7 +1180,7 @@ sub get_key
 sub get_table_as_hash_ref
 {
     my ($self, $table) = @_;
-    my $db = $self->db_open();
+    my $db = $self->db_open( { table => $table } );
 
     return( $db->{ "_$table" } || {} );
 }

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.125 2003/08/29 15:34:07 fukachan Exp $
+# $FML: Distribute.pm,v 1.126 2003/09/29 13:06:54 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -384,6 +384,11 @@ sub _distribute
     my $summary = new FML::Article::Summary $curproc;
     $summary->append($article, $id);
 
+    # update header info to sync w/ article header.
+    if ($config->yes('use_thread_track')) {
+	$curproc->_new_thread_check_post($args);
+    }
+
     $curproc->unlock($lock_channel);
 
     # delivery starts !
@@ -576,8 +581,34 @@ sub _new_thread_check
 
     # get summary based on updated UDB.
     # XXX mode = html or text 
+}
 
-    # header rewriting of article object if needed.
+
+# Descriptions: the top level interface to drive thread tracking system
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: update thread information
+# Return Value: none
+sub _new_thread_check_post
+{
+    my ($curproc, $args) = @_;
+    my $pcb = $curproc->pcb();
+    my $hdr = $curproc->article_message_header();
+
+    use Mail::Message::Thread;
+
+    # XXX we need to specify article_id here since
+    # XXX analyzer routine has no clue for the current primary key.
+    my $article_id    = $pcb->get('article', 'id');
+    my $tdb_args      = $curproc->thread_db_args($args);
+    $tdb_args->{ id } = $article_id;
+
+    # overwrite header info base on the article.
+    my $thread = new Mail::Message::Thread $tdb_args;
+    my $db     = $thread->db();
+
+    for my $key (qw(subject)) {
+	$db->set("article_$key", $article_id, $hdr->get($key));
+    }
 }
 
 
