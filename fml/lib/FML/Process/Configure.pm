@@ -120,18 +120,9 @@ sub _makefml
     };
 
     # here we go
-    $curproc->lock() if $curproc->_makefml_require_lock($method);
     require FML::Command;
     my $obj = new FML::Command;
     $obj->$method($curproc, $optargs);
-    $curproc->unlock() if $curproc->_makefml_require_lock($method);
-}
-
-
-sub _makefml_require_lock
-{
-    my ($self, $command) = @_;
-    $command eq 'newml' ? 0 : 1;
 }
 
 

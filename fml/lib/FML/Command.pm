@@ -55,7 +55,9 @@ sub AUTOLOAD
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
 	if ($pkg->can($command)) {
+	    $curproc->lock() if $self->require_lock($command);
 	    $pkg->$command($curproc, $args);
+	    $curproc->unlock() if $self->require_lock($command);
 	}
 	else {
 	    Log("$pkg module has no $command method");	    
@@ -64,6 +66,13 @@ sub AUTOLOAD
     else {
 	Log("$pkg module is not found");
     }
+}
+
+
+sub require_lock
+{
+    my ($self, $command) = @_;
+    $command eq 'newml' ? 0 : 1;
 }
 
 
