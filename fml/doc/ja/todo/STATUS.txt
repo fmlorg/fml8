@@ -12,6 +12,7 @@
 	perl 5.00503 on Redhat Linux 6.2 (sendmail8.11.6)
 			smrsh はリンク張る必要はあります。
 
+	(postfix + perl 5.6.1   on Solaris 7)
 
 3章
 	[TODO] ＭＬサーバの理論をかく
@@ -425,4 +426,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.17 2002/12/15 14:15:53 fukachan Exp $
+$FML: STATUS.txt,v 1.18 2002/12/16 13:22:30 tmu Exp $

@@ -1,5 +1,5 @@
 <!--
-   $FML: bookinfo.sgml,v 1.6 2002/12/15 14:19:12 fukachan Exp $
+   $FML: bookinfo.sgml,v 1.7 2002/12/16 13:22:31 tmu Exp $
 -->
 
 <bookinfo>
@@ -54,7 +54,7 @@ postfix  + perl 5.6.1   on Redhat Linux 7.2
 sendmail + perl 5.00503 on Redhat Linux 6.2
 postfix  + perl 5.00503 on FreeBSD 4.3 STABLE
 ?        + perl ?       on FreeBSD 4.6 RELEASE
-postfix  + perl ?       on Solaris 7
+(postfix + perl 5.6.1   on Solaris 7)
 </screen>
 	</para>
 
