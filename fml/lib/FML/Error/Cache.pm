@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.9 2003/03/06 09:54:24 fukachan Exp $
+# $FML: Cache.pm,v 1.10 2003/05/28 13:14:05 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -164,7 +164,7 @@ delete entry for $address.
 
 
 # Descriptions: delete entry for $address.
-#    Arguments: OBJ($self) STR($address) HASH_REF($argv)
+#    Arguments: OBJ($self) STR($address)
 # Side Effects: update cache
 # Return Value: none
 sub delete
