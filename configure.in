@@ -1,5 +1,5 @@
 dnl
-dnl $FML$
+dnl $FML: configure.in,v 1.4 2001/11/17 14:22:17 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -18,6 +18,20 @@ if test ! -n "$have_perl" ; then
    AC_MSG_ERROR("Perl needs to be installed to use fml")
 fi
 AC_PATH_PROG(PERL, perl)
+
+mlspooldir=/var/spool/ml
+AC_ARG_WITH(mlspooldir, 
+[  --with-mlspooldir=DIR   use DIR instead of /var/spool/ml], 
+    mlspooldir=$withval)
+AC_SUBST(mlspooldir)
+
+
+fml_owner=fml
+AC_ARG_WITH(fml_owner, 
+[  --with-fml-owner=USER   use USER instead of fml], 
+    fml_owner=$withval)
+AC_SUBST(fml_owner)
+
 
 AC_SUBST(SHELL)
 
