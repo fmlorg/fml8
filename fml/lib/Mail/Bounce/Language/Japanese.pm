@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Japanese.pm,v 1.2 2001/07/31 23:26:17 fukachan Exp $
+# $FML: Japanese.pm,v 1.3 2001/12/22 09:21:16 fukachan Exp $
 #
 
 #
@@ -62,6 +62,10 @@ See C<Mail::Bounce> for more details.
 =cut
 
 
+# Descriptions: trap Japanese specific error address
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: update $args->{result}
+# Return Value: none
 sub _japanese_address_match
 {
     my ($self, $args) = @_;

@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.5 2001/12/16 14:06:41 fukachan Exp $
+# $FML: Date.pm,v 1.6 2001/12/22 09:21:19 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -12,7 +12,6 @@ package Mail::Message::Date;
 Mail::Message::Date - utilities for date and time
 
 =head1 SYNOPSIS
-
 
    use Mail::Message::Date;
    $date = new Mail::Message::Date time;

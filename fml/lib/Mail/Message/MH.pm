@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #
-# $FML: MH.pm,v 1.1 2001/11/04 13:46:34 fukachan Exp $
+# $FML: MH.pm,v 1.2 2001/12/22 09:21:19 fukachan Exp $
 #
 
 package Mail::Message::MH;
@@ -36,6 +36,10 @@ return HASH ARRAY of numbers specified by the following format:
 =cut
 
 
+# Descriptions: expand MH style expression to list of numbers
+#    Arguments: OBJ($self) STR($str) NUM($min) NUM($max)
+# Side Effects: none
+# Return Value: HASH_ARRAY
 sub expand
 {
     my ($self, $str, $min, $max) = @_;
@@ -83,9 +87,9 @@ sub expand
 
 
 # Descriptions: make an array from $fist to $last number
-#    Arguments: $first_number $last_number
+#    Arguments: NUM($first_number) NUM($last_number)
 # Side Effects: none
-# Return Value: HASH ARRAY as [ $first .. $last ]
+# Return Value: HASH_ARRAY as [ $first .. $last ]
 sub _expand_range
 {
     my ($first, $last) = @_;
