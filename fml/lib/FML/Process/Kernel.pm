@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.248 2004/12/18 03:13:03 fukachan Exp $
+# $FML: Kernel.pm,v 1.249 2004/12/18 12:57:19 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1548,11 +1548,28 @@ sub logdebug
     my (@c)    = caller;
 
     if ($config->yes('use_debug')) {
-	$curproc->log_message($msg, {
-	    msg_args => $msg_args,
-	    level    => 'debug',
-	    caller   => \@c,
-	});
+	my ($package, $filename, $line) = @c;
+
+	# XXX-TODO: ok? how to implement debug mask.
+	my $re = $config->get_as_array_ref('debug_module_regexp_list') || [];
+	if (@$re) {
+	    my $regexp = '';
+	    for my $re (@$re) { $regexp .= $regexp ? "|^$re\$" : "^$re\$";}
+	    if ($package =~ /($regexp)/) {
+		$curproc->log_message($msg, {
+		    msg_args => $msg_args,
+		    level    => 'debug',
+		    caller   => \@c,
+		});		
+	    }
+	}
+	else {
+	    $curproc->log_message($msg, {
+		msg_args => $msg_args,
+		level    => 'debug',
+		caller   => \@c,
+	    });
+	}
     }
 }
 
