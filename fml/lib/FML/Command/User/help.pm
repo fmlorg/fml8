@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: help.pm,v 1.6 2001/12/22 09:21:05 fukachan Exp $
+# $FML: help.pm,v 1.7 2001/12/22 16:10:51 fukachan Exp $
 #
 
 package FML::Command::User::help;
@@ -47,8 +47,17 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $config = $curproc->{ config };
 
-    $command_args->{ _file_to_send } = $config->{ "help_file" };
-    $self->send_file($curproc, $command_args);
+    # if "help" is found in $ml_home_dir (e.g. /var/spool/ml/elena),
+    # send it.
+    if (-f $config->{ "help_file" }) {
+	$command_args->{ _file_to_send } = $config->{ "help_file" };
+	$self->send_file($curproc, $command_args);
+    }
+    # if "help" is not found, use the default help message.
+    else {
+	$curproc->reply_message_nl('help.user.help',
+				   "help unavailable (error).");
+    }
 }
 
 
