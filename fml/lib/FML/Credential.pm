@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.57 2004/03/17 13:22:06 fukachan Exp $
+# $FML: Credential.pm,v 1.58 2004/03/18 13:26:47 fukachan Exp $
 #
 
 package FML::Credential;
@@ -199,6 +199,10 @@ These addresses differs. But
 
 are same since the last 3 top level domains are same.
 
+=head2 is_same_domain($xdomain, $ydomain)
+
+check if $xdomain and $ydomain are same or not.
+
 =cut
 
 
@@ -261,6 +265,23 @@ sub is_same_address
 
     # fail
     return 0;
+}
+
+
+# Descriptions: check if the specified domains are same or not.
+#    Arguments: OBJ($self) STR($xdomain) STR($ydomain)
+# Side Effects: none
+# Return Value: NUM
+sub is_same_domain
+{
+    my ($self, $xdomain, $ydomain) = @_;
+
+    if ("\L$xdomain\E" eq "\L$ydomain\E") { 
+	return 1;
+    }
+    else {
+	return 0;
+    }
 }
 
 
@@ -392,7 +413,8 @@ sub has_address_in_map
     }
 
     # $curproc->lock($lock_channel);   # READER LOCK
-    my $addrs = $obj->find( $user , { want => 'key', all => 1 });
+    my $_user = quotemeta($user);
+    my $addrs = $obj->find($_user , { want => 'key', all => 1 });
     # $curproc->unlock($lock_channel); # READER LOCK
 
     if (ref($addrs) && $debug) {
