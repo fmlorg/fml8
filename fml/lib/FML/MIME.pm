@@ -25,18 +25,18 @@ sub decode_mime_string
     my $charset = $options->{ 'charset' } || 'euc-japan';
 
     if ($charset eq 'euc-japan') {
-	use Jcode;
 	use MIME::Base64;
-
 	if ($str =~ /=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/i) { 
 	    $str =~ s/=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/decode_base64($1)/gie;
 	}
 
-	if ($str =~ /=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/i) { 
-	    $str =~ s/=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/decode_base64($1)/gie;
+	use MIME::QuotedPrint;
+	if ($str =~ /=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/i) { 
+	    $str =~ s/=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/decode_qp($1)/gie;
 	}
     }
 
+    use Jcode;
     &Jcode::convert(\$str, 'euc');
     $str;
 }
@@ -46,12 +46,25 @@ sub encode_mime_string
 {
     my ($str, $options) = @_;
     my $charset = $options->{ 'charset' } || 'iso-2022-jp';
+    my $encode  = $options->{ 'encode' }  || 'base64';
+    my $header  = '=?'. $charset;
+    my $trailor = '?=';
 
+    use Jcode;
     &Jcode::convert(\$str, 'jis');
-    $str = encode_base64($str);
-    $str  =~ s/\n$//;
 
-    return '=?'. $charset . '?B?' . $str . '?=';
+    if ($encode eq 'base64') {
+	$header .= '?B?';
+	$str = encode_base64($str);
+    }
+    elsif ($encode eq 'qp') {
+	$header .= '?Q?';
+	$str = encode_qp($str);
+	$str =~ s/(\s)/${trailor}${1}${header}/g;
+    }
+
+    $str  =~ s/\n$//;
+    return ($header . $str . $trailor);
 }
 
 
