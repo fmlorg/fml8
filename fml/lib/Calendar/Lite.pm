@@ -4,22 +4,22 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.11 2003/01/25 09:34:43 fukachan Exp $
+# $FML: Lite.pm,v 1.12 2003/01/25 12:48:17 fukachan Exp $
 #
 
-package Calender::Lite;
+package Calendar::Lite;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 =head1 NAME
 
-Calender::Lite - show a calender (demonstration module)
+Calendar::Lite - show a calendar (demonstration module)
 
 =head1 SYNOPSIS
 
-    use Calender::Lite;
-    my $schedule = new Calender::Lite;
+    use Calendar::Lite;
+    my $schedule = new Calendar::Lite;
 
     $schedule->parse;
 
@@ -178,7 +178,7 @@ Parse files in ~/.schedule/ or the specified schedule file.
 
 # Descriptions: parse filee(s).
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: update calender entries in $self object
+# Side Effects: update calendar entries in $self object
 #               (actually by _add_entry() calleded here)
 # Return Value: none
 sub parse
@@ -281,7 +281,7 @@ sub _analyze
 }
 
 
-# Descriptions: add calender entry to $self object
+# Descriptions: add Calendar entry to $self object
 #    Arguments: OBJ($self) STR($day) STR($buf)
 # Side Effects: update $self object
 # Return Value: none
@@ -303,7 +303,7 @@ You can specify the output channel by file descriptor C<$fd>.
 =cut
 
 
-# Descriptions: print calender by HTML::CalenderMonthSimple::as_HTML()
+# Descriptions: print Calendar by HTML::CalendarMonthSimple::as_HTML()
 #               method.
 #    Arguments: OBJ($self) HANDLE($fd)
 # Side Effects: none
@@ -330,7 +330,7 @@ C<$n> is number or string among C<this>, C<next> and C<last>.
 =cut
 
 
-# Descriptions: print calender for specific month as HTML.
+# Descriptions: print Calendar for specific month as HTML.
 #    Arguments: OBJ($self) HANDLE($fh) STR($month) [STR($year)]
 # Side Effects: none
 # Return Value: none
@@ -427,11 +427,11 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Calender::Lite first appeared in fml8 mailing list driver package.
+Calendar::Lite first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 Firstly this module name is C<TinyScheduler.pm> and renamed to
-Calender::Lite later.
+Calendar::Lite later.
 
 =cut
 
