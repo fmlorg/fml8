@@ -1,0 +1,20 @@
+### Section: Authentication
+# pgp.incorrect_signature:
+1: 	PGP signatureが違います。
+
+# pgp.no_signature:
+2: 	PGP signatureが見つかりません
+
+# pgp.env.error:
+3: 	エラー: システムのエラーです。PGP環境を設定してください。
+
+# pgp.cmd.disabled:
+4: 	_ARG0_ はリモートでは使えません。
+4: 	fmlの走っているホスト上でこのPGPの操作は実行して下さい。
+
+# pgp.cmd.not_supported:
+5: 	_ARG0_はサポートされていません。
+
+# pgp.encryption.error:
+6: 	PGP 暗号化に失敗しました。
+6: 	配送は行なわれません。
