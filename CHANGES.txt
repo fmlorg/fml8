@@ -10,6 +10,23 @@
 	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
 	気をつけてください。
 
+2004/10/28
+
+   FML::Restriction::Post 
+	implement "check_article_thread" operation.
+	Itt allows post from someone who reffers articles within one weeks.
+	
+   FML::Article 
+	update article message-id cache if article is saved successfully.
+	
+   FML::Header 
+	bug fix and enhance reference extranction logic.
+
+2004/10/27
+
+   variables
+	add $article_message_id_cache_dir variable.
+	allow check_article_thread in $article_post_restrictions.
 
 2004/10/09
 
@@ -7767,4 +7784,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.225 2004/10/03 17:14:21 fukachan Exp $
+$FML: CHANGES.txt,v 1.226 2004/10/10 11:25:09 fukachan Exp $
