@@ -779,6 +779,17 @@ log_format_type	=	process[pid]
 #     Examples:
 log_dir		=	$var_dir/log
 
+=head1	配送プロセス
+
+=head2	プロセス
+
+
+# Descriptions: 配送処理プログラムをそもそも使うか？
+#      History: なし
+#        Value: yes
+#     Examples: yes / no
+use_distribute_program	=	yes
+
 =head1	記事および記事のスプール
 
 # Descriptions: 記事を配送する機能を使うか否か？
@@ -842,6 +853,16 @@ use_html_archive	=	yes
 html_archive_dir	= $fml_owner_home_dir/public_html/fml/mlarchive/$ml_domain/$ml_name
 
 =head1	コマンドの定義
+
+=head2	プロセス
+
+
+# Descriptions: コマンドメールを使うか？
+#      History: なし
+#        Value: yes
+#     Examples: yes / no
+use_command_mail_program	=	yes
+
 
 =head2	コマンドの定義
 
@@ -999,11 +1020,14 @@ newml_command_template_files 	=	config.cf
 
 =head1	エラーメール解析
 
-# Descriptions: use libexe/fml/{error,mead} or not
-#      History:
+=head2	プロセス
+
+
+# Descriptions: エラー解析プログラムを使うか？
+#      History: なし
 #        Value: yes
 #     Examples: yes / no
-use_error_analyzer	=	yes
+use_error_analyzer_program	=	yes
 
 
 =head2	キャッシュ
