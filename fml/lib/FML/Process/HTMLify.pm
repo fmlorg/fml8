@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.15 2002/04/15 04:01:47 fukachan Exp $
+# $FML: HTMLify.pm,v 1.16 2002/04/19 05:21:54 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -181,7 +181,7 @@ sub  _check_subdir_exists
 	    next if /^\./;
 	    $subdir = File::Spec->catfile($src_dir, $_);
 
-	    if ($subdir) {
+	    if (-d $subdir) {
 		push(@subdir, $subdir);
 		$status = 1;
 	    }
