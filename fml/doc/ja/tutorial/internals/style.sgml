@@ -1,5 +1,5 @@
 <!--
-	$FML: style.sgml,v 1.1 2001/04/26 08:58:36 fukachan Exp $
+	$FML: style.sgml,v 1.1 2001/05/01 15:16:27 fukachan Exp $
 -->
 
 <chapter id="programingstyle">
@@ -8,6 +8,14 @@
 
 <para>
 ここでは、プログラミング上のいくつかの諸問題についてまとめます。
+</para>
+
+<para>
+FML.ORG のソフトウエアのコーディングスタイルについては
+<ulink url="http://www.fml.org/software/FNF/">
+FNF
+</ulink>
+を参照して下さい。
 </para>
 
 

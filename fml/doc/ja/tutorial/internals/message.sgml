@@ -1,9 +1,20 @@
 <!--
-	$FML: message.sgml,v 1.5 2001/09/23 10:59:20 fukachan Exp $	
+	$FML: message.sgml,v 1.6 2001/09/30 23:09:39 fukachan Exp $	
 -->
 
-<chapter id="message">
-   <title> メール(メッセージ)の取り扱い </title>
+<chapter id="mail.manipulation">
+   <title> メールの操作 </title>
+
+<para>
+メール(オブジェクト)を扱う関数の詳細については
+<link linkend="module.mail.message">
+Mail::Message クラス
+</link>
+を見て下さい。
+このクラスが基本的な操作法を提供しています。
+Mail::Bounce や Mail::Delivery を始め、
+あらゆる関数がこのクラスに依存しています。
+</para>
 
 
 <!-- ======================================= -->
@@ -24,7 +35,11 @@ multipart のように、
 </para>
 
 <para>
-それらのモジュールのために Mail::Message クラスがあり、
+それらのモジュールのために 
+<link linkend="module.mail.message">
+Mail::Message クラス
+</link>
+があり、
 メールの構造を表現するために用いられています。
 このクラスは
 Mail::Bounce や Mail::Delivery を始め、
@@ -89,8 +104,5 @@ MIME::Lite クラスへ
 </para>
 
 </sect1>
-
-
-&sect.errormessage;
 
 </chapter>

@@ -1,5 +1,5 @@
 <!--
-	$FML: download.sgml,v 1.1 2001/04/24 10:06:36 fukachan Exp $
+	$FML: download.sgml,v 1.1 2001/05/01 15:38:06 fukachan Exp $
 -->
 
 <chapter id="download">
@@ -25,6 +25,10 @@ fml-devel のソースは
 日付の新しいものを選んでダウンロードして下さい。
 </para>
 
+<para>
+なお daily snapshot もあります。
+</para>
+
 </sect1>
 
 
@@ -34,19 +38,14 @@ fml-devel のソースは
 <title> cvs へのアクセス </title>
 
 <para>
-anonymous CVS へのアクセスはまだできません。
-anoncvs.fml.org は準備中です
-(ちょっと待ってください。
-マシンが壊れてしまったのですが、復旧予定不明)。
+anoncvs.fml.org の fmlsrc 以下が fml 5.0 ブランチです。
 </para>
 
 <para>
 cvs.fml.org にアクセスできる権限のある人は
-
 <screen>
 cvs -d cvs.fml.org:/cvsroot co fmlsrc
 </screen>
-
 でアクセスできます(注: cvs over ssh のみがサポートされます)。
 </para>
 

@@ -1,10 +1,10 @@
 <!--
-	$FML: chapter.sgml,v 1.1.1.1 2001/10/12 11:00:20 fukachan Exp $
+	$FML: chapter.sgml,v 1.2 2001/10/12 11:14:19 fukachan Exp $
 -->
 
 <chapter id="fml.command.op">
 	<title>
-	fml をメールで操作する
+	コマンド: fml をメールで操作する
 	</title>
 
 <para>
@@ -14,10 +14,14 @@ fml にメールで文字列(コマンド)を送り込むことで、fml に特定の処理をして
 </para>
 
 <para>
+fml 5.0  では
+<screen>
 メールによるコマンド処理
 makefml によるコマンド処理
 CGI でのコマンド処理
-すべてが同じ FML::Command:: クラスのモジュールを使うことにします。 
+</screen>
+これらすべての機能が FML::Command:: クラスのモジュールを使うように
+設計されています。
 </para>
 
 
@@ -27,7 +31,7 @@ CGI でのコマンド処理
 	</title>
 
 <para>
-FML::Command:: クラスの再構成
+FML::Command:: クラスは以下のような構成になっています。
 <screen>
 FML::Command.pm		FML::Command クラス以下への入口
 FML::Command::ACL	ACL
@@ -35,46 +39,79 @@ FML::Command::Utils	よもやまの定義
 FML::Command::User	ユーザ用コマンド群
 FML::Command::Admin	ユーザ用コマンド群
 </screen>
-</para>
-
-<para>
-例えば、ユーザ用のコマンドの場合
+例えば、(メールでの)ユーザ用のコマンドの場合
 FML::Command.pm を経由して
 FML::Command::User::コマンド.pm
 モジュールを使うことになります。
 </para>
 
-</sect1>
-
-
-&sect.command.internal;
-
-
-<sect1 id="fml.command.hack.example0">
-   <title> コマンドの拡張の仕方の例 </title>
-
-
-   <sect2>
-	<title> 独自コマンドを作る。 </title>
-
-	<para>
-	fml 5.0 では、
-	例えばユーザ向けのコマンド uja を作りたい場合、
-	FML::Command 以下から適当に cut & paste して
-<screen>	
-/usr/local/lib/fml/site_local/FML/Command/User/uja.pm
-</screen>	
-	というファイルを置けば OK にしようとしています。
-	</para>
+<sect2>
+	<title> (メールでの)一般ユーザ用コマンド </title>
+<para>
+FML::Process::Command.pm から
+FML::Command.pm 経由で
+FML::Command::User::コマンド.pm
+を用います。
+</para>
 
 <para>
-これだけではだめで、許可するコマンドリストに追加して始めて有効になるよ
-うにしないといけないでしょう。
+最終的に
+FML::Command::Admin::コマンド.pm
+を使うモジュールもあります。
+例えば登録と削除の実作業は
+FML::Command::Admin::コマンド.pm
+が行なっています。この場合
+FML::Command::User::コマンド.pm
+のコマンドは confirm を行なうための wrapper です。
+</para>
+</sect2>
+
+<sect2>
+	<title> (メールでの) adminコマンド </title>
+
+<para>
+FML::Process::Command.pm から
+FML::Command.pm 経由で
+FML::Command::Admin::コマンド.pm
+を用います。
+</para>
+
+</sect2>
+
+<sect2>
+	<title> makefml のコマンド </title>
+
+<para>
+FML::Process::Configure.pm から
+FML::Command.pm 経由で
+FML::Command::Admin::コマンド.pm
+を用います。
+</para>
+
+</sect2>
+
+<sect2>
+	<title> CGI （予定） </title>
+
+<para>
+FML::Process::CGI.pm から
+FML::Command.pm 経由で
+FML::Command::Admin::コマンド.pm
+を用います（予定）。
 </para>
 
 </sect2>
 
 
 </sect1>
+
+
+<!-- コマンドの例 -->
+&sect.command.internal;
+
+
+<!-- コマンドの拡張例 -->
+&sect.command.extension;
+
 
 </chapter>

@@ -1,9 +1,11 @@
 <!--
-	$FML: chapter.sgml,v 1.1 2001/04/25 14:30:20 fukachan Exp $
+	$FML: chapter.sgml,v 1.2 2001/05/07 03:16:25 fukachan Exp $
 -->
 
 <chapter id="overview"> 
-<title> おおまかな流れ </title>
+	<title>
+	おおまかな流れ
+	</title>
 
 <sect1>
 	<title> 概要 </title>

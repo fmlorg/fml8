@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.16 2001/09/30 23:08:23 fukachan Exp $
+	$FML: chapters.ent,v 1.17 2001/10/12 11:14:19 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -29,8 +29,9 @@
 
 
 <!-- コマンド -->
-<!entity chapter.fmlcommand    SYSTEM "command/chapter.sgml">
-<!entity sect.command.internal SYSTEM "command/internal.sgml">
+<!entity chapter.fmlcommand     SYSTEM "command/chapter.sgml">
+<!entity sect.command.internal  SYSTEM "command/internal.sgml">
+<!entity sect.command.extension SYSTEM "command/extension.sgml">
 
 
 <!-- う〜ん、分類は…？;-) -->
@@ -50,8 +51,8 @@
 <!entity chapter.design          SYSTEM "internals/design.sgml">
 <!entity chapter.config.cf       SYSTEM "internals/config.cf.sgml">
 <!entity chapter.message         SYSTEM "internals/message.sgml">
-<!entity sect.errormessage       SYSTEM "internals/errormessage.sgml">
 <!entity chapter.nl              SYSTEM "internals/nativelanguage.sgml">
+<!entity chapter.message.nl      SYSTEM "message/language.sgml">
 
 
 <!-- 開発 -->

@@ -1,0 +1,32 @@
+<!--
+   $FML$
+-->
+
+
+<sect1 id="fml.command.hack.example0">
+   <title> コマンドの拡張の仕方の例 </title>
+
+
+   <sect2>
+	<title> 独自コマンドを作る。 </title>
+
+	<para>
+	fml 5.0 では、
+	例えばユーザ向けのコマンド uja を作りたい場合、
+	FML::Command 以下から適当に cut & paste して
+<screen>	
+/usr/local/lib/fml/site_local/FML/Command/User/uja.pm
+</screen>	
+	というファイルを置けば OK にしようとしています。
+	</para>
+
+<para>
+TODO:
+これだけではだめで、許可するコマンドリストに追加して始めて有効になるよ
+うにしないといけないでしょう。
+このあたりはまだ未定です。
+</para>
+
+</sect2>
+
+</sect1>

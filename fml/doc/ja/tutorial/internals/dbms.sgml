@@ -1,5 +1,5 @@
 <!--
-   $FML: db.sgml,v 1.1 2001/08/05 12:33:50 fukachan Exp $
+   $FML: dbms.sgml,v 1.1 2001/08/19 12:53:08 fukachan Exp $
 -->
 
 <chapter id="dbms">
@@ -8,8 +8,17 @@
 	</title>
 
 <para>
-ごめん、この章は予約しただけで、書いてないです _o_
+DBMS との通信は
+<link linkend="module.io.adapter">
+IO::Adapter
+</link>
+クラス経由で通信することが前提です。
 </para>
 
+<para>
+データの挿入や削除といった基本的な機能はこのクラスが提供します。
+それらの原始的な機能を組み合わせた複雑な操作は
+IO::Adapter の前段階のプログラムが頑張る必要があります。
+</para>
 
 </chapter>

@@ -100,6 +100,15 @@ CPAN/ や 3RDPARTY/ 以下のモジュールを変更したい場合は fml5/ 以下でなん
 		</row>
 	
 		<row>
+		<entry>	img/
+		</entry>
+		<entry>
+		Internet Message Group
+		(だが、IM についてはすでに解散状態か？)
+		</entry>
+		</row>
+
+		<row>
 		<entry> 	3rdparty/
 		</entry>
 		<entry>	サードパーティ用(予約)
