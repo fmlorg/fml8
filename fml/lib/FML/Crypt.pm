@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Crypt.pm,v 1.2 2003/02/02 10:57:48 fukachan Exp $
+# $FML: Crypt.pm,v 1.3 2003/02/09 12:31:40 fukachan Exp $
 #
 
 package FML::Crypt;
@@ -29,7 +29,7 @@ Now FML::Crypt is just a wrapper for Crypt::UnixCrypt module.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 construcotor.
 

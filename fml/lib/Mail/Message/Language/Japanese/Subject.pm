@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.14 2003/07/21 11:25:38 fukachan Exp $
+# $FML: Subject.pm,v 1.15 2003/07/21 13:26:05 fukachan Exp $
 #
 
 
@@ -69,7 +69,7 @@ sub new
 }
 
 
-=head2 C<is_reply($string)>
+=head2 is_reply($string)
 
 check whether C<$string> looks like a reply message.
 C<$string> is a C<Subject:> of the mail header.
@@ -95,7 +95,7 @@ sub is_reply
 }
 
 
-=head2 C<cut_off_reply_tag($subject)>
+=head2 cut_off_reply_tag($subject)
 
 cut off C<Re:> in the string C<$subject> like C<Re: ... >
 within C<Subject:>.

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.38 2003/03/18 10:42:40 fukachan Exp $
+# $FML: Command.pm,v 1.39 2003/06/29 05:48:11 fukachan Exp $
 #
 
 # XXX
@@ -42,7 +42,7 @@ command request and makefml commands.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constructor.
 
@@ -69,7 +69,7 @@ sub new
 sub DESTROY { ;}
 
 
-=head2 C<rewrite_prompt($curproc, $command_args, $rbuf)>
+=head2 rewrite_prompt($curproc, $command_args, $rbuf)
 
 rewrite the specified buffer $rbuf (STR_REF).
 $rbuf is rewritten as a result.
@@ -115,7 +115,7 @@ sub rewrite_prompt
 
 
 
-=head2 C<notice_cc_recipient($curproc, $command_args, $rbuf)>
+=head2 notice_cc_recipient($curproc, $command_args, $rbuf)
 
 return addresses to inform for the command reply.
 
@@ -147,7 +147,7 @@ sub notice_cc_recipient
 }
 
 
-=head2 C<AUTOLOAD()>
+=head2 AUTOLOAD()
 
 the command dispatcher.
 It hooks up the C<$command> request and loads the module in

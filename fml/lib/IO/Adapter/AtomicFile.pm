@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: AtomicFile.pm,v 1.7 2003/01/29 04:46:54 fukachan Exp $
+# $FML: AtomicFile.pm,v 1.8 2003/02/01 06:08:39 fukachan Exp $
 #
 
 package IO::Adapter::AtomicFile;
@@ -75,7 +75,7 @@ The C<atomic> feature is based on C<rename(2)> system call.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 The ordinary constructor.
 The request is forwarded to SUPER CLASS's new().
@@ -241,11 +241,11 @@ sub copy
 }
 
 
-=head2 C<error()>
+=head2 error()
 
 return the error.
 
-=head2 C<rollback()>
+=head2 rollback()
 
 stop the operation and remove the temporary file to back to the first
 state.

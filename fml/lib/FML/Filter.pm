@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.30 2003/06/25 13:10:50 tmu Exp $
+# $FML: Filter.pm,v 1.31 2003/07/18 12:55:27 fukachan Exp $
 #
 
 package FML::Filter;
@@ -38,7 +38,7 @@ L<FML::Filter::MimeComponent>.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constructor.
 

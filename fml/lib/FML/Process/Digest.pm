@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Digest.pm,v 1.5 2002/12/10 12:00:50 fukachan Exp $
+# $FML: Digest.pm,v 1.6 2002/12/22 03:46:20 fukachan Exp $
 #
 
 package FML::Process::Digest;
@@ -36,7 +36,7 @@ where C<$obj> is the object C<FML::Process::$module::new()> returns.
 
 =head1 METHOD
 
-=head2 C<new($args)>
+=head2 new($args)
 
 create C<FML::Process::Digest> object.
 C<$curproc> is the object C<FML::Process::Kernel> returns but
@@ -59,7 +59,7 @@ sub new
 }
 
 
-=head2 C<prepare($args)>
+=head2 prepare($args)
 
 forward the request to the base class.
 adjust ml_* and load configuration files.
@@ -96,7 +96,7 @@ sub prepare
 }
 
 
-=head2 C<verify_request($args)>
+=head2 verify_request($args)
 
 set up the mail sender.
 
@@ -191,7 +191,7 @@ _EOF_
 }
 
 
-=head2 C<finish($args)>
+=head2 finish($args)
 
 Finalize the current process.
 If needed, we send back error messages to the mail sender.

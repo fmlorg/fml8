@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.25 2003/02/11 11:37:48 fukachan Exp $
+# $FML: DBI.pm,v 1.26 2003/05/26 12:28:06 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -32,7 +32,7 @@ parameters.
 
 =head1 METHODS
 
-=head2 C<make_dsn($args)>
+=head2 make_dsn($args)
 
 prepare C<dsn>.
 
@@ -54,7 +54,7 @@ sub make_dsn
 }
 
 
-=head2 C<execute($args)>
+=head2 execute($args)
 
 execute sql query.
 
@@ -101,11 +101,11 @@ sub execute
 }
 
 
-=head2 C<open($args)>
+=head2 open($args)
 
 connected to SQL server specified by C<dsn>.
 
-=head2 C<close($args)>
+=head2 close($args)
 
 close connection to SQL server specified by C<dsn>.
 
@@ -164,11 +164,11 @@ sub close
 }
 
 
-=head2 C<getline()>
+=head2 getline()
 
 return the next address.
 
-=head2 C<get_next_key()>
+=head2 get_next_key()
 
 return the next key.
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.20 2003/05/28 13:14:05 fukachan Exp $
+# $FML: Analyze.pm,v 1.21 2003/05/28 14:33:43 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -27,7 +27,7 @@ FML::Error::Analyze - provide model specific analyzer routines.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 =cut
 
@@ -114,7 +114,7 @@ sub print
 }
 
 
-=head2 C<AUTOLOAD()>
+=head2 AUTOLOAD()
 
 the command dispatcher.
 It hooks up the C<$command> request and loads the module in

@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.50 2003/02/09 12:31:44 fukachan Exp $
+# $FML: Configure.pm,v 1.51 2003/08/18 14:05:03 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -36,16 +36,16 @@ See C<FML::Process::Flow> for the flow detail.
 
 =head1 METHODS
 
-=head2 C<new($args)>
+=head2 new($args)
 
 constructor.
 It make a C<FML::Process::Kernel> object and return it.
 
-=head2 C<prepare($args)>
+=head2 prepare($args)
 
 fix @INC, adjust ml_* and load configuration files.
 
-=head2 C<verify_request($args)>
+=head2 verify_request($args)
 
 show help if needed.
 
@@ -112,7 +112,7 @@ sub verify_request
 }
 
 
-=head2 C<run($args)>
+=head2 run($args)
 
 the top level dispatcher for C<makefml>.
 

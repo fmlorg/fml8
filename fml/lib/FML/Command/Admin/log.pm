@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.14 2003/02/16 08:33:09 fukachan Exp $
+# $FML: log.pm,v 1.15 2003/02/20 04:32:50 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -27,7 +27,7 @@ show log file(s).
 
 =head1 METHODS
 
-=head2 C<process($curproc, $command_args)>
+=head2 process($curproc, $command_args)
 
 =cut
 

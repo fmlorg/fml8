@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: TextPlain.pm,v 1.1 2002/09/30 11:00:55 fukachan Exp $
+# $FML: TextPlain.pm,v 1.2 2002/12/20 03:42:41 fukachan Exp $
 #
 
 package FML::Filter::TextPlain;
@@ -27,7 +27,7 @@ mail body content, which tuned for plain texts.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constructor.
 
@@ -62,7 +62,7 @@ sub new
 }
 
 
-=head2 C<rules( $rules )>
+=head2 rules( $rules )
 
 overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 
@@ -80,7 +80,7 @@ sub rules
 }
 
 
-=head2 C<body_check($msg, $args)>
+=head2 body_check($msg, $args)
 
 C<$msg> is C<Mail::Message> object.
 
@@ -469,7 +469,7 @@ sub is_signature
 }
 
 
-=head2 C<clean_up_buffer($args)>
+=head2 clean_up_buffer($args)
 
 remove some special syntax pattern for further check.
 For example, the pattern is a mail address.

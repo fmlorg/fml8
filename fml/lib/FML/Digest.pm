@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Digest.pm,v 1.8 2003/03/16 10:57:27 fukachan Exp $
+# $FML: Digest.pm,v 1.9 2003/03/28 10:03:38 fukachan Exp $
 #
 
 package FML::Digest;
@@ -27,7 +27,7 @@ FML::Digest - create digest, a subset of articles.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constructor.
 

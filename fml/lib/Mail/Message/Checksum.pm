@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Checksum.pm,v 1.7 2003/01/26 03:23:09 fukachan Exp $
+# $FML: Checksum.pm,v 1.8 2003/07/21 10:40:06 fukachan Exp $
 #
 
 package Mail::Message::Checksum;
@@ -25,7 +25,7 @@ Mail::Message::Checksum - utilities for check sum
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 the constructor.
 It checks we can use MD5 perl module or we need to use external programs
@@ -84,7 +84,7 @@ sub _init
 }
 
 
-=head2 C<md5(\$string)>
+=head2 md5(\$string)
 
 return the md5 checksum of the given string C<$string>.
 
@@ -168,7 +168,7 @@ sub _md5_by_program
 }
 
 
-=head2 C<cksum1($file)>
+=head2 cksum1($file)
 
 C<not implemented>.
 
@@ -176,7 +176,7 @@ This is a 16-bit checksum. The algorithm used by historic BSD systems
 as the sum(1) algorithm and by historic AT&T System V UNIX systems as
 the sum algorithm when using the C<-r> option.
 
-=head2 C<cksum2($file)>
+=head2 cksum2($file)
 
 return the traditional checksum of the given C<$file>.
 
@@ -220,7 +220,7 @@ sub cksum2
 }
 
 
-=head2 C<crc($file)>
+=head2 crc($file)
 
 C<not implemented>.
 

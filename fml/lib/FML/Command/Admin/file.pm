@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: file.pm,v 1.11 2003/01/25 12:48:38 fukachan Exp $
+# $FML: file.pm,v 1.12 2003/03/18 10:42:43 fukachan Exp $
 #
 
 package FML::Command::Admin::file;
@@ -27,7 +27,7 @@ file a new address.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $command_args)>
+=head2 process($curproc, $command_args)
 
 =cut
 

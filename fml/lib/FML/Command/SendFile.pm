@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.27 2003/03/28 10:03:39 fukachan Exp $
+# $FML: SendFile.pm,v 1.28 2003/06/29 05:48:12 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -39,7 +39,7 @@ and file(s) in C<$ml_home_dir>.
 
 =head1 METHODS
 
-=head2 C<send_article($curproc, $command_args)>
+=head2 send_article($curproc, $command_args)
 
 send back articles where C<article> is a file named as /^\d+$/ in the
 ml spool $spool_dir.  This is used in C<FML::Command::User> and
@@ -158,7 +158,7 @@ sub _get_valid_article_list
 }
 
 
-=head2 C<send_file($curproc, $command_args)>
+=head2 send_file($curproc, $command_args)
 
 send back file specified as C<$command_args->{ _filepath_to_send }>.
 
@@ -207,7 +207,7 @@ sub send_file
 }
 
 
-=head2 C<send_user_xxx_message($curproc, $command_args, $type)>
+=head2 send_user_xxx_message($curproc, $command_args, $type)
 
 Send back a help file if "help" is found in $ml_home_dir
 (e.g. /var/spool/ml/elena) for backward compatibility.

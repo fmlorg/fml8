@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.18 2003/02/01 06:08:38 fukachan Exp $
+# $FML: subscribe.pm,v 1.19 2003/03/18 10:42:44 fukachan Exp $
 #
 
 package FML::Command::User::subscribe;
@@ -29,7 +29,7 @@ After confirmation succeeds, subcribe process proceeds.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $command_args)>
+=head2 process($curproc, $command_args)
 
 =cut
 

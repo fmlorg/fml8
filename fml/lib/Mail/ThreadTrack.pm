@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.33 2003/01/11 15:14:23 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.34 2003/01/11 15:16:34 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -51,7 +51,7 @@ where C<$msg> is Mail::Message object for the article 100.
 
 =head1 METHODS
 
-=head2 C<new($args)>
+=head2 new($args)
 
     $args = {
 	fd          => \*STDOUT,
@@ -215,7 +215,7 @@ sub _init_dir
 }
 
 
-=head2 C<increment_id(file)>
+=head2 increment_id(file)
 
 increment thread number which is taken up from C<file>
 and save the new number to C<file>.
@@ -441,7 +441,7 @@ sub close
 }
 
 
-=head2 C<set_status($args)>
+=head2 set_status($args)
 
 set $status for $thread_id. It rewrites DB (file).
 C<$args>, HASH reference, must have two keys.

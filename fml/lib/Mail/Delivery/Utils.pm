@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.9 2002/09/22 14:57:02 fukachan Exp $
+# $FML: Utils.pm,v 1.10 2002/12/20 03:50:27 fukachan Exp $
 #
 
 package Mail::Delivery::Utils;
@@ -67,7 +67,7 @@ several utility functions for C<Mail::Delivery> sub classes.
 
 =head1 LOGGING FUNCTIONS
 
-=head2 C<Log($buf)>
+=head2 Log($buf)
 
 Logging interface.
 send C<$buf> (the log message) to the function specified as
@@ -109,7 +109,7 @@ sub Log
 ##### SMTP Logging
 #####
 
-=head2 C<smtplog($buf)>
+=head2 smtplog($buf)
 
 smtp logging interface as the same as C<Log()> but for smtp
 transcation log.
@@ -166,15 +166,15 @@ sub _smtplog
 
 =head1 METHODS FOR ERROR MESSAGES AND STATUS CODES
 
-=head2 C<error_set($mesg)>
+=head2 error_set($mesg)
 
 save C<$mesg>.
 
-=head2 C<error()>
+=head2 error()
 
 return the latest error message which saved by C<error_set()>.
 
-=head2 C<error_clear()>
+=head2 error_clear()
 
 reset the error buffer which C<error_set()> and C<error()> use.
 
@@ -186,11 +186,11 @@ reset the error buffer which C<error_set()> and C<error()> use.
 ##### status codes manipulations
 #####
 
-=head2 C<_set_status_code($value)>
+=head2 _set_status_code($value)
 
 save C<($value)> as status code.
 
-=head2 C<_get_status_code()>
+=head2 _get_status_code()
 
 get the latest status code.
 
@@ -231,12 +231,12 @@ sub _set_status_code
 
 =head1 METHODS TO HANDLE POSITION at IO MAP
 
-=head2	     C<_set_target_map($map)>
+=head2 _set_target_map($map)
 
 save the current C<map> name
 where C<map> is a name usable at C<recipient_maps>
 
-=head2	     C<_get_target_map()>
+=head2 _get_target_map()
 
 return the current C<map>
 where C<map> is a name usable at C<recipient_maps>
@@ -269,20 +269,20 @@ sub _get_target_map
 }
 
 
-=head2	     C<_set_map_status($map, $status)>
+=head2 _set_map_status($map, $status)
 
 save C<$status> for C<$map> IO.
 For example, C<$status> is 'not done'.
 
-=head2	     C<_set_map_position($map, $position)>
+=head2 _set_map_position($map, $position)
 
 save the C<$position> for C<$map> IO.
 
-=head2	     C<_get_map_status($map)>
+=head2 _get_map_status($map)
 
 get the current C<$status> for C<$map> IO.
 
-=head2	     C<_get_map_position($map)>
+=head2 _get_map_position($map)
 
 get the current C<$position> for C<$map> IO.
 
@@ -343,13 +343,13 @@ sub _get_map_position
 }
 
 
-=head2	     C<_rollback_map_position()>
+=head2 _rollback_map_position()
 
 stop the IO for the current C<$map>.
 This method rolls back the operation state to the time when the
 current IO for C<$map> begins.
 
-=head2	     C<_reset_mapinfo()>
+=head2 _reset_mapinfo()
 
 clear information around the latest map operation.
 

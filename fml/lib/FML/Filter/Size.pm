@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Size.pm,v 1.2 2003/06/22 16:05:14 fukachan Exp $
+# $FML: Size.pm,v 1.3 2003/07/21 04:51:33 fukachan Exp $
 #
 
 package FML::Filter::Size;
@@ -27,7 +27,7 @@ size.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constructor.
 
@@ -62,7 +62,7 @@ sub new
 
 
 
-=head2 C<rules( $rules )>
+=head2 rules( $rules )
 
 overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 
@@ -98,7 +98,7 @@ sub set_class
 }
 
 
-=head2 C<size_check($msg, $args)>
+=head2 size_check($msg, $args)
 
 C<$msg> is C<Mail::Message> object.
 

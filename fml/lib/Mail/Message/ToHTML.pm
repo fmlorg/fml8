@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.51 2003/08/14 13:43:09 tmu Exp $
+# $FML: ToHTML.pm,v 1.52 2003/08/20 23:40:30 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.51 2003/08/14 13:43:09 tmu Exp $;
+my $version = q$FML: ToHTML.pm,v 1.52 2003/08/20 23:40:30 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -73,7 +73,7 @@ something() below is method name.
 
 =head1 METHODS
 
-=head2 C<new($args)>
+=head2 new($args)
 
     $args = {
 	directory => $directory,
@@ -130,7 +130,7 @@ sub DESTROY
 }
 
 
-=head2 C<htmlfy_rfc822_message($args)>
+=head2 htmlfy_rfc822_message($args)
 
 convert mail to html.
 
@@ -889,7 +889,7 @@ sub _binary_print
 }
 
 
-=head2 C<is_ignore($id)>
+=head2 is_ignore($id)
 
 we should not process this C<$id>
 
@@ -911,7 +911,7 @@ sub is_ignore
 
 =head1 METHODS for index and thread
 
-=head2 C<cache_message_info($msg, $args)>
+=head2 cache_message_info($msg, $args)
 
 save information into DB.
 See section C<Internal Data Presentation> for more detail.
@@ -961,7 +961,7 @@ sub ndb
 }
 
 
-=head2 C<update_msg_html_links($id)>
+=head2 update_msg_html_links($id)
 
 update link relation around C<$id>.
 
@@ -1284,7 +1284,7 @@ sub evaluate_safe_footer
 }
 
 
-=head2 C<update_id_index($args)>
+=head2 update_id_index($args)
 
 update index.html.
 
@@ -1416,7 +1416,7 @@ sub update_id_index
 }
 
 
-=head2 C<update_monthly_id_index($args)>
+=head2 update_monthly_id_index($args)
 
 =cut
 
@@ -1606,7 +1606,7 @@ sub _update_monthly_id_index
 }
 
 
-=head2 C<update_thread_index($args)>
+=head2 update_thread_index($args)
 
 update thread.html.
 
@@ -2042,7 +2042,7 @@ sub _decode_mime_string
 
 =head1 useful functions as entrance
 
-=head2 C<htmlify_file($file, $args)>
+=head2 htmlify_file($file, $args)
 
 try to convert rfc822 message C<$file> to HTML.
 
@@ -2050,7 +2050,7 @@ try to convert rfc822 message C<$file> to HTML.
 	directory => "destination directory",
     };
 
-=head2 C<htmlify_dir($dir, $args)>
+=head2 htmlify_dir($dir, $args)
 
 try to convert all rfc822 messages to HTML in C<$dir> directory.
 

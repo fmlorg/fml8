@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.60 2003/05/03 03:26:54 fukachan Exp $
+# $FML: Header.pm,v 1.61 2003/06/25 13:10:50 tmu Exp $
 #
 
 package FML::Header;
@@ -54,7 +54,7 @@ C<FML::Header> overloads C<get()> to remove the trailing "\n".
 # XXX-TODO: need to implement copy() and move() ?
 #
 
-=head2 C<new()>
+=head2 new()
 
 forward the request up to superclass C<Mail::header::new()>.
 
@@ -81,12 +81,12 @@ sub new
 sub DESTROY {}
 
 
-=head2 C<get($key)>
+=head2 get($key)
 
 return the value of C<Mail::Header::get($key)> but without the trailing
 "\n".
 
-=head2 C<set($key, $value)>
+=head2 set($key, $value)
 
 alias of C<Mail::Header::set($key, $value)>.
 
@@ -119,7 +119,7 @@ sub set
 }
 
 
-=head2 C<address_clean_up(address)>
+=head2 address_clean_up(address)
 
 clean up given C<address>. This method parses the given address by
 C<Mail::Address::parse()>, remove < and > and return the result.
@@ -157,7 +157,7 @@ sub address_clean_up
 }
 
 
-=head2 C<data_type()>
+=head2 data_type()
 
 return the C<type> defind in the header's Content-Type field.
 For example, C<text/plain>, C<mime/multipart> and et. al.
@@ -193,15 +193,15 @@ sub data_type
 
 =head1 FML SPECIFIC METHODS
 
-=head2 C<add_fml_ml_name($config, $args)>
+=head2 add_fml_ml_name($config, $args)
 
 add X-ML-Name:
 
-=head2 C<add_fml_traditional_article_id($config, $args)>
+=head2 add_fml_traditional_article_id($config, $args)
 
 add X-Mail-Count:
 
-=head2 C<add_fml_article_id($config, $args)>
+=head2 add_fml_article_id($config, $args)
 
 add X-ML-Count:
 
@@ -246,21 +246,21 @@ sub add_fml_article_id
 }
 
 
-=head2 C<add_software_info($config, $args)>
+=head2 add_software_info($config, $args)
 
 add X-MLServer: and List-Software:.
 
 C<MIME::Lite> object as a $args->{ message } can be handled
 when $args->{type} is 'MIME::Lite'.
 
-=head2 C<add_rfc2369($config, $args)>
+=head2 add_rfc2369($config, $args)
 
 add List-* sereies defined in RFC2369 and RFC2919.
 
 C<MIME::Lite> object as a $args->{ message } can be handled
 when $args->{type} is 'MIME::Lite'.
 
-=head2 C<add_x_sequence($config, $args)>
+=head2 add_x_sequence($config, $args)
 
 add X-Sequence.
 
@@ -352,28 +352,28 @@ sub add_x_sequence
 }
 
 
-=head2 C<rewrite_article_subject_tag($config, $args)>
+=head2 rewrite_article_subject_tag($config, $args)
 
 add subject tag like [elena:00010].
 The actual function definitions exist in C<FML::Header::Subject>.
 
-=head2 C<rewrite_reply_to>
+=head2 rewrite_reply_to
 
 replace C<Reply-To:> with this ML's address for post.
 add reply-to: if not specified.
 
 
-=head2 C<rewrite_errors_to>
+=head2 rewrite_errors_to
 
 replace C<Errors-To:> with this ML's address for post.
 add errors-to: if not specified.
 
-=head2 C<rewrite_date>
+=head2 rewrite_date
 
 replace original C<Date:> to C<X-Date:>.
 and now fml process time add to C<Date:>.
 
-=head2 C<rewrite_received>
+=head2 rewrite_received
 
 replace original C<Received:> to C<X-Received:>.
 
@@ -468,7 +468,7 @@ sub rewrite_received
 }
 
 
-=head2 C<delete_unsafe_header_fields($config, $args)>
+=head2 delete_unsafe_header_fields($config, $args)
 
 remove header fields defiend in C<$unsafe_header_fields>.
 C<$unsafe_header_fields> is a list of keys.
@@ -494,11 +494,11 @@ sub delete_unsafe_header_fields
 
 =head1 MISCELLANEOUS UTILITIES
 
-=head2 C<delete_subject_tag_like_string($string)>
+=head2 delete_subject_tag_like_string($string)
 
 remove subject tag like the string given as C<$string>.
 
-=head2 C<extract_message_id_references()>
+=head2 extract_message_id_references()
 
 return message-id list (ARRAY REFERENCE) extracted from the header
 (C<$self>).  It extracts message-id(s) from In-Reply-To: and
@@ -553,18 +553,18 @@ sub extract_message_id_references
 
 =head1 FILTERING FUNCTIONS
 
-=head2 C<check_message_id($config, $args)>
+=head2 check_message_id($config, $args)
 
 check whether message-id is unique or not. If the message-id is found
 in the past message-id cache, the injected message must causes a mail
 loop.
 
-=head2 C<check_x_ml_info($config, $args)>
+=head2 check_x_ml_info($config, $args)
 
 The injected message loops if x-ml-info: has our own
 C<address_for_post> address.
 
-=head2 C<check_list_post($config, $args)>
+=head2 check_list_post($config, $args)
 
 The injected message loops if list-post: has our own
 C<address_for_post> address.

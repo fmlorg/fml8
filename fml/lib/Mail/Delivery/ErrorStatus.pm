@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ErrorStatus.pm,v 1.4 2002/09/11 23:18:23 fukachan Exp $
+# $FML: ErrorStatus.pm,v 1.5 2002/09/22 14:57:02 fukachan Exp $
 #
 
 package Mail::Delivery::ErrorStatus;
@@ -47,11 +47,11 @@ simple utility functions to manipulate error messages.
 
 =head1 METHODS
 
-=head2 C<error_set($message)>
+=head2 error_set($message)
 
 save $message as an error message.
 
-=head2 C<error()>
+=head2 error()
 
 return $message which is saved by C<error_set($msg)>.
 

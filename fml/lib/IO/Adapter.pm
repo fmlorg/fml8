@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.25 2003/01/11 15:22:25 fukachan Exp $
+# $FML: Adapter.pm,v 1.26 2003/02/01 10:55:03 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -264,7 +264,7 @@ sub open
 }
 
 
-=head2 C<touch()>
+=head2 touch()
 
 create a file if not exists.
 This method is avaialble for file: type.
@@ -299,7 +299,7 @@ considered but these are not userd in fml version 8 now.
 
 return the next primary key.
 
-=head2 C<add( $address, [$argv] )>
+=head2 add( $address, [$argv] )
 
 add $address to the specified map.
 
@@ -309,7 +309,7 @@ or
   $address => [ STR1, STR2, ... ].
 
 
-=head2 C<delete( $address )>
+=head2 delete( $address )
 
 delete lines which matches $regexp from this map.
 
@@ -362,7 +362,7 @@ sub delete
 }
 
 
-=head2 C<find($regexp [,$args])>
+=head2 find($regexp [,$args])
 
 search $regexp in C<map> and return the line which matches C<$regexp>.
 It searches C<$regexp> in case insenssitive by default.
@@ -449,7 +449,7 @@ sub find
 }
 
 
-=head2 C<DESTROY>
+=head2 DESTROY
 
 =cut
 

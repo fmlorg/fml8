@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: addadmin.pm,v 1.9 2003/01/25 12:48:37 fukachan Exp $
+# $FML: addadmin.pm,v 1.10 2003/03/18 10:42:41 fukachan Exp $
 #
 
 package FML::Command::Admin::addadmin;
@@ -27,7 +27,7 @@ add a new administrator mail address.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $command_args)>
+=head2 process($curproc, $command_args)
 
 =cut
 

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.19 2002/12/18 04:43:52 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.20 2003/01/11 16:05:17 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -33,16 +33,16 @@ FML::Process::ConfViewer provides the main function for C<fmlconf>.
 
 =head1 METHODS
 
-=head2 C<new($args)>
+=head2 new($args)
 
 ordinary constructor.
 It make a C<FML::Process::Kernel> object and return it.
 
-=head2 C<prepare($args)>
+=head2 prepare($args)
 
 fix @INC, adjust ml_* and load configuration files.
 
-=head2 C<verify_request($args)>
+=head2 verify_request($args)
 
 show help unless @ARGV.
 
@@ -119,7 +119,7 @@ sub verify_request
 }
 
 
-=head2 C<run($args)>
+=head2 run($args)
 
 the top level dispatcher for C<fmlconf>.
 

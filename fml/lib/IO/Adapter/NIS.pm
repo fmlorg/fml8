@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: NIS.pm,v 1.19 2002/09/22 14:56:59 fukachan Exp $
+# $FML: NIS.pm,v 1.20 2002/12/22 02:54:38 fukachan Exp $
 #
 
 package IO::Adapter::NIS;
@@ -44,7 +44,7 @@ C<CAUTION: this map is read only>.
 This class inherits C<IO::Adapter::Array>.
 See L<IO::Adapter::Array>.
 
-=head2 C<configure($obj)>
+=head2 configure($obj)
 
 Configure $obj for array IO emulation.
 

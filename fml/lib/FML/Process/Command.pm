@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.85 2003/03/15 09:03:52 fukachan Exp $
+# $FML: Command.pm,v 1.86 2003/05/14 12:02:01 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -40,7 +40,7 @@ for the given C<$command>.
 
 =head1 METHODS
 
-=head2 C<new($args)>
+=head2 new($args)
 
 make fml process object, which inherits C<FML::Process::Kernel>.
 
@@ -60,7 +60,7 @@ sub new
 }
 
 
-=head2 C<prepare($args)>
+=head2 prepare($args)
 
 adjust ml_* and load configuration files.
 parse the incoming message.
@@ -98,7 +98,7 @@ sub prepare
 }
 
 
-=head2 C<verify_request($args)>
+=head2 verify_request($args)
 
 verify the sender is a valid member or not.
 
@@ -165,7 +165,7 @@ sub _check_filter
 }
 
 
-=head2 C<run($args)>
+=head2 run($args)
 
 dispatcher to run correspondig C<FML::Command::command> for
 C<command>. Standard style follows:
@@ -257,7 +257,7 @@ _EOF_
 }
 
 
-=head2 C<finish($args)>
+=head2 finish($args)
 
 queue flush and send back the results or error messages.
 

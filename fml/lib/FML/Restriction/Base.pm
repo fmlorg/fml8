@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.21 2003/02/09 12:31:46 fukachan Exp $
+# $FML: Base.pm,v 1.22 2003/04/29 12:33:24 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -41,7 +41,7 @@ a variable is safe or not.
 
 =head1 METHODS
 
-=head2 C<new($args)>
+=head2 new($args)
 
 usual constructor.
 

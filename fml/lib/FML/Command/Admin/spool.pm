@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: spool.pm,v 1.2 2003/03/16 10:56:00 fukachan Exp $
+# $FML: spool.pm,v 1.3 2003/03/18 10:42:43 fukachan Exp $
 #
 
 package FML::Command::Admin::spool;
@@ -27,7 +27,7 @@ show spool status or convert the structure.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $command_args)>
+=head2 process($curproc, $command_args)
 
 =cut
 

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.120 2003/08/06 13:45:49 fukachan Exp $
+# $FML: Distribute.pm,v 1.121 2003/08/16 02:46:37 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -36,7 +36,7 @@ where C<$obj> is the object C<FML::Process::$module::new()> returns.
 
 =head1 METHOD
 
-=head2 C<new($args)>
+=head2 new($args)
 
 create C<FML::Process::Distribute> object.
 C<$curproc> is the object C<FML::Process::Kernel> returns but
@@ -59,7 +59,7 @@ sub new
 }
 
 
-=head2 C<prepare($args)>
+=head2 prepare($args)
 
 forward the request to the base class.
 adjust ml_* and load configuration files.
@@ -98,7 +98,7 @@ sub prepare
 }
 
 
-=head2 C<verify_request($args)>
+=head2 verify_request($args)
 
 check the mail sender and the mail loop possibility.
 
@@ -302,7 +302,7 @@ _EOF_
 }
 
 
-=head2 C<finish($args)>
+=head2 finish($args)
 
 Finalize the current process.
 If needed, we send back error messages to the mail sender.

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.63 2003/04/18 15:53:46 fukachan Exp $
+# $FML: newml.pm,v 1.64 2003/04/19 06:13:00 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -33,7 +33,7 @@ install config.cf, include, include-ctl et. al.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $command_args)>
+=head2 process($curproc, $command_args)
 
 =cut
 

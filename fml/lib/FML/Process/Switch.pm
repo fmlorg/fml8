@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.90 2003/03/11 06:17:10 fukachan Exp $
+# $FML: Switch.pm,v 1.91 2003/03/28 10:32:23 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -61,7 +61,7 @@ For example, libexec/distribute (fml.pl) runs in this way.
 
 =head1 FUNCTIONS
 
-=head2 C<main::Bootstrap2()>
+=head2 main::Bootstrap2()
 
 kick off the second phase of bootstrap.
 
@@ -221,7 +221,7 @@ sub __log
 }
 
 
-=head2 C<ProcessSwitch($args)>
+=head2 ProcessSwitch($args)
 
 load the library and prepare environment to use it.
 C<ProcessSwitch($args)> return process object C<$obj>.

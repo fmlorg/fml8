@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.13 2003/01/31 14:50:32 fukachan Exp $
+# $FML: Lite.pm,v 1.14 2003/02/01 08:49:17 fukachan Exp $
 #
 
 package Calendar::Lite;
@@ -300,7 +300,7 @@ sub _add_entry
 }
 
 
-=head2 C<print($fd)>
+=head2 print($fd)
 
 print out the result as HTML.
 You can specify the output channel by file descriptor C<$fd>.
@@ -327,7 +327,7 @@ sub print
 }
 
 
-=head2 C<print_specific_month($fh, $n)>
+=head2 print_specific_month($fh, $n)
 
 print range specified by C<$n>.
 C<$n> is number or string among C<this>, C<next> and C<last>.

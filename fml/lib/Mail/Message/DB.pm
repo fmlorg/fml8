@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.5 2003/07/21 04:51:34 fukachan Exp $
+# $FML: DB.pm,v 1.6 2003/07/21 10:38:51 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -25,7 +25,7 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.5 2003/07/21 04:51:34 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.6 2003/07/21 10:38:51 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -122,7 +122,7 @@ please use flock() built in perl or CPAN lock modules for it.
 
 =head1 METHODS
 
-=head2 C<new($args)>
+=head2 new($args)
 
     my $args = {
 	db_module    => 'AnyDBM_File',

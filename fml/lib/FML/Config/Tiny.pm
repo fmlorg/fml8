@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.7 2003/01/01 02:06:22 fukachan Exp $
+# $FML: Tiny.pm,v 1.1 2003/03/11 06:17:11 fukachan Exp $
 #
 
 package FML::Config::Tiny;
@@ -22,7 +22,7 @@ FML::Config::Tiny - just read and return without variable expansion.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constructor.
 

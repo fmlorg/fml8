@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Bounce.pm,v 1.24 2003/01/26 03:23:05 fukachan Exp $
+# $FML: Bounce.pm,v 1.25 2003/08/06 11:21:03 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -84,7 +84,7 @@ returned C<$result> provides the following information:
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 standard new() method.
 
@@ -104,7 +104,7 @@ sub new
 }
 
 
-=head2 C<analyze($msg)>
+=head2 analyze($msg)
 
 C<$msg> is a C<Mail::Message> object.
 This routine is a top level switch which provides the entrance
@@ -166,7 +166,7 @@ sub analyze
 }
 
 
-=head2 C<address_list()>
+=head2 address_list()
 
 return ARRAY of addresses found in the error message.
 
@@ -185,12 +185,12 @@ sub address_list
 }
 
 
-=head2 C<status($addr)>
+=head2 status($addr)
 
 return status (string) for C<$addr>.
 The status can be extracted from C<result> analyze() method gives.
 
-=head2 C<reason($addr)>
+=head2 reason($addr)
 
 return error reason (string) for C<$addr>.
 It can be extracted from C<result> analyze() method gives.
@@ -240,7 +240,7 @@ sub hints
 }
 
 
-=head2 C<look_like_japanese(string)>
+=head2 look_like_japanese(string)
 
 return 1 if C<string> looks Japanese one in JIS/SJIS/EUC code.
 return 0 unless.
@@ -281,7 +281,7 @@ sub look_like_japanese
 }
 
 
-=head2 C<address_clean_up(hint, addr)>
+=head2 address_clean_up(hint, addr)
 
 clean up C<addr> and return it.
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: summary.pm,v 1.2 2003/03/18 10:42:43 fukachan Exp $
+# $FML: summary.pm,v 1.3 2003/03/28 10:03:38 fukachan Exp $
 #
 
 package FML::Command::Admin::summary;
@@ -27,7 +27,7 @@ change delivery mode from real time to digest.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $command_args)>
+=head2 process($curproc, $command_args)
 
 =cut
 

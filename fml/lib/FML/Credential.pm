@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.44 2003/02/09 12:31:40 fukachan Exp $
+# $FML: Credential.pm,v 1.45 2003/03/18 10:37:01 fukachan Exp $
 #
 
 package FML::Credential;
@@ -43,7 +43,7 @@ So this hash is accessible in public.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 bind $self to the module internal C<\%Credential> hash and return the
 hash reference as an object.
@@ -118,7 +118,7 @@ sub set_user_part_case_insensitive
 }
 
 
-=head2 C<is_same_address($addr1, $addr2 [, $level])>
+=head2 is_same_address($addr1, $addr2 [, $level])
 
 return 1 (same) or 0 (different).
 It returns 1 if C<$addr1> and C<$addr2> looks same within some
@@ -209,7 +209,7 @@ sub is_same_address
 }
 
 
-=head2 C<is_member($curproc, $args)>
+=head2 is_member($curproc, $args)
 
 return 1 if the sender is an ML member.
 return 0 if not.
@@ -419,7 +419,7 @@ sub _get_address
 }
 
 
-=head2 C<match_system_accounts($addr)>
+=head2 match_system_accounts($addr)
 
 C<addr> matches a system account or not.
 The system accounts are given as
@@ -454,7 +454,7 @@ sub match_system_accounts
 }
 
 
-=head2 C<sender()>
+=head2 sender()
 
 return the mail address of the mail sender who kicks off this fml
 process.
@@ -472,12 +472,12 @@ sub sender
 }
 
 
-=head2 C<set_compare_level( $level )>
+=head2 set_compare_level( $level )
 
 set C<level>, how many sub-domains from top level we compare, in
 C<in_same_address()> address comparison.
 
-=head2 C<get_compare_level()>
+=head2 get_compare_level()
 
 get level in C<in_same_address()> address comparison.
 return the number of C<level>.
@@ -514,11 +514,11 @@ sub get_compare_level
 
 
 
-=head2 C<get(key)>
+=head2 get(key)
 
    XXX NUKE THIS ?
 
-=head2 C<set(key, value)>
+=head2 set(key, value)
 
    XXX NUKE THIS ?
 

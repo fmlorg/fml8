@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Addr.pm,v 1.6 2003/01/29 13:28:22 fukachan Exp $
+# $FML: Addr.pm,v 1.7 2003/03/06 09:27:13 fukachan Exp $
 #
 
 package FML::Process::Addr;
@@ -39,16 +39,16 @@ See C<FML::Process::Flow> for the flow detail.
 
 =head1 METHODS
 
-=head2 C<new($args)>
+=head2 new($args)
 
 constructor.
 It make a C<FML::Process::Kernel> object and return it.
 
-=head2 C<prepare($args)>
+=head2 prepare($args)
 
 load config files and fix @INC.
 
-=head2 C<verify_request($args)>
+=head2 verify_request($args)
 
 dummy.
 
@@ -115,7 +115,7 @@ sub verify_request
 }
 
 
-=head2 C<run($args)>
+=head2 run($args)
 
 the top level dispatcher for C<fmladdr>.
 

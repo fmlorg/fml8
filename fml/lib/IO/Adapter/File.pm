@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.45 2003/02/01 08:48:07 fukachan Exp $
+# $FML: File.pm,v 1.46 2003/05/26 12:28:06 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -53,7 +53,7 @@ prefix.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 standard constructor.
 
@@ -73,7 +73,7 @@ sub new
 }
 
 
-=head2 C<open($args)>
+=head2 open($args)
 
 $args HASH REFERENCE must have two parameters.
 C<file> is the target file to open.
@@ -142,7 +142,7 @@ sub _rw_open
 }
 
 
-=head2 C<touch()>
+=head2 touch()
 
 create a file if not exists.
 
@@ -184,7 +184,7 @@ sub line_count
 }
 
 
-=head2 C<getline()>
+=head2 getline()
 
 return one line.
 It is the same as usual getline() call for a file.
@@ -266,11 +266,11 @@ sub _get_next_xxx
 }
 
 
-=head2 C<getpos()>
+=head2 getpos()
 
 get the position in the opened file.
 
-=head2 C<setpos(pos)>
+=head2 setpos(pos)
 
 set the position in the opened file.
 
@@ -301,11 +301,11 @@ sub setpos
 }
 
 
-=head2 C<eof()>
+=head2 eof()
 
 Eof Of File?
 
-=head2 C<close()>
+=head2 close()
 
 close the opended file.
 
@@ -335,7 +335,7 @@ sub close
 }
 
 
-=head2 C<add($address, ... )>
+=head2 add($address, ... )
 
 add (append) $address to this map.
 
@@ -392,7 +392,7 @@ sub add
 }
 
 
-=head2 C<delete($key)>
+=head2 delete($key)
 
 delete lines with key $key from this map.
 

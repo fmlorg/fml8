@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.38 2003/03/14 06:53:00 fukachan Exp $
+# $FML: Subject.pm,v 1.39 2003/07/21 11:25:37 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -28,7 +28,7 @@ collection of functions to manipulate the header subject.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constructor.
 
@@ -48,7 +48,7 @@ sub new
 }
 
 
-=head2 C<rewrite_article_subject_tag($header, $config, $args)>
+=head2 rewrite_article_subject_tag($header, $config, $args)
 
 add or rewrite the subject tag for C<$header>.
 This mothod cuts off Re: (reply identifier) in subject: and
@@ -171,7 +171,7 @@ sub _delete_subject_tag
 }
 
 
-=head2 C<regexp_compile($string)>
+=head2 regexp_compile($string)
 
 build a regular expression to trap C<$string>.
 
@@ -221,7 +221,7 @@ sub _regexp_compile
 }
 
 
-=head2 C<is_reply($subject_string)>
+=head2 is_reply($subject_string)
 
 speculate C<$subject_string> looks a reply message or not?
 It depends on each language specific representations.

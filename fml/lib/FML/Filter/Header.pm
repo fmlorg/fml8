@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.3 2003/06/11 13:01:06 tmu Exp $
+# $FML: Header.pm,v 1.4 2003/07/21 04:51:33 fukachan Exp $
 #
 
 package FML::Filter::Header;
@@ -27,7 +27,7 @@ header content.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constructor.
 
@@ -59,7 +59,7 @@ sub new
 
 
 
-=head2 C<rules( $rules )>
+=head2 rules( $rules )
 
 overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 
@@ -77,7 +77,7 @@ sub rules
 }
 
 
-=head2 C<header_check($msg, $args)>
+=head2 header_check($msg, $args)
 
 C<$msg> is C<Mail::Message> object.
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledDir.pm,v 1.19 2003/01/11 15:16:37 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.20 2003/07/21 09:40:31 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -44,7 +44,7 @@ It enables easy automatic expiration.
 
 =head1 METHODS
 
-=head2 C<new($args)>
+=head2 new($args)
 
     $args = {
 	dir   => directory path,        # mandatory

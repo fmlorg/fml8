@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #
-# $FML: SimpleLock.pm,v 1.17 2003/01/11 15:14:23 fukachan Exp $
+# $FML: SimpleLock.pm,v 1.18 2003/01/11 15:16:33 fukachan Exp $
 #
 
 package File::SimpleLock;
@@ -37,11 +37,11 @@ File::SimpleLock module provides simple lock using flock(2).
 
 =head1 METHODS
 
-=head2 C<lock($args)>
+=head2 lock($args)
 
 flock(2) for $args->{ file };
 
-=head2 C<unlock($args)>
+=head2 unlock($args)
 
 unlock flock(2) for $args->{ file };
 

@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.21 2003/07/21 10:37:13 fukachan Exp $
+# $FML: Date.pm,v 1.22 2003/07/21 13:59:30 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -38,17 +38,17 @@ The style you use follows:
 You can also method like $date->$style() style.
 specify the C<style> name described above as a method.
 
-=head2 C<log_file_style()>
+=head2 log_file_style()
 
-=head2 C<mail_header_style()>
+=head2 mail_header_style()
 
-=head2 C<YYYYMMDD()>
+=head2 YYYYMMDD()
 
-=head2 C<current_time()>
+=head2 current_time()
 
-=head2 C<precise_current_time()>
+=head2 precise_current_time()
 
-=head2 C<stardate()>
+=head2 stardate()
 
 return STAR TREK stardate :-)
 
@@ -230,7 +230,7 @@ sub stardate
 }
 
 
-=head2 C<date_to_unixtime($date)>
+=head2 date_to_unixtime($date)
 
 eat patter in Date: and return the corresponding unix time.
 For example, let C<$date> be

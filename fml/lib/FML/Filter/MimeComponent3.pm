@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent3.pm,v 1.14 2003/02/09 12:31:43 fukachan Exp $
+# $FML: MimeComponent3.pm,v 1.15 2003/08/16 15:45:03 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -40,7 +40,7 @@ For example,
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 usual constructor.
 
@@ -71,7 +71,7 @@ sub new
 }
 
 
-=head2 C<mime_component_check($msg, $args)>
+=head2 mime_component_check($msg, $args)
 
 C<$msg> is C<Mail::Message> object.
 

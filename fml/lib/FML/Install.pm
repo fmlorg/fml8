@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.5 2003/01/30 03:32:12 fukachan Exp $
+# $FML: Install.pm,v 1.6 2003/02/11 13:24:09 fukachan Exp $
 #
 
 package FML::Install;
@@ -71,7 +71,7 @@ module.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constructor.
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Alias.pm,v 1.1 2003/03/06 09:26:28 fukachan Exp $
+# $FML: Alias.pm,v 1.1 2003/03/11 09:10:18 fukachan Exp $
 #
 
 package FML::Sys::Alias;
@@ -26,7 +26,7 @@ FML::Sys::Alias - get mail alias infomation on this system
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constructor.
 

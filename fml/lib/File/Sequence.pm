@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.32 2003/01/27 03:53:53 fukachan Exp $
+# $FML: Sequence.pm,v 1.33 2003/03/15 09:02:59 fukachan Exp $
 #
 
 package File::Sequence;
@@ -61,18 +61,18 @@ As an extension, you can generate a cyclic number by this module.
 Please specify C<modulus> parameter in new() method if you want to get
 a cyclic number.
 
-=head2 C<new($args)>
+=head2 new($args)
 
 $args->{ sequence_file } is the file holding the current sequence
 number.
 $args->{ modulus } is the modulus when you want to get a cyclic
 number.
 
-=head2 C<increment_id([$file])>
+=head2 increment_id([$file])
 
 increment the sequence number.
 
-=head2 C<get_id([$file])>
+=head2 get_id([$file])
 
 get the sequence number from specified C<$file>.
 

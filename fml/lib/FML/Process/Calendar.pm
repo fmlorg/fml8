@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calendar.pm,v 1.2 2003/02/09 12:31:44 fukachan Exp $
+# $FML: Calendar.pm,v 1.3 2003/03/06 04:15:35 fukachan Exp $
 #
 
 package FML::Process::Calendar;
@@ -33,15 +33,15 @@ scheduler based on Calendar::Lite class.
 
 =head1 METHODS
 
-=head2 C<new($args)>
+=head2 new($args)
 
 standard constructor.
 
-=head2 C<prepare($args)>
+=head2 prepare($args)
 
 dummy.
 
-=head2 C<verify_request($args)>
+=head2 verify_request($args)
 
 dummy.
 

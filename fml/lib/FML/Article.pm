@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.55 2003/03/16 10:44:40 fukachan Exp $
+# $FML: Article.pm,v 1.56 2003/04/20 02:49:52 fukachan Exp $
 #
 
 package FML::Article;
@@ -55,7 +55,7 @@ This is the basic structure of the article object.
 
 =head1 METHODS
 
-=head2 C<new(curproc)>
+=head2 new(curproc)
 
 prepare an article message, which is duplicated from the incoming
 message $curproc->{ incoming_message }.
@@ -117,7 +117,7 @@ sub _setup_article_template
 }
 
 
-=head2 C<spool_in(id)>
+=head2 spool_in(id)
 
 save the article to the file name C<id> in the article spool.
 If the variable C<$use_spool> is 'yes', this routine works.

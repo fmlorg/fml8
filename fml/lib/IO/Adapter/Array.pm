@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Array.pm,v 1.30 2003/02/11 11:37:47 fukachan Exp $
+# $FML: Array.pm,v 1.31 2003/05/26 12:28:05 fukachan Exp $
 #
 
 package IO::Adapter::Array;
@@ -141,11 +141,11 @@ sub get_next_key
 }
 
 
-=head2 C<getpos()>
+=head2 getpos()
 
 return the current position in the array.
 
-=head2 C<setpos($pos)>
+=head2 setpos($pos)
 
 set the current position to $pos -th element.
 
@@ -175,12 +175,12 @@ sub setpos
 }
 
 
-=head2 C<eof()>
+=head2 eof()
 
 whether the current position reaches the end of the array or not.
 If it already reaches the end, return 1.
 
-=head2 C<close()>
+=head2 close()
 
 end of IO operation. It is a dummy.
 

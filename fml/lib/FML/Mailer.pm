@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.16 2002/12/18 04:36:33 fukachan Exp $
+# $FML: Mailer.pm,v 1.17 2002/12/26 14:00:46 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -53,7 +53,7 @@ It sends Mail::Message objects.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 standard constructor.
 
@@ -73,7 +73,7 @@ sub new
 }
 
 
-=head2 C<send($args)>
+=head2 send($args)
 
 send the given C<message>.
 $args can take the following arguments:

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.15 2003/03/18 10:42:42 fukachan Exp $
+# $FML: chaddr.pm,v 1.16 2003/05/12 10:16:42 fukachan Exp $
 #
 
 package FML::Command::Admin::chaddr;
@@ -28,7 +28,7 @@ change address from old one to new one.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $command_args)>
+=head2 process($curproc, $command_args)
 
 change address from old one to new one.
 

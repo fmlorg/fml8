@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.7 2003/07/21 04:51:35 fukachan Exp $
+# $FML: Utils.pm,v 1.8 2003/07/21 10:40:06 fukachan Exp $
 #
 
 package Mail::Message::Utils;
@@ -89,7 +89,7 @@ sub from_to_name
 }
 
 
-=head2 C<search_program($file [, $path_list ])>
+=head2 search_program($file [, $path_list ])
 
 search C<$file>.
 C<$path_list> is the ARRAY_REF.

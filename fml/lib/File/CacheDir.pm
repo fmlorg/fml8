@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CacheDir.pm,v 1.23 2003/01/29 04:46:53 fukachan Exp $
+# $FML: CacheDir.pm,v 1.24 2003/02/01 06:08:40 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -178,7 +178,7 @@ sub _take_file_name
 }
 
 
-=head2 C<open(file, mode)>
+=head2 open(file, mode)
 
 no argument.
 
@@ -217,7 +217,7 @@ sub open
 }
 
 
-=head2 C<close()>
+=head2 close()
 
 no argument.
 

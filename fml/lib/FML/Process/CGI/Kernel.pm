@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.48 2003/02/16 08:51:10 fukachan Exp $
+# $FML: Kernel.pm,v 1.49 2003/02/16 09:45:08 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -41,7 +41,7 @@ It provides basic functions and flow.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 ordinary constructor which is used widely in FML::Process classes.
 
@@ -70,7 +70,7 @@ sub new
 }
 
 
-=head2 C<prepare($args)>
+=head2 prepare($args)
 
 print HTTP header.
 The charset is C<euc-jp> by default.
@@ -154,11 +154,11 @@ sub _cgi_resolve_ml_specific_variables
 }
 
 
-=head2 C<verify_request()>
+=head2 verify_request()
 
 dummy method now.
 
-=head2 C<finish()>
+=head2 finish()
 
 dummy method now.
 
@@ -177,7 +177,7 @@ sub verify_request { 1;}
 sub finish { 1;}
 
 
-=head2 C<run()>
+=head2 run()
 
 dispatch *.cgi programs.
 

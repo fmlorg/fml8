@@ -3,7 +3,7 @@
 # Copyright (C) 2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.1 2003/03/16 10:45:45 fukachan Exp $
+# $FML: Spool.pm,v 1.2 2003/03/28 10:32:21 fukachan Exp $
 #
 
 package FML::Article::Spool;
@@ -32,7 +32,7 @@ This class provides utilitiy functions for the spool directory.
 
 =head1 METHODS
 
-=head2 C<new($curproc)>
+=head2 new($curproc)
 
 constructor.
 

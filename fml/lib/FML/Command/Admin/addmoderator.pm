@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: addmoderator.pm,v 1.4 2003/01/25 12:48:37 fukachan Exp $
+# $FML: addmoderator.pm,v 1.5 2003/03/18 10:42:42 fukachan Exp $
 #
 
 package FML::Command::Admin::addmoderator;
@@ -27,7 +27,7 @@ add a new moderator address.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $command_args)>
+=head2 process($curproc, $command_args)
 
 =cut
 

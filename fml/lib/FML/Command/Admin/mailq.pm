@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mailq.pm,v 1.3 2003/03/18 10:35:14 fukachan Exp $
+# $FML: mailq.pm,v 1.4 2003/04/29 11:29:29 fukachan Exp $
 #
 
 package FML::Command::Admin::mailq;
@@ -27,7 +27,7 @@ change delivery mode from real time to digest.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $command_args)>
+=head2 process($curproc, $command_args)
 
 =cut
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: byeadmin.pm,v 1.10 2003/01/26 03:15:10 fukachan Exp $
+# $FML: byeadmin.pm,v 1.11 2003/01/27 04:36:29 fukachan Exp $
 #
 
 package FML::Command::Admin::byeadmin;
@@ -41,7 +41,7 @@ remove the specified administrator.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $command_args)>
+=head2 process($curproc, $command_args)
 
 =head1 CODING STYLE
 

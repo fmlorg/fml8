@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.12 2003/01/11 15:16:35 fukachan Exp $
+# $FML: Encode.pm,v 1.13 2003/07/21 14:34:31 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -22,7 +22,7 @@ Mail::Message::Encode - encode/decode/charset conversion routines
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 standard constructor.
 
@@ -56,7 +56,7 @@ sub new
 }
 
 
-=head2 C<detect_code($str)>
+=head2 detect_code($str)
 
 speculate the code of $str string. $str is checked by
 Unicode::Japanese. Unicode::Japanes::getcode() can detect the follogin
@@ -450,7 +450,7 @@ sub qp
 }
 
 
-=head2 C<decode_mime_string(string, [$options])>
+=head2 decode_mime_string(string, [$options])
 
 decode a base64/quoted-printable encoded string to a plain message.
 The encoding method is automatically detected.

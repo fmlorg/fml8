@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent.pm,v 1.11 2002/09/22 14:56:50 fukachan Exp $
+# $FML: MimeComponent.pm,v 1.1 2002/09/30 11:00:54 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -26,7 +26,7 @@ C<FML::Filter::MimeComponent> is a MIME content filter
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 usual constructor.
 
@@ -60,7 +60,7 @@ sub new
 
 
 
-=head2 C<rules( $rules )>
+=head2 rules( $rules )
 
 overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 
@@ -78,7 +78,7 @@ sub rules
 }
 
 
-=head2 C<permit_rules( $rules )>
+=head2 permit_rules( $rules )
 
 overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 
@@ -95,7 +95,7 @@ sub permit_rules
     $self->{ _permit_rules } = $rarray;
 }
 
-=head2 C<reject_rules( $rules )>
+=head2 reject_rules( $rules )
 
 overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 
@@ -113,7 +113,7 @@ sub reject_rules
 }
 
 
-=head2 C<content_check($msg, $args)>
+=head2 content_check($msg, $args)
 
 C<$msg> is C<Mail::Message> object.
 

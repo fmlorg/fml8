@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.26 2002/12/22 03:46:20 fukachan Exp $
+# $FML: HTMLify.pm,v 1.27 2003/01/11 16:05:19 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -35,11 +35,11 @@ This class drives thread tracking system in the top level.
 
 =head1 METHODS
 
-=head2 C<new($args)>
+=head2 new($args)
 
 create a C<FML::Process::Kernel> object and return it.
 
-=head2 C<prepare()>
+=head2 prepare()
 
 adjust ml_*, load configuration files and fix @INC.
 
@@ -97,7 +97,7 @@ sub verify_request
 }
 
 
-=head2 C<run($args)>
+=head2 run($args)
 
 call &FML::Command::HTMLify::convert().
 

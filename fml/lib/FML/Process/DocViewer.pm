@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.22 2002/12/18 04:43:52 fukachan Exp $
+# $FML: DocViewer.pm,v 1.23 2003/01/11 16:05:17 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -39,16 +39,16 @@ See C<FML::Process::Flow> for the program flow.
 
 =head1 METHODS
 
-=head2 C<new($args)>
+=head2 new($args)
 
 standard constructor.
 It inherits C<FML::Process::Kernel>.
 
-=head2 C<prepare($args)>
+=head2 prepare($args)
 
 load default configuration files and fix @INC.
 
-=head2 C<verify_request($args)>
+=head2 verify_request($args)
 
 show help unless @ARGV.
 
@@ -113,7 +113,7 @@ sub verify_request
 }
 
 
-=head2 C<run($args)>
+=head2 run($args)
 
 the main top level dispatcher.
 It kicks off internal function C<_fmlconf($args)> for

@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.81 2003/02/09 12:31:39 fukachan Exp $
+# $FML: Config.pm,v 1.82 2003/02/16 07:54:07 fukachan Exp $
 #
 
 package FML::Config;
@@ -94,7 +94,7 @@ called.
 
 =head1 METHODS
 
-=head2  C<new( ref_to_curproc )>
+=head2 new( ref_to_curproc )
 
 special method used only in the fml initialization phase.
 This method binds $curproc and the %_fml_config hash on memory.
@@ -141,15 +141,15 @@ sub new
 }
 
 
-=head2  C<get( key )>
+=head2 get( key )
 
 get value for key.
 
-=head2  C<get_as_array_ref( key )>
+=head2 get_as_array_ref( key )
 
 get value for key as an array reference.
 
-=head2  C<set( key, value )>
+=head2 set( key, value )
 
 set value for key.
 
@@ -227,11 +227,11 @@ sub update
 }
 
 
-=head2  C<overload( filename )>
+=head2 overload( filename )
 
 alias of C<load_file( filename )>.
 
-=head2  C<load_file( filename )>
+=head2 load_file( filename )
 
 read the configuration file, split keys and the values in it and set
 them to %_fml_config.
@@ -494,13 +494,13 @@ sub _evaluate
 }
 
 
-=head2 C<read(file)>
+=head2 read(file)
 
 read configuration from the specified file.
 Internally it holds configuration and comment information in
 appearing order.
 
-=head2 C<write(file)>
+=head2 write(file)
 
 =cut
 
@@ -603,7 +603,7 @@ sub write
 }
 
 
-=head2 C<expand_variables()>
+=head2 expand_variables()
 
 expand all variables in C<%_default_fml_config> and C<%_fml_config>.
 The expanded result is saved in the same hash.
@@ -776,7 +776,7 @@ sub __expand_special_macros
 }
 
 
-=head2 C<expand_variable_in_buffer($rbuf)>
+=head2 expand_variable_in_buffer($rbuf)
 
 expand $varname to $config->{ varname } in C<$rbuf>.
 
@@ -812,15 +812,15 @@ sub expand_variable_in_buffer
 }
 
 
-=head2 C<yes( key )>
+=head2 yes( key )
 
 useful method to return 1 or 0 according the value to the given key.
 
-=head2 C<no( key )>
+=head2 no( key )
 
 useful method to return 1 or 0 according the value to the given key.
 
-=head2 C<has_attribute( key, attribute )>
+=head2 has_attribute( key, attribute )
 
 Some types of C<key> has a list as a value.
 If C<key> has the C<attribute> in the list, return 1.
@@ -890,7 +890,7 @@ sub has_attribute
 }
 
 
-=head2  C<dump_variables()>
+=head2 dump_variables()
 
 show all {key => value} for debug.
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.10 2003/05/28 13:14:05 fukachan Exp $
+# $FML: Cache.pm,v 1.11 2003/05/28 13:24:12 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -38,7 +38,7 @@ where C<$bounce_info) follows:
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 =cut
 

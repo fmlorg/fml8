@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.1 2003/03/16 10:44:41 fukachan Exp $
+# $FML: Sequence.pm,v 1.2 2003/03/16 12:52:43 fukachan Exp $
 #
 
 package FML::Article::Sequence;
@@ -26,7 +26,7 @@ FML::Article::Sequence - article sequence manipulation
 
 =head1 METHODS
 
-=head2 C<increment_id()>
+=head2 increment_id()
 
 increment the sequence number of this article C<$self> and
 save it to C<$sequence_file>.
@@ -66,7 +66,7 @@ sub increment_id
 }
 
 
-=head2 C<id()>
+=head2 id()
 
 return the current article sequence number.
 

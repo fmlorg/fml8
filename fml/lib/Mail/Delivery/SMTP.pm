@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.21 2003/01/11 15:13:29 fukachan Exp $
+# $FML: SMTP.pm,v 1.22 2003/01/11 15:16:34 fukachan Exp $
 #
 
 
@@ -91,7 +91,7 @@ See L<IO::Adapter> for more details.
 
 =head1 METHODS
 
-=head2 C<new($args)>
+=head2 new($args)
 
 the constructor.
 Please specify it in a hash reference as an argument of new().
@@ -282,7 +282,7 @@ sub _connect
 }
 
 
-=head2 C<socket_is_connected($socket)>
+=head2 socket_is_connected($socket)
 
 $socket has peer or not by C<getpeername()>.
 
@@ -308,7 +308,7 @@ sub socket_is_connected
 }
 
 
-=head2 C<close()>
+=head2 close()
 
 close BSD socket
 
@@ -337,7 +337,7 @@ sub close
 ##### SMTP delivery main loop
 #####
 
-=head2 C<deliver($args)>
+=head2 deliver($args)
 
 start delivery process.
 You can specify the following parameter at C<$args> HASH REFERENCE.

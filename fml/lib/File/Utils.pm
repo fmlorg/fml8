@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.21 2003/01/11 15:16:33 fukachan Exp $
+# $FML: Utils.pm,v 1.22 2003/01/29 04:46:54 fukachan Exp $
 #
 
 package File::Utils;
@@ -140,7 +140,7 @@ sub touch
 }
 
 
-=head2 C<search_program($file [, $path_list ])>
+=head2 search_program($file [, $path_list ])
 
 search C<$file>.
 C<$path_list> is the ARRAY_REF.

@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.30 2003/04/29 11:28:05 fukachan Exp $
+# $FML: Error.pm,v 1.31 2003/05/03 03:23:43 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -35,7 +35,7 @@ dispatcher for commands.
 
 =head1 METHODS
 
-=head2 C<new($args)>
+=head2 new($args)
 
 make fml process object, which inherits C<FML::Process::Kernel>.
 
@@ -55,7 +55,7 @@ sub new
 }
 
 
-=head2 C<prepare($args)>
+=head2 prepare($args)
 
 parse argv, load config files and fix @INC.
 
@@ -93,7 +93,7 @@ sub prepare
 }
 
 
-=head2 C<verify_request($args)>
+=head2 verify_request($args)
 
 dummy.
 
@@ -124,7 +124,7 @@ sub verify_request
 }
 
 
-=head2 C<run($args)>
+=head2 run($args)
 
 dispatcher to run correspondig C<FML::Error::command> for
 C<command>. Standard style follows:
@@ -252,7 +252,7 @@ _EOF_
 }
 
 
-=head2 C<finish($args)>
+=head2 finish($args)
 
     $curproc->inform_reply_messages();
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: edit.pm,v 1.14 2003/01/25 12:48:38 fukachan Exp $
+# $FML: edit.pm,v 1.15 2003/03/18 10:35:13 fukachan Exp $
 #
 
 package FML::Command::Admin::edit;
@@ -29,7 +29,7 @@ Tool to edit config.cf.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $command_args)>
+=head2 process($curproc, $command_args)
 
 C<TODO>:
 now we can read and write config.cf, not change it.

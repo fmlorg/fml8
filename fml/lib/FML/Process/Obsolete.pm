@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.7 2003/01/01 02:06:22 fukachan Exp $
+# $FML: Obsolete.pm,v 1.1 2003/03/14 03:45:58 fukachan Exp $
 #
 
 package FML::Process::Obsolete;
@@ -22,7 +22,7 @@ FML::Process::Obsolete - what is this
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 =cut
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: deladmin.pm,v 1.9 2003/03/18 10:42:42 fukachan Exp $
+# $FML: deladmin.pm,v 1.10 2003/05/12 10:16:42 fukachan Exp $
 #
 
 package FML::Command::Admin::deladmin;
@@ -27,7 +27,7 @@ remove the specified administrator.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $command_args)>
+=head2 process($curproc, $command_args)
 
 =cut
 

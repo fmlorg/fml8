@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: password.pm,v 1.8 2003/02/11 09:48:17 fukachan Exp $
+# $FML: password.pm,v 1.9 2003/03/18 10:42:43 fukachan Exp $
 #
 
 package FML::Command::Admin::password;
@@ -27,7 +27,7 @@ password a new address.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $command_args)>
+=head2 process($curproc, $command_args)
 
 =cut
 

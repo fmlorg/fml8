@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: simple_count.pm,v 1.1 2003/05/28 13:14:05 fukachan Exp $
+# $FML: simple_count.pm,v 1.2 2003/05/28 14:33:44 fukachan Exp $
 #
 
 package FML::Error::Analyze::simple_count;
@@ -26,7 +26,7 @@ FML::Error::Analyze::simple_count - cost evaluator
 
 =head1 METHODS
 
-=head2 C<new($curproc)>
+=head2 new($curproc)
 
 constructor.
 

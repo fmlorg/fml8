@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Confirm.pm,v 1.8 2002/09/28 09:27:42 fukachan Exp $
+# $FML: Confirm.pm,v 1.9 2002/12/22 04:43:05 fukachan Exp $
 #
 
 package FML::Confirm;
@@ -40,7 +40,7 @@ This module provides several utilitiy functions for confirmation.
 
 =head1 METHODS
 
-=head2 C<new($args)>
+=head2 new($args)
 
 usual constructor.
 

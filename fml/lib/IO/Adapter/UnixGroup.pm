@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UnixGroup.pm,v 1.17 2002/09/22 14:56:59 fukachan Exp $
+# $FML: UnixGroup.pm,v 1.18 2002/12/22 02:54:38 fukachan Exp $
 #
 
 package IO::Adapter::UnixGroup;
@@ -44,7 +44,7 @@ C<CAUTION: this map is read only>.
 
 =head1 METHOD
 
-=head2 C<configure($obj)>
+=head2 configure($obj)
 
 Configure object for array IO operation.
 

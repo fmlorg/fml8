@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.31 2003/07/21 10:37:12 fukachan Exp $
+# $FML: Analyze.pm,v 1.32 2003/07/21 11:29:15 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -28,7 +28,7 @@ See C<Mail::ThreadTrack> perl module for more detail.
 
 =head1 METHODS
 
-=head2 C<analyze($mesg)>
+=head2 analyze($mesg)
 
 C<$mesg> is Mail::Message object.
 

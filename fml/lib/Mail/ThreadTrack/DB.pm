@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.31 2002/12/22 03:21:32 fukachan Exp $
+# $FML: DB.pm,v 1.32 2002/12/24 10:19:49 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -26,7 +26,7 @@ Mail::ThreadTrack::DB - database access.
 
 =cut
 
-=head2 C<db_open()>
+=head2 db_open()
 
 open database.
 It uses tie() to bind a hash to a DB file.
@@ -40,7 +40,7 @@ C<%message_id>
 and
 C<%index>.
 
-=head2 C<db_close()>
+=head2 db_close()
 
 untie() the corresponding hashes opened by C<db_open()>.
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmml.pm,v 1.13 2003/01/07 08:38:32 fukachan Exp $
+# $FML: rmml.pm,v 1.14 2003/01/25 12:48:39 fukachan Exp $
 #
 
 package FML::Command::Admin::rmml;
@@ -33,7 +33,7 @@ and the corresponding alias entries.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $command_args)>
+=head2 process($curproc, $command_args)
 
 =cut
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.20 2003/01/25 12:48:40 fukachan Exp $
+# $FML: confirm.pm,v 1.21 2003/03/18 10:42:44 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -27,7 +27,7 @@ execute the actual corresponding process if the confirmation succeeds.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $command_args)>
+=head2 process($curproc, $command_args)
 
 =cut
 

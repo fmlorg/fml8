@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Debug.pm,v 1.2 2003/03/28 10:32:23 fukachan Exp $
+# $FML: Debug.pm,v 1.3 2003/03/28 11:01:54 fukachan Exp $
 #
 
 package FML::Process::Debug;
@@ -22,11 +22,11 @@ FML::Process::Debug - what is this
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constructor.
 
-=head2 C<dump_curproc($curproc)>
+=head2 dump_curproc($curproc)
 
 dump curproc structure.
 

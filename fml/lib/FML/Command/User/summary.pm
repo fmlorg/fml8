@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: summary.pm,v 1.13 2003/03/18 10:42:44 fukachan Exp $
+# $FML: summary.pm,v 1.14 2003/03/18 10:52:34 fukachan Exp $
 #
 
 package FML::Command::User::summary;
@@ -31,7 +31,7 @@ send back summary file.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $command_args)>
+=head2 process($curproc, $command_args)
 
 =cut
 

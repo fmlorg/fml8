@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.11 2003/01/11 06:58:46 fukachan Exp $
+# $FML: QueueManager.pm,v 1.12 2003/03/18 10:38:33 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -35,7 +35,7 @@ queue flush!
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
 
 constructor.
 
@@ -61,7 +61,7 @@ sub new
 }
 
 
-=head2 C<send($curproc, $id)>
+=head2 send($curproc, $id)
 
 try to send all mails in the queue.
 If queue id C<$id> is specified, send queue for C<$id>.

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: help.pm,v 1.16 2003/03/18 10:36:04 fukachan Exp $
+# $FML: help.pm,v 1.17 2003/03/18 10:52:34 fukachan Exp $
 #
 
 package FML::Command::User::help;
@@ -31,7 +31,7 @@ See C<FML::Command> for more details.
 
 =head1 METHODS
 
-=head2 C<process($curproc, $command_args)>
+=head2 process($curproc, $command_args)
 
 =cut
 

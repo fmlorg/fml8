@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.171 2003/08/16 02:45:23 fukachan Exp $
+# $FML: Kernel.pm,v 1.172 2003/08/18 14:05:03 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -49,7 +49,7 @@ in the process flow.
 
 =head1 METHODS
 
-=head2 C<new($args)>
+=head2 new($args)
 
 1. import variables such as C<$ml_home_dir> via C<libexec/loader>
 
@@ -226,7 +226,7 @@ sub _trap_help
 }
 
 
-=head2 C<prepare($args)>
+=head2 prepare($args)
 
 preparation before the main part starts.
 
@@ -478,7 +478,7 @@ sub _init_event_timeout
 }
 
 
-=head2 C<verify_sender_credential($args)>
+=head2 verify_sender_credential($args)
 
 validate the mail sender (From: in the header not SMTP SENEDER).  If
 valid, it sets the adddress within $curproc->{ credential } object as
@@ -548,7 +548,7 @@ sub verify_sender_credential
 }
 
 
-=head2 C<simple_loop_check($args)>
+=head2 simple_loop_check($args)
 
 loop checks following rules of $config->{ header_loop_check_rules }.
 The autual check is done by header->C<$rule()> for a C<rule>.
@@ -838,7 +838,7 @@ sub _find_ml_home_dir_in_argv
 }
 
 
-=head2 C<load_config_files($files)>
+=head2 load_config_files($files)
 
 read several configuration C<@$files>.
 The variable evaluation (expansion) is done on demand when
@@ -898,7 +898,7 @@ sub fix_perl_include_path
 }
 
 
-=head2 C<parse_incoming_message($args)>
+=head2 parse_incoming_message($args)
 
 C<preapre()> method calls this to
 parse the message to a set of header and body.
@@ -959,12 +959,12 @@ sub parse_incoming_message
 
 =head1 CREDENTIAL
 
-=head2 C<premit_post($args)>
+=head2 premit_post($args)
 
 permit posting.
 The restriction rules follows the order of C<post_restrictions>.
 
-=head2 C<premit_command($args)>
+=head2 premit_command($args)
 
 permit fml command use.
 The restriction rules follows the order of C<command_restrictions>.
@@ -1109,7 +1109,7 @@ sub close_stderr_channel_if_quiet_option_specified
 
 =head1 MESSAGE HANDLING
 
-=head2 C<reply_message($msg)>
+=head2 reply_message($msg)
 
 C<reply_message($msg)> holds message C<$msg> sent back to the mail
 sender.
@@ -1422,7 +1422,7 @@ sub _gen_recipient_key
 }
 
 
-=head2 C<reply_message_nl($class, $default_msg, $args)>
+=head2 reply_message_nl($class, $default_msg, $args)
 
 This is a wrapper for C<reply_message()> with natural language support.
 The message in natural language corresponding with C<$class> is sent.
@@ -1537,7 +1537,7 @@ sub caller_info
 }
 
 
-=head2 C<inform_reply_messages($args)>
+=head2 inform_reply_messages($args)
 
 inform the error messages to the sender or maintainer.
 C<inform_reply_messages($args)> checks existence of message(s) of the
@@ -1596,7 +1596,7 @@ sub inform_reply_messages
 }
 
 
-=head2 C<queue_in($category, $optargs)>
+=head2 queue_in($category, $optargs)
 
 =cut
 
@@ -1952,7 +1952,7 @@ sub _add_info_on_header
 }
 
 
-=head2 C<queue_flush($queue)>
+=head2 queue_flush($queue)
 
 flush all queue.
 
@@ -1981,7 +1981,7 @@ sub queue_flush
 }
 
 
-=head2 C<expand_variables_in_file>
+=head2 expand_variables_in_file
 
 expand $xxx variables in template (e.g. $help_file).  return file name
 string, which is a new template converted by this routine.

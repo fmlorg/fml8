@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Rotate.pm,v 1.12 2002/09/22 14:56:57 fukachan Exp $
+# $FML: Rotate.pm,v 1.13 2002/12/23 14:35:54 fukachan Exp $
 #
 
 package File::Rotate;
@@ -81,7 +81,7 @@ sub new
 }
 
 
-=head2 C<is_time_to_rotate()>
+=head2 is_time_to_rotate()
 
 C<stat()> the file correspoinding to the object and
 determine whether the time to do comes or not.
@@ -106,7 +106,7 @@ sub is_time_to_rotate
 }
 
 
-=head2 C<rotate()>
+=head2 rotate()
 
 rename files to rotate it.
 
@@ -156,7 +156,7 @@ sub _get_param
 }
 
 
-=head2 C<error()>
+=head2 error()
 
 return the error message if exists.
 

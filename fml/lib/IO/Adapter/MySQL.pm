@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: MySQL.pm,v 1.24 2003/01/11 15:22:26 fukachan Exp $
+# $FML: MySQL.pm,v 1.25 2003/02/01 10:55:04 fukachan Exp $
 #
 
 
@@ -62,7 +62,7 @@ It is expected to provide C<add()> and C<delete()> methods.
 
 =head1 METHODS
 
-=head2 C<configure($me, $args)>
+=head2 configure($me, $args)
 
 IO::Adapter::MySQL specific configuration loader.
 It also calles IO::Adapter::SQL::$model module for model specific
@@ -105,7 +105,7 @@ sub configure
 }
 
 
-=head2 C<setpos($pos)>
+=head2 setpos($pos)
 
 MySQL does not support rollack, so we close and open this transcation.
 After re-opening, we moved to the specified $pos.
@@ -140,7 +140,7 @@ sub setpos
 }
 
 
-=head2 C<getpos()>
+=head2 getpos()
 
 =cut
 
@@ -156,7 +156,7 @@ sub getpos
 }
 
 
-=head2 C<eof()>
+=head2 eof()
 
 =cut
 

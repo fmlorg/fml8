@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.24 2003/03/17 08:58:51 fukachan Exp $
+# $FML: Queue.pm,v 1.25 2003/04/15 01:52:18 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -60,7 +60,7 @@ C<Mail::Delivery::Queue> manipulats only queue around things.
 
 =head1 METHODS
 
-=head2 C<new($args)>
+=head2 new($args)
 
 constructor. You must specify C<queue directory> as
 
@@ -147,7 +147,7 @@ sub _new_queue_id
 }
 
 
-=head2 C<id()>
+=head2 id()
 
 return the queue id assigned to this object C<$self>.
 
@@ -165,7 +165,7 @@ sub id
 }
 
 
-=head2 C<filename()>
+=head2 filename()
 
 return the file name of the queue id assigned to this object C<$self>.
 
@@ -183,7 +183,7 @@ sub filename
 }
 
 
-=head2 C<list()>
+=head2 list()
 
 return queue list as ARRAY REFERENCE.
 It is a list of queue filenames in C<active/> directory.
@@ -229,7 +229,7 @@ sub list
 
 =head1 METHODS TO MANIPULATE INFORMATION
 
-=head2 C<getidinfo($id)>
+=head2 getidinfo($id)
 
 return information related with the queue id C<$id>.
 The returned information is
@@ -288,9 +288,9 @@ sub getidinfo
 
 =head1 LOCK
 
-=head2 C<lock()>
+=head2 lock()
 
-=head2 C<unlock()>
+=head2 unlock()
 
 =cut
 
@@ -333,7 +333,7 @@ sub unlock
 }
 
 
-=head2 C<in($msg)>
+=head2 in($msg)
 
 C<in()> creates a queue file in C<new/> directory
 (C<queue_directory/new/>.
@@ -371,7 +371,7 @@ sub in
 }
 
 
-=head2 C<set($key, $args)>
+=head2 set($key, $args)
 
    $queue->set('sender', $sender);
    $queue->set('recipients', [ $recipient0, $recipient1 ] );
@@ -433,7 +433,7 @@ sub set
 }
 
 
-=head2 C<setrunnable()>
+=head2 setrunnable()
 
 set the status of the queue assigned to this object C<$self>
 deliverable.
@@ -471,11 +471,11 @@ sub setrunnable
 
 
 
-=head2 C<remove()>
+=head2 remove()
 
 remove all queue assigned to this object C<$self>.
 
-=head2 C<valid()>
+=head2 valid()
 
 It checks the queue file is broken or not.
 return 1 (valid) or 0.
