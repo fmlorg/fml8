@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.57 2003/04/15 12:24:47 tmu Exp $
+# $FML: Header.pm,v 1.58 2003/04/16 08:09:23 tmu Exp $
 #
 
 package FML::Header;
@@ -160,10 +160,6 @@ sub address_clean_up
 return the C<type> defind in the header's Content-Type field.
 For example, C<text/plain>, C<mime/multipart> and et. al.
 
-=head2 C<mime_boundary()>
-
-return the C<boundary> defind in the header's Content-Type field.
-
 =cut
 
 
@@ -187,28 +183,6 @@ sub data_type
     return undef;
 }
 
-
-# Descriptions: return boundary defined in Content-Type
-#    Arguments: OBJ($header)
-# Side Effects: none.
-# Return Value: STR or UNDEF
-sub mime_boundary
-{
-    my ($header) = @_;
-    my $content_type = $header->get('content-type');
-
-    if (defined $content_type) {
-	if ($content_type =~ /boundary=\"(.*?)\"/) {
-	    return $1;
-	}
-	if ($content_type =~ /boundary=([^\s\(\)\<\>\@\,\;\:\\\"\/\[\]\?\=]+)/) {
-	    return $1;
-	}
-
-    }
-
-    return undef;
-}
 
 
 ###
