@@ -128,6 +128,7 @@ newml_command_init_public_dirs	=	$domain_config_base_dir
 					$domain_sendmail_config_dir
 					$domain_procmail_config_dir
 					$shared_db_dir
+					$udb_base_dir
 
 newml_command_init_private_dirs	=	$tmp_dir
 					$spool_dir
@@ -172,6 +173,15 @@ domain_config_base_dir	= $ml_home_prefix/etc
 #        Value: directory
 #     Examples: /var/spool/ml/@db@
 shared_db_dir	= $ml_home_prefix/@db@
+
+
+# Descriptions: ML 間でシェアするデータベースをおくホームディレクトリ
+#               $shared_db_dir は使われなくなる。
+#               udb は unified database の略称。
+#      History: $shared_db_dir の後継にあたる
+#        Value: directory
+#     Examples: /var/spool/ml/@udb@
+udb_base_dir	= $ml_home_prefix/@udb@
 
 
 =head2 ML 固有
