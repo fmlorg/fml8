@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: .gen.sh,v 1.10 2002/07/25 00:07:19 fukachan Exp $
+# $FML: .gen.sh,v 1.11 2002/09/14 01:22:20 fukachan Exp $
 #
 
 tmp=default_config.cf.xx.$$
@@ -26,7 +26,7 @@ _EOF_
 	sed -e 's/^/# $/' -e 's/$/ = q{ 1;};/'
 )  > src/hooks.cf
 
-for lang in ja
+for lang in ja en
 do
 	test -f $tmp || rm -f $tmp
 
