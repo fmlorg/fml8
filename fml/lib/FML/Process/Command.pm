@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.29 2002/01/20 13:52:25 fukachan Exp $
+# $FML: Command.pm,v 1.30 2002/02/11 12:29:27 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -105,6 +105,8 @@ C<command>. Standard style follows:
     lock
     execute FML::Command::command
     unlock
+
+XXX Each command determines need of lock or not.
 
 =cut
 
