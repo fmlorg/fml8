@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.21 2001/05/05 06:39:41 fukachan Exp $
+# $FML: Message.pm,v 1.22 2001/05/06 02:37:53 fukachan Exp $
 #
 
 package Mail::Message;
@@ -187,7 +187,7 @@ C<multipart.something> is a faked type to treat both real content,
 MIME delimiters and others in the same Mail::Message framework.
 
 
-=head1 METHODS to create an object
+=head1 METHODS to create a message object
 
 =head2 C<new($args)>
 
@@ -345,6 +345,22 @@ sub __build_message
 	carp("__build_message: neither data nor filename specified");
     }
 }
+
+
+=head2 C<dup_header()>
+
+duplicate a message chain. Precisely speaking, it duplicates the
+header object but not duplicate body parts of a message object chain.
+So, the next object of the duplicated header, C<dup_header0> in the
+following figure, is the first body part C<part1> of the origianl
+chain.
+
+    header0 ----> part1 -> part2 -> ...
+                   A
+                   |
+    dup_header0 ---
+
+=cut
 
 
 sub dup_header
@@ -1711,6 +1727,27 @@ sub get_data_type_list
     }
     \@buf;
 }
+
+
+=head1 METHODS to make a whole mail message
+
+Please use C<Mail::Message::Compose> class.
+This is an adapter for C<MIME::Lite>, so  
+your request is forwarded to C<MIME::Lite> class :-)
+
+    use Mail::Message::Compose;
+    $msg = Mail::Message::Compose->new(
+       From     => 'fukachan@fml.org',
+       To       => 'rudo@nuinui.net',
+       Cc       => 'kenken@nuinui.net',
+       Subject  => 'help',
+       Type     => 'text/plain',
+       Path     => 'help',
+    );
+    $msg->attr('content-type.charset' => 'us-ascii');
+
+    # show message;
+    print $msg->as_string;
 
 
 =head1 APPENDIX (RFC2046 Appendix A)
