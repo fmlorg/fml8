@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.82 2003/02/16 07:54:07 fukachan Exp $
+# $FML: Config.pm,v 1.83 2003/08/23 04:35:26 fukachan Exp $
 #
 
 package FML::Config;
@@ -985,7 +985,7 @@ sub is_hook_defined
 	$FML::Config::_fml_user_hooks;
 	package FML::Config;
     };
-    print STDERR $@ if $@;
+    carp($@) if $@;
 
     my $is_defined = 0;
     my $hook = sprintf("%s::%s::%s::%s", 'FML', 'Config', 'Hook', $hook_name);
@@ -995,7 +995,7 @@ sub is_hook_defined
 	    \$is_defined = 1;
 	}
     };
-    print STDERR $@ if $@;
+    carp($@) if $@;
 
     return $is_defined;
 }
@@ -1020,7 +1020,7 @@ sub get_hook
 	package FML::Config;
     };
     eval $eval;
-    print STDERR $@ if $@;
+    carp($@) if $@;
 
     my $r    = ''; # return value;
     my $namel = $hook_name; $namel =~ tr/A-Z/a-z/; # lowercase
@@ -1037,7 +1037,7 @@ sub get_hook
 	    \$r = $hooku;
 	}
     };
-    print STDERR $@ if $@;
+    carp($@) if $@;
 
     return "no strict;\n". $r;
 }
