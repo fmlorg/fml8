@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.14 2002/02/17 13:45:10 fukachan Exp $
+# $FML: DocViewer.pm,v 1.15 2002/03/17 06:24:31 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -12,16 +12,15 @@ use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use strict;
 use Carp;
 
-use FML::Process::Kernel;
 use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
-
+use FML::Process::Kernel;
 @ISA = qw(FML::Process::Kernel);
 
 
 =head1 NAME
 
-FML::Process::DocViewer -- perldoc wrapper for fml modules
+FML::Process::DocViewer -- perldoc wrapper to show a fml module
 
 =head1 SYNOPSIS
 
@@ -217,19 +216,13 @@ sub finish
 }
 
 
-# dummy to avoid the error ( undefined function )
-sub AUTOLOAD
-{
-    ;
-}
-
 =head1 AUTHOR
 
 Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000-2002 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
