@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.28 2002/07/14 15:15:27 fukachan Exp $
+# $FML: Command.pm,v 1.29 2002/07/14 22:46:59 fukachan Exp $
 #
 
 package FML::Command;
@@ -157,7 +157,7 @@ sub AUTOLOAD
     $comname =~ s/.*:://;
     my $pkg = "FML::Command::${mode}::${comname}";
 
-    Log("load $pkg") if $myname eq /loader/; # debug
+    Log("load $pkg") if $myname eq 'loader'; # debug
 
     my $command = undef;
     eval qq{ use $pkg; \$command = new $pkg;};
