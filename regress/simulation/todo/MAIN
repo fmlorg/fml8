@@ -1,5 +1,13 @@
 =head1 実装中(途中)
 
+=head2 pre-cgi タグの後に付け加えられたコードについて再考
+
+   relocate codes added after "pre-cgi" tag.
+   Especially the relation amon
+
+	fml/lib/FML/Process/CGI.pm
+	fml/libexec/loader
+
 =head2 MailCacheDir
 
     $LOG_MAIL_DIR = $LOG_MAIL_DIR || "$VAR_DIR/Mail";
