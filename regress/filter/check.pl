@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: headercheck.pl,v 1.1 2001/09/22 15:24:03 fukachan Exp $
+# $FML: check.pl,v 1.1 2001/09/23 09:17:18 fukachan Exp $
 #
 
 use lib qw(../../fml/lib ../../cpan/lib ../../img/lib);
@@ -12,7 +12,10 @@ for my $f (@ARGV) {
     my $message = Mail::Message->parse( { fd => $fh } );
 
     if (defined $message) {
-	print STDERR "$f\t header = ";
+	use File::Basename;
+	my $fn = basename($f);
+
+	printf STDERR "%-20s header = ", $fn;
 
 	use FML::Filter::HeaderCheck;
 	my $obj = new FML::Filter::HeaderCheck;
@@ -28,7 +31,7 @@ for my $f (@ARGV) {
 	}
 
 
-	print STDERR "$f\t   body = ";
+	printf STDERR "%-20s   body = ", $fn;
 
 	use FML::Filter::BodyCheck;
 	my $obj = new FML::Filter::BodyCheck;
