@@ -2,7 +2,7 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-$FML: book.sgml,v 1.63 2004/03/23 05:16:50 fukachan Exp $
+$FML: book.sgml,v 1.64 2004/03/25 04:10:02 fukachan Exp $
 -->
 
 <!doctype book public "-//FML//DTD DocBook V3.1-Based Extension//EN" [
@@ -58,6 +58,9 @@ $FML: book.sgml,v 1.63 2004/03/23 05:16:50 fukachan Exp $
 	<!-- 2000/nt -->
 	&chapter.install.fml.nt;
 
+	<!-- changes -->
+	&chapter.changes;
+
 	<!-- misc around installation/setup -->
 	&chapter.upgrade;
 
@@ -80,6 +83,7 @@ $FML: book.sgml,v 1.63 2004/03/23 05:16:50 fukachan Exp $
 	&chapter.usage.user;
 	&chapter.usage.onhost;
 	&chapter.config;
+
 	&chapter.filename; <!-- ここでいいのか？ちょっとわからん -->
 
 	<!-- customize -->

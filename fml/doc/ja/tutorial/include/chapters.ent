@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.85 2004/03/25 04:10:03 fukachan Exp $
+	$FML: chapters.ent,v 1.86 2004/03/31 06:03:00 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -210,3 +210,8 @@
 <!entity recipe.version              SYSTEM "troubleshoot/recipe.version.sgml">
 <!entity recipe.listup.addresses     SYSTEM "troubleshoot/recipe.listup.addresses.sgml">
 <!entity recipe.listup.aliases       SYSTEM "troubleshoot/recipe.listup.aliases.sgml">
+
+
+<!-- changes -->
+<!entity chapter.changes         SYSTEM "changes/chapter.sgml">
+<!entity table.changes.cui       SYSTEM "changes/table.cui.sgml">

@@ -1,5 +1,5 @@
 <!--
-   $FML: preface.sgml,v 1.17 2002/07/06 14:55:14 fukachan Exp $
+   $FML: preface.sgml,v 1.18 2003/04/15 14:51:35 fukachan Exp $
 -->
 
 
@@ -22,6 +22,14 @@ config.cf の編集支援ツール(makefml config や CGI からの設定変更)を
 除いて基本的な機能は実装されています。
 つまりＭＬごとに細かい設定変更をしたい場合はファイルの編集が必要ですが、
 それを除けば、ツール類を含めて &fml4; と同様に使えるはずです。
+</para>
+
+<para>
+なお、fml4 と fml8 の相違点については、
+<link linkend="changes">
+<xref linkend="changes">
+</link>
+を参照して下さい。
 </para>
 
 <para>

@@ -1,5 +1,5 @@
 <!--
-   $FML: bookinfo.sgml,v 1.12 2003/11/05 13:58:40 tmu Exp $
+   $FML: bookinfo.sgml,v 1.13 2004/03/18 08:58:49 fukachan Exp $
 -->
 
 <bookinfo>
@@ -43,6 +43,11 @@
 	<ulink url="../../../fml/doc/ja/todo/STATUS.html">
 	http://www.fml.org/software/fml-devel/fml/doc/ja/todo/STATUS.html
 	</ulink>
+	を、
+	fml4 と fml8 の相違点については、
+	<link linkend="changes">
+	<xref linkend="changes">
+	</link>
 	を参照して下さい。
 	</para>
 
@@ -52,7 +57,7 @@
 	<ulink url="../../../fml/doc/ja/todo/STATUS.html">
 	STATUS
 	</ulink>
-	のドキュメントを参照して下さい)。
+	ドキュメントを参照して下さい)。
 <screen>
 	perl 5.6.1   on NetBSD 1.5.x (1.5 stable)		
 	perl 5.6.1   on NetBSD 1.6				
