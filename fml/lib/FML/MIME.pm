@@ -86,6 +86,27 @@ by $options->{ charset }.
 sub encode_mime_string
 {
     my ($str, $options) = @_;
+    my $buf = ''; # return buffer
+    my $p   = 0;
+    my $pp  = 0;
+
+    while ($str) {
+	if ($str =~ /^(\S+)/) {
+	    $buf .= _encode_mime_string($1, $options);
+	    $str =~ s/^(\S+)//;
+	}
+	elsif ($str =~ /^(\s+)/) {
+	    $buf .= $1;
+	    $str =~ s/^(\s+)//;
+	}
+    }
+
+    return $buf;
+}
+
+sub _encode_mime_string
+{
+    my ($str, $options) = @_;
     my $charset = $options->{ 'charset' } || 'iso-2022-jp';
     my $encode  = $options->{ 'encode' }  || 'base64';
     my $header  = '=?'. $charset;
