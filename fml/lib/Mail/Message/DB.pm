@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.6 2003/07/21 10:38:51 fukachan Exp $
+# $FML: DB.pm,v 1.7 2003/08/23 04:35:46 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -12,7 +12,7 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 	    $NULL_VALUE
 	    @table_list
-	    @orig_header_fields @header_fields
+	    @orig_header_fields @header_fields @article_header_fields
 	    %old_db_to_udb_map
 	    %udb_to_old_db_map
 	    %header_field_type
@@ -25,13 +25,13 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.6 2003/07/21 10:38:51 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.7 2003/08/23 04:35:46 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
 $NULL_VALUE = '___NULL___';
 
-my $debug             = 0;
+my $debug             = 10;
 my $is_keepalive      = 1;
 my $is_demand_copying = 1;
 
@@ -85,21 +85,21 @@ my $is_demand_copying = 1;
 # OLD .htdb_${db_name}
 # NEW       ${db_name}
 %old_db_to_udb_map = qw(
-			msgidref            inv_message_id 
-			idref               ref_key_list 
-			next_id             next_key 
-			prev_id             prev_key 
-			filename            html_filename 
-			filepath            html_filepath 
-			monthly_idlist      inv_month 
-			thread_list         undef 
-			subdir              subdir 
-			info                hint 
+			msgidref            inv_message_id
+			idref               ref_key_list
+			next_id             next_key
+			prev_id             prev_key
+			filename            html_filename
+			filepath            html_filepath
+			monthly_idlist      inv_month
+			thread_list         undef
+			subdir              subdir
+			info                hint
 			);
-# reverse map 
+# reverse map
 {
     my ($k, $v);
-    while (($k, $v) = each %old_db_to_udb_map) { 
+    while (($k, $v) = each %old_db_to_udb_map) {
 	$udb_to_old_db_map{ $v } = $k;
     }
 }
@@ -188,6 +188,7 @@ sub new
     @header_fields = sort keys %header_field_type;
     for my $hdr (@header_fields) {
 	push(@orig_header_fields, "orig_$hdr");
+	push(@article_header_fields, "article_$hdr");
     }
 		
     return bless $me, $type;
@@ -495,16 +496,16 @@ sub thread_summary
     }
 
     if (defined $prev_thread_id) {
-	$fn_prev_thread_id = 
+	$fn_prev_thread_id =
 	    $self->_db_get($db, 'html_filename', $prev_thread_id);
-	$fp_prev_thread_id = 
+	$fp_prev_thread_id =
 	    $self->_db_get($db, 'html_filepath', $prev_thread_id);
     }
 
     if (defined $next_thread_id) {
-	$fn_next_thread_id = 
+	$fn_next_thread_id =
 	    $self->_db_get($db, 'html_filename', $next_thread_id);
-	$fp_next_thread_id = 
+	$fp_next_thread_id =
 	    $self->_db_get($db, 'html_filepath', $next_thread_id);
 
 	unless(-f $fp_next_thread_id) {
@@ -578,11 +579,11 @@ sub tohtml_thread_summary
 	$subject->{ next_id } = $self->_db_get($db, 'subject', $next_id);
     }
     if (defined $prev_thread_id && $prev_thread_id) {
-	$subject->{ prev_thread_id } = 
+	$subject->{ prev_thread_id } =
 	    $self->_db_get($db, 'subject', $prev_thread_id);
     }
     if (defined $next_thread_id && $next_thread_id) {
-	$subject->{ next_thread_id } = 
+	$subject->{ next_thread_id } =
 	    $self->_db_get($db, 'subject', $next_thread_id);
     }
 
@@ -863,7 +864,10 @@ sub db_open
     eval qq{ use $db_type; use Fcntl;};
     unless ($@) {
 	my ($file, $str);
- 	for my $db (@orig_header_fields, @header_fields, @table_list) {
+ 	for my $db (@orig_header_fields,
+		    @header_fields,
+		    @article_header_fields,
+		    @table_list) {
 	    $file = File::Spec->catfile($db_dir, $db);
 	    $str  = qq{
 		my \%$db = ();
@@ -895,7 +899,10 @@ sub db_close
 
     _PRINT_DEBUG("db_close()");
 
-    for my $db (@orig_header_fields, @header_fields, @table_list) {
+    for my $db (@orig_header_fields,
+		@header_fields,
+		@article_header_fields,
+		@table_list) {
 	my $str = qq{
 	    my \$${db} = \$self->{ _db }->{ '_$db' };
 	    untie \%\$${db};
@@ -1167,7 +1174,7 @@ sub _old_db_copyin
 
 	  COPYIN:
 	    for my $i ($start .. $end) {
-		last COPYIN if $cur_key == $i || $cur_key < $i; 
+		last COPYIN if $cur_key == $i || $cur_key < $i;
 
 		# we should not overwrite myself in coping.
 		if ($cur_key && $cur_key != $i) {
