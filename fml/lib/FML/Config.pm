@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.41 2001/10/10 03:10:10 fukachan Exp $
+# $FML: Config.pm,v 1.42 2001/10/10 14:53:45 fukachan Exp $
 #
 
 package FML::Config;
@@ -487,6 +487,30 @@ sub _expand_variables
 	if ($max >= 16) {
 	    croak("variable expansion of $x causes infinite loop\n");
 	} 
+    }
+}
+
+
+=head2 C<expand_variable_in_buffer($rbuf)>
+
+expand $varname to $config->{ varname } in C<$rbuf>.
+
+=cut
+
+# Descriptions: expand $varname to $config->{ varname } 
+#    Arguments: $config $ref_buffer
+# Side Effects: $ref_buffer is rewritten.
+# Return Value: none
+sub expand_variable_in_buffer
+{
+    my ($config, $rbuf) = @_;
+
+    while ($$rbuf =~ /\$([\w\d\_]+)/) {
+	my $varname = $1;
+	if (defined $config->{ $varname }) {
+	    my $x = $config->{ $varname };
+	    $$rbuf =~ s/\$$varname/$x/;
+	}
     }
 }
 
