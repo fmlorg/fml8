@@ -44,6 +44,10 @@ sub new
     use FML::Config;
     $curproc->{ config } = new FML::Config $cfargs;
 
+    # initialize PCB
+    use FML::PCB;
+    $curproc->{ pcb } = new FML::PCB;
+
     bless $curproc, $self;
 
     # load config.cf files, which is passed from fmlwrapper.
