@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.48 2002/10/29 10:35:30 fukachan Exp $
+# $FML: Utils.pm,v 1.49 2002/11/23 15:21:08 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -201,8 +201,17 @@ sub article_message
 
 =head1 misc METHODS
 
+=head2 mkdir($dir, $mode)
+
+create directory $dir if needed.
+
 =cut
 
+#
+# XXX-TODO: $curproc->mkdir() is strage.
+# XXX-TODO: hmm, we create a new subcleass such as $curproc->util->mkdir() ?
+# XXX-TODO: or $utils = $curproc->utils(); $utils->mkdir(dir, mode); ?
+#
 
 # Descriptions: create directory $dir if needed
 #    Arguments: OBJ($curproc) STR($dir) STR($mode)

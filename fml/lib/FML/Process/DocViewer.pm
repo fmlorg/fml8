@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.20 2002/09/11 23:18:15 fukachan Exp $
+# $FML: DocViewer.pm,v 1.21 2002/09/22 14:56:52 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -46,7 +46,11 @@ It inherits C<FML::Process::Kernel>.
 
 =head2 C<prepare($args)>
 
-load default configuration files.
+load default configuration files and fix @INC.
+
+=head2 C<verify_request($args)>
+
+show help unless @ARGV.
 
 =cut
 
@@ -64,7 +68,7 @@ sub new
 }
 
 
-# Descriptions: load default configurations
+# Descriptions: load default configurations and fix @INC.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none

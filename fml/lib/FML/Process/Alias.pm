@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Alias.pm,v 1.4 2002/09/11 23:18:13 fukachan Exp $
+# $FML: Alias.pm,v 1.5 2002/09/22 14:56:51 fukachan Exp $
 #
 
 package FML::Process::Alias;
@@ -20,7 +20,7 @@ use FML::Process::Kernel;
 
 =head1 NAME
 
-FML::Process::Alias -- fmlalias main functions
+FML::Process::Alias -- fmlalias, which show all aliases.
 
 =head1 SYNOPSIS
 
@@ -31,6 +31,9 @@ FML::Process::Alias -- fmlalias main functions
 =head1 DESCRIPTION
 
 FML::Process::Alias provides the main function for C<fmlalias>.
+
+C<fmladdr> command shows all aliases (accounts + aliases) but
+C<fmlalias> command shows only aliases without accounts.
 
 See C<FML::Process::Flow> for the flow detail.
 
@@ -61,7 +64,7 @@ sub new
 }
 
 
-# Descriptions: dummy
+# Descriptions: load config files and fix @INC.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -82,7 +85,7 @@ sub prepare
 }
 
 
-# Descriptions: check @ARGV, call help() if needed.
+# Descriptions: dummy.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: exit ASAP.
 #               longjmp() to help() if appropriate
@@ -110,12 +113,7 @@ sub verify_request
 
 =head2 C<run($args)>
 
-the top level dispatcher for C<fmlconf> and C<fmlalias>.
-
-It kicks off internal function
-C<_fmlconf($args)> for C<fmlconf>
-    and
-C<_fmlalias($args)> for fmlalias.
+the top level dispatcher for C<fmlalias>.
 
 NOTE:
 C<$args> is passed from parrent libexec/loader.
@@ -179,10 +177,6 @@ print <<"_EOF_";
 
 Usage: $name \$command \$ml_name [options]
 
-$name help         \$ml_name                   show this help
-
-$name list
-
 _EOF_
 }
 
@@ -190,8 +184,6 @@ _EOF_
 =head2 C<_fmlalias($args)> (INTERNAL USE)
 
 switch of C<fmlalias> command.
-It kicks off <FML::Command::$command> corrsponding with
-C<@$argv> ( $argv = $args->{ ARGV } ).
 
 C<Caution:>
 C<$args> is passed from parrent libexec/loader.
@@ -221,7 +213,7 @@ sub _fmlalias
     my $eval = $config->get_hook( 'fmlalias_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
-    # -n
+    # show fmlonly aliases if -n option specified.
     my $mode = $args->{ options }->{ n } ? 'fmlonly' : 'all';
 
     use FML::MTAControl;

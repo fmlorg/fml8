@@ -1,17 +1,16 @@
 #-*- perl -*-
 #
-# Copyright (C) 2001,2002 Ken'ichi Fukamachi
+# Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Summary.pm,v 1.2 2002/11/26 10:30:06 fukachan Exp $
+# $FML: Summary.pm,v 1.3 2002/11/26 10:47:22 fukachan Exp $
 #
 
 package FML::Process::Summary;
 
-use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use strict;
 use Carp;
-
+use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
 use FML::Process::Kernel;
@@ -20,7 +19,7 @@ use FML::Process::Kernel;
 
 =head1 NAME
 
-FML::Process::Summary -- maintenance article summary
+FML::Process::Summary -- maintain article summary
 
 =head1 SYNOPSIS
 
@@ -43,7 +42,11 @@ It make a C<FML::Process::Kernel> object and return it.
 
 =head2 C<prepare($args)>
 
-dummy.
+adjust ml_* variables, load config files and fix @INC.
+
+=head2 C<verify_request($args)>
+
+show help if enough arguments not specified.
 
 =cut
 
@@ -186,9 +189,7 @@ _EOF_
 
 =head2 C<_fmlsummary($args)> (INTERNAL USE)
 
-switch of C<fmlsummary> command.
-It kicks off <FML::Command::$command> corrsponding with
-C<@$argv> ( $argv = $args->{ ARGV } ).
+the main switch of C<fmlsummary> command.
 
 C<Caution:>
 C<$args> is passed from parrent libexec/loader.
@@ -229,8 +230,14 @@ sub _fmlsummary
 	$summary->rebuild(1, $id_max);
     }
     else {
-	LogError("unknown method=$method");
-	print STDERR "Error: unknown method=$method\n";
+	if ($method) {
+	    LogError("unknown method=$method");
+	    print STDERR "Error: unknown method=$method\n";
+	}
+	else {
+	    LogError("method not given");
+	    print STDERR "Error: method not given\n";
+	}
     }
 
     $eval = $config->get_hook( 'fmlsummary_run_end_hook' );

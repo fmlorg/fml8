@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calender.pm,v 1.8 2002/09/11 23:18:14 fukachan Exp $
+# $FML: Calender.pm,v 1.9 2002/09/22 14:56:51 fukachan Exp $
 #
 
 package FML::Process::Calender;
@@ -38,6 +38,10 @@ scheduler based on Calender::Lite class.
 standard constructor.
 
 =head2 C<prepare($args)>
+
+dummy.
+
+=head2 C<verify_request($args)>
 
 dummy.
 
@@ -135,9 +139,11 @@ sub run
 
     $wh->close;
 
+    # XXX-TODO: use $path_w3m not w3m
     if ($mode eq 'text') {
 	system "w3m -dump $tmpf";
     }
+    # XXX-TODO: use $path_cat not cat
     else {
 	system "cat $tmpf";
     }

@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.44 2002/09/11 23:18:14 fukachan Exp $
+# $FML: Configure.pm,v 1.45 2002/09/22 14:56:52 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -43,7 +43,11 @@ It make a C<FML::Process::Kernel> object and return it.
 
 =head2 C<prepare($args)>
 
-adjust ml_* and load configuration files.
+fix @INC, adjust ml_* and load configuration files.
+
+=head2 C<verify_request($args)>
+
+show help if needed.
 
 =cut
 
@@ -109,11 +113,9 @@ sub verify_request
 
 =head2 C<run($args)>
 
-the top level dispatcher for C<fmlconf> and C<makefml>.
+the top level dispatcher for C<makefml>.
 
 It kicks off internal function
-C<_fmlconf($args)> for C<fmlconf>
-    and
 C<_makefml($args)> for makefml.
 
 NOTE:
@@ -182,8 +184,11 @@ $name help         \$ml_name                   show this help
 
 $name subscribe    \$ml_name ADDRESS
 $name unsubscribe  \$ml_name ADDRESS
-
+...
 _EOF_
+
+    # XXX-TODO: show all available commands at the last of help message.
+
 }
 
 
@@ -220,6 +225,7 @@ sub _makefml
     my ($method, $argv_ml_name, @options) =  @$argv;
 
     # arguments to pass off to each method
+    # XXX-TODO: command = [ $method, @options ]; ? (no, used only for message?)
     my $command_args = {
 	command_mode => 'admin',
 	comname      => $method,

@@ -3,14 +3,13 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.17 2002/09/22 14:56:52 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.18 2002/09/29 05:28:25 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
-
-use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use strict;
 use Carp;
+use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use FML::Log qw(Log LogWarn LogError);
 use FML::Process::Kernel;
 @ISA = qw(FML::Process::Kernel);
@@ -41,7 +40,11 @@ It make a C<FML::Process::Kernel> object and return it.
 
 =head2 C<prepare($args)>
 
-adjust ml_* and load configuration files.
+fix @INC, adjust ml_* and load configuration files.
+
+=head2 C<verify_request($args)>
+
+show help unless @ARGV.
 
 =cut
 
@@ -118,7 +121,7 @@ sub verify_request
 
 =head2 C<run($args)>
 
-the top level dispatcher for C<fmlconf> and C<makefml>.
+the top level dispatcher for C<fmlconf>.
 
 It kicks off internal function C<_fmlconf($args)> for C<fmlconf>.
 
@@ -225,6 +228,7 @@ sub _fmlconf
     my $mode   = $args->{ options }->{ n } ? 'difference_only' : 'all';
     my $argv   = $curproc->command_line_argv();
 
+    # if variable name is given, show the value.
     if (defined $argv->[1]) {
 	my $k = $argv->[1];
 	print "$k = ", $config->{ $k }, "\n";
