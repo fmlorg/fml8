@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.16 2001/10/21 10:41:33 fukachan Exp $
+# $FML: Lite.pm,v 1.17 2001/10/21 11:19:34 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.16 2001/10/21 10:41:33 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.17 2001/10/21 11:19:34 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -525,7 +525,8 @@ sub _gen_attachment_filename
 
 
 # default header to show
-my @header_field = qw(From To Cc Subject Date);
+my @header_field = qw(From To Cc Subject Date 
+		      X-ML-Name X-Mail-Count X-Sequence);
 
 
 # Descriptions: 
@@ -574,8 +575,10 @@ sub _text_print
     my $buf = $args->{ data };
     my $fh  = $args->{ fh } || \*STDOUT;
 
-    use Jcode;
-    &Jcode::convert(\$buf, 'euc');
+    if (defined $buf) {
+	use Jcode;
+	&Jcode::convert(\$buf, 'euc');
+    }
 
     use HTML::FromText;
     print $fh text2html($buf, urls => 1, pre => 1);
@@ -600,8 +603,10 @@ sub _text_print_by_raw_mode
 	use FileHandle;
 	my $fh = new FileHandle "> $outf";
 
-	use Jcode;
-	&Jcode::convert(\$buf, 'euc');
+	if (defined $buf) {
+	    use Jcode;
+	    &Jcode::convert(\$buf, 'euc');
+	}
 	print $fh $buf, "\n";
 	$fh->close();
     }
@@ -1570,8 +1575,10 @@ sub _print
     my ($wh, $str, $code) = @_;
     $code = defined($code) ? $code : 'euc'; # euc-jp by default
 
-    use Jcode;
-    &Jcode::convert( \$str, $code);
+    if (defined $str) {
+	use Jcode;
+	&Jcode::convert( \$str, $code);
+    }
 
     print $wh $str;
 }
@@ -1705,9 +1712,11 @@ sub _decode_mime_string
             $str =~ s/=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/decode_qp($1)/gie;
         }
 
-	use Jcode;
-	my $icode = &Jcode::getcode(\$str);
-	&Jcode::convert(\$str, $code, $icode);
+	if (defined $str) {
+	    use Jcode;
+	    my $icode = &Jcode::getcode(\$str);
+	    &Jcode::convert(\$str, $code, $icode);
+	}
     }
 
     return $str;
