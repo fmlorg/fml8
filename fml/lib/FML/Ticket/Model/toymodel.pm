@@ -326,13 +326,24 @@ sub list_up
 
     # XXX $dh: date object handle
     use FML::Date;
-    my $dh = new FML::Date;
+    my $dh  = new FML::Date;
+    my $now = time; # save the current UTC for convenience
 
     # XXX $rh = Reference to Hash table, which is tied to db_dir/*db's
     my $rh             = $self->{ _hash_table };
     my $rh_status      = $rh->{ _status };
     my ($tid, $status) = ();
     my $mode           = $args->{ mode } || 'default';
+    my $day            = 24*3600;
+    my $format         = "%10s  %5s %6s  %-20s  %s\n";
+
+    # format
+    $| = 1;
+    printf($format, 'date', 'age', 'status', 'ticket id', 'articles');
+    print "-" x60;
+    print "\n";
+
+    my (@tid);
 
   TICEKT_LIST:
     while (($tid, $status) = each %$rh_status) {
@@ -340,17 +351,20 @@ sub list_up
 	    next TICEKT_LIST if $status =~ /close/o;
 	}
 
+	push(@tid, $tid);
+    }
+
+    for $tid (sort @tid) {
 	# we get the date by the form 1999/09/13 
 	# for the oldest article assigned to this ticket ($tid)
-	my ($aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
+	my (@aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
+	my $aid   = $aid[0];
+	my $laid  = $aid[ $#aid ];
+	my $age   = sprintf("%2.1f%s", ($now - $rh->{ _date }->{ $laid })/$day);
 	my $date  = $dh->YYYYxMMxDD( $rh->{ _date }->{ $aid } , '/');
+	my $status = $rh->{ _status }->{ $tid };
 
-	printf("%10s  %6s  %-20s  %s\n", 
-	       $date,
-	       $status,
-	       $tid,
-	       $rh->{ _articles }->{ $tid }
-	       );
+	printf($format, $date, $age, $status, $tid, $rh->{ _articles }->{ $tid });
     }
 
     # self->{ _hash_table } is untied from DB's.
