@@ -12,6 +12,7 @@ my $body;
 my $m_prev;
 my $msg;
 my $master;
+my @m = ();
 
 for $msg (@ARGV) {
     my $m = new MailingList::Messages { 
@@ -21,12 +22,14 @@ for $msg (@ARGV) {
 	filename       => $msg,
 	debug          => 1,
     };
-
-    $m_prev->next_chain( $m ) if defined $m_prev;
-    $m_prev = $m;
-    $master = $m unless $master; 
+    push(@m, $m);
 }
 
+$master = $m[0];
+$master = $master->build_mime_multipart_chain( {
+    base_content_type => 'multipart/mixed',
+    message_list      => \@m,
+});
 $master->raw_print;
 
 exit 0;
