@@ -1,10 +1,18 @@
 #
-# $FML: Makefile,v 1.11 2001/04/24 04:01:32 fukachan Exp $
+# $FML: Makefile,v 1.12 2001/04/24 15:47:03 fukachan Exp $
 #
 
 CONV = doc/bin/text2html.pl
 
-all: test
+all: usage
+
+usage:
+	@ echo "make install    install"
+	@ echo ""
+	@ echo "make doc        generate documents"
+	@ echo "make tutorial   generate turorials"
+	@ echo ""
+	@ echo "make clean             "
 
 install:
 	sh INSTALL.sh
@@ -20,7 +28,11 @@ clean:
 
 doc: html
 
-html: _html tutorial
+html: _new_doc _html tutorial
+
+_new_doc:
+	-fml/utils/bin/pm2txt.pl fml/lib  Documentation/en/modules
+	-fml/utils/bin/pm2txt.pl cpan/lib Documentation/en/modules
 
 _html:
 	@ (cd fml/lib/;make html)
@@ -29,4 +41,5 @@ _html:
 	@ (cd cpan/dist/;make html)
 
 tutorial:
-	@ (cd fml/doc/ja/tutorial; make ; make clean)
+	@ (cd fml/doc/ja/tutorial; make clean; make ; make clean)
+
