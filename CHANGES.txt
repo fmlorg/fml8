@@ -1,6 +1,91 @@
 		CHANGES
 		Last Modified: $Date$
 
+2001/11/27
+
+   FML::Log 
+   Tie::JournaledDir 
+	FML::Date -> Mail::Message::Date
+	
+   Mail::Message::Date 
+	remove MTI.. message
+
+   update comments
+	clean up
+	FNF-ify
+
+   Mail::ThreadTrack::Analyze 
+	run prepare_history_info($msg) if $self->{ _is_rewrite_header }
+
+   configure
+	@sysconfdir@ -> @sysconfdir@/fml
+	modify message
+	
+   FML::Process::Switch 
+	modified not to use Standalone
+	loader has Standalone by itself now.
+
+   config.sh.in 
+   etc/main.cf.in 
+	@sysconfdir@ -> @sysconfdir@::fml
+	
+   FML::Process::Switch 
+   libexec/loader.in 
+	modified not to use Standalone
+	loader has Standalone by itself now.
+
+2001/11/26
+
+   FML::Process::Kernel 
+	bug fix missing mkdir() argument
+	
+   FML::Process::Distribute 
+   Mail::ThreadTrack 
+   Mail::ThreadTrack::Analyze 
+	toggle header rewriting (subject) to add thread id. off by default
+	
+   config.cf
+	define $use_thread_subject_tag to toggle header rewrite
+
+2001/11/25
+
+   more tainted safe
+	(but needs more consideration, may be use of FML::Restriction class)
+	TinyScheduler 
+	FML::Process::ConfViewer, FML::Process::Scheduler
+	
+   FML::Filter::BodyCheck 
+	validate get_first_plaintext_message() return value
+
+   libexec/loader.in 
+	we should not use @INC derived from $0
+	reset PATH in the early stage
+
+   FML::Process::*
+	implement help() method
+	enable --help for all command line programs
+	verify_request() checks @ARGV and show help() if needed
+	
+   FML::Process::Switch 
+	enable distribute and command
+	check whether getopt() options are given or not.
+	enable --help for all command line programs
+	xxx.cgi SHOULD NOT ACCPET the same options as command line program xxx
+	does.
+	
+   FML::Process::Kernel 
+	trap --help in new() to show and exit asap
+	
+   FML::Process::ConfViewer 
+	fmlconf and makefml are separete now
+	
+   FML::Process::CGI::Kernel 
+	change defualt target to _top
+	
+   FML::Process::CGI::Param 
+   FML::Restriction
+	reconstructured safe parameter definitions
+
 2001/11/21
 
    FML::Process::Switch 
@@ -1142,4 +1227,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.35 2001/11/13 15:35:42 fukachan Exp $
+$FML: CHANGES.txt,v 1.36 2001/11/23 02:57:30 fukachan Exp $
