@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.48 2004/09/23 08:05:51 fukachan Exp $
+# $FML: Queue.pm,v 1.49 2004/12/15 06:46:19 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -1366,6 +1366,49 @@ sub set_log_function
     my ($self, $fp) = @_;
 
     $self->{ _log_function } = $fp || undef;
+}
+
+
+=head1 CLEAN UP GARBAGES
+
+=head2 clean_up()
+
+remove too old incoming queue files.
+
+=cut
+
+
+# Descriptions: remove too old incoming queue files.
+#    Arguments: OBJ($self)
+# Side Effects: remove too old incoming queue files.
+# Return Value: none
+sub clean_up
+{
+    my ($self) = @_;
+    my $dir    = $self->{ _directory } || croak("directory undefined");
+    my $limit  = 14*24*3600;
+
+    use DirHandle;
+    use File::stat;
+    my $incoming_queue_dir = File::Spec->catfile($dir, "incoming");
+    my $dh = new DirHandle $incoming_queue_dir;
+    if (defined $dh) {
+	my ($file, $entry, $stat);
+	my $day_limit = time - $limit;
+
+      ENTRY:
+	while ($entry = $dh->read()) {
+	    next ENTRY if $entry =~ /^\./o;
+
+	    $file = File::Spec->catfile($dir, "incoming", $entry);
+	    $stat = stat($file);
+	    if ($stat->mtime < $day_limit) {
+		$self->log("remove too old incoming queue: qid=$entry");
+		unlink $file;
+	    }
+	}
+	$dh->close();
+    }
 }
 
 
