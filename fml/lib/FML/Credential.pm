@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Credential.pm,v 1.11 2001/05/29 16:21:15 fukachan Exp $
+# $FML: Credential.pm,v 1.12 2001/06/29 05:57:32 fukachan Exp $
 #
 
 package FML::Credential;
@@ -13,7 +13,6 @@ use strict;
 use vars qw(%Credential @ISA @EXPORT @EXPORT_OK);
 use Carp;
 use ErrorStatus qw(errstr error error_set error_clear);
-
 
 =head1 NAME
 
@@ -119,21 +118,39 @@ sub is_member
 
   MAP:
     for my $map (split(/\s+/, $member_maps)) {
-	if ($map) {
-	    my $obj = new IO::Adapter $map;
+	if (defined $map) {
+	    $status = $self->has_address_in_map($map, $address);
+	    last MAP if $status;
+	}
+    }
 
-	    # 1. get all entries match /^$user/ from $map.
-	    my $addrs = $obj->find( $user , { all => 1 });
+    return $status; # found if ($status == 1).
+}
 
-	    # 2. try each address in the result matches $address to check.
-	    for my $x (@$addrs) {
-		my ($r) = split(/\s+/, $x);
 
-		# 3. is_same_address() conceals matching algorithm details.
-		if ($self->is_same_address($r, $address)) {
-		    $status = 1; # found
-		    last MAP;
-		}
+sub has_address_in_map
+{
+    my ($self, $map, $address) = @_;
+    my $status = 0;
+
+    my ($user, $domain) = split(/\@/, $address);
+
+    use IO::Adapter;
+    my $obj = new IO::Adapter $map;
+
+    # 1. get all entries match /^$user/ from $map.
+    my $addrs = $obj->find( $user , { all => 1 });
+
+    # 2. try each address in the result matches $address to check.
+    if (defined $addrs) {
+      LOOP:
+	for my $x (@$addrs) {
+	    my ($r) = split(/\s+/, $x);
+
+	    # 3. is_same_address() conceals matching algorithm details.
+	    if ($self->is_same_address($r, $address)) {
+		$status = 1; # found
+		last LOOP;
 	    }
 	}
     }
@@ -142,8 +159,9 @@ sub is_member
 	$self->error_set("user=$user domain=$domain not found");
     }
 
-    $status;
+    return $status;
 }
+
 
 
 =head2 C<match_system_accounts($curproc, $args)>
