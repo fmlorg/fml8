@@ -21,15 +21,18 @@ A2: SQL 構文も書けるようにしておけばよい？
 
 	とする
 
+	XXX	以下の例では
+		useradd() するとき、members recipients
+		の順で map を変更しないといけない
+
 ○ cf の例：
 
-member_maps 	= 	mysql:database
+member_maps 	= 	mysql:members
 
-recipient_maps 	= 	mysql:database
+recipient_maps 	= 	mysql:recipients
 
-[mysql:database]
 
-[mysql:fml]
+[mysql:members]
 
 sql_server	=	localhost
 sql_user	=	fml
@@ -61,6 +64,56 @@ sql_find	=	select * from $sql_table
 			where	fml_ml = '$ml_name'
 					and
 				fml_domain = '$ml_domain'
+					and
+				fml_address like '&regexp'
+
+
+
+[mysql:recipients]
+
+sql_server	=	localhost
+sql_user	=	fml
+sql_password	=	uja
+sql_database	=	fml
+sql_table	=	ml
+
+sql_get_next_key =	select fml_address from $sql_table
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_recipient = '1'
+
+sql_getline	=	select * from $sql_table
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_recipient = '1'
+
+sql_add		=	update ml
+			set recipient = 1
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_address = '&address'
+
+sql_delete	=	update ml
+			set recipient = 0
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_address = '&address'
+
+
+sql_find	=	select * from $sql_table
+			where	fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_recipient = '1'
 					and
 				fml_address like '&regexp'
 

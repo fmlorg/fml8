@@ -19,9 +19,9 @@
 
 
    [このメソッドは使っている]
-	getline			()		STR
 	get_next_key		()		STR
-	add			(KEY, STR)	*
+	add			(KEY)		*
+				(KEY, STR)	*	←要拡張？
 				(KEY, [])	*	←要拡張？
 	delete			(KEY)		*
 
@@ -31,13 +31,14 @@
 	eof			()		*
 
    [このメソッドは改良の余地なし]
-	touch			(引数なし)	NUM
+	touch			(引数なし)	*
 
    [要再実装(今はとりあえず使っていない)]
-	get_value_as_str	()		STR	←
-	get_value_as_array_ref	()		[]	←
-	replace			(KEY, STR)	*	←	
-				(KEY, [])	*	←
+	getline			()		STR	←要拡張？
+	get_value_as_str	()		STR	←要拡張？
+	get_value_as_array_ref	()		[]	←要拡張？
+	replace			(KEY, STR)	*	←要拡張？
+				(KEY, [])	*	←要拡張？
 
 *** TODO ***
 
