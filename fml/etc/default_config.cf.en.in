@@ -852,7 +852,7 @@ article_subject_tag			=	[$ml_name:%05d]
 #      History:
 #        Value:
 #     Examples: elena
-x_ml_name			=	$ml_name
+outgoing_mail_header_x_ml_name			=	$ml_name
 
 =head1	mail body
 
@@ -972,6 +972,25 @@ log_file_charset_en        =       us-ascii
 #        Value: filename
 #     Examples: /var/spool/ml/@log@
 domain_local_log_file	=	$domain_local_dir/@log@
+
+
+
+=head2	makefml/fml outputs machine friendly log
+
+
+# Descriptions: if yes, makefml/fml outputs machine friendly log.
+#               --coputer-output option implies "use_computer_output = yes".
+#      History: none
+#        Value: yes | no
+#     Examples: no
+use_computer_output	=	no
+
+
+# Descriptions: specify perl module for output engine.
+#      History: none
+#        Value: CLASS
+#     Examples: FML::Log::Print::Simple
+computer_output_engine	=	FML::Log::Print::Simple
 
 =head1	function of article delivery
 
@@ -2248,6 +2267,14 @@ sql_find	=	select fml_address from $sql_table
 # $error_run_start_hook = q{ 1;};
 # $error_verify_request_end_hook = q{ 1;};
 # $error_verify_request_start_hook = q{ 1;};
+# $faker_finish_end_hook = q{ 1;};
+# $faker_finish_start_hook = q{ 1;};
+# $faker_prepare_end_hook = q{ 1;};
+# $faker_prepare_start_hook = q{ 1;};
+# $faker_run_end_hook = q{ 1;};
+# $faker_run_start_hook = q{ 1;};
+# $faker_verify_request_end_hook = q{ 1;};
+# $faker_verify_request_start_hook = q{ 1;};
 # $fmladdr_finish_end_hook = q{ 1;};
 # $fmladdr_finish_start_hook = q{ 1;};
 # $fmladdr_prepare_end_hook = q{ 1;};
