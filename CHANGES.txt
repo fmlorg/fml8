@@ -13,6 +13,24 @@
 	気をつけてください。
 
 
+2004/05/02
+
+   variables
+	+html_archive_default_charset
+	+html_archive_charset_ja
+	+html_archive_charset_en
+	+path_bogofilter           = @BOGOFILTER@
+	+path_clamscan             = @CLAMSCAN@
+	
+   FML::Process::Utils 
+	remove language_default().
+	language_of_html_file() return $html_archive_default_charset.
+
+   コマンドの追加(対称性、操作をしやすくするため)
+	admindel
+	moderatoradd
+	moderatordel
+
 2004/05/01
 
    非対称のユーザ制御コマンドを色々追加する。			
@@ -6907,4 +6925,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.201 2004/05/01 15:02:07 fukachan Exp $
+$FML: CHANGES.txt,v 1.202 2004/05/02 15:51:37 fukachan Exp $
