@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: FixBrokenAddress.pm,v 1.9 2002/12/20 03:49:15 fukachan Exp $
+# $FML: FixBrokenAddress.pm,v 1.10 2004/01/02 14:42:47 fukachan Exp $
 #
 
 
@@ -36,7 +36,7 @@ See C<Mail::Bounce> for more details.
 =cut
 
 
-# Descriptions: speculate correct address
+# Descriptions: speculate correct address.
 #    Arguments: STR($hint) STR($addr)
 # Side Effects: speculate $addr
 # Return Value: STR($addr)

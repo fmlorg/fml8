@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ErrorStatus.pm,v 1.6 2003/08/23 04:35:45 fukachan Exp $
+# $FML: ErrorStatus.pm,v 1.7 2003/08/23 15:33:17 fukachan Exp $
 #
 
 package Mail::Delivery::ErrorStatus;
@@ -58,7 +58,7 @@ return $message which is saved by C<error_set($msg)>.
 =cut
 
 
-# Descriptions: set the error message
+# Descriptions: set the error message.
 #    Arguments: OBJ($self) STR($mesg)
 # Side Effects: update OBJ
 # Return Value: STR
@@ -69,7 +69,7 @@ sub error_set
 }
 
 
-# Descriptions: get the error message
+# Descriptions: get the error message.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
@@ -80,7 +80,7 @@ sub error
 }
 
 
-# Descriptions: get the error message
+# Descriptions: get the error message.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
@@ -91,7 +91,7 @@ sub errstr
 }
 
 
-# Descriptions: clear the error message
+# Descriptions: clear the error message.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
@@ -115,7 +115,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

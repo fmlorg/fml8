@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SimpleMatch.pm,v 1.38 2003/04/29 03:11:01 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.39 2003/05/04 07:57:13 fukachan Exp $
 #
 
 
@@ -179,7 +179,7 @@ my $reason_trap_regexp = {
 };
 
 
-# Descriptions: analyze irregular pattern
+# Descriptions: analyze irregular pattern.
 #    Arguments: OBJ($self) OBJ($msg) HASH_REF($result)
 # Side Effects: update $result
 # Return Value: none
@@ -331,7 +331,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

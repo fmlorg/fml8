@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DSN.pm,v 1.21 2003/01/11 15:14:24 fukachan Exp $
+# $FML: DSN.pm,v 1.22 2003/01/26 03:23:09 fukachan Exp $
 #
 
 
@@ -79,7 +79,7 @@ See RFC1894 on DSN (Delivery Status Notification) definition.
 =cut
 
 
-# Descriptions: analyze DSN
+# Descriptions: analyze DSN format message.
 #    Arguments: OBJ($self) OBJ($msg) HASH_REF($result)
 # Side Effects: update $result
 # Return Value: none
@@ -87,7 +87,7 @@ sub analyze
 {
     my ($self, $msg, $result) = @_;
     my $m = $msg->whole_message_body_head;
-    $m = $m->find( { data_type => 'message/delivery-status' } );
+    $m    = $m->find( { data_type => 'message/delivery-status' } );
 
     if (defined $m) {
 	# data in the part
@@ -171,7 +171,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

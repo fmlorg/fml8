@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UnixGroup.pm,v 1.19 2003/08/23 04:35:44 fukachan Exp $
+# $FML: UnixGroup.pm,v 1.20 2003/08/23 15:33:16 fukachan Exp $
 #
 
 package IO::Adapter::UnixGroup;
@@ -51,14 +51,14 @@ Configure object for array IO operation.
 =cut
 
 
-# Descriptions: initialize /etc/group specific configuration
+# Descriptions: initialize /etc/group specific configuration.
 #    Arguments: OBJ($self) HASH_REF($me)
 # Side Effects: none
 # Return Value: ARRAY_REF
 sub configure
 {
     my ($self, $me) = @_;
-    my ($type) = ref($self) || $self;
+    my ($type)      = ref($self) || $self;
 
     # emulate an array on memory
     my (@x)        = getgrnam( $me->{_name} );
@@ -81,7 +81,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

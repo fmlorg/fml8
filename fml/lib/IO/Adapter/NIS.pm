@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: NIS.pm,v 1.21 2003/08/23 04:35:44 fukachan Exp $
+# $FML: NIS.pm,v 1.22 2003/08/23 15:33:16 fukachan Exp $
 #
 
 package IO::Adapter::NIS;
@@ -51,15 +51,16 @@ Configure $obj for array IO emulation.
 =cut
 
 
-# Descriptions: initialize NIS specific configuration
+# Descriptions: initialize NIS specific configuration.
 #    Arguments: OBJ($self) HASH_REF($me)
 # Side Effects: none
 # Return Value: ARRAY_REF
 sub configure
 {
     my ($self, $me) = @_;
-    my ($type) = ref($self) || $self;
+    my ($type)      = ref($self) || $self;
 
+    # XXX-TODO: UNIX only.
     # XXX-TODO: we call "ypmatch" but should use full-path if could.
     # emulate an array on memory
     my $key        = $me->{_name};
@@ -83,7 +84,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

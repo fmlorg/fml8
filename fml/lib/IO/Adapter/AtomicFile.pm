@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: AtomicFile.pm,v 1.8 2003/02/01 06:08:39 fukachan Exp $
+# $FML: AtomicFile.pm,v 1.9 2003/08/23 04:35:43 fukachan Exp $
 #
 
 package IO::Adapter::AtomicFile;
@@ -215,7 +215,7 @@ C<IO::Adapter::AtomicFile::rw_open>.
 =cut
 
 
-# Descriptions: copy file, which ensures atomic operation
+# Descriptions: copy file, which ensures atomic operation.
 #    Arguments: OBJ($self) STR($src) STR($dst)
 # Side Effects: $dst's file mode becomes the same as $src
 # Return Value: NUM
@@ -233,6 +233,7 @@ sub copy
 	$wh->close;
 	$rh->close;
 
+	# XXX-TODO: chmod too late 
 	chmod $mode, $dst;
     }
     else {
@@ -253,7 +254,7 @@ state.
 =cut
 
 
-# Descriptions: return error message
+# Descriptions: return error message.
 #    Arguments: OJB($self)
 #               XXX $self is blessed file handle.
 # Side Effects: none
@@ -266,7 +267,7 @@ sub error
 }
 
 
-# Descriptions: reset the previous work
+# Descriptions: reset the previous work.
 #    Arguments: OBJ($self)
 #               XXX $self is blessed file handle.
 # Side Effects: clean up the previous work ;-)
@@ -304,7 +305,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Japanese.pm,v 1.8 2003/08/06 11:20:06 fukachan Exp $
+# $FML: Japanese.pm,v 1.9 2003/08/13 13:43:46 fukachan Exp $
 #
 
 #
@@ -79,7 +79,7 @@ See C<Mail::Bounce> for more details.
 =cut
 
 
-# Descriptions: trap Japanese specific error address
+# Descriptions: trap Japanese specific error address.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: update $args->{result}
 # Return Value: none
@@ -91,6 +91,7 @@ sub _japanese_address_match
     my $rbuf   = $args->{ buf };
     my $buf    = $$rbuf;
 
+    # XXX-TODO: use Mail::Message::Encode.
     use Jcode;
     &Jcode::convert(\$buf, 'euc');
 
@@ -132,7 +133,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
