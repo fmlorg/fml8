@@ -16,24 +16,32 @@
 sql_server	=	localhost
 sql_user	=	fml
 sql_password	=	uja
-sql_database	=	ml
-sql_table	=	fml
+sql_database	=	fml
+sql_table	=	ml
 
-get_next_key	=	select fml_address from $sql_table
-			where fml_ml = '&ml_name'
+sql_get_next_key =	select fml_address from $sql_table
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
 
-getline		=	select * from $sql_table
-			where fml_ml = '&ml_name'
+sql_getline	=	select * from $sql_table
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
 
-add		=	insert into $sql_table
-			values ('&ml_name', '&address', 1, 1)
+sql_add		=	insert into $sql_table
+			values ('$ml_name', '$ml_domain', '&address', 1, 1)
 
-delete		=	delete from $sql_table
-			where	fml_ml = '&ml_name'
-				and
+sql_delete	=	delete from $sql_table
+			where	fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
 				fml_address = '&address'
 
-find		=	select * from $sql_table
-			where	fml_ml = '&ml_name'
-				and
+sql_find	=	select * from $sql_table
+			where	fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
 				fml_address like '&regexp'
