@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.39 2002/08/07 03:59:18 fukachan Exp $
+# $FML: Utils.pm,v 1.40 2002/09/02 03:31:44 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -157,6 +157,7 @@ sub article_message_header
 	return $curproc->{ article }->{ header };
     }
     else {
+	LogError("\$curproc->{ article }->{ header } not defined");
 	return undef;
     }
 }
@@ -174,6 +175,7 @@ sub article_message_body
 	return $curproc->{ article }->{ body };
     }
     else {
+	LogError("\$curproc->{ article }->{ body } not defined");
 	return undef;
     }
 }
@@ -191,6 +193,7 @@ sub article_message
 	return $curproc->{ article }->{ message };
     }
     else {
+	LogError("\$curproc->{ article }->{ message } not defined");
 	return undef;
     }
 }
