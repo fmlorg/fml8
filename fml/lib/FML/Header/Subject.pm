@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.44 2004/03/28 11:11:54 fukachan Exp $
+# $FML: Subject.pm,v 1.45 2004/04/27 13:38:41 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -15,7 +15,7 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Header::Subject - manipulate the mail header subject
+FML::Header::Subject - manipulate the mail header subject.
 
 =head1 SYNOPSIS
 
@@ -75,12 +75,15 @@ sub rewrite_article_subject_tag
     ($subject, $tag, $in_code, $out_code) = $self->decode($subject, $tag);
 
     # cut off Re: Re: Re: ...
+    # $subject IS DECODED ALREADY.
     $self->_cut_off_reply(\$subject);
 
     # de-tag
+    # $subject IS DECODED ALREADY.
     $subject = $self->delete_subject_tag($subject, $tag);
 
     # cut off Re: Re: Re: ...
+    # $subject IS DECODED ALREADY.
     $self->_cut_off_reply(\$subject);
 
     use Mail::Message::Encode;
@@ -106,7 +109,7 @@ sub clean_up
 }
 
 
-# Descriptions: exapnd special regexp(s) and mime-decode subject.
+# Descriptions: expand special regexp(s) and mime-decode subject.
 #    Arguments: OBJ($self) STR($subject) STR($tag)
 # Side Effects: none
 # Return Value: ARRAY(STR, STR, STR, STR)
@@ -135,14 +138,14 @@ sub decode
 
     # decode mime
     use Mail::Message::Encode;
-    my $obj = new Mail::Message::Encode;
-    $subject = $obj->decode_mime_string($subject , $out_code);
+    my $obj  = new Mail::Message::Encode;
+    $subject = $obj->decode_mime_string($subject, $out_code);
 
     return ($subject, $tag, $in_code, $out_code);
 }
 
 
-# Descriptions: remove tag-like string
+# Descriptions: remove tag-like string.
 #    Arguments: OZBJ($self) STR($subject) STR($tag)
 #               XXX non OO type function
 # Side Effects: none
@@ -152,6 +155,9 @@ sub delete_subject_tag
     my ($self, $subject, $tag) = @_;
     my $retag = _regexp_compile($tag);
 
+    # 
+    # XXX $subject IS DECODED ALREADY.
+    # 
     $subject =~ s/$retag//g;
     $subject =~ s/^\s*//;
 
@@ -166,7 +172,7 @@ build a regular expression to trap C<$string>.
 =cut
 
 
-# Descriptions: wrapper for _regexp_compile
+# Descriptions: wrapper for _regexp_compile().
 #    Arguments: OBJ($self) STR($string)
 # Side Effects: none
 # Return Value: STR(regular expression)
@@ -226,12 +232,18 @@ sub is_reply
 {
     my ($self, $subject) = @_;
 
-    return 1 if $subject =~ /^\s*Re:/i;
+    # 
+    # XXX WE NEED $subject IS DECODED ALREADY.
+    #
+    # XXX-TODO: Mail::Message::Subject class should provide this function ?
+    # 
+
+    return 1 if $subject =~ /^\s*Re:/io;
 
     # XXX-TODO: care for not Japanese string!
     eval q{
 	use Mail::Message::Language::Japanese::Subject;
-	my $sbj  = new Mail::Message::Language::Japanese::Subject;
+	my $sbj = new Mail::Message::Language::Japanese::Subject;
 	return 1 if $sbj->is_reply($subject);
     };
 
@@ -247,6 +259,10 @@ sub is_reply
 sub _cut_off_reply
 {
     my ($self, $r_subject) = @_;
+
+    # 
+    # XXX $subject IS DECODED ALREADY.
+    # 
 
     # XXX-TODO: care for not Japanese string!
     use Mail::Message::Language::Japanese::Subject;
