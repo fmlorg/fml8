@@ -1,15 +1,15 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.17 2002/12/23 14:38:16 fukachan Exp $
+# $FML: Auth.pm,v 1.18 2002/12/24 10:19:43 fukachan Exp $
 #
 
 package FML::Command::Auth;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $debug);
 use Carp;
 use FML::Log qw(Log LogWarn LogError);
 
@@ -173,7 +173,7 @@ sub check_admin_member_password
 		if ($cred->is_same_address($u, $address)) {
 		    # 1.2 password match ?
 		    if ($p_infile eq $p_input) {
-			Log("check_password: password match");
+			Log("check_admin_member_password: password match") if $debug;
 			return 1;
 		    }
 		}
@@ -181,7 +181,7 @@ sub check_admin_member_password
         }
     }
 
-    LogWarn("check_password: password not match");
+    LogWarn("check_admin_member_password: password not match");
     return 0;
 }
 
@@ -196,7 +196,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Ken'ichi Fukamachi
+Copyright (C) 2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

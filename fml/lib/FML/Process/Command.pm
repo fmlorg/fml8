@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.77 2002/12/24 10:19:46 fukachan Exp $
+# $FML: Command.pm,v 1.78 2002/12/25 03:13:19 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -407,7 +407,7 @@ sub _try_admin_auth
 		return $is_auth;
 	    }
 	    else {
-		Log("admin: not match rule=$rule"); # XXX debug. remove this.
+		Log("admin: not match rule=$rule") if $debug;
 	    }
 	}
     }
@@ -482,10 +482,10 @@ sub _get_command_mode
     # Case: "admin" command is exceptional. try priviledged mode.
     elsif ($command =~ /$admin_prefix\s+/) {
 	if ($is_auth) {
-	    Log("admin auth-ed already. run <$command>");
+	    Log("admin: auth-ed already. run <$command>") if $debug;
 	}
 	else { # for the first time ?
-	    Log("admin try auth");
+	    Log("admin: try auth");
 
 	    my $sender  = $curproc->{'credential'}->{'sender'};
 	    my $data    = $command;
@@ -497,7 +497,7 @@ sub _get_command_mode
 	    # XXX simple state machine: update $status->{ is_auth }
 	    $is_auth = $curproc->_try_admin_auth($args, $optargs);
 	    $status->{ is_auth } = $is_auth;
-	    Log("authenticated as an ML administrator") if $is_auth;
+	    Log("admin: o.k. auth-ed as an ML admin") if $is_auth;
 	}
 
 	if ($is_admin && $is_auth) {
@@ -577,7 +577,7 @@ sub _get_command_mode
 		}
 		# XXX but just ignore this commnad unless admin mode.
 		else {
-		    Log("(debug) ignore $command");
+		    Log("(debug) ignore $command") if $debug;
 		    return '__NEXT__';
 		}
 	    }
@@ -600,10 +600,10 @@ sub _config_allow_command
     my $config  = $curproc->config();
     my $level   = $status->{ level };
 
-    Log("(debug) mode=$mode level=$level");
+    Log("(debug) mode=$mode level=$level") if $debug;
 
     if ($config->has_attribute("commands_for_${level}", $comname)) {
-	Log("(debug) $comname o.k. under mode=$mode level=$level");
+	Log("(debug) $comname o.k. under mode=$mode level=$level") if $debug;
     }
     else {
 	Log("deny command: mode=$mode level=$level");
@@ -730,7 +730,7 @@ sub _evaluate_command_lines
 
 	$num_total++; # the total numer of non null lines
 
-	Log("(debug) input: $orig_command"); # log raw buffer
+	Log("(debug) input: $orig_command") if $debug; # log raw buffer
 
 	# Example: if orig_command = "# help", comname = "help"
 	$fixed_command = __clean_up($orig_command);
@@ -779,7 +779,7 @@ sub _evaluate_command_lines
 	}
 
 	# o.k. here we go to execute this command
-	Log("execute \"$fixed_command\"");
+	Log("execute \"$fixed_command\"") if $debug;
 	$num_processed++;
 
 	use FML::Command;
@@ -875,7 +875,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
