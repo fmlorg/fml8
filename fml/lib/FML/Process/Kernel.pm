@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Kernel.pm,v 1.46 2001/05/19 03:31:33 fukachan Exp $
+# $FML: Kernel.pm,v 1.47 2001/06/02 12:38:19 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -293,7 +293,7 @@ sub verify_sender_credential
 
 =head2 C<simple_loop_check($args)>
 
-loop checks following rules of $config->{ header_check_rules }.
+loop checks following rules of $config->{ header_loop_check_rules }.
 The autual check is done by header->C<$rule()> for a C<rule>.
 See C<FML::Header> object for more details.
 
@@ -311,7 +311,7 @@ sub simple_loop_check
     my $header = $r_msg->{ header };
     my $match = 0;
 
-    for my $rule (split(/\s+/, $config->{ header_check_rules })) {
+    for my $rule (split(/\s+/, $config->{ header_loop_check_rules })) {
 	if ($header->can($rule)) {
 	    $match = $header->$rule($config, $args) ? $rule : 0;
 	}
