@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Debug.pm,v 1.4 2003/08/23 04:35:38 fukachan Exp $
+# $FML: Debug.pm,v 1.5 2003/11/16 11:50:57 fukachan Exp $
 #
 
 package FML::Process::Debug;
@@ -134,6 +134,24 @@ sub ml_home_prefix
     }
 
     return '';
+}
+
+
+=head2 config()
+
+return config object.
+
+=cut
+
+
+# Descriptions: return config object.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
+sub config
+{
+    my ($self) = @_;
+    return( defined $self->{ config } ? $self->{ config } : undef );
 }
 
 
