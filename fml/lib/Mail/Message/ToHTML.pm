@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.36 2003/02/09 12:31:50 fukachan Exp $
+# $FML: ToHTML.pm,v 1.37 2003/02/11 13:18:54 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.36 2003/02/09 12:31:50 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.37 2003/02/11 13:18:54 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -1296,8 +1296,8 @@ sub _update_relation
 
 	  LINE:
 	    while ($buf = <$rh>) {
-		if ($buf =~ /^$pat_preamble_begin/ 
-		      .. 
+		if ($buf =~ /^$pat_preamble_begin/
+		      ..
 		    $buf =~ /^$pat_preamble_end/) {
 		    if ($buf =~ /^$pat_preamble_end/) {
 			_print_raw_str($wh, $preamble, $code);

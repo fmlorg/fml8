@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Procmail.pm,v 1.7 2003/02/11 11:39:55 fukachan Exp $
+# $FML: Procmail.pm,v 1.8 2003/02/14 01:27:16 fukachan Exp $
 #
 
 package FML::MTAControl::Procmail;
@@ -83,7 +83,7 @@ sub procmail_remove_alias
 
       LINE:
 	while ($buf = <$rh>) {
-	    if ($buf =~ /\<ALIASES\s+$key\@/ 
+	    if ($buf =~ /\<ALIASES\s+$key\@/
 		  ..
 		$buf =~ /\<\/ALIASES\s+$key\@/) {
 		$removed++;

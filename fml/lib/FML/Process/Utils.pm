@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.59 2003/02/15 02:54:00 fukachan Exp $
+# $FML: Utils.pm,v 1.60 2003/02/16 08:55:42 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -522,7 +522,7 @@ sub myname
 }
 
 
-# Descriptions: return the current action name, 
+# Descriptions: return the current action name,
 #               which syntax is checked by regexp.
 #    Arguments: OBJ($curproc)
 # Side Effects: none

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MTAControl.pm,v 1.18 2003/01/29 09:00:54 fukachan Exp $
+# $FML: MTAControl.pm,v 1.19 2003/02/11 11:04:43 fukachan Exp $
 #
 
 package FML::MTAControl;
@@ -312,7 +312,7 @@ sub _remove_postfix_style_virtual
       LINE:
 	while ($buf = <$rh>) {
 	    if ($buf =~ /\<VIRTUAL\s+$key\@/
-		   .. 
+		   ..
 		$buf =~ /\<\/VIRTUAL\s+$key\@/) {
 		$removed++;
 		next LINE;

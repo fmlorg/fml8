@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.7 2003/02/15 02:54:25 fukachan Exp $
+# $FML: List.pm,v 1.8 2003/02/16 08:52:44 fukachan Exp $
 #
 
 package FML::CGI::Admin::List;
@@ -49,7 +49,7 @@ sub cgi_menu
     my $safe = new FML::Restriction::Base;
     unless ($safe->regexp_match('ml_name', $ml_name)) {
 	croak("invalid ml_name");
-    } 
+    }
 
     # check $map_default included in $map_list.
     unless ($config->has_attribute("cgi_menu_map_list", $map_default)) {
