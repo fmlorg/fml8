@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.75 2004/05/01 14:29:41 fukachan Exp $
+# $FML: Header.pm,v 1.76 2004/06/09 14:57:26 fukachan Exp $
 #
 
 package FML::Header;
@@ -21,7 +21,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::Header - header manipulators
+FML::Header - header manipulators.
 
 =head1 SYNOPSIS
 
@@ -61,7 +61,7 @@ forward the request up to superclass C<Mail::header::new()>.
 =cut
 
 
-# Descriptions: forward new() request to the base class
+# Descriptions: forward new() request to the base class.
 #    Arguments: OBJ($self) HASH_REF($rw_args)
 # Side Effects: none
 # Return Value: OBJ
@@ -74,7 +74,7 @@ sub new
 }
 
 
-# Descriptions: dummy
+# Descriptions: dummy.
 #    Arguments: OBJ($self) HASH_REF($rw_args)
 # Side Effects: none
 # Return Value: none
@@ -126,12 +126,13 @@ C<Mail::Address::parse()>, remove < and > and return the result.
 
 =cut
 
+
 #
 # XXX-TODO: address_clean_up() in this class is apporopriate ?
 # XXX-TODO: is it in some other class such as FML::Address ?
 #
 
-# Descriptions: utility to remove ^\s*< and >\s*$
+# Descriptions: utility to remove ^\s*< and >\s*$ strings.
 #    Arguments: OBJ($self) STR($addr)
 # Side Effects: none
 # Return Value: STR
@@ -159,7 +160,7 @@ sub address_clean_up
 
 =head2 data_type()
 
-return the C<type> defind in the header's Content-Type field.
+return the C<type> defined in the header's Content-Type field.
 For example, C<text/plain>, C<mime/multipart> and et. al.
 
 =cut
@@ -195,17 +196,18 @@ sub data_type
 
 =head2 add_fml_ml_name($config, $rw_args)
 
-add X-ML-Name:
+add X-ML-Name: field.
 
 =head2 add_fml_traditional_article_id($config, $rw_args)
 
-add X-Mail-Count:
+add X-Mail-Count: field.
 
 =head2 add_fml_article_id($config, $rw_args)
 
-add X-ML-Count:
+add X-ML-Count: field.
 
 =cut
+
 
 #
 # XXX-TODO: "x-ml-name: unknown" or "x-ml-name: " if $config is undefined?
@@ -213,7 +215,7 @@ add X-ML-Count:
 #
 
 
-# Descriptions: add "X-ML-Name: elena" to header
+# Descriptions: add "X-ML-Name: elena" to header.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
@@ -224,7 +226,7 @@ sub add_fml_ml_name
 }
 
 
-# Descriptions: add "X-Mail-Count: NUM" to header
+# Descriptions: add "X-Mail-Count: NUM" to header.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
@@ -235,7 +237,7 @@ sub add_fml_traditional_article_id
 }
 
 
-# Descriptions: add "X-ML-Count: NUM" to header
+# Descriptions: add "X-ML-Count: NUM" to header.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
@@ -248,37 +250,38 @@ sub add_fml_article_id
 
 =head2 add_software_info($config, $rw_args)
 
-add X-MLServer: and List-Software:.
+add X-MLServer: and List-Software: field.
 
 C<MIME::Lite> object as a $rw_args->{ message } can be handled
 when $rw_args->{type} is 'MIME::Lite'.
 
 =head2 add_rfc2369($config, $rw_args)
 
-add List-* sereies defined in RFC2369 and RFC2919.
+add List-* series defined in RFC2369 and RFC2919.
 
 C<MIME::Lite> object as a $rw_args->{ message } can be handled
 when $rw_args->{type} is 'MIME::Lite'.
 
 =head2 add_x_sequence($config, $rw_args)
 
-add X-Sequence.
+add X-Sequence field.
 
 =head2 add_message_id($config, $rw_args)
 
-add Message-Id.
+add Message-Id field.
 
 =cut
 
 
-# Descriptions: add "X-ML-Server: fml .." and "List-Software: fml .." to header
+# Descriptions: add "X-ML-Server: fml .." and "List-Software: fml .."
+#               to header.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
 sub add_software_info
 {
     my ($header, $config, $rw_args) = @_;
-    my $fml_version = $config->{ fml_version };
+    my $fml_version = $config->{ fml_version } || '';
     my $object_type = defined $rw_args->{ type } ? $rw_args->{ type } : '';
 
     if ($fml_version) {
@@ -295,7 +298,7 @@ sub add_software_info
 }
 
 
-# Descriptions: add List-* to header
+# Descriptions: add List-* to header.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
@@ -368,7 +371,7 @@ sub add_message_id
 }
 
 
-# Descriptions: add "X-Sequence: elena NUM" to header
+# Descriptions: add "X-Sequence: elena NUM" to header.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
@@ -392,7 +395,6 @@ The actual function definitions exist in C<FML::Header::Subject>.
 
 replace C<Reply-To:> with this ML's address for post.
 add reply-to: if not specified.
-
 
 =head2 rewrite_errors_to
 
@@ -429,7 +431,7 @@ sub rewrite_article_subject_tag
 	}
     }
 
-    # XXX-TODO: need $article_subject_tag expaned already e.g. "\Lmlname\E"
+    # XXX-TODO: $article_subject_tag e.g. "\Lmlname\E" is expanded already.
     # XXX-TODO: we should include this exapansion method within this module?
     use Mail::Message::Subject;
     my $str = $header->get('subject');
@@ -504,7 +506,7 @@ sub rewrite_errors_to
 }
 
 
-# Descriptions: rewrite Date: to X-Date: if needed
+# Descriptions: rewrite Date: to X-Date: if needed.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
@@ -522,7 +524,7 @@ sub rewrite_date
 }
 
 
-# Descriptions: rewrite Received: to X-Received: if needed
+# Descriptions: rewrite Received: to X-Received: if needed.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
@@ -553,7 +555,7 @@ The keys are space separeted.
 =cut
 
 
-# Descriptions: remove some header fields defined in $config
+# Descriptions: remove some header fields defined in $config.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
@@ -581,7 +583,7 @@ References: fields.
 =cut
 
 
-# Descriptions: remove tag like string in $str
+# Descriptions: remove tag like string in $str.
 #    Arguments: OBJ($header) STR($str)
 # Side Effects: none
 # Return Value: STR
@@ -614,10 +616,12 @@ sub extract_message_id_references
     my @r    = ();
     my %uniq = ();
     foreach my $addr (@addrs) {
-	my $a = $addr->address;
-	unless (defined($uniq{ $a }) && $uniq{ $a }) {
-	    push(@r, $addr->address);
-	    $uniq{ $a } = 1;
+	if (defined $addr) {
+	    my $a = $addr->address;
+	    unless (defined($uniq{ $a }) && $uniq{ $a }) {
+		push(@r, $addr->address);
+		$uniq{ $a } = 1;
+	    }
 	}
     }
 
@@ -637,7 +641,7 @@ loop.
 
 
 # Descriptions: check whether message-id is duplicated or not
-#                against mail loop.
+#               against mail loop.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update cache
 # Return Value: STR or 0
