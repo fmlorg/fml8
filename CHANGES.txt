@@ -3,6 +3,15 @@
 
    2002/12 は、オーバホール・キャンペーン実施中ですぉ。
 
+2002/12/26
+
+   FML::Mailer 
+	not set smtp_log_handle to avoid duplication
+
+   FML::Log 
+	create log file with mode 0600 if could.
+	it seems o.k. by "Principle of Least Surprise".
+
 2002/12/25
 
    FML::Process::Distribute 
@@ -3888,4 +3897,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.119 2002/12/23 21:10:10 fukachan Exp $
+$FML: CHANGES.txt,v 1.120 2002/12/25 11:52:25 fukachan Exp $
