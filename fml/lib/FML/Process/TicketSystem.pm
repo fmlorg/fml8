@@ -17,6 +17,9 @@ use FML::Process::Kernel;
 use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
 
+@ISA = qw(FML::Process::Kernel);
+
+
 =head1 NAME
 
 FML::Process::TicketSystem -- primitive fml5 ticket system
@@ -36,9 +39,6 @@ FML::Process::TicketSystem -- primitive fml5 ticket system
 =head1 METHOD
 
 =cut
-
-
-@ISA = qw(FML::Process::Kernel Exporter);
 
 
 sub new
@@ -73,6 +73,7 @@ sub run
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
 	my $ticket = $pkg->new($curproc, $args);
+	$ticket->mode( { mode => 'text' } );
 
 	if ($command eq 'list') {
 	    $ticket->show_summary($curproc, $args);
