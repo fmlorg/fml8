@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.31 2002/06/01 05:09:27 fukachan Exp $
+# $FML: File.pm,v 1.32 2002/06/21 03:54:13 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -169,6 +169,7 @@ my $ec = 0;
 
 
 # Descriptions: line couter (for debug).
+#               XXX remove this in the future
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
