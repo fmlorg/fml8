@@ -13,6 +13,101 @@
 	気をつけてください。
 
 
+2004/06/27
+
+   FML::Filter::External::clamscan 
+	fix typo
+	
+   FML::Cache::Journal 
+	overhaul:
+	o fix comments.
+	o defined() check.
+	
+   FML::Cache::Ring 
+	overhaul:
+	fix comments.
+	x.y -> sprintf(format, x, y)
+	fix return value.
+	change variable name to be more readable.
+	
+   FML::Command 
+	overhaul:
+	fix comments.
+	use ::::o if could.
+	bug fix notice_cc_recipient handling.
+	reverse command_mode check code.
+	
+   FML::Command::Auth 
+	fix comments.
+	quotemeta search key.
+	
+   FML::Command::Syntax 
+	fix comments.
+	my (@var) = ... style.
+	
+   FML::Command::Admin::edit 
+	fix comments.
+	warn() -> ui_message().
+	
+   FML::Command::Admin::get 
+	fix comments.
+	bug fix reset of $command_args values.
+	
+   FML::Command::Admin::list 
+	fix comments.
+	change private method name.
+	modify sanity check a little.
+	
+   FML::Command::Admin::log 
+	fix comments.
+	change default::tail -100 by default.
+	
+   FML::Command::User::chaddr 
+	bug fix::implement verify_syntax().
+	
+   FML::User::Control 
+	tune IO::Adapter::close() timing.
+	
+	use TERM_NL(map) style not which_map_nl() where TERM_NL() can handle
+	charset dependent map name translation.
+	
+   FML::Process::Utils 
+	re-implement which_map()
+	
+   FML::Process::Kernel 
+	TERM_NL() macro support in message translation.
+
+   Mail::Message 
+   Mail::Delivery::Queue SMTP 
+   FML::Process::Distribute 
+	queue system debug::trace number of bytes written.
+	
+   Mail::Delivery::Queue 
+	validate if message object supports write_count() method.
+	
+   IO::Adapter::AtomicFile 
+	close() allows 0 byte file e.g. in the case so that all content is
+	removed.
+	
+   IO::Adapter::File 
+	bug fix delete():
+	o not apply quotemeta() for key.
+	o autoflush(1)
+	o check the number of matching, return error if no any matched line.
+
+2004/06/25
+
+   FML::Filter::External::{bogofilter spamc clamscan}
+   FML::Process::Distribute State 
+	preliminary support of build-in virus/spam checker.
+	
+   FML::Command::Admin::dir 
+	clean up.
+	handle CUI case (ok?)
+	
+   FML::Process::QMail 
+	nuke old style FML::Log use.
+
 2004/06/23
 
    Mail::Message::Subject 
@@ -7252,4 +7347,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.212 2004/06/18 04:33:35 fukachan Exp $
+$FML: CHANGES.txt,v 1.213 2004/06/24 11:42:04 fukachan Exp $
