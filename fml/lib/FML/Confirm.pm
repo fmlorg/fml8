@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Confirm.pm,v 1.2 2001/12/22 09:11:55 fukachan Exp $
+# $FML: Confirm.pm,v 1.3 2001/12/22 09:21:01 fukachan Exp $
 #
 
 package FML::Confirm;
@@ -97,8 +97,8 @@ sub assign_id
     my $pid     = $$;
     my $string  = "$time $pid $addr $buffer";
 
-    use FML::Checksum;
-    my $cksum  = new FML::Checksum;
+    use Mail::Message::Checksum;
+    my $cksum  = new Mail::Message::Checksum;
     my $md5sum = $cksum->md5( \$string );
 
     # o.k. assign id

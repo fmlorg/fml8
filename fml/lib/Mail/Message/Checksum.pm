@@ -4,10 +4,10 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Checksum.pm,v 1.12 2001/05/29 16:21:15 fukachan Exp $
+# $FML: Checksum.pm,v 1.13 2001/12/22 09:21:00 fukachan Exp $
 #
 
-package FML::Checksum;
+package Mail::Message::Checksum;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
@@ -15,12 +15,12 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Checksum - utilities for check sum
+Mail::Message::Checksum - utilities for check sum
 
 =head1 SYNOPSIS
 
-   use FML::Checksum;
-   $cksum  = new FML::Checksum;
+   use Mail::Message::Checksum;
+   $cksum  = new Mail::Message::Checksum;
    $md5sum = $cksum->md5( \$string );
 
 =head1 METHODS
@@ -235,7 +235,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Checksum appeared in fml5 mailing list driver package.
+Mail::Message::Checksum appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 Algorithm used here is based on NetBSD cksum library (C program).
