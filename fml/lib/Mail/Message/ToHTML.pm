@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.49 2003/08/01 14:42:27 tmu Exp $
+# $FML: ToHTML.pm,v 1.50 2003/08/08 03:52:55 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.49 2003/08/01 14:42:27 tmu Exp $;
+my $version = q$FML: ToHTML.pm,v 1.50 2003/08/08 03:52:55 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -106,6 +106,7 @@ sub new
     $me->{ _use_subdir }          = 'yes';
     $me->{ _subdir_style }        = 'yyyymm';
     $me->{ _html_id_order }       = $args->{ index_order } || 'normal';
+    $me->{ _address_mask }        = $args->{ address_mask } || 'mask';
 
     use Mail::Message::Thread;
     my $t = new Mail::Message::Thread $args;
@@ -741,7 +742,7 @@ sub _format_safe_header
 	    my $xbuf = $hdr->get($field);
 
 	    # mask the raw address.
-	    if ($field eq 'From') {
+	    if ($field =~ /^(From|To|Cc)$/ && $self->{ _address_mask } ne 'nomask') {
 		$xbuf = $self->_who_of_address($xbuf);
 	    }
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.68 2003/05/01 13:14:54 fukachan Exp $
+# $FML: Utils.pm,v 1.69 2003/07/20 06:51:03 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1258,6 +1258,7 @@ sub thread_db_args
     my $html_dir     = $config->{ html_archive_dir };
     my $udb_dir      = $config->{ udb_base_dir };
     my $index_order  = $config->{ html_archive_index_order_type };
+    my $address_mask = $config->{ html_archive_address_mask };
     my $cur_lang     = $curproc->language_of_html_file();
 
     unless (-d $udb_dir) { $curproc->mkdir($udb_dir);}
@@ -1272,6 +1273,7 @@ sub thread_db_args
 	db_name     => $ml_name,     # elena
 
 	index_order => $index_order, # normal/reverse
+	address_mask => $address_mask, # normal/reverse
 
     };
 }
