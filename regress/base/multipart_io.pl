@@ -22,7 +22,7 @@ while (<$fh>) {
 
     if (1 .. /^$/) {
 	$header .= $_;
-	if (/boundary=\"(.*)\"/) {
+	if (/boundary=\"(.*)\"/i) {
 	    $boundary = $1;
 	}
     }
