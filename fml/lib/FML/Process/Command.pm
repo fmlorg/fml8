@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.53 2002/05/18 15:29:41 fukachan Exp $
+# $FML: Command.pm,v 1.54 2002/05/19 04:21:11 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -372,6 +372,10 @@ sub _get_command_mode
     my $confirm_prefix = $config->{ confirm_command_prefix };
     my $admin_prefix   = $config->{ privileged_command_prefix };
 
+    # cheap sanity
+    return '__NEXT__' unless defined $command;
+    return '__NEXT__' unless $command;
+
     # Case: "confirm" command.
     #        It is exceptional strangers can use.
     #        validate general command except for confirmation
@@ -540,9 +544,12 @@ sub _evaluate_command_lines
 
     # the main loop to analyze each command at each line.
     my ($comname, $comsubname, $comoptions, $cominfo, $fixed_command);
+    my ($num_total, $num_ignored, $num_processed) = (0, 0, 0);
   COMMAND:
     for my $orig_command (@$command_lines) {
 	next COMMAND if $orig_command =~ /^\s*$/; # ignore empty lines
+
+	$num_total++; # the total numer of non null lines
 
 	Log("(debug) input: $orig_command"); # log raw buffer
 
@@ -559,7 +566,10 @@ sub _evaluate_command_lines
 	$mode = $curproc->_get_command_mode($args, $status, $cominfo);
 
 	# 1. check $mode if the further processing is allowed
-	next COMMAND if $mode eq '__NEXT__';
+	if ($mode eq '__NEXT__') {
+	    $num_ignored++;
+	    next COMMAND;
+	}
 	unless ($mode eq 'user' || $mode eq 'admin') {
 	    LogError("command processing looks insane. stop.");
 	    last COMMAND;
@@ -568,17 +578,20 @@ sub _evaluate_command_lines
 	# 2. check $level if this command is allowed in the current $mode ?
 	unless ($curproc->_allow_command($mode, $status, $cominfo)) {
 	    Log("(debug) ignore $fixed_command");
+	    $num_ignored++;
 	    next COMMAND;
 	}
 
 	# 3. simple syntax check
 	unless ($curproc->_is_valid_syntax($args, $status, $fixed_command)) {
 	    Log("(debug) ignore $fixed_command");
+	    $num_ignored++;
 	    next COMMAND;
 	}
 
 	# o.k. here we go to execute command
 	Log("execute \"$fixed_command\"");
+	$num_processed++;
 
 	use FML::Command;
 	my $obj = new FML::Command;
@@ -627,6 +640,19 @@ sub _evaluate_command_lines
 
     $eval = $config->get_hook( 'command_run_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
+    # info
+    $curproc->reply_message("\ncommand processing results:");
+    $curproc->reply_message("   processed = $num_processed");
+    $curproc->reply_message("   ignored   = $num_ignored");
+    $curproc->reply_message("   total     = $num_total");
+
+    # in the case "confirm"
+    if ( $status->{ context }->{ under_confirmation } ) {
+	# send back original message as a reference
+	my $msg = $curproc->{ incoming_message }->{ message };
+	$curproc->reply_message( $msg );
+    }
 }
 
 
