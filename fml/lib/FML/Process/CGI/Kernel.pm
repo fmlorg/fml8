@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.45 2002/12/22 03:46:21 fukachan Exp $
+# $FML: Kernel.pm,v 1.46 2002/12/24 10:19:48 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -546,13 +546,13 @@ sub run_cgi_options
 {
     my ($curproc, $args) = @_;
     my $domain = $curproc->ml_domain();
-    my $action = $curproc->myname();
+    my $action = $curproc->safe_cgi_action_name();
 
     print "<P> <B> options </B>\n";
 
-    # XXX-TODO: validate $action.
     print start_form(-action=>$action);
 
+    # XXX-TODO: $langlist is hard-coded.
     print "Language:\n";
     my $langlist = [ 'Japanese', 'English' ];
     print scrolling_list(-name   => 'language',
@@ -742,7 +742,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

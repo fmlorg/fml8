@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.5 2002/09/22 14:56:42 fukachan Exp $
+# $FML: List.pm,v 1.6 2002/12/18 04:50:16 fukachan Exp $
 #
 
 package FML::CGI::Admin::List;
@@ -37,13 +37,14 @@ sub new
 sub cgi_menu
 {
     my ($self, $curproc, $args, $command_args) = @_;
-    my $action       = $curproc->myname();
-    my $target       = '_top';
-    my $ml_name      = $command_args->{ ml_name };
-    my $map_list     = [ 'member', 'recipient', 'admin_member' ];
-    my $map_default  = $curproc->safe_param_map() || 'member';
+    my $action      = $curproc->safe_cgi_action_name();
+    my $target      = '_top';
+    my $ml_name     = $command_args->{ ml_name };
 
-    # XXX-TODO: we can validate $action ?
+    # XXX-TODO: $map_list hard-coded
+    my $map_list    = [ 'member', 'recipient', 'admin_member' ];
+    my $map_default = $curproc->safe_param_map() || 'member';
+
     # create <FORM ... > ... by (start_form() ... end_form())
     print start_form(-action=>$action, -target=>$target);
 
@@ -86,7 +87,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Ken'ichi Fukamachi
+Copyright (C) 2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

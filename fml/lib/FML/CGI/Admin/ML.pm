@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ML.pm,v 1.6 2002/09/22 14:56:42 fukachan Exp $
+# $FML: ML.pm,v 1.7 2002/12/18 04:50:31 fukachan Exp $
 #
 
 package FML::CGI::Admin::ML;
@@ -38,7 +38,7 @@ sub cgi_menu
 {
     my ($self, $curproc, $args, $command_args) = @_;
     my $config       = $curproc->{ config };
-    my $action       = $curproc->myname();
+    my $action       = $curproc->safe_cgi_action_name();
     my $ml_domain    = $curproc->ml_domain();
     my $ml_list      = $curproc->get_ml_list($args, $ml_domain);
     my $address      = $curproc->safe_param_address() || '';
@@ -46,7 +46,6 @@ sub cgi_menu
     my $comname      = $command_args->{ comname };
     my $command_list = [ 'newml', 'rmml' ];
 
-    # XXX-TODO: we can validate $action ?
     print start_form(-action=>$action, -target=>$target);
 
     if ($comname eq 'newml') {
@@ -124,7 +123,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Ken'ichi Fukamachi
+Copyright (C) 2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

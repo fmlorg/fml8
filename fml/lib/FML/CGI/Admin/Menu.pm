@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.22 2002/09/22 14:56:42 fukachan Exp $
+# $FML: Menu.pm,v 1.23 2002/12/18 04:50:31 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -220,7 +220,7 @@ sub run_cgi_navigator
 {
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
-    my $action  = $curproc->myname();
+    my $action  = $curproc->safe_cgi_action_name();
     my $target  = '_top';
 
     # 1. ML
@@ -278,7 +278,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Ken'ichi Fukamachi
+Copyright (C) 2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

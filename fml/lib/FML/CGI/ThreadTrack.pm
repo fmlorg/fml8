@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.21 2002/09/22 14:56:41 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.22 2002/12/20 03:37:43 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -189,7 +189,7 @@ sub run_cgi_navigator
 {
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
-    my $action  = $curproc->myname();
+    my $action  = $curproc->safe_cgi_action_name();
     my $target  = $config->{ thread_cgi_target_window } || '_top';
     # XXX-TODO: we should provide $curproc->util->get_ml_list() method ?
     my $ml_list = $curproc->get_ml_list($args);
@@ -231,7 +231,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
