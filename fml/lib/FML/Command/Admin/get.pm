@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.22 2004/01/18 03:34:44 fukachan Exp $
+# $FML: get.pm,v 1.23 2004/01/21 03:51:16 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
@@ -66,6 +66,12 @@ sub process
     my $ml_home_dir = $config->{ ml_home_dir };
     my $command     = $command_args->{ command };
     my $options     = $command_args->{ options };
+    my $recipient   = '';
+
+    if ($curproc->is_cui_process()) {
+	$recipient = $curproc->command_specific_recipient() || '';
+	$command_args->{ _recipient } = $recipient;
+    }
 
     # This module is called after
     # FML::Process::Command::_can_accpet_command() already checks the
@@ -87,6 +93,7 @@ sub process
 
 	    delete $command_args->{ _filename_to_send };
 	    delete $command_args->{ _filepath_to_send };
+	    delete $command_args->{ _recipient };
 	}
 	else {
 	    $curproc->log("$filename not found");

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.37 2004/02/13 14:10:26 fukachan Exp $
+# $FML: SendFile.pm,v 1.38 2004/02/15 04:38:27 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -82,6 +82,7 @@ sub send_article
 {
     my ($self, $curproc, $command_args) = @_;
     my $command   = $command_args->{ command };
+    my $recipient = $command_args->{ _recipient } || '';
     my $config    = $curproc->config();
     my $ml_name   = $config->{ ml_name };
     my $spool_dir = $config->{ spool_dir };
@@ -100,13 +101,16 @@ sub send_article
 		my $article  = new FML::Article $curproc;
 		my $filepath = $article->filepath($filename);
 		if (-f $filepath) {
-		    $curproc->log("send back article $filename");
-		    $curproc->reply_message( {
+		    my $rm_args = {
 			type        => "message/rfc822",
 			path        => $filepath,
 			filename    => $filename,
 			disposition => "$ml_name ML article $filename",
-		    });
+		    };
+		    if ($recipient) { $rm_args->{ recipient } = $recipient;}
+
+		    $curproc->log("send back article $filename");
+		    $curproc->reply_message($rm_args, $rm_args);
 		}
 		else {
 		    $curproc->reply_message_nl('command.no_such_article',
@@ -172,9 +176,10 @@ send back file specified as C<$command_args->{ _filepath_to_send }>.
 sub send_file
 {
     my ($self, $curproc, $command_args) = @_;
-    my $filename = $command_args->{ _filename_to_send };
-    my $filepath = $command_args->{ _filepath_to_send };
-    my $config   = $curproc->config();
+    my $filename  = $command_args->{ _filename_to_send };
+    my $filepath  = $command_args->{ _filepath_to_send };
+    my $recipient = $command_args->{ _recipient } || '';
+    my $config    = $curproc->config();
 
     # XXX get_charset() take Accpet-Language: header field into account.
     my $charset  = $curproc->get_charset("reply_message");
@@ -191,12 +196,15 @@ sub send_file
     my $xxxx_template = $curproc->prepare_file_to_return( $params );
 
     if (-f $xxxx_template) {
-	$curproc->reply_message( {
+	my $rm_args = {
 	    type        => "text/plain; charset=$charset",
 	    path        => $xxxx_template,
 	    filename    => $filename,
 	    disposition => $filename,
-	});
+	};
+	if ($recipient) { $rm_args->{ recipient } = $recipient;}
+
+	$curproc->reply_message($rm_args, $rm_args);
     }
     else {
 	croak("$filepath not found\n");

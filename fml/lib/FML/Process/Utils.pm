@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.108 2004/03/13 10:27:43 fukachan Exp $
+# $FML: Utils.pm,v 1.109 2004/03/23 04:20:46 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -801,19 +801,6 @@ sub command_line_options
 }
 
 
-# Descriptions: return comman specific options (-O key=value) as HASH_REF.
-#    Arguments: OBJ($curproc)
-# Side Effects: none
-# Return Value: HASH_REF
-sub cui_command_specific_options
-{
-    my ($curproc) = @_;
-    my $args = $curproc->{ __parent_args };
-
-    return( $args->{ options }->{ O } || {} );
-}
-
-
 =head2 set_config_files_list($cf_file_path_array)
 
 set configuration file (.cf) to internal list.
@@ -1232,6 +1219,10 @@ sub __get_ml_home_prefix_maps
 }
 
 
+=head2 is_cui_process()
+
+inform whether this process runs as CUI (fml/makefml) ?
+
 =head2 is_cgi_process()
 
 inform whether this process runs as cgi ?
@@ -1241,6 +1232,24 @@ inform whether this process runs as cgi ?
 inform whether this process runs under MTA ?
 
 =cut
+
+
+# Descriptions: whether this process runs as CUI ?
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub is_cui_process
+{
+    my ($curproc) = @_;
+    my $name = $curproc->myname() || '';
+
+    # XXX-TODO: HARD CODED
+    if ($name eq 'fml' || $name eq 'makefml') {
+	return 1;
+    }
+
+    return 0;
+}
 
 
 # Descriptions: whether this process runs as cgi ?
@@ -1290,13 +1299,13 @@ return 0 if not.
 
 For example, processes running under MTA e.g. libexec/distribute,
 libexec/command receives a mail and reply it if needed.
-But makefml command do not. 
+But makefml command do not.
 
 =cut
 
 
 # Descriptions: check if we can send messages to the sender or
-#               specified address. 
+#               specified address.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
@@ -1826,6 +1835,40 @@ sub get_debug_level
     my $args = $curproc->{ __parent_args };
 
     return( $args->{ main_cf }->{ debug } || 0 );
+}
+
+
+=head1 CUI specific
+
+=cut
+
+
+# Descriptions: return comman specific options (-O key=value) as HASH_REF.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: HASH_REF
+sub cui_command_specific_options
+{
+    my ($curproc) = @_;
+    my $args = $curproc->{ __parent_args };
+
+    return( $args->{ options }->{ O } || {} );
+}
+
+
+# Descriptions: return sender or recipient specified by --send-to option.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub command_specific_recipient
+{
+    my ($curproc) = @_;
+    my $args      = $curproc->{ __parent_args };
+    my $rcpt      = $args->{ options }->{ 'send-to' } || '';
+    my $cred      = $curproc->{ credential };
+    my $sender    = $cred->sender() || '';
+
+    return( $rcpt || $sender || '' );
 }
 
 
