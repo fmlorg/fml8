@@ -1,13 +1,16 @@
 all: link
 
 clean:
-	@ (cd ../..;make clean)
+	@ (cd ../..; make clean)
 
 scan:
-	@ (cd ../..;make scan)
+	@ (cd ../..; make scan)
 
 update:
-	@ (cd ../..;make update)
+	@ (cd ../..; make update)
+
+check:
+	@ (cd ../../fml; make check)
 
 link:
 	rm -f doc; ln -s ../../fml/doc
