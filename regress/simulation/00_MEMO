@@ -8,6 +8,29 @@
 	XXX
 
 
+[TODO]	$ml-admin の取り扱い
+
+	X-Sequence: fml-devel 435
+
+	Q: makefml newml elena --maintainer=foo@bar.domain
+
+	aliases は
+
+		elena-admin: foo@bar.domain
+	
+	とかなるのはあり?
+
+	Q: configure で?
+
+		elena-admin: fml
+
+	を
+
+		elena-admin: foo@bar.domain
+
+	にできるおぷしょん？
+
+
 [TODO]	fml 4 の cf を解釈できる互換ルーチン
 
 	cf シンタックスを読んで、
@@ -15,12 +38,6 @@
 
 	8 の .cf シンタックスに置き換えて
 	値をよろしく変換する （←ここがむずかしー）
-
-
-[TODO]	ＭＬの管理者へエラーを転送する機能
-
-	libexec/maitainer_notify なんてのも?
-		IO::Adpater つかえないとだめじゃん
 
 
 [TODO]	「このＭＬはもうありません」
@@ -38,24 +55,6 @@
 [TODO]	01_RFC_UPGRADE.txt
 
 	かんがえよー／まとめようー
-
-
-[TODO]	01_RFC_FILTER.txt
-
-	もう OK ぽいので、ドキュメント化
-
-
-[TODO]	フィルタで弾いた時のエラーメール
-
-multipart でつき返すのと、plain/text としてつきかえすの
-が選択できるといいかなとおもうのです。multipart で送り返すことの問題は
-
-	MUA で普通に読めた方がいいのはわかるけど、
-	ウィルスだったらどうするよ？
-
-というあたりっす。ヘッダを隠しちゃう MUA の罠を回避するってのもあるけ
-どそれは二次的すね（今時の MUA には、どれでも、ヘッダを全部見るオプショ
-ンがあると思いたい）。
 
 
 [TODO]	フィルタの拡張機能？
@@ -343,6 +342,21 @@ multipart でつき返すのと、plain/text としてつきかえすの
 	ちょっとコーディングスタイルが古いかな?
 	近々に見直すべし
 
+[TODO]	Subroutine_O_CREAT_redefined_at_
+
+>qmailで使っていると出る最近のメッセージ(送信は出来ています)
+>#なんで再定義なんだかよくわからん
+>
+>Subroutine_O_CREAT_redefined_at_
+>/usr/local/fml5/lib/fml/current-20030305/IO/Adapter/File.pm_line_161
+>Subroutine_O_RDWR_redefined_at_
+>/usr/local/fml5/lib/fml/current-20030305/IO/Adapter/File.pm_line_161
+
+おー これもたまに見る。module の load の順番だか何だかからくるんだろうけど…
+
+FileHandle と IO::File 両方 use しちゃうからか？
+
+うーん、わからん。
 
 ----------
-$FML: 00_MEMO,v 1.73 2003/04/13 03:33:59 fukachan Exp $
+$FML: 00_MEMO,v 1.74 2003/04/15 15:35:46 fukachan Exp $
