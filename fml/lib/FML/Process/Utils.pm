@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.53 2003/01/11 16:05:20 fukachan Exp $
+# $FML: Utils.pm,v 1.54 2003/01/25 09:13:35 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -864,8 +864,8 @@ sub __get_virtual_maps
     if (defined $main_cf->{ virtual_maps } && $main_cf->{ virtual_maps }) {
 	my (@r) = ();
 	my (@maps) = split(/\s+/, $main_cf->{ virtual_maps });
-	for (@maps) {
-	    if (-f $_) { push(@r, $_);}
+	for my $map (@maps) {
+	    if (-f $map) { push(@r, $map);}
 	}
 	return \@r;
     }

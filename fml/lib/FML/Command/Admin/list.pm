@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: list.pm,v 1.10 2002/12/20 03:40:12 fukachan Exp $
+# $FML: list.pm,v 1.11 2003/01/25 12:48:38 fukachan Exp $
 #
 
 package FML::Command::Admin::list;
@@ -81,18 +81,18 @@ sub _show_list
     my $config  = $curproc->{ config };
     my $maplist = undef;
 
-    for (@$options) {
-	if (/^recipient|active/i) {
+    for my $option (@$options) {
+	if ($option =~ /^recipient|active/i) {
 	    $maplist = $config->get_as_array_ref( 'recipient_maps' );
 	}
-	elsif (/^member/i) {
+	elsif ($optoin =~ /^member/i) {
 	    $maplist = $config->get_as_array_ref( 'member_maps' );
 	}
-	elsif (/^adminmember|^admin_member/i) {
+	elsif ($option =~ /^adminmember|^admin_member/i) {
 	    $maplist = $config->get_as_array_ref( 'admin_member_maps' );
 	}
 	else {
-	    LogWarn("list: unknown type $_");
+	    LogWarn("list: unknown type $option");
 	}
     }
 
