@@ -3,10 +3,13 @@ all: anal
 anal:
 	@ find . | sort | grep -v CVS | sed 's@./@@'
 
-html:	index.ja.html
+html:	_subdir index.ja.html
+
+_subdir:
 	(cd Header; make html)
 	(cd Process; make html)
 	(cd Ticket; make html)
+	(cd Ticket/Model; make html)
 	(cd CGI; make html)
 
 index.ja.html: *.pm [A-Z]*
