@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.5 2003/08/23 14:37:59 fukachan Exp $
+# $FML: Sequence.pm,v 1.6 2003/12/30 08:22:36 fukachan Exp $
 #
 
 package FML::Article::Sequence;
@@ -169,7 +169,7 @@ sub speculate_max_id
 	my $max = 0;
 	my $fn  = ''; # file name
 
-	ENTRY
+      ENTRY:
 	while (defined($fn = $dh->read)) {
 	    next ENTRY unless $fn =~ /^\d+$/;
 	    $max = $max < $fn ? $fn : $max;
