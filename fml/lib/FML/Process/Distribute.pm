@@ -4,7 +4,7 @@
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Distribute.pm,v 1.43 2001/04/15 05:58:05 fukachan Exp $
+# $FML: Distribute.pm,v 1.44 2001/04/15 09:05:41 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -143,6 +143,12 @@ sub finish
     my ($curproc, $args) = @_;
 
     $curproc->inform_reply_messages();
+
+    my $queue_dir = $curproc->{ config }->{ mqueue_dir };
+
+    use FML::Process::QueueManager;
+    my $obj = new FML::Process::QueueManager { directory => $queue_dir };
+    $obj->send($curproc);
 }
 
 
