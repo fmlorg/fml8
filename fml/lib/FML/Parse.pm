@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Parse.pm,v 1.22 2002/01/16 13:43:19 fukachan Exp $
+# $FML: Parse.pm,v 1.23 2002/04/26 00:09:53 fukachan Exp $
 #
 
 package FML::Parse;
@@ -57,7 +57,6 @@ sub new
     my $me = {};
     bless $me, $self;
 
-    # return ( $ref_to_mail_header, $ref_to_mail_body, $error_code);
     return $me->_parse($curproc, $fd);
 }
 
