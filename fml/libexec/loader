@@ -1,21 +1,22 @@
-#!/usr/local/bin/perl -w
+#! /usr/local/bin/perl -w
 #-*- perl -*-
 #
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: loader,v 1.19 2001/11/09 00:03:31 fukachan Exp $
+# $FML: loader,v 1.20 2001/11/10 04:00:26 fukachan Exp $
 #
 
 eval 'exec /usr/local/bin/perl -S $0 ${1+"$@"}'
         if $running_under_some_shell;
 
-use vars qw($MainCF $running_under_some_shell);
+use vars qw($ConfDir $MainCF $running_under_some_shell);
 use strict;
 use Carp;
 
 # main configuration file for directory switch
-$MainCF = '/etc/fml/main.cf';
+$ConfDir = '/etc/fml';
+$MainCF  = "$ConfDir/main.cf";
 
 eval q{ &Bootstrap();};
 if ($@) { print STDERR "Error: ", $@, "\n"; exit 1;}
