@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.104 2004/02/15 04:38:34 fukachan Exp $
+# $FML: Utils.pm,v 1.105 2004/02/26 08:07:00 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1510,6 +1510,32 @@ sub language_of_html_file
 }
 
 
+# Descriptions: set the current charset hint.
+#    Arguments: OBJ($curproc) STR($category) STR($charset)
+# Side Effects: none
+# Return Value: none
+sub set_language_hint
+{
+    my ($curproc, $category, $charset) = @_;
+    my $pcb = $curproc->pcb();
+
+    $pcb->set("language_hint", $category, $charset);
+}
+
+
+# Descriptions: get the current charset hint.
+#    Arguments: OBJ($curproc) STR($category)
+# Side Effects: none
+# Return Value: none
+sub get_language_hint
+{
+    my ($curproc, $category) = @_;
+    my $pcb = $curproc->pcb();
+
+    $pcb->get("language_hint", $category);
+}
+
+
 # Descriptions: set the current charset.
 #    Arguments: OBJ($curproc) STR($category) STR($charset)
 # Side Effects: none
@@ -1620,7 +1646,7 @@ sub get_accept_language_list
 	return $pcb->get('incoming_message', 'accept-language');
     }
     else {
-	return [ '*' ];
+	return [ ];
     }
 }
 
