@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.83 2003/02/09 12:31:44 fukachan Exp $
+# $FML: Command.pm,v 1.84 2003/03/05 15:07:31 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -629,6 +629,29 @@ sub _config_allow_command
 
     1;
 }
+
+
+=head1 $command_args HASH STRUCTURE
+
+    $command_args  = {
+	args                 => HASH_REF,
+	argv                 => ARRAY_REF,
+	command              => SCALAR,
+	command_level        => SCALAR,
+	command_mode         => SCALAR,
+	comname              => SCALAR,
+	comsubname           => SCALAR,
+	ml_name              => SCALAR,
+	msg_args             => HASH_REF,
+	options              => ARRAY_REF,
+    };
+
+$command_args hash lives shortly within command processing.
+
+each module in FML::Command::${MODE}::${COMMAND} can use _VARIABLE
+within $command_args to share some data between modules called in it.
+
+=cut
 
 
 # Descriptions: build $command_args for FML::Command execution
