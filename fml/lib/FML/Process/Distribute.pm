@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.91 2002/08/14 14:17:09 fukachan Exp $
+# $FML: Distribute.pm,v 1.92 2002/08/19 12:41:17 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -209,8 +209,8 @@ sub run
 		$curproc->reply_message_nl("error.not_member", $r);
 	    }
 	    elsif ($rule eq 'reject') {
-		my $r = "deny all requests";
-		$curproc->reply_message_nl("error.reject", $r);
+		my $r = "deny your request";
+		$curproc->reply_message_nl("error.reject_post", $r);
 	    }
 	    else {
 		my $r = "deny your request due to an unknown reason";
