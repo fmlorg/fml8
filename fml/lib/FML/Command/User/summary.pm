@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: summary.pm,v 1.16 2003/08/29 15:34:01 fukachan Exp $
+# $FML: summary.pm,v 1.17 2003/10/18 05:07:41 fukachan Exp $
 #
 
 package FML::Command::User::summary;
@@ -70,7 +70,7 @@ sub lock_channel { return 'article_spool_modify';}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config       = $curproc->config();
+    my $config               = $curproc->config();
     my $article_summary_file = $config->{ "article_summary_file" };
 
     if (-f $article_summary_file) {
