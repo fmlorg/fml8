@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.21 2003/02/13 14:06:13 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.22 2003/03/18 10:42:43 fukachan Exp $
 #
 
 package FML::Command::Admin::unsubscribe;
@@ -68,22 +68,20 @@ sub lock_channel { return 'command_serialize';}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config         = $curproc->{ config };
-    my $member_maps    = $config->get_as_array_ref( 'member_maps' );
-    my $recipient_maps = $config->get_as_array_ref( 'recipient_maps' );
-    my $options        = $command_args->{ options };
-    my $address        = $command_args->{ command_data } || $options->[ 0 ];
+    my $config        = $curproc->{ config };
+    my $member_map    = $config->{ 'primary_member_map' };
+    my $recipient_map = $config->{ 'primary_recipient_map' };
+    my $options       = $command_args->{ options };
+    my $address       = $command_args->{ command_data } || $options->[ 0 ];
 
     # fundamental check
-    croak("address is not defined")          unless defined $address;
-    croak("address is not specified")        unless $address;
-    croak("member_maps is not specified")    unless @$member_maps;
-    croak("recipient_maps is not specified") unless @$recipient_maps;
+    croak("address not defined")         unless defined $address;
+    croak("address not specified")       unless $address;
+    croak("member_map not specified")    unless $member_map;
+    croak("recipient_map not specified") unless $recipient_map;
 
     # FML::Command::UserControl specific parameters
-    my $maplist = [];
-    push(@$maplist, @$recipient_maps);
-    push(@$maplist, @$member_maps);
+    my $maplist = [ $member_map, $recipient_map ];
     my $uc_args = {
 	address => $address,
 	maplist => $maplist,

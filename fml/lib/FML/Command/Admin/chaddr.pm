@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.14 2003/03/17 13:22:24 fukachan Exp $
+# $FML: chaddr.pm,v 1.15 2003/03/18 10:42:42 fukachan Exp $
 #
 
 package FML::Command::Admin::chaddr;
@@ -69,12 +69,12 @@ sub lock_channel { return 'command_serialize';}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config         = $curproc->{ config };
-    my $member_maps    = $config->get_as_array_ref( 'member_maps' );
-    my $recipient_maps = $config->get_as_array_ref( 'recipient_maps' );
-    my $options        = $command_args->{ options };
-    my $old_address    = '';
-    my $new_address    = '';
+    my $config        = $curproc->{ config };
+    my $member_map    = $config->{ 'primary_member_map'    };
+    my $recipient_map = $config->{ 'primary_recipient_map' };
+    my $options       = $command_args->{ options };
+    my $old_address   = '';
+    my $new_address   = '';
 
     if (defined $command_args->{ command_data }) {
 	my $x = $command_args->{ command_data };
@@ -91,15 +91,11 @@ sub process
     unless ($old_address && $new_address) {
 	croak("chaddr: invalid arguments");
     }
-    croak("\$member_maps is not specified")    unless $member_maps;
-    croak("\$recipient_maps is not specified") unless $recipient_maps;
+    croak("\$member_map not specified")    unless $member_map;
+    croak("\$recipient_map not specified") unless $recipient_map;
 
-    # change all maps including this $address.
-    my (@maps) = ();
-    push(@maps, @$member_maps);
-    push(@maps, @$recipient_maps);
-
-    # FML::Command::UserControl specific parameters
+    # uc_args = FML::Command::UserControl specific parameters
+    my (@maps) = ($member_map, $recipient_map);
     my $uc_args = {
 	old_address => $old_address,
 	new_address => $new_address,

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: changepassword.pm,v 1.3 2003/03/17 13:23:22 fukachan Exp $
+# $FML: changepassword.pm,v 1.4 2003/03/18 10:42:42 fukachan Exp $
 #
 
 package FML::Command::Admin::changepassword;
@@ -67,11 +67,9 @@ sub lock_channel { return 'command_serialize';}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config   = $curproc->config();
-    my $maps     = $config->get_as_array_ref('admin_member_password_maps');
-    my $pri_map  = $config->{ primary_admin_member_password_map };
-    my $myname   = $curproc->myname();
-    my $options  = $command_args->{ options };
+    my $config  = $curproc->config();
+    my $myname  = $curproc->myname();
+    my $options = $command_args->{ options };
 
     # XXX The arguments differ for the cases.
     # 1. command mail: admin changepassword [$USER] $PASSWORD
@@ -121,20 +119,18 @@ sub _change_password
 {
     my ($self, $curproc, $command_args, $address, $password) = @_;
     my $config  = $curproc->config();
-    my $maps    = $config->get_as_array_ref('admin_member_password_maps');
     my $pri_map = $config->{ primary_admin_member_password_map };
     my $up_args = {
-	primary_map => $pri_map,
-	maplist     => $maps,
-	address     => $address,
-	password    => $password,
+	map      => $pri_map,
+	address  => $address,
+	password => $password,
     };
     my $r = '';
 
     eval q{
 	use FML::Command::Auth;
 	my $passwd = new FML::Command::Auth;
-	$passwd->change($curproc, $command_args, $up_args);
+	$passwd->change_password($curproc, $command_args, $up_args);
     };
     if ($r = $@) {
 	croak($r);

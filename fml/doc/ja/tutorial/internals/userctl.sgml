@@ -1,0 +1,60 @@
+<!--
+   $FML: db.sgml,v 1.7 2003/04/15 14:51:40 fukachan Exp $
+-->
+
+<chapter id="userctl">
+	<title>
+	ユーザの制御
+	</title>
+
+
+<sect1 id="userctl.deladd">
+	<title>
+	ユーザの追加と削除は何に対して行なうか？
+	</title>
+
+<para>
+追加は primary_*_map に対しておこなう。
+削除も primary_*_map に対しておこなう。
+</para>
+
+<para>
+たとえば、リモート管理者は
+primary_admin_member_map と primary_admin_recipient_map の両方に
+アドレスを追加する。
+削除の際は、
+primary_admin_member_map と primary_admin_recipient_map から
+アドレスを削除する。
+</para>
+
+<para>
+これを admin_member_maps と admin_recipient_maps にすると問題だ。
+</para>
+
+<para>
+追加は、明らかに複数の map に追加してしまうので、一つに限定するべきだ。
+だから、primary_*_map 一つに対して行なう。
+メンバーは primary_xxx_member_map ひとつに、
+受信者は primary_xxx_recipient_map 一つに対して行なう。
+</para>
+
+<para>
+削除だが、一見 *_maps でもよいような気がするが、
+実は駄目だ。消し過ぎになってしまうことがある。
+特に問題になるのは、権限の異なる map が混在している場合である。
+</para>
+
+<para>
+たとえば、
+member_maps はデフォルトで、リモート管理者を含んでいる。
+<screen>
+member_maps		=	$primary_member_map
+				$admin_member_maps
+</screen>
+そのため、member_maps に対して削除を試みると、
+勢いあまってリモート管理者の分も削除してしまうことになる
+</para>
+
+</sect1>
+
+</chapter>

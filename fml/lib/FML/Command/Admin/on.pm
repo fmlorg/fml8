@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: on.pm,v 1.7 2003/02/13 14:06:13 fukachan Exp $
+# $FML: on.pm,v 1.8 2003/03/18 10:42:43 fukachan Exp $
 #
 
 package FML::Command::Admin::on;
@@ -67,8 +67,6 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ config };
-
-    # XXX-TODO: use of $primary_recipient_map is correct here?
     my $recipient_map = $config->{ primary_recipient_map };
     my $options       = $command_args->{ options };
     my $address       = $command_args->{ command_data } || $options->[ 0 ];

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: deladmin.pm,v 1.8 2003/01/27 04:36:29 fukachan Exp $
+# $FML: deladmin.pm,v 1.9 2003/03/18 10:42:42 fukachan Exp $
 #
 
 package FML::Command::Admin::deladmin;
@@ -69,25 +69,21 @@ sub process
     my $config = $curproc->config();
 
     # target maps
-    my $member_maps    = $config->get_as_array_ref('admin_member_maps');
-    my $recipient_maps = $config->get_as_array_ref('admin_recipient_maps');
-    my $options        = $command_args->{ options };
-    my $address        = $command_args->{ command_data } || $options->[ 0 ];
+    my $member_map    = $config->{ 'primary_admin_member_map' };
+    my $recipient_map = $config->{ 'primary_admin_recipient_map' };
+    my $options       = $command_args->{ options };
+    my $address       = $command_args->{ command_data } || $options->[ 0 ];
 
     # fundamental check
-    croak("address not undefined")        unless defined $address;
-    croak("address not specified")        unless $address;
-    croak("member_maps not undefined")    unless defined $member_maps;
-    croak("member_maps not specified")    unless $member_maps;
-    croak("recipient_maps not undefined") unless defined $recipient_maps;
-    croak("recipient_maps not specified") unless $recipient_maps;
+    croak("address not undefined")       unless defined $address;
+    croak("address not specified")       unless $address;
+    croak("member_map not undefined")    unless defined $member_map;
+    croak("member_map not specified")    unless $member_map;
+    croak("recipient_map not undefined") unless defined $recipient_map;
+    croak("recipient_map not specified") unless $recipient_map;
 
-    # maplist
-    my $maplist = [];
-    push(@$maplist, @$member_maps)    if @$member_maps;
-    push(@$maplist, @$recipient_maps) if @$recipient_maps;
-
-    # FML::Command::UserControl specific parameters
+    # $uc_args = FML::Command::UserControl specific parameters
+    my $maplist = [ $member_map, $recipient_map ];
     my $uc_args = {
 	address => $address,
 	maplist => $maplist,

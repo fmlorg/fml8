@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.8 2003/02/13 14:06:13 fukachan Exp $
+# $FML: digest.pm,v 1.9 2003/03/18 10:42:42 fukachan Exp $
 #
 
 package FML::Command::Admin::digest;
@@ -77,17 +77,16 @@ sub process
     my $mode    = $options->[ 1 ] || '';
 
     # maps
-    my $primary_recipient_map = $config->{ primary_recipient_map };
+    my $recipient_map         = $config->{ primary_recipient_map };
     my $recipient_maps        = $config->get_as_array_ref('recipient_maps');
     my $digest_recipient_map  = $config->{ primary_digest_recipient_map };
     my $digest_recipient_maps =
 	$config->get_as_array_ref('digest_recipient_maps');
 
     # fundamental check
-    croak("address not defined")   unless defined $address;
+    croak("address not defined")     unless defined $address;
     croak("address not specified")   unless $address;
-    croak("primary_recipient_map not defined")
-	unless defined $primary_recipient_map;
+    croak("primary_recipient_map not defined") unless defined $recipient_map;
     croak("recipient_maps not defined") unless defined $recipient_maps;
     croak("digest_recipient_map not defined")
 	unless defined $digest_recipient_map;
@@ -95,9 +94,9 @@ sub process
 	unless defined $digest_recipient_maps;
 
     my $digest_args = {
-	address => $address,
-	mode    => $mode,
-	primary_recipient_map        => $primary_recipient_map,
+	address                      => $address,
+	mode                         => $mode,
+	primary_recipient_map        => $recipient_map,
 	recipient_maps               => $recipient_maps,
 	primary_digest_recipient_map => $digest_recipient_map,
 	digest_recipient_maps        => $digest_recipient_maps,
@@ -131,16 +130,13 @@ sub _digest_on
 {
     my ($self, $curproc, $command_args, $dargs) = @_;
     my $address               = $dargs->{ address };
-    my $mode                  = $dargs->{ mode };
-    my $primary_recipient_map = $dargs->{ primary_recipient_map };
-    my $recipient_maps        = $dargs->{ recipient_maps };
+    my $recipient_map         = $dargs->{ primary_recipient_map };
     my $digest_recipient_map  = $dargs->{ primary_digest_recipient_map };
-    my $digest_recipient_maps = $dargs->{ digest_recipient_maps };
 
-    # move $address from normal $recipient_maps to $digest_recipient_maps
+    # move $address from normal $recipient_map to $digest_recipient_map
     my $uc_normal_args = {
 	address => $address,
-	maplist => $recipient_maps,
+	maplist => [ $recipient_map ],
     };
 
     my $uc_digest_args = {
@@ -162,21 +158,18 @@ sub _digest_off
 {
     my ($self, $curproc, $command_args, $dargs) = @_;
     my $address               = $dargs->{ address };
-    my $mode                  = $dargs->{ mode };
-    my $primary_recipient_map = $dargs->{ primary_recipient_map };
-    my $recipient_maps        = $dargs->{ recipient_maps };
+    my $recipient_map         = $dargs->{ primary_recipient_map };
     my $digest_recipient_map  = $dargs->{ primary_digest_recipient_map };
-    my $digest_recipient_maps = $dargs->{ digest_recipient_maps };
 
     # move $address from normal $digest_recipient_maps to $prmary_recipient_map
     my $uc_normal_args = {
 	address => $address,
-	maplist => [ $primary_recipient_map ],
+	maplist => [ $recipient_map ],
     };
 
     my $uc_digest_args = {
 	address => $address,
-	maplist => $digest_recipient_maps,
+	maplist => [ $digest_recipient_map ],
     };
 
     $self->_userdel($curproc, $command_args, $uc_digest_args);
