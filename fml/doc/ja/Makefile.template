@@ -1,5 +1,5 @@
 #
-# $FML: Makefile.template,v 1.4 2001/05/19 07:21:39 fukachan Exp $
+# $FML: Makefile.template,v 1.5 2001/06/05 13:28:44 fukachan Exp $
 #
 
 TMP_DIR     = /tmp/sgmltools
@@ -36,18 +36,18 @@ ENV_VARS    = TMPDIR=$(TMP_DIR) SGML_CATALOG_FILES=$(SGML_CATALOG_FILES) COLS=72
 
 all: export
 
-html:
+html: _init
 	$(ENV) $(ENV_VARS) $(HTMLify) -b html $(SOURCE).sgml 2>&1 | $(UNIQ)
 	@ $(PERL) -i.bak $(FIX_CHARSET) $(SOURCE)/$(BOOK_ID).html
 	@ rm -f $(SOURCE)/@*/*.html.bak
 
-txt:
+txt: _init
 	$(ENV) $(ENV_VARS) $(TEXTify) -b txt $(SOURCE).sgml 2>&1 | $(UNIQ)
 
-lynx:
+lynx: _init
 	$(ENV) $(ENV_VARS) $(TEXTify) -b lynx $(SOURCE).sgml 2>&1 | $(UNIQ)
 
-ps:
+ps: _init
 	$(ENV) $(ENV_VARS) $(TEXTify) -b ps $(SOURCE).sgml 2>&1 | $(UNIQ)
 
 clean:
