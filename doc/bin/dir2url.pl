@@ -14,6 +14,7 @@ use Carp;
 
 my $Module;
 my $ModulePrefix;
+my $TableMode = 1;
 
 Init();
 HEADER();
@@ -27,9 +28,10 @@ sub Init
 {
     my $pwd = `pwd`;
     chop($pwd);
-    $pwd =~ s@^.*fml/lib/@@;
+    $pwd =~ s@^.*fml/lib@@;
     $pwd =~ s@^.*cpan/dist@@;
-    $pwd =~ s@^.*cpan/lib/@@;
+    $pwd =~ s@^.*cpan/lib@@;
+    $pwd =~ s@^/@@;
     $ModulePrefix = $pwd;
     $ModulePrefix =~ s@/@::@g;
     $Module       = $pwd . "::*";
@@ -39,29 +41,55 @@ sub Init
 sub Show
 {
     print "<P> $ModulePrefix classes \n<BR>\n";
-    print "<UL>\n";
-
+    print ($TableMode ? "<TABLE BRODER=4>\n" : "<UL>\n");
+    
     my $pathname = '';
+    my $doc      = '';
 
     foreach $pathname (<*>) {
+	next if $pathname =~ /^\__template/;
 	next if $pathname =~ /^\@/;
 	next if $pathname =~ /\~$/;
+	next if $pathname =~ /pod$/;
 	next if $pathname eq 'CVS';
 	next if $pathname =~ /^index/;
 	next if $pathname eq 'Makefile';
 
 	my $module = $pathname;
-	if ($module =~ /pm/) {
+
+	# ignore module.txt file 
+	# which is generated from module.pm automatically
+	if ($module =~ /txt$/) { 
+	    my $x = $module;
+	    $x    =~ s/txt$/pm/; 
+	    next if -f $x;
+	}
+
+	if ($module =~ /\.pm$/) {
 	    $module = $ModulePrefix. "::". $pathname;
 	    $module =~ s/\.pm$//;
+
+	    if (-f $pathname) {
+		$doc = $pathname;
+		$doc =~ s/pm$/txt/;
+		print STDERR "\tpod2text $pathname > $doc\n";
+		system "pod2text $pathname > $doc";
+	    }
 	}
 
 	if (-d $pathname) {
-	    print "\t<LI> ";
+	    print ($TableMode ? "<TR>\n" : "<LI>\n");
+	    print "<TD>\n" if $TableMode;
 	    
 	    if (-f "$pathname/index.ja.html") {
 		print " <A HREF=$pathname/index.ja.html>";
-		print "${module}::*</A>\n";
+
+		if ($ModulePrefix) {
+		    print "${ModulePrefix}::${module}::* class</A>\n";
+		}
+		else {
+		    print "${module}::*</A>\n";
+		}
 	    }
 	    else {
 		if (-f "$pathname/README") {
@@ -73,15 +101,23 @@ sub Show
 		}
 
 		print STDERR "Error: *** fail to convert $pathname ***\n";
+		print "${pathname}/\n";
 	    }
 	}
 	else {
-	    print "\t<LI> ";
-	    print " <A HREF=\"$pathname\">$module</A>\n";
+	    print ($TableMode ? "<TR>\n" : "<LI>\n");
+	    print "<TD>\n" if $TableMode;
+	    print " $module ";
+
+	    print "<TD>\n" if $TableMode;
+	    print "<A HREF=\"$pathname\">[source]</A>\n";
+
+	    print "<TD>\n" if $TableMode;
+	    print "<A HREF=\"$doc\">[doc]</A>\n" if -f $doc;
 	}
     }
 
-    print "</UL>\n";
+    print ($TableMode ? "</TABLE>\n" : "</UL>\n");
 }
 
 
