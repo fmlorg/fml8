@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Convert.pm,v 1.14 2003/02/01 04:33:18 fukachan Exp $
+# $FML: Convert.pm,v 1.15 2003/02/01 06:12:17 fukachan Exp $
 #
 
 
@@ -129,6 +129,26 @@ sub _replace
 
     if (defined $config->{ ml_name }) {
 	$buf =~ s/__ml_name__/$config->{ ml_name }/g;
+    }
+
+    if (defined $config->{ _ml_name_admin }) {
+	$buf =~ s/__ml_name_admin__/$config->{ _ml_name_admin }/g;
+    }
+
+    if (defined $config->{ _ml_name_ctl }) {
+	$buf =~ s/__ml_name_ctl__/$config->{ _ml_name_ctl }/g;
+    }
+
+    if (defined $config->{ _ml_name_error }) {
+	$buf =~ s/__ml_name_error__/$config->{ _ml_name_error }/g;
+    }
+
+    if (defined $config->{ _ml_name_post }) {
+	$buf =~ s/__ml_name_post__/$config->{ _ml_name_post }/g;
+    }
+
+    if (defined $config->{ _ml_name_request }) {
+	$buf =~ s/__ml_name_request__/$config->{ _ml_name_request }/g;
     }
 
     if (defined $config->{ ml_domain }) {

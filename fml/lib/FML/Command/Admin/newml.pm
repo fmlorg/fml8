@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.62 2003/02/14 01:27:46 fukachan Exp $
+# $FML: newml.pm,v 1.63 2003/04/18 15:53:46 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -79,6 +79,9 @@ sub process
 	ml_domain         => $ml_domain,
 	ml_home_prefix    => $ml_home_prefix,
 	ml_home_dir       => $ml_home_dir,
+
+	# non conversion ml_name, which is preserved for further use
+	_ml_name          => $ml_name,
     };
 
     # mkdir $ml_home_prefix if could.
@@ -97,6 +100,9 @@ sub process
     # update $ml_home_prefix and $ml_home_dir to expand variables again.
     $config->set( 'ml_home_prefix', $ml_home_prefix );
     $config->set( 'ml_home_dir',    $ml_home_dir );
+
+    # define _ml_name_xxx variables in $parms for virtual domain
+    $self->_adjust_params_for_virtual_domain($curproc, $command_args, $params);
 
     # "makefml --force newml elena" creates elena ML even if elena
     # already exists.
@@ -131,6 +137,47 @@ sub process
     $self->_setup_mail_archive_dir($curproc, $command_args, $params);
     $self->_setup_cgi_interface($curproc, $command_args, $params);
     $self->_setup_listinfo($curproc, $command_args, $params);
+}
+
+
+# Descriptions: generate _ml_name_xxx in $params
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($command_args) HASH_REF($params)
+# Side Effects: update $params
+# Return Value: none
+sub _adjust_params_for_virtual_domain
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my ($ml_name_admin, $ml_name_ctl, $ml_name_error, 
+	$ml_name_post,$ml_name_request);
+    my $ml_name   = $params->{ _ml_name };
+    my $ml_domain = $params->{ ml_domain };
+    
+    if ($curproc->is_default_domain($ml_domain)) {
+	$ml_name_admin   = sprintf("%s-%s",$ml_name,"admin",$ml_domain);
+	$ml_name_ctl     = sprintf("%s-%s",$ml_name,"ctl",$ml_domain);
+	$ml_name_error   = sprintf("%s-%s",$ml_name,"error",$ml_domain);
+	$ml_name_request = sprintf("%s-%s",$ml_name,"request",$ml_domain);
+
+	# post is exceptional.
+	$ml_name_post    = sprintf("%s",$ml_name, $ml_domain);
+    }
+    else {
+	# virtual domain case
+	$ml_name_admin   = sprintf("%s-%s=%s",$ml_name,"admin",$ml_domain);
+	$ml_name_ctl     = sprintf("%s-%s=%s",$ml_name,"ctl",$ml_domain);
+	$ml_name_error   = sprintf("%s-%s=%s",$ml_name,"error",$ml_domain);
+	$ml_name_request = sprintf("%s-%s=%s",$ml_name,"request",$ml_domain);
+
+	# post is exceptional.
+	$ml_name_post    = sprintf("%s=%s",$ml_name, $ml_domain);
+    }
+
+    $params->{ _ml_name_admin }   = $ml_name_admin;
+    $params->{ _ml_name_ctl }     = $ml_name_ctl;
+    $params->{ _ml_name_error }   = $ml_name_error;
+    $params->{ _ml_name_post }    = $ml_name_post;
+    $params->{ _ml_name_request } = $ml_name_request;
 }
 
 
