@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.21 2002/03/30 11:08:37 fukachan Exp $
+# $FML: Kernel.pm,v 1.22 2002/04/10 09:51:26 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -287,6 +287,7 @@ sub get_ml_list
     }
     $dh->close;
 
+    @dirlist = sort @dirlist;
     return \@dirlist;
 }
 
