@@ -1,6 +1,39 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/01/16
+
+   change Mail::Message naming convention.
+	   FML::Article Parse
+	   FML::Filter::BodyCheck HeaderCheck TrafficMonitor 
+	   FML::Process::Command Distribute Kernel
+	   Mail::Bounce Message
+	   Mail::Bounce::DSN Exim GOO Postfix19991231 SimpleMatch
+	   Mail::Delivery::SMTP 
+	   Mail::HTML::Lite 
+	   Mail::ThreadTrack::Analyze HeaderRewrite
+	
+	public -> private:
+	o head_message
+	o last_message
+	o next_message
+	o prev_message
+	
+	prefix change:
+	o rfc822_message_ -> whole_message_
+	o get_first_plaintext_message() -> find_first_plaintext_message()
+	o get_encoding_mechanism() -> encoding_mechanism()
+	o get_data_type() -> data_type()
+	o get_data_type_list() -> data_type_list()
+	
+	renamed:
+	o get_offset() - >offset_pair()
+	o header_in_body_part() -> message_fields()
+	o data_in_body_part()   -> message_text()
+	where we use RFC822 flabour naming convention.
+	rfc822 says "message = fields + text" and rfc2047 says "message" as
+	defined in RFC 822, with all header fields optional.
+
 2002/01/14
 
    Mail::HTML::Lite 
@@ -1346,4 +1379,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.46 2002/01/13 16:19:58 fukachan Exp $
+$FML: CHANGES.txt,v 1.47 2002/01/14 12:01:48 fukachan Exp $
