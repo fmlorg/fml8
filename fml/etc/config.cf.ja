@@ -1,5 +1,5 @@
 #
-# $FML$
+# $FML: config.cf.ja,v 1.6 2002/08/13 14:01:53 fukachan Exp $
 #
 # THE CHARSET OF THIS FILE IS EUC-JP.
 # このファイルの文字コードは EUC-JP です。
@@ -11,9 +11,13 @@
 #    このファイルに明示的に値を書き足して下さい。
 #
 
+# 注: $ml_name と $ml_domain は include ファイル中の引数から
+#     自動的に設定されます。特別な理由のない限り config.cf で
+#     設定することはありません。
+#
 # ドメイン名 (参照: 以下のアドレスを見よ $ml_domain がこの値に展開される)
 # ml_domain           = __ml_domain__
-
+#
 # ML の名前
 # ml_name	    = __ml_name__
 
@@ -25,3 +29,12 @@ address_for_post    = $ml_name@$ml_domain
 
 # コマンド用のアドレス
 address_for_command = $ml_name-ctl@$ml_domain
+
+
+=cut
+
+#
+# この下の部分には HOOK (perl script) を書いて下さい。
+# 例:
+#	$distribute_run_start_hook = q{ ... };
+#
