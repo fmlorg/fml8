@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.89 2002/04/26 10:29:13 fukachan Exp $
+# $FML: Kernel.pm,v 1.90 2002/04/27 05:23:32 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -746,6 +746,27 @@ sub reply_message_nl
 {
     my ($curproc, $class, $default_msg, $args) = @_;
     my $config = $curproc->{ config };
+    my $buf = $curproc->message_nl($class, $default_msg, $args);
+
+    if (defined $buf) {
+	eval q{
+	    use FML::Language::ISO2022JP qw(STR2JIS);
+	};
+	if ($buf =~ /\$/) {
+	    $config->expand_variable_in_buffer(\$buf, $args);
+	}
+	$curproc->reply_message(STR2JIS( $buf ), $args);
+    }
+    else {
+	$curproc->reply_message($default_msg, $args);
+    }
+}
+
+
+sub message_nl
+{
+    my ($curproc, $class, $default_msg, $args) = @_;
+    my $config = $curproc->{ config };
     my $dir    = $config->{ message_template_dir };
     my $buf    = '';
 
@@ -765,18 +786,7 @@ sub reply_message_nl
 	LogWarn("no such file: $file");
     }
 
-    if (defined $buf) {
-	eval q{
-	    use FML::Language::ISO2022JP qw(STR2JIS);
-	};
-	if ($buf =~ /\$/) {
-	    $config->expand_variable_in_buffer(\$buf, $args);
-	}
-	$curproc->reply_message(STR2JIS( $buf ), $args);
-    }
-    else {
-	$curproc->reply_message($default_msg, $args);
-    }
+    return $buf;
 }
 
 
@@ -1206,6 +1216,25 @@ sub prepare_file_to_return
     }
 
     return (-s $tmpf ? $tmpf : undef);
+}
+
+
+=head1 ERROR HANDLING
+
+=cut
+
+
+sub parse_exception
+{
+    my ($curproc, $exception) = @_;
+    my $key = '';
+    my $reason = '';
+
+    if ($exception =~ /__ERROR_(\S+)__:\s+(.*)/) {
+	($key, $reason) = ($1, $2);
+    }
+
+    return ($key, $reason);
 }
 
 
