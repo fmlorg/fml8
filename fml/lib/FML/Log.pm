@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.19 2002/07/02 03:54:18 fukachan Exp $
+# $FML: Log.pm,v 1.20 2002/07/31 13:00:19 fukachan Exp $
 #
 
 package FML::Log;
@@ -107,9 +107,16 @@ sub Log
 
     # When the second argument is not defined, use the default log_file.
     my $style  = $config->{ log_format_type }       || 'fml4_compatible';
-    my $file   = $log_file || $config->{ log_file } || '/dev/stderr';
-    my $fh     = new FileHandle ">> $file";
+    my $file   = $log_file || $config->{ log_file } || undef;
+    my $fh     = undef;
     my $sender = FML::Credential->sender;
+
+    if (defined $file && -f $file) {
+	$fh = new FileHandle ">> $file";
+    }
+    else {
+	$fh = \*STDERR;
+    }
 
     if (defined $fh) {
 	if ($style eq 'fml4_compatible') {
