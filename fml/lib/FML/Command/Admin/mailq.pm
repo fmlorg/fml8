@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mailq.pm,v 1.9 2004/08/14 03:35:43 fukachan Exp $
+# $FML: mailq.pm,v 1.10 2004/09/03 12:43:55 fukachan Exp $
 #
 
 package FML::Command::Admin::mailq;
@@ -83,17 +83,24 @@ sub _list_up_queue
     for my $qid (@$ra_list) {
 	my $info = $queue->getidinfo($qid);
 
-	# 1. the first line is "queue-id sender".
-	printf $format, $qid, $info->{sender};
+	my $q = new Mail::Delivery::Queue {
+	    id        => $qid,
+	    directory => $queue_dir,
+	};
 
-	# 2. list up recipients after 2nd lines.
-	my $rq = $info->{ recipients };
-	for my $r (@$rq) {
-	    printf $format, "", $r;
+	if ($q->is_valid_queue()) {
+	    # 1. the first line is "queue-id sender".
+	    printf $format, $qid, $info->{sender};
+	    
+	    # 2. list up recipients after 2nd lines.
+	    my $rq = $info->{ recipients };
+	    for my $r (@$rq) {
+		printf $format, "", $r;
+	    }
+	    print "\n";
+
+	    $count++;
 	}
-	print "\n";
-
-	$count++;
     }
 
     if ($count) {
