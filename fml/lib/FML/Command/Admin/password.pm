@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: password.pm,v 1.12 2004/01/01 08:41:34 fukachan Exp $
+# $FML: password.pm,v 1.13 2004/01/01 08:48:39 fukachan Exp $
 #
 
 package FML::Command::Admin::password;
@@ -59,6 +59,59 @@ sub need_lock { 1;}
 sub lock_channel { return 'command_serialize';}
 
 
+# Descriptions: rewrite buffer to hide the password phrase in $rbuf
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args) STR_REF($rbuf)
+# Side Effects: none
+# Return Value: none
+sub rewrite_prompt
+{
+    my ($self, $curproc, $command_args, $rbuf) = @_;
+
+    if (defined $rbuf) {
+	$$rbuf =~ s/^(.*(password|pass)\s+).*/$1 ********/;
+    }
+}
+
+
+=head2 verify_syntax($curproc, $command_args)
+
+verify the syntax command string.
+return 0 if it looks insecure.
+
+=cut
+
+
+# Descriptions: verify the syntax command string.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub verify_syntax
+{
+    my ($self, $curproc, $command_args) = @_;
+    my $comname    = $command_args->{ comname }    || '';
+    my $comsubname = $command_args->{ comsubname } || '';
+    my $options    = $command_args->{ options }    || [];
+    my @test       = ($comname);
+
+    # XXX Let original_command be "admin password PASSWORD".
+    # XXX options = [ 'password', PASSWORD ] (not shifted yet here).
+    my $i = 0;
+  DATA:
+    for my $x (@$options) {
+	if ($i++ == 1) {
+	    push(@test, "PASSWORD");
+	}
+	else {
+	    push(@test, $x);
+	}
+    }
+
+    use FML::Command;
+    my $dispatch = new FML::Command;
+    return $dispatch->safe_regexp_match($curproc, $command_args, \@test);
+}
+
+
 # Descriptions: dummy in the case of command mail.
 #
 #               [Case 1: command mail]
@@ -74,23 +127,12 @@ sub lock_channel { return 'command_serialize';}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
+    my $option = $command_args->{ options } || [];
 
-    # dummy. see descriptions above.
-    return 1;
-}
-
-
-# Descriptions: rewrite buffer to hide the password phrase in $rbuf
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args) STR_REF($rbuf)
-# Side Effects: none
-# Return Value: none
-sub rewrite_prompt
-{
-    my ($self, $curproc, $command_args, $rbuf) = @_;
-
-    if (defined $rbuf) {
-	$$rbuf =~ s/^(.*(password|pass)\s+).*/$1 ********/;
-    }
+    # XXX Let original_command be "admin password PASSWORD".
+    # XXX $option is shifted before this method called, so [ PASSWORD ] now.
+    my $p = $option->[ 0 ];
+    $curproc->command_context_set_admin_password($p);
 }
 
 
