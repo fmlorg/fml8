@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.20 2002/09/24 15:02:29 fukachan Exp $
+# $FML: Header.pm,v 1.1 2002/09/30 11:00:54 fukachan Exp $
 #
 
 package FML::Filter::Header;
@@ -22,14 +22,14 @@ FML::Filter::Header - filter based on mail header content
 
 =head1 DESCRIPTION
 
-C<FML::Filter::Header> is a collectoin of filter rules based on
-mail header content.
+C<FML::Filter::Header> is the collectoin of filter rules based on mail
+header content.
 
 =head1 METHODS
 
 =head2 C<new()>
 
-usual constructor.
+constructor.
 
 =cut
 
@@ -37,6 +37,7 @@ usual constructor.
 my $debug = 0;
 
 
+# XXX-TODO: need this default rules here ? (principle of least surprise?)
 my (@default_rules) = qw(check_message_id);
 
 
@@ -122,7 +123,7 @@ sub header_check
 }
 
 
-=head1 RULES
+=head1 FILTER RULES
 
 =cut
 
