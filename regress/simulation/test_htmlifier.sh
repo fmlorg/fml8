@@ -1,4 +1,7 @@
 #!/bin/sh
+#
+# $FML$
+#
 
 ./perlcheck HTML/Lite.pm ||exit 1
 
