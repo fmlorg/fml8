@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Sequence.pm,v 1.9 2001/10/17 03:05:58 fukachan Exp $
+# $FML: Sequence.pm,v 1.10 2001/11/20 06:59:00 fukachan Exp $
 #
 
 package File::Sequence;
@@ -209,18 +209,25 @@ sub search_max_id
 	my $hash = $args->{ hash };
 	($pebot, $v) = each %$hash;
 
+	print STDERR "0. ", $pebot, "\n" if defined $ENV{'debug'};
+
       PEBOT_SEARCH:
 	while (1) {
 	    last PEBOT_SEARCH unless defined $hash->{ $pebot + $unit };
 	    $pebot += $unit;
+	    print STDERR "1. ", $pebot, "\n" if defined $ENV{'debug'};
 	}
 
 	# increment by 1.
 	do {
 	    $pebot++;
+	    print STDERR "2. ", $pebot, "\n" if defined $ENV{'debug'};
 	} while (defined $hash->{ $pebot + 1 });
 
 	return $pebot;
+    }
+    else {
+	warn("no argument");
     }
 }
 
