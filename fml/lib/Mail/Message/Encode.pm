@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.1 2001/12/23 02:59:48 fukachan Exp $
+# $FML: Encode.pm,v 1.2 2002/05/23 12:47:51 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-Mail::Message::Encode - handle a MIME encoded string
+Mail::Message::Encode - MIME encoding engine
 
 =head1 SYNOPSIS
 
@@ -50,14 +50,18 @@ by $options->{ charset }.
 
 
 # Descriptions: encode string
-#    Arguments: STR($str) HASH_REF)$option)
+#    Arguments: STR($str) HASH_REF($option)
 # Side Effects: none
 # Return Value: STR
 sub encode_mime_string
 {
     my ($str, $options) = @_;
-    my $charset = $options->{ 'charset' } || 'iso-2022-jp';
-    my $encode  = $options->{ 'encode' }  || 'base64';
+    my $charset = (defined $options->{ 'charset' } ?
+		   $options->{ 'charset' } :
+		   'iso-2022-jp');
+    my $encode  = (defined $options->{ 'encode' } ?
+		   $options->{ 'encode' } :
+		   'base64');
     my $header  = '=?'. $charset;
     my $trailor = '?=';
 
