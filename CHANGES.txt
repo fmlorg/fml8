@@ -1,6 +1,147 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/07/23
+
+   IO::Adapter の SQL コードを大改定
+
+   FML::Mailer 
+   FML::Command::Auth UserControl.pm 
+   FML::Command::Admin::chaddr 
+   FML::Process::Distribute Utils.pm 
+   Mail::Delivery::SMTP 
+	reconstruct SQL functions in IO::Adapter
+	new IO::Adapter $map, $config;
+	
+   IO::Adapter 
+   IO::Adapter::DBI MySQL.pm 
+	reconstruct MySQL functions
+	o get_next_key() works now.
+	o disable some functions once.
+	
+   FML::Config 
+	.ini sytle extension. for example
+	
+	[mysql:id]
+	key = value
+	
+	So, we have the 2nd level hash value such as
+	$config->{ key1 }->{ key2 } = $value
+	and read::write it.
+	
+	bug fix {+,-}=  operation in the second level.
+
+
+2002/07/22
+
+   変数
+	READ_ONLY($admin_member_maps)
+	mysql 設定の例を追加
+	
+   FML::Config 
+	expand READ_ONLY($array) -> an array of READ_ONLY($array[$i])
+	
+   IO::Adapter 
+	accept READ_ONLY($map)
+	prohibit add/delete/replace call for read only maps.
+	
+   FML::Credential 
+	add is_recipient() for sender is an ML recipient or not.
+
+   off/on command prototype	
+	   FML::Command::User::confirm 
+	   FML::Command::Admin::on
+	   FML::Command::Admin::off
+	   FML::Command::User::on
+	   FML::Command::User::off
+		prototype on and off mode for recipient map
+
+2002/07/20
+
+   FML::Command::Admin::unsubscribe 
+	member_map    use config primary_member_map    to member_maps
+	recipient_map use config primary_recipient_map to recipient_maps
+	
+2002/07/19
+
+   FML::Process::Kernel 
+	repyl_message() handles makefml and *.cgi as special cases.
+	
+   FML::Process::CGI::Kernel 
+	cgi_execute_command() checks the command is allowed in
+	commands_for_admin_cgi.
+	XXX "commands_for_admin_cgi" is hard-coded.
+	XXX we should enhance this for ml-admin::*.cgi et.al.
+	
+   FML::Restriction::Command 
+	enhance command syntax regexp
+	
+   FML::Command::Auth 
+	check user matching
+	
+   FML::Restriction::Command 
+	bug fix wrong command regexp
+	
+   FML::Process::Command 
+	remove not used variable
+	check whether this command is allowed in this $level
+
+2002/07/17
+
+   Mail::Message::MH 
+	add debug
+	define new()
+	bug fix first:\d+
+	handle a,b,c pattern
+	
+   FML::Command::SendFile 
+	use Mail::Message::MH
+	
+   FML::Command::UserControl 
+   FML::Command::Admin::log 
+   FML::Process::Kernel Utils.pm 
+   FML::Process::CGI::Kernel 
+	define printing style format such as 'text', 'html', ...
+	you can control it by the following access methods,
+	get_print_style() and set_print_style(mode)
+	
+   FML::Command::Admin::dir file.pm 
+	use FML::Restriction::
+	
+   FML::MTAControl::Procmail 
+	remove garbage definitions
+	
+   FML::MTAControl::Postfix 
+	search only hash:, dbm::types in postfix alias_maps
+	
+   FML::Credential 
+	optionally, we accept case insensitive comparison of user part
+	of the mail address.
+
+2002/07/15
+
+   FML::Process::Utils
+	define the following access methods:
+	config()
+	pcb()
+	incoming_message_header()
+	incoming_message_body()
+	incoming_message()
+	article_header()
+	article_body()
+	article_message()
+	
+   FML::Command::DataCheck 
+   FML::Filter::BodyCheck 
+   FML::Process::Command Distribute Error Kernel Utils
+	modified to use access methods above.
+
+   FML::Command 
+	use "$myname eq" not "$0 =~"
+	
+   FML::Config 
+	nuke debug::... if $0 =~ ::loader::
+
 2002/07/14
 
    いくつかのコマンドの結果やエラーメールは管理者へも送るようにする
@@ -2770,4 +2911,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.88 2002/07/13 14:28:09 fukachan Exp $
+$FML: CHANGES.txt,v 1.89 2002/07/14 15:22:37 fukachan Exp $
