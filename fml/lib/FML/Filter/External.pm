@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.8 2004/01/01 07:29:27 fukachan Exp $
+# $FML: External.pm,v 1.1 2004/05/25 03:39:50 fukachan Exp $
 #
 
 package FML::Filter::External;
@@ -25,9 +25,15 @@ FML::Filter::External - spawn external checker program.
 
 =head2 C<new()>
 
+constructor.
+
 =cut
 
 
+# Descriptions: constructor.
+#    Arguments: OBJ($self) OBJ($curproc)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self, $curproc) = @_;
