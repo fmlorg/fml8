@@ -1,5 +1,5 @@
 <!--
-   $FML: db.sgml,v 1.1 2002/12/30 07:38:08 fukachan Exp $
+   $FML: db.sgml,v 1.2 2003/04/15 14:51:44 fukachan Exp $
 -->
 
 <sect1 id="threadtrack.db">
@@ -45,7 +45,9 @@ x_sender	ヘッダの X-Sender: (めーる＠アドレスの形式)
 </para>
 
 <para>
-いずれの .db も article_id か thread_id が primary key です。
+スレッドのデータベースは
+「主に article_id か thread_id が primary key」
+です。
 具体的に書くと以下のようになります。
 <screen>
 [thread .db]

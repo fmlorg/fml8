@@ -1,10 +1,55 @@
 <!--
-   $FML: db.sgml,v 1.6 2002/09/15 01:44:29 fukachan Exp $
+   $FML: db.sgml,v 1.7 2003/04/15 14:51:40 fukachan Exp $
 -->
 
-<chapter id="db">
+<chapter id="db.module">
 	<title>
-	データをどう保持するべきか？(データベースの扱い)
+	データベース関連モジュール
+	</title>
+
+
+<sect1 id="db.module.ovewview">
+	<title>
+	概要もしくは理想像
+	</title>
+
+<para>
+ＭＬドライバはメールのさまざまな要素をデータとして保存する必要がありま
+す。しかしながら、同じ要素でも、永続的に持つべき場合と、一定時間経過後
+に捨てて良い扱いの場合とがあります。
+</para>
+
+<para>
+前者の例はスレッドのデータです。一方、後者の例はフィルタシステムの持っ
+ている message-id cache などです。スレッドデータベースも同じく 
+message-id のデータを持っていますし、記事の分については重複しています。
+ですが、２つの有効期間は異なるため別々に取り扱う必要があります。
+</para>
+
+<para>
+とはいえ実際問題スレッド関係とそれ以外に集約できそうなので、
+各モジュールの理想的な関係は次のようになるのでしょう。
+<screen>
+モジュールＡ ---|ア|----- スレッド DB
+モジュールＢ ---|ダ|
+モジュールＣ ---|プ|
+モジュールＤ ---|タ|----- キャッシュ (有効期限つき)
+</screen>
+このスレッド DB は 
+<link linkend="threadtrack.db">
+Mail::Message::DB
+</link>
+のようなものとし、各種アダプタ層ががんばってほしい。
+また、キャッシュの方だが、現在では Tie::JournaledDir もしくは 
+File::CacheDir かのいづれかが使われることとなる。
+</para>
+
+</sect1>
+
+
+<sect1 id="db.module.persistent">
+	<title>
+	永続的なデータの保持
 	</title>
 
 <para>
@@ -61,8 +106,10 @@ File::CacheDir を使わないようにすることが可能でしょう。
 </para>
 </warning>
 
+</sect1>
 
-<sect1 id="db.Tie.JournaledFile">
+
+<sect1 id="db.module.Tie.JournaledFile">
 	<title>
 	Tie::JournaledFile クラス
 	</title>
@@ -133,9 +180,9 @@ first match と last match は切替えることができます。
 </sect1>
 
 
-<sect1 id="db.File.CacheDir">
+<sect1 id="db.module.File.CacheDir">
 	<title>
-	File::CacheDir
+	File::CacheDir クラス
 	</title>
 
 <para>
@@ -174,7 +221,7 @@ first match と last match は切替えることができます。
 
 
 
-<sect1 id="db.modules.usage">
+<sect1 id="db.module.usage">
 	<title>
 	モジュールの使い分け
 	</title>

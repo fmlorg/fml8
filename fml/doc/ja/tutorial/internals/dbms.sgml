@@ -1,10 +1,16 @@
 <!--
-   $FML: dbms.sgml,v 1.3 2002/07/06 14:55:18 fukachan Exp $
+   $FML: dbms.sgml,v 1.4 2003/04/15 14:51:40 fukachan Exp $
 -->
 
 <chapter id="dbms">
 	<title>
 	データベース管理システム
+	</title>
+
+
+<sect1 id="dbms.overview">
+	<title>
+	概要
 	</title>
 
 <para>
@@ -20,6 +26,25 @@ IO::Adapter
 それらの原始的な機能を組み合わせた複雑な操作は
 IO::Adapter の前段階のプログラムが頑張る必要があります。
 </para>
+
+</sect1>
+
+
+<sect1 id="dbms.todo">
+	<title>
+	TODO
+	</title>
+
+<para>
+メソッドが必要最少限になっているかは考えた方がいい。
+けれど、
+<link linkend="module.io.adapter">
+IO::Adapter 
+</link>
+のメソッド準拠ではあるので、とりあえずいいのかな。
+</para>
+
+</sect1>
 
 
 </chapter>
