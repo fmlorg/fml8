@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.60 2002/12/30 07:38:07 fukachan Exp $
+	$FML: chapters.ent,v 1.61 2003/01/05 10:09:06 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -62,7 +62,10 @@
 <!entity sect.config.mailmagazine           SYSTEM "customize/mailmagazine.sgml">
 <!entity sect.config.post.permit.anyone     SYSTEM "customize/post_permit_anyone.sgml">
 
-<!entity sect.config.ml.hier    SYSTEM "customize/ml.hier.ml">
+<!entity sect.config.ml.hier		SYSTEM "customize/ml.hier.ml">
+
+<!entity sect.customize.casestudies	SYSTEM "customize/case_studies.sgml">
+
 
 
 <!entity recipe.header.tag.uppercase SYSTEM "customize/recipe.header.tag.uppercase.sgml">

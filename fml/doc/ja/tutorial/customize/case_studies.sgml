@@ -1,0 +1,60 @@
+<!--
+   $FML$
+-->
+
+
+<sect1 id="sect.casestudy.01">
+	<title>
+	ケーススタディ: オフィス (1)
+	</title>
+
+<para>
+
+</para>
+
+</sect1>
+
+
+<sect1 id="sect.casestudy.02">
+	<title>
+	ケーススタディ: オフィス (2)
+	</title>
+
+<para>
+以下の設定を /etc/fml/site_default_config.cf に書き、
+全ＭＬに反映させる。
+</para>
+
+<para>
+まず、記事のヘッダにはＭＬ名を大文字にしてつける。
+<screen>
+article_subject_tag = (\U$ml_name\E %05d)
+</screen>
+たとえば 
+support@example.co.jp ＭＬは
+<screen>
+Subject: (SUPPORT 10000)
+</screen>
+などとなる。
+</para>
+
+<para>
+そして、過去記事を参照させるために、コマンドメールの使用は許す。
+ただし、自ドメインからのリクエストに対してのみ、
+コマンドメールの使用を許す。
+これは、HOOK で実現する。
+<section>
+$command_verify_request_end_hook = q{
+        my $cred = $curproc->{ credential };
+        my $from = $cred->sender();
+
+        unless ($from =~ /\@example\.co\.jp/i) {
+                $curproc->stop_this_process();
+                LogError("deny command request from $from");
+        }
+};
+</section>  
+</para>
+
+
+</sect1>
