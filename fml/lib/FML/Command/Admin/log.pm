@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.23 2004/01/01 08:48:39 fukachan Exp $
+# $FML: log.pm,v 1.24 2004/01/01 23:52:12 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -86,20 +86,22 @@ sub cgi_menu
 }
 
 
-# Descriptions: show log file.
+# Descriptions: show log file. 
+#               This function is same as "tail -30 log" by default.
 #    Arguments: OBJ($self) OBJ($curproc) STR($log_file) HASH_REF($sl_args)
 # Side Effects: none
 # Return Value: none
 sub _show_log
 {
     my ($self, $curproc, $log_file, $sl_args) = @_;
-    my $is_cgi       = 1 if $sl_args->{ printing_style } eq 'html';
+    my $is_cgi     = 1 if $sl_args->{ printing_style } eq 'html';
+    my $line_count = 0;
+    my $line_max   = 0;
+    my $charset    = $curproc->get_charset($is_cgi ? "cgi" : "log_file");
 
-    # XXX-TODO: $last_n_lines should be customizable.
-    my $last_n_lines = 30;
-    my $line_count   = 0;
-    my $line_max     = 0;
-    my $charset      = $curproc->get_charset($is_cgi ? "cgi" : "log_file");
+    # run "tail -30 log" by default.
+    my $config       = $curproc->config();
+    my $last_n_lines = $config->{ log_command_tail_starting_location } || 30;
 
     use Mail::Message::Encode;
     my $encode = new Mail::Message::Encode;
@@ -141,7 +143,7 @@ sub _show_log
 }
 
 
-# Descriptions: convert text to html
+# Descriptions: convert text to html.
 #    Arguments: STR($str)
 # Side Effects: none
 # Return Value: STR
