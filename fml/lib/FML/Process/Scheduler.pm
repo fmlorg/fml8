@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2002,2003 Ken'ichi Fukamachi
+# Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Scheduler.pm,v 1.22 2003/03/06 09:43:31 fukachan Exp $
+# $FML: Scheduler.pm,v 1.23 2003/04/04 05:05:03 fukachan Exp $
 #
 
 package FML::Process::Scheduler;
@@ -26,7 +26,7 @@ FML::Process::Scheduler -- scheduler.
 
 =head1 DESCRIPTION
 
-This class provides utility for scheduler.
+This class provides utility functions for scheduler.
 However this module is dummy now.
 
 =head1 METHODS
@@ -68,7 +68,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.28 2004/01/02 02:11:27 fukachan Exp $
+# $FML: DocViewer.pm,v 1.29 2004/01/02 14:50:35 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -117,8 +117,6 @@ sub verify_request
 =head2 run($args)
 
 the main top level dispatcher.
-It kicks off internal function C<_fmlconf($args)> for
-C<fmlconf($args)>.
 
 =cut
 
@@ -130,9 +128,6 @@ C<fmlconf($args)>.
 sub run
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->config();
-    my $myname = $curproc->myname();
-    my $argv   = $curproc->command_line_argv();
 
     $curproc->_fmldoc();
 }
@@ -205,13 +200,12 @@ _EOF_
 
 =head2 finish()
 
-finalize.
+dummy.
 
 =cut
 
 
-# Descriptions: clean up in the end of the curreen process.
-#               return error messages et. al.
+# Descriptions: dummy.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: queue flush
 # Return Value: none

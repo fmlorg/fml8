@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.16 2004/01/02 10:23:58 fukachan Exp $
+# $FML: QueueManager.pm,v 1.17 2004/01/02 14:50:37 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -18,13 +18,15 @@ FML::Process::QueueManager - provide queue manipulation functions
 
 =head1 SYNOPSIS
 
+To flush all entries in the queue, 
+
     use FML::Process::QueueManager;
-    my $obj = new FML::Process::QueueManager { directory => $queue_dir };
-    $obj->send($curproc);
+    my $queue = new FML::Process::QueueManager { directory => $queue_dir };
+    $queue->send($curproc);
 
 or if you send specific queue C<$queue_id>, use
 
-    $obj->send($curproc, $queue_id);
+    $queue->send($curproc, $queue_id);
 
 where C<$queue_id> is queue id such as 1000390413.14775.1,
 not file path.
@@ -35,14 +37,14 @@ queue flush!
 
 =head1 METHODS
 
-=head2 new()
+=head2 new($qm_args)
 
 constructor.
 
 =cut
 
 
-use FML::Log qw(Log LogWarn LogError);
+# XXX-TODO: new FML::Process::QueueManager $curproc
 
 
 # Descriptions: standard constructor
@@ -63,13 +65,13 @@ sub new
 
 =head2 send($curproc, $id)
 
-try to send all mails in the queue.
-If queue id C<$id> is specified, send queue for C<$id>.
+try to send all messages in the queue. If the queue id C<$id> is
+specified, send only the queue corresponding to C<$id>.
 
 =cut
 
 
-# Descriptions: send message in queue directory sequentially
+# Descriptions: send message(s) in queue directory sequentially.
 #    Arguments: OBJ($self) OBJ($curproc) STR($id)
 # Side Effects: queue flush-ed
 # Return Value: none

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.2 2003/10/15 01:03:32 fukachan Exp $
+# $FML: Queue.pm,v 1.3 2004/01/02 14:42:46 fukachan Exp $
 #
 
 package FML::IPC::Queue;
@@ -21,7 +21,7 @@ FML::IPC::Queue - basic message queue operation
     my $queue = new FML::IPC::Queue;
 
     my $msg = new UserDefinedMessageObject { .. } # user defined object.
-    $queue->add($msg);
+    $queue->append($msg);
 
     my $qlist = $queue->list();
     for my $m (@$qlist) { $m->print();}
@@ -36,7 +36,11 @@ list up queue et.al.
 
 =head2 new()
 
+constructor.
+
 =head2 append($msg)
+
+append user defined message $msg into the message queue.
 
 =cut
 

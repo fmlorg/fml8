@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Addr.pm,v 1.14 2004/01/02 02:11:25 fukachan Exp $
+# $FML: Addr.pm,v 1.15 2004/01/02 14:50:33 fukachan Exp $
 #
 
 package FML::Process::Addr;
@@ -98,8 +98,8 @@ sub prepare
 sub verify_request
 {
     my ($curproc, $args) = @_;
-    my $argv = $curproc->command_line_argv();
-    my $len  = $#$argv + 1;
+    my $argv   = $curproc->command_line_argv();
+    my $len    = $#$argv + 1;
     my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'fmladdr_verify_request_start_hook' );
@@ -136,15 +136,22 @@ See <FML::Process::Switch()> on C<$args> for more details.
 sub run
 {
     my ($curproc, $args) = @_;
-    my $config  = $curproc->config();
-    my $myname  = $curproc->myname();
-    my $argv    = $curproc->command_line_argv();
+    my $config = $curproc->config();
+    my $myname = $curproc->myname();
+    my $argv   = $curproc->command_line_argv();
 
     $curproc->_fmladdr();
 }
 
 
-# Descriptions: dummy
+=head2 finish
+
+dummy.
+
+=cut
+
+
+# Descriptions: dummy.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -210,7 +217,7 @@ show only accounts if -n option specified.
 sub _fmladdr
 {
     my ($curproc) = @_;
-    my $config = $curproc->config();
+    my $config    = $curproc->config();
 
     my $eval = $config->get_hook( 'fmladdr_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }

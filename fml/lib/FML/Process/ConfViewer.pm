@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.26 2004/01/02 02:11:26 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.27 2004/01/02 14:50:34 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -124,12 +124,6 @@ sub verify_request
 
 the top level dispatcher for C<fmlconf>.
 
-It kicks off internal function C<_fmlconf()> for C<fmlconf>.
-
-NOTE:
-C<$args> is passed from parrent libexec/loader.
-See <FML::Process::Switch()> on C<$args> for more details.
-
 =cut
 
 
@@ -141,8 +135,6 @@ sub run
 {
     my ($curproc, $args) = @_;
     my $config = $curproc->config();
-    my $myname = $curproc->myname();
-    my $argv   = $curproc->command_line_argv();
 
     my $eval = $config->get_hook( 'fmlconf_run_start_hook' );
     if ($eval) {
@@ -188,7 +180,7 @@ _EOF_
 }
 
 
-# Descriptions: dummy
+# Descriptions: dummy.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -209,13 +201,6 @@ sub finish
 	$curproc->logwarn($@) if $@;
     }
 }
-
-
-=head2 _fmlconf()
-
-run dump_variables of C<FML::Config>.
-
-=cut
 
 
 # Descriptions: show configurations variables in the sytle "key = value".

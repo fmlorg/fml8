@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Alias.pm,v 1.15 2004/01/02 02:11:26 fukachan Exp $
+# $FML: Alias.pm,v 1.16 2004/01/02 14:50:33 fukachan Exp $
 #
 
 package FML::Process::Alias;
@@ -45,6 +45,10 @@ constructor.
 It make a C<FML::Process::Kernel> object and return it.
 
 =head2 prepare($args)
+
+load config files and fix @INC.
+
+=head2 verify_request($args)
 
 dummy.
 
@@ -94,8 +98,8 @@ sub prepare
 sub verify_request
 {
     my ($curproc, $args) = @_;
-    my $argv = $curproc->command_line_argv();
-    my $len  = $#$argv + 1;
+    my $argv   = $curproc->command_line_argv();
+    my $len    = $#$argv + 1;
     my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'fmlalias_verify_request_start_hook' );
@@ -138,7 +142,14 @@ sub run
 }
 
 
-# Descriptions: dummy
+=head2 finish($args)
+
+dummy.
+
+=cut
+
+
+# Descriptions: dummy.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -162,7 +173,7 @@ show help.
 =cut
 
 
-# Descriptions: show help
+# Descriptions: show help.
 #    Arguments: none
 # Side Effects: none
 # Return Value: none
@@ -187,23 +198,7 @@ _EOF_
 }
 
 
-=head2 _fmlalias()
-
-switch of C<fmlalias> command.
-
-C<Caution:>
-C<$args> is passed from parrent libexec/loader.
-We construct a new struct C<$command_args> here to pass parameters
-to child objects.
-C<FML::Command::$command> object takes them as arguments not pure
-C<$args>. It is a little mess. Pay attention.
-
-See <FML::Process::Switch()> on C<$args> for more details.
-
-=cut
-
-
-# Descriptions: fmlalias top level dispacher
+# Descriptions: fmlalias top level dispacher.
 #    Arguments: OBJ($curproc)
 # Side Effects: load FML::Command::command module and execute it.
 # Return Value: none
