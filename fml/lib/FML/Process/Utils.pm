@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.23 2002/06/01 03:01:54 fukachan Exp $
+# $FML: Utils.pm,v 1.24 2002/06/21 08:20:12 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -176,10 +176,35 @@ sub command_line_options
 }
 
 
+=head2 ml_name()
+
+not yet implemenetd properly. (?)
+
+=cut
+
+
+# Descriptions: return my domain
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub ml_name
+{
+    my ($curproc) = @_;
+    my $config = $curproc->{ config };
+
+    if (defined $config->{ ml_name } && $config->{ ml_name }) {
+	return $config->{ ml_name };
+    }
+    else {
+	croak("\$ml_name not defined.");
+    }
+}
+
+
 =head2 ml_domain()
 
-not yet implemenetd properly.
-Anyway, return the default domain defined in /etc/fml/main.cf.
+return the domain handled in the current process. If not defined
+properly, return the default domain defined in /etc/fml/main.cf.
 
 =cut
 
@@ -191,7 +216,14 @@ Anyway, return the default domain defined in /etc/fml/main.cf.
 sub ml_domain
 {
     my ($curproc) = @_;
-    return $curproc->default_domain();
+    my $config = $curproc->{ config };
+
+    if (defined $config->{ ml_domain } && $config->{ ml_domain }) {
+	return $config->{ ml_domain };
+    }
+    else {
+	return $curproc->default_domain();
+    }
 }
 
 
@@ -340,7 +372,11 @@ sub __ml_home_prefix_from_main_cf
 	}
     }
     else {
-	if (defined $main_cf->{ ml_home_prefix }) {
+	# if the domain is given as a hint (CGI)
+	if (defined $main_cf->{ _hints }->{ ml_domain }) {
+
+	}
+	elsif (defined $main_cf->{ ml_home_prefix }) {
 	    return $main_cf->{ ml_home_prefix };
 	}
 	elsif (defined $main_cf->{ default_ml_home_prefix }) {
@@ -358,19 +394,23 @@ sub __ml_home_prefix_from_main_cf
 #    Arguments: HASH_REF($main_cf)
 #               STR($virtual_domain)
 #               ARRAY_REF($virtual_maps)
+#         bugs: currently support the only file type of IO::Adapter.
+#               This limit comes from the architecture 
+#               since this function may be used
+#               before $curproc and $config is allocated.
 # Side Effects: none
 # Return Value: STR
 sub __ml_home_prefix_search_in_virtual_maps
 {
     my ($main_cf, $virtual_domain, $virtual_maps) = @_;
-
+    
     if (@$virtual_maps) {
 	my $dir = '';
 	eval q{ use IO::Adapter; };
 	unless ($@) {
 	  MAP:
 	    for my $map (@$virtual_maps) {
-		my $obj  = new IO::Adapter $map;
+		my $obj = new IO::Adapter $map;
 		if (defined $obj) {
 		    $obj->open();
 		    $dir = $obj->find("^$virtual_domain");
@@ -503,19 +543,27 @@ get HASH ARRAY of valid mailing lists.
 =cut
 
 
-# Descriptions: list up ML
-#    Arguments: OBJ($curproc) HASH_REF($args)
+# Descriptions: list up ML for the specified $ml_domain
+#    Arguments: OBJ($curproc) HASH_REF($args) STR($ml_domain)
 # Side Effects: none
 # Return Value: ARRAY_REF
 sub get_ml_list
 {
-    my ($curproc) = @_;
-    my $config = $curproc->{ config };
+    my ($curproc, $args, $ml_domain) = @_;
+    my $ml_home_prefix = $curproc->ml_home_prefix();
+
+    if (defined $ml_domain) {
+	$ml_home_prefix = $curproc->ml_home_prefix($ml_domain);
+    }
+    else {
+	my $xx_domain   = $curproc->ml_domain();
+	$ml_home_prefix = $curproc->ml_home_prefix($xx_domain);
+    }
 
     use File::Spec;
     use DirHandle;
-    my $dh      = new DirHandle $config->{ ml_home_prefix };
-    my $prefix  = $config->{ ml_home_prefix };
+    my $dh      = new DirHandle $ml_home_prefix;
+    my $prefix  = $ml_home_prefix;
     my $cf      = '';
     my @dirlist = ();
 
@@ -574,29 +622,47 @@ sub get_recipient_list
 }
 
 
-=head2 rewrite_config_if_needed($args, $command_args)
+=head2 rewrite_config_if_needed($args, $params)
 
 rewrite $ml_* information for virtual domain.
+C<$params> is like this:
+
+	$params = {
+		ml_name   => 'rudo',
+		ml_domain => 'nuinui.net',
+	};
 
 =cut
 
 
 # Descriptions: check argument and prepare virtual domain information
 #               if needed.
-#    Arguments: OBJ($curproc) HASH_REF($args) HASH_REF($command_args)
+#    Arguments: OBJ($curproc) HASH_REF($args) HASH_REF($params)
 # Side Effects: none
 # Return Value: HASH_REF
 sub rewrite_config_if_needed
 {
-    my ($curproc, $args, $command_args) = @_;
+    my ($curproc, $args, $params) = @_;
     my $config         = $curproc->{ config };
-    my $ml_name        = $command_args->{ 'ml_name' };
+    my $ml_name        = '';
     my $ml_domain      = $curproc->default_domain();
     my $ml_home_prefix = '';
     my $ml_home_dir    = '';
 
+    # ml_domain
+    if (defined $params->{ 'ml_domain' }) {
+	$ml_domain = $params->{ 'ml_domain' };
+    }
+    else {
+	$ml_domain = $curproc->default_domain();
+    }
+
     # virtual domain support e.g. "makefml newml elena@nuinui.net"
-    if ($ml_name =~ /\@/o) {
+    if (defined $params->{ 'ml_name' } && $params->{ 'ml_name' }) {
+	$ml_name = $params->{ 'ml_name' };
+    }
+
+    if (defined $ml_name && $ml_name && ($ml_name =~ /\@/o)) {
 	# overwrite $ml_name
 	($ml_name, $ml_domain) = split(/\@/, $ml_name);
 	$ml_home_prefix = $curproc->ml_home_prefix($ml_domain);
