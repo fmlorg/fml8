@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Bounce.pm,v 1.5 2001/04/12 10:46:47 fukachan Exp $
+# $FML: Bounce.pm,v 1.6 2001/04/12 12:06:11 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -103,6 +103,33 @@ sub reason
     $reason;
 }
 
+
+my $RE_SJIS_C = '[\201-\237\340-\374][\100-\176\200-\374]';
+my $RE_SJIS_S = "($RE_SJIS_C)+";
+my $RE_EUC_C  = '[\241-\376][\241-\376]';
+my $RE_EUC_S  = "($RE_EUC_C)+";
+my $RE_JIN    = '\033\$[\@B]';
+my $RE_JOUT   = '\033\([BJ]';
+
+my @REGEXP = (
+	      $RE_SJIS_C,
+	      $RE_SJIS_S,
+	      $RE_EUC_C,
+	      $RE_EUC_S,
+	      $RE_JIN,
+	      $RE_JOUT,
+	      );
+
+sub look_japanese
+{
+    my ($self, $buf) = @_;
+
+    for my $regexp (@REGEXP) {
+	return 1 if $buf =~ /$regexp/;
+    }
+
+    0;
+}
 
 
 =head1 AUTHOR
