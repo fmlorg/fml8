@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.40 2002/06/01 03:01:52 fukachan Exp $
+# $FML: Article.pm,v 1.41 2002/06/30 14:27:47 fukachan Exp $
 #
 
 package FML::Article;
@@ -194,7 +194,7 @@ sub spool_in
 		print $fh "\n";
 		$curproc->{ article }->{ body }->print($fh);
 		$fh->close;
-		Log("Article $id");
+		Log("article $id");
 	    }
 	}
 	else {
