@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.26 2004/08/15 11:59:04 fukachan Exp $
+# $FML: QueueManager.pm,v 1.27 2004/08/15 14:27:43 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -79,15 +79,18 @@ sub send
     my ($self, $id) = @_;
     my $curproc     = $self->{ _curproc };
     my $queue_dir   = $self->{ _directory };
-    my $max_count   = 2;
+    my $max_count   = 100;
     my $count       = 0;
     my $count_ok    = 0;
     my $count_err   = 0;
     my $channel     = 'qmgr_reschedule';
+    my $fp          = sub { $curproc->log(@_);};
 
     use Mail::Delivery::Queue;
     my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
     my $ra    = [];
+
+    $queue->set_log_function($fp);
 
     if (defined $id) {
 	$ra = [ $id ];
@@ -98,17 +101,23 @@ sub send
 	unless (@$ra) {
 	    $curproc->log("qmgr: empty active queue. re-schedule");
 	    $queue->reschedule();
+	    $ra = $queue->list();
 	}
     }
 
   QUEUE:
     for my $qid (@$ra) {
+	last QUEUE if $curproc->is_process_time_limit();
+
 	my $q = new Mail::Delivery::Queue {
 	    id        => $qid,
 	    directory => $queue_dir,
 	};
+	$q->set_log_function($fp);
 
 	if ( $q->lock() ) {
+	    my $is_locked = 1;
+
 	    if ( $q->is_valid_active_queue() ) {
 		my $r = $self->_send($curproc, $q);
 		if ($r) {
@@ -117,7 +126,9 @@ sub send
 		}
 		else {
 		    $curproc->log("qmgr: qid=$qid try later.");
+		    $q->unlock();
 		    $q->sleep_queue();
+		    $is_locked = 0;
 		    $count_err++;
 		}
 		$count++;
@@ -126,7 +137,8 @@ sub send
 		# XXX-TODO: $q->remove() if invalid queue ?
 		$curproc->log("qmgr: qid=$qid is invalid");
 	    }
-	    $q->unlock();
+
+	    $q->unlock() if $is_locked;
 	}
 	else {
 	    $curproc->log("qmgr: qid=$qid is locked. retry");
@@ -204,9 +216,12 @@ sub cleanup
     my ($self)    = @_;
     my $curproc   = $self->{ _curproc };
     my $queue_dir = $self->{ _directory };
+    my $fp        = sub { $curproc->log(@_);};
 
     use Mail::Delivery::Queue;
     my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
+    $queue->set_log_function($fp);
+
     my $list  = $queue->list_all() || [];
     my $limit = 5 * 24 * 3600; # 5 days.
     my $now   = time;
@@ -216,6 +231,7 @@ sub cleanup
 	    id        => $qid,
 	    directory => $queue_dir,
 	};
+	$q->set_log_function($fp);
 
 	unless ( $q->is_valid_queue() ) {
 	    my $mtime = $q->last_modified_time();
