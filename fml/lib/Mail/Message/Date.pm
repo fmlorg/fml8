@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.15 2002/12/22 03:09:56 fukachan Exp $
+# $FML: Date.pm,v 1.16 2002/12/24 10:19:49 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -157,7 +157,7 @@ sub YYYYMMDD
 
 
 # Descriptions: return e.g. 1999/09/13 style
-#    Arguments: OBJ($self) NUM($time)
+#    Arguments: OBJ($self) NUM($time) STR($sep)
 # Side Effects: none
 # Return Value: STR
 sub YYYYxMMxDD

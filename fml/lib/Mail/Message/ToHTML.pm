@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.30 2002/10/29 09:47:15 fukachan Exp $
+# $FML: ToHTML.pm,v 1.31 2002/11/18 22:45:08 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.30 2002/10/29 09:47:15 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.31 2002/11/18 22:45:08 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -598,20 +598,20 @@ sub _set_output_channel
 
 # Descriptions: return temporary file path.
 #               XXX temporary file is created under $db_dir not public space
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub _create_temporary_filename
 {
-    my ($self, $msg) = @_;
-    my $db_dir  = $self->{ _html_base_directory };
+    my ($self) = @_;
+    my $db_dir = $self->{ _html_base_directory };
 
     return "$db_dir/tmp$$";
 }
 
 
 # Descriptions: create a temporary file with the content $msg
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: create $tmpf file
 # Return Value: STR
 sub _create_temporary_file_in_raw_mode
@@ -686,7 +686,7 @@ sub _print_inline_object_link
 
 
 # Descriptions: return attachment filename
-#    Arguments: OBJ($self) STR($attach) STR($suffix)
+#    Arguments: STR($dst) STR($attach) STR($suffix)
 # Side Effects: none
 #         Todo: UNIX specific
 # Return Value: STR
@@ -744,7 +744,7 @@ sub _format_safe_header
 
 
 # Descriptions: show link to indexes as navigation
-#    Arguments: none
+#    Arguments: HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub _format_index_navigator
@@ -1326,7 +1326,7 @@ sub _update_relation
 
 
 # Descriptions: return thread link relation info et.al. for $id
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) NUM($id)
 # Side Effects: none
 # Return Value: HASH_REF
 sub evaluate_relation
@@ -2343,7 +2343,7 @@ sub _print_end_of_ul
 
 
 # Descriptions: print <LI> filename ... with proper indentation
-#    Arguments: OBJ($self) HANDLE($wh) HASH_REF($db) STR($code)
+#    Arguments: OBJ($self) HANDLE($wh) HASH_REF($db) NUM($id) STR($code)
 # Side Effects: none
 # Return Value: none
 sub _print_li_filename
@@ -2496,7 +2496,7 @@ try to convert all rfc822 messages to HTML in C<$dir> directory.
 
 
 # Descriptions: convert $file to HTML
-#    Arguments: STR($file) HASH_REF($args)
+#    Arguments: OBJ($self) STR($file) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub htmlify_file
@@ -2549,7 +2549,7 @@ sub htmlify_file
 
 
 # Descriptions: convert all articles in specified directory
-#    Arguments: STR($src_dir) HASH_REF($args)
+#    Arguments: OBJ($self) STR($src_dir) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub htmlify_dir

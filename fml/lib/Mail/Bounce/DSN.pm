@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DSN.pm,v 1.19 2002/09/22 14:57:01 fukachan Exp $
+# $FML: DSN.pm,v 1.20 2002/12/20 03:49:15 fukachan Exp $
 #
 
 
@@ -120,7 +120,7 @@ sub analyze
 #               Status: 4.0.0
 #               Diagnostic-Code: X-Postfix; connect to mx.nuinui.net[10.1.1.1]:
 #                    Connection refused
-#    Arguments: OBJ($self) OBJ($msg) HASH_REF($result)
+#    Arguments: OBJ($self) STR($buf) HASH_REF($result)
 # Side Effects: update $result
 # Return Value: none
 sub _parse_dsn_format
@@ -171,7 +171,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

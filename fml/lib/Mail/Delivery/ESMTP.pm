@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ESMTP.pm,v 1.7 2002/09/11 23:18:23 fukachan Exp $
+# $FML: ESMTP.pm,v 1.8 2002/09/22 14:57:02 fukachan Exp $
 #
 
 package Mail::Delivery::ESMTP;
@@ -17,7 +17,7 @@ use Mail::Delivery::SMTP;
 
 
 # Descriptions: constructor. forward the request to base class (SMTP).
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) VARARGS(@args)
 # Side Effects: none
 # Return Value: OBJ
 sub new

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Text.pm,v 1.11 2002/09/22 14:57:07 fukachan Exp $
+# $FML: Text.pm,v 1.12 2002/12/22 03:17:27 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Text;
@@ -101,7 +101,7 @@ sub __start_thread_summary
 
 
 # Descriptions: print formatted brief summary
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: none
 sub __print_thread_summary
@@ -132,7 +132,7 @@ sub __end_thread_summary
 
 
 # Descriptions: create a string of "a b c .." style up to $num bytes
-#    Arguments: NUM($num) STR($str)
+#    Arguments: NUM($max) STR($str)
 # Side Effects: none
 # Return Value: STR
 sub _format_list

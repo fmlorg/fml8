@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTML.pm,v 1.13 2002/09/22 14:57:07 fukachan Exp $
+# $FML: HTML.pm,v 1.14 2002/12/22 03:21:33 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::HTML;
@@ -160,7 +160,7 @@ sub __end_thread_summary
 
 # Descriptions: This shows summary on C<$thread_id> in HTML language.
 #               It is used in C<FML::CGI::ThreadSystem>.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: none
 sub __print_thread_summary

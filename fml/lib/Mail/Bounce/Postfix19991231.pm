@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix19991231.pm,v 1.20 2002/09/22 14:57:01 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.21 2002/12/20 03:49:16 fukachan Exp $
 #
 
 
@@ -144,7 +144,7 @@ sub _analyze_broken_dsn
 
 
 # Descriptions: clean up address
-#    Arguments: OBJ($self) OBJ($msg) HASH_REF($result)
+#    Arguments: OBJ($self) STR($data) HASH_REF($result)
 # Side Effects: update $result
 # Return Value: none
 sub _parse_address
@@ -171,7 +171,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

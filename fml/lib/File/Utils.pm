@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.18 2002/09/22 14:56:57 fukachan Exp $
+# $FML: Utils.pm,v 1.19 2002/12/22 03:32:00 fukachan Exp $
 #
 
 package File::Utils;
@@ -80,7 +80,7 @@ make a directory C<$dir> by the mode C<$mode> recursively.
 
 
 # Descriptions: "mkdir -p" or "mkdirhier"
-#    Arguments: STR($cdir) STR($mode)
+#    Arguments: STR($dir) STR($mode)
 # Side Effects: set $ErrorString
 # Return Value: 1 or UNDEF
 sub mkdirhier
@@ -155,11 +155,11 @@ The default search path list is
 
 
 # Descriptions: search executable named as $file
-#    Arguments: STR($file) ARRAY_REF($path_list)
 #               The "path_list" is an ARRAY_REFERENCE.
 #               For example,
 #               search_program('md5');
 #               search_program('md5', [ '/bin', '/sbin' ]);
+#    Arguments: STR($file) ARRAY_REF($path_list)
 # Side Effects: none
 # Return Value: STR
 sub search_program

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.10 2002/09/22 14:57:05 fukachan Exp $
+# $FML: Subject.pm,v 1.11 2002/12/22 03:09:56 fukachan Exp $
 #
 
 
@@ -105,7 +105,7 @@ within C<Subject:>.
 
 
 # Descriptions: remove Re:
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: STR($subject)
 # Side Effects: none
 # Return Value: STR
 sub cut_off_reply_tag

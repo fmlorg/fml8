@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledDir.pm,v 1.16 2002/09/22 14:57:07 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.17 2002/12/22 03:37:15 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -345,7 +345,7 @@ which is by default.
 
 
 # Descriptions: get all values for the key as ARRAY_REF.
-#    Arguments: OBJ($self) STR($key)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: HASH_REF
 sub get_all_values_as_hash_ref

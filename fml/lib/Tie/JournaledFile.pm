@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledFile.pm,v 1.25 2003/01/04 00:28:35 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.26 2003/01/07 08:38:35 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -274,7 +274,7 @@ parameter at C<new()> method. C<first_match> by default.
 
 
 # Descriptions: return the array of line(s) with the specified key.
-#    Arguments: OBJ($self) STR($key)
+#    Arguments: OBJ($self) STR($key) STR($mode)
 # Side Effects: none
 # Return Value: ARRAY_REF
 sub find

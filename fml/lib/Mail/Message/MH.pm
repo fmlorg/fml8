@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #
-# $FML: MH.pm,v 1.9 2002/09/11 23:18:25 fukachan Exp $
+# $FML: MH.pm,v 1.10 2002/09/22 14:57:04 fukachan Exp $
 #
 
 package Mail::Message::MH;
@@ -109,7 +109,7 @@ sub expand
 
 
 # Descriptions: make an array from $fist to $last number
-#    Arguments: NUM($first_number) NUM($last_number)
+#    Arguments: NUM($first) NUM($last)
 # Side Effects: none
 # Return Value: ARRAY_REF (as [ $first .. $last ])
 sub _expand_range

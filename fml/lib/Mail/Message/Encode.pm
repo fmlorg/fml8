@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.9 2002/11/26 13:55:46 fukachan Exp $
+# $FML: Encode.pm,v 1.10 2002/12/22 03:09:56 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -453,7 +453,7 @@ by $options->{ charset }.
 
 
 # Descriptions: decode MIME string
-#    Arguments: OBJ($self) STR($str) STR($encode) STR($out_code) STR($in_code)
+#    Arguments: OBJ($self) STR($str) STR($out_code) STR($in_code)
 # Side Effects: none
 # Return Value: STR
 sub decode_mime_string

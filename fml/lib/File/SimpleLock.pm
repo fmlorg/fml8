@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: SimpleLock.pm,v 1.15 2002/12/13 04:19:59 fukachan Exp $
+# $FML: SimpleLock.pm,v 1.16 2002/12/22 03:32:00 fukachan Exp $
 #
 
 package File::SimpleLock;
@@ -52,7 +52,7 @@ use Fcntl qw(:DEFAULT :flock);
 
 
 # Descriptions: standard constructor.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
 sub new
