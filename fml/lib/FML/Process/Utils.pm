@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.78 2003/09/06 03:34:05 fukachan Exp $
+# $FML: Utils.pm,v 1.79 2003/09/13 13:02:32 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1110,7 +1110,7 @@ inform whether this process runs under MTA ?
 sub is_cgi_process
 {
     my ($curproc) = @_;
-    my $name = $curproc->myname();
+    my $name = $curproc->myname() || '';
 
     if ($name =~ /\.cgi$/) {
 	return 1;
@@ -1127,7 +1127,7 @@ sub is_cgi_process
 sub is_under_mta_process
 {
     my ($curproc) = @_;
-    my $name = $curproc->myname();
+    my $name = $curproc->myname() || '';
 
     if ($name eq 'distribute' ||
 	$name eq 'command'    ||
