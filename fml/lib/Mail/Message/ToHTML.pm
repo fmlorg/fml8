@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.26 2002/10/03 22:10:16 fukachan Exp $
+# $FML: ToHTML.pm,v 1.27 2002/10/06 09:24:25 tmu Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.26 2002/10/03 22:10:16 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.27 2002/10/06 09:24:25 tmu Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -737,9 +737,10 @@ sub _format_index_navigator
     my $prefix = $use_subdir ? '../' : '';
 
     my $str = qq{
-<A HREF=\"${prefix}index.html\">[ID Index]</A>
+<A HREF=\"${prefix}index_all.html\">[ID Index]</A>
 <A HREF=\"${prefix}thread.html\">[Thread Index]</A>
 <A HREF=\"${prefix}monthly_index.html\">[Monthly ID Index]</A>
+<A HREF=\"${prefix}index.html\">[Top Index]</A>
 };
 
 return $str;
@@ -1680,10 +1681,35 @@ sub _print_index_end
     }
 }
 
-
-# Descriptions: update index.html
+# Descriptions: create Top index.html if no index.html
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: rewrite index.html
+# Side Effects: create Top index.html
+# Return Value: none
+sub create_top_index
+{
+    my ($self, $args) = @_;
+    my $html_base_dir = $self->{ _html_base_directory };
+    my $code          = _charset_to_code($self->{ _charset });
+    my $order         = $self->{ _html_id_order } || 'normal';
+    my $htmlinfo = {
+	title => defined($args->{ title }) ? $args->{ title } : "Top Index",
+	old   => "$html_base_dir/index.html",
+	new   => "$html_base_dir/index.html.new.$$",
+	code  => $code,
+    };
+
+    return if ( -f $htmlinfo-> { old } );
+
+    $self->_print_index_begin( $htmlinfo );
+    my $wh = $htmlinfo->{ wh };
+
+    $self->_print_index_end( $htmlinfo );
+}
+
+
+# Descriptions: update index_all.html
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: rewrite index_all.html
 # Return Value: none
 sub update_id_index
 {
@@ -1693,13 +1719,13 @@ sub update_id_index
     my $order         = $self->{ _html_id_order } || 'normal';
     my $htmlinfo = {
 	title => defined($args->{ title }) ? $args->{ title } : "ID Index",
-	old   => "$html_base_dir/index.html",
-	new   => "$html_base_dir/index.html.new.$$",
+	old   => "$html_base_dir/index_all.html",
+	new   => "$html_base_dir/index_all.html.new.$$",
 	code  => $code,
     };
 
     if ($self->is_ignore($args->{id})) {
-	warn("not update index.html around $args->{id}") if $debug;
+	warn("not update index_all.html around $args->{id}") if $debug;
 	return undef;
     }
 
@@ -2463,6 +2489,7 @@ sub htmlify_file
     $html->update_id_monthly_index({ id => $id });
     $html->update_id_index({ id => $id });
     $html->update_thread_index({ id => $id });
+    $html->create_top_index();
 
     # no more action for old files
     if ($html->is_ignore($id)) {
