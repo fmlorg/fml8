@@ -1,5 +1,5 @@
 #
-# $FML: Makefile.template,v 1.1 2001/04/28 10:01:46 fukachan Exp $
+# $FML: Makefile.template,v 1.2 2001/05/01 09:15:20 fukachan Exp $
 #
 
 TMP_DIR     = /tmp
@@ -19,7 +19,7 @@ CVS         = cvs
 ENV         = env
 EXPORTER    = rsync -a
 SGML_DIR    = ../../share/sgml
-JADE_OPTS   = -v -c $(SGML_DIR)/catalog.sample -c $(SGML_DIR)/catalog -c $(SGML_DIR)/fml.dsl -d $(SGML_DIR)/fml.dsl
+JADE_OPTS   = -v -c $(SGML_DIR)/catalog -d $(SGML_DIR)/fml.dsl
 SGML_TOOLS  = sgmltools -v -b html -j "$(JADE_OPTS)" 
 FIX_CHARSET = ../utils/bin/fix_charset.pl
 
