@@ -224,7 +224,14 @@ sub get_recipient { my ($self) = @_; $self->get_next_value;}
 
 =head2 C<add( $address )>
 
+add $address to the specified map.
+
+=head2 C<delete( $regexp )>
+
+delete lines which matches $regexp from this map.
+
 =cut
+
 
 # Descriptions: 
 #    Arguments: $self $address
