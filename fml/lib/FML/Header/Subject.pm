@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.31 2002/10/03 22:12:01 fukachan Exp $
+# $FML: Subject.pm,v 1.32 2002/10/28 09:51:21 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -64,13 +64,55 @@ replace the subject with the newer content.
 sub rewrite_article_subject_tag
 {
     my ($self, $header, $config, $args) = @_;
+    my ($in_code, $out_code);
+    my $tag     = $config->{ article_subject_tag };
+    my $subject = $header->get('subject');
+
+    # clean up subject
+    ($subject, $in_code, $out_code) = $self->decode($subject, $tag);
+
+    # cut off Re: Re: Re: ...
+    $self->_cut_off_reply(\$subject);
+
+    # de-tag
+    $subject = _delete_subject_tag( $subject, $tag );
+
+    # cut off Re: Re: Re: ...
+    $self->_cut_off_reply(\$subject);
+
+    use Mail::Message::Encode;
+    my $obj = new Mail::Message::Encode;
+
+    # add(prepend) the rewrited tag
+    $tag = sprintf($tag, $args->{ id });
+    my $new_subject = $tag." ".$subject;
+    $new_subject = $obj->encode_mime_string($new_subject, 'base64', $in_code);
+    $header->replace('Subject', $new_subject);
+}
+
+
+# Descriptions: 
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: 
+# Return Value: none
+sub clean_up
+{
+    my ($self, $subject, $tag) = @_;
+    my ($s, $in_code, $out_code) = $self->decode($subject, $tag);
+    return $self->delete_subject_tag($s, $tag);
+}
+
+
+# Descriptions: 
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: 
+# Return Value: none
+sub decode
+{
+    my ($self, $subject, $tag) = @_;
     my ($in_code, $out_code) = ();
 
     # for example, ml_name = elena
-    my $ml_name  = $config->{ ml_name };
-    my $tag      = $config->{ article_subject_tag };
-    my $subject  = $header->get('subject');
-
     # if $tag has special regexp such as \U$ml_name\E or \L$ml_name\E
     if ($tag =~ /\\E/o && $tag =~ /\\U|\\L/o) {
 	eval qq{ \$tag = "$tag";};
@@ -90,20 +132,18 @@ sub rewrite_article_subject_tag
     my $obj = new Mail::Message::Encode;
     $subject = $obj->decode_mime_string($subject , $out_code);
 
-    # cut off Re: Re: Re: ...
-    $self->_cut_off_reply(\$subject);
+    return ($subject, $in_code, $out_code);
+}
 
-    # de-tag
-    $subject = _delete_subject_tag( $subject, $tag );
 
-    # cut off Re: Re: Re: ...
-    $self->_cut_off_reply(\$subject);
-
-    # add(prepend) the rewrited tag
-    $tag = sprintf($tag, $args->{ id });
-    my $new_subject = $tag." ".$subject;
-    $new_subject = $obj->encode_mime_string($new_subject, 'base64', $in_code);
-    $header->replace('Subject', $new_subject);
+# Descriptions: 
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: 
+# Return Value: none
+sub delete_subject_tag
+{
+    my ($self, $subject, $tag) = @_;
+    return _delete_subject_tag($subject, $tag);
 }
 
 
