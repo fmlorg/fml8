@@ -11,9 +11,27 @@
 [TODO]	fml 4 の cf を解釈できる互換ルーチン
 
 
-[TODO]	fml/doc/ja/01_RFC_* 群をなんとかする
+[TODO]	01_RFC_ARGV.txt
+[TODO]	01_RFC_IO_ADAPTER.txt
+[TODO]	01_RFC_UPGRADE.txt
 
-	もう OK なら、ドキュメント化せい
+	かんがえよー／まとめようー
+
+
+[TODO]	01_RFC_SQL.txt
+[TODO]	01_RFC_FILTER.txt
+
+	もう OK ぽいので、ドキュメント化
+
+
+[TODO]	受信者としてだけの登録 (add2actives 相当、メールマガジンなど)は？
+
+	admin コマンド アドレス        --as-recipient
+
+	例:
+	admin useradd  rudo@nuinui.net --as-recipient
+
+	?
 
 
 [TODO]	off/on の問題
@@ -245,4 +263,4 @@
 
 
 ----------
-$FML: 00_MEMO,v 1.66 2003/03/06 13:13:34 fukachan Exp $
+$FML: 00_MEMO,v 1.67 2003/03/09 03:23:56 fukachan Exp $
