@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML$
+# $FML: show_rule_as_html.pl,v 1.1 2004/06/24 11:39:05 fukachan Exp $
 #
 
 print "<TABLE BORDER=4>\n";
@@ -67,8 +67,12 @@ sub _P
 	$x =~ s/\.convert/fml8 の形式に変換して使う/;
 	return $x;
     }
-    elsif ($x =~ /\.use/) {
-	$x =~ s/\.use/このまま、つかう/;
+    elsif ($x =~ /\.use_fml4_value/) {
+	$x =~ s/\.use_fml4_value/このまま fml4  の値を使う/;
+	return $x;
+    }
+    elsif ($x =~ /\.use_fml8_value/) {
+	$x =~ s/\.use_fml8_value/対応する fml8 の値を使う/;
 	return $x;
     }
     elsif ($x eq '.ignore') {
