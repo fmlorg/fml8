@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent3.pm,v 1.8 2003/01/08 04:18:37 fukachan Exp $
+# $FML: MimeComponent3.pm,v 1.9 2003/01/08 04:19:10 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -91,6 +91,8 @@ C<Usage>:
 
 my $default_action = 'permit';
 
+my $opt_cut_off_empty_part = 1;
+
 
 # Descriptions: top level dispatcher
 #    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
@@ -133,21 +135,43 @@ sub mime_component_check
 	    if (defined $action) {
 		$count{ $action }++;
 		$reason{ $action } = join(" ", @$rule);
-	    }
 
-	    if ($action eq 'reject' || $action eq 'permit') {
-		__dprint("\n\t! action = $action.");
-		if ($action eq 'reject') {
-		    $reject_reason = join(" ", @$rule);
+		if ($action eq 'reject' || $action eq 'permit') {
+		    __dprint("\n\t! action = $action.");
+		    if ($action eq 'reject') {
+			$reject_reason = join(" ", @$rule);
+		    }
 		}
-	    }
-	    elsif ($action eq 'cutoff') {
-		__dprint("\n\t! action = $action.");
-		$is_cutoff = 1;
-		$self->_cutoff($mp);
+		elsif ($action eq 'cutoff') {
+		    __dprint("\n\t! action = $action.");
+		    $is_cutoff = 1;
+		    $self->_cutoff($mp);
+		}
 	    }
 
 	    $i++; # prepare for the next _rule_match().
+	}
+
+	# cut off this part if empty.
+	if ($opt_cut_off_empty_part) {
+	    if ($mp->is_empty()) {
+		__dprint("\n\t! action = cutoff due to empty.");
+		$is_cutoff = 1;
+		$self->_cutoff($mp);
+	    }
+	}
+    }
+
+    # reject if all effective parts are cutoff.
+    if ($opt_cut_off_empty_part) {
+	if ($msg->is_multipart()) {
+	    # reject if no effective part.
+	    unless ($self->_has_effective_part($msg)) {
+		my $reason = "no effective part in this multipart";
+		Log($reason);
+		$count{ 'reject' }++; 
+		$reason{ 'reject' } = $reject_reason = $reason;
+	    }
 	}
     }
 
@@ -300,6 +324,29 @@ sub _cutoff
 }
 
 
+sub _has_effective_part
+{
+    my ($self, $msg) = @_;
+    my ($mp, $data_type, $in_multipart);
+    my $i = 0;
+
+  MSG:
+    for ($mp = $msg; $mp; $mp = $mp->{ next }) {
+	$data_type    = $mp->data_type();
+	$in_multipart = 1 if $data_type eq 'multipart.delimiter';
+	$in_multipart = 0 if $data_type eq 'multipart.close-delimiter';
+
+	next MSG if $data_type =~ /multipart\./o;
+
+	if ($in_multipart) {
+	    $i++;
+	}
+    }
+
+    return( $i ? 1 : 0 );
+}
+
+
 =head1 UTILITY FUNCTIONS
 
 =cut
@@ -360,9 +407,20 @@ sub dump_message_structure
     for ($mp = $msg, $i = 1; $mp; $mp = $mp->{ next }) {
 	$data_type = $mp->data_type();
 	next MSG if ($data_type eq "text/rfc822-headers");
-	next MSG if ($data_type =~ "multipart\.");
+	# next MSG if ($data_type =~ "multipart\.");
 	__dprint("\t\t\t$data_type");
 	$i++;
+    }
+
+    if ($debug > 7) {
+	for ($mp = $msg, $i = 1; $mp; $mp = $mp->{ next }, $i++) {
+	    my ($p, $c, $n) = ("$mp->{ prev }", "$mp", "$mp->{ next }");
+	    $p =~ s/Mail::Message=HASH\((\S+)\)/$1/;
+	    $c =~ s/Mail::Message=HASH\((\S+)\)/$1/;
+	    $n =~ s/Mail::Message=HASH\((\S+)\)/$1/;
+	    __dprint(sprintf("%2d %25s | %10s | %10s | %10s", 
+			     $i, $mp->data_type(), $p, $c, $n));
+	}
     }
 }
 
