@@ -666,6 +666,8 @@ available_commands_for_privileged_user	=	subscribe
 					pass
 					dir
 					ls
+					delete
+					unlink
 
 
 available_commands_for_admin_cgi	=	subscribe
