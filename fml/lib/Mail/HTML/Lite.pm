@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.29 2001/10/29 15:07:03 fukachan Exp $
+# $FML: Lite.pm,v 1.30 2001/11/17 04:01:54 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.29 2001/10/29 15:07:03 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.30 2001/11/17 04:01:54 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -2121,6 +2121,9 @@ sub htmlify_file
     # no more action for old files
     if ($html->is_ignore($id)) {
 	warn("not process $id (already exists)") if defined $ENV{'debug'};
+    }
+    else {
+	printf STDERR "   converted( id=%-6s src=%s )\n", $id, $file;
     }
 }
 
