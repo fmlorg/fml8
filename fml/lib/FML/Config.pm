@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.93 2004/03/13 03:50:09 fukachan Exp $
+# $FML: Config.pm,v 1.94 2004/04/17 11:37:56 fukachan Exp $
 #
 
 package FML::Config;
@@ -295,6 +295,10 @@ sub _read_file
 	my ($after_cut, $hook, $buf);
 	my $name_space = ''; # by default
 
+	if ($debug) {
+	    print STDERR "debug: read config from $file\n";
+	}
+
 	# For example
 	#    var = key1         (case 1.)
 	#    var = key1 key2    (case 1.)
@@ -349,12 +353,12 @@ sub _read_file
 		    $comment->{ $key } = $comment_buffer;
 		    undef $comment_buffer;
 
-		    print STDERR "push(@$order, $key);\n" if $debug;
+		    print STDERR "push(@$order, $key);\n" if $debug > 10;
 		    push(@$order, $key);
 		}
 		else {
 		    # XXX-TODO: need this in the case of default mode ?
-		    print STDERR "push(@$order, $key);\n" if $debug;
+		    print STDERR "push(@$order, $key);\n" if $debug > 10;
 		    push(@$order, $key);
 		}
 	    }
@@ -523,6 +527,8 @@ sub read
 
     # XXX debug: removed in the future
     if ($debug) {
+	print STDERR "debug: read config from $file\n";
+
 	my ($k, $v);
 	while (($k, $v) = each %$config) {
 	    print STDERR "\nconfig{ $k } =>\n";
@@ -841,7 +847,15 @@ sub yes
     my ($self, $key) = @_;
 
     if (defined $_fml_config_result{$key}) {
-	$_fml_config_result{$key} =~ /^yes$/i ? 1 : 0;
+	my $val = $_fml_config_result{$key};
+	$val =~ s/^\s*//o;
+	$val =~ s/\s*$//o;
+
+	if ($debug) {
+	    print STDERR "yes?: key=$key\t";
+	    print STDERR "\"$val\" =~ /^yes\$/i\n";
+	}
+	$val =~ /^yes$/i ? 1 : 0;
     }
     else {
 	0;
@@ -858,7 +872,11 @@ sub no
     my ($self, $key) = @_;
 
     if (defined $_fml_config_result{$key}) {
-	$_fml_config_result{$key} =~ /^no$/i ? 1 : 0;
+	my $val = $_fml_config_result{$key};
+	$val =~ s/^\s*//o;
+	$val =~ s/\s*$//o;
+
+	$val =~ /^no$/i ? 1 : 0;
     }
     else {
 	0;
@@ -1047,7 +1065,12 @@ sub get_hook
     };
     carp($@) if $@;
 
-    return "no strict;\n". $r;
+    if (defined $r && $r) {
+	return sprintf("no strict;\n%s", $r);
+    }
+    else {
+	return '';
+    }
 }
 
 
