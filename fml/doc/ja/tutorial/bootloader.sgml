@@ -1,6 +1,8 @@
 <!--
-	$FML$
+	$FML: bootloader.sgml,v 1.1 2001/04/23 14:14:01 fukachan Exp $
 -->
+
+<chapter id="bootloader">    	
 
 <title> バージョン依存性を解決するための fml ブートローダ </title>
 
@@ -147,3 +149,5 @@ $process->finish($args);
    </listitem>
 </itemizedlist>
 </sect1>
+
+</chapter>

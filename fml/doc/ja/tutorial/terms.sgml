@@ -1,8 +1,9 @@
 <!-- 
-	すでに <chapter> 〜 </chapter> の中で include されていることに注意
-
-	$FML: terms.sgml,v 1.2 2001/04/22 16:10:46 fukachan Exp $
+	$FML: terms.sgml,v 1.1.1.1 2001/04/22 16:17:17 fukachan Exp $
 -->
+
+<sect1 id="terms">
+
 <title> 本チュートリアル中における用語について </title>
 
 <variablelist>
@@ -29,3 +30,5 @@
    </varlistentry>
 
 </variablelist>
+
+</sect1>

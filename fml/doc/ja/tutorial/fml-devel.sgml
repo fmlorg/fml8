@@ -1,67 +1,64 @@
-<!doctype book public "-//OASIS//DTD DocBook V3.1//EN" [
-<!entity % include SYSTEM "include.sgml"> %include;
-]>
-
 <!--
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-$FML: fml-devel.sgml,v 1.4 2001/04/23 14:33:55 fukachan Exp $
+$FML: fml-devel.sgml,v 1.5 2001/04/23 17:27:21 fukachan Exp $
 -->
 
+<!doctype book public "-//OASIS//DTD DocBook V3.1//EN" [
+	<!entity % include SYSTEM "include.sgml"> %include;
+]>
+
 <book id="fml-devel">
-  <bookinfo>
-  <bookbiblio>
-    <title>
-	fml-devel (fml 5.0) チュートリアル
-    </title>
 
-    <author>
-	<honorific> Dr        </honorific>
-	<firstname> Ken'ichi  </firstname>
-	<surname>   Fukamachi </surname>
-	<affiliation>
-		<orgname>FML.ORG</orgname>
-	    <address>
-		<email>
-		<ulink url="mailto:fukachan@fml.org">
-		fukachan@fml.org
-		</ulink> 
-		</email>
-	    </address>
-	</affiliation>
-    </author>
+  &bookinfo;
 
-    <copyright>
-	<year> 2001 </year>
-	<holder> Ken'ichi Fukamachi </holder>
-    </copyright>
+  &preface; 
 
-  </bookbiblio>
+  <toc></toc>
 
-    <legalnotice>
-      <para>
-	All rights reserved. This program is free software; you can
-	redistribute it and/or modify it under the same terms as Perl itself. 
-      </para>
-    </legalnotice>
+  <part>
+	<title> 基本的な設定ガイド </title>
+	<partintro>
+	<para>
+	本パートは初心者向けの設定ガイドを目指しています。
+	内容は基本的なデザイン思想や設定の仕方についてです。
+	</para>
+	<para>
+	なお、メーリングリストの仕組みなどの、
+	より基本的な内容については
+	&fmlbible; 
+	や
+	&www.fml.org;
+	などを参照して下さい。
+	</para>
+	</partintro>
 
-  </bookinfo>
+	<!-- 以下、各章が並ぶ -->
+	&intro;
+  </part>
 
-  <TOC></TOC>
+  <part>
+	<title> 技術的な議論 </title>
+	<partintro>
+	<para>
+	本パートでは…
+	</para>
+	</partintro>
 
-  <chapter id="intro">
-    &intro;
-  </chapter>
-
-  <chapter id="bootloader">
-    &bootloader;
-  </chapter>
+	<!-- 以下、各章が並ぶ -->
+	&bootloader;
+  </part>
 
 
-  <!-- 〜ここから後は付録〜 -->
-  <appendix id="programingstyle"> &programingstyle; </appendix>
-  <appendix id="terms">   &terms;   </appendix>
-  <appendix id="docbook"> &docbook; </appendix>
+  <!-- 
+	***** ここから後は付録 *****
+  -->
+	&programingstyle; 
+	&docbook;
 
 </book>
+
+
+
+

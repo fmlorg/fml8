@@ -1,3 +1,10 @@
+<!--
+	$FML$
+-->
+
+<appendix id="docbook">
+
+
 <title> SGML の書き方 </title>
 
 <para>
@@ -25,3 +32,6 @@ SGML の書き方については
 
 のオンライン版を見ると良いでしょう。
 </para>
+
+
+</appendix>

@@ -1,6 +1,13 @@
+<!--
+	$FML$
+-->
+
 <!entity versin "1.1">
 
 <!-- include する SGML ファイル群 -->
+<!entity bookinfo  SYSTEM "bookinfo.sgml">
+<!entity preface  SYSTEM "preface.sgml">
+
 <!entity appendix  SYSTEM "appendix.sgml">
 <!entity docbook   SYSTEM "docbook.sgml">
 <!entity terms     SYSTEM "terms.sgml">
@@ -10,8 +17,9 @@
 <!entity programingstyle  SYSTEM "programing_style.sgml">
 <!entity reference SYSTEM "reference.sgml">
 
-
+<!-- ポインタ -->
+<!entity fmlbible    "『fml バイブル』(オライリージャパン刊)">
+<!entity www.fml.org "http://www.fml.org/fml/">
 
 <!-- 画像 -->
 <!entity architecture SYSTEM "architecture.gif" ndata gif>
-
