@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.66 2004/06/11 10:35:22 tmu Exp $
+# $FML: ToHTML.pm,v 1.67 2004/06/11 15:12:39 tmu Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.66 2004/06/11 10:35:22 tmu Exp $;
+my $version = q$FML: ToHTML.pm,v 1.67 2004/06/11 15:12:39 tmu Exp $;
 my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $versionid = "$1";
@@ -789,6 +789,7 @@ sub _format_index_navigator
     my $use_subdir = defined $args->{use_subdir} ? $args->{use_subdir} : 0;
     my $prefix = $use_subdir ? '../' : '';
     my $str;
+    my $indexs = \@indexs;
 
     for my $index (@$indexs) {
 	$str .= qq{<A HREF=\"${prefix}index_all.html\">[ID Index]</A>\n} if($index eq "all");
@@ -2167,6 +2168,7 @@ sub htmlify_file
 {
     my ($self, $file, $args) = @_;
     my $dst_dir = $args->{ output_dir };
+    my $indexs = \@indexs;
 
     unless (-f $file) {
 	print STDERR "no such file: $file\n" if $debug;
