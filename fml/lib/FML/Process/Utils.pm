@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.123 2004/10/03 12:06:36 fukachan Exp $
+# $FML: Utils.pm,v 1.124 2004/10/09 12:02:10 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1279,6 +1279,41 @@ sub is_config_cf_exist
     my $f = $curproc->config_cf_filepath($ml, $domain);
 
     return ( -f $f ? 1 : 0 );
+}
+
+
+=head2 get_cui_menu()
+
+return menu configuration path for CUI.
+
+=head2 get_gui_menu()
+
+return menu configuration path for GUI.
+
+=cut
+
+
+# Descriptions: return whether $ml ML's config.cf file exists or not.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub get_cui_menu
+{
+    my ($curproc) = @_;
+    my $main_cf   = $curproc->{ __parent_args }->{ main_cf };
+    return $main_cf->{ default_cui_menu };
+}
+
+
+# Descriptions: return whether $ml ML's config.cf file exists or not.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub get_gui_menu
+{
+    my ($curproc) = @_;
+    my $main_cf   = $curproc->{ __parent_args }->{ main_cf };
+    return $main_cf->{ default_gui_menu };
 }
 
 
