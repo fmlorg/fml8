@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.16 2002/03/20 03:17:47 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.17 2002/04/10 09:51:24 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -98,37 +98,43 @@ sub run_cgi_main
 
     use Mail::ThreadTrack;
     my $thread = new Mail::ThreadTrack $ttargs;
-    $thread->set_mode('html');
 
-    if ($action eq 'list') {
-	$thread->summary();
-    }
-    elsif ($action eq 'show') {
-	my $id = $curproc->safe_param_article_id();
-	my $tid = $thread->_create_thread_id_strings($id);
-	$thread->show($tid);
-    }
-    elsif ($action eq 'change_status') {
-	# fmlthread.cgi is for administorator, so you can change status.
-	if ($myname eq 'fmlthread.cgi') {
-	    my $list = $curproc->safe_paramlist2_threadcgi_change_status();
-	    for my $param (@$list) {
-		my ($ml, $id, $value) = @$param;
-		if ($value eq 'closed') {
-		    my $tid = $thread->_create_thread_id_strings($id);
-		    print "closed $tid", br, "\n";
-		    $thread->close($tid);
+    if (defined $thread) {
+	$thread->set_mode('html');
+
+	if ($action eq 'list') {
+	    $thread->summary();
+	}
+	elsif ($action eq 'show') {
+	    my $id = $curproc->safe_param_article_id();
+	    my $tid = $thread->_create_thread_id_strings($id);
+	    $thread->show($tid);
+	}
+	elsif ($action eq 'change_status') {
+	    # fmlthread.cgi is for administorator, so you can change status.
+	    if ($myname eq 'fmlthread.cgi') {
+		my $list = $curproc->safe_paramlist2_threadcgi_change_status();
+		for my $param (@$list) {
+		    my ($ml, $id, $value) = @$param;
+		    if ($value eq 'closed') {
+			my $tid = $thread->_create_thread_id_strings($id);
+			print "closed $tid", br, "\n";
+			$thread->close($tid);
+		    }
 		}
 	    }
+	    else {
+		print "Warning: only administrator change status\n";
+	    }
+
+	    $thread->summary();
 	}
 	else {
-	    print "Warning: only administrator change status\n";
+	    $thread->summary();
 	}
-
-	$thread->summary();
     }
     else {
-	$thread->summary();
+	croak("fail to create thread object");
     }
 }
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.101 2002/05/27 08:55:43 fukachan Exp $
+# $FML: Kernel.pm,v 1.102 2002/05/30 16:06:57 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -472,9 +472,11 @@ sub parse_incoming_message
 	    modulus    => $modulus,
         };
 
-	my $wh = $obj->open();
-	$msg->print($wh);
-	$obj->close();
+	if (defined $obj) {
+	    my $wh = $obj->open();
+	    $msg->print($wh) if defined $wh;
+	    $obj->close();
+	}
     }
 }
 
@@ -1279,7 +1281,12 @@ sub open_outgoing_message_channel
 	    modulus    => $modulus,
         };
 
-	return $obj->open();
+	if (defined $obj) {
+	    return $obj->open();
+	}
+	else {
+	    return undef;
+	}
     }
 
     return undef;

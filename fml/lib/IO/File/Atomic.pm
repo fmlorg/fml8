@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Atomic.pm,v 1.13 2002/02/02 08:04:54 fukachan Exp $
+# $FML: Atomic.pm,v 1.14 2002/04/08 12:44:27 fukachan Exp $
 #
 
 package IO::File::Atomic;
@@ -25,8 +25,10 @@ IO::File::Atomic - atomic IO operation
 
     use IO::File::Atomic;
     my $wh = IO::File::Atomic->open($file);
-    print $wh "new/updated things ...";
-    $wh->close unless $wh->error;
+    if (defined $wh) {
+	print $wh "new/updated things ...";
+	$wh->close unless $wh->error;
+    }
 
 In C<close()> runs, the C<$file> is replaced with the new content.
 Updating is defered until C<close()>.
@@ -41,21 +43,25 @@ In usual cases, you use this module in the following way.
 
     # get  handle to update $file
     my $wh = IO::File::Atomic->open($file);
-    while (<$rh>) {
-        print $wh "new/updated things ...";
+    if (defined $rh && defined $wh) {
+	while (<$rh>) {
+	    print $wh "new/updated things ...";
+	}
+	$wh->close;
+	$rh->close;
     }
-    $wh->close;
-    $rh->close;
 
 You can use this method to open $file for both read and write.
 
     use IO::File::Atomic;
     my ($rh, $wh) = IO::File::Atomic->rw_open($file);
-    while (<$rh>) {
-        print $wh "new/updated things ...";
+    if (defined $rh && defined $wh) {
+	while (<$rh>) {
+	    print $wh "new/updated things ...";
+	}
+	$wh->close;
+	$rh->close;
     }
-    $wh->close;
-    $rh->close;
 
 To copy from $src to $dst,
 
@@ -84,10 +90,15 @@ The request is forwarded to SUPER CLASS's new().
 # Return Value: OBJ
 sub new
 {
-    my ($self) = shift;
+    my ($self, @argv) = shift;
     my $me = $self->SUPER::new();
-    $me->open(@_) if @_;
-    $me;
+    if (defined $me) {
+	$me->open(@argv) if defined @argv;
+	return $me;
+    }
+    elese {
+	return undef;
+    }
 }
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.21 2002/05/25 06:58:24 fukachan Exp $
+# $FML: Utils.pm,v 1.22 2002/05/27 08:45:41 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -371,8 +371,10 @@ sub __ml_home_prefix_search_in_virtual_maps
 	  MAP:
 	    for my $map (@$virtual_maps) {
 		my $obj  = new IO::Adapter $map;
-		$obj->open();
-		$dir = $obj->find("^$virtual_domain");
+		if (defined $obj) {
+		    $obj->open();
+		    $dir = $obj->find("^$virtual_domain");
+		}
 		last MAP if $dir;
 	    }
 	    ($virtual_domain, $dir) = split(/\s+/, $dir);

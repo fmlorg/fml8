@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.38 2002/04/18 22:24:53 fukachan Exp $
+# $FML: Article.pm,v 1.39 2002/04/22 04:59:53 fukachan Exp $
 #
 
 package FML::Article;
@@ -170,11 +170,10 @@ sub spool_in
 	my $file = $self->filepath($id);
 
 	unless (-f $file) {
-
 	    use FileHandle;
 	    my $fh = new FileHandle;
-	    $fh->open($file, "w");
 	    if (defined $fh) {
+		$fh->open($file, "w");
 		$curproc->{ article }->{ header }->print($fh);
 		print $fh "\n";
 		$curproc->{ article }->{ body }->print($fh);

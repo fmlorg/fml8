@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledFile.pm,v 1.13 2002/02/01 12:04:04 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.14 2002/02/02 08:04:55 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -327,9 +327,9 @@ sub _puts
 
     use IO::File;
     my $fh = new IO::File;
-    $fh->open($file, "a");
-
     if (defined $fh) {
+	$fh->open($file, "a");
+
 	use Time::localtime;
 	my $date = ctime(time);
 	if (defined $string) {
