@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix19991231.pm,v 1.10 2001/12/22 09:21:16 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.11 2001/12/23 15:03:27 fukachan Exp $
 #
 
 
@@ -26,7 +26,7 @@ See C<Mail::Bounce> for more details.
 
 =head1 DESCRIPTION
 
-sub class used in C<Mail::Bounce>.
+subclass used in C<Mail::Bounce>.
 
 =head1 ERROR FORMAT
 
