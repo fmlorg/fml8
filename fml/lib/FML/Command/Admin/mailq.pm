@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mailq.pm,v 1.8 2004/06/26 11:47:57 fukachan Exp $
+# $FML: mailq.pm,v 1.9 2004/08/14 03:35:43 fukachan Exp $
 #
 
 package FML::Command::Admin::mailq;
@@ -78,7 +78,7 @@ sub _list_up_queue
 
     use Mail::Delivery::Queue;
     my $queue   = new Mail::Delivery::Queue { directory => $queue_dir };
-    my $ra_list = $queue->list();
+    my $ra_list = $queue->list_all();
 
     for my $qid (@$ra_list) {
 	my $info = $queue->getidinfo($qid);
