@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.30 2004/04/18 11:14:34 fukachan Exp $
+# $FML: Base.pm,v 1.31 2004/07/23 13:09:10 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -80,7 +80,7 @@ Of cource, "user@domain", described above.
 
 =cut
 
-my $domain_regexp  = '[-A-Za-z0-9\.]+';    # domain of user@domain 
+my $domain_regexp  = '[-A-Za-z0-9\.]+';    # domain of user@domain
 my $user_regexp    = '[-A-Za-z0-9\._\+]+'; # user of user@domain
 my $command_regexp = '[-A-Za-z0-9_]+';     # command name
 my $commail_regexp = '[-A-Za-z0-9_:]+';    # allow e.g. mget last:3

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.5 2004/04/12 15:32:05 fukachan Exp $
+# $FML: Message.pm,v 1.6 2004/07/23 12:57:17 fukachan Exp $
 #
 
 package FML::IPC::Message;
@@ -80,7 +80,7 @@ sub dump
 	if ($k =~ /\s+/o) {
 	    croak("invalid key: contains space");
 	}
-	else { 
+	else {
 	    print $wh "$k\t$v\n";
 	}
     }

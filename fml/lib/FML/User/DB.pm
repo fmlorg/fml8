@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.6 2004/04/27 13:30:51 fukachan Exp $
+# $FML: DB.pm,v 1.7 2004/07/11 15:43:40 fukachan Exp $
 #
 
 package FML::User::DB;
@@ -132,7 +132,7 @@ sub find
 	    $obj->open();
 	    $obj->touch();
 
-	    # XXX FIRST MATCH. OK ? 
+	    # XXX FIRST MATCH. OK ?
 	    $value = $obj->find($_key, {
 		want           => 'key,value',
 		case_sensitive => 0,

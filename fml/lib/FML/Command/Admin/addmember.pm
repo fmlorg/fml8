@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: addmember.pm,v 1.1 2004/05/01 05:02:04 fukachan Exp $
+# $FML: addmember.pm,v 1.2 2004/06/26 11:47:55 fukachan Exp $
 #
 
 package FML::Command::Admin::addmember;
@@ -113,8 +113,8 @@ sub process
     };
     if ($cred->has_address_in_map($member_map, $config, $address)) {
 	my $r = "already member";
-	$curproc->reply_message_nl('error.already_member', 
-				   $r, 
+	$curproc->reply_message_nl('error.already_member',
+				   $r,
 				   $msg_args);
 	$curproc->logerror($r);
 	croak($r);

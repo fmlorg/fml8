@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.4 2004/04/10 12:41:29 fukachan Exp $
+# $FML: Postfix.pm,v 1.5 2004/07/23 13:16:40 fukachan Exp $
 #
 
 package FML::MTA::Control::Postfix;
@@ -394,7 +394,7 @@ sub postfix_install_virtual_map
     }
 
     $self->_install($src, $dst, $params);
-    
+
     $curproc->append($dst, $virtual);
     unlink $dst;
 }
@@ -417,7 +417,7 @@ sub postfix_remove_virtual_map
 	map => $map,
     };
 
-    # XXX-TODO: _remove_postfix_style_virtual (private method) 
+    # XXX-TODO: _remove_postfix_style_virtual (private method)
     # XXX-TODO: NOT CROSS AMONG modules.
     $self->_remove_postfix_style_virtual($curproc, $params, $optargs, $p);
 }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.45 2004/04/27 13:38:41 fukachan Exp $
+# $FML: Subject.pm,v 1.46 2004/07/23 12:44:49 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -155,9 +155,9 @@ sub delete_subject_tag
     my ($self, $subject, $tag) = @_;
     my $retag = _regexp_compile($tag);
 
-    # 
+    #
     # XXX $subject IS DECODED ALREADY.
-    # 
+    #
     $subject =~ s/$retag//g;
     $subject =~ s/^\s*//;
 
@@ -232,11 +232,11 @@ sub is_reply
 {
     my ($self, $subject) = @_;
 
-    # 
+    #
     # XXX WE NEED $subject IS DECODED ALREADY.
     #
     # XXX-TODO: Mail::Message::Subject class should provide this function ?
-    # 
+    #
 
     return 1 if $subject =~ /^\s*Re:/io;
 
@@ -260,9 +260,9 @@ sub _cut_off_reply
 {
     my ($self, $r_subject) = @_;
 
-    # 
+    #
     # XXX $subject IS DECODED ALREADY.
-    # 
+    #
 
     # XXX-TODO: care for not Japanese string!
     use Mail::Message::Language::Japanese::Subject;

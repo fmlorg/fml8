@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.232 2004/06/14 14:51:19 fukachan Exp $
+# $FML: Kernel.pm,v 1.233 2004/06/27 06:09:49 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -590,7 +590,7 @@ sub verify_sender_credential
 
 =head2 simple_loop_check($args)
 
-loop checks following rules of 
+loop checks following rules of
 $config->{ incoming_mail_header_loop_check_rules }.
 The autual check is done by header->C<$rule()> for a C<rule>.
 See C<FML::Header> object for more details.
@@ -607,7 +607,7 @@ sub simple_loop_check
     my ($curproc) = @_;
     my $config    = $curproc->config();
     my $header    = $curproc->incoming_message_header();
-    my $rules     = 
+    my $rules     =
 	$config->get_as_array_ref( 'incoming_mail_header_loop_check_rules' );
     my $match     = 0;
 
@@ -1998,7 +1998,7 @@ sub __convert_message_nl
 
     # copy $m_args -> $_m_args;
     my ($k, $v);
-    while (($k, $v) = each %$m_args) { 
+    while (($k, $v) = each %$m_args) {
 	# TERM_NL(XXX) -> XXX(natural language) or XXX (if failed);
 	if ($v =~ /TERM_NL\((\S+)\)/o) {
 	    my $x  = $1;
@@ -2138,7 +2138,7 @@ sub __find_preferred_languages
 	for my $lang (@$pref_order) {
 	    push(@$selected, $lang);
 	    last LANG if $lang eq $mime_lang;
-	}	
+	}
     }
 
     if ($debug) {

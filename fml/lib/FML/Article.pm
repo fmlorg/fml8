@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.66 2004/05/28 03:53:50 fukachan Exp $
+# $FML: Article.pm,v 1.67 2004/07/23 13:16:31 fukachan Exp $
 #
 
 package FML::Article;
@@ -189,7 +189,7 @@ sub spool_in
 		    $curproc->logerror("failed to create article");
 		    $self->_try_failover($curproc, $file);
 		}
-		else {		
+		else {
 		    $fh->close;
 		    $curproc->log("article $id");
 		}
@@ -207,7 +207,7 @@ sub spool_in
 }
 
 
-# Descriptions: When we fail to create article file, 
+# Descriptions: When we fail to create article file,
 #               we try to save the original message at least.
 #               So, we try to save article content from incoming queue.
 #    Arguments: OBJ($self) OBJ($curproc) STR($article_file)

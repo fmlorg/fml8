@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.57 2004/06/27 05:59:10 fukachan Exp $
+# $FML: File.pm,v 1.58 2004/07/11 15:25:53 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -695,7 +695,7 @@ sub sequence_increment
     {
 	use IO::Adapter::AtomicFile;
 	my ($rh, $wh) = IO::Adapter::AtomicFile->rw_open($file);
-	if (defined $rh) { 
+	if (defined $rh) {
 	    my $new_id = $self->_read_one_word($rh);
 	    unless ($new_id == $id) {
 		$self->error_set("fail to save id");
@@ -747,10 +747,10 @@ sub sequence_replace
     {
 	use IO::Adapter::AtomicFile;
 	my ($rh, $wh) = IO::Adapter::AtomicFile->rw_open($file);
-	if (defined $rh) { 
+	if (defined $rh) {
 	    my $id = $self->_read_one_word($rh);
 	    unless ($new_id == $id) {
-		$self->error_set("fail to save id");	    
+		$self->error_set("fail to save id");
 	    }
 	    $rh->close();
 	}

@@ -4,13 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.13 2004/06/17 16:16:08 fukachan Exp $
+# $FML: Install.pm,v 1.14 2004/07/23 04:09:44 fukachan Exp $
 #
 
 package FML::Install;
 
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD 
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 	    $install_root $debug);
 use Carp;
 use FileHandle;
@@ -106,7 +106,7 @@ sub set_install_root
 {
     my ($self, $dir) = @_;
 
-    if (defined $dir) { 
+    if (defined $dir) {
 	$install_root = $dir;
 	print STDERR "\tinstall_root = $install_root\n";
     }
@@ -237,7 +237,7 @@ sub install_main_cf
     # XXX src = relative path, dst = absolute path
     my $src        = File::Spec->catfile("fml", "etc", "main.cf");
     my $config_dir = $self->path( 'config_dir' );
-    my $dst        = File::Spec->catfile($install_root, 
+    my $dst        = File::Spec->catfile($install_root,
 					 $config_dir, "main.cf");
 
     if (-f $dst) {
@@ -527,7 +527,7 @@ sub need_resymlink_loader
     # XXX src = relative path, dst = absolute path
     my $loader      = File::Spec->catfile("fml", "libexec", "loader");
     my $libexec_dir = $config->{ libexec_dir };
-    my $cur_loader  = File::Spec->catfile($install_root, 
+    my $cur_loader  = File::Spec->catfile($install_root,
 					  $libexec_dir, "loader");
 
     if ($debug) {
@@ -609,7 +609,7 @@ sub resymlink_loader
     my $libexec_dir   = File::Spec->catfile($install_root,
 					    $config->{ libexec_dir });
     my $cur_loader    = File::Spec->catfile($libexec_dir, "loader");
-					    
+
     my $bin_programs  = $config->get_as_array_ref('bin_programs');
     my $exec_programs = $config->get_as_array_ref('libexec_programs');
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: User.pm,v 1.9 2004/01/18 13:56:05 fukachan Exp $
+# $FML: User.pm,v 1.10 2004/07/23 13:16:33 fukachan Exp $
 #
 
 package FML::CGI::User;
@@ -44,12 +44,12 @@ sub cgi_menu
     my $address_list = [];
     my $selected_key = '';
 
-    # 
+    #
     # XXX $comman_args are checked already.
-    #     $command_args are passed in the following way: 
+    #     $command_args are passed in the following way:
     #       FML::CGI::Menu::run_cgi_main et.al. builds/checks $command_args.
     #       FML::CGI::Menu -(via PCB)-> cgi_execute_cgi_menu() -> cgi_menu().
-    # 
+    #
 
     # XXX-TODO: commnd list shoul be configurable by config files.
     # which address list to show at the scrolling list.

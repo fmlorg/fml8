@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Thread.pm,v 1.2 2004/03/31 04:08:42 fukachan Exp $
+# $FML: Thread.pm,v 1.3 2004/03/31 12:38:08 fukachan Exp $
 #
 
 package FML::CGI::Thread;
@@ -358,7 +358,7 @@ sub __psw_message_queue_html_summary_print
     my $buf;
     for my $q (@$queue) {
 	my $cur_id  = $q->{ cur_id }  || '';
-	my $head_id = $q->{ head_id } || '';	
+	my $head_id = $q->{ head_id } || '';
 	my $id_list = $q->{ id_list } || [];
 	my $status  = $q->{ status }  || 'unknown';
 	my $summary = $q->{ summary } || '';

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.20 2004/04/30 13:38:05 fukachan Exp $
+# $FML: digest.pm,v 1.21 2004/06/30 03:05:13 fukachan Exp $
 #
 
 package FML::Command::Admin::digest;
@@ -175,7 +175,7 @@ sub _digest_on
     };
 
     my $msg_args = {
-	_arg_address => $address,	
+	_arg_address => $address,
     };
 
     # 1. remove address from $recipient_map (normal delivery recipients).
@@ -193,8 +193,8 @@ sub _digest_on
     # 2. add address into $digest_recipient_map
     if ($cred->has_address_in_map($digest_recipient_map, $config, $address)) {
 	my $r = "already digest recipient";
-	$curproc->reply_message_nl('error.already_digest_recipient', 
-				   $r, 
+	$curproc->reply_message_nl('error.already_digest_recipient',
+				   $r,
 				   $msg_args);
 	$curproc->logerror($r);
 	croak($r);
@@ -233,7 +233,7 @@ sub _digest_off
     };
 
     my $msg_args = {
-	_arg_address => $address,	
+	_arg_address => $address,
     };
 
     # 1. remove address from digest_recipient_map.
@@ -243,8 +243,8 @@ sub _digest_off
     }
     else {
 	my $r = "no such digest recipient";
-	$curproc->reply_message_nl('error.no_such_digest_recipient', 
-				   $r, 
+	$curproc->reply_message_nl('error.no_such_digest_recipient',
+				   $r,
 				   $msg_args);
 	$curproc->logerror($r);
 	croak($r);
@@ -253,8 +253,8 @@ sub _digest_off
     # 2. add address into normal recipient map.
     if ($cred->has_address_in_map($recipient_map, $config, $address)) {
 	my $r = "already recipient";
-	$curproc->reply_message_nl('error.already_recipient', 
-				   $r, 
+	$curproc->reply_message_nl('error.already_recipient',
+				   $r,
 				   $msg_args);
 	$curproc->logerror($r);
 	croak($r);

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.5 2004/03/20 02:43:04 fukachan Exp $
+# $FML: List.pm,v 1.6 2004/07/23 13:16:41 fukachan Exp $
 #
 
 package FML::Merge::FML4::List;
@@ -37,7 +37,7 @@ sub new
 {
     my ($self, $curproc, $m_config) = @_;
     my ($type) = ref($self) || $self;
-    my $me     = { 
+    my $me     = {
 	_curproc  => $curproc,
 	_m_config => $m_config,
     };
@@ -85,7 +85,7 @@ sub _convert_actives
     my $dst = $m_config->new_file_path('recipients');
 
     $self->_write_without_comment($src, $dst);
-} 
+}
 
 
 # Descriptions: convert fml4 members to fml8 members file.
@@ -99,7 +99,7 @@ sub _convert_members
     my $dst = $m_config->new_file_path('members');
 
     $self->_write_without_comment($src, $dst);
-} 
+}
 
 
 # Descriptions: convert fml4 members-admin to
@@ -117,10 +117,10 @@ sub _convert_members_admin
 
     $dst = $m_config->new_file_path('recipients-admin');
     $self->_write_without_comment($src, $dst);
-} 
+}
 
 
-# Descriptions: convert fml4 moderators to 
+# Descriptions: convert fml4 moderators to
 #               fml8 {recipients,members}-moderator file.
 #    Arguments: OBJ($self) OBJ($m_config)
 # Side Effects: create fml8 file.
@@ -135,7 +135,7 @@ sub _convert_moderators
 
     $dst = $m_config->new_file_path('recipients-moderator');
     $self->_write_without_comment($src, $dst);
-} 
+}
 
 
 # Descriptions: convert fml4 etc/passwd to fml8 etc/passwd-admin.
@@ -149,7 +149,7 @@ sub _convert_etc_passwd
     my $dst = $m_config->new_file_path('etc/passwd-admin');
 
     print STDERR "warning: etc/passwrd conversion not yet implemented\n";
-} 
+}
 
 
 # Descriptions: filter output by removing comment line.

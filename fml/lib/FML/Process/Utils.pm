@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.119 2004/06/27 06:07:52 fukachan Exp $
+# $FML: Utils.pm,v 1.120 2004/07/23 15:20:18 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -560,7 +560,7 @@ return ml_home_dir to be removed.
 
 #
 # XXX-TODO: when we remove twice a day ?
-# 
+#
 
 
 # Descriptions: return ml_home_dir to be removed.
@@ -793,7 +793,7 @@ sub is_safe_syntax
 {
     my ($curproc, $class, $str) = @_;
 
-    # XXX-TODO: REMOVE 
+    # XXX-TODO: REMOVE
 
     use FML::Restriction::Base;
     my $safe = new FML::Restriction::Base;
@@ -1183,7 +1183,7 @@ sub ___search_in_ml_home_prefix_maps
 		my $obj = new IO::Adapter $map;
 		if (defined $obj) {
 		    $obj->open();
-		
+
 		    my $_domain = quotemeta($domain);
 		    my ($domainlist) = $obj->find($_domain, { all => 1 });
 		  DIR:

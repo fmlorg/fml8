@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.34 2004/06/30 03:05:14 fukachan Exp $
+# $FML: Adapter.pm,v 1.35 2004/07/11 15:25:51 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -501,7 +501,7 @@ sub find
 
 =head1 SEQUENCE NUMBER OPERATION
 
-methods suitable for sequence id operation. 
+methods suitable for sequence id operation.
 
 =head2 sequence_increment()
 

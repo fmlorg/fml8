@@ -4,13 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.5 2004/03/18 13:25:57 fukachan Exp $
+# $FML: config_ph.pm,v 1.6 2004/07/23 13:16:41 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD 
-	    $count $default_config_ph 
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
+	    $count $default_config_ph
 	    $result %result);
 use Carp;
 
@@ -123,7 +123,7 @@ sub _load_default_config_ph
 sub _gen_eval_string
 {
     my ($self, $f) = @_;
-    my $package = 'FML::Merge::FML4::config_ph'; 
+    my $package = 'FML::Merge::FML4::config_ph';
     my $s = '';
 
     $count++;
@@ -153,7 +153,7 @@ sub var_dump
 {
     my ($package, $stab) = @_;
     my ($key, $val, $def, $x, $rbuf);
-    
+
     # resolv
     eval "\$x = \$${package}::MAIL_LIST;\n";
     my ($ml_name, $ml_domain) = split(/\@/, $x);
@@ -305,7 +305,7 @@ sub gen_dummy_macros
 }
 
 
-=head1 TRANSLATION FROM 4 TO 8 
+=head1 TRANSLATION FROM 4 TO 8
 
 =head2 translate($key, $value)
 
@@ -335,7 +335,7 @@ sub translate
 	if ($value eq 'anyone') {
 	    return 'article_post_restrictions = reject_system_special_accounts
                                                 permit_anyone
-                                                reject'; 
+                                                reject';
 	}
     }
 

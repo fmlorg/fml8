@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.4 2004/03/18 13:25:56 fukachan Exp $
+# $FML: Config.pm,v 1.5 2004/07/23 13:16:41 fukachan Exp $
 #
 
 package FML::Merge::FML4::Config;
@@ -46,9 +46,9 @@ sub new
 # target files to back up.
 my $ml_home_dir_backup_target_files = {
 
-    # 
+    #
     # main configuration files
-    # 
+    #
     'cf' => {
 	'backup_mode' => 'move',
     },
@@ -58,9 +58,9 @@ my $ml_home_dir_backup_target_files = {
     },
 
 
-    # 
+    #
     # system
-    # 
+    #
     'aliases' => {
 	'backup_mode' => 'move',
     },
@@ -78,9 +78,9 @@ my $ml_home_dir_backup_target_files = {
     },
 
 
-    # 
+    #
     # message files
-    # 
+    #
     'confirm' => {
 	'backup_mode' => 'move',
     },
@@ -110,9 +110,9 @@ my $ml_home_dir_backup_target_files = {
     },
 
 
-    # 
+    #
     # include*
-    # 
+    #
     'include' => {
 	'backup_mode' => 'copy',
 	'type'        => 'include',
@@ -129,9 +129,9 @@ my $ml_home_dir_backup_target_files = {
     },
 
 
-    # 
+    #
     # list files
-    # 
+    #
 
     # member list files
     'actives' => {
@@ -157,18 +157,18 @@ my $ml_home_dir_backup_target_files = {
     },
 
 
-    # 
+    #
     # password files
-    # 
+    #
     'etc/passwd' => {
 	'backup_mode' => 'move',
 	'type'        => 'list',
     },
 
 
-    # 
+    #
     # log et.al.
-    # 
+    #
     'summary' => {
 	'backup_mode' => 'copy',
 	'continue'    => 'yes',
@@ -185,9 +185,9 @@ my $ml_home_dir_backup_target_files = {
     },
 
 
-    # 
+    #
     # misc
-    # 
+    #
     'Makefile' => {
 	'backup_mode' => 'move',
     },

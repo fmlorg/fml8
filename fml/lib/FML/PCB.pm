@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: PCB.pm,v 1.18 2004/04/17 11:37:55 fukachan Exp $
+# $FML: PCB.pm,v 1.19 2004/07/23 04:10:15 fukachan Exp $
 #
 
 package FML::PCB;
@@ -61,7 +61,7 @@ If $pcb_args HASH REFERENCE is specified, initialize C<pcb> area by it.
 =cut
 
 
-# Descriptions: constructor. 
+# Descriptions: constructor.
 #               bind object to private hash.
 #    Arguments: OBJ($self) HASH_REF($pcb_args)
 # Side Effects: bind object to internal hash

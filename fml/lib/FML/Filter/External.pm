@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: External.pm,v 1.2 2004/05/25 16:11:32 fukachan Exp $
+# $FML: External.pm,v 1.3 2004/07/23 13:16:38 fukachan Exp $
 #
 
 package FML::Filter::External;
@@ -15,7 +15,7 @@ use ErrorStatus qw(error_set error error_clear);
 
 =head1 NAME
 
-FML::Filter::External - spawn external checker program. 
+FML::Filter::External - spawn external checker program.
 
 =head1 SYNOPSIS
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.95 2004/05/24 15:41:28 fukachan Exp $
+# $FML: Config.pm,v 1.96 2004/07/23 13:16:31 fukachan Exp $
 #
 
 package FML::Config;
@@ -779,7 +779,7 @@ sub __expand_special_macros
 
 	$config->{$x} =~
 	    s/\$\{([a-z0-9_]+):-([a-z0-9_]+)\}/(defined $config->{$1} ?
-						$config->{$1} : 
+						$config->{$1} :
 						$default)/ge;
     }
 }

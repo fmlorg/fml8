@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DirUtils.pm,v 1.18 2004/04/23 04:10:30 fukachan Exp $
+# $FML: DirUtils.pm,v 1.19 2004/07/23 04:16:24 fukachan Exp $
 #
 
 package FML::Command::DirUtils;
@@ -65,7 +65,7 @@ sub dir
     my $rm_args = {};
 
     # inherit reply_message information.
-    my $recipient = $command_args->{ recipient } || ''; 
+    my $recipient = $command_args->{ recipient } || '';
     if ($recipient) { $rm_args->{ recipient } = $recipient;}
 
     # option: permit "ls [-A-Za-z]" syntax

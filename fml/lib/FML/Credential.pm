@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.60 2004/07/11 15:43:36 fukachan Exp $
+# $FML: Credential.pm,v 1.61 2004/07/23 13:16:31 fukachan Exp $
 #
 
 package FML::Credential;
@@ -282,7 +282,7 @@ sub is_same_domain
 {
     my ($self, $xdomain, $ydomain) = @_;
 
-    if ("\L$xdomain\E" eq "\L$ydomain\E") { 
+    if ("\L$xdomain\E" eq "\L$ydomain\E") {
 	return 1;
     }
     else {

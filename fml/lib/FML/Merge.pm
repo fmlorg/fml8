@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Merge.pm,v 1.9 2004/03/20 02:43:02 fukachan Exp $
+# $FML: Merge.pm,v 1.10 2004/07/23 13:16:32 fukachan Exp $
 #
 
 package FML::Merge;
@@ -138,7 +138,7 @@ sub backup_old_config_files
 	my $dst  = $m_config->new_file_path($f);
 	printf STDERR "copying: %-30s -> %-30s\n", $src, $dst;
 	use IO::Adapter::AtomicFile;
-        IO::Adapter::AtomicFile->copy($src, $dst);	
+        IO::Adapter::AtomicFile->copy($src, $dst);
     }
 }
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.47 2004/06/26 11:24:03 fukachan Exp $
+# $FML: Command.pm,v 1.48 2004/06/27 06:08:55 fukachan Exp $
 #
 
 # XXX
@@ -254,7 +254,7 @@ sub simple_syntax_check
 
 
 # Descriptions: simple syntax check by FML::Restriction::Command.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) ARRAY_REF($testlist)
 # Side Effects: none
 # Return Value: NUM(1 or 0)

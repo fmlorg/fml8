@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: String.pm,v 1.7 2004/03/31 02:48:22 fukachan Exp $
+# $FML: String.pm,v 1.8 2004/07/23 13:16:45 fukachan Exp $
 #
 
 package Mail::Message::String;
@@ -220,7 +220,7 @@ sub get_mime_charset
 
 =head1 CHAR CODE CONVERSION UTILITIES
 
-We need to identify internal and external char codes in fml8. 
+We need to identify internal and external char codes in fml8.
 It is defined in C<Mail::Message::Charset>.
 
 For example, if the original data is "=?iso-2022-jp?....", external
@@ -481,7 +481,7 @@ sub is_signature
 if ($0 eq __FILE__) {
     $debug = 1;
 
-    for my $_str ('=?ISO-2022-JP?B?GyRCJDckRCRiJHMbKEI=?=', 
+    for my $_str ('=?ISO-2022-JP?B?GyRCJDckRCRiJHMbKEI=?=',
 		  '=?ISO-2022-JP?B?GyRCJSshPCVJJS0lYyVXJT8hPCQ1JC8kaRsoQg==?=',
 		  '=?SJIS?B?g0qBW4Nog0yDg4N2g16BW4Kzgq2C5w==?=',
 		  'card captor sakura') {

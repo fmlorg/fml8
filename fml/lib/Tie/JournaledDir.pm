@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledDir.pm,v 1.23 2004/02/26 04:27:48 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.24 2004/06/30 03:05:17 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -178,7 +178,7 @@ sub expire
     my $dir    = $self->{ '_dir' };
     my $limit  = $self->{ '_expire' };
     my $when   = time - $limit * 24 * 3600;
-    
+
     use File::stat;
     use File::Spec;
     use DirHandle;

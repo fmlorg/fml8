@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.12 2004/06/25 05:09:09 fukachan Exp $
+# $FML: State.pm,v 1.13 2004/07/11 15:43:39 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -420,7 +420,7 @@ sub command_context_get_need_confirm
 }
 
 
-# Descriptions: remote administrator is authenticated. 
+# Descriptions: remote administrator is authenticated.
 #               state is ml specific.
 #    Arguments: OBJ($curproc)
 # Side Effects: update pcb.

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: clamscan.pm,v 1.2 2004/06/26 11:43:08 fukachan Exp $
+# $FML: clamscan.pm,v 1.3 2004/07/23 13:16:38 fukachan Exp $
 #
 
 package FML::Filter::External::clamscan;
@@ -59,7 +59,7 @@ sub process
 	else {
 	    $curproc->logerror("$program not exists");
 	}
-    } 
+    }
     else {
 	$curproc->logerror("path_clamscan undefined");
     }

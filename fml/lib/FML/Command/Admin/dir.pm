@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: dir.pm,v 1.17 2004/06/24 11:31:25 fukachan Exp $
+# $FML: dir.pm,v 1.18 2004/06/26 11:47:56 fukachan Exp $
 #
 
 package FML::Command::Admin::dir;
@@ -89,8 +89,8 @@ sub process
     if (@argv) {
 	my $buf = join(" ", @argv);
 	my $rm_args = { _arg_argv => $buf };
-	$curproc->reply_message_nl("error.ignore", 
-				   "\"buf\" ignored.", 
+	$curproc->reply_message_nl("error.ignore",
+				   "\"buf\" ignored.",
 				   $rm_args);
     }
 

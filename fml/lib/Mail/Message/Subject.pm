@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2004 Ken'ichi Fukamachi
 #
-# $FML: Subject.pm,v 1.4 2004/06/23 00:05:38 fukachan Exp $
+# $FML: Subject.pm,v 1.5 2004/07/23 13:16:45 fukachan Exp $
 #
 
 package Mail::Message::Subject;
@@ -116,7 +116,7 @@ sub delete_tag
     my ($self, $tag) = @_;
     my $subject = $self->as_str();
 
-    # XXX $subject SHOULD BE MIME DECODED ALREADY. 
+    # XXX $subject SHOULD BE MIME DECODED ALREADY.
     # for example, ml_name = elena
     # if $tag has special regexp such as \U$ml_name\E or \L$ml_name\E
     if (defined $tag) {

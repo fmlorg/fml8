@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.94 2004/05/24 15:38:00 fukachan Exp $
+# $FML: Message.pm,v 1.95 2004/06/27 02:39:30 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1199,9 +1199,9 @@ sub _print_messsage_on_memory
 	unless ($has_error && $fd->error) {
 	    $write_count += length($header);
 	}
-	    
+
 	print $fd ($raw_print_mode ? "\n" : "\r\n");
-	unless ($has_error && $fd->error) { 
+	unless ($has_error && $fd->error) {
 	    $write_count += $raw_print_mode ? 1 : 2;
 	}
 
@@ -1327,7 +1327,7 @@ sub _print_messsage_on_disk
 	}
 
 	print $fd ($raw_print_mode ? "\n" : "\r\n");
-	unless ($has_error && $fd->error) { 
+	unless ($has_error && $fd->error) {
 	    $write_count += $raw_print_mode ? 1 : 2;
 	}
     }

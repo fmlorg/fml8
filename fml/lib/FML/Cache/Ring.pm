@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Ring.pm,v 1.2 2004/05/25 03:33:29 fukachan Exp $
+# $FML: Ring.pm,v 1.3 2004/06/26 11:32:18 fukachan Exp $
 #
 
 package FML::Cache::Ring;
@@ -171,7 +171,7 @@ sub _take_file_name
 	}
 
 	# file.
-	$file = File::Spec->catfile($directory, 
+	$file = File::Spec->catfile($directory,
 				    sprintf("%s%s", $filename_prefix, $id));
     }
 

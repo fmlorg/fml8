@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: addrecipient.pm,v 1.1 2004/05/01 05:02:04 fukachan Exp $
+# $FML: addrecipient.pm,v 1.2 2004/06/26 11:47:56 fukachan Exp $
 #
 
 package FML::Command::Admin::addrecipient;
@@ -113,8 +113,8 @@ sub process
     };
     if ($cred->has_address_in_map($recipient_map, $config, $address)) {
 	my $r = "already recipient";
-	$curproc->reply_message_nl('error.already_recipient', 
-				   $r, 
+	$curproc->reply_message_nl('error.already_recipient',
+				   $r,
 				   $msg_args);
 	$curproc->logerror($r);
 	croak($r);

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.152 2004/06/29 07:57:38 fukachan Exp $
+# $FML: Distribute.pm,v 1.153 2004/06/30 15:03:19 tmu Exp $
 #
 
 package FML::Process::Distribute;
@@ -624,7 +624,7 @@ sub _deliver_article
 		      });
     $curproc->unlock($lock_channel) unless defined $queue;
 
-    if ($service->error) { 
+    if ($service->error) {
 	$curproc->log($service->error);
 	$curproc->smtp_server_state_set_error();
     }

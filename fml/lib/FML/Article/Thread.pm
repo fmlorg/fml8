@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Thread.pm,v 1.9 2004/04/23 04:10:26 fukachan Exp $
+# $FML: Thread.pm,v 1.10 2004/07/23 13:16:32 fukachan Exp $
 #
 
 package FML::Article::Thread;
@@ -558,7 +558,7 @@ sub psw_message_queue_text_summary_print
 
     for my $q (@$queue) {
 	my $cur_id  = $q->{ cur_id }  || '';
-	my $head_id = $q->{ head_id } || '';	
+	my $head_id = $q->{ head_id } || '';
 	my $id_list = $q->{ id_list } || [];
 	my $status  = $q->{ status }  || 'unknown';
 	my $summary = $q->{ summary } || '';
@@ -595,7 +595,7 @@ sub psw_message_queue_text_list_print
     my ($self, $curproc, $queue) = @_;
 
     for my $q (@$queue) {
-	my $head_id = $q->{ head_id } || '';	
+	my $head_id = $q->{ head_id } || '';
 	my $id_list = $q->{ id_list } || [];
 	my $status  = $q->{ status }  || 'unknown';
 	my $wh      = $q->{ output_channel } || \*STDOUT;
@@ -625,7 +625,7 @@ sub psw_message_queue_html_summary_print
 
     for my $q (@$queue) {
 	my $cur_id  = $q->{ cur_id }  || '';
-	my $head_id = $q->{ head_id } || '';	
+	my $head_id = $q->{ head_id } || '';
 	my $id_list = $q->{ id_list } || [];
 	my $status  = $q->{ status }  || 'unknown';
 	my $summary = $q->{ summary } || '';
@@ -674,7 +674,7 @@ sub psw_message_queue_html_list_print
     print $wh "<table border=4>\n";
 
     for my $q (@$queue) {
-	my $head_id = $q->{ head_id } || '';	
+	my $head_id = $q->{ head_id } || '';
 	my $id_list = $q->{ id_list } || [];
 	my $status  = $q->{ status }  || 'unknown';
 	my $wh      = $q->{ output_channel } || \*STDOUT;

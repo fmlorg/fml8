@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.7 2004/04/17 06:57:01 fukachan Exp $
+# $FML: Queue.pm,v 1.8 2004/07/23 15:21:23 fukachan Exp $
 #
 
 package FML::IPC::Queue;
@@ -187,7 +187,7 @@ sub _list_up_msg_in_queue_dir
 		# lock.
 		chmod 0755, $file;
 
-		eval qq{ 
+		eval qq{
 		    use FileHandle;
 		    my \$rh = new FileHandle \$file;
 
@@ -247,7 +247,7 @@ sub is_use_queue_dir
 
 
 # Descriptions: declare this object handles queues on file system.
-#               existence of $dir is mandatory. 
+#               existence of $dir is mandatory.
 #    Arguments: OBJ($self) STR($dir)
 # Side Effects: update $self.
 # Return Value: NUM

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: admin.pm,v 1.8 2004/04/30 13:39:15 fukachan Exp $
+# $FML: admin.pm,v 1.9 2004/06/29 10:02:43 fukachan Exp $
 #
 
 package FML::Command::User::admin;
@@ -127,7 +127,7 @@ sub process
 	}
     }
 
-    # 2. run admin command if already authenticated. 
+    # 2. run admin command if already authenticated.
     #    if not, fatal error.
     if ($curproc->command_context_get_admin_auth()) {
 	my $class = $command_args->{ comsubname } || '';
@@ -166,15 +166,15 @@ sub _try_admin_auth
 	$opt_args->{ password } = $p || '';
     }
 
-    return $self->_apply_new_admin_command_mail_restrictions($curproc, 
-							     $command_args, 
+    return $self->_apply_new_admin_command_mail_restrictions($curproc,
+							     $command_args,
 							     $opt_args);
 }
 
 
 # Descriptions: check if this request is allowed by
 #               $admin_command_mail_restriction.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($opt_args)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
@@ -211,7 +211,7 @@ sub _apply_old_admin_command_mail_restrictions
 
 # Descriptions: check if this request is allowed by
 #               $admin_command_mail_restriction.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($opt_args)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
@@ -307,7 +307,7 @@ sub _prepare_command_args
     $args->{ command_mode } = 'Admin';
 
     # we need to shift "options" by one column in admin command.
-    # e.g. for "admin add some thing", 
+    # e.g. for "admin add some thing",
     # options = [ add, some, thing ] => [ some, thing ]
     my @options = @{ $command_args->{ options } };
     shift @options;
