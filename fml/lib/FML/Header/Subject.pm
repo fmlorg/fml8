@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.30 2002/09/22 14:56:50 fukachan Exp $
+# $FML: Subject.pm,v 1.31 2002/10/03 22:12:01 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -70,6 +70,12 @@ sub rewrite_article_subject_tag
     my $ml_name  = $config->{ ml_name };
     my $tag      = $config->{ article_subject_tag };
     my $subject  = $header->get('subject');
+
+    # if $tag has special regexp such as \U$ml_name\E or \L$ml_name\E
+    if ($tag =~ /\\E/o && $tag =~ /\\U|\\L/o) {
+	eval qq{ \$tag = "$tag";};
+	Log($@) if $@;
+    }
 
     if ($subject =~ /=\?iso-2022-jp\?/i) {
 	$in_code  = 'jis-jp';
