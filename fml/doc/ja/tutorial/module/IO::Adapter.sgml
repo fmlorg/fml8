@@ -1,5 +1,5 @@
 <!--
-   $FML: IO::Adapter.sgml,v 1.4 2002/07/02 10:39:36 fukachan Exp $
+   $FML: IO::Adapter.sgml,v 1.5 2002/07/28 06:26:57 fukachan Exp $
 -->
 
 <chapter id="module.io.adapter">
@@ -92,6 +92,62 @@ REGEXP は正規表現ですが、たいていはメールアドレスです。
 そして、むしろファイルより SQL との IO を想定しつつ、選びました。
 そのため、&fml4; のファイルを前提にした様々な処理にくらべ、
 やや不自由に思えるでしょうが、そうしないとうまく抽象化ができません。
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	&fmldevel; で必要なメソッドの型
+	</title>
+
+<para>
+get_next_key() のように引数なしか STR を引数にして STR を返り値にする
+ものが多いです。これはファイルの一覧を見るとか、特定のアドレスに対する
+何かの値を取り寄せるとかいう操作でよく使われるためです。
+</para>
+
+<para>
+しかし、特定のアドレスに対する値が組になっているものがあります。
+これは
+<screen>
+KEY_STR => [
+     VALUE_STR_1
+     VALUE_STR_2
+     VALUE_STR_3
+]
+</screen>
+のようなデータ構造が返ってくることを期待する場合です。
+&fml4; の actives はメールアドレスに対していくつかのオプションの値を記
+述するので、こういったデータ構造と考えられます。
+<screen> 
+例
+
+rudo@nuinui.net	s=skip m=xxx.yyy.z # commnet
+
+rudo@nuinui.net => [
+        s=skip
+        m=xxx.yyy.z
+        # comment
+]
+</screen> 
+</para>
+
+<para>
+まとめると引数はないか STR なので STR とひとまとめにしても良いです。
+一方、返り値は STR か ARRAY_REF になります。
+<screen>
+引数    返り値
+---------------------------------------
+なし => STR
+
+STR  => STR
+
+なし => [STR, STR, ... ]
+
+STR  => [STR, STR, ... ]
+</screen>
 </para>
 
 </sect1>
