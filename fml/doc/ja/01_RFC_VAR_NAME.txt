@@ -17,7 +17,7 @@ address_for_command		command_mail_address
 use_digest_program              use_article_digest_function 
 use_distribute_program          use_article_post_function
 use_command_mail_program        use_command_mail_function
-use_error_analyzer_program      use_error_analyzer_function
+use_error_analyzer_program      use_error_mail_analyzer_function
 
 ## restrictions
 post_restrictions               article_post_restrictions
