@@ -1,0 +1,35 @@
+#
+# $FML$
+#
+# THE CHARSET OF THIS FILE IS US-ASCII.
+#
+# Usage:
+#    $ml_name and $ml_domain are determined by $0.
+#
+#    Add and modify variables before =cut.
+#    See default_config.cf for variable list.
+#
+
+# domain name
+# ml_domain           = __ml_domain__
+#
+# ml name
+# ml_name	    = __ml_name__
+
+# maintainer
+maintainer	    = $ml_name-admin@$ml_domain
+
+# address for post
+address_for_post    = $ml_name@$ml_domain
+
+# address for command mail
+address_for_command = $ml_name-ctl@$ml_domain
+
+
+=cut
+
+#
+# write hook (perl script) after here.
+# Example:
+#	$distribute_run_start_hook = q{ ... };
+#
