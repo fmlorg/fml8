@@ -1,3 +1,27 @@
+<!--
+   $FML$
+-->
+
+<qandaentry>
+<question>
+<para>
+fml のバージョンが知りたい。
+</para>
+</question>
+
+<answer>
+<para>
+fmlconf が各ＭＬの変数一覧を表示してくれます。どのＭＬ(実は適当なＭＬ
+でも良い)を指定しても良いので、fmlconf を実行して下さい。例えば
+<screen>
+% fmlconf test |grep fml_version
+fml_version                          = fml-devel current-20021029
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+
 <qandaentry>
 <question>
 <para>
