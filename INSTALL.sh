@@ -51,7 +51,7 @@ if [ ! -f $config_dir/main.cf ];then
 fi
 
 echo update $config_dir/defaults/$version/
-cp fml/etc/default_config.cf.ja $config_dir/defaults/$version/
+cp fml/etc/default_config.cf.ja $config_dir/defaults/$version/default_config.cf
 
 echo update $lib_dir/$version/
 cp -pr fml/lib/*	$lib_dir/$version/
