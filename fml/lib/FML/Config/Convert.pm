@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Convert.pm,v 1.4 2001/12/22 14:23:40 fukachan Exp $
+# $FML: Convert.pm,v 1.5 2002/02/24 08:25:40 fukachan Exp $
 #
 
 
@@ -82,6 +82,14 @@ sub _replace
 {
     my ($buf, $config) = @_;
 
+    # XXX special condition: replace one line if hints is given
+    if (defined $config->{ __hints_for_fml_process__ }) {
+	if ($buf =~ /__hints_for_fml_process__/) {
+	    $buf = $config->{ __hints_for_fml_process__ };
+	    return $buf;
+	}
+    }
+
     if (defined $config->{ fml_owner }) {
 	$buf =~ s/__fml_owner__/$config->{ fml_owner }/g;
     }
@@ -120,7 +128,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
