@@ -39,7 +39,7 @@ To initialize,
     my $service = new MailingList::SMTP {
         log_function       => $fp,
         smtp_log_function  => $sfp,
-        socket_timeout     => 2,     # XXX 2 for debug but 10 by default
+        default_io_timeout => 10,
     };
     if ($service->error) { Log($service->error); return;}
 
@@ -70,7 +70,7 @@ as an argument of new().
         --------------------------------------------
         log_function       reference to function for logging
         smtp_log_function  reference to function for logging
-        socket_timeout     set the timeout associated with the socket
+        default_io_timeout set the timeout associated with the socket
 
 log_function() is for general purpose.
 smtp_log_function() is used to log SMTP transactions.
@@ -87,13 +87,13 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {}; # malloc new SMTP session struct
 
-    # _recipient_limit: maximum recipients in one smtp session.
-    #  _socket_timeout: basic timeout parameter for smtp session
-    #    _log_function: pointer to the log() function
-    $me->{_recipient_limit} = $args->{recipient_limit} || 1000;
-    $me->{_socket_timeout}  = $args->{socket_timeout}  || 10;
-    $me->{_log_function}      = $args->{log_function};
-    $me->{_smtp_log_function} = $args->{smtp_log_function};
+    #     _recipient_limit: maximum recipients in one smtp session.
+    #  _default_io_timeout: basic timeout parameter for smtp session
+    #        _log_function: pointer to the log() function
+    $me->{_recipient_limit}    = $args->{recipient_limit}    || 1000;
+    $me->{_default_io_timeout} = $args->{default_io_timeout} || 10;
+    $me->{_log_function}       = $args->{log_function};
+    $me->{_smtp_log_function}  = $args->{smtp_log_function};
 
     _initialize_delivery_session($me, $args);
 
@@ -150,8 +150,8 @@ sub _read_reply
     # XXX Attention! dynamic scope by local() for %SIG is essential.
     #     See books on Perl for more details on my() and local() difference.
     eval {
-	local($SIG{ALRM}) = sub { die("$id socket timeout")}; 
-	alarm( $self->{_socket_timeout} );
+	local($SIG{ALRM}) = sub { croak("$id socket timeout")}; 
+	alarm( $self->{_default_io_timeout} );
 	my $buf = '';
 
       SMTP_REPLY:
@@ -195,6 +195,9 @@ sub _read_reply
 	Log("Error: smtp reply for \"$x\" is timeout");
 	$self->_error_reason("Error: smtp reply for \"$x\" is timeout");
     }
+
+    # reset latest alarm() setting
+    alarm(0);
 }
 
 
