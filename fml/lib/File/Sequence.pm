@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Sequence.pm,v 1.8 2001/05/27 14:27:55 fukachan Exp $
+# $FML: Sequence.pm,v 1.9 2001/10/17 03:05:58 fukachan Exp $
 #
 
 package File::Sequence;
@@ -183,6 +183,45 @@ sub get_id
     }
 
     return $id;
+}
+
+
+=head2 search_max_id($args)
+
+To search max_id in hash key,
+
+    $self->search_max_id( { hash => \%hash_table });
+
+=cut
+
+
+# Descriptions: search max id number
+#    Arguments: $self $args
+# Side Effects: none
+# Return Value: number
+sub search_max_id
+{
+    my ($self, $args) = @_;
+    my ($pebot, $k, $v);
+    my $unit = 50;
+
+    if (defined $args->{ hash }) {
+	my $hash = $args->{ hash };
+	($pebot, $v) = each %$hash;
+
+      PEBOT_SEARCH:
+	while (1) {
+	    last PEBOT_SEARCH unless defined $hash->{ $pebot + $unit };
+	    $pebot += $unit;
+	}
+
+	# increment by 1.
+	do {
+	    $pebot++;
+	} while (defined $hash->{ $pebot + 1 });
+
+	return $pebot;
+    }
 }
 
 
