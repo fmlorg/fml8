@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DSN.pm,v 1.4 2001/04/10 11:52:26 fukachan Exp $
+# $FML: DSN.pm,v 1.5 2001/04/12 11:44:54 fukachan Exp $
 #
 
 
@@ -16,6 +16,8 @@ use Carp;
 
 my $debug = $ENV{'debug'} ? 1 : 0;
 
+@ISA = qw(Mail::Bounce);
+
 
 =head1 NAME
 
@@ -24,7 +26,6 @@ Mail::Bounce::DSN - DSN error message format parser
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
-
 
  $result = {
       addr => {
@@ -84,9 +85,8 @@ sub _parse_dsn_format
     my $addr   = $header->get('Original-Recipient') || 
 	$header->get('Final-Recipient');
 
-    if ($addr =~ /.*;\s*(\S+\@\S+\w+)/) {
-	$addr = $1;
-    }
+    if ($addr =~ /.*;\s*(\S+\@\S+\w+)/) { $addr = $1;}
+    $addr = $self->address_clean_up($self, $addr);
 
     # set up return buffer
     if ($addr =~ /\@/) {

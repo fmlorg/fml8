@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Postfix19991231.pm,v 1.2 2001/04/10 11:52:26 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.3 2001/04/12 11:45:28 fukachan Exp $
 #
 
 
@@ -13,6 +13,8 @@ package Mail::Bounce::Postfix19991231;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+@ISA = qw(Mail::Bounce);
 
 =head1 NAME
 
@@ -62,6 +64,7 @@ sub analyze
 		    $data =~ s/\n/ /g;
 		    if ($data =~ /\<(\S+\@\S+\w+)\>:\s*(.*)/) {
 			($addr, $reason) = ($1, $2);
+			$addr = $self->address_clean_up($self, $addr);
 			$result->{ $addr }->{ 'Diagnostic-Code' } = $reason;
 			$result->{ $addr }->{ 'Status' }          = '5.x.y';
 		    }
