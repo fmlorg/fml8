@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Flow.pm,v 1.23 2003/09/14 04:05:46 fukachan Exp $
+# $FML: Flow.pm,v 1.24 2004/01/02 14:42:44 fukachan Exp $
 #
 
 package FML::Process::Flow;
@@ -22,7 +22,7 @@ FML::Process::Flow - the process flow
    FML::Process::Flow::ProcessStart($obj, $args);
 
 where C<$obj> is an FML::Process::C<something> object and
-C<$args> is HASH REFERENCE.
+C<$args> is HASH REFERENCE prepared by C<FML::Process::Switch>.
 
 =head1 DESCRIPTION
 
@@ -82,12 +82,14 @@ sub ProcessStart
     # XXX private method to show help ASAP
     # XXX we need to trap here since $process object is clarified after
     # XXX $pkg->new() above.
+    # XXX-TODO: we should not cross _*() private methods over modules.
     $process->_trap_help($args);
 
     # e.g. parse the incoming message (e.g. STDIN)
     $process->prepare($args);
 
     # close and reopen STDERR to record log messages written into STDERR.
+    # XXX-TODO: we should not cross _*() private methods over modules.
     $process->_reopen_stderr_channel();
 
     # validate the request, for example,
@@ -98,13 +100,14 @@ sub ProcessStart
     # start main transaction
     $process->run($args);
 
-    # closing the process
+    # start closing of this process
     $process->finish($args);
 
     # flush stderr channel log.
+    # XXX-TODO: we should not cross _*() private methods over modules.
     $process->_finalize_stderr_channel($args);
 
-    # clean up tmporary files
+    # clean up temporary files
     $process->clean_up_tmpfiles();
 
     # debug

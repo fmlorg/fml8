@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Fake.pm,v 1.4 2004/01/02 02:11:27 fukachan Exp $
+# $FML: Fake.pm,v 1.5 2004/01/02 14:50:35 fukachan Exp $
 #
 
 package FML::Process::Fake;
@@ -43,11 +43,12 @@ It make a C<FML::Process::Kernel> object and return it.
 
 =head2 prepare($args)
 
-load config files and fix @INC.
+load default config files,
+set up domain we need to fake,
+and
+fix @INC if needed.
 
-=head2 verify_request($args)
-
-dummy.
+lastly, parse incoming message input from \*STDIN channel.
 
 =cut
 
@@ -85,6 +86,16 @@ sub prepare
 }
 
 
+=head2 verify_request($args)
+
+parse the header of incoming message to check to: and cc: fields.
+
+If one of them matches the domain to fake, we need to start emulate
+something in run() method running phase.
+
+=cut
+
+
 # Descriptions: verify requests.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: exit ASAP.
@@ -109,12 +120,6 @@ sub verify_request
 
 the top level dispatcher for C<faker>.
 
-It kicks off C<_faker($args)> for faker.
-
-NOTE:
-C<$args> is passed from parrent libexec/loader.
-See <FML::Process::Switch()> on C<$args> for more details.
-
 =cut
 
 
@@ -129,7 +134,14 @@ sub run
 }
 
 
-# Descriptions: dummy
+=head2 finish($args)
+
+dummy.
+
+=cut
+
+
+# Descriptions: dummy.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -179,12 +191,12 @@ _EOF_
 }
 
 
-=head1 FAKER FUNCTIONS
+=head1 INTERNAL FAKER FUNCTIONS
 
 =cut
 
 
-# Descriptions: initialize the faker process
+# Descriptions: initialize the faker process.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -197,7 +209,9 @@ sub _faker_init
     my $faker_domain     = $argv->[0];
     $faker_domain        =~ s/^\@//;
 
-    # anyway chdir(2) before actions.
+    # XXX-TODO: we should chdir(ml_home_prefix of $faker_domain).
+    # anyway chdir(2) to the default domain's ml_home_prefix before
+    # actions for emergency logging.
     chdir $work_dir || exit(1);
 
     my $ml_home_dir  = File::Spec->catfile($work_dir, 'faker');
@@ -214,9 +228,12 @@ sub _faker_init
     $curproc->scheduler_init();
     $curproc->log_message_init();
 
+    # XXX-TODO: hmm, good syntax ???
+    # XXX-TODO: $curproc->is_valid_domain_syntax($faker_domain) ...
+    # XXX-TODO: $domain->valid() style is better?
     # we assume
     # VIRTUAL  @domain faker=domain@${default_domain}
-    # ALIAS    faker=domain: "|/usr/local/libexec/fml/faker domain"
+    # ALIAS    faker=domain: "|/usr/local/libexec/fml/faker @domain"
     if ($curproc->is_valid_domain_syntax($faker_domain)) {
 	$curproc->set_emul_domain($faker_domain);
     }

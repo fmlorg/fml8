@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Debug.pm,v 1.5 2003/11/16 11:50:57 fukachan Exp $
+# $FML: Debug.pm,v 1.6 2003/11/29 06:35:59 fukachan Exp $
 #
 
 package FML::Process::Debug;
@@ -14,11 +14,42 @@ use Carp;
 
 =head1 NAME
 
-FML::Process::Debug - debug tool
+FML::Process::Debug - debug tool / tiny FML::Process emulator
 
 =head1 SYNOPSIS
 
+    if ($0 eq __FILE__) {
+	my $domain  = "nuinui.net";
+	my $prefix  = "/tmp/nuinui.net";
+	my $map     = "/etc/fml/ml_home_prefix";
+
+	use FML::Process::Debug;
+	my $curproc = new FML::Process::Debug;
+	$curproc->{ config } = { fml_primary_ml_home_prefix_map => $map };
+
+        # special debug flag on
+	$debug = 101;
+	$|     = 1;
+
+	my $ml_home_prefix = new FML::ML::HomePrefix $curproc;
+
+	print "\n# add { $domain => $prefix }\n";
+	$ml_home_prefix->add($domain, $prefix);
+	system "cat $map";
+
+	print "\n# delete { $domain => $prefix }\n";
+	$ml_home_prefix->delete($domain);
+	system "cat $map";
+    }
+
+
 =head1 DESCRIPTION
+
+FML::Pcoess::Debug provides tiny FML::Process:: process emulator for
+debug use.
+
+It also provides dump_curproc() method to dump out $curproc structure
+as string for documentation.
 
 =head1 METHODS
 
@@ -61,7 +92,7 @@ simplified version of FML::Process::* only used for debug.
 =cut
 
 
-# Descriptions: create directory $dir if needed
+# Descriptions: create directory $dir if needed.
 #    Arguments: OBJ($self) STR($dir) STR($mode)
 # Side Effects: create directory $dir
 # Return Value: NUM(1 or 0)
@@ -74,7 +105,7 @@ sub mkdir
 }
 
 
-# Descriptions: log message
+# Descriptions: log message.
 #    Arguments: OBJ($self) STR($msg) HASH_REF($msg_args)
 # Side Effects: none
 # Return Value: none
@@ -85,7 +116,7 @@ sub log
 }
 
 
-# Descriptions: log message
+# Descriptions: log message at level as warning.
 #    Arguments: OBJ($self) STR($msg) HASH_REF($msg_args)
 # Side Effects: none
 # Return Value: none
@@ -96,7 +127,7 @@ sub logwarn
 }
 
 
-# Descriptions: log message
+# Descriptions: log message at level as critical error.
 #    Arguments: OBJ($self) STR($msg) HASH_REF($msg_args)
 # Side Effects: none
 # Return Value: none
@@ -151,6 +182,7 @@ return config object.
 sub config
 {
     my ($self) = @_;
+
     return( defined $self->{ config } ? $self->{ config } : undef );
 }
 
