@@ -29,7 +29,7 @@ sub main::ProcessSwitch
 {
     my ($args) = @_;
 
-    # 1. create process 
+    # Firstly, create process 
     # $pkg is a  package name, for exampl,e "FML::Process::Distribute".
     my $pkg = _package_we_use($args);
     croak("$args->{ myname } is unknown program\n") unless ($pkg);
@@ -39,13 +39,16 @@ sub main::ProcessSwitch
     $pkg->import();   # fake to use() method.
     my $process = $pkg->new($args); # create a new process object
 
-    # 2. parse the incoming message (e.g. STDIN)
+    # e.g. parse the incoming message (e.g. STDIN)
     $process->prepare($args);
 
-    # 3. start main transaction
+    # validate the request e.g. permit post from the sender ...
+    $process->verify_request($args);
+
+    # start main transaction
     $process->run($args);
 
-    # 4. closing the process
+    # closing the process
     $process->finish($args);
 }
 

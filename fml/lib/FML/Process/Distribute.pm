@@ -37,11 +37,15 @@ sub prepare
 }
 
 
+sub verify_request
+{
+    my ($curproc, $args) = @_;
+    $curproc->verify_sender_credential();
+}
+
 sub run
 {
     my ($curproc, $args) = @_;
-
-    $curproc->verify_sender_credential();
 
     $curproc->lock();
     {
