@@ -3,6 +3,33 @@
 
 	XXX 作業したら TODO/STATUS.txt もアップデートしてね XXX
 
+* IO::Adapter TODO
+
+   [used]
+	getline			()		STR
+	get_next_key		()		STR
+	add			(KEY, STR)	*
+				(KEY, [])	*	
+	delete			(KEY)		*	
+
+   [ok]
+	touch			(引数なし)	NUM
+
+   [?]
+	(only Mail::Delivery::SMTP)
+	getpos			()		NUM
+	setpos			(NUM)		---	
+	eof			()		*
+
+   [not used now]
+	get_next_value		()		STR	←
+	get_next_values		()		[]	←
+	replace			(KEY, STR)	*	←	
+				(KEY, [])	*	←
+
+	--------------------
+	KEY = STR
+	*   = ステータス
 
 -------------------- 2002-06 AUDIT --------------------
    FML::Article
@@ -10,7 +37,7 @@
 	subdir の取り扱いが不十分
 	$curpoc->{ article }->{ header } じゃだめ、
 	$curpoc->{ article }->header() などへ移行せよ
-	0700 とかハードコードされてるじょ 
+	0700 とかハードコードされてるじょ
 
    FML::Command
 
@@ -31,9 +58,9 @@
 
 	[BUG] ?
 	この negative cache ってまちがってないか？
-		find() して ->{} すると negative cache 
+		find() して ->{} すると negative cache
 		が間違って有効になってるんじゃないの？
- 
+
    FML::CGI::Admin::User
 
 	$comname と maps の関係がハードコーディングされてる
@@ -92,7 +119,7 @@
 	cgi_menu() ?
 		ディレクトリ listing してくれる perl module ないかな？
 
- 
+
    FML::Command::SendFile
 	Mail::Message::MH を使うように修正
 
@@ -148,9 +175,9 @@
 
 ○	IO::Adapter
 
-		replace(), 
-		get_next_value(), 
-		getline() 
+		replace(),
+		get_next_value(),
+		getline()
 	つかってないみたい？ 不必要 ?
 
 
@@ -211,7 +238,7 @@ http://www.cs.utk.edu/~moore/internet-drafts/draft-moore-auto-email-response-00
 	なくて admin コマンドの時は考えなくてもいいからだな、それは …
 
 
-○	ファイルを用意しただけやんシリーズ;) 
+○	ファイルを用意しただけやんシリーズ;)
 	これから改造するので、ほとんど未修正のままのこす
 
 	FML/Command/Admin/edit.pm
@@ -222,7 +249,7 @@ http://www.cs.utk.edu/~moore/internet-drafts/draft-moore-auto-email-response-00
 
 ○ Language::Japanese::Subject のマージが中途半端?
 
-   "Language::Japanese::Subject::CUT_OFF_RERERE_PATTERN" used only once: 
+   "Language::Japanese::Subject::CUT_OFF_RERERE_PATTERN" used only once:
 
 
 ○	FML::Language:: はどうよ
@@ -460,4 +487,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.28 2002/07/02 03:37:43 fukachan Exp $
+$FML: 00_MEMO,v 1.29 2002/07/02 13:48:04 fukachan Exp $
