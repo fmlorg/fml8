@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.20 2001/11/19 08:47:27 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.21 2001/11/19 11:37:05 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -13,13 +13,11 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 use Mail::ThreadTrack::Analyze;
-use Mail::ThreadTrack::HeaderRewrite;
 use Mail::ThreadTrack::DB;
 use Mail::ThreadTrack::Print;
 
 @ISA = qw(Mail::ThreadTrack::Analyze
 	Mail::ThreadTrack::DB
-	Mail::ThreadTrack::HeaderRewrite
 	Mail::ThreadTrack::Print
 	  );
 
@@ -84,6 +82,7 @@ sub new
 
     my @keys = qw(myname ml_name spool_dir article_id db_base_dir
 		  reverse_order
+		  rewrite_header
 		  base_url msg_base_url
 		  );
 
@@ -117,6 +116,13 @@ sub new
     $me->{ _db_dir }      = File::Spec->catfile($base_dir, $ml_name);
     $me->{ _fd }          = $args->{ fd } || \*STDOUT;
     $me->{ _saved_args }  = $args;
+
+    if (defined $config->{ rewrite_header } && $config->{ rewrite_header }) {
+	$me->{ _is_rewrite_header } = 1;
+	eval q{ use Mail::ThreadTrack::HeaderRewrite; };
+	croak($@) if $@;
+	push(@ISA, 'Mail::ThreadTrack::HeaderRewrite');
+    }
 
     # ::Print parameters
     $me->{ _article_summary_lines } = 5;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Analyze.pm,v 1.15 2001/11/18 08:58:54 fukachan Exp $
+# $FML: Analyze.pm,v 1.16 2001/11/19 14:34:31 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -51,7 +51,7 @@ sub analyze
     my ($self, $msg) = @_;
 
     $self->assign($msg);
-    $self->rewrite_header($msg);
+    $self->rewrite_header($msg) if $self->{ _is_rewrite_header };
     $self->update_thread_status($msg);
     $self->update_db($msg);
 }
