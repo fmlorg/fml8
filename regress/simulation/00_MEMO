@@ -10,18 +10,60 @@
 
 [TODO]	fml 4 の cf を解釈できる互換ルーチン
 
+		cf シンタックスを読んで、
+		＃ そういえば、Config::Tiny で出来るね
 
-[TODO]	01_RFC_ARGV.txt
+		8 の .cf シンタックスに置き換えて
+		値をよろしく変換する （←ここがむずかしー）
+
+
+[TODO]	*_maps をよぶまえには MUTEX ロックを
+
+	→ giant lock をなくす
+
+	*_map を使うモジュール一覧
+
+		FML/Credential.pm
+		FML/Digest.pm (reply_message() にわたすだけだが)
+		FML/Process/Utils.pm
+
+		FML/Command/Auth.pm
+		FML/Command/UserControl.pm
+
+		FML/Command/Admin/chaddr.pm		×
+		FML/Command/Admin/changepassword.pm	×
+			だめよ、コマンドの中にもってては
+			FML::Command::何か に移動だ！
+
+		Mail/Delivery/Queue.pm
+		Mail/Delivery/SMTP.pm
+		Mail/Delivery.pm
+			Mail::Delivery モジュールはかならず wrap
+
+
 [TODO]	01_RFC_IO_ADAPTER.txt
 [TODO]	01_RFC_UPGRADE.txt
 
 	かんがえよー／まとめようー
 
-
-[TODO]	01_RFC_SQL.txt
 [TODO]	01_RFC_FILTER.txt
 
 	もう OK ぽいので、ドキュメント化
+
+
+[TODO]	fml $ml spool {status,convert}: --srcdir= とか必要じゃない？
+
+		コマンドラインオプションは、OK？
+
+[TODO]	fml $ml thread $subcommand: モジュールの clean up
+
+		コマンドラインオプションは、OK？
+
+		Mail::ThreadTrack
+		FML::Command::Admin::thread
+		FML::Article::Thread		(不要じゃないの？)
+
+	どこに、なんのメソッドがあるべきなのか？	
 
 
 [TODO]	受信者としてだけの登録 (add2actives 相当、メールマガジンなど)は？
@@ -32,6 +74,11 @@
 	admin useradd  rudo@nuinui.net --as-recipient
 
 	?
+
+	＊ こういう形式を認めると言うのはどうだ？
+
+		fml $ml コマンド-サブコマンド アドレス
+		fml $ml useradd-as-recipient アドレス
 
 
 [TODO]	off/on の問題
@@ -129,23 +176,6 @@
 
 
 [TODO]	digest こまんど？ for user
-
-
-[TODO]	fmlerror : エラーの表示
-
-	error summary ?
-
-	error address maintenance
-
-
-[TODO]	mead bug ?
-
-	mkdir in new
-
-	cache db bug ?
-
-
-[TODO]	queue 管理プログラム: fmlsuper じゃなくて makefml queue かな
 
 
 [TODO]	ファイルを用意しただけやんシリーズ;)
@@ -263,4 +293,4 @@
 
 
 ----------
-$FML: 00_MEMO,v 1.67 2003/03/09 03:23:56 fukachan Exp $
+$FML: 00_MEMO,v 1.68 2003/03/11 14:43:56 fukachan Exp $
