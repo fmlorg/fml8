@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.68 2002/04/10 04:31:09 fukachan Exp $
+# $FML: Distribute.pm,v 1.69 2002/04/10 09:00:08 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -171,6 +171,8 @@ sub run
 	    $curproc->_distribute($args);
 	}
 	else {
+	    $curproc->reply_message_nl("error.system_accounts",
+				       "deny request from system accounts");
 	    Log("deny article submission");
 	}
     }
