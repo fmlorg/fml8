@@ -6,7 +6,7 @@ __exceptional__ {
 
 admin {
 
-   admin_command_restrictions { 
+   admin_command { 
           $admin_command_restrictions
    }
 
@@ -27,6 +27,12 @@ admin {
 
    admin_* {
           $admin_cgi_base_dir
+   }
+}
+
+admin_command {
+
+   admin_command { 
    }
 }
 
@@ -107,7 +113,7 @@ cgi {
    }
 }
 
-chaddr {
+chaddr_command {
 
    chaddr_command { 
           $chaddr_command_auth_type
@@ -117,7 +123,7 @@ chaddr {
 command {
 
    command_mail { 
-    ?     $command_mail_line_length_limit
+          $command_mail_line_length_limit
           $use_command_mail_program
    }
 
@@ -132,8 +138,8 @@ command {
           $use_command_mail_filter_reject_notice
    }
 
-   command_mail_junk_command { 
-    ?     $command_mail_junk_command_limit
+   command_mail_invalid_command { 
+          $command_mail_invalid_command_limit
    }
 
    command_mail_size_filter { 
@@ -142,30 +148,16 @@ command {
    }
 
    command_mail_valid_command { 
-    ?     $command_mail_valid_command_limit
-   }
-
-   command_restrictions { 
-          $command_restrictions
+          $command_mail_valid_command_limit
    }
 
    command_* {
     ?     $command_prompt
+          $command_restrictions
    }
 }
 
-commands_for {
-
-   commands_for_* {
-    ?     $commands_for_admin
-    ?     $commands_for_admin_cgi
-    ?     $commands_for_privileged_user
-    ?     $commands_for_stranger
-    ?     $commands_for_user
-   }
-}
-
-confirm {
+confirm_command {
 
    confirm_command { 
     ?     $confirm_command_prefix
@@ -246,8 +238,15 @@ error {
           $error_analyzer_cache_type
     ?     $error_analyzer_function
     ?     $error_analyzer_function_list
-    ?     $error_analyzer_simple_count_limit
+          $error_analyzer_simple_count_limit
           $use_error_analyzer_program
+   }
+}
+
+get_command {
+
+   get_command { 
+          $get_command_request_limit
    }
 }
 
@@ -357,6 +356,23 @@ member {
    }
 }
 
+message_template {
+
+   message_template_* {
+          $message_template_dir
+   }
+}
+
+ml_local {
+
+   ml_local_* {
+          $ml_local_dir
+          $ml_local_lib_dir
+          $ml_local_message_template_dir
+          $ml_local_share_dir
+   }
+}
+
 moderator {
 
    moderator_member { 
@@ -370,7 +386,7 @@ moderator {
    }
 }
 
-newml {
+newml_command {
 
    newml_command { 
           $newml_command_init_private_dirs
@@ -446,14 +462,6 @@ path {
    }
 }
 
-post {
-
-   post_restrictions { 
-          $post_restrictions
-          $post_restrictions_reject_notice_data_type
-   }
-}
-
 postfix {
 
    postfix_* {
@@ -462,7 +470,7 @@ postfix {
    }
 }
 
-privileged {
+privileged_command {
 
    privileged_command { 
     ?     $privileged_command_prefix
@@ -490,11 +498,14 @@ recipient {
    recipient { 
           $primary_recipient_map
           $recipient_maps
-    ?     $smtp_recipient_limit
+          $smtp_recipient_limit
    }
 }
 
-rmml {
+report_mail {
+}
+
+rmml_command {
 
    rmml_command { 
     ?     $rmml_command_mta_config_list
@@ -542,7 +553,7 @@ sql {
    }
 }
 
-subscribe {
+subscribe_command {
 
    subscribe_command { 
           $subscribe_command_auth_type
@@ -553,8 +564,6 @@ system {
 
    system_* {
     ?     $system_accounts
-    ?     $system_message_charset
-    ?     $system_message_subject
    }
 }
 
@@ -581,10 +590,17 @@ thread {
    }
 }
 
-unsubscribe {
+unsubscribe_command {
 
    unsubscribe_command { 
           $unsubscribe_command_auth_type
+   }
+}
+
+x {
+
+   x_* {
+    ?     $x_ml_name
    }
 }
 
@@ -604,12 +620,7 @@ _dir$ {
           $listinfo_dir
           $listinfo_template_dir
           $message_id_cache_dir
-          $message_template_dir
           $ml_admin_cgi_base_dir
-          $ml_local_dir
-          $ml_local_lib_dir
-          $ml_local_message_template_dir
-          $ml_local_share_dir
           $shared_db_dir
           $tmp_dir
           $var_dir
@@ -617,13 +628,19 @@ _dir$ {
 
 
 *** unclassified ***
+    ?     $commands_for_admin
+    ?     $commands_for_admin_cgi
+    ?     $commands_for_privileged_user
+    ?     $commands_for_stranger
+    ?     $commands_for_user
     ?     $list_addresses
+          $post_restrictions
+          $post_restrictions_reject_notice_data_type
     ?     $reply_message_charset
     ?     $reply_message_subject
     ?     $summary_format_address_length
     ?     $summary_format_style
     ?     $template_file_charset
     ?     $unsafe_header_fields
-    ?     $x_ml_name
 </screen>
 </para>
