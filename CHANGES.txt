@@ -3,6 +3,20 @@
 
    2002/12 は、オーバホール・キャンペーン実施中ですぉ。
 
+2002/12/30
+
+   Mail::Delivery::SMTP 
+   Mail::Message 
+	enhance Mail::Message::set_log_function() to override the global log
+	function within Mail::Message name space.  Thie enables all objects
+	within the current Mail::Message space uses the same log function.
+	
+	We need this function to enforce all objects in a chain to use the
+	same log output channel.
+	
+	So, Mail::Delivery enhanced to use this function to fix the lack of
+	log messages for multipart messages.
+
 2002/12/26
 
    FML::Article 
@@ -3900,4 +3914,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.121 2002/12/26 15:03:02 fukachan Exp $
+$FML: CHANGES.txt,v 1.122 2002/12/28 04:44:09 fukachan Exp $
