@@ -31,6 +31,10 @@ command_unsubscribe_type	=	confirmation
 available_commands		=	help
 					get
 					mget
+					get
+					mget
 					subscribe
+					bye
+					remove
+					resign
 					unsubscribe
-					chaddr
