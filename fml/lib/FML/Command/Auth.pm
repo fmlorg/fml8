@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.4 2002/04/07 12:13:02 fukachan Exp $
+# $FML: Auth.pm,v 1.5 2002/04/10 09:57:22 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -56,11 +56,40 @@ sub new
 # Return Value: NUM
 sub reject
 {
+    return '__LAST__';
+}
+
+
+# Descriptions: permit anyone
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: NUM
+sub permit_anyone
+{
+    return 1;
+}
+
+
+# Descriptions: virtual reject handler, just return 0 :-)
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: NUM
+sub reject_system_accounts
+{
+    my ($self, $curproc, $args, $optargs) = @_;
+    my $cred  = $curproc->{ credential }; 
+    my $match = $cred->match_system_accounts($curproc, $args);
+
+    if ($match) {
+	Log("reject_system_accounts: matches the sender");
+	return '__LAST__';
+    }
+
     return 0;
 }
 
 
-=head2 check_password($curproc, $args, $optargs)
+=head2 check_admin_member_password($curproc, $args, $optargs)
 
 check the password if it is valid or not.
 
@@ -74,7 +103,7 @@ check the password if it is valid or not.
 #               HASH_REF($optargs)
 # Side Effects: none
 # Return Value: NUM
-sub check_password
+sub check_admin_member_password
 {
     my ($self, $curproc, $args, $optargs) = @_;
     my $config   = $curproc->{ config };

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.57 2002/05/19 11:14:30 fukachan Exp $
+# $FML: Command.pm,v 1.58 2002/05/19 11:49:24 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -359,16 +359,19 @@ sub _auth_admin
 	my $config = $curproc->{ config };
 	my $rules  = $config->get_as_array_ref('admin_command_restrictions');
 	for my $rule (@$rules) {
-	    if ($rule eq 'reject') {
+	    $is_auth = $obj->$rule($curproc, $args, $optargs);
+
+	    # reject as soon as possible
+	    if ($is_auth eq '__LAST__') {
+		Log("admin: rejected by $rule");
 		return 0;
 	    }
-
-	    $is_auth = $obj->$rule($curproc, $args, $optargs);
-	    if ($is_auth) {
+	    elsif ($is_auth) {
+		Log("admin: auth by $rule");
 		return $is_auth;
 	    }
 	    else {
-		Log("admin: $rule fail");
+		Log("admin: not match rule=$rule"); # XXX debug. remove this.
 	    }
 	}
     }
