@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: off.pm,v 1.11 2003/08/29 15:34:00 fukachan Exp $
+# $FML: off.pm,v 1.12 2003/11/22 05:41:51 fukachan Exp $
 #
 
 package FML::Command::User::off;
@@ -70,24 +70,26 @@ sub lock_channel { return 'command_serialize';}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config        = $curproc->config();
+    my $config = $curproc->config();
+    my $cred   = $curproc->{ credential };
 
-    #
-    # XXX-TODO: correct to use primary_*_map for on/off ?
-    #
+    # XXX We should always add/rewrite only $primary_*_map maps via 
+    # XXX command mail, CUI and GUI.
+    # XXX Rewriting of maps not $primary_*_map is
+    # XXX 1) may be not writable.
+    # XXX 2) ambigous and dangerous 
+    # XXX    since the map is under controlled by other module.
+    # XXX    for example, one of member_maps is under admin_member_maps. 
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_command_prefix };
     my $command       = $command_args->{ command };
-    my $address       = $curproc->{ credential }->sender();
+    my $address       = $cred->sender();
 
     # cheap sanity checks
     croak("\$member_map is not specified")    unless $member_map;
     croak("\$recipient_map is not specified") unless $recipient_map;
-
-    use FML::Credential;
-    my $cred = new FML::Credential $curproc;
 
     # if not member, off request is wrong.
     unless ($cred->is_member($address)) {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.7 2003/08/23 07:24:44 fukachan Exp $
+# $FML: digest.pm,v 1.8 2003/08/29 15:34:00 fukachan Exp $
 #
 
 package FML::Command::User::digest;
@@ -70,9 +70,13 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->config();
 
-    #
-    # XXX-TODO: correct to use primary_*_map for chaddr ?
-    #
+    # XXX We should always add/rewrite only $primary_*_map maps via 
+    # XXX command mail, CUI and GUI.
+    # XXX Rewriting of maps not $primary_*_map is
+    # XXX 1) may be not writable.
+    # XXX 2) ambigous and dangerous 
+    # XXX    since the map is under controlled by other module.
+    # XXX    for example, one of member_maps is under admin_member_maps. 
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.25 2003/11/17 13:06:12 fukachan Exp $
+# $FML: confirm.pm,v 1.26 2003/11/22 05:41:51 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -83,7 +83,13 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->config();
 
-    # XXX-TODO: correct we handle only primary_*_map here?
+    # XXX We should always add/rewrite only $primary_*_map maps via 
+    # XXX command mail, CUI and GUI.
+    # XXX Rewriting of maps not $primary_*_map is
+    # XXX 1) may be not writable.
+    # XXX 2) ambigous and dangerous 
+    # XXX    since the map is under controlled by other module.
+    # XXX    for example, one of member_maps is under admin_member_maps. 
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
