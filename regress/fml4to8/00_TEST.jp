@@ -9,14 +9,15 @@
 デフォルトでは、ＭＬのホームディレクトリが /var/spool/ml 以下にある(た
 とえば elena ＭＬは /var/spool/ml/elena にある)ことを仮定しています。
 
-もし /var/spool/ml ではないディレクトリ(たとえば /usr/local/fml4/ml )
-を使っている場合は、test スクリプトの引数で指定して下さい。
+もし /var/spool/ml 以下ではない(たとえば /usr/local/fml4/ml 以下にある)
+場合は、test スクリプトの引数で指定して下さい。
 
 	% perl test /usr/local/fml4/ml
 
 次のような実行結果が表示されます。Q: 部分が翻訳対象の変数、A: が翻訳の
 結果です。OK は、うまく翻訳できたことを意味しますが、FAILED となってい
-る部分は、まだうまく翻訳できていません。
+る部分は、まだうまく翻訳できていません(翻訳が出来ていないか、fml8 に対
+応する実装がないかはケースバイケースです)。
 
 	% perl test /usr/local/fml4/ml
 	// check /usr/local/fml4/ml/elena/config.ph
