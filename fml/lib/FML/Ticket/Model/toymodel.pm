@@ -166,28 +166,28 @@ sub _update_db
     $self->_open_db($curproc, $args);
 
     # prepare hash table tied to db_dir/*db's
-    my $rh_ticket_id = $self->{ _hash_table }->{ _ticket_id };
-    my $rh_date      = $self->{ _hash_table }->{ _date };
-    my $rh_status    = $self->{ _hash_table }->{ _status };
-    my $rh_articles  = $self->{ _hash_table }->{ _articles };
+    my $rh = $self->{ _hash_table };
 
     # prepare article_id and ticket_id
     my $article_id = $pcb->get('article', 'id');
     my $ticket_id  = $self->{ _ticket_id };
-
     Log("article_id=$article_id ticket_id=$ticket_id");
 
-    $rh_ticket_id->{ $article_id } = $ticket_id;
-    $rh_date->{ $article_id }      = time;
-    $rh_articles->{ $ticket_id }  .= $article_id . " ";
+    $rh->{ _ticket_id }->{ $article_id } = $ticket_id;
+    $rh->{ _date }->{ $article_id }      = time;
+    $rh->{ _articles }->{ $ticket_id }  .= $article_id . " ";
+
+    # sender
+    my $header = $curproc->{ incoming_mail }->{ header };
+    $rh->{ _sender }->{ $article_id } = $header->get('from');
 
     # default value of status
-    unless (defined $rh_status->{ $ticket_id }) {
-	$rh_status->{ $ticket_id } = 'open';
+    unless (defined $rh->{ _status }->{ $ticket_id }) {
+	$rh->{ _status }->{ $ticket_id } = 'open';
     }
 
     if (defined $self->{ _status }) {
-	$rh_status->{ $ticket_id } = $self->{ _status };
+	$rh->{ _status }->{ $ticket_id } = $self->{ _status };
     }
 
     $self->_close_db($curproc, $args);
@@ -232,10 +232,11 @@ sub _open_db
     my $db_type   = $curproc->{ ticket_db_type } || 'AnyDBM_File';
     my $db_dir    = $self->{ _db_dir };
 
-    my (%ticket_id, %date, %status, %articles);
+    my (%ticket_id, %date, %status, %articles, %sender);
     my $ticket_id_file = $db_dir.'/ticket_id';
     my $date_file      = $db_dir.'/date';
     my $status_file    = $db_dir.'/status';
+    my $sender_file    = $db_dir.'/sender';
     my $articles_file  = $db_dir.'/articles';
 
     eval qq{ use $db_type;};
@@ -245,12 +246,14 @@ sub _open_db
 	    tie %ticket_id, $db_type, $ticket_id_file, O_RDWR|O_CREAT, 0644;
 	    tie %date,      $db_type, $date_file,      O_RDWR|O_CREAT, 0644;
 	    tie %status,    $db_type, $status_file,    O_RDWR|O_CREAT, 0644;
+	    tie %sender,    $db_type, $sender_file,    O_RDWR|O_CREAT, 0644;
 	    tie %articles,  $db_type, $articles_file,  O_RDWR|O_CREAT, 0644;
 	};
 	unless ($@) {
 	    $self->{ _hash_table }->{ _ticket_id } = \%ticket_id;
 	    $self->{ _hash_table }->{ _date }      = \%date;
 	    $self->{ _hash_table }->{ _status }    = \%status;
+	    $self->{ _hash_table }->{ _sender }    = \%sender;
  	    $self->{ _hash_table }->{ _articles }  = \%articles;
 	}
 	else {
@@ -273,11 +276,13 @@ sub _close_db
     my $ticket_id = $self->{ _hash_table }->{ _ticket_id };
     my $date      = $self->{ _hash_table }->{ _date };
     my $status    = $self->{ _hash_table }->{ _status };
+    my $sender    = $self->{ _hash_table }->{ _sender };
     my $articles  = $self->{ _hash_table }->{ _articles };
 
     untie %$ticket_id;
     untie %$date;
     untie %$status;
+    untie %$sender;
     untie %$articles;
 }
 
