@@ -1,12 +1,13 @@
 #!/bin/sh
 #
-# $FML: .gen.sh,v 1.11 2002/09/14 01:22:20 fukachan Exp $
+# $FML: .gen.sh,v 1.12 2003/07/26 14:23:03 fukachan Exp $
 #
 
 tmp=default_config.cf.xx.$$
 
 trap "rm -f $tmp" 0 1 3 15
 
+echo creating src/hooks.cf
 (
 	cat <<_EOF_
 #
@@ -18,6 +19,7 @@ _EOF_
 	egrep -r 'config.*get_hook' ../lib |\
 	egrep -v '~:|bak:' |\
 	sed 	-e 's/^.*get_hook(//' \
+		-e 's/) *|| .*;//' \
 		-e 's/);//' \
 		-e "s@'@@g" \
 		-e 's/ *//g' |\
