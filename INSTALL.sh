@@ -93,7 +93,7 @@ done
 PROGRAMS="fml.pl distribute command ";
 PROGRAMS="$PROGRAMS fmlserv mead fmlconf fmldoc"
 PROGRAMS="$PROGRAMS fmlticket fmlticket.cgi"
-PROGRAMS="$PROGRAMS makefml"
+PROGRAMS="$PROGRAMS makefml makefml.cgi"
 
 if [ ! -f $libexec_dir/loader ];then
 
