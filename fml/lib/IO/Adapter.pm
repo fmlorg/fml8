@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.15 2002/02/01 12:03:58 fukachan Exp $
+# $FML: Adapter.pm,v 1.16 2002/02/17 03:13:49 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -149,6 +149,16 @@ sub new
     my ($type) = ref($self) || $self;
     my ($me)   = { _map => $map };
     my $pkg;
+
+    # 2002/07/22: accpet READ_ONLY($map).
+    if ($map =~ /^READ_ONLY\(/) {
+	$map =~ s/^READ_ONLY\(//;
+	$map =~ s/^\)$//;
+	$me->{ _hints }->{ read_only } = 1;
+    }
+    else {
+	$me->{ _hints }->{ read_only } = 0;
+    }
 
     if (ref($map) eq 'ARRAY') {
 	$pkg                    = 'IO::Adapter::Array';
@@ -332,6 +342,11 @@ sub add
 {
     my ($self, $address) = @_;
 
+    if ($self->{ _hints }->{ read_only }) {
+	my $map = $self->{ _map };
+	croak("this map $map is read only.");
+    }
+
     if ($self->can('add')) {
 	$self->SUPER::add($address);
     }
@@ -350,6 +365,11 @@ sub delete
 {
     my ($self, $regexp) = @_;
 
+    if ($self->{ _hints }->{ read_only }) {
+	my $map = $self->{ _map };
+	croak("this map $map is read only.");
+    }
+
     if ($self->can('delete')) {
 	$self->SUPER::delete($regexp);
     }
@@ -367,6 +387,11 @@ sub delete
 sub replace
 {
     my ($self, $regexp, $value) = @_;
+
+    if ($self->{ _hints }->{ read_only }) {
+	my $map = $self->{ _map };
+	croak("this map $map is read only.");
+    }
 
     if ($self->can('replace')) {
 	$self->SUPER::replace($regexp, $value);
