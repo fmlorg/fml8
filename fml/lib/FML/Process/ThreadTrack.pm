@@ -4,10 +4,10 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: TicketSystem.pm,v 1.15 2001/05/30 04:03:22 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.16 2001/06/10 11:24:12 fukachan Exp $
 #
 
-package FML::Process::TicketSystem;
+package FML::Process::ThreadTrack;
 
 use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use strict;
@@ -22,16 +22,11 @@ use FML::Config;
 
 =head1 NAME
 
-FML::Process::TicketSystem -- primitive fml5 ticket system
+FML::Process::ThreadTrack -- primitive thread tracking system
 
 =head1 SYNOPSIS
 
-    use FML::Process::TicketSystem;
-         ... snip ...
-
-    use FML::Ticket::Model::minimal_states;
-    $ticket = FML::Ticket::Model::minimal_states->new($curproc, $args);
-    $ticket->$method($curproc, $args);
+See C<Mail::ThreadTrack> module.
 
 =head1 DESCRIPTION
 
@@ -82,43 +77,47 @@ sub run
 {
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
-    my $model   = $config->{ ticket_model };
-    my $pkg     = $config->{ ticket_driver };
     my $argv    = $args->{ ARGV };
     my $command = $argv->[ 0 ] || 'list';
 
-    # fake "use FML::Ticket::Model::$model;"
-    eval qq{ require $pkg; $pkg->import();};
-    unless ($@) {
-	my $ticket = $pkg->new($curproc, $args);
-	$ticket->mode( { mode => 'text' } );
+    #  argumente for thread track module
+    my $ml_name       = $config->{ ml_name };
+    my $ticket_db_dir = $config->{ ticket_db_dir };
+    my $spool_dir     = $config->{ spool_dir };
+    my $ttargs        = {
+	logfp       => \&Log,
+	fd          => \*STDOUT,
+	db_base_dir => $ticket_db_dir,
+	ml_name     => $ml_name,
+	spool_dir   => $spool_dir,
+    };
 
-	if ($command eq 'list') {
-	    $ticket->show_summary($curproc, $args);
-	}
-	elsif ($command eq 'close') {
-	    $curproc->lock();
+    use Mail::ThreadTrack;
+    my $thread = new Mail::ThreadTrack $ttargs;
+    $thread->set_mode('text');
 
-	    my $ticket_id = $argv->[ 2 ];
-	    my $args = {
-		ticket_id => $ticket_id, 
-		status    => 'close',
-	    };
-	    if ($ticket_id) {
-		$ticket->set_status($curproc, $args);
-	    }
-	    else {
-		croak("specify \$ticket_id");
-	    }
+    if ($command eq 'list') {
+	$thread->show_summary();
+    }
+    elsif ($command eq 'close') {
+	$curproc->lock();
 
-	    $curproc->unlock();
+	my $thread_id = $argv->[ 2 ];
+	my $args = {
+	    thread_id => $thread_id, 
+	    status    => 'close',
+	};
+	if ($thread_id) {
+	    $thread->set_status($curproc, $args);
 	}
 	else {
-	    croak("unknown command=$command\n");
+	    croak("specify \$thread_id");
 	}
+
+	$curproc->unlock();
     }
     else {
-	Log($@);
+	croak("unknown command=$command\n");
     }
 }
 
