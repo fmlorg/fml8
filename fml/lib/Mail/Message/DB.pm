@@ -4,12 +4,16 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.1.2.4 2003/06/03 13:49:08 fukachan Exp $
+# $FML: DB.pm,v 1.1.2.5 2003/06/04 13:37:22 fukachan Exp $
 #
 
 package Mail::Message::DB;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
+	    @table_list
+	    @orig_header_fields @header_fields
+	    %header_field_type 
+	    );
 use Carp;
 
 use lib qw(../../../../fml/lib
@@ -17,37 +21,47 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.1.2.4 2003/06/03 13:49:08 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.1.2.5 2003/06/04 13:37:22 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 my $debug = 1;
 
-my $keepalive = 1;
+my $is_keepalive = 1;
 
 #     map = { key => value } (normal order hash)
 # inv_map = { value => key } (inverted hash)
 #             or
 #           { value => "key key2 key3 ..."  } (inverted hash)
-my (@table_list) = qw(
-		      from who date subject to cc reply_to
 
-		      message_id
-		      inv_message_id
 
-		      ref_key_list
-		      next_key
-		      prev_key
+%header_field_type = (
+		  from       => 'ADDR',
+		  date       => 'STR',
+		  subject    => 'STR,MIME_DECODE',
+		  to         => 'ADDR_LIST',
+		  cc         => 'ADDR_LIST',
+		  reply_to   => 'ADDR_LIST',
+		  message_id => 'ADDR,INVERSE_MAP',
+		  references => 'ADDR_LIST',
+		  );
 
-		      filename
-		      filepath
-		      subdir
+@table_list    = qw(who
 
-		      month 
-		      inv_month
+		    inv_message_id
 
-		      hint
-		      );
+		    ref_key_list
+		    next_key
+		    prev_key
 
+		    filename
+		    filepath
+		    subdir
+
+		    month 
+		    inv_month
+
+		    hint
+		    );
 
 
 =head1 NAME
@@ -123,6 +137,12 @@ sub new
     # $db_name/$table uses $key as primary key.
     set_db_name($me, $args->{ db_name }) if defined $args->{ db_name };
     set_key($me,     $args->{ key })     if defined $args->{ key };
+
+    # genearete @orig_header_fields based on @header_fields
+    @header_fields = sort keys %header_field_type;
+    for my $hdr (@header_fields) {
+	push(@orig_header_fields, "orig_$hdr");
+    }
 		
     return bless $me, $type;
 }
@@ -155,48 +175,26 @@ sub DESTROY
 sub analyze
 {
     my ($self, $msg) = @_;
-    my $hdr      = $msg->whole_message_header;
-    my $date     = $hdr->get('date');     $date    =~ s/\s*$//;
-    my $to       = $hdr->get('to');       $to      =~ s/\s*$//;
-    my $cc       = $hdr->get('cc');       $cc      =~ s/\s*$//;
-    my $replyto  = $hdr->get('reply-to'); $replyto =~ s/\s*$//;
-    my $subject  = $hdr->get('subject');  $subject =~ s/\s*$//;
-    my $id       = $self->get_key();
-    my $month    = $self->msg_time($hdr, 'yyyy/mm');
-    my $subdir   = $self->msg_time($hdr, 'yyyymm');
-    my $_subject = $self->_decode_mime_string($subject);
-    my $who      = $self->_who_of_address( $hdr->get('from') );
-    my $ra_from  = $self->_address_clean_up( $hdr->get('from') );
-    my $ra_mid   = $self->_address_clean_up( $hdr->get('message-id') );
-    my $from     = $ra_from->[0] || 'unknown';
-    my $mid      = $ra_mid->[0]  || '';
+    my $hdr    = $msg->whole_message_header;
+    my $id     = $self->get_key();
+    my $month  = $self->msg_time($hdr, 'yyyy/mm');
+    my $subdir = $self->msg_time($hdr, 'yyyymm');
 
     my $db = $self->db_open();
 
     $self->_update_max_id($db, $id);
+    $self->_save_header_info($db, $id, $hdr);
 
-    $self->_db_set($db, 'date',     $id, $date);     # Sun Jun 1 13:46:15 ...
-    $self->_db_set($db, 'from',     $id, $from);     # rudo@nuinui.net
-    $self->_db_set($db, 'reply_to', $id, $replyto);  # a@b
-    $self->_db_set($db, 'who',      $id, $who);      # Rudolf Shumidt
-    $self->_db_set($db, 'subject',  $id, $_subject); # subject string ...
-    $self->_db_set($db, 'to',       $id, $to);       # a@b
-    $self->_db_set($db, 'cc',       $id, $cc);       # a@b
-    $self->_db_set($db, 'month',    $id, $month);    # 2003/06
-    $self->_db_set($db, 'subdir',   $id, $subdir);   # 200306
-    $self->_db_set($db, 'id',       $id, $id);       # 100
-
-    if ($mid) {
-	$self->_db_set($db, 'message_id',     $id, $mid); # 20030601rudo@nui
-	$self->_db_set($db, 'inv_message_id', $mid, $id); # REVERSE_MAP
-    }
+    $self->_db_set($db, 'id',     $id, $id);       # 100 => 100
+    $self->_db_set($db, 'month',  $id, $month);    # 100 => 2003/06
+    $self->_db_set($db, 'subdir', $id, $subdir);   # 100 => 200306
 
     # HASH { YYYY/MM => (id1 id2 id3 ..) }
     $self->_db_array_add($db, 'inv_month', $month, $id);
 
     $self->_analyze_thread($db, $msg, $hdr);
 
-    unless ($keepalive) {
+    unless ($is_keepalive) {
 	$self->db_close();
     }
 }
@@ -227,6 +225,55 @@ sub _update_max_id
     else {
 	_PRINT_DEBUG("mode = child");
     }
+}
+
+
+# Descriptions: extract and format if needed header infomation
+#               and save them into db.
+#    Arguments: OBJ($self) HASH_REF($db) NUM($id) OBJ($hdr)
+# Side Effects: update hint in $db
+# Return Value: none
+sub _save_header_info
+{
+    my ($self, $db, $id, $hdr) = @_;
+    my ($fld, $val);
+
+    # @header_fields may be overwritten. For example, 
+    #   key = message_id
+    #   fld = message-id
+    #   val = xxx@yyy.domain
+    for my $key (@header_fields) {
+	$fld =  $key;
+	$fld =~ s/_/-/g;
+	$fld =~ tr/A-Z/a-z/;  
+	$val =  $hdr->get($fld);
+	$val =~ s/\s*$//;
+
+	$self->_db_set($db, "orig_$key", $id, $val);
+	
+	# ADDR type: save the first element of address list.
+	if ($header_field_type{ $key } =~ /ADDR/) { # ADDR or ADDR_LIST
+	    my $ra_val = $self->_address_clean_up( $val );
+	    $val = $ra_val->[0] || '';
+	    $self->_db_set($db, $key, $id, $val);
+	}
+	elsif ($header_field_type{ $key } =~ /MIME_DECODE/) {
+	    $val = $self->_decode_mime_string($val);
+	    $self->_db_set($db, $key, $id, $val);
+	}
+	else {
+	    $self->_db_set($db, $key, $id, $val);
+	}
+
+	# reverse map { $key => $id }
+	if ($header_field_type{ $key } =~ /INVERSE_MAP/) {
+	    $self->_db_set($db, "inv_$key", $val, $id);
+	}
+    }
+
+    # what is called, "Gecos field"
+    my $who = $self->_who_of_address( $hdr->get('from') );
+    $self->_db_set($db, 'who',      $id, $who);      # Rudolf Shumidt
 }
 
 
@@ -566,7 +613,7 @@ sub db_open
 
     eval qq{ use $db_type; use Fcntl;};
     unless ($@) {
- 	for my $db (@table_list) {
+ 	for my $db (@orig_header_fields, @header_fields, @table_list) {
 	    my $file = "$db_dir/${db}";
 	    my $str = qq{
 		my \%$db = ();
@@ -598,7 +645,7 @@ sub db_close
 
     _PRINT_DEBUG("db_close()");
 
-    for my $db (@table_list) {
+    for my $db (@orig_header_fields, @header_fields, @table_list) {
 	my $str = qq{
 	    my \$${db} = \$self->{ _db }->{ '_$db' };
 	    untie \%\$${db};
@@ -646,7 +693,7 @@ sub _db_set
     my ($self, $db, $table, $key, $value) = @_;
 
     if (defined $value && $value) {
-	_PRINT_DEBUG("db: table=$table { $key => $value }");
+	_PRINT_DEBUG("_db_set: table=$table { $key => $value }");
 	$db->{ "_$table" }->{ $key } = $value;
     }
 }
