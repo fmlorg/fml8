@@ -4,12 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent3.pm,v 1.19 2003/09/13 13:01:01 fukachan Exp $
+# $FML: MimeComponent.pm,v 1.4 2003/09/20 13:43:31 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
+	    $recursive_level $recursive_max_level);
 use Carp;
 use ErrorStatus qw(error_set error error_clear);
 use FML::Log qw(Log LogWarn LogError);
@@ -66,7 +67,14 @@ sub new
 {
     my ($self, $curproc) = @_;
     my ($type) = ref($self) || $self;
-    my $me     = { _curproc => $curproc };
+    my %count  = ();
+    my %reason = ();
+    my $me     = { 
+	_curproc => $curproc,
+	_count   => \%count,
+	_reason  => \%reason,
+    };
+
     return bless $me, $type;
 }
 
@@ -94,6 +102,70 @@ my $default_action = 'permit';
 my $opt_cut_off_empty_part = 1;
 
 
+# Descriptions: parser of child multipart
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
+# Side Effects: update $recursive_level
+# Return Value: NUM
+sub _rfc822_mime_component_check
+{
+    my ($self, $msg, $args) = @_;
+    my $recursive_max_level = 10;
+    my $curproc = $self->{ _curproc };
+
+    $recursive_level ||= 0;
+    $recursive_level++;
+
+    if ($debug) {
+	print STDERR "\t_rfc822_mime_component_check ($recursive_level)\n";
+    }
+
+    if ($recursive_level > $recursive_max_level) {
+	croak("too deep recursive call");
+    }
+    else {
+	my $tmpf = $self->_temp_file_path();
+
+	use FileHandle;
+	my $wh = new FileHandle "> $tmpf";
+	if (defined $wh) {
+	    $msg->print($wh);
+	    $wh->close();
+	}
+
+	my $rh = new FileHandle $tmpf;
+	if (defined $rh) {
+	    use Mail::Message;
+	    my $msg0 = new Mail::Message->parse( { fd => $rh } );
+	    $self->mime_component_check($msg0, $args);
+	}
+    }
+
+    $recursive_level--;
+}
+
+
+# Descriptions: return temporary file path to be used.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
+sub _temp_file_path
+{
+    my ($self) = @_;
+    my $curproc = $self->{ _curproc };
+
+    if (defined $curproc) {
+	return $curproc->temp_file_path();
+    }
+    elsif ($debug) {
+	return "./fileter.debug.$$";
+    }
+    else {
+	$curproc->logerror("\$curproc is mandatory");
+	croak("\$curproc undefined");
+    }
+}
+
+
 # Descriptions: top level dispatcher
 #    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
 # Side Effects: none
@@ -106,14 +178,16 @@ sub mime_component_check
     my $is_cutoff = 0; # debug
     my $i = 1;
     my $j = 1;
-    my %count  = ();
-    my %reason = ();
+    my $count  = $self->{ _count };
+    my $reason = $self->{ _reason };
 
     # whole message type
     my $whole_data_type = $msg->whole_message_header_data_type();
 
     # debug info
     if ($debug) { $self->dump_message_structure($msg);}
+
+    $recursive_level ||= 0;
 
   MSG:
     for ($mp = $msg, $i = 1; $mp; $mp = $mp->{ next }) {
@@ -124,7 +198,17 @@ sub mime_component_check
 	next MSG if ($data_type eq "text/rfc822-headers");
 	next MSG if ($data_type =~ "multipart\.");
 
-	__dprint("\n   msg($i) $data_type");
+	if ($recursive_level > 0) {
+	    __dprint("\n   msg($recursive_level/$i) $data_type");
+	}
+	else {
+	    __dprint("\n   msg($i) $data_type");
+	}
+
+	if ($data_type =~ /message\/rfc822/i) {
+	    $self->_rfc822_mime_component_check($mp, $args);
+	    next MSG;
+	}
 
 	# apply all rules for this message $mp.
       RULE:
@@ -134,8 +218,8 @@ sub mime_component_check
 
 	    $action = $self->_rule_match($msg,$rule,$mp,$whole_data_type);
 	    if (defined $action) {
-		$count{ $action }++;
-		$reason{ $action } = join(" ", @$rule);
+		$count->{ $action }++;
+		$reason->{ $action } = join(" ", @$rule);
 
 		if ($action eq 'reject' || $action eq 'permit') {
 		    __dprint("\n\t! action = $action.");
@@ -169,9 +253,9 @@ sub mime_component_check
 	    # reject if no effective part.
 	    unless ($self->_has_effective_part($msg)) {
 		my $reason = "no effective part in this multipart";
-		$curproc->log($reason);
-		$count{ 'reject' }++;
-		$reason{ 'reject' } = $reject_reason = $reason;
+		$curproc->log($reason) if defined $curproc;
+		$count->{ 'reject' }++;
+		$reason->{ 'reject' } = $reject_reason = $reason;
 	    }
 	}
     }
@@ -182,15 +266,16 @@ sub mime_component_check
     # if matched with "reject" at laest once, reject the whole mail.
     my $decision = $default_action;
     my $_reason  = undef;
-    if (defined $count{ 'reject' } && $count{ 'reject' } > 0) {
+    if (defined $count->{ 'reject' } && $count->{ 'reject' } > 0) {
 	$decision = 'reject';
 	$_reason  = $reject_reason;
     }
     else {
 	# save the reason(s).
-	for my $key (keys %reason) {
+	for my $key (keys %$reason) {
 	    if ($key ne 'reject') {
-		$_reason .= $_reason ? " + ".$reason{ $key } : $reason{ $key };
+		$_reason .= 
+		    $_reason ? " + ".$reason->{ $key } : $reason->{ $key };
 	    }
 
 	    if ($key eq 'permit') {
@@ -198,13 +283,17 @@ sub mime_component_check
 	    }
 	}
     }
+    
+    $_reason ||= $self->{ _reject_reason } || "default action";
+    if (defined $curproc) {
+	$curproc->log("mime_component_filter: $decision ($_reason)");
+    }
 
-    $_reason ||= "default action";
-    $curproc->log("mime_component_filter: $decision ($_reason)");
-    __dprint("\n   our desicion: $decision ($_reason)");
+    __dprint("\n   our desicion($recursive_level): $decision ($_reason)");
 
     if ($decision eq 'reject') {
 	$self->error_set($_reason);
+	$self->{ _reject_reason } = $_reason;
     }
     return $decision;
 }
@@ -514,6 +603,7 @@ if ($0 eq __FILE__) {
 	    print STDERR "\n";
 	}
     };
+    print $@ if $@;
 }
 
 
