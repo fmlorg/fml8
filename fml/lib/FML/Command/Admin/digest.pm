@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.15 2004/01/01 08:48:40 fukachan Exp $
+# $FML: digest.pm,v 1.16 2004/01/01 23:52:11 fukachan Exp $
 #
 
 package FML::Command::Admin::digest;
@@ -87,7 +87,6 @@ sub process
     my $digest_recipient_maps =
 	$config->get_as_array_ref('digest_recipient_maps');
 
-    # XXX-TODO: validate $address ?
     my $address = $command_args->{ command_data } || $options->[ 0 ] || undef;
     my $mode    = $options->[ 1 ] || '';
 
@@ -100,6 +99,13 @@ sub process
 	unless defined $digest_recipient_map;
     croak("digest_recipient_maps not definde")
 	unless defined $digest_recipient_maps;
+
+    use FML::Restriction::Base;
+    my $safe = new FML::Restriction::Base;
+    unless ($safe->regexp_match('address', $address)) {
+	$curproc->logerror("digest: unsafe address <$address>");
+	croak("unsafe address");
+    }
 
     my $digest_args = {
 	address                      => $address,

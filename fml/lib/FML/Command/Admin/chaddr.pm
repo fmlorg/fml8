@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.21 2004/01/01 08:41:33 fukachan Exp $
+# $FML: chaddr.pm,v 1.22 2004/01/01 08:48:39 fukachan Exp $
 #
 
 package FML::Command::Admin::chaddr;
@@ -95,13 +95,22 @@ sub process
 
     $curproc->log("chaddr: $old_address -> $new_address");
 
-    # XXX-TODO: validate $old_address and $new_address syntax.
     # sanity check
     unless ($old_address && $new_address) {
 	croak("chaddr: invalid arguments");
     }
     croak("\$member_map not specified")    unless $member_map;
     croak("\$recipient_map not specified") unless $recipient_map;
+
+    # check syntax of old or new addresses.
+    use FML::Restriction::Base;
+    my $safe = new FML::Restriction::Base;
+    unless ($safe->regexp_match('address', $old_address)) {
+	croak("chaddr: unsafe old address: $old_address");
+    }    
+    unless ($safe->regexp_match('address', $new_address)) {
+	croak("chaddr: unsafe new address: $new_address");
+    }    
 
     # uc_args = FML::User::Control specific parameters
     my (@maps) = ($member_map, $recipient_map);

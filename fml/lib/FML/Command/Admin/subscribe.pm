@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.27 2004/01/01 23:52:13 fukachan Exp $
+# $FML: subscribe.pm,v 1.28 2004/01/02 14:44:46 fukachan Exp $
 #
 
 package FML::Command::Admin::subscribe;
@@ -88,7 +88,13 @@ sub process
     croak("\$member_map is not specified")    unless $member_map;
     croak("\$recipient_map is not specified") unless $recipient_map;
 
-    # XXX-TODO: validate $address syntax.
+    use FML::Restriction::Base;
+    my $safe = new FML::Restriction::Base;
+    unless ($safe->regexp_match('address', $address)) {
+	$curproc->logerror("subscribe: unsafe address <$address>");
+	croak("unsafe address");
+    }
+
     # FML::User::Control specific parameters
     my $uc_args = {
 	address => $address,

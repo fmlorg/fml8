@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: changepassword.pm,v 1.8 2004/01/01 08:41:33 fukachan Exp $
+# $FML: changepassword.pm,v 1.9 2004/01/01 08:48:39 fukachan Exp $
 #
 
 package FML::Command::Admin::changepassword;
@@ -104,11 +104,22 @@ sub process
 	    croak("wrong arguments");
 	}
 
-	# XXX-TODO: validate $address syntax.
-	$self->_change_password($curproc, $command_args, $address, $password);
+	use FML::Restriction::Base;
+	my $safe = new FML::Restriction::Base;
+	if ($safe->regexp_match('address', $address)) {
+	    $self->_change_password($curproc, 
+				    $command_args, 
+				    $address, 
+				    $password);
+	}
+	else {
+	    croak("unsafe address: $address");
+	    $curproc->logerror("unsafe address: $address");
+	}
     }
     else {
-	$curproc->logerror("myname=$myname unknown program");
+	croak("this program not support this function");
+	$curproc->logerror("myname=$myname not support this function");
     }
 }
 
