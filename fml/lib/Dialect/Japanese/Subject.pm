@@ -57,10 +57,10 @@ sub new
 # レレレ対策
 sub cut_off_reply_tag
 {
-    my ($x) = @_;
-    my ($y, $limit, $pattern);
+    my ($subject) = @_;
+    my ($y, $limit);
 
-    Jcode::convert(\$x, 'euc');
+    Jcode::convert(\$subject, 'euc');
 
     if ($CUT_OFF_RERERE_PATTERN) {
 	Jcode::convert(*CUT_OFF_RERERE_PATTERN, 'euc');
@@ -69,16 +69,16 @@ sub cut_off_reply_tag
     $pattern .= '|' . $CUT_OFF_RERERE_PATTERN if ($CUT_OFF_RERERE_PATTERN);
 
     # fixed by OGAWA Kunihiko <kuni@edit.ne.jp> (fml-support: 07815)
-    # $x =~ s/^((\s*|(　)*)*($pattern)\s*)+/Re: /oi;
-    $x =~ s/^((\s|(　))*($pattern)\s*)+/Re: /oi;
+    # $subject =~ s/^((\s*|(　)*)*($pattern)\s*)+/Re: /oi;
+    $subject =~ s/^((\s|(　))*($pattern)\s*)+/Re: /oi;
 
     if ($CUT_OFF_RERERE_HOOK) { 
 	eval($CUT_OFF_RERERE_HOOK);
 	&Log($@) if $@;
     }
 
-    Jcode::convert(*x, 'jis');
-    $x;
+    Jcode::convert(\$subject, 'jis');
+    $subject;
 }
 
 
