@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.6 2002/09/11 23:18:18 fukachan Exp $
+# $FML: Command.pm,v 1.7 2002/09/22 14:56:56 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -54,6 +54,9 @@ sub is_secure_command_string
    #           command = [-\d\w]+
    #      mail address = [-_\w]+@[\w\-\.]+
    #   command options = last:30
+   #
+   # XXX-TODO: sync w/ mailaddress regexp in FML::Restriction::Base.
+   #
    if ($s =~/^[-\d\w]+\s*$/o) {
        return 1;
    }
@@ -80,6 +83,10 @@ return 1 if $string looks valid email address.
 sub is_valid_mail_address
 {
     my ($s) = @_;
+
+    #
+    # XXX-TODO: sync w/ mailaddress regexp in FML::Restriction::Base.
+    #
 
     # 1. NOT Japanese strings
     ($s !~ /\s|\033\$[\@B]|\033\([BJ]/ &&
