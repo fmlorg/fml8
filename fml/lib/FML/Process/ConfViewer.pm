@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.21 2003/08/23 04:35:38 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.22 2003/08/23 04:43:41 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -74,7 +74,7 @@ sub prepare
     my $eval = $config->get_hook( 'fmlconf_prepare_start_hook' );
     if ($eval) {
 	eval qq{ $eval; };
-	print STDERR $@ if $@;
+	$curproc->logwarn($@) if $@;
     }
 
     $curproc->resolve_ml_specific_variables( $args );
@@ -84,7 +84,7 @@ sub prepare
     $eval = $config->get_hook( 'fmlconf_prepare_end_hook' );
     if ($eval) {
 	eval qq{ $eval; };
-	print STDERR $@ if $@;
+	$curproc->logwarn($@) if $@;
     }
 }
 
@@ -103,7 +103,7 @@ sub verify_request
     my $eval = $config->get_hook( 'fmlconf_verify_request_start_hook' );
     if ($eval) {
 	eval qq{ $eval; };
-	print STDERR $@ if $@;
+	$curproc->logwarn($@) if $@;
     }
 
     if (length(@$argv) == 0 || (not $argv->[0])) {
@@ -114,7 +114,7 @@ sub verify_request
     $eval = $config->get_hook( 'fmlconf_verify_request_end_hook' );
     if ($eval) {
 	eval qq{ $eval; };
-	print STDERR $@ if $@;
+	$curproc->logwarn($@) if $@;
     }
 }
 
@@ -146,7 +146,7 @@ sub run
     my $eval = $config->get_hook( 'fmlconf_run_start_hook' );
     if ($eval) {
 	eval qq{ $eval; };
-	print STDERR $@ if $@;
+	$curproc->logwarn($@) if $@;
     }
 
     $curproc->_fmlconf($args);
@@ -154,7 +154,7 @@ sub run
     $eval = $config->get_hook( 'fmlconf_run_end_hook' );
     if ($eval) {
 	eval qq{ $eval; };
-	print STDERR $@ if $@;
+	$curproc->logwarn($@) if $@;
     }
 }
 
@@ -199,13 +199,13 @@ sub finish
     my $eval = $config->get_hook( 'fmlconf_finish_start_hook' );
     if ($eval) {
 	eval qq{ $eval; };
-	print STDERR $@ if $@;
+	$curproc->logwarn($@) if $@;
     }
 
     $eval = $config->get_hook( 'fmlconf_finish_end_hook' );
     if ($eval) {
 	eval qq{ $eval; };
-	print STDERR $@ if $@;
+	$curproc->logwarn($@) if $@;
     }
 }
 
