@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.15 2002/09/22 14:56:42 fukachan Exp $
+# $FML: Auth.pm,v 1.16 2002/12/18 04:46:21 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -37,7 +37,7 @@ dummy :-)
 =cut
 
 
-# Descriptions: ordinary constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: OBJ
@@ -50,7 +50,7 @@ sub new
 }
 
 
-# Descriptions: virtual reject handler, just return 0 :-)
+# Descriptions: virtual reject handler, just return __LAST__ :-)
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: STR (__LAST__, a special upcall)
@@ -145,6 +145,7 @@ sub check_admin_member_password
 	return 0;
     }
 
+    # XXX-TODO: validate $address here ?
     # get candidates
     my ($user, $domain) = split(/\@/, $address);
 
@@ -166,6 +167,8 @@ sub check_admin_member_password
 		my ($u, $p_infile) = split(/\s+/, $r);
 		my $p_input        = crypt( $password, $p_infile );
 
+		# XXX-TODO: is_same_assress() validates input ??? 
+		# XXX-TODO: we need to validate addresses here ??? 
 		# 1.1 user match ?
 		if ($cred->is_same_address($u, $address)) {
 		    # 1.2 password match ?
