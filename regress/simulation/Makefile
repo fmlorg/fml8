@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.74 2003/12/24 12:50:31 fukachan Exp $
+# $FML: Makefile,v 1.75 2003/12/28 13:24:07 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -55,6 +55,9 @@ check:
 	   tee 44_STYLE
 	- test -s 33_TODO  || rm -f 33_TODO
 	- test -s 44_STYLE || rm -f 44_STYLE
+	@ echo ""; echo "-- summary"; echo "";
+	@ echo -n "TODO: ";
+	@ grep TODO 33_TODO| wc -l
 
 link: clean_link _link
 
