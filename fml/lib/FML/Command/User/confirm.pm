@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.29 2004/02/15 04:38:30 fukachan Exp $
+# $FML: confirm.pm,v 1.30 2004/02/24 14:36:52 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -198,6 +198,10 @@ sub _switch_command
 	}
     }
 
+    if ($class eq 'unsubscribe') {
+	$curproc->command_context_set_normal_stop();
+	$curproc->log("need no more command processing.");
+    }
 }
 
 
