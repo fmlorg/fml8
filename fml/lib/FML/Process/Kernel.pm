@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.97 2002/05/21 11:21:47 fukachan Exp $
+# $FML: Kernel.pm,v 1.98 2002/05/21 11:43:03 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -464,7 +464,7 @@ sub parse_incoming_message
     # save input message for further investigation
     my $config  = $curproc->{ config };
     if ($config->yes('use_incoming_message_cache')) { 
-	my $dir     = $config->{ mail_incoming_dir };
+	my $dir     = $config->{ incoming_message_dir };
 	my $modulus = $config->{ incoming_message_cache_size };
         my $obj     = new File::CacheDir {
             directory  => $dir,
