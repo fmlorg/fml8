@@ -1,11 +1,78 @@
 <!--
-   $FML: restriction.sgml,v 1.4 2001/10/21 02:18:09 fukachan Exp $
+   $FML: restriction.sgml,v 1.1 2001/11/25 12:03:24 fukachan Exp $
 -->
 
 <chapter id="restriction">
 	<title>
-	制限
+	入力データへの制限
 	</title>
+
+
+<sect1 id="restriction.overview">
+	<title>
+	入力の検査についての概要
+	</title>
+
+<sect2>
+	<title>
+	投稿
+	</title>
+
+<para>
+チェックなしがデフォルト。
+もしフィルタをしたい場合は FML::Filter クラスが検査を担当する。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	コマンドメール
+	</title>
+
+<para>
+コマンドメールは FML::Process::Command で一行ずつ
+FML::Restriction::Command で定義されているルールで
+検査される。合格すれば、
+FML::Command::User::コマンド の実行に進むことができる。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	CGI
+	</title>
+
+<para>
+safe_param_ほえほえ() という関数経由でのみ CGI から
+データを受けとることができる。
+</para>
+
+<para>
+safe_param_XXX() は FML::Restriction::CGI (
+FML::Restriction::Base を継承している)経由でパターンの検査をす
+る。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	makefml
+	</title>
+
+<para>
+コマンドラインで実行するので、入力チェックなしがデフォルト
+</para>
+
+</sect2>
+
+
+</sect1>
 
 
 <sect1 id="restriction.class">
