@@ -1,7 +1,0 @@
-### Section: Subscribe Request
-# req.subscribe.forwarded_to_admin:
-1: 	_ARG0_リクエストはメーリングリストの管理者にフォワードされました。
-1: 	少し待ってみて下さい。
-
-# req.digest.no_spool:
-2: 	_ARG0_ は(記事をアーカイブしてないため)使用できません。
