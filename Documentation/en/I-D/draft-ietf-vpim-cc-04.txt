@@ -803,7 +803,7 @@ Burger                     Expires 9/30/01                  [Page 14]
 16. Acknowledgments 
     
    Emily Candell of Comverse Network Systems was instrumental in 
-   helping work out the base issues in the û00 draft in Adelaide. 
+   helping work out the base issues in the “00 draft in Adelaide. 
     
    Ned Freed pointed out that this mechanism was about criticality, not 
    notification.  That insight made the concept and descriptions 

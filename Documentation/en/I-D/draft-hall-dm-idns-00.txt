@@ -123,15 +123,15 @@
       
      The following abbreviations are used throughout this document: 
       
-          UCS (Universal Character Set) “ The ISO/IEC 10646 character 
+          UCS (Universal Character Set) - The ISO/IEC 10646 character 
             set repertoire, as represented by the Unicode 3.1 
             specification. 
       
-          ACE (ASCII-Compatible Encoding) “ A transfer encoding which 
+          ACE (ASCII-Compatible Encoding) - A transfer encoding which 
             encodes UCS character codes into a seven-bit codespace 
             which is compatible with US-ASCII. 
       
-          UTF-8 (UCS Transformation Format, Eight-Bit) “ A transfer 
+          UTF-8 (UCS Transformation Format, Eight-Bit) - A transfer 
             encoding which encodes UCS characters into an eight-bit 
             codespace which is compatible with DNS message formats. 
       
@@ -313,7 +313,7 @@
      and application in one form or another. However, most usages fall 
      under one or more of the following scenarios: 
       
-        *   Connection identifiers “ Domain names are most commonly 
+        *   Connection identifiers. Domain names are most commonly 
             used as host-specific identifiers for outbound connection 
             requests, whether this be for a command-line application 
             such as ping, or as a host name which is stored in an 
@@ -352,7 +352,7 @@
             manner, the ACE equivalent domain name will be negotiated 
             for the operation at hand. 
       
-        *   Protocol data “ Some application protocols exchange domain 
+        *   Protocol data. Some application protocols exchange domain 
             names as protocol data, with those domain names either 
             determining or altering a service-specific operation. 
             Examples of this usage include SMTP envelopes ("RCPT TO 
@@ -375,7 +375,7 @@
             to provide these protocols with access to the 
             internationalized namespace. 
       
-        *   Structured application data “ Structured application data 
+        *   Structured application data. Structured application data 
             is similar to protocol data in that it can trigger or 
             affect some protocol action, although this will not always 
             occur. For example, a web browser can process an embedded 
@@ -406,7 +406,7 @@
             application data, and to determine the appropriate course 
             of action for each usage accordingly. 
       
-        *   Unstructured application data “ Many application protocols 
+        *   Unstructured application data. Many application protocols 
             provide free-text data which can contain domain names, but 
             with those domain names existing as unstructured data. For 
             example, an email message which is provided as a text/plain 
@@ -1550,14 +1550,14 @@
          |0 1|0 0 0 0 1 1|    length     |  label data  ///  | 
          +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 
       
-          0b01 “ The extended label identifier. 
+          0b01 - The extended label identifier. 
       
-          0b000011 “ The EDNS/UTF-8 extended label type identifier. 
+          0b000011 - The EDNS/UTF-8 extended label type identifier. 
       
-          Length “ The number of octets in the label data, or the off-
+          Length - The number of octets in the label data, or the off-
             set to the length octet of another EDNS/UTF-8 label. 
       
-          Label data “ The label data, encoded as UTF-8 octets. 
+          Label data - The label data, encoded as UTF-8 octets. 
       
      The following example shows the domain name of me.com, where the 
      "e" in "me" is the UCS character <LATIN SMALL LETTER E WITH ACUTE> 

@@ -1411,11 +1411,11 @@ archives.                     Yes
                            4. Acknowledgments
 
 Harald Tveit Alvestrand, Neil Carpenter, William C.
-Carpenter, Rob Chandhok, Ned Freed, Olle J„rnefors, Jukka
+Carpenter, Rob Chandhok, Ned Freed, Olle Järnefors, Jukka
 Korpela, Usi Paz, Martin Platt, Keith Moore, Robert A.
 Rosenberg, Mark Symons, Nick Smith Michael C. Tiernan and
 several other people have helped me with compiling this
-list. I especially thank Ned Freed and Olle J„rnefors for
+list. I especially thank Ned Freed and Olle Järnefors for
 their thorough review and many helpful suggestions for
 improvements. I alone take responsibility for any errors
 which may still be in the list.

@@ -2,8 +2,8 @@
 
 Network Working Group                        K. Toyoda, MGCS
 Internet Draft                       D. Crocker, Brandenburg
-  draft-ietf-fax-esmtp-conneg-00.txt               June 2001
-Expires: <12/01>
+  draft-ietf-fax-esmtp-conneg-01.txt           November 2001
+Expires: May 2002
 
 
 
@@ -105,35 +105,32 @@ Expires: <12/01>
      in the CONNEG RCPT-TO reply, and transform data that is
      sent, so that the target can accept the data. The
      client SHOULD transform the data to the "highest" level
-     of capability of the server.
+     of capability of the target.
      
      Server Action:
           
           If the client specifies CONNEG in the RCPT-TO, but
-     the server does not support the CONNEG parameter, the
-     server MUST reject the RCPT-TO command with a 504
+     the target does not support the CONNEG parameter, the
+     target MUST reject the RCPT-TO command with a 504
      reply.
           
-          If the server does support the CONNEG parameter,
+          If the target does support the CONNEG parameter,
      then it MUST issue a 250 reply, followed by its
      capabilities of the target that is specified by the
      RCPT-TO address.
           
-          The response to a CONNEG RCPT-TO request will be
-     multi-line.  For successful (250) responses, at least
-     the first line of the response is for RCPT-TO
-     information other than CONNEG.  Additional response
-     lines are for CONNEG.    In order to avoid problems due
-     to variations in line buffer sizes, the total
-     parametric listing must be provided as a series of
-     lines, each beginning with "250-CONNEG" except for the
-     last line, which is "250 CONNEG".
-          
-          An alternative approach for lengthy CONNEG data
-     would be to fit the entire parameter list into one,
-     very long virtual line, using backslash ("\") escapes
-     at the end of each physical line.  This risks the
-     buffer overflow problem, cited above.
+           Successful responses to CONNEG RCPT-TO 
+     requests will always be multiple SMTP lines.  The
+     first line is the normal RCPT-TO response, and 
+     subsequent lines beginning with the exact string
+     "250-CONNEG " and "250 CONNEG " are the CONNEG responses.
+     The last line begins with "250 CONNEG ".  if the SMTP 
+     server supports ENHANCEDSTATUSCODES, the exact strings 
+     are "250-2.1.5 CONNEG " and "250 2.1.5 CONNEG ".
+
+         All CONNEG-capable clients and CONNEG-capable servers MUST
+     be able to successfully process CONNEG lines that are up to 512
+     characters long, as required by RFC2821.
           
           The contents of the capability listing MUST
      conform to the specifications in "Content Feature
@@ -143,14 +140,24 @@ Expires: <12/01>
 
 4.   SYNTAX
      
-     Content_Negotiation =    "CONNEG"
-     
-     Capability          =    <<as per [RFC2879]>>
+     Command with "CONNEG":
+      "RCPT TO:" ("<Postmaster@" domain ">" / "<Postmaster>"
+                   / Forward-Path) (SP "CONNEG") CRLF
+
+     Reply:
+      ( ("250-" CRLF) *("250-CONNEG" capability CRLF)
+        ("250 CONNEG" capability CRLF) )/
+      ( ("250-2.1.5" CRLF) 
+          *("250-2.1.5 CONNEG" capability CRLF)
+           ("250 2.1.5 CONNEG" capability CRLF) )
+
+      capability  =  <<as per [RFC2879]>>
 
 
 
 5.   EXAMPLE
      
+
      S: 220 ifax1.jp IFAX
      
      C: EHLO ifax1.jp
@@ -201,6 +208,43 @@ Expires: <12/01>
      
      S: 221 goodbye
 
+
+     An example when CONNEG-capable server supports 
+     ENHANCEDSTATUSCODES.
+     
+
+     S: 220 ifax1.jp IFAX
+     
+     C: EHLO ifax1.jp
+     
+     S: 250-ifax1.jp
+     S: 250-DSN
+     S: 250-ENHANCEDSTATUSCODES
+     S: 250 CONNEG
+          
+     C: MAIL FROM:<May@ifax2.jp>
+     
+     S: 250 2.1.5<May@ifax2.jp> sender ok
+     
+     C: RCPT TO:<June@ifax1.jp> CONNEG
+     
+     S: 250-2.1.5<June@ifax1.jp> recipient ok
+     S: 250-2.1.5 CONNEG (&(image-file-structure=TIFF-minimal)
+     S: 250-2.1.5 CONNEG   (MRC-mode=0)
+     S: 250-2.1.5 CONNEG   (color=Binary)
+     S: 250-2.1.5 CONNEG   (|(&(dpi=204)
+     S: 250-2.1.5 CONNEG       (dpi-xyratio=[204/98,204/196]) )
+     S: 250-2.1.5 CONNEG     (&(dpi=200)
+     S: 250-2.1.5 CONNEG       (dpi-xyratio=[200/100,1]) )
+     S: 250-2.1.5 CONNEG     (&(dpi=400)
+     S: 250-2.1.5 CONNEG       (dpi-xyratio=1) ) )
+     S: 250-2.1.5 CONNEG   (|(image-coding=[MH,MR,MMR])
+     S: 250-2.1.5 CONNEG      (&(image-coding=JBIG)
+     S: 250-2.1.5 CONNEG        (image-coding-constraint=JBIG-T85)
+     S: 250-2.1.5 CONNEG        (JBIG-stripe-size=128) ) )
+     S: 250-2.1.5 CONNEG   (paper-size=[letter,A4,B4])
+     S: 250 2.1.5 CONNEG   (ua-media=stationery) )
+     
 
 
 6.   IANA CONSIDERATIONS

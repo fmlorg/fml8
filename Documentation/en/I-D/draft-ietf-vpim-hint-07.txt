@@ -334,7 +334,7 @@ Burger et. al.             Expires 12/05/01                   [Page 5]
    convey information that is critical for presentation of the message.  
    One can conceive of goofy situations, such as a message marked 
    "voice-message" but without an audio body part.  In this case, the 
-   fact that the contents of a message don∆t match its context does not 
+   fact that the contents of a message donÀt match its context does not 
    mean the receiving system should generate an error report or fail to 
    deliver or process the message.  
     

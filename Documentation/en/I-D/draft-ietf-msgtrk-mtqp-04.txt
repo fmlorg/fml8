@@ -5,16 +5,16 @@
 
 
 Internet Draft                                                 T. Hansen
-draft-ietf-msgtrk-mtqp-03.txt                          AT&T Laboratories
-Valid for six months                                        July 1, 2001
+draft-ietf-msgtrk-mtqp-04.txt                          AT&T Laboratories
+Valid for six months                                   November 20, 2001
 
 
 
                     Message Tracking Query Protocol
 
-                    <draft-ietf-msgtrk-mtqp-03.txt>
+                    <draft-ietf-msgtrk-mtqp-04.txt>
 
-                         Authors' version: 1.7
+                         Authors' version: 1.10
 
      Status of this Memo
 
@@ -57,7 +57,7 @@ current routing status of that message.  This document describes the
 
 Hansen                                                          [Page 1]
 
-Internet Draft      Message Tracking Query Protocol         July 1, 2001
+Internet Draft      Message Tracking Query Protocol    November 20, 2001
 
 
 Message Tracking Query Protocol that is used in conjunction with exten-
@@ -76,9 +76,9 @@ The memo [DRAFT-TRACK-ESMTP] defines an extension to the SMTP service
 that provides the information necessary to track messages.  This memo
 defines a protocol that can be used to query the status of messages that
 have been transmitted on the Internet via SMTP.  The memo [DRAFT-TRACK-
-TSN] describes the message/tracking-status MIME media type that is used
-to report tracking status information.  Using the model document's ter-
-minology, this solution uses active enabling and active requests with
+TSN] describes the message/tracking-status [RFC-MIME] media type that is
+used to report tracking status information.  Using the model document's
+terminology, this solution uses active enabling and active requests with
 both request and chaining referrals.
 
 1.1.  Terminology
@@ -91,7 +91,48 @@ document are to be interpreted as described in [RFC-KEYWORDS].
 minal nodes not defined elsewhere in this document are defined in [RFC-
 ABNF], [RFC-URI], [DRAFT-TRACK-ESMTP] or [RFC-SMTPEXT].
 
-1.2.  Changes Made for -02
+1.2.  Changes Made for -04
+
+     Reworked the SRV lookup description.
+
+     Other comments from the list.
+
+     Changes to the ABNF.
+
+     Changed "must" to "MUST" in section 4.
+
+     Changed "may" to "MAY" in section 4.
+
+     More examples.
+
+     Eliminated the registry of vnd. options.
+
+     Eliminated lots of unused references.
+
+
+
+Hansen                                                          [Page 2]
+
+Internet Draft      Message Tracking Query Protocol    November 20, 2001
+
+
+1.3.  Changes Made for -03
+
+     Changed references.
+
+     Worked on error codes.
+
+     Made examples more real with secrets and hashes.
+
+     Fixes to examples.
+
+     Added dot-stuffed example.
+
+     Additional TLS info.
+
+     Better Security Considerations section.
+
+1.4.  Changes Made for -02
 
      This section will be removed before publication.
 
@@ -108,14 +149,6 @@ information on the option registry.
      Added text on various error conditions and fixed ABNF for error
 response codes.
 
-
-
-
-Hansen                                                          [Page 2]
-
-Internet Draft      Message Tracking Query Protocol         July 1, 2001
-
-
      Fleshed out the tracking examples.
 
 2.  Basic Operation
@@ -126,14 +159,22 @@ the server host starts the MTQP service by listening on TCP port XXXX
 (TBD by IANA).
 
      When an MTQP client wishes to make use of the message tracking ser-
-vice, it establishes a TCP connection with the server host.  To find the
-server host, the MTQP client first does an SRV lookup for the server
-host using DNS SRV records, with a service name of "mtqp".  (See the
-"Usage rules" section in [RFC-SRV] for details.)  If the host is not
-found, the MTQP client then does an MX lookup for the server host using
-DNS MX records, as specified in [RFC-DNS] and revised by [RFC-HOSTS].
-If the host is still not found, the MTQP client then does an A record
-lookup for the server host.
+vice, it establishes a TCP connection with the server host, as recorded
+from the initial message submission or as returned by a previous track-
+ing request.  To find the server host, the MTQP client first does an SRV
+lookup for the server host using DNS SRV records, with a service name of
+"mtqp" and a protocol name of "tcp", as in _mtqp._tcp.smtp3.example.com.
+
+
+
+Hansen                                                          [Page 3]
+
+Internet Draft      Message Tracking Query Protocol    November 20, 2001
+
+
+(See the "Usage rules" section in [RFC-SRV] for details.)  If the SRV
+records do not exist, the MTQP client then does an address record lookup
+for the server host.
 
      When the connection is established, the MTQP server sends a greet-
 ing.  The MTQP client and MTQP server then exchange commands and
@@ -153,7 +194,7 @@ Both mail and MTQP clients will access that host directly.
 ing queries to be performed on a different machine, MUST have an SRV
 MTQP record pointing at that different machine.
 
-     A mail system that uses multiple mail servers has two choices for
+     A mail system that uses multihomed mail servers has two choices for
 providing tracking services: either all mail servers must be running
 tracking servers that are able to retrieve information on all messages,
 or the tracking service must be performed on one (or more) machine(s)
@@ -161,16 +202,8 @@ that are able to retrieve information on all messages.  In the former
 case, no additional DNS records are needed beyond the MX records already
 in place for the mail system.  In the latter case, SRV MTQP records are
 needed that point at the machine(s) that are running the tracking ser-
-vice.  In both cases, note that the tracking service for a given mail
-domain MUST be able to handle the queries for all messages destined for
-that mail domain.
-
-
-
-Hansen                                                          [Page 3]
-
-Internet Draft      Message Tracking Query Protocol         July 1, 2001
-
+vice.  In both cases, note that the tracking service MUST be able to
+handle the queries for all messages accepted by that mail system.
 
 2.2.  Commands
 
@@ -187,20 +220,27 @@ before the CRLF.
 cess or failure.  Successful commands may also be followed by additional
 lines of data.  All response lines are terminated by a CRLF pair and are
 limited to 998 characters before the CRLF.  There are several status
+
+
+
+Hansen                                                          [Page 4]
+
+Internet Draft      Message Tracking Query Protocol    November 20, 2001
+
+
 indicators:  "+OK" indicates success; "+OK+" indicates a success fol-
 lowed by additional lines of data, a multi-line success response; "-
 TEMP" indicates a temporary failure; "-ERR" indicates a permanent
 failure; and "-BAD" indicates a protocol error (such as for unrecognized
 commands).
 
-     A status indicator MAY be followed by a series of machine-
-parseable, case-insensitive response information giving more data about
-the errors.  These are separated from the status indicator and each
-other by a single slash character ("/", decimal code 47).  Following
-that, there MAY be white space and a human-readable text message.  The
-human-readable text message is not intended to be presented to the end
-user, but should be appropriate for putting in a log for use in debug-
-ging problems.
+     A status indicator MAY be followed by a series of machine-parsable,
+case-insensitive response information giving more data about the errors.
+These are separated from the status indicator and each other by a single
+slash character ("/", decimal code 47).  Following that, there MAY be
+white space and a human-readable text message.  The human-readable text
+message is not intended to be presented to the end user, but should be
+appropriate for putting in a log for use in debugging problems.
 
      In a multi-line success response, each subsequent line is ter-
 minated by a CRLF pair and limited to 998 characters before the CRLF.
@@ -221,28 +261,30 @@ indicator.  A server MUST respond to a command issued when the session
 is in an incorrect state by responding with a negative -ERR status indi-
 cator.
 
-
-
-Hansen                                                          [Page 4]
-
-Internet Draft      Message Tracking Query Protocol         July 1, 2001
-
-
 2.4.  Optional Timers
 
      An MTQP server MAY have an inactivity autologout timer.  Such a
 timer MUST be of at least 10 minutes in duration.  The receipt of any
 command from the client during that interval should suffice to reset the
-autologout timer.  An MTQP server MAY limit the number of commands or
-total connection time to prevent denial of service attacks.
+autologout timer.  An MTQP server MAY limit the number of commands,
+unrecognized commands, or total connection time, or MAY use other cri-
+teria, to prevent denial of service attacks.
 
 2.5.  Firewall Considerations
 
      A firewall mail gateway has two choices when receiving a tracking
 query for a host within its domain: it may return a response to the
 query that says the message has been passed on, but no further informa-
-tion is available; or it may perform a chaining operation itself, gath-
-ering information on the message from the mail hosts behind the
+tion is available; or it may perform a chaining operation itself,
+
+
+
+Hansen                                                          [Page 5]
+
+Internet Draft      Message Tracking Query Protocol    November 20, 2001
+
+
+gathering information on the message from the mail hosts behind the
 firewall, and returning to the MTQP client the information for each
 behind-the-firewall hop, or possibly just the final hop information,
 possibly also disguising the names of any hosts behind the firewall.
@@ -264,9 +306,9 @@ vailable".
      "/" "unavailable"
      "/" "admin"
 
-     The reason code "/admin" may be used when the service is unavail-
-able for administrative reasons.  The reason code "/unavailable" may be
-used when the service is unavailable for other reasons.
+     The reason code "/admin" SHOULD be used when the service is una-
+vailable for administrative reasons.  The reason code "/unavailable"
+SHOULD be used when the service is unavailable for other reasons.
 
      If the server has any options enabled, they are listed as the
 multi-line response of the initial status response, one per line.  An
@@ -274,15 +316,8 @@ option specification consists of an identifier, optionally followed by
 option-specific parameters.  An option specification may be continued
 onto additional lines by starting the continuation lines with white
 space.  The option identifier is case insensitive.  Option identifiers
-beginning with the characters "vnd." are reserved for vendor use.
-
-
-
-
-Hansen                                                          [Page 5]
-
-Internet Draft      Message Tracking Query Protocol         July 1, 2001
-
+beginning with the characters "vnd." are reserved for vendor use.  (See
+below.)
 
      One option specification is defined here:
 
@@ -297,6 +332,14 @@ ported by the MTQP server.  It has no parameters.
      Example #2 (service temporarily unavailable):
      S: -TEMP/MTQP/admin Service down for admin, call back later
 
+
+
+
+Hansen                                                          [Page 6]
+
+Internet Draft      Message Tracking Query Protocol    November 20, 2001
+
+
      Example #3 (service permanently unavailable):
      S: -ERR/MTQP/unavailable Service down
 
@@ -307,8 +350,8 @@ ported by the MTQP server.  It has no parameters.
      Example #5 (options available):
      S: +OK+/MTQP MTQP server ready
      S: starttls
-     S: Option2 with parameters
-     S: Option3 with a very long
+     S: vnd.com.example.option2 with parameters private to example.com
+     S: vnd.com.example.option3 with a very long
      S:  list of parameters
      S: .
 
@@ -325,23 +368,15 @@ A described in [DRAFT-TRACK-ESMTP], encoded using base64.
      When the client issues the TRACK command, and the user is vali-
 dated, the MTQP server retrieves tracking information about an email
 message.  To validate the user, the value of mtrk-secret is hashed using
-SHA1, as described in [NIST-SHA1].  The hash value is then compared with
+SHA1, as described in [RFC-SHA1].  The hash value is then compared with
 the value passed with the message when it was originally sent.  If the
 hash values match, the user is validated.
 
-     A successful response MUST be multi-line, consisting of a [MIME]
-body part.  The MIME body part must be of type multipart/related, with
-subparts of message/tracking-status, as defined in [DRAFT-TRACK-TSN].
-
-
-
-Hansen                                                          [Page 6]
-
-Internet Draft      Message Tracking Query Protocol         July 1, 2001
-
-
-The response contains the tracking information about the email message
-that used the given tracking-id.
+     A successful response MUST be multi-line, consisting of a [RFC-
+MIME] body part.  The MIME body part MUST be of type multipart/related,
+with subparts of message/tracking-status, as defined in [DRAFT-TRACK-
+TSN].  The response contains the tracking information about the email
+message that used the given tracking-id.
 
 
      In each of the examples below, the envid is "<12345-
@@ -353,6 +388,14 @@ came from example.com and the MTQP server is example2.com.
      C: TRACK <12345-20010101@example.com> YWJjZGVmZ2gK
      S: +OK+ Tracking information follows
      S: Content-Type: multipart/related; boundary=%%%%; type=tracking-status
+
+
+
+Hansen                                                          [Page 7]
+
+Internet Draft      Message Tracking Query Protocol    November 20, 2001
+
+
      S:
      S: --%%%%
      S: Content-Type: message/tracking-status
@@ -388,14 +431,6 @@ came from example.com and the MTQP server is example2.com.
      S: Last-Attempt-Date: Mon,  1 Jan 2001 19:15:03 -0500
      S: Status: 2.4.0
      S:
-
-
-
-Hansen                                                          [Page 7]
-
-Internet Draft      Message Tracking Query Protocol         July 1, 2001
-
-
      S: --%%%%--
      S: .
 
@@ -409,6 +444,14 @@ Internet Draft      Message Tracking Query Protocol         July 1, 2001
      S: Content-Type: message/tracking-status
      S:
      S: Original-Envelope-Id: 12345-20010101@example.com
+
+
+
+Hansen                                                          [Page 8]
+
+Internet Draft      Message Tracking Query Protocol    November 20, 2001
+
+
      S: Reporting-MTA: dns; example2.com
      S: Arrival-Date: Mon,  1 Jan 2001 15:15:15 -0500
      S:
@@ -444,14 +487,6 @@ Internet Draft      Message Tracking Query Protocol         July 1, 2001
      S:
      S: Original-Recipient: rfc822; user2@example1.com
      S: Final-Recipient: rfc822; user2@example1.com
-
-
-
-Hansen                                                          [Page 8]
-
-Internet Draft      Message Tracking Query Protocol         July 1, 2001
-
-
      S: Action: failed
      S: Status 5.2.2 (Mailbox full)
      S: Remote-MTA: dns; example3.com
@@ -460,7 +495,84 @@ Internet Draft      Message Tracking Query Protocol         July 1, 2001
      S: --%%%%--
      S: .
 
-     Example #10 Firewall, Hiding System Names Behind the Firewall:
+     Example #10 Firewall:
+     C: TRACK <12345-20010101@example.com> YWJjZGVmZ2gK
+     S: +OK+ Tracking information follows
+     S: Content-Type: multipart/related; boundary=%%%%; type=tracking-status
+     S:
+
+
+
+Hansen                                                          [Page 9]
+
+Internet Draft      Message Tracking Query Protocol    November 20, 2001
+
+
+     S: --%%%%
+     S: Content-Type: message/tracking-status
+     S:
+     S: Original-Envelope-Id: 12345-20010101@example.com
+     S: Reporting-MTA: dns; example2.com
+     S: Arrival-Date: Mon,  1 Jan 2001 15:15:15 -0500
+     S:
+     S: Original-Recipient: rfc822; user1@example1.com
+     S: Final-Recipient: rfc822; user1@example1.com
+     S: Action: relayed
+     S: Status: 2.1.9
+     S: Remote-MTA: dns; example2.com
+     S: Last-Attempt-Date: Mon,  1 Jan 2001 19:15:03 -0500
+     S:
+     S: --%%%%
+     S: Content-Type: message/tracking-status
+     S:
+     S: Original-Envelope-Id: 12345-20010101@example.com
+     S: Reporting-MTA: dns; smtp.example3.com
+     S: Arrival-Date: Mon,  1 Jan 2001 15:15:15 -0500
+     S:
+     S: Original-Recipient: rfc822; user2@example1.com
+     S: Final-Recipient: rfc822; user4@example3.com
+     S: Action: delivered
+     S: Status: 2.5.0
+     S:
+     S: --%%%%--
+     S: .
+
+     Example #11 Firewall, Combining Per-Recipient Blocks:
+     C: TRACK <12345-20010101@example.com> YWJjZGVmZ2gK
+     S: +OK+ Tracking information follows
+     S: Content-Type: multipart/related; boundary=%%%%; type=tracking-status
+     S:
+     S: --%%%%
+     S: Content-Type: message/tracking-status
+     S:
+     S: Original-Envelope-Id: 12345-20010101@example.com
+     S: Reporting-MTA: dns; example2.com
+     S: Arrival-Date: Mon,  1 Jan 2001 15:15:15 -0500
+     S:
+     S: Original-Recipient: rfc822; user1@example1.com
+     S: Final-Recipient: rfc822; user1@example1.com
+     S: Action: relayed
+     S: Status: 2.1.9
+     S: Remote-MTA: dns; example2.com
+     S: Last-Attempt-Date: Mon,  1 Jan 2001 19:15:03 -0500
+     S:
+
+
+
+Hansen                                                         [Page 10]
+
+Internet Draft      Message Tracking Query Protocol    November 20, 2001
+
+
+     S: Original-Recipient: rfc822; user2@example1.com
+     S: Final-Recipient: rfc822; user4@example3.com
+     S: Action: delivered
+     S: Status: 2.5.0
+     S:
+     S: --%%%%--
+     S: .
+
+     Example #12 Firewall, Hiding System Names Behind the Firewall:
      C: TRACK <12345-20010101@example.com> YWJjZGVmZ2gK
      S: +OK+ Tracking information follows
      S: Content-Type: multipart/related; boundary=%%%%; type=tracking-status
@@ -486,8 +598,8 @@ Internet Draft      Message Tracking Query Protocol         July 1, 2001
      S: Reporting-MTA: dns; example2.com
      S: Arrival-Date: Mon,  1 Jan 2001 15:15:15 -0500
      S:
-     S: Original-Recipient: rfc822; user1@example1.com
-     S: Final-Recipient: rfc822; user1@example1.com
+     S: Original-Recipient: rfc822; user2@example1.com
+     S: Final-Recipient: rfc822; user4@example1.com
      S: Action: delivered
      S: Status: 2.5.0
      S:
@@ -503,9 +615,9 @@ Internet Draft      Message Tracking Query Protocol         July 1, 2001
 
 
 
-Hansen                                                          [Page 9]
+Hansen                                                         [Page 11]
 
-Internet Draft      Message Tracking Query Protocol         July 1, 2001
+Internet Draft      Message Tracking Query Protocol    November 20, 2001
 
 
      When the client issues the COMMENT command, the MTQP server MUST
@@ -526,17 +638,20 @@ server MAY support TLS.  If an MTQP server supports TLS, it MUST include
 following response codes:
      "/" "unsupported"
      "/" "unavailable"
+     "/" "tlsinprogress"
 
-     If a TLS session is already in progress, then it is a protocol
-error and "-BAD" MUST be returned with a response code of "/tlsinpro-
-gress".
+     If TLS is not suported, then a response code of "/unsupported"
+SHOULD be used.  If TLS is not available for some other reason, then a
+reponse code of "/unavailable" SHOULD be used.  If a TLS session is
+already in progress, then it is a protocol error and "-BAD" MUST be
+returned with a response code of "/tlsinprogress".
 
      After receiving a positive response to a STARTTLS command, the
 client MUST start the TLS negotiation before giving any other MTQP com-
 mands.
 
-     If the MTQP client is using pipelining, the STARTTLS command must
-be the last command in a group.
+     If the MTQP client is using pipelining (see below), the STARTTLS
+command must be the last command in a group.
 
 6.1.  Processing After the STARTTLS Command
 
@@ -553,17 +668,17 @@ achieved.
 
      If the MTQP client decides that the level of authentication or
 privacy is not high enough for it to continue, it SHOULD issue an MTQP
+
+
+
+Hansen                                                         [Page 12]
+
+Internet Draft      Message Tracking Query Protocol    November 20, 2001
+
+
 QUIT command immediately after the TLS negotiation is complete.  If the
 MTQP server decides that the level of authentication or privacy is not
 high enough for it to continue, it SHOULD reply to every MTQP command
-
-
-
-Hansen                                                         [Page 10]
-
-Internet Draft      Message Tracking Query Protocol         July 1, 2001
-
-
 from the client (other than a QUIT command) with a negative "-ERR"
 response and a response code of "/insecure".
 
@@ -595,8 +710,9 @@ sion is already active.
 
      When the client issues the QUIT command, the MTQP session ter-
 minates.  The QUIT command has no parameters.  The server MUST respond
-with a successful response.  The client may close the session from its
-end immediately after issuing this command.
+with a successful response.  The client MAY close the session from its
+end immediately after issuing this command (if the client is on an
+operating system where this does not cause problems).
 
 8.  Pipelining
 
@@ -609,17 +725,16 @@ example, STARTTLS must be the last command in a batch of MTQP commands.
 
      The following two examples are identical:
 
-     Example #11 :
+
+
+Hansen                                                         [Page 13]
+
+Internet Draft      Message Tracking Query Protocol    November 20, 2001
+
+
+     Example #13 :
      C: TRACK <tracking-id> YWJjZGVmZ2gK
      S: +OK+ Tracking information follows
-
-
-
-Hansen                                                         [Page 11]
-
-Internet Draft      Message Tracking Query Protocol         July 1, 2001
-
-
      S:
      S: ... tracking details #1 go here ...
      S: .
@@ -629,7 +744,7 @@ Internet Draft      Message Tracking Query Protocol         July 1, 2001
      S: ... tracking details #2 go here ...
      S: .
 
-     Example #12 :
+     Example #14 :
      C: TRACK <tracking-id> YWJjZGVmZ2gK
      C: TRACK <tracking-id-2> QUJDREVGR0gK
      S: +OK+ Tracking information follows
@@ -653,28 +768,32 @@ following forms:
      The first form is used to refer to an MTQP server on the standard
 port, while the second form specifies a non-standard port.  Both of
 these forms specify that the TRACK command is to be issued using the
-given tracking id and authorization cookie.  The path element "/track/"
-is case insensitive, but the envid and mtrk-secret may not be.
+given tracking id (envid) and authorization secret (mtrk-secret).  The
+path element "/track/" is case insensitive, but the envid and mtrk-
+secret may not be.
 
 9.1.  MTQP URL Syntax
 
      This is an ABNF description of the MTQP URL.
 
-     mtqp-url = "mtqp://" net_loc "/track/" envid ":" mtrk-secret
+     mtqp-url = "mtqp://" net_loc "/track/" envid "/" mtrk-secret
+
+
+
+
+
+
+Hansen                                                         [Page 14]
+
+Internet Draft      Message Tracking Query Protocol    November 20, 2001
+
 
 10.  IANA Considerations
 
-     System port number XXXX - TBA by IANA
+     System port number XXXX - TBD by IANA
 
      The service name to be registered with the Internet Assigned Number
 Authority (IANA) is "MTQP".
-
-
-
-Hansen                                                         [Page 12]
-
-Internet Draft      Message Tracking Query Protocol         July 1, 2001
-
 
      This document requests that IANA maintain one new registry: MTQP
 options.  The registry's purpose is to register options to this proto-
@@ -689,14 +808,17 @@ MUST include the following information as part of their definition:
      specification reference
      discussion
 
-     Additional vendor-specific options for this protocol whose names
-begin with "vnd."  MUST be registered with IANA on a Firt Come First
-Served basis.  It is expected that after the "vnd." would appear an
-abbreviated form of the vendor's name that is registering the option,
-followed by a second dot "." and a name for the option itself.  For
-example, "vnd.example.extinfo" might represent a vendor-specific exten-
-sion providing extended information being registered by the "Example,
-Inc." company.
+     One MTQP option is defined in this document:
+     option identifier: STARTTLS option parameters: none added commands:
+     STARTTLS standard commands affected: none specification reference:
+     RFC TBD discussion: see RFC TBD
+
+     Additional vendor-specific options for this protocol have names
+that begin with "vnd.".  After the "vnd." would appear the reversed
+domain name of the vendor, another dot ".", and a name for the option
+itself.  For example, "vnd.com.example.extinfo" might represent a
+vendor-specific extension providing extended information by the owner of
+the "example.com" domain.  These names MAY be registered with IANA.
 
 11.  Security Considerations
 
@@ -714,25 +836,26 @@ this level of exposure is too much, TLS may be used to reduce the expo-
 sure further.
 
      It should be noted that message tracking is not an end-to-end
+
+
+
+Hansen                                                         [Page 15]
+
+Internet Draft      Message Tracking Query Protocol    November 20, 2001
+
+
 mechanism.  Thus, if an MTQP client/server pair decide to use TLS
 privacy, they are not securing tracking queries with any prior or suc-
 cessive MTQP servers.
 
-     Both the STMP client and server must check the result of the TLS
+     Both the MTQP client and server must check the result of the TLS
 negotiation to see whether acceptable authentication or privacy was
 achieved.  Ignoring this step completely invalidates using TLS for secu-
 rity.  The decision about whether acceptable authentication or privacy
-was achieved is made locally, is implementation-dependant, and is beyond
+was achieved is made locally, is implementation-dependent, and is beyond
 the scope of this document.
 
-
-
-Hansen                                                         [Page 13]
-
-Internet Draft      Message Tracking Query Protocol         July 1, 2001
-
-
-     The SMTP client and server should note carefully the result of the
+     The MTQP client and server should note carefully the result of the
 TLS negotiation.  If the negotiation results in no privacy, or if it
 results in privacy using algorithms or key lengths that are deemed not
 strong enough, or if the authentication is not good enough for either
@@ -769,6 +892,14 @@ per user.
 12.  Protocol Syntax
 
      This is a collected ABNF description of the MTQP protocol.
+
+
+
+Hansen                                                         [Page 16]
+
+Internet Draft      Message Tracking Query Protocol    November 20, 2001
+
+
      conversation = command-response *( client-command command-response )
 
      # client side
@@ -779,14 +910,6 @@ per user.
      mtrk-secret = base64
 
      starttls-command = "STARTTLS" CRLF
-
-
-
-
-Hansen                                                         [Page 14]
-
-Internet Draft      Message Tracking Query Protocol         July 1, 2001
-
 
      quit-command = "QUIT" CRLF
 
@@ -815,11 +938,22 @@ Internet Draft      Message Tracking Query Protocol         July 1, 2001
 
      option-list = *option-line
 
-     option-line = identifier opt-text *[CRLF WSP opt-text] CRLF
+     option-line = identifier opt-text *(CRLF WSP opt-text) CRLF
 
-     identifier = (ALPHA / "_") *(ALPHA / DIGIT / "-" / "_")
+     NAMECHAR = ALPHA / DIGIT / "-" / "_"
 
-     response-info = *( "/" 1*(ALPHA / DIGIT / "-" / "_")
+     identifier = (ALPHA / "_") *NAMECHAR)
+
+     response-info = *( "/" ( "admin" / "unavailable" / "unsupported" /
+             "tlsinprogress" / "insecure" / 1*NAMECHAR ) )
+
+
+
+
+
+Hansen                                                         [Page 17]
+
+Internet Draft      Message Tracking Query Protocol    November 20, 2001
 
 
 13.  Acknowledgements
@@ -828,50 +962,19 @@ Internet Draft      Message Tracking Query Protocol         July 1, 2001
 
 14.  References
 
-     [NIST-SHA1] NIST FIPS  PUB  180-1, "Secure  Hash  Standard",
-National Institute of Standards and Technology, U.S. Department of Com-
-merce, May 1994.
+     [RFC-SHA1] RFC TBD, D. Eastlake & P. Jones, "US Secure Hash Stan-
+dard 1 (SHA1)", TBD 2001.
 
-     [MIME] RFC 2045, N. Freed & N. Borenstein, "Multipurpose Internet
-Mail Extensions (MIME) Part One: Format of Internet Message Bodies",
+     [RFC-MIME] RFC 2045, N. Freed & N. Borenstein, "Multipurpose Inter-
+net Mail Extensions (MIME) Part One: Format of Internet Message Bodies",
 Innosoft, First Virtual, November 1996.
-
-
-
-
-Hansen                                                         [Page 15]
-
-Internet Draft      Message Tracking Query Protocol         July 1, 2001
-
-
-     [RFC-821] STD 10, RFC 821, J. Postel, "Simple Mail Transfer Proto-
-col", University of Southern California / Information Sciences Insti-
-tute, August 1982.
-
-     [RFC-822] STD 11, RFC 822, D. Crocker, "Standard for the Format of
-ARPA Internet Text Messages", University of Delaware, August 1982.
 
      [RFC-ABNF] RFC 2234, D. Crocker, Editor, and P. Overell, "Augmented
 BNF for Syntax Specifications: ABNF", Internet Mail Consortium, Demon
 Internet Ltd., November 1997.
 
-     [RFC-DNS] RFC 974, "Mail routing and the domain system", C. Par-
-tridge, January 1986.
-
-     [RFC-ESMTP] RFC 1651, J. Klensin, N. Freed, M. Rose, E. Stefferud,
-and D. Crocker, "SMTP Service Extensions", MCI, Innosoft, Dover Beach
-Consulting, Inc., network Management Associates, Inc., Silicon Graphics,
-Inc., July 1994.
-
-     [RFC-HOSTS] "Requirements for Internet Hosts - Application and Sup-
-port", R. Braden, Ed., October 1989.
-
      [RFC-KEYWORDS] RFC 2119, S. Bradner, "Key words for use in RFCs to
 Indicate Requirement Levels", Harvard University, March 1997.
-
-     [RFC-MD5] RFC 1321, R. Rivest, "The MD5 Message-Digest Algorithm",
-MIT Laboratory for Computer Science and RSA Data Security, Inc., April
-1992.
 
      [RFC-SMTPEXT] RFC 2554, J. Myers, "SMTP Service Extension for
 Authentication", Netscape Communications, March 1999.
@@ -885,22 +988,13 @@ Internet Software Consortium, Microsoft Corp., February 2000
 
      [DRAFT-TRACK-ESMTP] draft-ietf-msgtrk-smtpext-*.txt, E. Allman, T.
 Hansen, "SMTP Service Extension for Message Tracking", Sendmail, Inc.,
-AT&T Laboratories, TBD 2000.
+AT&T Laboratories, TBD 2001.
 
-     [DRAFT-TRACK-MODEL] draft-ietf-msgtrk-model-03.txt, T. Hansen,
-"Message Tracking Models and Requirements", AT&T Laboratories, November
-2000.
+     [DRAFT-TRACK-MODEL] draft-ietf-msgtrk-model-*.txt, T. Hansen, "Mes-
+sage Tracking Models and Requirements", AT&T Laboratories, TBD 2001.
 
      [DRAFT-TRACK-TSN] draft-ietf-msgtrk-trkstat-*.txt, E. Allman, "The
-
-
-
-Hansen                                                         [Page 16]
-
-Internet Draft      Message Tracking Query Protocol         July 1, 2001
-
-
-Message/Tracking-Status MIME Extension", Sendmail, Inc., TBD 2000.
+Message/Tracking-Status MIME Extension", Sendmail, Inc., TBD 2001.
 
      [RFC-URI] RFC 2396, T. Berners-Lee, R. Fielding, L. Masinter, "Uni-
 form Resource Identifiers (URI): Generic Syntax", MIT/LCS, U. C. Irvine,
@@ -910,6 +1004,14 @@ Xerox Corporation, August 1998.
 
      Tony Hansen
      AT&T Laboratories
+
+
+
+Hansen                                                         [Page 18]
+
+Internet Draft      Message Tracking Query Protocol    November 20, 2001
+
+
      Lincroft, NJ 07738
      USA
 
@@ -922,12 +1024,12 @@ Xerox Corporation, August 1998.
 
      This document and translations of it may be copied and furnished to
 others, and derivative works that comment on or otherwise explain it or
-assist in its implmentation may be prepared, copied, published and dis-
+assist in its implementation may be prepared, copied, published and dis-
 tributed, in whole or in part, without restriction of any kind, provided
 that the above copyright notice and this paragraph are included on all
 such copies and derivative works.  However, this document itself may not
 be modified in any way, such as by removing the copyright notice or
-references to the Internet Society or other Internet organisations,
+references to the Internet Society or other Internet organizations,
 except as needed for the purpose of developing Internet standards in
 which case the procedures for copyrights defined in the Internet Stan-
 dards process must be followed, or as required to translate it into
@@ -943,7 +1045,7 @@ NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL
 NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR
 FITNESS FOR A PARTICULAR PURPOSE.
 
-     This document expires January 1, 2002.
+     This document expires May 20, 2002.
 
 
 
@@ -951,4 +1053,14 @@ FITNESS FOR A PARTICULAR PURPOSE.
 
 
 
-Hansen                                                         [Page 17]
+
+
+
+
+
+
+
+
+
+
+Hansen                                                         [Page 19]
