@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.47 2002/01/18 15:38:41 fukachan Exp $
+# $FML: Message.pm,v 1.48 2002/02/01 12:03:59 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1502,6 +1502,24 @@ sub _alloc_new_part
 
     __build_message($me, $args);
     return bless $me, ref($self);
+}
+
+# Descriptions: delete message part link
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: null
+sub delete_message_part_link
+{
+    my ($self) = @_;
+    my $mp   = $self;
+    my $prevmp = $mp->{ prev };
+    my $nextmp = $mp->{ next };
+    my $data_type = $mp->data_type();
+
+    return if($data_type eq "text/rfc822-headers");
+
+    _prev_message_is($nextmp,$prevmp);
+    _next_message_is($prevmp,$nextmp);
 }
 
 
