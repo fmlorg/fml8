@@ -853,6 +853,21 @@ cgi_default_charset	=	euc-jp
 #     Examples:
 cgi_charset		=	$cgi_default_charset
 
+
+# Descriptions: デフォルトの bgcolor
+#      History:
+#        Value:
+#     Examples:
+cgi_main_menu_color		=	#FFFFFF
+
+
+# Descriptions: デフォルトの bgcolor
+#      History:
+#        Value:
+#     Examples:
+cgi_navigation_bar_color	=	#FFFFFF
+
+
 =head1 program paths
 
 path_perl                 = @PERL@
