@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.62 2004/01/24 15:37:02 fukachan Exp $
+# $FML: Configure.pm,v 1.63 2004/01/31 04:06:32 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -153,6 +153,12 @@ sub finish
     my $eval = $config->get_hook( 'makefml_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
+    # --allow-send-message or --allow-reply-message option specified.
+    if ($curproc->allow_reply_message()) {
+	$curproc->inform_reply_messages();
+	$curproc->queue_flush();
+    }
+
     $eval = $config->get_hook( 'makefml_finish_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
@@ -293,8 +299,10 @@ sub _makefml
 
     # build arguments to pass off to each method.
     # XXX-TODO: command = [ $method, @options ]; ? (no, used only for message?)
+    my $option       = $curproc->command_line_options();
+    my $command_mode = $curproc->__get_command_mode($option);
     my $command_args = {
-	command_mode => 'admin',
+	command_mode => $command_mode,
 	comname      => $method,
 	command      => "$method @options",
 	ml_name      => $ml_name,
@@ -339,6 +347,23 @@ sub _makefml
 
     $eval = $config->get_hook( 'makefml_run_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
+}
+
+
+# Descriptions: determine command mode.
+#    Arguments: OBJ($curproc) HASH_REF($option)
+# Side Effects: none
+# Return Value: STR
+sub __get_command_mode
+{
+    my ($curproc, $option) = @_;
+
+    if (defined $option->{ mode } && $option->{ mode } =~ /^user$/i) {
+	return 'user';
+    }
+    else {
+	return 'admin';
+    }
 }
 
 

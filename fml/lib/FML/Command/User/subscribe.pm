@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.25 2004/02/15 04:38:31 fukachan Exp $
+# $FML: subscribe.pm,v 1.26 2004/02/24 14:36:53 fukachan Exp $
 #
 
 package FML::Command::User::subscribe;
@@ -85,11 +85,21 @@ sub process
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_command_prefix };
     my $command       = $command_args->{ command };
-    my $address       = $cred->sender();
+    my $options       = $command_args->{ options };
+    my $address       =
+	$command_args->{ command_data } || $options->[ 0 ] || $cred->sender();
 
     # fundamental check
-    croak("\$member_map is not specified")    unless $member_map;
-    croak("\$recipient_map is not specified") unless $recipient_map;
+    croak("\$member_map unspecified")    unless $member_map;
+    croak("\$recipient_map unspecified") unless $recipient_map;
+    croak("\$address unspecified")       unless $address;
+
+    # XXX extension: fml --allow-send-message or fml --allow-reply-message
+    unless ($cred->sender()) {
+	if ($curproc->allow_reply_message()) {
+	    $cred->set_sender($address);
+	}
+    }
 
     # exatct match as could as possible.
     my $compare_level = $cred->get_compare_level();
