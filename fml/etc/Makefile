@@ -1,10 +1,10 @@
 #
-# $FML$
+# $FML: Makefile,v 1.6 2001/04/30 10:21:44 fukachan Exp $
 #
 
 TARGET_DIR = ../../Documentation/ja/etc
 
-CONV       = $(PERL) ../../doc/bin/text2html.pl 
+CONV       = $(PERL) ../../fml/utils/bin/text2html.pl 
 
 all: default_config.cf.ja html
 
