@@ -1,0 +1,5 @@
+x 	= 	permit_all
+		deny_xxx
+
+y	=	3
+		4
