@@ -1,6 +1,13 @@
 		CHANGES
 		Last Modified: $Date$
 
+2001/12/11
+
+   ./configure の拡張
+		メッセージをいろいろつけたす	
+		--with-fml-group=$GROUP
+		--with-fmlconfdir=$prefix/etc/fml
+
 2001/12/09
 
   インストーラのバグをとる
@@ -1245,4 +1252,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.38 2001/12/08 15:05:32 fukachan Exp $
+$FML: CHANGES.txt,v 1.39 2001/12/09 13:16:09 fukachan Exp $
