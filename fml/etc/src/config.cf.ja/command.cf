@@ -39,20 +39,26 @@ available_commands		=	help
 					mget
 					get
 					mget
+					send
 					subscribe
+					add
+					unsubscribe
 					bye
 					remove
 					resign
-					unsubscribe
+					signoff
 					chaddr
 					confirm
 					guide
 					info
 					admin
+					objective
+					summary
 
 
 available_commands_for_stranger	=	guide
 					info
+					add
 					subscribe
 					$confirm_keyword
 
