@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.119 2003/08/05 14:01:02 fukachan Exp $
+# $FML: Distribute.pm,v 1.120 2003/08/06 13:45:49 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -565,13 +565,19 @@ sub _new_thread_check
     use Mail::Message::Thread;
 
     # XXX we need to specify article_id here since
-    # XXX analyzer routine has no clue for the curren primary key.
+    # XXX analyzer routine has no clue for the current primary key.
     my $article_id    = $pcb->get('article', 'id');
     my $tdb_args      = $curproc->thread_db_args($args);
     $tdb_args->{ id } = $article_id;
 
-    my $thread   = new Mail::Message::Thread $tdb_args;
+    # analyze the current message to update DB (UDB).
+    my $thread = new Mail::Message::Thread $tdb_args;
     $thread->analyze($msg);
+
+    # get summary based on updated UDB.
+    # XXX mode = html or text 
+
+    # header rewriting of article object if needed.
 }
 
 
