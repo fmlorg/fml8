@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.3 2002/11/26 10:30:07 fukachan Exp $
+# $FML: Summary.pm,v 1.4 2002/11/26 14:13:00 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -12,7 +12,7 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use FML::Log qw(Log LogWarn LogError);
-
+use Mail::Message::Date;
 
 =head1 NAME
 
@@ -83,9 +83,11 @@ sub _prepare_info
 
     if (-f $file) {
 	use Mail::Message;
-	my $msg     = new Mail::Message->parse( { file => $file } );
-	my $header  = $msg->whole_message_header();
-	my $address = $header->get( 'from' );
+	my $msg      = new Mail::Message->parse( { file => $file } );
+	my $header   = $msg->whole_message_header();
+	my $address  = $header->get( 'from' );
+	my $date     = $header->get( 'date' );
+	my $unixtime = Mail::Message::Date::date_to_unixtime( $date );
 
 	# extract the first 15 bytes of user@domain part 
 	# from From: header field.
@@ -102,12 +104,13 @@ sub _prepare_info
 
 	use Mail::Message::Encode;
 	my $enc  = new Mail::Message::Encode;
-	$subject = $enc->convert($subject, "jis-jp");
+	$subject = $enc->convert($subject, "jis-jp", "euc-jp");
 
 	my $info = {
 	    id       => $id,
 	    address  => $address,
 	    subject  => $subject,
+	    unixtime => $unixtime,
 	};
 
 	return $info;
@@ -145,12 +148,16 @@ sub print_one_line_summary
 sub _fml4_compatible_style_one_line_summary
 {
     my ($self, $wh, $info) = @_;
+    my $time  = $info->{ unixtime } || undef;
     my $rdate = undef;
 
-    eval q{
-        use Mail::Message::Date;
-        $rdate = new Mail::Message::Date;
-    };
+    if ($time) {
+	use Mail::Message::Date;
+	$rdate = new Mail::Message::Date $time;
+    }
+    else {
+	LogError("unix time undefined");
+    }
 
     if (defined $rdate) {
 	my $date   = $rdate->{ 'log_file_style' };
