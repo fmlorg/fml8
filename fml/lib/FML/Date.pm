@@ -49,6 +49,10 @@ You can also method like $date->$style() style.
 
 =item    precise_current_time()
 
+=item    stardate()
+
+return STAR TREK stardate.
+
 =cut
 
 require Exporter;
@@ -157,6 +161,42 @@ sub precise_current_time
     my ($self, $time) = @_;
     my $p = _date($time || time);
     $p->{'precise_current_time'};
+}
+
+# Descriptions: return Star Trek stardate()
+#                  stardate(tm, issue, integer, fraction)
+#                           unsigned long tm;
+#                           long *issue, *integer, *fraction;
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: stardate
+sub stardate
+{
+    my ($self, $args) = @_;
+    my ($issue, $integer, $fraction);
+
+    # It would be convenient to calculate the fractional part with
+    # *fraction = ( (tm%17280) *1000000) / 17280;
+    # but the long int type may not be long enough for this (it requires 36
+    # bits).  Cancelling the 1000000 with the 17280 gives an expression that
+    # takes only 27 bits.
+
+    $fraction = int (    (((time % 17280) * 3125) / 54)   );
+
+    # Get integer part.
+    $integer = time / 17280 + 9350;
+
+    # At this stage, *integer contains the issue number in the obvious place,
+    # biased to always be non-negative.  The issue number can be extracted by
+    # simply dividing *integer by 10000 and offsetting it appropriately:
+
+    $issue = int($integer / 10000) - 36;
+    
+    # Remove the issue number from *integer.
+
+    $integer = $integer % 10000;
+
+    sprintf("[%d]%04d.%02.2s", $issue, $integer, $fraction);
 }
 
 
