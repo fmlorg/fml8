@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.66 2003/11/02 05:12:37 fukachan Exp $
+# $FML: Kernel.pm,v 1.67 2003/12/06 04:48:22 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -184,7 +184,7 @@ sub _cgi_resolve_ml_specific_variables
 
     # cheap sanity 2.
     unless ($ml_name) {
-	my $is_need_ml_name = $args->{ 'need_ml_name' };
+	my $is_need_ml_name = $curproc->is_need_ml_name();
 	if ($is_need_ml_name) {
 	    my $r = "fail to get ml_name from HTTP";
 	    croak("__ERROR_cgi.fail_to_get_ml_name__: $r");
