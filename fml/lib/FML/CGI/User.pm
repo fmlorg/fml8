@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: User.pm,v 1.1 2003/09/27 03:00:18 fukachan Exp $
+# $FML: User.pm,v 1.2 2003/09/27 03:44:05 fukachan Exp $
 #
 
 package FML::CGI::User;
@@ -63,7 +63,7 @@ sub cgi_menu
     }
     elsif ($comname eq 'digestoff') {
 	$address_list = $curproc->get_address_list( 'digest_recipient_maps' );
-	$selected_key = 'digest recipients';
+	$selected_key = 'digest_recipients';
     }
     elsif ($comname eq 'addadmin' ||
 	   $comname eq 'adminadd' ||
