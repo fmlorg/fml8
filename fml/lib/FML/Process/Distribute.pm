@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.102 2002/12/24 10:06:24 fukachan Exp $
+# $FML: Distribute.pm,v 1.103 2002/12/25 08:41:18 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -317,7 +317,7 @@ sub _distribute
     # XXX debug, remove here in the future
     if ($debug) {
 	my $ha_msg = $curproc->{ article }->{ body }->data_type_list;
-	for (@$ha_msg) { Log("debug: $_");}
+	for my $msg (@$ha_msg) { Log("debug: $msg");}
     }
 
     # thread system checks the message before header rewritings.
@@ -557,7 +557,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
