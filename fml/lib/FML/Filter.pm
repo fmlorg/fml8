@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.25 2003/05/01 13:59:33 fukachan Exp $
+# $FML: Filter.pm,v 1.26 2003/05/09 13:09:15 tmu Exp $
 #
 
 package FML::Filter;
@@ -254,8 +254,8 @@ sub article_filter_reject_notice
     my $list  =
 	$config->get_as_array_ref('article_filter_reject_notice_recipients');
     my $rcpts = $curproc->convert_to_mail_address($list);
-    $msg_args->{ recipient }   = $rcpts;
-    $msg_args->{ _arg_sender } = $cred->sender();
+    $msg_args->{ recipient }    = $rcpts;
+    $msg_args->{ _arg_address } = $cred->sender();
 
     Log("filter notice: [ @$rcpts ]");
 

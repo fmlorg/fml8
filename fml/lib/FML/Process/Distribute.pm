@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.112 2003/03/18 10:42:45 fukachan Exp $
+# $FML: Distribute.pm,v 1.113 2003/05/02 07:57:54 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -201,7 +201,6 @@ sub run
 	$config->{post_restrictions_reject_notice_data_type} || 'string';
     my $msg_args = {
 	_arg_address => $sender,
-	_arg_sender  => $sender,
 	recipient    => $sender,
     };
 
