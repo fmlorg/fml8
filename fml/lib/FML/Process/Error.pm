@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.19 2002/08/14 03:31:56 fukachan Exp $
+# $FML: Error.pm,v 1.20 2002/08/15 08:04:41 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -61,7 +61,8 @@ forward the request to SUPER CLASS.
 
 =cut
 
-# Descriptions: dummy
+# Descriptions: check if $use_error_analyzer_program value is yes.
+#               parse incoming message if this process runs.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -78,10 +79,8 @@ sub prepare
     $curproc->fix_perl_include_path();
     $curproc->scheduler_init();
 
-    if ($config->yes('use_error_analyzer')) {
+    if ($config->yes('use_error_analyzer_program')) {
 	$curproc->parse_incoming_message($args);
-
-	$config->{ log_format_type } = 'new_style';
     }
     else {
 	exit(0);
