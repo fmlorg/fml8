@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.54 2004/01/18 14:04:31 fukachan Exp $
+# $FML: Credential.pm,v 1.55 2004/03/13 07:41:58 fukachan Exp $
 #
 
 package FML::Credential;
@@ -62,40 +62,50 @@ sub new
 {
     my ($self, $curproc) = @_;
     my ($type) = ref($self) || $self;
-    my $config = $curproc->config();
-    my $actype = $config->{ address_compare_function_type };
     my $me     = \%Credential;
 
     # default comparison level
     set_compare_level( $me, 3 );
 
-    # user address check
-    if ($config->yes('use_address_compare_function')) {
-	$me->{ _use_address_compare_function } = 1;
-    }
-    else {
-	$me->{ _use_address_compare_function } = 0;
-    }
-
-    # case insensitive for backward compatibility. (default)
-    if ($actype eq 'user_part_case_insensitive' ||
-	$actype eq 'case_insensitive') {
-	$me->{ _user_part_case_sensitive } = 0;
-    }
-    # case sensitive for user part comparison.
-    elsif ($actype eq 'user_part_case_sensitive' ||
-	   $actype eq 'case_sensitive') {
-	$me->{ _user_part_case_sensitive } = 1;
-    }
-    # case-insensitive by default for backward compatibility.
-    else {
-	$me->{ _user_part_case_sensitive } = 0;
-    }
-
     # hold pointer to $curproc
     $me->{ _curproc } = $curproc if defined $curproc;
 
     return bless $me, $type;
+}
+
+
+sub _reconfigure
+{
+    my ($self) = @_;
+    my $curproc = $self->{ _curproc };
+
+    if (defined $curproc) {
+	my $config = $curproc->config();
+	my $actype = $config->{ address_compare_function_type };
+
+	# user address check
+	if ($config->yes('use_address_compare_function')) {
+	    $self->{ _use_address_compare_function } = 1;
+	}
+	else {
+	    $self->{ _use_address_compare_function } = 0;
+	}
+
+	# case insensitive for backward compatibility. (default)
+	if ($actype eq 'user_part_case_insensitive' ||
+	    $actype eq 'case_insensitive') {
+	    $self->{ _user_part_case_sensitive } = 0;
+	}
+	# case sensitive for user part comparison.
+	elsif ($actype eq 'user_part_case_sensitive' ||
+	       $actype eq 'case_sensitive') {
+	    $self->{ _user_part_case_sensitive } = 1;
+	}
+	# case-insensitive by default for backward compatibility.
+	else {
+	    $self->{ _user_part_case_sensitive } = 0;
+	}
+    }
 }
 
 
@@ -193,6 +203,8 @@ are same since the last 3 top level domains are same.
 sub is_same_address
 {
     my ($self, $xaddr, $yaddr, $max_level) = @_;
+
+    $self->_reconfigure();
 
     # always same if address_check function disabled.
     unless ($self->{ _use_address_compare_function }) { return 1; }
