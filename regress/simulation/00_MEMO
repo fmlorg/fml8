@@ -7,9 +7,56 @@
 	XXX fml 4.0 と同じディレクトリ名は使わないように    XXX
 	XXX
 
-[TODO]	document translation needed.
 
-	how-to ?
+[TODO]	case insensitive of user part of user@domain
+
+
+[TODO]	rmml したＭＬをふっかつさせることは？
+
+	一番日付が最近の @xxx.yyyymmdd を探して、そこから戻す。
+
+	だが、
+
+	aliases を復活させる問題があるので、もう一度 newml
+	もする必要があるだろう。つまり
+
+	newml --reuse ? --rewind ? --return ?
+	こんなかんじ？
+
+
+[TODO]	ドメイン全部きれいに一発で抹殺するには？
+
+		rmml を連発で実行しまくる rmdomain ってのがあればいい？
+
+
+[TODO]	エラートラップフレーム？
+
+		$curproc->error_regist( { キー => オブジェクト } );
+		croak(エラーのキー);
+
+	？ 必要な場所すべてに $curproc ってのが難しそう？
+
+
+[TODO]	エラーをどのように呼びだし側へ組織的に伝えるか？
+	オブジェクトか HASH_REF ごとわたせないか？
+
+[TODO]	$main_cf (HASH_REF) が FML::Process::{Switch,Utils,Kernel}
+	以外で参照されているのは間違いだ！ (FNF?)
+
+
+[TODO]	(debug ではない) print STDERR をなくそう => error upcall system
+
+	STDERR は閉じて、$tmp_dir/stderr.$$ などに吐いておくほうがよい？
+
+	->ui_message() 化
+	やりのこし （スレッド関連は改造の予定があるので放置）
+		FML/Command/Admin/thread.pm
+		Mail/ThreadTrack/Analyze.pm
+		Mail/ThreadTrack/DB.pm
+
+
+[TODO]	$use_log_dup
+	$log_dup_print_engine
 
 
 [TODO]	fml 4 の cf を解釈できる互換ルーチン
@@ -28,7 +75,7 @@
 	maintainer_recipient_maps は実装しました。デフォルトは未定義な
 	ので、エラーメールのフォワードィングは行なわれません。
 
-	あと、単にフォワーディングしてるだけ == 中身が message/rfc822 
+	あと、単にフォワーディングしてるだけ == 中身が message/rfc822
 	一通だけのかなーり無意味な mime/multipart です。
 
 	ヘッダ情報＋そのエラーメールのアドレスの分析レポートとかなんか
@@ -62,6 +109,8 @@
 
 	コマンドラインオプションは、OK？
 
+	コマンド固有オプションは + ってのは、どうよ？
+
 
 [TODO]	Accept-Language: を考慮する
 
@@ -72,6 +121,8 @@
 
 
 [TODO]	スレッド関連のモジュール全部見直せよ
+
+	スレッド DB 再生成の呪文がないよ;)
 
 	スレッドその他のエンジンもそれを使うことになる。
 
@@ -90,14 +141,14 @@
 		Mail::ThreadTrack
 		FML::Article::Thread		(不要じゃないの？)
 
-	どこに、なんのメソッドがあるべきなのか？	
+	どこに、なんのメソッドがあるべきなのか？
 
 	output とモードの明瞭化を
 	どこでどう CSS とたたかうの？
 	Mail::ThreadTrack::Analyze をきれいにしないとね
 
 	index.html (fml-devel 234)
-	 	最近のＭＬのレビュー 
+	 	最近のＭＬのレビュー
 	 		＋
 	 	選択画面 → index thread monthly
 
@@ -159,7 +210,7 @@ FileHandle と IO::File 両方 use しちゃうからか？
 	aliases は
 
 		elena-admin: foo@bar.domain
-	
+
 	とかなるのはあり?
 
 	Q: configure で?
@@ -208,7 +259,7 @@ FileHandle と IO::File 両方 use しちゃうからか？
 	ん？もういいのかな？
 
 
-[TODO]	時間つき subscribe 
+[TODO]	時間つき subscribe
 
 	subscribe -> 一カ月すると削除される？
 
@@ -246,6 +297,30 @@ FileHandle と IO::File 両方 use しちゃうからか？
 [TODO]	.cgi の ml-admin の階層 ;-)
 
 
+[TODO]	Mail::Message::ToHTML
+
+	X-Sequence: fml-devel 515
+
+	1) spam対策の表示処理について
+
+	今メールアドレスとかを名前の部分だけか address@xxx.xxx.xxx み
+	たいな感じで処理をしていますが、ヘッダ部分のTo:とかCC:とかはそ
+	のままなので、これも直した方がいいかも。また逆にこの機能は会社
+	のwebではそのまま表示されるのが望ましいので変数で処理できるよ
+	うにしたい
+
+	2) indexの要、不要について
+
+	現状ではall,monthly,threadが出来るが、これらも選択できるほうが
+	良いかも#２万通以上のMLがあるとallは不要と思えてくる...
+
+	3) thread.htmlの月別の作成＆出来れば逆順のもの
+
+
+[TODO]	xxx_restrictions = pgp_signature_check ?
+
+
+
 ======================================================================
 ○		FNF-ify およびドキュメント
 
@@ -267,9 +342,14 @@ FileHandle と IO::File 両方 use しちゃうからか？
 	module/Mail::Message::ToHTML
 	threadtrack/chapter.sgml
 	threadtrack/tools.sgml
-	
+
 	usage/ がいまいち
 	fml bible のパートIIIの最初の部分のように編成し直すべき
+
+
+[TODO]	ドキュメントの翻訳
+
+	どうやってシンクロするの？
 
 
 [TODO]	2002 年のオーバホールの残り
@@ -337,4 +417,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.85 2003/05/31 09:16:31 fukachan Exp $
+$FML: 00_MEMO,v 1.86 2003/08/04 14:15:02 fukachan Exp $
