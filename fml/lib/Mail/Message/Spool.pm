@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #
-# $FML: Spool.pm,v 1.3 2002/12/24 02:26:34 fukachan Exp $
+# $FML: Spool.pm,v 1.1 2002/03/30 15:29:43 fukachan Exp $
 #
 
 package Mail::Message::Spool;
@@ -46,7 +46,7 @@ sub new
 return article file path.
 
    $args = {
-	spool_dir  => $spool_dir, 
+	base_dir   => $base_dir, 
 	id         => $id,
 	use_subdir => 0,    # 1 or 0
    };
@@ -62,22 +62,22 @@ sub filepath
 {
     my ($self, $args) = @_;
 
-    if (defined $args->{ spool_dir } && defined $args->{ id }) {
-	my $spool_dir = $args->{ spool_dir };
-	my $id        = $args->{ id };
-	my $is_hash   = 0;
-	my $file      = '';
-	my $unit      = 1000;
-	my $subdir    = int($id/$unit);
+    if (defined $args->{ base_dir } && defined $args->{ id }) {
+	my $base_dir = $args->{ base_dir };
+	my $id       = $args->{ id };
+	my $is_hash  = 0;
+	my $file     = '';
+	my $unit     = 1000;
+	my $subdir   = int($id/$unit);
 
 	if (defined $args->{ use_subdir }) {
 	    $is_hash = 1;
 	    use File::Spec;
-	    $file = File::Spec->catfile($spool_dir, $subdir, $id);
+	    $file = File::Spec->catfile($base_dir, $subdir, $id);
 	}
 	else {
 	    use File::Spec;
-	    $file = File::Spec->catfile($spool_dir, $id);
+	    $file = File::Spec->catfile($base_dir, $id);
 	}
 
 	return $file;
@@ -100,7 +100,7 @@ if ($0 eq __FILE__) {
 		       )) {
 	    print "$id\t=>\t";
 	    print $obj->filepath({
-		spool_dir  => '/var/spool/ml/elena/spool',
+		base_dir   => '/var/spool/ml/elena/spool',
 		id         => $id,
 		use_subdir => $is_hash,
 	    }), "\n";
