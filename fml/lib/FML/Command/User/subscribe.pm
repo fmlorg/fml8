@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: subscribe.pm,v 1.1.1.1 2001/08/26 05:43:10 fukachan Exp $
+# $FML: subscribe.pm,v 1.2 2001/08/26 07:58:39 fukachan Exp $
 #
 
 package FML::Command::User::subscribe;
@@ -14,6 +14,7 @@ use Carp;
 
 use ErrorStatus;
 use FML::Command::Utils;
+use FML::Log qw(Log LogWarn LogError);
 @ISA = qw(FML::Command::Utils ErrorStatus);
 
 
@@ -47,23 +48,16 @@ sub process
     croak("\$member_map is not specified")    unless $member_map;
     croak("\$recipient_map is not specified") unless $recipient_map;
 
-    use IO::Adapter;
-    my $obj = new IO::Adapter $member_map;
-    $obj->touch();
-
     use FML::Credential;
+    my $cred = new FML::Credential;
 
-    for my $map ($member_map, $recipient_map) {
-	my $cred = new FML::Credential;
-	unless ($cred->has_address_in_map($map, $address)) {
-	    $obj = new IO::Adapter $map;
-	    $obj->touch();
-	    $obj->add( $address );
-	}
-	else {
-	    $self->error_set( "$address already exists" );
-	    return undef;
-	}
+    # if already member, subscriber request is wrong.
+    if ($cred->is_member($curproc, { address => $address })) {
+	croak("already member");
+    }
+    # if not, try confirmation before subscribe
+    else {
+	Log("new subscriber, try confirmation");	
     }
 }
 
