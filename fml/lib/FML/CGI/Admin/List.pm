@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.9 2002/06/25 04:02:11 fukachan Exp $
+# $FML: List.pm,v 1.1 2002/06/25 07:52:13 fukachan Exp $
 #
 
 package FML::CGI::Admin::List;
@@ -64,7 +64,7 @@ sub cgi_menu
 		       scrolling_list(-name   => 'map',
 				      -values => $map_list,
 				      -default => $map_default,
-				      -size   => 2)
+				      -size   => $#$map_list + 1)
 		       ]),
 		   )
 		);
