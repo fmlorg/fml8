@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.4 2002/04/07 05:35:07 fukachan Exp $
+# $FML: Lite.pm,v 1.5 2002/05/31 14:44:40 fukachan Exp $
 #
 
 package Calender::Lite;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-Calender::Lite - DEMO to show calender
+Calender::Lite - show a calender (demonstration module)
 
 =head1 SYNOPSIS
 
@@ -36,12 +36,17 @@ Calender::Lite - DEMO to show calender
 
 =head1 DESCRIPTION
 
-C<TinSchecdule> is a demonstration module to show how to use and build
-up modules to couple with CPAN and FML modules.
-This routine needs C<HTML::CalendarMonthSimple>.
+C<CAUTION:> This module is created just for a demonstration to show
+how to write a module based on FML::Process::* not intended for your
+general use. This module is not enough mature nor insecure.
 
-It parses files in ~/.schedule/ and output schedule of this month as
-HTML TABLE by default. To see it, you need WWW browser e.g. "w3m".
+C<Calenter::lite> is a demonstration module to show how to use and
+build up modules to couple with CPAN and FML modules.  This routine
+needs C<HTML::CalendarMonthSimple>.
+
+It parses files in ~/.schedule/ and output the schedule of this month
+as HTML TABLE by default. To see it, you need a WWW browser
+e.g. "w3m".
 
 
 =head1 METHODS
@@ -50,8 +55,8 @@ HTML TABLE by default. To see it, you need WWW browser e.g. "w3m".
 
 The standard constructor.
 
-It speculates C<user> by $args->{ user } or $ENV{'user'} or uid
-and determine path for ~user/.schedule/.
+It speculates C<user> by $args->{ user } or $ENV{'USER'} or UID
+and determine the path for ~user/.schedule/.
 
 $args can take the following variables:
 
@@ -61,10 +66,10 @@ $args can take the following variables:
        mode           => MODE,
    };
 
-C<Caution:>
-   The string for ~user is restricted to ^[\w\d\.\/]+$.
+C<CAUTION:>
+   The string for ~user is restricted to ^[-\w\d\.\/_]+$.
 
-   PATH is reset in the last of new().
+   PATH is reset atn the last of new() method.
 
 =cut
 
@@ -75,7 +80,7 @@ C<Caution:>
 #               libexec/loaders's $args if fmlsch uses.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
-# Return Value: object
+# Return Value: OBJ
 sub new
 {
     my ($self, $args) = @_;
@@ -96,7 +101,7 @@ sub new
     # XXX-AUDIT (we should use FML::Restriction ?)
     # simple check (not enough mature).
     # This code is not for security but to avoid -T (taint mode) error ;)
-    if ($home_dir =~ /^([\w\d\.\/]+)$/) {
+    if ($home_dir =~ /^([-\w\d\.\/_]+)$/) {
 	$home_dir = $1;
     }
     else {
@@ -149,6 +154,8 @@ sub tmpfilepath
 	croak("$dir is not writable\n") unless -w $dir;
     }
 
+    # XXX we should not create a temporary file in the public area
+    # XXX such as /tmp/, so create it in ~/.schedule/.
     if (defined $tmpdir) {
 	eval q{
 	    use File::Spec;
@@ -377,7 +384,7 @@ XXX: The mode is not used in this module itsef.
 # Descriptions: show the current $mode
 #    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: string or undef
+# Return Value: STR or undef
 sub get_mode
 {
     my ($self) = @_;
@@ -388,7 +395,7 @@ sub get_mode
 # Descriptions: overwrite $mode
 #    Arguments: OBJ($self) STR($mode)
 # Side Effects: update $self object
-# Return Value: none
+# Return Value: STR
 sub set_mode
 {
     my ($self, $mode) = @_;
