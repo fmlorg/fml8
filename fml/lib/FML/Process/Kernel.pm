@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.185 2003/10/14 12:57:45 fukachan Exp $
+# $FML: Kernel.pm,v 1.186 2003/10/15 01:03:34 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -975,6 +975,12 @@ sub parse_incoming_message
 	    $msg->print($wh) if defined $wh;
 	    $obj->close();
 	}
+    }
+
+    # Accept-Language: handling
+    if (defined $msg) {
+	my $list = $msg->accept_language_list();
+	$curproc->set_accept_language_list($list);
     }
 }
 

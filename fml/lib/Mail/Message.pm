@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.85 2003/09/13 13:01:01 fukachan Exp $
+# $FML: Message.pm,v 1.86 2003/10/15 01:03:37 fukachan Exp $
 #
 
 package Mail::Message;
@@ -2425,6 +2425,21 @@ sub data_type_list
     }
     \@buf;
 }
+
+
+=head1 UTILITY for Accept-Language:
+
+=head2 accept_language_list()
+
+return list of languages to accept as ARRAY_REF such as [ 'ja', 'en',
+'*' ] but [ '*' ] if Accept-Language: unavailable.
+
+=cut
+
+
+# Accept-Language: handling
+use Mail::Message::Language;
+push(@ISA, "Mail::Message::Language");
 
 
 =head1 METHODS to make a whole mail message
