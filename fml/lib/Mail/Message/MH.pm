@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #
-# $FML: MH.pm,v 1.6 2002/07/02 12:54:44 fukachan Exp $
+# $FML: MH.pm,v 1.7 2002/07/17 12:08:46 fukachan Exp $
 #
 
 package Mail::Message::MH;
@@ -124,20 +124,15 @@ sub _expand_range
 
 
 if ($0 eq __FILE__) {
-    my $mh = new Mail::Message::MH;
-    for (qw(1,2,3
-	    1,10,last:20
-	    100
-	    100-110
-	    first-110
-	    190-last
-	    first first:10
-	    last  last:10
-	    )) {
-	print "\n[$_] => ";
-	my $a = $mh->expand($_, 1, 200);
-	print "@$a\n";
-    }
+    eval q{
+	my $mh = new Mail::Message::MH;
+	for (qw(1,2,3 1,10,last:20 100 100-110 first-110 190-last first
+	      first:10 last last:10)) {
+	    print "\n[$_] => ";
+	    my $a = $mh->expand($_, 1, 200);
+	    print "@$a\n";
+	}
+    };
 }
 
 
