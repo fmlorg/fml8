@@ -1,6 +1,72 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/10/15
+
+   FML::Digest 
+   FML::Command::SendFile 
+   FML::Process::Kernel Utils 
+	implement get_charset() and set_charset().  modified to use it to
+	treat current charset changed dynamically on the fly.
+	
+   FML::Process::CGI::Kernel 
+	enable languge change function
+	
+   variables
+	define $default_cgi_language, $cgi_language_list
+
+2003/10/14
+
+   fml/share/message/ is translated to English.
+	euc-jp/* is translated to corresponding us-ascii/*.
+
+   FML::Process::Kernel 
+	if (defined $pcb) { ...}
+	
+   FML::Process::CGI::Kernel Utils 
+	define cgi_var_language() and use it
+	
+   Mail::Message::DB 
+	oops, remove debug message output
+	
+   FML::Filter::MimeComponent 
+	recursive multipart checks
+	
+   FML::Process::CGI::Kernel 
+   FML::CGI::List ML Menu User 
+	implement cgi_hidden_info_language() and modified to use it.
+	It holds language info within CGI operations.
+
+2003/10/07
+
+   FML::Command::Admin::log 
+	fix html style:
+	<pre>str1<::pre> <pre>str2<::pre> ... -> <pre>str1\nstr2 ... <::pre>
+
+2003/10/06
+
+   FML::Process::Distribute 
+   Mail::Message::DB ToHTML 
+	handle article subject specilly where the key in db is
+	"article_subject".
+	
+   FML::Command::Admin::log 
+	
+	fix printing_style value::cgi -> html
+
+2003/09/30
+
+   Mail::Message::DB 
+	create article_$header db too.
+
+   FML::Restriction::Base 
+	define language regexp
+
+2003/09/29
+
+   FML::Process::Distribute
+	disable _old_thread_check()
+
 2003/09/27
 
    natural language extension in cgi menu.
@@ -5390,4 +5456,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.162 2003/09/25 22:08:44 fukachan Exp $
+$FML: CHANGES.txt,v 1.163 2003/09/27 14:35:33 fukachan Exp $
