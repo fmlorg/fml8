@@ -3,6 +3,29 @@
 
    2002/12 は、オーバホール・キャンペーン実施中ですぉ。
 
+2002/12/25
+
+   FML::Process::Distribute 
+	not use smtp_log_handle to avoid duplication in
+	var/mail/outgoing/ (PR fml-devel:345).
+
+   FML::Process::Command 
+	fix comments.
+	rename::_allow_command() -> _config_allow_command()
+
+2002/12/24
+
+   *オーバホール・キャンペーン実施中
+
+   FML::Process::Command 
+	rename:
+	o _is_valid_command() -> _config_permit_command()
+	o _is_valid_syntax()  -> _is_safe_syntax()
+	o _auth_admin()       -> _try_admin_auth()
+	
+	fix changes.
+	more log of level exceptions.
+
 2002/12/23
 
    *オーバホール・キャンペーン実施中
@@ -3865,4 +3888,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.118 2002/12/22 15:20:26 fukachan Exp $
+$FML: CHANGES.txt,v 1.119 2002/12/23 21:10:10 fukachan Exp $
