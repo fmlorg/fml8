@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.32 2001/12/22 09:21:18 fukachan Exp $
+# $FML: Lite.pm,v 1.33 2001/12/23 14:12:51 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.32 2001/12/22 09:21:18 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.33 2001/12/23 14:12:51 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -1967,7 +1967,7 @@ sub _print_li_filename
     my $subject  = $db->{ _subject }->{ $id };
     my $who      = $db->{ _who }->{ $id };
 
-    if (defined $filename && $filename && -f $filename) {
+    if (defined $filename && $filename) {
 	_print_raw_str($wh, "<!-- LI id=$id -->\n", $code);
 
 	_print_raw_str($wh, "<LI>\n", $code);
