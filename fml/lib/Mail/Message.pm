@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.32 2001/10/21 15:29:20 fukachan Exp $
+# $FML: Message.pm,v 1.33 2001/10/27 04:50:39 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1536,7 +1536,7 @@ sub get_encoding_mechanism
     my ($self) = @_;
     my $buf = $self->header_in_body_part();
 
-    if ($buf =~ /Content-Transfer-Encoding:\s*(\S+)/i) {
+    if ($buf =~ /Content-Transfer-Encoding:\s*(\S+)/mi) {
 	my $mechanism = $1;
 	$mechanism =~ tr/A-Z/a-z/;
 	return $mechanism;
