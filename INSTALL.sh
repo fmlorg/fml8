@@ -34,7 +34,7 @@ owner=fukachan
 _mkdir () {
 	local dir=$1 
 	echo mkdir $dir; 
-	test -d $dir || mkdir $dir
+	test -d $dir || mkdir -p $dir
 }
 
 
