@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.52 2003/01/25 11:44:04 fukachan Exp $
+# $FML: Header.pm,v 1.53 2003/03/05 16:10:27 fukachan Exp $
 #
 
 package FML::Header;
@@ -373,7 +373,14 @@ The actual function definitions exist in C<FML::Header::Subject>.
 
 =head2 C<rewrite_reply_to>
 
-add or replace C<Reply-To:>.
+replace C<Reply-To:> with this ML's address for post.
+add reply-to: if not specified.
+
+
+=head2 C<rewrite_errors_to>
+
+replace C<Errors-To:> with this ML's address for post.
+add errors-to: if not specified.
 
 =head2 C<rewrite_date>
 
@@ -402,7 +409,8 @@ sub rewrite_article_subject_tag
 }
 
 
-# Descriptions: rewrite Reply-To: if needed
+# Descriptions: rewrite Reply-To: to this ML's address.
+#               add Reply-To: if not specified.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
 # Side Effects: update $header
 # Return Value: none
@@ -414,6 +422,18 @@ sub rewrite_reply_to
     unless ($reply_to) {
 	$header->add('Reply-To', $config->{ address_for_post });
     }
+}
+
+
+# Descriptions: rewrite Errors-To: to the maintainer.
+#               add Errors-To: if not specified.
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+# Side Effects: update $header
+# Return Value: none
+sub rewrite_errors_to
+{
+    my ($header, $config, $args) = @_;
+    $header->add('Errors-To', $config->{ maintainer });
 }
 
 
