@@ -1,0 +1,41 @@
+X-Sequence: fml-devel 205
+
+もう、ここまできたらファイル名も変える方が建設的だとおもふ？
+
+1. 受信者リスト
+
+	primary_recipient_maps	=	recipients
+
+	# 互換性のため actives をいれておく
+	recipient_maps	=	recipients
+				actives
+
+2. リモート管理者のリスト
+
+	members-admin でもいい？ なら
+ 
+3.	モデレータ
+
+	moderators じゃなくて members-moderator
+
+が適切ではないのかなぁ… 
+
+以下同様に『役割』を新設するごとに
+
+	members-役割
+	recipient-役割
+
+を使う、でも recipient-* はないことが多いと:)
+＃ 理論的には使い分けても良い（が、どういう場合があるのかはよくわから
+＃ ない）。
+
+逆に、上の 2. 3. が変なら
+
+	admins
+	moderators
+
+のようにするべき？
+＃そのばあい members ってのがよくわからいけど…
+
+-- fukachan
+
