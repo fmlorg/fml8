@@ -1,0 +1,296 @@
+2002-09-12  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+        * Version 1.16.
+        
+        * MMagic.pm (new): Fixed binmode() place.
+        (contributed by Everton da Silva Marques, thank you.)
+
+2002-03-14  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm (new): Added a signature for text/x-roff type.
+
+2002-02-22  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Version 1.15.
+
+	* MMagic.pm: Added new funtions removeSpecials and
+	removeExts.
+	(Patch contributed by Hilko Bengen, thank you.)
+
+2001-11-13  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Added binmode() in some file handles.
+	(Reported by Antony O'Sullivan, thanks.)
+
+2001-08-08  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* README.en : Added the notice section.
+
+	* README.ja : Ditto.
+
+2001-07-17  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MANIFEST: Added t/02-extmagic.t for distribution.
+
+	* t/02-extmagic.t: Added a new file for testing.
+
+	* MANIFEST: Added t/01-selfcheck.t for distribution.
+
+	* t/01-selfcheck.t: Added a new file for testing.
+
+2001-07-05  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm (checktype_filename): Added workaround for MSWin32
+	symlink handling probrem on ActivePerl build 626.
+	(Reported by Thomas Yengst, thank you.)
+
+	* perl-File-MMagic.spec: Removed.
+
+2001-06-20  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Added some archives entry (arc, zoo, arj, rar).
+
+2001-06-19  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Added ms-tnef entry.
+
+	* Version 1.14.
+
+2001-06-18  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Added more comment on pod.
+
+2001-06-15  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm (readMagicEntry): Fixed warning output probrem
+	on large magic database.
+	(Reported and patched by John R Lenton. Thanks.)
+
+	* Version 1.13.
+
+2001-02-09  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm (checktype_data): Changed evaluation sequence of
+	binary-checking and specials-checking.
+	Version 1.12.
+
+2000-12-11  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Discarded disallowEightbit().
+	Add new variable "allowEightbit".
+	Version 1.11.
+
+	* MMagic.pm (disallowEightbit): Added new entry.
+	Version 1.10.
+
+2000-10-10  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Removed a text/x-info related entry.
+	Version 1.09.
+
+2000-09-12  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm : Added image/png entry.
+	(suggested by Jamie LeTual. Thanks.)
+	Version 1.08.
+
+2000-08-09  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm (new): Added '\.' in $self->{FILEEXTS}.
+	(reported by Yasunori Tada. Thanks.)
+	Version 1.07.
+
+2000-03-29  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Removed "\v" from %ESC.
+
+2000-03-23  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Added some entries.
+	(committed by kenzo-. Thanks.)
+
+2000-03-08  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Version 1.03.
+
+	* MMagic.pm (addMagicEntry): Changed priority for added entry.
+
+2000-03-03  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Version 1.02.
+
+	* MMagic.pm: Added the original copyrignt.
+	(I apology to the original author David Kulp, I overlook it.)
+	(magicMatchStr): Fixed short data handling probrem.
+
+2000-02-29  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Fixed version number. Version 1.01.
+	
+	* Version 1.00.
+
+	* MMagic.pm (checktype_filehandle): Fixed to work multiple subtests.
+
+2000-02-28  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Changed URI for Namzu Project.
+	(contributed by Satoru Takabayasi)
+	Fixed to work multiple subtests.
+	Changed some entries for MicroSoft Office files.
+	Fixed addFileExts() bug.
+	Changed to check file-extends for case insensitive.
+
+	* perl-File-MMagic.spec: Created.
+	(contributed by Ryuji Abe)
+
+2000-02-24  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Changed to work subtest matching.
+
+2000-02-10  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Version 0.20.
+
+	* MMagic.pm: Fixed media type for RIFF format.
+	Added audio/mpeg, video/mpeg, video/quicktime format.
+	(Thanks for Mr. Perter Breton.)
+
+1999-12-02  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* prel-File-MMagic.spec: Renamed from File-MMagic.spec.
+
+1999-11-30  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Version 0.19.
+
+1999-11-29  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm: Changed to work with Win32 envoronment.
+	Added excel, powerpoint, ichitaro* entries.
+	(Thanks for kenzo-.)
+
+1999-11-15  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* MMagic.pm (new): Changed to handle specified filename for
+	magic file.
+	(Thanks for Mr. Philippe Chiasson.)
+
+1999-10-27  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Added 'AUTHOR' and 'ABSTRACT' paramaters on Makefile.PL.
+
+1999-10-05  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Added excluding character CR on check_binary() function.
+
+1999-09-14  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Changed to return magicMatchStr function when null string is
+	specified in $str.
+
+1999-09-13  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Changed `text/html' SPECIALS entry.
+	* Added empty check on checktype_data, checktype_magic.
+	* Removed non-standard type entry from %SPECIALS, %FILEEXTS, __DATA__.
+	* Added new methods addSpecials, addFileExts, addMagicEntry.
+	* Moved global %SPECIALS, %FILEEXTS variable to object.
+	* Renamed spec file.
+
+1999-09-10  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Added spec file.
+	(Thanks to Mr.Abe.)
+
+1999-09-09  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Fixed unescaped space in VRML magic entry.
+	 (Thanks to Mr.Takaku.)
+
+1999-09-08  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Changed %SPECIALS contents.
+	  (Remove 'Organization:' from news,
+	   add space character on rfc822/news message header,
+	   add "^X-Mailer: " on rfc822,
+	   add "^X-Newsreader: " on news,
+	   add "^From ", "^To: " on rfc822.)
+
+	* Separated checktype_magic() from checktype_contents().
+
+1999-09-06  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Added excluding character TAB on check_binary() function.
+	 (Tkanks to Mr.Takaku)
+	* Added VRML magic entries. (Tkanks to Mr.Takaku)
+	
+1999-08-03  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Fixed flie close bug in checktype_filehandle().
+	 (Thanks to Mr. Alan)
+
+1999-07-29  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Fixed %SPECIALS evaluation bug.
+	* Release version 0.16.
+
+1999-07-14  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Added blessing FileHandle process in new function.
+	 (Thanks to Mr. majiCk)
+
+1999-07-13  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Release version 0.15.
+	
+1999-07-06  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Fix %SPECIALS media types.
+	 (text/(rfc822|news) is bad, message/* is correct.
+	  Thanks to Mr.Takaku.)
+	* Changed %SPECIALS token regexp.
+
+1999-06-29  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Fix truncating data processing bug in checktype_data function
+	 (pack('a8192') padded "\0", it cause a probrem.)
+
+1999-06-18  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Add initialize some variables code in readMagicEntry function
+	 (to avoid '-w' warning).
+	* Add length check code in checktype_contents function.
+
+1999-06-17  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Change %SPECIAL checking code.
+	* Add checktype_byfilename function.
+	* Add data truncation process on checktype_data function.
+
+1999-06-16  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Reorder some magic entries.
+	* Fix MHonArc magic entry.
+	* Add RFC check to %SPECIALS.
+
+1999-06-15  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Add 2 magic entries (MHonArc and bzip2).
+
+1999-06-14  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Add the Apache License.
+	 (Thanks to Ian Kluft.)
+	* Add checktype_contents() function.
+	* Add zero check routine in check_binary() funciton.
+
+1999-06-11  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Change __DATA__ handling.
+	 (Thanks to Mr. Inaba, Mr. Maeda, and fj.comp.lang.perl.)
+
+1999-06-10  NOKUBI Takatsugu  <knok@daionet.gr.jp>
+
+	* Initial version.
+	* Branch 'classify' version.
+

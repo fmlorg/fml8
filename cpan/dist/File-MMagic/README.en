@@ -1,0 +1,36 @@
+File::MMagic
+
+Copyright(C) 1999-2001 NOKUBI Takatsugu <knok@daionet.gr.jp>
+
+1. Abstract
+
+This module is to guess file type from its contents like file(1)
+command.
+
+2. Install
+
+Extract archive file.
+Change current directory to File-MMagic-x.xx ("x.xx" is version
+number).
+Type "perl Makefile.PL" to create Makefile.
+Type "make install" to install.
+
+3. How to use
+
+See "perldoc File::MMagic".
+
+4. Copyright
+
+See COPYING file.
+
+5. Notice
+
+If you want to use the module under mod_perl environment, you'll need
+to divide the module into module part and magic entry file part, and use
+the magic file explicitly.
+Built-in magic entry does not work correctly under mod_perl.
+
+Ex.
+
+my $magic = File::MMagic::new('/etc/mime-magic');
+   # /etc/mime-magic is separated file from MMagic.pm
