@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.56 2003/04/08 15:41:42 tmu Exp $
+# $FML: Header.pm,v 1.57 2003/04/15 12:24:47 tmu Exp $
 #
 
 package FML::Header;
@@ -487,8 +487,8 @@ sub rewrite_received
     {
 	$data = $header->get($org, $i);
 	$header->add($new, $data);
-	$header->delete($org, $i);
     }
+    $header->delete($org);
     Log("(debug) rewrite $org to $new (total $num)");
 }
 
