@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent2.pm,v 1.3 2002/10/21 09:03:09 fukachan Exp $
+# $FML: MimeComponent2.pm,v 1.4 2002/10/21 09:09:46 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -100,7 +100,7 @@ C<Usage>:
 sub mime_component_check
 {
     my ($self, $msg, $args) = @_;
-    my ($data_type, $prevmp, $nextmp, $mp, $action);
+    my ($data_type, $prevmp, $nextmp, $mp, $action, $reason);
     my $is_match  = 0;
     my $is_cutoff = 0;
     my $i = 1;
@@ -131,6 +131,7 @@ sub mime_component_check
 	    if ($action eq 'reject' || $action eq 'permit') {
 		__dprint("\n\t! action = $action. stop here.");
 		$is_match = 1;
+		$reason   = join(" ", @$rule);
 		last RULE;
 	    }
 	    elsif ($action eq 'cutoff') {
@@ -146,8 +147,9 @@ sub mime_component_check
     if ($is_cutoff) { $self->dump_message_structure($msg);}
 
     my $decision = $is_match ? $action : $default_action;
-    my $reason   = $is_match ? "matched action" : "default action";
-    __dprint("\n   our desicion: $decision ($reason)");
+    my $_reason  = $is_match ? $reason : "default action";
+    Log("mime_component_filter: $decision ($_reason)");
+    __dprint("\n   our desicion: $decision ($_reason)");
     return $decision;
 }
 
