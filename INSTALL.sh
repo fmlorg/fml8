@@ -4,7 +4,6 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
 # $FML$
 #
 
@@ -132,6 +131,8 @@ if [ "X$iam" != Xroot ];then
 fi
 
 id -un $owner || exit 1
+
+exit 0;
 
 if [ -d $ml_spool_dir -a -w $ml_spool_dir ]; then
 	echo set up the owner of $ml_spool_dir to be $owner
