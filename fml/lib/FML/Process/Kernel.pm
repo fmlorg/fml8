@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.69 2002/01/16 13:34:00 fukachan Exp $
+# $FML: Kernel.pm,v 1.70 2002/01/16 13:43:20 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -739,20 +739,26 @@ sub queue_in
 	_add_info_on_header($config, $msg);
     }
 
+    my ($queue_dir, $queue, $qid) = (undef, undef, undef);
     eval q{
 	use Mail::Delivery::Queue;
+	$queue_dir = $config->{ mqueue_dir };
+	$queue     = new Mail::Delivery::Queue { directory => $queue_dir };
+	$qid       = $queue->id();
     };
-    my $queue_dir = $config->{ mqueue_dir };
-    my $queue     = new Mail::Delivery::Queue { directory => $queue_dir };
-    my $qid       = $queue->id();
 
-    $queue->set('sender',     $sender);
-    $queue->set('recipients', [ $recipient ]);
-    $queue->in( $msg ) && Log("queue=$qid in");
-    $queue->setrunnable();
+    if (defined $queue) {
+	$queue->set('sender',     $sender);
+	$queue->set('recipients', [ $recipient ]);
+	$queue->in( $msg ) && Log("queue=$qid in");
+	$queue->setrunnable();
 
-    # return queue object
-    return $queue;
+	# return queue object
+	return $queue;
+    }
+    else {
+	return undef;
+    }
 }
 
 
