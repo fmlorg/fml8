@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.169 2003/04/29 11:28:45 fukachan Exp $
+# $FML: Kernel.pm,v 1.170 2003/07/21 14:31:51 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -347,11 +347,16 @@ sub _lock_init
 {
     my ($curproc, $channel) = @_;
     my $config    = $curproc->{ config };
+    my $home_dir  = $config->{ ml_home_dir };
     my $lock_dir  = $config->{ lock_dir };
     my $lock_type = $config->{ lock_type };
 
     # our lock channel
     $channel ||= 'giantlock';
+
+    unless (-d $home_dir) {
+	croak("cannot lock: \$ml_home_dir not exists");
+    }
 
     # only user "fml" should read lock files.
     unless (-d $lock_dir) {
