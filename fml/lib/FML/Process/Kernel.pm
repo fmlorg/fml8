@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.127 2002/08/14 14:14:33 fukachan Exp $
+# $FML: Kernel.pm,v 1.128 2002/08/14 14:17:09 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -935,6 +935,11 @@ sub _check_restrictions
 Set "we should refuse this processing now" flag.
 We should stop this process as soon as possible.
 
+=head2 do_nothing($reason)
+
+same as stop_this_process($reason).
+dedicated to fml 4.0's C<$DO_NOTHING> variable.
+
 =head2 is_refused()
 
 We should stop this process as soon as possible due to something
@@ -952,6 +957,18 @@ sub stop_this_process
 {
     my ($curproc, $reason) = @_;
     $curproc->{ __this_process_is_invalid } = 1;
+}
+
+
+# Descriptions: synonym of stop_this_process()
+#    Arguments: OBJ($curproc) STR($reason)
+#      History: dedicated to $DO_NOTHING variable in fml 4.0
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub do_nothing
+{
+    my ($curproc, $reason) = @_;
+    $curproc->stop_this_process($reason);
 }
 
 
