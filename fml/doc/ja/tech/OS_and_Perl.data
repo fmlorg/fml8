@@ -31,6 +31,10 @@
 [release]      2.8
 [perl.version] 5.6.0
 
+[system]       OpenBSD
+[release]      2.9
+[perl.version] 5.6.0
+[perl.path]    /usr/bin/perl
 
 
 [system]       FreeBSD
@@ -403,4 +407,4 @@ SEE ALSO:
    http://www.cyber-magic.org/~taka/perl-versions.html
    http://www.uinet.or.jp/~taka/perl-versions.html
 
-$FML: OS_and_Perl.data,v 1.3 2001/04/30 09:44:12 fukachan Exp $
+$FML: OS_and_Perl.data,v 1.4 2001/08/15 11:06:25 fukachan Exp $
