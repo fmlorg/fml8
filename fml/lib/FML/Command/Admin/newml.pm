@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.30 2002/04/27 05:25:02 fukachan Exp $
+# $FML: newml.pm,v 1.31 2002/05/21 09:21:08 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -150,16 +150,25 @@ sub _install_template_files
     my $config       = $curproc->{ config };
     my $template_dir = $curproc->template_files_dir_for_newml();
     my $ml_home_dir  = $params->{ ml_home_dir };
+    my $templ_files  = $config->{ newml_command_template_files };
 
-    my $newml_template_files =
-	$config->get_as_array_ref('newml_command_postfix_template_files');
-    for my $file (@$newml_template_files) {
+    for my $file (@$templ_files) {
 	my $src = File::Spec->catfile($template_dir, $file);
 	my $dst = File::Spec->catfile($ml_home_dir, $file);
 
 	print STDERR "creating $dst\n";
 	_install($src, $dst, $params);
     }
+
+    use FML::MTAControl;
+
+    # setup include include-ctl ... 
+    my $postfix = new FML::MTAControl { mta_type => 'postfix' };
+    $postfix->setup($curproc, $params);
+
+    # setup ~fml/.qmail-*
+    my $qmail = new FML::MTAControl { mta_type => 'qmail' };
+    $qmail->setup($curproc, $params);
 }
 
 
@@ -207,7 +216,6 @@ sub _update_aliases
 	croak($@) if $@;
     }
 }
-
 
 
 # Descriptions: $alias file has an $ml_name entry or not
@@ -412,28 +420,11 @@ sub _install
 {
     my ($src, $dst, $config) = @_;
 
-    use FileHandle;
-    my $in  = new FileHandle $src;
-    my $out = new FileHandle "> $dst.$$";
-
-    if (defined $in && defined $out) {
-	chmod 0644, "$dst.$$";
-
-	eval q{
-	    use FML::Config::Convert;
-	    &FML::Config::Convert::convert($in, $out, $config);
-	};
-	croak($@) if $@;
-
-	$out->close();
-	$in->close();
-
-	rename("$dst.$$", $dst) || croak("fail to rename $dst");
-    }
-    else {
-	croak("fail to open $src") unless defined $in;
-	croak("fail to open $dst") unless defined $out;
-    }
+    eval q{
+	use FML::Config::Convert;
+	&FML::Config::Convert::convert_file($src, $dst, $config);
+    };
+    croak($@) if $@;
 }
 
 

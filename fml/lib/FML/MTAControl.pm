@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MTAControl.pm,v 1.3 2002/04/25 04:40:03 fukachan Exp $
+# $FML: MTAControl.pm,v 1.4 2002/04/27 05:25:01 fukachan Exp $
 #
 
 package FML::MTAControl;
@@ -52,7 +52,55 @@ sub new
     $me->{ mta_type } =
 	defined $args->{ mta_type } ? $args->{ mta_type } : 'postfix';
 
+    _update_isa($me);
+
     return bless $me, $type;
+}
+
+
+sub _update_isa
+{
+    my ($self, $optargs) = @_;
+    my $mta_type =
+	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
+	    $self->{ mta_type };
+
+    if ($mta_type eq 'postfix') {
+	eval q{ 
+	    use FML::MTAControl::Postfix;
+	    push(@ISA, qw(FML::MTAControl::Postfix));
+	};
+	croak($@) if $@;
+    }
+    elsif ($mta_type eq 'qmail') {
+	eval q{ 
+	    use FML::MTAControl::Qmail;
+	    push(@ISA, qw(FML::MTAControl::Qmail));
+	};
+	croak($@) if $@;
+    }
+}
+
+
+# Descriptions: install configuration temaplate alias
+#    Arguments: OBJ($self) 
+#               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
+# Side Effects: update aliases
+# Return Value: none
+sub setup
+{
+    my ($self, $curproc, $params, $optargs) = @_;
+    my $mta_type =
+	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
+	    $self->{ mta_type };
+
+    if ($mta_type eq 'postfix' || $mta_type eq 'qmail') {
+	my $method = "${mta_type}_setup";
+	$self->$method($curproc, $params, $optargs);
+    }
+    else {
+	croak("unknown MTA");
+    }
 }
 
 
@@ -67,28 +115,12 @@ sub update_alias
 	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
 	    $self->{ mta_type };
 
-    if ($mta_type eq 'postfix') {
-	$self->postfix_update_alias($curproc, $optargs);
+    if ($mta_type eq 'postfix' || $mta_type eq 'qmail') {
+	my $method = "${mta_type}_update_alias";
+	$self->$method($curproc, $optargs);
     }
     else {
 	croak("unknown MTA");
-    }
-}
-
-
-# Descriptions: update alias
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
-# Side Effects: update aliases
-# Return Value: none
-sub postfix_update_alias
-{
-    my ($self, $curproc, $optargs) = @_;
-    my $config = $curproc->{ config };
-    my $prog   = $config->{ path_postalias };
-    my $maps   = $optargs->{ alias_maps };
-
-    for my $alias (@$maps) {
-	system "$prog $alias";
     }
 }
 
@@ -105,8 +137,9 @@ sub find_key_in_alias
 	    $self->{ mta_type };
     my $key      = $optargs->{ key };
 
-    if ($mta_type eq 'postfix') {
-	$self->postfix_find_key_in_alias($curproc, $optargs);
+    if ($mta_type eq 'postfix' || $mta_type eq 'qmail') {
+	my $method = "${mta_type}_find_key_in_alias";
+	$self->$method($curproc, $optargs);
     }
     else {
 	croak("unknown MTA");
@@ -125,8 +158,9 @@ sub get_aliases_as_hash_ref
 	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
 	    $self->{ mta_type };
 
-    if ($mta_type eq 'postfix') {
-	$self->postfix_get_aliases_as_hash_ref($curproc, $optargs);
+    if ($mta_type eq 'postfix' || $mta_type eq 'qmail') {
+	my $method = "${mta_type}_get_aliases_as_hash_ref";
+	$self->$method($curproc, $optargs);
     }
     else {
 	croak("unknown MTA");
@@ -134,103 +168,19 @@ sub get_aliases_as_hash_ref
 }
 
 
-# Descriptions: find key in aliases
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
-# Side Effects: none
-# Return Value: NUM(1 or 0)
-sub postfix_find_key_in_alias
+# Descriptions: install file $dst with variable expansion of $src
+#    Arguments: OBJ($self) STR($src) STR($dst) HASH_REF($config)
+# Side Effects: create $dst
+# Return Value: none
+sub _install
 {
-    my ($self, $curproc, $optargs) = @_;
-    my $key  = $optargs->{ key };
-    my $maps = $self->postfix_alias_maps($curproc, $optargs);
+    my ($self, $src, $dst, $config) = @_;
 
-    for my $map (@$maps) {
-	print STDERR "scan key = $key, map = $map\n" if $debug;
-
-	use FileHandle;
-	my $fh = new FileHandle $map;
-	if (defined $fh) {
-	    while (<$fh>) {
-		return 1 if /^$key:/;
-	    }
-	}
-	else {
-	    warn("cannot open $map");
-	}
-	$fh->close;
-    }
-
-    return 0;
-}
-
-
-# Descriptions: get { key => value } in aliases
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
-# Side Effects: none
-# Return Value: HASH_REF
-sub postfix_get_aliases_as_hash_ref
-{
-    my ($self, $curproc, $optargs) = @_;
-    my $config     = $curproc->{ config };
-    my $alias_file = $config->{ mail_aliases_file };
-    my $key        = $optargs->{ key };
-    my $mode       = $optargs->{ mode };
-    my $maps       = $self->postfix_alias_maps($curproc, $optargs);
-    my $aliases    = {};
-
-    # $0 -n shows fml only aliases
-    if ($mode eq 'fmlonly') {
-	$maps = [ $alias_file ];
-    }
-
-    for my $map (@$maps) {
-	print STDERR "scan key = $key, map = $map\n" if $debug;
-
-	use FileHandle;
-	my $fh = new FileHandle $map;
-	if (defined $fh) {
-	    my ($key, $value);
-
-	  LINE:
-	    while (<$fh>) {
-		next LINE if /^#/;
-		next LINE if /^\s*$/;
-
-		chomp;
-		($key, $value)   = split(/:/, $_, 2);
-		$value =~ s/^\s*//;
-		$value =~ s/s*$//;
-		$aliases->{ $key } = $value;
-	    }
-	}
-	else {
-	    warn("cannot open $map");
-	}
-	$fh->close;
-    }
-
-    return $aliases;
-}
-
-
-# Descriptions: return alias_maps as ARRAY_REF
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
-# Side Effects: none
-# Return Value: ARRAY_REF
-sub postfix_alias_maps
-{
-    my ($self, $curproc, $optargs) = @_;
-    my $config = $curproc->{ config };
-    my $prog   = $config->{ path_postconf };
-
-
-    my $maps   = `$prog alias_maps`;
-    $maps      =~ s/\s+\w+:/ /g;
-    $maps      =~ s/^.*=\s*//;
-    chomp $maps;
-
-    my (@maps) = split(/\s+/, $maps);
-    return \@maps;
+    eval q{
+	use FML::Config::Convert;
+	&FML::Config::Convert::convert_file($src, $dst, $config);
+    };
+    croak($@) if $@;
 }
 
 
