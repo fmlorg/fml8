@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Switch.pm,v 1.35 2001/11/10 04:01:11 fukachan Exp $
+# $FML: Switch.pm,v 1.36 2001/11/11 13:37:41 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -119,7 +119,10 @@ sub main::Bootstrap2
 
     # 2.3 prepare @$cf
     #     XXX hmm, .. '/etc/fml/site_default_config.cf' is good ???
-    unshift(@$cf, '/etc/fml/site_default_config.cf');
+    use File::Spec;
+    my $sitedef = 
+      File::Spec->catfile($main_cf->{ config_dir }, 'site_default_config.cf');
+    unshift(@$cf, $sitedef);
     unshift(@$cf, $main_cf->{ default_config });
 
     # 3.1 set up @INC 
