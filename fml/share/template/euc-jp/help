@@ -1,2 +1,54 @@
 		$ml_name ＭＬのヘルプファイル
 
+		一般ユーザ用のコマンド
+
+	記法: () で括ってあるのは alias
+
+----------------------------------------------------------------------
+○ 実装済み
+
+help		ヘルプファイルを取り寄せる
+guide		guide ファイルを取り寄せる
+summary		summary ファイルを取り寄せる
+
+subscribe	ＭＬへの入会
+(add)
+					confirm を返す
+
+unsubscribe	ＭＬからの脱退
+					confirm を返す
+(bye)
+(remove)
+(resign)
+(signoff)
+
+chaddr		登録してあるメールアドレスを変更する
+					confirm を返す
+
+confirm		subscribe, unsubscribe, chaddr で用いる
+		汎用 confirmation アダプタ
+
+		もし、confirm が正しいなら操作の実体である 
+		FML::Command::Admin::コマンドを呼び出す。
+		つまり登録関係のユーザコマンドは admin コマンドへの
+		アダプターというわけです。
+
+get		過去の記事を取り寄せる ( MIME/multipart only )
+(mget)
+(send)
+		XXX これは admin へのアダプタにはなっていない
+		XXX ユーザは記事しか見られないが、
+		XXX admin は何でも見られる特権がある。
+		XXX これを実現するためにモジュール自体を分離する
+
+
+○ 未実装
+
+members
+actives
+
+off
+on
+
+
+$FML: MANIFEST.euc-jp,v 1.2 2001/10/13 12:23:35 fukachan Exp $
