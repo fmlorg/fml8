@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.13 2003/02/09 12:31:40 fukachan Exp $
+# $FML: Error.pm,v 1.14 2003/02/18 15:57:46 fukachan Exp $
 #
 
 package FML::Error;
@@ -56,6 +56,55 @@ sub new
 }
 
 
+# Descriptions: lock channel we should use to lock this object.
+#    Arguments: OBJ($self)
+# Side Effects: lock "error_analyzer_cache_dir" channel 
+# Return Value: STR
+sub get_lock_channel_name
+{
+    my ($self) = @_;
+
+    # LOCK_CHANNEL: error_analyzer_cache_dir
+    return 'error_analyzer_cache_dir';
+}
+
+
+=head1 LOCK ERROR DB ACCESS
+
+=cut
+
+
+# Descriptions: lock
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
+sub lock
+{
+    my ($self) = @_;
+    my $curproc = $self->{ _curproc };
+    my $channel = $self->get_lock_channel_name();
+    $curproc->lock($channel);
+}
+
+
+# Descriptions: unlock
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
+sub unlock
+{
+    my ($self) = @_;
+    my $curproc = $self->{ _curproc };
+    my $channel = $self->get_lock_channel_name();
+    $curproc->unlock($channel);
+}
+
+
+=head1 Database
+
+=cut
+
+
 # Descriptions: open cache database.
 #    Arguments: OBJ($self)
 # Side Effects: none
@@ -66,7 +115,8 @@ sub db_open
     my $curproc = $self->{ _curproc };
 
     use FML::Error::Cache;
-    return new FML::Error::Cache $curproc;
+    $self->{ _db } = new FML::Error::Cache $curproc;
+    return $self->{ _db };
 }
 
 
@@ -78,6 +128,35 @@ sub db_close
 {
     my ($self)  = @_;
     my $curproc = $self->{ _curproc };
+}
+
+
+=head2 add($info)
+
+add bounce info into cache.
+
+=cut
+
+
+# Descriptions: add bounce info into cache.
+#               in fact, this is a wrapper of FML::Error::Cache::add()
+#               to clarify that we should lock.
+#    Arguments: OBJ($self) HASH_REF($info)
+# Side Effects: update cache
+# Return Value: none
+sub add
+{
+    my ($self, $info) = @_;
+    my $db = $self->{ _db };
+
+    if (defined $db) {
+	$self->lock();
+	$db->add($info);
+	$self->unlock();
+    }
+    else {
+	LogError("db not open");
+    }
 }
 
 
@@ -109,7 +188,11 @@ sub analyze
     use FML::Error::Analyze;
     my $analyzer = new FML::Error::Analyze $curproc;
     my $fp       = $config->{ error_analyzer_function } || 'simple_count';
-    my $list     = $analyzer->$fp($curproc, $rdata);
+
+    # critical region: access to db under locked.
+    $self->lock();
+    my $list = $analyzer->$fp($curproc, $rdata);
+    $self->unlock();
 
     $self->{ _analyzer } = $analyzer;
 
@@ -163,6 +246,7 @@ sub remove_bouncers
     use FML::Restriction::Base;
     my $safe = new FML::Restriction::Base;
 
+    # XXX need no lock here since lock is done in FML::Command::* class.
   ADDR:
     for my $addr (@$list) {
 	# check if $address is a safe string.

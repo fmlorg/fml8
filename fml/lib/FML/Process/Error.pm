@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.27 2003/02/11 09:48:16 fukachan Exp $
+# $FML: Error.pm,v 1.28 2003/02/18 15:57:46 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -153,8 +153,8 @@ sub run
 	    $bouncer->analyze( $msg );
 
 	    use FML::Error;
-	    my $error_obj  = new FML::Error $curproc;
-	    my $errorcache = $error_obj->db_open();
+	    my $error = new FML::Error $curproc;
+	    $error->db_open();
 
 	    for my $address ( $bouncer->address_list ) {
 		my $status = $bouncer->status( $address );
@@ -165,17 +165,17 @@ sub run
 		    Log("bounced: status=$status");
 		    Log("bounced: reason=\"$reason\"");
 
-		    $curproc->lock('errorcache');
-		    $errorcache->add({
+		    $error->add({
 			address => $address,
 			status  => $status,
 			reason  => $reason,
 		    });
-		    $curproc->unlock('errorcache');
 
 		    $found++;
 		}
 	    }
+
+	    $error->db_close();
 	};
 	LogError($@) if $@;
 
@@ -206,11 +206,7 @@ sub _clean_up_bouncers
 	eval q{
 	    use FML::Error;
 	    my $error = new FML::Error $curproc;
-
-	    $curproc->lock('errorcache');
 	    $error->analyze();
-	    $curproc->unlock('errorcache');
-
 	    $error->remove_bouncers();
 	};
 	LogError($@) if $@;
