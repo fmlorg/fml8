@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.92 2004/03/12 08:36:45 fukachan Exp $
+# $FML: Config.pm,v 1.93 2004/03/13 03:50:09 fukachan Exp $
 #
 
 package FML::Config;
@@ -16,11 +16,16 @@ use vars qw($need_expansion_variables
 	    %_default_fml_config
 	    $object_id
 	    $_fml_user_hooks
+	    $current_context
 	    );
 use ErrorStatus qw(error_set error error_clear);
 
-
 my $debug = 0;
+
+# XXX context switching must be needed for listserv style emulator,
+# XXX not fml4 emulation nor fml8 itself.
+# XXX we set $current_context as $ml_name@$ml_domain for lisetserv.
+$current_context = '__default__';
 
 
 =head1 NAME

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.4 2004/03/14 08:47:47 fukachan Exp $
+# $FML: State.pm,v 1.5 2004/03/14 10:29:51 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -24,6 +24,48 @@ FML::Process::State - interface to handle states within this process
 =head1 DESCRIPTION
 
 =head1 METHODS
+
+=head1 CURRENT MAILING LIST
+
+=cut
+
+
+# Descriptions: dummy.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub current_process_ml_name_init
+{
+    my ($curproc) = @_;
+
+}
+
+
+# Descriptions: set ml_name to handle currently.
+#    Arguments: OBJ($curproc) STR($ml_name)
+# Side Effects: update pcb.
+# Return Value: none
+sub set_current_process_ml_name
+{
+    my ($curproc, $ml_name) = @_;
+    my $pcb = $curproc->pcb();
+
+    return $pcb->get("current_process", "ml_name", $ml_name);
+}
+
+
+# Descriptions: get ml_name to handle currently.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub get_current_process_ml_name
+{
+    my ($curproc) = @_;
+    my $pcb = $curproc->pcb();
+
+    return $pcb->get("current_process", "ml_name");
+}
+
 
 =haed1 BASIC RESTRICTION STATES
 

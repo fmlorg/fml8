@@ -4,14 +4,22 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: PCB.pm,v 1.16 2004/01/02 02:07:30 fukachan Exp $
+# $FML: PCB.pm,v 1.17 2004/01/02 14:50:28 fukachan Exp $
 #
 
 package FML::PCB;
 
 use strict;
 use Carp;
-use vars qw(%_fml_PCB); # PCB: Process Control Block (malloc it here)
+
+# PCB: Process Control Block (malloc it here)
+use vars qw(%_fml_PCB $current_context);
+
+
+# XXX context switching must be needed for listserv style emulator,
+# XXX not fml4 emulation nor fml8 itself.
+# XXX we set $current_context as $ml_name@$ml_domain for lisetserv.
+$current_context = '__default__';
 
 
 =head1 NAME
