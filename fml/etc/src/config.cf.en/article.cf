@@ -58,9 +58,15 @@ outgoing_article_body_size_limit	= $default_mail_body_size_limit
 
 
 # Descriptions:
-#      History:
-#        Value:
-#     Examples:
+#      History: fml8 rearragena fml4 filter functions and integrates them
+#		into one.
+#		Roughly speaking, fml8 filter is composed of the following
+#			$USE_DISTRIBUTE_FILTER
+#			$INCOMING_MAIL_SIZE_LIMIT
+#			ADD_CONTENT_HANDLER()
+#		functions.
+#        Value: yes / no
+#     Examples: yes
 use_article_filter	= 	yes
  
 
@@ -78,8 +84,8 @@ article_filter_functions	=	article_size_filter
 =head2	size based filter
 
 
-# Descriptions: use size based filter
-#      History:
+# Descriptions: use size based filter.
+#      History: no
 #        Value: yes / no
 #     Examples:
 use_article_size_filter	=	yes
@@ -100,7 +106,8 @@ article_size_filter_rules	=	check_header_size
 
 
 # Descriptions: use header based filter ?
-#      History:
+#      History: disabled by default.
+#               "yes" always if $USE_DISTRIBUTE_FILTER is yes.
 #        Value: yes / no
 #     Examples:
 use_article_header_filter		=	yes
@@ -109,7 +116,7 @@ use_article_header_filter		=	yes
 # Descriptions: header filter rules.
 #               first match. 
 #               permit post if no rule matched.
-#      History:
+#      History: fml4 has no check_date rule.
 #        Value:
 #     Examples:
 article_header_filter_rules		=	check_message_id
@@ -121,7 +128,8 @@ article_header_filter_rules		=	check_message_id
 
 
 # Descriptions: dummy
-#      History: !MIME of 4.0 content filter
+#      History: disabled by default.
+#		!MIME of 4.0 content filter.
 #        Value: yes / no
 #     Examples:
 use_article_non_mime_filter		=	yes
@@ -135,7 +143,7 @@ article_non_mime_filter_rules		=	permit
 
 
 # Descriptions: MIME structure based filter
-#      History: 4.0 content filter
+#      History: 4.0 content filter. disabled by default.
 #        Value: yes / no
 #     Examples:
 use_article_mime_component_filter	=	yes
@@ -153,7 +161,9 @@ article_mime_component_filter_rules	= $fml_config_dir/mime_component_filter
 
 
 # Descriptions: use text/plain filter, which is a simple syntax checker.
-#      History: 4.0's EnvelopeFilter
+#      History: 4.0's EnvelopeFilter.
+#		half of the following rules applied when
+#		$USE_DISTRIBUTE_FILTER is enabled.
 #        Value: yes / no
 #     Examples:
 use_article_text_plain_filter		=	yes

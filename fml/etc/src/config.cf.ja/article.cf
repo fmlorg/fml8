@@ -61,9 +61,13 @@ outgoing_article_body_size_limit	= $default_mail_body_size_limit
 
 
 # Descriptions:
-#      History:
-#        Value:
-#     Examples:
+#      History: fml8 では、いくつかのフィルタや制限が整理統合された。
+#		fml4 では、おおむね次の３つの機能に相当している。
+#		$USE_DISTRIBUTE_FILTER
+#		$INCOMING_MAIL_SIZE_LIMIT
+#		ADD_CONTENT_HANDLER()
+#        Value: yes / no
+#     Examples: yes
 use_article_filter	= 	yes
  
 
@@ -82,7 +86,7 @@ article_filter_functions	=	article_size_filter
 
 
 # Descriptions: サイズ情報を根拠にしたフィルタリングをするか？
-#      History:
+#      History: no
 #        Value: yes / no
 #     Examples:
 use_article_size_filter	=	yes
@@ -102,7 +106,8 @@ article_size_filter_rules	=	check_header_size
 
 
 # Descriptions: ヘッダ情報を根拠にしたフィルタリングをするか？
-#      History:
+#      History: disabled by default.
+#               "yes" always if $USE_DISTRIBUTE_FILTER is yes.
 #        Value: yes / no
 #     Examples:
 use_article_header_filter		=	yes
@@ -110,7 +115,7 @@ use_article_header_filter		=	yes
 
 # Descriptions: フィルタリングのルール。
 #               どのルールにもマッチしないなら、記事の投稿は認められる。
-#      History:
+#      History: check_date に該当するものはない。
 #        Value:
 #     Examples:
 article_header_filter_rules		=	check_message_id
@@ -122,7 +127,8 @@ article_header_filter_rules		=	check_message_id
 
 
 # Descriptions: とりあえず、だみ〜
-#      History: 4.0 の content filter で、!MIME にあたる部分
+#      History: 4.0 の content filter で、!MIME にあたる部分。
+#		よって、デフォルトでは no ということになる。
 #        Value: yes / no
 #     Examples:
 use_article_non_mime_filter		=	yes
@@ -137,7 +143,7 @@ article_non_mime_filter_rules		=	reject_empty_content_type
 
 
 # Descriptions: MIME の構造に基づいたフィルタを行なう
-#      History: 4.0 の content filter 相当
+#      History: 4.0 の content filter 相当。デフォルトでは no だ。
 #        Value: yes / no
 #     Examples:
 use_article_mime_component_filter	=	yes
@@ -156,7 +162,9 @@ article_mime_component_filter_rules	= $fml_config_dir/mime_component_filter
 
 # Descriptions: 先頭の text/plain 部分に対するフィルタ。
 #		簡単なシンタックスチェック
-#      History: 4.0 の EnvelopeFilter 相当
+#      History: 4.0 の EnvelopeFilter 相当。
+#		$USE_DISTRIBUTE_FILTER が yes の場合、
+#		以下のルールの半分くらいが自動的に適用されていた。
 #        Value: yes / no
 #     Examples:
 use_article_text_plain_filter		=	yes
