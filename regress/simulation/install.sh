@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: install.sh,v 1.7 2001/11/27 04:15:55 fukachan Exp $
+# $FML: install.sh,v 1.8 2001/12/11 15:52:12 fukachan Exp $
 #
 
 (cd ../..; ./configure \
@@ -18,6 +18,7 @@ cp config.cf /var/spool/ml/elena/config.cf
 
 (cd ../../fml/etc/;sh .gen.sh)
 sudo rm -f /etc/fml/main.cf 
+sudo rm -f /etc/fml/site_default_config.cf 
 sudo rm -f /usr/local/libexec/fml/loader
 (cd ../..; sudo sh INSTALL.sh )
 
