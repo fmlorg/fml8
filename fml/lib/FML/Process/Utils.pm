@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.106 2004/02/26 13:19:37 fukachan Exp $
+# $FML: Utils.pm,v 1.107 2004/02/27 22:17:40 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1263,6 +1263,46 @@ sub is_under_mta_process
 	$name eq 'digest'     ||
 	$name eq 'error'      ||
 	$name eq 'fml.pl'     ) {
+	return 1;
+    }
+
+    return 0;
+}
+
+
+=head2 allow_reply_message()
+
+return 1 if we can send messages to the sender or specified address.
+return 0 if not.
+
+For example, processes running under MTA e.g. libexec/distribute,
+libexec/command receives a mail and reply it if needed.
+But makefml command do not. 
+
+=cut
+
+
+# Descriptions: check if we can send messages to the sender or
+#               specified address. 
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub allow_reply_message
+{
+    my ($curproc) = @_;
+    my $option    = $curproc->command_line_options();
+    my $myname    = $curproc->myname();
+
+    if ($curproc->is_under_mta_process()) {
+	return 1;
+    }
+    elsif (defined $option->{ 'allow-reply-message' }) {
+	return 1;
+    }
+    elsif (defined $option->{ 'allow-send-message' }) {
+	return 1;
+    }
+    elsif ($myname eq 'loader') {
 	return 1;
     }
 
