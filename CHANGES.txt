@@ -13,6 +13,13 @@
 	気をつけてください。
 
 
+2004/06/09
+
+   FML::Header 
+   FML::Process::Kernel 
+	separate message-id duplication check and cache updating.
+	cache updating when process ends.
+
 2004/06/08
 
    パッケージシステムのためにインストーラを拡張した
@@ -33,6 +40,21 @@
 	などが使われることもありますが、パッケージシステムを作る人にし
 	か関係がないこと、そして configure --prefix とまぎらわしいという
 	理由により、prefix ではないキーワードを使っています。
+
+   install.pl.in 
+   FML::Install 
+	enhanced to enable "make install install_root=::prefix" for
+	package system. 
+
+	install_root is the prefix that is prepended to the pathnames
+	of installed files.
+	
+	[IMPORTANT]
+	
+	In a lot of systems, "make install prefix=::prefix" is used.
+	But it is confusing against usage of othre software e.g.
+	".::configure --prefix=::prefix".  So, we avoid this confusion
+	to use other keyword, which is same as Postfix.
 
 2004/06/02
 
@@ -7184,4 +7206,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.207 2004/06/01 04:29:10 fukachan Exp $
+$FML: CHANGES.txt,v 1.208 2004/06/07 16:10:11 fukachan Exp $
