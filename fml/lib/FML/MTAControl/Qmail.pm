@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MTAControl.pm,v 1.4 2002/04/27 05:25:01 fukachan Exp $
+# $FML: Qmail.pm,v 1.1.1.1 2002/05/24 06:30:04 fukachan Exp $
 #
 
 package FML::MTAControl::Qmail;
@@ -96,7 +96,7 @@ sub qmail_setup
 	$config->get_as_array_ref('newml_command_qmail_template_files');
     my $fml_owner_home_dir = $config->{ fml_owner_home_dir }; 
     my $ml_name   = $config->{ ml_name };
-    my $ml_domain = $config->{ ml_domain };
+    my $ml_domain = $config->{ ml_domain }; $ml_domain =~ s/\./:/g;
     for my $file (@$qmail_template_files) {
 	my $xfile = $file; 
 	$xfile =~ s/dot-/\./; 
