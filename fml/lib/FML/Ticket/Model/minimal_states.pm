@@ -492,15 +492,22 @@ It is also larger if $status is C<open>.
 sub show_summary
 {
     my ($self, $curproc, $args, $optargs) = @_;
-    my $method = 'show_summary_in_'. $self->{ _mode };
-    $self->$method($curproc, $args, $optargs);
+    my $mode    = $self->{ _mode } || 'text';
+    my $ml_name = $curproc->{ config }->{ ml_name };
+
+    print "<HR><PRE>" if $mode eq 'html';
+
+    $self->_show_summary($curproc, $args, $optargs);
+
+    print "</PRE>\n" if $mode eq 'html';
 }
 
 
-sub show_summary_in_text
+sub _show_summary
 {
     my ($self, $curproc, $args) = @_;
     my ($tid, $status, $ticket_id);
+    my $mode = $self->{ _mode } || 'text';
 
     # rh: ticket id list, which is ARRAY REFERENCE tied to db_dir/*db's
     $ticket_id = $self->get_id_list($curproc, $args);
@@ -520,28 +527,6 @@ sub show_summary_in_text
 
     # self->{ _hash_table } is untied from DB's.
     $self->close_db($curproc, $args);
-}
-
-
-sub show_summary_in_html
-{
-    my ($self, $curproc, $args, $optargs) = @_;
-    my $rfd    = $optargs->{ rfd };
-    my $wfd    = $optargs->{ wfd };
-
-    my $ml_name = $curproc->{ config }->{ ml_name };
-    print "<HR>\n";
-    print "<P> $ml_name ML brief summary <BR>\n";
-    print "<PRE>\n";
-
-    my $argv     = $args->{ ARGV };
-    $argv->[ 0 ] = 'list';
-    $self->show_summary_in_text($curproc, $args);
-
-    close($wfd);
-    while (<$rfd>) { print STDOUT "  $_";}
-
-    print "</PRE>\n\n";
 }
 
 

@@ -98,10 +98,6 @@ sub run
     my $title  = $config->{ ticket_cgi_title }   || 'ticket system interface';
     my $color  = $config->{ ticket_cgi_bgcolor } || '#E6E6FA';
 
-    use FileHandle;
-    my ($rfd, $wfd) = FileHandle::pipe;
-    $args->{ fd }   = $wfd;
-
     # ticket object
     my $ticket = $curproc->_load_ticket_model_module($args);
     $ticket->mode({ mode => 'html' });
@@ -112,14 +108,9 @@ sub run
     # menu at the top of scrren
     $ticket->cgi_top_menu($curproc, $args);
 
-    # get ticket id list
-    my $tid = $ticket->get_id_list($curproc, $args);
-    $ticket->sort($curproc, $args, $tid);
-    for (@$tid) { $ticket->html_show($curproc, $args, $_);}
-
     # show summary
     $ticket->mode({ mode => 'html' });
-    $ticket->show_summary($curproc, $args, {rfd => $rfd, wfd => $wfd});
+    $ticket->show_summary($curproc, $args);
 
     # o.k. end of html
     print end_html;
