@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent3.pm,v 1.13 2003/02/01 08:53:10 fukachan Exp $
+# $FML: MimeComponent3.pm,v 1.14 2003/02/09 12:31:43 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -474,6 +474,7 @@ sub __dprint
 #
 
 if ($0 eq __FILE__) {
+    $| = 1;
     eval q{
 	use FileHandle;
 	use File::Basename;
