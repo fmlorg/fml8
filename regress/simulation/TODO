@@ -1,3 +1,40 @@
+ドキュメンテーションチェック 2001 last 
+
+	ErrorStatus.pm
+	IO/Adapter/ErrorStatus.pm
+	Mail/Bounce/ErrorStatus.pm
+	Mail/Delivery/ErrorStatus.pm
+	Mail/Message/ErrorStatus.pm
+	
+	File/CacheDir.pm
+	File/Rotate.pm
+	File/Sequence.pm
+	File/SimpleLock.pm
+	File/Utils.pm
+	
+	IO/File/Atomic.pm
+	
+	Mail/Delivery/Net/INET4.pm
+	Mail/Delivery/Net/INET6.pm
+	Mail/Delivery/Queue.pm
+	Mail/Delivery/SMTP.pm
+	Mail/Delivery/Utils.pm
+	
+	Mail/HTML/Lite.pm
+	
+	Mail/Message.pm
+	
+	Mail/ThreadTrack/HeaderRewrite.pm
+	Mail/ThreadTrack/Print.pm
+	Mail/ThreadTrack/Print/HTML.pm
+	Mail/ThreadTrack/Print/Message.pm
+	Mail/ThreadTrack/Print/Sort.pm
+	Mail/ThreadTrack/Print/Text.pm
+	Mail/ThreadTrack/Print/Utils.pm
+
+
+-------------------------------------------------------
+
 kern/fml.pl                    13.30	
 	kern/libenvf.pl                1.46	done
 	kern/libenvfsubr.pl            0.62	done
