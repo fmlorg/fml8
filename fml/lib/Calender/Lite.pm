@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.3 2002/04/03 03:39:32 fukachan Exp $
+# $FML: Lite.pm,v 1.4 2002/04/07 05:35:07 fukachan Exp $
 #
 
 package Calender::Lite;
@@ -26,11 +26,13 @@ Calender::Lite - DEMO to show calender
     # show table by w3m :-)
     my $tmp = $schedule->tmpfilepath;
     my $fh  = new FileHandle $tmp, "w";
-    $schedule->print($fh);
-    $fh->close;
+    if (defined $wh) {
+	$schedule->print($fh);
+	$fh->close;
+    }
 
     system "w3m -dump $tmp";
-    unlink $tmp;
+    unlink $tmp if -f $tmp;
 
 =head1 DESCRIPTION
 
@@ -88,8 +90,8 @@ sub new
 	$user = $p->name;
     }
 
-    my $pw                  = getpwnam($user);
-    my $home_dir            = $pw->dir;
+    my $pw       = getpwnam($user);
+    my $home_dir = $pw->dir;
 
     # XXX-AUDIT (we should use FML::Restriction ?)
     # simple check (not enough mature).
@@ -135,9 +137,9 @@ It creates just a file path not file itself.
 sub tmpfilepath
 {
     my ($self, $args) = @_;
-    my $user = $self->{ _user };
-    my $dir  = $self->{ _schedule_dir };
-    my $tmpdir;
+    my $user   = $self->{ _user };
+    my $dir    = $self->{ _schedule_dir };
+    my $tmpdir = undef;
 
     if (-w $dir) {
 	$tmpdir = $dir;
@@ -147,12 +149,18 @@ sub tmpfilepath
 	croak("$dir is not writable\n") unless -w $dir;
     }
 
-    eval q{
-	use File::Spec;
-	$self->{ _tmpfile } = File::Spec->catfile($tmpdir, ".tmp.$$.html");
-    };
-    croak($@) if $@;
-    return $self->{ _tmpfile };
+    if (defined $tmpdir) {
+	eval q{
+	    use File::Spec;
+	    $self->{ _tmpfile } = File::Spec->catfile($tmpdir, ".tmp.$$.html");
+	};
+	croak($@) if $@;
+
+	return $self->{ _tmpfile };
+    }
+    else {
+	croak("cannot determine \$tmpdir");
+    }
 }
 
 
@@ -298,7 +306,7 @@ sub print
     my ($self, $fd) = @_;
 
     if (defined $self->{ _schedule }) {
-	$fd = $fd || \*STDOUT;
+	$fd = defined $fd ? $fd : \*STDOUT;
 	print $fd $self->{ _schedule }->as_HTML;
     }
     else {
@@ -323,8 +331,8 @@ sub print_specific_month
 {
     my ($self, $fh, $month, $year) = @_;
     my ($month_now, $year_now) = (localtime(time))[4,5];
-    my $default_year  = 1900 + $year_now;
-    my $default_month = $month_now + 1;
+    my $default_year           = 1900 + $year_now;
+    my $default_month          = $month_now + 1;
     my ($thismonth, $thisyear) = ($default_month, $default_year);
 
     if ($month =~ /^\d+$/) {
@@ -384,7 +392,13 @@ sub get_mode
 sub set_mode
 {
     my ($self, $mode) = @_;
-    $self->{ _mode } = $mode;
+
+    if (defined $mode) {
+	$self->{ _mode } = $mode;
+    }
+    else {
+	$self->{ _mode } = undef;
+    }
 }
 
 
