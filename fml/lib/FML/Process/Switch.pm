@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.78 2002/11/26 07:32:30 fukachan Exp $
+# $FML: Switch.pm,v 1.79 2002/12/21 12:15:54 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -353,6 +353,9 @@ sub _module_specific_options
     elsif ($myname eq 'fmlspool') {
 	return qw(debug! help! -I=s convert! style=s srcdir=s);
     }
+    elsif ($myname eq 'fmlsuper') {
+	return qw(debug! help! s! p! v!);
+    }
     else {
 	croak "no such program $myname.\n";
     }
@@ -470,6 +473,9 @@ sub _module_we_use
     elsif ($name eq 'fmlspool') {
 	$pkg = 'FML::Process::Spool';
     }
+    elsif ($name eq 'fmlsuper') {
+	$pkg = 'FML::Process::Super';
+    }
     else {
 	return '';
     }
@@ -499,7 +505,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
