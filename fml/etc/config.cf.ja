@@ -1,3 +1,6 @@
+#
+# $FML$
+#
 # THE CHARSET OF THIS FILE IS EUC-JP.
 # このファイルの文字コードは EUC-JP です。
 #
@@ -9,10 +12,10 @@
 #
 
 # ドメイン名 (参照: 以下のアドレスを見よ $ml_domain がこの値に展開される)
-ml_domain           = __ml_domain__
+# ml_domain           = __ml_domain__
 
 # ML の名前
-ml_name		    = __ml_name__
+# ml_name	    = __ml_name__
 
 # 管理者のアドレス
 maintainer	    = $ml_name-admin@$ml_domain
