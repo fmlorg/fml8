@@ -24,4 +24,16 @@ DIFF $xdir/multipart=mixed
 DIFF $xdir/multipart=mixed-preamble
 DIFF $xdir/multipart=mixed-trailor
 
+xdir=$dir/../errormails
+
+echo "   ++ errormails/ has broken multipart messages ;0"
+# ../errormails has broken multipart messages ;0
+grep -i -l multipart $xdir/[a-z]*[a-z0-9] |\
+grep -v odn.ne.jp |\
+while read file
+do
+	DIFF $file
+done
+echo "   ++ errormails/ test ends"; echo ""
+
 exit 0;
