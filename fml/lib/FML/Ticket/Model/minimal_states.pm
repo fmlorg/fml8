@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: minimal_states.pm,v 1.16 2001/04/15 05:04:01 fukachan Exp $
+# $FML: minimal_states.pm,v 1.17 2001/04/15 05:58:06 fukachan Exp $
 #
 
 package FML::Ticket::Model::minimal_states;
@@ -389,6 +389,10 @@ sub _update_db
     my (@aid)  = split(/\s+/, $rh->{ _articles  }->{ $ticket_id });
     my $sender = $rh->{ _sender }->{ $aid[0] };
     my $when   = $rh->{ _date }->{ $aid[0] };
+
+    # clean up
+    $sender =~ s/[\s\n]*$//;
+    $when   =~ s/[\s\n]*$//;
 
     use FML::Date;
     $when = FML::Date->new($when)->mail_header_style();
