@@ -5,18 +5,25 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: search.pl,v 1.2 2001/05/04 14:32:35 fukachan Exp $
+# $FML: search.pl,v 1.3 2002/04/18 14:18:08 fukachan Exp $
 #
 
+use strict;
+use Carp;
 use IO::Adapter;
 my $debug = defined $ENV{'debug'} ? 1 : 0;
-my $map   = shift || 'file:/var/spool/ml/elena/actives';
+my $map   = shift || 'file:/var/spool/ml/elena/recipients';
 my $obj   = new IO::Adapter $map;
 
-$obj->open || croak("cannot open $map");
-while ($x = $obj->getline) { print "<< ", $x if $x =~ /\S+/;}
-print "\n";
-$obj->close;
+{
+	$obj->open || croak("cannot open $map");
+
+	my $x;
+	while ($x = $obj->getline) { print "<< ", $x if $x =~ /\S+/;}
+
+	print "\n";
+	$obj->close;
+}
 
 for ('rudo', 'fukachan') {
     print "* search $_ in $map\n";
