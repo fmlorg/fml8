@@ -10,7 +10,7 @@ package FML::Config;
 use strict;
 use Carp;
 use vars qw(%_fml_config %_default_fml_config);
-use ErrorMessages::Status qw(error_set error error_reset);
+use ErrorMessages::Status qw(error_set error error_clear);
 
 
 =head1 NAME
@@ -75,21 +75,21 @@ memory which locates within FML::Parse name space.
 
 =head1 METHODS
 
-=item  Init( ref_to_curproc )
+=head2  C<Init( ref_to_curproc )>
 
 special method only used in the initialization phase.
 This method binds $curproc and the %_fml_config memory area.
 
-=item  load_file( filename ) 
+=head2  C<load_file( filename )>
 
 read the configuration file, split key and value and set them to
 %_fml_config.
 
-=item  get( key )
+=head2  C<get( key )>
 
-=item  set( key, value )
+=head2  C<set( key, value )>
 
-=item  dump_variables()
+=head2  C<dump_variables()>
 
 show all {key => value} for debug.
 
