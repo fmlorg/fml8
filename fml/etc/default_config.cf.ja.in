@@ -56,6 +56,19 @@
 # の「プログラミングスタイル」の章を御覧ください。
 #
 
+=head1 デバッグモード
+
+
+# Descriptions: デバッグ、デフォルトは NO にしてある。
+#      History: $DEBUG
+#        Value: YES_OR_NO
+#     Examples: no
+debug		=	no
+
+
+
+
+
 =head1	基本的なパラメータ
 
 =head2	ＭＬの管理者
