@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.78 2002/03/16 14:24:58 fukachan Exp $
+# $FML: Kernel.pm,v 1.79 2002/03/17 02:44:09 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -555,6 +555,12 @@ sub reply_message
 	elsif (ref($args->{recipient}) eq '') {
 	    $recipient = [ $args->{ recipient } ];
 	}
+    }
+
+    # check text messages and fix if needed.
+    unless (ref($msg)) {
+	# \n in the last always.
+	$msg .= "\n" unless $msg =~ /\n$/;
     }
 
     $curproc->_append_message_into_queue($msg, $args, $recipient);
