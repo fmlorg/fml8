@@ -49,29 +49,9 @@
 	このコマンドは…ファイルでも作るの？
 
 
-[TODO]	フィルタの拡張機能？
-
-	Q: content-type が正しいかどうかを調べる
-		image/gif なら本当に gif ?
-
-	A: ん〜全部は無理だなぁ。File::なんとかで、
-	   ファイルのタイプを識別するモジュールとかあれば OK なのかも
-	   しれず(?)
-
-
-	Q: まだ、text/plain 部分は言語依存パートになってない。
-
-	だいたい言語依存とかいうなら virus checker を切り離せよ ＞ お
-	れなど、てんこもりなので、text_plain_filter ってちょっと整理が
-	大変だなと。
-
-	Q: 古いメールは SPAM に違いない
-
-
 [TODO]	fml $ml spool {status,convert}: --srcdir= とか必要じゃない？
 
-
-		コマンドラインオプションは、OK？
+	コマンドラインオプションは、OK？
 
 
 [TODO]	Accept-Language: を考慮する
@@ -205,6 +185,11 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 	にできるおぷしょん？
 
+	Q: default_ml_admin_addr = $maintainer などという変数を創設？
+		newml 時に考慮される。
+
+		$newml_command_ml_admin_addr ?
+
 
 [TODO]	受信者としてだけの登録 (add2actives 相当、メールマガジンなど)は？
 
@@ -257,12 +242,6 @@ FileHandle と IO::File 両方 use しちゃうからか？
 [TODO]	時間つき subscribe 
 
 	subscribe -> 一カ月すると削除される？
-
-
-[TODO]	digest こまんど？ for CGI
-
-
-[TODO]	digest こまんど？ for user
 
 
 [TODO]	makefml で動くもの、動かないものは何？
@@ -380,4 +359,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.79 2003/05/12 10:21:27 fukachan Exp $
+$FML: 00_MEMO,v 1.80 2003/05/14 12:17:09 fukachan Exp $
