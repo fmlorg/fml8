@@ -1,0 +1,274 @@
+<!-- 
+	$FML: intro.sgml,v 1.4 2001/04/24 06:51:59 fukachan Exp $
+-->
+
+<chapter id="design">
+
+<title>fml5 (仮名) のデザインコンセプト</title>
+
+  
+<!-- ========================================================
+		section 1
+     ========================================================
+-->
+
+<sect1>
+
+<title> fml-devel プロジェクトの構想 </title>
+
+<para>
+<ulink url="http://www.fml.org/devel/">
+fml-devel 
+</ulink>
+とも呼ばれている fml 5.0 プロジェクトは、
+fml 4.0 の再構想(refactoring)とその実装(例)の構築
+を行なっています。
+</PARA>
+
+<para>
+http://www.fml.org/devel/
+は将来の fml-current についてのデザインや実装例を紹介しています。
+</PARA>
+
+
+<para>
+これは fml 5.0 のアイデアを募るための、
+fml 5.0 のアルファ版のアルファ版のアルファ版
+もしくは
+プロトタイプ
+とでもいうべきものです。ですが、すでに動く実装例をダウンロードできます
+し、fml 1.2 相当の機能を使うこともできます。しかしながら、変数名もアー
+キテクチャアも本決まりではないので、将来変わる可能性があります。
+</PARA>
+
+<para>
+また、多くの機能が実装されていません。これは、デザインを最初から考え直
+すに当たり、アイデアや意見を募集するためにまだまだ原型にとどまっている
+ためでもあります。
+</PARA>
+
+<para>
+ものによっては fml 5.0 用に作られたモジュールを fml 4.0 へ
+輸入/輸出することも検討しています。
+たとえば 4.0 でも独立性の高い mead (エラーメール解析プログラム)などは
+その良い例だろうし、新機能を提供するモジュールなども再輸入(輸出)可能な
+ものは順次マージしていきます。
+</PARA>
+
+<para>
+これらのマージおよび 4.0 自体のコードの保守をしつつ 4.0 および 5.0 は
+並行開発されていく予定です。
+そのため 4.0 系は stable に近い current という位置付けになります。
+そして 4.0 の bug fix は 4.0.x (4.0.1 4.0.2 …)としてまとめられリリー
+スれていく予定です。
+逆に 5.0 は本当の開発用のコード( fml-current )ということになります。
+</PARA>
+
+</sect1>
+
+
+<!-- ========================================================
+		section 3
+     ========================================================
+-->
+
+<sect1>
+
+<title> 構想（詳細）</title>
+
+<para>
+5.0 のアイデアのついて、ご意見・御感想をお待ちしております。
+端的にいえば 4.0 のここは受け継ぎたいが、あの機能は
+どうでもよいとか、あの機能はこう実装するべきだなどといった
+意見も募集しています。
+</para>
+
+
+<itemizedlist>
+
+   <listitem>
+	<para>
+	設定ファイルとメニュープログラムの負荷を少なくしたい
+	</para>
+   </listitem>
+
+   <listitem>
+	<para>
+	全部 perl module 形式 (要 5.004 以降)
+	</para>
+   </listitem>
+
+   <listitem>
+	<para>
+	CUI (makefml) インターフェイスおよび CGI インターフェイス
+	</para>
+	<para>
+	これは従来通りのもの。
+	ただしより統合化され、
+	よりメニューなどが書きやすいものであるように
+	(実装者が楽できる設定ファイル形式がのぞましい et.al.)
+	</para>
+   </listitem>
+
+   <listitem>
+	<para>
+	乖離層
+	</para>
+
+	<itemizedlist>
+
+	   <listitem>
+		<para>
+		バージョンアップを簡単にできるように
+		</para>
+	   </listitem>
+
+	   <listitem>
+		<para>
+		CPAN モジュール使いまくり
+		 (ただし、できるだけ直接使うより、
+		一層被せておくほうがよい)
+		</para>
+	   </listitem>
+
+	   <listitem>
+		<para>
+		3rd party 用ディレクトリ
+		</para>
+	   </listitem>
+
+	</itemizedlist>
+   </listitem>
+
+   <listitem>
+	<para>
+	統一化されたメンバーリストなどへのアクセスをできるだけ抽象化する。
+	</para>
+		
+		<itemizedlist>
+		
+		   <listitem>
+			<para>
+				ファイル (実装済み)
+			</para>
+		   </listitem>
+		
+		   <listitem>
+			<para>
+				/etc/group (実装済み)
+			</para>
+		   </listitem>
+		
+		   <listitem>
+			<para>
+				NIS (実装済み)
+			</para>
+		   </listitem>
+		
+		   <listitem>
+			<para>
+				SQL (プロトタイプは実装済み)
+			</para>
+		   </listitem>
+		
+		   <listitem>
+			<para>
+				LDAP
+			</para>
+		   </listitem>
+		
+	</itemizedlist>
+
+	<para>
+	実際には効率の問題もあり、
+	あらゆる抽象化は重たくなってしまう。
+	しかし少々重くなっても実装しよう。
+	</para>		
+   </listitem>
+
+   <listitem>
+	<para>
+	IPv4/IPv6 ready (実装済み)
+	</para>
+   </listitem>
+
+</itemizedlist>
+</sect1>
+
+
+
+<!-- ======================================================== -->
+<sect1>
+
+<title> アーキテクチャア・イメージ </title>
+
+<graphic entityref="architecture"></graphic>
+
+</sect1>
+
+
+
+<!-- ======================================================== -->
+
+<sect1>
+
+<TITLE> リリース・エンジニアリングについて </TITLE>
+
+<para>
+アーキテクトでも、デベロッパーに偏ってもいけない。
+抽象化に萌過ぎても、オブジェクト指向分析に燃え過ぎてもいけない。
+中庸であり、一カ月単位でフィードバックしながら
+プロジェクトの計画とコードレビューを行なうこと。
+</para>
+
+
+<para>
+<table>
+ <title> 日取り </title>
+ <tgroup cols=2>
+   <thead>
+	<row>
+	<entry> 日取り </entry>
+	<entry> 内容 </entry>
+	</row>
+   </thead>
+
+   <tbody>
+
+	<row>
+	<entry> 最初の 4〜5日</entry>
+	<entry> 計画を練り直す。
+		リリースエンジニアリングプロセス中の 
+		20 ％程度はこの計画に費やすこと
+	</entry>
+	</row>
+
+	<row>
+	<entry> 2〜3 週間</entry>
+	<entry> コードを書く</entry>
+	</row>
+
+	<row>
+	<entry> 最終週</entry>
+	<entry> ドキュメントを見直す、およびコードレビュー</entry>
+	</row>
+
+	<row>
+	<entry> 月の切れ目</entry>
+	<entry> まぁまぁ大丈夫ぽい snapshot を出してみる。
+		alpha-0,
+		alpha-1,
+		alpha-2, ...
+	</entry>
+	</row>
+
+   </tbody>
+ </tgroup>
+</table>
+</para>
+
+
+</sect1>
+
+
+</chapter>
