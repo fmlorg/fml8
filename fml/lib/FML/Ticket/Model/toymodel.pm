@@ -57,7 +57,10 @@ sub new
     my $ml_name = $config->{ ml_name };
 
     $me->{ _db_dir } = $config->{ ticket_db_dir } ."/". $ml_name;
-    $me->_init_ticket_db_dir($curproc, $args) || do { return undef;};
+    $me->_init_ticket_db_dir($curproc, $args) || do {
+	Log("fail to initialize ticket_db_dir");
+	return undef;
+    };
 
     # index for cross reference over mailing lists.
     $me->{ _index_db } = $config->{ ticket_db_dir } ."/\@index";
@@ -665,21 +668,13 @@ sub _header_summary
     my $subject = $args->{ header }->get('subject');
     my $padding = $args->{ padding };
 
-    use Jcode;
-    use MIME::Base64;
-
-    if ($subject =~ /=\?ISO\-2022\-JP\S+B\?(\S+)=\?=/i) { 
-	my $y = decode_base64($1);
-	$subject = Jcode::convert(\$y, 'euc')."\n";
-    }
-    if ($from =~ /=\?ISO\-2022\-JP\S+B\?(\S+)=\?=/i) { 
-	my $y = decode_base64($1);
-	$from = Jcode::convert(\$y, 'euc')."\n";
-    }
-
-    $from    =~ s/\n/ /g;
+    use FML::MIME qw(mime_decode_string);
+    $subject = mime_decode_string($subject, { charset => 'euc-japan' });
     $subject =~ s/\n/ /g;
     $subject = FML::Header::remove_subject_tag_like_string($subject);
+
+    $from    = mime_decode_string($from, { charset => 'euc-japan' });
+    $from    =~ s/\n/ /g;
 
     return 
 	$padding. "   From: ". $from ."\n". 
