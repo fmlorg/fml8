@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.31 2004/02/15 04:38:30 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.32 2004/04/28 04:10:37 fukachan Exp $
 #
 
 package FML::Command::Admin::unsubscribe;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::unsubscribe - remove the specified user
+FML::Command::Admin::unsubscribe - remove the specified user.
 
 =head1 SYNOPSIS
 
@@ -47,14 +47,14 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
 
 
-# Descriptions: lock channel
+# Descriptions: lock channel.
 #    Arguments: none
 # Side Effects: none
 # Return Value: STR
@@ -83,7 +83,7 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config  = $curproc->config();
-    my $options = $command_args->{ options };
+    my $options = $command_args->{ options } || [];
     my $address = $command_args->{ command_data } || $options->[ 0 ];
 
     # XXX We should always add/rewrite only $primary_*_map maps via
@@ -121,7 +121,7 @@ sub process
 }
 
 
-# Descriptions: show cgi menu for unsubscribe
+# Descriptions: show cgi menu for unsubscribe.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
@@ -130,6 +130,7 @@ sub cgi_menu
     my ($self, $curproc, $command_args) = @_;
     my $r = '';
 
+    # XXX-TODO: $command_args checked ?
     eval q{
 	use FML::CGI::User;
 	my $obj = new FML::CGI::User;

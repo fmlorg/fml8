@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.30 2004/02/15 04:38:29 fukachan Exp $
+# $FML: subscribe.pm,v 1.31 2004/04/28 04:10:37 fukachan Exp $
 #
 
 package FML::Command::Admin::subscribe;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::subscribe - subscribe a new member
+FML::Command::Admin::subscribe - subscribe a new member.
 
 =head1 SYNOPSIS
 
@@ -47,7 +47,7 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
@@ -83,7 +83,7 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config  = $curproc->config();
-    my $options = $command_args->{ options };
+    my $options = $command_args->{ options } || [];
     my $address = $command_args->{ command_data } || $options->[ 0 ];
 
     # XXX We should always add/rewrite only $primary_*_map maps via
@@ -136,6 +136,7 @@ sub cgi_menu
     my ($self, $curproc, $command_args) = @_;
     my $r = '';
 
+    # XXX-TODO: $command_args checked ?
     eval q{
 	use FML::CGI::User;
 	my $obj = new FML::CGI::User;
