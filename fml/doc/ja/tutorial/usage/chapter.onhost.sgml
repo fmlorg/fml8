@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.onhost.sgml,v 1.4 2003/01/05 08:03:22 fukachan Exp $
+   $FML: chapter.onhost.sgml,v 1.5 2003/03/14 08:28:00 fukachan Exp $
 -->
 
 <chapter id="usage.onhost">
@@ -95,6 +95,23 @@ fml     ＭＬ名 コマンド オプション
 
 <setc2>
 	<title>
+	特定のＭＬのデータを見るコマンド
+	</title>
+
+<para>
+特定のＭＬに対し、データ(ログや何かのサマリ)を見るだけでも、
+makefml (or fml) のコマンドとして実装しましょう。
+<screen>
+makefml コマンド ＭＬ名 オプション
+fml     ＭＬ名 コマンド オプション
+</screen>
+</para>
+
+</sect2>
+
+
+<setc2>
+	<title>
 	データを見るだけのコマンド
 	</title>
 
@@ -116,7 +133,8 @@ fmlconf  [-n] $ml
 
 <setc2>
 	<title>
-	操作を施すコマンドだが、特定のＭＬとの関わりはないかも知れないタイプ
+	操作を施すコマンドだが、
+	特定のＭＬとの関わりはないかも知れないタイプ
 	</title>
 
 <para>
