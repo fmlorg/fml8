@@ -103,30 +103,19 @@ sub new
     }
     else {
 	if ($map =~ /file:(\S+)/ || $map =~ m@^(/\S+)@) {
-	    $pkg         = 'IO::Adapter::File';
 	    $me->{_file} = $1;
 	    $me->{_type} = 'file';
+	    $pkg         = 'IO::Adapter::File';
 	}
 	elsif ($map =~ /unix\.group:(\S+)/) {
-	    $pkg         = 'IO::Adapter::Array';
 	    $me->{_name} = $1;
 	    $me->{_type} = 'unix.group';
-
-	    # emulate an array on memory
-	    my (@x)       = getgrnam( $me->{_name} );
-	    my (@members) = split ' ', $x[3];
-	    $me->{_array_reference} = \@members;
+	    $pkg         = 'IO::Adapter::UnixGroup';
 	}
 	elsif ($map =~ /nis\.group:(\S+)/) {
-	    my $key      = $1;
-	    $pkg         = 'IO::Adapter::Array';
-	    $me->{_name} = $key;
+	    $me->{_name} = $1;
 	    $me->{_type} = 'nis.group';
-
-	    # emulate an array on memory
-	    my (@x)       = `ypmatch $key group.byname`;
-	    my (@members) = split ',', $x[3];
-	    $me->{_array_reference} = \@members;
+	    $pkg         = 'IO::Adapter::NIS';
 	}
 	elsif ($map =~ /(ldap|mysql|postgresql):(\S+)/) {
 	    $me->{_type}   = $1;
@@ -135,13 +124,13 @@ sub new
 	}
 	else {
 	    my $s = "IO::MapAdapter::new: args='$map' is unknown.";
-	    print STDERR $s, "\n";
 	    _error_reason($me, $s);
 	}
     }
 
     unshift(@ISA, $pkg);
     eval qq{ require $pkg; $pkg->import();};
+    $pkg->configure($me) if $pkg->can('configure');
     _error_reason($me, $@) if $@;
 
     return bless $me, $type;
