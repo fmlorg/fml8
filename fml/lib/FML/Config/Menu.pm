@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.1 2004/11/21 05:36:12 fukachan Exp $
+# $FML: Menu.pm,v 1.2 2004/11/21 07:01:32 fukachan Exp $
 #
 
 package FML::Config::Menu;
@@ -271,6 +271,11 @@ sub rewrite_config_cf
 }
 
 
+# Descriptions: get difference between the current and default configuration.
+#               return the result as HASH_REF.
+#    Arguments: OBJ($self) VAR_ARGS(@files)
+# Side Effects: none
+# Return Value: HASH_REF
 sub _get_diff_as_hash_ref
 {
     my ($self, @files) = @_;
@@ -285,6 +290,10 @@ sub _get_diff_as_hash_ref
 }
 
 
+# Descriptions: get difference between specified hashes.
+#    Arguments: OBJ($self) HASH_REF($hash) HASH_REF($hash_new)
+# Side Effects: none
+# Return Value: HASH_REF
 sub _get_diff_between_hash_ref
 {
     my ($self, $hash, $hash_new) = @_;
