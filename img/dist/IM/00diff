@@ -1,0 +1,29 @@
+		Differences between IM144 and IM143
+
+* Supporting darwin.
+* Regexp fix for Form=%b.
+* Bug fix for configure options.
+* Doc/message fix.
+
+		Differences between IM143 and IM142
+
+* The number of the fsync system call is guessed on run time by default.
+  If `FsyncNumber' is set to non-0 in Config, it is preferred.
+* New config variable, `SshPath'.
+
+		Differences between IM142 and IM141
+
+* Local security fix for impwagent and immknmz.
+* IM/TcpTransaction.pm: Socket6.pm support.
+* IM/MD5.pm: Fix 64bit integer problem.
+* imsetup: Support `User' and `MBoxStyle=qmail'.
+* imsetup: Bug fix for Perl 5.8.0.
+* Minor bug fixes.
+
+		Differences between IM141 and IM140
+
+* immknmz: New option, `--timestamp'.
+* IM/Nntp.pm: Bug fix for NNTP authuser for queue.
+* IM/Imap.pm: Bug fix for IMAP login.
+* IM/Iso2022jp.pm: Fix word_iso2022jp_mimefy problem.
+* IM/Scan.pm: jisx0213 support.
