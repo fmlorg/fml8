@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ThreadTrack.pm,v 1.28 2002/06/01 05:02:33 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.29 2002/06/27 08:25:51 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -274,6 +274,10 @@ sub _speculate_max_id
 	return $options->{ article_id_max };
     }
     else {
+	eval q{
+	    use FML::Article;
+	    push(@ISA, 'FML::Article');
+	};
 	my $max_id = $curproc->speculate_max_id();
 
 	# XXX check whether $max_id > 1 or not since
