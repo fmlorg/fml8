@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.50 2003/11/26 04:47:08 fukachan Exp $
+# $FML: Credential.pm,v 1.51 2003/11/26 09:14:04 fukachan Exp $
 #
 
 package FML::Credential;
@@ -455,12 +455,12 @@ sub _get_address
 }
 
 
-=head2 match_system_accounts($addr)
+=head2 match_system_special_accounts($addr)
 
 C<addr> matches a system account or not.
 The system accounts are given as
 
-     $curproc->config()->{ system_accounts }.
+     $curproc->config()->{ system_special_accounts }.
 
 =cut
 
@@ -470,7 +470,7 @@ The system accounts are given as
 #    Arguments: OBJ($self) STR($addr)
 # Side Effects: none
 # Return Value: STR
-sub match_system_accounts
+sub match_system_special_accounts
 {
     my ($self, $addr) = @_;
     my $curproc = $self->{ _curproc };
@@ -481,7 +481,7 @@ sub match_system_accounts
 
     # compare $user part with e.g. root, postmaster, ...
     # XXX always case INSENSITIVE
-    my $accounts = $config->get_as_array_ref('system_accounts');
+    my $accounts = $config->get_as_array_ref('system_special_accounts');
     for my $addr (@$accounts) {
 	if ($user =~ /^${addr}$/i) { return $addr;}
     }

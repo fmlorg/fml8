@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.6 2003/08/23 14:38:01 fukachan Exp $
+# $FML: Post.pm,v 1.7 2003/08/29 15:34:10 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -46,12 +46,12 @@ sub new
 #    Arguments: OBJ($self) STR($rule) STR($sender)
 # Side Effects: none
 # Return Value: ARRAY(STR, STR)
-sub reject_system_accounts
+sub reject_system_special_accounts
 {
     my ($self, $rule, $sender) = @_;
     my $curproc = $self->{ _curproc };
     my $cred    = $curproc->{ credential };
-    my $match   = $cred->match_system_accounts($sender);
+    my $match   = $cred->match_system_special_accounts($sender);
     my $pcb     = $curproc->pcb();
 
     if ($match) {
@@ -63,6 +63,18 @@ sub reject_system_accounts
     }
 
     return(0, undef);
+}
+
+
+# Descriptions: [BACKWARD COMPATIBILITY]
+#               reject if $sender matches a system account.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
+sub reject_system_accounts
+{
+    my ($self, $rule, $sender) = @_;
+    $self->reject_system_special_accounts($rule, $sender);
 }
 
 

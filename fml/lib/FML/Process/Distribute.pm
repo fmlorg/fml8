@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.128 2003/10/15 01:03:33 fukachan Exp $
+# $FML: Distribute.pm,v 1.129 2003/11/29 10:24:28 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -221,9 +221,9 @@ sub run
 	    $curproc->log("deny article submission");
 
 	    my $rule = $pcb->get("check_restrictions", "deny_reason");
-	    if ($rule eq 'reject_system_accounts') {
+	    if ($rule eq 'reject_system_special_accounts') {
 		my $r = "deny request from a system account";
-		$curproc->reply_message_nl("error.system_accounts",
+		$curproc->reply_message_nl("error.system_special_accounts",
 					   $r, $msg_args);
 	    }
 	    elsif ($rule eq 'permit_member_maps') {

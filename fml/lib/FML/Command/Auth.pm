@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.27 2003/08/23 07:24:41 fukachan Exp $
+# $FML: Auth.pm,v 1.28 2003/08/29 15:33:57 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -98,15 +98,15 @@ sub permit_admin_member_maps
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: NUM or STR (__LAST__, a special upcall)
-sub reject_system_accounts
+sub reject_system_special_accounts
 {
     my ($self, $curproc, $args, $optargs) = @_;
     my $cred   = $curproc->{ credential };
     my $sender = $cred->sender();
-    my $match  = $cred->match_system_accounts($sender);
+    my $match  = $cred->match_system_special_accounts($sender);
 
     if ($match) {
-	$curproc->log("reject_system_accounts: matches the sender");
+	$curproc->log("reject_system_special_accounts: matches the sender");
 	return '__LAST__';
     }
 

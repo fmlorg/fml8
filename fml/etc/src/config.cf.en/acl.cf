@@ -23,11 +23,11 @@ address_compare_function_type = user_part_case_insensitive
 #        Value: list of attributes (
 #			permit_anyone
 #			permit_member_maps
-#			reject_system_accounts
+#			reject_system_special_accounts
 #			reject
 #		)
 #     Examples:
-post_restrictions	=	reject_system_accounts
+post_restrictions	=	reject_system_special_accounts
 				permit_member_maps
 				reject
 
@@ -37,11 +37,11 @@ post_restrictions	=	reject_system_accounts
 #			permit_anyone
 #			permit_commands_for_stranger
 #			permit_member_maps
-#			reject_system_accounts
+#			reject_system_special_accounts
 #			reject
 #		)
 #     Examples:
-command_restrictions	=	reject_system_accounts
+command_restrictions	=	reject_system_special_accounts
 				permit_commands_for_stranger
 				permit_member_maps
 				reject
@@ -53,7 +53,7 @@ command_restrictions	=	reject_system_accounts
 #			permit_anyone
 #			permit_admin_member_maps
 #			check_admin_member_password
-#			reject_system_accounts
+#			reject_system_special_accounts
 #			reject
 #		)
 #     Examples:
@@ -62,7 +62,7 @@ command_restrictions	=	reject_system_accounts
 #		2. password auth (members-admin + password)
 #			check_admin_member_password reject
 #
-admin_command_restrictions	=	reject_system_accounts
+admin_command_restrictions	=	reject_system_special_accounts
 					check_admin_member_password
 					reject
 
@@ -235,7 +235,7 @@ moderator_recipient_maps	=	$primary_moderator_recipient_map
 #      History: fml 4.0's $REJECT_ADDR
 #        Value: a list of strings
 #     Examples: see below
-system_accounts		=	root
+system_special_accounts		=	root
 				postmaster
 				MAILER-DAEMON
 				msgs
