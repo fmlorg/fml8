@@ -1,6 +1,32 @@
 #
-# $Id: HISTORY,v 0.65 2000/12/11 05:35:36 dankogai Exp $
+# $Id: HISTORY,v 0.71 2001/05/18 05:22:50 dankogai Exp dankogai $
 #
+0.71    2001/05/18
+        * VERSIONing glitches on Jcode::Constants fixed
+          (Tatsuhiko Miyagawa <miyagawa@edge.co.jp>)
+        * _mkbuf is gone!
+          -> Jcode::Constants is now sub free!
+        * all *.pm passes podchecker(1) now
+0.70	2001/05/16
+	* euc -> jis code optimized
+	  (Kazuto Ichimura <ichimura@shimada.nuee.nagoya-u.ac.jp>)
+	* VERSIONing glitches on Jcode::Unicode fixed
+	  (Tatsuhiko Miyagawa <miyagawa@edge.co.jp>)
+0.69	2001/05/12
+	* lots of code beautification done in response to
+	Kazuto Ichimura <ichimura@shimada.nuee.nagoya-u.ac.jp>
+0.68	2000/12/27
+	* mime_encode(): regex bug that may spill hankaku kana
+	  is fixed (ohzaki@iod.ricoh.co.jp)
+          - t/mime.t modified to check this
+	* mime_decode(): (?i:=\?ISO-2022-JP\?B\?) replaced with
+	  =\?[Ii][Ss][Oo]-2022-[Jj][Pp]\?[Bb]\? to keep backward
+	  compatibilty with perl 5.004 (shino@ifnet.or.jp)
+0.67	2000/12/26
+	* all bugs on mime_encode() reported by 
+          shusuke@pop01.odn.ne.jp is fixed
+	  - useless $bpl is now useful
+	  - RE{EUC_0212} -> $RE{EUC_0212} at a regexp
 0.66	2000/12/21
 	* =?iso-2022-jp?b? is now case insensitive
 	  (toshihiro.kayama@toshiba.co.jp)
