@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.20 2003/03/14 06:53:01 fukachan Exp $
+# $FML: Date.pm,v 1.21 2003/07/21 10:37:13 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -88,8 +88,7 @@ sub _date
     my @Month = ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
 		 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
 
-    # XXX-TODO: default timezone is +0900. o.k. ? :-)
-    $TimeZone ||= '+0900';
+    $TimeZone ||= speculate_timezone();
     my ($sec,$min,$hour,$mday,$mon,$year,$wday) = (localtime($time))[0..6];
 
     $date->{'log_file_style'} =
@@ -411,6 +410,39 @@ sub date_to_unixtime
     _log($@) if $@;
 
     return $t;
+}
+
+
+# Descriptions: speculate timezone and return the string e.g. +0900.
+#    Arguments: NUM($_offset)
+# Side Effects: none
+# Return Value: STR
+sub speculate_timezone
+{
+    my ($_offset) = @_;
+
+    use Time::Timezone;
+    my $offset = $_offset || tz_local_offset();
+    my $hour   = int(abs($offset)/3600);
+    my $shift  = (abs($offset) - $hour*3600)/3600;
+
+    if ($offset > 0) {
+	return sprintf("+%02d%02d", $hour, $shift*60);
+    }
+    elsif ($offset < 0) {
+	return sprintf("-%02d%02d", $hour, $shift*60);
+    }
+    else {
+	return '+0000';
+    }
+}
+
+
+if ($0 eq __FILE__) {
+    print "default\ttimezone = ", speculate_timezone(), "\n";
+    for my $t (qw(-5400 1800 3600 5400 7200)) {
+	print "$t\ttimezone = ", speculate_timezone($t), "\n";
+    }
 }
 
 
