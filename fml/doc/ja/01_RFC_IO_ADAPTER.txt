@@ -38,3 +38,17 @@
 	get_value_as_array_ref	()		[]	←
 	replace			(KEY, STR)	*	←	
 				(KEY, [])	*	←
+
+*** TODO ***
+
+   File::Sequence
+	IO::Adapter 経由にするべきでし
+
+   Tie::JournaledFile
+	IO::Adapter で journaled file をサポートしてほしい
+
+	[BUG] ?
+	この negative cache ってまちがってないか？
+		find() して ->{} すると negative cache
+		が間違って有効になってるんじゃないの？
+
