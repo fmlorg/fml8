@@ -23,6 +23,13 @@ incoming_mail_header_loop_check_rules		=	check_message_id
 message_id_cache_dir		=	$db_dir/message_id
 
 
+# Descriptions: article Message-ID cache directory
+#      History:
+#        Value:
+#     Examples:
+article_message_id_cache_dir	=	$db_dir/article_message_id
+
+
 # Descriptions: use article header rewrite function ?
 #      History:
 #        Value: yes / no

@@ -13,14 +13,22 @@ use_incoming_mail_header_loop_check		=	yes
 #        Value:
 #     Examples:
 incoming_mail_header_loop_check_rules		=	check_message_id
-					check_x_ml_info
-					check_list_post
+							check_x_ml_info
+							check_list_post
 
-# Descriptions: Message-ID のキャッシュを格納するディレクトリ
-#      History:
+# Descriptions: すべての Message-ID のキャッシュを格納するディレクトリ
+#      History: なし
 #        Value:
 #     Examples:
 message_id_cache_dir		=	$db_dir/message_id
+
+
+# Descriptions: 記事としてスプールに格納されたメールの 
+#               Message-ID のキャッシュを格納するディレクトリ
+#      History: なし
+#        Value:
+#     Examples:
+article_message_id_cache_dir	=	$db_dir/article_message_id
 
 
 # Descriptions: ヘッダ書換えの操作をするか？
