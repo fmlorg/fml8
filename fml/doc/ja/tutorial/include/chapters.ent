@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.63 2003/02/18 02:24:47 fukachan Exp $
+	$FML: chapters.ent,v 1.64 2003/02/18 02:29:13 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -102,6 +102,7 @@
 <!entity chapter.directory        SYSTEM "internals/directory.sgml">
 <!entity chapter.db               SYSTEM "internals/db.sgml">
 <!entity chapter.dbms             SYSTEM "internals/dbms.sgml">
+<!entity chapter.db.thread        SYSTEM "internals/db.thread.sgml">
 <!entity chapter.hook             SYSTEM "internals/hook.sgml">
 <!entity chapter.policy           SYSTEM "policy.sgml">
 

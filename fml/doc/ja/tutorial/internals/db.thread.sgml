@@ -1,9 +1,18 @@
-総論: 
-	主に article_id か thread_id が primary key  である。
+<!--
+   $FML$
+-->
+
+<chapter id="db.thread">
+	<title>
+	スレッド・データベース
+	</title>
 
 
-	*********************************************************
-
+<para>
+スレッドのデータベースは
+「主に article_id か thread_id が primary key」
+です。
+<screen>
 $status		open / close
 $ml_name	elena
 article_id	100
@@ -11,8 +20,6 @@ thread_id	elena/100
 $from		ヘッダの From: (めーる＠アドレスの形式)
 $sender		ヘッダの Sender: (めーる＠アドレスの形式)
 $x_sender	ヘッダの X-Sender: (めーる＠アドレスの形式)
-
-	*********************************************************
 
 [thread]
 
@@ -45,3 +52,9 @@ $x_sender	ヘッダの X-Sender: (めーる＠アドレスの形式)
 	thread_id	=>	"$ml_name " *
 
 	Example: support/100 => support sales
+</screen>
+
+</para>
+
+
+</chapter>
