@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.154 2003/01/25 12:04:49 fukachan Exp $
+# $FML: Kernel.pm,v 1.155 2003/01/25 12:11:19 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1160,6 +1160,10 @@ sub _analyze_recipients
 	$recipient = [ $curproc->{ credential }->sender() ];
     }
 
+    # aggregation of recepients: [ A, A, B ] -> [ A, B ]
+    $recipient      = $curproc->unique( $recipient );
+    $recipient_maps = $curproc->unique( $recipient_maps );
+
     return ($recipient, $recipient_maps);
 }
 
@@ -1184,6 +1188,7 @@ sub reply_message
     my ($curproc, $msg, $args) = @_;
     my $myname = $curproc->myname();
 
+    # XXX-TODO: hard-coded. move condition statements to configuration file.
     # XXX makefml not support message handling not yet.
     if ($myname eq 'makefml' || 
 	$myname eq 'fml'     || 
@@ -1193,7 +1198,7 @@ sub reply_message
 	return;
     }
 
-    # recipients list
+    # get recipients list
     my ($recipient, $recipient_maps) = $curproc->_analyze_recipients($args);
     my $hdr                          = $curproc->_analyze_header($args);
 
@@ -1203,7 +1208,7 @@ sub reply_message
 	$msg .= "\n" unless $msg =~ /\n$/;
     }
 
-    $curproc->_append_message_into_queue($msg, $args,
+    $curproc->_append_message_into_queue2($msg, $args,
 					 $recipient, $recipient_maps,
 					 $hdr);
 
@@ -1272,6 +1277,43 @@ sub _append_message_into_queue
 	recipient_maps => $recipient_maps,
 	header         => $hdr,
     };
+
+    $pcb->set($category, $class, $rarray);
+}
+
+
+# Descriptions: add the specified $msg into on memory queue
+#    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($args)
+#               ARRAY_REF($recipient) ARRAY_REF($recipient_maps) OBJ($hdr)
+# Side Effects: update on momory queue which is on PCB area.
+# Return Value: none
+sub _append_message_into_queue2
+{
+    my ($curproc, $msg, $args, $recipient, $recipient_maps, $hdr) = @_;
+    my $pcb      = $curproc->{ pcb };
+    my $category = 'reply_message';
+    my $class    = 'queue';
+    my $rarray   = $pcb->get($category, $class) || [];
+
+    for my $rcpt (@$recipient) {
+	$rarray->[ $#$rarray + 1 ] = {
+	    message        => $msg,
+	    type           => ref($msg) ? ref($msg) : 'text',
+	    recipient      => [ $rcpt ],
+	    recipient_maps => [],
+	    header         => $hdr,
+	};
+    }
+
+    for my $map (@$recipient_maps) {
+	$rarray->[ $#$rarray + 1 ] = {
+	    message        => $msg,
+	    type           => ref($msg) ? ref($msg) : 'text',
+	    recipient      => [],
+	    recipient_maps => [ $map ],
+	    header         => $hdr,
+	};
+    }
 
     $pcb->set($category, $class, $rarray);
 }
