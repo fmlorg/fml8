@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DSN.pm,v 1.3 2001/04/09 15:31:48 fukachan Exp $
+# $FML: DSN.pm,v 1.4 2001/04/10 11:52:26 fukachan Exp $
 #
 
 
@@ -13,6 +13,9 @@ package Mail::Bounce::DSN;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+my $debug = $ENV{'debug'} ? 1 : 0;
+
 
 =head1 NAME
 
@@ -42,9 +45,10 @@ Mail::Bounce::DSN - DSN error message format parser
 sub analyze
 {
     my ($self, $msg, $result) = @_;
-    my $m;
+    my $m = $msg->rfc822_message_body_head;
+    $m = $m->find( { data_type => 'message/delivery-status' } );
 
-    if ($m = $msg->find( { data_type => 'message/delivery-status' } )) {
+    if (defined $m) {
 	# data in the part
 	my $data = $m->data;
 	my $n    = $m->num_paragraph;
@@ -80,14 +84,17 @@ sub _parse_dsn_format
     my $addr   = $header->get('Original-Recipient') || 
 	$header->get('Final-Recipient');
 
-
-    if ($addr =~ /.*;\s*(\S+\@\S+)/) { $addr = $1;}
+    if ($addr =~ /.*;\s*(\S+\@\S+\w+)/) {
+	$addr = $1;
+    }
 
     # set up return buffer
-    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
-    for ('Final-Recipient', 'Original-Recipient',
-	 'Action', 'Status', 'Diagnostic-Code') {
-	$result->{ $addr }->{ $_ } = $header->get($_) || undef;
+    if ($addr =~ /\@/) {
+	$result->{ $addr }->{ 'Final-Recipient' } = $addr;
+	for ('Final-Recipient', 'Original-Recipient',
+	     'Action', 'Status', 'Diagnostic-Code') {
+	    $result->{ $addr }->{ $_ } = $header->get($_) || undef;
+	}
     }
 }
 
