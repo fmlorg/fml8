@@ -1,6 +1,20 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/01/14
+
+   Mail::HTML::Lite 
+	define default value.
+	delayed loading by eval q{ use .. }.
+	validate defined( $db->{ _thread_list }->{ $id } ).
+	
+	_head_thread()::fix head_thread search algorithm.
+	
+	rename __search_default_next_thread_id() to
+	__search_default_next_id_in_thread().
+	
+	__sort_yyyymm()::validate value is not null.
+
 2002/01/13, 01/12, ...
 
    final clean up campaign in 2001 
@@ -1332,4 +1346,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.45 2001/12/26 14:33:29 fukachan Exp $
+$FML: CHANGES.txt,v 1.46 2002/01/13 16:19:58 fukachan Exp $
