@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.29 2002/06/21 08:20:12 fukachan Exp $
+# $FML: Kernel.pm,v 1.30 2002/06/22 11:49:26 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -245,9 +245,9 @@ sub _drive_cgi_by_table
     #   sw   south  se
     #
     my $function_table = {
-	nw    => '',
-	north => 'run_cgi_title',
-	ne    => '',
+	nw       => '',
+	north    => 'run_cgi_title',
+	ne       => '',
 
 	'west'   => 'run_cgi_navigator', 
 	'center' => 'run_cgi_main',
