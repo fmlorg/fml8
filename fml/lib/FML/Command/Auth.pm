@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.9 2002/06/01 05:09:23 fukachan Exp $
+# $FML: Auth.pm,v 1.10 2002/07/02 12:01:38 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -146,6 +146,9 @@ sub check_admin_member_password
     # get candidates
     my ($user, $domain) = split(/\@/, $address);
 
+    use FML::Credential;
+    my $cred = new FML::Credential;
+
     # search $user in password database map, which has a hash of
     # { $user => $encryptd_passwrod }.
     for my $map (@$maplist) {
@@ -161,10 +164,13 @@ sub check_admin_member_password
 		my ($u, $p_infile) = split(/\s+/, $r);
 		my $p_input        = crypt( $password, $p_infile );
 
-		# password match
-		if ($p_infile eq $p_input) {
-		    Log("check_password: password match");
-		    return 1;
+		# 1.1 user match ?
+		if ($cred->is_same_address($u, $address)) {
+		    # 1.2 password match ?
+		    if ($p_infile eq $p_input) {
+			Log("check_password: password match");
+			return 1;
+		    }
 		}
             }
         }
