@@ -543,6 +543,10 @@ return the message size.
 
 return this message has empty content or not.
 
+=head2 C<set_log_function()>
+
+internal use. set CODE REFERENCE to the log function
+
 =cut
 
 sub size
@@ -573,6 +577,76 @@ sub set_log_function
 {
     my ($self, $fp) = @_;
     $self->{ _log_function } = $fp; # log function pointer
+}
+
+
+sub get_content_type
+{
+    my ($self) = @_;
+    $self->{ content_type };
+}
+
+
+=head2 C<get_content_header($size)>
+
+get header in the content, which is whole mail or a part of multipart.
+
+=head2 C<get_content_body($size)>
+
+get body part in the content.
+
+=head2 C<get_first_plaintext_message($args)>
+
+    $args->{ size }
+
+=cut
+
+
+sub get_content_header
+{
+    my ($self, $size) = @_;
+    my $content = $self->{ content };
+    my $pos     = index($$content, "\n\n", $self->{ offset_begin });
+    my $len     = $pos - $self->{ offset_begin };
+
+    substr($$content, $self->{ offset_begin }, $len);
+}
+
+
+sub get_content_body
+{
+    my ($self, $size) = @_;
+    my $content   = $self->{ content };
+    my $pos       = index($$content, "\n\n", $self->{ offset_begin });
+    my $pos_begin = $pos + 2;
+    my $msglen    = $self->{ offset_end } - $pos_begin;
+
+    $size ||= 512;
+    if ($msglen < $size) { $size = $msglen;}
+    return substr($$content, $pos_begin, $size);
+}
+
+
+sub get_first_plaintext_message
+{
+    my ($self, $args) = @_;
+
+    $size = $args->{ size } || 512;
+
+    # use Data::Dumper; print STDERR Dumper( $self ), "\n";
+
+    my $mp;
+    for ($mp = $self; 
+	 defined $mp->{ content } || defined $mp->{ next }; 
+	 $mp = $mp->{ next }) {
+	my $type = $mp->get_content_type;
+
+	if ($type eq 'text/plain') {
+	    return $mp->get_content_body($size);
+	}
+    }
+
+    return undef;
 }
 
 

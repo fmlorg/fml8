@@ -82,9 +82,9 @@ sub update_status
 {
     my ($self, $curproc, $args) = @_;
     my $rbody   = $curproc->{ article }->{ body };
-    my $content = $rbody->get_content_reference();
+    my $content = $rbody->get_first_plaintext_message();
 
-    if ($$content =~ /close/) {
+    if ($content =~ /close/) {
 	$self->{ _status } = "close";
     }
     else {
