@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.12 2003/08/23 15:33:16 fukachan Exp $
+# $FML: Utils.pm,v 1.13 2003/09/13 09:02:01 fukachan Exp $
 #
 
 package Mail::Delivery::Utils;
@@ -45,13 +45,13 @@ require Exporter;
 
 =head1 NAME
 
-Mail::Delivery::utils - utility programs for mail delivery class
+Mail::Delivery::Utils - utility programs for mail delivery class
 
 =head1 SYNOPSIS
 
 For example,
 
-   use Mail::Delivery::utils;
+   use Mail::Delivery::Utils;
    Log( $message_to_log );
 
 =head1 DESCRIPTION
