@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sendmail.pm,v 1.3 2003/03/04 04:42:34 fukachan Exp $
+# $FML: Sendmail.pm,v 1.4 2003/03/05 05:36:31 tmu Exp $
 #
 
 package FML::MTAControl::Sendmail;
@@ -70,7 +70,12 @@ sub sendmail_update_alias
     my $alias  = $config->{ mail_aliases_file };
 
     print STDERR "updating $alias database\n";
-    system "$prog -bi -oA$alias";
+    if (-x $prog) {
+	system "$prog -bi -oA$alias";
+    }
+    else {
+	warn("sendmail='$prog' not found");
+    }
 }
 
 
@@ -150,7 +155,6 @@ sub sendmail_install_virtual_map
     my $config       = $curproc->{ config };
     my $ml_name      = $config->{ ml_name };
     my $ml_domain    = $config->{ ml_domain };
-    my $postmap      = $config->{ path_postmap };
 
     use File::Spec;
     my $virtual = $config->{ sendmail_virtual_map_file };
@@ -214,7 +218,12 @@ sub sendmail_update_virtual_map
     # XXX-TODO: NOT IMPLEMENTED
     if (-f $virtual) {
 	print STDERR "updating $virtual database\n";
-	system "$makemap hash $virtual < $virtual";
+	if (-x $makemap) {
+	    system "$makemap hash $virtual < $virtual";
+	}
+	else {
+	    warn("makemap='$makemap' not found");
+	}
     }
 }
 

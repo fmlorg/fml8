@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.18 2003/01/27 03:23:17 fukachan Exp $
+# $FML: Postfix.pm,v 1.19 2003/02/11 11:04:43 fukachan Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -134,7 +134,12 @@ sub postfix_update_alias
     my $alias  = $config->{ mail_aliases_file };
 
     print STDERR "updating $alias database\n";
-    system "$prog $alias";
+    if (-x $prog) {
+	system "$prog $alias";
+    }
+    else {
+	warn("postalias='$prog' not found");
+    }
 }
 
 
@@ -279,14 +284,20 @@ sub postfix_alias_maps
     my ($self, $curproc, $params, $optargs) = @_;
     my $config = $curproc->{ config };
     my $prog   = $config->{ path_postconf };
+    my $maps   = '';
 
     # XXX-TODO: postconf returns $xxx in some cases. we need to expand it.
-    my $maps   = `$prog alias_maps`;
-    $maps      =~ s/,/ /g;
-    $maps      =~ s/\s+hash:/ /g;
-    $maps      =~ s/\s+dbm:/ /g;
-    $maps      =~ s/^.*=\s*//;
-    $maps      =~ s/[\s\n]*$//;
+    if (-x $prog) {
+	$maps = `$prog alias_maps`;
+	$maps =~ s/,/ /g;
+	$maps =~ s/\s+hash:/ /g;
+	$maps =~ s/\s+dbm:/ /g;
+	$maps =~ s/^.*=\s*//;
+	$maps =~ s/[\s\n]*$//;
+    }
+    else {
+	warn("postconf='$prog' not found");
+    }
 
     my (@maps) = split(/\s+/, $maps);
     return \@maps;
@@ -411,7 +422,12 @@ sub postfix_update_virtual_map
 
     if (-f $virtual) {
 	print STDERR "updating $virtual database\n";
-	system "$postmap $virtual";
+	if (-x $postmap) {
+	    system "$postmap $virtual";
+	}
+	else {
+	    warn("postmap='$postmap' not found");
+	}
     }
 }
 
