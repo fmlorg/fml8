@@ -1,6 +1,99 @@
 		CHANGES
 		Last Modified: $Date$
 
+2001/11/21
+
+   FML::Process::Switch 
+	fmlsch -h to show help
+	
+   FML::Process::Scheduler 
+   TinyScheduler 
+	clean up fmlsch
+	FNF-ify
+	handle options by getopt() in Process::Scheduler not TinySchedule
+	make "fmlsch help" work
+	fix entry duplication bug in parser
+	print_specific_month() can handle (month, year) pair
+	define set_mode()
+	use env var BROWSER ("w3m" by default)
+
+2001/11/20
+
+   File::Sequence 
+	implement search_max_id() in hash key
+	more debug
+	
+   Mail::ThreadTrack::DB 
+	db_hash( $type ) to return hash reference for $type
+	
+   Mail::ThreadTrack::HeaderRewrite 
+	validate variables
+	
+   FML::Process::ThreadTrack 
+	update database for latest not-yet-analyzed articles.
+
+2001/11/19
+
+   Mail::ThreadTrack 
+	implement set_fd(), get_fd()
+	implemente set_order()
+	
+   FML::Process::ThreadTrack 
+   Mail::ThreadTrack::Print 
+	split functions for list and summary.
+	"list" shows thread summary but "summary" shows thread summary +
+	article summary.
+	
+	enhance fmlthread to provide CUI, oh this is useful !
+	
+   Mail::ThreadTrack::Print 
+	enable --reverse for summary, list command
+	check reverse_order value ;-)
+	
+   Mail::ThreadTrack::Print::Message 
+	check value of header fields, which is undefined in some cases
+	
+   Mail::ThreadTrack::Print::Text 
+	implement show_articles_in_thread()
+	
+   FML::CGI::ThreadTrack 
+	summary listing on CGI is normal order by default
+
+2001/11/18
+
+   FML::Article 
+	implement speculate_max_id()
+	
+   FML::Process::ThreadTrack 
+	change max_id speculation strategy:
+	1. check the max_id is given or not, use it if given
+	2. try max_id() of FML::Article;
+	3. speculate_max_id($spool_dir) in FML::Article
+
+   fml/etc/paths.cf
+	./configure が paths.cf を作る。
+
+2001/11/17
+
+   FML::Process::HTMLify 
+   Mail::HTML::Lite 
+	disable debug code, enable it when $ENV{debug} is defined
+	
+   FML::CGI::Configure ThreadTrack.pm 
+   FML::Process::Switch 
+   Mail::ThreadTrack 
+   Mail::ThreadTrack::Print::HTML 
+	change default target to _top
+	use $msg_base_url to show link to article
+
+2001/11/16
+
+   Mail::ThreadTrack 
+	new()::save $args as _saved_args in $self
+	
+   Mail::ThreadTrack::DB 
+	fix _status but in unpolite way. XXX fix it !
+
 2001/11/13
 
    CGI 新スタイルへ変更他、
@@ -1049,4 +1142,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.34 2001/11/12 15:06:35 fukachan Exp $
+$FML: CHANGES.txt,v 1.35 2001/11/13 15:35:42 fukachan Exp $
