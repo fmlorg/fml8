@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.9 2004/04/23 04:10:28 fukachan Exp $
+# $FML: Control.pm,v 1.10 2004/04/28 04:06:11 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -299,8 +299,14 @@ sub _try_chaddr_in_map
 	$old_address_in_map = $cred->matched_address();
     }
     else {
-	# XXX-TODO: error handing ?
+	my $msg_args = {};
+	$msg_args->{ _arg_address } = $old_address;
+	$msg_args->{ _arg_map }     = $curproc->which_map_nl($map);
+
 	$curproc->logerror("$old_address not found in map=$map");
+	$curproc->reply_message_nl('error.no_such_address_in_map',
+				   "no such address",
+				   $msg_args);
     }
 
     # 2. new address NOT EXISTS
@@ -308,8 +314,14 @@ sub _try_chaddr_in_map
 	$is_new_address_ok = 1;
     }
     else {
+	my $msg_args = {};
+	$msg_args->{ _arg_address } = $new_address;
+	$msg_args->{ _arg_map }     = $curproc->which_map_nl($map);
+
 	$curproc->logerror("$new_address is already member (map=$map)");
-	return 0;
+	$curproc->reply_message_nl('error.already_subscribed_in_map',
+				   "already subscribed",
+				   $msg_args);
     }
 
     # 3. both conditions are o.k., here we go!
@@ -356,8 +368,11 @@ sub _try_chaddr_in_map
 	    $obj->close();
 	}
     }
+    else {
+	croak("invalid chaddr request");
+    }
 
-    # update user database.
+    # XXX-TODO: update user database.
 }
 
 
