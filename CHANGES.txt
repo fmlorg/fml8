@@ -1,6 +1,16 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/09/14
+
+   FML::Filter::BodyCheck 
+	add use Mail::Message::Encode at reject_japanese_command_syntax()
+	because rejected by filter due to Undefined subroutine
+	&FML::Filter::BodyCheck::STR2EUC called
+	
+   variables	
+	define $default_umask and $timezone
+
 2002/09/11
 
    FML::Log
@@ -3311,4 +3321,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.100 2002/09/06 13:07:57 fukachan Exp $
+$FML: CHANGES.txt,v 1.101 2002/09/11 22:17:25 fukachan Exp $
