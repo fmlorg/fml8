@@ -12,6 +12,11 @@ package FML::CGI::TicketSystem;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+use CGI qw/:standard/; # load standard CGI routines
+use FML::Process::CGI;
+
+@ISA = qw(FML::Process::CGI Exporter);
+
 
 =head1 NAME
 
@@ -33,30 +38,60 @@ C<FML::CGI::TicketSystem> is a subclass of C<FML::Process::CGI>.
 
 =head1 METHODS
 
-=cut
-
-use CGI qw/:standard/; # load standard CGI routines
-use FML::Process::CGI;
-
-@ISA = qw(FML::Process::CGI Exporter);
-
+Almost methods are forwarded to C<FML::Process::CGI> base class.
 
 =head2 C<run()>
+
+main method.
 
 =cut
 
 # See CGI.pm for more details
 sub run
 {
-    my ($curproc) = @_;
+    my ($curproc, $args) = @_;
+    my $ticket = $curproc->_load_ticket_model_module($args);
 
-    print start_html('hello world'), "\n";
+    print start_html('ticket system interface'), "\n";
+
     print "<PRE>\n";
-    print " hen hen hen \n";
+
+    my $argv     = $args->{ ARGV };
+    $argv->[ 0 ] = 'list';
+    $ticket->show_summary($curproc, $args);
+
     print "</PRE>\n";
+
+
     print "\n";
     print end_html;
     print "\n";
+}
+
+
+sub _load_ticket_model_module
+{
+    my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
+    my $model  = $config->{ ticket_model };
+    my $pkg    = "FML::Ticket::Model::";
+
+    if ($model eq 'toymodel') {
+	$pkg .= $model;
+    }
+    else {
+	Log("ticket: unknown model");
+	return;
+    }
+
+    # fake use() to do "use FML::Ticket::$model;"
+    eval qq{ require $pkg; $pkg->import();};
+    unless ($@) {
+	return $pkg->new($curproc, $args);
+    }
+    else {
+	Log($@);
+    }
 }
 
 
