@@ -746,6 +746,7 @@ x {
 
 
 _file$ {
+          $compat_old_fml_default_config_ph_file
           $guide_file
           $help_file
           $objective_file
@@ -753,6 +754,8 @@ _file$ {
 }
 
 _dir$ {
+          $compat_config_base_dir
+          $compat_old_fml_config_dir
           $db_dir
           $etc_dir
           $event_queue_dir
