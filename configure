@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# From configure.in Revision: 1.11 
+# From configure.in Revision: 1.12 
 
 # Guess values for system-dependent variables and create Makefiles.
 # Generated automatically using autoconf version 2.13 
@@ -1819,6 +1819,7 @@ echo "                sbindir: $sbindir"
 echo "                lib_dir: $libdir"
 echo "            libexec_dir: $libexecdir"
 echo "                 mandir: $mandir"
+echo "                datadir: $datadir"
 echo ""
 echo "      fml process owner: $fml_owner"
 echo "      fml process group: $fml_group"

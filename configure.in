@@ -1,5 +1,5 @@
 dnl
-dnl $FML: configure.in,v 1.11 2001/12/18 12:59:29 fukachan Exp $
+dnl $FML: configure.in,v 1.12 2002/03/24 11:22:31 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -111,6 +111,7 @@ echo "                sbindir: $sbindir"
 echo "                lib_dir: $libdir"
 echo "            libexec_dir: $libexecdir"
 echo "                 mandir: $mandir"
+echo "                datadir: $datadir"
 echo ""
 echo "      fml process owner: $fml_owner"
 echo "      fml process group: $fml_group"
