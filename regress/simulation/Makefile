@@ -20,6 +20,7 @@ allclean: clean
 	rm -f File
 	rm -f CGI
 	rm -f Command
+	rm -f SQL
 
 scan:
 	@ (cd ../..; make scan 2>&1) |tee __scan__ || echo 'nothing changed'
@@ -41,7 +42,8 @@ link:
 	rm -f Command; ln -s ../../fml/lib/FML/Command
 	rm -f IO; ln -s ../../fml/lib/IO
 	rm -f File; ln -s ../../fml/lib/File
-	rm -f Tie; 
+	rm -f SQL; ln -s ../../fml/lib/SQL
+	rm -f Tie; ln -s ../../fml/lib/Tie
 	rm -f Dialect; ln -s ../../fml/lib/Dialect
 	rm -f MailingList; ln -s ../../fml/lib/MailingList
 	rm -f libexec; ln -s ../../fml/libexec
