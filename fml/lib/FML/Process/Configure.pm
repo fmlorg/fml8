@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.36 2002/02/17 03:07:55 fukachan Exp $
+# $FML: Configure.pm,v 1.37 2002/02/17 13:45:10 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -12,10 +12,9 @@ use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use strict;
 use Carp;
 
-use FML::Process::Kernel;
 use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
-
+use FML::Process::Kernel;
 @ISA = qw(FML::Process::Kernel);
 
 
@@ -49,10 +48,10 @@ dummy.
 =cut
 
 
-# Descriptions: constructor
+# Descriptions: ordinary constructor
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
-# Return Value: FML::Process::Configure object
+# Return Value: OBJ
 sub new
 {
     my ($self, $args) = @_;
@@ -63,7 +62,7 @@ sub new
 
 
 # Descriptions: dummy
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub prepare
@@ -80,7 +79,7 @@ sub prepare
 
 
 # Descriptions: check @ARGV, call help() if needed.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: exit ASAP.
 #               longjmp() to help() if appropriate
 # Return Value: none
@@ -121,7 +120,7 @@ See <FML::Process::Switch()> on C<$args> for more details.
 
 
 # Descriptions: just a switch, call _makefml().
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub run
@@ -136,7 +135,7 @@ sub run
 
 
 # Descriptions: dummy
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub finish
@@ -203,7 +202,7 @@ See <FML::Process::Switch()> on C<$args> for more details.
 
 
 # Descriptions: makefml top level dispacher
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: load FML::Command::command module and execute it.
 # Return Value: none
 sub _makefml
