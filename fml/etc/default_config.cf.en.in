@@ -297,6 +297,7 @@ address_compare_function_type = user_part_case_insensitive
 #        Value: list of attributes (
 #			permit_anyone
 #			permit_member_maps
+#			check_article_thread
 #			reject_system_special_accounts
 #			reject
 #		)
@@ -821,6 +822,13 @@ incoming_mail_header_loop_check_rules		=	check_message_id
 #        Value:
 #     Examples:
 message_id_cache_dir		=	$db_dir/message_id
+
+
+# Descriptions: article Message-ID cache directory
+#      History:
+#        Value:
+#     Examples:
+article_message_id_cache_dir	=	$db_dir/article_message_id
 
 
 # Descriptions: use article header rewrite function ?
