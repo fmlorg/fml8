@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.114 2003/05/13 03:49:55 fukachan Exp $
+# $FML: Distribute.pm,v 1.115 2003/05/13 04:26:48 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -562,17 +562,24 @@ sub htmlify
     my $ml_name      = $config->{ ml_name };
     my $spool_dir    = $config->{ spool_dir };
     my $html_dir     = $config->{ html_archive_dir };
+    my $udb_dir      = $config->{ udb_base_dir };
     my $article      = $curproc->_build_article_object($args);
     my $article_id   = $pcb->get('article', 'id');
     my $article_file = $article->filepath($article_id);
     my $index_order  = $config->{ html_archive_index_order_type };
     my $cur_lang     = $curproc->language_of_html_file();
 
+    unless (-d $udb_dir) { $curproc->mkdir($udb_dir);}
+
     # XXX-TODO: care for non Japanese.
     my $htmlifier_args = {
-	directory   => $html_dir,
 	charset     => $cur_lang,
-	index_order => $index_order,
+
+	output_dir  => $html_dir,    # ~fml/public_html/mlarchive/$domain/$ml/
+	db_base_dir => $udb_dir,     # /var/spool/ml/@udb@
+	db_name     => $ml_name,     # elena
+
+	index_order => $index_order, # normal/reverse
     };
 
     $curproc->set_umask_as_public();

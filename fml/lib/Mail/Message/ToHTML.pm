@@ -4,20 +4,21 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: ToHTML.pm,v 1.44 2003/07/19 10:23:35 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+use File::Spec;
 
 my $is_strict_warn = 0;
 my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML$;
+my $version = q$FML: ToHTML.pm,v 1.44 2003/07/19 10:23:35 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -95,33 +96,36 @@ sub new
     my ($type)  = ref($self) || $self;
     my $me      = {};
 
-    $me->{ _html_base_directory } = $args->{ directory };
     $me->{ _charset }             = $args->{ charset } || 'us-ascii';
-    $me->{ _is_attachment }       = defined($args->{ attachment }) ? 1 : 0;
+    $me->{ _html_base_directory } = $args->{ output_dir };
     $me->{ _db_type }             = $args->{ db_type };
     $me->{ _db_name }             = $args->{ db_name };
     $me->{ _db_base_dir }         = $args->{ db_base_dir };
+    $me->{ _is_attachment }       = defined($args->{ attachment }) ? 1 : 0;
     $me->{ _args }                = $args;
     $me->{ _num_attachment }      = 0; # for child process
     $me->{ _use_subdir }          = 'yes';
     $me->{ _subdir_style }        = 'yyyymm';
     $me->{ _html_id_order }       = $args->{ index_order } || 'normal';
 
-    my $db_type = $me->{ _db_type };
-    my $db_base = $me->{ _db_base_dir } || croak("specify db_base_dir\n");
-    my $db_name = $me->{ _db_name }     || croak("specify db_name\n");
-    my $_args   = {
+    my $db_type  = $me->{ _db_type };
+    my $db_base  = $me->{ _db_base_dir } || croak("specify db_base_dir\n");
+    my $db_name  = $me->{ _db_name }     || croak("specify db_name\n");
+    my $db_dir   = File::Spec->catfile($db_base, $db_name);
+    unless (-d $db_base) { mkdir($db_base, 0755);}
+    unless (-d $db_dir)  { mkdir($db_dir,  0755);}
+    my $_db_args = {
 	db_module       => $db_type,
-	db_base_dir     => $db_base,
+	db_base_dir     => $db_dir,
 	db_name         => $db_name, # mailing list identifier
 
-	# db non UDB
-	old_db_base_dir => $args->{ directory },
+	# db_dir for non UDB
+	old_db_base_dir => $args->{ output_dir },
     };
 
     # Firstly, prepare db object.
     use Mail::Message::DB;
-    my $ndb = new Mail::Message::DB $_args;
+    my $ndb = new Mail::Message::DB $_db_args;
     $me->{ _ndb } = $ndb;
 
     return bless $me, $type;
@@ -2044,7 +2048,7 @@ try to convert all rfc822 messages to HTML in C<$dir> directory.
 sub htmlify_file
 {
     my ($self, $file, $args) = @_;
-    my $dst_dir = $args->{ directory };
+    my $dst_dir = $args->{ output_dir };
 
     unless (-f $file) {
 	print STDERR "no such file: $file\n" if $debug;
@@ -2109,7 +2113,7 @@ sub htmlify_file
 sub htmlify_dir
 {
     my ($self, $src_dir, $args) = @_;
-    my $dst_dir  = $args->{ directory };
+    my $dst_dir  = $args->{ output_dir };
     my $min      = 0;
     my $max      = 0;
     my $has_fork = 1; # ok on unix and perl>5.6 on wine32.
