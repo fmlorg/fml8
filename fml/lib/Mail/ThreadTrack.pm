@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.9 2001/11/04 13:43:50 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.10 2001/11/05 14:34:50 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -435,6 +435,28 @@ sub _set_status
 {
     my ($self, $thread_id, $value) = @_;
     $self->{ _hash_table }->{ _status }->{ $thread_id } = $value;
+}
+
+
+=head2 add_filter( { key => value } )
+
+add filter rule to ignore in thread database.
+
+    my $thread = new Mail::ThreadTrack;
+    $thread->set_filter( { 'subject' => 'fml cvs weekly changes' } );
+
+=cut
+
+
+sub add_filter
+{
+    my ($self, $hash) = @_;
+
+    # update filter list
+    my ($k, $v);
+    while (($k, $v) = each %$hash) { 
+	$self->{ _filterlist }->{ $k } = $v;
+    }
 }
 
 
