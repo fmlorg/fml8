@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.4 2001/04/22 12:45:46 fukachan Exp $
+# $FML: Makefile,v 1.1.1.1 2001/04/22 16:17:17 fukachan Exp $
 #
 
 TARGET_DIR = ../../../Documentation/ja/tutorial
@@ -16,4 +16,5 @@ clean:
 
 export: html
 	rsync -a fml-devel/@*/ $(TARGET_DIR)/
-	rsync -a *.gif         $(TARGET_DIR)/
+	rsync -a ../../en/figures/*.gif $(TARGET_DIR)/
+
