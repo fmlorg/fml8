@@ -690,6 +690,7 @@ use_article_header_rewrite		=	yes
 article_header_rewrite_rules	=	delete_unsafe_header_fields
 					rewrite_article_subject_tag
 					rewrite_reply_to
+					rewrite_errors_to
 					add_software_info
 					add_fml_ml_name
 					add_fml_traditional_article_id
