@@ -252,7 +252,7 @@ sub debug
     my ($curproc, $args) = @_;
 
     eval {
-	use FML::Debug;
+	require FML::Debug;
 	my $fp = new FML::Debug;
 	$fp->show_structure($curproc);
     };

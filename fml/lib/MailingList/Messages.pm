@@ -618,8 +618,6 @@ sub parse_and_build_mime_multipart_chain
 
     # chain $self and our chains built here.
     next_chain($self, $m[0]);
-
-    # use Data::Dumper; print STDERR Dumper( $self ); # debug
 }
 
 

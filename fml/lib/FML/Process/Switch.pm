@@ -89,7 +89,12 @@ sub main::Bootstrap2
 
     # 4. debug
     if ($0 =~ /loader/) {
-	eval q#use Data::Dumper; print Dumper( $main_cf ); sleep 3;#;
+	eval q#
+	    require Data::Dumper; 
+	    Data::Dumper->import();
+	    print Dumper( $main_cf );
+	    sleep 3;
+	#;
     }
 
     # 5. o.k. here we go!

@@ -64,9 +64,6 @@ sub run
     my $myname  = $args->{ myname };
     my $argv    = $args->{ ARGV };
 
-    # XXX debug
-    # use Data::Dumper; print Dumper( $args ); sleep 3;
-
     if ($myname eq 'fmlconf') {
 	$curproc->_show_conf($args);
     }
