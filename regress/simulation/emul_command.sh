@@ -1,12 +1,15 @@
 #!/bin/sh
 #
-# $FML: emul_command.sh,v 1.3 2003/03/15 09:19:37 fukachan Exp $
+# $FML: emul_command.sh,v 1.4 2004/03/12 15:54:43 fukachan Exp $
 #
 
 buf=$PWD/__command$$__
 trap "rm -f $buf" 0 1 3 15
 
 header_file=${header:-text=empty}
+
+# option
+option=${OPTION:-test_key=test_value}
 
 
 DO () {
@@ -26,6 +29,7 @@ DO () {
 
 	regress/message/scramble.pl $msg |\
 	${PERL:-perl} -w fml/libexec/loader -c $maincf \
+		-o $option \
 		--ctladdr \
 		/var/spool/ml/elena
 	echo "-- exit code: $?"
