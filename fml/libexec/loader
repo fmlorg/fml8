@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML$
+# $FML: loader,v 1.16 2001/06/17 08:57:12 fukachan Exp $
 #
 
 eval 'exec /usr/local/bin/perl -S $0 ${1+"$@"}'
@@ -48,24 +48,38 @@ BEGIN {
 sub Bootstrap
 {
     # 1. main.cf exists and I can open it?
-    -f $MainCF   || die("cannot find ${MainCF}");
+    -f $MainCF   || croak("cannot find ${MainCF}");
     my $fh = new FileHandle $MainCF;
-    defined($fh) || die("cannot find ${MainCF}");
+    defined($fh) || croak("cannot find ${MainCF}");
 
     # parse command line options (preliminary)
+    #   XXX -c and --params options affect Standalone::load_cf().
+    #   XXX so, we need to parse only options for -c and --params.
+    #   XXX We should check @ARGV again after.
     my $main_cf_file = $MainCF;
-    my $params;
+    my $params = {};
     for (my $i = 0; $i <= $#ARGV; $i++) {
-	if ($ARGV[ $i ] =~ /^\-c$/) { $main_cf_file = $ARGV[$i + 1];}
-	if ($ARGV[ $i ] =~ /^\-\-params$/) { $params = $ARGV[$i + 1];}
+	# -c main.cf
+	if ($ARGV[ $i ] =~ /^\-c$/) {
+	    $main_cf_file = $ARGV[$i + 1];
+	}
+
+	# --params key=value
+	if ($ARGV[ $i ] =~ /^\-\-params$/) { 
+	    $params = $ARGV[$i + 1];
+	}
     }
 
-    # 2.1 o.k. try to load main.cf (1st pass) to resolve $libexec_dir
-    my $main_cf     = Standalone::load_cf($main_cf_file, $params);
-    my $libexec_dir = $main_cf->{ libexec_dir };
+    # 2.1 o.k. try to load main.cf (1st pass) to resolve @INC
+    my $main_cf = Standalone::load_cf($main_cf_file, $params);
 
-    # set up @INC
-    push(@INC, split(/\s+/, $main_cf->{ lib_dir }));
+    # 2.1.1 set up @INC to load FML::Process::Switch
+    if (defined $main_cf->{ lib_dir }) {
+	push(@INC, split(/\s+/, $main_cf->{ lib_dir }));
+    }
+    else {
+	croak("\$lib_dir not defined in main.cf");
+    }
 
     # 2.2 load version dependent Bootstrap2(), 
     #     which is imported from FML::Process::Switch
@@ -73,10 +87,13 @@ sub Bootstrap
 	require FML::Process::Switch;
     };
     unless ($@) {
-	&Bootstrap2($main_cf_file);
+	eval q{ &Bootstrap2($main_cf_file);};
+	if ($@) {
+	    croak("fail to execute Bootstrap2($main_cf_file)\n");
+	}
     }
     else {
-	croak("cannot load $libexec_dir/process_switch\n");
+	croak("cannot load FML::Process::Switch\n");
     }
 }
 
