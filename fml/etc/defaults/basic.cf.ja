@@ -6,7 +6,10 @@
 
 =head2	ＭＬの管理者
 
-maintainer	=	fukachan@sapporo.iij.ad.jp
+# Descriptions: いわゆるＭＬの管理者、エラーメールの返る先
+#      History: fml 4.0 の $MAINTAINER
+#         Type: rfc822_address
+maintainer	=
 
 
 =head2	default modes

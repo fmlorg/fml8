@@ -6,7 +6,10 @@
 
 =head2	ＭＬの管理者
 
-maintainer	=	fukachan@sapporo.iij.ad.jp
+# Descriptions: いわゆるＭＬの管理者、エラーメールの返る先
+#      History: fml 4.0 の $MAINTAINER
+#         Type: rfc822_address
+maintainer	=
 
 
 =head2	default modes
@@ -17,15 +20,16 @@ default_directory_mode	=	0755
 
 =head1	ディレクトリ
 
-# description: ML のホームディレクトリ
-#              $ml_home_dir は FML::Process::Switch が決める
-# history: fml 4.0 の $DIR のこと
-# type: directory string
-# ml_home_dir	=
+# Descriptions: ML のホームディレクトリ
+#               $ml_home_dir は FML::Process::Switch が決める
+#      History: fml 4.0 の $DIR にあたるもの
+#         Type: directory_string
+#     Examples: /var/spool/ml/elena
+ml_home_dir	=
 
-# description: ML 間でシェアするデータベースをおくホームディレクトリ
-# history: fml 4.0 に該当するものはない
-# type: directory string
+# Descriptions: ML 間でシェアするデータベースをおくホームディレクトリ
+#      History: fml 4.0 に該当するものはない
+#         Type: directory_string
 shared_db_dir	= $ml_home_prefix/@db@
 
 var_dir		= $ml_home_dir/var
