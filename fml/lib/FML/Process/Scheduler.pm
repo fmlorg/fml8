@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Scheduler.pm,v 1.21 2003/01/25 12:11:20 fukachan Exp $
+# $FML: Scheduler.pm,v 1.22 2003/03/06 09:43:31 fukachan Exp $
 #
 
 package FML::Process::Scheduler;
@@ -16,19 +16,29 @@ use FML::Config;
 
 =head1 NAME
 
-FML::Process::Scheduler -- Scheduler utility.
+FML::Process::Scheduler -- scheduler.
 
 =head1 SYNOPSIS
 
+    use FML::Process::Scheduler;
+    my $scheduler = new FML::Process::Scheduler $curproc;
+    $curproc->{ scheduler } = $scheduler;
+
 =head1 DESCRIPTION
 
+This class provides utility for scheduler.
+However this module is dummy now.
+
 =head1 METHODS
+
+=head2 new($curproc)
+
+constructor. mkdir $event_queue_dir if needed.
 
 =cut
 
 
-# Descriptions: dummy constructor.
-#               avoid the default fml new() since we do not need it.
+# Descriptions: constructor. mkdir $event_queue_dir if needed.
 #    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: none
 # Return Value: OBJ
