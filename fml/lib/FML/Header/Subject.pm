@@ -160,10 +160,10 @@ sub is_reply
 
     return 1 if $subject =~ /^\s*Re:/i;
 
-    my $pkg = 'Dialect::Japanese::Subject';
+    my $pkg = 'Language::Japanese::Subject';
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
-	return 1 if &Dialect::Japanese::Subject::is_reply($subject);
+	return 1 if &Language::Japanese::Subject::is_reply($subject);
     };
 
     return 0;
@@ -179,11 +179,11 @@ sub _cut_off_reply
 {
     my ($self, $r_subject) = @_;
 
-    my $pkg = 'Dialect::Japanese::Subject';
+    my $pkg = 'Language::Japanese::Subject';
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
 	$$r_subject = 
-	    &Dialect::Japanese::Subject::cut_off_reply_tag($$r_subject);
+	    &Language::Japanese::Subject::cut_off_reply_tag($$r_subject);
     }
     else  {
 	Log($@);

@@ -14,7 +14,7 @@
 ###                                                   ###
 
 
-package Dialect::Japanese::Subject;
+package Language::Japanese::Subject;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
@@ -22,12 +22,12 @@ use Jcode;
 
 =head1 NAME
 
-Dialect::Japanese::Subject - Japanese specific handling of a subject
+Language::Japanese::Subject - Japanese specific handling of a subject
 
 =head1 SYNOPSIS
 
-    use Dialect::Japanese::Subject;
-    $is_reply = Dialect::Japanese::Subject::is_reply($subject);
+    use Language::Japanese::Subject;
+    $is_reply = Language::Japanese::Subject::is_reply($subject);
 
 =head1 DESCRIPTION
 
@@ -152,7 +152,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Dialect::Japanese::Subject appeared in fml5 mailing list driver package.
+Language::Japanese::Subject appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

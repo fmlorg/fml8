@@ -8,18 +8,18 @@
 # $FML$
 #
 
-package Dialect::Japanese::Utils;
+package Language::Japanese::Utils;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 =head1 NAME
 
-Dialect::Japanese::Utils - what is this
+Language::Japanese::Utils - what is this
 
 =head1 SYNOPSIS
 
-   use Dialect::Japanese::Utils qw(is_iso2022jp_string);
+   use Language::Japanese::Utils qw(is_iso2022jp_string);
    if ( is_iso2022jp_string($string) ) { do_something_if_Japanese;}
 
 =head1 DESCRIPTION
@@ -94,7 +94,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Dialect::Japanese::Utils appeared in fml5 mailing list driver package.
+Language::Japanese::Utils appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

@@ -6,7 +6,7 @@ index.ja.html: [A-Z]*
 	../../doc/bin/dir2url.pl > index.ja.html
 
 _subdir: [A-Z]*
-	(cd Dialect; make html)
+	(cd Language; make html)
 	(cd FML; make html)
 	(cd File; make html)
 	(cd IO; make html)
