@@ -1375,11 +1375,13 @@ article_summary_file_format_address_length	=	15
 
 =head1	convert article to html format.
 
+
 # Descriptions: use html converter function ?
 #      History: $AUTO_HTML_GEN
 #        Value: yes / no
 #     Examples: yes
 use_html_archive	=	yes
+
 
 # Descriptions: html archive directory of the specific ML.
 #      History: none
@@ -1407,6 +1409,28 @@ use_html_archive_address_mask	=	yes
 #        Value:
 #     Examples:
 html_archive_address_mask_type	=	all
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+html_archive_default_charset	=	$html_archive_charset_en
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+html_archive_charset_ja		=	euc-jp
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+html_archive_charset_en		=	us-ascii
+
 
 =head1	command definitoins
 
