@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: ThreadTrack.pm,v 1.11 2001/11/09 13:23:15 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.12 2001/11/11 13:37:41 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -84,8 +84,7 @@ sub run
     my $ml_name       = $config->{ ml_name };
     my $thread_db_dir = $config->{ thread_db_dir };
     my $spool_dir     = $mydir || $config->{ spool_dir };
-    my $max_id        = defined $options->{ article_id_max } ?
-	$options->{ article_id_max } : $curproc->article_id_max();
+    my $max_id        = $curproc->_speculate_max_id($spool_dir);
     my $ttargs        = {
 	myname        => $myname,
 	logfp         => \&Log,
@@ -137,6 +136,41 @@ sub run
     }
 
     $curproc->unlock();
+}
+
+
+sub _speculate_max_id
+{
+    my ($curproc, $spool_dir) = @_;
+    my $options = $curproc->command_line_options();
+
+    if (defined $options->{ article_id_max }) {
+	return $options->{ article_id_max };
+    }
+    else {
+	my $max_id = $curproc->speculate_max_id();
+
+	# XXX check whether $max_id > 1 or not since
+	# XXX speculate_max_id() returns 1 by default
+ 	if ($max_id > 1) {
+	    return $max_id;
+	}
+	else {
+	    eval q{ 
+		use FML::Article; 
+		push(@ISA, 'FML::Article');
+		$max_id = $curproc->speculate_max_id($spool_dir);
+	    };
+	    warn($@) if $@;
+	}
+
+	if ($max_id > 0) {
+	    return $max_id;
+	}
+    }
+
+    warn("cannot determine max_id");
+    return undef;
 }
 
 
