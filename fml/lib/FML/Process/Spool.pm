@@ -3,22 +3,21 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.10 2002/09/15 00:11:44 fukachan Exp $
+# $FML: Spool.pm,v 1.11 2002/09/22 14:56:54 fukachan Exp $
 #
 
 package FML::Process::Spool;
 
-use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use strict;
 use Carp;
-
-use FML::Process::Kernel;
+use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
 
-my $debug = 0;
-
+use FML::Process::Kernel;
 @ISA = qw(FML::Process::Kernel);
+
+my $debug = 0;
 
 
 =head1 NAME
@@ -37,9 +36,13 @@ This class drives thread tracking system in the top level.
 
 create a C<FML::Process::Kernel> object and return it.
 
-=head2 C<prepare()>
+=head2 C<prepare($args)>
 
-dummy :)
+ajdust ml_* variables, load config files and fix @INC.
+
+=head2 C<verify_request($args)>
+
+show help.
 
 =cut
 
@@ -103,9 +106,13 @@ sub verify_request
 
 =head2 C<run($args)>
 
-call the actual thread tracking system.
+rebuild summary.
 
 =cut
+
+#
+# XXX-TODO: clean up run() more.
+#
 
 
 # Descriptions: convert text format article to HTML by Mail::Message::ToHTML
@@ -126,8 +133,9 @@ sub run
     use FML::Article;
     my $article = new FML::Article $curproc;
 
+    # XXX-TODO: options and argv(s) are appropriate ?
     # use $dst_dir if --srcdir=DIR not specified.
-    my $src_dir = defined $options->{srcdir} ? $options->{srcdir} : $dst_dir;
+    my $src_dir = $options->{srcdir} || $dst_dir;
     my $optargs = {
 	article => $article,
 	src_dir => $src_dir,
@@ -178,7 +186,7 @@ sub _convert
 	my $source = '';
 
 	while (defined($_ = $dh->read)) {
-	    next if /^\./;
+	    next if /^\./o;
 
 	    $source = File::Spec->catfile($src_dir, $_);
 
