@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledFile.pm,v 1.29 2003/07/21 09:40:31 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.30 2003/10/15 01:03:41 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -82,7 +82,7 @@ standard hash functions.
 my $debug = 0;
 
 
-# Descriptions: constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: import _match_condition into $self
 # Return Value: OBJ
@@ -108,7 +108,7 @@ sub new
 }
 
 
-# Descriptions: tie() operation stars
+# Descriptions: tie() operation stars.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: initialize object
 # Return Value: OBJ
@@ -121,7 +121,7 @@ sub TIEHASH
 }
 
 
-# Descriptions: tie() fetch op
+# Descriptions: tie() fetch op.
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: none
 # Return Value: STR
@@ -133,7 +133,7 @@ sub FETCH
 }
 
 
-# Descriptions: tie() store op
+# Descriptions: tie() store op.
 #    Arguments: OBJ($self) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
@@ -145,15 +145,15 @@ sub STORE
 }
 
 
-# Descriptions: op for keys() and each()
+# Descriptions: op for keys() and each().
 #    Arguments: OBJ($self)
 # Side Effects: initialize $self->{ _hash }.
 # Return Value: ARRAY(STR, STR)
 sub FIRSTKEY
 {
     my ($self) = @_;
-    my $file = $self->{ '_file' };
-    my $hash = {};
+    my $file   = $self->{ '_file' };
+    my $hash   = {};
 
     use IO::File;
     my $fh = new IO::File $file;
@@ -176,14 +176,14 @@ sub FIRSTKEY
 }
 
 
-# Descriptions: tie() keys op (next op)
+# Descriptions: tie() keys op (next op).
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub NEXTKEY
 {
     my ($self) = @_;
-    my $hash = $self->{ _hash };
+    my $hash   = $self->{ _hash };
 
     if (defined $hash) {
 	return each %$hash;
@@ -216,7 +216,7 @@ which is by default.
 
 
 # Descriptions: return all key and the values as HASH_REF
-#               { key => [ values ] }
+#               { key => [ values ] }.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: HASH_REF
@@ -283,6 +283,7 @@ method. C<last match> by default.
 sub find
 {
     my ($self, $key, $mode) = @_;
+
     return $self->_fetch($key, $mode || 'array');
 }
 
@@ -317,12 +318,12 @@ sub _fetch
     my ($xkey, $xvalue, $value, @values) = ();
     my $buf;
 
-  SEARCH:
+  LINE:
     while ($buf = <$fh>) {
-	next SEARCH if $buf =~ /^\#*$/o;
-	next SEARCH if $buf =~ /^\s*$/o;
-	next SEARCH unless $buf =~ /^$prekey/i;
-	next SEARCH unless $buf =~ /^$keytrap/i;
+	next LINE if $buf =~ /^\#*$/o;
+	next LINE if $buf =~ /^\s*$/o;
+	next LINE unless $buf =~ /^$prekey/i;
+	next LINE unless $buf =~ /^$keytrap/i;
 
 	chomp $buf;
 
@@ -336,7 +337,7 @@ sub _fetch
 	    if ($mode eq 'scalar') {
 		# firstmatch: exit loop ASAP if the $key is found.
 		if ($self->{ '_match_condition' } eq 'first') {
-		    last SEARCH;
+		    last LINE;
 		}
 	    }
 	}
@@ -367,11 +368,12 @@ sub _fetch
 sub _store
 {
     my ($self, $key, $value) = @_;
+
     $self->_puts(sprintf("%-20s   %s", $key, $value));
 }
 
 
-# Descriptions: append given string to cache file
+# Descriptions: append given string to cache file.
 #    Arguments: OBJ($self) STR($string)
 # Side Effects: update cache file
 # Return Value: 1 or throw exception by croak()
@@ -387,7 +389,7 @@ sub _puts
 
 	if (defined $string) {
 	    $fh->print($string);
-	    $fh->print("\n") unless $string =~ /\n$/;
+	    $fh->print("\n") unless $string =~ /\n$/o;
 	}
 
 	$fh->close;
@@ -408,7 +410,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: GOO.pm,v 1.9 2002/12/20 03:49:16 fukachan Exp $
+# $FML: GOO.pm,v 1.10 2004/01/02 14:42:47 fukachan Exp $
 #
 
 
@@ -50,13 +50,13 @@ sub analyze
     my $hdr  = $msg->whole_message_header();
     my $subj = $hdr->get('subject');
 
-    if ($subj =~ /Rejecting your mail to (\S+)/) {
+    if ($subj =~ /Rejecting your mail to (\S+)/o) {
 	my $addr = $1;
 
 	# set up return buffer if $addr is found.
 	# XXX-TODO: we should use $self->address_clean_up() ?
 	if ($addr) {
-	    $addr =~ s/\s*$//;
+	    $addr =~ s/\s*$//o;
 	    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
 	    $result->{ $addr }->{ 'Status' }          = '5.x.y';
 	    $result->{ $addr }->{ 'hints' }           = 'goo.ne.jp';

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Bounce.pm,v 1.25 2003/08/06 11:21:03 fukachan Exp $
+# $FML: Bounce.pm,v 1.26 2003/08/23 04:35:44 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -91,7 +91,7 @@ standard new() method.
 =cut
 
 
-# Descriptions: constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -118,7 +118,7 @@ already known.
 =cut
 
 
-# Descriptions: top level dispatcher
+# Descriptions: top level dispatcher.
 #    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: update $self->{ _result }, which holds several info
 # Return Value: none
@@ -201,7 +201,7 @@ It can be extracted from C<result> analyze() method gives.
 # XXX-TODO: hmm, we should prepare $addr->status() and $addr->reason() ?
 
 
-# Descriptions: return status (string) for $addr
+# Descriptions: return status (string) for $addr.
 #    Arguments: OBJ($self) STR($addr)
 # Side Effects: none
 # Return Value: STR
@@ -209,13 +209,13 @@ sub status
 {
     my ($self, $addr) = @_;
     my $status = $self->{ _result }->{ $addr }->{ 'Status' };
-    $status =~ s/\s+/ /g;
-    $status =~ s/\s*$//;
+    $status =~ s/\s+/ /go;
+    $status =~ s/\s*$//o;
     $status;
 }
 
 
-# Descriptions: return reason (string) for $addr
+# Descriptions: return reason (string) for $addr.
 #    Arguments: OBJ($self) STR($addr)
 # Side Effects: none
 # Return Value: STR
@@ -223,13 +223,13 @@ sub reason
 {
     my ($self, $addr) = @_;
     my $reason = $self->{ _result }->{ $addr }->{ 'Diagnostic-Code' };
-    $reason =~ s/\s+/ /g;
-    $reason =~ s/\s*$//;
+    $reason =~ s/\s+/ /go;
+    $reason =~ s/\s*$//o;
     $reason;
 }
 
 
-# Descriptions: return hints (string) for $addr
+# Descriptions: return hints (string) for $addr.
 #    Arguments: OBJ($self) STR($addr)
 # Side Effects: none
 # Return Value: STR
@@ -307,11 +307,11 @@ sub address_clean_up
 	$prev_addr = $addr;
 	print STDERR "    address_clean_up.in: $prev_addr\n" if $debug;
 
-	$addr      =~ s/\.$//;
-	$addr      =~ s/^\<//;
-	$addr      =~ s/\>$//;
-	$addr      =~ s/^\"//;
-	$addr      =~ s/\"$//;
+	$addr      =~ s/\.$//o;
+	$addr      =~ s/^\<//o;
+	$addr      =~ s/\>$//o;
+	$addr      =~ s/^\"//o;
+	$addr      =~ s/\"$//o;
 
 	print STDERR "   address_clean_up.out: $addr\n" if $debug;
     } while ($addr ne $prev_addr);
@@ -341,7 +341,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

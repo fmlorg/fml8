@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Checksum.pm,v 1.9 2003/08/23 04:35:46 fukachan Exp $
+# $FML: Checksum.pm,v 1.10 2003/08/23 05:15:14 fukachan Exp $
 #
 
 package Mail::Message::Checksum;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-Mail::Message::Checksum - utilities for check sum
+Mail::Message::Checksum - utilities for checksum
 
 =head1 SYNOPSIS
 
@@ -33,7 +33,7 @@ such as C<md5>, C<cksum>, et.al.
 =cut
 
 
-# Descriptions: ordinary constructor
+# Descriptions: ordinary constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: OBJ
@@ -62,6 +62,7 @@ sub _init
 	$self->{ _program } = $args->{ program };
     }
 
+    # XXX-TODO: Digest::MD5
     my $pkg = 'MD5';
     eval qq{ require $pkg; $pkg->import();};
 
@@ -69,6 +70,7 @@ sub _init
 	$self->{ _type } = 'native';
     }
     else {
+	# XXX-TODO: method-ify
 	eval q{
 	    use Mail::Message::Utils;
 	    my $prog = Mail::Message::Utils::search_program('md5') ||
@@ -90,7 +92,7 @@ return the md5 checksum of the given string C<$string>.
 =cut
 
 
-# Descriptions: dispatcher to calculate the md5 checksum
+# Descriptions: dispatcher to calculate the md5 checksum.
 #    Arguments: OBJ($self) STR_REF($r_data)
 # Side Effects: none
 # Return Value: STR(md5 sum)
@@ -108,7 +110,7 @@ sub md5
 }
 
 
-# Descriptions: calculate the md5 checksum by MD5 module
+# Descriptions: calculate the md5 checksum by MD5 module.
 #    Arguments: OBJ($self) STR_REF($r_data)
 # Side Effects: none
 # Return Value: STR(md5 sum)
@@ -124,8 +126,10 @@ sub _md5_native
     $md5->reset();
 
     $p = 0;
+  BUF:
     while (1) {
-	last if $p > $pe;
+	last BUF if $p > $pe;
+
 	$buf = substr($$r_data, $p, 128);
 	$p  += 128;
 	$md5->add($buf);
@@ -135,7 +139,7 @@ sub _md5_native
 }
 
 
-# Descriptions: calculate the md5 checksum by md5 (external) program
+# Descriptions: calculate the md5 checksum by md5 (external) program.
 #    Arguments: OBJ($self) STR_REF($r_data)
 # Side Effects: none
 # Return Value: STR(md5 sum)
@@ -149,21 +153,23 @@ sub _md5_by_program
 	use FileHandle;
 	my ($rh, $wh) = FileHandle::pipe;
 
+	# XXX-TODO: UNIX only.
 	eval qq{ require IPC::Open2; IPC::Open2->import();};
 	my $pid = open2($rh, $wh, $self->{ _program });
 	if (defined $pid) {
 	    print $wh $$r_data;
 	    close($wh);
+
 	    my $cksum = 0;
 	    sysread($rh, $cksum, 1024);
-	    $cksum =~ s/[\s\n]*$//;
+	    $cksum =~ s/[\s\n]*$//o;
 	    if ($cksum =~ /^(\S+)/) { $cksum = $1;}
 	    close($rh);
 	    return $cksum if $cksum;
 	}
     }
 
-    undef;
+    return undef;
 }
 
 
@@ -261,7 +267,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

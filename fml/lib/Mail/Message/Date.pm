@@ -1,8 +1,8 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.23 2003/08/23 04:35:47 fukachan Exp $
+# $FML: Date.pm,v 1.24 2003/09/13 09:02:01 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -72,7 +72,7 @@ sub new
 }
 
 
-# Descriptions: prepare date by several time format
+# Descriptions: prepare date by several time format.
 #    Arguments: NUM($time)
 # Side Effects: create object
 # Return Value: HASH_REF
@@ -119,7 +119,7 @@ sub _date
 }
 
 
-# Descriptions: return logfile style
+# Descriptions: return logfile style.
 #    Arguments: OBJ($self) NUM($time)
 # Side Effects: none
 # Return Value: STR
@@ -131,7 +131,7 @@ sub log_file_style
 }
 
 
-# Descriptions: return Date: style date
+# Descriptions: return Date: style date.
 #    Arguments: OBJ($self) NUM($time)
 # Side Effects: none
 # Return Value: STR
@@ -143,7 +143,7 @@ sub mail_header_style
 }
 
 
-# Descriptions: return YYYYMMDD style date
+# Descriptions: return YYYYMMDD style date.
 #    Arguments: OBJ($self) NUM($time)
 # Side Effects: none
 # Return Value: STR
@@ -155,7 +155,7 @@ sub YYYYMMDD
 }
 
 
-# Descriptions: return e.g. 1999/09/13 style
+# Descriptions: return e.g. 1999/09/13 style.
 #    Arguments: OBJ($self) NUM($time) STR($sep)
 # Side Effects: none
 # Return Value: STR
@@ -169,7 +169,7 @@ sub YYYYxMMxDD
 }
 
 
-# Descriptions: return YYYYMMDD.HHMM
+# Descriptions: return YYYYMMDD.HHMM.
 #    Arguments: OBJ($self) NUM($time)
 # Side Effects: none
 # Return Value: STR
@@ -177,11 +177,11 @@ sub current_time
 {
     my ($self, $time) = @_;
     my $p = _date($time || time);
-    return  $p->{'current_time'};
+    return $p->{'current_time'};
 }
 
 
-# Descriptions: return YYYYMMDD.HHMMSS
+# Descriptions: return YYYYMMDD.HHMMSS.
 #    Arguments: OBJ($self) NUM($time)
 # Side Effects: none
 # Return Value: STR
@@ -302,8 +302,8 @@ sub date_to_unixtime
 
     # $in = clean up-ed string. $input = original one.
     my $input = $in;
-    $in =~ s/[\s\n]*$//;
-    if ($in =~ /([A-Z]+)\s*$/) {
+    $in =~ s/[\s\n]*$//o;
+    if ($in =~ /([A-Z]+)\s*$/o) {
 	$zone = $1;
 	if ($zone{$zone} ne "") {
 	    $in =~ s/$zone/$zone{$zone}/;
@@ -393,8 +393,8 @@ sub date_to_unixtime
     }
 
     # calculate shift between local time and UTC
-    $shift_t =~ s/^0*//;
-    $shift_m =~ s/^0*//;
+    $shift_t =~ s/^0*//o;
+    $shift_m =~ s/^0*//o;
     $shift_m = 0 unless $shift_m;
     $shift   = $shift_t + ($shift_m/60);
     $shift   = ($pm eq '+' ? -1 : +1) * $shift;
@@ -458,7 +458,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

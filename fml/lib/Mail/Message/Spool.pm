@@ -1,8 +1,8 @@
 #-*- perl -*-
 #
-# Copyright (C) 2002,2003 Ken'ichi Fukamachi
+# Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #
-# $FML: Spool.pm,v 1.10 2002/09/22 14:57:04 fukachan Exp $
+# $FML: Spool.pm,v 1.11 2003/03/03 15:53:50 fukachan Exp $
 #
 
 package Mail::Message::Spool;
@@ -34,7 +34,7 @@ standard constructor.
 =cut
 
 
-# Descriptions: usual constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: OBJ
@@ -66,19 +66,19 @@ where C<base_dir> and C<id> are mandatory.
 
 # Descriptions: return article file path.
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: none
+# Side Effects: croak() if failed.
 # Return Value: STR(file path)
 sub filepath
 {
     my ($self, $args) = @_;
 
+    # XXX-TODO: $is_hash is used for what ?
     if (defined $args->{ base_dir } && defined $args->{ id }) {
 	my $base_dir = $args->{ base_dir };
 	my $id       = $args->{ id };
 	my $is_hash  = 0;
 	my $file     = '';
-	my $unit     =
-	    defined($args->{ subdir_unit }) ?  $args->{ subdir_unit } : 1000;
+	my $unit     = $args->{ subdir_unit } || 1000;
 	my $subdir   = int($id/$unit);
 
 	if (defined $args->{ use_subdir } && $args->{ use_subdir }) {
@@ -99,14 +99,15 @@ sub filepath
 }
 
 
-# Descriptions: return article dirpath with subdir if needed
+# Descriptions: return article dirpath with subdir if needed.
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: none
+# Side Effects: croak() if failed.
 # Return Value: STR(dir path)
 sub dirpath
 {
     my ($self, $args) = @_;
 
+    # XXX-TODO: $is_hash is used for what ?
     if (defined $args->{ base_dir } && defined $args->{ id }) {
 	my $base_dir = $args->{ base_dir };
 	my $id       = $args->{ id };
@@ -166,7 +167,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.22 2003/01/11 15:16:34 fukachan Exp $
+# $FML: SMTP.pm,v 1.23 2003/08/23 04:35:45 fukachan Exp $
 #
 
 
@@ -111,7 +111,7 @@ transactions.
 =cut
 
 
-# Descriptions: Mail::Delivery::SMTP constructor
+# Descriptions: Mail::Delivery::SMTP constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: $self ($me) hash has some default values
 # Return Value: OBJ
@@ -126,21 +126,21 @@ sub new
     #        _log_function: pointer to the log() function
     $me->{_recipient_limit}    = $args->{recipient_limit}    || 1000;
     $me->{_default_io_timeout} = $args->{default_io_timeout} || 10;
-    $me->{_log_function}       = $args->{log_function};
-    $me->{_smtp_log_function}  = $args->{smtp_log_function};
-    $me->{_smtp_log_handle}    = $args->{smtp_log_handle};
+    $me->{_log_function}       = $args->{log_function}       || undef;
+    $me->{_smtp_log_function}  = $args->{smtp_log_function}  || undef;
+    $me->{_smtp_log_handle}    = $args->{smtp_log_handle}    || undef;
 
     _initialize_delivery_session($me, $args);
 
     # define package global pointer to the log() function
-    $LogFunctionPointer     = $args->{log_function};
-    $SmtpLogFunctionPointer = $args->{smtp_log_function};
+    $LogFunctionPointer     = $args->{log_function}      || undef;
+    $SmtpLogFunctionPointer = $args->{smtp_log_function} || undef;
 
     return bless $me, $type;
 }
 
 
-# Descriptions: send a (SMTP/LMTP) command string to BSD socket
+# Descriptions: send a (SMTP/LMTP) command string to BSD socket.
 #    Arguments: OBJ($self) STR($command)
 # Side Effects: log file by _smtplog
 #               set _last_command and _error_action in object itself
@@ -148,7 +148,7 @@ sub new
 sub _send_command
 {
     my ($self, $command) = @_;
-    my $socket = $self->{'_socket'};
+    my $socket = $self->{'_socket'} || undef;
 
     $self->{_last_command} = $command;
     $self->{_error_action} = '';
@@ -163,7 +163,7 @@ sub _send_command
 }
 
 
-# Descriptions: receive a reply for a (SMTP/LMTP) command
+# Descriptions: receive a reply for a (SMTP/LMTP) command.
 #    Arguments: OBJ($self)
 # Side Effects: log file by _smtplog
 # Return Value: none
@@ -185,7 +185,7 @@ sub _read_reply
     # XXX Attention! dynamic scope by local() for %SIG is essential.
     #     See books on Perl for more details on my() and local() difference.
     eval {
-	local($SIG{ALRM}) = sub { croak("$id socket timeout")};
+	local($SIG{ALRM}) = sub { croak("$id socket timeout");};
 	alarm( $self->{_default_io_timeout} );
 	my $buf = '';
 
@@ -292,7 +292,7 @@ $socket has peer or not by C<getpeername()>.
 =cut
 
 
-# Descriptions: this socket is connected or not
+# Descriptions: this socket is connected or not.
 #    Arguments: OBJ($self) HANDLE($socket)
 # Side Effects: none
 # Return Value: 1 or 0
@@ -314,7 +314,7 @@ close BSD socket
 
 =cut
 
-# Descriptions: close BSD socket
+# Descriptions: close BSD socket.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: same as close()
@@ -428,7 +428,7 @@ sub deliver
   MAP:
     for my $map ( @maps ) {
 	# uniq $map
-	next if $used_map{ $map }; $used_map{ $map } = 1;
+	next MAP if $used_map{ $map }; $used_map{ $map } = 1;
 
 	# try to open $map
 	eval q{
@@ -447,6 +447,7 @@ sub deliver
 	$self->_set_map_status($map, 'not done');
 	$self->_set_map_position($map, 0);
 
+	# XXX-TODO: correct $max_loop_count evaluation ?
 	# To avoid infinite loop, we enforce some artificial limit.
 	# The loop evaluation is limited to "4 * $number_of_mta" for each $map.
 	my $loop_count     = 0;
@@ -465,7 +466,7 @@ sub deliver
 	  MTA:
 	    for my $mta (@mta) {
 		# uniq $mta
-		next if $used_mta{ $mta }; $used_mta{ $mta } = 1;
+		next MTA if $used_mta{ $mta }; $used_mta{ $mta } = 1;
 
 		# count the number of effective mta in this inter loop.
 		$n_mta++;
@@ -589,8 +590,8 @@ sub _deliver
 }
 
 
-# Descriptions: initialize _deliver() process
-#               this routine is called at the first phase in _deliver()
+# Descriptions: initialize _deliver() process.
+#               this routine is called at the first phase in _deliver().
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: initialize object
 # Return Value: none
@@ -608,7 +609,7 @@ sub _initialize_delivery_session
 #####
 
 
-# Descriptions: send SMTP command "MAIL FROM"
+# Descriptions: send SMTP command "MAIL FROM".
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -711,7 +712,7 @@ sub _send_recipient_list_by_recipient_map
 }
 
 
-# Descriptions: send "RCPT TO:<recipient>" to MTA
+# Descriptions: send "RCPT TO:<recipient>" to MTA.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -769,7 +770,7 @@ sub _send_body_to_mta
 }
 
 
-# Descriptions: send message itself to file handle (BSD socket here)
+# Descriptions: send message itself to file handle (BSD socket here).
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -778,9 +779,9 @@ sub _send_data_to_mta
     my ($self, $args) = @_;
 
     # prepare smtp information
-    my $header     = $args->{ message }->whole_message_header;
-    my $body       = $args->{ message }->whole_message_body;
-    my $socket     = $self->{'_socket'};
+    my $header = $args->{ message }->whole_message_header;
+    my $body   = $args->{ message }->whole_message_body;
+    my $socket = $self->{'_socket'};
 
     if (defined $body) {
 	$self->_send_command("DATA");
@@ -815,7 +816,7 @@ sub _send_data_to_mta
 #####
 
 
-# Descriptions: send the SMTP reset "RSET" command
+# Descriptions: send the SMTP reset "RSET" command.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -851,7 +852,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

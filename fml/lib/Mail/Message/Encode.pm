@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Encode.pm,v 1.15 2003/09/08 09:17:51 fukachan Exp $
+# $FML: Encode.pm,v 1.16 2003/11/08 05:56:22 fukachan Exp $
 #
 
 package Mail::Message::Encode;
@@ -125,7 +125,7 @@ $in_code is used as a hint.
 =cut
 
 
-# Descriptions: convert $str to $out_code code
+# Descriptions: convert $str to $out_code code.
 #    Arguments: OBJ($self) STR($str) STR($out_code) STR($in_code)
 # Side Effects: none
 # Return Value: STR
@@ -137,9 +137,9 @@ sub convert
 }
 
 
-# Descriptions: convert string reference $str_str to $out_code code
+# Descriptions: convert string reference $str_str to $out_code code.
 #    Arguments: OBJ($self) STR_REF($str_ref) STR($out_code) STR($in_code)
-# Side Effects: none
+# Side Effects: croak() if input data is invalid.
 # Return Value: NUM(1/0)
 sub convert_str_ref
 {
@@ -187,16 +187,16 @@ sub _jp_str_ref
 
     if ($out_code =~ /^(jis|sjis|euc)$|^(jis|sjis|euc)[-_]jp$/i) {
 	my $code = $1 || $2;
-	$code =~ tr/A-Z/a-z/;
+	$code    =~ tr/A-Z/a-z/;
 
 	use Jcode;
-	&Jcode::convert( $str_ref, $code, $in_code);
+	&Jcode::convert($str_ref, $code, $in_code);
 
 	return 1;
     }
     elsif ($out_code =~ /^(iso2022jp|iso-2022-jp)$/i) {
 	use Jcode;
-	&Jcode::convert( $str_ref, 'jis', $in_code);
+	&Jcode::convert($str_ref, 'jis', $in_code);
 
 	return 1;
     }
@@ -325,7 +325,7 @@ convert $str to japanese SJIS code.
 =cut
 
 
-# Descriptions: convert $str to euc
+# Descriptions: convert $str to euc.
 #    Arguments: STR($str)
 # Side Effects: none
 # Return Value: STR
@@ -337,7 +337,7 @@ sub STR2EUC
 }
 
 
-# Descriptions: convert $str to sjis
+# Descriptions: convert $str to sjis.
 #    Arguments: STR($str)
 # Side Effects: none
 # Return Value: STR
@@ -349,7 +349,7 @@ sub STR2SJIS
 }
 
 
-# Descriptions: convert $str to jis
+# Descriptions: convert $str to jis.
 #    Arguments: STR($str)
 # Side Effects: none
 # Return Value: STR
@@ -371,9 +371,9 @@ $in_code is used as a hint.
 =cut
 
 
-# Descriptions: encode string
+# Descriptions: encode string.
 #    Arguments: OBJ($self) STR($str) STR($encode) STR($out_code) STR($in_code)
-# Side Effects: none
+# Side Effects: croak() if language is unknown.
 # Return Value: STR
 sub encode_mime_string
 {
@@ -429,7 +429,7 @@ $in_code is use as a hint.
 =cut
 
 
-# Descriptions: encode $str by base64
+# Descriptions: encode $str by base64.
 #    Arguments: OBJ($self) STR($str) STR($out_code) STR($in_code)
 # Side Effects: none
 # Return Value: STR
@@ -440,7 +440,7 @@ sub base64
 }
 
 
-# Descriptions: encode $str by quoted-printable
+# Descriptions: encode $str by quoted-printable.
 #    Arguments: OBJ($self) STR($str) STR($out_code) STR($in_code)
 # Side Effects: none
 # Return Value: STR
@@ -477,9 +477,9 @@ by $options->{ charset }.
 =cut
 
 
-# Descriptions: decode MIME string
+# Descriptions: decode MIME string.
 #    Arguments: OBJ($self) STR($str) STR($out_code) STR($in_code)
-# Side Effects: none
+# Side Effects: croak() if language is unknown.
 # Return Value: STR
 sub decode_mime_string
 {
@@ -515,7 +515,7 @@ sub decode_mime_string
 
 # Descriptions: decode MIME base64 encoded-string
 #    Arguments: OBJ($self) STR($str) STR($out_code) STR($in_code)
-# Side Effects: none
+# Side Effects: croak() if language is unknown.
 # Return Value: STR
 sub decode_base64_string
 {
@@ -544,7 +544,7 @@ sub decode_base64_string
 
 # Descriptions: decode MIME quoted-printable encoded-string
 #    Arguments: OBJ($self) STR($str) STR($out_code) STR($in_code)
-# Side Effects: none
+# Side Effects: croak() if language is unknown.
 # Return Value: STR
 sub decode_qp_string
 {
@@ -577,7 +577,7 @@ sub decode_qp_string
 =cut
 
 
-# Descriptions: dump $str as the style by "od -a"
+# Descriptions: dump $str as the style by "od -a".
 #    Arguments: OBJ($self) STR($str)
 # Side Effects: none
 # Return Value: none
@@ -657,7 +657,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET6.pm,v 1.12 2003/12/30 03:06:09 fukachan Exp $
+# $FML: INET6.pm,v 1.13 2003/12/31 04:08:45 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET6;
@@ -14,9 +14,8 @@ use Carp;
 use Mail::Delivery::Utils;
 
 require Exporter;
-
-@ISA     = qw(Exporter);
-@EXPORT  = qw(is_ipv6_ready is_ipv6_mta_syntax connect6);
+@ISA    = qw(Exporter);
+@EXPORT = qw(is_ipv6_ready is_ipv6_mta_syntax connect6);
 
 
 # Descriptions: we have Socket6.pm or not ?
@@ -32,7 +31,7 @@ sub _we_can_use_Socket6
 	use Socket6;
     };
 
-    if ($@ =~ /Can\'t locate Socket6.pm/) {
+    if ($@ =~ /Can\'t locate Socket6.pm/o) {
 	$self->{_ipv6_ready} = 'no';
     }
     else {
@@ -70,7 +69,7 @@ sub is_ipv6_mta_syntax
     my ($x_host, $x_port);
 
     # check the mta syntax whether it is ipv6 form or not.
-    if ( $host =~ /\[([\d:]+)\]:(\d+)/) {
+    if ($host =~ /\[([\d:]+)\]:(\d+)/) {
 	($x_host, $x_port) = ($1, $2);
 	return ($x_host, $x_port);
     }
@@ -229,7 +228,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

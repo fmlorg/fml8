@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.11 2003/10/15 01:03:39 fukachan Exp $
+# $FML: DB.pm,v 1.12 2003/12/10 04:00:05 tmu Exp $
 #
 
 package Mail::Message::DB;
@@ -26,15 +26,17 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.11 2003/10/15 01:03:39 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.12 2003/12/10 04:00:05 tmu Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
 $NULL_VALUE = '___NULL___';
 
+# operation mode definitions.
 my $debug             = 0;
 my $is_keepalive      = 1;
 my $is_demand_copying = 1;
+
 
 #     map = { key => value } (normal order hash)
 # inv_map = { value => key } (inverted hash)
@@ -185,14 +187,15 @@ sub new
     set_db_module_name($me, $args->{ db_module } || 'AnyDBM_File');
 
     # db_base_dir = /var/spool/ml/@udb@/elena
-    set_db_base_dir($me,
-		    $args->{ db_base_dir } || croak("specify db_base_dir"));
+    my $_db_base_dir = $args->{ db_base_dir } || croak("specify db_base_dir");
+    set_db_base_dir($me, $_db_base_dir);
 
     # XXX in old ToHTML module (before UDB), db_base_dir == html_base_dir.
     if (defined $args->{ old_db_base_dir }) {
 	$me->{ _old_db_base_dir } = $args->{ old_db_base_dir };
     }
 
+    # XXX-TOOD: if db_name and key is not specified ? we should call croak()?
     # $db_name/$table uses $key as primary key.
     set_db_name($me, $args->{ db_name }) if defined $args->{ db_name };
     set_key($me,     $args->{ key })     if defined $args->{ key };
@@ -200,7 +203,7 @@ sub new
     # genearete @orig_header_fields based on @header_fields
     @header_fields = sort keys %header_field_type;
     for my $hdr (@header_fields) {
-	push(@orig_header_fields, "orig_$hdr");
+	push(@orig_header_fields,    "orig_$hdr");
 	push(@article_header_fields, "article_$hdr");
     }
 
@@ -246,6 +249,10 @@ sub analyze
     my $id     = $self->get_key();
     my $month  = $self->msg_time($hdr, 'yyyy/mm');
     my $subdir = $self->msg_time($hdr, 'yyyymm');
+
+    # 
+    # XXX-TODO: analyze() must not be here ?
+    # 
 
     _PRINT_DEBUG("analyze start");
 
@@ -317,18 +324,19 @@ sub _save_header_info
 	$fld =  $key;
 	$fld =~ s/_/-/g;
 	$fld =~ tr/A-Z/a-z/;
-	@val =  $hdr->get($fld); $val = join("", @val);
+	@val =  $hdr->get($fld);
+	$val =  join("", @val);
 	$val =~ s/\s*$//;
 
 	$self->_db_set($db, "orig_$key", $id, $val);
 
 	# ADDR type: save the first element of address list.
-	if ($header_field_type{ $key } =~ /ADDR/) { # ADDR or ADDR_LIST
+	if ($header_field_type{ $key } =~ /ADDR/o) { # ADDR or ADDR_LIST
 	    my $ra_val = $self->_address_clean_up( $val );
 	    $val = $ra_val->[0] || '';
 	    $self->_db_set($db, $key, $id, $val);
 	}
-	elsif ($header_field_type{ $key } =~ /MIME_DECODE/) {
+	elsif ($header_field_type{ $key } =~ /MIME_DECODE/o) {
 	    $val = $self->_decode_mime_string($val);
 	    $self->_db_set($db, $key, $id, $val);
 	}
@@ -337,7 +345,7 @@ sub _save_header_info
 	}
 
 	# reverse map { $key => $id }
-	if ($header_field_type{ $key } =~ /INVERSE_MAP/) {
+	if ($header_field_type{ $key } =~ /INVERSE_MAP/o) {
 	    $self->_db_set($db, "inv_$key", $val, $id);
 	}
     }
@@ -379,12 +387,12 @@ sub _analyze_thread
     $self->_db_array_add($db, 'ref_key_list', $id, $id);
 
     # search order is artibrary (see comments above).
-  MSGID_SEARCH:
+  MSGID:
     for my $mid (@$ra_inreplyto, @$ra_ref) {
-	next MSGID_SEARCH unless defined $mid;
+	next MSGID unless defined $mid;
 
 	# ensure uniqueness
-	next MSGID_SEARCH if $uniq{$mid};
+	next MSGID if $uniq{$mid};
 	$uniq{$mid} = 1;
 
 	$count++;
@@ -406,7 +414,7 @@ sub _analyze_thread
     # II. ok. go to speculate prev/next links
     #   1. If In-Reply-To: is found, use it as "pointer to previous id"
     my $idp = 0;
-    if (defined $in_reply_to and $in_reply_to ne '') {
+    if (defined $in_reply_to && $in_reply_to ne '') {
 	# XXX idp (id pointer) = id1 by _head_of_list_str( (id1 id2 id3 ...)
 	$idp = $self->_db_get($db, 'inv_message_id', $in_reply_to);
     }
@@ -421,7 +429,7 @@ sub _analyze_thread
     }
 
     # 4. if $idp (link to previous message) found,
-    if (defined($idp) && $idp && $idp =~ /^\d+$/) {
+    if (defined($idp) && $idp && $idp =~ /^\d+$/o) {
 	if ($idp != $current_key) {
 	    $self->_db_set($db, 'prev_key', $current_key, $idp);
 	}
@@ -563,7 +571,7 @@ sub thread_summary
 # Return Value: HASH_REF
 sub tohtml_thread_summary
 {
-    my ($self, $id) = @_;
+    my ($self, $id)    = @_;
     my $db             = $self->db_open();
     my $summary        = $self->thread_summary($id);
     my $prev_id        = $summary->{ prev_id };
@@ -608,21 +616,21 @@ sub tohtml_thread_summary
     my $path              = $self->_db_get($db, 'html_filepath', $id);
     my $tohtml_thread_summary = {
 	# myself
-	id                  => $id,
-	filepath            => $path,
+	id                    => $id,
+	filepath              => $path,
 
 	# other links
-	prev_id             => $prev_id,
-	next_id             => $next_id,
-	prev_thread_id      => $prev_thread_id,
-	next_thread_id      => $next_thread_id,
+	prev_id               => $prev_id,
+	next_id               => $next_id,
+	prev_thread_id        => $prev_thread_id,
+	next_thread_id        => $next_thread_id,
 
-	link_prev_id        => $fn_prev_id,
-	link_next_id        => $fn_next_id,
-	link_prev_thread_id => $fn_prev_thread_id,
-	link_next_thread_id => $fn_next_thread_id,
+	link_prev_id          => $fn_prev_id,
+	link_next_id          => $fn_next_id,
+	link_prev_thread_id   => $fn_prev_thread_id,
+	link_next_thread_id   => $fn_next_thread_id,
 
-	subject             => $subject,
+	subject               => $subject,
     };
 
     _PRINT_DEBUG("$id link relation");
@@ -638,8 +646,8 @@ sub tohtml_thread_summary
 sub _search_default_next_thread_id
 {
     my ($self, $db, $id) = @_;
+    my $list      = $self->get_as_array_ref('ref_key_list', $id);
     my (@ra, @c0) = ();
-    my $list = $self->get_as_array_ref('ref_key_list', $id);
 
     # 1. @ra (id list for $id thread relations)
     @ra = reverse @$list if defined $list;
@@ -680,9 +688,9 @@ sub __search_default_next_id_in_thread
 
 	# thread_list HASH { $id => $id1 $id2 $id3 ... $id $prev ... }
 	#                           <---- search ---
-      SEARCH:
+      ID:
 	for my $xid (reverse @$list) {
-	    last SEARCH if $xid == $id;
+	    last ID if $xid == $id;
 	    $prev = $xid;
 	}
     }
@@ -709,7 +717,7 @@ All methods are module internal.
 =cut
 
 
-# Descriptions: convert space-separeted string to array
+# Descriptions: convert space-separeted string to array.
 #    Arguments: STR($str)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -717,10 +725,10 @@ sub _str_to_array_ref
 {
     my ($str) = @_;
 
-    return undef unless defined $str;
+    return [] unless defined $str;
 
-    $str =~ s/^\s*//;
-    $str =~ s/\s*$//;
+    $str =~ s/^\s*//o;
+    $str =~ s/\s*$//o;
     my (@a) = split(/\s+/, $str);
     return \@a;
 }
@@ -759,15 +767,15 @@ sub _db_array_add
 }
 
 
-# Descriptions: head of array (space separeted string)
+# Descriptions: head of array (space separeted string).
 #    Arguments: STR($buf)
 # Side Effects: none
 # Return Value: STR
 sub _head_of_list_str
 {
     my ($buf) = @_;
-    $buf =~ s/^\s*//;
-    $buf =~ s/\s*$//;
+    $buf =~ s/^\s*//o;
+    $buf =~ s/\s*$//o;
 
     return (split(/\s+/, $buf))[0];
 }
@@ -828,10 +836,10 @@ sub _address_clean_up
     my (@addrs) = Mail::Address->parse($addr);
 
     my $i = 0;
-  LIST:
+  ADDR:
     for my $addr (@addrs) {
 	my $xaddr = $addr->address();
-	next LIST unless $xaddr =~ /\@/;
+	next ADDR unless $xaddr =~ /\@/o;
 	push(@r, $xaddr);
     }
 
@@ -839,7 +847,7 @@ sub _address_clean_up
 }
 
 
-# Descriptions: extrace gecos field in $address
+# Descriptions: extrace gecos field in $address.
 #    Arguments: OBJ($self) STR($address)
 # Side Effects: none
 # Return Value: STR
@@ -857,7 +865,7 @@ sub _who_of_address
 =cut
 
 
-# Descriptions: open database
+# Descriptions: open database.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: tied with $self->{ _db }
 #         Todo: we should use IO::Adapter ?
@@ -865,7 +873,7 @@ sub _who_of_address
 sub db_open
 {
     my ($self, $args) = @_;
-    my (@table) = ();
+    my (@table)       = ();
 
     if (defined $args->{ table }) {
 	my $table = $args->{ table };
@@ -917,7 +925,7 @@ sub db_open
 }
 
 
-# Descriptions: close database
+# Descriptions: close database.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: untie $self->{ _db }
 #         Todo: we should use IO::Adapter ?
@@ -925,7 +933,7 @@ sub db_open
 sub db_close
 {
     my ($self, $args) = @_;
-    my (@table) = ();
+    my (@table)       = ();
 
     if (defined $args->{ table }) {
 	@table = ($args->{ table });
@@ -957,7 +965,7 @@ sub db_close
 }
 
 
-# Descriptions: set $key = $value of $table
+# Descriptions: set $key = $value of $table.
 #    Arguments: OBJ($self) STR($table) STR($key) STR($value)
 # Side Effects: one
 # Return Value: STR
@@ -972,7 +980,7 @@ sub set
 }
 
 
-# Descriptions: get $key of $table
+# Descriptions: get $key of $table.
 #    Arguments: OBJ($self) STR($table) STR($key)
 # Side Effects: one
 # Return Value: STR
@@ -985,7 +993,7 @@ sub get
 }
 
 
-# Descriptions: get $key (list) of $table as array (ARRAY_REF)
+# Descriptions: get $key (list) of $table as array (ARRAY_REF).
 #    Arguments: OBJ($self) STR($table) STR($key)
 # Side Effects: one
 # Return Value: ARRAY_REF
@@ -997,8 +1005,8 @@ sub get_as_array_ref
 
     my $db  = $self->db_open();
     my $val = $self->_db_get($db, $table, $key);
-    $val =~ s/^\s*//;
-    $val =~ s/\s*$//;
+    $val =~ s/^\s*//o;
+    $val =~ s/\s*$//o;
 
     _PRINT_DEBUG("get_as_array_ref($table, $key, '$val')");
 
@@ -1009,7 +1017,7 @@ sub get_as_array_ref
 }
 
 
-# Descriptions: set $key = $value of $table
+# Descriptions: set $key = $value of $table.
 #    Arguments: OBJ($self) HASH_REF($db) STR($table) STR($key) STR($value)
 # Side Effects: one
 # Return Value: STR
@@ -1023,7 +1031,7 @@ sub _db_set
 	}
 
 	if ($table =~ /^($mime_decode_filter)$/) {
-	    if ($value =~ /ISO.*\?[BQ]/i) {
+	    if ($value =~ /ISO.*\?[BQ]/io) {
 		$value = $self->_decode_mime_string($value);
 	    }
 	}
@@ -1034,7 +1042,7 @@ sub _db_set
 }
 
 
-# Descriptions: get $key of $table
+# Descriptions: get $key of $table.
 #    Arguments: OBJ($self) HASH_REF($db) STR($table) STR($key)
 # Side Effects: one
 # Return Value: STR
@@ -1071,7 +1079,7 @@ sub _db_get
 }
 
 
-# Descriptions: set module name
+# Descriptions: set module name.
 #    Arguments: OBJ($self) STR($module)
 # Side Effects: none
 # Return Value: none
@@ -1083,7 +1091,7 @@ sub set_db_module_name
 }
 
 
-# Descriptions: get module name
+# Descriptions: get module name.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
@@ -1095,7 +1103,7 @@ sub get_db_module_name
 }
 
 
-# Descriptions: set db_base_dir
+# Descriptions: set db_base_dir.
 #    Arguments: OBJ($self) STR($dir)
 # Side Effects: none
 # Return Value: none
@@ -1107,7 +1115,7 @@ sub set_db_base_dir
 }
 
 
-# Descriptions: get db_base_dir
+# Descriptions: get db_base_dir.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: none
@@ -1119,7 +1127,7 @@ sub get_db_base_dir
 }
 
 
-# Descriptions: set db_name
+# Descriptions: set db_name.
 #    Arguments: OBJ($self) STR($name)
 # Side Effects: none
 # Return Value: none
@@ -1131,7 +1139,7 @@ sub set_db_name
 }
 
 
-# Descriptions: get db_name
+# Descriptions: get db_name.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
@@ -1143,7 +1151,7 @@ sub get_db_name
 }
 
 
-# Descriptions: set the curent key
+# Descriptions: set the curent key.
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: none
 # Return Value: none
@@ -1155,7 +1163,7 @@ sub set_key
 }
 
 
-# Descriptions: get the curent key
+# Descriptions: get the curent key.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: none
@@ -1172,7 +1180,7 @@ sub get_key
 =cut
 
 
-# Descriptions: get table as hash ref to handle it as HASH_REF
+# Descriptions: get table as hash ref to handle it as HASH_REF.
 #    Arguments: OBJ($self) STR($table)
 # Side Effects: none
 # Return Value: HASH_REF
@@ -1244,6 +1252,7 @@ sub _old_db_copyin
 	    $self->_db_set($db, $table, $key, $value);
 
 	    _PRINT_DEBUG("all copy into $table from $file");
+
 	    my ($k, $v);
 	    while (($k, $v) = each %old_db) {
 		$self->_db_set($db, $table, $k, $v || $NULL_VALUE);
@@ -1262,13 +1271,14 @@ sub _old_db_copyin
 
 =cut
 
-# Descriptions: debug
+# Descriptions: print if debug mode.
 #    Arguments: STR($str)
 # Side Effects: none
 # Return Value: none
 sub _PRINT_DEBUG
 {
     my ($str) = @_;
+
     print STDERR "(debug) $str\n" if $debug;
 }
 
@@ -1327,7 +1337,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003 Ken'ichi Fukamachi
+Copyright (C) 2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.30 2003/12/29 07:33:05 fukachan Exp $
+# $FML: Queue.pm,v 1.31 2003/12/30 03:06:38 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -86,6 +86,7 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {};
 
+    # XXX-TODO: _status is used ?
     my $dir = $args->{ directory } || croak("specify directory");
     my $id  = defined $args->{ id } ? $args->{ id } : _new_queue_id();
     $me->{ _directory } = $dir;
@@ -122,7 +123,7 @@ sub new
 }
 
 
-# Descriptions: mkdir recursively
+# Descriptions: mkdir recursively.
 #    Arguments: STR($dir)
 # Side Effects: none
 # Return Value: ARRAY or UNDEF
@@ -138,7 +139,7 @@ sub _mkdirhier
 }
 
 
-# Descriptions: return new queue identifier
+# Descriptions: return new queue identifier.
 #    Arguments: none
 # Side Effects: increment counter $Counter
 # Return Value: STR
@@ -156,7 +157,7 @@ return the queue id assigned to this object C<$self>.
 =cut
 
 
-# Descriptions: return object identifier (queue id)
+# Descriptions: return object identifier (queue id).
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
@@ -174,7 +175,7 @@ return the file name of the queue id assigned to this object C<$self>.
 =cut
 
 
-# Descriptions: return queue file name assigned to this object
+# Descriptions: return queue file name assigned to this object.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
@@ -200,7 +201,7 @@ where C<$qid> is like this: 990157187.20792.1
 =cut
 
 
-# Descriptions: return queue file list
+# Descriptions: return queue file list.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -215,8 +216,9 @@ sub list
 	my @r = ();
 	my $file;
 
+      ENTRY:
 	while (defined ($file = $dh->read)) {
-	    next unless $file =~ /^\d+/o;
+	    next ENTRY unless $file =~ /^\d+/o;
 	    push(@r, $file);
 	}
 
@@ -242,7 +244,7 @@ The returned information is
 =cut
 
 
-# Descriptions: get information of queue for this object
+# Descriptions: get information of queue for this object.
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
 # Return Value: HASH_REF
@@ -260,7 +262,7 @@ sub getidinfo
     $fh = new FileHandle $self->sender_file_path($id);
     if (defined $fh) {
 	$sender = $fh->getline;
-	$sender =~ s/[\n\s]*$//;
+	$sender =~ s/[\n\s]*$//o;
 	$fh->close;
     }
 
@@ -268,8 +270,10 @@ sub getidinfo
     $fh = new FileHandle $self->recipients_file_path($id);
     if (defined $fh) {
 	my $buf;
+
+      ENTRY:
 	while (defined($buf = $fh->getline)) {
-	    $buf =~ s/[\n\s]*$//;
+	    $buf =~ s/[\n\s]*$//o;
 	    push(@recipients, $buf);
 	}
 	$fh->close;
@@ -297,7 +301,7 @@ use FileHandle;
 use Fcntl qw(:DEFAULT :flock);
 
 
-# Descriptions: lock queue
+# Descriptions: lock queue.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: flock queue
 # Return Value: 1 or 0
@@ -315,11 +319,11 @@ sub lock
     };
     alarm(0);
 
-    ($@ =~ /lock timeout/) ? 0 : 1;
+    ($@ =~ /lock timeout/o) ? 0 : 1;
 }
 
 
-# Descriptions: unlock queue
+# Descriptions: unlock queue.
 #    Arguments: OBJ($self)
 # Side Effects: unlock queue by flock(2)
 # Return Value: 1 or 0
@@ -444,13 +448,13 @@ directory to C<active/> directory like C<postfix> queue strategy.
 =cut
 
 
-# Descriptions: set this object queue to be deliverable
+# Descriptions: enable this object queue to be delivery ready.
 #    Arguments: OBJ($self)
 # Side Effects: move $queue_id file from new/ to active/
 # Return Value: 1 (success) or 0 (fail)
 sub setrunnable
 {
-    my ($self) = @_;
+    my ($self)        = @_;
     my $qf_new        = $self->{ _new_qf };
     my $qf_sender     = $self->{ _info }->{ sender };
     my $qf_recipients = $self->{ _info }->{ recipients };
@@ -518,7 +522,7 @@ sub valid
 }
 
 
-# Descriptions: clear this queue file
+# Descriptions: clear this queue file.
 #    Arguments: OBJ($self)
 # Side Effects: unlink this queue
 # Return Value: NUM
@@ -569,7 +573,7 @@ sub active_file_path
     my ($self, $id) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
 
-		return File::Spec->catfile($dir, "active", $id);
+    return File::Spec->catfile($dir, "active", $id);
 }
 
 
@@ -700,7 +704,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

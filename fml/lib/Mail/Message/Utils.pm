@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.8 2003/07/21 10:40:06 fukachan Exp $
+# $FML: Utils.pm,v 1.9 2003/08/23 04:35:48 fukachan Exp $
 #
 
 package Mail::Message::Utils;
@@ -58,7 +58,7 @@ extract gecos field in $address with shielding the real address.
 =cut
 
 
-# Descriptions: extract gecos field in $address
+# Descriptions: extract gecos field in $address.
 #    Arguments: STR($address)
 # Side Effects: none
 # Return Value: STR
@@ -149,7 +149,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Exim.pm,v 1.10 2002/12/20 03:49:15 fukachan Exp $
+# $FML: Exim.pm,v 1.11 2004/01/02 14:42:47 fukachan Exp $
 #
 
 
@@ -63,7 +63,7 @@ sub analyze
     # set up return buffer if $addr is found.
     # XXX-TODO: we should use $self->address_clean_up() ?
     if ($addr) {
-	$addr =~ s/\s*$//;
+	$addr =~ s/\s*$//o;
 	$result->{ $addr }->{ 'Final-Recipient' } = $addr;
 	$result->{ $addr }->{ 'Status' }          = '5.x.y';
 	$result->{ $addr }->{ 'hints' }           = 'exim';

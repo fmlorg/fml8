@@ -1,8 +1,8 @@
 #-*- perl -*-
 #
-# Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+# Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #
-# $FML: MH.pm,v 1.15 2003/07/19 10:23:34 fukachan Exp $
+# $FML: MH.pm,v 1.16 2003/07/21 04:51:34 fukachan Exp $
 #
 
 package Mail::Message::MH;
@@ -37,7 +37,7 @@ return ARRAY_REF of numbers specified by the following format:
 =cut
 
 
-# Descriptions: usual constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: OBJ
@@ -50,7 +50,7 @@ sub new
 }
 
 
-# Descriptions: expand MH style expression to list of numbers
+# Descriptions: expand MH style expression to list of numbers.
 #    Arguments: OBJ($self) STR($str) NUM($min) NUM($max)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -70,13 +70,13 @@ sub expand
     }
 
     if ($str eq 'all') {
-	unless (defined $max) { return undef;}
+	unless (defined $max) { return [];}
 	return _expand_range($min, $max);
     }
-    elsif ($str =~ /^\d+$/) {
+    elsif ($str =~ /^\d+$/o) {
         return [ $str ];
     }
-    elsif ($str =~ /^(\d+)\-(\d+)$/) {
+    elsif ($str =~ /^(\d+)\-(\d+)$/o) {
         my ($first, $last) = ($1, $2);
 	$first = $min if ($first < $min);
 	$last  = $max if ($last > $max);
@@ -84,11 +84,11 @@ sub expand
     }
     elsif ($str =~ /^(first)\-(\d+)$/) {
         my ($first, $last) = ($1, $2);
-	$last  = $max if ($last > $max);
+	$last = $max if ($last > $max);
         return _expand_range($min, $last);
     }
     elsif ($str =~ /^(\d+)\-(last)$/) {
-	unless (defined $max) { return undef;}
+	unless (defined $max) { return [];}
         my ($first, $last) = ($1, $2);
 	$first = $min if ($first < $min);
         return _expand_range($first, $max);
@@ -97,14 +97,14 @@ sub expand
         return [ $min ];
     }
     elsif ($str eq 'last' || $str eq 'cur') {
-	unless (defined $max) { return undef;}
+	unless (defined $max) { return [];}
         return [ $max ];
     }
     elsif ($str =~ /^first:(\d+)$/) {
 	return _expand_range($min, $min + $1 - 1);
     }
     elsif ($str =~ /^last:(\d+)$/) {
-	unless (defined $max) { return undef;}
+	unless (defined $max) { return [];}
 	return _expand_range($max - $1 + 1, $max);
     }
 
@@ -112,7 +112,7 @@ sub expand
 }
 
 
-# Descriptions: make an array from $fist to $last number
+# Descriptions: make an array from $fist to $last number.
 #    Arguments: NUM($first) NUM($last)
 # Side Effects: none
 # Return Value: ARRAY_REF (as [ $first .. $last ])
@@ -150,7 +150,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

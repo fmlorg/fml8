@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.13 2003/09/13 09:02:01 fukachan Exp $
+# $FML: Utils.pm,v 1.14 2003/12/29 07:31:30 fukachan Exp $
 #
 
 package Mail::Delivery::Utils;
@@ -45,7 +45,7 @@ require Exporter;
 
 =head1 NAME
 
-Mail::Delivery::Utils - utility programs for mail delivery class
+Mail::Delivery::Utils - utility functions for mail delivery class
 
 =head1 SYNOPSIS
 
@@ -81,6 +81,7 @@ the logging message is forwarded to STDERR channel.
 
 
 # XXX-TODO: we should provide both Log() and $delivery->log() methods ?
+# XXX-TODO: NO, we should NOT USE Log().
 
 
 # Descriptions: log by specified function pointer or into STDERR
@@ -198,7 +199,10 @@ get the latest status code.
 =cut
 
 
-# Descriptions: get current status code
+# XXX-TODO: private method _function() MUST NOT over modules.
+
+
+# Descriptions: get current status code.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
@@ -208,18 +212,19 @@ sub _get_status_code
 
     # XXX-TODO: return what code if undefined ?
     # XXX-TODO: consider Principle of Least Surprise!
-    $self->{'_status_code'};
+    return( $self->{'_status_code'} || '' );
 }
 
 
-# Descriptions: set current status code
+# Descriptions: set current status code.
 #    Arguments: OBJ($self) STR($value)
 # Side Effects: update object
 # Return Value: STR
 sub _set_status_code
 {
     my ($self, $value) = @_;
-    $self->{'_status_code'} = $value;
+
+    $self->{'_status_code'} = $value || '';
 }
 
 
@@ -245,18 +250,19 @@ where C<map> is a name usable at C<recipient_maps>
 =cut
 
 
-# Descriptions: set target map
+# Descriptions: set target map.
 #    Arguments: OBJ($self) STR($map)
 # Side Effects: update object
 # Return Value: STR
 sub _set_target_map
 {
     my ($self, $map) = @_;
-    $self->{ _mapinfo }->{ _curmap } = $map;
+
+    $self->{ _mapinfo }->{ _curmap } = $map || '';
 }
 
 
-# Descriptions: get current target map
+# Descriptions: get current target map.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
@@ -266,7 +272,7 @@ sub _get_target_map
 
     # XXX-TODO: return what code if undefined ?
     # XXX-TODO: consider Principle of Least Surprise!
-    $self->{ _mapinfo }->{ _curmap };
+    return( $self->{ _mapinfo }->{ _curmap } || '' );
 }
 
 
@@ -290,7 +296,7 @@ get the current C<$position> for C<$map> IO.
 =cut
 
 
-# Descriptions: set map status
+# Descriptions: set map status.
 #    Arguments: OBJ($self) STR($map) STR($status)
 # Side Effects: update object
 # Return Value: STR
@@ -303,7 +309,7 @@ sub _set_map_status
 }
 
 
-# Descriptions: set map position
+# Descriptions: set map position.
 #    Arguments: OBJ($self) STR($map) STR($position)
 # Side Effects: update object
 # Return Value: STR
@@ -316,7 +322,7 @@ sub _set_map_position
 }
 
 
-# Descriptions: get map status
+# Descriptions: get map status.
 #    Arguments: OBJ($self) STR($map)
 # Side Effects: update object
 # Return Value: STR
@@ -330,7 +336,7 @@ sub _get_map_status
 }
 
 
-# Descriptions: get map position
+# Descriptions: get map position.
 #    Arguments: OBJ($self) STR($map)
 # Side Effects: update object
 # Return Value: STR
@@ -357,7 +363,7 @@ clear information around the latest map operation.
 =cut
 
 
-# Descriptions: rollback IO for current map
+# Descriptions: rollback IO for current map.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: none
@@ -387,7 +393,7 @@ sub _rollback_map_position
 }
 
 
-# Descriptions: reset info for the current map
+# Descriptions: reset info for the current map.
 #    Arguments: OBJ($self)
 # Side Effects: clear info in object
 # Return Value: none
@@ -411,7 +417,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

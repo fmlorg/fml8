@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.28 2003/08/24 14:09:25 fukachan Exp $
+# $FML: DBI.pm,v 1.29 2003/11/26 11:00:32 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -39,13 +39,15 @@ prepare C<dsn>.
 =cut
 
 
-# Descriptions: prepare DSN for DBI
+# Descriptions: prepare DSN for DBI.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: STR
 sub make_dsn
 {
     my ($self, $args) = @_;
+
+    # prepare DBI string.
     my $driver   = $args->{ driver };
     my $database = $args->{ database };
     my $host     = $args->{ host };
@@ -65,7 +67,7 @@ execute sql query.
 =cut
 
 
-# Descriptions: execute query for DBI
+# Descriptions: execute query for DBI.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: STR
@@ -84,6 +86,7 @@ sub execute
 	my $res = $dbh->prepare($query);
 
 	if (defined $res) {
+	    # XXX-TODO: error of execute() is discarded?
 	    $res->execute;
 	    $self->{ _res } = $res;
 	    return $res;
@@ -112,7 +115,7 @@ close connection to SQL server specified by C<dsn>.
 =cut
 
 
-# Descriptions: open DBI map
+# Descriptions: open DBI map.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: create DB? handle
 # Return Value: HANDLE (DB? handle)
@@ -125,8 +128,9 @@ sub open
     # save for restart
     $self->{ _args } = $args;
 
+    # XXX-TODO: croak() if DSN is not specified ?
     # DSN parameters
-    my $dsn      = $self->{ _dsn };
+    my $dsn      = $self->{ _dsn }         || '';
     my $user     = $self->{ _sql_user }    || 'fml';
     my $password = $self->{ _sql_password} || '';
 
@@ -147,7 +151,7 @@ sub open
 }
 
 
-# Descriptions: delete DBI map
+# Descriptions: delete DBI map.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: delete DB? handle
 # Return Value: none
@@ -175,7 +179,7 @@ return the next key.
 =cut
 
 
-# Descriptions: return a table row as a string sequentially
+# Descriptions: return a table row as a string sequentially.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: STR
@@ -186,7 +190,7 @@ sub getline
 }
 
 
-# Descriptions: return (key, values, ... ) as ARRAY_REF
+# Descriptions: return (key, values, ... ) as ARRAY_REF.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -197,7 +201,7 @@ sub get_key_values_as_array_ref
 }
 
 
-# Descriptions: return the primary key in the table sequentially
+# Descriptions: return the primary key in the table sequentially.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: STR
@@ -208,7 +212,7 @@ sub get_next_key
 }
 
 
-# Descriptions: get from DBI map
+# Descriptions: get from DBI map.
 #    Arguments: OBJ($self) HASH_REF($args) STR($mode)
 # Side Effects: none
 # Return Value: STR
@@ -216,7 +220,8 @@ sub _get_data_from_cache
 {
     my ($self, $args, $mode) = @_;
 
-    # for the first time, get the data and cache it for the later use.
+    # For the first time, get the data and cache it for the later use.
+    # So, $self->{ _res } is initialized by _fetch_all().
     unless ($self->{ _res }) {
 	# reset row information
 	undef $self->{ _row_pos };
@@ -257,8 +262,8 @@ sub _get_data_from_cache
 }
 
 
-# Descriptions: get one entry from DBMS
-#               create an SQL query and exetute it
+# Descriptions: get one entry from DBMS.
+#               create an SQL query and exetute it.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: update DB via SQL
 # Return Value: STR
@@ -279,8 +284,8 @@ sub _fetch_all
 =cut
 
 
-# Descriptions: add $addr
-#               create an SQL query and exetute it
+# Descriptions: add $addr.
+#               create an SQL query and exetute it.
 #    Arguments: OBJ($self) STR($addr)
 # Side Effects: update DB via SQL
 # Return Value: STR
@@ -328,8 +333,8 @@ map specific find().
 =cut
 
 
-# Descriptions: search, md = map dependent
-#               create an SQL query and exetute it
+# Descriptions: search, md = map dependent.
+#               create an SQL query and exetute it.
 #    Arguments: OBJ($self) STR($regexp) HASH_REF($args)
 # Side Effects: update DB via SQL
 # Return Value: STR or ARRAY_REF
@@ -395,7 +400,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.8 2002/12/20 03:49:16 fukachan Exp $
+# $FML: Qmail.pm,v 1.9 2003/01/07 08:38:35 fukachan Exp $
 #
 
 
@@ -32,7 +32,7 @@ format), as describbed in
 =cut
 
 
-# Descriptions: parse qmail error message
+# Descriptions: parse qmail error message.
 #    Arguments: OBJ($self) OBJ($msg) HASH_REF($result)
 # Side Effects: update $result
 # Return Value: none
@@ -52,11 +52,11 @@ sub analyze
 	    for ( my $i = 0; $i < $num ; $i++ ) {
 		my $data = $m->nth_paragraph( $i + 1 );
 
-		if ($data =~ /$pattern/)     { $state = 1;}
-		if ($data =~ /$end_pattern/) { $state = 0;}
+		if ($data =~ /$pattern/o)     { $state = 1;}
+		if ($data =~ /$end_pattern/o) { $state = 0;}
 
 		if ($state == 1) {
-		    $data =~ s/\n/ /g;
+		    $data =~ s/\n/ /go;
 		    if ($data =~ /\<(\S+\@\S+)\>:\s*(.*)/) {
 			($addr, $reason) = ($1, $2);
 
@@ -68,8 +68,8 @@ sub analyze
 			}
 			elsif ($data =~ /\s+(\d{3})\s+/) {
 			    my $code = $1;
-			    $status  = '5.x.y' if $code =~ /^5/;
-			    $status  = '4.x.y' if $code =~ /^4/;
+			    $status  = '5.x.y' if $code =~ /^5/o;
+			    $status  = '4.x.y' if $code =~ /^4/o;
 			}
 
 			$result->{ $addr }->{ 'Diagnostic-Code' } = $reason;
@@ -97,7 +97,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledDir.pm,v 1.20 2003/07/21 09:40:31 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.21 2003/08/23 04:35:49 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -94,7 +94,7 @@ use Tie::JournaledFile;
 my $debug = 0;
 
 
-# Descriptions: constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 #               $args = {
 #                    dir => directory path,
@@ -109,9 +109,12 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {};
 
-    my $dir   = $args->{ 'dir' };
+    my $dir   = $args->{ 'dir' }   || '';
     my $unit  = $args->{ 'unit' }  || 'day'; # 1 day
     my $limit = $args->{ 'limit' } || 90;
+
+    # sanity.
+    unless ($dir) { croak("dir unspecified");}
 
     # reverse order file list to search
     my @filelist = ();
@@ -135,7 +138,7 @@ sub _file_name
     my ($unit, $dir, $i) = @_;
     my $fn = '';
 
-    if ($unit =~ /^\d+$/) {
+    if ($unit =~ /^\d+$/o) {
 	$fn = $unit * int(time / $unit) - ($i * $unit);
     }
     elsif ($unit eq 'day') {
@@ -152,7 +155,7 @@ sub _file_name
 }
 
 
-# Descriptions: call new()
+# Descriptions: call new().
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: same as new()
 # Return Value: OBJ
@@ -175,18 +178,18 @@ sub FETCH
     my $files = $self->{ '_files' } || [];
     my $x     = '';
 
-  FILES_LOOP:
+  FILE:
     for my $f (@$files) {
 	if (-f $f) {
 	    # XXX reverse order: firstly, try last match in the latest file.
 	    my $obj = new Tie::JournaledFile {
 		'match_condition' => 'last',
-		'file'       => $f,
+		'file'            => $f,
 	    };
 
 	    if (defined $obj) {
 		$x = $obj->FETCH($key);
-		last FILES_LOOP if defined $x;
+		last FILE if defined $x;
 	    }
 	}
     }
@@ -207,14 +210,14 @@ sub STORE
 
     my $obj = new Tie::JournaledFile {
 	'match_condition' => 'last',
-	'file'       => $f,
+	'file'            => $f,
     };
 
     return $obj->STORE($key, $value);
 }
 
 
-# Descriptions: generate and return HASH_REF on memory over all data
+# Descriptions: generate and return HASH_REF on memory over all data.
 #    Arguments: OBJ($self)
 # Side Effects: generate hash on memory
 # Return Value: HASH_REF
@@ -233,7 +236,7 @@ sub __gen_hash
 
 	tie %db, 'Tie::JournaledFile', {
 	    'match_condition' => 'last',
-	    'file'       => $f,
+	    'file'            => $f,
 	};
 
 	# XXX overwrite { key => value } for normal time order.
@@ -256,7 +259,7 @@ sub __gen_hash
 sub FIRSTKEY
 {
     my ($self) = @_;
-    my $hash = $self->__gen_hash();
+    my $hash   = $self->__gen_hash();
 
     if (defined $hash) {
 	$self->{ _hash } = $hash;
@@ -300,13 +303,14 @@ sub EXISTS
 }
 
 
-# Descriptions: delete $key
+# Descriptions: delete $key.
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: update cache.
 # Return Value: none
 sub DELETE
 {
     my ($self, $key) = @_;
+
     $self->STORE($key, '');
 }
 
@@ -354,11 +358,13 @@ sub get_all_values_as_hash_ref
     my $files  = $self->{ '_files' } || [];
     my $result = {};
 
+    # read files in reverse order to overwrite values by the latest one
+    # from old to new.
     use FileHandle;
     for my $f (reverse @$files) {
 	my $obj  = new Tie::JournaledFile {
 	    'match_condition' => 'last',
-	    'file'       => $f,
+	    'file'            => $f,
 	};
 	my $hash = $obj->get_all_values_as_hash_ref();
 
@@ -393,7 +399,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

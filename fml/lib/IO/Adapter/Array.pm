@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Array.pm,v 1.33 2003/11/26 11:00:32 fukachan Exp $
+# $FML: Array.pm,v 1.34 2003/11/29 06:31:48 fukachan Exp $
 #
 
 package IO::Adapter::Array;
@@ -47,7 +47,8 @@ constructor.
 
 =cut
 
-# Descriptions: constructor
+
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -77,7 +78,7 @@ $flag is "r" only (read only) now.
 =cut
 
 
-# Descriptions: open() emulation
+# Descriptions: open() emulation.
 #    Arguments: OBJ($self) HASH_REF($args)
 #               $args = {
 #                              flag => $flag
@@ -89,7 +90,7 @@ sub open
 {
     my ($self, $args) = @_;
     my $flag    = $args->{ flag } || 'r';
-    my $r_array = $self->{ _array_reference };
+    my $r_array = $self->{ _array_reference } || [];
 
     if ($flag ne 'r') {
 	$self->error_set("Error: type=$self->{_type} is read only.");
@@ -97,7 +98,7 @@ sub open
     }
 
     # malloc()
-    my @elements = @$r_array;
+    my (@elements)         = @$r_array;
     $self->{_elements}     = $r_array;
     $self->{_num_elements} = $#elements;
     $self->{_counter}      = 0;
@@ -163,7 +164,7 @@ set the current position to $pos -th element.
 =cut
 
 # Descriptions: return the current position in the array, that is,
-#               which element in the array
+#               which element in the array.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM(the current number of element)
@@ -174,14 +175,14 @@ sub getpos
 }
 
 
-# Descriptions: set the postion in the array
+# Descriptions: set the postion in the array.
 #    Arguments: OBJ($self) NUM($pos)
 #               $pos is the integer number.
 # Side Effects: reset counter in the object
 # Return Value: NUM(update position)
 sub setpos
 {
-    my ($self, $pos) = @_;
+    my ($self, $pos)  = @_;
     $self->{_counter} = $pos;
 }
 
@@ -197,7 +198,7 @@ end of IO operation. It is a dummy.
 
 =cut
 
-# Descriptions: whether end of the array is not now
+# Descriptions: echeck whether end of the array is not now.
 #    Arguments: OJB($self)
 # Side Effects: none
 # Return Value: 1 or 0.
@@ -229,7 +230,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

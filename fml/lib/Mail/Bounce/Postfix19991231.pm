@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix19991231.pm,v 1.21 2002/12/20 03:49:16 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.22 2003/01/11 15:14:24 fukachan Exp $
 #
 
 
@@ -55,7 +55,7 @@ Postfix old style error format.
 =cut
 
 
-# Descriptions: trap error of old postfix style
+# Descriptions: trap error of old postfix style.
 #    Arguments: OBJ($self) OBJ($msg) HASH_REF($result)
 # Side Effects: update $result
 # Return Value: none
@@ -64,7 +64,7 @@ sub analyze
     my ($self, $msg, $result) = @_;
     my $data_type = $msg->whole_message_header_data_type();
 
-    if (defined($data_type) && $data_type && $data_type =~ /multipart/i) {
+    if (defined($data_type) && $data_type && $data_type =~ /multipart/io) {
 	$self->_analyze_broken_dsn($msg, $result);
     }
     else {
@@ -73,7 +73,7 @@ sub analyze
 }
 
 
-# Descriptions: analyze postfix error message
+# Descriptions: analyze postfix old style error message.
 #    Arguments: OBJ($self) OBJ($msg) HASH_REF($result)
 # Side Effects: update $result
 # Return Value: none
@@ -96,11 +96,11 @@ sub _analyze_plaintext
 		# debug
 		print STDERR "paragraph($i){$data}\n" if $debug;
 
-		if ($data =~ /$pattern/)     { $state = 1;}
-		if ($data =~ /$end_pattern/) { $state = 0;}
+		if ($data =~ /$pattern/o)     { $state = 1;}
+		if ($data =~ /$end_pattern/o) { $state = 0;}
 
 		if ($state == 1) {
-		    $data =~ s/\n/ /g;
+		    $data =~ s/\n/ /go;
 		    if ($data =~ /\<(\S+\@\S+\w+)\>:\s*(.*)/) {
 			$self->_parse_address($data, $result);
 		    }
@@ -115,7 +115,7 @@ sub _analyze_plaintext
 }
 
 
-# Descriptions: analyze postfix error message II
+# Descriptions: analyze postfix error message II.
 #    Arguments: OBJ($self) OBJ($msg) HASH_REF($result)
 # Side Effects: update $result
 # Return Value: none
@@ -143,7 +143,7 @@ sub _analyze_broken_dsn
 }
 
 
-# Descriptions: clean up address
+# Descriptions: clean up address.
 #    Arguments: OBJ($self) STR($data) HASH_REF($result)
 # Side Effects: update $result
 # Return Value: none
@@ -171,7 +171,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

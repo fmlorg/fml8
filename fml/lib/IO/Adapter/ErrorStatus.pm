@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ErrorStatus.pm,v 1.6 2003/08/23 04:35:44 fukachan Exp $
+# $FML: ErrorStatus.pm,v 1.7 2003/08/23 15:33:16 fukachan Exp $
 #
 
 package IO::Adapter::ErrorStatus;
@@ -58,49 +58,51 @@ return $message which is saved by C<error_set($msg)>.
 =cut
 
 
-# Descriptions: set the error message
+# Descriptions: set the error message.
 #    Arguments: OBJ($self) STR($mesg)
 # Side Effects: update OBJ
 # Return Value: STR
 sub error_set
 {
     my ($self, $mesg) = @_;
-    $self->{'_error_reason'} = $mesg;
+    $self->{'_error_reason'} = $mesg || '';
 }
 
 
-# Descriptions: get the error message
+# Descriptions: get the error message.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub error
 {
     my ($self) = @_;
-    return $self->{'_error_reason'};
+    return( $self->{'_error_reason'} || '' );
 }
 
 
-# Descriptions: get the error message
+# Descriptions: get the error message.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub errstr
 {
     my ($self) = @_;
-    return $self->{'_error_reason'};
+    return( $self->{'_error_reason'} || '' );
 }
 
 
-# Descriptions: clear the error message
+# Descriptions: clear the error message.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
 sub error_clear
 {
     my ($self) = @_;
-    my $msg = $self->{'_error_reason'};
+    my $msg    = $self->{'_error_reason'};
+
     undef $self->{'_error_reason'} if defined $self->{'_error_reason'};
     undef $self->{'_error_action'} if defined $self->{'_error_action'};
+
     return $msg;
 }
 
@@ -115,7 +117,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

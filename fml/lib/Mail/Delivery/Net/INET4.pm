@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET4.pm,v 1.7 2002/12/20 03:50:27 fukachan Exp $
+# $FML: INET4.pm,v 1.8 2004/01/02 14:42:47 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET4;
@@ -14,12 +14,11 @@ use Carp;
 use Mail::Delivery::Utils;
 
 require Exporter;
+@ISA    = qw(Exporter);
+@EXPORT = qw(connect4);
 
-@ISA       = qw(Exporter);
-@EXPORT    = qw(connect4);
 
-
-# Descriptions: try connect(2) by IPv4
+# Descriptions: try connect(2) by IPv4.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: create ipv4 smtp connection
 # Return Value: HANDLE
@@ -37,8 +36,8 @@ sub connect4
 	$socket = new IO::Socket::INET($mta);
     };
     if ($@) {
-	Log("Error: cannot make socket for $mta");
-	$self->error_set("Error: cannot make socket: $@");
+	Log("Error: cannot create socket for $mta");
+	$self->error_set("Error: cannot create socket: $@");
 	return undef;
     }
 

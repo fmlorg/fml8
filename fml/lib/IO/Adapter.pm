@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.26 2003/02/01 10:55:03 fukachan Exp $
+# $FML: Adapter.pm,v 1.27 2003/08/23 04:35:43 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -138,7 +138,7 @@ the constructor. The first argument is a map decribed above.
 
 
 # Descriptions: a constructor, which prepare IO operations for the
-#               given $map
+#               given $map.
 #    Arguments: OBJ($self) STR($map) HASH_REF($args)
 # Side Effects: @ISA is modified
 #               load and import sub-class
@@ -208,7 +208,7 @@ sub new
 
     if ($debug) {
 	printf STDERR "%-20s %s\n", "IO::Adapter::ISA:", "@ISA";
-	print STDERR "use $pkg\n";
+	print  STDERR "use $pkg\n";
     }
     eval qq{ use $pkg; };
     unless ($@) {
@@ -234,7 +234,7 @@ C<open()> is a dummy function in other maps now.
 =cut
 
 
-# Descriptions: open IO, each request is forwraded to each sub-class
+# Descriptions: open IO, each request is forwraded to each sub-class.
 #    Arguments: OBJ($self) STR($flag)
 #               $flag is the same as open()'s flag for file: map but
 #               "r" only for other maps.
@@ -280,7 +280,7 @@ It is dummy for maps other than file: type.
 sub touch
 {
     my ($self) = @_;
-    my $type = $self->{ _type };
+    my $type   = $self->{ _type };
 
     if ($type eq 'file') {
 	$self->SUPER::touch( { file => $self->{_file} } );
@@ -316,9 +316,9 @@ delete lines which matches $regexp from this map.
 =cut
 
 
-# Descriptions: add $address to the current map
+# Descriptions: add $address to the current map.
 #    Arguments: OBJ($self) STR($address) VARARGS($argv)
-# Side Effects: modify map content
+# Side Effects: modify map content, croak() if critical error.
 # Return Value: same as add()
 sub add
 {
@@ -339,9 +339,9 @@ sub add
 }
 
 
-# Descriptions: delete $address from the current map
+# Descriptions: delete $address from the current map.
 #    Arguments: OBJ($self) STR($regexp)
-# Side Effects: moidfy map content
+# Side Effects: moidfy map content, croak() if critical error.
 # Return Value: same as delete()
 sub delete
 {
@@ -393,7 +393,8 @@ For example, to search mail addresses in recipient list,
 =cut
 
 
-# Descriptions: search method
+# Descriptions: search method. 
+#               call map dependent routine md_find() if defined in the map.
 #    Arguments: OBJ($self) STR($regexp) HASH_REF($args)
 # Side Effects: none
 # Return Value: STR or ARRAY_REF
@@ -403,7 +404,6 @@ sub find
     my $case_sensitive = $args->{ case_sensitive } ? 1 : 0;
     my $show_all       = $args->{ all } ? 1 : 0;
     my $want           = 'key,value';
-    my (@buf, $x);
 
     # forward the request to SUPER class (md = map dependent)
     if ($self->SUPER::can('md_find')) {
@@ -422,8 +422,11 @@ sub find
     }
 
     # search regexp by reading the specified map.
+    my (@buf, $x);
+
     $self->open;
     my $fp = $want eq 'key' ? 'get_next_key' : 'getline';
+  DATA:
     while (defined ($x = $self->$fp())) {
 	if ($show_all) {
 	    if ($case_sensitive) {
@@ -435,10 +438,10 @@ sub find
 	}
 	else {
 	    if ($case_sensitive) {
-		last if $x =~ /$regexp/;
+		last DATA if $x =~ /$regexp/;
 	    }
 	    else {
-		last if $x =~ /$regexp/i;
+		last DATA if $x =~ /$regexp/i;
 	    }
 	}
     }
@@ -453,7 +456,7 @@ sub find
 
 =cut
 
-# Descriptions: destructor
+# Descriptions: destructor.
 #               request is forwarded to close() method.
 #    Arguments: OBJ($self)
 # Side Effects: object is undef'ed.
@@ -483,7 +486,7 @@ Ken'ichi Fukamchi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamchi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamchi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
