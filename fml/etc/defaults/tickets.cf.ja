@@ -6,7 +6,9 @@ use_ticket		=	yes
 
 ticket_model		=	toymodel
 
-ticket_subject_tag	=	[%s #%08d]
+ticket_id_syntax	=	%s_#%08d
+
+ticket_subject_tag	=	[$ticket_id_syntax]
 
 ticket_sequence_file	=	$ml_home_dir/ticket.seq
 
