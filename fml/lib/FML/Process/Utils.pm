@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.18 2002/04/07 05:27:19 fukachan Exp $
+# $FML: Utils.pm,v 1.19 2002/04/15 10:29:44 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -370,6 +370,48 @@ sub __ml_home_prefix_search_in_virtual_maps
     }
 
     return '';
+}
+
+
+=head2 config_cf_filepath($ml, $domain)
+
+return config.cf path for this $ml ($ml@$domain).
+
+=head2 is_config_cf_exist($ml, $domain)
+
+return 1 if config.cf exists. 0 if not.
+
+=cut
+
+
+# Descriptions: return $ml ML's home directory
+#    Arguments: OBJ($curproc) STR($ml) STR($domain)
+# Side Effects: none
+# Return Value: STR
+sub config_cf_filepath
+{
+    my ($curproc, $ml, $domain) = @_;
+    my $prefix = $curproc->ml_home_prefix($domain);
+
+    unless (defined $ml) {
+	$ml = $curproc->{ config }->{ ml_name };
+    }
+
+    use File::Spec;
+    return File::Spec->catfile($prefix, $ml, "config.cf");
+}
+
+
+# Descriptions: return $ml ML's home directory
+#    Arguments: OBJ($curproc) STR($ml) STR($domain)
+# Side Effects: none
+# Return Value: STR
+sub is_config_cf_exist
+{
+    my ($curproc, $ml, $domain) = @_;
+    my $f = $curproc->config_cf_filepath($ml, $domain);
+
+    return ( -f $f ? 1 : 0 );
 }
 
 
