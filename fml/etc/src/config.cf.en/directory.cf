@@ -24,7 +24,7 @@ directory_private_mode	=	0700
 =head2 directories "makefml newml" initializes 
 
 
-newml_command_init_public_dirs	=	$domain_config_base_dir
+newml_command_init_public_directories	=	$domain_config_base_dir
 					$domain_mail_config_dir
 					$domain_postfix_config_dir
 					$domain_qmail_config_dir
@@ -34,7 +34,7 @@ newml_command_init_public_dirs	=	$domain_config_base_dir
 					$shared_db_dir
 					$udb_base_dir
 
-newml_command_init_private_dirs	=	$tmp_dir
+newml_command_init_private_directories	=	$tmp_dir
 					$spool_dir
 					$var_dir
 					$db_dir

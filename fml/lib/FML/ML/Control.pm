@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Prefix.pm,v 1.1 2003/11/16 11:53:19 fukachan Exp $
+# $FML: Control.pm,v 1.1 2003/12/28 13:23:18 fukachan Exp $
 #
 
 package FML::ML::Control;
@@ -103,7 +103,7 @@ sub init_ml_home_dir
     }
 
     # $ml_home_dir/etc/mail
-    my $dirlist = $config->get_as_array_ref('newml_command_init_public_dirs');
+    my $dirlist = $config->get_as_array_ref('newml_command_init_public_directories');
     for my $_dir (@$dirlist) {
 	unless (-d $_dir) {
 	    $curproc->ui_message("creating $_dir");
@@ -111,7 +111,7 @@ sub init_ml_home_dir
 	}
     }
 
-    $dirlist = $config->get_as_array_ref('newml_command_init_private_dirs');
+    $dirlist = $config->get_as_array_ref('newml_command_init_private_directories');
     for my $_dir (@$dirlist) {
 	unless (-d $_dir) {
 	    $curproc->ui_message("creating $_dir");
