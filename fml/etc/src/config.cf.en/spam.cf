@@ -1,0 +1,44 @@
+=head2	ARTICLE SPAM FILTER CONFIGURATIONS
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+use_article_spam_filter		=	no
+
+
+# Descriptions: list up driver names used as spam checker.
+#      History: none
+#        Value: spamassassin | spamc | bogofilter
+#     Examples: bogofilter
+article_spam_filter_functions	=	bogofilter
+
+
+=head3 	SpamAssassin
+
+
+# Descriptions: exit non-zero status code when spam caught if "-e" specified.
+#      History: none
+#        Value: STR
+#     Examples: -e
+article_spam_filter_spamassassin_options	=	-e
+
+
+# Descriptions: spamc optoins. "-c" means check only.
+#      History: none
+#        Value: STR
+#     Examples: -c
+article_spam_filter_spamc_options		=	-c
+
+
+=head3	BogoFilter
+
+
+# Descriptions: "-e" implies embedded mode.
+#      History: none
+#        Value: STR
+#     Examples: -e
+article_spam_filter_bogofilter_options		=	-e
+
+

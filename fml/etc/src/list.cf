@@ -14,6 +14,7 @@ lock.cf
 log.cf
 distribute.cf
 article.cf
+spam.cf
 spool.cf
 summary.cf
 htmlarchive.cf
