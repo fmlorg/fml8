@@ -84,6 +84,7 @@ available_commands_for_privileged_user	=	subscribe
 					dir
 					ls
 					file
+					list
 
 
 available_commands_for_admin_cgi	=	subscribe

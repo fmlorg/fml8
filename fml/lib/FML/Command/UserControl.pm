@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.1 2002/03/19 10:12:44 fukachan Exp $
+# $FML: UserControl.pm,v 1.2 2002/03/30 11:08:34 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -101,6 +101,33 @@ sub userdel
 	}
 	else {
 	    LogWarn("no such user in map=$map");
+	}
+    }
+}
+
+
+# Descriptions: show list
+#    Arguments: OBJ($self)
+#               HASH_REF($curproc) HASH_REF($command_args) HASH_REF($uc_args)
+# Side Effects: none
+# Return Value: none
+sub userlist
+{
+    my ($self, $curproc, $command_args, $uc_args) = @_;
+    my $maplist = $uc_args->{ maplist };
+    my $wh      = $uc_args->{ wh };
+
+    for my $map (@$maplist) {
+	my $obj = new IO::Adapter $map;
+
+	if (defined $obj) {
+	    my $x = '';
+	    $obj->open || croak("cannot open $map");
+	    while ($x = $obj->getline()) { print $wh $x; }
+	    $obj->close;
+	}
+	else {
+	    LogWarn("canot open $map");
 	}
     }
 }
