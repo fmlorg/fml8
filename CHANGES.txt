@@ -1,6 +1,43 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/11/02
+
+   FML::Process::Utils 
+   FML::Process::CGI::Kernel 
+	move safe_cgi_action_name from FML::Process::Utils to
+	FML::Process::CGI::Utils.
+
+   FML::Process::Kernel Utils 
+	debug_level() -> get_debug_level().
+	sort definitions::{set,get}_print_style().
+
+2003/11/01
+
+   変数体系のクリーニング: 階層構造、命名規則
+
+	よりシステマティックな変数命名ルールを考えていくと、ここでも、
+	基底クラスと継承という考えを（ある程度）導入する方がよいと思う
+	ようになりました。
+
+	が、ものすごく厳密にやると逆にわけ分からないので程ほどに。
+
+	例：
+		mail_何とか
+		mail_default_何とか
+
+		use_incoming_mail_何とか
+		incoming_mail_何とか
+
+		use_outgoing_mail_何とか
+		outgoing_mail_何とか
+
+		use_report_mail_何とか
+		report_mail_何とか
+
+	この例でも、厳密には outgoing_report_mail とかするべきなんでしょ
+	うけど、そこまではやらないのが程ほどってところでしょうね。
+
 2003/10/30
 
    variables
@@ -10,6 +47,9 @@
 	body_loop_check_rules   -> incoming_mail_body_loop_check_rules
 	use_body_loop_check     -> use_incoming_mail_body_loop_check
 	body_cksum_cache_dir    -> incoming_mail_body_cksum_cache_dir
+
+   variables
+	has_* -> system_has_*
 
 2003/10/29
 
@@ -5569,4 +5609,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.168 2003/10/29 14:48:13 fukachan Exp $
+$FML: CHANGES.txt,v 1.169 2003/10/30 14:46:57 fukachan Exp $
