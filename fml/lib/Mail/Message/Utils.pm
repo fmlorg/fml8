@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.3 2002/09/11 23:18:28 fukachan Exp $
+# $FML: Utils.pm,v 1.4 2002/09/22 14:57:05 fukachan Exp $
 #
 
 package Mail::Message::Utils;
@@ -42,16 +42,14 @@ remove subject tag like string such as [elena 100].
 sub remove_subject_tag_like_string
 {
     my ($str) = @_;
+
     $str =~ s/^\s*\W[-\w]+.\s*\d+\W//g;
     $str =~ s/\s+/ /g;
     $str =~ s/^\s*//g;
-    $str;
+
+    return $str;
 }
 
-
-=head1 CODING STYLE
-
-See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 CODING STYLE
 
@@ -63,7 +61,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
