@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.89 2003/08/29 15:34:06 fukachan Exp $
+# $FML: Command.pm,v 1.90 2003/10/17 14:00:51 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -84,6 +84,7 @@ sub prepare
     $curproc->load_config_files( $args->{ cf_list } );
     $curproc->fix_perl_include_path();
     $curproc->scheduler_init();
+    $curproc->log_message_init();
 
     if ($config->yes('use_command_mail_program')) {
 	$curproc->parse_incoming_message($args);

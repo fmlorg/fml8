@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.33 2003/08/23 07:24:47 fukachan Exp $
+# $FML: Error.pm,v 1.34 2003/08/29 15:34:08 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -80,6 +80,7 @@ sub prepare
     $curproc->load_config_files( $args->{ cf_list } );
     $curproc->fix_perl_include_path();
     $curproc->scheduler_init();
+    $curproc->log_message_init();
 
     if ($config->yes('use_error_analyzer_program')) {
 	$curproc->parse_incoming_message($args);

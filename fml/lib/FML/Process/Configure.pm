@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.56 2003/09/13 13:01:40 fukachan Exp $
+# $FML: Configure.pm,v 1.57 2003/11/16 12:23:48 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -80,6 +80,7 @@ sub prepare
     $curproc->resolve_ml_specific_variables( $args );
     $curproc->load_config_files( $args->{ cf_list } );
     $curproc->fix_perl_include_path();
+    $curproc->log_message_init();
 
     $eval = $config->get_hook( 'makefml_prepare_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }

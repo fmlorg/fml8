@@ -70,3 +70,23 @@ log_file_charset_en        =       us-ascii
 #        Value: filename
 #     Examples: /var/spool/ml/@log@
 domain_local_log_file	=	$domain_local_dir/@log@
+
+
+=head2	makefml や fml で詳細なログを STDERR などへ出力したい場合
+
+
+# Descriptions: 機会処理にやさしいフォーマットでログを出力する。
+#               コマンドラインオプションで --computer-output を指定すると
+#               use_computer_output = yes と同じ意味になる。
+#      History: none
+#        Value: yes | no
+#     Examples: no
+use_computer_output	=	no
+
+
+# Descriptions: 機会処理にやさしいフォーマットを出力する際の出力エンジン。
+#               perl module を指定する。
+#      History: none
+#        Value: CLASS
+#     Examples: FML::Log::Print::Simple
+computer_output_engine	=	FML::Log::Print::Simple
