@@ -79,8 +79,8 @@ sub Bootstrap
     unshift(@cf, $default_config);
 
     # 3. reset @INC 
-    unshift(@INC, split(/\s+/, $main_cf->{ local_lib_dir }));
     unshift(@INC, split(/\s+/, $main_cf->{ lib_dir }));	    
+    unshift(@INC, split(/\s+/, $main_cf->{ local_lib_dir }));
 
     # 4. inspect my mode from $0
     use File::Basename;
