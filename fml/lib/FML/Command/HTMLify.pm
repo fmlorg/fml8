@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.20 2004/01/01 23:52:10 fukachan Exp $
+# $FML: HTMLify.pm,v 1.21 2004/01/02 14:50:30 fukachan Exp $
 #
 
 package FML::Command::HTMLify;
@@ -25,8 +25,8 @@ FML::Command::HTMLify - utility functions to convert text to html.
 
 =head1 DESCRIPTION
 
-This module provides several utility functions to send back article
-and file in C<$ml_home_dir>.
+This module provides several utility functions to convert text file to
+html format.
 
 =head1 METHODS
 
@@ -64,13 +64,13 @@ sub convert
 
     my $index_order    = $config->{ html_archive_index_order_type };
     my $htmlifier_args = {
-	charset     => $charset,
+	charset        => $charset,
 
-	output_dir  => $dst_dir,     # ~fml/public_html/mlarchive/$domain/$ml/
-	db_base_dir => $udb_dir,     # /var/spool/ml/@udb@
-	db_name     => $ml_name,     # elena
+	output_dir     => $dst_dir,  # ~fml/public_html/mlarchive/$domain/$ml/
+	db_base_dir    => $udb_dir,  # /var/spool/ml/@udb@
+	db_name        => $ml_name,  # elena
 
-	index_order => $index_order, # normal/reverse
+	index_order    => $index_order, # normal/reverse
     };
 
     my ($is_subdir_exists, $subdirs) = _check_subdir_exists($src_dir);
@@ -85,6 +85,7 @@ sub convert
 	    my (@x) = sort _sort_subdirs @$subdirs;
 	    print STDERR "   subdirs: @x\n" if $debug;
 	    for my $xdir (@x) {
+		# XXX-TODO: hmm, naming ? $obj->htmlify_dir(...).
 		eval q{
 		    use Mail::Message::ToHTML;
 		    my $obj = new Mail::Message::ToHTML $htmlifier_args;
@@ -127,21 +128,24 @@ sub _sort_subdirs
 #    Arguments: STR($src_dir)
 # Side Effects: none
 # Return Value: ARRAY( STR, ARRAY_REF )
-sub  _check_subdir_exists
+sub _check_subdir_exists
 {
     my ($src_dir) = @_;
-    my $status = 0;
-    my $subdir = '';
-    my @subdir = ();
+    my $status    = 0;
+    my $subdir    = '';
+    my @subdir    = ();
 
     use File::Spec;
     use DirHandle;
     my $dh = new DirHandle $src_dir;
     if (defined $dh) {
-	while (defined($_ = $dh->read)) {
-	    next if /^\./;
-	    $subdir = File::Spec->catfile($src_dir, $_);
+	my $e;
 
+      ENTRY:
+	while (defined($e = $dh->read)) {
+	    next ENTRY if $e =~ /^\./o;
+
+	    $subdir = File::Spec->catfile($src_dir, $e);
 	    if (-d $subdir) {
 		push(@subdir, $subdir);
 		$status = 1;
