@@ -3,6 +3,42 @@
 
    2002/12 は、オーバホール・キャンペーン実施中ですぉ。
 
+2002/12/22
+
+   FML::MTAControl::Postfix 
+	PR (fml-devel:343)
+	check the existence of virtual file.
+	
+   *オーバホール・キャンペーン実施中
+
+   IO::Adapter::AtomicFile 
+	cometics. fix comments.
+	defined() check before $fh->close().
+	
+   Mail::ThreadTrack::Print::Text 
+	fix comments.
+	add loop label.
+	
+   Mail::ThreadTrack::Print::Message 
+	fix comments.
+	//o
+	modify variable to be more readable::$h -> header
+	
+   Mail::ThreadTrack::Analyze 
+	fix comments.
+	//o
+	defined() check more.
+	
+   Tie::JournaledDir JournaledFile.pm 
+	fix comments.
+	clean up variable names.
+	inform error by croak() more.
+	
+   FML::Config Confirm.pm 
+	fix comments.
+	add todo(s) as comments.
+	//o
+
 2002/12/19
 
    *オーバホール・キャンペーン実施中
@@ -3793,4 +3829,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.116 2002/12/15 14:38:55 fukachan Exp $
+$FML: CHANGES.txt,v 1.117 2002/12/20 03:56:14 fukachan Exp $
