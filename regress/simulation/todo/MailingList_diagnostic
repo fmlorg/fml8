@@ -5,7 +5,7 @@ IO::Adapter::Array;
 IO::Adapter::DBI;
 IO::MapAdapter;
 
-MailingList::Delivery;
+Mail::Delivery;
 MailingList::ESMTP;
 MailingList::Net::INET4;
 MailingList::Net::INET6;

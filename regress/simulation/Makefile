@@ -15,6 +15,7 @@ allclean: clean
 	rm -f Tie
 	rm -f Dialect
 	rm -f MailingList
+	rm -f Mail
 	rm -f libexec
 	rm -f log
 	rm -f File
@@ -48,7 +49,7 @@ link:
 	rm -f SQL; ln -s ../../fml/lib/SQL
 	rm -f Tie; ln -s ../../fml/lib/Tie
 	rm -f Language; ln -s ../../fml/lib/Language
-	rm -f MailingList; ln -s ../../fml/lib/MailingList
+	rm -f Mail; ln -s ../../fml/lib/Mail
 	rm -f libexec; ln -s ../../fml/libexec
 	rm -f log; ln -s /var/spool/ml/elena/log
 

@@ -2,7 +2,7 @@
 
 use strict;
 use File::Basename;
-use MailingList::Messages;
+use Mail::Message;
 use Getopt::Std;
 
 my %opts;
@@ -40,7 +40,7 @@ for $msg (@ARGV) {
 	$args->{ charset      } = 'iso-2022-jp';
     }
 
-    my $m = new MailingList::Messages $args;
+    my $m = new Mail::Message $args;
     push(@m, $m);
 }
 
