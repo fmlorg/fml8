@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.41 2004/08/13 11:50:49 fukachan Exp $
+# $FML: Queue.pm,v 1.42 2004/08/13 13:23:46 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -74,6 +74,7 @@ C<new()> assigns them but do no actual works.
 
 =cut
 
+my $default_strategy = "oldest";
 
 my $dir_mode = 0755;
 
@@ -118,6 +119,9 @@ sub new
     $me->{ _info }->{ sender }     = $me->sender_file_path($id);
     $me->{ _info }->{ recipients } = $me->recipients_file_path($id);
     $me->{ _info }->{ transport }  = $me->transport_file_path($id);
+
+    # strategy
+    $me->{ strategy } = $default_strategy;
 
     return bless $me, $type;
 }
@@ -198,6 +202,10 @@ by default, return a list of queue filenames in C<active/> directory.
 
 where C<$qid> is like this: 990157187.20792.1
 
+=head2 list_all()
+
+return all queue list in all classes.
+
 =cut
 
 
@@ -223,7 +231,7 @@ sub list
 	    push(@r, $file);
 	}
 
-	return \@r;
+	return $self->strategy(\@r);
     }
 
     return [];
@@ -251,6 +259,122 @@ sub list_all
 
     @r = keys %r;
     return \@r;
+}
+
+
+
+=head2 set_strategy($strategy)
+
+set queue management strategy.
+
+=head2 get_strategy()
+
+return queue management strategy.
+
+=head2 strategy(list)
+
+=cut
+
+
+# Descriptions: set queue management strategy.
+#    Arguments: OBJ($self) STR($strategy)
+# Side Effects: update $self.
+# Return Value: none
+sub set_strategy
+{
+    my ($self, $strategy) = @_;
+
+    if (defined $strategy) {
+	$self->{ strategy } = $strategy;
+    }
+}
+
+
+# Descriptions: get queue management strategy.
+#    Arguments: OBJ($self) STR($strategy)
+# Side Effects: update $self.
+# Return Value: none
+sub get_strategy
+{
+    my ($self, $strategy) = @_;
+
+    return( $self->{ strategy } || $default_strategy );
+}
+
+
+# Descriptions: return re-ordering queue list.
+#    Arguments: OBJ($self) ARRAY_REF($list)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub strategy
+{
+    my ($self, $list) = @_;
+    my $strategy = $self->{ strategy } || $default_strategy;
+
+    if ($strategy eq 'oldest') {
+	my (@r) = sort _queue_streategy_oldest @$list;
+	return \@r;
+    }
+    elsif ($strategy eq 'newest') {
+	my (@r) = sort _queue_streategy_newest @$list;
+	return \@r;
+    }
+    elsif ($strategy eq 'fair_queue' || $strategy eq 'fair-queue') {
+	my (@o) = sort _queue_streategy_oldest @$list;
+	my (@n) = sort _queue_streategy_newest @$list;
+	my (@p) = ();
+	my $max = $#o;
+
+      ENTRY:
+	while ($max >= 0) {
+	    push(@p, shift @o);
+	    $max--;
+	    last ENTRY if $max < 0;
+
+	    push(@p, shift @n);
+	    $max--;
+	    last ENTRY if $max < 0;
+	}
+	
+	return \@p;
+    }
+    else {
+	for my $q (@$list) { ;}
+    }
+
+    return $list;
+}
+
+
+# Descriptions: sort by normal date order.
+#    Arguments: IMPLICIT
+# Side Effects: none
+# Return Value: NUM
+sub _queue_streategy_oldest
+{
+    my $xa = $a;
+    my $xb = $b;
+
+    $xa =~ s/\.\d+.*$//;
+    $xb =~ s/\.\d+.*$//;
+
+    $xa <=> $xb;
+}
+
+
+# Descriptions: sort by reverse date order.
+#    Arguments: IMPLICIT
+# Side Effects: none
+# Return Value: NUM
+sub _queue_streategy_newest
+{
+    my $xa = $a;
+    my $xb = $b;
+
+    $xa =~ s/\.\d+.*$//;
+    $xb =~ s/\.\d+.*$//;
+
+    $xb <=> $xa;
 }
 
 
