@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.31 2004/06/27 02:39:31 fukachan Exp $
+# $FML: SMTP.pm,v 1.32 2004/07/26 06:40:15 fukachan Exp $
 #
 
 
@@ -474,7 +474,9 @@ sub deliver
     # recipient limit
     $self->{_recipient_limit} = $args->{recipient_limit} || 1000;
 
-    Log("debug: recipient_limit = $self->{_recipient_limit}");
+    if ($self->{_recipient_limit} != 1000) {
+	Log("debug: recipient_limit = $self->{_recipient_limit}");
+    }
 
     # temporary hash to check whether the map/mta is used already.
     my %used_mta = ();
