@@ -57,7 +57,7 @@ admin_member_password_maps</entry>
  リモート管理者のパスワードファイル(群)</entry>
 <entry>
 $primary_admin_member_password_map
-   file:$ml_home_dir/etc/passwd
+   file:$etc_dir/passwd
    </entry>
 </row>
 <row>
@@ -626,6 +626,15 @@ error_analyzer_simple_count_limit</entry>
  simple_count のエラー回数の上限</entry>
 <entry>
 5
+   </entry>
+</row>
+<row>
+<entry>
+etc_dir</entry>
+<entry>
+ パスワードファイルなどを置くディレクトリ</entry>
+<entry>
+$ml_home_dir/etc
    </entry>
 </row>
 <row>
@@ -1203,7 +1212,7 @@ primary_admin_member_password_map</entry>
 <entry>
  リモート管理者のパスワードファイル</entry>
 <entry>
-file:$ml_home_dir/etc/passwd-admin
+file:$etc_dir/passwd-admin
    </entry>
 </row>
 <row>

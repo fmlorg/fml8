@@ -733,6 +733,7 @@ _file$ {
 
 _dir$ {
           $db_dir
+          $etc_dir
           $event_queue_dir
           $listinfo_base_dir
           $listinfo_dir

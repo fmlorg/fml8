@@ -57,7 +57,7 @@ admin_member_password_maps</entry>
  all password files.</entry>
 <entry>
 $primary_admin_member_password_map
-   file:$ml_home_dir/etc/passwd
+   file:$etc_dir/passwd
    </entry>
 </row>
 <row>
@@ -647,6 +647,15 @@ error_analyzer_simple_count_limit</entry>
 </row>
 <row>
 <entry>
+etc_dir</entry>
+<entry>
+ etc directory</entry>
+<entry>
+$ml_home_dir/etc
+   </entry>
+</row>
+<row>
+<entry>
 event_queue_dir</entry>
 <entry>
  event queue directory for scheduler</entry>
@@ -1211,7 +1220,7 @@ primary_admin_member_password_map</entry>
 <entry>
  primary password file to authenticate remote administrator </entry>
 <entry>
-file:$ml_home_dir/etc/passwd-admin
+file:$etc_dir/passwd-admin
    </entry>
 </row>
 <row>
