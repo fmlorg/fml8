@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: configtest.pl,v 1.1 2004/12/09 11:35:58 fukachan Exp $
+# $FML: configtest.pl,v 1.2 2004/12/29 01:02:26 fukachan Exp $
 #
 
 use strict;
@@ -10,17 +10,19 @@ use vars qw(@failed_queue %failed_queue $base_dir);
 
 my $base_dir = shift || '/var/spool/ml';
 
-for my $f (<$base_dir/*/config.ph>) {
+for my $f (sort <$base_dir/*/config.ph>) {
     if (-f $f) {
-	print STDERR "// check $f\n";
-	check($f);
+	print "\n// check $f\n";
+	eval q{ check($f); };
+	print $@ if $@;
     }
 }
 
-for my $f (<$base_dir/*/.fml4rc/config.ph>) {
+for my $f (sort <$base_dir/*/.fml4rc/config.ph>) {
     if (-f $f) {
-	print STDERR "// check $f\n";
-	check($f);
+	print "\n// check $f\n";
+	eval q{ check($f); };
+	print $@ if $@;
     }
 }
 
@@ -36,6 +38,7 @@ if (@failed_queue) {
     print "\n";
 }
 else {
+    print "\n";
     print "Congraturations! ALL OK\n";
 }
 
@@ -70,12 +73,22 @@ sub check
 	my $query = "# Q: $k => $y\n";
 
         if ($x = $config_ph->translate($diff, $k, $v)) {
-	    print "# A: OK TRANSLATION FOUND\n";
-            print $x ,"\n";
+	    if ($x =~ /IGNORED (since .*)/) {
+		print "# A: OK (IGNORED $1)\n";
+	    }
+	    elsif ($x =~ /ERROR/) {
+		push(@failed_queue, $query);
+		print "# A: ERROR ($x)\n";
+	    }
+	    else {
+		print "# A: OK TRANSLATION FOUND\n";
+		print $x ,"\n";
+	    }
         }
 	else {
-	    if ($k =~ /_HOOK$/) {
+	    if ($k =~ /_HOOK$|ML_FN|WELCOME_STATEMENT|XMLNAME|BRACKET/) {
 		print "# A: OK (IGNORED SINCE HOOK CAN NOT TRANSLATED)\n";
+		$query = "# Q: $k => ...\n";
 	    }
 	    else {
 		print "# A: FAILED (NOT TRANSLATED)\n";
