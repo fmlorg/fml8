@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SimpleMatch.pm,v 1.16 2001/04/21 16:54:24 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.17 2001/05/20 12:58:24 fukachan Exp $
 #
 
 
@@ -116,6 +116,17 @@ my $address_trap_regexp = {
     	'end'   => 'Received.*',
     },
 
+
+    'sims.1' => {
+	'start' => 'Your message cannot be delivered to the following recipients:',
+    },
+
+    'sims.2' => {
+	'start' => '----- The following addresses had permanent fatal errors -----',
+	'end'   => '----- Transcript of session follows -----',
+    },
+
+
     # XXX what is this ???
     'unknown1' => {
 	'start' => 'here is your list of failed recipients',
@@ -131,6 +142,7 @@ my $address_trap_regexp = {
 	'start' => 'this message was created automatically by mail delivery software',
 	'end'   => 'original message follows',
     },
+
 };
 
 my $reason_trap_regexp = {
