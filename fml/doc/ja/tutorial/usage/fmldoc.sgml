@@ -1,10 +1,11 @@
 <!--
-	$FML: fmldoc.sgml,v 1.2 2001/04/26 11:02:39 fukachan Exp $
+   $FML: fmldoc.sgml,v 1.1 2001/11/24 03:22:58 fukachan Exp $
 -->
 
 <sect1 id="usage.fmldoc">
-
-<title> モジュールのドキュメントを表示する (fmldoc) </title>
+	<title>
+	モジュールのドキュメントを表示する (fmldoc)
+	</title>
 
 <para>
 fmldoc の使い方は perldoc と同様です。

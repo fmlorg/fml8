@@ -1,5 +1,5 @@
 <!--
-   $FML: fml.sgml,v 1.1 2002/07/02 10:39:37 fukachan Exp $
+   $FML: fml.sgml,v 1.2 2002/07/04 10:59:01 fukachan Exp $
 -->
 
 <chapter id="overview">
@@ -34,13 +34,24 @@
 
     <listitem>
 	<para>
-	makefml によるＭＬの作成/削除、メンバーの登録/削除など
+	makefml によるコマンド操作:
+		ＭＬの作成/削除、
+		メンバーの登録/削除/変更(chaddr)、
+		リモート管理者の登録/削除、
+		ログを見る、
+		メンバーリストを見る、
+		他		
 	</para>
     </listitem>
 
     <listitem>
 	<para>
-	CGI によるＭＬの作成/削除、メンバーの登録/削除など
+	CGI による操作:
+		ＭＬの作成/削除、
+		メンバーの登録/削除/変更(chaddr)、
+		リモート管理者の登録/削除、
+		ログを見る、
+		メンバーリストを見る、
 	</para>
     </listitem>
 
@@ -50,6 +61,29 @@
 	配送、
 	ヘッダの書き換え、
 	フィルタ( 4.0 の Envelope Filter と Content Filter に相当するもの )、
+	</para>
+    </listitem>
+
+    <listitem>
+	<para>
+	コマンドメール(一般ユーザ):
+		メンバーの登録/削除/変更(chaddr)、
+		リモート管理者の登録/削除、
+		ログを見る、
+	</para>
+    </listitem>
+
+    <listitem>
+	<para>
+	コマンドメール(リモート管理者):
+		メンバーの登録/削除/変更(chaddr)、
+		リモート管理者の登録/削除、
+		ログを見る、
+	</para>
+    </listitem>
+
+    <listitem>
+	<para>
 	エラーメール解析
 	</para>
     </listitem>
@@ -72,7 +106,7 @@
 
     <listitem>
 	<para>
-	記事の HTML 化システム:
+	記事の HTML 化(デフォルトで HTML 版も作る):
 	fmlhtmlify および makefml に HTML 化コマンドがあります。
 	</para>
     </listitem>
@@ -88,7 +122,7 @@
 
     <listitem>
 	<para>
-	いくつかのユーティリティ:
+	管理を支援するユーティリティ:
 	fmlconf
 	fmldoc
 	fmlhtmlify
@@ -327,7 +361,7 @@ elena@nuinui.net を作る場合は、次のように実行して下さい。
 <!-- ============================================================= -->
 <sect1 id="guide.config.cf">
 	<title>
-	ＭＬの設定をカスタマイズをする
+	ＭＬの設定のカスタマイズ
 	</title>
 
 <warning>
@@ -371,7 +405,7 @@ elena ＭＬの設定のカスタマイズは
 /var/spool/ml/elena/config.cf
 を編集して下さい。
 フォーマットは postfix の設定ファイルと同様です(&fml4; の config.ph よ
-りは cf にやや近いですが)。わかりやすいでしょ？:-)
+りは cf にやや近いですが)。
 </para>
 
 <para>

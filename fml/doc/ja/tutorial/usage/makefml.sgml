@@ -1,10 +1,11 @@
 <!--
-   $FML: makefml.sgml,v 1.2 2002/04/01 23:41:07 fukachan Exp $
+   $FML: makefml.sgml,v 1.3 2002/07/02 10:39:39 fukachan Exp $
 -->
 
 <sect1 id="usage.makefml">
-
-<title> makefml を使って、ユーザの登録/削除他(あらゆる:) </title>
+	<title>
+	makefml を使って、ユーザの登録/削除他(あらゆる:)
+	</title>
 
 <para>
 makefml の基本的な使い方は &fml4; の makefml と同様です。
@@ -46,6 +47,35 @@ makefml の基本的な使い方は &fml4; の makefml と同様です。
 
 	<listitem>
 	<para>
+	アドレスの変更
+	(
+		chaddr
+	)	
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
+	リモート管理者の登録
+	(
+		addadmin
+		addpriv	
+	)	
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
+	リモート管理者の削除
+	(
+		byeadmin
+		byepriv	
+	)	
+	</para>
+	</listitem>
+
+	<listitem>
+	<para>
 	ＭＬの作成
 	(
 		newml
@@ -58,16 +88,6 @@ makefml の基本的な使い方は &fml4; の makefml と同様です。
 	ＭＬの削除
 	(
 		rmml
-	)
-	</para>
-	</listitem>
-
-	<listitem>
-	<para>
-	ファイルを送り返す
-	(
-		get
-		mget
 	)
 	</para>
 	</listitem>

@@ -1,5 +1,5 @@
 <!--
-   $FML: Mail::Message.sgml,v 1.5 2002/01/16 14:12:37 fukachan Exp $
+   $FML: Mail::Message.sgml,v 1.6 2002/04/01 23:41:05 fukachan Exp $
 -->
 
 <chapter id="module.mail.message">
@@ -29,7 +29,7 @@ header -> body
 header -> preamble -> part1 -> part2 -> trailor
 </screen>
 のようにオブジェクトが数珠つなぎのようなデータ構造を作ります。
-ちなみに鎖の鎖の鎖の間の double link list です。
+ちなみに鎖と鎖の間は double link list です。
 Mail::Message のクラスは
 このようなデータ構造に対して、さまざまなオペレーションを提供します。
 </para>
@@ -75,7 +75,7 @@ parse() メソッドは
 data_type_list()
 は
 鎖の列の情報を返します。
-情報は HASH ARRAY の形で返されます。
+情報は ARRAY REFERENCE の形で返されます。
 例えば MIME/Multipart は次のようになります。
 <screen>
   type[ 1]: text/rfc822-headers       | multipart/mixed

@@ -1,5 +1,5 @@
 <!--
-   $FML: module.sgml,v 1.1 2001/11/24 03:22:53 fukachan Exp $
+   $FML: module.sgml,v 1.2 2002/07/02 10:39:31 fukachan Exp $
 -->
 
 
@@ -49,9 +49,11 @@ FML::Command::Admin::コマンド
 を使うモジュールもあります。
 例えば登録と削除の実作業は
 FML::Command::Admin::コマンド
-が行なっています。この場合
+内のコードが行なっています。
+登録/削除のコードはすべてのプログラムで共有するためです。
+この場合
 FML::Command::User::コマンド
-のコマンドは confirm を行なうための wrapper です。
+のコマンドは confirm を行なうための wrapper という位置付けになります。
 </para>
 </sect2>
 

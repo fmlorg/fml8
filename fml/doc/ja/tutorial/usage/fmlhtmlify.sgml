@@ -1,16 +1,19 @@
 <!--
-	$FML: fmlhtmlify.sgml,v 1.2 2001/04/26 11:02:39 fukachan Exp $
+   $FML: fmlhtmlify.sgml,v 1.1 2001/11/24 03:22:58 fukachan Exp $
 -->
 
 <sect1 id="usage.fmlhtmlify">
-
-<title> 記事を HTML 化する (fmlhtmlify) </title>
+	<title>
+	記事を HTML 化する (fmlhtmlify)
+	</title>
 
 <para>
+[TODO] ん、これでいいのか？
 <screen>
-% fmlhtmlify ＭＬ名
+% fmlhtmlify ＭＬのホーム 作る先
+
+% fmlhtmlify /var/spool/ml/elena /some/where/mlarchive/elena
 </screen>
 
 </para>
 
-</sect1>

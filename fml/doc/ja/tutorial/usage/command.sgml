@@ -1,5 +1,5 @@
 <!--
-	$FML: command.sgml,v 1.2 2002/07/02 10:39:38 fukachan Exp $
+	$FML: command.sgml,v 1.3 2002/07/05 04:01:37 fukachan Exp $
 -->
 
 <sect1 id="fml.command.bymail">
@@ -32,7 +32,7 @@ fml.pl はメールを標準入力から受けとり、
 
 <warning>
 <para>
-4.0 と違い、5.0 ではコマンドの結果を
+&fml4; と違い、&fmldevel; ではコマンドの結果を
 <link linkend="message.reply">
 一通のメール ( MIME/Multipart )にまとめて返送
 </link>
