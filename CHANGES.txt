@@ -1,28 +1,33 @@
 		CHANGES
 		Last Modified: $Date$
 
-2001/12/22
+2001/12/25
+
+   Mail::HTML::Lite 
+	bug fix::_print_li_filename() check is too restricted
+
+2001/12/22,23,24,25
 
    final clean up campaign in 2001
    	クリーニングキャンペーン 2001 ファイナル:)
+	FNF-ify 
 	コメントおよびドキュメントの更新
 	空白の削除 \s*$
 	使っていないので削除したモジュール
 		FML::Messages
 		FML::MIME
+		FML::Language::Japanese::Subject
 
    renamed
 	FML::Checksum -> Mail::Message::Checksum
   
+2001/12/22
+
    FML::Process::Kernel 
 	remove FML::Messages
 	
    TinyScheduler 
-	update documents and comments.
-	define get_mode for symmetric definition.
-	
-   FML::Confirm Credential.pm PCB.pm Parse.pm 
-	update comments
+	define get_mode() for symmetric definition.
 
 2001/12/18
 
@@ -1310,4 +1315,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.43 2001/12/22 02:54:34 fukachan Exp $
+$FML: CHANGES.txt,v 1.44 2001/12/22 16:22:15 fukachan Exp $
