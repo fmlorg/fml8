@@ -55,7 +55,7 @@
 #   http://www.fml.org/software/fml-devel/Documentation/ja/tutorial/
 # の「プログラミングスタイル」の章を御覧ください。
 #
-=head1	基本的なパラメータ
+n=head1	基本的なパラメータ
 
 =head2	ＭＬの管理者
 
@@ -66,32 +66,7 @@
 maintainer	=
 
 
-=head2	default modes
-
-
-# Descriptions: ファイルを作成する時のデフォルトモード
-#      History:
-#        Value:
-#     Examples:
-default_file_mode	=	0600
-
-
-# Descriptions: ディレクトリを作成する時のデフォルトモード
-#      History:
-#        Value:
-#     Examples:
-default_directory_mode	=	0755
-
-
-# Descriptions: ディレクトリを作成する時のデフォルトモード
-#      History:
-#        Value:
-#     Examples:
-default_directory_mode	=	0755
-
-directory_public_mode	=	0755
-
-directory_private_mode	=	0700
+=head2	default umask
 
 
 # Descriptions:
@@ -110,7 +85,35 @@ default_umask		=	077
 #     Examples:
 timezone		=	+0900
 
+
+
+
+
+
+
+
 =head1	ディレクトリ
+
+=head2	mode
+
+# Descriptions: ディレクトリを作成する時のデフォルトモード
+#      History:
+#        Value:
+#     Examples:
+directory_default_mode	=	0755
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+directory_public_mode	=	0755
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+directory_private_mode	=	0700
+
 
 =head2 newml で初期化する
 
@@ -259,6 +262,15 @@ domain_local_tmp_dir	=	$ml_home_prefix/@tmp@
 event_queue_dir	= $var_dir/event/queue
 
 =head1	ファイル
+
+=head2 	mode
+
+
+# Descriptions: ファイルを作成する時のデフォルトモード
+#      History:
+#        Value:
+#     Examples:
+file_default_mode	=	0600
 
 
 =head1	アクセス制御ルール

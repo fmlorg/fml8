@@ -1,5 +1,26 @@
 =head1	directory
 
+=head2	mode
+
+# Descriptions: default mode in creating directory.
+#      History:
+#        Value:
+#     Examples:
+directory_default_mode	=	0755
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+directory_public_mode	=	0755
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+directory_private_mode	=	0700
+
+
 =head2 directories "makefml newml" initializes 
 
 

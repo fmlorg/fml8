@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.88 2003/10/16 03:50:07 fukachan Exp $
+# $FML: Utils.pm,v 1.89 2003/10/16 14:05:26 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -280,7 +280,7 @@ sub mkdir
 {
     my ($curproc, $dir, $mode) = @_;
     my $config  = $curproc->config();
-    my $dirmode = $config->{ default_directory_mode } || '0700';
+    my $dirmode = $config->{ directory_default_mode } || '0700';
 
     # back up umask
     my $curmask = umask( 077 ); # full open for readability

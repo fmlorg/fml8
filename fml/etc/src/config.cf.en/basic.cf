@@ -9,26 +9,7 @@
 maintainer	=
 
 
-=head2	default modes
-
-
-# Descriptions: default mode in creating file
-#      History:
-#        Value:
-#     Examples:
-default_file_mode	=	0600
-
-# Descriptions:
-#      History:
-#        Value:
-#     Examples:
-directory_public_mode	=	0755
-
-# Descriptions:
-#      History:
-#        Value:
-#     Examples:
-directory_private_mode	=	0700
+=head2	default umask
 
 
 # Descriptions:

@@ -431,24 +431,6 @@ $var_dir/db
 </row>
 <row>
 <entry>
-default_directory_mode</entry>
-<entry>
- ディレクトリを作成する時のデフォルトモード</entry>
-<entry>
-0755
-   </entry>
-</row>
-<row>
-<entry>
-default_file_mode</entry>
-<entry>
- ファイルを作成する時のデフォルトモード</entry>
-<entry>
-0600
-   </entry>
-</row>
-<row>
-<entry>
 default_mail_body_size_limit</entry>
 <entry>
  本文サイズの上限のデフォルト値</entry>
@@ -500,6 +482,15 @@ digest_sequence_file</entry>
  まとめ送りした最後の記事番号を保存するファイル</entry>
 <entry>
 $ml_home_dir/seq-digest
+   </entry>
+</row>
+<row>
+<entry>
+directory_default_mode</entry>
+<entry>
+ ディレクトリを作成する時のデフォルトモード</entry>
+<entry>
+0755
    </entry>
 </row>
 <row>
@@ -663,6 +654,15 @@ event_queue_dir</entry>
  イヴェントのキューディレクトリ</entry>
 <entry>
 $var_dir/event/queue
+   </entry>
+</row>
+<row>
+<entry>
+file_default_mode</entry>
+<entry>
+ ファイルを作成する時のデフォルトモード</entry>
+<entry>
+0600
    </entry>
 </row>
 <row>

@@ -70,26 +70,7 @@
 maintainer	=
 
 
-=head2	default modes
-
-
-# Descriptions: default mode in creating file
-#      History:
-#        Value:
-#     Examples:
-default_file_mode	=	0600
-
-
-# Descriptions: default mode in mkdir
-#      History:
-#        Value:
-#     Examples:
-default_directory_mode	=	0755
-
-
-directory_public_mode	=	0755
-
-directory_private_mode	=	0700
+=head2	default umask
 
 
 # Descriptions:
@@ -109,6 +90,27 @@ default_umask		=	077
 timezone		=	+0900
 
 =head1	directory
+
+=head2	mode
+
+# Descriptions: default mode in creating directory.
+#      History:
+#        Value:
+#     Examples:
+directory_default_mode	=	0755
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+directory_public_mode	=	0755
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+directory_private_mode	=	0700
+
 
 =head2 directories "makefml newml" initializes 
 
@@ -251,6 +253,15 @@ domain_local_tmp_dir	=	$ml_home_prefix/@tmp@
 event_queue_dir	= $var_dir/event/queue
 
 =head1	file
+
+=head2	mode
+
+
+# Descriptions: default mode in creating file
+#      History:
+#        Value:
+#     Examples:
+file_default_mode	=	0600
 
 
 =head1	ACL

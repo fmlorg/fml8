@@ -1,2 +1,11 @@
 =head1	ファイル
 
+=head2 	mode
+
+
+# Descriptions: ファイルを作成する時のデフォルトモード
+#      History:
+#        Value:
+#     Examples:
+file_default_mode	=	0600
+

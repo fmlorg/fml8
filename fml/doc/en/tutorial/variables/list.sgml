@@ -449,24 +449,6 @@ $var_dir/db
 </row>
 <row>
 <entry>
-default_directory_mode</entry>
-<entry>
- default mode in mkdir</entry>
-<entry>
-0755
-   </entry>
-</row>
-<row>
-<entry>
-default_file_mode</entry>
-<entry>
- default mode in creating file</entry>
-<entry>
-0600
-   </entry>
-</row>
-<row>
-<entry>
 default_mail_body_size_limit</entry>
 <entry>
  body size limit</entry>
@@ -518,6 +500,15 @@ digest_sequence_file</entry>
  file to store the last sequence to deliver</entry>
 <entry>
 $ml_home_dir/seq-digest
+   </entry>
+</row>
+<row>
+<entry>
+directory_default_mode</entry>
+<entry>
+ default mode in creating directory.</entry>
+<entry>
+0755
    </entry>
 </row>
 <row>
@@ -681,6 +672,15 @@ event_queue_dir</entry>
  event queue directory for scheduler</entry>
 <entry>
 $var_dir/event/queue
+   </entry>
+</row>
+<row>
+<entry>
+file_default_mode</entry>
+<entry>
+ default mode in creating file</entry>
+<entry>
+0600
    </entry>
 </row>
 <row>

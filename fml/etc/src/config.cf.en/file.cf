@@ -1,2 +1,11 @@
 =head1	file
 
+=head2	mode
+
+
+# Descriptions: default mode in creating file
+#      History:
+#        Value:
+#     Examples:
+file_default_mode	=	0600
+

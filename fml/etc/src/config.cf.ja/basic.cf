@@ -1,4 +1,4 @@
-=head1	基本的なパラメータ
+n=head1	基本的なパラメータ
 
 =head2	ＭＬの管理者
 
@@ -9,33 +9,7 @@
 maintainer	=
 
 
-=head2	default modes
-
-
-# Descriptions: ファイルを作成する時のデフォルトモード
-#      History:
-#        Value:
-#     Examples:
-default_file_mode	=	0600
-
-
-# Descriptions: ディレクトリを作成する時のデフォルトモード
-#      History:
-#        Value:
-#     Examples:
-default_directory_mode	=	0755
-
-# Descriptions:
-#      History:
-#        Value:
-#     Examples:
-directory_public_mode	=	0755
-
-# Descriptions:
-#      History:
-#        Value:
-#     Examples:
-directory_private_mode	=	0700
+=head2	default umask
 
 
 # Descriptions:
@@ -53,3 +27,10 @@ default_umask		=	077
 #        Value:
 #     Examples:
 timezone		=	+0900
+
+
+
+
+
+
+

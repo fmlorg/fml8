@@ -221,8 +221,6 @@ unsubscribe_command {
 default {
 
    default_* {
-    ?     $default_directory_mode
-    ?     $default_file_mode
           $default_mail_body_size_limit
           $default_mail_header_size_limit
     ?     $default_umask
@@ -255,6 +253,7 @@ digest {
 directory {
 
    directory_* {
+    ?     $directory_default_mode
     ?     $directory_private_mode
     ?     $directory_public_mode
    }
@@ -675,7 +674,9 @@ _dir$ {
     ?     $commands_for_privileged_user
     ?     $commands_for_stranger
     ?     $commands_for_user
+    ?     $file_default_mode
     ?     $list_addresses
+    ?     $n
     ?     $unsafe_header_fields
 </screen>
 </para>
