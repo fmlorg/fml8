@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.13 2003/08/23 04:35:28 fukachan Exp $
+# $FML: Summary.pm,v 1.14 2003/08/23 14:37:59 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -47,16 +47,16 @@ sub new
 }
 
 
-# Descriptions: append summary to $summary_file
+# Descriptions: append summary to $article_summary_file
 #    Arguments: OBJ($self) HANDLE($wh) NUM($id)
-# Side Effects: append summary to $summary_file
+# Side Effects: append summary to $article_summary_file
 # Return Value: none
 sub print
 {
     my ($self, $wh, $id) = @_;
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
-    my $file    = $config->{ 'summary_file' };
+    my $file    = $config->{ 'article_summary_file' };
 
     # XXX last resort == STDOUT.
     $wh ||= \*STDOUT;
@@ -81,7 +81,7 @@ sub _prepare_info
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
     my $tag     = $config->{ article_subject_tag };
-    my $addrlen = $config->{ summary_format_address_length };
+    my $addrlen = $config->{ article_summary_file_format_address_length };
     my $article = undef;
 
     if (defined $self->{ _article }) {
@@ -146,20 +146,20 @@ sub print_one_line_summary
     my ($self, $wh, $info) = @_;
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
-    my $style   = $config->{ 'summary_format_style' };
+    my $style   = $config->{ 'article_summary_file_format_style' };
 
     if ($style eq 'fml4_compatible') {
 	$self->_fml4_compatible_style_one_line_summary($wh, $info);
     }
     else {
-	$curproc->logerror("unknown \$summary_file_style: $style");
+	$curproc->logerror("unknown \$article_summary_file_style: $style");
     }
 }
 
 
-# Descriptions: write out formatted string into $summary_file.
+# Descriptions: write out formatted string into $article_summary_file.
 #    Arguments: OBJ($self) HANDLE($wh) HASH_REF($info)
-# Side Effects: update $summary_file.
+# Side Effects: update $article_summary_file.
 # Return Value: none
 sub _fml4_compatible_style_one_line_summary
 {
@@ -205,7 +205,7 @@ sub append
     my ($self, $article, $id) = @_;
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
-    my $file    = $config->{ 'summary_file' };
+    my $file    = $config->{ 'article_summary_file' };
 
     if (defined $article) {
 	$self->{ _article } = $article;
@@ -230,7 +230,7 @@ sub rebuild
     my ($self, $min, $max) = @_;
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
-    my $file    = $config->{ 'summary_file' };
+    my $file    = $config->{ 'article_summary_file' };
     my $tmp     = "$file.new.$$";
 
     use FileHandle;
@@ -263,10 +263,10 @@ sub dump
     my ($self, $wh) = @_;
     my $curproc      = $self->{ _curproc };
     my $config       = $curproc->config();
-    my $summary_file = $config->{ "summary_file" };
+    my $article_summary_file = $config->{ "article_summary_file" };
 
-    if (-f $summary_file) {
-	my $fh = new FileHandle $summary_file;
+    if (-f $article_summary_file) {
+	my $fh = new FileHandle $article_summary_file;
 	if (defined $fh && defined $wh) {
 	    my $buf;
 	    while ($buf = <$fh>) { print $wh $buf;}
