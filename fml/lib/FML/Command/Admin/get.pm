@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.7 2002/02/17 09:14:02 fukachan Exp $
+# $FML: get.pm,v 1.8 2002/02/18 14:24:12 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
@@ -35,6 +35,19 @@ get arbitrary file in $ml_home_dir
 =head1 METHODS
 
 =cut
+
+
+# Descriptions: standard constructor
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
+sub new
+{
+    my ($self) = @_;
+    my ($type) = ref($self) || $self;
+    my $me     = {};
+    return bless $me, $type;
+}
 
 
 # Descriptions: need lock or not

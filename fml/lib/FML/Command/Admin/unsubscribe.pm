@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.6 2002/02/13 10:41:17 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.7 2002/02/18 14:24:12 fukachan Exp $
 #
 
 package FML::Command::Admin::unsubscribe;
@@ -33,6 +33,19 @@ unsubscribe a new user.
 =head2 C<process($curproc, $command_args)>
 
 =cut
+
+
+# Descriptions: standard constructor
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
+sub new
+{
+    my ($self) = @_;
+    my ($type) = ref($self) || $self;
+    my $me     = {};
+    return bless $me, $type;
+}
 
 
 # Descriptions: need lock or not

@@ -1,11 +1,10 @@
-
 #-*- perl -*-
 #
 #  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: send.pm,v 1.5 2002/02/13 10:41:17 fukachan Exp $
+# $FML: send.pm,v 1.6 2002/02/18 14:14:53 fukachan Exp $
 #
 
 package FML::Command::User::send;
@@ -15,13 +14,6 @@ use Carp;
 
 use FML::Command::User::get;
 @ISA = qw(FML::Command::User::get);
-
-
-# Descriptions: need lock or not
-#    Arguments: none
-# Side Effects: none
-# Return Value: NUM( 1 or 0)
-sub need_lock { $self->SUPER::need_lock();}
 
 
 # Descriptions: send articles, files, et.al...

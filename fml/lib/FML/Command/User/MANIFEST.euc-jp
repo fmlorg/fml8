@@ -11,7 +11,7 @@ summary		summary ファイルを取り寄せる
 
 ( (compatibility)
 objective	objective ファイルを取り寄せる if found
-deny		deny ファイルを取り寄せる if found
+deny		deny ファイルを取り寄せる if found	   (needed ?)
 )
 
 
@@ -55,4 +55,4 @@ off
 on
 
 
-$FML: MANIFEST.euc-jp,v 1.2 2001/10/13 12:23:35 fukachan Exp $
+$FML: MANIFEST.euc-jp,v 1.3 2002/02/11 13:29:12 fukachan Exp $

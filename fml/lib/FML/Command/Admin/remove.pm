@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: remove.pm,v 1.4 2001/12/22 09:53:09 fukachan Exp $
+# $FML: remove.pm,v 1.5 2002/02/18 14:24:12 fukachan Exp $
 #
 
 package FML::Command::Admin::remove;
@@ -24,7 +24,7 @@ use FML::Command::Admin::unsubscribe;
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    $self->SUPER::unsubscribe($curproc, $command_args);
+    $self->SUPER::process($curproc, $command_args);
 }
 
 

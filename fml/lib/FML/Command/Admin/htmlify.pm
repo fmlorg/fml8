@@ -4,15 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: htmlify.pm,v 1.6 2002/02/17 04:51:14 fukachan Exp $
+# $FML: htmlify.pm,v 1.7 2002/02/18 14:24:12 fukachan Exp $
 #
 
 package FML::Command::Admin::htmlify;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-
-
 
 use FML::Log qw(Log LogWarn LogError);
 
@@ -47,6 +45,19 @@ if --srcdir is not specified, the source is taken from
 =head1 METHODS
 
 =cut
+
+
+# Descriptions: standard constructor
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
+sub new
+{
+    my ($self) = @_;
+    my ($type) = ref($self) || $self;
+    my $me     = {};
+    return bless $me, $type;
+}
 
 
 # Descriptions: need lock or not
