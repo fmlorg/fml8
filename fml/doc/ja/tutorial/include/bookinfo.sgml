@@ -1,5 +1,5 @@
 <!--
-   $FML: bookinfo.sgml,v 1.5 2002/09/29 06:12:20 fukachan Exp $
+   $FML: bookinfo.sgml,v 1.6 2002/12/15 14:19:12 fukachan Exp $
 -->
 
 <bookinfo>
@@ -50,7 +50,8 @@
 	なお、以下の環境で動作実績が確認されています。
 <screen>
 postfix  + perl 5.6.1   on NetBSD 1.5.x (1.5 stable)
-sendmail + perl 5.6.1   on Redhat Linux 6.2
+postfix  + perl 5.6.1   on Redhat Linux 7.2
+sendmail + perl 5.00503 on Redhat Linux 6.2
 postfix  + perl 5.00503 on FreeBSD 4.3 STABLE
 ?        + perl ?       on FreeBSD 4.6 RELEASE
 postfix  + perl ?       on Solaris 7
