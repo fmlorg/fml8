@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.2 2004/03/17 06:08:24 fukachan Exp $
+# $FML: config_ph.pm,v 1.3 2004/03/17 12:33:12 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
@@ -287,7 +287,7 @@ sub translate
 	if ($value eq '[:]') {
 	    my $s;
 	    $s .= "article_header_rewrite_rules += rewrite_article_subject_tag\n\n";
-	    $s .= "article_subject_tag = [$ml_name:%05d]\n";
+	    $s .= "article_subject_tag = [\$ml_name:\%05d]\n";
 	    return $s;
 	}
     }
