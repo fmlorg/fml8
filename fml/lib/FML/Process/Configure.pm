@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Configure.pm,v 1.31 2001/11/25 05:13:22 fukachan Exp $
+# $FML: Configure.pm,v 1.32 2001/11/27 11:40:30 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -86,8 +86,9 @@ sub verify_request
 {
     my ($curproc, $args) = @_;
     my $argv = $curproc->command_line_argv();
+    my $len  = $#$argv + 1;
 
-    if (length(@$argv) <= 1) {
+    if ($len <= 1) {
 	$curproc->help();
 	exit(0);
     }
@@ -122,6 +123,9 @@ sub run
 
     $curproc->_makefml($args);
 }
+
+
+sub finish { 1;} 
 
 
 =head2 help()
