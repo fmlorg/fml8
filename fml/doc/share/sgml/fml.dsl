@@ -1,7 +1,23 @@
-<!-- $FML$ -->
+<!-- $FML: fml.dsl,v 1.1.1.1 2001/05/01 08:47:06 fukachan Exp $ -->
 
 <!DOCTYPE style-sheet PUBLIC "-//James Clark//DTD DSSSL Style Sheet//EN" [
    <!ENTITY docbook.dsl PUBLIC "-//Norman Walsh//DOCUMENT DocBook HTML Stylesheet//EN" CDATA DSSSL>
+
+<!ENTITY % output.html          "INCLUDE">
+<!ENTITY % output.html.images   "INCLUDE">
+<!ENTITY % output.print         "IGNORE">
+<!ENTITY % output.print.pdf     "IGNORE">
+
+<![ %output.html; [
+<!ENTITY docbook.dsl PUBLIC "-//Norman Walsh//DOCUMENT DocBook HTML Stylesheet//EN" 
+CDATA DSSSL>
+]]>
+<![ %output.print; [
+<!ENTITY docbook.dsl PUBLIC "-//Norman Walsh//DOCUMENT DocBook Print Stylesheet//EN"
+ CDATA DSSSL>
+
+]]>
+
 ]>
 
 <style-sheet>
