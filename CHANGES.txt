@@ -1,6 +1,17 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/11/19
+
+   FML::Process::Kernel 
+	bug fix queue identifier generation
+	
+   Mail::Delivery::Queue 
+	input of recipients can be duplicated
+
+   Mail::Message::ToHTML 
+	bug fix function call::f() => $obj->f()
+
 2002/11/18
 
    FML::Process::Digest 
@@ -3583,4 +3594,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.108 2002/11/10 13:10:17 fukachan Exp $
+$FML: CHANGES.txt,v 1.109 2002/11/18 14:36:48 fukachan Exp $
