@@ -26,5 +26,23 @@ on upgrade installation
 ファイルをセーブした瞬間から新しい fml に切り替わります
 (注: エディタで編集中は古い内容)。
 
+<P>注意点
+
+Q: loader や Bootstrap() がどーとかいうエラーが出る
+<BR>
+A: ブートストラップのやり方がまだ収束してないので、稀に
+
+	/usr/local/fml/libexec/loader
+
+を入れ替える必要がある時があります。loader は /etc/fml/main.cf を読む
+前に起動されるものなので、手動で切替えるしかない。
+
+やりかたはインストール後に、
+
+	# /usr/local/fml/libexec/
+	# mv current-yyyymmdd/loader loader
+
+などとする。cp でもいいけど同一パーティッション上の mv なら atomic で
+あることが保証されるので、good 。
 </BODY>
 </HTML>
