@@ -10,6 +10,11 @@
 [TODO]	変数のクラス構造を再構成
 
 
+[TODO]	変数の ...s vs _list 
+
+	xxxs vs xxx_list ?
+	"all of" vs "either of" ?
+
 [TODO]	charset と言語(japanese,english)との対応関係を一箇所にまとめて定義
 
 	[CHECK]	
@@ -131,34 +136,6 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 ======================================================================
 ○		アドレスの操作
-
-
-[TODO]	$ml-admin の取り扱い
-
-	X-Sequence: fml-devel 435
-
-	Q: makefml newml elena --maintainer=foo@bar.domain
-
-	aliases は
-
-		elena-admin: foo@bar.domain
-
-	とかなるのはあり?
-
-	Q: configure で?
-
-		elena-admin: fml
-
-	を
-
-		elena-admin: foo@bar.domain
-
-	にできるおぷしょん？
-
-	Q: default_ml_admin_addr = $maintainer などという変数を創設？
-		newml 時に考慮される。
-
-		$newml_command_ml_admin_addr ?
 
 
 [TODO]	受信者としてだけの登録 (add2actives 相当、メールマガジンなど)は？
@@ -322,4 +299,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.100 2003/11/30 04:44:59 fukachan Exp $
+$FML: 00_MEMO,v 1.101 2003/11/30 09:38:47 fukachan Exp $
