@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Print.pm,v 1.13 2001/11/09 15:09:03 fukachan Exp $
+# $FML: Print.pm,v 1.14 2001/11/10 09:04:27 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -12,8 +12,6 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use Mail::ThreadTrack::Print::Utils qw(decode_mime_string STR2EUC);
-
-my $is_show_cost_indicate = 0;
 
 =head1 NAME
 
@@ -25,26 +23,14 @@ Mail::ThreadTrack::Print - print out thread relation
 
 =head1 METHODS
 
-=head2 review()
+=head2 summary()
 
-=head2 C<summary(>)
-
-top level entrance for routines to show the thread summary. 
-
-See L<simple_print()> for more detail.
-Either of 
-C<simple_print()> 
-or
-C<_summary_print()>
-is used for purposes.
-
+show the thread summary. 
 Each row that C<show_summary()> returns has a set of 
 C<date>, C<age>, C<status>, C<thread-id> and 
 C<articles>, which is a list of articles with the thread-id.
 
-=head2 C<simple_print()>
-
-show entries by the thread_id order. For example,
+summary show entries by the thread_id order. For example,
 
        date    age status  thread id             articles
  ------------------------------------------------------------
@@ -55,16 +41,17 @@ show entries by the thread_id order. For example,
  2001/02/07    3.0  going  elena_#00000454       814 815 
  2001/02/10    0.1   open  elena_#00000456       821 
 
-=head2 C<_summary_print()> 
+=head2 review()
 
-show entries in the C<cost> larger order.
-The cost is evaluated by $status and $age.
-The cost is larger as $age is larger.
-It is also larger if $status is C<open>.
+show a chain of article summary in each thread.
 
 =cut
 
 
+# Descriptions: top level entrance for "show" mode
+#    Arguments: $self varargs ...
+# Side Effects: none
+# Return Value: none
 sub summary
 {
     my ($self, @opts) = @_;
@@ -76,6 +63,10 @@ sub summary
 }
 
 
+# Descriptions: top level entrance for "review" mode
+#    Arguments: $self varargs ...
+# Side Effects: none
+# Return Value: none
 sub review
 {
     my ($self, @opts) = @_;
@@ -88,6 +79,10 @@ sub review
 
 
 
+# Descriptions: dynamic loading of sub modules
+#    Arguments: $self
+# Side Effects: @INC modified
+# Return Value: none
 sub _load_library
 {
     my ($self) = @_;
@@ -111,180 +106,116 @@ sub _load_library
 }
 
 
+#
+# SUMMARY MODE
+#
+
+
+# Descriptions: get thread id list with status != 'open' and
+#               show summary for the list
+#    Arguments: $self
+# Side Effects: none
+# Return Value: none
 sub _do_summary
 {
     my ($thread) = @_;
     my $mode = $thread->get_mode || 'text';
 
-    # rh: thread id list picked at status databsae.
+    # rh: thread id list picked from status.db
     my $thread_id_list = $thread->list_up_thread_id();
 
+    # 1. sort the thread output order by cost
+    # 2. print the thread brief summary in that order.
+    # 3. show short summary for each message if needed (mode dependent)
     if (@$thread_id_list) {
-	# sort the thread output order by cost and
-	# print the thread summary in that order.
 	$thread->sort_thread_id($thread_id_list);
 	$thread->_print_thread_summary($thread_id_list);
-
-	# show short summary for each message
-	unless ($mode eq 'html') {
-	    $thread->_print_message_summary($thread_id_list);
-	}
+	$thread->_print_message_summary($thread_id_list);
     }
 }
 
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub _print_thread_summary
 {
     my ($self, $thread_id_list) = @_;
-    my $mode   = $self->get_mode || 'text';
-    my $rh_age = $self->{ _age } || {};
-    my $fd     = $self->{ _fd } || \*STDOUT;
-    my $rh     = $self->{ _hash_table };
-    my $format = "%-20s %10s %5s %8s %s\n";
+    my $mode = $self->get_mode || 'text';
+    my $db   = $self->{ _hash_table };
 
-    if ($mode eq 'text') {
-	printf($fd $format, 'id', 'date', 'age', 'status', 'articles');
-	print $fd "-" x60;
-	print $fd "\n";
-    }
-    else {
-	print $fd "<TABLE BORDER=4>\n";
-	print $fd "<TD>id\n";
-	print $fd "<TD>summary\n";
-	print $fd "<TD>age\n";
-	print $fd "<TD>status\n";
-	print $fd "<TD>action\n";
-    }
+    # guide of presentation
+    $self->__start_thread_summary(); # XXX dynamic binding
 
-    my ($tid, @article_id, $article_id, $date, $age, $status) = ();
-    my $dh = new Mail::Message::Date;
-    for $tid (@$thread_id_list) {
-	next unless defined $rh->{ _articles }->{ $tid };
+    # show brief summary along thread_id list
+    my ($thread_id, @article_id, $article_id, $date, $age, $status) = ();
+    my $date_h = new Mail::Message::Date;
+    for $thread_id (@$thread_id_list) {
+	next unless defined $db->{ _articles }->{ $thread_id };
 
 	# get the first $article_id from the article_id list
-	(@article_id) = split(/\s+/, $rh->{ _articles }->{ $tid });
+	(@article_id) = split(/\s+/, $db->{ _articles }->{ $thread_id });
 	$article_id   = $article_id[0];
 
-	# determine $date for the $article_id
-	# $age and $status for $thread_id
-	$date   = $dh->YYYYxMMxDD( $rh->{ _date }->{ $article_id } , '/');
-	$age    = $rh_age->{ $tid };
-	$status = $rh->{ _status }->{ $tid };
+	# format $date for the $article_id
+	$date   = $date_h->YYYYxMMxDD( $db->{ _date }->{ $article_id } , '/');
+	$age    = $self->{ _age }->{ $thread_id };
+	$status = $db->{ _status }->{ $thread_id };
 
-	if ($mode eq 'html') {
-	    eval q{
-		use Mail::ThreadTrack::Print::HTML;
-		push(@ISA, qw(Mail::ThreadTrack::Print::HTML));
-	    };
-	    $self->_show_thread_by_html_table({
-		date     => $date,
-		age      => $age,
-		status   => $status,
-		tid      => $tid,
-		articles => $rh->{ _articles }->{ $tid },
-	    });
-	}
-	else {
-	    printf($fd $format, $tid, $date, $age, $status, 
-		   _format_list(25, $rh->{ _articles }->{ $tid }));
-	}
+	$self->__print_thread_summary( {
+	    date      => $date,
+	    age       => $age,
+	    status    => $status,
+	    thread_id => $thread_id,
+	    articles  => $db->{ _articles }->{ $thread_id },
+	}); # XXX dynamic binding
     }
 
-    if ($mode eq 'html') {
-	print $fd "</TABLE>\n";
-    }
+    $self->__end_thread_summary(); # XXX dynamic binding
 }
 
 
-sub _format_list
-{
-    my ($max, $str) = @_;
-    my (@idlist) = split(/\s+/, $str);
-    my $r = '';
-
-    for (@idlist) {
-	$r .= $_ . " ";
-	if (length($r) > $max) {
-	    $r .= "...";
-	    last;
-	}
-    }
-
-    return $r;
-}
-
-
-sub _cost_to_indicator
-{
-    my ($cost) = @_;
-    my $how_bad = 0;
-
-    if ($cost =~ /(\w+)\-(\d+)/) { 
-	$how_bad += $2;
-	$how_bad += 2 if $1 =~ /open/;
-	$how_bad  = "!" x ($how_bad > 6 ? 6 : $how_bad);
-    }
-}
-
-
+# Descriptions: show the first few lines of the first message in the thread
+#    Arguments: $self $id
+# Side Effects: none
+# Return Value: none
 sub _print_message_summary
 {
     my ($self, $thread_id) = @_;
-    my $config = $self->{ _config };
-    my $age  = $self->{ _age }  || {};
-    my $cost = $self->{ _cost } || {};
-    my $fd   = $self->{ _fd }   || \*STDOUT;
-    my $rh   = $self->{ _hash_table };
-
-    if (defined $config->{ spool_dir }) {
-	my ($aid, @aid, $file);
-	my $spool_dir  = $config->{ spool_dir };
-
-      THREAD_ID_LIST:
-	for my $tid (@$thread_id) {
-	    if ($is_show_cost_indicate) {
-		my $how_bad = _cost_to_indicator( $cost->{ $tid } );
-		printf $fd "\n%6s  %-10s  %s\n", $how_bad, $tid;
-	    }
-	    else {
-		printf $fd "\n>Thread-Id: %-10s  %s\n", $tid;
-	    }
-
-	    # show only the first article of this thread $tid
-	    if (defined $rh->{ _articles }->{ $tid }) {
-		(@aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
-		$aid  = $aid[0];
-		$file = File::Spec->catfile($spool_dir, $aid);
-		if (-f $file) {
-		    $self->print(  $self->message_summary($file) );
-		}
-	    }
-	}
-    }
+    $self->__print_message_summary($thread_id);
 }
 
 
+#
+# REVIEW MODE
+#
+
+# Descriptions: show brief summary chain of messages in the thread
+#    Arguments: $self $string $min_num $max_num
+# Side Effects: 
+# Return Value: none
 sub _do_review
 {
     my ($self, $str, $min, $max) = @_;
     my $config    = $self->{ _config };
     my $spool_dir = $config->{ spool_dir };
     my $fd        = $self->{ _fd } || \*STDOUT;
-    my $rh        = $self->{ _hash_table };
+    my $db        = $self->{ _hash_table };
     my %uniq      = ();
+    my $is_first  = 0;
 
-    # modify Print parameters 
-    $self->{ _article_summary_lines } = 5;
-
+    # translate the given parameter (MH style)
+    # get HASH ARRAY of specified range
     use Mail::Message::MH;
-    my $ra = Mail::Message::MH->expand($str, $min, $max);
-    my $first = 0;
+    my $range = Mail::Message::MH->expand($str, $min, $max);
 
-    if (defined $config->{ reverse_order }) { @$ra = reverse @$ra;}
+    # reverse order (first thread is the latest one) if reverse mode
+    if (defined $config->{ reverse_order }) { @$range = reverse @$range;}
 
   ID_LIST:
-    for my $id (@$ra) {
+    for my $id (@$range) {
 	next ID_LIST unless defined $id;
 
 	if ($id =~ /^\d+$/) {
@@ -292,22 +223,23 @@ sub _do_review
 	    my $tid = $self->_create_thread_id_strings($id);
 
 	    # check thread id $tid exists really ?
-	    if (defined $rh->{ _articles }->{ $tid }) {
+	    if (defined $db->{ _articles }->{ $tid }) {
 		printf $fd "\n>Thread-Id: %-10s  %s\n", $tid;
 
 		# different treatment for the fisrt article in this thread
-		$first = 1;
+		$is_first = 1;
 
 		# show all articles in this thread
 	      ARTICLE:
-		for my $aid (split(/\s+/, $rh->{ _articles }->{ $tid })) {
+		for my $aid (split(/\s+/, $db->{ _articles }->{ $tid })) {
 		    # ensure uniquness
 		    next ARTICLE if $uniq{ $aid };
 		    $uniq{ $aid } = 1;
 
-		    if ($first) {
+		    # show header only for the first message in this thread
+		    if ($is_first) {
 			undef $self->{ _no_header_summary };
-			$first = 0;
+			$is_first = 0;
 		    }
 		    else {
 			$self->{ _no_header_summary } = 1;
@@ -330,6 +262,10 @@ sub _do_review
 =cut
 
 
+# Descriptions: wrapper of print()
+#    Arguments: $self $str
+# Side Effects: quote if needed
+# Return Value: none
 sub print
 {
     my ($self, $str) = @_;
@@ -347,6 +283,10 @@ sub print
 }
 
 
+# Descriptions: quote for html
+#    Arguments: $str
+# Side Effects: quote
+# Return Value: string
 sub _quote
 {
     my ($str) = @_;
