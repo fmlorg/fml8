@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Subject.pm,v 1.19 2001/07/31 14:19:41 fukachan Exp $
+# $FML: Subject.pm,v 1.20 2001/10/08 23:28:27 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -164,10 +164,10 @@ sub is_reply
 
     return 1 if $subject =~ /^\s*Re:/i;
 
-    my $pkg = 'FML::Language::Japanese::Subject';
+    my $pkg = 'Mail::Message::Language::Japanese::Subject';
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
-	return 1 if &FML::Language::Japanese::Subject::is_reply($subject);
+	return 1 if &Mail::Message::Language::Japanese::Subject::is_reply($subject);
     };
 
     return 0;
@@ -183,11 +183,11 @@ sub _cut_off_reply
 {
     my ($self, $r_subject) = @_;
 
-    my $pkg = 'FML::Language::Japanese::Subject';
+    my $pkg = 'Mail::Message::Language::Japanese::Subject';
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
 	$$r_subject = 
-	    &FML::Language::Japanese::Subject::cut_off_reply_tag($$r_subject);
+	    &Mail::Message::Language::Japanese::Subject::cut_off_reply_tag($$r_subject);
     }
     else  {
 	Log($@);
