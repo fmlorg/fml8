@@ -25,13 +25,23 @@ FML::Header - header manipulators
 
     $header = use FML::Header \@header;
     $header->add('X-ML-Info', "mailing list name");
-    
+    $header->delete('Return-Receipt-To');
+    $header->replace(field, value);
+
 =head1 DESCRIPTION
 
-FML::Header is an adapter for Mail::Address class.
-That is, Mail::Address is the base class. 
+C<FML::Header> is an adapter for C<Mail::Header> class.
+C<Mail::Header> is the base class. 
 
 =head1 METHODS
+
+Methods defined in C<Mail::Header> are available.
+For example,
+C<modify()>, C<mail_from()>, C<fold()>, C<extract()>, C<read()>,
+C<empty()>, C<header()>, C<header_hashref()>, C<add()>, C<replace()>,
+C<combine()>, C<get()>, C<delete()>, C<count()>, C<print()>,
+C<as_string()>, C<fold_length()>, C<tags()>, C<dup()>, C<cleanup()>,
+C<unfold()>.
 
 =cut
 
@@ -39,6 +49,10 @@ require Exporter;
 @ISA = qw(Mail::Header Exporter);
 
 
+# Descriptions: forward new() request to the base class
+#    Arguments: $self $args
+# Side Effects: none
+# Return Value: none
 sub new
 {
     my ($self, $args) = @_;
@@ -58,6 +72,20 @@ sub AUTOLOAD
 }
 
 
+=head2 C<content_type()>
+
+return the C<type> defind in the header's Content-Type field.
+
+=head2 C<mime_boundary()>
+
+return the C<boundary> defind in the header's Content-Type field.
+
+=cut
+
+# Descriptions: return the type defind in the header's Content-Type field.
+#    Arguments: $self
+# Side Effects: extra spaces in the type to return is removed.
+# Return Value: none
 sub content_type
 {
     my ($header) = @_;
@@ -66,9 +94,14 @@ sub content_type
 	$type =~ s/\s*//g;
 	return $type;
     }
+    undef;
 }
 
 
+# Descriptions: return boundary defined in Content-Type
+#    Arguments: $self $args
+# Side Effects: none.
+# Return Value: none
 sub mime_boundary
 {
     my ($header) = @_;
@@ -83,10 +116,30 @@ sub mime_boundary
 }
 
 
+###
+### FML specific functions
+###
+
+=head1 FML SPECIFIC METHODS
+
+=head2 C<add_fml_ml_name($config, $args)>
+
+add X-ML-Name:
+
+=head2 C<add_fml_traditional_article_id($config, $args)>
+
+add X-Mail-Count:
+
+=head2 C<add_fml_article_id($config, $args)>
+
+add X-ML-Count:
+
+=cut
+
+
 sub add_fml_ml_name
 {
     my ($header, $config, $args) = @_;
-
     $header->add('X-ML-Name', $config->{ x_ml_name });
 }
 
@@ -103,6 +156,21 @@ sub add_fml_article_id
     my ($header, $config, $args) = @_;
     $header->add('X-ML-Count', $args->{ id });
 }
+
+
+=head2 C<add_software_info($config, $args)>
+
+add X-MLServer: and List-Software:
+
+=head2 C<add_rfc2369($config, $args)>
+
+add List-* sereies defined in RFC2369.
+
+=head2 C<add_x_sequence($config, $args)>
+
+add X-Sequence.
+
+=cut
 
 
 sub add_software_info
@@ -147,6 +215,18 @@ sub add_x_sequence
 }
 
 
+=head2 C<rewrite_subject_tag($config, $args)>
+
+add subject tag e.g. [elena:00010]. 
+The real function exists in C<FML::Header::Subject>.
+
+=head2 C<rewrite_reply_to>
+
+add or replace C<Reply-To:>.
+
+=cut
+
+
 sub rewrite_subject_tag
 {
     my ($header, $config, $args) = @_;
@@ -172,6 +252,29 @@ sub rewrite_reply_to
 }
 
 
+=head2 C<delete_unsafe_header_fields($config, $args)>
+
+remove header fields defiend in C<$unsafe_header_fields>.
+
+=cut
+
+sub delete_unsafe_header_fields
+{
+    my ($header, $config, $args) = @_;
+    my (@fields) = split(/\s+/, $config->{ unsafe_header_fields });
+    for (@fields) { $header->delete($_);}
+}
+
+
+=head1 MISCELLANEOUS UTILITIES
+
+=head2 C<remove_subject_tag_like_string($string)>
+
+remove subject tag like string in C<$string>.
+
+=cut
+
+
 sub remove_subject_tag_like_string
 {
     my ($str) = @_;
@@ -182,17 +285,9 @@ sub remove_subject_tag_like_string
 }
 
 
-sub delete_unsafe_header_fields
-{
-    my ($header, $config, $args) = @_;
-    my (@fields) = split(/\s+/, $config->{ unsafe_header_fields });
-    for (@fields) { $header->delete($_);}
-}
-
-
 =head1 SEE ALSO
 
-L<Mail::Address>
+L<Mail::Header>
 
 =head1 AUTHOR
 

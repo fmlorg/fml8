@@ -83,6 +83,8 @@ sub _setup_article_template
 increment article sequence number and 
 save it to C<$sequence_file>.
 
+This routine uses C<File::Sequence> module. 
+
 =head2 C<id()>
 
 return the current article sequence number.
@@ -174,7 +176,8 @@ sub spool_in
 =head1 SEE ALSO
 
 L<FML::Header>,
-L<MailingList::Messsages>.
+L<MailingList::Messsages>,
+L<File::Sequence>
 
 =head1 AUTHOR
 

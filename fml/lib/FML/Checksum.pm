@@ -12,6 +12,7 @@ package FML::Checksum;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+use FML::Log qw(Log);
 
 =head1 NAME
 
@@ -28,8 +29,8 @@ FML::Checksum - utilities for check sum
 =head2 C<new()>
 
 the constructor. 
-It checks we can use MD5 perl module or should use some programs e.g. 
-C<md5>, C<cksum>, et.al.
+It checks we can use MD5 perl module or we need to use some programs
+e.g. C<md5>, C<cksum>, et.al.
 
 =cut
 
@@ -147,7 +148,7 @@ sub _md5_by_program
 
 =head2 C<cksum1($file)>
 
-not implemented.
+C<not implemented>.
 
 This is a 16-bit checksum. The algorithm used by historic BSD systems
 as the sum(1) algorithm and by historic AT&T System V UNIX systems as
@@ -186,7 +187,7 @@ sub cksum2
         $crc = ($crc & 0xffff) + ($crc >> 16);
     }
     else {
-        print STDERR "ERROR: no such file $f\n";
+        Log("ERROR: no such file $f");
     }
 
     ($crc, $total);
@@ -195,7 +196,7 @@ sub cksum2
 
 =head2 C<crc($file)>
 
-not implemented.
+C<not implemented>.
 
 The default CRC used is based on the polynomial used for CRC error
 checking in the networking standard ISO 8802-3:1989 The CRC checksum
