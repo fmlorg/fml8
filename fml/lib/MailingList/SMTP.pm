@@ -264,7 +264,7 @@ sub _connect
 	return undef;
     }
     else {
-	$self->_connect4($args);
+	$self->connect4($args);
     }
 }
 

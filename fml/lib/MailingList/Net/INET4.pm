@@ -17,9 +17,9 @@ use MailingList::Utils;
 require Exporter;
 
 @ISA       = qw(Exporter);
-@EXPORT    = qw(_connect4);
+@EXPORT    = qw(connect4);
 
-sub _connect4
+sub connect4
 {
     my ($self, $args) = @_;
     my $mta = $args->{ _mta };
@@ -60,7 +60,7 @@ MailingList::Net::INET4 - establish tcp connection over IPv4
    use MailingList::Net::INET4;
 
    $mta = '127.0.0.1:25';
-   $self->_connect4( { _mta => $mta });
+   $self->connect4( { _mta => $mta });
 
 =head1 DESCRIPTION
 
@@ -69,7 +69,7 @@ IPv4. This is a typical socket program.
 
 =head1 METHODS
 
-=item C<_connect4()>
+=item C<connect4()>
 
 try L<connect(2)>. 
 If it succeeds, returned 
@@ -79,7 +79,7 @@ $self->{ _socket } is undef.
 
 Avaialble arguments follows:
 
-    _connect4( { _mta => $mta });
+    connect4( { _mta => $mta });
 
 $mta is a hostname or [raw_ipv4_addr]:port form, for example, 
 127.0.0.1:25.
