@@ -55,6 +55,14 @@
 	</row>
 
 	<row>
+	<entry>OpenBSD</entry>
+	<entry>3.0</entry>
+	<entry>5.6.1+patches</entry>
+	<entry>/usr/bin/perl</entry>
+	<entry></entry>
+	</row>
+
+	<row>
 	<entry>FreeBSD</entry>
 	<entry>2.2.5</entry>
 	<entry>4.036</entry>
