@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.29 2001/05/18 17:30:09 fukachan Exp $
+# $FML: Config.pm,v 1.30 2001/05/27 14:27:53 fukachan Exp $
 #
 
 package FML::Config;
@@ -165,6 +165,41 @@ sub load_file
     my ($self, $file) = @_;
     my $config        = \%_fml_config;
 
+    # read configuration file
+    $self->_read_file({ 
+	file   => $file, 
+	config => $config,
+    });
+
+    # At the first time, save $config to another hash, which is used
+    # as a default value at variable comparison.
+    unless (%_default_fml_config) {
+	%_default_fml_config = %_fml_config;
+    }
+
+    # flag on: we need $config->{ key } needs variable expansion
+    $need_expansion_variables = 1;
+}
+
+
+# Descriptions: read configuration file and the keys and values to
+#               $config (REF HASH).
+#
+#               XXX we should not reset $config since we permit
+#               XXX $config can be overwritten.
+#
+#    Arguments: $self $file $config $options
+#                     $file = configuration file
+#                   $config = area to store {key => value } hash
+#                  $options = REFHASH to describe a hash for options
+# Side Effects: $config changes
+# Return Value: none
+sub _read_file
+{
+    my ($self, $args) = @_;
+    my $file   = $args->{ 'file' };
+    my $config = $args->{ 'config' }; 
+
     # open the $file by using FileHandle.pm
     use FileHandle;
     my $fh = new FileHandle $file;
@@ -172,21 +207,27 @@ sub load_file
     if (defined $fh) {
 	my ($key, $value, $curkey);
 
+	# For example
+	#    var = key1         (case 1.)
+	#    var = key1 key2    (case 1.)
+	#    var = key1         (case 1.)
+	#          key2         (case 2.)
+	# 
 	while (<$fh>) {
 	    last if /^=cut/; # end of postfix format
 	    next if /^=/;    # ignore special keywords of pod formats
 	    next if /^\#/;   # ignore comments
+	    chop;            # nuke trailing "\n"
 
-	    # here we go
-	    chop;
-
+	    # case 1.
 	    if (/^([A-Za-z0-9_]+)\s+=\s*(.*)/) {
 		my ($key, $value) = ($1, $2);
-		$value =~ s/\s*$//o;
+		$value            =~ s/\s*$//o;
 		$curkey           = $key;
 		$config->{$key}   = $value;
 	    }
-	    if (/^\s+(.*)/) {
+	    # case 2.
+	    elsif (/^\s+(.*)/) {
 		my $value = $1;
 		$value =~ s/\s*$//o;
 		$config->{ $curkey }  .= " ". $value;
@@ -197,14 +238,6 @@ sub load_file
     else {
 	$self->error_set("Error: cannot open $file");
     }
-
-    # first time
-    unless (%_default_fml_config) {
-	%_default_fml_config = %_fml_config;
-    }
-
-    # flag on: we need $config->{ key } needs variable expansion
-    $need_expansion_variables = 1;
 }
 
 
