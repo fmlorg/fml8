@@ -578,7 +578,10 @@ available_commands_for_stranger	=	guide
 					$confirm_keyword
 
 
-confirm_keyword			=	confirm
+confirm_command_prefix		=	confirm
+
+	
+privileged_command_prefix	=	admin
 
 =head1	スレッド追跡システム
 
