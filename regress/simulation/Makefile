@@ -2,6 +2,8 @@ all: link
 
 clean:
 	@ (cd ../..; make clean)
+
+allclean: clean
 	rm -f doc
 	rm -f etc
 	rm -f lib
