@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.6 2003/02/11 13:24:09 fukachan Exp $
+# $FML: Install.pm,v 1.7 2003/08/23 04:35:27 fukachan Exp $
 #
 
 package FML::Install;
@@ -244,10 +244,11 @@ install sample .cf files:
 sub install_sample_cf_files
 {
     my ($self) = @_;
+    my $config     = $self->{ _config };
     my $config_dir = $self->path( 'config_dir' );
+    my $samples    = $config->get_as_array_ref('sample_cf_files');
 
-    for my $file (qw(site_default_config.cf
-		     mime_component_filter)) {
+    for my $file (@$samples) {
 	# XXX src = relative path, dst = absolute path
 	my $src = File::Spec->catfile("fml", "etc", $file);
 	my $dst = File::Spec->catfile($config_dir, $file);
