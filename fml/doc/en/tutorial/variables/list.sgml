@@ -1636,7 +1636,7 @@ ${use_distribute_program:-yes}
 <entry>
 use_article_size_filter</entry>
 <entry>
- use size based filter</entry>
+ use size based filter.</entry>
 <entry>
 yes
    </entry>

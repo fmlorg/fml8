@@ -73,7 +73,7 @@ article_filter_functions	=	article_size_filter
 
 
 # Descriptions: サイズ情報を根拠にしたフィルタリングをするか？
-#      History:
+#      History: no
 #        Value: yes / no
 #     Examples:
 use_article_size_filter	=	yes

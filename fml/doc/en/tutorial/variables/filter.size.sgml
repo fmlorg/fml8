@@ -78,8 +78,8 @@ article_filter_functions	=	article_size_filter
 =head2	size based filter
 
 
-# Descriptions: use size based filter
-#      History:
+# Descriptions: use size based filter.
+#      History: no
 #        Value: yes / no
 #     Examples:
 use_article_size_filter	=	yes
