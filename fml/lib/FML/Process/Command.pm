@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.92 2003/11/30 09:59:19 fukachan Exp $
+# $FML: Command.pm,v 1.93 2004/01/01 23:52:15 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -80,14 +80,15 @@ sub prepare
     my $eval = $config->get_hook( 'command_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
-    $curproc->resolve_ml_specific_variables( $args );
-    $curproc->load_config_files( $args->{ cf_list } );
+    $curproc->resolve_ml_specific_variables();
+    my $cf_list = $curproc->get_config_files_list();
+    $curproc->load_config_files($cf_list);
     $curproc->fix_perl_include_path();
     $curproc->scheduler_init();
     $curproc->log_message_init();
 
     if ($config->yes('use_command_mail_program')) {
-	$curproc->parse_incoming_message($args);
+	$curproc->parse_incoming_message();
     }
     else {
 	$curproc->logerror("use of command_mail_program prohibited");

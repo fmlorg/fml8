@@ -3,7 +3,7 @@
 # Copyright (C) 2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Fake.pm,v 1.2 2003/12/30 03:57:05 fukachan Exp $
+# $FML: Fake.pm,v 1.3 2004/01/01 23:52:16 fukachan Exp $
 #
 
 package FML::Process::Fake;
@@ -208,7 +208,8 @@ sub _faker_init
     $config->set('ml_home_dir',    $ml_home_dir);
 
     # init
-    $curproc->load_config_files( $args->{ cf_list } );
+    my $cf_list = $curproc->get_config_files_list();
+    $curproc->load_config_files($cf_list);
     $curproc->fix_perl_include_path();
     $curproc->scheduler_init();
     $curproc->log_message_init();

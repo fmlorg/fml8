@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Digest.pm,v 1.11 2003/08/29 15:34:07 fukachan Exp $
+# $FML: Digest.pm,v 1.12 2003/12/24 14:29:36 fukachan Exp $
 #
 
 package FML::Process::Digest;
@@ -81,8 +81,9 @@ sub prepare
     my $eval = $config->get_hook( 'digest_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
-    $curproc->resolve_ml_specific_variables( $args );
-    $curproc->load_config_files( $args->{ cf_list } );
+    $curproc->resolve_ml_specific_variables();
+    my $cf_list = $curproc->get_config_files_list();
+    $curproc->load_config_files($cf_list);
     $curproc->fix_perl_include_path();
     $curproc->scheduler_init();
 

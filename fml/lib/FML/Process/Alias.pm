@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Alias.pm,v 1.13 2003/12/24 14:29:35 fukachan Exp $
+# $FML: Alias.pm,v 1.14 2003/12/28 13:23:21 fukachan Exp $
 #
 
 package FML::Process::Alias;
@@ -76,8 +76,9 @@ sub prepare
     my $eval = $config->get_hook( 'fmlalias_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
-    # $curproc->resolve_ml_specific_variables( $args );
-    $curproc->load_config_files( $args->{ cf_list } );
+    # $curproc->resolve_ml_specific_variables();
+    my $cf_list = $curproc->get_config_files_list();
+    $curproc->load_config_files($cf_list);
     $curproc->fix_perl_include_path();
 
     $eval = $config->get_hook( 'fmlalias_prepare_end_hook' );

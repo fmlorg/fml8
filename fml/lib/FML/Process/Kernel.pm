@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.200 2003/12/30 03:53:53 fukachan Exp $
+# $FML: Kernel.pm,v 1.201 2004/01/01 23:52:16 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -627,7 +627,7 @@ with considering virtual domains.
 # Return Value: none
 sub resolve_ml_specific_variables
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my ($ml_name, $ml_domain, $ml_home_prefix, $ml_home_dir);
     my ($command, @options, $config_cf_path);
     my $config  = $curproc->config();
@@ -778,8 +778,7 @@ sub resolve_ml_specific_variables
 	$curproc->__debug_ml_xxx('resolv:');
 
 	# add this ml's config.cf to the .cf list.
-	my $list = $args->{ cf_list };
-	push(@$list, $config_cf_path);
+	$curproc->append_to_config_files_list($config_cf_path);
     }
     else {
 	$curproc->logerror("cannot determine which ml_name");
@@ -956,7 +955,7 @@ The C<body> is C<Mail::Message> object.
 # Return Value: none
 sub parse_incoming_message
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
 
     # parse incoming mail to cut off it to the header and the body.
     use FML::Parse;
