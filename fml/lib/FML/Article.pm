@@ -49,11 +49,6 @@ sub _setup_article_template
     # create an article template by duplicating the incoming message
     $curproc->{ article }->{ header } = $msg->{'header'}->dup();
     $curproc->{ article }->{ body }   = $msg->{'body'};
-    
-    # initialize the header object
-    use FML::Header;
-    $curproc->{'article'}->{'header'}->check;
-    $curproc->{'article'}->{'header'}->rewrite;
 }
 
 

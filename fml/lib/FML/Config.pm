@@ -7,9 +7,9 @@
 
 package FML::Config;
 
-use vars qw(%_fml_config);
 use strict;
 use Carp;
+use vars qw(%_fml_config);
 
 
 sub new

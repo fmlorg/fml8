@@ -24,7 +24,7 @@ sub new
 {
     my ($self, $args)    = @_;
     my ($curproc) = {}; # alloc memory as the struct current_process.
-    my $cfargs    = {};
+    my ($cfargs)  = {};
 
     # import variables
     my (@import_vars) = qw(ml_home_dir ml_home_prefix);

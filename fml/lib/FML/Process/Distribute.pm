@@ -73,6 +73,7 @@ sub finish
 sub _distribute
 {
     my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
 
     # XXX   $ah is "article handler" object.
     # XXX   $ah != $curproc->{ article } (which is just a key)
@@ -81,6 +82,9 @@ sub _distribute
 
     # get sequence number
     my $id = $ah->increment_id;
+
+    # ticket system checks the message before header rewritings.
+    $curproc->_ticket_system_check($args) if $config->yes('use_ticket');
 
     # header operations
     # XXX we need $curproc->{ article }, which is prepared above.
@@ -116,7 +120,7 @@ sub _header_rewrite
     my $id     = $args->{ id };
 
     for my $rule (split(/\s+/, $rules)) {
-	Log("_header_rewrite( $rule )");
+	Log("_header_rewrite( $rule )") if $config->yes('debug');
 
 	if ($rule eq 'rewrite_subject_tag') {
 	    $header->rewrite_subject_tag($config, { id => $id } );
@@ -144,13 +148,6 @@ sub _header_rewrite
 	if ($rule eq 'add_rfc2369') {
 	    $header->add_rfc2369($config, {
 		id   => $id,
-		mode => 'distribute',
-	    });
-	}
-
-	# ticket system
-	if ($rule eq 'add_ticket_tag') {
-	    $header->add_ticket_tag($config, {
 		mode => 'distribute',
 	    });
 	}
@@ -191,6 +188,32 @@ sub _deliver_article
     if ($service->error) { Log($service->error); return;}
 }
 
+
+sub _ticket_system_check
+{
+    my ($curproc, $args) = @_;    
+    my $config = $curproc->{ config };
+    my $header = $curproc->{ article }->{ header }; # FML::Header object
+    my $model  = $config->{ ticket_model };
+    my $pkg    = "FML::Ticket::Model::";
+
+    if ($model eq 'toymodel') {
+	$pkg .= $model;
+    }
+    else {
+	Log("ticket: unknown model");
+	return;
+    }
+
+    eval qq{ require $pkg; $pkg->import();};
+    unless ($@) {
+	my $ts = $pkg->new;
+	$ts->add_ticket($header, $config, $args) if $ts->can('add_ticket');
+    }
+    else {
+	Log($@);
+    }
+}
 
 
 =head1 NAME

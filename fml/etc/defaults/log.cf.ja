@@ -3,7 +3,7 @@
 ###
 
 # logfile
-log_file	=	/tmp/log
+log_file	=	$ml_home_dir/log
 
 # type of logging
 # value: file / syslog
