@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Text.pm,v 1.13 2003/01/11 15:14:26 fukachan Exp $
+# $FML: Text.pm,v 1.14 2003/01/11 15:16:37 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Text;
@@ -69,12 +69,14 @@ sub show_articles_in_thread
 
 	    my $fh = new FileHandle $file;
 	    if (defined $fh) {
+		my $buf;
+
 	      LINE:
-		while (defined($_ = $fh->getline())) {
-		    next LINE if 1 .. /^$/;
+		while (defined($buf = $fh->getline())) {
+		    next LINE if 1 .. $buf =~ /^$/o;
 
 		    # XXX-TODO: we suppose Japanese only here.
-		    $s = STR2EUC($_);
+		    $s = STR2EUC($buf);
 		    print $wh $s;
 		}
 		$fh->close;
@@ -142,8 +144,8 @@ sub _format_list
     my $r = '';
 
   ID:
-    for (@idlist) {
-	$r .= $_ . " ";
+    for my $id (@idlist) {
+	$r .= $id . " ";
 	if (length($r) > $max) {
 	    $r .= "...";
 	    last ID;
