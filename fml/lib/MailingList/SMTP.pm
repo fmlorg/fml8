@@ -148,7 +148,7 @@ sub _send_command
 
     $self->{_last_command} = $command;
     $self->{_error_action} = '';
-    $self->smtplog($command);
+    $self->smtplog($command."\r\n");
 
     if (defined $socket) {
 	$socket->print($command, "\r\n");
