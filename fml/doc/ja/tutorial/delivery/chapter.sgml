@@ -1,5 +1,5 @@
 <!--
-    $FML: chapter.sgml,v 1.8 2002/07/06 14:55:15 fukachan Exp $
+    $FML: chapter.sgml,v 1.9 2002/07/23 07:19:47 fukachan Exp $
 -->
 
 <chapter id="delivery">
@@ -7,7 +7,7 @@
 	&fmldevel; のメール配送システム
 	</TITLE>
 
-<sect1 id="fml5-delivery">
+<sect1 id="fmldevel-delivery">
 	<title>
 	&fml4; と &fmldevel; の相違点
 	</title>

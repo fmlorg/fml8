@@ -1,5 +1,5 @@
 <!--
-   $FML: main.cf.sgml,v 1.5 2002/07/04 10:59:00 fukachan Exp $
+   $FML: main.cf.sgml,v 1.6 2002/07/06 14:55:18 fukachan Exp $
 -->
 
 <sect2 id="main.cf">
@@ -29,12 +29,12 @@ main.cf のフォーマットは他の .cf と同様
 
 <screen>
 #
-# $FML: main.cf.sgml,v 1.5 2002/07/04 10:59:00 fukachan Exp $
+# $FML: main.cf.sgml,v 1.6 2002/07/06 14:55:18 fukachan Exp $
 #
 
 # fml version
 #   This is important
-# Example: fml 5.0
+# Example: fml 8.0
 #          fml-current YYYYMMDD
 #          fml-devel YYYYMMDD
 fml_version	=	current-20020701
@@ -98,7 +98,7 @@ default_domain		=	fml.org
 
 # version dependent default_config.cf location
 # whic holds
-# Example: /etc/fml/defaults/5.0/default_config.cf
+# Example: /etc/fml/defaults/8.0/default_config.cf
 default_config_cf	=	$default_config_dir/default_config.cf
 
 
