@@ -1,0 +1,23 @@
+=head1 COMPATIBILITY
+
+=head2 fml version 4 compatibility
+
+# Descriptions:
+#      History: none
+#        Value: DIR
+#     Examples: /usr/local/etc/fml/$version/etc/compat
+compat_config_base_dir		=	$fml_default_config_dir/compat
+
+# Descriptions:
+#      History: none
+#        Value: DIR
+#     Examples: /usr/local/etc/fml/$version/etc/compat/fml4
+compat_old_fml_config_dir		=	$compat_config_base_dir/fml4
+
+# Descriptions:
+#      History: none
+#        Value: PH_FILE
+#     Examples: /usr/local/etc/fml/$version/etc/compat/fml4/default_config.ph
+compat_old_fml_default_config_ph_file	=	$compat_old_fml_config_dir/default_config.ph
+
+
