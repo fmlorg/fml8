@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.236 2004/08/12 09:53:38 fukachan Exp $
+# $FML: Kernel.pm,v 1.237 2004/08/13 11:45:23 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1125,12 +1125,14 @@ sub _store_message_into_incoming_queue
     # write to queue file.
     my $wh = new FileHandle "> $queue_file";
     if (defined $wh) {
-	my ($n, $w, $buf);
+	my $n = 0;
+	my $w = 0;
+	my $buf;
 
 	$wh->autoflush(1);
 	while ($n = sysread(*STDIN{IO}, $buf, 8192)) {
 	    $total += $n;
-	    $w = syswrite($wh, $buf, 8192);
+	    $w = syswrite($wh, $buf, 8192) || 0;
 	    unless ($w == $n) {
 		$fatal = 1;
 	    }
