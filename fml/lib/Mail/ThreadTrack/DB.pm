@@ -4,13 +4,15 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DB.pm,v 1.9 2001/11/07 03:13:34 fukachan Exp $
+# $FML: DB.pm,v 1.10 2001/11/07 04:07:02 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+my $debug = defined $ENV{'debug'} ? 1 : 0;
 
 =head1 NAME
 
@@ -123,8 +125,8 @@ sub _db_clear
 		next if $f =~ /^\./;
 		my $file = File::Spec->catfile($db_dir, $f);
 		if (-f $file) {
-		    print STDERR "unlink $file\n";
 		    unlink $file;
+		    print STDERR "removed $file\n" unless -f $file;
 		}
 	    }
 	    $dh->close;
@@ -160,8 +162,6 @@ sub db_close
 
 =cut
 
-my $debug = defined $ENV{'debug'} ? 1 : 0;
-
 
 sub db_mkdb
 {
@@ -173,6 +173,7 @@ sub db_mkdb
     use File::Spec;
 
     my $count = 0;
+    print STDERR "db_mkdb: $min_id -> $max_id\n" if $debug;
     for my $id ( $min_id .. $max_id ) {
 	print STDERR "." if $count++ % 25 == 0;
 	print STDERR "process $id\n" if $debug;
