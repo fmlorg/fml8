@@ -10,7 +10,7 @@
 
 package Netlib::Utils;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $LogFunctionPointer);
+use vars qw(@ISA @EXPORT @EXPORT_OK $LogFunctionPointer $SmtpLogFunctionPointer);
 use Carp;
 
 require Exporter;
@@ -19,8 +19,10 @@ require Exporter;
 @EXPORT = qw(
 	     Log
 	     _smtplog
+	     smtplog
 
 	     $LogFunctionPointer
+	     $SmtpLogFunctionPointer
 
 	     _error_why
 	     error 
@@ -56,13 +58,25 @@ sub Log
 }
 
 
-sub _smtplog
+sub smtplog
 {
     my ($self, $buf) = @_;
+    _smtplog($buf);
+}
 
-    if (defined $buf) {
-	print $buf;
-	print "\n" if $buf !~ /\n$/o;
+sub _smtplog
+{
+    my ($buf) = @_;
+
+    # function pointer to logging function
+    my $fp = $SmtpLogFunctionPointer;
+
+    if ($fp) {
+	eval &$fp($buf);
+	print STDERR $@, "\n" if $@;
+    }
+    else {
+	print STDERR @_, "\n";
     }
 }
 

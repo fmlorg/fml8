@@ -127,6 +127,7 @@ sub _print
     my $pp     = 0;
     my $maxlen = length($$r_body);
     my $logfp  = $self->{ _log_function };
+    $logfp     = ref($logfp) eq 'CODE' ? $logfp : undef;
 
     # write each line in buffer
     my ($p, $len, $buf, $pbuf);
@@ -141,7 +142,7 @@ sub _print
 	$buf =~ s/^\./../;
 
 	print $fd    $buf;
-	&$logfp($buf) if defined $logfp;
+	&$logfp($buf) if $logfp;
 
 	last SMTP_IO if $p < 0;
 	$pp = $p + 1;
@@ -173,10 +174,10 @@ sub is_empty
 }
 
 
-sub bind_log_function
+sub set_log_function
 {
-    my ($self, $ref_function) = @_;
-    $self->{ _log_function } = $ref_function;
+    my ($self, $fp) = @_;
+    $self->{ _log_function } = $fp; # log function pointer
 }
 
 

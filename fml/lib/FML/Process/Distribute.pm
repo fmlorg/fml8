@@ -86,10 +86,12 @@ sub _distribute
 
     # distribute article
     use Netlib::SMTP;
-    my $fp = sub { Log(@_);}; # pointer to the log function
+    my $fp  = sub { Log(@_);}; # pointer to the log function
+    my $sfp = sub { my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;};
     my $service = new Netlib::SMTP {
-	log_function   => $fp,
-	socket_timeout => 2,
+	log_function       => $fp,
+	smtp_log_function  => $sfp,
+	socket_timeout     => 2,     # XXX 2 for debug but 10 by default
     };
     if ($service->error) { Log($service->error); return;}
 

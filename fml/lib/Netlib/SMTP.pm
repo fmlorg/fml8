@@ -47,12 +47,14 @@ sub new
     #    _log_function: pointer to the log() function
     $me->{_recipient_limit} = $args->{recipient_limit} || 1000;
     $me->{_socket_timeout}  = $args->{socket_timeout}  || 10;
-    $me->{_log_function}    = $args->{log_function};
+    $me->{_log_function}      = $args->{log_function};
+    $me->{_smtp_log_function} = $args->{smtp_log_function};
 
     _initialize_delivery_session($me, $args);
 
     # define package global pointer to the log() function
     $LogFunctionPointer     = $args->{log_function};
+    $SmtpLogFunctionPointer = $args->{smtp_log_function};
 
     return bless $me, $type;
 }
@@ -70,7 +72,7 @@ sub _send_command
 
     $self->{_last_command} = $command;
     $self->{_error_action} = '';
-    $self->_smtplog($command);
+    $self->smtplog($command);
 
     if (defined $socket) {
 	$socket->print($command, "\r\n");
@@ -110,7 +112,7 @@ sub _read_reply
       SMTP_REPLY:
 	while (1) {
 	    $buf = $socket->getline;
-	    $self->_smtplog($buf);
+	    $self->smtplog($buf);
 
 	    # check smtp attributes
 	    if ($check_attributes) {
@@ -576,7 +578,7 @@ sub _send_header_to_mta
     my $h = $header->as_string($socket);
     $h =~ s/\n/\r\n/g;
     print $socket $h;
-    $self->_smtplog($h);
+    $self->smtplog($h);
 }
 
 
@@ -589,6 +591,7 @@ sub _send_body_to_mta
     my ($self, $socket, $msg) = @_;
 
     # XXX $msg is Netlib::Messages object.
+    $msg->set_log_function( $SmtpLogFunctionPointer );
     $msg->print($socket);
 }
 
@@ -622,7 +625,7 @@ sub _send_data_to_mta
 
 	# 2. separator between header and body
 	print $socket "\r\n";
-	$self->_smtplog("\r\n");
+	$self->smtplog("\r\n");
 
 	# 3. body; send(copy) body on memory to socket each line
 	$self->_send_body_to_mta($socket, $body);
