@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.6 2001/11/24 03:22:56 fukachan Exp $
+   $FML: chapter.sgml,v 1.7 2002/02/04 00:03:57 fukachan Exp $
 -->
 
 <chapter id="overview"> 
@@ -216,8 +216,46 @@ aliases はまだ makefml が生成していません
 もうちょっと待って〜)。
 </para>
 
-</sect1>
 
+<para>
+aliases のエントリは
+$ml_home_prefix/etc/mail/aliases
+に追加されます。
+<screen>
+### BEGIN-elena@fml.org-ML-aliases ###
+
+# address for post
+elena: :include:/var/spool/ml/elena/include
+owner-elena: fukachan
+
+# address for command
+elena-ctl: :include:/var/spool/ml/elena/include-ctl
+owner-elena-ctl: fukachan
+
+# maintainer
+elena-request: elena-admin
+elena-admin: fukachan
+
+### END-elena@fml.org-ML-aliases ###
+</screen>
+バーチャルドメインの場合、
+$ml_home_prefix の部分は  
+$virtual_maps にしたがって自動的に変化します。
+</para>
+
+<!--
+
+        案１
+        /etc/fml/ドメイン名/aliases
+
+        案２ (prefix は virtual_maps でドメインごとに定義されているの
+                で一意に定まる)
+        /var/spool/ml/etc/mail/aliases
+
+-->
+
+
+</sect1>
 
 
 <sect1 id="guide.config.cf">
