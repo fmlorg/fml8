@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.65 2002/04/16 04:04:44 fukachan Exp $
+# $FML: Switch.pm,v 1.66 2002/04/19 13:34:19 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -299,7 +299,7 @@ sub _makefml_parse_argv
 	    @cf = ($cf);
 	}
 	else {
-	    warn("\$ml_name not specified");
+	    warn("\$ml_name not specified") if $debug;
 	}
 
 	return \@cf;
@@ -417,6 +417,9 @@ sub _module_specific_options
     elsif ($myname eq 'makefml') {
 	return qw(debug! help! force! params=s -c=s);
     }
+    elsif ($myname eq 'fmlalias') {
+	return qw(debug! help! -c=s n!);
+    }
     elsif ($myname eq 'config.cgi' || $myname eq 'menu.cgi') {
 	return ();
     }
@@ -453,6 +456,9 @@ sub _ml_name_is_required
 	return 0;
     }
     elsif ($myname eq 'makefml') {
+	return 0;
+    }
+    elsif ($myname eq 'fmlalias') {
 	return 0;
     }
     elsif ($myname eq 'menu.cgi'   ||
@@ -495,6 +501,9 @@ sub _module_we_use
     }
     elsif ($name eq 'makefml') {
 	$pkg = 'FML::Process::Configure';
+    }
+    elsif ($name eq 'fmlalias') {
+	$pkg = 'FML::Process::Alias';
     }
     elsif ($name eq 'fmlthread') {
 	$pkg = 'FML::Process::ThreadTrack';
