@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: PCB.pm,v 1.17 2004/01/02 14:50:28 fukachan Exp $
+# $FML: PCB.pm,v 1.18 2004/04/17 11:37:55 fukachan Exp $
 #
 
 package FML::PCB;
@@ -24,7 +24,7 @@ $current_context = '__default__';
 
 =head1 NAME
 
-FML::PCB -- hold some information for the current process
+FML::PCB -- hold some information for the current process.
 
 =head1 SYNOPSIS
 
@@ -61,7 +61,8 @@ If $pcb_args HASH REFERENCE is specified, initialize C<pcb> area by it.
 =cut
 
 
-# Descriptions: constructor. bind object to private hash
+# Descriptions: constructor. 
+#               bind object to private hash.
 #    Arguments: OBJ($self) HASH_REF($pcb_args)
 # Side Effects: bind object to internal hash
 # Return Value: OBJ
@@ -69,6 +70,7 @@ sub new
 {
     my ($self, $pcb_args) = @_;
 
+    # XXX-TODO: PCB is needed to prepare for each ml_name@ml_domain ?
     unless (defined %_fml_PCB) { %_fml_PCB = ();}
     my $me = \%_fml_PCB;
 
@@ -97,7 +99,7 @@ You must specify C<category>, C<key> and the C<value>.
 =cut
 
 
-# Descriptions: print out hash {key => value}
+# Descriptions: print out hash {key => value}.
 #    Arguments: NONE
 # Side Effects: none
 # Return Value: none
@@ -110,7 +112,7 @@ sub dump_variables
 }
 
 
-# Descriptions: get value for $key in $category
+# Descriptions: get value for $key in $category.
 #    Arguments: OBJ($self) STR($category) STR($key)
 # Side Effects: none
 # Return Value: STR
@@ -119,10 +121,10 @@ sub get
     my ($self, $category, $key) = @_;
 
     if (defined $self->{ $category }->{ $key }) {
-	$self->{ $category }->{ $key };
+	return $self->{ $category }->{ $key };
     }
     else {
-	undef;
+	return undef;
     }
 }
 
