@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.108 2002/06/27 08:25:50 fukachan Exp $
+# $FML: Kernel.pm,v 1.109 2002/06/30 14:30:16 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -113,6 +113,7 @@ sub new
     }
 
     # 2.1 speculate $fml_owner_home_dir by the current process uid
+    #     XXX we should compare $fml_owner and $< ?
     {
 	my $dir = (getpwuid($<))[7];
 	$cfargs->{ 'fml_owner_home_dir' } = $dir if defined $dir;
@@ -130,7 +131,7 @@ sub new
     use FML::Config;
     $curproc->{ config } = new FML::Config $cfargs;
 
-    # 3.3 initialize PCB
+    # 3.3 initialize PCB (Process Control Block)
     use FML::PCB;
     $curproc->{ pcb } = new FML::PCB;
 
@@ -138,19 +139,12 @@ sub new
     # object-ify. bless! bless! bless!
     bless $curproc, $self;
 
-    # 3.5 initialize signal
+    # 3.5 initialize signal handlers
     $curproc->_signal_init;
 
-    # 4.1 load config.cf files, which is passed from loader.
-    #     XXX we need the following variables are resolved.
-    #     XXX ml_name, ml_domain, ml_home_prefix, ml_home_dir
-    # $curproc->resolve_ml_specific_variables( $args );
-    # $curproc->load_config_files( $args->{ cf_list } );
-
-    # debug
+    # 4.1 debug. XXX remove this in the future !
     $curproc->__debug_ml_xxx('loaded:');
 
-    # 5.1 debug
     if ($args->{ myname } eq 'loader') {
 	eval q{
 	    require Data::Dumper; Data::Dumper->import();
@@ -194,7 +188,7 @@ sub _trap_help
     my ($curproc, $args) = @_;
     my $option = $curproc->command_line_options();
 
-    if (defined $option->{ help }) {
+    if (defined $option->{ help } || defined $option->{ h }) {
 	print STDERR "FML::Process::Kernel trapped\n" if $debug;
 	if ($curproc->can('help')) {
 	    $curproc->help();
@@ -275,9 +269,10 @@ sub lock
 	my $pcb = $curproc->{ pcb };
 	$pcb->set('lock', 'object', $lockobj);
 	$pcb->set('lock', 'file',   $lock_file);
-	Log( "locked $lock_file" );
+	Log("locked $lock_file") if $debug;
     }
     else {
+	LogError("cannot lock");
 	croak("Error: cannot lock");
     }
 }
@@ -297,9 +292,10 @@ sub unlock
 
     my $r = $lockobj->unlock( { file => $lock_file } );
     if ($r) {
-	Log( "unlocked $lock_file");
+	Log("unlocked $lock_file") if $debug;
     }
     else {
+	LogError("cannot unlock");
 	croak("Error: cannot unlock");
     }
 }
@@ -401,6 +397,11 @@ determine ml specific variables
 by command line arguments or CGI environment variables
 with considering virtual domains.
 
+    Example: "| /usr/local/libexec/fml/distribute elena@fml.org"
+             makefml COMMAND elena@fml.org ...
+       or in the old style
+             "| /usr/local/libexec/fml/fml.pl /var/spool/ml/elena"
+
 =cut
 
 
@@ -416,12 +417,6 @@ sub resolve_ml_specific_variables
     my $config  = $curproc->{ config };
     my $myname  = $args->{ myname };
     my $ml_addr = '';
-
-    # Example: "| /usr/local/libexec/fml/distribute elena@fml.org"
-    #          makefml COMMAND elena@fml.org ...
-    #    or in the old style
-    #          "| /usr/local/libexec/fml/fml.pl /var/spool/ml/elena"
-    #
 
     # 1. virtual domain or not ?
     # 1.1 search ml@domain syntax arg in @ARGV
@@ -493,7 +488,7 @@ sub resolve_ml_specific_variables
 # XXX remove this in the future
 my @delayed_buffer = ();
 
-# Descriptions:
+# Descriptions: debug log. removed in the future
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -869,10 +864,10 @@ sub reply_message
 sub _append_message_into_queue
 {
     my ($curproc, $msg, $args, $recipient) = @_;
-    my $pcb       = $curproc->{ pcb };
-    my $category  = 'reply_message';
-    my $class     = 'queue';
-    my $rarray    = $pcb->get($category, $class) || [];
+    my $pcb      = $curproc->{ pcb };
+    my $category = 'reply_message';
+    my $class    = 'queue';
+    my $rarray   = $pcb->get($category, $class) || [];
 
     $rarray->[ $#$rarray + 1 ] = {
 	message   => $msg,
@@ -957,7 +952,7 @@ sub reply_message_nl
 {
     my ($curproc, $class, $default_msg, $args) = @_;
     my $config = $curproc->{ config };
-    my $buf = $curproc->message_nl($class, $default_msg, $args);
+    my $buf    = $curproc->message_nl($class, $default_msg, $args);
 
     if (defined $buf) {
 	eval q{
@@ -1081,7 +1076,7 @@ sub queue_in
     my $subject      = $config->{ "${category}_subject" };
     my $reply_to     = $config->{ address_for_command };
     my $is_multipart = 0;
-    my $rcptkey    = '';
+    my $rcptkey      = '';
     my $rcptlist     = [];
     my $msg          = '';
 
@@ -1560,32 +1555,6 @@ sub reset_umask
 
     # back to the original umask;
     umask($saved_umask);
-}
-
-
-=head2 C<load_module($args, $module)>
-
-load model dependent module.
-return the object for C<$module>.
-
-=cut
-
-
-# Descriptions: load module
-#    Arguments: OBJ($curpros) HASH_REF($args) STR($pkg)
-# Side Effects: load module
-# Return Value: OBJ
-sub load_module
-{
-    my ($curproc, $args, $pkg) = @_;
-
-    eval qq{ require $pkg; $pkg->import();};
-    unless ($@) {
-	return $pkg->new($curproc, $args);
-    }
-    else {
-	Log($@);
-    }
 }
 
 
