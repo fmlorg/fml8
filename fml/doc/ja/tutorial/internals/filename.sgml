@@ -1,0 +1,146 @@
+<chapter id="filename">
+	<title>
+	[&fmldevel; での注意点] ファイル名について
+	</title>
+
+<para>
+どうせやるならとことん。
+ここまできたらファイル名も変える方が建設的だろうという話です。
+参照: fml-devel 205
+</para>
+
+
+
+<sect1 id="filename.basic">
+	<title>
+	ファイル名の基本構成
+	</title>
+
+<para>
+基本系は
+<screen>
+ファイル名-役割
+</screen>
+です。例えば、配送リストは次のようになります。
+<screen>
+recipients-役割
+members-役割
+</screen>
+</para>
+
+<para>
+さらに配送リスト以外でも同じルールを適用します。
+例えば
+<screen>
+passwd-admin
+passwd-moderator
+passwd-cgiadmin
+</screen>
+というようなぐあいにです。
+</para>
+
+
+<para>
+将来も同様に、新たな『役割』を新設するごとに
+<screen>
+members-役割
+recipient-役割
+</screen>
+を作ることにします。
+でも、たいてい recipient-* はダミーに過ぎないないことが多いでしょう:)
+</para>
+
+<para>
+一応、使い分けるつもりですが、実際、どういう場合に役立つのかはよくわか
+らないです。が、とりあえず理論的に美しいほうを採用することとします。
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	例: ＭＬのメンバー／受信者リスト
+	</title>
+
+<para>
+<screen>
+primary_recipient_maps	=	recipients
+
+# 互換性のため actives をいれておく
+recipient_maps	=	recipients
+</screen>
+</para>				actives
+
+<para>
+[TODO] warning 出るところがあるので、なんとかせな
+</para>
+
+
+</sect1>
+
+
+<sect1>
+	<title>
+	例: リモート管理者のリスト
+	</title>
+
+<para>
+<screen>
+recipients-admin
+members-admin
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	モデレータのリスト
+	</title>
+
+
+<para>
+<screen>
+recipients-moderator
+members-moderator
+</screen>
+</para>
+
+
+</sect1>
+
+
+<sect1>
+	<title>
+	リモート管理者のパスワード
+	</title>
+
+
+<para>
+<screen>
+etc/passwd-admin
+</screen>
+</para>
+
+<warning>
+<para>
+4.0 では etc/passwd でした。
+</para>
+</warning>
+
+</sect1>
+
+
+</chapter>
+
+<!--
+
+[ヒストリ]
+
+   01_RFC_FILENAME.txt,v 1.2 2002/08/21 15:30:25 fukachan Exp
+
+より
+
+-->
