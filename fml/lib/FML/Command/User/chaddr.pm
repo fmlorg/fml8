@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.30 2004/04/23 04:10:31 fukachan Exp $
+# $FML: chaddr.pm,v 1.31 2004/06/26 11:47:57 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -62,6 +62,52 @@ sub need_lock { 1;}
 # Side Effects: none
 # Return Value: STR
 sub lock_channel { return 'command_serialize';}
+
+
+# Descriptions: verify the syntax command string.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub verify_syntax
+{
+    my ($self, $curproc, $command_args) = @_;
+    my $comname    = $command_args->{ comname }    || '';
+    my $options    = $command_args->{ options }    || [];
+    my $command    = $comname;
+    my $oldaddr    = $options->[ 0 ] || '';
+    my $newaddr    = $options->[ 1 ] || '';
+    my (@test)     = ($command);
+
+    $curproc->log("command = $command, old = $oldaddr, new = $newaddr");
+
+    my $ok = 0;
+
+    use FML::Restriction::Base;
+    my $dispatch = new FML::Restriction::Base;
+    if ($dispatch->regexp_match('address', $oldaddr)) {
+	$ok++;
+    }
+    else {
+	$curproc->logerror("insecure address: <$oldaddr>");
+	return 0;
+    }
+
+    if ($dispatch->regexp_match('address', $newaddr)) {
+	$ok++;
+    }
+    else {
+	$curproc->logerror("insecure address: <$newaddr>");
+	return 0;
+    }
+
+    use FML::Command;
+    $dispatch = new FML::Command;
+    if ($dispatch->safe_regexp_match($curproc, $command_args, \@test)) {
+	$ok++;
+    }
+
+    return( $ok == 3 ? 1 : 0 );
+}
 
 
 # Descriptions: chaddr adapter: confirm before real chaddr operation.
