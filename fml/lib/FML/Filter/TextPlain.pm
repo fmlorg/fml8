@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: TextPlain.pm,v 1.9 2004/01/21 03:43:30 fukachan Exp $
+# $FML: TextPlain.pm,v 1.10 2004/02/01 14:52:50 fukachan Exp $
 #
 
 package FML::Filter::TextPlain;
@@ -103,7 +103,7 @@ C<Usage>:
 =cut
 
 
-# Descriptions: top level dispatcher
+# Descriptions: top level dispatcher.
 #    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: none
 # Return Value: none
@@ -119,6 +119,7 @@ sub body_check
     ## 2. XXX %REJECT_HDR_FIELD_REGEXP
     ## 3. check only the first plain/text block
 
+    # XXX-TODO: need recursive ? e.g. text/plain in rfc822
     # get the message object for the first plain/text message.
     # If the incoming message is a mime multipart format,
     # find_first_plaintext_message() return the first mime part block
@@ -263,7 +264,7 @@ sub _probe_guid
 }
 
 
-# Descriptions: decode $buf
+# Descriptions: decode $buf.
 #    Arguments: OBJ($self) STR($buf) STR($encoding)
 # Side Effects: none
 # Return Value: STR
@@ -323,7 +324,7 @@ sub reject_old_fml_command_syntax
     my ($self, $msg, $first_msg) = @_;
     my $buf = $first_msg->message_text;
 
-    if ($buf =~ /^[\s\n]*(\#\s*[\w\d\:\-\s]+)[\n\s]*$/) {
+    if ($buf =~ /^[\s\n]*(\#\s*[\w\d\:\-\s]+)[\n\s]*$/o) {
 	my $r = $1;
 	$r =~ s/\n//g;
 	$r = "avoid to distribute commands [$r]";
@@ -418,7 +419,7 @@ sub need_one_line_check
 }
 
 
-# Descriptions: $data looks a citation or not
+# Descriptions: $data looks a citation or not.
 #    Arguments: OBJ($self) STR($data)
 # Side Effects: none
 # Return Value: 1 or 0
@@ -439,7 +440,7 @@ sub is_citation
 }
 
 
-# Descriptions: $data looks a citation or not
+# Descriptions: $data looks a citation or not.
 #               XXX fml 4.0 assumes:
 #               XXX If the paragraph has @ or ://, it must be signature.
 #               trap special keyword like tel:011-123-456789 ...
@@ -486,7 +487,7 @@ We remove it and check the remained buffer whether it is safe or not.
 =cut
 
 
-# Descriptions: clean up buffer before main check begins
+# Descriptions: clean up buffer before main check begins.
 #    Arguments: OBJ($self) STR($xbuf)
 # Side Effects: none
 # Return Value: STR
