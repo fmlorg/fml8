@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: check.pm,v 1.8 2003/02/14 15:29:02 fukachan Exp $
+# $FML: check.pm,v 1.9 2003/08/29 15:33:58 fukachan Exp $
 #
 
 package FML::Command::Admin::check;
@@ -48,17 +48,36 @@ sub new
 # Return Value: NUM( 1 or 0)
 sub need_lock { 0;}
 
+# check rules
 my @rules =  qw(
+		check_ml_home_dir
 		check_spool_dir
 		check_html_archive_dir
 		);
 
 
-# Descriptions: checknostics
+# Descriptions: top level dispatcher.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
 # Return Value: none
 sub process
+{
+    my ($self, $curproc, $command_args) = @_;
+
+    for my $rule (@rules) {
+	$self->$rule($curproc, $command_args);
+    }
+}
+
+
+# XXX-TODO: which correct ? use ui_message() / print() 
+
+
+# Descriptions: check the existence of $ml_home_dir.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: none
+# Return Value: none
+sub check_ml_home_dir
 {
     my ($self, $curproc, $command_args) = @_;
     my $ml_name     = $curproc->ml_name();
@@ -66,12 +85,15 @@ sub process
     my $ml_home_dir = $curproc->ml_home_dir($ml_name, $ml_domain);
 
     # validate $ml_name existence firstly.
-    unless (-d $ml_home_dir) {
-	croak("no such ml: $ml_name\@$ml_domain");
+    print "ml_home_dir exists ? ... ";
+    if (-d $ml_home_dir) {
+	print "ok\n";
     }
-
-    for my $rule (@rules) {
-	$self->$rule($curproc, $command_args);
+    else {
+	my $s = "no ml_home_dir($ml_home_dir) for $ml_name\@$ml_domain";
+	$curproc->ui_message($s);
+	$curproc->logerror($s);
+	croak($s);
     }
 }
 
