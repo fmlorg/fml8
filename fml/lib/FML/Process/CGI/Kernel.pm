@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.43 2002/09/11 23:18:17 fukachan Exp $
+# $FML: Kernel.pm,v 1.44 2002/09/22 14:56:55 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -75,11 +75,14 @@ sub new
 print HTTP header.
 The charset is C<euc-jp> by default.
 
+adjust ml_*, load config files and fix @INC.
+
 =cut
 
 
 # Descriptions: print html header.
 #               analyze cgi data to determine ml_name et.al.
+#               adjust ml_*, load config files and fix @INC.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -219,7 +222,7 @@ sub run
 
 
 # Descriptions: show error string
-#    Arguments: STR($r)
+#    Arguments: OBJ($curproc) STR($r)
 # Side Effects: none
 # Return Value: none
 sub _error_string
@@ -258,6 +261,7 @@ sub _drive_cgi_by_table
     my ($curproc, $args) = @_;
     my $r = '';
 
+    # XXX-TODO: hmm, customisable by /etc/fml/cgi.conf ?
     #
     #   nw   north  ne
     #   west center east
@@ -346,6 +350,7 @@ sub cgi_execute_command
     unless ($config->has_attribute("commands_for_admin_cgi", $comname)) {
 	LogError("cgi deny command: mode=$commode level=cgi");
 
+	# XXX-TODO: validate $comname (CSS). 
 	my $buf = $curproc->message_nl("cgi.deny",
 				       "Error: deny $comname command");
 	print $buf, "<BR>\n";
@@ -364,6 +369,7 @@ sub cgi_execute_command
 	    $obj->$comname($curproc, $command_args);
 	};
 	unless ($@) {
+	    # XXX-TODO: validate $comname (CSS). 
 	    print "OK! $comname succeed.\n";
 	}
 	else {
@@ -373,6 +379,7 @@ sub cgi_execute_command
 		my ($key, $r) = $curproc->parse_exception($reason);
 		my $buf       = $curproc->message_nl($key);
 
+		# XXX-TODO: validate output.
 		print "<BR>\n";
 		print ($buf || $reason);
 		print "<BR>\n";
@@ -480,6 +487,8 @@ log.
 sub run_cgi_log
 {
     my ($curproc, $args) = @_;
+
+    # XXX-TODO: NOT IMPLEMENTED.
 }
 
 
@@ -497,6 +506,8 @@ dummy.
 sub run_cgi_dummy
 {
     my ($curproc, $args) = @_;
+
+    # XXX-TODO: NOT IMPLEMENTED.
 }
 
 
@@ -515,6 +526,7 @@ sub run_cgi_date
 {
     my ($curproc, $args) = @_;
 
+    # XXX-TODO: NOT IMPLEMENTED. NOT USE `date`;
     print `date`;
 }
 
@@ -538,6 +550,7 @@ sub run_cgi_options
 
     print "<P> <B> options </B>\n";
 
+    # XXX-TODO: validate $action.
     print start_form(-action=>$action);
 
     print "Language:\n";
@@ -561,7 +574,6 @@ execute cgi_menu() given as FML::Command::*
 
 # Descriptions: execute FML::Command
 #    Arguments: OBJ($curproc) HASH_REF($args)
-#               STR($comname) HASH_REF($command_args)
 # Side Effects: load module
 # Return Value: none
 sub run_cgi_menu
@@ -571,6 +583,7 @@ sub run_cgi_menu
     my $command_args = $pcb->get('cgi', 'command_args');
 
     if (defined $command_args) {
+	# XXX-TODO: validate $comname
 	my $comname = $command_args->{ comname };
 	my $cmd     = "FML::Command::Admin::$comname";
 	my $obj     = undef;
@@ -713,6 +726,7 @@ sub AUTOLOAD
         return $curproc->$method($varname);
     }
     else {
+	# XXX-TODO: validate $comname
         croak("__ERROR_cgi.unknown_method__: unknown method $comname");
     }
 }

@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.23 2002/09/22 14:56:52 fukachan Exp $
+# $FML: Error.pm,v 1.24 2002/09/22 15:01:21 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -57,7 +57,9 @@ sub new
 
 =head2 C<prepare($args)>
 
-forward the request to SUPER CLASS.
+parse argv, load config files and fix @INC.
+
+if $use_error_analyzer_program, parse incoming message.
 
 =cut
 
@@ -93,12 +95,12 @@ sub prepare
 
 =head2 C<verify_request($args)>
 
-verify the sender is a valid member or not.
+dummy.
 
 =cut
 
 
-# Descriptions: verify the sender of this process is an ML member.
+# Descriptions: dummy.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: 1 or 0
@@ -129,9 +131,9 @@ XXX Each command determines need of lock or not.
 =cut
 
 
-# Descriptions: call _evaluate_command_lines()
+# Descriptions: analyze error mails and remove error addresses.
 #    Arguments: OBJ($curproc) HASH_REF($args)
-# Side Effects: none
+# Side Effects: update cache and member lists if needed.
 # Return Value: none
 sub run
 {

@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Digest.pm,v 1.4 2002/11/18 13:52:22 fukachan Exp $
+# $FML: Digest.pm,v 1.5 2002/12/10 12:00:50 fukachan Exp $
 #
 
 package FML::Process::Digest;
@@ -63,12 +63,13 @@ sub new
 
 forward the request to the base class.
 adjust ml_* and load configuration files.
+fix @INC.
 
 =cut
 
 
 # Descriptions: prepare miscellaneous work before the main routine starts.
-#               adjust ml_* and load configuration files.
+#               adjust ml_* and load configuration files. fix @INC.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -97,15 +98,12 @@ sub prepare
 
 =head2 C<verify_request($args)>
 
-check the mail sender and the mail loop possibility.
+set up the mail sender.
 
 =cut
 
 
-# Descriptions: verify the mail sender and others
-#               1. verify user credential
-#               2. primitive loop check
-#               3. filter
+# Descriptions: set up the mail sender.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -201,8 +199,8 @@ If needed, we send back error messages to the mail sender.
 =cut
 
 
-# Descriptions: clean up in the end of the curreen process.
-#               return error messages et. al.
+# Descriptions: queue flush.
+#               return error messages et. al if needed.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: queue flush
 # Return Value: none
@@ -223,9 +221,9 @@ sub finish
 }
 
 
-# Descriptions:
+# Descriptions: primitive digest delivery.
 #    Arguments: OBJ($curproc) HASH_REF($args)
-# Side Effects:
+# Side Effects: update digest sequence.
 # Return Value: none
 sub _digest
 {
@@ -241,6 +239,7 @@ sub _digest
 	$did++; # start = last digest id + 1
 	my $range  = "$did-$aid";
 
+	# XXX-TODO: $range = "100-200" -> $range = [ 100, 101, ... ]; ?
 	# create multipart of articles as a digest.
 	$digest->create_multipart_message({ range => $range });
 

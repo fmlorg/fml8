@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Param.pm,v 1.17 2002/09/11 23:18:17 fukachan Exp $
+# $FML: Param.pm,v 1.18 2002/09/22 14:56:55 fukachan Exp $
 #
 
 package FML::Process::CGI::Param;
@@ -17,7 +17,7 @@ use CGI qw/:standard/;
 
 =head1 NAME
 
-FML::Process::CGI::Param - CGI input restriction
+FML::Process::CGI::Param - restric CGI input
 
 =head1 SYNOPSIS
 
@@ -25,11 +25,11 @@ See FML::CGI:: on usage.
 
 =head1 DESCRIPTION
 
-cleaner for data.
+cleaner for input data.
 
 =head1 METHODS
 
-=head2 safe_param(str, key)
+=head2 safe_param(key)
 
 return value for key if the value is appropriate.
 
@@ -77,7 +77,7 @@ sub safe_param
 }
 
 
-=head2 safe_paramlist($self, $numregexp, $key)
+=head2 safe_paramlist($numregexp, $key)
 
 return ARRAY_REF for $key.
 

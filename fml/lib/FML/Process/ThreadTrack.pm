@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ThreadTrack.pm,v 1.34 2002/09/22 14:56:54 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.35 2002/10/28 09:58:12 tmu Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -38,7 +38,7 @@ create a C<FML::Process::Kernel> object and return it.
 
 =head2 C<prepare()>
 
-adjust ml_* and load configuration files.
+adjust ml_*, load configuration files and fix @INC.
 
 =cut
 
@@ -56,7 +56,7 @@ sub new
 }
 
 
-# Descriptions: adjust ml_* and load configuration files
+# Descriptions: adjust ml_*, load configuration files and fix @INC.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -178,6 +178,7 @@ sub run
     elsif ($command eq 'close') {
 	my $thread_id = $argv->[ 2 ];
 	if (defined $thread_id) {
+	    # XXX-TODO: method-ify.
 	    _close($thread, $thread_id, 1, $max_id);
 	}
 	else {
@@ -185,6 +186,8 @@ sub run
 	}
     }
     else {
+	# XXX-TODO: hmm, run interactive session unless @ARGV ?
+	# XXX-TODO: showing help is appropriate ?
 	if ($argv->[ 0 ] ne '') {
 	    push(@ISA, 'FML::Process::ThreadTrack::CUI');
 	    $ttargs->{ ml_name } = $argv->[ 0 ];

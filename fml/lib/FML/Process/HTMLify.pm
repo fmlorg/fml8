@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.24 2002/09/22 14:56:53 fukachan Exp $
+# $FML: HTMLify.pm,v 1.25 2002/11/18 22:47:26 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -41,7 +41,7 @@ create a C<FML::Process::Kernel> object and return it.
 
 =head2 C<prepare()>
 
-adjust ml_* and load configuration files.
+adjust ml_*, load configuration files and fix @INC.
 
 =cut
 
@@ -59,7 +59,7 @@ sub new
 }
 
 
-# Descriptions: adjust ml_* and load configuration files
+# Descriptions: adjust ml_*, load configuration files, and fix @INC.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -80,7 +80,7 @@ sub prepare
 }
 
 
-# Descriptions: dummy to avoid to take data from STDIN
+# Descriptions: dummy.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -99,9 +99,10 @@ sub verify_request
 
 =head2 C<run($args)>
 
-call the actual thread tracking system.
+call &FML::Command::HTMLify::convert().
 
 =cut
+
 
 # Descriptions: convert text format article to HTML by Mail::Message::ToHTML
 #    Arguments: OBJ($curproc) HASH_REF($args)
@@ -160,7 +161,7 @@ _EOF_
 }
 
 
-# Descriptions: dummy to avoid to take data from STDIN
+# Descriptions: dummy.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -177,7 +178,7 @@ sub finish
 }
 
 
-# Descriptions: dummy to avoid to take data from STDIN
+# Descriptions: dummy.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
