@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.54 2004/04/10 07:40:02 fukachan Exp $
+# $FML: File.pm,v 1.55 2004/04/11 12:58:39 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -636,6 +636,11 @@ sub sequence_increment
     use IO::Adapter::AtomicFile;
     my ($rh, $wh) = IO::Adapter::AtomicFile->rw_open($file);
 
+    if ($rh->error || $wh->error) {
+	$self->error_set("fail to open temporary files.");
+	return 0;
+    }
+
     # read the current sequence number
     if (defined $rh) {
 	$id = $self->_read_one_word($rh);
@@ -657,11 +662,34 @@ sub sequence_increment
 
     # save $id
     if (defined $wh) {
+	$wh->autoflush(1);
+	$wh->clearerr();
 	print $wh $id, "\n";
-	$wh->close;
+	if ($wh->error()) {
+	    $self->error_set("write error");
+	    $wh->rollback();
+	    return 0;
+	}
+	else {
+	    $wh->close;
+	}
     }
     else {
 	$self->error_set("cannot save id");
+    }
+
+    # verify if the value is writtern.
+    {
+	use IO::Adapter::AtomicFile;
+	my ($rh, $wh) = IO::Adapter::AtomicFile->rw_open($file);
+	if (defined $rh) { 
+	    my $new_id = $self->_read_one_word($rh);
+	    unless ($new_id == $id) {
+		$self->error_set("fail to save id");
+		return 0;
+	    }
+	    $rh->close();
+	}
     }
 
     return $id;
@@ -686,8 +714,15 @@ sub sequence_replace
 
     # save $id
     if (defined $wh) {
+	$wh->clearerr();
 	print $wh $new_id, "\n";
-	$wh->close;
+	if ($wh->error()) {
+	    $self->error_set("write error");
+	    $wh->rollback();
+	}
+	else {
+	    $wh->close;
+	}
     }
     else {
 	$self->error_set("cannot save id");
