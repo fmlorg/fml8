@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.107 2004/05/25 03:39:00 fukachan Exp $
+# $FML: Command.pm,v 1.108 2004/05/29 03:45:12 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -50,7 +50,7 @@ make fml process object, which inherits C<FML::Process::Kernel>.
 =cut
 
 
-# Descriptions: standard constructor.
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: inherit FML::Process::Kernel
 # Return Value: OBJ
@@ -287,6 +287,7 @@ sub _command_process_loop
     my $comlines  = $msg->message_text_as_array_ref();
     my $context   = {};
 
+    # XXX-TODO: toggle on/off
     # firstly, prompt (for politeness :) to show processing ...
     {
 	my $whoami    = "Hi, I am fml8 system for $ml_domain domain.";
@@ -306,7 +307,7 @@ sub _command_process_loop
 	    $curproc->log("(debug) input[$num_total]: $orig_command");
 	}
 
-	# XXX analyze the iput command and set info into $context.
+	# XXX analyze the input command and set the result into $context.
 	$context = $curproc->command_context_init($orig_command);
 
 	# if $context is empty HASH_REF, no valid command in this line.
@@ -480,8 +481,8 @@ sub _command_execute
 
 	    $num_error++;
 
-	    $curproc->reply_message_nl('command.fail', "fail.", $msg_args);
-	    $curproc->logerror("command ${comname} fail");
+	    $curproc->reply_message_nl('command.fail', "failed.", $msg_args);
+	    $curproc->logerror("command ${comname} failed");
 
 	    if ($reason =~ /^(.*)\s+at\s+/) {
 		my $reason = $1;
