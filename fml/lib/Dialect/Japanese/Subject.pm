@@ -85,6 +85,7 @@ sub cut_off_reply_tag
 sub is_reply
 {
     my ($self, $x) = @_;
+    return 0 unless $x;
     &Jcode::convert(\$x, 'euc');
     return ($x =~ /^((\s|(¡¡))*($pattern)\s*)+/ ? 1 : 0);
 }
