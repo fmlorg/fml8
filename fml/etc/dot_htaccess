@@ -1,3 +1,4 @@
 AuthName ByPassword
 AuthType Basic
 require valid-user
+AuthUserFile "/dev/null"
