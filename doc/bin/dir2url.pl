@@ -11,15 +11,23 @@
 
 use strict;
 use Carp;
+use vars qw($WarningMessage);
+use File::Basename;
 
 my $Module;
 my $ModulePrefix;
 my $TableMode = 1;
+my $Prefix    = dirname($0);
 
 Init();
 HEADER();
 Show();
 FOOTER();
+
+if ($WarningMessage) {
+    print "*** warning ***\n";
+    print $WarningMessage;
+}
 
 exit 0;
 
@@ -38,20 +46,50 @@ sub Init
 }
 
 
-sub Show
+sub update_cvs_ignore
 {
-    print "<CENTER><EM>$ModulePrefix class modules</EM></CENTER>\n<HR>\n";
-    print ($TableMode ? "<TABLE BRODER=4>\n" : "<UL>\n");
-    
-    my $pathname = '';
-    my $doc      = '';
-
     if ( -f ".cvsignore" ) {
 	use FileHandle;
 	my $fh = new FileHandle "> .cvsignore";
 	print $fh '@@doc', "\n";
 	close($fh);
     } 
+}
+
+
+sub generate_manual
+{
+    my ($pathname) = @_;
+    my ($doc, $manual);
+
+    if (-f $pathname) {
+	-d '@@doc' || mkdir('@@doc', 0755);
+	$manual = '@@doc/'.$pathname;
+	$manual =~ s/pm$/txt/;
+
+	print STDERR "\tpod2text $pathname > $manual\n";
+	system "pod2text $pathname > $manual";
+
+	$manual =  $pathname;
+	$manual =~ s/pm$/ja.txt/;
+	$doc    =  '@@doc/'.$pathname;
+	$doc    =~  s/pm$/ja.html/;
+
+	if (-f $manual) {
+	    system "$Prefix/text2html.pl $manual > $doc";
+	}
+    }
+}
+
+
+sub Show
+{
+    my ($pathname, $manual);
+
+    print "<CENTER><EM>$ModulePrefix class modules</EM></CENTER>\n<HR>\n";
+    print ($TableMode ? "<TABLE>\n" : "<UL>\n");
+
+    update_cvs_ignore();
 
     foreach $pathname (<*>) {
 	next if $pathname =~ /^\__template/;
@@ -64,28 +102,10 @@ sub Show
 	next if $pathname eq 'Makefile';
 
 	my $module = $pathname;
+	if ($module =~ /\.pm$/) { generate_manual($pathname);}
 
-	# ignore module.txt file 
-	# which is generated from module.pm automatically
-	if ($module =~ /txt$/) { 
-	    my $x = $module;
-	    $x    =~ s/txt$/pm/; 
-	    next if -f $x;
-	}
-
-	if ($module =~ /\.pm$/) {
-	    $module = $ModulePrefix. "::". $pathname;
-	    $module =~ s/\.pm$//;
-
-	    if (-f $pathname) {
-		-d '@@doc' || mkdir('@@doc', 0755);
-		$doc = '@@doc/'.$pathname;
-		$doc =~ s/pm$/txt/;
-
-		print STDERR "\tpod2text $pathname > $doc\n";
-		system "pod2text $pathname > $doc";
-	    }
-	}
+	$manual = '@@doc/'.$pathname;
+	$manual =~ s/pm$/txt/;
 
 	if (-d $pathname) {
 	    print ($TableMode ? "<TR>\n" : "<LI>\n");
@@ -110,11 +130,11 @@ sub Show
 		    print " <A HREF=$pathname/INSTALL>INSTALL</A>\n";
 		}
 
-		print STDERR "Error: *** fail to convert $pathname ***\n";
+		_warn("Error: *** fail to convert $pathname ***");
 		print "${pathname}/\n";
 	    }
 	}
-	else {
+	elsif ($pathname =~ /\.pm$/) {
 	    print ($TableMode ? "<TR>\n" : "<LI>\n");
 	    print "<TD>\n" if $TableMode;
 	    print " $module ";
@@ -123,13 +143,23 @@ sub Show
 	    print "<A HREF=\"$pathname\">[source]</A>\n";
 
 	    print "<TD>\n" if $TableMode;
-	    print "<A HREF=\"$doc\">[doc]</A>\n" if -f $doc;
+	    print "<A HREF=\"$manual\">[manual]</A>\n" if -f $manual;
+
+	    my $doc = $manual;
+	    $doc    =~ s/txt/ja.html/;
+	    print "<TD>\n" if $TableMode;
+	    print "<A HREF=\"$doc\">[Japanese MEMO]</A>\n" if -f $doc;
+	}
+	elsif ($pathname =~ /\.ja\.txt$/) {
+	    ; # see above
+	}
+	else {
+	    _warn("unknown file type $pathname");
 	}
     }
 
     print ($TableMode ? "</TABLE>\n" : "</UL>\n");
 }
-
 
 
 sub HEADER 
@@ -160,6 +190,13 @@ print <<'_EOF';
 </HTML>
 _EOF
 
+}
+
+
+sub _warn
+{
+    my ($mesg) = @_;
+    $WarningMessage .= $mesg . "\n";
 }
 
 
