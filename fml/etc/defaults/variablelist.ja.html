@@ -64,6 +64,14 @@ var_dir		= $ml_home_dir/var
 #     Examples: /var/spool/ml/elena/tmp
 tmp_dir		= $ml_home_dir/tmp
 
+
+# Descriptions: 各種データファイルを置くディレクトリ
+#      History: $VARDB_DIR
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var/db
+db_dir		= $var_dir/db
+
+
 =head1	アクセス制御ルール
 
 # Descriptions: 投稿への制限
@@ -191,6 +199,12 @@ use_header_check		=	yes
 header_check_rules		=	verify_message_id_uniqueness
 					verify_x_ml_info_uniqueness
 					verify_list_post_uniqueness
+
+header_message_id_cache_dir	=	$db_dir/message_id
+
+header_x_ml_info_cache_dir	=	$db_dir/x_ml_info
+
+header_list_post_cache_dir	=	$db_dir/list_post
 
 
 # Descriptions: 記事のヘッダを書き換えるルール群
