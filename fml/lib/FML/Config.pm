@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.38 2001/08/23 14:29:22 fukachan Exp $
+# $FML: Config.pm,v 1.39 2001/09/13 12:20:39 fukachan Exp $
 #
 
 package FML::Config;
@@ -245,14 +245,14 @@ sub _read_file
 	    if (/^([A-Za-z0-9_]+)\s*(=)\s*(.*)/   ||
 		/^([A-Za-z0-9_]+)\s*(\+=)\s*(.*)/ ||
 		/^([A-Za-z0-9_]+)\s*(\-=)\s*(.*)/) {
-		my ($key, $mode, $value) = ($1, $2, $3);
-		$mode   =~ s/=//;
+		my ($key, $xmode, $value) = ($1, $2, $3);
+		$xmode   =~ s/=//;
 		$value  =~ s/\s*$//o;
 		$curkey = $key;
 
-		if ($mode) {
+		if ($xmode) {
 		    $config->{ $key } = 
-			_evaluate($config, $key, $mode, $value);
+			_evaluate($config, $key, $xmode, $value);
 		}
 		else { # by default
 		    $config->{ $key } = $value;
@@ -263,6 +263,7 @@ sub _read_file
 		    $comment->{ $key } = $comment_buffer;
 		    undef $comment_buffer;
 
+		    print STDERR "push(@$order, $key);\n" if $ENV{'debug'};
 		    push(@$order, $key);
 		}
 	    }
@@ -344,11 +345,11 @@ sub read
     });
 
     # XXX debug: removed in the future
-    if (0) {
+    if ($ENV{'debug'}) {
 	my ($k, $v);
 	while (($k, $v) = each %$config) {
-	    print STDERR "\n[$k]\n";
-	    print STDERR " value  $v\n";
+	    print STDERR "\nconfig{ $k } =>\n";
+	    print STDERR "          $v\n";
 	    if (defined $comment->{ $k }) {
 		my $comment = $comment->{ $k };
 		print STDERR " comment\n{$comment}\n";
@@ -392,6 +393,11 @@ sub write
 	# XXX get variable list modified in this process
 	my $newkeys = $self->{ _newly_added_keys };
 	for my $k (@$order, @$newkeys) {
+	    if ($ENV{'debug'} && defined $comment->{$k}) {
+		print STDERR "write.config{ ", $comment->{$k}, " }";
+		print STDERR join("\n\t", split(/\s+/, $config->{$k})), "\n";
+	    }
+
 	    print $fh $comment->{$k} if defined $comment->{$k};
 	    print $fh "$k = ";
 	    print $fh join("\n\t", split(/\s+/, $config->{$k}));
