@@ -1,5 +1,5 @@
 <!--
-   $FML: style.sgml,v 1.5 2002/07/02 10:39:36 fukachan Exp $
+   $FML: style.sgml,v 1.6 2002/07/06 14:55:18 fukachan Exp $
 -->
 
 <chapter id="programingstyle">
@@ -22,10 +22,30 @@ FNF
 
 <!-- ==================================================== -->
 <sect1 id="variable-naming-convention">
-
 <title>
 変数の命名規則（ネーミングコンベンション）
 </title>
+
+<caption>
+
+<para>
+default という単語をどこにはさむか？は悩ましいです。
+一番左に来る（たいてはい最初の _ までの）文字列部分は、
+大きな括りでのクラスを意味すると考えられます。
+</para>
+
+<para>
+たとえば article_* であれば記事関連の変数が全て article_ 以下に
+定義されていると期待するでしょう。
+</para>
+
+<para>
+そう考えると、我々の場合は、default_* (つまり default クラスが存在する
+と考える)より、「クラス_default_変数」ないしは「クラス_変数_default」
+というシンタックスの方が素直な分類方式のような気がします。
+</para>
+
+</caption>
 
 <sect2>
 	<title>
