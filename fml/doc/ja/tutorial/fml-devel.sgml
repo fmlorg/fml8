@@ -2,7 +2,7 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-$FML: fml-devel.sgml,v 1.7 2001/04/24 07:12:29 fukachan Exp $
+$FML: fml-devel.sgml,v 1.8 2001/04/24 10:06:37 fukachan Exp $
 -->
 
 <!doctype book public "-//OASIS//DTD DocBook V3.1//EN" [
@@ -37,6 +37,7 @@ $FML: fml-devel.sgml,v 1.7 2001/04/24 07:12:29 fukachan Exp $
 	<!-- 以下、各章が並ぶ -->
 	&intro;
 	&download;
+	&install;
   </part>
 
 
@@ -57,8 +58,12 @@ $FML: fml-devel.sgml,v 1.7 2001/04/24 07:12:29 fukachan Exp $
   <!-- 
 	***** ここから後は付録 *****
   -->
+  <part>
+	<title> 付録 </title>
+
 	&programingstyle; 
 	&docbook;
+  </part>
 
 </book>
 

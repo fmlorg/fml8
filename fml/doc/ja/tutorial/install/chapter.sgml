@@ -1,0 +1,126 @@
+<!--
+	$FML$
+-->
+
+<chapter id="installation">
+
+<title> インストール </title>
+
+
+<!-- ====================================================== --> 
+<sect1 id="install">
+<title> 概要 </title>
+
+<para>
+対話型インストーラは"まだ"作られていません。
+シェルスクリプトがあるだけです。
+</para>
+
+<para>
+トップ・ディレクトリにある INSTALL.sh の先頭にあるディレクトリ名などを
+適当に修正し、
+ユーザ root で実行して下さい。
+</para>
+
+<screen>
+% su root
+# sh INSTALL.sh
+</screen>
+
+</sect1>
+
+
+<!-- ====================================================== --> 
+<sect1>
+<title> 各ディレクトリの役割 </title>
+
+<para>
+それぞれのディレクトリの役割は次の通りです。
+なお、デフォルトは /usr/local 以下にインストールされます。
+</para>
+
+<para>
+  <table>
+    <title> ディレクトリの構造 </title>
+    <tgroup cols=2>
+
+      <thead>
+        <row>
+          <entry> ディレクトリ 		</entry>
+          <entry> 説明			</entry>
+        </row>
+      </thead>
+
+      <tbody>
+        <row>
+          <entry> /etc/fml	</entry>
+          <entry>
+		基本設定ファイルを置く場所。
+		( fml 4 の /usr/local/fml/.fml や default_config.ph 相当)
+
+		バージョンやライブラリの場所(ディレクトリ)などを指定する。
+          </entry>
+        </row>
+  
+        <row>
+          <entry> /usr/local/libexec/fml 		</entry>
+          <entry>
+		実行ファイル ( fml 4 の /usr/local/fml )
+	  </entry>
+        </row>
+
+        <row>
+          <entry>
+		/usr/local/lib/fml
+	  </entry>
+          <entry>
+		ライブラリ ( fml 4 の /usr/local/fml )
+	  </entry>
+        </row>
+
+        <row>
+          <entry>
+		/var/spool/ml
+	  </entry>
+          <entry>
+		ＭＬのホームディレクトリ。fml 4 と同じ目的です。
+
+		注意: /var/spool/ml のオーナは INSTALL.sh の
+		owner 変数(デフォルトはユーザ fml)に設定されます。
+	  </entry>
+        </row>
+      </tbody>
+
+    </tgroup>
+  </table>
+</para>
+</sect1>
+
+
+<!-- ====================================================== --> 
+<sect1 id="upgrade">
+<title> アップグレード </title>
+
+<para>
+単に、もう一度インストールして下さい。
+</para>
+
+<para>
+インストール後、/etc/fml/main.cf の fml_version 行の日付を
+最新のものにして下さい。
+ファイルをセーブした瞬間から新しい fml に切り替わります
+(注: エディタで編集中は古い内容)。
+</para>
+</sect1>
+
+<sect1>
+<title> ダウングレード </title>
+
+<para>
+	/etc/fml/main.cf の fml_verison をアップグレード前のものに
+	戻して下さい。
+</para>
+
+</sect1>
+
+</chapter>
