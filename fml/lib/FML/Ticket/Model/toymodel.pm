@@ -40,11 +40,17 @@ sub new
 sub DESTROY {}
 
 
+# Descriptions: assign a new ticket or 
+#               extract the existing ticket-id from the subject
+#    Arguments: $self $curproc $args
+# Side Effects: a new ticket_id may be assigned
+#               article header is rewritten
+# Return Value: none
 sub assign
 {
     my ($self, $curproc, $args) = @_;
     my $config  = $curproc->{ config };
-    my $header  = $curproc->{ article }->{ header }; # FML::Header object
+    my $header  = $curproc->{ incoming_message }->{ header };
     my $subject = $header->get('subject');
 
     use FML::Header::Subject;
@@ -54,11 +60,11 @@ sub assign
     # if the header carries "Subject: Re: ..." with ticket-id, 
     # we do not rewrite the subject but save the extracted $ticket_id.
     if ($is_reply && $has_ticket_id) {
-	Log("reply message with extracted ticket_id=$has_ticket_id");
+	Log("reply message with ticket_id=$has_ticket_id");
 	$self->{ _ticket_id } = $has_ticket_id;
     }
     elsif ($has_ticket_id) {
-	Log("usual message but with extracted ticket_id=$has_ticket_id");
+	Log("usual message with ticket_id=$has_ticket_id");
 	$self->{ _ticket_id } = $has_ticket_id;
     }
     else {
@@ -68,6 +74,8 @@ sub assign
 
 	# O.K. rewrite Subject: of the article to distribute
 	unless ($self->error) {
+	    my $header = $curproc->{ article }->{ header };
+
 	    $self->_pcb_set_id($curproc, $id); # save $id info in PCB
 	    $self->_rewrite_subject($header, $config, $id);
 	}
@@ -81,15 +89,19 @@ sub assign
 sub update_status
 {
     my ($self, $curproc, $args) = @_;
-    my $rbody   = $curproc->{ article }->{ body };
-    my $content = $rbody->get_first_plaintext_message();
+    my $header  = $curproc->{ incoming_message }->{ header };
+    my $body    = $curproc->{ incoming_message }->{ body };
 
-    if ($content =~ /^\s*close/) {
+    # entries to check
+    my $subject = $header->get('subject');
+    my $content = $body->get_first_plaintext_message();
+
+    if ($content =~ /^\s*close/ || $subject =~ /^\s*close/) {
 	$self->{ _status } = "close";
 	Log("ticket is closed");
     }
     else {
-	Log("(debug) ticket status not changes");
+	Log("ticket status not changed");
     }
 }
 
@@ -174,24 +186,32 @@ sub _update_db
     my $ticket_id  = $self->{ _ticket_id };
     Log("article_id=$article_id ticket_id=$ticket_id");
 
-    $rh->{ _ticket_id }->{ $article_id } = $ticket_id;
-    $rh->{ _date }->{ $article_id }      = time;
-    $rh->{ _articles }->{ $ticket_id }  .= $article_id . " ";
+    $rh->{ _ticket_id }->{ $article_id }  = $ticket_id;
+    $rh->{ _date      }->{ $article_id }  = time;
+    $rh->{ _articles  }->{ $ticket_id  } .= $article_id . " ";
 
-    # sender
+    # record the sender information
     my $header = $curproc->{ incoming_message }->{ header };
     $rh->{ _sender }->{ $article_id } = $header->get('from');
 
-    # default value of status
+    # in the first ticket assignment, set the default status value.
     unless (defined $rh->{ _status }->{ $ticket_id }) {
-	$rh->{ _status }->{ $ticket_id } = 'open';
+	$self->_set_status($ticket_id, 'open');
     }
 
+    # update status
     if (defined $self->{ _status }) {
-	$rh->{ _status }->{ $ticket_id } = $self->{ _status };
+	$self->_set_status($ticket_id, $self->{ _status });
     }
 
     $self->_close_db($curproc, $args);
+}
+
+
+sub _set_status
+{
+    my ($self, $ticket_id, $value) = @_;
+    $self->{ _hash_table }->{ _status }->{ $ticket_id } = $value;
 }
 
 
@@ -199,6 +219,7 @@ sub list_up
 {
     my ($self, $curproc, $args) = @_;
 
+    # self->{ _hash_table } is tied to DB's.
     $self->_open_db($curproc, $args);
 
     # XXX $dh: date object handle
@@ -209,10 +230,19 @@ sub list_up
     my $rh             = $self->{ _hash_table };
     my $rh_status      = $rh->{ _status };
     my ($tid, $status) = ();
+    my $mode           = $args->{ mode } || 'open_only';
+
+  TICEKT_LIST:
     while (($tid, $status) = each %$rh_status) {
+	if ($mode eq 'open_only') {
+	    next TICEKT_LIST unless $status eq 'open';
+	}
+
+	# we get the date by the form 1999/09/13 
+	# for the oldest article assigned to this ticket ($tid)
 	my ($aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
-	# we get the date by the form 1999/09/13
 	my $date  = $dh->YYYYxMMxDD( $rh->{ _date }->{ $aid } , '/');
+
 	printf("%10s  %5s  %-20s  %s\n", 
 	       $date,
 	       $status,
@@ -221,6 +251,7 @@ sub list_up
 	       );
     }
 
+    # self->{ _hash_table } is untied from DB's.
     $self->_close_db($curproc, $args);
 }
 
