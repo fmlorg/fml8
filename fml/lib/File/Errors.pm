@@ -43,7 +43,7 @@ When you use Something module,
 
 =head2 C<error_reason($message)>
 
-save $message
+save $message as an error message.
 
 =head2 C<error()>
 

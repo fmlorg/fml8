@@ -29,26 +29,29 @@ File::Utils - error handling utilities
 
 =head1 DESCRIPTION
 
-=head1 AUTHOR
+this module provides utility functions to handle files, 
+for example, 
+C<mkdirhier>,
+C<touch>,
+C<search_program>
+and
+C<copy>.
 
-Ken'ichi Fukamachi
 
-=head1 COPYRIGHT
-
-Copyright (C) 2001 Ken'ichi Fukamachi
-
-All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
-
-=head1 HISTORY
-
-File::Utils appeared in fml5 mailing list driver package.
-See C<http://www.fml.org/> for more details.
+=head1 METHODS
 
 =cut
 
+# Descriptions: return the error
+#    Arguments: none
+# Side Effects: none
+# Return Value: error message
 sub error       { return $ErrorString;}
 
+# Descriptions: remove the error message buffer
+#    Arguments: none
+# Side Effects: undef $ErrorString buffer
+# Return Value: none
 sub error_reset { undef $ErrorString;}
 
 
@@ -158,6 +161,25 @@ sub copy
 	undef;
     }
 }
+
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1 HISTORY
+
+File::Utils appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
+=cut
 
 
 1;

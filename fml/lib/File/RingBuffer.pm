@@ -104,6 +104,11 @@ sub new
 }
 
 
+# Descriptions: determine the file name to write into
+#    Arguments: $self $args
+# Side Effects: increment $sequence_file_name
+#               set the file name at ${*$self}{ _file }
+# Return Value: none
 sub _take_file_name
 {
     my ($self, $args) = @_;
@@ -144,6 +149,10 @@ sub open
 }
 
 
+# Descriptions: forward close() to SUPER class
+#    Arguments: $self
+# Side Effects: none
+# Return Value: value returned by SUPER::close()
 sub close
 {
     my ($self) = @_;

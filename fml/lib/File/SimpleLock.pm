@@ -11,6 +11,9 @@ package File::SimpleLock;
 use vars qw(%LockedFileHandle %FileIsLocked @ISA $Error);
 use strict;
 use Carp;
+use File::Errors;
+
+@ISA = qw(File::Errors);
 
 =head1 NAME
 
@@ -18,7 +21,7 @@ File::SimpleLock - simple lock by flock(2)
 
 =head1 SYNOPSIS
 
-    require File::SimpleLock;
+    use File::SimpleLock;
     my $lockobj = new File::SimpleLock;
     $lockobj->lock( { file => $lock_file } ) || croak "fail to lock";
 
@@ -28,17 +31,20 @@ File::SimpleLock - simple lock by flock(2)
 
 =head1 DESCRIPTION
 
-File::SimpleLock.pm contains several interfaces for several files,
+File::SimpleLock module contains several interfaces for several files,
 for example, Lockfiles, sysLock() (not yet implemented).
 
-=item Lock( $message )
+=head1 METHODS
 
-The argument is the message to Lock.
+=head2 C<lock($args)>
+
+flock(2) for $args->{ file };
+
+=head2 C<unlock($args)> 
+
+unlock flock(2) for $args->{ file };
 
 =cut
-
-require Exporter;
-@ISA = qw(Exporter);
 
 
 # constants
@@ -58,26 +64,12 @@ sub new
 }
 
 
-sub _error_reason
-{
-    my $msg = @_;
-    $Error = $msg;
-}
-
-
-sub error
-{
-    my ($self) = @_;
-    $Error;
-}
-
-
 sub lock
 {
     my ($self, $args) = @_;
 
     my $file = $args->{ file };
-    _simple_flock($file);
+    $self->_simple_flock($file);
 }
 
 
@@ -86,14 +78,14 @@ sub unlock
     my ($self, $args) = @_;
 
     my $file = $args->{ file };
-    _simple_funlock($file);
+    $self->_simple_funlock($file);
 }
 
 
 
 sub _simple_flock
 {
-    my ($file) = @_;
+    my ($self, $file) = @_;
 
     use FileHandle;
     my $fh = new FileHandle $file;
@@ -105,7 +97,7 @@ sub _simple_flock
 	eval q{
 	    $r = flock($fh, &LOCK_EX);
 	};
-	_error_reason($@) if $@;
+	$self->error_reason($@) if $@;
 
 	if ($r) {
 	    $FileIsLocked{ $file } = 1;
@@ -113,7 +105,7 @@ sub _simple_flock
 	}
     }
     else {
-	_error_reason("cannot open $file");
+	$self->error_reason("cannot open $file");
     }
 
     return 0;
@@ -122,7 +114,7 @@ sub _simple_flock
 
 sub _simple_funlock
 {
-    my ($file) = @_;
+    my ($self, $file) = @_;
 
     return 0 unless $FileIsLocked{ $file };
     return 0 unless $LockedFileHandle{ $file };
@@ -133,7 +125,7 @@ sub _simple_funlock
     eval q{
 	$r = flock($fh, &LOCK_UN);
     };
-    _error_reason($@) if $@;
+    $self->error_reason($@) if $@;
 
     if ($r) {
 	delete $FileIsLocked{ $file };
@@ -147,7 +139,8 @@ sub _simple_funlock
 
 =head1 SEE ALSO
 
-L<FileHandle>
+L<FileHandle>,
+L<File::Errors>,
 
 =head1 AUTHOR
 
@@ -155,7 +148,7 @@ Ken'ichi Fukamachi <F<fukachan@fml.org>>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000 Ken'ichi Fukamachi
+Copyright (C) 2000,2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself. 

@@ -65,6 +65,10 @@ sub new
 }
 
 
+# Descriptions: determine the time to rotate comes
+#    Arguments: $self
+# Side Effects: none
+# Return Value: 1 (time comes!) or 0
 sub is_time_to_rotate
 {
     my ($self) = @_;
@@ -78,6 +82,12 @@ sub is_time_to_rotate
 }
 
 
+
+# Descriptions: rotate filenames
+#    Arguments: $self
+# Side Effects: filename rotations
+#               unlink the oldest file
+# Return Value: none
 sub rotate
 {
     my ($self) = @_;
@@ -98,6 +108,10 @@ sub rotate
 }
 
 
+# Descriptions: extract parameters in $self
+#    Arguments: $self
+# Side Effects: none
+# Return Value: a set of (file, max_size, num_backlog)
 sub _get_param
 {
     my ($self) = @_;
@@ -122,6 +136,7 @@ sub error
 
 Ken'ichi Fukamachi
 
+
 =head1 COPYRIGHT
 
 Copyright (C) 2001 Ken'ichi Fukamachi
@@ -135,5 +150,6 @@ File::Rotate appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
+
 
 1;
