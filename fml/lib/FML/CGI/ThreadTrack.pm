@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.3 2001/11/11 02:46:42 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.4 2001/11/11 11:12:27 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -49,10 +49,10 @@ C<FML::Process::CGI> base class.
 sub html_start
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
-    my $title  = $config->{ thread_cgi_title }   || 'thread system interface';
-    my $color  = $config->{ thread_cgi_bgcolor } || '#E6E6FA';
-    my $myname = $config->{ program_name };
+    my $config  = $curproc->{ config };
+    my $title   = $config->{ thread_cgi_title }   || 'thread system interface';
+    my $color   = $config->{ thread_cgi_bgcolor } || '#E6E6FA';
+    my $myname  = $curproc->myname();
     my $charset = $config->{ cgi_charset } || 'euc-jp';
 
     # o.k start html
@@ -101,17 +101,24 @@ sub run_cgi
 	$thread->show($tid);
     }
     elsif ($action eq 'change_status') {
-	my (@id);
-	for my $param (param()) {
-	    my $req = param($param);
-	    if ($req eq 'closed') {
-		if ($param =~ /^change_status\.(\S+)\/(\d+)$/) {
-		    my $tid = $thread->_create_thread_id_strings($2);
-		    print "closed $tid\n"; print br;
-		    $thread->close($tid);
+	# fmlthread.cgi is for administorator, so you can change status. 
+	if ($myname eq 'fmlthread.cgi') {
+	    my (@id);
+	    for my $param (param()) {
+		my $req = param($param);
+		if ($req eq 'closed') {
+		    if ($param =~ /^change_status\.(\S+)\/(\d+)$/) {
+			my $tid = $thread->_create_thread_id_strings($2);
+			print "closed $tid\n"; print br;
+			$thread->close($tid);
+		    }
 		}
 	    }
 	}
+	else {
+	    print "Warning: only administrator change status\n";
+	}
+
 	$thread->summary();
     }
     else {
@@ -124,6 +131,7 @@ sub _build_param
 {
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
+    my $myname = $config->{ program_name };
 
     #  argumente for thread track module
     my $ml_name       = $curproc->safe_param_ml_name();
@@ -131,6 +139,7 @@ sub _build_param
     my $spool_dir     = $config->{ spool_dir };
     my $max_id        = $curproc->article_id_max();
     my $ttargs        = {
+	myname        => $myname,
 	logfp         => \&Log,
 	fd            => \*STDOUT,
 	db_base_dir   => $thread_db_dir,
@@ -147,7 +156,7 @@ sub _show_guide
 {
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
-    my $myname  = $config->{ program_name };
+    my $myname = $config->{ program_name };
     my $action  = $myname;
     my $target  = $config->{ thread_cgi_target_window } || 'ThreadCGIWindow';
     my $ml_list = $curproc->get_ml_list($args);

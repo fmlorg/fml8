@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: HTML.pm,v 1.4 2001/11/11 00:57:36 fukachan Exp $
+# $FML: HTML.pm,v 1.5 2001/11/11 11:12:28 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::HTML;
@@ -71,7 +71,7 @@ sub __start_thread_summary
     my $config  = $self->{ _config };
     my $ml_name = $config->{ ml_name };
     my $fd      = $self->{ _fd } || \*STDOUT;
-    my $action  = "fmlthread.cgi";
+    my $action  = $config->{ myname };
     my $target  = "ResultsWindow";
 
     # statistics
@@ -137,7 +137,7 @@ sub __print_thread_summary
     my $config    = $self->{ _config };
     my $ml_name   = $config->{ ml_name };
     my $spool_dir = $config->{ spool_dir };
-    my $action    = 'fmlthread.cgi';
+    my $action    = $config->{ myname };
     my $target    = $config->{ thread_cgi_target_window } || 'ThreadCGIWindow';
 
     my $date     = $optargs->{ date };

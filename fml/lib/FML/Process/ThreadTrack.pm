@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: ThreadTrack.pm,v 1.10 2001/11/07 09:28:27 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.11 2001/11/09 13:23:15 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -74,6 +74,7 @@ sub run
 {
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
+    my $myname  = $curproc->myname();
     my $argv    = $curproc->command_line_argv();
     my $options = $curproc->command_line_options();
     my $mydir   = defined $options->{spool_dir} ? $options->{spool_dir} : '';
@@ -86,6 +87,7 @@ sub run
     my $max_id        = defined $options->{ article_id_max } ?
 	$options->{ article_id_max } : $curproc->article_id_max();
     my $ttargs        = {
+	myname        => $myname,
 	logfp         => \&Log,
 	fd            => \*STDOUT,
 	db_base_dir   => $thread_db_dir,

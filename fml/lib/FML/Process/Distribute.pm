@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Distribute.pm,v 1.50 2001/11/03 09:57:32 fukachan Exp $
+# $FML: Distribute.pm,v 1.51 2001/11/04 04:42:52 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -317,12 +317,14 @@ sub _thread_check
     my ($curproc, $args) = @_;    
     my $config = $curproc->{ config };
     my $pcb    = $curproc->{ pcb };
+    my $myname = $curproc->myname();
 
     my $ml_name       = $config->{ ml_name };
     my $thread_db_dir = $config->{ thread_db_dir };
     my $spool_dir     = $config->{ spool_dir };
     my $article_id    = $pcb->get('article', 'id');
     my $ttargs        = {
+	myname      => $myname,
 	logfp       => \&Log,
 	fd          => \*STDOUT,
 	db_base_dir => $thread_db_dir,
