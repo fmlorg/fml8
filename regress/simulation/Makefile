@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.68 2003/05/31 02:24:03 fukachan Exp $
+# $FML: Makefile,v 1.69 2003/05/31 04:46:03 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -113,7 +113,7 @@ depend:
 
 LIST_TARGET = ../../fml/doc/share/config/list_makefml_command.txt
 
-regen: regen_default_config_cf regen_command_list
+regen: regen_default_config_cf regen_command_list _doc_tutorial
 
 regen_default_config_cf:
 	(cd ../../fml/etc; make )
@@ -122,3 +122,6 @@ regen_command_list: $(LIST_TARGET)
 
 $(LIST_TARGET): ../../fml/etc/src/config.cf.ja/command.cf
 	sh ../../fml/utils/bin/listup_commnads.sh
+
+_doc_tutorial:
+	(cd ../../fml/doc/ja/tutorial;make -f Makefile.local)
