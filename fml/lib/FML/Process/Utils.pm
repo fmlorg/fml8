@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.120 2004/07/23 15:20:18 fukachan Exp $
+# $FML: Utils.pm,v 1.121 2004/07/23 15:59:11 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1859,6 +1859,7 @@ sub thread_db_args
     my $html_dir     = $config->{ html_archive_dir };
     my $udb_dir      = $config->{ udb_base_dir };
     my $index_order  = $config->{ html_archive_index_order_type };
+    my $subject_tag  = $config->{ article_subject_tag };
     my $cur_lang     = $curproc->language_of_html_file();
 
     # whether we should mask address?
@@ -1871,6 +1872,11 @@ sub thread_db_args
     }
 
     unless (-d $udb_dir) { $curproc->mkdir($udb_dir);}
+
+    # hints
+    use FML::Header::Subject;
+    my $subj = new FML::Header::Subject;
+    my $subject_tag_regexp = $subj->regexp_compile($subject_tag);
 
     # XXX-TODO: care for non Japanese.
     return {
@@ -1886,6 +1892,12 @@ sub thread_db_args
 	# address mask = yes/no, _type = all
 	use_address_mask  => $use_address_mask,
 	address_mask_type => $address_mask_type,
+
+	# hints
+	hints        => {
+	    subject_tag        => $subject_tag,
+	    subject_tag_regexp => $subject_tag_regexp,
+	},
     };
 }
 
