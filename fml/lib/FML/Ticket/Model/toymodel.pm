@@ -144,8 +144,11 @@ sub update_status
     # entries to check
     my $subject = $header->get('subject');
     my $content = $body->get_first_plaintext_message();
+    my $pragma  = $header->get('x-ticket-pragma') || '';
 
-    if ($content =~ /^\s*close/ || $subject =~ /^\s*close/) {
+    if ($content =~ /^\s*close/ || 
+	$subject =~ /^\s*close/ || 
+	$pragma  =~ /close/      ) {
 	$self->{ _status } = "closed";
 	Log("ticket is closed");
     }
