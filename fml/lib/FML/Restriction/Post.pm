@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.13 2004/07/23 13:16:43 fukachan Exp $
+# $FML: Post.pm,v 1.14 2004/10/28 03:32:52 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -163,7 +163,8 @@ sub check_article_thread
     my $header  = $curproc->incoming_message_header();
     my $reflist = $header->extract_message_id_references() || [];
     my $curtime = time;
-    my $limit   = 3600*24*7;
+    my $_limit  = $config->{ article_post_article_thread_lifetime } || 0;
+    my $limit   = $_limit || 3600*24*7;
     my $match   = 0;
 
   SEARCH_ID:
