@@ -5,14 +5,16 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: __template.pm,v 1.5 2001/04/03 09:45:39 fukachan Exp $
+# $FML: html2sgml.pl,v 1.1 2001/04/23 14:37:42 fukachan Exp $
 #
 
 use strict;
 use Carp;
+use vars qw($TR);
 
 my $para = '';
 my $hr   = 0;
+my $tr   = 0;
 my $listitem = 0;
 
 while (<>) {
@@ -64,7 +66,24 @@ while (<>) {
 
 
     # BR
-    s@<BR>@<newline>@gi;
+    s@<BR>@@gi;
+
+    # TABLE
+    s@<TABLE.*>@<table>@gi;
+    if (m@<TR>@) {
+	$TR = $TR ? 'tbody' : 'thead';
+	$tr++;
+	s@<TR>@<${TR}>\n\t<row>@gi;
+    }
+    if (m@<TD>@) {
+	s@<TD>@<entry>@;
+	s@$@</entry>@;
+    }
+    if ($tr && /^\s*$/) {
+	print "\t</row>\n";
+	print "   </${TR}>\n";
+	$tr = 0;
+    }
 
     print;
 }
