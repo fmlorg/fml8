@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: spool.pm,v 1.2 2003/03/14 06:53:22 fukachan Exp $
+# $FML: spool.pm,v 1.1 2003/03/15 09:07:04 fukachan Exp $
 #
 
 package FML::Command::Admin::spool;
@@ -49,7 +49,7 @@ sub new
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
-sub need_lock { 1;}
+sub need_lock { 0;}
 
 
 # Descriptions: subcommand dispatch table for "spool" command.
@@ -59,8 +59,9 @@ sub need_lock { 1;}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config = $curproc->config();
-    my $fp     = $command_args->{ comsubname } || 'status';
+    my $config  = $curproc->config();
+    my $options = $command_args->{ options };
+    my $fp      = $options->[ 0 ] || 'status';
 
     # XXX-TODO: makefml $ml spool ... what arguments is appropriate ?
     #           use $dst_dir as $src_dir if --srcdir=DIR not specified.
@@ -76,8 +77,8 @@ sub process
     # output channel (we suppose only makefml here).
     $command_args->{ _output_channel } = \*STDOUT;
 
-    use FML::Spool;
-    my $spool = new FML::Spool $curproc;
+    use FML::Article::Spool;
+    my $spool = new FML::Article::Spool $curproc;
     if ($spool->can($fp)) {
 	$spool->$fp($curproc, $command_args);
     }
