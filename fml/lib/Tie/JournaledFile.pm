@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledFile.pm,v 1.16 2002/06/30 14:27:50 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.17 2002/08/03 04:18:17 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -187,7 +187,7 @@ sub NEXTKEY
 }
 
 
-=head2 C<find(key)>
+=head2 find(key, [ $mode ])
 
 return the array of line(s) with the specified C<key>.
 
@@ -201,12 +201,11 @@ parameter at C<new()> method. C<first_match> by default.
 # Descriptions: return the array of line(s) with the specified key.
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: none
-# Return Value: ARRAY
+# Return Value: ARRAY_REF
 sub find
 {
-    my ($self, $key) = @_;
-    my $rarray = $self->_fetch($key, 'array');
-    return @$rarray;
+    my ($self, $key, $mode) = @_;
+    return $self->_fetch($key, $mode || 'array');
 }
 
 
@@ -219,7 +218,7 @@ sub find
 #               $key is the string to search.
 #               $mode selects the return value style, scalar or array.
 # Side Effects: none
-# Return Value: SCALAR or ARRAY
+# Return Value: SCALAR or ARRAY_REF
 sub _fetch
 {
     my ($self, $key, $mode) = @_;
@@ -252,7 +251,7 @@ sub _fetch
 	if ($xkey eq $key) {
 	    $value = $xvalue; # save the value for $key
 
-	    if ($mode eq 'array') {
+	    if ($mode eq 'array' || $mode eq 'array_ref') {
 		push(@values, $value);
 	    }
 	    if ($mode eq 'scalar') {
@@ -269,7 +268,13 @@ sub _fetch
 	return( $value || undef );
     }
     elsif ($mode eq 'array') {
+	return @values;
+    }
+    elsif ($mode eq 'array_ref') {
 	return \@values;
+    }
+    else {
+	croak("JournaledFile: invalid mode");
     }
 }
 
@@ -320,6 +325,10 @@ sub _puts
 =head1 LOG
 
 $Log$
+Revision 1.18  2002/08/03 06:42:33  fukachan
+enhance find:
+find(key, [mode]) where mode = scalar, array, array_ref
+
 Revision 1.17  2002/08/03 04:18:17  fukachan
 bug fix FIRSTKEY() and NEXTKEY(), modified to use hash on memory
 
