@@ -69,7 +69,7 @@ sub ShowSummary
 	    my $how_bad = 0;
 	    if ($cost =~ /(\w+)\-(\d+)/) { 
 		$how_bad += $2;
-		$how_bad += 1 if $1 =~ /open/;
+		$how_bad += 2 if $1 =~ /open/;
 		$how_bad  = "!" x ($how_bad > 6 ? 6 : $how_bad);
 	    }
 
