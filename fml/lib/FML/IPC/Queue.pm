@@ -4,13 +4,17 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.3 2004/01/02 14:42:46 fukachan Exp $
+# $FML: Queue.pm,v 1.4 2004/01/02 16:08:38 fukachan Exp $
 #
 
 package FML::IPC::Queue;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
+	    $Counter $debug);
 use Carp;
+
+$debug = 0;
+
 
 =head1 NAME
 
@@ -54,7 +58,10 @@ sub new
     my ($self, $args) = @_;
     my ($type) = ref($self) || $self;
     my $queue  = [];
-    my $me     = { _queue => $queue };
+    my $me     = { 
+	_queue   => $queue,
+	_on_disk => 1,
+    };
     return bless $me, $type;
 }
 
@@ -66,8 +73,14 @@ sub new
 sub append
 {
     my ($self, $msg) = @_;
-    my $q = $self->{ _queue };
-    push(@$q, $msg);
+
+    if ($self->is_use_queue_dir()) {
+	$self->_append_msg_into_queue_dir($msg);
+    }
+    else {
+	my $q = $self->{ _queue };
+	push(@$q, $msg);
+    }
 }
 
 
@@ -78,7 +91,202 @@ sub append
 sub list
 {
     my ($self) = @_;
-    return $self->{ _queue };
+
+    if ($self->is_use_queue_dir()) {
+	$self->_list_up_msg_in_queue_dir();
+    }
+    else {
+	return $self->{ _queue };
+    }
+}
+
+
+=head1
+
+=cut
+
+
+# Descriptions: insert message into $queue_dir.
+#    Arguments: OBJ($self) OBJ($msg)
+# Side Effects: create queue file in $queue_dir.
+# Return Value: none
+sub _append_msg_into_queue_dir
+{
+    my ($self, $msg) = @_;
+    my $queue_dir    = $self->{ _queue_dir };
+
+    use File::Spec;
+    $Counter++;
+    my $tmptmp  = sprintf(",%d.%d.%d", time, $$, $Counter);
+    my $tmpname = sprintf("%d.%d.%d",  time, $$, $Counter);
+    my $tmpfile = File::Spec->catfile($queue_dir, $tmptmp);
+    my $q_file  = File::Spec->catfile($queue_dir, $tmpname);
+
+    use FileHandle;
+    my $wh = new FileHandle "> $tmpfile";
+    if (defined $wh) {
+	if (ref($msg)) {
+	    if ($msg->can('dump')) {
+		$msg->dump($wh);
+	    }
+	}
+	$wh->close();
+    }
+
+    if (-s $tmpfile) {
+	# initialized to unlocked state (lock == executable bit).
+	chmod 0644, $tmpfile;
+	unless (rename($tmpfile, $q_file)) {
+	    croak("cannot rename $tmpfile $q_file");
+	}
+	else {
+	    print STDERR "$q_file created.\n" if $debug;
+	}
+    }
+    else {
+	print STDERR "unlink $tmpfile since it is empty.\n" if $debug;
+	unlink $tmpfile;
+    }
+}
+
+
+# Descriptions: 
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub _list_up_msg_in_queue_dir
+{
+    my ($self)    = @_;
+    my $queue_dir = $self->{ _queue_dir };
+    my $class     = $self->{ _module };
+    my $queue     = [];
+    my $remove    = [];
+
+    use DirHandle;
+    my $dh = new DirHandle $queue_dir;
+    if (defined $dh) {
+	my $entry;
+	my $file;
+
+      ENTRY:
+	while ($entry = $dh->read()) {
+	    next ENTRY if $entry =~ /^\./o;
+	    next ENTRY if $entry =~ /^\,/o;
+
+	    $file = File::Spec->catfile($queue_dir, $entry);
+	    if (-f $file) {
+		# already locked.
+		next ENTRY if -x $file;
+
+		# lock.
+		chmod 0755, $file;
+
+		eval qq{ 
+		    use FileHandle;
+		    my \$rh = new FileHandle \$file;
+
+		    use $class;
+		    my \$msg = new $class;
+		    \$msg->restore(\$rh);
+		    push(\@\$queue, \$msg) if defined \$msg;
+		    push(\@\$remove, \$file);
+		};
+	    }
+	}
+    }
+
+    # used later in destructor.
+    $self->{ _remove_files } = $remove;
+
+    return $queue;
+}
+
+
+=head1 UTILITY
+
+=cut
+
+
+# Descriptions: check if this object handles queues on file system or
+#               on memory.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
+sub is_use_queue_dir
+{
+    my ($self) = @_;
+
+    return( $self->{ _on_disk } ? 1 : 0 );
+}
+
+
+# Descriptions: declare this object handles queues on file system.
+#               existence of $dir is mandatory. 
+#    Arguments: OBJ($self) STR($dir)
+# Side Effects: update $self.
+# Return Value: NUM
+sub use_queue_dir
+{
+    my ($self, $dir) = @_;
+
+    if (-d $dir) {
+	$self->{ _on_disk }   = 1;
+	$self->{ _queue_dir } = $dir;
+    }
+}
+
+
+# Descriptions: set object class to be used in list().
+#    Arguments: OBJ($self) STR($class)
+# Side Effects: update $self.
+# Return Value: none
+sub use_object_class
+{
+    my ($self, $class) = @_;
+
+    $self->{ _module } = $class;
+}
+
+
+# Descriptions: destructor.
+#    Arguments: OBJ($self)
+# Side Effects: remove files to be picked up.
+# Return Value: none
+sub DESTROY
+{
+    my ($self) = @_;
+    my $remove = $self->{ _remove_files } || [];
+
+    for my $f (@$remove) {
+	if (-f $f) {
+	    print STDERR "DESTROY: unlink $f\n" if $debug;
+	    unlink $f;
+	}
+    }
+}
+
+
+#
+# debug
+#
+if ($0 eq __FILE__) {
+    $debug = 1;
+
+    use FML::IPC::Message;
+    my $msg = new FML::IPC::Message;
+    $msg->set("to", "pager");
+
+    my $q = new FML::IPC::Queue;
+    $q->use_queue_dir("/tmp/queue");
+    $q->append($msg);
+
+    # list.
+    $q->use_object_class("FML::IPC::Message");
+    my $list = $q->list();
+
+    # dump.
+    use Data::Dumper;
+    print Dumper($list);
 }
 
 

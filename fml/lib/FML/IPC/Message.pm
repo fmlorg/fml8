@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.3 2004/01/02 14:42:46 fukachan Exp $
+# $FML: Message.pm,v 1.4 2004/01/02 16:08:38 fukachan Exp $
 #
 
 package FML::IPC::Message;
@@ -64,6 +64,41 @@ sub get
 {
     my ($self, $key) = @_;
     return $self->{ $key } || '';
+}
+
+
+# Descriptions: dump data into handle $wh.
+#    Arguments: OBJ($self) HANDLE($wh)
+# Side Effects: none
+# Return Value: none
+sub dump
+{
+    my ($self, $wh) = @_;
+    my ($k, $v);
+
+    while (($k, $v) = each %$self) {
+	print $wh "$k: $v\n";
+    }
+}
+
+
+# Descriptions: restore data from handle $rh.
+#    Arguments: OBJ($self) HANDLE($rh)
+# Side Effects: none
+# Return Value: none
+sub restore
+{
+    my ($self, $rh) = @_;
+    my ($k, $v);
+    my $buf;
+
+  LINE:
+    while ($buf = <$rh>) {
+	next LINE if $buf =~ /^\s*$/o;
+
+	($k, $v) = split(/\s+/, $buf, 2);
+	$self->set($k, $v) if defined $k && defined $v;
+    }
 }
 
 
