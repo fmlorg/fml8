@@ -1,5 +1,5 @@
 <!--
-   $FML: db.sgml,v 1.4 2001/10/21 02:18:09 fukachan Exp $
+   $FML: db.sgml,v 1.5 2002/04/01 23:41:03 fukachan Exp $
 -->
 
 <chapter id="db">
@@ -46,6 +46,20 @@ Tie::JournaledDir もしくは File::CacheDir かのいづれかは
 不必要になるかも知れません。
 また、インターフェイスの違いから適宜使い分けるのかもしれません。
 </para>
+
+<para>
+2002/08:
+File::CacheDir は改名し、なくす方向で考えています。
+そもそも File::CacheDir は
+FML/Process/Kernel.pm
+と
+FML/Filter/TrafficMonitor.pm 
+でしか使ってません。
+しかも、
+TrafficMonitor.pm は事実上未完成なので、まだ変更が可能です。
+実際 FML::Process::Kernel の var/mail/ でしか使っていないので、
+File::CacheDir を使わないようにすることが可能でしょう。
+</para>
 </warning>
 
 
@@ -90,6 +104,22 @@ message-id キャッシュです。
 これらは expire を時間で制御したいからです。
 このクラスは引数でファイル名を与えることになっているので、
 ファイル名に日付付のファイルを選ぶと良いでしょう。
+</para>
+
+
+<para>
+なお、普通の tie() とは違う
+<screen>
+key => [
+	ろぐ1	 (どっかのふぁいるのどっかの行),
+	ろぐ2	 (どっかのふぁいるのどっかの行),
+	ろぐ3	 (どっかのふぁいるのどっかの行),
+]
+</screen>
+型のデータとりだしをしたい場合があります。
+この形のデータ取り出しは
+get_all_values_as_hash_ref()
+メソッドで可能です。
 </para>
 
 
@@ -139,11 +169,31 @@ first match と last match は切替えることができます。
 
 <warning>
 <para>
-旧 RingBuffer, File::CacheDir に統合されました。
+旧 RingBuffer は File::CacheDir に統合されました。
 </para>
 </warning>
 
 </sect1>
 
+
+
+<sect1 id="db.modules.usage">
+	<title>
+	モジュールの使い分け
+	</title>
+
+<para>
+う〜ん、困りましたね…
+</para>
+
+<para>
+元々はサイズの上限を重視する場合が
+リングバッファ、つまり File::CacheDir でした。
+逆に、
+時間方向の expire を重視する場合は Tie::Journaled* を使うつもりでした。
+でも時間方向の File::CacheDir はそれと一緒じゃん;)
+</para>
+
+</sect1>
 
 </chapter>
