@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Journal.pm,v 1.3 2003/12/30 03:47:54 fukachan Exp $
+# $FML: Journal.pm,v 1.4 2003/12/31 03:49:15 fukachan Exp $
 #
 
 package FML::Cache::Journal;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Cache::Journal - interface into Tie::JournaledDir
+FML::Cache::Journal - interface into Tie::JournaledDir.
 
 =head1 SYNOPSIS
 
@@ -45,7 +45,7 @@ sub new
 }
 
 
-# Descriptions: open database by Tie::JournaledDir.
+# Descriptions: open database via Tie::JournaledDir.
 #    Arguments: OBJ($self) STR($cache_dir) STR($class)
 # Side Effects: open database, mkdir if needed
 # Return Value: HASH_REF to dabase
@@ -80,7 +80,9 @@ sub close
 {
     my ($self) = @_;
     my $db = $self->{ _db };
-    untie %$db;
+    if (defined $db) {
+	untie %$db;
+    }
 }
 
 
