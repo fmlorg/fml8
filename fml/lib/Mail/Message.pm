@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
 # $Id$
-# $FML$
+# $FML: Message.pm,v 1.1.1.1 2001/04/03 09:53:29 fukachan Exp $
 #
 
 package Mail::Message;
@@ -51,7 +51,7 @@ Mail::Message -- message manipulator
     $m2->create( { content => \$body2 });
 
     # make a chain of $m1, $m2, ...
-    $m1->chain( $m2 );
+    $m1->next_chain( $m2 );
 
     # print the contents in the order:  $m1, $m2, ...
     $m1->print;
