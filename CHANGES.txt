@@ -1,6 +1,83 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/12/25
+
+   FML::Process::Utils 
+	bugfix default $use_address_mask and $address_mask_type in
+	thread_db_args()
+	
+   Mail::Message::ToHTML 
+	add from-address for not use address_mask in
+	_print_li_filename()
+	
+   FML::Process::Distribute 
+	add log at htmlify article end
+
+2003/12/24
+
+   etc/{command_line_options,install.cf.in,modules}
+   FML::Process::Fake 
+	add and enable libexec::faker
+	
+   FML::Process::Utils 
+	implement is_need_ml_name()
+	
+   FML::Process::CGI::Kernel 
+	use is_need_ml_name() not $args->{ ... }
+	
+   FML::Process::{Addr,Alias,Calendar,ConfViewer,Digest,
+		  Distribute,DocViewer,Kernel}
+	remove the direct use of $args
+	instead, use utility methods via $curproc
+
+2003/12/22
+
+   Mail::Delivery::Queue 
+	define the following methods and modified to use it:
+	new_dirpath deferred_dirpath active_dirpath info_dirpath
+	sender_dir_path recipients_dir_path
+	*_dirpath() -> *_dir_path().
+
+2003/12/21
+
+   variables
+	+ $list_command_default_maps
+	+ $newml_command_ml_admin_default_address
+
+   etc/install.cf.in 
+   FML::Install 
+	remove hard-coded language dependent information by moving it to
+	$nl_template_files in install.cf.in.
+
+2003/12/20
+
+   FML::Command::Admin::list 
+	use $list_command_default_maps not hard-coded value.
+	change default map to $recipient_maps not $member_maps.
+	
+   FML::Command::Admin::newml 
+	use $newml_command_ml_admin_default_address as $ml-admin value.
+	if unspecified, use the default fml owner value.
+	
+   FML::Command 
+	define get_mode() and set_mode() and modified to use it.
+
+2003/12/10
+
+   Mail::Message::DB 
+	quick hack for trouble making html indexs and working
+	distribute.
+
+2003/11/30
+
+   variables
+   FML::Credential 
+   FML::Command::Auth 
+   FML::Process::{Command,Distribute}
+   FML::Restriction::Post 
+	rename: $system_accounts -> $system_special_accounts.
+
 2003/11/29
 
    機械処理（および、その出力形式をカスタマイズ)しやすいログを出力する
@@ -5806,4 +5883,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.175 2003/11/28 15:44:04 fukachan Exp $
+$FML: CHANGES.txt,v 1.176 2003/11/29 14:45:48 fukachan Exp $
