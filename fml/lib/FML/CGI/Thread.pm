@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: Thread.pm,v 1.1 2004/03/29 14:22:15 fukachan Exp $
 #
 
 package FML::CGI::Thread;
@@ -54,11 +54,13 @@ C<FML::Process::CGI> base class.
 sub html_start
 {
     my ($curproc) = @_;
-    my $config  = $curproc->config();
-    my $title   = $config->{ thread_cgi_title }   || 'thread system interface';
-    my $color   = $config->{ thread_cgi_bgcolor } || '#E6E6FA';
-    my $myname  = $curproc->myname();
-    my $charset = $curproc->get_charset("cgi");
+    my $config    = $curproc->config();
+    my $ml_name   = $curproc->cgi_var_ml_name();
+    my $ml_domain = $curproc->cgi_var_ml_domain();
+    my $name_ui   = $curproc->message_nl('term.thread_interface');
+    my $title     = "${ml_name}\@${ml_domain} $name_ui";
+    my $color     = $config->{ thread_cgi_bgcolor } || '#E6E6FA';
+    my $charset   = $curproc->get_charset("cgi");
 
     # o.k start html
     print start_html(-title   => $title,
@@ -83,6 +85,7 @@ sub html_end
 
 
 # Descriptions: currently, dummy.
+#               this routine is executed before table based navigation.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
@@ -93,6 +96,7 @@ sub run_cgi_main
 
 
 # Descriptions: main routine for thread control.
+#               this output is shown at table center.
 #               run_cgi() can process request: list, show, change_status
 #    Arguments: OBJ($curproc)
 # Side Effects: none
@@ -101,8 +105,8 @@ sub run_cgi_menu
 {
     my ($curproc)     = @_;
     my $myname        = $curproc->myname();
-    my $ml_name       = $curproc->cgi_var_ml_name();
-    my $command       = $curproc->cgi_var_action() || 'summary';
+    my $ml_name       = $curproc->cgi_var_ml_name() || '';
+    my $command       = $curproc->cgi_var_action()  || 'summary';
     my $max_id        = $curproc->article_max_id();
     my $cur_id        = $curproc->safe_param_article_id();
     my $range         = $cur_id;
@@ -113,35 +117,40 @@ sub run_cgi_menu
 
     print "<!-- exec run_cgi_menu start -->\n";
 
-    use FML::Article::Thread;
-    my $article_thread = new FML::Article::Thread $curproc;
-    $article_thread->set_print_style('html');
-
-    if ($command eq 'one_line_summary') {
-	$th_args->{ range } = $range || $default_range;
-	$article_thread->print_one_line_summary($th_args);
-    }
-    elsif ($command eq 'summary') {
-	$th_args->{ range } = $range || $default_range;
-	$article_thread->print_summary($th_args);
-    }
-    elsif ($command eq 'list') {
-	$th_args->{ range } = $range || '';
-	$article_thread->print_list($th_args);
-	# $article_thread->print_one_line_summary($th_args);
-    }
-    elsif ($command eq 'open' || $command eq 'reopen') {
-	$th_args->{ range } = $range || '';
-	$article_thread->open_thread_status($th_args);
-    }
-    elsif ($command eq 'close') {
-	$th_args->{ range } = $range || '';
-	$article_thread->close_thread_status($th_args);
+    unless ($ml_name) {
+	print "<!-- ml_name unspecified, so show help and exit -->\n";
     }
     else {
-	my $r = "unknown subcommand: thread $command";
-	$curproc->logerror($r);
-	$curproc->ui_message("error: $r");
+	use FML::Article::Thread;
+	my $article_thread = new FML::Article::Thread $curproc;
+	$article_thread->set_print_style('html');
+
+	if ($command eq 'one_line_summary') {
+	    $th_args->{ range } = $range || $default_range;
+	    $article_thread->print_one_line_summary($th_args);
+	}
+	elsif ($command eq 'summary') {
+	    $th_args->{ range } = $range || $default_range;
+	    $article_thread->print_summary($th_args);
+	}
+	elsif ($command eq 'list') {
+	    $th_args->{ range } = $range || '';
+	    $article_thread->print_list($th_args);
+	    # $article_thread->print_one_line_summary($th_args);
+	}
+	elsif ($command eq 'open' || $command eq 'reopen') {
+	    $th_args->{ range } = $range || '';
+	    $article_thread->open_thread_status($th_args);
+	}
+	elsif ($command eq 'close') {
+	    $th_args->{ range } = $range || '';
+	    $article_thread->close_thread_status($th_args);
+	}
+	else {
+	    my $r = "unknown subcommand: thread $command";
+	    $curproc->logerror($r);
+	    $curproc->ui_message("error: $r");
+	}
     }
 
     print "<!-- exec run_cgi_menu end -->\n";
