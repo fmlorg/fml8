@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: emul_command.sh,v 1.1 2001/10/12 09:01:24 fukachan Exp $
+# $FML: emul_command.sh,v 1.2 2001/11/27 08:41:14 fukachan Exp $
 #
 
 buf=$PWD/__command$$__
@@ -17,7 +17,10 @@ DO () {
 
 	maincf=/tmp/main.cf.$$
 	trap "rm -f $maincf" 0 1 3 15
-	sed -e "s@\$pwd@$PWD@g" regress/simulation/main.cf > $maincf
+	sed 	-e "s@\$pwd@$PWD@g" \
+		-e "s@^debug.*@debug = $debug@" \
+		regress/simulation/main.cf > $maincf
+
 
 	regress/message/scramble.pl $msg |\
 	${PERL:-perl} -w fml/libexec/loader -c $maincf \
