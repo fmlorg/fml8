@@ -1439,6 +1439,15 @@ $ml_home_dir/tmp
 </row>
 <row>
 <entry>
+udb_base_dir</entry>
+<entry>
+ ML 間でシェアするデータベースをおくホームディレクトリ</entry>
+<entry>
+$ml_home_prefix/@udb@
+   </entry>
+</row>
+<row>
+<entry>
 unsafe_header_fields</entry>
 <entry>
  あぶないタグを消す</entry>

@@ -623,6 +623,7 @@ _dir$ {
           $ml_admin_cgi_base_dir
           $shared_db_dir
           $tmp_dir
+          $udb_base_dir
           $var_dir
 }
 
