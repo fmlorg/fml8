@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mailq.pm,v 1.2 2003/03/14 06:53:22 fukachan Exp $
+# $FML: mailq.pm,v 1.3 2003/03/18 10:35:14 fukachan Exp $
 #
 
 package FML::Command::Admin::mailq;
@@ -74,13 +74,22 @@ sub _queue
     my $config    = $curproc->config();
     my $queue_dir = $config->{ mail_queue_dir };
     my $count     = 0;
+    my $format    = "%-20s   %s\n";
 
     use Mail::Delivery::Queue;
     my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
     my $ra    = $queue->list();
 
     for my $qid (@$ra) {
-	print $qid, "\n";
+	my $info = $queue->getidinfo($qid);
+	my $rq   = $info->{ recipients };
+
+	printf $format, $qid, $info->{sender};
+	for my $r (@$rq) {
+	    printf $format, "", $r;
+	}
+	print "\n";
+
 	$count++;
     }
 
