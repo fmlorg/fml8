@@ -1,7 +1,7 @@
 basic.cf
 directory.cf
 acl.cf
-mta.cf
+delivery.cf
 header.cf
 lock.cf
 log.cf
