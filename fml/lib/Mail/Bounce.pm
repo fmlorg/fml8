@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Bounce.pm,v 1.12 2001/07/30 23:09:04 fukachan Exp $
+# $FML: Bounce.pm,v 1.13 2001/07/31 12:58:33 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -120,9 +120,9 @@ sub analyze
 
     if ($debug) {
 	my $h = $msg->get_data_type_list;
-	print "   ----- dump msg -----\n";
-	for (@$h) { print "   ", $_, "\n";}
-	print "   ----- dump msg end -----\n";
+	print STDERR "   ----- dump msg -----\n";
+	for (@$h) { print STDERR "   ", $_, "\n";}
+	print STDERR "   ----- dump msg end -----\n";
     }
 
     for my $pkg (
@@ -134,7 +134,7 @@ sub analyze
 		 'SimpleMatch', 
 		 ) {
 	my $module = "Mail::Bounce::$pkg";
-	print "\n   --- module: $module\n" if $debug;
+	print STDERR "\n   --- module: $module\n" if $debug;
 	eval qq { 
 	    require $module; $module->import();
 	    $module->analyze( \$msg , \$result );
@@ -142,8 +142,12 @@ sub analyze
 	croak($@) if $@;
 
 	if (keys %$result) { 
-	    print "\n   match $module\n" if $debug;
+	    print STDERR "\n   match $module\n" if $debug;
 	    last;
+	}
+
+        if ($debug) {
+	    print STDERR "   * not match $module\n" unless %$result;
 	}
     }
 
@@ -255,11 +259,13 @@ sub address_clean_up
 {
     my ($self, $hint, $addr) = @_;
 
+    if ($debug) { print STDERR "address_clean_up($hint, $addr)\n";}
+
     # nuke predecing and trailing strings around user@domain pattern
     my $prev_addr = $addr;
     do { 
 	$prev_addr = $addr;
-	print "    address_clean_up.in: $prev_addr\n" if $debug;
+	print STDERR "    address_clean_up.in: $prev_addr\n" if $debug;
 
 	$addr      =~ s/\.$//;
 	$addr      =~ s/^\<//;
@@ -267,7 +273,7 @@ sub address_clean_up
 	$addr      =~ s/^\"//;
 	$addr      =~ s/\"$//;
 
-	print "   address_clean_up.out: $addr\n" if $debug;
+	print STDERR "   address_clean_up.out: $addr\n" if $debug;
     } while ($addr ne $prev_addr);
 
     # Mail::Bounce::FixBrokenAddress class provides irrgular

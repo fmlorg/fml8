@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SimpleMatch.pm,v 1.21 2001/07/30 14:42:34 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.22 2001/07/31 14:07:00 fukachan Exp $
 #
 
 
@@ -173,18 +173,18 @@ sub analyze
 
     if (defined $m) {
 	my $n = $m->num_paragraph;
-	if ($debug) { print "   num_paragraph: $n\n";}
+	if ($debug) { print STDERR "   num_paragraph: $n\n";}
 
 	for (my $i = 0; $i < $n; $i++) {
 	    my $buf = $m->nth_paragraph($i + 1); # 1 not 0 for 1st paragraph
 	    $args->{ buf } = \$buf;
 
 	    if ( $self->look_like_japanese( $buf ) ) {
-		if ($debug) { print "{$buf}\n";}
+		if ($debug) { print STDERR "{$buf}\n";}
 		$self->_japanese_address_match($args);
 	    }
 	    else {
-		if ($debug) { print "{$buf}\n";}
+		if ($debug) { print STDERR "{$buf}\n";}
 		$self->_address_match($args);
 	    }
 
@@ -193,7 +193,7 @@ sub analyze
 	}
     }
     else {
-	print "body object not found\n" if $debug;
+	print STDERR "body object not found\n" if $debug;
     }
 }
 
@@ -209,7 +209,7 @@ sub _reach_end
 
 	my $end_regexp = $address_trap_regexp->{ $mta_type }->{ 'end' };
 	if ($end_regexp && ($$rbuf =~ /$end_regexp/)) {
-	    print "last match {$$rbuf} ~ /$end_regexp/\n" if $debug;
+	    print STDERR "last match {$$rbuf} ~ /$end_regexp/\n" if $debug;
 	    return 1;
 	}
     }
@@ -252,12 +252,12 @@ sub _address_match
 
       SCAN:
 	for (@buf) {
-	    print "scan($args->{ mta_type })|state=$args->{state}> $_\n"
+	    print STDERR "scan($args->{ mta_type })|state=$args->{state}> $_\n"
 		if $debug;
 	    last SCAN if $end_regexp && /$end_regexp/;
 
 	    if (/(\S+\@\S+)/) {
-		if ($debug) { print "trap address ($1)\n";}
+		if ($debug) { print STDERR "trap address ($1)\n";}
 		my $addr = $self->address_clean_up($mta_type, $1);
 		if ($addr) {
 		    $result->{ $addr }->{ 'Final-Recipient' } = $addr;

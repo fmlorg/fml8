@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DSN.pm,v 1.8 2001/07/30 23:09:04 fukachan Exp $
+# $FML: DSN.pm,v 1.9 2001/07/31 12:56:21 fukachan Exp $
 #
 
 
@@ -94,6 +94,10 @@ sub analyze
 		$self->_parse_dsn_format($buf, $result);
 	    }
 	}
+
+	if ($debug) { 
+	    print STDERR "\t * no recipient information\n" unless %$result;
+	}
     }
     else {
 	return undef;
@@ -126,6 +130,10 @@ sub _parse_dsn_format
     # domain part of $addr may match someting e.g. nifty.ne.jp, webtv.ne.jp. 
     $addr = $self->address_clean_up($addr, $addr);
     
+    if ($debug) { 
+	print STDERR "\t *** valid address is not found\n" unless $addr;
+    }
+
     # set up return buffer
     if ($addr =~ /\@/) {
 	$result->{ $addr }->{ 'Final-Recipient' } = $addr;
