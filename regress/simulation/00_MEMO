@@ -17,30 +17,6 @@
 		値をよろしく変換する （←ここがむずかしー）
 
 
-[TODO]	*_maps をよぶまえには MUTEX ロックを
-
-	→ giant lock をなくす
-
-	*_map を使うモジュール一覧
-
-		FML/Credential.pm
-		FML/Digest.pm (reply_message() にわたすだけだが)
-		FML/Process/Utils.pm
-
-		FML/Command/Auth.pm
-		FML/Command/UserControl.pm
-
-		FML/Command/Admin/chaddr.pm		×
-		FML/Command/Admin/changepassword.pm	×
-			だめよ、コマンドの中にもってては
-			FML::Command::何か に移動だ！
-
-		Mail/Delivery/Queue.pm
-		Mail/Delivery/SMTP.pm
-		Mail/Delivery.pm
-			Mail::Delivery モジュールはかならず wrap
-
-
 [TODO]	01_RFC_IO_ADAPTER.txt
 [TODO]	01_RFC_UPGRADE.txt
 
@@ -64,6 +40,33 @@
 		FML::Article::Thread		(不要じゃないの？)
 
 	どこに、なんのメソッドがあるべきなのか？	
+
+
+[TODO]	*_maps をよぶまえには MUTEX ロックを
+
+	ん〜 メンバーリストは READ,WRITE LOCK だろ 
+		いや、実装はかなりむつかしいかも… ;)
+
+	→ giant lock をなくす
+
+	*_map を使うモジュール一覧
+
+		FML/Credential.pm
+		FML/Digest.pm (reply_message() にわたすだけだが)
+		FML/Process/Utils.pm
+
+		FML/Command/Auth.pm
+		FML/Command/UserControl.pm
+
+		FML/Command/Admin/chaddr.pm		×
+		FML/Command/Admin/changepassword.pm	×
+			だめよ、コマンドの中にもってては
+			FML::Command::何か に移動だ！
+
+		Mail/Delivery/Queue.pm
+		Mail/Delivery/SMTP.pm
+		Mail/Delivery.pm
+			Mail::Delivery モジュールはかならず wrap
 
 
 [TODO]	受信者としてだけの登録 (add2actives 相当、メールマガジンなど)は？
@@ -293,4 +296,4 @@
 
 
 ----------
-$FML: 00_MEMO,v 1.68 2003/03/11 14:43:56 fukachan Exp $
+$FML: 00_MEMO,v 1.69 2003/03/16 05:02:13 fukachan Exp $
