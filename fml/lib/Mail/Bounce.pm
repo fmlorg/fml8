@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Bounce.pm,v 1.2 2001/04/10 14:37:49 fukachan Exp $
+# $FML: Bounce.pm,v 1.3 2001/04/11 15:15:55 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -46,6 +46,7 @@ sub analyze
 		 'Postfix19991231', 
 		 'Qmail', 
 		 'Exim',
+		 'GOO',
 		 'SimpleMatch', 
 		 ) {
 	my $module = "Mail::Bounce::$pkg";
