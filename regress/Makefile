@@ -1,0 +1,2 @@
+clean:
+	(cd ..;make clean)
