@@ -41,6 +41,8 @@ require Exporter;
 sub new
 {
     my ($self, $args) = @_;
+
+    # an adapter for Mail::Header::new()
     $self->SUPER::new($args);
 }
 
@@ -103,6 +105,16 @@ sub add_x_sequence
     my ($header, $config, $args) = @_;
 
     $header->add('X-Sequence',  "$args->{ name } $args->{ id }");
+}
+
+
+
+sub rewrite_subject
+{
+    my ($header, $config, $args) = @_;
+
+    use FML::Header::Subject;
+    my $subject = new FML::Header::Subject;
 }
 
 
