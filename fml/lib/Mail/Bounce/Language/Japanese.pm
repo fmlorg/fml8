@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DSN.pm,v 1.9 2001/07/31 12:56:21 fukachan Exp $
+# $FML: Japanese.pm,v 1.1.1.1 2001/07/31 13:51:13 fukachan Exp $
 #
 
 #
@@ -73,7 +73,7 @@ sub _japanese_address_match
     use Jcode;
     &Jcode::convert(\$buf, 'euc');
 
-    print STDERR "rbuf={$buf}\n" if 1 || $debug;
+    print STDERR "rbuf={$buf}\n" if $debug;
     
     # lotus NOTES
     if ($buf =~ /Á÷¿®Àè:\s*(\S+)/) {
