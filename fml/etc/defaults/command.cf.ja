@@ -45,13 +45,15 @@ available_commands		=	help
 					resign
 					unsubscribe
 					chaddr
+					confirm
+					guide
+					info
 
 
 available_commands_for_stranger	=	guide
+					info
 					subscribe
-					confirm
-
-
+					$confirm_keyword
 
 
 confirm_keyword			=	confirm
