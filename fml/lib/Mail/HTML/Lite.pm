@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: @template.pm,v 1.1 2001/08/07 12:23:48 fukachan Exp $
+# $FML: Lite.pm,v 1.1.1.1 2001/10/19 13:45:32 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -12,13 +12,48 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
+my $debug = $ENV{'debug'} ? 1 : 0;
+
 =head1 NAME
 
 Mail::HTML::Lite - mail to html converter
 
 =head1 SYNOPSIS
 
+  use Mail::HTML::Lite;
+  my $obj = new Mail::HTML::Lite { 
+      directory => "/var/www/htdocs/ml/elena",
+  };
+
+  $obj->htmlfy_rfc822_message({
+      id  => 1,
+      src => "/var/spool/ml/elena/spool/1",
+  });
+
 =head1 DESCRIPTION
+
+=head2 Message structure created as HTML
+
+HTML-fied message has following structure.
+something() below is method name.
+
+                               for example 
+    -------------------------------------------------------------------
+    html_begin()               <HTML><HEAD> ... </HEAD><BODY> 
+    mhl_preamble()             <!-- comment used by this module -->
+    mhl_separator()            <HR>
+
+      message header
+           From:    ...
+           Subject: ...
+
+    mhl_separator()            <HR>
+
+      message body
+
+    mhl_separator()            <HR>
+    mhl_footer()               <!-- comment used by this module -->
+    html_end()                 </BODY></HTML> 
 
 =head1 METHODS
 
@@ -59,40 +94,9 @@ convert mail to html.
 	path => $path,
     };
 
-C<$path> is file path.
+where C<$path> is file path.
 
 =cut
-
-
-sub _init_htmlfy_rfc822_message
-{
-    my ($self, $args) = @_;
-    my ($id, $src, $dst);
-
-    if (defined $args->{ src }) {
-	$src = $args->{ src };
-    }
-    else {
-	croak("htmlfy_rfc822_message: \$src is mandatory\n");
-    }
-
-    if (defined $args->{ id }) {
-	my $html_base_dir = $self->{ _html_base_directory };
-	$id  = $args->{ id };
-	$dst = "$html_base_dir/msg$id.html";
-    }
-    elsif (defined $args->{ dst }) {
-	$id  = time.".".$$;
-	$dst = $args->{ dst };
-    }
-    else {
-	croak("htmlfy_rfc822_message: specify \$id or \$dst\n");
-    }
-
-    $self->{ _id } = $id;
-
-    return ($id, $src, $dst);
-}
 
 
 # Descriptions: 
@@ -117,7 +121,10 @@ sub htmlfy_rfc822_message
     my $body = $msg->rfc822_message_body;
 
     # save information for index.html and thread.html
-    $self->cache_message_info($msg, { src => $src } );
+    $self->cache_message_info($msg, { id => $id, 
+				      src => $src, 
+				      dst => $dst,
+				  } );
 
     # prepare output channel
     my $wh = $self->_set_output_channel( { dst => $dst } );
@@ -221,32 +228,80 @@ sub htmlfy_rfc822_message
 }
 
 
-=head1 Message structure created as HTML
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub message_filename
+{
+    my ($self, $id) = @_;
 
-HTML-fied message has following structure.
-something() below is method name.
-
-                                       for example 
-    -----------------------------------------------------------------------
-    html_begin()                      <HTML><HEAD> ... </HEAD><BODY> 
-    mhl_preamble()                    <!-- comment used by this module -->
-    mhl_separator()                   <HR>
-
-      ... message header  ...
-           From:    ...
-           Subject: ...
-
-    mhl_separator()                   <HR>
-
-     ... message body ...
-
-    mhl_separator()                   <HR>
-    mhl_footer()                      <!-- comment used by this module -->
-    html_end()                        </BODY></HTML> 
-
-=cut
+    if (defined($id) && ($id > 0)) {
+	return "msg${id}.html";
+    }
+    else {
+	return undef;
+    }
+}
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub message_filepath
+{
+    my ($self, $id) = @_;
+    my $html_base_dir = $self->{ _html_base_directory };
+
+    if (defined($id) && ($id > 0)) {
+	return "$html_base_dir/msg$id.html";
+    }
+    else {
+	return undef;
+    }
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub _init_htmlfy_rfc822_message
+{
+    my ($self, $args) = @_;
+    my ($id, $src, $dst);
+
+    if (defined $args->{ src }) {
+	$src = $args->{ src };
+    }
+    else {
+	croak("htmlfy_rfc822_message: \$src is mandatory\n");
+    }
+
+    if (defined $args->{ id }) {
+	my $html_base_dir = $self->{ _html_base_directory };
+	$id  = $args->{ id };
+	$dst = $self->message_filepath($id);
+    }
+    elsif (defined $args->{ dst }) {
+	$id  = time.".".$$;
+	$dst = $args->{ dst };
+    }
+    else {
+	croak("htmlfy_rfc822_message: specify \$id or \$dst\n");
+    }
+
+    $self->{ _id } = $id;
+
+    return ($id, $src, $dst);
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub html_begin
 {
     my ($self, $wh) = @_;
@@ -258,6 +313,10 @@ sub html_begin
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub html_end
 {
     my ($self, $wh) = @_;
@@ -266,6 +325,10 @@ sub html_end
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub mhl_separator
 {
     my ($self, $wh) = @_;
@@ -273,22 +336,40 @@ sub mhl_separator
 }
 
 
+my $preamble_begin = "<!-- __PREAMBLE_BEGIN__ by Mail::HTML::Lite -->";
+my $preamble_end   = "<!-- __PREAMBLE_END__   by Mail::HTML::Lite -->";
+my $footer_begin   = "<!-- __FOOTER_BEGIN__ by Mail::HTML::Lite -->";
+my $footer_end     = "<!-- __FOOTER_END__   by Mail::HTML::Lite -->";
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub mhl_preamble
 {
     my ($self, $wh) = @_;
-    print $wh "<!-- __PREAMBLE_BEGIN__ by Mail::HTML::Lite -->\n";
-    print $wh "<!-- __PREAMBLE_END__   by Mail::HTML::Lite -->\n";
+    print $wh $preamble_begin, "\n";
+    print $wh $preamble_end, "\n";
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub mhl_footer
 {
     my ($self, $wh) = @_;
-    print $wh "<!-- __FOOTER_BEGIN__ by Mail::HTML::Lite -->\n";
-    print $wh "<!-- __FOOTER_END__   by Mail::HTML::Lite -->\n";
+    print $wh $footer_begin, "\n";
+    print $wh $footer_end, "\n";
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub _set_output_channel
 {
     my ($self, $args) = @_;
@@ -306,6 +387,10 @@ sub _set_output_channel
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub _create_temporary_file
 {
     my ($self, $msg) = @_;
@@ -328,6 +413,10 @@ sub _create_temporary_file
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub _relative_path
 {
     my ($self, $file) = @_;
@@ -338,6 +427,10 @@ sub _relative_path
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub _print_attachment
 {
     my ($self, $args) = @_;
@@ -387,7 +480,8 @@ sub _format_header
     for my $field (qw(From To Cc Subject Date)) {
 	if (defined($hdr->get($field))) {
 	    $buf .= "${field}: ";
-	    $buf .= $hdr->get($field);
+	    my $xbuf = $hdr->get($field); 
+	    $buf .= $xbuf =~ /=\?iso/i ? _decode_mime_string($xbuf) : $xbuf;
 	}
     }
 
@@ -467,26 +561,361 @@ sub _binary_print
 }
 
 
-=head1 Create INDEX
+=head1 METHODS for index and thread
 
 =head2 C<cache_message_info($msg, $args)>
+
+save information into DB.
+See section C<Internal Data Presentation> for more detail.
 
 =cut
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub cache_message_info
 {
     my ($self, $msg, $args) = @_;
     my $hdr = $msg->rfc822_message_header;
-    my $src = $args->{ src };
+    my $id  = $args-> { id };
+    my $dst = $args-> { dst };
 
     $self->_db_open();
+    my $db = $self->{ _db };
 
-    $self->{ _db }->{ _from }->{ $src } = $hdr->get('from');
-    $self->{ _db }->{ _date }->{ $src } = $hdr->get('date');
-    $self->{ _db }->{ _message_id }->{ $src } = $hdr->get('message-id');
+    $db->{ _filepath }->{ $id } = $dst;
+
+    $db->{ _date }->{ $id } = $hdr->get('date');
+
+    $db->{ _subject }->{ $id } = _decode_mime_string( $hdr->get('subject') );
+	
+    my $ra = _address_clean_up( $hdr->get('from') );
+    $db->{ _from }->{ $id } = $ra->[0];
+
+    $ra  = _address_clean_up( $hdr->get('message-id') );
+    my $mid = $ra->[0];
+    $db->{ _message_id }->{ $id } = $mid;
+    $db->{ _msgidref }->{ $mid }  = $id;
+
+    $ra = _address_clean_up( $hdr->get('in-reply-to') );
+    my $in_reply_to = $ra->[0];
+    for my $mid (@$ra) {
+	$db->{ _msgidref }->{ $mid } .= " ".$id;
+    }
+
+    $ra = _address_clean_up( $hdr->get('references') );
+    for my $mid (@$ra) {
+	$db->{ _msgidref }->{ $mid } .= " ".$id;
+    }
+
+    # thread information for convenience
+    #   prev_id = { id => prev_id } (by in-reply-to:)
+    #   next_id = { id => next_id } (? in-reply-to of the future message ?)
+
+    #  $ids = (id1 id2 id3 ...)
+    my $ids = $db->{ _msgidref }->{ $in_reply_to };
+    if (defined $ids) {
+	$ids =~ s/^\s*//;
+	my $prev_id = (split(/\s+/, $ids))[0];
+	$db->{ _prev_id }->{ $id } = $prev_id;
+
+	# XXX we should not overwrite " id => next_id " hash.
+	# XXX we preserve the first " id => next_id " value.
+	unless (defined $db->{ _next_id }->{ $prev_id }) {
+	    $db->{ _next_id }->{ $prev_id } = $id;
+	}
+    }
+    else {
+	warn("no prev/next thread link\n");
+    }
 
     $self->_db_close();
+}
+
+
+sub _address_clean_up
+{
+    my ($addr) = @_;
+    my (@r);
+
+    use Mail::Address;
+    my (@addrs) = Mail::Address->parse($addr);
+
+    for my $addr (@addrs) {
+	push(@r, $addr->address());
+    }
+
+    return \@r;
+}
+
+
+sub _decode_mime_string
+{
+    my ($str, $options) = @_;
+    my $charset = $options->{ 'charset' } || 'euc-japan';
+
+    if ($charset eq 'euc-japan') {
+        use MIME::Base64;
+        if ($str =~ /=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/i) { 
+            $str =~ s/=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/decode_base64($1)/gie;
+        }
+
+        use MIME::QuotedPrint;
+        if ($str =~ /=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/i) { 
+            $str =~ s/=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/decode_qp($1)/gie;
+        }
+    }
+
+    use Jcode;
+    &Jcode::convert(\$str, 'euc');
+    $str;
+}
+
+
+=head2 C<update_relation()>
+
+=cut
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub update_relation
+{
+    my ($self, $id) = @_;
+
+    # update target itself, of course
+    $self->_update_relation($id);
+
+    # rewrite links of files for prev/next id (article id)
+    # (order by e.g. Article ID, MH folder)
+    $self->_update_relation($id - 1) if $id > 1;
+    $self->_update_relation($id + 1);
+
+    # rewrite links for prev/next by thread
+    my $args = $self->evaluate_relation($id);
+    if (defined $args->{ prev_id }) {
+	$self->_update_relation( $args->{ prev_id } );
+    }
+    if (defined $args->{ next_id }) {
+	$self->_update_relation( $args->{ next_id } );
+    }
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub _update_relation
+{
+    my ($self, $id) = @_;
+    my $args     = $self->evaluate_relation($id);
+    my $preamble = $self->evaluate_preamble($args);
+    my $footer   = $self->evaluate_footer($args);
+    my $code     = _charset_to_code($self->{ _charset });
+
+    my $pat_preamble_begin = quotemeta($preamble_begin);
+    my $pat_preamble_end   = quotemeta($preamble_end);
+    my $pat_footer_begin   = quotemeta($footer_begin);
+    my $pat_footer_end     = quotemeta($footer_end);
+
+    use FileHandle;
+    my $file        = $args->{ file };
+    my ($old, $new) = ($file, "$file.new");
+    my $rh = new FileHandle $old;
+    my $wh = new FileHandle "> $new";
+    if (defined $rh && defined $wh) {
+	while (<$rh>) {
+	    if (/^$pat_preamble_begin/ .. /^$pat_preamble_end/) {
+		_print($wh, $preamble, $code) if /^$pat_preamble_end/;
+		next;
+	    }
+	    if (/^$pat_footer_begin/ .. /^$pat_footer_end/) {
+		_print($wh, $footer, $code) if /^$pat_footer_end/;
+		next;
+	    }
+
+	    _print($wh, $_, $code);
+	}
+	$rh->close;
+	$wh->close;
+
+	unless (rename($new, $old)) {
+	    croak("rename($new, $old) fail\n");
+	}
+    }
+    else {
+	warn("cannot open $file (id=$id)\n");
+    }
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub _charset_to_code
+{
+    my ($charset) = @_;
+
+    if (defined $charset) {
+	;
+    }
+    else {
+	return 'euc'; # euc-jp by default
+    }
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub _print
+{
+    my ($wh, $str, $code) = @_;
+    $code = defined($code) ? $code : 'euc'; # euc-jp by default
+
+    use Jcode;
+    &Jcode::convert( \$str, $code);
+
+    print $wh $str;
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub evaluate_relation
+{
+    my ($self, $id) = @_;
+
+    $self->_db_open();
+    my $db   = $self->{ _db };
+    my $file = $db->{ _filepath }->{ $id };
+
+    my $next_file        = $self->message_filepath( $id + 1 );
+    my $prev_id          = $id > 1 ? $id - 1 : undef;
+    my $next_id          = $id + 1 if -f $next_file;
+    my $prev_thread_id   = $db->{ _prev_id }->{ $id };
+    my $next_thread_id   = $db->{ _next_id }->{ $id };
+    my $link_prev_id     = $self->message_filename($prev_id);
+    my $link_next_id     = $self->message_filename($next_id);
+    my $link_prev_thread = $self->message_filename($prev_thread_id);
+    my $link_next_thread = $self->message_filename($next_thread_id);
+    my $subject = {
+	prev_id     => $db->{ _subject }->{ $prev_id },
+	next_id     => $db->{ _subject }->{ $next_id },
+	prev_thread => $db->{ _subject }->{ $prev_thread_id },
+	next_thread => $db->{ _subject }->{ $next_thread_id },
+    };
+
+    if ($debug) {
+	print STDERR "subject($prev_id -> $id -> $next_id)\n";
+	print STDERR "       ($prev_thread_id -> $id -> $next_thread_id)\n";
+    }
+
+    my $args = {
+	id               => $id,
+	file             => $file,
+	link_prev_id     => $link_prev_id,
+	link_next_id     => $link_next_id,
+	link_prev_thread => $link_prev_thread,
+	link_next_thread => $link_next_thread,
+	subject          => $subject, 
+    };
+
+    $self->_db_close();
+
+    return $args;
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub evaluate_preamble
+{
+    my ($self, $args) = @_;
+    my $link_prev_id     = $args->{ link_prev_id };
+    my $link_next_id     = $args->{ link_next_id };
+    my $link_prev_thread = $args->{ link_prev_thread };
+    my $link_next_thread = $args->{ link_next_thread };
+
+    my $preamble = $preamble_begin. "\n";
+
+    if (defined($link_prev_id)) {
+	$preamble .= "<A HREF=\"$link_prev_id\">[Prev by ID]</A>\n";
+    }
+    if (defined($link_next_id)) {
+	$preamble .= "<A HREF=\"$link_next_id\">[Next by ID]</A>\n";
+    }
+    if (defined $link_prev_thread) {
+	$preamble .= "<A HREF=\"$link_prev_thread\">[Prev by Thread]</A>\n";
+    }
+    if (defined $link_next_thread) {
+	$preamble .= "<A HREF=\"$link_next_thread\">[Next by Thread]</A>\n";
+    }
+
+    $preamble .= qq{<A HREF=\"index.html\">[ID Index]</A>\n};
+    $preamble .= qq{<A HREF=\"thread.html\">[Thread Index]</A>\n};
+    $preamble .= $preamble_end. "\n";;
+
+    return $preamble;
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub evaluate_footer
+{
+    my ($self, $args) = @_;
+    my $link_prev_id     = $args->{ link_prev_id };
+    my $link_next_id     = $args->{ link_next_id };
+    my $link_prev_thread = $args->{ link_prev_thread };
+    my $link_next_thread = $args->{ link_next_thread };
+    my $subject     = $args->{ subject };
+
+    my $footer = $footer_begin. "\n";;
+
+    if (defined($link_prev_id)) {
+	$footer .= "<BR>\n";
+	$footer .= "<A HREF=\"$link_prev_id\">Prev by ID: ";
+	$footer .= "$subject->{ prev_id }</A>\n";
+    }
+
+    if (defined($link_next_id)) {
+	$footer .= "<BR>\n";
+	$footer .= "<A HREF=\"$link_next_id\">Next by ID: ";
+	$footer .= "$subject->{ next_id }</A>\n";
+    }
+
+    if (defined $link_prev_thread) {
+	$footer .= "<BR>\n";
+	$footer .= "<A HREF=\"$link_prev_thread\">Prev by Thread: ";
+	$footer .= "$subject->{ prev_thread }</A>\n";
+    }
+
+    if (defined $link_next_thread) {
+	$footer .= "<BR>\n";
+	$footer .= "<A HREF=\"$link_next_thread\">Next by Thread: ";
+	$footer .= "$subject->{ next_thread }</A>\n";
+    }
+
+    $footer .= qq{<BR>\n};
+    $footer .= qq{<A HREF=\"index.html\">[ID Index]</A>\n};
+    $footer .= qq{<A HREF=\"thread.html\">[Thread Index]</A>\n};
+    $footer .= $footer_end. "\n";;
+
+    return $footer;
 }
 
 
@@ -501,8 +930,40 @@ sub cache_message_info
    subject       id => Subject: header field
    message_id    id => Message-Id: header field
    references    id => References: header field
-   fileloc       id => file location ( /some/where/YYYY/MM/DD/xxx.html )
+   filepath      id => file location ( /some/where/YYYY/MM/DD/xxx.html )
    msgidref      message-id => id(myself) refered-by-id1 refered-by-id2 ...
+
+We need several information to speculate thread relation rapidly.
+At least we need two relations:
+
+1. to speculate [Next by Thread]
+
+   message-id => ( id1 id2 id3 ... )   
+
+where C<id1> is the message itself.
+
+2. to speculate [Prev by Thread]
+
+   id         => message-id of replied message (e.g. In-Reply-To:)
+
+hashes. 
+
+BTW, the end message of the thread has no next message, 
+and the top of the thread has no previous message. 
+We arrange apporopviate link to another thread.
+Also we need this relation for C<thread.html>.
+
+To resolve this problem, we need ID or Date ordered thread (top id of
+th thread) list ?
+
+   thread   followup relation in the thread
+   -----------------------------
+     id1    id1 - id2 - id4
+     id3    id3 - id5 - id6
+                   |
+                    - id7 - id10
+     id8    id8 - id9 - id11
+     id12   id12   ...
 
 =head2 Usage
 
@@ -513,7 +974,8 @@ For example, you can set { $key => $value } for C<from> data in this way:
 =cut
 
 my @kind_of_databases = qw(from date subject message_id references
-			   fileloc msgidref);
+			   msgidref next_id prev_id
+			   filename filepath);
 
 
 # 1. Hmm, what database is needed for 
@@ -543,45 +1005,62 @@ sub _db_open
 	    croak($@) if $@;
 	}
     }
+    else {
+	croak("cannot use $db_type");
+    }
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub _db_close
 {
     my ($self, $args) = @_;
     my $db_type = $args->{ db_type } || 'AnyDBM_File';
     my $db_dir  = $self->{ _html_base_directory };
 
-    unless ($@) {
- 	for my $db (@kind_of_databases) {
-	    eval qq{ untie \$self->{ _db }->{ _$db };};
-	    croak($@) if $@;
-	}
+    for my $db (@kind_of_databases) {
+	eval qq{ untie \$self->{ _db }->{ _$db };};
+	croak($@) if $@;
     }
+
+    system "sync";
 }
 
 
 =head2 C<make_index($args)>
 
+=cut
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub make_index
 {
     my ($self, $args) = @_;
 }
 
-=cut
 
+#
+# debug
+#
 
 if ($0 eq __FILE__) {
     eval q{
-	my $html = new Mail::HTML::Lite { directory => "/tmp/htdocs" };
-
 	for (@ARGV) {
 	    use File::Basename;
 	    my $f = basename($_);
+	    my $html = new Mail::HTML::Lite { directory => "/tmp/htdocs" };
 	    $html->htmlfy_rfc822_message({
 		id  => $f,
 		src => $_,
 	    });
+
+	    $html->update_relation( $f );
 	}
     };
     croak($@) if $@;
