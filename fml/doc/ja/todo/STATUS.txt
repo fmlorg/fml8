@@ -8,7 +8,7 @@
 	perl 5.6.1 on NetBSD 1.5.x (1.5 stable)
 	perl 5.6.1 on Redhat Linux ?
 	perl 5.00503 on FreeBSD 4.3 STABLE
-
+	perl ? on FreeBSD 4.6 RELEASE
 
 II部　fmlのセットアップ〜MLの作成
 4章　Unix上でのfmlのインストール
@@ -33,9 +33,20 @@ II部　fmlのセットアップ〜MLの作成
 	ただし fml-devel では newml 時に設定用 CGI や、HTML 化された記事
 	をおくディレクトリ ~fml/public_html/ .. を用意する点が異なります。
 
-	* postfix ( および sendmail ) がターゲットシステムです。
+	* postfix と qmail がターゲットシステムです。
 
-	[TODO] newml 時に qmail 用の設定はまだ作れません。
+	* バーチャルドメインの扱い
+
+		makefml newml elena@nuinui.net
+
+	のようにドメインつきの名前を指定して下さい。
+
+	注意:	nuinui.net 用のディレクトリの指定が必要です。
+		main.cf の virtual_maps で、ファイルを指定して下さい。
+
+			virtual_maps = /etc/fml/virtual
+
+		このファイルの書式は『ドメイン ディレクトリ』です。
 
 6章　Windows 2000/NT4上でのfmlのインストール
 
@@ -57,10 +68,7 @@ II部　fmlのセットアップ〜MLの作成
 	[TODO] .htaccess の設定支援ツールがまだありません。
 		エディタでファイルを消すなり、編集するなりして下さい。
 
-	[TODO] CGI からのエラーの上げ方
-
-	[TODO] CGI の画面構成を制御するアクセスメソッドを作る
-		$cgi->configure( { header => \&header(), } );
+	[TODO] CGI からのエラーの上げ方 ？
 
 
 9章　fmlの動作確認
@@ -131,7 +139,7 @@ III部　fmlのカスタマイズ
 
 	[TODO] モデレータ 
 
-	[TODO] 自動ファイル返送
+	 自動ファイル返送
 
 	[TODO] 複数の管理者による運用
 
@@ -292,4 +300,4 @@ VIII部　付録
 	queue manager for LMTP ? 
 
 ---
-$FML: STATUS.txt,v 1.8 2002/04/25 14:37:12 fukachan Exp $
+$FML: STATUS.txt,v 1.9 2002/05/17 09:54:01 fukachan Exp $
