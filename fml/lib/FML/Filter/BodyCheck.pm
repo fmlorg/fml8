@@ -4,13 +4,14 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: BodyCheck.pm,v 1.3 2001/08/05 14:35:50 fukachan Exp $
+# $FML: BodyCheck.pm,v 1.4 2001/08/19 14:59:07 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+use ErrorStatus qw(error_set error error_clear);
 
 =head1 NAME
 
@@ -31,6 +32,7 @@ usual constructor.
 
 =cut
 
+
 my $debug = $ENV{'debug'} ? 1 : 0;
 
 
@@ -44,23 +46,27 @@ sub new
 
 
 
-=head2 C<body_check($curproc, $args)>
+=head2 C<body_check($msg, $args)>
 
-entrance to the body check routines.
-C<fml process> to need this function kicks off fileter rules 
-through C<body_check()>.
+C<$msg> is C<Mail::Message> object.
 
-Filter rules are applied to the incoming message from STDIN, 
+C<Usage>:
 
-   $curproc->{ incoming_message }->{ body }.
+    use FML::Filter::BodyCheck;
+    my $obj     = new FML::Filter::BodyCheck;
+    my $msg = $curproc->{ incoming_message }->{ body };
+
+    $obj->body_check($msg, $args);
+    if ($obj->error()) {
+       # do something for wrong formated message ...
+    }
 
 =cut
 
 
 sub body_check
 {
-    my ($self, $curproc, $args) = @_;
-    my $message = $curproc->{ incoming_message }->{ body };
+    my ($self, $msg, $args) = @_;
 
     ## 0. preparation 
     # local scope after here
@@ -74,7 +80,7 @@ sub body_check
     # If the incoming message is a mime multipart format,
     # get_first_plaintext_message() return the first mime part block
     # with the "plain/text" type.
-    my $m = $message->get_first_plaintext_message();
+    my $m = $msg->get_first_plaintext_message();
 
     ## 4. check only the last paragraph
     #     XXX if message size > 1024 or not, we change the buffer to check.
@@ -86,18 +92,28 @@ sub body_check
     my $need_one_line_check = $self->need_one_line_check($m);
 
     ## 5. preparation for main rules.
-    $self->clean_up_buffer($m);
+    ## $self->_clean_up_buffer($m);
 
     ## 6. main fules
-    for my $rule (
-		'reject_not_iso2022jp_japanese_string',
-		'reject_null_mail_body',
-		) {
+    for my $rule (qw(reject_not_iso2022jp_japanese_string
+		     reject_null_mail_body
+		     reject_virus_message
+		     reject_one_line_message
+		     reject_old_fml_command_syntax
+		     reject_invalid_fml_command_syntax
+		     reject_japanese_command_syntax
+		     )) {
 	if ($self->can($rule)) {
-	    $self->$rule($curproc, $args, $m);
+	    eval q{
+		$self->$rule($msg, $args, $m);
+	    };
+	    if ($@) {
+		$self->error_set($@);
+		return $@;
+	    }
 	}
 	else {
-	    LogWarn("no such rule $rule");
+	    carp("no such rule $rule");
 	}
     }
 }
@@ -105,15 +121,25 @@ sub body_check
 
 sub reject_not_iso2022jp_japanese_string
 {
-    use FML::Language::ISO2022JP;
-    not is_iso2022jp_string();
+    my ($self, $msg, $args, $first_msg) = @_;
+    my $buf = $first_msg->nth_paragraph(1);
+
+    use FML::Language::ISO2022JP qw(is_iso2022jp_string);
+    unless (is_iso2022jp_string($buf)) {
+	croak "Japanese but not ISO-2022-JP";
+    }
 }
 
 
 sub reject_null_mail_body
 {
-    my $m;
-    $m->is_empty;
+    my ($self, $msg, $args, $first_msg) = @_;
+    my $buf = $first_msg->nth_paragraph(1);
+
+    if ($first_msg->is_empty) {
+	my $size = $first_msg->size();
+	croak "empty (size = $size)";
+    }
 }
 
 
@@ -124,6 +150,8 @@ sub reject_null_mail_body
 # Return Value: none
 sub reject_virus_message
 {
+    my ($self, $msg, $args, $first_msg) = @_;
+
     # &use('viruschk');
     # my ($xr);
     # $xr = &VirusCheck(*e);
@@ -141,10 +169,13 @@ sub reject_virus_message
 # Return Value: none
 sub reject_one_line_message
 {
-    my $buf;
+    my ($self, $msg, $args, $first_msg) = @_;
+    my $buf = $first_msg->nth_paragraph(1);
 
-    if ($buf =~ /^[\s\n]*[\s\w\d:,\@\-]+[\n\s]*$/) {
-	croak "one line mail body";
+    if ( $self->need_one_line_check($first_msg) ) {
+	if ($buf =~ /^[\s\n]*[\s\w\d:,\@\-]+[\n\s]*$/) {
+	    croak "one line mail body";
+	}
     }
 }
 
@@ -158,7 +189,8 @@ sub reject_one_line_message
 # Return Value: none
 sub reject_old_fml_command_syntax
 {
-    my $buf;
+    my ($self, $msg, $args, $first_msg) = @_;
+    my $buf = $first_msg->data;
 
     if ($buf =~ /^[\s\n]*(\#\s*[\w\d\:\-\s]+)[\n\s]*$/) {
 	my $r = $1; 
@@ -171,7 +203,8 @@ sub reject_old_fml_command_syntax
 
 sub reject_invalid_fml_command_syntax
 {
-    my $buf;
+    my ($self, $msg, $args, $first_msg) = @_;
+    my $buf = $first_msg->data;
 
     if ($buf =~ /^[\s\n]*\%\s*echo.*/i) {
 	croak "invalid command in the mail body";
@@ -192,7 +225,8 @@ sub reject_invalid_fml_command_syntax
 # Return Value: none
 sub reject_japanese_command_syntax
 {
-    my $buf;
+    my ($self, $msg, $args, $first_msg) = @_;
+    my $buf = $first_msg->data;
 
     if ($buf =~ /\033\044\102(\043[\101-\132\141-\172])/) {
 	# trap /JIS"2byte"[A-Za-z]+/
@@ -210,20 +244,6 @@ sub reject_japanese_command_syntax
 	}
     }
 }
-
-
-sub clean_up_buffer
-{
-    ;
-}
-
-
-sub is_empty
-{
-    my ($self, $m) = @_;
-    $m->is_empty();
-}
-
 
 
 sub need_one_line_check
@@ -256,20 +276,6 @@ sub need_one_line_check
 }
 
 
-# XXX fml 4.0 assumes: 
-# XXX If the paragraph has @ or ://, it must be signature.
-sub _check_this_paragraph
-{
-    my ($self, $m) = @_;
-    my $np   = $m->num_paragraph;
-    my $data = '';
-
-    for (my $i = 1; $i <= $np; $i++) { # XXX: 1 .. n (not 0 .. n-1)
-	if ($debug) { print STDERR "($i){", $data, "}\n";}
-    }
-}
-
-
 sub is_citation
 {
     my ($self, $data) = @_;
@@ -286,6 +292,8 @@ sub is_citation
 }
 
 
+# XXX fml 4.0 assumes: 
+# XXX If the paragraph has @ or ://, it must be signature.
 # trap special keyword like tel:011-123-456789 ...
 sub is_signature
 {

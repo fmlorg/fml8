@@ -4,17 +4,18 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: HeaderCheck.pm,v 1.3 2001/08/05 13:55:05 fukachan Exp $
+# $FML: HeaderCheck.pm,v 1.4 2001/08/05 14:07:08 fukachan Exp $
 #
 
 package FML::Filter::HeaderCheck;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+use ErrorStatus qw(error_set error error_clear);
 
 =head1 NAME
 
-FML::Filter::HeaderCheck - filter by mail header content
+FML::Filter::HeaderCheck - filter based on mail header content
 
 =head1 SYNOPSIS
 
@@ -32,6 +33,9 @@ usual constructor.
 =cut
 
 
+my $debug = $ENV{'debug'} ? 1 : 0;
+
+
 sub new
 {
     my ($self) = @_;
@@ -42,38 +46,43 @@ sub new
 
 
 
-=head2 C<header_check($curproc, $args)>
+=head2 C<header_check($msg, $args)>
 
-entrance to the header check routines.
-C<fml process> to need this function kicks off fileter rules 
-through C<header_check()>.
+C<$msg> is C<Mail::Message> object.
 
-Filter rules are applied to the incoming message from STDIN, 
+C<Usage>:
 
-   $curproc->{ incoming_message }->{ header }.
+    use FML::Filter::HeaderCheck;
+    my $obj  = new FML::Filter::HeaderCheck;
+    my $msg  = $curproc->{'incoming_message'};
+
+    $obj->header_check($msg, $args);
+    if ($obj->error()) {
+       # do something for wrong formated message ...
+    }
 
 =cut
 
 
 sub header_check
 {
-    my ($self, $curproc, $args) = @_;
-    my $msg  = $curproc->{'incoming_message'};
+    my ($self, $msg, $args) = @_;
+    my $h = $msg->rfc822_message_header();
 
     eval q{
-	$self->is_valid_message_id($curproc, $args, $msg);
+	$self->is_valid_message_id($h, $args);
     };
 
     if ($@) {
-	return 1;
+	$self->error_set($@);
     }
 }
 
 
 sub is_valid_message_id
 {
-    my ($self, $curproc, $args, $msg) = @_;
-    my $mid  = $msg->{'header'}->get('message-id');
+    my ($self, $msg, $args) = @_;
+    my $mid = $msg->get('message-id');
 
     if ($mid !~ /\@/) { 
 	croak "invalid Message-Id";
