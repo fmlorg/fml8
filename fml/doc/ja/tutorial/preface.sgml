@@ -1,5 +1,5 @@
 <!--
-   $FML: preface.sgml,v 1.8 2001/08/26 05:55:51 fukachan Exp $
+   $FML: preface.sgml,v 1.9 2001/09/17 13:04:24 fukachan Exp $
 -->
 
 <preface>
@@ -8,13 +8,37 @@
 	</title>
 
 
+<warning>
+<para>
+ドキュメントも不十分だし、
+機能も不十分なので、
+実運用には fml-devel を使わずに 4.0 stable を使う方がよいでしょう。
+</para>
+
+<para>
+2001 年も終りに近付く今日この頃、
+fml-devel は開発用で fml-current ですらないことに変わりはありませんが、
+十分実用的に動いています。
+makefml や CGI でユーザの登録などもできるし、
+HTML 化機能＋スレッド追跡システムは便利で、
+作者は、(特に 4.0 にない諸機能を使うために)運用ベースで使っています。
+ただ、多くのこまごまとした機能は未実装ですし、
+再デザインの研究最終段階といったあたりにあります。
+</para>
+</warning>
+
+
+
 <!-- ======================================================== -->
 <sect1>
 
-<title> はるかなる fml 5.0 への道 </title>
+	<title>
+	次世代 fml への道 
+	</title>
 
 <para>
-fml 5.0 とは fml 4.0 を一から書き直す次世代 fml プロジェクトの総称
+fml-devel もしくは fml 5.0 (仮称) プロジェクト
+とは fml 4.0 を一から書き直す次世代 fml プロジェクトの総称
 	<footnote>
 	<para>
 	ざっくりとしたイメージしては
@@ -23,120 +47,86 @@ fml 5.0 とは fml 4.0 を一から書き直す次世代 fml プロジェクトの総称
 	</para>
 	</footnote>
 です。
-fml 4.0 までに至る約 10 年の経験を再実装する試みといえます。
-これには何年もの歳月がかかるでしょう。
-</para>
-
-<warning>
-<para>
-実運用には fml-devel を使わずに 4.0 stable を使って下さい。
-fml-devel は開発用で、 fml-current ですらありません。
-</para>
-</warning>
-
-<para>
-fml 5.0  への道(はるかなる道)について、
-現在は次のような構想を持っています。
-基本的な考え方は fml 4.0 の”機能”を再構想/再実装することです。
+これは fml 4.0 までに至る約 10 年の経験を再実装する試みといえます。
+つまり、この試みには何年もの歳月がかかっても不思議はないでしょう。
 </para>
 
 <para>
-まず最初にしたいことは 4.0 の機能についての再検討です。
-例えば、次のような項目です。
+次世代 fml の考え方は fml 4.0 の”機能”を再構想/再実装することです。
+これはデザインを一から考え直すことに加え、
+機能や変数の整理整頓も含みます。
+</para>
 
-<itemizedlist>
+<para>
+まず最初するべきことは 4.0 の機能とそのデザインについての再検討です。
+例えば、次のような項目が挙げられます。
 
-   <listitem>
+    <itemizedlist>
+
+
+    <listitem>
 	<para>
 	   5.0 へ引き継ぐものは何か？
 	</para>
-   </listitem>
+    </listitem>
 
-   <listitem>
+
+    <listitem>
 	<para>
 	   5.0 でもっとうまく、よりカスタマイズしやすいものに実装できないか？
 	</para>
-   </listitem>
+    </listitem>
 
-   <listitem>
+
+    <listitem>
 	<para>
 	   もう要らないものは何か？
 	</para>
-   </listitem>
+    </listitem>
 
-</itemizedlist>
+    </itemizedlist>
 
 これらについての意見を募集したいと思っています。ですが、漠然と議論して
-もしょうがないので、議論の叩き台としてある程度動くものを作りました。
-
-	<ulink url="ftp://ftp.fml.org/pub/fml-devel/">
-	ftp://ftp.fml.org/pub/fml-devel/
-	</ulink>
-
-にあります。まだまだ 5.0 の α 版ではなく、プロトタイプですらないので、
-リリースなどではありません。これは、あくまでもアイデアを表現するための
-ものですが、配送プログラムとしては十分動きます。fml-devel ＭＬをはじめ
-として、いくつか運用テストに入っているものがあります。
-また、チケットシステムも同様に実運用ベースでテストされています。
+もしょうがないので、議論の叩き台として動くものを作りつつあります。
 </para>
 
 <para>
-最初に実装するのは
-<emphasis>
-fml 1.2 相当の最低限の機能に makefml が加わったもの
-</emphasis>
-だろうと考えています。
-</para>
-
-</sect1>
-
-
-<!-- ======================================================== -->
-<sect1>
-
-<title> fml-devel プロジェクトの構想 </title>
-
-<para>
-fml 5.0 ないしは
-<ulink url="http://www.fml.org/devel/">
-fml-devel 
+<ulink url="http://www.fml.org/software/fml-devel/">
+http://www.fml.org/software/fml-devel/
 </ulink>
-とも呼んでいる fml 5.0 プロジェクトは、
-fml 4.0 の再構想(refactoring)とその実装(例)の構築
-を行なっています。
 </para>
 
 <para>
-<ulink url="http://www.fml.org/devel/">
-http://www.fml.org/devel/
+<ulink url="ftp://ftp.fml.org/pub/fml-devel/">
+ftp://ftp.fml.org/pub/fml-devel/
 </ulink>
-では将来の fml-current についてのデザインや実装例を紹介しています。
 </para>
 
-
 <para>
-これは fml 5.0 のアイデアを募るための、
-fml 5.0 のアルファ版のアルファ版のアルファ版
-もしくは
-プロトタイプ
-とでもいうべきものです。ですが、すでに動く実装例をダウンロードできます
-し、fml 1.2 相当の機能を使うこともできます。しかしながら、変数名もアー
-キテクチャア
-も本決まりではないので、将来変わる可能性があります。
+これは、あくまでもアイデアを表現するためのものなので、機能は最低限のも
+のしかありませんが、十分動きます。
+作者は fml-devel ＭＬをはじめ、
+いくつかの場所で運用ベースで使っています。
 </para>
 
 <para>
 また、多くの機能が実装されていません。これは、デザインを最初から考え直
 すにあたり、アイデアや意見を募集するためにまだまだ原型にとどまっている
 ためでもあります。
+そして、変数名もアーキテクチャアも本決まりではないので、将来変わ
+る可能性があります。
 </para>
 
+
 <para>
-ものによっては fml 5.0 用に作られたモジュールを fml 4.0 へ
-輸入/輸出することも検討しています。
-たとえば 4.0 でも独立性の高い mead (エラーメール解析プログラム)などは
-その良い例だろうし、新機能を提供するモジュールなども再輸入(輸出)可能な
-ものは順次マージしていきます。
+最初の mile stone としてお試しリリースされる際には、
+<screen>
+fml 1.2 相当の最低限の機能
++ makefml (CUI + CGI) が加わったもの 
++ 自動スレッド追跡システム
++ 自動 HTML 化機構
+</screen>
+が動く状態のものだろうという見通しです。
 </para>
 
 </sect1>
@@ -145,7 +135,9 @@ fml 5.0 のアルファ版のアルファ版のアルファ版
 <!-- ======================================================== -->
 <sect1>
 
-<title> fml 4.0 と 5.0 の関係 </title>
+	<title>
+	fml 4.0 と 5.0 の関係 
+	</title>
 
 <para>
 fml-devel で作られたモジュールのマージおよび 
@@ -168,77 +160,105 @@ fml-devel で作られたモジュールのマージおよび
             4.0.1   4.0.2 .... (リリース / 4.0-stable バージョン)
 </screen>
 
-<warning>
+
 <para>
-	実運用には fml-devel を使わずに 4.0 stable を使って下さい。
-	fml-devel は開発用で、 fml-current ですらありません。
+ものによっては fml 5.0 用に作られたモジュールを fml 4.0 へ
+輸入/輸出することも検討しています。
+たとえば 4.0 でも独立性の高い mead (エラーメール解析プログラム)などは
+その良い例だろうし、新機能を提供するモジュールなども再輸入(輸出)可能な
+ものは順次マージしていきます。
+5.0 の機能を 4.0 でテストをするいう意味もあります。
+このマージは 4.0.4 か 4.0.5 以降本格化する予定です。
 </para>
-</warning>
+
 
 </sect1>
 
 <!-- ======================================================== -->
 <sect1>
-	<title> fml5で既に動く機能 </title>
+	<title>
+	fml-devel で既に動く機能 
+	</title>
 
 <para>
 
-<itemizedlist>
+    <itemizedlist>
 
-   <listitem>
+
+    <listitem>
 	<para>
-		postfix スタイルの設定ファイル 
+	postfix スタイルの設定ファイル 
 	</para>
-   </listitem>
+    </listitem>
 
-   <listitem>
+
+    <listitem>
 	<para>
-		配送、ヘッダの書き換え、(単純な)フィルタ
+	配送、
+	ヘッダの書き換え、
+	フィルタ( 4.0 の Envelope Filter に相当するもの ) 
 	</para>
-   </listitem>
+    </listitem>
 
-   <listitem>
+
+    <listitem>
 	<para>
-		いくつかのユーティリティプログラム:
-		fmldoc fmlconf makefml fmlticket
+	いくつかのユーティリティプログラム:
+	fmldoc fmlconf makefml fmlthread
 	</para>
-   </listitem>
+    </listitem>
 
-   <listitem>
+
+    <listitem>
 	<para>
-		IPv6 
+	IPv6 
 	</para>
-   </listitem>
+    </listitem>
 
-   <listitem>
+
+    <listitem>
 	<para>
-		チケットシステム(最小限の機能、CGI 含む):
-		fmlticket fmlticket.cgi
+	スレッド追跡システム(CUI と CGI を含む):
+	fmlthread fmlthread.cgi
 	</para>
-   </listitem>
+    </listitem>
 
-   <listitem>
+
+    <listitem>
 	<para>
-		<link linkend="io.adapter">
-		抽象化 IO 層
-		</link>
-
-		メンバーファイルをファイル、/etc/group, NIS, MySQL 
-		から取り出すことができます。
+	記事の HTML 化システム
 	</para>
-   </listitem>
-</itemizedlist>
+    </listitem>
 
 
-<link linkend="available"> 詳細はこちら </link>
+
+    <listitem>
+	<para>
+	<link linkend="io.adapter">
+	抽象化 IO 層
+	</link>
+	メンバーファイルをファイル、/etc/group, NIS, MySQL 
+	から取り出すことができます。
+	</para>
+    </listitem>
+    </itemizedlist>
+
+詳細は
+<link linkend="available"> 
+『fml-devel の実行形式プログラム』の章
+</link>
+を参照して下さい。
 </para>
 
 </sect1>
 
+
 <!-- ======================================================== -->
 <sect1 id="mailinglist">
 
-	<title> メーリングリスト </title>
+	<title>
+	メーリングリスト 
+	</title>
 
 <para>
 fml 5 の議論のためのメーリングリストを用意してあります。
@@ -288,7 +308,9 @@ fml-devel ＭＬのログは
 <!-- ======================================================== -->
 <sect1>
 
-<title> ご意見募集中 </title>
+	<title>
+	ご意見募集中 
+	</title>
 
 <para>
 5.0 のアイデアのついて、

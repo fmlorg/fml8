@@ -1,12 +1,12 @@
 <!--
-	$FML: chapters.ent,v 1.18 2001/10/13 08:47:55 fukachan Exp $
+	$FML: chapters.ent,v 1.19 2001/10/22 11:08:05 fukachan Exp $
 -->
 
 <!entity versin "1.1">
 
 <!-- ポインタ -->
 <!entity fmlbible    "『fml バイブル』(オライリージャパン刊)">
-<!entity www.fml.org "http://www.fml.org/fml/">
+<!entity www.fml.org "http://www.fml.org/software/fml/">
 <!entity fml4        "fml 4.0">
 <!entity fml5        "fml 5.0">
 
@@ -63,8 +63,10 @@
 
 
 <!-- misc -->
-<!entity chapter.ticket.usage  SYSTEM "ticketsystem/chapter.sgml">
-<!entity chapter.ticket.tools  SYSTEM "ticketsystem/tools.sgml">
+<!entity chapter.ticket.usage		SYSTEM "ticketsystem/chapter.sgml">
+<!entity chapter.ticket.tools		SYSTEM "ticketsystem/tools.sgml">
+<!entity chapter.threadtrack.usage	SYSTEM "threadtrack/chapter.sgml">
+<!entity chapter.threadtrack.tools	SYSTEM "threadtrack/tools.sgml">
 
 
 <!-- プログラムの説明 -->
@@ -72,6 +74,7 @@
 <!entity sect.fmlconf     SYSTEM "programs/fmlconf.sgml">
 <!entity sect.fmldoc      SYSTEM "programs/fmldoc.sgml">
 <!entity sect.fmlticket   SYSTEM "programs/fmlticket.sgml">
+<!entity sect.fmlthread   SYSTEM "programs/fmlthread.sgml">
 <!entity sect.makefml     SYSTEM "programs/makefml.sgml">
 
 

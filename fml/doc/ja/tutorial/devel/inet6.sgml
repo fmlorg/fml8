@@ -1,10 +1,12 @@
 <!--
-	$FML: inet6.sgml,v 1.1 2001/05/17 04:00:43 fukachan Exp $
+	$FML: inet6.sgml,v 1.2 2001/08/22 22:34:44 fukachan Exp $
 -->
 
 <appendix id="inet6">
 
-<title> NetBSD 1.5 での IPv6 の設定 </title>
+	<title>
+	NetBSD 1.5 での IPv6 の設定 
+	</title>
 
 <para>
 <ulink url="http://www.netbsd.org/Documentation/network/ipv6/">
@@ -14,7 +16,9 @@ NetBSD の IPv6 の解説
 </para>
 
 <sect1>
-	<title>	IIJ IPv6 トンネル型サービスの場合 </title>
+	<title>
+	IIJ IPv6 トンネル型サービスの場合 
+	</title>
 
 <para>
 まず、上流 ISP から IPv6 アドレス空間を割り当ててもらいます。
@@ -52,7 +56,9 @@ route6d を何も考えずに起動すると /64 を advertise してしまうので
 </sect1>
 
 <sect1>
-	<title> トンネルの設定 </title>
+	<title>
+	トンネルの設定 
+	</title>
 
 <para>
 gif インターフェイスを使ってトンネルを張ります。
@@ -90,7 +96,9 @@ tunnel 10.1.1.1 10.2.2.2
 
 
 <sect1>
-	<title> ルーティング </title>
+	<title>
+	ルーティング 
+	</title>
 
 <para>
 IIJ のルータからは ::/0 (IPv4 なら 0/0) つまりデフォルトルートが
@@ -114,7 +122,9 @@ route6d=YES		route6d_flags="-A 2001:240:22::/48,gif0"
 
 
 <sect1>
-	<title> ホストなどへのアドレスの割り当て </title>
+	<title>
+	ホストなどへのアドレスの割り当て 
+	</title>
 
 <para>
 適宜ふるなり、rtadvd か rtsold で自動で割り当てるなりします。
@@ -125,7 +135,7 @@ route6d=YES		route6d_flags="-A 2001:240:22::/48,gif0"
 
 <sect1>
 	<title>
-	references
+	リファレンス
 	</title>
 
 <para>
@@ -160,6 +170,14 @@ http://www.feyrer.de/NetBSD/6to4.html
 www.kame.net
 </ulink>
 </para>
+
+
+<para>
+<ulink url="http://www.kame.net/newsletter/19980604/">
+"Implementing AF-independent application"
+</ulink>
+</para>
+
 
 <para>
 Interview with Jun-ichiro "Itojun" Hagino about the KAME Project 

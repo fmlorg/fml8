@@ -1,9 +1,11 @@
 <!--
-	$FML$
+	$FML: glossary.sgml,v 1.1 2001/04/25 02:55:56 fukachan Exp $
 -->
 
 <glossary id="glossary">
-   <title> 用語集(関数名および変数名関連) </title>
+   <title>
+	用語集(関数名および変数名関連)
+	</title>
 
 
    <glossentry>
@@ -24,6 +26,11 @@
 		遠い将来に 
 		fml 5.0 になるであろうとおもわれる fml-current
 	</para>
+
+	<para>
+	もしかしたら fml 8.x の方が適切かも知れない。
+	だが、まだ決まっていない。
+	</para>
 	</glossdef>
 
 
@@ -34,7 +41,11 @@
 	<glossterm>	curproc	</glossterm>
 	<glossdef>
 	<para>
-		"current process"の略
+		"current process"の略。
+	</para>
+
+	<para>
+	UNIX カーネルで伝統的に使われている省略名の典型例
 	</para>
 	</glossdef>
 
@@ -50,6 +61,10 @@
 		現状 fml 内部でのコンテキスト切替などはないので、
 		UNIX カーネルの PCB とは少し趣が異なります。
 	</para>
+
+	<para>
+	UNIX カーネルで伝統的に使われている省略名の典型例
+	</para>
 	</glossdef>
 
    </glossentry>
@@ -62,8 +77,16 @@
 		configuration の略
 	</para>
 	</glossdef>
+   </glossentry>
 
 
+   <glossentry>
+	<glossterm>	conf	</glossterm>
+	<glossdef>
+	<para>
+		configuration の略
+	</para>
+	</glossdef>
    </glossentry>
 
 
@@ -121,6 +144,12 @@
 		慣習的にパッケージ、クラス、オブジェクト内部で使う
 		変数や関数名に _ ではじまるキーワードを使う。
 	</para>
+
+	<para>
+	つまり private ということ(
+		OO の厳密な意味で private method という意味か？などとは
+		つっこまないようにしたい:-)
+	</para>
 	</glossdef>
    </glossentry>
 
@@ -129,9 +158,10 @@
 	<glossterm>	rなになに	</glossterm>
 	<glossdef>
 	<para>
-		r はリファレンスの略。ハンガリアン記法。
+		r はリファレンスの略。
+		これをハンガリアン記法と呼ぶ。
 		特別に強調したい場合に使うことがあるが、
-		あまり使っていない。		
+		fml 内部では、あまり使っていない。
 	</para>
 	</glossdef>
    </glossentry>

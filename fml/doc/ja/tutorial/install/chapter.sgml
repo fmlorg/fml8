@@ -1,5 +1,5 @@
 <!--
-	$FML: chapter.sgml,v 1.4 2001/05/01 15:16:27 fukachan Exp $
+	$FML: chapter.sgml,v 1.5 2001/10/13 08:47:56 fukachan Exp $
 -->
 
 <chapter id="installation">
@@ -11,22 +11,51 @@
 <sect1 id="install">
 	<title> 概要 </title>
 
-<para>
-対話型インストーラは"まだ"作られていません。
-</para>
 
 <para>
-make を実行して下さい。
+configure (GNU autoconf) および make を実行して下さい。
 <screen>
 % su root
+# ./configure
 # make install
 </screen>
-これはシェルスクリプト INSTALL.sh を実行するだけです。 
+make install はシェルスクリプト INSTALL.sh を実行するだけです :-)
 </para>
 
 <para>
-変更が必要ならトップ・ディレクトリにある INSTALL.sh の先頭にあるディレ
-クトリ名などを適当に修正し、ユーザ root で実行して下さい。
+変更が必要なら configure の引数で変更して下さい。
+変更できる変数は以下のものです。
+fml では各ディレクトリにさらに /fml といった suffix をつけます。
+変更できるのはその直前の prefix 部分までです。
+<screen>
+変数            configure のデフォルト値    fml の利用するディレクトリ
+--------------------------------------------------------
+prefix          /usr/local                  /usr/local
+exec_prefix     /usr/local
+bindir          ${exec_prefix}/bin          /usr/local/bin
+sbindir         ${exec_prefix}/sbin         /usr/local/sbin
+libexecdir      ${exec_prefix}/libexec      /usr/local/libexec/fml
+datadir         ${prefix}/share             /usr/local/share/fml
+sysconfdir      ${prefix}/etc               /usr/local/etc/fml
+sharedstatedir  ${prefix}/com         
+localstatedir   ${prefix}/var
+libdir          ${exec_prefix}/lib          /usr/local/lib/fml
+includedir      ${prefix}/include       
+oldincludedir   /usr/include
+infodir         ${prefix}/info
+mandir          ${prefix}/man
+</screen>
+また
+<screen>
+mlspooldir      /var/spool/ml               /var/spool/ml
+fml_owner       fml                         fml
+</screen>
+これらの変数は、それぞれ
+<screen>
+--with-mlspooldir=DIR
+--with-fml-owner=USER
+</screen>
+で上書きすることができます。
 </para>
 
 </sect1>

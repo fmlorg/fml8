@@ -1,11 +1,12 @@
 <!--
-	$FML: docbook.sgml,v 1.5 2001/05/02 11:38:24 fukachan Exp $
+	$FML: docbook.sgml,v 1.1 2001/05/09 09:37:35 fukachan Exp $
 -->
 
+
 <appendix id="docbook">
-
-
-<title> SGML の書き方 </title>
+	<title>
+	SGML の書き方
+	</title>
 
 <para>
 fml-devel (fml 5.0) のドキュメントでは、SGML の DTD は
@@ -103,9 +104,8 @@ SGML を使うことで得られる最大の意義は「ある基準となるもの」に
 
 <para> 
 ここで”概念”といっているのであって、”見栄え”については
-降れていないことに注意して下さい。
-HTML では概念と見栄えは(むしろ意識的に)はっきり分離していないといえま
-す。
+ふれていないことに注意して下さい。
+例えば HTML では概念と見栄えは(むしろ意識的に)はっきり分離していません。
 </para> 
 
 <para> 
@@ -121,7 +121,6 @@ DSSSL (Document Style Semantics and Specification Language)
 を使います。
 </para> 
 
-
 <para> 
 また SGML では論理構造しか記述しないので見栄えはコンバータ次第で
 どうとでもなります。
@@ -135,8 +134,9 @@ HTML、テキスト、ROFF、PS、PDF、RTF を始め、
 
 <!--  =========================================================  -->
 <sect1 id="book.sgml">
-
-<title> 本( book )形式のテンプレート </title>
+	<title>
+	本( book )形式のテンプレート
+	</title>
 
 <para>
 docbook DTD には book や article といった代表的な形式についての
@@ -209,7 +209,9 @@ include するべき定義ファイルを
 
 <!--  =========================================================  -->
 <sect1>
-	<title> HTML の &lt;UL&gt; 相当 </title>
+	<title>
+	HTML の &lt;UL&gt; 相当
+	</title>
 
 <screen>
 &lt;itemizedlist&gt;
@@ -384,7 +386,13 @@ include するべき定義ファイルを
 <para>
 SGML を HTML などに翻訳するために、いくつかのツールが必要です。
 DTD と DSL の規格文書群は必須です。
-おそらく openjade と opensp も必須のプログラムです。
+処理系として openjade と opensp 
+	<footnote>
+	<para>
+	opensp は openjade パッケージに含まれています。
+	</para>
+	</footnote>
+も必須のプログラムです。
 その他はオプショナルで、各自が好きにすればよいようです。
 </para>
 
@@ -407,7 +415,7 @@ fml 5.0 では、以下のプログラムを使って HTML やテキストファイルを作成し
 
    <listitem>
 	<para>
-           SGMLtools-Lite 3.0.2
+           SGMLtools-Lite 3.0.3
 	</para>
    </listitem>
 
@@ -417,14 +425,14 @@ fml 5.0 では、以下のプログラムを使って HTML やテキストファイルを作成し
 </para>
 
 <para>
-なお
-sgmltools がなくても SGML から HTML を作ることができます。
+もちろん sgmltools がなくても SGML から HTML を作ることができます。
 どのツールを使うかは、あなたがどれを便利に思うか？次第です。
+単に &fml5; では、sgmltools を歴史的に使っているだけです。 
 </para>
 
 <para>
-SGML からの変換には
-fml/doc/share/sgml/ にある fml.dtd fml.dsl も使っています。
+また、SGML からの変換には
+fml/doc/share/sgml/ にある fml.dtd fml.dsl を定義として使っています。
 これらは各 Makefile 内に
 定義(jade に与えるオプション -c や -d オプション)が記述されています。
 </para>
@@ -479,17 +487,18 @@ sgmltools は /etc/sgml/catalog ファイルを使います。
 
 <!--  =========================================================  -->
 <sect1>
-
-<title> 見栄えを変更する </title>
+	<title>
+	見栄えを変更する
+	</title>
 
 <para>
 SGML は論理的な構造を記述している言語です。
 HTML の各ページに URL をつけたいとか、画像をつけたいといった
-”見栄えの記述”は直接はできません。
+"見栄えの記述"を SGML で直接変更することはできません。
 </para>
 
 <para>
-そこで、見栄えは DSL により記述をすることになります。
+見栄えは DSL により記述をすることになります。
 しかしながら、DSL は本質的に LISP (List Processre) 言語なので、
 LISP を知らないとちょっと手が出ないでしょう。
 </para>
@@ -513,9 +522,9 @@ LISP を知らないとちょっと手が出ないでしょう。
 
 
 <sect1>
-   <title>
-   その他の情報源 
-   </title>
+	<title>
+	その他の情報源 
+	</title>
 
 <para>
 SGML の書き方については
@@ -542,7 +551,7 @@ SGML のタグの一覧は
 	DOCBOOK definitive guide (O'reilly)
 	</ulink>
 
-のオンライン版を参照すると良いでしょう。
+のオンライン版を参照するのが便利です。
 </para>
 
 </sect1>
