@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.224 2004/04/10 12:42:40 fukachan Exp $
+# $FML: Kernel.pm,v 1.225 2004/04/17 06:18:04 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2811,6 +2811,9 @@ sub finalize
 	};
 	$curproc->logerror($@) if $@;
     }
+
+    # log rotation
+    $curproc->log_rorate();
 }
 
 
