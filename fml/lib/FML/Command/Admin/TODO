@@ -30,9 +30,9 @@ newinfo
 noskip
 off
 on
-pass
+		pass			done
 passwd
-password
+		password		done
 pgp
 put
 remove
