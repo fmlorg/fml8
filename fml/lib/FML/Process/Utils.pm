@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.24 2002/06/21 08:20:12 fukachan Exp $
+# $FML: Utils.pm,v 1.25 2002/06/22 14:42:50 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -359,6 +359,7 @@ sub ml_home_dir
 sub __ml_home_prefix_from_main_cf
 {
     my ($main_cf, $domain) = @_;
+    my $default_domain = $main_cf->{ default_domain };
 
     if (defined $domain) {
 	my ($virtual_maps) = __get_virtual_maps($main_cf);
@@ -367,8 +368,11 @@ sub __ml_home_prefix_from_main_cf
 						    $domain,
 						    $virtual_maps);
 	}
+	elsif ("\L$domain\E" eq "\L$default_domain\E") {
+	    return $main_cf->{ default_ml_home_prefix };
+	}
 	else {
-	    ;
+	    croak("ml_home_prefix: unknown domain");
 	}
     }
     else {
@@ -558,6 +562,11 @@ sub get_ml_list
     else {
 	my $xx_domain   = $curproc->ml_domain();
 	$ml_home_prefix = $curproc->ml_home_prefix($xx_domain);
+    }
+
+    # cheap sanity:
+    unless ($ml_home_prefix) {
+	croak("get_ml_list: ml_home_prefix undefined");
     }
 
     use File::Spec;
