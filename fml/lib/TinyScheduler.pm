@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: TinyScheduler.pm,v 1.2 2001/04/01 23:32:04 fukachan Exp $
 #
 
 package TinyScheduler;
@@ -83,14 +83,16 @@ sub parse
     $month = $args->{ month } || ($month + 1);
 
     # schedule file
-    my $data_file = $args->{ schedule_file } ||	$self->{ _schedule_file };
+    my $data_dir = $args->{ schedule_dir } || $self->{ _schedule_dir };
 
     # pattern to match
-    my @pat;
-    $pat[0] = sprintf("^%04d%02d(\\d{1,2})\\s+(.*)",  $year, $month);
-    $pat[1] = sprintf("^%04d/%02d/(\\d{1,2})\\s+(.*)", $year, $month);
-    $pat[2] = sprintf("^%02d(\\d{1,2})\\s+(.*)",  $month);
-    $pat[3] = sprintf("^%02d/(\\d{1,2})\\s+(.*)", $month);
+    my @pat = (
+	       sprintf("^%04d%02d(\\d{1,2})\\s+(.*)",  $year, $month),
+	       sprintf("^%04d/%02d/(\\d{1,2})\\s+(.*)", $year, $month),
+	       sprintf("^%04d/%d/(\\d{1,2})\\s+(.*)", $year, $month),
+	       sprintf("^%02d(\\d{1,2})\\s+(.*)",  $month),
+	       sprintf("^%02d/(\\d{1,2})\\s+(.*)", $month),
+	       );
 
     # 
     use HTML::CalendarMonthSimple;
@@ -104,23 +106,33 @@ sub parse
 	croak("cannot get object");
     }
 
-    $cal->width('50%');
+    $cal->width('70%');
     $cal->border(10);
     $cal->header(sprintf("%04d/%02d %s",  $year, $month, "schedule"));
     $cal->bgcolor('pink');
 
-    if (-f $data_file) {
+    if (-d $data_dir) {
 	use FileHandle;
-	my $fh = new FileHandle $data_file;
 
-	while (<$fh>) {
-	    for my $pat (@pat) {
-		if (/$pat(.*)/) {
-		    $self->_parse($1, $2);
+	use DirHandle;
+	my $dh = new DirHandle $data_dir;
+
+	if (defined $dh) {
+	    while (defined($_ = $dh->read)) {
+		next if $_ =~ /~$/;
+
+		my $fh = new FileHandle "$data_dir/$_";
+
+		while (<$fh>) {
+		    for my $pat (@pat) {
+			if (/$pat(.*)/) {
+			    $self->_parse($1, $2);
+			}
+		    }
 		}
+		close($fh);
 	    }
 	}
-	close($fh);
     }
 }
 
