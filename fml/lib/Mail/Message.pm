@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.8 2001/04/07 08:08:37 fukachan Exp $
+# $FML: Message.pm,v 1.9 2001/04/08 05:56:35 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1039,7 +1039,7 @@ sub _get_data_type
     my ($args, $default) = @_;
     my $buf = $args->{ header } || '';
 
-    if ($buf =~ /Content-Type:\s*(\S+)\;/) {
+    if ($buf =~ /Content-Type:\s*(\S+)(\;|\s*$)/) {
 	return $1;
     }
     else {
@@ -1055,6 +1055,9 @@ sub _get_mime_header
     my $buf = substr($$data, $pos_begin, $pos - $pos_begin);
 
     if ($buf =~ /Content-Type:\s*(\S+)\;/) {
+	return ($buf, $pos + 1);
+    }
+    elsif ($buf =~ /Content-Type:\s*(\S+)\s*$/) {
 	return ($buf, $pos + 1);
     }
     else {
@@ -1452,7 +1455,7 @@ sub get_data_type_list
     for ($i = 0, $m = $msg; defined $m ; $m = $m->{ 'next' }) {
 	$i++;
 	my $data = $m->{'data'};
-	push(@buf, sprintf("type[%d]: %-25s | %s", 
+	push(@buf, sprintf("type[%2d]: %-25s | %s", 
 			   $i, $m->{'data_type'}, $m->{'base_data_type'}));
     }
     \@buf;
