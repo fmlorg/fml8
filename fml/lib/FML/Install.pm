@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.3 2003/01/28 23:35:02 fukachan Exp $
+# $FML: Install.pm,v 1.4 2003/01/29 14:21:05 fukachan Exp $
 #
 
 package FML::Install;
@@ -656,8 +656,9 @@ sub get_version
     }
 
     unless ($vers) {
-	use POSIX;
-	$vers = strftime("current-%C%y%m%d", localtime());
+	use Mail::Message::Date;
+	my $date = new Mail::Message::Date time;
+	$vers    = sprintf("current-%s", $date->{ YYYYMMDD });
     }
 
     return $vers;
