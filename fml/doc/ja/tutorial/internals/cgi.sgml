@@ -1,5 +1,5 @@
 <!--
-   $FML: cgi.sgml,v 1.5 2002/04/01 23:41:03 fukachan Exp $
+   $FML: cgi.sgml,v 1.6 2002/07/02 10:39:35 fukachan Exp $
 -->
 
 <chapter id="internal.cgi">
@@ -14,7 +14,7 @@
 	</title>
 
 <para>
-FML::CGI のクラスは以下の３つのメソッドを実装して下さい。
+FML::CGI のクラスは以下のメソッド群を実装して下さい。
 <screen>
 html_start()
 run_cgi_main()
@@ -30,7 +30,7 @@ html_start() は、
 ようするに HTML の先頭部分、たとえば DOCTYPE から BODY あたりを、
 html_end() は
 /BODY と /HTML を表示する部分をカスタマイズするために用います。
-run_cgi() メソッドでは BODY の部分を表示してください。
+run_◎◎ メソッド群では BODY の部分を定義しています。
 </para>
 
 <para>
@@ -60,14 +60,16 @@ finish()
 
 <sect1 id="internal.cgi.frames">
 	<title>
-	画面の作りとメソッド
+	CGI の画面の作りとメソッド
 	</title>
 
 <para>
-典型的な画面は次のように分割されると考えて良いでしょう。
+fml CGI スクリプトでは典型的な画面が次のように分割されると考えています。
 <screen>
           ヘッダ
-バー１    メニュー     バー２
+◎        メニュー    ◎
+バー１    メイン      バー２
+◎        メニュー    ◎
           フッタ
 </screen>
 なお、バー１と２の部分は navigation などと呼ばれます。
@@ -78,17 +80,12 @@ finish()
 ヘッダ部分( HTTP ヘッダではなく、HTML の DOCTYPE から BODY あたり)
 やフッタの部分は
 html_start() および html_end() で HTML コードを生成するでしょう。
-BODY の中身は
-<screen>
-バー１    メニュー     バー２
-</screen>
-の部分で、run_cgi() によって生成します。
+BODY の中身は真中の３ｘ３のテーブル状の部分で、run_cgi() から呼ばれる
+メソッドが生成しています。
 </para>
 
 
-<warning>
 <para>
-TODO:
 run_cgi() の中身をもっと細かくすることと、
 画面上のどの部分をどのメソッドが記述するのかを指定できる
 アクセスメソッドが必要です。
@@ -98,9 +95,8 @@ nw   north  ne
 west center east
 sw   south  se
 </screen>
-くらいの精度がないといけないかも知れません。
+という３x３の精度で表現されています。
 </para>
-</warning>
 
 
 </sect1>
@@ -125,11 +121,11 @@ FML::CGI:: クラスが提供するメニュー生成クラスを
 <screen>
 FML::CGI::Admin::Main →
 FML::Command::Admin::subscribe →
-FML::CGI::Admin::Menu →
+FML::CGI::Admin::User →
 メニューの表示
 </screen>
-などとなるでしょう。
-このように Mach のトランポリン機構のように、いったりきたりします。
+などとなっていて、Mach のトランポリン機構のように、いったりきたりしま
+す。
 </para>
 
 </sect1>

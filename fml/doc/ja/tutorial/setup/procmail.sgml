@@ -1,8 +1,8 @@
 <!--
-   $FML: procmail.sgml,v 1.4 2002/07/05 04:01:37 fukachan Exp $
+   $FML: procmail.sgml,v 1.1 2002/07/06 05:26:10 fukachan Exp $
 -->
 
-<sect1 id="fml.bymyaccount">
+<sect1 id="setup.procmail">
 	<title>
 	自分のアカウントでＭＬを行ないたい
 	</title>
@@ -22,12 +22,14 @@
 こういった場合、
 &fmldevel; ではユーザが
 procmail などの振分ツールを使うだろうと期待しています :-)
+そのため、&fmldevel; に振り分けツールは用意されていません。
+OS のパッケージシステムなどを使って振り分けツールをインストールして下さい。
 </para>
 
 
-<sect2 id="procmail">
+<sect2 id="setup.procmailrc">
 	<title>
-	procmail の例
+	例: .procmailrc 
 	</title>
 
 <para>

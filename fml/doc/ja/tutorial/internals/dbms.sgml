@@ -1,11 +1,18 @@
 <!--
-   $FML: dbms.sgml,v 1.1 2001/08/19 12:53:08 fukachan Exp $
+   $FML: dbms.sgml,v 1.2 2001/10/13 08:47:56 fukachan Exp $
 -->
 
 <chapter id="dbms">
 	<title>
 	データベース管理システム
 	</title>
+
+<warning>
+<para>
+まだ、実装途中です。
+</para>
+</warning>
+
 
 <para>
 DBMS との通信は
@@ -20,5 +27,6 @@ IO::Adapter
 それらの原始的な機能を組み合わせた複雑な操作は
 IO::Adapter の前段階のプログラムが頑張る必要があります。
 </para>
+
 
 </chapter>

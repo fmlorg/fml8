@@ -4,7 +4,7 @@
 	</title>
 
 
-<sect1>
+<sect1 id="directory.subdir.hier.level">
 	<title>
 	Q: サブディレクトリ構造は何段階まで必要か？
 	</title>

@@ -1,5 +1,5 @@
 <!--
-	$FML: fml_on_unix.sgml,v 1.1 2002/07/02 10:39:34 fukachan Exp $
+   $FML: fml_on_unix.sgml,v 1.2 2002/07/04 10:59:00 fukachan Exp $
 -->
 
 <chapter id="install.fml.unix">
@@ -30,7 +30,7 @@ configure を実行する(後述)前に、
 <!-- ====================================================== -->
 <sect1 id="install.fml.unix.configure">
 	<title>
-	fml のインストール: configure
+	configure を実行する
 	</title>
 
 
@@ -207,7 +207,7 @@ Now you must run "make install".
 <!-- ====================================================== -->
 <sect1>
 	<title>
-	各ディレクトリの役割
+	補足: 各ディレクトリの役割
 	</title>
 
 <para>
@@ -310,6 +310,11 @@ configure を実行後、ユーザ root になり、make install を実行して下さい。
 configure はユーザ root で実行する必要はありませんが、
 make install はユーザ root で実行して下さい。
 間違えないように、configure も root で実行しても構いません。 
+<screen>
+% su root
+# ./configure
+# make install
+</screen>
 </para>
 </warning>
 
@@ -336,7 +341,7 @@ configure のオプション指定が正しければ、
 
 <sect1 id="install.fml.unix.edit.site.default.config.cf">
 	<title>
-	site_default_config.cf を編集する
+	site_default_config.cf を編集する (オプショナル)
 	</title>
 
 <para>
@@ -360,7 +365,7 @@ configure のオプション指定が正しければ、
 デフォルトでは見本として:)
 subject のタグをつけない設定だけが入っています。
 <screen>
-# $FML: site_default_config.cf.in,v 1.2 2002/04/01 10:16:48 fukachan Exp $
+# $FML: fml_on_unix.sgml,v 1.2 2002/07/04 10:59:00 fukachan Exp $
 #
 #               site default_config.cf EXAMPLE
 #
@@ -388,7 +393,7 @@ article_header_rewrite_rules	-=	rewrite_article_subject_tag
 </sect1>
 
 
-<sect1 id="install.fml.unix.edit.virtual">
+<sect1 id="install.virtual">
 	<title>
 	バーチャルドメインの場合
 	</title>
@@ -396,8 +401,6 @@ article_header_rewrite_rules	-=	rewrite_article_subject_tag
 <para>
 /usr/local/etc/fml/main.cf の編集は必要ありませんが、
 /usr/local/etc/fml/virtual は編集して下さい。
-site_default_config.cf はドメインに関わらず適用されることに注意してく
-ださい。
 </para>
 
 <para>
@@ -405,15 +408,19 @@ fml.org がデフォルトのドメインとすると、fml.org のＭＬ群は
 /var/spool/ml 以下をデフォルトでは使います。そのため、別のドメイン 
 nuinui.net のＭＬ群は別のディレクトリ(例: /var/spool/nuinui.net)を使う
 必要があります。
-</para>
-
-<para>
 その「ドメイン→ディレクトリ」の対応関係を 
 /usr/local/etc/fml/virtual に定義して下さい。
 <screen>
 nuinui.net	/var/spool/nuinui.net
 </screen>
 </para>
+
+<warning>
+<para>
+なお site_default_config.cf はドメインに関わらず適用されることに注意し
+てください。
+</para>
+</warning>
 
 </sect1>
 

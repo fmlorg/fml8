@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: postfix.sgml,v 1.1 2002/07/04 10:59:00 fukachan Exp $
 -->
 
 <sect1 id="install.postfix">
@@ -22,10 +22,19 @@ makefml newml を実行するだけでＭＬが自動的に有効になるように、あらかじ
 <para>
 具体的には postfix の /etc/postfix/main.cf を次のようにしておきます。
 <screen>
+allow_mail_to_commands = alias,forward,include
+
 alias_maps	=	hash:/etc/mail/aliases
 			hash:/var/spool/ml/etc/mail/aliases
 </screen>
 </para>
+
+<warning>
+<para>
+また mydestination にデフォルトのドメイン(おそらく $mydomain )が
+ちゃんと追加されていることを確認して下さい。
+</para>
+</warning>
 
 </sect2>
 
@@ -35,16 +44,29 @@ alias_maps	=	hash:/etc/mail/aliases
 	バーチャルドメイン(例: nuinui.net)
 	</title>
 
-
 <para>
-/usr/local/etc/fml/virtual の設定と合わせて下さい。
+main.cf と virtual_map と両方の設定が必要です。
 <screen>
+allow_mail_to_commands = alias,forward,include
+
 alias_maps	=	hash:/etc/mail/aliases
 			hash:/var/spool/ml/etc/mail/aliases
 			hash:/var/spool/nuinui.net/etc/mail/aliases
+
+virtual_maps	=	hash:/var/spool/nuinui.net/etc/postfix/virtual
+
 </screen>
+/var/spool/nuinui.net/etc/postfix/virtual は makefml によって自動的に
+更新されます。
 </para>
 
+<warning>
+<para>
+mydestination にデフォルトのドメイン(おそらく $mydomain )がちゃんと追
+加されていることを確認して下さい。しかし、バーチャルドメイン(ここでは 
+nuinui.net)は mydestination に追加する必要はありません。注意して下さい。
+</para>
+</warning>
 
 </sect2>
 

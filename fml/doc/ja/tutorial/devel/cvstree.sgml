@@ -1,5 +1,5 @@
 <!--
-	$FML
+   $FML$
 -->
 
 <appendix id="cvs.dirhier">
@@ -15,17 +15,16 @@
 	</title>
 
 <para>
-fml-devel の基本方針として、
+&fmldevel; の基本方針として、
 使えるもの(例えば CPAN )は片っ端から使います。
-そうしないと保守する項目が増える一方のためです。
+そうしないと自分で保守しないといけない項目が増える一方のためです。
 </para>
 
 <para>
-また、保守する人をはっきり区別するためにベンダーごとにディレクトリを分
-けています。例えば CPAN で保守されているものは CPAN/ ディレクトリ以下
-に入れてください。
-ライセンスなどによっては、
-将来さらに区分を分ける必要が出てくるかも知れません。
+また、保守する人とライセンスをはっきり区別するためにベンダーごとにディ
+レクトリを分けています。例えば CPAN で保守されているものは CPAN/ ディ
+レクトリ以下に入れてください。ライセンスなどによっては、将来さらに区分
+を分ける必要が出てくるかも知れません。
 </para>
 
 <para>
@@ -158,6 +157,16 @@ CPAN/dist/ はオリジナルを保存する場所なので、変更してはいけません。
 
 	   <tbody>
 		<row>
+		<entry>	fml/bin/	</entry>
+		<entry> /usr/local/bin/ にインストールするプログラム </entry>
+		</row>
+
+		<row>
+		<entry>	fml/doc/	</entry>
+		<entry> Documentation/ のソース	</entry>
+		</row>
+
+		<row>
 		<entry>	fml/etc/	</entry>
 		<entry> 設定変数	</entry>
 		</row>
@@ -175,6 +184,19 @@ CPAN/dist/ はオリジナルを保存する場所なので、変更してはいけません。
 			実行されるプログラムの実体。
 			すぐにモジュールを
 			呼び出すので、正確には wrapper です。
+		</entry>
+		</row>
+
+		<row>
+		<entry>	fml/share/ 		</entry>
+		<entry>	メッセージのテンプレートなど	</entry>
+		</row>
+
+		<row>
+		<entry>	fml/utils/	</entry>
+		<entry> ユーティリティですが、
+			これは
+			fml ソース内で使うだけです。 
 		</entry>
 		</row>
 	   </tbody>

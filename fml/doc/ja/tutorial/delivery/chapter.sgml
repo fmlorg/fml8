@@ -1,5 +1,5 @@
 <!--
-    $FML: chapter.sgml,v 1.6 2002/04/01 23:41:01 fukachan Exp $
+    $FML: chapter.sgml,v 1.7 2002/07/02 10:39:31 fukachan Exp $
 -->
 
 <chapter id="delivery">
@@ -84,5 +84,9 @@ Mail::Message
 </para>
 
 </sect1>
+
+
+<!-- mail queue -->
+&sect.mailqueue;
 
 </chapter>

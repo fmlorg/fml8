@@ -1,11 +1,19 @@
 <!--
-   $FML$
+   $FML: qmail.sgml,v 1.1 2002/07/04 10:59:00 fukachan Exp $
 -->
 
 <sect1 id="install.qmail">
 	<title>
 	メールサーバの設定 (qmail)
 	</title>
+
+<warning>
+<para>
+&fmldevel; の qmail 設定は
+/var/qmail/control/virtualdomains
+を前提としています。
+</para>
+</warning>
 
 <para>
 makefml newml を実行するだけでＭＬが自動的に有効になるように、あらかじ
@@ -15,7 +23,7 @@ makefml newml を実行するだけでＭＬが自動的に有効になるように、あらかじ
 
 <sect2>
 	<title>
-	デフォルトのドメイン(例: fml.org)
+	デフォルトのドメイン(例: fml.org)の場合
 	</title>
 
 <para>
@@ -31,9 +39,7 @@ fml.org:fml-fml.org
 </para>
 
 <para>
-この設定がうまく機能するかいなか？は
-makefml newml が作るファイル名に依存しています。
-詳細については
+makefml newml が作るファイル名については
 <link linkend="setup.qmail.aliases">
 makefml newml の qmail に関する節
 </link>
@@ -49,10 +55,11 @@ makefml newml の qmail に関する節
 	</title>
 
 <para>
-/usr/local/etc/fml/virtual の設定と合わせて下さい。
+nuinui.net ドメインのＭＬは
 <screen>
 nuinui.net:fml-nuinui.net
 </screen>
+などとしてください。
 </para>
 
 </sect2>

@@ -1,5 +1,5 @@
 <!--
-   $FML: main.cf.sgml,v 1.4 2002/07/02 10:39:35 fukachan Exp $
+   $FML: main.cf.sgml,v 1.5 2002/07/04 10:59:00 fukachan Exp $
 -->
 
 <sect2 id="main.cf">
@@ -18,7 +18,7 @@
 main.cf のフォーマットは他の .cf と同様
 <footnote>
 <para>
-実際のところファイル拡張子とファイルフォーマットには相関があります。 
+ファイル拡張子とファイルフォーマットには相関があります。 
 </para>
 </footnote>
 に
@@ -29,7 +29,7 @@ main.cf のフォーマットは他の .cf と同様
 
 <screen>
 #
-# $FML: main.cf.sgml,v 1.4 2002/07/02 10:39:35 fukachan Exp $
+# $FML: main.cf.sgml,v 1.5 2002/07/04 10:59:00 fukachan Exp $
 #
 
 # fml version

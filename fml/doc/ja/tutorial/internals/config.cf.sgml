@@ -1,5 +1,5 @@
 <!--
-	$FML: config.cf.sgml,v 1.6 2002/04/01 23:41:03 fukachan Exp $
+   $FML: config.cf.sgml,v 1.7 2002/07/02 10:39:35 fukachan Exp $
 -->
 
 <chapter>
@@ -22,7 +22,20 @@
 </para>
 
 <para>
-この perl script 方式にはいくつか問題があります。
+&fmldevel; では config.cf 一つです。
+フォーマットは postfix や .ini 風の 
+<screen>
+変数 = 値
+</screen>
+</para>
+
+<sect2>
+	<title>
+	&fml4; の諸問題
+	</title>
+
+<para>
+&fml4; の perl script 方式にはいくつか問題があります。
 例えば perl script なので、perl が許す限りの自由な書き方ができます。
 これは人間にとっては嬉しいのですが、
 機械処理の観点からは問題です。というのは 
@@ -41,6 +54,7 @@ cf というファイルと config.ph という
 これは本質的に postfix 風のフォーマットです。
 </para>
 
+</sect2>
 </sect1>
 
 
@@ -157,7 +171,7 @@ x = a b c d e
 『サイト固有の定義』、
 『ドメイン固有の定義』
 などを別のファイルに分離することができます。
-デフォルトでは分離されています。
+デフォルトではいくつかの .cf ファイルに分離されています。
 </para>
 
 <para>
@@ -205,7 +219,7 @@ $config->{ another_key }
 これは $dir/$file のような形式のままです。
 
 get() はこのハッシュではなく %_fml_config_result の値を返しています。
-これは $dir などが展開された後の値で、
+このハッシュ中の値は $dir などが展開された後の値で、
 /var/spool/ml/elena/file などとなっています。
 この変数の値の展開は get() なりで呼ばれた時に始めて行なわれます。
 </para>

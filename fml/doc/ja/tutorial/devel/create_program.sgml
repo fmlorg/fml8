@@ -1,5 +1,5 @@
 <!--
-	$FML: create_program.sgml,v 1.3 2002/04/01 23:41:01 fukachan Exp $
+   $FML: create_program.sgml,v 1.4 2002/07/02 10:39:31 fukachan Exp $
 -->
 
 <chapter id="program.create">
@@ -34,7 +34,9 @@ verify_request()
 run()
 finish()
 </screen>
-ダミーでもよいので、このメソッドを用意しておいて下さい。
+ダミーでもよいので、これらのメソッドを適宜用意しておいて下さい。
+各メソッドの具体例は、FML::Process を見て下さい。
+メソッドの役割を知るためには最大構成の Distribute が一番適当かも知れません。
 </para>
 
 <para>
@@ -55,16 +57,21 @@ FML::Process::○○○
 を用意したら、
 FML::Process::Switch
 を編集します。
-このモジュールは、各プログラムごとに
+このモジュールでは、各プログラムごとに
 『ロードするモジュール』
 『コマンドラインオプション』
 『ＭＬ名を必要とするか否か？』
-などを定義してください。
-編集する場所は fmlsch などの文字列を頼りにサーチすると良いでしょう。
+を定義してください。
+編集する場所は以下の private method です。
+<screen>
+sub _module_specific_options
+sub _ml_name_is_required
+sub _module_we_use
+</screen>
 </para>
 
 <para>
-この 2 つの準備だけで、準備は終りですです。
+この 2 つの準備だけで、新しいプログラムの準備は終りですです。
 呼びたい名前のファイルを loader と link もしくは symlink することで
 実行が可能になります。
 例えば、標準のインストールでは、次のようになっています。
@@ -103,7 +110,7 @@ lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 mead -> loader
 CGI のプログラムは
 FML::CGI::○○○
 というモジュールです。
-CGI 系列では次のような、オブジェクトの関係にあります。
+CGI 系列では次のような、オブジェクトの関係があります。
 <screen>
         FML::Process::Kernel
                 |
@@ -119,9 +126,10 @@ CGI 系列では次のような、オブジェクトの関係にあります。
 </para>
 
 <para>
-CGI のプログラムの書き方も同様です。
-コマンドラインのプログラムと同様に、
-FML::CGI のモジュールを見本にして、
+CGI のプログラムの書き方もコマンドラインプログラムと同様です。
+名前空間で区別するために CGI スクリプトのモジュールは
+FML::Process ではなく FML::CGI に配置されています。
+既存の FML::CGI のモジュールを見本にして、
 FML::CGI::○○○
 を適宜用意して下さい。
 </para>
@@ -129,7 +137,7 @@ FML::CGI::○○○
 
 <para>
 FML::CGI::○○○ の注意点は、
-用意するメソッドは
+用意するメソッドが
 <screen>
 html_start()
 html_end()
@@ -148,13 +156,18 @@ run_cgi_options()
 </para>
 
 <para>
+これらは FML::Process::CGI の中の
+verify_request() および run() から呼ばれた先のメソッドとなっています。
+</para>
+
+<para>
 CGI プロセスは FML::Process::CGI で駆動され、run() メソッドは
 <screen>
 $curproc->html_start($args);
 画面を作るために run_cgi_xxx() メソッド郡を呼び出す。
 $curproc->html_end($args);
 </screen>
-のように FML::CGI:: 以下のメソッド群を呼び出しているからです。
+の順に FML::CGI:: 以下のメソッド群を呼び出しています。
 </para>
 
 <para>
@@ -164,7 +177,8 @@ $curproc->html_end($args);
 	<para>
 	このため、多くの場合
 	FML::Process::Kernel
-	のメソッドは呼ばれてはいません。
+	のメソッドは CGI::Kernel でオーバロードされており、
+	直接呼ばれることは稀です。
 	</para>
 	</footnote>
 からなっています。

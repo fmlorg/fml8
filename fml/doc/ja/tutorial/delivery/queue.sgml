@@ -1,14 +1,11 @@
 <!--
-    $FML: reply.sgml,v 1.1 2001/11/24 03:22:55 fukachan Exp $
+    $FML: reply.sgml,v 1.2 2002/04/01 23:41:04 fukachan Exp $
 -->
 
-<chapter id="message.reply">
+<sect1 id="message.reply">
 	<TITLE>
 	fml からメールで返事を送り返す
 	</TITLE>
-
-<sect1>
-   <title> 概要  </title>
 
 <para>
 送り返すべきメールは
@@ -17,63 +14,10 @@ Mail::Delivery::Queue
 queue に入ったメールは、のちに
 FML::Process::QueueManager
 クラスが(配送)処理をします。
-FML::Process::QueueManager により
-queue ファイルが queue ディレクトリから pickup され、
-Mail::Message で parse され、
-FML::Mailer 経由で
-Mail::Delivery が実際にメール配送処理をします。
-<screen>
-Mail::Delivery::Queue
-   ↓
-   ↓→→→ キューディレクトリ
-   ↓
-FML::Process::QueueManager
-   ↓
-   ↓←←← キューディレクトリ
-   ↓
-FML::Mailer
-   ↓
-Mail::Delivery
-</screen>
-</para>
-</sect1>
-
-
-<sect1>
-   <title> queue ディレクトリ  </title>
-
-<para>
-queue ディレクトリは複数のディレクトリからなります。
-<screen>
-new/
-active/
-deferred/
-info/sender/
-info/recipients/
-</screen>
-info/ には envelope 情報が格納されます。
 </para>
 
-<para>
-queue ファイルを作る時は、一旦 new/ に作成されます。
-queue ファイルを作る作業が終了し、配送準備 OK となったら
-new/ から active/ に移動されます。
-つまり active/ にあるファイルは配送準備ができているものです。
-</para>
 
 <sect2>
-   <title> queue ディレクトリをロックする </title>
-<para>
-特定の $queue_id object ごとに lock() と unlock() メソッドを使い、
-ロックをかけます。
-ロックは active/$queue_id ファイルに対しての flock(2) システムコールです。
-</para>
-</sect2>
-
-</sect1>
-
-
-<sect1>
 	<title>
 	fml の中でどうするか？
 	</title>
@@ -107,7 +51,70 @@ $curproc->reply_message( {
 </screen>
 </para>
 
+</sect2>
 </sect1>
 
 
-</chapter>
+<sect1 id="message.queue">
+	<TITLE>
+	mail queue と配送の仕組み
+	</TITLE>
+
+<para>
+FML::Process::QueueManager により
+queue ファイルが queue ディレクトリから pickup され、
+Mail::Message で parse され、
+FML::Mailer 経由で
+Mail::Delivery が実際にメール配送処理をします。
+<screen>
+Mail::Delivery::Queue
+   ↓
+   ↓→→→ キューディレクトリ
+   ↓
+FML::Process::QueueManager
+   ↓
+   ↓←←← キューディレクトリ
+   ↓
+FML::Mailer
+   ↓
+Mail::Delivery
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1>
+	<TITLE>
+	mail queue ディレクトリ
+	</TITLE>
+
+<para>
+queue ディレクトリは複数のディレクトリからなります。
+<screen>
+new/
+active/
+deferred/
+info/sender/
+info/recipients/
+</screen>
+info/ には envelope 情報が格納されます。
+</para>
+
+<para>
+queue ファイルを作る時は、一旦 new/ に作成されます。
+queue ファイルを作る作業が終了し、配送準備 OK となったら
+new/ から active/ に移動されます。
+つまり active/ にあるファイルは配送準備ができているものです。
+</para>
+
+<sect2>
+   <title> queue ディレクトリをロックする </title>
+<para>
+特定の $queue_id object ごとに lock() と unlock() メソッドを使い、
+ロックをかけます。
+ロックは active/$queue_id ファイルに対しての flock(2) システムコールです。
+</para>
+</sect2>
+
+</sect1>

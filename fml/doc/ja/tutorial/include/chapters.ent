@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.40 2002/07/05 04:01:36 fukachan Exp $
+	$FML: chapters.ent,v 1.41 2002/07/06 05:26:09 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -20,7 +20,7 @@
 <!-- メタレベル -->
 <!entity bookinfo   SYSTEM "include/bookinfo.sgml">
 <!entity preface    SYSTEM "preface.sgml">
-<!entity sect.terms SYSTEM "include/terms.sgml">
+<!entity sect.terms SYSTEM "terms.sgml">
 
 
 <!-- パート I: introduction 〜 インストール、テストまで -->
@@ -77,6 +77,7 @@
 
 <!-- 配送 -->
 <!entity chapter.delivery         SYSTEM "delivery/chapter.sgml">
+<!entity sect.mailqueue           SYSTEM "delivery/queue.sgml">
 
 
 <!-- 内部構造 -->
@@ -97,7 +98,6 @@
 <!entity chapter.message          SYSTEM "message/chapter.sgml">
 <!entity sect.message.nl          SYSTEM "message/language.sgml">
 <!entity sect.message.discuss     SYSTEM "message/discussion.sgml">
-<!entity chapter.replybyfml       SYSTEM "message/reply.sgml">
 
 
 <!-- 開発 -->

@@ -1,3 +1,7 @@
+<!--
+   $FML$
+-->
+
 <sect1 id="setup.postfix.aliases">
 	<title>
 	メールサーバの設定 (postfix)
@@ -8,6 +12,14 @@
 alias_maps が適切に設定されていれば、
 ＭＬ作成時にも特別な作業はありません。
 postfix の設定は自動的に更新されています。
+</para>
+
+<para>
+postfix の設定については
+<link linkend="install.postfix">
+<xref linkend="install.postfix">
+</link>
+を参照して下さい。
 </para>
 </important>
 
@@ -21,7 +33,7 @@ $ml_home_prefix/etc/mail/aliases
 
 <sect2>
 	<title>
-	例: /var/spool/ml/etc/mail/aliases のフォーマット
+	補足: /var/spool/ml/etc/mail/aliases のフォーマット
 	</title>
 
 <para>
@@ -29,7 +41,7 @@ aliases のエントリは
 $ml_home_prefix/etc/mail/aliases
 に追加されます。
 <screen>
-### BEGIN-elena@fml.org-ML-aliases ###
+### &lt;ALIASES elena@home.fml.org ML&gt; ###
 
 # address for post
 elena: :include:/var/spool/ml/elena/include
@@ -41,9 +53,13 @@ owner-elena-ctl: fukachan
 
 # maintainer
 elena-request: elena-admin
-elena-admin: fukachan
+elena-admin: fukachan, elena-error
 
-### END-elena@fml.org-ML-aliases ###
+# error analyzer
+elena-error: :include:/var/spool/ml/elena/include-error
+owner-elena-error: fukachan
+
+### &lt;/ALIASES elena@home.fml.org ML&gt; ###
 </screen>
 バーチャルドメインの場合、
 $ml_home_prefix の部分は

@@ -1,5 +1,5 @@
 <!--
-	$FML: style.sgml,v 1.4 2002/05/27 09:00:28 fukachan Exp $
+   $FML: style.sgml,v 1.5 2002/07/02 10:39:36 fukachan Exp $
 -->
 
 <chapter id="programingstyle">
@@ -27,11 +27,13 @@ FNF
 変数の命名規則（ネーミングコンベンション）
 </title>
 
-	<sect2>
-	<title> 標準パターン (例 log.cf lock.cf) </title>
+<sect2>
+	<title>
+	標準パターン (例 log.cf lock.cf)
+	</title>
 
 <screen>
-use_変数		=	yes/no
+use_変数		=	yes か no
 
 # ディレクトリなら最後に _dir がつくことが望ましい
 変数_dir		=	文字列
@@ -52,10 +54,12 @@ use_変数		=	yes/no
 変数_lower_limit	=	文字列(数字だけど文字列扱い)
 </screen>
 
-	</sect2>
+</sect2>
 
-	<sect2>
-	<title> パターン２ (例 acl.cf ) </title>
+<sect2>
+	<title>
+	パターン２ (例 acl.cf)
+	</title>
 
 <screen>
 変数_restrictions	=	reject_属性1
@@ -73,14 +77,73 @@ use_変数		=	yes/no
 	 </sect2>
 
 
-	<sect2>
-	<title> パターン3 (さらにプログラム名がつく場合) </title>
+<sect2>
+	<title>
+	パターン3 (さらにプログラム名がつく場合)
+	</title>
 
 <screen>
 プログラム_変数_属性
 </screen>
 	 </sect2>
 
+
+</sect1>
+
+
+<!-- ==================================================== -->
+<sect1 id="design.policy">
+	<title>
+	デザイン/コーディングスタイルの上でいろいろ
+	</title>
+
+<warning>
+<para>
+スタイルについては、
+<ulink url="http://www.fml.org/software/FNF/">FNF</ulink>
+も参照して下さい。 
+</para>
+</warning>
+
+
+<sect2>
+	<title>
+	２、３の注意点
+	</title>
+
+
+<para>
+サーチするキーに対して quotemeta() を
+</para>
+
+
+<para>
+オブジェクトの中身のキーを直接使わずに、
+常にアクセスメソッドを定義すること。
+例: main_cf へのアクセスは 
+<screen>
+$curproc->{ ... }->{ main_cf }
+</screen>
+ではなく
+<screen>
+$curproc->main_cf();
+</screen>
+を使うこと
+</para>
+
+
+<para>
+@EXPORT @EXPORT_OK はできればやめたい…
+</para>
+
+
+<para>
+Srting::is_japanese_string()
+くらいの階層に浅くするべきではないかなぁ？
+せめて 3 段目くらいで止まってほしいような〜
+</para>
+
+</sect2>
 
 </sect1>
 

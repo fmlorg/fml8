@@ -1,5 +1,5 @@
 <!--
-	$FML: docbook.sgml,v 1.3 2002/04/01 23:41:01 fukachan Exp $
+   $FML: docbook.sgml,v 1.4 2002/07/02 10:39:31 fukachan Exp $
 -->
 
 
@@ -19,7 +19,7 @@ fml-devel (&fmldevel;) のドキュメントでは、SGML の DTD は
 </para>
 
 <para>
-ここでは、SGML を書くために最小限必要な知識についてメモします。
+本章では、SGML を書くために最小限必要な知識についてメモします。
 </para>
 
 <para>
@@ -31,7 +31,7 @@ fml-devel (&fmldevel;) のドキュメントでは、SGML の DTD は
         </para>
 	</footnote>
 ですが、正しい HTML の書き方と同様です。
-本 Appendix で、２、３の典型的な SGML テンプレートをメモしておくので、
+本 Appendix で、2、3 の典型的な SGML テンプレートをメモしておくので、
 それらを適当に切り剥ぎしていけばなんとかなるはずです。
 </para>
 
@@ -48,7 +48,7 @@ SGML は本や短い文書(記事)を作成するに使います。
 HTML のもっと厳密なものだと思って下さい
   <footnote>
   <para>
-  正確には HTML が SGML の一部です。
+  正確には HTML が SGML の一部にフォーマッタの要素が合体してしまったものです。
   HTML の方がはるかに有名になってしまったので、
   「HTML のもっと厳密なもの…」といった説明が良くされます :)
   </para>
@@ -385,14 +385,14 @@ include するべき定義ファイルを
 
 <para>
 SGML を HTML などに翻訳するために、いくつかのツールが必要です。
-DTD と DSL の規格文書群は必須です。
-処理系として openjade と opensp
+また DTD と DSL の規格文書群も必須です。
+処理系としては openjade と opensp
 	<footnote>
 	<para>
 	opensp は openjade パッケージに含まれています。
 	</para>
 	</footnote>
-も必須のプログラムです。
+が必須のプログラムでしょう。
 その他はオプショナルで、各自が好きにすればよいようです。
 </para>
 
@@ -420,8 +420,8 @@ DTD と DSL の規格文書群は必須です。
    </listitem>
 
 </itemizedlist>
-
-多くの OS では附属のパッケージシステムで一発ポン！てなもんでしょう。
+多くの OS ではこれらのプログラムを附属のパッケージシステムで簡単に
+インストールできるでしょう。
 </para>
 
 <para>
@@ -499,7 +499,7 @@ HTML の各ページに URL をつけたいとか、画像をつけたいといった
 
 <para>
 見栄えは DSL により記述をすることになります。
-しかしながら、DSL は本質的に LISP (List Processre) 言語なので、
+しかしながら、DSL は本質的に LISP (List Processor) 言語なので、
 LISP を知らないとちょっと手が出ないでしょう。
 </para>
 

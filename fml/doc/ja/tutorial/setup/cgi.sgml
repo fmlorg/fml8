@@ -1,5 +1,5 @@
 <!--
-   $FML: cgi.admin.sgml,v 1.3 2002/07/04 15:56:24 fukachan Exp $
+   $FML: cgi.sgml,v 1.1 2002/07/05 03:11:11 fukachan Exp $
 -->
 
 <chapter id="setup.cgi">
@@ -84,7 +84,8 @@ http://lists.fml.org/~fml/cgi-bin/fml/fml.org/.htaccess
 </para>
 
 <para>
-デフォルトの .htaccess は次のような無意味なものになっています:)
+デフォルトの .htaccess は次のような無意味:)なものになっていて、
+アクセスできません。
 <screen>
 AuthName ByPassword
 AuthType Basic
@@ -96,9 +97,9 @@ require valid-user
 <warning>
 <para>
 (当たり前だけど)このファイルを消すと、誰でもアクセスできるようになります。
-デバッグするならいいけど、そういうことはしないように;-)
-でもそういうのに限って再設定し忘れたりするものなので、
-しない方が良いです。
+デバッグする場合はともかく、そういう裏技は使わないようにしましょう;-)
+また、そういうのに限って再設定し忘れたりするものなので、しない方が良い
+です。きちんと .htaccess を設定しましょう。
 </para>
 </warning>
 

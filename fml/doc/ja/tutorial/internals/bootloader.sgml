@@ -1,5 +1,5 @@
 <!--
-	$FML: bootloader.sgml,v 1.6 2002/04/01 23:41:03 fukachan Exp $
+   $FML: bootloader.sgml,v 1.7 2002/07/02 10:39:35 fukachan Exp $
 -->
 
 <chapter id="bootloader">
@@ -10,10 +10,10 @@
 <para>
 
 &fmldevel; にはインストールされている fml のバージョン依存性を考慮するた
-めに、実行時には本章で述べるようなブートストラップの過程があります。
+めに、本章で述べるようなブートストラップの過程があります。
 
 <screen>
-boot していくイメージ
+fml が boot していくイメージ
 
 libexec/loader ->
      FML::Process::Switch ->
@@ -32,7 +32,7 @@ loader から次々と呼ばれていく様子は、例えば配送処理の場合、次のよう
 </para>
 
 <para>
-libexec/loader は /usr/local/etc/fml/main.cf を読みこみます。
+libexec/loader は /usr/local/etc/fml/main.cf を読みこみ、
 fml_version 変数から使うべきライブラリのバージョンを決めます。
 例えば fml_vesrion が current-20010501 となっていたら
 /usr/local/lib/fml/current-20010501/ 以下にあるライブラリを使うといった
@@ -86,7 +86,7 @@ FML::Process::Mead       >-|    |
 
    <listitem>
 	<para>
-	 libexec/loader (wrapper)
+	libexec/loader (wrapper)
 	Bootstrap() を実行する。
 	fml.pl などはこの loader へのシンボリックリンクです。
 	/usr/local/libexec/fml/ を参照して下さい。
@@ -146,10 +146,11 @@ FML::Process::Mead       >-|    |
 
 		FML::Process::Flow の中に、
 		どのように fml プロセスを実行するかが
-		定義されています。
+		定義されています。大雑把には
 <screen>
 $process = new FML::Process::なにか;
 $process->prepare($args);
+$process->verify_request($args);
 $process->run($args);
 $process->finish($args);
 </screen>

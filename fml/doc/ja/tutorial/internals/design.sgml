@@ -1,10 +1,10 @@
 <!--
-	$FML: design.sgml,v 1.6 2002/04/01 23:41:03 fukachan Exp $
+   $FML: design.sgml,v 1.7 2002/07/02 10:39:35 fukachan Exp $
 -->
 
 <chapter id="design">
 	<title>
-	&fmldevel; (仮名) のデザインコンセプト
+	原案: &fmldevel; (仮名) のデザインコンセプト
 	</title>
 
 
@@ -14,11 +14,12 @@
 -->
 
 <sect1>
-
-<title> fml-devel プロジェクトの構想 </title>
+	<title>
+	fml-devel プロジェクトの構想
+	</title>
 
 <para>
-<ulink url="http://www.fml.org/devel/">
+<ulink url="http://www.fml.org/software/fml-devel/">
 fml-devel
 </ulink>
 とも呼ばれている &fmldevel; プロジェクトは、
@@ -27,8 +28,8 @@ fml-devel
 </PARA>
 
 <para>
-<ulink url="http://www.fml.org/devel/">
-http://www.fml.org/devel/
+<ulink url="http://www.fml.org/software/fml-devel/">
+http://www.fml.org/software/fml-devel/
 </ulink>
 は将来の fml-current についてのデザインや実装例を紹介しています。
 </PARA>

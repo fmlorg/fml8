@@ -1,5 +1,5 @@
 <!--
-   $FML: language.sgml,v 1.2 2001/11/24 12:48:10 fukachan Exp $
+   $FML: language.sgml,v 1.3 2002/04/01 23:41:04 fukachan Exp $
 -->
 
 
@@ -24,21 +24,23 @@ $curproc->reply_message_nl('error.already_member',
 </screen>
 のような呼び出し方をします。
 この関数は
-/usr/local/share/fml/message/euc-jp/error/already_member
+/usr/local/share/fml/バージョン/message/euc-jp/error/already_member
 というテンプレートを用いてメッセージを構築します。
 </para>
 
 <para>
-メッセージ中の $変数名、例えば、
+メッセージ中の $_arg_変数名、例えば、
 <screen>
 $_args_address
 </screen>
 はハッシュリファレンスとして与えられた引数へ展開されます。
+メッセージテンプレート中の $_arg_address は、その値で
+展開されます。
 </para>
 
 <para>
 また config.cf 中で定義されている変数も同様に展開可能です。
-例えば $ml_name はＭＬ名に展開されるようになっています。
+例えばテンプレート中の $ml_name はＭＬ名に展開されるようになっています。
 </para>
 
 </sect1>

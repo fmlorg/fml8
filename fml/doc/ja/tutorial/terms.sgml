@@ -1,0 +1,27 @@
+<!--
+	$FML: terms.sgml,v 1.3 2002/07/02 10:39:34 fukachan Exp $
+-->
+
+<sect1 id="terms">
+
+<title> 本チュートリアル中における用語について </title>
+
+<variablelist>
+
+   <varlistentry>
+	<term> % </term>
+	<listitem>
+	<para>	一般ユーザのプロンプト	</para>
+	</listitem>
+   </varlistentry>
+
+   <varlistentry>
+	<term> # </term>
+	<listitem>
+	<para>	ユーザ root のプロンプト </para>
+	</listitem>
+   </varlistentry>
+
+</variablelist>
+
+</sect1>

@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: config.cf.sgml,v 1.1.1.1 2002/07/04 08:30:48 fukachan Exp $
 -->
 
 <sect1 id="setup.config.cf">
@@ -8,12 +8,12 @@
 	</title>
 
 <para>
-makefml は
+makefml は makefml newml を実行した際に
 config.cf (設定ファイル) と
 fml を起動するために MTA が呼び出すファイルである
-include
-および
-include-ctl をインストールしてくれます。
+(postfix のための) include 類および
+~fml/.qmail-*
+を用意してくれます。
 <screen>
 % su fml
 % makefml newml elena

@@ -1,15 +1,16 @@
 <!--
-	$FML: chapter.sgml,v 1.11 2002/04/01 23:41:02 fukachan Exp $
+	$FML: fml_on_nt.sgml,v 1.1 2002/07/02 10:39:34 fukachan Exp $
 -->
 
 <chapter id="install.fml.nt">
 	<title>
-	Microsft 2000/NT 上での fml のインストール
+	Microsft 2000/NT 上での &fmldevel; のインストール
 	</title>
 
 <warning>
 <para>
-まだ、できません。
+まだ、&fmldevel; は動きません。ごめんなさい。
+この章はダミー or ごめんっていうためだけにあります。
 </para>
 </warning>
 
