@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.45 2002/01/16 13:34:01 fukachan Exp $
+# $FML: Message.pm,v 1.46 2002/01/16 14:01:14 fukachan Exp $
 #
 
 package Mail::Message;
@@ -403,8 +403,8 @@ sub dup_header
 	# 2. overwrite only header data in $dupmsg
 	my $header = $self->{ data };
 	$dupmsg->{ data } = $header->dup();
-	$dupmsg->__next_message( $body );
-	$body->__prev_message( $dupmsg );
+	$dupmsg->_next_message_is( $body );
+	$body->_prev_message_is( $dupmsg );
 
 	# 3. return the new object.
 	return $dupmsg;
@@ -475,8 +475,8 @@ sub parse
     my $ref_body = $me->_build_body_object($args, $result);
 
     # make a chain such as "undef -> header -> body -> undef"
-    $me->__next_message( $ref_body );
-    $ref_body->__prev_message( $me );
+    $me->_next_message_is( $ref_body );
+    $ref_body->_prev_message_is( $me );
 
     # return information
     $result->{ body_size } = length($$InComingMessage);
@@ -835,11 +835,11 @@ sub __last_message
 }
 
 
-=head2 __next_message( $obj )
+=head2 _next_message_is( $obj )
 
 The next part of C<$self> object is C<$obj>.
 
-=head2 __prev_message( $obj )
+=head2 _prev_message_is( $obj )
 
 The previous part of C<$self> object is C<$obj>.
 
@@ -850,7 +850,7 @@ The previous part of C<$self> object is C<$obj>.
 #    Arguments: OBJ($self) OBJ(ref_next_message)
 # Side Effects: update next pointer in object
 # Return Value: OBJ
-sub __next_message
+sub _next_message_is
 {
     my ($self, $ref_next_message) = @_;
     $self->{ 'next' } = $ref_next_message;
@@ -861,7 +861,7 @@ sub __next_message
 #    Arguments: OBJ($self) OBJ(ref_prev_message)
 # Side Effects: update prev pointer in object
 # Return Value: OBJ
-sub __prev_message
+sub _prev_message_is
 {
     my ($self, $ref_prev_message) = @_;
     $self->{ 'prev' } = $ref_prev_message;
@@ -1164,8 +1164,8 @@ sub build_mime_multipart_chain
 	$head = $msg unless $head; # save the head $msg
 
 	# boundary -> data -> boundary ...
-	if (defined $prev_m) { $prev_m->__next_message( $msg );}
-	$msg->__next_message( $m );
+	if (defined $prev_m) { $prev_m->_next_message_is( $msg );}
+	$msg->_next_message_is( $m );
 
 	# for the next loop
 	$prev_m = $m;
@@ -1178,7 +1178,7 @@ sub build_mime_multipart_chain
 	data_type      => $virtual_data_type{'close-delimeter'},
 	data           => \$delbuf_end,
     };
-    $prev_m->__next_message( $msg ); # ... -> data -> close-delimeter
+    $prev_m->_next_message_is( $msg ); # ... -> data -> close-delimeter
 
     return $head; # return the pointer to the head of a chain
 }
@@ -1255,7 +1255,7 @@ sub parse_and_build_mime_multipart_chain
 		data         => $data,
 	    };
 	    my $m = $self->_alloc_new_part($args);
-	    return __next_message($self, $m);
+	    return _next_message_is($self, $m);
 	}
 	# close-delimiter is not found.
 	elsif ($mpb_end < 0) {
@@ -1392,15 +1392,15 @@ sub parse_and_build_mime_multipart_chain
     my $j = 0;
     for ($j = 0; $j < $i; $j++) {
 	if (defined $m[ $j + 1 ]) {
-	    __next_message( $m[ $j ], $m[ $j + 1 ] );
+	    _next_message_is( $m[ $j ], $m[ $j + 1 ] );
 	}
 	if (($j > 1) && defined $m[ $j - 1 ]) {
-	    __prev_message( $m[ $j ], $m[ $j - 1 ] );
+	    _prev_message_is( $m[ $j ], $m[ $j - 1 ] );
 	}
     }
 
     # chain $self and our chains built here.
-    __next_message($self, $m[0]);
+    _next_message_is($self, $m[0]);
 }
 
 
