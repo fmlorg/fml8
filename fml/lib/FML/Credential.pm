@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.24 2002/05/28 13:36:18 fukachan Exp $
+# $FML: Credential.pm,v 1.25 2002/06/01 05:02:31 fukachan Exp $
 #
 
 package FML::Credential;
@@ -73,7 +73,7 @@ sub DESTROY {}
 
 =head2 C<is_same_address($addr1, $addr2 [, $level])>
 
-return 1 (same ) or 0 (different).
+return 1 (same) or 0 (different).
 It returns 1 if C<$addr1> and C<$addr2> looks same within some
 ambiguity.  The ambiguity is defined by the following rules:
 
@@ -114,13 +114,15 @@ sub is_same_address
     my ($self, $xaddr, $yaddr, $max_level) = @_;
     my ($xuser, $xdomain) = split(/\@/, $xaddr);
     my ($yuser, $ydomain) = split(/\@/, $yaddr);
-    my $level = 0;
+    my $level             = 0;
+
+    # the max recursive level in comparison
     $max_level = $max_level || $self->{ _max_level } || 3;
 
-    # rule 1
+    # rule 1: case sensitive
     if ($xuser ne $yuser) { return 0;}
 
-    # rule 2
+    # rule 2: case insensitive
     if ("\L$xdomain\E" eq "\L$ydomain\E") { return 1;}
 
     # rule 3: compare a.b.c.d.jp in reverse order
@@ -156,8 +158,9 @@ sub is_member
     my ($self, $curproc, $args) = @_;
     my $config      = $curproc->{ config };
     my $member_maps = $config->get_as_array_ref('member_maps');
-    my $address = $args->{ address } || $curproc->{'credential'}->{'sender'};
-    my $status  = 0;
+    my $address     = (defined $args->{ address } ? 
+		       $args->{ address } :
+		       $curproc->{'credential'}->{'sender'});
 
     $self->_is_member($curproc, $args, {
 	address     => $address,
@@ -175,7 +178,9 @@ sub is_privileged_member
     my ($self, $curproc, $args) = @_;
     my $config      = $curproc->{ config };
     my $member_maps = $config->get_as_array_ref('admin_member_maps');
-    my $address = $args->{ address } || $curproc->{'credential'}->{'sender'};
+    my $address     = (defined $args->{ address } ? 
+		       $args->{ address } :
+		       $curproc->{'credential'}->{'sender'});
 
     $self->_is_member($curproc, $args, {
 	address     => $address,
@@ -191,11 +196,16 @@ sub is_privileged_member
 sub _is_member
 {
     my ($self, $curproc, $args, $optargs) = @_;
+    my $status = 0;
+    my $user   = '';
+    my $domain = '';
+
+    # cheap sanity
+    return 0 unless defined $optargs->{ member_maps }; 
+    return 0 unless defined $optargs->{ address };
+
     my $member_maps = $optargs->{ member_maps };
     my $address     = $optargs->{ address };
-    my $status      = 0;
-    my $user        = '';
-    my $domain      = '';
 
     if (defined $address) {
 	($user, $domain) = split(/\@/, $address);
@@ -325,7 +335,13 @@ return the number of C<level>.
 sub set_compare_level
 {
     my ($self, $level) = @_;
-    $self->{ _max_level } = $level;
+
+    if ($level =~ /^\d+$/) {
+	$self->{ _max_level } = $level;
+    }
+    else {
+	croak("set_compare_level: invalid input ($level)");
+    }
 }
 
 
@@ -364,6 +380,7 @@ sub get
 	return $self->{ $key };
     }
     else {
+	warn("Credential::get: invalid input { key=$key }");
 	return '';
     }
 }
@@ -376,7 +393,13 @@ sub get
 sub set
 {
     my ($self, $key, $value) = @_;
-    $self->{ $key } = $value;
+
+    if (defined $value) {
+	$self->{ $key } = $value;
+    }
+    else {
+	croak("set: invalid input { $key => $value }");
+    }
 }
 
 

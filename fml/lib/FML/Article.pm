@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.39 2002/04/22 04:59:53 fukachan Exp $
+# $FML: Article.pm,v 1.40 2002/06/01 03:01:52 fukachan Exp $
 #
 
 package FML::Article;
@@ -17,22 +17,38 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Article - manipulate ML article
+FML::Article - manipulate an ML article and related information
 
 =head1 SYNOPSIS
 
-   use FML::Article;
-   $article = new FML::Article $curproc;
-   $header  = $article->{ header };
-   $body    = $article->{ body };
+    use FML::Article;
+    $article = new FML::Article $curproc;
+
+    # get sequence number
+    my $id = $article->increment_id;
+
+    # spool in the article before delivery
+    $article->spool_in($id);
+
+    my $article_file = $article->filepath($article_id);
 
 =head1 DESCRIPTION
 
 C<$article> object is just a container which holds
 C<header> and C<body> object as hash keys.
-The C<header> is an C<FML::Header> object
+The C<header> is an C<FML::Header> object,
+the C<body> is a C<Mail::Message> object
 and
-the C<body> is a C<Mail::Message> object.
+the C<message> is the whole of chains.
+
+new() sets up the $curproc as
+
+    my $dupmsg  = $curproc->{'incoming_message'}->{ message }->dup_header;
+    $curproc->{ article }->{ message } = $dupmsg;
+    $curproc->{ article }->{ header }  = $dupmsg->whole_message_header;
+    $curproc->{ article }->{ body }    = $dupmsg->whole_message_body;
+
+This is the basic structure of the article object.
 
 =head1 METHODS
 
@@ -55,7 +71,7 @@ sub new
     my $me     = {};
 
     if (defined $curproc->{'incoming_message'}->{ message }) {
-	    _setup_article_template($curproc);
+	_setup_article_template($curproc);
     }
     $me->{ curproc } = $curproc;
 
@@ -241,7 +257,7 @@ sub _filepath
 
     use Mail::Message::Spool;
     my $spool = new Mail::Message::Spool;
-    my $args = {
+    my $args  = {
 	base_dir    => $spool_dir,
 	id          => $id,
 	use_subdir  => $use_subdir,
@@ -259,7 +275,7 @@ sub _filepath
 }
 
 
-=head2 speculate_max_id($spool_dir)
+=head2 speculate_max_id([$spool_dir])
 
 scan the spool_dir and get max number among files in it It must be the
 max (latest) article number in its folder.
@@ -275,6 +291,11 @@ max (latest) article number in its folder.
 sub speculate_max_id
 {
     my ($curproc, $spool_dir) = @_;
+    my $config = $curproc->{ config };
+
+    unless (defined $spool_dir) {
+	$spool_dir = $config->{ spool_dir };
+    }
 
     use DirHandle;
     my $dh = new DirHandle $spool_dir;
@@ -298,7 +319,7 @@ sub speculate_max_id
 =head1 SEE ALSO
 
 L<FML::Header>,
-L<MailingList::Messsages>,
+L<Mail::Message>,
 L<File::Sequence>
 
 =head1 AUTHOR

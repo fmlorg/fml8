@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledFile.pm,v 1.14 2002/02/02 08:04:55 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.15 2002/06/01 03:01:56 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -109,8 +109,8 @@ sub new
 sub TIEHASH
 {
     my ($self, $args) = @_;
-    my ($type) = ref($self) || $self;
     $args->{ 'last_match' } = 1;
+
     new($self, $args);
 }
 
@@ -122,6 +122,7 @@ sub TIEHASH
 sub FETCH
 {
     my ($self, $key) = @_;
+
     $self->_fetch($key, 'scalar');
 }
 
@@ -133,6 +134,7 @@ sub FETCH
 sub STORE
 {
     my ($self, $key, $value) = @_;
+
     $self->_store($key, $value);
 }
 
@@ -183,7 +185,10 @@ sub NEXTKEY
 
 	    # duplicated (already returned key)
 	    if (defined $self->{ '_key_negative_cache' }->{ $key }) {
-		print STDERR "   File.NEXTKEY: $key (dup, ignored)\n" if $debug;
+		if ($debug) {
+		    print STDERR "   File.NEXTKEY: $key (dup, ignored)\n";
+		}
+
 		next LOOP;
 	    }
 	    else {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.24 2002/04/07 05:08:23 fukachan Exp $
+# $FML: Command.pm,v 1.25 2002/04/07 05:35:08 fukachan Exp $
 #
 
 package FML::Command;
@@ -16,7 +16,7 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Command - fml commands dispacher
+FML::Command - fml command dispatcher
 
 =head1 SYNOPSIS
 
@@ -28,8 +28,9 @@ FML::Command - fml commands dispacher
 
 C<FML::Command> is a wrapper and dispathcer for fml commands.
 AUTOLOAD() picks up the command request and dispatches
-C<FML::Command::User::somoting> for the request.
-Also, C<FML::Command::Admin::somoting> for the admin command request.
+C<FML::Command::User::somoting> suitable for the request.
+Also, C<FML::Command::Admin::somoting> for the admin command request
+and makefml commands.
 
 =head1 METHODS
 
@@ -64,6 +65,8 @@ sub DESTROY { ;}
 
 rewrite the specified buffer $rbuf (STR_REF).
 $rbuf is rewritten as a result.
+For example, this function is used to hide the password in the $rbuf
+buffer.
 
 =cut
 
@@ -77,8 +80,9 @@ sub rewrite_prompt
     my ($self, $curproc, $command_args, $rbuf) = @_;
     my $command = undef;
     my $comname = $command_args->{ comname };
-    my $mode = $command_args->{'command_mode'} =~ /admin/i ? 'Admin' : 'User';
-    my $pkg  = "FML::Command::${mode}::${comname}";
+    my $mode    = 
+	$command_args->{'command_mode'} =~ /admin/i ? 'Admin' : 'User';
+    my $pkg     = "FML::Command::${mode}::${comname}";
 
     eval qq{ use $pkg; \$command = new $pkg;};
     unless ($@) {
@@ -92,7 +96,7 @@ sub rewrite_prompt
 =head2 C<AUTOLOAD()>
 
 the command dispatcher.
-It hooks up the C<command> request and loads the module
+It hooks up the C<command> request and loads the module in
 C<FML::Command::command>.
 
 =cut
@@ -109,7 +113,8 @@ sub AUTOLOAD
     # we need to ignore DESTROY()
     return if $AUTOLOAD =~ /DESTROY/;
 
-    # mode
+    # user mode by default
+    # XXX IMPORTANT: user mode if the given mode is invalid.
     my $mode = 'User';
     if (defined $command_args->{ command_mode }) {
 	$mode =
@@ -140,6 +145,12 @@ sub AUTOLOAD
 	    if (defined $command_args->{ override_need_no_lock }) {
 		$need_lock = 0 if $command_args->{ override_need_no_lock };
 	    }
+	}
+	else {
+	    LogError("${pkg} has no need_lock method");
+	    $curproc->reply_message("Error: invalid command definition\n");
+	    $curproc->reply_message("       need_lock() is undefined\n");
+	    $curproc->reply_message("       Please contact the maintainer\n");
 	}
 
 	# run the actual process

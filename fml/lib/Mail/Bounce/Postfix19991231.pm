@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix19991231.pm,v 1.16 2002/02/01 12:04:01 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.17 2002/05/21 08:37:16 fukachan Exp $
 #
 
 
@@ -87,7 +87,7 @@ sub _analyze_plaintext
     my $m = $msg->{ next };
     do {
 	if (defined $m) {
-	    my $num  = $m->num_paragraph;
+	    my $num = $m->num_paragraph;
 	    for ( my $i = 0; $i < $num ; $i++ ) {
 		my $data = $m->nth_paragraph( $i + 1 );
 
