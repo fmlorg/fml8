@@ -1,0 +1,91 @@
+=head1 program paths
+
+path_perl                 = @PERL@
+
+path_cksum                = @CKSUM@
+
+path_sum                  = @SUM@
+
+path_md5                  = @MD5@
+
+path_tar                  = @TAR@
+
+path_gzip                 = @GZIP@
+
+path_zcat                 = @ZCAT@
+
+path_gzcat                = @GZCAT@
+
+path_gunzip               = @GUNZIP@
+
+path_lha                  = @LHA@
+
+path_ls                   = @LS@
+
+path_ish                  = @ISH@
+
+path_bzip2                = @BZIP2@
+
+path_bunzip2              = @BUNZIP2@
+
+path_uuencode             = @UUENCODE@
+
+path_compress             = @COMPRESS@
+
+
+=head2 MTA related program paths
+
+path_sendmail             = @SENDMAIL@
+
+path_makemap              = @MAKEMAP@
+
+path_newaliases           = @NEWALIASES@
+
+path_postfix              = @POSTFIX@
+
+path_postalias            = @POSTALIAS@
+
+path_postconf             = @POSTCONF@
+
+path_postmap              = @POSTMAP@
+
+
+=head2 encryption/decryption
+
+path_pgp                  = @PGP@
+
+path_pgp5                 = @PGP5@
+
+path_pgpe                 = @PGPe@
+
+path_pgpk                 = @PGPK@
+
+path_pgps                 = @PGPS@
+
+path_pgpv                 = @PGPV@
+
+path_gpg                  = @GPG@
+
+
+=head2	utilities
+
+path_nkf                  = @NKF@
+
+path_kakasi               = @KAKASI@
+
+path_namazu               = @NAMAZU@
+
+path_less                 = @LESS@
+
+path_more                 = @MORE@
+
+path_w3m                  = @W3M@
+
+
+=head2 spam related utilities
+
+path_spamassassin         = @SPAMASSASSIN@
+
+path_spamd                = @SPAMD@
+
+path_spamc                = @SPAMC@

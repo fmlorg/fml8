@@ -1,0 +1,21 @@
+=head1	article summary
+
+# Descriptions: article summary file.
+#      History:
+#        Value:
+#     Examples:
+summary_file		=	$ml_home_dir/summary
+
+
+# Descriptions: format style.
+#      History:
+#        Value: fml4_compatible
+#     Examples:
+summary_format_style	=	fml4_compatible
+
+
+# Descriptions: save the first N bytes of the address in summary.
+#      History:
+#        Value: \d+
+#     Examples: 15
+summary_format_address_length	=	15

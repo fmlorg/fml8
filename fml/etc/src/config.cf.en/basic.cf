@@ -1,0 +1,53 @@
+=head1	basic parameters
+
+=head2	ML maintainers
+
+# Descriptions: ML maintainer. person who receives the error messages.
+#      History: fml 4.0's $MAINTAINER
+#        Value: rfc822_address
+#     Examples: elena-admin@fml.org
+maintainer	=
+
+
+=head2	language
+
+default_charset		=	us-ascii
+
+
+=head2	default modes
+
+
+# Descriptions: default mode in creating file
+#      History:
+#        Value:
+#     Examples:
+default_file_mode	=	0600
+
+
+# Descriptions: default mode in mkdir
+#      History:
+#        Value:
+#     Examples:
+default_directory_mode	=	0755
+
+
+directory_public_mode	=	0755
+
+directory_private_mode	=	0700
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+default_umask		=	077
+
+
+=head2 TIME ZONE
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+timezone		=	+0900

@@ -1,0 +1,45 @@
+=head1 MySQL example
+
+#
+# [Example]
+# create table ml (
+# 	fml_ml        char(64),
+# 	fml_address   char(64),
+# 	fml_member    int,
+# 	fml_recipient int
+# );
+
+[mysql:fml]
+
+sql_server	=	localhost
+sql_user	=	fml
+sql_password	=	uja
+sql_database	=	fml
+sql_table	=	ml
+
+sql_get_next_key =	select fml_address from $sql_table
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+
+sql_getline	=	select fml_address from $sql_table
+			where fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+
+sql_add		=	insert into $sql_table
+			values ('$ml_name', '$ml_domain', '&address', 1, 1)
+
+sql_delete	=	delete from $sql_table
+			where	fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_address = '&address'
+
+sql_find	=	select fml_address from $sql_table
+			where	fml_ml = '$ml_name'
+					and
+				fml_domain = '$ml_domain'
+					and
+				fml_address like '%&regexp%'

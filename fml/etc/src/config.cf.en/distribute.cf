@@ -1,0 +1,12 @@
+=head1	function of article delivery
+
+=head2	article delivery process
+
+
+# Descriptions: use function of article delivery
+#      History: none
+#        Value: yes
+#     Examples: yes / no
+use_distribute_program	=	yes
+
+

@@ -1,0 +1,79 @@
+=head1	error message analyzer
+
+=head2
+
+# Descriptions: where error mail is forwarded to ?
+# 		it is useful to use mysql to control recipients of 
+#               error messages.
+#      History: none
+#        Value: maps
+#     Examples: file:$ml_home_dir/recipients-maintainer
+#               $admin_recipient_maps 
+maintainer_recipient_maps	=
+
+
+=head2	process
+
+
+# Descriptions: use error message analyzer ?
+#      History: none
+#        Value: yes
+#     Examples: yes / no
+use_error_analyzer_program	=	yes
+
+
+=head2	cache
+
+
+# Descriptions: directory to cache error messages.
+#      History: /var/spool/ml/mead/errormaillog
+#        Value: directory
+#     Examples: 
+error_analyzer_cache_dir		=	$db_dir/error
+
+
+# Descriptions: module as cache engine
+#      History: none
+#        Value: string
+#     Examples: File::CacheDir
+error_analyzer_cache_type		=	File::CacheDir
+
+
+# Descriptions: mode of cache expiration
+#      History: none
+#        Value: string
+#     Examples: 
+error_analyzer_cache_mode		=	temporal
+
+
+# Descriptions: cache size.
+#		it implies days if the cache mode is temporal.
+#      History: none
+#        Value: number
+#     Examples: 
+error_analyzer_cache_size		=	14
+
+
+=head2	analyzer
+
+
+# Descriptions: functions defined in FML::Error::Analyze
+#      History: none
+#        Value: simple_count / histgram
+#     Examples: simple_count
+error_analyzer_function_list		=	simple_count
+						histgram
+
+
+# Descriptions: function in FML::Error::Analyze to analyze.
+#      History: none
+#        Value: simple_count / histgram
+#     Examples: simple_count
+error_analyzer_function			=	histgram
+
+
+# Descriptions: error limit in using simple_count as anlyzer function.
+#      History: none
+#        Value: NUM
+#     Examples: 5
+error_analyzer_simple_count_limit	=	5

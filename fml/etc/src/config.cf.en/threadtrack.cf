@@ -1,0 +1,81 @@
+=head1 thread tracking system
+
+
+# Descriptions: user thread tracking system ?
+#      History: fml 8.0 new
+#        Value: yes / no
+#     Examples:
+use_thread_track	=	yes
+
+
+# Descriptions: use special subject tag ?
+#      History: fml 8.0 new
+#        Value: yes / no
+#     Examples:
+use_thread_subject_tag	=	no
+
+
+# Descriptions: ml name assigned to ticket
+#      History: fml 8.0 new
+#        Value: string
+#     Examples: elena
+thread_subject_tag_name	=	$ml_name
+
+
+# Descriptions: ticket number
+#      History: fml 8.0 new
+#        Value:
+#     Examples: elena_#00001010     $ml_name_#%08d
+#               elena/100           $ml_name/%d
+thread_id_syntax	=	$ml_name/%d
+
+
+# Descriptions: syntax added to Subject:
+#      History: fml 8.0 new
+#        Value:
+#     Examples: [elena_#00001010]
+#               [elena/100]
+thread_subject_tag	=	[$thread_id_syntax]
+
+
+# Descriptions: location of insertion of tag
+#      History: fml 8.0 new
+#        Value: appended/prepended
+#     Examples: Subject: [elena/100] ....
+#               Subject: .... [elena/100]
+thread_subject_tag_location	=	appended
+
+
+# Descriptions: file to store ticket sequence
+#      History: fml 8.0 new
+#        Value: filename
+#     Examples: /var/spool/ml/elena/thread.seq
+thread_sequence_file	=	$ml_home_dir/thread.seq
+
+
+# Descriptions: directory to hold ticket data
+#      History: fml 8.0 new 
+#        Value: directory
+#     Examples: /var/spool/ml/@db@/thread
+thread_db_dir		=	$shared_db_dir/thread
+
+
+# Descriptions: CGI relative path
+#      History:
+#        Value:
+#     Examples:
+thread_cgi_base_url	=	/cgi-bin/fmlthread.cgi
+
+
+# Descriptions: CGI title
+#      History:
+#        Value:
+#     Examples:
+thread_cgi_title	=	thread tracking system interface
+
+
+# Descriptions: CGI color
+#      History:
+#        Value:
+#     Examples:
+thread_cgi_bgcolor	=	#E6E6FA

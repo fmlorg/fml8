@@ -1,0 +1,120 @@
+=head1	directory
+
+=head2 directories "makefml newml" initializes 
+
+
+newml_command_init_public_dirs	=	$domain_config_base_dir
+					$domain_mail_config_dir
+					$domain_postfix_config_dir
+					$domain_qmail_config_dir
+					$domain_exim_config_dir
+					$domain_sendmail_config_dir
+					$domain_procmail_config_dir
+					$shared_db_dir
+					$udb_base_dir
+
+newml_command_init_private_dirs	=	$tmp_dir
+					$spool_dir
+					$var_dir
+					$db_dir
+					$error_analyzer_cache_dir
+					$lock_dir
+
+
+=head2 fml system directories
+
+# Descriptions: home directory of user fml
+#      History: none
+#        Value: directory
+#     Examples: /home/fml
+# fml_owner_home_dir =
+
+
+# Descriptions: home directory of this ML
+#      History: $DIR
+#        Value: directory
+#     Examples: /var/spool/ml/elena
+# ml_home_dir	=
+
+
+=head2 directories shared among ML's
+
+
+# Descriptions: system data directory provided by fml
+#      History: hard-coded in fml 4.0
+#        Value: directory
+#     Examples: /var/spool/ml/etc
+domain_config_base_dir	= $ml_home_prefix/etc
+
+
+# Descriptions: database directory shared among ML's
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml/@db@
+shared_db_dir	= $ml_home_prefix/@db@
+
+
+# Descriptions: database directory shared among ML's.
+#               udb == unified database.
+#      History: inherit $shared_db_dir
+#        Value: directory
+#     Examples: /var/spool/ml/@udb@
+udb_base_dir	= $ml_home_prefix/@udb@
+
+
+=head2 ML specific
+
+
+# Descriptions: directory hoding
+#               multi-purpose log, temporary, transient, and spool files
+#      History: $VAR_DIR
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var
+var_dir		= $ml_home_dir/var
+
+
+# Descriptions: directory to hold temporary files
+#      History: $TMP_DIR
+#        Value: directory
+#     Examples: /var/spool/ml/elena/tmp
+tmp_dir		= $ml_home_dir/tmp
+
+
+# Descriptions: directoy to hold several data files
+#      History: $VARDB_DIR
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var/db
+db_dir		= $var_dir/db
+
+
+=head2 ml local
+
+
+# Descriptions: ML local directory
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml/elena/local
+ml_local_dir		=	$ml_home_dir/local
+
+
+# Descriptions: ML local library path
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml/elena/local/lib
+ml_local_lib_dir	=	$ml_local_dir/lib
+
+
+# Descriptions: ML local share/
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml/elena/local/share
+ml_local_share_dir	=	$ml_local_dir/share
+
+
+=head2 scheduler
+
+# Descriptions: event queue directory for scheduler
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var/event
+event_queue_dir	= $var_dir/event/queue
