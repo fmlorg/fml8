@@ -1,0 +1,73 @@
+# Auto refiling for imget  -*-Perl-*-
+
+use IM::File qw(im_rename);
+
+sub get_sub ($$$) {
+    my($folder, $first, $last) = @_;
+    my($header, $flie, $new_folder, $new_file, $tmp_str, $dir, $msg);
+    my($touch_file, $touch_file_m, $touch_file_n);
+
+    return if ($folder ne &inbox_folder());
+
+    $dir = &expand_path($folder);
+    $touch_file = "$dir/.im_getsbr_touch";
+
+    if (-e $touch_file) {
+	$touch_file_m = -M $touch_file;
+	$touch_file_n = 0;
+	if (open(FH, $touch_file)) {
+	    while (<FH>) {
+		chomp;
+		$touch_file_n = $_;
+	    }
+	    close(FH);
+	}
+	for ($msg = $last; $msg >= $first; $msg--) {
+	    $file = &message_name($folder, $msg);
+	    if (! -e $file) {
+		last;
+	    }
+	    if (-M $file > $touch_file_m) {
+		last;
+	    }
+	    if (-M $file == $touch_file_m && $msg <= $touch_file_n) {
+		last;
+	    }
+	}
+	$first = $msg + 1;
+    }
+
+    for ($msg = $first; $msg <= $last; $msg++) {
+	$file = &message_name($folder, $msg);
+	if (open(MSG, "$file")) {
+	    $tmp_str = $/;
+	    $/ = "\n\n";
+	    $header = <MSG>;
+	    $/ = $tmp_str;
+
+	    $new_folder = $folder;
+	    if ($header =~ /(^|\n)X-Bogosity: Yes/) {
+		$new_folder = '+spam';
+	    } elsif ($header =~ /(^|\n)X-Spam-Flag: Yes/) {
+		$new_folder = '+spam';
+	    } elsif ($header =~ /(^|\n)X-Spam: yes/) {
+		$new_folder = '+spam';
+#	    } elsif ($header =~ /(^|\n)X-ML-Name: mew-dist/) {
+#		$new_folder = '+mew-dist';
+	    }
+	    if ($new_folder ne $folder) {
+		$new_file = &message_name($new_folder, 'new') || die $!;
+		&im_notice("refiling $folder/$msg to $new_folder.\n");
+		&im_rename($file, $new_file) || die $!;
+	    }
+	    close(MSG);
+	}
+    }
+
+    if (open(FH, ">$touch_file")) {
+	print FH "$last\n";
+	close(FH);
+    }
+}
+
+1;
