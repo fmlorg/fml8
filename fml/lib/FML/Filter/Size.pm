@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Size.pm,v 1.8 2004/01/21 03:43:30 fukachan Exp $
+# $FML: Size.pm,v 1.9 2004/02/01 14:52:50 fukachan Exp $
 #
 
 package FML::Filter::Size;
@@ -16,7 +16,7 @@ use ErrorStatus qw(error_set error error_clear);
 
 =head1 NAME
 
-FML::Filter::Size - filter based on mail size
+FML::Filter::Size - filter based on mail size.
 
 =head1 SYNOPSIS
 
@@ -196,7 +196,7 @@ sub _check_mail_size
     my $hdr_size   = $msg->whole_message_header_size();
     my $body_size  = $msg->whole_message_body_size();
     my $class      = $self->{ _class };
-    my $limit      = $config->{ "${class}_${type}_size_limit" };
+    my $limit      = $config->{ "${class}_${type}_size_limit" } || 10240000;
     my $reason     = '';
     my $errmsg_key = '';
 
