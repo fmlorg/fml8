@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.198 2003/12/24 14:29:36 fukachan Exp $
+# $FML: Kernel.pm,v 1.199 2003/12/29 14:57:04 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -102,6 +102,8 @@ sub new
 			    libexec_dir
 			    share_dir
 			    local_lib_dir
+
+			    default_ml_home_prefix
 
 			    primary_ml_home_prefix_map
 			    ml_home_prefix_maps
