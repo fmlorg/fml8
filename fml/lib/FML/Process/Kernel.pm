@@ -147,18 +147,13 @@ sub verify_sender_credential
     my $from  = $r_msg->{'header'}->get('from');
 
     use Mail::Address;
-    my @addrs = Mail::Address->parse($from);
+    my ($addr, @addrs) = Mail::Address->parse($from);
 
-    my $count = 0;
-    for my $a (@addrs) {
-	$count++;
+    # extract the first address as a sender.
+    $from = $addr->address;
+    $from =~ s/\n$//o;
 
-	# extract the first address as a sender.
-	$from = $a->format unless $from;
-	$from =~ s/\n$//o;
-    }
-
-    if ($count == 1) {
+    unless (@addrs) { # XXX @addrs must be empty.
 	Log("sender: $from");
 	use FML::Credential;
 	$curproc->{'credential'} = new FML::Credential;
