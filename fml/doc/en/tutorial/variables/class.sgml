@@ -116,6 +116,7 @@ article {
    }
 
    article_* {
+          $article_message_id_cache_dir
           $article_sequence_file
     ?     $article_subject_tag
           $article_summary_file

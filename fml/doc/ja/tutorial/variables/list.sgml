@@ -128,6 +128,15 @@ delete_unsafe_header_fields
 </row>
 <row>
 <entry>
+article_message_id_cache_dir</entry>
+<entry>
+ 記事としてスプールに格納されたメールの </entry>
+<entry>
+$db_dir/article_message_id
+   </entry>
+</row>
+<row>
+<entry>
 article_mime_component_filter_rules</entry>
 <entry>
  ファイル名</entry>
@@ -1069,7 +1078,7 @@ $primary_member_map
 <entry>
 message_id_cache_dir</entry>
 <entry>
- Message-ID のキャッシュを格納するディレクトリ</entry>
+ すべての Message-ID のキャッシュを格納するディレクトリ</entry>
 <entry>
 $db_dir/message_id
    </entry>

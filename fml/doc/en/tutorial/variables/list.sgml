@@ -128,6 +128,15 @@ delete_unsafe_header_fields
 </row>
 <row>
 <entry>
+article_message_id_cache_dir</entry>
+<entry>
+ article Message-ID cache directory</entry>
+<entry>
+$db_dir/article_message_id
+   </entry>
+</row>
+<row>
+<entry>
 article_mime_component_filter_rules</entry>
 <entry>
  file of filter rules</entry>
