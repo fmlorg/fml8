@@ -5,8 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: distdir2url.pl,v 1.1 2001/04/30 11:43:34 fukachan Exp $
 #
 
 use strict;
@@ -40,7 +39,8 @@ sub Show
 	print "<TR>\n";
 	print "<TD> $pathname \n";
 
-	for my $fn ("README", "INSTALL", "MANIFEST") {
+	for my $fn ("README", "INSTALL", "MANIFEST",
+		    "00readme", "00install", "00manifest") {
 	    print "<TD>";
 	    if (-f "$pathname/$fn") {
 		print "<A HREF=\"$pathname/$fn\">$fn</A>\n";
