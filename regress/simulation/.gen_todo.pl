@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: .gen_todo.pl,v 1.1 2003/01/11 16:10:03 fukachan Exp $
+# $FML: .gen_todo.pl,v 1.2 2003/03/06 04:19:39 fukachan Exp $
 #
 
 use strict;
@@ -10,6 +10,7 @@ my $function;
 my $todo = {};
 my $KEY  = "__FILE_GLOBAL__";
 my $all  = 0;
+my $prev = 0;
 
 while (<>) {
     if (/^sub (\S+)/o) {
@@ -18,13 +19,18 @@ while (<>) {
 
     if (/^sub .*\}/o || /^\}/o) {
 	$function = $KEY;
+	$prev     = 0;
     }
 
     next if /XXX-TODO.*curproc->util->/ && (! $all);
 
     if (/(XXX-TODO:|XXX-TODO)\s*(.*)\s*$/o) {
 	my ($xtodo) = $2;
-	$todo->{ $ARGV }->{ $function } .= "\t". $xtodo . "\n";
+	$todo->{ $ARGV }->{ $function } .= 
+		abs($.-$prev) == 1 ? "\t\t" : "\t[TODO]\t";
+	$todo->{ $ARGV }->{ $function } .= $xtodo;
+	$todo->{ $ARGV }->{ $function } .= "\n";
+	$prev = $.;
     }
 }
 
@@ -37,7 +43,7 @@ for my $file (sort keys %$todo) {
     for my $k (keys %$hash) {
 	if ($k eq $KEY) {
 	    my $buf = $hash->{ $k };
-	    $buf =~ s/\t/   /g;
+	    $buf =~ s/^\t/ [GLOBL]/g;
 	    print $buf;
 	}
 	else {
