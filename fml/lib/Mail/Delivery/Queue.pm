@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Queue.pm,v 1.4 2001/05/19 03:41:34 fukachan Exp $
+# $FML: Queue.pm,v 1.5 2001/05/31 11:02:33 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -269,9 +269,12 @@ sub unlock
 
 =head2 C<in($msg)>
 
-You specify C<$msg>, which is C<Mail::Message> object.
 C<in()> creates a queue file in C<new/> directory 
 (C<queue_directory/new/>.
+
+C<$msg> is C<Mail::Message> object by default.
+If C<$msg> object has print() method, 
+arbitrary C<$msg> is acceptable.
 
 REMEMBER YOU MUST DO C<setrunnable()> for the queue to deliver.
 If you not C<setrunnable()> it, the queue file is removed by
