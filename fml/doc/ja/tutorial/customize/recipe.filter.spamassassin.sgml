@@ -1,0 +1,41 @@
+<!--
+   $FML: recipe.filter.notice.sgml,v 1.3 2004/04/07 11:07:02 fukachan Exp $
+-->
+
+
+<qandaentry>
+
+<question>
+<para>
+spamassassin で SPAM メールを無視する。
+</para>
+</question>
+
+<answer>
+
+<para>
+HOOK でなんとかする/ごまかす例。
+<screen>
+$distribute_verify_request_end_hook = q{
+        my $spamassassin = '/usr/pkg/bin/spamc -c';
+
+        use FileHandle;
+        my $wh  = new FileHandle "| $spamassassin";
+
+        if (defined $wh) {
+                $wh->autoflush(1);
+                my $msg = $curproc->incoming_message();
+                $msg->print($wh);
+                $wh->close();
+                if ($?) {
+                        $curproc->log("spam: (code = $?)");
+                        $curproc->stop_this_process();  
+                }
+        }
+};
+</screen>
+</para>
+
+</answer>
+
+</qandaentry>

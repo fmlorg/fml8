@@ -1,5 +1,5 @@
 <!--
-   $FML: filter.sgml,v 1.1 2003/04/13 03:29:01 fukachan Exp $
+   $FML: filter.sgml,v 1.2 2003/04/13 04:36:11 fukachan Exp $
 -->
 
 <chapter>
@@ -10,6 +10,7 @@
 <qandaset>
 
 &recipe.filter.notice;
+&recipe.filter.spamassassin;
 
 </qandaset>
 
