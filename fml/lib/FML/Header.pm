@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.44 2002/06/01 14:53:38 fukachan Exp $
+# $FML: Header.pm,v 1.45 2002/07/02 11:54:06 fukachan Exp $
 #
 
 package FML::Header;
@@ -403,10 +403,6 @@ sub rewrite_reply_to
 
     unless ($reply_to) {
 	$header->add('reply-to', $config->{ address_for_post });
-	Log("(debug) rewrite reply-to to $config->{ address_for_post }");
-    }
-    else {
-	Log("(debug) not rewrite 'reply-to: $reply_to'");
     }
 }
 
@@ -551,19 +547,15 @@ sub check_message_id
     if ($mid) {
 	use FML::Header::MessageID;
 	my $xargs = { directory => $dir };
-	my $obj   = FML::Header::MessageID->new->open_cache($xargs);
+	my $db    = FML::Header::MessageID->new->db_open($xargs);
 
-	if (defined $obj) {
-	    my $fh = $obj->open;
-
+	if (defined $db) {
 	    # we can tind the $mid in the past message-id cache ?
-	    $dup = $obj->find($mid);
+	    $dup = $db->{ $mid };
 	    Log( "message-id duplicated" ) if $dup;
 
 	    # save the current id
-	    print $fh $mid, "\t", $mid, "\n";
-
-	    $fh->close;
+	    $db->{ $mid } = 1;
 	}
     }
 

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MessageID.pm,v 1.3 2001/12/22 09:21:07 fukachan Exp $
+# $FML: MessageID.pm,v 1.4 2001/12/23 03:00:41 fukachan Exp $
 #
 
 package FML::Header::MessageID;
@@ -51,10 +51,6 @@ standard constructor.
 =cut
 
 
-use File::CacheDir;
-@ISA = qw(File::CacheDir);
-
-
 # Descriptions: standard constructor
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
@@ -68,9 +64,9 @@ sub new
 }
 
 
-=head2 C<open_cache($args)>
+=head2 C<db_open($args)>
 
-open cache and return C<File::CacheDir> object.
+open db and return HASH_REF for the db access.
 
 =cut
 
@@ -79,7 +75,7 @@ open cache and return C<File::CacheDir> object.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: OBJ
-sub open_cache
+sub db_open
 {
     my ($self, $args) = @_;
     my $dir  = $args->{ 'directory' };
@@ -87,14 +83,17 @@ sub open_cache
     my $days = 14;
 
     if ($dir) {
-	my $obj = new File::CacheDir {
-	    directory  => $dir,
-	    cache_type => $mode,
-	    expires_in => $days,
-	};
+	unless (-d $dir) {
+	    eval q{ use File::Utils qw(mkdirhier);};
+	    mkdirhier($dir, 0700);
+	}
 
-	$self->{ _obj } = $obj;
-	return $obj;
+	my %db = ();
+	use Tie::JournaledDir;
+	tie %db, 'Tie::JournaledDir', { dir => $dir };
+
+	$self->{ _db } = \%db;
+	return \%db;
     }
 
     undef;
@@ -119,10 +118,10 @@ set value for the key $key in message-id database.
 sub get
 {
     my ($self, $key) = @_;
-    my $obj = $self->{ _obj };
+    my $db = $self->{ _db };
 
-    if (defined $obj) {
-	return $obj->find($key);
+    if (defined $db) {
+	return $db->{ $key };
     }
 
     undef;
@@ -136,13 +135,14 @@ sub get
 sub set
 {
     my ($self, $key, $value) = @_;
-    my $obj = $self->{ _obj };
+    my $db = $self->{ _db };
 
-    if (defined $obj) {
-	$obj->set($key, $value);
+    if (defined $db) {
+	$db->{ $key } = $value;
+	return $value;
     }
 
-    undef;
+    return undef;
 }
 
 
@@ -173,7 +173,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
