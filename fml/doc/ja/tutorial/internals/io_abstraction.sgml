@@ -1,5 +1,5 @@
 <!--
-   $FML: io_abstraction.sgml,v 1.1 2003/05/26 08:56:52 fukachan Exp $
+   $FML: io_abstraction.sgml,v 1.2 2003/05/26 13:07:26 fukachan Exp $
 -->
 
 
@@ -252,17 +252,8 @@ XXX すなおに、key() もしくは get_key() でも良い気がする？
 	</title>
 
 <para>
-find() の返り値を ARRAY_REF にできるので、find() をつかうよろし。
-</para>
-
-<para>
-とどめに find('*', { all => 1 }) などとすると全部の値が
-ARRAY_REF で返りますのぉ。
-<screen>
-KEY1 => ARRAY_REF1
-KEY2 => ARRAY_REF2
-   ...
-</screen>
+うーん、どういうデータ構造が欲しいんでしょうねぇ？
+PRIMARY KEY の一覧くらいか？
 </para>
 
 </sect2>
@@ -282,7 +273,12 @@ KEY2 => ARRAY_REF2
 
 <para>
 もし、あるとしたら get_primary_keys() みたいな名前のメソッド？で、
-ARRAY_REF で返すのでしょうかね？
+ARRAY_REF で返すのでしょうかね？でも、find('*', { all => 1 }) などとす
+ると全部の KEY の値がARRAY_REF で返りますんで、別のメソッドも不要な気
+がするねぇ。
+<screen>
+(KEY1 KEY2)
+</screen>
 </para>
 
 </sect2>
@@ -294,6 +290,7 @@ ARRAY_REF で返すのでしょうかね？
 	</title>
 
 <para>
+これこそ、どういうデータ構造が欲しいんでしょうねぇ？
 返り値が HASH_REF であるようなメソッドが欲しいだろうか？
 <screen>
 返り値 = {
@@ -301,15 +298,37 @@ ARRAY_REF で返すのでしょうかね？
 	変数２ => 値２、 
 }
 </screen>
-って、getattr() とかいうメソッドかなぁ。だが、HASH_REF 中の
-属性のキーがオブジェクトに強く依存するなぁ…う〜む。
+って、つまり getattr(KEY) とかいうメソッドかなぁ。だが、HASH_REF 中の
+属性のキーがオブジェクトに強く依存するわけですが…そんなので modular 
+といえるのか？
+</para>
+
+<para>
+単に、表のＮ番めじゃなくて、Ｎ番目の名前はこれこれ…っていう情報のタグ
+をつけて返すと思えば、あまり変わらないといえば変わらない。
+</para>
+
+<para>
+メールアドレスに属性をつけることを考えるとこういったものが必要でしょう。
+たとえば、まとめ送りがその例といえる。
+<screen>
+メールアドレス => {
+	送り間隔	=> 	３時間、
+	ファイル圧縮	=>	しない
+	フォーマット	=>	mime/multipart
+};
+</screen>
 </para>
 
 <para>
 ただ、キャッシュを抽象化したアダプタ層はこの形になりうるでしょう。
+たとえば
 <screen>
 FML::Error -> FML::Error::Cache -> Tie::JournaledDir
 </screen>
+こういったキャッシュのアダプター層のために、標準規格があるとよいです。
+全部 Tie でやるってのもあるけど、Tie で書きまくると、どんどん HASH の
+中身が複雑になって、一番下の Tie:: の変えがきかなかったりしそう。
 </para>
 
 </sect2>
