@@ -722,24 +722,31 @@ sub _article_summary
     my $fh = new FileHandle $file;
 
     if (defined $fh) {
-      ARTICLE:
+      LINE:
 	while (<$fh>) {
 	    # nuke useless lines
-	    next ARTICLE if /^\>/;
-	    next ARTICLE if /^\-/;
+	    next LINE if /^\>/;
+	    next LINE if /^\-/;
 
 	    if (1 ../^$/) {
 		push(@header, $_);
 	    }
 	    else {
-		next ARTICLE if /^\s*$/;
+		next LINE if /^\s*$/;
+
+		# ignore mail header like patterns
+		next LINE if /^X-[-A-Za-z0-9]+:/i;
+		next LINE if /^Return-[-A-Za-z0-9]+:/i;
+		next LINE if /^Mime-[-A-Za-z0-9]+:/i;
+		next LINE if /^Content-[-A-Za-z0-9]+:/i;
+		next LINE if /^(To|From|Subject|Reply-To|Received):/i;
 
 		# pick up effetive the first $line lines
 		if ($line--> 0) {
 		    $buf .= $padding. $_;
 		}
 		else {
-		    last ARTICLE;
+		    last LINE;
 		}
 	    }
 	}
