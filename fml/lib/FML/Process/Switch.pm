@@ -339,9 +339,6 @@ sub _ml_name_is_required
     elsif ($myname eq 'makefml') {
 	return 0;
     }
-    elsif ($myname eq 'fmlticket.cgi') {
-	return 0;
-    }
     else {
 	return 1;
     }
