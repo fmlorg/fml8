@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.1 2002/08/07 15:06:58 fukachan Exp $
+# $FML: Error.pm,v 1.2 2002/08/08 03:02:49 fukachan Exp $
 #
 
 package FML::Error;
@@ -97,10 +97,32 @@ sub md_analyze
 sub remove_bouncers
 {
     my ($self) = @_;
-    my $list = $self->{ _remove_addr_list };
+    my $curproc = $self->{ _curproc };
+    my $list    = $self->{ _remove_addr_list };
 
+    use FML::Credential;
+    my $cred = new FML::Credential $curproc;
+
+    use FML::Restriction::Base;
+    my $safe    = new FML::Restriction::Base;
+    my $regexp  = $safe->basic_variable();
+    my $addrreg = $regexp->{ address };
+
+  ADDR:
     for my $addr (@$list) {
-	$self->deluser( $addr );
+	# check if $address is a safe string.
+	if ($addr =~ /^($addrreg)$/) {
+	    if ($cred->is_member( $addr ) || $cred->is_recipient( $addr )) {
+		$self->deluser( $addr );
+	    }
+	    else {
+		Log("remove_bouncers: <$addr> seems not member");
+	    }
+	}
+	else {
+	    LogError("remove_bouncers: <$addr> is invalid");
+	    next ADDR;
+	}
     }
 }
 
