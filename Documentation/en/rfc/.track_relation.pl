@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: .track_relation.pl,v 1.1 2001/10/08 05:34:32 fukachan Exp $
+# $FML: .track_relation.pl,v 1.2 2001/10/08 06:11:07 fukachan Exp $
 #
 
 use strict;
@@ -90,6 +90,11 @@ sub analyze
     while (($k, $v) = each %$r) {
 	my $last = _last_rfc($v);
 	print "$k => @$v (last=$last)\n" if $debug;
+
+	# add myself to appear in the index.html
+	# even if I am in the last node;
+	$rfc_link->{ $k } = $k;
+
 	$rfc_link->{ $last } .= " ".join(" ", @$v );
     }
 }
@@ -156,21 +161,29 @@ sub _remove_dup
 sub _analyze_links
 {
     my ($rfc, $s) = @_;
-
-    # one line
-    $s =~ s/\n/ /g;
+    $s =~ s/\n/ /g; # one line
 
     # Title of RFC.  Author 1, Author 2, Author 3.  Issue date.
     # (Format: ASCII) (Obsoletes xxx) (Obsoleted by xxx) (Updates xxx)
     # (Updated by xxx) (Also FYI ####) (Status: ssssss)
 
-    if ($s =~ /(Obsoletes|Updates)([\s\w\d,]+)/i) {
-	$rfc_prev{ $rfc } = _clean_up($2);
+    if ($s =~ /(Obsoletes)([\s\w\d,]+)/i) {
+	$rfc_prev{ $rfc } .= _clean_up($2);
+	_check_exists($rfc_prev{ $rfc } );
+    }
+
+    if ($s =~ /(Updates)([\s\w\d,]+)/i) {
+	$rfc_prev{ $rfc } .= _clean_up($2);
 	_check_exists($rfc_prev{ $rfc } );
     }
     
-    if ($s =~ /(Updated\s+by|Obsoleted\s+by)([\s\w\d,]+)/i) {
-	$rfc_next{ $rfc } = _clean_up($2);
+    if ($s =~ /(Updated\s+by)([\s\w\d,]+)/i) {
+	$rfc_next{ $rfc } .= _clean_up($2);
+	_check_exists($rfc_next{ $rfc } );
+    }
+
+    if ($s =~ /(Obsoleted\s+by)([\s\w\d,]+)/i) {
+	$rfc_next{ $rfc } .= _clean_up($2);
 	_check_exists($rfc_next{ $rfc } );
     }
 }
@@ -196,7 +209,7 @@ sub _check_exists
 	if (/rfc\d+/i) {
 	    my $fn = _rfc2filename($_);
 	    unless (-f $fn) {
-		print "no $fn\n";
+		print STDERR "no $fn\n";
 		if (-d "source") {
 		    system "cp source/$fn.gz .";
 		    system "gunzip *gz";
@@ -215,7 +228,7 @@ sub _clean_up
     $s =~ s/,/ /g;
     $s =~ s/^\s+//g;
 
-    return $s;
+    return " $s ";
 }
 
 
