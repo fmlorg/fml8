@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.39 2003/03/09 03:10:32 fukachan Exp $
+# $FML: ToHTML.pm,v 1.40 2003/05/16 13:40:57 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.39 2003/03/09 03:10:32 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.40 2003/05/16 13:40:57 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -866,7 +866,9 @@ sub _binary_print
 		_print_safe_str($fh, $msg->message_text());
 	    }
 	    else {
-		croak("unknown MIME encoding enc=$enc");
+		my $r = "*** unknown MIME encoding enc='$enc' ***\n";
+		_print_safe_str($fh, $r);
+		_print_safe_str($fh, $msg->message_text());
 	    }
 
 	    $fh->close();
@@ -1114,17 +1116,19 @@ sub __add_value_to_array
 {
     my ($db, $dbname, $key, $value) = @_;
     my $found = 0;
-    my $ra    = __str2array($db->{ $dbname }->{ $key });
+    my $ra    = __str2array($db->{ $dbname }->{ $key }) || [];
 
-    # ensure uniqueness
-    for my $v (@$ra) {
-	$found = 1 if ($value =~ /^\d+$/o) && ($v == $value);
-	$found = 1 if ($value !~ /^\d+$/o) && ($v eq $value);
-    }
-
-    # add if the value is a new comer.
-    unless ($found) {
-	$db->{ $dbname }->{ $key } .= " $value";
+    if (defined($key) && $key && defined($value) && $value) {
+	# check dup to ensure uniqueness within this array.
+	for my $v (@$ra) {
+	    $found = 1 if ($value =~ /^\d+$/o) && ($v == $value);
+	    $found = 1 if ($value !~ /^\d+$/o) && ($v eq $value);
+	}
+	
+	# add if the value is a new comer.
+	unless ($found) {
+	    $db->{ $dbname }->{ $key } .= " $value";
+	}
     }
 }
 
