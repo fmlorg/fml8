@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent3.pm,v 1.12 2003/01/29 13:26:49 fukachan Exp $
+# $FML: MimeComponent3.pm,v 1.13 2003/02/01 08:53:10 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -102,7 +102,7 @@ sub mime_component_check
 {
     my ($self, $msg, $args) = @_;
     my ($data_type, $prevmp, $nextmp, $mp, $action, $reject_reason);
-    my $is_cutoff = 0; # debug 
+    my $is_cutoff = 0; # debug
     my $i = 1;
     my $j = 1;
     my %count  = ();
@@ -169,7 +169,7 @@ sub mime_component_check
 	    unless ($self->_has_effective_part($msg)) {
 		my $reason = "no effective part in this multipart";
 		Log($reason);
-		$count{ 'reject' }++; 
+		$count{ 'reject' }++;
 		$reason{ 'reject' } = $reject_reason = $reason;
 	    }
 	}
@@ -423,7 +423,7 @@ sub dump_message_structure
 	    $p =~ s/Mail::Message=HASH\((\S+)\)/$1/;
 	    $c =~ s/Mail::Message=HASH\((\S+)\)/$1/;
 	    $n =~ s/Mail::Message=HASH\((\S+)\)/$1/;
-	    __dprint(sprintf("%2d %25s | %10s | %10s | %10s", 
+	    __dprint(sprintf("%2d %25s | %10s | %10s | %10s",
 			     $i, $mp->data_type(), $p, $c, $n));
 	}
     }

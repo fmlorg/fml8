@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.20 2003/01/11 16:05:14 fukachan Exp $
+# $FML: Auth.pm,v 1.21 2003/02/02 04:43:22 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -159,7 +159,7 @@ sub check_admin_member_password
 	# try to check { user => password } relation.
 	if (defined $pwent) {
 	    use FML::Crypt;
-	    my $crypt = new FML::Crypt;		
+	    my $crypt = new FML::Crypt;
 
 	  PASSWORD_ENTRY:
 	    for my $r (@$pwent) {

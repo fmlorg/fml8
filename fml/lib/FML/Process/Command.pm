@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.81 2003/02/03 12:25:58 fukachan Exp $
+# $FML: Command.pm,v 1.82 2003/02/05 03:11:03 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -157,7 +157,7 @@ sub run
 	    $curproc->_evaluate_command_lines($args);
 	}
 	# XXX reject command use irrespective of requests from admins/users.
-	# XXX rejection of admin use occurs in _evaluate_command_lines() 
+	# XXX rejection of admin use occurs in _evaluate_command_lines()
 	# XXX not here.
 	# XXX possible cases are from "system_accounts" or from a not member.
 	else {

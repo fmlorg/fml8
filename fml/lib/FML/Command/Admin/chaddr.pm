@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.11 2003/02/01 06:08:39 fukachan Exp $
+# $FML: chaddr.pm,v 1.12 2003/02/01 13:45:58 fukachan Exp $
 #
 
 package FML::Command::Admin::chaddr;
@@ -95,7 +95,7 @@ sub process
     push(@maps, @$recipient_maps);
     for my $map (@maps) {
 	my $cred = new FML::Credential $curproc;
-	
+
 	# exatct match as could as possible.
 	$cred->set_compare_level( 100 );
 
@@ -104,7 +104,7 @@ sub process
 	# the current member/recipient file must have $old_address
 	# but should not contain $new_address.
 	if ($cred->has_address_in_map($map, $config, $old_address)) {
-	    my $old_address_in_map = $cred->matched_address(); 
+	    my $old_address_in_map = $cred->matched_address();
 
 	    unless ($cred->has_address_in_map($map, $config, $new_address)) {
 		# remove the old address only if $new_address not included.

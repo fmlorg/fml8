@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.5 2002/12/24 10:19:44 fukachan Exp $
+# $FML: digest.pm,v 1.6 2003/01/25 12:48:38 fukachan Exp $
 #
 
 package FML::Command::Admin::digest;
@@ -116,7 +116,7 @@ sub process
 
 
 # Descriptions: change delivery mode to real time.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($dargs)
 # Side Effects: update $recipient_map
 # Return Value: none

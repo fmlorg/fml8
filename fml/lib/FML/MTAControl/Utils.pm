@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.5 2002/12/18 04:03:16 fukachan Exp $
+# $FML: Utils.pm,v 1.1 2003/01/29 08:48:49 fukachan Exp $
 #
 
 package FML::MTAControl::Utils;
@@ -51,7 +51,7 @@ sub is_user_entry_exist_in_passwd
 	    my ($x_user, $buf);
 	    while ($buf = <$fh>) {
 		($x_user) = split(/:/, $buf);
-		if ($user eq $x_user) { 
+		if ($user eq $x_user) {
 		    $found = 1;
 		}
 	    }
@@ -60,7 +60,7 @@ sub is_user_entry_exist_in_passwd
     }
 
     return $found;
-}    
+}
 
 
 =head1 CODING STYLE

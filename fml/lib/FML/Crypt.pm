@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Crypt.pm,v 1.1 2003/02/02 04:46:33 fukachan Exp $
+# $FML: Crypt.pm,v 1.2 2003/02/02 10:57:48 fukachan Exp $
 #
 
 package FML::Crypt;
@@ -19,7 +19,7 @@ FML::Crypt - crypt library
 =head1 SYNOPSIS
 
     use FML::Crypt;
-    my $crypt   = new FML::Crypt;		
+    my $crypt   = new FML::Crypt;
     my $p_input = $crypt->unix_crypt($text, $salt)
 
 =head1 DESCRIPTION

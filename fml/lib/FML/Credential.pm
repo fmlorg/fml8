@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.42 2003/02/01 05:25:51 fukachan Exp $
+# $FML: Credential.pm,v 1.43 2003/02/01 13:50:59 fukachan Exp $
 #
 
 package FML::Credential;
@@ -183,8 +183,8 @@ sub is_same_address
     }
 
     # XXX adjust to avoid undefined warning.
-    $xdomain ||= ''; 
-    $ydomain ||= ''; 
+    $xdomain ||= '';
+    $ydomain ||= '';
 
     # rule 2: case insensitive
     print STDERR "2. eq domain ?\n" if $debug;
@@ -359,7 +359,7 @@ sub has_address_in_map
     }
 
     unless ($status) {
-	$domain ||= ''; 
+	$domain ||= '';
 	$self->error_set("user=$user domain=$domain not found");
     }
 
@@ -390,7 +390,7 @@ sub matched_address
 }
 
 
-# Descriptions: save the last matched address 
+# Descriptions: save the last matched address
 #    Arguments: OBJ($self) STR($address)
 # Side Effects: update $self->{ _last_matched_address };
 # Return Value: STR
@@ -401,7 +401,7 @@ sub _save_address
 }
 
 
-# Descriptions: return the last matched address 
+# Descriptions: return the last matched address
 #    Arguments: OBJ($self) STR($address)
 # Side Effects: none
 # Return Value: STR

@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.79 2003/02/01 08:53:11 fukachan Exp $
+# $FML: Config.pm,v 1.80 2003/02/01 13:48:45 fukachan Exp $
 #
 
 package FML::Config;
@@ -385,7 +385,7 @@ sub _read_file
 
 
 # Descriptions: update $config by re-evaluating variables relation.
-#    Arguments: HASH_REF($config) 
+#    Arguments: HASH_REF($config)
 #               STR($key) STR($value) STR($name_space) STR($mode)
 # Side Effects: update $config on memory.
 # Return Value: none
@@ -414,7 +414,7 @@ sub __update_config
 
 
 # Descriptions: append $value into $config
-#    Arguments: HASH_REF($config) 
+#    Arguments: HASH_REF($config)
 #               STR($key) STR($value) STR($name_space) STR($mode)
 # Side Effects: update $config
 # Return Value: none
@@ -439,7 +439,7 @@ sub __append_config
 #                  key becomes "value1 value3".
 #               If "key += value4, key becomes
 #                  "value1 value2 value3 value4".
-#    Arguments: HASH_REF($config) 
+#    Arguments: HASH_REF($config)
 #               STR($key) STR($mode) STR($value) STR($name_space)
 # Side Effects: update $config by $mode
 # Return Value: STR(new value for $config{ $key })

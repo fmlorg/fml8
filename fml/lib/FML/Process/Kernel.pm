@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.157 2003/02/01 08:51:41 fukachan Exp $
+# $FML: Kernel.pm,v 1.158 2003/02/03 12:33:29 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1201,8 +1201,8 @@ sub reply_message
 
     # XXX-TODO: hard-coded. move condition statements to configuration file.
     # XXX makefml not support message handling not yet.
-    if ($myname eq 'makefml' || 
-	$myname eq 'fml'     || 
+    if ($myname eq 'makefml' ||
+	$myname eq 'fml'     ||
 	$myname eq 'error'   ||
 	$myname =~ /\.cgi$/) {
 	LogWarn("(debug) $myname disables reply_message()");
@@ -1971,7 +1971,7 @@ sub prepare_file_to_return
 	if (defined $obj) {
 	    my $buf;
 	    while ($buf = <$rh>) {
-		if ($buf =~ /\$/o) { 
+		if ($buf =~ /\$/o) {
 		    $config->expand_variable_in_buffer(\$buf, $args);
 		}
 		$wh->print( $obj->convert( $buf, 'jis-jp' ) );

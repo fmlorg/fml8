@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: changepassword.pm,v 1.1 2003/02/02 10:59:19 fukachan Exp $
 #
 
 package FML::Command::Admin::changepassword;
@@ -76,7 +76,7 @@ sub process
 	my ($address, $password);
 
 	if ($options->[2]) {
-	    croak("wrong arguments");	    
+	    croak("wrong arguments");
 	}
 	elsif ($options->[0] && $options->[1]) {
 	    $address  = $options->[ 0 ];
@@ -116,7 +116,7 @@ sub _change_password
     my $config  = $curproc->config();
     my $maps    = $config->get_as_array_ref('admin_member_password_maps');
     my $pri_map = $config->{ primary_admin_member_password_map };
-    my $status  = 0; 
+    my $status  = 0;
 
     # crypt-fy password.
     use FML::Crypt;

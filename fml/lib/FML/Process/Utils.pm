@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.56 2003/01/29 13:27:32 fukachan Exp $
+# $FML: Utils.pm,v 1.57 2003/02/01 04:34:33 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -379,7 +379,7 @@ sub cat
 
     for my $file (@$files) {
 	_cat($file, $out);
-    }    
+    }
 }
 
 
@@ -395,7 +395,7 @@ sub _cat
     my $fh = new FileHandle $file;
     if (defined $fh) {
 	my $buf = '';
-	while (sysread($fh, $buf, 4096)) { 
+	while (sysread($fh, $buf, 4096)) {
 	    syswrite($out, $buf);
 	}
 	$fh->close();

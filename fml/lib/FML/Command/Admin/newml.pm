@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.59 2003/01/25 12:48:39 fukachan Exp $
+# $FML: newml.pm,v 1.60 2003/01/29 08:48:48 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -275,7 +275,7 @@ sub _is_mta_alias_maps_has_ml_entry
 	use FML::MTAControl;
 
 	my $obj = new FML::MTAControl;
-	if ($obj->is_user_entry_exist_in_passwd($ml_name)) { 
+	if ($obj->is_user_entry_exist_in_passwd($ml_name)) {
 	    $found = 1;
 	}
 
@@ -458,7 +458,7 @@ sub _setup_listinfo
 
 
 # Descriptions: show cgi menu for newml
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($args) HASH_REF($command_args)
 # Side Effects: create home directories, update aliases, ...
 # Return Value: none

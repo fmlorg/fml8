@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.34 2003/01/26 05:57:12 fukachan Exp $
+# $FML: ToHTML.pm,v 1.35 2003/02/06 15:15:05 tmu Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.34 2003/01/26 05:57:12 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.35 2003/02/06 15:15:05 tmu Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -1786,7 +1786,7 @@ sub update_id_index
 	for my $id ( reverse (1 .. $id_max )) {
 	    $self->_print_li_filename($wh, $db, $id, $code);
 	}
-    } 
+    }
     else {
 	for my $id ( 1 .. $id_max ) {
 	    $self->_print_li_filename($wh, $db, $id, $code);
@@ -1976,7 +1976,7 @@ sub _update_id_monthly_index
 	    next unless $id =~ /^\d+$/;
 	    $self->_print_li_filename($wh, $db, $id, $code);
 	}
-    } 
+    }
     else {
 	for my $id (sort {$a <=> $b} @list) {
 	    next unless $id =~ /^\d+$/;

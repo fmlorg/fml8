@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: password.pm,v 1.5 2002/12/20 03:40:12 fukachan Exp $
+# $FML: password.pm,v 1.6 2003/02/01 13:44:22 fukachan Exp $
 #
 
 package FML::Command::Admin::password;
@@ -59,7 +59,7 @@ sub need_lock { 1;}
 #               FML::Command::Auth::check::check_admin_member_password()
 #               verified the password already before this module is called.
 #
-#               [Case 2: makefml/fml command on promt] 
+#               [Case 2: makefml/fml command on promt]
 #
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map

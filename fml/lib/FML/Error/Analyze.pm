@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.17 2003/01/25 12:48:41 fukachan Exp $
+# $FML: Analyze.pm,v 1.18 2003/01/26 05:57:11 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -364,7 +364,7 @@ sub get_data_detail
 {
     my ($self) = @_;
 
-    return $self->{ _summary } || {}; 
+    return $self->{ _summary } || {};
 }
 
 

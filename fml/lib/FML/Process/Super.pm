@@ -3,7 +3,7 @@
 # Copyright (C) 2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Super.pm,v 1.2 2003/01/11 16:05:20 fukachan Exp $
+# $FML: Super.pm,v 1.3 2003/01/25 12:11:20 fukachan Exp $
 #
 
 package FML::Process::Super;
@@ -128,7 +128,7 @@ sub run
     my $eval = $config->get_hook( 'fmlsuper_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
-    # if -p specified, run _purge(); 
+    # if -p specified, run _purge();
     # if not, run _check();
     $curproc->_queue($args);
 

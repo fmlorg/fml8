@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.11 2003/01/05 05:15:21 fukachan Exp $
+# $FML: Error.pm,v 1.12 2003/01/25 09:14:04 fukachan Exp $
 #
 
 package FML::Error;
@@ -58,7 +58,7 @@ sub new
 
 =head2 analyze()
 
-open error message cache and 
+open error message cache and
 analyze the data by the analyzer function.
 The function is specified by $config->{ error_analyzer_function }.
 Available functions are located in C<FML::Error::Analyze>.
@@ -71,7 +71,7 @@ error_analyzer_function } is unspecified.
 # Descriptions: open error message cache and analyze the data by
 #               the specified analyzer function.
 #    Arguments: OBJ($self)
-# Side Effects: set up $self->{ _remove_addr_list } used internally. 
+# Side Effects: set up $self->{ _remove_addr_list } used internally.
 # Return Value: none
 sub analyze
 {

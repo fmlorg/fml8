@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.23 2003/02/01 05:27:51 fukachan Exp $
+# $FML: UserControl.pm,v 1.24 2003/02/01 13:53:13 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -133,7 +133,7 @@ sub userdel
 
     my $ml_home_dir = $config->{ ml_home_dir };
     for my $map (@$maplist) {
-	my $_map = $map; 
+	my $_map = $map;
 	$_map =~ s@$ml_home_dir@\$ml_home_dir@;
 	$_map =~ s/file://;
 

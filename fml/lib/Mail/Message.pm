@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.72 2003/01/11 15:13:51 fukachan Exp $
+# $FML: Message.pm,v 1.73 2003/02/01 08:48:08 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1227,7 +1227,7 @@ sub build_mime_multipart_chain
 	$head = $msg unless $head; # save the head $msg
 
 	# boundary -> data -> boundary ...
-	if (defined $prev_m) { 
+	if (defined $prev_m) {
 		$prev_m->_next_message_is( $msg );
 		_prev_message_is( $msg, $prev_m );
 	}

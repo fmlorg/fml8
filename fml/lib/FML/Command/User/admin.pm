@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: admin.pm,v 1.1 2003/01/03 06:45:45 fukachan Exp $
 #
 
 package FML::Command::User::admin;
@@ -35,7 +35,7 @@ sub new
 # Return Value: none
 sub rewrite_prompt
 {
-    my ($self, $curproc, $command_args, $rbuf) = @_;	
+    my ($self, $curproc, $command_args, $rbuf) = @_;
     my $obj = new FML::Command::Admin::password;
     $obj->rewrite_prompt($curproc, $command_args, $rbuf);
 }

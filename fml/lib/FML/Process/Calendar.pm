@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calendar.pm,v 1.12 2003/01/29 11:34:33 fukachan Exp $
+# $FML: Calendar.pm,v 1.1 2003/01/31 14:55:35 fukachan Exp $
 #
 
 package FML::Process::Calendar;
@@ -67,7 +67,7 @@ sub new
 # Side Effects: none
 # Return Value: none
 sub prepare
-{ 
+{
     my ($curproc, $args) = @_;
 
     # load default configurations.

@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.19 2003/01/25 09:34:44 fukachan Exp $
+# $FML: Base.pm,v 1.20 2003/01/26 03:11:59 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -189,7 +189,7 @@ sub regexp_match
     my ($self, $class, $string) = @_;
 
     if (defined $class && defined $string) {
-	if ($class eq 'fullpath') { 
+	if ($class eq 'fullpath') {
 	    return $self->_regexp_match_fullpath($string);
 	}
 

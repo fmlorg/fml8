@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SimpleMatch.pm,v 1.34 2003/01/27 03:23:18 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.35 2003/01/27 03:53:54 fukachan Exp $
 #
 
 
@@ -268,7 +268,7 @@ sub _address_match
       SCAN:
 	for my $buf (@buf) {
 	    if ($debug) {
-		print STDERR 
+		print STDERR
 		    "scan($args->{ mta_type })|state=$args->{state}> $buf\n";
 	    }
 

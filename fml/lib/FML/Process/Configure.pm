@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.48 2003/01/07 08:38:34 fukachan Exp $
+# $FML: Configure.pm,v 1.49 2003/01/11 06:58:46 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -199,7 +199,7 @@ FYI:
 \"makefml\" and \"fml\" are same program except for the argument order.
 So, available commands are same as makefml.
 
-Usage: 
+Usage:
    fml     \$ml_name \$command [command_options]
    makefml \$command \$ml_name [command_options]
 
@@ -229,7 +229,7 @@ _EOF_
 # Side Effects: none
 # Return Value: none
 sub _makefml_help
-{	
+{
     my ($name) = @_;
 
 print <<"_EOF_";

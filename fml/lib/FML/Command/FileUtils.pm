@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: FileUtils.pm,v 1.10 2003/01/11 16:05:14 fukachan Exp $
+# $FML: FileUtils.pm,v 1.11 2003/01/25 09:14:05 fukachan Exp $
 #
 
 package FML::Command::FileUtils;
@@ -84,7 +84,7 @@ sub remove
     my $argv     = $du_args->{ options };
     my $is_error = 0;
 
-    # regexp allowed here for file 
+    # regexp allowed here for file
     my $safe = $self->{ _safe };
 
     # chdir $ml_home_dir firstly. return ASAP if failed.
