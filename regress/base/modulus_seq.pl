@@ -1,9 +1,11 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 #
-# $FML: modulus_seq.pl,v 1.1 2001/02/21 03:41:18 fukachan Exp $
+# $FML: modulus_seq.pl,v 1.2 2001/06/17 09:00:30 fukachan Exp $
 #
 
-$seq_file = "/tmp/.seq";
+use strict;
+my $debug    = defined $ENV{'debug'} ? 1 : 0;
+my $seq_file = "/tmp/.seq";
 
 for ( 1 .. 10 ) {
     &id;

@@ -1,10 +1,11 @@
 #!/usr/bin/env perl
 #
-# $FML: journaleddir.pl,v 1.3 2001/08/22 21:58:50 fukachan Exp $
+# $FML: journaleddir.pl,v 1.4 2001/10/18 03:40:51 fukachan Exp $
 #
 
 BEGIN {
-    print "init  journaleddir ...\n";
+    my $debug = defined $ENV{'debug'} ? 1 : 0;
+    print "init  journaleddir ...\n" if $debug;
 };
 
 use Tie::JournaledDir;
@@ -15,6 +16,7 @@ my $key  = shift || 'uja';
 my $unit = shift || 2;
 my $dir  = "/tmp/fml5/jd";
 
+my $debug = defined $ENV{'debug'} ? 1 : 0;
 
 if (-d $dir) {
     use DirHandle;
@@ -59,16 +61,18 @@ sub _read
     my $error = 0;
     my %found = %$pat;
 
-    print "check keys and values ";
+    print "check keys and values " if $debug;
     for my $k (keys %db) {
-	print ".";
+	print "." if $debug;
 	if (defined $db{$k}) {
 	    if ($db{$k} ne $pat->{$k}) {
-		print "($k) differs: [";
-		print $db{$k};
-		print "] != [";
-		print $pat->{$k};
-		print "]\n";
+		if ($debug) {
+		    print "($k) differs: [";
+		    print $db{$k};
+		    print "] != [";
+		    print $pat->{$k};
+		    print "]\n";
+		}
 		$error++;
 	    }
 
@@ -90,8 +94,10 @@ sub _read
 
     untie %db;
 
-    system "ls -l $dir";
-    print "\n";
+    if ($debug) {
+	system "ls -l $dir";
+	print "\n";
+    }
 }
 
 
@@ -99,7 +105,7 @@ sub _write
 {
     my ($pat) = @_;
 
-    print "write journaleddir ";
+    print "write journaleddir " if $debug;
     for my $key (keys %$pat) {
 	tie %db, 'Tie::JournaledDir', { 
 	    unit => $unit,
@@ -107,10 +113,10 @@ sub _write
 	};
 
 	$db{ $key } = $pat->{ $key };
-	print "$key ";
+	print "$key " if $debug;
 	sleep 1;
 
 	untie %db;
     }
-    print " done\n";
+    print " done\n" if $debug;
 }

@@ -5,13 +5,14 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: search_max_id.pl,v 1.1 2001/11/20 07:02:57 fukachan Exp $
+# $FML: search_max_id.pl,v 1.2 2002/01/27 13:20:03 fukachan Exp $
 #
 
 use strict;
 use lib qw(../../fml/lib ../../cpan/lib ../../img/lib);
-
 use Benchmark;
+
+my $debug = defined $ENV{'debug'} ? 1 : 0;
 
 use File::Sequence;
 my $obj = new File::Sequence;
@@ -25,25 +26,29 @@ for my $file (@ARGV) {
     use Fcntl;
     tie %db, 'AnyDBM_File', $f, O_RDWR|O_CREAT, 0644;
 
-    print STDERR "\nsearch with pebot:\n";
-    print STDERR "max = ";
-    my $t0 = new Benchmark;
-    print STDERR $obj->search_max_id( { hash => \%db } );
-    my $t1 = new Benchmark;
-    my $td = timediff($t1, $t0);
-    print STDERR " ", timestr($td), "\n";
+    {
+	print STDERR "\nsearch with pebot:\n";
+	print STDERR "max = ";
+	my $t0 = new Benchmark;
+	print STDERR $obj->search_max_id( { hash => \%db } );
+	my $t1 = new Benchmark;
+	my $td = timediff($t1, $t0);
+	print STDERR " ", timestr($td), "\n";
+    }
 
 
-    print STDERR "\nfull search:\n";
-    print STDERR "max = ";
-    my $t0 = new Benchmark;
-    print STDERR $obj->search_max_id( { 
-	hash => \%db,
-	full_search => 1,
-    } );
-    my $t1 = new Benchmark;
-    my $td = timediff($t1, $t0);
-    print STDERR " ", timestr($td), "\n";
+    {
+	print STDERR "\nfull search:\n";
+	print STDERR "max = ";
+	my $t0 = new Benchmark;
+	print STDERR $obj->search_max_id( { 
+	    hash => \%db,
+	    full_search => 1,
+	} );
+	my $t1 = new Benchmark;
+	my $td = timediff($t1, $t0);
+	print STDERR " ", timestr($td), "\n";
+    }
 
 }
 

@@ -1,13 +1,14 @@
-#!/usr/pkg/bin/perl
+#!/usr/bin/env perl
 #
-# $FML: mime_encode.pl,v 1.1 2001/09/23 14:32:34 fukachan Exp $
+# $FML: mime_decode.pl,v 1.1 2001/10/19 13:16:19 fukachan Exp $
 #
 
 use strict;
 use lib qw(../../cpan/lib ../../fml/lib ../../im/lib);
 use MIME::Base64;
 
-my $buf = '';
+my $debug = defined $ENV{'debug'} ? 1 : 0;
+my $buf   = '';
 
 while (<>) {
 	$buf .= $_; 

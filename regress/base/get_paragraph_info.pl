@@ -1,6 +1,13 @@
+#!/usr/bin/env perl
+#
+# $FML$
+#
+
 use strict;
 use File::Basename;
 use vars qw(%opts);
+
+my $debug = defined $ENV{'debug'} ? 1 : 0;
 
 use Getopt::Std;
 getopts('d', \%opts);

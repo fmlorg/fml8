@@ -1,15 +1,18 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: copy.pl,v 1.3 2001/04/03 09:51:12 fukachan Exp $
+# $FML: copy.pl,v 1.4 2001/06/17 09:00:30 fukachan Exp $
 #
 
+use strict;
+my $debug = defined $ENV{'debug'} ? 1 : 0;
+
 unless (@ARGV) {
-    use FML::Utils qw(copy);
+    use File::Utils qw(copy);
     copy("main.cf", "/tmp/main.cf");
 }
 else {

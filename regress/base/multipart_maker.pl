@@ -1,6 +1,6 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 #
-# $FML: multipart_maker.pl,v 1.8 2001/04/07 06:35:54 fukachan Exp $
+# $FML: multipart_maker.pl,v 1.9 2001/05/06 08:25:02 fukachan Exp $
 #
 
 use strict;
@@ -8,13 +8,13 @@ use File::Basename;
 use Mail::Message;
 use Getopt::Std;
 
-my %opts;
+my $debug = defined $ENV{'debug'} ? 1 : 0;
 
+my %opts;
 getopts('mr:', \%opts);
 
 my $rcpt = $opts{ r } || undef; 
-
-my $dir = dirname($0);
+my $dir  = dirname($0);
 
 $| = 1;
 

@@ -1,7 +1,10 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 #
-# $FML: lock.pl,v 1.4 2001/06/17 09:00:30 fukachan Exp $
+# $FML: lock.pl,v 1.5 2001/08/05 13:09:00 fukachan Exp $
 #
+
+use strict;
+my $debug = defined $ENV{'debug'} ? 1 : 0;
 
 use File::SimpleLock;
 my $lockobj = new File::SimpleLock;

@@ -1,7 +1,9 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 #
-# $FML$
+# $FML: log_structured_data.pl,v 1.1 2001/04/02 14:34:04 fukachan Exp $
 #
+
+my $debug = defined $ENV{'debug'} ? 1 : 0;
 
 use File::LogStructuredData;
 $db = new File::LogStructuredData { file => '/tmp/cache.txt' };

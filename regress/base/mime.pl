@@ -1,6 +1,6 @@
-#!/usr/local/bin/perl
+#!/usr/bin/env perl
 #
-# $FML: mime.pl,v 1.6 2001/06/17 09:00:30 fukachan Exp $
+# $FML: mime.pl,v 1.7 2001/12/23 06:44:34 fukachan Exp $
 #
 
 use strict;
@@ -10,6 +10,7 @@ use Mail::Message::Encode qw(encode_mime_string);
 use MIME::Base64;
 use MIME::QuotedPrint;
 
+my $debug = defined $ENV{'debug'} ? 1 : 0;
 
 &try_mime(" ");
 &try_mime("¡¡");
@@ -40,7 +41,7 @@ sub try_mime
     $buf .=  "<". $out_str_qp. "<\n";
 
     $buf =~ s/\n/\n   |/g;
-    print $buf, "\n";
+    print $buf, "\n" if $debug;
     print ($orig_str eq $out_str_b64 ? "base64 ... ok\n" : "fail\n");
     print ($orig_str eq $out_str_qp  ? "qp     ... ok\n" : "fail\n");
 }
