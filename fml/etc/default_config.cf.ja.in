@@ -769,7 +769,7 @@ template_file_charset_en	=	us-ascii
 #        Value:
 #     Examples:
 template_file_charset_select_list	=	euc-jp	
-					us-ascii
+						us-ascii
 
 # Descriptions:
 #      History:
@@ -1874,7 +1874,7 @@ error_analyzer_cache_size		=	14
 #      History: none
 #        Value: simple_count / histgram
 #     Examples: simple_count
-error_analyzer_function_select_list		=	simple_count
+error_analyzer_function_select_list	=	simple_count
 						histgram
 
 
@@ -2084,7 +2084,7 @@ cgi_default_language	=	japanese
 #        Value:
 #     Examples:
 cgi_language_select_list	=	japanese
-				english
+					english
 
 
 # Descriptions: デフォルトの bgcolor

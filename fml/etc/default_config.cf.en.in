@@ -736,7 +736,7 @@ template_file_charset_en	=	us-ascii
 #        Value:
 #     Examples:
 template_file_charset_select_list	=	euc-jp	
-					us-ascii
+						us-ascii
 
 # Descriptions:
 #      History:
@@ -1803,7 +1803,7 @@ error_analyzer_cache_size		=	14
 #      History: none
 #        Value: simple_count / histgram
 #     Examples: simple_count
-error_analyzer_function_select_list		=	simple_count
+error_analyzer_function_select_list	=	simple_count
 						histgram
 
 
@@ -2017,9 +2017,9 @@ cgi_navigation_bar_color	=	#FFFFFF
 #      History: 
 #        Value: member recipient admin_member
 #     Examples: member recipient admin_member
-cgi_menu_address_map_select_list		=	member
-					recipient
-					admin_member
+cgi_menu_address_map_select_list	=	member
+						recipient
+						admin_member
 
 
 # Descriptions: default value of list types in CGI operations.
