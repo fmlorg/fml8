@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: subscribe.pm,v 1.10 2001/07/15 12:03:37 fukachan Exp $
+# $FML: subscribe.pm,v 1.1.1.1 2001/08/26 05:43:10 fukachan Exp $
 #
 
 package FML::Command::User::subscribe;
@@ -19,7 +19,7 @@ use FML::Command::Utils;
 
 =head1 NAME
 
-FML::Command::subscribe - subscribe a new member
+FML::Command::User::subscribe - subscribe a new member
 
 =head1 SYNOPSIS
 
@@ -50,21 +50,20 @@ sub process
     use IO::Adapter;
     my $obj = new IO::Adapter $member_map;
     $obj->touch();
-    $obj->add( $address );
 
-    if ($obj->error()) {
-	$self->error_set( $obj->error() );
-	return undef;
-    }
+    use FML::Credential;
 
-    $obj = new IO::Adapter $recipient_map;
-    $obj->touch();
-    $obj->add( $address );
-    $self->error_set( $obj->error() );
-
-    if ($obj->error()) {
-	$self->error_set( $obj->error() );
-	return undef;
+    for my $map ($member_map, $recipient_map) {
+	my $cred = new FML::Credential;
+	unless ($cred->has_address_in_map($map, $address)) {
+	    $obj = new IO::Adapter $map;
+	    $obj->touch();
+	    $obj->add( $address );
+	}
+	else {
+	    $self->error_set( "$address already exists" );
+	    return undef;
+	}
     }
 }
 
@@ -82,7 +81,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::subscribe appeared in fml5 mailing list driver package.
+FML::Command::User::subscribe appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
