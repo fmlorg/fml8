@@ -1,6 +1,51 @@
 		CHANGES
 		$Date$
 
+2001/10/10
+
+   コマンド
+	get mget help などが動くようになった。
+
+   FML::Config
+	check defined() more
+
+   FML::Credential
+	implement is_same_address() completely.
+	is_member() accpepts $args->{ address }
+	define set_compare_level(), get_compare_level()
+
+   add variables
+	command_prompot	= >>>
+	help_file = $message_template_dir/help
+	message_template_dir = $fml_share_dir/template/$template_file_charset
+	template_file_charset = $default_charset
+
+   Mail::Delivery::SMTP
+	old IO::Socket has no connected() method. modified to use our
+	own socket_is_connected() method or remove connected() check. 
+
+	Mail::Delivery::SMTP	
+	+ bug fix: ensure we handle IPv6 case more restrictly  
+
+	Mail::Delivery::Net::INET6
+	+ bug fix: clear error counter
+	+ check more defined($socket) or not, socket is connected    
+	+ more debug log
+
+   FML::Process::Kernel
+	define prototype for reply_message_nl() for natural language
+	check more defined() or not
+	more debug info
+	define expand_variables_in_file()
+	+ expand $xxx variables in template (e.g. $help_file).
+
+   FML::Process::Command
+	bug fix: $obj->$command where $command is a command name not line.
+	modified to use reply_meessage_nl()
+
+   FML::Command
+	define error_nl(), but a dummy yet now
+	+ get natural language information
 
 2001/10/09
 
@@ -358,5 +403,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.16 2001/10/09 00:27:46 fukachan Exp $
-
+$FML: CHANGES.txt,v 1.17 2001/10/09 14:50:13 fukachan Exp $
