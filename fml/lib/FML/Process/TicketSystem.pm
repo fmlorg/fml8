@@ -40,33 +40,37 @@ sub prepare
 sub run
 {
     my ($curproc, $args) = @_;
+    my $config  = $curproc->{ config };
+    my $model   = $config->{ ticket_model };
+    my $pkg     = "FML::Ticket::Model::". $model;
+    my $argv    = $args->{ ARGV };
+    my $command = $argv->[ 0 ];
 
-    # use Data::Dumper; print Dumper( $args ); sleep 30;
+    # fake use() to do "use FML::Ticket::$model;"
+    eval qq{ require $pkg; $pkg->import();};
+    unless ($@) {
+	$curproc->lock();
 
-    $curproc->lock();
-    {
-	$curproc->_ticket_show_summary($args);
+	if ($command eq 'list') {
+	    $curproc->_ticket_show_summary($args, $pkg);
+	}
+	else {
+	    croak("unknown command=$command\n");
+	}
+
+	$curproc->unlock();
     }
-    $curproc->unlock();
+    else {
+	Log($@);
+    }
 }
 
 
 sub _ticket_show_summary
 {
-    my ($curproc, $args) = @_;    
-    my $config = $curproc->{ config };
-    my $model  = $config->{ ticket_model };
-    my $pkg    = "FML::Ticket::Model::". $model;
-
-    # fake use() to do "use FML::Ticket::$model;"
-    eval qq{ require $pkg; $pkg->import();};
-    unless ($@) {
-	my $ticket = $pkg->new($curproc, $args);
-	$ticket->show_summary($curproc, $args);
-    }
-    else {
-	Log($@);
-    }
+    my ($curproc, $args, $pkg) = @_;
+    my $ticket = $pkg->new($curproc, $args);
+    $ticket->show_summary($curproc, $args);
 }
 
 
