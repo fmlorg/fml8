@@ -1,5 +1,6 @@
 basic.cf
 acl.cf
+mta.cf
 header.cf
 lock.cf
 log.cf

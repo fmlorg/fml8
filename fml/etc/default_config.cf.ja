@@ -28,13 +28,12 @@ member_maps		=	file:$ml_home_dir/members
 recipient_maps		=	file:$ml_home_dir/recipients
 				file:$ml_home_dir/actives
 				unix.group:fml
+=head2 MTA
 
 recipient_limit		=	1000
 
 mta			=	[::1]:25
 				127.0.0.1:25
-				192.168.148.193:25
-				192.168.148.194:25
 
 ###
 ### Section: Header Manipulations
