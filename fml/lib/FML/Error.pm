@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.26 2003/10/15 01:03:27 fukachan Exp $
+# $FML: Error.pm,v 1.27 2003/12/31 03:59:28 fukachan Exp $
 #
 
 package FML::Error;
@@ -217,7 +217,6 @@ sub analyze
     my $cache   = $self->db_open();
     my $rdata   = $cache->get_all_values_as_hash_ref();
 
-    # XXX-TODO: we should use method to get function name.
     use FML::Error::Analyze;
     my $analyzer = new FML::Error::Analyze $curproc;
     my $fp       = $self->get_analyzer_function();
@@ -401,9 +400,8 @@ sub deluser
 	return;
     }
 
-    # XXX-TODO: hmm, which is better, 
-    # XXX-TODO: FML::Command::Admin::unsubscribe or FML::User::Control ?
-    # arguments to pass off to each method
+    # we call FML::Command::Admin::unsubscribe not FML::User::Control
+    # since FML::User::Control is too raw.
     my $method       = 'unsubscribe';
     my $command_args = {
         command_mode => 'admin',
