@@ -1,9 +1,18 @@
 ○ _analyze_thread()
 
-スレッドの依存関係を調べる処理は _thread_analyze() が真髄の一つだ。
-この関数は HASH_REF(ref_key_list) を更新するためにある。
+スレッドの依存関係を調べる処理は _thread_analyze() が真髄の一つです。
+この関数は 
 
-HASH_REF(ref_key_list) は、次のように更新される。
+	HASH_REF(ref_key_list)
+
+	doubly linked list
+		HASH_REF(prev_key)
+		HASH_REF(next_key)
+
+を更新しています。prev_key と next_key は最も参照関係の近い記事同士の
+相互リンクを表しています。
+
+さて、HASH_REF(ref_key_list) は、次のように更新されます。
 
 for $message_id (In-Reply-To と References にふくまれるID) {
 
@@ -14,10 +23,13 @@ for $message_id (In-Reply-To と References にふくまれるID) {
 
 }
 
-たとえば、記事101を処理しているとし、記事１０１が１００へのフォローだ
-としましょう。そして、１０１は９０と９１も参照せよと指示しているとしま
-す。90がスレッドの先頭で、91は90へのフォローだとしましょう。この場合、
-初期状態は次のようになっています。
+たとえば、記事101を処理しているとし、記事101が100へのフォローだとしま
+しょう。この場合、next_key は { 100 => 101 } であり、prev_key は { 101
+=> 100 } となります。
+
+さらに、101は90と91も参照せよと指示しているとします。また、90がスレッ
+ドの先頭で、91は90へのフォローだとしましょう。この場合、初期状態は次の
+ようになっています。
 
 ref_key_list = {
  	 90 => 91,
@@ -38,8 +50,7 @@ ref_key_list = {
  	 91 => 101,
 };
 
-
-次に、記事102が101へのフォローなら、ref_key_list は次のようになるだろ
+次に、記事102が101へのフォローなら、ref_key_list は次のようになるでしょ
 う。
 
 ref_key_list = {
@@ -53,4 +64,4 @@ ref_key_list = {
 
 	for $message_id (In-Reply-To と References にふくまれるID) {
 
-の処理の順番はどうでもいいです。
+の処理の順番はどうでもいいはずです。
