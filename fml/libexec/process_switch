@@ -50,12 +50,12 @@ sub _module_we_use
     my $name   = $args->{ myname };
     my $pkg    = '';
 
-    if ($name eq 'fml.pl' || $name eq 'distribute' || $name eq 'loader') {
-	$pkg = 'FML::Process::Distribute';
-    }
-    elsif (( $name eq 'fml.pl' && $args->{ options }->{ ctladdr }) || 
+    if (($name eq 'fml.pl' && $args->{ options }->{ ctladdr }) || 
 	   $name eq 'command') {
 	$pkg = 'FML::Process::Command';
+    }
+    elsif ($name eq 'fml.pl' || $name eq 'distribute' || $name eq 'loader') {
+	$pkg = 'FML::Process::Distribute';
     }
     elsif ($name eq 'fmlserv') {
 	$pkg = 'FML::Process::ListServer';
