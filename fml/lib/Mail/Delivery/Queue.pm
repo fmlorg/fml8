@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Queue.pm,v 1.3 2001/05/08 14:14:26 fukachan Exp $
+# $FML: Queue.pm,v 1.1 2001/05/09 00:55:54 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -31,6 +31,9 @@ Mail::Delivery::Queue - hashed directory holding queue files
     # ok to deliver this queue !
     $queue->setrunnable() || croak("fail to set queue deliverable");
 
+    # get the filename of this $queue object
+    my $filename = $queue->filename();
+
 =head1 DESCRIPTION
 
 C<Mail::Delivery::Queue> provides basic manipulation of mail queue.
@@ -50,11 +53,18 @@ method.
 
    $queue_dir/new/$qid  --->  $queue_dir/active/$qid
 
+The actual delivery is done by other modules such as 
+C<Mail::Delivery>.
+C<Mail::Delivery::Queue> manipulats only queue around things.
+
 =head1 METHODS
 
 =head2 C<new($args)>
 
-constructor. You must specify $args->{ dirctory } (C<queue directory>).
+constructor. You must specify C<queue directory> as
+
+    $args->{ dirctory } .
+
 C<new()> assigns the queue id, queue files to be used but do no actual
 works.
 
@@ -113,7 +123,7 @@ sub id
 
 =head2 C<filename()>
 
-return the file name of the quque id assigned to the object C<$self>.
+return the file name of the queue id assigned to the object C<$self>.
 
 =cut
 
@@ -130,9 +140,9 @@ You specify C<$msg>, which is C<Mail::Message> object.
 C<in()> creates a queue file in C<new/> directory 
 (C<queue_directory/new/>.
 
+REMEMBER YOU MUST DO C<setrunnable()> for the queue to deliver.
 If you not C<setrunnable()> it, the queue file is removed by
 C<DESTRUCTOR>. 
-REMEMBER YOU MUST SET THE QUEUE C<setrunnable()>.
 
 =cut
 
@@ -164,9 +174,9 @@ sub in
 
 set the status of the queue assigned to this object C<$self>
 deliverable. 
-This file is scheduled to be delivered (in near future).
+This file is scheduled to be delivered.
 
-In fact setrunnable() C<rename>s the queue id file from C<new/>
+In fact, setrunnable() C<rename>s the queue id file from C<new/>
 directory to C<active/> directory like C<postfix> queue strategy.
 
 =head2 C<remove()>
