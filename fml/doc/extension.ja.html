@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>
+fml5 の拡張の仕方
+</TITLE>
+<META http-equiv="Content-Type"
+	content="text/html; charset=EUC-JP">
+</HEAD>
+
+<BODY BGCOLOR="#E6E6FA">
+<!-- ================== body =========================================== -->
+
+<CENTER>
+fml5 の拡張の仕方の例
+</CENTER>
+
+<UL>
+
+<LI>
+独自コマンドを作る。
+<BR>
+例えばコマンド uja を作りたいなら、FML::Command をぱくって
+
+	/usr/local/lib/fml/site_local/FML/Command/uja.pm
+
+というファイルを置けば OK (いいのか、それで?)。
+いや、うそかも… 許可するコマンドリストに追加して始めて
+有効になるようにしないといけないと思う。
+
+
+</UL>
+
+</BODY>
+</HTML>
