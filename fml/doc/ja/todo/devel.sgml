@@ -1,5 +1,5 @@
 <!--
-   $FML: devel.sgml,v 1.6 2001/07/15 09:17:59 fukachan Exp $
+   $FML: devel.sgml,v 1.7 2001/07/15 09:51:19 fukachan Exp $
 -->
 
 <chapter id="fml5.todo">
@@ -61,14 +61,5 @@ Mail::Bounce
 
 </sect1>
 
-<!-- ============================================ -->
-<sect1>
-<title> チケットシステム </title>
-
-<para>
-チェックボタンで一括消去をする
-</para>
-
-</sect1>
 
 </chapter>
