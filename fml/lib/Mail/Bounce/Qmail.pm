@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.6 2002/09/11 23:18:22 fukachan Exp $
+# $FML: Qmail.pm,v 1.7 2002/09/22 14:57:01 fukachan Exp $
 #
 
 
@@ -39,8 +39,8 @@ format), as describbed in
 sub analyze
 {
     my ($self, $msg, $result) = @_;
-    my $state   = 0;
-    my $pattern = 'Hi. This is the';
+    my $state       = 0;
+    my $pattern     = 'Hi. This is the';
     my $end_pattern = '--- Undelivered message follows ---';
 
     # search data
@@ -48,7 +48,7 @@ sub analyze
     my $m = $msg->{ next };
     do {
 	if (defined $m) {
-	    my $num  = $m->num_paragraph;
+	    my $num = $m->num_paragraph;
 	    for ( my $i = 0; $i < $num ; $i++ ) {
 		my $data = $m->nth_paragraph( $i + 1 );
 
@@ -60,6 +60,8 @@ sub analyze
 		    if ($data =~ /\<(\S+\@\S+)\>:\s*(.*)/) {
 			($addr, $reason) = ($1, $2);
 
+			# XXX-TODO: we should use $self->address_clean_up() ?
+
 			my $status = '5.x.y';
 			if ($data =~ /\#(\d+\.\d+\.\d+)/) {
 			    $status = $1;
@@ -69,7 +71,6 @@ sub analyze
 			    $status  = '5.x.y' if $code =~ /^5/;
 			    $status  = '4.x.y' if $code =~ /^4/;
 			}
-
 
 			$result->{ $addr }->{ 'Diagnostic-Code' } = $reason;
 			$result->{ $addr }->{ 'Status' }          = $status;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: FixBrokenAddress.pm,v 1.7 2002/09/11 23:18:22 fukachan Exp $
+# $FML: FixBrokenAddress.pm,v 1.8 2002/09/22 14:57:01 fukachan Exp $
 #
 
 
@@ -21,7 +21,7 @@ my $debug = 0;
 
 =head1 NAME
 
-Mail::Bounce::FixBrokenAddress - handles irregular error message
+Mail::Bounce::FixBrokenAddress - handle irregular error message
 
 =head1 SYNOPSIS
 
@@ -32,7 +32,6 @@ See C<Mail::Bounce> for more details.
 See C<Mail::Bounce> for more details.
 
 =head1 ERROR EXAMPLE
-
 
 =cut
 
@@ -50,12 +49,12 @@ sub FixIt
     }
 
     # error address from nifty.ne.jp has no domain part ;)
-    if ($hint eq 'nifty.ne.jp' && $addr !~ /\@/) {
+    if ($hint eq 'nifty.ne.jp' && $addr !~ /\@/o) {
 	return( $addr . '@nifty.ne.jp' );
     }
     # looks like URL for DB
     # e.g. errorperson?user-id=102624708&subscriber-id=94219786@webtv.ne.jp
-    elsif ($hint =~ /webtv.ne.jp/ && $addr =~ /\?/) {
+    elsif ($hint =~ /webtv.ne.jp/ && $addr =~ /\?/o) {
 	if ($addr =~ /^(\S+)\?/) {
 	    return( $1 .'@webtv.ne.jp' );
 	}

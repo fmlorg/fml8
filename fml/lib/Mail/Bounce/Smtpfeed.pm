@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Smtpfeed.pm,v 1.5 2002/09/11 23:18:23 fukachan Exp $
+# $FML: Smtpfeed.pm,v 1.6 2002/09/22 14:57:01 fukachan Exp $
 #
 
 
@@ -47,22 +47,24 @@ sub analyze
     my ($self, $msg, $result) = @_;
     my $m      = $msg->find( { data_type => 'message/rfc822' } );
     my $header = $m->nth_paragraph( 1 );
-    my $addr;
+    my $addr   = '';
 
     #
-    # XXX code below is correct ?
+    # XXX-TODO: code below is correct ?
     #
 
     if ($header =~
 	/^To: \(original recipient in envelope at \S+\) <(\S+)>/) {
 	$addr = $1;
-    }
-    $addr =~ s/\s*$//;
+	$addr =~ s/\s*$//;
 
-    # set up return buffer
-    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
-    $result->{ $addr }->{ 'Status' }          = '5.x.y';
-    $result->{ $addr }->{ 'hints' }           = 'smtpfeed';
+	if ($addr) {
+	    # set up return buffer
+	    $result->{ $addr }->{ 'Final-Recipient' } = $addr;
+	    $result->{ $addr }->{ 'Status' }          = '5.x.y';
+	    $result->{ $addr }->{ 'hints' }           = 'smtpfeed';
+	}
+    }
 }
 
 
@@ -76,7 +78,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

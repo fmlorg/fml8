@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DSN.pm,v 1.18 2002/09/11 23:18:22 fukachan Exp $
+# $FML: DSN.pm,v 1.19 2002/09/22 14:57:01 fukachan Exp $
 #
 
 
@@ -32,6 +32,8 @@ See C<Mail::Bounce> for more details.
 See C<Mail::Bounce> for more details.
 
 =head1 ERROR EXAMPLE
+
+See RFC1894 on DSN (Delivery Status Notification) definition.
 
    From: MAILER-DAEMON@ahodori.fml.org (Mail Delivery System)
    Subject: Undelivered Mail Returned to Sender
@@ -61,7 +63,7 @@ See C<Mail::Bounce> for more details.
    Final-Recipient: rfc822; rudo@nuinui.net
    Action: failed
    Status: 4.0.0
-   Diagnostic-Code: X-Postfix; connect to sv.nuinui.net[210.161.170.173]:
+   Diagnostic-Code: X-Postfix; connect to sv.nuinui.net[10.0.0.1]:
        Connection refused
 
    --C687D866E0.986737575/ahodori.fml.org
@@ -107,7 +109,7 @@ sub analyze
 	return undef;
     }
 
-    $result;
+    return $result;
 }
 
 
@@ -143,15 +145,15 @@ sub _parse_dsn_format
     }
 
     # set up return buffer
-    if ($addr =~ /\@/) {
+    if ($addr =~ /\@/o) {
 	$result->{ $addr }->{ 'Final-Recipient' } = $addr;
-	for ('Final-Recipient',
-	     'Original-Recipient',
-	     'Action',
-	     'Status',
-	     'Diagnostic-Code',
-	     'Reporting-MTA',
-	     'Received-From-MTA') {
+	for (qw(Final-Recipient
+		Original-Recipient
+		Action
+		Status
+		Diagnostic-Code
+		Reporting-MTA
+		Received-From-MTA)) {
 	    $result->{ $addr }->{ $_ } = $header->get($_) || undef;
 	}
 	$result->{ $addr }->{ 'hints' } = 'DSN';

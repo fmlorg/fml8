@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Exim.pm,v 1.8 2002/09/11 23:18:22 fukachan Exp $
+# $FML: Exim.pm,v 1.9 2002/09/22 14:57:01 fukachan Exp $
 #
 
 
@@ -39,11 +39,13 @@ See C<Mail::Bounce> for more details.
 
 =head1 TODO
 
-need to guess MTA as "exim" ???
+We need to guess MTA as "exim", but how ?
 
 	if (/^Message-ID:\s+\<[\w\d]+\-[\w\d]+\-[\w\d]+\@/i) {
 	    $MTA = "exim";
 	}
+
+o.k. ?
 
 =cut
 
@@ -59,6 +61,7 @@ sub analyze
     my $addr = $m->get('X-Failed-Recipients');
 
     # set up return buffer if $addr is found.
+    # XXX-TODO: we should use $self->address_clean_up() ?
     if ($addr) {
 	$addr =~ s/\s*$//;
 	$result->{ $addr }->{ 'Final-Recipient' } = $addr;

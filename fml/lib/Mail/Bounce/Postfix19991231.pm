@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix19991231.pm,v 1.19 2002/09/11 23:18:22 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.20 2002/09/22 14:57:01 fukachan Exp $
 #
 
 
@@ -31,6 +31,8 @@ See C<Mail::Bounce> for more details.
 subclass used in C<Mail::Bounce>.
 
 =head1 ERROR FORMAT
+
+Postfix old style error format.
 
    Date: Fri, 29 Jan 1999 15:05:06 +0900 (JST)
    From: MAILER-DAEMON@fml.org (Mail Delivery System)

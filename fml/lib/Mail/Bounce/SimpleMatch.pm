@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SimpleMatch.pm,v 1.30 2002/09/11 23:18:22 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.31 2002/09/22 14:57:01 fukachan Exp $
 #
 
 
@@ -22,7 +22,7 @@ use Mail::Bounce::Language::Japanese;
 
 =head1 NAME
 
-Mail::Bounce::SimpleMatch - SimpleState error message format parser
+Mail::Bounce::SimpleMatch - simple state machine to parse error messages
 
 =head1 SYNOPSIS
 
@@ -179,6 +179,7 @@ sub analyze
 	my $n = $m->num_paragraph;
 	if ($debug) { print STDERR "   num_paragraph: $n\n";}
 
+      PARAGRAPH:
 	for (my $i = 0; $i < $n; $i++) {
 	    my $buf = $m->nth_paragraph($i + 1); # 1 not 0 for 1st paragraph
 	    $args->{ buf } = \$buf;
@@ -193,7 +194,7 @@ sub analyze
 	    }
 
 	    # we found the mark of "end of error message part".
-	    last if $self->_reach_end($args);
+	    last PARAGRAPH if $self->_reach_end($args);
 	}
     }
     else {
@@ -212,8 +213,9 @@ sub _reach_end
     my $result = $args->{ result };
     my $rbuf   = $args->{ buf };
 
+  REGEXP:
     for my $mta_type (keys %$address_trap_regexp) {
-	next unless $mta_type;
+	next REGEXP unless $mta_type;
 
 	my $end_regexp = $address_trap_regexp->{ $mta_type }->{ 'end' };
 	if ($end_regexp && ($$rbuf =~ /$end_regexp/)) {
@@ -222,15 +224,15 @@ sub _reach_end
 	}
     }
 
-    0;
+    return 0;
 }
 
 
-# Descriptions: trap address in error message
+# Descriptions: trap address in error message.
 #               our state check is applied to each paragraph
 #               not the whole body.
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: update $result
+# Side Effects: update $result and state in $args if found.
 # Return Value: none
 sub _address_match
 {
@@ -239,8 +241,9 @@ sub _address_match
     my $rbuf   = $args->{ buf };
 
     unless ($args->{ state }) {
+      REGEXP:
 	for my $mta_type (keys %$address_trap_regexp) {
-	    next unless $mta_type;
+	    next REGEXP unless $mta_type;
 
 	    my $start_regexp = $address_trap_regexp->{ $mta_type }->{'start'};
 	    if ($$rbuf =~ /$start_regexp/) {
@@ -266,6 +269,7 @@ sub _address_match
 	for (@buf) {
 	    print STDERR "scan($args->{ mta_type })|state=$args->{state}> $_\n"
 		if $debug;
+	    # XXX in some cases, $end_regexp not defined.
 	    last SCAN if $end_regexp && /$end_regexp/;
 
 	    if (/(\S+\@\S+)/) {

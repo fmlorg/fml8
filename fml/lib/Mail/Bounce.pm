@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Bounce.pm,v 1.21 2002/09/11 23:18:21 fukachan Exp $
+# $FML: Bounce.pm,v 1.22 2002/09/22 14:56:59 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -16,7 +16,7 @@ my $debug = 0;
 
 =head1 NAME
 
-Mail::Bounce - analye error messages
+Mail::Bounce - analyze error messages
 
 =head1 SYNOPSIS
 
@@ -134,25 +134,26 @@ sub analyze
 	print STDERR "   ----- dump msg end -----\n";
     }
 
-    for my $pkg (
-		 'DSN',
-		 'Postfix19991231',
-		 'Qmail',
-		 'Exim',
-		 'GOO',
-		 'SimpleMatch',
-		 ) {
+  MODEL:
+    for my $pkg (qw(
+		    DSN
+		    Postfix19991231
+		    Qmail
+		    Exim
+		    GOO
+		    SimpleMatch
+		    )) {
 	my $module = "Mail::Bounce::$pkg";
 	print STDERR "\n   --- module: $module\n" if $debug;
 	eval qq {
-	    require $module; $module->import();
+	    use $module;
 	    $module->analyze( \$msg , \$result );
 	};
 	croak($@) if $@;
 
 	if (keys %$result) {
 	    print STDERR "\n   match $module\n" if $debug;
-	    last;
+	    last MODEL;
 	}
 
         if ($debug) {
@@ -186,14 +187,17 @@ sub address_list
 =head2 C<status($addr)>
 
 return status (string) for C<$addr>.
-The status is extracted from C<result> analyze() method gives.
+The status can be extracted from C<result> analyze() method gives.
 
 =head2 C<reason($addr)>
 
 return error reason (string) for C<$addr>.
-It is extracted from C<result> analyze() method gives.
+It can be extracted from C<result> analyze() method gives.
 
 =cut
+
+
+# XXX-TODO: hmm, we should prepare $addr->status() and $addr->reason() ?
 
 
 # Descriptions: return status (string) for $addr
@@ -276,11 +280,11 @@ sub look_like_japanese
 }
 
 
-=head2 C<address_clean_up(type, addr)>
+=head2 C<address_clean_up(hint, addr)>
 
 clean up C<addr> and return it.
 
-C<type> gives a special hint for some specific MTA or domain.
+C<hint> gives a special hint for some specific MTA or domain.
 It is rarely used.
 
 =cut
@@ -314,10 +318,17 @@ sub address_clean_up
     # Mail::Bounce::FixBrokenAddress class provides irrgular
     # address handlings, so handles domain/MTA specific addresses.
     # For example, nifty.ne.jp, webtv.ne.jp, ...
+    # XXX-TODO: Mail::Bounce::FixBrokenAddress::FixIt is ugly.
     use Mail::Bounce::FixBrokenAddress;
     return Mail::Bounce::FixBrokenAddress::FixIt($hint, $addr);
 }
 
+
+=head1 SECURITY CONSIDERATION
+
+The address returned by Mail::Bounce class may be unsafe.  Please
+validate it by some other class such as FML::Restriction class before
+use it at some other place.
 
 =head1 CODING STYLE
 
@@ -343,3 +354,4 @@ See C<http://www.fml.org/> for more details.
 
 
 1;
+
