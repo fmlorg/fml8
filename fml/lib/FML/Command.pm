@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.22 2002/02/20 13:59:48 fukachan Exp $
+# $FML: Command.pm,v 1.23 2002/03/23 12:20:25 fukachan Exp $
 #
 
 package FML::Command;
@@ -16,9 +16,13 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Command - dispacher of fml commands
+FML::Command - fml commands dispacher
 
 =head1 SYNOPSIS
+
+    use FML::Command;
+    my $obj = new FML::Command;
+    $obj->rewrite_prompt($curproc, $command_args, \$orig_command);
 
 =head1 DESCRIPTION
 
@@ -32,12 +36,6 @@ Also, C<FML::Command::Admin::somoting> for the admin command request.
 =head2 C<new()>
 
 ordinary constructor.
-
-=head2 C<AUTOLOAD()>
-
-dispatcher.
-It hooks up the C<command> request and loads the module
-C<FML::Command::command>.
 
 =cut
 
@@ -55,7 +53,22 @@ sub new
 }
 
 
-# Descriptions: rewrite buffer
+# Descriptions: ordinary destructor
+#    Arguments: none
+# Side Effects: none
+# Return Value: none
+sub DESTROY { ;}
+
+
+=head2 C<rewrite_prompt($curproc, $command_args, $rbuf)>
+
+rewrite the specified buffer $rbuf (STR_REF).
+$rbuf is rewritten as a result.
+
+=cut
+
+
+# Descriptions: rewrite prompt buffer
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args) STR_REF($rbuf)
 # Side Effects: none
 # Return Value: none
@@ -76,11 +89,13 @@ sub rewrite_prompt
 }
 
 
-# Descriptions: ordinary destructor
-#    Arguments: none
-# Side Effects: none
-# Return Value: none
-sub DESTROY { ;}
+=head2 C<AUTOLOAD()>
+
+the command dispatcher.
+It hooks up the C<command> request and loads the module
+C<FML::Command::command>.
+
+=cut
 
 
 # Descriptions: run FML::Command::XXX:YYY()
@@ -90,12 +105,15 @@ sub DESTROY { ;}
 sub AUTOLOAD
 {
     my ($self, $curproc, $command_args) = @_;
-    my $mode = 'User';
 
+    # we need to ignore DESTROY()
     return if $AUTOLOAD =~ /DESTROY/;
 
-    if (defined $command_args->{ 'command_mode' }) {
-	$mode = $command_args->{'command_mode'} =~ /admin/i ? 'Admin' : 'User';
+    # mode
+    my $mode = 'User';
+    if (defined $command_args->{ command_mode }) {
+	$mode = 
+	    $command_args->{ command_mode } =~ /admin/i ? 'Admin' : 'User';
     }
 
     my $comname = $AUTOLOAD;
@@ -109,6 +127,7 @@ sub AUTOLOAD
     unless ($@) {
 	my $need_lock = 1; # default.
 
+	# we need to authenticate this ?
 	if ($command->can('auth')) {
 	    $command->auth($curproc, $command_args);
 	}
@@ -123,6 +142,7 @@ sub AUTOLOAD
 	    }
 	}
 
+	# run the actual process
 	if ($command->can('process')) {
 	    $curproc->lock()   if $need_lock;
 	    $command->process($curproc, $command_args);

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.9 2002/02/17 13:45:10 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.10 2002/03/17 06:24:31 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -34,7 +34,7 @@ FML::Process::ConfViewer provides the main function for C<fmlconf>.
 
 =head2 C<new($args)>
 
-constructor.
+ordinary constructor.
 It make a C<FML::Process::Kernel> object and return it.
 
 =head2 C<prepare($args)>
@@ -44,7 +44,7 @@ dummy.
 =cut
 
 
-# Descriptions: constructor
+# Descriptions: ordinary constructor
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: FML::Process::ConfViewer object
@@ -114,10 +114,7 @@ sub verify_request
 
 the top level dispatcher for C<fmlconf> and C<makefml>.
 
-It kicks off internal function
-C<_fmlconf($args)> for C<fmlconf>
-    and
-C<_makefml($args)> for makefml.
+It kicks off internal function C<_fmlconf($args)> for C<fmlconf>.
 
 NOTE:
 C<$args> is passed from parrent libexec/loader.
