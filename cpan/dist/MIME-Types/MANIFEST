@@ -1,0 +1,11 @@
+ChangeLog
+Makefile.PL
+MANIFEST
+MIME/Type.pm
+MIME/Types.pm
+MIME/Makefile.PL
+README
+t/10type.t
+t/11typeol.t
+t/20types.t
+t/30export.t
