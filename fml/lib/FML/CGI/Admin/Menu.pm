@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.3 2002/03/18 14:19:41 fukachan Exp $
+# $FML: Menu.pm,v 1.4 2002/03/18 15:21:31 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -123,7 +123,7 @@ sub run_cgi_main
 {
     my ($curproc, $args) = @_;
     my $command = $curproc->safe_param_command() || '';
-    my $address = $curproc->try_get_address($args);
+    my $address = $curproc->cgi_try_get_address($args);
 
     if ($command && $address) {
 	my $ml_name      = $curproc->safe_param_ml_name();
@@ -139,79 +139,21 @@ sub run_cgi_main
 	$curproc->cgi_execute_command($args, $command_args);
 
 	print hr;
-	$curproc->_show_menu($args);
+	$curproc->run_cgi_menu($args, $command);
+    }
+    elsif ($command) {
+	$curproc->run_cgi_menu($args, $command);
     }
     else {
 	my $ml_name = $curproc->safe_param_ml_name();
 
 	if ($ml_name) {
-	    $curproc->_show_menu($args);
+	    $curproc->run_cgi_help($args);
 	}
 	else {
 	    $curproc->run_cgi_help($args);
 	}
     }
-}
-
-
-# Descriptions: show menu
-#    Arguments: OBJ($curproc) HASH_REF($args)
-# Side Effects: none
-# Return Value: none
-sub _show_menu
-{
-    my ($curproc, $args) = @_;
-    my $action  = $curproc->myname();
-    my $target  = '_top';
-    my $ml_list = $curproc->get_ml_list($args);
-    my $address = $curproc->safe_param_address() || '';
-    my $config  = $curproc->{ config };
-
-    # 
-    my $address_list = $curproc->get_recipient_list();
-    my $command_list = 
-	$config->get_as_array_ref('available_commands_for_admin_cgi');
-
-
-    print start_form(-action=>$action, -target=>$target);
-
-    print table( { -border => undef },
-		Tr( undef, 
-		   td([
-		       "ML: ",
-		      popup_menu(-name => 'ml_name', -values => $ml_list)
-		      ])
-		   ),
-		Tr( undef, 
-		   td([
-		       "command: ",
-		       popup_menu(-name => 'command', -values => $command_list)
-		       ])
-		   ),
-		Tr( undef,
-		   td([
-		       "address: ",
-		       textfield(-name      => 'address_specified',
-				 -default   => $address,
-				 -override  => 1,
-				 -size      => 32,
-				 -maxlength => 64,
-				 )
-		       ])
-		   ),
-		Tr( undef,
-		   td([
-		       "",
-		       popup_menu(-name   => 'address_selected', 
-				  -values => $address_list)
-		       ]),
-		   )
-		);
-
-
-    print submit(-name => 'submit');
-    print reset(-name  => 'reset');
-    print end_form;
 }
 
 
@@ -231,19 +173,26 @@ sub run_cgi_navigator
 	$config->get_as_array_ref('available_commands_for_admin_cgi');
 
     # main menu
-    {
-	my $ml_name = $curproc->safe_param_ml_name() || '?';
-	print "<B>fml admin menu</B>\n<BR>\n";
-	print "ML: $ml_name\n<BR>\n";
-    }
+    my $ml_name = $curproc->safe_param_ml_name() || '?';
+    my $fml_url = '<A HREF="http://www.fml.org/software/fml-devel/">fml</A>';
+    print "<B>$fml_url admin menu</B>\n<BR>\n";
 
     print start_form(-action=>$action, -target=>$target);
 
-    print "Go to: <BR>\n";
-    print popup_menu(-name => 'ml_name', -values => $ml_list);
+    print "mailing list:\n";
+    print scrolling_list(-name    => 'ml_name', 
+			 -values  => $ml_list,
+			 -default => $ml_name,
+			 -size    => 5);
     print "\n<BR>\n";
 
-    print submit(-name => 'change');
+    print "  command:\n";
+    print scrolling_list(-name   => 'command', 
+			 -values => $command_list,
+			 -size   => 5);
+    print "\n<BR>\n";
+
+    print submit(-name => 'submit');
     print reset(-name  => 'reset');
 
     print end_form;

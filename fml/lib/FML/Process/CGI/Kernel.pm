@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.16 2002/03/18 13:52:20 fukachan Exp $
+# $FML: Kernel.pm,v 1.17 2002/03/18 15:21:33 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -341,8 +341,6 @@ sub cgi_execute_command
 	    if ($@ =~ /^(.*)\s+at\s+/) {
 		my $reason = $@;
 		print "<BR>\n";
-		print $1;
-		print "<BR>\n";
 		print $reason;
 		print "<BR>\n";
 	    }
@@ -351,7 +349,35 @@ sub cgi_execute_command
 }
 
 
-=head2 try_get_address()
+=head2 run_cgi_menu($args, $comname, $command_args)
+
+execute cgi_menu() given as FML::Command::*
+
+=cut
+
+
+# Descriptions: execute FML::Command
+#    Arguments: OBJ($curproc) HASH_REF($args) HASH_REF($command_args)
+# Side Effects: load module
+# Return Value: none
+sub run_cgi_menu
+{
+    my ($curproc, $args, $comname, $command_args) = @_;
+    my $cmd = "FML::Command::Admin::$comname";
+    my $obj = undef;
+
+    eval qq{ 
+	use $cmd; 
+	\$obj = new $cmd;
+    };
+
+    if (defined $obj) {
+	$obj->cgi_menu($curproc, $args, $command_args);
+    }
+}
+
+
+=head2 cgi_try_get_address()
 
 return input address after validating the input
 
@@ -362,7 +388,7 @@ return input address after validating the input
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: longjmp() if critical error occurs.
 # Return Value: STR
-sub try_get_address
+sub cgi_try_get_address
 {
     my ($curproc, $args) = @_;
     my $address = '';
@@ -376,7 +402,10 @@ sub try_get_address
 	# XXX longjmp() if insecure input is given.
 	my $r = $@;
 	if ($r =~ /ERROR\.INSECURE/) { croak($r);}
+    }
 
+    # retry !
+    unless ($a) {
 	eval q{ $a = $curproc->safe_param_address_selected();};
 	unless ($@) {
 	    $address = $a;
