@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: JournaledFile.pm,v 1.8 2001/08/21 03:46:39 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.9 2001/08/21 08:37:04 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -242,7 +242,7 @@ sub _fetch
     unless (defined $fh) { return undef;}
 
     # o.k. we open cache file, here we go for searching
-    my ($xkey, $xvalue) = ();
+    my ($xkey, $xvalue, $value) = ();
     my (@values)        = ();
   SEARCH:
     while (<$fh>) {
@@ -255,8 +255,10 @@ sub _fetch
 
 	($xkey, $xvalue) = split(/\s+/, $_, 2);
 	if ($xkey eq $key) {
+	    $value = $xvalue; # save the value for $key
+
 	    if ($mode eq 'array') {
-		push(@values, $xvalue);  
+		push(@values, $value);  
 	    }
 	    if ($mode eq 'scalar') {
 		# firstmatch: exit loop ASAP if the $key is found.
@@ -269,7 +271,7 @@ sub _fetch
     close($fh);
 
     if ($mode eq 'scalar') {
-	return( $xvalue || undef );
+	return( $value || undef );
     }
     elsif ($mode eq 'array') {
 	return \@values;
