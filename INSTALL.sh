@@ -16,10 +16,10 @@ umask 022
 ### configurations ###
 date=`date +%C%y%m%d`
 fml_version=current-${date}
-prefix_dir=/usr/local
+default_prefix=/usr/local
 config_dir=/etc/fml
-libexec_dir=$prefix_dir/libexec/fml
-lib_dir=$prefix_dir/lib/fml
+libexec_dir=$default_prefix/libexec/fml
+lib_dir=$default_prefix/lib/fml
 
 
 # ml spool
@@ -55,7 +55,7 @@ if [ ! -f $config_dir/main.cf ];then
 	echo create $config_dir/main.cf
 	sed 	-e s@__fml_version__@$fml_version@ \
 		-e s@__config_dir__@$config_dir@ \
-		-e s@__prefix_dir__@$prefix_dir@ \
+		-e s@__default_prefix__@$default_prefix@ \
 		fml/etc/main.cf > $config_dir/main.cf
 fi
 
