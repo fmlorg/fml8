@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.14 2001/08/19 12:53:07 fukachan Exp $
+	$FML: chapters.ent,v 1.15 2001/09/23 10:59:20 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -74,5 +74,5 @@
 
 
 <!-- modules -->
+<!entity chapter.module.io.adapter   SYSTEM "module/IO::Adapter.sgml">
 <!entity chapter.module.mail.message SYSTEM "module/Mail::Message.sgml">
-
