@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.47 2002/07/12 15:06:34 fukachan Exp $
+# $FML: newml.pm,v 1.48 2002/07/28 03:30:46 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -84,6 +84,10 @@ sub process
     # fundamental check
     croak("\$ml_name is not specified")     unless $ml_name;
     croak("\$ml_home_dir is not specified") unless $ml_home_dir;
+    croak("\$ml_home_prefix not exists")    unless -d $ml_home_prefix;
+
+    # check if $ml_home_prefix is writable
+    croak("\$ml_home_prefix is not writable") unless -w $ml_home_prefix;
 
     # update $ml_home_prefix and $ml_home_dir to expand variables again.
     $config->set( 'ml_home_prefix', $ml_home_prefix );
