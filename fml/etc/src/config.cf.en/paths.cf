@@ -89,3 +89,11 @@ path_spamassassin         = @SPAMASSASSIN@
 path_spamd                = @SPAMD@
 
 path_spamc                = @SPAMC@
+
+path_bogofilter           = @BOGOFILTER@
+
+
+=head2 virus checker
+
+
+path_clamscan             = @CLAMSCAN@
