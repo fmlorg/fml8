@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: bounce.pl,v 1.5 2001/04/12 13:01:50 fukachan Exp $
+# $FML: bounce.pl,v 1.6 2001/04/15 13:29:28 fukachan Exp $
 #
 
 use strict;
@@ -23,7 +23,7 @@ for my $f (@ARGV) {
     my $bouncer = new Mail::Bounce;
     $bouncer->analyze( $msg );
     print "\n--- result (debug)\n\n" if $ENV{'debug'};
-    printf "# %-15s ... %s\n", $f, ($bouncer->address_list ? "ok" : "fail");
+    printf "# %-20s ... %s\n", $f, ($bouncer->address_list ? "ok" : "fail");
 
     if ($ENV{'dump'}) { 
 	eval qq{ require Data::Dumper; Data::Dumper->import();};
