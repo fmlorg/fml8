@@ -1,0 +1,72 @@
+<HTML>
+<HEAD>
+  <TITLE>mime_longlines</TITLE>
+</HEAD>
+<BODY 
+       bgcolor="#FFFFFF" link="#CC3366" vlink="#993366" alink="#FF6666">
+<FONT FACE="sans-serif" SIZE=-1><A HREF="http://www.zeegee.com" TARGET="_top"><IMG SRC="icons/zeegee.gif" ALT="ZeeGee Software" ALIGN="RIGHT" BORDER="0"></A><A NAME="__TOP__"><H1>mime_longlines</H1>
+</A><UL>
+<LI> <A HREF="#NAME">NAME</A>
+<LI> <A HREF="#SYNOPSIS">SYNOPSIS</A>
+<LI> <A HREF="#DESCRIPTION">DESCRIPTION</A>
+<LI> <A HREF="#AUTHOR">AUTHOR</A>
+</UL>
+</A>
+
+<P><HR>
+<A NAME="NAME"><H2><A HREF="#__TOP__"><IMG SRC="icons/h1bullet.gif" ALT="Top" BORDER="0"></A> NAME</H2></A>
+
+
+<P>mime_longlines - generate a test message with long lines
+
+
+
+<P><HR>
+<A NAME="SYNOPSIS"><H2><A HREF="#__TOP__"><IMG SRC="icons/h1bullet.gif" ALT="Top" BORDER="0"></A> SYNOPSIS</H2></A>
+
+
+<P>Usage:
+
+<FONT SIZE=3 FACE="courier"><PRE>
+    mime_longlines [-s]
+</PRE></FONT>
+
+<P>Options:
+
+<FONT SIZE=3 FACE="courier"><PRE>
+    -s   Stringify message first, and print the *string* to STDOUT.
+</PRE></FONT>
+
+
+<P><HR>
+<A NAME="DESCRIPTION"><H2><A HREF="#__TOP__"><IMG SRC="icons/h1bullet.gif" ALT="Top" BORDER="0"></A> DESCRIPTION</H2></A>
+
+
+<P>Assemble and print (to the standard output) a multipart message 
+with 5 attachments, for the purpose of &quot;eyeballing&quot; how well the 
+encoders are working.
+
+
+<P>Each attachments holds the same data -- some 8-bit text, and a long 
+line consisting of 1000 &quot;a&quot;s followed by a few &quot;b&quot;s) -- but each
+has a different encoding (the &quot;Content-transfer-encoding&quot; field
+will tell you which is which).
+
+
+<P>All of the encodings (except for the first one, &quot;binary&quot;) should 
+break the long line before the b's.
+
+
+
+<P><HR>
+<A NAME="AUTHOR"><H2><A HREF="#__TOP__"><IMG SRC="icons/h1bullet.gif" ALT="Top" BORDER="0"></A> AUTHOR</H2></A>
+
+
+<P>Eryq, eryq@zeegee.com
+
+<P><HR>
+<ADDRESS><FONT SIZE=-1>
+Generated Fri Mar 30 01:17:41 2001 by cvu_pod2html
+</FONT></ADDRESS>
+</FONT></BODY>
+</HTML>

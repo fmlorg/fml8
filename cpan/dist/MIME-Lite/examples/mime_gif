@@ -1,0 +1,93 @@
+#!/usr/bin/perl -w
+
+=head1 NAME
+
+mime_gif - encode a single gif by reading data different ways
+
+
+=head1 SYNOPSIS
+
+Usage:
+
+    mime_gif /path/to/some.gif
+
+
+=head1 DESCRIPTION
+
+Encode a multipart message where each part contains the same GIF
+file, but where the GIF file has been read-in in different ways.
+The subject line of each part will tell you how the GIF was read.
+
+
+=head1 AUTHOR
+
+Eryq, eryq@zeegee.com
+
+=cut
+
+use strict;
+use MIME::Lite;
+use Getopt::Std;
+
+#------------------------------
+# main
+#------------------------------
+sub main {
+    my %opts;
+
+    ### Get options:
+    getopts('', \%opts) or die "usage error\n";
+    my $gifpath = $ARGV[0] || die "missing path to GIF\n";
+
+    ### Create message:
+    my $msg = MIME::Lite->new(To       => 'me@somewhere.com',
+			      Subject  => 'GIF test',
+			      Type     => 'multipart/mixed');
+    
+    ### Read data:
+    open IN, "<$gifpath" or die "open $gifpath: $!\n";
+    binmode IN;
+    my @data;
+    local $_ = '';
+    while (read(IN, $_, 1024)) {
+	push @data, $_;
+    }
+    close IN;
+
+    ### Direct path:
+    if (1) {
+	my $path = $gifpath;
+	$msg->attach(Subject => "Read path directly",
+		     Path => $path,
+		     Type => 'image/gif');
+    }
+
+    ### Cat (Unix only):
+    if (1) {
+	my $path = "cat $gifpath |";
+	$msg->attach(Subject => "Cat path to pipe, and read that",
+		     Path => $path,
+		     Type => 'image/gif');
+    }
+
+    ### Array:
+    if (1) {
+	$msg->attach(Subject => "Read data as array",
+		     Data => \@data,
+		     Type => 'image/gif');
+    }
+
+    ### String:
+    if (1) {
+	$msg->attach(Subject => "Read data as string",
+		     Data => join('', @data),
+		     Type => 'image/gif');
+    }
+
+    ### Output:
+    $msg->print(\*STDOUT);
+}
+exit(&main ? 0 : -1);
+1;
+__END__
+

@@ -1,0 +1,58 @@
+#!/usr/bin/perl -w
+
+
+=head1 NAME
+
+mime_hack - test the "attach to singlepart" hack
+
+
+=head1 SYNOPSIS
+
+Usage:
+
+    mime_hack /path/to/some.gif
+
+
+=head1 DESCRIPTION
+
+Encode a multipart message by starting with a text message,
+and attaching a GIF file to it.
+
+
+=head1 AUTHOR
+
+Eryq, eryq@zeegee.com
+
+=cut
+
+use strict;
+use MIME::Lite;
+use Getopt::Std;
+
+#------------------------------
+# main
+#------------------------------
+sub main {
+    my %opts;
+    my $gif = $ARGV[0] || die "usage error: missing GIF path\n";
+
+    ### Create a new multipart message:
+    my $msg = MIME::Lite->new(From    => 'me@myhost.com',
+			      To      => 'you@yourhost.com',
+			      Subject =>'Test the "attach to singlepart" hack',
+			      Type    => 'TEXT',
+			      Data    => ["This is a simple text message... ",
+					  "can we attach a file to it?\n"]);  
+
+    ### Attach a part: 
+    $msg->attach(Type     => 'image/gif',
+		 Path     => $gif);
+
+    ### Output!
+    $msg->print;
+}
+exit (&main ? 0 : -1);
+
+__END__
+
+

@@ -1,0 +1,24 @@
+MENU perlmod
+
+SECTION Overview
+
+ITEM MIME::Lite
+HREF MIME/Lite.pm.html
+
+SECTION Examples
+
+ITEM mime_fwd
+HREF mime_fwd.html
+
+ITEM mime_gif
+HREF mime_gif.html
+
+ITEM mime_hack
+HREF mime_hack.html
+
+ITEM mime_longlines
+HREF mime_longlines.html
+
+ITEM mime_postcard
+HREF mime_postcard.html
+
