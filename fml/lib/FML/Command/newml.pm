@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: newml.pm,v 1.6 2001/05/27 14:27:54 fukachan Exp $
+# $FML: newml.pm,v 1.7 2001/07/15 12:03:37 fukachan Exp $
 #
 
 package FML::Command::newml;
@@ -52,9 +52,11 @@ sub newml
     unless (-d $ml_home_dir) {
 	mkdirhier( $ml_home_dir, $config->{ default_dir_mode } || 0755 );
 
+	use File::Spec;
+
 	my $default_config_dir = $main_cf->{ default_config_dir };
-	my $src = $default_config_dir ."/config.cf";
-	my $dst = $ml_home_dir . "/" . 'config.cf';
+	my $src = File::Spec->catfile($default_config_dir, "config.cf");
+	my $dst = File::Spec->catfile($ml_home_dir, 'config.cf');
 	copy($src, $dst);
     }
     else {

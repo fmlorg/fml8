@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: CGI.pm,v 1.13 2001/05/28 16:17:13 fukachan Exp $
+# $FML: CGI.pm,v 1.14 2001/06/10 11:24:12 fukachan Exp $
 #
 
 package FML::Process::CGI;
@@ -59,7 +59,9 @@ sub new
     my $ml_name        = param('ml_name') || do {
 	croak("not get ml_name from HTTP") if $args->{ need_ml_name };
     };
-    my $ml_home_dir    = $ml_home_prefix .'/'. $ml_name;
+
+    use File::Spec;
+    my $ml_home_dir    = File::Spec->catfile($ml_home_prefix, $ml_name);
 
     # fix $args { cf_list, ml_home_dir };
     my $cf = $args->{ cf_list };

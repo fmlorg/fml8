@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Article.pm,v 1.21 2001/04/08 06:42:59 fukachan Exp $
+# $FML: Article.pm,v 1.22 2001/05/27 14:27:53 fukachan Exp $
 #
 
 package FML::Article;
@@ -161,7 +161,9 @@ sub spool_in
 	    mkpath( $spool_dir, 0, 0700 );
 	}
 
-	my $file = $spool_dir . "/" . $id;
+	use File::Spec;
+	my $file = File::Spec->catfile($spool_dir, $id);
+
 	use FileHandle;
 	my $fh = new FileHandle;
 	$fh->open($file, "w");

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: minimal_states.pm,v 1.19 2001/06/10 10:22:47 fukachan Exp $
+# $FML: minimal_states.pm,v 1.20 2001/07/31 14:19:44 fukachan Exp $
 #
 
 package FML::Ticket::Model::minimal_states;
@@ -12,6 +12,7 @@ package FML::Ticket::Model::minimal_states;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
+use File::Spec;
 use FML::Log qw(Log LogWarn LogError);
 
 use FML::Ticket::System;
@@ -78,16 +79,18 @@ sub new
     my $ml_name = $config->{ ml_name };
 
     croak("specify \$ml_name\n") unless defined $ml_name;
-
+  
     $me->{ _fd }     = $args->{ fd } || \*STDOUT; 
-    $me->{ _db_dir } = $config->{ ticket_db_dir } ."/". $ml_name;
+    $me->{ _db_dir } = File::Spec->catfile($config->{ ticket_db_dir }, 
+					   $ml_name);
     $me->_init_ticket_db_dir($curproc, $args) || do {
 	Log("fail to initialize ticket_db_dir");
 	return undef;
     };
 
     # index for cross reference over mailing lists.
-    $me->{ _index_db } = $config->{ ticket_db_dir } ."/\@index";
+    $me->{ _index_db } = File::Spec->catfile($config->{ ticket_db_dir },
+					     "\@index");
 
     # pragma for operations hints
     $me->{ _pragma } = '';
@@ -802,7 +805,8 @@ sub _print_article_summary
 
 	(@aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
 	$aid   = $aid[0];
-	print $fd $self->_article_summary( $spool_dir ."/". $aid );
+	print $fd $self->_article_summary(File::Spec->catfile($spool_dir, 
+							      $aid));
     }
 }
 
@@ -905,7 +909,7 @@ sub show_articles_for_ticket
 
     my $s = '';
     for (split(/\s+/, $articles)) {
-	my $file = $spool_dir.'/'.$_;
+	my $file = File::Spec->catfile($spool_dir, $_);
 
 	my $fh = new FileHandle $file;
 	while (defined($_ = $fh->getline())) {
@@ -1005,7 +1009,7 @@ sub _show_ticket_by_html_table
     print "<TD>";
 
     $aid = (split(/\s+/, $articles))[0];
-    my $buf = $self->_article_summary( $spool_dir ."/". $aid );
+    my $buf = $self->_article_summary(File::Spec->catfile($spool_dir, $aid));
     use FML::Language::ISO2022JP qw(STR2EUC);
     print STR2EUC($buf);
 }
