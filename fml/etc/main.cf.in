@@ -1,5 +1,5 @@
 #
-# $FML: main.cf.in,v 1.17 2003/10/26 02:20:01 fukachan Exp $
+# $FML: main.cf.in,v 1.18 2003/11/05 03:37:53 fukachan Exp $
 #
 
 # fml version
@@ -29,6 +29,12 @@ config_dir		= 	@fmlconfdir@
 
 # Example: /etc/fml/defaults/$fml_version
 default_config_dir	=	$config_dir/defaults/$fml_version
+
+# group writable configuration directory.
+# prepared but not used by default. 
+# This may be used by ml_home_prefix handling.
+# Example: /etc/fml/config.gw
+group_writable_config_dir =     @fmlgwconfdir@
 
 # defined for convenience, for example, we need this variable
 # at include, include-ctl, which needs expansion of ../libexec/fml/fml.pl
@@ -73,7 +79,7 @@ default_ml_home_prefix	=	@mlspooldir@
 #   nuinui.net	/var/spool/ml/nuinui.net
 #
 # Example: /etc/fml/ml_home_prefix
-primary_ml_home_prefix_map	=	$config_dir/ml_home_prefix
+primary_ml_home_prefix_map	=	@primary_ml_home_prefix_map@
 
 
 # maps of { $ml_name => $ml_home_dir } map relation.

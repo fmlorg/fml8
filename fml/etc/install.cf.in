@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: install.cf.in,v 1.14 2003/12/24 12:49:10 fukachan Exp $
+# $FML: install.cf.in,v 1.15 2003/12/26 14:51:37 fukachan Exp $
 #
 
 
@@ -27,6 +27,8 @@ bindir		=	@bindir@
 mandir		=	@mandir@
 
 config_dir	=	@fmlconfdir@
+
+group_writable_config_dir =     @fmlgwconfdir@
 
 libexec_dir	=	@libexecdir@/fml
 
@@ -54,6 +56,7 @@ mandatory_dirs	=	prefix
 			exec_prefix
 			config_dir
 			default_config_dir
+			group_writable_config_dir
 			bindir
 			mandir
 			libexec_dir
