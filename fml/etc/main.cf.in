@@ -1,5 +1,5 @@
 #
-# $FML: main.cf.in,v 1.5 2001/12/22 16:06:24 fukachan Exp $
+# $FML: main.cf.in,v 1.6 2002/01/20 14:31:26 fukachan Exp $
 #
 
 # fml version
@@ -77,4 +77,4 @@ domain_default_config 	=	$config_dir/domains/$default_domain/config.cf
 # for example,
 #   fml.org	/var/spool/ml/fml.org
 #   nuinui.net	/var/spool/ml/nuinui.net
-virtual_maps		=	$fmlconfdir/virtual
+virtual_maps		=	$config_dir/virtual
