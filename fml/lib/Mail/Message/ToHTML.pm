@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.29 2002/10/20 13:20:13 fukachan Exp $
+# $FML: ToHTML.pm,v 1.30 2002/10/29 09:47:15 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.29 2002/10/20 13:20:13 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.30 2002/10/29 09:47:15 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -2587,7 +2587,7 @@ sub htmlify_dir
 	my $file = File::Spec->catfile($src_dir, $id);
 
 	unless ( $has_fork ) {
-	    htmlify_file($file, $args);
+	    $self->htmlify_file($file, $args);
 	}
 	else {
 	    my $pid = fork();
@@ -2595,7 +2595,7 @@ sub htmlify_dir
 		croak("cannot fork");
 	    }
 	    elsif ($pid == 0) {
-		htmlify_file($file, $args);
+		$self->htmlify_file($file, $args);
 		exit 0;
 	    }
 
