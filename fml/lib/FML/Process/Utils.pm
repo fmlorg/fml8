@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.62 2003/03/06 14:13:28 fukachan Exp $
+# $FML: Utils.pm,v 1.63 2003/03/14 03:49:09 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1165,25 +1165,10 @@ return the current article number (sequence number).
 sub article_id_max
 {
     my ($curproc) = @_;
-    my $config   = $curproc->{ config };
-    my $seq_file = $config->{ sequence_file };
-    my $id       = undef;
 
-    use FileHandle;
-    my $fh = new FileHandle $seq_file;
-    if (defined $fh) {
-	$id = $fh->getline();
-	$id =~ s/^\s*//;
-	$id =~ s/[\n\s]*$//;
-	$fh->close();
-    }
-
-    if (defined $id) {
-	return( $id =~ /^\d+$/ ? $id : 0 );
-    }
-    else {
-	return 0;
-    }
+    use FML::Article;
+    my $article = new FML::Article $curproc;
+    return $article->id();
 }
 
 
