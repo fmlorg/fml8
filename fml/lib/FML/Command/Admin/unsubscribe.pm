@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: unsubscribe.pm,v 1.2 2001/08/26 07:59:03 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.1.1.1 2001/08/26 08:01:04 fukachan Exp $
 #
 
 package FML::Command::Admin::unsubscribe;
@@ -47,11 +47,18 @@ sub process
     croak("\$recipient_map is not specified") unless $recipient_map;
 
     use IO::Adapter;
-    my $obj = new IO::Adapter $member_map;
-    $obj->delete( $address );
+    use FML::Log qw(Log LogWarn LogError);
 
-    $obj = new IO::Adapter $recipient_map;
-    $obj->delete( $address );
+    for my $map ($member_map, $recipient_map) {
+	my $obj = new IO::Adapter $map;
+	$obj->delete( $address );
+	unless ($obj->error()) {
+	    Log("removed $address from map=$map");
+	}
+	else {
+	    LogError("fail to remove $address from map=$map");
+	}
+    }
 }
 
 

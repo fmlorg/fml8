@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: subscribe.pm,v 1.1.1.1 2001/08/26 08:01:04 fukachan Exp $
+# $FML: subscribe.pm,v 1.2 2001/08/26 13:09:29 fukachan Exp $
 #
 
 package FML::Command::Admin::subscribe;
@@ -48,20 +48,24 @@ sub process
     croak("\$recipient_map is not specified") unless $recipient_map;
 
     use IO::Adapter;
-    my $obj = new IO::Adapter $member_map;
-    $obj->touch();
-
     use FML::Credential;
+    use FML::Log qw(Log LogWarn LogError);
 
     for my $map ($member_map, $recipient_map) {
 	my $cred = new FML::Credential;
 	unless ($cred->has_address_in_map($map, $address)) {
-	    $obj = new IO::Adapter $map;
+	    my $obj = new IO::Adapter $map;
 	    $obj->touch();
 	    $obj->add( $address );
+	    unless ($obj->error()) {
+		Log("added $address to map=$map");
+	    }
+	    else {
+		LogError("fail to add $address to map=$map");
+	    }
 	}
 	else {
-	    $self->error_set( "$address is member (map=$map)" );
+	    $self->error_set( "$address is already member (map=$map)" );
 	    return undef;
 	}
     }

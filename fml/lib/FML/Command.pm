@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Command.pm,v 1.5 2001/05/27 14:27:53 fukachan Exp $
+# $FML: Command.pm,v 1.6 2001/07/15 12:03:37 fukachan Exp $
 #
 
 package FML::Command;
@@ -21,9 +21,11 @@ FML::Command - dispacher of fml commands
 
 =head1 DESCRIPTION
 
-C<FML::Commands> is a wrapper and dispathcer for fml commands.
+C<FML::Command> is a wrapper and dispathcer for fml commands.
 AUTOLOAD() picks up the command request and dispatches
-C<FML::Command::somoting> for the request.
+C<FML::Command::User::somoting> for the request.
+Also, C<FML::Command::Admin::somoting> for the admin command request.
+
 
 =head1 METHODS
 
@@ -55,27 +57,36 @@ sub DESTROY { ;}
 sub AUTOLOAD
 {
     my ($self, $curproc, $optargs) = @_;
+    my $mode = $optargs->{ 'command_mode' } =~ /admin/i ? 'Admin' : 'User';
 
     return if $AUTOLOAD =~ /DESTROY/;
 
-    my $command = $AUTOLOAD;
-    $command =~ s/.*:://;
-
-    my $pkg = "FML::Command::${command}";
+    my $comname = $AUTOLOAD;
+    $comname =~ s/.*:://;
+    my $pkg = "FML::Command::${mode}::${comname}";
 
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
-	if ($pkg->can($command)) {
-	    $curproc->lock() if $self->require_lock($command);
-	    $pkg->$command($curproc, $optargs);
-	    $curproc->unlock() if $self->require_lock($command);
+	my $command = $pkg->new();
+
+	if ($command->can('auth')) {
+	    $command->auth($curproc, $optargs);
+	}
+
+	if ($command->can('process')) {
+	    $curproc->lock() if $self->require_lock($comname);
+	    $command->process($curproc, $optargs);
+	    $curproc->unlock() if $self->require_lock($comname);
+
+	    if ($command->error()) { Log($command->error());}
 	}
 	else {
-	    Log("$pkg module has no $command method");	    
+	    LogError("${pkg} has no process method");	    
 	}
     }
     else {
-	Log("$pkg module is not found");
+	LogError("$pkg module is not found");
+	LogError($@);
     }
 }
 
