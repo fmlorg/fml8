@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.18 2004/05/16 05:08:22 fukachan Exp $
+# $FML: Utils.pm,v 1.19 2004/05/17 11:55:44 fukachan Exp $
 #
 
 package Mail::Delivery::Utils;
@@ -403,7 +403,7 @@ sub rollback_map_position
     my $map    = $self->get_target_map;
 
     # count the number of rollback to avoid infinite loop
-    if ( $self->{ _map_rollback_info }->{ $map }->{ count } > 2 ) {
+    if (($self->{ _map_rollback_info }->{ $map }->{ count } || 0) > 2) {
 	Log("Error: not rollback $map to avoid infinite loop");
 	return ;
     }
