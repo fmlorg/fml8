@@ -20,6 +20,14 @@ prefix_dir=/usr/local
 config_dir=/etc/fml
 libexec_dir=$prefix_dir/libexec/fml
 lib_dir=$prefix_dir/lib/fml
+
+
+# ml spool
+ml_spool_dir=/var/spool/ml
+
+# owner of /var/spool/ml
+owner=fukachan
+
 ######################
 
 
@@ -36,7 +44,8 @@ for dir in 	$config_dir \
 		$lib_dir	\
 		$lib_dir/$version	\
 		$libexec_dir	\
-		$libexec_dir/$version
+		$libexec_dir/$version \
+		$ml_spool_dir
 do
    test -d $dir || _mkdir $dir
 done
@@ -79,6 +88,11 @@ if [ ! -f $libexec_dir/fmlwrapper ];then
 	done
 	echo ""
    )
+fi
+
+if [ -d $ml_spool_dir ]; then
+	echo set up the owner of $ml_spool_dir to be $owner
+	chown -R $owner $ml_spool_dir
 fi
 
 exit 0
