@@ -17,6 +17,23 @@ use FML::Process::Kernel;
 use FML::Log qw(Log);
 use FML::Config;
 
+
+=head1 NAME
+
+FML::Process::Distribute -- fml5 article distributer library.
+
+=head1 SYNOPSIS
+
+   use FML::Process::Command;
+   ...
+
+See L<FML::Process::Flow> for details of flow.
+
+=head1 DESCRIPTION
+
+=cut
+
+
 require Exporter;
 @ISA = qw(FML::Process::Kernel Exporter);
 
@@ -42,6 +59,7 @@ sub verify_request
     my ($curproc, $args) = @_;
     $curproc->verify_sender_credential();
 }
+
 
 sub run
 {
@@ -233,49 +251,5 @@ sub _ticket_check
     }
 }
 
-
-=head1 NAME
-
-distribute -- fml5 article distributer program.
-
-=head1 SYNOPSIS
-
-   distribute [-d] config.cf
-
-=head1 DESCRIPTION
-
-libexec/fml.pl, the wrapper, executes this program. For example, The
-incoming mail to elena@fml.org kicks off libexec/distribute via
-libexec/fml.pl, whereas mail to elena-ctl@fml.org kicks off
-libexec/command finally.
-
-   incoming_message =>
-      elena@fml.org       => fml.pl => libexec/distribute
-      elena-ctl@fml.org   => fml.pl => libexec/command
-      elena-admin@fml.org => forwarded to administrator(s)
-                                  OR
-                          => libexec/mead
-
-C<-d>
-    debug on.
-
-=head1 FLOW AROUND COMPONENTS
-
-   |  <=> FML::BaseSystem
-   |      load configuration files
-   |      start logging service
-   |
-   |  STDIN                           => FML::Parse
-   |  $CurProc->{'incoming_message'} <=
-   |  $CurProc->{'credential'}
-   | 
-   |  (lock)
-   |  prepare article
-   |  $CurProc->{'article'} is spooled in.
-   |  $CurProc->{'article'}    <=> Service::SMTP
-   |  (unlock)
-   V
-
-=cut
 
 1;
