@@ -15,7 +15,33 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
 use FML::Log qw(Log);
 
-require Exporter;
+
+=head1 NAME
+
+FML::Article - article manipulation components
+
+=head1 SYNOPSIS
+
+   use FML::Article;
+   $article = new FML::Article $curproc;
+   $header  = $article->{ header };
+   $body    = $article->{ body };
+
+=head1 DESCRIPTION
+
+$article object is just a container which holds 
+C<header> and C<body> object as hash keys.
+The C<header> is an FML::Header object and
+the C<body> is a MailingList::Messages object.
+
+=head1 METHODS
+
+=head2 C<new(curproc)>
+
+prepare a message duplicated from the incoming message holded in
+C<$curproc->{ incoming_message }>.
+
+=cut
 
 
 # Descriptions: constructor
@@ -52,6 +78,18 @@ sub _setup_article_template
 }
 
 
+=head2 C<increment_id()>
+
+increment article sequence number and 
+save it to C<$sequence_file>.
+
+=head2 C<id()>
+
+return the current article sequence number.
+
+=cut
+
+
 # Descriptions: determine article id (sequence number)
 #    Arguments: $self
 # Side Effects: record the current article sequence number
@@ -75,6 +113,10 @@ sub increment_id
 }
 
 
+# Descriptions: return the article id (sequence number)
+#    Arguments: $self
+# Side Effects: none
+# Return Value: number (sequence number)
 sub id
 {
     my ($self) = @_;
@@ -82,6 +124,14 @@ sub id
     my $pcb     = $curproc->{ pcb };
     return $pcb->get('article', 'id');
 }
+
+
+=head2 C<spool_in(id)>
+
+save the article to the file name C<id> in the article spool.
+If the variable C<$use_spool> is 'yes', this routine works.
+
+=cut
 
 
 # Descriptions: spool in the article
@@ -121,18 +171,10 @@ sub spool_in
 }
 
 
+=head1 SEE ALSO
 
-=head1 NAME
-
-FML::Article - article manipulation components
-
-=head1 SYNOPSIS
-
-... not yet documented ...
-
-=head1 DESCRIPTION
-
-... not yet documented ...
+L<FML::Header>,
+L<MailingList::Messsages>.
 
 =head1 AUTHOR
 
@@ -151,7 +193,6 @@ FML::Article appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
-
 
 
 1;

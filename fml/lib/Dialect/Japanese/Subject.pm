@@ -8,11 +8,28 @@
 # $FML$
 #
 
+
+###                                                   ###
+### CAUTION: THE CHARSET OF THIS FILE IS "EUC-JAPAN". ###
+###                                                   ###
+
+
 package Dialect::Japanese::Subject;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
 use Jcode;
+
+=head1 NAME
+
+Dialect::Japanese::Subject - what is this
+
+=head1 SYNOPSIS
+
+=head1 DESCRIPTION
+
+=cut
+
 
 require Exporter;
 @ISA = qw(Exporter);
@@ -31,6 +48,23 @@ my $pattern  = 'Re:|Re\d+:|Re\[\d+\]:|Re\(\d+\):|Re\^\d+:|Re\*\d+:';
    $pattern .= '|( ÷øÆ| ÷|£“£≈|£“£Â)(\s*:|°ß)';
 
 
+=head1 METHODS
+
+=head2 C<new()>
+
+usual constructor.
+
+=head2 C<is_reply($string)>
+
+check whether C<$string> looks like a reply message.
+C<$string> is a C<Subject:> of the mail header.
+For example, it is like this:
+
+  Re: reply to your messages
+
+=cut
+
+
 sub new
 {
     my ($self) = @_;
@@ -38,6 +72,23 @@ sub new
     my $me     = {};
     return bless $me, $type;
 }
+
+
+sub is_reply
+{
+    my ($self, $x) = @_;
+    return 0 unless $x;
+    &Jcode::convert(\$x, 'euc');
+    return ($x =~ /^((\s|(°°))*($pattern)\s*)+/ ? 1 : 0);
+}
+
+
+=head2 C<cut_off_reply_tag($subject)>
+
+cut off C<Re:> in the string C<$subject> like C<Re: ... >, 
+which is a C<Subject:> in typical case.
+
+=cut
 
 
 # fml-support: 07507
@@ -80,29 +131,6 @@ sub cut_off_reply_tag
     Jcode::convert(\$subject, 'jis');
     $subject;
 }
-
-
-sub is_reply
-{
-    my ($self, $x) = @_;
-    return 0 unless $x;
-    &Jcode::convert(\$x, 'euc');
-    return ($x =~ /^((\s|(°°))*($pattern)\s*)+/ ? 1 : 0);
-}
-
-
-=head1 NAME
-
-Dialect::Japanese::Subject.pm - what is this
-
-
-=head1 SYNOPSIS
-
-=head1 DESCRIPTION
-
-=head2 new
-
-=item Function()
 
 
 =head1 AUTHOR

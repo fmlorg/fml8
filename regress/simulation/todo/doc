@@ -1,28 +1,25 @@
-FML/Article.pm
 FML/Config.pm
 FML/Credential.pm
 FML/Header.pm
-FML/Parse.pm
 FML/Ticket/Model/toymodel.pm
 FML/Ticket/System.pm
 FML/Process/Distribute.pm
 FML/Process/Kernel.pm
 FML/Process/TicketSystem.pm
-FML/Process/Flow.pm
 FML/Process/Configure.pm
 FML/Process/QMail.pm
 FML/Process/Command.pm
 FML/Process/Switch.pm
 FML/Header/Subject.pm
 
-IO/Adapter/NIS.pm
-IO/Adapter/RDBMS.pm
+
 IO/Adapter/UnixGroup.pm
 IO/Adapter/Array.pm
-IO/MapAdapter.pm
+
 
 Dialect/Japanese/Subject.pm
 Dialect/Japanese/Utils.pm
+
 
 MailingList/Net/INET4.pm
 MailingList/Net/INET6.pm

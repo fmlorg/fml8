@@ -13,8 +13,20 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
-require Exporter;
-@ISA = qw(Exporter);
+
+=head1 NAME
+
+IO::Adapter::RDBMS.pm - IO with SQL databases
+
+=head1 SYNOPSIS
+
+... not yet ...
+
+=head1 DESCRIPTION
+
+... not yet ...
+
+=cut
 
 
 sub new
@@ -25,27 +37,6 @@ sub new
     return bless $me, $type;
 }
 
-
-#####
-##### This is just a dummy yet now.
-#####
-
-
-=head1 NAME
-
-IO::Adapter::RDBMS.pm - what is this
-
-=head1 SYNOPSIS
-
-=head1 DESCRIPTION
-
-=head1 CLASSES
-
-=head1 METHODS
-
-=item C<new()>
-
-... what is this ...
 
 =head1 AUTHOR
 
@@ -64,5 +55,6 @@ IO::Adapter::RDBMS appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
+
 
 1;

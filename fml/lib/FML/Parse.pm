@@ -10,6 +10,14 @@
 
 package FML::Parse;
 
+use vars qw($InComingMessage);
+use strict;
+use Carp;
+use FML::Header;
+use MailingList::Messages;
+use FML::Config;
+use FML::Log qw(Log);
+
 
 =head1 NAME
 
@@ -28,44 +36,14 @@ $r_header is the reference to the header object, which is returned by
 Mail::Header class. $r_body is reference to the scalar mail body
 variable, which is alloced in FML::Parse name space.
 
-=head1 METHOD
+=head1 METHODS
 
 =item new( fd )
 
 C<fd> is the file handle. 
 Normally C<fd> is the handle for STDIN channel.
 
-=head1 SEE ALSO
-
-L<Mail::Header>,
-
-=head1 AUTHOR
-
-Ken'ichi Fukamachi
-
-=head1 COPYRIGHT
-
-Copyright (C) 2001 Ken'ichi Fukamachi
-
-All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
-
-=head1 HISTORY
-
-FML::Parse appeared in fml5 mailing list driver package.
-See C<http://www.fml.org/> for more details.
-
 =cut
-
-
-use vars qw($InComingMessage);
-use strict;
-use Carp;
-use FML::Header;
-use MailingList::Messages;
-use FML::Config;
-use FML::Log qw(Log);
-
 
 sub new
 {
@@ -136,6 +114,7 @@ sub _parse
 
 =head1 SEE ALSO
 
+L<Mail::Header>,
 L<FML::Header>,
 L<MailingList::Messages>,
 L<FML::Config>,

@@ -17,6 +17,7 @@ use IO::Adapter::Array;
 
 @ISA = qw(IO::Adapter::Array);
 
+
 sub configure
 {
     my ($self, $me) = @_;
@@ -30,22 +31,40 @@ sub configure
 }
 
 
-
 =head1 NAME
 
-IO::Adapter::NIS.pm - what is this
+IO::Adapter::NIS.pm - NIS map definition under IO::MapAdapter
 
 =head1 SYNOPSIS
 
+    $map = 'nis.group:fml';
+
+    use IO::MapAdapter;
+    $obj = new IO::MapAdapter $map;
+    $obj->open || croak("cannot open $map");
+    while ($x = $obj->getline) { ... }
+    $obj->close;
+
+/etc/group has C<fml> entry like this:
+
+  fml:*:1000:fukachan
+
+
 =head1 DESCRIPTION
 
-=head1 CLASSES
+fake IO for 
+NIS (Network Information System, its old name is Yellow Page).
+See L<IO::Adapter::Array> for more details.
+
+C<CAUTION: this map is read only>.
 
 =head1 METHODS
 
-=item C<new()>
+See L<IO::Adapter::Array>
 
-... what is this ...
+=head1 SEE ALSO
+
+L<IO::Adapter::Array>
 
 =head1 AUTHOR
 
@@ -64,5 +83,6 @@ IO::Adapter::NIS appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
+
 
 1;

@@ -15,38 +15,39 @@ use Carp;
 
 =head1 NAME
 
-FML::Process::Flow - what is this
+FML::Process::Flow - describe process flow 
 
 =head1 SYNOPSIS
 
+   use FML::Process::Flow;
+   FML::Process::Flow::ProcessStart($pkg, $args);
+
+where C<$pkg> is the package name.
+C<$args> is HASH REFERENCE.
+
 =head1 DESCRIPTION
 
-=head1 CLASSES
+This is the current fml program flow. 
+Each function is implemented in each module in FML::Process class.
 
-=head1 METHODS
+    # create a new process object
+    my $process = $pkg->new($args);
 
-=item C<new()>
+    # e.g. parse the incoming message (e.g. STDIN)
+    $process->prepare($args);
 
-... what is this ...
+    # validate the request, for example,
+    #    permit post from the sender,
+    #    check the mail loop or not ...
+    $process->verify_request($args);
 
-=head1 AUTHOR
+    # start main transaction
+    $process->run($args);
 
-Ken'ichi Fukamachi
-
-=head1 COPYRIGHT
-
-Copyright (C) 2001 Ken'ichi Fukamachi
-
-All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
-
-=head1 HISTORY
-
-FML::Process::Flow appeared in fml5 mailing list driver package.
-See C<http://www.fml.org/> for more details.
+    # closing the process
+    $process->finish($args);
 
 =cut
-
 
 # Descriptions: drives basic flow 
 #               1. initialize processes and load configurations from *.cf
@@ -80,6 +81,25 @@ sub ProcessStart
     # closing the process
     $process->finish($args);
 }
+
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1 HISTORY
+
+FML::Process::Flow appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
+=cut
 
 
 1;
