@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.6 2004/07/23 13:16:41 fukachan Exp $
+# $FML: config_ph.pm,v 1.7 2004/07/23 15:59:08 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
@@ -145,7 +145,7 @@ sub _gen_eval_string
 
 
 # Descriptions: generate diff config.ph against defualt_config.ph and
-#               save it at %result (global variabl).
+#               save it at %result (global variable).
 #    Arguments: STR($package) HASH_REF($stab)
 # Side Effects: none
 # Return Value: none
