@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: subscribe.pm,v 1.2 2001/08/26 13:09:29 fukachan Exp $
+# $FML: subscribe.pm,v 1.3 2001/09/13 11:53:30 fukachan Exp $
 #
 
 package FML::Command::Admin::subscribe;
@@ -44,6 +44,7 @@ sub process
     my $address       = $optargs->{ address } || $options->[ 0 ];
 
     # fundamental check
+    croak("address is not specified")       unless defined $address;
     croak("\$member_map is not specified")    unless $member_map;
     croak("\$recipient_map is not specified") unless $recipient_map;
 
