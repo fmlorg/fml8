@@ -1,5 +1,5 @@
 <!--
-	$FML: cvstags.sgml,v 1.2 2001/04/25 02:55:31 fukachan Exp $
+	$FML: inet6.sgml,v 1.1 2001/05/17 04:00:43 fukachan Exp $
 -->
 
 <appendix id="inet6">
@@ -122,5 +122,52 @@ route6d=YES		route6d_flags="-A 2001:240:22::/48,gif0"
 
 </sect1>
 
+
+<sect1>
+	<title>
+	references
+	</title>
+
+<para>
+<ulink url="http://www.v6start.net/">
+http://www.v6start.net/
+</ulink>
+</para>
+
+<para>
+Introduction to IPv6
+<ulink url="http://www.onlamp.com/pub/a/onlamp/2001/05/24/ipv6_tutorial.html">
+http://www.onlamp.com/pub/a/onlamp/2001/05/24/ipv6_tutorial.html
+</ulink>
+</para>
+
+<para>
+Getting Connected with 6to4
+<ulink url="http://www.onlamp.com/pub/a/onlamp/2001/06/01/ipv6_tutorial.html">
+http://www.onlamp.com/pub/a/onlamp/2001/06/01/ipv6_tutorial.html
+</ulink>
+</para>
+
+<para>
+6to4 IPv6 Explained, or: Flogging a Dead Horse
+<ulink url="http://www.feyrer.de/NetBSD/6to4.html">
+http://www.feyrer.de/NetBSD/6to4.html
+</ulink>
+</para>
+
+<para>
+<ulink url="http://www.kame.net">
+www.kame.net
+</ulink>
+</para>
+
+<para>
+Interview with Jun-ichiro "Itojun" Hagino about the KAME Project 
+<ulink url="http://www.feyrer.de/NetBSD/interview-itojun.html">
+http://www.feyrer.de/NetBSD/interview-itojun.html
+</ulink>
+</para>
+
+</sect1>
 
 </appendix>
