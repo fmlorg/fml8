@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Postfix19991231.pm,v 1.1 2001/04/09 15:32:24 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.2 2001/04/10 11:52:26 fukachan Exp $
 #
 
 
@@ -60,7 +60,7 @@ sub analyze
 
 		if ($state == 1) {
 		    $data =~ s/\n/ /g;
-		    if ($data =~ /\<(\S+\@\S+)\>:\s*(.*)/) {
+		    if ($data =~ /\<(\S+\@\S+\w+)\>:\s*(.*)/) {
 			($addr, $reason) = ($1, $2);
 			$result->{ $addr }->{ 'Diagnostic-Code' } = $reason;
 			$result->{ $addr }->{ 'Status' }          = '5.x.y';
