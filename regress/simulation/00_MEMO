@@ -13,70 +13,6 @@
 	fml.org でつかうねんて
 
 
-○	File::CachdDir と Tie::JournaledDir
-
-	Tie::JournaledDir の keys はまちがってないか？
-		ファイルごとに JournaledFile しても重複するだろ？
-
-○	FML::Article
-
-	subdir の取り扱いが不十分
-
-
-○	0700 とかハードコードされてるじょ
-
-        FML/Config/Convert.pm:        chmod 0644, "$dst.$$";
-        FML/Config/Convert.pm:	chmod 0644, $dst_tmp;
-
-        FML/Confirm.pm:	mkdirhier($dir, 0700);
-
-        FML/Header/MessageID.pm:	    mkdirhier($dir, 0700);
-
-        File/CacheDir.pm:	my $mode = $args->{ directory_mode } || 0755;
-
-        Mail/Delivery/Queue.pm:	mkpath( [ $dir ], 0, 0755);
-        
-        Mail/ThreadTrack/DB.pm:
-	               tie \%$db, \$db_type, \$file, O_RDWR|O_CREAT, 0644;
-        Mail/ThreadTrack/DB.pm:
-		    tie %index, $db_type, $index_file, O_RDWR|O_CREAT, 0644;
-
-        Mail/ThreadTrack.pm:    $mode = defined $mode ? $mode : 0700;
-        
-        Mail/Message/ToHTML.pm:		mkdir($xsubdir, 0755);
-        Mail/Message/ToHTML.pm:
-		tie \%$db, \$db_type, \$file, O_RDWR|O_CREAT, 0644;
-
-○	auto-responses
-
-	http://www.cs.utk.edu/~moore/internet-drafts/draft-moore-auto-email-response-00.txt
-
-
-○	remove $msg->{ next }
-
-	FML/Filter/BodyCheck.pm
-	Mail/HTML/Lite.pm
-	Mail/Message.pm
-	Mail/Bounce/Postfix19991231.pm
-	Mail/Bounce/Qmail.pm
-
-
-○	ファイルを用意しただけやんシリーズ;)
-	これから改造するので、ほとんど未修正のままのこす
-
-	FML::Command::Admin::edit
-	FML::Process::Qmail
-	FML::Filter::TrafficMonitor
-	IO::Adapter::LDAP
-
-
-○ mail-message-0-2 タグの後に付け加えられたコードについて再考
-
-	s/content/data/g;
-
-	we need our own MIME generator ???
-
-
 ○	ちょっと見栄えが？
 
    FML::CGI::ThreadTrack
@@ -84,15 +20,32 @@
 	＃ テーブルベースの見栄え
 
 
+○	ファイルを用意しただけやんシリーズ;)
+	これから改造するので、ほとんど未修正のままのこす
+
+	FML::Process::Qmail
+	FML::Filter::TrafficMonitor
+	IO::Adapter::LDAP
+
+
+○	remove $msg->{ next }
+
+	FML/Filter/BodyCheck.pm
+	Mail/Message/ToHTML.pm
+	Mail/Message.pm
+	Mail/Bounce/Postfix19991231.pm
+	Mail/Bounce/Qmail.pm
+
+
 ○	ちょっとコーディングスタイルが古いかな?
 
-   FML::Header
-   FML::Header::Subject
-   File::Sequence
-   Mail::Delivery::* (?)
-   FML::Filter
-   FML::Filter::BodyCheck
-   FML::Filter::HeaderCheck
+		FML::Header
+		FML::Header::Subject
+		File::Sequence
+		Mail::Delivery::* (?)
+		FML::Filter
+		FML::Filter::BodyCheck
+		FML::Filter::HeaderCheck
 
 	ちょっとコーディングスタイルが古いかな?
 	近々に見直すべし
@@ -100,17 +53,12 @@
 
 ○	ドキュメント( tutorial )
 
-	setup/test.sgml
-	usage/fmlhtmlify.sgml
-	module/IO::Adapter.sgml
 	module/Mail::HTML::Lite.sgml
-	command/extension.sgml
 	threadtrack/chapter.sgml
 	threadtrack/tools.sgml
 	
-	usage/ がいまいち(fml bible のパートIIIの最初の部分にあたるもの)
-		usage/command.sgml
-		usage/post.sgml
+	usage/ がいまいち
+	fml bible のパートIIIの最初の部分のように編成し直すべき
 
 
 ○	makefml でうごかない？
@@ -138,6 +86,13 @@
 	ところで、誰に送信するんじゃ？ :-) って、そうか、makefml じゃ
 	なくて admin コマンドの時は考えなくてもいいからだな、それは …
 
+
+
+○	mail-message-0-2 タグの後に付け加えられたコードについて再考
+
+	s/content/data/g;
+
+	we need our own MIME generator ???
 
 
 ○ Mail::ThreadTrack
@@ -225,4 +180,4 @@ sub compare_euc_string
 
 
 ----------
-$FML: 00_MEMO,v 1.49 2002/09/21 09:53:00 fukachan Exp $
+$FML: 00_MEMO,v 1.50 2002/09/23 15:01:47 fukachan Exp $
