@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.19 2001/12/21 07:34:05 tmu Exp $
+# $FML: Analyze.pm,v 1.20 2001/12/22 09:21:20 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -42,7 +42,7 @@ This is top level entrance for
 
 
 # Descriptions: top level entrance
-#    Arguments: $self $msg
+#    Arguments: OBJ($self) STR($msg)
 #               $msg = "Mail::Messge object"
 # Side Effects: none
 # Return Value: none
@@ -65,9 +65,9 @@ analyze message given by $msg and assign thread id if needed.
 
 
 # Descriptions: given string looks like subject or not
-#    Arguments: $string
+#    Arguments: STR($subject)
 # Side Effects: none
-# Return Value: 1/0
+# Return Value: 1 or 0
 sub _is_reply
 {
     my ($subject) = @_;
@@ -79,7 +79,7 @@ sub _is_reply
 
 # Descriptions: assign a new thread id or
 #               extract the existing thread-id from the subject
-#    Arguments: $self $msg
+#    Arguments: OBJ($self) OBJ($msg)
 #                  $msg = Mail::Message object
 # Side Effects: a new thread_id may be assigned
 # Return Value: none
@@ -144,10 +144,10 @@ sub assign
 }
 
 
-# Descriptions:
-#    Arguments: $self
-# Side Effects:
-# Return Value: number
+# Descriptions: assign new thread_id
+#    Arguments: OBJ($self)
+# Side Effects: increment id
+# Return Value: NUM
 sub _assign_new_thread_id_number
 {
     my ($self) = @_;
@@ -169,9 +169,9 @@ sub _assign_new_thread_id_number
 
 
 # Descriptions: update $self->{ _status_info }
-#    Arguments: $self $str
+#    Arguments: OBJ($self) STR($s)
 # Side Effects: update $self->{ _status_info }
-# Return Value: none
+# Return Value: STR
 sub _append_thread_status_info
 {
     my ($self, $s) = @_;
@@ -181,15 +181,19 @@ sub _append_thread_status_info
 
 =head2 get_thread_status()
 
+get thread status
+
 =head2 set_thread_status($status)
+
+set thread status
 
 =cut
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: get thread status
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub get_thread_status
 {
     my ($self) = @_;
@@ -197,10 +201,10 @@ sub get_thread_status
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: set thread status
+#    Arguments: OBJ($self) STR($thread_status)
+# Side Effects: none
+# Return Value: STR
 sub set_thread_status
 {
     my ($self, $thread_status) = @_;
@@ -214,9 +218,9 @@ sub set_thread_status
 =cut
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: update thread status
+#    Arguments: OBJ($self) OBJ($msg)
+# Side Effects: update database
 # Return Value: none
 sub update_thread_status
 {
@@ -260,6 +264,10 @@ sub update_thread_status
 }
 
 
+# Descriptions: check filter whether this $msg should be ignored or not.
+#    Arguments: OBJ($self) OBJ($msg)
+# Side Effects: none
+# Return Value: 1 or 0
 sub _is_ignore
 {
     my ($self, $msg) = @_;
@@ -293,10 +301,10 @@ sub _is_ignore
 =cut
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: get thread_id
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR or UNDEF
 sub get_thread_id
 {
     my ($self) = @_;
@@ -304,10 +312,10 @@ sub get_thread_id
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: set thread_id
+#    Arguments: OBJ($self) STR($thread_id)
+# Side Effects: none
+# Return Value: STR
 sub set_thread_id
 {
     my ($self, $thread_id) = @_;
@@ -318,10 +326,10 @@ sub set_thread_id
 
 # Descriptions: create regexp for a subject tag, for example
 #               "[%s %05d]" => "\[\S+ \d+\]"
-#    Arguments: a subject tag string
+#    Arguments: STR($s)
 #               XXX non OO type function
 # Side Effects: none
-# Return Value: a regexp for the given tag
+# Return Value: STR(a regexp for the given tag)
 sub _regexp_compile
 {
     my ($s) = @_;
@@ -343,10 +351,10 @@ sub _regexp_compile
 
 
 # Descriptions: extract message-id list and return it.
-#    Arguments: $header
+#    Arguments: OBJ($header)
 #               function not OO
 # Side Effects: none
-# Return Value: HASH ARRAY
+# Return Value: ARRAY_HASH
 sub _extract_message_id_references
 {
     my ($header) = @_;
@@ -377,10 +385,10 @@ sub _extract_message_id_references
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: extract thread_id in Subject:
+#    Arguments: OBJ($self) OBJ($header)
+# Side Effects: none
+# Return Value: STR or 0
 sub _extract_thread_id_in_subject
 {
     my ($self, $header) = @_;
@@ -413,22 +421,29 @@ sub _extract_thread_id_in_subject
 }
 
 
-# For example, consider a posting to both elena ML and rudo (DM) from kenken.
+# Descriptions: 
+#               For example, consider a posting to both elena ML and 
+#               rudo (DM) from kenken.
 #
-#     From: kenken
-#     To: elena-ml
-#     Cc: rudo
+#                    From: kenken
+#                    To: elena-ml
+#                    Cc: rudo
 #
-# The reply to this DM (direct message) from rudo is
+#                The reply to this DM (direct message) from rudo is
 #
-#     From: rudo
-#     To: elena-ml
+#                    From: rudo
+#                    To: elena-ml
 #
-# This reply message has no thread_id since the message from kenken to
-# rudo comes directly from kenken not through fml driver.
-# In this case, we try to speculdate the reply relation and the thread_id
-# of this thread by using _speculate_thread_id_from_header().
+#                    This reply message has no thread_id since the
+#                    message from kenken to rudo comes directly from
+#                    kenken not through fml driver.  In this case, we
+#                    try to speculdate the reply relation and the
+#                    thread_id of this thread by using _
+#                    speculate_thread_id_from_header().
 #
+#    Arguments: OBJ($self) OBJ($header)
+# Side Effects: none
+# Return Value: STR(message id)
 sub _speculate_thread_id_from_header
 {
     my ($self, $header) = @_;
@@ -455,10 +470,10 @@ sub _speculate_thread_id_from_header
 }
 
 
-# Descriptions:
-#    Arguments: $self $id_num
+# Descriptions: create thread_id
+#    Arguments: OBJ($self) STR($id)
 # Side Effects: update $self->{ _thread_subject_tag }
-# Return Value: thread_id string
+# Return Value: STR(thread_id string)
 sub _create_thread_id_strings
 {
     my ($self, $id) = @_;
@@ -479,9 +494,9 @@ sub _create_thread_id_strings
 =cut
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: top level dispatcher to drive database update
+#    Arguments: OBJ($self) OBJ($msg)
+# Side Effects: update databases
 # Return Value: none
 sub update_db
 {
@@ -507,6 +522,10 @@ sub update_db
 }
 
 
+# Descriptions: speculate unixtime from header
+#    Arguments: OBJ($msg)
+# Side Effects: none
+# Return Value: NUM(unix time)
 sub _speculate_time
 {
     my ($msg) = @_;
@@ -522,10 +541,10 @@ sub _speculate_time
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: update database
+#    Arguments: OBJ($self) OBJ($msg)
+# Side Effects: update database
+# Return Value: STR
 sub _update_db
 {
     my ($self, $msg) = @_;
@@ -580,9 +599,9 @@ sub _update_db
 
 # Descriptions: register myself to index_db for further reference
 #               among mailing lists
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+#    Arguments: OBJ($self)
+# Side Effects: update object
+# Return Value: STR
 sub _update_index_db
 {
     my ($self) = @_;

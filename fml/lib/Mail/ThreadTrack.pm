@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.22 2001/11/26 09:12:38 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.23 2001/12/22 09:21:15 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -68,9 +68,9 @@ C<$id> is sequential number for input data (article).
 
 
 # Descriptions: constructor
-#    Arguments: $self
+#    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: object
+# Return Value: OBJ
 sub new
 {
     my ($self, $args) = @_;
@@ -143,9 +143,9 @@ sub DESTROY {}
 
 
 # Descriptions: "mkdir -p" or "mkdirhier"
-#    Arguments: directory [file_mode]
+#    Arguments: STR($dir) STR($mode)
 # Side Effects: set $ErrorString
-# Return Value: succeeded to create directory or not
+# Return Value: 1 or UNDEF
 sub _mkdirhier
 {
     my ($dir, $mode) = @_;
@@ -163,7 +163,7 @@ sub _mkdirhier
 
 # Descriptions: set up directory which is taken from
 #               $self->{ _db_dir }
-#    Arguments: $self $curproc $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: create a "_db_dir" directory if needed
 # Return Value: 1 (success) or undef (fail)
 sub _init_dir
@@ -195,9 +195,9 @@ and save its new number to C<file>.
 
 
 # Descriptions: increment thread number $id holded in $seq_file
-#    Arguments: $self $seq_file
+#    Arguments: OBJ($self) STR($seq_file)
 # Side Effects: increment id holded in $seq_file
-# Return Value: number
+# Return Value: NUM
 sub increment_id
 {
     my ($self, $seq_file) = @_;
@@ -230,9 +230,9 @@ return @thread_id ARRAY
 
 
 # Descriptions: return @thread_id ARRAY
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: update statistics
+# Return Value: ARRAY_HASH
 sub list_up_thread_id
 {
     my ($self) = @_;
@@ -278,9 +278,9 @@ get output format.
 
 
 # Descriptions: set output format
-#    Arguments: $self $string
+#    Arguments: OBJ($self) STR($mode)
 # Side Effects: none
-# Return Value: string
+# Return Value: STR
 sub set_mode
 {
     my ($self, $mode) = @_;
@@ -289,9 +289,9 @@ sub set_mode
 
 
 # Descriptions: set output format
-#    Arguments: $self
+#    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: string
+# Return Value: STR
 sub get_mode
 {
     my ($self) = @_;
@@ -301,11 +301,15 @@ sub get_mode
 
 =head2 set_fd( $fd )
 
-=head2 get_fd( $fd )
+=head2 get_fd()
 
 =cut
 
 
+# Descriptions: set output format
+#    Arguments: OBJ($self) HADNLE($fd)
+# Side Effects: none
+# Return Value: STR
 sub set_fd
 {
     my ($self, $fd) = @_;
@@ -314,9 +318,9 @@ sub set_fd
 
 
 # Descriptions: set output format
-#    Arguments: $self $string
+#    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: string
+# Return Value: STR
 sub get_fd
 {
     my ($self) = @_;
@@ -331,6 +335,10 @@ set thread listing order where $order is 'normal' or 'reverse'.
 =cut
 
 
+# Descriptions: set thread listing order
+#    Arguments: OBJ($self) STR($order)
+# Side Effects: none
+# Return Value: none
 sub set_order
 {
     my ($self, $order) = @_;
@@ -349,13 +357,15 @@ sub set_order
 
 =head2 exist($thread_id)
 
+$thread_id exists or not?
+
 =cut
 
 
-# Descriptions:
-#    Arguments: $self $string
-# Side Effects:
-# Return Value: none
+# Descriptions: $thread_id exists or not?
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: 1 or 0
 sub exist
 {
     my ($self, $id) = @_;
@@ -383,6 +393,10 @@ close specified $thread_id.
 =cut
 
 
+# Descriptions: close specified $thread_id.
+#    Arguments: OBJ($self) STR($thread_id)
+# Side Effects: update status
+# Return Value: none
 sub close
 {
     my ($self, $thread_id) = @_;
@@ -408,9 +422,9 @@ C<set_status()> calls db_open() an db_close() automatically within it.
 =cut
 
 
-# Descriptions:
-#    Arguments: $self $curproc $args
-# Side Effects:
+# Descriptions: set status
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: update status
 # Return Value: none
 sub set_status
 {
@@ -424,9 +438,9 @@ sub set_status
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: set status
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: update status
 # Return Value: none
 sub _set_status
 {
@@ -445,6 +459,10 @@ add filter rule to ignore in thread database.
 =cut
 
 
+# Descriptions: add filter rule to ignore in thread database.
+#    Arguments: OBJ($self) HASH_REF($hash)
+# Side Effects: none
+# Return Value: none
 sub add_filter
 {
     my ($self, $hash) = @_;
@@ -459,11 +477,14 @@ sub add_filter
 
 =head2 log( $str )
 
+log $str
+
 =cut
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+
+# Descriptions: log
+#    Arguments: OBJ($self) STR($str)
+# Side Effects: none
 # Return Value: none
 sub log
 {

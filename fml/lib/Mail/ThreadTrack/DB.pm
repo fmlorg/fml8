@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.16 2001/12/21 07:34:06 tmu Exp $
+# $FML: DB.pm,v 1.17 2001/12/22 09:21:20 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -50,9 +50,9 @@ my @kind_of_databases = qw(thread_id date status sender articles
                            message_id);
 
 
-# Descriptions:
-#    Arguments: $self
-# Side Effects:
+# Descriptions: open database by tie() 
+#    Arguments: OBJ($self)
+# Side Effects: none
 # Return Value: none
 sub db_open
 {
@@ -89,9 +89,9 @@ sub db_open
 }
 
 
-# Descriptions:
-#    Arguments: $self
-# Side Effects:
+# Descriptions: clear database
+#    Arguments: OBJ($self)
+# Side Effects: update database
 # Return Value: none
 sub db_clear
 {
@@ -106,9 +106,9 @@ sub db_clear
 }
 
 
-# Descriptions:
-#    Arguments: $directory
-# Side Effects:
+# Descriptions: clear database
+#    Arguments: STR($db_dir)
+# Side Effects: clear database, remove file if needed
 # Return Value: none
 sub _db_clear
 {
@@ -136,9 +136,9 @@ sub _db_clear
 }
 
 
-# Descriptions:
-#    Arguments: $self
-# Side Effects:
+# Descriptions: close database by untie()
+#    Arguments: OBJ($self)
+# Side Effects: none
 # Return Value: none
 sub db_close
 {
@@ -160,9 +160,15 @@ sub db_close
 
 =head2 db_mkdb($min, $max)
 
+remake database.
+
 =cut
 
 
+# Descriptions: remake database for messages from $min_id to $max_id
+#    Arguments: OBJ($self) NUM($min_id) NUM($max_id)
+# Side Effects: remake database
+# Return Value: none
 sub db_mkdb
 {
     my ($self, $min_id, $max_id) = @_;
@@ -208,6 +214,10 @@ dump status database if $type is not specified.
 =cut
 
 
+# Descriptions: dump data for database $type
+#    Arguments: OBJ($self) STR($type)
+# Side Effects: none
+# Return Value: none
 sub db_dump
 {
     my ($self, $type) = @_;
@@ -228,6 +238,10 @@ return HASH REFERENCE for specified $type.
 =cut
 
 
+# Descriptions: get HASH REFERENCE for specified $type.
+#    Arguments: OBJ($self) STR($db_type)
+# Side Effects: none
+# Return Value: STR or UNDEF
 sub db_hash
 {
     my ($self, $db_type) = @_;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledDir.pm,v 1.5 2001/11/27 15:19:40 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.6 2001/12/22 09:21:22 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -81,14 +81,14 @@ my $debug = $ENV{'debug'} ? 1 :0;
 
 
 # Descriptions: constructor
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 #               $args = {
 #                    dir => directory path,
 #                   unit => number (seconds)
 #                  limit => number (days)
 #               }
 # Side Effects: import _match_style into $self
-# Return Value: object
+# Return Value: OBJ
 sub new
 {
     my ($self, $args) = @_;
@@ -113,9 +113,9 @@ sub new
 
 
 # Descriptions: generate a cache file
-#    Arguments: (number, directory path, number)
+#    Arguments: NUM($unit) STR($dir) NUM($i)
 # Side Effects: none
-# Return Value: file path
+# Return Value: STR(file path)
 sub _file_name
 {
     my ($unit, $dir, $i) = @_;
@@ -136,9 +136,9 @@ sub _file_name
 
 
 # Descriptions: call new()
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: same as new()
-# Return Value: object returned by new()
+# Return Value: OBJ
 sub TIEHASH
 {
     my ($self, $args) = @_;
@@ -149,9 +149,9 @@ sub TIEHASH
 # Descriptions: hash{} access to file in the cache directory
 #               by Tie::JournaledFile sequentially.
 #               XXX file list in the directory is given by new().
-#    Arguments: $self $key
+#    Arguments: OBJ($self) STR($key)
 # Side Effects: none
-# Return Value: key string
+# Return Value: STR
 sub FETCH
 {
     my ($self, $key) = @_;
@@ -179,9 +179,9 @@ sub FETCH
 
 # Descriptions: add { $key => $value } to the latest file
 #               by Tie::JournaledFile.
-#    Arguments: $self $key $value
+#    Arguments: OBJ($self) STR($key) STR($value)
 # Side Effects: none
-# Return Value: Tie::JournaledFile->STORE() operation return value
+# Return Value: STR(Tie::JournaledFile->STORE() operation return value)
 sub STORE
 {
     my ($self, $key, $value) = @_;
@@ -197,10 +197,10 @@ sub STORE
 
 
 # Descriptions: find key in file
-#    Arguments: $self
+#    Arguments: OBJ($self)
 # Side Effects: update object and negative cache in $self
 #               where the cache is file list already searched
-# Return Value: key string
+# Return Value: STR(key string)
 sub __find_key
 {
     my ($self) = @_;
@@ -266,7 +266,7 @@ sub __find_key
 
 
 # Descriptions: object for cache file is alive
-#    Arguments: $self
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: 1 or 0
 sub __in_valid_search
@@ -277,9 +277,9 @@ sub __in_valid_search
 
 
 # Descriptions: return the first key in the latest file
-#    Arguments: $self
+#    Arguments: OBJ($self)
 # Side Effects: initialize _key_files{done,obj}
-# Return Value: key string
+# Return Value: STR(key string)
 sub FIRSTKEY
 {
     my ($self) = @_;
@@ -303,9 +303,9 @@ sub FIRSTKEY
 
 # Descriptions: fetch the next key in the cache
 #               file to search changes automatically by Tie::JournaledFile.
-#    Arguments: $self
+#    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: key string
+# Return Value: STR(key string)
 sub NEXTKEY
 {
     my ($self) = @_;

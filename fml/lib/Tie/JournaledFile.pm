@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledFile.pm,v 1.10 2001/08/21 10:04:10 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.11 2001/12/22 09:21:22 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -73,9 +73,9 @@ my $debug = $ENV{'debug'} ? 1 : 0;
 
 
 # Descriptions: constructor
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: import _match_style into $self
-# Return Value: object
+# Return Value: OBJ
 sub new
 {
     my ($self, $args) = @_;
@@ -102,6 +102,10 @@ sub new
 }
 
 
+# Descriptions: tie() operation stars
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: initialize object
+# Return Value: OBJ
 sub TIEHASH
 {
     my ($self, $args) = @_;
@@ -111,6 +115,10 @@ sub TIEHASH
 }
 
 
+# Descriptions: tie() fetch op
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: none
+# Return Value: STR
 sub FETCH
 {
     my ($self, $key) = @_;
@@ -118,6 +126,10 @@ sub FETCH
 }
 
 
+# Descriptions: tie() store op
+#    Arguments: OBJ($self) STR($key) STR($value)
+# Side Effects: none
+# Return Value: STR
 sub STORE
 {
     my ($self, $key, $value) = @_;
@@ -125,6 +137,10 @@ sub STORE
 }
 
 
+# Descriptions: tie() keys op
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub FIRSTKEY
 {
     my ($self) = @_;
@@ -149,6 +165,10 @@ sub FIRSTKEY
 }
 
 
+# Descriptions: tie() keys op (next op)
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub NEXTKEY
 {
     my ($self) = @_;
@@ -207,6 +227,10 @@ parameter at C<new()> method. C<first_match> by default.
 =cut
 
 
+# Descriptions: return the array of line(s) with the specified key.
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: none
+# Return Value: ARRAY
 sub find
 {
     my ($self, $key) = @_;
@@ -220,11 +244,11 @@ sub find
 #               return the value with the $key
 #               $self->{ '_match_style' } conrolls the matching algorithm
 #               is either of the fist or last match.
-#    Arguments: $self $key $mode
+#    Arguments: OBJ($self) STR($key) STR($mode)
 #               $key is the string to search.
 #               $mode selects the return value style, scalar or array.
 # Side Effects: none
-# Return Value: SCALAR or ARRAY with the key
+# Return Value: SCALAR or ARRAY
 sub _fetch
 {
     my ($self, $key, $mode) = @_;
@@ -281,10 +305,10 @@ sub _fetch
 
 # Descriptions: wrapper to put "key => value" pair to cache file.
 #               It emulates hash value upates.
-#    Arguments: $self $key $value
+#    Arguments: OBJ($self) STR($key) STR($value)
 #               that is, $key => $value
 # Side Effects: update cache file by _puts()
-# Return Value: return value from _puts()
+# Return Value: same as _puts()
 sub _store
 {
     my ($self, $key, $value) = @_;
@@ -293,7 +317,7 @@ sub _store
 
 
 # Descriptions: append given string to cache file
-#    Arguments: $self $string
+#    Arguments: OBJ($self) STR($string)
 # Side Effects: update cache file
 # Return Value: 1 or throw exception by croak()
 sub _puts
