@@ -49,7 +49,7 @@ Please see it for more details.
 =head1 DESCRIPTION
 
 In C<MailingList> class, 
-C<Delivery> is an adapter which composes
+C<Delivery> is an adapter to
 C<SMTP>
 C<ESMTP>
 C<LMTP> classes. 
@@ -83,6 +83,9 @@ sub new
     my ($self, $args) = @_;
     my $protocol =  $args->{ protocol } || 'SMTP';
     my $pkg      = 'MailingList::SMTP';
+
+    # char's of the protocol name is aligned to upper case.
+    $protocol =~ tr/A-Z/a-z/;
  
     if ($protocol eq 'SMTP') {
 	$pkg = 'MailingList::SMTP';

@@ -1,12 +1,7 @@
 FML/Config.pm
 FML/Credential.pm
 
-MailingList/Delivery.pm
 MailingList/Messages.pm
-MailingList/SMTP.pm
-MailingList/Utils.pm
-
-
 
 --- not yet implemented ---
 

@@ -58,10 +58,10 @@ To start delivery, use deliver() method in this way.
                           body            => $body_object,
                       });
 
-You can use ARRAY REFERENCE.
+You can specify the recipient list as an ARRAY REFERENCE.
 
     # reference to an array of recipients
-    $raaray = [ 'kenken@nuinui.net' ];
+    $rarray = [ 'kenken@nuinui.net' ];
 
     $service->deliver(
                       {
@@ -85,17 +85,18 @@ sub-classes,
 C<MailingList::Net::INET4> and
 C<MailingList::Net::INET6>.
 
-It sends all recipients indicated by $recipient_maps.
-The list of recipients for $recipient_maps is resolved by
-L<IO::MapAdapter>.
-
+It sends a list of all recipients indicated by $recipient_maps.
+C<IO::MapAdapter> resolves $recipient_maps and provides the abstract
+IO layer. It provides the usual file IO methods for each C<map>.
+See L<IO::MapAdapter> for more details.
 
 =head1 METHODS
 
-=item C<new()>
+=item C<new($args)>
 
-constructor. If you control parameters, specify it in a hash reference
-as an argument of new().
+the constructor. 
+Please specify it in a hash reference as an argument of new().
+Several parameters on logging and timeout et. al. are avialable.
 
    hash key             value
    --------------------------------------------
@@ -103,8 +104,10 @@ as an argument of new().
    smtp_log_function    reference to function for logging
    default_io_timeout   default timeout associated with the socket IO
 
-log_function() is for general purpose.
-smtp_log_function() is used to log SMTP transactions.
+C<log_function()> is the function pointer to write a message in the
+log file.  
+C<smtp_log_function()> is special function pointer to log SMTP
+transactions.
 
 =cut
 
@@ -292,9 +295,10 @@ sub close
 ##### SMTP delivery main loop
 #####
 
-=item C<deliver()>
+=item C<deliver($args)>
 
 start delivery process.
+You can specify the following parameter at C<$args> HASH REFERENCE.
 
     hash key           value
     --------------------------------------------
@@ -305,12 +309,13 @@ start delivery process.
     header             FML::Header object
     body               MailingList::Messages object
 
-C<smtp_servers> is a list of MTA's.
-The syntax of each MTA is address:port style. 
-If you use a raw IPv6 address, use [address]:port syntax. 
-For example, [::1]:25 (v6 loopback).
-You can specify IPv4 and IPv6 addresses.
-deliver() automatically tries smtp in both protocols.
+C<smtp_servers> is a list of MTA's (Mail Transport Agents).
+The syntax of each MTA is C<host:port> or C<address:port> style. 
+If you use a raw IPv6 address, use C<[address]:port> syntax. 
+For example, [::1]:25 (IPv6 loopback address).
+You can specify a combination of IPv4 and IPv6 addresses at
+C<smtp_servers>.
+C<deliver()> automatically tries smtp connection on both protocols.
 
 C<smtp_sender> is the sender's email address. 
 It is used at MAIL FROM: command.
@@ -319,20 +324,21 @@ C<recipient_maps> is a list of C<maps>.
 See L<IO::MapAdapter> for more details. 
 For example,
 
-to read address from a file
+To read addresses from a file, specify the map as
 
          file:/var/spool/ml/elena/recipients
 
-to read addresses from /etc/group
+and to read addresses from /etc/group
 
          unix.group:fml
 
 C<recipient_limit> is the max number of recipients in one SMTP
-transaction. 1000 by default, which corresponds to the limit by Postfix. 
+transaction. 1000 by default, 
+which corresponds to the limit by C<Postfix>. 
 
-C<header> is an FML::Header object.
+C<header> is an C<FML::Header> object.
 
-C<body> is a MailingList::Messages object.
+C<body> is a C<MailingList::Messages> object.
 See L<MailingList::Messages> for more details.
 
 =cut
@@ -773,6 +779,9 @@ L<MailingList::INET4>,
 L<MailingList::INET6>,
 L<IO::MapAdapter>
 
+See I<http://www.postfix.org/> on C<Postfix> 
+which replaces sendmail with little effort 
+but provides a lot of compatibility except for sendmail.cf.
 
 =head1 AUTHOR
 

@@ -56,6 +56,8 @@ For example,
 
 =head1 DESCRIPTION
 
+several utility functions for C<MailingList> sub classes.
+
 =cut
 
 #################################################################
@@ -63,13 +65,16 @@ For example,
 ##### General Logging
 #####
 
-=head2
+=head1 LOGGING FUNCTIONS
 
-=item C<Log()>
+=head2 C<Log($buf)>
 
 Logging interface. 
-If CODE REFERENCE is not specified at
-MailingList::Delivery::new(), 
+send C<$buf> (the log message) to the function specified as
+C<$LogFunctionPointer> (CODE REFERENCE).
+C<$LogFunctionPointer> is expected to set up at
+C<MailingList::Delivery::new()>
+If it is not specified,
 the logging message is forwarded to STDERR channel.
 
 =cut
@@ -96,14 +101,14 @@ sub Log
 #####
 ##### SMTP Logging
 #####
-=head2
 
-=item C<smtplog()>
+=head2 C<smtplog($buf)>
 
-smtp logging interface.
-If CODE REFERENCE is not specified at
-MailingList::Delivery::new(), 
-the logging message is forwarded to STDERR channel.
+smtp logging interface as the same as C<Log()> but for smtp
+transcation log.
+If the real log function pointer is not specified at
+C<MailingList::Delivery::new()>, 
+C<$buf> is sent to C<STDERR>.
 
 =cut
 
@@ -132,16 +137,20 @@ sub _smtplog
 
 
 #################################################################
-#####
-##### error manipulations
-#####
-=head2
 
-=item C<_error_reason()>
+=head1 METHODS FOR ERROR MESSAGES AND STATUS CODES
 
-=item C<error()>
+=head2 C<error_reason($mesg)>
 
-=item C<error_reset()>
+save C<$mesg>.
+
+=head2 C<error()>
+
+return the latest error message which saved by C<error_reason()>.
+
+=head2 C<error_reset()>
+
+reset the error buffer which C<error_reason()> and C<error()> use.
 
 =cut
 
@@ -181,11 +190,13 @@ sub error_reset
 ##### status codes manipulations
 #####
 
-=head2
+=head2 C<_set_status_code($value)>
 
-=item C<_get_status_code()>
+save C<($value)> as status code.
 
-=item C<_set_status_code(value)>
+=head2 C<_get_status_code()>
+
+get the latest status code.
 
 =cut
 
@@ -211,23 +222,17 @@ sub _set_status_code
 ##### utility to control $recipient_map
 #####
 
-=head2
+=head1 METHODS TO HANDLE POSITION at IO MAP
 
-=item	     C<_set_target_map()>
+=head2	     C<_set_target_map($map)>
 
-=item	     C<_get_target_map()>
+save the current C<map> name
+where C<map> is a name usable at C<recipient_maps>
 
-=item	     C<_set_map_status()>
+=head2	     C<_get_target_map()>
 
-=item	     C<_set_map_position()>
-
-=item	     C<_get_map_status()>
-
-=item	     C<_get_map_position()>
-
-=item	     C<_rollback_map_position()>
-
-=item	     C<_reset_mapinfo()>
+return the current C<map>
+where C<map> is a name usable at C<recipient_maps>
 
 =cut
 
@@ -244,6 +249,25 @@ sub _get_target_map
     $self->{ _mapinfo }->{ _curmap };
 }
 
+
+=head2	     C<_set_map_status($map, $status)>
+
+save C<$status> for C<$map> IO.
+For example, C<$status> is 'not done'.
+
+=head2	     C<_set_map_position($map, $position)>
+
+save the C<$position> for C<$map> IO.
+
+=head2	     C<_get_map_status($map)>
+
+get the current C<$status> for C<$map> IO.
+
+=head2	     C<_get_map_position($map)>
+
+get the current C<$position> for C<$map> IO.
+
+=cut
 
 sub _set_map_status
 {
@@ -273,6 +297,18 @@ sub _get_map_position
     $self->{ _mapinfo }->{ $map }->{position};
 }
 
+
+=head2	     C<_rollback_map_position()>
+
+stop the IO for the current C<$map>.
+This method rolls back the operation state to the time when the
+current IO for C<$map> begins.
+
+=head2	     C<_reset_mapinfo()>
+
+clear information around the latest map operation.
+
+=cut
 
 sub _rollback_map_position
 {
