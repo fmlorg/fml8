@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.13 2002/09/30 11:00:53 fukachan Exp $
+# $FML: Filter.pm,v 1.14 2002/10/03 22:11:12 fukachan Exp $
 #
 
 package FML::Filter;
@@ -131,7 +131,7 @@ sub _apply_article_non_mime_filter
     my $config = $curproc->config();
 
     if ($config->yes( 'use_article_non_mime_filter' )) {
-	my $rules = 
+	my $rules =
 	    $config->get_as_array_ref('article_none_mime_filter_rules');
 
       RULE:
@@ -165,7 +165,7 @@ sub _apply_article_text_plain_filter
 	my $obj = new FML::Filter::TextPlain;
 
 	# overwrite filter rules based on FML::Config
-	my $rules = 
+	my $rules =
 	    $config->get_as_array_ref('article_text_plain_filter_rules');
 	if (defined $rules) {
 	    $obj->rules( $rules );
@@ -203,7 +203,7 @@ sub _apply_article_mime_component_filter
 	return 0;
 
 	# overwrite filter rules based on FML::Config
-	my $rules = 
+	my $rules =
 	    $config->get_as_array_ref('article_mime_component_filter_rules');
 	if (defined $rules) {
 	    $obj->rules( $rules );

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.47 2002/09/22 14:56:39 fukachan Exp $
+# $FML: Article.pm,v 1.48 2002/09/28 09:58:19 fukachan Exp $
 #
 
 package FML::Article;
@@ -296,7 +296,7 @@ sub speculate_max_id
 	use DirHandle;
 	my $dh = new DirHandle $spool_dir;
 
-	if (defined $dh) {	
+	if (defined $dh) {
 	    my $fn         = ''; # file name
 	    my $subdir     = '';
 	    my $max_subdir = 0;
