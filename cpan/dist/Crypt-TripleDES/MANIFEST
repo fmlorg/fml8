@@ -1,0 +1,6 @@
+lib/Crypt/TripleDES.pm
+lib/Crypt/PPDES.pm
+MANIFEST
+Makefile.PL
+test.pl
+examples/deswrapper

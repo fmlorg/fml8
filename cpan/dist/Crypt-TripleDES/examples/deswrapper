@@ -1,0 +1,23 @@
+#!/usr/bin/perl -s
+##
+##
+##
+## Copyright (c) 1999, Vipul Ved Prakash.  All rights reserved.
+## This code is free software; you can redistribute it and/or modify
+## it under the same terms as Perl itself.
+##
+## $Id$
+
+
+use Crypt::TripleDES; 
+
+my $des = new Crypt::TripleDES; 
+die "syntax: $0 -e|-d -pass=passphrase datafile\n" unless $pass; 
+$data = join'',<>; 
+print $des->encrypt3 ( $data, $pass ) if $e; 
+print $des->decrypt3 ( $data, $pass ) if $d; 
+
+
+
+
+
