@@ -1,22 +1,25 @@
 =head1	メール本文(ボディ)への操作
 
+
 # Descriptions: ヘッダ情報を根拠にしたフィルタリングをするか？
 #      History:
 #        Value: yes / no
 #     Examples:
 use_body_filter		=	yes
 
+
 # Descriptions: フィルタリングのルール
 #      History:
 #        Value:
 #     Examples:
-body_filter_rules		=	reject_not_iso2022jp_japanese_string
-					reject_null_mail_body
-					reject_one_line_message
-					reject_old_fml_command_syntax
-					reject_invalid_fml_command_syntax
-					reject_japanese_command_syntax
-					reject_ms_guid
+body_filter_rules	=	reject_not_iso2022jp_japanese_string
+				reject_null_mail_body
+				reject_one_line_message
+				reject_old_fml_command_syntax
+				reject_invalid_fml_command_syntax
+				reject_japanese_command_syntax
+				reject_ms_guid
+
 
 # Descriptions: ヘッダ情報を根拠にしたループチェックをするか？
 #      History:
@@ -24,11 +27,13 @@ body_filter_rules		=	reject_not_iso2022jp_japanese_string
 #     Examples:
 use_body_loop_check		=	yes
 
+
 # Descriptions: ヘッダに対するループチェックのルール群
 #      History:
 #        Value:
 #     Examples:
 body_loop_check_rules		=	verify_body_cksum_uniqueness
+
 
 # Descriptions: Message-ID のキャッシュを格納するディレクトリ
 #      History:
