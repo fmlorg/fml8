@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.65 2003/03/17 13:26:05 fukachan Exp $
+# $FML: Utils.pm,v 1.66 2003/03/28 10:03:36 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1104,7 +1104,7 @@ sub which_map_nl
 convert_to_mail_address() converts $list to mail addresses.
 For example
 
-    admin	=>	$maintainer
+    maitainer	=>	$maintainer
     sender	=>	sender of the current message (From: in header)
 
 =cut
@@ -1122,7 +1122,7 @@ sub convert_to_mail_address
     my $result = [];
 
     for my $rcpt (@$list) {
-	if ($rcpt eq 'admin') {
+	if ($rcpt eq 'maitainer') {
 	    push(@$result, $config->{ maintainer });
 	}
 	elsif ($rcpt eq 'sender') {

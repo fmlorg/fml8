@@ -960,9 +960,9 @@ use_article_filter_reject_notice	=	yes
 
 # Descriptions: エラーのお知らせの受信者
 #      History: 4.0 ではハードコードだったような…
-#        Value: admin | sender
-#     Examples: admin sender
-article_filter_reject_notice_recipients	=	admin
+#        Value: maintainer | sender
+#     Examples: maintainer sender
+article_filter_reject_notice_recipients	=	maintainer
 						sender
 
 =head1	記事および記事のスプール
