@@ -766,7 +766,69 @@ sub is_empty
 sub get_content_type
 {
     my ($self) = @_;
-    $self->{ content_type };
+    my $type = $self->{ content_type };
+    $type =~ s/;//;
+    $type;
+}
+
+
+=head2 C<num_paragraph()>
+
+return the number of paragraphs in the message ($self).
+
+=cut
+
+sub num_paragraph
+{
+    my ($self) = @_;
+
+    # exit ASAP if the message is empty. 
+    return 0 if $self->is_empty();
+
+    my $pb      = $self->{ offset_begin };
+    my $pe      = $self->{ offset_end };
+    my $bodylen = $self->size;
+    my $content = $self->{ content };
+
+    my $i  = 0; # the number of paragraphs
+    my $p  = $pb;
+    my $pp = $p;
+
+    # skip "\n" in the first and end of the buffer
+    while (substr($$content, $p, 1) eq "\n") { $p++;}
+    while (substr($$content, $pe -1, 1) eq "\n") { $pe--;} 
+
+    my (@pmap) = ($pb);
+  LINE:
+    while ($p < $pe) {
+	$pp = index($$content, "\n\n", $p);
+	if ($pp < $p ||    # not found
+	    $pp >= $pe ) { # over the end of buffer boundary
+
+	    push(@pmap, $pe); # the end of the last paragraph
+	    last LINE; 
+	}
+	else {
+	    # skip trailing "\n" after "\n\n"
+	    while (substr($$content, $pp, 1) eq "\n") { $pp++;}
+
+	    push(@pmap, $pp) if $pp > 0;
+
+	    $p = $pp;
+	}
+    }
+
+    # XXX debug
+    if (0) {
+	for (my $i = 0; $i < $#pmap; $i++ ) {
+	    my $p  = $pmap[ $i ];
+	    my $pp = $pmap[ $i + 1 ];
+	    print STDERR "($p,$pp)<", substr($$content, $p, $pp - $p) , ">\n";
+	}
+	print STDERR "( @pmap )\n"; 
+    }
+
+    $#pmap;
 }
 
 

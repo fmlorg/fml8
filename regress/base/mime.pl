@@ -14,16 +14,18 @@ use MIME::QuotedPrint;
 &try_mime(" ");
 &try_mime("　");
 &try_mime("\n");
+&try_mime(" ", 3);
 
 exit 0;
 
 
 sub try_mime
 {
-    my ($separator) = @_;
+    my ($separator, $xbuf) = @_;
     my $buf = "\n";
 
     my $orig_str = "うじゃ". $separator ."あじゃじゃ";
+    $orig_str = "うじゃ". $separator . $xbuf . "あじゃじゃ" if $xbuf;
     my $in_str_b64 = encode_mime_string($orig_str);
     my $in_str_qp  = encode_mime_string($orig_str, { encode => 'qp' });
 
