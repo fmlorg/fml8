@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.79 2003/01/03 07:06:38 fukachan Exp $
+# $FML: Command.pm,v 1.80 2003/01/11 06:58:45 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -147,32 +147,35 @@ sub run
     my ($curproc, $args) = @_;
     my $pcb = $curproc->{ pcb };
 
-    # permit_xxx() sets the error reason at "check_restriction" in pcb.
-    if ($curproc->permit_command($args)) {
-	$curproc->_evaluate_command_lines($args);
-    }
-    # XXX reject command use irrespective of requests from admins/users.
-    # XXX rejection of admin use occurs in _evaluate_command_lines() not here.
-    # XXX possible cases are from "system_accounts" or from a not member.
-    else {
-	# check the error reason by permit_command().
-	my $reason = $pcb->get("check_restrictions", "deny_reason");
-	if (defined($reason) && ($reason eq 'reject_system_accounts')) {
-	    $curproc->reply_message_nl("error.system_accounts",
-				       "deny request from system accounts");
+    unless ($curproc->is_refused()) {
+	# permit_xxx() sets the error reason at "check_restriction" in pcb.
+	if ($curproc->permit_command($args)) {
+	    $curproc->_evaluate_command_lines($args);
 	}
+	# XXX reject command use irrespective of requests from admins/users.
+	# XXX rejection of admin use occurs in _evaluate_command_lines() 
+	# XXX not here.
+	# XXX possible cases are from "system_accounts" or from a not member.
 	else {
-	    $curproc->reply_message_nl("error.not_member",
-				       "deny request from a not member");
+	    # check the error reason by permit_command().
+	    my $reason = $pcb->get("check_restrictions", "deny_reason");
+	    if (defined($reason) && ($reason eq 'reject_system_accounts')) {
+		my $s = "deny request from system accounts";
+		$curproc->reply_message_nl("error.system_accounts", $s);
+	    }
+	    else {
+		$curproc->reply_message_nl("error.not_member",
+					   "deny request from a not member");
+	    }
+
+	    # append the incoming message into the error message sent back
+	    # as the reference.
+	    my $msg = $curproc->incoming_message();
+	    $curproc->reply_message( $msg );
+
+	    unless (defined $reason) { $reason = 'unknown';}
+	    Log("deny command. reason=$reason");
 	}
-
-	# append the incoming message into the error message sent back
-	# as the reference.
-	my $msg = $curproc->incoming_message();
-	$curproc->reply_message( $msg );
-
-	unless (defined $reason) { $reason = 'unknown';}
-	Log("deny command. reason=$reason");
     }
 }
 

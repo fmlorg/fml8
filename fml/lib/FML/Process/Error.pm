@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.24 2002/09/22 15:01:21 fukachan Exp $
+# $FML: Error.pm,v 1.25 2002/12/22 03:46:20 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -146,40 +146,42 @@ sub run
     my $eval = $config->get_hook( 'error_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
-    eval q{
-	use Mail::Bounce;
-	my $bouncer = new Mail::Bounce;
-	$bouncer->analyze( $msg );
+    unless ($curproc->is_refused()) {
+	eval q{
+	    use Mail::Bounce;
+	    my $bouncer = new Mail::Bounce;
+	    $bouncer->analyze( $msg );
 
-	use FML::Error::Cache;
-	my $errorcache = new FML::Error::Cache $curproc;
+	    use FML::Error::Cache;
+	    my $errorcache = new FML::Error::Cache $curproc;
 
-	for my $address ( $bouncer->address_list ) {
-	    my $status = $bouncer->status( $address );
-	    my $reason = $bouncer->reason( $address );
+	    for my $address ( $bouncer->address_list ) {
+		my $status = $bouncer->status( $address );
+		my $reason = $bouncer->reason( $address );
 
-	    if ($address) {
-		Log("bounced: address=<$address>");
-		Log("bounced: status=$status");
-		Log("bounced: reason=\"$reason\"");
+		if ($address) {
+		    Log("bounced: address=<$address>");
+		    Log("bounced: status=$status");
+		    Log("bounced: reason=\"$reason\"");
 
-		$curproc->lock('errorcache');
-		$errorcache->add({
-		    address => $address,
-		    status  => $status,
-		    reason  => $reason,
-		});
-		$curproc->unlock('errorcache');
+		    $curproc->lock('errorcache');
+		    $errorcache->add({
+			address => $address,
+			status  => $status,
+			reason  => $reason,
+		    });
+		    $curproc->unlock('errorcache');
 
-		$found++;
+		    $found++;
+		}
 	    }
-	}
-    };
-    LogError($@) if $@;
+	};
+	LogError($@) if $@;
 
-    if ($found) {
-	$pcb->set("error", "found", 1);
-	$curproc->_clean_up_bouncers($args);
+	if ($found) {
+	    $pcb->set("error", "found", 1);
+	    $curproc->_clean_up_bouncers($args);
+	}
     }
 
     $eval = $config->get_hook( 'error_run_end_hook' );
