@@ -103,6 +103,7 @@ ToDomain=@im_hostname@		# domain when domain part is omitted
 #Imget.Src=local:${HOME}/Maildir	# in case of qmail
 UseCL=@im_usecl@		# Use value of Content-Length header
 NoSync=@im_nosync@		# Do not need fsync(2) on writing file
+#FsyncNumber=118		# system call number of fsync
 
 #Imget.Src=pop
 #PopAccount=/APOP@localhost	# account info for POP access
@@ -119,13 +120,18 @@ NoSync=@im_nosync@		# Do not need fsync(2) on writing file
 #HttpProxy=proxy-server:8080	# proxy server for HTTP access
 #NoProxy=http://.*my.domain/	# URL regex not to use Proxy server
 #UsePwAgent=yes			# use password agent
-#PwAgentPort=6543		# Port to connect pwagent with TCP/IP
-				# (Insecure for multi-user system!)
-				# 0 to use UNIX domain socket (more secure)
+#PwAgentPort=0			# Port to connect pwagent with TCP/IP
+				# 0 to use UNIX domain socket
+				# NOTE: non-0 (e.g. 6543) is insecure
+				#       on multi-user system
+#PwAgentTmpDir=pwagtmp		# temporary directory (relative to ~/.im/)
 
 # be careful on security if you wish to use PwFiles!
 #UsePwFiles=yes			# use password files
 #PwFiles=password		# password files (relative to ~/.im/)
+
+#NamazuV2=yes			# use Namazu version 2 (1.9.x or late)
+#NamazuLockDir=nmzlock		# lock directory (relative to ~/.im/)
 
 ## imput specific
 #FccDir=$MailDir		# directory for FCC folders

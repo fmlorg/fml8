@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::EncDec.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::EncDec.pm version 20021207(IM142)";
 
 package IM::EncDec;
 require 5.003;
@@ -22,40 +22,6 @@ use vars qw(@ISA @EXPORT);
 @EXPORT = qw(mime_encode_string mime_decode_string
 		b_encode_string b_decode_string
 		q_encode_string q_decode_string);
-
-=head1 NAME
-
-EncDec - MIME header encoder/decoder
-
-=head1 SYNOPSIS
-
-    use IM::EncDec;
-
-    $mime_header_encoded_string =
-	mime_encode_string(string, iso7bit, iso8bit);
-    $string =
-	mime_decode_string(mime_header_encoded_string);
-
-    $B_encoded_string = b_encode_string(string);
-    $string = b_decode_string(B_encoded_string);
-
-    $Q_encoded_string = q_encode_string(string);
-    $string = q_decode_string(Q_encoded_string);
-
-=head1 DESCRIPTION
-
-MIME header encoder/decoder package.
-
-    $_ = "JAPANESE (Kazuhiko Yamamoto)";
-    mime_encode_string($_, 'iso-2022-jp', 'iso-8859-1');
-	=> =?iso-2022-jp?B?GyRCOzNLXE9CSScbKEI=?=
-		  (Kazuhiko Yamamoto)
-
-    s/\n[\t ]+//g;
-    print mime_decode_string($_), "\n";
-	=> "JAPANESE (Kazuhiko Yamamoto)"
-
-=cut
 
 use vars qw(@D2H 
 	    $mime_encode_switch
@@ -90,7 +56,7 @@ $mime_decode_switch = {
 ## String Encoder/Decoder
 ##
 
-sub mime_encode_string ($$$) {
+sub mime_encode_string($$$) {
     my($str, $iso7, $iso8) = (@_);
     my($point, $len, $nstr, $s) = (0, length($str), '', '');
     my($single, $double) = ('', '');
@@ -155,12 +121,12 @@ sub mime_encode_string ($$$) {
     return $nstr;
 }
 
-sub mime_decode_string ($) {
+sub mime_decode_string($) {
     my $in = shift;
     return '' if ($in eq '');
     if (!$main::opt_mimedecodequoted) {
         if ($in =~ /^([^"]*)("[^"]*")([\0-\255]*)$/) {
-            return mime_decode_string($1) . $2 . mime_decode_string($3);
+            return &mime_decode_string($1) . $2 . &mime_decode_string($3);
 	}
     }
     $in =~ s/\?=\s+=\?/?==?/g;
@@ -170,7 +136,7 @@ sub mime_decode_string ($) {
 }
 
 sub mime_decode($$$) {
-    my ($cs, $bq, $str) = @_;
+    my($cs, $bq, $str) = @_;
     my $ret = &{$$mime_decode_switch{uc($3)}}($4);
     if ($cs =~ /iso-8859-([2-9])/i) {
 	$ret = iso_8859_to_ctext($ret, $1);
@@ -194,8 +160,8 @@ sub mime_decode($$$) {
     return $ret;
 }
 
-sub iso_8859_to_ctext ($$) {
-    my ($str, $num) = @_;
+sub iso_8859_to_ctext($$) {
+    my($str, $num) = @_;
     my @index = ("A", "A", "B", "C", "D", "L", "G", "F", "H", "M");
     $str =~ s/([\x80-\xff]+)/\e-$index[$num]$1\e-A/g;
     return $str;
@@ -217,9 +183,9 @@ sub iso_8859_to_ctext ($$) {
      "\xce", "\xb0", "\xb1", "\xc6", "\xb4", "\xb5", "\xc4", "\xb3",
      "\xc5", "\xb8", "\xb9", "\xba", "\xbb", "\xbc", "\xbd", "\xbe",
      "\xbf", "\xcf", "\xc0", "\xc1", "\xc2", "\xc3", "\xb6", "\xb2",
-     "\xcc", "\xcb", "\xb7", "\xc8", "\xcd", "\xc9", "\xc7", "\xca" );
+     "\xcc", "\xcb", "\xb7", "\xc8", "\xcd", "\xc9", "\xc7", "\xca");
 
-sub koi2iso ($) {
+sub koi2iso($) {
     my $str = shift;
     $str =~ s/(.)/$koi_iso[ord($1)-128]/ge;
     return $str;
@@ -232,12 +198,12 @@ sub koi8r_to_ctext($) {
 }
 
 sub tis_620_to_ctext($) {
-    my ($str) = shift;
+    my($str) = shift;
     $str =~ s/([\x80-\xff]+)/\e-T$1\e-A/g;
     return $str;
 }
 
-sub cn_gb_to_ctext ($) {
+sub cn_gb_to_ctext($) {
     my $str = shift;
     $str =~ s/([\x80-\xff]+)/"\e\$(A" . remove_msb($1) . "\e(B"/ge;
     return $str;
@@ -251,7 +217,7 @@ sub hz_to_ctext($) {
     return $str;
 }
 
-sub euc_jp_to_ctext ($) {
+sub euc_jp_to_ctext($) {
     my $str = shift;
     $str =~ s/((\x8f[\xa0-\xff][\xa0-\xff])+)/"\e\$(D"
 	. remove_msb(remove_ss($1, "\x8f")) . "\e-A"/ge;
@@ -261,25 +227,25 @@ sub euc_jp_to_ctext ($) {
     return $str;
 }
 
-sub euc_kr_to_ctext ($) {
+sub euc_kr_to_ctext($) {
     my $str = shift;
     $str =~ s/([\x80-\xff]+)/"\e\$(C" . remove_msb($1) . "\e(B"/ge;
     return $str;
 }
 
-sub remove_msb ($) {
+sub remove_msb($) {
     my $str = shift;
     $str =~ tr/\x80-\xff/\x00-\x7f/;
     return $str;
 }
 
-sub remove_ss ($$) {
-    my ($str, $si) = @_;
+sub remove_ss($$) {
+    my($str, $si) = @_;
     $str =~ s/$si//g;
     return $str;
 }
 
-sub shift_jis_to_ctext ($) {
+sub shift_jis_to_ctext($) {
     my $str = shift;
     my $kanji = "[\x81-\x9f\xe0-\xef].";
     my $kana = "[\xa0-\xdf]";
@@ -292,7 +258,7 @@ sub shift_jis_to_ctext ($) {
 
 sub s2j($) {
     my $str = shift;
-    my ($c1, $c2);
+    my($c1, $c2);
     my $ret = "";
 
     while ($str) {
@@ -311,9 +277,9 @@ sub s2j($) {
     return $ret;
 }
 
-sub b157to94 ($) {
+sub b157to94($) {
     my $str = shift;
-    my ($c1, $c2, $tmp);
+    my($c1, $c2, $tmp);
     my $ret = "";
 
     while ($str) {
@@ -350,14 +316,14 @@ sub big5_to_ctext($) {
 ## B Encoder/Decoder
 ##
 
-sub b_encode_string ($) {
+sub b_encode_string($) {
     my $mod3 = length($_[0]) % 3;
     local($_);
 
     $_ = pack('u', $_[0]);
     chop;
     s/(^|\n).//mg;
-    tr[`!-_][A-Za-z0-9+/];
+    tr[`!-_][A-Za-z0-9+/];  #`
 
     if    ($mod3 == 1) { s/..$/==/; }
     elsif ($mod3 == 2) { s/.$/=/; }
@@ -365,7 +331,7 @@ sub b_encode_string ($) {
     $_;
 }
 
-sub b_decode_string ($) {
+sub b_decode_string($) {
     my $s64 = shift;
     my $len;
     my $res = '';
@@ -378,7 +344,7 @@ sub b_decode_string ($) {
 	if (/(=+)$/) {
 	    $len -= length($1);
 	}
-	tr[A-Za-z0-9+/=][`!-_A];
+	tr[A-Za-z0-9+/=][`!-_A];  #`
 
 	$res .= sprintf("%c%s\n", $len + 32, $_);
     }
@@ -390,7 +356,7 @@ sub b_decode_string ($) {
 ## Q Encoder/Decoder
 ##
 
-sub q_encode_string ($;$) {
+sub q_encode_string($;$) {
     my($line, $struct) = @_;
     local($_);
 
@@ -404,7 +370,7 @@ sub q_encode_string ($;$) {
     $_;
 }
 
-sub q_decode_string ($) {
+sub q_decode_string($) {
     my($qstr) = @_;
     local($_);
 
@@ -415,6 +381,52 @@ sub q_decode_string ($) {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::EncDec - MIME header encoder/decoder
+
+=head1 SYNOPSIS
+
+ use IM::EncDec;
+
+ $mime_header_encoded_string =
+     mime_encode_string(string, iso7bit, iso8bit);
+ $string =
+    mime_decode_string(mime_header_encoded_string);
+
+ $B_encoded_string = b_encode_string(string);
+ $string = b_decode_string(B_encoded_string);
+
+ $Q_encoded_string = q_encode_string(string);
+ $string = q_decode_string(Q_encoded_string);
+
+=head1 DESCRIPTION
+
+The I<IM::EncDec> module is encoder/decoder for MIME header.
+
+This modules is provided by IM (Internet Message).
+
+=head1 EXAMPLES
+
+ $_ = "JAPANESE (Kazuhiko Yamamoto)";
+ mime_encode_string($_, 'iso-2022-jp', 'iso-8859-1');
+     => =?iso-2022-jp?B?GyRCOzNLXE9CSScbKEI=?=
+	 (Kazuhiko Yamamoto)
+
+ s/\n[\t ]+//g;
+ print mime_decode_string($_), "\n";
+     => "JAPANESE (Kazuhiko Yamamoto)"
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

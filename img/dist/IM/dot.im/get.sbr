@@ -8,10 +8,10 @@
 %hash = ();
 
 sub get_sub ($$$) {
-    my ($folder, $first, $last) = @_;
+    my($folder, $first, $last) = @_;
 
     my $dir = expand_path($folder);
-    my ($name, $val);
+    my($name, $val);
 
     open(SEQ, "$dir/.mh_sequences") || return;
 

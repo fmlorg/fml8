@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Dec 31, 1995
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "imls version 20000414(IM141)";
+my $VERSION = "imls version 20021207(IM142)";
 
 $Prog = 'imls';
 
@@ -48,11 +48,10 @@ my $START = 0;
 
 my $THREAD_INDENT;
 
-$EXPLANATION = "
-$Prog :: Internet Message List
-$VERSION
+$EXPLANATION = "$VERSION
+list up the contents of mail/news folder
 
-Usage :: $Prog [options] [+folder] [range]
+Usage: $Prog [OPTIONS] [FOLDER] [RANGE]
 ";
 
 @OptConfig = (
@@ -70,12 +69,12 @@ Usage :: $Prog [options] [+folder] [range]
     'delimiter;s;\n\n|\n----\n;' => 'Mail header delimiter',
     'dupchecktarget,D;s;;'    => 'Duplicate Check Target',
     'mimedecodequoted,x;b;;' => 'Decode broken mime-encoded strings',
+    'SSHServer,S;s;localhost;SSH_server'
+                       => 'SSH port relay server.',
     'quiet;b;;'   => 'Suppress informational messages.',
     'verbose;b;;' => 'With verbose messages.',
     'debug;d;;'   => "With debug message.",
     'help;b;;'    => 'Show this message',
-    'SSHServer,S;s;localhost;SSH_server'
-                       => 'SSH port relay server.',
     );
 
 ##
@@ -105,7 +104,7 @@ if (scalar(@opt_src) < 1) {
 } elsif ($opt_grep) {
     require IM::Folder && import IM::Folder;
     require IM::Grep && import IM::Grep;
-    if ($opt_namazu){
+    if ($opt_namazu) {
 	&vscan_namazu(@ARGV);
     } else {
 	&vscan();
@@ -153,14 +152,14 @@ if (scalar(@opt_src) < 1) {
 ## Local Mail and News
 ##
 
-sub local_files ($@) {
+sub local_files($@) {
     my $folder = shift;
     my @arg = @_;
     my %Head = ();
     my $num;
 
     foreach $num (get_message_paths($folder, @arg)) {
-	if ( -f $num ) {
+	if (-f $num) {
 	    %Head = &get_header($num);
 	    $FIRST = $Head{'number:'} if $FIRST == 0;
 	    if ($opt_thread) {
@@ -179,10 +178,10 @@ sub local_files ($@) {
 ## News by NNTP
 ##
 
-sub nntp_messages ($@) {
-    my ($newsgroup, @ranges) = @_;
-    my ($resp, $start, $end, $rc);
-#   my ($num, $subj, $from, $date, $id, $ref, $num1, $num2);
+sub nntp_messages($@) {
+    my($newsgroup, @ranges) = @_;
+    my($resp, $start, $end, $rc);
+#   my($num, $subj, $from, $date, $id, $ref, $num1, $num2);
 
     ($newsgroup, my $srvs) = nntp_spec($newsgroup, nntpservers());
     local(@servers) = split(',', $srvs);
@@ -195,7 +194,7 @@ sub nntp_messages ($@) {
 	}
     } while (@servers > 0 && $rc > 0);
     im_die("can not access $newsgroup on $srvs.\n") if ($rc);
-    my (@resp) = &nntp_command_response;
+    my(@resp) = &nntp_command_response;
     my $error = 0;
     my $i;
     for ($i = 0; $i <= $#resp; $i++) {
@@ -335,8 +334,8 @@ sub make_thread {
 ## Display subroutines
 ##
 
-sub disp_thread ($$) {
-    my ($point, $indent) = @_;
+sub disp_thread($$) {
+    my($point, $indent) = @_;
 
     if ($point != $START) {
 	my $c = $point->{'head'};
@@ -359,7 +358,7 @@ sub disp_thread ($$) {
 ### vscan
 ###
 
-sub vscan () {
+sub vscan() {
     my $num = 1;
     my $folder;
     my $eval_string;
@@ -367,23 +366,23 @@ sub vscan () {
     $eval_string = parse_expression($opt_grep, $opt_casefold);
 
     foreach (@opt_src) {
-	my ($folder, $ranges) = (/([^:]+)(?::)?(.*)?/);
+	my($folder, $ranges) = (/([^:]+)(?::)?(.*)?/);
 	my $folder_dir;
 	my @ranges = split(',', $ranges);
 	my @messages = ();
 
-	if ( $folder =~ /^\-/ ) {
+	if ($folder =~ /^\-/) {
 	    im_warn("Newsspool $folder search not supported (ignored)\n");
 	    next FOLDER;
 	}
 
-	@ranges = ( $ranges ? @ranges : 'all' );
+	@ranges = ($ranges ? @ranges : 'all');
 
 	$folder_dir = expand_path($folder);
 
 	@messages = grep_folder($folder_dir, $eval_string, 'none', @ranges);
-	foreach ( @messages ) {
-	    if ( -f "$folder_dir/$_" ) {
+	foreach (@messages) {
+	    if (-f "$folder_dir/$_") {
 		my %Head = &get_header("$folder_dir/$_");
 		$Head{'pnum'} = $Head{'number:'};
 		$Head{'number:'} = $num;
@@ -399,12 +398,12 @@ sub vscan () {
 ###
 ### vscan_namazu
 ###
-sub vscan_namazu (@) {
+sub vscan_namazu(@) {
     my $num = shift;
     my $nmzidx;
     my $nmzargs;
 
-    $num = 1 if($num eq 'all');
+    $num = 1 if ($num eq 'all');
     if (&namazuv2()) {
 	$nmzargs = "--all --list --early";
     } else {
@@ -417,15 +416,15 @@ sub vscan_namazu (@) {
 	my @messages = ();
 
 	im_open(\*NMZ, "namazu $nmzargs \"$opt_grep\" $nmzidx|") 
-	    || im_err( "namazu error\n");
+	    || im_err("namazu error\n");
 	@messages = sort {$a <=> $b} <NMZ>;
-	close( NMZ );
+	close(NMZ);
 
-	foreach ( @messages ) {
+	foreach (@messages) {
 	    chop;
 	    s/^\/([a-zA-Z])\|/\1:/;
 	    $_ = expand_path($_);
-	    if ( -f $_ ) {
+	    if (-f $_) {
 		my %Head = &get_header($_);
 		$Head{'pnum'} = $Head{'number:'};
 		$Head{'number:'} = $num;
@@ -442,8 +441,8 @@ sub vscan_namazu (@) {
 ### nntp_message_number
 ###
 
-sub nntp_message_number ($$$) {
-    my ($min, $max, $num) = @_;
+sub nntp_message_number($$$) {
+    my($min, $max, $num) = @_;
     $num =~ /^\d+$/   && return $num;
     $num =~ /^first$/ && return $min;
     $num =~ /^last$/  && return $max;
@@ -454,10 +453,10 @@ sub nntp_message_number ($$$) {
 ### nntp_message_range
 ###
 
-sub nntp_message_range ($$$) {
-    my ($range, $min, $max) = @_;
-    my ($start, $end, $n) = ('', '', '');
-    my (@filesinfolder) = ($min..$max);
+sub nntp_message_range($$$) {
+    my($range, $min, $max) = @_;
+    my($start, $end, $n) = ('', '', '');
+    my(@filesinfolder) = ($min..$max);
     my $dir;
 
     if ($range eq 'all') {
@@ -499,18 +498,18 @@ sub nntp_message_range ($$$) {
 	return @filesinfolder;
     }
 
-    return (&nntp_message_number($min, $max, $range));
+    return(&nntp_message_number($min, $max, $range));
 }
 
-sub get_nntp_message_range ($$@) {
-    my ($min, $max, @ranges) = (shift, shift, @_);
-    my (@filesinfolder) = ();
+sub get_nntp_message_range($$@) {
+    my($min, $max, @ranges) = (shift, shift, @_);
+    my(@filesinfolder) = ();
     my $range;
 
     foreach $range (@ranges) {
 	push(@filesinfolder, nntp_message_range($range, $min, $max));
     }
-    return (&sort_uniq(@filesinfolder));
+    return(&sort_uniq(@filesinfolder));
 }
 
 ############################################
@@ -518,9 +517,9 @@ sub get_nntp_message_range ($$@) {
 ## IMAP
 ##
 
-sub imap_messages ($@) {
-    my ($folder, @ranges) = @_;
-    my ($auth, $user, $host);
+sub imap_messages($@) {
+    my($folder, @ranges) = @_;
+    my($auth, $user, $host);
 
     if ($folder !~ /[:\@]/) {
 	# Use ImapAccount spec, unless user or host is specified.
@@ -530,10 +529,10 @@ sub imap_messages ($@) {
 	($folder, $auth, $user, $host) = imap_spec($folder);
     }
 
-    my ($pass, $agtfound, $interact) = getpass('imap', $auth, $host, $user);
+    my($pass, $agtfound, $interact) = getpass('imap', $auth, $host, $user);
     im_warn("accessing IMAP/$auth:$user\@$host\n") if (&verbose);
 
-    my ($rc, $HANDLE) = &imap_open($auth, $host, $user, $pass);
+    my($rc, $HANDLE) = &imap_open($auth, $host, $user, $pass);
     if ($rc < 0) {
 	my $prompt = lc("imap/$auth:$user\@$host");
 	im_err("invalid password ($prompt).\n");
@@ -562,7 +561,7 @@ sub imap_messages ($@) {
     return 0;
 }
 
-sub sort_uniq (@) {
+sub sort_uniq(@) {
     my(@target) = @_;
     my(%tmp);
     my($i);
@@ -574,19 +573,121 @@ sub sort_uniq (@) {
     return sort {$a <=> $b} keys %tmp;
 }
 
-sub uniq (@) {
+sub uniq(@) {
     my @array = @_;
     my %hash;
 
-    foreach (@array){
+    foreach (@array) {
 	$hash{$_} = $_;
     }
     return keys(%hash);
 }
 
-##
-## End of imls
-##
+__END__
+
+=head1 NAME
+
+imls - list up the contents of the folder
+
+=head1 SYNOPSIS
+
+B<imls> [OPTIONS] [FOLDER] [RANGE]
+
+=head1 DESCRIPTION
+
+The I<imls> command produces a one line per message listing of the
+specified folder or mail/news messages.
+
+This command is provided by IM (Internet Message).
+
+=head1 OPTIONS
+
+=over 5
+
+=item I<-s, --src=FOLDER,FOLDER...>
+
+Folder name.  Default value is "+inbox".
+"--src=+xxx" is equivalent to "+xxx".
+
+=item I<-f, --form=STRING>
+
+Scan format.  Default value is "%+5n %m%d %-14A %S || %b".
+
+=item I<-b, --buffer={on,off}>
+
+Make output data buffered.
+
+=item I<-j, --jissafe={on,off}>
+
+Safe manner for JIS.  Default value is "on".
+
+=item I<-w, --width=NUM>
+
+Width of result for scan listings.  Default value is 80.
+
+=item I<-t, --thread={on,off}>
+
+Make threads.
+
+=item I<-i, --indent=NUM>
+
+Width of thread indent.  Default value is 2.
+
+=item I<-g, --grep=STRING>
+
+Grep pattern for vscan.
+
+=item I<-n, --namazu={on,off}>
+
+Use namazu for vscan.
+
+=item I<-c, --casefold={on,off}>
+
+Case sensitivity.  Default value is "on".
+(This option affects both fieldname and pattern.)
+
+=item I<-d, --delimiter=STRING>
+
+Mail header delimiter.  Default value is "\n\n|\n----\n".
+
+=item I<-D, --dupchecktarget=STRING>
+
+Duplicate check target ('none', 'message-id', or 'message-id+subject').
+Default value is "message-id".
+
+=item I<-x, --mimedecodequoted={on,off}>
+
+Decode broken mime-encoded strings.
+
+=item I<-S, --sshserver=SERVER>
+
+SSH port relay server.
+
+=item I<-q, --quiet={on,off}>
+
+Do not show any messages.
+
+=item I<-v, --verbose={on,off}>
+
+Print verbose messages when running.
+
+=item I<--debug=DEBUG_OPTION>
+
+Print debug messages when running.
+
+=item I<-h, --help>
+
+Display help message and exit.
+
+=back
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

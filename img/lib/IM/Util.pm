@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::Util.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::Util.pm version 20021207(IM142)";
 
 package IM::Util;
 require 5.003;
@@ -71,7 +71,7 @@ sub unixp {
 }
 
 sub win95p {
-    if (($OS eq 'WIN95') || ($OS eq 'WNT') ){
+    if (($OS eq 'WIN95') || ($OS eq 'WNT')) {
 	return 1;
     } else {
 	return 0;
@@ -94,14 +94,14 @@ sub os2p {
     }
 }
 
-sub progname () {
+sub progname() {
     return $main::Prog;
 }
 
 ###
 ### get login name
 ###
-sub im_getlogin () {
+sub im_getlogin() {
     if (&unixp()) {
 	my $login = getlogin();
 	if ($login ne '' && $login ne 'root') {
@@ -109,9 +109,9 @@ sub im_getlogin () {
 	} else {
 	    return (getpwuid($<))[0] || undef;
 	}
-    } elsif (&os2p()){
+    } elsif (&os2p()) {
 	return getlogin() || undef;
-    } elsif (&win95p()){
+    } elsif (&win95p()) {
 	return Win32::LoginName();
     }
 }
@@ -128,54 +128,54 @@ sub im_getlogin () {
 # im_err    - display critical error messages -- process will be aborted
 # im_die    - display critical error messages and exit
 
-sub im_msg ($) {
+sub im_msg($) {
     my $msg = shift;
     print progname(), ': ', $msg;
 }
 
-sub im_info ($) {
+sub im_info($) {
     my $info = shift;
     return if $main::opt_quiet;
     print progname(), ': ', $info;
 }
 
-sub im_debug ($) {
+sub im_debug($) {
     my $dbg = shift;
     print STDERR progname(), ':DEBUG: ', $dbg;
 }
 
-sub im_notice ($) {
+sub im_notice($) {
     return unless &verbose;
     my $warn = progname() . ': '. shift;
     $SavedMsg .= $warn;
     print STDERR $warn;
 }
 
-sub im_warn ($) {
+sub im_warn($) {
     my $warn = progname() . ': '. shift;
     $SavedMsg .= $warn;
     print STDERR $warn;
 }
 
-sub im_err ($) {
+sub im_err($) {
     my $err = progname() . ': ERROR: ' . shift;
     $SavedMsg .= $err;
     print STDERR $err;
 }
 
-sub im_die ($) {
+sub im_die($) {
     my $die = shift;
     print STDERR progname(), ': ERROR: ', $die;
     exit $EXIT_ERROR;
 }
 
-sub im_die2 ($) {
+sub im_die2($) {
     my $die = shift;
     print STDERR progname(), ': ', $die;
     exit $EXIT_ERROR;
 }
 
-sub im_save_error (;$) {
+sub im_save_error(;$) {
     my $string = shift;
     if ($string eq '') {
 	$SavedMsg = '';	# reset
@@ -184,7 +184,7 @@ sub im_save_error (;$) {
     }
 }
 
-sub im_saved_errors () {
+sub im_saved_errors() {
     return $SavedMsg;
 }
 
@@ -192,22 +192,21 @@ sub im_saved_errors () {
 ### Debug
 ###
 
-sub print_hash (\%)
-{
+sub print_hash(\%) {
     my $hashref = shift;
 
-    foreach (keys(%{$hashref})){
+    foreach (keys(%{$hashref})) {
 	print "$_ -> $hashref->{$_}\n";
     }
 }
 
-sub set_debug ($$) {
+sub set_debug($$) {
     my $category = shift;
 
     $Debug{$category} = shift;
 }
 
-sub debug ($) {
+sub debug($) {
     my $category = shift;
 
     if ($Debug{'all'}) {
@@ -217,11 +216,11 @@ sub debug ($) {
     }
 }
 
-sub set_verbose ($) {
+sub set_verbose($) {
     $main::opt_verbose = shift;
 }
 
-sub verbose () {
+sub verbose() {
     return $main::opt_verbose;
 }
 
@@ -229,7 +228,7 @@ sub verbose () {
 #
 # debug_option()
 #
-sub debug_option ($) {
+sub debug_option($) {
     my $DebugFlag = shift;
 
     if ($DebugFlag && ($DebugFlag !~ /^(off|no|false|0)$/)) {
@@ -245,7 +244,7 @@ sub debug_option ($) {
 # flush buffer
 #
 
-sub flush (*) {
+sub flush(*) {
     local($old) = select(shift);
     $| = 1;
     print '';
@@ -258,8 +257,8 @@ sub flush (*) {
 #
 
 sub im_open($$) {
-    my ($d, $a) = @_;
-    my ($r);
+    my($d, $a) = @_;
+    my($r);
     if ($r = open($d, $a)) {
 	binmode($d);
     }
@@ -267,8 +266,8 @@ sub im_open($$) {
 }
 
 sub im_sysopen($$$) {
-    my ($d, $f, $a) = @_;
-    my ($r);
+    my($d, $f, $a) = @_;
+    my($r);
     if ($r = sysopen($d, $f, $a)) {
 	binmode($d);
     }
@@ -276,6 +275,45 @@ sub im_sysopen($$$) {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::Util - utility functions for IM
+
+=head1 SYNOPSIS
+
+ use IM::Util;
+
+Constant variables:
+$SUCCESS
+$ERROR
+$EXIT_SUCCESS
+$EXIT_ERROR
+
+Subroutines:
+unixp win95p wntp os2p
+progname
+im_getlogin
+im_msg im_info im_debug im_notice im_warn im_err im_die im_die2
+im_save_error im_saved_errors im_open im_sysopen
+debug_option set_debug debug set_verbose verbose
+flush
+
+=head1 DESCRIPTION
+
+The I<IM::Util> module provides utility functions for IM.
+
+This modules is provided by IM (Internet Message).
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Jul  7, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::File.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::File.pm version 20021207(IM142)";
 
 package IM::File;
 require 5.003;
@@ -24,24 +24,18 @@ use vars qw(@ISA @EXPORT);
 @ISA = qw(Exporter);
 @EXPORT = qw(im_rename im_link im_unlink);
 
-## im_rename(path1, path2);
-## im_link  (path1, path2);
-## im_unlink(path1);
-##
-## paths may be full-path or [+=]folder../../message.
-
 use vars qw($CHECKED $USE_DB);
 
-sub im_rename ($$) {
-    my ($p1, $p2) = @_;
-    my ($m1, $m2);
-    my ($ret);
+sub im_rename($$) {
+    my($p1, $p2) = @_;
+    my($m1, $m2);
+    my($ret);
     ($p1, $m1) = expand_path_and_msg($p1);
     ($p2, $m2) = expand_path_and_msg($p2);
 
-    #my ($id) = get_msg_info($p1) if (!defined $id && !$main::opt_noharm);
+    #my($id) = get_msg_info($p1) if (!defined $id && !$main::opt_noharm);
     #XXX???
-    my ($id);
+    my($id);
     if (defined($main::id) || $main::opt_noharm) {
 	$id = $main::id;
     } else {
@@ -52,7 +46,7 @@ sub im_rename ($$) {
 	print "mv $p1 $p2\n";
 	$ret = 1;
     } else {
-	if (!($ret = rename($p1, $p2))){
+	if (!($ret = rename($p1, $p2))) {
 	    $ret = copy($p1, $p2) && unlink($p1);
 	}
 	history_rename($id, $m1, $m2)
@@ -61,15 +55,15 @@ sub im_rename ($$) {
     return $ret;
 }
 
-sub im_link ($$) {
-    my ($p1, $p2) = @_;
-    my ($m1, $m2);
-    my ($ret);
+sub im_link($$) {
+    my($p1, $p2) = @_;
+    my($m1, $m2);
+    my($ret);
     ($p1, $m1) = expand_path_and_msg($p1);
     ($p2, $m2) = expand_path_and_msg($p2);
 
-    #my ($id) = get_msg_info($p1) if (!defined $id && !$main::opt_noharm);
-    my ($id);
+    #my($id) = get_msg_info($p1) if (!defined $id && !$main::opt_noharm);
+    my($id);
     if (defined($main::id) || $main::opt_noharm) {
 	$id = $main::id;
     } else {
@@ -80,7 +74,7 @@ sub im_link ($$) {
 	print "ln $p1 $p2\n";
 	$ret = 1;
     } else {
-	if (win95p() || os2p() || wntp() || !($ret = link($p1, $p2))){
+	if (win95p() || os2p() || wntp() || !($ret = link($p1, $p2))) {
 	    $ret = copy($p1, $p2);
 	}
 	history_link($id, $m1, $m2)
@@ -89,15 +83,14 @@ sub im_link ($$) {
     return $ret;
 }
 
-sub im_unlink ($)
-{
-    my ($p1) = @_;
-    my ($m1, $ret);
+sub im_unlink($) {
+    my($p1) = @_;
+    my($m1, $ret);
 
     ($p1, $m1) = expand_path_and_msg($p1);
 
-    # my ($id) = get_msg_info($p1) if (!defined $id && !$main::opt_noharm);
-    my ($id);
+    # my($id) = get_msg_info($p1) if (!defined $id && !$main::opt_noharm);
+    my($id);
     if (defined($main::id) || $main::opt_noharm) {
 	$id = $main::id;
     } else {
@@ -120,14 +113,13 @@ sub im_unlink ($)
 ##
 ## Private.
 ##
-sub get_msg_info ($)
-{
-    my ($p, $m) = expand_path_and_msg(shift);
-    my ($id, $date, $hdr);
+sub get_msg_info($) {
+    my($p, $m) = expand_path_and_msg(shift);
+    my($id, $date, $hdr);
     local $/ = '';
 
-    if (im_open(\*MSG, "<$p")){
-        $hdr = <MSG>;  close(MSG);
+    if (im_open(\*MSG, "<$p")) {
+        $hdr = <MSG>; close(MSG);
     } else {
 	im_warn("no message id in $m.\n");
         return undef;
@@ -142,9 +134,9 @@ sub get_msg_info ($)
     return ($id);
 }
 
-sub unexpand_path ($) {
+sub unexpand_path($) {
     my $path = shift;
-    my ($mail_path, $news_path) = (mail_path(), news_path());
+    my($mail_path, $news_path) = (mail_path(), news_path());
 
     $path =~ s!^$mail_path/*!\+!;
     $path =~ s!^$news_path/*!\=!;
@@ -152,12 +144,12 @@ sub unexpand_path ($) {
     return $path;
 }
 
-sub expand_path_and_msg ($) {
+sub expand_path_and_msg($) {
     my $path_or_msg = shift;
     return (expand_path($path_or_msg), unexpand_path($path_or_msg));
 }
 
-sub USE_DB () {
+sub USE_DB() {
     if (!$CHECKED) {
 	$CHECKED = 1;
 	if ($USE_DB = msgdbfile()) {
@@ -171,6 +163,36 @@ sub USE_DB () {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::File - mail/news file handler
+
+=head1 SYNOPSIS
+
+ use IM::File;
+
+ im_rename(path1, path2);
+ im_link(path1, path2);
+ im_unlink(path1);
+
+Paths may be full-path or [+=]folder../../message.
+
+=head1 DESCRIPTION
+
+The I<IM::File> module handles mail/news message files.
+
+This modules is provided by IM (Internet Message).
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

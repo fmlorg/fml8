@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "imgrep version 20000414(IM141)";
+my $VERSION = "imgrep version 20021207(IM142)";
 
 $Prog = 'imgrep';
 
@@ -49,12 +49,10 @@ my $range_element = '(\\d+|cur|first|last|next|prev|new)';
 my $range_regexp = "($range_element(-$range_element|:[+-]?\\d+)?|all)";
 my $ranges_regexp = "$range_regexp(,$range_regexp)?";
 
-$EXPLANATION = "
-$Prog :: Internet Message GREP
-$VERSION
+$EXPLANATION = "$VERSION
+search for mail/news messages
 
-Usage :: $Prog [options] [+folder] [range]
-
+Usage: $Prog [OPTIONS] [FOLDER] [RANGE]
 ";
 
 @OptConfig = (
@@ -106,10 +104,10 @@ my $default_folder = cur_folder(); # must set here
 
 @opt_src = sortuniq(@opt_src);
 
-@opt_src or @opt_src = ( $default_folder );
-@default_ranges = ( @ARGV ? @ARGV : 'all' );
+@opt_src or @opt_src = ($default_folder);
+@default_ranges = (@ARGV ? @ARGV : 'all');
 
-if ( $opt_format eq 'number' and @opt_src > 1 ) {
+if ($opt_format eq 'number' and @opt_src > 1) {
     $opt_format = 'path';
 }
 
@@ -126,26 +124,26 @@ my $matched = 0;
 
  FOLDER:
     foreach (@opt_src) {
-	my ($folder, $ranges) = (/^(.*?)(:$ranges_regexp)?$/);
+	my($folder, $ranges) = (/^(.*?)(:$ranges_regexp)?$/);
 	$ranges =~ s/^:(.*)$/$1/;
 	my $folder_dir;
 	my @ranges = split(',', $ranges);
 	my @messages = ();
 
-	if ( $folder =~ /^\-/ ) {
+	if ($folder =~ /^\-/) {
 	    im_warn("Newsspool $folder search not supported (ignored)\n");
 	    next FOLDER;
 	}
 
-	@ranges = ( $ranges ? @ranges : @default_ranges );
+	@ranges = ($ranges ? @ranges : @default_ranges);
 
 	$folder_dir = expand_path($folder);
 
 	@messages = grep_folder($folder_dir, $eval_string, 
 				$opt_dupchecktarget, @ranges);
-	if ( @messages ) {
+	if (@messages) {
 	    $matched += @messages;
-	    foreach ( @messages ) {
+	    foreach (@messages) {
 		print "$folder:" if ($opt_format eq 'folder');
 		print "$folder_dir/" if ($opt_format eq 'path');
 		print "$_\n";
@@ -168,6 +166,106 @@ exit $EXIT_SUCCESS;
 ## End of Main
 ##
 ##################################################
+
+__END__
+
+=head1 NAME
+
+imgrep - search for mail/news messages
+
+=head1 SYNOPSIS
+
+B<imgrep> [OPTIONS] [FOLDER] [RANGE]
+
+=head1 DESCRIPTION
+
+The I<imgrep> command enumerates mail/news messages matched given patterns.
+
+This command is provided by IM (Internet Message).
+
+=head1 OPTIONS
+
+=over 5
+
+=item I<-s, --src=FOLDER,FOLDER...>
+
+message source: "+folder:[range[,range..]]".
+
+"--src=+xxx" is equivalent to "+xxx".
+
+=item I<-f, --format=STRING>
+
+Output format: "number", "folder", or "path".
+
+(default: "number" for single target folder, "path" for multiple target folders)
+
+=item I<-c, --casefold={on,off}>
+
+Case sensitivity.
+(This option affects both fieldname and pattern.)
+
+Default value is "on".
+
+=item I<-e, --expression=STRING>
+
+Search expression:
+
+Usable keyword
+
+	& &&	logical AND
+
+	| ||	logical OR
+
+	!	logical NOT
+
+	( )	parens
+
+	fieldname=pattern	search pattern for the field
+
+Special fieldname:
+
+	head	Entire header
+
+	body	Entire body
+
+	all	Entire message
+
+=item I<-d, --delimiter=STRING>
+
+Mail header delimiter.
+
+Default value is "\n\n|\n----\n".
+
+=item I<-D, --dupchecktarget=STRING>
+
+Duplicate check target ('none', 'message-id', or 'message-id+subject').
+Default value is 'none'.
+
+=item I<-q, --quiet={on,off}>
+
+Do not show any messages.
+
+=item I<-v, --verbose={on,off}>
+
+Print verbose messages when running.
+
+=item I<--debug=DEBUG_OPTION>
+
+Print debug messages when running.
+
+=item I<-h, --help>
+
+Display help message and exit.
+
+=back
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

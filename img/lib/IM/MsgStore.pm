@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::MsgStore.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::MsgStore.pm version 20021207(IM142)";
 
 package IM::MsgStore;
 require 5.003;
@@ -27,16 +27,6 @@ use vars qw(@ISA @EXPORT);
 @ISA = qw(Exporter);
 @EXPORT = qw(store_message exec_getsbrfile open_fcc excl_create fsync);
 
-=head1 NAME
-
-MsgStore - store message in MH-style folder
-
-=head1 SYNOPSIS
-
-=head1 DESCRIPTION
-
-=cut
-
 use vars qw($MsgNum $PrevFolder $First $Last $PrevDst $sys_fsync);
 BEGIN {
     $MsgNum = 0;
@@ -54,7 +44,7 @@ BEGIN {
 #		success: file name to be saved
 #		fail: NULL
 #
-sub new_message (\*$) {
+sub new_message(\*$) {
     (local *MESSAGE, my $folder) = @_;
     if ($folder ne $PrevFolder) {
         $MsgNum = 0;
@@ -68,7 +58,11 @@ sub new_message (\*$) {
 	}
 	$First = $Last = $MsgNum;
     } else {
-	$MsgNum++;
+	$MsgNum = message_number($folder, 'new', ($MsgNum));
+	if ($MsgNum == 0) {
+	    im_warn("can't get new message number in $folder\n");
+	    return ('', '');
+	}
     }
     my $try = 3;
     while ($try--) {
@@ -83,15 +77,19 @@ sub new_message (\*$) {
 	    $Last = $MsgNum;
 	    return ("$folder/$MsgNum", $file);
 	}
-	$MsgNum++;
+	$MsgNum = message_number($folder, 'new', ($MsgNum));
+	if ($MsgNum == 0) {
+	    im_warn("can't get new message number in $folder\n");
+	    return ('', '');
+	}
     }
     im_warn("excl_create failed.\n");
     # message creation failed
     return ('', '');
 }
 
-sub store_message ($$;$) {
-    my ($Msg, $dst, $noscan) = @_;
+sub store_message($$;$) {
+    my($Msg, $dst, $noscan) = @_;
     local *ART;
     require IM::Scan && import IM::Scan qw(store_header parse_header
 					   parse_body disp_msg);
@@ -104,7 +102,7 @@ sub store_message ($$;$) {
 	touch_folder($dst);
 	$PrevDst = $dst;
     }
-    my ($msgfile, $filepath) = &new_message(\*ART, $dst);
+    my($msgfile, $filepath) = &new_message(\*ART, $dst);
     my $size = 0;
     if ($filepath ne '') {
 	my $line;
@@ -190,7 +188,7 @@ sub store_message ($$;$) {
     }
 }
 
-sub exec_getsbrfile ($) {
+sub exec_getsbrfile($) {
     my $dst = shift;
     my $get_hook = getsbr_file();
     if ($get_hook) {
@@ -229,9 +227,9 @@ sub exec_getsbrfile ($) {
 #	  path: file name to be saved
 #	  rm_file_on_error: a path to be deleted on error
 #
-sub open_fcc ($$) {
-    my ($folder, $dir_style) = @_;
-    my ($fcc_dir, $rm_file_on_error, $fcc_folder, $FILE, $msgfile);
+sub open_fcc($$) {
+    my($folder, $dir_style) = @_;
+    my($fcc_dir, $rm_file_on_error, $fcc_folder, $FILE, $msgfile);
     $fcc_folder = &expand_path($folder);
 
     if (-d $fcc_folder) {
@@ -286,14 +284,14 @@ sub open_fcc ($$) {
 #	  0: success
 #	 -1: fail
 #
-sub excl_create (*$) {
+sub excl_create(*$) {
     (local *MESSAGE, my $file) = @_;
     msg_mode(1);
     return -1 unless (im_sysopen(\*MESSAGE, $file, file_attr()));
     return 0;
 }
 
-sub fsync ($) {
+sub fsync($) {
     my $fno = shift;
 
     if (fsync_no()) {
@@ -339,6 +337,33 @@ sub fsync ($) {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::MsgStore - store message in MH-style folder
+
+=head1 SYNOPSIS
+
+ use IM::MsgStore;
+
+Subroutines:
+store_message exec_getsbrfile open_fcc excl_create fsync
+
+=head1 DESCRIPTION
+
+The I<IM::MsgStore> module stores mail/news messages in MH-style folder.
+
+This modules is provided by IM (Internet Message).
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

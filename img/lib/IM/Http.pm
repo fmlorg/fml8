@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::Http.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::Http.pm version 20021207(IM142)";
 
 package IM::Http;
 require 5.003;
@@ -22,16 +22,6 @@ use vars qw(@ISA @EXPORT);
 
 @ISA = qw(Exporter);
 @EXPORT = qw(http_process http_spec);
-
-=head1 NAME
-
-Http - HTTP handling package
-
-=head1 SYNOPSIS
-
-=head1 DESCRIPTION
-
-=cut
 
 use vars qw(*HTTPd);
 
@@ -48,10 +38,10 @@ use vars qw(*HTTPd);
 #		 0: success
 #		-1: failure
 #
-sub http_open ($$) {
-    my ($host, $port) = @_;
-    my ($resp);
-    my (@host_list);
+sub http_open($$) {
+    my($host, $port) = @_;
+    my($resp);
+    my(@host_list);
     if ($port ne '' && $port != 0 && $port != 80) {
 	@host_list = ("$host/$port");
     } else {
@@ -67,16 +57,16 @@ sub http_open ($$) {
     return 0;
 }
 
-sub http_close () {
+sub http_close() {
     im_notice("closing HTTP session.\n");
     close(HTTPd);
     return 0;
 }
 
-sub http_get ($$$) {
-    my ($path, $user, $pass) = @_;
-    local ($_);
-    my (@Message);
+sub http_get($$$) {
+    my($path, $user, $pass) = @_;
+    local($_);
+    my(@Message);
     im_notice("getting $path.\n");
     &send_data(\*HTTPd, "GET $path HTTP/1.0", '');
     if ($pass ne '') {
@@ -94,11 +84,11 @@ sub http_get ($$$) {
 }
 
 # http_process(spec)
-sub http_process ($;$$) {
-    my ($spec, $http_proxy, $no_proxy) = @_;
-    my ($msg, $rcode, $auth);
-    my ($user, $host, $port, $path);
-    my ($target_host, $target_port);
+sub http_process($;$$) {
+    my($spec, $http_proxy, $no_proxy) = @_;
+    my($msg, $rcode, $auth);
+    my($user, $host, $port, $path);
+    my($target_host, $target_port);
 
     $http_proxy = '' if ($no_proxy && $spec =~ /$no_proxy/);
 
@@ -190,7 +180,7 @@ sub http_process ($;$$) {
 }
 
 # HTTP (--src=http://[user@]server[:port]/path)
-sub http_spec ($) {
+sub http_spec($) {
     my $spec = shift;
 
     if ($spec eq '') {
@@ -223,6 +213,45 @@ sub http_spec ($) {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::Http - HTTP handler
+
+=head1 SYNOPSIS
+
+ use IM::Http;
+
+ (rc, data) = http_process(spec, http_proxy, no_proxy)
+     rc: 
+         0: success
+         -1: failure
+
+=head1 DESCRIPTION
+
+The I<IM::Http> module handles HTTP.
+
+This modules is provided by IM (Internet Message).
+
+=head1 EXAMPLES
+
+ my($rc, $data) = http_process($spec, httpproxy(), noproxy())
+ if ($rc < 0) {
+     exit 1;
+ }
+ foreach (@$data) {
+     print;
+ }
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::Japanese.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::Japanese.pm version 20021207(IM142)";
 
 package IM::Japanese;
 require 5.003;
@@ -22,22 +22,6 @@ use vars qw(@ISA @EXPORT);
 @EXPORT = qw(code_check code_check_body
 	     convert_iso2022jp_body conv_iso2022jp
 	     conv_euc_from_jis conv_euc_from_sjis);
-
-=head1 NAME
-
-Japanese - IM Japanese handler
-
-=head1 SYNOPSIS
-
-  use IM::Japanese;
-  $code = code_check($line, $use_hankaku_kana);
-  $code = code_check_body($content);
-  convert_iso2022jp_body($content, $code);
-  $converted = conv_iso2022jp($line, $code);
-
-=head1 DESCRIPTION
-
-=cut
 
 use vars qw($C_jis $C_jis_roman $C_sjis $C_sjis_kana
 	    $C_euc $C_euc_kana $C_SorE $C_ascii
@@ -75,9 +59,9 @@ BEGIN {
 #		sjis
 #		sORe
 #
-sub code_check ($;$) {
-    my ($line, $no_hankaku_kana) = @_;
-    my ($sjis, $euc);
+sub code_check($;$) {
+    my($line, $no_hankaku_kana) = @_;
+    my($sjis, $euc);
 
     if ($line =~ /^$C_ascii*$/o) {
 	return 'ascii';
@@ -114,9 +98,9 @@ sub code_check ($;$) {
 #		EUC
 #		SJIS
 #
-sub code_check_body ($) {
+sub code_check_body($) {
     my $content = shift;
-    my (%count) = ();
+    my(%count) = ();
 
     $count{'ascii'} = 0;	# for debug print
     $count{'8bit'} = 0;
@@ -171,8 +155,8 @@ sub code_check_body ($) {
 #	code: input kanji code
 #	return value: none
 #
-sub convert_iso2022jp_body ($$) {
-    my ($content, $code) = @_;
+sub convert_iso2022jp_body($$) {
+    my($content, $code) = @_;
 
     my $i;
     for ($i = 0; $i <= $#$content; $i++) {
@@ -187,8 +171,8 @@ sub convert_iso2022jp_body ($$) {
 #	code: input kanji code
 #	return value: converted line
 #
-sub conv_iso2022jp ($;$) {
-    my ($line, $code) = @_;
+sub conv_iso2022jp($;$) {
+    my($line, $code) = @_;
 
     im_debug("conv_iso2022jp: $line\n") if (&debug('japanese'));
 
@@ -221,19 +205,19 @@ sub conv_iso2022jp ($;$) {
 #	line: a line of string to be converted
 #	return value: converted line
 #
-sub conv_from_sjis ($) {
+sub conv_from_sjis($) {
     my $line = shift;
     $line =~ s/((?:$C_sjis|$C_sjis_kana)+)/sjis2jis($1)/geo;
     return $line;
 }
-sub sjis2jis ($) {
+sub sjis2jis($) {
     my $line = shift;
     $line =~ s/((?:$C_sjis)+|(?:$C_sjis_kana)+)/s2j($1)/geo;
     return "$line$E_asc";
 }
-sub s2e ($) {
+sub s2e($) {
     my $code = shift;
-    my ($c1, $c2) = unpack('CC', $code);
+    my($c1, $c2) = unpack('CC', $code);
     if (0xa1 <= $c1 && $c1 <= 0xdf) {
 	$c2 = $c1;
 	$c1 = 0x8e;
@@ -246,7 +230,7 @@ sub s2e ($) {
     }
     return pack('CC', $c1, $c2);
 }
-sub s2j ($) {
+sub s2j($) {
     my $cur = shift;
     if ($cur =~ /^$C_sjis_kana/o) {
 	$cur =~ tr/\xa1-\xdf/\x21-\x5f/;
@@ -264,17 +248,17 @@ sub s2j ($) {
 #	line: a line of string to be converted
 #	return value: converted line
 #
-sub conv_from_euc ($) {
+sub conv_from_euc($) {
     my $line = shift;
     $line =~ s/((?:$C_euc|$C_euc_kana)+)/euc2jis($1)/geo;
     return $line;
 }
-sub euc2jis ($) {
+sub euc2jis($) {
     my $line = shift;
     $line =~ s/((?:$C_euc)+|(?:$C_euc_kana)+)/e2j($1)/geo;
     return "$line$E_asc";
 }
-sub e2j ($) {
+sub e2j($) {
     my $cur = shift;
     $cur =~ tr/\xa1-\xfe/\x21-\x7e/;
     if ($cur =~ tr/\x8e//d) {
@@ -291,7 +275,7 @@ sub e2j ($) {
 #	return value: converted line
 #
 
-sub conv_euc_from_sjis ($) {
+sub conv_euc_from_sjis($) {
     my $line = shift;
     $line =~ s/($C_sjis|$C_sjis_kana)/s2e($1)/geo;  
     return $line;
@@ -304,14 +288,14 @@ sub conv_euc_from_sjis ($) {
 #	return value: converted line
 #
 
-sub conv_euc_from_jis ($) {
+sub conv_euc_from_jis($) {
     my $line = shift;
     $line =~ s/$C_jis/j2e($1,$2)/geo;
     $line =~ s/\e\$C_jis_roman/$2/geo;
     return $line;
 }
 
-sub j2e ($$) {
+sub j2e($$) {
     my $esc = shift;
     my $line = shift;
     if ($esc =~ /\e\$[\@B]/) {
@@ -321,6 +305,36 @@ sub j2e ($$) {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::Japanese - Japanese message handler
+
+=head1 SYNOPSIS
+
+ use IM::Japanese;
+
+ $code = code_check($line, $use_hankaku_kana);
+ $code = code_check_body($content);
+ convert_iso2022jp_body($content, $code);
+ $converted = conv_iso2022jp($line, $code);
+
+=head1 DESCRIPTION
+
+The I<IM::Japanese> module handles Japanese message encoded with
+ISO-2022-JP, EUC-JP, Shift_JIS, or US-ASCII.
+
+This modules is provided by IM (Internet Message).
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

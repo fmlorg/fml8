@@ -12,7 +12,7 @@ $symbol_table{'{from}'} = 'fromaddr:';	# can be referenced with %{from} in Form
 #$REF_SYMBOL{'from:'} = 1;
 
 sub scan_sub {
-    local ($href) = shift;
+    local($href) = shift;
 
     # annotation mark
     if ($href->{'replied'} ne '') {

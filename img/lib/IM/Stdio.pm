@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: May 7, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::Stdio.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::Stdio.pm version 20021207(IM142)";
 
 package IM::Stdio;
 require 5.003;
@@ -22,7 +22,7 @@ use vars qw(@ISA @EXPORT $old); # why not my($old)?
 @ISA = qw(Exporter);
 @EXPORT = qw(flush);
 
-sub flush (*) {
+sub flush(*) {
     local($old) = select(shift);
     $| = 1;
     print '';
@@ -31,6 +31,37 @@ sub flush (*) {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::Stdio - stdio handler
+
+=head1 SYNOPSIS
+
+ use IM::Stdio;
+
+ flush(OUTPUT_HANDLE);
+
+=head1 DESCRIPTION
+
+The I<IM::Stdio> module handles stdio.
+
+This modules is provided by IM (Internet Message).
+
+=head1 BUGS
+
+This module is semi-obsolete.  This module conflicts with the
+I<IM::Util> module.
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

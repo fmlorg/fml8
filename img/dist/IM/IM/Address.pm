@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::Address.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::Address.pm version 20021207(IM142)";
 
 package IM::Address;
 require 5.003;
@@ -22,36 +22,6 @@ use vars qw(@ISA @EXPORT);
 @ISA = qw(Exporter);
 @EXPORT = qw(extract_addr replace_addr fetch_addr);
 
-=head1 NAME
-
-Address - RFC822 style address parser
-
-=head1 SYNOPSIS
-
-  use IM::Address;
-
-  $pure_address_portion = &extract_addr($address_with_comment);
-
-  $replaced_address = &replace_addr($original_address_with_comment,
-	$pure_notation_of_old_address, $pure_notation_of_new_address);
-
-  ($first, $rest) = &fetch_addr($address_list, $pure_address_flag);
-
-=head1 DESCRIPTION
-
-  $a = "Motonori Nakamura <motonori\@econ.kyoto-u.ac.jp>";
-  &extract_addr($a) returns "motonori@econ.kyoto-u.ac.jp".
-
-  $a = "Motonori Nakamura <motonori\@econ.kyoto-u.ac.jp>";
-  $b = "motonori\@econ.kyoto-u.ac.jp";
-  $c = "motonori\@wide.ad.jp";
-  &replace_addr($a, $b, $c) returns "Motonori Nakamura <motonori@wide.ad.jp>".
-
-  $a = "kazu, nom, motonori";
-  &fetch_addr($a, 0) returns ("kazu", " nom, motonori").
-
-=cut
-
 use vars qw($FOR_SMTP); # sub fetch_addr
 
 ##### EXTRACT AN ADDRESS FROM AN ADDRESS EXPRESSION #####
@@ -60,7 +30,7 @@ use vars qw($FOR_SMTP); # sub fetch_addr
 #	address: an address in any style
 #	return values: pure address portion (NULL if error)
 #
-sub extract_addr ($) {
+sub extract_addr($) {
     my $addrin = shift;
 
     $addrin =~ s/\n\s+//g;
@@ -75,8 +45,8 @@ sub extract_addr ($) {
 #	new:
 #	return value: replaced expression
 #
-sub replace_addr ($$$) {
-    my ($expr, $old, $new) = @_;
+sub replace_addr($$$) {
+    my($expr, $old, $new) = @_;
     my $qold = quotemeta($old);
 
     if ($expr =~ /$qold.*$qold/) {
@@ -99,18 +69,18 @@ sub replace_addr ($$$) {
 #	  rest: rest of address in the list
 #	  friendly: user friendly portion of the first address
 #
-sub fetch_addr ($$) {
-    my ($addrin, $extract) = @_;
-    my ($addrout, $pureout, $groupsyntax) = ('', '', '');
-    my ($friendly1, $friendly2, $c) = ('', '', '');
-    my ($inquote, $incomment, $addrquote) = (0, 0, 0);
-    my ($gotpure, $groupcolon, $route) = (0, 0, 0);
+sub fetch_addr($$) {
+    my($addrin, $extract) = @_;
+    my($addrout, $pureout, $groupsyntax) = ('', '', '');
+    my($friendly1, $friendly2, $c) = ('', '', '');
+    my($inquote, $incomment, $addrquote) = (0, 0, 0);
+    my($gotpure, $groupcolon, $route) = (0, 0, 0);
     im_debug("fetch_addr(in): $addrin\n") if (&debug('addr'));
     $FOR_SMTP = (&progname =~ /imput/i) unless (defined($FOR_SMTP));
     $addrin = '' unless (defined($addrin));
     $route = 1 if ($addrin =~ /^\@/);
     while ($addrin ne '') {
-	if ($addrin =~ /^([^\e"\\()<>:;,]+)(.*)/s) {
+	if ($addrin =~ /^([^\e"\\()<>:;,]+)(.*)/s) {  #"
 	    $c = $1;
 	    $addrin = $2;
 	} elsif ($addrin =~ /^\e/) {
@@ -131,7 +101,7 @@ sub fetch_addr ($$) {
 
 	last if ($c eq ',' && !$inquote && !$incomment && !$groupcolon
 	         && !$route);
-	$friendly2 .= $c unless($addrquote);
+	$friendly2 .= $c unless ($addrquote);
 	if ($inquote) {
 	    $addrout .= $c;
 	    $pureout .= $c unless ($gotpure);
@@ -141,7 +111,7 @@ sub fetch_addr ($$) {
 		($c, $addrin) = unpack('a a*', $addrin);
 		$addrout .= $c;
 		$pureout .= $c unless ($gotpure);
-		$friendly2 .= $c unless($addrquote);
+		$friendly2 .= $c unless ($addrquote);
 	    }
 	    next;
 	} elsif ($incomment) {
@@ -154,7 +124,7 @@ sub fetch_addr ($$) {
 	    } elsif ($c eq '\\') {
 		($c, $addrin) = unpack('a a*', $addrin);
 		$friendly1 .= $c;
-		$friendly2 .= $c unless($addrquote);
+		$friendly2 .= $c unless ($addrquote);
 		$addrout .= $c unless ($extract);
 	    }
 	    chop($friendly1) unless ($incomment);
@@ -183,17 +153,17 @@ sub fetch_addr ($$) {
 	    $addrout .= $c;
 	    $pureout .= $c unless ($gotpure);
 	    ($c, $addrin) = unpack('a a*', $addrin);
-	    $friendly2 .= $c unless($addrquote);
+	    $friendly2 .= $c unless ($addrquote);
 	} elsif ($c eq ':') {
 	    $addrout .= $c;
 	    $pureout .= $c unless ($gotpure);
-	    if ($addrin =~ /^([^"\()<>:;,]+)(.*)/s) {
+	    if ($addrin =~ /^([^"\()<>:;,]+)(.*)/s) {  #"
 		$c = $1;
 		$addrin = $2;
 	    } else {
 		($c, $addrin) = unpack('a a*', $addrin);
 	    }
-	    $friendly2 .= $c unless($addrquote);
+	    $friendly2 .= $c unless ($addrquote);
 	    $groupcolon = 1 if ($c ne ':');
 	} elsif ($c eq ';') {
 	    if ($groupcolon) {
@@ -233,6 +203,50 @@ sub fetch_addr ($$) {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::Address - RFC822 style address parser
+
+=head1 SYNOPSIS
+
+ use IM::Address;
+
+ $pure_address_portion = &extract_addr($address_with_comment);
+
+ $replaced_address = &replace_addr($original_address_with_comment,
+     $pure_notation_of_old_address, $pure_notation_of_new_address);
+
+ ($first, $rest) = &fetch_addr($address_list, $pure_address_flag);
+
+=head1 DESCRIPTION
+
+The I<IM::Address> module is a parser for RFC822 style address.
+
+This modules is provided by IM (Internet Message).
+
+=head1 EXAMPLES
+
+ $a = "Motonori Nakamura <motonori\@econ.kyoto-u.ac.jp>";
+ &extract_addr($a) returns "motonori@econ.kyoto-u.ac.jp".
+
+ $a = "Motonori Nakamura <motonori\@econ.kyoto-u.ac.jp>";
+ $b = "motonori\@econ.kyoto-u.ac.jp";
+ $c = "motonori\@wide.ad.jp";
+ &replace_addr($a, $b, $c) returns "Motonori Nakamura <motonori@wide.ad.jp>".
+
+ $a = "kazu, nom, motonori";
+ &fetch_addr($a, 0) returns ("kazu", " nom, motonori").
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

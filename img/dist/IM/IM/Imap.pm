@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::Imap.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::Imap.pm version 20021207(IM142)";
 
 package IM::Imap;
 require 5.003;
@@ -32,16 +32,6 @@ use vars qw(@ISA @EXPORT);
     imap_put_message imap_put_file imap_refile imap_delete_message
 );
 
-=head1 NAME
-
-Imap - IMAP handling package
-
-=head1 SYNOPSIS
-
-=head1 DESCRIPTION
-
-=cut
-
 use vars qw($ImapSeq);
 ########################
 # IMAP access routines #
@@ -52,10 +42,10 @@ use vars qw($ImapSeq);
 #		 0: success
 #		-1: failure
 #
-sub imap_open ($$$$) {
-    my ($auth, $host, $user, $pass) = @_;
-    my ($data, $seq, $errmsg);
-    my (@host_list) = ($host);
+sub imap_open($$$$) {
+    my($auth, $host, $user, $pass) = @_;
+    my($data, $seq, $errmsg);
+    my(@host_list) = ($host);
     my $HANDLE;
 
     $pass = '*' unless ($pass);
@@ -72,7 +62,7 @@ sub imap_open ($$$$) {
     }
     my $failed = 0;
     if ($auth eq 'LOGIN') {
-	my ($us, $pw) = ($user, $pass);
+	my($us, $pw) = ($user, $pass);
 	$us =~ s/([\\"])/\\$1/g;	# escape specials
 	$us = "\"$us\"";		# quote it
 	$pw =~ s/([\\"])/\\$1/g;	# escape specials
@@ -134,9 +124,9 @@ sub imap_open ($$$$) {
     return (0, $HANDLE);
 }
 
-sub imap_close ($) {
-    my ($HANDLE) = @_;
-    my ($seq) = $ImapSeq++;
+sub imap_close($) {
+    my($HANDLE) = @_;
+    my($seq) = $ImapSeq++;
     my $failed = 0;
     if (1) {
 	im_notice("closing IMAP session.\n");
@@ -162,10 +152,10 @@ sub imap_close ($) {
     return 0;
 }
 
-sub imap_select ($$$) {
-    my ($HANDLE, $mbox, $select) = @_;
-    my ($seq) = $ImapSeq++;
-    my ($resp, @field);
+sub imap_select($$$) {
+    my($HANDLE, $mbox, $select) = @_;
+    my($seq) = $ImapSeq++;
+    my($resp, @field);
     if ($select) {
 	im_notice("select mbox $mbox and getting number of message.\n");
 	$resp = &send_command($HANDLE, "im$seq SELECT $mbox", '');
@@ -195,10 +185,10 @@ sub imap_select ($$$) {
     return $msgs;
 }
 
-sub imap_get ($$) {
-    my ($HANDLE, $num) = @_;
-    my ($seq) = $ImapSeq++;
-    my (@message);
+sub imap_get($$) {
+    my($HANDLE, $num) = @_;
+    my($seq) = $ImapSeq++;
+    my(@message);
     im_notice("getting message $num.\n");
     my $resp = &send_command($HANDLE, "im$seq UID FETCH $num RFC822", '');
     my $failed = 0;
@@ -236,18 +226,18 @@ sub imap_get ($$) {
     return (0, \@message);
 }
 
-sub imap_head ($$) {
-    my ($HANDLE, $num) = @_;
-    my ($seq) = $ImapSeq++;
+sub imap_head($$) {
+    my($HANDLE, $num) = @_;
+    my($seq) = $ImapSeq++;
     im_notice("getting header of message $num.\n");
     my $resp = &send_command($HANDLE,
       "im$seq UID FETCH $num (RFC822.SIZE RFC822.HEADER)", '');
     my $failed = 0;
-    my (%head);
+    my(%head);
     undef %head;
     if ($resp =~
     /^\* \d+ FETCH \((UID $num )?RFC822.SIZE (\d+) RFC822.HEADER \{(\d+)\}/i) {
-	my ($size, $len) = ($2, $3);
+	my($size, $len) = ($2, $3);
 	my $field = '';
 	alarm(imap_timeout()) unless win95p();
 	$! = 0;
@@ -295,8 +285,8 @@ sub imap_head ($$) {
     return (0, \%head);
 }
 
-sub imap_from ($$) {
-    my ($HANDLE, $num) = @_;
+sub imap_from($$) {
+    my($HANDLE, $num) = @_;
     my $seq = $ImapSeq++;
     my $failed = 0;
     im_notice("getting sender information of message $num.\n");
@@ -349,10 +339,10 @@ sub imap_from ($$) {
     return 0;
 }
 
-sub imap_flags ($$) {
-    my ($HANDLE, $num) = @_;
+sub imap_flags($$) {
+    my($HANDLE, $num) = @_;
     my $seq = $ImapSeq++;
-    my ($flags);
+    my($flags);
     im_notice("getting flags for $num.\n");
     my $failed = 0;
     my $resp = &send_command($HANDLE, "im$seq UID FETCH $num FLAGS", '');
@@ -370,8 +360,8 @@ sub imap_flags ($$) {
     return $flags;
 }
 
-sub imap_delete ($$) {
-    my ($HANDLE, $num) = @_;
+sub imap_delete($$) {
+    my($HANDLE, $num) = @_;
     my $seq = $ImapSeq++;
     my $failed = 0;
     im_notice("deleting message $num.\n");
@@ -386,13 +376,13 @@ sub imap_delete ($$) {
     return 0;
 }
 
-sub imap_list_folder ($) {
-    my ($HANDLE) = @_;
+sub imap_list_folder($) {
+    my($HANDLE) = @_;
     my $seq = $ImapSeq++;
     my $failed = 0;
     im_notice("listing folders.\n");
     my $resp = &send_command($HANDLE, "im$seq LIST \"\" *", '');
-    my (@folders) = ();
+    my(@folders) = ();
     while ($resp !~ /^im$seq/) {
 	$failed = 1 if ($resp =~ /^\* NO/i);
         if ($resp =~ /^\* LIST \(([^)]*)\) (\S+) (\S+)/) {
@@ -407,8 +397,8 @@ sub imap_list_folder ($) {
     return @folders;
 }
 
-sub imap_create_folder ($$) {
-    my ($HANDLE, $folder) = @_;
+sub imap_create_folder($$) {
+    my($HANDLE, $folder) = @_;
     my $seq = $ImapSeq++;
     my $failed = 0;
     im_notice("creating folder $folder.\n");
@@ -422,8 +412,8 @@ sub imap_create_folder ($$) {
     return 0;
 }
 
-sub imap_delete_folder ($$) {
-    my ($HANDLE, $folder) = @_;
+sub imap_delete_folder($$) {
+    my($HANDLE, $folder) = @_;
     my $seq = $ImapSeq++;
     my $failed = 0;
     im_notice("deleting folder $folder.\n");
@@ -437,8 +427,8 @@ sub imap_delete_folder ($$) {
     return 0;
 }
 
-sub imap_rename_folder ($$$) {
-    my ($HANDLE, $old, $new) = @_;
+sub imap_rename_folder($$$) {
+    my($HANDLE, $old, $new) = @_;
     my $seq = $ImapSeq++;
     my $failed = 0;
     im_notice("rename folder from $old to $new.\n");
@@ -452,8 +442,8 @@ sub imap_rename_folder ($$$) {
     return 0;
 }
 
-sub imap_copy ($$$$) {
-    my ($HANDLE, $srcmsg, $dstfolder, $moveflag) = @_;
+sub imap_copy($$$$) {
+    my($HANDLE, $srcmsg, $dstfolder, $moveflag) = @_;
     im_notice("copying message $srcmsg to $dstfolder.\n");
 #    my $resp = &imap_select($HANDLE, $dstfolder, 0);
 #    if ($resp < 0) {
@@ -480,8 +470,8 @@ sub imap_copy ($$$$) {
     return 0;
 }
 
-sub imap_put ($$$) {
-    my ($HANDLE, $folder, $Msg) = @_;
+sub imap_put($$$) {
+    my($HANDLE, $folder, $Msg) = @_;
     my $seq = $ImapSeq++;
     my $failed = 0;
     im_notice("appending a new message to $folder.\n");
@@ -516,9 +506,9 @@ sub imap_put ($$$) {
 }
 
 # imap_process(handle, how, host, src, dst, limit)
-sub imap_process ($$$$$$$) {
-    my ($HANDLE, $how, $host, $src, $dst, $limit, $noscan) = @_;
-    my ($msgs, $count) = (0, 0);
+sub imap_process($$$$$$$) {
+    my($HANDLE, $how, $host, $src, $dst, $limit, $noscan) = @_;
+    my($msgs, $count) = (0, 0);
      if (($msgs = &imap_select($HANDLE, $src, 1)) < 0) {
          im_warn("selecting folder $src failed.\n"); 
          return -1;
@@ -553,7 +543,7 @@ sub imap_process ($$$$$$$) {
 		    im_info("$count message(s).\n");
 		    return $count;
 		}  
-		my ($rc, $message) = &imap_get($HANDLE, $i);
+		my($rc, $message) = &imap_get($HANDLE, $i);
 		return -1 if ($rc < 0);
 		return -1 if (store_message($message, $dst, $noscan) < 0);
 		&exec_getsbrfile($dst);
@@ -573,17 +563,17 @@ sub imap_process ($$$$$$$) {
     return $msgs;
 }
 
-sub imap_get_msg ($$$$$) {
-    my ($src, $dst, $how, $limit, $noscan) = @_;
+sub imap_get_msg($$$$$) {
+    my($src, $dst, $how, $limit, $noscan) = @_;
 
     $src =~ s/^imap//i;
 
-    my ($folder, $auth, $user, $host) = &imap_spec($src);
+    my($folder, $auth, $user, $host) = &imap_spec($src);
     return -1 if ($folder eq '');
 
-    my ($pass, $agtfound, $interact) = getpass('imap', $auth, $host, $user);
+    my($pass, $agtfound, $interact) = getpass('imap', $auth, $host, $user);
     im_notice("accessing IMAP/$auth:$user\@$host for $how\n");
-    my ($rc, $HANDLE) = &imap_open($auth, $host, $user, $pass);
+    my($rc, $HANDLE) = &imap_open($auth, $host, $user, $pass);
     if ($rc == 0) {
 	&savepass('imap', $auth, $host, $user, $pass)
 	    if ($pass ne '' && $interact && &usepwagent());
@@ -601,7 +591,7 @@ sub imap_get_msg ($$$$$) {
 }
 
 # IMAP folder (--src=imap[%folder][//auth][:user][@server[/port]])
-sub imap_spec ($) {
+sub imap_spec($) {
     my $spec = shift;
 
     if ($spec eq '' || $spec !~ /[:\@]|\/\//) {
@@ -619,7 +609,7 @@ sub imap_spec ($) {
 	$spec .= $s if ($s ne '');
     }
 
-    my ($folder, $auth, $host) = ('INBOX', 'auth', 'localhost');
+    my($folder, $auth, $host) = ('INBOX', 'auth', 'localhost');
     my $user = $ENV{'USER'} || $ENV{'LOGNAME'} || im_getlogin();
 
     if ($spec =~ /^%(.*)\/(\/.*)/) {
@@ -658,13 +648,13 @@ sub imap_spec ($) {
     return ($folder, $auth, $user, $host);
 }
 
-sub imap_range2set ($@) {
-    my ($HANDLE, @ranges) = @_;
-    my (@uids, $fromuid, $dir);
+sub imap_range2set($@) {
+    my($HANDLE, @ranges) = @_;
+    my(@uids, $fromuid, $dir);
 
     my @alluids = &imap_all_uids($HANDLE);
     return -1 if ($alluids[0] < 0);
-    my ($min, $max) = ($alluids[0], $alluids[$#alluids]);
+    my($min, $max) = ($alluids[0], $alluids[$#alluids]);
 
     @ranges = ('first-last') if ($#ranges < 0 || grep(/^all$/, @ranges));
     local $_;
@@ -703,9 +693,9 @@ sub imap_range2set ($@) {
     return join(',', grep($_, @ranges));
 }
 
-sub imap_range2msgs ($@) {
-    my ($HANDLE, @ranges) = @_;
-    my ($seq, $set, $resp, @uids);
+sub imap_range2msgs($@) {
+    my($HANDLE, @ranges) = @_;
+    my($seq, $set, $resp, @uids);
 
     $set = &imap_range2set($HANDLE, @ranges);
     $seq = $ImapSeq++;
@@ -721,9 +711,9 @@ sub imap_range2msgs ($@) {
     return wantarray ? @uids : $uids[0];
 }
 
-sub imap_folder_regname ($) {
+sub imap_folder_regname($) {
     my $folder = shift;		# %...
-    my ($auth, $user, $host);
+    my($auth, $user, $host);
 
     ($folder, $auth, $user, $host) = imap_spec($folder);
     $folder =~ s/^/%/;
@@ -731,7 +721,7 @@ sub imap_folder_regname ($) {
     return "$folder//$auth:$user\@$host"; # may be appended '/port'
 }
 
-sub imap_folder_name ($) {
+sub imap_folder_name($) {
     my $folder = shift;
 
     if ($folder =~ /^%([^:\@]+)/) {
@@ -744,9 +734,9 @@ sub imap_folder_name ($) {
     return '';
 }
 
-sub imap_folder_acct ($) {
+sub imap_folder_acct($) {
     my $folder = shift;		# %...
-    my ($auth, $user, $host);
+    my($auth, $user, $host);
 
     ($folder, $auth, $user, $host) = imap_spec($folder);
 
@@ -756,9 +746,9 @@ sub imap_folder_acct ($) {
     return '';
 }
 
-sub imap_all_uids ($) {
-    my ($HANDLE) = @_;
-    my ($seq, $resp, @uids);
+sub imap_all_uids($) {
+    my($HANDLE) = @_;
+    my($seq, $resp, @uids);
 
     $seq = $ImapSeq++;
     $resp = &send_command($HANDLE, "im$seq UID SEARCH 1:*", '');
@@ -773,8 +763,8 @@ sub imap_all_uids ($) {
     return @uids;
 }
 
-sub imap_message_number ($$$) {
-    my ($min, $max, $num) = @_;
+sub imap_message_number($$$) {
+    my($min, $max, $num) = @_;
 
     return $num if $num =~ /^\d+$/;
     return $min if $num =~ /^first$/;
@@ -787,9 +777,9 @@ sub imap_message_number ($$$) {
 ## For imls
 ##
 
-sub imap_scan_folder ($$@) {
-    my ($HANDLE, $folder, @ranges) = @_;
-    my ($uid, $size, $len);
+sub imap_scan_folder($$@) {
+    my($HANDLE, $folder, @ranges) = @_;
+    my($uid, $size, $len);
 
     my $msgset = &imap_range2set($HANDLE, @ranges);
     return  0 if !$msgset;
@@ -857,20 +847,20 @@ sub imap_scan_folder ($$@) {
 
 my %ImapHandleCache = ();
 
-sub imap_open_folders ($@) {
-    my ($create, @folders) = @_;
+sub imap_open_folders($@) {
+    my($create, @folders) = @_;
 
     foreach (@folders) {
 	next unless (/^%/);
 	my $acct = imap_folder_acct($_);
 	my $ifld = imap_folder_name($_);
-	my ($rc, $HANDLE);
+	my($rc, $HANDLE);
 
 	unless ($HANDLE = $ImapHandleCache{$acct}) {
-	    my ($dummy, $auth, $user, $host)
+	    my($dummy, $auth, $user, $host)
 		= imap_spec(imap_folder_regname($_));
 
-	    my ($pass, $agtfound, $interact) = 
+	    my($pass, $agtfound, $interact) = 
 		getpass('imap', $auth, $host, $user);
 
 	    ($rc, $HANDLE) = imap_open($auth, $host, $user, $pass);
@@ -898,19 +888,19 @@ sub imap_open_folders ($@) {
     return 0;
 }
 
-sub imap_close_folders () {
+sub imap_close_folders() {
     foreach (keys(%ImapHandleCache)) {
 	imap_close($ImapHandleCache{$_});
     }
     %ImapHandleCache = ();
 }
 
-sub imap_get_handle ($) {
+sub imap_get_handle($) {
     return $ImapHandleCache{imap_folder_acct(shift)};
 }
 
-sub imap_get_message ($$) {
-    my ($src, $range) = @_;
+sub imap_get_message($$) {
+    my($src, $range) = @_;
     my $HANDLE = imap_get_handle($src);
     my $msg = imap_range2msgs($HANDLE, ($range));
 
@@ -919,7 +909,7 @@ sub imap_get_message ($$) {
 	return ();
     }
 
-    my ($rc, $msgref) = imap_get($HANDLE, $msg);
+    my($rc, $msgref) = imap_get($HANDLE, $msg);
     if ($rc < 0) {
 	im_warn("can't get msg $_ from source folder.\n");
 	return ();
@@ -927,8 +917,8 @@ sub imap_get_message ($$) {
     return $msgref;
 }
 
-sub imap_put_message ($$;$) {
-    my ($Message, $dsts, $src_path) = @_;
+sub imap_put_message($$;$) {
+    my($Message, $dsts, $src_path) = @_;
     my $dst;
 
     foreach $dst (@$dsts) {
@@ -941,10 +931,10 @@ sub imap_put_message ($$;$) {
     return 0;
 }
 
-sub imap_put_file ($$$) {
-    my ($src, $dsts, $src_path) = @_;
+sub imap_put_file($$$) {
+    my($src, $dsts, $src_path) = @_;
     my @Message;
-    local (*SRC);
+    local(*SRC);
 
     unless (im_open(\*SRC, "<$src_path")) {
 	im_warn("can't open local message $src_path.\n");
@@ -959,9 +949,9 @@ sub imap_put_file ($$$) {
     return imap_put_message(\@Message, $dsts, $src_path);
 }
 
-sub imap_refile ($$$) {
-    my ($src, $dsts, $msgs) = @_;
-    my ($HANDLE, $srcacct, $srcset);
+sub imap_refile($$$) {
+    my($src, $dsts, $msgs) = @_;
+    my($HANDLE, $srcacct, $srcset);
     my $link_1st;
 
     $srcacct = imap_folder_acct($src);
@@ -993,8 +983,8 @@ sub imap_refile ($$$) {
     return 0;
 }
 
-sub imap_delete_message () {
-    my ($src, @range) = @_;
+sub imap_delete_message() {
+    my($src, @range) = @_;
     my $HANDLE = imap_get_handle($src);
     my $srcset = imap_range2set($HANDLE, @range);
 
@@ -1002,6 +992,49 @@ sub imap_delete_message () {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::Imap - IMAP handler
+
+=head1 SYNOPSIS
+
+ use IM::Imap;
+
+ imap_open(auth, host, user, pass)
+     return value:
+	  0: success
+	 -1: failure
+
+Other subroutines:
+imap_select imap_head imap_get imap_put imap_delete
+imap_get_msg imap_spec imap_range2set imap_folder_regname imap_scan_folder 
+imap_open_folders imap_close_folders imap_get_handle imap_get_message
+imap_put_message imap_put_file imap_refile imap_delete_message
+
+=head1 DESCRIPTION
+
+The I<IM::Imap> module handles IMAP.
+
+This modules is provided by IM (Internet Message).
+
+=head1 EXAMPLES
+
+  my($rc, $HANDLE) = imap_open($auth, $host, $user, $pass);
+  if ($rc < 0) {
+      exit 1;
+  }
+  imap_close($HANDLE);
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

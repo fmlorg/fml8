@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 27, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::Recipient.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::Recipient.pm version 20021207(IM142)";
 
 package IM::Recipient;
 require 5.003;
@@ -27,29 +27,19 @@ use vars qw(@ISA @EXPORT);
 @ISA = qw(Exporter);
 @EXPORT = qw(add_to_rcpt parse_rcpt rcpt_pickup);
 
-=head1 NAME
-
-Recipient - IM recipient handler
-
-=head1 SYNOPSIS
-
-=head1 DESCRIPTION
-
-=cut
-
 use vars qw($Alias_match_count $Include_count %Include_Files);
 ##### ADD AN ADDRESS TO RECIPIENT LIST #####
 #
-# add_to_rctp(bcc_flag, addr)
+# add_to_rcpt(bcc_flag, addr)
 #	bcc_flag: register with "bcc" tag
 #	addr: an address to be registered
 #	return value: none
 #	   0: success
 #	  -1: failure
 #
-sub add_to_rcpt ($$) {
-    my ($bcc_flag, $addr) = @_;
-    my ($rec, $a);
+sub add_to_rcpt($$) {
+    my($bcc_flag, $addr) = @_;
+    my($rec, $a);
     $addr = &extract_addr($addr);
     return -1 if ($addr eq '');
     return 0 unless ($addr);
@@ -89,7 +79,7 @@ sub add_to_rcpt ($$) {
 
 ##### PARSE RECIPIENT LIST #####
 #
-# sub parse_rcpt(bcc_flag, addr_list, need_code_conversion)
+# parse_rcpt(bcc_flag, addr_list, need_code_conversion)
 #	bcc_flag:
 #		 1 = BCC distination
 #		 0 = normal distination
@@ -97,9 +87,9 @@ sub add_to_rcpt ($$) {
 #	addr_list: address list string (concatinated with ",")
 #	return value: number of addresses in the list (-1 if error)
 #
-sub parse_rcpt ($$$) {
-    my ($bcc_flag, $addr_list, $conv) = @_;
-    my ($cnt, $addr);
+sub parse_rcpt($$$) {
+    my($bcc_flag, $addr_list, $conv) = @_;
+    my($cnt, $addr);
     $addr_list =~ s/^\s+//;
     $addr_list =~ s/\n\s*//g;	# XXX
     return 0 if ($addr_list eq '');
@@ -148,13 +138,13 @@ sub parse_rcpt ($$$) {
 #	   0: success
 #	  -1: failure
 #
-sub expn_group ($$) {
-    my ($bcc_flag, $group_expression) = @_;
-    my ($rest, @mboxes, $rec);
+sub expn_group($$) {
+    my($bcc_flag, $group_expression) = @_;
+    my($rest, @mboxes, $rec);
 #   return if ($group_expression !~ /:.*;$/);
     return if ($group_expression !~ /:[^;]*;/);
     im_debug("expanding $group_expression\n") if (&debug('rcpt'));
-#   my ($group_name);
+#   my($group_name);
 #   $group_name = $group_expression;
 #   $group_name =~ s/:.*/:;/;
     $rest = $group_expression;
@@ -181,10 +171,10 @@ sub expn_group ($$) {
 #	  0: success
 #	 -1: failure
 #
-sub expn_rcpt_list ($$) {
-    my ($bcc_flag, $include_file) = @_;
-    my ($file) = &expand_path($include_file);
-    my ($INCLUDE) = &include_open($file);
+sub expn_rcpt_list($$) {
+    my($bcc_flag, $include_file) = @_;
+    my($file) = &expand_path($include_file);
+    my($INCLUDE) = &include_open($file);
     if ($INCLUDE) {
 	while (defined($_ = include_readline($INCLUDE))) {
 	    chomp;
@@ -205,7 +195,7 @@ sub expn_rcpt_list ($$) {
 	    } elsif (/^\s*\//) {
 		im_err("Mail to file not supported: $_\n");
 		return -1;
-	    } elsif (/^\s*\|/ || /^\s*"\s*\|/) {
+	    } elsif (/^\s*\|/ || /^\s*"\s*\|/) {  #"
 		im_err("Mail to program not supported: $_\n");
 		return -1;
 	    }
@@ -228,8 +218,8 @@ sub expn_rcpt_list ($$) {
 #	  -1: failure
 #	   0: success
 #
-sub rcpt_pickup ($$$) {
-    my ($Header, $resend_flag, $news_only_flag) = @_;
+sub rcpt_pickup($$$) {
+    my($Header, $resend_flag, $news_only_flag) = @_;
     my $line;
     my $resend_prefix;
 
@@ -262,24 +252,70 @@ sub rcpt_pickup ($$$) {
 #       return value: handle
 #
 no strict 'refs';
-sub include_open ($) {
-    my ($file) = shift;
+sub include_open($) {
+    my($file) = shift;
     return undef if $Include_Files{$file};
     im_open($file, $file) || return undef;
     $Include_Files{$file} = 1;
     return $file;
 }
-sub include_readline ($) {
+sub include_readline($) {
     my $fh = shift;
     return scalar(<$fh>);
 }
-sub include_close ($) {
-    my ($fh) = shift;
+sub include_close($) {
+    my($fh) = shift;
     close($fh);
     delete $Include_Files{$fh};
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::Recipient - mail/news recipient handler
+
+=head1 SYNOPSIS
+
+ use IM::Recipient;
+
+ add_to_rcpt(bcc_flag, addr)
+     bcc_flag: register with "bcc" tag
+     addr: an address to be registered
+     return value: none
+	  0: success
+	 -1: failure
+
+ parse_rcpt(bcc_flag, addr_list, need_code_conversion)
+     bcc_flag:
+	  1 = BCC distination
+	  0 = normal distination
+	 -1 = parse only
+     addr_list: address list string (concatinated with ",")
+     return value: number of addresses in the list (-1 if error)
+
+ rcpt_pickup(header, resend_flag, news_only_flag)
+     resend_flag: pickup addresses for redistributing mode
+     news_only_flag: do not pickup destination addresses for news mode
+     return value:
+	 -1: failure
+	  0: success
+
+=head1 DESCRIPTION
+
+The I<IM::Recipient> module handles recipient of mail/news message.
+
+This modules is provided by IM (Internet Message).
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

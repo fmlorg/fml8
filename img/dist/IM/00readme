@@ -3,20 +3,29 @@
 			    Kazu Yamamoto
 			     Sep  5, 1999
 
+	     Modified by Tatsuya Kinoshita on Dec  7, 2002
+
+
 			   <<<Copyright>>>
 
 This package provides a series of user interface commands (im*
-commands) and backend Perl5 libraries to integrate Email and NetNews
-handling. They are designed to be used both from Mew and on command
-line.
+commands) and backend Perl5 modules to integrate E-mail and NetNews
+handling. They are designed to be used both from Mew version 1.x and
+on command line.
 
-The folder style of Mew is exactly the same as that of MH. So, you can
+The folder style of IM is exactly the same as that of MH. So, you can
 replace MH with this package without any migration works. Moreover,
 you are able to operate your messages both by IM and MH with
 consistent manner.
 
-All programs/libraries conforms the BSD like "AS IS" copyright. This
-means, in short words, free but no warranty. 
+IM is free software; you can redistribute it and/or modify it under
+the modified BSD license. See 00copyright for more details.
+
+IM/MD5.pm is derived from md5.pl copyrighted by NAKAMURA, Motonori
+<motonori@econ.kyoto-u.ac.jp>. It is converted to Perl4 from C version
+derived from the RSA Data Security, Inc. MD5 Message-Digest Algorithm.
+
+install-sh is under the M.I.T. license.
 
 	      <<<Installing under the root privilege>>>
 
@@ -83,7 +92,11 @@ have the root privilege.
 
 		 <<<Contributions and Bug Reports>>>
 
-Please send comments, bug reports, and patches to "img@mew.org".
+Please send comments, bug reports, and patches to <img@mew.org>.
+You can contact the current maintainer (Tatsuya Kinoshita, since
+October 2002) by this e-mail address.
+
+See also "IM Official Site" (http://tats.iris.ne.jp/im/).
 
 
 			  <<<Programmers>>>

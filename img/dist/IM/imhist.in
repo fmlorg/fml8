@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Jul  6, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "imhist version 20000414(IM141)";
+my $VERSION = "imhist version 20021207(IM142)";
 
 $Prog = 'imhist';
 
@@ -37,11 +37,10 @@ use vars qw($Prog $EXPLANATION @OptConfig
 ## Environments
 ##
 
-$EXPLANATION = "
-imhist :: Manage History Database
-$VERSION
+$EXPLANATION = "$VERSION
+treat mail/news history database
 
-Usage: imhist [options]
+Usage: imhist [OPTIONS]
 ";
 
 @OptConfig = (
@@ -136,9 +135,9 @@ if ($opt_lookup ne '') {
 
 exit $EXIT_SUCCESS;
 
-sub add_msg_info ($$) {
-    my ($path, $msg) = @_;
-    local (@Hdr) = ();
+sub add_msg_info($$) {
+    my($path, $msg) = @_;
+    local(@Hdr) = ();
     if (im_open(\*MSG, "<$path")) {
 	&read_header(\*MSG, \@Hdr, 0);
 	my $mid = &header_value(\@Hdr, 'Message-ID');
@@ -164,8 +163,8 @@ sub add_msg_info ($$) {
     return -1;
 }
 
-sub add_folder_info ($$) {
-    my ($dir, $folder) = @_;
+sub add_folder_info($$) {
+    my($dir, $folder) = @_;
     $dir =~ s|/$||;
     im_info("Entering folder $dir\n");
     chdir ($dir);
@@ -185,7 +184,7 @@ sub add_folder_info ($$) {
 	}
     }
     closedir(FOLDER);
-    if($opt_subfolders eq '1'){
+    if ($opt_subfolders eq '1') {
 	my $l;
 	foreach $l (@lower) {
 	    if ($folder eq '+') {
@@ -196,6 +195,72 @@ sub add_folder_info ($$) {
 	}
     }
 }
+
+__END__
+
+=head1 NAME
+
+imhist - treat mail/news history database
+
+=head1 SYNOPSIS
+
+B<imhist> [OPTIONS]
+
+=head1 DESCRIPTION
+
+The I<imhist> command handles mail/news history database.
+
+This command is provided by IM (Internet Message).
+
+=head1 OPTIONS
+
+=over 5
+
+=item I<-l, --lookup=STRING>
+
+Look up an entry for specified message-id.
+
+=item I<-r, --remove=STRING>
+
+Remove whole information on specified message-id.
+
+=item I<-m, --msg=STRING>
+
+Message to be deleted if multiple in database.
+
+=item I<-d, --dump={on,off}>
+
+Dump database just for debugging.
+
+=item I<-a, --add=FOLDER>
+
+Add information of messages in a specified folder.
+
+=item I<-s, --subfolders={on,off}>
+
+Descend sub folders recursively (option for --add).
+
+=item I<-v, --verbose={on,off}>
+
+Print verbose messages when running.
+
+=item I<--debug=DEBUG_OPTION>
+
+Print debug messages when running.
+
+=item I<-h, --help>
+
+Display help message and exit.
+
+=back
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

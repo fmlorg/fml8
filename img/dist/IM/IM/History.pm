@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Jul 6, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::History.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::History.pm version 20021207(IM142)";
 
 package IM::History;
 require 5.003;
@@ -42,8 +42,8 @@ sub LookUpMsg  {  0 }
 #sub LookUpDate {  1 }
 
 
-sub history_open ($) {
-    my ($with_lock) = @_;
+sub history_open($) {
+    my($with_lock) = @_;
     $DBtype = msgdbtype();	# package global
     unless ($DBtype) {
 	$DBtype = db_type();
@@ -74,13 +74,13 @@ sub history_open ($) {
 
     im_debug("history database: $dbfile\n") if (&debug('history'));
 
-    my ($db, $fd);
+    my($db, $fd);
     if ($DBtype eq 'DB') {
 	$db = tie %History, 'DB_File', $dbfile, O_CREAT()|O_RDWR(), &msg_mode(0);
     } elsif ($DBtype eq 'NDBM') {
 	$db = tie %History, 'NDBM_File', $dbfile, O_CREAT()|O_RDWR(), &msg_mode(0);
     } elsif ($DBtype eq 'SDBM') {
-	if (&win95p || &os2p){
+	if (&win95p || &os2p) {
 	    $db = tie %History, 'SDBM_File', $dbfile, O_CREAT()|O_RDWR()|O_BINARY(), &msg_mode(0);
 	} else {
 	    $db = tie %History, 'SDBM_File', $dbfile, O_CREAT()|O_RDWR(), &msg_mode(0);
@@ -112,7 +112,7 @@ sub history_open ($) {
 	    return -1;
 	}
     }
-    if (! &win95p ){
+    if (! &win95p) {
 	unless (flock (HIST_FH, LOCK_EX | LOCK_NB)) {
 	    im_warn "history: waiting for write lock ($!)\n";
 	    unless (flock (HIST_FH, LOCK_EX)) {
@@ -126,12 +126,12 @@ sub history_open ($) {
 }
 
 
-sub history_close () {
+sub history_close() {
     if ($nodbfile) {
 	im_err("no database specified.\n");
 	return;
     }
-    if (! &win95p ){
+    if (! &win95p) {
 	if ($locked) {
 	    flock(HIST_FH, LOCK_UN);
 	}
@@ -144,12 +144,12 @@ sub history_close () {
 }
 
 
-sub history_lookup ($$) {
+sub history_lookup($$) {
     if ($nodbfile) {
 	im_err("no database specified.\n");
 	return ();
     }
-    my ($msgid, $field) = @_;
+    my($msgid, $field) = @_;
     $msgid =~ s/^<(.*)>$/$1/;
     if (defined($History{$msgid})) {
 	if ($field == LookUpAll) {
@@ -167,16 +167,16 @@ sub history_lookup ($$) {
     }
 }
 
-sub history_store ($$) {
+sub history_store($$) {
     if ($nodbfile) {
 	im_err("no database specified.\n");
 	return -1;
     }
-    my ($msgid, $folder) = @_;
+    my($msgid, $folder) = @_;
     $msgid =~ s/^<(.*)>$/$1/;
     im_notice("add to history: $msgid\t$folder\n");
     if (defined($History{$msgid})) {
-	my ($ofolder) = split("\t", $History{$msgid});
+	my($ofolder) = split("\t", $History{$msgid});
 	if (scalar(grep($folder eq $_, split(',', $ofolder)))) {
 	    return;
 	}
@@ -185,17 +185,17 @@ sub history_store ($$) {
     $History{$msgid} = $folder;
 }
 
-sub history_delete ($$) {
+sub history_delete($$) {
     if ($nodbfile) {
 	im_err("no database specified.\n");
 	return -1;
     }
-    my ($msgid, $folder) = @_;
+    my($msgid, $folder) = @_;
     $msgid =~ s/^<(.*)>$/$1/;
     if (defined($History{$msgid})) {
 	if ($folder ne '') {
-	    my ($f) = split("\t", $History{$msgid});
-	    my (@list, $found);
+	    my($f) = split("\t", $History{$msgid});
+	    my(@list, $found);
 	    foreach (split(',', $f)) {
 		if ($_ eq $folder) {
 		    $found = 1;
@@ -221,25 +221,25 @@ sub history_delete ($$) {
 }
 
 
-sub history_dump () {
+sub history_dump() {
     if ($nodbfile) {
 	im_err("no database specified.\n");
 	return;
     }
-    my ($key, $val);
+    my($key, $val);
     while (($key, $val) = each(%History)) {
 	print "$key\t$val\n";
     }
 }
 
-sub history_rename ($$$) {
+sub history_rename($$$) {
     if ($nodbfile) {im_err("no database specified.\n"); return;}
 
-    my ($id, $m1, $m2) = @_;
+    my($id, $m1, $m2) = @_;
     $id =~ s/<(.*)>/$1/;
 
     my $h;
-    if (defined $History{$id}){
+    if (defined $History{$id}) {
 	$h = $History{$id};
 	$h =~ s/^([^\t]+)(.*)//;
 	$h = join(',', grep($_ ne $m1, split(',', $1)), $m2) . $2;
@@ -251,14 +251,14 @@ sub history_rename ($$$) {
     return 0;
 }
 
-sub history_link ($$$) {
+sub history_link($$$) {
     if ($nodbfile) {im_err("no database specified.\n"); return;}
 
-    my ($id, $m1, $m2) = @_;
+    my($id, $m1, $m2) = @_;
     $id =~ s/<(.*)>/$1/;
 
     my $h;
-    if (defined $History{$id}){
+    if (defined $History{$id}) {
 	$h = $History{$id};
 	$h =~ s/^([^\t]+)(.*)//;
 	$h = join(',', grep($_ ne $m2, split(',', $1)), $m2) . $2;
@@ -270,13 +270,13 @@ sub history_link ($$$) {
     return 0;
 }
 
-sub history_unlink ($$) {
+sub history_unlink($$) {
     if ($nodbfile) {im_err("no database specified.\n"); return;}
 
-    my ($id, $m1) = @_;
+    my($id, $m1) = @_;
     $id =~ s/<(.*)>/$1/;
 
-    if (defined $History{$id}){
+    if (defined $History{$id}) {
         my $h = $History{$id};
 	$h =~ s/^([^\t]+)(.*)//;
 	$h = join(',', grep($_ ne $m1, split(',', $1))) . $2;
@@ -292,6 +292,40 @@ sub history_unlink ($$) {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::History - mail/news history database handler
+
+=head1 SYNOPSIS
+
+ use IM::History;
+
+ history_open($with_lock);
+ history_dump();
+ history_store($msgid, $folder);
+ history_lookup($msgid, LookUpAll);
+ history_lookup($msgid, LookUpMsg);
+ history_delete($msgid, $folder);
+ history_rename($id, $m1, $m2);
+ history_link($id, $m1, $m2);
+ history_close();
+
+=head1 DESCRIPTION
+
+The I<IM::History> module handles mail/news database.
+
+This modules is provided by IM (Internet Message).
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

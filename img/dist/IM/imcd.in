@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "imcd version 20000414(IM141)";
+my $VERSION = "imcd version 20021207(IM142)";
 
 $Prog = 'imcd';
 
@@ -33,11 +33,10 @@ use vars qw($Prog $EXPLANATION @OptConfig
 ## Environments
 ##
 
-$EXPLANATION = "
-$Prog :: Internet Message Change Default Folder
-$VERSION
+$EXPLANATION = "$VERSION
+change default folder of IM
 
-Usage: $Prog [options]
+Usage: $Prog [OPTIONS] [FOLDER]
 ";
 
 @OptConfig = (
@@ -75,6 +74,68 @@ if (! -d &expand_path($folder)) {
 print "$folder\n" unless $opt_quiet;
 
 exit $EXIT_SUCCESS;
+
+__END__
+
+=head1 NAME
+
+imcd - change default folder of IM
+
+=head1 SYNOPSIS
+
+B<imcd> [OPTIONS] [FOLDER]
+
+=head1 DESCRIPTION
+
+The I<imcd> command change the current folder of IM.
+
+This command is provided by IM (Internet Message).
+
+=head1 OPTIONS
+
+=over 5
+
+=item I<-s, --src=FOLDER>
+
+Set source folder.  "--src=+xxx" is equivalent to "+xxx".
+
+=item I<-q, --quiet={on,off}>
+
+Do not show any messages.
+
+=item I<-v, --verbose={on,off}>
+
+Print verbose messages when running.
+
+=item I<--debug=DEBUG_OPTION>
+
+Print debug messages when running.
+
+=item I<-h, --help>
+
+Display help message and exit.
+
+=back
+
+=head1 FILES
+
+=over 5
+
+=item ~/.im/Context
+
+=back
+
+=head1 BUGS
+
+This feature is not well supported by the other im* commands.
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

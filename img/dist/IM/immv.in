@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "immv version 20000414(IM141)";
+my $VERSION = "immv version 20021207(IM142)";
 
 $Prog = 'immv';
 
@@ -39,23 +39,22 @@ use vars qw($Prog $EXPLANATION @OptConfig
 
 my %NewMsgCache = ();
 
-$EXPLANATION = "
-$Prog :: Internet Message Move
-$VERSION
+$EXPLANATION = "$VERSION
+file mail/news message in other folders
 
-Usage: $Prog [options] +folder... msgs...
+Usage: $Prog [OPTIONS] FOLDER... MSGS...
 ";
 
 @OptConfig = (
     'src;f;;'     => "Set source folder.",
     'dst;F@;;'    => "Set destination folders.",
     'link;b;;'    => "Remain original msg in src folder.",
+    'SSHServer,S;s;localhost;SSH_server'
+                       => 'SSH port relay server.',
     'noharm;b;;'  => "Display the commands but do not actually execute them.",
     'verbose;b;;' => 'With verbose messages.',
     'debug;d;;'   => "With debug message.",
     'help;b;;'    => "Show this message.",
-    'SSHServer,S;s;localhost;SSH_server'
-                       => 'SSH port relay server.',
     );
 
 ##
@@ -87,10 +86,10 @@ exit $EXIT_SUCCESS;
 ##
 ## Work horse
 ##
-sub immv ($$$) {
-    my ($src, $dsts, $msgs) = @_;
-    my (@imap_dsts, @local_dsts);
-    my ($imap_src, $imap_dst, $news_src, $news_dst) = (0, 0, 0, 0);
+sub immv($$$) {
+    my($src, $dsts, $msgs) = @_;
+    my(@imap_dsts, @local_dsts);
+    my($imap_src, $imap_dst, $news_src, $news_dst) = (0, 0, 0, 0);
 
     if ($src =~ /^-/) {
 	$news_src = 1;
@@ -150,7 +149,7 @@ sub immv ($$$) {
 }
 
 sub local2local($$$) {
-    my ($src, $dsts, $msgs) = @_;
+    my($src, $dsts, $msgs) = @_;
 
     my @msg_paths = get_impath($src, @$msgs);
     foreach (@msg_paths) {
@@ -159,8 +158,8 @@ sub local2local($$$) {
 }
 
 sub imap2local($$$) {
-    my ($src, $dsts, $msgs) = @_;
-    my ($msg, $Message);
+    my($src, $dsts, $msgs) = @_;
+    my($msg, $Message);
 
     foreach $msg (@$msgs) {
 	$Message = imap_get_message($src, $msg);
@@ -170,8 +169,8 @@ sub imap2local($$$) {
 }
 
 sub news2local($$$) {
-    my ($src, $dsts, $msgs) = @_;
-    my ($msg, $rc, $Message);
+    my($src, $dsts, $msgs) = @_;
+    my($msg, $rc, $Message);
 
     foreach $msg (@$msgs) {
 	($rc, $Message) = nntp_get_message($src, $msg);
@@ -180,12 +179,12 @@ sub news2local($$$) {
     }
 }
 
-sub refile_one ($$$) {
-    my ($src, $dsts, $msg) = @_;
-    my ($dst, $dst_path, $link_it);
+sub refile_one($$$) {
+    my($src, $dsts, $msg) = @_;
+    my($dst, $dst_path, $link_it);
 
     foreach $dst (@{$dsts}) {
-	if ($NewMsgCache{$dst}){
+	if ($NewMsgCache{$dst}) {
 	    $NewMsgCache{$dst} =~ s|([^/]+)$|$1+1|e; # increment cache
 	    $dst_path = $NewMsgCache{$dst};
 	} else {
@@ -209,8 +208,8 @@ sub refile_one ($$$) {
     }
 }
 
-sub local2imap ($$$) {
-    my ($src, $dsts, $msgs) = @_;
+sub local2imap($$$) {
+    my($src, $dsts, $msgs) = @_;
     my $msg;
 
     foreach $msg (@$msgs) {
@@ -222,9 +221,9 @@ sub local2imap ($$$) {
     }
 }
 
-sub news2imap ($$$) {
-    my ($src, $dsts, $msgs) = @_;
-    my ($msg, $rc, $Message);
+sub news2imap($$$) {
+    my($src, $dsts, $msgs) = @_;
+    my($msg, $rc, $Message);
 
     foreach $msg (@$msgs) {
 	($rc, $Message) = nntp_get_message($src, $msg);
@@ -233,19 +232,82 @@ sub news2imap ($$$) {
     }
 }
 
-sub imap2imap ($$$) {
+sub imap2imap($$$) {
     imap_refile(@_);
 }
 
-sub uniq (@) {
+sub uniq(@) {
     my @array = @_;
     my %hash;
 
-    foreach (@array){
+    foreach (@array) {
 	$hash{$_} = $_;
     }
     return keys(%hash);
 }
+
+__END__
+
+=head1 NAME
+
+immv - file mail/news message in other folders
+
+=head1 SYNOPSIS
+
+B<immv> [OPTIONS] FOLDER... MSGS...
+
+=head1 DESCRIPTION
+
+The I<immv> command moves messages from the source folder to the
+destination folders.
+
+This command is provided by IM (Internet Message).
+
+=head1 OPTIONS
+
+=over 5
+
+=item I<-s, --src=FOLDER>
+
+Set source folder.  Default value is "+inbox".
+
+=item I<-d, --dst=FOLDER,FOLDER...>
+
+Set destination folders.  "--dst=+xxx" is equivalent to "+xxx".
+
+=item I<-l, --link={on,off}>
+
+Remain original msg in src folder.
+
+=item I<-S, --sshserver=SERVER>
+
+SSH port relay server.
+
+=item I<-n, --noharm={on,off}>
+
+Display the commands but do not actually execute them.
+
+=item I<-v, --verbose={on,off}>
+
+Print verbose messages when running.
+
+=item I<--debug=DEBUG_OPTION>
+
+Print debug messages when running.
+
+=item I<-h, --help>
+
+Display help message and exit.
+
+=back
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

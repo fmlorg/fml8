@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Jul  2, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "imsort version 20000414(IM141)";
+my $VERSION = "imsort version 20021207(IM142)";
 
 $Prog = 'imsort';
 
@@ -35,11 +35,10 @@ use vars qw($Prog $EXPLANATION @OptConfig
 ## Environments
 ##
 
-$EXPLANATION = "
-$Prog :: Internet Message Sort
-$VERSION
+$EXPLANATION = "$VERSION
+sort mail/news messages
 
-Usage: $Prog [options] +folder [msgs...]
+Usage: $Prog [OPTIONS] FOLDER [MSGS...]
 ";
 
 @OptConfig = (
@@ -91,7 +90,7 @@ my %MONTH = ('Jan',  1, 'Feb',  2, 'Mar',  3, 'Apr',  4,
 	     'May',  5, 'Jun',  6, 'Jul',  7, 'Aug',  8,
 	     'Sep',  9, 'Oct', 10, 'Nov', 11, 'Dec', 12);
 
-sub rxp_or  { join('|', @_); }
+sub rxp_or { join('|', @_); }
 my $m_rxp = rxp_or(keys(%MONTH));
 my $z_rxp = rxp_or(keys(%ZONE), '[-+]\d{4}');
 
@@ -106,9 +105,9 @@ exit $EXIT_SUCCESS;
 ## Work horse
 ##
 
-sub imsort ($$$$) {
-    my ($src, $msgs, $mode, $field) = @_;
-    my ($i, $path, $from, $to, $tmp, @msg_all, @msg_paths, @sorted_index);
+sub imsort($$$$) {
+    my($src, $msgs, $mode, $field) = @_;
+    my($i, $path, $from, $to, $tmp, @msg_all, @msg_paths, @sorted_index);
     my @param = ();
 
     my $HOLE_PATH = get_impath($src, 'new');
@@ -151,13 +150,13 @@ sub imsort ($$$$) {
     touch_folder($src) unless $opt_noharm;
 }
 
-sub get_field_value ($$$) {
-    my ($path, $field, $smode) = @_;
+sub get_field_value($$$) {
+    my($path, $field, $smode) = @_;
     local $_;
     local $/ = '';
-    my ($ml, $num);
+    my($ml, $num);
 
-    if (im_open(\*MSG, "< $path")){
+    if (im_open(\*MSG, "< $path")) {
 	($_ = <MSG>) =~ s/\n\s+/ /g;
 	close(MSG);
     } else {
@@ -167,7 +166,7 @@ sub get_field_value ($$$) {
     ($_) = /^$field:\s+([^\n]*)/imo;
     if (lc($field) eq 'subject') {
 	if ($smode eq 'ml') {
-	  if(s/^[\[\(]([^\]\)]*)[\]\)]\s*//i){
+	  if (s/^[\[\(]([^\]\)]*)[\]\)]\s*//i) {
 	    $1 =~ /^(.*)[:,\s](.*)$/;       $ml=$1; $num=$2;
 	    s/^(re:\s*)(.*)$/$2$1/i;
 	    $_ = $ml . $_ . $num;
@@ -180,8 +179,8 @@ sub get_field_value ($$$) {
 	m/(\d+)\D*$/;
 	$_ = $1;
     }
-    if ($smode eq 'date'){
-	if (/(\d+)\s+($m_rxp)\s+(\d+)\s+(\d+):(\d+)(:(\d+))?\s*($z_rxp)?/io){
+    if ($smode eq 'date') {
+	if (/(\d+)\s+($m_rxp)\s+(\d+)\s+(\d+):(\d+)(:(\d+))?\s*($z_rxp)?/io) {
 	    ## Y2K: conform to drums
 	    if ($3 < 50) {
 		return sec_from_epoc($3 + 2000, $MONTH{$2}, $1,
@@ -199,8 +198,8 @@ sub get_field_value ($$$) {
     return $_;
 }
 
-sub sec_from_epoc ($$$$$$$) {
-    my ($y, $m, $d, $hh, $mm, $ss, $tz) = @_;
+sub sec_from_epoc($$$$$$$) {
+    my($y, $m, $d, $hh, $mm, $ss, $tz) = @_;
 
     $tz = ($ZONE{$tz} * 3600) || (int($tz/100)*3600 + ($tz%100)*60);
 
@@ -208,6 +207,65 @@ sub sec_from_epoc ($$$$$$$) {
     ($y * 365 + int($y/4) - int($y/100) + int($y/400) + $TBL[$m] + $d - 719469)
 	* 86400	+ $hh * 3600 + $mm * 60 + $ss - $tz;
 }
+
+__END__
+
+=head1 NAME
+
+imsort - sort mail/news messages
+
+=head1 SYNOPSIS
+
+B<imsort> [OPTIONS] FOLDER [MSGS...]
+
+=head1 DESCRIPTION
+
+The I<imsort> command sorts mail/news messages in a folder.
+
+This command is provided by IM (Internet Message).
+
+=head1 OPTIONS
+
+=over 5
+
+=item I<-s, --src=FOLDER>
+
+Set source folder.  Default value is "+inbox".
+"--src=+xxx" is equivalent to "+xxx".
+
+=item I<-f, --field=STRING>
+
+Sort by the specified field.  Default value is "date".
+
+=item I<-m, --mode=STRING>
+
+Set sort mode to date, num, text or ml.  Default value is "date".
+
+=item I<-n, --noharm={on,off}>
+
+Display the commands but do not actually execute them.
+
+=item I<-v, --verbose={on,off}>
+
+Print verbose messages when running.
+
+=item I<--debug=DEBUG_OPTION>
+
+Print debug messages when running.
+
+=item I<-h, --help>
+
+Display help message and exit.
+
+=back
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::TcpTransaction.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::TcpTransaction.pm version 20021207(IM142)";
 
 package IM::TcpTransaction;
 require 5.003;
@@ -31,21 +31,6 @@ use vars qw(@ISA @EXPORT);
 	get_session_log set_cur_server get_cur_server get_cur_server_original_form
 	pool_priv_sock);
 
-=head1 NAME
-
-TcpTransaction - TCP Transaction processing interface for SMTP and NNTP
-
-=head1 SYNOPSIS
-
-$socket = &connect_server(server_list, protocol, log_flag);
-$return_code = &tcp_command(socket, command_string, log_flag);
-@response = &command_response;
-&set_command_response(response_string_list);
-
-=head1 DESCRIPTION
-
-=cut
-
 use vars qw($Cur_server $Cur_server_original_form $Session_log $TcpSockName
 	    $SOCK @Response $Logging @SockPool @Sock6Pool);
 BEGIN {
@@ -54,7 +39,7 @@ BEGIN {
     $TcpSockName = 'tcp00';
 }
 
-sub log_transaction () {
+sub log_transaction() {
     use IM::Log;
 }
 
@@ -66,8 +51,8 @@ sub log_transaction () {
 #	root: privilidge port required
 #	return value: handle if success
 #
-sub connect_server ($$$) {
-    my ($servers, $serv, $root) = @_;
+sub connect_server($$$) {
+    my($servers, $serv, $root) = @_;
 
     if ($#$servers < 0) {
 	im_err("no server specified for $serv\n");
@@ -77,14 +62,14 @@ sub connect_server ($$$) {
     $SIG{'ALRM'} = \&alarm_func;
 
     no strict 'refs'; # XXX
-    local (*SOCK) = \*{$TcpSockName};
+    local(*SOCK) = \*{$TcpSockName};
     $SOCK = $serv;
     @Response = ();
-    my (@he_infos);
-    my ($s, $localport, $remoteport);
+    my(@he_infos);
+    my($s, $localport, $remoteport);
     foreach $s (@$servers) {
 	$Cur_server_original_form = $s;
-	my ($r) = ($#$servers >= 0) ? 'skipped' : 'failed';
+	my($r) = ($#$servers >= 0) ? 'skipped' : 'failed';
 	# manage server[/remoteport]%localport
 	if ($s =~ s/\%(\d+)$//) {
 	    $localport = $1;
@@ -95,14 +80,14 @@ sub connect_server ($$$) {
 		next unless ($remoteport = getserv($serv, 'tcp'));
 	    }
 	    if ($main::SSH_server eq 'localhost') {
-		im_warn( "Don't use port-forwarding to `localhost'.\n" );
+		im_warn("Don't use port-forwarding to `localhost'.\n");
 		$Cur_server = "$s/$remoteport";
 	    } else {
-		if ( $remoteport = &ssh_proxy($s,$remoteport,$localport,$main::SSH_server) ) {
+		if ($remoteport = &ssh_proxy($s,$remoteport,$localport,$main::SSH_server)) {
 		    $s = 'localhost';
 		    $Cur_server = "$Cur_server%$remoteport";
 		} else { # Connection failed.
-		    im_warn( "Can't login to $main::SSH_server\n" );
+		    im_warn("Can't login to $main::SSH_server\n");
 		    if ($serv eq 'smtp') {
 			&log_action($serv, $Cur_server,
 				    join(',', @main::Recipients), $r, @Response);
@@ -138,7 +123,7 @@ sub connect_server ($$$) {
 	    next;
 	}
 	while ($#he_infos >= 0) {
-	    my ($family, $socktype, $proto, $sin, $canonname)
+	    my($family, $socktype, $proto, $sin, $canonname)
 		= splice(@he_infos, 0, 5);
 	    if ($root && unixp()) {
 		my $name = priv_sock($family);
@@ -207,9 +192,9 @@ sub connect_server ($$$) {
 #		 1: recoverable error (should be retried)
 #		-1: unrecoverable error
 #
-sub tcp_command ($$$) {
-    my ($CHAN, $command, $fake) = @_;
-    my ($resp, $stat, $rcode, $logcmd);
+sub tcp_command($$$) {
+    my($CHAN, $command, $fake) = @_;
+    my($resp, $stat, $rcode, $logcmd);
 
     @Response = ();
     $stat = '';
@@ -266,9 +251,9 @@ sub tcp_command ($$$) {
 # send_command(channel, command, fake_message)
 #	return value: the first line of responses
 #
-sub send_command ($$$) {
-    my ($CHAN, $command, $fake) = @_;
-    my ($resp, $logcmd);
+sub send_command($$$) {
+    my($CHAN, $command, $fake) = @_;
+    my($resp, $logcmd);
     if ($command) {
 	print $CHAN "$command\r\n";
 	if ($fake) {
@@ -299,9 +284,9 @@ sub send_command ($$$) {
     return $resp;
 }
 
-sub send_data ($$$) {
-    my ($CHAN, $data, $fake) = @_;
-    my ($logdata);
+sub send_data($$$) {
+    my($CHAN, $data, $fake) = @_;
+    my($logdata);
     $data =~ s/\r?\n?$//;
     print $CHAN "$data\r\n";
     if ($fake) {
@@ -313,7 +298,7 @@ sub send_data ($$$) {
     $Session_log .= "<<< $logdata\n" if ($Logging);
 }
 
-sub next_response ($) {
+sub next_response($) {
     my $CHAN = shift;
     my $resp;
 
@@ -334,36 +319,36 @@ sub next_response ($) {
     return $resp;
 }
 
-sub command_response () {
+sub command_response() {
     return @Response;
 }
 
-sub set_command_response (@) {
+sub set_command_response(@) {
     @Response = @_;
 }
 
-sub tcp_logging ($) {
+sub tcp_logging($) {
 #   conversations are saved in $Session_log if true
     $Logging = shift;
 }
 
-sub get_session_log () {
+sub get_session_log() {
     return $Session_log;
 }
 
-sub set_cur_server ($) {
+sub set_cur_server($) {
     $Cur_server = shift;
 }
 
-sub get_cur_server () {
+sub get_cur_server() {
     return $Cur_server;
 }
 
-sub get_cur_server_original_form () {
+sub get_cur_server_original_form() {
     return $Cur_server_original_form;
 }
 
-sub pool_priv_sock ($) {
+sub pool_priv_sock($) {
     my $count = shift;
 
     pool_priv_sock_af($count, AF_INET);
@@ -373,12 +358,12 @@ sub pool_priv_sock ($) {
     }
 }
 
-sub pool_priv_sock_af ($$) {
-    my ($count, $family) = @_;
+sub pool_priv_sock_af($$) {
+    my($count, $family) = @_;
     my $privport = 1023;
 
     no strict 'refs'; # XXX
-    my ($pe_name, $pe_aliases, $pe_proto);
+    my($pe_name, $pe_aliases, $pe_proto);
     ($pe_name, $pe_aliases, $pe_proto) = getprotobyname ('tcp');
     unless ($pe_name) {
 	$pe_proto = 6;
@@ -389,7 +374,7 @@ sub pool_priv_sock_af ($$) {
 	    return -1;
 	}
 	while ($privport > 0) {
-	    my ($ANYADDR, $psin);
+	    my($ANYADDR, $psin);
 
 	    im_debug("binding port $privport.\n") if (&debug('tcp'));
 	    if ($family == AF_INET) {
@@ -419,9 +404,9 @@ sub pool_priv_sock_af ($$) {
     return 0;
 }
 
-sub priv_sock ($) {
-    my ($family) = shift;
-    my ($sock_name);
+sub priv_sock($) {
+    my($family) = shift;
+    my($sock_name);
 
     if ($family == AF_INET) {
 	return '' if ($#SockPool < 0);
@@ -438,12 +423,12 @@ sub alarm_func {
     im_die("connection error\n");
 }
 
-sub im_getaddrinfo ($$;$$$$) {
+sub im_getaddrinfo($$;$$$$) {
     return getaddrinfo(@_) if (defined &getaddrinfo);
 
-    my ($node, $serv, $family, $socktype, $proto, $flags) = @_;
+    my($node, $serv, $family, $socktype, $proto, $flags) = @_;
 
-    my ($pe_name, $pe_aliases, $pe_proto, $se_port);
+    my($pe_name, $pe_aliases, $pe_proto, $se_port);
     if (unixp()) {
 	$proto = 'tcp' unless ($proto);
 	($pe_name, $pe_aliases, $pe_proto) = getprotobyname($proto);
@@ -451,7 +436,7 @@ sub im_getaddrinfo ($$;$$$$) {
     $pe_proto = 6 unless ($pe_name);
     return unless ($se_port = getserv($serv, $proto));
 
-    my ($he_name, $he_alias, $he_type, $he_len, @he_addrs);
+    my($he_name, $he_alias, $he_type, $he_len, @he_addrs);
     if ($node =~ /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/) {
 	@he_addrs = (pack('C4', $1, $2, $3, $4));
     } else {
@@ -462,7 +447,7 @@ sub im_getaddrinfo ($$;$$$$) {
 	return unless ($he_name);
     }
 
-    my ($he_addr, @infos);
+    my($he_addr, @infos);
     foreach $he_addr (@he_addrs) {
 	push(@infos, AF_INET, $socktype, $pe_proto,
 	     pack_sockaddr_in($se_port, $he_addr), $he_name);
@@ -471,13 +456,13 @@ sub im_getaddrinfo ($$;$$$$) {
 }
 
 sub getserv($$) {
-    my ($serv, $proto) = @_;
+    my($serv, $proto) = @_;
 
-    my ($se_port);
+    my($se_port);
     if ($serv =~ /^\d+$/o) {
 	$se_port = $serv;
     } else {
-	my ($se_name, $se_aliases);
+	my($se_name, $se_aliases);
 	($se_name, $se_aliases, $se_port) = getservbyname($serv, $proto)
 	    if (unixp());
 	unless ($se_name) {
@@ -501,6 +486,35 @@ sub getserv($$) {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::TcpTransaction - TCP transaction processing interface for SMTP and NNTP
+
+=head1 SYNOPSIS
+
+ use IM::TcpTransaction;
+
+ $socket = &connect_server(server_list, protocol, log_flag);
+ $return_code = &tcp_command(socket, command_string, log_flag);
+ @response = &command_response;
+ &set_command_response(response_string_list);
+
+=head1 DESCRIPTION
+
+The I<IM::TcpTransaction> module handles TCP transaction for SMTP and NNTP.
+
+This modules is provided by IM (Internet Message).
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

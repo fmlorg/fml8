@@ -6,7 +6,7 @@
 		);
 
 sub scan_sub {
-    local ($href) = shift;
+    local($href) = shift;
 
     my($folder, $pattern);
     my($eval_string);

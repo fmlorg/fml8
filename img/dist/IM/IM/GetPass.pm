@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 30, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::GetPass.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::GetPass.pm version 20021207(IM142)";
 
 package IM::GetPass;
 require 5.003;
@@ -24,19 +24,7 @@ use vars qw(@ISA @EXPORT);
 @EXPORT = qw(getpass getpass_interact
 	     loadpass savepass connect_agent talk_agent findpass);
 
-=head1 NAME
-
-GetPass - Get password from tty or ...
-
-=head1 SYNOPSIS
-    
-($pass, $agtfound, $interact) = getpass('imap', $auth, $host, $user);
-
-=head1 DESCRIPTION
-
-=cut
-
-sub getpass ($$$$) {
+sub getpass($$$$) {
     my($proto, $auth, $host, $user) = @_;
     my $pass = '';
     my $agtfound = 0;
@@ -57,14 +45,14 @@ sub getpass ($$$$) {
     return ($pass, $agtfound, $interact);
 }
 
-sub getpass_interact ($) {
-    my ($prompt) = @_;
-    my ($secret, $termios, $c_lflag);
+sub getpass_interact($) {
+    my($prompt) = @_;
+    my($secret, $termios, $c_lflag);
 
     if (! -t STDIN) {
 	# stty is not effective for Mule since it's not terminal base.
 	# Anyway, Mew never echos back even if getpass echos back.
-    } elsif (eval 'require POSIX' & ! win95p() ) {
+    } elsif (eval 'require POSIX' & !win95p()) {
 	import POSIX qw(termios_h);
 	$termios = new POSIX::Termios;
 	$termios->getattr(fileno(STDIN));
@@ -73,7 +61,7 @@ sub getpass_interact ($) {
 	$termios->setattr(fileno(STDIN), &POSIX::TCSANOW);
     } elsif (unixp()) {		# non-POSIX-ish UNIX.
 	# stty might be available.
-	my ($OldPath) = $ENV{'PATH'};	# for SUID version
+	my($OldPath) = $ENV{'PATH'};	# for SUID version
 	$ENV{'PATH'} = '/bin:/usr/bin';
 	system('/bin/stty -echo'); # Ignore errors.
 	$ENV{'PATH'} = $OldPath;
@@ -92,7 +80,7 @@ sub getpass_interact ($) {
 	$termios->setlflag($c_lflag);
 	$termios->setattr(fileno(STDIN), &POSIX::TCSANOW);
     } elsif (unixp()) {		# non-POSIX-ish UNIX.
-	my ($OldPath) = $ENV{'PATH'};	# for SUID version
+	my($OldPath) = $ENV{'PATH'};	# for SUID version
 	$ENV{'PATH'} = '/bin:/usr/bin';
 	system('/bin/stty echo');	# Ignore errors.
 	$ENV{'PATH'} = $OldPath;
@@ -101,9 +89,9 @@ sub getpass_interact ($) {
     return $secret;
 }
 
-sub loadpass ($$$$) {
-    my ($proto, $auth, $path, $user) = @_;
-    local ($_);
+sub loadpass($$$$) {
+    my($proto, $auth, $path, $user) = @_;
+    local($_);
     my $key = &connect_agent(0);
     return '' if ($key eq '');
     my @keys = unpack('C*', $key);
@@ -124,9 +112,9 @@ sub loadpass ($$$$) {
     }
 }
 
-sub savepass ($$$$$) {
-    my ($proto, $auth, $path, $user, $pass) = @_;
-    local ($_);
+sub savepass($$$$$) {
+    my($proto, $auth, $path, $user, $pass) = @_;
+    local($_);
     my $key = &connect_agent(0);
     return '' if ($key eq '');
     my @keys = unpack('C*', $key);
@@ -141,8 +129,8 @@ sub savepass ($$$$$) {
     &talk_agent("SAVE\t$proto\t$auth\t$path\t$user\nPASS\t$pass\n", 0);
 }
 
-sub connect_agent ($) {
-    my ($surpresserror) = shift;
+sub connect_agent($) {
+    my($surpresserror) = shift;
     require Socket && import Socket;
 
     my $realuser = im_getlogin();
@@ -150,7 +138,7 @@ sub connect_agent ($) {
 	im_warn("pwagent: can not get login name\n") unless ($surpresserror);
 	return '';
     }
-    my $dir = "/tmp/im-$realuser";
+    my $dir = &pwagent_tmp_path() . "-$realuser";
 
     my $port = &pwagentport();
     if ($port > 0) {
@@ -172,7 +160,7 @@ sub connect_agent ($) {
 	    return '';
 	}
 
-	my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev) = stat($dir);
+	my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev) = stat($dir);
 	if ($mode & 0077) {
 	    im_warn("pwagent: invalid mode: $dir\n") unless ($surpresserror);
 	    return '';
@@ -199,8 +187,8 @@ sub connect_agent ($) {
     return $res;
 }
 
-sub talk_agent ($) {
-    my ($msg) = shift;
+sub talk_agent($) {
+    my($msg) = shift;
     print SOCK $msg;
     my $res = <SOCK>;
     shutdown (SOCK, 2);
@@ -210,9 +198,9 @@ sub talk_agent ($) {
 }
 
 sub findpass($$$$) {
-    my ($proto, $auth, $host, $user) = @_;
-    local ($_);
-    my ($passfile);
+    my($proto, $auth, $host, $user) = @_;
+    local($_);
+    my($passfile);
 
     foreach $passfile (split(',', &pwfiles())) {
 	$passfile = &expand_path($passfile);
@@ -222,8 +210,8 @@ sub findpass($$$$) {
 	    next if (/^(#.*)?$/); 
 #	    s/\s+(\#.*)?$//;	# remove comments
 	    if (/^(\S+)\s+(\S+)\s+(\S+)\s+(\S.+)$/) {
-		my ($tmp_host, $tmp_user, $tmp_pass) = ($2, $3, $4);
-		my ($tmp_proto, $tmp_auth) = split('/', $1);
+		my($tmp_host, $tmp_user, $tmp_pass) = ($2, $3, $4);
+		my($tmp_proto, $tmp_auth) = split('/', $1);
 		if (($tmp_proto eq $proto)
 		    && ($tmp_auth eq $auth)
 		    && ($tmp_host eq $host)
@@ -240,6 +228,32 @@ sub findpass($$$$) {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::GetPass - get password from tty or ...
+
+=head1 SYNOPSIS
+    
+ use IM::GetPass;
+
+ ($pass, $agtfound, $interact) = getpass('imap', $auth, $host, $user);
+
+=head1 DESCRIPTION
+
+The I<IM::GetPass> module handles password for mail/news servers.
+
+This modules is provided by IM (Internet Message).
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "imclean version 20000414(IM141)";
+my $VERSION = "imclean version 20021207(IM142)";
 
 $Prog = 'imclean';
 
@@ -34,22 +34,21 @@ use vars qw($Prog $EXPLANATION @OptConfig
 ## Environments
 ##
 
-$EXPLANATION = "
-$Prog :: Internet Message Garbage Cleanup
-$VERSION
+$EXPLANATION = "$VERSION
+mail/news garbage cleanup
 
-Usage: $Prog [options] [msgs...]
+Usage: $Prog [OPTIONS] [FOLDER] [MSGS...]
 ";
 
 @OptConfig = (
     'src;F;;'     => "Set a folder to be cleaned up.",
+    'SSHServer,S;s;localhost;SSH_server'
+                       => 'SSH port relay server.',
     'noharm;b;;'  => "Do not delete files, show what will be performed.",
     'quiet;b;;'   => "Do not show any messages.",
     'verbose;b;;' => 'With verbose messages.',
     'debug;d;;'   => "With debug message.",
     'help;b;;'    => "Show this message.",
-    'SSHServer,S;s;localhost;SSH_server'
-                       => 'SSH port relay server.',
     );
 
 ##
@@ -76,9 +75,9 @@ exit $EXIT_SUCCESS;
 ##
 ## work horse
 
-sub imclean ($@) {
-    my ($folder, @msgs) = @_;
-    my (@paths, $set, $HANDLE);
+sub imclean($@) {
+    my($folder, @msgs) = @_;
+    my(@paths, $set, $HANDLE);
 
     if ($folder !~ /^%/) {
 	@paths = get_message_paths($folder, @msgs);
@@ -90,7 +89,7 @@ sub imclean ($@) {
 	# IMAP folder (%folder[:[user[/auth]]@server])
 	require IM::Imap && import IM::Imap;
 	require IM::GetPass && import IM::GetPass;
-	my ($ifld, $auth, $user, $host);
+	my($ifld, $auth, $user, $host);
 
 	$ifld = $folder;
 	if ($ifld !~ /[:\@]/) {
@@ -101,7 +100,7 @@ sub imclean ($@) {
 	    ($ifld, $auth, $user, $host) = imap_spec($ifld);
 	}
 
-	my ($pass, $agtfound, $interact) = getpass('imap', $auth, $host, $user);
+	my($pass, $agtfound, $interact) = getpass('imap', $auth, $host, $user);
 	im_warn("accessing IMAP/$auth:$user\@$host\n") if (&verbose);
 
 	(my $rc, $HANDLE) = imap_open($auth, $host, $user, $pass);
@@ -133,8 +132,9 @@ sub imclean ($@) {
     if ($folder !~ /^%/) {
 	my $i = 0;
 	foreach (@paths) {
-	    im_die("invalid message specification (unlinked $i message(s))\n")
-		if (!-f $_);
+	    if (! -f $_) {
+		im_die("invalid message specification (unlinked $i message(s))\n");
+	    }
 	    im_unlink($_);
 	    $i++;
 	}
@@ -148,6 +148,67 @@ sub imclean ($@) {
 	touch_folder($folder) unless $opt_noharm;
     }
 }
+
+__END__
+
+=head1 NAME
+
+imclean - mail/news garbage cleanup
+
+=head1 SYNOPSIS
+
+B<imclean> [OPTIONS] [FOLDER] [MSGS...]
+
+=head1 DESCRIPTION
+
+The I<imclean> command delete all mail/news messages from +trash folder.
+
+If you do not want to delete all messages, specify message numbers.
+
+This command is provided by IM (Internet Message).
+
+=head1 OPTIONS
+
+=over 5
+
+=item I<-s, --src=FOLDER>
+
+Set a folder to be cleaned up.  "--src=+xxx" is equivalent to "+xxx".
+Default value is "+trash".
+
+=item I<-S, --sshserver=SERVER>
+
+SSH port relay server.
+
+=item I<-n, --noharm={on,off}>
+
+Do not delete files, show what will be performed.
+
+=item I<-q, --quiet={on,off}>
+
+Do not show any messages.
+
+=item I<-v, --verbose={on,off}>
+
+Print verbose messages when running.
+
+=item I<--debug=DEBUG_OPTION>
+
+Print debug messages when running.
+
+=item I<-h, --help>
+
+Display help message and exit.
+
+=back
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

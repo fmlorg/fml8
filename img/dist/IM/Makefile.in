@@ -4,7 +4,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Nov 16, 2002
 ###
 
 SHELL=	/bin/sh
@@ -35,11 +35,14 @@ moddir=	  $(perldir)/IM
 
 RPOP=	@im_rpop@
 
-PROG =	imali imcat imcd imclean imgrep imhist imhsync imjoin imls immv \
-	impack impath imput impwagent imrm imsetup imsort imstore \
-	imtar immknmz
+PROG =	imali imcat imcd imclean \
+	imgrep imhist imhsync imjoin imls \
+	immknmz immv impack impath imput \
+	impwagent imrm imsetup imsort imstore imtar
 
 ALLPROG = $(PROG) imget
+
+CNF = config.h config.status config.cache config.log configure.lineno
 
 all:
 	@echo everything has been done by configure.
@@ -86,7 +89,7 @@ clean::
 	$(rm) -f IM/Config.pm
 
 distclean:: clean
-	$(rm) -f Makefile config.log config.status config.cache
+	$(rm) -f Makefile $(CNF)
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

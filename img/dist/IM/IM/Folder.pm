@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::Folder.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::Folder.pm version 20021207(IM142)";
 
 package IM::Folder;
 require 5.003;
@@ -26,58 +26,11 @@ use vars qw(@ISA @EXPORT);
 	get_message_paths create_folder touch_folder
         chk_folder_existance chk_msg_existance get_impath);
 
-=head1 NAME
-
-Folder - IM folder handler
-
-=head1 DESCRIPTION
-
-
-=head1 SYNOPSIS
-
-use IM::Folder;
-
-$current_folder_name = &cur_folder();
-
-&set_cur_folder($new_current_folder_name);
-
-($number_of_files,
- $number_of_message_files,
- $minimum_message_number,
- $maximum_message_number) = &folder_info($folder_name);
-
-$message_number = &message_number($message_number_or_name);
-
-@message_number_array = &message_range($message_range_string);
-
-$message_file_path = &message_name($folder_name, $message_number);
-
-=head1 DESCRIPTION
-
-&cur_folder();
-	results "+inbox"
-
-&set_cur_folder("+inbox");
-
-($a, $b, $c, $d) = &folder_info("+inbox");
-	results (10, 3, 1, 3)
-
-&message_number("+inbox", "cur");
-	results 3
-
-&message_range("+inbox", "1-3");
-	results (1, 2, 3)
-
-&message_name("+inbox", "3");
-	results "/usr/home/itojun/Mail/inbox/3"
-
-=cut
-
 #
 # Mail folder related routines.
 #
 
-sub cur_folder () {
+sub cur_folder() {
     my $folder;
     local(*IN);
 
@@ -95,7 +48,7 @@ sub cur_folder () {
     return $folder;
 }
 
-sub set_cur_folder ($) {
+sub set_cur_folder($) {
     my($folder) = @_;
     local(*IN, *OUT);
     my($buf);
@@ -118,7 +71,7 @@ sub set_cur_folder ($) {
     close(OUT);
 }
 
-sub folder_info ($) {
+sub folder_info($) {
     my($folder) = @_;
     local(*DIR);
     my(@allfiles, $filecnt, $numfilecnt, $min, $max);
@@ -135,8 +88,8 @@ sub folder_info ($) {
     return ($filecnt, $numfilecnt, $min, $max);
 }
 
-sub message_list ($) {
-    my ($folder_dir) = @_;
+sub message_list($) {
+    my($folder_dir) = @_;
     my @filesinfolder;
 
     opendir(DIR, $folder_dir) || im_die("can't open $folder_dir.\n");
@@ -146,9 +99,9 @@ sub message_list ($) {
     return @filesinfolder;
 }
 
-sub message_number ($$;@) {
-    my ($folder, $number, @filesinfolder) = @_;
-    my ($folder_dir, $offset, $max, $min);
+sub message_number($$;@) {
+    my($folder, $number, @filesinfolder) = @_;
+    my($folder_dir, $offset, $max, $min);
 
     # simple case: digits
     if ($number !~ /\D/) {
@@ -158,7 +111,7 @@ sub message_number ($$;@) {
     # get folder
     $folder = cur_folder if ($folder eq '');
     $folder_dir = expand_path($folder);
-    return '' if (!-d $folder_dir);
+    return '' if (! -d $folder_dir);
 
     @filesinfolder = message_list($folder_dir) if (scalar(@_) == 2);
 
@@ -203,8 +156,8 @@ sub message_number ($$;@) {
     return '';
 }
 
-sub message_range ($$@) {
-    my ($folder, $range, @filesinfolder) = @_;
+sub message_range($$@) {
+    my($folder, $range, @filesinfolder) = @_;
     my $range_regexp = '\d+|first|last|next|prev';
 
     $folder = cur_folder if ($folder eq '');
@@ -215,7 +168,7 @@ sub message_range ($$@) {
     }
 
     if ($range =~ /^($range_regexp|new)-($range_regexp|new)$/) {
-	my ($start, $end) = ($1, $2);
+	my($start, $end) = ($1, $2);
 
 	$start = message_number($folder, $start, @filesinfolder);
 	$end = message_number($folder, $end, @filesinfolder);
@@ -226,7 +179,7 @@ sub message_range ($$@) {
 	    return grep($start <= $_ && $_ <= $end, @filesinfolder);
 	}
     } elsif ($range =~ /^($range_regexp):([+-]?)(\d+)$/) {
-	my ($start, $dir, $n) = ($1, $2, $3);
+	my($start, $dir, $n) = ($1, $2, $3);
 	if ($dir eq '') {
 	    $dir = ($start eq 'last') ? '-' : '+';
 	}
@@ -247,7 +200,7 @@ sub message_range ($$@) {
     }
 }
 
-sub message_name ($$) {
+sub message_name($$) {
     my($folder, $number) = @_;
 
     $number = &message_number($folder, $number);
@@ -258,9 +211,9 @@ sub message_name ($$) {
     }
 }
 
-sub get_message_paths ($@) {
-    my ($folder, @messages0) = @_; # local @messages0?
-    my ($i, @messages, @x); # local(@messages, @x);?
+sub get_message_paths($@) {
+    my($folder, @messages0) = @_; # local @messages0?
+    my($i, @messages, @x); # local(@messages, @x);?
 
     my $folder_dir = &expand_path($folder);
 
@@ -272,7 +225,7 @@ sub get_message_paths ($@) {
 
     # messages specified.
     # print the path to the message.
-    if (!-d $folder_dir) {
+    if (! -d $folder_dir) {
 	$@ = "no such folder $folder";
 	return ();
     }
@@ -305,7 +258,7 @@ sub get_message_paths ($@) {
     grep($_ = "$folder_dir/$_", @messages);
 }
 
-sub create_folder ($) {
+sub create_folder($) {
     my $folder = shift;
     my $path = &expand_path($folder);
     return 0 if (-d $path);
@@ -331,9 +284,9 @@ sub create_folder ($) {
     return 0;
 }
 
-sub touch_folder ($) {
+sub touch_folder($) {
     if (&usetouchfile()) {
- 	my ($dir) = shift;
+ 	my($dir) = shift;
  	$dir =~ s/\/\d+$//;
  	$dir = &expand_path($dir);
  	my($file) = ($dir . "/" . &touchfile());
@@ -341,7 +294,7 @@ sub touch_folder ($) {
 	print OF "touched by IM.";
 	close(OF);
     } elsif (&os2p) {
-	my ($dir) = shift;
+	my($dir) = shift;
 	$dir =~ s/\/\d+$//;
 	$dir = &expand_path($dir);
 	my $now = time;	# XXX
@@ -352,19 +305,19 @@ sub touch_folder ($) {
 ##
 ## Check folder existance.
 ##
-sub chk_folder_existance (@) {
+sub chk_folder_existance(@) {
     my @folders = @_;
     my $path;
 
     im_debug("chk_folder_existance: folder: @folders\n") if (&debug('all'));
 
-    foreach (@folders){
+    foreach (@folders) {
 	next if /^[%-]/;		# skip IMAP and News folders
 	$path = get_impath($_);
 
 	if (-e $path) {
 	    im_die "folder $_ is not writable. (Nothing was refiled.)\n"
-		if (!-w $path);
+		if (! -w $path);
 	} else {
 	    if (create_folder($path) == 0) {
 		im_warn "created folder $_.\n";
@@ -376,20 +329,21 @@ sub chk_folder_existance (@) {
     im_debug("chk_folder_existance: OK.\n") if (&debug('all'));
 }
 
-sub chk_msg_existance ($@) {
+sub chk_msg_existance($@) {
     my $folder = shift;
     my @paths  = get_impath($folder, @_);
 
     im_debug("chk_msg_existance: folder: $folder msg: @_\n") if (&debug('all'));
 
-    foreach (@paths){
-	im_die "message specification error in $folder. (Nothing was refiled.)\n"
-	    if (!-f $_);
+    foreach (@paths) {
+	if (! -f $_) {
+	    im_die "message specification error in $folder. (Nothing was refiled.)\n";
+	}
     }
     im_debug("chk_msg_existance: OK.\n") if (&debug('all'));;
 }
 
-sub get_impath ($@) {
+sub get_impath($@) {
     my $folder = shift;
     my @msgs  = @_;
     my @paths;
@@ -402,6 +356,64 @@ sub get_impath ($@) {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::Folder - mail/news folder handler
+
+=head1 SYNOPSIS
+
+ use IM::Folder;
+
+ $current_folder_name = &cur_folder();
+
+ &set_cur_folder($new_current_folder_name);
+
+ ($number_of_files,
+  $number_of_message_files,
+  $minimum_message_number,
+  $maximum_message_number) = &folder_info($folder_name);
+
+ $message_number = &message_number($message_number_or_name);
+
+ @message_number_array = &message_range($message_range_string);
+
+ $message_file_path = &message_name($folder_name, $message_number);
+
+=head1 DESCRIPTION
+
+The I<IM::Folder> module handles mail/news message folders.
+
+This modules is provided by IM (Internet Message).
+
+=head1 EXAMPLES
+
+ &cur_folder();
+     results "+inbox"
+
+ &set_cur_folder("+inbox");
+
+ ($a, $b, $c, $d) = &folder_info("+inbox");
+     results (10, 3, 1, 3)
+
+ &message_number("+inbox", "cur");
+     results 3
+
+ &message_range("+inbox", "1-3");
+     results (1, 2, 3)
+
+ &message_name("+inbox", "3");
+     results "/usr/home/itojun/Mail/inbox/3"
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

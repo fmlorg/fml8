@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: May  5, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "imjoin version 20000414(IM141)";
+my $VERSION = "imjoin version 20021207(IM142)";
 
 $Prog = 'imjoin';
 
@@ -33,16 +33,15 @@ use vars qw($Prog $EXPLANATION @EnvConfig @OptConfig $opt_noscan
 ## Environments
 ##
 
-$EXPLANATION = "
-imjoin :: Join Message/partial Messages
-$VERSION
+$EXPLANATION = "$VERSION
+join Message/partial messages
 
-Usage: imjoin [options] msg
+Usage: imjoin [OPTIONS] MSGS
 ";
 
 @OptConfig = (
-	      'src;f;;'     => "Folder.",
-	      'dst;s;+inbox;' => "Folder.",
+	      'src;f;;'     => "Source folder.",
+	      'dst;s;+inbox;' => "Destination folder.",
 	      'verbose;b;;' => 'With verbose messages.',
 	      'debug;d;;'   => "With debug message.",
 	      'help;b;;'    => "Show this message.",
@@ -77,7 +76,7 @@ if ($opt_dst eq "stdout") {
 
 exit $EXIT_SUCCESS;
 
-sub join_msg ($) {
+sub join_msg($) {
     my @msgs = @_;
     my @paths;
     my @index;
@@ -104,7 +103,7 @@ sub join_msg ($) {
 
     # sort each part number on each part
     my $total = 0;
-    my ($path, $header);
+    my($path, $header);
     foreach $path (@paths) {
 	if (im_open(\*MSG, "<$path")) {
 	    $/ = "\n\n";
@@ -170,7 +169,7 @@ sub join_msg ($) {
 			next;
 		    }
 		    last if (/^$/);
-		    push (@Message, "$_\n");
+		    push(@Message, "$_\n");
 		}
 		$header = <MSG>;
 		$skip = 0;
@@ -182,9 +181,9 @@ sub join_msg ($) {
 			next;
 		    }
 		    last if (/^$/);
-		    push (@Message, "$_\n");
+		    push(@Message, "$_\n");
 		}
-		push (@Message, "\n");
+		push(@Message, "\n");
 	    } else {
 		# skip header part
 		<MSG>;
@@ -200,7 +199,7 @@ sub join_msg ($) {
     return @Message;
 }
 
-sub get_paths ($) {
+sub get_paths($) {
     my $msg = shift;
     my $path;
     local $_;
@@ -281,6 +280,56 @@ sub get_paths ($) {
 
     return @paths;
 }
+
+__END__
+
+=head1 NAME
+
+imjoin - join Message/partial messages
+
+=head1 SYNOPSIS
+
+B<imjoin> [OPTIONS] MSGS
+
+=head1 DESCRIPTION
+
+The I<imjoin> command joins Message/partial messages.
+
+This command is provided by IM (Internet Message).
+
+=head1 OPTIONS
+
+=over 5
+
+=item I<-s, --src=FOLDER>
+
+Source folder.
+
+=item I<-d, --dst=FOLDER>
+
+Destination folder.  Default value is "+inbox".
+
+=item I<-v, --verbose={on,off}>
+
+Print verbose messages when running.
+
+=item I<--debug=DEBUG_OPTION>
+
+Print debug messages when running.
+
+=item I<-h, --help>
+
+Display help message and exit.
+
+=back
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Sep 13, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "impwagent version 20000414(IM141)";
+my $VERSION = "impwagent version 20021207(IM142)";
 
 $Prog = 'impwagent';
 
@@ -44,7 +44,7 @@ if ($ARGV[0] =~ /stop|quit/i) {
     } else {
 	print "$Prog: exit message: $res\n";
     }
-    exit 0;
+    exit $EXIT_SUCCESS;
 }
 
 # clear password cache
@@ -56,25 +56,29 @@ if ($ARGV[0] =~ /clear/i) {
     } else {
 	print "$Prog: exit message: $res\n";
     }
-    exit 0;
+    exit $EXIT_SUCCESS;
 }
 
 if ($ARGV[0] !~ /start/i && @ARGV > 0) {
     print <<EOF;
-$Prog: IM Password Agent -- hold passwords to reuse on later sessions.
+$VERSION
+hold passwords for IM
 
 Usage:
-	$Prog help		show this message
-	$Prog [start]	start $Prog
-	$Prog stop/quit	terminate $Prog
-	$Prog clear		clear passwords held by $Prog
+	$Prog [start]       start $Prog
+	$Prog stop/quit     terminate $Prog
+	$Prog clear         clear passwords held by $Prog
+	$Prog help          show this message
+
+This command holds passwords to reuse on later sessions for IM.
 
 If you wish to use the feature supplied by $Prog, put "UsePwAgent=yes"
-in your Config file, and start $Prog manually before using IM-commands
+in your Config file, and start $Prog manually before using im* commands
 which require passwords.
 
+Report bugs to <img\@mew.org>
 EOF
-    exit 0;
+    exit $EXIT_SUCCESS;
 }
 
 # duplicate check
@@ -82,60 +86,53 @@ $res = &connect_agent(1);
 $res = &talk_agent("PING\n") if ($res ne '');
 if ($res eq 'PONG') {
     print STDERR "$Prog: already running.\n";
-    exit 1;
+    exit $EXIT_ERROR;
 }
 
 # preparing socket directory
 my $realuser = im_getlogin();
 unless ($realuser) {
     print STDERR "$Prog: can not get login name.\n";
-    exit 1;
+    exit $EXIT_ERROR;
 }
-
-my $dir = "/tmp/im-$realuser";
+my $dir = &pwagent_tmp_path() . "-$realuser";
 
 my $port = &pwagentport();
 if ($port > 0) {
-    rmdir ($dir);
-
-    if (-e $dir) {
-	print STDERR "$Prog: can not re-create directory: $dir.\n";
-	exit 1;
+    rmdir $dir;
+    unless (mkdir($dir, 0700)) {
+	print STDERR "$Prog: can not create directory: $dir.\n";
+	exit $EXIT_ERROR;
     }
-
-    mkdir ($dir, 0700);
 
     unless (socket(SOCK, &AF_INET, &SOCK_STREAM, 0)) {
 	print STDERR "$Prog: socket: $!\n";
-	exit 1;
+	exit $EXIT_ERROR;
     }
     my $sin = sockaddr_in($port, inet_aton('127.0.0.1'));
     unless (bind(SOCK, $sin)) {
 	print STDERR "$Prog: bind: $!\n";
-	exit 1;
+	exit $EXIT_ERROR;
     }
 } else {
     $sockname = "$dir/pw";
 
     # be sure the dir is not a link
-    unlink ($sockname);
-    rmdir ($dir);
-
-    if (-e $dir) {
-	print STDERR "$Prog: can not re-create directory: $dir.\n";
-	exit 1;
+    unlink $sockname;
+    rmdir $dir;
+    unless (mkdir($dir, 0700)) {
+	print STDERR "$Prog: can not create directory: $dir.\n";
+	exit $EXIT_ERROR;
     }
-
-    mkdir ($dir, 0700);
 
     unless (socket(SOCK, &AF_UNIX, &SOCK_STREAM, 0)) {
 	print STDERR "$Prog: socket: $!\n";
-	exit 1;
+	exit $EXIT_ERROR;
     }
     my $sun = sockaddr_un($sockname);
     unless (bind(SOCK, $sun)) {
 	print STDERR "$Prog: bind: $!\n";
-	exit 1;
+	exit $EXIT_ERROR;
     }
 
     chmod(0600, $sockname);
@@ -150,12 +147,12 @@ $SIG{'ALRM'} = \&alarm_func;
 my $id = fork();
 if ($id < 0) {
     print STDERR "$Prog: can not fork: $!\n";
-    exit 1;
+    exit $EXIT_ERROR;
 }
 
 if ($id) {
     print STDERR "$Prog: started (pid: $id)\n";
-    exit 0;
+    exit $EXIT_SUCCESS;
 }
 
 chdir($dir);
@@ -169,11 +166,11 @@ my $key = pack('C2', @_);
 for (;;) {
     unless (accept(REQ, SOCK)) {
 	print STDERR "$Prog: accept: $!\n";
-	exit 1;
+	exit $EXIT_ERROR;
     }
     if ($port > 0) {
 	my $sa = getpeername(REQ);
-	my ($fa, $po, $ad) = sockaddr_in($sa);
+	my($fa, $po, $ad) = sockaddr_in($sa);
 	next if ($ad != inet_aton('127.0.0.1'));
     }
     select(REQ); $| = 1; select(STDOUT);
@@ -207,20 +204,75 @@ for (;;) {
     } else {
 	# protocol error (including QUIT)
 	print REQ "BYE\n";
-	shutdown (REQ, 2);
-	close (REQ);
-	close (SOCK);
-	unlink ($sockname) if ($sockname);
-	exit 1;
+	shutdown(REQ, 2);
+	close(REQ);
+	close(SOCK);
+	unlink($sockname) if ($sockname);
+	rmdir $dir;
+	exit $EXIT_ERROR;
     }
     substr($_, 0, length($_)) = '0123456789abcdef';
-    shutdown (REQ, 2);
-    close (REQ);
+    shutdown(REQ, 2);
+    close(REQ);
 }
 
 sub alarm_func {
 #   no operation
 }
+
+__END__
+
+=head1 NAME
+
+impwagent - hold passwords for IM
+
+=head1 SYNOPSIS
+
+B<impwagent> [start | stop | quit | clear | help]
+
+=head1 DESCRIPTION
+
+The I<impwagent> command holds passwords to reuse on later
+sessions for IM.
+
+If you wish to use the feature supplied by impwagent, put
+
+    UsePwAgent=yes
+
+in your Config file, and start impwagent manually before using im* commands
+which require passwords.
+
+This command is provided by IM (Internet Message).
+
+=head1 OPTIONS
+
+=over 5
+
+=item I<start>
+
+Start impwagent.  This is the default behavior.
+
+=item I<stop>, I<quit>
+
+Terminate impwagent.
+
+=item I<clear>
+
+Clear passwords held by impwagent.
+
+=item I<help>
+
+Show help message.
+
+=back
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 08, 1998
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "imtar version 20000414(IM141)";
+my $VERSION = "imtar version 20021207(IM142)";
 
 $Prog = 'imtar';
 
@@ -33,11 +33,10 @@ use vars qw($Prog $EXPLANATION @OptConfig
 ## Environments
 ##
 
-$EXPLANATION = "
-$Prog :: compress folder into a single file.
-$VERSION
+$EXPLANATION = "$VERSION
+archiving utility for mail/news messages
 
-usage: $Prog [options] [+folder] [msg(s)]
+Usage: $Prog [OPTIONS] [FOLDER] [MSGS]
 ";
 
 @OptConfig =(
@@ -77,8 +76,8 @@ exit $EXIT_SUCCESS;
 ##
 ## Work horse
 ##
-sub make_mmdf ($$$) {
-    my ($src, $dst, $msgs) = @_;
+sub make_mmdf($$$) {
+    my($src, $dst, $msgs) = @_;
     my $msg;
     my @msg_paths;
 
@@ -95,7 +94,7 @@ sub make_mmdf ($$$) {
             im_die("cannot open $dst\n");
         }
     }
-    foreach (@msg_paths){
+    foreach (@msg_paths) {
         $msg = $_;
         im_notice("source file: \"$msg\"\n");
         &open_msg($msg);
@@ -104,18 +103,77 @@ sub make_mmdf ($$$) {
     print STDERR "done\n" unless $opt_noharm;
 }
 
-sub open_msg ($) {
+sub open_msg($) {
     my $msg = $_;
     my $mmdf_delimiter="\001\001\001\001";
     if (im_open(\*ART, "<$msg")) {
         print "$mmdf_delimiter\n";
-        print while(<ART>);
+        print while (<ART>);
         print "$mmdf_delimiter\n";
         close(ART);
     } else {
         im_die("cannot open $msg\n");
     }
 }
+
+__END__
+
+=head1 NAME
+
+imtar - archiving utility for mail/news messages
+
+=head1 SYNOPSIS
+
+B<imtar> [OPTIONS] [FOLDER] [MSGS]
+
+=head1 DESCRIPTION
+
+The I<imtar> command is an archiving utility for mail/news messages.
+
+Messages are converted into a single MMDF file ("^A^A^A^A" + MSG
++ "^A^A^A^A", "^A^A^A^A" + MSG + "^A^A^A^A", ...).  You can
+extract messages by the I<imget> command.
+
+This command is provided by IM (Internet Message).
+
+=head1 OPTIONS
+
+=over 5
+
+=item I<-s, --src=FOLDER>
+
+Set source folder.  Default value is "+inbox".
+"--src=+xxx" is equivalent to "+xxx".
+
+=item I<-d, --dst=STRING>
+
+Destination MMDF file.  Default value is "./msgbox".
+
+=item I<-n, --noharm={on,off}>
+
+No operation.  Show what will happen.
+
+=item I<-v, --verbose={on,off}>
+
+Print verbose messages when running.
+
+=item I<--debug=DEBUG_OPTION>
+
+Print debug messages when running.
+
+=item I<-h, --help>
+
+Display help message and exit.
+
+=back
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

@@ -6,6 +6,10 @@
 
                        Sep 07, 1998
 
+        Modified by Tatsuya Kinoshita on Dec  7, 2002
+OS2 support is outdated.  Last update: Sep 23, 1998 (IM101).
+
+
 * Install Perl 5.004_03 if not installed.
 
    !!!!!!!!!!!!!!!!!!!!!!   IMPORTANT   !!!!!!!!!!!!!!!!!!!!!!

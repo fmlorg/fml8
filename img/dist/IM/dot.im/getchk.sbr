@@ -1,7 +1,7 @@
 # get messages sent to me directly
 
 sub getchk_sub {
-    local ($href) = shift;
+    local($href) = shift;
 
 #   if (my_addr($href->{'to'}, $href->{'cc'}) {
     if ($href->{'to'} =~ /motonori/i || $href->{'cc'} =~ /motonori/i) {

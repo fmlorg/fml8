@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::Config.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::Config.pm version 20021207(IM142)";
 
 package IM::Config;
 require 5.003;
@@ -40,8 +40,8 @@ use vars qw(@ISA @EXPORT);
     mbox_style
     nntpservers nntphistoryfile nntpauthuser set_nntpauthuser
     popaccount pophistoryfile imapaccount httpproxy noproxy
-    usepwagent pwagentport usepwfiles pwfiles
-    expand_path usetouchfile touchfile namazuv2
+    usepwagent pwagentport pwagent_tmp_dir pwagent_tmp_path usepwfiles pwfiles
+    expand_path usetouchfile touchfile namazuv2 namazu_lock_dir namazu_lock_path
     pop_timeout imap_timeout nntp_timeout dns_timeout
     connect_timeout command_timeout rcv_buf_siz
     db_type file_attr $SSH_PATH);
@@ -70,7 +70,7 @@ $IM_DB_TYPE = '@im_db_type@';
 $FSYNC_NO = @im_fsync_no@;
 $SSH_PATH = "@im_path_ssh@";
 
-sub file_attr () {
+sub file_attr() {
     return @im_file_attr@;
 }
 
@@ -86,7 +86,7 @@ $HOME_DIR =~ s:\\:/:g;     # "\home\user" -> "/home/user"
 $HOME_DIR =~ s/\/$//;      # "/home/" -> "/home"
 
 $IM_SYS_DIR = $ENV{'IM_SYS_DIR'} || "$IM_LIBDIR";
-$IM_USER_DIR = expand_home($ENV{'IM_USER_DIR'} || '.im');
+$IM_USER_DIR = &expand_home($ENV{'IM_USER_DIR'} || '.im');
 
 $IM_SYS_PROFILE = "$IM_SYS_DIR/SiteConfig";
 $IM_USER_PROFILE = "$IM_USER_DIR/Config";
@@ -107,6 +107,7 @@ BEGIN {
     'msgmode;i;;MsgMode'		=> 'Message file mode when created',
     'usecl;b;;UseCL' => 'Use value of Content-Length header for delimitation',
     'nosync;b;;NoSync'		=> 'Do not need fsync(2) on writing file',
+    'fsyncnumber;i;;FsyncNumber'	=> 'System call number of fsync',
     'allowcrlf;b;;AllowCRLF'		=> 'CRLF may be in saved message',
     'preservedot;b;;PreserveDot'	=> 'Not substitute "." with "/"',
     'addrbookfile;s;;AddrBookFile'      => 'Address book file',
@@ -132,6 +133,7 @@ BEGIN {
     'noproxy;s;;Noproxy'		=> 'URL regex not to use Proxy server',
     'usepwagent;b;;UsePwAgent'		=> 'Use password agent',
     'pwagentport;i;;PwAgentPort'	=> 'Port to connect agent with TCP/IP',
+    'pwagenttmpdir;s;;PwAgentTmpDir'	=> 'Temporary directory for impwagent',
     'usepwfiles;b;;UsePwFiles'		=> 'Use password files',
     'pwfiles;s;;PwFiles'		=> 'Password files',
     'poptimeout;i;20;PopTimeout'	=> 'Timeout for POP connection',
@@ -144,15 +146,16 @@ BEGIN {
     'usetouchfile;b;;UseTouchFile'	=> 'Use touch file',
     'touchfile;s;;TouchFile'		=> 'Touch file name',
     'namazuv2;b;;NamazuV2'		=> 'Use Namazu Version 2',
+    'namazulockdir;s;;NamazuLockDir'	=> 'Lock directory for immknmz',
     );
 
     # these vars should be in current package?
-    my (@vars) = ();
-    my ($i, $name, $desc, $dflt, $vnam);
+    my(@vars) = ();
+    my($i, $name, $desc, $dflt, $vnam);
     for ($i = 0; $i < $#CfgConfig; $i+=2) {
 	($name, $desc, $dflt, $vnam) = split(';', $CfgConfig[$i]);
 	if ($vnam) {
-	    push(@vars, '$' . $vnam);
+	    push(@vars, '$' . $vnam);  #'
         }
     }
     # print "use vars qw(@vars);\n";
@@ -163,7 +166,7 @@ BEGIN {
 ##
 ##
 
-sub read_cfg_selector ($) {
+sub read_cfg_selector($) {
     my $argvref = shift;
     my $i = 0;
     my $selector = '';
@@ -180,11 +183,10 @@ sub read_cfg_selector ($) {
     return $selector;
 }
 
-sub init_opt ($;$)
-{
-    my ($optref, $cptref) = @_;
-    my ($name, $desc, $dflt, $vnam, $optn, $help);
-    my ($i, $N);
+sub init_opt($;$) {
+    my($optref, $cptref) = @_;
+    my($name, $desc, $dflt, $vnam, $optn, $help);
+    my($i, $N);
 
     @O_IORD = (); ## option list in order
     %O_DESC = (); # --help -> s|s@|i|i@|f|f@|F|F@|b|B
@@ -228,7 +230,7 @@ sub init_opt ($;$)
 	$i++;
 	$help = $$optref[$i];
 	$i++;
-	if ($desc =~ /^(s|s@|i|i@|f|f@|F|F@|b|B|d)$/){
+	if ($desc =~ /^(s|s@|i|i@|f|f@|F|F@|b|B|d)$/) {
 	    my $abbr;
 	    if ($name =~ ',') {
 		($name, $abbr) = split(',', $name);
@@ -265,7 +267,7 @@ sub init_opt ($;$)
     	    $i++;
 	    $help = $cptref->[$i];
 	    $i++;
-	    if ($desc =~ /^(s|s@|i|i@|f|f@|F|F@|b|B)$/){
+	    if ($desc =~ /^(s|s@|i|i@|f|f@|F|F@|b|B)$/) {
 	        $optn = "-$name"; ## no lc()
 		push(@O_IORD, $optn);
 	        if ($vnam) {
@@ -288,10 +290,10 @@ sub init_opt ($;$)
     return 1;
 }
 
-sub read_env ($) {
+sub read_env($) {
     my $envref = shift;
-    my ($i, $N) = (0, scalar(@$envref));
-    my ($name, $desc, $dflt, $var);
+    my($i, $N) = (0, scalar(@$envref));
+    my($name, $desc, $dflt, $var);
 
     while ($i < $N) {
 	($name, $desc, $dflt, $var) =  split(';', $envref->[$i]);
@@ -304,8 +306,8 @@ sub read_env ($) {
     }
 }
 
-sub read_cfg () {
-    my ($profile, @profiles);
+sub read_cfg() {
+    my($profile, @profiles);
     my $prev_line = '';
     my $case;
     my $use;
@@ -400,10 +402,10 @@ sub read_cfg () {
     }
 }
 
-sub read_opt ($) {
+sub read_opt($) {
     my $argref = shift;
-    my ($ref, $i, $N) = (0, 0, scalar(@$argref));
-    my ($name, $val, $desc, $vnam);
+    my($ref, $i, $N) = (0, 0, scalar(@$argref));
+    my($name, $val, $desc, $vnam);
 
     # delete options from @ARGV so that main{} can treat
     # @ARGV as argments.
@@ -468,8 +470,8 @@ sub read_opt ($) {
     }
 }
 
-sub set_selector ($;$) {
-    my ($selector, $base) = @_;
+sub set_selector($;$) {
+    my($selector, $base) = @_;
     my $s;
 
     foreach $s (split(',', $selector)) { ### xxx lc
@@ -480,11 +482,11 @@ sub set_selector ($;$) {
 	} else {
 	    if (!defined($base) or $base eq 'default') {
 	        push(@SELECTORS, $s) if !defined($base);
-	        foreach (keys(%{$s})){
+	        foreach (keys(%{$s})) {
 	    	    ${$_} = $s->{$_};
 	        }
 	    } else {
-	        foreach (keys(%{$s})){
+	        foreach (keys(%{$s})) {
 		    $base->{$_} = $s->{$_};
 	        }
 	    }
@@ -493,11 +495,11 @@ sub set_selector ($;$) {
     return 0;
 }
 
-sub used_selectors () {
+sub used_selectors() {
     return join(',', @SELECTORS);
 }
 
-sub sanity_check () {
+sub sanity_check() {
     unless ($MailDir) {
 	im_die("config files\n" .
 	       "Please setup user profile \"$IM_USER_PROFILE\".\n" .
@@ -505,14 +507,13 @@ sub sanity_check () {
     }
 }
 
-sub help ($)
-{
+sub help($) {
     my $explanation = shift;
-    my ($name, $spec, $desc, $abbr, $dflt);
+    my($name, $spec, $desc, $abbr, $dflt);
 
     print "${explanation}\nOptions are: \n";
 
-    foreach $name (@O_IORD){
+    foreach $name (@O_IORD) {
 	next unless (defined($O_HELP{$name}));
 
 	$desc = $O_DESC{$name};
@@ -548,7 +549,11 @@ sub help ($)
 	print "\t$name$spec $abbr($dflt)\n";
 	print "\t\t", $O_HELP{$name}, "\n";
     }
-    print "\n* Note that +xxx is equivalent to $O_FOPT=+xxx\n\n" if $O_FOPT;
+
+    if ($O_FOPT) {
+	print "\nNote that +xxx is equivalent to $O_FOPT=+xxx.\n";
+    }
+    print "\nReport bugs to <img\@mew.org>.\n";
     return 1;
 }
 
@@ -556,10 +561,9 @@ sub help ($)
 ##
 ##
 
-sub set_value_cfg ($$$)
-{
-    my ($name, $val, $case) = @_;
-    my ($mnam, $desc, $vnam);
+sub set_value_cfg($$$) {
+    my($name, $val, $case) = @_;
+    my($mnam, $desc, $vnam);
 
     $val =~ s/\${(\w+)}/$ENV{$1}/ge;
     if ($val =~ /^\$(.*)/) {
@@ -595,9 +599,8 @@ sub set_value_cfg ($$$)
 # set_value is not in safe manner.
 # see if $desc exists before calling this.
 
-sub set_value ($$$$)
-{
-    my ($desc, $vnam, $val, $who) = @_;  # b, $main::opt_help, yes
+sub set_value($$$$) {
+    my($desc, $vnam, $val, $who) = @_;  # b, $main::opt_help, yes
 
     # require numeric but not numeric, return undef
     return undef if ($desc =~ /i/ && $val !~ /\d+/);
@@ -607,7 +610,7 @@ sub set_value ($$$$)
 	# -> @xxx = (foo, bar, gaz)
 	my @val = split(',', $val);
 	if ($desc =~ /F/) { # xxx how about f
-	    my ($i, $N) = (0, scalar(@val));
+	    my($i, $N) = (0, scalar(@val));
 	    while ($i < $N) {
 		$val[$i] = "+$val[$i]"
 		    unless $val =~ /(^[+\-=%~\/])|(^[a-zA-Z]:)/;
@@ -653,9 +656,8 @@ sub set_value ($$$$)
     return 1;
 }
 
-sub set_value_case ($$$$)
-{
-    my ($desc, $vnam, $val, $case) = @_;  # b, $main::opt_help, yes
+sub set_value_case($$$$) {
+    my($desc, $vnam, $val, $case) = @_;  # b, $main::opt_help, yes
 
     # require numeric but not numeric, return undef
     return undef if ($desc =~ /i/ && $val !~ /\d+/);
@@ -685,62 +687,62 @@ sub set_value_case ($$$$)
 ### Config vs Default
 ###
 
-sub current_dir () {
+sub current_dir() {
     return $CURRENT_DIR;
 }
 
-sub home_dir () {
+sub home_dir() {
     return $HOME_DIR;
 }
 
-sub conf_dir () {
+sub conf_dir() {
     return $IM_USER_DIR;
 }
 
-sub mail_dir () {
+sub mail_dir() {
     return $MailDir;
 }
 
-sub mail_path () {
+sub mail_path() {
     return expand_home(mail_dir());
 }
 
-sub news_dir () {
+sub news_dir() {
     return $NewsDir;
 }
 
-sub news_path () {
+sub news_path() {
     return expand_home(news_dir());
 }
 
-sub queue_dir () {
+sub queue_dir() {
     return $QueueDir;
 }
 
-sub queue_path () {
+sub queue_path() {
     expand_path(queue_dir());
 }
 
-sub inbox_folder (;$) {
-    my ($case) = split(',', shift); ## use the first one only
+sub inbox_folder(;$) {
+    my($case) = split(',', shift); ## use the first one only
     if (defined($case) && $case ne 'default' &&
 	defined($case->{InboxFolder}) &&
-	$case->{InboxFolder} ne ''){
+	$case->{InboxFolder} ne '') {
 	return $case->{InboxFolder};
     } else {
 	return $InboxFolder;
     }
 }
 
-sub draft_folder () {
+sub draft_folder() {
     return $DraftFolder;
 }
 
-sub trash_folder () {
+sub trash_folder() {
     return $TrashFolder;
 }
 
-sub config_cases () {
+sub config_cases() {
     my @cases = keys(%CASES);
     if (scalar(@cases) >= 2) {
 	return join(',', @cases);
@@ -749,7 +751,7 @@ sub config_cases () {
     }
 }
 
-sub config_case_inbox () {
+sub config_case_inbox() {
     my @cases = keys(%CASES);
     my @caseinbox = ();
     if (scalar(@cases) >= 2) {
@@ -764,11 +766,11 @@ sub config_case_inbox () {
     }
 }
 
-sub preserve_dot () {
+sub preserve_dot() {
     return $PreserveDot;
 }
 
-sub folder_mode ($) {
+sub folder_mode($) {
     my $setumask = shift;
 
     $FolderMode = oct($FolderMode) if ($FolderMode =~ /^0\d/);
@@ -777,7 +779,7 @@ sub folder_mode ($) {
     return $FolderMode;
 }
 
-sub msg_mode ($) {
+sub msg_mode($) {
     my $setumask = shift;
 
     $MsgMode = oct($MsgMode) if ($MsgMode =~ /^0\d/);
@@ -786,175 +788,191 @@ sub msg_mode ($) {
     return $MsgMode;
 }
 
-sub allowcrlf () {
+sub allowcrlf() {
     return $AllowCRLF;
 }
 
-sub use_cl () {
+sub use_cl() {
     return $UseCL;
 }
 
-sub no_sync () {
+sub no_sync() {
     return $NoSync;
 }
 
-sub fsync_no () {
-    return $FSYNC_NO;
+sub fsync_no() {
+    return $FsyncNumber || $FSYNC_NO;
 }
 
-sub addrbook_file () {
+sub addrbook_file() {
     return join(',', map {expand_path($_)} split(',', $AddrBookFile));
 }
 
-sub aliases_file () {
+sub aliases_file() {
     return join(',', map {expand_path($_)} split(',', $AliasesFile));
 }
 
-sub context_file () {
+sub context_file() {
     return &expand_path($ContextFile);
 }
 
-sub getchksbr_file () {
+sub getchksbr_file() {
     return &expand_path($GetChkSbrFile);
 }
 
-sub getsbr_file () {
+sub getsbr_file() {
     return &expand_path($GetSbrFile);
 }
 
-sub scansbr_file () {
+sub scansbr_file() {
     return &expand_path($ScanSbrFile);
 }
 
-sub scan_header_pick () {
+sub scan_header_pick() {
     return $ScanHeaderPick;
 }
 
-sub petname_file () {
+sub petname_file() {
     return &expand_path($PetNameFile);
 }
 
-sub address () {
+sub address() {
     return $Address;
 }
 
-sub addresses_regex () {
+sub addresses_regex() {
     return $AddrRegex;
 }
 
-sub msgdbfile () {
+sub msgdbfile() {
     return &expand_path($MsgDBFile);
 }
 
-sub msgdbtype () {
+sub msgdbtype() {
     return $MsgDBType;
 }
 
-sub mbox_style () {
+sub mbox_style() {
     return $MBoxStyle;
 }
 
-sub nntpservers () {
+sub nntpservers() {
     return $NNTPservers;
 }
 
-sub nntphistoryfile () {
+sub nntphistoryfile() {
     return &expand_path($NNTPhistory);
 }
 
-sub nntpauthuser () {
+sub nntpauthuser() {
     return $NNTPauthuser;
 }
 
 sub set_nntpauthuser($) {
-  $NNTPauthuser = shift;
+    $NNTPauthuser = shift;
 }
 
-sub popaccount () {
+sub popaccount() {
     return $POPaccount;
 }
 
-sub pophistoryfile () {
+sub pophistoryfile() {
     return &expand_path($POPhistory);
 }
 
-sub imapaccount () {
+sub imapaccount() {
     return $IMAPaccount;
 }
 
-sub httpproxy () {
+sub httpproxy() {
     return $HTTPproxy;
 }
 
-sub noproxy () {
+sub noproxy() {
     return $Noproxy;
 }
 
-sub usepwagent () {
+sub usepwagent() {
     return $UsePwAgent;
 }
 
-sub pwagentport () {
+sub pwagentport() {
     return $PwAgentPort;
 }
 
-sub usepwfiles () {
+sub pwagent_tmp_dir() {
+    return $PwAgentTmpDir;
+}
+
+sub pwagent_tmp_path() {
+    return expand_path(pwagent_tmp_dir());
+}
+
+sub usepwfiles() {
     return $UsePwFiles;
 }
 
-sub pwfiles () {
+sub pwfiles() {
     return $PwFiles;
 }
 
-sub usetouchfile () {
+sub usetouchfile() {
     return $UseTouchFile;
 }
 
-sub touchfile () {
+sub touchfile() {
     return $TouchFile;
 }
 
-sub pop_timeout () {
+sub pop_timeout() {
     return $PopTimeout;
 }
 
-sub imap_timeout () {
+sub imap_timeout() {
     return $ImapTimeout;
 }
 
-sub nntp_timeout () {
+sub nntp_timeout() {
     return $NntpTimeout;
 }
 
-sub dns_timeout () {
+sub dns_timeout() {
     return $DnsTimeout;
 }
 
-sub connect_timeout () {
+sub connect_timeout() {
     return $ConnectTimeout;
 }
 
-sub command_timeout () {
+sub command_timeout() {
     return $CommandTimeout;
 }
 
-sub rcv_buf_siz () {
+sub rcv_buf_siz() {
     return $RcvBufSiz;
 }
 
-sub db_type () {
+sub db_type() {
     return $IM_DB_TYPE;
 }
 
-sub namazuv2 () {
+sub namazuv2() {
     return $NamazuV2;
+}
+
+sub namazu_lock_dir() {
+    return $NamazuLockDir;
+}
+
+sub namazu_lock_path() {
+    return expand_path(namazu_lock_dir());
 }
 
 ###
 ### path expansion
 ###
 
-sub expand_home ($) {
+sub expand_home($) {
     my $folder = shift;
 
     return '' if ($folder eq '');
@@ -970,7 +988,7 @@ sub expand_home ($) {
     return $folder;
 }
 
-sub expand_path ($) {
+sub expand_path($) {
     my $folder = shift;
 
     $folder =~ s/^\s*(.*?)\s*$/$1/; # SPC may be used in folder names
@@ -1054,9 +1072,59 @@ QueueDir=queue			# relative to ~/.im/
 Imget.Src=local			# default source of imget (local mailbox)
 PopHistory=pophist-{POPSERVERID}	# to save last state (relative to ~/.im/)
 NntpHistory=newshist		# to save last state (relative to ~/.im/)
+# impwagent
+PwAgentTmpDir=pwagtmp		# temporary directory (relative to ~/.im/)
 # namazu
-NamazuV2=off			# use Namazu version2 (1.9.x or late)
+NamazuV2=off			# use Namazu version 2 (1.9.x or late)
+NamazuLockDir=nmzlock		# lock directory (relative to ~/.im/)
 __END__
+
+=head1 NAME
+
+IM::Config - confiugration for IM
+
+=head1 SYNOPSIS
+
+ use IM::Config;
+
+Subroutines:
+read_cfg_selector
+init_opt
+read_env read_cfg read_opt
+set_selector used_selectors
+sanity_check
+help
+home_dir conf_dir
+mail_dir mail_path news_dir news_path queue_dir queue_path
+inbox_folder draft_folder trash_folder config_cases config_case_inbox
+preserve_dot
+folder_mode msg_mode allowcrlf use_cl no_sync fsync_no
+addrbook_file aliases_file petname_file
+context_file getchksbr_file getsbr_file scansbr_file scan_header_pick
+address addresses_regex
+msgdbfile msgdbtype
+mbox_style
+nntpservers nntphistoryfile nntpauthuser set_nntpauthuser
+popaccount pophistoryfile imapaccount httpproxy noproxy
+usepwagent pwagentport pwagent_tmp_dir pwagent_tmp_path usepwfiles pwfiles
+expand_path usetouchfile touchfile namazuv2 namazu_lock_dir namazu_lock_path
+pop_timeout imap_timeout nntp_timeout dns_timeout
+connect_timeout command_timeout rcv_buf_siz
+db_type file_attr
+
+=head1 DESCRIPTION
+
+The I<IM::Config> module is for configuration of IM.
+
+This modules is provided by IM (Internet Message).
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

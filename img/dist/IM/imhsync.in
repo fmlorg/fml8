@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Jul 02, 1998
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "imhsync version 20000414(IM141)";
+my $VERSION = "imhsync version 20021207(IM142)";
 
 $Prog = 'imhsync';
 
@@ -35,11 +35,10 @@ use vars qw($Prog $EXPLANATION @OptConfig @Hdr %Folder
 ## Environments
 ##
 
-$EXPLANATION = "
-imhsync :: Refile by another DB
-$VERSION
+$EXPLANATION = "$VERSION
+refile mail/news messages by another DB
 
-Usage: imhsync [options]
+Usage: imhsync [OPTIONS]
 ";
 
 @OptConfig = (
@@ -95,16 +94,16 @@ if ($opt_folder eq '') {
 
 exit $EXIT_SUCCESS;
 
-sub db_refile ($$) {
-    my ($msg, $folder) = @_;
-    my ($multi_folder);
-    local (@Hdr) = ();
+sub db_refile($$) {
+    my($msg, $folder) = @_;
+    my($multi_folder);
+    local(@Hdr) = ();
     if (im_open(\*MSG, "<$msg")) {
 	&read_header(\*MSG, \@Hdr, 0);
-	close (MSG);
+	close(MSG);
 	my $mid = &header_value(\@Hdr, 'Message-ID');
 	my $dest = my_history_lookup($mid, 0);
-	my ($f, $df);
+	my($f, $df);
 	$multi_folder = 0;
 	$df = '';
 	foreach $f (split(',', $dest)) {
@@ -128,11 +127,11 @@ sub db_refile ($$) {
     return -1;
 }
 
-sub folder_db_refile ($$) {
-    my ($dir, $folder) = @_;
+sub folder_db_refile($$) {
+    my($dir, $folder) = @_;
     $dir =~ s|/$||;
     im_info("Refiling folder $dir\n");
-    chdir ($dir);
+    chdir($dir);
     unless (opendir(FOLDER, $dir)) {
 	im_warn("can't read $dir\n");
 	return -1;
@@ -156,8 +155,8 @@ sub folder_db_refile ($$) {
 
 use vars qw($DBtype $nodbfile $DB_HASH %History);
 
-sub my_history_open ($$) {
-    my ($dbfile) = @_;
+sub my_history_open($$) {
+    my($dbfile) = @_;
     $DBtype = msgdbtype();	# package global
     unless ($DBtype) {
 	$DBtype = 'DB';
@@ -185,13 +184,13 @@ sub my_history_open ($$) {
 
     im_debug("history database: $dbfile\n") if (&debug('history'));
 
-    my ($db, $fd);
+    my($db, $fd);
     if ($DBtype eq 'DB') {
 	$db = tie %History, 'DB_File', $dbfile, O_RDONLY(), 0444;
     } elsif ($DBtype eq 'NDBM') {
 	$db = tie %History, 'NDBM_File', $dbfile, O_RDONLY(), 0444;
     } elsif ($DBtype eq 'SDBM') {
-	if (&win95p || &os2p){
+	if (&win95p || &os2p) {
 	    $db = tie %History, 'SDBM_File', $dbfile, O_RDONLY(), 0444;
 	} else {
 	    $db = tie %History, 'SDBM_File', $dbfile, O_RDONLY(), 0444;
@@ -213,7 +212,7 @@ sub my_history_open ($$) {
 }
 
 
-sub my_history_close () {
+sub my_history_close() {
     if ($nodbfile) {
 	im_err("no database specified.\n");
 	return;
@@ -222,12 +221,12 @@ sub my_history_close () {
 }
 
 
-sub my_history_lookup ($$) {
+sub my_history_lookup($$) {
     if ($nodbfile) {
 	im_err("no database specified.\n");
 	return ();
     }
-    my ($msgid, $field) = @_;
+    my($msgid, $field) = @_;
     $msgid =~ s/^<(.*)>$/$1/;
     if (defined($History{$msgid})) {
 	if ($field == LookUpAll) {
@@ -244,3 +243,85 @@ sub my_history_lookup ($$) {
 	}
     }
 }
+
+__END__
+
+=head1 NAME
+
+imhsync - refile mail/news messages by another DB
+
+=head1 SYNOPSIS
+
+B<imhsync> [OPTIONS]
+
+=head1 DESCRIPTION
+
+The I<imhsync> command handles mail/news messages by another DB.
+
+This command is provided by IM (Internet Message).
+
+=head1 OPTIONS
+
+=over 5
+
+=item I<-d, --db=STRING>
+
+reference DB.
+
+=item I<-f, --folder=STRING>
+
+folder to be refiled.
+
+=item I<-v, --verbose={on,off}>
+
+Print verbose messages when running.
+
+=item I<--debug=DEBUG_OPTION>
+
+Print debug messages when running.
+
+=item I<-h, --help>
+
+Display help message and exit.
+
+=back
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
+
+### Copyright (C) 1997, 1998, 1999 IM developing team
+### All rights reserved.
+### 
+### Redistribution and use in source and binary forms, with or without
+### modification, are permitted provided that the following conditions
+### are met:
+### 
+### 1. Redistributions of source code must retain the above copyright
+###    notice, this list of conditions and the following disclaimer.
+### 2. Redistributions in binary form must reproduce the above copyright
+###    notice, this list of conditions and the following disclaimer in the
+###    documentation and/or other materials provided with the distribution.
+### 3. Neither the name of the team nor the names of its contributors
+###    may be used to endorse or promote products derived from this software
+###    without specific prior written permission.
+### 
+### THIS SOFTWARE IS PROVIDED BY THE TEAM AND CONTRIBUTORS ``AS IS'' AND
+### ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+### IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+### PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE TEAM OR CONTRIBUTORS BE
+### LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+### CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+### SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+### BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+### WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+### OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+### IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+### Local Variables:
+### mode: perl
+### End:

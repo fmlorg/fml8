@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: May  5, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "imcat version 20000414(IM141)";
+my $VERSION = "imcat version 20021207(IM142)";
 
 $Prog = 'imcat';
 
@@ -34,11 +34,10 @@ use vars qw($Prog $EXPLANATION @EnvConfig @OptConfig
 ## Environments
 ##
 
-$EXPLANATION = "
-imcat :: Display Messages
-$VERSION
+$EXPLANATION = "$VERSION
+display mail/news message
 
-Usage: imcat [options] msg
+Usage: $Prog [OPTIONS] [FOLDER] MSG
 ";
 
 @EnvConfig = (
@@ -49,11 +48,11 @@ Usage: imcat [options] msg
     'src;F;;'      => "Folder.",
     'join;b;;'     => "join partial messages.",
     'boundary;b;;' => "Print start boundary for Mew.",
+    'SSHServer,S;s;localhost;SSH_server'
+                       => 'SSH port relay server.',
     'verbose;b;;'  => 'With verbose messages.',
     'debug;d;;'    => "With debug message.",
     'help;b;;'     => "Show this message.",
-    'SSHServer;s;localhost;SSH_server'
-                       => 'SSH port relay server.',
     );
 
 ##
@@ -82,7 +81,7 @@ binmode(STDOUT);
 
 if ($msg =~ /^http:/i) {
     require IM::Http && import IM::Http qw(http_process);
-    my ($rc, $data) = http_process($msg, httpproxy(), noproxy());
+    my($rc, $data) = http_process($msg, httpproxy(), noproxy());
     if ($rc < 0) {
 	im_die("can't access to message $msg.\n");
     }
@@ -139,7 +138,7 @@ if ($msg =~ /^http:/i) {
 } elsif ($opt_src =~ /^-/) {
     # News spool (-group[@server])
     require IM::Nntp && import IM::Nntp qw(nntp_get_message);
-    my ($rc, $art) = nntp_get_message($opt_src, $msg);
+    my($rc, $art) = nntp_get_message($opt_src, $msg);
     im_die($art) if ($rc < 0);
     print $BOUNDARY if $opt_boundary;
     foreach (@$art) {
@@ -149,7 +148,7 @@ if ($msg =~ /^http:/i) {
     # IMAP folder (%folder[:[user[/auth]]@server])
     require IM::Imap && import IM::Imap;
     require IM::GetPass && import IM::GetPass;
-    my ($folder, $auth, $user, $host);
+    my($folder, $auth, $user, $host);
     
     $folder = $1;
     if ($folder !~ /[:\@]/) {
@@ -160,10 +159,10 @@ if ($msg =~ /^http:/i) {
 	($folder, $auth, $user, $host) = imap_spec($folder);
     }
 
-    my ($pass, $agtfound, $interact) = getpass('imap', $auth, $host, $user);
+    my($pass, $agtfound, $interact) = getpass('imap', $auth, $host, $user);
     im_warn("accessing IMAP/$auth:$user\@$host\n") if (&verbose);
 
-    my ($rc, $HANDLE) = &imap_open($auth, $host, $user, $pass);
+    my($rc, $HANDLE) = &imap_open($auth, $host, $user, $pass);
     if ($rc < 0) {
 	my $prompt = lc("imap/$auth:$user\@$host");
 	im_err("invalid password ($prompt).\n");
@@ -178,7 +177,7 @@ if ($msg =~ /^http:/i) {
 	&imap_close($HANDLE);
 	im_die("can't access to $folder\n");
     } else {
-	my ($rc, $message) = &imap_get($HANDLE, $msg);
+	my($rc, $message) = &imap_get($HANDLE, $msg);
 	&imap_close($HANDLE);
 	if ($rc < 0) {
 	    im_die("can't access to message $msg in \%$folder.\n");
@@ -194,7 +193,7 @@ if ($msg =~ /^http:/i) {
 
 exit $EXIT_SUCCESS;
 
-sub join_msg ($) {
+sub join_msg($) {
     my $msg = shift;
     my $path;
     local $_;
@@ -360,6 +359,66 @@ sub join_msg ($) {
     exit $EXIT_SUCCESS;
 }
 
+__END__
+
+=head1 NAME
+
+imcat - display mail/news message
+
+=head1 SYNOPSIS
+
+B<imcat> [OPTIONS] [FOLDER] MSG
+
+=head1 DESCRIPTION
+
+The I<imcat> command shows the contents of the mail/news message stored
+in a folder.
+
+This command is provided by IM (Internet Message).
+
+=head1 OPTIONS
+
+=over 5
+
+=item I<-s, --src=FOLDER>
+
+Folder name.  Default value is "+inbox".
+"--src=+xxx" is equivalent to "+xxx".
+
+=item I<-j, --join={on,off}>
+
+Join partial messages.
+
+=item I<-b, --boundary={on,off}>
+
+Print start boundary for Mew version 1.x.
+
+=item I<-S, --sshserver=SERVER>
+
+SSH port relay server.
+
+=item I<-v, --verbose={on,off}>
+
+Print verbose messages when running.
+
+=item I<--debug=DEBUG_OPTION>
+
+Print debug messages when running.
+
+=item I<-h, --help>
+
+Display help message and exit.
+
+=back
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
+
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.
 ### 
@@ -391,4 +450,3 @@ sub join_msg ($) {
 ### Local Variables:
 ### mode: perl
 ### End:
-

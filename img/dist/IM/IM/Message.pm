@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::Message.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::Message.pm version 20021207(IM142)";
 
 package IM::Message;
 require 5.003;
@@ -48,16 +48,6 @@ use vars qw(@ISA @EXPORT);
 	sort_header
 );
 
-=head1 NAME
-
-Message - IM Message
-
-=head1 SYNOPSIS
-
-=head1 DESCRIPTION
-
-=cut
-
 use vars qw($First_body_line $First_part_mid
 	    $bcc_mid $crlf_char
 	    @Week_str @Month_str $Cur_time
@@ -65,7 +55,7 @@ use vars qw($First_body_line $First_part_mid
 @Week_str = qw(Sun Mon Tue Wed Thu Fri Sat);
 @Month_str = qw(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec);
 
-sub cur_time ($) {
+sub cur_time($) {
     my $part = shift;
     return $Cur_time if ($Cur_time && $part == 0);
     return $Cur_time = time;
@@ -80,10 +70,10 @@ sub cur_time ($) {
 #	  0: success
 #	 -1: failure
 #
-sub read_header (*$$) {
+sub read_header(*$$) {
     local *CHAN = shift;
-    my ($Header, $dist_append) = @_;
-    my ($inheader, $line) = (1, '');
+    my($Header, $dist_append) = @_;
+    my($inheader, $line) = (1, '');
 
     $First_body_line = '';
     local $_ = <CHAN>;
@@ -134,9 +124,9 @@ sub read_header (*$$) {
 #	  -1: failed
 #	   0: success
 #
-sub rewrite_header ($) {
+sub rewrite_header($) {
     my $Header = shift;
-    my ($i, $val);
+    my($i, $val);
     local $_;
 
     my $e = $#$Header;	# do not evaluate in the loop
@@ -173,9 +163,9 @@ sub rewrite_header ($) {
 #	append_default: append default domain name for local names if true
 #	return value: rewritten addresses (NULL if error)
 #
-sub rewrite_addr_list ($$$;$) {
-    my ($Header, $sender_flag, $addr_list, $def_append) = @_;
-    my ($line, $ret, $addr, $a, $b, $err);
+sub rewrite_addr_list($$$;$) {
+    my($Header, $sender_flag, $addr_list, $def_append) = @_;
+    my($line, $ret, $addr, $a, $b, $err);
 
     $addr_list =~ s/^\s+//;
     $addr_list =~ s/\s+$//;
@@ -224,7 +214,7 @@ sub rewrite_addr_list ($$$;$) {
 		    $b = "$a\@$main::Default_to_domain_name";
 		    $addr = &replace_addr($addr, $a, $b);
 		}
-	    } elsif ($b = hosts_completion($a,$main::Cmpl_with_gethostbyname)){
+	    } elsif ($b = hosts_completion($a,$main::Cmpl_with_gethostbyname)) {
 		$addr = &replace_addr($addr, $a, $b);
 	    }
 	}
@@ -241,7 +231,7 @@ sub rewrite_addr_list ($$$;$) {
 # rewrite_resend_header()
 #	return value: none
 #
-sub rewrite_resend_header ($) {
+sub rewrite_resend_header($) {
     my $Header = shift;
 
     my $i;
@@ -262,10 +252,10 @@ sub rewrite_resend_header ($) {
 #		 0: success
 #		-1: failure
 #
-sub put_header (*$$$) {
+sub put_header(*$$$) {
     local *CHAN = shift;
-    my ($Header, $proto, $sel) = @_;
-    my ($line, $del, $s);
+    my($Header, $proto, $sel) = @_;
+    my($line, $del, $s);
     my $crlf = &crlf;
 
     im_debug("entering put_header ($sel)\n")
@@ -332,9 +322,9 @@ sub put_header (*$$$) {
 #	term_dot: terminating dot protocol is used if true
 #	return value: none
 #
-sub read_body (*$$$) {
+sub read_body(*$$$) {
     local *CHAN = shift;
-    my ($Body, $hidden_dot, $term_dot) = @_;
+    my($Body, $hidden_dot, $term_dot) = @_;
     local $_;
     @$Body = ();
 
@@ -364,9 +354,9 @@ sub read_body (*$$$) {
 #	content: pointer to body content line list
 #	return value: none
 #
-sub body_qp_encode ($) {
+sub body_qp_encode($) {
     my $Body = shift;
-    my ($i, $line, $pos);
+    my($i, $line, $pos);
 
     for ($i = 0; $i <= $#$Body; $i++) {
 	$line = $$Body[$i];
@@ -396,10 +386,10 @@ sub body_qp_encode ($) {
 #	content: pointer to body content line list
 #	return value: none
 #
-sub body_base64_encode ($) {
+sub body_base64_encode($) {
     my $Body = shift;
     my $line = '';
-    my ($i, $tmp, @Body_tmp);
+    my($i, $tmp, @Body_tmp);
 
     require IM::EncDec && import IM::EncDec qw(b_encode_string);
 
@@ -429,10 +419,10 @@ sub body_base64_encode ($) {
 #		 0: success
 #		-1: failure
 #
-sub put_body (*$$$) {
+sub put_body(*$$$) {
     local *CHAN = shift;
-    my ($Body, $hidden_dot, $part) = @_;
-    my ($start, $end, $i, $line);
+    my($Body, $hidden_dot, $part) = @_;
+    my($start, $end, $i, $line);
     my $crlf= &crlf;
 
     if ($part == 0) {
@@ -471,9 +461,9 @@ sub put_body (*$$$) {
 #		 0: success
 #		-1: failure
 #
-sub put_mimed_bcc (*$$$$$$) {
+sub put_mimed_bcc(*$$$$$$) {
     local *CHAN = shift;
-    my ($Header, $Body, $proto, $hidden_dot, $part, $total) = @_;
+    my($Header, $Body, $proto, $hidden_dot, $part, $total) = @_;
     my $subj;
     my $crlf = &crlf;
 
@@ -538,9 +528,9 @@ sub put_mimed_bcc (*$$$$$$) {
 #		 0: success
 #		-1: failure
 #
-sub put_mimed_partial (*$$$$$$) {
+sub put_mimed_partial(*$$$$$$) {
     local *CHAN = shift;
-    my ($Header, $Body, $proto, $hidden_dot, $part, $total) = @_;
+    my($Header, $Body, $proto, $hidden_dot, $part, $total) = @_;
     my $crlf = &crlf;
 
     return -1 if (&put_header(\*CHAN, $Header, $proto, 'partial:ext') < 0);
@@ -583,10 +573,10 @@ sub put_mimed_partial (*$$$$$$) {
 #		 0: success
 #		-1: failure
 #
-sub put_mimed_error_notify (*$$$$$$$$;$) {
+sub put_mimed_error_notify(*$$$$$$$$;$) {
     local *CHAN = shift;
-    my ($Header, $Body, $Recp, $Stat, $proto, $server,
-	$hidden_dot, $session_log, $part) = @_;    # XXX: $part missing?
+    my($Header, $Body, $Recp, $Stat, $proto, $server,
+       $hidden_dot, $session_log, $part) = @_;    # XXX: $part missing?
     my $subj;
     my $crlf = &crlf;
     my $boundary;
@@ -639,7 +629,7 @@ sub put_mimed_error_notify (*$$$$$$$$;$) {
 	# host information
 	my $myhostname = hostname();
 	unless ($myhostname =~ /\./) {
-	    my ($h) = gethostbyname($myhostname);
+	    my($h) = gethostbyname($myhostname);
 	    $myhostname = $h if ($h);
 	}
 
@@ -684,9 +674,9 @@ sub put_mimed_error_notify (*$$$$$$$$;$) {
 #	body: reference to a message body array
 #	return value: size of whole message
 #
-sub message_size ($$$) {
-    my ($Header, $Body, $part) = @_;
-    my ($start, $end, $i, $size);
+sub message_size($$$) {
+    my($Header, $Body, $part) = @_;
+    my($start, $end, $i, $size);
 
     if ($part == 0) {
 	$start = 0;
@@ -706,11 +696,11 @@ sub message_size ($$$) {
     return $size;
 }
 
-sub set_crlf ($) {
+sub set_crlf($) {
     $crlf_char = shift;
 }
 
-sub crlf () {
+sub crlf() {
     $crlf_char;
 }
 
@@ -720,14 +710,14 @@ sub crlf () {
 #	part: part number of partial messages (for reuse)
 #	return value: a unique message-id string
 #
-sub gen_message_id ($) {
+sub gen_message_id($) {
     my $part = shift;
     return $Mid_hist{$part} if ($part > 0 && $Mid_hist{$part});
-    my ($tm_sec, $tm_min, $tm_hour, $tm_mday, $tm_mon, $tm_year)
+    my($tm_sec, $tm_min, $tm_hour, $tm_mday, $tm_mon, $tm_year)
 	= localtime(&cur_time($part));
-    my ($mid_time) = sprintf("%d%02d%02d%02d%02d%02d",
+    my($mid_time) = sprintf("%d%02d%02d%02d%02d%02d",
 	$tm_year+1900, $tm_mon+1, $tm_mday, $tm_hour, $tm_min, $tm_sec);
-    my ($mid_rnd) = sprintf("%c", 0x41 + rand(26));
+    my($mid_rnd) = sprintf("%c", 0x41 + rand(26));
     if ($Prev_mid_time eq $mid_time) {
 	while ($mid_rnd =~ /[$Mid_rnd_hist]/) {
 	    $mid_rnd = sprintf("%c", 0x41 + rand(26));
@@ -746,7 +736,7 @@ sub gen_message_id ($) {
     } else {
 	$mid_user = $main::Login;
     }
-    my ($mid)
+    my($mid)
       = "<$mid_time$mid_rnd.$mid_user\@$main::Message_id_domain_name>";
     $Mid_hist{$part} = $mid if ($part > 0);
     return $mid;
@@ -761,10 +751,10 @@ sub gen_message_id ($) {
 #		2 = "WWW MMM DD HH:MM:SS YYYY" (mainly for UNIX From)
 #	return value: date string generated with current time
 #
-sub gen_date ($) {
+sub gen_date($) {
     my $format = shift;
-    my ($tm_sec, $tm_min, $tm_hour, $tm_mday, $tm_mon, $tm_year,
-	$tm_wk, $tm_yday, $tm_isdst, $tm_tz);
+    my($tm_sec, $tm_min, $tm_hour, $tm_mday, $tm_mon, $tm_year,
+       $tm_wk, $tm_yday, $tm_isdst, $tm_tz);
     if ($main::NewsGMTdate && $main::News_flag) {
 	($tm_sec, $tm_min, $tm_hour, $tm_mday, $tm_mon, $tm_year,
 	    $tm_wk, $tm_yday) = gmtime(&cur_time(0));
@@ -787,8 +777,8 @@ sub gen_date ($) {
 		}
 	    }
 	} else {
-	    my ($gm_sec, $gm_min, $gm_hour, $gm_mday, $gm_mon,
-	      $gm_year, $gm_wk, $gm_yday) = gmtime(&cur_time(0));
+	    my($gm_sec, $gm_min, $gm_hour, $gm_mday, $gm_mon,
+	       $gm_year, $gm_wk, $gm_yday) = gmtime(&cur_time(0));
 	    $off = ($tm_hour - $gm_hour) * 60 + $tm_min - $gm_min;
 	    if ($tm_year < $gm_year) {
 		$off -= 24 * 60;
@@ -832,8 +822,8 @@ sub gen_date ($) {
 #	field: field name of which value needed
 #	return value: value for specified field OR null
 #
-sub header_value ($$) {
-    my ($Header, $field_name) = @_;
+sub header_value($$) {
+    my($Header, $field_name) = @_;
     my $val;
     local $_;
 
@@ -855,8 +845,8 @@ sub header_value ($$) {
 #	field_value: field value to be entered with
 #	return value: none
 #
-sub add_header ($$$$) {
-    my ($Header, $replace_flag, $field_name, $field_value) = @_;
+sub add_header($$$$) {
+    my($Header, $replace_flag, $field_name, $field_value) = @_;
 
     $field_value .= "\n" if ($field_value !~ /\n$/);
     im_debug("adding header> $field_name: $field_value")
@@ -881,8 +871,8 @@ sub add_header ($$$$) {
 #	leave_first: leave the first appeared header line if true
 #	return value: none
 #
-sub kill_header ($$$) {
-    my ($Header, $field_name, $leave_first) = @_;
+sub kill_header($$$) {
+    my($Header, $field_name, $leave_first) = @_;
 
     my $i;
     for ($i = 0; $i <= $#$Header; $i++) {
@@ -903,7 +893,7 @@ sub kill_header ($$$) {
 #	header: reference to a message header array
 #	return value: none
 #
-sub kill_empty_header ($) {
+sub kill_empty_header($) {
     my $Header = shift;
 
     my $i;
@@ -922,12 +912,12 @@ sub kill_empty_header ($) {
 #	name_list: leave the first appeared header line if true
 #	return value: none
 #
-sub sort_header ($$) {
-    my ($Header, $name_list) = @_;
-    my ($i, $label, @tail);
+sub sort_header($$) {
+    my($Header, $name_list) = @_;
+    my($i, $label, @tail);
 
     foreach $label (split(',', $name_list)) {
-	for ($i = 0; $i <= $#$Header; ) {
+	for ($i = 0; $i <= $#$Header;) {
 	    if ($$Header[$i] =~ /^$label:/i) {
 		push (@tail, $$Header[$i]);
 		splice(@$Header, $i, 1);
@@ -946,8 +936,8 @@ sub sort_header ($$) {
 #	str2: a header string to be appended to str1
 #	return value: a concatinated header string
 #
-sub hdr_cat ($$) {
-    my ($str1, $str2) = @_;
+sub hdr_cat($$) {
+    my($str1, $str2) = @_;
 
     if ($str1 eq '' || $str1 =~ /\n[\t ]+$/) {
 	return "$str1$str2";
@@ -963,6 +953,53 @@ sub hdr_cat ($$) {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::Message - mail/news message handler
+
+=head1 SYNOPSIS
+
+ use IM::Message;
+
+Subroutines:
+read_header
+message_size
+put_header
+read_body
+put_body
+rewrite_header
+rewrite_resend_header
+body_qp_encode
+body_base64_encode
+put_mimed_bcc
+put_mimed_partial
+put_mimed_error_notify
+set_crlf
+crlf
+gen_message_id
+gen_date
+header_value
+add_header
+kill_header
+kill_empty_header
+sort_header
+
+=head1 DESCRIPTION
+
+The I<IM::Message> module handles mail/news messages.
+
+This modules is provided by IM (Internet Message).
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

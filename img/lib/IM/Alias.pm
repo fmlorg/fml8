@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::Alias.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::Alias.pm version 20021207(IM142)";
 
 package IM::Alias;
 require 5.003;
@@ -24,38 +24,6 @@ use vars qw(@ISA @EXPORT);
 @EXPORT = qw(alias_read alias_lookup alias_print
 	     hosts_read hosts_completion hosts_lookup hosts_print);
 
-=head1 NAME
-
-Alias - mail and host alias looking up package
-
-=head1 SYNOPSIS
-
-  use IM::Alias;
-
-  alias_read(mail_alias_files, addrbook_files);
-  $result = alias_lookup(user_name);
-  alias_print(alias);
-
-  hosts_read(hosts_alias_files);
-  $result = hosts_completion(mail_address);
-  hosts_print(alias);
-
-=head1 DESCRIPTION
-
-  alias_read("$HOME/.im/Aliases", "$HOME/.im/Addrbook");
-  hosts_read("$HOME/.hostaliases");
-
-  $result = alias_lookup('u');
-  print "$result\n" if ($result);
-
-  $result = hosts_completion('u@h');
-  print "$result\n" if ($result);
-
-  alias_print("a") displays mail addresses whose alias is "a".
-  hosts_print("") displays all host aliases.
-
-=cut
-
 use vars qw(%MAIL_ALIAS_HASH %MAIL_ALIASES %HOST_ALIASES);
 
 ##### READ MAIL ALIAS FILES #####
@@ -64,7 +32,7 @@ use vars qw(%MAIL_ALIAS_HASH %MAIL_ALIASES %HOST_ALIASES);
 #
 #	return value: none
 #
-sub alias_read (;$$) {
+sub alias_read(;$$) {
     my @olds = split(',', shift || aliases_file());
     my @news = split(',', shift || addrbook_file());
     my $usenew = 0;
@@ -127,7 +95,7 @@ sub alias_read (;$$) {
 		    $cont =~ s/^\s*/ /;
 		    $line .= $cont;
 		}
-		my ($name, $val) = split('\s*[:=]\s*', $line, 2);
+		my($name, $val) = split('\s*[:=]\s*', $line, 2);
 		$MAIL_ALIASES{$name} = $val if $val;
 	    } else {
 		#personal info. Skip continuous lines.
@@ -149,7 +117,7 @@ sub alias_read (;$$) {
 #	alias: an alias to be looked up
 #	return value: aliased address OR null
 #
-sub alias_lookup ($) {
+sub alias_lookup($) {
     my $alias = shift;
     return '' if ($alias =~ /[\@%!:]/o);
 
@@ -168,7 +136,7 @@ sub alias_lookup ($) {
 #       alias: an alias to be looked up
 #       return value: none
 #
-sub alias_print (;$) {
+sub alias_print(;$) {
     my $alias = shift;
 
     if ($alias) {
@@ -190,7 +158,7 @@ sub alias_print (;$) {
 #
 #	return value: none
 #
-sub hosts_read (;$) {
+sub hosts_read(;$) {
     my @aliases = split(',', shift || '~/.hostaliases');
     my $ali;
 
@@ -222,11 +190,11 @@ sub hosts_read (;$) {
 #       cmpl: flag whether complete with get_host_byname() or not;
 #	return value: completed address OR null
 #
-sub hosts_completion ($;$) {
-    my ($addr, $cmpl) = @_;
+sub hosts_completion($;$) {
+    my($addr, $cmpl) = @_;
 
-    if ($addr =~ /^([\w-.]+)@([\w-.]+)$/) {
-	my ($local, $domain) = ($1, $2);
+    if ($addr =~ /^([\w.-]+)@([\w.-]+)$/) {
+	my($local, $domain) = ($1, $2);
 	im_debug("searching $domain by host alias file.\n") if &debug('alias');
 	my $new = $HOST_ALIASES{$domain};
 	if ($new) {
@@ -236,7 +204,7 @@ sub hosts_completion ($;$) {
 	if ($cmpl) {
 	    im_debug("searching $domain with gethostbyname().\n")
 		if (&debug('alias'));
-	    my ($he_name) = gethostbyname($domain);
+	    my($he_name) = gethostbyname($domain);
 	    if (length($he_name) > length($domain)) {
 		im_debug("found(gethostbyname): $domain -> $he_name\n")
 		    if (&debug('alias'));
@@ -253,7 +221,7 @@ sub hosts_completion ($;$) {
 #	alias: an alias to be looked up
 #	return value: aliased hosts OR null
 #
-sub hosts_lookup ($) {
+sub hosts_lookup($) {
     my $alias = shift;
     my $host = $HOST_ALIASES{$alias};
     if ($host) {
@@ -269,7 +237,7 @@ sub hosts_lookup ($) {
 #       alias: an alias to be looked up
 #       return value: none
 #
-sub hosts_print (;$) {
+sub hosts_print(;$) {
     my $alias = shift;
 
     if ($alias) {
@@ -286,6 +254,52 @@ sub hosts_print (;$) {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::Alias - mail and host alias looking up package
+
+=head1 SYNOPSIS
+
+ use IM::Alias;
+
+ alias_read(mail_alias_files, addrbook_files);
+ $result = alias_lookup(user_name);
+ alias_print(alias);
+
+ hosts_read(hosts_alias_files);
+ $result = hosts_completion(mail_address);
+ hosts_print(alias);
+
+=head1 DESCRIPTION
+
+The I<IM::Alias> module handles mail and host aliases.
+
+This modules is provided by IM (Internet Message).
+
+=head1 EXAMPLES
+
+ alias_read("$HOME/.im/Aliases", "$HOME/.im/Addrbook");
+ hosts_read("$HOME/.hostaliases");
+
+ $result = alias_lookup('u');
+ print "$result\n" if ($result);
+
+ $result = hosts_completion('u@h');
+ print "$result\n" if ($result);
+
+ alias_print("a") displays mail addresses whose alias is "a".
+ hosts_print("") displays all host aliases.
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

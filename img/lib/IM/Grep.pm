@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Nov 03, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::Grep.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::Grep.pm version 20021207(IM142)";
 
 package IM::Grep;
 require 5.003;
@@ -26,23 +26,6 @@ use vars qw(@ISA @EXPORT %MESSAGE_ID_HASH);
 @ISA = qw(Exporter);
 @EXPORT = qw(parse_expression grep_folder sortuniq);
 
-=head1 NAME
-
-Grep - IM grep folder
-
-=head1 DESCRIPTION
-
-
-=head1 SYNOPSIS
-
-use IM::Grep;
-
-$eval_string = &parse_expression($expression, $casefold);
-
-@message_number_array = &grep_folder($folder_dir, $eval_string, @ranges);
-
-=cut
-
 ##
 ## Environments
 ##
@@ -56,13 +39,13 @@ my $draft_delimiter = "\n----\n";
 
 %MESSAGE_ID_HASH = ();
 
-sub grep_folder ($$$@) {
-    my ($folder, $eval_string, $dup_check, @ranges) = @_;
+sub grep_folder($$$@) {
+    my($folder, $eval_string, $dup_check, @ranges) = @_;
     my $folder_dir;
     my @src_msgs = ();
     my @messages = ();
 
-    if ( $folder =~ /^\-/ ) {
+    if ($folder =~ /^\-/) {
 	im_warn("Newsspool $folder search not supported (ignored)\n");
     }
 
@@ -77,12 +60,12 @@ sub grep_folder ($$$@) {
 
     # collect message numbers
     my @filesinfolder = message_list($folder_dir);
-    foreach ( @ranges ) {
+    foreach (@ranges) {
 	my @tmp = ();
 	im_die("illegal range specification: $_\n")
 	    unless /^$range_regexp$/;
 	im_debug("extract range $_\n") if &debug('all');
-	if (( @tmp = message_range($folder, $_,  @filesinfolder )) eq '') {
+	if ((@tmp = message_range($folder, $_,  @filesinfolder)) eq '') {
 	    im_warn("message $_ out of range\n");
 	}
 	push(@src_msgs, @tmp);
@@ -181,8 +164,8 @@ sub EOL     { 0; }
 sub LITERAL { 1; }
 sub SYMBOL  { 2; }
 
-sub parse_expression ($$) {
-    my ($expr, $casefold) = @_;
+sub parse_expression($$) {
+    my($expr, $casefold) = @_;
 
     my $case_flag = '';
     my $expr_string = '';
@@ -196,8 +179,8 @@ sub parse_expression ($$) {
     my $SYMBOLS = '[!()=]|\&\&?|\|\|?';
 
     my @tokens = ();
-    my ($escape, $pos, $len) = (0) x 3;
-    my ($token, $quote) = ('') x 2;
+    my($escape, $pos, $len) = (0) x 3;
+    my($token, $quote) = ('') x 2;
 
     my $str;
   LEX:
@@ -272,8 +255,8 @@ sub parse_expression ($$) {
     # 3: before pattern: LITERAL->1, fallback to 1
     #
 
-    my ($status, $paren) = (0) x 2;
-    my ($field, $pattern, $string) = ('') x 3;
+    my($status, $paren) = (0) x 2;
+    my($field, $pattern, $string) = ('') x 3;
 
 #    my $token;
   PARSE:
@@ -372,7 +355,7 @@ sub parse_expression ($$) {
     }
     
 # simple check by perl interpreter
-    my ($head, $body, $all) = ('') x 3;
+    my($head, $body, $all) = ('') x 3;
     eval "$eval_string";
     if ($@) {
 	if ($main::opt_quiet) {
@@ -389,7 +372,7 @@ sub parse_expression ($$) {
 }    
 
 sub parse_die($$$) {
-    my ($die, $expr, $pos) = @_;
+    my($die, $expr, $pos) = @_;
     if (!$main::opt_quiet and !$main::opt_verbose) {
 	im_die("$die in the expression\n");
     }
@@ -405,12 +388,12 @@ sub parse_die($$$) {
 ## sort and uniqify a list
 ##
 
-sub sortuniq (@) {
+sub sortuniq(@) {
     my(@target) = @_;
     my(%tmp);
 
     @tmp{@target} = (undef) x @target;
-    return ( sort {$a <=> $b} keys %tmp );
+    return(sort {$a <=> $b} keys %tmp);
 }
 
 ##################################################
@@ -464,6 +447,34 @@ sub make_japanese_pattern {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::Grep - grep mail/news folder
+
+=head1 SYNOPSIS
+
+ use IM::Grep;
+
+ $eval_string = &parse_expression($expression, $casefold);
+
+ @message_number_array = &grep_folder($folder_dir, $eval_string, @ranges);
+
+=head1 DESCRIPTION
+
+The I<IM::Grep> module enumerates mail/news messages matched given patterns.
+
+This modules is provided by IM (Internet Message).
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

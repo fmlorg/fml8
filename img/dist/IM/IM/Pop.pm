@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::Pop.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::Pop.pm version 20021207(IM142)";
 
 package IM::Pop;
 require 5.003;
@@ -27,16 +27,6 @@ use vars qw(@ISA @EXPORT);
 @ISA = qw(Exporter);
 @EXPORT = qw(pop_get_msg pop_spec);
 
-=head1 NAME
-
-Pop - POP handling package
-
-=head1 SYNOPSIS
-
-=head1 DESCRIPTION
-
-=cut
-
 use vars qw(*POPd $SERVER_IDENT %history %newhistory);
 #######################
 # POP access routines #
@@ -54,11 +44,11 @@ use vars qw(*POPd $SERVER_IDENT %history %newhistory);
 #		-1: failure
 #		-2: failure (connection)
 #
-sub pop_open ($$$$) {
-    my ($auth, $host, $user, $pass) = @_;
+sub pop_open($$$$) {
+    my($auth, $host, $user, $pass) = @_;
     my $prompt = lc("pop/$auth:$user\@$host");
-    my ($resp, $pwd, $errmsg);
-    my (@host_list) = ($host);
+    my($resp, $pwd, $errmsg);
+    my(@host_list) = ($host);
     im_notice("opening POP session ($auth)\n");
     if ($auth eq 'RPOP' && !$main::SUIDROOT) {
 	im_warn("RPOP operation requires SUID root.\n");
@@ -126,7 +116,7 @@ sub pop_open ($$$$) {
     return 0;
 }
 
-sub pop_close () {
+sub pop_close() {
     im_notice("closing POP session.\n");
     my $resp = &send_command(\*POPd, 'QUIT', '');
     return -1 if ($resp !~ /^\+/);
@@ -134,8 +124,8 @@ sub pop_close () {
     return 0;
 }
 
-sub pop_stat () {
-    my (@field);
+sub pop_stat() {
+    my(@field);
     im_notice("getting number of message.\n");
     my $resp = &send_command(\*POPd, 'STAT', '');
     if ($resp !~ /^\+/) {
@@ -147,10 +137,10 @@ sub pop_stat () {
     return $field[1];
 }
 
-sub pop_retr ($$$) {
-    my ($num, $dst, $noscan) = @_;
-    local ($_);
-    my (@Message);
+sub pop_retr($$$) {
+    my($num, $dst, $noscan) = @_;
+    local($_);
+    my(@Message);
     im_notice("getting message $num.\n");
     my $resp = &send_command(\*POPd, "RETR $num", '');
     if ($resp !~ /^\+/) {
@@ -181,7 +171,7 @@ sub pop_retr ($$$) {
     return 0;
 }
 
-sub pop_head ($) {
+sub pop_head($) {
     my $num = shift;
     im_notice("getting header of message $num.\n");
     my $resp = &send_command(\*POPd, "TOP $num 1", '');
@@ -189,9 +179,9 @@ sub pop_head ($) {
 	im_warn("TOP command failed.\n");
 	return 0;
     }
-    my ($field, $inheader) = ('', 1);
-    local ($_);
-    my (%head);
+    my($field, $inheader) = ('', 1);
+    local($_);
+    my(%head);
     undef %head;
     alarm(pop_timeout()) unless win95p();
     $! = 0;
@@ -227,7 +217,7 @@ sub pop_head ($) {
     return \%head;
 }
 
-sub pop_dele ($) {
+sub pop_dele($) {
     my $num = shift;
     im_notice("deleting message $num.\n");
     my $resp = &send_command(\*POPd, "DELE $num", '');
@@ -238,7 +228,7 @@ sub pop_dele ($) {
     return 0;
 }
 
-sub pop_uidl ($) {
+sub pop_uidl($) {
     my $uidlp = shift;
     local $_;
     im_notice("getting UIDL information.\n");
@@ -269,9 +259,9 @@ sub pop_uidl ($) {
 }
 
 # pop_process(socket, how)
-sub pop_process ($$$$) {
-    my ($how, $host, $dst, $noscan) = @_;
-    my ($histfile, $head, $msgs, $i, $h, $new, $last);
+sub pop_process($$$$) {
+    my($how, $host, $dst, $noscan) = @_;
+    my($histfile, $head, $msgs, $i, $h, $new, $last);
     return -1 if (($msgs = &pop_stat) < 0);
 
     my $keep_proto = 'UIDL';	# UIDL/LAST/STATUS/MSGID
@@ -432,9 +422,9 @@ sub pop_process ($$$$) {
     return $new;
 }
 
-sub pop_inc ($$$$$$$$) {
-    my ($msgs, $host, $dst, $last, $keep_proto, $histp, $uidlp, $noscan) = @_;
-    my ($accesstime, $i, $h, $head);
+sub pop_inc($$$$$$$$) {
+    my($msgs, $host, $dst, $last, $keep_proto, $histp, $uidlp, $noscan) = @_;
+    my($accesstime, $i, $h, $head);
     my $got = 0;
     my $ttl = 0;
 
@@ -530,14 +520,14 @@ sub pop_inc ($$$$$$$$) {
     return $got;
 }
 
-sub pop_get_msg ($$$$) {
-    my ($src, $dst, $how, $noscan) = @_;
+sub pop_get_msg($$$$) {
+    my($src, $dst, $how, $noscan) = @_;
 
     $src =~ s/^pop//i;
 
-    my ($auth, $user, $host) = &pop_spec($src);
+    my($auth, $user, $host) = &pop_spec($src);
 
-    my ($pass, $agtfound, $interact) = ('', 0, 0);
+    my($pass, $agtfound, $interact) = ('', 0, 0);
     ($pass, $agtfound, $interact) = 
 	getpass ('pop', $auth, $host, $user) unless $auth eq 'RPOP';
 
@@ -563,7 +553,7 @@ sub pop_get_msg ($$$$) {
 }
 
 # POP folder (--src=pop[//auth][:user][@server[/port]])
-sub pop_spec ($) {
+sub pop_spec($) {
     my $spec = shift;
 
     if ($spec eq '' || $spec !~ /[:\@]|\/\//) {
@@ -577,7 +567,7 @@ sub pop_spec ($) {
 	}
 	$spec .= $s if ($s ne '');
     }
-    my ($auth, $host) = ('apop', 'localhost');
+    my($auth, $host) = ('apop', 'localhost');
     my $user = $ENV{'USER'} || $ENV{'LOGNAME'} || im_getlogin();
 
     if ($spec =~ /^\/\/?(\w+)(.*)/) {
@@ -612,6 +602,34 @@ sub pop_spec ($) {
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::Pop - POP handler
+
+=head1 SYNOPSIS
+
+ use IM::Pop;
+
+ $msgs = pop_get_msg($src, $dst, $mode, $noscan);
+
+ ($auth, $user, $host) = pop_spec($src)
+
+=head1 DESCRIPTION
+
+The I<IM::Pop> module handles Pop.
+
+This modules is provided by IM (Internet Message).
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

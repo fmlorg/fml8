@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Aug 31, 1995
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
 BEGIN {
@@ -13,31 +13,9 @@ BEGIN {
     @im_src_siteperl@
 };
 
-$VERSION = "imput version 20000414(IM141)";
+$VERSION = "imput version 20021207(IM142)";
 
 $Prog = 'imput';
-
-# Usage:
-#  o With UCB Mail
-#	define "sendmail" environment variable with value "imput".
-#  o With Mew
-#	eval (setq mew-prog-imput "imput")
-#  o With MH
-#	define sendproc in ~/.mh_profile like "sendproc: imput"
-#  o With sendmail.el (if you are using VM or ....)
-#	eval (setq sendmail-program "imput")
-#  o With mh-e (4 or later)
-#	eval (setq mh-send-prog "imput")
-#  o With pine
-#	define "sendmail-path" in ~/.pinerc, for example:
-#	sendmail-path=/usr/local/bin/imput -Report -ObeyHeader -IgnoreDot
-#  o With applications which use sendmail
-#	replace sendmail to this program but if daemon sendmail is required,
-#	original sendmail should be renamed to sendmail.bin or something else
-#	for starting daemon mode sendmail and for newaliasing
-#  o With applications which use inews
-#	header generation by command line option not supported
-
 
 require 5.003;
 
@@ -64,11 +42,10 @@ use vars qw($DebugAll $QueueStatus $Subject $Ignore_Dot $Fcc_partial
 	    $News_severe_check $PreserveMessage $Queuing $Comment_Name
 	    $Help $JustQueuing $Me_too $Dcc_Address $PGP_Sign);
 
-$EXPLANATION = "
-$Prog :: Put Messages into Networks
-$VERSION
+$EXPLANATION = "$VERSION
+put mail/news message into networks
 
-Usage: $Prog [options] msg
+Usage: $Prog [OPTIONS] [MSG]
 ";
 
 # table of environment variables
@@ -157,7 +134,8 @@ Usage: $Prog [options] msg
     'JPconv;b;;Iso2022jp_code_conversion'
 	=> 'Convert japanese character encoding from EUC/SJIS to JIS.',
     'DefCode;s;8BIT;Default_code'
-	=> 'Default classification of japanese character code (EUC/SJIS/8BIT).',
+	=> 'Default classification of japanese character code.' .
+	      "\n\t\t(EUC/SJIS/8BIT)",
     'JPheader;b;1;Iso2022jp_header_mime_conv'
 	=> 'Encode japanese JIS characters to MIME style at header.',
     'HdrQEncoding;b;;HdrQEncoding'
@@ -414,7 +392,7 @@ help($EXPLANATION) && exit $EXIT_SUCCESS if $Help;
 
     &init_final;
 
-    my ($h);
+    my($h);
     foreach $h (@Add_headers) {
 	if ($h =~ /^([\w\-]+):\s*(.*)/s) {
 	    &add_header(\@Header, 0, $1, $2);
@@ -661,7 +639,7 @@ help($EXPLANATION) && exit $EXIT_SUCCESS if $Help;
     if ($Me_too) {
 	&error_exit if (&add_to_rcpt(0, $Sender) < 0);
     }
-    my ($d);
+    my($d);
     foreach $d (split(',', $Dcc_Address)) {
 	&error_exit if (&add_to_rcpt(0, $d) < 0);
     }
@@ -840,14 +818,14 @@ sub initialize {
     # user's information
 
     if (unixp()) {
-	my ($pw_name, $pw_passwd, $pw_uid, $pw_gid, $pw_quota,
-	  $pw_comment, $pw_gcos, $pw_dir, $pw_shell) = getpwuid($<);
+	my($pw_name, $pw_passwd, $pw_uid, $pw_gid, $pw_quota,
+	   $pw_comment, $pw_gcos, $pw_dir, $pw_shell) = getpwuid($<);
 
 	$Home = $pw_dir;
 
-	local (@cap) = unpack('aa*', $pw_name);
+	local(@cap) = unpack('aa*', $pw_name);
 	$cap[0] =~ tr/a-z/A-Z/;
-	local ($cap) = join('', @cap);
+	local($cap) = join('', @cap);
 	if (!$Sender_name) {
 	    ($Sender_name = $pw_gcos) =~ s/,.*$//;
 	    $Sender_name =~ s/&/$cap/g;
@@ -886,7 +864,7 @@ sub init_final {
     if ($Mail_Address ne '' && $Default_from_domain_name eq '') {
 	my $a = &extract_addr($Mail_Address);
 	if ($a =~ /(.*)\@(.*)/s) {
-	    my ($u, $h) = ($1, $2);
+	    my($u, $h) = ($1, $2);
 	    $Default_from_domain_name = $h;
 	    $User_name = $u unless ($User_name);
 	}
@@ -915,7 +893,7 @@ sub init_final {
     &log_transaction;
 
     # user's require file
-    if($User_require) {
+    if ($User_require) {
 	require $User_require;
     }
 }
@@ -932,8 +910,8 @@ sub init_final {
 #		-1: unrecoverable error
 #
 sub send_message {
-    local ($news_flag, $split) = @_;
-    local ($normal, $bcc, $i, $rcode);
+    local($news_flag, $split) = @_;
+    local($normal, $bcc, $i, $rcode);
 
     # hook before dispatching the message
     &$Hook_PreDispatching if ($Hook_PreDispatching);
@@ -1058,7 +1036,7 @@ sub send_message {
 #	return value: none
 #
 sub smtp_get_mail {
-    local ($state) = 0;
+    local($state) = 0;
     print STDOUT "220 Server ready ($VERSION)\r\n";
     while (<STDIN>) {
 	if (/^NOOP\s/i) {
@@ -1127,7 +1105,7 @@ sub smtp_get_mail {
 #	return value: none
 #
 sub smtp_get_mail_final {
-    local ($error) = @_;
+    local($error) = @_;
     return unless (fileno(STDOUT));
     unless ($error) {
 	print STDOUT "250 Message accepted for delivery\n";
@@ -1167,9 +1145,9 @@ sub smtp_get_mail_final {
 #	return value: none
 #
 sub read_message {
-    local ($dist_mode) = @_;
-    local ($message_file);
-    local (*READ);
+    local($dist_mode) = @_;
+    local($message_file);
+    local(*READ);
     if ($dist_mode) {
 	$message_file = &expand_path($Dist_file);
     } else {
@@ -1200,8 +1178,8 @@ sub read_message {
 #
 sub read_mp_message {
     (my $file, local *content) = @_;
-    local ($message_file);
-    local (*MP_READ);
+    local($message_file);
+    local(*MP_READ);
     if ($file eq '-') {
 	$message_file = '/dev/tty';	# get from STDIN
     } else {
@@ -1225,8 +1203,8 @@ sub read_mp_message {
 #	return value: none
 #
 sub encapsulate_body {
-    local ($boundary) = @_;
-    local ($l);
+    local($boundary) = @_;
+    local($l);
 #   unshift(@Body, "\n");
     # pull down Content-* header lines into body part
     foreach $l (@Header) {
@@ -1250,7 +1228,7 @@ sub encapsulate_body {
 #	return value: none
 #
 sub add_multipart {
-    local ($part_code);
+    local($part_code);
     local($mp_boundary) = &gen_message_id(0);
     $mp_boundary =~ y/<@>/-_-/;
     &encapsulate_body($mp_boundary);
@@ -1285,7 +1263,7 @@ sub add_multipart {
 ## endif
 	}
 	if ($part_code eq '8BIT') {
-	    local ($part_encoding);
+	    local($part_encoding);
 	    push(@Body, "Content-Type: Text/plain; "
 	      . "charset=$Unknown8bit_label\n");
 	    if ($Conv_8to7) {
@@ -1350,7 +1328,7 @@ sub pgp_process {
 	  . "for PGP PassPhrase passing\n")
 	     if (&debug('pgp'));
 
-	local ($f) = fork;
+	local($f) = fork;
 	if ($f < 0) {
 	    im_err("Can not fork to exec PGP program.\n");
 	    &error_exit;
@@ -1438,9 +1416,9 @@ sub pgp_process {
 #		path_of_file: success
 #
 sub save_fcc {
-    my ($folder, $dir_style, $total) = @_;
-    my ($fcc_dir, $err_remove, $i, $msg, $dead);
-    my ($FCC);
+    my($folder, $dir_style, $total) = @_;
+    my($fcc_dir, $err_remove, $i, $msg, $dead);
+    my($FCC);
     &set_crlf("\n");
     $total = 0 unless ($Fcc_partial);
     if ($folder eq '') {
@@ -1557,18 +1535,18 @@ sub trash_message {
     }
     my $message_file = &expand_path($d);
     if ($message_file =~ /^(.*\D)(\d+)$/) {
-	my ($dir, $file) = ($1, $2);
+	my($dir, $file) = ($1, $2);
 	if ($Trashmark) {
 	    if (-f "$dir$Trashmark$file") {
-		unlink ("$dir$Trashmark$file");
+		unlink("$dir$Trashmark$file");
 	    }
-	    if (!rename ("$dir$file", "$dir$Trashmark$file")) {
+	    if (!rename("$dir$file", "$dir$Trashmark$file")) {
 		im_err("Can not rename: $dir$file as $dir$Trashmark$file\n");
 		&error_exit;
 	    }
-	    im_notice("$dir$file was renamed to $dir$Trashmark$file");
+	    im_notice("$dir$file was renamed to $dir$Trashmark$file\n");
 	} else {
-	    unlink ("$dir$file");
+	    unlink("$dir$file");
 	}
     }
 }
@@ -1585,8 +1563,8 @@ sub append_dist_header {
     } else {
 	$d = $Draft_message;
     }
-    my ($message_file) = &expand_path($d);
-    local (*DIST);
+    my($message_file) = &expand_path($d);
+    local(*DIST);
     unless (im_open(\*DIST, "<$message_file")) {
 	im_err("Can not open: $message_file\n");
 	&error_exit;
@@ -1603,7 +1581,7 @@ sub append_dist_header {
 #	return value: none
 #
 sub annotate {
-    my ($label, $ref) = @_;
+    my($label, $ref) = @_;
     local $_;
     im_notice("annotating messages ($ref).\n");
     return if (history_open(0) < 0);
@@ -1724,7 +1702,7 @@ sub annotate {
 	    return -1;
 	}
 	close(TMP);
-	unlink ($tmp);
+	unlink($tmp);
     }
     return 0;
 }
@@ -1738,8 +1716,8 @@ sub annotate {
 #	reutrn value: none
 #
 sub process_queue {
-    my ($queue_dir, $deliver) = @_;
-    my ($q, $found);
+    my($queue_dir, $deliver) = @_;
+    my($q, $found);
     unless ($deliver) {
 	require IM::EncDec && import IM::EncDec;
     }
@@ -1754,10 +1732,10 @@ sub process_queue {
     foreach $q (sort {$a <=> $b} readdir(QUEUEDIR)) {
 	next unless ($q =~ /^\d+$/);
 #	$QUEUE = 'QUEUE';
-	rename ("$queue_dir/$q", "$queue_dir/$q.wrk");
+	rename("$queue_dir/$q", "$queue_dir/$q.wrk");
 	unless (im_open(\*QUEUE, "<$queue_dir/$q.wrk")) {
 	    im_err("can't open $queue_dir/$q.wrk\n");
-	    rename ("$queue_dir/$q.wrk", "$queue_dir/$q");
+	    rename("$queue_dir/$q.wrk", "$queue_dir/$q");
 	    return;
 	}
 	im_notice("processing $queue_dir/$q.wrk ...\n");
@@ -1796,7 +1774,7 @@ sub process_queue {
 		unlink("$queue_dir/$q.wrk");
 		im_info("$queue_dir/$q: sent\n");
 	    } elsif ($rcode > 0) {
-		rename ("$queue_dir/$q.wrk", "$queue_dir/$q");
+		rename("$queue_dir/$q.wrk", "$queue_dir/$q");
 		im_info("$queue_dir/$q: preserved\n");
 	    } else {
 		unlink("$queue_dir/$q.wrk");
@@ -1804,8 +1782,8 @@ sub process_queue {
 		&error_report;
 	    }
 	} else {
-	    my ($r, $t);
-	    rename ("$queue_dir/$q.wrk", "$queue_dir/$q");
+	    my($r, $t);
+	    rename("$queue_dir/$q.wrk", "$queue_dir/$q");
 	    print "Message queued in $queue_dir/$q";
 	    if ($Config_opt ne '') {
 		print " (Config: $Config_opt)\n";
@@ -1858,9 +1836,9 @@ sub process_queue {
 #		 0: success
 #
 sub queue_message {
-    local ($queue_dir, *Header, *Body) = @_;
-    my ($q);
-    local (*QUEUE);
+    local($queue_dir, *Header, *Body) = @_;
+    my($q);
+    local(*QUEUE);
     unless (-d $queue_dir) {
 	unless (mkdir($queue_dir, &folder_mode(0))) {
 	    im_err("can't create directory $queue_dir\n");
@@ -1880,7 +1858,7 @@ sub queue_message {
     }
     closedir(QUEUEDIR);
     $max++;
-    my ($fail_cnt) = 0;
+    my($fail_cnt) = 0;
     im_notice("QUEUE creating $queue_dir/$max\n");
     msg_mode(1);
     while (&excl_create(\*QUEUE, "$queue_dir/$max") < 0) {
@@ -1933,8 +1911,8 @@ sub queue_message {
 # error_report()
 #
 sub error_report {
-    my ($rc);
-    local ($errlog) = &im_saved_errors();
+    my($rc);
+    local($errlog) = &im_saved_errors();
     # reset the server list
     @Smtp_servers = split(',', $Smtp_servers);
     push(@Smtp_servers, split(',', $Emg_Smtp_servers));
@@ -1965,11 +1943,11 @@ sub error_report {
 # error_exit()
 #
 sub error_exit {
-    local ($rc);
+    local($rc);
 #   if (!$Error_report_by_mail && !$Smtp_input_mode) {
 #	$Error_report_by_mail = 1 unless (-t STDERR); # unless TTY
 #   }
-    local ($errlog) = &im_saved_errors();
+    local($errlog) = &im_saved_errors();
     if ($Error_report_by_mail) {
 	# reset the server list
 	@Smtp_servers = split(',', $Smtp_servers);
@@ -2058,7 +2036,7 @@ sub error_exit {
 #	stat: exit status
 #
 sub exit_ {
-    local ($stat) = @_;
+    local($stat) = @_;
     &smtp_close;
     &nntp_close;
     exit $stat;
@@ -2080,6 +2058,488 @@ sub exit_ {
 # draft all
 # @HOSTNAME@
 # sgid mail
+
+__END__
+
+=head1 NAME
+
+imput - put mail/news message into networks
+
+=head1 SYNOPSIS
+
+B<imput> [OPTIONS] [MSG]
+
+=head1 DESCRIPTION
+
+The I<imput> command dispatches mail/news message by way of SMTP/NNTP.
+
+This command is provided by IM (Internet Message).
+
+=over 5
+
+=item With UCB Mail
+
+Define "sendmail" environment variable with value "imput".
+
+=item With Mew
+
+Eval (setq mew-prog-imput "imput").
+
+=item With MH
+
+Define sendproc in ~/.mh_profile like "sendproc: imput".
+
+=item With sendmail.el (if you are using VM or ....)
+
+Eval (setq sendmail-program "imput").
+
+=item With mh-e (4 or later)
+
+Eval (setq mh-send-prog "imput").
+
+=item With pine
+
+Define "sendmail-path" in ~/.pinerc, for example:
+
+sendmail-path=/usr/local/bin/imput -Report -ObeyHeader -IgnoreDot
+
+=item With applications which use sendmail
+
+Replace sendmail to this program but if daemon sendmail is required,
+original sendmail should be renamed to sendmail.bin or something else
+for starting daemon mode sendmail and for newaliasing.
+
+=item With applications which use inews
+
+Header generation by command line option not supported.
+
+=back
+
+=head1 OPTIONS
+
+=over 5
+
+=item I<--help>
+
+Display help message and exit.
+
+=item I<--debug={on,off}>
+
+Set all debug options.
+
+=item I<--debugflag=DEBUG_OPTION>
+
+Set specific debug options (separated with ',').
+
+=item I<--verbose={on,off}>
+
+Print verbose messages when running.
+
+=item I<--require=STRING>
+
+User defined perl script to be required.
+
+=item I<--smtpservers=STRING>
+
+List of SMTP servers (separated with ',').
+
+Each element should be server[/remote_port][%local_port]
+
+=item I<--emgsmtpsvrs=STRING>
+
+List of SMTP servers for Emergency Use (i.e. error reporting).
+
+=item I<--trynextonfatal={on,off}>
+
+Try next SMTP server evenif permanent failure.
+
+=item I<--nntpservers=STRING>
+
+List of NNTP servers (separated with ',').
+
+Each element should be server[/remote_port][%local_port]
+
+=item I<--nntpauthuser=STRING>
+
+User name for NNTP authentication.
+
+=item I<--clientname=STRING>
+
+Name as a SMTP client (used for SMTP HELO).
+
+=item I<--sshserver=STRING>
+
+SSH port relay server.
+
+=item I<--obeymtadomain={on,off}>
+
+Do not qualify local addresses with default domain.
+
+=item I<--fromdomain=STRING>
+
+Default domain name for sender.
+
+=item I<--todomain=STRING>
+
+Default domain name for recipients.
+
+=item I<--msgiddomain=STRING>
+
+Default domain name for Message-Id generation.
+
+=item I<--nomsgidfornews=STRING>
+
+Strip Message-Id when posting to news system.
+
+=item I<--user=STRING>
+
+Local part of the sender address.
+
+=item I<--address=STRING>
+
+Address used in From: header; equivalent to User@FromDomain
+
+=item I<--name=STRING>
+
+Commentary name for sender.
+
+=item I<--nameincomment={on,off}>
+
+Show commentary name in () on From: header.
+
+=item I<--org=STRING>
+
+Name of organization for news posting.
+
+=item I<--subj=STRING>
+
+A string for subject field.
+
+=item I<--nscmpl={on,off}>
+
+Use domain-part completion with nameserver.
+
+=item I<--showrcpts={on,off}>
+
+Allow to show recipients in header as To: if no To: in original.
+
+=item I<--metoo={on,off}>
+
+Request DCC to me.
+
+=item I<--dcc=STRING>
+
+Supplemental DCC address.
+
+=item I<--fcc=STRING>
+
+Folder name to save FCC.
+
+=item I<--receipt={on,off}>
+
+Need a report of successful delivery.
+
+=item I<--group=STRING>
+
+Newsgroup names to be posted in.
+
+=item I<--jpconv={on,off}>
+
+Convert japanese character encoding from EUC/SJIS to JIS.
+
+=item I<--defcode=STRING>
+
+Default classification of japanese character code (EUC/SJIS/8BIT).
+Default value is "8bit".
+
+=item I<--jpheader={on,off}>
+
+Encode japanese JIS characters to MIME style at header.
+Default value is "on".
+
+=item I<--hdrqencoding={on,off}>
+
+Header encoding type: 0 is B; 1 is Q.
+
+=item I<--nohdrfolding={on,off}>
+
+Do not fold long header lines.
+
+=item I<--sortheader=STRING>
+
+Header sequence for sorting (labels separated with ',').
+
+=item I<--8to7={on,off}>
+
+Convert 8bit body to 7bit by base64/quoted-printable encoding.
+
+=item I<--8bitlabel=STRING>
+
+Sub-type label for unknown 8bit body on Content-Type:.
+Default value is "unknown-8bit".
+
+=item I<--lines=NUM>
+
+Line numbers for splitting into partial messages.
+
+=item I<--sleep=NUM>
+
+Sleep interval for dispatching each splitted messages.
+Default value is 10.
+
+=item I<--log=STRING>
+
+File name to write delivery log.
+Default value is "putlog".
+
+=item I<--syslog={on,off}>
+
+Use SYSLOG feature instead of writing to a file directly.
+
+=item I<--report={on,off}>
+
+Report errors via mail.
+Default value is "on".
+
+=item I<--msgid={on,off}>
+
+Generate Message-Id header line.
+Default value is "on".
+
+=item I<--pidmsgid={on,off}>
+
+Generate Message-Id with Process ID.
+
+=item I<--uidmsgid={on,off}>
+
+Generate Message-Id with User ID instead of login name.
+
+=item I<--date={on,off}>
+
+Generate Date header line.
+Default value is "on".
+
+=item I<--newsgmtdate={on,off}>
+
+Generate date field in GMT for posting news.
+
+=item I<--uselines={on,off}>
+
+Generate Lines header line.
+Default value is "on".
+
+=item I<--aliasesfile=STRING>
+
+List of files for mail address aliasing.
+Default value is "Aliases".
+
+=item I<--addrbook=STRING>
+
+List of Addrbook files.
+
+=item I<--hostaliases=STRING>
+
+List of files for domain part completion.
+
+=item I<--fccpartial={on,off}>
+
+Save FCC with partial format.
+
+=item I<--dead=STRING>
+
+Path of file to save unsent message as a deadletter.
+Default value is "dead.letter".
+
+=item I<--justqueuing={on,off}>
+
+Just store message into queue without attempt of delivery.
+
+=item I<--queuing={on,off}>
+
+Store message into queue on delivery failure.
+
+=item I<--processqueue={on,off}>
+
+Process queued messages.
+
+=item I<--queuestatus={on,off}>
+
+Show list of queued messages.
+
+=item I<--folder=STRING>
+
+Path of draft folder directory.
+
+=item I<--mimebcc={on,off}>
+
+Use MIME (message/rfc822) style BCC.
+Default value is "on".
+
+=item I<--trashmark=STRING>
+
+Prefix character for draft message file renaming.
+Default value is "#".
+
+=item I<--preserve={on,off}>
+
+Preserve draft message as is even if dispatched successfully.
+
+=item I<--message=STRING>
+
+Path/name of draft message.
+
+=item I<--pgpsign={on,off}>
+
+Generate PGP signature for body-part.
+
+=item I<--multipartadd=STRING,STRING...>
+
+Path/name of message to be added as a part of multipart message.
+
+=item I<--filenameadd={on,off}>
+
+Add filename field at Content-Disposition header.
+
+=item I<--smtp={on,off}>
+
+Perform SMTP style input mode.
+
+=item I<--annotate={on,off}>
+
+Annotate on the parent message (MsgDB required).
+
+=item I<--dist={on,off}>
+
+Redistribution mode (using Resent-*:).
+
+=item I<--distmsg=STRING>
+
+Path of message for redistribution.
+
+=item I<--obeyheader={on,off}>
+
+Collect recipients from message header.
+
+=item I<--ignoredot={on,off}>
+
+Ignore DOT for message termination.
+
+=item I<--newscheck={on,off}>
+
+No news posting if To, Cc header found evenif Newsgroups: exists.
+
+=item I<--esmtp={on,off}>
+
+Enforce ESMTP (always begins with EHLO).
+
+=item I<--newspost={on,off}>
+
+Enable NNTP.
+Default value is "on".
+
+=item I<--addheader=STRING,STRING...>
+
+Header lines to be added.
+
+=back
+
+For compatibility with the send command (provided by MH/nmh):
+
+	-mime=<on|off> (on)
+		
+	-watch=<on|off> (off)
+		
+	-draftmessage=<string> ()
+		
+	-draftf=<string> ()
+		
+	-verbose=<on|off> (off)
+		
+	-draftfolder=<string> ()
+		
+	-nowatch=<on|off> (off)
+		
+	-nodraftfolder=<string> ()
+		
+	-draftm=<string> ()
+		
+	-draft=<on|off> (off)
+		
+	-alias=<string> (Aliases)
+		
+	-aliasesfile=<string> (Aliases)
+		
+	-filter=<string> ()
+		
+	-nofilter=<on|off> (off)
+		
+	-format=<on|off> (off)
+		
+	-noformat=<on|off> (off)
+		
+	-forward=<on|off> (off)
+		
+	-noforward=<on|off> (off)
+		
+	-push=<on|off> (on)
+		
+	-nopush=<on|off> (on)
+		
+	-width=<num> ()
+		
+	-library=<string> ()
+		
+	-hencode=<on|off> (on)
+		
+	-nohencode=<on|off> (on)
+		
+	-split=<num> (10)
+		
+	-server=<string> (localhost)
+		
+	-client=<string> (localhost)
+		
+	-bs=<on|off> (off)
+		
+	-f=<string> ()
+		
+	-t=<on|off> (off)
+		
+	-v=<on|off> (off)
+		
+	-odb=<on|off> (off)
+		
+	-odi=<on|off> (off)
+		
+	-oem=<on|off> (on)
+		
+	-oi=<on|off> (off)
+		
+	-i=<on|off> (off)
+		
+	-om=<on|off> (off)
+		
+	-m=<on|off> (off)
+		
+	-odq=<on|off> (off)
+		
+	-q=<on|off> (off)
+		
+	-bp=<on|off> (off)
+		
+	-J=<on|off> (off)
+		
+	-h=<on|off> (off)
+		
+	-s=<string> ()
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.

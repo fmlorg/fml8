@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Apr 14, 2000
+### Revised: Dec  7, 2002
 ###
 
-my $PM_VERSION = "IM::Smtp.pm version 20000414(IM141)";
+my $PM_VERSION = "IM::Smtp.pm version 20021207(IM142)";
 
 package IM::Smtp;
 require 5.003;
@@ -28,21 +28,6 @@ use vars qw(@ISA @EXPORT);
 @EXPORT = qw(smtp_open smtp_close smtp_transaction
 	smtp_transaction_for_error_notify);
 
-=head1 NAME
-
-Smtp - SMTP interface package
-
-=head1 SYNOPSIS
-
-$return_code = &smtp_open(current_server, server_list, log_flag);
-$return_code = &smtp_close(socket, savehist_flag);
-$return_code = &smtp_transaction(bcc_flag, part_current, part_total);
-$return_code = &smtp_transaction_for_error_notify;
-
-=head1 DESCRIPTION
-
-=cut
-
 use vars qw(@Status $Smtp_opened *SMTPd $SmtpErrTitle
 	    $Esmtp_flag %ESMTP);
 ##### SMTP SESSION OPENING #####
@@ -56,8 +41,8 @@ use vars qw(@Status $Smtp_opened *SMTPd $SmtpErrTitle
 #		 1: recoverable error (should be retried)
 #		-1: unrecoverable error
 #
-sub smtp_open ($$$) {
-    my ($server, $server_list, $logging) = @_;
+sub smtp_open($$$) {
+    my($server, $server_list, $logging) = @_;
     local $_;
     my $rc;
     my $svr = &get_cur_server_original_form();
@@ -77,7 +62,7 @@ sub smtp_open ($$$) {
     $SmtpErrTitle = "(while talking to " . &get_cur_server() . " with smtp)\n";
     return $rc if ($rc = &tcp_command(\*SMTPd, '', ''));
     $Esmtp_flag = 0;
-    my (@resp) = &command_response;
+    my(@resp) = &command_response;
     if (join('/', @resp) =~ /ESMTP/) {
 	$Esmtp_flag = 1;
     }
@@ -85,7 +70,7 @@ sub smtp_open ($$$) {
     if ($Esmtp_flag) {
 	unless (&tcp_command(\*SMTPd, "EHLO $main::Client_name", '')) {
 	# ESMTP OK
-	my (@resp) = &command_response;
+	my(@resp) = &command_response;
 	foreach (@resp) {
 	    if (/^250[ \-]([A-Z0-9]+)$/) {
 		$ESMTP{$1} = 1;
@@ -114,7 +99,7 @@ sub smtp_open ($$$) {
 #		 1: recoverable error (should be retried)
 #		-1: unrecoverable error
 #
-sub smtp_close () {
+sub smtp_close() {
 #   @Status =();
     return 0 unless ($SMTPd);
     return 0 unless ($Smtp_opened);
@@ -137,8 +122,8 @@ sub smtp_close () {
 #		 1: recoverable error (should be retried)
 #		-1: unrecoverable error
 #
-sub smtp_transaction ($$$$$$) {
-    my ($servers, $Header, $Body, $bcc, $part, $total) = @_;
+sub smtp_transaction($$$$$$) {
+    my($servers, $Header, $Body, $bcc, $part, $total) = @_;
     my $rc;
     my $fatal_error = 0;
     
@@ -181,9 +166,9 @@ sub smtp_transaction ($$$$$$) {
 #		 1: recoverable error (should be retried)
 #		-1: unrecoverable error
 #
-sub smtp_transact_sub ($$$$$$$) {
-    my ($server, $server_list, $Header, $Body, $bcc, $part, $total) = @_;
-    my ($i, $rc, $fail, @fatal, $msg_size, $btype);
+sub smtp_transact_sub($$$$$$$) {
+    my($server, $server_list, $Header, $Body, $bcc, $part, $total) = @_;
+    my($i, $rc, $fail, @fatal, $msg_size, $btype);
     return $rc if ($rc = smtp_open($server, $server_list, 1));
     if ($ESMTP{'8BITMIME'} && $main::Has_8bit_body && !$main::do_conv_8to7) {
         $btype = ' BODY=8BIT';
@@ -199,7 +184,7 @@ sub smtp_transact_sub ($$$$$$$) {
     }
     return $rc if ($rc);
     $fail = 0;
-    my ($rec);
+    my($rec);
     for ($i = 0; $i <= $#main::Recipients; $i++) {
 	$rec = $main::Recipients[$i];
 	if ($bcc) {
@@ -210,7 +195,7 @@ sub smtp_transact_sub ($$$$$$$) {
 	    } else {
 		$rc = &tcp_command(\*SMTPd, "RCPT TO:<$rec>", '');
 	    }
-	    my (@resp) = &command_response;
+	    my(@resp) = &command_response;
 	    if ($rc) {
 		push(@fatal, @resp);
 	    }
@@ -223,7 +208,7 @@ sub smtp_transact_sub ($$$$$$$) {
 	    } else {
 		$rc = &tcp_command(\*SMTPd, "RCPT TO:$rec", '');
 	    }
-	    my (@resp) = &command_response;
+	    my(@resp) = &command_response;
 	    if ($rc) {
 		push(@fatal, @resp);
 	    }
@@ -252,7 +237,7 @@ sub smtp_transact_sub ($$$$$$$) {
     }
     select (SMTPd); $| = 1; select (STDOUT);
     return $rc if ($rc = &tcp_command(\*SMTPd, '.', ''));
-    my (@resp) = &command_response;
+    my(@resp) = &command_response;
     &log_action($Esmtp_flag ? 'esmtp' : 'smtp', &get_cur_server(),
 		join(',', @main::Recipients), 'sent', @resp);
     $main::Info .= "Delivery successful for the following recipient(s):\n";
@@ -276,9 +261,9 @@ sub smtp_transact_sub ($$$$$$$) {
 #		 1: recoverable error (should be retried)
 #		-1: unrecoverable error
 #
-sub smtp_transaction_for_error_notify ($$$$) {
-    my ($server, $servers, $Header, $Body) = @_;
-    my ($rc, @prev_rcpt, @prev_stat);
+sub smtp_transaction_for_error_notify($$$$) {
+    my($server, $servers, $Header, $Body) = @_;
+    my($rc, @prev_rcpt, @prev_stat);
     @prev_rcpt = @main::Recipients;
     @prev_stat = @Status;
     @main::Recipients = ($main::Sender);
@@ -292,13 +277,42 @@ sub smtp_transaction_for_error_notify ($$$$) {
 	$Esmtp_flag ? 'esmtp' : 'smtp', &get_cur_server, 1, &get_session_log);
     select (SMTPd); $| = 1; select (STDOUT);
     return $rc if ($rc = &tcp_command(\*SMTPd, '.', ''));
-    my (@resp) = &command_response;
+    my(@resp) = &command_response;
     &log_action($Esmtp_flag ? 'esmtp' : 'smtp', &get_cur_server(),
 		join(',', @main::Recipients), 'sent', @resp);
     return 0;
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+IM::Smtp - SMTP handler
+
+=head1 SYNOPSIS
+
+ use IM::Smtp;
+
+ $return_code = &smtp_open(current_server, server_list, log_flag);
+ $return_code = &smtp_close(socket, savehist_flag);
+ $return_code = &smtp_transaction(bcc_flag, part_current, part_total);
+ $return_code = &smtp_transaction_for_error_notify;
+
+=head1 DESCRIPTION
+
+The I<IM::Smtp> module handles SMTP.
+
+This modules is provided by IM (Internet Message).
+
+=head1 COPYRIGHT
+
+IM (Internet Message) is copyrighted by IM developing team.
+You can redistribute it and/or modify it under the modified BSD
+license.  See the copyright file for more details.
+
+=cut
 
 ### Copyright (C) 1997, 1998, 1999 IM developing team
 ### All rights reserved.
