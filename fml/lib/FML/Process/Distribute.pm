@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.74 2002/04/23 14:10:33 fukachan Exp $
+# $FML: Distribute.pm,v 1.75 2002/04/28 13:34:16 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -390,7 +390,12 @@ sub _deliver_article
     my $fp  = sub { Log(@_);}; # pointer to the log function
     my $sfp = sub { my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;};
 
-    { # debug
+    my $wh = $curproc->open_outgoing_message_channel();
+    if (defined $wh) {
+	$sfp = sub { print $wh @_;};
+    }
+
+    if (0) { # debug
 	my $dir = $config->{ smtp_log_dir };
 	use File::Utils qw(mkdirhier);
 	mkdirhier($dir) unless -d $dir;
@@ -406,6 +411,7 @@ sub _deliver_article
 	    }
 	}
     }
+
 
     # delay loading of module
     my $service = {};
