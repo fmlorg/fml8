@@ -5,7 +5,7 @@ my $dir = dirname($0);
 
 $| = 1;
 
-my $msg = "$dir/msg_mp";
+my $msg = shift || "$dir/msg_mp";
 
 use FileHandle;
 my $fh = new FileHandle $msg;

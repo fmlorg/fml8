@@ -288,10 +288,11 @@ sub parse_mime_multipart
     return undef unless $args->{ content  };
 
     # boundaries of the continuous multipart blocks
-    my $content   = $args->{ content };
-    my $boundary  = $args->{ boundary };
-    my $buf_begin = index($$content, $boundary     , 0);
-    my $buf_end   = index($$content, $boundary."--", 0);
+    my $content        = $args->{ content };
+    my $boundary       = $args->{ boundary };
+    my $content_length = length($$content);
+    my $buf_begin      = index($$content, $boundary     , 0);
+    my $buf_end        = index($$content, $boundary."--", 0);
 
     # prepare lexical variables
     # pb = position of the beginning, pe = position of the end
@@ -319,6 +320,16 @@ sub parse_mime_multipart
 	});	
     } while ($pe <= $buf_end);
 
+    my $p = index($$content, "\n", $buf_end) + 1;
+    if (($content_length - $p) > 0) {
+	$m[ $i++ ] = _alloc_new_part($self, {
+	    boundary     => $boundary,
+	    offset_begin => $p,
+	    offset_end   => $content_length,
+	    content      => $content,
+	});
+    }
+
     my $j = 0;
     for ($j = 0; $j < $i; $j++) {
 	if (defined $m[ $j + 1 ]) {
@@ -345,9 +356,6 @@ sub _alloc_new_part
     my $me = {};
 
     _create($me, {
-	next         => $args->{ next } || undef,
-	prev         => $args->{ prev } || undef,
-
 	offset_begin => $args->{ offset_begin },
 	offset_end   => $args->{ offset_end },
 	content      => $args->{ content },

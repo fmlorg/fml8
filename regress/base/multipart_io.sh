@@ -4,9 +4,18 @@ dir=`dirname $0`
 
 tmp=/tmp/buf$$
 
-sed -n '1,/^$/p' $dir/msg_mp > $tmp
-perl $dir/multipart_io.pl   >> $tmp
+trap "rm -f $tmp" 0 1 3 15
 
-diff -ub $dir/msg_mp $tmp && echo ok || echo fail
+
+DIFF () {
+	local msg=$1
+ 
+	sed -n '1,/^$/p' $msg > $tmp
+	perl $dir/multipart_io.pl $msg  >> $tmp
+	diff -ub $msg $tmp && echo ok || echo fail
+}
+ 
+DIFF $dir/msg_mp
+DIFF $dir/msg_mp.2
 
 exit 0;
