@@ -23,8 +23,8 @@ Tie::JournaledFile - hash emulation for a log structered file
    use Tie::JournaledFile;
    $db = new Tie::JournaledFile { file => 'cache.txt' };
 
-   # all entries with the key = 'rudo'
-   @values = $db->grep( rudo );
+   # get all entries with the key = 'rudo'
+   @values = $db->grep( 'rudo' );
 
 or
 
@@ -32,7 +32,7 @@ or
    tie %db, 'Tie::JournaledFile', { file => 'cache.txt' };
    print $db{ rudo }, "\n";
 
-where cache file "cache.txt" format is "key value" for each line.
+where the format of "cache.txt" is "key value" for each line.
 For example
 
      rudo   teddy bear
@@ -45,8 +45,8 @@ By default, FETCH() returns the first value with the key.
    tie %db, 'Tie::JournaledFile', { first_match => 1, file => 'cache.txt' };
    print $db{ rudo }, "\n";
 
-if you find the latest value (so at the later line somewhere in the
-file) for the $key
+If you print out the latest value (so at the later line somewhere in
+the file) for the specified C<$key>
 
    use Tie::JournaledFile;
    tie %db, 'Tie::JournaledFile', { last_match => 1, file => 'cache.txt' };

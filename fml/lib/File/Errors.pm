@@ -23,24 +23,27 @@ File::Errors - error handling utilities
 
 =head1 SYNOPSIS
 
-	package Something;
-	use File::Errors qw(error_reason error error_reset);
+Consider C<Something> class module
 
-	sub xxx
-	{
-		if something errors ...
-		$self->error_reason( error reason );
-	}
+   package Something;
+   use File::Errors qw(error_reason error error_reset);
 
-When you use Something module,
+   sub xxx
+   {
+      if something errors ...
+      $self->error_reason( error reason );
+   }
 
-	use Something;
-	$obj = new Something;
-	unless ($obj->error) { $obj->do_somting( ...); };
+You use C<Something> module like this.
+
+   use Something;
+   $obj = new Something;
+   $obj->xxx();
+   unless ($obj->error) { $obj->do_somting( ...); };
 
 =head1 DESCRIPTION
 
-utility functions to manipulate error messages.
+simple utility functions to manipulate error messages.
 
 =head1 METHODS
 
@@ -77,7 +80,6 @@ sub error_reset
     undef $self->{'_error_action'} if defined $self->{'_error_action'};
     return $msg;
 }
-
 
 
 =head1 AUTHOR
