@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: ConfViewer.pm,v 1.1 2001/11/25 05:13:22 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.2 2001/11/25 07:53:13 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -135,11 +135,8 @@ sub run
 # Return Value: none
 sub help
 {
-    my $name = $0;
-    eval {
-	use File::Basename;
-	$name = basename($0);
-    };
+    my ($curproc, $args) = @_;
+    my $name = $curproc->myname();
 
 print <<"_EOF_";
 

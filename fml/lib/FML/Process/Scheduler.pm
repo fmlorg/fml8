@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Scheduler.pm,v 1.6 2001/11/25 09:04:43 fukachan Exp $
+# $FML: Scheduler.pm,v 1.7 2001/11/25 10:43:35 fukachan Exp $
 #
 
 package FML::Process::Scheduler;
@@ -132,7 +132,10 @@ sub help
     my ($self) = @_;
 
     my $name = $0;
-    eval q{ use File::Basename; $name = basename($0);};
+    eval q{ use File::Basename; 
+	    $name = basename($0); 
+	    if ($name =~ /(\w+)$/) { $name = $1;}
+	};
 
 print <<"_EOF_";
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: TinyScheduler.pm,v 1.8 2001/09/22 13:17:10 fukachan Exp $
+# $FML: TinyScheduler.pm,v 1.9 2001/11/23 02:52:27 fukachan Exp $
 #
 
 package TinyScheduler;
@@ -68,6 +68,16 @@ sub new
     use User::pwent;
     my $pw                  = getpwnam($user);
     my $home_dir            = $pw->dir;
+
+    # XXX FML::Restriction / Taint
+    # simple check (not enough mature) to avoid -T error ;)
+    if ($home_dir =~ /^([\w\d\.\/]+)$/) {
+	$home_dir = $1;
+    }
+    else {
+	croak("invalid home directory");
+    }
+
     $me->{ _user }          = $user;
     $me->{ _schedule_dir }  = "$home_dir/.schedule"; # ~/.schedule/ by default
     $me->{ _schedule_file } = undef;
@@ -77,6 +87,9 @@ sub new
 	    $me->{ "_$key" } = $args->{ $key };
 	}
     }
+
+    # reset PATH
+    $ENV{'PATH'} = '/bin/:/usr/bin:/usr/pkg/bin:/usr/local/bin';
 
     return bless $me, $type;
 }
