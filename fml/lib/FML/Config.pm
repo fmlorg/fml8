@@ -15,6 +15,7 @@ use Carp;
 sub new
 {
     my ($self) = @_;
+
     my $me = \%_fml_config;
     return bless $me, $self;
 }
@@ -125,24 +126,40 @@ sub _expand_variables
     my $max = 0;
     my $org = '';
 
-    # expand $xxx style variables
-    no strict 'refs';
-    for my $x ( @$order ) { $$x = $config->{ $x };}
+    # check whether the variable definition is recursive.
+    # For example, definition "var_a = $var_a/b/c" causes loop.
+    for my $x ( @$order ) {
+	if ($config->{ $x } =~ /\$$x/) {
+	    croak("loop1: definition of $x is recursive\n");
+	}
+    }
+
 
   KEY:
     for my $x ( @$order ) {
-	next KEY unless $config->{ $x } =~ /\$/o;
-
-	$max = 0;
+	next KEY if $config->{ $x } !~ /\$/o;
 
 	# we need a loop to expand nested variables, for example, 
 	# a = $x/y and b = $a/c/0
-      EXPAND_LOOP:
+	# 
+	$max = 0;
+      EXPANSION_LOOP:
 	while ($max++ < 16) {
 	    $org = $config->{ $x };
-	    $config->{ $x } =~ s/\$([a-z_]+)/${$1}/g;
-	    last EXPAND_LOOP if $org eq $config->{ $x };
+
+	    $config->{ $x } =~ s/\$([a-z_]+)/$config->{$1}/g;
+
+	    last EXPANSION_LOOP if $config->{ $x } !~ /\$/o;
+	    last EXPANSION_LOOP if $org eq $config->{ $x };
+
+	    if ($config->{ $x } =~ /\$$x/) {
+		croak("loop2: definition of $x is recursive\n");
+	    }
         }
+
+	if ($max >= 16) {
+	    croak("variable expansion of $x causes infinite loop\n");
+	} 
     }
 }
 
