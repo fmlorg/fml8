@@ -1,13 +1,19 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/07/10
 
-	   ドキュメントクリーニング きゃんぺーん
+   CPAN modules
+	import Unicode::Japanese 0.09
 
+   CPAN documents	
+	catch up (2002::07::10)
 
-2002/06/30
+2002/06/30-2002/07/30
 
    ドキュメントクリーニング きゃんぺーん
+
+2002/06/30
 
    FML::Command::HTMLify 
 	more check of input
@@ -2706,4 +2712,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.83 2002/06/24 15:01:51 fukachan Exp $
+$FML: CHANGES.txt,v 1.84 2002/06/30 14:37:41 fukachan Exp $
