@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: loader.in,v 1.6 2001/11/27 08:38:38 fukachan Exp $
+# $FML: loader.in,v 1.7 2001/11/27 11:50:26 fukachan Exp $
 #
 
 eval 'exec @PERL@ -S $0 ${1+"$@"}'
@@ -12,6 +12,7 @@ eval 'exec @PERL@ -S $0 ${1+"$@"}'
 
 use vars qw($running_under_some_shell);
 use strict;
+use IO::File;
 
 # reset PATH in the early stage
 $ENV{'PATH'} = '/bin:/usr/bin';
@@ -21,7 +22,7 @@ delete @ENV{'IFS', 'CDPATH', 'ENV', 'BASH_ENV'};
 {
     my $prefix      = "@prefix@";
     my $exec_prefix = "@exec_prefix@";
-    my $main_cf     = "@sysconfdir@/fml/main.cf";
+    my $main_cf     = "@fmlconfdir@/main.cf";
 
     eval q{ Bootstrap($main_cf);};
 
@@ -82,7 +83,7 @@ sub Bootstrap
     unless (-f $main_cf_default) {
 	__CROAK("cannot find $main_cf_default");
     }
-    my $fh = new FileHandle $main_cf_default;
+    my $fh = new IO::File $main_cf_default, "r";
     unless (defined $fh) {
 	__CROAK("cannot open $main_cf_default");
     }
@@ -158,8 +159,7 @@ sub loader_read_main_cf
     my ($file) = @_;
     my $config = {};
 
-    use FileHandle;
-    my $fh = new FileHandle $file;
+    my $fh = new IO::File $file, "r";
 
     if (defined $fh) {
 	my $curkey = '';
