@@ -178,6 +178,14 @@ sub remove_subject_tag_like_string
 }
 
 
+sub delete_unsafe_header_fields
+{
+    my ($header, $config, $args) = @_;
+    my (@fields) = split(/\s+/, $config->{ unsafe_header_fields });
+    for (@fields) { $header->delete($_);}
+}
+
+
 =head1 SEE ALSO
 
 L<Mail::Address>
