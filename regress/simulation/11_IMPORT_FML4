@@ -1,11 +1,3 @@
-ドキュメンテーションのチェック 2001 last 
-
-	ErrorStatus.pm
-	IO/Adapter/ErrorStatus.pm
-	Mail/Delivery/ErrorStatus.pm
-
--------------------------------------------------------
-
 kern/fml.pl                    13.30	
 	kern/libenvf.pl                1.46	done
 	kern/libenvfsubr.pl            0.62	done

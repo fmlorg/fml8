@@ -1,0 +1,377 @@
+		雑多なメモ
+		Last Modified: $Date$
+
+
+○	$curproc->{ main_cf } のパラメータをむやみに/気軽によびだしてはいけない。
+	きちんとしたアクセスメソッドを用意するべきである。
+
+
+○	IO::Adapter::find() の定義を考え直せ
+
+	lib/FML/Command/Admin/newml.pm
+
+はこれからだけど、↓このへんで IO::Adapter::find() を使ってるけど、返
+される値の期待は OK （修正したはず）？
+
+
+   IO/Adapter/DBI.pm:271:    my $a = $self->find($regexp, { want => 'key', all => 1});
+
+
+   FML/Command/Admin/newml.pm:74:	    my $path = $obj->find("^$ml_name");
+
+
+
+○	IO::Adapter::get_XXX() の定義を考え直せ
+
+	   IO/Adapter/DBI.pm:182:    $self->get_next_key($args);
+
+
+○	ドキュメンテーションのチェック 2001 last 
+
+	ErrorStatus.pm
+	IO/Adapter/ErrorStatus.pm
+	Mail/Delivery/ErrorStatus.pm
+
+
+○ 	未完成だ
+
+	(perl -cw に引っかかる)
+
+	FML/Filter/BodyCheck.pm
+	FML/Filter/TrafficMonitor.pm
+	../img/lib/IM/EncDec.pm
+
+
+○ 	@EXPORT @EXPORT_OK をやめたい
+
+
+○ 	サーチするキーに対して quotemeta() を
+
+
+○	Mail::ThreadTrack のドキュメントなどはよく見直すべき（？）
+
+
+○	まちがってない？
+
+	 Mail::Delivery::ESMTP の new()
+
+
+○	FML::Language:: はどうよ
+
+	これ自体はまぁいいとはおもうけど、他のモジュールで使うにはちょっと
+	うとおしいくらい深くないか？
+
+		Srting::is_japanese_string()
+
+	などをトップレベルインターフェイスにするべきじゃないかな	
+
+
+○	FML::Filter::Utils  は FML::Restriction へ移動ですかね？
+
+
+○	FML::Process::Kernel FML::Process::Distribute
+
+	そのうちゆっくりみなおしてみたいですな
+
+
+○	ファイルを用意しただけやんシリーズ;) 
+	これから改造するので、ほとんど未修正のままのこす
+
+	FML::Process::Qmail
+	FML/Filter/TrafficMonitor.pm
+	IO::Adapter::LDAP
+
+
+○	名前を再考するべき？
+
+	FML::Process::Scheduler は紛らわしいのでやめるべきか？
+
+		FML::Process::TinyScheduler ?
+		FML::Process::Demo::Scheduler ?
+
+○	あれ？
+
+	FML/Command/SendFile.pm の ErrorStatus いらないよね？
+
+
+○	FML::MIME は使われてないので削除した
+
+		Mail::Message::Decode
+		Mail::Message::Encode
+
+	の２つに分離された
+
+
+○	コマンドがロックをひつようとするか？などは
+	アクセスメソッドで処理するべきだ
+	-> FML::Command::Attribute を削除するべき
+
+
+○	makefml htmlify elena srdir=DIR dstdir=DIR
+	だけオプションのスタイルが違うのは問題じゃないかい？
+
+
+○	FML::Command::Admin::get はこわれてる
+
+	半分直した
+
+	ところで、誰に送信するんじゃ？ :-) って、そうか、makefml じゃ
+	なくて admin コマンドの時は考えなくてもいいからだな、それは …
+
+
+○	パフォーマンステスト
+
+   * loader 自体のコスト
+
+   perl -w
+	v5.6.1 built for i386-netbsd	遅いマシンですなぁ;)
+	on Pentium 100, 128M memory
+
+	loader on /tmp (MFS)
+
+	0.698u 0.049s 0:00.79 92.4%     0+0k 1+10io 1pf+0w
+	0.678u 0.068s 0:00.75 97.3%     0+0k 0+12io 0pf+0w
+	0.672u 0.060s 0:00.76 96.0%     0+0k 0+1io 0pf+0w
+
+
+○ HTML 化するコード
+
+むずかしいわけだ、
+
+ 	+
+		+
+			+ (3)
+
+
+	+ (4)
+		+
+
+
+となっているときに (3) の next_thread はいつ次のリンクがわかるのか？
+予言できない。過去に向かってスレッドを修正するアルゴリズムなので、
+過去の修正がいつ行なわれるかは良くわからないのでした ;)
+	
+(4) が来た時に (3) を修正するべき？
+
+とりあえず、すれっど全部のファイルに修正を試みるべきだ。
+ろーかるな更新は、あまりよい結果にならないようだ。
+
+
+==============================================================================
+[付録]	仕えそうなモジュール？
+
+
+Tie::Persistent_hash - persistent hash
+
+
+	If you use the line
+
+	        use Tie::STDERR;
+
+	at the start of your script (and maybe CGI script), any output
+	that would go to STDERR will be sent by email to root. You can
+	specify the recipient, for example
+
+	        use Tie::STDERR 'adelton';
+
+
+=======================================
+Tie::TransactHash README
+
+
+	This is the Tie::TwoLevelHash module.  It is a TIEHASH
+	interface which lets you tie to a text file which is a
+	multi-dimensional (two level) hash.
+
+	To use it, tie a hash to a directory:
+
+	# Open in read/write mode
+	tie(%hash, 'Tie::TwoLevelHash', $file, 'rw');
+
+
+=======================================
+HTML::CGIChecker
+
+
+
+=======================================
+HTML::DynamicTemplate - HTML template class.
+
+
+=======================================
+HTML::Template - a Perl module to use HTML Templates
+
+
+=======================================
+HTML/EasyTemplate version Version 0.985
+
+
+=======================================
+HTML::Subtext - Perform text substitutions on an HTML template
+
+   SYNOPSIS
+      use HTML::Subtext;
+      %context = ( ... ); # Hash of names to substitution text
+      $p = HTML::Subtext->new('CONTEXT' => \%context);
+      $p->parse_file("template.html");
+
+
+=======================================
+HTML::WWWTheme
+
+
+	HTML::WWWTheme is a module that creates a standard header and
+	footer for HTML pages.  This header includes <BODY> tags, and
+	is designed to wrap around valid body HTML.
+
+=======================================
+HTML::WebMake
+
+	WebMake is a simple content management system, based around a
+	templating system for HTML documents, with lots of built-in
+	smarts about what a "typical" informational website needs in
+	the way of functionality; metadata, sitemapping, navigational
+	aids, and (of course) embedded perl code. ;)
+
+
+
+=======================================
+HTML::Summary
+
+	The HTML::Summary module produces summaries from the textual
+	content of web pages. It does so using the location heuristic,
+	which determines the value of a given sentence based on its
+	position and status within the document; for example,
+	headings, section titles and opening paragraph sentences may
+	be favoured over other textual content. A LENGTH option can be
+	used to restrict the length of the summary produced.
+
+	This distribution contains the HTML::Summary module, and some
+	supporting modules. The full list of modules is:
+
+
+=======================================
+HTML::FromText - mark up text as HTML
+
+         use HTML::FromText;
+         print text2html($text, urls => 1, paras => 1, headings => 1);
+
+
+================
+use HTML::PageIndex;
+
+	$foo = new HTML::PageIndex;
+
+
+================
+HTML::Stream
+
+	This a lightweight form generation module, which can be used
+	with either CGI.pm (version 2 or 3), or (inside mod_perl)
+	Apache::Request.  The module provides similar facilities to
+	CGI.pm's HTML tag generation routines, but is restricted to
+	form field generation tags, with sticky values.  Also, the
+	interface is not so flexible as CGI.pm's, in order to keep the
+	code size down.
+
+
+================
+HTML::STable - Create HTML tables using SIMPLE interface.
+
+
+	STable name driven from Simple Table.
+
+
+================
+HTML::Pager - Perl module to handle CGI HTML paging of arbitary data
+
+
+	This module handles the paging of data coming from an
+	arbitrary source and being displayed using HTML::Template and
+	CGI.pm.  It provides an interface to pages of data similar to
+	many well-known sites, like altavista.digital.com or
+	www.google.com.
+
+	This module uses HTML::Templateto do all its HTML generation.
+	While it is possible to use this module without directly using
+	HTML::Template, it's not very useful.  Modification of the
+	look-and-feel as well as the functionality of the resulting
+	HTML should all be done through HTML::Template objects.  Take
+	a look at the the HTML::Template perldocs for more info.
+
+
+
+================
+HTML::Navigation
+
+
+	HTML::Navigation is Perl module for creating navigation
+	bars/menus of arbitrary design and structure within HTML
+	documents.
+
+
+================
+Mason
+
+	elcome to Mason, a Perl-based web site development and
+	delivery system.  Mason allows web pages and sites to be
+	constructed from shared, reusable building blocks called
+	components. Components contain a mix of Perl and HTML, and can
+	call each other and pass values back and forth like
+	subroutines. Components increase modularity and eliminate
+	repetitive work: common design elements (headers, footers,
+	menus, logos) can be extracted into their own components where
+	they need be changed only once to affect the whole site.
+
+	See http://www.masonhq.com/ for more information.
+
+
+
+================
+HTML::Widgets::Menu - Builds an HTML menu
+
+
+================
+PCB
+
+   129:    my $header = $curproc->{ incoming_message }->{ header };
+   214:    my $header = $curproc->{ incoming_message }->{ header };
+   249:    my $header = $curproc->{ incoming_message }->{ header };
+   389:    my $header = $curproc->{ incoming_message }->{ header };
+   
+   250:    my $body   = $curproc->{ incoming_message }->{ body };
+   
+   182:    my $header = $curproc->{ article }->{ header };
+   1045:   my $header = $curproc->{ article }->{ header };
+   
+   
+   131:    my $pcb     = $curproc->{ pcb };
+   373:    my $pcb     = $curproc->{ pcb };
+   473:    my $pcb     = $curproc->{ pcb };
+   
+   474:    my $db_type   = $curproc->{ ticket_db_type } || 'AnyDBM_File';
+   
+   1091:	$self->set_status($curproc, {
+
+
+
+----------------------------------------------------------------------
+TODO
+
+	->data() ではなく ->data_in_body_part() をつかうべし？
+
+	lib/FML/Process/Command.pm:    my $body    = $curproc->{ incoming_message }->{ body }->data_in_body_part;
+
+	lib/FML/Filter/BodyCheck.pm:    my $buf = $first_msg->data;
+	lib/FML/Filter/BodyCheck.pm:    my $buf = $first_msg->data;
+	lib/FML/Filter/BodyCheck.pm:    my $buf = $first_msg->data;
+
+	lib/Mail/Message.pm:    $self->data_in_body_part(@_[1 .. $#_]);
+	lib/Mail/Message.pm:sub data_in_body_part
+	lib/Mail/Message.pm:         $body = $m->data_in_body_part();
+
+	lib/Mail/Bounce/DSN.pm:	my $data = $m->data;
+
+
+----------
+$FML$
