@@ -4,6 +4,6 @@
 
 * SMTP
 
-	outgoing address
+	outgoing address hack
 
-	direct exec $program on the disk NOT IPC.
+	execute $program on the disk NOT IPC.
