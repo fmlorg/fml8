@@ -13,6 +13,14 @@
 	気をつけてください。
 
 
+2004/06/17
+
+   パッケージ化のための変更。ちょっと間違ってた _o_
+   FML::Install 
+	fix message of $default_config_dir installation when
+	install_root specified. 
+	fix install path of $ml_spool_dir when install_root specified. 
+
 2004/06/14
 
   メールキューイングの仕組みを、もっと正確にしました。
@@ -26,6 +34,13 @@
 
 	くわしくは、チュートリアルのトラブルシューティングあたりに
 	書いておきます。参照して下さい。
+
+
+   Mail::Message::ToHTML 
+	bugfix @indexs use my $indexs = \@indexs;
+	
+   FML::Process::Kernel 
+	defined($header) check before calling update_message_id_cache.
 
 2004/06/13
 
@@ -7232,4 +7247,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.210 2004/06/14 04:36:57 fukachan Exp $
+$FML: CHANGES.txt,v 1.211 2004/06/14 15:17:46 fukachan Exp $
