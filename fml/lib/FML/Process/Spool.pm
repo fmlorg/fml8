@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2002 Ken'ichi Fukamachi
+# Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.11 2002/09/22 14:56:54 fukachan Exp $
+# $FML: Spool.pm,v 1.12 2002/12/18 04:43:27 fukachan Exp $
 #
 
 package FML::Process::Spool;
@@ -22,13 +22,13 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::Process::Spool -- handle a spool directory
+FML::Process::Spool -- small maintenance jobs on the spool directory
 
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
 
-This class drives thread tracking system in the top level.
+This class provides utilitiy functions for the spool directory.
 
 =head1 METHODS
 
@@ -355,7 +355,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Ken'ichi Fukamachi
+Copyright (C) 2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
