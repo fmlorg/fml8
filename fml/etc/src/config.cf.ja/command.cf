@@ -85,6 +85,13 @@ command_mail_size_filter_rules	=	check_header_size
 =head2	コマンドメール一通あたりに含まれているコマンドへの上限
 
 
+#
+# 以下の制限はコマンドメールの文面全体についてのものであり、
+# コマンド依存の制限が別途存在する
+# 例: ${コマンド名}_command_ファイル数_limit
+#
+
+
 # Descriptions: コマンドメール一通あたりに含まれている
 #               有効なコマンド数の上限。
 #      History: $MAXNUM_COMMAND_INPUT
