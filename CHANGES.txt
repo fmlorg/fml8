@@ -1,6 +1,14 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/03/03
+
+   FML::Article 
+	bug fix::try to mkdir $dir ($subdir) when $use_subdir enabled.
+	
+   Mail::Message::Spool 
+	bug fix::check value not by defined()
+
 2003/02/18
 
    FML::Error 
@@ -4370,4 +4378,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.130 2003/02/16 13:20:16 fukachan Exp $
+$FML: CHANGES.txt,v 1.131 2003/03/02 16:39:34 fukachan Exp $
