@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: AtomicFile.pm,v 1.10 2004/01/24 09:00:53 fukachan Exp $
+# $FML: AtomicFile.pm,v 1.11 2004/02/15 04:38:36 fukachan Exp $
 #
 
 package IO::Adapter::AtomicFile;
@@ -197,7 +197,7 @@ sub close
        $fh->SUPER::close();
     }
 
-    if (rename($temp, $orig)) {
+    if (-s $temp && rename($temp, $orig)) {
        return 1;
     }
     else {
