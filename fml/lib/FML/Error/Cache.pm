@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.1.1.1 2002/08/07 03:51:11 fukachan Exp $
+# $FML: Cache.pm,v 1.2 2002/08/07 15:06:58 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -43,7 +43,7 @@ where C<$bounce_info) follows:
 # Descriptions: standard constructor
 #    Arguments: OBJ($self) HASH_REF($curproc)
 # Side Effects: none
-# Return Value: none
+# Return Value: OBJ
 sub new
 {
     my ($self, $curproc) = @_;
