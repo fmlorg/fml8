@@ -1,0 +1,13 @@
+
+  <title>Reference</title>
+  <para>
+    This chapter documents the drivers and options you may specify
+    in the configuration file.
+  </para>
+  <sect1>
+    <title>Source drivers</title>
+    <para>
+      The following drivers may be used in the source statement, as
+      described in the previous chapter.
+    </para>
+  </sect1>
