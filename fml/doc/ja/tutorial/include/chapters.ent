@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.90 2004/10/02 14:29:46 fukachan Exp $
+	$FML: chapters.ent,v 1.91 2004/10/28 13:18:25 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -81,6 +81,7 @@
 <!entity chapter.customize.filter    SYSTEM "customize/filter.sgml">
 <!entity recipe.filter.notice        SYSTEM "customize/recipe.filter.notice.sgml">
 <!entity recipe.filter.spamassassin  SYSTEM "customize/recipe.filter.spamassassin.sgml">
+<!entity recipe.filter.attachments   SYSTEM "customize/recipe.filter.attachments.sgml">
 <!entity chapter.filter              SYSTEM "internals/filter.sgml">
 <!entity var.filter.rules            SYSTEM "variables/filter.rules.sgml">
 <!entity var.filter.size             SYSTEM "variables/filter.size.sgml">
