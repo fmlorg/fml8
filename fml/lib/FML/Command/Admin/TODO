@@ -31,6 +31,8 @@ members
 off
 on
 		noskip			removed
+		skip			removed
+		subscribe		done
 		unsubscribe		done
 
 
@@ -50,19 +52,15 @@ on
 
 		forward			removed *新スタイルへ
 		get			done
-newguide
-newinfo
+		newguide		removed *新スタイルへ ?
+		newinfo			removed *新スタイルへ ?
 		put			removed *新スタイルへ
 		remove			注意: 別の意味になる
 		remove-article		removed *新スタイルへ
 		rename			removed *新スタイルへ
-resend
-		send			removed *新スタイルへ
-		skip			removed
-		subscribe		done
-		unlink			done
-					? もっとわかりやすいものへ？
-					file unlink とかか？
+		resend			removed *新スタイルへ ?
+		send			removed *新スタイルへ ?
+		unlink			removed *新スタイルへ
 		unlink-article		removed *新スタイルへ
 
 		file remove		done
@@ -96,4 +94,4 @@ help
 
 
 ----------
-$FML: TODO,v 1.5 2002/03/30 08:11:53 fukachan Exp $
+$FML: TODO,v 1.6 2002/03/30 11:58:45 fukachan Exp $

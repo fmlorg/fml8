@@ -2,44 +2,15 @@
 		Last Modified: $Date$
 
 
-○	階層化
-
-	スプール
-
 ○	トラフィックの統計？
 
 
 ○	CGI ?
 
-	FML::Process::CGI::{Kernel,Param}
-		|
-		A
-	FML::Process::CGI
-		|
-		A
-	FML::CGI::MenuFrame has components in FML::CGI::Admin et.al.
-
-	screen:
-
-			  header
-	----------------------------------------------
-			|		|
-	navigation_bar	| main_menu	|	navigation_subbar
-			|		|
-	----------------------------------------------
-			  footer
-
-
 	$object->configure( {
 			header => \&xxx_header(),
 
 		});
-
-
-○	コマンド clean up キャンペーン
-
-   * admin
-	(send)		この名前でいいかしら？
 
 
 ○	makefml get ???
@@ -81,75 +52,10 @@
 
 	などをトップレベルインターフェイスにするべきじゃないかな	
 
-
-○	FML::Process::Kernel
-	FML::Process::Distribute
-
-	そのうちゆっくりみなおしてみたいですな
+	だめ、ぶつかるだろうってば;)
 
 
-○	パフォーマンステスト
-
-   * loader 自体のコスト
-
-   perl -w
-	v5.6.1 built for i386-netbsd	遅いマシンですなぁ;)
-	on Pentium 100, 128M memory
-
-	loader on /tmp (MFS)
-
-	0.698u 0.049s 0:00.79 92.4%     0+0k 1+10io 1pf+0w
-	0.678u 0.068s 0:00.75 97.3%     0+0k 0+12io 0pf+0w
-	0.672u 0.060s 0:00.76 96.0%     0+0k 0+1io 0pf+0w
-
-
-○ HTML 化するコード
-
-むずかしいわけだ、
-
- 	+
-		+
-			+ (3)
-
-
-	+ (4)
-		+
-
-
-となっているときに (3) の next_thread はいつ次のリンクがわかるのか？
-予言できない。過去に向かってスレッドを修正するアルゴリズムなので、
-過去の修正がいつ行なわれるかは良くわからないのでした ;)
-	
-(4) が来た時に (3) を修正するべき？
-
-とりあえず、すれっど全部のファイルに修正を試みるべきだ。
-ろーかるな更新は、あまりよい結果にならないようだ。
-
-
-================================================================
-PCB
-
-   129:    my $header = $curproc->{ incoming_message }->{ header };
-   214:    my $header = $curproc->{ incoming_message }->{ header };
-   249:    my $header = $curproc->{ incoming_message }->{ header };
-   389:    my $header = $curproc->{ incoming_message }->{ header };
-   
-   250:    my $body   = $curproc->{ incoming_message }->{ body };
-   
-   182:    my $header = $curproc->{ article }->{ header };
-   1045:   my $header = $curproc->{ article }->{ header };
-   
-   
-   131:    my $pcb     = $curproc->{ pcb };
-   373:    my $pcb     = $curproc->{ pcb };
-   473:    my $pcb     = $curproc->{ pcb };
-   
-   474:    my $db_type   = $curproc->{ ticket_db_type } || 'AnyDBM_File';
-   
-   1091:	$self->set_status($curproc, {
-
-
-==============================================================================
+====================================================================
 [付録]	仕えそうなモジュール？
 
 
@@ -324,4 +230,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.10 2002/03/18 13:46:58 fukachan Exp $
+$FML: 00_MEMO,v 1.11 2002/03/30 08:15:33 fukachan Exp $
