@@ -86,6 +86,7 @@ article_header_filter_rules</entry>
  フィルタリングのルール。</entry>
 <entry>
 check_message_id
+   check_date
    permit
    </entry>
 </row>
