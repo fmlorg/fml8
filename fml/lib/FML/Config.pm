@@ -1,7 +1,7 @@
 #-*- perl -*-
-# Copyright (C) 2000-2001 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.48 2001/12/24 09:23:00 fukachan Exp $
+# $FML: Config.pm,v 1.49 2002/01/13 13:35:24 fukachan Exp $
 #
 
 package FML::Config;
@@ -789,7 +789,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
