@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.79 2003/11/29 12:51:36 fukachan Exp $
+	$FML: chapters.ent,v 1.80 2003/12/21 03:19:13 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -44,7 +44,7 @@
 <!entity sect.setup.postfix       SYSTEM "setup/postfix.sgml">
 <!entity sect.setup.qmail         SYSTEM "setup/qmail.sgml">
 <!entity sect.setup.config.cf     SYSTEM "setup/config.cf.sgml">
-<!entity sect.newml.recipes       SYSTEM "setup/newml.recipes.sgml">
+<!entity sect.setup.newml.recipes SYSTEM "setup/newml.recipes.sgml">
 <!entity chapter.setup.cgi        SYSTEM "setup/cgi.sgml">
 <!entity chapter.setup.test       SYSTEM "setup/test.sgml">
 
