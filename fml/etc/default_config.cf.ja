@@ -51,8 +51,10 @@ header_rewrite_rules =	rewrite_subject_tag
 			add_fml_article_id
 			add_x_sequence
 			add_rfc2369
+			append_ticket_tag_to_subject
 
 subject_tag_name	=	$ml_name
+
 subject_tag		=	[%s:%05d]
 =head2 ロック
 
@@ -81,7 +83,23 @@ use_spool	= yes
 spool_dir	= $ml_home_dir/spool
 
 spool_type	= plane
+# value: confirmation / ? 
+chaddr_type	=	confirmation
+###
+### Section: Tickets / Trouble Tickets System
+###
+
+# 
+ticket_model		=	toymodel
+
+# 
+subject_ticket_tag	=	[%s #%08d]
+
+#
+ticket_sequence_file	=	$ml_home_dir/ticket.seq
+=head1 hooks
 ###
 ### default_config.cf file ends here.
-###
+### fml 4.0's 現在の LOCAL_CONFIG で別れ目になる行
+### 
 =cut

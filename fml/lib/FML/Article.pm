@@ -67,25 +67,13 @@ sub increment_id
     my $curproc  = $self->{ curproc };
     my $config   = $curproc->{ config };
     my $seq_file = $config->{ sequence_file };
-    my $id       = 0;
 
-    use IO::File::Atomic;
-    my ($rh, $wh) = IO::File::Atomic->rw_open($seq_file);
+    use FML::SequenceFile;
+    my $sfh = new FML::SequenceFile { sequence_file => $seq_file };
+    my $id  = $sfh->increment_id;
+    if ($sfh->error) { Log( $sfh->error ); }
 
-    # read the current sequence number
-    if (defined $rh) {
-	$id = $rh->getline;
-	$rh->close;
-    }
-
-    # increment $id. The incremented number is the current article ID.
-    $id++;
-
-    # save $id
-    print $wh $id, "\n";
-    $wh->close;
-
-    # return value
+    # save $id in pcb (process control block) and return $id
     $curproc->{ pcb }->{ article }->{ id } = $id;
     $id;
 }
