@@ -32,7 +32,7 @@ proc/liberror.pl               0.38
 proc/libexpire.pl              0.66	
 proc/libfml.pl                 6.13	
 	proc/libfop.pl                 4.59	removed
-proc/libhtmlsubr.pl            1.77	
+	proc/libhtmlsubr.pl            1.77	half done (Mail::HTML::Lite)
 	proc/liblibrary.pl             1.33	removed?
 	proc/liblock.pl                0.32	removed
 	proc/liblogmail.pl             0.22	removed
@@ -61,7 +61,7 @@ proc/libra.pl                  6.35
 	proc/libsendfile.pl            4.08	removed almost
 	proc/libsmtpsd.pl              0.43	removed
 	proc/libstardate.pl            0.21	done
-proc/libsynchtml.pl            7.80	
+	proc/libsynchtml.pl            7.80	half done (Mail::HTML::Lite)
 	proc/libtagdef.pl              0.48	done?
 	proc/libutils.pl               2.27	done?
 
