@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: newml.pm,v 1.4 2001/12/09 12:52:24 fukachan Exp $
+# $FML: newml.pm,v 1.5 2001/12/09 14:52:34 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -97,6 +97,8 @@ sub _install
     my $out = new FileHandle "> $dst.$$";
 
     if (defined $in && defined $out) {
+	chmod 0644, "$dst.$$";
+
 	&FML::Config::Convert::convert($in, $out, $config);
 
 	$out->close();
