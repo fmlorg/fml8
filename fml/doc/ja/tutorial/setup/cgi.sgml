@@ -1,5 +1,5 @@
 <!--
-   $FML: cgi.sgml,v 1.3 2002/07/23 09:34:34 fukachan Exp $
+   $FML: cgi.sgml,v 1.4 2003/04/15 14:51:43 fukachan Exp $
 -->
 
 <chapter id="setupcgi">
@@ -12,8 +12,8 @@
 
 <para>
 CGI の内部構造については
-<link linkend="internalcgi.method">
-<xref linkend="internalcgi.method">
+<link linkend="cgi.internal.method">
+<xref linkend="cgi.internal.method">
 </link>
 を参照して下さい。
 </para>
