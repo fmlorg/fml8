@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.77 2003/05/01 10:56:08 fukachan Exp $
+# $FML: Message.pm,v 1.78 2003/05/01 14:00:57 fukachan Exp $
 #
 
 package Mail::Message;
@@ -737,7 +737,7 @@ sub whole_message_as_str
     my $start  = $args->{ start } || 0;
     my $end    = $args->{ end }   || 2048; # the first 2048 bytes by default.
     my $type   = $args->{ type }  || 'find paragraph boundary if could';
-    my $indent = $args->{ indent } || '   ';
+    my $indent = $args->{ indent } || '';
     my $hdrobj = $self->whole_message_header();
     my $header = $hdrobj->as_string();
     my $s      = '';
@@ -753,6 +753,7 @@ sub whole_message_as_str
     $s = sprintf("%s\n%s", $header, $s);
     $s =~ s/^/$indent/;
     $s =~ s/\n/\n$indent/g;
+    $s =~ s/$indent$//;
 
     return $s;
 }
