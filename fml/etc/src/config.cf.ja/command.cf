@@ -66,6 +66,7 @@ commands_for_user	=		help
 					bye
 					on
 					off
+					digest
 					remove
 					resign
 					signoff
@@ -99,6 +100,8 @@ commands_for_privileged_user	=	subscribe
 					byeadmin
 					byepriv
 					digest
+					digeston
+					digestoff
 					get
 					mget
 					send
@@ -116,6 +119,8 @@ commands_for_admin_cgi	=		adduser
 					deluser
 					addadmin
 					deladmin
+					digeston
+					digestoff
 					list
 					log
 					newml
