@@ -1,11 +1,5 @@
 =head1	記事および記事のスプール
 
-# Descriptions: 記事を配送する機能を使うか否か？
-#      History:
-#        Value: yes / no
-#     Examples:
-use_article_delivery	=	yes
-
 # Descriptions: 記事をスプールディレクトリに保存する
 #      History: 4.0 の $NOT_USE_SPOOL
 #        Value: yes / no

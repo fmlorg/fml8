@@ -1,5 +1,22 @@
 =head1	article handling
 
+
+=head2	article delivery system
+
+# Descriptions: user article delivery function ?
+#      History:
+#        Value: yes / no
+#     Examples:
+use_article_delivery	=	yes
+
+# Descriptions: specify transport for article delivery.
+#               try MTA of $smtp_servers incrementary in the case of smtp.
+#      History: none
+#        Value: smtp / lmtp
+#     Examples: smtp
+article_delivery_transport	=	smtp
+
+
 =head2	article sequence number
 
 

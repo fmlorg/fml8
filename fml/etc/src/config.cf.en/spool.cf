@@ -1,11 +1,5 @@
 =head1	article and article spool
 
-# Descriptions: user article delivery function ?
-#      History:
-#        Value: yes / no
-#     Examples:
-use_article_delivery	=	yes
-
 # Descriptions: store article into spool directory ?
 #      History: $NOT_USE_SPOOL
 #        Value: yes / no

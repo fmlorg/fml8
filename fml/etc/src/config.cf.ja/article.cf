@@ -1,5 +1,24 @@
 =head1	記事の処理
 
+
+=head2	記事の配送
+
+
+# Descriptions: 記事を配送する機能を使うか否か？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_article_delivery	=	yes
+
+
+# Descriptions: トランスポート(配送システム)の指定。
+#		smtpのばあい、$smtp_serversで指定されたMTAを順番に試す。
+#      History: NONE
+#        Value: smtp / lmtp
+#     Examples: smtp
+article_delivery_transport	=	smtp
+
+
 =head2	記事番号
 
 
