@@ -1,10 +1,10 @@
 <!--
-   $FML$
+   $FML: chapter.sgml,v 1.1 2002/12/26 15:38:00 fukachan Exp $
 -->
 
 <chapter id="digest">
 	<title>
-	digest
+	ダイジェスト/まとめ送り
 	</title>
 
 <para>
@@ -14,6 +14,12 @@
 を定期的に cron から起動すれば、まとめ送りができます。
 </para>
 
+
+<sect1 id="digest.config.files">
+	<title>
+	まとめ送りで使われるファイル群
+	</title>
+
 <para>
 $ml_home_dir/ 以下のファイルの仕様はこうです。
 <screen>
@@ -22,13 +28,115 @@ members-digest
 recipients-digest
 </screen>
 seq-digest は最後に送った記事は何番か？を記録しています。
+</para>
 
-members-digest はダミーです。
-
+<para>
+members-digest はダミーで、
 recipients-digest が、まとめおくりの配送リストです。
+</para>
 
+<para>
 $digest_recipient_maps は、もちろん IO::Adapter なので、
 mysql とかも使えます。
 </para>
+
+</sect1>
+
+
+<sect1 id="digest.command">
+	<title>
+	案: ダイジェスト関連のコマンドをどうするか？
+	</title>
+
+<para>
+digest コマンドのまとめ。作るなら、こうかな？(fml-devel 313)
+</para>
+
+<para>
+でもね、将来、より細かい指定が出来るようにすることを考えると、
+これでいいのか？
+</para>
+
+
+<sect2>
+	<title>
+	makefml コマンド
+	</title>
+
+<para>
+(以下のコマンドは実装済み)
+<screen>
+makefml digest    $ml $address on
+makefml digeston  $ml $address
+
+makefml digest    $ml $address off
+makefml digestoff $ml $address
+</screen>
+</para>
+
+<para>
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	admin コマンド
+	</title>
+
+<para>
+(以下のコマンドは実装済み)
+<screen>
+admin digest $address on
+admin digest $address off
+</screen>
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	ユーザコマンド
+	</title>
+
+<para>
+(未実装)
+<screen>
+digest on
+digest off
+</screen>
+これは confirmation を返す。で、よい？
+</para>
+
+<para>
+confirm は必要ですかねぇ？これは決めごとなんで、デザインポリシーとして、
+アドレス操作関係のコマンドのデフォルトは厳しくしましょう。要望がでてき
+たら、順次緩めていくということにします。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	CGI
+	</title>
+
+<para>
+(未実装)
+<screen>
+digeston
+digestoff
+</screen>
+を使えばいいのかな？
+</para>
+
+</sect2>
+
+
+</sect1>
+
 
 </chapter>
