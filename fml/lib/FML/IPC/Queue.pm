@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.5 2004/04/12 15:32:05 fukachan Exp $
+# $FML: Queue.pm,v 1.6 2004/04/13 11:28:16 fukachan Exp $
 #
 
 package FML::IPC::Queue;
@@ -60,7 +60,7 @@ sub new
     my $queue  = [];
     my $me     = { 
 	_queue   => $queue,
-	_on_disk => 1,
+	_on_disk => 0,
     };
     return bless $me, $type;
 }
