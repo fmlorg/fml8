@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.91 2003/03/28 10:32:23 fukachan Exp $
+# $FML: Switch.pm,v 1.92 2003/08/23 04:35:40 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -152,26 +152,27 @@ sub main::Bootstrap2
     #    XXX CAN WE MOVE PARSER TO Process::{Kernel,CGI::Kernel} ?
     #    XXX ml_name, ml_domain, ml_home_prefix, ml_home_dir
     my $args = {
-	fml_version    => $main_cf->{ fml_version },
+	fml_version      => $main_cf->{ fml_version },
 
-	myname         => $myname,
-	program_name   => $myname,
+	myname           => $myname,
+	program_name     => $myname,
+	program_fullname => $0,
 
 	#    XXX CAN WE MOVE PARSER TO Process::{Kernel,CGI::Kernel} ?
 	#    XXX ml_name, ml_domain, ml_home_prefix, ml_home_dir
 	# ml_home_prefix => $ml_home_prefix,
 	# ml_home_dir    => $main_cf->{ ml_home_dir },
 
-	cf_list        => $cf,       # site_default + default
-	options        => \%options, # options parsed by getopt()
+	cf_list          => $cf,       # site_default + default
+	options          => \%options, # options parsed by getopt()
 
-	argv           => \@argv,    # pass the original @ARGV
-	ARGV           => \@ARGV,    # @ARGV after getopts()
+	argv             => \@argv,    # pass the original @ARGV
+	ARGV             => \@ARGV,    # @ARGV after getopts()
 
-	main_cf        => $main_cf,
+	main_cf          => $main_cf,
 
 	# options
-	need_ml_name   => 0,         # defined in _module_we_use()
+	need_ml_name     => 0,         # defined in _module_we_use()
     };
 
     # get the object. The suitable module is speculcated by $0.
@@ -376,12 +377,13 @@ sub _ml_name_is_required
 # Return Value: STR(FML::Process::SOMETHING module name)
 sub _module_we_use
 {
-    my ($args)  = @_;
-    my $main_cf = $args->{ main_cf };
-    my $name    = $args->{ myname };
-    my $modules = $main_cf->{ default_module_config };
-    my $pkg     = undef;
-    my $pkgopts = undef;
+    my ($args)   = @_;
+    my $main_cf  = $args->{ main_cf };
+    my $name     = $args->{ myname };
+    my $modules  = $main_cf->{ default_module_config };
+    my $pkg      = undef;
+    my $pkgopts  = undef;
+    my $fullname = $args->{ program_fullname };
 
     if (defined $args->{ options }->{ ctladdr } &&
 	$args->{ options }->{ ctladdr }) {
@@ -399,7 +401,7 @@ sub _module_we_use
 
 	    if (defined $buf && $buf) {
 		my ($program, $class, $opts) = split(/\s+/, $buf, 3);
-		if ($program eq $name) {
+		if (_program_match($program, $name, $fullname)) {
 		    $pkg     = $class;
 		    $pkgopts = $opts;
 		    last LINE;
@@ -422,6 +424,70 @@ sub _module_we_use
     $args->{ need_ml_name } = _ml_name_is_required($args);
 
     return $pkg;
+}
+
+
+# Descriptions: compare $program (entry in etc/modules) and $0.
+#               $program   = entry in etc/modules
+#               $name      = basename($0)
+#               $fullname  = $0
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub _program_match
+{
+    my ($program, $name, $fullname) = @_;
+
+    if ($name =~ /^[\w\d\.]+$/o) {
+	if ($program eq $name) {
+	    return 1;
+	}
+	else {
+	    return _program_subdir_match($program, $name, $fullname);
+	}
+    }    
+    else {
+	return _program_subdir_match($program, $name, $fullname);
+    }
+
+    return 0;
+}
+
+
+# Descriptions: compare $program (entry in etc/modules) and $0.
+#               $program   = entry in etc/modules
+#               $name      = basename($0)
+#               $fullname  = $0
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub _program_subdir_match
+{
+    my ($program, $name, $fullname) = @_;
+    my (@n) = split(/\//, $program);
+
+    use File::Spec;
+    my ($v, $d, $n) = File::Spec->splitpath($fullname);
+    my (@p)         = File::Spec->splitdir(File::Spec->catfile($d, $n));
+
+    # @n is shorter than @p;
+    my $count = 0;
+    @n = reverse @n;
+    @p = reverse @p;
+    for (my $i = 0; $i <= $#n; $i++) {
+	if ($n[$i] eq $p[$i]) {
+	    $count++;
+	}
+	elsif ($n[$i] eq '*') {
+	    $count++;
+	}
+    }
+
+    if ($count == ($#n + 1)) {
+	return 1;
+    }
+
+    return 0;
 }
 
 
