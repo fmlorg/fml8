@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Thread.pm,v 1.5 2004/03/28 13:04:31 fukachan Exp $
+# $FML: Thread.pm,v 1.6 2004/03/29 14:22:17 fukachan Exp $
 #
 
 package FML::Article::Thread;
@@ -549,7 +549,7 @@ sub set_print_function
 
 
 # Descriptions: default print engine for summary.
-#    Arguments: OBJ($self)ARRAY_REF($queue)
+#    Arguments: OBJ($self) ARRAY_REF($queue)
 # Side Effects: none
 # Return Value: none
 sub psw_message_queue_text_summary_print
@@ -587,7 +587,7 @@ sub psw_message_queue_text_summary_print
 
 
 # Descriptions: default print engine for list.
-#    Arguments: OBJ($self)ARRAY_REF($queue)
+#    Arguments: OBJ($self) ARRAY_REF($queue)
 # Side Effects: none
 # Return Value: none
 sub psw_message_queue_text_list_print
@@ -612,7 +612,7 @@ sub psw_message_queue_text_list_print
 
 
 # Descriptions: default print engine for summary.
-#    Arguments: OBJ($self)ARRAY_REF($queue)
+#    Arguments: OBJ($self) ARRAY_REF($queue)
 # Side Effects: none
 # Return Value: none
 sub psw_message_queue_html_summary_print
@@ -662,7 +662,7 @@ sub psw_message_queue_html_summary_print
 
 
 # Descriptions: default print engine for list.
-#    Arguments: OBJ($self)ARRAY_REF($queue)
+#    Arguments: OBJ($self) ARRAY_REF($queue)
 # Side Effects: none
 # Return Value: none
 sub psw_message_queue_html_list_print

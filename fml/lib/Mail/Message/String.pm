@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: String.pm,v 1.5 2004/02/15 09:32:05 fukachan Exp $
+# $FML: String.pm,v 1.6 2004/03/27 09:25:13 fukachan Exp $
 #
 
 package Mail::Message::String;
@@ -413,7 +413,7 @@ $data looks a citation or not.
 
 
 # Descriptions: looks a citation or not
-#    Arguments: OBJ($self) STR($data)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: 1 or 0
 sub is_citation
@@ -438,7 +438,7 @@ sub is_citation
 #               XXX fml 4.0 assumes:
 #               XXX If the paragraph has @ or ://, it must be signature.
 #               trap special keyword like tel:011-123-456789 ...
-#    Arguments: OBJ($self) STR($data)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub is_signature

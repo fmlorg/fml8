@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.90 2004/03/27 09:29:02 fukachan Exp $
+# $FML: Message.pm,v 1.91 2004/03/28 10:29:56 fukachan Exp $
 #
 
 package Mail::Message;
@@ -2039,7 +2039,7 @@ sub has_closing_phrase
 
 
 # Descriptions: set phrase trap rules.
-#    Arguments: OBJ($self)
+#    Arguments: OBJ($self) HASH_REF($rules)
 # Side Effects: update $self.
 # Return Value: none
 sub set_closing_phrase_rules
