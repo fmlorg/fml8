@@ -1,7 +1,11 @@
 #!/bin/sh
 #
-# $FML: test.sh,v 1.8 2001/04/14 14:35:08 fukachan Exp $
+# $FML: test-ctl.sh,v 1.1 2001/10/08 15:42:01 fukachan Exp $
 #
+
+buf=$PWD/__command$$__
+trap "rm -f $buf" 0 1 3 15
+
 
 DO () {
    (
@@ -21,14 +25,13 @@ DO () {
    )
 }
 
-if [ "X$*" != X ];then
-	list=$*
-else
-	pwd=`pwd`
-	list=$pwd/../testmails/text=plain.command
-fi
-
 (cd ../../fml/etc/;sh .gen.sh)
+
+
+cat ./../testmails/text=empty > $buf
+cat >> $buf
+
+list=$buf
 
 for msg in $list
 do
