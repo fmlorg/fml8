@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.146 2004/05/19 09:19:04 fukachan Exp $
+# $FML: Distribute.pm,v 1.147 2004/05/21 11:52:27 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -77,6 +77,7 @@ sub prepare
     my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'distribute_prepare_start_hook' );
+    $eval   .= $config->get_hook( 'article_post_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->resolve_ml_specific_variables();
@@ -93,7 +94,8 @@ sub prepare
 	exit(0);
     }
 
-    $eval = $config->get_hook( 'distribute_prepare_end_hook' );
+    $eval  = $config->get_hook( 'distribute_prepare_end_hook' );
+    $eval .= $config->get_hook( 'article_post_prepare_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
@@ -118,6 +120,7 @@ sub verify_request
     my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'distribute_verify_request_start_hook' );
+    $eval   .= $config->get_hook( 'article_post_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->verify_sender_credential();
@@ -130,7 +133,8 @@ sub verify_request
 	$curproc->_check_filter();
     }
 
-    $eval = $config->get_hook( 'distribute_verify_request_end_hook' );
+    $eval  = $config->get_hook( 'distribute_verify_request_end_hook' );
+    $eval .= $config->get_hook( 'article_post_verify_request_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
@@ -145,6 +149,9 @@ sub _check_filter
     my $config    = $curproc->config();
 
     if ($config->yes('use_article_filter')) {
+	my $eval = $config->get_hook( 'article_filter_start_hook' );
+	if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
+
 	eval q{
 	    use FML::Filter;
 	    my $filter = new FML::Filter;
@@ -170,6 +177,9 @@ sub _check_filter
 	    }
 	};
 	$curproc->log($@) if $@;
+
+	my $eval = $config->get_hook( 'article_filter_end_hook' );
+	if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
     }
     else {
 	$curproc->log("debug: article_filter disabled");
@@ -213,6 +223,7 @@ sub run
     };
 
     my $eval = $config->get_hook( 'distribute_run_start_hook' );
+    $eval   .= $config->get_hook( 'article_post_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # $curproc->lock();
@@ -264,7 +275,8 @@ sub run
 
     # $curproc->unlock();
 
-    $eval = $config->get_hook( 'distribute_run_end_hook' );
+    $eval  = $config->get_hook( 'distribute_run_end_hook' );
+    $eval .= $config->get_hook( 'article_post_run_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
@@ -310,6 +322,7 @@ sub finish
     my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'distribute_finish_start_hook' );
+    $eval   .= $config->get_hook( 'article_post_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # XXX [queue-based-distrbute] HACK
@@ -323,7 +336,8 @@ sub finish
 	$curproc->queue_flush();
     }
 
-    $eval = $config->get_hook( 'distribute_finish_end_hook' );
+    $eval  = $config->get_hook( 'distribute_finish_end_hook' );
+    $eval .= $config->get_hook( 'article_post_finish_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
 }
@@ -431,6 +445,9 @@ sub _header_rewrite
     my $rules  = $config->get_as_array_ref('article_header_rewrite_rules');
     my $id     = $hrw_args->{ id };
 
+    my $eval = $config->get_hook( 'article_header_rewrite_start_hook' );
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
+
   RULE:
     for my $rule (@$rules) {
 	$curproc->log("_header_rewrite( $rule )") if $config->yes('debug');
@@ -445,6 +462,9 @@ sub _header_rewrite
 	    $curproc->logerror("header->$rule is undefined");
 	}
     }
+
+    my $eval = $config->get_hook( 'article_header_rewrite_end_hook' );
+    if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
 
