@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.68 2004/06/14 13:21:33 tmu Exp $
+# $FML: ToHTML.pm,v 1.69 2004/06/19 02:24:41 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.68 2004/06/14 13:21:33 tmu Exp $;
+my $version = q$FML: ToHTML.pm,v 1.69 2004/06/19 02:24:41 fukachan Exp $;
 my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $versionid = "$1";
@@ -908,7 +908,7 @@ sub _binary_print
     my ($self, $args) = @_;
     my $msg  = $args->{ message }; # Mail::Message object
     my $type = $msg->data_type;
-    my $enc  = $msg->encoding_mechanism;
+    my $enc  = $msg->encoding_mechanism || '';
     my $mask = umask();
 
     umask(022);
