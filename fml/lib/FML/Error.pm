@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.17 2003/03/16 10:47:10 fukachan Exp $
+# $FML: Error.pm,v 1.18 2003/03/28 10:32:20 fukachan Exp $
 #
 
 package FML::Error;
@@ -14,7 +14,7 @@ use Carp;
 use FML::Log qw(Log LogWarn LogError);
 
 
-my $debug = 1;
+my $debug = 0;
 
 
 =head1 NAME
@@ -219,6 +219,37 @@ sub get_data_detail
 }
 
 
+# Descriptions: check whether $addr is one of addresses this ML uses.
+#    Arguments: OBJ($self) STR($addr)
+# Side Effects: none
+# Return Value: NUM
+sub is_list_address
+{
+    my ($self, $addr)  = @_;
+    my $curproc = $self->{ _curproc };
+    my $config  = $curproc->config();
+    my $addrs   = $config->get_as_array_ref('list_addresses');
+    my $match   = 0;
+
+    use FML::Credential;
+    my $cred = new FML::Credential $curproc;
+    $cred->set_compare_level(100); # match strictly!
+    for my $sysaddr (@$addrs) {
+	if (defined $sysaddr && $sysaddr) {
+	    Log("check is_same_address($addr, $sysaddr)") if $debug;
+	    if ($cred->is_same_address($addr, $sysaddr)) {
+		Log("match") if $debug;
+		$match++;
+	    }
+	    else {
+		Log("not match") if $debug;
+	    }
+	}
+    }
+
+    return $match;
+}
+
 =head2 remove_bouncers()
 
 delete mail addresses, analyze() determined as bouncers, by deluser()
@@ -249,18 +280,24 @@ sub remove_bouncers
     # XXX need no lock here since lock is done in FML::Command::* class.
   ADDR:
     for my $addr (@$list) {
-	# check if $address is a safe string.
-	if ($safe->regexp_match('address', $addr)) {
-	    if ($cred->is_member( $addr ) || $cred->is_recipient( $addr )) {
-		$self->deluser( $addr );
+	unless ($self->is_list_address($addr)) { 
+	    # check if $address is a safe string.
+	    if ($safe->regexp_match('address', $addr)) {
+		if ($cred->is_member( $addr ) || 
+		    $cred->is_recipient( $addr )) {
+		    $self->deluser( $addr );
+		}
+		else {
+		    Log("remove_bouncers: <$addr> seems not member");
+		}
 	    }
 	    else {
-		Log("remove_bouncers: <$addr> seems not member");
+		LogError("remove_bouncers: <$addr> is invalid");
+		next ADDR;
 	    }
 	}
 	else {
-	    LogError("remove_bouncers: <$addr> is invalid");
-	    next ADDR;
+	    LogWarn("remove_bouncers: <$addr> ignored");
 	}
     }
 }

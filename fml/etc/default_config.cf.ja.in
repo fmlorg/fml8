@@ -465,6 +465,18 @@ system_accounts		=	root
 				\S+\-subscribe
 				\S+\-unsubscribe
 
+
+
+# Descriptions: ＭＬが使うアドレス: 例: elena, elena-ctl
+#               たとえば、libexec/error は、これらのアドレスを
+#               削除しちゃいけない。
+#      History: none
+#        Value: a list of strings
+#     Examples: (elena-ctl@fml.org elena-ctl@fml.org ...)
+list_addresses	=	$address_for_post
+			$address_for_command
+			$maintainer
+
 =head1	MTA の設定
 
 =head2	SMTP パラメータ
