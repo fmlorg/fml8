@@ -1,6 +1,22 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/10/28
+
+   FML::Header::Subject 
+	you can use \U$ml_name\$ in subject tag configuration:)
+	
+   FML::Process::ThreadTrack 
+	fix db_update cannot get last_id from _speculate_last_id() use seqfile
+	
+   File::Sequence 
+	use chomp at get_id()'s return value
+
+2002/10/27
+
+   FML::Filter::MimeComponent3 
+	bug fix interface between FML::Filter and MimeComponent3
+
 2002/10/26
 
    FML::Filter::MimeComponent3 
@@ -3475,4 +3491,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.105 2002/10/21 15:00:20 fukachan Exp $
+$FML: CHANGES.txt,v 1.106 2002/10/26 13:37:57 fukachan Exp $
