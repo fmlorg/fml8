@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.28 2004/02/04 14:41:47 fukachan Exp $
+# $FML: Base.pm,v 1.29 2004/03/04 12:21:34 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -19,15 +19,7 @@ FML::Restriction::Base -- define safe data representations
 =head1 SYNOPSIS
 
     use FML::Restriction::Base;
-    my $safe   = new FML::Restriction::Base;
-    my $regexp = $safe->regexp( 'type' );
-
-    if ($data =~ /^($regexp)$/) {
-	# o.k. do something ...
-    }
-
-or
-
+    my $safe = new FML::Restriction::Base;
     if ($safe->regexp_match('address', $data)) {
 	# o.k. do something ...
     }
@@ -153,30 +145,6 @@ sub basic_variable
     my ($self) = @_;
 
     return \%basic_variable;
-}
-
-
-=head2 regexp( class )
-
-return the allowed regexp for C<class>.
-
-=cut
-
-
-# Descriptions: return allowed regexp for $class.
-#    Arguments: OBJ($self) STR($class)
-# Side Effects: none
-# Return Value: STR or UNDEF
-sub regexp
-{
-    my ($self, $class) = @_;
-
-    if (defined $basic_variable{ $class }) {
-	return $basic_variable{ $class };
-    }
-    else {
-	return undef;
-    }
 }
 
 
