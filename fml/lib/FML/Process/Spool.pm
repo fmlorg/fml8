@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.5 2002/06/01 05:02:33 fukachan Exp $
+# $FML: Spool.pm,v 1.6 2002/06/27 08:25:50 fukachan Exp $
 #
 
 package FML::Process::Spool;
@@ -90,7 +90,7 @@ sub verify_request
     my $eval = $config->get_hook( 'fmlspool_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
-    if (length(@$argv) == 0) {
+    if (length(@$argv) == 0 || (not $argv->[0])) {
 	$curproc->help();
 	exit(0);
     }
@@ -296,11 +296,17 @@ sub help
 
 print <<"_EOF_";
 
-Usage: $name [--convert] [--style=STR] [--srcdir=DIR] [-I DIR] DIR
+Usage: $name [--convert] [--style=STR] [--srcdir=DIR] [-I DIR] ML
 
 options:
 
--I dir      prepend dir into include path
+--convert   convert the spool dir at the same directory path
+
+--style=    convertd to subdir style if 'subdir' specified.
+
+-I DIR      prepend dir into include path
+
+ML          ml_name. Example: elena, rudo\@nuinui.net
 
 _EOF_
 }

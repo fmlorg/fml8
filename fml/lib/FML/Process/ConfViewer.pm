@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.11 2002/04/07 05:08:24 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.12 2002/06/27 08:25:49 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -91,7 +91,7 @@ sub prepare
 sub verify_request
 {
     my ($curproc, $args) = @_;
-    my $argv = $curproc->command_line_argv();
+    my $argv   = $curproc->command_line_argv();
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmlconf_verify_request_start_hook' );
@@ -100,7 +100,7 @@ sub verify_request
 	print STDERR $@ if $@;
     }
 
-    if (length(@$argv) == 0) {
+    if (length(@$argv) == 0 || (not $argv->[0])) {
 	$curproc->help();
 	exit(0);
     }
