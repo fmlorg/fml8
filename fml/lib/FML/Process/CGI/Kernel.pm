@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.61 2003/10/15 01:03:36 fukachan Exp $
+# $FML: Kernel.pm,v 1.62 2003/10/15 08:16:22 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -90,13 +90,13 @@ adjust ml_*, load config files and fix @INC.
 sub prepare
 {
     my ($curproc, $args) = @_;
-    my $charset = $curproc->get_charset("cgi");
 
     $curproc->_cgi_resolve_ml_specific_variables( $args );
     $curproc->load_config_files( $args->{ cf_list } );
     $curproc->fix_perl_include_path();
     $curproc->_set_charset();
 
+    my $charset = $curproc->get_charset("cgi"); # updated charset.
     print header(-type    => "text/html; charset=$charset",
 		 -charset => $charset,
 		 -target  => "_top");
@@ -691,14 +691,19 @@ sub run_cgi_menu
 
 =head1 MISC / UTILITIES
 
-=head2
+=head2 cgi_hidden_info_language()
 
 =cut
 
 
+# Descriptions: return "<hidden name=language value= ...>" to interact
+#               with user browser.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
 sub cgi_hidden_info_language
 {
-    my ($curproc, $cgi) = @_;
+    my ($curproc) = @_;
     my $lang = $curproc->cgi_var_language();
 
     return hidden(-name    => 'language',
