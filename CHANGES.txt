@@ -1,6 +1,55 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/07/23
+
+  Document translation to English starts 
+
+2003/07/22
+
+   Mail::Message::Language::Japanese::Subject 
+	nuke todo::method-ify done.
+	
+   Mail::Message::Date 
+	implement speculate_timezone() to remove hard-coded timezone
+	+0900 :-). 
+	
+   FML::Process::Kernel 
+	use our own Date::field when we use Mail::Message::Compose
+	(MIME::Lite). 
+	
+   Mail::Message::Encode 
+	detect_code() should not call croak() but return 'unknown'.
+	we can handle Japanes and English, so fixed comments.
+
+2003/07/21
+
+   import Time-modules-2003.0211 to use Time::Timezone.
+
+   clean up ...
+
+   Tie::JournaledDir JournaledFile 
+	clean up.
+	
+	change the match conditoin parameter name to "match_condition".  You
+	should specify "first" or "last" as match_condition in
+	Tie::JournaledFile::new() method.
+	
+	Tie::JournaledFile::change default match condition to "last match".
+	
+   Mail::ThreadTrack::Analyze 
+   FML::Article::Summary 
+   Mail::Message::Date 
+	method-ify date_to_unixtime() of Mail::Message::Date.
+	
+   Mail::Message::Checksum Utils 
+	import search_program() into Mail::Message::Utils module.
+	modified Checksum to use it.
+	
+   FML::Header::Subject 
+   Mail::Message::Language::Japanese::Subject 
+	method-ify cut_off_reply_tag()
+
 2003/07/20
 
    Mail::Message::DB 
@@ -5013,4 +5062,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.151 2003/07/13 13:53:53 fukachan Exp $
+$FML: CHANGES.txt,v 1.152 2003/07/20 11:16:03 fukachan Exp $
