@@ -1,9 +1,0 @@
-
-This  document has been replaced by draft-ietf-ngtrans-shipworm-00.txt.
-For more information or a copy of the document, contact the author directly.
-
-Draft Author(s):
-
-C. Huitema: huitema@bellcore.com                                                    
-
-

@@ -1,5 +1,0 @@
-
-
-This Internet-Draft <draft-palme-MHRegistry-00.txt>
-has been replaced by another Internet-Draft 
-<draft-ietf-drums-MHRegistry-00.txt>
