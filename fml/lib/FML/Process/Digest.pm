@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Digest.pm,v 1.2 2002/11/17 08:03:09 fukachan Exp $
+# $FML: Digest.pm,v 1.3 2002/11/17 14:07:33 fukachan Exp $
 #
 
 package FML::Process::Digest;
@@ -215,7 +215,7 @@ sub finish
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
     $curproc->inform_reply_messages();
-    # $curproc->queue_flush();
+    $curproc->queue_flush();
 
     $eval = $config->get_hook( 'digest_finish_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -238,6 +238,7 @@ sub _digest
 
     # run digest proceess if article(s) not to send found.
     if ($aid > $did) {
+	$did++; # start = last digest id + 1
 	my $range  = "$did-$aid";
 
 	# create multipart of articles as a digest.
