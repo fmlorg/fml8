@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Kernel.pm,v 1.44 2001/05/16 11:25:49 fukachan Exp $
+# $FML: Kernel.pm,v 1.45 2001/05/18 10:39:28 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -575,6 +575,8 @@ sub _queue_in
 	    Subject => $subject,
 	    Type    => "multipart/mixed";
 
+	_add_info_on_header($config, $msg);
+
 	if (defined $string) {
 	    $msg->attach(Type => "text/plain; charset=$charset",
 			 Data => $string,
@@ -597,15 +599,36 @@ sub _queue_in
 	    Subject => $subject,
 	    Data    => $string;
 	$msg->attr('content-type.charset' => $charset);
+	_add_info_on_header($config, $msg);
     }
 
     use Mail::Delivery::Queue;
     my $queue_dir = $config->{ mqueue_dir };
     my $queue     = new Mail::Delivery::Queue { directory => $queue_dir };
+    my $qid       = $queue->id();
+
     $queue->set('sender',     $maintainer);
     $queue->set('recipients', [ $recipient ]);
-    $queue->in( $msg );
+    $queue->in( $msg ) && Log("queue=$qid in");
     $queue->setrunnable();
+}
+
+
+sub _add_info_on_header
+{
+    my ($config, $msg) = @_;
+    my $ml_name = $config->{ "ml_name" };
+    my $version = $config->{ "fml_version" };
+
+    $msg->attr('X-ML-Name' => $ml_name);
+
+    use FML::Header;
+    my $args = { 
+	type    => 'MIME::Lite',
+	message => $msg,
+    };
+  FML::Header->add_software_info($config, $args);
+  FML::Header->add_rfc2369($config, $args);
 }
 
 
