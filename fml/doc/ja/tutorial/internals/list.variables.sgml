@@ -23,9 +23,19 @@ $cgi_base_dir/admin
 </row>
 <row>
 <entry>
+admin_command_restrictions</entry>
+<entry>
+ admin コマンドへの制限</entry>
+<entry>
+check_password
+   reject
+   </entry>
+</row>
+<row>
+<entry>
 admin_member_maps</entry>
 <entry>
- メンバーかどうか認証する際に検索するすべてのメンバーリスト </entry>
+ メンバーかどうか認証する際に検索するすべてのメンバーリスト</entry>
 <entry>
 $primary_admin_member_map
    </entry>
@@ -121,7 +131,7 @@ $fml_owner_home_dir/public_html/cgi-bin/fml/$ml_domain
 <entry>
 cgi_charset</entry>
 <entry>
- CGI の表示の CHARSET </entry>
+ CGI の表示の CHARSET</entry>
 <entry>
 $cgi_default_charset
    </entry>
@@ -130,7 +140,7 @@ $cgi_default_charset
 <entry>
 cgi_default_charset</entry>
 <entry>
- デフォルトの CHARSET </entry>
+ デフォルトの CHARSET</entry>
 <entry>
 euc-jp
    </entry>
@@ -335,7 +345,7 @@ html_archive_dir</entry>
 <entry>
  HTML 化された記事を作るディレクトリ (ＭＬごと)</entry>
 <entry>
-$fml_owner_home_dir/public_html/mlarchive/$ml_domain/$ml_name
+$fml_owner_home_dir/public_html/fml/mlarchive/$ml_domain/$ml_name
    </entry>
 </row>
 <row>
@@ -345,6 +355,24 @@ ldap_query_filter</entry>
  LDAP のフィルタ</entry>
 <entry>
 (objectclass=*)
+   </entry>
+</row>
+<row>
+<entry>
+listinfo_dir</entry>
+<entry>
+ information をおくディレクトリ (ＭＬごと)</entry>
+<entry>
+$fml_owner_home_dir/public_html/fml/listinfo/$ml_domain/$ml_name
+   </entry>
+</row>
+<row>
+<entry>
+listinfo_template_dir</entry>
+<entry>
+ listinfo template</entry>
+<entry>
+$fml_share_dir/listinfo/$template_file_charset
    </entry>
 </row>
 <row>
@@ -432,7 +460,7 @@ $sysconf_dir/mail
 <entry>
 member_maps</entry>
 <entry>
- メンバーかどうか認証する際に検索するすべてのメンバーリスト </entry>
+ メンバーかどうか認証する際に検索するすべてのメンバーリスト</entry>
 <entry>
 $primary_member_map
    </entry>
@@ -448,20 +476,11 @@ $db_dir/message_id
 </row>
 <row>
 <entry>
-message_message_dir</entry>
+message_template_dir</entry>
 <entry>
  message template (paragraph)</entry>
 <entry>
 $fml_share_dir/message/$template_file_charset
-   </entry>
-</row>
-<row>
-<entry>
-message_template_dir</entry>
-<entry>
- message template (file)</entry>
-<entry>
-$fml_share_dir/template/$template_file_charset
    </entry>
 </row>
 <row>
@@ -565,7 +584,6 @@ recipient_maps</entry>
  すべての受信者のリスト</entry>
 <entry>
 $primary_recipient_map
-   file:$ml_home_dir/recipients
    </entry>
 </row>
 <row>
@@ -617,7 +635,7 @@ $maintainer
 <entry>
 smtp_servers</entry>
 <entry>
- デフォールトの MTA は自分自身( localhost ) </entry>
+ デフォールトの MTA は自分自身( localhost )</entry>
 <entry>
 [::1]:25
    127.0.0.1:25
@@ -663,7 +681,7 @@ fml
 <entry>
 subject_tag</entry>
 <entry>
- Subject: のタグ </entry>
+ Subject: のタグ</entry>
 <entry>
 [$ml_name:%05d]
    </entry>
@@ -884,6 +902,15 @@ use_spool</entry>
  記事をスプールディレクトリに保存する</entry>
 <entry>
 yes
+   </entry>
+</row>
+<row>
+<entry>
+use_spool_subdir</entry>
+<entry>
+ 記事のスプールディレクトリを階層化するか？</entry>
+<entry>
+no
    </entry>
 </row>
 <row>
