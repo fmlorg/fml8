@@ -1,3 +1,17 @@
+# 諸注意
+#
+# [用語について]
+#
+#	mail		rfc822/message なメッセージ、いわゆるメール。
+#			mail でも message でもいいけど mail で統一。
+#
+#	message		subject やメール本文の文章の方を指す
+#
+#
+# [参照] 変数名の体系については
+#   http://www.fml.org/software/fml-devel/Documentation/ja/tutorial/
+# の「プログラミングスタイル」の章を御覧ください。
+#
 =head1	基本的なパラメータ
 
 =head2	ＭＬの管理者
@@ -95,14 +109,14 @@ db_dir		= $var_dir/db
 #      History: LOG_MAIL_DIR ($DIR/var/Mail/)
 #        Value: directory
 #     Examples: /var/spool/ml/elena/var/mail/incoming
-incoming_message_dir	= $var_dir/mail/incoming
+incoming_mail_dir	= $var_dir/mail/incoming
 
 
 # Descriptions: deliver されるメールを置くディレクトリ
 #      History: LOG_MAIL_DIR ($DIR/var/Mail/)
 #        Value: directory
 #     Examples: /var/spool/ml/elena/var/mail/outgoing
-outgoing_message_dir	= $var_dir/mail/outgoing
+outgoing_mail_dir	= $var_dir/mail/outgoing
 
 
 # Descriptions: mail queue のディレクトリ
@@ -134,19 +148,27 @@ listinfo_template_dir	= $fml_share_dir/listinfo/$template_file_charset
 #     Examples: /var/spool/ml/etc/mail/aliases
 mail_aliases_file	=	$mailconf_dir/aliases
 
+
+# Descriptions: MTA に教えるための virtual map ファイル
+#      History: none
+#        Value: file path
+#     Examples: /var/spool/ml/etc/mail/virtual
+postfix_virtual_map_file	=	$mailconf_dir/virtual
+
+
 =head1	アクセス制御ルール
 
 # Descriptions: 投稿への制限
 #      History: fml 4.0 の PERMIT_POST_FROM と REJECT_ADDR を合体したもの
 #        Value: list of attributes (
 #			permit_anyone
-#			permit_members_only
+#			permit_member_maps
 #			reject_system_accounts
 #			reject
 #		)
 #     Examples:
 post_restrictions	=	reject_system_accounts
-				permit_members_only
+				permit_member_maps
 				reject
 
 # Descriptions: コマンドへの制限
@@ -154,22 +176,28 @@ post_restrictions	=	reject_system_accounts
 #        Value: list of attributes (
 #			permit_anyone
 #			permit_commands_for_stranger
-#			permit_members_only
+#			permit_member_maps
 #			reject_system_accounts
 #			reject
 #		)
 #     Examples:
 command_restrictions	=	reject_system_accounts
 				permit_commands_for_stranger
-				permit_members_only
+				permit_member_maps
 				reject
 
 
 # Descriptions: admin コマンドへの制限
 #      History: fml 4.0 の ?
-#        Value: return 0 if nothing is specified.
+#        Value: list of attributes (
+#			permit_anyone
+#			check_admin_member_password
+#			reject_system_accounts
+#			reject
+#		)
 #     Examples:
-admin_command_restrictions	=	check_password
+admin_command_restrictions	=	reject_system_accounts
+					check_admin_member_password
 					reject
 
 
@@ -189,7 +217,7 @@ primary_member_map	=	file:$ml_home_dir/members
 #         Type:
 #     Examples:
 member_maps		=	$primary_member_map
-
+				$admin_member_maps
 
 =head2 受信者のリスト
 
@@ -1166,14 +1194,14 @@ has_fork	=	yes
 #      History: $NUM_LOG_MAIL
 #        Value: yes / no
 #     Examples: y
-use_incoming_message_cache	=	yes
+use_incoming_mail_cache	=	yes
 
 
 # Descriptions: 入力されるメールを最大何通キャッシュするか
 #      History: $NUM_LOG_MAIL
 #        Value: NUM
 #     Examples: 128
-incoming_message_cache_size	=	128
+incoming_mail_cache_size	=	128
 
 
 =head2	出力(配送)データのキャッシュ
@@ -1183,14 +1211,14 @@ incoming_message_cache_size	=	128
 #      History: $NUM_LOG_MAIL
 #        Value: yes / no
 #     Examples: y
-use_outgoing_message_cache	=	yes
+use_outgoing_mail_cache	=	yes
 
 
 # Descriptions: 出力(配送)されるメールを最大何通キャッシュするか
 #      History: $NUM_LOG_MAIL
 #        Value: NUM
 #     Examples: 128
-outgoing_message_cache_size	=	128
+outgoing_mail_cache_size	=	128
 
 =head1 フック's
 

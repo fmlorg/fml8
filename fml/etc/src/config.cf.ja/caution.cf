@@ -1,0 +1,14 @@
+# 諸注意
+#
+# [用語について]
+#
+#	mail		rfc822/message なメッセージ、いわゆるメール。
+#			mail でも message でもいいけど mail で統一。
+#
+#	message		subject やメール本文の文章の方を指す
+#
+#
+# [参照] 変数名の体系については
+#   http://www.fml.org/software/fml-devel/Documentation/ja/tutorial/
+# の「プログラミングスタイル」の章を御覧ください。
+#

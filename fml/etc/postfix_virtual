@@ -1,0 +1,9 @@
+### <VIRTUAL __ml_name__@__ml_domain__ ML> ###
+
+__ml_name__@__ml_domain__		__ml_name__=__ml_domain__
+__ml_name__-ctl@__ml_domain__		__ml_name__-ctl=__ml_domain__
+__ml_name__-request@__ml_domain__	__ml_name__-request=__ml_domain__
+__ml_name__-admin@__ml_domain__		__ml_name__-admin=__ml_domain__
+__ml_name__-error@__ml_domain__		__ml_name__-error=__ml_domain__
+
+### </VIRTUAL __ml_name__@__ml_domain__ ML> ###

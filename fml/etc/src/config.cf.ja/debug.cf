@@ -7,14 +7,14 @@
 #      History: $NUM_LOG_MAIL
 #        Value: yes / no
 #     Examples: y
-use_incoming_message_cache	=	yes
+use_incoming_mail_cache	=	yes
 
 
 # Descriptions: 入力されるメールを最大何通キャッシュするか
 #      History: $NUM_LOG_MAIL
 #        Value: NUM
 #     Examples: 128
-incoming_message_cache_size	=	128
+incoming_mail_cache_size	=	128
 
 
 =head2	出力(配送)データのキャッシュ
@@ -24,11 +24,11 @@ incoming_message_cache_size	=	128
 #      History: $NUM_LOG_MAIL
 #        Value: yes / no
 #     Examples: y
-use_outgoing_message_cache	=	yes
+use_outgoing_mail_cache	=	yes
 
 
 # Descriptions: 出力(配送)されるメールを最大何通キャッシュするか
 #      History: $NUM_LOG_MAIL
 #        Value: NUM
 #     Examples: 128
-outgoing_message_cache_size	=	128
+outgoing_mail_cache_size	=	128

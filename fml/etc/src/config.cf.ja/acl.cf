@@ -4,13 +4,13 @@
 #      History: fml 4.0 の PERMIT_POST_FROM と REJECT_ADDR を合体したもの
 #        Value: list of attributes (
 #			permit_anyone
-#			permit_members_only
+#			permit_member_maps
 #			reject_system_accounts
 #			reject
 #		)
 #     Examples:
 post_restrictions	=	reject_system_accounts
-				permit_members_only
+				permit_member_maps
 				reject
 
 # Descriptions: コマンドへの制限
@@ -18,22 +18,28 @@ post_restrictions	=	reject_system_accounts
 #        Value: list of attributes (
 #			permit_anyone
 #			permit_commands_for_stranger
-#			permit_members_only
+#			permit_member_maps
 #			reject_system_accounts
 #			reject
 #		)
 #     Examples:
 command_restrictions	=	reject_system_accounts
 				permit_commands_for_stranger
-				permit_members_only
+				permit_member_maps
 				reject
 
 
 # Descriptions: admin コマンドへの制限
 #      History: fml 4.0 の ?
-#        Value: return 0 if nothing is specified.
+#        Value: list of attributes (
+#			permit_anyone
+#			check_admin_member_password
+#			reject_system_accounts
+#			reject
+#		)
 #     Examples:
-admin_command_restrictions	=	check_password
+admin_command_restrictions	=	reject_system_accounts
+					check_admin_member_password
 					reject
 
 
@@ -53,7 +59,7 @@ primary_member_map	=	file:$ml_home_dir/members
 #         Type:
 #     Examples:
 member_maps		=	$primary_member_map
-
+				$admin_member_maps
 
 =head2 受信者のリスト
 
