@@ -1,10 +1,33 @@
 <!--
-   $FML$
+   $FML: done.sgml,v 1.1 2001/05/19 13:51:57 fukachan Exp $
 -->
 
 <chapter id="fml4to5">
 
 <title> fml 5.0 では解決したが、4.0 ではどうする？ </title>
+
+<!-- ============================================ -->
+<sect1>
+   <title>
+   MIMEライブラリーの書きなおし
+   </title>
+<para>
+特に base64 encoder 。RFC2047準拠ではヨーロッパ系言語以外では矛盾があ
+る。それを考慮すること
+</para>
+
+<para>
+fml-support:05948 を参照
+</para>
+
+<para>
+im-140 に入れ換えた。4.0 5.0 ともに解決
+</para>
+
+</sect1>
+
+
+
 
 <sect1>
 <title> より賢いアップグレード法 </title>
