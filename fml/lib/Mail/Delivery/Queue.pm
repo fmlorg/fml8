@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.27 2003/10/15 01:03:39 fukachan Exp $
+# $FML: Queue.pm,v 1.28 2003/12/22 12:13:17 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -99,12 +99,12 @@ sub new
     $dir_mode = $args->{ directory_mode } || $dir_mode;
 
     # prepare directories
-    my $new_dir      = $me->new_dirpath($id);
-    my $info_dir     = $me->info_dirpath($id);
-    my $active_dir   = $me->active_dirpath($id);
-    my $sender_dir   = $me->sender_dirpath($id);
-    my $rcpt_dir     = $me->recipients_dirpath($id);
-    my $deferred_dir = $me->deferred_dirpath($id);
+    my $new_dir      = $me->new_dir_path($id);
+    my $info_dir     = $me->info_dir_path($id);
+    my $active_dir   = $me->active_dir_path($id);
+    my $sender_dir   = $me->sender_dir_path($id);
+    my $rcpt_dir     = $me->recipients_dir_path($id);
+    my $deferred_dir = $me->deferred_dir_path($id);
 
     # hold information for delivery
     $me->{ _new_qf }               = $new_dir;
@@ -114,7 +114,7 @@ sub new
 
     # create directories in queue if not exists.
     for my $_dir ($dir, $active_dir, $new_dir, $info_dir,
-		  n$deferred_dir, $sender_dir, $rcpt_dir) {
+		  $deferred_dir, $sender_dir, $rcpt_dir) {
 	-d $_dir || _mkdirhier($_dir);
     }
 
@@ -207,7 +207,7 @@ where C<$qid> is like this: 990157187.20792.1
 sub list
 {
     my ($self) = @_;
-    my $dir = $self->active_dirpath();
+    my $dir = $self->active_dir_path();
 
     use DirHandle;
     my $dh = new DirHandle $dir;
@@ -258,7 +258,7 @@ sub getidinfo
     # XXX-TODO: we should provide e.g. sender_dir_path().
     # sender
     use FileHandle;
-    $fh = $self->sender_dirpath($id);
+    $fh = $self->sender_dir_path($id);
     if (defined $fh) {
 	$sender = $fh->getline;
 	$sender =~ s/[\n\s]*$//;
@@ -267,7 +267,7 @@ sub getidinfo
 
     # XXX-TODO: we should provide e.g. recipients_dir_path().
     # recipient array
-    $fh = $self->recipients_dirpath($id);
+    $fh = $self->recipients_dir_path($id);
     if (defined $fh) {
 	my $buf;
 	while (defined($buf = $fh->getline)) {
@@ -279,7 +279,7 @@ sub getidinfo
 
     return {
 	id         => $id,
-	path       => $self->active_dirpath($id),
+	path       => $self->active_dir_path($id),
 	sender     => $sender,
 	recipients => \@recipients,
     };
@@ -539,7 +539,7 @@ sub DESTROY
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
 # Return Value: STR
-sub new_dirpath
+sub new_dir_path
 {
     my ($self, $id) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
@@ -557,7 +557,7 @@ sub new_dirpath
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
 # Return Value: STR
-sub deferred_dirpath
+sub deferred_dir_path
 {
     my ($self, $id) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
@@ -570,7 +570,7 @@ sub deferred_dirpath
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
 # Return Value: STR
-sub active_dirpath
+sub active_dir_path
 {
     my ($self, $id) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
@@ -588,7 +588,7 @@ sub active_dirpath
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
 # Return Value: STR
-sub info_dirpath
+sub info_dir_path
 {
     my ($self, $id) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
