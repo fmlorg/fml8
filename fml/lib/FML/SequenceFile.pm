@@ -25,6 +25,23 @@ FML::SequenceFile - maintain the sequence number
    my $id  = $sfh->increment_id;
    if ($sfh->error) { use Carp; carp( $sfh->error ); }
 
+If you divide the $id by some modulus, use
+
+   my $sfh = new FML::SequenceFile { 
+       sequence_file => $seq_file,
+       modulus       => $modules,
+   };
+   my $id  = $sfh->increment_id;
+
+For example, if you do new() with modulus 3,
+
+   my $sfh = new FML::SequenceFile { 
+       sequence_file => $seq_file,
+       modulus       => 3,
+   };
+
+$id becomes 0, 1, 2, 0, 1, 2...
+
 =head1 DESCRIPTION
 
 =head2 C<new($args)>
@@ -47,6 +64,7 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {};
     $me->{ _sequence_file } = $args->{ sequence_file };
+    $me->{ _modulus }       = $args->{ modulus };
     return bless $me, $type;
 }
 
@@ -81,8 +99,16 @@ sub increment_id
 	return 0;
     }
 
+    # compute the modulus
+    if (defined $self->{ _modulus }) {
+	my $modulus = $self->{ _modulus };
+	$id++;
+	$id = $id % $modulus;
+    }
     # increment $id. The incremented number is the current article ID.
-    $id++;
+    else {
+	$id++;
+    }
 
     # save $id
     print $wh $id, "\n";
