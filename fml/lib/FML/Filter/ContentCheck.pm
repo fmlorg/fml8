@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ContentCheck.pm,v 1.6 2002/05/09 15:42:15 tmu Exp $
+# $FML: ContentCheck.pm,v 1.7 2002/05/11 09:34:16 fukachan Exp $
 #
 
 package FML::Filter::ContentCheck;
@@ -178,7 +178,7 @@ sub only_plaintext
 	    }
 	}
 	$mp->delete_message_part_link();
-	Log("only_plaintext delete not plain");
+	Log("only_plaintext delete not plain $data_type");
     }
     return 0;
 }
@@ -193,7 +193,7 @@ sub permit_mimetype
     my ($self, $msg, $args) = @_;
     my ($data_type, $prevmp, $nextmp);
     my $mp            = $msg;
-    my $permit_ruules = $self->{ _permit_rules };
+    my $permit_rules = $self->{ _permit_rules };
 
   MSG:
    for ( ; $mp; $mp = $mp->{ next }) {
@@ -201,7 +201,7 @@ sub permit_mimetype
 	$data_type = $mp->data_type();
 	next MSG if ($data_type eq "text/rfc822-headers");
 
-	foreach my $permit_type (@$permit_ruules) {
+	foreach my $permit_type (@$permit_rules) {
 	    next LOOPSTART if ($data_type =~ $permit_type);
 	}
 
