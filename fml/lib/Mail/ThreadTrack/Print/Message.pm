@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Utils.pm,v 1.1 2001/11/09 10:37:06 fukachan Exp $
+# $FML: Message.pm,v 1.1 2001/11/09 11:30:31 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Message;
@@ -82,7 +82,7 @@ sub _valid_buf
     my ($str) = @_;
     $str = STR2EUC( $str );
 
-    if ($str =~ /^[\>\#\|\*\:\;]/) {
+    if ($str =~ /^[\>\#\|\*\:\;\=]/) {
 	return 0;
     }
     elsif ($str =~ /^in /) { # quotation ?
