@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.116 2004/04/27 13:30:03 fukachan Exp $
+# $FML: Utils.pm,v 1.117 2004/04/28 04:07:09 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1622,23 +1622,11 @@ sub get_print_style
 }
 
 
-=head2 language_default()
-
 =head2 language_of_html_file()
 
+return default language used in html files.
+
 =cut
-
-
-# Descriptions: inform default language.
-#    Arguments: OBJ($curproc)
-# Side Effects: none
-# Return Value: STR
-sub language_default
-{
-    my ($curproc) = @_;
-
-    return 'euc-jp'; # default
-}
 
 
 # Descriptions: language used in html files.
@@ -1648,7 +1636,10 @@ sub language_default
 sub language_of_html_file
 {
     my ($curproc) = @_;
-    $curproc->language_default();
+    my $config    = $curproc->config();
+    my $language  = $config->{ html_archive_default_charset } || 'us-ascii';   
+
+    return $language;
 }
 
 
