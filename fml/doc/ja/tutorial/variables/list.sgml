@@ -187,6 +187,42 @@ check_header_size
 </row>
 <row>
 <entry>
+article_spam_filter_bogofilter_options</entry>
+<entry>
+ "-e" implies embedded mode.</entry>
+<entry>
+-e
+   </entry>
+</row>
+<row>
+<entry>
+article_spam_filter_functions</entry>
+<entry>
+ list up driver names used as spam checker.</entry>
+<entry>
+bogofilter
+   </entry>
+</row>
+<row>
+<entry>
+article_spam_filter_spamassassin_options</entry>
+<entry>
+ exit non-zero status code when spam caught if "-e" specified.</entry>
+<entry>
+-e
+   </entry>
+</row>
+<row>
+<entry>
+article_spam_filter_spamc_options</entry>
+<entry>
+ spamc optoins. "-c" means check only.</entry>
+<entry>
+-c
+   </entry>
+</row>
+<row>
+<entry>
 article_subject_tag</entry>
 <entry>
  Subject: のタグ</entry>
@@ -575,7 +611,7 @@ $domain_config_base_dir/sendmail
 </row>
 <row>
 <entry>
-error_analyzer_cache_dir</entry>
+error_mail_analyzer_cache_dir</entry>
 <entry>
  error messages のキャッシュを格納するディレクトリ</entry>
 <entry>
@@ -584,7 +620,7 @@ $db_dir/error
 </row>
 <row>
 <entry>
-error_analyzer_cache_mode</entry>
+error_mail_analyzer_cache_mode</entry>
 <entry>
  キャッシュのモード</entry>
 <entry>
@@ -593,7 +629,7 @@ temporal
 </row>
 <row>
 <entry>
-error_analyzer_cache_size</entry>
+error_mail_analyzer_cache_size</entry>
 <entry>
  キャッシュのサイズ</entry>
 <entry>
@@ -602,7 +638,7 @@ error_analyzer_cache_size</entry>
 </row>
 <row>
 <entry>
-error_analyzer_cache_type</entry>
+error_mail_analyzer_cache_type</entry>
 <entry>
  キャッシュのタイプ</entry>
 <entry>
@@ -611,7 +647,7 @@ File::CacheDir
 </row>
 <row>
 <entry>
-error_analyzer_function</entry>
+error_mail_analyzer_function</entry>
 <entry>
  FML::Error::Analyze 中の関数名。</entry>
 <entry>
@@ -620,7 +656,7 @@ histgram
 </row>
 <row>
 <entry>
-error_analyzer_function_select_list</entry>
+error_mail_analyzer_function_select_list</entry>
 <entry>
  FML::Error::Analyze 中の関数名。</entry>
 <entry>
@@ -630,7 +666,7 @@ simple_count
 </row>
 <row>
 <entry>
-error_analyzer_simple_count_limit</entry>
+error_mail_analyzer_simple_count_limit</entry>
 <entry>
  simple_count のエラー回数の上限</entry>
 <entry>

@@ -177,7 +177,7 @@ command_mail_size_filter_rules	=	check_header_size
 #      History: none
 #        Value: number
 #     Examples: 
-error_analyzer_cache_size		=	14
+error_mail_analyzer_cache_size		=	14
 
 </screen>
 </para>

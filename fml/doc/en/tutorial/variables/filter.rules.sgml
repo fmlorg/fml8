@@ -192,6 +192,41 @@ article_filter_reject_notice_recipients	=	maintainer
 article_filter_reject_notice_data_type	=	string
 
 
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+use_article_spam_filter		=	no
+
+
+# Descriptions: list up driver names used as spam checker.
+#      History: none
+#        Value: spamassassin | spamc | bogofilter
+#     Examples: bogofilter
+article_spam_filter_functions	=	bogofilter
+
+
+# Descriptions: exit non-zero status code when spam caught if "-e" specified.
+#      History: none
+#        Value: STR
+#     Examples: -e
+article_spam_filter_spamassassin_options	=	-e
+
+
+# Descriptions: spamc optoins. "-c" means check only.
+#      History: none
+#        Value: STR
+#     Examples: -c
+article_spam_filter_spamc_options		=	-c
+
+
+# Descriptions: "-e" implies embedded mode.
+#      History: none
+#        Value: STR
+#     Examples: -e
+article_spam_filter_bogofilter_options		=	-e
+
+
 =head2	filter
 
 
@@ -258,6 +293,109 @@ command_mail_filter_reject_notice_recipients	=	maintainer
 command_mail_filter_reject_notice_data_type	=	string
 
 path_bogofilter           = @BOGOFILTER@
+
+# $article_digest_finish_end_hook = q{ 1;};
+# $article_digest_finish_start_hook = q{ 1;};
+# $article_digest_prepare_end_hook = q{ 1;};
+# $article_digest_prepare_start_hook = q{ 1;};
+# $article_digest_run_end_hook = q{ 1;};
+# $article_digest_run_start_hook = q{ 1;};
+# $article_digest_verify_request_end_hook = q{ 1;};
+# $article_digest_verify_request_start_hook = q{ 1;};
+# $article_filter_end_hook = q{ 1;};
+# $article_filter_start_hook = q{ 1;};
+# $article_header_rewrite_end_hook = q{ 1;};
+# $article_header_rewrite_start_hook = q{ 1;};
+# $article_post_finish_end_hook = q{ 1;};
+# $article_post_finish_start_hook = q{ 1;};
+# $article_post_prepare_end_hook = q{ 1;};
+# $article_post_prepare_start_hook = q{ 1;};
+# $article_post_run_end_hook = q{ 1;};
+# $article_post_run_start_hook = q{ 1;};
+# $article_post_verify_request_end_hook = q{ 1;};
+# $article_post_verify_request_start_hook = q{ 1;};
+# $command_mail_filter_end_hook = q{ 1;};
+# $command_mail_filter_start_hook = q{ 1;};
+# $command_mail_finish_end_hook = q{ 1;};
+# $command_mail_finish_start_hook = q{ 1;};
+# $command_mail_prepare_end_hook = q{ 1;};
+# $command_mail_prepare_start_hook = q{ 1;};
+# $command_mail_run_end_hook = q{ 1;};
+# $command_mail_run_start_hook = q{ 1;};
+# $command_mail_verify_request_end_hook = q{ 1;};
+# $command_mail_verify_request_start_hook = q{ 1;};
+# $distribute_finish_end_hook = q{ 1;};
+# $distribute_finish_start_hook = q{ 1;};
+# $distribute_prepare_end_hook = q{ 1;};
+# $distribute_prepare_start_hook = q{ 1;};
+# $distribute_run_end_hook = q{ 1;};
+# $distribute_run_start_hook = q{ 1;};
+# $distribute_verify_request_end_hook = q{ 1;};
+# $distribute_verify_request_start_hook = q{ 1;};
+# $error_mail_analyzer_finish_end_hook = q{ 1;};
+# $error_mail_analyzer_finish_start_hook = q{ 1;};
+# $error_mail_analyzer_prepare_end_hook = q{ 1;};
+# $error_mail_analyzer_prepare_start_hook = q{ 1;};
+# $error_mail_analyzer_run_end_hook = q{ 1;};
+# $error_mail_analyzer_run_start_hook = q{ 1;};
+# $error_mail_analyzer_verify_request_end_hook = q{ 1;};
+# $error_mail_analyzer_verify_request_start_hook = q{ 1;};
+# $faker_finish_end_hook = q{ 1;};
+# $faker_finish_start_hook = q{ 1;};
+# $faker_prepare_end_hook = q{ 1;};
+# $faker_prepare_start_hook = q{ 1;};
+# $faker_run_end_hook = q{ 1;};
+# $faker_run_start_hook = q{ 1;};
+# $faker_verify_request_end_hook = q{ 1;};
+# $faker_verify_request_start_hook = q{ 1;};
+# $fmladdr_finish_end_hook = q{ 1;};
+# $fmladdr_finish_start_hook = q{ 1;};
+# $fmladdr_prepare_end_hook = q{ 1;};
+# $fmladdr_prepare_start_hook = q{ 1;};
+# $fmladdr_run_end_hook = q{ 1;};
+# $fmladdr_run_start_hook = q{ 1;};
+# $fmladdr_verify_request_end_hook = q{ 1;};
+# $fmladdr_verify_request_start_hook = q{ 1;};
+# $fmlalias_finish_end_hook = q{ 1;};
+# $fmlalias_finish_start_hook = q{ 1;};
+# $fmlalias_prepare_end_hook = q{ 1;};
+# $fmlalias_prepare_start_hook = q{ 1;};
+# $fmlalias_run_end_hook = q{ 1;};
+# $fmlalias_run_start_hook = q{ 1;};
+# $fmlalias_verify_request_end_hook = q{ 1;};
+# $fmlalias_verify_request_start_hook = q{ 1;};
+# $fmlconf_finish_end_hook = q{ 1;};
+# $fmlconf_finish_start_hook = q{ 1;};
+# $fmlconf_prepare_end_hook = q{ 1;};
+# $fmlconf_prepare_start_hook = q{ 1;};
+# $fmlconf_run_end_hook = q{ 1;};
+# $fmlconf_run_start_hook = q{ 1;};
+# $fmlconf_verify_request_end_hook = q{ 1;};
+# $fmlconf_verify_request_start_hook = q{ 1;};
+# $fmldoc_finish_end_hook = q{ 1;};
+# $fmldoc_finish_start_hook = q{ 1;};
+# $fmldoc_prepare_end_hook = q{ 1;};
+# $fmldoc_prepare_start_hook = q{ 1;};
+# $fmldoc_run_end_hook = q{ 1;};
+# $fmldoc_run_start_hook = q{ 1;};
+# $fmldoc_verify_request_end_hook = q{ 1;};
+# $fmldoc_verify_request_start_hook = q{ 1;};
+# $fmlhtmlify_finish_end_hook = q{ 1;};
+# $fmlhtmlify_finish_start_hook = q{ 1;};
+# $fmlhtmlify_prepare_end_hook = q{ 1;};
+# $fmlhtmlify_prepare_start_hook = q{ 1;};
+# $fmlhtmlify_run_end_hook = q{ 1;};
+# $fmlhtmlify_run_start_hook = q{ 1;};
+# $fmlhtmlify_verify_request_end_hook = q{ 1;};
+# $fmlhtmlify_verify_request_start_hook = q{ 1;};
+# $makefml_finish_end_hook = q{ 1;};
+# $makefml_finish_start_hook = q{ 1;};
+# $makefml_prepare_end_hook = q{ 1;};
+# $makefml_prepare_start_hook = q{ 1;};
+# $makefml_run_end_hook = q{ 1;};
+# $makefml_run_start_hook = q{ 1;};
+# $makefml_verify_request_end_hook = q{ 1;};
+# $makefml_verify_request_start_hook = q{ 1;};
 
 </screen>
 </para>

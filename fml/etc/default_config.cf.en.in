@@ -130,7 +130,7 @@ newml_command_init_private_directories	=	$etc_dir
 						$spool_dir
 						$var_dir
 						$db_dir
-						$error_analyzer_cache_dir
+						$error_mail_analyzer_cache_dir
 						$lock_dir
 
 
@@ -1329,6 +1329,51 @@ article_filter_reject_notice_recipients	=	maintainer
 #     Examples: string
 article_filter_reject_notice_data_type	=	string
 
+=head2	ARTICLE SPAM FILTER CONFIGURATIONS
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+use_article_spam_filter		=	no
+
+
+# Descriptions: list up driver names used as spam checker.
+#      History: none
+#        Value: spamassassin | spamc | bogofilter
+#     Examples: bogofilter
+article_spam_filter_functions	=	bogofilter
+
+
+=head3 	SpamAssassin
+
+
+# Descriptions: exit non-zero status code when spam caught if "-e" specified.
+#      History: none
+#        Value: STR
+#     Examples: -e
+article_spam_filter_spamassassin_options	=	-e
+
+
+# Descriptions: spamc optoins. "-c" means check only.
+#      History: none
+#        Value: STR
+#     Examples: -c
+article_spam_filter_spamc_options		=	-c
+
+
+=head3	BogoFilter
+
+
+# Descriptions: "-e" implies embedded mode.
+#      History: none
+#        Value: STR
+#     Examples: -e
+article_spam_filter_bogofilter_options		=	-e
+
+
+
 =head1	article and article spool
 
 # Descriptions: store article into spool directory ?
@@ -1814,21 +1859,21 @@ use_error_mail_analyzer_function = ${use_error_analyzer_program:-yes}
 #      History: /var/spool/ml/mead/errormaillog
 #        Value: directory
 #     Examples: 
-error_analyzer_cache_dir		=	$db_dir/error
+error_mail_analyzer_cache_dir		=	$db_dir/error
 
 
 # Descriptions: module as cache engine
 #      History: none
 #        Value: string
 #     Examples: File::CacheDir
-error_analyzer_cache_type		=	File::CacheDir
+error_mail_analyzer_cache_type		=	File::CacheDir
 
 
 # Descriptions: mode of cache expiration
 #      History: none
 #        Value: string
 #     Examples: 
-error_analyzer_cache_mode		=	temporal
+error_mail_analyzer_cache_mode		=	temporal
 
 
 # Descriptions: cache size.
@@ -1836,7 +1881,7 @@ error_analyzer_cache_mode		=	temporal
 #      History: none
 #        Value: number
 #     Examples: 
-error_analyzer_cache_size		=	14
+error_mail_analyzer_cache_size		=	14
 
 
 =head2	analyzer
@@ -1846,7 +1891,7 @@ error_analyzer_cache_size		=	14
 #      History: none
 #        Value: simple_count / histgram
 #     Examples: simple_count
-error_analyzer_function_select_list	=	simple_count
+error_mail_analyzer_function_select_list	=	simple_count
 						histgram
 
 
@@ -1854,14 +1899,14 @@ error_analyzer_function_select_list	=	simple_count
 #      History: none
 #        Value: simple_count / histgram
 #     Examples: simple_count
-error_analyzer_function			=	histgram
+error_mail_analyzer_function			=	histgram
 
 
 # Descriptions: error limit in using simple_count as anlyzer function.
 #      History: none
 #        Value: NUM
 #     Examples: 5
-error_analyzer_simple_count_limit	=	5
+error_mail_analyzer_simple_count_limit	=	5
 
 =head1 thread tracking system
 
@@ -2408,22 +2453,36 @@ sql_find	=	select fml_address from $sql_table
 # list of available hooks
 #
 
-# $command_finish_end_hook = q{ 1;};
-# $command_finish_start_hook = q{ 1;};
-# $command_prepare_end_hook = q{ 1;};
-# $command_prepare_start_hook = q{ 1;};
-# $command_run_end_hook = q{ 1;};
-# $command_run_start_hook = q{ 1;};
-# $command_verify_request_end_hook = q{ 1;};
-# $command_verify_request_start_hook = q{ 1;};
-# $digest_finish_end_hook = q{ 1;};
-# $digest_finish_start_hook = q{ 1;};
-# $digest_prepare_end_hook = q{ 1;};
-# $digest_prepare_start_hook = q{ 1;};
-# $digest_run_end_hook = q{ 1;};
-# $digest_run_start_hook = q{ 1;};
-# $digest_verify_request_end_hook = q{ 1;};
-# $digest_verify_request_start_hook = q{ 1;};
+# $article_digest_finish_end_hook = q{ 1;};
+# $article_digest_finish_start_hook = q{ 1;};
+# $article_digest_prepare_end_hook = q{ 1;};
+# $article_digest_prepare_start_hook = q{ 1;};
+# $article_digest_run_end_hook = q{ 1;};
+# $article_digest_run_start_hook = q{ 1;};
+# $article_digest_verify_request_end_hook = q{ 1;};
+# $article_digest_verify_request_start_hook = q{ 1;};
+# $article_filter_end_hook = q{ 1;};
+# $article_filter_start_hook = q{ 1;};
+# $article_header_rewrite_end_hook = q{ 1;};
+# $article_header_rewrite_start_hook = q{ 1;};
+# $article_post_finish_end_hook = q{ 1;};
+# $article_post_finish_start_hook = q{ 1;};
+# $article_post_prepare_end_hook = q{ 1;};
+# $article_post_prepare_start_hook = q{ 1;};
+# $article_post_run_end_hook = q{ 1;};
+# $article_post_run_start_hook = q{ 1;};
+# $article_post_verify_request_end_hook = q{ 1;};
+# $article_post_verify_request_start_hook = q{ 1;};
+# $command_mail_filter_end_hook = q{ 1;};
+# $command_mail_filter_start_hook = q{ 1;};
+# $command_mail_finish_end_hook = q{ 1;};
+# $command_mail_finish_start_hook = q{ 1;};
+# $command_mail_prepare_end_hook = q{ 1;};
+# $command_mail_prepare_start_hook = q{ 1;};
+# $command_mail_run_end_hook = q{ 1;};
+# $command_mail_run_start_hook = q{ 1;};
+# $command_mail_verify_request_end_hook = q{ 1;};
+# $command_mail_verify_request_start_hook = q{ 1;};
 # $distribute_finish_end_hook = q{ 1;};
 # $distribute_finish_start_hook = q{ 1;};
 # $distribute_prepare_end_hook = q{ 1;};
@@ -2432,14 +2491,14 @@ sql_find	=	select fml_address from $sql_table
 # $distribute_run_start_hook = q{ 1;};
 # $distribute_verify_request_end_hook = q{ 1;};
 # $distribute_verify_request_start_hook = q{ 1;};
-# $error_finish_end_hook = q{ 1;};
-# $error_finish_start_hook = q{ 1;};
-# $error_prepare_end_hook = q{ 1;};
-# $error_prepare_start_hook = q{ 1;};
-# $error_run_end_hook = q{ 1;};
-# $error_run_start_hook = q{ 1;};
-# $error_verify_request_end_hook = q{ 1;};
-# $error_verify_request_start_hook = q{ 1;};
+# $error_mail_analyzer_finish_end_hook = q{ 1;};
+# $error_mail_analyzer_finish_start_hook = q{ 1;};
+# $error_mail_analyzer_prepare_end_hook = q{ 1;};
+# $error_mail_analyzer_prepare_start_hook = q{ 1;};
+# $error_mail_analyzer_run_end_hook = q{ 1;};
+# $error_mail_analyzer_run_start_hook = q{ 1;};
+# $error_mail_analyzer_verify_request_end_hook = q{ 1;};
+# $error_mail_analyzer_verify_request_start_hook = q{ 1;};
 # $faker_finish_end_hook = q{ 1;};
 # $faker_finish_start_hook = q{ 1;};
 # $faker_prepare_end_hook = q{ 1;};

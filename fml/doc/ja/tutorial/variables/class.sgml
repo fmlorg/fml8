@@ -94,6 +94,14 @@ article {
           $use_article_size_filter
    }
 
+   article_spam_filter { 
+    ?     $article_spam_filter_bogofilter_options
+          $article_spam_filter_functions
+    ?     $article_spam_filter_spamassassin_options
+    ?     $article_spam_filter_spamc_options
+          $use_article_spam_filter
+   }
+
    article_text_plain_filter { 
           $article_text_plain_filter_rules
           $use_article_text_plain_filter
@@ -316,17 +324,14 @@ domain {
 error {
 
    error_mail_analyzer { 
+          $error_mail_analyzer_cache_dir
+    ?     $error_mail_analyzer_cache_mode
+    ?     $error_mail_analyzer_cache_size
+          $error_mail_analyzer_cache_type
+    ?     $error_mail_analyzer_function
+    ?     $error_mail_analyzer_function_select_list
+          $error_mail_analyzer_simple_count_limit
           $use_error_mail_analyzer_function
-   }
-
-   error_* {
-          $error_analyzer_cache_dir
-    ?     $error_analyzer_cache_mode
-    ?     $error_analyzer_cache_size
-          $error_analyzer_cache_type
-    ?     $error_analyzer_function
-    ?     $error_analyzer_function_select_list
-          $error_analyzer_simple_count_limit
    }
 }
 

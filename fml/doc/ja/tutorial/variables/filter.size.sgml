@@ -165,7 +165,7 @@ outgoing_command_mail_body_size_limit	= $default_mail_body_size_limit
 #      History: none
 #        Value: number
 #     Examples: 
-error_analyzer_cache_size		=	14
+error_mail_analyzer_cache_size		=	14
 
 </screen>
 </para>
