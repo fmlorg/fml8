@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: Header.pm,v 1.27 2001/04/03 03:34:00 fukachan Exp $
+# $FML: Header.pm,v 1.28 2001/04/06 16:25:41 fukachan Exp $
 #
 
 package FML::Header;
@@ -69,6 +69,41 @@ sub AUTOLOAD
 {
     my ($self, $args) = @_;
     Log("Error: $AUTOLOAD is not defined");
+}
+
+
+=head2 C<get()>
+
+return the value of C<Mail::Header::get()> but without the trailing "\n".
+
+=head2 C<set()>
+
+alias of C<Mail::Header::set()>.
+
+=cut
+
+sub get
+{
+    my ($self, @x) = @_;
+    my $x = $self->SUPER::get(@x) || '';
+    $x =~ s/\n$//;
+    $x;
+}
+
+
+sub set
+{
+    my ($self, @x) = @_;
+    $self->SUPER::set(@x);
+}
+
+
+sub address_clean_up
+{
+    my ($self, $addr) = @_;
+    $addr =~ s/^\s*<//;
+    $addr =~ s/>\s*$//;
+    $addr;
 }
 
 
@@ -293,19 +328,64 @@ sub remove_subject_tag_like_string
 sub verify_message_id_uniqueness
 {
     my ($header, $config, $args) = @_;    
-    Log("run verify_message_id_uniqueness");
+    my $dir = $config->{ 'message_id_cache_dir' };
+    my $id  = $header->get('message-id');
+    my $dup = 0;
+
+    $id = $header->address_clean_up($id);
+    if ($id) {
+	if (-d $dir) {
+	    use File::CacheDir;
+	    my $obj = new File::CacheDir {
+		directory  => $dir, 
+		cache_type => 'temporal',
+		expires_in => 14,
+	    };
+
+	    my $fh = $obj->open;
+
+	    # check duplication
+	    $dup = $obj->find($id);
+
+	    # save the current id
+	    print $fh $id, "\t", $id, "\n";
+
+	    $fh->close;
+	}
+    }
+
+    Log( "message-id duplicated" ) if $dup;
+    return $dup;
 }
 
 sub verify_x_ml_info_uniqueness
 {
-    my ($header, $config, $args) = @_;    
-    Log("run verify_x_ml_info_uniqueness");
+    my ($header, $config, $args) = @_;
+    my $buf  = $header->get('x-ml-info')  || undef;
+    my $addr = $config->{ addr_for_post } || undef;
+
+    if ($addr && $buf) {
+	return ($buf =~ /$addr/) ? 1 : 0;
+    }
+    else {
+	0;
+    }
 }
 
 sub verify_list_post_uniqueness
 {
     my ($header, $config, $args) = @_;    
-    Log("run verify_list_post_uniqueness");
+    my $buf  = $header->get('list-post')  || undef;
+    my $addr = $config->{ addr_for_post } || undef;
+
+    if ($addr && $buf) {
+	return ($buf =~ /$addr/) ? 1 : 0;
+    }
+    else {
+	0;
+    }
+
+    0;
 }
 
 
