@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sort.pm,v 1.7 2002/09/11 23:18:30 fukachan Exp $
+# $FML: Sort.pm,v 1.8 2002/09/22 14:57:07 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::Sort;
@@ -33,9 +33,9 @@ See C<Mail::ThreadTrack::Print> for usage of this subclass.
 
 
 # Descriptions: sort ARRAY REFERENCE $thread_id_list
-#    Arguments: OBJ($self) REF_ARRAY($thread_id_list)
-# Side Effects: none
-# Return Value: REF_ARRAY
+#    Arguments: OBJ($self) ARRAY_REF($thread_id_list)
+# Side Effects: initialize $self->{ _age } and $self->{ _cost }
+# Return Value: ARRAY_REF
 sub sort_thread_id
 {
     my ($self, $thread_id_list) = @_;
@@ -59,17 +59,17 @@ my $status_cost = {
 };
 
 
-# Descriptions: evaluate how old and status for each thread
-#    Arguments: OBJ($self) REF_ARRAY($thread_id_list)
+# Descriptions: evaluate how old and status each thread is
+#    Arguments: OBJ($self) ARRAY_REF($thread_id_list)
 # Side Effects: none
-# Return Value: ARRAY( REF_HASH, REF_HASH )
+# Return Value: ARRAY( HASH_REF, HASH_REF )
 sub _calculate_age
 {
     my ($self, $thread_id_list) = @_;
     my (%age, %cost) = ();
-    my $now   = time; # save the current UTC for convenience
-    my $rh    = $self->{ _hash_table } || {};
-    my $day   = 24*3600;
+    my $now = time; # save the current UTC for convenience
+    my $rh  = $self->{ _hash_table } || {};
+    my $day = 24*3600;
 
     # $age hash referehence = { $thread_id => $age };
     my (@aid, $last, $age, $date, $status, $tid) = ();

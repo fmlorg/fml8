@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTML.pm,v 1.12 2002/09/11 23:18:29 fukachan Exp $
+# $FML: HTML.pm,v 1.13 2002/09/22 14:57:07 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print::HTML;
@@ -52,6 +52,7 @@ sub show_articles_in_thread
 
     my $articles = $self->{ _hash_table }->{ _articles }->{ $thread_id };
 
+    # XXX-TODO: who validates $thread_id ?
     print "<B>";
     print "show contents related with thread_id=$thread_id\n";
     print "</B>";
@@ -69,8 +70,12 @@ sub show_articles_in_thread
 	    });
 	    my $fh   = new FileHandle $file;
 	    while (defined($_ = $fh->getline())) {
+		# ignore header part.
 		next if 1 .. /^$/;
 
+		# XXX-TODO: care for non Japanese char(s).
+		# XXX-TODO: to avoid CSS bug, convert all special char(s).
+		# XXX-TODO: create method safe_html_string() in Mail::Message ?
 		$s = STR2EUC($_);
 		$s =~ s/&/&amp;/g;
 		$s =~ s/</&lt;/g;
@@ -110,11 +115,13 @@ sub __start_thread_summary
 	print $fd br, "\n";
     }
 
+    # XXX-TODO: validate $action ?
     print $fd start_form(-action=>$action, -target=>$target);
     print $fd submit(-name => 'submit');
-    print $fd reset(-name => 'reset');
+    print $fd reset(-name  => 'reset');
     print $fd "\n";
 
+    # XXX-TODO: validate $ml_name ?
     print $fd hidden(-name    => 'ml_name',
 		     -default => [ $ml_name ],
 		     ), "\n";
@@ -133,8 +140,8 @@ sub __start_thread_summary
 }
 
 
-# Descriptions: finalize thread list
-#               close TABLE tag
+# Descriptions: finalize thread list.
+#               close TABLE tag.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -146,7 +153,7 @@ sub __end_thread_summary
     print $fd "</TABLE>\n";
 
     print submit(-name => 'submit');
-    print reset(-name => 'reset');
+    print reset(-name  => 'reset');
     print $fd end_form;
 }
 
@@ -165,16 +172,17 @@ sub __print_thread_summary
     my $action    = $config->{ myname };
     my $target    = $config->{ thread_cgi_target_window } || '_top';
 
-    my $date     = $optargs->{ date };
-    my $age      = $optargs->{ age };
-    my $status   = $optargs->{ status };
-    my $tid      = $optargs->{ thread_id };
-    my $articles = $optargs->{ articles };
-    my $aid      = (split(/\s+/, $articles))[0];
+    my $date      = $optargs->{ date };
+    my $age       = $optargs->{ age };
+    my $status    = $optargs->{ status };
+    my $tid       = $optargs->{ thread_id };
+    my $articles  = $optargs->{ articles };
+    my $aid       = (split(/\s+/, $articles))[0];
 
     # do nothing if the $thread_id is unknown.
     return unless $tid;
 
+    # XXX-TODO: validate $action, $ml_name, $aid ...
     # <FORM ACTION=> ..>
     my $xtid = CGI::escape($tid);
     $action  = "${action}?ml_name=${ml_name}&article_id=$aid";
@@ -182,11 +190,13 @@ sub __print_thread_summary
     $self->{ _table_count } = 1 unless defined $self->{ _table_count };
     if (($self->{ _table_count }++ % 5) == 0) {
 	print "<TR>\n<TD>\n";
-	print submit(-name => 'submit'), reset(-name => 'reset');
+	print submit(-name => 'submit');
+	print reset(-name  => 'reset');
     }
 
     print "<TR>\n";
 
+    # XXX-TODO: validate $msg_base_url ?
     # show articles in this thread id
     print "<TD>";
     if (defined $config->{ msg_base_url }) {
@@ -197,6 +207,7 @@ sub __print_thread_summary
 	print "\n</A>\n";
     }
     else {
+	# XXX-TODO: validate $action ?
 	print "<A HREF=\"$action&action=show\" TARGET=\"article\">\n";
 	print $tid;
 	print "\n</A>\n";
@@ -222,6 +233,7 @@ sub __print_thread_summary
 	    id       => $aid,
 	});
 	if (-f $f) {
+	    # XXX-TODO: care for non Japanese.
 	    my $buf = $self->message_summary($f);
 	    $self->print( STR2EUC($buf) );
 	}
@@ -244,10 +256,6 @@ sub __print_message_summary
     ;
 }
 
-
-=head1 CODING STYLE
-
-See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 CODING STYLE
 

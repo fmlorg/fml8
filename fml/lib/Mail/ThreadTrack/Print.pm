@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Print.pm,v 1.25 2002/09/11 23:18:29 fukachan Exp $
+# $FML: Print.pm,v 1.26 2002/09/22 14:57:06 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -23,7 +23,7 @@ Mail::ThreadTrack::Print - dispatcher to print out thread
 
 =head1 METHODS
 
-=head2 list()
+=head2 list([ @opts ])
 
 show todo list without article summary.
 
@@ -31,7 +31,7 @@ show todo list without article summary.
 
 
 # Descriptions: show todo list without article summary.
-#    Arguments: OBJ($self)
+#    Arguments: OBJ($self) VARARGS(@opts)
 # Side Effects: none
 # Return Value: none
 sub list
@@ -45,7 +45,7 @@ sub list
 }
 
 
-=head2 summary()
+=head2 summary([ @opts ])
 
 show the thread summary, which is todo list C<with> article summary.
 
@@ -53,7 +53,7 @@ Each row that C<show_summary()> returns has a set of
 C<date>, C<age>, C<status>, C<thread-id> and
 C<articles>, which is a list of articles with the thread-id.
 
-summary show entries by the thread_id order. For example,
+list() shows entries by the thread_id order. For example,
 
        date    age status  thread id             articles
  ------------------------------------------------------------
@@ -64,11 +64,13 @@ summary show entries by the thread_id order. For example,
  2001/02/07    3.0  going  elena_#00000454       814 815
  2001/02/10    0.1   open  elena_#00000456       821
 
+summary() shows the todo list above and article summaries.
+
 =cut
 
 
 # Descriptions: show todo list with article summary.
-#    Arguments: OBJ($self)
+#    Arguments: OBJ($self) VARARGS(@opts)
 # Side Effects: none
 # Return Value: none
 sub summary
@@ -82,16 +84,16 @@ sub summary
 }
 
 
-=head2 review()
+=head2 review([ @opts ])
 
-show a chain of article summary in each thread.
+show a chain of a few lines summary for articles in each thread.
 This summary is a collection of short summary of articles in one thread.
 
 =cut
 
 
-# Descriptions: show summary for each thread
-#    Arguments: OBJ($self) VARARGS
+# Descriptions: show a chain of summaries for each thread.
+#    Arguments: OBJ($self) VARARGS(@opts)
 # Side Effects: none
 # Return Value: none
 sub review
@@ -106,7 +108,7 @@ sub review
 
 
 
-# Descriptions: load subclasses, change @INC
+# Descriptions: load subclasses, change @INC.
 #    Arguments: OBJ($self)
 # Side Effects: @INC modified
 # Return Value: none
@@ -161,8 +163,8 @@ sub _do_list
 
 
 # Descriptions: get thread id list with status != 'close' and
-#               show summary for the list
-#    Arguments: OBJ($self) HASH_REF($option)
+#               show summary for the list if needed.
+#    Arguments: OBJ($thread) HASH_REF($option)
 # Side Effects: none
 # Return Value: none
 sub __do_summary
@@ -178,6 +180,7 @@ sub __do_summary
     # 2. print the thread brief summary in that order.
     # 3. show short summary for each message if needed (mode dependent)
     if (@$thread_id_list) {
+	# XXX-TODO: $thread->sort() method should accept the order ?
 	$thread->sort_thread_id($thread_id_list);
 
 	# reverse order (first thread is the latest one) if reverse mode
@@ -185,8 +188,10 @@ sub __do_summary
 	    @$thread_id_list = reverse @$thread_id_list;
 	}
 
+	# XXX thread summary == todo list
 	$thread->_print_thread_summary($thread_id_list);
 
+	# XXX message summary == brief summary of articles.
 	if ($option->{ mode } eq 'summary') {
 	    $thread->_print_message_summary($thread_id_list);
 	}
@@ -194,8 +199,7 @@ sub __do_summary
 }
 
 
-
-# Descriptions: show thread summary
+# Descriptions: show thread summary (without article summary).
 #    Arguments: OBJ($self) ARRAY_REF($thread_id_list)
 # Side Effects: none
 # Return Value: none
@@ -223,6 +227,7 @@ sub _print_thread_summary
 	$age    = $self->{ _age }->{ $thread_id };
 	$status = $db->{ _status }->{ $thread_id };
 
+	# XXX-TODO: who care for output mode ? (e.g. against CSS).
 	$self->__print_thread_summary( {
 	    date      => $date,
 	    age       => $age,
@@ -251,7 +256,7 @@ sub _print_message_summary
 # REVIEW MODE
 #
 
-# Descriptions: show brief summary chain of messages in the thread
+# Descriptions: show brief summary chain of messages in the thread.
 #    Arguments: OBJ($self) STR($str) NUM($min) NUM($max)
 # Side Effects: none
 # Return Value: none
@@ -283,6 +288,7 @@ sub _do_review
 
 	    # check thread id $tid exists really ?
 	    if (defined $db->{ _articles }->{ $tid }) {
+		# XXX-TODO: validate $tid.
 		printf $fd "\n>Thread-Id: %-10s  %s\n", $tid;
 
 		# different treatment for the fisrt article in this thread
@@ -386,10 +392,6 @@ sub _quote
     return $str;
 }
 
-
-=head1 CODING STYLE
-
-See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 CODING STYLE
 

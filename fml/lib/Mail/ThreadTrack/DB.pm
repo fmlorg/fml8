@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.29 2002/09/28 09:27:45 fukachan Exp $
+# $FML: DB.pm,v 1.30 2002/10/23 02:30:10 tmu Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -16,7 +16,7 @@ my $debug = 0;
 
 =head1 NAME
 
-Mail::ThreadTrack::DB - what is this
+Mail::ThreadTrack::DB - database access.
 
 =head1 SYNOPSIS
 
@@ -28,9 +28,9 @@ Mail::ThreadTrack::DB - what is this
 
 =head2 C<db_open()>
 
-open DB.
+open database.
 It uses tie() to bind a hash to a DB file.
-Our minimal_states uses several DB files for
+Our thread model uses several DB files such as 
 C<%thread_id>,
 C<%date>,
 C<%status>,
@@ -42,7 +42,7 @@ C<%index>.
 
 =head2 C<db_close()>
 
-untie() corresponding hashes opened by C<db_open()>.
+untie() the corresponding hashes opened by C<db_open()>.
 
 =cut
 
@@ -52,7 +52,7 @@ my @kind_of_databases = qw(thread_id date status sender articles
 
 # Descriptions: open database by tie()
 #    Arguments: OBJ($self)
-# Side Effects: none
+# Side Effects: $self->{ _hash_table } initialized.
 # Return Value: none
 sub db_open
 {
@@ -84,7 +84,7 @@ sub db_open
 	croak($@) if $@;
     }
     else {
-        croak("cannot use $db_type");
+        croak("failed to \"use $db_type\"");
     }
 
     1;
@@ -184,28 +184,33 @@ sub db_mkdb
     use File::Spec;
 
     my $count = 0;
+    my ($fh, $file, $msg);
     print STDERR "db_mkdb: $min_id -> $max_id\n" if $debug;
+
+  ID:
     for my $id ( $min_id .. $max_id ) {
 	print STDERR "." if $count++ % 10 == 0;
 	print STDERR "process $id\n" if $debug;
 
-	# XXX this code is workaround, we should create more clever way.
-	# XXX overwrite (tricky)
+	# XXX-TODO: this code is workaround, we should create more clever way.
+	# XXX-TODO: overwrite (tricky)
 	$self->{ _config }->{ article_id } = $id;
 
-	# analyze
-	my $file = $self->filepath({
+	# parse article and analyze it.
+	$file = $self->filepath({
 	    base_dir => $spool_dir,
 	    id       => $id,
 	});
-	my $fh   = new FileHandle $file;
-	next unless (defined $fh);	# for file missing
-	my $msg  = Mail::Message->parse({ fd => $fh });
-	$self->analyze($msg);
 
-	# XXX this code is workaround, we should create more clever way.
-	# XXX remove current status (tricky ;)
-	delete $self->{ _status };
+	$fh = new FileHandle $file;
+	if (defined $fh) {
+	    my $msg  = Mail::Message->parse({ fd => $fh });
+	    $self->analyze($msg);
+
+	    # XXX-TODO: workaround, we should create more clever way.
+	    # XXX-TODO: remove current status (tricky ;)
+	    delete $self->{ _status };
+	}
     }
     print STDERR "\n" if $count > 0;
 }
@@ -238,7 +243,7 @@ sub db_dump
 
 =head2 db_hash( $type )
 
-return HASH REFERENCE for specified $type.
+return HASH REFERENCE for specified database $type.
 
 =cut
 
@@ -246,7 +251,7 @@ return HASH REFERENCE for specified $type.
 # Descriptions: get HASH REFERENCE for specified $type.
 #    Arguments: OBJ($self) STR($db_type)
 # Side Effects: none
-# Return Value: STR or UNDEF
+# Return Value: HASH_REF or UNDEF
 sub db_hash
 {
     my ($self, $db_type) = @_;
@@ -279,6 +284,7 @@ sub db_last_modified
     my $db_dir        = $self->{ _db_dir };
     my $last_modified = 0;
 
+    # XXX-TODO: we supporse Berkeley DB. fix it. 
     use File::Spec;
     my $file = File::Spec->catfile($db_dir, "date.db");
     if (-f $file) {

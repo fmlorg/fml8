@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HeaderRewrite.pm,v 1.11 2002/09/11 23:18:29 fukachan Exp $
+# $FML: HeaderRewrite.pm,v 1.12 2002/09/22 14:57:06 fukachan Exp $
 #
 
 package Mail::ThreadTrack::HeaderRewrite;
@@ -49,7 +49,7 @@ sub rewrite_header
 	if ($loctype eq 'appended' && $tag) {
 	    $header->replace('subject', $subject ." ". $tag);
 	}
-	elsif ($loctype eq 'prepended') {
+	elsif ($loctype eq 'prepended' && $tag) {
 	    $header->replace('subject', $tag ." ". $subject);
 	}
 	else {
@@ -71,14 +71,14 @@ sub rewrite_header
 }
 
 
-# Descriptions: prepare history infomation for further header rewrite
+# Descriptions: prepare history infomation for further header rewriting.
 #    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: update $self->{ _status_history }
 # Return Value: none
 sub prepare_history_info
 {
     my ($self, $msg) = @_;
-    my $thread_id  = $self->get_thread_id();
+    my $thread_id = $self->get_thread_id();
 
     # prepare hash table tied to db_dir/*db's
     my $rh = $self->{ _hash_table };
@@ -96,6 +96,7 @@ sub prepare_history_info
 	use Mail::Message::Date;
 	$when = Mail::Message::Date->new($when)->mail_header_style();
 
+	# XXX-TODO: validate $aid[0], $sender, $when, @aid.
 	$buf .= "\t\n";
 	$buf .= "\tthis thread is opended at article $aid[0]\n";
 	$buf .= "\tby $sender\n";
