@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.14 2002/10/03 22:11:12 fukachan Exp $
+# $FML: Filter.pm,v 1.15 2002/10/20 13:20:12 fukachan Exp $
 #
 
 package FML::Filter;
@@ -196,21 +196,19 @@ sub _apply_article_mime_component_filter
     my $config = $curproc->config();
 
     if ($config->yes( 'use_article_mime_component_filter' )) {
-	use FML::Filter::MimeComponent;
-	my $obj = new FML::Filter::MimeComponent;
+	use FML::Filter::MimeComponent2;
+	my $obj  = new FML::Filter::MimeComponent;
+	my $file = $config->get('article_mime_component_filter_rules');
 
-	# XXX DISABLED NOW ANYWAY
-	return 0;
-
-	# overwrite filter rules based on FML::Config
-	my $rules =
-	    $config->get_as_array_ref('article_mime_component_filter_rules');
-	if (defined $rules) {
-	    $obj->rules( $rules );
+	if (-f $file) {
+	    $obj->read_filter_rule_from_file($file);
+	    $obj->mime_component_check($mesg);
+	}
+	else {
+	    Log("(debug) disabled since rule file not found");
+	    return 0;
 	}
 
-	# go check
-	$obj->content_check($mesg);
 	if ($obj->error()) {
 	    my $x = $obj->error();
 	    $x =~ s/\s*at .*$//;
