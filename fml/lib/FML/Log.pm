@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.18 2002/06/22 14:22:09 fukachan Exp $
+# $FML: Log.pm,v 1.19 2002/07/02 03:54:18 fukachan Exp $
 #
 
 package FML::Log;
@@ -118,8 +118,10 @@ sub Log
 	    print $fh "\n";
 	}
 	else {
-	    my $name = $0; $name =~ s@.*/@@;
-	    my $iam  = $name."[". $config->{ _pid } ."]";
+	    use File::Basename;
+	    my $name = basename($0);
+	    my $pid  = $config->{ _pid };
+	    my $iam  = $name."[${pid}]:";
 	    print $fh $rdate->{'log_file_style'}, " ", $iam, " ", $mesg;
 	    print $fh "\n";
 	}
