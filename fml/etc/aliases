@@ -9,6 +9,7 @@ __ml_name_ctl__: :include:__ml_home_dir__/include-ctl
 owner-__ml_name_ctl__: __fml_owner__
 
 # maintainer
+# XXX -request is mandatory in the scope of RFC2142.
 __ml_name_request__: __ml_name_admin__
 __ml_name_admin__: __fml_owner__, __ml_name_error__
 
