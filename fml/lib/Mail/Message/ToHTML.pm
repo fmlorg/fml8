@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.14 2002/04/19 16:21:54 fukachan Exp $
+# $FML: ToHTML.pm,v 1.15 2002/04/20 15:51:26 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -19,7 +19,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.14 2002/04/19 16:21:54 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.15 2002/04/20 15:51:26 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -2483,6 +2483,10 @@ sub htmlify_dir
 	}
     }
 
+    # overwride
+    $has_fork = $args->{ has_fork } if defined $args->{ has_fork }; 
+    $max      = $args->{ max } if defined $args->{ max };
+
     for my $id ( 1 .. $max ) {
 	use File::Spec;
 	my $file = File::Spec->catfile($src_dir, $id);
@@ -2515,6 +2519,7 @@ sub htmlify_dir
 #
 if ($0 eq __FILE__) {
     my $dir = "/tmp/htdocs";
+    my $has_fork = defined $ENV{'HAS_FORK'} ? 1 : 0;
 
     eval q{
 	for my $x (@ARGV) {
@@ -2522,7 +2527,11 @@ if ($0 eq __FILE__) {
 		htmlify_file($x, { directory => $dir });
 	    }
 	    elsif (-d $x) {
-		htmlify_dir($x, { directory => $dir });
+		htmlify_dir($x, { 
+		    directory => $dir, 
+		    has_fork  => $has_fork,
+		    max       => 25,
+		});
 	    }
 	}
     };
