@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.8 2002/04/14 07:54:52 fukachan Exp $
+# $FML: ToHTML.pm,v 1.9 2002/04/14 08:03:33 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -19,7 +19,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.8 2002/04/14 07:54:52 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.9 2002/04/14 08:03:33 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -2128,8 +2128,7 @@ sub __sprintf_safe_str
 
     if (defined($str) && $str) {
 	use Jcode;
-	warn("code not specified") unless defined $code;
-	&Jcode::convert(\$str, $code || 'euc');
+	&Jcode::convert(\$str, defined($code) ? $code : 'euc' );
     }
 
     if (defined $str) {
