@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.41.2.9 2003/06/14 10:52:48 fukachan Exp $
+# $FML: ToHTML.pm,v 1.41.2.10 2003/06/14 12:44:12 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 1;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.41.2.9 2003/06/14 10:52:48 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.41.2.10 2003/06/14 12:44:12 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -173,6 +173,7 @@ sub htmlfy_rfc822_message
     #   $src  = source file
     #   $dst  = destination file (target html)
     my ($id, $src, $dst) = $self->_init_htmlfy_rfc822_message($args);
+    $self->{ _debug_id } = $id;
 
     # target html exists already.
     if (-f $dst) {
@@ -1053,25 +1054,34 @@ sub update_msg_html_links
 	return undef;
     }
 
+    # sanity
+    return unless defined $id;
+    return unless $id;
+
     # update target itself, of course
     $self->_msg_file_rewrite_links($id);
     push(@$list, $id);
 
-    # rewrite links of files for
-    #      prev/next id (article id) and
-    #      prev/next by thread
+    # no rewriting for myself
     my %uniq = ( $id => 1 );
 
   KEY:
-    for my $id (qw(prev_id next_id prev_thread_id next_thread_id)) {
-	if (defined $info->{ $id }) {
-	    my $_id = $info->{ $id };
+    for my $_link (qw(prev_id next_id prev_thread_id next_thread_id)) {
+	if (defined $info->{ $_link }) {
+	    my $_id = $info->{ $_link };
 
 	    next KEY if $uniq{ $_id };
 	    $uniq{ $_id } = 1;
 
-	    $self->_msg_file_rewrite_links($_id);
-	    push(@$list, $_id);
+	    _PRINT_DEBUG("try: rewrite $_link links in msg $_id");
+
+	    if (defined $_id && $_id) {
+		$self->_msg_file_rewrite_links($_id);
+		push(@$list, $_id);
+	    }
+	}
+	else {
+	    _PRINT_DEBUG("error: fail to rewrite msg $_link");
 	}
     }
 
@@ -1112,10 +1122,10 @@ sub _msg_file_rewrite_links
 
     umask(022);
 
-    _PRINT_DEBUG("_msg_file_rewrite_links $id");
+    _PRINT_DEBUG("try _msg_file_rewrite_links($id)");
 
     use FileHandle;
-    my $file = $info->{ file };
+    my $file = $info->{ filepath };
     if (defined $file && $file && -f $file) {
 	my ($old, $new) = ($file, "$file.new.$$");
 	my $rh = new FileHandle $old;
@@ -1123,6 +1133,8 @@ sub _msg_file_rewrite_links
 
 	if (defined $rh && defined $wh) {
 	    my $buf;
+
+	    _PRINT_DEBUG("rewrite: open msg $id");
 
 	  LINE:
 	    while ($buf = <$rh>) {
@@ -1153,6 +1165,9 @@ sub _msg_file_rewrite_links
 	    unless (rename($new, $old)) {
 		croak("rename($new, $old) fail (id=$id)\n");
 	    }
+	    else {
+		_PRINT_DEBUG("done: rewritten links in msg $id");
+	    }
 	}
 	else {
 	    unless (defined $file) {
@@ -1178,7 +1193,6 @@ sub evaluate_links_relation
 {
     my ($self, $id) = @_;
     my $ndb            = $self->ndb();
-    my $file           = $self->html_filepath($id);
     my $summary        = $ndb->thread_summary($id);
     my $prev_id        = $summary->{ prev_id };
     my $next_id        = $summary->{ next_id };
@@ -1197,10 +1211,10 @@ sub evaluate_links_relation
 	}
     }
 
-    my $link_prev_id        = $ndb->get('html_filename', $prev_id);
-    my $link_next_id        = $ndb->get('html_filename', $next_id);
-    my $link_prev_thread_id = $ndb->get('html_filename', $prev_thread_id);
-    my $link_next_thread_id = $ndb->get('html_filename', $next_thread_id);
+    my $fn_prev_id        = $summary->{ html_filename_prev_id };
+    my $fn_next_id        = $summary->{ html_filename_next_id };
+    my $fn_prev_thread_id = $summary->{ html_filename_prev_thread_id };
+    my $fn_next_thread_id = $summary->{ html_filename_next_thread_id };
 
     my $subject = {};
     if (defined $prev_id) {
@@ -1216,19 +1230,21 @@ sub evaluate_links_relation
 	$subject->{ next_thread_id } = $ndb->get('subject', $next_thread_id);
     }
 
+    my $path = $ndb->get('html_filepath', $id) || $self->html_filepath($id);
     my $args = {
 	id                  => $id,
-	file                => $file,
+	filepath            => $path,
 	prev_id             => $prev_id,
 	next_id             => $next_id,
 	prev_thread_id      => $prev_thread_id,
 	next_thread_id      => $next_thread_id,
-	link_prev_id        => $link_prev_id,
-	link_next_id        => $link_next_id,
-	link_prev_thread_id => $link_prev_thread_id,
-	link_next_thread_id => $link_next_thread_id,
+	link_prev_id        => $fn_prev_id,
+	link_next_id        => $fn_next_id,
+	link_prev_thread_id => $fn_prev_thread_id,
+	link_next_thread_id => $fn_next_thread_id,
 	subject             => $subject,
     };
+    _PRINT_DEBUG("$id link relation");
     _PRINT_DEBUG_DUMP_HASH( $args );
 
     return $args;
@@ -1255,26 +1271,29 @@ sub evaluate_safe_preamble
 
     umask(022);
 
-    if (defined($link_prev_id)) {
+    # for debug
+    $preamble .= "<!-- rewritten for id=$self->{ _debug_id } -->\n";
+
+    if (defined($link_prev_id) && $link_prev_id) {
 	$preamble .= "<A HREF=\"${prefix}$link_prev_id\">[Prev by ID]</A>\n";
     }
     else {
 	$preamble .= "[No Prev ID]\n";
     }
 
-    if (defined($link_next_id)) {
+    if (defined($link_next_id) && $link_next_id) {
 	$preamble .= "<A HREF=\"${prefix}$link_next_id\">[Next by ID]</A>\n";
     }
     else {
 	$preamble .= "[No Next ID]\n";
     }
 
-    if (defined $link_prev_thread_id) {
+    if (defined $link_prev_thread_id && $link_prev_thread_id) {
 	$preamble .=
 	    "<A HREF=\"${prefix}$link_prev_thread_id\">[Prev by Thread]</A>\n";
     }
     else {
-	if (defined $link_prev_id) {
+	if (defined $link_prev_id && $link_prev_id) {
 	    $preamble .=
 		"<A HREF=\"${prefix}$link_prev_id\">[Prev by Thread]</A>\n";
 	}
@@ -1283,12 +1302,12 @@ sub evaluate_safe_preamble
 	}
     }
 
-    if (defined $link_next_thread_id) {
+    if (defined $link_next_thread_id && $link_next_thread_id) {
 	$preamble .=
 	    "<A HREF=\"${prefix}$link_next_thread_id\">[Next by Thread]</A>\n";
     }
     else {
-	if (defined $link_next_id) {
+	if (defined $link_next_id && $link_next_id) {
 	    $preamble .=
 		"<A HREF=\"${prefix}$link_next_id\">[Next by Thread]</A>\n";
 	}
@@ -1323,7 +1342,7 @@ sub evaluate_safe_footer
     my $prefix     = $use_subdir ? '../' : '';
     my $footer     = $footer_begin. "\n";;
 
-    if (defined($link_prev_id)) {
+    if (defined($link_prev_id) && $link_prev_id) {
 	$footer .= "<BR>\n";
 	$footer .= "<A HREF=\"${prefix}$link_prev_id\">Prev by ID: ";
 	if (defined $subject->{ prev_id } ) {
@@ -1332,7 +1351,7 @@ sub evaluate_safe_footer
 	$footer .= "</A>\n";
     }
 
-    if (defined($link_next_id)) {
+    if (defined($link_next_id) && $link_next_id) {
 	$footer .= "<BR>\n";
 	$footer .= "<A HREF=\"${prefix}$link_next_id\">Next by ID: ";
 	if (defined $subject->{ next_id } ) {
@@ -1341,7 +1360,7 @@ sub evaluate_safe_footer
 	$footer .= "</A>\n";
     }
 
-    if (defined $link_prev_thread_id) {
+    if (defined $link_prev_thread_id && $link_prev_thread_id) {
 	$footer .= "<BR>\n";
 	$footer .=
 	    "<A HREF=\"${prefix}$link_prev_thread_id\">Prev by Thread: ";
@@ -1350,7 +1369,7 @@ sub evaluate_safe_footer
 	}
 	$footer .= "</A>\n";
     }
-    elsif (defined($link_prev_id)) {
+    elsif (defined($link_prev_id) && $link_prev_id) {
 	$footer .= "<BR>\n";
 	$footer .=
 	    "<A HREF=\"${prefix}$link_prev_id\">Prev by Thread: ";
@@ -1360,7 +1379,7 @@ sub evaluate_safe_footer
 	$footer .= "</A>\n";
     }
 
-    if (defined $link_next_thread_id) {
+    if (defined $link_next_thread_id && $link_next_thread_id) {
 	$footer .= "<BR>\n";
 	$footer .=
 	    "<A HREF=\"${prefix}$link_next_thread_id\">Next by Thread: ";
@@ -1369,7 +1388,7 @@ sub evaluate_safe_footer
 	}
 	$footer .= "</A>\n";
     }
-    elsif (defined($link_next_id)) {
+    elsif (defined($link_next_id) && $link_next_id) {
 	$footer .= "<BR>\n";
 	$footer .=
 	    "<A HREF=\"${prefix}$link_next_id\">Next by Thread: ";
