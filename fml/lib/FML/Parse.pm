@@ -134,4 +134,31 @@ sub _parse
 }
 
 
+=head1 SEE ALSO
+
+L<FML::Header>,
+L<MailingList::Messages>,
+L<FML::Config>,
+L<FML::Log>
+
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1 HISTORY
+
+FML::Parse appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
+=cut
+
+
 1;

@@ -19,6 +19,46 @@ use FML::Config;
 use FML::Date;
 use FML::Credential;
 
+=head1 NAME
+
+FML::Log - several interfaces to open several files
+
+=head1 SYNOPSIS
+
+To import Log(),
+
+   use FML::Log qw(Log);
+   &Log( $log_message );
+
+or specify arguments in the hash reference
+
+   use FML::Log qw(Log);
+   &Log( $log_message , { 
+       log_file => $log_file,
+       facility => $facility,
+       level    => $level,
+   });
+
+
+=head1 DESCRIPTION
+
+FML::Log.pm contains several interfaces for several files,
+for example, log files, syslog() (not yet implemented).
+
+=head2 Log( $message [, $args])
+
+The argument is the message to log.
+You can specify C<log_file>, C<facility> and C<level> as an optional.
+
+    $args = {
+       log_file => $log_file,
+       facility => $facility,
+       level    => $level,
+   };
+
+=cut
+
+
 #  usage: &Log( message, { log_file => $log_file } );
 # return: none
 #
@@ -66,51 +106,14 @@ sub Log
 }
 
 
-
-=head1 NAME
-
-FML::Log.pm - several interfaces to open several files
-
-
-=head1 SYNOPSIS
-
-To import Log(),
-
-   use FML::Log qw(Log);
-   &Log( $log_message );
-
-or specify arguments in the hash reference
-
-   use FML::Log qw(Log);
-   &Log( $log_message , { 
-       log_file => $log_file,
-       facility => $facility,
-       level    => $level,
-   });
-
-
-=head1 DESCRIPTION
-
-FML::Log.pm contains several interfaces for several files,
-for example, log files, syslog() (not yet implemented).
-
-=item Log( $message )
-
-The argument is the message to log.
-
-
-
 =head1 SEE ALSO
 
 L<FML::Date>, 
-L<FML::Config>,
-L<FML::BaseSystem>,
-L<FileHandle>
+L<FML::Config>
 
 =head1 AUTHOR
 
 Ken'ichi Fukamachi <F<fukachan@fml.org>>
-
 
 =head1 COPYRIGHT
 
@@ -119,13 +122,12 @@ Copyright (C) 2000 Ken'ichi Fukamachi
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself. 
 
-
 =head1 HISTORY
 
 FML::Log appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
-
 =cut
+
 
 1;

@@ -17,19 +17,28 @@ require Exporter;
 
 =head1 NAME
 
-FML::Messages - what is this
-
+FML::Messages - manipulate fml system messages
 
 =head1 SYNOPSIS
 
+NOT YET IMPLEMENTED
+
 =head1 DESCRIPTION
 
-=head2 new
+=cut
 
-=item Function()
+
+sub new
+{
+    my ($self) = @_;
+    my ($type) = ref($self) || $self;
+    return bless {}, $type;
+}
 
 
 =head1 AUTHOR
+
+Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
@@ -44,18 +53,6 @@ FML::Messages appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
-
-
-@ISA       = qw(Exporter);
-@EXPORT_OK = qw(Log);
-
-
-sub new
-{
-    my ($self) = @_;
-    my ($type) = ref($self) || $self;
-    return bless {}, $type;
-}
 
 
 1;

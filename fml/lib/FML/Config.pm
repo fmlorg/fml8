@@ -12,6 +12,89 @@ use Carp;
 use vars qw(%_fml_config %_default_fml_config);
 
 
+=head1 NAME
+
+FML::Config -- fml5 configuration holding object
+
+=head1 SYNOPSIS
+
+    $config = new FML::Config;
+
+    # get the current value
+    $config->{recipient_maps};
+
+    # set the new value
+    $config->{recipient_maps} = 'mysql:toymodel';
+
+    # function style to get/set the value for the key "recipient_maps"
+    $config->get('recipient_maps');
+    $config->set('recipient_maps', 'mysql:toymodel');
+
+
+=head1 DESCRIPTION
+
+=head2 DATA STRUCTURE
+
+C<%CurProc> holds the CURrent PROCess information.
+The hash holds several references to other data structures,
+which are mainly hashes.
+
+    $CurProc = {
+		# configurations
+		config => {
+		    key => value,
+		},
+
+		# emulator mode though fml mode in fact
+		emulator => $emulator,
+
+		# struct incoming_message holds the mail input from STDIN.
+		incoming_message => $r_msg,
+		article          => $r_msg,
+		};
+
+We use r_variable_name syntax where "r_" implies "reference to" here.
+C<$r_msg> is the reference to "struct message".
+
+    $r_msg = {
+	r_header => \$header,
+	r_body   => \$body,
+	info   => {
+	    mime-version => 1.0, 
+	    content-type => {
+		charset      => ISO-2022-JP,
+	    },
+	    size         => $size,
+	},
+    };
+
+where $header is the object returned by Mail::Header class (CPAN
+module) and the $body is the reference to the mail body region on
+memory which locates within FML::Parse name space.
+
+=head1 METHODS
+
+=item  Init( ref_to_curproc )
+
+special method only used in the initialization phase.
+This method binds $curproc and the %_fml_config memory area.
+
+=item  load_file( filename ) 
+
+read the configuration file, split key and value and set them to
+%_fml_config.
+
+=item  get( key )
+
+=item  set( key, value )
+
+=item  dump_variables()
+
+show all {key => value} for debug.
+
+=cut
+
+
 sub new
 {
     my ($self, $args) = @_;
@@ -272,87 +355,5 @@ sub CLEAR
 }
 
 
-=head1 NAME
-
-FML::Config -- fml5 configuration holding object
-
-=head1 SYNOPSIS
-
-    $config = new FML::Config;
-
-    # get the current value
-    $config->{recipient_maps};
-
-    # set the new value
-    $config->{recipient_maps} = 'mysql:toymodel';
-
-    # function style to get/set the value for the key "recipient_maps"
-    $config->get('recipient_maps');
-    $config->set('recipient_maps', 'mysql:toymodel');
-
-
-=head1 DESCRIPTION
-
-
-=head1 METHOD
-
-=item  Init( ref_to_curproc )
-
-special method only used in the initialization phase.
-This method binds $curproc and the %_fml_config memory area.
-
-=item  load_file( filename ) 
-
-read the configuration file, split key and value and set them to
-%_fml_config.
-
-=item  get( key )
-
-=item  set( key, value )
-
-=item  dump_variables()
-
-show all {key => value} for debug.
-
-=head1 DATA STRUCTURE
-
-C<%CurProc> holds the CURrent PROCess information.
-The hash holds several references to other data structures,
-which are mainly hashes.
-
-    $CurProc = {
-		# configurations
-		config => {
-		    key => value,
-		},
-
-		# emulator mode though fml mode in fact
-		emulator => $emulator,
-
-		# struct incoming_message holds the mail input from STDIN.
-		incoming_message => $r_msg,
-		article          => $r_msg,
-		};
-
-We use r_variable_name syntax where "r_" implies "reference to" here.
-C<$r_msg> is the reference to "struct message".
-
-    $r_msg = {
-	r_header => \$header,
-	r_body   => \$body,
-	info   => {
-	    mime-version => 1.0, 
-	    content-type => {
-		charset      => ISO-2022-JP,
-	    },
-	    size         => $size,
-	},
-    };
-
-where $header is the object returned by Mail::Header class (CPAN
-module) and the $body is the reference to the mail body region on
-memory which locates within FML::Parse name space.
-
-=cut
 
 1;
