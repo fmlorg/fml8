@@ -633,7 +633,7 @@ sub get_first_plaintext_message
 {
     my ($self, $args) = @_;
 
-    $size = $args->{ size } || 512;
+    my $size = $args->{ size } || 512;
 
     # use Data::Dumper; print STDERR Dumper( $self ), "\n";
 
