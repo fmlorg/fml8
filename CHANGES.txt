@@ -2,6 +2,43 @@
 		$Date$
 
 
+2001/09/23
+
+   Mail::Message
+	implement get_encoding_mechanism() in Mail::Message. 
+
+	implement get_offset(): return offset information in the data.
+	return value is	ARRAY.
+
+	return encoding type for specified Mail::Message not whole mail. 
+	The return value is one of base64, quoted-printable or undef. 
+
+	Modified Files:
+		fml/lib/Mail/Message.pm
+		fml/doc/ja/tutorial/module/Mail::Message.sgml
+		regress/message/dump.pl
+
+   チュートリアル
+	module  に関する新パートの創設
+	module/ ディレクトリを創設
+		Mail::Message
+		IO::Adapter
+	のプロトタイプを用意する。
+	このディレクトリでは各モジュールの詳細な使い方について
+	記述するもの。
+
+   FML::Filter
+	fml 4.0.x 相当の機能をきちんと実装する。
+	＃ ただし、ウィルスチェックは除く
+	XXX これで、おおむね、いつでも入れ換え可能か？ 
+
+	Utils を削除し、関数は適当なモジュールへ移動
+	move clean_up_buffer() and compare_euc_string() to
+	FML::Filter::BodyCheck and FML::Language::Japanese::Utils
+	respectively to remove FML::Filter::Utils.
+
+	MS GUID を判別するルーチンも実装した
+
 2001/09/22
 
    FML/Config.pm
@@ -244,5 +281,5 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.12 2001/09/22 03:35:24 fukachan Exp $
+$FML: CHANGES.txt,v 1.13 2001/09/22 14:52:04 fukachan Exp $
 
