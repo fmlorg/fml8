@@ -30,6 +30,12 @@ path_compress             = @COMPRESS@
 
 path_sendmail             = @SENDMAIL@
 
+path_newaliases           = @NEWALIASES@
+
+path_postfix              = @POSTFIX@
+
+path_postalias            = @POSTALIAS@
+
 path_nkf                  = @NKF@
 
 path_kakasi               = @KAKASI@
