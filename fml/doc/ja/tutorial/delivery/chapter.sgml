@@ -1,5 +1,5 @@
 <!--
-    $FML: chapter.sgml,v 1.7 2002/07/02 10:39:31 fukachan Exp $
+    $FML: chapter.sgml,v 1.8 2002/07/06 14:55:15 fukachan Exp $
 -->
 
 <chapter id="delivery">
@@ -88,5 +88,30 @@ Mail::Message
 
 <!-- mail queue -->
 &sect.mailqueue;
+
+
+<sect1>
+	<title>
+	議論: FML::Mailer は必要か？
+	</title>
+
+<para>
+FML::Process::QueueManager が使っているのみなので
+独立したモジュールである必要があるだろうか？
+</para>
+
+<para>
+reply_message() が何でもしてしまうので、
+FML::Mailer を呼ぶことはないかもしれない。
+でも、 reply_message() 以外の送信メソッドがあり得るかもしれないね。
+</para>
+
+<para>
+将来、どうも使ってないようなら
+ FML::Process::QueueManager に合併するべきかもしれない。
+</para>
+
+</sect1>
+
 
 </chapter>

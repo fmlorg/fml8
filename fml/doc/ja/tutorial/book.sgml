@@ -2,7 +2,7 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-$FML: book.sgml,v 1.38 2002/07/05 04:01:35 fukachan Exp $
+$FML: book.sgml,v 1.39 2002/07/06 14:55:14 fukachan Exp $
 -->
 
 <!doctype book public "-//FML//DTD DocBook V3.1-Based Extension//EN" [
@@ -141,6 +141,7 @@ $FML: book.sgml,v 1.38 2002/07/05 04:01:35 fukachan Exp $
 
 	<!-- セキュリティ -->
 	&chapter.restriction;
+	&chapter.credential;
 
 	<!-- フック -->
 	&chapter.hook;
