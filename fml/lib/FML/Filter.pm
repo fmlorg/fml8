@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.12 2002/09/29 12:43:23 fukachan Exp $
+# $FML: Filter.pm,v 1.13 2002/09/30 11:00:53 fukachan Exp $
 #
 
 package FML::Filter;
@@ -129,6 +129,23 @@ sub _apply_article_non_mime_filter
 {
     my ($self, $curproc, $args, $mesg) = @_;
     my $config = $curproc->config();
+
+    if ($config->yes( 'use_article_non_mime_filter' )) {
+	my $rules = 
+	    $config->get_as_array_ref('article_none_mime_filter_rules');
+
+      RULE:
+	for my $rule (@$rules) {
+	    if ($rule eq 'permit') {
+		return 0;
+	    }
+
+	    # XXX implement this!
+	    if ($rule eq 'reject') {
+		;
+	    }
+	}
+    }
 
     return 0;
 }
