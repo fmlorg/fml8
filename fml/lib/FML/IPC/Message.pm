@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.4 2004/01/02 16:08:38 fukachan Exp $
+# $FML: Message.pm,v 1.5 2004/04/12 15:32:05 fukachan Exp $
 #
 
 package FML::IPC::Message;
@@ -45,7 +45,7 @@ sub new
 }
 
 
-# Descriptions: set value for key
+# Descriptions: set value for key.
 #    Arguments: OBJ($self) STR($key) STR($value)
 # Side Effects: none
 # Return Value: none
@@ -56,7 +56,7 @@ sub set
 }
 
 
-# Descriptions: get value for key
+# Descriptions: get value for key.
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: none
 # Return Value: STR
@@ -77,7 +77,12 @@ sub dump
     my ($k, $v);
 
     while (($k, $v) = each %$self) {
-	print $wh "$k: $v\n";
+	if ($k =~ /\s+/o) {
+	    croak("invalid key: contains space");
+	}
+	else { 
+	    print $wh "$k\t$v\n";
+	}
     }
 }
 
