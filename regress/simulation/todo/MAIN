@@ -48,11 +48,6 @@
 		for LMTP 
 
 
-=head1	フィルタ
-
-	FML::Process::Distribute に組み込まれていない。	
-
-
 =head1	ループチェック
 
 	MAIL_LIST != MAINTAINER
@@ -84,8 +79,6 @@
 	mode-expire
 
 	mode-archive
-
-	mode-html-generator
 
 	MIME Content Handler(include backword compatible)
 
