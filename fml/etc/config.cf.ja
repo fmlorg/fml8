@@ -15,4 +15,4 @@ address_for_post    = elena@$ml_domain
 address_for_command = elena-ctl@$ml_domain
 
 # fml 4.0 ¤Î $DIR
-ml_home_dir         = /var/spool/ml/elena
+# ml_home_dir         = /var/spool/ml/elena
