@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Param.pm,v 1.4 2001/11/11 11:05:45 fukachan Exp $
+# $FML: Param.pm,v 1.5 2001/11/11 23:34:00 fukachan Exp $
 #
 
 package FML::Process::CGI::Param;
@@ -77,7 +77,7 @@ sub safe_param
 	}
     }
     else {
-	croak("parameter $key not permitted");
+	croak("parameter $key not permitted under CGI");
     }
 }
 
