@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix19991231.pm,v 1.9 2001/07/30 14:42:34 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.10 2001/12/22 09:21:16 fukachan Exp $
 #
 
 
@@ -51,6 +51,10 @@ sub class used in C<Mail::Bounce>.
 =cut
 
 
+# Descriptions: trap error of old postfix style
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($result)
+# Side Effects: update $result
+# Return Value: none
 sub analyze
 {
     my ($self, $msg, $result) = @_;
@@ -65,6 +69,10 @@ sub analyze
 }
 
 
+# Descriptions: analyze postfix error message
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($result)
+# Side Effects: update $result
+# Return Value: none
 sub _analyze_plaintext
 {
     my ($self, $msg, $result) = @_;
@@ -103,6 +111,10 @@ sub _analyze_plaintext
 }
 
 
+# Descriptions: analyze postfix error message II
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($result)
+# Side Effects: update $result
+# Return Value: none
 sub _analyze_broken_dsn
 {
     my ($self, $msg, $result) = @_;
@@ -127,6 +139,10 @@ sub _analyze_broken_dsn
 }
 
 
+# Descriptions: clean up address
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($result)
+# Side Effects: update $result
+# Return Value: none
 sub _parse_address
 {
     my ($self, $data, $result) = @_;
