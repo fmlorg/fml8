@@ -19,6 +19,31 @@ use FML::Ticket::System;
 require Exporter;
 @ISA = qw(FML::Ticket::System Exporter);
 
+=head1 NAME
+
+FML::Ticket::Model::toymodel - a toymodel of ticket systems
+
+=head1 SYNOPSIS
+
+=head1 DESCRIPTION
+
+=head1 CLASS HIERARCHY
+
+        FML::Ticket::System
+                |
+                A 
+       -------------------
+       |        |        |
+    toymodel  model2    ....
+
+=head1 METHOD
+
+=head2 C<new($curproc, $args)>
+
+constructor. 
+
+=cut
+
 
 sub new
 {
@@ -38,6 +63,13 @@ sub new
 
 
 sub DESTROY {}
+
+
+=head2 C<assign($curproc, $args)>
+
+assign a new ticket or extract the existing ticket-id from the subject.
+
+=cut
 
 
 # Descriptions: assign a new ticket or 
@@ -215,6 +247,46 @@ sub _set_status
 }
 
 
+=head2 C<set_status($args)>
+
+set $status for $ticket_id. 
+C<$args>, HASH reference, must have two keys.
+
+    $args = {
+	ticket_id => $ticket_id,
+	status    => $status,
+    }
+
+=head2 C<list_up($curproc, $args>)
+
+show the ticket summary. By default the output is as follow:
+
+   2001/02/06   open  support_#00000002      3 
+   2001/02/06   open  support_#00000003      4 6 8
+   2001/02/06   open  support_#00000004      5 7
+
+where the column is a set of 
+C<date>, C<status>, C<ticket-id> and C<articles>.
+
+=cut
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub set_status
+{
+    my ($self, $curproc, $args) = @_;
+    my $ticket_id = $args->{ ticket_id };
+    my $status    = $args->{ status };
+
+    $self->_open_db($curproc, $args);
+    $self->_set_status($ticket_id, $status);
+    $self->_close_db($curproc, $args);
+}
+
+
 sub list_up
 {
     my ($self, $curproc, $args) = @_;
@@ -318,27 +390,6 @@ sub _close_db
     untie %$articles;
 }
 
-
-=head1 NAME
-
-FML::Ticket::Model::toymodel - a toymodel of ticket systems
-
-=head1 SYNOPSIS
-
-=head1 DESCRIPTION
-
-=head1 CLASS HIERARCHY
-
-        FML::Ticket::System
-                |
-                A 
-       -------------------
-       |        |        |
-    toymodel  model2    ....
-
-=head1 METHOD
-
-=head2 new
 
 =head1 AUTHOR
 
