@@ -62,7 +62,6 @@ sub _init_ticket_db_dir
 {
     my ($self, $curproc, $args) = @_;
     my $config    = $curproc->{ config };
-    my $ml_name   = $config->{ ml_name };
 
     if (defined $self->{ _db_dir }) {
 	my $db_dir    = $self->{ _db_dir };
