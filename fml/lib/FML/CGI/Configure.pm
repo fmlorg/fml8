@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Configure.pm,v 1.2 2001/04/03 09:45:41 fukachan Exp $
+# $FML: Configure.pm,v 1.3 2001/05/30 04:03:21 fukachan Exp $
 #
 
 package FML::CGI::Configure;
@@ -57,6 +57,19 @@ Almost methods common for CGI or HTML are forwarded to
 C<FML::Process::CGI> base class.
 
 This module has routines needed for CGI.
+
+=cut
+
+
+sub run
+{
+    my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
+    my $myname = $config->{ program_name };
+
+    print STDERR "(debug) loading $0\n";
+}
+
 
 =head1 SEE ALSO
 
