@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calendar.pm,v 1.9 2004/01/02 14:50:33 fukachan Exp $
+# $FML: Calendar.pm,v 1.10 2004/01/02 16:08:06 fukachan Exp $
 #
 
 package FML::Process::Calendar;
@@ -62,14 +62,17 @@ dummy.
 
 # Descriptions: dummy constructor.
 #               avoid the default fml new() since we do not need it.
-#    Arguments: OBJ($self)
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: OBJ
 sub new
 {
-    my ($self) = @_;
+    my ($self, $args) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
+    $me->{ main_cf }       = $args->{ main_cf };
+    $me->{ __parent_args } = $args;
+
     return bless $me, $type;
 }
 
