@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.34 2001/12/26 12:38:10 fukachan Exp $
+# $FML: Lite.pm,v 1.35 2002/01/14 05:34:12 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.34 2001/12/26 12:38:10 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.35 2002/01/14 05:34:12 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -451,7 +451,7 @@ my $footer_end     = "<!-- __FOOTER_END__   by Mail::HTML::Lite -->";
 
 
 # Descriptions: prepare information area before main message appears.
-#               Later, this area is replaced with useful information 
+#               Later, this area is replaced with useful information
 #               e.g. thread link.
 #    Arguments: OBJ($self) HANDLE($wh)
 # Side Effects: none
@@ -465,7 +465,7 @@ sub mhl_preamble
 
 
 # Descriptions: prepare information area after main message appears.
-#               Later, this area is replaced with useful information 
+#               Later, this area is replaced with useful information
 #               e.g. thread link.
 #    Arguments: OBJ($self) HANDLE($wh)
 # Side Effects: none
@@ -699,7 +699,7 @@ sub _text_raw_print
 }
 
 
-# Descriptions: print out binary with MIME encoding or 
+# Descriptions: print out binary with MIME encoding or
 #               text with escaping
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: create $outf file
@@ -960,7 +960,7 @@ sub __add_value_to_array
 }
 
 
-# Descriptions: speculate head of thread list, 
+# Descriptions: speculate head of thread list,
 #               traced back from $id.
 #    Arguments: HASH_REF($db) STR($id)
 # Side Effects: none
@@ -1025,7 +1025,7 @@ sub __search_default_next_thread_id
 	$prev = $xid;
     }
 
-    # found 
+    # found
     # XXX we use $prev in reverse order, so this $prev means "next"
     if ($prev > 0) {
 	_PRINT_DEBUG("default thread: $id => $prev (@$list)");
@@ -1460,7 +1460,7 @@ update index.html.
 =cut
 
 
-# Descriptions: print navigation bar et.al. at upper half of indexes 
+# Descriptions: print navigation bar et.al. at upper half of indexes
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: create $new html
 # Return Value: none
@@ -1554,9 +1554,9 @@ sub update_id_index
 =cut
 
 
-# Descriptions: update monthly index 
+# Descriptions: update monthly index
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: rewrite monthly index 
+# Side Effects: rewrite monthly index
 # Return Value: none
 sub update_id_monthly_index
 {
@@ -2012,7 +2012,7 @@ sub _separete_url
 
 # Descriptions: debug
 #    Arguments: STR($str)
-# Side Effects: none 
+# Side Effects: none
 # Return Value: none
 sub _PRINT_DEBUG
 {
@@ -2021,9 +2021,9 @@ sub _PRINT_DEBUG
 }
 
 
-# Descriptions: debug, print out hash 
+# Descriptions: debug, print out hash
 #    Arguments: HASH_REF($hash)
-# Side Effects: none 
+# Side Effects: none
 # Return Value: none
 sub _PRINT_DEBUG_DUMP_HASH
 {
