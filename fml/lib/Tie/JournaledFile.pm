@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledFile.pm,v 1.22 2002/09/11 23:18:30 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.23 2002/09/22 14:57:08 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -42,12 +42,13 @@ for each line. For example
      .....
 
 By default, FETCH() returns the first value with the key.
+It meas first match.
 
    use Tie::JournaledFile;
    tie %db, 'Tie::JournaledFile', { first_match => 1, file => 'cache.txt' };
    print $db{ rudo }, "\n";
 
-If you print out the latest value for C<$key>
+If you print out the latest value for C<$key>, specify C<last_match>.
 
    use Tie::JournaledFile;
    tie %db, 'Tie::JournaledFile', { last_match => 1, file => 'cache.txt' };
@@ -95,6 +96,8 @@ sub new
 	$me->{ '_match_style' } = 'last';
     }
     else {
+	# XXX-TODO: why first match by default?
+	# first match by default.
 	$me->{ '_match_style' } = 'first';
     }
 
@@ -141,7 +144,7 @@ sub STORE
 
 # Descriptions: op for keys() and each()
 #    Arguments: OBJ($self)
-# Side Effects: none
+# Side Effects: initialize $self->{ _hash }.
 # Return Value: ARRAY(STR, STR)
 sub FIRSTKEY
 {
@@ -154,6 +157,8 @@ sub FIRSTKEY
     if (defined $fh) {
 	my ($k, $v);
 	while (<$fh>) {
+	    # XXX overwritten. it means last match.
+	    # XXX-TODO: hmm, what imply first match ?
 	    ($k, $v) = split(/\s+/, $_, 2);
 	    $hash->{ $k } = $v if $k;
 	}
@@ -215,16 +220,18 @@ which is by default.
 sub get_all_values_as_hash_ref
 {
     my ($self) = @_;
+    my $file   = $self->{ '_file' };
     my $hash   = {};
 
     use IO::File;
     my $fh = new IO::File;
-    $self->{ _fh } = $fh;
 
-    if (-f $self->{ '_file' }) {
-	$fh->open($self->{ '_file' }, "r");
+    if (-f $file) {
+	$fh->open($file, "r");
 
 	if (defined $fh) {
+	    $self->{ _fh } = $fh;
+
 	    my ($a, $k, $v);
 	    while (<$fh>) {
 		chomp;
@@ -242,6 +249,9 @@ sub get_all_values_as_hash_ref
 		$hash->{ $k } = $a;
 	    }
 	    $fh->close();
+	}
+	else {
+	    $self->{ _fh } = undef;
 	}
 
 	return $hash;
@@ -371,17 +381,14 @@ sub _puts
     if (defined $fh) {
 	$fh->open($file, "a");
 
-	use Time::localtime;
-	my $date = ctime(time);
 	if (defined $string) {
 	    $fh->print($string);
 	    $fh->print("\n") unless $string =~ /\n$/;
 	}
+
 	$fh->close;
-	return 1;
     }
     else {
-	use Carp;
 	croak "cannot open cache file $file\n";
     }
 }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledDir.pm,v 1.15 2002/09/11 23:18:30 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.16 2002/09/22 14:57:07 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-Tie::JournaledDir - tie hash to journaled style directory cache by Tie::JournaledFile
+Tie::JournaledDir - tie hash to journaled style directory cache
 
 =head1 SYNOPSIS
 
@@ -26,8 +26,9 @@ Tie::JournaledDir - tie hash to journaled style directory cache by Tie::Journale
 
 =head1 DESCRIPTIONS
 
-tie hash by C<Tie::JournaledDir> acceses some directory with a lot of
-files. For example the directory consists of files with numeric names.
+tie hash by C<Tie::JournaledDir> acceses some directory holding a lot
+of files. For example, the directory consists of files with numeric
+names.
 
     /some/where/998520336
     /some/where/998520338
@@ -36,7 +37,7 @@ files. For example the directory consists of files with numeric names.
 
 C<Tie::JournaledFile> manipulates each file.
 
-C<Tie::JournaledDir> has a cache by a directory.
+C<Tie::JournaledDir> has cache files in a directory.
 C<Tie::JournaledDir> wraps C<Tie::JournaledFile> over several files.
 It enables easy automatic expiration.
 
@@ -63,7 +64,7 @@ For example,
     $args = {
 	dir   => '/var/spool/ml/elena/var/db/message_id',
 	unit  => 'day',
-	limit => 90,     # so, search the last 90 days.
+	limit => 90,     # search the last 90 days.
     };
 
 =head2 TIEHASH, FETCH, STORE, FIRSTKEY, NEXTKEY
@@ -125,7 +126,7 @@ sub new
 }
 
 
-# Descriptions: generate a cache file
+# Descriptions: generate a cache file name.
 #    Arguments: NUM($unit) STR($dir) NUM($i)
 # Side Effects: none
 # Return Value: STR(file path)
@@ -142,9 +143,12 @@ sub _file_name
 	my $date = new Mail::Message::Date time;
 	$fn = $date->YYYYMMDD( time - $i * 24 * 3600 );
     }
+    else {
+	carp("JournaledDir: wrong unit");
+    }
 
     use File::Spec;
-    File::Spec->catfile($dir, $fn);
+    return File::Spec->catfile($dir, $fn);
 }
 
 
@@ -174,6 +178,7 @@ sub FETCH
   FILES_LOOP:
     for my $f (@$files) {
 	if (-f $f) {
+	    # XXX reverse order: firstly, try last match in the latest file.
 	    my $obj = new Tie::JournaledFile {
 		'last_match' => 1,
 		'file'       => $f,
@@ -216,9 +221,9 @@ sub STORE
 sub __gen_hash
 {
     my ($self) = @_;
-    my $files = $self->{ '_files' } || [];
-    my $hash  = {};
-    my %db    = ();
+    my $files  = $self->{ '_files' } || [];
+    my $hash   = {};
+    my %db     = ();
     my ($k, $v);
 
     use FileHandle;
@@ -231,6 +236,8 @@ sub __gen_hash
 	    'file'       => $f,
 	};
 
+	# XXX overwrite { key => value } for normal time order.
+	# XXX so, the value is the latest one.
 	while (($k, $v) = each %db) {
 	    $hash->{ $k } = $v;
 	}
@@ -242,7 +249,7 @@ sub __gen_hash
 }
 
 
-# Descriptions: return the first key in the latest file
+# Descriptions: return the first key in hash on memory.
 #    Arguments: OBJ($self)
 # Side Effects: __gen_hash() creates hash on momery.
 # Return Value: ARRAY(STR, STR)
@@ -261,10 +268,10 @@ sub FIRSTKEY
 }
 
 
-# Descriptions: fetch the next key in the cache
+# Descriptions: fetch the next key in the cache.
 #               file to search changes automatically by Tie::JournaledFile.
 #    Arguments: OBJ($self) STR($lastkey)
-# Side Effects: none
+# Side Effects: seek $self->{ _hash } by each().
 # Return Value: ARRAY(STR, STR)
 sub NEXTKEY
 {
@@ -280,7 +287,7 @@ sub NEXTKEY
 }
 
 
-# Descriptions: check whether $key exists
+# Descriptions: check whether $key exists ($key has value or not).
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
@@ -295,7 +302,7 @@ sub EXISTS
 
 # Descriptions: delete $key
 #    Arguments: OBJ($self) STR($key)
-# Side Effects: update db
+# Side Effects: update cache.
 # Return Value: none
 sub DELETE
 {
@@ -304,7 +311,7 @@ sub DELETE
 }
 
 
-# Descriptions: dummy now
+# Descriptions: dummy.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: none
@@ -349,7 +356,10 @@ sub get_all_values_as_hash_ref
 
     use FileHandle;
     for my $f (reverse @$files) {
-	my $obj  = new Tie::JournaledFile { 'file' => $f };
+	my $obj  = new Tie::JournaledFile {
+	    'last_match' => 1,
+	    'file'       => $f,
+	};
 	my $hash = $obj->get_all_values_as_hash_ref();
 
 	# copy
@@ -367,6 +377,8 @@ sub get_all_values_as_hash_ref
 	}
     }
 
+    # return all values assigned to the key.
+    #        { key => [ value1, value2, ... ] }.
     return $result;
 }
 
