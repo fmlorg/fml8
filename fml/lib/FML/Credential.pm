@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.22 2002/03/22 11:36:05 fukachan Exp $
+# $FML: Credential.pm,v 1.23 2002/04/03 11:32:58 fukachan Exp $
 #
 
 package FML::Credential;
@@ -150,7 +150,8 @@ return 0 if not.
 sub is_member
 {
     my ($self, $curproc, $args) = @_;
-    my $member_maps = $curproc->{ config }->{ member_maps };
+    my $config      = $curproc->{ config };
+    my $member_maps = $config->get_as_array_ref('member_maps');
     my $address = $args->{ address } || $curproc->{'credential'}->{'sender'};
     my $status  = 0;
 
@@ -168,7 +169,8 @@ sub is_member
 sub is_privileged_member
 {
     my ($self, $curproc, $args) = @_;
-    my $member_maps = $curproc->{ config }->{ admin_member_maps };
+    my $config      = $curproc->{ config };
+    my $member_maps = $config->get_as_array_ref('admin_member_maps');
     my $address = $args->{ address } || $curproc->{'credential'}->{'sender'};
 
     $self->_is_member($curproc, $args, {
@@ -201,7 +203,7 @@ sub _is_member
     use IO::Adapter;
 
   MAP:
-    for my $map (split(/\s+/, $member_maps)) {
+    for my $map (@$member_maps) {
 	if (defined $map) {
 	    $status = $self->has_address_in_map($map, $address);
 	    last MAP if $status;
