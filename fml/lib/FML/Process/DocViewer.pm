@@ -1,10 +1,10 @@
 #!/usr/local/bin/perl -w
 #-*- perl -*-
 #
-# Copyright (C) 2000 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML$
+# $FML: DocViewer.pm,v 1.2 2001/04/03 09:45:43 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -32,8 +32,10 @@ FML::Process::DocViewer -- fmldoc wrapper
 
 =head1 DESCRIPTION
 
-FML::Process::DocViewer is the wrapper for fmldoc.
-See C<FML::Process::Flow> for each method definition.
+FML::Process::DocViewer is the main routine of C<fmldoc> program.
+It wrapps C<perldoc>. 
+
+See C<FML::Process::Flow> for program flow.
 
 =head2 MODULES
 
@@ -75,8 +77,8 @@ sub prepare { ; }
 
 =head2 C<run($args)>
 
-the main top level dispatcher for C<fmlconf>, C<fmldoc> and C<makefml>. 
-For example, it kicks off internal function C<_fmlconf($args)> for
+the main top level dispatcher.
+It kicks off internal function C<_fmlconf($args)> for
 C<fmlconf($args)>.
 
 =cut

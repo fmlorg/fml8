@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: Checksum.pm,v 1.11 2001/04/03 09:45:40 fukachan Exp $
 #
 
 package FML::Checksum;
@@ -29,14 +28,11 @@ FML::Checksum - utilities for check sum
 =head2 C<new()>
 
 the constructor. 
-It checks we can use MD5 perl module or we need to use some programs
-e.g. C<md5>, C<cksum>, et.al.
+It checks we can use MD5 perl module or we need to use external programs
+such as C<md5>, C<cksum>, et.al.
 
 =cut
 
-
-require Exporter;
-@ISA = qw(Exporter);
 
 sub new
 {
@@ -77,7 +73,7 @@ sub _init
 
 =head2 C<md5(\$string)>
 
-return the md5 checksum of C<$string>.
+return the md5 checksum of the given string C<$string>.
 
 =cut
 
@@ -241,6 +237,8 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 FML::Checksum appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
+
+Algorithm used here is based on NetBSD cksum library (C program).
 
 =cut
 

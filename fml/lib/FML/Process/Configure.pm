@@ -1,10 +1,10 @@
 #!/usr/local/bin/perl -w
 #-*- perl -*-
 #
-# Copyright (C) 2000 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML$
+# $FML: Configure.pm,v 1.21 2001/04/03 09:45:43 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -17,7 +17,7 @@ use FML::Process::Kernel;
 use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
 
-@ISA = qw(FML::Process::Kernel Exporter);
+@ISA = qw(FML::Process::Kernel);
 
 
 =head1 NAME
@@ -33,7 +33,8 @@ FML::Process::Configure -- fmlconf and makefml wrapper
 =head1 DESCRIPTION
 
 FML::Process::Configure is the wrapper for fmlconf and makefml.
-See C<FML::Process::Flow> for each method definition.
+
+See C<FML::Process::Flow> for each program flow.
 
 =head2 MODULES
 
@@ -47,7 +48,8 @@ bootstrap by using these modules in this order.
 
 =head2 C<new($args)>
 
-usual constructor.
+constructor.
+It make a C<FML::Process::Kernel> object and return it.
 
 =head2 C<prepare($args)>
 
@@ -78,8 +80,10 @@ sub prepare { ; }
 =head2 C<run($args)>
 
 the main top level dispatcher for C<fmlconf> and C<makefml>. 
-For example, it kicks off internal function C<_fmlconf($args)> for
-C<fmlconf($args)>.
+It kicks off internal function 
+C<_fmlconf($args)> for C<fmlconf> 
+    and 
+C<_makefml($args)> for makefml.
 
 =cut
 

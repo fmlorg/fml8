@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: Flow.pm,v 1.9 2001/04/03 09:45:43 fukachan Exp $
 #
 
 package FML::Process::Flow;
@@ -20,14 +19,14 @@ FML::Process::Flow - describe process flow
 =head1 SYNOPSIS
 
    use FML::Process::Flow;
-   FML::Process::Flow::ProcessStart($pkg, $args);
+   FML::Process::Flow::ProcessStart($obj, $args);
 
-where C<$pkg> is the package name.
+where C<$obj> is the FML::Process::C<something> object.
 C<$args> is HASH REFERENCE.
 
 =head1 DESCRIPTION
 
-This module describes the current fml program flow. 
+This module describes the fml program flow. 
 Each function is implemented in each module of FML::Process classes.
 
     # create a new process object

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML$
+# $FML: Standalone.pm,v 1.5 2001/04/24 03:50:25 fukachan Exp $
 #
 
 
@@ -22,7 +22,7 @@ Standalone - minimal parser for libexec/* programs
    use Standalone;
    my $main_cf = Standalone::load_cf($main_cf_file, $params);
 
-where $param is optional and the format of it is
+where $param is optional. The format of it is
 
   $params = "key1=value1 key2=value2";
 
@@ -40,7 +40,7 @@ key2 is equivalent to
 
    key2 = value2 value3
 
-A set of space separeted elements is an array of values.
+A set of space separeted elements constructs an array of values.
 
 
 =head1 METHODS
@@ -48,7 +48,7 @@ A set of space separeted elements is an array of values.
 =head2 C<load_cf()>
 
 load "key = value" style configuration file and build a hash.
-return the reference to the hash.
+return HASH REFERENCE.
 
 =cut
 
@@ -158,8 +158,6 @@ sub _parse_params
 
     \%config;
 }
-
-
 
 
 =head1 AUTHOR

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: QueueManager.pm,v 1.1 2001/05/18 10:39:29 fukachan Exp $
+# $FML: QueueManager.pm,v 1.2 2001/05/19 03:40:36 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -19,8 +19,20 @@ FML::Process::QueueManager - provide queue manipulation functions
 =head1 SYNOPSIS
 
     use FML::Process::QueueManager;
+    my $obj = new FML::Process::QueueManager { directory => $queue_dir };
+    $obj->send($curproc);
 
 =head1 DESCRIPTION
+
+not yet implemented.
+
+Now it can send a mail in queue.
+
+=head1 METHODS
+
+=head2 C<new()>
+
+constructor.
 
 =cut
 
@@ -38,6 +50,12 @@ sub new
     return bless $me, $type;
 }
 
+
+=head2 C<send($curproc)> 
+
+try to send all mails in the queue.
+
+=cut
 
 sub send
 {

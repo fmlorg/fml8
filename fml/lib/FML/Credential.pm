@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Credential.pm,v 1.9 2001/05/04 14:32:32 fukachan Exp $
+# $FML: Credential.pm,v 1.10 2001/05/28 16:17:12 fukachan Exp $
 #
 
 package FML::Credential;
@@ -70,6 +70,10 @@ The ambiguity is followed by these rules.
 3. C<domain> part is the same from the top C<gTLD> layer to
    C<$level>-th sub domain level.
 
+
+   XXX RULE 3 IS NOT YET IMPLEMENTED
+
+
 =cut
 
 sub is_same_address
@@ -90,9 +94,10 @@ sub is_same_address
 }
 
 
-=head2 C<is_member()>
+=head2 C<is_member($curproc, $args)>
 
-return 1 if the sender is a ML member and 0 if not.
+return 1 if the sender is a ML member.
+return 0 if not.
 
 =cut
 
@@ -130,6 +135,16 @@ sub is_member
 
     $status;
 }
+
+
+=head2 C<match_system_accounts($curproc, $args)>
+
+C<sender> ( == $self->sender() ) matches a system account or not.
+The system accounts are given as 
+
+     $curproc->{ config }->{ system_accounts }. 
+
+=cut
 
 
 sub match_system_accounts
@@ -170,7 +185,11 @@ sub sender
 
 =head2 C<get(key)>
 
+   XXX NUKE THIS ?
+
 =head2 C<set(key, value)>
+
+   XXX NUKE THIS ?
 
 =cut
 
