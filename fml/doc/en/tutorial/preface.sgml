@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: preface.sgml,v 1.1 2003/07/25 17:05:46 fukachan Exp $
    $jaFML: preface.sgml,v 1.18 2003/04/15 14:51:35 fukachan Exp $
 -->
 
@@ -149,7 +149,9 @@ We only have to bug-fix at &fml4; branch.
 <screen>
                fml-devel
              -----------------------------> 8.0
-                       ¢¬¢­
+                       A  |
+                       |  | (interaction)
+                       |  V
 1.2  ¡Á 4.0 ------------------------------> 4.0-current
               |      |
             4.0.1   4.0.2 .... (release / 4.0-stable release)
