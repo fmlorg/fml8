@@ -1,0 +1,220 @@
+<!--
+   $FML$
+-->
+
+
+<chapter id="language.preference">
+	<title>
+	言語処理の優先順位
+	</title>
+
+
+<sect1 id="language.preference.overview">
+	<title>
+	言語処理の諸問題
+	</title>
+
+<para>
+一番単純なモデルは、「このＭＬは日本人用」と設定してあるならメッセージ
+は常に日本語で返すというものです。
+ＭＬ作成時に何言語用かを指定する必要があります。
+</para>
+
+<para>
+しかしながら、日本人だからといって、今、メールを読んでいる環境で日本語
+が使えないかも知れないし、Accept-Language: を無視するのもよろしくあり
+ません。とはいえ、みんながちゃんとAccept-Language:をつけているわけでは
+ないので、問題はいろいろと山積みです。
+</para>
+
+<para>
+たとえば、Accept-Language: ja などとしてある場合はja が優先だと分かり
+ます。しかしながら、そういったものがなく、かつ、「日本人が help という
+メールを送ってきた」場合、返事を us-ascii なのか iso-2022-jp で返すべ
+きなのか？が、プログラムには良く分かりません。
+<screen>
+例:
+
+From: rudo@example.co.jp
+Subject: help
+mime-version: 1.0
+content-type: text/plain; charset=us-ascii 
+
+help
+</screen>
+</para>
+
+<para>
+charsetを素直に考えると、英語で返すべきですが、これは本文が英語だけな
+のでcharset=us-asciiになっているだけです。しょうがないので、このＭＬが
+(日本人相手のため)日本語優先と設定されているなら、日本語と英語のメッセー
+ジ両方を返すべきでしょう。英語のＭＬなら、英語を返すだけでいいです。
+</para>
+
+<para>
+逆に、Accept-Lanaguage: が指定されていれば、それを尊重するべきです。英
+語のＭＬ(language_preference_order = en)の場合でも、Accept-Lanaguage:
+ja なら（できるだけ）日本語で返事をするべきでしょう。
+標準のメッセージであれば、このサポートは可能なので、優先するべきでしょう。
+</para>
+
+</sect1>
+
+
+<sect1 id="language.preference.ml.ja">
+	<title>
+	日本語のＭＬ
+	</title>
+
+<para>
+language_preference_order という変数があります。
+これが、次のように指定されています。
+<screen>
+language_preference_order	=	ja en
+</screen>
+このヒントを使い、以下のように処理をするようにしています。
+</para>
+
+
+<sect2>
+	<title>
+	Accept-Language: ja, en
+	</title>
+
+<para>
+日本語（だけ）で返すと判断する。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Accept-Language: en
+	</title>
+
+<para>
+英語（だけ）で返すと判断する。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Accept-Language: はなし、Content-Type: では charset=iso-2022-jp
+	</title>
+
+<para>
+日本語（だけ）で返すと判断する。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Accept-Language: はなし、Content-Type: では charset=us-ascii
+	</title>
+
+<para>
+日本語（だけ）で返していいと判断できない。
+日本語と英語のコンビで返すべきだとおもう。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Accept-Language: はなし、Content-Type: もなし
+	</title>
+
+<para>
+日本語（だけ）で返していいと判断できない。
+日本語と英語のコンビで返すべきだとおもう。
+</para>
+
+</sect2>
+
+</sect1>
+
+
+<sect1 id="language.preference.ml.en">
+	<title>
+	英語のＭＬ
+	</title>
+
+<para>
+language_preference_order という変数があります。
+これが、次のように指定されています。
+<screen>
+language_preference_order	=	en
+</screen>
+このヒントを使い、以下のように処理をするようにしています。
+</para>
+
+
+<sect2>
+	<title>
+	Accept-Language: ja, en
+	</title>
+
+<para>
+日本語（だけ）で返すと判断する。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Accept-Language: en
+	</title>
+
+<para>
+英語（だけ）で返すと判断する。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Accept-Language: はなし、Content-Type: では charset=iso-2022-jp
+	</title>
+
+<para>
+日本語（だけ）で返すと判断する。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Accept-Language: はなし、Content-Type: では charset=us-ascii
+	</title>
+
+<para>
+英語（だけ）で返すと判断する。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	Accept-Language: はなし、Content-Type: もなし
+	</title>
+
+<para>
+英語（だけ）で返すと判断する。
+</para>
+
+</sect2>
+
+</sect1>
+
+
+</chapter>
