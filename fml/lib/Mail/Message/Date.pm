@@ -2,14 +2,14 @@
 #
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.26 2004/02/04 15:16:25 fukachan Exp $
+# $FML: Date.pm,v 1.27 2004/02/15 04:38:37 fukachan Exp $
 #
 
 package Mail::Message::Date;
 
 =head1 NAME
 
-Mail::Message::Date - utilities for date and time
+Mail::Message::Date - utilities for date and time.
 
 =head1 SYNOPSIS
 
@@ -22,7 +22,7 @@ Mail::Message::Date - utilities for date and time
 
 =head1 DESCRIPTION
 
-The style you use follows:
+The style you can use follows:
 
     style                       example
     ----------------------------------------------
@@ -60,6 +60,11 @@ use strict;
 use Carp;
 
 
+#
+# XXX-TOOD: OLD STYLE -> NEW .
+#
+
+
 # Descriptions: constructor.
 #    Arguments: OBJ($self) NUM($time)
 # Side Effects: create date object by _date()
@@ -73,8 +78,8 @@ sub new
 	$time = date_to_unixtime($me, $time);
     }
 
-    my $type = _date($time);
-    return bless $type, $self;
+    my $date_set = _date($time);
+    return bless $date_set, $self;
 }
 
 
@@ -135,7 +140,7 @@ sub _date
 =cut
 
 
-# Descriptions:
+# Descriptions: set date.
 #    Arguments: OBJ($self) STR($date)
 # Side Effects: none
 # Return Value: none
@@ -155,7 +160,7 @@ sub set
 }
 
 
-# Descriptions: return logfile style.
+# Descriptions: return date as logfile style.
 #    Arguments: OBJ($self) NUM($time)
 # Side Effects: none
 # Return Value: STR
@@ -167,7 +172,7 @@ sub log_file_style
 }
 
 
-# Descriptions: return Date: style date.
+# Descriptions: return date as Date: style date.
 #    Arguments: OBJ($self) NUM($time)
 # Side Effects: none
 # Return Value: STR
@@ -179,7 +184,7 @@ sub mail_header_style
 }
 
 
-# Descriptions: return YYYYMMDD style date.
+# Descriptions: return date as YYYYMMDD style date.
 #    Arguments: OBJ($self) NUM($time)
 # Side Effects: none
 # Return Value: STR
@@ -191,7 +196,7 @@ sub YYYYMMDD
 }
 
 
-# Descriptions: return e.g. 1999/09/13 style.
+# Descriptions: return date as e.g. 1999/09/13 style.
 #    Arguments: OBJ($self) NUM($time) STR($sep)
 # Side Effects: none
 # Return Value: STR
@@ -205,7 +210,7 @@ sub YYYYxMMxDD
 }
 
 
-# Descriptions: return YYYYMMDD.HHMM.
+# Descriptions: return date as YYYYMMDD.HHMM.
 #    Arguments: OBJ($self) NUM($time)
 # Side Effects: none
 # Return Value: STR
@@ -217,7 +222,7 @@ sub current_time
 }
 
 
-# Descriptions: return YYYYMMDD.HHMMSS.
+# Descriptions: return date as YYYYMMDD.HHMMSS.
 #    Arguments: OBJ($self) NUM($time)
 # Side Effects: none
 # Return Value: STR
@@ -229,7 +234,7 @@ sub precise_current_time
 }
 
 
-# Descriptions: return Star Trek stardate()
+# Descriptions: return date as Star Trek stardate()
 #                  stardate(tm, issue, integer, fraction)
 #                           unsigned long tm;
 #                           long *issue, *integer, *fraction;
@@ -266,24 +271,6 @@ sub stardate
 }
 
 
-=head2 date_to_unixtime($date)
-
-eat patter in Date: and return the corresponding unix time.
-For example, let C<$date> be
-
-   Mon Jul  2 22:59:45 2001
-
-C<date_to_unixtime($date)> returns
-
-   994082385
-
-You can use like this.
-
-    use Mail::Message::Date;
-    $unixtime = Mail::Message::Date::date_to_unixtime( $date );
-
-=cut
-
 my $debug_mti = 0;
 
 # TIME ZONES: RFC822 except for "JST"
@@ -302,7 +289,7 @@ my %zone = ("JST", "+0900",
 	    );
 
 
-# Descriptions: dummy log function
+# Descriptions: dummy log function.
 #    Arguments: STR($s)
 # Side Effects: none
 # Return Value: none
@@ -332,7 +319,7 @@ sub unixtime
 =cut
 
 
-# Descriptions: return data as mail_header_style style
+# Descriptions: return date as mail_header_style style.
 #    Arguments: OBJ($self) NUM($time)
 # Side Effects: none
 # Return Value: STR
@@ -342,7 +329,8 @@ sub as_mail_header_style
      $self->mail_header_style($time);
 }
 
-# Descriptions: return data as YYYYMMDD style
+
+# Descriptions: return date as YYYYMMDD style.
 #    Arguments: OBJ($self) NUM($time)
 # Side Effects: none
 # Return Value: STR
@@ -352,7 +340,8 @@ sub as_YYYYMMDD
      $self->YYYYMMDD($time);
 }
 
-# Descriptions: return data as YYYYxMMxDD style
+
+# Descriptions: return date as YYYYxMMxDD style.
 #    Arguments: OBJ($self) NUM($time)
 # Side Effects: none
 # Return Value: STR
@@ -362,7 +351,8 @@ sub as_YYYYxMMxDD
      $self->YYYYxMMxDD($time);
 }
 
-# Descriptions: return data as current_time style
+
+# Descriptions: return date as current_time style.
 #    Arguments: OBJ($self) NUM($time)
 # Side Effects: none
 # Return Value: STR
@@ -372,7 +362,8 @@ sub as_current_time
      $self->current_time($time);
 }
 
-# Descriptions: return data as precise_current_time style
+
+# Descriptions: return date as precise_current_time style.
 #    Arguments: OBJ($self) NUM($time)
 # Side Effects: none
 # Return Value: STR
@@ -382,7 +373,8 @@ sub as_precise_current_time
      $self->precise_current_time($time);
 }
 
-# Descriptions: return data as stardate style
+
+# Descriptions: return date as stardate style.
 #    Arguments: OBJ($self) NUM($time)
 # Side Effects: none
 # Return Value: STR
@@ -392,7 +384,8 @@ sub as_stardate
      $self->stardate($time);
 }
 
-# Descriptions: return data as unixtime style
+
+# Descriptions: return date as unixtime style.
 #    Arguments: OBJ($self) NUM($time)
 # Side Effects: none
 # Return Value: STR
@@ -405,10 +398,27 @@ sub as_unixtime
 
 =head1 UTILITIES
 
+=head2 date_to_unixtime($date)
+
+eat date string in several patterns and return the corresponding unix
+time.  For example, let C<$date> be
+
+   Mon Jul  2 22:59:45 2001
+
+C<date_to_unixtime($date)> returns
+
+   994082385
+
+You can use like this.
+
+    use Mail::Message::Date;
+    $dp = Mail::Message::Date;
+    $unixtime = $dp->date_to_unixtime( $date );
+
 =cut
 
 
-# Descriptions: convert Date: string to UNIXTIME (sec)
+# Descriptions: convert Date: string to UNIXTIME (sec).
 #    Arguments: OBJ($self) STR($in)
 # Side Effects: none
 # Return Value: NUM(unix time)
