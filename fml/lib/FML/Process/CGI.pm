@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: CGI.pm,v 1.16 2001/11/04 03:36:55 fukachan Exp $
+# $FML: CGI.pm,v 1.17 2001/11/07 14:11:46 fukachan Exp $
 #
 
 package FML::Process::CGI;
@@ -63,11 +63,12 @@ sub new
     };
 
     use File::Spec;
-    my $ml_home_dir    = File::Spec->catfile($ml_home_prefix, $ml_name);
+    my $ml_home_dir = File::Spec->catfile($ml_home_prefix, $ml_name);
+    my $config_cf   = File::Spec->catfile($ml_home_dir, 'config.cf');
 
     # fix $args { cf_list, ml_home_dir };
-    my $cf = $args->{ cf_list };
-    push(@$cf, $ml_home_dir.'/config.cf');
+    my $cflist = $args->{ cf_list };
+    push(@$cflist, $config_cf);
     $args->{ ml_home_dir } =  $ml_home_dir;
 
     # o.k. load configurations
