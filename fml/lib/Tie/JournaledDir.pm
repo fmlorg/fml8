@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: JournaledDir.pm,v 1.2 2001/08/21 08:39:03 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.3 2001/08/22 23:27:29 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -43,6 +43,29 @@ It enables easy automatic expiration.
 
 =head1 METHODS
 
+=head2 C<new($args)>
+
+    $args = {
+	dir   => directory path,        # mandatory
+	unit  => number (seconds),      # optional
+	limit => number (days),         # optional
+    };
+
+you need specify C<dir> as cache dir at least.
+
+C<unit> is optional, "day" by default.
+C<unit> is number (seconds) or keyword "day".
+
+C<limit> is number. It is the range of unit to search.
+
+For example,
+
+    $args = {
+	dir   => '/var/spool/ml/elena/var/db/message_id',
+	unit  => 'day',
+	limit => 90,     # so, search the last 90 days.
+    };
+
 =head2 TIEHASH, FETCH, STORE, FIRSTKEY, NEXTKEY
 
 standard hash functions.
@@ -73,7 +96,7 @@ sub new
     my $me     = {};
 
     my $dir   = $args->{ 'dir' };
-    my $unit  = $args->{ 'unit' }  || 24*3600; # 1 day 
+    my $unit  = $args->{ 'unit' }  || 'day'; # 1 day 
     my $limit = $args->{ 'limit' } || 90;
 
     # reverse order file list to search
@@ -96,7 +119,16 @@ sub new
 sub _file_name
 {
     my ($unit, $dir, $i) = @_;
-    my $fn = $unit * int(time / $unit) - ($i * $unit);
+    my $fn = '';
+
+    if ($unit =~ /^\d+$/) {
+	$fn = $unit * int(time / $unit) - ($i * $unit);
+    }
+    elsif ($unit eq 'day') {
+	use FML::Date;
+	my $date = new FML::Date time;
+	$fn = $date->YYYYMMDD();
+    }
 
     use File::Spec;
     File::Spec->catfile($dir, $fn);
