@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Analyze.pm,v 1.16 2001/11/19 14:34:31 fukachan Exp $
+# $FML: Analyze.pm,v 1.17 2001/11/26 09:12:38 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -498,7 +498,7 @@ sub update_db
     # save $ticke_id et.al. in db_dir/$ml_name
     $self->_update_db($msg);
 
-    $self->prepare_history_info($msg);
+    $self->prepare_history_info($msg) if $self->{ _is_rewrite_header };
 
     # save cross reference pointers among $ml_name
     $self->_update_index_db();
