@@ -638,7 +638,7 @@ command_unsubscribe_type	=	confirmation
 #               変更を加える
 #        Value:
 #     Examples:
-available_commands_for_user	=	help
+commands_for_user	=	help
 					get
 					mget
 					get
@@ -660,7 +660,7 @@ available_commands_for_user	=	help
 					summary
 
 
-available_commands_for_stranger	=	guide
+commands_for_stranger	=	guide
 					info
 					add
 					subscribe
@@ -668,7 +668,7 @@ available_commands_for_stranger	=	guide
 					$confirm_command_prefix
 
 
-available_commands_for_privileged_user	=	subscribe
+commands_for_privileged_user	=	subscribe
 					add
 					unsubscribe
 					bye
@@ -691,7 +691,7 @@ available_commands_for_privileged_user	=	subscribe
 					list
 
 
-available_commands_for_admin_cgi	=	subscribe
+commands_for_admin_cgi	=	subscribe
 						unsubscribe
 						addadmin
 						byeadmin
