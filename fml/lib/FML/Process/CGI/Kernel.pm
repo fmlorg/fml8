@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.26 2002/04/27 09:48:38 fukachan Exp $
+# $FML: Kernel.pm,v 1.27 2002/05/16 14:44:22 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -122,8 +122,16 @@ dummy method now.
 
 =cut
 
+# Descriptions: dummy
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub verify_request { 1;}
 
+# Descriptions: dummy
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub finish { 1;}
 
 
@@ -281,19 +289,21 @@ sub get_ml_list
     my $config = $curproc->{ config };
 
     use File::Spec;
-    my $cf = '';
-
     use DirHandle;
-    my $dh = new DirHandle $config->{ ml_home_prefix };
-    my @dirlist;
-    my $prefix = $config->{ ml_home_prefix };
-    while ($_ = $dh->read()) {
-	next if /^\./;
-	next if /^\@/;
-	$cf = File::Spec->catfile($prefix, $_, "config.cf");
-	push(@dirlist, $_) if -f $cf;
+    my $dh      = new DirHandle $config->{ ml_home_prefix };
+    my $prefix  = $config->{ ml_home_prefix };
+    my $cf      = '';
+    my @dirlist = ();
+
+    if (defined $dh) {
+	while ($_ = $dh->read()) {
+	    next if /^\./;
+	    next if /^\@/;
+	    $cf = File::Spec->catfile($prefix, $_, "config.cf");
+	    push(@dirlist, $_) if -f $cf;
+	}
+	$dh->close;
     }
-    $dh->close;
 
     @dirlist = sort @dirlist;
     return \@dirlist;
@@ -324,11 +334,13 @@ sub get_recipient_list
 	for my $map (@$list) {
 	    my $io  = new IO::Adapter $map;
 	    my $key = '';
-	    $io->open();
-	    while (defined($key = $io->get_next_key())) {
-		push(@$r, $key);
+	    if (defined $io) {
+		$io->open();
+		while (defined($key = $io->get_next_key())) {
+		    push(@$r, $key);
+		}
+		$io->close();
 	    }
-	    $io->close();
 	}
 
 	return $r;
