@@ -1,5 +1,5 @@
 <!--
-   $FML: cgi.sgml,v 1.2 2002/03/18 06:57:18 fukachan Exp $
+   $FML: cgi.sgml,v 1.3 2002/03/18 13:34:36 fukachan Exp $
 -->
 
 <chapter id="internal.cgi">
@@ -97,6 +97,35 @@ sw   south  se
 </para>
 </warning>
 
+
+</sect1>
+
+
+<sect1 id="internal.cgi.trampoline">
+	<title>
+	画面とトランポリン機構
+	</title>
+
+<para>
+CGI の表示部分は
+FML::Command:: 
+以下のクラスに移動させます。
+しかしながら、
+FML::Command:: 
+の中に実体があるとは限らず
+object composition の形式で
+FML::CGI:: クラスが提供するメニュー生成クラスを
+使うことになるでしょう。
+たとえば subscribe の場合
+<screen>
+FML::CGI::Admin::Main → 
+FML::Command::Admin::subscribe → 
+FML::CGI::Admin::Menu → 
+メニューの表示
+</screen>
+などとなるでしょう。
+このように Mach のトランポリン機構のように、いったりきたりします。
+</para>
 
 </sect1>
 
