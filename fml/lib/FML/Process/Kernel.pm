@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.175 2003/08/23 07:24:48 fukachan Exp $
+# $FML: Kernel.pm,v 1.176 2003/08/29 15:34:08 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -129,11 +129,11 @@ sub new
 
     # 3.2 bind FML::Config object to $curproc
     use FML::Config;
-    $curproc->config() = new FML::Config $cfargs;
+    $curproc->{ config } = new FML::Config $cfargs;
 
     # 3.3 initialize PCB (Process Control Block)
     use FML::PCB;
-    $curproc->pcb() = new FML::PCB;
+    $curproc->{ pcb } = new FML::PCB;
 
     # 3.4
     # object-ify. bless! bless! bless!
@@ -144,6 +144,9 @@ sub new
 
     # 3.6 default printing style
     $curproc->_print_init;
+
+    # 3.7 set up message queue for logging.
+    $curproc->_log_message_init();
 
     # 4.1 debug. XXX remove this in the future !
     $curproc->__debug_ml_xxx('loaded:');
@@ -1109,6 +1112,53 @@ sub close_stderr_channel_if_quiet_option_specified
 
 =head1 MESSAGE HANDLING
 
+=cut
+
+
+# Descriptions: log message queue
+#    Arguments: OBJ($curproc)
+# Side Effects: set up $curproc->{ log_message_queue }.
+# Return Value: none
+sub _log_message_init
+{
+    my ($curproc) = @_;
+
+    use FML::IPC::Queue;
+    my $queue = new FML::IPC::Queue;
+    $curproc->{ log_message_queue } = $queue;
+}
+
+
+# Descriptions: append message into the message queue.
+#    Arguments: OBJ($curproc) HASH_REF($msg)
+# Side Effects: update message queue.
+# Return Value: none
+sub _msg_queue_append
+{
+    my ($curproc, $msg) = @_;
+    my $msg_queue = $curproc->{ log_message_queue };
+
+    $msg->{ time } = time;
+    $msg_queue->append($msg);
+}
+
+
+# Descriptions: log message queue
+#    Arguments: OBJ($curproc)
+# Side Effects: set up $curproc->{ log_message_queue }.
+# Return Value: none
+sub _log_message_print
+{
+    my ($curproc) = @_;
+    my $msg_queue = $curproc->{ log_message_queue };
+    my $msg_list  = $msg_queue->list();
+
+    for my $m (@$msg_list) {
+	printf "%10d %10s %s\n", $m->{ time }, $m->{ level }, $m->{ buf };
+    }
+}
+
+
 =head2 log_message($msg, $msg_args)
 
 ?
@@ -1147,6 +1197,17 @@ sub log_message
     elsif ($level eq 'error') {
 	LogError($msg);
     }
+
+    # update message queue
+    $curproc->_msg_queue_append({
+	buf   => $msg,
+	level => $level,
+	hints => {
+	    at_package  => $at_package,
+	    at_function => $at_function,
+	    at_line     => $at_line,
+	},
+    });
 }
 
 
@@ -1479,7 +1540,7 @@ sub _reply_message_recipient_keys
 
 
 # Descriptions: make a key
-#    Arguments: ARRAY_REF($rarray) ARRAY_REF($rmaps)
+#    Arguments: OBJ($curproc) ARRAY_REF($rarray) ARRAY_REF($rmaps)
 # Side Effects: none
 # Return Value: STR
 sub _gen_recipient_key
@@ -2248,6 +2309,11 @@ sub finalize
 {
     my ($curproc) = @_;
     my $debug     = $curproc->debug_level();
+    my $config    = $curproc->config();
+
+    if ($config->yes('use_log_message_queue')) {
+	$curproc->_log_message_print();
+    }
 
     if ($debug > 100) {
 	$curproc->log("debug: dump curproc structure");
