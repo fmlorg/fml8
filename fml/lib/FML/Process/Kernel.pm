@@ -29,9 +29,6 @@ sub new
     my ($curproc) = {}; # alloc memory as the struct current_process.
     my ($cfargs)  = {};
 
-    # fndamental checks
-    croak("Error: \$ml_home_dir not defined") unless $args->{ ml_home_dir };
-
     # import variables
     my (@import_vars) = qw(ml_home_prefix ml_home_dir);
     for my $var (@import_vars) {
@@ -44,6 +41,10 @@ sub new
 	    }
 
 	    croak "variable $var is not defined.\n";
+	    # fndamental checks
+	    unless ($args->{ ml_home_dir }) {
+		croak("Error: \$ml_home_dir not defined");
+	    }
 	}
     }
 
