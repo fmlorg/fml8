@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.4 2002/04/07 12:13:03 fukachan Exp $
+# $FML: UserControl.pm,v 1.5 2002/04/10 09:57:22 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -122,7 +122,7 @@ sub userlist
 	if (defined $obj) {
 	    my $x = '';
 	    $obj->open || croak("cannot open $map");
-	    while ($x = $obj->getline()) { print $wh $x; }
+	    while ($x = $obj->get_next_key()) { print $wh $x, "\n"; }
 	    $obj->close;
 	}
 	else {
