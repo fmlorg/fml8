@@ -46,7 +46,12 @@ sub Show
     my $pathname = '';
     my $doc      = '';
 
-    unlink ".cvsignore" if -f ".cvsignore";
+    if ( -f ".cvsignore" ) {
+	use FileHandle;
+	my $fh = new FileHandle "> .cvsignore";
+	print $fh '@@doc', "\n";
+	close($fh);
+    } 
 
     foreach $pathname (<*>) {
 	next if $pathname =~ /^\__template/;
@@ -73,11 +78,12 @@ sub Show
 	    $module =~ s/\.pm$//;
 
 	    if (-f $pathname) {
-		$doc = '@'.$pathname;
+		-d '@@doc' || mkdir('@@doc', 0755);
+		$doc = '@@doc/'.$pathname;
 		$doc =~ s/pm$/txt/;
+
 		print STDERR "\tpod2text $pathname > $doc\n";
 		system "pod2text $pathname > $doc";
-		system "echo $doc >> .cvsignore";
 	    }
 	}
 
