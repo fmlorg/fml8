@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.17 2002/07/22 09:41:12 fukachan Exp $
+# $FML: Adapter.pm,v 1.18 2002/07/23 13:06:35 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -243,18 +243,19 @@ C<open()> is a dummy function in other maps now.
 sub open
 {
     my ($self, $flag) = @_;
+    my $type = $self->{ _type };
 
     # default flag is "r" == "read open"
     $flag ||= 'r';
 
-    if ($self->{'_type'} eq 'file') {
+    if ($type eq 'file') {
 	$self->SUPER::open( { file => $self->{_file}, flag => $flag } );
     }
-    elsif ($self->{'_type'} eq 'unix.group' ||
-	   $self->{'_type'} eq 'array_reference') {
+    elsif ($type eq 'unix.group' ||
+	   $type eq 'array_reference') {
 	$self->SUPER::open( { flag => $flag } );
     }
-    elsif ($self->{'_type'} =~ /^(ldap|mysql|postgresql)$/o) {
+    elsif ($type =~ /^(ldap|mysql|postgresql)$/o) {
 	$self->SUPER::open( { flag => $flag } );
     }
     else {
@@ -279,8 +280,9 @@ It is dummy for maps other than file: type.
 sub touch
 {
     my ($self) = @_;
+    my $type = $self->{ _type };
 
-    if ($self->{'_type'} eq 'file') {
+    if ($type eq 'file') {
 	$self->SUPER::touch( { file => $self->{_file} } );
     }
 }
@@ -510,39 +512,6 @@ sub DESTROY
     undef $self;
 }
 
-
-
-=head2 C<AUTOLOAD(@varargs)>
-
-hook extension for map dependent methods
-
-=cut
-
-
-# Descriptions: hook extension for map dependent methods
-#    Arguments: OBJ($self) ARRAY(@varargs)
-# Side Effects: depend on loaded module
-# Return Value: depend on loaded module
-sub AUTOLOAD
-{
-    my ($self, @varargs) = @_;
-
-    return if $AUTOLOAD =~ /DESTROY/;
-
-    my $comname = $AUTOLOAD;
-    $comname =~ s/.*:://;
-
-    # try md_something() for something()
-    my $fp = "md_${comname}";
-
-    if ($self->can($fp)) {
-	$self->$fp(@varargs);
-    }
-    else {
-	croak("${comname}() nor md_${comname}() is not found");
-	croak($@);
-    }
-}
 
 
 =head2
