@@ -22,12 +22,12 @@ END   {}
 
 =head1 NAME
 
-IO::Atomic - atomic IO operation
+IO::File::Atomic - atomic IO operation
 
 =head1 SYNOPSIS
 
-    use IO::Atomic;
-    my $wh = IO::Atomic->open($file);
+    use IO::File::Atomic;
+    my $wh = IO::File::Atomic->open($file);
     print $wh "new/updated things ...";
     $wh->close unless $wh->error;
 
@@ -37,13 +37,13 @@ Updating is defered until C<close()>.
 In usual cases, you use this module in the following way.
 
     use FileHandle;
-    use IO::Atomic;
+    use IO::File::Atomic;
 
     # get read handle for $file
     my $rh = new FileHandle $file;
 
     # get  handle to update $file
-    my $wh = IO::Atomic->open($file);
+    my $wh = IO::File::Atomic->open($file);
     while (<$rh>) {
         print $wh "new/updated things ...";
     }
@@ -52,8 +52,8 @@ In usual cases, you use this module in the following way.
 
 You can use this method to open $file for both read and write.
 
-    use IO::Atomic;
-    my ($rh, $wh) = IO::Atomic->rw_open($file);
+    use IO::File::Atomic;
+    my ($rh, $wh) = IO::File::Atomic->rw_open($file);
     while (<$rh>) {
         print $wh "new/updated things ...";    
     }
