@@ -3,6 +3,11 @@
 
 2001/10/22
 
+   FML::Ticket::System (clean up campaign)
+	remove obsolete functions:_quote_space(), _dequote_space(), AUTOLOAD()
+	remove not used _pcb_[sg]et_id()
+	$self->_pcb_set_id($curproc, $id) -> $pcb->set('article', 'id', $id)
+
    Mail::HTML::Lite 
 	add (X-ML-Name X-Mail-Count X-Sequence) into @header_field (default
 	header to show)
@@ -684,4 +689,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.25 2001/10/21 14:49:43 fukachan Exp $
+$FML: CHANGES.txt,v 1.26 2001/10/22 12:42:56 fukachan Exp $
