@@ -116,6 +116,28 @@ ml_local_lib_dir	=	$ml_local_dir/lib
 ml_local_share_dir	=	$ml_local_dir/share
 
 
+=head2 domain local
+
+#
+# admin/*.cgi など ml_name が特定されない場合にだけ使う
+#
+
+# Descriptions: domian local なディレクトリ。
+#               admin/*.cgi など ml_name が特定されない場合にだけ使う。
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml
+domain_local_dir	=	$ml_home_prefix
+
+# Descriptions: domian local な tmp ディレクトリ。
+#               admin/*.cgi など ml_name が特定されない場合にだけ使う。
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml/@tmp@
+domain_local_tmp_dir	=	$ml_home_prefix/@tmp@
+
+
+
 =head2 スケジューラ
 
 # Descriptions: イヴェントのキューディレクトリ

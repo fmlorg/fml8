@@ -111,6 +111,27 @@ ml_local_lib_dir	=	$ml_local_dir/lib
 ml_local_share_dir	=	$ml_local_dir/share
 
 
+=head2 domain local
+
+#
+# used in admin/*.cgi e.g. when ml_name unspecified.
+#
+
+# Descriptions: domian local directory.
+#               used in admin/*.cgi e.g. when ml_name unspecified.
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml
+domain_local_dir	=	$ml_home_prefix
+
+# Descriptions: domian local temporary directory.
+#               used in admin/*.cgi e.g. when ml_name unspecified.
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml/@tmp@
+domain_local_tmp_dir	=	$ml_home_prefix/@tmp@
+
+
 =head2 scheduler
 
 # Descriptions: event queue directory for scheduler
