@@ -3,6 +3,42 @@
 
    2002/12 は、オーバホール・キャンペーン実施中ですぉ。
 
+2002/12/23
+
+   *オーバホール・キャンペーン実施中
+
+   File::CacheDir 
+	fix comments.
+	check defined() more.
+	chop -> chomp.
+	
+   File::Sequence 
+	fix comments.
+	clean up the return value by removing \s*..
+	
+   FML::Command::HTMLify 
+	fix comments.
+	aggrege duplicated code.
+	
+   FML::Command::SendFile 
+	fix comments.
+	rename: _is_valid_argument() -> _get_valid_article_list().
+	sort.
+	
+   FML::Command::User::digest 
+	fix comments.
+	clean up (sort) codes.
+	
+   FML::Process::Kernel 
+	clean up.
+	fix comments.
+	fix label name.
+	check address pattern by FML::Restriction.
+	//o if could.
+	
+   IO::Adapter::AtomicFile 
+	bug fix: $fh->close() -> $fh->SUPER::close().
+
 2002/12/22
 
    FML::MTAControl::Postfix 
@@ -3829,4 +3865,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.117 2002/12/20 03:56:14 fukachan Exp $
+$FML: CHANGES.txt,v 1.118 2002/12/22 15:20:26 fukachan Exp $
