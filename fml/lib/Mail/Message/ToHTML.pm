@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.35 2003/02/06 15:15:05 tmu Exp $
+# $FML: ToHTML.pm,v 1.36 2003/02/09 12:31:50 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.35 2003/02/06 15:15:05 tmu Exp $;
+my $version = q$FML: ToHTML.pm,v 1.36 2003/02/09 12:31:50 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -315,7 +315,10 @@ sub _disable_html_tag_in_file
     my $wh = new FileHandle "> $outf";
     if (defined $rh) {
 	my $buf = '';
-	while (<$rh>) { $buf .= $_;}
+
+	my $b;
+	while ($b = <$rh>) { $buf .= $b;}
+
 	_print_safe_buf($wh, $buf);
 	$wh->close;
 	$rh->close;
@@ -1103,12 +1106,12 @@ sub __add_value_to_array
 {
     my ($db, $dbname, $key, $value) = @_;
     my $found = 0;
-    my $ra = __str2array($db->{ $dbname }->{ $key });
+    my $ra    = __str2array($db->{ $dbname }->{ $key });
 
     # ensure uniqueness
-    for (@$ra) {
-	$found = 1 if ($value =~ /^\d+$/) && ($_ == $value);
-	$found = 1 if ($value !~ /^\d+$/) && ($_ eq $value);
+    for my $v (@$ra) {
+	$found = 1 if ($value =~ /^\d+$/o) && ($v == $value);
+	$found = 1 if ($value !~ /^\d+$/o) && ($v eq $value);
     }
 
     # add if the value is a new comer.
@@ -1151,7 +1154,7 @@ sub _search_default_next_thread_id
     my (@ra, @c0, @c1) = ();
     @ra = reverse @$list if defined $list;
 
-    for (1 .. 10) { push(@c0, $id + $_);}
+    for my $_id (1 .. 10) { push(@c0, $id + $_id);}
 
     # prepare thread list to search
     # 1. thread includes $id
@@ -1289,18 +1292,30 @@ sub _update_relation
 	my $wh = new FileHandle "> $new";
 
 	if (defined $rh && defined $wh) {
-	    while (<$rh>) {
-		if (/^$pat_preamble_begin/ .. /^$pat_preamble_end/) {
-		    _print_raw_str($wh, $preamble, $code) if /^$pat_preamble_end/;
-		    next;
+	    my $buf;
+
+	  LINE:
+	    while ($buf = <$rh>) {
+		if ($buf =~ /^$pat_preamble_begin/ 
+		      .. 
+		    $buf =~ /^$pat_preamble_end/) {
+		    if ($buf =~ /^$pat_preamble_end/) {
+			_print_raw_str($wh, $preamble, $code);
+		    }
+		    next LINE;
 		}
-		if (/^$pat_footer_begin/ .. /^$pat_footer_end/) {
-		    _print_raw_str($wh, $footer, $code) if /^$pat_footer_end/;
-		    next;
+
+		if ($buf =~ /^$pat_footer_begin/
+		     ..
+		    $buf =~ /^$pat_footer_end/) {
+		    if ($buf =~ /^$pat_footer_end/) {
+			_print_raw_str($wh, $footer, $code);
+		    }
+		    next LINE;
 		}
 
 		# just copy (rewrite only $preamble and $footer not message)
-		_print_raw_str($wh, $_, $code);
+		_print_raw_str($wh, $buf, $code);
 	    }
 	    $rh->close;
 	    $wh->close;
@@ -1912,8 +1927,8 @@ sub _yyyy_range
     my ($list) = @_;
     my ($yyyy) = {};
 
-    for (@$list) {
-	if (/^(\d{4})\/(\d{2})/) {
+    for my $y (@$list) {
+	if ($y =~ /^(\d{4})\/(\d{2})/) {
 	    $yyyy->{ $1 } = $1;
 	}
     }
