@@ -13,6 +13,11 @@
 	気をつけてください。
 
 
+2004/06/23
+
+   Mail::Message::Subject 
+	bug fix::delete_dup_reply_tag() runs always. (fml-devel: 711)
+
 2004/06/17
 
    パッケージ化のための変更。ちょっと間違ってた _o_
@@ -7247,4 +7252,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.211 2004/06/14 15:17:46 fukachan Exp $
+$FML: CHANGES.txt,v 1.212 2004/06/18 04:33:35 fukachan Exp $
