@@ -47,3 +47,4 @@ diff:
 test:
 	@ echo "* IO::* class test"
 	@ apply perl IO/t/*pl
+	@ make -f ../base/Makefile

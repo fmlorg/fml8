@@ -12,10 +12,11 @@ trap "rm -f $tmp" 0 1 3 15
 
 DIFF () {
 	local msg=$1
+	local file=`basename $msg`
  
 	sed -n '1,/^$/p' $msg > $tmp
 	perl $dir/multipart_io.pl $msg  >> $tmp
-	diff -ub $msg $tmp && echo ok || echo fail
+	diff -ub $msg $tmp && echo $file ok || echo $file fail
 }
 
 xdir=$dir/../testmails
