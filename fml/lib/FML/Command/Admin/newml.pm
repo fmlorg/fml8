@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.23 2002/04/10 09:51:25 fukachan Exp $
+# $FML: newml.pm,v 1.24 2002/04/10 09:57:23 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -226,20 +226,26 @@ sub _setup_cgi_interface
     eval q{ use File::Utils qw(mkdirhier);};
     croak($@) if $@;
 
+    my (%is_dir_exists)  = ();
     my $cgi_base_dir     = $config->{ cgi_base_dir };
     my $admin_cgi_dir    = $config->{ admin_cgi_base_dir };
     my $ml_admin_cgi_dir = $config->{ ml_admin_cgi_base_dir };
-    for my $dir ($admin_cgi_dir, $ml_admin_cgi_dir) {
+    for my $dir ($cgi_base_dir, $admin_cgi_dir, $ml_admin_cgi_dir) {
 	unless (-d $dir) {
 	    print STDERR "creating $dir\n";
+	    $is_dir_exists{ $dir } = 0;
 	    mkdirhier( $dir, $config->{ default_dir_mode } || 0755 );
+	}
+	else {
+	    $is_dir_exists{ $dir } = 1;
 	}
     }
 
     #
     # 2. disable CGI access by creating a dummy .htaccess
-    #
-    {
+    #    install .htaccess only for the first time.
+    # 
+    unless ( $is_dir_exists{ $cgi_base_dir } ) {
 	use File::Spec;
 	my $src   = File::Spec->catfile($template_dir, 'dot_htaccess');
 	my $dst   = File::Spec->catfile($cgi_base_dir, '.htaccess');
