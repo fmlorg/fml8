@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Command.pm,v 1.15 2001/10/11 04:16:41 fukachan Exp $
+# $FML: Command.pm,v 1.16 2001/10/12 00:19:19 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -147,14 +147,16 @@ sub _can_accpet_command
     unless ( FML::Filter::Utils::is_secure_command_string( $command ) ) {
 	LogError("insecure command: $command");
 	$curproc->reply_message("\n$prompt $command");
-	$curproc->reply_message("insecure, so ignored.");
+	$curproc->reply_message_nl('command.insecure', 
+				   "insecure, so ignored.");
 	return 0;
     }
 
     # 2. use of this command is allowed in FML::Config or not ?
     unless ($config->has_attribute("available_commands", $comname)) {
 	$curproc->reply_message("\n$prompt $command");
-	$curproc->reply_message("not command, ignored.");
+	$curproc->reply_message_nl('command.not_command',
+				   "not command, ignored.");
 	return 0;
     }		
     
@@ -163,7 +165,8 @@ sub _can_accpet_command
 	unless ($config->has_attribute("available_commands_for_stranger", 
 				       $comname)) {
 	    $curproc->reply_message("\n$prompt $command");
-	    $curproc->reply_message("you are not allowd to use this command.");
+	    $curproc->reply_message_nl('command.deny',
+				       "not allowed to use this command.");
 	    return 0;
 	}
 	else {
@@ -234,23 +237,13 @@ sub _evaluate_command
 		$obj->$comname($curproc, $optargs);
 	    };
 	    unless ($@) {
-		$curproc->reply_message_nl('general.success', "ok.");
+		$curproc->reply_message_nl('command.ok', "ok.");
 	    }
 	    else {
-		$curproc->reply_message_nl('general.fail', "fail.");
+		$curproc->reply_message_nl('command.fail', "fail.");
 		LogError("command ${comname} fail");
 		if ($@ =~ /^(.*)\s+at\s+/) {
 		    my $reason = $1;
-		    my $nlinfo = $obj->error_nl();
-
-		    if (defined $nlinfo) {
-			my $class = $nlinfo->{ class };
-			my $args  = $nlinfo->{ args };
-			$curproc->reply_message_nl($class, $reason, $args);
-		    }
-		    else {
-			$curproc->reply_message($reason);
-		    }
 		    Log($reason); # pick up reason
 		}
 	    }
