@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.107 2003/03/05 15:07:31 fukachan Exp $
+# $FML: Distribute.pm,v 1.108 2003/03/06 04:16:00 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -142,6 +142,7 @@ sub verify_request
 sub _check_filter
 {
     my ($curproc, $args) = @_;
+    my $config = $curproc->config();
 
     eval q{
 	use FML::Filter;
@@ -150,10 +151,17 @@ sub _check_filter
 
 	# filter traps this message.
 	if ($r = $filter->error()) {
-	    my $msg_args = {
-		_arg_reason => $r,
-	    };
-	    $filter->article_filter_reject_notice($curproc, $msg_args);
+	    if ($config->yes('use_article_filter_reject_notice')) {
+		my $msg_args = {
+		    _arg_reason => $r,
+		};
+
+		Log("(debug) filter: inform rejection");
+		$filter->article_filter_reject_notice($curproc, $msg_args);
+	    }
+	    else {
+		Log("filter: not inform rejection");
+	    }
 
 	    # we should stop this process ASAP.
 	    $curproc->stop_this_process();
