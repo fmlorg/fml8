@@ -1202,6 +1202,24 @@ file:$ml_home_dir/recipients
 </row>
 <row>
 <entry>
+primary_user_db_gecos_map</entry>
+<entry>
+ primary { address => gecos_field } map.</entry>
+<entry>
+$db_dir/gecos
+   </entry>
+</row>
+<row>
+<entry>
+primary_user_db_subscribe_date_map</entry>
+<entry>
+ primary { address => unix time when subscribed } map.</entry>
+<entry>
+$db_dir/subscribe_date
+   </entry>
+</row>
+<row>
+<entry>
 privileged_command_prefix</entry>
 <entry>
  管理用のコマンドを表す特別なコマンド</entry>
@@ -1733,6 +1751,24 @@ use_thread_track</entry>
  スレッド追跡システムを使うか</entry>
 <entry>
 yes
+   </entry>
+</row>
+<row>
+<entry>
+user_db_gecos_maps</entry>
+<entry>
+ { address => gecos_field } maps.</entry>
+<entry>
+$primary_user_db_gecos_map
+   </entry>
+</row>
+<row>
+<entry>
+user_db_subscribe_date_maps</entry>
+<entry>
+ { address => unix time when subscribed } maps.</entry>
+<entry>
+$primary_user_db_subscribe_date_map
    </entry>
 </row>
 <row>

@@ -283,9 +283,6 @@ error {
    }
 }
 
-has {
-}
-
 html {
 
    html_archive { 
@@ -543,6 +540,9 @@ reply_message {
    }
 }
 
+report_mail {
+}
+
 sendmail {
 
    sendmail_* {
@@ -626,6 +626,19 @@ thread {
           $thread_db_dir
     ?     $thread_id_syntax
           $thread_sequence_file
+   }
+}
+
+user {
+
+   user_db_gecos { 
+          $primary_user_db_gecos_map
+          $user_db_gecos_maps
+   }
+
+   user_db_subscribe_date { 
+          $primary_user_db_subscribe_date_map
+          $user_db_subscribe_date_maps
    }
 }
 
