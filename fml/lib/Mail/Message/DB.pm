@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.1.2.11 2003/06/15 08:00:57 fukachan Exp $
+# $FML: DB.pm,v 1.1.2.12 2003/06/15 08:07:15 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -21,7 +21,7 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.1.2.11 2003/06/15 08:00:57 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.1.2.12 2003/06/15 08:07:15 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 my $debug = 0;
@@ -35,14 +35,23 @@ my $is_keepalive = 1;
 
 
 %header_field_type = (
-		  from       => 'ADDR',
-		  date       => 'STR',
-		  subject    => 'STR,MIME_DECODE',
-		  to         => 'ADDR_LIST',
-		  cc         => 'ADDR_LIST',
-		  reply_to   => 'ADDR_LIST',
-		  message_id => 'ADDR,INVERSE_MAP',
-		  references => 'ADDR_LIST',
+		      from        => 'ADDR',
+		      date        => 'STR',
+		      subject     => 'STR,MIME_DECODE',
+		      to          => 'ADDR_LIST',
+		      cc          => 'ADDR_LIST',
+		      reply_to    => 'ADDR_LIST',
+		      message_id  => 'ADDR,INVERSE_MAP',
+		      references  => 'ADDR_LIST',
+
+		      # save info for filter system.
+		      return_path => 'ADDR',
+		      posted      => 'STR',
+		      x_posted    => 'STR',
+		      sender      => 'ADDR',
+		      x_sender    => 'ADDR',
+		      received    => 'STR',
+		      x_received  => 'STR',
 		  );
 
 @table_list    = qw(who
@@ -241,7 +250,7 @@ sub _update_max_id
 sub _save_header_info
 {
     my ($self, $db, $id, $hdr) = @_;
-    my ($fld, $val);
+    my ($fld, $val, @val);
 
     # @header_fields may be overwritten. For example,
     #   key = message_id
@@ -251,7 +260,7 @@ sub _save_header_info
 	$fld =  $key;
 	$fld =~ s/_/-/g;
 	$fld =~ tr/A-Z/a-z/;
-	$val =  $hdr->get($fld);
+	@val =  $hdr->get($fld); $val = join("", @val);
 	$val =~ s/\s*$//;
 
 	$self->_db_set($db, "orig_$key", $id, $val);
