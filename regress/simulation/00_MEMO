@@ -5,21 +5,23 @@
 
 -------------------- 2002-06 AUDIT --------------------
    FML::Article
-
 	subdir の取り扱いが不十分
 	0700 とかハードコードされてるじょ
 
-   FML::Credential
+   FML::CGI::ThreadTrack
+	見栄えを config.cgi などと合わせる方が良いでしょう
+	＃ テーブルベースの見栄え
 
-	case sensitive / case insensitive
-	今は
-		USER	パートは sensitive
-		ドメインパートは insensitive
-	オプションで、USER パートも insensitive にできるように
-	できた方がよい？
+   FML::Command::Auth
+	パスワードエントリのサーチで、検索範囲が冗長過ぎ
+
+	[BUG]
+	ユーザ名の一致も検査しなはれ
+
+   File::Sequence
+	IO::Adapter 経由にするべきでし
 
    Tie::JournaledFile
-
 	IO::Adapter で journaled file をサポートしてほしい
 
 	[BUG] ?
@@ -27,61 +29,9 @@
 		find() して ->{} すると negative cache
 		が間違って有効になってるんじゃないの？
 
-   FML::CGI::ThreadTrack
-
-	見栄えを config.cgi などと合わせる方が良いでしょう
-	＃ テーブルベースの見栄え
-
-   FML::Command::Auth
-
-	パスワードエントリのサーチで、検索範囲が冗長過ぎ
-
-	[BUG]
-	ユーザ名の一致も検査しなはれ
-
-   FML::Parse
-
-	new() である必然性ってあるの？
-
-   FML::Mailer
-
-	FML::Process::QueueManager が使っているのみ
-	独立したモジュールである必要があるだろうか？
-
-	reply_message() が何でもしてしまうので、
-	FML::Mailer を呼ぶことはないかもしれない。
-
-	→ FML::Process::QueueManager に合併するべきか？
-
-	論点２: 継承か、object composition か？
-
-
-   FML::Header
-   FML::Header::Subject
-   File::Sequence
-   Mail::Delivery::* (?)
-   FML/Filter.pm
-   FML/Filter/BodyCheck.pm
-   FML/Filter/HeaderCheck.pm
-
-	ちょっとコーディングスタイルが古いかな?
-	近々に見直すべし
-
-   File::Sequence
-
-	IO::Adapter 経由にするべきでし
-
-
-   FML::Command::Admin::dir
-   FML::Command::Admin::file
-   FML::Command::DirUtils
-	ファイルの正規表現に FML::Restriction:: を使うように変更
-
-
    FML::Command::Admin::dir
 	cgi_menu() ?
 		ディレクトリ listing してくれる perl module ないかな？
-
 
    FML::Command::SendFile
 	Mail::Message::MH を使うように修正
@@ -94,23 +44,41 @@
 	はよろしくないとおもうなぁ。もうちょっとモジュールに共通する
 	$curproc->is_cgi() みたいなメソッドがほしい感じ？
 
-   FML::Restriction::
-	RFC 2822 っていってもねぇ… RFC の定義が広すぎるよね
+	プロセスごとに出力モードってのを定義できるようにするべし？
+	or おしえてくれえる $curproc->expected_printing_style() ?
 
-   FML::Restriction::Command
-	コマンドのシンタックスチェックはもうちょっと粒度を上げるべきか？
 
    FML::Command::Admin::log
 	    my $is_cgi       = 1 if $args->{ mode } eq 'cgi';
 
-   FML::Process::Command
 
+   FML::Restriction::
+	RFC 2822 っていってもねぇ… RFC の定義が広すぎるよね
+
+
+   FML::Restriction::Command
+	コマンドのシンタックスチェックはもうちょっと粒度を上げるべきか？
+
+
+   FML::Process::Command
 	_allow_command() が途中
 
-   FML/Command/User/confirm.pm
-	(ユーザに返す)エラーメッセージが少ない？
 
 -------------------- 2002-06 AUDIT --------------------
+
+○	ちょっとコーディングスタイルが古いかな?
+
+   FML::Header
+   FML::Header::Subject
+   File::Sequence
+   Mail::Delivery::* (?)
+   FML/Filter.pm
+   FML/Filter/BodyCheck.pm
+   FML/Filter/HeaderCheck.pm
+
+	ちょっとコーディングスタイルが古いかな?
+	近々に見直すべし
+
 
 ○   [DOC] Delivered-To をけそう tips
 
@@ -148,12 +116,10 @@
 	send
 	password
 	pass
-	dir
-	ls
-	file
-	list
-
-○	postconf で file じゃないものは無視しないとだね
+			dir 	＊不要？
+			ls 	＊不要？
+			file 	＊不要？
+			list 	＊不要？
 
 
 ○	コマンド拡張の仕方
@@ -505,4 +471,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.33 2002/07/15 15:29:18 fukachan Exp $
+$FML: 00_MEMO,v 1.34 2002/07/16 10:53:07 fukachan Exp $
