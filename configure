@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# From configure.in Revision: 1.31 
+# From configure.in Revision: 1.32 
 
 # Guess values for system-dependent variables and create Makefiles.
 # Generated automatically using autoconf version 2.13 
@@ -2070,7 +2070,9 @@ done
 ac_given_srcdir=$srcdir
 
 trap 'rm -fr `echo "\
+	install.pl \
 	config.sh \
+	fml/etc/install.cf \
 	fml/etc/main.cf \
 	fml/etc/default_config.cf.ja \
 	fml/etc/site_default_config.cf \
@@ -2206,7 +2208,9 @@ EOF
 cat >> $CONFIG_STATUS <<EOF
 
 CONFIG_FILES=\${CONFIG_FILES-"\
+	install.pl \
 	config.sh \
+	fml/etc/install.cf \
 	fml/etc/main.cf \
 	fml/etc/default_config.cf.ja \
 	fml/etc/site_default_config.cf \
@@ -2303,6 +2307,10 @@ if test -f fml/libexec/loader ; then
    chmod 755 fml/libexec/loader
 fi
 
+if test -f install.pl ; then
+   chmod 755 install.pl
+fi
+
 
 echo ""
 echo "fml has been configured with the following options:"
@@ -2324,5 +2332,5 @@ echo "         default domain: $default_domain"
 echo ""
 echo "      mime based filter: $use_mime_component_filter"
 echo ""
-echo "Now you must run \"make install\"."
+echo "Now you must run \"make install\" as user \"root\"."
 echo ""
