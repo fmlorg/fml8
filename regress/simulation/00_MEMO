@@ -10,11 +10,11 @@
 
 [TODO]	fml 4 の cf を解釈できる互換ルーチン
 
-		cf シンタックスを読んで、
-		＃ そういえば、Config::Tiny で出来るね
+	cf シンタックスを読んで、
+	＃ そういえば、Config::Tiny で出来るね
 
-		8 の .cf シンタックスに置き換えて
-		値をよろしく変換する （←ここがむずかしー）
+	8 の .cf シンタックスに置き換えて
+	値をよろしく変換する （←ここがむずかしー）
 
 
 [TODO]	01_RFC_IO_ADAPTER.txt
@@ -31,42 +31,36 @@
 
 		コマンドラインオプションは、OK？
 
-[TODO]	fml $ml thread $subcommand: モジュールの clean up
-
-		コマンドラインオプションは、OK？
-
-		Mail::ThreadTrack
-		FML::Command::Admin::thread
-		FML::Article::Thread		(不要じゃないの？)
-
-	どこに、なんのメソッドがあるべきなのか？	
-
-
 [TODO]	*_maps をよぶまえには MUTEX ロックを
-
-	ん〜 メンバーリストは READ,WRITE LOCK だろ 
-		いや、実装はかなりむつかしいかも… ;)
 
 	→ giant lock をなくす
 
-	*_map を使うモジュール一覧
+	○ Mail::Delivery::Queue  
 
-		FML/Credential.pm
-		FML/Digest.pm (reply_message() にわたすだけだが)
-		FML/Process/Utils.pm
+		見るだけ (mailq コマンド)か、
+		並列操作可能なものだけなので、ロックは考えなくて良い
 
+	○ Mail::Delivery::SMTP
+
+		メンバーリストのロックが必要ざましょ
+
+	○ メンバーリストへ IO::Adapter をかます時
+
+		READ,WRITE LOCK がほしいよぉ、が、
+		いや、実装はかなりむつかしいかも… ;)
+
+		READ ロックは不要か？いや、だめだろ
+		chaddr の途中で sleep したら敗けやから;)
+
+	[_map を使うモジュール一覧]
+
+	？ write lock が必要
+                FML/Command/UserControl.pm
 		FML/Command/Auth.pm
-		FML/Command/UserControl.pm
 
-		FML/Command/Admin/chaddr.pm		×
-		FML/Command/Admin/changepassword.pm	×
-			だめよ、コマンドの中にもってては
-			FML::Command::何か に移動だ！
+	？ read lock だけでよい
+		FML/Credential.pm
 
-		Mail/Delivery/Queue.pm
-		Mail/Delivery/SMTP.pm
-		Mail/Delivery.pm
-			Mail::Delivery モジュールはかならず wrap
 
 
 [TODO]	受信者としてだけの登録 (add2actives 相当、メールマガジンなど)は？
@@ -255,6 +249,19 @@
 	mkdir するだけ？ :-)
 
 
+[TODO]	fml $ml thread $subcommand: モジュールの clean up
+
+	スレッド関連のモジュール全部見直せよ
+
+		コマンドラインオプションは、OK？
+
+		Mail::ThreadTrack
+		FML::Command::Admin::thread
+		FML::Article::Thread		(不要じゃないの？)
+
+	どこに、なんのメソッドがあるべきなのか？	
+
+
 [TODO]	Mail::ThreadTrack のクリーニング
 
 	output とモードの明瞭化を
@@ -296,4 +303,4 @@
 
 
 ----------
-$FML: 00_MEMO,v 1.69 2003/03/16 05:02:13 fukachan Exp $
+$FML: 00_MEMO,v 1.70 2003/03/16 13:05:58 fukachan Exp $
