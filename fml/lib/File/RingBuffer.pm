@@ -27,15 +27,15 @@ File::RingBuffer - IO operations to ring buffer which consists of files
        directory => '/some/where'
    };
    $fh = $obj->open;
-   print $fh $message;
+   print $fh "some message";
    $fh->close;
 
    ... unlock ...
 
 =head1 DESCRIPTION
 
-To log messages but up to some limit, it is useful to use the ring of
-files as a buffer.
+To log messages but up to some limit, it may be useful to use a file
+in cyclic way. It is chosen among a set of files as a buffer.
 
 Consider several files under a directory C<ring/>
 where the unit of the ring is 5 here.
