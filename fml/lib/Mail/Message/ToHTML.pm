@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.50 2003/08/08 03:52:55 fukachan Exp $
+# $FML: ToHTML.pm,v 1.51 2003/08/14 13:43:09 tmu Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.50 2003/08/08 03:52:55 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.51 2003/08/14 13:43:09 tmu Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -105,8 +105,9 @@ sub new
     $me->{ _num_attachment }      = 0; # for child process
     $me->{ _use_subdir }          = 'yes';
     $me->{ _subdir_style }        = 'yyyymm';
-    $me->{ _html_id_order }       = $args->{ index_order } || 'normal';
-    $me->{ _address_mask }        = $args->{ address_mask } || 'mask';
+    $me->{ _html_id_order }       = $args->{ index_order }  || 'normal';
+    $me->{ _use_address_mask }    = $args->{ use_address_mask }  || 'yes';
+    $me->{ _address_mask_type }   = $args->{ address_mask_type } || 'all';
 
     use Mail::Message::Thread;
     my $t = new Mail::Message::Thread $args;
@@ -741,9 +742,11 @@ sub _format_safe_header
 
 	    my $xbuf = $hdr->get($field);
 
-	    # mask the raw address.
-	    if ($field =~ /^(From|To|Cc)$/ && $self->{ _address_mask } ne 'nomask') {
-		$xbuf = $self->_who_of_address($xbuf);
+	    # mask the raw address against address collector (e.g. spammer).
+	    if ($self->{ _use_address_mask } eq 'yes') {
+		if ($self->_is_mask_address($field)) {
+		    $xbuf = $self->_who_of_address($xbuf);
+		}
 	    }
 
 	    $xbuf = $self->_decode_mime_string($xbuf) if $xbuf =~ /=\?iso/i;
@@ -1981,11 +1984,6 @@ sub _print_li_filename
 }
 
 
-=head2 misc
-
-=cut
-
-
 # Descriptions: extrace gecos field in $address
 #    Arguments: OBJ($self) STR($address)
 # Side Effects: none
@@ -1996,6 +1994,29 @@ sub _who_of_address
 
     use Mail::Message::Utils;
     return Mail::Message::Utils::from_to_name($address);
+}
+
+
+# Descriptions: mask the detail of address
+#    Arguments: OBJ($self) STR($field)
+# Side Effects: none
+# Return Value: NUM
+sub _is_mask_address
+{
+    my ($self, $field) = @_;
+    my $type = $self->{ _address_mask_type } || 'all';
+
+    if ($type eq 'all') {
+	if ($field =~ /^(From|To|Cc)$/i) {
+	    return 1;
+	}
+	else {
+	    return 0;
+	}
+    }
+    else {
+	return 0;
+    }
 }
 
 

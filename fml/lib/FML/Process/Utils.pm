@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.69 2003/07/20 06:51:03 fukachan Exp $
+# $FML: Utils.pm,v 1.70 2003/08/14 13:43:08 tmu Exp $
 #
 
 package FML::Process::Utils;
@@ -1258,23 +1258,33 @@ sub thread_db_args
     my $html_dir     = $config->{ html_archive_dir };
     my $udb_dir      = $config->{ udb_base_dir };
     my $index_order  = $config->{ html_archive_index_order_type };
-    my $address_mask = $config->{ html_archive_address_mask };
     my $cur_lang     = $curproc->language_of_html_file();
+
+    # whether we should mask address?
+    my $use_address_mask  = 'yes';
+    my $address_mask_type = 'all';
+    if ($config->yes('use_html_archive_address_mask')) {
+	$use_address_mask = 'yes';
+	$address_mask_type
+	    = $config->{ html_archive_address_mask_type } || 'all';
+    }
 
     unless (-d $udb_dir) { $curproc->mkdir($udb_dir);}
 
     # XXX-TODO: care for non Japanese.
     return {
 
-	charset     => $cur_lang,
+	charset      => $cur_lang,
 
-	output_dir  => $html_dir,    # ~fml/public_html/mlarchive/$domain/$ml/
-	db_base_dir => $udb_dir,     # /var/spool/ml/@udb@
-	db_name     => $ml_name,     # elena
+	output_dir   => $html_dir, # ~fml/public_html/mlarchive/$domain/$ml/
+	db_base_dir  => $udb_dir,  # /var/spool/ml/@udb@
+	db_name      => $ml_name,  # elena
 
-	index_order => $index_order, # normal/reverse
-	address_mask => $address_mask, # normal/reverse
+	index_order  => $index_order,  # normal/reverse
 
+	# address mask = yes/no, _type = all
+	use_address_mask  => $use_address_mask,
+	address_mask_type => $address_mask_type,
     };
 }
 
