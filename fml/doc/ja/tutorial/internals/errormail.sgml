@@ -1,5 +1,5 @@
 <!--
-   $FML: errormail.sgml,v 1.3 2004/02/24 14:26:58 fukachan Exp $
+   $FML: errormail.sgml,v 1.4 2004/04/07 11:07:08 fukachan Exp $
 -->
 
 
@@ -42,11 +42,11 @@ Mail::Bounce は、エラーメールについて「どの MTA が生成したものか？」
 </para>
 
 <para>
-解析結果は $error_analyzer_cache_dir ディレクトリに格納されます。
+解析結果は $error_mail_analyzer_cache_dir ディレクトリに格納されます。
 </para>
 
 <para>
-一定時間以上経過すると、$error_analyzer_function がキャッシュのデータ
+一定時間以上経過すると、$error_mail_analyzer_function がキャッシュのデータ
 を解析し、あるメールアドレスが存在しないように思えるか否か？を判定しま
 す。その結果、消すべきだと判断されると、削除されます。
 </para>
@@ -60,7 +60,7 @@ Mail::Bounce は、エラーメールについて「どの MTA が生成したものか？」
 	</title>
 
 <para>
-$error_analyzer_function_list にある関数名が利用し得るアルゴリズムです。
+$error_mail_analyzer_function_list にある関数名が利用し得るアルゴリズムです。
 現在は simple_count histgram という２つのアルゴリズムがあり、histgram 
 がデフォルトです。
 </para>
@@ -114,7 +114,7 @@ $error_analyzer_function_list にある関数名が利用し得るアルゴリズムです。
 	</title>
 
 <para>
-解析結果は $error_analyzer_cache_dir ディレクトリに格納されます。
+解析結果は $error_mail_analyzer_cache_dir ディレクトリに格納されます。
 </para>
 
 <para>

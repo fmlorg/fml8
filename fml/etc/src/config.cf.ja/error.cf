@@ -31,21 +31,21 @@ use_error_mail_analyzer_function = ${use_error_analyzer_program:-yes}
 #      History: /var/spool/ml/mead/errormaillog
 #        Value: directory
 #     Examples: 
-error_analyzer_cache_dir		=	$db_dir/error
+error_mail_analyzer_cache_dir		=	$db_dir/error
 
 
 # Descriptions: キャッシュのタイプ
 #      History: none
 #        Value: string
 #     Examples: File::CacheDir
-error_analyzer_cache_type		=	File::CacheDir
+error_mail_analyzer_cache_type		=	File::CacheDir
 
 
 # Descriptions: キャッシュのモード
 #      History: none
 #        Value: string
 #     Examples: 
-error_analyzer_cache_mode		=	temporal
+error_mail_analyzer_cache_mode		=	temporal
 
 
 # Descriptions: キャッシュのサイズ
@@ -53,7 +53,7 @@ error_analyzer_cache_mode		=	temporal
 #      History: none
 #        Value: number
 #     Examples: 
-error_analyzer_cache_size		=	14
+error_mail_analyzer_cache_size		=	14
 
 
 =head2	データを解析する
@@ -63,7 +63,7 @@ error_analyzer_cache_size		=	14
 #      History: none
 #        Value: simple_count / histgram
 #     Examples: simple_count
-error_analyzer_function_select_list	=	simple_count
+error_mail_analyzer_function_select_list	=	simple_count
 						histgram
 
 
@@ -71,11 +71,11 @@ error_analyzer_function_select_list	=	simple_count
 #      History: none
 #        Value: simple_count / histgram
 #     Examples: simple_count
-error_analyzer_function			=	histgram
+error_mail_analyzer_function			=	histgram
 
 
 # Descriptions: simple_count のエラー回数の上限
 #      History: none
 #        Value: NUM
 #     Examples: 5
-error_analyzer_simple_count_limit	=	5
+error_mail_analyzer_simple_count_limit	=	5

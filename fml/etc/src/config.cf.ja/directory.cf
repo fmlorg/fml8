@@ -39,7 +39,7 @@ newml_command_init_private_directories	=	$etc_dir
 						$spool_dir
 						$var_dir
 						$db_dir
-						$error_analyzer_cache_dir
+						$error_mail_analyzer_cache_dir
 						$lock_dir
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: simple_count.pm,v 1.7 2004/02/15 04:38:32 fukachan Exp $
+# $FML: simple_count.pm,v 1.8 2004/04/23 04:10:33 fukachan Exp $
 #
 
 package FML::Error::Analyze::simple_count;
@@ -76,8 +76,8 @@ sub _simple_count
     my @removelist = ();
     my $summary    = {};
     my $config     = $curproc->config();
-    my $limit      = $config->{ error_analyzer_simple_count_limit } || 5;
-    my $daylimit   = $config->{ error_analyzer_day_limit } || 14;
+    my $limit      = $config->{ error_mail_analyzer_simple_count_limit } || 5;
+    my $daylimit   = $config->{ error_mail_analyzer_day_limit } || 14;
     my $now        = time;
     my $day        = 24*3600;
     my $threshold  = $day * $daylimit;

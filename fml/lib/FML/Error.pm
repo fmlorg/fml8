@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.29 2004/02/01 14:35:33 fukachan Exp $
+# $FML: Error.pm,v 1.30 2004/04/23 04:10:27 fukachan Exp $
 #
 
 package FML::Error;
@@ -52,7 +52,7 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = { _curproc => $curproc };
     my $config = $curproc->config();
-    my $fp     = $config->{ error_analyzer_function } || 'simple_count';
+    my $fp     = $config->{ error_mail_analyzer_function } || 'simple_count';
 
     # default analyzer function
     set_analyzer_function($me, $fp);
@@ -71,7 +71,7 @@ functions.
 
 # Descriptions: lock channel we should use to lock this object.
 #    Arguments: OBJ($self)
-# Side Effects: lock "error_analyzer_cache_dir" channel
+# Side Effects: lock "error_mail_analyzer_cache_dir" channel
 # Return Value: STR
 sub get_lock_channel_name
 {
@@ -197,9 +197,9 @@ sub add
 
 open error message cache and analyze the data by the analyzer
 function.  The function is specified by $config->{
-error_analyzer_function }.  Available functions are located in
+error_mail_analyzer_function }.  Available functions are located in
 C<FML::Error::Analyze>.  C<simple_count> function is used by default
-if $config->{ error_analyzer_function } is unspecified.
+if $config->{ error_mail_analyzer_function } is unspecified.
 
 =cut
 

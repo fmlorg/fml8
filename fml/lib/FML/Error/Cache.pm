@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.20 2004/04/11 14:31:03 fukachan Exp $
+# $FML: Cache.pm,v 1.21 2004/04/23 04:10:33 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -54,7 +54,7 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = { _curproc => $curproc };
     my $config = $curproc->config();
-    my $db_dir = $config->{ error_analyzer_cache_dir };
+    my $db_dir = $config->{ error_mail_analyzer_cache_dir };
 
     unless (-d $db_dir) {
 	$curproc->mkdir($db_dir, "mode=private");
@@ -230,13 +230,13 @@ sub _open_cache
     my ($self)  = @_;
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
-    my $dir     = $config->{ error_analyzer_cache_dir  };
+    my $dir     = $config->{ error_mail_analyzer_cache_dir  };
 
     # parameters: but not used now.
     my %db   = ();
-    my $type = $config->{ error_analyzer_cache_type };
-    my $mode = $config->{ error_analyzer_cache_mode } || 'temporal';
-    my $days = $config->{ error_analyzer_cache_size } || 14;
+    my $type = $config->{ error_mail_analyzer_cache_type };
+    my $mode = $config->{ error_mail_analyzer_cache_mode } || 'temporal';
+    my $days = $config->{ error_mail_analyzer_cache_size } || 14;
     my $args = {
 	dir   => $dir,
 	unit  => 'day',
@@ -301,7 +301,7 @@ sub get_all_values_as_hash_ref
     my ($self)  = @_;
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
-    my $dir     = $config->{ error_analyzer_cache_dir };
+    my $dir     = $config->{ error_mail_analyzer_cache_dir };
 
     use Tie::JournaledDir;
     my $obj = new Tie::JournaledDir { dir => $dir };

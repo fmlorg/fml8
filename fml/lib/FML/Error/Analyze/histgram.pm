@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: histgram.pm,v 1.8 2004/02/15 04:38:32 fukachan Exp $
+# $FML: histgram.pm,v 1.9 2004/04/23 04:10:33 fukachan Exp $
 #
 
 package FML::Error::Analyze::histgram;
@@ -83,8 +83,8 @@ sub _histgram
     my @removelist = ();
     my $summary    = {};
     my $config     = $curproc->config();
-    my $limit      = $config->{ error_analyzer_simple_count_limit } || 14;
-    my $daylimit   = $config->{ error_analyzer_day_limit } || 14;
+    my $limit      = $config->{ error_mail_analyzer_simple_count_limit } || 14;
+    my $daylimit   = $config->{ error_mail_analyzer_day_limit } || 14;
     my $now        = time;                 # unix time (seconds).
     my $half_day   = 12   * 3600 ;         # 12 hours  (seconds).
     my $one_day    = 24   * 3600 ;         # 24 hours  (seconds).
