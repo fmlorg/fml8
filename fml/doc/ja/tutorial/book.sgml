@@ -2,7 +2,7 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-$FML: book.sgml,v 1.6 2001/05/05 06:40:29 fukachan Exp $
+$FML: book.sgml,v 1.7 2001/05/06 23:11:48 fukachan Exp $
 -->
 
 <!doctype book public "-//FML//DTD DocBook V3.1-Based Extension//EN" [
@@ -35,10 +35,10 @@ $FML: book.sgml,v 1.6 2001/05/05 06:40:29 fukachan Exp $
 	</partintro>
 
 	<!-- 動票﹜備懍互岈少 -->
-	&overview;
-	&download;
-	&install;
-	&available;
+	&chapter.overview;
+	&chapter.download;
+	&chapter.install;
+	&chapter.available;
   </part>
 
 
@@ -54,8 +54,8 @@ $FML: book.sgml,v 1.6 2001/05/05 06:40:29 fukachan Exp $
 	&chapter.bootloader;
 	&chapter.programs;
         &chapter.config.cf;
-	&fmlcommands;
-        &delivery;
+	&chapter.fmlcommands;
+        &chapter.delivery;
   </part>
 
 
@@ -68,11 +68,11 @@ $FML: book.sgml,v 1.6 2001/05/05 06:40:29 fukachan Exp $
 	</partintro>
 
 	<!-- 動票﹜備懍互岈少 -->
-	&design;
-	&cvstree;
+	&chapter.design;
+	&chapter.cvstree;
 	&chapter.programingstyle; 
         &chapter.message;
-	&modules;
+	&chapter.modules;
   </part>
 
 
@@ -81,9 +81,9 @@ $FML: book.sgml,v 1.6 2001/05/05 06:40:29 fukachan Exp $
   -->
   <part>
 	<title> 尥狤 </title>
-	&glossary;
-	&docbook;
-	&cvstags;
+	&chapter.glossary;
+	&chapter.docbook;
+	&chapter.cvstags;
   </part>
 
 </book>
