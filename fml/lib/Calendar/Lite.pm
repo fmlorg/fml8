@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.19 2004/01/31 04:59:05 fukachan Exp $
+# $FML: Lite.pm,v 1.20 2004/02/15 04:38:24 fukachan Exp $
 #
 
 package Calendar::Lite;
@@ -442,7 +442,8 @@ sub _print_specific_day
     my ($sec,$min,$hour,$mday,$month,$year,$wday) = localtime($time);
     my $buf = $cal->getcontent($mday) || '';
     $buf =~ s/^\s*//;
-    $buf =~ s/<p>//g;
+    $buf =~ s/<p>//;
+    $buf =~ s/<p>/,/g;
     printf $fh "%02d: %s\n", $mday, $buf;
 }
 
