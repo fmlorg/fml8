@@ -2,9 +2,9 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.1 2001/08/07 12:23:48 fukachan Exp $
+# $FML: @template.pm,v 1.2 2001/10/27 04:27:18 fukachan Exp $
 #
 
 package __MODULE_NAME__;
@@ -57,7 +57,7 @@ __YOUR_NAME__
 Copyright (C) 2001 __YOUR_NAME__
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
