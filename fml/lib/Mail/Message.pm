@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.63 2002/05/11 09:52:45 fukachan Exp $
+# $FML: Message.pm,v 1.64 2002/05/18 15:30:19 fukachan Exp $
 #
 
 package Mail::Message;
@@ -554,7 +554,7 @@ sub _parse
 }
 
 
-# Descriptions: return hash array for header for further parsing.
+# Descriptions: return ARRAY_REF for header for further parsing.
 #               get reverse_path if possible.
 #    Arguments: OBJ($self) HASH_REF($r)
 # Side Effects: update $r
