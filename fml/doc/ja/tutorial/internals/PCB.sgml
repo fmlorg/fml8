@@ -4,10 +4,12 @@ module     function                                     category
                                                     <-- (get value)
                                                     --> (set value)
 --------------------------------------------------------------------------------
+State      command_context_get_ml_name              <-- process_command
 State      command_context_get_admin_auth           <-- process_command
 State      command_context_get_need_confirm         <-- process_command
 State      command_context_get_stop_process         <-- process_command
 State      command_context_get_admin_password       <-- process_command
+State      command_context_set_ml_name              --> process_command
 State      command_context_set_admin_auth           --> process_command
 State      command_context_set_need_confirm         --> process_command
 State      command_context_set_stop_process         --> process_command
