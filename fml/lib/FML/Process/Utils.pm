@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.25 2002/06/22 14:42:50 fukachan Exp $
+# $FML: Utils.pm,v 1.26 2002/06/24 07:00:12 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -421,12 +421,15 @@ sub __ml_home_prefix_search_in_virtual_maps
 		}
 		last MAP if $dir;
 	    }
-	    ($virtual_domain, $dir) = split(/\s+/, $dir);
-	    $dir =~ s/[\s\n]*$// if defined $dir;
 
-	    # found
 	    if ($dir) {
-		return $dir; # == $ml_home_prefix
+		($virtual_domain, $dir) = split(/\s+/, $dir);
+		$dir =~ s/[\s\n]*$// if defined $dir;
+
+		# found
+		if ($dir) {
+		    return $dir; # == $ml_home_prefix
+		}
 	    }
 	}
 	else {
@@ -678,7 +681,12 @@ sub rewrite_config_if_needed
     }
     # default domain: e.g. "makefml newml elena"
     else {
-	$ml_home_prefix = $curproc->ml_home_prefix();
+	$ml_home_prefix = $curproc->ml_home_prefix($ml_domain);
+    }
+
+    # cheap sanity
+    unless ($ml_home_prefix) {
+	croak("rewrite_config_if_needed: ml_home_prefix is undefined");
     }
 
     eval q{ use File::Spec;};
