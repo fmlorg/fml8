@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.9 2002/09/22 14:56:45 fukachan Exp $
+# $FML: log.pm,v 1.10 2002/12/15 13:46:29 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -32,7 +32,7 @@ show log file(s).
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -63,10 +63,12 @@ sub process
     my $log_file = $config->{ log_file };
     my $options  = $command_args->{ options };
     my $address  = $command_args->{ command_data } || $options->[ 0 ];
+
+    # XXX-TODO: we should provide $curproc->util->get_print_style() ?
     my $style    = $curproc->get_print_style();
 
     if (-f $log_file) {
-	_show_log($log_file, { printing_style => $style });
+	$self->_show_log($log_file, { printing_style => $style });
     }
 }
 
@@ -83,19 +85,19 @@ sub cgi_menu
     my $style    = $curproc->get_print_style();
 
     if (-f $log_file) {
-	_show_log($log_file, { printing_style => $style });
+	$self->_show_log($log_file, { printing_style => $style });
     }
 }
 
 
-# Descriptions: show log file
-#    Arguments: STR($log_file) HASH_REF($args)
+# Descriptions: show log file.
+#    Arguments: OBJ($self) STR($log_file) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub _show_log
 {
     my ($self, $log_file, $args) = @_;
-    my $is_cgi       = 1 if $args->{ printin_style } eq 'cgi';
+    my $is_cgi       = 1 if $args->{ printing_style } eq 'cgi';
     my $last_n_lines = 30;
     my $linecount    = 0;
     my $maxline      = 0;
@@ -105,6 +107,8 @@ sub _show_log
 
     use FileHandle;
     my $fh = new FileHandle $log_file;
+    my $wh = \*STDOUT;
+
     if (defined $fh) {
 	while (<$fh>) { $maxline++;}
 	$fh->close();
@@ -121,10 +125,10 @@ sub _show_log
 	    $s = $obj->convert( $_, 'euc-jp' );
 
 	    if ($is_cgi) {
-		print _html_to_text($s);
+		print $wh (_html_to_text($s));
 	    }
 	    else {
-		print $s;
+		print $wh $s;
 	    }
 	}
 	$fh->close;
