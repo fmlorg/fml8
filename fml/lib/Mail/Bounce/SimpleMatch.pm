@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SimpleMatch.pm,v 1.10 2001/04/12 14:27:44 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.11 2001/04/12 14:41:44 fukachan Exp $
 #
 
 
@@ -72,7 +72,7 @@ my $address_trap_regexp = {
 
 
     'freeml.com' => {
-	'start' => '.',
+	'start' => 'FreeML',
 	'end'   => 'http\:\/\/www\.freeml\.com\/help\/',
     },
 
@@ -101,10 +101,10 @@ my $address_trap_regexp = {
 
 
     # XXX what is this ???
-    'smtp32' => {
-	'start' => '.',
-	'end'   => 'original message follows',
-    },
+    # 'smtp32' => {
+    #	'start' => '.',
+    #	'end'   => 'original message follows',
+    # },
 };
 
 my $reason_trap_regexp = {
@@ -204,7 +204,7 @@ sub _address_match
 
       SCAN:
 	for (@buf) {
-	    print "scan> $_\n" if $debug;
+	    print "scan($args->{ mta_type })> $_\n" if $debug;
 	    last SCAN if /$end_regexp/;
 
 	    if (/(\S+\@\S+)/) { 
