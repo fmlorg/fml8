@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: User.pm,v 1.3 2002/04/10 09:51:25 fukachan Exp $
+# $FML: User.pm,v 1.7 2002/04/25 04:15:19 fukachan Exp $
 #
 
 package FML::CGI::Admin::User;
@@ -46,6 +46,7 @@ sub cgi_menu
 
     #
     my $address_list = $curproc->get_recipient_list();
+    my $ml_name      = $command_args->{ ml_name };
     my $comname      = $command_args->{ comname };
     my $command_list =
 	$config->get_as_array_ref('commands_for_admin_cgi');
@@ -57,18 +58,17 @@ sub cgi_menu
 		Tr( undef,
 		   td([
 		       "ML: ",
-		      scrolling_list(-name   => 'ml_name',
-				     -values => $ml_list,
-				     -size   => 5)
-		      ])
+		       textfield(-name    => 'ml_name',
+				 -default => $ml_name,
+				 -size    => 32)
+		       ])
 		   ),
 		Tr( undef,
 		   td([
 		       "command: ",
-		       scrolling_list(-name    => 'command',
-				      -values  => $command_list,
-				      -default => $comname,
-				      -size    => 1)
+		       textfield(-name    => 'command',
+				 -default => $comname,
+				 -size    => 32)
 		       ])
 		   ),
 		Tr( undef,

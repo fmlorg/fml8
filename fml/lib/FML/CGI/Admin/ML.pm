@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ML.pm,v 1.1 2002/04/23 09:32:34 fukachan Exp $
+# $FML: ML.pm,v 1.2 2002/06/22 14:37:23 fukachan Exp $
 #
 
 package FML::CGI::Admin::ML;
@@ -52,36 +52,61 @@ sub cgi_menu
 
     print start_form(-action=>$action, -target=>$target);
 
-    print table( { -border => undef },
-		Tr( undef,
-		   td([
-		       "ML: ",
-		      scrolling_list(-name   => 'ml_name',
-				     -values => $ml_list,
-				     -size   => 5)
-		      ])
-		   ),
-		Tr( undef,
-		   td([
-			"",
-		       textfield(-name      => 'ml_name_specified',
-				 -default   => '',
-				 -override  => 1,
-				 -size      => 32,
-				 -maxlength => 64,
-				 )
-		       ])
-		   ),
-		Tr( undef,
-		   td([
-		       "command: ",
-		       scrolling_list(-name    => 'command',
-				      -values  => $command_list,
-				      -default => $comname,
-				      -size    => 1)
-		       ])
-		   ),
-		);
+    if ($comname eq 'newml') {
+	print table( { -border => undef },
+		    Tr( undef,
+		       td([
+			   "ML:",
+			   textfield(-name      => 'ml_name_specified',
+				     -default   => '',
+				     -override  => 1,
+				     -size      => 32,
+				     -maxlength => 64,
+				     )
+			   ])
+		       ),
+		    Tr( undef,
+		       td([
+			   "command: ",
+			   textfield(-name    => 'command',
+				     -default => $comname,
+				     -size    => 32)
+			   ])
+		       ),
+		    );
+
+    }
+    elsif ($comname eq 'rmml') {
+	print table( { -border => undef },
+		    Tr( undef,
+		       td([
+			   "ML: ",
+			   scrolling_list(-name   => 'ml_name',
+					  -values => $ml_list,
+					  -size   => 5)
+			   ])
+		       ),
+		    Tr( undef,
+		       td([
+			   "",
+			   textfield(-name      => 'ml_name_specified',
+				     -default   => '',
+				     -override  => 1,
+				     -size      => 32,
+				     -maxlength => 64,
+				     )
+			   ])
+		       ),
+		    Tr( undef,
+		       td([
+			   "command: ",
+			   textfield(-name    => 'command',
+				     -default => $comname,
+				     -size    => 32)
+			   ])
+		       ),
+		    );
+    }
 
 
     print submit(-name => 'submit');

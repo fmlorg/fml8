@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.31 2002/06/22 14:39:56 fukachan Exp $
+# $FML: Kernel.pm,v 1.32 2002/06/24 09:43:25 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -255,7 +255,7 @@ sub _drive_cgi_by_table
 	'center' => 'run_cgi_main',
 	'east'   => 'run_cgi_options',
 
-	'sw'     => '',
+	'sw'     => 'run_cgi_command_help',
 	'south'  => '',
 	'se'     => '',
     };
@@ -269,21 +269,28 @@ sub _drive_cgi_by_table
 	'center' => 'rowspan=2 valign="top"',
 	'east'   => 'rowspan=2 valign="top"',
 
-	'sw'     => '',
-	'south'  => '',
-	'se'     => '',
+	'sw'     => 'valign="top"',
+	'south'  => 'rowspan=2 valign="top"',
+	'se'     => 'rowspan=2 valign="top"',
     };
 
     print "<table border=0 cellspacing=\"0\" cellpadding=\"5\">\n";
-    print "<tr>\n";
+    print "\n<!-- new line -->\n";
+    print "\n<tr>\n";
     for my $pos ('nw', 'north', 'ne',
 		 '!',
 		 'west', 'center', 'east',
 		 '!',
 		 'sw', 'south', 'se') {
-	if ($pos eq '!') { print "</tr>\n\n<tr>\n"; next;}
+	if ($pos eq '!') {
+	    print "</tr>\n";
+	    print "\n<!-- new line -->\n";
+	    print "\n<tr>\n";
+	    next;
+	}
 
 	my $attr = $td_attr->{ $pos };
+	print "\n<!-- $pos -->\n";
 	print $attr ? "<td $attr>\n" : "<td>\n";
 
 	my $fp   = $function_table->{ $pos };
@@ -291,9 +298,9 @@ sub _drive_cgi_by_table
 	    eval q{ $curproc->$fp($args);};
 	    if ($r = $@) { _error_string($curproc, $r);}
 	}
-	print "</td>\n";
+	print "\n</td>\n";
     }
-    print "</tr>\n";
+    print "\n</tr>\n";
     print "</table>\n";
 }
 
@@ -383,6 +390,83 @@ sub run_cgi_help
     print "<CENTER>fml CGI interface for \@$domain ML's</CENTER><BR>\n";
     print "help<BR>\n";
     print "</B>\n";
+}
+
+
+=head2 run_cgi_log($args)
+
+log.
+
+=cut
+
+
+# Descriptions: show log
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
+sub run_cgi_log
+{
+    my ($curproc, $args) = @_;
+
+    print "log";
+}
+
+
+=head2 run_cgi_dummy($args)
+
+dummy.
+
+=cut
+
+
+# Descriptions: show dummy
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
+sub run_cgi_dummy
+{
+    my ($curproc, $args) = @_;
+
+    print "dummy\n";
+}
+
+
+=head2 run_cgi_date($args)
+
+date.
+
+=cut
+
+
+# Descriptions: show date
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
+sub run_cgi_date
+{
+    my ($curproc, $args) = @_;
+
+    print `date`;
+}
+
+
+=head2 run_cgi_command_help($args)
+
+command_help.
+
+=cut
+
+
+# Descriptions: show command_dependent help
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
+sub run_cgi_command_help
+{
+    my ($curproc, $args) = @_;
+    my $buf = $curproc->message_nl("cgi.top");
+
+    print $buf;
 }
 
 

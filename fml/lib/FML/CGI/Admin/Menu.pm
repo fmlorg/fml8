@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.14 2002/06/21 09:28:12 fukachan Exp $
+# $FML: Menu.pm,v 1.15 2002/06/22 14:37:48 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -16,6 +16,8 @@ use CGI qw/:standard/; # load standard CGI routines
 
 use FML::Process::CGI;
 @ISA = qw(FML::Process::CGI);
+
+my $debug = 0;
 
 
 =head1 NAME
@@ -117,6 +119,8 @@ sub run_cgi_main
     my $navi_command = $curproc->safe_param_navi_command() || '';
     my $command      = $curproc->safe_param_command() || '';
 
+    print "command = $command, navi_command = $navi_command<br>\n" if $debug;
+
     # update config on memory to hadlne 
     # 1. ml_name specified here
     # 2. virtual domain
@@ -128,6 +132,7 @@ sub run_cgi_main
 
     if (($command eq 'newml' && $ml_name) ||
 	($command eq 'rmml'  && $ml_name)) {
+	print "<br>* case 1 <br>\n" if $debug;
 	my $command_args = {
 	    command_mode => 'admin',
 	    comname      => $command,
@@ -141,9 +146,10 @@ sub run_cgi_main
 	$curproc->cgi_execute_command($args, $command_args);
 
 	print hr;
-	$curproc->run_cgi_menu($args, $command);
+	$curproc->run_cgi_menu($args, $command, $command_args);
     }
     elsif ($command && $address) {
+	print "<br>* case 2 <br>\n" if $debug;
 	my $ml_name      = $curproc->safe_param_ml_name();
 	my $command_args = {
 	    command_mode => 'admin',
@@ -157,15 +163,39 @@ sub run_cgi_main
 	$curproc->cgi_execute_command($args, $command_args);
 
 	print hr;
-	$curproc->run_cgi_menu($args, $command);
+	$curproc->run_cgi_menu($args, $command, $command_args);
     }
     elsif ($navi_command) {
-	$curproc->run_cgi_menu($args, $navi_command);
+	print "<br>* case 3 <br>\n" if $debug;
+
+	my $ml_name      = $curproc->safe_param_ml_name();
+	my $command_args = {
+	    command_mode => 'admin',
+	    comname      => $navi_command,
+	    command      => $navi_command,
+	    ml_name	 => $ml_name,
+	    argv         => undef,
+	    args         => undef,
+	};
+	$curproc->run_cgi_menu($args, $navi_command, $command_args);
     }
     elsif ($command) {
-	$curproc->run_cgi_menu($args, $command);
+	print "<br>* case 4 <br>\n" if $debug;
+
+	my $ml_name      = $curproc->safe_param_ml_name();
+	my $command_args = {
+	    command_mode => 'admin',
+	    comname      => $command,
+	    command      => $command,
+	    ml_name	 => $ml_name,
+	    argv         => undef,
+	    args         => undef,
+	};
+	$curproc->run_cgi_menu($args, $command, $command_args);
     }
     else {
+	print "<br>* case 5 <br>\n" if $debug;
+
 	my $ml_name = $curproc->safe_param_ml_name();
 
 	if ($ml_name) {
@@ -194,7 +224,7 @@ sub run_cgi_navigator
 	$config->get_as_array_ref('commands_for_admin_cgi');
 
     # main menu
-    my $ml_name = $curproc->safe_param_ml_name() || '?';
+    my $ml_name = $curproc->cgi_try_get_ml_name($args);
     my $fml_url = '<A HREF="http://www.fml.org/software/fml-devel/">fml</A>';
     print "<B>$fml_url admin menu</B>\n<BR>\n";
 
@@ -203,7 +233,7 @@ sub run_cgi_navigator
     print "mailing list:\n";
     print scrolling_list(-name    => 'ml_name',
 			 -values  => $ml_list,
-			 -default => $ml_name,
+			 -default => [ $ml_name ],
 			 -size    => 5);
     print "\n<BR>\n";
 
