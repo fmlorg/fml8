@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.66 2002/04/19 13:34:19 fukachan Exp $
+# $FML: Switch.pm,v 1.67 2002/04/25 04:46:09 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -390,6 +390,8 @@ sub _module_specific_options
     if ($myname eq 'fml.pl'     ||
 	$myname eq 'distribute' ||
 	$myname eq 'command'    ||
+	$myname eq 'mead'       ||
+	$myname eq 'error'      ||
 	$myname eq 'loader' ) {
 	return qw(ctladdr! debug! help! params=s -c=s);
     }
@@ -490,6 +492,9 @@ sub _module_we_use
     elsif ($name eq 'fml.pl' || $name eq 'distribute' || $name eq 'loader') {
 	$pkg = 'FML::Process::Distribute';
     }
+    elsif ($name eq 'mead' || $name eq 'error') {
+	$pkg = 'FML::Process::Error';
+    }
     elsif ($name eq 'fmlserv') {
 	$pkg = 'FML::Process::ListServer';
     }
@@ -512,9 +517,6 @@ sub _module_we_use
 	   $name eq 'thread.cgi'    ||
 	   $name eq 'threadview.cgi') {
 	$pkg = 'FML::CGI::ThreadTrack';
-    }
-    elsif ($name eq 'mead') {
-	$pkg = 'FML::Process::MailErrorAnalyzer';
     }
     elsif ($name eq 'qmail-ext') {
 	$pkg = 'FML::Process::QMail';
