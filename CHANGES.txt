@@ -1,6 +1,42 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/09/26
+
+   ml-admin/*/*.cgi を利用可能にする
+
+   variables
+	define $commands_for_ml_admin_cgi
+	
+   FML::Process::CGI::Kernel 
+   FML::CGI::Admin::Menu 
+   FML::Command::Admin::newml 
+   FML::CGI::Menu 
+   FML::CGI::MLAdmin::Menu 
+   FML::Process::CGI::Utils 
+	change *::CGI:::class architecture.
+	
+	FML::CGI::*Admin::Menu inherits FML::CGI::Menu.
+	
+	methods in FML::Process::CGI::* returns the value by checking the
+	current cgi mode (admin or ml-admin).
+	
+   FML::CGI::Admin::ML 
+   FML::CGI::Admin::User 
+   FML::Command::Admin::list 
+   FML::Process::Utils 
+	change arguments of get_ml_list() to remove $args.
+
+   FML::Process::CGI::Kernel 
+	use cgi.*.top for top level help
+
+2003/09/20
+
+   FML::Process::Switch 
+	define _find_longest_matched_entry() function and use it to
+	find more specific entry for getopt parameters and module
+	definitons.
+
 2003/09/19
 
    FML::Process::Switch 
@@ -5321,4 +5357,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.160 2003/09/08 14:54:37 fukachan Exp $
+$FML: CHANGES.txt,v 1.161 2003/09/19 14:39:18 fukachan Exp $
