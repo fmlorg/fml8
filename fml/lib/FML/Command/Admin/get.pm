@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.24 2004/03/23 06:34:15 fukachan Exp $
+# $FML: get.pm,v 1.25 2004/04/23 04:10:29 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
@@ -17,7 +17,7 @@ use FML::Command::SendFile;
 
 =head1 NAME
 
-FML::Command::Admin::get - get arbitrary file(s) in $ml_home_dir
+FML::Command::Admin::get - get arbitrary file(s) in $ml_home_dir.
 
 =head1 SYNOPSIS
 
@@ -45,7 +45,7 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
@@ -74,8 +74,8 @@ sub process
 
     # This module is called after
     # FML::Process::Command::_can_accpet_command() already checks the
-    # command syntax. $options is raw command as ARRAY_REF such as
-    #     $options = [ 'get:3', 1, 100 ];
+    # command syntax. $options contains only arguments as ARRAY_REF such as
+    #     $options = [ 1, 100 ] for command string "get 1,100".
     # send_file() called below can parse MH style argument.
     for my $filename (@$options) {
 	use File::Spec;
@@ -92,7 +92,6 @@ sub process
 
 	    delete $command_args->{ _filename_to_send };
 	    delete $command_args->{ _filepath_to_send };
-	    delete $command_args->{ _recipient };
 	}
 	else {
 	    $curproc->log("$filename not found");
@@ -103,6 +102,11 @@ sub process
 				       });
 	    croak("no such file $filepath");
 	}
+    }
+
+
+    if (defined $command_args->{ _recipient }) {
+	delete $command_args->{ _recipient };
     }
 }
 
