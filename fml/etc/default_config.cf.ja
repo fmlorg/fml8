@@ -89,6 +89,8 @@ recipient_limit		=	1000
 smtp_servers		=	[::1]:25
 				127.0.0.1:25
 
+# MAIL FROM:<$smtp_sender>
+smtp_sender		=	$maintainer
 
 =head1	•ÿ•√•¿§Œ¡‡∫Ó
 

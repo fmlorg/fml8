@@ -242,7 +242,7 @@ sub _deliver_article
 		      {
 			  'smtp_servers'    => $config->{'smtp_servers'},
 
-			  'smtp_sender'     => $config->{'maintainer'},
+			  'smtp_sender'     => $config->{'smtp_sender'},
 			  'recipient_maps'  => $config->{recipient_maps},
 			  'recipient_limit' => $config->{recipient_limit},
 
