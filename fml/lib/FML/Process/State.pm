@@ -4,13 +4,16 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.3 2004/03/14 06:36:33 fukachan Exp $
+# $FML: State.pm,v 1.4 2004/03/14 08:47:47 fukachan Exp $
 #
 
 package FML::Process::State;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+my $debug = 0;
+
 
 =head1 NAME
 
@@ -23,6 +26,8 @@ FML::Process::State - interface to handle states within this process
 =head1 METHODS
 
 =haed1 BASIC RESTRICTION STATES
+
+CAUTION: restriction_state_*() is reset each command.
 
 =cut
 
@@ -48,7 +53,7 @@ sub restriction_state_set_deny_reason
     my $pcb = $curproc->pcb();
     $pcb->set("check_restrictions", "deny_reason", $reason);
 
-    $curproc->log("restriction_state_set_deny_reason: $reason");
+    $curproc->log("restriction_state_set_deny_reason: $reason") if $debug;
 }
 
 
@@ -60,7 +65,8 @@ sub restriction_state_get_deny_reason
 {
     my ($curproc) = @_;
     my $pcb = $curproc->pcb();
-    $pcb->get("check_restrictions", "deny_reason");
+
+    return $pcb->get("check_restrictions", "deny_reason");
 }
 
 
@@ -74,7 +80,7 @@ sub restriction_state_reply_reason
 
     my $rule = $curproc->restriction_state_get_deny_reason();
 
-    $curproc->log("restriction_state_reply_reason: $rule");
+    $curproc->log("restriction_state_reply_reason: $rule") if $debug;
 
     if ($rule eq 'reject_system_special_accounts') {
 	my $r = "deny request from a system account";
@@ -120,6 +126,15 @@ sub restriction_state_reply_reason
 
 =haed1 COMMAND PROCESSOER STATES
 
+command_context_init() called for each command, so
+restriction_state_*() is reset each time.
+
+But in the case of emulatation of listserv/majordomo emulation, we
+should pay attention for handlings of $command_mail_restrictions and
+$admin_command_mail_restrictions. The restrictions must differ among
+mailing lists. So, we do not cache the return value and always check
+it each command mail line.
+
 =cut
 
 
@@ -142,6 +157,10 @@ sub command_context_init
 
     # reset error reason
     $curproc->restriction_state_set_deny_reason('');
+
+    # declare current mailing list.
+    my $ml_name = $curproc->ml_name();
+    $curproc->command_context_set_ml_name($ml_name);
 
     return $context;
 }
@@ -192,6 +211,32 @@ sub _command_string_clean_up
 }
 
 
+# Descriptions: declare the current $ml_name.
+#    Arguments: OBJ($curproc) STR($ml_name)
+# Side Effects: update pcb.
+# Return Value: STR
+sub command_context_set_ml_name
+{
+    my ($curproc, $ml_name) = @_;
+    my $pcb = $curproc->pcb();
+
+    $pcb->set("process_command", "ml_name", $ml_name);
+}
+
+
+# Descriptions: return the current $ml_name.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub command_context_get_ml_name
+{
+    my ($curproc) = @_;
+    my $pcb = $curproc->pcb();
+
+    return( $pcb->get("process_command", "ml_name") || '' );
+}
+
+
 # Descriptions: declare no more further command processing needed.
 #    Arguments: OBJ($curproc)
 # Side Effects: update pcb.
@@ -219,6 +264,8 @@ sub command_context_get_stop_process
 
 
 # Descriptions: set "we need to send back confirmation".
+#               usually, this flag means we send back the original message.
+#               hence, this flag is universal over plural ML's.
 #    Arguments: OBJ($curproc)
 # Side Effects: update pcb.
 # Return Value: NUM
@@ -232,6 +279,8 @@ sub command_context_set_need_confirm
 
 
 # Descriptions: check if we need to send back confirmation ?
+#               usually, this flag means we send back the original message.
+#               hence, this flag is universal over plural ML's.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: NUM
@@ -251,9 +300,11 @@ sub command_context_get_need_confirm
 sub command_context_set_admin_auth
 {
     my ($curproc) = @_;
-    my $pcb = $curproc->pcb();
+    my $pcb    = $curproc->pcb();
+    my $cur_ml = $curproc->command_context_get_ml_name();
+    my $class  = sprintf("admin_auth_ml_name=%s", $cur_ml);
 
-    $pcb->set("process_command", "admin_auth", 1);
+    $pcb->set("process_command", $class, 1);
 }
 
 
@@ -264,9 +315,11 @@ sub command_context_set_admin_auth
 sub command_context_get_admin_auth
 {
     my ($curproc) = @_;
-    my $pcb = $curproc->pcb();
+    my $pcb    = $curproc->pcb();
+    my $cur_ml = $curproc->command_context_get_ml_name();
+    my $class  = sprintf("admin_auth_ml_name=%s", $cur_ml);
 
-    return( $pcb->get("process_command", "admin_auth") || 0 );
+    return( $pcb->get("process_command", $class) || 0 );
 }
 
 
@@ -277,7 +330,9 @@ sub command_context_get_admin_auth
 sub command_context_set_admin_password
 {
     my ($curproc, $password) = @_;
-    my $pcb = $curproc->pcb();
+    my $pcb    = $curproc->pcb();
+    my $cur_ml = $curproc->command_context_get_ml_name();
+    my $class  = sprintf("admin_password_ml_name=%s", $cur_ml);
 
     $pcb->set("process_command", "admin_password", $password);
 }
@@ -290,7 +345,9 @@ sub command_context_set_admin_password
 sub command_context_get_admin_password
 {
     my ($curproc) = @_;
-    my $pcb = $curproc->pcb();
+    my $pcb    = $curproc->pcb();
+    my $cur_ml = $curproc->command_context_get_ml_name();
+    my $class  = sprintf("admin_password_ml_name=%s", $cur_ml);
 
     return( $pcb->get("process_command", "admin_password") || '' );
 }
@@ -313,6 +370,7 @@ messages.
 
 # Descriptions: increment error count on this class $class
 #               to avoid duplicated error messages.
+#               hence, this flag is universal over plural ML's.
 #    Arguments: OBJ($curproc) STR($class)
 # Side Effects: none
 # Return Value: none
@@ -328,6 +386,7 @@ sub error_message_set_count
 
 # Descriptions: get error count on this class $class
 #               to avoid duplicated error messages.
+#               hence, this flag is universal over plural ML's.
 #    Arguments: OBJ($curproc) STR($class)
 # Side Effects: none
 # Return Value: none
