@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.72 2003/10/17 08:40:46 fukachan Exp $
+# $FML: Makefile,v 1.73 2003/10/29 14:52:30 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -26,6 +26,7 @@ check:
 	- test -f 33_TODO && mv -f 33_TODO 33_TODO.bak
 	@ echo "   *********** 00_MEMO ********** " >> 33_TODO
 	- grep '^\[TODO' 00_MEMO >> 33_TODO
+	@ echo "" >> 33_TODO
 	@ echo "   *********** PERL SYNTAX CHECKS ********** " >> 33_TODO
 	- (cd ../../fml; make check 2>&1 |\
 		grep -v 'syntax OK' |\
@@ -34,6 +35,7 @@ check:
 	@ echo "" >> 33_TODO
 	@ echo "   *********** CHECK VARIABLE DEFINITIONS ********** " >> 33_TODO
 	@ ../variable/diff.pl >> 33_TODO
+	@ echo "" >> 33_TODO
 	@ echo "   *********** STATUS.txt ********** " >> 33_TODO
 	@ echo "" >> 33_TODO
 	- egrep '^[0-9]|\[TODO\]' ../../fml/doc/ja/todo/STATUS.txt >> 33_TODO
