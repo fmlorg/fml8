@@ -1,8 +1,8 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000 Ken'ichi Fukamachi
+# Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #
-# $FML: MH.pm,v 1.3 2001/12/24 02:26:34 fukachan Exp $
+# $FML: MH.pm,v 1.4 2002/04/08 12:44:29 fukachan Exp $
 #
 
 package Mail::Message::MH;
@@ -79,7 +79,7 @@ sub expand
     }
     elsif ($str =~ /^last:(\d+)$/) {
 	unless (defined $max) { return undef;}
-	return _expand_range($max - $1, $max);
+	return _expand_range($max - $1 + 1, $max);
     }
 
     undef;
@@ -106,7 +106,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
