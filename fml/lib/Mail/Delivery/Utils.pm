@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.17 2004/05/16 05:00:41 fukachan Exp $
+# $FML: Utils.pm,v 1.18 2004/05/16 05:08:22 fukachan Exp $
 #
 
 package Mail::Delivery::Utils;
@@ -35,8 +35,12 @@ require Exporter;
 	     get_target_map
 	     set_map_status
 	     set_map_position
+	     set_mta_status
+
 	     get_map_status
 	     get_map_position
+	     get_mta_status
+
 	     rollback_map_position
 	     reset_mapinfo
 	     );
@@ -321,6 +325,19 @@ sub set_map_position
 }
 
 
+# Descriptions: set mta status.
+#    Arguments: OBJ($self) STR($mta) STR($status)
+# Side Effects: update object
+# Return Value: STR
+sub set_mta_status
+{
+    my ($self, $mta, $status) = @_;
+    $self->{ _mtainfo }->{ $mta }->{prev_status} =
+	$self->{ _mtainfo }->{ $mta }->{status} || 'unknown';
+    $self->{ _mtainfo }->{ $mta }->{status}      = $status;
+}
+
+
 # Descriptions: get map status.
 #    Arguments: OBJ($self) STR($map)
 # Side Effects: update object
@@ -331,21 +348,35 @@ sub get_map_status
 
     # XXX-TODO: return what code if undefined ?
     # XXX-TODO: consider Principle of Least Surprise!
-    $self->{ _mapinfo }->{ $map }->{status};
+    $self->{ _mapinfo }->{ $map }->{status} || '';
 }
 
 
 # Descriptions: get map position.
 #    Arguments: OBJ($self) STR($map)
 # Side Effects: update object
-# Return Value: STR
+# Return Value: NUM
 sub get_map_position
 {
     my ($self, $map) = @_;
 
     # XXX-TODO: return what code if undefined ?
     # XXX-TODO: consider Principle of Least Surprise!
-    $self->{ _mapinfo }->{ $map }->{position};
+    $self->{ _mapinfo }->{ $map }->{position} || 0;
+}
+
+
+# Descriptions: get mta status.
+#    Arguments: OBJ($self) STR($mta)
+# Side Effects: update object
+# Return Value: STR
+sub get_mta_status
+{
+    my ($self, $mta) = @_;
+
+    # XXX-TODO: return what code if undefined ?
+    # XXX-TODO: consider Principle of Least Surprise!
+    $self->{ _mtainfo }->{ $mta }->{status} || '';
 }
 
 
