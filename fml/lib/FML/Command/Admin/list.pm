@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: list.pm,v 1.1 2002/03/24 11:26:46 fukachan Exp $
+# $FML: list.pm,v 1.1 2002/04/01 12:41:41 fukachan Exp $
 #
 
 package FML::Command::Admin::list;
@@ -42,10 +42,25 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ config };
     my $member_map    = $config->{ primary_member_map };
+    my $recipient_map = $config->{ primary_recipient_map };
+    my $options       = $command_args->{ options };
+    my $maplist       = [ $member_map ];
+
+    for (@$options) {
+	if (/^recipient|active/i) {
+	    $maplist = [ $recipient_map ];
+	} 
+	elsif (/^member/i) {
+	    $maplist = [ $member_map ];
+	} 
+	else {
+	    $maplist = [ $member_map ];
+	}
+    }
 
     # FML::Command::UserControl specific parameters
     my $uc_args = {
-	maplist => [ $member_map ],
+	maplist => $maplist,
 	wh      => \*STDOUT,
     };
     my $r = '';
