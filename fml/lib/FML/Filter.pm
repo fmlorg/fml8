@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.11 2002/09/22 14:56:40 fukachan Exp $
+# $FML: Filter.pm,v 1.12 2002/09/29 12:43:23 fukachan Exp $
 #
 
 package FML::Filter;
@@ -71,7 +71,7 @@ sub article_filter
 	for my $function (@$functions) {
 	    if ($config->yes( "use_${function}" )) {
 		Log("filter(debug): check by $function");
-		my $fp = "_load_$function";
+		my $fp = "_apply_$function";
 		$status = $self->$fp($curproc, $args, $message);
 	    }
 	    else {
@@ -86,17 +86,17 @@ sub article_filter
 }
 
 
-# Descriptions: 
+# Descriptions: header based filter
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) OBJ($mesg)
-# Side Effects: 
+# Side Effects: none
 # Return Value: STR(reason) or 0 (not trapped, ok)
-sub _load_article_header_filter
+sub _apply_article_header_filter
 {
     my ($self, $curproc, $args, $mesg) = @_;
     my $config = $curproc->config();
 
-    use FML::Filter::HeaderCheck;
-    my $obj = new FML::Filter::HeaderCheck;
+    use FML::Filter::Header;
+    my $obj = new FML::Filter::Header;
 
     if (defined $obj) {
 	# overwrite filter rules based on FML::Config
@@ -121,11 +121,11 @@ sub _load_article_header_filter
 }
 
 
-# Descriptions: 
+# Descriptions: filter non MIME format message
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: 
+# Side Effects: none
 # Return Value: 0 (always ok, anyway)
-sub _load_article_non_mime_filter
+sub _apply_article_non_mime_filter
 {
     my ($self, $curproc, $args, $mesg) = @_;
     my $config = $curproc->config();
@@ -134,18 +134,18 @@ sub _load_article_non_mime_filter
 }
 
 
-# Descriptions: 
+# Descriptions: syntax check for text(/plain)
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: 
+# Side Effects: none
 # Return Value: none
-sub _load_article_text_plain_filter
+sub _apply_article_text_plain_filter
 {
     my ($self, $curproc, $args, $mesg) = @_;
     my $config = $curproc->config();
 
     if ($config->yes( 'use_article_text_plain_filter' )) {
-	use FML::Filter::BodyCheck;
-	my $obj = new FML::Filter::BodyCheck;
+	use FML::Filter::TextPlain;
+	my $obj = new FML::Filter::TextPlain;
 
 	# overwrite filter rules based on FML::Config
 	my $rules = 
@@ -169,18 +169,18 @@ sub _load_article_text_plain_filter
 }
 
 
-# Descriptions: 
+# Descriptions: analyze MIME structure and filter it if matched.
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: 
+# Side Effects: none
 # Return Value: none
-sub _load_article_mime_component_filter
+sub _apply_article_mime_component_filter
 {
     my ($self, $curproc, $args, $mesg) = @_;
     my $config = $curproc->config();
 
     if ($config->yes( 'use_article_mime_component_filter' )) {
-	use FML::Filter::ContentCheck;
-	my $obj = new FML::Filter::ContentCheck;
+	use FML::Filter::MimeComponent;
+	my $obj = new FML::Filter::MimeComponent;
 
 	# XXX DISABLED NOW ANYWAY
 	return 0;

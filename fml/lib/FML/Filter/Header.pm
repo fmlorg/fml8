@@ -4,10 +4,10 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HeaderCheck.pm,v 1.19 2002/09/22 14:56:50 fukachan Exp $
+# $FML: Header.pm,v 1.20 2002/09/24 15:02:29 fukachan Exp $
 #
 
-package FML::Filter::HeaderCheck;
+package FML::Filter::Header;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
@@ -16,13 +16,13 @@ use ErrorStatus qw(error_set error error_clear);
 
 =head1 NAME
 
-FML::Filter::HeaderCheck - filter based on mail header content
+FML::Filter::Header - filter based on mail header content
 
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
 
-C<FML::Filter::HeaderCheck> is a collectoin of filter rules based on
+C<FML::Filter::Header> is a collectoin of filter rules based on
 mail header content.
 
 =head1 METHODS
@@ -82,8 +82,8 @@ C<$msg> is C<Mail::Message> object.
 
 C<Usage>:
 
-    use FML::Filter::HeaderCheck;
-    my $obj  = new FML::Filter::HeaderCheck;
+    use FML::Filter::Header;
+    my $obj  = new FML::Filter::Header;
     my $msg  = $curproc->{'incoming_message'};
 
     $obj->header_check($msg, $args);
@@ -160,7 +160,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Filter::HeaderCheck first appeared in fml8 mailing list driver package.
+FML::Filter::Header first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

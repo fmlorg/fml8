@@ -4,10 +4,10 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: BodyCheck.pm,v 1.26 2002/09/23 02:02:05 fukachan Exp $
+# $FML: TextPlain.pm,v 1.27 2002/09/24 14:24:35 fukachan Exp $
 #
 
-package FML::Filter::BodyCheck;
+package FML::Filter::TextPlain;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
@@ -16,13 +16,13 @@ use ErrorStatus qw(error_set error error_clear);
 
 =head1 NAME
 
-FML::Filter::BodyCheck - filter by mail body content
+FML::Filter::TextPlain - filter by mail body content
 
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
 
-C<FML::Filter::BodyCheck> is a collectoin of filter rules based on
+C<FML::Filter::TextPlain> is a collectoin of filter rules based on
 mail body content.
 
 =head1 METHODS
@@ -85,8 +85,8 @@ C<$msg> is C<Mail::Message> object.
 
 C<Usage>:
 
-    use FML::Filter::BodyCheck;
-    my $obj = new FML::Filter::BodyCheck;
+    use FML::Filter::TextPlain;
+    my $obj = new FML::Filter::TextPlain;
     my $msg = $curproc->incoming_message_body();
 
     $obj->body_check($msg, $args);
@@ -561,7 +561,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Filter::BodyCheck first appeared in fml8 mailing list driver package.
+FML::Filter::TextPlain first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

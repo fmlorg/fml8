@@ -4,10 +4,10 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ContentCheck.pm,v 1.10 2002/09/11 23:18:12 fukachan Exp $
+# $FML: MimeComponent.pm,v 1.11 2002/09/22 14:56:50 fukachan Exp $
 #
 
-package FML::Filter::ContentCheck;
+package FML::Filter::MimeComponent;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
@@ -16,13 +16,13 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Filter::ContentCheck - filter based on mail MIME content
+FML::Filter::MimeComponent - filter based on mail MIME content
 
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
 
-C<FML::Filter::ContentCheck> is a MIME content filter
+C<FML::Filter::MimeComponent> is a MIME content filter
 
 =head1 METHODS
 
@@ -119,8 +119,8 @@ C<$msg> is C<Mail::Message> object.
 
 C<Usage>:
 
-    use FML::Filter::ContentCheck;
-    my $obj = new FML::Filter::ContentCheck;
+    use FML::Filter::MimeComponent;
+    my $obj = new FML::Filter::MimeComponent;
     my $msg = $curproc->{'incoming_message'};
 
     $obj->content_check($msg, $args);
@@ -276,8 +276,10 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Filter::ContentCheck first appeared in fml8 mailing list driver package.
+FML::Filter::MimeComponent first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
+
+2002/09/30: rename ContentCheck to MimeComponent.
 
 =cut
 
