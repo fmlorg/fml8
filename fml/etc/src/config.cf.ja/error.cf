@@ -62,6 +62,14 @@ error_analyzer_cache_size		=	14
 #      History: none
 #        Value: simple_count / histgram
 #     Examples: simple_count
+error_analyzer_function_list		=	simple_count
+						histgram
+
+
+# Descriptions: FML::Error::Analyze 中の関数名。
+#      History: none
+#        Value: simple_count / histgram
+#     Examples: simple_count
 error_analyzer_function			=	histgram
 
 
