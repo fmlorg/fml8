@@ -64,16 +64,23 @@ db_dir		= $var_dir/db
 # Descriptions: 入力されるメールを置くディレクトリ
 #      History: LOG_MAIL_DIR ($DIR/var/Mail/)
 #        Value: directory
-#     Examples: /var/spool/ml/elena/var/mincoming
-mincoming_dir	= $var_dir/mincoming
+#     Examples: /var/spool/ml/elena/var/mail/incoming
+mail_incoming_dir	= $var_dir/mail/incoming
+
+
+# Descriptions: deliver されるメールを置くディレクトリ
+#      History: LOG_MAIL_DIR ($DIR/var/Mail/)
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var/mail/outgoing
+mail_outgoing_dir	= $var_dir/mail/outgoing
 
 
 # Descriptions: mail queue のディレクトリ
 #      History: 似たような目的に tmp/ が使われていたが、
 #               fml 4.0 には直接該当するものはない。
 #        Value: directory
-#     Examples: /var/spool/ml/elena/var/mqueue
-mqueue_dir	= $var_dir/mqueue
+#     Examples: /var/spool/ml/elena/var/mail/queue
+mail_queue_dir	= $var_dir/mail/queue
 
 
 # Descriptions: message template (paragraph)

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.95 2002/05/17 05:12:21 fukachan Exp $
+# $FML: Kernel.pm,v 1.96 2002/05/17 09:47:06 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1053,7 +1053,7 @@ sub queue_in
     my ($queue_dir, $queue, $qid) = (undef, undef, undef);
     eval q{
 	use Mail::Delivery::Queue;
-	$queue_dir = $config->{ mqueue_dir };
+	$queue_dir = $config->{ mail_queue_dir };
 	$queue     = new Mail::Delivery::Queue { directory => $queue_dir };
 	$qid       = $queue->id();
     };
@@ -1172,7 +1172,7 @@ sub queue_flush
 {
     my ($curproc, $queue) = @_;
     my $config    = $curproc->{ config };
-    my $queue_dir = $config->{ mqueue_dir };
+    my $queue_dir = $config->{ mail_queue_dir };
 
     eval q{
 	use FML::Process::QueueManager;
