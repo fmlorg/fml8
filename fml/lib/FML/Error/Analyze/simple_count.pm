@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: simple_count.pm,v 1.3 2003/08/23 04:35:35 fukachan Exp $
+# $FML: simple_count.pm,v 1.4 2003/10/15 01:03:31 fukachan Exp $
 #
 
 package FML::Error::Analyze::simple_count;
@@ -18,7 +18,7 @@ my $debug = 1;
 
 =head1 NAME
 
-FML::Error::Analyze::simple_count - cost evaluator
+FML::Error::Analyze::simple_count - simple cost evaluator
 
 =head1 SYNOPSIS
 
@@ -44,6 +44,14 @@ sub new
     my $me     = { _curproc => $curproc };
     return bless $me, $type;
 }
+
+
+=head2 process($curproc, $data)
+
+count up the number of error messsages if the status is [45]XX.
+The cost to sum up varies according to the status code.
+
+=cut
 
 
 # Descriptions: main dispatcher
@@ -75,10 +83,14 @@ sub _simple_count
     my $day        = 24*3600;
     my $threshold  = $day * $daylimit;
 
+    # $data format = { 
+    #             key1 => [ value1, value2, ... ],
+    #             key2 => [ value1, value2, ... ],
+    #          }
     while (($addr, $bufarray) = each %$data) {
 	$count = 0;
 
-	# count up the number of error messsages if the status is 5XX.
+	# count up the number of error messsages if the status is [45]XX.
 	if (defined $bufarray) {
 	  ELEMENT:
 	    for my $buf (@$bufarray) {
@@ -87,6 +99,7 @@ sub _simple_count
 		# ignore too old data.
 		next ELEMENT if (($now - $time) > $threshold);
 
+		# XXX-TODO: cost should be customizable.
 		if ($buf =~ /status=5/i) {
 		    $count += 1.0;
 		}

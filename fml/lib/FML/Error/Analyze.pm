@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.23 2003/08/23 07:24:44 fukachan Exp $
+# $FML: Analyze.pm,v 1.24 2003/10/15 01:03:31 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -22,6 +22,19 @@ my $debug = 1;
 FML::Error::Analyze - provide model specific analyzer routines.
 
 =head1 SYNOPSIS
+
+    use FML::Error::Cache;
+    my $cache = new FML::Error::Cache $curproc;
+    my $rdata = $cache->get_all_values_as_hash_ref();
+
+    # $rdata format = { 
+    #             key1 => [ value1, value2, ... ],
+    #             key2 => [ value1, value2, ... ],
+    #          }
+    use FML::Error::Analyze;
+    my $analyzer = new FML::Error::Analyze $curproc;
+    $analyzer->$evaluator_function($curproc, $rdata);
+
 
 =head1 DESCRIPTION
 
@@ -49,7 +62,7 @@ sub new
 
 =head2 summary()
 
-return summary of points of addresses as HASH_REF.
+return summary of address and points as HASH_REF.
 
     $summary = {
 	address1 => point,
@@ -69,7 +82,7 @@ return addresses to be removed.
 # Return Value: HASH_REF
 sub summary
 {
-    my ($self) = @_;
+    my ($self)   = @_;
     my $analyzer = $self->{ _analyzer };
 
     if (defined $analyzer) {
@@ -87,7 +100,7 @@ sub summary
 # Return Value: ARRAY_REF
 sub removal_address
 {
-    my ($self) = @_;
+    my ($self)   = @_;
     my $analyzer = $self->{ _analyzer };
 
     if (defined $analyzer) {
@@ -106,7 +119,7 @@ sub removal_address
 sub print
 {
     my ($self, $addr) = @_;
-    my $analyzer = $self->{ _analyzer };
+    my $analyzer      = $self->{ _analyzer };
 
     if (defined $analyzer) {
 	return $analyzer->print($addr);
@@ -124,12 +137,12 @@ C<FML::Command::$MODE::$command>.
 
 
 # Descriptions: run FML::Error::Analyze::XXX()
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($anal_args)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($anal_data)
 # Side Effects: load appropriate module
 # Return Value: none
 sub AUTOLOAD
 {
-    my ($self, $curproc, $anal_args) = @_;
+    my ($self, $curproc, $anal_data) = @_;
 
     # we need to ignore DESTROY()
     return if $AUTOLOAD =~ /DESTROY/;
@@ -145,8 +158,8 @@ sub AUTOLOAD
     unless ($@) {
 	# run the actual process
 	if ($analyzer->can('process')) {
-	    $analyzer->process($curproc, $anal_args);
-	    $self->{ _analyzer } = $analyzer;
+	    $analyzer->process($curproc, $anal_data);
+	    $self->{ _analyzer } = $analyzer; # saved for further reference.
 	}
 	else {
 	    $curproc->logerror("${pkg} has no process method");
@@ -163,7 +176,7 @@ sub AUTOLOAD
 =head1 $data STRUCTURE
 
 C<$data> is passed to the error analyer function
-C<FML::Error::Analyze::${fp}> (as $anal_args in AUTOLOAD()).
+C<FML::Error::Analyze::${fp}> (as $anal_data in AUTOLOAD()).
 
 	 $data = {
 	    address => [
@@ -172,8 +185,8 @@ C<FML::Error::Analyze::${fp}> (as $anal_args in AUTOLOAD()).
 	    ]
 	 };
 
-where the error_info_* has error reasons (STR).  $fp parses it, count
-up.  FML::Error or FML::Error::Analyze can retrieve the result via
+where the error_info_* has error reasons (STR). $fp parses it, count
+up. FML::Error or FML::Error::Analyze can retrieve the result via
 summary() method.
 
 =head1 CODING STYLE

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.14 2003/08/29 15:34:03 fukachan Exp $
+# $FML: Cache.pm,v 1.15 2003/10/15 01:03:31 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -39,6 +39,8 @@ where C<$bounce_info) follows:
 =head1 METHODS
 
 =head2 new()
+
+standard constructor.
 
 =cut
 
@@ -138,10 +140,12 @@ sub add
 	    $reason =~ s/\s+/_/g;
 	}
 	else {
-	    $curproc->logerror("FML::Error::Cache: add: not implemented \$argv type");
+	    my $s = "FML::Error::Cache: unknown type: \$argv";
+	    $curproc->logerror($s);
 	    return undef;
 	}
 
+	# XXX-TODO: validate $address ?
 	if ($address) {
 	    $db->{ $address } = "$unixtime status=$status reason=$reason";
 	}
@@ -177,6 +181,7 @@ sub delete
 
     my $db = $self->{ _db };
     if (defined $db) {
+	# XXX-TODO: validate $address ?
 	if ($address) {
 	    delete $db->{ $address };
 	}
@@ -208,10 +213,10 @@ following a set of key ($address) and value.
 # Descriptions: open the cache database for File::CacheDir.
 #    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: OBJ
+# Return Value: HASH_REF
 sub _open_cache
 {
-    my ($self) = @_;
+    my ($self)  = @_;
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
     my $type    = $config->{ error_analyzer_cache_type };
@@ -221,6 +226,7 @@ sub _open_cache
 
     use Tie::JournaledDir;
 
+    # XXX-TODO: use ? $type, $mode, $days
     # tie style
     my %db = ();
     tie %db, 'Tie::JournaledDir', { dir => $dir };
@@ -235,7 +241,7 @@ sub _open_cache
 sub _close_cache
 {
     my ($self) = @_;
-    my $db = $self->{ _db };
+    my $db     = $self->{ _db };
 
     if (defined $db) {
 	untie %$db;
@@ -277,10 +283,10 @@ sub get_primary_keys
 # Return Value: HASH_REF
 sub get_all_values_as_hash_ref
 {
-    my ($self) = @_;
+    my ($self)  = @_;
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
-    my $dir     = $config->{ error_analyzer_cache_dir  };
+    my $dir     = $config->{ error_analyzer_cache_dir };
 
     use Tie::JournaledDir;
     my $obj = new Tie::JournaledDir { dir => $dir };

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: histgram.pm,v 1.4 2003/08/23 07:24:45 fukachan Exp $
+# $FML: histgram.pm,v 1.5 2003/10/15 01:03:31 fukachan Exp $
 #
 
 package FML::Error::Analyze::histgram;
@@ -46,7 +46,7 @@ sub new
 }
 
 
-# Descriptions: cost evaluator.
+# Descriptions: top level dipatcher to run cost evaluator.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($data)
 # Side Effects: none
 # Return Value: none
@@ -80,23 +80,31 @@ but sum up count as the delta.
 sub _histgram
 {
     my ($self, $curproc, $data) = @_;
-    my ($addr, $bufarray, $count, $i);
-    my ($time, $status, $reason);
+    my ($addr, $bufarray, $count, $i, $time, $status, $reason);
     my @removelist = ();
     my $summary    = {};
     my $config     = $curproc->config();
     my $limit      = $config->{ error_analyzer_simple_count_limit } || 14;
     my $daylimit   = $config->{ error_analyzer_day_limit } || 14;
-    my $now        = time;
-    my $day        = 24*3600;
-    my $threshold  = $day * $daylimit;
+    my $now        = time;                 # unix time (seconds). 
+    my $half_day   = 12   * 3600 ;         # 12 hours  (seconds).
+    my $one_day    = 24   * 3600 ;         # 24 hours  (seconds).
+    my $threshold  = $one_day * $daylimit; # how old   (seconds).
 
+    # $data format = { 
+    #             key1 => [ value1, value2, ... ],
+    #             key2 => [ value1, value2, ... ],
+    #          }
     while (($addr, $bufarray) = each %$data) {
 	$count = 0;
+
 	if (defined $bufarray) {
+	  BUF:
 	    for my $buf (@$bufarray) {
 		($time, $status, $reason) = split(/\s+/, $buf);
-		next if ((time - $time) > $threshold);
+
+		# ignore too old data.
+		next BUF if (($now - $time) > $threshold);
 
 		if ($buf =~ /status=5/i) {
 		    unless (defined $summary->{ $addr }) {
@@ -104,15 +112,15 @@ sub _histgram
 		    }
 
 		    # center of distribution function
-		    $i = int( (time - $time ) / (24*3600) );
+		    $i = int( ($now - $time ) / $one_day );
 		    $summary->{ $addr }->[ $i ] += 2;
 
 		    # +delta
-		    $i = int( (time - $time + 12*3600) / (24*3600) );
+		    $i = int( ($now - $time + $half_day) / $one_day );
 		    $summary->{ $addr }->[ $i ] += 1;
 
 		    # -delta
-		    $i = int( (time - $time - 12*3600) / (24*3600) );
+		    $i = int( ($now - $time - $half_day) / $one_day );
 		    $summary->{ $addr }->[ $i ] += 1 if $i >= 0;
 		}
 		elsif ($buf =~ /status=4/i) {
@@ -121,15 +129,15 @@ sub _histgram
 		    }
 
 		    # center of distribution function
-		    $i = int( (time - $time ) / (24*3600) );
+		    $i = int( ($now - $time ) / $one_day );
 		    $summary->{ $addr }->[ $i ] += 0.25;
 
 		    # +delta
-		    $i = int( (time - $time + 12*3600) / (24*3600) );
+		    $i = int( ($now - $time + $half_day) / $one_day );
 		    $summary->{ $addr }->[ $i ] += 0.25;
 
 		    # -delta
-		    $i = int( (time - $time - 12*3600) / (24*3600) );
+		    $i = int( ($now - $time - $half_day) / $one_day );
 		    $summary->{ $addr }->[ $i ] += 0.25 if $i >= 0;
 		}
 	    }
@@ -139,8 +147,8 @@ sub _histgram
     # debug info
     {
 	my $addr = '';
-	my $sum  = 0;
 	my $ra   = ();
+	my $sum  = 0;
 	while (($addr, $ra) = each %$summary) {
 	    $sum = 0;
 	    for my $v (@$ra) {
@@ -150,7 +158,7 @@ sub _histgram
 		}
 	    }
 
-	    my $array = __debug_printable_array($ra);
+	    my $array = _ra_to_str($ra);
 	    $curproc->log("summary: $addr sum=$sum ($array)");
 	    push(@removelist, $addr) if $sum >= $limit;
 	}
@@ -168,7 +176,7 @@ sub _histgram
 #    Arguments: ARRAY_REF($ra)
 # Side Effects: none
 # Return Value: STR
-sub __debug_printable_array
+sub _ra_to_str
 {
     my ($ra) = @_;
     my $s    = '';
@@ -206,7 +214,7 @@ sub removal_address
 }
 
 
-# Descriptions: print address and the summary
+# Descriptions: print summary for the specified address.
 #    Arguments: OBJ($self) STR($addr)
 # Side Effects: none
 # Return Value: none
@@ -216,17 +224,9 @@ sub print
     my $wh       = \*STDOUT;
     my $summary  = $self->summary();
     my $bufarray = $summary->{ $addr } || [];
-    my $x        = '';
-    my $y        = '';
+    my $result   = _ra_to_str($bufarray);
 
-    for my $y (@$bufarray) {
-	$x .= defined $y ? $y : 0;
-	$x .= " ";
-    }
-
-    $x =~ s/^\s*//;
-    $x =~ s/\s*$//;
-    printf $wh "%25s => (%s)\n", $addr, $x;
+    printf $wh "%25s => (%s)\n", $addr, $result;
 }
 
 
