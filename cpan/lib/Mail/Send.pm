@@ -8,7 +8,7 @@ use Carp;
 use vars qw($VERSION);
 require Mail::Mailer;
 
-$VERSION = "1.09";
+$VERSION = "1.52";
 
 sub Version { $VERSION }
 
@@ -79,8 +79,11 @@ Mail::Send - Simple electronic mail interface
 
     # Launch mailer and set headers. The filehandle returned
     # by open() is an instance of the Mail::Mailer class.
+    # Arguments to the open() method are passed to the Mail::Mailer
+    # constructor.
 
-    $fh = $msg->open;
+    $fh = $msg->open;               # some default mailer
+    # $fh = $msg->open('sendmail'); # explicit
 
     print $fh "Body of message";
 
@@ -96,14 +99,11 @@ Mail::Mailer
 
 =head1 AUTHORS
 
-Maintained by Graham Barr E<lt>F<gbarr@pobox.com>E<gt>
+Maintained by Mark Overmeer <mailtools@overmeer.net>
 
 Original code written by Tim Bunce E<lt>F<Tim.Bunce@ig.co.uk>E<gt>,
 with a kick start from Graham Barr E<lt>F<gbarr@pobox.com>E<gt>. With
 contributions by Gerard Hickey E<lt>F<hickey@ctron.com>E<gt>
-
-For support please contact comp.lang.perl.misc or Graham Barr
-E<lt>F<gbarr@pobox.com>E<gt>
 
 =cut
 

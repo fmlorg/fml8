@@ -8,7 +8,12 @@ sub set_headers {
     local($\)="";
     foreach(keys %$hdrs) {
 	next unless m/^[A-Z]/;
-	print $self "$_: ", join(",", $self->to_array($hdrs->{$_})), "\n";
+
+        my ($h);
+        foreach $h ($self->to_array($hdrs->{$_}))
+        {   $h =~ s/\n+\Z//;
+            print $self "$_: ", $h, "\n";
+        }
     }
     print $self "\n";	# terminate headers
 }

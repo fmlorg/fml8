@@ -1,11 +1,10 @@
-#
 
 package Mail::Cap;
 use strict;
 
 use vars qw($VERSION $useCache);
 
-$VERSION = "1.07";
+$VERSION = "1.52";
 sub Version { $VERSION; }
 
 =head1 NAME
@@ -54,34 +53,84 @@ if($^O eq "MacOS") {
 
 =head1 METHODS
 
-=head2 new()
+=head2 new(OPTIONS)
 
   $mcap = new Mail::Cap;
   $mcap = new Mail::Cap "/mydir/mailcap";
+  $mcap = new Mail::Cap filename => "/mydir/mailcap";
+  $mcap = new Mail::Cap take => 'ALL';
+  $mcap = Mail::Cap->new(take => 'ALL');
 
 Create and initialize a new Mail::Cap object.  If you give it an
 argument it will try to parse the specified file.  Without any
 arguments it will search for the mailcap file using the standard
 mailcap path, or the MAILCAPS environment variable if it is defined.
 
+There is currently two OPTION implemented:
+
+=over 4
+
+=item * take =E<gt> 'ALL'|'FIRST'
+
+Include all mailcap files you can find.  By default, only the first
+file is parsed, however the RFC tells us to include ALL.  To maintain
+backwards compatibility, the default only takes the FIRST.
+
+=item * filename =E<gt> FILENAME
+
+Add the specified file to the list to standard locations.  This file
+is tried first.
+
+=back
+
 =cut
 
 sub new
 {
-    my($class, $file) = @_;
-    unless (defined $file) {
-	for (@path) {
-	    if (-r $_) {
-		$file = $_;
-		last;
+    my $class = shift;
+    
+    if(@_ % 2 == 1)  {unshift @_, 'filename'}
+    my %args = @_;
+
+    my $take_all = $args{take} && uc $args{take} eq 'ALL';
+
+    my $self = bless {}, $class;
+    $self->{_count} = 0;
+
+    if (defined($args{filename}) && -r $args{filename}) {
+	$self->_process_file($args{filename});
+    }
+
+    if ( !defined($args{filename}) || $take_all)
+    {   my $fname;
+	foreach $fname (@path) {
+	    if (-r $fname) {
+		$self->_process_file($fname);
+		last unless $take_all;
 	    }
 	}
     }
-    my $self = bless {}, $class;
+
+    unless ($self->{_count}) {
+	# Set up default mailcap
+	$self->{'audio/*'} = [{'view' => "showaudio %s"}];
+	$self->{'image/*'} = [{'view' => "xv %s"}];
+	$self->{'message/rfc822'} = [{'view' => "xterm -e metamail %s"}];
+    }
+
+    $self;
+}
+
+sub _process_file
+{
+    my $self = shift;
+    my $file = shift;
+    unless($file) { return;}
+
     local *MAILCAP;
-    if (defined $file && open(MAILCAP, $file)) {
+    if(open(MAILCAP, $file)) {
 	$self->{'_file'} = $file;
-      local($_);
+	local($_);
 	while (<MAILCAP>) {
 	    next if /^\s*#/; # comment
 	    next if /^\s*$/; # blank line
@@ -117,17 +166,12 @@ sub new
 	    # record this entry
 	    unless (exists $self->{$type}) {
 		$self->{$type} = [];
+		$self->{_count}++; 
 	    }
 	    push(@{$self->{$type}}, \%field);
 	}
 	close(MAILCAP);
-    } else {
-	# Set up default mailcap
-      $self->{'audio/*'} = [{'view' => "showaudio %s"}];
-      $self->{'image/*'} = [{'view' => "xv %s"}];
-      $self->{'message/rfc822'} = [{'view' => "xterm -e metamail %s"}];
     }
-    $self;
 }
 
 =head2 view($type, $file)
@@ -330,7 +374,9 @@ modify it under the same terms as Perl itself.
 
 Gisle Aas <aas@oslonett.no> 
 
-Maintained by Graham Barr <gbarr@pobox.com>
+Modified by Graham Barr <gbarr@pobox.com>
+
+Maintained by Mark Overmeer <mailtools@overmeer.net>
 
 =cut
 

@@ -1,6 +1,6 @@
 # Mail::Util.pm
 #
-# Copyright (c) 1995-8 Graham Barr <gbarr@pobox.com>. All rights reserved.
+# Copyright (c) 1995-2001 Graham Barr <gbarr@pobox.com>. All rights reserved.
 # This program is free software; you can redistribute it and/or
 # modify it under the same terms as Perl itself.
 
@@ -14,7 +14,7 @@ use Exporter ();
 BEGIN {
     require 5.000;
 
-    $VERSION = "1.16";
+    $VERSION = "1.52";
 
     *AUTOLOAD = \&AutoLoader::AUTOLOAD;
     @ISA = qw(Exporter);
@@ -50,23 +50,34 @@ Each reference is a reference to an array containg one message.
 Attempt to determine the current uers mail domain string via the following
 methods
 
- Look for a sendmail.cf file and extract DH parameter
- Look for a smail config file and usr the first host defined in hostname(s)
- Try an SMTP connect (if Net::SMTP exists) first to mailhost then localhost
- Use value from Net::Domain::domainname (if Net::Domain exists)
+=over 4
+
+=item *  Look for the MAILDOMAIN enviroment variable, which can be set from outside the program.
+
+=item *  Look for a sendmail.cf file and extract DH parameter
+
+=item *  Look for a smail config file and usr the first host defined in hostname(s)
+
+=item *  Try an SMTP connect (if Net::SMTP exists) first to mailhost then localhost
+
+=item *  Use value from Net::Domain::domainname (if Net::Domain exists)
+
+=back
 
 =head2 mailaddress()
 
 Return a guess at the current users mail address. The user can force
-the return value by setting C<$ENV{MAILADDRESS}>
+the return value by setting the MAILADDRESS environment variable.
 
 =head1 AUTHOR
 
-Graham Barr <gbarr@pobox.com>
+Graham Barr.
+
+Maintained by Mark Overmeer <mailtools@overmeer.net>
 
 =head1 COPYRIGHT
 
-Copyright (c) 1995-8 Graham Barr. All rights reserved. This program is free
+Copyright (c) 1995-2001 Graham Barr. All rights reserved. This program is free
 software; you can redistribute it and/or modify it under the same terms
 as Perl itself.
 
@@ -118,6 +129,15 @@ sub maildomain {
 	if(defined $domain);
 
     ##
+    ## Get mail domain from environment
+    ##
+
+    $domain = $ENV{MAILDOMAIN};
+
+    return $domain
+       if(defined $domain);
+
+    ##
     ## Try sendmail config file if exists
     ##
 
@@ -135,15 +155,18 @@ sub maildomain {
     if(defined $config && open(CF,$config)) {
 	my %var;
 	while(<CF>) {
-	    if(/\AD([a-zA-Z])([\w.]+)/) {
-		my($v,$arg) = ($1,$2);
-		$arg =~ s/\$([a-zA-Z])/exists $var{$1} ? $var{$1} : '$' . $1/eg;
+	    if(my ($v, $arg) = /^D([a-zA-Z])([\w.\$\-]+)/) {
+		$arg =~ s/\$([a-zA-Z])/exists $var{$1} ? $var{$1} : '$'.$1/eg;
 		$var{$v} = $arg;
 	    }
 	}
 	close(CF);
-	$domain = $var{'j'} if defined $var{'j'};
-	$domain = $var{'M'} if defined $var{'M'};
+	$domain = $var{j} if defined $var{j};
+	$domain = $var{M} if defined $var{M};
+
+        $domain = $1
+            if($domain && $domain =~ m/([A-Za-z0-9](?:[\.\-A-Za-z0-9]+))/ );
+
 	return $domain
 	    if(defined $domain);
     }
@@ -222,9 +245,9 @@ sub mailaddress {
 	$mailaddress = $InternetConfig{kICEmail()};
     }
 
-    $mailaddress ||= $ENV{USER} ||
+    $mailaddress ||= $ENV{USER}    ||
                      $ENV{LOGNAME} ||
-                     eval { (getpwuid($>))[6] } ||
+                     eval {getpwuid($>)} ||
                      "postmaster";
 
     ##
