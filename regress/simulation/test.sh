@@ -3,19 +3,36 @@
 # $Id$
 #
 
+DO () {
+   (
+	pwd=`pwd`
+	cd ../.. || exit 1
+	pwd
+
+	test -f $msg || return;
+
+	cat $msg |\
+	perl -w fml/libexec/loader \
+		--params pwd=$PWD \
+		-c $pwd/main.cf \
+		/var/spool/ml/elena
+	echo "-- exit code: $?"
+   )
+}
+
+if [ "X$*" != X ];then
+	list=$*
+else
+	pwd=`pwd`
+	list=$pwd/example
+fi
+
 (cd ../../fml/etc/;sh .gen.sh)
 
-pwd=`pwd`
-
-cd ../.. || exit 1
-pwd
-cat $pwd/example |\
-perl -w fml/libexec/loader \
-	--params pwd=$PWD \
-	-c $pwd/main.cf \
-	/var/spool/ml/elena
-
-echo "-- exit code: $?"
+for msg in $list
+do
+   DO $msg
+done
 
 exit 0
 
