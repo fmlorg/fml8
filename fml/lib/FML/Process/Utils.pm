@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.91 2003/11/02 05:12:37 fukachan Exp $
+# $FML: Utils.pm,v 1.92 2003/11/02 13:37:42 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -365,6 +365,42 @@ sub _mkpath_str
     }
 
     umask($cur_mask);
+}
+
+
+# XXX-TODO: $curproc->mkfile() is strage.
+
+# Descriptions: create a file.
+#    Arguments: OBJ($curproc) STR($file)
+# Side Effects: none
+# Return Value: none
+sub mkfile
+{
+    my ($curproc, $file) = @_;
+
+    unless (-f $file) {
+	use IO::Adapter;
+	my $obj = new IO::Adapter $file;
+	$obj->touch();
+
+	# verify 
+	unless (-f $file) {
+	    $curproc->logerror("fail to create file: $file");
+	}
+    }
+}
+
+
+# XXX-TODO: $curproc->touch() is strage.
+
+# Descriptions: create a file.
+#    Arguments: OBJ($curproc) STR($file)
+# Side Effects: none
+# Return Value: none
+sub touch
+{
+    my ($curproc, $file) = @_;
+    $curproc->mkfile($file);
 }
 
 
@@ -902,11 +938,11 @@ sub __ml_home_prefix_from_main_cf
     if (defined $domain) {
 	my $found = '';
 
-	my ($virtual_maps) = __get_virtual_maps($main_cf);
-	if (@$virtual_maps) {
-	    $found = __ml_home_prefix_search_in_virtual_maps($main_cf,
-							     $domain,
-							     $virtual_maps);
+	my ($prefix_maps) = __get_ml_home_prefix_maps($main_cf);
+	if (@$prefix_maps) {
+	    $found = ___search_in_ml_home_prefix_maps($main_cf,
+						      $domain,
+						      $prefix_maps);
 	}
 
 	if ($found) {
@@ -939,11 +975,11 @@ sub __ml_home_prefix_from_main_cf
 }
 
 
-# Descriptions: search virtual domain in $virtual_maps.
-#               return $ml_home_prefix for the virtual domain if found.
+# Descriptions: search domain in $prefix_maps.
+#               return $ml_home_prefix for the domain if found.
 #    Arguments: HASH_REF($main_cf)
-#               STR($virtual_domain)
-#               ARRAY_REF($virtual_maps)
+#               STR($domain)
+#               ARRAY_REF($prefix_maps)
 #         bugs: currently support the only file type of IO::Adapter.
 #               This limit comes from the architecture
 #               since this function may be used
@@ -952,27 +988,27 @@ sub __ml_home_prefix_from_main_cf
 #               SUPPORT ONLY FILE TYPE MAPS NOT SQL NOR LDAP.
 # Side Effects: none
 # Return Value: STR
-sub __ml_home_prefix_search_in_virtual_maps
+sub ___search_in_ml_home_prefix_maps
 {
-    my ($main_cf, $virtual_domain, $virtual_maps) = @_;
+    my ($main_cf, $domain, $prefix_maps) = @_;
 
-    if (@$virtual_maps) {
+    if (@$prefix_maps) {
 	my $dir = '';
 	eval q{ use IO::Adapter; };
 	unless ($@) {
 	  MAP:
-	    for my $map (@$virtual_maps) {
+	    for my $map (@$prefix_maps) {
 		# XXX only support file:// map
 		my $obj = new IO::Adapter $map;
 		if (defined $obj) {
 		    $obj->open();
-		    $dir = $obj->find("^$virtual_domain");
+		    $dir = $obj->find("^$domain");
 		}
 		last MAP if $dir;
 	    }
 
 	    if ($dir) {
-		($virtual_domain, $dir) = split(/\s+/, $dir);
+		($domain, $dir) = split(/\s+/, $dir);
 		$dir =~ s/[\s\n]*$// if defined $dir;
 
 		# found
@@ -1032,36 +1068,38 @@ sub is_config_cf_exist
 }
 
 
-=head2 get_virtual_maps()
+=head2 get_ml_home_prefix_maps()
 
-return virtual maps.
+return ml_home_prefix maps. 
+By default, ml_home_prefix and virtual under $fml_config_dir.
 
 =cut
 
 
-# Descriptions: return virtual maps as array reference.
+# Descriptions: return ml_home_prefix maps as array reference.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub get_virtual_maps
+sub get_ml_home_prefix_maps
 {
     my ($curproc) = @_;
     my $main_cf = $curproc->{ __parent_args }->{ main_cf };
-    __get_virtual_maps($main_cf);
+    __get_ml_home_prefix_maps($main_cf);
 }
 
 
-# Descriptions: return virtual maps as array reference.
+# Descriptions: return ml_home_prefix maps as array reference.
 #    Arguments: HASH_REF($main_cf)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub __get_virtual_maps
+sub __get_ml_home_prefix_maps
 {
     my ($main_cf) = @_;
 
-    if (defined $main_cf->{ virtual_maps } && $main_cf->{ virtual_maps }) {
+    if (defined $main_cf->{ ml_home_prefix_maps } && 
+	$main_cf->{ ml_home_prefix_maps }) {
 	my (@r) = ();
-	my (@maps) = split(/\s+/, $main_cf->{ virtual_maps });
+	my (@maps) = split(/\s+/, $main_cf->{ ml_home_prefix_maps });
 	for my $map (@maps) {
 	    if (-f $map) { push(@r, $map);}
 	}
