@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Param.pm,v 1.20 2003/08/24 14:11:10 fukachan Exp $
+# $FML: Param.pm,v 1.21 2003/08/25 14:13:59 fukachan Exp $
 #
 
 package FML::Process::CGI::Param;
@@ -17,7 +17,7 @@ use CGI qw/:standard/;
 
 =head1 NAME
 
-FML::Process::CGI::Param - restric CGI input
+FML::Process::CGI::Param - restrict CGI input
 
 =head1 SYNOPSIS
 
@@ -94,6 +94,8 @@ sub safe_paramlist
     my ($self, $numregexp, $key) = @_;
     my (@list) = ();
 
+    # XXX-TODO: who uses safe_paramlist() ?
+
     use FML::Restriction::CGI;
     my $safe = new FML::Restriction::CGI;
     my $safe_param_regexp  = $safe->param_regexp();
@@ -130,7 +132,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.9 2004/01/01 08:41:09 fukachan Exp $
+# $FML: Utils.pm,v 1.10 2004/01/01 08:48:41 fukachan Exp $
 #
 
 package FML::Process::CGI::Utils;
@@ -190,7 +190,7 @@ sub cgi_var_cgi_mode
 sub cgi_var_language
 {
     my ($curproc) = @_;
-    my $lang = $curproc->safe_param_language() || '';
+    my $lang      = $curproc->safe_param_language() || '';
 
     if ($lang =~ /^(Japanese|English)$/io)  {
 	return lc($lang);
@@ -227,6 +227,7 @@ sub cgi_var_navigator_title
 sub cgi_var_fml_project_url
 {
     my ($curproc) = @_;
+
     return '<A HREF="http://www.fml.org/software/fml-devel/">fml</A>';
 }
 

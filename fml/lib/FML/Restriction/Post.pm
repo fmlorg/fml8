@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.7 2003/08/29 15:34:10 fukachan Exp $
+# $FML: Post.pm,v 1.8 2003/11/30 09:59:20 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -20,7 +20,7 @@ FML::Restriction::Post - restricts who is allowed to post/use command mails.
 
 =head1 SYNOPSIS
 
-collection of utility functions used in Post routines.
+collection of utility functions used in post routines.
 
 =head1 DESCRIPTION
 
@@ -130,6 +130,11 @@ sub permit_member_maps
 }
 
 
+#
+# XXX-TODO: permit_commands_for_stranger -> permit_anonymous_command ?
+#
+
+
 # Descriptions: permit this command even if $sender is a stranger.
 #    Arguments: OBJ($self) STR($rule) STR($sender)
 # Side Effects: none
@@ -140,6 +145,7 @@ sub permit_commands_for_stranger
     my $curproc = $self->{ _curproc };
     my $pcb     = $curproc->pcb();
 
+    # XXX-TODO: find_commands_for_stranger -> match_anonymous_command ?
     use FML::Command::DataCheck;
     my $check = new FML::Command::DataCheck;
     if ($check->find_commands_for_stranger($curproc)) {
@@ -178,7 +184,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003 Ken'ichi Fukamachi
+Copyright (C) 2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

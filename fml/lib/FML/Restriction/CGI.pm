@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: CGI.pm,v 1.9 2002/12/15 15:17:18 fukachan Exp $
+# $FML: CGI.pm,v 1.10 2004/01/02 14:42:44 fukachan Exp $
 #
 
 package FML::Restriction::CGI;
@@ -64,7 +64,7 @@ sub param_regexp
 }
 
 
-# Descriptions: return metho safe expression
+# Descriptions: return method safe expression
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: HASH_REF

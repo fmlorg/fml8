@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Info.pm,v 1.1 2003/11/23 04:07:02 fukachan Exp $
+# $FML: Info.pm,v 1.1 2003/11/23 14:18:23 fukachan Exp $
 #
 
 package FML::User::Info;
@@ -16,7 +16,7 @@ use Carp;
 
 =head1 NAME
 
-FML::User::Info - maintain data with expiration.
+FML::User::Info - maintain user information.
 
 =head1 SYNOPSIS
 
@@ -76,6 +76,7 @@ sub import_from_mail_header
     #   expire    Account expiration time.
     #   gecos     General information about the user.
 
+    # XXX-TODO: correct logic if multiple matched ?
     use Mail::Address;
     my (@addrlist) = Mail::Address->parse($from);
     for my $a (@addrlist) {
@@ -163,7 +164,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003 Ken'ichi Fukamachi
+Copyright (C) 2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
