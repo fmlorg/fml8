@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.13 2001/11/09 11:28:41 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.14 2001/11/09 15:07:51 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -114,7 +114,7 @@ sub new
     $me->{ _fd }          = $args->{ fd } || \*STDOUT;
 
     # ::Print parameters
-    $me->{ _article_summary_lines } = 3;
+    $me->{ _article_summary_lines } = 5;
 
     # log function pointer
     if (defined $args->{ logfp }) {
