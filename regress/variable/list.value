@@ -99,7 +99,7 @@ log_format_type				STR
 
 ldap_query_filter			LDAP_QUERY_FILTER
 ldap_search_base			LDAP_SEARCH_BASE
-ldap_server_bind			LDAP_SEVERVER_BIND
+ldap_server_bind			LDAP_SERVER_BIND
 
 sql_database				SQL_DATABASE
 sql_server				HOSTNAME
