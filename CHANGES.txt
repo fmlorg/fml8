@@ -1,7 +1,52 @@
 		CHANGES
 		Last Modified: $Date$
 
-2002/02/12
+2002/02/17
+
+   FML::Config 
+	implement hook extension. For example,
+	$config->is_hook_defined( 'START_HOOK' );
+	$config->get_hook( 'START_HOOK' );
+	
+   FML::Process::Command ConfViewer Configure Distribute  
+		 DocViewer HTMLify ThreadTrack
+	implement several hooks
+
+   import HTML-Template-2.5 from CPAN
+	
+   change variables	
+	$confirm_keyword -> $confirm_command_prefix
+	add $admin_command_prefix
+
+   FML::Command::Admin::htmlify 
+	makefml htmlify elena --srcdir=.. --outdir=...
+	
+   Mail::Delivery::ESMTP 
+	fix argument
+
+   admin コマンドを動くようにする
+	まだ認証してないけど :)   	
+
+   FML::Command::User::confirm 
+	remove ErrorStatus, FML::Command::Utils;
+	define new()
+	call User::Command::XXX without lock since already locked now.
+	
+   FML::Config 
+	fix return value by FETCH() to be without \s*$
+	
+   FML::Command 
+	change use() and new().
+	not use ErrorStatus.
+	check $command_args->{ override_need_no_lock } to control lock.
+	
+   FML::Process::Distribute 
+	bug fix definitions on hooks
+	
+   FML::Process::Kernel 
+	fix file name in searching message template
+
+2002/02/13
 
    define access method need_lock().
         each command module determins whether it needs lock or not.
@@ -1518,4 +1563,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.50 2002/02/11 13:33:07 fukachan Exp $
+$FML: CHANGES.txt,v 1.51 2002/02/13 13:56:46 fukachan Exp $
