@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $Id$
-# $FML: Message.pm,v 1.2 2001/04/05 16:34:32 fukachan Exp $
+# $FML: Message.pm,v 1.3 2001/04/06 11:35:12 fukachan Exp $
 #
 
 package Mail::Message;
@@ -945,30 +944,6 @@ sub get_first_plaintext_message
     return undef;
 }
 
-
-sub AUTOLOAD
-{
-    my ($self, $args) = @_;
-    my $function = $AUTOLOAD;
-    $function =~ s/.*:://;
-
-    return if $function =~ /DESTROY/;
-
-    if ($function =~ /^get_(\w+)_reference$/) {
-	return $self->{ $1 };
-    }
-    else {
-	return undef;
-    }
-}
-
-
-=head2 C<get_xxx_reference()>
-
-get the reference to xxx, which is a key of the message.
-For example,
-C<get_content_reference()>
-returns the reference to the content of the message.
 
 =head2 C<set_log_function()>
 
