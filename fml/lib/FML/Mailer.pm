@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: __template.pm,v 1.5 2001/04/03 09:45:39 fukachan Exp $
+# $FML: Mailer.pm,v 1.1 2001/05/05 13:50:58 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -37,6 +37,15 @@ HASH ARRAY.
 	message    => $message,
     });
 
+If you send a file, 
+
+    use FML::Mailer;
+    my $obj = new FML::Mailer;
+    $obj->send( {
+	sender    => 'rudo@nuinui.net',
+	recipient => 'kenken@nuinui.net',
+	file      => "/some/where/file",
+    });
 
 =head1 DESCRIPTION
 
@@ -79,9 +88,6 @@ sub send
 	$sfp = sub { my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;};
     }
 
-    # Mail::Message which is sent
-    my $message    = $args->{ message } || undef;
-
     # who is sender
     my $sender     = $args->{ sender } || $maintainer;
 
@@ -89,6 +95,16 @@ sub send
     my $recipient  = $args->{ recipient }  || undef;
     my $recipients = $args->{ recipients } || [ $recipient ] || undef;
 
+    # Mail::Message object which is sent
+    my $message    = $args->{ message } || undef;
+    my $file       = $args->{ file }    || undef;
+
+    if ($file && -f $file) {
+	use Mail::Message;
+	use FileHandle;
+	my $fh   = new FileHandle $file;
+	$message = Mail::Message->parse( { fd => $fh } );
+    }
 
     ### main ###
     use Mail::Delivery;
