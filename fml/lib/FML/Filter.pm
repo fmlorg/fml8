@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.21 2003/03/05 13:54:26 fukachan Exp $
+# $FML: Filter.pm,v 1.22 2003/03/05 15:10:42 fukachan Exp $
 #
 
 package FML::Filter;
@@ -237,13 +237,13 @@ send back message on rejection, with reason if could.
 =cut
 
 
-# Descriptions: 
+# Descriptions: send back message on rejection, with reason if could.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($msg_args)
 # Side Effects: update reply message queue
 # Return Value: none
 sub article_filter_reject_notice
 {
-    my ($obj, $curproc, $msg_args) = @_;
+    my ($self, $curproc, $msg_args) = @_;
     my $msg = $curproc->incoming_message();
     my $r   = $msg_args->{ _arg_reason } || 'unknown';
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.159 2003/02/09 12:31:44 fukachan Exp $
+# $FML: Kernel.pm,v 1.160 2003/03/05 15:10:09 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1454,7 +1454,7 @@ sub reply_message_nl
 
 
 # Descriptions: add header info.
-#    Arguments: OBJ($curproc)
+#    Arguments: OBJ($curproc) HASH_REF($msg_args)
 # Side Effects: none
 # Return Value: none
 sub reply_message_add_header_info
