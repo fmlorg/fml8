@@ -32,3 +32,25 @@ chaddr を認証の前にトラップすること( libtrap.pl )
 
 
 5.0 では ReloadMySelf() って必要ないような気がするが…
+
+
+
+*** ticket status (RT)
+                
+A Request will always be in one of the following four states:
+
+    Open -- the Request is expecting imminent action a/o updates
+ Stalled -- the Request needs a specific action or piece of
+            information before it can proceed
+Resolved -- the Request has either been answered or successfully
+            taken care of, and no longer needs action
+    Dead -- the request should not have been in the ticketing system to begin
+            with and has been completely purged.
+
+(REQ)
+
+       Another somewhat hardcoded features is the "status" field.
+       We're not exactly sure how to use this yet,  but  normally
+       use  "stalled" to indicate that this request isn't one can
+       make any progress at the moment, thus isn't worth  picking
+       from the queue to work on.
