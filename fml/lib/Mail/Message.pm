@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.22 2001/05/06 02:37:53 fukachan Exp $
+# $FML: Message.pm,v 1.23 2001/05/06 08:19:11 fukachan Exp $
 #
 
 package Mail::Message;
@@ -394,17 +394,35 @@ sub dup_header
 
 =head1 METHODS to parse
 
-=head2 C<parse($fd)>
+=head2 C<parse($args)>
 
 read data from file descriptor C<$fd> and parse it to the mail header
 and the body.
+
+    parse({ 
+	fd => $fd,
+    });
+
+You can specify file not file descriptor.
+
+    parse({
+	file => $file,
+    });
 
 =cut
 
 sub parse
 {
     my ($self, $args) = @_;
-    my $fd  = $args->{ fd }  || \*STDIN;
+    my $fd;
+
+    if (defined($args->{ 'file' })) {
+	use FileHandle;
+	$fd = new FileHandle $args->{ 'file' };
+    }
+    else {
+	$fd = $args->{ fd } || \*STDIN;
+    }
 
     # make an object
     my ($type) = ref($self) || $self;
