@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.53 2002/04/25 04:58:08 fukachan Exp $
+# $FML: Message.pm,v 1.54 2002/04/26 00:26:23 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1679,7 +1679,8 @@ sub encoding_mechanism
     my ($self) = @_;
     my $buf = $self->message_fields();
 
-    if ($buf =~ /Content-Transfer-Encoding:\s*(\S+)/mi) {
+    if (defined($buf) &&
+	($buf =~ /Content-Transfer-Encoding:\s*(\S+)/mi)) {
 	my $mechanism = $1;
 	$mechanism =~ tr/A-Z/a-z/;
 	return $mechanism;
@@ -1827,9 +1828,14 @@ sub nth_paragraph
     my $data = $self->{ data };
     my $pmap = $self->_evaluate_pmap();
 
-    $i--; # shift $i: 1 => 0, 2 =>1, et. al.
-    my ($pb, $pe) = ($pmap->[ $i ], $pmap->[ $i + 1 ]);
-    return substr($$data, $pb, $pe - $pb);
+    if (defined($$data) && $$data) {
+	$i--; # shift $i: 1 => 0, 2 =>1, et. al.
+	my ($pb, $pe) = ($pmap->[ $i ], $pmap->[ $i + 1 ]);
+	return substr($$data, $pb, $pe - $pb);
+    }
+    else {
+	return undef;
+    }
 }
 
 
@@ -1845,6 +1851,10 @@ sub _evaluate_pmap
     my $pe      = $self->{ offset_end };
     my $bodylen = $self->size;
     my $data    = $self->{ data };
+
+    unless (defined $data) {
+	return [];
+    }
 
     my $i  = 0; # the number of paragraphs
     my $p  = $pb;
