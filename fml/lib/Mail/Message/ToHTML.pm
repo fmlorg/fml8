@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.10 2002/04/14 08:10:11 fukachan Exp $
+# $FML: ToHTML.pm,v 1.11 2002/04/15 03:47:49 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -19,7 +19,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.10 2002/04/14 08:10:11 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.11 2002/04/15 03:47:49 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -1243,8 +1243,8 @@ sub _update_relation
     _PRINT_DEBUG("_update_relation $id");
 
     use FileHandle;
-    my $file        = $args->{ file };
-    if (defined $file) {
+    my $file = $args->{ file };
+    if (defined $file && $file && -f $file) {
 	my ($old, $new) = ($file, "$file.new.$$");
 	my $rh = new FileHandle $old;
 	my $wh = new FileHandle "> $new";
