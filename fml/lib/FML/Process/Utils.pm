@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.7 2002/01/20 15:06:45 fukachan Exp $
+# $FML: Utils.pm,v 1.8 2002/01/30 14:51:15 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -140,6 +140,75 @@ sub command_line_options
 
     return $args->{ options };
 }
+
+
+=head2 default_domain()
+
+return the default domain defined in /etc/fml/main.cf.
+
+=cut
+
+
+# Descriptions: return the default domain defined in /etc/fml/main.cf.
+#    Arguments: OBJ($curproc) STR($domain)
+# Side Effects: none
+# Return Value: HASH_ARRAY
+sub default_domain
+{
+    my ($curproc, $domain) = @_;
+    my $main_cf = $curproc->{ __parent_args }->{ main_cf };
+
+    return $main_cf->{ default_domain };
+}
+
+
+=head2 ml_home_prefix([domain])
+
+return $ml_home_prefix in main.cf.
+
+=cut
+
+
+# Descriptions: front end wrapper to retrieve $ml_home_prefix (/var/spool/ml).
+#               return $ml_home_prefix defined in main.cf (/etc/fml/main.cf).
+#               return $ml_home_prefix for $domain if $domain is specified.
+#               return default one if $domain is not specified.
+#    Arguments: OBJ($curproc) STR($domain)
+# Side Effects: none
+# Return Value: STR
+sub ml_home_prefix
+{
+    my ($curproc, $domain) = @_;
+    my $main_cf = $curproc->{ __parent_args }->{ main_cf };
+    __ml_home_prefix_from_main_cf($main_cf, $domain);
+}
+
+
+# Descriptions: return $ml_home_prefix defined in main.cf (/etc/fml/main.cf).
+#               return $ml_home_prefix for $domain if $domain is specified.
+#               return default one if $domain is not specified.
+#    Arguments: OBJ($curproc) STR($domain)
+# Side Effects: none
+# Return Value: STR
+sub __ml_home_prefix_from_main_cf
+{
+    my ($main_cf, $domain) = @_;
+
+    if (defined $domain) {
+	warn("not implemented");
+    }
+    else {
+	return $main_cf->{ ml_home_prefix };
+    }
+}
+
+
+#
+# XXX
+#    __ml_home_prefix_from_main_cf() is not needed.
+#    since FML::Process::Switch calculate this variable and set it to 
+#    $curproc->{ main_cf }.
+#
 
 
 =head2 get_virtual_maps()
