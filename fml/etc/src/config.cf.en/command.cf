@@ -335,7 +335,7 @@ newml_command_template_files 		=	config.cf
 # Descriptions: fml_owner value used by newml command.
 #               this value is a destination where error mail are forwardeded.
 #               user "fml" by default (same as $fml_owner in main.cf).
-#        Value: ADDR
+#        Value: RFC822_USER_OR_RFC822_ADDRESS
 #     Examples:
 newml_command_ml_admin_default_address 	=	$fml_owner
 
