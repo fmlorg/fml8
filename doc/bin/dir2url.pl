@@ -46,6 +46,8 @@ sub Show
     my $pathname = '';
     my $doc      = '';
 
+    unlink ".cvsignore" if -f ".cvsignore";
+
     foreach $pathname (<*>) {
 	next if $pathname =~ /^\__template/;
 	next if $pathname =~ /^\@/;
@@ -74,6 +76,7 @@ sub Show
 		$doc =~ s/pm$/txt/;
 		print STDERR "\tpod2text $pathname > $doc\n";
 		system "pod2text $pathname > $doc";
+		system "echo $doc >> .cvsignore";
 	    }
 	}
 
