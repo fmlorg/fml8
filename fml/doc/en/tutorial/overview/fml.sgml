@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: fml.sgml,v 1.1 2003/07/25 14:30:51 fukachan Exp $
    $jaFML: fml.sgml,v 1.4 2003/04/15 14:51:43 fukachan Exp $
 -->
 
@@ -28,21 +28,22 @@
 
     <listitem>
 	<para>
-	usage of CUI is same as one unser &fml4; .
-	You can use CUI(makefml and fml command)
-		to create/remove ML,
-		to add/remove/change addresses of ML members,
-		to add/remove/change address of remote administrators,
-		to see logs,
-		to see member list 
+	usage of CUI is almost same as one of &fml4; 
+	(it is same as could as possible).
+	You can use CUI (makefml and fml command)
+		to create/remove an ML,
+		to add/remove/change an addresse of ML members,
+		to add/remove/change an address of remote administrators,
+		to see log and member list,
 		et.al.
+	Makefml and fml are same programs except for argument order.
 	</para>
     </listitem>
 
     <listitem>
 	<para>
 	CGI interface.
-	The functions are a subset of CUI.
+	The functions are a subset of CUI ones.
 	</para>
     </listitem>
 
@@ -84,14 +85,15 @@
 
     <listitem>
 	<para>
-	thread track system.
+	tiny thread track system.
 	</para>
     </listitem>
 
 
     <listitem>
 	<para>
-	built-in HTML converter of articles.
+	built-in module for HTML converter of articles.
+	support automatic conversion by default.
 	</para>
     </listitem>
 
@@ -147,10 +149,11 @@
 <important>
 
 <para>
-You run GNU autoconf firstly, and "make install".  It is standard in
-the world of open sources.  This procedure is not similar to &fml4;
-installation steps.  It confuses you but it is friendly for package
-systems of free unix like systems.
+You run GNU autoconf firstly, and "make install". It is standard in
+the world of open sources. This procedure is different from &fml4;
+installation steps. It may confuse you if you are customered with
+&fml4; But &fml8; is more friendly for package systems of free unix
+like systems.
 </para>
 
 <para>
@@ -161,14 +164,14 @@ and
 editing of configuration files:
 /usr/local/etc/fml/main.cf 
 and
-/usr/local/etc/fml/site_default_config.ph.
+/usr/local/etc/fml/site_default_config.cf.
 </para>
 
 </important>
 
 
 <para>
-Suppse we craete a new ML named elena ML (elena@fml.org).
+Suppose we create a new ML named elena ML (elena@fml.org).
 The brief flow of installation is as follows:
 </para>
 
@@ -177,7 +180,7 @@ The brief flow of installation is as follows:
    <listitem>
 	<para>
 	<link linkend="download">
-	download &fml8; source and expand it.
+	Download &fml8; source and expand it on the disk.
 	</link>
 	</para>
    </listitem>
@@ -185,14 +188,14 @@ The brief flow of installation is as follows:
    <listitem>
 	<para>
 	<link linkend="install.fml.unix">
-	install by user root.
+	Install it by user root.
 	Firstly, change user to "root" and create the user "fml" and
 	the group "fml".
 	Secondly, run
 	<link linkend="install.fml.unix.configure">
 	configure
 	</link>
-	and  "make install".
+	and "make install".
 	</link>
 <screen>
 % su root
@@ -204,7 +207,10 @@ The brief flow of installation is as follows:
 	</para>
 
 	<para>
-	By default, installer installs utility programs to 
+	By default, 
+	main programs such as distribute, command, et.al. are installed into
+	/usr/local/libexec/fml/.
+	Also, installer installs utility programs to 
 	/usr/local/bin.
 		<footnote>
 		<para>
@@ -216,13 +222,21 @@ The brief flow of installation is as follows:
 		</footnote>
 	These are wrappers to call real programs at /usr/local/libexec/fml/.
 	</para>
+
+	<para>
+	Perl modules are installed into
+	/usr/local/lib/fml/$fml_version/
+	and message templates et.al. are installed into
+	/usr/local/share/fml/$fml_version/.	 
+	</para>
+
    </listitem>
 
 
    <listitem>
 	<para>
 	<link linkend="guide.newml">
-	change user to "fml", create elena ML.
+	Change user to "fml", create elena ML for test.
 	</link>
 <screen>
 % su fml
@@ -247,7 +261,7 @@ Both are same except for the syntax.
 
    <listitem>
 	<para>
-	test.
+	Test.
 	</para>
    </listitem>
 
@@ -255,7 +269,7 @@ Both are same except for the syntax.
    <listitem>
 	<para>
 	<link linkend="guide.config.cf">
-	cutomize.
+	Cutomize your ML.
 	</link>
 	</para>
    </listitem>
@@ -265,7 +279,7 @@ Both are same except for the syntax.
 <warning>
 <para>
 Please install by user root.
-It is differ from &fml4;.
+It is different from &fml4;.
 </para>
 </warning>
 
@@ -279,7 +293,7 @@ It is differ from &fml4;.
 	</title>
 
 <para>
-create an ML by CUI (makefml).
+Create an ML by CUI (makefml).
 To create elena@fml.org ML (fml.org is the default domain), 
 run
 <screen>
@@ -294,9 +308,8 @@ for more details.
 </para>
 
 <para>
-Instead, consider a virtual domain nuinui.net.
-In this case, specify the whole address. 
-To create an ML elena@nuinui.net, run the following:
+In the virtual domain case, specify the whole address as an argument. 
+For example, to create an ML elena@nuinui.net, run the following command:
 <screen>
 % su fml
 % makefml newml elena@nuinui.net
@@ -365,7 +378,7 @@ BUT NOT yet implemented.
 </para>
 
 <para>
-Edit files anyway.
+Edit configuration files anyway.
 </para>
 
 </warning>
@@ -401,17 +414,14 @@ below.
 	</title>
 
 <para>
-To customize elena ML, edit 
-/var/spool/ml/elena/config.cf
-file.
-The format is a little modified postfix style.
-It is differ from both &fml4;'s config.ph and cf.
+To customize elena ML, edit /var/spool/ml/elena/config.cf file. The
+format is a little modified postfix style. It is different from both
+&fml4;'s config.ph and cf.
 </para>
 
 <para>
-Add or modify the least variables.
-If unspecified, the default value is used.
-The default value depends fml version and is defined at
+Add or modify the least variables. If unspecified, the default value
+is used.  The default value depends fml version and is defined at
 <screen>
 /usr/local/etc/fml/defaults/${fml_version}/default_config.cf
 </screen>

@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: ml.sgml,v 1.1 2003/07/24 15:37:37 fukachan Exp $
    $jaFML: ml.sgml,v 1.3 2003/04/15 14:51:43 fukachan Exp $
 -->
 
@@ -18,8 +18,9 @@ Email is an electirc version of mail.
 </para>
 
 <para>
-One email has the following structure: the former is the header, the
-latter is the body. The separator is one null line (empty line).
+One email has the following structure which consists of two parts.
+The former is the header, the latter is the body. The separator
+between them is one null line (empty line).
 <screen>
 From: rudo@nuinui.net
 To: kenken@nuinui.net
@@ -42,10 +43,10 @@ See RFC822 and RFC2822 for more details of definitions.
 	</title>
 
 <para>
-Mailing list (ML) is forwarding mechanism of email.
-The program to do it is called as an ML driver.
-An ML driver receives the email injected via MTA over the network,
-copy it and redistributes it to ML members.
+Mailing list (ML) is forwarding mechanism of email. The program for it
+is called as ML driver. ML driver receives the email injected via MTA
+over the network, copy and redistributes it to members subscribed to
+the ML.
 </para>
 
 <sect2 id="overview.mldriver">
