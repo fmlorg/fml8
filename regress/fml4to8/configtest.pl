@@ -1,21 +1,23 @@
 #!/usr/bin/env perl
 #
-# $FML$
+# $FML: configtest.pl,v 1.1 2004/12/09 11:35:58 fukachan Exp $
 #
 
 use strict;
 use Carp;
 use lib qw(fml/lib cpan/lib gnu/lib img/lib);
-use vars qw(@failed_queue %failed_queue);
+use vars qw(@failed_queue %failed_queue $base_dir);
 
-for my $f (</var/spool/ml/*/config.ph>) {
+my $base_dir = shift || '/var/spool/ml';
+
+for my $f (<$base_dir/*/config.ph>) {
     if (-f $f) {
 	print STDERR "// check $f\n";
 	check($f);
     }
 }
 
-for my $f (</var/spool/ml/*/.fml4rc/config.ph>) {
+for my $f (<$base_dir/*/.fml4rc/config.ph>) {
     if (-f $f) {
 	print STDERR "// check $f\n";
 	check($f);
@@ -40,6 +42,10 @@ else {
 exit 0;
 
 
+# Descriptions: check translation results.
+#    Arguments: STR($old_config_ph)
+# Side Effects: update @failed_queue.
+# Return Value: none
 sub check
 {
     my ($old_config_ph) = @_;
