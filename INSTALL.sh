@@ -22,9 +22,11 @@ libexec_dir=$prefix_dir/libexec/fml
 lib_dir=$prefix_dir/lib/fml
 ######################
 
+
 _mkdir () {
 	local dir=$1 
-	echo mkdir $dir; test -d $dir || mkdir $dir
+	echo mkdir $dir; 
+	test -d $dir || mkdir $dir
 }
 
 
@@ -41,6 +43,7 @@ done
 
 
 if [ ! -f $config_dir/main.cf ];then
+	echo create $config_dir/main.cf
 	sed 	-e s@__version__@$version@ \
 		-e s@__config_dir__@$config_dir@ \
 		-e s@__prefix_dir__@$prefix_dir@ \
@@ -49,8 +52,11 @@ fi
 
 cp fml/etc/default_config.cf $config_dir/defaults/$version
 
+echo install libraries to $lib_dir/$version/
 cp -pr fml/lib/*	$lib_dir/$version
 cp -pr cpan/lib/*	$lib_dir/$version
+
+echo install executables to $libexec_dir/$version/
 cp -pr fml/libexec/*	$libexec_dir/$version
 
 if [ ! -f $libexec_dir/fmlwrapper ];then
@@ -59,11 +65,13 @@ if [ ! -f $libexec_dir/fmlwrapper ];then
    cp -pr fml/libexec/Standalone.pm $libexec_dir/
    (
 	cd $libexec_dir/
-	ln -s fmlwrapper fml.pl
-	ln -s fmlwrapper distribute
-	ln -s fmlwrapper command
-	ln -s fmlwrapper fmlserv
-	ln -s fmlwrapper mead
+
+	for x in fml.pl distribute command fmlserv mead
+	do
+		rm $x
+		echo link $x
+		ln -s fmlwrapper $x
+	done
    )
 fi
 
