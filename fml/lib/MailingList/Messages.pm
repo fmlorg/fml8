@@ -2,7 +2,7 @@
 #
 #  Copyright (C) 2001 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
-#   redistribute it and/or modify it under the same terms as Perl itself. 
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
 # $Id$
 # $FML$
@@ -46,13 +46,13 @@ MailingList::Messages -- message manipulator
     # make a chain of $m1, $m2, ...
     $m1->chain( $m2 );
 
-    # print the contents in the order:  $m1, $m2, ... 
+    # print the contents in the order:  $m1, $m2, ...
     $m1->print;
 
 =head1 DESCRIPTION
 
 A message has the content and a header including the next message
-pointer, et. al. 
+pointer, et. al.
 
 The messages are chained from/to others among them.
 Out idea on the chain is similar to IPv6.
@@ -60,43 +60,97 @@ For example, MIME/multipart is a chain of messages such as
 
   mesg1 -> mesg2 -> mesg3 (-> undef)
 
-So the message format is as follows. 
-We describe a message as a hash reference.
+Whereas the usual mail, which Content-Type is text/plain, is described
+as
+
+  mesg1 (-> undef)
+
+To describe such chains, a message format is a hash reference
+internally.
 
    $message = {
-                next         => \%next_message
-                prev         => \%prev_message
+                version           => 1.0
 
-                version      => 1.0
-                mime_version => 1.0
-                content_type => text/plain
-                header       => {
-                                    field_name => field_value
-                                 }
-                content      => \$message_body
+                next              => $next_message (HASH reference)
+                prev              => $prev_message (HASH reference)
+
+                mime_version      => 1.0
+                base_content_type => text/plain
+                content_type      => text/plain
+                header            => {
+                                       field_name => field_value
+                                     }
+                content           => \$message_body
                }
 
-   key              value
+   key                value
    -----------------------------------------------------
-   next             pointer to the next message
-   prev             pointer to the previous message
-   version          MailingList::Message object version
-   mime_version     MIME version
-   content_type     MIME content-type
-   header           reference to a header hash
-   content          reference to the content (that is, memory area)
+   next               pointer to the next message
+   prev               pointer to the previous message
+   version            MailingList::Message object version
+   mime_version       MIME version
+   base_content_type  MIME content-type specified in the header
+   content_type       MIME content-type
+   header             reference to a header hash
+   content            reference to the content (that is, memory area)
 
 Each default value follows:
 
    key              value
    -----------------------------------------------------
-   next             undef
-   prev             undef
-   version          1.0
-   mime_version     1.0
-   content_type     text/plain
-   header           undef
-   content          ''
+   next              undef
+   prev              undef
+   version           1.0
+   mime_version      1.0
+   base_content_type
+   content_type      text/plain
+   header            undef
+   content           ''
+
+=head1 INTERNAL REPRESENTATION
+
+=head2 plain/text
+
+If the message is just an plain/text, which is usual,
+internal representation follows:
+
+   i  base_content_type              content_type
+   ----------------------------------------------------------
+   0: text/plain                      text/plain
+
+where the C<i> is the C<i>-th element of a chain.
+
+=head2 multipart/...
+
+Consider a multipart such as
+
+   Content-Type: multipart/mixed; boundary="boundary"
+
+      ... preamble ...
+
+   --boundary
+   Content-Type: text/plain; charset="iso-2022-jp"
+
+   --boundary
+   Content-Type: image/gif;
+
+   --boundary--
+      ... trailor ...
+
+The internal parser interpetes it as follows:
+
+      base_content_type              content_type
+   ----------------------------------------------------------
+   0: multipart/mixed                multipart.preamble/plain
+   1: multipart/mixed                multipart.delimiter/plain
+   2: multipart/mixed                text/plain
+   3: multipart/mixed                multipart.delimiter/plain
+   4: multipart/mixed                image/gif
+   5: multipart/mixed                multipart.close-delimiter/plain
+   6: multipart/mixed                multipart.trailer/plain
+
+C<multipart.something> is a faked type to treat both real content,
+delimiters and others in the same MailingList::Messages framework.
 
 =head1 METHOD
 
@@ -115,8 +169,11 @@ sub create
 {
     my ($self, $args) = @_;
 
+    # set up template anyway
+    $self->_set_up_template($args);
+
     # parse the non multipart mail
-    if ($args->{ content_type } =~ /multipart/i) { 
+    if ($args->{ content_type } =~ /multipart/i) {
 	$self->parse_mime_multipart($args);
     }
     else {
@@ -125,7 +182,7 @@ sub create
 }
 
 
-sub _create
+sub _set_up_template
 {
     my ($self, $args) = @_;
 
@@ -134,12 +191,24 @@ sub _create
     $self->{ prev }         = $args->{ prev } || undef;
 
     # basic content information
-    $self->{ version }      = $args->{ version }       || 1.0; 
-    $self->{ mime_version } = $args->{ mime_version }  || 1.0; 
+    $self->{ version }      = $args->{ version }       || 1.0;
+    $self->{ mime_version } = $args->{ mime_version }  || 1.0;
     $self->{ content_type } = $args->{ content_type  } || 'text/plain';
 
     # header
     $self->{ header  }      = $args->{ header  } || undef;
+
+    # save the mail header Content-Type information
+    $self->{ base_content_type } =
+	$args->{ base_content_type } || $args->{ content_type } || undef;
+}
+
+
+sub _create
+{
+    my ($self, $args) = @_;
+
+    _set_up_template($self, $args);
 
     # message itself (mail body)
     my $r_content = $args->{ content };
@@ -199,14 +268,8 @@ sub print
 
   MSG:
     while (1) {
-	if (defined $self->{ _raw_print }) {
-	    my $r_body = $msg->{ content };
-	    print $fd $$r_body;
-	}
-	else {
-	    if (defined $msg->{ content }) {
-		$msg->_print($fd, $msg->{ content });
-	    }
+	if (defined $msg->{ content }) {
+	    $msg->_print($fd, $msg->{ content });
 	}
 
 	last MSG unless $msg->{ next };
@@ -233,6 +296,9 @@ sub _print
     my $logfp  = $self->{ _log_function };
     $logfp     = ref($logfp) eq 'CODE' ? $logfp : undef;
 
+    # \n -> \r\n
+    my $raw_print_mode = 1 if defined $self->{ _raw_print };
+
     # write each line in buffer
     my ($p, $len, $buf, $pbuf, $pe);
   SMTP_IO:
@@ -244,12 +310,16 @@ sub _print
 	$len = ($p < 0 ? ($maxlen - $pp) : $len);
 	$pe  = $pp + $len;
 	$buf = substr($$r_body, $pp, $len);
-	if ($buf !~ /\r\n$/) { $buf =~ s/\n$/\r\n/;}
 
-	# ^. -> ..
-	$buf =~ s/^\./../;
+	unless (defined $raw_print_mode) {
+	    # fix \n -> \r\n in the end of the line
+	    if ($buf !~ /\r\n$/) { $buf =~ s/\n$/\r\n/;}
 
-	print $fd    $buf;
+	    # ^. -> ..
+	    $buf =~ s/^\./../;
+	}
+
+	print $fd $buf;
 	&$logfp($buf) if $logfp;
 
 	last SMTP_IO if $p < 0;
@@ -258,8 +328,8 @@ sub _print
 }
 
 
-=head2 C<parse_mime_multipart()>
-    
+=head2 C<parse_mime_multipart($args)>
+
 parse the multipart mail. Actually it calculates the begin and end
 offset for each part of content, not split() and so on.
 C<new()> calls this routine if the message looks MIME multipart.
@@ -270,12 +340,12 @@ C<new()> calls this routine if the message looks MIME multipart.
 # CAUTION: $args must be the same as it of new().
 #
 #         ... preamble ...
-#      V $buf_begin
+#      V $mpb_begin
 #      ---boundary
 #         ... message 1 ...
 #      ---boundary
 #         ... message 2 ...
-#      V $buf_end  (V here is not $buf_end)
+#      V $mpb_end  (V here is not $buf_end)
 #      ---boundary--
 #         ... trailor ...
 #
@@ -283,60 +353,97 @@ sub parse_mime_multipart
 {
     my ($self, $args) = @_;
 
+    # virtual content-type
+    my %content_type = 
+	(
+	 'preamble'        => 'multipart.preamble/plain',
+	 'delimiter'       => 'multipart.delimiter/plain',
+	 'close-delimiter' => 'multipart.close-delimiter/plain',
+	 'trailer'         => 'multipart.trailer/plain',
+	 );
+
+
     # check input parameters
     return undef unless $args->{ boundary };
     return undef unless $args->{ content  };
 
+    # base content-type
+    my $base_content_type = $args->{ content_type };
+
     # boundaries of the continuous multipart blocks
-    my $content        = $args->{ content };
-    my $boundary       = $args->{ boundary };
-    my $content_length = length($$content);
-    my $buf_begin      = index($$content, $boundary     , 0);
-    my $buf_end        = index($$content, $boundary."--", 0);
+    my $content     = $args->{ content };  # reference to content
+    my $content_end = length($$content);   # end position of the content
+    my $boundary    = $args->{ boundary }; # MIME boundary string
+    my $mpb_begin   = index($$content, $boundary     , 0);
+    my $mpb_end     = index($$content, $boundary."--", 0);
 
     # prepare lexical variables
-    # pb = position of the beginning, pe = position of the end
     my ($msg, $next_part, $prev_part, @m);
-    my $i   = 0;
+    my $i = 0; # counter to indicate the $i-th message
 
-    # check the preamble before multipart blocks
-    my $pb  = 0;
-    my $pe  = $buf_begin;
+    # 1. check the preamble before multipart blocks
+    my $pb  = 0;          # pb = position of the beginning in $content
+    my $pe  = $mpb_begin; # pe = position of the end in $content
     $self->_set_pos( $pe + 1 );
 
     do {
-	# XXX not effective region if $pe <= $pb
-	#     we should check this to avoid the empty preamble case.
-	if ($pe > $pb) {
-	    $m[ $i++ ] = _alloc_new_part($self, {
-		boundary     => $boundary,
-		offset_begin => $pb,
-		offset_end   => $pe,
-		content      => $content,
+	# 2. analyze the region for the next part in $content
+	#     we should check the condition "$pe > $pb" here
+	#     to avoid the empty preamble case.
+	# XXX this function is not called
+	# XXX if there is not the prededing preamble.
+	if ($pe > $pb) { # XXX not effective region if $pe <= $pb
+	    my $args = {
+		boundary          => $boundary,
+		offset_begin      => $pb,
+		offset_end        => $pe,
+		content           => $content,
+		base_content_type => $base_content_type,
+	    };
+	    my $default = ($i == 0) ? $content_type{'preamble'} : undef;
+	    $args->{ content_type } = _get_content_type($args, $default);
+
+	    $m[ $i++ ] = $self->_alloc_new_part($args);
+	}
+
+	# 3. where is the region for the next part?
+	($pb, $pe) = $self->_next_part_pos($content, $boundary);
+
+	# 4. insert a multipart delimiter
+	#    XXX we malloc(), "my $tmpbuf", to store the boundary string.
+	if ($pe > $mpb_end) { # check the closing of the blocks or not
+	    my $tmpbuf = $boundary . "--\n";
+	    $m[ $i++ ] = $self->_alloc_new_part({
+		content           => \$tmpbuf,
+		content_type      => $content_type{'close-delimiter'},
+		base_content_type => $base_content_type,
+	    });
+
+	}
+	else {
+	    my $tmpbuf = $boundary . "\n";
+	    $m[ $i++ ] = $self->_alloc_new_part({
+		content           => \$tmpbuf,
+		content_type      => $content_type{'delimiter'},
+		base_content_type => $base_content_type,
 	    });
 	}
 
-	($pb, $pe) = $self->_next_part_pos($content, $boundary);
-
-	# the closing of the blocks
-	if ($pe > $buf_end) { $boundary .= "--";}
-	my $buf = $boundary."\n";
-
-	# add the multipart delimiter
-	$m[ $i++ ] = _alloc_new_part($self, {
-	    content => \$buf
-	});	
-    } while ($pe <= $buf_end);
+    } while ($pe <= $mpb_end);
 
     # check the trailor after multipart blocks exists or not.
-    my $p = index($$content, "\n", $buf_end) + 1;
-    if (($content_length - $p) > 0) {
-	$m[ $i++ ] = _alloc_new_part($self, {
-	    boundary     => $boundary,
-	    offset_begin => $p,
-	    offset_end   => $content_length,
-	    content      => $content,
-	});
+    {
+	my $p = index($$content, "\n", $mpb_end) + 1;
+	if (($content_end - $p) > 0) {
+	    $m[ $i++ ] = $self->_alloc_new_part({
+		boundary          => $boundary,
+		offset_begin      => $p,
+		offset_end        => $content_end,
+		content           => $content,
+		content_type      => $content_type{'trailor'},
+		base_content_type => $base_content_type,
+	    });
+	}
     }
 
     # build a chain of multipart blocks and delimeters
@@ -348,9 +455,35 @@ sub parse_mime_multipart
 	if (($j > 1) && defined $m[ $j - 1 ]) {
 	    prev_chain( $m[ $j ], $m[ $j - 1 ] );
 	}
+
+	if (0) { # debug
+	    printf STDERR "%d: %-30s %-30s\n", $j,
+		$m[ $j]->{ base_content_type },
+		$m[ $j]->{ content_type };
+	}
     }
 
+    # chain $self and our chains built here.
     next_chain($self, $m[0]);
+
+    # use Data::Dumper; print STDERR Dumper( $self ); # debug
+}
+
+
+sub _get_content_type
+{
+    my ($args, $default) = @_;
+    my $content   = $args->{ content };
+    my $pos_begin = $args->{ offset_begin };
+    my $pos       = index($$content, "\n\n", $pos_begin);
+    my $buf       = substr($$content, $pos_begin, $pos - $pos_begin );
+
+    if ($buf =~ /Content-Type:\s*(\S+)\;/) {
+	return $1;
+    }
+    else {
+	$default
+    }
 }
 
 
@@ -363,12 +496,7 @@ sub _alloc_new_part
     my ($self, $args) = @_;
     my $me = {};
 
-    _create($me, {
-	offset_begin => $args->{ offset_begin },
-	offset_end   => $args->{ offset_end },
-	content      => $args->{ content },
-    });
-
+    _create($me, $args);
     return bless $me, ref($self);
 }
 
@@ -464,8 +592,8 @@ sub AUTOLOAD
 
 =head2 C<get_xxx_reference()>
 
-get the reference to xxx, which is a key of the message. 
-For example, 
+get the reference to xxx, which is a key of the message.
+For example,
 C<get_content_reference()>
 returns the reference to the
 content of the message.
@@ -473,11 +601,6 @@ content of the message.
 =cut
 
 ######################################################################
-
-=head1 TODO
-
-The chain structure of messages is implemented, but 
-MIME/multipart is not yet handled well.
 
 =head1 AUTHOR
 
@@ -488,7 +611,7 @@ Ken'ichi Fukamachi
 Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
-redistribute it and/or modify it under the same terms as Perl itself. 
+redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
