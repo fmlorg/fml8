@@ -115,9 +115,9 @@ cgi {
     ?     $cgi_charset_ja
     ?     $cgi_default_charset
     ?     $cgi_default_language
-    ?     $cgi_language_list
+    ?     $cgi_language_select_list
     ?     $cgi_main_menu_color
-    ?     $cgi_menu_address_map_list
+    ?     $cgi_menu_address_map_select_list
           $cgi_menu_default_address_map
     ?     $cgi_navigation_bar_color
    }
@@ -324,7 +324,7 @@ error {
     ?     $error_analyzer_cache_size
           $error_analyzer_cache_type
     ?     $error_analyzer_function
-    ?     $error_analyzer_function_list
+    ?     $error_analyzer_function_select_list
           $error_analyzer_simple_count_limit
    }
 }
@@ -676,7 +676,7 @@ template_file {
    template_file_* {
     ?     $template_file_charset_en
     ?     $template_file_charset_ja
-    ?     $template_file_charset_list
+    ?     $template_file_charset_select_list
     ?     $template_file_default_charset
    }
 }

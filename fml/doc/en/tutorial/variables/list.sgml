@@ -274,7 +274,7 @@ english
 </row>
 <row>
 <entry>
-cgi_language_list</entry>
+cgi_language_select_list</entry>
 <entry>
  available language mode in CGI</entry>
 <entry>
@@ -293,7 +293,7 @@ cgi_main_menu_color</entry>
 </row>
 <row>
 <entry>
-cgi_menu_address_map_list</entry>
+cgi_menu_address_map_select_list</entry>
 <entry>
  choise of address list types in CGI operations.</entry>
 <entry>
@@ -628,7 +628,7 @@ histgram
 </row>
 <row>
 <entry>
-error_analyzer_function_list</entry>
+error_analyzer_function_select_list</entry>
 <entry>
  functions defined in FML::Error::Analyze</entry>
 <entry>

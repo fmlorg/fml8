@@ -735,7 +735,7 @@ template_file_charset_en	=	us-ascii
 #      History:
 #        Value:
 #     Examples:
-template_file_charset_list	=	euc-jp	
+template_file_charset_select_list	=	euc-jp	
 					us-ascii
 
 # Descriptions:
@@ -1803,7 +1803,7 @@ error_analyzer_cache_size		=	14
 #      History: none
 #        Value: simple_count / histgram
 #     Examples: simple_count
-error_analyzer_function_list		=	simple_count
+error_analyzer_function_select_list		=	simple_count
 						histgram
 
 
@@ -1996,7 +1996,7 @@ cgi_default_language   =       english
 #      History:
 #        Value:
 #     Examples:
-cgi_language_list      =	english
+cgi_language_select_list      =	english
 				japanese
 
 # Descriptions: default bgcolor
@@ -2017,7 +2017,7 @@ cgi_navigation_bar_color	=	#FFFFFF
 #      History: 
 #        Value: member recipient admin_member
 #     Examples: member recipient admin_member
-cgi_menu_address_map_list		=	member
+cgi_menu_address_map_select_list		=	member
 					recipient
 					admin_member
 

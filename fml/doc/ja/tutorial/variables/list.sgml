@@ -257,7 +257,7 @@ japanese
 </row>
 <row>
 <entry>
-cgi_language_list</entry>
+cgi_language_select_list</entry>
 <entry>
  CGI で利用可能な言語モード (!= charset) </entry>
 <entry>
@@ -276,7 +276,7 @@ cgi_main_menu_color</entry>
 </row>
 <row>
 <entry>
-cgi_menu_address_map_list</entry>
+cgi_menu_address_map_select_list</entry>
 <entry>
  CGI のアドレス操作の際に選べる種類</entry>
 <entry>
@@ -611,7 +611,7 @@ histgram
 </row>
 <row>
 <entry>
-error_analyzer_function_list</entry>
+error_analyzer_function_select_list</entry>
 <entry>
  FML::Error::Analyze 中の関数名。</entry>
 <entry>
