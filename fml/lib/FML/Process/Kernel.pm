@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.206 2004/01/14 13:39:58 fukachan Exp $
+# $FML: Kernel.pm,v 1.207 2004/02/15 09:34:41 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -121,6 +121,13 @@ sub new
     if (defined $args->{ fml_version }) {
 	$cfargs->{ fml_version } =
 	    sprintf("fml-devel %s", $args->{ fml_version });
+    }
+
+    # 1.4 overwrite variables by -o options
+    if (defined $args->{ options }->{ o }) {
+	my ($k, $v);
+	my $opts = $args->{ options }->{ o };
+	while (($k, $v) = each %$opts) { $cfargs->{ $k } = $v;}
     }
 
     # 2.1 speculate $fml_owner_home_dir by the current process uid
