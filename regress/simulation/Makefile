@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.56 2002/07/02 13:34:40 fukachan Exp $
+# $FML: Makefile,v 1.57 2002/07/11 14:52:10 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -62,7 +62,8 @@ diff:
 test:
 	@ make _test 2>&1 | tee $(TMPFILE)
 	@ echo ""; echo "--- summary ---"; echo "";
-	@ egrep '\* |fail *$$' $(TMPFILE) || echo ''
+	@ egrep '\* |fail *$$' $(TMPFILE) |\
+		sed 's|text=empty fail|text=empty fail (ok)|' || echo ''
 	@ rm -f $(TMPFILE)
 
 _test:
