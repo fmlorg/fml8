@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.21 2003/08/23 07:24:43 fukachan Exp $
+# $FML: chaddr.pm,v 1.22 2003/08/29 15:34:00 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -104,7 +104,7 @@ sub process
     $optargs->{ recipient } = [ $sender, $old_addr, $new_addr ];
 
     # prompt again (since recipient differs)
-    my $prompt  = $config->{ command_prompt } || '>>>';
+    my $prompt  = $config->{ command_mail_reply_prompt } || '>>>';
     $curproc->reply_message("\n$prompt $command", $optargs);
 
     # if either old or new addresses in chaddr arguments is an ML member,

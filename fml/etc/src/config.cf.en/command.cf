@@ -124,7 +124,7 @@ command_mail_line_length_limit	=	128
 #      History: hard coded in fml (< 4.0)
 #        Value: string without spaces
 #     Examples: >>>
-command_prompt			=	>>>
+command_mail_reply_prompt			=	>>>
 
 
 # Descriptions: use comnfirmation in subscribe command ?

@@ -115,6 +115,7 @@ command {
 
    command_mail { 
           $command_mail_line_length_limit
+    ?     $command_mail_reply_prompt
           $use_command_mail_program
    }
 
@@ -143,7 +144,6 @@ command {
    }
 
    command_* {
-    ?     $command_prompt
           $command_restrictions
    }
 }

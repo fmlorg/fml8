@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.88 2003/08/23 07:24:46 fukachan Exp $
+# $FML: Command.pm,v 1.89 2003/08/29 15:34:06 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -318,7 +318,7 @@ sub _config_permit_command
     my ($curproc, $args, $level, $opts) = @_;
     my $config  = $curproc->config();
     my $cred    = $curproc->{ credential }; # user credential
-    my $prompt  = $config->{ command_prompt } || '>>>';
+    my $prompt  = $config->{ command_mail_reply_prompt } || '>>>';
     my $comname = $opts->{ comname };
     my $command = $opts->{ command };
 
@@ -355,7 +355,7 @@ sub _is_safe_syntax
 {
     my ($curproc, $args, $status, $cominfo) = @_;
     my $config  = $curproc->config();
-    my $prompt  = $config->{ command_prompt } || '>>>';
+    my $prompt  = $config->{ command_mail_reply_prompt } || '>>>';
     my $level   = $status->{ level };
     my $command = $cominfo->{ command };
 
@@ -737,7 +737,7 @@ sub __stop_here
 {
     my ($curproc, $args, $status, $cominfo, $orig_command) = @_;
     my $config  = $curproc->config();
-    my $prompt  = $config->{ command_prompt } || '>>>';
+    my $prompt  = $config->{ command_mail_reply_prompt } || '>>>';
     my $key     = $status->{ _stop_reason_key };
     my $str     = $status->{ _stop_reason_str };
 
@@ -767,7 +767,7 @@ sub _evaluate_command_lines
     my $config  = $curproc->config();
     my $ml_name = $config->{ ml_name };
     my $argv    = $curproc->command_line_argv();
-    my $prompt  = $config->{ command_prompt } || '>>>';
+    my $prompt  = $config->{ command_mail_reply_prompt } || '>>>';
     my $mode    = 'unknown';
     my $rbody   = $curproc->incoming_message_body();
     my $msg     = $rbody->find_first_plaintext_message();

@@ -330,6 +330,15 @@ command_mail_line_length_limit</entry>
 </row>
 <row>
 <entry>
+command_mail_reply_prompt</entry>
+<entry>
+ command prompt in message reply</entry>
+<entry>
+>>>
+   </entry>
+</row>
+<row>
+<entry>
 command_mail_size_filter_rules</entry>
 <entry>
  size based filter rules.</entry>
@@ -348,15 +357,6 @@ command_mail_valid_command_limit</entry>
  the numfer of effective commands in one command mail.</entry>
 <entry>
 100
-   </entry>
-</row>
-<row>
-<entry>
-command_prompt</entry>
-<entry>
- command prompt in message reply</entry>
-<entry>
->>>
    </entry>
 </row>
 <row>

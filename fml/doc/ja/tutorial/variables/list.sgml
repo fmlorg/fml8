@@ -330,6 +330,15 @@ command_mail_line_length_limit</entry>
 </row>
 <row>
 <entry>
+command_mail_reply_prompt</entry>
+<entry>
+ command prompt in message reply</entry>
+<entry>
+>>>
+   </entry>
+</row>
+<row>
+<entry>
 command_mail_size_filter_rules</entry>
 <entry>
  フィルタリングのルール。</entry>
@@ -348,15 +357,6 @@ command_mail_valid_command_limit</entry>
  コマンドメール一通あたりに含まれている</entry>
 <entry>
 100
-   </entry>
-</row>
-<row>
-<entry>
-command_prompt</entry>
-<entry>
- command prompt in message reply</entry>
-<entry>
->>>
    </entry>
 </row>
 <row>
