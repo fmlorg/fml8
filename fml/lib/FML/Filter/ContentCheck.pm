@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ContentCheck.pm,v 1.5 2002/04/24 03:16:06 fukachan Exp $
+# $FML: ContentCheck.pm,v 1.6 2002/05/09 15:42:15 tmu Exp $
 #
 
 package FML::Filter::ContentCheck;
@@ -35,9 +35,10 @@ usual constructor.
 
 my $debug = 0;
 
-my (@default_rules) = qw(only_plaintext);
+my (@default_rules)        = qw(only_plaintext);
 my (@default_permit_rules) = qw(text/plain);
 my (@default_reject_rules) = qw();
+
 
 # Descriptions: constructor.
 #    Arguments: OBJ($self)
@@ -50,7 +51,7 @@ sub new
     my $me     = {};
 
     # apply default rules
-    $me->{ _rules } = \@default_rules;
+    $me->{ _rules }        = \@default_rules;
     $me->{ _permit_rules } = \@default_permit_rules;
     $me->{ _reject_rules } = \@default_reject_rules;
 
@@ -75,6 +76,7 @@ sub rules
     my ($self, $rarray) = @_;
     $self->{ _rules } = $rarray;
 }
+
 
 =head2 C<permit_rules( $rules )>
 
@@ -118,8 +120,8 @@ C<$msg> is C<Mail::Message> object.
 C<Usage>:
 
     use FML::Filter::ContentCheck;
-    my $obj  = new FML::Filter::ContentCheck;
-    my $msg  = $curproc->{'incoming_message'};
+    my $obj = new FML::Filter::ContentCheck;
+    my $msg = $curproc->{'incoming_message'};
 
     $obj->content_check($msg, $args);
     if ($obj->error()) {
@@ -157,17 +159,18 @@ sub content_check
 sub only_plaintext
 {
     my ($self, $msg, $args) = @_;
-    my $mp   = $msg;
-    my ($data_type,$prevmp,$nextmp);
+    my ($data_type, $prevmp, $nextmp);
+    my $mp = $msg;
 
+  MSG:
    for ( ; $mp; $mp = $mp->{ next }) {
 	$data_type = $mp->data_type();
-	next if($data_type eq "text/rfc822-headers");
-	next if($data_type eq "text/plain");
-	next if($data_type =~ "multipart\.");
+	next MSG if ($data_type eq "text/rfc822-headers");
+	next MSG if ($data_type eq "text/plain");
+	next MSG if ($data_type =~ "multipart\.");
 
 	$prevmp = $mp->{ prev };
-	if($prevmp) {
+	if ($prevmp) {
 	    my $prev_type = $prevmp->data_type();
 	    if ($prev_type eq "multipart.delimiter") {
 		$prevmp->delete_message_part_link();
@@ -180,6 +183,7 @@ sub only_plaintext
     return 0;
 }
 
+
 # Descriptions: permit mimetype
 #    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
 # Side Effects: croak()
@@ -187,21 +191,22 @@ sub only_plaintext
 sub permit_mimetype
 {
     my ($self, $msg, $args) = @_;
-    my $mp   = $msg;
-    my ($data_type,$prevmp,$nextmp);
-    my $permits = $self->{ _permit_rules };
+    my ($data_type, $prevmp, $nextmp);
+    my $mp            = $msg;
+    my $permit_ruules = $self->{ _permit_rules };
 
+  MSG:
    for ( ; $mp; $mp = $mp->{ next }) {
-        LOOPSTART:
+     LOOPSTART:
 	$data_type = $mp->data_type();
-	next if($data_type eq "text/rfc822-headers");
+	next MSG if ($data_type eq "text/rfc822-headers");
 
-	foreach my $permit_type (@$permits) {
-	    next LOOPSTART if($data_type =~ $permit_type);
+	foreach my $permit_type (@$permit_ruules) {
+	    next LOOPSTART if ($data_type =~ $permit_type);
 	}
 
 	$prevmp = $mp->{ prev };
-	if($prevmp) {
+	if ($prevmp) {
 	    my $prev_type = $prevmp->data_type();
 	    if ($prev_type eq "multipart.delimiter") {
 		$prevmp->delete_message_part_link();
@@ -209,10 +214,12 @@ sub permit_mimetype
 	    }
 	}
 	$mp->delete_message_part_link();
-	Log("permit_mimetype delete $reject_type");
+	Log("permit_mimetype delete $data_type");
     }
+
     return 0;
 }
+
 
 # Descriptions: reject mimetype
 #    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
@@ -221,19 +228,22 @@ sub permit_mimetype
 sub reject_mimetype
 {
     my ($self, $msg, $args) = @_;
-    my $mp   = $msg;
-    my ($data_type,$prevmp,$nextmp);
-    my $rejects = $self->{ _reject_rules };
+    my ($data_type, $prevmp, $nextmp);
+    my $mp           = $msg;
+    my $reject_rules = $self->{ _reject_rules };
 
+  MSG:
    for ( ; $mp; $mp = $mp->{ next }) {
 	$data_type = $mp->data_type();
-	next if($data_type eq "text/rfc822-headers");
+	next MSG if ($data_type eq "text/rfc822-headers");
 
-	foreach my $reject_type (@$rejects) {
-	    next if($data_type ne $reject_type);
+      RULE:
+	foreach my $reject_type (@$reject_rules) {
+	    next RULE if ($data_type ne $reject_type);
 
+	    # this message $mp should be a message type to reject.
 	    $prevmp = $mp->{ prev };
-	    if($prevmp) {
+	    if ($prevmp) {
 		my $prev_type = $prevmp->data_type();
 		if ($prev_type eq "multipart.delimiter") {
 		    $prevmp->delete_message_part_link();
@@ -244,8 +254,10 @@ sub reject_mimetype
 	    Log("reject_mimetype delete $reject_type");
 	}
     }
+
     return 0;
 }
+
 
 =head1 AUTHOR
 
