@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.41 2001/08/05 13:09:00 fukachan Exp $
+# $FML: Makefile,v 1.42 2001/08/24 11:55:55 fukachan Exp $
 #
 
 all: link
@@ -8,25 +8,10 @@ clean:
 	@ (cd ../..; make clean)
 	rm -f __scan__
 
-allclean: clean
-	rm -f doc ja-doc en-doc
-	rm -f etc
-	rm -f lib
-	rm -f FML
-	rm -f Ticket
-	rm -f Process
-	rm -f IO
-	rm -f Tie
-	rm -f Dialect
-	rm -f MailingList
-	rm -f Mail
-	rm -f libexec
-	rm -f log
-	rm -f File
-	rm -f CGI
-	rm -f Command
-	rm -f doc-devel
-	rm -f tutorial
+allclean: clean clean_link
+
+clean_link:
+	for file in * ; do  test -h $$file && rm -f $$file || echo '' ; done
 
 scan:
 	@ (cd ../..; make scan 2>&1) |tee __scan__ || echo 'nothing changed'
@@ -47,7 +32,8 @@ link:
 	rm -f Ticket; ln -s ../../fml/lib/FML/Ticket
 	rm -f CGI; ln -s ../../fml/lib/FML/CGI
 	rm -f Process; ln -s ../../fml/lib/FML/Process
-	rm -f Command; ln -s ../../fml/lib/FML/Command
+	rm -f Command/Admin; ln -s ../../fml/lib/FML/AdminCommand
+	rm -f Command/User;  ln -s ../../fml/lib/FML/UserCommand
 	rm -f IO; ln -s ../../fml/lib/IO
 	rm -f File; ln -s ../../fml/lib/File
 	rm -f Tie; ln -s ../../fml/lib/Tie
