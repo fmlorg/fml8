@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: INSTALL.sh,v 1.54 2002/07/28 03:41:00 fukachan Exp $
+# $FML: INSTALL.sh,v 1.55 2002/08/28 15:07:52 fukachan Exp $
 #
 
 # Run this from the top-level fml source directory.
@@ -39,9 +39,10 @@ _mkdir () {
 is_owner=1
 is_group=1
 id $owner >/dev/null || is_owner=0
-id -p $owner |\
-egrep '^groups' |\
-egrep -e "${group}" >/dev/null || is_group=0
+
+if [ -f /etc/group ];then
+	egrep -e "^${group}:" /etc/group >/dev/null || is_group=0
+fi
 
 if [ $is_owner = 0 ];then
 	echo warning: no such user $owner
