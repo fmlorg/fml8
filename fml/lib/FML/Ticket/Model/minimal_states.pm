@@ -436,6 +436,8 @@ sub set_status
     my $ticket_id = $args->{ ticket_id };
     my $status    = $args->{ status };
 
+    Log("ticket.set_status($ticket_id, $status)");
+
     $self->open_db($curproc, $args);
     $self->_set_status($ticket_id, $status);
     $self->close_db($curproc, $args);
@@ -495,11 +497,11 @@ sub show_summary
     my $mode    = $self->{ _mode } || 'text';
     my $ml_name = $curproc->{ config }->{ ml_name };
 
-    print "<HR><PRE>" if $mode eq 'html';
+    print "<HR><TABLE BORDER=4>" if $mode eq 'html';
 
     $self->_show_summary($curproc, $args, $optargs);
 
-    print "</PRE>\n" if $mode eq 'html';
+    print "</TABLE>\n" if $mode eq 'html';
 }
 
 
@@ -519,10 +521,16 @@ sub _show_summary
 	# sort the ticket output order it out by cost
 	# and print the ticket summary in that order.
 	$self->sort($curproc, $args, $ticket_id);
-	$self->_print_ticket_summary($curproc, $args, $ticket_id);
 
-	# show short summary for each article
-	$self->_print_article_summary($curproc, $args, $ticket_id);
+	if ($mode eq 'html') {
+	    $self->_print_ticket_summary($curproc, $args, $ticket_id);
+	}
+	else {
+	    $self->_print_ticket_summary($curproc, $args, $ticket_id);
+
+	    # show short summary for each article
+	    $self->_print_article_summary($curproc, $args, $ticket_id);
+	}
     }
 
     # self->{ _hash_table } is untied from DB's.
@@ -610,14 +618,22 @@ sub _calculate_age
 sub _print_ticket_summary
 {
     my ($self, $curproc, $args, $ticket_id) = @_;
+    my $mode   = $self->{ _mode } || 'text';
     my $rh_age = $self->{ _age } || {};
     my $fd     = $self->{ _fd } || \*STDOUT;
     my $rh     = $self->{ _hash_table };
     my $format = "%10s  %5s %6s  %-20s  %s\n";
 
-    printf($fd $format, 'date', 'age', 'status', 'ticket id', 'articles');
-    print $fd "-" x60;
-    print $fd "\n";
+    if ($mode eq 'text') {
+	printf($fd $format, 'date', 'age', 'status', 'ticket id', 'articles');
+	print $fd "-" x60;
+	print $fd "\n";
+    }
+    else {
+	print "<TD>action\n";
+	print "<TD>date\n"."<TD>age\n"."<TD>status\n"."<TD>ticket id\n";
+	print "<TD>article summary\n";
+    }
 
     my ($tid, @article_id, $article_id, $date, $age, $status) = ();
     my $dh = new FML::Date;
@@ -632,8 +648,20 @@ sub _print_ticket_summary
 	$age    = $rh_age->{ $tid };
 	$status = $rh->{ _status }->{ $tid };
 
-	printf($fd $format, 
-	       $date, $age, $status, $tid, $rh->{ _articles }->{ $tid });
+	if ($mode eq 'html') {
+	    $self->_show_ticket_by_html_table($curproc, $args, {
+		format   => $format,
+		date     => $date, 
+		age      => $age, 
+		status   => $status, 
+		tid      => $tid, 
+		articles => $rh->{ _articles }->{ $tid },
+	    });
+	}
+	else {
+	    printf($fd $format, 
+		   $date, $age, $status, $tid, $rh->{ _articles }->{ $tid });
+	}
     }
 }
 
@@ -680,7 +708,8 @@ sub _article_summary
     my (@header) = ();
     my $buf      = '';
     my $line     = 5;
-    my $padding  = '      > ';
+    my $mode     = $self->{ _mode } || 'text';
+    my $padding  = $mode eq 'text' ? '      # ' : '';
 
     use FileHandle;
     my $fh = new FileHandle $file;
@@ -747,40 +776,119 @@ sub cgi_top_menu
 {
     my ($self, $curproc, $args) = @_;
     my $config = $curproc->{ config };
-    my $action = '/cgi-bin/fmlticket.cgi';
+    my $action = $config->{ ticket_cgi_base_url } || '/cgi-bin/fmlticket.cgi';
+    my $target = $config->{ ticket_cgi_target_window } || 'TicketCGIWindow';
+
+    use DirHandle;
+    my $dh = new DirHandle $config->{ ml_home_prefix };
+    my @dirlist;
+    while ($_ = $dh->read()) {
+	next if /^\./;
+	next if /^\@/;
+	push(@dirlist, $_);
+    }
+    $dh->close;
 
     use CGI qw/:standard/;
-    print start_form(-action=>$action,
-		     -target=>'ResultsWindow'),
-    "mailing list: ", textfield('ml_name'),p,
-    "action: ", checkbox_group(-name=>'action',
-			       -values=>['list', 'close'],
-			       -defaults=>['list']),
-    p,
-    submit,
+    print start_form(-action=>$action, -target=>$target);
+    print "mailing list: ", 
+    popup_menu(-name   => 'ml_name', -values => \@dirlist),
+    submit(-name => 'change'),
     end_form;
 }
 
 
-=head2 C<html_show($ticket_id)>
 
-This shows summary on C<$ticket_id> in HTML language.
-It is used in C<FML::CGI::TicketSystem>.
+# This shows summary on C<$ticket_id> in HTML language.
+# It is used in C<FML::CGI::TicketSystem>.
+sub _show_ticket_by_html_table
+{
+    my ($self, $curproc, $args, $optargs) = @_;
+    my $config    = $curproc->{ config };
+    my $ml_name   = $config->{ ml_name };
+    my $spool_dir = $config->{ spool_dir };
+    my $action    = $config->{ ticket_cgi_base_url } || '/cgi-bin/fmlticket.cgi';
+    my $target    = $config->{ ticket_cgi_target_window } || 'TicketCGIWindow';
+
+    # printf($fd $format, 
+    #        $date, $age, $status, $tid, $rh->{ _articles }->{ $tid });
+    my $format   = $optargs->{ format };
+    my $date     = $optargs->{ date };
+    my $age      = $optargs->{ age };
+    my $status   = $optargs->{ status };
+    my $tid      = $optargs->{ tid };
+    my $articles = $optargs->{ articles };
+    my $aid      = (split(/\s+/, $articles))[0];
+
+    # do nothing if the $ticket_id is unknown.
+    return unless $tid;
+
+    # <FORM ACTION=> ..>
+    my $xtid = CGI::escape($tid);
+    $action  = "${action}?ml_name=${ml_name}&action=close";
+    $action .= "&ticket_id=$xtid&article_id=$aid";
+    $target  = $target.".close";
+
+    print "<TR>\n";
+    print "<TD><A HREF=\"$action\" TARGET=\"$target\">[close]</A>\n";
+    print "<TD>$date\n";
+    print "<TD>$age\n";
+    print "<TD>$status\n";
+    print "<TD>$tid\n";
+    print "<TD>";
+
+    my $aid = (split(/\s+/, $articles))[0];
+    my $buf = $self->_article_summary( $spool_dir ."/". $aid );
+    $buf    =~ s/\n/<BR>\n/g;
+    print $buf;
+}
+
+
+=head2 C<run_cgi($curproc, $args)>
+
+execute CGI.
 
 =cut
 
-
-sub html_show
+sub run_cgi
 {
-    my ($self, $curproc, $args, $id) = @_;
-    my $config  = $curproc->{ config };
-    my $ml_name = $config->{ ml_name };
-    my $action  = $config->{ ticket_cgi_base_url } || "/cgi-bin/fmlticket.cgi";
-    $action  = "${action}?ml_name=${ml_name}&action=close";
+    my ($self, $curproc, $args) = @_;
+    my $config = $curproc->{ config };
+    my $title  = $config->{ ticket_cgi_title }   || 'ticket system interface';
+    my $color  = $config->{ ticket_cgi_bgcolor } || '#E6E6FA';
 
-    printf "%s", $id;
-    print "<A HREF=\"$action\" TARGET=\"$id\">close</A>\n";
-    print "<BR>\n";
+    # ensure the current mode
+    $self->mode({ mode => 'html' });
+
+    # load standard CGI routines
+    use CGI qw/:standard/;
+
+    # get action parameter via HTTP
+    my $action = param('action') || 'list';
+
+    # o.k start html
+    print start_html(-title=>$title,-BGCOLOR=>$color), "\n";
+
+    if ($action eq 'close') {
+	my $ticket_id = param('ticket_id');
+	$self->set_status($curproc, {
+	    ticket_id => $ticket_id,
+	    status    => 'closed',
+	});
+    }
+
+    # represent this always
+    {
+	# menu at the top of scrren
+	$self->cgi_top_menu($curproc, $args);
+
+	# show summary
+	$self->show_summary($curproc, $args);
+    }
+
+    # o.k. end of html
+    print end_html;
+    print "\n";
 }
 
 
