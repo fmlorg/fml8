@@ -7,6 +7,27 @@
         XXX 遠大なビジョンやとりあえず後まわしでよいものは STATUS.txt へ
 
 
+[TODO]	FML::Credential object って、verify_request() で
+	ある必要があるのかな？
+
+
+[TODO]	load_config_... () は引数がいらないようになった。
+
+		FML::Process::*	以下、書き換え
+
+
+[TODO]	FML::PCB FML::Config は、コンテキスト切替時にどうする？
+
+
+[TODO]	使ってないモジュール?
+
+		FML::Data::Deadline
+		FML::IPC::Message
+		FML::Process::QMail
+		FML::Sys::Alias
+		File::Rotate
+
+
 [TODO]	変数のクラス構造を再構成
 
 
@@ -14,6 +35,15 @@
 
 	xxxs vs xxx_list ?
 	"all of" vs "either of" ?
+
+		cgi_language_list
+		cgi_menu_address_map_list
+		error_analyzer_function_list
+		newml_command_mta_config_list
+		rmml_command_mta_config_list
+		template_file_charset_list
+
+
 
 [TODO]	charset と言語(japanese,english)との対応関係を一箇所にまとめて定義
 
@@ -225,28 +255,6 @@ FileHandle と IO::File 両方 use しちゃうからか？
 	どうやってシンクロするの？
 
 
-[TODO]	2002 年のオーバホールの残り
-
-  ＊ 要 BUG FIX
-	Mail/Delivery/SMTP.pm
-
-  ＊おもたい
-	FML/Process/Kernel.pm
-	Mail/Message.pm
-
-   * IN/OUT のチェック
-	Mail/Message/ToHTML.pm
-
-	OUT のちぇっくで最重要なのは？
-
-	Mail/Message/ToHTML.pm
-	Mail/ThreadTrack/Print
-
-	Mail/Message/Print などに集結させるべきだろう？
-
-		print_axss (against cross site scripting).
-
-
 [TODO]	remove $msg->{ next }
 
 	FML/Filter/TextPlain.pm
@@ -269,8 +277,65 @@ FileHandle と IO::File 両方 use しちゃうからか？
 	近々に見直すべし
 
 
+[TODO]	2002,2003 年のオーバホールの残り
+
+  ＊おもたい
+	FML/Process/Kernel.pm
+	Mail/Message.pm
+
+   * IN/OUT のチェック
+	Mail/Message/ToHTML.pm
+
+	OUT のちぇっくで最重要なのは？
+
+	Mail/Message/ToHTML.pm
+	Mail/ThreadTrack/Print
+
+	Mail/Message/Print などに集結させるべきだろう？
+
+		print_axss (against cross site scripting).
+
+
+  * 2003-2004 オーバホール、やりのこし
+	FML/Log.pm
+	FML/Process/Kernel.pm
+	FML/Process/Switch.pm
+
+    スレッドモジュールの改変があるので、この辺もとりあえずオーバホール無視
+	Mail/Message.pm
+	Mail/Message/Thread.pm
+	Mail/Message/ToHTML.pm
+
+
 ======================================================================
 ○	内部構造
+
+
+[TODO]	FML::Process::Command の中にステートマシンがあるのはどうなんだ？
+
+	カスタマイズ/拡張しやすいように admin 認証の部分を
+	admin コマンド経由で呼び出すようにできないのか？
+
+	ステートマシンは別のメタフレームの仕組み移す。
+
+
+[TODO]	File::* は、なくすべきだとおもうなぁ。
+
+
+[TODO]	FML::Command というかコマンドまわりのステートって
+	どこをみればいっぱつでわかるの？
+
+	state ようのモジュールがひつようか？
+
+
+[TODO]	フィルタ関数は、やっぱり FML::FIlter 以下に集結している
+	べきかもしれない？ FML::Command::Filter ?
+	FML::Article::Filter はないのに？
+
+
+[TODO]	FML::Restriction って、これでいいのか？
+
+	->regexp_match() は、まぁいいとおもうが、それいがいのところ
 
 
 [TODO]	remove $pcb->{set,get} other than FML::Process::{Kernel,Utils}
@@ -304,4 +369,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.102 2003/12/21 02:58:34 fukachan Exp $
+$FML: 00_MEMO,v 1.103 2003/12/24 12:49:53 fukachan Exp $
