@@ -4,13 +4,14 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.9 2002/01/13 13:35:26 fukachan Exp $
+# $FML: Queue.pm,v 1.10 2002/01/13 15:46:53 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
 use strict;
 use Carp;
 use vars qw($Counter);
+use File::Spec;
 
 =head1 NAME
 
@@ -87,16 +88,20 @@ sub new
     $me->{ _directory } = $dir;
     $me->{ _id }        = $id;
     $me->{ _status }    = "new";
-    $me->{ _new_qf }    = "$dir/new/$id";
-    $me->{ _active_qf } = "$dir/active/$id";
+    $me->{ _new_qf }    = File::Spec->catfile($dir, "new", $id);
+    $me->{ _active_qf } = File::Spec->catfile($dir, "active", $id);
 
     # infomation for delivery
-    $me->{ _info }->{ sender }     = "$dir/info/sender/$id";
-    $me->{ _info }->{ recipients } = "$dir/info/recipients/$id";
+    $me->{ _info }->{ sender }     = File::Spec->catfile($dir, "info", "sender", $id);
+    $me->{ _info }->{ recipients } = File::Spec->catfile($dir, "info", "recipients", $id);
 
     for ($dir,
-	 "$dir/active", "$dir/new", "$dir/deferred",
-	 "$dir/info", "$dir/info/sender", "$dir/info/recipients") {
+	 &File::Spec->catfile($dir, "active"),
+	 &File::Spec->catfile($dir, "new"),
+	 &File::Spec->catfile($dir, "deferred"),
+	 &File::Spec->catfile($dir, "info"),
+	 &File::Spec->catfile($dir, "info", "sender"),
+	 &File::Spec->catfile($dir, "info", "recipients")) {
 	-d $_ || _mkdirhier($_);
     }
 
@@ -187,7 +192,7 @@ where C<$qid> is like this: 990157187.20792.1
 sub list
 {
     my ($self) = @_;
-    my $dir = $self->{ _directory }. "/active";
+    my $dir = File::Spec->catfile( $self->{ _directory }, "active");
     my @r; # result array which holds active queue list
 
     use DirHandle;
@@ -233,7 +238,7 @@ sub getidinfo
 
     # sender
     use FileHandle;
-    $fh = new FileHandle "$dir/info/sender/$id";
+    $fh = new FileHandle File::Spec->catfile($dir, "info", "sender", $id);
     if (defined $fh) {
 	$sender = $fh->getline;
 	$sender =~ s/[\n\s]*$//;
@@ -241,7 +246,7 @@ sub getidinfo
     }
 
     # recipient array
-    $fh = new FileHandle "$dir/info/recipients/$id";
+    $fh = new FileHandle File::Spec->catfile($dir, "info", "recipients", $id);
     if (defined $fh) {
 	while (defined( $_ = $fh->getline)) {
 	    s/[\n\s]*$//;
@@ -252,7 +257,7 @@ sub getidinfo
 
     return {
 	id         => $id,
-	path       => "$dir/active/$id",
+	path       => File::Spec->catfile($dir, "active", $id),
 	sender     => $sender,
 	recipients => \@recipients,
     };
