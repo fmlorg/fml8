@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.43 2004/08/14 16:34:56 fukachan Exp $
+# $FML: Queue.pm,v 1.44 2004/08/15 11:59:04 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -390,7 +390,9 @@ sub _update_schedule_info
 
     # sleep time
     my $cur_sleep = $hint->find("SLEEP") || 300;
-    my $new_sleep = $cur_sleep * 2;
+    $cur_sleep =~ s/^.*SLEEP\s+//;
+    $cur_sleep =~ s/\s*$//;
+    my $new_sleep = ($cur_sleep || 300 ) * 2;
     $hint->delete("SLEEP");
     $hint->add("SLEEP", [ $new_sleep ]);
     $info->{ sleep } = $new_sleep;
@@ -445,6 +447,15 @@ sub _change_queue_mode
 	    if (-f $qf_deferred) {
 		rename($qf_deferred, $qf_active);
 		$self->touch($qf_active);
+		if (-f $qf_active) {
+		    $self->log("qid=$id activated.");
+		}
+		else {
+		    $self->log("error: qid=$id operation failed.");
+		}
+	    }
+	    else {
+		$self->log("no such deferred queue qid=$id");
 	    }
 	}
 	elsif ($to_mode eq 'deferred' || $to_mode eq 'defer') {
@@ -452,10 +463,26 @@ sub _change_queue_mode
 		rename($qf_active, $qf_deferred);
 		$self->touch($qf_deferred);
 		$self->update_schedule($qstr_args);
+
+		if (-f $qf_deferred) {
+		    $self->log("qid=$id deferred");
+		}
+		else {
+		    $self->log("error: qid=$id operation failed.");
+		}
 	    }
+	    else {
+		$self->log("no such active queue qid=$id");
+	    }
+	}
+	else {
+	    $self->log("invalid mode");
 	}
 
 	$self->unlock();
+    }
+    else {
+	$self->log("qid=$id lock failed.");
     }
 }
 
@@ -464,14 +491,31 @@ sub reschedule
 {
     my ($self) = @_;
     my $q_list = $self->list("deferred");
+    my $count  = 0;
+    my $early  = 0;
+    my $total  = 0;
 
     use File::stat;
     for my $qid (@$q_list) {
 	my $qf = $self->deferred_file_path($qid);
 	my $st = stat($qf);
+
+	$total++;
 	if ($st->mtime < time) {
 	    $self->wakeup_queue($qid);
+	    $count++;
 	}
+	else {
+	    $early++;
+	}
+    }
+
+    if ($count) {
+	$self->log("activate $count queue(s)");
+	$self->log("$early queue(s) sleeping") if $early;
+    }
+    else {
+	$self->log("$early queue(s) sleeping");
     }
 }
 
@@ -1221,6 +1265,60 @@ sub strategy_file_path
     my $dir = $self->{ _directory } || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info", "strategy", $id);
+}
+
+
+=head1 LOG
+
+=head2 log()
+
+=head2 get_log_function()
+
+=head2 set_log_function($fp)
+
+=cut
+
+
+# Descriptions: log interface.
+#    Arguments: OBJ($self) STR($s)
+# Side Effects: none
+# Return Value: none
+sub log
+{
+    my ($self, $s) = @_;
+    my $fp = $self->get_log_function();
+
+    my $buf = "qmgr: $s";
+    if (defined $fp) {
+	eval q{ &$fp($buf);};
+	if ($@) {
+	    carp($@);
+	}
+    }
+}
+
+
+# Descriptions: return log function pointer.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: CODE
+sub get_log_function
+{
+    my ($self) = @_;
+
+    return( $self->{ _log_function } || undef );
+}
+
+
+# Descriptions: return log function pointer.
+#    Arguments: OBJ($self) CODE($fp)
+# Side Effects: update $self.
+# Return Value: CODE
+sub set_log_function
+{
+    my ($self, $fp) = @_;
+
+    $self->{ _log_function } = $fp || undef;
 }
 
 
