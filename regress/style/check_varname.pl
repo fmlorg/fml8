@@ -1,97 +1,103 @@
 #!/usr/bin/env perl
 #
-# $FML$
+# $FML: check_varname.pl,v 1.1 2003/05/29 13:38:17 fukachan Exp $
 #
 
 use strict;
 use Carp;
+use vars qw(@exceptional $debug $varname %varname %base %done %top);
 
-$| = 1;
+init();
+parse();
+base();
+exceptional();
+inherit();
 
-my $debug = 0;
+last_match('file');
+last_match('dir');
 
-my $varname;
-my %varname;
-my %base;
+unclassified();
 
-while (<>) {
-    next if /^\#/;
+exit 0;
 
-    if (/^[a-z].*=/) {
-	($varname) = split(/\s*=\s*/, $_);
-	$varname{ $varname } = $varname;
+
+sub init
+{
+    $|     = 1;
+    $debug = 0;
+
+    # exceptional category
+    @exceptional = qw(timezone);
+
+    # top level category
+    for (qw(path directory system has
+	    default domain 
+	    cgi commands_for 
+	    sql ldap
+	    smtp mail postfix qmail sendmail procmail)) {
+
+	$top{ $_ } = $_;
     }
 }
 
 
-base();
-global();
-inherit();
+sub parse
+{
+    while (<>) {
+	next if /^\#/o;
 
-first_match('path');
-first_match('has');
-first_match('cgi');
-first_match('fml');
-first_match('domain');
-first_match('sql');
-first_match('ldap');
-first_match('commands_for');
-first_match('default');
-first_match('smtp');
-first_match('mail');
-first_match('postfix');
-first_match('qmail');
-first_match('sendmail');
-first_match('procmail');
-
-last_match('dir');
-last_match('sequence_file');
-last_match('file');
-last_match('mode');
-last_match('charset');
-
-misc();
+	if (/^[a-z].*=/o) {
+	    ($varname) = split(/\s*=\s*/, $_);
+	    $varname{ $varname } = $varname;
+	}
+    }
+}
 
 
-exit 0;
+sub regist
+{
+    my ($x) = @_;
+    my $s = (split(/_/, $x))[0];
+
+    $top{ $s }  = $s;
+    $base{ $x } = $x;
+
+    return $x;
+}
 
 
 sub base
 {
     for my $varname (sort keys %varname) {
-	print $varname, "\n" if $debug && ($varname =~ /incoming/);
-
 	if ($varname =~ /^use_(\S+)_program/) {
-	    $base{ $1 } = $1;
-	    print "1. \$base{ $1 } = $1;\n" if $debug;
+	    regist($1);
 	}
 	elsif ($varname =~ /^use_([a-z_]+)/) {
-	    $base{ $1 } = $1;
-	    print "2. \$base{ $1 } = $1;\n" if $debug;
+	    regist($1);
 	}
 	elsif ($varname =~ /(\S+_restrictions)$/) {
-	    $base{ $1 } = $1;
+	    regist($1);
 	}
 	elsif ($varname =~ 
 	       /^(incoming_command_mail|outgoing_command_mail)_\S+/) {
-	    $base{ $1 } = $1;
+	    regist($1);
 	}
 	elsif ($varname =~ /^(incoming_article|outgoing_article)_\S+/) {
-	    $base{ $1 } = $1;
+	    regist($1);
 	}
 	elsif ($varname =~ /^(\w+_command)_\S+/) {
-	    $base{ $1 } = $1;
+	    regist($1);
 	}
     }
 
     for my $varname (sort _longest keys %varname) {
 	if ($varname =~ /^(\S+_password)_maps/) {
-	    $base{ $1 } = $1;
+	    regist($1);
 	    next;
 	}
 
 	if ($varname =~ /^(\S+)_maps/) {
-	    $base{ $1 } = $1;
+	    regist($1);
 	}
     }
 }
@@ -106,14 +112,16 @@ sub _longest
 }
 
 
-sub global
+sub exceptional
 {
-    print "__global__ {\n";
-    for my $x (qw(maintainer timezone system_accounts)) {
-	_print($x);
-	delete $varname{ $x };
+    if (@exceptional) {
+	print "__exceptional__ {\n";
+	for my $x (@exceptional) {
+	    _print($x);
+	    delete $varname{ $x };
+	}
+	print "}\n\n";
     }
-    print "}\n";
 }
 
 
@@ -136,15 +144,29 @@ sub inherit
 	$b{ $base } = \@x;
     }
 
-    for my $base (sort keys %b) {
-	print "\n$base { \n";
+    for my $top (sort keys %top) {
+	print "$top {\n";
 
-	my $x = $b{ $base };
-	for my $varname (@$x) {
-	    _print($varname);
+	for my $base (sort keys %b) {
+	    if ($base =~ /^$top/) {
+		print "\n"; 
+		print "   ";
+		print "$base { \n";
+
+		my $x = $b{ $base };
+		for my $varname (@$x) {
+		    _print($varname);
+		}
+
+		print "   ";
+		print "}\n";
+	    }
 	}
 
+	__print_if_match($top);
+
 	print "}\n";
+	print "\n"; 
     }
 }
 
@@ -181,9 +203,9 @@ sub last_match
 }
 
 
-sub misc
+sub unclassified
 {
-    print "\n// misc\n";
+    print "\n\n*** unclassified ***\n";
 
     for my $varname (sort keys %varname) {
 	_print($varname);	
@@ -191,16 +213,40 @@ sub misc
 }
 
 
+sub __print_if_match
+{
+    my ($top) = @_;
+    my @x = ();
+
+    for my $varname (sort keys %varname) {
+	next if $done{ $varname };
+	push(@x, $varname) if $varname =~ /^${top}_/;
+	push(@x, $varname) if $varname =~ /^${top}$/;
+    }
+
+    if (@x) {
+	print "\n";
+	print "   ", $top , "_* {\n";
+	for my $varname (@x) {
+	    _print($varname);
+	}
+	print "   }\n";
+    }
+}
+
 
 sub _print
 {
     my ($x) = @_;
 
+    return if $done{ $x };
+    $done{ $x } = 1;
+
     if (_match($x)) {
-	printf "%8s  %s\n", "", $x;
+	printf "%8s  \$%s\n", "", $x;
     }
     else {
-	printf "%8s  %s\n", "   ?   ", $x;
+	printf "%8s  \$%s\n", "   ?   ", $x;
     }
 }
 
@@ -208,11 +254,22 @@ sub _print
 sub _match
 {
     my ($x) = @_;
+    my $pat;
+
+    # pattern to permit at the last of name.
+    my @pat = qw(file dir type format format_type files dirs
+		 size_limit map maps rules type restrictions
+		 functions);
+
+    for (@pat) { 
+	$pat .= $pat ? "|" : ''; 
+	$pat .= sprintf("_%s\$", $_);
+    }
 
     if ($x =~ /^use_|^path_|^has_/) {
 	return 1;
     }
-    elsif ($x =~ /_file$|_dir$|_files$|_dirs$|_size_limit$|_maps$|_rules$|_type$|^primary_\S+_map$|_restrictions$|_functions$/) {
+    elsif ($x =~ /$pat/) {
 	return 1;
     }
     else {
