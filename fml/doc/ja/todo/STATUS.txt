@@ -45,6 +45,11 @@ II部　fmlのセットアップ〜MLの作成
 	注意: ユーザ fml を作るだけでなく、きちんとユーザ fml さんの
 	      ホームディレクトリも作って下さい。
 
+	パッケージ作成者のかたへ: 
+		fml8 一式を / 以外の場所へインストールする際は、
+		以下のように install_root でディレクトリを指定して下さい。
+		# make install install_root=/tmp/dir
+	
 	[TODO] sendmail + smtpfeed
 	[TODO] MacOS X Server
 
@@ -62,17 +67,20 @@ II部　fmlのセットアップ〜MLの作成
 	* postfix と qmail、および sendmail procmail の見本を作っています。
 
 	* バーチャルドメインの扱い
+		まず nuinui.net 用のディレクトリの指定が必要です。
 
-		makefml newml elena@nuinui.net
+		% makefml newdomain nuinui.net ディレクトリ
+
+	newml のさいには
+
+		% makefml newml elena@nuinui.net
 
 	のようにドメインつきの名前を指定して下さい。
 
-	注意:	nuinui.net 用のディレクトリの指定が必要です。
-		main.cf の virtual_maps で、ファイルを指定して下さい。
-
-			virtual_maps = /etc/fml/virtual
-
-		このファイルの書式は『ドメイン ディレクトリ』です。
+	注意:	main.cf の virtual_maps は obsolete で、
+		ml_home_prefix_maps になりました。
+		ml_home_prefix_maps が virtual_maps を含んでいるので
+		virtual_maps も一応つかえます。
 
 
 6章　Windows 2000/NT4上でのfmlのインストール
@@ -82,14 +90,14 @@ II部　fmlのセットアップ〜MLの作成
 
 	[TODO]	pop based ML
 	[TODO]	imap based ML
-	[TODO]	sendmail
+	[TODO]	sendmail (NT版)
 
 
 7章　アップグレード
 
-	もう一度インストールをし、/etc/fml/main.cf を編集するだけです。
-	main.cf の編集をするだけでアップグレードもダウングレードも
-	思いのままです。
+	もう一度インストールをし、/etc/fml/main.cf の fml_version を編
+	集するだけです。main.cf の編集をするだけでアップグレードもダウ
+	ングレードも思いのままです。
 
 	★ レシピ のアップグレードの節を見てね
 
@@ -260,16 +268,18 @@ III部　fmlのカスタマイズ
 		$chaddr_command_mode	=	auto / manual
 		$unsubscribe_command_mode =	auto / manual
 
-	[TODO] コマンドメール（の手動登録モード）
-
-		confirmation は fml8 で、登録作業は makefml コマンドで
-
 	[TODO] 自動登録の confirmation 以外のモード 
 
 		今はデフォルトで自動登録ですわ :-)
 		まだ confirmation タイプしかありません。
 
+	[TODO] コマンドメール（の手動登録モード）
+
+		confirmation は fml8 で、登録作業は makefml コマンドで
+
 	[TODO] モデレータ 
+
+		moderator_*_map だけ定義がある。定義があるだけ;)
 
 	[TODO] 複数の管理者による運用
 
@@ -377,14 +387,18 @@ III部　fmlのカスタマイズ
 		フォーマットが微妙に違います（拡張されている）
 		操作ツール、コマンドは fml4 と同じです。
 
-	[TODO] "approve パスワード コマンド"型構文サポート
+	[DONE] 共通鍵暗号認証
 
-	[TODO] 非対称鍵暗号認証
+	[TODO] 公開鍵暗号認証
+
+	[TODO] "approve パスワード コマンド"型構文サポート
 
 
 19章　MLの暗号化 (配送時の暗号化)
 
-	[TODO] 未実装
+	[TODO] 配送時の暗号化 共通鍵暗号認証 ???
+
+	[TODO] 配送時の暗号化 公開鍵暗号認証
 
 
 20章　MLの記事をWWWで公開する
@@ -427,18 +441,19 @@ V部　その他のトピック
 26章　日々の運用について
 
 	スプールは真っ平ら or 一階層構造のどちらでもとれます。
-	一階層構造がお薦めです。
+	何万通も流れそうなＭＬでは一階層構造がお薦めです。
+	デフォルトは fml4 との互換性のため、まったいらです。
 
-	受けとったメールを保存する。
+	デバッグのためにメールを一定量つねに保存しています。
+	これは記事の保存とは別の仕組みで、全プロセスの入出力の記録です。
+
+	   受けとったメールをすべて保存する。
 		var/mail/incoming/ 以下に保存します。
 		fml4 と異なり保存がデフォルトの挙動です。
 
-	出ていくメールを保存する。
+	   出ていくメールを保存する。
 		var/mail/outgoing/ 以下に保存します。
 		fml4 と異なり保存がデフォルトの挙動です。
-
-	自分が出したメールは
-		var/mail/outgoing/ 以下に保存します。
 
 	ログファイルへの newsyslog (fml4 の $LOGFILE_NEWSYSLOG_LIMIT)
 		use_log_rotate = yes
@@ -592,4 +607,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.34 2004/04/18 02:44:03 fukachan Exp $
+$FML: STATUS.txt,v 1.35 2004/05/02 00:14:17 fukachan Exp $
