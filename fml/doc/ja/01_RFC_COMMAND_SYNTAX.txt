@@ -1,0 +1,50 @@
+		admin コマンド体系
+		Last Modified: $Date$
+
+  [基本のシンタックス]
+	admin コマンド アドレス オプション
+
+	◎ 受信者としてだけの登録 (add2actives 相当、メールマガジンなど)は？
+
+	admin コマンド アドレス        --as-recipient
+
+	例:
+	admin useradd  rudo@nuinui.net --as-recipient
+
+
+○ ユーザの登録/削除
+
+	admin useradd		← メイン、他は alias
+	admin adduser
+	admin add		← (互換性)
+	admin subscribe		← (互換性)
+
+	admin userdel		← メイン、他は alias
+	admin deluser
+	admin del		← (互換性)
+	admin unsubscribe	← (互換性)
+
+
+○ リモート管理者の登録/削除
+
+
+	admin adminadd		← メイン、他は alias
+	admin addadmin
+
+	admin admindel		← メイン、他は alias
+	admin deladmin
+
+
+○ モデレータの登録/削除
+
+
+	admin moderatoradd	← メイン、他は alias
+	admin addmoderator
+
+	admin moderatordel	← メイン、他は alias
+	admin delmoderator
+
+
+
+----------
+$FML: 00_MEMO,v 1.31 2002/07/07 12:48:26 fukachan Exp $
