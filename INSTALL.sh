@@ -91,12 +91,20 @@ if [ ! -f $libexec_dir/loader ];then
 
    (
 	cd $libexec_dir/
+	i=0
 
 	echo -n "   link loader to: "
 	for x in $PROGRAMS
 	do
 		rm -f $x
 		ln -s loader $x && echo -n "$x "
+
+		i=`expr $i + 1`
+		if [ $i -ge 7 ];then
+			echo ""
+			echo -n "                   "
+			i=0
+		fi
 	done
 	echo ""
    )
