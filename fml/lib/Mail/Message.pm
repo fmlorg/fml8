@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.89 2004/02/29 15:59:40 fukachan Exp $
+# $FML: Message.pm,v 1.90 2004/03/27 09:29:02 fukachan Exp $
 #
 
 package Mail::Message;
@@ -13,6 +13,8 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 	    $override_print_mode
 	    $override_log_function);
 use Carp;
+use Mail::Message::String;
+
 
 my $debug = 0;
 
@@ -1985,6 +1987,81 @@ sub _is_citation_or_signature
     }
 
     return 0;
+}
+
+
+=head2 has_closing_phrase()
+
+check if this message has closing phrase in it.
+
+=head2 set_closing_phrase_rules($rules)
+
+set rules.
+
+=head2 get_closing_phrase_rules()
+
+get rules.
+
+=cut
+
+
+# Descriptions: check if this message has closing phrase in it.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
+sub has_closing_phrase
+{
+    my ($self)  = @_;
+    my $msg     = $self->find_first_plaintext_message();
+    my $rules   = $self->get_closing_phrase_rules();
+    my $regexp  = join("|", keys %$rules);
+
+    if (defined($msg) && $regexp) {
+	my ($buf, $string);
+
+	my $num_prg = $msg->num_paragraph();
+	for (my $i = 1; $i <= $num_prg; $i++) {
+	    $buf = $msg->nth_paragraph($i);
+	    $buf =~ s/^[\s\n]*//o;
+	    $buf =~ s/[\s\n]*$//o;
+
+	    if ($buf) {
+		$string = new Mail::Message::String $buf;
+		$string->charcode_convert_to_internal_code();
+		$buf = $string->as_str();
+		if ($buf =~ /$regexp/) { return 1;}
+	    }
+	}
+    }
+
+    return 0;
+}
+
+
+# Descriptions: set phrase trap rules.
+#    Arguments: OBJ($self)
+# Side Effects: update $self.
+# Return Value: none
+sub set_closing_phrase_rules
+{
+    my ($self, $rules) = @_;
+
+    if (defined $rules) {
+	$self->{ _closing_phrase_rules } = $rules || {};
+    }
+}
+
+
+# Descriptions: return phrase trap rules.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: HASH_REF
+sub get_closing_phrase_rules
+{
+    my ($self) = @_;
+    my $rules  = $self->{ _closing_phrase_rules } || {};
+
+    return $rules;
 }
 
 
