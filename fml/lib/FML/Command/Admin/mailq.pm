@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mailq.pm,v 1.5 2003/08/23 04:35:31 fukachan Exp $
+# $FML: mailq.pm,v 1.6 2003/09/13 09:16:59 fukachan Exp $
 #
 
 package FML::Command::Admin::mailq;
@@ -23,7 +23,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-change delivery mode from real time to digest.
+list up outgoing mail queue.
 
 =head1 METHODS
 
@@ -60,7 +60,7 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
 
-    $self->_queue($curproc);
+    $self->_list_up_queue($curproc);
 }
 
 
@@ -68,7 +68,7 @@ sub process
 #    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: none
 # Return Value: none
-sub _queue
+sub _list_up_queue
 {
     my ($self, $curproc) = @_;
     my $config    = $curproc->config();
@@ -77,14 +77,17 @@ sub _queue
     my $format    = "%-20s   %s\n";
 
     use Mail::Delivery::Queue;
-    my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
-    my $ra    = $queue->list();
+    my $queue   = new Mail::Delivery::Queue { directory => $queue_dir };
+    my $ra_list = $queue->list();
 
-    for my $qid (@$ra) {
+    for my $qid (@$ra_list) {
 	my $info = $queue->getidinfo($qid);
-	my $rq   = $info->{ recipients };
 
+	# 1. the first line is "queue-id sender".
 	printf $format, $qid, $info->{sender};
+
+	# 2. list up recipients after 2nd lines.
+	my $rq = $info->{ recipients };
 	for my $r (@$rq) {
 	    printf $format, "", $r;
 	}
