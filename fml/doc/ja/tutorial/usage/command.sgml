@@ -1,5 +1,5 @@
 <!--
-	$FML: command.sgml,v 1.4 2002/07/07 01:57:12 fukachan Exp $
+	$FML: command.sgml,v 1.5 2002/07/28 06:26:57 fukachan Exp $
 -->
 
 <sect1 id="fml.command.bymail">
@@ -10,16 +10,20 @@
 <para>
 fml にメールで文字列(コマンド)を送り込むことで、fml に特定の処理をして
 もらうことができます。例えば、メンバーの登録、削除や、過去の記事を取り
-寄せるなどの処理です。
+寄せるなどの処理が代表例です。
 </para>
 
 <important>
 <para>
-fml の基本的な使い方は makefml での操作です。
-ユーザが使えるコマンド/ユーザに提供されているコマンド操作は 
-その操作のごく一部です。
+fml の基本的な使い方は makefml を使った操作です。
+makefml ではすべての作業が許されます。
+</para>
+
+<para>
+一方、コマンドメールなどでユーザに提供されているコマンド操作は 
+makefml による操作のごく一部です。
 それは makefml のコマンドの一部を使えなくし、
-適宜 confirmation を付け加えたものといえます。
+適宜 confirmation を付け加えたコマンド体系といってよいでしょう。
 </para>
 </important>
 

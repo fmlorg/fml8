@@ -1,5 +1,5 @@
 <!--
-   $FML: post.sgml,v 1.4 2002/07/05 04:01:37 fukachan Exp $
+   $FML: post.sgml,v 1.5 2002/07/07 01:57:12 fukachan Exp $
 -->
 
 <sect1 id="usage.post">
@@ -44,7 +44,7 @@ HTML 化された記事を作る。
 </para>
 
 <para>
-スレッド追跡システムのデータベースを更新
+スレッド追跡システムのデータベースを更新する。
 </para>
 
 </sect2>
