@@ -1,6 +1,28 @@
 		CHANGES
 		Last Modified: $Date$
 
+   *** clean up, audit キャンペーン中 *** 
+
+2002/04/06
+
+   remove "recipients" file from default $recipient_maps   
+
+   Mail::Message::Spool 
+	define dirpath()
+	
+   FML::Article 
+	mkdir subdir if needed
+	
+2002/04/05
+
+   spool (記事のスプール)の階層化構造をオプションにする
+	変数 $use_spool_subdir を創設する 
+
+2002/04/03
+
+   clean up, audit campaign
+	春だからお掃除しましょう(意味不明) 
+
 2002/04/01
 
   実際に構築しつつテストしてみる。
@@ -1906,4 +1928,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.62 2002/03/31 12:22:42 fukachan Exp $
+$FML: CHANGES.txt,v 1.63 2002/04/01 14:54:30 fukachan Exp $
