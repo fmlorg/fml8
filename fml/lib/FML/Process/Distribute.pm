@@ -183,7 +183,6 @@ sub _deliver_article
     my $service = new MailingList::Delivery {
 	log_function       => $fp,
 	smtp_log_function  => $sfp,
-	socket_timeout     => 2,     # XXX 2 for debug but 10 by default
     };
     if ($service->error) { Log($service->error); return;}
 
