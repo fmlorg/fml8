@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: off.pm,v 1.5 2002/12/24 10:19:44 fukachan Exp $
+# $FML: off.pm,v 1.6 2003/01/25 12:48:39 fukachan Exp $
 #
 
 package FML::Command::Admin::off;
@@ -59,22 +59,20 @@ sub need_lock { 1;}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config        = $curproc->{ config };
-
-    # XXX-TODO: we should use $config->get_as_array_ref().
-    my @recipient_map = split(/\s+/, $config->{ recipient_maps });
-    my $options       = $command_args->{ options };
-    my $address       = $command_args->{ command_data } || $options->[ 0 ];
+    my $config         = $curproc->config();
+    my $recipient_maps = $config->get_as_array_ref( 'recipient_maps' );
+    my $options        = $command_args->{ options };
+    my $address        = $command_args->{ command_data } || $options->[ 0 ];
 
     # fundamental check
-    croak("address not defined")           unless defined $address;
-    croak("address not specified")         unless $address;
-    croak("\@recipient_map not specified") unless @recipient_map;
+    croak("address not defined")            unless defined $address;
+    croak("address not specified")          unless $address;
+    croak("\$recipient_maps not specified") unless @$recipient_maps;
 
     # FML::Command::UserControl specific parameters
     my $uc_args = {
 	address => $address,
-	maplist => [ @recipient_map ],
+	maplist => $recipient_maps,
     };
     my $r = '';
 
