@@ -673,6 +673,11 @@ digest_sequence_file	= $ml_home_dir/seq-digest
 
 =head1 message manipulation
 
+=head2 hint
+
+language_preference_order	=	en ja
+
+
 =head2 language
 
 # Descriptions:
