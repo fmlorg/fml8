@@ -68,30 +68,10 @@ sub run
 	exec 'perldoc', @$argv;
     }
     elsif ($myname eq 'makefml') {
-	require FML::MemberControl;
-	my $obj = new FML::MemberControl;
-	my ($command, $ml_name, @options) =  @$argv;
-	if ($command eq 'add' || $command eq 'subscribe') {
-	    $curproc->lock();
-	    $obj->add($curproc, @options);
-	    $curproc->unlock();
-	}
-	elsif ($command eq 'bye' || $command eq 'unsubscribe') {
-	    $curproc->lock();
-	    $obj->delete($curproc, @options);
-	    $curproc->unlock();
-	}
-	else {
-	    croak("unknown");
-	}
+	$curproc->_makefml($args);
     }
     else {
 	my $command = $argv->[ 0 ] || croak("command not specified\n");
-	$curproc->lock();
-	{
-	    ;
-	}
-	$curproc->unlock();
     }
 }
 
@@ -108,6 +88,67 @@ sub _show_conf
     my $argv   = $args->{ ARGV };
 
     $config->dump_variables({ mode => $mode });
+}
+
+
+# Descriptions: makefml top level dispacher
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub _makefml
+{
+    my ($curproc, $args) = @_;
+    my $config  = $curproc->{ config };
+    my $myname  = $args->{ myname };
+    my $argv    = $args->{ ARGV };
+
+    my ($command, $ml_name, @options) =  @$argv;
+
+    if ($command eq 'newml' ||
+	$command eq 'add' || $command eq 'subscribe' ||
+	$command eq 'bye' || $command eq 'unsubscribe') {
+	my $method = $curproc->_which_makefml_method($command);
+	my $pkg    = "FML::Command::${method}";
+
+	# local scope
+	local(@ISA) = ($pkg, @ISA);
+
+	eval qq{ require $pkg; $pkg->import();};
+	if ($@) { 
+	    Log( $@ );
+	    return ;
+	}
+
+	# here we go
+	$curproc->lock();
+	my $obj = $pkg->new;
+	$obj->$method($curproc, @options);
+	$curproc->unlock();
+    }
+    else {
+	croak("unknown makefml method");
+    }
+}
+
+
+# Descriptions: 
+#    Arguments: $self $command
+# Side Effects: none
+# Return Value: method name
+sub _which_makefml_method
+{
+    my ($self, $command) = @_;
+    my $method = {
+	'add'        => 'add',
+	'subscribe'  => 'add',
+
+	'bye'          => 'delete',
+	'unsubscribe'  => 'delete',
+
+	'newml'        => 'newml',
+    };
+
+    $method->{ $command };
 }
 
 
