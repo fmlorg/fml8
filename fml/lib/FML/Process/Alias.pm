@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Alias.pm,v 1.5 2002/09/22 14:56:51 fukachan Exp $
+# $FML: Alias.pm,v 1.6 2002/12/18 04:43:51 fukachan Exp $
 #
 
 package FML::Process::Alias;
@@ -175,7 +175,12 @@ sub help
 
 print <<"_EOF_";
 
-Usage: $name \$command \$ml_name [options]
+Usage: $name [options]
+
+-n   show fml specific aliases.
+
+[BUGS]
+	support only fml8 + postfix case.
 
 _EOF_
 }
@@ -204,11 +209,7 @@ See <FML::Process::Switch()> on C<$args> for more details.
 sub _fmlalias
 {
     my ($curproc, $args) = @_;
-    my $config  = $curproc->{ config };
-    my $myname  = $curproc->myname();
-    my $argv    = $curproc->command_line_argv();
-
-    my ($method, $ml_name, @options) =  @$argv;
+    my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmlalias_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
