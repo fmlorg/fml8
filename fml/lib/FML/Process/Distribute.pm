@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.142 2004/03/31 12:53:51 fukachan Exp $
+# $FML: Distribute.pm,v 1.143 2004/04/23 04:10:36 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -489,6 +489,7 @@ sub _deliver_article
     if ($service->error) { $curproc->log($service->error); return;}
 
     # XXX_LOCK_CHANNEL: recipient_map_modify
+    my $queue_dir    = $config->{ mail_queue_dir };
     my $lock_channel = "recipient_map_modify";
     $curproc->lock($lock_channel);
     $service->deliver(
@@ -502,6 +503,10 @@ sub _deliver_article
 			  'message'         => $message,
 
 			  map_params        => $config,
+
+			  # fallback
+			  use_queue_dir     => 1,
+			  queue_dir         => $queue_dir,
 		      });
     $curproc->unlock($lock_channel);
 
