@@ -226,6 +226,12 @@
 [comments]     true ?
 
 
+[system]       TurboLinux Server
+[release]      8.0
+[perl.version] 5.6.1
+[comments]     
+
+
 [system]       Slackware
 [release]      7.1
 [perl.version] 5.6.0
@@ -427,4 +433,4 @@ SEE ALSO:
    http://www.cyber-magic.org/~taka/perl-versions.html
    http://www.uinet.or.jp/~taka/perl-versions.html
 
-$FML: OS_and_Perl.data,v 1.9 2002/04/01 23:40:57 fukachan Exp $
+$FML: OS_and_Perl.data,v 1.10 2002/05/16 04:57:09 fukachan Exp $
