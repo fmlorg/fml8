@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: minimal_states.pm,v 1.13 2001/04/03 09:45:44 fukachan Exp $
 #
 
 package FML::Ticket::Model::minimal_states;
@@ -184,7 +184,7 @@ sub update_status
     my $content = '';
     my $message = $body->get_first_plaintext_message();
     if ( ref($message) eq 'Mail::Message' ) {
-	$content = $message->get_content_body();
+	$content = $message->data_in_body_part();
     }
     else {
 	Log("Error: get_first_plaintext_message cannot get object");

@@ -1,4 +1,7 @@
 #!/usr/local/bin/perl
+#
+# $FML$
+#
 
 use strict;
 use File::Basename;
@@ -32,11 +35,11 @@ for $msg (@ARGV) {
 
     # mail ?
     if ($opts{ m }) {
-	$args->{ content_type } = 'message/rfc822';
+	$args->{ data_type } = 'message/rfc822';
     }
     # text 
     else {
-	$args->{ content_type } = 'text/plain';
+	$args->{ data_type } = 'text/plain';
 	$args->{ charset      } = 'iso-2022-jp';
     }
 
@@ -46,7 +49,7 @@ for $msg (@ARGV) {
 
 $master = $m[0];
 $master = $master->build_mime_multipart_chain( {
-    base_content_type => 'multipart/mixed',
+    base_data_type => 'multipart/mixed',
     boundary          => $boundary,
     message_list      => \@m,
 });

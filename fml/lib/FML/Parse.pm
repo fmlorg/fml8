@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: Parse.pm,v 1.12 2001/04/03 09:45:41 fukachan Exp $
 #
 
 package FML::Parse;
@@ -105,9 +105,9 @@ sub _parse
     # extract each field from the header array
     my $r_header = new FML::Header \@h, Modify => 0;
     my $r_body   = new Mail::Message {
-	boundary     => $r_header->mime_boundary(),
-	content_type => $r_header->content_type(),
-	content      => \$InComingMessage,
+	boundary  => $r_header->mime_boundary(),
+	data_type => $r_header->data_type(),
+	data      => \$InComingMessage,
     };
 
     # return ( $ref_to_mail_header, $ref_to_mail_body, $error_code);

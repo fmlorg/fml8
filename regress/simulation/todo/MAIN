@@ -1,5 +1,11 @@
 =head1 実装中(途中)
 
+=head2 mail-message-0-2 タグの後に付け加えられたコードについて再考
+
+	s/content/data/g;
+
+	we need our own MIME generator ???
+
 =head2 pre-cgi タグの後に付け加えられたコードについて再考
 
    relocate codes added after "pre-cgi" tag.

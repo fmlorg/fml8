@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: Header.pm,v 1.27 2001/04/03 03:34:00 fukachan Exp $
 #
 
 package FML::Header;
@@ -72,7 +72,7 @@ sub AUTOLOAD
 }
 
 
-=head2 C<content_type()>
+=head2 C<data_type()>
 
 return the C<type> defind in the header's Content-Type field.
 
@@ -86,7 +86,7 @@ return the C<boundary> defind in the header's Content-Type field.
 #    Arguments: $self
 # Side Effects: extra spaces in the type to return is removed.
 # Return Value: none
-sub content_type
+sub data_type
 {
     my ($header) = @_;
     my ($type) = split(/;/, $header->get('content-type'));

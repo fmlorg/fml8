@@ -35,9 +35,9 @@ my $original_length = length($body);
 
 use Mail::Message;
 my $m = new Mail::Message { 
-    content_type   => 'multipart/mixed',
+    data_type   => 'multipart/mixed',
     boundary       => $boundary,
-    content        => \$body,
+    data        => \$body,
     debug          => 1,
 };
 
@@ -56,13 +56,13 @@ sub debug
     my $total=0;
     for ($p = $m; defined $p ; $p = $p->{ next }) {
 	my $size = $p->size;
-	my $h    = $p->get_content_header;
+	my $h    = $p->get_data_header;
 	$size   += length($h) if defined $h;
 	
 	$total += $size;
-	print STDERR "type: ", $p->get_content_type, "\n";
+	print STDERR "type: ", $p->get_data_type, "\n";
 	print STDERR " hdr:{", $h,                   "}\n";
-	print STDERR "body:{", $p->get_content_body, "}\n";
+	print STDERR "body:{", $p->get_data_body, "}\n";
 	print STDERR "size: ", $size, " / $total (<= $original_length)\n";
 	print STDERR "\n";
 	sleep 3;

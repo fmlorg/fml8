@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.4 2001/04/06 12:46:59 fukachan Exp $
+# $FML: Message.pm,v 1.5 2001/04/06 12:58:09 fukachan Exp $
 #
 
 package Mail::Message;
@@ -14,7 +14,7 @@ use Carp;
 
 
 # virtual content-type
-my %content_type = 
+my %data_type = 
     (
      'preamble'        => '_multipart_preamble/plain',
      'delimiter'       => '_multipart_delimiter/plain',
@@ -44,15 +44,15 @@ Mail::Message -- message manipulator
 
 =head1 SYNOPSIS
 
-    my $m1 = new Mail::Message { content => \$body1 };
+    my $m1 = new Mail::Message { data => \$body1 };
 
     my $m2 = new Mail::Message;
-    $m2->create( { content => \$body2 });
+    $m2->create( { data => \$body2 });
 
     # make a chain of $m1, $m2, ...
     $m1->next_chain( $m2 );
 
-    # print the contents in the order:  $m1, $m2, ...
+    # print the mail message (a chain of body-parts) in the order:  $m1, $m2, ...
     $m1->print;
 
 =head1 DESCRIPTION
@@ -75,18 +75,18 @@ To describe such chains, a message format is a hash reference
 internally.
 
    $message = {
-                version           => 1.0
+                version        => 1.0
 
-                next              => $next_message (HASH reference)
-                prev              => $prev_message (HASH reference)
+                next           => $next_message (HASH reference)
+                prev           => $prev_message (HASH reference)
 
-                mime_version      => 1.0
-                base_content_type => text/plain
-                content_type      => text/plain
-                header            => {
+                mime_version   => 1.0
+                base_data_type => text/plain
+                data_type      => text/plain
+                data           => \$message_body
+                header         => {
                                        field_name => field_value
-                                     }
-                content           => \$message_body
+                                  }
                }
 
    key                value
@@ -95,10 +95,10 @@ internally.
    prev               pointer to the previous message
    version            Mail::Delivery::Message object version
    mime_version       MIME version
-   base_content_type  MIME content-type specified in the header
-   content_type       MIME content-type
+   base_data_type     type of the whole message
+   data_type          type of each message (part)
    header             MIME header
-   content            reference to the content (that is, memory area)
+   data               reference to the data (that is, memory area)
 
 Each default value follows:
 
@@ -108,10 +108,10 @@ Each default value follows:
    prev              undef
    version           1.0
    mime_version      1.0
-   base_content_type
-   content_type      text/plain
+   base_data_type
+   data_type         text/plain
    header            undef
-   content           ''
+   data              ''
 
 
 =head1 INTERNAL REPRESENTATION
@@ -121,7 +121,7 @@ Each default value follows:
 If the message is just an plain/text, which is usual,
 internal representation follows:
 
-   i  base_content_type              content_type
+   i  base_data_type               data_type
    ----------------------------------------------------------
    0: text/plain                      text/plain
 
@@ -146,7 +146,7 @@ Consider a multipart such as
 
 The internal parser interpetes it as follows:
 
-      base_content_type              content_type
+      base_data_type                 data_type
    ----------------------------------------------------------
    0: multipart/mixed                _multipart_preamble/plain
    1: multipart/mixed                _multipart_delimiter/plain
@@ -187,7 +187,7 @@ sub create
     $self->_set_up_template($args);
 
     # parse the non multipart mail and build a chain
-    if ($args->{ content_type } =~ /multipart/i) {
+    if ($args->{ data_type } =~ /multipart/i) {
 	$self->parse_and_build_mime_multipart_chain($args);
     }
     else {
@@ -207,14 +207,14 @@ sub _set_up_template
     # basic content information
     $self->{ version }      = $args->{ version }       || 1.0;
     $self->{ mime_version } = $args->{ mime_version }  || 1.0;
-    $self->{ content_type } = $args->{ content_type  } || 'text/plain';
+    $self->{ data_type }    = $args->{ data_type  } || 'text/plain';
 
     # header
     $self->{ header  }      = $args->{ header  } || undef;
 
     # save the mail header Content-Type information
-    $self->{ base_content_type } =
-	$args->{ base_content_type } || $args->{ content_type } || undef;
+    $self->{ base_data_type } =
+	$args->{ base_data_type } || $args->{ data_type } || undef;
 }
 
 
@@ -225,13 +225,13 @@ sub _create
     _set_up_template($self, $args);
 
     # message itself (mail body)
-    my $r_content = $args->{ content };
-    my $filename  = $args->{ filename };
+    my $r_data   = $args->{ data };
+    my $filename = $args->{ filename };
 
     # on memory
-    if (defined $r_content) {
-	my $len = length( $$r_content );
-	$self->{ content }      = $args->{ content } || '';
+    if (defined $r_data) {
+	my $len = length( $$r_data );
+	$self->{ data }         = $args->{ data } || '';
 	$self->{ offset_begin } = $args->{ offset_begin } || 0;
 	$self->{ offset_end }   = $args->{ offset_end   } || $len;
 	$self->{ _on_memory }   = 1;
@@ -239,7 +239,7 @@ sub _create
     # on disk
     elsif (defined $filename) {
 	if (-f $filename) {
-	    undef $self->{ content };
+	    undef $self->{ data };
 	    $self->{ header }     = build_mime_header($self, $args);
 	    $self->{ filename }   = $filename;
 	    $self->{ _on_memory } = 0; # not on memory
@@ -249,7 +249,7 @@ sub _create
 	}
     }
     else {
-	carp("neither content nor filename specified");
+	carp("neither data nor filename specified");
     }
 }
 
@@ -309,25 +309,25 @@ sub build_mime_multipart_chain
     my ($self, $args) = @_;
     my ($head, $prev_m);
 
-    my $base_content_type = $args->{ base_content_type };
-    my $msglist           = $args->{ message_list };
-    my $boundary          = $args->{ boundary } || "--". time ."-$$-";
-    my $dash_boundary     = "--". $boundary;
-    my $delbuf            = "\n". $dash_boundary."\n";
-    my $delbuf_end        = "\n". $dash_boundary . "--\n";
+    my $base_data_type = $args->{ base_data_type };
+    my $msglist        = $args->{ message_list };
+    my $boundary       = $args->{ boundary } || "--". time ."-$$-";
+    my $dash_boundary  = "--". $boundary;
+    my $delbuf         = "\n". $dash_boundary."\n";
+    my $delbuf_end     = "\n". $dash_boundary . "--\n";
 
     for my $m (@$msglist) {
 	# delimeter: --boundary
 	my $msg = new Mail::Message {
-	    base_content_type => $base_content_type,
-	    content_type      => $content_type{'delimeter'},
-	    boundary          => $boundary,
-	    content           => \$delbuf,
+	    boundary       => $boundary,
+	    base_data_type => $base_data_type,
+	    data_type      => $data_type{'delimeter'},
+	    data           => \$delbuf,
 	};
 
 	$head = $msg unless $head; # save the head $msg
 
-	# boundary -> content -> boundary ...
+	# boundary -> data -> boundary ...
 	if (defined $prev_m) { $prev_m->next_chain( $msg );}
 	$msg->next_chain( $m );
 
@@ -337,12 +337,12 @@ sub build_mime_multipart_chain
 
     # close delimeter: --boundary--
     my $msg = new Mail::Message {
-	base_content_type => $base_content_type,
-	content_type      => $content_type{'close-delimeter'},
-	boundary          => $boundary,
-	content           => \$delbuf_end,
+	boundary       => $boundary,
+	base_data_type => $base_data_type,
+	data_type      => $data_type{'close-delimeter'},
+	data           => \$delbuf_end,
     };
-    $prev_m->next_chain( $msg ); # ... -> content -> close-delimeter
+    $prev_m->next_chain( $msg ); # ... -> data -> close-delimeter
 
     return $head; # return the pointer to the head of a chain
 }
@@ -385,7 +385,7 @@ sub print
   MSG:
     while (1) {
 	# on memory
-	if (defined $msg->{ content }) {
+	if (defined $msg->{ data }) {
 	    $msg->_print_messsage_on_memory($fd, $args);
 	}
 	# not on memory, may be on disk
@@ -404,7 +404,7 @@ sub print
 #               replace "\n" in the end of line with "\r\n" on memory.
 #               We should do it to use as less memory as possible.
 #               So we use substr() to process each line.
-#               XXX the message to send out is $self->{ content }.
+#               XXX the message to send out is $self->{ data }.
 #    Arguments: $self $socket
 # Side Effects: none
 # Return Value: none
@@ -416,7 +416,7 @@ sub _print_messsage_on_memory
     my $raw_print_mode = 1 if defined $args->{ _raw_print };
 
     # set up offset for the buffer
-    my $r_body = $self->{ content };
+    my $r_body = $self->{ data };
     my $header = $self->{ header };
     my $pp     = $self->{ offset_begin };
     my $p_end  = $self->{ offset_end };
@@ -544,14 +544,14 @@ sub parse_and_build_mime_multipart_chain
 
     # check input parameters
     return undef unless $args->{ boundary };
-    return undef unless $args->{ content  };
+    return undef unless $args->{ data  };
 
     # base content-type
-    my $base_content_type = $args->{ content_type };
+    my $base_data_type = $args->{ data_type };
 
     # boundaries of the continuous multipart blocks
-    my $content         = $args->{ content };  # reference to content
-    my $content_end     = length($$content);   # end position of the content
+    my $data            = $args->{ data };  # reference to data
+    my $data_end        = length($$data);   # end position of the data
     my $boundary        = $args->{ boundary }; # MIME boundary string
     my $dash_boundary   = "--".$boundary;
     my $delimeter       = "\n". $dash_boundary;
@@ -559,58 +559,58 @@ sub parse_and_build_mime_multipart_chain
 
     # 1. check the preamble before multipart blocks
     #    XXX mpb = multipart-body
-    my $mpb_begin       = index($$content, $delimeter, 0);
-    my $mpb_end         = index($$content, $close_delimeter, 0);
-    my $pb              = 0; # pb = position of the beginning in $content
-    my $pe              = $mpb_begin; # pe = position of the end in $content
+    my $mpb_begin       = index($$data, $delimeter, 0);
+    my $mpb_end         = index($$data, $close_delimeter, 0);
+    my $pb              = 0; # pb = position of the beginning in $data
+    my $pe              = $mpb_begin; # pe = position of the end in $data
     $self->_set_pos( $pe + 1 );
 
     # prepare lexical variables
     my ($msg, $next_part, $prev_part, @m);
     my $i = 0; # counter to indicate the $i-th message
     do {
-	# 2. analyze the region for the next part in $content
+	# 2. analyze the region for the next part in $data
 	#     we should check the condition "$pe > $pb" here
 	#     to avoid the empty preamble case.
 	# XXX this function is not called
 	# XXX if there is not the prededing preamble.
 	if ($pe > $pb) { # XXX not effective region if $pe <= $pb
-	    my ($header, $pb) = _get_mime_header($content, $pb);
+	    my ($header, $pb) = _get_mime_header($data, $pb);
 
 	    my $args = {
-		boundary          => $boundary,
-		offset_begin      => $pb,
-		offset_end        => $pe,
-		header            => $header || undef,
-		content           => $content,
-		base_content_type => $base_content_type,
+		boundary       => $boundary,
+		offset_begin   => $pb,
+		offset_end     => $pe,
+		header         => $header || undef,
+		data           => $data,
+		base_data_type => $base_data_type,
 	    };
-	    my $default = ($i == 0) ? $content_type{'preamble'} : undef;
-	    $args->{ content_type } = _get_content_type($args, $default);
+	    my $default = ($i == 0) ? $data_type{'preamble'} : undef;
+	    $args->{ data_type } = _get_data_type($args, $default);
 
 	    $m[ $i++ ] = $self->_alloc_new_part($args);
 	}
 
 	# 3. where is the region for the next part?
-	($pb, $pe) = $self->_next_part_pos($content, $delimeter);
+	($pb, $pe) = $self->_next_part_pos($data, $delimeter);
 
 	# 4. insert a multipart delimiter
 	#    XXX we malloc(), "my $tmpbuf", to store the delimeter string.
 	if ($pe > $mpb_end) { # check the closing of the blocks or not
 	    my $buf = $close_delimeter."\n";
 	    $m[ $i++ ] = $self->_alloc_new_part({
-		content           => \$buf,
-		content_type      => $content_type{'close-delimiter'},
-		base_content_type => $base_content_type,
+		data           => \$buf,
+		data_type      => $data_type{'close-delimiter'},
+		base_data_type => $base_data_type,
 	    });
 
 	}
 	else {
 	    my $buf = $delimeter."\n";
 	    $m[ $i++ ] = $self->_alloc_new_part({
-		content           => \$buf,
-		content_type      => $content_type{'delimiter'},
-		base_content_type => $base_content_type,
+		data           => \$buf,
+		data_type      => $data_type{'delimiter'},
+		base_data_type => $base_data_type,
 	    });
 	}
 
@@ -618,15 +618,15 @@ sub parse_and_build_mime_multipart_chain
 
     # check the trailor after multipart blocks exists or not.
     {
-	my $p = index($$content, "\n", $mpb_end + length($close_delimeter)) +1;
-	if (($content_end - $p) > 0) {
+	my $p = index($$data, "\n", $mpb_end + length($close_delimeter)) +1;
+	if (($data_end - $p) > 0) {
 	    $m[ $i++ ] = $self->_alloc_new_part({
-		boundary          => $boundary,
-		offset_begin      => $p,
-		offset_end        => $content_end,
-		content           => $content,
-		content_type      => $content_type{'trailor'},
-		base_content_type => $base_content_type,
+		boundary       => $boundary,
+		offset_begin   => $p,
+		offset_end     => $data_end,
+		data           => $data,
+		data_type      => $data_type{'trailor'},
+		base_data_type => $base_data_type,
 	    });
 	}
     }
@@ -643,8 +643,8 @@ sub parse_and_build_mime_multipart_chain
 
 	if (0) { # debug
 	    printf STDERR "%d: %-30s %-30s\n", $j,
-		$m[ $j]->{ base_content_type },
-		$m[ $j]->{ content_type };
+		$m[ $j]->{ base_data_type },
+		$m[ $j]->{ data_type };
 	}
     }
 
@@ -653,7 +653,7 @@ sub parse_and_build_mime_multipart_chain
 }
 
 
-sub _get_content_type
+sub _get_data_type
 {
     my ($args, $default) = @_;
     my $buf = $args->{ header } || '';
@@ -669,9 +669,9 @@ sub _get_content_type
 
 sub _get_mime_header
 {
-    my ($content, $pos_begin) = @_;
-    my $pos = index($$content, "\n\n", $pos_begin) + 1;
-    my $buf = substr($$content, $pos_begin, $pos - $pos_begin);
+    my ($data, $pos_begin) = @_;
+    my $pos = index($$data, "\n\n", $pos_begin) + 1;
+    my $buf = substr($$data, $pos_begin, $pos - $pos_begin);
 
     if ($buf =~ /Content-Type:\s*(\S+)\;/) {
 	return ($buf, $pos + 1);
@@ -686,13 +686,13 @@ sub build_mime_header
 {
     my ($self, $args) = @_;
     my ($buf, $charset);
-    my $content_type = $args->{ content_type };
+    my $data_type = $args->{ data_type };
 
-    if ($content_type =~ /^text/) {
+    if ($data_type =~ /^text/) {
 	$charset = $args->{ charset } || 'us-ascii';
     }
 
-    $buf .= "Content-Type: $content_type" if defined $content_type;
+    $buf .= "Content-Type: $data_type" if defined $data_type;
     $buf .= ";\n\tcharset=$charset" if $charset;
 
     # use File::Basename;
@@ -719,13 +719,13 @@ sub _alloc_new_part
 
 sub _next_part_pos
 {
-    my ($self, $content, $delimeter) = @_;
+    my ($self, $data, $delimeter) = @_;
     my ($len, $p, $pb, $pe, $pp);
-    my $maxlen = length($$content);
+    my $maxlen = length($$data);
 
     # get the next deliemter position
     $pp  = $self->_get_pos();
-    $p   = index($$content, $delimeter, $pp);
+    $p   = index($$data, $delimeter, $pp);
     $self->_set_pos( $p + 1 );
 
     # determine the begin and end of the next block without delimiter
@@ -766,7 +766,7 @@ my $total = 0;
 sub size
 {
     my ($self) = @_;
-    my $rc = $self->{ content };
+    my $rc = $self->{ data };
     my $pb = $self->{ offset_begin };
     my $pe = $self->{ offset_end };
 
@@ -786,7 +786,7 @@ sub is_empty
 {
     my ($self) = @_;
     my $size   = $self->size;
-    my $rc     = $self->{ content };
+    my $rc     = $self->{ data };
 
     if ($size == 0) { return 1;}
     if ($size <= 8) {
@@ -798,10 +798,10 @@ sub is_empty
 }
 
 
-sub get_content_type
+sub get_data_type
 {
     my ($self) = @_;
-    my $type = $self->{ content_type };
+    my $type = $self->{ data_type };
     $type =~ s/;//;
     $type;
 }
@@ -823,20 +823,20 @@ sub num_paragraph
     my $pb      = $self->{ offset_begin };
     my $pe      = $self->{ offset_end };
     my $bodylen = $self->size;
-    my $content = $self->{ content };
+    my $data    = $self->{ data };
 
     my $i  = 0; # the number of paragraphs
     my $p  = $pb;
     my $pp = $p;
 
     # skip "\n" in the first and end of the buffer
-    while (substr($$content, $p, 1) eq "\n") { $p++;}
-    while (substr($$content, $pe -1, 1) eq "\n") { $pe--;} 
+    while (substr($$data, $p, 1) eq "\n") { $p++;}
+    while (substr($$data, $pe -1, 1) eq "\n") { $pe--;} 
 
     my (@pmap) = ($pb);
   LINE:
     while ($p < $pe) {
-	$pp = index($$content, "\n\n", $p);
+	$pp = index($$data, "\n\n", $p);
 	if ($pp < $p ||    # not found
 	    $pp >= $pe ) { # over the end of buffer boundary
 
@@ -845,7 +845,7 @@ sub num_paragraph
 	}
 	else {
 	    # skip trailing "\n" after "\n\n"
-	    while (substr($$content, $pp, 1) eq "\n") { $pp++;}
+	    while (substr($$data, $pp, 1) eq "\n") { $pp++;}
 
 	    push(@pmap, $pp) if $pp > 0;
 
@@ -858,7 +858,7 @@ sub num_paragraph
 	for (my $i = 0; $i < $#pmap; $i++ ) {
 	    my $p  = $pmap[ $i ];
 	    my $pp = $pmap[ $i + 1 ];
-	    print STDERR "($p,$pp)<", substr($$content, $p, $pp - $p) , ">\n";
+	    print STDERR "($p,$pp)<", substr($$data, $p, $pp - $p) , ">\n";
 	}
 	print STDERR "( @pmap )\n"; 
     }
@@ -867,11 +867,11 @@ sub num_paragraph
 }
 
 
-=head2 C<get_content_header($size)>
+=head2 C<header_in_body_part($size)>
 
 get header in the content.
 
-=head2 C<get_content_body($size)>
+=head2 C<data_in_body_part($size)>
 
 get body part in the content, 
 which is the whole mail or a part of multipart.
@@ -882,42 +882,42 @@ return the Messages object for the first "plain/text" message in a
 chain. For example,
 
          $m    = $msg->get_first_plaintext_message();
-         $body = $m->get_content_body();
+         $body = $m->data_in_body_part();
 
 where $body is the mail body (string).
 
 =cut
 
 
-sub get_content_header
+sub header_in_body_part
 {
     my ($self, $size) = @_;
     return defined $self->{ header } ? $self->{ header } : undef;
 }
 
 
-sub get_content_body
+sub data_in_body_part
 {
     my ($self, $size) = @_;
-    my $content           = $self->{ content };
-    my $base_content_type = $self->{ base_content_type };
+    my $data           = $self->{ data };
+    my $base_data_type = $self->{ base_data_type };
     my ($pos, $pos_begin, $msglen);
 
     # if the content is undef, do nothing.
-    return undef unless $content; 
+    return undef unless $data; 
 
-    if ($base_content_type =~ /multipart/i) {
+    if ($base_data_type =~ /multipart/i) {
 	$pos_begin = $self->{ offset_begin };
 	$msglen    = $self->{ offset_end } - $pos_begin;
     }
     else {
 	$pos_begin = 0;
-	$msglen    = length($$content);
+	$msglen    = length($$data);
     }
 
     $size ||= 512;
     if ($msglen < $size) { $size = $msglen;}
-    return substr($$content, $pos_begin, $size);
+    return substr($$data, $pos_begin, $size);
 }
 
 
@@ -931,9 +931,9 @@ sub get_first_plaintext_message
     # This routine return the first reference to the message with the
     # type = ' plain/text'
     for ($mp = $self; 
-	 defined $mp->{ content } || defined $mp->{ 'next' }; 
+	 defined $mp->{ data } || defined $mp->{ 'next' }; 
 	 $mp = $mp->{ 'next' }) {
-	my $type = $mp->get_content_type;
+	my $type = $mp->get_data_type;
 
 	if ($type eq 'text/plain') {
 	    return $mp;
@@ -959,14 +959,14 @@ sub set_log_function
 
 
 # XXX debug, remove this in the future
-sub get_content_type_list
+sub get_data_type_list
 {
     my ($msg) = @_;
     my ($m, @buf, $i);
 
     for ($i = 0, $m = $msg; defined $m ; $m = $m->{ 'next' }) {
 	$i++;
-	push(@buf, "type[$i]: $m->{'content_type'} | $m->{'base_content_type'}");
+	push(@buf, "type[$i]: $m->{'data_type'} | $m->{'base_data_type'}");
     }
     \@buf;
 }

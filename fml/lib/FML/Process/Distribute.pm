@@ -4,7 +4,7 @@
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML$
+# $FML: Distribute.pm,v 1.40 2001/04/03 09:45:43 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -176,7 +176,7 @@ sub _distribute
 
     # XXX debug, remove here in the future
     {
-	my $ha_msg = $curproc->{ article }->{ body }->get_content_type_list;
+	my $ha_msg = $curproc->{ article }->{ body }->get_data_type_list;
 	for (@$ha_msg) { Log($_);}
     }
 

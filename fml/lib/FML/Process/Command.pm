@@ -4,7 +4,7 @@
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML$
+# $FML: Command.pm,v 1.8 2001/04/03 09:45:43 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -97,7 +97,7 @@ sub _evaluate_command
     my $config  = $curproc->{ config };
     my $ml_name = $config->{ ml_name };
     my $argv    = $config->{ main_cf }->{ ARGV };
-    my $body    = $curproc->{ incoming_message }->{ body }->get_content_body;
+    my $body    = $curproc->{ incoming_message }->{ body }->data_in_body_part;
     my @body    = split(/\n/, $body);
 
     for my $command (@body) { 
