@@ -1,5 +1,8 @@
 #!/bin/sh
+#
+# $FML$
+#
 
-egrep ' [SRM].p. |^$|^[A-Za-z0-9:]+$' \
+perl -nle 'print if /\s+[SRM].p.|^$|^[A-Za-z0-9:]+$/' \
 	00modlist.long.txt |\
 	uniq
