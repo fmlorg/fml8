@@ -1,6 +1,29 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/04/01
+
+  実際に構築しつつテストしてみる。
+	configure はもっといろいろチェックするべし
+	不便なものを実装する。e.g. makefml list
+
+   more check and expansion by configure
+	we should use values speculated by configure if could.
+	default_ml_home_prefix = @mlspooldir@
+	
+   FML::Command::Admin::newml 
+	not install CVS
+	
+	expand default_domain by config.status
+	
+   FML::Command::UserControl 
+   FML::Command::Admin::list 
+	enable "admin list" command
+	admin list $ml {members,actives,recipients}
+	
+   FML::Process::Switch 
+	warn() if $ml_name not specified
+
 2002/03/31
 
    "makefml newml" set up ~fml/fml/listinfo/$domain/$ml/
@@ -1883,4 +1906,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.61 2002/03/29 11:16:05 fukachan Exp $
+$FML: CHANGES.txt,v 1.62 2002/03/31 12:22:42 fukachan Exp $
