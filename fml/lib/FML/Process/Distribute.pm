@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.130 2003/11/30 09:59:19 fukachan Exp $
+# $FML: Distribute.pm,v 1.131 2003/12/24 14:29:36 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -398,6 +398,7 @@ sub _distribute
     if ($config->yes('use_html_archive')) {
 	$curproc->log("htmlify article $id");
 	$curproc->_htmlify($args);
+	$curproc->log("htmlify article $id end");
     }
 }
 
