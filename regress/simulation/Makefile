@@ -1,6 +1,8 @@
 #
-# $FML: Makefile,v 1.51 2002/04/01 13:12:42 fukachan Exp $
+# $FML: Makefile,v 1.52 2002/04/11 10:13:43 fukachan Exp $
 #
+
+TMPFILE	=	/tmp/log.fml-devel.test
 
 all: link
 
@@ -53,8 +55,13 @@ _link:
 diff:
 	@ (cd ../..;cvs diff -ub)
 
-
 test:
+	@ make _test 2>&1 | tee $(TMPFILE)
+	@ echo ""; echo "--- summary ---"; echo "";
+	@ egrep '\* |fail *$$' $(TMPFILE) || echo ''
+	@ rm -f $(TMPFILE)
+
+_test:
 	@ echo "* IO::* class test"
 	@ apply perl IO/t/*pl
 	@ test -d /tmp/fml5 || mkdir /tmp/fml5
