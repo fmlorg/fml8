@@ -656,6 +656,7 @@ sub _header_summary
     my $padding = $args->{ padding };
 
     use Jcode;
+    use MIME::Base64;
 
     if ($subject =~ /=\?ISO\-2022\-JP\S+B\?(\S+)=\?=/i) { 
 	my $y = decode_base64($1);
