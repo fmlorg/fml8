@@ -279,7 +279,7 @@ sub build_mime_multipart_chain
 
     my $base_content_type = $args->{ base_content_type };
     my $msglist           = $args->{ message_list };
-    my $boundary          = $args->{ boundary } || "---". time ."-$$-";
+    my $boundary          = "--".$args->{ boundary } || "---". time ."-$$-";
     my $buffer            = $boundary."\n";
     my $buffer_end        = $boundary . "--\n";
 
@@ -343,7 +343,8 @@ sub raw_print
 sub print
 {
     my ($self, $fd) = @_;
-    my $msg     = $self;
+    my $msg  = $self;
+    my $args = $self; # e.g. pass _raw_print flag among functions
 
     # if $fd is not given, we use STDOUT.
     unless (defined $fd) { $fd = \*STDOUT;}
@@ -352,12 +353,12 @@ sub print
     while (1) {
 	# on memory
 	if (defined $msg->{ content }) {
-	    $msg->_print_messsage_on_memory($fd);
+	    $msg->_print_messsage_on_memory($fd, $args);
 	}
 	# not on memory, may be on disk
 	elsif (defined $msg->{ filename } &&
 	    -f $msg->{ filename }) {
-	    $msg->_print_messsage_on_disk($fd);
+	    $msg->_print_messsage_on_disk($fd, $args);
 	}
 
 	last MSG unless $msg->{ next };
@@ -376,10 +377,10 @@ sub print
 # Return Value: none
 sub _print_messsage_on_memory
 {
-    my ($self, $fd) = @_;
+    my ($self, $fd, $args) = @_;
 
     # \n -> \r\n
-    my $raw_print_mode = 1 if defined $self->{ _raw_print };
+    my $raw_print_mode = 1 if defined $args->{ _raw_print };
 
     # set up offset for the buffer
     my $r_body = $self->{ content };
@@ -429,10 +430,10 @@ sub _print_messsage_on_memory
 
 sub _print_messsage_on_disk
 {
-    my ($self, $fd) = @_;
+    my ($self, $fd, $args) = @_;
 
     # \n -> \r\n
-    my $raw_print_mode = 1 if defined $self->{ _raw_print };
+    my $raw_print_mode = 1 if defined $args->{ _raw_print };
     my $header   = $self->{ header }   || undef;
     my $filename = $self->{ filename } || undef;
     my $logfp    = $self->{ _log_function };
@@ -644,9 +645,12 @@ sub _get_mime_header
 sub build_mime_header
 {
     my ($self, $args) = @_;
-    my $buf;
+    my ($buf, $charset);
     my $content_type = $args->{ content_type };
-    my $charset      = $args->{ charset } || 'us-ascii';
+
+    if ($content_type =~ /^text/) {
+	$charset = $args->{ charset } || 'us-ascii';
+    }
 
     $buf .= "Content-Type: $content_type" if defined $content_type;
     $buf .= ";\n\tcharset=$charset" if $charset;
