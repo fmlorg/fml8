@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.76 2002/02/20 14:11:37 fukachan Exp $
+# $FML: Kernel.pm,v 1.76.2.1 2002/03/02 15:09:39 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -549,14 +549,35 @@ sub reply_message
     my $rcpt     = $curproc->{ credential }->sender();
     my $pcb      = $curproc->{ pcb };
     my $category = 'reply_message';
-    my $class    = (ref($msg) eq 'HASH') ? 'queue' : 'text';
+    my $class    = 'queue';
+    my $rarray   = $pcb->get($category, $class) || [];
 
-    my $rarray = $pcb->get($category, $class) || [];
     $rarray->[ $#$rarray + 1 ] = {
 	message   => $msg,
+	type      => ref($msg) ? ref($msg) : 'text',
 	recipient => $rcpt,
     };
+
     $pcb->set($category, $class, $rarray);
+}
+
+
+sub _reply_message_recipient_keys
+{
+    my ($curproc, $msg, $args) = @_;
+    my $pcb      = $curproc->{ pcb };
+    my $category = 'reply_message';
+    my $class    = 'queue';
+    my $rarray   = $pcb->get($category, $class) || [];
+    my %rcptlist = ();
+
+    for my $r (@$rarray) {
+	if (defined $r->{ recipient } ) {
+	    $rcptlist{ $r->{ recipient } }++;
+	}
+    }
+
+    return \%rcptlist;
 }
 
 
@@ -643,11 +664,25 @@ sub inform_reply_messages
     my ($curproc, $args) = @_;
     my $pcb = $curproc->{ pcb };
 
-    # inject message string to queue in
-    for my $category ('reply_message', 'system_message') {
-	if (defined($pcb->get($category, 'text')) ||
-	    defined($pcb->get($category, 'queue') )) {
-	    $curproc->queue_in($category);
+    # We should classify reply messages by
+    # a set of ( category,  recipient(s) , + more ? what ??? );
+    # Hmm, it is better to sort message by 
+    #    1. recipients
+    #    2. pick up messages for it/them.
+    #       merge messages by types if needed.
+    #
+    my $rcptlist = $curproc->_reply_message_recipient_keys();
+    for my $rcpt (keys %$rcptlist) {
+	Log("reply rcpt: $rcpt");
+
+	# inject message string to queue in
+	for my $category ('reply_message', 'system_message') {
+	    if (defined($pcb->get($category, 'queue'))) {
+		$curproc->queue_in($category, {
+		    recipient    => $rcpt,
+		    num_messages => $rcptlist->{ $rcpt },
+		});
+	    }
 	}
     }
 }
@@ -665,18 +700,15 @@ sub inform_reply_messages
 sub queue_in
 {
     my ($curproc, $category, $optargs) = @_;
+    my $pcb          = $curproc->{ pcb };
     my $config       = $curproc->{ config };
-
-    # default values
     my $sender       = $config->{ maintainer };
     my $charset      = $config->{ "${category}_charset" } || 'us-ascii';
     my $subject      = $config->{ "${category}_subject" };
-    my $recipient    = undef; # by default. used as sanity check later
     my $reply_to     = $config->{ address_for_command };
-
-    if (defined $curproc->{ credential }) {
-	$recipient = $curproc->{ credential }->sender();
-    }
+    my $is_multipart = 0;
+    my $recipient    = '';
+    my $msg          = ''; 
 
     # overwrite
     if (defined $optargs) {
@@ -684,10 +716,19 @@ sub queue_in
 	$charset   = $optargs->{'charset'}   if defined $optargs->{'charset'};
 	$subject   = $optargs->{'subject'}   if defined $optargs->{'subject'};
 	$recipient = $optargs->{'recipient'} if defined $optargs->{'recipient'};
+
+	$is_multipart = $optargs->{ num_messages } > 1 ? 1 : 0;
+    }
+
+    # default recipient if undefined.
+    unless ($recipient) {
+	if (defined $curproc->{ credential }) {
+	    $recipient = $curproc->{ credential }->sender();
+	}
     }
 
     # cheap sanity check
-    unless (defined($sender) && defined($recipient)) {
+    unless ($sender && $recipient) {
 	my $reason = '';
 	$reason = "no sender specified\n"    unless defined $sender;
 	$reason = "no recipient specified\n" unless defined $recipient;
@@ -695,6 +736,7 @@ sub queue_in
     }
 
 
+    ###############################################################
     #
     # start building a message
     #
@@ -702,11 +744,6 @@ sub queue_in
 	use Mail::Message::Compose;
     };
     croak($@) if $@;
-
-    my $pcb          = $curproc->{ pcb };
-    my $textq        = $pcb->get($category, 'text') || undef;
-    my $is_multipart = $pcb->get($category, 'queue') ? 1 : 0;
-    my $msg;
 
     if ($is_multipart) {
 	eval q{
@@ -719,28 +756,64 @@ sub queue_in
 	$msg->add('Reply-To' => $reply_to);
 	_add_info_on_header($config, $msg);
 
-	if (defined $textq) {
+	my $mesg_queue = $pcb->get($category, 'queue');
+	my $s = '';
+
+      QUEUE:
+	for my $m ( @$mesg_queue ) {
+	    my $q = $m->{ message };
+	    my $t = $m->{ type };
+	    my $r = $m->{ recipient };
+
+	    # pick up only messages returned to specified $recipient
+	    next QUEUE unless $r eq $recipient;  
+
+	    if ($t eq 'text') {
+		$s .= $q;
+	    }
+	}
+
+	# 1. eat up text messages and put it into the first part.
+	if ($s) {
 	    $msg->attach(Type => "text/plain; charset=$charset",
-			 Data => $textq->{ message },
+			 Data => $s,
 			 );
 	}
 
-	my $a = $pcb->get($category, 'queue');
-	for my $m ( @$a ) {
+	# 2. pick up non text parts after the second part.
+	# pick up only messages returned to specified $recipient
+      QUEUE:
+	for my $m ( @$mesg_queue ) {
 	    my $q = $m->{ message };
-	    $msg->attach(Type        => $q->{ type },
-			 Path        => $q->{ path },
-			 Filename    => $q->{ filename },
-			 Disposition => $q->{ disposition });
+	    my $t = $m->{ type };
+	    my $r = $m->{ recipient };
+
+	    next QUEUE unless $r eq $recipient;  
+
+	    unless ($t eq 'text') {
+		$msg->attach(Type        => $q->{ type },
+			     Path        => $q->{ path },
+			     Filename    => $q->{ filename },
+			     Disposition => $q->{ disposition });
+	    }
 	}
     }
     # text/plain format message (by default).
     else {
-	my $buf  = '';
-	my $a    = $pcb->get($category, 'text');
-	for my $m ( @$a ) {
-	    if ($m->{ message }) {
-		$buf .= $m->{ message };
+	my $mesg_queue = $pcb->get($category, 'queue');
+	my $s = '';
+
+	# pick up only messages returned to specified $recipient
+      QUEUE:
+	for my $m ( @$mesg_queue ) {
+	    my $q = $m->{ message };
+	    my $t = $m->{ type };
+	    my $r = $m->{ recipient };
+
+	    next QUEUE unless $r eq $recipient;  
+
+	    if ($t eq 'text') {
+		$s .= $q;
 	    }
 	}
 
@@ -749,13 +822,18 @@ sub queue_in
 		From     => $sender,
 		To       => $recipient,
 		Subject  => $subject,
-		Data     => $buf,
+		Data     => $s,
 	};
 	$msg->attr('content-type.charset' => $charset);
 	$msg->add('Reply-To' => $reply_to);
 	_add_info_on_header($config, $msg);
     }
 
+
+    ###############################################################
+    #
+    # queue in (not flush queue here)
+    #
     my ($queue_dir, $queue, $qid) = (undef, undef, undef);
     eval q{
 	use Mail::Delivery::Queue;
