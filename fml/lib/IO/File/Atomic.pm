@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Atomic.pm,v 1.10 2001/05/27 14:27:55 fukachan Exp $
+# $FML: Atomic.pm,v 1.11 2001/12/22 09:21:14 fukachan Exp $
 #
 
 package IO::File::Atomic;
@@ -79,10 +79,10 @@ The request is forwarded to SUPER CLASS's new().
 
 # Descriptions: constructor
 #               forward new() request to superclass (IO::File)
-#    Arguments: $class_name
+#               XXX returned object $self is blessed file handle.
+#    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: class object
-#               XXX $self is blessed file handle.
+# Return Value: OBJ
 sub new
 {
     my ($self) = shift;
@@ -92,7 +92,7 @@ sub new
 }
 
 
-=head2 C<open(file[, mode])>
+=head2 open(file[, mode])
 
 open C<file> with C<mode>.
 If C<mode> is not specified, open C<file> with writable mode by default.
@@ -101,26 +101,16 @@ Actually this method opens a new temporary file for write.
 So to write this C<file> is to write the temporary file.
 When close() method sucesses, the file is replaced with this temporary file.
 
-=head2 C<rw_open(file[, mode])>
-
-return the file descriptor for both to read and write C<file>.
-This is a wrapper for C<open()> method described above for conveninece.
-
-=head2 C<close()>
-
-close the file.
-After the file is closed, the file is renamed to the original file name.
-
 =cut
 
 
 # Descriptions: open( $file [, $mode] )
 #               open not $file but file.new.$$
 #               forward open() request to IO::File class
-#    Arguments: $self $file [$mode]
+#    Arguments: OBJ($self) STR($file) [STR($mode)]
 #               XXX $self is blessed file handle.
 # Side Effects: create ${ *$self } hash to save status information
-# Return Value: write file handle (for $file.new.$$)
+# Return Value: HANDLE(write file handle for $file.new.$$)
 sub open
 {
     my ($self, $file, $mode) = @_;
@@ -142,11 +132,19 @@ sub open
 }
 
 
+=head2 rw_open(file[, mode])
+
+return the file descriptor for both to read and write C<file>.
+This is a wrapper for C<open()> method described above for conveninece.
+
+=cut
+
+
 # Descriptions: open $file with the mode $mode for both
 #               reading and writing.
-#    Arguments: $class_name $file [$mode]
+#    Arguments: OBJ($self) STR($file) [STR($mode)]
 # Side Effects: none
-# Return Value: LIST of file handle (read, write)
+# Return Value: ARRAY(HANDLE($rh for read), HANDLE($wh for write))
 sub rw_open
 {
     my ($self, $file, $mode) = @_;
@@ -159,9 +157,17 @@ sub rw_open
 }
 
 
+=head2 close()
+
+close the file.
+After the file is closed, the file is renamed to the original file name.
+
+=cut
+
+
 # Descriptions: close "write" file handle
 #               XXX "read" file handle is closed by SUPERCLASS.
-#    Arguments: $self
+#    Arguments: OBJ($self)
 #               XXX $self is blessed file handle.
 # Side Effects: rename the temporary file to the original file
 #               save the error message in ${ *$fh }
@@ -186,7 +192,7 @@ sub close
 }
 
 
-=head2 C<copy(src, dst)>
+=head2 copy(src, dst)
 
 copy from C<src> file to C<dst> file in atomic way by using
 C<IO::File::Atomic::rw_open>.
@@ -195,9 +201,9 @@ C<IO::File::Atomic::rw_open>.
 
 
 # Descriptions: copy file, which ensures atomic operation
-#    Arguments: $self source_file destination_file
+#    Arguments: OBJ($self) STR($src) STR($dst)
 # Side Effects: $dst's file mode becomes the same as $src
-# Return Value: 1 if succeeded, undef if not
+# Return Value: NUM or UNDEF
 sub copy
 {
     my ($self, $src, $dst) = @_;
@@ -232,10 +238,10 @@ state.
 
 
 # Descriptions: return error message
-#    Arguments: $self
+#    Arguments: OJB($self)
 #               XXX $self is blessed file handle.
 # Side Effects: none
-# Return Value: error message string
+# Return Value: STR(error message string)
 sub error
 {
     my ($self) = @_;
@@ -245,11 +251,11 @@ sub error
 
 
 # Descriptions: reset the previous work
-#    Arguments: $self
+#    Arguments: OBJ($self)
 #               XXX $self is blessed file handle.
 # Side Effects: clean up the previous work ;-)
 #               remove temporary files we created
-# Return Value: none
+# Return Value: NUM
 sub rollback
 {
     my ($self) = @_;
@@ -261,7 +267,7 @@ sub rollback
 
 # Descriptions: destructor
 #               forward the request to rollback() in this class
-#    Arguments: $self
+#    Arguments: OBJ($self)
 #               XXX $self is blessed file handle.
 # Side Effects: none
 # Return Value: the same as rollback()
