@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.13 2003/08/23 14:38:00 fukachan Exp $
+# $FML: Cache.pm,v 1.14 2003/08/29 15:34:03 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -97,7 +97,7 @@ sub close { 1;}
 sub touch { 1;}
 
 
-=head2 add($address, $argv) 
+=head2 add($address, $argv)
 
 add data given as hash reference $argv.
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.98 2003/09/20 04:32:51 fukachan Exp $
+# $FML: Switch.pm,v 1.99 2003/09/27 14:56:48 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -460,7 +460,7 @@ sub _program_match
 	else {
 	    return _program_subdir_match($program, $name, $fullname);
 	}
-    }    
+    }
     else {
 	return _program_subdir_match($program, $name, $fullname);
     }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.7 2003/01/01 02:06:22 fukachan Exp $
+# $FML: Queue.pm,v 1.1 2003/08/30 00:14:44 fukachan Exp $
 #
 
 package FML::IPC::Queue;
@@ -28,8 +28,8 @@ FML::IPC::Queue - basic message queue operation
 
 =head1 DESCRIPTION
 
-FML::IPC::Queue provides basic message queue operations such as 
-appending messages into the queue, 
+FML::IPC::Queue provides basic message queue operations such as
+appending messages into the queue,
 list up queue et.al.
 
 =head1 METHODS
@@ -43,7 +43,7 @@ list up queue et.al.
 
 # Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: create an object 
+# Side Effects: create an object
 # Return Value: OBJ
 sub new
 {

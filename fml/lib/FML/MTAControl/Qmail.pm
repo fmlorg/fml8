@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.17 2003/08/29 15:34:05 fukachan Exp $
+# $FML: Qmail.pm,v 1.18 2003/09/13 09:17:00 fukachan Exp $
 #
 
 package FML::MTAControl::Qmail;
@@ -74,7 +74,7 @@ sub qmail_remove_alias
 	    unlink $dst || do {
 		my $s = "failed to remove $dst";
 		$curproc->ui_message("error: $s");
-		$curproc->logerror($s);		
+		$curproc->logerror($s);
 	    };
 	}
     }

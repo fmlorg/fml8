@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.55 2003/09/08 09:21:51 fukachan Exp $
+# $FML: ToHTML.pm,v 1.56 2003/10/06 10:42:19 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.55 2003/09/08 09:21:51 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.56 2003/10/06 10:42:19 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -119,7 +119,7 @@ sub new
 
 # Descriptions: destructor.
 #    Arguments: OBJ($self)
-# Side Effects: none 
+# Side Effects: none
 # Return Value: none
 sub DESTROY
 {
@@ -490,7 +490,7 @@ sub html_begin
     elsif (defined $args->{ message }) {
 	$msg   = $args->{ message };
 	$hdr   = $msg->whole_message_header;
-	$title = $self->_decode_mime_string( $hdr->get('article_subject') || 
+	$title = $self->_decode_mime_string( $hdr->get('article_subject') ||
 					$hdr->get('subject') );
     }
 
@@ -1978,7 +1978,7 @@ sub _print_li_filename
 {
     my ($self, $wh, $db, $id, $code) = @_;
     my $filename = $db->get('html_filename', $id);
-    my $subject  = $db->get('article_subject', $id) || 
+    my $subject  = $db->get('article_subject', $id) ||
 			$db->get('subject', $id) || "no subject";
     my $who      = $db->get('who', $id) || "no sender";
 

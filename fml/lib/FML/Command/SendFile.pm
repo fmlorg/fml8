@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.31 2003/08/29 15:33:57 fukachan Exp $
+# $FML: SendFile.pm,v 1.32 2003/10/14 12:57:44 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -56,7 +56,7 @@ sub num_files_in_send_article_args
 {
     my ($self, $curproc, $command_args) = @_;
     my $command = $command_args->{ command };
-    my $count   = 0; 
+    my $count   = 0;
 
     # command buffer = get 1
     # command buffer = get 1,2,3

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.22 2003/08/23 04:35:34 fukachan Exp $
+# $FML: Analyze.pm,v 1.23 2003/08/23 07:24:44 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -53,7 +53,7 @@ return summary of points of addresses as HASH_REF.
 
     $summary = {
 	address1 => point,
-	address2 => point,	
+	address2 => point,
     };
 
 =head2 removal_address()
@@ -63,7 +63,7 @@ return addresses to be removed.
 =cut
 
 
-# Descriptions: return summary 
+# Descriptions: return summary
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: HASH_REF
@@ -89,7 +89,7 @@ sub removal_address
 {
     my ($self) = @_;
     my $analyzer = $self->{ _analyzer };
-	
+
     if (defined $analyzer) {
 	return $analyzer->removal_address();
     }
@@ -107,7 +107,7 @@ sub print
 {
     my ($self, $addr) = @_;
     my $analyzer = $self->{ _analyzer };
-	
+
     if (defined $analyzer) {
 	return $analyzer->print($addr);
     }
@@ -162,7 +162,7 @@ sub AUTOLOAD
 
 =head1 $data STRUCTURE
 
-C<$data> is passed to the error analyer function 
+C<$data> is passed to the error analyer function
 C<FML::Error::Analyze::${fp}> (as $anal_args in AUTOLOAD()).
 
 	 $data = {

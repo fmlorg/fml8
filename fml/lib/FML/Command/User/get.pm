@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.17 2003/06/29 05:48:12 fukachan Exp $
+# $FML: get.pm,v 1.18 2003/08/23 07:24:44 fukachan Exp $
 #
 
 package FML::Command::User::get;
@@ -98,7 +98,7 @@ sub check_limit
 				   'requests exceed limit',
 				   $_args);
 	$curproc->logerror("get command limit: $nreq > $limit");
-	return $nreq;	
+	return $nreq;
     }
     else {
 	return 0;

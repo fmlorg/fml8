@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledFile.pm,v 1.28 2003/02/01 08:48:09 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.29 2003/07/21 09:40:31 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -45,8 +45,8 @@ By default, FETCH() returns the first value with the key.
 It meas first match.
 
    use Tie::JournaledFile;
-   tie %db, 'Tie::JournaledFile', { 
-       match_condition => "first", 
+   tie %db, 'Tie::JournaledFile', {
+       match_condition => "first",
        file            => 'cache.txt',
    };
    print $db{ rudo }, "\n";

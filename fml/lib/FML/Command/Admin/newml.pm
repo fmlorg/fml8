@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.70 2003/09/25 11:40:59 fukachan Exp $
+# $FML: newml.pm,v 1.71 2003/09/27 03:00:15 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -108,7 +108,7 @@ sub process
     # already exists.
     unless (defined $options->{ force } ) {
 	if (-d $ml_home_dir) {
-	    warn("$ml_name ml_home_dir($ml_home_dir) already exists"); 
+	    warn("$ml_name ml_home_dir($ml_home_dir) already exists");
 	    return ;
 	}
     }
@@ -143,18 +143,18 @@ sub process
 
 
 # Descriptions: generate _ml_name_xxx in $params
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($params)
 # Side Effects: update $params
 # Return Value: none
 sub _adjust_params_for_virtual_domain
 {
     my ($self, $curproc, $command_args, $params) = @_;
-    my ($ml_name_admin, $ml_name_ctl, $ml_name_error, 
+    my ($ml_name_admin, $ml_name_ctl, $ml_name_error,
 	$ml_name_post,$ml_name_request);
     my $ml_name   = $params->{ _ml_name };
     my $ml_domain = $params->{ ml_domain };
-    
+
     if ($curproc->is_default_domain($ml_domain)) {
 	$ml_name_admin   = sprintf("%s-%s",$ml_name,"admin",$ml_domain);
 	$ml_name_ctl     = sprintf("%s-%s",$ml_name,"ctl",$ml_domain);
@@ -428,9 +428,9 @@ sub _setup_cgi_interface
 	_install($src, $dst, $params);
     }
 
-    # 
+    #
     # 3.  install *.cgi
-    # 
+    #
 
     use File::Spec;
     my $libexec_dir = $config->{ fml_libexec_dir };

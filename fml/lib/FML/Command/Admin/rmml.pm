@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmml.pm,v 1.19 2003/09/13 09:16:59 fukachan Exp $
+# $FML: rmml.pm,v 1.20 2003/09/27 03:00:16 fukachan Exp $
 #
 
 package FML::Command::Admin::rmml;
@@ -118,7 +118,7 @@ sub _remove_ml_home_dir
     $curproc->ui_message("removing ml_home_dir for $ml_name");
 
     # /var/spool/ml/elena -> /var/spool/ml/@elena
-    my $removed_dir = 
+    my $removed_dir =
 	$curproc->removed_ml_home_dir_path($ml_home_prefix, $ml_name);
     rename($ml_home_dir, $removed_dir);
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ML.pm,v 1.3 2003/09/27 04:07:27 fukachan Exp $
+# $FML: ML.pm,v 1.4 2003/10/14 10:55:27 fukachan Exp $
 #
 
 package FML::CGI::ML;
@@ -47,7 +47,7 @@ sub cgi_menu
 
     unless ($curproc->cgi_var_cgi_mode() eq "admin") {
 	croak("Admin::ML::cgi_menu: prohibited in this mode");
-    }    
+    }
 
     print start_form(-action=>$action, -target=>$target);
     print $curproc->cgi_hidden_info_language();

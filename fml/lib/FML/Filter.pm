@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.34 2003/08/23 14:37:58 fukachan Exp $
+# $FML: Filter.pm,v 1.35 2003/09/20 13:43:29 fukachan Exp $
 #
 
 package FML::Filter;
@@ -310,7 +310,7 @@ sub _filter_reject_notice
     my $config = $curproc->config();
     my $msg    = $curproc->incoming_message();
     my $r      = $msg_args->{ _arg_reason } || 'unknown';
-    my $type   = $config->{ "${class}_filter_reject_notice_data_type" } || 
+    my $type   = $config->{ "${class}_filter_reject_notice_data_type" } ||
 	'string';
     my $size   = 2048;
 
@@ -337,9 +337,9 @@ sub _filter_reject_notice
 	$curproc->reply_message($msg, $msg_args);
     }
     elsif ($type eq 'string') {
-	my $s = $msg->whole_message_as_str( { 
-	    indent => '   ', 
-	    size   => $size, 
+	my $s = $msg->whole_message_as_str( {
+	    indent => '   ',
+	    size   => $size,
 	});
 	my $r = "The first $size bytes of this message follows:";
 	$curproc->reply_message_nl("error.reject_notice_preamble",
@@ -368,7 +368,7 @@ sub command_mail_filter
     my $config  = $curproc->config();
 
     if (defined $message) {
-	my $functions = 
+	my $functions =
 	    $config->get_as_array_ref('command_mail_filter_functions');
 	my $status    = 0;
 
@@ -409,7 +409,7 @@ sub _apply_command_mail_size_filter
 	$obj->set_class('incoming_command_mail');
 
 	# overwrite filter rules based on FML::Config
-	my $rules = 
+	my $rules =
 	    $config->get_as_array_ref('command_mail_size_filter_rules');
 
 	# overwrite rules

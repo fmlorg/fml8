@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.25 2003/04/15 01:52:18 fukachan Exp $
+# $FML: Queue.pm,v 1.26 2003/08/23 04:35:45 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -315,7 +315,7 @@ sub lock
 	flock($fh, &LOCK_EX);
 	$self->{ _lock }->{ _fh } = $fh;
     };
-    alarm(0); 
+    alarm(0);
 
     ($@ =~ /lock timeout/) ? 0 : 1;
 }

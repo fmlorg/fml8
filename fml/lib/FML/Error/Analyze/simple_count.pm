@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: simple_count.pm,v 1.2 2003/05/28 14:33:44 fukachan Exp $
+# $FML: simple_count.pm,v 1.3 2003/08/23 04:35:35 fukachan Exp $
 #
 
 package FML::Error::Analyze::simple_count;
@@ -14,7 +14,7 @@ use Carp;
 use FML::Log qw(Log LogWarn LogError);
 
 my $debug = 1;
- 
+
 
 =head1 NAME
 

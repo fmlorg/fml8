@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.126 2003/09/29 13:06:54 fukachan Exp $
+# $FML: Distribute.pm,v 1.127 2003/10/06 10:42:18 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -197,13 +197,13 @@ sub run
     my $config     = $curproc->config();
     my $maintainer = $config->{ maintainer };
     my $sender     = $curproc->{'credential'}->{'sender'};
-    my $data_type  = 
+    my $data_type  =
 	$config->{post_restrictions_reject_notice_data_type} || 'string';
     my $size       = 2048;
     my $msg_args   = {
 	recipient    => $sender,
 	_arg_address => $sender,
-	_arg_size    => $size, 
+	_arg_size    => $size,
     };
 
     my $eval = $config->get_hook( 'distribute_run_start_hook' );
@@ -222,7 +222,7 @@ sub run
 	    my $rule = $pcb->get("check_restrictions", "deny_reason");
 	    if ($rule eq 'reject_system_accounts') {
 		my $r = "deny request from a system account";
-		$curproc->reply_message_nl("error.system_accounts", 
+		$curproc->reply_message_nl("error.system_accounts",
 					   $r, $msg_args);
 	    }
 	    elsif ($rule eq 'permit_member_maps') {
@@ -241,7 +241,7 @@ sub run
 	    # send back deny request with the original message.
 	    my $msg = $curproc->incoming_message();
 	    if ($data_type eq 'string') {
-		my $s = $msg->whole_message_as_str( { 
+		my $s = $msg->whole_message_as_str( {
 		    indent => '   ',
 		    size   => $size,
 		} );
@@ -580,7 +580,7 @@ sub _new_thread_check
     $thread->analyze($msg);
 
     # get summary based on updated UDB.
-    # XXX mode = html or text 
+    # XXX mode = html or text
 }
 
 

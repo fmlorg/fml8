@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.24 2003/08/23 14:37:58 fukachan Exp $
+# $FML: Error.pm,v 1.25 2003/08/29 15:33:54 fukachan Exp $
 #
 
 package FML::Error;
@@ -182,7 +182,7 @@ sub add
     my ($self, $info) = @_;
     my $curproc = $self->{ _curproc };
     my $db      = $self->{ _db };
-    my $addr    = $info->{ address }; 
+    my $addr    = $info->{ address };
 
     if (defined $db) {
 	$self->lock();

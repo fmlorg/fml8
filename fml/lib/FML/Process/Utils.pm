@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.81 2003/09/25 11:36:25 fukachan Exp $
+# $FML: Utils.pm,v 1.82 2003/10/14 12:57:46 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1404,7 +1404,7 @@ sub language_of_html_file
 # Return Value: none
 sub set_charset
 {
-    my ($curproc, $category, $charset) = @_; 
+    my ($curproc, $category, $charset) = @_;
     my $pcb = $curproc->pcb();
 
     $pcb->set("charset", $category, $charset);
@@ -1418,7 +1418,7 @@ sub set_charset
 # Return Value: STR
 sub get_charset
 {
-    my ($curproc, $category) = @_; 
+    my ($curproc, $category) = @_;
     my $config   = $curproc->config();
     my $pcb      = $curproc->pcb();
     my $category = $category || "template_file";

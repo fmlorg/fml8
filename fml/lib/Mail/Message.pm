@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.84 2003/09/08 09:30:09 fukachan Exp $
+# $FML: Message.pm,v 1.85 2003/09/13 13:01:01 fukachan Exp $
 #
 
 package Mail::Message;
@@ -722,7 +722,7 @@ sub whole_message_body
 
 =head2 whole_message_as_str($args)
 
-To extract the first 2048 bytes in the whole message (body), 
+To extract the first 2048 bytes in the whole message (body),
 specify the following parameters in $args.
 
     $args = {
@@ -793,7 +793,7 @@ sub _fuzzy_substr
 
     if ($p <= $max) {
 	return substr($$r_data, $start, $p - $start);
-    } 
+    }
     else {
 	my ($last_p, $i);
 	$i = 10;
@@ -802,7 +802,7 @@ sub _fuzzy_substr
       PAR:
 	while ($i-- > 0) {
 	    $p = index($$r_data, "\n\n", $p + 1);
-	    last PAR if $p > $max;  
+	    last PAR if $p > $max;
 	    $last_p = $p;
 	}
 
@@ -1421,7 +1421,7 @@ sub parse_and_build_mime_multipart_chain
 
     # 1. check the preamble before multipart blocks
     #    XXX mpb = multipart-body
-    # 
+    #
     #    XXX-TODO: bug fix logic to find the start point of multipart.
     #    2003/08/16: modify $mpb_begin search logic,
     #    which is effective but wrong.
@@ -1490,7 +1490,7 @@ sub parse_and_build_mime_multipart_chain
     # XXX We need Content-Type: in each block. This may be a bug ?
     # XXX To avoid the first part without no content-type, we check
     # XXX the first string in the body data.
-    # 
+    #
     # XXX The first delimeter should be handled specially.
     # XXX Exactly, it is dash-boundary not delimeter!
     my $dp = index($$data, $dash_boundary, 0); # ^dash-boundary

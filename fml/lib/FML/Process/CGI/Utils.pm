@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.3 2003/09/27 06:57:00 fukachan Exp $
+# $FML: Utils.pm,v 1.4 2003/10/14 07:04:35 fukachan Exp $
 #
 
 package FML::Process::CGI::Utils;
@@ -45,7 +45,7 @@ sub cgi_var_ml_name
 
 
 # Descriptions: return $ml_domain defined in *.cgi programd .
-#               ml_domain is hard-coded, not dependent on cgi_var_cgi_mode. 
+#               ml_domain is hard-coded, not dependent on cgi_var_cgi_mode.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: STR
@@ -58,8 +58,8 @@ sub cgi_var_ml_domain
 
 
 # Descriptions: return $ml_home_prefix defined in *.cgi program.
-#               ml_home_prefix is determined by ml_domain, 
-#               which is hard-coded, not dependent on cgi_var_cgi_mode. 
+#               ml_home_prefix is determined by ml_domain,
+#               which is hard-coded, not dependent on cgi_var_cgi_mode.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: STR

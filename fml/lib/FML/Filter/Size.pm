@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Size.pm,v 1.3 2003/07/21 04:51:33 fukachan Exp $
+# $FML: Size.pm,v 1.4 2003/08/23 04:35:36 fukachan Exp $
 #
 
 package FML::Filter::Size;
@@ -87,7 +87,7 @@ set class e.g. incoming_article, outgoing_article, ...
 =cut
 
 
-# Descriptions: set class. 
+# Descriptions: set class.
 #    Arguments: OBJ($self) STR($class)
 # Side Effects: update $self->{ _class }
 # Return Value: STR

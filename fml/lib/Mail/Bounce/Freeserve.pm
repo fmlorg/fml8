@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Freeserve.pm,v 1.2 2003/08/06 11:20:04 fukachan Exp $
+# $FML: Freeserve.pm,v 1.3 2003/08/06 14:13:41 tmu Exp $
 #
 
 #
@@ -45,7 +45,7 @@ See C<Mail::Bounce> for more details.
 X-Loop contains the address which causes this error.
 
 See L<Mail::Bounce::Language::Japanese> module for the Japanese
-message. 
+message.
 
 =cut
 

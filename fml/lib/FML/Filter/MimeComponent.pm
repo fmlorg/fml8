@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent.pm,v 1.4 2003/09/20 13:43:31 fukachan Exp $
+# $FML: MimeComponent.pm,v 1.5 2003/10/14 10:44:08 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -69,7 +69,7 @@ sub new
     my ($type) = ref($self) || $self;
     my %count  = ();
     my %reason = ();
-    my $me     = { 
+    my $me     = {
 	_curproc => $curproc,
 	_count   => \%count,
 	_reason  => \%reason,
@@ -274,7 +274,7 @@ sub mime_component_check
 	# save the reason(s).
 	for my $key (keys %$reason) {
 	    if ($key ne 'reject') {
-		$_reason .= 
+		$_reason .=
 		    $_reason ? " + ".$reason->{ $key } : $reason->{ $key };
 	    }
 
@@ -283,7 +283,7 @@ sub mime_component_check
 	    }
 	}
     }
-    
+
     $_reason ||= $self->{ _reject_reason } || "default action";
     if (defined $curproc) {
 	$curproc->log("mime_component_filter: $decision ($_reason)");
@@ -392,7 +392,7 @@ sub __basic_regexp_match
 	    return 0;
 	}
     }
-    
+
     return 0;
 }
 

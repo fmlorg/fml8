@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.9 2003/10/06 10:42:19 fukachan Exp $
+# $FML: DB.pm,v 1.10 2003/10/14 10:06:08 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -26,7 +26,7 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.9 2003/10/06 10:42:19 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.10 2003/10/14 10:06:08 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -203,7 +203,7 @@ sub new
 	push(@orig_header_fields, "orig_$hdr");
 	push(@article_header_fields, "article_$hdr");
     }
-		
+
     return bless $me, $type;
 }
 
@@ -321,7 +321,7 @@ sub _save_header_info
 	$val =~ s/\s*$//;
 
 	$self->_db_set($db, "orig_$key", $id, $val);
-	
+
 	# ADDR type: save the first element of address list.
 	if ($header_field_type{ $key } =~ /ADDR/) { # ADDR or ADDR_LIST
 	    my $ra_val = $self->_address_clean_up( $val );
@@ -745,7 +745,7 @@ sub _db_array_add
 	    $found = 1 if ($value =~ /^\d+$/o) && ($v == $value);
 	    $found = 1 if ($value !~ /^\d+$/o) && ($v eq $value);
 	}
-	
+
 	# add if the value is a new comer.
 	unless ($found) {
 	    my $v = $self->_db_get($db, $table, $key) || '';
@@ -880,11 +880,11 @@ sub db_open
     else {
 	return $self->{ _db } if defined $self->{ _db };
 
-	# @table = (@orig_header_fields, 
-	# @header_fields, 
+	# @table = (@orig_header_fields,
+	# @header_fields,
 	# @article_header_fields,
 	# @table_list);
-	@table = (@table_list); 
+	@table = (@table_list);
     }
     _PRINT_DEBUG("db_open(on demand): @table");
 

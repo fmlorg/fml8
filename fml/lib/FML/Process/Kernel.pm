@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.184 2003/10/14 06:58:10 fukachan Exp $
+# $FML: Kernel.pm,v 1.185 2003/10/14 12:57:45 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1195,10 +1195,10 @@ sub log_message
     my $at_function = $msg_args->{ caller }->[ 1 ];
     my $at_line     = $msg_args->{ caller }->[ 2 ];
 
-    if ($level eq 'info') { 
+    if ($level eq 'info') {
 	Log($msg);
     }
-    elsif ($level eq 'warn') { 
+    elsif ($level eq 'warn') {
 	LogWarn($msg);
     }
     elsif ($level eq 'error') {
@@ -1679,7 +1679,7 @@ sub message_nl
     my $buf       = '';
 
     use File::Spec;
-    $class =~ s@\.@/@g; # XXX . -> / 
+    $class =~ s@\.@/@g; # XXX . -> /
 
     my $local_file = File::Spec->catfile($local_dir, $charset, $class);
     my $file       = File::Spec->catfile($dir,       $charset, $class);
@@ -2331,7 +2331,7 @@ sub parse_exception
 sub _reopen_stderr_channel
 {
     my ($curproc) = @_;
-    my $config    = $curproc->config(); 
+    my $config    = $curproc->config();
     my $option    = $curproc->command_line_options();
 
     if ($curproc->is_cgi_process()       ||
