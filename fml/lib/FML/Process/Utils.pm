@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.31 2002/06/30 14:30:17 fukachan Exp $
+# $FML: Utils.pm,v 1.32 2002/07/02 12:48:42 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -620,6 +620,34 @@ sub get_address_list
     }
 
     return [];
+}
+
+
+=head2 which_map_nl($map)
+
+which member of maps is this $map ?
+
+=cut
+
+
+sub which_map_nl
+{
+    my ($curproc, $map) = @_;
+    my $config = $curproc->{ config };
+    my $found  = '';
+
+  SEARCH_MAPS:
+    for my $mode (qw(member recipient admin_member)) {
+	my $maps = $config->get_as_array_ref("${mode}_maps");
+	for my $m (@$maps) {
+	    if ($map eq $m) { 
+		$found = $mode;
+		last SEARCH_MAPS;
+	    }
+	}
+    }
+
+    return $found;
 }
 
 
