@@ -1,5 +1,5 @@
 <!--
-   $FML: cgi.sgml,v 1.6 2002/07/02 10:39:35 fukachan Exp $
+   $FML: cgi.sgml,v 1.7 2002/07/06 14:55:18 fukachan Exp $
 -->
 
 <chapter id="internal.cgi">
@@ -126,6 +126,24 @@ FML::CGI::Admin::User →
 </screen>
 などとなっていて、Mach のトランポリン機構のように、いったりきたりしま
 す。
+</para>
+
+</sect1>
+
+
+<sect1 id="internal.cgi.problems">
+	<title>
+	備考: FML::CGI::Admin:: ではハードコーディングするしかない？	
+	</title>
+
+<para>
+例えば FML::CGI::Admin::User では
+$comname と maps の関係がハードコーディングされてるけれど、
+でも、これはしかたないんじゃないかなぁ…
+</para>
+
+<para>
+config に追い出すと、とてつもなくいっぱい変数が必要になりそうだ。
 </para>
 
 </sect1>
