@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.110 2002/07/02 12:45:32 fukachan Exp $
+# $FML: Kernel.pm,v 1.111 2002/07/13 13:08:08 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -828,6 +828,9 @@ If you attach a plain text with the charset = iso-2022-jp,
 	disposition => "main.cf example",
     });
 
+=head3 CAUTION
+makefml not support message handling not yet.
+
 =cut
 
 
@@ -838,6 +841,11 @@ If you attach a plain text with the charset = iso-2022-jp,
 sub reply_message
 {
     my ($curproc, $msg, $args) = @_;
+    my $myname = $curproc->myname();
+
+    # XXX makefml not support message handling not yet.
+    return if $myname eq 'makefml';
+
     my $recipient = [ $curproc->{ credential }->sender() ];
 
     if (defined($args->{recipient})) {
