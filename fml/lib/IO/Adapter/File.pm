@@ -4,13 +4,14 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.52 2004/02/03 04:15:33 fukachan Exp $
+# $FML: File.pm,v 1.53 2004/03/17 06:58:43 fukachan Exp $
 #
 
 package IO::Adapter::File;
 
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
+	    %LockedFileHandle %FileIsLocked);
 use Carp;
 use IO::Adapter::ErrorStatus qw(error_set error error_clear);
 
@@ -167,7 +168,9 @@ sub touch
 }
 
 
+#
 # debug tools
+#
 my $c  = 0;
 my $ec = 0;
 
@@ -459,6 +462,113 @@ sub delete
 	$self->error_set("Error: cannot open file=$self->{ _file }");
 	return undef;
     }
+}
+
+
+=head1 LOCK
+
+=head2 lock($args)
+
+=head2 unlock($args)
+
+=cut
+
+
+# Descriptions: flock file (create a file if needed).
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create a file if needed.
+# Return Value: none
+sub lock
+{
+    my ($self, $args) = @_;
+    my $file = $args->{ file };
+
+    $self->_simple_flock($file);
+}
+
+
+# Descriptions: un-flock file (create a file if needed).
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
+sub unlock
+{
+    my ($self, $args) = @_;
+    my $file = $args->{ file };
+
+    $self->_simple_funlock($file);
+}
+
+
+# Descriptions: try flock(2) for $file.
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: flock for $file
+# Return Value: 1 or 0
+sub _simple_flock
+{
+    my ($self, $file) = @_;
+
+    use FileHandle;
+    my $fh = new FileHandle ">> $file";
+
+    if (defined $fh) {
+	print STDERR "\tdebug[$$]: try lock $file\n" if $debug;
+
+	$LockedFileHandle{ $file } = $fh;
+
+	my $r = 0; # return value
+	eval q{
+	    use Fcntl qw(:DEFAULT :flock);
+	    $r = flock($fh, &LOCK_EX);
+	};
+	$self->error_set($@) if $@;
+
+	if ($r) {
+	    print STDERR "\tdebug[$$]: $file LOCKED\n" if $debug;
+	    $FileIsLocked{ $file } = 1;
+	    return 1;
+	}
+    }
+    else {
+	$self->error_set("cannot open $file");
+    }
+
+    return 0;
+}
+
+
+# Descriptions: try unlock by flock(2) for $file.
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: flock for $file
+# Return Value: 1 or 0
+sub _simple_funlock
+{
+    my ($self, $file) = @_;
+
+    print STDERR "\tdebug[$$]: call unlock $file\n" if $debug;
+
+    return 0 unless $FileIsLocked{ $file };
+    return 0 unless $LockedFileHandle{ $file };
+
+    my $fh = $LockedFileHandle{ $file };
+
+    print STDERR "\tdebug[$$]: try unlock $file\n" if $debug;
+
+    my $r = 0; # return value
+    eval q{
+	use Fcntl qw(:DEFAULT :flock);
+	$r = flock($fh, &LOCK_UN);
+    };
+    $self->error_set($@) if $@;
+
+    if ($r) {
+	print STDERR "\tdebug[$$]: $file UNLOCKED\n" if $debug;
+	delete $FileIsLocked{ $file };
+	delete $LockedFileHandle{ $file };
+	return 1;
+    }
+
+    return 0;
 }
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.29 2004/02/03 04:15:32 fukachan Exp $
+# $FML: Adapter.pm,v 1.30 2004/02/15 04:38:35 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -284,6 +284,47 @@ sub touch
 
     if ($type eq 'file') {
 	$self->SUPER::touch( { file => $self->{_file} } );
+    }
+}
+
+
+=head2 lock()
+
+lock. currently, only supported for file map.
+
+=head2 unlock()
+
+unlock. currently, only supported for file map.
+
+=cut
+
+
+# Descriptions: create a file if not exists.
+#    Arguments: OBJ($self)
+# Side Effects: create $map if needed or possible
+# Return Value: none
+sub lock
+{
+    my ($self) = @_;
+    my $type   = $self->{ _type };
+
+    if ($type eq 'file') {
+	$self->SUPER::lock( { file => $self->{_file} } );
+    }
+}
+
+
+# Descriptions: create a file if not exists.
+#    Arguments: OBJ($self)
+# Side Effects: create $map if needed or possible
+# Return Value: none
+sub unlock
+{
+    my ($self) = @_;
+    my $type   = $self->{ _type };
+
+    if ($type eq 'file') {
+	$self->SUPER::unlock( { file => $self->{_file} } );
     }
 }
 
