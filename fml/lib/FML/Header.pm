@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: Header.pm,v 1.31 2001/04/14 15:41:05 fukachan Exp $
+# $FML: Header.pm,v 1.32 2001/04/15 05:01:58 fukachan Exp $
 #
 
 package FML::Header;
@@ -284,9 +284,14 @@ sub rewrite_subject_tag
 sub rewrite_reply_to
 {
     my ($header, $config, $args) = @_;
-    my $reply_to = $header->get('reply-to');
-    unless (defined $reply_to) {
+    my $reply_to = $header->get('reply-to') || '';
+
+    unless ($reply_to) {
 	$header->add('reply-to', $config->{ address_for_post });
+	Log("(debug) rewrite reply-to to $config->{ address_for_post }");
+    }
+    else {
+	Log("(debug) not rewrite 'reply-to: $reply_to'");
     }
 }
 
