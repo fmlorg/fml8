@@ -16,8 +16,8 @@ DIFF () {
 }
 
 xdir=$dir/../testmails
-DIFF $dir/msg_mp
-DIFF $dir/msg_mp.1
 DIFF $xdir/multipart=mixed
+DIFF $xdir/multipart=mixed-preamble
+DIFF $xdir/multipart=mixed-trailor
 
 exit 0;
