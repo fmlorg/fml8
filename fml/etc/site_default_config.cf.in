@@ -1,4 +1,4 @@
-# $FML$
+# $FML: site_default_config.cf.in,v 1.1 2002/04/01 09:58:35 fukachan Exp $
 #
 #               site default_config.cf EXAMPLE
 #
@@ -14,3 +14,9 @@
 
 # We want to disable the subject tag in articles by default.
 article_header_rewrite_rules	-=	rewrite_subject_tag
+
+
+
+#
+# site specific options.
+#
