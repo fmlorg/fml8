@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.52 2001/10/08 15:50:24 fukachan Exp $
+# $FML: Kernel.pm,v 1.53 2001/10/08 20:25:53 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -99,6 +99,13 @@ sub new
 	}
     }
 
+    # import XXX_dir variables from /etc/fml/main.cf
+    for my $dir_var (qw(lib_dir libexec_dir share_dir)) {
+	if (defined $args->{ main_cf }->{ $dir_var }) {
+	    $cfargs->{ 'fml_'.$dir_var } = $args->{ main_cf }->{ $dir_var };
+	}
+    }
+
     # import $fml_version
     if (defined $args->{ fml_version }) {
 	$cfargs->{ fml_version } = "fml-devel ". $args->{ fml_version };
@@ -130,9 +137,10 @@ sub new
 	    print "// FML::Process::Kernel::new()\n";
 	    $Data::Dumper::Varname = 'curproc';
 	    print Dumper( $curproc );
+	    sleep 2;
 	    $Data::Dumper::Varname = 'args';
 	    print Dumper( $args );
-	    sleep 3;
+	    sleep 2;
 	};
     }
 
@@ -692,6 +700,37 @@ sub queue_flush
     use FML::Process::QueueManager;
     my $obj = new FML::Process::QueueManager { directory => $queue_dir };
     $obj->send($curproc);
+}
+
+
+=head2 C<expand_variables_in_file>
+
+expand $xxx variables in template (e.g. $help_file).  return file name
+string, which is a new template converted by this routine.
+
+For example, it expands
+
+        welcome to $ml_name ML
+
+to
+        welcome to elena ML
+
+C<Caution:>
+   We need to convert charset of the specified file in some language.
+   For example, Japanese message is ISO-2022-JP but programs love euc-jp
+   since it is easy to use euc-jp.
+
+=cut
+
+# Descriptions: expand $xxx variables in template (e.g. $help_file).
+#    Arguments: $self $filename_string $args
+# Side Effects: none
+# Return Value: file name string
+sub expand_variables_in_file
+{
+    my ($curproc, $file, $args) = @_;
+    Log("expand ... $file ...");
+    return $file;
 }
 
 
