@@ -12,7 +12,7 @@ package FML::SequenceFile;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
-use Base::Errors qw(error_reason error error_reset);
+use FML::Base::Errors qw(error_reason error error_reset);
 
 require Exporter;
 @ISA = qw(Exporter);

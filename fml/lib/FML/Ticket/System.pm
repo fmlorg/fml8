@@ -13,7 +13,7 @@ package FML::Ticket::System;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use Base::Errors qw(error_reason error error_reset);
+use FML::Base::Errors qw(error_reason error error_reset);
 
 require Exporter;
 @ISA = qw(Exporter);
@@ -53,9 +53,9 @@ sub update_ticket_trace_cache
     printf "%o\n", (0777 & $umask);
 
     unless (-d $db_dir) {
-	use Base::File qw(mkdirhier);
+	use FML::Base::File qw(mkdirhier);
 	mkdirhier($db_dir, 0755);
-	$self->error_reason( Base::File->error() );
+	$self->error_reason( FML::Base::File->error() );
 	return;
     }
 
