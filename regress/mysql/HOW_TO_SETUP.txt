@@ -2,6 +2,10 @@ DO NOT FORGET, RUN
 
 	# mysqladmin -p reload
 
+TO CHECK THE ACL
+	# mysqlaccess localhost fukachan fml -U root -P -H localhost
+
+
 -------------------------------------------------------------
 
 
