@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: install.cf.in,v 1.11 2003/03/16 04:53:34 fukachan Exp $
+# $FML: install.cf.in,v 1.12 2003/10/26 02:04:09 fukachan Exp $
 #
 
 
@@ -61,8 +61,10 @@ mandatory_dirs	=	prefix
 			data_dir
 
 # install /etc/fml/defaults/$version/
-nl_template_files	=	default_config.cf
-				config.cf
+nl_template_files	=	default_config.cf.ja
+				default_config.cf.en
+				config.cf.ja
+				config.cf.en
 
 # sample files
 sample_cf_files		=	site_default_config.cf

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.7 2003/08/23 04:35:27 fukachan Exp $
+# $FML: Install.pm,v 1.8 2003/10/26 02:04:08 fukachan Exp $
 #
 
 package FML::Install;
@@ -41,8 +41,6 @@ FML::Install - utility functions used in installation
 	    print STDERR "ok $path\n" if $debug;
 	}
     }
-
-    # XXX-TODO: check uid, gid
 
     $installer->install_main_cf();
     $installer->install_sample_cf_files();
@@ -93,6 +91,9 @@ sub new
 
     return bless $me, $type;
 }
+
+
+# XXX-TODO: check uid, gid method
 
 
 =head1 CONFIG
@@ -288,11 +289,12 @@ sub install_default_config_files
 
     $self->disable_message();
 
+    # XXX change file name of components of $nl_template_files into
+    # XXX ${file_name}.{ja,en,...}
     my $nl_template_files = $config->get_as_array_ref('nl_template_files');
     for my $file (@$nl_template_files) {
-	# XXX-TODO: how should we handle natural language .cf ?
 	# XXX src = relative path, dst = absolute path
-	my $src = File::Spec->catfile("fml", "etc", $file . ".ja");
+	my $src = File::Spec->catfile("fml", "etc", $file);
 	my $dst = File::Spec->catfile($config_dir, $file);
 
 	# always override.
