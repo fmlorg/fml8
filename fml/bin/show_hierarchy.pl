@@ -99,15 +99,15 @@ sub load
 	    if (/(use|require)\s+([A-Z]\S+[a-zA-Z0-9])/) {
 		unless ( $function_hach{ $current_function } ) {
 		    if ($verbose) {
-			&P();
-			&P( "${name}::". $current_function );
+			&Print();
+			&Print( "${name}::". $current_function );
 		    }
 		    $function_hach{ $current_function } = 1;
 		}
 
-		&P() if $Count == 1;
-		&P() if $Count == 2;
-		$verbose ? &P( $_ , $. ) : &P( $_ );
+		&Print() if $Count == 1;
+		&Print() if $Count == 2;
+		$verbose ? &Print( $_ , $. ) : &Print( $_ );
 		$file = $2;
 		$file =~ s/\"//g;
 		$file =~ s/\'//g;
@@ -128,7 +128,7 @@ sub load
 }
 
 
-sub P
+sub Print
 {
     my ($s, $lc) = @_;
 
