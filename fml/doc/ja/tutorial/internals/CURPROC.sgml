@@ -31,6 +31,8 @@ incoming_message     => HASH {
                         message              => Mail::Message
                      }
 
+log_message_queue    => FML::IPC::Queue
+
 main_cf              => HASH {
                         _hints
                         config_dir
