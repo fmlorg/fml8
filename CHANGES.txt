@@ -1,6 +1,14 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/08/29
+
+   INSTALL.sh 
+	add a cheap diag: check the existence of $owner and $group
+
+   FML::Command::Admin::newml 
+	validate $ml_home_prefix before main
+
 2002/08/28
 
    FML/Process/Kernel 
@@ -3293,4 +3301,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.98 2002/08/21 15:25:10 fukachan Exp $
+$FML: CHANGES.txt,v 1.99 2002/08/28 14:01:52 fukachan Exp $
