@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.51 2004/01/24 09:03:56 fukachan Exp $
+# $FML: File.pm,v 1.52 2004/02/03 04:15:33 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -158,11 +158,11 @@ sub touch
     my ($self) = @_;
     my $file   = $self->{_file};
 
-    use IO::File;
-    my $fh = new IO::File;
+    use FileHandle;
+    my $fh = new FileHandle;
     if (defined $fh) {
-	$fh->open($file, "a");
-	$fh->close;
+        $fh->open($file, "a");
+	$fh->close();
     }
 }
 
