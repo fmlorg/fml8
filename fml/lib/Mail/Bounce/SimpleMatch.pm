@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SimpleMatch.pm,v 1.35 2003/01/27 03:53:54 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.36 2003/02/09 12:31:49 fukachan Exp $
 #
 
 
@@ -91,6 +91,12 @@ my $address_trap_regexp = {
     },
 
 
+    'ybb.ne.jp' => {
+	'start' => 'Unable to deliver message to the following address',
+	'end'   => '= Original message follows',
+    },
+
+
     'smail' => {
 	'start' => 'Failed addresses follow:',
 	'end'   => 'Message text follows:',
@@ -117,6 +123,12 @@ my $address_trap_regexp = {
     'smtpsvc' => {
     	'start' => '------Transcript of session follows -------',
     	'end'   => 'Received.*',
+    },
+
+
+    'webshield' => {
+    	'start' => '------ Here is your List of Failed Recipients ------',
+    	'end'   => '-------- Here Is Your Returned Mail --------',
     },
 
 
