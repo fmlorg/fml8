@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: INSTALL.sh,v 1.39 2001/12/09 14:52:33 fukachan Exp $
+# $FML: INSTALL.sh,v 1.40 2001/12/11 12:13:48 fukachan Exp $
 #
 
 # Run this from the top-level fml source directory.
@@ -95,7 +95,28 @@ PROGRAMS="$PROGRAMS makefml makefml.cgi"
 PROGRAMS="$PROGRAMS fmlsch fmlsch.cgi"
 PROGRAMS="$PROGRAMS fmlhtmlify"
 
-if [ ! -f $libexec_dir/loader ];then
+
+#
+# check loader is upgraded or not
+#
+loader_replace=0
+if [ -f $libexec_dir/loader ];then
+   cmp fml/libexec/loader $libexec_dir/loader > /dev/null
+
+   if [ $? != 0 ];then
+	echo "warn: loader updated."
+	echo -n "  You must upgrade loader. Replace it ? [y/n]"; read answer;
+
+	if [ "X$answer" = "Xy" ];then
+		loader_replace=1
+	fi   
+   fi
+fi
+
+# 
+# install loader
+#
+if [ ! -f $libexec_dir/loader -o $loader_replace = 1 ];then
 
    echo install libexec/loader
    cp -p fml/libexec/loader $libexec_dir/loader.new.$$
@@ -133,7 +154,7 @@ id -un $owner 2>/dev/null || (
 	echo warning: user $owner is not defined
 )
 
-grep "^${group}:" /etc/group 2>/dev/null || (
+grep "^${group}:" /etc/group >/dev/null || (
 	echo warning: group $group is not defined
 )
 
