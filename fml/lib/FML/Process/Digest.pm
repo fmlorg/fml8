@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Digest.pm,v 1.18 2004/03/13 06:03:24 fukachan Exp $
+# $FML: Digest.pm,v 1.19 2004/04/23 04:10:36 fukachan Exp $
 #
 
 package FML::Process::Digest;
@@ -77,7 +77,7 @@ sub prepare
     my ($curproc, $args) = @_;
     my $config = $curproc->config();
 
-    my $eval = $config->get_hook( 'digest_prepare_start_hook' );
+    my $eval = $config->get_hook( 'article_digest_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->resolve_ml_specific_variables();
@@ -90,7 +90,7 @@ sub prepare
 	exit(0);
     }
 
-    $eval = $config->get_hook( 'digest_prepare_end_hook' );
+    $eval = $config->get_hook( 'article_digest_prepare_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
@@ -112,13 +112,13 @@ sub verify_request
     my $config     = $curproc->config();
     my $maintainer = $config->{ maintainer };
 
-    my $eval = $config->get_hook( 'digest_verify_request_start_hook' );
+    my $eval = $config->get_hook( 'article_digest_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # set sender against further errors
     $curproc->{'credential'}->set( 'sender', $maintainer );
 
-    $eval = $config->get_hook( 'digest_verify_request_end_hook' );
+    $eval = $config->get_hook( 'article_digest_verify_request_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
@@ -149,7 +149,7 @@ sub run
     my $maintainer = $config->{ maintainer };
     my $sender     = $curproc->{'credential'}->{'sender'};
 
-    my $eval = $config->get_hook( 'digest_run_start_hook' );
+    my $eval = $config->get_hook( 'article_digest_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->lock();
@@ -161,7 +161,7 @@ sub run
     }
     $curproc->unlock();
 
-    $eval = $config->get_hook( 'digest_run_end_hook' );
+    $eval = $config->get_hook( 'article_digest_run_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
@@ -206,13 +206,13 @@ sub finish
     my ($curproc, $args) = @_;
     my $config = $curproc->config();
 
-    my $eval = $config->get_hook( 'digest_finish_start_hook' );
+    my $eval = $config->get_hook( 'article_digest_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->inform_reply_messages();
     $curproc->queue_flush();
 
-    $eval = $config->get_hook( 'digest_finish_end_hook' );
+    $eval = $config->get_hook( 'article_digest_finish_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
 }
