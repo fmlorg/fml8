@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: ThreadTrack.pm,v 1.7 2001/11/07 03:14:22 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.8 2001/11/07 04:08:30 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -76,7 +76,7 @@ sub run
     my $config  = $curproc->{ config };
     my $argv    = $curproc->command_line_argv();
     my $options = $curproc->command_line_options();
-    my $mydir   = $curproc->command_line_argv_find('srcdir=(\S+)');
+    my $mydir   = defined $options->{spool_dir} ? $options->{spool_dir} : '';
     my $command = $argv->[ 0 ] || '';
 
     #  argumente for thread track module
