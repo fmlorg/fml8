@@ -1,3 +1,7 @@
+#
+# $FML$
+#
+
 all: link
 
 clean:

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id$
+# $FML$
 #
 
 (cd ../../fml/etc/;sh .gen.sh)

@@ -1,3 +1,7 @@
+#
+# $FML$
+# 
+
 fml_version	=	__fml_version__
 
 config_dir  = 	$pwd/fml/etc
