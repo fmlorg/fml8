@@ -1,6 +1,192 @@
 		CHANGES
 		Last Modified: $Date$
 
+	*** 2003 年末 〜 2004 年初め オーバホールキャンペーン終了 ***
+
+2004/02/13
+
+   FML::Article::Summary 
+	ensure initial value of $min and $max
+
+2004/02/06
+
+   FML::Header 
+	expand special regexp in tag before tag substitution.
+	
+   Mail::Message::Subject 
+	update $subject only if subject is rewritten.
+	
+   FML::Article::Summary 
+	switch to new Mail::Message::* framework.
+	
+   Mail::Message::Charset 
+	implement message_charset_to_language() method.
+	
+   Mail::Message::String 
+	use mothod-style more even internally.
+	speculate in and out code::charset as could as possible.
+	implement method::charcode_convert(), get_charcode().
+
+2004/02/04
+
+   FML::Command::User::chaddr 
+	vaildate address type variables.
+	
+   Mail::Message::String 
+	change in-core internal variables.
+	implement set(), get(), set_mime_charset(), get_mime_charset
+	and unfold().
+	
+   Mail::Message::Address 
+	modify on-memory variable naming.
+	implement as_str(), substr().
+	
+   Mail::Message::Date 
+	new() can handle both unix time and Date::style string.
+	
+	implement set(), unixtime().
+	speculate_timezone() -> _speculate_timezone().
+	
+	yet another style methods::as_mail_header_style(),
+	as_YYYYMMDD(), as_YYYYxMMxDD(), as_current_time(),
+	as_precise_current_time(), as_stardate(), and as_unixtime().
+	
+   FML::Article::Summary 
+   FML::Header 
+	modified to use new Mail::Message::* framekwork.
+
+2004/02/03
+
+   IO::Adapter 
+   IO::Adapter::File 
+	fix meta escape needed in finding key.
+
+2004/02/01
+
+   variables
+	add $log_command_tail_starting_location
+	$article_non_mime_filter_rules = reject_empty_content_type permit
+	
+   FML::Config 
+	fix checking code of defined value.
+	
+   FML::Article::Sequence 
+	$sequence_file -> $article_sequence_file
+	use //o if could.
+	
+   FML::Command::Admin::log 
+	use $log_command_tail_starting_location.
+	fix comments.
+	
+   FML::Command::Admin::{chaddr,changepassword,digest,subscribe}
+	validate input address by FML::Restriction::Base.
+	
+   FML::Command::Filter 
+   FML::Filter 
+   FML::Filter::Header MimeComponent Size TextPlain 
+	new FML::Command::Filter $curproc;
+	fix::update comments::messages.
+	rename method::rules() -> set_rules().
+	use ::::o if could.
+	
+	fix var name:
+	$article_none_mime_filter_rules -> $article_non_mime_filter_rules.
+	
+	implement reject_empty_content_type rule (non mime filter).
+
+2004/01/31
+
+   FML::Error::Cache 
+	validate input address.
+
+   FML::Process::{Addr,Alias,Calendar,Command,ConfViewer,Configure}
+   FML::Process::{Digest,Distribute,DocViewer,Error,Fake,HTMLify}
+   FML::Process::CGI::Kernel 
+	not use "$cf_list = $curproc->get_config_files_list();".
+	$curproc->load_config_files($cf_list);
+	->
+	$curproc->load_config_files();
+	
+   Calendar::Lite 
+	print() -> print_as_html()
+	
+2004/01/22
+   *** オーバホールキャンペーン中 ***
+
+   FML::Command 
+	fix comments.
+	define $default_lock_channel and modified to use it.
+	
+   FML::MTA::Control::Procmail 
+	fix $fh->close() usage.
+	fix comments.
+	cosmetics.
+
+2004/01/21
+   *** オーバホールキャンペーン中 ***
+
+   FML::Restriction::Base 
+	define $number_regexp , $address_regexp.
+	modified to use it.
+	
+   FML::Process::CGI::Kernel 
+	more todo comments.
+	remove 'use FML::Log' which is not used.
+	
+   FML::Filter::Size TextPlain 
+	check input data type.
+	more todo comments.
+	white space cometics.
+	
+   FML::Header 
+	cosmetics: spaces, unroll one line to plural ones.
+	
+   FML::Command::HTMLify 
+	fix comments.
+	add missing loop label.
+	
+   FML::Filter::Header 
+	fix comments.
+	check input data type.
+	cosmetics.
+	FNF.
+	
+   FML::Filter::MimeComponent 
+	define $recursive_max_level in file scope.
+	fix comments.
+	cosmtics: sort initialization order, location.
+	=~ "" -> =~ //
+	
+   FML::User::DB 
+	fix comments.
+	close output channel before exits from within loop.
+
+2004/01/18
+   *** オーバホールキャンペーン中 ***
+
+   FML::Confirm 
+	update comments.
+	clean up.
+	if (defined $db) { ...->open::close ... }
+	
+   FML::Config 
+	fix comments.
+	change variable name::$mode -> $op in some cases.
+	change argument order of __update_config().
+
+2004/01/14
+
+   FML::Process::Calendar 
+	bug fix handling of $args within $curproc for further reference.
+	
+   Calendar::Lite 
+	clean up.
+	show summary next 3 days above calender this month.
+
+   FML::Process::Kernel 
+	load_config_files() not need the argument.
+	load_config_files() do sanity checks for mta and cgi processes.
+
 2004/01/01-2004/01/04
 
 	*** 2003 年末 〜 2004 年初め オーバホールキャンペーン中 ***
@@ -6014,4 +6200,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.178 2004/01/04 13:40:52 fukachan Exp $
+$FML: CHANGES.txt,v 1.179 2004/01/04 16:37:32 fukachan Exp $
