@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.26 2003/08/29 15:33:56 fukachan Exp $
+# $FML: Menu.pm,v 1.27 2003/09/25 11:40:58 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -19,7 +19,7 @@ use FML::CGI::Menu;
 
 =head1 NAME
 
-FML::CGI::Admin::Menu - provides CGI controll for the specific domain
+FML::CGI::Admin::Menu - provides CGI control function for the specific domain
 
 =head1 SYNOPSIS
 

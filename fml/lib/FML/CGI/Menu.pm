@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.7 2004/01/01 23:52:09 fukachan Exp $
+# $FML: Menu.pm,v 1.8 2004/01/02 14:50:29 fukachan Exp $
 #
 
 package FML::CGI::Menu;
@@ -21,7 +21,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::CGI::Menu - provides CGI controll for the specific domain
+FML::CGI::Menu - provides CGI control function for the specific domain
 
 =head1 SYNOPSIS
 
@@ -57,7 +57,7 @@ C<FML::CGI::Menu> is a subclass of C<FML::Process::CGI>.
 
 =head1 METHODS
 
-Almost methods common for CGI or HTML are forwarded to
+Almost cgi common methods are forwarded to
 C<FML::Process::CGI> base class.
 
 This module has routines needed for the admin CGI.

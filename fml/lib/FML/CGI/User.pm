@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: User.pm,v 1.7 2004/01/01 23:52:10 fukachan Exp $
+# $FML: User.pm,v 1.8 2004/01/02 14:50:29 fukachan Exp $
 #
 
 package FML::CGI::User;
@@ -44,6 +44,8 @@ sub cgi_menu
     my $address_list = [];
     my $selected_key = '';
 
+    # XXX-TODO: who verified $ml_name and $comname ?
+
     # XXX-TODO: we should enable configurable by config files.
 
     # which address list to show at the scrolling list
@@ -75,6 +77,7 @@ sub cgi_menu
 	$selected_key = 'admin_members';
     }
     else {
+	# XXX-TODO: nl ?
 	croak("not allowed command");
     }
 

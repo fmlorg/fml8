@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ML.pm,v 1.6 2004/01/01 23:52:09 fukachan Exp $
+# $FML: ML.pm,v 1.7 2004/01/02 14:50:29 fukachan Exp $
 #
 
 package FML::CGI::ML;
@@ -42,7 +42,10 @@ sub cgi_menu
     my $comname      = $command_args->{ comname };
     my $command_list = [ 'newml', 'rmml' ];
 
+    # XXX-TODO: who verified comname ?
+
     unless ($curproc->cgi_var_cgi_mode() eq "admin") {
+	# XXX-TODO: nl ?
 	croak("Admin::ML::cgi_menu: prohibited in this mode");
     }
 
@@ -105,6 +108,7 @@ sub cgi_menu
 		    );
     }
     else {
+	# XXX-TODO: nl ?
 	croak("Admin::ML::cgi_menu: unknown command");
     }
 
