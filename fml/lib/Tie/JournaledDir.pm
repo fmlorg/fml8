@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: JournaledDir.pm,v 1.7 2001/08/05 13:03:31 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.1 2001/08/21 03:46:39 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -186,6 +186,9 @@ sub __find_key
 		    next FILES;
 		}
 	    }
+	    else {
+		delete $self->{ '_key_files_obj' };
+	    }
 	}
     }
 
@@ -206,7 +209,8 @@ sub FIRSTKEY
     my $files = $self->{ 'files' };
 
     # initialize cache area which holds done lists
-    undef $self->{ '_key_files_done' };
+    delete $self->{ '_key_files_done' };
+    delete $self->{ '_key_files_obj' };
 
     my $x = $self->__find_key();
 
@@ -228,7 +232,7 @@ sub NEXTKEY
     # XXX This class opens plural files and
     # XXX is responsible to check return values.
 
-    while (defined $self->__in_valid_search()) {
+    while ($self->__in_valid_search()) { # 1/0 is returned.
 	my $x = $self->__find_key();
 
 	if (defined $x) {
