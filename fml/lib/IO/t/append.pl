@@ -18,11 +18,10 @@ my $buffer   = time . $$ . "aho ";
 
 
 ### MAIN ###
-print "file map ->add() ";
+print "${map}->add() ";
 
 # prepare
 system "cp $org_file /tmp/";
-
 
 # append
 use IO::MapAdapter;
@@ -42,6 +41,20 @@ if ($buf eq $orgbuf) {
 else {
     print " ... fail\n";
     system "diff -ub $org_file $file";
+}
+
+
+$map = 'unix.group:fml';
+print "${map}->add()    ... ";
+$obj = new IO::MapAdapter $map;
+eval q{ $obj->add( $buffer ); };
+if ($@) {
+    print "ok\n"; # XXX fail (non null $@) is ok here.
+}
+else {
+    print "fail"        unless $@;
+    print "<", $obj->error, ">" if $obj->error;
+    print "\n";
 }
 
 exit 0;
