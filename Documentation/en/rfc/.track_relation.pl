@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: @template.pm,v 1.1 2001/08/07 12:23:48 fukachan Exp $
+# $FML: .track_relation.pl,v 1.1 2001/10/08 05:34:32 fukachan Exp $
 #
 
 use strict;
@@ -19,20 +19,22 @@ my $debug = $ENV{'debug'} ? 1 : 0;
 # %rfc_prev    double link list
 # %rfc_next    double link list 
 my (%rfc_exists, %rfc, %rfc_prev, %rfc_next);
-my ($r);
+my ($result) = {};
 
-check_rfc_here();
-read_rfc_index(); # set up %rfc
-analyze( $r );
-show( $r );
+check_rfc_here( \%rfc_exists );
+read_rfc_index( "./rfc-index.txt", \%rfc );
+analyze( $result );
+show( $result );
 
 
 sub check_rfc_here
 {
+    my ($rfc_exists) = @_;
+
     for (<rfc*txt>) {
 	if (/RFC(\d+)/i) {
 	    my $x = sprintf("RFC%04d", $1);
-	    $rfc_exists{$x} = $x;
+	    $rfc_exists->{$x} = $x;
 	}
     }
 }
@@ -40,8 +42,10 @@ sub check_rfc_here
 
 sub read_rfc_index
 {
+    my ($f, $rfc) = @_;
+
     use FileHandle;
-    my $fh  = new FileHandle "rfc-index.txt";
+    my $fh  = new FileHandle $f;
     my $cur = undef;
 
     if (defined $fh) {
@@ -51,7 +55,7 @@ sub read_rfc_index
 	    }
 
 	    if (defined $cur) {
-		$rfc{ "RFC$cur" } .= $_;
+		$rfc->{ "RFC$cur" } .= $_;
 	    }
 	}
 	close($fh);
@@ -126,11 +130,10 @@ sub _combine
 
 sub _sort_links
 {
-    my ($a, $b) = @_;
-    $a =~ /RFC/;
-    $b =~ /RFC/;
-
-    $a <=> $b;
+    my ($ra, $rb) = ($a, $b); 
+    $ra =~ s/RFC//i;
+    $rb =~ s/RFC//i;
+    $rb <=> $ra;
 }
 
 
@@ -173,16 +176,25 @@ sub _analyze_links
 }
 
 
+sub _rfc2filename
+{
+    my ($fn) = @_;
+
+    $fn =~ s/RFC/rfc/;
+    $fn =~ s/0(\d{3})/$1/;
+    $fn .= ".txt";
+
+    return $fn;
+}
+
+
 sub _check_exists
 {
     my ($buf) = @_;
 
     for (split(/\s+/, $buf)) {
 	if (/rfc\d+/i) {
-	    my $fn = $_;
-	    $fn =~ s/RFC/rfc/;
-	    $fn =~ s/0(\d{3})/$1/;
-	    $fn .= ".txt";
+	    my $fn = _rfc2filename($_);
 	    unless (-f $fn) {
 		print "no $fn\n";
 		if (-d "source") {
@@ -207,18 +219,71 @@ sub _clean_up
 }
 
 
+
+=head2 C<show( $result_hash )>
+
+show rfc relation from the given $result_hash.
+$result_hash contains the following hash pair.
+
+    RFC-LAST => RFC-A RFC-B RFC-C ... RFC-LAST
+
+=cut
+
+
 sub show
 {
     my ($r) = @_;
 
-    my ($k, $v);
-    while (($k, $v) = each %$r) {
-	my @r  = split(/\s+/, $v);
-	my $rv = _remove_dup( \@r );
-	print "$k => @$rv\n";
+    print "<UL>\n";
+
+    for my $last_rfc (sort _sort_links keys %$r) {
+	my $v = $r-> { $last_rfc }; 
+	my @r = sort _sort_links split(/\s+/, $v);
+
+	my $links = _remove_dup( \@r );
+
+	print "<LI>\n";
+	print _href( $last_rfc ), "\n";
+	print _who_i_am( $last_rfc );
+
+	my $buf;
+	for my $link (@$links) {
+	    next if $link eq $last_rfc;
+	    if ($link =~ /rfc\d+/i) {
+		$buf .= "<A HREF=\"#$link\">$link</A>\n";
+	    }
+	}
+
+	print "<BR> Updates:\n";
+	print $buf ? $buf : "none";
+	print "<BR>\n";
     }
 
-
+    print "</UL>\n";
 }
+
+
+sub _href
+{
+    my ($rfc) = @_;
+    my $fn = _rfc2filename($rfc);
+
+    return "<A NAME=\"$rfc\" HREF=\"$fn\">$rfc</A>";
+}
+
+
+sub _who_i_am
+{
+    my ($rfc) = @_;
+    my $buf = $rfc{ $rfc };
+
+    $buf =~ s/^\d+\s//g;
+    $buf =~ s/\n/ /g;
+
+    if ($buf =~ /^(.*?)\./) {
+	return "\"$1\"\n";
+    }
+}
+
 
 1;
