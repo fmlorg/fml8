@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.2 2004/03/04 04:30:14 fukachan Exp $
+# $FML: State.pm,v 1.3 2004/03/14 06:36:33 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -321,8 +321,8 @@ sub error_message_set_count
     my ($curproc, $class) = @_;
     my $pcb   = $curproc->pcb();
 
-    my $count = $pcb->get("reply_messaged_count", $class) || 0;
-    $pcb->set("reply_messaged_count", $class, $count + 1);
+    my $count = $pcb->get("reply_message_count", $class) || 0;
+    $pcb->set("reply_message_count", $class, $count + 1);
 }
 
 
@@ -336,7 +336,7 @@ sub error_message_get_count
     my ($curproc, $class) = @_;
     my $pcb = $curproc->pcb();
 
-    return $pcb->get("reply_messaged_count", $class) || 0;
+    return $pcb->get("reply_message_count", $class) || 0;
 }
 
 
