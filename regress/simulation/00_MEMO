@@ -7,13 +7,7 @@
    FML::Article
 
 	subdir の取り扱いが不十分
-	$curpoc->{ article }->{ header } じゃだめ、
-	$curpoc->{ article }->header() などへ移行せよ
 	0700 とかハードコードされてるじょ
-
-   FML::Command
-
-	Log("load $pkg") if $0 =~ /loader/; # debug
 
    FML::Credential
 
@@ -32,10 +26,6 @@
 	この negative cache ってまちがってないか？
 		find() して ->{} すると negative cache
 		が間違って有効になってるんじゃないの？
-
-   FML::CGI::Admin::User
-
-	$comname と maps の関係がハードコーディングされてる
 
    FML::CGI::ThreadTrack
 
@@ -87,6 +77,7 @@
    FML::Command::DirUtils
 	ファイルの正規表現に FML::Restriction:: を使うように変更
 
+
    FML::Command::Admin::dir
 	cgi_menu() ?
 		ディレクトリ listing してくれる perl module ないかな？
@@ -104,17 +95,13 @@
 	$curproc->is_cgi() みたいなメソッドがほしい感じ？
 
    FML::Restriction::
-	と RFC っていってもねぇ… RFC の定義が広すぎるよね
+	RFC 2822 っていってもねぇ… RFC の定義が広すぎるよね
 
    FML::Restriction::Command
 	コマンドのシンタックスチェックはもうちょっと粒度を上げるべきか？
 
    FML::Command::Admin::log
 	    my $is_cgi       = 1 if $args->{ mode } eq 'cgi';
-
-   FML::Config
-
-	if $0 =~ /loader/; # debug
 
    FML::Process::Command
 
@@ -124,6 +111,14 @@
 	(ユーザに返す)エラーメッセージが少ない？
 
 -------------------- 2002-06 AUDIT --------------------
+
+○   FML::CGI::Admin:: ではハードコーディングするしかない？
+
+  例 FML::CGI::Admin::User
+	$comname と maps の関係がハードコーディングされてる
+
+	でも、これはしかたないんじゃないかなぁ
+
 
 ○	ドキュメント( tutorial )
 
@@ -138,6 +133,7 @@
 	usage/ がいまいち(fml bible のパートIIIの最初の部分にあたるもの)
 		usage/command.sgml
 		usage/post.sgml
+
 
 ○	makefml でうごかない？
 
@@ -503,4 +499,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.31 2002/07/07 12:48:26 fukachan Exp $
+$FML: 00_MEMO,v 1.32 2002/07/13 14:28:41 fukachan Exp $
