@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: minimal_states.pm,v 1.14 2001/04/06 16:25:44 fukachan Exp $
+# $FML: minimal_states.pm,v 1.15 2001/04/14 15:41:05 fukachan Exp $
 #
 
 package FML::Ticket::Model::minimal_states;
@@ -132,6 +131,19 @@ sub assign
     my $has_ticket_id = $self->_extract_ticket_id($header, $config);
     my $pragma        = $header->get('x-ticket-pragma') || '';
 
+    # hmm, we cannot extract ticket_id but we try to
+    # speculate ticket_id by header information.
+    unless ($has_ticket_id) {
+	$has_ticket_id = $self->_speculate_ticket_id($curproc, $args);
+	if ($has_ticket_id) {
+	    $is_reply = 1;
+	    Log("speculated id=$has_ticket_id");
+	}
+	else {
+	    Log("(debug) fail to spelucate ticket_id");
+	}
+    }
+
     # If the header has a "X-Ticket-Pragma: ignore" field, 
     # we ignore this mail.
     if ($pragma =~ /ignore/i) {
@@ -160,12 +172,56 @@ sub assign
 	    my $header = $curproc->{ article }->{ header };
 
 	    $self->_pcb_set_id($curproc, $id); # save $id info in PCB
-	    $self->_rewrite_subject($header, $config, $id);
+	    $self->_rewrite_header($header, $config, $id);
 	}
 	else {
 	    Log( $self->error );
 	}
     }
+}
+
+
+# For example, consider a posting to both elena ML and rudo (DM) from kenken.
+#
+#     From: kenken 
+#     To: elena-ml
+#     Cc: rudo
+#
+# The reply to this DM (direct message) from rudo is
+#
+#     From: rudo
+#     To: elena-ml
+#
+# This reply message has no ticket_id since the message from kenken to
+# rudo comes directly from kenken not through fml driver.
+# In this case, we try to speculdate the reply relation and the ticket_id
+# of this thread by using _speculate_ticket_id().
+#
+sub _speculate_ticket_id
+{
+    my ($self, $curproc, $args) = @_;
+    my $header  = $curproc->{ incoming_message }->{ header };
+    my $midlist = $header->extract_message_id_references();
+    my $result  = '';
+
+    for (@$midlist) { Log("(debug) mid=$_");}
+
+    if (defined $midlist) {
+	$self->open_db($curproc, $args);
+
+	# prepare hash table tied to db_dir/*db's
+	my $rh = $self->{ _hash_table };
+
+	for my $mid (@$midlist) { 
+	    $result = $rh->{ _message_id }->{ $mid };
+	    last if $result;
+	}
+
+	$self->close_db($curproc, $args);
+    }
+
+    Log("(debug) not speculated") unless $result;
+    $result;
 }
 
 
@@ -224,7 +280,7 @@ sub update_db
 }
 
 
-sub _gen_ticket_id
+sub _prepare_subject_ticket_id
 {
     my ($self, $header, $config, $id) = @_;
     my $ml_name   = $config->{ ml_name };
@@ -261,12 +317,12 @@ sub _extract_ticket_id
 }
 
 
-sub _rewrite_subject
+sub _rewrite_header
 {
     my ($self, $header, $config, $id) = @_;
 
     # create ticket syntax in the subject
-    $self->_gen_ticket_id($header, $config, $id);
+    $self->_prepare_subject_ticket_id($header, $config, $id);
 
     # append the ticket tag to the subject
     my $subject = $header->get('subject') || '';
@@ -311,6 +367,12 @@ sub _update_db
 	    $self->_set_status($ticket_id, 'open');
 	}
     }
+
+    # 4. save optional/additional information
+    #    message_id hash is { message_id => ticket_id };
+    my $mid = $header->get('message-id');
+    $mid    = $header->address_clean_up($mid);
+    $rh->{ _message_id }->{ $mid } = $ticket_id;
 }
 
 
@@ -340,7 +402,8 @@ C<%ticket_id>,
 C<%date>,
 C<%status>,
 C<%sender>,
-C<%articles>
+C<%articles>,
+C<%message_id>
 and
 C<%index>.
 
@@ -359,32 +422,35 @@ sub open_db
     my $db_type   = $curproc->{ ticket_db_type } || 'AnyDBM_File';
     my $db_dir    = $self->{ _db_dir };
 
-    my (%ticket_id, %date, %status, %articles, %sender, %index);
-    my $ticket_id_file = $db_dir.'/ticket_id';
-    my $date_file      = $db_dir.'/date';
-    my $status_file    = $db_dir.'/status';
-    my $sender_file    = $db_dir.'/sender';
-    my $articles_file  = $db_dir.'/articles';
-    my $index_file     = $self->{ _index_db };
+    my (%ticket_id, %date, %status, %articles, %sender, %message_id, %index);
+    my $ticket_id_file  = $db_dir.'/ticket_id';
+    my $date_file       = $db_dir.'/date';
+    my $status_file     = $db_dir.'/status';
+    my $sender_file     = $db_dir.'/sender';
+    my $articles_file   = $db_dir.'/articles';
+    my $message_id_file = $db_dir.'/message_id';
+    my $index_file      = $self->{ _index_db };
 
     eval qq{ use $db_type;};
     unless ($@) {
 	eval q{
 	    use Fcntl;
-	    tie %ticket_id, $db_type, $ticket_id_file, O_RDWR|O_CREAT, 0644;
-	    tie %date,      $db_type, $date_file,      O_RDWR|O_CREAT, 0644;
-	    tie %status,    $db_type, $status_file,    O_RDWR|O_CREAT, 0644;
-	    tie %sender,    $db_type, $sender_file,    O_RDWR|O_CREAT, 0644;
-	    tie %articles,  $db_type, $articles_file,  O_RDWR|O_CREAT, 0644;
-	    tie %index,     $db_type, $index_file,     O_RDWR|O_CREAT, 0644;
+	    tie %ticket_id,  $db_type, $ticket_id_file,  O_RDWR|O_CREAT, 0644;
+	    tie %date,       $db_type, $date_file,       O_RDWR|O_CREAT, 0644;
+	    tie %status,     $db_type, $status_file,     O_RDWR|O_CREAT, 0644;
+	    tie %sender,     $db_type, $sender_file,     O_RDWR|O_CREAT, 0644;
+	    tie %articles,   $db_type, $articles_file,   O_RDWR|O_CREAT, 0644;
+	    tie %index,      $db_type, $index_file,      O_RDWR|O_CREAT, 0644;
+	    tie %message_id, $db_type, $message_id_file, O_RDWR|O_CREAT, 0644;
 	};
 	unless ($@) {
-	    $self->{ _hash_table }->{ _ticket_id } = \%ticket_id;
-	    $self->{ _hash_table }->{ _date }      = \%date;
-	    $self->{ _hash_table }->{ _status }    = \%status;
-	    $self->{ _hash_table }->{ _sender }    = \%sender;
- 	    $self->{ _hash_table }->{ _articles }  = \%articles;
- 	    $self->{ _hash_table }->{ _index }     = \%index;
+	    $self->{ _hash_table }->{ _ticket_id }  = \%ticket_id;
+	    $self->{ _hash_table }->{ _date }       = \%date;
+	    $self->{ _hash_table }->{ _status }     = \%status;
+	    $self->{ _hash_table }->{ _sender }     = \%sender;
+ 	    $self->{ _hash_table }->{ _articles }   = \%articles;
+ 	    $self->{ _hash_table }->{ _message_id } = \%message_id;
+ 	    $self->{ _hash_table }->{ _index }      = \%index;
 	}
 	else {
 	    Log("Error: tail to tie() under $db_type");
@@ -404,13 +470,15 @@ sub close_db
 {
     my ($self, $curproc, $args) = @_;
 
-    my $ticket_id = $self->{ _hash_table }->{ _ticket_id };
-    my $date      = $self->{ _hash_table }->{ _date };
-    my $status    = $self->{ _hash_table }->{ _status };
-    my $sender    = $self->{ _hash_table }->{ _sender };
-    my $articles  = $self->{ _hash_table }->{ _articles };
-    my $index     = $self->{ _hash_table }->{ _index };
+    my $ticket_id  = $self->{ _hash_table }->{ _ticket_id };
+    my $date       = $self->{ _hash_table }->{ _date };
+    my $status     = $self->{ _hash_table }->{ _status };
+    my $sender     = $self->{ _hash_table }->{ _sender };
+    my $articles   = $self->{ _hash_table }->{ _articles };
+    my $index      = $self->{ _hash_table }->{ _index };
+    my $message_id = $self->{ _hash_table }->{ _message_id };
 
+    untie %$message_id;
     untie %$ticket_id;
     untie %$date;
     untie %$status;
