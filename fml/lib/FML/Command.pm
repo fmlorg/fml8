@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.46 2004/04/23 04:10:27 fukachan Exp $
+# $FML: Command.pm,v 1.47 2004/06/26 11:24:03 fukachan Exp $
 #
 
 # XXX
@@ -110,7 +110,7 @@ sub get_mode
 
     if (defined $command_args->{ command_mode }) {
 	# XXX use capital letter for module name used latter (module loading).
-	if ($command_args->{'command_mode'} eq 'Admin') {
+	if ($command_args->{'command_mode'} =~ /^(Admin)$/i) {
 	    return 'Admin';
 	}
 	else {
