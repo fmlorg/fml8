@@ -1,32 +1,27 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML>
-<HEAD>
-<TITLE>
-fml5 のメール配送システムについて
-</TITLE>
-<META http-equiv="Content-Type"
-	content="text/html; charset=EUC-JP">
-</HEAD>
+<!--
+    $FML$
+-->
 
-<BODY BGCOLOR="#E6E6FA">
+<chapter id="delivery">
 
-<CENTER>
-fml5 のメール配送システムについて
-</CENTER>
+   <TITLE> メールの配送 </TITLE>
 
-<P>	fml4 と fml5 の相違点
+<sect1 id="fml5-delivery">
 
+   <title> fml5 のメール配送システムについて 
+           (fml4 と fml5 の相違点)
+   </title>
+
+<para>
 fml5 の最大の目的の一つは、メンバーリストの取得と操作の統合と抽象化です。
 配送には抽象化された Mail::Delivery クラスを次のように使います。
+</para>
 
-<P> Mail::Delivery::* クラスの使い方について
-
+<para>
 Mail::Delivery::* に属するクラスは SMTP および LMTP 配送へのインターフェ
 イスを提供します。
 
-<PRE>
-Mail::Delivery::SMTP の実例
-
+<screen>
     use Mail::Delivery::SMTP;
     my $service = new Mail::Delivery::SMTP;
     if ($service->error) { Log($service->error); return;}
@@ -42,21 +37,20 @@ Mail::Delivery::SMTP の実例
                           header          => $header_object,
                           body            => $body_object,
                       });
-</PRE>
+</screen>
 
 ここで $header_object はヘッダで、FML::Header オブジェクトです。
 そして $body_oject   はメール本文で、Mail::Message オブジェクトです。
+</para>
 
-
-<P> コンポーネント
-
-C<Delivery> は
-C<SMTP>
-C<ESMTP>
-C<LMTP>
+<para>
+ここで、Delivery は
+SMTP
+ESMTP
+LMTP
 などへのインターフェイスです。
+</para>
 
+</sect1>
 
-<!-- =================================================================== -->
-</BODY>
-</HTML>
+</chapter>

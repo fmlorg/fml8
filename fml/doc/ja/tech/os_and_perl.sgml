@@ -39,6 +39,14 @@
 	</row>
 
 	<row>
+	<entry>OpenBSD</entry>
+	<entry>2.8</entry>
+	<entry>5.6.0</entry>
+	<entry></entry>
+	<entry></entry>
+	</row>
+
+	<row>
 	<entry>FreeBSD</entry>
 	<entry>2.2.5</entry>
 	<entry>4.036</entry>
@@ -287,6 +295,70 @@
 	</row>
 
 	<row>
+	<entry>Vine Linux</entry>
+	<entry>2.1</entry>
+	<entry>5.6.0</entry>
+	<entry></entry>
+	<entry>?</entry>
+	</row>
+
+	<row>
+	<entry>Vine Linux</entry>
+	<entry>2.1</entry>
+	<entry>5.005_03</entry>
+	<entry></entry>
+	<entry>?</entry>
+	</row>
+
+	<row>
+	<entry>TurboLinux Workstation</entry>
+	<entry>6.0</entry>
+	<entry>5.005_03</entry>
+	<entry></entry>
+	<entry>true ?</entry>
+	</row>
+
+	<row>
+	<entry>Slackware</entry>
+	<entry>7.1</entry>
+	<entry>5.6.0</entry>
+	<entry></entry>
+	<entry></entry>
+	</row>
+
+	<row>
+	<entry>Slackware-current</entry>
+	<entry>7.1</entry>
+	<entry>5.6.0</entry>
+	<entry></entry>
+	<entry></entry>
+	</row>
+
+	<row>
+	<entry>RedHat Linux</entry>
+	<entry>6.2J</entry>
+	<entry>5.005_03</entry>
+	<entry></entry>
+	<entry></entry>
+	</row>
+
+	<row>
+	<entry>Laser5 Linux</entry>
+	<entry>6.0</entry>
+	<entry>5.005_03</entry>
+	<entry></entry>
+	<entry>jperl5.005_03-990703 (?)</entry>
+	</row>
+
+	<row>
+	<entry>Kondara MNU/Linux</entry>
+	<entry>1.2</entry>
+	<entry>5.005_03</entry>
+	<entry></entry>
+	<entry></entry>
+	</row>
+
+	<row>
 	<entry>Cobalt RaQ1-J (mips) Linux</entry>
 	<entry>2.0.34</entry>
 	<entry>5.004_04</entry>
@@ -352,6 +424,14 @@
 
 	<row>
 	<entry>IRIX</entry>
+	<entry>6.5.11</entry>
+	<entry>5.005_04</entry>
+	<entry></entry>
+	<entry></entry>
+	</row>
+
+	<row>
+	<entry>IRIX</entry>
 	<entry>6.5.7m</entry>
 	<entry>5.005_04</entry>
 	<entry>/usr/bin/perl</entry>
@@ -372,6 +452,14 @@
 	<entry>5.005_03</entry>
 	<entry></entry>
 	<entry></entry>
+	</row>
+
+	<row>
+	<entry>QNX RTP</entry>
+	<entry>?</entry>
+	<entry>5.6.0</entry>
+	<entry></entry>
+	<entry>?</entry>
 	</row>
 
 	<row>
@@ -412,6 +500,46 @@
 	<entry>5.6.0</entry>
 	<entry></entry>
 	<entry>5.6.0 built for darwin</entry>
+	</row>
+
+	<row>
+	<entry>Mac OS X Server Developer Release DR1</entry>
+	<entry></entry>
+	<entry>?</entry>
+	<entry></entry>
+	<entry></entry>
+	</row>
+
+	<row>
+	<entry>Mac OS X Server Developer Release DR2</entry>
+	<entry></entry>
+	<entry>?</entry>
+	<entry></entry>
+	<entry></entry>
+	</row>
+
+	<row>
+	<entry>Mac OS X</entry>
+	<entry></entry>
+	<entry>?</entry>
+	<entry></entry>
+	<entry></entry>
+	</row>
+
+	<row>
+	<entry>Mac OS X for Interl</entry>
+	<entry></entry>
+	<entry>?</entry>
+	<entry></entry>
+	<entry></entry>
+	</row>
+
+	<row>
+	<entry>Mac OS X Developer Preview DP1,2,3,4</entry>
+	<entry></entry>
+	<entry>?</entry>
+	<entry></entry>
+	<entry></entry>
 	</row>
 
 	<row>

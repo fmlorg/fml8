@@ -71,6 +71,7 @@ $FML: fml-devel.sgml,v 1.16 2001/04/28 09:33:40 fukachan Exp $
 	<!-- 以下、各章が並ぶ -->
 	&cvstree;
 	&programingstyle; 
+	&modules;
   </part>
 
 
@@ -85,7 +86,4 @@ $FML: fml-devel.sgml,v 1.16 2001/04/28 09:33:40 fukachan Exp $
   </part>
 
 </book>
-
-
-
 
