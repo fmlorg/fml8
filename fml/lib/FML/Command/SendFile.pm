@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SendFile.pm,v 1.2 2001/10/13 13:10:34 fukachan Exp $
+# $FML: SendFile.pm,v 1.3 2001/10/14 00:54:16 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -57,7 +57,7 @@ sub send_article
     # command buffer = get last:3
     my (@files) = split(/\s+/, $command);
     for my $fn (@files) {
-	my $filelist = _is_valid_argument($fn);
+	my $filelist = $self->_is_valid_argument($curproc, $fn);
 	if (defined $filelist) {
 	    for my $fn (@$filelist) {
 		my $file = "$spool_dir/$fn";
@@ -79,9 +79,18 @@ sub send_article
 }
 
 
+# Descriptions: check the argument and expand it if needed
+#    Arguments: $self $curproc $filename_string
+# Side Effects: none
+# Return Value: HASH ARRAY as [ $fist .. $last ]
 sub _is_valid_argument
 {
-    my ($fn) = @_;
+    my ($self, $curproc, $fn) = @_;
+
+    use File::Sequence;
+    my $config   = $curproc->{ config };
+    my $file     = $config->{ sequence_file };
+    my $sequence = new File::Sequence { sequence_file => $file };
 
     if ($fn =~ /^\d+$/) {
 	return [ $fn ];
@@ -92,13 +101,41 @@ sub _is_valid_argument
     }
     elsif ($fn =~ /^(\d+)\-(\d+)$/) {
 	my ($first, $last) = ($1, $2);
-	my (@fn);
-	for ($first .. $last) { push(@fn, $_);}
-	return \@fn;
+	return _expand_range($first, $last);
+    }
+    elsif ($fn eq 'first') {
+	return [ 1 ];
+    }
+    elsif ($fn eq 'last' || $fn eq 'cur') {
+	my $last_id = $sequence->get_id();
+	return [ $last_id ];
+    }
+    elsif ($fn =~ /^first:(\d+)$/) {
+	my $range = $1;
+        return _expand_range(1, 1 + $range);
+    }
+    elsif ($fn =~ /^last:(\d+)$/) {
+	my $range   = $1;
+	my $last_id = $sequence->get_id();
+        return _expand_range($last_id - $range, $last_id);
     }
     else {
 	return undef;
     }
+}
+
+
+# Descriptions: make an array from $fist to $last number
+#    Arguments: $first_number $last_number
+# Side Effects: none
+# Return Value: HASH ARRAY as [ $first .. $last ]
+sub _expand_range
+{
+    my ($first, $last) = @_;
+
+    my (@fn);
+    for ($first .. $last) { push(@fn, $_);}
+    return \@fn;
 }
 
 
