@@ -17,7 +17,7 @@
 	my $status  = $encode->convert_str_ref( \$s, 'euc-jp', 'jis' );
 
 	my $fp = sub { ... };
-	$encode->chcodedo( $fp, $oout, $in );
+	$encode->run_in_chcode( $fp, $oout, $in );
 
    * 4.0 互換
 	ues FML::Encode qw(STR2EUC);
@@ -90,7 +90,7 @@ euc にしてごにょごにょ する典型的なコードは全部 wrap する。
 
 
 # change code and do $proc
-sub chcodedo
+sub run_in_chcode
 {
    my ($self, $proc, $s, $out_code, $in_code) = @_;
 
@@ -99,3 +99,26 @@ sub chcodedo
    convert_str_ref($s, $out_code, $EUC_JP) if $conv_status && $out_code;
    return wantarray ? ($conv_status, $proc_status): $conv_status;
 }
+
+
+
+[FML::Encode へマージしたいもの]
+
+	FML::Language を削除
+	FML::Language::ISO2022JP を削除
+		実態は以下の2つのクラス
+
+	FML::Language::Japanese::String
+		STR2EUC()
+		STR2JIS()
+		STR2SJIS()
+
+
+	FML::Language::Japanese::Utils
+		is_iso2022jp_string()
+		_look_not_iso2022jp_string()
+		compare_euc_string()
+
+	[TODO]
+
+	Mail/ThreadTrack/Print/Utils.pm に STR2EUC がある
