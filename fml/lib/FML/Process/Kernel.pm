@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.76.2.2 2002/03/16 10:43:45 fukachan Exp $
+# $FML: Kernel.pm,v 1.77 2002/03/16 10:51:59 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -591,7 +591,11 @@ We need parameters in some cases.
 They are stored in $args if needed.
 
 	$curproc->reply_message_nl('kern.not_member',
-				   "you are not a ML member." );
+				   "you are not a ML member.",
+				   $args);
+
+This $args is passed through to reply_message().
+
 =cut
 
 
@@ -625,10 +629,10 @@ sub reply_message_nl
 	if ($buf =~ /\$/) {
 	    $config->expand_variable_in_buffer(\$buf, $args);
 	}
-	$curproc->reply_message( STR2JIS( $buf ) );
+	$curproc->reply_message(STR2JIS( $buf ), $args);
     }
     else {
-	$curproc->reply_message($default_msg);
+	$curproc->reply_message($default_msg, $args);
     }
 }
 
