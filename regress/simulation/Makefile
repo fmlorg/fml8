@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.55 2002/06/01 07:16:52 fukachan Exp $
+# $FML: Makefile,v 1.56 2002/07/02 13:34:40 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -42,6 +42,7 @@ _link:
 	ln -s ../../fml/lib/FML/Command       Command
 	ln -s ../../fml/lib/FML/Command/Admin AdminCommand
 	ln -s ../../fml/lib/FML/Command/User  UserCommand
+	ln -s ../../fml/lib/FML/MTAControl    MTAControl
 	ln -s ../../fml/lib/IO
 	ln -s ../../fml/lib/File
 	ln -s ../../fml/lib/Tie
