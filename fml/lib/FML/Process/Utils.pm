@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.61 2003/02/20 04:32:50 fukachan Exp $
+# $FML: Utils.pm,v 1.62 2003/03/06 14:13:28 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1286,6 +1286,26 @@ sub hints
     my $main_cf = $curproc->{ __parent_args }->{ main_cf };
 
     return $main_cf->{ _hints };
+}
+
+
+=head2 debug_level()
+
+return debug level.
+
+=cut
+
+
+# Descriptions: return debug level.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: NUM
+sub debug_level
+{
+    my ($curproc) = @_;
+    my $args = $curproc->{ __parent_args };
+
+    return( $args->{ main_cf }->{ debug } || 0 );
 }
 
 
