@@ -4,9 +4,9 @@
 #
 
 use strict;
-use IO::Adapter::MySQL::toymodel;
+use IO::Adapter::MySQL;
 
-my $obj = new IO::Adapter::MySQL::toymodel { ml_name => 'elena' };
+my $obj = new IO::Adapter::MySQL { ml_name => 'elena' };
 
 $obj->open({
     sql_user          => 'fukachan',
