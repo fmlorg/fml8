@@ -15,9 +15,9 @@ trap "rm -f $tmp $buf $log" 0 1 3 15
 DIFF () {
 	cat $1 $2 $3 > $buf
 	perl $dir/multipart_maker.pl $1 $2 $3 > $tmp
-	diff -ub $buf $tmp > $log && echo ok || echo "$1 $2 $3 multipart"
+	diff -ub $buf $tmp > $log && echo ok || echo " aggregate $1 $2 $3"
 	echo ""
-	sed -n -e 1,2d -e '/^\+/p' -e '/^\-/p' $log
+	sed -n -e 1,2d -e '/^\+/p' -e '/^\-/p' $log|sed -e 's/^/   /' 
 	echo ""
 }
 
