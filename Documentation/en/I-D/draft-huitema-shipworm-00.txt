@@ -1,0 +1,922 @@
+INTERNET DRAFT                                              C. Huitema
+<draft-huitema-shipworm-00.txt>                              Microsoft            
+Expires January 12, 2001                                 July 12, 2001
+
+Shipworm: Tunneling IPv6 over UDP through NATs
+
+Status of this memo
+
+This document is an Internet-Draft and is in full conformance with 
+all provisions of Section 10 of RFC2026.
+
+This document is an Internet-Draft. Internet-Drafts are working 
+documents of the Internet Engineering Task Force (IETF), its areas, 
+and its working groups.  Note that other groups may also distribute 
+working documents as Internet-Drafts.
+
+Internet-Drafts are draft documents valid for a maximum of six 
+months and may be updated, replaced, or obsoleted by other documents 
+at any time.  It is inappropriate to use Internet- Drafts as 
+reference material or to cite them other than as "work in progress."
+
+The list of current Internet-Drafts can be accessed at 
+http://www.ietf.org/ietf/1id-abstracts.txt.
+
+The list of Internet-Draft Shadow Directories can be accessed at 
+http://www.ietf.org/shadow.html.
+
+Abstract
+
+We propose here a service that would enable nodes located behind one 
+or several IPv4 NATs to obtain IPv6 connectivity by tunneling 
+packets over UDP; we call this the Shipworm service. The 
+establishment of the tunnel is automatic, and does not require any 
+configuration parameters on the client. Running the service requires 
+the help of "Shipworm servers" and "Shipworm relays"; the Shipworm 
+servers are stateless, and only have to manage a small fraction of 
+the traffic between Shipworm clients; the Shipworm relays act as 
+IPv6 routers between the Shipworm service and the "native" IPv6 
+Internet.
+
+1	Introduction
+
+Classic tunneling methods envisaged for IPv6 transition operate by 
+sending IPv6 packets as payload of IPv4 packets; the 6to4 proposal 
+proposes automatic discovery in this context. A problem with these 
+methods is that they don't work when the IPv6 candidate node is 
+isolated behind a Network Address Translation device: NAT are 
+typically not programmed to allow the transmission of arbitrary 
+payload types; even when they are, the local address cannot be used 
+in a 6to4 scheme. 6to4  will work with NAT if the NAT and 6to4 
+router functions are in the same box; we want to cover the 
+relatively frequent case when the NAT cannot be readily upgraded to 
+provide a 6to4 router function. 
+
+
+Huitema                                                      [Page  1]
+
+
+INTERNET DRAFT               Shipworm                    July 12, 2001
+
+A possible way to solve the problem is to rely on a set of "tunnel 
+brokers." There are however limits to any solution that is based on 
+such brokers: the quality of service is not very good, since the 
+traffic follows a "dog leg" route from the source to the broker and 
+then the destination; the broker has to provide sufficient 
+transmission capacity to relay all packets and thus suffers a high 
+cost. For these two reasons, we tend to prefer solutions that allow 
+for "automatic tunneling", i.e. let the packets follow a direct path 
+to the destination.
+
+The automatic tunneling requirement is indeed at odds with some of 
+the specificities of NATs. Establishing a direct path supposes that 
+the IPv6 Candidate can retrieve a "globally routable" address that 
+results from the translation of its local address by one or several 
+NATs; it also supposes that we can find a way to bypass the various 
+"per destination protections" that many NATs implement. In this 
+memo, we will explain how IPv6 candidates located behind NATs can 
+enlist the help of "v6 UDP routers" to learn their "global address" 
+and to obtain connectivity.
+
+2	Definitions
+
+2.1	Shipworm service
+
+The transmission of IPv6 packets over UDP, as defined in this memo.
+
+2.2	Shipworm Client
+
+A node that has some access to the IPv4 Internet and that wants to 
+gain access to the IPv6 Internet. This node may behave either as an 
+IPv6 host or as an IPv6 router. 
+
+2.3	Shipworm Server
+
+A node that has access to the IPv4 Internet through a globally 
+routable address, and that is used as a helper to provide IPv6 
+connectivity to Shipworm Client. The node is also reachable through 
+the Shipworm IPv4 anycast address.
+
+2.4	Shipworm relay router
+
+An IPv6 router that can receive traffic destined to Shipworm clients 
+and forward it using the Shipworm service.
+
+2.5	Shipworm IPv6 service prefix
+
+A 16 bit IPv6 addressing prefix, whose value is XXXX::/16. (TBD 
+IANA) 
+
+
+
+
+
+Huitema                                                      [Page  2]
+
+
+INTERNET DRAFT               Shipworm                    July 12, 2001
+
+2.6	Shipworm IPv4 anycast prefix
+
+An IPv4 address prefix, whose value is x.x.x.0/24. (TBD IANA)
+This prefix is announced in the IPv4 routing tables.
+
+2.7	Shipworm IPv4 anycast address
+
+An IPv4 address whose value is x.x.x.y, where "x.x.x" is the 24 bit 
+Shipworm IPv4 anycast prefix. (TBD IANA)
+IPv4 Packets sent to this address are directed to the nearest 
+Shipworm server.
+
+2.8	Shipworm UDP port
+
+An UDP port number at which Shipworm Servers are waiting for 
+packets. The value of this port is PPPP. (TBD IANA)
+
+2.9	Shipworm bubble
+
+A packet sent over UDP by a Shipworm agent in order to trigger a 
+side effect in the NAT.
+
+2.10	Shipworm Discard port
+
+An UDP port number that is used as the destination of Shipworm 
+bubbles. The normal value for that port number is 9, i.e. the port 
+number reserved by IANA for the discard service.
+
+2.11	Shipworm service port
+
+The port over which the Shipworm client sends Shipworm packets. This 
+port is attached to one of the client's IPv4 interfaces. The IPv4 
+address may or may not be globally routable, as the client may be 
+located behind one or several NAT.
+
+2.12	Shipworm mapped address and Shipworm mapped port
+
+A global IPv4 address and a UDP port that results from the 
+translation by one or several NAT of the IPv4 address and UDP port 
+of a client's Shipworm service port. The client learns these values 
+through the Shipworm protocol described in this memo.
+
+2.13	Shipworm IPv6 client prefix
+
+A global scope 64 bit IPv6 prefix composed from the Shipworm IPv6 
+service prefix, the Shipworm mapped address and Shipworm mapped 
+port. 
+
+2.14	Shipworm IPv6 address
+
+A Shipworm IPv6 address obtained by combining a Shipworm IPv6 client 
+
+Huitema                                                      [Page  3]
+
+
+INTERNET DRAFT               Shipworm                    July 12, 2001
+
+prefix and a 64 bit node identifier.
+
+2.15	Shipworm IPv6 anycast address
+
+A global scope IPv6 address obtained by combining the Shipworm IPv6 
+service prefix, the Shipworm IPv4 anycast address, the Shipworm port 
+and a null 64 bit node identifier (i.e., all zeroes).
+
+
+3	Model, requirements
+
+The Shipworm service requires the cooperation of three kinds of 
+actors: Shipworm clients, who want to use IPv6 despite being located 
+behind a NAT, Shipworm servers who will facilitate the service, and 
+Shipworm relays that provide for the interconnection between the 
+service and the "native IPv6 Internet."
+
+In order to enable the service, the Shipworm servers must have an 
+unencumbered IPv4 connection, i.e. they must have a global IPv4 
+address. In fact, these servers must be dual homed, capable of 
+receiving packet on a specific, topology dependent, IPv4 address, 
+and also of receiving packets on the generic "Shipworm anycast IPv4 
+address."
+
+The Shipworm routers must be connected to the IPv6 Internet and must 
+participate in IPv6 routing; they must be able to announce 
+reachability over IPv6 of the "Shipworm service IPv6 prefix." They 
+must then be able to relay packets over IPv4 UDP towards Shipworm 
+clients. It is very sensible to combine the functions of Shipworm 
+server and Shipworm relay in a single box.
+
+The Shipworm service is designed primarily for robustness: packets 
+are carried over UDP in order to cross as many NAT implementations 
+as possible. The servers are designed to be stateless, which means 
+that they can easily be replicated. We expect indeed to find many 
+such servers replicated at multiple Internet locations.
+
+The primary role of the servers is to enable the NAT traversal. The 
+service is designed in such a way that, as soon as NAT traversal is 
+guaranteed, packets can flow on a direct path between source and 
+destination, without necessarily involving a relay by a Shipworm 
+server.
+
+4	Description of the solution
+
+The Shipworm service is realized by having clients interact with 
+"Shipworm servers" through the Shipworm service protocol.
+
+The Shipworm server is designed to be stateless. It waits for 
+Shipworm requests or test requests on the Shipworm service and 
+Shipworm test ports, and processes by sending a response to the 
+adequate address and port; it waits for IPv6 packets on the Shipworm 
+
+Huitema                                                      [Page  4]
+
+
+INTERNET DRAFT               Shipworm                    July 12, 2001
+
+relay port, and forwards them to the adequate IPv4 address and UDP 
+port.
+
+4.1	Message formats
+
+4.1.1	Shipworm IPv6 addresses
+
+Shipworm IPv6 addresses comprise four components:
+
+   +------+------------+----+-----------------------------+
+   |Prefix|IPv4 address|Port|       Node identifier       |
+   +------+------------+----+-----------------------------+
+
+The 16 bit prefix is the "Shipworm IPv6 Prefix."
+
+The next 32 bits contain a globally routable IPv4 address.
+
+The next 16 bits contain a port number associated with that address.
+
+The last 64 bits contain a node identifier.
+
+4.1.2	Shipworm IPv6 packets encapsulation
+
+Shipworm IPv6 packets are transmitted as UDP packets [13] within 
+IPv4 [14].  The source and destination IP addresses and UDP port 
+take values that are specified in this section.
+
+4.1.3	Maximum Transmission Unit
+
+Since Shipworm uses UDP as an underlying transport, a Shipworm
+Maximum Transfer Unit (MTU) could potentially be as large as the 
+payload of the largest valid UDP datagram (65527 bytes).  However, 
+since Shipworm packets can travel unto unpredictable path over the 
+Internet, it is best to contain this MTU to a small size, in order 
+to minimize the effect of packet fragmentation and reassembly. The 
+default link MTU assumed by a host, and the link MTU supplied by a 
+Shipworm server during Router Advertisement SHOULD normally be set 
+to the minimum IPv6 MTU size of 1280 bytes [5].
+
+Shipworm implementations SHOULD NOT set the "do not fragment" (DF) 
+bit of the encapsulating IPv4 header.
+
+4.1.4	Shipworm bubble
+
+A Shipworm bubble is a minimal UDP packet sent to a specific 
+destination to "prime" a NAT for later accepting packets from this 
+destination. The bubble has the following parameter:
+
+- IPv4 source address: the Shipworm mapped address of the sender
+
+- IPv4 destination address: the IPv4 address of the target
+
+
+Huitema                                                      [Page  5]
+
+
+INTERNET DRAFT               Shipworm                    July 12, 2001
+
+- UDP source port: the Shipworm mapped port of the sender
+
+- UDP destination port: the Shipworm Discard Port.
+
+- UDP payload: the string "Shipworm." 
+
+4.2	Shipworm Client specification
+
+A Shipworm client expects to exchange IPv6 packets through an UDP 
+port, the Shipworm service port. The client will maintain the 
+following variables that reflect the state of the Shipworm service:
+
+- Shipworm connectivity status,
+- Mapped address and port number of the Shipworm service port,
+- Shipworm IPv6 prefix associated with the Shipworm service port,
+- Shipworm IPv6 address or addresses derived from the prefix,
+- Date and time of the last interaction with the Shipworm server,
+- List of recent Shipworm peers.
+
+Before sending any packets, the client must perform the Shipworm 
+qualification procedure, which determines the Shipworm connectivity 
+status, the mapped address and port number, and the Shipworm IPv6 
+prefix. If the qualification is successful, the client may use the 
+Shipworm service port to transmit and receive IPv6 packets, 
+according to the transmission and reception procedures; these 
+procedures use the "list of recent peers". The client must regularly 
+perform the maintenance procedure in order to guarantee that the 
+Shipworm service port remains usable; the need to use this procedure 
+or not depend on the delay since the last interaction with the 
+Shipworm server. 
+
+4.2.1	Qualification procedure
+
+The purpose of the qualification procedure is to establish the 
+status of the local IPv4 connection, and to determine the Shipworm 
+IPv6 client prefix of the local Shipworm interface. The procedure 
+starts when the service is in the "initial" state, and results in a 
+"qualified" state if successful, in an "off-line" or "bad-NAT" stage 
+if unsuccessful.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Huitema                                                      [Page  6]
+
+
+INTERNET DRAFT               Shipworm                    July 12, 2001
+
+          /---------\
+          | Initial |
+          \---------/
+               |
+          +----+----+
+          | Start   |<------+
+          +----+----+       |
+               |            |
+               v            |
+          /---------\ Timer |
+          |Starting |-------+ N attempts   /----------\
+          \---------/--------------------->| Off-line |
+               | Response                  \----------/
+               |
+          +----+----+
+          | Test    |<------+
+          +----+----+       |
+               | OK         |
+               v            |
+          /---------\ Timer |
+          | Testing |-------+ N attempts   /----------\
+          \---------/--------------------->| Bad-NAT  |
+               | Response                  \----------/
+               V
+          /---------\
+          |Qualified|
+          \---------/
+
+Initially, the Shipworm connectivity status is set to "Initial". 
+When the interface is initialized, the system first performs the 
+"start action" by sending a Router Solicit packet. The IPv6 
+destination of the RS is the Shipworm IPv6 anycast address; the IPv6 
+source is the unspecified address; the packet will be sent over UDP 
+to the Shipworm anycast address and Shipworm service port. The 
+connectivity status moves then to "Starting".
+
+In the starting state, the client waits for a router advertisement 
+from the Shipworm server. If no response comes within a time-out, 
+the client should repeat the start action, by resending the Router 
+Solicit packet. If no response has arrived after N=4 repetitions, 
+the client concludes that it cannot use UDP, and that the Shipworm 
+service is not available; the status is set to "Off-line." 
+
+If a response arrives, the client checks that the router 
+advertisement contains exactly one advertised address prefix. This 
+prefix should be a valid Shipworm IPv6 client prefix:
+
+- the first 16 bits contain the Shipworm service TLA,
+
+- the next 32 bits are the client's Shipworm mapped address,
+
+
+Huitema                                                      [Page  7]
+
+
+INTERNET DRAFT               Shipworm                    July 12, 2001
+
+- the next 16 bits are the client's Shipworm mapped port.
+
+The source address of the Router Advertisement is the Shipworm IPv6 
+address of the Shipworm server. This address must be built using an 
+IPv4 unicast address of the server, and a port number at which the 
+server is waiting for packets. 
+
+If the response is a valid router advertisement, from a valid 
+Shipworm source address, and containing a valid Shipworm address 
+prefix, the client should build a Shipworm IPv6 address using the 
+Shipworm IPv6 client prefix learned from the RA and locally selected 
+identifier. The client will then initiate the test of the 
+connection. It does so by sending first a Shipworm bubble whose 
+target is the IPv4 unicast address of the server, as learned from 
+the IPv6 source address of the RA, and then by sending IPv6 ICMP 
+echo request whose IPv6 source address is the client's Shipworm IPv6 
+address, and whose IPv6 destination is the server's Shipworm IPv6 
+address, i.e. the source address of the RA; the echo request is sent 
+over IPv4 UDP to the Shipworm IPv4 anycast address and Shipworm UDP 
+port.
+
+The client is now in the "testing" state, and waits for the ICMP 
+echo response from the Shipworm server. If no response comes within 
+a time-out, the client should repeat the test action, by resending 
+the Shipworm bubble and the Shipworm ICMP echo request. If no 
+response has arrived after N=4 repetitions, the client concludes 
+that the NAT cannot be reliably traversed, and that the Shipworm 
+service is not available; the status is set to "Bad-NAT." 
+
+If the echo response arrives, the address is qualified, and the 
+client can start using the Shipworm service.
+
+4.2.2	Packet reception
+
+The Shipworm client receives packet over the Shipworm interface. The 
+role of the packet reception procedure, besides receiving packets, 
+is to maintain the date and time of the last interaction with the 
+Shipworm server, and the "list of recent peers." Each entry in the 
+list contains an IPv4 address, a UDP port, and a date and time.
+
+When a UDP packet is received, the Shipworm client examines the IPv4 
+source address and port number from which the packet is received. If 
+these values match the Shipworm IPv4 anycast address and Shipworm 
+port, the client updates the "date and time of the last interaction 
+with the Shipworm server" to the current data and time.
+
+The Shipworm client will then examine the IPv6 source address of the 
+encapsulated packet. If the source IPv6 address is a Shipworm IPv6 
+address, the client extracts the "peer IPv4 address" and "peer UDP 
+port" corresponding to that address. If the address and port pair 
+are already represented in the "list of recent peers", the client 
+updates the data and time associated to that list entry. If the pair 
+
+Huitema                                                      [Page  8]
+
+
+INTERNET DRAFT               Shipworm                    July 12, 2001
+
+is not yet represented, the client creates a new list entry for the 
+pair, associated with the current data and time.
+
+The list of peers is used to "optimize" the transmission of IPv6 
+packets by using a "direct path" for the recently active peers. The 
+list of peers could grow over time. Clients should implement a list 
+management strategy, such as for example deleting the least recently 
+used entries. Clients should make sure that the list has a 
+sufficient size, so that most traffic goes over the "direct path."
+
+4.2.3	Packet transmission
+
+When a Shipworm client has to transmit a packet over a Shipworm 
+interface, it examines the destination IPv6 address. If the 
+destination is not a Shipworm IPv6 address, the packet is posted 
+over UDP to the Shipworm IPv4 anycast address and Shipworm UDP port.
+
+If the destination is a Shipworm IPv6 address, the client extracts 
+the "peer IPv4 address" and "peer UDP port" corresponding to that 
+address.
+
+If there is an entry for this address and port pair in the List of 
+recent Shipworm peers for this address and port pair, the packet 
+should be sent over UDP directly to the specified "peer IPv4 
+address" and "peer UDP port".
+
+If there is no entry in the list, the client should first send a 
+Shipworm bubble to the "peer IPv4 address". It should then send the 
+IPv6 packet over IPv4 UDP to the Shipworm IPv4 anycast address and 
+Shipworm UDP port.
+
+4.2.4	Maintenance
+
+The Shipworm client must ensure that the mappings that it uses 
+remain valid. It does so by checking that packets are regularly 
+received from the Shipworm server.
+
+At regular intervals, the client must check the "date and time of 
+the last interaction with the Shipworm server", to ensure that at 
+least one packet has been received in the last 30 seconds. If this 
+is not the case, the client shall send a router solicitation to the 
+Shipworm IPv6 Anycast address. When the router advertisement is 
+received, the client checks that the advertised prefix corresponds 
+to the current Shipworm service prefix. If this is not the case, the 
+mapping has changed; the client must check that the new prefix is 
+valid, as specified in the qualification procedure. It should then 
+invalidate the addresses derived from the old prefixes.
+
+4.3	Shipworm Server specification
+
+The Shipworm server is designed to be stateless. The Shipworm server 
+waits for incoming UDP packets at the Shipworm Relay Port. The 
+
+Huitema                                                      [Page  9]
+
+
+INTERNET DRAFT               Shipworm                    July 12, 2001
+
+incoming packets may be sent to either the Shipworm IPv4 Anycast 
+Address, or to the specific unicast address of the Shipworm Server.
+
+The Shipworm server acts as an IPv6 router. As such, it will receive 
+Router Solicitation packets, to which it will respond with router 
+advertisement packets as explained in the "router solicitation" 
+procedure; it may also receive other packets, for example ICMP 
+packets; ICMP echo request packets must be processed according to 
+the "echo request" procedure.
+
+4.3.1	Processing of Shipworm IPv6 packets
+
+Upon reception of a packet on the Shipworm port, the Shipworm server 
+will first check that the UDP payload contains a valid IPv6 packet; 
+if this is not the case, the packet will be silently discarded. The 
+Shipworm server will then check the IPv6 destination address of the 
+encapsulated IPv6 packet.
+
+If the IPv6 destination address is either the Shipworm IPv6 anycast 
+address or the Shipworm IPv6 address associated to the local 
+interface, the Shipworm server processes the packet; it may in 
+particular have to process "router solicitation" and "echo request" 
+packets according to the corresponding procedures.
+
+If the IPv6 destination address is a valid Shipworm IPv6 address, 
+the Shipworm server encapsulates the IPv6 packet in a new UDP 
+datagram, in which the following parameters are set:
+
+- The destination IPv4 address is derived from the IPv6 destination.
+
+- The source IPv4 address is the Shipworm IPv4 anycast address.
+
+- The destination UDP port is derived from the IPv6 destination.
+
+- The source UDP port is set to the Shipworm Relay Port.
+
+If the destination address is not a Shipworm IPv6 address, the 
+packet should be relayed to the IPv6 Internet using IPv6 routing.
+
+Before relaying packets, the Shipworm server MAY perform the 
+security tests suggested in section 7. 
+
+4.3.2	Processing of router solicitations
+
+When the Shipworm server receives a router solicitation (RS), it 
+retains the IPv4 address and UDP port from which the solicitation 
+was received; these become the Shipworm mapped address and Shipworm 
+mapped port of the client. The router uses these values to compose a 
+Shipworm IPv6 Prefix.
+
+The Shipworm server responds to the router solicitation by sending a 
+Router Advertisement. The router advertisement must advertise the 
+
+Huitema                                                      [Page 10]
+
+
+INTERNET DRAFT               Shipworm                    July 12, 2001
+
+Shipworm IPv6 prefix composed from the mapped address and mapped 
+port. The IPv6 destination address is normally set to the IPv6 
+source address of the RS; if that address was the unspecified 
+address, the IPv6 destination should be set to the Shipworm IPv6 
+anycast address. The Router Advertisement must be sent over UDP to 
+the Shipworm mapped address and Shipworm mapped port of the client; 
+the IPv4 source address and UDP source port should be set to the 
+Shipworm IPv4 anycast address and Shipworm Port.
+
+4.3.3	Processing of echo requests
+
+When the Shipworm server receives an echo request over the Shipworm 
+port, it prepares an ICMP echo reply. If the IPv6 source address of 
+the echo request is a Shipworm address, the IPv6 source address of 
+the response must be set to the Shipworm IPv6 address of the server; 
+the IPv4 destination address and UDP destination port should be set 
+to the value derived from the Shipworm IPv6 address of the client; 
+the IPv4 source address and UDP source address should be set to the 
+values derived from the Shipworm IPv6 address of the server. 
+
+4.3.4	Processing of bubbles
+
+Shipworm servers may receive Shipworm Discard messages on a discard 
+port; these messages are silently discarded.
+
+4.4	Shipworm Relay specification
+
+Shipworm relays are IPv6 routers that advertise reachability of the 
+Shipworm service IPv6 prefix. Shipworm relays will receive IPv6 
+packets bound to Shipworm clients. Shipworm routers can transmit 
+Shipworm packets in one of two ways, depending of whether or not the 
+local configuration allows them to use the Shipworm IPv4 anycast 
+address as the source address of UDP packets.
+
+If the Shipworm Relay can use the Shipworm IPv4 anycast address as a 
+source address, it should transmit the IPv6 packets directly to the 
+target Shipworm client: the IPv4 destination address and UDP 
+destination port are derived from the destination Shipworm IPv6 
+address; the IPv4 source address and UDP source port are set to the 
+Shipworm IPv4 anycast address and Shipworm UDP port.
+
+If the Shipworm Relay cannot use the Shipworm IPv4 anycast address 
+as a source address, it should transmit the IPv6 packets through the 
+nearest Shipworm server: the IPv4 destination address and UDP 
+destination port are set to the Shipworm IPv4 anycast address and 
+Shipworm UDP port; the IPv4 source address and UDP source port are 
+set to a local interface address and local port number on the relay.
+
+It is obviously desirable to combine the functions of Shipworm relay 
+and Shipworm server, but this is not mandatory.
+
+
+
+Huitema                                                      [Page 11]
+
+
+INTERNET DRAFT               Shipworm                    July 12, 2001
+
+5	Discussion of the solution
+
+5.1	Why do we have bubbles and lists of peers?
+
+Experience shows that the implementers of NAT products can adopt 
+widely different treatments of UDP packets:
+
+1. Some implement the simplest solution, which is to map an internal 
+UDP port, defined by an internal address and a port number on the 
+corresponding host, to an external port, defined by a global address 
+managed by the NAT and a port number valid for that address. In this 
+simple case, the mapping is retained as long as the port is active, 
+and is removed after an inactivity timer. As long as the mapping is 
+retained, any packet received by the NAT for the external port is 
+relayed to the internal address and port.
+
+2. Some implement a more complex solution, in which the NAT not only 
+establishes a mapping for the UDP port, but also maintains a list of 
+external hosts to which traffic has been sent from that port. The 
+packets originating from third party hosts to which the local host 
+has not yet sent traffic are rejected.
+
+3. Instead of keeping just a list of authorized hosts, some NAT 
+implementations keep a list of authorized host and port pairs. UDP 
+packets coming from remote addresses are rejected if the internal 
+host has not yet sent traffic to the outside host and port pair.
+
+4. Finally, some NAT map the same internal address and port pair to 
+different external address and port pairs, depending on the address 
+of the remote host.
+
+Measurement campaigns and studies of documentations have shown that 
+most NAT implement either option 1 or option 2. The combination of 
+"bubbles" and "list of peers" allows us to cross these types of NAT; 
+it is not strictly required for the NAT of type 1, but it does not 
+hurt either.
+
+5.2	Why do we test with ICMP?
+
+The purpose of the ICMP test is to check that the client is capable 
+of receiving UDP packets on a mapped port, from a different server 
+than the one which performed the address mapping - i.e. to verify 
+that the NAT is of type 1 or 2, not 3 or 4. The ICMP request will 
+trigger a "triangle":
+
+1) ICMP request sent by the client to the Shipworm IPv4 anycast 
+address,
+
+2) Local transmission on the server between the anycast address and 
+the unicast interface,
+
+
+Huitema                                                      [Page 12]
+
+
+INTERNET DRAFT               Shipworm                    July 12, 2001
+
+3) ICMP response sent from the unicast address of the server.
+
+This test, combined with the transmission of a bubble, is sufficient 
+to check that the same mapping can be used independently of the IPv4 
+address of the peer.
+
+5.3	Why do we need an anycast address?
+
+The use of an IPv4 anycast address to locate the Shipworm server has 
+many advantages. An obvious one is that it solves configuration 
+issues, making it very easy for the Shipworm client to locate the 
+nearest server. A less obvious one is the interaction with the NAT. 
+The type 2 NAT check that the packet comes from a source with which 
+the local client already interacted; by using a single unicast 
+address as the source address of all UDP packets coming from all 
+Shipworm servers, we guarantee that the "pin-hole in the NAT" can be 
+use by all of these servers.
+
+The use of an anycast address is facilitated by the stateless 
+implementation of Shipworm servers: since the service is performed 
+in exactly the same way by any server, it does not matter whether 
+anycast routing carries the packet to a specific server or another.
+
+The only dependency that we have is during the qualification phase: 
+it is important that the echo packet be processed by the same server 
+for which we have sent a bubble. However, since the IPv6 destination 
+address of the echo request specifies a specific server address, we 
+know that even the anycast packet was routed to another server, the 
+normal routing rule will ensure that the packet is relayed from 
+there to the intended server.
+
+The consequences of the use of anycast addresses on access control, 
+scaling, and failover are discussed in [RFC3068] in the context of 
+the "6to4" service.   
+
+5.4	When to use Shipworm?
+
+Shipworm is designed to robustly enable IPv6 traffic through NAT, 
+and the price of robustness is a reasonable amount of overhead, due 
+to UDP encapsulation, transmission of bubbles, and relaying of 
+packets through the Shipworm servers. Nodes that want to connect to 
+the IPv6 Internet should only use the Shipworm service as a "last 
+resort" option: they should prefer using direct IPv6 connectivity if 
+it is locally available, and they should prefer using the less 
+onerous "6to4" encapsulation if they can use a global IPv4 address.
+
+5.5	What about firewalls?
+
+The Shipworm service is not designed to "transparently traverse 
+firewalls." A local administrator can decide to allow or disallow 
+the service, by programming the local firewall to authorize or deny 
+traffic on the Shipworm UDP port. 
+
+Huitema                                                      [Page 13]
+
+
+INTERNET DRAFT               Shipworm                    July 12, 2001
+
+5.6	Why do we use the name Shipworm?
+
+A "Shipworm" is a little saltwater critter that is common in the 
+harbors of warm seas and that digs holes in immersed wood pieces, 
+such as boat hulls or posts. The animal is not an actual worm - it 
+is a mollusk. The Shipworm service also digs holes, albeit in NATs, 
+not in wood. 
+
+On one hand, one may think that the shipworm is a pretty nasty 
+animal. On the other hand, the animal only survives in relatively 
+clean and unpolluted water; its recent comeback in several Northern 
+American harbors is a testimony to their newly retrieved 
+cleanliness. The Shipworm service should, in turn, contribute to a 
+newly retrieved transparency of the Internet. 
+
+6	Future Work
+
+Obviously a lot - this is a first draft.
+
+7	Security Considerations
+
+The security consideration for using a dynamic encapsulation of IPv6 
+over UDP are very similar to the implications of "6to4" [RFC3056], 
+which we partially reproduce here.
+
+Implementors should be aware that, in addition to possible attacks 
+against IPv6, security attacks against IPv4 must also be considered. 
+Use of IP security at both IPv4 and IPv6 levels should nevertheless 
+be avoided, for efficiency reasons.  For example, if IPv6 is running 
+encrypted, encryption of IPv4 would be redundant except if traffic 
+analysis is felt to be a threat.  If IPv6 is running authenticated, 
+then authentication of IPv4 will add little.  Conversely, IPv4 
+security will not protect IPv6 traffic once it leaves the Shipworm 
+service. Therefore, implementing IPv6 security is required even if 
+IPv4 security is available. 
+
+By default, Shipworm traffic will be accepted and decapsulated from 
+any source from which regular IPv4 traffic is accepted.  If this is 
+for any reason felt to be a security risk (for example, if IPv6 
+spoofing is felt to be more likely than IPv4 spoofing), then 
+additional source address based packet filtering could be applied.  
+A possible plausibility check is whether the encapsulating IPv4 
+address is consistent with the encapsulated Shipworm IPv6 address.  
+If this check is applied, exceptions to it must be configured to 
+admit traffic from Shipworm relays and Shipworm servers. 
+
+In any case, any Shipworm traffic whose source or destination 
+address embeds a mapped IPv4 address which is not in the format of a 
+global unicast address MUST be silently discarded by both Shipworm 
+clients and Shipworm servers.  Specifically, this means that IPv4 
+addresses defined in [RFC 1918], broadcast, subnet broadcast, 
+
+Huitema                                                      [Page 14]
+
+
+INTERNET DRAFT               Shipworm                    July 12, 2001
+
+multicast and loopback addresses are unacceptable.
+
+8	IANA Considerations
+
+This memo documents a request to IANA to allocate a Shipworm IPv6 
+service prefix, a Shipworm IPv4 anycast prefix, a Shipworm IPv4 
+anycast address and a Shipworm UDP port.
+
+
+9	Copyright
+
+The following copyright notice is copied from RFC 2026 [Bradner, 
+1996], Section 10.4, and describes the applicable copyright for this 
+document.
+
+Copyright (C) The Internet Society July 12, 2001. All Rights 
+Reserved.
+
+This document and translations of it may be copied and furnished to 
+others, and derivative works that comment on or otherwise explain it 
+or assist in its implementation may be prepared, copied, published 
+and distributed, in whole or in part, without restriction of any 
+kind, provided that the above copyright notice and this paragraph 
+are included on all such copies and derivative works.  However, this 
+document itself may not be modified in any way, such as by removing 
+the copyright notice or references to the Internet Society or other 
+Internet organizations, except as needed for the purpose of 
+developing Internet standards in which case the procedures for 
+copyrights defined in the Internet Standards process must be 
+followed, or as required to translate it into languages other than 
+English.
+
+The limited permissions granted above are perpetual and will not be 
+revoked by the Internet Society or its successors or assignees.
+
+This document and the information contained herein is provided on an 
+"AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING 
+TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING 
+BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION 
+HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF 
+MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+10	Intellectual Property
+
+The following notice is copied from RFC 2026 [Bradner, 1996], 
+Section 10.4, and describes the position of the IETF concerning 
+intellectual property claims made against this document.
+
+The IETF takes no position regarding the validity or scope of any 
+intellectual property or other rights that might be claimed to 
+pertain to the implementation or use other technology described in 
+this document or the extent to which any license under such rights 
+
+Huitema                                                      [Page 15]
+
+
+INTERNET DRAFT               Shipworm                    July 12, 2001
+
+might or might not be available; neither does it represent that it 
+has made any effort to identify any such rights.  Information on the 
+IETF's procedures with respect to rights in standards-track and 
+standards-related documentation can be found in BCP-11.  Copies of 
+claims of rights made available for publication and any assurances 
+of licenses to be made available, or the result of an attempt made 
+to obtain a general license or permission for the use of such 
+proprietary rights by implementers or users of this specification 
+can be obtained from the IETF Secretariat.
+
+The IETF invites any interested party to bring to its attention any 
+copyrights, patents or patent applications, or other proprietary 
+rights which may cover technology that may be required to practice 
+this standard.  Please address the information to the IETF Executive 
+Director.
+
+11	Acknowledgements
+
+Many of the ideas in this memo are the result of discussions between 
+the author and Microsoft colleagues, notably Brian Zill and Rick 
+Rashid. Several encapsulation details are inspired from early work 
+by Keith Moore.
+
+12	References
+
+[RFC3056] B. Carpenter, K. Moore, "Connection of IPv6 Domains via 
+IPv4 Clouds", RFC 3056, February 2001.
+
+[RFC3068] C. Huitema, "An Anycast Prefix for 6to4 Relay Routers", 
+RFC 3068, June 2001.
+
+13	Authors' Addresses
+
+Christian Huitema
+Microsoft Corporation
+One Microsoft Way
+Redmond, WA 98052-6399
+
+Email: huitema@microsoft.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Huitema                                                      [Page 16]

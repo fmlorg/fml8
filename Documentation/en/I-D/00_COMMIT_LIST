@@ -8,6 +8,7 @@ draft-bernstein-owner-hack-01.txt
 draft-bernstein-pirp-02.txt
 draft-bernstein-qmtp-01.txt
 draft-bernstein-qsbmf-02.txt
+draft-bose-smtp-integrity-00.txt
 draft-burger-vpim-cc-00.txt
 draft-burger-vpim-cc-01.txt
 draft-burger-vpim-pc-00.txt
@@ -20,6 +21,9 @@ draft-freed-bsmtp-02.txt
 draft-freed-smtp-pipe-00.txt
 draft-freed-smtp-pipe-01.txt
 draft-freed-smtp-pipeline-02.txt
+draft-hoffman-legis-smtp-banner-00.txt
+draft-hoffman-legis-smtp-banner-01.txt
+draft-hoffman-legis-smtp-banner-02.txt
 draft-hoffman-legis-smtp-banner-03.txt
 draft-hoffman-rfc2487bis-00.txt
 draft-hoffman-rfc2487bis-02.txt
@@ -32,6 +36,7 @@ draft-hoffman-smtp-ssl-07.txt
 draft-hoffman-smtp-ssl-08.txt
 draft-hoffman-smtp-ssl-09.txt
 draft-hoffman-smtp-ssl-10.txt
+draft-huitema-shipworm-00.txt
 draft-ietf-drums-smtpupd-06.txt
 draft-ietf-drums-smtpupd-07.txt
 draft-ietf-drums-smtpupd-08.txt
@@ -42,8 +47,12 @@ draft-ietf-drums-smtpupd-12.txt
 draft-ietf-drums-smtpupd-13.txt
 draft-ietf-fax-esmtp-conneg-00.txt
 draft-ietf-fax-smtp-capabilities-00.txt
+draft-ietf-fax-smtp-capabilities-01.txt
+draft-ietf-fax-smtp-session-02.txt
+draft-ietf-fax-smtp-session-03.txt
 draft-ietf-fax-smtp-session-04.txt
 draft-ietf-impp-datetime-00.txt
+draft-ietf-ipngwg-dns-discovery-analysis-00.txt
 draft-ietf-ldapbis-url-00.txt
 draft-ietf-mailext-mail-attributes-07.txt
 draft-ietf-msgtrk-model-00.txt
@@ -82,6 +91,7 @@ draft-ietf-vpim-pndn-01.txt
 draft-jones-msgtrk-def-00.txt
 draft-jones-msgtrk-def-01.txt
 draft-jones-msgtrk-def-02.txt
+draft-khanna-smtp-mail-transfer-reliability-00.txt
 draft-melnikov-esmtp-lang-00.txt
 draft-melnikov-smtp-lang-00.txt
 draft-melnikov-smtp-lang-01.txt
