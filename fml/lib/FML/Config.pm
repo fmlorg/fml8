@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.55 2002/02/17 13:31:29 fukachan Exp $
+# $FML: Config.pm,v 1.56 2002/02/24 08:27:01 fukachan Exp $
 #
 
 package FML::Config;
@@ -332,7 +332,7 @@ sub _read_file
 	$fh->close;
 
 	# save hook configuration in FML::Config name space (global).
-	$_fml_user_hooks .= $hook;
+	$_fml_user_hooks .= $hook if defined $hook;
     }
     else {
 	$self->error_set("Error: cannot open $file");
