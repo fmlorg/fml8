@@ -12,7 +12,7 @@ DO () {
 	test -f $msg || return;
 
 	cat $msg |\
-	perl -w fml/libexec/loader \
+	${PERL:-perl} -w fml/libexec/loader \
 		--params pwd=$PWD \
 		-c $pwd/main.cf \
 		/var/spool/ml/elena
