@@ -40,6 +40,9 @@ OS 依存
 
 
 その他
+	RCS バックアップ？
+		CVS のみサポートか？
+
 
 	LOG_CONNECTION:	0
 
