@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.124 2004/10/09 12:02:10 fukachan Exp $
+# $FML: Utils.pm,v 1.125 2004/11/21 07:00:34 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -322,7 +322,7 @@ sub mkdir
 	    }
 	    elsif ($mode =~ /mode=(\S+)/o) {
 		my $xmode = "directory_${1}_mode";
-		if (defined $config->{ $xmode }) {
+		if (defined $config->{ $xmode } && $config->{ $xmode }) {
 		    $curproc->_mkpath_str($dir, $config->{ $xmode });
 		}
 		else {
@@ -1279,6 +1279,19 @@ sub is_config_cf_exist
     my $f = $curproc->config_cf_filepath($ml, $domain);
 
     return ( -f $f ? 1 : 0 );
+}
+
+
+# Descriptions: return default config.cf path.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub default_config_cf_filepath
+{
+    my ($curproc) = @_;
+    my $main_cf   = $curproc->{ __parent_args }->{ main_cf };
+
+    return $main_cf->{ default_config_cf };
 }
 
 
