@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Configure.pm,v 1.23 2001/05/31 11:02:32 fukachan Exp $
+# $FML: Configure.pm,v 1.24 2001/07/15 12:02:12 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -170,11 +170,12 @@ sub _makefml
 
     # arguments to pass off to each method
     my $optargs = {
-	command => $method,
-	ml_name => $ml_name,
-	options => \@options,
-	argv    => $argv,
-	args    => $args,
+	command_mode => 'admin',
+	command      => $method,
+	ml_name      => $ml_name,
+	options      => \@options,
+	argv         => $argv,
+	args         => $args,
     };
 
     # here we go
