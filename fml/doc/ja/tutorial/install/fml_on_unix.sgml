@@ -1,5 +1,5 @@
 <!--
-   $FML: fml_on_unix.sgml,v 1.4 2003/02/11 11:10:58 fukachan Exp $
+   $FML: fml_on_unix.sgml,v 1.5 2003/04/15 14:51:39 fukachan Exp $
 -->
 
 <chapter id="install.fml.unix">
@@ -374,7 +374,7 @@ mani.cf は大枠の最も基本的な設定です。より細かな設定は fml の動作の指
 デフォルトでは見本として:)
 subject のタグをつけない設定とフィルタ関連の設定だけが入っています。
 <screen>
-# $FML: site_default_config.cf.in,v 1.5 2002/10/31 10:46:38 fukachan Exp $
+# $FML: fml_on_unix.sgml,v 1.5 2003/04/15 14:51:39 fukachan Exp $
 #
 #               site default_config.cf EXAMPLE
 #
@@ -459,31 +459,24 @@ use_mime_component_filter	=	yes
 	</title>
 
 <para>
-/usr/local/etc/fml/main.cf の編集は必要ありませんが、
-/usr/local/etc/fml/virtual を編集して下さい。
-</para>
-
-<para>
-fml.org がデフォルトのドメインとしましょう。この場合、fml.org のＭＬ群
-に対しては /var/spool/ml 以下を使います。ところが、ディレクトリ名には 
-fml.org などと入っていないので、このままでは elena@fml.org と 
-elena@nuinui.net の２つを作ることが出来ません。 別のドメイン 
-nuinui.net のＭＬ群は別のディレクトリ(例: /var/spool/nuinui.net)を使う
-必要があります。
-</para>
-
-<para>
-そこで「ドメイン → ディレクトリ」の対応関係を 
-/usr/local/etc/fml/virtual に定義して下さい。
-<screen>
-nuinui.net	/var/spool/nuinui.net
-</screen>
+そのドメインでのＭＬを作る前に、newdomain コマンドで 
+ml_home_prefix_maps に利用したいドメインと ml_home_prefix の対応関係を
+定義してください。
+newdomain コマンドについては
+<link linkend="setup.newml">
+「ＭＬの作成」
+</link>
+の節で後述します。
 </para>
 
 <warning>
 <para>
-なお site_default_config.cf はドメインに関わらず適用されることに注意し
-てください。
+/usr/local/etc/fml/main.cf の編集は必要ありません。
+</para>
+
+<para>
+一方、site_default_config.cf はドメインに関わらず適用されることに注意
+してください。
 </para>
 </warning>
 
