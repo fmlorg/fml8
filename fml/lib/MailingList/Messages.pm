@@ -167,6 +167,13 @@ build a template message following the given $args (a hash reference).
 =cut
 
 
+# Descriptions: adapter to forward the request to object builders
+#               by following content-type. The real work is done at
+#                 &build_mime_multipart_chain() if multipart
+#                 &_create() if not
+#    Arguments: $self $args
+# Side Effects: none
+# Return Value: none
 sub create
 {
     my ($self, $args) = @_;
@@ -174,9 +181,9 @@ sub create
     # set up template anyway
     $self->_set_up_template($args);
 
-    # parse the non multipart mail
+    # parse the non multipart mail and build a chain
     if ($args->{ content_type } =~ /multipart/i) {
-	$self->parse_mime_multipart($args);
+	$self->build_mime_multipart_chain($args);
     }
     else {
 	$self->_create($args);
@@ -330,7 +337,7 @@ sub _print
 }
 
 
-=head2 C<parse_mime_multipart($args)>
+=head2 C<build_mime_multipart_chain($args)>
 
 parse the multipart mail. Actually it calculates the begin and end
 offset for each part of content, not split() and so on.
@@ -351,7 +358,7 @@ C<new()> calls this routine if the message looks MIME multipart.
 #      ---boundary--
 #         ... trailor ...
 #
-sub parse_mime_multipart
+sub build_mime_multipart_chain
 {
     my ($self, $args) = @_;
 
