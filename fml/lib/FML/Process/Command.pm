@@ -86,6 +86,8 @@ sub finish
 }
 
 
+# dynamic loading of command definition.
+# It resolves your customized command easily.
 sub _evaluate_command
 {
     my ( $curproc ) = @_;
@@ -93,10 +95,14 @@ sub _evaluate_command
     my $body   = $curproc->{ incoming_message }->{ body }->get_content_body;
     my @body   = split(/\n/, $body);
 
-    for (@body) { 
-	my $valid = $config->has_attribute( "available_commands", $_ )
-	    ? "valid" : "invalid";
-	Log("command($valid) = " . $_);
+    for my $command (@body) { 
+	my $is_valid = 
+	    $config->has_attribute( "available_commands", $command )
+		? 'yes' : 'no';
+	Log("command = " . $command . " (valid?=$is_valid)");
+	next if $is_valid eq 'no';
+	eval qq{ require FML::Command::$command; };
+	if ($@) { Log($@);}
     }
 }
 
