@@ -1,10 +1,10 @@
 <!--
-   $FML: merge.sgml,v 1.2 2001/11/25 00:44:19 fukachan Exp $
+   $FML: merge.sgml,v 1.3 2002/04/01 23:40:59 fukachan Exp $
 -->
 
 <chapter id="merge">
 	<title>
-	TODO: fml 4.0 から 5.0 への検討事項
+	TODO: fml 4.0 から 8.0 への検討事項
 	</title>
 
 <sect1 id="merge.removed">

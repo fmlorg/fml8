@@ -1,8 +1,8 @@
 <!--
-   $FML: done.sgml,v 1.5 2001/11/25 00:51:08 fukachan Exp $
+   $FML: done.sgml,v 1.6 2002/04/01 23:40:58 fukachan Exp $
 -->
 
-<chapter id="fml4to5">
+<chapter id="fml4to8">
 
 <title> 解決したもの </title>
 
@@ -44,7 +44,7 @@ fml-support:05948 を参照
 </para>
 
 <para>
-im-140 に入れ換えた。4.0 5.0 ともに解決
+im-140 に入れ換えた。4.0 8.0 ともに解決
 </para>
 
 </sect1>
@@ -67,7 +67,7 @@ fml-devel ではこの動作がデフォルトなので、done.
 
 <warning>
 <para>
-fml 5.0 では解決済みだが、4.0 ではどうする？
+fml 8.0 では解決済みだが、4.0 ではどうする？
 </para>
 </warning>
 
@@ -106,7 +106,7 @@ http://linas.org/linux/pm.html
 
 <warning>
 <para>
-fml 5.0 では解決済みだが、4.0 ではどうする？
+fml 8.0 では解決済みだが、4.0 ではどうする？
 </para>
 </warning>
 

@@ -2,7 +2,7 @@
 <HTML>
 <HEAD>
 <TITLE>
-fml 5 project home page
+fml8 project home page
 </TITLE>
 <META http-equiv="Content-Type"
 	content="text/html; charset=EUC-JP">
@@ -13,7 +13,7 @@ fml 5 project home page
       	<FRAME SRC="Documentation/ja/tutorial/index.html" NAME="right">
   <NOFRAMES>
 	<A HREF="Documentation/ja/tutorial/index.html">
-	fml5 project (fml/doc/)
+	fml8 project (fml/doc/)
 	</A>
 	(if your browser not support frameset).
   </NOFRAMES>

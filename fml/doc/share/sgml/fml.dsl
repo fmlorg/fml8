@@ -1,4 +1,4 @@
-<!-- $FML: fml.dsl,v 1.3 2001/10/23 07:45:28 fukachan Exp $ -->
+<!-- $FML: fml.dsl,v 1.4 2002/04/01 23:41:08 fukachan Exp $ -->
 
 <!DOCTYPE style-sheet PUBLIC "-//James Clark//DTD DSSSL Style Sheet//EN" [
    <!ENTITY docbook.dsl PUBLIC "-//Norman Walsh//DOCUMENT DocBook HTML Stylesheet//EN" CDATA DSSSL>
@@ -52,7 +52,7 @@ CDATA DSSSL>
 	    (make element gi: "p"
                   attributes: (list (list "align" "center"))
               (make element gi: "small"
-                (literal "fml-devel (fml 5.0), fml next generation prototype, homepage is ")
+                (literal "fml-devel (fml 8.0), fml next generation prototype, homepage is ")
 	        (make element gi: "a"
                       attributes:
                       (list (list "href" "http://www.fml.org/software/fml-devel/")
