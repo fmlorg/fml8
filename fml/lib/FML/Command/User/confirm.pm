@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.11 2002/07/14 15:15:28 fukachan Exp $
+# $FML: confirm.pm,v 1.12 2002/07/17 09:28:33 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -141,7 +141,9 @@ sub _switch_command
 
     if ($class eq 'subscribe'   ||
 	$class eq 'unsubscribe' ||
-	$class eq 'chaddr') {
+	$class eq 'chaddr' ||
+	$class eq 'on' ||
+	$class eq 'off') {
 	$command_args->{ command_data } = $address;
 	$command_args->{ command_mode } = 'Admin';
 	$command_args->{ override_need_no_lock } = 1; # already locked
