@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001 Ken'ichi Fukamachi
+# Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calender.pm,v 1.1 2002/02/13 13:01:38 fukachan Exp $
+# $FML: Calender.pm,v 1.2 2002/04/03 03:39:33 fukachan Exp $
 #
 
 package FML::Process::Calender;
@@ -30,7 +30,7 @@ FML::Process::Calender -- demonstration of FML module usage
 FML::Process::Calender is demonstration module to show fml module
 usage.
 This module provides calender presentation for simple scheduler,
-Calender::Lite calss.
+Calender::Lite class.
 
 =head1 METHODS
 
@@ -45,8 +45,8 @@ dummy.
 =cut
 
 
-# Descriptions: dummy
-#               avoid default fml new() since we do not need it.
+# Descriptions: dummy constructor.
+#               avoid the default fml new() since we do not need it.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: OBJ
@@ -171,7 +171,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
