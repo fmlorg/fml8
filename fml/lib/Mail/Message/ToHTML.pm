@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.18 2002/04/21 14:00:01 fukachan Exp $
+# $FML: ToHTML.pm,v 1.19 2002/04/27 05:25:03 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -12,14 +12,12 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
-BEGIN { @AnyDBM_File::ISA = qw(DB_File GDBM_File NDBM_File); }
-
 my $is_strict_warn = 0;
 my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.18 2002/04/21 14:00:01 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.19 2002/04/27 05:25:03 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
