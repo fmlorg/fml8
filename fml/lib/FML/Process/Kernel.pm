@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.249 2004/12/18 12:57:19 fukachan Exp $
+# $FML: Kernel.pm,v 1.250 2004/12/19 11:26:33 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -825,9 +825,11 @@ sub resolve_ml_specific_variables
 	my $config_ph_path = $config_cf_path;
 	$config_ph_path    =~ s/config.cf/config.ph/;	
 	use File::stat;
-	my $stat_ph = stat($config_ph_path);
-	my $stat_cf = stat($config_cf_path);
-	if ((! -f $config_cf_path) || ($stat_ph->mtime > $stat_cf->mtime)) {
+	my $stat_ph = -f $config_ph_path ? stat($config_ph_path) : undef;
+	my $stat_cf = -f $config_cf_path ? stat($config_cf_path) : undef;
+	if ((! -f $config_cf_path) || 
+	    (defined $stat_ph && defined $stat_cf && 
+	     $stat_ph->mtime > $stat_cf->mtime)) {
 	    my $fallback       = $resolver_args->{ fallback } || undef;
 	    my $fallback_args  = {
 		config_cf_path => $config_cf_path,
