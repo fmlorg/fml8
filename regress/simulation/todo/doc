@@ -4,7 +4,6 @@ doc/index.ja.html
 doc/interfaces.ja.html
 doc/objects.ja.html
 
-
 etc/defaults/basic.cf.ja
 etc/defaults/command.cf.ja
 etc/defaults/dbms.cf.ja
@@ -19,11 +18,9 @@ etc/defaults/system_dependence.cf.ja
 etc/defaults/tickets.cf.ja
 etc/defaults/cgi.cf.ja
 
-
 Dialect/Japanese/String.pm
 Dialect/Japanese/Subject.pm
 Dialect/Japanese/Utils.pm
-
 
 FML/Article.pm
 FML/Checksum.pm
@@ -38,11 +35,9 @@ FML/Messages.pm
 FML/PCB.pm
 FML/Parse.pm
 
-
 CGI/TicketSystem.pm
 
 Header/Subject.pm
-
 
 Process/Command.pm
 Process/Configure.pm
@@ -52,16 +47,12 @@ Process/Switch.pm
 Process/TicketSystem.pm
 Process/CGI.pm
 
-
 Ticket/System.pm
-
 
 File/RingBuffer.pm
 File/Utils.pm
 
-
 IO/Adapter/Array.pm
-
 
 MailingList/Net/INET4.pm
 MailingList/Net/INET6.pm
