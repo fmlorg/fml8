@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.10 2004/12/09 11:33:32 fukachan Exp $
+# $FML: config_ph.pm,v 1.11 2004/12/15 14:48:02 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
@@ -87,28 +87,30 @@ sub _load_default_config_ph
     package default;
     no strict;
 
-    $DIR             = '$DIR';
-    $DOMAINNAME      = '$ml_domain';
-    $MAIL_LIST       = '$ml_name@$ml_domain';
-    $CONTROL_ADDRESS = '$ml_name-ctl@$ml_domain';
-    $MAINTAINER      = '$ml_name-admin@$ml_domain';
-    $BRACKET         = '$ml_name';
-    $ML_FN           = '($ml_name ML)';
-    $XMLNAME         = '';
-    $GOOD_BYE_PHRASE = '';
+    $DIR               = '$DIR';
+    $DOMAINNAME        = '$ml_domain';
+    $MAIL_LIST         = '$ml_name@$ml_domain';
+    $CONTROL_ADDRESS   = '$ml_name-ctl@$ml_domain';
+    $OUTGOING_ADDRESS  = '$ml_name-outgoing@$ml_domain';
+    $MAINTAINER        = '$ml_name-admin@$ml_domain';
+    $BRACKET           = '$ml_name';
+    $ML_FN             = '($ml_name ML)';
+    $XMLNAME           = '';
+    $GOOD_BYE_PHRASE   = '';
     $WELCOME_STATEMENT = '';
 
     require $FML::Merge::FML4::config_ph::default_config_ph;
 
-    $DIR             = '$DIR';
-    $DOMAINNAME      = '$ml_domain';
-    $MAIL_LIST       = '$ml_name@$ml_domain';
-    $CONTROL_ADDRESS = '$ml_name-ctl@$ml_domain';
-    $MAINTAINER      = '$ml_name-admin@$ml_domain';
-    $BRACKET         = '$ml_name';
-    $ML_FN           = '($ml_name ML)';
-    $GOOD_BYE_PHRASE = '--$ml_name@$ml_domain, Be Seeing You!';
-    $XMLNAME         = 'X-ML-Name: $ml_name';
+    $DIR              = '$DIR';
+    $DOMAINNAME       = '$ml_domain';
+    $MAIL_LIST        = '$ml_name@$ml_domain';
+    $CONTROL_ADDRESS  = '$ml_name-ctl@$ml_domain';
+    $OUTGOING_ADDRESS = '$ml_name-outgoing@$ml_domain';
+    $MAINTAINER       = '$ml_name-admin@$ml_domain';
+    $BRACKET          = '$ml_name';
+    $ML_FN            = '($ml_name ML)';
+    $GOOD_BYE_PHRASE  = '--$ml_name@$ml_domain, Be Seeing You!';
+    $XMLNAME          = 'X-ML-Name: $ml_name';
 
     $WELCOME_STATEMENT =~ s/our /our \(\$ml_name ML\)/;
 
@@ -324,6 +326,7 @@ sub translate
     my $dispatch = {
 	rule_convert           => \&translate_xxx,
 	rule_prefer_fml4_value => \&translate_xxx,
+	rule_prefer_fml8_value => \&translate_use_fml8_value,
     };
 
     use FML::Merge::FML4::Rules;
@@ -356,6 +359,10 @@ sub translate_xxx
     }
     elsif ($key eq 'CONTROL_ADDRESS') {
 	return "command_mail_address = $value";
+    }
+    elsif ($key eq 'OUTGOING_ADDRESS') {
+	return "";
+	return "# WARNING outgoing_address = $value";
     }
     elsif ($key eq 'SMTP_SENDER') {
 	return "smtp_sender = $value";
@@ -489,6 +496,14 @@ sub _fix_subject_tag
     }
 
     return $s;
+}
+
+
+sub translate_use_fml8_value
+{
+    my ($self, $diff, $key, $value) = @_;
+
+   return "# IGNORED since \$$key uses fml8 value";
 }
 
 
