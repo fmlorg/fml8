@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.17 2004/01/14 13:38:28 fukachan Exp $
+# $FML: Lite.pm,v 1.18 2004/01/17 14:47:22 fukachan Exp $
 #
 
 package Calendar::Lite;
@@ -347,7 +347,7 @@ sub _add_entry
 }
 
 
-=head2 print($fd)
+=head2 print_as_html($fd)
 
 print out the result as HTML.
 You can specify the output channel by file descriptor C<$fd>.
@@ -355,15 +355,12 @@ You can specify the output channel by file descriptor C<$fd>.
 =cut
 
 
-# XXX-TODO: print() -> print_as_html() ?
-
-
 # Descriptions: print Calendar by HTML::CalendarMonthSimple::as_HTML()
 #               method.
 #    Arguments: OBJ($self) HANDLE($fd)
 # Side Effects: none
 # Return Value: none
-sub print
+sub print_as_html
 {
     my ($self, $fd) = @_;
 
@@ -429,7 +426,7 @@ sub print_specific_month
     }
 
     # calender style
-    $self->print($fh);
+    $self->print_as_html($fh);
 }
 
 
