@@ -41,6 +41,8 @@ sub build_sql_query
     my $address = $args->{ address };
     my $table   = $self->{ _table };
 
+    print STDERR "build_sql_query( query=$query )\n" if $ENV{'debug'};
+
     if ($query eq 'add') {
 	"insert into $table values ('$ml_name', '$file', '$address', 0, 0)";
     }
