@@ -44,7 +44,7 @@ sub run
     my $model   = $config->{ ticket_model };
     my $pkg     = "FML::Ticket::Model::". $model;
     my $argv    = $args->{ ARGV };
-    my $command = $argv->[ 0 ];
+    my $command = $argv->[ 0 ] || 'list';
 
     # fake use() to do "use FML::Ticket::$model;"
     eval qq{ require $pkg; $pkg->import();};
@@ -62,7 +62,12 @@ sub run
 		ticket_id => $ticket_id, 
 		status    => 'close',
 	    };
-	    $ticket->set_status($curproc, $args);
+	    if ($ticket_id) {
+		$ticket->set_status($curproc, $args);
+	    }
+	    else {
+		croak("specify \$ticket_id");
+	    }
 
 	    $curproc->unlock();
 	}
