@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.116 2003/07/19 12:58:49 fukachan Exp $
+# $FML: Distribute.pm,v 1.117 2003/07/20 06:51:02 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -201,9 +201,9 @@ sub run
 	$config->{post_restrictions_reject_notice_data_type} || 'string';
     my $size       = 2048;
     my $msg_args   = {
-	_arg_address => $sender,
 	recipient    => $sender,
-	size         => $size, 
+	_arg_address => $sender,
+	_arg_size    => $size, 
     };
 
     my $eval = $config->get_hook( 'distribute_run_start_hook' );
