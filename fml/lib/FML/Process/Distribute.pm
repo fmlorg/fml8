@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.103 2002/12/25 08:41:18 fukachan Exp $
+# $FML: Distribute.pm,v 1.104 2003/01/25 12:02:41 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -503,22 +503,22 @@ sub _thread_check
 sub htmlify
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
-    my $pcb    = $curproc->{ pcb };
-    my $myname = $curproc->myname();
-
-    my $ml_name        = $config->{ ml_name };
-    my $spool_dir      = $config->{ spool_dir };
-    my $html_dir       = $config->{ html_archive_dir };
-    my $article        = $curproc->_build_article_object($args);
-    my $article_id     = $pcb->get('article', 'id');
-    my $article_file   = $article->filepath($article_id);
-    my $index_order    = $config->{ html_archive_index_order_type };
+    my $config       = $curproc->config();
+    my $pcb          = $curproc->pcb();
+    my $myname       = $curproc->myname();
+    my $ml_name      = $config->{ ml_name };
+    my $spool_dir    = $config->{ spool_dir };
+    my $html_dir     = $config->{ html_archive_dir };
+    my $article      = $curproc->_build_article_object($args);
+    my $article_id   = $pcb->get('article', 'id');
+    my $article_file = $article->filepath($article_id);
+    my $index_order  = $config->{ html_archive_index_order_type };
+    my $cur_lang     = $curproc->language_of_html_file();
 
     # XXX-TODO: care for non Japanese.
     my $htmlifier_args = {
 	directory   => $html_dir,
-	charset     => 'euc-jp',
+	charset     => $cur_lang,
 	index_order => $index_order,
     };
 

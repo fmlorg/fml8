@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.22 2002/12/20 03:37:43 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.23 2003/02/15 02:54:24 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -58,7 +58,7 @@ sub html_start
     my $title   = $config->{ thread_cgi_title }   || 'thread system interface';
     my $color   = $config->{ thread_cgi_bgcolor } || '#E6E6FA';
     my $myname  = $curproc->myname();
-    my $charset = $config->{ cgi_charset } || 'euc-jp';
+    my $charset = $curproc->language_of_cgi_message();
 
     # o.k start html
     print start_html(-title   => $title,

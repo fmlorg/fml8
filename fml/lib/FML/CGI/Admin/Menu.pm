@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.23 2002/12/18 04:50:31 fukachan Exp $
+# $FML: Menu.pm,v 1.24 2003/02/15 02:54:25 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
@@ -74,14 +74,13 @@ sub html_start
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
     my $myname  = $curproc->myname();
-    my $domain  = $curproc->ml_domain();
-    my $ml_name = $curproc->cgi_try_get_ml_name($args);
+    my $domain  = $curproc->ml_domain(); # must be safe (hard-coded in .cgi)
+    my $ml_name = $curproc->cgi_try_get_ml_name($args); # safe ok
     my $title   = "${ml_name}\@${domain} configuration interface";
     my $color   = $config->{ cgi_main_menu_color } || '#FFFFFF';
-    my $charset = $config->{ cgi_charset } || 'euc-jp';
+    my $charset = $curproc->language_of_cgi_message();
 
     # o.k start html
-    # XXX-TODO: validate $title
     print start_html(-title   => $title,
 		     -lang    => $charset,
 		     -BGCOLOR => $color);
@@ -101,11 +100,6 @@ sub html_end
     print end_html;
     print "\n";
 }
-
-
-#
-# XXX-TODO: we ensure safe_param_*() and try_cgi_*() returns save value.
-#
 
 
 # Descriptions: main routine for CGI.

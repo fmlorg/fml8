@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.14 2002/12/24 10:19:43 fukachan Exp $
+# $FML: HTMLify.pm,v 1.15 2003/01/11 16:05:14 fukachan Exp $
 #
 
 package FML::Command::HTMLify;
@@ -43,9 +43,7 @@ sub convert
     my $config  = $curproc->config();
     my $src_dir = $optargs->{ src_dir };
     my $dst_dir = $optargs->{ dst_dir };
-
-    # XXX-TODO: care for non Japanese.
-    my $charset = 'euc-jp';
+    my $charset = $curproc->language_of_html_file();
 
     croak("src_dir not defined") unless defined $src_dir;
     croak("src_dir not exists")  unless -d $src_dir;

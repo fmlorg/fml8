@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.12 2003/01/25 12:48:38 fukachan Exp $
+# $FML: log.pm,v 1.13 2003/01/27 03:34:36 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -68,6 +68,7 @@ sub process
     my $style    = $curproc->get_print_style();
 
     if (-f $log_file) {
+	$self->{ _curproc } = $curproc;
 	$self->_show_log($log_file, { printing_style => $style });
     }
 }
@@ -86,6 +87,7 @@ sub cgi_menu
     my $style    = $curproc->get_print_style();
 
     if (-f $log_file) {
+	$self->{ _curproc } = $curproc;
 	$self->_show_log($log_file, { printing_style => $style });
     }
 }
@@ -102,6 +104,10 @@ sub _show_log
     my $last_n_lines = 30;
     my $linecount    = 0;
     my $maxline      = 0;
+    my $curproc      = $self->{ _curproc };
+    my $charset      = ($is_cgi ? 
+			$curproc->language_of_cgi_message() :
+			$curproc->language_default() );
 
     use Mail::Message::Encode;
     my $obj = new Mail::Message::Encode;
@@ -124,7 +130,7 @@ sub _show_log
 	while ($buf = <$fh>) {
 	    next LINE if $linecount++ < $maxline;
 
-	    $s = $obj->convert( $buf, 'euc-jp' );
+	    $s = $obj->convert( $buf, $charset );
 
 	    if ($is_cgi) {
 		print $wh (_html_to_text($s));
