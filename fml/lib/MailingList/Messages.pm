@@ -73,12 +73,14 @@ sub create
 {
     my ($self, $args) = @_;
 
-    $self->{ version } = $args->{ version } || 1.0; 
-    $self->{ type    } = $args->{ type    } || 'message/rfc822';
-    $self->{ next    } = $args->{ next    } || undef;
-    $self->{ prev    } = $args->{ prev    } || undef;
-    $self->{ header  } = $args->{ header  } || undef;
-    $self->{ content } = $args->{ content } || '';
+    $self->{ next    }      = $args->{ next    } || undef;
+    $self->{ prev    }      = $args->{ prev    } || undef;
+
+    $self->{ version }      = $args->{ version }       || 1.0; 
+    $self->{ mime_version } = $args->{ mime_version }  || 1.0; 
+    $self->{ content_type } = $args->{ content_type  } || 'message/rfc822';
+    $self->{ header  }      = $args->{ header  } || undef;
+    $self->{ content }      = $args->{ content } || '';
 }
 
 
