@@ -1,0 +1,18 @@
+<!--
+   $FML$
+-->
+
+<sect1 id ="config.post.permitanyone">
+	<title>
+	ケーススタディ: 誰でも投稿可能なＭＬ
+	</title>
+
+<para>
+<screen>
+post_restrictions = permit_anyone
+</screen>
+post_restrictions は記事の投稿を許すメンバーを定義しています。
+これを permit_anyone とすると、だれでも投稿可能になります。
+</para>
+
+</sect1>

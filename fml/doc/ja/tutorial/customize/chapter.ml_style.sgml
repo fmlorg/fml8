@@ -1,10 +1,17 @@
 <!--
-   $FML: chapter.sgml,v 1.1.1.1 2002/07/28 04:59:56 fukachan Exp $
+   $FML: chapter.ml_style.sgml,v 1.1 2002/07/28 06:26:56 fukachan Exp $
 -->
 <chapter id="cuctomize">
 	<title>
 	カスタマイズの事例
 	</title>
+
+
+&sect.config.autoreply;
+&sect.config.command.permit.anyone;
+&sect.config.command.rejectall;
+&sect.config.mailmagazine;
+&sect.config.post.permit.anyone;
 
 
 <!-- procmail -->

@@ -1,0 +1,38 @@
+<sect1 id ="config.mailmagazine">
+	<title>
+	ケーススタディ: メールマガジン
+	</title>
+
+
+<para>
+メールマガジンは投稿可能なメンバーリストをカスタマイズすることで行なえ
+ます。
+</para>
+
+<para>
+member_maps から $primary_member_maps を抜き、
+代わりに投稿可能なメンバーのリスト(ここでは 
+$ml_home_dir/members-mailmag としましょう)を
+member_maps を追加します。
+<screen>
+member_maps	=	$ml_home_dir/members-mailmag
+</screen>
+なお subscribe コマンドの利用方法はデフォルトのままで構いません。
+<footnote>
+<para>
+fml 4.0 のように subscribe コマンドの仕方を変更するといったやり方
+ではありません。
+メンバーの認証方法を config.cf できめ細かくコントロールできるので、
+それを使う方が、subscribe コマンドを変更するより簡単ですしね。
+</para>
+</footnote>
+</para>
+
+<para>
+なお、この場合 subscribe したアドレスが
+members というファイルに追加されていきますが、
+このファイルは使わないという設定なので大丈夫です。
+気にはなるかも知れませんが…
+</para>
+
+</sect1>

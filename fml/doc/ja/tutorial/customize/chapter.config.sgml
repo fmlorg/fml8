@@ -1,0 +1,24 @@
+<!--
+   $FML$
+-->
+
+<chapter id="config">
+	<title>
+	設定ファイルを変更する
+	</title>
+
+
+<sect1 id="config.site_default_config.cf">
+	<title>
+	そのホストのすべてのＭＬに同じ設定を強制する
+	</title>
+
+<para>
+/usr/local/etc/fml/site_default_config.cf に書いて下さい。
+フォーマットは .cf 形式、つまり config.cf と同様です。
+</para>
+
+</sect1>
+
+
+</chapter>

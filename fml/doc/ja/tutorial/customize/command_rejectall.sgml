@@ -1,0 +1,18 @@
+<!--
+   $FML$
+-->
+
+<sect1 id ="config.command.rejectall">
+	<title>
+	ケーススタディ: コマンドを誰も使えないようにする
+	</title>
+
+<para>
+<screen>
+command_restrictions = reject
+</screen>
+こう設定すると(メンバー以外の人に送り返すはずの) guide すら返送されず、
+何をしても「あなたはメンバーでない」という一点張りの答を返すだけです。
+</para>
+
+</sect1>

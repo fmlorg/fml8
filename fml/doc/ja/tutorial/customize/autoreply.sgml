@@ -1,0 +1,36 @@
+<!--
+   $FML$
+-->
+
+<sect1 id ="config.autoreply">
+	<title>
+	ケーススタディ: 自動ファイル送り返しサーバ
+	</title>
+
+<para>
+配送プロセス( libexec/distribute )を改造して
+/etc/fml/help ファイルを送り返すことを考えます。
+例えば help@fml.org ＭＬを作り、このアドレスにメールを送ると
+ヘルプファイルを送り返すというものです。
+この場合の config.cf の例はこのようになります。
+<screen>
+post_restrictions = permit_anyone
+</screen>
+=cut の後に hook を書きます。
+<screen>
+$distribute_run_start_hook = q{
+
+        $curproc->reply_message( {
+                type        => "text/plain; charset=iso-2022-jp",
+                path        => "/etc/fml/help",
+                filename    => "help",
+                disposition => "help example",
+        });
+
+        $curproc->refuse_further_processing();
+
+};
+</screen>
+</para>
+
+</sect1>

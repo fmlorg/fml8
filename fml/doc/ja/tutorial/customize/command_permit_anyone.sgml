@@ -1,0 +1,24 @@
+<!--
+   $FML$
+-->
+
+<sect1 id ="config.command.permitanyone">
+	<title>
+	ケーススタディ: 誰でもコマンドメールが使える
+	</title>
+
+<para>
+command_restrictions はコマンドメールの利用を許すメンバーを定義してい
+ます。
+<screen>
+command_restrictions = permit_anyone
+</screen>
+これで、ＭＬのメンバーか否かを問わず誰でもコマンドメールが使えます。
+</para>
+
+<para>
+って、こんな設定していいのか/いつ使うんだ？というのはありますが…
+設定は可能です。
+</para>
+
+</sect1>
