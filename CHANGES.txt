@@ -1,6 +1,28 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/03/11
+
+   FML::Sys::Alias
+	basic functions to deal with aliases file
+
+   FML::Process::Switch 
+   FML::Config::Tiny 
+	main.cf のデフォルト(バージョン依存)と /etc/fml/main.cf を
+	マージして評価する。そうしないと新変数が未定義になるなど
+	不都合がいろいろ出てくる。
+	
+	we use FML::Config::Tiny, which just reads and parses the file.
+	It is a tiny version of FML::Config module.
+
+   /etc/fml/	
+	install main.cf at $default_config_dir/
+
+2003/03/09
+
+   Mail::ThreadTrack::Print::HTML 
+	$action  = $curproc->safe_cgi_action_name()
+
 2003/03/06
 
    variables
@@ -4461,4 +4483,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.133 2003/03/05 15:24:22 fukachan Exp $
+$FML: CHANGES.txt,v 1.134 2003/03/06 14:35:30 fukachan Exp $
