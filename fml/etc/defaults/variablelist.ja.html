@@ -1,0 +1,371 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>
+default_config.cf.ja
+</TITLE>
+<META http-equiv="Content-Type"
+	content="text/html; charset=EUC-JP">
+</HEAD>
+
+<BODY BGCOLOR="#E6E6FA">
+<PRE>
+=head1	基本的なパラメータ
+
+# domain	= fml.org
+# fqdn		= mx0.fml.org
+
+
+=head2	ＭＬの管理者
+
+# Descriptions: いわゆるＭＬの管理者、エラーメールの返る先
+#      History: fml 4.0 の $MAINTAINER
+#         Type: rfc822_address
+maintainer	=
+
+
+=head2	default modes
+
+default_file_mode	=	0600
+
+default_directory_mode	=	0755
+
+=head1	ディレクトリ
+
+# Descriptions: ML のホームディレクトリ
+#               $ml_home_dir は FML::Process::Switch が決める
+#      History: fml 4.0 の $DIR にあたるもの
+#         Type: directory_string
+#     Examples: /var/spool/ml/elena
+# ml_home_dir	=
+
+# Descriptions: ML 間でシェアするデータベースをおくホームディレクトリ
+#      History: fml 4.0 に該当するものはない
+#         Type: directory_string
+shared_db_dir	= $ml_home_prefix/@db@
+
+var_dir		= $ml_home_dir/var
+
+tmp_dir		= $ml_home_dir/tmp
+
+=head1	アクセス制御ルール
+
+# 投稿への制限
+# XXX fml 4.0 の PERMIT_POST_FROM と REJECT_ADDR を合体したもの
+post_restrictions	=	reject_system_accounts
+				permit_members_only
+				reject
+
+# コマンドへの制限
+# fml 4.0 の PERMIT_COMMAND_FROM と REJECT_ADDR を合体したもの
+command_restrictions	=	reject_system_accounts
+				permit_members_only
+				reject
+
+=head2 メンバーとみなされるのは誰か？
+
+
+# 登録などの際に対象となるメンバーリスト
+# XXX タイプによっては書き込みできないこともある(例: unix.group )
+primary_member_map	=	file:$ml_home_dir/members
+
+# メンバーかどうか認証する際に検索するすべてのメンバーリスト 
+# fml 4.0 の $MEMBER_LIST @MEMBER_LIST 相当
+member_maps		=	$primary_member_map
+
+
+=head2 受信者のリスト
+
+
+# 登録などの際に対象とする受信者のリスト
+# XXX タイプによっては書き込みできないこともある(例: unix.group )
+primary_recipient_map	=	 file:$ml_home_dir/actives
+
+# すべての受信者のリスト
+# fml 4.0 の $ACTIVE_LIST @ACTIVE_LIST 相当
+recipient_maps		=	$primary_recipient_map
+				file:$ml_home_dir/recipients
+				unix.group:fml
+
+# system accounts
+system_accounts		=	root
+				postmaster
+				MAILER-DAEMON
+				msgs
+				nobody
+				news
+				majordomo
+				listserv
+				listproc
+				\S+\-help
+				\S+\-subscribe
+				\S+\-unsubscribe
+
+=head1		MTA の設定
+
+# ひとつの SMTP トランザクションで MTA に渡す受信者の数の上限
+# デフォルトは postfix にあわせて 1000
+recipient_limit		=	1000
+
+# デフォールトの MTA は自分自身( localhost ) 
+smtp_servers		=	[::1]:25
+				127.0.0.1:25
+
+# MAIL FROM:<$smtp_sender>
+smtp_sender		=	$maintainer
+
+=head1	ヘッダの操作
+
+use_header_rewrite		=	yes
+
+use_header_check		=	yes
+
+header_check_rules		=	verify_message_id_uniqueness
+					verify_x_ml_info_uniqueness
+					verify_list_post_uniqueness
+
+# もちろん”記事”に対してのものだ（自明？）
+# article_header_rewrite_rules とかの方がよいか？
+# XXX: The action to cut off "Re:" is default. need not specified.
+article_header_rewrite_rules	=	delete_unsafe_header_fields
+					rewrite_subject_tag
+					rewrite_reply_to
+					add_software_info
+					add_fml_ml_name
+					add_fml_traditional_article_id
+					add_fml_article_id
+					add_x_sequence
+					add_rfc2369
+
+
+digest_header_rewrite_rules	=	add_software_info
+					add_rfc2369
+
+
+# Descriptions: あぶないタグを消す
+#      History: fml 4.0 の SKIP_FIELDS
+#         Type: strings
+#     Examples:
+unsafe_header_fields		=	Return-Receipt-To
+
+# Subject: につけるタグの制御
+subject_tag_name		=	$ml_name
+
+
+# % の意味は UNIX マニュアルを参照。例えば sprintf 関数など 
+subject_tag			=	[$ml_name:%05d]
+
+# X-ML-Name: および X-Sequence にあらわれる ML 名
+#    XXX そこだけ変えたい場合があるかもしれないので、
+#    XXX 一応 $ml_name とは分けておく。
+x_ml_name			=	$ml_name
+
+=head1	ロック
+
+use_lock	= yes
+
+lock_dir	= $var_dir/lock
+
+lock_file	= $lock_dir/giantlock
+
+lock_type	= flock
+
+
+=head1	ログのとり方
+
+# enable logging function
+use_log		=	yes
+
+# logfile
+log_file	=	$ml_home_dir/log
+
+# type of logging
+# value: file / syslog
+log_type	=	file
+
+# log message format
+log_format_type	=	fml4_compatible
+
+log_dir		=	$var_dir/log
+
+smtp_log_dir	=	$log_dir
+
+smtp_log_file	=	$smtp_log_dir/_smtplog
+
+=head1	記事および記事のスプール
+
+# 記事を配送する
+use_article_delivery	=	yes
+
+# 記事をスプールディレクトリに保存する
+use_spool		= 	yes
+
+# 記事番号
+sequence_file	= $ml_home_dir/seq
+
+spool_dir	= $ml_home_dir/spool
+
+spool_type	= plane
+
+=head1	コマンドの定義
+
+# value: confirmation / 
+command_chaddr_type		=	confirmation
+
+command_unsubscribe_type	=	confirmation
+
+
+
+# コマンド一覧
+available_commands		=	help
+					get
+					mget
+					subscribe
+					unsubscribe
+					chaddr
+
+=head1	Tickets / Trouble Tickets System
+
+
+use_ticket		=	yes
+
+ticket_model		=	toymodel
+
+ticket_subject_tag_name	=	$ml_name
+
+ticket_id_syntax	=	$ml_name_#%08d
+
+# please use [] or () or {} for the ends
+ticket_subject_tag	=	[$ticket_id_syntax]
+
+ticket_sequence_file	=	$ml_home_dir/ticket.seq
+
+# top directory
+ticket_db_dir		=	$shared_db_dir/ticket
+
+=head1	データベースとの連携
+
+use_database	=	no
+
+# value: mysql postgresql ldap
+database_method	=	mysql
+
+database_model	=	toymodel
+
+# うー？
+# DATABASE_CACHE_FILE_SUFFIX:
+
+=head2	SQL の場合
+
+sql_servers		=
+
+#
+# sql_port		=
+
+sql_user		=	fml
+
+sql_use_password	=
+
+sql_database_name	=	fml
+
+
+
+=head2	LDAP の場合
+
+ldap_servers		=
+
+# ldap_port		=
+
+ldap_server_password	=	
+
+ldap_search_base	=	
+
+ldap_server_bind	=	
+
+ldap_query_filter	=	
+
+=head1	CGI 関連の設定
+
+cgi_default_charset	=	euc-jp
+
+cgi_charset		=	$cgi_default_charset
+
+=head1	プログラムのパス名
+
+# 
+# 注意: デフォールトは NetBSD 1.5 リリース
+# 
+
+path_md5	=	/usr/bin/md5
+
+path_sendmail	=	/usr/sbin/sendmail
+
+
+=head2	ファイル操作
+
+path_tar	=	/usr/bin/tar
+
+path_uuencode	=	/usr/bin/uuencode
+
+path_compress	=	/usr/bin/compress
+
+path_zcat	=	/usr/bin/zcat
+
+path_lha	=	
+
+path_ish	=	
+
+path_zip	=	
+
+path_bzip2	=	/usr/bin/bzip2
+
+
+=head2 バージョン管理
+
+path_rcs	=	/usr/bin/rcs
+
+path_ci		=	/usr/bin/ci
+
+path_co		=	/usr/bin/co
+
+path_cvs	=	
+
+
+=head2	非対称暗号
+
+path_pgp	=	
+
+path_pgp5	=	
+
+path_pgpe	=	
+
+path_pgpk	=	
+
+path_pgps	=	
+
+path_pgpv	=	
+
+
+=head1	システム依存
+
+#
+# 注意: デフォールトは NetBSD
+#
+
+has_getpwuid	=	yes
+
+has_getpwgid	=	yes
+
+has_alarm	=	yes
+
+
+=head1 フック
+
+### default_config.cf file ends here.
+### fml 4.0's 現在の LOCAL_CONFIG で別れ目になる行
+
+=cut
+
+</PRE>
+</BODY>
+</HTML>
