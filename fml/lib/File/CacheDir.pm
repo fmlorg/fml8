@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: CacheDir.pm,v 1.6 2001/04/15 04:58:05 fukachan Exp $
+# $FML: CacheDir.pm,v 1.7 2001/06/17 08:57:11 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -250,7 +250,8 @@ sub get_latest_value
 	next if $_ !~ /^\d/;
 	next if $_ =~ /^\d{1,2}$/;
 
-	$file = $dir .'/'. $_;
+	use File::Spec;
+	$file = File::Spec->catfile($dir, $_);
 	$buf  = $self->_search($file, $key);
 	last if $buf;
     }
