@@ -1,0 +1,30 @@
+# fmlserv.process.info:
+1: 	_ARG0_ ML宛のリクエストは以下の通りです。
+
+# fmlserv.command.info:
+2: 	fmlserv 内蔵コマンドを処理します。
+
+# fmlserv.ml.not_found:
+3: 	_ARG0_ メーリングリストはありません
+
+# fmlserv.guide.sent:
+4: 	メーリングリストの案内を<_ARG0_>に送りました。
+
+# fmlserv.done:
+5: 	処理を終了しました。
+
+# fmlserv.stop:
+6: 	エラー: ここで処理を終了します。
+
+# fmlserv.serv:
+7: 	_ARG0_ の管理下には以下のようなメーリングリストがあります。
+
+# fmlserv.not_any_member:
+8: 	<_ARG0_>はどのメーリングリストのメンバーでもありません。
+
+# fmlserv.subscribed_lists:
+9: 	<_ARG0_>は次のメーリングリストのメンバーです。
+
+# fmlserv.mlmap.opendir.fail:
+10: 	エラー: ML MAP を作れません (opendir()に失敗しました)。
+

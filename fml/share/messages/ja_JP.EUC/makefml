@@ -1,0 +1,35 @@
+### makefml 日本語化大作戦（でもCGIでしかつかってない;-)
+
+# makefml.add:
+1: 	メーリングリスト: _ARG0_
+1: 	   Email Address: _ARG1_
+1: 	_ARG1_ を _ARG0_ に加えます。
+
+# makefml.bye:
+2: 	メーリングリスト: _ARG0_
+2: 	   Email Address: _ARG1_
+2: 	_ARG1_ を _ARG0_ から削除します。
+
+# makefml.newml:
+3: 	メーリングリスト: _ARG0_
+3: 	を作成します。
+
+# makefml.destructml:
+4: 	メーリングリスト: _ARG0_
+4: 	を削除します。
+
+# makefml.passwd:
+5: 	メーリングリスト: _ARG0_ 
+5: 	   Email Address: _ARG1_ 
+5: 	さんのパスワードを変更します。
+
+# makefml.html_passwd:
+6: 	メーリングリスト: _ARG0_ 
+6: 	   Email Address: _ARG1_ 
+6: 	さんのパスワードを変更します。
+
+# makefml.html_config:
+7: 	メーリングリスト: _ARG0_ の設定を変更します
+
+# makefml.log:
+8: 	_ARG0_ ML のログです。

@@ -1,0 +1,35 @@
+### Section: Security && Filtering
+# filter.has_meta_char:
+1: 	エラー:メタキャラクタが含まれています。
+
+# filter.rejected.notify_to_admin:
+2: 	以下の _ARG0_ からのメールは
+2: 	   _ARG1_
+2: 	という理由のため拒否されました。	
+
+# filter.rejected:
+3: 	あなたのメールは
+3: 	   _ARG0_
+3: 	という理由のため拒否されました。
+
+# filter.reject_html_mail:
+4: 	このメーリングリストではHTMLメール(PLAINTEXTとHTML部分で無意味に同じ内
+4: 	容のあるメール)が流れないようにするために貼付メールを拒否しています。
+4: 	メールはPLAINTEXTで書いて下さい。
+
+# filter.strip_html_mail:
+
+
+# filter.insecure_p.stop:
+6: 	エラー: リクエストに特殊な文字などがあります。
+6: 	セキュリティ上の理由によりこれ以上の処理はしません。
+
+# filter.reject_non_text_mail:
+7: 	このメーリングリストでは添付メールが流れないようにするためにメーリン
+7: 	グリストに設定された条件に従ってメールの配送を拒否しています。
+
+# filter.strip_notice_non_text_mail:
+8: 	このメーリングリストでは添付メールが流れないようにするためにメーリン
+8: 	グリストに設定された条件に従って添付部分を削除しています。あなたの
+8: 	メールで以下の部分が削除されました。
+
