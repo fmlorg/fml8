@@ -1,6 +1,65 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/05/28
+
+   rename/reconstruct variables
+	clarify prefixes in caution.
+	define or rename sysconf_dir et.al. to $domain_XXX_config_dir
+	define $path_postmap
+
+   FML::Command::Admin::newml 
+	mkdir @$init_config_dir_list
+	run "postmap virtual"
+	mainconf_dir -> domain_mail_config_dir
+	
+   FML::Credential 
+	$config->get_as_array_ref
+	
+   FML::Command::Auth 
+	implement permit_admin_member_maps()
+	
+2002/05/27
+
+   new variable naming convention
+	add caution
+	
+	define terms on "mail" and "message"
+	change::_message_ -> _mail_
+	
+	define $postfix_virtual_map_file
+	
+	add $admin_member_maps to $member_maps
+	
+	change attribute names:
+	o permit_members_only -> permit_member_maps
+	o check_command -> check_admin_member_password
+
+   FML::Mailer 
+   FML::Process::Distribute 
+   Mail::Delivery::{SMTP,Utils}
+	pass smtp log file handle to Mail::Delivery
+
+   FML::Process::Distribute 
+	permit_members_only -> permit_member_maps
+	
+   FML::Command::Admin::newml 
+   FML::MTAControl 
+   FML::MTAControl::{Postfix,Qmail}
+	set up virtual map if needed
+	
+   FML::Process::Kernel 
+	only user "fml" should read lock files.
+	define terms on "mail" and "message"::_message_ -> _mail_
+	permit_members_only -> permit_member_maps
+	
+   FML::Process::Command 
+   FML::Command::Auth 
+	rearrange admin command authentication to sync w/ new variable names
+
+   FML::Process::Utils 
+	implement is_default_domain()
+
 2002/05/25
 
    FML::Command::Admin::newml 
@@ -2436,4 +2495,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.77 2002/05/24 15:59:26 fukachan Exp $
+$FML: CHANGES.txt,v 1.78 2002/05/25 15:09:10 fukachan Exp $
