@@ -1,0 +1,42 @@
+<!--
+   $FML$
+-->
+
+<chapter id="design.policy">
+	<title>
+	デザイン/コーディングスタイルの上でいろいろ
+	</title>
+
+<sect1>
+	<title>
+	２、３の注意点
+	</title>
+	
+
+<para>
+サーチするキーに対して quotemeta() を
+</para>
+
+
+<para>
+オブジェクトの中身のキーを直接使わずに、
+常にアクセスメソッドを定義すること。
+例: main_cf へのアクセス
+</para>
+
+
+<para>
+@EXPORT @EXPORT_OK はできればやめたい…
+</para>
+
+
+<para>
+Srting::is_japanese_string()
+くらいの階層に浅くするべきではないかなぁ？
+せめて 3 段目くらいで止まってほしいような〜
+</para>
+
+</sect1>
+
+
+</chapter>
