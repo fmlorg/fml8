@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Calender.pm,v 1.5 2002/09/11 23:18:03 fukachan Exp $
+# $FML: Calender.pm,v 1.6 2002/09/22 14:56:41 fukachan Exp $
 #
 
 package FML::CGI::Calender;
@@ -39,7 +39,7 @@ See L<FML::Process::Flow> for flow details.
 
 C<FML::CGI::Calender> is a subclass of C<FML::Process::CGI>.
 
-Almost all methods inherits C<FML::Process::CGI> base class.
+Almost all methods inherit C<FML::Process::CGI> base class.
 
 =head1 METHODS
 
@@ -104,7 +104,7 @@ sub _show_guide
 }
 
 
-# Descriptions: main routine for calender (HTML TABLE format)
+# Descriptions: main routine for calender as HTML TABLE format
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
