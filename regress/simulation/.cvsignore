@@ -2,5 +2,4 @@
 __scan__
 bin
 mysql.sh
-reset_lib.sh
 w
