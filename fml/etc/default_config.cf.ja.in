@@ -228,6 +228,28 @@ ml_local_lib_dir	=	$ml_local_dir/lib
 ml_local_share_dir	=	$ml_local_dir/share
 
 
+=head2 domain local
+
+#
+# admin/*.cgi など ml_name が特定されない場合にだけ使う
+#
+
+# Descriptions: domian local なディレクトリ。
+#               admin/*.cgi など ml_name が特定されない場合にだけ使う。
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml
+domain_local_dir	=	$ml_home_prefix
+
+# Descriptions: domian local な tmp ディレクトリ。
+#               admin/*.cgi など ml_name が特定されない場合にだけ使う。
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml/@tmp@
+domain_local_tmp_dir	=	$ml_home_prefix/@tmp@
+
+
+
 =head2 スケジューラ
 
 # Descriptions: イヴェントのキューディレクトリ
@@ -839,7 +861,9 @@ lock_file	= $lock_dir/giantlock
 #     Examples:
 lock_type	= flock
 
-=head1	ログのとり方
+=head1 ログのとり方
+
+=head2 普通のログファイル
 
 # Descriptions: ログとり機能を有効にする
 #      History: fml 4.0 では有無を言わさずログをとる
@@ -847,7 +871,7 @@ lock_type	= flock
 #     Examples:
 use_log		=	yes
 
-# Descriptions: ログファイル
+# Descriptions: ML 固有のログファイル
 #      History: fml 4.0 の $LOGFILE
 #        Value: filename
 #     Examples:
@@ -877,6 +901,17 @@ log_format_type	=	process[pid]
 #        Value: filename
 #     Examples:
 log_dir		=	$var_dir/log
+
+
+=head2 ドメイン固有
+
+
+# Descriptions: ドメイン固有のログファイル
+#               admin/*.cgi など ml_name が特定されない場合にだけ使う。
+#      History: none
+#        Value: filename
+#     Examples: /var/spool/ml/@log@
+domain_local_log_file	=	$domain_local_dir/@log@
 
 =head1	配送プロセス
 

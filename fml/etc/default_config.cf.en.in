@@ -70,11 +70,6 @@
 maintainer	=
 
 
-=head2	language
-
-default_charset		=	us-ascii
-
-
 =head2	default modes
 
 
@@ -224,6 +219,27 @@ ml_local_lib_dir	=	$ml_local_dir/lib
 #        Value: directory
 #     Examples: /var/spool/ml/elena/local/share
 ml_local_share_dir	=	$ml_local_dir/share
+
+
+=head2 domain local
+
+#
+# used in admin/*.cgi e.g. when ml_name unspecified.
+#
+
+# Descriptions: domian local directory.
+#               used in admin/*.cgi e.g. when ml_name unspecified.
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml
+domain_local_dir	=	$ml_home_prefix
+
+# Descriptions: domian local temporary directory.
+#               used in admin/*.cgi e.g. when ml_name unspecified.
+#      History: none
+#        Value: directory
+#     Examples: /var/spool/ml/@tmp@
+domain_local_tmp_dir	=	$ml_home_prefix/@tmp@
 
 
 =head2 scheduler
@@ -608,14 +624,44 @@ digest_sequence_file	= $ml_home_dir/seq-digest
 #      History:
 #        Value:
 #     Examples:
-reply_message_charset	=	$default_charset
+reply_message_default_charset	=	$reply_message_charset_en
 
 # Descriptions:
 #      History:
 #        Value:
 #     Examples:
-template_file_charset	=	euc-jp
+reply_message_charset_ja	=	iso-2022-jp
 
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+reply_message_charset_en	=	us-ascii
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+template_file_default_charset	=	$template_file_charset_ja
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+template_file_charset_ja	=	euc-jp
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+template_file_charset_en	=	us-ascii
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+template_file_charset_list	=	euc-jp	
+					us-ascii
 
 # Descriptions:
 #      History:
@@ -839,6 +885,16 @@ log_format_type	=	process[pid]
 #        Value: filename
 #     Examples:
 log_dir		=	$var_dir/log
+
+=head2 domain local
+
+
+# Descriptions: domin local log file.
+#               used in admin/*.cgi e.g. when ml_name unspecified.
+#      History: none
+#        Value: filename
+#     Examples: /var/spool/ml/@log@
+domain_local_log_file	=	$domain_local_dir/@log@
 
 =head1	function of article delivery
 
@@ -1698,11 +1754,17 @@ ml_admin_cgi_base_dir	=	$cgi_base_dir/ml-admin/$ml_name
 #     Examples:
 cgi_default_charset	=	us-ascii
 
-# Descriptions: cgi charset
+# Descriptions: cgi charset in Japanese
 #      History:
 #        Value:
 #     Examples:
-cgi_charset		=	$cgi_default_charset
+cgi_charset_ja		=	euc-jp
+
+# Descriptions: cgi charset in English
+#      History:
+#        Value:
+#     Examples:
+cgi_charset_en		=	us-ascii
 
 # Descriptions: language mode of CGI (!= charset) 
 #      History:
