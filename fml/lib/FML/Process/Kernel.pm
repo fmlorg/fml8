@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.142 2002/11/19 14:12:57 fukachan Exp $
+# $FML: Kernel.pm,v 1.143 2002/11/26 10:27:20 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -579,12 +579,12 @@ sub resolve_ml_specific_variables
 	($command, $ml_name, @options) = @ARGV;
 
 	# makefml $ml->$command
-	if ($command =~ /\-\>/) {
+	if (defined $command && $command =~ /\-\>/) {
 	    ($command, @options) = @ARGV;
 	    ($ml_name, $command) = split('->', $command);
 	}
 	# makefml $ml::$command
-	elsif ($command =~ /::/) {
+	elsif (defined $command && $command =~ /::/) {
 	    ($command, @options) = @ARGV;
 	    ($ml_name, $command) = split('::', $command);
 	}
