@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.5 2002/04/10 09:57:22 fukachan Exp $
+# $FML: Auth.pm,v 1.6 2002/05/27 08:59:15 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -56,6 +56,8 @@ sub new
 # Return Value: NUM
 sub reject
 {
+    my ($self, $curproc, $args, $optargs) = @_;
+
     return '__LAST__';
 }
 
@@ -66,7 +68,22 @@ sub reject
 # Return Value: NUM
 sub permit_anyone
 {
+    my ($self, $curproc, $args, $optargs) = @_;
+
     return 1;
+}
+
+
+sub permit_admin_member_maps
+{
+    my ($self, $curproc, $args, $optargs) = @_;
+    my $cred  = $curproc->{ credential }; 
+    my $match = $cred->is_privileged_member($curproc, $args);
+
+    if ($match) {
+	Log("found in admin_member_maps");
+	return 1;
+    }
 }
 
 
