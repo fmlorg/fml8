@@ -1,5 +1,5 @@
 dnl
-dnl $FML: configure.in,v 1.40 2003/07/26 14:35:17 fukachan Exp $
+dnl $FML: configure.in,v 1.41 2004/05/02 00:02:52 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -113,7 +113,7 @@ AC_SUBST(fml_group)
 _hostname=`hostname`
 default_domain=` expr $_hostname : '[[^\.]]*\.\(.*\)' `
 AC_ARG_WITH(default_domain, 
-[  --with-default-domain=DOMAIN  use DOMAIN as the ML domain], 
+[  --with-default-domain=DOMAIN     use DOMAIN as the default ML domain], 
     default_domain=$withval)
 AC_SUBST(default_domain)
 
@@ -123,6 +123,31 @@ AC_ARG_WITH(mime-component-filter,
 [  --without-mime-component-filter  disable mime_component_filter],
     use_mime_component_filter=$withval)
 AC_SUBST(use_mime_component_filter)
+
+#
+# ml_home_prefix_maps
+#
+fmlgwconfdir=${sysconfdir}/fml/config.gw
+AC_ARG_WITH(fmlgwconfdir, 
+[  --with-group-writable-fmlconfdir=DIR   instead of \$fmlconfdir/config.gw], 
+    fmlgwconfdir=$withval)
+AC_SUBST(fmlgwconfdir)
+
+primary_ml_home_prefix_map=$fmlconfdir/ml_home_prefix
+AC_ARG_WITH(ml_home_prefix_map, 
+[  --with-ml-home-prefix-map=PATH   use PATH as primary_ml_home_prefix_map],
+    primary_ml_home_prefix_map=$withval)
+
+use_group_writable_ml_home_prefix_map=no
+AC_ARG_WITH(group_writable_ml_home_prefix_map,
+[  --with-group-writable-ml-home-prefix-map ],
+    use_group_writable_ml_home_prefix_map=$withval)
+
+if test "X$with_group_writable_ml_home_prefix_map" = "Xyes" ; then
+	primary_ml_home_prefix_map=$fmlgwconfdir/ml_home_prefix
+fi
+
+AC_SUBST(primary_ml_home_prefix_map)
 
 
 
@@ -155,6 +180,7 @@ else
 	mv fml/libexec/loader.new.$$ fml/libexec/loader
 fi
 
+
 if test -f fml/libexec/loader ; then
    chmod 755 fml/libexec/loader
 fi
@@ -167,22 +193,23 @@ fi
 echo ""
 echo "fml has been configured with the following options:"
 echo ""
-echo "                 prefix: $prefix"
-echo "            exec_prefix: $exec_prefix"
-echo "                 bindir: $bindir"
-echo "                sbindir: $sbindir"
-echo "                lib_dir: $libdir"
-echo "            libexec_dir: $libexecdir"
-echo "                 mandir: $mandir"
-echo "                datadir: $datadir"
-echo ""
-echo "      fml process owner: $fml_owner"
-echo "      fml process group: $fml_group"
-echo "             fmlconfdir: $fmlconfdir"
-echo "             mlspooldir: $mlspooldir"
-echo "         default domain: $default_domain"
-echo ""
-echo "      mime based filter: $use_mime_component_filter"
-echo ""
+echo "                    prefix: $prefix"   
+echo "               exec_prefix: $exec_prefix"   
+echo "                    bindir: $bindir"   
+echo "                   sbindir: $sbindir"   
+echo "                   lib_dir: $libdir"   
+echo "               libexec_dir: $libexecdir"   
+echo "                    mandir: $mandir"   
+echo "                   datadir: $datadir"   
+echo "   "   
+echo "         fml process owner: $fml_owner"   
+echo "         fml process group: $fml_group"   
+echo "                fmlconfdir: $fmlconfdir"   
+echo "        ml_home_prefix_map: $primary_ml_home_prefix_map"   
+echo "                mlspooldir: $mlspooldir"   
+echo "            default domain: $default_domain"   
+echo "   "   
+echo "         mime based filter: $use_mime_component_filter"   
+echo "   "
 echo "Now you must run \"make install\" as user \"root\"."
 echo ""
