@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.19 2002/03/20 03:19:03 fukachan Exp $
+# $FML: newml.pm,v 1.20 2002/03/30 11:08:35 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -120,12 +120,14 @@ sub process
     # 3. prepare mail archive at ~fml/public_html/$domain/$ml/ ?
     # 4. prepare cgi interface at ?
     #      ~fml/public_html/cgi-bin/fml/$domain/admin/
-    # 5. prepare thread cgi interface at ?
+    #    prepare thread cgi interface at ?
     #      ~fml/public_html/cgi-bin/fml/$domain/threadview.cgi ?
+    # 5. prepare listinfo url
     $self->_install_template_files($curproc, $command_args, $params);
     $self->_update_aliases($curproc, $command_args, $params);
     $self->_setup_mail_archive_dir($curproc, $command_args, $params);
     $self->_setup_cgi_interface($curproc, $command_args, $params);
+    $self->_setup_listinfo($curproc, $command_args, $params);
 }
 
 
@@ -318,6 +320,39 @@ sub _install
     else {
 	croak("fail to open $src") unless defined $in;
 	croak("fail to open $dst") unless defined $out;
+    }
+}
+
+
+sub _setup_listinfo
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $config       = $curproc->{ config };
+    my $template_dir = $config->{ listinfo_template_dir };
+    my $listinfo_dir = $config->{ listinfo_dir };
+
+    eval q{ use File::Utils qw(mkdirhier);};
+    croak($@) if $@;
+    unless (-d $listinfo_dir) {
+	mkdirhier($listinfo_dir, $config->{ default_dir_mode } || 0755 );
+    }
+
+    use DirHandle;
+    my $dh = new DirHandle $template_dir;
+    if (defined $dh) {
+	my $file = '';
+
+      FILE:
+	while (defined($file = $dh->read)) {
+	    next FILE if $file =~ /^\./;
+
+	    use File::Spec;
+	    my $src   = File::Spec->catfile($template_dir, $file);
+	    my $dst   = File::Spec->catfile($listinfo_dir, $file);
+
+	    print STDERR "creating $dst\n";
+	    _install($src, $dst, $params);
+	}
     }
 }
 
