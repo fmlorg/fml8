@@ -5,4 +5,6 @@ header.cf
 lock.cf
 log.cf
 spool.cf
+command.cf.ja
+tickets.cf.ja
 __end__.cf

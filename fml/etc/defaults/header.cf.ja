@@ -16,6 +16,8 @@ header_rewrite_rules =	rewrite_subject_tag
 			add_fml_article_id
 			add_x_sequence
 			add_rfc2369
+			append_ticket_tag_to_subject
 
 subject_tag_name	=	$ml_name
+
 subject_tag		=	[%s:%05d]
