@@ -1,8 +1,8 @@
 #
-# $FML: Makefile,v 1.3 2001/04/23 03:49:48 fukachan Exp $
+# $FML: Makefile,v 1.4 2001/04/23 09:33:54 fukachan Exp $
 #
 
-TMP_DIR    = 
+TMP_DIR    = /tmp
 TARGET_DIR = ../../../../Documentation/ja/tutorial
 
 all: export
