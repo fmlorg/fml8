@@ -28,3 +28,8 @@ has_alarm	=	yes
 #     Examples:
 has_select	=	yes
 
+# Descriptions: fork(2) があるか？
+#      History:
+#        Value: yes / no
+#     Examples:
+has_fork	=	yes
