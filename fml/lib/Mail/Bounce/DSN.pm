@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DSN.pm,v 1.6 2001/04/12 14:07:40 fukachan Exp $
+# $FML: DSN.pm,v 1.7 2001/07/30 14:42:34 fukachan Exp $
 #
 
 
@@ -125,8 +125,13 @@ sub _parse_dsn_format
     # set up return buffer
     if ($addr =~ /\@/) {
 	$result->{ $addr }->{ 'Final-Recipient' } = $addr;
-	for ('Final-Recipient', 'Original-Recipient',
-	     'Action', 'Status', 'Diagnostic-Code') {
+	for ('Final-Recipient', 
+	     'Original-Recipient',
+	     'Action', 
+	     'Status', 
+	     'Diagnostic-Code',
+	     'Reporting-MTA', 
+	     'Received-From-MTA') {
 	    $result->{ $addr }->{ $_ } = $header->get($_) || undef;
 	}
 	$result->{ $addr }->{ 'hints' } = 'DSN';

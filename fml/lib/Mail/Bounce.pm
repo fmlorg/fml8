@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Bounce.pm,v 1.10 2001/07/29 15:08:36 fukachan Exp $
+# $FML: Bounce.pm,v 1.11 2001/07/30 14:42:33 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -69,16 +69,13 @@ returned C<$result> provides the following information:
 	    Diagnostic-Code    => 'reason ...',
 	    Action             => 'failed',
 	    Status             => '4.0.0',
+	    Reporting-MTA      => 'dns; server.fml.org',
+	    Received-From-MTA  => 'DNS; server.fml.org',
 	    hints              => ... which module matches ...,
 	},
 
 	address2 => {
-	    Original-Recipient => 'rfc822; addr',
-	    Final-Recipient    => 'rfc822; addr',
-	    Diagnostic-Code    => 'reason ...',
-	    Action             => 'failed',
-	    Status             => '4.0.0',
-	    hints              => ... which module matches ...,
+	    ... snip ...
 	},
 
 	...
