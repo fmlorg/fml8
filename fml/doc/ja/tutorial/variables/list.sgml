@@ -71,6 +71,15 @@ $primary_admin_recipient_map
 </row>
 <row>
 <entry>
+article_delivery_transport</entry>
+<entry>
+ トランスポート(配送システム)の指定。</entry>
+<entry>
+smtp
+   </entry>
+</row>
+<row>
+<entry>
 article_filter_reject_notice_data_type</entry>
 <entry>
  弾いたメールをどのようにフォワードするか？</entry>

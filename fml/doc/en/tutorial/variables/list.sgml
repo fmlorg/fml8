@@ -71,6 +71,15 @@ $primary_admin_recipient_map
 </row>
 <row>
 <entry>
+article_delivery_transport</entry>
+<entry>
+ specify transport for article delivery.</entry>
+<entry>
+smtp
+   </entry>
+</row>
+<row>
+<entry>
 article_filter_reject_notice_data_type</entry>
 <entry>
  how fml refer the rejeced message.</entry>
