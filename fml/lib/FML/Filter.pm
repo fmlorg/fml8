@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.1 2001/10/14 23:06:38 fukachan Exp $
+# $FML: Filter.pm,v 1.2 2001/12/22 09:21:01 fukachan Exp $
 #
 
 package FML::Filter;
@@ -15,7 +15,7 @@ use ErrorStatus qw(error_set error error_clear);
 
 =head1 NAME
 
-FML::Filter - entry pointer for FML::Filter::* modules
+FML::Filter - entry point for FML::Filter::* modules
 
 =head1 SYNOPSIS
 

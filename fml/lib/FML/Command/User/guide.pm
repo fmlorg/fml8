@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: guide.pm,v 1.2 2001/10/14 00:32:29 fukachan Exp $
+# $FML: guide.pm,v 1.3 2001/12/22 09:21:04 fukachan Exp $
 #
 
 package FML::Command::User::guide;
@@ -25,9 +25,11 @@ FML::Command::User::guide - send back guide file
 
 =head1 SYNOPSIS
 
+See C<FML::Command> for more details.
+
 =head1 DESCRIPTION
 
-See C<FML::Command> for more details.
+send back file.
 
 =head1 METHODS
 
@@ -36,6 +38,10 @@ See C<FML::Command> for more details.
 =cut
 
 
+# Descriptions: send file by FML::Command::SendFile.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: none
+# Return Value: none
 sub process
 {
     my ($self, $curproc, $command_args) = @_;

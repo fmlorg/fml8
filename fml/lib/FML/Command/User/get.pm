@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.5 2001/10/14 00:32:29 fukachan Exp $
+# $FML: get.pm,v 1.6 2001/12/22 09:21:04 fukachan Exp $
 #
 
 package FML::Command::User::get;
@@ -24,9 +24,11 @@ FML::Command::User::get - send back articles
 
 =head1 SYNOPSIS
 
-not yet implemented
+See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
+
+send back articles.
 
 =head1 METHODS
 
@@ -35,6 +37,10 @@ not yet implemented
 =cut
 
 
+# Descriptions: send articles by FML::Command::SendFile.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: none
+# Return Value: none
 sub process
 {
     my ($self, $curproc, $command_args) = @_;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.5 2001/05/28 16:17:13 fukachan Exp $
+# $FML: Mailer.pm,v 1.6 2001/12/22 09:21:01 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -28,8 +28,8 @@ FML::Mailer - Utilities to send mails
     });
 
 where C<$message> is a C<Mail::Message> object to send.
-If you want to sent plural recipinets, specify ARRAY HASH of the
-recipients as a C<recipient> parameter.
+If you want to sent plural recipinets, 
+specify the recipients as ARRAY HASH at C<recipients> parameter.
 
     $obj->send( {
 	sender     => 'rudo@nuinui.net',
@@ -49,15 +49,21 @@ If you send a file, you can specify the filename as a data to send.
 
 =head1 DESCRIPTION
 
+It sends Mail::Message object.
+
 =head1 METHODS
 
 =head2 C<new()>
 
-ordinary constructor.
+standard constructor.
 
 =cut
 
 
+# Descriptions: standard constructor
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self) = @_;
@@ -81,6 +87,11 @@ $args can take the following arguments:
 
 =cut
 
+
+# Descriptions: send messages in the queue (queue flush).
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: queue changed
+# Return Value: 1 or 0
 sub send
 {
     my ($self, $args) = @_;
