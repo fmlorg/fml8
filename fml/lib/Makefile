@@ -9,6 +9,7 @@ index.ja.html: *.pm
 	(cd IO; make html)
 	(cd MailingList; make html)
 	(cd Tie; make html)
+	(cd ErrorMessages; make html)
 	../../doc/bin/dir2url.pl > index.ja.html
 
 _clean:
