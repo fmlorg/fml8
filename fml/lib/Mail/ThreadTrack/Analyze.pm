@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Analyze.pm,v 1.5 2001/11/03 02:48:23 fukachan Exp $
+# $FML: Analyze.pm,v 1.6 2001/11/03 07:47:31 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -131,9 +131,7 @@ sub assign
     else {
 	$self->log("message without thread_id");
 
-	# assign a new thread number for a new message
-	my $id = $self->increment_id();
-	$self->log("assign thread_id=$id");
+	my $id = $self->_assign_new_thread_id_number();
 
 	# side effect: 
 	# define $self->{ _thread_subject_tag } and $self->{ _thread_id }
@@ -141,6 +139,30 @@ sub assign
 	$self->set_thread_id($ticket_id);
 	$self->_append_thread_status_info("newly assigned");
     }
+}
+
+
+# Descriptions: 
+#    Arguments: $self
+# Side Effects: 
+# Return Value: number
+sub _assign_new_thread_id_number
+{
+    my ($self) = @_;
+    my $id = 0;
+
+    # assign a new thread number for a new message
+    if (1) {
+	# unique but non sequential number
+	$id = $self->{ _config }->{ article_id };
+    }
+    else {
+	# incremental number
+	$id = $self->increment_id();
+    }
+
+    $self->log("assign thread_id=$id");
+    return $id;
 }
 
 
