@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.80 2002/06/01 14:53:39 fukachan Exp $
+# $FML: Distribute.pm,v 1.81 2002/06/27 08:25:49 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -62,11 +62,13 @@ sub new
 =head2 C<prepare($args)>
 
 forward the request to the base class.
+adjust ml_* and load configuration files. 
 
 =cut
 
 
-# Descriptions: prepare miscellaneous work before the main routine starts
+# Descriptions: prepare miscellaneous work before the main routine starts.
+#               adjust ml_* and load configuration files. 
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none

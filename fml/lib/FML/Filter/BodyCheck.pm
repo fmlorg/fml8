@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: BodyCheck.pm,v 1.18 2002/04/20 11:21:25 fukachan Exp $
+# $FML: BodyCheck.pm,v 1.19 2002/05/18 02:22:42 tmu Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -63,7 +63,7 @@ sub new
 
 =head2 C<rules( $rules )>
 
-overwrite rules by specified C<@$rules> ($rules is HASH ARRAY).
+overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 
 =cut
 
