@@ -1,0 +1,87 @@
+<!--
+   $FML: bootloader.sgml,v 1.2 2001/05/10 03:11:43 fukachan Exp $
+-->
+
+<chapter id="usage.post">
+	<title>
+	記事の投稿 (配送処理プログラムについて)
+	</title>
+
+<para>
+elena ＭＬなら、投稿する時はメールを elena@fml.org に送信してください。
+メールは MTA が受け、最終的に MTA は
+/usr/local/libexec/fml/fml.pl 
+(もしくは /usr/local/libexec/fml/distribute )
+というコマンドを実行します。
+fml.pl はメールを標準入力から受けとり、
+ＭＬとして必要な処理をした後、MTA へ配送を委ねます。
+</para>
+
+
+<sect1>
+	<title>
+	ＭＬとして処理するべきこと
+	</title>
+
+
+<para>
+subject のタグをつける、もしくは記事番号などを更新するなど
+<screen>
+Subject: [elena:00100] えれなさん素敵
+</screen>
+ (デフォルトではつけません)
+</para>
+
+<para>
+スレッド追跡システムのデータベースを更新
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	投稿記事の振舞いを制御する変数
+	</title>
+
+<warning>
+<para>
+ごめん、まだ、書いてない
+</para>
+</warning>
+
+</sect1>
+
+
+<sect1>
+   <title> 備考: ブートしていく様子 </title>
+
+<para>
+<link linkend="bootloader">
+fml ブートローダ
+</link>
+の章でも例に上げているように、次のようにブートします。
+</para>
+
+
+<para>
+libexec/loader は /etc/fml/main.cf を読みこみます。
+fml_version 変数から使うべきライブラリのバージョンを決めます。
+例えば fml_vesrion が current-20010501 となっていたら
+/usr/local/lib/fml/current-20010501/ 以下にあるライブラリを使うといった
+具合です。
+</para>
+
+<para>
+@INC を設定した後、
+loader は FML::Process::Switch をロードし、
+$0 を調べます。
+その名前から自分の仕事は配送処理だと知ります。
+配送処理なので
+FML::Process::Distribute をロードし、配送処理に移ります。
+</para>
+
+</sect1>
+
+
+</chapter>
