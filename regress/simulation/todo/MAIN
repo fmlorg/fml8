@@ -1,0 +1,61 @@
+=head1	すけじゅーら
+
+alarm() によるスケジューラ
+
+
+=head1	るーぷちぇっく
+
+	loop_check
+
+	MAIL_LIST != MAINTAINER
+
+
+=head1	いるかな?
+
+	$default_umask
+
+	time_zone config?
+
+=head1	まーだだよ 
+
+	newsyslog()
+
+	mode-expire
+
+	mode-archive
+
+	mode-html-generator
+
+	MIME Content Handler(include backword compatible)
+
+	log suffix extension
+
+	chaddr を認証の前にトラップすること( libtrap.pl )
+
+
+=head1 とちゅう
+
+
+
+sub MailCacheDir
+{
+    local($id, $p, $pp);
+
+    $LOG_MAIL_DIR = $LOG_MAIL_DIR || "$VAR_DIR/Mail";
+    $LOG_MAIL_SEQ = $LOG_MAIL_SEQ || "$LOG_MAIL_DIR/.seq";
+    $LOG_MAIL_FILE_SIZE_MAX = $LOG_MAIL_FILE_SIZE_MAX || 2048;
+
+	へっだをかく
+
+	せんとうの２０４８ばいとだけかく
+	for ($p = 0; $p < $LOG_MAIL_FILE_SIZE_MAX; ) {
+	    $p = index($Envelope{'Body'}, "\n", $p + 1);
+	    if ($p < 0) {
+		last;
+	    }
+	    else {
+		print F substr($Envelope{'Body'}, $pp, $p + 1 - $pp);
+		$pp = $p + 1;
+	    }
+	}
+	close(F);
