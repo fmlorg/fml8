@@ -61,6 +61,9 @@ sub new
     # index for cross reference over mailing lists.
     $me->{ _index_db } = $config->{ ticket_db_dir } ."/\@index";
 
+    # pragma for operations hints
+    $me->{ _pragma } = '';
+
     return bless $me, $type;
 }
 
@@ -91,6 +94,14 @@ sub assign
     use FML::Header::Subject;
     my $is_reply      = FML::Header::Subject->is_reply( $subject );
     my $has_ticket_id = $self->_extract_ticket_id($header, $config);
+    my $pragma        = $header->get('x-ticket-pragma') || '';
+
+    # If the header has a "X-Ticket-Pragma: ignore" field, 
+    # we ignore this mail.
+    if ($pragma =~ /ignore/i) {
+	$self->{ _pragma } = 'ignore';
+	return undef;
+    }
     
     # if the header carries "Subject: Re: ..." with ticket-id, 
     # we do not rewrite the subject but save the extracted $ticket_id.
@@ -128,6 +139,8 @@ sub update_status
     my $header  = $curproc->{ incoming_message }->{ header };
     my $body    = $curproc->{ incoming_message }->{ body };
 
+    return if $self->{ _pragma } eq 'ignore';
+
     # entries to check
     my $subject = $header->get('subject');
     my $content = $body->get_first_plaintext_message();
@@ -147,6 +160,8 @@ sub update_db
     my ($self, $curproc, $args) = @_;
     my $config    = $curproc->{ config };
     my $ml_name   = $config->{ ml_name };
+
+    return if $self->{ _pragma } eq 'ignore';
 
     # save $ticke_id et.al. in db_dir/
     $self->_update_db($curproc, $args);
