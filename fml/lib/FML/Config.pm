@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.58 2002/03/06 14:38:02 fukachan Exp $
+# $FML: Config.pm,v 1.59 2002/04/11 05:20:55 fukachan Exp $
 #
 
 package FML::Config;
@@ -542,7 +542,8 @@ sub _expand_variables
     # check whether the variable definition is recursive.
     # For example, definition "var_a = $var_a/b/c" causes a loop.
     for my $x ( @order ) {
-	if ($config->{ $x } =~ /\$$x/) {
+	if (defined $config->{ $x } &&
+	    $config->{ $x } =~ /\$$x/) {
 	    croak("loop1: definition of $x is recursive\n");
 	}
     }
@@ -552,6 +553,7 @@ sub _expand_variables
     my $max = 0;
   KEY:
     for my $x ( @order ) {
+	next KEY unless defined $config->{ $x };
 	next KEY if $config->{ $x } !~ /\$/o;
 
 	# we need a loop to expand nested variables, for example,
@@ -872,7 +874,9 @@ sub STORE
 
     # inform fml we need to expand variable again when FETCH() is
     # called.
-    if ($value =~ /\$/) { $need_expansion_variables = 1;}
+    if (defined $value && $value =~ /\$/) { 
+	$need_expansion_variables = 1;
+    }
 
     $_fml_config{$key} = $value;
 }
