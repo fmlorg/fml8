@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.95 2003/09/13 09:06:10 fukachan Exp $
+# $FML: Switch.pm,v 1.96 2003/09/14 04:05:47 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -406,6 +406,7 @@ sub _module_we_use
     use FileHandle;
     my $fh = new FileHandle $modules;
     if (defined $fh) {
+	my $max_match_level = 0;
 	my $buf;
       LINE:
 	while ($buf = <$fh>) {
@@ -413,11 +414,15 @@ sub _module_we_use
 	    chomp $buf;
 
 	    if (defined $buf && $buf) {
+		my $n = 0;
 		my ($program, $class, $opts) = split(/\s+/, $buf, 3);
-		if (_program_match($program, $name, $fullname)) {
-		    $pkg     = $class;
-		    $pkgopts = $opts;
-		    last LINE;
+		if ($n = _program_match($program, $name, $fullname)) {
+		    print STDERR "class = $class, n = $n (for $0)\n" if $debug;
+		    if ($n > $max_match_level) {
+			$max_match_level = $n;
+			$pkg     = $class;
+			$pkgopts = $opts;
+		    }
 		}
 	    }
 	}
@@ -441,12 +446,13 @@ sub _module_we_use
 
 
 # Descriptions: compare $program (entry in etc/modules) and $0.
+#               return the number of matched path level.
 #               $program   = entry in etc/modules
 #               $name      = basename($0)
 #               $fullname  = $0
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
-# Return Value: NUM(1 or 0)
+# Return Value: NUM
 sub _program_match
 {
     my ($program, $name, $fullname) = @_;
@@ -471,36 +477,64 @@ sub _program_match
 #               $program   = entry in etc/modules
 #               $name      = basename($0)
 #               $fullname  = $0
+#
+#               return the number of matched path level.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
-# Return Value: NUM(1 or 0)
+# Return Value: NUM
 sub _program_subdir_match
 {
     my ($program, $name, $fullname) = @_;
-    my (@n) = split(/\//, $program);
 
-    use File::Spec;
-    my ($v, $d, $n) = File::Spec->splitpath($fullname);
-    my (@p)         = File::Spec->splitdir(File::Spec->catfile($d, $n));
+    # cheap sanity
+    return 0 unless $program;
+    return 0 unless $fullname;
+
+    my (@n) = _filespec_splitdir($program);
+    my (@p) = _filespec_splitdir($fullname);
 
     # @n is shorter than @p;
     my $count = 0;
+    my $point = 0;
     @n = reverse @n;
     @p = reverse @p;
     for (my $i = 0; $i <= $#n; $i++) {
 	if ($n[$i] eq $p[$i]) {
+	    $point += 2;
 	    $count++;
 	}
 	elsif ($n[$i] eq '*') {
+	    $point += 1;
 	    $count++;
 	}
     }
 
     if ($count == ($#n + 1)) {
-	return 1;
+	return $point;
     }
 
     return 0;
+}
+
+
+# Descriptions: split filename and return it as ARRAY.
+#    Arguments: STR($fullname)
+# Side Effects: none
+# Return Value: STR
+sub _filespec_splitdir
+{
+    my ($fullname) = @_;
+
+    return () unless defined $fullname;
+    return () unless $fullname;
+
+    if ($] > 5.006) {
+	use File::Spec;
+	return File::Spec->splitdir($fullname);
+    }
+    else {
+	return split(/\\|\//, $fullname);
+    }
 }
 
 
