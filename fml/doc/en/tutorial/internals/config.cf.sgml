@@ -1,0 +1,269 @@
+<!--
+   $FML$
+   $jaFML: config.cf.sgml,v 1.11 2003/06/20 22:23:14 fukachan Exp $
+-->
+
+<chapter>
+	<title>
+	Configuration file: config.cf
+	</title>
+
+
+<!-- ======================================= -->
+<sect1 id="config.cf">
+	<title>
+	ML specific configuration file: config.cf
+	</title>
+
+<para>
+You can customize each ML differently.
+&fml4; and &fmldevel; are same in this point.
+</para>
+
+<para>
+In the case of &fml4;, there are $DIR and config.ph in ML home
+directory.  "config.ph" is a perl script.
+</para>
+
+<para>
+There is a config.cf file in &fmldevel;.
+Its format is  like this:
+<screen>
+variable = value
+</screen>
+.
+It is similar to postfix or .ini files.
+</para>
+
+<sect2>
+	<title>
+	problems in &fml4;
+	</title>
+
+<para>
+The configuration file of &fml4; is a perl script.
+Perl script is good for human editing but 
+it is not suitable for configuration tools.
+Hence, it is difficult to prepare configuration tools.
+So, in &fml4; two files, cf and config.ph are used.
+<footnote>
+<para>
+It is similar to the conversion from .mc to .cf in sendmail.
+</para>
+</footnote>
+</para>
+
+<para>
+The use of cf is suitable for configuration tools but introduces
+another difficulity such as inconsistency between cf and config.ph
+since human may edit config.ph but not cf.
+So, &fmldevel; introduces a new format as .cf files.
+This is postfix flavour.
+</para>
+
+</sect2>
+</sect1>
+
+
+<!-- ======================================= -->
+<sect1 id="config.cf.format">
+	<title>
+	config.cf format
+	</title>
+
+<para>
+The format of "config.cf" is "variable = value syntax".
+If plural values are required, space or "\n" is a separator.
+<screen>
+variable = value
+
+valiable = value1 value2 value3
+
+variable = value1
+           value2
+           value3
+</screen>
+The .cf files, e.g.
+	<link linkend="main.cf">
+	/etc/fml/main.cf
+	</link>
+	, default_config.cf,
+is same as config.cf file.
+</para>
+
+<para>
+$variable at the right hand is expanded. 
+For example,
+<screen>
+a = value1
+b = $a/value2
+</screen>
+is expanded to
+<screen>
+a = value1
+b = value1/value2
+</screen>
+.
+</para>
+
+
+<para>
+The variable expansion is done at the last. 
+So, the following definitions
+<screen>
+a = value1
+b = $a/value2/$c
+c = value3
+a = value4
+</screen>
+are expaned to
+<screen>
+b = valu4/value2/value3
+</screen>
+since the last $a overwrite the previous one.
+</para>
+
+</sect1>
+
+
+<!-- ======================================= -->
+<sect1>
+	<title>
+	extension to postfix style
+	</title>
+
+<para>
+<screen>
+variable += value
+variable -= value
+</screen>
+is used for adding or removing the specific value.
+</para>
+
+<para>
+<screen>
+x  = a b c d
+x -= b
+</screen>
+becoms
+<screen>
+x = a c d
+</screen>
+.
+</para>
+
+<para>
+Another case,
+<screen>
+x  = a b c d
+x += e
+</screen>
+becomes
+<screen>
+x = a b c d e
+</screen>
+.
+</para>
+
+</sect1>
+
+
+<!-- ======================================= -->
+<sect1 id="config.cf.overload">
+	<title>
+	overload of variables in config.cf
+	</title>
+
+<para>
+Overloading of .cf files i possible.
+It overwrites variables.
+</para>
+
+<para>
+It enables separation of configuration files e.g.
+the default file,
+the host specific file,
+the domain specific file,
+and 
+ML specific file.
+</para>
+
+<para>
+fml reads these files sequentially.  At the last, fml reads ML
+specific config.cf and expand variables.
+</para>
+
+</sect1>
+
+<!-- ======================================= -->
+<sect1>
+	<title>
+	modifying/adding variables 
+	after all configuration files has been loaded.
+	</title>
+
+<para>
+The variable expansion is always done.
+If some value with $ is added to some variable, 
+the next reading operation 
+   <footnote>
+   <para>
+   tie() operation of perl
+   </para>
+   </footnote>
+causes variable expansion.
+</para>
+
+<para>
+For example, set
+<screen>
+$config->{ key } = '$ml_home_dir/value';
+</screen>
+here. 
+The next read operation e.g.
+<screen>
+$config->{ another_key }
+</screen>
+(where the key is any) evaluates the variable expansion.
+</para>
+
+
+<sect2>
+	<title>
+	Internal of variable expansion
+	</title>
+
+<para>
+%_fml_config hash holds pairs of key and value.
+The format is $dir/$file in this hash, it is not expanded.
+get() returns the value of %_fml_config_result.
+The value in this hash is after the variable expansion.
+The variable expansion is done in calling get() method.
+</para>
+
+</sect2>
+
+</sect1>
+
+
+<sect1 id="list.variables.by.alphabeticalorder">
+	<title>
+	variable list (alphabetical order)
+	</title>
+
+&var.table.list.variables;
+
+</sect1>
+
+
+<sect1 id="list.variables.by.class">
+	<title>
+	variable list (class based)
+	</title>
+
+&var.table.class.variables;
+
+</sect1>
+
+
+</chapter>
