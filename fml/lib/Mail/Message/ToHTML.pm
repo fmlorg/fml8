@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.53 2003/08/23 04:35:47 fukachan Exp $
+# $FML: ToHTML.pm,v 1.54 2003/08/24 14:01:12 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.53 2003/08/23 04:35:47 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.54 2003/08/24 14:01:12 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -254,8 +254,10 @@ sub htmlfy_rfc822_message
 	# XXX inline expansion.
 	elsif ($type eq 'text/plain') {
 	    $self->_text_safe_print({
-		fh   => $wh,                    # parent html
-		data => $m->message_text(),
+		fh       => $wh,                    # parent html
+		data     => $m->message_text(),
+		charset  => $m->charset(),
+		encoding => $m->encoding_mechanism(),
 	    });
 	}
 	# create a separete file for attachment
@@ -749,7 +751,7 @@ sub _format_safe_header
 		}
 	    }
 
-	    $xbuf = $self->_decode_mime_string($xbuf) if $xbuf =~ /=\?iso/i;
+	    $xbuf = $self->_decode_mime_string($xbuf) if $xbuf =~ /=\?/i;
 	    $buf .= "<SPAN CLASS=${field}-value>\n";
 	    $buf   .= _sprintf_safe_str($xbuf);
 	    $buf .= "</SPAN>\n";
@@ -790,13 +792,25 @@ return $str;
 sub _text_safe_print
 {
     my ($self, $args) = @_;
-    my $buf = $args->{ data };
-    my $fh  = $args->{ fh } || \*STDOUT;
+    my $buf      = $args->{ data };
+    my $fh       = $args->{ fh } || \*STDOUT;
+    my $in_code  = $args->{ charset }  || undef;
+    my $encoding = $args->{ encoding } || '7bit';
+
+    if ($encoding eq 'base64') {
+	use Mail::Message::Encode;
+	my $encode = new Mail::Message::Encode;
+	$buf = $encode->decode_base64_string($buf);
+    }
+    elsif ($encoding eq 'quoted-printable') {
+	use Mail::Message::Encode;
+	my $encode = new Mail::Message::Encode;
+	$buf = $encode->decode_qp_string($buf);
+    }
 
     # XXX-TODO: euc-jp is hard-coded.
     if (defined $buf && $buf) {
-	use Jcode;
-	&Jcode::convert(\$buf, 'euc');
+	$buf = $self->_convert($buf, 'euc');
     }
 
     _print_safe_buf($fh, $buf);
@@ -825,8 +839,7 @@ sub _text_raw_print
 
 	# XXX-TODO: euc-jp is hard-coded.
 	if (defined $buf && $buf) {
-	    use Jcode;
-	    &Jcode::convert(\$buf, 'euc');
+	    $buf = $self->_convert($buf, 'euc');
 	}
 	print $fh $buf, "\n";
 	$fh->close();
@@ -1769,9 +1782,7 @@ sub _print_raw_str
 
     # XXX-TODO: euc-jp is hard-coded.
     if (defined($str) && $str) {
-	use Jcode;
-	warn("code not specified") unless defined $code;
-	&Jcode::convert( \$str, $code || 'euc');
+	$str = __nc_convert($str, $code || 'euc');
     }
 
     print $wh $str;
@@ -1827,7 +1838,7 @@ sub _sprintf_safe_str
 
 
 # Descriptions: return safe $str modified by text2html().
-#               $str language code is modified by Jcode if needed.
+#               $str language code is modified by Mail::Message::Encode.
 #    Arguments: NUM($attr_pre) HANDLE($wh) STR($str) STR($code)
 # Side Effects: none
 # Return Value: STR or UNDEF
@@ -1838,8 +1849,7 @@ sub __sprintf_safe_str
 
     # XXX-TODO: euc-jp is hard-coded.
     if (defined($str) && $str) {
-	use Jcode;
-	&Jcode::convert(\$str, defined($code) ? $code : 'euc' );
+	$str = __nc_convert($str, $code || 'euc');
     }
 
     if (defined $str) {
@@ -2037,6 +2047,34 @@ sub _decode_mime_string
     }
 
     return $str;
+}
+
+
+# Descriptions: convert $str to $out_code code
+#    Arguments: OBJ($self) STR($str) STR($out_code) STR($in_code)
+# Side Effects: none
+# Return Value: STR
+sub _convert
+{
+    my ($self, $str, $out_code, $in_code) = @_;
+
+    use Mail::Message::Encode;
+    my $encode = new Mail::Message::Encode;
+    return $encode->convert($str, $out_code, $in_code);
+}
+
+# Descriptions: convert $str to $out_code code (non method version)
+#               XXX you should remove this function.
+#    Arguments: STR($str) STR($out_code) STR($in_code)
+# Side Effects: none
+# Return Value: STR
+sub __nc_convert
+{
+    my ($str, $out_code, $in_code) = @_;
+
+    use Mail::Message::Encode;
+    my $encode = new Mail::Message::Encode;
+    return $encode->convert($str, $out_code, $in_code);
 }
 
 
