@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.4 2004/01/02 16:08:38 fukachan Exp $
+# $FML: Queue.pm,v 1.5 2004/04/12 15:32:05 fukachan Exp $
 #
 
 package FML::IPC::Queue;
@@ -202,6 +202,23 @@ sub _list_up_msg_in_queue_dir
 }
 
 
+# Descriptions: roll back the status of files.
+#    Arguments: OBJ($self)
+# Side Effects: chmod 0644 files.
+# Return Value: none
+sub rollback
+{
+    my ($self) = @_;
+    my $remove = $self->{ _remove_files } || [];
+
+    for my $f (@$remove) {
+	chmod 0644, $f;
+    }
+
+    $self->{ _remove_files } = [];
+}
+
+
 =head1 UTILITY
 
 =cut
@@ -287,6 +304,10 @@ if ($0 eq __FILE__) {
     # dump.
     use Data::Dumper;
     print Dumper($list);
+
+    if (defined $ENV{ ROLLBACK } && $ENV{ ROLLBACK }) {
+	$q->rollback();
+    }
 }
 
 
