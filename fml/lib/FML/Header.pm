@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.63 2003/08/23 14:37:58 fukachan Exp $
+# $FML: Header.pm,v 1.64 2003/09/19 13:30:33 tmu Exp $
 #
 
 package FML::Header;
@@ -220,7 +220,7 @@ add X-ML-Count:
 sub add_fml_ml_name
 {
     my ($header, $config, $args) = @_;
-    $header->add('X-ML-Name', $config->{ x_ml_name });
+    $header->add('X-ML-Name', $config->{ outgoing_mail_header_x_ml_name });
 }
 
 
@@ -373,7 +373,7 @@ sub add_x_sequence
 {
     my ($header, $config, $args) = @_;
 
-    $header->add('X-Sequence',  "$config->{ x_ml_name } $args->{ id }");
+    $header->add('X-Sequence',  "$config->{ outgoing_mail_header_x_ml_name } $args->{ id }");
 }
 
 

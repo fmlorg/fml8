@@ -80,4 +80,4 @@ article_subject_tag			=	[$ml_name:%05d]
 #      History:
 #        Value:
 #     Examples: elena
-x_ml_name			=	$ml_name
+outgoing_mail_header_x_ml_name			=	$ml_name
