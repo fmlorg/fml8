@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.194 2003/11/29 10:24:29 fukachan Exp $
+# $FML: Kernel.pm,v 1.195 2003/11/29 11:08:04 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1172,8 +1172,17 @@ sub _log_message_queue_append
 {
     my ($curproc, $msg) = @_;
     my $msg_queue = $curproc->{ log_message_queue };
-    $msg->{ time } = time;
-    $msg_queue->add($msg);
+
+    if (defined $msg_queue) {
+	$msg->{ time } = time;
+	$msg_queue->add($msg);
+    }
+    else {
+	my $debug = $curproc->get_debug_level();
+	if ($debug > 1) {
+	    print STDERR "msg: ", $msg->{ buf }, "\n";
+	}
+    }
 }
 
 
@@ -1185,7 +1194,10 @@ sub _log_message_print
 {
     my ($curproc) = @_;
     my $msg_queue = $curproc->{ log_message_queue };
-    $msg_queue->print();
+
+    if (defined $msg_queue) {
+	$msg_queue->print();
+    }
 }
 
 
