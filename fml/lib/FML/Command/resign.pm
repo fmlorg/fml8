@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: resign.pm,v 1.6 2001/05/27 14:27:54 fukachan Exp $
+# $FML: resign.pm,v 1.7 2001/07/15 12:03:37 fukachan Exp $
 #
 
 package FML::Command::resign;
@@ -35,11 +35,11 @@ all requests are forwarded to C<FML::Command::unsubscribe>.
 
 =head1 AUTHOR
 
-__YOUR_NAME__
+Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 __YOUR_NAME__
+Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself. 

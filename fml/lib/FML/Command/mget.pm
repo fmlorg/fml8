@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: mget.pm,v 1.3 2001/04/03 09:45:42 fukachan Exp $
+# $FML: mget.pm,v 1.4 2001/06/17 08:57:09 fukachan Exp $
 #
 
 package FML::Command::mget;
@@ -29,10 +29,6 @@ not yet implemented
 =cut
 
 
-require Exporter;
-@ISA = qw(Exporter);
-
-
 sub new
 {
     my ($self) = @_;
@@ -44,11 +40,11 @@ sub new
 
 =head1 AUTHOR
 
-__YOUR_NAME__
+Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 __YOUR_NAME__
+Copyright (C) 2001 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself. 
