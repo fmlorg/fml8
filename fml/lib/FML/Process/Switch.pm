@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.92 2003/08/23 04:35:40 fukachan Exp $
+# $FML: Switch.pm,v 1.93 2003/09/13 05:03:12 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -156,7 +156,7 @@ sub main::Bootstrap2
 
 	myname           => $myname,
 	program_name     => $myname,
-	program_fullname => $0,
+	program_fullname => $ENV{ 'SCRIPT_FILENAME' } || $0,
 
 	#    XXX CAN WE MOVE PARSER TO Process::{Kernel,CGI::Kernel} ?
 	#    XXX ml_name, ml_domain, ml_home_prefix, ml_home_dir
