@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Print.pm,v 1.17 2001/11/19 08:49:30 fukachan Exp $
+# $FML: Print.pm,v 1.18 2001/11/19 09:56:33 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -160,7 +160,7 @@ sub __do_summary
 	$thread->sort_thread_id($thread_id_list);
 
 	# reverse order (first thread is the latest one) if reverse mode
-	if (defined $config->{ reverse_order }) { 
+	if ($config->{ reverse_order }) { 
 	    @$thread_id_list = reverse @$thread_id_list;
 	}
 
@@ -250,7 +250,7 @@ sub _do_review
     my $range = Mail::Message::MH->expand($str, $min, $max);
 
     # reverse order (first thread is the latest one) if reverse mode
-    if (defined $config->{ reverse_order }) { @$range = reverse @$range;}
+    if ($config->{ reverse_order }) { @$range = reverse @$range;}
 
   ID_LIST:
     for my $id (@$range) {
