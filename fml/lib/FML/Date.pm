@@ -19,8 +19,8 @@ FML::Date - utilities for date and time
    $date = new FML::Date time;
 
    # get the date in $style format
-   $date->{ logfile_style }
-   $date->logfile_style
+   $date->{ log_file_style }
+   $date->log_file_style
 
 =head1 DESCRIPTION
 
@@ -28,7 +28,7 @@ The style you use follows:
 
     style                       example
     ----------------------------------------------
-    logfile_style               01/01/07 21:06:19
+    log_file_style              01/01/07 21:06:19
     mail_header_style           Sun, 7 Jan 2001 21:06:19 +0900  
     YYYYMMDD                    20010107
     current_time                200101072106
@@ -39,7 +39,7 @@ The style you use follows:
 
 You can also method like $date->$style() style.
 
-=item    logfile_style()
+=item    log_file_style()
 
 =item    mail_header_style()
 
@@ -82,7 +82,7 @@ sub _date
     $TimeZone ||= '+0900';
     my ($sec,$min,$hour,$mday,$mon,$year,$wday) = (localtime($time))[0..6];
 
-    $date->{'logfile_style'} = 
+    $date->{'log_file_style'} = 
 	sprintf("%02d/%02d/%02d %02d:%02d:%02d", 
 		($year % 100), $mon + 1, $mday, $hour, $min, $sec);
 
@@ -106,11 +106,11 @@ sub _date
 }
 
 
-sub logfile_style
+sub log_file_style
 {
     my ($self, $time) = @_;
     my $p = _date($time || time);
-    $p->{'logfile_style'};
+    $p->{'log_file_style'};
 }
 
 

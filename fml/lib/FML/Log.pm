@@ -19,7 +19,7 @@ use FML::Config;
 use FML::Date;
 
 
-#  usage: &Log( message, { logfile => $logfile } );
+#  usage: &Log( message, { log_file => $log_file } );
 # return: none
 #
 sub Log
@@ -28,7 +28,7 @@ sub Log
     my $config = new FML::Config;
 
     # parse arguments
-    my $logfile  = $args->{ logfile };
+    my $log_file = $args->{ log_file };
     my $facility = $args->{ facility };
     my $level    = $args->{ level };
 
@@ -41,12 +41,12 @@ sub Log
     # open the $file by using FileHandle.pm
     use FileHandle;
 
-    # When the second argument is not defined, use the default logfile.
-    my $file = $logfile || $config->{ logfile } || '/dev/stderr';
+    # When the second argument is not defined, use the default log_file.
+    my $file = $log_file || $config->{ log_file } || '/dev/stderr';
     my $fh   = new FileHandle ">> $file";
 
     if (defined $fh) {
-	print $fh $rdate->{'logfile_style'}, " ", $mesg, "\n";
+	print $fh $rdate->{'log_file_style'}, " ", $mesg, "\n";
     }
     else {
 	croak "Error: cannot open $file\n";
@@ -71,7 +71,7 @@ or specify arguments in the hash reference
 
    use FML::Log qw(Log);
    &Log( $log_message , { 
-       logfile  => $logfile,
+       log_file => $log_file,
        facility => $facility,
        level    => $level,
    });
@@ -80,7 +80,7 @@ or specify arguments in the hash reference
 =head1 DESCRIPTION
 
 FML::Log.pm contains several interfaces for several files,
-for example, logfiles, syslog() (not yet implemented).
+for example, log files, syslog() (not yet implemented).
 
 =item Log( $message )
 

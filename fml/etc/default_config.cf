@@ -2,7 +2,7 @@
 ### basic logging
 ###
 # logfile
-logfile	=	/tmp/log
+log_file	=	/tmp/log
 
 
 ###

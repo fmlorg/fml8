@@ -17,7 +17,7 @@ lock_type	= flock
 
 =head2 log
 
-logfile		= $ml_home_dir/log
+log_file	= $ml_home_dir/log
 
 
 =head2 アクセス制御

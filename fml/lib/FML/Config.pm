@@ -16,6 +16,7 @@ sub new
 {
     my ($self) = @_;
 
+    unless (defined %_fml_config) { %_fml_config = ();}
     my $me = \%_fml_config;
     return bless $me, $self;
 }
