@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.8 2004/04/10 12:41:28 fukachan Exp $
+# $FML: Spool.pm,v 1.9 2004/04/23 04:10:26 fukachan Exp $
 #
 
 package FML::Article::Spool;
@@ -18,7 +18,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::Article::Spool -- utilities to maintain the spool directory
+FML::Article::Spool -- utilities to maintain the spool directory.
 
 =head1 SYNOPSIS
 
@@ -70,7 +70,7 @@ sub get_lock_channel_name
 }
 
 
-# Descriptions: convert files from src_dir/ to dst_dir/
+# Descriptions: convert files at src_dir/ into dst_dir/.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_RER($command_args)
 # Side Effects: none
 # Return Value: none
@@ -108,20 +108,21 @@ sub convert
     my $dh = new DirHandle $src_dir;
     if (defined $dh) {
 	my $source = '';
-	my $dir;
+	my $entry;
 
       ENTRY:
-	while (defined($dir = $dh->read)) {
-	    next ENTRY if $dir =~ /^\./o;
+	while (defined($entry = $dh->read)) {
+	    next ENTRY if $entry =~ /^\./o;
 
-	    $source = File::Spec->catfile($src_dir, $dir);
+	    $source = File::Spec->catfile($src_dir, $entry);
 
+	    # XXX-TODO: incorrect logic ??? (we can handle subdir properly?)
 	    if (-d $source) {
 		print $wh "   $source is a subdir.\n";
 	    }
 	    elsif (-f $source) {
-		my $subdirpath = $article->subdirpath($dir);
-		my $filepath   = $article->filepath($dir);
+		my $subdirpath = $article->subdirpath($entry);
+		my $filepath   = $article->filepath($entry);
 
 		next ENTRY if -f $filepath;
 
