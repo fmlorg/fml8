@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.49 2002/08/28 15:07:07 fukachan Exp $
+# $FML: newml.pm,v 1.50 2002/09/11 23:18:08 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -140,20 +140,16 @@ sub _init_ml_home_dir
     my $config      = $curproc->{ 'config' };
     my $ml_home_dir = $config->{ ml_home_dir };
 
-    eval q{
-	use File::Utils qw(mkdirhier);
-	unless (-d $ml_home_dir) {
-	    mkdirhier( $ml_home_dir, $config->{ default_dir_mode } || 0755 );
-	}
-    };
-    croak($@) if $@;
+    unless (-d $ml_home_dir) {
+	$curproc->mkdir($ml_home_dir, "mode=public");
+    }
 
     # $ml_home_dir/etc/mail
     my $dirlist = $config->get_as_array_ref('newml_command_init_dirs');
     for my $_dir (@$dirlist) {
 	unless (-d $_dir) {
 	    print STDERR "creating $_dir\n";
-	    mkdirhier( $_dir, $config->{ default_dir_mode } || 0755 );
+	    $curproc->mkdir( $_dir, "mode=public");
 	}
     }
 }
@@ -285,12 +281,9 @@ sub _setup_mail_archive_dir
     my $config = $curproc->{ config };
     my $dir    = $config->{ html_archive_dir };
 
-    eval q{ use File::Utils qw(mkdirhier);};
-    croak($@) if $@;
-
     unless (-d $dir) {
 	print STDERR "creating $dir\n";
-	mkdirhier( $dir, $config->{ default_dir_mode } || 0755 );
+	$curproc->mkdir($dir, "mode=public");
     }
 }
 
@@ -312,9 +305,6 @@ sub _setup_cgi_interface
     #
     # 1. create directory path if needed
     #
-    eval q{ use File::Utils qw(mkdirhier);};
-    croak($@) if $@;
-
     my (%is_dir_exists)  = ();
     my $cgi_base_dir     = $config->{ cgi_base_dir };
     my $admin_cgi_dir    = $config->{ admin_cgi_base_dir };
@@ -323,7 +313,7 @@ sub _setup_cgi_interface
 	unless (-d $dir) {
 	    print STDERR "creating $dir\n";
 	    $is_dir_exists{ $dir } = 0;
-	    mkdirhier( $dir, $config->{ default_dir_mode } || 0755 );
+	    $curproc->mkdir($dir, "mode=public");
 	}
 	else {
 	    $is_dir_exists{ $dir } = 1;
@@ -411,10 +401,8 @@ sub _setup_listinfo
     my $template_dir = $config->{ listinfo_template_dir };
     my $listinfo_dir = $config->{ listinfo_dir };
 
-    eval q{ use File::Utils qw(mkdirhier);};
-    croak($@) if $@;
     unless (-d $listinfo_dir) {
-	mkdirhier($listinfo_dir, $config->{ default_dir_mode } || 0755 );
+	$curproc->mkdir($listinfo_dir, "mode=public");
     }
 
     use DirHandle;

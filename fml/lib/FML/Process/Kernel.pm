@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.134 2002/08/28 05:52:35 fukachan Exp $
+# $FML: Kernel.pm,v 1.135 2002/09/11 23:18:15 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -335,8 +335,7 @@ sub _lock_init
 
     # only user "fml" should read lock files.
     unless (-d $lock_dir) {
-	use File::Path;
-	mkpath($lock_dir, 0, 0700);
+	$curproc->mkdir($lock_dir, "mode=private");
     }
 
     use File::Spec;
@@ -435,8 +434,7 @@ sub _init_event_timeout
     my $dir    = $config->{ event_queue_dir };
 
     unless (-d $dir) {
-	use File::Path;
-	mkpath($dir, 0, 0700);
+	$curproc->mkdir($dir, "mode=private");
     }
 
     use File::Spec;
@@ -1765,7 +1763,7 @@ sub prepare_file_to_return
     my $src_file    = $args->{ src };
     my $charset_out = $args->{ charset };
 
-    -d $tmp_dir || mkdir $tmp_dir, 0755;
+    -d $tmp_dir || $curproc->mkdir($tmp_dir, "mode=private");
 
     use FileHandle;
     my $rh = new FileHandle $src_file;

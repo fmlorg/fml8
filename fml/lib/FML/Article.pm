@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.44 2002/09/06 04:13:11 fukachan Exp $
+# $FML: Article.pm,v 1.45 2002/09/11 23:18:01 fukachan Exp $
 #
 
 package FML::Article;
@@ -176,11 +176,7 @@ sub spool_in
 
     if ( $config->yes( 'use_spool' ) ) {
 	unless (-d $spool_dir) {
-	    eval q{
-		use File::Path;
-		mkpath( $spool_dir, 0, 0700 );
-	    };
-	    LogError($@) if $@;
+	    $curproc->mkdir($spool_dir, "mode=private");
 	}
 
 	# translate the article path e.g. spool/1900,  spool/2/1900
@@ -268,8 +264,7 @@ sub _filepath
     my $dir  = $spool->dirpath($args);
 
     unless (-d $dir) {
-	eval q{ use File::Utils qw(mkdirhier);};
-	mkdirhier($dir, 0700);
+	$curproc->mkdir($dir, "mode=private");
     }
 
     return ($file, $dir);

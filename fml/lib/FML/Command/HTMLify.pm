@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.7 2002/06/30 01:22:26 fukachan Exp $
+# $FML: HTMLify.pm,v 1.8 2002/09/11 23:18:05 fukachan Exp $
 #
 
 package FML::Command::HTMLify;
@@ -55,8 +55,7 @@ sub convert
 
     if (defined $dst_dir) {
         unless (-d $dst_dir) {
-            use File::Utils qw(mkdirhier);
-            mkdirhier($dst_dir, 0755);
+            $curproc->mkdir($dst_dir, "mode=public");
         }
 
 	if ($is_subdir_exists) {

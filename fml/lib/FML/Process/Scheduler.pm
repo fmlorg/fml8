@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Scheduler.pm,v 1.16 2002/08/07 14:32:45 fukachan Exp $
+# $FML: Scheduler.pm,v 1.17 2002/09/11 23:18:16 fukachan Exp $
 #
 
 package FML::Process::Scheduler;
@@ -41,10 +41,7 @@ sub new
     my $qdir   = $config->{ event_queue_dir };
 
     unless (-d $qdir) {
-	eval q{
-	    use File::Utils qw(mkdirhier);
-	    mkdirhier($qdir, $config->{ default_dir_mode } || 0755 );
-	};
+	$curproc->mkdir($qdir, "mode=public");
     }
 
     return bless $me, $type;

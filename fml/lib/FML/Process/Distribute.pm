@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.94 2002/09/02 03:31:43 fukachan Exp $
+# $FML: Distribute.pm,v 1.95 2002/09/11 23:18:14 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -514,13 +514,8 @@ sub htmlify
     };
     unless ($@) {
 	unless (-d $html_dir) {
-	    eval q{
-		use File::Path;
-		mkpath($html_dir, 0, 0755);
-		Log("mkdir $html_dir") if -d $html_dir;
-		LogError("fail to mkdir $html_dir") unless -d $html_dir;
-	    };
-	    if ($@) { LogError($@);}
+	    $curproc->mkdir($html_dir, "mode=public");
+	    LogError("fail to mkdir $html_dir") unless -d $html_dir;
 	}
 
 	eval q{

@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.8 2002/08/14 03:31:57 fukachan Exp $
+# $FML: Spool.pm,v 1.9 2002/09/11 23:18:16 fukachan Exp $
 #
 
 package FML::Process::Spool;
@@ -165,7 +165,7 @@ sub _convert
     if ($src_dir eq $dst_dir) {
 	$src_dir .= ".old";
 	rename($dst_dir, $src_dir);
-	mkdir($dst_dir, 0700);
+	$curproc->mkdir($dst_dir, "mode=private");
 	$use_link = 1;
     }
 
@@ -198,7 +198,7 @@ sub _convert
 		}
 		else {
 		    unless (-d $subdirpath) {
-			mkdir($subdirpath, 0700);
+			$curproc->mkdir($subdirpath, "mode=private");
 		    }
 
 		    if (-d $subdirpath) {

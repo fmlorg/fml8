@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: check.pm,v 1.1 2002/04/30 16:17:14 fukachan Exp $
+# $FML: check.pm,v 1.2 2002/06/01 05:02:32 fukachan Exp $
 #
 
 package FML::Command::Admin::check;
@@ -88,7 +88,7 @@ sub check_spool_dir
     }
     else {
 	print "fail. not exist\n";
-	-d $spool_dir || midir($spool_dir, 0700);
+	-d $spool_dir || $curproc->($spool_dir, "mode=private");
 	print "   created $spool_dir\n";
     }
 
