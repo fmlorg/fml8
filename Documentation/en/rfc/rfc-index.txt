@@ -5,7 +5,7 @@
                              RFC INDEX
                            -------------
 
-(CREATED ON: 10/04/2001.)
+(CREATED ON: 10/16/2001.)
 
 This file contains citations for all RFCs in numeric order.
 
@@ -11097,6 +11097,20 @@ See the RFC Editor Web page http://www.rfc-editor.org
      Hambridge. April 2001. (Format: TXT=64687 bytes) (Also FYI0038)
      (Status: INFORMATIONAL)
 
+3102 Realm Specific IP: Framework. M. Borella, J. Lo, D. Grabelsky, G.
+     Montenegro. October 2001. (Format: TXT=73856 bytes) (Status:
+     EXPERIMENTAL)
+
+3103 Realm Specific IP: Protocol Specification. M. Borella, D.
+     Grabelsky, J. Lo, K. Taniguchi. October 2001. (Format: TXT=115855
+     bytes) (Status: EXPERIMENTAL)
+
+3104 RSIP Support for End-to-end IPsec. G. Montenegro, M. Borella.
+     October 2001. (Format: TXT=38719 bytes) (Status: EXPERIMENTAL)
+
+3105 Finding an RSIP Server with SLP. J. Kempf, G. Montenegro. October
+     2001. (Format: TXT=21427 bytes) (Status: EXPERIMENTAL)
+
 3106 ECML v1.1: Field Specifications for E-Commerce. D. Eastlake, T.
      Goldstein. April 2001. (Format: TXT=40715 bytes) (Obsoletes RFC2706)
      (Status: INFORMATIONAL)
@@ -11357,6 +11371,20 @@ See the RFC Editor Web page http://www.rfc-editor.org
 3177 IAB/IESG Recommendations on IPv6 Address. IAB, IESG. September
      2001. (Format: TXT=23178 bytes) (Status: INFORMATIONAL)
 
+3178 IPv6 Multihoming Support at Site Exit Routers. J. Hagino, H.
+     Snyder. October 2001. (Format: TXT=24453 bytes) (Status:
+     INFORMATIONAL)
+
+3179 Script MIB Extensibility Protocol Version 1.1. J. Schoenwaelder,
+     J. Quittek. October 2001. (Format: TXT=56311 bytes) (Obsoletes
+     RFC2593) (Status: EXPERIMENTAL)
+
 3180 GLOP Addressing in 233/8. D. Meyer, P. Lothberg. September 2001.
      (Format: TXT=8225 bytes) (Obsoletes RFC2770) (Also BCP0053) (Status:
      BEST CURRENT PRACTICE)
+
+3183 Domain Security Services using S/MIME. T. Dean, W. Ottaway.
+     October 2001. (Format: TXT=57129 bytes) (Status: EXPERIMENTAL)
+
+3185 Reuse of CMS Content Encryption Keys. S. Farrell, S. Turner.
+     October 2001. (Format: TXT=20404 bytes) (Status: PROPOSED STANDARD)
