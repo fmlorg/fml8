@@ -1,7 +1,7 @@
 		エラーメッセージのコレクション
 
 入力は
-	Mailinglist::Messages オブジェクトの形で
+	Mail::Message オブジェクトの形で
 
 
 出力は
