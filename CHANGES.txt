@@ -12,7 +12,12 @@
 
 	enable read and write configuration file
 
+	コメントを保存しつつ postfix スタイルの設定ファイルの
+	読み書きを可能にするように
 
+2001/07/15
 
-$FML$
+   このファイルを創設する:)
+
+$FML: CHANGES.txt,v 1.1 2001/07/15 08:40:26 fukachan Exp $
 
