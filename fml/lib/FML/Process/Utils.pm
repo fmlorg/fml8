@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.118 2004/05/02 00:04:43 fukachan Exp $
+# $FML: Utils.pm,v 1.119 2004/06/27 06:07:52 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -19,7 +19,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::Process::Utils - convenient utilities for FML::Process:: classes
+FML::Process::Utils - convenient utilities for FML::Process:: classes.
 
 =head1 SYNOPSIS
 
@@ -558,6 +558,11 @@ return ml_home_dir to be removed.
 =cut
 
 
+#
+# XXX-TODO: when we remove twice a day ?
+# 
+
+
 # Descriptions: return ml_home_dir to be removed.
 #    Arguments: OBJ($curproc) STR($ml_home_prefix) STR($ml_name)
 # Side Effects: none
@@ -779,6 +784,7 @@ sub is_need_ml_name
     return( $args->{ need_ml_name } ? 1 : 0 );
 }
 
+
 # Descriptions: check $str with $class regexp defined in FML::Restriction.
 #    Arguments: OBJ($curproc) STR($class) STR($str)
 # Side Effects: none
@@ -786,6 +792,8 @@ sub is_need_ml_name
 sub is_safe_syntax
 {
     my ($curproc, $class, $str) = @_;
+
+    # XXX-TODO: REMOVE 
 
     use FML::Restriction::Base;
     my $safe = new FML::Restriction::Base;
@@ -1102,7 +1110,6 @@ sub ml_home_dir
 sub __ml_home_prefix_from_main_cf
 {
     my ($curproc, $main_cf, $domain) = @_;
-    my $default_domain = $main_cf->{ default_domain };
 
     if (defined $domain) {
 	my $found = '';
@@ -1118,6 +1125,7 @@ sub __ml_home_prefix_from_main_cf
 	    return $found;
 	}
 	else {
+	    my $default_domain = $curproc->default_domain();
 	    if ("\L$domain\E" eq "\L$default_domain\E") {
 		return $main_cf->{ default_ml_home_prefix };
 	    }
@@ -1129,7 +1137,8 @@ sub __ml_home_prefix_from_main_cf
     else {
 	# if the domain is given as a hint (CGI)
 	if (defined $main_cf->{ _hints }->{ ml_domain }) {
-
+	    # XXX-TODO: ?
+	    ;
 	}
 	elsif (defined $main_cf->{ ml_home_prefix }) {
 	    return $main_cf->{ ml_home_prefix };
@@ -1447,12 +1456,14 @@ sub get_ml_list
 	my $safe    = new FML::Restriction::Base;
 	my $ml_name = '';
 
+      ENTRY:
 	while ($ml_name = $dh->read()) {
-	    next if $ml_name =~ /^\./o;
-	    next if $ml_name =~ /^\@/o;
+	    next ENTRY if $ml_name =~ /^\./o;
+	    next ENTRY if $ml_name =~ /^\@/o;
 
 	    # XXX permit $ml_name matched by FML::Restriction::Base.
 	    if ($safe->regexp_match('ml_name', $ml_name)) {
+		# pick up fml8 style ml, so ignore fml4 one.
 		$cf = File::Spec->catfile($prefix, $ml_name, "config.cf");
 		push(@dirlist, $ml_name) if -f $cf;
 	    }
@@ -1499,7 +1510,7 @@ which this $map belongs to ?
 =cut
 
 
-# Descriptions: which member of maps is this $map ?
+# Descriptions: which member of maps this $map belongs to ?
 #    Arguments: OBJ($curproc) STR($map)
 # Side Effects: none
 # Return Value: STR
@@ -1736,7 +1747,7 @@ sub get_charset
 	    for my $a (@$acpt_lang_list) {
 		if ($a eq 'ja' || $a eq 'en') {
 		    my $key  = sprintf("%s_charset_%s", $category, $a);
-		    $charset = $config->{ $key };
+		    $charset = $config->{ $key } || undef;
 		    last ACCEPT_LANGUAGE;
 		}
 		elsif ($a eq '*') { # any charset is o.k.
