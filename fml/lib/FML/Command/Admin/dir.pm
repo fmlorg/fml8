@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: dir.pm,v 1.7 2002/11/23 15:20:00 fukachan Exp $
+# $FML: dir.pm,v 1.8 2002/12/15 14:13:16 fukachan Exp $
 #
 
 package FML::Command::Admin::dir;
@@ -67,8 +67,7 @@ sub process
 
     use FML::Restriction::Base;
     my $safe   = new FML::Restriction::Base;
-    my $regexp = $safe->basic_variable();
-    my $dirreg = $regexp->{ directory };
+    my $dirreg = $safe->regexp( 'directory' );
 
     # analyze ...
     # XXX-TODO: "admin ls -i -a tmp" ignores "tmp" but not inform the error.
@@ -113,7 +112,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Ken'ichi Fukamachi
+Copyright (C) 2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

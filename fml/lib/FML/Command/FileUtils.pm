@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: FileUtils.pm,v 1.7 2002/12/18 04:46:22 fukachan Exp $
+# $FML: FileUtils.pm,v 1.8 2002/12/24 10:19:43 fukachan Exp $
 #
 
 package FML::Command::FileUtils;
@@ -42,8 +42,7 @@ sub new
     my $me     = {};
 
     use FML::Restriction::Base;
-    my $safe = new FML::Restriction::Base;
-    $me->{ _basic_variable } = $safe->basic_variable();
+    $me->{ _safe } = new FML::Restriction::Base;
 
     return bless $me, $type;
 }
@@ -85,9 +84,8 @@ sub remove
     my $argv     = $du_args->{ options };
     my $is_error = 0;
 
-    # regexp
-    my $basic_variable = $self->{ _basic_variable };
-    my $file_regexp    = $basic_variable->{ file };
+    # regexp allowed here for file 
+    my $file_regexp = $self->{ _safe }->regexp( 'file' );
 
     # chdir $ml_home_dir firstly. return ASAP if failed.
     my $ml_home_dir    = $config->{ ml_home_dir };
@@ -143,7 +141,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Ken'ichi Fukamachi
+Copyright (C) 2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
