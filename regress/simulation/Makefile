@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.45 2001/09/23 09:06:02 fukachan Exp $
+# $FML: Makefile,v 1.46 2001/10/13 02:59:21 fukachan Exp $
 #
 
 all: link
@@ -35,8 +35,9 @@ _link:
 	ln -s ../../fml/lib/FML/Ticket
 	ln -s ../../fml/lib/FML/CGI
 	ln -s ../../fml/lib/FML/Process
+	ln -s ../../fml/lib/FML/Command       Command
 	ln -s ../../fml/lib/FML/Command/Admin AdminCommand
-	ln -s ../../fml/lib/FML/Command/User UserCommand
+	ln -s ../../fml/lib/FML/Command/User  UserCommand
 	ln -s ../../fml/lib/IO
 	ln -s ../../fml/lib/File
 	ln -s ../../fml/lib/Tie
