@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.11 2002/12/20 03:39:08 fukachan Exp $
+# $FML: log.pm,v 1.12 2003/01/25 12:48:38 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -119,11 +119,12 @@ sub _show_log
 	$maxline -= $last_n_lines;
 
 	# show the last $last_n_lines lines by default.
+	my $buf;
       LINE:
-	while (<$fh>) {
+	while ($buf = <$fh>) {
 	    next LINE if $linecount++ < $maxline;
 
-	    $s = $obj->convert( $_, 'euc-jp' );
+	    $s = $obj->convert( $buf, 'euc-jp' );
 
 	    if ($is_cgi) {
 		print $wh (_html_to_text($s));
