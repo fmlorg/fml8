@@ -87,6 +87,8 @@ article_filter_functions	=	article_size_filter
 					article_non_mime_filter
 					article_mime_component_filter
 					article_text_plain_filter
+					article_spam_filter
+					article_virus_filter
 
 
 =head2	size based filter

@@ -195,11 +195,29 @@ article_spam_filter_bogofilter_options</entry>
 </row>
 <row>
 <entry>
+article_spam_filter_drivers</entry>
+<entry>
+ external spam checker.</entry>
+<entry>
+bogofilter
+   </entry>
+</row>
+<row>
+<entry>
 article_spam_filter_functions</entry>
 <entry>
  list up driver names used as spam checker.</entry>
 <entry>
 bogofilter
+   </entry>
+</row>
+<row>
+<entry>
+article_spam_filter_rules</entry>
+<entry>
+ action if the message looks a spam.</entry>
+<entry>
+header_rewrite
    </entry>
 </row>
 <row>
@@ -270,6 +288,24 @@ reject_not_iso2022jp_japanese_string
    reject_japanese_command_syntax
    reject_ms_guid
    permit
+   </entry>
+</row>
+<row>
+<entry>
+article_virus_filter_drivers</entry>
+<entry>
+ external virus checker.</entry>
+<entry>
+clamscan
+   </entry>
+</row>
+<row>
+<entry>
+article_virus_filter_rules</entry>
+<entry>
+ action if virus found.</entry>
+<entry>
+reject
    </entry>
 </row>
 <row>
@@ -1751,11 +1787,29 @@ yes
 </row>
 <row>
 <entry>
+use_article_spam_filter</entry>
+<entry>
+ use external spam checker.</entry>
+<entry>
+no
+   </entry>
+</row>
+<row>
+<entry>
 use_article_text_plain_filter</entry>
 <entry>
  use text/plain filter, which is a simple syntax checker.</entry>
 <entry>
 yes
+   </entry>
+</row>
+<row>
+<entry>
+use_article_virus_filter</entry>
+<entry>
+ external virus checker. disabled by default.</entry>
+<entry>
+no
    </entry>
 </row>
 <row>
