@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $Id: loader,v 1.10 2001/02/17 01:54:41 fukachan Exp $ 
+# $Id: loader,v 1.11 2001/02/17 07:39:38 fukachan Exp $ 
 # $FML$
 #
 
@@ -62,9 +62,12 @@ sub Bootstrap
     my $main_cf     = Standalone::load_cf($main_cf_file, $params);
     my $libexec_dir = $main_cf->{ libexec_dir };
 
+    # set up @INC
+    push(@INC, split(/\s+/, $main_cf->{ lib_dir }));
+
     # 2.2 load $version depended process_switch
     eval {
-	require "$libexec_dir/process_switch";
+	require FML::Process::Switch;
     };
     unless ($@) {
 	&Bootstrap2($main_cf_file);

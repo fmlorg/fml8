@@ -1,17 +1,18 @@
-#!/usr/local/bin/perl -w
 #-*- perl -*-
 #
-# Copyright (C) 2000 Ken'ichi Fukamachi
-#          All rights reserved. 
+#  Copyright (C) 2001 Ken'ichi Fukamachi
+#   All rights reserved. This program is free software; you can
+#   redistribute it and/or modify it under the same terms as Perl itself. 
 #
+# $Id$
 # $FML$
 #
 
-package FML;
+package FML::Process::Switch;
 
-use vars qw($debug);
 use strict;
 use Carp;
+use vars qw($debug);
 
 
 sub main::Bootstrap2
