@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmml.pm,v 1.3 2002/04/24 03:59:15 fukachan Exp $
+# $FML: rmml.pm,v 1.4 2002/06/25 09:38:09 fukachan Exp $
 #
 
 package FML::Command::Admin::rmml;
@@ -81,16 +81,17 @@ sub process
     };
 
     # fundamental check
-    croak("\$ml_name is not specified") unless $ml_name;
+    croak("\$ml_name is not specified")     unless $ml_name;
     croak("\$ml_home_dir is not specified") unless $ml_home_dir;
 
     # update $ml_home_prefix and expand variables again.
     $config->set( 'ml_home_prefix' , $ml_home_prefix );
 
-    # "makefml --force rmml elena" makes elena ML even if elena
-    # already exists.
+    # check if $ml_name already exists.
     my $found = 0;
-    unless (defined $options->{ force } ) {
+
+    # --force: ignore the existence of $ml_home_dir
+    unless (defined $options->{ force }) {
 	if (-d $ml_home_dir) {
 	    $found = 1;
 	}
@@ -109,43 +110,11 @@ sub process
     if (-d $removed_dir && (! -d $ml_home_dir)) {
 	print STDERR "$ml_name home_dir removed.\n";
     }
+    else {
+	print STDERR "cannot rmdir $ml_name home_dir.\n";
+    }
 
     $self->_update_aliases($curproc, $command_args, $params);
-}
-
-
-# Descriptions: check argument and prepare virtual domain information
-#               if needed.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
-# Side Effects: none
-# Return Value: ARRAY
-sub _get_domain_info
-{
-    my ($self, $curproc, $command_args) = @_;
-    my $ml_name        = $command_args->{ 'ml_name' };
-    my $ml_domain      = $curproc->default_domain();
-    my $ml_home_prefix = '';
-    my $ml_home_dir    = '';
-
-    # virtual domain support e.g. "makefml newml elena@nuinui.net"
-    if ($ml_name =~ /\@/o) {
-	# overwrite $ml_name
-	($ml_name, $ml_domain) = split(/\@/, $ml_name);
-	$ml_home_prefix = $curproc->ml_home_prefix($ml_domain);
-    }
-    # default domain: e.g. "makefml newml elena"
-    else {
-	$ml_home_prefix = $curproc->ml_home_prefix();
-    }
-
-    eval q{ use File::Spec;};
-    $ml_home_dir = File::Spec->catfile($ml_home_prefix, $ml_name);
-
-    # save for convenience
-    $self->{ _ml_name   } = $ml_name;
-    $self->{ _ml_domain } = $ml_domain;
-
-    return ($ml_name, $ml_domain, $ml_home_prefix, $ml_home_dir);
 }
 
 
