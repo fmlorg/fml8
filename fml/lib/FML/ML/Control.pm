@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.1 2003/12/28 13:23:18 fukachan Exp $
+# $FML: Control.pm,v 1.2 2003/12/29 03:19:00 fukachan Exp $
 #
 
 package FML::ML::Control;
@@ -26,7 +26,7 @@ FML::ML::Control - create, rename and delete ml_home_dir.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: standard constructor.
 #    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: none
 # Return Value: OBJ
@@ -39,12 +39,12 @@ sub new
 }
 
 
-=head1 CREATE
+=head1 ML CREATE
 
 =cut
 
 
-# Descriptions: generate _ml_name_xxx in $params
+# Descriptions: generate _ml_name_xxx in $params.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($params)
 # Side Effects: update $params
@@ -58,9 +58,9 @@ sub adjust_params_for_virtual_domain
     my $ml_domain = $params->{ ml_domain };
 
     if ($curproc->is_default_domain($ml_domain)) {
-	$ml_name_admin   = sprintf("%s-%s",$ml_name,"admin",$ml_domain);
-	$ml_name_ctl     = sprintf("%s-%s",$ml_name,"ctl",$ml_domain);
-	$ml_name_error   = sprintf("%s-%s",$ml_name,"error",$ml_domain);
+	$ml_name_admin   = sprintf("%s-%s",$ml_name,"admin",  $ml_domain);
+	$ml_name_ctl     = sprintf("%s-%s",$ml_name,"ctl",    $ml_domain);
+	$ml_name_error   = sprintf("%s-%s",$ml_name,"error",  $ml_domain);
 	$ml_name_request = sprintf("%s-%s",$ml_name,"request",$ml_domain);
 
 	# post is exceptional.
@@ -68,9 +68,9 @@ sub adjust_params_for_virtual_domain
     }
     else {
 	# virtual domain case
-	$ml_name_admin   = sprintf("%s-%s=%s",$ml_name,"admin",$ml_domain);
-	$ml_name_ctl     = sprintf("%s-%s=%s",$ml_name,"ctl",$ml_domain);
-	$ml_name_error   = sprintf("%s-%s=%s",$ml_name,"error",$ml_domain);
+	$ml_name_admin   = sprintf("%s-%s=%s",$ml_name,"admin",  $ml_domain);
+	$ml_name_ctl     = sprintf("%s-%s=%s",$ml_name,"ctl",    $ml_domain);
+	$ml_name_error   = sprintf("%s-%s=%s",$ml_name,"error",  $ml_domain);
 	$ml_name_request = sprintf("%s-%s=%s",$ml_name,"request",$ml_domain);
 
 	# post is exceptional.
@@ -85,7 +85,7 @@ sub adjust_params_for_virtual_domain
 }
 
 
-# Descriptions: create $ml_home_dir if needed
+# Descriptions: create $ml_home_dir if needed.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
 #               HASH_REF($command_args)
@@ -103,19 +103,21 @@ sub init_ml_home_dir
     }
 
     # $ml_home_dir/etc/mail
-    my $dirlist = $config->get_as_array_ref('newml_command_init_public_directories');
+    my $dirlist = 
+	$config->get_as_array_ref('newml_command_init_public_directories');
     for my $_dir (@$dirlist) {
 	unless (-d $_dir) {
 	    $curproc->ui_message("creating $_dir");
-	    $curproc->mkdir( $_dir, "mode=public");
+	    $curproc->mkdir($_dir, "mode=public");
 	}
     }
 
-    $dirlist = $config->get_as_array_ref('newml_command_init_private_directories');
+    $dirlist =
+	$config->get_as_array_ref('newml_command_init_private_directories');
     for my $_dir (@$dirlist) {
 	unless (-d $_dir) {
 	    $curproc->ui_message("creating $_dir");
-	    $curproc->mkdir( $_dir, "mode=private");
+	    $curproc->mkdir($_dir, "mode=private");
 	}
     }
 }
@@ -141,7 +143,7 @@ sub install_template_files
     use File::Spec;
     for my $file (@$templ_files) {
 	my $src = File::Spec->catfile($template_dir, $file);
-	my $dst = File::Spec->catfile($ml_home_dir, $file);
+	my $dst = File::Spec->catfile($ml_home_dir,  $file);
 
 	$curproc->ui_message("creating $dst");
 	$self->_install($src, $dst, $params);
@@ -160,7 +162,7 @@ sub install_template_files
 }
 
 
-# Descriptions: update aliases entry
+# Descriptions: update alias entries.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
 #               HASH_REF($command_args)
@@ -191,8 +193,8 @@ sub update_aliases
 		use FML::MTA::Control;
 		my $obj = new FML::MTA::Control;
 		my $found = $obj->find_key_in_alias_maps($curproc, $params, {
-		    mta_type   => $mta,
-		    key        => $ml_name,
+		    mta_type => $mta,
+		    key      => $ml_name,
 		});
 
 		# we need to use the original $params here
@@ -218,7 +220,7 @@ sub update_aliases
 }
 
 
-# Descriptions: $alias file has an $ml_name entry or not
+# Descriptions: check if $alias file has an $ml_name entry or not.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params) STR($ml_name)
 # Side Effects: none
 # Return Value: NUM( 1 or 0 )
@@ -264,7 +266,7 @@ sub is_mta_alias_maps_has_ml_entry
 }
 
 
-# Descriptions: set up ~fml/public_html/ for this mailing list
+# Descriptions: set up ~fml/public_html/ for this mailing list.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
 #               HASH_REF($command_args)
@@ -389,7 +391,7 @@ sub setup_cgi_interface
 }
 
 
-# Descriptions: install $dst with variable expansion of $src
+# Descriptions: install $dst with variable expansion of $src.
 #    Arguments: OBJ($self) STR($src) STR($dst) HASH_REF($config)
 # Side Effects: create $dst
 # Return Value: none
@@ -397,6 +399,7 @@ sub _install
 {
     my ($self, $src, $dst, $config) = @_;
 
+    # XXX-TODO: method-ify.
     eval q{
 	use FML::Config::Convert;
 	&FML::Config::Convert::convert_file($src, $dst, $config);
@@ -430,12 +433,12 @@ sub setup_listinfo
 
       FILE:
 	while (defined($file = $dh->read)) {
-	    next FILE if $file =~ /^\./;
-	    next FILE if $file =~ /^CVS/;
+	    next FILE if $file =~ /^\./o;
+	    next FILE if $file =~ /^CVS/o;
 
 	    use File::Spec;
-	    my $src   = File::Spec->catfile($template_dir, $file);
-	    my $dst   = File::Spec->catfile($listinfo_dir, $file);
+	    my $src = File::Spec->catfile($template_dir, $file);
+	    my $dst = File::Spec->catfile($listinfo_dir, $file);
 
 	    $curproc->ui_message("creating $dst");
 	    $self->_install($src, $dst, $params);
@@ -444,12 +447,12 @@ sub setup_listinfo
 }
 
 
-=head1 REMOVE
+=head1 ML REMOVE
 
 =cut
 
 
-# Descriptions: remove $ml_home_dir and update aliases if needed
+# Descriptions: remove $ml_home_dir and update aliases if needed.
 #    Arguments: OBJ($self)
 #               OBJ($curproc)
 #               HASH_REF($command_args)
