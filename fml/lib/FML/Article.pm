@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Article.pm,v 1.24 2001/10/27 04:11:29 fukachan Exp $
+# $FML: Article.pm,v 1.25 2001/11/18 06:40:16 fukachan Exp $
 #
 
 package FML::Article;
@@ -45,7 +45,7 @@ message $curproc->{ incoming_message }.
 
 
 # Descriptions: constructor
-#    Arguments: $self $curproc
+#    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: none
 # Return Value: FML::Article object
 sub new
@@ -62,7 +62,7 @@ sub new
 
 
 # Descriptions: prepare article template to distribute
-#    Arguments: $self $curproc
+#    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: build $curproc->{ article }
 # Return Value: none
 sub _setup_article_template
@@ -93,7 +93,7 @@ This routine uses C<File::Sequence> module.
 
 
 # Descriptions: determine article id (sequence number)
-#    Arguments: $self
+#    Arguments: OBJ($self)
 # Side Effects: record the current article sequence number
 # Return Value: number (sequence identifier)
 sub increment_id
@@ -122,7 +122,7 @@ return the current article sequence number.
 =cut
 
 # Descriptions: return the article id (sequence number)
-#    Arguments: $self
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: number (sequence number)
 sub id
@@ -143,7 +143,7 @@ If the variable C<$use_spool> is 'yes', this routine works.
 
 
 # Descriptions: spool in the article
-#    Arguments: $self $curproc
+#    Arguments: OBJ($self) NUM($id)
 # Side Effects: 
 # Return Value: none
 sub spool_in
@@ -186,6 +186,11 @@ sub spool_in
 =cut
 
 
+# Descriptions: scan the spool_dir and get max number among files in it
+#               It must be the max (latest) article number in its folder.
+#    Arguments: OBJ($curproc) STR($spool_dir)
+# Side Effects: none
+# Return Value: NUM(sequence number) or undef
 sub speculate_max_id
 {
     my ($curproc, $spool_dir) = @_;

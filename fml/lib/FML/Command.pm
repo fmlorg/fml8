@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Command.pm,v 1.12 2001/10/17 10:24:25 fukachan Exp $
+# $FML: Command.pm,v 1.13 2001/11/08 03:37:33 fukachan Exp $
 #
 
 package FML::Command;
@@ -44,6 +44,10 @@ C<FML::Command::command>.
 =cut
 
 
+# Descriptions: ordinary constructor
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self) = @_;
@@ -53,9 +57,17 @@ sub new
 }
 
 
+# Descriptions: ordinary destructor
+#    Arguments: none
+# Side Effects: none
+# Return Value: none
 sub DESTROY { ;}
 
 
+# Descriptions: run FML::Command::XXX:YYY()
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: load appropriate module
+# Return Value: none
 sub AUTOLOAD
 {
     my ($self, $curproc, $command_args) = @_;
@@ -106,6 +118,11 @@ return 1 by default (almost all command requires lock).
 
 =cut
 
+
+# Descriptions: we need lock or not
+#    Arguments: OBJ($self) STR($mode) STR($comname)
+# Side Effects: none
+# Return Value: 1 / 0 / undef
 sub require_lock
 {
     my ($self, $mode, $comname) = @_;

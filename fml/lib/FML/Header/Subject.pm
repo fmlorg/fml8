@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Subject.pm,v 1.20 2001/10/08 23:28:27 fukachan Exp $
+# $FML: Subject.pm,v 1.21 2001/11/26 08:41:36 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -36,9 +36,9 @@ constructor.
 
 
 # Descriptions: constructor
-#    Arguments: $self
+#    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: object
+# Return Value: OBJ
 sub new
 {
     my ($self) = @_;
@@ -56,8 +56,9 @@ replace the subject with the newer content.
 
 =cut
 
+
 # Descriptions: add or rewrite the subject tag
-#    Arguments: $self $header $config $args
+#    Arguments: OBJ($self) OBJ($header) OBJ($config) HASH_REF($args)
 # Side Effects: the header subject is rewritten
 # Return Value: none
 sub rewrite_subject_tag
@@ -86,10 +87,10 @@ sub rewrite_subject_tag
 
 
 # Descriptions: remove tag-like string
-#    Arguments: $subject $args
+#    Arguments: STR($subject) STR($tag)
 #               XXX non OO type function
 # Side Effects: none
-# Return Value: subject string
+# Return Value: STR(subject string)
 sub _delete_subject_tag
 {
     my ($subject, $tag) = @_;
@@ -108,10 +109,11 @@ build a regular expression to trap C<$string>.
 
 =cut
 
+
 # Descriptions: wrapper for _regexp_compile
-#    Arguments: $self $args
+#    Arguments: OBJ($self) STR($string)
 # Side Effects: none
-# Return Value: string (regular expression)
+# Return Value: STR(regular expression)
 sub regexp_compile
 {
     my ($self, $string) = @_;
@@ -121,10 +123,11 @@ sub regexp_compile
 
 # Descriptions: create regexp for a subject tag, for example
 #               "[%s %05d]" => "\[\S+ \d+\]"
-#    Arguments: a subject tag string
-#               XXX non OO type function
+#               not OO style.
+#    Arguments: STR($s)
+#               $s == a subject tag string
 # Side Effects: none
-# Return Value: a regexp for the given tag
+# Return Value: STR(a regexp for the given tag)
 sub _regexp_compile
 {
     my ($s) = @_;
@@ -155,7 +158,7 @@ Now we can trap Japanese specific keywords.
 
 
 # Descriptions: speculate $subject looks a reply message or not?
-#    Arguments: $self $subject
+#    Arguments: OBJ($self) STR($subject)
 # Side Effects: none
 # Return Value: 1 (looks reply message) or 0
 sub is_reply
@@ -175,9 +178,9 @@ sub is_reply
 
 
 # Descriptions: cut off reply keywords like "Re:"
-#    Arguments: $self $r_subject
+#    Arguments: OBJ($self) STR_REF($r_subject)
 #               $r_subject is SCALAR REREFENCE to the subject string
-# Side Effects: none
+# Side Effects: $r_subject is rewritten
 # Return Value: none
 sub _cut_off_reply
 {
