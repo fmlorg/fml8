@@ -1,0 +1,161 @@
+<!--
+   $FML: ticket.sgml,v 1.1 2001/06/10 12:58:30 fukachan Exp $
+-->
+
+<chapter id="ticketsystem.pmtools.summary">
+	<title>
+	Problem Report 関連ツールのまとめ
+	</title>
+
+<para>
+bug tracking システムとチケットシステムは微妙に目的が違うと思うが、
+ここでは広く problem report という観点でまとめてみようとおもう。
+</para>
+
+<para>
+<ulink url="http://www.daveeaton.com/scm/PMTools.html">
+http://www.daveeaton.com/scm/PMTools.html
+</ulink>
+に FAQ がある。
+	<footnote>
+	<para>
+	<ulink url="http://www.iac.honeywell.com/Pub/Tech/CM/PMTools.html">
+	http://www.iac.honeywell.com/Pub/Tech/CM/PMTools.html
+	</ulink>
+	に昔あった？
+	</para>
+	</footnote>
+特に売りもの一覧についてはここをまず見られたい。
+Free のものもいくつかある。
+最も有名なものは GNATS かもしれないが、
+<screen>
+Bugzilla 
+jitterbug
+</screen>
+などが有名だろうか？ 
+debuggs (Debian Bug Tracking System)
+や OpenTrack PTS WREK Wreq (?) などというのもある。
+どちらかというと有名なものは特定のプロジェクトと bind されていて
+そこから派生したという趣があるようにおもえる。
+</para>
+
+
+<sect1>
+	<title>
+	Call Tracking と Problem Tracking
+	</title>
+
+<para>
+Call Tracking は主にお客からの問題の指摘についての扱いであり
+人の割り当てとステータス管理とレポートを行なう必要がある。
+</para>
+
+<para>
+一方 Problem Tracking は
+開発プロセスの管理などであり、
+その管理対象には
+タスクやさまざまな統計やレポートだけでなく、
+インテグレーションやそのテストまでも含まれうる。
+</para>
+
+<para>
+なお Configuration Management という単語も Problem Tracking の
+近隣に位置するが、これは CVS などのツール系のことである。
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	status で使われる単語の例
+	</title>
+
+<para>
+たとえば GNATS では
+<screen>
+open
+analyzed
+feedback
+closed
+suspended
+</screen>
+他の例では
+<screen>
+NEW
+ASSIGNED
+REOPENED
+RESOLVED
+VERIFIED
+CLOSED
+</screen>
+などもある。
+</para>
+
+<para>
+jitterbug だと
+<screen>
+all
+pending
+replied
+unreplied
+</screen>
+にあたるのかな?(でいいのか?)
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	Jitterbug
+	</title>
+
+<para>
+<ulink url="http://samba.anu.edu.au/jitterbug/">
+http://samba.anu.edu.au/jitterbug/
+</ulink>
+を参照。
+割と simple is best 指向なものといえるだろうか。
+WWW インターフェイスのみ。
+(URL みりゃわかるとおり)
+もともとは samba の bug tracking をする目的からスタート。
+</para>
+
+
+<sect1>
+	<title>
+	Call Center, Bug Tracking and Project Management Tools for Linux
+	</title>
+
+<para>
+<ulink url="http://linas.org/linux/pm.html">
+http://linas.org/linux/pm.html
+</ulink>
+</para>
+
+<para>
+すみません、まだ、よくみてないす。
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	Perforce Defect Tracking Integration Project
+	</title>
+
+<para>
+<ulink url="http://www.ravenbrook.com/project/p4dti/">
+http://www.ravenbrook.com/project/p4dti/
+</ulink>
+</para>
+
+<para>
+すみません、まだ、よくみてないす。
+</para>
+
+</sect1>
+
+</chapter>
