@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.4 2001/10/14 00:44:13 fukachan Exp $
+# $FML: get.pm,v 1.5 2001/12/22 09:21:03 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
@@ -24,36 +24,51 @@ FML::Command::Admin::get - get arbitrary file in $ml_home_dir
 
 =head1 SYNOPSIS
 
-not yet implemented
+   ... NOT IMPLEMENTED ...
+
+See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
+
+get arbitrary file in $ml_home_dir
 
 =head1 METHODS
 
 =cut
 
 
+# Descriptions: send file in $ml_home_dir
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: none
+# Return Value: none
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $command     = $command_args->{ 'command' };
     my $config      = $curproc->{ 'config' };
     my $ml_home_dir = $config->{ ml_home_dir };
+    my $options     = $command_args->{ options };
 
-    use File::Spec;
-    my $file = File::Spec->catfile($ml_home_dir, $f);
+    for my $f (@$options) {
+	use File::Spec;
+	my $file = File::Spec->catfile($ml_home_dir, $f);
 
-    if (-f $file) {
-	$command_args->{ _file_to_send } = $file;
-	$self->send_file($curproc, $command_args);
-    }
-    else {
-	$curproc->reply_message_nl('error.no_such_file',
-				   "no such file $file",
-				   {
-				       _arg_file => $f,
-				   });
-	croak("no such file $file");
+	print STDERR "send back $file (debug)\n";
+
+	next;
+
+	if (-f $file) {
+	    $command_args->{ _file_to_send } = $file;
+	    $self->send_file($curproc, $command_args);
+	}
+	else {
+	    $curproc->reply_message_nl('error.no_such_file',
+				       "no such file $file",
+				       {
+					   _arg_file => $f,
+				       });
+	    croak("no such file $file");
+	}
     }
 }
 
