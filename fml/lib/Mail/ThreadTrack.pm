@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.19 2001/11/17 04:03:37 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.20 2001/11/19 08:47:27 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -315,6 +315,29 @@ sub get_fd
 {
     my ($self) = @_;
     return $self->{ _mode };
+}
+
+
+=head2 set_order( $order )
+
+set thread listing order where $order is 'normal' or 'reverse'.
+
+=cut
+
+
+sub set_order
+{
+    my ($self, $order) = @_;
+
+    if ((defined $order) && $order eq 'normal') {
+	$self->{ _config }->{ reverse_order } = 0;
+    }
+    elsif ((defined $order) && $order eq 'reverse') {
+	$self->{ _config }->{ reverse_order } = 1;
+    }
+    else {
+	warn("set_order eats unknown order $order");
+    }
 }
 
 
