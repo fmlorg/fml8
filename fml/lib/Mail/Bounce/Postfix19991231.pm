@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Postfix19991231.pm,v 1.4 2001/04/12 14:07:40 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.5 2001/05/05 06:23:05 fukachan Exp $
 #
 
 
@@ -45,7 +45,7 @@ Mail::Bounce::Postfix19991231 - Postfix-19991231 error message format parser
 sub analyze
 {
     my ($self, $msg, $result) = @_;
-    my $data_type = $msg->message_data_type;
+    my $data_type = $msg->get_data_type();
 
     if ($data_type =~ /multipart/i) {
 	$self->_analyze_broken_dsn($msg, $result);
