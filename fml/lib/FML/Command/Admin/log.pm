@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.17 2003/08/29 15:33:59 fukachan Exp $
+# $FML: log.pm,v 1.18 2003/10/06 10:46:47 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -124,6 +124,8 @@ sub _show_log
 	my $s = '';
 	$maxline -= $last_n_lines;
 
+	if ($is_cgi) { print $wh "<pre>\n";}
+
 	# show the last $last_n_lines lines by default.
 	my $buf;
       LINE:
@@ -134,12 +136,15 @@ sub _show_log
 
 	    if ($is_cgi) {
 		print $wh (_html_to_text($s));
+		print $wh "\n";
 	    }
 	    else {
 		print $wh $s;
 	    }
 	}
 	$fh->close;
+
+	if ($is_cgi) { print $wh "</pre>\n";}
     }
 }
 
@@ -156,7 +161,7 @@ sub _html_to_text
 	use HTML::FromText;
     };
     unless ($@) {
-	return text2html($str, urls => 1, pre => 1);
+	return text2html($str, urls => 1, pre => 0);
     }
     else {
 	croak($@);
