@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SMTP.pm,v 1.6 2001/06/02 12:38:21 fukachan Exp $
+# $FML: SMTP.pm,v 1.7 2001/07/08 13:37:22 fukachan Exp $
 #
 
 
@@ -187,6 +187,8 @@ sub _read_reply
 	alarm( $self->{_default_io_timeout} );
 	my $buf = '';
 
+	croak("socket is not connected") unless $socket->connected;
+
       SMTP_REPLY:
 	while (1) {
 	    $buf = $socket->getline;
@@ -247,8 +249,11 @@ sub _connect
     my $mta = $args->{'_mta'} || '127.0.0.1:25';
     my $socket;
 
+    $self->error_clear;
+
     # 1. try to connect(2) $args->{ _mta } by IPv6 if we can use Socket6.
     if ($self->is_ipv6_ready($args)) {
+	Log("try mta=$args->{_mta} by IPv6");
 	$self->connect6($args);
 	my $socket = $self->{_socket};
 	return $socket if defined $socket;
@@ -256,6 +261,8 @@ sub _connect
     else {
 	Log("IPv6 is not ready");
     }
+
+    $self->error_clear;
 
     # 2. try to connect(2) $args->{ _mta } by IPv4.
     #    XXX check the _mta syntax.
@@ -266,7 +273,8 @@ sub _connect
 	return undef;
     }
     else {
-	$self->connect4($args);
+	Log("try mta=$args->{_mta} by IPv4");
+	return $self->connect4($args);
     }
 }
 
@@ -455,6 +463,8 @@ sub deliver
 	    # we used all MTA candidates. We reuse @mta again.
 	    if ($n_mta == 0) { 
 		Log("(debug) we used all MTA candidates. reuse \$mta");
+		my (@c) = keys %used_mta;
+		Log("(debug) candidates = (@c)");
 		undef %used_mta;
 		next MTA_RETRY_LOOP;
 	    }
@@ -502,7 +512,10 @@ sub _deliver
     # 0. create BSD SOCKET as the communication terminal
     #    IF_ERROR_FOUND: do nothing and return as soon as possible
     my $socket = $self->_connect($args);
-    $socket || return;
+    unless (defined($socket) && $socket->connected) {
+	Log("cannot connected");
+	return undef;
+    }
 
     # 1. receive the first "220 .." message
     #    If you faces some error in this stage, you have to do nothing 
