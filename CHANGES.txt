@@ -1,6 +1,20 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/04/22
+
+   FML::Process::CGI::Kernel 
+	sort ml list
+	
+   FML::Command::HTMLify 
+	bug fix subdirs sorting algorithm
+	
+   Mail::Message::Spool 
+	check value of $args->{ use_subdir }
+	
+   FML::Article 
+	error if the article already exists
+
 2002/04/21
 
    FML::Command::Admin::newml 
@@ -2130,4 +2144,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.67 2002/04/14 14:48:19 fukachan Exp $
+$FML: CHANGES.txt,v 1.68 2002/04/21 14:07:10 fukachan Exp $
