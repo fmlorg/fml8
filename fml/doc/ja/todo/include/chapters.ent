@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.9 2001/05/17 04:00:44 fukachan Exp $
+   $FML: chapters.ent,v 1.1.1.1 2001/05/19 05:14:57 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -21,6 +21,7 @@
 <!entity sect.terms SYSTEM "include/terms.sgml">
 
 
-<!-- overview: introduction 〜 インストール、テストまで -->
+<!-- chapters -->
 <!entity chapter.merge    SYSTEM "merge.sgml">
-<!entity chapter.todo     SYSTEM "todo.sgml">
+<!entity chapter.fml5     SYSTEM "devel.sgml">
+<!entity chapter.fml4     SYSTEM "fml.sgml">
