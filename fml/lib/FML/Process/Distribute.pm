@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.66 2002/03/30 13:48:26 fukachan Exp $
+# $FML: Distribute.pm,v 1.67 2002/03/31 03:39:14 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -107,9 +107,28 @@ sub verify_request
 
     $curproc->verify_sender_credential();
     $curproc->simple_loop_check();
+    $curproc->_check_filter($args);
 
     $eval = $config->get_hook( 'distribute_verify_request_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+}
+
+
+sub _check_filter
+{
+    my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
+
+    use FML::Filter;
+    my $filter = new FML::Filter;
+    $filter->check($curproc, $args);
+
+    # filter traps this message.
+    if ($filter->error()) {
+	# we should stop this process ASAP.
+	$curproc->refuse_further_processing();
+	Log("mail loop detected");
+    }
 }
 
 
@@ -141,13 +160,16 @@ sub run
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
     $curproc->lock();
-    {
+    unless ($curproc->is_refused()) {
 	if ($curproc->permit_post($args)) {
 	    $curproc->_distribute($args);
 	}
 	else {
 	    Log("deny article submission");
 	}
+    }
+    else {
+	LogError("ignore this request.");
     }
     $curproc->unlock();
 

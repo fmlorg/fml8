@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.81 2002/03/17 06:24:31 fukachan Exp $
+# $FML: Kernel.pm,v 1.82 2002/03/31 12:11:26 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -368,6 +368,8 @@ sub simple_loop_check
     }
 
     if ($match) {
+	# we should stop this process ASAP.
+	$curproc->refuse_further_processing();
 	Log("mail loop detected for $match");
     }
 }
@@ -508,6 +510,38 @@ sub _check_resitrictions
 	    LogWarn("unknown rule=$rule");
 	}
     }
+}
+
+
+=head2 refuse_further_processing($reason)
+
+Set "we should refuse this processing now" flag.
+We should stop this process as soon as possible.
+
+=head2 is_refused()
+
+We should stop this process as soon as possible due to something
+invalid conditions by such as filtering.
+
+=cut
+
+
+sub refuse_further_processing
+{
+    my ($curproc, $reason) = @_;
+    $curproc->{ __this_process_is_invalid } = 1;
+}
+
+
+sub is_refused
+{
+    my ($curproc, $reason) = @_;
+
+    if (defined $curproc->{ __this_process_is_invalid }) {
+	return $curproc->{ __this_process_is_invalid };
+    }
+
+    return 0;
 }
 
 
