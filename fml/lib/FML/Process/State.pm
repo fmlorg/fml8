@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.11 2004/06/24 10:40:25 fukachan Exp $
+# $FML: State.pm,v 1.12 2004/06/25 05:09:09 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -17,7 +17,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::Process::State - interface to handle states within this process
+FML::Process::State - interface to handle states within current process.
 
 =head1 SYNOPSIS
 
@@ -171,7 +171,7 @@ sub restriction_state_reply_reason
 =cut
 
 
-# Descriptions: get the current article id on this process.
+# Descriptions: set the current article id on current process.
 #    Arguments: OBJ($curproc) NUM($id)
 # Side Effects: update pcb.
 # Return Value: NUM
@@ -184,7 +184,7 @@ sub set_article_id
 }
 
 
-# Descriptions: get the current article id on this process.
+# Descriptions: get the current article id on current process.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: NUM
@@ -301,15 +301,15 @@ sub _build_command_context_template
 sub _command_string_clean_up
 {
     my ($curproc, $buf) = @_;
-    my $config         = $curproc->config();
-    my $confirm_prefix = $config->{ confirm_command_prefix };
+    my $config          = $curproc->config();
+    my $confirm_prefix  = $config->{ confirm_command_prefix };
 
     $buf =~ s/^\W+$confirm_prefix/$confirm_prefix/;
     return $buf;
 }
 
 
-# Descriptions: declare the current $ml_name.
+# Descriptions: set the current $ml_name.
 #    Arguments: OBJ($curproc) STR($ml_name)
 # Side Effects: update pcb.
 # Return Value: STR
@@ -399,6 +399,7 @@ sub command_context_set_need_confirm
     my ($curproc) = @_;
     my $pcb = $curproc->pcb();
 
+    # XXX-TODO: correct ? this flag is universal over plural ML's.
     $pcb->set("process_command", "need_confirm", 1);
 }
 
@@ -414,11 +415,13 @@ sub command_context_get_need_confirm
     my ($curproc) = @_;
     my $pcb = $curproc->pcb();
 
+    # XXX-TODO: correct ? this flag is universal over plural ML's.
     return( $pcb->get("process_command", "need_confirm") || 0 );
 }
 
 
-# Descriptions: remote administrator is authenticated.
+# Descriptions: remote administrator is authenticated. 
+#               state is ml specific.
 #    Arguments: OBJ($curproc)
 # Side Effects: update pcb.
 # Return Value: NUM
@@ -434,6 +437,7 @@ sub command_context_set_admin_auth
 
 
 # Descriptions: check if remote administrator is authenticated.
+#               state is ml specific.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: NUM

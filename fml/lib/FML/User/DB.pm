@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.5 2004/01/21 03:55:12 fukachan Exp $
+# $FML: DB.pm,v 1.6 2004/04/27 13:30:51 fukachan Exp $
 #
 
 package FML::User::DB;
@@ -24,7 +24,7 @@ my $default_expire_period = 30*24*3600;
 
 =head1 NAME
 
-FML::User::DB - maintain data with expiration.
+FML::User::DB - maintain user database with expiration.
 
 =head1 SYNOPSIS
 
@@ -42,6 +42,8 @@ FML::User::DB - maintain data with expiration.
 =head1 METHODS
 
 =head2 C<new()>
+
+constructor.
 
 =cut
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.58 2004/03/18 13:26:47 fukachan Exp $
+# $FML: Credential.pm,v 1.59 2004/04/27 13:28:06 fukachan Exp $
 #
 
 package FML::Credential;
@@ -22,7 +22,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::Credential - functions to authenticate the mail sender
+FML::Credential - functions to authenticate the mail sender.
 
 =head1 SYNOPSIS
 
@@ -35,7 +35,7 @@ FML::Credential - functions to authenticate the mail sender
 =head1 DESCRIPTION
 
 a collection of utilitity functions to authenticate the sender of the
-message which kicks off this proces
+message which kicks off this proces.
 
 =head2 User credential information
 

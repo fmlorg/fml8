@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: merge.pm,v 1.3 2004/03/17 06:06:42 fukachan Exp $
+# $FML: mergeml.pm,v 1.1 2004/03/18 10:20:28 fukachan Exp $
 #
 
 package FML::Command::Admin::mergeml;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::mergeml - top level dispather of configuration merge
+FML::Command::Admin::mergeml - top level dispather of configuration merge.
 
 =head1 SYNOPSIS
 
@@ -27,7 +27,7 @@ FML::Command::Admin::mergeml - top level dispather of configuration merge
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -40,7 +40,7 @@ sub new
 }
 
 
-# Descriptions: not need lock in the first time
+# Descriptions: not need lock in the first time.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
@@ -67,12 +67,12 @@ sub process
     my $owner          = $config->{ newml_command_ml_admin_default_address }||
 			 $curproc->fml_owner();
     my $params         = {
-	ml_name     => $ml_name,
-	ml_domain   => $ml_domain,
-	ml_home_dir => $ml_home_dir,
+	ml_name        => $ml_name,
+	ml_domain      => $ml_domain,
+	ml_home_dir    => $ml_home_dir,
 
 	# old ml_home_dir path (e.g. /var/spool/ml/elena).
-	src_dir     => $src_dir,
+	src_dir        => $src_dir,
     };
 
 

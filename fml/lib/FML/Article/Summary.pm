@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.20 2004/03/04 10:18:40 fukachan Exp $
+# $FML: Summary.pm,v 1.21 2004/04/23 04:10:26 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -15,7 +15,7 @@ use Mail::Message::Date;
 
 =head1 NAME
 
-FML::Article::Summary - generate article summary
+FML::Article::Summary - generate article summary.
 
 =head1 SYNOPSIS
 
@@ -25,12 +25,12 @@ FML::Article::Summary - generate article summary
 
 =head2 new()
 
-standard constructor.
+constructor.
 
 =cut
 
 
-# Descriptions: standard constructor.
+# Descriptions: constructor.
 #    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: $self->{ _curproc } = $curproc;
 # Return Value: OBJ
@@ -46,9 +46,9 @@ sub new
 }
 
 
-# Descriptions: append summary to $article_summary_file
+# Descriptions: append summary to $article_summary_file.
 #    Arguments: OBJ($self) HANDLE($wh) NUM($id)
-# Side Effects: append summary to $article_summary_file
+# Side Effects: update $article_summary_file file.
 # Return Value: none
 sub print
 {

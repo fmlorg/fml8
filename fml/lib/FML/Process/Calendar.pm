@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calendar.pm,v 1.12 2004/01/31 04:06:31 fukachan Exp $
+# $FML: Calendar.pm,v 1.13 2004/02/15 04:38:33 fukachan Exp $
 #
 
 package FML::Process::Calendar;
@@ -17,7 +17,7 @@ use FML::Process::Kernel;
 
 =head1 NAME
 
-FML::Process::Calendar -- demonstration of FML module usage
+FML::Process::Calendar -- demonstration of FML module usage.
 
 =head1 SYNOPSIS
 
@@ -35,7 +35,7 @@ scheduler based on Calendar::Lite class.
 
 =head2 new($args)
 
-standard constructor.
+constructor.
 
 =head2 prepare($args)
 
@@ -60,7 +60,7 @@ dummy.
 =cut
 
 
-# Descriptions: dummy constructor.
+# Descriptions: constructor.
 #               avoid the default fml new() since we do not need it.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
@@ -92,14 +92,14 @@ sub prepare
 }
 
 
-# Descriptions: dummy
+# Descriptions: dummy.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub verify_request { 1; }
 
 
-# Descriptions: dummy
+# Descriptions: dummy.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -187,7 +187,7 @@ sub run
 
 
 
-# Descriptions: show help
+# Descriptions: show help.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none

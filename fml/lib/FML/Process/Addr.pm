@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Addr.pm,v 1.17 2004/01/31 04:06:31 fukachan Exp $
+# $FML: Addr.pm,v 1.18 2004/04/23 04:10:35 fukachan Exp $
 #
 
 package FML::Process::Addr;
@@ -54,7 +54,7 @@ dummy.
 =cut
 
 
-# Descriptions: ordinary constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: OBJ
@@ -173,7 +173,7 @@ show help.
 =cut
 
 
-# Descriptions: show help
+# Descriptions: show help.
 #    Arguments: none
 # Side Effects: none
 # Return Value: none
@@ -236,7 +236,7 @@ sub _fmladdr
     my $list = $sys->get_user_list();
 
     for my $user (keys %$list) {
-	# which definition survives ? alias > user ?
+	# hmm, user is important than alias ? or not ?
 	unless (defined $aliases->{ $user }) {
 	    $aliases->{ $user } = "$user (LOCAL USER)";
 	}

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Debug.pm,v 1.8 2004/01/04 13:19:10 fukachan Exp $
+# $FML: Debug.pm,v 1.9 2004/04/27 12:54:50 fukachan Exp $
 #
 
 package FML::Process::Debug;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Process::Debug - debug tool / tiny FML::Process emulator
+FML::Process::Debug - debug tool / tiny FML::Process emulator.
 
 =head1 SYNOPSIS
 

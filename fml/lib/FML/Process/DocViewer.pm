@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.31 2004/01/31 04:06:32 fukachan Exp $
+# $FML: DocViewer.pm,v 1.32 2004/04/23 04:10:36 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -19,7 +19,7 @@ use FML::Process::Kernel;
 
 =head1 NAME
 
-FML::Process::DocViewer -- perldoc wrapper to show a fml module
+FML::Process::DocViewer -- perldoc wrapper to show a fml module.
 
 =head1 SYNOPSIS
 
@@ -40,7 +40,7 @@ See C<FML::Process::Flow> for the program flow.
 
 =head2 new($args)
 
-standard constructor.
+constructor.
 It inherits C<FML::Process::Kernel>.
 
 =head2 prepare($args)
@@ -54,7 +54,7 @@ show help unless @ARGV.
 =cut
 
 
-# Descriptions: constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: FML::Process::DocViewer object
@@ -88,7 +88,7 @@ sub prepare
 }
 
 
-# Descriptions: check @ARGV and show help if needed
+# Descriptions: check @ARGV and show help if needed.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: may exit.
 #               longjmp() to help() if appropriate.
@@ -131,16 +131,16 @@ sub run
 }
 
 
-# Descriptions: fmldoc wrapper / top level dispacher
+# Descriptions: fmldoc wrapper / top level dispacher.
 #    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub _fmldoc
 {
     my ($curproc) = @_;
-    my $config = $curproc->config();
-    my $myname = $curproc->myname();
-    my $argv   = $curproc->command_line_argv();
+    my $config    = $curproc->config();
+    my $myname    = $curproc->myname();
+    my $argv      = $curproc->command_line_argv();
 
     my $eval = $config->get_hook( 'fmldoc_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
@@ -173,7 +173,7 @@ show help.
 =cut
 
 
-# Descriptions: show help
+# Descriptions: show help.
 #    Arguments: none
 # Side Effects: none
 # Return Value: none

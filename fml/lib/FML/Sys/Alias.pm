@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Alias.pm,v 1.1 2003/03/11 09:10:18 fukachan Exp $
+# $FML: Alias.pm,v 1.2 2003/08/23 04:35:41 fukachan Exp $
 #
 
 package FML::Sys::Alias;
@@ -18,7 +18,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::Sys::Alias - get mail alias infomation on this system
+FML::Sys::Alias - get mail alias infomation on this system.
 
 =head1 SYNOPSIS
 
@@ -97,7 +97,7 @@ sub add_key
 }
 
 
-# Descriptions: expand $key
+# Descriptions: expand $key.
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: none
 # Return Value: ARRAY_REF

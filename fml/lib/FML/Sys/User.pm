@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: User.pm,v 1.1 2003/03/06 09:26:28 fukachan Exp $
+# $FML: User.pm,v 1.2 2003/08/23 04:35:42 fukachan Exp $
 #
 
 package FML::Sys::User;
@@ -16,7 +16,7 @@ use Config;
 
 =head1 NAME
 
-FML::Sys::User - get user infomation on this system
+FML::Sys::User - get user infomation on this system.
 
 =head1 SYNOPSIS
 

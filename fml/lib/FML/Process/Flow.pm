@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Flow.pm,v 1.25 2004/01/04 03:25:09 fukachan Exp $
+# $FML: Flow.pm,v 1.26 2004/05/25 03:35:16 fukachan Exp $
 #
 
 package FML::Process::Flow;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Process::Flow - the process flow
+FML::Process::Flow - the process flow.
 
 =head1 SYNOPSIS
 
@@ -34,7 +34,7 @@ programs kicked by MTA, command line interfaces and CGI's.
     # create a new process object
     my $process = $pkg->new($args);
 
-    # XXX private method to show help ASAP
+    # XXX private method to show help ASAP.
     # XXX we need to trap here since $process object is clarified after
     # XXX $pkg->new() above.
     $process->_trap_help($args);
@@ -60,11 +60,11 @@ programs kicked by MTA, command line interfaces and CGI's.
 
 
 # Descriptions: drive top level process flow
-#               1. initialize processes and load configurations from *.cf
+#               1. initialize processes and load configurations from *.cf,
 #                  switch to each process according with $0 and @ARGV.
-#               2. parse the incoming message(mail)
-#               3. start the main transaction
-#                  lock, execute main routine, unlock
+#               2. parse the incoming message(mail).
+#               3. start the main transaction.
+#                  lock, execute main routine, unlock, ...
 #               4. inform error messages, clean up and more ...
 #    Arguments: OBJ($pkg) HASH_REF($args)
 # Side Effects: ProcessSwtich() is exported to main:: Name Space.

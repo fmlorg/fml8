@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.64 2004/03/13 11:46:32 fukachan Exp $
+# $FML: Configure.pm,v 1.65 2004/04/23 04:10:36 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -19,7 +19,7 @@ use FML::Process::Kernel;
 
 =head1 NAME
 
-FML::Process::Configure -- makefml main functions
+FML::Process::Configure -- makefml main functions.
 
 =head1 SYNOPSIS
 
@@ -140,7 +140,8 @@ sub run
 }
 
 
-# Descriptions: dummy.
+# Descriptions: send if --allow-send-message or --allow-reply-message
+#               option specified.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -234,7 +235,7 @@ _EOF_
 }
 
 
-# Descriptions: show help usage
+# Descriptions: show help usage.
 #    Arguments: STR($name)
 # Side Effects: none
 # Return Value: none
@@ -260,7 +261,7 @@ _EOF_
 =head2 _makefml($args)
 
 switch of C<makefml> command.
-It kicks off <FML::Command::$command> corrsponding with
+It kicks off <FML::Command::$command> corresponding with
 C<@$argv> ( $argv = $args->{ ARGV } ).
 
 C<Caution:>

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Crypt.pm,v 1.4 2003/08/23 04:35:27 fukachan Exp $
+# $FML: Crypt.pm,v 1.5 2004/01/02 16:08:37 fukachan Exp $
 #
 
 package FML::Crypt;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Crypt - raw level crypt library wrapper
+FML::Crypt - raw level crypt library wrapper.
 
 =head1 SYNOPSIS
 
@@ -53,7 +53,7 @@ sub new
 # XXX-TODO: $str = FML::String; $str->unix_crypt(); ???
 
 
-# Descriptions: unix crypt(3).
+# Descriptions: raw level unix crypt(3) interface.
 #    Arguments: OBJ($self) STR($text) STR($salt)
 # Side Effects: none
 # Return Value: STR

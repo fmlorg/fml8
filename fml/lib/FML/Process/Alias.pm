@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Alias.pm,v 1.18 2004/01/31 04:06:31 fukachan Exp $
+# $FML: Alias.pm,v 1.19 2004/04/23 04:10:35 fukachan Exp $
 #
 
 package FML::Process::Alias;
@@ -54,7 +54,7 @@ dummy.
 =cut
 
 
-# Descriptions: ordinary constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: OBJ

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.29 2004/01/31 04:06:32 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.30 2004/04/23 04:10:36 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -16,7 +16,7 @@ use FML::Process::Kernel;
 
 =head1 NAME
 
-FML::Process::ConfViewer -- show configuration variables
+FML::Process::ConfViewer -- show configuration variables.
 
 =head1 SYNOPSIS
 
@@ -34,7 +34,7 @@ FML::Process::ConfViewer provides the main function for C<fmlconf>.
 
 =head2 new($args)
 
-ordinary constructor.
+constructor.
 It make a C<FML::Process::Kernel> object and return it.
 
 =head2 prepare($args)
@@ -48,7 +48,7 @@ show help unless @ARGV.
 =cut
 
 
-# Descriptions: ordinary constructor
+# Descriptions: constructor
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: FML::Process::ConfViewer object
@@ -125,7 +125,7 @@ the top level dispatcher for C<fmlconf>.
 =cut
 
 
-# Descriptions: just a switch, call _fmlconf()
+# Descriptions: just a switch, call _fmlconf().
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -157,7 +157,7 @@ show help.
 =cut
 
 
-# Descriptions: show help
+# Descriptions: show help.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none

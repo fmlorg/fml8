@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Parse.pm,v 1.32 2004/04/23 04:10:27 fukachan Exp $
+# $FML: Parse.pm,v 1.33 2004/04/23 04:15:57 fukachan Exp $
 #
 
 package FML::Parse;
@@ -18,7 +18,7 @@ use FML::Config;
 
 =head1 NAME
 
-FML::Parse - parse the incoming message
+FML::Parse - parse the incoming message.
 
 =head1 SYNOPSIS
 
@@ -28,7 +28,7 @@ FML::Parse - parse the incoming message
 
 FML::Parse parses the incoming message. C<new()> analyses the data
 injected from STDIN channel, by default, and split it to a set of mail
-header and body.  C<new()> returns a C<Mail::Message> object.
+header and body.  C<new()> returns a C<Mail::Message> object chain.
 
 =head1 METHODS
 
@@ -40,7 +40,7 @@ Normally C<$fd> is the handle for STDIN channel.
 =cut
 
 
-# Descriptions: parse message read from file handle $fd
+# Descriptions: parse message read from file handle $fd.
 #    Arguments: OBJ($self) OBJ($curproc) HANDLE($fd)
 # Side Effects: none
 # Return Value: OBJ
@@ -54,7 +54,7 @@ sub new
 }
 
 
-# Descriptions: parse message read from file handle $fd
+# Descriptions: parse message read from file handle $fd.
 #    Arguments: OBJ($self) OBJ($curproc) HANDLE($fd)
 # Side Effects: none
 # Return Value: OBJ
@@ -73,6 +73,7 @@ sub _parse
     my $body_size   = $msg->whole_message_body_size();
     $curproc->log("read header=$header_size body=$body_size");
 
+    # XXX-TODO: use $curproc->XXX_set_envelope_sender($address).
     if (defined $msg->envelope_sender()) {
 	my $pcb = $curproc->pcb();
 	if (defined $pcb) {

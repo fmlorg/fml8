@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.27 2004/04/23 04:10:27 fukachan Exp $
+# $FML: Mailer.pm,v 1.28 2004/05/18 00:37:32 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Mailer - utilities to send mails
+FML::Mailer - utilities for sending mails.
 
 =head1 SYNOPSIS
 
@@ -54,12 +54,12 @@ This module sends Mail::Message object(s).
 
 =head2 new()
 
-standard constructor.
+constructor.
 
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: none
 # Return Value: OBJ
