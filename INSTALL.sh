@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: INSTALL.sh,v 1.49 2002/05/21 09:22:07 fukachan Exp $
+# $FML: INSTALL.sh,v 1.50 2002/05/24 06:37:31 fukachan Exp $
 #
 
 # Run this from the top-level fml source directory.
@@ -24,7 +24,7 @@ get_fml_version () {
 
 _mkdir () {
 	local dir=$1 
-	echo mkdir $dir; 
+	echo mkdiring $dir; 
 	test -d $dir || mkdir -p $dir
 }
 
