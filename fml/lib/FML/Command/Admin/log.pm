@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.19 2003/10/07 08:58:06 fukachan Exp $
+# $FML: log.pm,v 1.20 2003/10/15 08:16:24 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -105,9 +105,7 @@ sub _show_log
     my $linecount    = 0;
     my $maxline      = 0;
     my $curproc      = $self->{ _curproc };
-    my $charset      = ($is_cgi ?
-			$curproc->get_charset("cgi") :
-			$curproc->language_default() );
+    my $charset      = $curproc->get_charset($is_cgi ? "cgi" : "log_file");
 
     use Mail::Message::Encode;
     my $obj = new Mail::Message::Encode;

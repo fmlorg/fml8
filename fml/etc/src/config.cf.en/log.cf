@@ -37,6 +37,28 @@ log_format_type	=	process[pid]
 #     Examples:
 log_dir		=	$var_dir/log
 
+
+=head2 charset
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+log_file_default_charset   =       $log_file_charset_en
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+log_file_charset_ja        =       euc-jp
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+log_file_charset_en        =       us-ascii
+
+
 =head2 domain local
 
 

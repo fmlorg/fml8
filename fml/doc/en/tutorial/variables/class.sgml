@@ -375,6 +375,9 @@ log {
           $domain_local_log_file
           $log_dir
           $log_file
+    ?     $log_file_charset_en
+    ?     $log_file_charset_ja
+    ?     $log_file_default_charset
           $log_format_type
           $log_type
           $use_log
