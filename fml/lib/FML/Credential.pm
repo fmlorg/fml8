@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.21 2002/01/27 09:25:22 fukachan Exp $
+# $FML: Credential.pm,v 1.22 2002/03/22 11:36:05 fukachan Exp $
 #
 
 package FML::Credential;
@@ -16,7 +16,7 @@ use ErrorStatus qw(errstr error error_set error_clear);
 
 =head1 NAME
 
-FML::Credential - authenticate the mail sender
+FML::Credential - functions to authenticate the mail sender
 
 =head1 SYNOPSIS
 
@@ -30,11 +30,17 @@ FML::Credential - authenticate the mail sender
 a collection of utilitity functions to authenticate the sender who
 kicks off this mail.
 
+=head2 User credential information
+
+C<%Credential> information is unique in one fml process.
+So this hash is accessible in public.
+
 =head1 METHODS
 
 =head2 C<new()>
 
-bind \%Credential to $self and return it as an object.
+bind $self to the module internal C<\%Credential> hash and return the
+has reference as an object.
 
 =cut
 
@@ -44,7 +50,7 @@ bind \%Credential to $self and return it as an object.
 #               you can access the same \%Credential through this object.
 #    Arguments: OBJ($self)
 # Side Effects: bind $self ($me) to \%Credential
-# Return Value: object
+# Return Value: OBJ
 sub new
 {
     my ($self) = @_;
@@ -95,10 +101,10 @@ are same since the last 3 top level domains are same.
 =cut
 
 
-# Descriptions: compare addresses are same.
+# Descriptions: compare whether the given addresses are same or not.
 #    Arguments: OBJ($self) STR($xaddr) STR($xaddr) NUM($max_level)
 # Side Effects: none
-# Return Value: 1 or 0
+# Return Value: NUM(1 or 0)
 sub is_same_address
 {
     my ($self, $xaddr, $yaddr, $max_level) = @_;
@@ -140,13 +146,13 @@ return 0 if not.
 # Descriptions: sender of the current process is an ML member or not.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args)
 # Side Effects: none
-# Return Value: 1 or 0
+# Return Value: NUM(1 or 0)
 sub is_member
 {
     my ($self, $curproc, $args) = @_;
-    my $status = 0;
     my $member_maps = $curproc->{ config }->{ member_maps };
     my $address = $args->{ address } || $curproc->{'credential'}->{'sender'};
+    my $status  = 0;
 
     $self->_is_member($curproc, $args, {
 	address     => $address,
@@ -158,7 +164,7 @@ sub is_member
 # Descriptions: sender of the current process is an ML administrator ?
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args)
 # Side Effects: none
-# Return Value: 1 or 0
+# Return Value: NUM(1 or 0)
 sub is_privileged_member
 {
     my ($self, $curproc, $args) = @_;
@@ -175,14 +181,15 @@ sub is_privileged_member
 # Descriptions: sender of the current process is an ML member or not.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) HASH_REF($optargs)
 # Side Effects: none
-# Return Value: 1 or 0
+# Return Value: NUM(1 or 0)
 sub _is_member
 {
     my ($self, $curproc, $args, $optargs) = @_;
-    my $address     = $optargs->{ address };
     my $member_maps = $optargs->{ member_maps };
-    my ($user, $domain) = ();
-    my $status = 0;
+    my $address     = $optargs->{ address };
+    my $status      = 0;
+    my $user        = '';
+    my $domain      = '';
 
     if (defined $address) {
 	($user, $domain) = split(/\@/, $address);
@@ -209,13 +216,12 @@ sub _is_member
 #               by is_same_address().
 #    Arguments: OBJ($self) STR($map) STR($address)
 # Side Effects: none
-# Return Value: 1 or 0
+# Return Value: NUM(1 or 0)
 sub has_address_in_map
 {
     my ($self, $map, $address) = @_;
-    my $status = 0;
-
     my ($user, $domain) = split(/\@/, $address);
+    my $status          = 0;
 
     use IO::Adapter;
     my $obj = new IO::Adapter $map;
@@ -282,10 +288,10 @@ process.
 
 =cut
 
-# Descriptions: returh the mail sender
+# Descriptions: return the mail sender
 #    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: mail address
+# Return Value: STR(mail address)
 sub sender
 {
     my ($self) = @_;
@@ -347,7 +353,13 @@ sub get_compare_level
 sub get
 {
     my ($self, $key) = @_;
-    $self->{ $key };
+
+    if (defined $self->{ $key }) {
+	return $self->{ $key };
+    }
+    else {
+	return '';
+    }
 }
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: add.pm,v 1.5 2001/12/22 16:10:51 fukachan Exp $
+# $FML: add.pm,v 1.6 2002/02/18 14:14:52 fukachan Exp $
 #
 
 package FML::Command::User::add;
@@ -38,7 +38,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-forward request to C<subscribe> module.
+forward request to C<FML::Command::User::subscribe> module.
 
 =head1 AUTHOR
 

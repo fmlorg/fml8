@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: bye.pm,v 1.5 2001/12/22 09:53:09 fukachan Exp $
+# $FML: bye.pm,v 1.6 2002/02/18 14:24:12 fukachan Exp $
 #
 
 package FML::Command::Admin::bye;
@@ -30,7 +30,7 @@ sub process
 
 =head1 NAME
 
-FML::Command::Admin::bye - remove the specified member
+FML::Command::Admin::bye - remove the specified user from ML members
 
 =head1 SYNOPSIS
 
@@ -38,7 +38,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-save as C<unsubscribe>.
+alias of C<FML::Command::Admin::unsubscribe>.
 
 =head1 AUTHOR
 

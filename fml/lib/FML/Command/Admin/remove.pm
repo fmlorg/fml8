@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: remove.pm,v 1.5 2002/02/18 14:24:12 fukachan Exp $
+# $FML: remove.pm,v 1.6 2002/02/20 14:10:37 fukachan Exp $
 #
 
 package FML::Command::Admin::remove;
@@ -38,7 +38,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-same as C<unsubscribe>.
+an alias of C<FML::Command::Admin::unsubscribe>.
 
 =head1 AUTHOR
 

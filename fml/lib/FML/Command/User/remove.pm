@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: remove.pm,v 1.6 2002/02/18 14:14:53 fukachan Exp $
+# $FML: remove.pm,v 1.7 2002/02/20 14:10:38 fukachan Exp $
 #
 
 package FML::Command::User::remove;
@@ -30,7 +30,7 @@ sub process
 
 =head1 NAME
 
-FML::Command::User::remove - remove the specified member
+FML::Command::User::remove - unsubscribe
 
 =head1 SYNOPSIS
 
@@ -38,7 +38,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-same as C<unsubscribe>.
+alias of C<FML::Command::User::unsubscribe>.
 
 =head1 AUTHOR
 

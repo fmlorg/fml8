@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: bye.pm,v 1.6 2001/12/22 09:53:09 fukachan Exp $
+# $FML: bye.pm,v 1.7 2002/02/18 14:14:52 fukachan Exp $
 #
 
 package FML::Command::User::bye;
@@ -38,7 +38,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-same as C<unsubscribe>.
+alias of C<FML::Command::User::unsubscribe>.
 
 =head1 AUTHOR
 

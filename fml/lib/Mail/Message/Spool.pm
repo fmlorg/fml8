@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #
-# $FML: Spool.pm,v 1.2 2002/03/31 02:25:44 fukachan Exp $
+# $FML: Spool.pm,v 1.3 2002/03/31 09:42:36 fukachan Exp $
 #
 
 package Mail::Message::Spool;
@@ -12,18 +12,24 @@ use Carp;
 
 =head1 NAME
 
-Mail::Message::Spool - utilities for Spool style format
+Mail::Message::Spool - utilities to handle directory such as article spool
 
 =head1 SYNOPSIS
 
    use Mail::Message::Spool;
-   my $Spool = new Mail::Message::Spool;
+   my $spool = new Mail::Message::Spool;
+   my $file  = $spool->filepath($args);
 
 =head1 DESCRIPTION
+
+C<Mail::Message::Spool> class provides utility functions to handle a
+directory such as article spool.
 
 =head1 METHODS
 
 =head2 new()
+
+standard constructor.
 
 =cut
 
@@ -43,13 +49,16 @@ sub new
 
 =head2 filepath($args)
 
-return article file path.
+return article file path.  If you use hierarchical subdirectories,
+this filepath() conversion is useful.
 
    $args = {
 	base_dir   => $base_dir,
 	id         => $id,
 	use_subdir => 0,    # 1 or 0
    };
+
+where C<base_dir> and C<id> are mandatory.
 
 =cut
 
@@ -88,6 +97,9 @@ sub filepath
 }
 
 
+#
+# test
+#
 if ($0 eq __FILE__) {
     my $obj = new Mail::Message::Spool;
 

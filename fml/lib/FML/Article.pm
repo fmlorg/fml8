@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.32 2002/03/30 15:29:42 fukachan Exp $
+# $FML: Article.pm,v 1.33 2002/03/31 02:25:42 fukachan Exp $
 #
 
 package FML::Article;
@@ -61,8 +61,8 @@ sub new
 }
 
 
-# Descriptions: prepare article template to distribute
-#    Arguments: OBJ($self) OBJ($curproc)
+# Descriptions: build an article template to distribute
+#    Arguments: OBJ($curproc)
 # Side Effects: build $curproc->{ article }
 # Return Value: none
 sub _setup_article_template
@@ -104,6 +104,8 @@ sub increment_id
     my $pcb      = $curproc->{ pcb };
     my $seq_file = $config->{ sequence_file };
 
+    # XXX we should enhance IO::Adapter module to handle
+    # XXX sequential number.
     use File::Sequence;
     my $sfh = new File::Sequence { sequence_file => $seq_file };
     my $id  = $sfh->increment_id;
@@ -149,18 +151,20 @@ If the variable C<$use_spool> is 'yes', this routine works.
 sub spool_in
 {
     my ($self, $id) = @_;
-
-    # configurations
     my $curproc   = $self->{ curproc };
     my $config    = $curproc->{ config };
     my $spool_dir = $config->{ spool_dir };
 
     if ( $config->yes( 'use_spool' ) ) {
 	unless (-d $spool_dir) {
-	    use File::Path;
-	    mkpath( $spool_dir, 0, 0700 );
+	    eval q{
+		use File::Path;
+		mkpath( $spool_dir, 0, 0700 );
+	    };
+	    LogError($@) if $@;
 	}
 
+	# translate the article path e.g. spool/1900,  spool/2/1900
 	my $file = $self->filepath($id);
 
 	use FileHandle;
@@ -204,8 +208,6 @@ sub filepath
 	base_dir => $spool_dir,
 	id       => $id,
     } );
-
-    Log("debug: spooled path = $file");
 
     return $file;
 }

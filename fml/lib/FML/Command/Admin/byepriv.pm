@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: bye.pm,v 1.5 2002/02/18 14:24:11 fukachan Exp $
+# $FML: byepriv.pm,v 1.1 2002/03/19 11:34:37 fukachan Exp $
 #
 
 package FML::Command::Admin::byepriv;
@@ -17,7 +17,7 @@ use FML::Command::Admin::byeadmin;
 @ISA = qw(FML::Command::Admin::byeadmin);
 
 
-# Descriptions: bye a new admin user
+# Descriptions: remove the specified administrator
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: forward request to byeadmin module
 # Return Value: none
@@ -29,7 +29,7 @@ sub process
 
 =head1 NAME
 
-FML::Command::Admin::bye - bye a new member
+FML::Command::Admin::bye - remove the specified administrator
 
 =head1 SYNOPSIS
 
@@ -37,7 +37,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-same as C<byeadmin>.
+an alias of C<FML::Command::Admin::byeadmin>.
 
 =head1 AUTHOR
 

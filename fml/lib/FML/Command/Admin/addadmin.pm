@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: addadmin.pm,v 1.1 2002/03/19 10:31:51 fukachan Exp $
+# $FML: addadmin.pm,v 1.2 2002/03/30 11:08:35 fukachan Exp $
 #
 
 package FML::Command::Admin::addadmin;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::addadmin - addadmin a new administrator
+FML::Command::Admin::addadmin - add a new administrator
 
 =head1 SYNOPSIS
 
@@ -23,7 +23,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-addadmin a new address.
+add a new administrator address.
 
 =head1 METHODS
 
@@ -86,7 +86,7 @@ sub process
 }
 
 
-# Descriptions: addadmin a new user
+# Descriptions: cgi menu to add a new user
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
@@ -112,7 +112,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

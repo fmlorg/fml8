@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.20 2002/02/20 11:53:22 tmu Exp $
+# $FML: Sequence.pm,v 1.21 2002/02/27 09:20:34 tmu Exp $
 #
 
 package File::Sequence;
@@ -240,7 +240,7 @@ sub search_max_id
 }
 
 
-# Descriptions: search max id number from bottom
+# Descriptions: search max id number from the bottom
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: NUM
@@ -276,46 +276,44 @@ sub _search_max_id_from_bottom
     }
 }
 
-# Descriptions: search max id number from top
+# Descriptions: search max id number from the top
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: NUM
 sub _search_max_id_from_top
 {
-	my ($self, $args) = @_;
-	my ($pebot, $k, $v);
-	my $unit = 50;
-	my $debug = 1;
+    my ($self, $args) = @_;
+    my ($pebot, $k, $v);
+    my $unit = 50;
+    my $debug = 1;
 
-	$pebot = $self->get_id();
-	print STDERR "get_id ", $pebot, "\n" if $debug;
+    $pebot = $self->get_id();
+    print STDERR "get_id ", $pebot, "\n" if $debug;
 
-	if (defined $args->{ hash }) {
-		my $hash = $args->{ hash };
+    if (defined $args->{ hash }) {
+	my $hash = $args->{ hash };
 
-		print STDERR "0. ", $pebot, "\n" if $debug;
+	print STDERR "0. ", $pebot, "\n" if $debug;
 
-		PEBOT_SEARCH:
-		while ($pebot > 0) {
-			last PEBOT_SEARCH if defined $hash->{ $pebot - $unit };
-			last PEBOT_SEARCH if(($pebot - $unit) <= 0);
-			$pebot -= $unit;
-			print STDERR "1. ", $pebot, "\n" if defined $ENV{'debug'};
-		}
-
-# decrement by 1.
-		while(! defined $hash->{ $pebot - 1 }) {
-			$pebot--;
-			return 0 if($pebot <= 0);
-			print STDERR "2. ", $pebot, "\n" if defined $ENV{'debug'};
-		}
-
-		return $pebot;
-
+      PEBOT_SEARCH:
+	while ($pebot > 0) {
+	    last PEBOT_SEARCH if defined $hash->{ $pebot - $unit };
+	    last PEBOT_SEARCH if(($pebot - $unit) <= 0);
+	    $pebot -= $unit;
 	}
-	else {
-		warn("no argument");
+
+	# decrement by 1.
+	while(! defined $hash->{ $pebot - 1 }) {
+	    $pebot--;
+	    return 0 if($pebot <= 0);
 	}
+
+	return $pebot;
+
+    }
+    else {
+	warn("no argument");
+    }
 }
 
 

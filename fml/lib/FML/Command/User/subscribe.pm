@@ -4,23 +4,19 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.10 2002/02/17 08:13:25 fukachan Exp $
+# $FML: subscribe.pm,v 1.11 2002/02/18 14:14:53 fukachan Exp $
 #
 
 package FML::Command::User::subscribe;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-
-
-
 use FML::Log qw(Log LogWarn LogError);
-
 
 
 =head1 NAME
 
-FML::Command::User::subscribe - subscribe a new member
+FML::Command::User::subscribe - subscribe
 
 =head1 SYNOPSIS
 
@@ -58,7 +54,8 @@ sub new
 sub need_lock { 1;}
 
 
-# Descriptions: subscribe adapter: confirm before subscribe
+# Descriptions: subscribe adapter.
+#               we confirm it before real subscribe process.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update database for confirmation.
 #               prepare reply message.

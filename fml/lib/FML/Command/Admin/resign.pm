@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: resign.pm,v 1.5 2001/12/22 09:53:09 fukachan Exp $
+# $FML: resign.pm,v 1.6 2002/02/18 14:24:12 fukachan Exp $
 #
 
 package FML::Command::Admin::resign;
@@ -29,7 +29,7 @@ sub process
 
 =head1 NAME
 
-FML::Command::Admin::resign - alias of "unsubscribe" command
+FML::Command::Admin::resign - remove the specified user
 
 =head1 SYNOPSIS
 

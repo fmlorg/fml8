@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: byeadmin.pm,v 1.1 2002/03/19 10:31:52 fukachan Exp $
+# $FML: byeadmin.pm,v 1.2 2002/03/30 11:08:35 fukachan Exp $
 #
 
 package FML::Command::Admin::byeadmin;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::byeadmin - remove the specified member
+FML::Command::Admin::byeadmin - remove the specified administrator
 
 =head1 SYNOPSIS
 
@@ -52,7 +52,7 @@ sub new
 sub need_lock { 1;}
 
 
-# Descriptions: byeadmin a new user
+# Descriptions: remove the specified administrator
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
@@ -86,7 +86,7 @@ sub process
 }
 
 
-# Descriptions: subscribe a new user
+# Descriptions: show cgi menu to remove the administrator
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none

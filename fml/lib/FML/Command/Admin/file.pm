@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: file.pm,v 1.1 2002/03/26 04:01:36 fukachan Exp $
+# $FML: file.pm,v 1.1 2002/03/30 10:18:34 fukachan Exp $
 #
 
 package FML::Command::Admin::file;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::file - file file operations
+FML::Command::Admin::file - functions for file operations
 
 =head1 SYNOPSIS
 
@@ -52,16 +52,16 @@ sub new
 sub need_lock { 1;}
 
 
-# Descriptions: this command needs "command subcommand parameters" style or not
+# Descriptions: needs "command subcommand parameters" style or not
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub is_subcommand_style { 1;}
 
 
-# Descriptions: file a new user
+# Descriptions: wrapper for file operations
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
-# Side Effects: update $member_map $recipient_map
+# Side Effects: file is created, renamed and removed
 # Return Value: none
 sub process
 {
@@ -95,7 +95,7 @@ sub process
 }
 
 
-# Descriptions: log a new user
+# Descriptions: show cgi menu (dummy)
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none

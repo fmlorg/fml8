@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: dir.pm,v 1.1 2002/03/19 11:13:45 fukachan Exp $
+# $FML: dir.pm,v 1.1 2002/03/24 11:26:46 fukachan Exp $
 #
 
 package FML::Command::Admin::dir;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::dir - dir file operations
+FML::Command::Admin::dir - show "ls" results
 
 =head1 SYNOPSIS
 
@@ -23,7 +23,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-dir a new address.
+show "ls" results
 
 =head1 METHODS
 
@@ -52,7 +52,7 @@ sub new
 sub need_lock { 0;}
 
 
-# Descriptions: dir a new user
+# Descriptions: show result by "ls -l"
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
@@ -82,7 +82,7 @@ sub process
 }
 
 
-# Descriptions: log a new user
+# Descriptions: cgi menu (dummy)
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
