@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.30 2002/07/24 09:27:15 fukachan Exp $
+# $FML: Credential.pm,v 1.31 2002/08/08 03:09:45 fukachan Exp $
 #
 
 package FML::Credential;
@@ -301,10 +301,13 @@ sub has_address_in_map
     my $obj = new IO::Adapter $map, $config;
 
     # 1. get all entries match /^$user/ from $map.
+    if ($debug) {
+	print STDERR "find( $user , { want => 'key', all => 1 });\n";
+    }
     my $addrs = $obj->find( $user , { want => 'key', all => 1 });
 
     if (ref($addrs) && $debug) {
-	print STDERR "cred: matched [ @$addrs ]\n";
+	print STDERR "cred: match? [ @$addrs ]\n";
     }
 
     # 2. try each address in the result matches $address to check.
@@ -312,9 +315,14 @@ sub has_address_in_map
       LOOP:
 	for my $r (@$addrs) {
 	    # 3. is_same_address() conceals matching algorithm details.
+	    print STDERR "is_same_address($r, $address)\n" if $debug;
 	    if ($self->is_same_address($r, $address)) {
+		print STDERR "\tmatch!\n" if $debug;
 		$status = 1; # found
 		last LOOP;
+	    }
+	    else {
+		print STDERR "\tnot match!\n" if $debug;
 	    }
 	}
     }
@@ -465,6 +473,21 @@ sub set
     else {
 	croak("set: invalid input { $key => $value }");
     }
+}
+
+
+#
+# debug
+#
+if ($0 eq __FILE__) {
+    my $file = $ARGV[0];
+    my $addr = $ARGV[1];
+    my $obj  = new FML::Credential;
+
+    $debug = 1;
+    print STDERR "has_address_in_map( $file, {}, $addr ) ...\n";
+    print STDERR $obj->has_address_in_map( $file, {}, $addr );
+    print STDERR "\n";
 }
 
 
