@@ -1,0 +1,67 @@
+<!--
+   $FML$
+-->
+
+
+<chapter id="setup.apache">
+	<title>
+	apache の設定
+	</title>
+
+
+<warning>
+
+<para>
+fml8 CGI の内部構造については
+<link linkend="cgi.internal.method">
+<xref linkend="cgi.internal.method">
+</link>
+を参照して下さい。
+</para>
+
+</warning>
+
+
+<sect id="setup.apache.suexec">
+	<title>
+	apache で suexec を使う
+	</title>
+
+<para>
+suexec 利用可能な apache を作る必要があります。 
+configure を実行する際に、
+<screen>
+configure --enable-suexec --suexec-caller=www
+</screen>
+などとします。
+ここでは suexec を呼ことが可能なユーザが www です。
+このユーザには、この用途専用のものを用意して下さい。
+</para>
+
+<para>
+インストール後、~ユーザ/cgi-bin/ を許すように httpd.conf を
+設定する必要があります。
+<screen>
+&lt;Directory /home/*/*/public_html&gt;
+    AllowOverride FileInfo AuthConfig Limit
+    Options MultiViews Indexes SymLinksIfOwnerMatch IncludesNoExec ExecCGI
+    &lt;Limit GET POST OPTIONS PROPFIND&gt;
+        Order allow,deny
+        Allow from 特定のホスト
+    &lt;/Limit&gt;
+&lt;/Directory&gt;
+
+&lt;IfModule mod_mime.c&gt;
+	... 略 ...
+
+   AddHandler cgi-script .cgi
+
+	... 略 ...
+&lt;/IfModule&gt;
+</screen>
+</para>
+
+</sect1>
+
+
+</chapter>

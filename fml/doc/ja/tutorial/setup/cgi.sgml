@@ -1,6 +1,7 @@
 <!--
-   $FML: cgi.sgml,v 1.4 2003/04/15 14:51:43 fukachan Exp $
+   $FML: cgi.sgml,v 1.5 2004/03/31 06:29:00 fukachan Exp $
 -->
+
 
 <chapter id="setupcgi">
 	<title>
@@ -19,18 +20,20 @@ CGI の内部構造については
 </para>
 
 <para>
-apache で suexec を使うことを前提としています。
+<link linkend="setup.apache.suexec">apache で suexec を使う</link>
+ことを前提としています。
 </para>
 
 <para>
-また、現在はＭＬごとの CGI はなく、
-ドメイン全体を管理する CGI しかありません。
-そのうち作ります _o_ 
+2004 年、秋現在、ＭＬごとの CGI およびドメイン全体を管理する CGI は、
+あります。ユーザの追加、削除、メンバーリストやログの閲覧などが可能です
+が、CGI からの設定変更インターフェイス( config.cf の編集機能)が未実装
+です。
 </para>
 
 <para>
-CGI を使う場合でも、メールサーバとして postfix や qmail を使っている場
-合はメールサーバの設定変更は不要です。
+なお、CGI を使う場合でも、メールサーバとして postfix や qmail を使って
+いるなら、CGI 用の特別な「メールサーバの設定変更」は不要です。
 </para>
 
 </warning>
@@ -38,7 +41,7 @@ CGI を使う場合でも、メールサーバとして postfix や qmail を使っている場
 
 <sect1 id="setupcgi.install">
 	<title>
-	makefml newml は CGI スクリプトを作ります
+	いつでも makefml newml は CGI スクリプトを作っています
 	</title>
 
 <para>
@@ -46,6 +49,13 @@ makefml newml を実行するとデフォルトで config.cgi などの CGI スクリプ
 トが ~fml/public_html/ 以下に用意されています。この CGI は二種類あり、
 ドメイン全体を管理するものとそれぞれのＭＬを管理する CGI と両方ありま
 す。
+<screen>
+そのドメインのＭＬ全部の管理者用
+~fml/public_html/fml/ドメイン/admin/config.cgi
+
+ＭＬごとの管理者用
+~fml/public_html/fml/ドメイン/ml-admin/config.cgi
+</screen>
 </para>
 
 <para>
@@ -100,6 +110,14 @@ AuthType Basic
 require valid-user
 </screen>
 この .htaccess を適切なものに書き換えて下さい。
+<screen>
+例
+
+AuthName ByPassword
+AuthType Basic
+AuthUserConfig "/usr/local/etc/fml/ドメイン/htpasswd"
+require valid-user
+</screen>
 </para>
 
 <warning>
