@@ -1,0 +1,300 @@
+
+
+
+
+
+
+Network Working Group                        Julian Onions & Graeme Lunt
+Request for Comments: DRAFT                                        NEXOR
+                                                            May 30, 2001
+
+
+                  SMTP Service Extension for Priority
+                    draft-onions-priority-smtpext-00
+
+
+Status of This Memo
+
+   This  document  is  an  Internet-Draft and  is  in  full  conformance
+   with  all  provisions  of  Section 10  of  RFC2026.   Internet-Drafts
+   are working   documents   of  the  Internet  Engineering  Task  Force
+   (IETF),  its  areas,  and its working groups.  Note that other groups
+   may  also distribute working documents as Internet-Drafts.
+
+   Internet-Drafts  are  draft  documents valid for  a  maximum  of  six
+   months   and  may  be  updated,  replaced,  or  obsoleted  by   other
+   documents at  any time.  It is inappropriate to  use  Internet-Drafts
+   as  reference  material  or  to  cite  them  other  than  as "work in
+   progress."
+
+   The list of current Internet-Drafts can be accessed at:
+
+      http://www.ietf.org/ietf/1id-abstracts.txt
+
+   The list of Internet-Draft Shadow Directories can be accessed at:
+
+      http://www.ietf.org/shadow.html
+
+1. Abstract
+
+   This memo defines an extension to the SMTP service whereby  a  client
+   may mark a message with a given priority.
+
+2. Introduction
+
+   Email messages  may  get  assigned  a  priority  to  influence  their
+   delivery.  Higher  priority  messages  being processed ahead of lower
+   priority messages. Whilst this is used to some extent  in  commerical
+   environments,  it  is  much  more  common in military environments to
+   attach grades of service and therefore  priority  to  message  types.
+   Some message priorities having very specific delivery time scales.
+
+   The extension may be  used  on  receipt  for  a  number  of  possible
+   affects, which include, but are not limited to
+
+
+
+
+Onions & Lunt             Expires Nov 30, 2001                  [Page 1]
+
+
+
+
+
+INTERNET DRAFT    SMTP Service Extension for Priority       May 30, 2001
+
+
+   o    Sorting the mail queue based on priority
+
+   o    Batching up low priority messages
+
+   o    Meeting certain service level agreements.
+
+   o    The message may also be refused early in the SMTP  dialog  based
+        on the requested priority.
+
+   There are other mechanisms  for  relaying  the  priority  in  RFC-822
+   messages,  such  as  the  Priority:  [MIXER]  and Precedence: fields.
+   However these are part of the header fields,  are  not  per-recipient
+   and  as  content  fields,  are  not possible for early refusal of the
+   message.
+
+3. SMTP Extension Oveview
+
+   The Priority SMTP service extension uses the SMTP  service  extension
+   mechanism  described in [RFC-ESMTP].  The following service extension
+   is hereby defined:
+
+   (1)  The name of the SMTP service extension  is  "Priority".
+
+   (2)  The  EHLO  keyword  value  associated  with  this  extension  is
+        "PRIO".
+
+   (3)  No parameters are allowed  with   this   EHLO   keyword   value.
+        Future  documents  may  extend  this specification by specifying
+        options.  (maybe max priority?)
+
+   (4)  One optional parameter using the keyword "PRIO" is added  to the
+        RCPT TO command.
+
+   (5)  No SMTP verbs are defined by this extension.
+
+4. The Extended RCPT TO Command
+
+   The extended RCPT TO command is issued by  an  SMTP  client  when  it
+   wishes  to  inform  an SMTP server that a priority will be associated
+   with  this  message.  The  priority  is  associated  with  the  given
+   recipient.   The RCPT TO is the same as defined in [RFC-SMTP], except
+   that PRIO parameter may appear.  If  no  priority  is  given,  it  is
+   SHOULD default to normal.
+
+4.1. The PRIO parameter to the ESMTP RCPT TO command
+
+   To indicate a given priority to a message, a priority must be set  in
+   the RCPT TO command. This is defined as follows:
+
+
+
+Onions & Lunt             Expires Nov 30, 2001                  [Page 2]
+
+
+
+
+
+INTERNET DRAFT    SMTP Service Extension for Priority       May 30, 2001
+
+
+      prio-parameter = "PRIO=" prio-value
+      prio-value = prio-key / prio-level
+      prio-key = "low" / "normal" / "high" ; text priorities
+      prio-level = 1*2digit ; relative prioritites
+
+   The low, medium and high priorities MUST be taken as values  10,  20,
+   and 30 respectively. As military systems often have a larger range of
+   priorities, these can be labelled  by  an  integer  to  indicate  the
+   relative priority. Higher numbers implying higher levels of priority.
+   Using these values, allows scope for values with lower priority  than
+   the  normal  low  priority messages, and interpolation between values
+   too if required.
+
+5. SMTP Server handling
+
+   The final decision of the handling of the message will be down to the
+   receiving  MTA.  Based  on policy or limitations, it may take several
+   actions.
+
+   o    It may reject messages, or individual recipients  based  on  the
+        priority requested.
+
+   o    It may silently downgrade the priority to another value.
+
+   o    It may discard the priority. THis has to be done  when  relaying
+        to a non Priory Extension supporting MTA.
+
+   o    When a report or DSN is required, it MAY take the priority value
+        of  the  recipient(s)  it  is  reporting  about to construct the
+        priority of the response. This may be subject to local  policies
+        however.
+
+   When rejecting messages based on the priority given,  two  new  codes
+   are considered
+
+   4XX (TBD) This indicates a  temporary  rejection  influenced  by  the
+        assigned  priority  of  the  message. Possible reasons are; high
+        priority messages are  not  allowed  at  this  time;  only  high
+        priority   messages   are   allowed   now   (military   MINIMISE
+        conditions).
+
+   5XX (TBD) This indicates a  permanent  rejection  influenced  by  the
+        assigned  priority.  This  might  be  because  the  user  is not
+        permitted to submit such priority messages.
+
+
+
+
+
+
+
+Onions & Lunt             Expires Nov 30, 2001                  [Page 3]
+
+
+
+
+
+INTERNET DRAFT    SMTP Service Extension for Priority       May 30, 2001
+
+
+6. Examples
+
+   The following show possible dialogs using the new parameter.
+
+   In this exchange, the default priority is set  to  normal,  and  then
+   downgraded to low priority for the second recipient.
+
+      S: <wait for connection>
+      C: <open connection to server>
+      S: 220 nexor.co.uk SMTP ready
+      C: EHLO victor.nexor.co.uk
+      S: 250-hello victor.nexor.co.uk
+      S: 250 PRIO
+      C: MAIL FROM:<jpo@nexor.co.uk>
+      S: 250 <jpo@nexor.co.uk> OK
+      C: RCPT TO:<g.lunt@nexor.co.uk> PRIO=normal
+      S: 250 <g.lunt@nexor.co.uk> OK
+      C: RCPT TO:<martin@nexor.com> PRIO=low
+      S: 250 <martin@nexor.com> OK
+
+   This example shows a possible military senario. The  first  recipient
+   being  a  high  priority  -  higher  than the normal high, the second
+   recipient being normal (value 20) and the third  recipient  being  of
+   lower then the normal low priority.
+
+      S: <wait for connection>
+      C: <open connection to server>
+      S: 220 nexor.co.uk SMTP ready
+      C: EHLO victor.nexor.co.uk
+      S: 250-hello victor.nexor.co.uk
+      S: 250 PRIO
+      C: MAIL FROM:<jpo@nexor.co.uk>
+      S: 250 <jpo@nexor.co.uk> OK
+      C: MAIL FROM:<xyz@nexor.co.uk> PRIO=normal
+      S: 250 <xyz@nexor.co.uk> OK
+      C: RCPT TO:<g.lunt@nexor.co.uk> PRIO=70
+      S: 250 <g.lunt@nexor.co.uk> OK
+      C: RCPT TO:<martin@nexor.com> PRIO=5
+      S: 250 <martin@nexor.com> OK
+
+
+7. Security Considerations
+
+   High priority messages are open to possible  abuse.  Therefore  if  a
+   system  makes use of this extension, it may need to validate that the
+   message is suitable for that level of processing.
+
+
+
+
+
+Onions & Lunt             Expires Nov 30, 2001                  [Page 4]
+
+
+
+
+
+INTERNET DRAFT    SMTP Service Extension for Priority       May 30, 2001
+
+
+8. References
+
+
+   [RFC-ESMTP]
+        Rose, M., Stefferud, E.,  Crocker,  D.,  Klensin,  J.   and   N.
+        Freed, ``SMTP Service Extensions.''  STD 10, RFC 1869.  November
+        1995.
+
+   [RFC-SMTP]
+        J. Postel,  ``Simple  Mail  Transport  Protocol.''    RFC   821.
+        August 1982.
+
+   [RFC-KEYWORDS]
+        S.  Bradner,  ``Key  words  for  use  in   RFCs   to    Indicate
+        Requirement Levels.'' RFC 2119.  March 1997.
+
+   [MIXER]
+        S. Kille, "MIXER (Mime Internet X.400 Enhanced  Relay):  Mapping
+        between X.400 and RFC 822/MIME", RFC 2156, January 1998.
+
+9. Author's  Addresses
+
+        Julian Onions <j.onions@nexor.co.uk>
+        Graeme Lunt <g.lunt@nexor.co.uk>
+        Nexor
+        Rutherford House
+        Nottingham Science Park,
+        University Boulevard,
+        Nottingham, England.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Onions & Lunt             Expires Nov 30, 2001                  [Page 5]
+
+
