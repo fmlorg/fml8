@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: Header.pm,v 1.32 2001/04/15 05:01:58 fukachan Exp $
+# $FML: Header.pm,v 1.33 2001/04/23 04:30:28 fukachan Exp $
 #
 
 package FML::Header;
@@ -105,9 +105,17 @@ sub set
 sub address_clean_up
 {
     my ($self, $addr) = @_;
+
+    use Mail::Address;
+    my @addrlist = Mail::Address->parse($addr);
+
+    # only the first element in the @addrlist array is effective.
+    $addr = $addrlist[0]->address;
     $addr =~ s/^\s*<//;
     $addr =~ s/>\s*$//;
-    $addr;
+
+    # return the result.
+    return $addr;
 }
 
 
@@ -343,8 +351,15 @@ sub extract_message_id_references
     use Mail::Address;
     my @addrs = Mail::Address->parse($buf);
 
-    my @r = ();
-    foreach my $addr (@addrs) { push(@r, $addr->address);}
+    my @r    = ();
+    my %uniq = ();
+    foreach my $addr (@addrs) { 
+	my $a = $addr->address;
+	unless ($uniq{ $a }) {
+	    push(@r, $addr->address);
+	    $uniq{ $a } = 1;
+	}
+    }
 
     \@r;
 }
