@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.104 2004/01/02 14:42:44 fukachan Exp $
+# $FML: Switch.pm,v 1.105 2004/03/31 12:53:52 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -117,6 +117,7 @@ sub main::Bootstrap2
 	if (@$options) {
 	    eval q{
 		use Getopt::Long;
+		Getopt::Long::Configure(qw(no_ignore_case));
 		GetOptions(\%options, @$options);
 	    };
 	    croak($@) if $@;
