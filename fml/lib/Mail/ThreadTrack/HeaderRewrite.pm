@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: HeaderRewrite.pm,v 1.5 2001/11/03 11:58:45 fukachan Exp $
+# $FML: HeaderRewrite.pm,v 1.6 2001/11/10 13:20:56 fukachan Exp $
 #
 
 package Mail::ThreadTrack::HeaderRewrite;
@@ -50,31 +50,33 @@ sub rewrite_header
     my $config  = $self->{ _config };
     my $loctype = $config->{ thread_subject_tag_location } || 'appended';
     my $header  = $msg->rfc822_message_header();
-    my $tag     = $self->{ _thread_subject_tag };
+    my $tag     = $self->{ _thread_subject_tag } || '';
 
     # append the thread tag to the subject
-    my $subject = $header->get('subject') || '';
+    if (defined $header->get('subject')) {
+	my $subject = $header->get('subject');
 
-    if ($loctype eq 'appended') {
-	$header->replace('subject', $subject ." ". $tag);
-    }
-    elsif ($loctype eq 'prepended') {
-	$header->replace('subject', $tag ." ". $subject);
-    }
-    else {
-	$self->log("unknown thread_subject_tag_location type");
-    }
+	if ($loctype eq 'appended' && $tag) {
+	    $header->replace('subject', $subject ." ". $tag);
+	}
+	elsif ($loctype eq 'prepended') {
+	    $header->replace('subject', $tag ." ". $subject);
+	}
+	else {
+	    $self->log("unknown thread_subject_tag_location type");
+	}
 
-    if (defined $self->{ _status_info }) {
-	$header->add('X-Thread-Status', $self->{ _status_info });
-    }
+	if (defined $self->{ _status_info }) {
+	    $header->add('X-Thread-Status', $self->{ _status_info });
+	}
 
-    if (defined $self->{ _thread_id }) {
-	$header->add('X-Thread-ID', $self->{ _thread_id });
-    }
+	if (defined $self->{ _thread_id }) {
+	    $header->add('X-Thread-ID', $self->{ _thread_id });
+	}
 
-    if (defined $self->{ _status_history }) {
-	$header->add('X-Thread-History', $self->{ _status_history });
+	if (defined $self->{ _status_history }) {
+	    $header->add('X-Thread-History', $self->{ _status_history });
+	}
     }
 }
 
