@@ -628,6 +628,10 @@ available_commands_for_privileged_user	=	subscribe
 					send
 
 
+available_commands_for_admin_cgi	=	subscribe
+						unsubscribe
+
+
 # Descriptions: confirmation の返事を表す特別なコマンド
 #        Value: STR
 #     Examples:
