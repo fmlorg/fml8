@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000-2001 Ken'ichi Fukamachi
+# Copyright (C) 2000-2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ThreadTrack.pm,v 1.19 2001/12/23 11:37:08 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.20 2002/02/01 12:03:57 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -172,23 +172,56 @@ sub run
 sub _speculate_last_id
 {
     my ($curproc, $thread) = @_;
-    my $last_id = 0;
+    my $config           = $curproc->{ config };
+    my $seq_file         = $config->{ sequence_file };
+    my $db_last_modified = $thread->db_last_modified();
+    my $sf_last_modified = 0;
 
-    $thread->db_open();
+    if (-f $seq_file) {
+	my $st = undef;
+	eval q{ 
+	    use File::stat;
+	    my $st = stat($seq_file);
+	    $sf_last_modified = 
+		$sf_last_modified > $st->mtime ? $sf_last_modified : $st->mtime;
+	};
+    }
 
-    my $rh = $thread->db_hash( 'date' );
-    if (defined $rh) {
-	eval q{
+    # The condition "$sf_last_modified < $db_last_modified" is always
+    # true since FML::Process::Distribute updates the thread db after
+    # updaiteing $seq_file.
+    # XXX 3600 is the magic number. How long time is appropriate ?
+    if (-f $seq_file && 
+	($sf_last_modified + 3600 > $db_last_modified)
+	) {
+	print STDERR "read seqfile\n"; sleep 3;
+	eval q{ 
 	    use File::Sequence;
-	    my $obj = new File::Sequence;
-	    $last_id = $obj->search_max_id( { hash => $rh } );
+	    my $sfh      = new File::Sequence { sequence_file => $seq_file };
+	    return $sfh->get_id();
 	};
 	warn($@) if $@;
     }
+    else {
 
-    $thread->db_close();
+	my $last_id = 0;
 
-    return $last_id;
+	$thread->db_open();
+
+	my $rh = $thread->db_hash( 'date' );
+	if (defined $rh) {
+	    eval q{
+		use File::Sequence;
+		my $obj = new File::Sequence;
+		$last_id = $obj->search_max_id( { hash => $rh } );
+	    };
+	    warn($@) if $@;
+	}
+
+	$thread->db_close();
+
+	return $last_id;
+    }
 }
 
 
@@ -446,7 +479,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
