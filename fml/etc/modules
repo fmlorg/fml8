@@ -1,0 +1,50 @@
+#
+# $FML$
+#
+# map between programs and modules (like /etc/name_to_sysnum on solaris ?)
+#
+
+# program name		class				argv syntax
+# --------------------------------------------------------------------
+#
+
+# libexec/
+command			FML::Process::Command		$ml
+digest			FML::Process::Digest		$ml
+distribute		FML::Process::Distribute	$ml	
+error			FML::Process::Error		$ml
+fmlserv			FML::Process::ListServer	?
+mead			FML::Process::Error		$ml
+
+# bin/
+fml			FML::Process::Configure		$ml $command $opts
+fmladdr			FML::Process::Addr		
+fmlalias		FML::Process::Alias		
+fmlconf			FML::Process::ConfViewer	
+fmldoc			FML::Process::DocViewer		
+fmlerror		FML::Process::ErrorViewer	$ml
+fmlhtmlify		FML::Process::HTMLify		$ml
+fmlspool		FML::Process::Spool		$ml
+fmlsummary		FML::Process::Summary		$ml
+fmlsuper		FML::Process::Super		$ml
+fmlthread		FML::Process::ThreadTrack	$ml
+makefml			FML::Process::Configure		$command $ml $opts
+
+# cgi-bin/
+fmlthread.cgi		FML::CGI::ThreadTrack		$cgiargs
+thread.cgi		FML::CGI::ThreadTrack		$cgiargs
+threadview.cgi		FML::CGI::ThreadTrack		$cgiargs
+menu.cgi		FML::CGI::Admin::Menu		$cgiargs
+config.cgi		FML::CGI::Admin::Menu		$cgiargs
+
+# libexec/ compatibility
+fml.pl			FML::Process::Distribute	$ml
+fml.pl__--ctladdr	FML::Process::Command		$ml
+
+# test
+loader			FML::Process::Distribute	$ml
+loader__--ctladdr	FML::Process::Command
+
+# demo
+fmlsch			FML::Process::Calendar
+fmlsch.cgi		FML::CGI::Calendar
