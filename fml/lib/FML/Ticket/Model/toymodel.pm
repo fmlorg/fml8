@@ -303,11 +303,11 @@ sub list_up
     my $rh             = $self->{ _hash_table };
     my $rh_status      = $rh->{ _status };
     my ($tid, $status) = ();
-    my $mode           = $args->{ mode } || 'open_only';
+    my $mode           = $args->{ mode } || 'default';
 
   TICEKT_LIST:
     while (($tid, $status) = each %$rh_status) {
-	if ($mode eq 'open_only') {
+	if ($mode eq 'default') {
 	    next TICEKT_LIST if $status =~ /close/o;
 	}
 
