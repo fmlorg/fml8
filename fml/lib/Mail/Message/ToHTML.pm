@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.38 2003/02/20 04:32:51 fukachan Exp $
+# $FML: ToHTML.pm,v 1.39 2003/03/09 03:10:32 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.38 2003/02/20 04:32:51 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.39 2003/03/09 03:10:32 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -733,6 +733,12 @@ sub _format_safe_header
 	    $buf .= "</SPAN>\n";
 
 	    my $xbuf = $hdr->get($field);
+
+	    # mask the raw address.
+	    if ($field eq 'From') {
+		$xbuf = $self->_who_of_address($xbuf);
+	    }
+
 	    $xbuf = $self->_decode_mime_string($xbuf) if $xbuf =~ /=\?iso/i;
 	    $buf .= "<SPAN CLASS=${field}-value>\n";
 	    $buf   .= _sprintf_safe_str($xbuf);
@@ -956,7 +962,7 @@ sub cache_message_info
     # HASH { $id => From: }
     my $ra = _address_clean_up( $hdr->get('from') );
     $db->{ _from }->{ $id } = $ra->[0];
-    $db->{ _who }->{ $id } = $self->_who_of_address( $hdr->get('from') );
+    $db->{ _who }->{ $id }  = $self->_who_of_address( $hdr->get('from') );
 
     # HASH { $id => Message-Id: }
     # HASH { Message-Id: => $id }
