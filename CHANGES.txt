@@ -2,6 +2,15 @@
 		$Date$
 
 
+2001/09/22
+
+   FML/Config.pm
+	if ($ENV{'debug'}) { ... debug ...;}
+
+   TinyScheduler.pm
+   FML/Command/Admin/edit.pm
+	modified to use File::Spec
+
 2001/09/18
 
    errormail collection
@@ -235,5 +244,5 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.11 2001/09/13 13:49:54 fukachan Exp $
+$FML: CHANGES.txt,v 1.12 2001/09/22 03:35:24 fukachan Exp $
 
