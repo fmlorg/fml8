@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CacheDir.pm,v 1.13 2002/01/13 13:35:25 fukachan Exp $
+# $FML: CacheDir.pm,v 1.14 2002/05/17 05:03:28 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -23,7 +23,9 @@ File::CacheDir - IO operations to ring buffer which consists of files
 
    use File::CacheDir;
    $obj = new File::CacheDir {
-       directory => '/some/where'
+       directory          => '/some/where' # mandatory
+       sequence_file_name => '.seq',       # optional
+       modulus            => 128,          # optional
    };
    $fh = $obj->open;
    print $fh "some message";
