@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.8 2002/12/24 10:19:45 fukachan Exp $
+# $FML: Cache.pm,v 1.9 2003/03/06 09:54:24 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -63,28 +63,85 @@ sub new
 }
 
 
+=head2 open()
+
+dummy.
+
+=head2 close()
+
+dummy.
+
+=head2 touch()
+
+dummy.
+
+=cut
+
+
+# Descriptions: none
+#    Arguments: none
+# Side Effects: none
+# Return Value: none
+sub open  { 1;}
+
+# Descriptions: none
+#    Arguments: none
+# Side Effects: none
+# Return Value: none
+sub close { 1;}
+
+# Descriptions: none
+#    Arguments: none
+# Side Effects: none
+# Return Value: none
+sub touch { 1;}
+
+
+=head2 add($address, $argv) 
+
+add data given as hash reference $argv.
+
+    $argv = {
+	address => STR,
+	reason  => STR,
+	status  => STR,
+    };
+
+C<Tie::JournaledDir> is a simple hash, so $argv is converted to the
+following a set of key ($address) and value.
+
+     $address => "$unixtime status=$status reason=$reason"
+
+=cut
+
+
 # Descriptions: add bounce info into cache.
-#    Arguments: OBJ($self) HASH_REF($info)
+#    Arguments: OBJ($self) STR($address) HASH_REF($argv)
 # Side Effects: update cache
 # Return Value: none
 sub add
 {
-    my ($self, $info) = @_;
+    my ($self, $address, $argv) = @_;
 
     $self->_open_cache();
 
     my $db = $self->{ _db };
     if (defined $db) {
-	my ($address, $reason, $status);
+	my ($reason, $status);
 	my $unixtime = time;
 
-	$address = $info->{ address };
-	$reason  = $info->{ reason } || 'unknown';
-	$status  = $info->{ status } || 'unknown';
-
-	if ($address) {
+	if (ref($argv) eq 'HASH') {
+	    $reason = $argv->{ reason } || 'unknown';
+	    $status = $argv->{ status } || 'unknown';
 	    $status =~ s/\s+/_/g;
 	    $reason =~ s/\s+/_/g;
+	}
+	else {
+	    LogError("FML::Error::Cache: add: not implemented \$argv type");
+	    return undef;
+	}
+
+	if ($address) {
 	    $db->{ $address } = "$unixtime status=$status reason=$reason";
 	}
 	else {
@@ -97,6 +154,53 @@ sub add
 	croak("FML::Error::Cache: add: unknown data input type");
     }
 }
+
+
+=head2 delete($address)
+
+delete entry for $address.
+
+=cut
+
+
+# Descriptions: delete entry for $address.
+#    Arguments: OBJ($self) STR($address) HASH_REF($argv)
+# Side Effects: update cache
+# Return Value: none
+sub delete
+{
+    my ($self, $address) = @_;
+
+    $self->_open_cache();
+
+    my $db = $self->{ _db };
+    if (defined $db) {
+	if ($address) {
+	    delete $db->{ $address };
+	}
+	else {
+	    LogWarn("FML::Error::Cache: delete: invalid data");
+	}
+
+	$self->_close_cache();
+    }
+    else {
+	croak("FML::Error::Cache: delete: unknown data input type");
+    }
+}
+
+
+=head1 CACHE IO MANIPULATION
+
+You need to use primitive methods this class provides for IO into/from
+error data cache.
+
+C<Tie::JournaledDir> is a simple hash, so $argv is converted to the
+following a set of key ($address) and value.
+
+     $address => "$unixtime status=$status reason=$reason"
+
+=cut
 
 
 # Descriptions: open the cache database for File::CacheDir.
@@ -137,11 +241,20 @@ sub _close_cache
 }
 
 
-# Descriptions: return key list in db.
+=head1 UTILITY FUNCTIONS
+
+=head2 get_primary_keys()
+
+return primary keys in cache as ARRAY_REF.
+
+=cut
+
+
+# Descriptions: return (primary) key list in cache database.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub get_addr_list
+sub get_primary_keys
 {
     my ($self) = @_;
 

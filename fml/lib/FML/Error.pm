@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.20 2003/05/20 10:02:16 fukachan Exp $
+# $FML: Error.pm,v 1.21 2003/05/20 13:49:04 fukachan Exp $
 #
 
 package FML::Error;
@@ -52,8 +52,22 @@ sub new
     my ($self, $curproc) = @_;
     my ($type) = ref($self) || $self;
     my $me     = { _curproc => $curproc };
+    my $config = $curproc->config();
+    my $fp     = $config->{ error_analyzer_function } || 'simple_count';
+
+    # defautl analyzer function
+    $me->{ _analyzer_function_name } = $fp;
+
     return bless $me, $type;
 }
+
+
+=head2 get_lock_channel_name()
+
+return the lock channel name to be used to lock/unlock error related
+functions.
+
+=cut
 
 
 # Descriptions: lock channel we should use to lock this object.
@@ -69,7 +83,11 @@ sub get_lock_channel_name
 }
 
 
-=head1 LOCK ERROR DB ACCESS
+=head1 LOCK ACCESS TO ERROR CACHE DB
+
+=head2 lock()
+
+=head2 unlock()
 
 =cut
 
@@ -100,7 +118,11 @@ sub unlock
 }
 
 
-=head1 Database
+=head1 DATABASE
+
+=head2 db_open()
+
+=head2 db_close()
 
 =cut
 
@@ -133,7 +155,18 @@ sub db_close
 
 =head2 add($info)
 
-add bounce info into cache.
+add bounce info into cache where $info is a HASH_REF.  Currently,
+$info expects "address", "status" (status code) and "reason".
+"address" and "status" are mandatory.
+
+    $info = {
+	address => $address,
+	status  => $status,
+	reason  => $reason,
+    };
+
+The format to store these information depends on FML::Error::Cache
+module, which conceals the detail of cache structure.
 
 =cut
 
@@ -147,11 +180,12 @@ add bounce info into cache.
 sub add
 {
     my ($self, $info) = @_;
-    my $db = $self->{ _db };
+    my $db   = $self->{ _db };
+    my $addr = $info->{ address }; 
 
     if (defined $db) {
 	$self->lock();
-	$db->add($info);
+	$db->add($addr, $info);
 	$self->unlock();
     }
     else {
@@ -162,12 +196,11 @@ sub add
 
 =head2 analyze()
 
-open error message cache and
-analyze the data by the analyzer function.
-The function is specified by $config->{ error_analyzer_function }.
-Available functions are located in C<FML::Error::Analyze>.
-C<simple_count> function is used by default if $config->{
-error_analyzer_function } is unspecified.
+open error message cache and analyze the data by the analyzer
+function.  The function is specified by $config->{
+error_analyzer_function }.  Available functions are located in
+C<FML::Error::Analyze>.  C<simple_count> function is used by default
+if $config->{ error_analyzer_function } is unspecified.
 
 =cut
 
@@ -175,48 +208,74 @@ error_analyzer_function } is unspecified.
 # Descriptions: open error message cache and analyze the data by
 #               the specified analyzer function.
 #    Arguments: OBJ($self)
-# Side Effects: set up $self->{ _remove_addr_list } used internally.
+# Side Effects: set up $self->{ _removal_addr_list } used internally.
 # Return Value: none
 sub analyze
 {
     my ($self)  = @_;
     my $curproc = $self->{ _curproc };
-    my $config  = $curproc->config();
     my $cache   = $self->db_open();
     my $rdata   = $cache->get_all_values_as_hash_ref();
 
     use FML::Error::Analyze;
     my $analyzer = new FML::Error::Analyze $curproc;
-    my $fp       = $config->{ error_analyzer_function } || 'simple_count';
+    my $fp       = $self->{ _analyzer_function_name };
 
     # critical region: access to db under locked.
     $self->lock();
-    my $list = $analyzer->$fp($curproc, $rdata);
+    $analyzer->$fp($curproc, $rdata);
     $self->unlock();
 
-    $self->{ _analyzer } = $analyzer;
+    # saved for further reference.
+    $self->{ _analyzer }          = $analyzer;
+    $self->{ _removal_addr_list } = $analyzer->removal_address();
 
-    # pass address list to remove
-    $self->{ _remove_addr_list } = $list;
+    # clean up.
+    $self->db_close();
 }
 
 
-# Descriptions: get data detail for the current result as HASH_REF.
+=head2 set_analyzer_function($fp)
+
+set the function for error cost evaluator. Acutually, the contet
+locates at C<FML::Error::Analyze::$fp>.
+
+=head2 get_analyzer_function($fp)
+
+get the current function.
+
+=cut
+
+
+# Descriptions: set analyzer function name
+#    Arguments: OBJ($self) STR($fp)
+# Side Effects: one
+# Return Value: STR
+sub set_analyzer_function
+{
+    my ($self, $fp) = @_;
+    $self->{ _analyzer_function_name } = $fp;
+}
+
+
+# Descriptions: set analyzer function name
 #    Arguments: OBJ($self)
-# Side Effects: none
-# Return Value: HASH_REF
-sub get_data_detail
+# Side Effects: one
+# Return Value: STR
+sub get_analyzer_function
 {
     my ($self) = @_;
-    my $analyzer = $self->{ _analyzer };
-
-    if (defined $analyzer) {
-	return $analyzer->get_data_detail();
-    }
-    else {
-	return {}
-    }
+    return $self->{ _analyzer_function_name };
 }
+
+
+=head1 ADDRESS MANIPULATION
+
+=head2 is_list_address($addr)
+
+check whether $addr is one of addresses this ML uses.
+
+=cut
 
 
 # Descriptions: check whether $addr is one of addresses this ML uses.
@@ -250,10 +309,11 @@ sub is_list_address
     return $match;
 }
 
+
 =head2 remove_bouncers()
 
-delete mail addresses, analyze() determined as bouncers, by deluser()
-method.
+delete mail addresses which analyze() determined as bouncers by
+deluser() method.
 
 You need to call analyze() method before calling remove_bouncers() to
 list up addresses to remove.
@@ -269,7 +329,7 @@ sub remove_bouncers
 {
     my ($self) = @_;
     my $curproc = $self->{ _curproc };
-    my $list    = $self->{ _remove_addr_list };
+    my $list    = $self->{ _removal_addr_list };
 
     use FML::Credential;
     my $cred = new FML::Credential $curproc;
@@ -278,27 +338,32 @@ sub remove_bouncers
     my $safe = new FML::Restriction::Base;
 
     # XXX need no lock here since lock is done in FML::Command::* class.
-  ADDR:
-    for my $addr (@$list) {
-	unless ($self->is_list_address($addr)) { 
-	    # check if $address is a safe string.
-	    if ($safe->regexp_match('address', $addr)) {
-		if ($cred->is_member( $addr ) || 
-		    $cred->is_recipient( $addr )) {
-		    $self->deluser( $addr );
+    if (defined $list) {
+      ADDR:
+	for my $addr (@$list) {
+	    unless ($self->is_list_address($addr)) {
+		# check if $address is a safe string.
+		if ($safe->regexp_match('address', $addr)) {
+		    if ($cred->is_member( $addr ) ||
+			$cred->is_recipient( $addr )) {
+			$self->deluser( $addr );
+		    }
+		    else {
+			Log("remove_bouncers: <$addr> seems not member");
+		    }
 		}
 		else {
-		    Log("remove_bouncers: <$addr> seems not member");
+		    LogError("remove_bouncers: <$addr> unsafe expr");
+		    next ADDR;
 		}
 	    }
 	    else {
-		LogError("remove_bouncers: <$addr> is invalid");
-		next ADDR;
+		LogWarn("remove_bouncers: <$addr> ignored");
 	    }
 	}
-	else {
-	    LogWarn("remove_bouncers: <$addr> ignored");
-	}
+    }
+    else {
+	LogError("undefined list");
     }
 }
 
@@ -373,9 +438,9 @@ sub deluser
 
 =head1 DUMP ADDRESS AND STATUS
 
-=head2 dump([$handle])
+=head2 print([$handle])
 
-list up the address and point.
+print list of addresses and the corresponding point.
 
 =cut
 
@@ -384,25 +449,29 @@ list up the address and point.
 #    Arguments: OBJ($self) HANDLE($handle)
 # Side Effects: none
 # Return Value: none
-sub dump
+sub print
 {
     my ($self, $handle) = @_;
-    my $info = $self->get_data_detail();
-    my $wh   = $handle || \*STDOUT;
+    my $wh       = $handle || \*STDOUT;
+    my $analyzer = $self->{ _analyzer };
 
-    my ($k, $v);
-    while (($k, $v) = each %$info) {
-	if (defined($v) && ref($v) eq 'ARRAY') {
-	    my $x = '';
-	    for my $y (@$v) {
-		$x .= $y if defined $y;
-		$x .= " ";
+    if (defined $analyzer) {
+	my $info = $analyzer->summary();
+    	my ($k, $v);
+	
+	while (($k, $v) = each %$info) {
+	    if (defined($v) && ref($v) eq 'ARRAY') {
+		my $x = '';
+		for my $y (@$v) {
+		    $x .= $y if defined $y;
+		    $x .= " ";
+		}
+
+		printf $wh "%25s => (%s)\n", $k, $x;
 	    }
-
-	    printf $wh "%25s => (%s)\n", $k, $x;
-	}
-	else {
-	    printf $wh "%25s => %s\n", $k, $v;
+	    else {
+		printf $wh "%25s => %s\n", $k, $v;
+	    }
 	}
     }
 }
