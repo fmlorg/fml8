@@ -54,6 +54,7 @@ sub Show
 	next if $pathname =~ /\~$/;
 	next if $pathname =~ /pod$/;
 	next if $pathname eq 'CVS';
+	next if $pathname eq 't'; # test directory
 	next if $pathname =~ /^index/;
 	next if $pathname eq 'Makefile';
 
