@@ -155,6 +155,41 @@ sub _update_db
     my ($self, $curproc, $args) = @_;
     my $config    = $curproc->{ config };
     my $pcb       = $curproc->{ pcb };
+
+    $self->_open_db($curproc, $args);
+
+    # prepare hash table tied to db_dir/*db's
+    my $rh_ticket_id = $self->{ _hash_table }->{ _ticket_id };
+    my $rh_date      = $self->{ _hash_table }->{ _date };
+    my $rh_status    = $self->{ _hash_table }->{ _status };
+    my $rh_articles  = $self->{ _hash_table }->{ _articles };
+
+    # prepare article_id and ticket_id
+    my $article_id = $pcb->get('article', 'id');
+    my $ticket_id  = $self->{ _ticket_id };
+
+    Log("article_id=$article_id ticket_id=$ticket_id");
+
+    $rh_ticket_id->{ $article_id } = $ticket_id;
+    $rh_date->{ $article_id }      = time;
+    $rh_articles->{ $ticket_id }  .= $article_id . " ";
+
+    # default value of status
+    unless (defined $rh_status->{ $ticket_id }) {
+	$rh_status->{ $ticket_id } = 'open';
+    }
+
+    if (defined $self->{ _status }) {
+	$rh_status->{ $ticket_id } = $self->{ _status };
+    }
+}
+
+
+sub _open_db
+{
+    my ($self, $curproc, $args) = @_;
+    my $config    = $curproc->{ config };
+    my $pcb       = $curproc->{ pcb };
     my $db_type   = $curproc->{ ticket_db_type } || 'AnyDBM_File';
     my $db_dir    = $self->{ _db_dir };
 
@@ -174,36 +209,37 @@ sub _update_db
 	    tie %articles,  $db_type, $articles_file, O_RDWR|O_CREAT, 0644;
 	};
 	unless ($@) {
-	    my $article_id = $pcb->get('article', 'id');
-	    my $ticket_id  = $self->{ _ticket_id };
-
-	    Log("article_id=$article_id ticket_id=$ticket_id");
-
-	    $ticket_id{ $article_id } = $ticket_id;
-	    $date{ $article_id }      = time;
-	    $articles{ $ticket_id }  .= $article_id . " ";
-
-	    # default value of status
-	    unless (defined $status{ $ticket_id }) {
-		$status{ $ticket_id } = 'open';
-	    }
-
-	    if (defined $self->{ _status }) {
-		$status{ $ticket_id } = $self->{ _status };
-	    }
-
-	    untie %ticket_id;
-	    untie %date;
-	    untie %status;
-	    untie %articles;
+	    $self->{ _hash_table }->{ _ticket_id } = \%ticket_id;
+	    $self->{ _hash_table }->{ _date }      = \%date;
+	    $self->{ _hash_table }->{ _status }    = \%status;
+ 	    $self->{ _hash_table }->{ _articles }  = \%articles;
 	}
 	else {
 	    Log("Error: tail to tie() under $db_type");
+	    return undef;
 	}
     }
     else {
 	Log("Error: fail to use $db_type");
+	return undef;
     }
+
+    1;
+}
+
+
+sub _close_db
+{
+    my ($self, $curproc, $args) = @_;
+    my $ticket_id = $self->{ _hash_table }->{ _ticket_id };
+    my $date      = $self->{ _hash_table }->{ _date };
+    my $status    = $self->{ _hash_table }->{ _status };
+    my $articles  = $self->{ _hash_table }->{ _articles };
+
+    untie %$ticket_id;
+    untie %$date;
+    untie %$status;
+    untie %$articles;
 }
 
 
