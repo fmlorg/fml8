@@ -50,18 +50,29 @@ main method.
 sub run
 {
     my ($curproc, $args) = @_;
+
+    use FileHandle;
+    my ($rfd, $wfd) = FileHandle::pipe;
+    $args->{ fd }   = $wfd;
     my $ticket = $curproc->_load_ticket_model_module($args);
 
     print start_html('ticket system interface'), "\n";
 
     print "<PRE>\n";
 
+
     my $argv     = $args->{ ARGV };
     $argv->[ 0 ] = 'list';
+
+    # my $tid = $ticket->get_id_list($curproc, $args);
+    # for (@$tid) { print "|| $_\n";}
+
     $ticket->show_summary($curproc, $args);
+    close($wfd);
+    while (<$rfd>) { print STDOUT " | $_";}
+
 
     print "</PRE>\n";
-
 
     print "\n";
     print end_html;

@@ -56,6 +56,7 @@ sub new
     my $config  = $curproc->{ config };
     my $ml_name = $config->{ ml_name };
 
+    $me->{ _fd }     = $args->{ fd } || \*STDOUT; 
     $me->{ _db_dir } = $config->{ ticket_db_dir } ."/". $ml_name;
     $me->_init_ticket_db_dir($curproc, $args) || do {
 	Log("fail to initialize ticket_db_dir");
@@ -472,16 +473,45 @@ It is also larger if $status is C<open>.
 sub show_summary
 {
     my ($self, $curproc, $args) = @_;
+    my ($tid, $status, $ticket_id);
+
+    # rh: Reference to Hash table, which is tied to db_dir/*db's
+    $ticket_id = $self->get_id_list($curproc, $args);
+
+    # self->{ _hash_table } is tied to DB's.
+    $self->open_db($curproc, $args);
+
+    if (@$ticket_id) {
+	# age HASH TABLE
+	my ($rh_age, $rh_cost) = 
+	    $self->_calculate_age($curproc, $args, $ticket_id);
+
+	# sort the ticket output order and print it out
+	$self->_sort_ticket_id($curproc, $ticket_id, $rh_cost);
+	$self->_print_ticket_summary($curproc, $args, $ticket_id, $rh_age);
+
+	# show short summary for each article
+	$self->_print_article_summary($curproc, $args, $ticket_id, 
+				      $rh_age, $rh_cost);
+    }
+
+    # self->{ _hash_table } is untied from DB's.
+    $self->close_db($curproc, $args);
+}
+
+
+# return @ticket_id ARRAY
+sub get_id_list
+{
+    my ($self, $curproc, $args) = @_;
     my ($tid, $status, @ticket_id);
 
     # self->{ _hash_table } is tied to DB's.
     $self->open_db($curproc, $args);
 
-    # rh: Reference to Hash table, which is tied to db_dir/*db's
-    my $rh_status      = $self->{ _hash_table }->{ _status };
-    my $mode           = $args->{ mode } || 'default';
+    my $rh_status = $self->{ _hash_table }->{ _status };
+    my $mode      = $args->{ mode } || 'default';
 
-    # @ticket_id ARRAY
   TICEKT_LIST:
     while (($tid, $status) = each %$rh_status) {
 	if ($mode eq 'default') {
@@ -491,22 +521,9 @@ sub show_summary
 	push(@ticket_id, $tid);
     }
 
-    if (@ticket_id) {
-	# age HASH TABLE
-	my ($rh_age, $rh_cost) = 
-	    $self->_calculate_age($curproc, $args, \@ticket_id);
-
-	# sort the ticket output order and print it out
-	$self->_sort_ticket_id($curproc, \@ticket_id, $rh_cost);
-	$self->_print_ticket_summary($curproc, $args, \@ticket_id, $rh_age);
-
-	# show short summary for each article
-	$self->_print_article_summary($curproc, $args, \@ticket_id, 
-				      $rh_age, $rh_cost);
-    }
-
-    # self->{ _hash_table } is untied from DB's.
     $self->close_db($curproc, $args);
+
+    \@ticket_id;
 }
 
 
@@ -550,6 +567,7 @@ sub _calculate_age
 sub _print_ticket_summary
 {
     my ($self, $curproc, $args, $ticket_id, $rh_age) = @_;
+
     my $fd     = $self->{ _fd } || \*STDOUT;
     my $rh     = $self->{ _hash_table };
     my $format = "%10s  %5s %6s  %-20s  %s\n";
@@ -595,21 +613,18 @@ sub _print_article_summary
     my ($self, $curproc, $args, $ticket_id, $age, $cost) = @_;
     my $fd     = $self->{ _fd } || \*STDOUT;
     my $rh     = $self->{ _hash_table };
-    my $wd     = $self->{ _wd } || \*STDOUT;
-
-    # 
     my ($aid, @aid);
     my $spool_dir  = $curproc->{ config }->{ spool_dir };
 
-    print $wd "\n\"!\" mark: stalled? please check and reply it.\n";
+    print $fd "\n\"!\" mark: stalled? please check and reply it.\n";
 
     for my $tid (@$ticket_id) {
 	my $how_bad = _cost_to_indicator( $cost->{ $tid } );
-	printf $wd "\n%6s  %-10s  %s\n", $how_bad, $tid;
+	printf $fd "\n%6s  %-10s  %s\n", $how_bad, $tid;
 
 	(@aid) = split(/\s+/, $rh->{ _articles }->{ $tid });
 	$aid   = $aid[0];
-	print $wd $self->_article_summary( $spool_dir ."/". $aid );
+	print $fd $self->_article_summary( $spool_dir ."/". $aid );
     }
 }
 
