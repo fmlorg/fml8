@@ -1,10 +1,10 @@
-#-*- perl -*-
+   #-*- perl -*-
 #
 #  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.41 2003/08/23 07:24:40 fukachan Exp $
+# $FML: Command.pm,v 1.42 2003/12/20 07:51:35 fukachan Exp $
 #
 
 # XXX
@@ -89,7 +89,8 @@ sub set_mode
 {
     my ($self, $curproc, $command_args, $mode) = @_;
 
-    # always 'usre' if invalid mode specified.
+    # always 'user' if invalid mode specified.
+    # XXX use capital letter for module name used latter.
     if ($mode =~ /admin/i) {
 	$command_args->{'command_mode'} = 'Admin';
     }
@@ -107,6 +108,7 @@ sub get_mode
 {
     my ($self, $curproc, $command_args) = @_;
 
+    # XXX use capital letter for module name used latter.
     if ($command_args->{'command_mode'} =~ /admin/i) {
 	return 'Admin';
     }
@@ -150,13 +152,13 @@ sub rewrite_prompt
 	    $command->rewrite_prompt($curproc, $command_args, $rbuf);
 	}
 	else {
-	    $curproc->logerror("call $pkg but rewrite_prompt() not supported") if $debug;
+	    $curproc->logerror("$pkg not support rewrite_prompt()") if $debug;
 	}
     }
     else {
 	if ($debug) {
-	    $curproc->logerror($@);
 	    $curproc->logerror("cannot load $pkg");
+	    $curproc->logerror($@);
 	}
     }
 }
@@ -210,7 +212,8 @@ C<FML::Command::$MODE::$command>.
 sub AUTOLOAD
 {
     my ($self, $curproc, $command_args) = @_;
-    my $myname = $curproc->myname();
+    my $myname               = $curproc->myname();
+    my $default_lock_channel = 'command_serialize';
 
     # we need to ignore DESTROY()
     return if $AUTOLOAD =~ /DESTROY/;
@@ -232,7 +235,7 @@ sub AUTOLOAD
     eval qq{ use $pkg; \$command = new $pkg;};
     unless ($@) {
 	my $need_lock    = 0; # no lock by default.
-	my $lock_channel =  'command_serialize';
+	my $lock_channel = $default_lock_channel;
 
 	# we need to authenticate this ?
 	if ($command->can('auth')) {
@@ -261,7 +264,7 @@ sub AUTOLOAD
 	}
 
 	if ($command->can('lock_channel')) {
-	    $lock_channel = $command->lock_channel() || 'command_serialize';
+	    $lock_channel = $command->lock_channel() || $default_lock_channel;
 	}
 
 	# run the actual process
