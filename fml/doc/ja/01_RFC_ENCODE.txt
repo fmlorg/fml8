@@ -1,4 +1,7 @@
-			FML::Encode クラス(?)
+		Mail::Message::Encode クラス(?)
+
+	XXX じゃ Mail::Message::Decode も必要ですな？
+	XXX FML::Encode vs Mail::Message::Encode 
 
 
 [リファレンス]
@@ -7,12 +10,12 @@
 
 [使い方の例]
 
-	use FML::Encode;
-	my $encode  = new FML::Encode;
+	use Mail::Message::Encode;
+	my $encode  = new Mail::Message::Encode;
 	my $str_euc = $encode->convert( $s, 'euc-jp' );
 	my $str_euc = $encode->convert( $s, 'euc-jp', 'iso-2022-jp' );
 
-	my $encode  = new FML::Encode;
+	my $encode  = new Mail::Message::Encode;
 	my $status  = $encode->convert_str_ref( \$s, 'euc-jp' );
 	my $status  = $encode->convert_str_ref( \$s, 'euc-jp', 'jis' );
 
@@ -20,7 +23,7 @@
 	$encode->run_in_chcode( $fp, $oout, $in );
 
    * 4.0 互換
-	ues FML::Encode qw(STR2EUC);
+	ues Mail::Message::Encode qw(STR2EUC);
 	my $euc_s = STR2EUC( $s );
 
 
@@ -102,7 +105,11 @@ sub run_in_chcode
 
 
 
-[FML::Encode へマージしたいもの]
+[Mail::Message::Encode へマージしたいもの]
+
+	Mail/Message/Decode.pm
+	Mail/Message/Encode.pm
+		はどうする？
 
 	FML::Language を削除
 	FML::Language::ISO2022JP を削除
