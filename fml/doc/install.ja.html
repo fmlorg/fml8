@@ -2,7 +2,7 @@
 <HTML>
 <HEAD>
 <TITLE>
-00_README.ja.txt
+fml-devel のインストール
 </TITLE>
 <META http-equiv="Content-Type"
 	content="text/html; charset=EUC-JP">
@@ -10,7 +10,7 @@
 
 <BODY BGCOLOR="#E6E6FA">
 <PRE>
-		インストールについて
+		fml-devel のインストールについて
 
   * 用語について:
 	% 一般ユーザのプロンプト
@@ -25,6 +25,10 @@
 
 	% su root
 	# sh INSTALL.sh
+
+
+以下のディレクトリにインストールされます。
+以下のディレクトリがない場合、勝手に作ります。
 
 それぞれのディレクトリの役割は次の通りです。
 
@@ -52,6 +56,15 @@
 
 	注意: /var/spool/ml のオーナは INSTALL.sh の
 	owner 変数(デフォルトはユーザ fml)に設定されます。
+
+/usr/local/bin/
+	以下のスクリプトが /usr/local/bin/ にインストールされます。
+	注意して下さい。
+
+	/usr/local/bin/fmldoc
+	/usr/local/bin/fmlticket
+	/usr/local/bin/fmlconf
+	/usr/local/bin/makefml
 
 
 ○ ドキュメントは HTML 版だけです。
