@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.168 2003/04/04 04:45:01 fukachan Exp $
+# $FML: Kernel.pm,v 1.169 2003/04/29 11:28:45 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1601,6 +1601,10 @@ sub queue_in
     my $msg          = '';
     my $hdr_to       = '';
 
+    use Mail::Message::Date;
+    my $_nowdate     = new Mail::Message::Date time;
+    my $our_date     = $_nowdate->{ mail_header_style };
+
     # override parameters (may be processed here always)
     if (defined $optargs) {
 	my $a = $optargs;
@@ -1665,12 +1669,14 @@ sub queue_in
 	my $_to = $hdr_to || $rcptkey;
 	eval q{
 	    $msg = new Mail::Message::Compose
-		From     => $sender,
-		To       => $_to,
-		Subject  => $subject,
-		Type     => "multipart/mixed";
+		From      => $sender,
+		To        => $_to,
+		Subject   => $subject,
+		Type      => "multipart/mixed",
+	        Datestamp => undef,
 	};
 	$msg->add('Reply-To' => $reply_to);
+	$msg->add('Date' => $our_date);
 	_add_info_on_header($config, $msg);
 
 	my $mesg_queue = $pcb->get($category, 'queue');
@@ -1757,13 +1763,15 @@ sub queue_in
 	my $_to = $hdr_to || $rcptkey;
 	eval q{
 	    $msg = new Mail::Message::Compose
-		From     => $sender,
-		To       => $_to,
-		Subject  => $subject,
-		Data     => $s,
+		From      => $sender,
+		To        => $_to,
+		Subject   => $subject,
+		Data      => $s,
+	        Datestamp => undef,
 	};
 	$msg->attr('content-type.charset' => $charset);
 	$msg->add('Reply-To' => $reply_to);
+	$msg->add('Date' => $our_date);
 	_add_info_on_header($config, $msg);
     }
 
