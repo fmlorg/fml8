@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Adapter.pm,v 1.6 2001/08/05 11:56:01 fukachan Exp $
+# $FML: Adapter.pm,v 1.7 2001/08/26 05:52:08 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -42,30 +42,13 @@ For example, C<$map_params> is:
 	    user           => 'fml',
 	    user_password  => "secret password :)",
 
-	    # this driver specific SQL statements
-	    getline        => "select ... ",
-	    get_next_value => "select ... ",
-	    add            => "insert ... ",
-	    delete         => "delete ... ",
-	    replace        => "set address = 'value' where ... ",
-	},
-    };
-
-In another way, you can specify your own module to provide
-specific SQL statements.
-
-    $map_params = {
-	'mysql:toymodel' => {
-	    sql_server     => 'mysql.fml.org',
-	    database       => 'fml',
-	    table          => 'ml',
-	    user           => 'fml',
-	    user_password  => "secret password :)",
-
+	    # model specific driver module
 	    driver         => 'My::Driver::Module::Name',
 	},
     };
 
+where you can specify your own module to provide specific SQL
+statements.
 
 =head1 DESCRIPTION
 
@@ -299,7 +282,7 @@ add $address to the specified map.
 
 delete lines which matches $regexp from this map.
 
-=head2 C<regexp( $regexp, $value )>
+=head2 C<replace( $regexp, $value )>
 
 replace lines which matches $regexp with $value.
 
@@ -383,14 +366,21 @@ sub find
     my $show_all       = $args->{ all } ? 1 : 0;
     my (@buf, $x);
 
-    # forward the request to SUPER class
-    if ($self->SUPER::can('_find')) { $self->_find($regexp, $args);}
+    # forward the request to SUPER class (md = map dependent)
+    if ($self->SUPER::can('md_find')) { 
+	return $self->md_find($regexp, $args);
+    }
 
     # search regexp by reading the specified map.
     $self->open;
     while (defined ($x = $self->get_next_value())) {
 	if ($show_all) {
-	    push(@buf, $x) if $x =~ /$regexp/;	    
+	    if ($case_sensitive) {
+		push(@buf, $x) if $x =~ /$regexp/;
+	    }
+	    else {
+		push(@buf, $x) if $x =~ /$regexp/i;
+	    }
 	}
 	else {
 	    if ($case_sensitive) {
