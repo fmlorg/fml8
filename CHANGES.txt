@@ -1,6 +1,42 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/05/13
+
+   FML::Process::Utils 
+	implement
+	config_cf_filepath($ml, $domain)
+	is_config_cf_exist($ml, $domain)
+	
+   FML::Command::HTMLify 
+	validate if config.cf exists
+
+2002/05/11
+
+   FML::Filter::ContentCheck 
+	add Log deteled mimetype at only_plaintext() and typo fix
+	fix wrong log message (but is it correct fix ?).
+	FNF-ify
+	
+   FML::Language::Japanese::Utils 
+	_look_not_iso2022jp_string::add trivial check
+	
+   Mail::Message 
+	fix::parser() should handle header only message.
+	no no no, not reset $data_ptr unless body
+	nuke \s*$
+
+2002/05/10
+
+   FML::Filter::ContentCheck 
+	add function permit_mimetype() and reject_mimetype()
+	add function permit_rules() and reject_rules()
+	
+2002/04/30
+
+   FML::Command::Admin::check 
+	add prototype for diagnostics
+
 2002/04/28
 
    FML::Process::Kernel 
@@ -2252,4 +2288,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.71 2002/04/27 14:30:45 fukachan Exp $
+$FML: CHANGES.txt,v 1.72 2002/04/28 15:01:52 fukachan Exp $
