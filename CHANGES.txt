@@ -1,6 +1,106 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/10/12
+
+   Mail::Message::ToHTML 
+	rename index.html to index_all.html
+	add sub create_top_index()
+
+2002/10/06
+
+   Mail::Message::ToHTML 
+	add index reverse code at _update_id_monthly_index()
+
+2002/10/04
+
+   variables
+	define $html_archive_index_order_type
+	
+   FML::Command::HTMLify 
+   FML::Process::Distribute 
+   Mail::Message::ToHTML 
+	enabled to handle order in index.html by
+	$html_archive_index_order_type.
+	
+	Mail::Message::ToHTML
+	o htmlify_{file,dir}() is changted to normal methods for passing
+	arguments.
+	
+   FML::Filter 
+	add prototype for $use_article_non_mime_filter
+	
+   FML::Header::Subject 
+	workaround to re-encode subject after subject tag handling
+
+2002/09/30
+
+   フィルタリングの再構成
+
+	FNF-ify
+	
+	rename: _load_function() -> _apply_function()
+	
+	module name renamed:
+	o ContentCheck -> MimeComponent
+	o HeaderCheck  -> Header
+	o BodyCheck    -> TextPlain
+
+2002/09/29
+
+   フィルタリングの再構成
+
+   変数
+	reconstruct filter system.  create a new file "article.cf",
+	and gather article_*_filter definitions in it.
+
+   FML::Process::Distribute 
+	sync w:::FML::Filter reconstruction. rename function name
+	
+   FML::Filter 
+	following new variable $article_filter_functions,
+	call the following function sequentially.
+	o article_header_filter
+	o article_non_mime_filter
+	o article_mime_component_filter
+	o article_text_plain_filter
+
+2002/09/29
+
+   FML::Process::ConfViewer 
+	"fmlconf $ml $varname" shows "$varname = $value".
+	unless $varname specified, dump all variables.
+
+   FML::Config::Convert 
+	hold file mode. set $dst mode same as $src mode
+	
+   FML::Confirm 
+   FML::Header::MessageID 
+   File::CacheDir 
+   Mail::ThreadTrack 
+   Mail::Delivery::Queue 
+   Mail::Message::ToHTML 
+   Mail::ThreadTrack::DB 
+	we should not use hard-coded file::dir mode
+	
+   FML::Article 
+	care subdir case more
+
+2002/09/28
+
+   variables
+	enable off/on for user use
+
+2002/09/24
+
+   variables
+	$article_body_filter_rules add permit as the last resort
+	$article_header_filter_rules append permit rule
+	
+   FML::Filter::BodyCheck 
+   FML::Filter::HeaderCheck 
+	define permit rule
+
 2002/09/23
 
    FML::Filter::BodyCheck 
@@ -3327,4 +3427,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.102 2002/09/15 02:22:47 fukachan Exp $
+$FML: CHANGES.txt,v 1.103 2002/09/23 15:02:34 fukachan Exp $
