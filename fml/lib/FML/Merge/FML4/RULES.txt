@@ -1,9 +1,9 @@
 #
-# $FML: config.txt,v 1.1.1.1 2004/03/16 12:58:21 fukachan Exp $
+# $FML: RULES.txt,v 1.1 2004/03/20 04:51:37 fukachan Exp $
 #     BASED ON fml/cf/MANIFEST 1.104
 #
-#	.use			そのまま使う
-#	.auto			fml8 で自動設定される値を使う
+#	.use_fml4_value		そのまま使う
+#	.use_fml8_value		fml8 で自動設定される値を使う
 #	.convert		よろしく変換して頑張る
 #	.fml8_default		fml8 のデフォルトと同じ、気にするな
 #	.not_yet_implemented	まだ、実装されてない
@@ -66,12 +66,12 @@
 # # value: string
 # DOMAINNAME:	&fix:dn   phys.titech.ac.jp
 .if DOMAINNAME
-	.auto
+	.use_fml8_value
 
 
 # FQDN:		&fix:fqdn axion.phys.titech.ac.jp
 .if FQDN
-	.auto
+	.use_fml8_value
 
 
 #########################################################################
@@ -93,7 +93,7 @@
 
 .if MAIL_LIST
 
-	.convert (article_post_address = MAIL_LIST)
+	.convert
 
 
 .if PERMIT_POST_FROM == anyone
@@ -101,14 +101,15 @@
 	article_post_restrictions = reject_system_special_accounts permit_anyone
 
 .if PERMIT_POST_FROM == members_only
-
 	.if REJECT_POST_HANDLER == reject
 
 	article_post_restrictions = reject_system_special_accounts permit_member_maps reject
 
+.if PERMIT_POST_FROM == members_only
 	.if REJECT_POST_HANDLER == auto_subscribe
 		.unavailable
 
+.if PERMIT_POST_FROM == members_only
 	.if REJECT_POST_HANDLER == ignore
 		.unavailable
 
@@ -145,7 +146,7 @@
 
 .if CONTROL_ADDRESS
 
-	.convert (command_mail_address = CONTROL_ADDRESS)
+	.convert
 
 
 .if PERMIT_COMMAND_FROM == anyone
@@ -154,13 +155,14 @@
 
 
 .if PERMIT_COMMAND_FROM == members_only
-
 	.if REJECT_COMMAND_HANDLER == reject
 		.not_yet_implemented		
 
+.if PERMIT_COMMAND_FROM == members_only
 	.if REJECT_COMMAND_HANDLER == auto_subscribe
 		.fml8_default
 
+.if PERMIT_COMMAND_FROM == members_only
 	.if REJECT_COMMAND_HANDLER == ignore
 		.not_yet_implemented
 
@@ -187,7 +189,7 @@
 # MAINTAINER:		
 .if MAINTAINER
 
-	.convert (maintainer = MAINTAINER)
+	.convert
 
 
 # MAINTAINER_SIGNATURE:	
@@ -225,7 +227,7 @@
 # # value: directory string
 # TMP_DIR:	tmp
 .if TMP_DIR == tmp
-	.auto
+	.use_fml8_value
 
 
 # # multi-purpose log, temporary, transient, and spool files (4.4BSD style)
@@ -233,7 +235,7 @@
 # # value: directory string
 # VAR_DIR:	var
 .if VAR_DIR == var
-	.auto
+	.use_fml8_value
 
 
 # VARLOG_DIR:	var/log
@@ -248,7 +250,7 @@
 
 # VARDB_DIR:	var/db
 .if VARDB_DIR == var/db
-	.auto
+	.use_fml8_value
 
 
 
@@ -388,7 +390,7 @@
 # # value: filename string
 # CONFIRMATION_LIST:		
 .if CONFIRMATION_LIST
-	.auto
+	.use_fml8_value
 
 
 # # In fact, obsolete.
@@ -512,8 +514,8 @@
 # # value: crypt/address/md5/pgp/pgp2/pgp5/gpgp
 # REMOTE_ADMINISTRATION_AUTH_TYPE:	crypt
 .if REMOTE_ADMINISTRATION_AUTH_TYPE == crypt
-	.fml8_default
-	(admin_command_mail_restrictions += check_admin_member_password)
+
+	admin_command_mail_restrictions += check_admin_member_password
 
 .if REMOTE_ADMINISTRATION_AUTH_TYPE == address
 	.not_yet_implemented
@@ -575,7 +577,7 @@
 # ADMIN_LOG_DEFAULT_LINE_LIMIT:	100
 .if ADMIN_LOG_DEFAULT_LINE_LIMIT
 
-	$log_command_tail_starting_location = ADMIN_LOG_DEFAULT_LINE_LIMIT
+	log_command_tail_starting_location = ADMIN_LOG_DEFAULT_LINE_LIMIT
 
 
 # # PGP directory path (obsolete in fml 4.0)
@@ -744,7 +746,7 @@
 	.unavailable
 
 .if INCOMING_MAIL_SIZE_LIMIT != 0
-	.auto
+	.use_fml8_value
 
 
 # # When fml reject too big mail,
@@ -921,14 +923,14 @@
 # # value: 1/0
 # CONTENT_HANDLER_CUTOFF_EMPTY_MESSAGE:	0
 .if CONTENT_HANDLER_CUTOFF_EMPTY_MESSAGE
-	.use_other_file
+	.use_fml4_value
 
 
 # # reject empty message after cut off process.
 # # value: 1/0
 # CONTENT_HANDLER_REJECT_EMPTY_MESSAGE:	0
 .if CONTENT_HANDLER_REJECT_EMPTY_MESSAGE
-	.use_other_file
+	.use_fml4_value
 
 
 # # try to convert Japanese HANKAKU chars in the mail body to ZENAKKU
@@ -948,7 +950,7 @@
 # # value: "strip" / "reject" / ""
 # HTML_MAIL_DEFAULT_HANDLER:
 .if HTML_MAIL_DEFAULT_HANDLER
-	.use_other_file
+	.use_fml4_value
 
 
 # # Traffic Monitoring Mechanism within fml
@@ -1062,11 +1064,11 @@
 # # value: filename string
 # LOG_MAIL_DIR:	$VAR_DIR/Mail
 .if LOG_MAIL_DIR
-	.auto
+	.use_fml8_value
 
 # LOG_MAIL_SEQ:	$LOG_MAIL_DIR/.seq
 .if LOG_MAIL_SEQ
-	.auto
+	.use_fml8_value
 
 
 # # value: number
@@ -1345,14 +1347,14 @@
 # # value: +\d{4} / -\d{4}
 # TZone:		 +0900
 .if TZone == +0900
-	.auto
+	.use_fml8_value
 
 
 # # time zone within summer time if you use summer time.
 # # thank HIROSHIMA Naoki <naoki@bcrossing.com> on this idea
 # TZONE_DST:
 .if TZONE_DST
-	.auto
+	.use_fml8_value
 
 
 # # ## Sub Section: Pass All Header ? ##
@@ -1475,7 +1477,7 @@
 # # value: regexp string
 # CHADDR_KEYWORD:	 chaddr|change\-address|change
 .if CHADDR_KEYWORD == chaddr|change\-address|change
-	.auto
+	.use_fml8_value
 
 
 # # choise of addresses to return for "chaddr" command reply
@@ -1709,21 +1711,21 @@
 # # value: filename string
 # LOG_MESSAGE_ID:	$VARRUN_DIR/msgidcache
 .if LOG_MESSAGE_ID == $VARRUN_DIR/msgidcache
-	.auto
+	.use_fml8_value
 
 
 # # cache size of Message-ID: negative cache
 # # value: number
 # MESSAGE_ID_CACHE_BUFSIZE:	6000
 .if MESSAGE_ID_CACHE_BUFSIZE == 6000
-	.auto
+	.use_fml8_value
 
 
 # # cache file of mailbody cksum mail loop check
 # # value: filename string
 # LOG_MAILBODY_CKSUM:	$VARRUN_DIR/bodycksumcache
 .if LOG_MAILBODY_CKSUM == $VARRUN_DIR/bodycksumcache
-	.auto
+	.use_fml8_value
 
 
 # # $MEMBER_LIST 	member who can post and use commands
@@ -1773,7 +1775,7 @@
 # # value: filename string
 # LOGFILE:	 $DIR/log
 .if LOGFILE == $DIR/log
-	.use
+	.use_fml4_value
 
 
 # MGET_LOGFILE:    $DIR/log
@@ -1801,14 +1803,14 @@
 # # value: filename string
 # SUMMARY_FILE: 	 $DIR/summary
 .if SUMMARY_FILE == $DIR/summary
-	.use
+	.use_fml4_value
 
 
 # # sequence number file
 # # value: filename string
 # SEQUENCE_FILE: 	 $DIR/seq
 .if SEQUENCE_FILE == $DIR/seq
-	.use
+	.use_fml4_value
 
 
 # # rename(2) lock (liblock.pl)
@@ -1861,35 +1863,35 @@
 # # value: filename string
 # SMTP_LOG:		$VARLOG_DIR/_smtplog
 .if SMTP_LOG == $VARLOG_DIR/_smtplog
-	.auto
+	.use_fml8_value
 
 
 # # rotate use of var/log/_smtplog.$i (where $i is the number)
 # # value: 1/0
 # USE_SMTP_LOG_ROTATE:	1
 .if USE_SMTP_LOG_ROTATE == 1
-	.auto
+	.use_fml8_value
 
 
 # # expire how old _smtplog.$date
 # # value: number
 # SMTP_LOG_ROTATE_EXPIRE_LIMIT:	90
 .if SMTP_LOG_ROTATE_EXPIRE_LIMIT == 90
-	.auto
+	.use_fml8_value
 
 
 # # the number of var/log/_smtplog.$i files. This is the value of modulus.
 # # value: number
 # NUM_SMTP_LOG_ROTATE:	8
 .if NUM_SMTP_LOG_ROTATE == 8
-	.auto
+	.use_fml8_value
 
 
 # # type of suffix for _smtplog
 # # value: number / day
 # SMTP_LOG_ROTATE_TYPE:	number
 .if SMTP_LOG_ROTATE_TYPE == number
-	.auto
+	.use_fml8_value
 
 
 
@@ -1922,7 +1924,7 @@
 # # value: number
 # MCI_SMTP_HOSTS:		
 .if MCI_SMTP_HOSTS
-	.auto
+	.use_fml8_value
 
 
 # # obsolete today
@@ -2617,7 +2619,7 @@
 # # value: string
 # CPU_TYPE_MANUFACTURER_OS:
 .if CPU_TYPE_MANUFACTURER_OS
-	.auto
+	.use_fml8_value
 
 
 # # struct sockaddr
@@ -2625,36 +2627,36 @@
 # # value: string
 # STRUCT_SOCKADDR:	S n a4 x8
 .if STRUCT_SOCKADDR
-	.auto
+	.use_fml8_value
 
 
 # # flock(2) system call; please see "/usr/include/sys/file.h"
 # # value: number
 # LOCK_SH: 	 1
 .if LOCK_SH
-	.auto
+	.use_fml8_value
 
 
 # LOCK_EX: 	 2
 .if LOCK_EX
-	.auto
+	.use_fml8_value
 
 
 # LOCK_NB:	 4
 .if LOCK_NB
-	.auto
+	.use_fml8_value
 
 
 # LOCK_UN: 	 8
 .if LOCK_UN
-	.auto
+	.use_fml8_value
 
 
 # # enforce solaris 2 compatible
 # # value: 1/0
 # COMPAT_SOLARIS2:	
 .if COMPAT_SOLARIS2
-	.auto
+	.use_fml8_value
 
 
 # # used in cron of fml package
@@ -2662,35 +2664,35 @@
 # # value: 1/0
 # NOT_USE_TIOCNOTTY:	
 .if NOT_USE_TIOCNOTTY
-	.auto
+	.use_fml8_value
 
 
 # # On Unix, always yes set 1 in &SetDefaults;
 # # value: 1/0
 # HAS_GETPWUID:	&is_unix
 .if HAS_GETPWUID
-	.auto
+	.use_fml8_value
 
 
 # # On Unix, always yes set 1 in &SetDefaults;
 # # value: 1/0
 # HAS_GETPWGID:	&is_unix
 .if HAS_GETPWGID
-	.auto
+	.use_fml8_value
 
 
 # # On Unix, always yes set 1 in &SetDefaults;
 # # value: 1/0
 # HAS_ALARM:	&is_unix
 .if HAS_ALARM
-	.auto
+	.use_fml8_value
 
 
 # # On Unix, always yes set 1 in &SetDefaults;
 # # value: 1/0
 # UNISTD:		&is_unix
 .if UNISTD
-	.auto
+	.use_fml8_value
 
 
 
@@ -2699,109 +2701,109 @@
 # # value: filename string
 # SENDMAIL:	&path(sendmail)
 .if SENDMAIL
-	.auto
+	.use_fml8_value
 
 
 # TAR:		&path(tar) cf -
 .if TAR
-	.auto
+	.use_fml8_value
 
 
 # UUENCODE:	&path(uuencode)
 .if UUENCODE
-	.auto
+	.use_fml8_value
 
 
 # COMPRESS:	&path(gzip) -c
 .if COMPRESS
-	.auto
+	.use_fml8_value
 
 
 # ZCAT:		&path(gzcat:zcat:gzip\s-cd)
 .if ZCAT
-	.auto
+	.use_fml8_value
 
 
 # LHA:		&path(lha)
 .if LHA
-	.auto
+	.use_fml8_value
 
 
 # ISH:		&path(ish)
 .if ISH
-	.auto
+	.use_fml8_value
 
 
 # ZIP:		&path(zip)
 .if ZIP
-	.auto
+	.use_fml8_value
 
 
 # BZIP2:		&path(bzip2)
 .if BZIP2
-	.auto
+	.use_fml8_value
 
 
 # PGP:		&path(pgp)
 .if PGP
-	.auto
+	.use_fml8_value
 
 
 # PGP5:		&path(pgp5)
 .if PGP5
-	.auto
+	.use_fml8_value
 
 
 # PGPE:		&path(pgpe)
 .if PGPE
-	.auto
+	.use_fml8_value
 
 
 # PGPK:		&path(pgpk)
 .if PGPK
-	.auto
+	.use_fml8_value
 
 
 # PGPS:		&path(pgps)
 .if PGPS
-	.auto
+	.use_fml8_value
 
 
 # PGPV:		&path(pgpv)
 .if PGPV
-	.auto
+	.use_fml8_value
 
 
 # GPG:		&path(gpg)
 .if GPG
-	.auto
+	.use_fml8_value
 
 
 # RCS:		&path(rcs)
 .if RCS
-	.auto
+	.use_fml8_value
 
 
 # CI:		&path(ci)
 .if CI
-	.auto
+	.use_fml8_value
 
 
 
 # BASE64_DECODE:
 .if BASE64_DECODE
-	.auto
+	.use_fml8_value
 
 
 
 # BASE64_ENCODE:
 .if BASE64_ENCODE
-	.auto
+	.use_fml8_value
 
 
 # MD5:		&path(md5:md5sum)
 .if MD5
-	.auto
+	.use_fml8_value
 
 
 
