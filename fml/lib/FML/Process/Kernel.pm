@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.245 2004/12/05 16:19:10 fukachan Exp $
+# $FML: Kernel.pm,v 1.246 2004/12/09 04:53:42 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2656,6 +2656,15 @@ sub clean_up_tmpfiles
 	    unlink $q;
 	}
     }
+
+    # clean up tmp_dir.
+    my $channel = "clean_up_tmp_dir";
+    if ($curproc->is_event_timeout($channel)) {
+	my $config  = $curproc->config();
+	my $tmp_dir = $config->{ tmp_dir };
+	$curproc->remove_too_old_files_in_dir($tmp_dir);
+	$curproc->set_event_timeout($channel, time + 24*3600);
+    }
 }
 
 
@@ -2666,11 +2675,25 @@ sub clean_up_tmpfiles
 sub clean_up_incoming_queue
 {
     my ($curproc) = @_;
+    my $config    = $curproc->config();
+    my $channel   = 'mail_incoming_queue_clean_up';
 
     # Mail::Delivery::Queue object.
     my $queue = $curproc->mail_queue_get_incoming_queue() || undef;
     if (defined $queue) {
 	$queue->remove();
+    }
+
+    # remove too old incoming queue files.
+    if ($curproc->is_event_timeout($channel)) {
+	my $fp = sub { $curproc->log(@_);};
+
+	use Mail::Delivery::Queue;
+	my $queue_dir = $config->{ mail_queue_dir };
+	my $queue     = new Mail::Delivery::Queue { directory => $queue_dir };
+	$queue->set_log_function($fp);
+	$queue->clean_up();
+	$curproc->set_event_timeout($channel, time + 24*3600);
     }
 }
 
