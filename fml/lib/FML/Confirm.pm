@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Confirm.pm,v 1.15 2004/01/02 14:42:45 fukachan Exp $
+# $FML: Confirm.pm,v 1.16 2004/01/18 14:03:55 fukachan Exp $
 #
 
 package FML::Confirm;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Confirm - manipulate confirmation database
+FML::Confirm - manipulate confirmation database.
 
 =head1 SYNOPSIS
 
@@ -87,9 +87,9 @@ assign new id for current object.
 =cut
 
 
-# Descriptions: assign new id for current object
+# Descriptions: assign new id for current object.
 #    Arguments: OBJ($self)
-# Side Effects: update databse
+# Side Effects: update databse.
 # Return Value: STR
 sub assign_id
 {
@@ -133,8 +133,9 @@ sub store_id
     my ($self, $id, $comment) = @_;
     my $class  = $self->{ _class };
     my $addr   = $self->{ _address };
-    my $db     = $self->_open_db();
     my $id_str = sprintf("%s%s", time, defined $comment ? " $comment" : '');
+
+    my $db = $self->_open_db();
 
     $db->{ $id }           = $id_str;
     $db->{ "request-$id" } = "$class $addr";
@@ -146,27 +147,27 @@ sub store_id
 
 =head2 find($id)
 
-find database value for $id
+find database value for $id.
 
 =cut
 
 
-# Descriptions: find value for $id
+# Descriptions: find value for $id.
 #    Arguments: OBJ($self) STR($id)
-# Side Effects: update $self->{ _found };
+# Side Effects: update $self->{ _found }.
 # Return Value: STR
 sub find
 {
     my ($self, $id) = @_;
-    my $db    = $self->_open_db();
     my $found = '';
 
+    my $db = $self->_open_db();
     if (defined $db) {
 	$found = $db->{ $id } || '';
 	$self->_close_db();
     }
 
-    $self->{ _found } = $found;
+    $self->{ _found } = $found || '';
 
     return $found;
 }
@@ -174,21 +175,21 @@ sub find
 
 =head2 get_request($id)
 
-get value for request id $id.
+get request info for id $id.
 
 =cut
 
 
-# Descriptions: get request id
+# Descriptions: get request for id.
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
 # Return Value: STR
 sub get_request
 {
     my ($self, $id) = @_;
-    my $db    = $self->_open_db();
     my $found = '';
 
+    my $db = $self->_open_db();
     if (defined $db) {
 	$found = $db->{ "request-$id" } || '';
 	$self->_close_db();
@@ -205,16 +206,16 @@ get address for $id.
 =cut
 
 
-# Descriptions: get address for $id
+# Descriptions: get address for $id.
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
 # Return Value: STR
 sub get_address
 {
     my ($self, $id) = @_;
-    my $db    = $self->_open_db();
     my $found = '';
 
+    my $db = $self->_open_db();
     if (defined $db) {
 	$found = $db->{ "address-$id" } || '';
 	$self->_close_db();
@@ -224,15 +225,14 @@ sub get_address
 }
 
 
-=head2 is_expired($found, $howold)
+=head2 is_expired($id, $howold)
 
-request for $id is expired or not.
-specify $found (database value) for $id as argument.
+check if request for $id is expired or not.
 
 =cut
 
 
-# Descriptions: request for $id is expired or not
+# Descriptions: check if request for $id is expired or not.
 #    Arguments: OBJ($self) STR($id) NUM($howold)
 # Side Effects: none
 # Return Value: 1 or 0
@@ -278,7 +278,7 @@ sub _open_db
     if (defined $db) {
 	my $dir   = $self->{ _cache_dir };
 	my $class = $self->{ _class };
-	my $_db   = $db->open($dir, $class);
+	my $_db   = $db->open($dir, $class) || undef;
 	$self->{ _db } = $_db;
 	return $_db;
     }
