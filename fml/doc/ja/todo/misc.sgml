@@ -1,5 +1,5 @@
 <!--
-   $FML: misc.sgml,v 1.1 2001/05/19 13:51:58 fukachan Exp $
+   $FML: misc.sgml,v 1.2 2001/07/15 09:17:59 fukachan Exp $
 -->
 
 <chapter id="misc">
@@ -299,8 +299,8 @@ fml-support: 07525
 </sect1>
 
 
-
 &sect.cgi;
+
 &sect.port;
 
 

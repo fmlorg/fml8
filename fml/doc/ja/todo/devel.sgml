@@ -1,5 +1,5 @@
 <!--
-	$FML: devel.sgml,v 1.5 2001/07/07 02:40:51 fukachan Exp $
+   $FML: devel.sgml,v 1.6 2001/07/15 09:17:59 fukachan Exp $
 -->
 
 <chapter id="fml5.todo">
@@ -16,6 +16,12 @@ smtpfeed を直接叩きたい。
 エラーの場合は、SMTP に処理を切替える。
 </para>
 
+<para>
+Mail::Delivery::Queue クラスが実装済み。
+これによりキューファイルの出し入れはできる。
+あとは LMTP か？
+</para>
+
 </sect1>
 
 
@@ -26,14 +32,18 @@ smtpfeed を直接叩きたい。
    </title>
 
 <para>
-mead の改造
+mead の改造をするために、きちんと
+Mail::Bounce
+を実装する。
 </para>
+
+
 </sect1>
 
 
 <!-- ============================================ -->
 <sect1>
-   <title> より統合されたパッケージ </title>
+   <title> より統合されたパッケージを作りたい </title>
 
 <para>
 サーチエンジンとのよりよい連携(?)
@@ -46,7 +56,7 @@ mead の改造
 <title> モデレータ </title>
 
 <para>
-モデレータの承認は www でぽん
+モデレータの承認は www でぽーんといきたい
 </para>
 
 </sect1>
@@ -56,7 +66,7 @@ mead の改造
 <title> チケットシステム </title>
 
 <para>
-チェックボタンで一括消去
+チェックボタンで一括消去をする
 </para>
 
 </sect1>

@@ -1,7 +1,12 @@
+<!--
+   $FML$
+-->
+
+
 <!-- ============================================== -->
 <sect1>
    <title>
-   remove @elena again where @elena already exists
+   ＭＬを消去する際に @elena ディレクトリを消す
    </title>
 
 <para>
@@ -20,11 +25,24 @@ rm -fr でちゃれんじ…してもいいけど、失敗するとこわい〜ん;_;
 <!-- ============================================== -->
 <sect1>
    <title>
+   ML を消したら対応する authdb/ml-admin/$ml/ 以下も消す
+   </title>
+
+<para>
+ML を消したら対応する authdb/ml-admin/$ml/ 以下も消す
+</para>
+
+</sect1>
+
+
+<!-- ============================================== -->
+<sect1>
+   <title>
    qmail と CGI でＭＬの作成 
    </title>
 
 <para>
-てづかず 
+手つかず
 </para>
 
 <para>
@@ -40,15 +58,17 @@ http://www.nmt.ne.jp/~myone/fml.shtml
 <!-- ============================================== -->
 <sect1>
    <title>
-   script 一発インストーラ (きめうち)
+   script 一発インストーラ (決め打ち)
    </title>
 
 <para>
 <screen>
-	postfix  + apache + fml-current
-	sendmail + apache + fml-current
-	qmail    + apache + fml-current
+postfix  + apache + fml-current
+sendmail + apache + fml-current
+qmail    + apache + fml-current
 </screen>
+などといった代表的な組合せについて、スクリプト一発で
+セットアップできるようにする。
 </para>
 
 </sect1>
@@ -57,11 +77,11 @@ http://www.nmt.ne.jp/~myone/fml.shtml
 <!-- ============================================== -->
 <sect1>
    <title>
-   modify file (e.g. help) by CGI ?
+   CGI でヘルプファイルなどを編集できるか？
    </title>
 
 <para>
-だめ？
+うーん、むつかしいような…
 </para>
 
 </sect1>
@@ -102,24 +122,11 @@ HTML 規格にあるものでなんとか〜
 <!-- ============================================== -->
 <sect1>
    <title>
-   ML を消したら対応する authdb/ml-admin/$ml/ 以下も消す
-   </title>
-
-<para>
-ML を消したら対応する authdb/ml-admin/$ml/ 以下も消す
-</para>
-
-</sect1>
-
-
-<!-- ============================================== -->
-<sect1>
-   <title>
    apache with SSL の解説の用意をする
    </title>
 
 <para>
-でもあるから、いいよね？ たとえば
+あるから、いいよね？ たとえば
 <screen>
 http://www.apache.org/dist/Announcement.html
 http://www.cert.org/advisories/CA-2000-02.html
@@ -128,6 +135,7 @@ http://www.apache.org/info/css-security/index.html
 </para>
 
 </sect1>
+
 
 
 <!-- ============================================== -->
@@ -141,7 +149,7 @@ ML名つきで、その下のアクセス権限は各 ML ごとに自由に変更できないといけない
 </para>
 
 <para>
-一般ユーザ用のWWWアクセスモデルの構築も必要
+まず、一般ユーザ用のWWWアクセスモデルの構築が必要でしょう。
 </para>
 
 </sect1>

@@ -1,21 +1,7 @@
 <!--
-   $FML: makefml.sgml,v 1.1 2001/05/19 13:51:58 fukachan Exp $
+   $FML: makefml.sgml,v 1.2 2001/06/01 03:55:09 fukachan Exp $
 -->
 
-
-<!-- ============================================== -->
-<sect1>
-   <title>
-    makefml *  と connect()
-   </title>
-
-<para>
-makefml install の時以外では
-connect(2) してみなくてもよいだろうに？
-( fml-help: 00251 )
-</para>
-
-</sect1>
 
 <!-- ============================================== -->
 <sect1>
