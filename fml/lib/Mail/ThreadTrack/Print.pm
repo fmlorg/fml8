@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Print.pm,v 1.5 2001/11/03 11:53:03 fukachan Exp $
+# $FML: Print.pm,v 1.6 2001/11/05 14:35:47 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -105,8 +105,10 @@ sub review
 		    }
 
 		    my $file = File::Spec->catfile($spool_dir, $aid);
-		    print $fd $self->__article_summary($file);
-		    print $fd "\n";
+		    if (-f $file) {
+			print $fd $self->__article_summary($file);
+			print $fd "\n";
+		    }
 		}
 	    }
 	}
