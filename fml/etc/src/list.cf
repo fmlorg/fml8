@@ -16,4 +16,5 @@ dbms.cf
 cgi.cf
 paths.cf
 system_dependence.cf
+debug.cf
 __end__.cf
