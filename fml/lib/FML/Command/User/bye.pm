@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: bye.pm,v 1.2 2001/08/26 07:59:03 fukachan Exp $
+# $FML: bye.pm,v 1.3 2001/10/14 00:32:29 fukachan Exp $
 #
 
 package FML::Command::User::bye;
@@ -12,7 +12,7 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
-FML::Command::Utils;
+use FML::Command::Utils;
 use FML::Command::User::unsubscribe;
 @ISA = qw(FML::Command::User::unsubscribe FML::Command::Utils);
 
