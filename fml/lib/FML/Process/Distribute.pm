@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.104 2003/01/25 12:02:41 fukachan Exp $
+# $FML: Distribute.pm,v 1.105 2003/02/16 08:33:09 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -150,6 +150,11 @@ sub _check_filter
 
 	# filter traps this message.
 	if ($r = $filter->error()) {
+	    my $msg_args = {
+		_arg_reason => $r,
+	    };
+	    $filter->article_filter_reject_notice($curproc, $msg_args);
+
 	    # we should stop this process ASAP.
 	    $curproc->stop_this_process();
 	    Log("rejected by filter due to $r");

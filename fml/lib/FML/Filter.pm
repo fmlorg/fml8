@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.19 2003/01/11 06:58:44 fukachan Exp $
+# $FML: Filter.pm,v 1.20 2003/02/18 15:55:33 fukachan Exp $
 #
 
 package FML::Filter;
@@ -225,6 +225,43 @@ sub _apply_article_mime_component_filter
     }
 
     return 0;
+}
+
+
+=head1 REJECT NOTIFICATION
+
+=head2 article_filter_reject_notice($curproc, $msg_args)
+
+send back message on rejection, with reason if could.
+
+=cut
+
+
+# Descriptions: 
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($msg_args)
+# Side Effects: update reply message queue
+# Return Value: none
+sub article_filter_reject_notice
+{
+    my ($obj, $curproc, $msg_args) = @_;
+    my $msg = $curproc->incoming_message();
+    my $r   = $msg_args->{ _arg_reason } || 'unknown';
+
+    $curproc->reply_message_nl("error.reject_post",
+			       "your post is rejected.",
+			       $msg_args);
+    $curproc->reply_message_nl("error.reject_post_reason",
+			       "reason(s) for rejection: $r",
+			       $msg_args);
+
+    # add header info
+    my $tag     = '   ';
+    my $hdr     = $curproc->incoming_message_header();
+    my $hdr_str = sprintf("\n%s\n", $hdr->as_string());
+    $hdr_str    =~ s/\n/\n$tag/g;
+    $curproc->reply_message($hdr_str);
+
+    $curproc->reply_message($msg, $msg_args);
 }
 
 
