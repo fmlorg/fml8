@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Size.pm,v 1.2 2002/12/20 03:41:28 fukachan Exp $
+# $FML: Size.pm,v 1.1 2003/05/14 12:02:01 fukachan Exp $
 #
 
 package FML::Filter::Size;
@@ -208,8 +208,57 @@ sub _check_mail_size
 	}
     }
 
-    $self->error_set($reason) if $reason;
-    croak($reason);
+    if ($reason) {
+	$self->error_set($reason);
+	croak($reason);
+    }
+}
+
+
+=head1
+
+=cut
+
+
+# Descriptions: 
+#    Arguments: OBJ($self) OBJ($msg) STR($type)
+# Side Effects: 
+# Return Value: none
+sub check_command_limit
+{
+    my ($self, $msg, $type) = @_;
+    my $curproc = $self->{ _curproc };
+
+    use FML::Command::Filter;
+    my $_msg   = $curproc->incoming_message_body();
+    my $obj    = new FML::Command::Filter;
+    my $reason = $obj->check_command_limit($curproc, $_msg);
+
+    if ($reason) {
+	$self->error_set($reason);
+	croak($reason);
+    }
+}
+
+
+# Descriptions: 
+#    Arguments: OBJ($self) OBJ($msg) STR($type)
+# Side Effects: 
+# Return Value: none
+sub check_line_length_limit
+{
+    my ($self, $msg, $type) = @_;
+    my $curproc = $self->{ _curproc };
+
+    use FML::Command::Filter;
+    my $_msg   = $curproc->incoming_message_body();
+    my $obj    = new FML::Command::Filter;
+    my $reason = $obj->check_line_length_limit($curproc, $_msg);
+
+    if ($reason) {
+	$self->error_set($reason);
+	croak($reason);
+    }
 }
 
 
