@@ -148,8 +148,9 @@ sub _expand_variables
       EXPANSION_LOOP:
 	while ($max++ < 16) {
 	    $org = $config->{ $x };
-
-	    $config->{ $x } =~ s/\$([a-z_]+)/$config->{$1}/g;
+	    
+	    $config->{$x} =~ 
+		s/\$([a-z_]+)/(defined $config->{$1} ? $config->{$1} : '')/ge;
 
 	    last EXPANSION_LOOP if $config->{ $x } !~ /\$/o;
 	    last EXPANSION_LOOP if $org eq $config->{ $x };
