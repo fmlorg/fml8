@@ -209,6 +209,16 @@ $default_cgi_charset
 </row>
 <row>
 <entry>
+cgi_language_list</entry>
+<entry>
+ available language mode in CGI</entry>
+<entry>
+english
+   japanese
+   </entry>
+</row>
+<row>
+<entry>
 cgi_main_menu_color</entry>
 <entry>
  default bgcolor</entry>
@@ -390,6 +400,15 @@ default_cgi_charset</entry>
  default charset</entry>
 <entry>
 us-ascii
+   </entry>
+</row>
+<row>
+<entry>
+default_cgi_language</entry>
+<entry>
+ language mode of CGI (!= charset) </entry>
+<entry>
+english
    </entry>
 </row>
 <row>

@@ -106,6 +106,7 @@ cgi {
    cgi_* {
           $cgi_base_dir
     ?     $cgi_charset
+    ?     $cgi_language_list
     ?     $cgi_main_menu_color
           $cgi_menu_default_map
     ?     $cgi_menu_map_list
@@ -168,6 +169,7 @@ default {
 
    default_* {
     ?     $default_cgi_charset
+    ?     $default_cgi_language
     ?     $default_charset
     ?     $default_directory_mode
     ?     $default_file_mode
@@ -636,6 +638,7 @@ _dir$ {
 *** unclassified ***
     ?     $commands_for_admin
     ?     $commands_for_admin_cgi
+    ?     $commands_for_ml_admin_cgi
     ?     $commands_for_privileged_user
     ?     $commands_for_stranger
     ?     $commands_for_user

@@ -209,6 +209,16 @@ $default_cgi_charset
 </row>
 <row>
 <entry>
+cgi_language_list</entry>
+<entry>
+ CGI で利用可能な言語モード (!= charset) </entry>
+<entry>
+japanese
+   english
+   </entry>
+</row>
+<row>
+<entry>
 cgi_main_menu_color</entry>
 <entry>
  デフォルトの bgcolor</entry>
@@ -390,6 +400,15 @@ default_cgi_charset</entry>
  デフォルトの CHARSET</entry>
 <entry>
 euc-jp
+   </entry>
+</row>
+<row>
+<entry>
+default_cgi_language</entry>
+<entry>
+ CGI の言語モード (!= charset) </entry>
+<entry>
+japanese
    </entry>
 </row>
 <row>
