@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: BodyCheck.pm,v 1.20 2002/07/02 12:39:00 fukachan Exp $
+# $FML: BodyCheck.pm,v 1.21 2002/07/15 15:27:14 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -164,8 +164,9 @@ sub reject_not_iso2022jp_japanese_string
     my ($self, $msg, $args, $first_msg) = @_;
     my $buf = $first_msg->nth_paragraph(1);
 
-    use FML::Language::ISO2022JP qw(is_iso2022jp_string);
-    unless (is_iso2022jp_string($buf)) {
+    use Mail::Message::Encode;
+    my $obj = new Mail::Message::Encode;
+    unless ($obj->is_iso2022jp_string($buf)) {
 	croak "Japanese but not ISO-2022-JP";
     }
 }
@@ -444,8 +445,9 @@ sub is_signature
 	return 1;
     }
 
-    use FML::Language::ISO2022JP qw(STR2EUC);
-    $data = STR2EUC( $data );
+    use Mail::Message::Encode;
+    my $obj = new Mail::Message::Encode;
+    $data   = $obj->convert( $data, 'euc-jp' );
 
     # "2-byte @"domain where "@" is a 2-byte "@" character.
     if ($data =~ /[-A-Za-z0-9]\241\367[-A-Za-z0-9]/) {

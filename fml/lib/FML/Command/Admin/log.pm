@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.5 2002/06/25 04:12:54 fukachan Exp $
+# $FML: log.pm,v 1.6 2002/07/17 12:13:24 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -100,7 +100,8 @@ sub _show_log
     my $linecount    = 0;
     my $maxline      = 0;
 
-    use FML::Language::ISO2022JP qw(STR2EUC);
+    use Mail::Message::Encode;
+    my $obj = new Mail::Message::Encode;
 
     use FileHandle;
     my $fh = new FileHandle $log_file;
@@ -117,7 +118,7 @@ sub _show_log
 	while (<$fh>) {
 	    next LINE if $linecount++ < $maxline;
 
-	    $s = STR2EUC($_);
+	    $s = $obj->convert( $_, 'euc-jp' );
 
 	    if ($is_cgi) {
 		print _html_to_text($s);

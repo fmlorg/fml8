@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.130 2002/08/15 08:03:23 fukachan Exp $
+# $FML: Kernel.pm,v 1.131 2002/08/15 08:04:41 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1213,13 +1213,16 @@ sub reply_message_nl
     my $buf    = $curproc->message_nl($class, $default_msg, $args);
 
     if (defined $buf) {
-	eval q{
-	    use FML::Language::ISO2022JP qw(STR2JIS);
-	};
 	if ($buf =~ /\$/) {
 	    $config->expand_variable_in_buffer(\$buf, $args);
 	}
-	$curproc->reply_message(STR2JIS( $buf ), $args);
+
+	eval q{
+	    use Mail::Message::Encode;
+	    my $obj = new Mail::Message::Encode;
+	    $curproc->reply_message( $obj->convert( $buf, 'jis-jp' ), $args);
+	};
+	LogError($@) if $@;
     }
     else {
 	$curproc->reply_message($default_msg, $args);
@@ -1716,11 +1719,22 @@ sub prepare_file_to_return
     my $wh = new FileHandle "> $tmpf";
 
     if (defined($rh) && defined($wh)) {
-	eval q{ use FML::Language::ISO2022JP qw(STR2JIS);};
-	while (<$rh>) {
-	    if (/\$/) { $config->expand_variable_in_buffer(\$_, $args);}
-	    $wh->print(STR2JIS($_));
+	my $obj = undef;
+	eval q{
+	    use Mail::Message::Encode;
+	    $obj = new Mail::Message::Encode;
+	};
+
+	if (defined $obj) {
+	    while (<$rh>) {
+		if (/\$/) { $config->expand_variable_in_buffer(\$_, $args);}
+		$wh->print( $obj->convert( $_, 'jis-jp' ) );
+	    }
 	}
+	else {
+	    LogError("Mail::Message::Encode object undef");
+	}
+
 	close($wh);
 	close($rh);
     }
