@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: password.pm,v 1.4 2002/09/22 14:56:46 fukachan Exp $
+# $FML: password.pm,v 1.5 2002/12/20 03:40:12 fukachan Exp $
 #
 
 package FML::Command::Admin::password;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::password - change password (dummy in fact :-)
+FML::Command::Admin::password - authenticate the admin password
 
 =head1 SYNOPSIS
 
@@ -52,7 +52,15 @@ sub new
 sub need_lock { 1;}
 
 
-# Descriptions: dummy.
+# Descriptions: dummy in the case of command mail.
+#
+#               [Case 1: command mail]
+#               This password module is a dummy. In fact,
+#               FML::Command::Auth::check::check_admin_member_password()
+#               verified the password already before this module is called.
+#
+#               [Case 2: makefml/fml command on promt] 
+#
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
 # Return Value: none
@@ -60,14 +68,7 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
 
-    # this module is dummy.
-    # The code exists in FML::Command::Auth due to ambivalence.
-    # Though this module should be called after authentication,
-    # this module is a module of authentication.
-
-    # XXX-TODO: NOT IMPLEMNETED.
-
-    # dummy
+    # dummy. see descriptions above.
     return 1;
 }
 
