@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.14 2002/04/08 12:44:28 fukachan Exp $
+# $FML: Queue.pm,v 1.15 2002/04/10 09:57:25 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -29,7 +29,7 @@ Mail::Delivery::Queue - hashed directory holding queue files
     # "/some/where/new/$queue_id" is created.
     $queue->in( $msg ) || croak("fail to queue in");
 
-    # ok to deliver this queue !
+    # ok to deliver this message !
     $queue->setrunnable() || croak("fail to set queue deliverable");
 
     # get the filename of this $queue object
@@ -84,7 +84,7 @@ sub new
     my $me     = {};
 
     my $dir = $args->{ directory } || croak("specify directory");
-    my $id  = $args->{ id } ||  _new_queue_id();
+    my $id  = defined $args->{ id } ? $args->{ id } : _new_queue_id();
     $me->{ _directory } = $dir;
     $me->{ _id }        = $id;
     $me->{ _status }    = "new";
@@ -118,10 +118,12 @@ sub new
 sub _mkdirhier
 {
     my ($dir) = @_;
+
     eval q{
 	use File::Path;
 	mkpath( [ $dir ], 0, 0755);
     };
+    warn($@) if $@;
 }
 
 
@@ -195,18 +197,21 @@ sub list
 {
     my ($self) = @_;
     my $dir = File::Spec->catfile( $self->{ _directory }, "active");
-    my @r; # result array which holds active queue list
 
     use DirHandle;
     my $dh = new DirHandle $dir;
     if (defined $dh) {
+	my @r = ();
+
 	while (defined ($_ = $dh->read)) {
 	    next unless /^\d+/;
 	    push(@r, $_);
 	}
+
+	return \@r;
     }
 
-    \@r;
+    return [];
 }
 
 
@@ -236,7 +241,7 @@ sub getidinfo
     my ($fh, $sender, @recipients);
 
     # validate queue id is given
-    $id = $id || $self->id();
+    $id ||= $self->id();
 
     # sender
     use FileHandle;
