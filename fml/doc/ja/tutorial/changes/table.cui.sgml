@@ -1,0 +1,1180 @@
+<!-- 1 -->
+<row>
+
+<entry>
+ヘルプの表示
+</entry>
+
+<entry>
+makefml help ML
+もしくは makefml info ML を実行するとヘルプが表示される。
+どちらでも同じ動作。
+表示の際に、環境変数 PAGER が指定されていれば、それを使う。
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 2 -->
+<row>
+
+<entry>
+fml のインストール方法
+</entry>
+
+<entry>
+トップディレクトリで make install (実体は makefml install)を実行する
+</entry>
+
+<entry>
+トップディレクトリで
+configure および make install (実体は install.pl スクリプト)
+</entry>
+
+</row>
+
+<!-- 3 -->
+<row>
+
+<entry>
+インストールスクリプトの挙動
+</entry>
+
+<entry>
+対話法式がデフォルト。最重要項目は対話的に設定が可能。
+</entry>
+
+<entry>
+対話法式ではない。最重要項目は configure オプションで指定する。
+</entry>
+
+</row>
+
+<!-- 4 -->
+<row>
+
+<entry>
+ＭＬの作成
+</entry>
+
+<entry>
+makefml newml ML もしくは makefml new ML
+</entry>
+
+<entry>
+makefml newml ML 
+</entry>
+
+</row>
+
+<!-- 5 -->
+<row>
+
+<entry>
+newml コマンドが作るエイリアス(見本)ファイル
+</entry>
+
+<entry>
+sendmail 用 (互換性があるため postfix 用としても使用可能)
+</entry>
+
+<entry>
+postfix, sendmail, qmail, procmail すべてを作る
+</entry>
+
+</row>
+
+<!-- 6 -->
+<row>
+
+<entry>
+newml コマンドが作るエイリアス(見本)ファイルのパス
+</entry>
+
+<entry>
+/var/spool/ml/etc/aliaes
+</entry>
+
+<entry>
+/var/spool/ml/etc/mail/aliaes
+</entry>
+
+</row>
+
+<!-- 7 -->
+<row>
+
+<entry>
+qmail 用の設定を作る
+</entry>
+
+<entry>
+makefml qmail-setup ML
+</entry>
+
+<entry>
+不要 (デフォルトで作成する)
+</entry>
+
+</row>
+
+<!-- 8 -->
+<row>
+
+<entry>
+aliaes を再生成する
+</entry>
+
+<entry>
+makefml recollect-aliases ML
+</entry>
+
+<entry>
+該当するものはない
+</entry>
+
+</row>
+
+<!-- 9 -->
+<row>
+
+<entry>
+ML の削除
+</entry>
+
+<entry>
+makefml destructml ML
+</entry>
+
+<entry>
+makefml rmml ML
+</entry>
+
+</row>
+
+<!-- 10 -->
+<row>
+
+<entry>
+エラーメール自動解析ツールを設定する
+</entry>
+
+<entry>
+makefml mead ML を実行し、エイリアスも適宜、設定変更する。
+</entry>
+
+<entry>
+不要、デフォルトで設定されている
+</entry>
+
+</row>
+
+<!-- 11 -->
+<row>
+
+<entry>
+fml 自体のテストをしてみる
+</entry>
+
+<entry>
+makefml test ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 12 -->
+<row>
+
+<entry>
+LISTSERV スタイルのコマンドのセットアップ。
+</entry>
+
+<entry>
+makefml fmlserv ML
+listserv majordomo でも同じ。
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 13 -->
+<row>
+
+<entry>
+アドレスを(受信者、送信者リスト両方に)追加する
+</entry>
+
+<entry>
+makefml add ML ADDRESS
+もしくは adduser でもよい。 
+終了後、ファイルの変更点が表示される。
+デフォルトの操作対象は actives と members ファイル。
+</entry>
+
+<entry>
+makefml subscribe ML ADDRESS 
+なお
+add subscribe adduser useradd
+コマンドは全て同じ意味である。 
+エラーにならない限り、画面表示はなく、静かに終る。
+デフォルトの操作対象は recipients と members ファイル。	
+</entry>
+
+</row>
+
+<!-- 14 -->
+<row>
+
+<entry>
+アドレスを(受信者、送信者リスト両方から)削除する
+</entry>
+
+<entry>
+makefml bye ML ADDRESS
+もしくは byeuser でもよい。 
+終了後、ファイルの変更点が表示される。
+デフォルトの操作対象は actives と members ファイル。
+</entry>
+
+<entry>
+makefml unsubscribe ML ADDRESS 
+なお
+bye unsubscribe deluser remove resign signoff userdel 
+コマンドは全て同じ意味である。 
+エラーにならない限り、画面表示はなく、静かに終る。
+デフォルトの操作対象は recipients と members ファイル。	
+</entry>
+
+</row>
+
+<!-- 15 -->
+<row>
+
+<entry>
+アドレスを変更する(受信者リスト、メンバーリストともに変更する)
+</entry>
+
+<entry>
+makefml chaddr ML OLD_ADDRESS NEW_ADDRESS
+終了後、ファイルの変更点が表示される。
+デフォルトの操作対象は actives と members ファイル。
+</entry>
+
+<entry>
+makefml chaddr ML OLD_ADDRESS NEW_ADDRESS
+エラーにならない限り、画面表示はなく、静かに終る。
+デフォルトの操作対象は recipients と members ファイル。	
+</entry>
+
+</row>
+
+<!-- 16 -->
+<row>
+
+<entry>
+受信者リストにのみアドレスを追加する。
+</entry>
+
+<entry>
+makefml addactives ML ADDRESS
+これは addactive add2active add2actives でも同じ意味。
+終了後、ファイルの変更点が表示される。
+デフォルトの操作対象は actives ファイル。
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 17 -->
+<row>
+
+<entry>
+メンバーリストにのみアドレスを追加する。
+</entry>
+
+<entry>
+makefml addmembers ML ADDRESS
+これは addmember add2member add2members でも同じ。
+終了後、ファイルの変更点が表示される。
+デフォルトの操作対象は members ファイル。
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 18 -->
+<row>
+
+<entry>
+リアルタイム配送を止める
+</entry>
+
+<entry>
+makefml off ML ADDRESS
+これは skip でもよい。
+終了後、ファイルの変更点が表示される。
+デフォルトの操作対象は actives ファイル。
+</entry>
+
+<entry>
+makefml off ML ADDRESS
+</entry>
+
+</row>
+
+<!-- 19 -->
+<row>
+
+<entry>
+リアルタイム配送を再開する
+</entry>
+
+<entry>
+makefml on  ML ADDRESS
+終了後、ファイルの変更点が表示される。
+デフォルトの操作対象は actives ファイル。
+</entry>
+
+<entry>
+makefml on  ML ADDRESS
+</entry>
+
+</row>
+
+<!-- 20 -->
+<row>
+
+<entry>
+まとめおくり配送へ
+</entry>
+
+<entry>
+makefml matome ML ADDRESS
+コマンドは digest でもよい。 
+終了後、ファイルの変更点が表示される。
+デフォルトの操作対象は actives ファイル。
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 21 -->
+<row>
+
+<entry>
+リモート管理者を追加する。
+</entry>
+
+<entry>
+makefml addadmin ML ADDRESS
+終了後、ファイルの変更点が表示される。
+デフォルトの操作対象は members-admin ファイル。
+</entry>
+
+<entry>
+makefml addadmin ML ADDRESS
+エラーにならない限り、画面表示はなく、静かに終る。
+デフォルトの操作対象は recipients-admin と members-admin ファイル。
+</entry>
+
+</row>
+
+<!-- 22 -->
+<row>
+
+<entry>
+リモート管理者を削除する。
+</entry>
+
+<entry>
+makefml byeadmin ML ADDRESS
+終了後、ファイルの変更点が表示される。
+デフォルトの操作対象は members-admin ファイル。
+</entry>
+
+<entry>
+makefml byeadmin ML ADDRESS
+エラーにならない限り、画面表示はなく、静かに終る。
+デフォルトの操作対象は recipients-admin と members-admin ファイル。
+</entry>
+
+</row>
+
+<!-- 23 -->
+<row>
+
+<entry>
+リモート管理者のパスワードを設定する(1)
+</entry>
+
+<entry>
+makefml passwd ML
+対話モードになり、アドレスとパスワードの入力を促される。
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 24 -->
+<row>
+
+<entry>
+リモート管理者のパスワードを設定する(2)
+</entry>
+
+<entry>
+makefml passwd ML ADDRESS
+対話モードになり、パスワードの入力を促される。
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 25 -->
+<row>
+
+<entry>
+リモート管理者のパスワードを設定する(3)
+</entry>
+
+<entry>
+makefml passwd ML ADDRESS PASSWORD
+処理の様子が表示される。
+デフォルトの操作対象は etc/passwd ファイル。
+</entry>
+
+<entry>
+makefml passwd ML ADDRESS PASSWORD
+エラーにならない限り、画面表示はなく、静かに終る。
+デフォルトの操作対象は etc/passwd-admin ファイル。
+</entry>
+
+</row>
+
+<!-- 26 -->
+<row>
+
+<entry>
+メニュー形式で設定を変更する
+</entry>
+
+<entry>
+makefml config ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 27 -->
+<row>
+
+<entry>
+設定ファイルを編集する
+</entry>
+
+<entry>
+makefml edit ML
+使うエディタの入力を促し、
+そのエディタで config.ph を編集できるようにする。
+エディタのデフォルトは vi 。
+</entry>
+
+<entry>
+makefml edit ML
+エディタで config.cf を編集できるようにする。
+使うエディタを尋ねたりはしない。
+環境変数 EDITOR が設定されていれば、その値が使われる。
+エディタのデフォルトは vi 。
+</entry>
+
+</row>
+
+<!-- 28 -->
+<row>
+
+<entry>
+fml4 固有の設定ファイル変換( cf から config.ph を再生成する)
+</entry>
+
+<entry>
+makefml update-config ML
+これは update、config-update、update-config.ph コマンドでも同じ。
+処理の様子が表示される。	
+</entry>
+
+<entry>
+設定ファイルは config.cf しかないため該当する操作は不要。
+</entry>
+
+</row>
+
+<!-- 29 -->
+<row>
+
+<entry>
+メニューを使い、cf のテンプレートファイルを編集する
+</entry>
+
+<entry>
+makefml config-template ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 30 -->
+<row>
+
+<entry>
+newml の際に使われる各種テンプレートファイルを編集する
+</entry>
+
+<entry>
+makefml edit-template FILE
+なお FILE なしで実行すると、指定可能なファイル一覧が表示される。
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 31 -->
+<row>
+
+<entry>
+ＭＬのホームディレクトリにあるヘルプなどのファイルを再生成する
+</entry>
+
+<entry>
+makefml create-doc-template ML
+</entry>
+
+<entry>
+不要。存在しない。
+もし置かれているなら、それは管理者がつくって置いたもののはず。
+</entry>
+
+</row>
+
+<!-- 32 -->
+<row>
+
+<entry>
+引数の SRC ファイルを DST へ、ファイル内の変数を変換しつつ生成する。
+</entry>
+
+<entry>
+makefml conv ML SRC DST
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 33 -->
+<row>
+
+<entry>
+ログをみる。デフォルトでは最後の100行が表示される。
+</entry>
+
+<entry>
+makefml log ML [オプション]
+これは makefml tail ML でも同じ動作になる。
+</entry>
+
+<entry>
+makefml log ML
+オプションは未実装
+</entry>
+
+</row>
+
+<!-- 34 -->
+<row>
+
+<entry>
+admin.cgi のセットアップ(スクリプト生成、apacheの設定支援)
+</entry>
+
+<entry>
+makefml admin.cgi ML
+対話的に行なわれる。
+</entry>
+
+<entry>
+半分未実装、半分不要 (スクリプトは makefml newml 時に自動的に作成)
+</entry>
+
+</row>
+
+<!-- 35 -->
+<row>
+
+<entry>
+ml-admin.cgi のセットアップ(スクリプト生成、apacheの設定支援)
+</entry>
+
+<entry>
+makefml ml-admin.cgi ML
+makefml mladmin.cgi ML でも同じ。
+対話的に行なわれる。
+</entry>
+
+<entry>
+半分未実装、半分不要 (スクリプトは makefml newml 時に自動的に作成)
+</entry>
+
+</row>
+
+<!-- 36 -->
+<row>
+
+<entry>
+admin.cgi の .htpasswd を設定する
+</entry>
+
+<entry>
+makefml html_cgiadmin_passwd ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 37 -->
+<row>
+
+<entry>
+html_config
+</entry>
+
+<entry>
+makefml html_config ML
+このコマンドは html_config_set でも同じ。
+CGI から設定を変更する際に使われている内部用コマンド。
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 38 -->
+<row>
+
+<entry>
+リモート管理者のパスワードを設定し、かつ
+ml-admin.cgi の .htpasswd を(リモート管理のパスワードと同じも
+のに)設定する
+</entry>
+
+<entry>
+makefml html_passwd ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 39 -->
+<row>
+
+<entry>
+ml-admin.cgi の .htpasswd を設定する
+</entry>
+
+<entry>
+makefml htpasswd ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 40 -->
+<row>
+
+<entry>
+pgp コマンド WRAPPER
+</entry>
+
+<entry>
+makefml pgp ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 41 -->
+<row>
+
+<entry>
+pgp2 コマンド WRAPPER
+</entry>
+
+<entry>
+makefml pgp2 ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 42 -->
+<row>
+
+<entry>
+pgpe コマンド WRAPPER
+</entry>
+
+<entry>
+makefml pgpe ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 43 -->
+<row>
+
+<entry>
+pgpk コマンド WRAPPER
+</entry>
+
+<entry>
+makefml pgpk ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 44 -->
+<row>
+
+<entry>
+pgps コマンド WRAPPER
+</entry>
+
+<entry>
+makefml pgps ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 45 -->
+<row>
+
+<entry>
+pgpv コマンド WRAPPER
+</entry>
+
+<entry>
+makefml pgpv ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 46 -->
+<row>
+
+<entry>
+gpg コマンド WRAPPER
+</entry>
+
+<entry>
+makefml gpg ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 47 -->
+<row>
+
+<entry>
+admin-auth
+</entry>
+
+<entry>
+makefml admin-auth ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 48 -->
+<row>
+
+<entry>
+admin-auth.pgp ML args
+</entry>
+
+<entry>
+makefml admin-auth.pgp ML args ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 49 -->
+<row>
+
+<entry>
+admin-encrypt
+</entry>
+
+<entry>
+makefml admin-encrypt ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 50 -->
+<row>
+
+<entry>
+admin-encrypt.pgp ML args
+</entry>
+
+<entry>
+makefml admin-encrypt.pgp ML args ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 51 -->
+<row>
+
+<entry>
+dist-auth
+</entry>
+
+<entry>
+makefml dist-auth ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 52 -->
+<row>
+
+<entry>
+dist-auth.pgp ML args
+</entry>
+
+<entry>
+makefml dist-auth.pgp ML args ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 53 -->
+<row>
+
+<entry>
+dist-encrypt
+</entry>
+
+<entry>
+makefml dist-encrypt ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 54 -->
+<row>
+
+<entry>
+dist-encrypt.pgp ML args
+</entry>
+
+<entry>
+makefml dist-encrypt.pgp ML args ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 55 -->
+<row>
+
+<entry>
+popfml のセットアップをする
+</entry>
+
+<entry>
+makefml popfml
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 56 -->
+<row>
+
+<entry>
+POP のパスワードを設定する
+</entry>
+
+<entry>
+makefml pop_passwd
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 57 -->
+<row>
+
+<entry>
+ＭＬの動作をロックする
+</entry>
+
+<entry>
+makefml lock ML
+</entry>
+
+<entry>
+対応するものがない。そもそも giant lock がない。
+</entry>
+
+</row>
+
+<!-- 58 -->
+<row>
+
+<entry>
+バグレポートの編集テンプレートを作る
+</entry>
+
+<entry>
+makefml bug-report-template ML
+send-pr でもよい
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 59 -->
+<row>
+
+<entry>
+コマンドの実行
+</entry>
+
+<entry>
+makefml command ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 60 -->
+<row>
+
+<entry>
+配送モードの設定
+</entry>
+
+<entry>
+makefml delivery_mode ML
+</entry>
+
+<entry>
+未実装
+</entry>
+
+</row>
+
+<!-- 61 -->
+<row>
+
+<entry>
+makefml 中の変数を変更する
+</entry>
+
+<entry>
+makefml setq ML
+</entry>
+
+<entry>
+対応するものがない
+</entry>
+
+</row>
+
+<!-- 62 -->
+<row>
+
+<entry>
+fml が動いている環境についてサマリを表示する
+</entry>
+
+<entry>
+makefml showconfig ML
+showconf でもよい
+</entry>
+
+<entry>
+未実装 / 実装予定なし
+</entry>
+
+</row>
+
+<!-- 63 -->
+<row>
+
+<entry>
+「show コマンド」スタイルの OS 情報を表示する方法
+</entry>
+
+<entry>
+makefml show コマンド
+</entry>
+
+<entry>
+未実装 / 実装予定なし
+</entry>
+
+</row>
+
+<!-- 64 -->
+<row>
+
+<entry>
+ファイルを送る
+</entry>
+
+<entry>
+makefml resend ML
+</entry>
+
+<entry>
+未実装 / 実装予定なし
+</entry>
+
+</row>
+
+<!-- 65 -->
+<row>
+
+<entry>
+upgrade コマンド: fml 2.0 から 3.0 へのコンバート
+</entry>
+
+<entry>
+makefml upgrade ML
+</entry>
+
+<entry>
+不要
+</entry>
+
+</row>
+
