@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.2 2001/10/20 06:19:07 fukachan Exp $
+# $FML: Lite.pm,v 1.3 2001/10/20 06:57:40 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -22,6 +22,7 @@ Mail::HTML::Lite - mail to html converter
 
   use Mail::HTML::Lite;
   my $obj = new Mail::HTML::Lite { 
+      charset   => "euc-jp",
       directory => "/var/www/htdocs/ml/elena",
   };
 
@@ -79,6 +80,7 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {};
 
+    $me->{ _charset } = $args->{ charset } || 'us-ascii';
     $me->{ _html_base_directory } = $args->{ directory };
 
     return bless $me, $type;
@@ -133,7 +135,7 @@ sub htmlfy_rfc822_message
     }
 
     # before main message
-    $self->html_begin($wh);
+    $self->html_begin($wh, $msg);
     $self->mhl_preamble($wh);
 
     # analyze $msg (message chain)
@@ -304,10 +306,31 @@ sub _init_htmlfy_rfc822_message
 # Return Value: none
 sub html_begin
 {
-    my ($self, $wh) = @_;
-    print $wh "<HTML>";
-    print $wh "<HEAD>\n";
+    my ($self, $wh, $msg) = @_;
+    my $hdr   = $msg->rfc822_message_header;
+    my $title = $self->_decode_mime_string( $hdr->get('subject') );
+
+    print $wh q{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">};
     print $wh "\n";
+    print $wh "<HTML>\n";
+    print $wh "<HEAD>\n";
+
+    if (defined $self->{ _charset }) {
+	my $charset = $self->{ _charset };
+	print $wh "<META http-equiv=\"Content-Type\"\n";
+	print $wh "   content=\"text/html; charset=${charset}\">\n";
+    }
+
+    if (defined $self->{ _stylsheet }) {
+	my $css = $self->{ _stylsheet };
+	print $wh "<LINK rel=\"stylesheet\"\n";
+	print $wh "   type=\"text/css\" href=\"fml.css\">\n";
+    }
+
+    if (defined $title) {
+	print $wh "<title>$title</title>\n";
+    }
+
     print $wh "</HEAD>\n";
     print $wh "<BODY>\n";
 }
@@ -481,7 +504,7 @@ sub _format_header
 	if (defined($hdr->get($field))) {
 	    $buf .= "${field}: ";
 	    my $xbuf = $hdr->get($field); 
-	    $buf .= $xbuf =~ /=\?iso/i ? _decode_mime_string($xbuf) : $xbuf;
+	    $buf .= $xbuf =~ /=\?iso/i ? $self->_decode_mime_string($xbuf) : $xbuf;
 	}
     }
 
@@ -589,7 +612,7 @@ sub cache_message_info
 
     $db->{ _date }->{ $id } = $hdr->get('date');
 
-    $db->{ _subject }->{ $id } = _decode_mime_string( $hdr->get('subject') );
+    $db->{ _subject }->{ $id } = $self->_decode_mime_string( $hdr->get('subject') );
 	
     my $ra = _address_clean_up( $hdr->get('from') );
     $db->{ _from }->{ $id } = $ra->[0];
@@ -653,10 +676,13 @@ sub _address_clean_up
 
 sub _decode_mime_string
 {
-    my ($str, $options) = @_;
-    my $charset = $options->{ 'charset' } || 'euc-japan';
+    my ($self, $str, $options) = @_;
+    my $charset = $options->{ 'charset' } || $self->{ _charset };
+    my $code    = _charset_to_code($charset);
 
-    if ($charset eq 'euc-japan') {
+    # If looks Japanese and $code is specified as Japanese, decode !
+    if (($str =~ /=\?ISO\-2022\-JP\?[BQ]\?(\S+\=*)\?=/i) &&
+	($code eq 'euc' || $code eq 'jis')) {
         use MIME::Base64;
         if ($str =~ /=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/i) { 
             $str =~ s/=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/decode_base64($1)/gie;
@@ -666,11 +692,12 @@ sub _decode_mime_string
         if ($str =~ /=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/i) { 
             $str =~ s/=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/decode_qp($1)/gie;
         }
+
+	use Jcode;
+	&Jcode::convert(\$str, $code);
     }
 
-    use Jcode;
-    &Jcode::convert(\$str, 'euc');
-    $str;
+    return $str;
 }
 
 
@@ -759,7 +786,16 @@ sub _charset_to_code
     my ($charset) = @_;
 
     if (defined $charset) {
-	;
+	$charset =~ tr/A-Z/a-z/;
+	if ($charset eq 'euc-jp') {
+	    return 'euc';
+	}
+	elsif ($charset eq 'iso-2022-jp') {
+	    return 'jis';
+	}
+	else {
+	    return $charset; # may be wrong, but I hope it works well:-)
+	}
     }
     else {
 	return 'euc'; # euc-jp by default
@@ -1070,7 +1106,10 @@ sub _debug
 
     use File::Basename;
     my $f = basename($file);
-    my $html = new Mail::HTML::Lite { directory => "/tmp/htdocs" };
+    my $html = new Mail::HTML::Lite {
+	charset   => "euc-jp",
+	directory => "/tmp/htdocs",
+    };
 
     print STDERR "\n_debug(id=$f src=$file)\n";
 
