@@ -1,5 +1,5 @@
 dnl
-dnl $FML: configure.in,v 1.9 2001/12/11 13:12:17 fukachan Exp $
+dnl $FML: configure.in,v 1.10 2001/12/11 13:40:02 fukachan Exp $
 dnl
 AC_REVISION($Revision$)
 
@@ -54,7 +54,7 @@ dnl path_check_end
 
 fmlconfdir=${sysconfdir}/fml
 AC_ARG_WITH(fmlconfdir, 
-[  --with-fmlconfdir=DIR   use DIR instead of SYSCONFDIR/etc/fml], 
+[  --with-fmlconfdir=DIR   use DIR instead of SYSCONFDIR/fml], 
     fmlconfdir=$withval)
 AC_SUBST(fmlconfdir)
 
@@ -75,7 +75,7 @@ AC_SUBST(fml_owner)
 
 fml_group=fml
 AC_ARG_WITH(fml_group, 
-[  --with-fml-group=USER   use GROUP instead of fml], 
+[  --with-fml-group=GROUP  use GROUP instead of fml], 
     fml_group=$withval)
 AC_SUBST(fml_group)
 
