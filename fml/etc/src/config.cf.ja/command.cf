@@ -277,7 +277,7 @@ privileged_command_prefix	=	admin
 #      History: /usr/local/fml/listinfo/
 #        Value: directory
 #     Examples: /usr/local/share/fml/$fml_version/listinfo/$language
-listinfo_template_dir	= $fml_share_dir/listinfo/$template_file_charset
+listinfo_template_dir	= $fml_share_dir/listinfo/$template_file_default_charset
 
 
 # Descriptions: information をおくディレクトリ (ＭＬごと)

@@ -66,11 +66,6 @@
 maintainer	=
 
 
-=head2	言語
-
-default_charset		=	iso-2022-jp
-
-
 =head2	default modes
 
 
@@ -617,20 +612,50 @@ digest_sequence_file	= $ml_home_dir/seq-digest
 #      History:
 #        Value:
 #     Examples:
-reply_message_charset	=	$default_charset
+reply_message_default_charset	=	$reply_message_charset_ja
 
 # Descriptions:
 #      History:
 #        Value:
 #     Examples:
-template_file_charset	=	euc-jp
-
+reply_message_charset_ja	=	iso-2022-jp
 
 # Descriptions:
 #      History:
 #        Value:
 #     Examples:
-default_message_subject	=	fml system message ($ml_name ML)
+reply_message_charset_en	=	us-ascii
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+template_file_default_charset	=	$template_file_charset_ja
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+template_file_charset_ja	=	euc-jp
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+template_file_charset_en	=	us-ascii
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+template_file_charset_list	=	euc-jp	
+					us-ascii
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+message_default_subject	=	fml system message ($ml_name ML)
 
 
 # Descriptions:
@@ -1454,7 +1479,7 @@ privileged_command_prefix	=	admin
 #      History: /usr/local/fml/listinfo/
 #        Value: directory
 #     Examples: /usr/local/share/fml/$fml_version/listinfo/$language
-listinfo_template_dir	= $fml_share_dir/listinfo/$template_file_charset
+listinfo_template_dir	= $fml_share_dir/listinfo/$template_file_default_charset
 
 
 # Descriptions: information をおくディレクトリ (ＭＬごと)
@@ -1748,24 +1773,32 @@ admin_cgi_base_dir	=	$cgi_base_dir/admin
 ml_admin_cgi_base_dir	=	$cgi_base_dir/ml-admin/$ml_name
 
 
-# Descriptions: デフォルトの CHARSET
+# Descriptions: CGI の表示の CHARSET
 #      History:
 #        Value:
 #     Examples:
-default_cgi_charset	=	euc-jp
+cgi_default_charset	=	$cgi_charset_ja
+
 
 # Descriptions: CGI の表示の CHARSET
 #      History:
 #        Value:
 #     Examples:
-cgi_charset		=	$default_cgi_charset
+cgi_charset_ja	=	euc-jp
+
+
+# Descriptions: CGI の表示の CHARSET
+#      History:
+#        Value:
+#     Examples:
+cgi_charset_en	=	us-ascii
 
 
 # Descriptions: CGI の言語モード (!= charset) 
 #      History:
 #        Value:
 #     Examples:
-default_cgi_language	=	japanese
+cgi_default_language	=	japanese
 
 
 # Descriptions: CGI で利用可能な言語モード (!= charset) 

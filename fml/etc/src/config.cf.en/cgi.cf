@@ -28,19 +28,19 @@ ml_admin_cgi_base_dir	=	$cgi_base_dir/ml-admin/$ml_name
 #      History:
 #        Value:
 #     Examples:
-default_cgi_charset	=	us-ascii
+cgi_default_charset	=	us-ascii
 
 # Descriptions: cgi charset
 #      History:
 #        Value:
 #     Examples:
-cgi_charset		=	$default_cgi_charset
+cgi_charset		=	$cgi_default_charset
 
 # Descriptions: language mode of CGI (!= charset) 
 #      History:
 #        Value:
 #     Examples:
-default_cgi_language   =       english
+cgi_default_language   =       english
 
 # Descriptions: available language mode in CGI
 #      History:

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.86 2003/10/15 08:43:12 fukachan Exp $
+# $FML: Utils.pm,v 1.87 2003/10/16 01:56:22 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1396,7 +1396,8 @@ sub get_charset
     my ($curproc, $category) = @_;
     my $config  = $curproc->config();
     my $pcb     = $curproc->pcb();
-    my $default = $config->{ "${category}_charset" } || 'us-ascii';
+    my $keyword = sprintf("%s_default_charset", $category);
+    my $default = $config->{ $keyword } || 'us-ascii';
     my $charset = $default;
 
     # if overwritten by some module, we use it always.
@@ -1413,12 +1414,9 @@ sub get_charset
 	if (@$acpt_lang_list) {
 	  ACCEPT_LANGUAGE:
 	    for my $a (@$acpt_lang_list) {
-		if ($a eq 'ja') {
-		    $charset = $config->{ "${category}_charset" } || 'euc-jp';
-		    last ACCEPT_LANGUAGE;
-		}
-		elsif ($a eq 'en') {
-		    $charset = 'us-ascii';
+		if ($a eq 'ja' || $a eq 'en') {
+		    my $key  = sprintf("%s_charset_%s", $category, $a);
+		    $charset = $config->{ $key };
 		    last ACCEPT_LANGUAGE;
 		}
 		elsif ($a eq '*') { # any charset is o.k.
