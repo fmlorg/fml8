@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.77 2004/07/23 04:09:04 fukachan Exp $
+# $FML: Header.pm,v 1.78 2004/07/23 15:59:00 fukachan Exp $
 #
 
 package FML::Header;
@@ -607,8 +607,9 @@ sub delete_subject_tag_like_string
 sub extract_message_id_references
 {
     my ($header) = @_;
-    my $buf =
-	$header->get('in-reply-to') ."\n". $header->get('references');
+    my $buf0 = $header->get('in-reply-to') || '';
+    my $buf1 = $header->get('references')  || ''; $buf1 =~ s/\s+/,/g;
+    my $buf  = join(",", $buf0, $buf1);
 
     use Mail::Address;
     my @addrs = Mail::Address->parse($buf);
@@ -648,8 +649,36 @@ loop.
 sub check_message_id
 {
     my ($header, $config, $rw_args) = @_;
-    my $dir = $config->{ 'message_id_cache_dir' };
-    my $mid = $header->get('message-id');
+    my $mode = 'message_id_cache_dir';
+    my $mid  = $header->get('message-id');
+    $header->_check_xxx_message_id($config, $mode, $mid);
+}
+
+
+# Descriptions: find message-id in article database.
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
+# Side Effects: update cache
+# Return Value: STR or 0
+sub check_article_message_id
+{
+    my ($header, $config, $rw_args) = @_;
+    my $mode = 'article_message_id_cache_dir';
+    my $mid  = $rw_args->{ message_id } || '';
+    if ($mid) {
+	$header->_check_xxx_message_id($config, $mode, $mid);
+    }
+}
+
+
+# Descriptions: check whether message-id is duplicated or not
+#               against mail loop.
+#    Arguments: OBJ($header) OBJ($config) STR($mode) STR($mid)
+# Side Effects: update cache
+# Return Value: STR or 0
+sub _check_xxx_message_id
+{
+    my ($header, $config, $mode, $mid) = @_;
+    my $dir = $config->{ $mode };
     my $dup = 0;
 
     $mid = $header->address_clean_up($mid);
@@ -661,7 +690,9 @@ sub check_message_id
 	if (defined $db) {
 	    # we can tind the $mid in the past message-id cache ?
 	    $dup = $db->{ $mid };
-	    Log( "message-id duplicated" ) if $dup;
+	    if ($dup && $mode eq 'message_id_cache_dir') {
+		Log( "message-id duplicated" );
+	    }
 	}
     }
 
@@ -676,7 +707,31 @@ sub check_message_id
 sub update_message_id_cache
 {
     my ($header, $config, $rw_args) = @_;
-    my $dir = $config->{ 'message_id_cache_dir' };
+    my $mode = 'message_id_cache_dir';
+    $header->_update_xxx_message_id_cache($mode, $config, $rw_args);
+}
+
+
+# Descriptions: store article message-id into the cache.
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
+# Side Effects: update cache
+# Return Value: STR or 0
+sub update_article_message_id_cache
+{
+    my ($header, $config, $rw_args) = @_;
+    my $mode = 'article_message_id_cache_dir';
+    $header->_update_xxx_message_id_cache($mode, $config, $rw_args);
+}
+
+
+# Descriptions: store article message-id into the cache.
+#    Arguments: OBJ($header) STR($mode) OBJ($config) HASH_REF($rw_args)
+# Side Effects: update cache
+# Return Value: STR or 0
+sub _update_xxx_message_id_cache
+{
+    my ($header, $mode, $config, $rw_args) = @_;
+    my $dir = $config->{ $mode };
     my $mid = $header->get('message-id');
 
     $mid = $header->address_clean_up($mid);
@@ -686,8 +741,8 @@ sub update_message_id_cache
 	my $db    = FML::Header::MessageID->new->db_open($xargs);
 
 	if (defined $db) {
-	    # save the current id
-	    $db->{ $mid } = 1;
+	    # save the current id and time (unix time).
+	    $db->{ $mid } = time;
 	}
     }
 }
