@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.35 2002/01/14 05:34:12 fukachan Exp $
+# $FML: Lite.pm,v 1.36 2002/01/14 05:44:46 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.35 2002/01/14 05:34:12 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.36 2002/01/14 05:44:46 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -122,7 +122,7 @@ where C<$path> is file path.
 #    Arguments: OBJ($self) HASH_REF($args)
 #               $args = { id => $id, path => $path };
 #                  $id    identifier (e.g. "1" (article id))
-#                  $src_path  file path  (e.g. "/some/where/1");
+#                  $path  file path  (e.g. "/some/where/1");
 # Side Effects: none
 # Return Value: none
 sub htmlfy_rfc822_message
@@ -130,9 +130,12 @@ sub htmlfy_rfc822_message
     my ($self, $args) = @_;
 
     # initialize basic information
+    #    $id  = article id
+    #   $src  = source file
+    #   $dst  = destination file (target html)
     my ($id, $src, $dst) = $self->_init_htmlfy_rfc822_message($args);
 
-    # already exists
+    # target html exists already.
     if (-f $dst) {
 	$self->{ _ignore_list }->{ $id } = 1; # ignore flag
 	warn("html file for $id already exists") if $debug;
@@ -164,13 +167,15 @@ sub htmlfy_rfc822_message
 
     # analyze $msg, chain of Mail::Message objects.
     # See Mail::Message class for more detail.
+    # XXX we use $m->{ next } here, but we should avoid this style and
+    # XXX prepare access method for it in Mail::Message class.
     my ($m, $type, $attach);
   CHAIN:
     for ($m = $msg; defined($m) ; $m = $m->{ 'next' }) {
 	$type = $m->get_data_type;
 
 	last CHAIN if $type eq 'multipart.close-delimiter'; # last of multipart
-	next CHAIN if $type =~ /^multipart/;
+	next CHAIN if $type =~ /^multipart/; # multipart type is special.
 
 	unless ($type =~ /^\w+\/[-\w\d\.]+$/) {
 	    warn("invalid type={$type}");
@@ -185,7 +190,7 @@ sub htmlfy_rfc822_message
 	    _print_raw_str($wh, $header, $charset);
 	    $self->mhl_separator($wh);
 	}
-	# message/rfc822 case
+	# message/rfc822 case (attached rfc822 message)
 	elsif ($type eq 'message/rfc822') {
 	    $attach++;
 
@@ -202,7 +207,8 @@ sub htmlfy_rfc822_message
 		    dst => $outf,
 		});
 
-		# show inline href appeared in parent html.
+		# show inline <HREF> link,
+		# which appears in parent html ( == $wh channel ).
 		$self->_print_inline_object_link({
 		    fh   => $wh,     # file descriptor
 		    type => $type,   # XXX derived from input message
@@ -214,9 +220,10 @@ sub htmlfy_rfc822_message
 	    }
 	}
 	# text/plain case.
+	# XXX inline expansion.
 	elsif ($type eq 'text/plain') {
 	    $self->_text_safe_print({
-		fh   => $wh,
+		fh   => $wh,                    # parent html
 		data => $m->data_in_body_part(),
 	    });
 	}
@@ -231,6 +238,7 @@ sub htmlfy_rfc822_message
 
 	    # e.g. text/xxx case (e.g. text/html case)
 	    if ($type =~ /^text/) {
+		# 1. firstly saved to temporary file $tmpf in "raw" mode
 		my $tmpf = $self->_create_temporary_filename();
 		$msginfo->{ file } = $tmpf;
 
@@ -243,7 +251,9 @@ sub htmlfy_rfc822_message
 		    $self->_text_raw_print($msginfo); # XXX raw mode
 		}
 
-		# disable html tag in file which is saved in raw mode.
+		# 2. secondary convert $tmpf to real target $outf with
+		#    some modification e.g. metachars escaping, ...
+		# disable html tag in file saved in raw mode.
 		if (-f $tmpf) {
 		    $msginfo->{ description } = "(HTML TAGs are disabled)";
 		    _disable_html_tag_in_file($tmpf, $outf);
@@ -256,7 +266,7 @@ sub htmlfy_rfc822_message
 		$self->_binary_print($msginfo);
 	    }
 
-	    # show inline href appeared in parent html.
+	    # show inline <HREF> link appeared in parent html.
 	    $self->_print_inline_object_link({
 		inline => 1,
 		fh     => $wh,
@@ -268,7 +278,7 @@ sub htmlfy_rfc822_message
 	}
     }
 
-    # after message
+    # show navigation bar et.al. after message itself
     $self->mhl_separator($wh);
     $self->mhl_footer($wh);
     $self->html_end($wh);
@@ -276,6 +286,7 @@ sub htmlfy_rfc822_message
 
 
 # Descriptions: copy $inf file to $outf file with disabling HTML tag
+#               by _print_safe_buf().
 #    Arguments: STR($inf) STR($outf)
 # Side Effects: create $outf file
 # Return Value: none
@@ -352,15 +363,18 @@ sub _init_htmlfy_rfc822_message
 	$id  = $args->{ id };
 	$dst = $self->message_filepath($id);
     }
+    # this object is an attachment if parent_id is specified.
     elsif (defined $args->{ parent_id }) {
 	$self->{ _num_attachment }++;
 	$id  = $args->{ parent_id } .'.'. $self->{ _num_attachment };
 	$dst = $args->{ dst };
     }
+    # last resort: give unique identifier
     elsif (defined $args->{ dst }) {
 	$id  = time.".".$$;
 	$dst = $args->{ dst };
     }
+    # oops ;) wrong call of this function
     else {
 	croak("htmlfy_rfc822_message: specify \$id or \$dst\n");
     }
@@ -371,7 +385,7 @@ sub _init_htmlfy_rfc822_message
 }
 
 
-# Descriptions: show html header
+# Descriptions: show html header + file title in <BODY>
 #    Arguments: OBJ($self) HANDLE($wh) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -499,7 +513,8 @@ sub _set_output_channel
 }
 
 
-# Descriptions: return temporary file path
+# Descriptions: return temporary file path.
+#               XXX temporary file is created under $db_dir not public space
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: STR
@@ -538,8 +553,10 @@ sub _create_temporary_file_in_raw_mode
 
 
 # Descriptions: convert $file filepath to relative path
+#               XXX UNIX specific ???
 #    Arguments: OBJ($self) STR($file)
 # Side Effects: none
+#         Todo: UNIX specific
 # Return Value: STR
 sub _relative_path
 {
@@ -551,7 +568,8 @@ sub _relative_path
 }
 
 
-# Descriptions: print link as html
+# Descriptions: print inline link as html for attachments e.g.
+#               images, files et. al.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -583,6 +601,7 @@ sub _print_inline_object_link
 # Descriptions: return attachment filename
 #    Arguments: OBJ($self) STR($attach) STR($suffix)
 # Side Effects: none
+#         Todo: UNIX specific
 # Return Value: STR
 sub _gen_attachment_filename
 {
@@ -606,7 +625,7 @@ my @header_field = qw(From To Cc Subject Date
 #               See _sprintf_safe_str() for how to escape.
 #    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: none
-#               XXX print return value (str) in raw mode later.
+#               XXX $buf is printed out later in raw mode.
 # Return Value: STR
 sub _format_safe_header
 {
@@ -637,7 +656,7 @@ sub _format_safe_header
 }
 
 
-# Descriptions: show link to index html files
+# Descriptions: show link to indexes as navigation
 #    Arguments: none
 # Side Effects: none
 # Return Value: none
@@ -721,12 +740,16 @@ sub _binary_print
 	    binmode($fh);
 
 	    if ($enc eq 'base64') {
-		use MIME::Base64;
-		print $fh decode_base64( $msg->data_in_body_part() );
+		eval q{
+		    use MIME::Base64;
+		    print $fh decode_base64( $msg->data_in_body_part() );
+		};
 	    }
 	    elsif ($enc eq 'quoted-printable') {
-		use MIME::QuotedPrint;
-		print $fh decode_qp( $msg->data_in_body_part() );
+		eval q{
+		    use MIME::QuotedPrint;
+		    print $fh decode_qp( $msg->data_in_body_part() );
+		};
 	    }
 	    elsif ($enc eq '7bit') {
 		_print_safe_str($fh, $msg->data_in_body_part());
@@ -748,7 +771,7 @@ we should not process this C<$id>
 =cut
 
 
-# Descriptions: check list to be ignored
+# Descriptions: check whether article $id is ignored
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
 # Return Value: 1 or 0
@@ -771,7 +794,8 @@ See section C<Internal Data Presentation> for more detail.
 =cut
 
 
-# Descriptions: update database on message header, thread relation et.al.
+# Descriptions: update database on message header, thread relation
+#               et. al.
 #    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
 # Side Effects: update database
 # Return Value: none
@@ -785,7 +809,8 @@ sub cache_message_info
     $self->_db_open();
     my $db = $self->{ _db };
 
-    # XXX update max id only under the top level operation
+    # XXX we should not update max_id when our target is an attachment.
+    # XXX update max_id only under the top level operation
     unless ($self->{ _is_attachment }) {
 	if (defined $db->{ _info }->{ id_max }) {
 	    $db->{_info}->{id_max} =
@@ -806,7 +831,7 @@ sub cache_message_info
     $db->{ _filename }->{ $id } = $self->message_filename($id);
     $db->{ _filepath }->{ $id } = $dst;
 
-    # Date:
+    # HASH { $id => Date: }
     $db->{ _date }->{ $id } = $hdr->get('date');
 
     use Time::ParseDate;
@@ -815,22 +840,24 @@ sub cache_message_info
     my ($sec,$min,$hour,$mday,$mon,$year,$wday) = localtime( $unixtime );
     my $month  = sprintf("%04d/%02d", 1900 + $year, $mon + 1);
 
-    # { id => YYYY/MM }
+    # HASH { $id => YYYY/MM }
     $db->{ _month }->{ $id } = $month;
 
-    # { YYYY/MM => (id1 id2 id3 ..) }
+    # HASH { YYYY/MM => (id1 id2 id3 ..) }
     __add_value_to_array($db, '_monthly_idlist', $month, $id);
 
-    # Subject:
+    # HASH { $id => Subject: }
     $db->{ _subject }->{ $id } =
 	$self->_decode_mime_string( $hdr->get('subject') );
 
-    # From:
+    # HASH { $id => From: }
     my $ra = _address_clean_up( $hdr->get('from') );
     $db->{ _from }->{ $id } = $ra->[0];
     $db->{ _who }->{ $id } = $self->_who_of_address( $hdr->get('from') );
 
-    # Message-Id:
+    # HASH { $id => Message-Id: }
+    # HASH { Message-Id: => $id }
+    # HASH { $id => list of $id ... }
     $ra  = _address_clean_up( $hdr->get('message-id') );
     my $mid = $ra->[0];
     if ($mid) {
@@ -846,6 +873,7 @@ sub cache_message_info
 
 	_PRINT_DEBUG("In-Reply-To: $in_reply_to") if defined $in_reply_to;
 
+	# save message-id(s) within In-Reply-To: field into database
 	for my $mid (@$irt_ra) {
 	    # { message-id => (id1 id2 id3 ...)
 	    __add_value_to_array($db, '_msgidref', $mid, $id);
@@ -898,7 +926,7 @@ sub cache_message_info
 		_PRINT_DEBUG("no \$db->{ _prev_id }");
 	    }
 
-	    # XXX we should not overwrite already " id => next_id " exists
+	    # XXX we should not overwrite " id => next_id " assinged already.
 	    # XXX we preserve the first " id => next_id " value.
 	    # XXX but we overwride it if "id => id (itself)", wrong link.
 	    unless ((defined $db->{ _next_id }->{ $idp }) &&
@@ -939,7 +967,8 @@ sub __str2array
 }
 
 
-# Descriptions: add { key => value } of database $dbname
+# Descriptions: add { key => value } of database $dbname.
+#               value is "x y z ..." form, space separated string.
 #    Arguments: HASH_REF($db) STR($dbname) STR($key) STR($value)
 # Side Effects: update database
 # Return Value: none
@@ -949,11 +978,13 @@ sub __add_value_to_array
     my $found = 0;
     my $ra = __str2array($db->{ $dbname }->{ $key });
 
+    # ensure uniqueness
     for (@$ra) {
 	$found = 1 if ($value =~ /^\d+$/) && ($_ == $value);
 	$found = 1 if ($value !~ /^\d+$/) && ($_ eq $value);
     }
 
+    # add if the value is a new comer.
     unless ($found) {
 	$db->{ $dbname }->{ $key } .= " $value";
     }
@@ -969,11 +1000,11 @@ sub _thread_head
 {
     my ($db, $id) = @_;
     my $max     = 128;
-    my $head_id = 0;
+    my $head_id = $id;
 
-    # search the thread head
+    # track back id list to search the thread head
     while ($max-- > 0) {
-	my $prev_id = $db->{ _prev_id }->{ $id };
+	my $prev_id = $db->{ _prev_id }->{ $head_id };
 	last unless $prev_id;
 	$head_id = $prev_id;
     }
@@ -1001,7 +1032,7 @@ sub _search_default_next_thread_id
     # 3. last resort: thread includes ($id+1),
     #                 thread includes ($id+2), ...
     for my $xid ($id, @ra, @c0) {
-	my $default = __search_default_next_thread_id($db, $xid);
+	my $default = __search_default_next_id_in_thread($db, $xid);
 	return $default if defined $default;
     }
 }
@@ -1011,18 +1042,24 @@ sub _search_default_next_thread_id
 #    Arguments: HASH_REF($db) STR($id)
 # Side Effects: none
 # Return Value: STR
-sub __search_default_next_thread_id
+sub __search_default_next_id_in_thread
 {
     my ($db, $id) = @_;
-    my $list = __str2array( $db->{ _thread_list }->{ $id } );
+    my $list = [];
     my $prev = 0;
 
-    return undef unless $#$list > 1;
+    # thread_list HASH { $id => $id1 $id2 $id3 ... }
+    if (defined $db->{ _thread_list }->{ $id }) {
+	$list = __str2array( $db->{ _thread_list }->{ $id } );
+	return undef unless $#$list > 1;
 
-  SEARCH:
-    for my $xid (reverse @$list) {
-	last SEARCH if $xid == $id;
-	$prev = $xid;
+	# thread_list HASH { $id => $id1 $id2 $id3 ... $id $prev ... }
+	#                           <---- search ---
+      SEARCH:
+	for my $xid (reverse @$list) {
+	    last SEARCH if $xid == $id;
+	    $prev = $xid;
+	}
     }
 
     # found
@@ -1069,7 +1106,6 @@ sub update_relation
     #      prev/next id (article id) and
     #      prev/next by thread
     my $db = $self->{ _db };
-    my $thread_list = __str2array( $db->{ _thread_list }->{ $id } );
     my %uniq = ( $id => 1 );
 
   UPDATE:
@@ -1082,16 +1118,20 @@ sub update_relation
 	}
     }
 
-    # update link relation for all articles in this thread.
-    for my $id (@$thread_list) {
-	next UPDATE if $uniq{ $id}; $uniq{ $id } = 1;
-	$self->_update_relation( $id );
-	push(@$list, $id);
+    if (defined $db->{ _thread_list }->{ $id } ) {
+	my $thread_list = __str2array( $db->{ _thread_list }->{ $id } );
+
+	# update link relation for all articles in this thread.
+	for my $id (@$thread_list) {
+	    next UPDATE if $uniq{ $id}; $uniq{ $id } = 1;
+	    $self->_update_relation( $id );
+	    push(@$list, $id);
+	}
     }
 }
 
 
-# Descriptions: update link in preamble and footer.
+# Descriptions: update link at preamble and footer of HTML-ified message.
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: rewrite index file
 # Return Value: none
@@ -1137,12 +1177,13 @@ sub _update_relation
 	}
     }
     else {
-	warn("cannot open $file (id=$id)\n");
+	warn("cannot open   $old (id=$id)\n") unless defined $rh;
+	warn("cannot create $new (id=$id)\n") unless defined $wh;
     }
 }
 
 
-# Descriptions: return thread link relation et.al. for $id
+# Descriptions: return thread link relation info et.al. for $id
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: HASH_REF
@@ -1402,6 +1443,7 @@ my @kind_of_databases = qw(from date subject message_id references
 # Descriptions: open database
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: tied with $self->{ _db }
+#         Todo: we should use IO::Adapter ?
 # Return Value: none
 sub _db_open
 {
@@ -1433,6 +1475,7 @@ sub _db_open
 # Descriptions: close database
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: untie $self->{ _db }
+#         Todo: we should use IO::Adapter ?
 # Return Value: none
 sub _db_close
 {
@@ -1658,7 +1701,7 @@ sub _update_id_montly_index_master
 sub _yyyy_range
 {
     my ($list) = @_;
-    my ($yyyy);
+    my ($yyyy) = {};
 
     for (@$list) {
 	if (/^(\d{4})\/(\d{2})/) {
@@ -1680,6 +1723,9 @@ sub __sort_yyyymm
     my ($xa, $xb) = ($a, $b);
     $xa =~ s@/@@;
     $xb =~ s@/@@;
+    if ($xa eq '') { $xa = 0;}
+    if ($xb eq '') { $xb = 0;}
+
     $xa <=> $xb;
 }
 
@@ -2132,7 +2178,7 @@ sub _address_clean_up
 }
 
 
-# Descriptions: extrace gecos fieldin $address
+# Descriptions: extrace gecos field in $address
 #    Arguments: OBJ($self) STR($address)
 # Side Effects: none
 # Return Value: STR
@@ -2187,18 +2233,18 @@ sub _decode_mime_string
     if (defined($str) &&
 	($str =~ /=\?ISO\-2022\-JP\?[BQ]\?/i) &&
 	($code eq 'euc' || $code eq 'jis')) {
-        use MIME::Base64;
         if ($str =~ /=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/i) {
+	    eval q{ use MIME::Base64; };
             $str =~ s/=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/decode_base64($1)/gie;
         }
 
-        use MIME::QuotedPrint;
         if ($str =~ /=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/i) {
+	    eval q{ use MIME::QuotedPrint;};
             $str =~ s/=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/decode_qp($1)/gie;
         }
 
 	if (defined $str) {
-	    use Jcode;
+	    eval q{ use Jcode;};
 	    my $icode = &Jcode::getcode(\$str);
 	    &Jcode::convert(\$str, $code, $icode);
 	}
