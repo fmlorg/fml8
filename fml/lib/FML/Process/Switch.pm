@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Switch.pm,v 1.41 2001/11/22 11:12:09 fukachan Exp $
+# $FML: Switch.pm,v 1.42 2001/11/25 02:51:34 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -254,24 +254,29 @@ sub _makefml_parse_argv
     my $ml_home_prefix = $main_cf->{ ml_home_prefix };
 
     # makefml specific syntax.
-    my ($command, $ml_name, @options) = @ARGV;
-    if ($command =~ /\-\>/) {
-	($command, @options) = @ARGV;
-	($ml_name, $command) = split('->', $command);
+    if (@ARGV) {
+	my ($command, $ml_name, @options) = @ARGV;
+	if ($command =~ /\-\>/) {
+	    ($command, @options) = @ARGV;
+	    ($ml_name, $command) = split('->', $command);
+	}
+	elsif ($command =~ /::/) {
+	    ($command, @options) = @ARGV;
+	    ($ml_name, $command) = split('::', $command);
+	}
+
+	# save $ml_home_dir value in $main_cf directly
+	$main_cf->{ ml_home_dir } = "$ml_home_prefix/$ml_name";
+
+	# config.cf
+	my $cf = "$ml_home_prefix/$ml_name/config.cf";
+	my @cf = ($cf);
+
+	\@cf;
     }
-    elsif ($command =~ /::/) {
-	($command, @options) = @ARGV;
-	($ml_name, $command) = split('::', $command);
+    else {
+	return [];
     }
-
-    # save $ml_home_dir value in $main_cf directly
-    $main_cf->{ ml_home_dir } = "$ml_home_prefix/$ml_name";
-
-    # config.cf
-    my $cf = "$ml_home_prefix/$ml_name/config.cf";
-    my @cf = ($cf);
-
-    \@cf;
 }
 
 
@@ -355,10 +360,10 @@ sub _module_specific_options
     # XXX program xxx does.
     if ($myname eq 'fml.pl' || 
 	$myname eq 'loader' ) { 
-	return qw(ctladdr! debug! params=s -c=s);
+	return qw(ctladdr! debug! help! params=s -c=s);
     }
     elsif ($myname eq 'fmlthread') {
-	return qw(debug! 
+	return qw(debug! help! 
 		  article_id_max=i
 		  spool_dir=s
 		  base_url=s
@@ -372,26 +377,26 @@ sub _module_specific_options
 	return ();
     }
     elsif ($myname eq 'fmlconf') {
-	return qw(debug! params=s -c=s n!);
+	return qw(debug! help! params=s -c=s n!);
     }
     elsif ($myname eq 'fmldoc') {
 	# perldoc [-h] [-v] [-t] [-u] [-m] [-l]
-	return qw(debug! params=s -c=s v! t! u! m! l!);
+	return qw(debug! help! params=s -c=s v! t! u! m! l!);
     }
     elsif ($myname eq 'makefml') {
-	return qw(debug! params=s -c=s);	
+	return qw(debug! help! params=s -c=s);	
     }
     elsif ($myname eq 'makefml.cgi') {
 	return ();
     }
     elsif ($myname eq 'fmlsch') {
-	return qw(debug! -D=s -F=s -m=s a! h!);
+	return qw(debug! help! -D=s -F=s -m=s a! h!);
     }
     elsif ($myname eq 'fmlsch.cgi') {
 	return ();
     }
     elsif ($myname eq 'fmlhtmlify') {
-	return qw(debug! -I=s);
+	return qw(debug! help! -I=s);
     }
     else {
 	croak "no such program $myname.\n";
