@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.193 2003/11/29 08:18:20 fukachan Exp $
+# $FML: Kernel.pm,v 1.194 2003/11/29 10:24:29 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1146,7 +1146,7 @@ sub log_message_init
 {
     my ($curproc) = @_;
     my $config    = $curproc->config();
-    my $module    = $config->{ computer_output_engine };
+    my $module    = $config->{ log_computer_output_engine };
     my $obj       = undef;
 
     eval qq{
@@ -1159,7 +1159,7 @@ sub log_message_init
 	$curproc->{ log_message_queue } = $obj;
     }
     else {
-	$curproc->logerror("fail to create computer_output_engine object");
+	$curproc->logerror("fail to create log_computer_output_engine object");
     }
 }
 
@@ -2365,7 +2365,7 @@ sub _reopen_stderr_channel
 	$curproc->is_under_mta_process() ||
 	defined $option->{ quiet }  || defined $option->{ q } ||
 	$config->yes('use_log_dup') || $option->{ 'log-dup' } ||
-	$config->yes('use_computer_output') || $option->{'computer-output'}) {
+	$config->yes('use_log_computer_output') || $option->{'log-computer-output'}) {
 	my $tmpfile = $curproc->temp_file_path();
 	my $pcb     = $curproc->pcb();
 	$pcb->set("stderr", "logfile", $tmpfile);
@@ -2399,8 +2399,8 @@ sub _finalize_stderr_channel
 	    $curproc->is_under_mta_process() ||
 	    defined $option->{ quiet }  || defined $option->{ q } ||
 	    $config->yes('use_log_dup') || $option->{ 'log-dup' } ||
-	    $config->yes('use_computer_output') ||
-	    $option->{'computer-output'}) {
+	    $config->yes('use_log_computer_output') ||
+	    $option->{'log-computer-output'}) {
 
 	    close(STDERR);
 	    open(STDERR, ">&STDOUT");
@@ -2476,7 +2476,7 @@ sub be_quiet
 	$curproc->is_under_mta_process() ||
 	defined $option->{ quiet }  || defined $option->{ q } ||
 	$config->yes('use_log_dup') || $option->{ 'log-dup' } ||
-	$config->yes('use_computer_output') || $option->{'computer-output'}) {
+	$config->yes('use_log_computer_output') || $option->{'log-computer-output'}) {
 	return 1;
     }
     else {
@@ -2497,7 +2497,7 @@ sub finalize
     my $option    = $curproc->command_line_options();
 
     if ($config->yes('use_log_dup') || $option->{ 'log-dup' } ||
-	$config->yes('use_computer_output') || $option->{'computer-output'}) {
+	$config->yes('use_log_computer_output') || $option->{'log-computer-output'}) {
 	$curproc->_finalize_stderr_channel();
 	$curproc->_log_message_print();
     }
