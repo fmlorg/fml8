@@ -1,5 +1,5 @@
 <!--
-   $FML: style.sgml,v 1.6 2002/07/06 14:55:18 fukachan Exp $
+   $FML: style.sgml,v 1.7 2003/10/17 08:38:24 fukachan Exp $
 -->
 
 <chapter id="programingstyle">
@@ -46,6 +46,52 @@ default という単語をどこにはさむか？は悩ましいです。
 </para>
 
 </caption>
+
+
+<sect2>
+	<title>
+	変数の階層構造
+	</title>
+
+<para>
+よりシステマティックな変数命名ルールを考えていくと、ここでも、基底クラ
+スと継承という考えを（ある程度）導入する方がよいと思うようになりました。
+たとえば、次のようなものです。
+</para>
+
+<para>
+mail は「いわゆるメール」つまり messager/rfc822 形式のものです。
+fml システムへ入力されるものも mail だし、出ていくものも mail です。
+それらは mail から派生したサブクラスと考えられるため、
+「PREFIX_mail_属性」形式に統一する方が良いでしょう。
+<screen>
+mail_何とか
+mail_default_何とか
+
+use_incoming_mail_何とか
+incoming_mail_何とか
+
+use_outgoing_mail_何とか
+outgoing_mail_何とか
+</screen>
+</para>
+
+<para>
+ヘッダ関連の場合、こういった感じになるでしょう。
+<screen>
+header_なんとか
+header_default_なんとか
+
+article_header_なんとか
+use_article_header_なんとか
+
+command_mail_header_なんとか
+use_command_mail_header_なんとか
+</screen>
+</para>
+
+</sect2>
+
 
 <sect2>
 	<title>
