@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: edit.pm,v 1.2 2001/08/26 07:59:03 fukachan Exp $
+# $FML: edit.pm,v 1.1.1.1 2001/08/26 08:01:04 fukachan Exp $
 #
 
 package FML::Command::Admin::edit;
@@ -50,8 +50,9 @@ sub process
     my $myname        = $optargs->{ args }->{ myname };
 
     # ML's home directory
+    use File::Spec;
     my $ml_home_dir   = $optargs->{ 'args' }->{ 'ml_home_dir' };
-    my $config_cf     = $ml_home_dir."/config.cf";
+    my $config_cf     = File::Spec->catfile($ml_home_dir, "config.cf");
 
     use FML::Config;
     my $c = new FML::Config;

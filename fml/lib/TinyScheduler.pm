@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: TinyScheduler.pm,v 1.6 2001/06/17 08:57:10 fukachan Exp $
+# $FML: TinyScheduler.pm,v 1.7 2001/06/28 09:06:43 fukachan Exp $
 #
 
 package TinyScheduler;
@@ -72,7 +72,8 @@ sub tmpfile
 	croak("Hmm, unsafe ? I cannot write $dir, stop\n");
     }
 
-    $self->{ _tmpfile } = $tmpdir ."/$$.html";
+    use File::Spec;
+    $self->{ _tmpfile } = File::Spec->catfile($tmpdir,"$$.html");
     return $self->{ _tmpfile };
 }
 
