@@ -1,5 +1,5 @@
 #
-# $FML: modules,v 1.9 2004/03/31 12:31:30 fukachan Exp $
+# $FML: modules,v 1.10 2004/10/09 12:10:12 fukachan Exp $
 #
 # map between programs and modules (like /etc/name_to_sysnum on solaris ?)
 #
@@ -48,8 +48,8 @@ ml-admin/*/menu.cgi	FML::CGI::MLAdmin::MenuOld	$cgiargs
 ml-admin/*/config.cgi	FML::CGI::MLAdmin::Menu		$cgiargs
 
 # libexec/ compatibility
-fml.pl			FML::Process::Distribute	$ml
-fml.pl__--ctladdr	FML::Process::Command		$ml
+fml.pl			FML::Process::Emulate		$ml
+fml.pl__--ctladdr	FML::Process::Emulate		$ml $emulator_opts
 
 # test
 loader			FML::Process::Distribute	$ml
