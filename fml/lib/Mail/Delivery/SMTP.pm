@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2000-2001 Ken'ichi Fukamachi
+#  Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.9 2001/10/10 09:46:21 fukachan Exp $
+# $FML: SMTP.pm,v 1.10 2001/12/22 09:21:17 fukachan Exp $
 #
 
 
@@ -110,10 +110,11 @@ transactions.
 
 =cut
 
+
 # Descriptions: Mail::Delivery::SMTP constructor
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: $self ($me) hash has some default values
-# Return Value: object
+# Return Value: OBJ
 sub new
 {
     my ($self, $args) = @_;
@@ -139,7 +140,7 @@ sub new
 
 
 # Descriptions: send a (SMTP/LMTP) command string to BSD socket
-#    Arguments: $self $command_string
+#    Arguments: OBJ($self) STR($command)
 # Side Effects: log file by _smtplog
 #               set _last_command and _error_action in object itself
 # Return Value: none
@@ -162,7 +163,7 @@ sub _send_command
 
 
 # Descriptions: receive a reply for a (SMTP/LMTP) command
-#    Arguments: $self
+#    Arguments: OBJ($self)
 # Side Effects: log file by _smtplog
 # Return Value: none
 sub _read_reply
@@ -241,7 +242,7 @@ sub _read_reply
 #               1. try connect(2) by IPv6 if we can use Socket6.pm
 #               2. try connect(2) by IPv4
 #                  if $host is not IPv6 raw address e.g. [::1]:25
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: set file handle (BSD socket) in $self->{_socket}
 # Return Value: file handle (created BSD socket) or undef()
 sub _connect
@@ -279,6 +280,7 @@ sub _connect
     }
 }
 
+
 =head2 C<socket_is_connected($socket)>
 
 $socket has peer or not by C<getpeername()>.
@@ -289,6 +291,10 @@ $socket has peer or not by C<getpeername()>.
 =cut
 
 
+# Descriptions: this socket is connected or not
+#    Arguments: OBJ($self) HANDLE($socket)
+# Side Effects: none
+# Return Value: 1 or 0
 sub socket_is_connected
 {
     my ($self, $socket) = @_;
@@ -308,9 +314,9 @@ close BSD socket
 =cut
 
 # Descriptions: close BSD socket
-#    Arguments: $self
-# Side Effects:
-# Return Value: none
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: same as close()
 sub close
 {
     my ($self) = @_;
@@ -378,6 +384,7 @@ See L<Mail::Message> for more details.
 
 =cut
 
+
 # Descriptions: main delivery loop for each recipient_maps and each mta.
 #               real delivery is done within _deliver() method.
 #               algorithm:
@@ -388,7 +395,7 @@ See L<Mail::Message> for more details.
 #                    }
 #                 }
 #
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: See Mail::Delivery::Utils for recipient_map utilities
 #               to track the delivery process status.
 # Return Value: none
@@ -518,7 +525,7 @@ sub deliver
 #              >250 oK
 #              <QUIT
 #              >221 good bye
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: remove error messages when we return from here
 #               for the next _deliver() session.
 # Return Value: none
@@ -583,8 +590,8 @@ sub _deliver
 
 # Descriptions: initialize _deliver() process
 #               this routine is called at the first phase in _deliver()
-#    Arguments: $self $args
-# Side Effects:
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: initialize object
 # Return Value: none
 sub _initialize_delivery_session
 {
@@ -599,8 +606,9 @@ sub _initialize_delivery_session
 ##### MAIL FROM:
 #####
 
+
 # Descriptions: send SMTP command "MAIL FROM"
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 #     See Also: RFC821, RFC1123
@@ -620,6 +628,7 @@ sub _send_mail_from
 ##### RCPT TO:
 #####
 
+
 # Descriptions: We evaluate recipient_maps parameter here.
 #               You can use a lot of classes for this directive: e.g.
 #               file, UNIX's /etc/group, YP, SQL, LDAP, ...
@@ -628,7 +637,7 @@ sub _send_mail_from
 #                                         mysql:toymodel
 #               IO::Adapter class is essential to handle abstract
 #               $recipient_map.
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: $self->{ _retry_recipient_table } has recipients which
 #               causes some errors.
 #               _{set,get}_map_position() and _{set,get}_map_status()
@@ -702,7 +711,7 @@ sub _send_recipient_list_by_recipient_map
 
 
 # Descriptions: send "RCPT TO:<recipient>" to MTA
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub _send_recipient_list
@@ -722,7 +731,7 @@ sub _send_recipient_list
 #####
 
 # Descriptions: send the header part of the message to socket
-#    Arguments: $self $socket $ref_to_header
+#    Arguments: OBJ($self) HANDLE($socket) OBJ($header)
 #               $ref_to_header is the FML::Header class object.
 # Side Effects: none
 # Return Value: none
@@ -739,7 +748,7 @@ sub _send_header_to_mta
 
 
 # Descriptions: send the body part of the message to socket
-#    Arguments: $self $socket "Mail::Message object"
+#    Arguments: OBJ($self) HANDLE($socket) OBJ($msg)
 # Side Effects: none
 # Return Value: none
 sub _send_body_to_mta
@@ -754,8 +763,8 @@ sub _send_body_to_mta
 
 
 # Descriptions: send message itself to file handle (BSD socket here)
-#    Arguments: $self $args
-# Side Effects:
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
 # Return Value: none
 sub _send_data_to_mta
 {
@@ -798,8 +807,9 @@ sub _send_data_to_mta
 ##### QUIT / RSET
 #####
 
+
 # Descriptions: send the SMTP reset "RSET" command
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub _reset_smtp_transaction
@@ -830,7 +840,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
