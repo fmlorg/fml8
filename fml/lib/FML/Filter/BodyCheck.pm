@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: BodyCheck.pm,v 1.5 2001/09/23 09:30:28 fukachan Exp $
+# $FML: BodyCheck.pm,v 1.6 2001/09/23 11:34:42 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -97,11 +97,11 @@ sub body_check
     ## 6. main fules
     for my $rule (qw(reject_not_iso2022jp_japanese_string
 		     reject_null_mail_body
-		     reject_virus_message
 		     reject_one_line_message
 		     reject_old_fml_command_syntax
 		     reject_invalid_fml_command_syntax
 		     reject_japanese_command_syntax
+		     reject_ms_guid
 		     )) {
 	if ($self->can($rule)) {
 	    eval q{
@@ -145,16 +145,79 @@ sub reject_null_mail_body
 
 # Descriptions: virus check against some types of M$ products
 #               Even if Multipart, evaluate all blocks agasint virus checks.
+#     
+#             [HISTORY]
+#             research by Yoshihiro Kawashima <katino@kyushu.iij.ad.jp>
+#             helps me to speculate the virus family?
+#             This GUID trap idea is based on ZDNet news information.
+#             Thanks hama@sunny.co.jp on M$ GUID pattern.
+#
 #    Arguments: $self $args
 # Side Effects: 
 # Return Value: none
-sub reject_virus_message
+sub reject_ms_guid
 {
     my ($self, $msg, $args, $first_msg) = @_;
 
-    # &use('viruschk');
-    # my ($xr);
-    # $xr = &VirusCheck(*e);
+    for (my $mp = $msg->{ next }; $mp ; $mp = $mp->{ next } ) {
+	$self->_probe_guid($mp);
+    }
+}
+
+
+sub _probe_guid
+{
+    my ($self, $msg) = @_;
+    my ($xbuf, $pbuf, $buf, $found, @id);
+
+    # cheap diagnostic check
+    return unless defined $msg->{ data };
+
+
+    # M$ GUID pattern ; thank hama@sunny.co.jp
+    my $guid_pat = 
+	'\{([0-9A-F]{8}\-[0-9A-F]{4}\-[0-9A-F]{4}\-[0-9A-F]{4}\-[0-9A-F]{12})\}';
+
+    my $window_size = 1024; # at lease 32*2
+    my ($pb, $pe)   = $msg->get_offset();
+    my $dataref     = $msg->{ data };
+    my $encoding    = $msg->get_encoding_mechanism();
+
+    # get $window_size bytes window and decode it
+    $buf = substr($$dataref, $pb, $pe - $pb);
+
+    if ($encoding) {
+	$buf = $self->_decode_mime_buffer($buf, $encoding);
+    }
+
+    # check current window
+    if ($buf =~ /($guid_pat)/) {
+	croak "MS GUID ($1) found, may be a virus";
+    }
+    else {
+	return undef;
+    }
+}
+
+
+sub _decode_mime_buffer
+{
+    my ($self, $buf, $encoding) = @_;
+    my $size = length($buf);
+
+    # cheap diagnostic check
+    return $buf unless $encoding;
+
+    if ($encoding eq 'base64') {
+	use MIME::Base64;
+	$buf = decode_base64($buf);
+    }
+    elsif ($encoding eq 'quoted-printable') {
+	use MIME::QuotedPrint;
+	$buf = decode_qp($buf);
+    }	    
+
+    return $buf;
 }
 
 
