@@ -61,7 +61,7 @@ error_analyzer_cache_size		=	14
 #      History: none
 #        Value: simple_count / histgram
 #     Examples: simple_count
-error_analyzer_function_select_list		=	simple_count
+error_analyzer_function_select_list	=	simple_count
 						histgram
 
 

@@ -48,7 +48,7 @@ template_file_charset_en	=	us-ascii
 #        Value:
 #     Examples:
 template_file_charset_select_list	=	euc-jp	
-					us-ascii
+						us-ascii
 
 # Descriptions:
 #      History:

@@ -58,7 +58,7 @@ cgi_default_language	=	japanese
 #        Value:
 #     Examples:
 cgi_language_select_list	=	japanese
-				english
+					english
 
 
 # Descriptions: デフォルトの bgcolor
