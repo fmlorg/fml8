@@ -1,0 +1,49 @@
+#
+# $FML: Makefile,v 1.1 2001/04/28 08:16:08 fukachan Exp $
+#
+
+TMP_DIR     = /tmp
+
+# targets
+SOURCE      = book
+BOOK        = tech
+BOOK_ID     = tips
+TARGET_DIR  = ../../../../Documentation/ja/$(BOOK)
+
+# programs (except for /bin/*)
+UNIQ        = uniq
+PERL        = perl
+FIND        = find
+GREP        = grep
+CVS         = cvs
+ENV         = env
+EXPORTER    = rsync -a
+SGML_TOOLS  = sgmltools -v -b html -j "-v" 
+FIX_CHARSET = ../utils/bin/fix_charset.pl
+
+
+###
+### RULES
+###
+
+all: export
+
+html:
+	$(ENV) TMPDIR=$(TMP_DIR) $(SGML_TOOLS) $(SOURCE).sgml 2>&1 | $(UNIQ)
+	@ $(PERL) -i.bak $(FIX_CHARSET) $(SOURCE)/@*/$(BOOK_ID).html
+	@ rm -f $(SOURCE)/@*/*.html.bak
+
+clean:
+	$(FIND) . -type f -print |$(GREP) '~' |$(PERL) -nple unlink
+	rm -fr $(SOURCE)
+
+export: _init html
+	$(EXPORTER) $(SOURCE)/@*/ $(TARGET_DIR)/
+	@ rsync -a ../../en/figures/*.gif $(TARGET_DIR)/
+	chmod 755 $(TARGET_DIR)
+
+scan:
+	@ $(CVS) -n update 2>&1 |$(GREP) -v : || echo ''
+
+_init:
+	test -d $(TARGET_DIR) || mkdir $(TARGET_DIR)

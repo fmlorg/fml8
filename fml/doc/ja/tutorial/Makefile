@@ -1,28 +1,40 @@
 #
-# $FML: Makefile,v 1.7 2001/04/24 08:08:01 fukachan Exp $
+# $FML: Makefile,v 1.8 2001/04/24 11:40:37 fukachan Exp $
 #
 
-TMP_DIR    = /tmp
+# targets
+TARGET      = book
 TARGET_DIR = ../../../../Documentation/ja/tutorial
+ID          = techtips.html
+
+###
+### CONFIGURATIONS
+###
+
+SOURCE      = fml-devel
+BOOK        = tutorial
+BOOK_ID     = fml-devel
+TARGET_DIR  = ../../../../Documentation/ja/$(BOOK)
+
+
+###
+### RULES
+###
+
+_ARGV = SOURCE=$(SOURCE) BOOK=$(BOOK) BOOK_ID=$(BOOK_ID)
+_MAKE = $(MAKE) -f ../Makefile.template $(_ARGV)
+
 
 all: export
 
 html:
-	env TMPDIR=$(TMP_DIR) sgmltools -v -b html -j "-v" fml-devel.sgml 2>&1 |\
-	uniq
-	@ perl -i.bak .fix_charset.pl fml-devel/@*/fml-devel.html
-	@ rm -f fml-devel/@*/fml-devel.html.bak
+	@ $(_MAKE) html
 
 clean:
-	find . -type f -print |grep '~' |perl -nple unlink
-	rm -fr fml-devel
+	@ $(_MAKE) clean
 
-export: html
-	test -d  $(TARGET_DIR) || mkdir $(TARGET_DIR)
-	rsync -a fml-devel/@*/ $(TARGET_DIR)/
-	rsync -a ../../en/figures/*.gif $(TARGET_DIR)/
-	chmod 755 $(TARGET_DIR)
-
+export:
+	@ $(_MAKE) export
 
 scan:
-	@ cvs -n update 2>&1 |grep -v : || echo ''
+	@ $(_MAKE) scan
