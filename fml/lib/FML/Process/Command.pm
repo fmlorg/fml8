@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Command.pm,v 1.21 2001/11/04 03:44:46 fukachan Exp $
+# $FML: Command.pm,v 1.22 2001/11/25 03:13:50 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -118,6 +118,7 @@ Usage: $0 \$ml_home_prefix/\$ml_name [options]
 
    For example, process command of elena ML
    $0 /var/spool/ml/elena
+
 _EOF_
 }
 

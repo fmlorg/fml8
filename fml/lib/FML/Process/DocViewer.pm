@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: DocViewer.pm,v 1.5 2001/11/25 03:13:50 fukachan Exp $
+# $FML: DocViewer.pm,v 1.6 2001/11/25 03:55:38 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -84,7 +84,7 @@ sub verify_request
     my ($curproc, $args) = @_;
     my $argv = $curproc->command_line_argv();
 
-    if (length(@$argv) == 1) {
+    if (length(@$argv) == 0) {
 	$curproc->help();
 	exit(0);
     }

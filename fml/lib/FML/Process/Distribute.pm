@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Distribute.pm,v 1.52 2001/11/11 13:37:41 fukachan Exp $
+# $FML: Distribute.pm,v 1.53 2001/11/25 03:13:50 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -147,6 +147,7 @@ Usage: $0 \$ml_home_prefix/\$ml_name [options]
 
    For example, distribute of elena ML
    $0 /var/spool/ml/elena
+
 _EOF_
 }
 
