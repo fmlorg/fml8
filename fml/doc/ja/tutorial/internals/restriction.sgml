@@ -1,0 +1,92 @@
+<!--
+   $FML: restriction.sgml,v 1.4 2001/10/21 02:18:09 fukachan Exp $
+-->
+
+<chapter id="restriction">
+	<title>
+	制限
+	</title>
+
+
+<sect1 id="restriction.class">
+	<title>
+	FML::Restriction クラス
+	</title>
+
+<para>
+入力データや、
+コマンドの ACL は
+FML::Restriction クラス以下にモジュールを配置することにしています。
+</para>
+
+<para>
+例えば、CGI では
+FML::Restriction::CGI クラスのモジュールを用いて
+入力データがある正規表現の中に収まるかどうか？の検査をしています。
+</para>
+
+<para>
+FML::Restriction 以下では
+Base を継承したりしますが、
+他のモジュールでは、FML::Restriction クラスを object composition
+として使って下さい。
+例えば、
+<screen>
+use FML::Restriction::CGI;
+$safe = new FML::Restriction::CGI;
+my $allowed_regexp = $safe->param_regexp();
+
+if ($value =~ /^$allowed_regexp{$key}$) { ... ok, do something ... ;}
+</screen>
+のように使います。
+</para>
+
+</sect1>
+
+
+<sect1 id="restriction.cgi.input.data">
+	<title>
+	CGI における入力データの制限
+	</title>
+
+<para>
+CGI では
+FML::Restriction::CGI クラスのモジュールを用いて
+入力データがある正規表現の中に収まるかどうか？の検査をします。
+</para>
+
+<para>
+入力値は、前述のクラスの入力制限をうけるべきです。
+そのため、直接 param() を使ってはいけません。
+必ず safe_param_xxx() メソッドを通じてのみ、
+param() ( CGI モジュール )からのデータ入力をして下さい。
+</para>
+
+<para>
+なお、入力されたキーワード一覧を調べるために、
+<screen>
+for my $dirty_buf (param()) {
+   ... check ...
+}
+</screen>
+のような構文は許す必要はあるでしょうが、
+<screen>
+param($dirtty_buf)
+</screen>
+などとはしてはいけません。必ず
+<screen>
+for my $key (param()) {
+   ... check ...
+
+   if (key eq $key) {
+       value = safe_param_key()
+   }
+}
+</screen>
+のように書いて下さい。
+</para>
+
+</sect1>
+
+
+</chapter>
