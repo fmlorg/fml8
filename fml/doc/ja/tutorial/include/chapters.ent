@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.23 2001/11/24 12:48:10 fukachan Exp $
+	$FML: chapters.ent,v 1.24 2001/11/25 03:52:13 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -78,6 +78,7 @@
 <!entity chapter.cvstags         SYSTEM "devel/cvstags.sgml">
 <!entity chapter.docbook         SYSTEM "devel/docbook.sgml">
 <!entity chapter.inet6           SYSTEM "devel/inet6.sgml">
+<!entity chapter.program.create  SYSTEM "devel/create_program.sgml">
 
 
 <!-- misc -->

@@ -1,0 +1,148 @@
+<!--
+	$FML: inet6.sgml,v 1.3 2001/11/19 14:55:15 fukachan Exp $
+-->
+
+<chapter id="program.create">
+	<title>
+	新プログラムの作成
+	</title>
+
+
+<sect1>
+	<title>
+	プログラムを作る(コマンドライン用)
+	</title>
+
+<para>
+まず FML::Process:: にモジュールを用意します。
+最小構成の見本としては FML::Process::Scheduler 、
+最大構成としては FML::Process::Distribute 
+を参考にすると良いでしょう。
+</para>
+
+<para>
+用意しなければいけない関数は
+FML::Process::Flow::ProcessStart()
+を見ると分かります。
+FML::Process::Flow::ProcessStart()
+がプロセスを駆動しているからです。
+2001/11 現在、プロセスは以下のメソッドからなっています。
+<screen>
+new()
+prepare()
+verify_request()
+run()
+finish()
+</screen>
+</para>
+
+<para>
+<screen>
+        FML::Process::Kernel 
+                |       uses-a FML::Process::{Flow,Utils} FML::Parse ...
+                |
+                A
+        FML::Process::○○○
+                        uses-a FML::ほえほえ
+                        uses-a CPAN モジュール
+                        uses-a …
+</screen>
+</para>
+
+<para>
+FML::Process::○○○
+を用意したら、
+FML::Process::Switch
+を編集します。
+このモジュールは、各プログラムごとに
+『ロードするモジュール』
+『コマンドラインオプション』
+『ＭＬ名を必要とするか否か？』
+などを定義してください。
+編集する場所は fmlsch などの文字列を頼りにサーチすると良いでしょう。
+</para>
+
+<para>
+この 2 つの準備だけで、準備は終りですです。
+呼びたい名前のファイルを loader と link もしくは symlink することで
+実行が可能になります。
+例えば、標準のインストールでは、次のようになっています。
+<screen>
+% ls -l /usr/local/libexec/fml
+total 11
+-rw-r--r--  1 fml       wheel  4044 Nov 20 00:19 Standalone.pm
+lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 command -> loader
+drwxr-xr-x  4 root      wheel   512 Mar 29  2001 current-20010329
+drwxr-xr-x  4 root      wheel   512 Apr  7  2001 current-20010407
+drwxr-xr-x  4 root      wheel   512 Apr 18  2001 current-20010418
+drwxr-xr-x  3 root      wheel   512 Nov 23 22:10 current-20011123
+lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 distribute -> loader
+lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 fml.pl -> loader
+lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 fmlconf -> loader
+lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 fmldoc -> loader
+lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 fmlhtmlify -> loader
+lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 fmlsch -> loader
+lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 fmlsch.cgi -> loader
+lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 fmlserv -> loader
+lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 fmlthread -> loader
+lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 fmlthread.cgi -> loader
+-rwxr-xr-x  1 fml       wheel  4358 Nov 23 22:08 loader
+lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 makefml -> loader
+lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 makefml.cgi -> loader
+lrwxr-xr-x  1 root      wheel     6 Nov 23 22:10 mead -> loader
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1>
+	<title>
+	プログラムを作る( CGI 用)	
+	</title>
+
+<para>
+CGI のプログラムは
+FML::CGI::○○○
+というモジュールです。
+CGI 系列では次のような、オブジェクトの関係にあります。
+<screen>
+        FML::Process::Kernel 
+                |
+                A
+        FML::Process::CGI::Kernel   uses-a CGI
+                |
+                A
+        FML::Process::CGI
+                |
+                A
+        FML::CGI::○○○
+</screen>
+</para>
+
+<para>
+CGI のプログラムの書き方も同様です。
+コマンドラインのプログラムと同様に、
+FML::CGI::○○○ 
+を適宜用意して下さい。
+</para>
+
+<para>
+FML::Process::CGI::Kernel は、
+2001/11 現在、プロセスは以下のメソッドからなっています。
+<screen>
+new()
+prepare()
+verify_request()
+run()
+finish()
+</screen>
+そのため、多くの場合
+FML::Process::Kernel 
+のメソッドが呼ばれることはありません。
+</para>
+
+</sect1>
+
+
+</chapter>
