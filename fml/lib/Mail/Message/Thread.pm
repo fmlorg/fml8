@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Thread.pm,v 1.4 2004/03/28 10:28:23 fukachan Exp $
+# $FML: Thread.pm,v 1.5 2004/03/28 12:13:52 fukachan Exp $
 #
 
 package Mail::Message::Thread;
@@ -134,7 +134,7 @@ return thread data as HASH_REF.
 # Descriptions: top level dispatcher to get thread data.
 #    Arguments: OBJ($self) HASH_REF($thread_args)
 # Side Effects: update database
-# Return Value: none
+# Return Value: HASH_REF
 sub get_thread_data
 {
     my ($self, $thread_args) = @_;
