@@ -582,16 +582,16 @@ recipient {
 }
 
 reply_message {
-
-   reply_message_* {
-    ?     $reply_message_charset_en
-    ?     $reply_message_charset_ja
-    ?     $reply_message_default_charset
-    ?     $reply_message_subject
-   }
 }
 
 report_mail {
+
+   report_mail_* {
+    ?     $report_mail_charset_en
+    ?     $report_mail_charset_ja
+    ?     $report_mail_default_charset
+    ?     $report_mail_subject
+   }
 }
 
 sendmail {

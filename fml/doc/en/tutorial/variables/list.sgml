@@ -869,6 +869,15 @@ flock
 </row>
 <row>
 <entry>
+log_command_tail_starting_location</entry>
+<entry>
+ show the last N lines of log file where N == 100.</entry>
+<entry>
+100
+   </entry>
+</row>
+<row>
+<entry>
 log_computer_output_engine</entry>
 <entry>
  specify perl module for output engine.</entry>
