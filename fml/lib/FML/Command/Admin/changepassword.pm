@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: changepassword.pm,v 1.11 2004/02/15 04:38:28 fukachan Exp $
+# $FML: changepassword.pm,v 1.12 2004/04/23 04:10:29 fukachan Exp $
 #
 
 package FML::Command::Admin::changepassword;
@@ -59,6 +59,38 @@ sub need_lock { 1;}
 # Side Effects: none
 # Return Value: STR
 sub lock_channel { return 'command_serialize';}
+
+
+# Descriptions: verify the syntax command string.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub verify_syntax
+{
+    my ($self, $curproc, $command_args) = @_;
+    my $comname    = $command_args->{ comname }    || '';
+    my $comsubname = $command_args->{ comsubname } || '';
+    my $options    = $command_args->{ options }    || [];
+    my @test       = ($comname);
+    my $command    = $options->[ 0 ] || '';
+    my $address    = $options->[ 1 ] || '';
+    my $passwd     = $options->[ 2 ] || '';
+    push(@test, $command);
+
+    # 1. check address syntax
+    if ($address) {
+        use FML::Restriction::Base;
+        my $dispatch = new FML::Restriction::Base;
+        unless ($dispatch->regexp_match('address', $address)) {
+            $curproc->logerror("insecure address: <$address>");
+            return 0;
+        }
+    }
+
+    use FML::Command;
+    my $dispatch = new FML::Command;
+    return $dispatch->safe_regexp_match($curproc, $command_args, \@test);
+}
 
 
 # Descriptions: change the admin password.

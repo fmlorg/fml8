@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: addmoderator.pm,v 1.12 2004/01/02 14:45:03 fukachan Exp $
+# $FML: addmoderator.pm,v 1.13 2004/02/15 04:38:27 fukachan Exp $
 #
 
 package FML::Command::Admin::addmoderator;
@@ -57,6 +57,20 @@ sub need_lock { 1;}
 # Side Effects: none
 # Return Value: STR
 sub lock_channel { return 'command_serialize';}
+
+
+# Descriptions: verify the syntax command string.
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub verify_syntax
+{
+    my ($self, $curproc, $command_args) = @_;
+
+    use FML::Command::Syntax;
+    push(@ISA, qw(FML::Command::Syntax));
+    $self->check_syntax_address_handler($curproc, $command_args);
+}
 
 
 # Descriptions: add a new moderator.
