@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.26 2004/02/24 14:36:53 fukachan Exp $
+# $FML: subscribe.pm,v 1.27 2004/03/13 11:46:33 fukachan Exp $
 #
 
 package FML::Command::User::subscribe;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 
 
 =head1 NAME

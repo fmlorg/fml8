@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.23 2004/02/01 14:40:01 fukachan Exp $
+# $FML: chaddr.pm,v 1.24 2004/02/15 04:38:27 fukachan Exp $
 #
 
 package FML::Command::Admin::chaddr;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 
 
 =head1 NAME

@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.39 2004/01/21 03:48:32 fukachan Exp $
+# $FML: Filter.pm,v 1.40 2004/02/01 14:52:49 fukachan Exp $
 #
 
 package FML::Filter;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 use ErrorStatus qw(error_set error error_clear);
 
 my $debug = 0;

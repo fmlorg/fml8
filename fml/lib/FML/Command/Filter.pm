@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.3 2004/01/02 14:42:43 fukachan Exp $
+# $FML: Filter.pm,v 1.4 2004/02/01 14:52:49 fukachan Exp $
 #
 
 package FML::Command::Filter;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $debug);
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 
 
 # XXX_LOCK_CHANNEL: auth_map_modify

@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Fake.pm,v 1.8 2004/01/31 04:06:33 fukachan Exp $
+# $FML: Fake.pm,v 1.9 2004/02/15 04:38:34 fukachan Exp $
 #
 
 package FML::Process::Fake;
@@ -12,7 +12,6 @@ use strict;
 use Carp;
 use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 
-use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
 use FML::Process::Kernel;
 @ISA = qw(FML::Process::Kernel);

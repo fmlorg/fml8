@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: histgram.pm,v 1.7 2004/01/01 08:48:42 fukachan Exp $
+# $FML: histgram.pm,v 1.8 2004/02/15 04:38:32 fukachan Exp $
 #
 
 package FML::Error::Analyze::histgram;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 
 my $debug = 1;
 

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.30 2004/01/02 16:08:39 fukachan Exp $
+# $FML: DocViewer.pm,v 1.31 2004/01/31 04:06:32 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -12,7 +12,6 @@ use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use strict;
 use Carp;
 
-use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
 use FML::Process::Kernel;
 @ISA = qw(FML::Process::Kernel);

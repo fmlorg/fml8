@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.11 2004/02/15 04:38:31 fukachan Exp $
+# $FML: digest.pm,v 1.12 2004/02/24 14:36:52 fukachan Exp $
 #
 
 package FML::Command::User::digest;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 
 
 =head1 NAME

@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Thread.pm,v 1.7 2004/03/31 02:49:48 fukachan Exp $
+# $FML: Thread.pm,v 1.8 2004/03/31 12:38:08 fukachan Exp $
 #
 
 package FML::Article::Thread;
@@ -14,7 +14,6 @@ use vars qw($debug @ISA @EXPORT @EXPORT_OK $AUTOLOAD
 use strict;
 use Carp;
 
-use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
 use FML::Process::Kernel;
 @ISA = qw(FML::Process::Kernel);

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.78 2004/03/31 05:28:18 fukachan Exp $
+# $FML: Kernel.pm,v 1.79 2004/04/18 05:59:43 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -16,7 +16,6 @@ use File::Spec;
 # load standard CGI routines
 use CGI qw/:standard/;
 
-use FML::Log qw(Log LogWarn LogError);
 use FML::Process::Kernel;
 use FML::Process::CGI::Utils;
 @ISA = qw(FML::Process::CGI::Utils FML::Process::Kernel);

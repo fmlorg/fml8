@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: changepassword.pm,v 1.10 2004/02/01 14:40:02 fukachan Exp $
+# $FML: changepassword.pm,v 1.11 2004/02/15 04:38:28 fukachan Exp $
 #
 
 package FML::Command::Admin::changepassword;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 
 
 =head1 NAME

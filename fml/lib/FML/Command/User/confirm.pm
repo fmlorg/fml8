@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.30 2004/02/24 14:36:52 fukachan Exp $
+# $FML: confirm.pm,v 1.31 2004/04/22 10:37:35 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 

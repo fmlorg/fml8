@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.33.2.1 2004/03/04 04:21:28 fukachan Exp $
+# $FML: Auth.pm,v 1.34 2004/03/04 04:30:12 fukachan Exp $
 #
 
 package FML::Command::Auth;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $debug);
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 
 
 # XXX_LOCK_CHANNEL: auth_map_modify

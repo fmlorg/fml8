@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.21 2004/01/02 14:50:30 fukachan Exp $
+# $FML: HTMLify.pm,v 1.22 2004/01/21 03:49:55 fukachan Exp $
 #
 
 package FML::Command::HTMLify;
@@ -12,7 +12,6 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use File::Spec;
-use FML::Log qw(Log LogWarn LogError);
 
 my $debug = 0;
 

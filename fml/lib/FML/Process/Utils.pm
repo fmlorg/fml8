@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.113 2004/04/17 13:24:35 fukachan Exp $
+# $FML: Utils.pm,v 1.114 2004/04/21 10:09:52 fukachan Exp $
 #
 
 package FML::Process::Utils;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 use File::Spec;
 use File::stat;
 

@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: thread.pm,v 1.6 2004/03/29 14:13:20 fukachan Exp $
+# $FML: thread.pm,v 1.7 2004/03/31 12:53:51 fukachan Exp $
 #
 
 package FML::Command::Admin::thread;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 
 
 =head1 NAME

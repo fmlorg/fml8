@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Scheduler.pm,v 1.23 2003/04/04 05:05:03 fukachan Exp $
+# $FML: Scheduler.pm,v 1.24 2004/01/02 16:08:39 fukachan Exp $
 #
 
 package FML::Process::Scheduler;
@@ -11,7 +11,6 @@ package FML::Process::Scheduler;
 use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use strict;
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
 
 =head1 NAME

@@ -3,14 +3,13 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.28 2004/01/02 16:08:39 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.29 2004/01/31 04:06:32 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
 use strict;
 use Carp;
 use vars qw($debug @ISA @EXPORT @EXPORT_OK);
-use FML::Log qw(Log LogWarn LogError);
 use FML::Process::Kernel;
 @ISA = qw(FML::Process::Kernel);
 

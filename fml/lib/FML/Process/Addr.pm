@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Addr.pm,v 1.16 2004/01/02 16:08:38 fukachan Exp $
+# $FML: Addr.pm,v 1.17 2004/01/31 04:06:31 fukachan Exp $
 #
 
 package FML::Process::Addr;
@@ -12,7 +12,6 @@ use strict;
 use Carp;
 use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 
-use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
 use FML::Process::Kernel;
 @ISA = qw(FML::Process::Kernel);

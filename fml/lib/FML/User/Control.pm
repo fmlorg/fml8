@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.7 2003/12/06 04:48:23 fukachan Exp $
+# $FML: Control.pm,v 1.8 2004/01/24 09:05:54 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -14,7 +14,6 @@ use Carp;
 use File::Spec;
 use FML::Credential;
 use FML::Restriction::Base;
-use FML::Log qw(Log LogWarn LogError);
 use IO::Adapter;
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: guide.pm,v 1.13 2003/03/18 10:52:34 fukachan Exp $
+# $FML: guide.pm,v 1.14 2003/08/23 04:35:33 fukachan Exp $
 #
 
 package FML::Command::User::guide;
@@ -13,7 +13,6 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 use FML::Command::SendFile;
-use FML::Log qw(Log LogWarn LogError);
 @ISA = qw(FML::Command::SendFile);
 
 

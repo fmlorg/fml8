@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.10 2004/03/12 11:45:55 fukachan Exp $
+# $FML: Post.pm,v 1.11 2004/03/14 06:49:26 fukachan Exp $
 #
 
 package FML::Restriction::Post;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 
 
 =head1 NAME

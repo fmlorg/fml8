@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.7 2004/02/15 09:27:42 fukachan Exp $
+# $FML: Spool.pm,v 1.8 2004/04/10 12:41:28 fukachan Exp $
 #
 
 package FML::Article::Spool;
@@ -11,7 +11,6 @@ package FML::Article::Spool;
 use strict;
 use Carp;
 use vars qw($debug @ISA @EXPORT @EXPORT_OK);
-use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
 
 my $debug = 0;

@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DataCheck.pm,v 1.13 2004/01/21 03:45:08 fukachan Exp $
+# $FML: DataCheck.pm,v 1.14 2004/03/12 11:45:48 fukachan Exp $
 #
 
 package FML::Command::DataCheck;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 
 
 =head1 NAME

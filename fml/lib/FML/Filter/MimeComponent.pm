@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent.pm,v 1.9 2004/01/21 03:53:18 fukachan Exp $
+# $FML: MimeComponent.pm,v 1.10 2004/02/01 14:52:50 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -13,7 +13,6 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 	    $recursive_level $recursive_max_level);
 use Carp;
 use ErrorStatus qw(error_set error error_clear);
-use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 

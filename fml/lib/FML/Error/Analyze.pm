@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.26 2004/01/01 08:48:41 fukachan Exp $
+# $FML: Analyze.pm,v 1.27 2004/02/15 04:38:31 fukachan Exp $
 #
 
 package FML::Error::Analyze;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 
 
 my $debug = 1;

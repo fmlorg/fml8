@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.19 2004/02/13 14:11:12 fukachan Exp $
+# $FML: Summary.pm,v 1.20 2004/03/04 10:18:40 fukachan Exp $
 #
 
 package FML::Article::Summary;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 use Mail::Message::Date;
 
 =head1 NAME

@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.34 2004/01/24 15:37:03 fukachan Exp $
+# $FML: HTMLify.pm,v 1.35 2004/01/31 04:06:33 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -13,7 +13,6 @@ use strict;
 use Carp;
 
 use FML::Process::Kernel;
-use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
 
 my $debug = 0;

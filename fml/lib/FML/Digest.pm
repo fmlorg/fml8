@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Digest.pm,v 1.17 2004/03/12 04:22:53 fukachan Exp $
+# $FML: Digest.pm,v 1.18 2004/04/11 13:02:15 fukachan Exp $
 #
 
 package FML::Digest;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 
 #
 # XXX-TODO: Currently, fml 8 digest has no granuality like fml 4.

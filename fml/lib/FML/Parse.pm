@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Parse.pm,v 1.30 2003/08/23 07:24:40 fukachan Exp $
+# $FML: Parse.pm,v 1.31 2003/08/29 15:33:54 fukachan Exp $
 #
 
 package FML::Parse;
@@ -14,7 +14,6 @@ use Carp;
 use FML::Header;
 use Mail::Message;
 use FML::Config;
-use FML::Log qw(Log LogWarn LogError);
 
 
 =head1 NAME
@@ -93,9 +92,7 @@ sub _parse
 L<Mail::Message>,
 L<Mail::Header>,
 L<FML::Header>,
-L<FML::Config>,
-L<FML::Log>
-
+L<FML::Config>
 
 =head1 CODING STYLE
 

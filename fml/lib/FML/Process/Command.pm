@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.102 2004/03/14 06:47:38 fukachan Exp $
+# $FML: Command.pm,v 1.103 2004/04/22 12:43:19 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -11,7 +11,6 @@ package FML::Process::Command;
 use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use strict;
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
 use FML::Process::Kernel;
 @ISA = qw(FML::Process::Kernel);

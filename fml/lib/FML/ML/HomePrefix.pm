@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HomePrefix.pm,v 1.2 2004/01/22 15:14:24 fukachan Exp $
+# $FML: HomePrefix.pm,v 1.3 2004/01/23 09:17:37 fukachan Exp $
 #
 
 package FML::ML::HomePrefix;
@@ -14,7 +14,6 @@ use Carp;
 use File::Spec;
 use FML::Credential;
 use FML::Restriction::Base;
-use FML::Log qw(Log LogWarn LogError);
 use IO::Adapter;
 
 # disable debug by default.

@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.19 2004/02/26 08:24:32 fukachan Exp $
+# $FML: Cache.pm,v 1.20 2004/04/11 14:31:03 fukachan Exp $
 #
 
 package FML::Error::Cache;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 

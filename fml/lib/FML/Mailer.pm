@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.25 2004/01/02 14:50:28 fukachan Exp $
+# $FML: Mailer.pm,v 1.26 2004/01/02 16:07:23 fukachan Exp $
 #
 
 package FML::Mailer;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 

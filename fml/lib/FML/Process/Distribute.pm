@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.141 2004/03/28 10:33:35 fukachan Exp $
+# $FML: Distribute.pm,v 1.142 2004/03/31 12:53:51 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -12,7 +12,6 @@ use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use strict;
 use Carp;
 
-use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
 use FML::Process::Kernel;
 @ISA = qw(FML::Process::Kernel);
