@@ -1,0 +1,29 @@
+Revision history for Perl extension Unicode::Japanese.
+
+0.09  Mon Jul  8 16:54:01 JST 2002
+	- many fixes (included vulnerability of DoS)
+	- supports imode's extended EMOJI only with mapped charcters.
+	  (convertion among each model is not supported yet)
+	- new implementation; convertion utf8<->ucs2 on XS-mode
+	- can specify PurePerl mode when loading with 'PurePrel' keyword.
+
+0.08  Tue Jun 18 13:45:18 JST 2002
+	- Supports XS. 
+	- Some bugs has been fixed.
+
+0.03  Mon Sep 17 17:16:01 JST 2001
+	- t/getcode.t added.
+	- Manual updated. (It translated into English.)
+	- Fixed bug, doesn't work with perl 5.005. 
+	- Fixed bug, $_ is broken when first method call.
+
+0.02  Wed Aug  1 17:48:33 JST 2001
+	- Manual updated.
+	- Changed the handling of characters which out of SJIS codes' range
+	  in converting from UTF8 to SJIS.
+	- The time of loading the module was reduced. (with AUTOLOAD function)
+	- t/outrange.t added.
+
+0.01  Fri Jul 27 20:51:44 JST 2001
+	- BETA Release.
+

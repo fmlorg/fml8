@@ -1,0 +1,39 @@
+Changes
+Japanese/u2s-s2u.dat  sjis<=>utf8変換テーブル
+Japanese/emoji.dat    i-mode/j-sky/dot-i<=>utf8変換テーブル
+Japanese.pm           Unicode::Japanese パッケージ
+Japanese.xs           Unicode::Japanese XS宣言
+Japanese.h            XS-Unicode::Japanese の各種前方宣言
+Makefile.PL
+MANIFEST
+MANIFEST.noxs
+conv.cpp              sjis<=>utf8 変換コード
+eucjp.cpp             sjis<=>eucjp 変換コード
+getcode.cpp           getcode
+getcode.h
+getcode_map.cpp       getcode用状態遷移テーブル
+jis.cpp               sjis<=>jis 変換コード
+memmap.cpp            データファイルのメモリマップコード
+sjis.cpp              sjis有効判定テーブル
+sjis.h                sjis有効判定テーブル 前方宣言
+sjis_doti.cpp         sjis(dot-i)<=>utf8 変換コード
+sjis_imode.cpp        sjis(i-mode)<=>utf8 変換コード
+sjis_jsky.cpp         sjis(j-sky)<=>utf8 変換コード
+str.h                 SV* 操作用クラス
+ucs2_utf8.cpp
+t/allchar_utf8.pl
+t/base.t
+t/emoji.t
+t/fromutf8.t
+t/hirakata.t
+t/illlet.t
+t/toutf8.t
+t/util.t
+t/z2h.t
+t/getcode.t
+t/outrange.t
+t/random.pl
+t/random_redo.pl
+t/ucs2_utf8.pl
+t/verify_sjis_ucs2.pl
+xs_test.c             xsコンパイルテスト用コード
