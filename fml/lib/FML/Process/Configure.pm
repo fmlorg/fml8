@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.37 2002/02/17 13:45:10 fukachan Exp $
+# $FML: Configure.pm,v 1.38 2002/04/10 04:24:15 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -241,8 +241,10 @@ sub _makefml
 	    ; # not show anything
 	}
 	else {
+	    my $r = $@;
 	    LogError("command $method fail");
-	    if ($@ =~ /^(.*)\s+at\s+/) {
+	    LogError($r);
+	    if ($r =~ /^(.*)\s+at\s+/) {
 		my $reason = $1;
 		Log($reason); # pick up reason
 		croak($reason);
