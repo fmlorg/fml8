@@ -158,42 +158,6 @@ tmp_dir		= $ml_home_dir/tmp
 #     Examples: /var/spool/ml/elena/var/db
 db_dir		= $var_dir/db
 
-
-# Descriptions: 入力されるメールを置くディレクトリ
-#      History: LOG_MAIL_DIR ($DIR/var/Mail/)
-#        Value: directory
-#     Examples: /var/spool/ml/elena/var/mail/incoming
-incoming_mail_dir	= $var_dir/mail/incoming
-
-
-# Descriptions: deliver されるメールを置くディレクトリ
-#      History: LOG_MAIL_DIR ($DIR/var/Mail/)
-#        Value: directory
-#     Examples: /var/spool/ml/elena/var/mail/outgoing
-outgoing_mail_dir	= $var_dir/mail/outgoing
-
-
-# Descriptions: mail queue のディレクトリ
-#      History: 似たような目的に tmp/ が使われていたが、
-#               fml 4.0 には直接該当するものはない。
-#        Value: directory
-#     Examples: /var/spool/ml/elena/var/mail/queue
-mail_queue_dir	= $var_dir/mail/queue
-
-
-# Descriptions: message template (paragraph)
-#      History: /usr/local/fml/drafts/
-#        Value: directory
-#     Examples: /usr/local/share/fml/$fml_version/template/$language
-message_template_dir	= $fml_share_dir/message/$template_file_charset
-
-
-# Descriptions: listinfo template
-#      History: /usr/local/fml/listinfo/
-#        Value: directory
-#     Examples: /usr/local/share/fml/$fml_version/listinfo/$language
-listinfo_template_dir	= $fml_share_dir/listinfo/$template_file_charset
-
 =head1	ファイル
 
 
@@ -332,7 +296,9 @@ system_accounts		=	root
 				\S+\-subscribe
 				\S+\-unsubscribe
 
-=head1		MTA の設定
+=head1	MTA の設定
+
+=head2	SMTP パラメータ
 
 # Descriptions: ひとつの SMTP トランザクションで MTA に渡す受信者の数の上限
 #               デフォルトは postfix にあわせて 1000
@@ -340,7 +306,7 @@ system_accounts		=	root
 #               $MCI_SMTP_HOSTS は似ているがちょっと違う
 #        Value: number
 #     Examples:
-recipient_limit		=	1000
+smtp_recipient_limit		=	1000
 
 # Descriptions: デフォールトの MTA は自分自身( localhost )
 #               IPv6 の loopback がデフォルトなのがおしゃれ :-)
@@ -355,6 +321,66 @@ smtp_servers		=	[::1]:25
 #        Value: mail_address (RFC822 の addrspec)
 #     Examples: elena-admin@fml.org
 smtp_sender		=	$maintainer
+
+
+=head2 mail queue
+
+# Descriptions: mail queue のディレクトリ
+#      History: 似たような目的に tmp/ が使われていたが、
+#               fml 4.0 には直接該当するものはない。
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var/mail/queue
+mail_queue_dir	= $var_dir/mail/queue
+
+
+=head2	デバッグに役立つ機能
+
+=head3	入力データのキャッシュ
+
+
+# Descriptions: 入力されるメールをキャッシュするか？
+#      History: $NUM_LOG_MAIL
+#        Value: yes / no
+#     Examples: y
+use_incoming_mail_cache	=	yes
+
+
+# Descriptions: 入力されるメールを置くディレクトリ
+#      History: LOG_MAIL_DIR ($DIR/var/Mail/)
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var/mail/incoming
+incoming_mail_cache_dir	= $var_dir/mail/incoming
+
+
+# Descriptions: 入力されるメールを最大何通キャッシュするか
+#      History: $NUM_LOG_MAIL
+#        Value: NUM
+#     Examples: 128
+incoming_mail_cache_size	=	128
+
+
+=head3	出力(配送)データのキャッシュ
+
+
+# Descriptions: 出力(配送)されるメールをキャッシュするか？
+#      History: $NUM_LOG_MAIL
+#        Value: yes / no
+#     Examples: y
+use_outgoing_mail_cache	=	yes
+
+
+# Descriptions: deliver されるメールを置くディレクトリ
+#      History: LOG_MAIL_DIR ($DIR/var/Mail/)
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var/mail/outgoing
+outgoing_mail_cache_dir	= $var_dir/mail/outgoing
+
+
+# Descriptions: 出力(配送)されるメールを最大何通キャッシュするか
+#      History: $NUM_LOG_MAIL
+#        Value: NUM
+#     Examples: 128
+outgoing_mail_cache_size	=	128
 
 =head1 メッセージ操作
 
@@ -403,6 +429,16 @@ system_message_subject	=	fml system message ($ml_name ML)
 =head2 テンプレートファイル群
 
 
+# Descriptions: message template (paragraph)
+#      History: /usr/local/fml/drafts/
+#        Value: directory
+#     Examples: /usr/local/share/fml/$fml_version/template/$language
+message_template_dir	= $fml_share_dir/message/$template_file_charset
+
+
+=head2 テンプレートファイル群 for user
+
+
 # Descriptions: ヘルプファイル
 #      History:
 #        Value:
@@ -429,23 +465,19 @@ objective_file		=	$ml_home_dir/objective
 
 =head1	ヘッダの操作
 
-# Descriptions: ヘッダ書換えの操作をするか？
-#      History:
-#        Value: yes / no
-#     Examples:
-use_header_rewrite		=	yes
-
 # Descriptions: ヘッダ情報を根拠にしたフィルタリングをするか？
 #      History:
 #        Value: yes / no
 #     Examples:
-use_header_filter		=	yes
+use_article_header_filter		=	yes
+
 
 # Descriptions: フィルタリングのルール
 #      History:
 #        Value:
 #     Examples:
-header_filter_rules		=	is_valid_message_id
+article_header_filter_rules		=	check_message_id
+
 
 # Descriptions: ヘッダ情報を根拠にしたループチェックをするか？
 #      History:
@@ -453,13 +485,14 @@ header_filter_rules		=	is_valid_message_id
 #     Examples:
 use_header_loop_check		=	yes
 
+
 # Descriptions: ヘッダに対するループチェックのルール群
 #      History:
 #        Value:
 #     Examples:
-header_loop_check_rules		=	verify_message_id_uniqueness
-					verify_x_ml_info_uniqueness
-					verify_list_post_uniqueness
+header_loop_check_rules		=	check_message_id
+					check_x_ml_info
+					check_list_post
 
 # Descriptions: Message-ID のキャッシュを格納するディレクトリ
 #      History:
@@ -468,13 +501,20 @@ header_loop_check_rules		=	verify_message_id_uniqueness
 message_id_cache_dir		=	$db_dir/message_id
 
 
+# Descriptions: ヘッダ書換えの操作をするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_article_header_rewrite		=	yes
+
+
 # Descriptions: 記事のヘッダを書き換えるルール群
 #               Re: を切り落とす操作はデフォルトなので指定の必要なし
 #      History:
 #        Value:
 #     Examples:
 article_header_rewrite_rules	=	delete_unsafe_header_fields
-					rewrite_subject_tag
+					rewrite_article_subject_tag
 					rewrite_reply_to
 					add_software_info
 					add_fml_ml_name
@@ -482,6 +522,13 @@ article_header_rewrite_rules	=	delete_unsafe_header_fields
 					add_fml_article_id
 					add_x_sequence
 					add_rfc2369
+
+
+# Descriptions: ヘッダ書換えの操作をするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_digest_header_rewrite		=	yes
 
 
 # Descriptions: 記事のまとめおくりのヘッダを書き換えるルール群
@@ -499,19 +546,12 @@ digest_header_rewrite_rules	=	add_software_info
 unsafe_header_fields		=	Return-Receipt-To
 
 
-# Descriptions: Subject: につけるタグの制御
-#      History:
-#        Value:
-#     Examples:
-subject_tag_name		=	$ml_name
-
-
 # Descriptions: Subject: のタグ
 #               % の意味は UNIX マニュアルを参照。例えば sprintf 関数など
 #      History:
 #        Value:
 #     Examples: [elena:00080]
-subject_tag			=	[$ml_name:%05d]
+article_subject_tag			=	[$ml_name:%05d]
 
 
 # Descriptions: X-ML-Name: および X-Sequence にあらわれる ML 名
@@ -529,20 +569,20 @@ x_ml_name			=	$ml_name
 #      History:
 #        Value: yes / no
 #     Examples:
-use_body_filter		=	yes
+use_article_body_filter		=	yes
 
 
 # Descriptions: フィルタリングのルール
 #      History:
 #        Value:
 #     Examples:
-body_filter_rules	=	reject_not_iso2022jp_japanese_string
-				reject_null_mail_body
-				reject_one_line_message
-				reject_old_fml_command_syntax
-				reject_invalid_fml_command_syntax
-				reject_japanese_command_syntax
-				reject_ms_guid
+article_body_filter_rules	=	reject_not_iso2022jp_japanese_string
+					reject_null_mail_body
+					reject_one_line_message
+					reject_old_fml_command_syntax
+					reject_invalid_fml_command_syntax
+					reject_japanese_command_syntax
+					reject_ms_guid
 
 
 # Descriptions: ヘッダ情報を根拠にしたループチェックをするか？
@@ -556,7 +596,7 @@ use_body_loop_check		=	yes
 #      History:
 #        Value:
 #     Examples:
-body_loop_check_rules		=	verify_body_cksum_uniqueness
+body_loop_check_rules		=	check_body_cksum
 
 
 # Descriptions: Message-ID のキャッシュを格納するディレクトリ
@@ -623,18 +663,6 @@ log_format_type	=	fml4_compatible
 #        Value: filename
 #     Examples:
 log_dir		=	$var_dir/log
-
-# Descriptions: ログファイルがおかれるディレクトリ
-#      History:
-#        Value: directory
-#     Examples:
-smtp_log_dir	=	$log_dir
-
-# Descriptions: メールサーバとのやりとりを記録するファイル
-#      History: fml 4.0 の $SMTP_LOG
-#        Value: filename
-#     Examples:
-smtp_log_file	=	$smtp_log_dir/_smtplog
 
 =head1	記事および記事のスプール
 
@@ -821,6 +849,13 @@ privileged_command_prefix	=	admin
 =head2	CGI
 
 
+# Descriptions: listinfo template
+#      History: /usr/local/fml/listinfo/
+#        Value: directory
+#     Examples: /usr/local/share/fml/$fml_version/listinfo/$language
+listinfo_template_dir	= $fml_share_dir/listinfo/$template_file_charset
+
+
 # Descriptions: information をおくディレクトリ (ＭＬごと)
 #      History: none
 #        Value: directory
@@ -859,7 +894,7 @@ use_error_analyzer	=	yes
 #      History: /var/spool/ml/mead/errormaillog
 #        Value: directory
 #     Examples: 
-error_cache_dir		=	$db_dir/error
+error_analyzer_cache_dir		=	$db_dir/error
 
 =head1	スレッド追跡システム
 
@@ -1097,6 +1132,7 @@ cgi_navigation_bar_color	=	#FFFFFF
 
 =head1	MTA に依存する設定のヒント
 
+
 =head2 directory
 
 
@@ -1182,7 +1218,7 @@ newml_command_qmail_template_files 	=	dot-qmail
 #      History: none
 #        Value: file path
 #     Examples: /var/qmail/control/virtualdomains
-qmail_control_virtualdomains_file = /var/qmail/control/virtualdomains
+qmail_virtualdomains_file = /var/qmail/control/virtualdomains
 
 
 =head2	sendmail
@@ -1289,41 +1325,6 @@ has_select	=	yes
 #        Value: yes / no
 #     Examples:
 has_fork	=	yes
-
-=head1	デバッグに役立つ機能
-
-=head2	入力データのキャッシュ
-
-
-# Descriptions: 入力されるメールをキャッシュするか？
-#      History: $NUM_LOG_MAIL
-#        Value: yes / no
-#     Examples: y
-use_incoming_mail_cache	=	yes
-
-
-# Descriptions: 入力されるメールを最大何通キャッシュするか
-#      History: $NUM_LOG_MAIL
-#        Value: NUM
-#     Examples: 128
-incoming_mail_cache_size	=	128
-
-
-=head2	出力(配送)データのキャッシュ
-
-
-# Descriptions: 出力(配送)されるメールをキャッシュするか？
-#      History: $NUM_LOG_MAIL
-#        Value: yes / no
-#     Examples: y
-use_outgoing_mail_cache	=	yes
-
-
-# Descriptions: 出力(配送)されるメールを最大何通キャッシュするか
-#      History: $NUM_LOG_MAIL
-#        Value: NUM
-#     Examples: 128
-outgoing_mail_cache_size	=	128
 
 =head1 フック's
 

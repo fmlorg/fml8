@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.78 2002/05/27 11:20:01 fukachan Exp $
+# $FML: Distribute.pm,v 1.79 2002/06/01 05:09:25 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -397,24 +397,6 @@ sub _deliver_article
 	$handle = $wh;
     }
 
-    if (0) { # debug
-	my $dir = $config->{ smtp_log_dir };
-	use File::Utils qw(mkdirhier);
-	mkdirhier($dir) unless -d $dir;
-
-	my $f = $config->{ smtp_log_file };
-	unlink $f if -f $f;
-	if ($f) {
-	    use FileHandle;
-	    my $fh = new FileHandle "> $f";
-	    if (defined $fh) {
-		$fh->autoflush(1);
-		$sfp = sub { print $fh @_;};
-	    }
-	}
-    }
-
-
     # delay loading of module
     my $service = {};
     eval q{
@@ -435,7 +417,7 @@ sub _deliver_article
 
 			  'smtp_sender'     => $config->{'smtp_sender'},
 			  'recipient_maps'  => $config->{recipient_maps},
-			  'recipient_limit' => $config->{recipient_limit},
+			  'recipient_limit' => $config->{smtp_recipient_limit},
 
 			  'message'         => $message,
 		      });

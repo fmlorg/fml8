@@ -19,6 +19,5 @@ cgi.cf
 mta.cf
 paths.cf
 system_dependence.cf
-debug.cf
 __end__.cf
 ../hooks.cf

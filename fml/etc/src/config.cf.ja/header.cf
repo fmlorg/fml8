@@ -1,22 +1,18 @@
 =head1	ヘッダの操作
 
-# Descriptions: ヘッダ書換えの操作をするか？
-#      History:
-#        Value: yes / no
-#     Examples:
-use_header_rewrite		=	yes
-
 # Descriptions: ヘッダ情報を根拠にしたフィルタリングをするか？
 #      History:
 #        Value: yes / no
 #     Examples:
-use_header_filter		=	yes
+use_article_header_filter		=	yes
+
 
 # Descriptions: フィルタリングのルール
 #      History:
 #        Value:
 #     Examples:
-header_filter_rules		=	is_valid_message_id
+article_header_filter_rules		=	check_message_id
+
 
 # Descriptions: ヘッダ情報を根拠にしたループチェックをするか？
 #      History:
@@ -24,13 +20,14 @@ header_filter_rules		=	is_valid_message_id
 #     Examples:
 use_header_loop_check		=	yes
 
+
 # Descriptions: ヘッダに対するループチェックのルール群
 #      History:
 #        Value:
 #     Examples:
-header_loop_check_rules		=	verify_message_id_uniqueness
-					verify_x_ml_info_uniqueness
-					verify_list_post_uniqueness
+header_loop_check_rules		=	check_message_id
+					check_x_ml_info
+					check_list_post
 
 # Descriptions: Message-ID のキャッシュを格納するディレクトリ
 #      History:
@@ -39,13 +36,20 @@ header_loop_check_rules		=	verify_message_id_uniqueness
 message_id_cache_dir		=	$db_dir/message_id
 
 
+# Descriptions: ヘッダ書換えの操作をするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_article_header_rewrite		=	yes
+
+
 # Descriptions: 記事のヘッダを書き換えるルール群
 #               Re: を切り落とす操作はデフォルトなので指定の必要なし
 #      History:
 #        Value:
 #     Examples:
 article_header_rewrite_rules	=	delete_unsafe_header_fields
-					rewrite_subject_tag
+					rewrite_article_subject_tag
 					rewrite_reply_to
 					add_software_info
 					add_fml_ml_name
@@ -53,6 +57,13 @@ article_header_rewrite_rules	=	delete_unsafe_header_fields
 					add_fml_article_id
 					add_x_sequence
 					add_rfc2369
+
+
+# Descriptions: ヘッダ書換えの操作をするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_digest_header_rewrite		=	yes
 
 
 # Descriptions: 記事のまとめおくりのヘッダを書き換えるルール群
@@ -70,19 +81,12 @@ digest_header_rewrite_rules	=	add_software_info
 unsafe_header_fields		=	Return-Receipt-To
 
 
-# Descriptions: Subject: につけるタグの制御
-#      History:
-#        Value:
-#     Examples:
-subject_tag_name		=	$ml_name
-
-
 # Descriptions: Subject: のタグ
 #               % の意味は UNIX マニュアルを参照。例えば sprintf 関数など
 #      History:
 #        Value:
 #     Examples: [elena:00080]
-subject_tag			=	[$ml_name:%05d]
+article_subject_tag			=	[$ml_name:%05d]
 
 
 # Descriptions: X-ML-Name: および X-Sequence にあらわれる ML 名

@@ -30,15 +30,3 @@ log_format_type	=	fml4_compatible
 #        Value: filename
 #     Examples:
 log_dir		=	$var_dir/log
-
-# Descriptions: ログファイルがおかれるディレクトリ
-#      History:
-#        Value: directory
-#     Examples:
-smtp_log_dir	=	$log_dir
-
-# Descriptions: メールサーバとのやりとりを記録するファイル
-#      History: fml 4.0 の $SMTP_LOG
-#        Value: filename
-#     Examples:
-smtp_log_file	=	$smtp_log_dir/_smtplog

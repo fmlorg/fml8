@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.7 2002/04/08 10:17:32 tmu Exp $
+# $FML: Filter.pm,v 1.8 2002/04/10 04:30:00 fukachan Exp $
 #
 
 package FML::Filter;
@@ -70,13 +70,13 @@ sub check
     my $config  = $curproc->{ 'config' };
 
     if (defined $message) {
-	if ($config->yes( 'use_header_filter' )) {
+	if ($config->yes( 'use_article_header_filter' )) {
 	    use FML::Filter::HeaderCheck;
 	    my $obj = new FML::Filter::HeaderCheck;
 
 	    # overwrite filter rules based on FML::Config
-	    if (defined $config->{ header_filter_rules }) {
-		my (@rules) = split(/\s+/, $config->{ header_filter_rules });
+	    if (defined $config->{ article_header_filter_rules }) {
+		my (@rules) = split(/\s+/, $config->{ article_header_filter_rules });
 		$obj->rules( \@rules );
 	    }
 
@@ -91,13 +91,13 @@ sub check
 	    }
 	}
 
-	if ($config->yes( 'use_body_filter' )) {
+	if ($config->yes( 'use_article_body_filter' )) {
 	    use FML::Filter::BodyCheck;
 	    my $obj = new FML::Filter::BodyCheck;
 
 	    # overwrite filter rules based on FML::Config
-	    if (defined $config->{ body_filter_rules }) {
-		my (@rules) = split(/\s+/, $config->{ body_filter_rules });
+	    if (defined $config->{ article_body_filter_rules }) {
+		my (@rules) = split(/\s+/, $config->{ article_body_filter_rules });
 		$obj->rules( \@rules );
 	    }
 

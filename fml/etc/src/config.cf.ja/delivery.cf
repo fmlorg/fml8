@@ -1,4 +1,6 @@
-=head1		MTA の設定
+=head1	MTA の設定
+
+=head2	SMTP パラメータ
 
 # Descriptions: ひとつの SMTP トランザクションで MTA に渡す受信者の数の上限
 #               デフォルトは postfix にあわせて 1000
@@ -6,7 +8,7 @@
 #               $MCI_SMTP_HOSTS は似ているがちょっと違う
 #        Value: number
 #     Examples:
-recipient_limit		=	1000
+smtp_recipient_limit		=	1000
 
 # Descriptions: デフォールトの MTA は自分自身( localhost )
 #               IPv6 の loopback がデフォルトなのがおしゃれ :-)
@@ -21,3 +23,63 @@ smtp_servers		=	[::1]:25
 #        Value: mail_address (RFC822 の addrspec)
 #     Examples: elena-admin@fml.org
 smtp_sender		=	$maintainer
+
+
+=head2 mail queue
+
+# Descriptions: mail queue のディレクトリ
+#      History: 似たような目的に tmp/ が使われていたが、
+#               fml 4.0 には直接該当するものはない。
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var/mail/queue
+mail_queue_dir	= $var_dir/mail/queue
+
+
+=head2	デバッグに役立つ機能
+
+=head3	入力データのキャッシュ
+
+
+# Descriptions: 入力されるメールをキャッシュするか？
+#      History: $NUM_LOG_MAIL
+#        Value: yes / no
+#     Examples: y
+use_incoming_mail_cache	=	yes
+
+
+# Descriptions: 入力されるメールを置くディレクトリ
+#      History: LOG_MAIL_DIR ($DIR/var/Mail/)
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var/mail/incoming
+incoming_mail_cache_dir	= $var_dir/mail/incoming
+
+
+# Descriptions: 入力されるメールを最大何通キャッシュするか
+#      History: $NUM_LOG_MAIL
+#        Value: NUM
+#     Examples: 128
+incoming_mail_cache_size	=	128
+
+
+=head3	出力(配送)データのキャッシュ
+
+
+# Descriptions: 出力(配送)されるメールをキャッシュするか？
+#      History: $NUM_LOG_MAIL
+#        Value: yes / no
+#     Examples: y
+use_outgoing_mail_cache	=	yes
+
+
+# Descriptions: deliver されるメールを置くディレクトリ
+#      History: LOG_MAIL_DIR ($DIR/var/Mail/)
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var/mail/outgoing
+outgoing_mail_cache_dir	= $var_dir/mail/outgoing
+
+
+# Descriptions: 出力(配送)されるメールを最大何通キャッシュするか
+#      History: $NUM_LOG_MAIL
+#        Value: NUM
+#     Examples: 128
+outgoing_mail_cache_size	=	128

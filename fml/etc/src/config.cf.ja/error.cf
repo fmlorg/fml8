@@ -11,4 +11,4 @@ use_error_analyzer	=	yes
 #      History: /var/spool/ml/mead/errormaillog
 #        Value: directory
 #     Examples: 
-error_cache_dir		=	$db_dir/error
+error_analyzer_cache_dir		=	$db_dir/error

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.24 2002/04/24 14:28:15 tmu Exp $
+# $FML: Subject.pm,v 1.25 2002/05/23 11:03:29 tmu Exp $
 #
 
 package FML::Header::Subject;
@@ -20,7 +20,7 @@ FML::Header::Subject - manipule the mail header subject
 =head1 SYNOPSIS
 
     use FML::Header::Subject;
-    FML::Header::Subject->rewrite_subject_tag($header, $config, $args);
+    FML::Header::Subject->rewrite_article_subject_tag($header, $config, $args);
 
 =head1 DESCRIPTION
 
@@ -48,7 +48,7 @@ sub new
 }
 
 
-=head2 C<rewrite_subject_tag($header, $config, $args)>
+=head2 C<rewrite_article_subject_tag($header, $config, $args)>
 
 add or rewrite the subject tag for C<$header>.
 This mothod cuts off Re: (reply identifier) in subject: and
@@ -61,13 +61,13 @@ replace the subject with the newer content.
 #    Arguments: OBJ($self) OBJ($header) OBJ($config) HASH_REF($args)
 # Side Effects: the header subject is rewritten
 # Return Value: none
-sub rewrite_subject_tag
+sub rewrite_article_subject_tag
 {
     my ($self, $header, $config, $args) = @_;
 
     # for example, ml_name = elena
     my $ml_name = $config->{ ml_name };
-    my $tag     = $config->{ subject_tag };
+    my $tag     = $config->{ article_subject_tag };
     my $subject = $header->get('subject');
 
     # decode mime

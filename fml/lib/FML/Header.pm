@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.42 2002/05/31 14:09:21 tmu Exp $
+# $FML: Header.pm,v 1.43 2002/06/01 02:21:56 fukachan Exp $
 #
 
 package FML::Header;
@@ -350,7 +350,7 @@ sub add_x_sequence
 }
 
 
-=head2 C<rewrite_subject_tag($config, $args)>
+=head2 C<rewrite_article_subject_tag($config, $args)>
 
 add subject tag like [elena:00010].
 The actual function definitions exist in C<FML::Header::Subject>.
@@ -371,14 +371,14 @@ and now fml process time add to C<Date:>.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
 # Side Effects: update $header
 # Return Value: none
-sub rewrite_subject_tag
+sub rewrite_article_subject_tag
 {
     my ($header, $config, $args) = @_;
 
     my $pkg = "FML::Header::Subject";
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
-	$pkg->rewrite_subject_tag($header, $config, $args);
+	$pkg->rewrite_article_subject_tag($header, $config, $args);
     }
     else {
 	Log("Error: cannot load $pkg");
@@ -507,18 +507,18 @@ sub extract_message_id_references
 
 =head1 FILTERING FUNCTIONS
 
-=head2 C<verify_message_id_uniqueness($config, $args)>
+=head2 C<check_message_id($config, $args)>
 
 check whether message-id is unique or not. If the message-id is found
 in the past message-id cache, the injected message must causes a mail
 loop.
 
-=head2 C<verify_x_ml_info_uniqueness($config, $args)>
+=head2 C<check_x_ml_info($config, $args)>
 
 The injected message loops if x-ml-info: has our own
 C<address_for_post> address.
 
-=head2 C<verify_list_post_uniqueness($config, $args)>
+=head2 C<check_list_post($config, $args)>
 
 The injected message loops if list-post: has our own
 C<address_for_post> address.
@@ -531,7 +531,7 @@ C<address_for_post> address.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
 # Side Effects: update cache
 # Return Value: STR or 0
-sub verify_message_id_uniqueness
+sub check_message_id
 {
     my ($header, $config, $args) = @_;
     my $dir = $config->{ 'message_id_cache_dir' },
@@ -566,7 +566,7 @@ sub verify_message_id_uniqueness
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
 # Side Effects: none
 # Return Value: 1 or 0
-sub verify_x_ml_info_uniqueness
+sub check_x_ml_info
 {
     my ($header, $config, $args) = @_;
     my $buf  = $header->get('x-ml-info')  || undef;
@@ -585,7 +585,7 @@ sub verify_x_ml_info_uniqueness
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
 # Side Effects: none
 # Return Value: 1 or 0
-sub verify_list_post_uniqueness
+sub check_list_post
 {
     my ($header, $config, $args) = @_;
     my $buf  = $header->get('list-post')  || undef;

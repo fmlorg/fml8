@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HeaderCheck.pm,v 1.14 2002/04/10 03:20:53 fukachan Exp $
+# $FML: HeaderCheck.pm,v 1.15 2002/04/10 09:57:23 fukachan Exp $
 #
 
 package FML::Filter::HeaderCheck;
@@ -37,7 +37,7 @@ usual constructor.
 my $debug = 0;
 
 
-my (@default_rules) = qw(is_valid_message_id);
+my (@default_rules) = qw(check_message_id);
 
 
 # Descriptions: constructor.
@@ -127,7 +127,7 @@ sub header_check
 #    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
 # Side Effects: croak()
 # Return Value: none
-sub is_valid_message_id
+sub check_message_id
 {
     my ($self, $msg, $args) = @_;
     my $mid = $msg->get('message-id');

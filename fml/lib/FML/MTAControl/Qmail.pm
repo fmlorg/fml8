@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.4 2002/06/01 05:02:32 fukachan Exp $
+# $FML: Qmail.pm,v 1.5 2002/06/01 05:09:24 fukachan Exp $
 #
 
 package FML::MTAControl::Qmail;
@@ -110,7 +110,7 @@ sub qmail_setup
 	$self->_install($src, $dst, $params);
     }
 
-    my $virtual_domain_conf = $config->{ qmail_control_virtualdomains_file };
+    my $virtual_domain_conf = $config->{ qmail_virtualdomains_file };
     unless (-f $virtual_domain_conf) {
 	print STDERR "  XXX We assume $ml_domain:fml-$ml_domain\n";
 	print STDERR "  XXX in $virtual_domain_conf\n";

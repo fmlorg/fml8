@@ -1,5 +1,6 @@
 =head1	MTA に依存する設定のヒント
 
+
 =head2 directory
 
 
@@ -85,7 +86,7 @@ newml_command_qmail_template_files 	=	dot-qmail
 #      History: none
 #        Value: file path
 #     Examples: /var/qmail/control/virtualdomains
-qmail_control_virtualdomains_file = /var/qmail/control/virtualdomains
+qmail_virtualdomains_file = /var/qmail/control/virtualdomains
 
 
 =head2	sendmail

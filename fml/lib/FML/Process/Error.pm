@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.6 2002/06/01 05:02:33 fukachan Exp $
+# $FML: Error.pm,v 1.7 2002/06/01 05:09:26 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -239,7 +239,7 @@ sub __open_cache
 {
     my ($curproc) = @_;
     my $config = $curproc->{ config };
-    my $dir    = $config->{ error_cache_dir };
+    my $dir    = $config->{ error_analyzer_cache_dir };
     my $mode   = 'temporal';
     my $days   = 14;
 
