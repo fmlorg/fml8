@@ -20,13 +20,14 @@ use Carp;
 #                          value3
 #               XXX This file is non-Object Oriented style but 
 #               XXX this is minimum module used in standalone program.
-#    Arguments: $file
-# Side Effects: none
-# Return Value: reference to configuration hash
+#    Arguments: $file $params
+#               $params is 'key1=value1 key2=value2' syntax.
+# Side Effects: $config (hash reference) is allocated on memory here.
+# Return Value: hash reference to configuration parameters
 sub load_cf
 {
-    my ($file) = @_;
-    my $config = {};
+    my ($file, $params) = @_;
+    my $config = $params ? _parse_params($params) : {};
 
     use FileHandle;
     my $fh = new FileHandle $file;
@@ -73,6 +74,20 @@ sub _expand_variables
     }
 }
 
+
+
+sub _parse_params
+{
+    my ($params) = @_;
+    my %config = ();
+
+    for my $x (split(/\s+/, $params)) {
+	my ($key, $value) = split(/=/, $x);
+	$config{ $key } = $value;
+    }
+
+    \%config;
+}
 
 
 1;

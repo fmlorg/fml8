@@ -11,6 +11,7 @@
 use vars qw($MainCF);
 use strict;
 use Carp;
+use Getopt::Long;
 
 # main configuration file for directory switch
 $MainCF = '/etc/fml/main.cf';
@@ -54,17 +55,12 @@ sub Bootstrap
     my @cf      = ();
     my %options = ();
     my $my_default_config = '';
+    GetOptions(\%options, 
+	       qw(ctladdr! debug! params! -c=s)
+	       );
+
     for (@ARGV) {
-	if  ($_ eq '--ctladdr') {
-	    $options{ ctladdr } = 1;
-	}
-	elsif ($_ eq '-c') {
-	    $options{ debug } = 1;
-	}
-	elsif ($_ eq '-c') {
-	    $my_default_config = shift @ARGV;
-	}
-	elsif (-d $_) {
+	if (-d $_) {
 	    push(@cf, "$_/config.cf") if -f "$_/config.cf";
 	}
 	elsif (-f $_) {
@@ -73,7 +69,9 @@ sub Bootstrap
     }
 
     # 2.1 o.k. try to load main.cf
-    my $main_cf        = Standalone::load_cf($MainCF);
+    my $main_cf        = Standalone::load_cf($options{'c'} || $MainCF,
+					     $options{'params'}
+					     );
     my $libexec_dir    = $main_cf->{ libexec_dir };
     my $default_config = $my_default_config || $main_cf->{ default_config };
     unshift(@cf, $default_config);
@@ -103,17 +101,20 @@ fmlwrapper -- the wrapper which executes a real fml5 program.
 
 =head1 SYNOPSIS
 
-fmlwrapper C<[-c main.cf]> C<[-d]> C<[--ctladdr]> ml_home_dir
+fmlwrapper C<[-c main.cf]> C<[--debug]> C<[--ctladdr]> ml_home_dir
 
 =head1 DESCRIPTION
 
 C<-c main.cf>
     main.cf alternative
 
-C<-d>
+C<--debug>
     debug on.
 
 C<--ctladdr> 
     execute fml/libexec/command.
+
+C<--params> 
+    --params 'key1=value1 key2=value2 ...'
 
 =cut
