@@ -21,6 +21,7 @@ my $Prefix    = dirname($0);
 
 Init();
 HEADER();
+Prepend();
 Show();
 FOOTER();
 
@@ -83,11 +84,39 @@ sub generate_manual
 }
 
 
+sub Prepend
+{
+    print "<CENTER><EM>$ModulePrefix class modules</EM></CENTER>\n";
+    print "<HR>\n";
+
+    my $found = 0;
+    foreach (<*.txt>) {
+	my $japanese = 0;
+
+	/ja.txt/ && $japanese++;
+
+	my $name = $_; 
+	$name =~ s/^00_//;
+	$name =~ s/.txt$//;
+	$name =~ s/.ja$//;
+
+	print STDERR "\t*** include $_\n";
+	if (-f $_) {
+	    print "<A HREF=\"$_\">$name";
+	    print "(Japanese)" if $japanese;
+	    print "</A>\n";
+	    $found++;
+	}
+    }
+
+    print "<HR>\n" if $found;
+}
+
+
 sub Show
 {
     my ($pathname, $manual);
 
-    print "<CENTER><EM>$ModulePrefix class modules</EM></CENTER>\n<HR>\n";
     print ($TableMode ? "<TABLE>\n" : "<UL>\n");
 
     update_cvs_ignore();
@@ -96,6 +125,7 @@ sub Show
 	next if $pathname =~ /^\__template/;
 	next if $pathname =~ /^\@/;
 	next if $pathname =~ /\~$/;
+	next if $pathname =~ /txt$/;
 	next if $pathname =~ /pod$/;
 	next if $pathname eq 'CVS';
 	next if $pathname eq 't'; # test directory
