@@ -1,5 +1,6 @@
 =head1	スレッド追跡システム
 
+
 # Descriptions: スレッド追跡システムを使うか
 #      History: fml 5.0 new
 #        Value: yes / no
@@ -8,6 +9,7 @@ use_thread_track	=	yes
 
 
 # Descriptions: スレッド追跡システムは Subject タグを利用するか？
+#               XXX ん〜でも、使わなくてもいけそうですわ
 #      History: fml 5.0 new
 #        Value: yes / no
 #     Examples:
@@ -22,21 +24,26 @@ use_thread_subject_tag	=	no
 #     Examples: elena
 thread_subject_tag_name	=	$ml_name
 
+
 # Descriptions: チケット番号のシンタックス
+#               XXX ん〜でも、使わなくてもいけそうですわ
 #      History: fml 5.0 new
 #        Value:
 #     Examples: elena_#00001010     $ml_name_#%08d
 #               elena/100           $ml_name/%d
 thread_id_syntax	=	$ml_name/%d
 
+
 # Descriptions: Subject につけるチケット番号のシンタックス
 #               []  ()  {} などを $thread_id_syntax の
-#               前後につけてもらうとわかりやすそう
+#               前後につけてもらうとわかりやすそう?
+#               XXX ん〜でも、使わなくてもいけそうですわ
 #      History: fml 5.0 new
 #        Value:
 #     Examples: [elena_#00001010]
 #               [elena/100]
 thread_subject_tag	=	[$thread_id_syntax]
+
 
 # Descriptions: Subject につけるチケット番号のシンタックスの場所
 #               前につけるか、それとも後ろにつけるか？
@@ -46,26 +53,39 @@ thread_subject_tag	=	[$thread_id_syntax]
 #               Subject: .... [elena/100]
 thread_subject_tag_location	=	appended
 
+
 # Descriptions: チケット番号を保存するファイル
 #      History: fml 5.0 new
 #        Value: filename
 #     Examples: /var/spool/ml/elena/thread.seq
 thread_sequence_file	=	$ml_home_dir/thread.seq
 
+
 # Descriptions: チケット関連データを保存するディレクトリ
 #               実際にはこの下に elena/article.db のように
-#               サブディレクトリがおかれる
+#               ＭＬ名のサブディレクトリがおかれる
 #      History: fml 5.0 new
 #        Value: directory
 #     Examples: /var/spool/ml/@db@/thread
 thread_db_dir		=	$shared_db_dir/thread
 
-# Descriptions:
+
+# Descriptions: CGI の相対パス
 #      History:
 #        Value:
 #     Examples:
 thread_cgi_base_url	=	/cgi-bin/fmlthread.cgi
 
+
+# Descriptions: CGI のタイトル
+#      History:
+#        Value:
+#     Examples:
 thread_cgi_title	=	thread tracking system interface
 
+
+# Descriptions: CGI 画面の基本カラー
+#      History:
+#        Value:
+#     Examples:
 thread_cgi_bgcolor	=	#E6E6FA
