@@ -1,6 +1,3 @@
-hier.ja.html
-
-
 doc/components.ja.html
 doc/dirhier.ja.html
 doc/index.ja.html
@@ -64,8 +61,6 @@ Process/Configure.pm
 Process/Distribute.pm
 Process/Flow.pm
 Process/Kernel.pm
-
-
 Process/QMail.pm
 Process/Switch.pm
 Process/TicketSystem.pm
@@ -97,7 +92,3 @@ MailingList/Delivery.pm
 MailingList/Messages.pm
 MailingList/SMTP.pm
 MailingList/Utils.pm
-
-
-ErrorMessages/00_PARSE.ja.txt
-ErrorMessages/00_README.ja.txt
