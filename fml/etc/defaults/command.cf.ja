@@ -1,5 +1,9 @@
 =head1	コマンドの定義
 
+#
+# 注意: まだまだ考え中といえます
+#
+
 
 # Descriptions: chaddr コマンドで confirmation 認証(コールバック認証)
 #               を行なうか否か？
@@ -18,7 +22,12 @@ command_unsubscribe_type	=	confirmation
 
 
 
-# コマンド一覧
+# Descriptions: 有効なコマンド一覧を書く
+#      History: fml 4.0 ではデフォルトのコマンド定義一覧に対し
+#               @PERMIT_PROCEDURE @DENY_PROCEDURE などで
+#               変更を加える
+#        Value: 
+#     Examples:
 available_commands		=	help
 					get
 					mget

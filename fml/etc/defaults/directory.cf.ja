@@ -1,17 +1,28 @@
 =head1	ディレクトリ
 
 # Descriptions: ML のホームディレクトリ
-#               $ml_home_dir は FML::Process::Switch が決める
+#               $ml_home_dir は起動時に渡されるアーギュメントを元に
+#               FML::Process::Switch が決める
 #      History: fml 4.0 の $DIR にあたるもの
-#        Value: directory_string
+#        Value: directory
 #     Examples: /var/spool/ml/elena
 # ml_home_dir	=
 
 # Descriptions: ML 間でシェアするデータベースをおくホームディレクトリ
 #      History: fml 4.0 に該当するものはない
-#        Value: directory_string
+#        Value: directory
+#     Examples: /var/spool/ml/@db@
 shared_db_dir	= $ml_home_prefix/@db@
 
+# Descriptions: さまざまな目的につかう
+#               multi-purpose log, temporary, transient, and spool files
+#      History: $VAR_DIR
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var
 var_dir		= $ml_home_dir/var
 
+# Descriptions: 一時的な中間ファイルを置くディレクトリ
+#      History: $TMP_DIR
+#        Value: directory
+#     Examples: /var/spool/ml/elena/tmp
 tmp_dir		= $ml_home_dir/tmp

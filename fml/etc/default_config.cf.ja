@@ -21,19 +21,30 @@ default_directory_mode	=	0755
 =head1	ディレクトリ
 
 # Descriptions: ML のホームディレクトリ
-#               $ml_home_dir は FML::Process::Switch が決める
+#               $ml_home_dir は起動時に渡されるアーギュメントを元に
+#               FML::Process::Switch が決める
 #      History: fml 4.0 の $DIR にあたるもの
-#        Value: directory_string
+#        Value: directory
 #     Examples: /var/spool/ml/elena
 # ml_home_dir	=
 
 # Descriptions: ML 間でシェアするデータベースをおくホームディレクトリ
 #      History: fml 4.0 に該当するものはない
-#        Value: directory_string
+#        Value: directory
+#     Examples: /var/spool/ml/@db@
 shared_db_dir	= $ml_home_prefix/@db@
 
+# Descriptions: さまざまな目的につかう
+#               multi-purpose log, temporary, transient, and spool files
+#      History: $VAR_DIR
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var
 var_dir		= $ml_home_dir/var
 
+# Descriptions: 一時的な中間ファイルを置くディレクトリ
+#      History: $TMP_DIR
+#        Value: directory
+#     Examples: /var/spool/ml/elena/tmp
 tmp_dir		= $ml_home_dir/tmp
 
 =head1	アクセス制御ルール
@@ -282,6 +293,10 @@ spool_type	= plane
 
 =head1	コマンドの定義
 
+#
+# 注意: まだまだ考え中といえます
+#
+
 
 # Descriptions: chaddr コマンドで confirmation 認証(コールバック認証)
 #               を行なうか否か？
@@ -300,7 +315,12 @@ command_unsubscribe_type	=	confirmation
 
 
 
-# コマンド一覧
+# Descriptions: 有効なコマンド一覧を書く
+#      History: fml 4.0 ではデフォルトのコマンド定義一覧に対し
+#               @PERMIT_PROCEDURE @DENY_PROCEDURE などで
+#               変更を加える
+#        Value: 
+#     Examples:
 available_commands		=	help
 					get
 					mget
@@ -327,45 +347,91 @@ ticket_sequence_file	=	$ml_home_dir/ticket.seq
 # top directory
 ticket_db_dir		=	$shared_db_dir/ticket
 
-=head1	データベースとの連携
+=head1	データベース管理システムとの連携
 
+###
+### TODO
+###   うー？  
+###   DATABASE_CACHE_FILE_SUFFIX はどするん？
+###
+
+
+# Descriptions: データベース管理システムを使うか？
+#               このパラメータは必要ないと思うな…（？）
+#      History: 4.0 の $USE_DATABASE
+#        Value: yes / no
 use_database	=	no
 
-# value: mysql postgresql ldap
+# Descriptions: データベース管理システムとの通信方法
+#      History:
+#        Value: mysql / postgresql / ldap
+#     Examples:
 database_method	=	mysql
 
+# Descriptions: データベース管理システムとの通信方法のモデル
+#      History:
+#        Value: toymodel
+#     Examples:
 database_model	=	toymodel
 
-# うー？
-# DATABASE_CACHE_FILE_SUFFIX:
 
 =head2	SQL の場合
 
+# Descriptions: SQL サーバ群の定義
+#      History:
+#        Value:
+#     Examples:
 sql_servers		=
 
-#
-# sql_port		=
-
+# Descriptions: SQL サーバにログインするためのユーザ名
+#      History:
+#        Value:
+#     Examples:
 sql_user		=	fml
 
-sql_use_password	=
+# Descriptions: SQL サーバにログインするためのパスワード
+#      History:
+#        Value:
+#     Examples:
+sql_user_password	=
 
+# Descriptions: データベースの名前
+#      History:
+#        Value:
+#     Examples:
 sql_database_name	=	fml
-
 
 
 =head2	LDAP の場合
 
+# Descriptions: LDAP サーバ
+#      History:
+#        Value:
+#     Examples:
 ldap_servers		=
 
-# ldap_port		=
-
+# Descriptions: LDAP サーバにログインするためのパスワード
+#      History:
+#        Value:
+#     Examples:
 ldap_server_password	=	
 
+# Descriptions: LDAP の search base
+#      History:
+#        Value:
+#     Examples:
 ldap_search_base	=	
 
+# Descriptions: LDAP の search bind
+#      History:
+#        Value:
+#     Examples:
 ldap_server_bind	=	
 
+# Descriptions: LDAP のフィルタ
+#      History:
+#        Value:
+#     Examples:
 ldap_query_filter	=	
 
 =head1	CGI 関連の設定
