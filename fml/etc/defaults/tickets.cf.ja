@@ -8,6 +8,7 @@ ticket_model		=	toymodel
 
 ticket_id_syntax	=	%s_#%08d
 
+# please use [] or () or {} for the ends
 ticket_subject_tag	=	[$ticket_id_syntax]
 
 ticket_sequence_file	=	$ml_home_dir/ticket.seq
