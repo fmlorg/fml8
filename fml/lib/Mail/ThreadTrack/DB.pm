@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DB.pm,v 1.12 2001/11/16 10:09:14 fukachan Exp $
+# $FML: DB.pm,v 1.13 2001/11/18 08:57:30 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -214,6 +214,27 @@ sub db_dump
     my ($k, $v);
     while (($k, $v) = each %$rh) {
 	printf "%-20s %s\n", $k, $v;
+    }
+}
+
+
+=head2 db_hash( $type )
+
+return HASH REFERENCE for specified $type.
+
+=cut
+
+
+sub db_hash
+{
+    my ($self, $db_type) = @_;
+    my $type = "_" . $db_type;
+
+    if (defined $self->{ _hash_table }->{ $type }) {
+	return $self->{ _hash_table }->{ $type };
+    }
+    else {
+	return undef;
     }
 }
 
