@@ -1,5 +1,5 @@
 <!-- 
-	$FML: intro.sgml,v 1.4 2001/04/24 06:51:59 fukachan Exp $
+	$FML: design.sgml,v 1.1 2001/04/24 07:12:29 fukachan Exp $
 -->
 
 <chapter id="design">
@@ -194,6 +194,195 @@ fml 5.0 のアルファ版のアルファ版のアルファ版
 
 </itemizedlist>
 </sect1>
+
+
+<!-- ======================================================== -->
+<sect1>
+
+<title>
+fml リファクトリングのアイデア
+</title>
+
+<table>
+ <title> リファクトリング TODO </title>
+ <tgroup cols=3>
+
+  <thead>
+	<row>
+	<entry> status	</entry>
+	<entry> 項目	</entry>
+	<entry> 詳細	</entry>
+	</row>
+   </thead>
+
+  <tbody>
+	<row>
+	<entry>	done. 		</entry>
+	<entry> ライセンス	</entry>
+	<entry>	ライセンスを Perl 準拠へ変更する	</entry>
+	</row>
+
+	<row>
+	<entry>	</entry>
+	<entry> イメージ/モティーフ</entry>
+	<entry>
+		fml4 から fml5 へは、
+		sendmail から postfix への移行のようなイメージで。
+		最低限の config.ph コンバータは用意する。
+	</entry>
+	</row>
+
+	<row>
+	<entry>	done. 		</entry>
+	<entry>
+		メインプログラムの wrapper (乖離層)。 
+	</entry>
+	<entry>
+		バージョン管理やデバッグを簡単にするための乖離層
+	</entry>
+	</row>
+
+	<row>
+	<entry>	</entry>
+	<entry> 再利用性(自主開発はできるだけ避ける) </entry>
+	<entry>
+		可能な限りあらゆる CPAN モジュールなどを使う。
+
+		そして利用する場合には乖離層を設けること。
+		例えば
+		”FML::モジュール →  乖離層 → CPAN/モジュール”
+		のように。
+	</entry>
+	</row>
+
+
+	<row>
+	<entry>	</entry>
+	<entry>
+	設定ファイル形式
+	<itemizedlist>
+		<listitem>
+		<para>
+		 cf と config.ph を統合化する
+		</para>
+		</listitem>
+
+		<listitem>
+		<para>
+		 配列を表現できる形式
+		</para>
+		</listitem>
+
+		<listitem>
+		<para>
+		 メニュープログラムが楽できるフォーマットを
+		</para>
+		</listitem>
+
+		<listitem>
+		<para>
+		 原則として”設定ファイル”という名のものは
+		     どれも同じフォーマットとする。
+		</para>
+		</listitem>
+	</itemizedlist>
+	</entry>
+	<entry>
+	</entry>
+	</row>
+
+
+	<row>
+	<entry>	</entry>
+	<entry> 変数の命名規則
+	<itemizedlist>
+		<listitem>
+		<para>
+		USE_機能
+		</para>
+		</listitem>
+
+		<listitem>
+		<para>
+		機能_TYPE
+		</para>
+		</listitem>
+
+		<listitem>
+		<para>
+		機能_ATTRIBUTES
+		</para>
+		</listitem>
+
+	</itemizedlist>
+	</entry>
+	<entry>
+		”USE_ほえ”および”ほえ_TYPE”形式か？	
+		また、NOT_USE などは禁止する( default_config に書くこと)。
+
+		attribute にあたるものが
+		群れになってしまうのはしょうがない。しかし、
+		配列表現が可能なため、現在の ifdef の群れで表現する
+		ようなことが少なくなるはず。
+	</entry>
+	</row>
+
+
+	<row>
+	<entry> </entry>
+	<entry>	 関数名ルールの統一
+
+	main:: スペースに出てくるものは従来通り X11 風準拠に。
+
+	メソッドは他のモジュールにあるようなそれっぽい小文字の名前をつける。
+
+	lisp 的要素を廃止する。
+	</entry>
+
+	<entry>
+		参考文献 Perl Cookbook として、
+		そこにあるようなシンタックス風を推奨する？
+
+		例:
+		メソッドなら is_member() で、大域関数なら
+		”MemberP() -> IsMember()”
+	</entry>
+	</row>
+
+	<row>
+	<entry> 手づかず </entry>
+	<entry> queue manager </entry>
+	<entry>
+		再送処理のため (e.g.  smtpfeed )
+	</entry>
+	</row>
+
+
+	<row>
+	<entry> may be </entry>
+	<entry> tools </entry>
+	<entry>
+		BSD make を使わない。
+
+		C 言語ではないので、autoconf は特には必要ないと思う。
+		しかしながら configure という名前のスクリプトを（フェイクでも）
+		用意することはよいことかもしれない。
+
+		そのスクリプトは例えば
+		IPv6 ready か否かを決めるために使われるだろう(
+		現在の実装では使ってはいない、IPv6 は常に挑戦してみる
+		)。
+	</entry>
+	</row>
+   </tbody>
+ </tgroup>
+</table>
+
+</sect1>
+
+
+
+
 
 
 
