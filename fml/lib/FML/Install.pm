@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.11 2004/01/21 03:45:03 fukachan Exp $
+# $FML: Install.pm,v 1.12 2004/06/07 16:04:42 fukachan Exp $
 #
 
 package FML::Install;
@@ -306,7 +306,8 @@ sub install_default_config_files
     my $config     = $self->{ _config };
     my $config_dir = $self->path( 'default_config_dir' );
 
-    print STDERR "updating $config_dir\n";
+    my $_config_dir = File::Spec->catfile($install_root, $config_dir);
+    print STDERR "updating $_config_dir\n";
 
     $self->disable_message();
 
@@ -651,7 +652,8 @@ sub setup_ml_spool_dir
 {
     my ($self) = @_;
     my $config = $self->{ _config };
-    my $dir    = $self->path( 'ml_spool_dir' );
+    my $spool  = $self->path( 'ml_spool_dir' );
+    my $dir    = File::Spec->catfile($install_root, $spool);
     my $owner  = $config->{ owner };
     my $group  = $config->{ group };
 
