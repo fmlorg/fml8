@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.90 2002/08/14 03:31:56 fukachan Exp $
+# $FML: Distribute.pm,v 1.91 2002/08/14 14:17:09 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -84,7 +84,14 @@ sub prepare
     $curproc->load_config_files( $args->{ cf_list } );
     $curproc->fix_perl_include_path();
     $curproc->scheduler_init();
-    $curproc->parse_incoming_message($args);
+
+    if ($config->yes('use_distribute_program')) {
+	$curproc->parse_incoming_message($args);
+    }
+    else {
+	LogError("use of distribute_program prohibited");
+	exit(0);
+    }
 
     $eval = $config->get_hook( 'distribute_prepare_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
