@@ -1,0 +1,311 @@
+### VERY FUNDAMENTAL CONFIG ###
+$ErrorCodePat = '55\d|5\.\d\.\d';
+$TrapWord     = 'unknown \S+|\S+ unknown|\S+ not known| not found';
+
+# regexp
+$RE_SJIS_C = '[\201-\237\340-\374][\100-\176\200-\374]';
+$RE_SJIS_S = "($RE_SJIS_C)+";
+$RE_EUC_C  = '[\241-\376][\241-\376]';
+$RE_EUC_S  = "($RE_EUC_C)+";
+$RE_JIN    = '\033\$[\@B]';
+$RE_JOUT   = '\033\([BJ]';
+###############################
+
+
+
+
+
+
+sub Parse
+{
+    my ($new_block, $gobble, $curf, $first_header_part);
+    my ($mp_block, $p, $pmax);
+
+    $new_block = 1;
+    $gobble    = 0;
+    $curf      = $NULL;
+    $first_header_part = 1;
+
+    # gobble error mail
+    {
+	$pmax = sysread(STDIN, 
+			$MessageBuffer, 
+			$MEAD_INCOMING_MAIL_SIZE_LIMIT);
+
+	if ($pmax >= $MEAD_INCOMING_MAIL_SIZE_LIMIT) {
+	    &Log("warn: input mail is too large");
+	    &Log("warn: check the fisrt $MEAD_INCOMING_MAIL_SIZE_LIMIT bytes");
+	}
+	&Log("log: read $pmax bytes") if $debug;
+    }
+
+    my ($msgbufp, $msgbufp1);
+    for ($msgbufp = 0; $msgbufp <= $pmax; ) {
+	$msgbufp1 = index($MessageBuffer, "\n", $msgbufp);
+	last if $msgbufp1 < 0;
+	$_        = substr($MessageBuffer, $msgbufp, $msgbufp1 - $msgbufp);
+	$msgbufp  = $msgbufp1 + 1;
+
+	# reread input buffer since this buffer ends incomletely.
+	# we ends it up with "\n" correctly.
+	$SavedBuffer .= $_."\n" if $InputLines++ < 1024;
+
+	# ignore the first header
+	# we should ignore header for <maintainer>
+	$first_header_part = 0 if /^$/;
+
+	# save excursion
+	$PrevLine = $CurLine;
+	$CurLine  = $_;
+
+	# check the current block
+	if (/^Content-Type:\s*(.*)/i) { 
+	    &Debug("<<< $_ >>>");
+	    $mp_block = $1;
+	}
+
+	if (/^(Content-Description:\s*Notification).*/i) { 
+	    &Debug("<<< $_ >>>");
+	    $mp_block = $1;
+	}
+
+	# Store Received: field 
+	if (! $first_header_part) {
+	    if (/^([-A-Za-z]+):(.*)/) {
+		$curf  = $1;
+		$value = $2;
+		$Received .= "\n".$value if $curf =~ /Received/i;
+	    }
+	    elsif (/^\s+(.*)/) {
+		$value = $1;
+		$Received .= $value if $curf =~ /Received/i;
+	    }
+	}
+
+	if ($original_mail && $found && $debug) {
+	    &Debug("   --- $_") if $debug;
+	}
+	elsif ($debug) {
+	    &Debug("   | $_") if $debug;
+	}
+
+	$new_block = 1 if /^\s*$/;
+
+	if (/^From:.*mailer-daemon/i || /^From:.*postmaster/) {
+	    undef %return_addr;
+	    $original_mail = $found = 0;
+	    undef $MTA;
+	    undef $CurAddr;
+	}
+
+	# guess MTA ...
+	if (/^Message-ID:\s+\<[\w\d]+\-[\w\d]+\-[\w\d]+\@/i) { 
+	    $MTA = "exim";
+	    next;
+	}
+	if (/qmail-send/) {
+	    $MTA = "qmail";
+	    next;
+	}
+
+	# get returned addresses
+	if ($first_header_part) {
+	    if (/^(To|Cc):.*/i) {
+		if ($new_block && $gabbble == 0) {
+		    &Debug("$new_block, $gobble> rset \%return_addr\n") if $debug;
+		    undef %return_addr;
+		}
+
+		$new_block = 0;
+		$gabbble = 1;
+
+		&ExtractAddr($_);
+		next;
+	    }
+	    elsif (/^X\-MLServer:/i) { # this is the commnd mail from fml.
+		$NotSavedBuffer = 1;
+	    }
+	    # 822 folding
+	    elsif (/^\s+/ && $gobble) {
+		&ExtractAddr($_);
+		next;	
+	    }
+	}
+
+
+	###
+	### RFC1891,1894 DSN
+	###
+	if ($mp_block =~ /delivery\-status/i) {
+	    if (/^Final-Recipient:.*\s+(\S+\@\S+)/i) {
+		$DSN_FinalRecipient = &BareAddr($1);
+	    }
+	    elsif (/^Original-Recipient:.*\s+(\S+\@\S+)/i) {
+		$DSN_OriginalRecipient =  &BareAddr($1);
+	    }
+	    elsif (/^Status:\s*5/i) {
+		if ($DSN_OriginalRecipient) {
+		    &CacheOn($DSN_OriginalRecipient, " ");
+		}
+		if ($DSN_FinalRecipient) {
+		    &CacheOn($DSN_FinalRecipient, " ");
+		}
+
+		$found++;	    
+	    }
+	}
+
+	# smtpfeed -1 -F hack
+	if (/^To: \(original recipient in envelope at \S+\) <(\S+)>/) {
+	    &PickUpHint($1);
+	}
+
+	#####
+	##### MTA szpecific
+	#####
+	# postfix
+	# <uja@beth.fml.org>: unknown user
+	if ($mp_block eq 'Content-Description: Notification') {
+	    if (/^\s*(\S+\@\S+):\s*(unknown user|.*:\s+5\d\d\s+.*)/) {
+		$CurAddr = $1;
+		$CurAddr =~ s/[\<\>]//g;
+		$CurAddr =~ s/\s*//g;	
+		&Debug("CurAddr => $CurAddr") if $debug && $CurAddr;
+		$MTA = 'postfix';
+	    }
+	}
+
+	# exim || qmail
+	if ($MTA eq 'qmail' && /This is a permanent error/) {
+	    $RABuf .= $_;
+	}
+
+	if ($MTA eq 'exim' || $MTA eq 'qmail') {
+	    /^\s*(\S+\@\S+):\s*$/ && ($CurAddr = $1);
+	    $CurAddr =~ s/[\<\>]//g;
+	    $CurAddr =~ s/\s*//g;
+	    &Debug("CurAddr => $CurAddr") if $debug && $CurAddr;
+	}
+
+	$gobble = 0;
+
+	# ignore Japanese strings.
+	next if /$RE_JIN/;
+	next if /$RE_JOUT/;
+	next if /$RE_SJIS_S/;
+	next if /$RE_EUC_S/;
+
+	### unknown MTA  ###
+	if (/(\S+\@[-A-Z0-9\.]+)/i) {
+	    /(\S+\@[-A-Z0-9\.]+)/i && ($P_CurAddr = $1); # pseudo
+	    $P_CurAddr =~ s/[\<\>]//g;
+	    $P_CurAddr =~ s/\s*//g;
+	    &Debug("P_CurAddr => $P_CurAddr") if $debug && $P_CurAddr;
+	}
+
+	# error message line
+	# next if /<<<.*\@/;
+	# next if /^Diagnostic-Code:/i;
+
+	# ignore the original mails
+	# &Debug("next") if $original_mail && $found;
+	next if $original_mail && $found;
+	$original_mail = 1 if /^received:/i;
+
+	##### TRAP CODE #####
+	if (/fatal error/i) { $fatal++;}
+
+	if (/\@/ && /(5\d\d)/)    { &AnalyzeErrorCode($_); $found++; }
+	if (/\@/ && /$TrapWord/i) { &AnalyzeErrorWord($_); $found++; }
+
+	### unknown MTA
+	# e.g. uset not known
+	if (/$TrapWord/i && $P_CurAddr) {
+	    &AnalyzeErrorWord($_, $P_CurAddr); 
+	    $found++;	
+	}
+
+	### postfix
+	if (/$TrapWord/i && $MTA eq 'postfix') { 
+	    &AnalyzeErrorWord($_, $CurAddr); 
+	    $found++;
+	} 
+
+	###
+	### exim
+	###
+	if (/$TrapWord/i && $MTA eq 'exim') { 
+	    &AnalyzeErrorWord($_, $CurAddr); 
+	    $found++;
+	}
+
+	# EXIM pattern
+	if (/failed/i && $MTA eq 'exim') { 
+	    $trap_want_addr = $_;
+	    next;
+	}
+	if ($trap_want_addr && /\@/ && $MTA eq 'exim') { 
+	    local($a);
+	    /^\s*(\S+\@\S+)/ && ($a = $1);
+	    $a =~ s/[\<\>:]//g;
+	    &CacheOn($a, " ") if $a; # space is a dummy
+	    undef $trap_want_addr;
+	}
+
+	if (/($ErrorCodePat)/ && $MTA eq 'exim') { 
+	    &AnalyzeErrorWord($_, $CurAddr); 
+	    $found++;
+	}
+
+	###
+	### qmail
+	###
+	if (/\#5\.\d+\.\d+/ && $MTA eq 'qmail') { 
+	    &AnalyzeErrorWord($_, $CurAddr);
+	    $found++;
+	}
+
+	if ($MTA eq 'qmail' && $CurAddr && $RABuf) {
+	    &AnalyzeErrorWord($RABuf, $CurAddr);
+	    $found++;
+	}
+
+	###
+	### sendmail
+	###
+	if ($fatal) {
+	    local($a);
+	    /^\s*(\S+\@\S+)/ && ($a = $1);
+	    $a =~ s/[\<\>]//g;
+	    &CacheOn($a, " ") if $a; # space is a dummy
+	}
+	# end of fatal block
+	if ($fatal && /^$/) {    
+	    undef $fatal;
+	}
+    }
+
+    # VERPs: qmail specific
+    # Suppose list-admin-account=domain@$mydomain syntax, ...
+    {
+	local($ra, $addr);
+
+	$addr = $ENV{'RECIPIENT'};
+	$ra   = $ENV{'RECIPIENT'};
+
+	if ($addr =~ /=/) {
+	    $addr =~ s/\@\S+$//;
+	    $addr =~ s/=/\@/;
+	    $addr =~ s/^\S+\-admin\-//; # fml specific 
+
+	    $ra =~ s/admin\-\S+\@/admin@/;
+
+	    &Debug("qmail:". $addr);
+	    &Debug("qmail return_addr:". $ra);
+	    $return_addr{$ra} = 1;
+	    &CacheOn($addr, " ");
+	}
+    }
+}
+
+
