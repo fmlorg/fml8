@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.24 2001/05/18 03:50:16 fukachan Exp $
+# $FML: Message.pm,v 1.25 2001/06/02 12:38:20 fukachan Exp $
 #
 
 package Mail::Message;
@@ -12,7 +12,7 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $InComingMessage);
 use Carp;
 
-my $debug = $ENV{'debug'} ? 1 : 0;
+my $debug = $ENV{'debug'} ? $ENV{'debug'} : 0;
 
 # virtual content-type
 my %virtual_data_type = 
@@ -924,14 +924,41 @@ sub _print_messsage_on_memory
     # 2. print content body: write each line in buffer
     my ($p, $len, $buf, $pbuf);
     my $maxlen = length($$data);
+    if ($debug > 1) {
+	my $r = substr($$data, $pp, $p_end - $pp);
+	print STDERR "output($pp, $p_end) = {$r}\n";
+    }
   SMTP_IO:
     while (1) {
 	$p = index($$data, "\n", $pp);
-	last SMTP_IO if $p >= $p_end;
+	print STDERR "try to print(p=$p pp=$pp < $p_end)\n" if $debug > 1;
+
+	# handle buffer (MIME part) without trailing "\n".
+	# index("\n") can pick up both 
+	#     the last "\n" of the MIME part
+	# and
+	#     "\n" of MIME delimiter string "CRLF delimiter"
+	# since index() searches the whole not a part of the mail.
+	# We need to identify these two cases restrictly.
+	last SMTP_IO if $p == $p_end && substr($$data, $p-1, 1) eq "\n";
+	last SMTP_IO if $p > $p_end;
 
 	$len = $p - $pp + 1;
-	$len = ($p < 0 ? ($maxlen - $pp) : $len);
+
+	# handle buffer wihtout trailing "\n" 
+	if ($p == $p_end && substr($$data, $p-1, 1) ne "\n") {
+	    $len = $p_end - $pp;
+	}
+	else {
+	    $len = ($p < 0 ? ($maxlen - $pp) : $len);
+	}
 	$buf = substr($$data, $pp, $len);
+
+	if ($debug > 1) {
+	    print STDERR "	\$len = $p - $pp + 1;\n";
+	    print STDERR "	$len = ($p < 0 ? ($maxlen - $pp) : $len);\n";
+	    print STDERR "print($pp,$len){$buf}\n";
+	}
 
 	# do nothing, get away from here 
 	last SMTP_IO if $len == 0;
