@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.79 2003/05/09 13:54:44 fukachan Exp $
+# $FML: Message.pm,v 1.80 2003/06/20 22:29:33 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1384,9 +1384,13 @@ sub parse_and_build_mime_multipart_chain
 {
     my ($self, $args) = @_;
 
+    print "// start parse_and_build_mime_multipart_chain\n" if $debug;
+
     # check input parameters
     return undef unless $args->{ boundary };
     return undef unless $args->{ data  };
+
+    print "// start parse_and_build_mime_multipart_chain (0)\n" if $debug;
 
     # base content-type
     my $base_data_type = $args->{ data_type };
@@ -1401,7 +1405,14 @@ sub parse_and_build_mime_multipart_chain
 
     # 1. check the preamble before multipart blocks
     #    XXX mpb = multipart-body
+    # 
+    #    XXX-TODO: bug fix logic to find the start point of multipart.
+    #    2003/08/16: modify $mpb_begin search logic,
+    #    which is effective but wrong.
+    #    The first delimeter should be handled specially.
+    #    Exactly, it is a dash-boundary not delimeter!
     my $mpb_begin       = index($$data, $delimeter, 0);
+    $mpb_begin          = index($$data, $boundary, 0) if $mpb_begin < 0;
     my $mpb_end         = index($$data, $close_delimeter, 0);
     my $pb              = 0; # pb = position of the beginning in $data
     my $pe              = $mpb_begin; # pe = position of the end in $data
@@ -1412,7 +1423,12 @@ sub parse_and_build_mime_multipart_chain
     {
 	# oops, no delimiter is not found !!!
 	if ($mpb_begin < 0) {
-	    print "   *** broken multipart message.\n" if $debug;
+	    if ($debug) {
+		print "   *** broken multipart message (mpb_begin < 0).\n";
+		print "   delimeter={$delimeter}\n" if $debug > 2;
+		print "        data={$$data}\n"     if $debug > 2;
+	    }
+
 	    my $args = {
 		offset_begin => 0,
 		offset_end   => $data_end,
@@ -1427,21 +1443,30 @@ sub parse_and_build_mime_multipart_chain
 	    print "   * broken close-delimiter multipart message.\n" if $debug;
 	    $mpb_end = $data_end;
 	}
+	else {
+	    print "   * ok ?\n" if $debug;
+	}
     }
 
     # XXX We should check the first string is delimiter or not.
     # XXX We need Content-Type: in each block. This may be a bug ?
     # XXX To avoid the first part without no content-type, we check
     # XXX the first string in the body data.
-    my $preamble = "\n".substr($$data, 0, length($delimeter) - 1);
+    # 
+    # XXX The first delimeter should be handled specially.
+    # XXX Exactly, it is dash-boundary not delimeter!
+    my $preamble    = "\n".substr($$data, 0, length($delimeter) - 1);
     my $no_preamble = 1 if $preamble eq $delimeter;
 
     #
     # HERE WE GO but debug firstly :)
     #
-    print "\tmpb($mpb_begin, $mpb_end)\n\t----------\n\n" if $debug;
-    print "\tno preamble\n" if $debug && $no_preamble;
-
+    if ($debug) {
+	print "\tmpb($mpb_begin, $mpb_end)\n\t----------\n\n";
+	print "\tno preamble\n" if $no_preamble;
+	print "\tpreamble    = $preamble\n";
+	print "\tno_preamble = $no_preamble\n";
+    }
 
     # prepare lexical variables
     my ($msg, $next_part, $prev_part, @m);
