@@ -1,0 +1,16 @@
+=head1	Digest
+
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+use_digest_program		=	yes
+
+
+# Descriptions: まとめ送りした最後の記事番号を保存するファイル
+#      History: fml4 では各自それぞれの番号を保存していた。
+#        Value: filename
+#     Examples:
+digest_sequence_file	= $ml_home_dir/seq-digest
+
