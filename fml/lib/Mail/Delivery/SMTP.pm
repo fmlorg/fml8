@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: SMTP.pm,v 1.1.1.1 2001/04/03 09:53:30 fukachan Exp $
 #
 
 
@@ -707,6 +707,7 @@ sub _send_body_to_mta
 
     # XXX $msg is Mail::Message object.
     $msg->set_log_function( $SmtpLogFunctionPointer );
+    $msg->set_print_mode('smtp');
     $msg->print($socket);
 }
 
