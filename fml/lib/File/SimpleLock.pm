@@ -1,8 +1,8 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: SimpleLock.pm,v 1.8 2001/05/28 16:17:14 fukachan Exp $
+# $FML: SimpleLock.pm,v 1.9 2001/12/22 09:21:11 fukachan Exp $
 #
 
 package File::SimpleLock;
@@ -51,6 +51,10 @@ sub LOCK_NB {4;}
 sub LOCK_UN {8;}
 
 
+# Descriptions: standard constructor.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self) = @_;
@@ -60,6 +64,10 @@ sub new
 }
 
 
+# Descriptions: lock
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: 1 or 0
 sub lock
 {
     my ($self, $args) = @_;
@@ -69,6 +77,10 @@ sub lock
 }
 
 
+# Descriptions: unlock
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: 1 or 0
 sub unlock
 {
     my ($self, $args) = @_;
@@ -79,6 +91,10 @@ sub unlock
 
 
 
+# Descriptions: try flock(2) for $file
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: flock for $file
+# Return Value: 1 or 0
 sub _simple_flock
 {
     my ($self, $file) = @_;
@@ -108,6 +124,10 @@ sub _simple_flock
 }
 
 
+# Descriptions: try unlock by flock(2) for $file
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: flock for $file
+# Return Value: 1 or 0
 sub _simple_funlock
 {
     my ($self, $file) = @_;

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.12 2001/11/27 15:55:23 fukachan Exp $
+# $FML: Sequence.pm,v 1.13 2001/12/22 09:21:11 fukachan Exp $
 #
 
 package File::Sequence;
@@ -80,7 +80,7 @@ get the sequence number from specified C<$file>.
 # Descriptions: constructor
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: object itself holds a few local _variables
-# Return Value: object
+# Return Value: OBJ
 sub new
 {
     my ($self, $args) = @_;
@@ -97,7 +97,7 @@ sub new
 #               If $file is not specified,
 #               the sequence_file parameter in new().
 # Side Effects: the number holded in $file is incremented
-# Return Value: number (sequence number)
+# Return Value: NUM(sequence number)
 sub increment_id
 {
     my ($self, $file) = @_;
@@ -111,8 +111,10 @@ sub increment_id
 
     # touch the sequence file if it does not exist.
     unless (-f $seq_file) {
-	use File::Utils qw(touch);
-	touch($seq_file);
+	eval q{ 
+	    use File::Utils qw(touch);
+	    touch($seq_file);
+	};
     };
 
     use IO::File::Atomic;
@@ -152,7 +154,7 @@ sub increment_id
 #               If $file is not specified,
 #               the sequence_file parameter in new().
 # Side Effects: the number holded in $file is incremented
-# Return Value: number (sequence number)
+# Return Value: NUM(sequence number)
 sub get_id
 {
     my ($self, $file) = @_;
@@ -198,7 +200,7 @@ To search max_id in hash key,
 # Descriptions: search max id number
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
-# Return Value: number
+# Return Value: NUM
 sub search_max_id
 {
     my ($self, $args) = @_;

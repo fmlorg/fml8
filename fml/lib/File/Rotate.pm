@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Rotate.pm,v 1.7 2001/06/02 12:38:20 fukachan Exp $
+# $FML: Rotate.pm,v 1.8 2001/12/22 09:21:11 fukachan Exp $
 #
 
 package File::Rotate;
@@ -48,7 +48,7 @@ some programs such as /usr/bin/newsyslog (MIT athena project) do.
 
 =head1 METHODS
 
-=head2 C<new($args)>
+=head2 new($args)
 
 ordinary constructor. $args accpets the following parameters.
 
@@ -62,10 +62,9 @@ ordinary constructor. $args accpets the following parameters.
 
 # Descriptions: constructor
 #               forward new() request to superclass (IO::File)
-#    Arguments: $class_name $HASH_REFERENCE
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
-# Return Value: class object
-#               XXX $self is blessed file handle.
+# Return Value: OBJ
 sub new
 {
     my ($self, $args) = shift;
@@ -91,7 +90,7 @@ determine whether the time to do comes or not.
 
 
 # Descriptions: determine the time to rotate
-#    Arguments: $self
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: 1 (time comes!) or 0
 sub is_time_to_rotate
@@ -120,8 +119,9 @@ rename files to rotate it.
 
 =cut
 
+
 # Descriptions: rotate filenames
-#    Arguments: $self
+#    Arguments: OBJ($self)
 # Side Effects: filename rotations
 #               unlink the oldest file
 # Return Value: none
@@ -146,9 +146,9 @@ sub rotate
 
 
 # Descriptions: extract parameters in $self
-#    Arguments: $self
+#    Arguments: OBJ($self)
 # Side Effects: none
-# Return Value: a set of (file, max_size, num_backlog)
+# Return Value: ARRAY(file, max_size, num_backlog)
 sub _get_param
 {
     my ($self) = @_;
@@ -162,11 +162,12 @@ return the error message if exists.
 
 =cut
 
+
 # Descriptions: return error message
-#    Arguments: $self
+#    Arguments: OBJ($self)
 #               XXX $self is blessed file handle.
 # Side Effects: none
-# Return Value: error message string
+# Return Value: STR(error message)
 sub error
 {
     my ($self) = @_;
