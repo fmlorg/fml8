@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.5 2001/12/22 09:21:03 fukachan Exp $
+# $FML: get.pm,v 1.6 2001/12/23 03:50:06 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
@@ -37,7 +37,16 @@ get arbitrary file in $ml_home_dir
 =cut
 
 
-# Descriptions: send file in $ml_home_dir
+# Descriptions: need lock or not
+#    Arguments: none
+# Side Effects: none
+# Return Value: NUM( 1 or 0)
+sub need_lock { 1;}
+
+
+# Descriptions: send arbitrary file in $ml_home_dir by
+#               FML::Command::SendFile.
+#               XXX we permit arbitrary file for administrator to retrieve.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
 # Return Value: none
@@ -49,17 +58,22 @@ sub process
     my $ml_home_dir = $config->{ ml_home_dir };
     my $options     = $command_args->{ options };
 
+    # This module is called after
+    # FML::Process::Command::_can_accpet_command() already checks the
+    # command syntax. $options is raw command as ARRAY_REF such as
+    #     $options = [ 'get:3', 1, 100 ];
+    # send_file() called below can parse MH style argument.
     for my $f (@$options) {
 	use File::Spec;
 	my $file = File::Spec->catfile($ml_home_dir, $f);
 
-	print STDERR "send back $file (debug)\n";
-
-	next;
+	Log("send back $file"); # XXX but return to whom ?
 
 	if (-f $file) {
+	    Log("send back $file");
 	    $command_args->{ _file_to_send } = $file;
 	    $self->send_file($curproc, $command_args);
+	    delete $command_args->{ _file_to_send };
 	}
 	else {
 	    $curproc->reply_message_nl('error.no_such_file',
@@ -79,7 +93,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
