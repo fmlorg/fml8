@@ -1,9 +1,0 @@
-=head1 configurations
-
-domain              = fml.org
-fqdn                = ahodori.fml.org
-
-address_for_post    = elena@fml.org   
-address_for_command = elena-ctl@fml.org 
-
-ml_home_dir         = /var/spool/ml/elena

@@ -1,0 +1,16 @@
+=head1 configurations
+
+# 各種アドレスに使うドメイン名
+ml_domain           = fml.org
+
+# Fully Qualified Domain Name
+fqdn                = ahodori.fml.org
+
+# 投稿用のアドレス
+address_for_post    = elena@$ml_domain
+
+# コマンド用のアドレス
+address_for_command = elena-ctl@$ml_domain
+
+# fml 4.0 の $DIR
+ml_home_dir         = /var/spool/ml/elena
