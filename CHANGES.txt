@@ -1,6 +1,10 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/10/29
+
+   import im-146.
+
 2003/10/26
 
    FML::Install 
@@ -5555,4 +5559,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.166 2003/10/18 09:29:55 fukachan Exp $
+$FML: CHANGES.txt,v 1.167 2003/10/26 05:47:21 fukachan Exp $
