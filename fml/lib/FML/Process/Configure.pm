@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.33 2001/12/08 14:32:08 fukachan Exp $
+# $FML: Configure.pm,v 1.34 2001/12/22 09:21:09 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -21,7 +21,7 @@ use FML::Config;
 
 =head1 NAME
 
-FML::Process::Configure -- fmlconf and makefml main functions
+FML::Process::Configure -- makefml main functions
 
 =head1 SYNOPSIS
 
@@ -31,16 +31,7 @@ FML::Process::Configure -- fmlconf and makefml main functions
 
 =head1 DESCRIPTION
 
-FML::Process::Configure provides the main function for
-C<fmlconf>
- and
-C<makefml>.
-
-These programs,
-C<fmlconf> and C<makefml>,
-bootstrap by using these modules in this order.
-
-   libexec/loader -> FML::Process::Switch -> FML::Process::Configure
+FML::Process::Configure provides the main function for C<makefml>.
 
 See C<FML::Process::Flow> for the flow detail.
 
@@ -59,7 +50,7 @@ dummy.
 
 
 # Descriptions: constructor
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: FML::Process::Configure object
 sub new
@@ -71,16 +62,17 @@ sub new
 }
 
 
-# Descriptions: dummy yet now
-#    Arguments: $self $args
+# Descriptions: dummy
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub prepare { ; }
 
 
-# Descriptions: check @ARGV
-#    Arguments: $self $args
-# Side Effects: longjmp() to help() if appropriate
+# Descriptions: check @ARGV, call help() if needed.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: exit ASAP.
+#               longjmp() to help() if appropriate
 # Return Value: none
 sub verify_request
 {
@@ -110,8 +102,9 @@ See <FML::Process::Switch()> on C<$args> for more details.
 
 =cut
 
-# Descriptions: just a switch
-#    Arguments: $self $args
+
+# Descriptions: just a switch, call _makefml().
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub run
@@ -125,10 +118,16 @@ sub run
 }
 
 
+# Descriptions: dummy
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub finish { 1;}
 
 
 =head2 help()
+
+show help.
 
 =cut
 
@@ -177,8 +176,8 @@ See <FML::Process::Switch()> on C<$args> for more details.
 
 
 # Descriptions: makefml top level dispacher
-#    Arguments: $self $args
-# Side Effects:
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: load FML::Command::command module and execute it.
 # Return Value: none
 sub _makefml
 {

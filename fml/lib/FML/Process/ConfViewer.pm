@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.5 2001/11/27 15:56:55 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.6 2001/12/22 09:21:09 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -57,16 +57,17 @@ sub new
 }
 
 
-# Descriptions: dummy yet now
+# Descriptions: dummy
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub prepare { ; }
 
 
-# Descriptions: check @ARGV
+# Descriptions: check @ARGV, call help() if needed
 #    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: longjmp() to help() if appropriate
+# Side Effects: exit ASAP.
+#               longjmp() to help() if appropriate
 # Return Value: none
 sub verify_request
 {
@@ -96,7 +97,7 @@ See <FML::Process::Switch()> on C<$args> for more details.
 =cut
 
 
-# Descriptions: just a switch
+# Descriptions: just a switch, call _fmlconf()
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -112,6 +113,8 @@ sub run
 
 
 =head2 help()
+
+show help.
 
 =cut
 
@@ -137,7 +140,7 @@ _EOF_
 }
 
 
-# Descriptions: dummy yet now
+# Descriptions: dummy
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
@@ -151,7 +154,7 @@ run dump_variables of C<FML::Config>.
 =cut
 
 
-# Descriptions: show configurations variables in the sytle "key = value"
+# Descriptions: show configurations variables in the sytle "key = value".
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none

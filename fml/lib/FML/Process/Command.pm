@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.24 2001/11/27 11:40:30 fukachan Exp $
+# $FML: Command.pm,v 1.25 2001/12/22 09:21:08 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -21,7 +21,7 @@ use FML::Config;
 
 =head1 NAME
 
-FML::Process::Command -- fml5 command dispacher.
+FML::Process::Command -- command dispacher.
 
 =head1 SYNOPSIS
 
@@ -35,24 +35,24 @@ See L<FML::Process::Flow> for details of fml process flow.
 C<FML::Process::Command> is a command wrapper and top level
 dispatcher for commands.
 It kicks off corresponding
-C<FML::Command>->C<$command($curproc,$args)>
+
+   FML::Command->$command($curproc, $command_args)
+
 for the given C<$command>.
 
 =head1 METHODS
 
 =head2 C<new($args)>
 
-make fml process object.
-
-    my $curproc = new FML::Process::Kernel $args;
-
-=head2 C<prepare($args)>
-
-forward the request to SUPER CLASS.
+make fml process object, which inherits C<FML::Process::Kernel>.
 
 =cut
 
 
+# Descriptions: standard constructor.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: inherit FML::Process::Kernel
+# Return Value: OBJ
 sub new
 {
     my ($self, $args) = @_;
@@ -62,6 +62,16 @@ sub new
 }
 
 
+=head2 C<prepare($args)>
+
+forward the request to SUPER CLASS.
+
+=cut
+
+# Descriptions: dummy
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub prepare
 {
     my ($self, $args) = @_;
@@ -75,6 +85,11 @@ verify the sender is a valid member or not.
 
 =cut
 
+
+# Descriptions: verify the sender of this process is an ML member.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: 1 or 0
 sub verify_request
 {
     my ($curproc, $args) = @_;
@@ -85,7 +100,7 @@ sub verify_request
 =head2 C<run($args)>
 
 dispatcher to run correspondig C<FML::Command::command> for
-C<command>.
+C<command>. Standard style follows:
 
     lock
     execute FML::Command::command
@@ -93,6 +108,11 @@ C<command>.
 
 =cut
 
+
+# Descriptions: call _evaluate_command()
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub run
 {
     my ($curproc, $args) = @_;
@@ -101,6 +121,8 @@ sub run
 
 
 =head2 help()
+
+show help.
 
 =cut
 
@@ -128,6 +150,12 @@ _EOF_
 
 =cut
 
+
+# Descriptions: finalize command process.
+#               reply messages, command results et. al.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: queue manipulation
+# Return Value: none
 sub finish
 {
     my ($curproc, $args) = @_;
@@ -137,6 +165,11 @@ sub finish
 }
 
 
+# Descriptions: check message of the current process
+#               whether it contais keyword e.g. "confirm".
+#    Arguments: OBJ($self) STR_REF($ra_body)
+# Side Effects: none
+# Return Value: STR or 0
 sub _pre_scan
 {
     my ($curproc, $ra_body) = @_;
@@ -154,6 +187,11 @@ sub _pre_scan
 }
 
 
+# Descriptions: check command (specified in $opts) content:
+#               syntax check, permission of command use et. al.
+#    Arguments: OBJ($self) HASH_REF($args) HASH_REF($opts)
+# Side Effects: none
+# Return Value: 1 or 0
 sub _can_accpet_command
 {
     my ($curproc, $args, $opts) = @_;
@@ -201,9 +239,9 @@ sub _can_accpet_command
 
 # Descriptions: parse command buffer to make
 #               argument vector after command name
-#    Arguments: ($string_to_parse, $string_command_name)
+#    Arguments: STR($command) STR($comname)
 # Side Effects: none
-# Return Value: ARRAY REFERENCE
+# Return Value: HASH_ARRAY
 sub _parse_command_options
 {
     my ($command, $comname) = @_;
@@ -219,6 +257,10 @@ sub _parse_command_options
 }
 
 
+# Descriptions: return command name ( ^\S+ in $command )
+#    Arguments: STR($command)
+# Side Effects: none
+# Return Value: STR
 sub _get_command_name
 {
     my ($command) = @_;
@@ -227,8 +269,13 @@ sub _get_command_name
 }
 
 
-# dynamic loading of command definition.
-# It resolves your customized command easily.
+# Descriptions: scan message body and execute approviate command
+#               with dynamic loading of command definition.
+#               It resolves your customized command easily.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: loading FML::Command::command.
+#               prepare messages to return.
+# Return Value: none
 sub _evaluate_command
 {
     my ($curproc, $args) = @_;
