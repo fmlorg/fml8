@@ -1,4 +1,4 @@
-PERL = perl -w -I ../cpan/lib -I ./lib
+PERL = perl -w -I ../cpan/lib -I ./lib -I ./libexec
 
 all: test
 
@@ -25,7 +25,7 @@ test3:
 
 check:
 	@ for x in `find lib* -type f -print|grep pm|grep -v CPAN` ; do $(PERL) -c $$x || echo '' ;done
-	@ for x in libexec/loader libexec/process_switch ; do $(PERL) -c $$x || echo '' ;done
+	@ for x in libexec/loader ; do $(PERL) -c $$x || echo '' ;done
 
 clean:
 	@ find . |grep '~' |perl -nple unlink
