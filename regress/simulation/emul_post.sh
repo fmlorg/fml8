@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: emul_post.sh,v 1.3 2003/03/14 04:10:44 fukachan Exp $
+# $FML: emul_post.sh,v 1.4 2004/02/26 13:50:10 fukachan Exp $
 #
 
 debug=${debug:-1}
@@ -21,7 +21,7 @@ DO () {
 
 	regress/message/scramble.pl $msg |\
 	${PERL:-perl} -w fml/libexec/loader -c $maincf \
-		-o test_key=test_value \
+		-o test_key=test_value -o smtp_recipient_limit=1 \
 		/var/spool/ml/elena
 	echo "-- exit code: $?"
    )
