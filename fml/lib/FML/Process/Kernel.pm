@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.73 2002/02/01 12:03:56 fukachan Exp $
+# $FML: Kernel.pm,v 1.74 2002/02/17 13:46:55 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -481,6 +481,9 @@ sub _check_resitrictions
 		Log("${rule}: $match matches sender address");
 		return 0;
 	    }
+	}
+	elsif ($rule eq 'permit_anyone') {
+		return 1;
 	}
 	elsif ($rule eq 'permit_members_only') {
 	    # Q: the mail sender is a ML member?

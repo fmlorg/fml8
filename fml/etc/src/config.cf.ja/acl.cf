@@ -2,7 +2,12 @@
 
 # Descriptions: 投稿への制限
 #      History: fml 4.0 の PERMIT_POST_FROM と REJECT_ADDR を合体したもの
-#        Value: list of attributes
+#        Value: list of attributes (
+#			permit_anyone
+#			permit_members_only
+#			reject_system_accounts
+#			reject
+#		)
 #     Examples:
 post_restrictions	=	reject_system_accounts
 				permit_members_only
@@ -10,7 +15,12 @@ post_restrictions	=	reject_system_accounts
 
 # Descriptions: コマンドへの制限
 #      History: fml 4.0 の PERMIT_COMMAND_FROM と REJECT_ADDR を合体したもの
-#        Value: list of attributes
+#        Value: list of attributes (
+#			permit_anyone
+#			permit_members_only
+#			reject_system_accounts
+#			reject
+#		)
 #     Examples:
 command_restrictions	=	reject_system_accounts
 				permit_members_only
