@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: toymodel.pm,v 1.5 2001/12/22 09:21:13 fukachan Exp $
+# $FML: toymodel.pm,v 1.6 2001/12/24 07:40:57 fukachan Exp $
 #
 
 
@@ -32,7 +32,7 @@ model.
 =cut
 
 
-# Descriptions: add $addr 
+# Descriptions: add $addr
 #               create an SQL query and exetute it
 #    Arguments: OBJ($self) STR($addr)
 # Side Effects: update DB via SQL
@@ -51,7 +51,7 @@ sub add
 }
 
 
-# Descriptions: delete $addr 
+# Descriptions: delete $addr
 #               create an SQL query and exetute it
 #    Arguments: OBJ($self) STR($addr)
 # Side Effects: update DB via SQL

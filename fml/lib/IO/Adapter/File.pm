@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.25 2001/12/22 09:21:13 fukachan Exp $
+# $FML: File.pm,v 1.26 2001/12/24 07:40:56 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -275,7 +275,7 @@ close the opended file.
 =cut
 
 
-# Descriptions: EOF or not 
+# Descriptions: EOF or not
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: same as eof()

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.59 2001/12/23 11:37:07 fukachan Exp $
+# $FML: Distribute.pm,v 1.60 2001/12/24 04:55:14 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -319,7 +319,7 @@ sub _deliver_article
 
     # delay loading of module
     my $service = {};
-    eval q{ 
+    eval q{
 	use Mail::Delivery;
 	$service = new Mail::Delivery {
 	    log_function       => $fp,
