@@ -6,6 +6,7 @@ anal:
 html:	_subdir index.ja.html
 
 _subdir:
+	(cd Command; make html)
 	(cd Header; make html)
 	(cd Process; make html)
 	(cd Ticket; make html)
