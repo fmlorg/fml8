@@ -1,4 +1,47 @@
-X-Sequence: fml-devel 252
+* fml-help によるアンケートのまとめ
+
+まとめると、いまの機能でいいわけだ。content filter の起源となった 
+cutoff の機能はもう不要なんだね。ということなんだとおもふ。
+
+
+   Q: content filter ってどういう風に使ってますか？
+
+   A:	使う場合には、ほぼ (1) で決まり。
+
+	規模とポリシー(きびしくできるか否かなど)によって (2)もアリかも。
+
+	メールの型を厳しくできないＭＬは、そもそも content filter を 
+	on にしない(例えば社内ＭＬ？)。
+
+   パターン例: 
+
+	(1) text/plain と multipart の text/plain だけは通す
+		text/plain じゃないメールなんて○○ ML では不要
+		だいたい virus つきかもしれないじゃん
+
+	(2) multipart で text/plain 以外があるようなメールは拒否
+		virus つきかもしれないじゃん
+
+	(3) multipart の text/html 部分を削る
+		いわゆる html メール
+		＃ついでに text/plain に戻す(やりすぎかも…)？
+
+	(4) multipart の image/* 部分だけを削る
+		画像なんてＭＬに送るなよぉ
+
+	(5) text/html のメールなんて spam に決まってるから捨てる
+
+   TODO: 拡張機能？
+
+	Q: content-type が正しいかどうかを調べる
+		image/gif なら本当に gif ?
+
+	A: ん〜全部は無理だなぁ。File::なんとかで、
+	   ファイルのタイプを識別するモジュールとかあれば OK なのかも
+	   しれず(?)
+
+
+* X-Sequence: fml-devel 252
 
 フィルタ
 
@@ -286,4 +329,4 @@ article_text_plain_filter_rules	=	reject_not_iso2022jp_japanese_string
 					permit
 
 ----
-$FML: 01_RFC_FILTER.txt,v 1.1 2002/10/03 15:30:55 fukachan Exp $
+$FML: 01_RFC_FILTER.txt,v 1.2 2002/10/21 07:48:29 fukachan Exp $
