@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: CGI.pm,v 1.14 2001/06/10 11:24:12 fukachan Exp $
+# $FML: CGI.pm,v 1.15 2001/08/22 03:07:59 fukachan Exp $
 #
 
 package FML::Process::CGI;
@@ -142,7 +142,7 @@ sub _makefml
     my $method  = param('method');
     my $ml_name = param('ml_name');
     my $address = param('address') || '';
-    my $argv    = $args->{ ARGV } || '';
+    my $argv    = $curproc->command_line_argv();
     my @options = ();
 
     # arguments to pass off to each method
