@@ -780,7 +780,7 @@ sub _header_summary
     $from    = decode_mime_string($from, { charset => 'euc-japan' });
     $from    =~ s/\n/ /g;
 
-    my $br = '<BR>' if $self->{ _mode } eq 'html';
+    my $br = $self->{ _mode } eq 'html' ? '<BR>' : '';
     return 
 	$padding. "   From: ". $from ."$br\n". 
 	$padding. "Subject: ". $subject ."$br\n";
