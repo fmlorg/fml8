@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: .gen.sh,v 1.9 2002/06/27 10:36:02 fukachan Exp $
+# $FML: .gen.sh,v 1.10 2002/07/25 00:07:19 fukachan Exp $
 #
 
 tmp=default_config.cf.xx.$$
@@ -16,7 +16,7 @@ trap "rm -f $tmp" 0 1 3 15
 _EOF_
 
 	egrep -r 'config.*get_hook' ../lib |\
-	egrep -v '~:' |\
+	egrep -v '~:|bak:' |\
 	sed 	-e 's/^.*get_hook(//' \
 		-e 's/);//' \
 		-e "s@'@@g" \
