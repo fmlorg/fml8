@@ -11,6 +11,40 @@
 	気をつけてください。
 
 
+2004/12/18
+
+   デバッグモードでログの出方が変わるようにしました。
+	
+   variables
+	define $debug to control log messages.
+
+   FML::Process::Kernel 
+	logdebug() works if debug = yes defined.
+
+2004/12/15
+
+   Mail::Delivery::Queue 
+	randomize queue list more in fair-queue mode.
+	implement clean_up() method
+	
+   FML::Process::QueueManager 
+	log delay time in success of delivery.
+	
+   FML::Process::Utils 
+	implement remove_too_old_files_in_dir() method.
+	
+   FML::Process::Kernel 
+	remove too old files in tmp/ and incoming queue.
+
+   FML::Merge::FML4::RULES.txt 
+	fix/update rules
+	
+   FML::Merge::FML4::Rules 
+	regen.
+
+   FML::Merge::FML4::config_ph 
+	support more special conversion rules
+
 2004/12/09
 
    FML::Merge 
@@ -26,6 +60,18 @@
    FML::Process::Emulate Kernel 
 	run fallback to generate config.cf when config.ph is newer
 	than config.cf.
+
+   etc/compat/fml4
+	use -i option to generate default_config.ph
+	
+   FML::Merge::FML4::RULES.txt 
+	fix rules
+	
+   FML::Merge::FML4::Rules 
+	rules fixed.
+	
+   FML::Merge::FML4::config_ph 
+	enhance special handlings to support more rules
 
 2004/12/08
 
@@ -7953,4 +7999,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.232 2004/12/06 23:21:07 fukachan Exp $
+$FML: CHANGES.txt,v 1.233 2004/12/09 11:56:20 fukachan Exp $
