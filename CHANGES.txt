@@ -11,6 +11,66 @@
 	気をつけてください。
 
 
+2004/11/25
+
+   fml4 の fml.pl を fml8 の fml.pl に入れ換え可能とした。
+	/usr/sbin/sendmail (sendmail 互換コマンド)みたいな扱いですね。
+
+	fml.pl (fml8) が起動された時に config.cf が見つからないと、
+	ＭＬのホームディレクトリにある config.ph から config.cf を生成し、
+	それを使うことで fml8 プロセスとして動作します。
+
+	設定ファイルの自動変換が可能な範囲は限られていますが、fml4 の
+	メニューで設定可能な(単純な)ものなら自動変換して何とかなるよう
+	になっています。
+
+   variables
+	defind $compat_*
+	
+   FML::Install 
+	define install_compat_dir() method to install
+	etc/compat/ dir for fml4 compatibility codes.
+	
+   FML::ML::Control 
+	implement install_config_cf() method to install only config.cf.
+	
+   FML::Command::Admin::mergeml 
+	clean up around set_target_system()
+	
+   FML::Process::Utils 
+	o mkdir()::bug fix defined check for specified mode.
+	o implement default_config_cf_filepath() method.
+	
+   FML::Merge 
+	speculate_default_config_ph_path() returns specified location of
+	default_config.ph if ::usr::local::fml::default_config.ph not found.
+	
+   FML::Process::Emulate Kernel 
+	implement fallback function in resolve_ml_specific_variables().
+	
+	when resolver fails, resolve_ml_specific_variables calls fallback if
+	specified.
+	
+	FML::Process::Emulate uses this fallback mechanism to generate a
+	config.cf from fml4's config.ph file at the first time.
+
+2004/11/24
+
+   FML::Command::Admin::mergeml 
+	generate merge() method by separeting codes.
+
+2004/11/23
+
+   FML::Process::Kernel 
+	fix white space cosmetics.
+	
+   FML::Process::Emulate 
+	re-implement fml.pl as fml4 emulator which emulates fml8's
+	article_post or command_mail functions by following the arguments.
+	
+	TODO::when config.cf not exists, convert fml4 configurations to fml8
+	ones on the fly.
+
 2004/11/21
 
    メニュー形式で設定変更を可能にする
@@ -7854,4 +7914,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.229 2004/11/14 12:06:19 fukachan Exp $
+$FML: CHANGES.txt,v 1.230 2004/11/21 13:44:33 fukachan Exp $
