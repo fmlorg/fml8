@@ -28,10 +28,13 @@ sub new
     return bless $me, $type;
 }
 
+sub DESTROY {}
 
 sub add_ticket
 {
-    my ($self, $header, $config, $args) = @_;
+    my ($self, $curproc, $args) = @_;
+    my $config  = $curproc->{ config };
+    my $header  = $curproc->{ article }->{ header }; # FML::Header object
     my $subject = $header->get('subject');
 
     use FML::Header::Subject;

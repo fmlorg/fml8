@@ -9,9 +9,11 @@
 #
 
 package FML::Ticket::System;
+
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK);
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+use Base::Errors qw(error_reason error error_reset);
 
 require Exporter;
 @ISA = qw(Exporter);
@@ -33,16 +35,36 @@ sub increment_id
     use FML::SequenceFile;
     my $sfh = new FML::SequenceFile { sequence_file => $seq_file };
     my $id  = $sfh->increment_id;
-    $self->{ _error } = $sfh->error;
+    $self->error_reason( $sfh->error );
 
     $id;
 }
 
 
-sub error
+sub update_ticket_trace_cache
+{
+    my ($self, $curproc) = @_;
+    my $config    = $curproc->{ config };
+    my $db_dir    = $config->{ ticket_db_dir };
+    my $ml_name   = $config->{ ml_name };
+    my $cachefile = $db_dir. $ml_name;
+
+    use FileHandle;
+    my $fh = new FileHandle ">> $cachefile";
+    if (defined $fh) {
+	print $fh "";
+	close($fh);
+    }
+    else {
+	$self->error_reason("cannot open ticket cache");
+    }
+}
+
+
+sub AUTOLOAD
 {
     my ($self) = @_;
-    return $self->{ _error };
+    $self->error_reason("FYI: unknown method $AUTOLOAD is called");
 }
 
 

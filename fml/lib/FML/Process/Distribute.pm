@@ -193,7 +193,6 @@ sub _ticket_system_check
 {
     my ($curproc, $args) = @_;    
     my $config = $curproc->{ config };
-    my $header = $curproc->{ article }->{ header }; # FML::Header object
     my $model  = $config->{ ticket_model };
     my $pkg    = "FML::Ticket::Model::";
 
@@ -208,7 +207,8 @@ sub _ticket_system_check
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
 	my $ts = $pkg->new;
-	$ts->add_ticket($header, $config, $args) if $ts->can('add_ticket');
+	$ts->add_ticket($curproc, $args);
+	$ts->update_ticket_trace_cache($curproc);
     }
     else {
 	Log($@);
