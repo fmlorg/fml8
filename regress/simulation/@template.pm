@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: __template.pm,v 1.6 2001/05/16 13:30:46 fukachan Exp $
+# $FML: @template.pm,v 1.1 2001/08/07 12:23:48 fukachan Exp $
 #
 
 package __MODULE_NAME__;
@@ -33,6 +33,19 @@ sub new
     my $me     = {};
     return bless $me, $type;
 }
+
+
+=head1 Data IN/OUT among modules
+
+=head2 Style
+
+    OO
+
+=head2 Data IN  (from File, DBMS et.al.)
+
+    $curproc
+
+=head2 Data OUT (into File, DBMS et.al.)
 
 
 =head1 AUTHOR
