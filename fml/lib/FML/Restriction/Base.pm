@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.27 2004/01/21 03:41:27 fukachan Exp $
+# $FML: Base.pm,v 1.28 2004/02/04 14:41:47 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -91,6 +91,7 @@ Of cource, "user@domain", described above.
 my $domain_regexp  = '[-A-Za-z0-9\.]+';
 my $user_regexp    = '[-A-Za-z0-9\._\+]+';
 my $command_regexp = '[-A-Za-z0-9_]+';
+my $commail_regexp = '[-A-Za-z0-9_:]+'; # allow e.g. last:3
 my $file_regexp    = '[-A-Za-z0-9_]+';
 my $dir_regexp     = '[-A-Za-z0-9_]+';
 my $option_regexp  = '[-A-Za-z0-9]+';
@@ -121,8 +122,11 @@ my %basic_variable =
      # unix command switch
      'command_line_options' => $option_regexp,
 
+     # command mail
+     'command_mail_substr'  => $commail_regexp,
+
      # misc
-     'language'          => $option_regexp,
+     'language'             => $option_regexp,
      );
 
 

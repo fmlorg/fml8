@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.9.4.1 2004/03/04 04:07:54 fukachan Exp $
+# $FML: Command.pm,v 1.10 2004/03/04 04:30:15 fukachan Exp $
 #
 
 package FML::Restriction::Command;
@@ -95,7 +95,7 @@ sub command_regexp_match
 	    for my $x (@$data) {
 		next DATA unless $x;
 
-		unless ($safe->regexp_match('command', $x)) {
+		unless ($safe->regexp_match('command_mail_substr', $x)) {
 		    $r = 0;
 		    last DATA;
 		}
