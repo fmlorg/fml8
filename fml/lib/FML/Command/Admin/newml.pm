@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: newml.pm,v 1.2 2001/08/26 07:59:03 fukachan Exp $
+# $FML: newml.pm,v 1.1.1.1 2001/08/26 08:01:04 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -33,7 +33,7 @@ See C<FML::Command> for more details.
 
 =head1 METHODS
 
-=head2 C<newml($curproc, $optargs)>
+=head2 C<process($curproc, $optargs)>
 
 =cut
 
@@ -41,16 +41,16 @@ See C<FML::Command> for more details.
 sub process
 {
     my ($self, $curproc, $optargs) = @_;
-    my $config        = $curproc->{ config };
-    my $main_cf       = $curproc->{ main_cf };
-    my $member_map    = $config->{ primary_member_map };
-    my $recipient_map = $config->{ primary_recipient_map };
-    my $ml_name       = $optargs->{ ml_name };
+    my $config        = $curproc->{ 'config' };
+    my $main_cf       = $curproc->{ 'main_cf' };
+    my $member_map    = $config->{ 'primary_member_map' };
+    my $recipient_map = $config->{ 'primary_recipient_map' };
+    my $ml_name       = $optargs->{ 'ml_name' };
 
     # fundamental check
     croak("\$ml_name is not specified")    unless $ml_name;
 
-    my $ml_home_prefix     = $main_cf->{ ml_home_prefix };
+    my $ml_home_prefix     = $main_cf->{ 'ml_home_prefix' };
     my $ml_home_dir        = "$ml_home_prefix/$ml_name";
 
     use File::Utils qw(mkdirhier copy);
@@ -59,9 +59,11 @@ sub process
 
 	use File::Spec;
 
-	my $default_config_dir = $main_cf->{ default_config_dir };
+	my $default_config_dir = $main_cf->{ 'default_config_dir' };
 	my $src = File::Spec->catfile($default_config_dir, "config.cf");
 	my $dst = File::Spec->catfile($ml_home_dir, 'config.cf');
+
+	print STDERR "install $dst\n";
 	copy($src, $dst);
     }
     else {
