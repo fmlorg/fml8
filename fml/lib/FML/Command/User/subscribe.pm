@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: subscribe.pm,v 1.3 2001/10/10 14:50:03 fukachan Exp $
+# $FML: subscribe.pm,v 1.4 2001/10/11 23:59:03 fukachan Exp $
 #
 
 package FML::Command::User::subscribe;
@@ -55,6 +55,11 @@ sub process
 
     # if already member, subscriber request is wrong.
     if ($cred->is_member($curproc, { address => $address })) {
+	$curproc->reply_message_nl('error.already_member', 
+				   'already member',
+				   {
+				       _arg_address => $address
+				   });
 	croak("already member");
     }
     # if not, try confirmation before subscribe
@@ -69,7 +74,8 @@ sub process
 	    buffer    => $command,
 	};
 	my $id = $confirm->assign_id;
-	$curproc->reply_message( $id );
+	$curproc->reply_message_nl('command.confirm');
+	$curproc->reply_message("\n$id\n");
     }
 }
 
