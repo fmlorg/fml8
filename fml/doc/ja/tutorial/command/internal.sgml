@@ -1,5 +1,5 @@
 <!--
-   $FML: internal.sgml,v 1.7 2004/03/12 14:04:09 fukachan Exp $
+   $FML: internal.sgml,v 1.8 2004/04/07 11:07:00 fukachan Exp $
 -->
 
 <sect1 id="fml.command.internal.change">
@@ -27,7 +27,7 @@ sub myProcHelpFileSendBack
 {
     local($proc, *Fld, *e, *misc) = @_;
     my $UJA_FILE = "/some/where/help";
-    &SendFile($Envelope{'Addr2Reply:'}, "UJA $ML_FN", $UJA_FILE);
+    &amp;SendFile($Envelope{'Addr2Reply:'}, "UJA $ML_FN", $UJA_FILE);
 }
 </screen>
 </para>
