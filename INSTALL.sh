@@ -80,6 +80,7 @@ cp -pr fml/libexec/*	$libexec_dir/$fml_version/
 PROGRAMS="fml.pl distribute command ";
 PROGRAMS="$PROGRAMS fmlserv mead fmlconf fmldoc"
 PROGRAMS="$PROGRAMS fmlticket fmlticket.cgi"
+PROGRAMS="$PROGRAMS makefml"
 
 if [ ! -f $libexec_dir/loader ];then
 
