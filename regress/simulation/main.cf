@@ -1,5 +1,5 @@
 #
-# $FML: main.cf,v 1.9 2002/01/20 13:43:22 fukachan Exp $
+# $FML: main.cf,v 1.10 2002/01/27 08:31:30 fukachan Exp $
 # 
 
 fml_version	=	__fml_version__
@@ -35,7 +35,7 @@ default_paths_cf	=	$default_config_dir/paths.cf
 
 
 # default domain
-default_domain = fml.org
+default_domain = home.fml.org
 
 
 # domain specific configurations
