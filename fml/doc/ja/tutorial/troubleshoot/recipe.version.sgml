@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: recipe.version.sgml,v 1.2 2002/10/29 04:10:08 fukachan Exp $
 -->
 
 <qandaentry>
@@ -32,7 +32,7 @@ Postfix のバージョンが知りたい。
 <answer>
 <para>
 <screen>
-postconf mail_version
+% postconf mail_version
 </screen>
 </para>
 </answer>
