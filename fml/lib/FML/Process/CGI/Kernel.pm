@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.28 2002/06/01 02:22:52 fukachan Exp $
+# $FML: Kernel.pm,v 1.29 2002/06/21 08:20:12 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -59,29 +59,50 @@ sub new
 {
     my ($self, $args) = @_;
     my $type = ref($self) || $self;
-    my $is_need_ml_name = $args->{ 'need_ml_name' };
 
-    # we should get $ml_name from HTTP.
+    # ml_name: we should get $ml_name from HTTP.
     use FML::Process::Utils;
-    my $ml_home_prefix = FML::Process::Utils::__ml_home_prefix_from_main_cf($args);
-    my $ml_name        = safe_param_ml_name($self) || do {
+    my $ml_name = safe_param_ml_name($self) || do {
+	my $is_need_ml_name = $args->{ 'need_ml_name' };
 	if ($is_need_ml_name) {
 	    my $r = "fail to get ml_name from HTTP";
 	    croak("__ERROR_cgi.fail_to_get_ml_name__: $r");
 	}
     };
 
-    use File::Spec;
-    my $ml_home_dir = File::Spec->catfile($ml_home_prefix, $ml_name);
-    my $config_cf   = File::Spec->catfile($ml_home_dir, 'config.cf');
-
-    # fix $args { cf_list, ml_home_dir };
-    my $cflist = $args->{ cf_list };
-    push(@$cflist, $config_cf);
-    $args->{ ml_home_dir } =  $ml_home_dir;
-
-    # o.k. load configurations
+    # set up $curproc for further steps
+    # XXX set up the dummy value for $ml_home_prefix (default value)
+    #     anyway to avoid the error of "new FML::Process::Kernel".
+    $args->{ ml_home_prefix } = $args->{ main_cf }->{ default_ml_home_prefix };
     my $curproc = new FML::Process::Kernel $args;
+
+    # ml_domain
+    my $hints     = $curproc->hints();
+    my $ml_domain = $hints->{ ml_domain };
+
+    # ml_home_prefix
+    my $ml_home_prefix = $curproc->ml_home_prefix( $ml_domain );
+
+    # ml_home_dir
+    my ($ml_home_dir, $config_cf);
+    if ($ml_name) {
+	use File::Spec;
+	$ml_home_dir = $curproc->ml_home_dir($ml_name, $ml_domain);
+	$config_cf   = File::Spec->catfile($ml_home_dir, 'config.cf');
+
+	# fix $args { cf_list, ml_home_dir };
+	my $cflist = $args->{ cf_list };
+	push(@$cflist, $config_cf);
+	$args->{ ml_home_dir } =  $ml_home_dir;
+    }
+
+    # reset $ml_domain to handle virtual domains
+    my $config = $curproc->{ config };
+    $config->set('ml_domain',      $ml_domain);
+    $config->set('ml_home_prefix', $ml_home_prefix);
+    $config->set('ml_home_dir',    $ml_home_dir);
+
+    # redefine $curproc as the object $type.
     return bless $curproc, $type;
 }
 
@@ -218,56 +239,59 @@ sub _drive_cgi_by_table
     my ($curproc, $args) = @_;
     my $r = '';
 
-    #
+    # 
     #   nw   north  ne
     #   west center east
     #   sw   south  se
     #
-    # table starts.
+    my $function_table = {
+	nw    => '',
+	north => 'run_cgi_title',
+	ne    => '',
+
+	'west'   => 'run_cgi_navigator', 
+	'center' => 'run_cgi_main',
+	'east'   => 'run_cgi_options',
+
+	'sw'     => '',
+	'south'  => '',
+	'se'     => '',
+    };
+
+    my $td_attr = {
+	nw       => '',
+	north    => '',
+	ne       => '',
+
+	'west'   => 'valign="top" BGCOLOR="#E0E0F0"', 
+	'center' => 'rowspan=2 valign="top"',
+	'east'   => 'rowspan=2 valign="top"',
+
+	'sw'     => '',
+	'south'  => '',
+	'se'     => '',
+    };
+
     print "<table border=0 cellspacing=\"0\" cellpadding=\"5\">\n";
-
-    # the first line
     print "<tr>\n";
-    print "<td>\n";
-    print "</td>\n";
-    print "<td>\n";
+    for my $pos ('nw', 'north', 'ne',
+		 '!',
+		 'west', 'center', 'east',
+		 '!',
+		 'sw', 'south', 'se') {
+	if ($pos eq '!') { print "</tr>\n\n<tr>\n"; next;}
 
-    eval q{ $curproc->run_cgi_title($args);};
-    if ($r = $@) { _error_string($curproc, $r);}
+	my $attr = $td_attr->{ $pos };
+	print $attr ? "<td $attr>\n" : "<td>\n";
 
-    print "</td>\n";
-    print "<td></td>\n";
+	my $fp   = $function_table->{ $pos };
+	if ($fp) {
+	    eval q{ $curproc->$fp($args);};
+	    if ($r = $@) { _error_string($curproc, $r);}
+	}
+	print "</td>\n";
+    }
     print "</tr>\n";
-
-    # the second line
-    print "<tr>\n";
-    print "<td valign=\"top\" BGCOLOR=\"#E0E0F0\">\n";
-
-    eval q{ $curproc->run_cgi_navigator($args);};
-    if ($r = $@) { _error_string($curproc, $r);}
-
-    print "<td rowspan=2 valign=\"top\">\n";
-
-    eval q{ $curproc->run_cgi_main($args);};
-    if ($r = $@) { _error_string($curproc, $r);}
-
-    print "</td>\n";
-    print "<td rowspan=2 valign=\"top\">\n";
-
-    eval q{ $curproc->run_cgi_options($args);};
-    if ($r = $@) { _error_string($curproc, $r);}
-
-    print "</td>\n";
-    print "</tr>\n";
-
-    # the 3rd line
-    print "<tr>\n";
-    print "<td></td>\n";
-    print "<td></td>\n";
-    print "<td></td>\n";
-    print "</tr>\n";
-
-    # table ends.
     print "</table>\n";
 }
 
