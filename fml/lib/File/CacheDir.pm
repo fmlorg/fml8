@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CacheDir.pm,v 1.25 2003/08/23 04:35:42 fukachan Exp $
+# $FML: CacheDir.pm,v 1.26 2003/12/29 15:02:19 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -12,6 +12,8 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use IO::File;
+use File::Spec;
+
 
 =head1 NAME
 
@@ -133,16 +135,14 @@ sub new
 # Return Value: none
 sub _take_file_name
 {
-    my ($self, $args) = @_;
-    my $directory          = $args->{ directory } || '.';
-    my $file_name          = $args->{ file_name } || '';
+    my ($self, $args)      = @_;
     my $sequence_file_name = $args->{ sequence_file_name } || '.seq';
-    my $modulus            = $args->{ modulus } || 128;
+    my $directory          = $args->{ directory }  || '.';
+    my $filename_prefix    = $args->{ file_name }  || '';
+    my $modulus            = $args->{ modulus }    || 128;
     my $cache_type         = $args->{ cache_type } || 'cyclic';
-    my $dir_mode           = $args->{ dir_mode } || 0755;
-
+    my $dir_mode           = $args->{ dir_mode }   || 0755;
     my $file;
-    eval q{ use File::Spec;};
 
     unless (-d $directory) {
 	use File::Path;
@@ -151,24 +151,25 @@ sub _take_file_name
 
     if ($cache_type eq 'temporal') {
 	my ($sec,$min,$hour,$mday,$mon,$year,$wday) = localtime(time);
-	my $file_name = sprintf("%04d%02d%02d", 1900+$year, $mon+1, $mday);
-	$file = File::Spec->catfile($directory, $file_name);
+	my $filename = sprintf("%04d%02d%02d", 1900+$year, $mon+1, $mday);
+	$file = File::Spec->catfile($directory, $filename);
     }
     elsif ($cache_type eq 'cyclic') {
 	my $seq_file = File::Spec->catfile($directory, $sequence_file_name);
 
-	# XXX-TODO: remove File::Sequence dependence. ?
-	my $sfh = undef;
-	eval q{ use File::Sequence;
-		$sfh = new File::Sequence {
-		    sequence_file => $seq_file,
-		    modulus       => $modulus,
-		};
-	};
-	if (defined $sfh) {
-	    my $id = $sfh->increment_id;
-	    $file  = File::Spec->catfile($directory, $file_name.$id);
+	use IO::Adapter;
+	my $io = new IO::Adapter $seq_file;
+	my $id = $io->sequence_increment();
+
+	# updated.
+	my $saved_id = $id;
+	$id = $id % $modulus;
+	if ($saved_id != $id) {
+	    $io->sequence_replace($id);
 	}
+
+	# file.
+	$file = File::Spec->catfile($directory, $filename_prefix.$id);
     }
 
     $self->{ _cache_type } = $cache_type || 'cyclic';
@@ -293,8 +294,6 @@ sub get_latest_value
     for my $dir (readdir($dh)) { push(@dh, $dir) if $dir =~ /^\d+/;}
     @dh = sort { $b <=> $a } @dh;
 
-    eval q{ use File::Spec;};
-
   DIR_ENTRY:
     for my $_dir (@dh) {
 	next DIR_ENTRY if $_dir =~ /^\./;
@@ -397,6 +396,24 @@ sub set
     }
 }
 
+
+#
+# debug
+#
+if ($0 eq __FILE__) {
+    my $tmp_dir = "/tmp/cachedir";
+
+    unless (-d $tmp_dir) {
+	eval q{
+	    use File::Path;
+	    mkpath( [ $tmp_dir ], 0, 0755);
+	};
+    }
+    my $cache = new File::CacheDir { directory => $tmp_dir };
+    $cache->set(time, time);
+
+    print STDERR "see $tmp_dir\n";
+}
 
 =head1 CODING STYLE
 
