@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.9 2001/04/28 10:01:47 fukachan Exp $
+# $FML: Makefile,v 1.10 2001/04/30 10:21:43 fukachan Exp $
 #
 
 # targets
@@ -13,7 +13,7 @@ ID          = techtips.html
 
 SOURCE      = book
 BOOK        = tutorial
-BOOK_ID     = fml-devel
+BOOK_ID     = index
 TARGET_DIR  = ../../../../Documentation/ja/$(BOOK)
 
 

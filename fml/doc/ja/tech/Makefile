@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.2 2001/04/28 10:01:47 fukachan Exp $
+# $FML: Makefile,v 1.3 2001/04/28 14:37:03 fukachan Exp $
 #
 
 ###
@@ -8,7 +8,7 @@
 
 SOURCE      = book
 BOOK        = tech
-BOOK_ID     = tips
+BOOK_ID     = index
 TARGET_DIR  = ../../../../Documentation/ja/$(BOOK)
 
 # local
