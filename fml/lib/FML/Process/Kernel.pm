@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Kernel.pm,v 1.43 2001/05/05 03:56:09 fukachan Exp $
+# $FML: Kernel.pm,v 1.44 2001/05/16 11:25:49 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -602,6 +602,8 @@ sub _queue_in
     use Mail::Delivery::Queue;
     my $queue_dir = $config->{ mqueue_dir };
     my $queue     = new Mail::Delivery::Queue { directory => $queue_dir };
+    $queue->set('sender',     $maintainer);
+    $queue->set('recipients', [ $recipient ]);
     $queue->in( $msg );
     $queue->setrunnable();
 }

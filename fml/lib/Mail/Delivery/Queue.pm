@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Queue.pm,v 1.1 2001/05/09 00:55:54 fukachan Exp $
+# $FML: Queue.pm,v 1.2 2001/05/16 11:45:23 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -65,8 +65,9 @@ constructor. You must specify C<queue directory> as
 
     $args->{ dirctory } .
 
-C<new()> assigns the queue id, queue files to be used but do no actual
-works.
+If C<id> is not specified,
+C<new()> assigns the queue id, queue files to be used.
+C<new()> assigns them but do no actual works.
 
 =cut
 
@@ -78,14 +79,20 @@ sub new
     my $me     = {};
 
     my $dir = $args->{ directory } || croak("specify directory");
-    my $id  = _new_queue_id();
+    my $id  = $args->{ id } ||  _new_queue_id();
     $me->{ _directory } = $dir;
     $me->{ _id }        = $id;
     $me->{ _status }    = "new";
     $me->{ _new_qf }    = "$dir/new/$id";
     $me->{ _active_qf } = "$dir/active/$id";
 
-    for ($dir, "$dir/active", "$dir/new", "$dir/deferred", "$dir/info") {
+    # infomation for delivery
+    $me->{ _info }->{ sender }     = "$dir/info/sender/$id";
+    $me->{ _info }->{ recipients } = "$dir/info/recipients/$id";
+
+    for ($dir, 
+	 "$dir/active", "$dir/new", "$dir/deferred",
+	 "$dir/info", "$dir/info/sender", "$dir/info/recipients") {
 	-d $_ || _mkdirhier($_);
     }
 
@@ -134,6 +141,45 @@ sub filename
 }
 
 
+=head2 C<lock()>
+
+=head2 C<unlock()>
+
+=cut
+
+use POSIX qw(EAGAIN ENOENT EEXIST O_EXCL O_CREAT O_RDONLY O_WRONLY); 
+use FileHandle;
+
+sub LOCK_SH {1;}
+sub LOCK_EX {2;}
+sub LOCK_NB {4;}
+sub LOCK_UN {8;}
+
+
+sub lock
+{
+    my ($self) = @_;
+    my $fh = new FileHandle $self->{ _active_qf };
+
+    eval {
+	local($SIG{ALRM}) = sub { croak("lock timeout");}; 
+        alarm( 10 );
+	flock($fh, &LOCK_EX);
+	$self->{ _lock }->{ _fh } = $fh;
+    };
+
+    ($@ =~ /lock timeout/) ? 0 : 1;
+}
+
+
+sub unlock
+{
+    my ($self) = @_;
+    my $fh = $self->{ _lock }->{ _fh };
+    flock($fh, &LOCK_UN);
+}
+
+
 =head2 C<in($msg)>
 
 You specify C<$msg>, which is C<Mail::Message> object.
@@ -163,12 +209,37 @@ sub in
 }
 
 
-=head2 C<info($args)>
+=head2 C<set($key, $args)>
 
-   $args = {
-	sender     => $sender,
-	recipients => [ $recipient ],
-   }
+   $queue->set('sender', $sender);
+   $queue->set('recipients', [ $recipient0, $recipient1 ] );
+
+=cut
+
+sub set
+{
+    my ($self, $key, $value) = @_;
+    my $qf_sender     = $self->{ _info }->{ sender };
+    my $qf_recipients = $self->{ _info }->{ recipients };
+
+    use FileHandle;
+
+    if ($key eq 'sender') {
+	my $fh = new FileHandle "> $qf_sender";
+	if (defined $fh) {
+	    print $fh $value, "\n";
+	    $fh->close;
+	}
+    }
+    elsif ($key eq 'recipients') {
+	my $fh = new FileHandle "> $qf_recipients";
+	if (defined $fh) {
+	    for (@$value) { print $fh $_, "\n";}
+	    $fh->close;
+	}
+    }
+}
+
 
 =head2 C<setrunnable()>
 
@@ -193,6 +264,16 @@ remove all queue assigned to this object C<$self>.
 sub setrunnable
 {
     my ($self) = @_;
+    my $qf_new        = $self->{ _new_qf };
+    my $qf_sender     = $self->{ _info }->{ sender };
+    my $qf_recipients = $self->{ _info }->{ recipients };
+
+    # There must be a set of these three files.
+    unless (-f $qf_new && -f $qf_sender && -f $qf_recipients) {
+	return 0;
+    }
+
+    # move new/$id to active/$id
     rename( $self->{ _new_qf }, $self->{ _active_qf } );
 }
 
@@ -200,15 +281,20 @@ sub setrunnable
 sub remove
 {
     my ($self) = @_;
-    unlink $self->{ _new_qf }    if -f $self->{ _new_qf };
-    unlink $self->{ _active_qf } if -f $self->{ _active_qf };
+
+    for ($self->{ _new_qf },
+	 $self->{ _active_qf },
+	 $self->{ _info }->{ sender },
+	 $self->{ _info }->{ recipients }) {
+	unlink $_ if -f $_;
+    }
 }
 
 
 sub DESTROY
 {
     my ($self) = @_;
-    unlink $self->{ _new_qf }    if -f $self->{ _new_qf };
+    unlink $self->{ _new_qf } if -f $self->{ _new_qf };
 }
 
 
