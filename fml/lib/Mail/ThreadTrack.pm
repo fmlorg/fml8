@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: ThreadTrack.pm,v 1.8 2001/11/03 11:57:05 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.9 2001/11/04 13:43:50 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -112,6 +112,9 @@ sub new
     $me->{ _index_db }    = File::Spec->catfile($base_dir, "index");
     $me->{ _db_dir }      = File::Spec->catfile($base_dir, $ml_name);
     $me->{ _fd }          = $args->{ fd } || \*STDOUT;
+
+    # ::Print parameters
+    $me->{ _article_summary_lines } = 3;
 
     # log function pointer
     if (defined $args->{ logfp }) {
