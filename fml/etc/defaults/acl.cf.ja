@@ -14,11 +14,11 @@ COMMAND_RESTRICTIONS	=	reject_system_accounts
 
 member_maps		=	file:$ml_home_dir/members 
 
-#recipient_maps		=	file:w/members
-#				unix.group:fml
-recipient_maps		=	file:w/members
+recipient_maps		=	file:$ml_home_dir/recipients
+				file:$ml_home_dir/actives
+				unix.group:fml
 
-recipient_limit		=	2
+recipient_limit		=	1000
 
 mta			=	[::1]:25
 				127.0.0.1:25

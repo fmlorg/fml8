@@ -1,69 +1,9 @@
 =head1 configurations
 
-DOMAIN	= fml.org
-FQDN	= ahodori.fml.org
+domain              = fml.org
+fqdn                = ahodori.fml.org
 
-ml_home_dir = /var/spool/ml/elena
+address_for_post    = elena@fml.org   
+address_for_command = elena-ctl@fml.org 
 
-
-=head2 ロック
-
-lock_dir	= $ml_home_dir/var/lock
-
-lock_file	= $lock_dir/simplelock
-
-lock_type	= flock
-
-
-=head2 log
-
-log_file	= $ml_home_dir/log
-
-
-=head2 アクセス制御
-
-# 配列表現には本質的に
-
-# 現在の PERMIT_POST_FROM と REJECT_ADDR をがったいしたもの
-POST_RESTRICTIONS	=	reject_system_accounts
-				permit_members_only
-				reject
-
-# 現在の PERMIT_COMMAND_FROM と REJECT_ADDR をがったいしたもの
-COMMAND_RESTRICTIONS	=	reject_system_accounts
-				permit_members_only
-				reject
-
-member_maps		=	file:$ml_home_dir/members 
-
-#recipient_maps		=	file:w/members
-#				unix.group:fml
-recipient_maps		=	file:w/members
-
-recipient_limit		=	2
-
-mta			=	[::1]:25
-				127.0.0.1:25
-				192.168.148.193:25
-				192.168.148.194:25
-
-=head2 すぷーる
-
-sequence_file	= $ml_home_dir/seq
-
-use_spool	= yes
-
-spool_dir	= $ml_home_dir/spool
-
-spool_type	= plane
-
-
-=head1 hooks
-=cut
-
-# 現在の LOCAL_CONFIG で別れ目になる行
-# HOOK 
-
-print "run hooks here.\n";
-
-1;
+ml_home_dir         = /var/spool/ml/elena

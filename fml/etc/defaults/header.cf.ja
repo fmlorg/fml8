@@ -1,11 +1,4 @@
 ###
-### basic logging
-###
-# logfile
-log_file	=	/tmp/log
-
-
-###
 ### Section: Header Manipulations
 ###
 
@@ -14,11 +7,3 @@ header_checks        =	validate_message_id
 			verify_unique_list_post
 
 header_rewrite_rules =	add_rfc2369
-
-
-
-
-###
-### default_config.cf file ends here.
-###
-=cut

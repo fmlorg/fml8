@@ -1,0 +1,10 @@
+###
+### basic logging
+###
+
+# logfile
+log_file	=	/tmp/log
+
+# type of logging
+# value: file / syslog
+log_type	=	file
