@@ -9,7 +9,7 @@
 #
 
 # ドメイン名 (参照: 以下のアドレスを見よ $ml_domain がこの値に展開される)
-ml_domain           = fml.org
+ml_domain           = home.fml.org
 
 # ML の名前
 ml_name		    = elena		
