@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.67 2004/06/11 15:12:39 tmu Exp $
+# $FML: ToHTML.pm,v 1.68 2004/06/14 13:21:33 tmu Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.67 2004/06/11 15:12:39 tmu Exp $;
+my $version = q$FML: ToHTML.pm,v 1.68 2004/06/14 13:21:33 tmu Exp $;
 my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $versionid = "$1";
@@ -792,10 +792,10 @@ sub _format_index_navigator
     my $indexs = \@indexs;
 
     for my $index (@$indexs) {
-	$str .= qq{<A HREF=\"${prefix}index_all.html\">[ID Index]</A>\n} if($index eq "all");
-	$str .= qq{<A HREF=\"${prefix}thread.html\">[Thread Index]</A>\n} if($index eq "thread");
-	$str .= qq{<A HREF=\"${prefix}monthly_index.html\">[Monthly ID Index]</A>\n} if($index eq "month");
-	$str .= qq{<A HREF=\"${prefix}index.html\">[Top Index]</A>\n} if($index eq "top");
+	$str .= qq{<A HREF=\"${prefix}index_all.html\">[ID Index]</A>\n} if ($index eq "all");
+	$str .= qq{<A HREF=\"${prefix}thread.html\">[Thread Index]</A>\n} if ($index eq "thread");
+	$str .= qq{<A HREF=\"${prefix}monthly_index.html\">[Monthly ID Index]</A>\n} if ($index eq "month");
+	$str .= qq{<A HREF=\"${prefix}index.html\">[Top Index]</A>\n} if ($index eq "top");
     };
 
 return $str;
@@ -2203,22 +2203,22 @@ sub htmlify_file
     $html->update_msg_html_links( $id );
 
     for my $index (@$indexs) {
-	if($index eq "month") {
+	if ($index eq "month") {
 	    _PRINT_DEBUG("-- monthly id index");
 	    $html->update_monthly_id_index({ id => $id });
 	}
 
-	if($index eq "all") {
+	if ($index eq "all") {
 	    _PRINT_DEBUG("-- id index");
 	    $html->update_id_index({ id => $id });
 	}
 
-	if($index eq "thread") {
+	if ($index eq "thread") {
 	    _PRINT_DEBUG("-- thread index");
 	    $html->update_thread_index({ id => $id });
 	}
 
-	if($index eq "top") {
+	if ($index eq "top") {
 	    _PRINT_DEBUG("-- top index");
 	    $html->create_top_index();
 	}
