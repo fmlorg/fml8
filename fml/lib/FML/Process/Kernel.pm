@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.148 2002/12/24 10:19:46 fukachan Exp $
+# $FML: Kernel.pm,v 1.149 2002/12/25 03:11:02 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1101,11 +1101,16 @@ If you attach a plain text with the charset = iso-2022-jp,
     });
 
 =head3 CAUTION
+
 makefml not support message handling not yet.
 
 =cut
 
 
+# Descriptions: return recipient info.
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: ARRAY( ARRAY_REF, ARRAY_REF)
 sub _analyze_recipients
 {
     my ($curproc, $args) = @_;
@@ -1154,6 +1159,10 @@ sub _analyze_recipients
 }
 
 
+# Descriptions: return header parameters
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: HASH_REF
 sub _analyze_header
 {
     my ($curproc, $args) = @_;
