@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.7 2004/07/23 15:59:08 fukachan Exp $
+# $FML: config_ph.pm,v 1.8 2004/09/06 07:06:26 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
@@ -315,12 +315,30 @@ translate fml4 config {$key => $value } to fml8 one if could.
 
 
 # Descriptions: translate fml4 config {$key => $value } to fml8 one if could.
-#    Arguments: OBJ($self) STR($key) STR($value)
+#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR
 sub translate
 {
-    my ($self, $key, $value) = @_;
+    my ($self, $diff, $key, $value) = @_;
+    my $dispatch = {
+	rule_convert           => \&translate_xxx,
+	rule_prefer_fml4_value => \&translate_xxx,
+    };
+
+    use FML::Merge::FML4::Rules;
+    my $s = FML::Merge::FML4::Rules::translate($self, $dispatch, $diff, $key, $value);
+    return $s;
+}
+
+
+# Descriptions: translate fml4 config {$key => $value } to fml8 one if could.
+#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+# Side Effects: none
+# Return Value: STR
+sub translate_xxx
+{
+    my ($self, $diff, $key, $value) = @_;
 
     if ($key eq 'SUBJECT_TAG_TYPE') {
 	if ($value eq '[:]') {
@@ -330,8 +348,7 @@ sub translate
 	    return $s;
 	}
     }
-
-    if ($key eq 'PERMIT_POST_FROM') {
+    elsif ($key eq 'PERMIT_POST_FROM') {
 	if ($value eq 'anyone') {
 	    return 'article_post_restrictions = reject_system_special_accounts
                                                 permit_anyone
@@ -339,7 +356,7 @@ sub translate
 	}
     }
 
-    return '';
+    return '# UNKNOWN TRANSLATION RULE';
 }
 
 
