@@ -1,0 +1,37 @@
+左のナビゲーションバーから、
+ＭＬ(mailing list)とコマンド(command)を選択し、
+submit ボタンを押して下さい。
+
+<table>
+<tr>
+	<td>	adduser
+	<td>	アドレスの追加
+</tr>
+
+<tr>
+	<td>	deluser
+	<td>	アドレスの削除
+</tr>
+
+<tr>
+	<td>	addadmin
+	<td>	リモート管理者アドレスの追加
+</tr>
+
+<tr>
+	<td>	deladmin
+	<td>	リモート管理者アドレスの削除
+</tr>
+
+<tr>
+	<td>	list
+	<td>	アドレスリストを見る
+</tr>
+
+<tr>
+	<td>	log
+	<td>	ログを見る
+</tr>
+
+
+</table>
