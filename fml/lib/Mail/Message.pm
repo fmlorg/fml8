@@ -4,13 +4,15 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.12 2001/04/09 14:07:01 fukachan Exp $
+# $FML: Message.pm,v 1.13 2001/04/10 11:48:06 fukachan Exp $
 #
 
 package Mail::Message;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $InComingMessage);
 use Carp;
+
+my $debug = $ENV{'debug'} ? 1 : 0;
 
 # virtual content-type
 my %virtual_data_type = 
@@ -255,8 +257,9 @@ sub _set_up_template
 
     # information on data and the type for the message.
     $self->{'mime_version'}   = $args->{'mime_version'}   || 1.0;
-    $self->{'data_type'}      = $args->{'data_type'  }    || 'text/plain';
-    $self->{'base_data_type'} = $args->{'base_data_type'} || $self->{'data_type'} || undef;
+    $self->{'data_type'}      = $args->{'data_type'}      || 'text/plain';
+    $self->{'base_data_type'} = 
+	$args->{'base_data_type'} || $self->{'data_type'} || undef;
 
     # default print out mode
     set_print_mode($self, 'raw');
@@ -477,6 +480,8 @@ sub _build_body_object
 {
     my ($self, $args, $result) = @_;
 
+    # XXX we use data_type (type defined in Content-Type: field) here.
+    # XXX "base_data_type" is used only internally.
     return new Mail::Message {
 	boundary  => $self->_header_mime_boundary($result->{ header }),
 	data_type => $self->_header_data_type($result->{ header }),
@@ -491,7 +496,12 @@ return Mail::Header object for the message header.
 
 =head2 C<rfc822_message_body()>
 
-return a Mail::Message object or a chain of objects for the message body.
+alias of C<rfc822_message_body_head()>.
+
+=head2 C<rfc822_message_body_head()>
+
+return the first or the head Mail::Message object in a chain for the
+message body.
 
 =cut
 
@@ -499,20 +509,24 @@ return a Mail::Message object or a chain of objects for the message body.
 sub rfc822_message_header
 {
     my ($self) = @_;
-    ($self->{ data_type } eq 'text/rfc822-headers') ? $self->{ data } : undef;
+    my $m = $self->find( { data_type => 'text/rfc822-headers' } );
+
+    defined $m ? $m->{ data } : undef ;
+}
+
+
+sub rfc822_message_body_head
+{
+    my ($self) = @_;
+    my $type = $self->get_data_type();
+    return ( ($type eq 'text/rfc822-headers') ? $self->{ next } : undef );
 }
 
 
 sub rfc822_message_body
 {
     my ($self) = @_;
-
-    if ($self->{ data_type } eq 'text/rfc822-headers') {
-	$self->{ next } || undef;
-    }
-    else {
-	$self;
-    }
+    $self->rfc822_message_body_head();
 }
 
 
@@ -526,6 +540,10 @@ For example,
 
 C<$m> is the first "text/plain" object in a chain of C<$msg> object.
 
+    $m = $msg->find( { data_type_regexp => 'text' } );
+
+C<$m> is the first "text/*" object in a chain of C<$msg> object.
+
 =cut
 
 sub find
@@ -536,7 +554,21 @@ sub find
 	my $type = $args->{ data_type };
 	my $mp   = $self;
 	for ( ; $mp; $mp = $mp->{ next }) {
+	    if ($debug) { print "   msg->find(", $type, " eq $type)\n";}
 	    if ($type eq $mp->data_type()) {
+		if ($debug) { print "   msg->find($type match) = $mp\n";}
+		return $mp;
+	    }
+	}
+    }
+    elsif (defined $args->{ data_type_regexp }) {
+	my $regexp = $args->{ data_type_regexp };
+	my $mp     = $self;
+	for ( ; $mp; $mp = $mp->{ next }) {
+	    my $type = $mp->data_type();
+	    if ($debug) { print "   msg->find(", $type, "=~ /$regexp/)\n";}
+	    if ($type =~ /$regexp/) {
+		if ($debug) { print "   msg->find($type match) = $mp\n";}
 		return $mp;
 	    }
 	}
@@ -570,7 +602,7 @@ sub _header_mime_boundary
     my ($self, $header) = @_;
     my $m = $header->get('content-type');
 
-    if ($m =~ /boundary=\"(.*)\"/) {
+    if ($m =~ /boundary=\"(.*)\"/i) { # case insensitive
 	return $1;
     }
     else {
@@ -1213,9 +1245,16 @@ my $total = 0;
 sub size
 {
     my ($self) = @_;
-    my $rc = $self->{ data };
+    my $rc = $self->{ data } || undef;
     my $pb = $self->{ offset_begin };
     my $pe = $self->{ offset_end };
+
+    # fundamental check
+    unless (defined($rc) && ref($rc) eq 'SCALAR') {
+	# XXX simple check (needed ?)
+	# confess("Mail::Message->size() is given invalid object ($self)\n");
+	return 0;
+    }
 
     if ((defined $pe) && (defined $pb)) {
 	if ($pe - $pb > 0) {
@@ -1224,7 +1263,7 @@ sub size
 	}
     }
     else {
-	defined $rc ? length($$rc) : 0;
+	length($$rc);
     }
 }
 
