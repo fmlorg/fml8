@@ -194,9 +194,6 @@ sub _update_db
 sub list_up
 {
     my ($self, $curproc, $args) = @_;
-    my $config    = $curproc->{ config };
-    my $pcb       = $curproc->{ pcb };
-    my $ml_name   = $config->{ ml_name };
 
     $self->_open_db($curproc, $args);
 
@@ -206,11 +203,16 @@ sub list_up
     my $rh_status    = $self->{ _hash_table }->{ _status };
     my $rh_articles  = $self->{ _hash_table }->{ _articles };
 
+    use FML::Date;
+    my $dh = new FML::Date;
+
     my ($tid, $status) = ();
     while (($tid, $status) = each %$rh_status) {
+	next if $status eq 'close';
 	my ($aid) = split(/\s+/, $rh_articles->{ $tid });
-	printf "%5s  %-20s  %s\n", 
-	   $status, $tid, $rh_articles->{ $tid },
+	my $date  = $dh->YYYYMMDD( $rh_date->{ $aid } );
+	printf "%8d  %5s  %-20s  %s\n", 
+	$date, $status, $tid, $rh_articles->{ $tid };
     }
 
     $self->_close_db($curproc, $args);
