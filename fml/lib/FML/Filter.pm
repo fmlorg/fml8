@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.41 2004/04/23 04:10:27 fukachan Exp $
+# $FML: Filter.pm,v 1.42 2004/05/25 04:08:32 fukachan Exp $
 #
 
 package FML::Filter;
@@ -25,7 +25,7 @@ my $FILTER_ERR_HEADER_REWRITE = 3;
 
 =head1 NAME
 
-FML::Filter - entry point for FML::Filter::* modules
+FML::Filter - entry point for FML::Filter::* modules.
 
 =head1 SYNOPSIS
 
@@ -304,7 +304,7 @@ sub _apply_article_mime_component_filter
 }
 
 
-# Descriptions: analyze external spam checker.
+# Descriptions: analyze external spam/virus checker.
 #    Arguments: OBJ($self) OBJ($curproc) OBJ($mesg)
 # Side Effects: none
 # Return Value: STR(reason) or 0 (not trapped, ok)
@@ -318,9 +318,10 @@ sub _apply_article_spam_filter
 
       DRIVER:
 	for my $driver (@$drivers) {
-	    $curproc->log("spam: call $driver");
+	    $curproc->log("call external spam driver: $driver");
 	    my $r = $self->_external_article_filter($curproc, $mesg, $driver);
 	    if ($r) {
+		# XXX-TODO: $FILTER_ERR_IGNORE ok?
 		# set reject if action unspecified.
 		unless ($curproc->filter_state_get_error("article_filter")) {
 		    $curproc->filter_state_set_error("article_filter",
@@ -354,8 +355,10 @@ sub _apply_article_virus_filter
 
       DRIVER:
 	for my $driver (@$drivers) {
+	    $curproc->log("call external virus driver: $driver");
 	    my $r = $self->_external_article_filter($curproc, $mesg, $driver);
 	    if ($r) {
+		# XXX-TODO: $FILTER_ERR_IGNORE ok?
 		# set reject if action unspecified.
 		unless ($curproc->filter_state_get_error("article_filter")) {
 		    $curproc->filter_state_set_error("article_filter",
