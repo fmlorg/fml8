@@ -43,26 +43,31 @@ $primary_admin_member_map
 </row>
 <row>
 <entry>
-article_body_filter_rules</entry>
+admin_member_password_maps</entry>
 <entry>
- フィルタリングのルール</entry>
+ リモート管理者のパスワードファイル(群)</entry>
 <entry>
-reject_not_iso2022jp_japanese_string
-   reject_null_mail_body
-   reject_one_line_message
-   reject_old_fml_command_syntax
-   reject_invalid_fml_command_syntax
-   reject_japanese_command_syntax
-   reject_ms_guid
+$primary_admin_member_password_map
+   file:$ml_home_dir/etc/passwd
+   </entry>
+</row>
+<row>
+<entry>
+admin_recipient_maps</entry>
+<entry>
+ とりあえず定義してあるけど、使われてはいない</entry>
+<entry>
+$primary_admin_recipient_map
    </entry>
 </row>
 <row>
 <entry>
 article_header_filter_rules</entry>
 <entry>
- フィルタリングのルール</entry>
+ フィルタリングのルール。</entry>
 <entry>
 check_message_id
+   permit
    </entry>
 </row>
 <row>
@@ -84,11 +89,54 @@ delete_unsafe_header_fields
 </row>
 <row>
 <entry>
+article_mime_component_filter_rules</entry>
+<entry>
+ ファイル名</entry>
+<entry>
+$fml_config_dir/mime_component_filter
+   </entry>
+</row>
+<row>
+<entry>
+article_non_mime_filter_rules</entry>
+<entry>
+ とりあえず、だみ〜</entry>
+<entry>
+permit
+   </entry>
+</row>
+<row>
+<entry>
+article_sequence_file</entry>
+<entry>
+ 記事番号を保存するファイル (ダミー？)</entry>
+<entry>
+$sequence_file
+   </entry>
+</row>
+<row>
+<entry>
 article_subject_tag</entry>
 <entry>
  Subject: のタグ</entry>
 <entry>
 [$ml_name:%05d]
+   </entry>
+</row>
+<row>
+<entry>
+article_text_plain_filter_rules</entry>
+<entry>
+ テキスト部分へのフィルタリングのルール。</entry>
+<entry>
+reject_not_iso2022jp_japanese_string
+   reject_null_mail_body
+   reject_one_line_message
+   reject_old_fml_command_syntax
+   reject_invalid_fml_command_syntax
+   reject_japanese_command_syntax
+   reject_ms_guid
+   permit
    </entry>
 </row>
 <row>
@@ -191,6 +239,9 @@ help
    add
    unsubscribe
    bye
+   on
+   off
+   digest
    remove
    resign
    signoff
@@ -210,24 +261,6 @@ confirm_command_prefix</entry>
  confirmation の返事を表す特別なコマンド</entry>
 <entry>
 confirm
-   </entry>
-</row>
-<row>
-<entry>
-database_method</entry>
-<entry>
- データベース管理システムとの通信方法</entry>
-<entry>
-mysql
-   </entry>
-</row>
-<row>
-<entry>
-database_model</entry>
-<entry>
- データベース管理システムとの通信方法が</entry>
-<entry>
-SQL::Schema::toymodel
    </entry>
 </row>
 <row>
@@ -278,6 +311,33 @@ add_software_info
 </row>
 <row>
 <entry>
+digest_member_maps</entry>
+<entry>
+ ダミー</entry>
+<entry>
+$primary_member_maps
+   </entry>
+</row>
+<row>
+<entry>
+digest_recipient_maps</entry>
+<entry>
+ すべてのまとめ送りをするべき受信者のリスト</entry>
+<entry>
+$primary_digest_recipient_map
+   </entry>
+</row>
+<row>
+<entry>
+digest_sequence_file</entry>
+<entry>
+ まとめ送りした最後の記事番号を保存するファイル</entry>
+<entry>
+$ml_home_dir/seq-digest
+   </entry>
+</row>
+<row>
+<entry>
 domain_config_base_dir</entry>
 <entry>
  fml からシステムに教えるデータを置くためのディレクトリ</entry>
@@ -314,6 +374,15 @@ $domain_config_base_dir/postfix
 </row>
 <row>
 <entry>
+domain_procmail_config_dir</entry>
+<entry>
+ MTA 用に教えるための設定ファイルを置くディレクトリ</entry>
+<entry>
+$domain_config_base_dir/procmail
+   </entry>
+</row>
+<row>
+<entry>
 domain_qmail_config_dir</entry>
 <entry>
  qmail 用に教えるための設定ファイルを置くディレクトリ</entry>
@@ -327,7 +396,7 @@ domain_sendmail_config_dir</entry>
 <entry>
  sendmail 用に教えるための設定ファイルを置くディレクトリ</entry>
 <entry>
-$domain_mail_config_dir
+$domain_config_base_dir/sendmail
    </entry>
 </row>
 <row>
@@ -337,6 +406,60 @@ error_analyzer_cache_dir</entry>
  error messages のキャッシュを格納するディレクトリ</entry>
 <entry>
 $db_dir/error
+   </entry>
+</row>
+<row>
+<entry>
+error_analyzer_cache_mode</entry>
+<entry>
+ キャッシュのモード</entry>
+<entry>
+temporal
+   </entry>
+</row>
+<row>
+<entry>
+error_analyzer_cache_size</entry>
+<entry>
+ キャッシュのサイズ</entry>
+<entry>
+14
+   </entry>
+</row>
+<row>
+<entry>
+error_analyzer_cache_type</entry>
+<entry>
+ キャッシュのタイプ</entry>
+<entry>
+File::CacheDir
+   </entry>
+</row>
+<row>
+<entry>
+error_analyzer_function</entry>
+<entry>
+ FML::Error::Analyze 中の関数名。</entry>
+<entry>
+error_continuity
+   </entry>
+</row>
+<row>
+<entry>
+error_analyzer_simple_count_limit</entry>
+<entry>
+ simple_count のエラー回数の上限</entry>
+<entry>
+5
+   </entry>
+</row>
+<row>
+<entry>
+event_queue_dir</entry>
+<entry>
+ イヴェントのキューディレクトリ</entry>
+<entry>
+$var_dir/event/queue
    </entry>
 </row>
 <row>
@@ -527,7 +650,7 @@ log_format_type</entry>
 <entry>
  log message format</entry>
 <entry>
-fml4_compatible
+process[pid]
    </entry>
 </row>
 <row>
@@ -580,9 +703,9 @@ $db_dir/message_id
 <entry>
 message_template_dir</entry>
 <entry>
- message template (paragraph)</entry>
+ directory to hold message template files</entry>
 <entry>
-$fml_share_dir/message/$template_file_charset
+$fml_share_dir/message
    </entry>
 </row>
 <row>
@@ -592,6 +715,60 @@ ml_admin_cgi_base_dir</entry>
  このＭＬの admin CGI を置くディレクトリ</entry>
 <entry>
 $cgi_base_dir/ml-admin/$ml_name
+   </entry>
+</row>
+<row>
+<entry>
+ml_local_dir</entry>
+<entry>
+ 各ＭＬローカルのディレクトリ</entry>
+<entry>
+$ml_home_dir/local
+   </entry>
+</row>
+<row>
+<entry>
+ml_local_lib_dir</entry>
+<entry>
+ 各ＭＬローカルの lib/ ディレクトリ</entry>
+<entry>
+$ml_local_dir/lib
+   </entry>
+</row>
+<row>
+<entry>
+ml_local_message_template_dir</entry>
+<entry>
+ directory to hold ml specific message template files</entry>
+<entry>
+$ml_local_share_dir/message
+   </entry>
+</row>
+<row>
+<entry>
+ml_local_share_dir</entry>
+<entry>
+ 各ＭＬローカルの share/ ディレクトリ</entry>
+<entry>
+$ml_local_dir/share
+   </entry>
+</row>
+<row>
+<entry>
+moderator_member_maps</entry>
+<entry>
+ メンバーかどうか認証する際に検索するすべてのメンバーリスト</entry>
+<entry>
+$primary_moderator_member_map
+   </entry>
+</row>
+<row>
+<entry>
+moderator_recipient_maps</entry>
+<entry>
+ とりあえず定義してあるけど、使われてはいない</entry>
+<entry>
+$primary_moderator_recipient_map
    </entry>
 </row>
 <row>
@@ -685,6 +862,42 @@ file:$ml_home_dir/members-admin
 </row>
 <row>
 <entry>
+primary_admin_member_password_map</entry>
+<entry>
+ リモート管理者のパスワードファイル</entry>
+<entry>
+file:$ml_home_dir/etc/passwd-admin
+   </entry>
+</row>
+<row>
+<entry>
+primary_admin_recipient_map</entry>
+<entry>
+ とりあえず定義してあるけど、使われてはいない</entry>
+<entry>
+file:$ml_home_dir/recipients-admin
+   </entry>
+</row>
+<row>
+<entry>
+primary_digest_member_map</entry>
+<entry>
+ ダミー</entry>
+<entry>
+$primary_member_map
+   </entry>
+</row>
+<row>
+<entry>
+primary_digest_recipient_map</entry>
+<entry>
+ まとめ送りをする受信者のリスト</entry>
+<entry>
+file:$ml_home_dir/recipients-digest
+   </entry>
+</row>
+<row>
+<entry>
 primary_member_map</entry>
 <entry>
  登録などの際に対象となるメンバーリスト</entry>
@@ -694,11 +907,29 @@ file:$ml_home_dir/members
 </row>
 <row>
 <entry>
+primary_moderator_member_map</entry>
+<entry>
+ 登録などの際に対象となるメンバーリスト</entry>
+<entry>
+file:$ml_home_dir/members-moderator
+   </entry>
+</row>
+<row>
+<entry>
+primary_moderator_recipient_map</entry>
+<entry>
+ とりあえず定義してあるけど、使われてはいない</entry>
+<entry>
+file:$ml_home_dir/recipients-moderator
+   </entry>
+</row>
+<row>
+<entry>
 primary_recipient_map</entry>
 <entry>
  登録などの際に対象とする受信者のリスト</entry>
 <entry>
-file:$ml_home_dir/actives
+file:$ml_home_dir/recipients
    </entry>
 </row>
 <row>
@@ -708,6 +939,15 @@ privileged_command_prefix</entry>
  管理用のコマンドを表す特別なコマンド</entry>
 <entry>
 admin
+   </entry>
+</row>
+<row>
+<entry>
+procmail_aliases_file</entry>
+<entry>
+ MTA に教えるための aliases ファイル</entry>
+<entry>
+$domain_procmail_config_dir/procmailrc
    </entry>
 </row>
 <row>
@@ -735,6 +975,16 @@ recipient_maps</entry>
  すべての受信者のリスト</entry>
 <entry>
 $primary_recipient_map
+   file:$ml_home_dir/actives
+   </entry>
+</row>
+<row>
+<entry>
+sendmail_virtual_map_file</entry>
+<entry>
+ MTA に教えるための virtual map ファイル</entry>
+<entry>
+$domain_sendmail_config_dir/virtusertable
    </entry>
 </row>
 <row>
@@ -803,38 +1053,11 @@ plane
 </row>
 <row>
 <entry>
-sql_database_name</entry>
-<entry>
- データベースの名前</entry>
-<entry>
-fml
-   </entry>
-</row>
-<row>
-<entry>
-sql_user</entry>
-<entry>
- SQL サーバにログインするためのユーザ名</entry>
-<entry>
-fml
-   </entry>
-</row>
-<row>
-<entry>
 subscribe_command_auth_type</entry>
 <entry>
  subscribe コマンドで confirmation 認証(コールバック認証)</entry>
 <entry>
 confirmation
-   </entry>
-</row>
-<row>
-<entry>
-summary_file</entry>
-<entry>
- ヘルプファイル</entry>
-<entry>
-$ml_home_dir/summary
    </entry>
 </row>
 <row>
@@ -967,15 +1190,6 @@ confirmation
 </row>
 <row>
 <entry>
-use_article_body_filter</entry>
-<entry>
- ヘッダ情報を根拠にしたフィルタリングをするか？</entry>
-<entry>
-yes
-   </entry>
-</row>
-<row>
-<entry>
 use_article_delivery</entry>
 <entry>
  記事を配送する機能を使うか否か？</entry>
@@ -1003,6 +1217,33 @@ yes
 </row>
 <row>
 <entry>
+use_article_mime_component_filter</entry>
+<entry>
+ MIME の構造に基づいたフィルタを行なう</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_article_non_mime_filter</entry>
+<entry>
+ とりあえず、だみ〜</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_article_text_plain_filter</entry>
+<entry>
+ 先頭の text/plain 部分に対するフィルタ。</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
 use_body_loop_check</entry>
 <entry>
  ヘッダ情報を根拠にしたループチェックをするか？</entry>
@@ -1012,11 +1253,11 @@ yes
 </row>
 <row>
 <entry>
-use_database</entry>
+use_command_mail_program</entry>
 <entry>
- データベース管理システムを使うか？</entry>
+ コマンドメールを使うか？</entry>
 <entry>
-no
+yes
    </entry>
 </row>
 <row>
@@ -1030,9 +1271,18 @@ yes
 </row>
 <row>
 <entry>
-use_error_analyzer</entry>
+use_distribute_program</entry>
 <entry>
- use libexe/fml/{error,mead} or not</entry>
+ 記事の配送処理プログラムをそもそも使うか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_error_analyzer_program</entry>
+<entry>
+ エラー解析プログラムを使うか？</entry>
 <entry>
 yes
    </entry>
