@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.39 2002/12/24 10:19:42 fukachan Exp $
+# $FML: Credential.pm,v 1.40 2003/01/11 06:58:44 fukachan Exp $
 #
 
 package FML::Credential;
@@ -181,6 +181,10 @@ sub is_same_address
 	if ("\L$xuser\E" ne "\L$yuser\E") { return 0;}
     }
 
+    # XXX adjust to avoid undefined warning.
+    $xdomain ||= ''; 
+    $ydomain ||= ''; 
+
     # rule 2: case insensitive
     if ("\L$xdomain\E" eq "\L$ydomain\E") { return 1;}
 
@@ -346,6 +350,7 @@ sub has_address_in_map
     }
 
     unless ($status) {
+	$domain ||= ''; 
 	$self->error_set("user=$user domain=$domain not found");
     }
 
