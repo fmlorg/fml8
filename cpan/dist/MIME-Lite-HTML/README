@@ -1,0 +1,59 @@
+WHAT IS THIS ?
+
+This is MIME::Lite::HTML, a module which provide routine 
+to transform a HTML page in a MIME::Lite mail
+
+The job done is:
+
+ + Get the file (LWP)
+ + Parse page to find include images
+ + Attach them to mail with adequat cid
+ + Include external CSS,Javascript file
+ + Replace relative url with absolute one
+
+It can be used by example in a HTML newsletter. You make a classic HTML page, 
+and give just url to MIME::Lite::HTML.
+
+HOW DO I INSTALL IT ?
+
+To install this module, cd to the directory that contains
+this README file and type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+If you can't do that, you can put HTML.pm file in
+directory $root/MIME/Lite/HTML.pm and then put use lib
+$root in your program (make same thing if you haven't MIME-Lite
+module).
+So it give:
+$root/MIME/Lite/HTML.pm
+$root/MIME/Lite.pm
+
+and in your script:
+
+#!/usr/bin/perl
+$root='/home/alian/mylibperl'
+use lib $root;
+use MIME::Lite;
+use MIME::Lite::HTML;
+
+REQUIREMENT ?
+
+libnet, MIME::Lite
+
+DOCUMENTATION ?
+
+You'll find very verbose documentation in the file
+HTML.pm in POD format
+
+When you install MIME::Lite::HTML, the MakeMaker program
+will automatically install the manual pages for you
+(on Unix systems, type "man MIME::Lite::HTML").
+
+Have fun, and let me know how it turns out!
+
+Alain BARBET
+alian@alianwebserver.com
