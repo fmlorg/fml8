@@ -9,8 +9,117 @@
 	fml-devel-20040303 が、このコマンドメールの変更が"入っていない"
 	最後のスナップショットです。
 
-	fml-devel-20040312 では、変数命名のルールが大きく変わりました。
+	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
 	気をつけてください。
+
+2004/03/14
+
+  コマンドメールまわりを書き直す（その２）  
+
+  variables
+	fix $command_mail_restrictions by using new rules:
+	permit_anonymous_command, permit_user_command rules.
+	
+   FML::Process::Kernel 
+	remove permit_command().
+	
+   FML::Process::State 
+	implement the following methods:
+	restriction_state_init()
+	restriction_state_set_deny_reason()
+	restriction_state_get_deny_reason()
+	restriction_state_reply_reason()
+	error_message_set_count()
+	error_message_get_count()
+	
+	change some code to "... if $debug".
+	
+	implement command_context_set_ml_name() and
+	command_context_get_ml_name().
+	
+	This is preliminary codes for more extension so that we need
+	to care authentication differs among ML's when we enhance
+	command processor for listserv emulation.
+
+   FML::Process::Distribute 
+	use restriction_state_reply_reason() to shling code size.
+	clean up.
+	
+   FML::Process::Command 
+	modify command analyze logic. currently, apply
+	$command_mail_restrictions for each command line, if ok,
+	execute the commmand via FML::Command.
+	
+   FML::Restriction::Post 
+	modified to use restriction_state_*().
+	move permit_anonymous_command_mail() to FML::Restriction::Command.
+	
+   FML::Restriction::Command 
+	implement permit_user_command() and permit_anonymous_command()
+	methods. 
+
+	inherit methods from FML::Restriction::Post class if needed.
+	
+	implement permit_admin_member_maps and
+	check_admin_member_password in FML::Restriction::Command class.
+	
+	modify $admin_command_mail_restrictions to switch to use them.
+
+   FML::Command::User::admin 
+	fix comments (FNF).
+	renamed to _apply_{old,new}_admin_command_mail_restrictions().
+	
+	implement permit_admin_member_maps and
+	check_admin_member_password in FML::Restriction::Command class.
+	
+	modify $admin_command_mail_restrictions to switch to use them.
+
+2004/03/13
+
+   makefml/fml extension
+	makefml --mode=user --allow-send-message $command $ml ...
+	    fml --mode=user --allow-send-message $ml $command ...
+
+	他のスクリプトや独自のCGIから、subscribeやunsubscribeの
+	confirmを送りたい時のことを考えて、以下のオプションを追加した。
+
+	    fml --mode=user --allow-send-message $ml subscribe ADDRESS
+
+	これを実行すれば、コマンドメールのsubscribeと同じコードが動き、
+	confirmメールを ADDRESS へ送るようになる。
+
+	fmlコマンドやmakefmlコマンドはadminモードのコマンドを実行する
+	インターフェイスだが、この拡張のポイントはユーザモードの 
+	subscribe コマンドを実行可能にすることでコマンドメールのエミュ
+	レーションをしているところにある。
+
+	なお、デフォルトでは、余計なメールが出ないように、メールでのメッ
+	セージ配送(例: 登録しました〜)をCUIは無視している。そのため、
+	--allow-send-message オプションで明示的に、メールをユーザへ
+	送るという指示をする必要があることに注意。
+
+  command_line_options 
+	fml     --allow-send-message --mode=user
+	makefml --allow-send-message --mode=user
+	
+   FML::Process::Digest Error Kernel 
+	prepare credential area more early stage (within constructor).
+	so remove later object creation.
+	
+   FML::Credential 
+	implement set_sender() and get_sender().
+	
+   FML::Process::Utils 
+	implement allow_reply_message() method.
+	
+   FML::Process::Kernel 
+	use $curproc->allow_reply_message() to check if we should send back
+	messages.
+	
+   FML::Process::Configure 
+   FML::Command::User::subscribe unsubscribe 
+	fml --allow-send-message allows makefml::fml sends reply messages.
+	currently user mode "subscribe" and "unsubcribe" support this style.
 
 2004/03/12
 
@@ -6382,4 +6491,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.187 2004/03/12 15:29:00 fukachan Exp $
+$FML: CHANGES.txt,v 1.188 2004/03/12 15:59:50 fukachan Exp $
