@@ -7,7 +7,7 @@
 # $FML: Configure.pm,v 1.30 2001/11/25 03:55:38 fukachan Exp $
 #
 
-package FML::Process::Configure;
+package FML::Process::ConfViewer;
 
 use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use strict;
@@ -22,17 +22,17 @@ use FML::Config;
 
 =head1 NAME
 
-FML::Process::Configure -- fmlconf and makefml main functions
+FML::Process::ConfViewer -- fmlconf and makefml main functions
 
 =head1 SYNOPSIS
 
-    use FML::Process::Configure;
-    $curproc = new FML::Process::Configure;
+    use FML::Process::ConfViewer;
+    $curproc = new FML::Process::ConfViewer;
     $curproc->run();
 
 =head1 DESCRIPTION
 
-FML::Process::Configure provides the main function for 
+FML::Process::ConfViewer provides the main function for 
 C<fmlconf>
  and 
 C<makefml>.
@@ -41,7 +41,7 @@ These programs,
 C<fmlconf> and C<makefml>,
 bootstrap by using these modules in this order.
 
-   libexec/loader -> FML::Process::Switch -> FML::Process::Configure
+   libexec/loader -> FML::Process::Switch -> FML::Process::ConfViewer
 
 See C<FML::Process::Flow> for the flow detail.
 
@@ -58,11 +58,10 @@ dummy.
 
 =cut
 
-
 # Descriptions: constructor
 #    Arguments: $self $args
 # Side Effects: none
-# Return Value: FML::Process::Configure object
+# Return Value: FML::Process::ConfViewer object
 sub new
 {
     my ($self, $args) = @_;
@@ -88,7 +87,7 @@ sub verify_request
     my ($curproc, $args) = @_;
     my $argv = $curproc->command_line_argv();
 
-    if (length(@$argv) <= 1) {
+    if (length(@$argv) == 1) {
 	$curproc->help();
 	exit(0);
     }
@@ -121,7 +120,7 @@ sub run
     my $myname  = $curproc->myname();
     my $argv    = $curproc->command_line_argv();
 
-    $curproc->_makefml($args);
+    $curproc->_fmlconf($args);
 }
 
 
@@ -144,80 +143,34 @@ sub help
 
 print <<"_EOF_";
 
-Usage: $name \$command \$ml_name [options]
+Usage: $name [-n] \$ml_name
 
-$name help         \$ml_name                   show this help
-
-$name subscribe    \$ml_name ADDRESS
-$name unsubscribe  \$ml_name ADDRESS
+          show all configuration variables
+ 
+-n        show only difference from default
 
 _EOF_
 }
 
 
-=head2 C<_makefml($args)> (INTERNAL USE)
+=head2 C<_fmlconf($args)> (INTERNAL USE)
 
-switch of C<makefml> command.
-It kicks off <FML::Command::$command> corrsponding with 
-C<@$argv> ( $argv = $args->{ ARGV } ).
-
-C<Caution:>
-C<$args> is passed from parrent libexec/loader.
-We construct a new struct C<$command_args> here to pass parameters 
-to child objects.
-C<FML::Command::$command> object takes them as arguments not pure
-C<$args>. It is a little mess. Pay attention.
-
-See <FML::Process::Switch()> on C<$args> for more details.
+run dump_variables of C<FML::Config>.
 
 =cut
 
 
-# Descriptions: makefml top level dispacher
+# Descriptions: show configurations variables in the sytle "key = value"
 #    Arguments: $self $args
-# Side Effects: 
+# Side Effects: none
 # Return Value: none
-sub _makefml
+sub _fmlconf
 {
-    my ($curproc, $args) = @_;
-    my $config  = $curproc->{ config };
-    my $myname  = $curproc->myname();
-    my $argv    = $curproc->command_line_argv();
+    my ($curproc, $args) = @_;    
+    my $config = $curproc->{ config };
+    my $mode   = $args->{ options }->{ n } ? 'difference_only' : 'all';
 
-    my ($method, $ml_name, @options) =  @$argv;
-
-    # arguments to pass off to each method
-    my $command_args = {
-	command_mode => 'admin',
-	comname      => $method,
-	command      => "$method @options",
-	ml_name      => $ml_name,
-	options      => \@options,
-	argv         => $argv,
-	args         => $args,
-    };
-
-    # here we go
-    require FML::Command;
-    my $obj = new FML::Command;
-
-    if (defined $obj) {
-	# execute command ($comname method) under eval().
-	eval q{
-	    $obj->$method($curproc, $command_args);
-	};
-	unless ($@) {
-	    ; # not show anything
-	}
-	else {
-	    LogError("command $method fail");
-	    if ($@ =~ /^(.*)\s+at\s+/) {
-		my $reason = $1;
-		Log($reason); # pick up reason
-		croak($reason);
-	    }
-	}
-    }
+    $config->dump_variables({ mode => $mode });
 }
 
 
@@ -234,7 +187,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::Configure appeared in fml5 mailing list driver package.
+FML::Process::ConfViewer appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

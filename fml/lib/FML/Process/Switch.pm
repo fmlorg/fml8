@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Switch.pm,v 1.42 2001/11/25 02:51:34 fukachan Exp $
+# $FML: Switch.pm,v 1.43 2001/11/25 03:54:43 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -272,7 +272,7 @@ sub _makefml_parse_argv
 	my $cf = "$ml_home_prefix/$ml_name/config.cf";
 	my @cf = ($cf);
 
-	\@cf;
+	return \@cf;
     }
     else {
 	return [];
@@ -452,7 +452,10 @@ sub _module_we_use
     elsif ($name eq 'fmldoc') {
 	$pkg = 'FML::Process::DocViewer';
     }
-    elsif ($name eq 'fmlconf' || $name eq 'makefml') {
+    elsif ($name eq 'fmlconf') {
+	$pkg = 'FML::Process::ConfViewer';
+    }
+    elsif ($name eq 'makefml') {
 	$pkg = 'FML::Process::Configure';
     }
     elsif ($name eq 'fmlthread') {
