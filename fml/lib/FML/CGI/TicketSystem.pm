@@ -32,6 +32,8 @@ See L<FML::Process::Flow> for flow methods details.
 
 =head1 DESCRIPTION
 
+C<NOT YET IMPLEMENTED>.
+
 =head2 CLASS HIERARCHY
 
 C<FML::CGI::TicketSystem> is a subclass of C<FML::Process::CGI>.
