@@ -1,16 +1,17 @@
 #!/usr/bin/env perl
 #
-# $FML: mime.pl,v 1.7 2001/12/23 06:44:34 fukachan Exp $
+# $FML: mime.pl,v 1.8 2002/04/18 14:18:07 fukachan Exp $
 #
 
 use strict;
 use Carp;
-use Mail::Message::Decode qw(decode_mime_string);
-use Mail::Message::Encode qw(encode_mime_string);
 use MIME::Base64;
 use MIME::QuotedPrint;
 
 my $debug = defined $ENV{'debug'} ? 1 : 0;
+
+use Mail::Message::Encode;
+my $obj = new Mail::Message::Encode;
 
 &try_mime(" ");
 &try_mime("　");
@@ -26,18 +27,17 @@ sub try_mime
     my $buf = "\n";
 
     my $orig_str   = "さくら". $separator . $xbuf . "映画版";
-    my $in_str_b64 = encode_mime_string($orig_str);
-    my $in_str_qp  = encode_mime_string($orig_str, { encode => 'qp' });
+    my $in_str_b64 = $obj->encode_mime_string($orig_str);
+    my $in_str_qp  = $obj->encode_mime_string($orig_str, 'qp');
 
     $buf .=  ">". $orig_str. "<\n";
     $buf .=  ">". $in_str_b64. "<\n";
     $buf .=  ">". $in_str_qp. "<\n";
 
-    my $out_str_b64 = 
-	decode_mime_string($in_str_b64, {charset => 'euc-japan'});
+    my $out_str_b64 = $obj->decode_mime_string($in_str_b64, 'euc-jp');
     $buf .=  "<". $out_str_b64. "<\n";
 
-    my $out_str_qp = decode_mime_string($in_str_qp, {charset => 'euc-japan'});
+    my $out_str_qp = $obj->decode_mime_string($in_str_qp, 'euc-jp');
     $buf .=  "<". $out_str_qp. "<\n";
 
     $buf =~ s/\n/\n   |/g;
