@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: Subject.pm,v 1.16 2001/04/03 09:45:42 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -16,7 +15,7 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Header::Subject - manipule the header subject
+FML::Header::Subject - manipule the mail header subject
 
 =head1 SYNOPSIS
 
@@ -31,12 +30,12 @@ a collection of functions to manipulate the header subject.
 
 =head2 C<new()>
 
-the usual constructor.
+constructor.
 
 =cut
 
 
-# Descriptions: usual constructor
+# Descriptions: constructor
 #    Arguments: $self
 # Side Effects: none
 # Return Value: object
@@ -51,11 +50,13 @@ sub new
 
 =head2 C<rewrite_subject_tag($header, $config, $args)>
 
- add or update the subject tag for C<$header>
+add or rewrite the subject tag for C<$header>.
+This mothod cuts off Re: (reply identifier) in subject: and
+replace the subject with the newer content.
 
 =cut
 
-# Descriptions: add or update the subject tag
+# Descriptions: add or rewrite the subject tag
 #    Arguments: $self $header $config $args
 # Side Effects: the header subject is rewritten
 # Return Value: none
@@ -77,7 +78,7 @@ sub rewrite_subject_tag
     # cut off Re: Re: Re: ...
     $self->_cut_off_reply(\$subject);
 
-    # add(prepend) the updated tag
+    # add(prepend) the rewrited tag
     $tag = sprintf($tag, $args->{ id });
     my $new_subject = $tag." ".$subject;
     $header->replace('subject', $new_subject);

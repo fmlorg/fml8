@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: Configure.pm,v 1.2 2001/04/03 09:45:41 fukachan Exp $
 #
 
 package FML::CGI::Configure;
@@ -21,15 +20,17 @@ use FML::Process::CGI;
 
 =head1 NAME
 
-FML::CGI::Configure - CGI details to control ticket system
+FML::CGI::Configure - provides functions for makefml CGI interface
+
+    XXX NOT YET IMPLEMENTED
 
 =head1 SYNOPSIS
 
-    $ticket = new FML::CGI::Configure;
-    $ticket->new();
-    $ticket->run();
+    $makefml = new FML::CGI::Configure;
+    $makefml->new();
+    $makefml->run();
 
-See L<FML::Process::Flow> for flow methods details.
+See L<FML::Process::Flow> for flow details.
 
 =head1 DESCRIPTION
 
@@ -56,7 +57,6 @@ Almost methods common for CGI or HTML are forwarded to
 C<FML::Process::CGI> base class.
 
 This module has routines needed for CGI.
-But ticket model specific routines exist within C<FML::Ticket::Model>.
 
 =head1 SEE ALSO
 

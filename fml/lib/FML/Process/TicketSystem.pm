@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML$
+# $FML: TicketSystem.pm,v 1.14 2001/04/03 09:45:44 fukachan Exp $
 #
 
 package FML::Process::TicketSystem;
@@ -35,8 +35,19 @@ FML::Process::TicketSystem -- primitive fml5 ticket system
 
 =head1 DESCRIPTION
 
+This class drives ticket system in the top level.
+The ticket database is maintained by each ticket system model, 
+which is called in C<run()> method.
 
 =head1 METHOD
+
+=head2 C<new($args)>
+
+create a C<FML::Process::Kernel> object and return it.
+
+=head2 C<prepare()>
+
+dummy.
 
 =cut
 
@@ -59,6 +70,13 @@ sub prepare
     ;
 }
 
+
+=head2 C<run($args)>
+
+call the actual ticket system.
+It supports only 'list' and 'close' commands.
+
+=cut
 
 sub run
 {

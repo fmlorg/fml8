@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: TicketSystem.pm,v 1.8 2001/04/03 09:45:41 fukachan Exp $
 #
 
 package FML::CGI::TicketSystem;
@@ -29,7 +28,7 @@ FML::CGI::TicketSystem - CGI details to control ticket system
     $ticket->new();
     $ticket->run();
 
-See L<FML::Process::Flow> for flow methods details.
+See L<FML::Process::Flow> for flow details.
 
 =head1 DESCRIPTION
 

@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: System.pm,v 1.22 2001/04/03 09:45:44 fukachan Exp $
+# $FML: System.pm,v 1.23 2001/04/08 13:25:39 fukachan Exp $
 #
 
 package FML::Ticket::System;
@@ -47,7 +46,7 @@ This module provides basic functions to help sub classes.
 
 =head2 C<new()>
 
-the usual constructor.
+constructor.
 
 =cut
 
@@ -152,13 +151,13 @@ sub AUTOLOAD
 
 =head2 C<increment_id(file)>
 
-increment sequence number which is taken up from C<file> 
+increment ticket number which is taken up from C<file> 
 and save its new number to C<file>.
 
 =cut
 
 
-# Descriptions: increment $id holded in $seq_file
+# Descriptions: increment ticket number $id holded in $seq_file
 #    Arguments: $self $seq_file
 # Side Effects: increment id holded in $seq_file 
 # Return Value: number

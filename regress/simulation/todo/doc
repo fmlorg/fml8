@@ -1,4 +1,4 @@
-$FML: doc,v 1.43 2001/05/28 16:17:15 fukachan Exp $
+$FML: doc,v 1.44 2001/05/29 16:21:17 fukachan Exp $
 
 	TODO for documents
 	Last Modified: $Date$
@@ -6,16 +6,10 @@ $FML: doc,v 1.43 2001/05/28 16:17:15 fukachan Exp $
 ---------------
 2001/05 todo (document clean up)
 
-	FML/CGI/Configure.pm
-	FML/CGI/TicketSystem.pm
-	FML/Header/Subject.pm
-	FML/MemberControl.pm
 	FML/Process/Configure.pm
 	FML/Process/Distribute.pm
 	FML/Process/Kernel.pm
-	FML/Process/TicketSystem.pm
 	FML/Ticket/Model/minimal_states.pm
-	FML/Ticket/System.pm
 	File/Rotate.pm
 	IO/Adapter.pm
 	IO/Adapter/Array.pm
