@@ -1,6 +1,53 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/11/09
+
+   I-D を消去し、www.fml.org I-D コレクションを見るようにした。
+
+2002/11/07
+
+   FML::MTAControl::Postfix 
+	postconf -d -> postconf (postfix version dependent ?)
+	
+   FML::Process::Switch 
+   FML::Process::Addr 
+   INSTALL.sh configure configure.in 
+   fml/bin/fmladdr.in 
+	implement fmladdr command, which shows all users and aliases.
+
+2002/10/31
+
+   add configura option: --with/without-mime-component-filter   
+	configure.in 
+	fml/etc/site_default_config.cf.in 
+		configure --with/without-mime-component-filter
+
+2002/10/29
+
+   FML::Process::Utils 
+	fix escape of Log(...) in eval q{}
+	
+   FML::Command::Admin::newml 
+	prinf "a b c" -> a, b, c
+	
+   Mail::Message::ToHTML 
+	umask escaping like splx():
+	mask = umask();
+	umask( ...) ; # set up umask here
+	do something ...
+	uamsk($mask);
+	
+   FML::Process::Utils 
+	ensure umask escape in _mkpath_*()
+	
+   FML::Command::Admin::newml 
+	handle both public and private directories in initialization phase.
+	create variables:
+	$newml_command_init_public_dirs $newml_command_init_private_dirs
+	
+	changed newml codes to use them.
+
 2002/10/28
 
    FML::Header::Subject 
@@ -3491,4 +3538,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.106 2002/10/26 13:37:57 fukachan Exp $
+$FML: CHANGES.txt,v 1.107 2002/10/28 15:53:45 fukachan Exp $
