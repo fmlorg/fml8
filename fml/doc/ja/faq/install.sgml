@@ -1,5 +1,5 @@
 <!--
-	$FML: install.sgml,v 1.1.1.1 2001/04/26 13:31:36 fukachan Exp $
+	$FML: install.sgml,v 1.2 2001/05/19 05:51:59 fukachan Exp $
 -->
 
 <chapter id="installation">
@@ -15,28 +15,21 @@
 </question>
 
 <answer>
-	<para>
-	ブートストラップのやり方がまだ収束してないので、稀に
+<para>
+ブートストラップのやり方がまだ収束してないので、稀に
+fml の boot loader (/usr/local/fml/libexec/loader)
+を入れ替える必要がある時があります。
+</para>
 
-	/usr/local/fml/libexec/loader
-
-	を入れ替える必要がある時があります。
-	loader は /etc/fml/main.cf を読む
-	前に起動されるものなので、手動で切替えるしかないのです。
-	</para>
-
-	<para>
-	切替え方はインストール後に、
+<para>
+そういう場合は、make install 時に
 <screen>
-# /usr/local/fml/libexec/
-# mv current-yyyymmdd/loader loader
+You must upgrade loader. Replace it ? [y/n]
 </screen>
-	などとしてください。
-	cp でもいいですが、
-	同一パーティッション上の mv なら atomic で
-	あることが保証されるので、
-	mv が良いです。
-	</para>
+と表示されます。ここで  y と答えると、
+インストーラが loader を新しいものに入れ換えます。
+</para>
+
 </answer>
 </qandaentry>
 </qandaset>
