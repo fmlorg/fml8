@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.5 2001/12/23 03:50:27 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.6 2002/02/13 10:41:17 fukachan Exp $
 #
 
 package FML::Command::Admin::unsubscribe;
@@ -12,9 +12,9 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
-use ErrorStatus;
-use FML::Command::Utils;
-@ISA = qw(FML::Command::Utils ErrorStatus);
+
+
+
 
 =head1 NAME
 
