@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.33 2001/07/15 08:14:44 fukachan Exp $
+# $FML: Config.pm,v 1.34 2001/07/15 08:20:25 fukachan Exp $
 #
 
 package FML::Config;
@@ -95,6 +95,9 @@ This method binds $curproc and the %_fml_config hash on memory.
 Internally this method uses C<tie()> to get and set a key to a value.
 For example, C<get()> and C<set()> described below is a wrapper for
 tie() IO.
+
+C<NOTE:> 
+pseudo variable C<_pid> is reserved for process id reference.
 
 =cut
 
