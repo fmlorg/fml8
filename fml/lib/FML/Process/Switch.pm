@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.87 2003/03/06 12:35:58 fukachan Exp $
+# $FML: Switch.pm,v 1.88 2003/03/06 12:36:33 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -282,7 +282,7 @@ sub ProcessSwitch
 
 
 # Descriptions: return the suitable getopt options
-#    Arguments: STR($myname)
+#    Arguments: HASH_REF($main_cf) STR($myname)
 # Side Effects: none
 # Return Value: ARRAY (getopt parameters)
 sub _module_specific_options
@@ -318,7 +318,7 @@ sub _module_specific_options
 
 
 # Descriptions: this program ($0) requires ML name always or not?
-#    Arguments: STR($myname)
+#    Arguments: HASH_REF($args)
 # Side Effects: none
 # Return Value: NUM(1 (require ml name always) or 0)
 sub _ml_name_is_required

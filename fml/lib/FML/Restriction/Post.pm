@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.8 2002/12/15 15:17:18 fukachan Exp $
+# $FML: Post.pm,v 1.1 2003/03/06 09:34:15 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -42,6 +42,10 @@ sub new
 }
 
 
+# Descriptions: reject if $sender matches a system account.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
 sub reject_system_accounts
 {
     my ($self, $rule, $sender) = @_;
@@ -60,6 +64,10 @@ sub reject_system_accounts
 }
 
 
+# Descriptions: permit irrespective of $sender :)
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
 sub permit_anyone
 {
     my ($self, $rule, $sender) = @_;
@@ -68,6 +76,10 @@ sub permit_anyone
 }
 
 
+# Descriptions: permit if $sender is an ML member.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
 sub permit_member_maps
 {
     my ($self, $rule, $sender) = @_;
@@ -102,6 +114,10 @@ sub permit_member_maps
 }
 
 
+# Descriptions: permit this command even if $sender is a stranger.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
 sub permit_commands_for_stranger
 {
     my ($self, $rule, $sender) = @_;
@@ -119,6 +135,10 @@ sub permit_commands_for_stranger
 }
 
 
+# Descriptions: reject irrespective of $sender.
+#    Arguments: OBJ($self) STR($rule) STR($sender)
+# Side Effects: none
+# Return Value: ARRAY(STR, STR)
 sub reject
 {
     my ($self, $rule, $sender) = @_;
