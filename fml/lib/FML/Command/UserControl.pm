@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.26 2003/02/13 14:06:12 fukachan Exp $
+# $FML: UserControl.pm,v 1.27 2003/02/15 02:25:40 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -26,7 +26,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::Command::UserControl - utility functions to send back file(s)
+FML::Command::UserControl - utility functions to control user list.
 
 =head1 SYNOPSIS
 
@@ -186,6 +186,101 @@ sub userdel
 }
 
 
+# Descriptions: 
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: 
+# Return Value: none
+sub user_chaddr
+{
+    my ($self, $curproc, $command_args, $uc_args) = @_;
+    my $cred    = new FML::Credential $curproc;
+    my $level   = $cred->get_compare_level();
+    my $maplist = $uc_args->{ maplist };
+
+    # save excursion: exatct match as could as possible.
+    $cred->set_compare_level( 100 );
+
+    for my $map (@$maplist) {
+	$self->_try_chaddr_in_map($curproc, $command_args, $uc_args, 
+				   $cred, $map);
+    }
+
+    # reset enironment.
+    $cred->set_compare_level( $level );
+}
+
+
+# Descriptions: 
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: 
+# Return Value: none
+sub _try_chaddr_in_map
+{
+    my ($self, $curproc, $command_args, $uc_args, $cred, $map) = @_;
+    my $config      = $curproc->config();
+    my $old_address = $uc_args->{ old_address };
+    my $new_address = $uc_args->{ new_address };
+
+    # 
+    my $is_old_address_ok  = 0;
+    my $is_new_address_ok  = 0;
+    my $old_address_in_map = '';
+
+    # 1. old address exists
+    #   XXX the case of $old_address may differ in this map, so
+    #   XXX we need to hold the matched address(e.g. x@a.b vs x@A.B).
+    if ($cred->has_address_in_map($map, $config, $old_address)) {
+	$is_old_address_ok  = 1;
+	$old_address_in_map = $cred->matched_address();
+    }
+
+    # 2. new address NOT EXISTS
+    unless ($cred->has_address_in_map($map, $config, $new_address)) { 
+	$is_new_address_ok = 1;
+    }
+    else {
+	LogError("$new_address is already member (map=$map)");
+	return 0;
+    }
+
+    # 3. both conditions are o.k., here we go!
+    # XXX-TODO: this condition is correct ?
+    # XXX-TODO: we should remove old one when both old and new ones exist.
+    if ($is_old_address_ok && $is_new_address_ok) {
+	# remove the old address only if $new_address not included.
+	{
+	    my $obj = new IO::Adapter $map, $config;
+	    $obj->touch();
+
+	    $obj->open();
+	    $obj->delete( $old_address_in_map );
+	    unless ($obj->error()) {
+		Log("delete $old_address from map=$map");
+	    }
+	    else {
+		croak("fail to delete $old_address to map=$map");
+	    }
+	    $obj->close();	
+	}
+
+	# restart map to add the new address.
+	# XXX we need to restart or rewrind map.
+	{
+	    my $obj = new IO::Adapter $map, $config;
+	    $obj->open();
+	    $obj->add( $new_address );
+	    unless ($obj->error()) {
+		Log("add $new_address to map=$map");
+	    }
+	    else {
+		croak("fail to add $new_address to map=$map");
+	    }
+	    $obj->close();
+	}
+    }
+}
+
+
 # Descriptions: show list
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
@@ -221,6 +316,32 @@ sub userlist
 	    LogWarn("canot open $map");
 	}
     }
+}
+
+
+# Descriptions: return address list as ARRAY_REF
+#    Arguments: OBJ($self) ARRAY_REF($list)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub get_user_list
+{
+    my ($self, $curproc, $list) = @_;
+    my $config = $curproc->config();
+    my $r = [];
+
+    for my $map (@$list) {
+	my $io  = new IO::Adapter $map, $config;
+	my $key = '';
+	if (defined $io) {
+	    $io->open();
+	    while (defined($key = $io->get_next_key())) {
+		push(@$r, $key);
+	    }
+	    $io->close();
+	}
+    }
+
+    return $r;
 }
 
 
