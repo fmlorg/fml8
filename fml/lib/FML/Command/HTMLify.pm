@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.5 2002/05/13 14:24:46 fukachan Exp $
+# $FML: HTMLify.pm,v 1.6 2002/06/27 08:22:21 fukachan Exp $
 #
 
 package FML::Command::HTMLify;
@@ -40,9 +40,10 @@ sub convert
     my $src_dir = $optargs->{ src_dir };
     my $dst_dir = $optargs->{ dst_dir };
 
-    unless (-d $src_dir) {
-	croak("no such source directory");
-    }
+    croak("src_dir not defined") unless defined $src_dir;
+    croak("src_dir not exists")  unless -d $src_dir;
+    croak("dst_dir not defined") unless defined $dst_dir;
+    croak("dst_dir not exists")  unless -d $dst_dir;
 
     # XXX NOT NEED THIS CHECK ?
     #     unless ($curproc->is_config_cf_exist()) {
