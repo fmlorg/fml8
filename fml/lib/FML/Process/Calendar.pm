@@ -3,10 +3,10 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calender.pm,v 1.11 2003/01/11 16:05:17 fukachan Exp $
+# $FML: Calendar.pm,v 1.12 2003/01/29 11:34:33 fukachan Exp $
 #
 
-package FML::Process::Calender;
+package FML::Process::Calendar;
 
 use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use strict;
@@ -17,19 +17,19 @@ use FML::Process::Kernel;
 
 =head1 NAME
 
-FML::Process::Calender -- demonstration of FML module usage
+FML::Process::Calendar -- demonstration of FML module usage
 
 =head1 SYNOPSIS
 
-    use FML::Process::Calender;
-    $curproc = new FML::Process::Calender;
+    use FML::Process::Calendar;
+    $curproc = new FML::Process::Calendar;
     $curproc->run();
 
 =head1 DESCRIPTION
 
-FML::Process::Calender is a demonstration module to show fml module
-usage.  This module provides calender presentation as a simple
-scheduler based on Calender::Lite class.
+FML::Process::Calendar is a demonstration module to show fml module
+usage.  This module provides calendar presentation as a simple
+scheduler based on Calendar::Lite class.
 
 =head1 METHODS
 
@@ -91,8 +91,8 @@ sub verify_request { 1; }
 sub finish         { 1; }
 
 
-# Descriptions: prepare parameters and call Calender::Lite module.
-#               we use w3m to show calender (HTML table).
+# Descriptions: prepare parameters and call Calendar::Lite module.
+#               we use w3m to show calendar (HTML table).
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: create temporary file and remove it in the last
 # Return Value: none
@@ -110,7 +110,7 @@ sub run
     }
 
     use FileHandle;
-    use Calender::Lite;
+    use Calendar::Lite;
 
     # prepare new() argument
     $mode             = $option->{ m } if defined $option->{ m };
@@ -120,7 +120,7 @@ sub run
 	schedule_dir  => $schedule_dir,
 	schedule_file => undef,
     };
-    my $schedule = new Calender::Lite $schargs;
+    my $schedule = new Calendar::Lite $schargs;
 
     # prepare output channel
     my $tmpf     = $schedule->tmpfilepath;
@@ -129,19 +129,19 @@ sub run
     # set output mode
     $schedule->set_mode( $mode );
 
-    # -a option: show three calender for this, next and last month.
+    # -a option: show three calendar for this, next and last month.
     if (defined($option->{ a })) {
 	for my $month ('this', 'next', 'last') {
 	    $schedule->print_specific_month($wh, $month);
 	}
     }
     # if "month" option is specified as an argument,
-    # show the corresponding calender.
+    # show the corresponding calendar.
     elsif (defined(@$argv) && @$argv) {
 	# ($month, $yeer) = @$argv;
 	$schedule->print_specific_month($wh, @$argv);
     }
-    # show this month calender by default.
+    # show this month calendar by default.
     else {
 	$schedule->print_specific_month($wh, 'this');
     }
@@ -184,7 +184,7 @@ Usage: $name [-a] [-m mode] [month] [year]
            show this month if not specified.
 
 -h         show this help
--a         show calender at this, next and last month
+-a         show calendar at this, next and last month
 -m mode    mode is 'text' or 'html'
 -D DIR     alternative of ~/.schedule/
 -F FILE    specify schedule file to read
@@ -212,10 +212,10 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::Calender first appeared in fml8 mailing list driver package.
+FML::Process::Calendar first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
-C<FML::Process::Scheduler> is renamed to C<FML::Process::Calender>.
+C<FML::Process::Scheduler> is renamed to C<FML::Process::Calendar>.
 
 =cut
 
