@@ -591,15 +591,16 @@ sub get_content_type
 
 =head2 C<get_content_header($size)>
 
-get header in the content, which is whole mail or a part of multipart.
+get header in the content.
 
 =head2 C<get_content_body($size)>
 
-get body part in the content.
+get body part in the content, 
+which is the whole mail or a part of multipart.
 
 =head2 C<get_first_plaintext_message($args)>
 
-    $args->{ size }
+return the content for the first "plain/text" message in a chain.
 
 =cut
 
@@ -680,8 +681,7 @@ sub AUTOLOAD
 get the reference to xxx, which is a key of the message.
 For example,
 C<get_content_reference()>
-returns the reference to the
-content of the message.
+returns the reference to the content of the message.
 
 =cut
 
