@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Sequence.pm,v 1.7 2001/04/08 13:25:39 fukachan Exp $
+# $FML: Sequence.pm,v 1.8 2001/05/27 14:27:55 fukachan Exp $
 #
 
 package File::Sequence;
@@ -18,6 +18,15 @@ use ErrorStatus qw(error_set error error_clear);
 File::Sequence - maintain the sequence number
 
 =head1 SYNOPSIS
+
+To get the latest $article_id, 
+
+   use File::Sequence;
+   my $sfh = new File::Sequence { sequence_file => $seq_file };
+   my $id  = $sfh->et_id;
+   if ($sfh->error) { use Carp; carp( $sfh->error ); }
+
+to increment $article_id and get it
 
    use File::Sequence;
    my $sfh = new File::Sequence { sequence_file => $seq_file };
@@ -60,6 +69,10 @@ number.
 =head2 C<increment_id([$file])>
 
 increment the sequence number.
+
+=head2 C<get_id([$file])>
+
+get the sequence number from specified C<$file>.
 
 =cut
 
@@ -131,6 +144,45 @@ sub increment_id
     $wh->close;
 
     $id;
+}
+
+
+# Descriptions: get sequence
+#    Arguments: $self [$file]
+#               If $file is not specified, 
+#               the sequence_file parameter in new().
+# Side Effects: the number holded in $file is incremented
+# Return Value: number (sequence number)
+sub get_id
+{
+    my ($self, $file) = @_;
+    my $id = 0;
+    my $seq_file = $file || $self->{ _sequence_file };
+
+    unless ($seq_file) {
+	$self->error_set("the sequence file is not specified");
+	return 0;
+    };
+
+    # touch the sequence file if it does not exist.
+    unless (-f $seq_file) {
+	return 0;
+    };
+
+    use IO::File::Atomic;
+    my ($rh, $wh) = IO::File::Atomic->rw_open($seq_file);
+
+    # read the current sequence number
+    if (defined $rh) {
+	$id = $rh->getline;
+	$rh->close;
+    }
+    else {
+	$self->error_set("cannot open the sequence file");
+	return 0;
+    }
+
+    return $id;
 }
 
 
