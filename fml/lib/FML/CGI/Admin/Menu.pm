@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.21 2002/09/11 23:18:04 fukachan Exp $
+# $FML: Menu.pm,v 1.22 2002/09/22 14:56:42 fukachan Exp $
 #
 
 package FML::CGI::Admin::Menu;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use CGI qw/:standard/; # load standard CGI routines
 
 use FML::Process::CGI;
@@ -82,6 +81,7 @@ sub html_start
     my $charset = $config->{ cgi_charset } || 'euc-jp';
 
     # o.k start html
+    # XXX-TODO: validate $title
     print start_html(-title   => $title,
 		     -lang    => $charset,
 		     -BGCOLOR => $color);
@@ -101,6 +101,11 @@ sub html_end
     print end_html;
     print "\n";
 }
+
+
+#
+# XXX-TODO: we ensure safe_param_*() and try_cgi_*() returns save value.
+#
 
 
 # Descriptions: main routine for CGI.

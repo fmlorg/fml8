@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ML.pm,v 1.5 2002/09/11 23:18:04 fukachan Exp $
+# $FML: ML.pm,v 1.6 2002/09/22 14:56:42 fukachan Exp $
 #
 
 package FML::CGI::Admin::ML;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use CGI qw/:standard/; # load standard CGI routines
 
 
@@ -47,6 +46,7 @@ sub cgi_menu
     my $comname      = $command_args->{ comname };
     my $command_list = [ 'newml', 'rmml' ];
 
+    # XXX-TODO: we can validate $action ?
     print start_form(-action=>$action, -target=>$target);
 
     if ($comname eq 'newml') {
