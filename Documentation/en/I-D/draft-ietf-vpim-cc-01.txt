@@ -1,0 +1,627 @@
+
+Network Working Group                                           E. Burger
+Internet Draft                                         SnowShore Networks
+Document: draft-ietf-vpim-cc-01.txt                            E. Candell
+Category: Standards Track                        Comverse Network Systems
+Expires February 2001                                    October 18, 2000
+ 
+ 
+                   Critical Content of Internet Mail 
+ 
+ 
+Status of this Memo 
+ 
+   This document is an Internet-Draft and is in full conformance with 
+   all provisions of Section 10 of RFC2026 [1].  
+    
+   Internet-Drafts are working documents of the Internet Engineering 
+   Task Force (IETF), its areas, and its working groups.  Note that 
+   other groups may also distribute working documents as Internet-
+   Drafts.  Internet-Drafts are draft documents valid for a maximum of 
+   six months and may be updated, replaced, or obsoleted by other 
+   documents at any time.  It is inappropriate to use Internet- Drafts 
+   as reference material or to cite them other than as "work in 
+   progress." 
+    
+   One can access the list of current Internet-Drafts at 
+   http://www.ietf.org/ietf/1id-abstracts.txt 
+    
+   One can access the list of Internet-Draft Shadow Directories at 
+   http://www.ietf.org/shadow.html. 
+    
+    
+    
+1.   Abstract 
+    
+   This document describes a mechanism for identifying the body parts 
+   that the sender deems critical in a multi-part Internet mail 
+   message. 
+    
+   By knowing what parts of a message the sender deems critical, a MTA 
+   or UA can intelligently handle multi-part messages when gatewaying 
+   (MTA) or presenting (UA) to systems of lesser capability. Critical 
+   content can help a smart gateway decide what parts to forward.  It 
+   can indicate how hard a gateway should try to deliver a body part.  
+   It can help an MTA to select body parts to silently delete when a 
+   system of lesser capability receives a message.  In addition, 
+   critical content can help indicate the notification strategy of the 
+   receiving system. 
+    
+
+
+
+
+
+ 
+                           Expires 4/18/01                    [Page 1] 
+                  Critical Content of Internet Mail       October 2000 
+ 
+ 
+Table of Contents 
+    
+1.  ABSTRACT .........................................................1 
+2.  CONVENTIONS USED IN THIS DOCUMENT ................................2 
+3.  INTRODUCTION .....................................................2 
+4.  CONTENT-CRITICALITY ENTITY .......................................5 
+
+4.1.  CRITICAL .......................................................6 
+4.2.  IGNORE .........................................................6 
+4.3.  Other Values ...................................................6 
+4.4.  Summary ........................................................6 
+5.  BACKWARD COMPATIBILITY CONSIDERATIONS ............................7 
+6.  MIME INTERACTIONS ................................................8 
+6.1.  multipart/alternative ..........................................8 
+6.2.  multipart/related ..............................................8 
+
+6.3.  message/rfc822 .................................................8 
+7.  SECURITY CONSIDERATIONS ..........................................8 
+8.  COLLECTED SYNTAX .................................................9 
+9.  REFERENCES .......................................................9 
+10. ACKNOWLEDGMENTS .................................................10 
+11. AUTHOR'S ADDRESSES ..............................................10 
+    
+    
+2.   Conventions used in this document 
+    
+   This document refers generically to the sender of a message in the 
+   masculine (he/him/his) and the recipient of the message in the 
+   feminine (she/her/hers).  This convention is purely for convenience 
+   and makes no assumption about the gender of a message sender or 
+   recipient. 
+    
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", 
+   "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in 
+   this document are to be interpreted as described in RFC-2119 [2]. 
+    
+   FORMATTING NOTE: Notes, such at this one, provide additional 
+   nonessential information that the reader may skip without missing 
+   anything essential.  The primary purpose of these non-essential 
+   notes is to convey information about the rationale of this document, 
+   or to place this document in the proper historical or evolutionary 
+   context.  Readers whose sole purpose is to construct a conformant 
+   implementation may skip such information.  However, it may be of use 
+   to those who wish to understand why we made certain design choices. 
+    
+    
+3.   Introduction 
+    
+   This document describes the Critical Content identification for 
+   multi-part Internet mail. 
+    
+
+  
+Burger and Candell         Expires 4/18/01                    [Page 2] 
+                  Critical Content of Internet Mail       October 2000 
+ 
+ 
+   The need for a critical content identification mechanism comes about 
+   because of the internetworking of Internet mail systems with legacy 
+   messaging systems that do not fulfil all of the semantics of 
+   Internet mail.  Such legacy systems have a limited ability to render 
+   all parts of a given message.  This document will use the case of an 
+   Internet mail system exchanging electronic messages with a legacy 
+   voice messaging system for illustrative purposes. 
+    
+   Electronic mail has historically been text-centric.  Extensions such 
+   as MIME [3] enable the desktop to send and receive multi-part, 
+   multimedia messages.  Popular multimedia data types include binary 
+   word processing documents, binary business presentation graphics, 
+   voice, and video. 
+    
+   Voice mail has historically been audio-centric.  Many voice 
+   messaging systems only render voice.  Extensions such as fax enable 
+   the voice mail system to send and receive fax images as well as 
+   create multi-part voice and fax messages.  A few voice mail systems 
+   can render text using text-to-speech or text-to-fax technology.  
+   Although theoretically possible, none can today render video. 
+    
+   An important aspect of the interchange between voice messaging 
+   services and desktop e-mail client applications is that the 
+   rendering capability of the voice messaging platform is often much 
+   less than the rendering capability of a desktop e-mail client.  In 
+   the e-mail case, the sender has the expectation that the recipient 
+   receives all components of a multimedia message.  This is so even if 
+   the recipient cannot render all body parts.  In most cases, the 
+   recipient can either find the appropriate rendering tool or tell the 
+   sender that she cannot read the particular attachment. 
+    
+   This is an important issue.  By definition, a MIME-enabled user 
+   agent, conforming to [4] will present or make available all of the 
+   body parts to the recipient.  However, a voice mail system may not 
+   be capable of storing non-voice objects.  Moreover, the voice mail 
+   system may not be capable of notifying the recipient that there were 
+   undeliverable message parts. 
+    
+   The inability of the receiving system to render a body part is 
+   usually a permanent failure.  Retransmission of the message will not 
+   improve the likelihood of a future successful delivery.  Contrast 
+   this to the case with normal data delivery.  Traditional message 
+   failures, such as a garbled message or disabled link will benefit 
+   from retransmission. 
+    
+   This situation is fundamentally different from normal Internet mail.  
+   In the Internet mail case, either the system delivered the message, 
+   or it didn't.  There is no concept of a system partially delivering 
+   a message. 
+    
+   In addition, the sender would not mind if the system did not deliver 
+   non-critical parts of a message.  In fact, the sender's user agent 
+  
+Burger and Candell         Expires 4/18/01                    [Page 3] 
+                  Critical Content of Internet Mail       October 2000 
+ 
+ 
+   may be silently adding body parts to a message unbeknownst to the 
+   sender.  For example, take Microsoft Outlook as a user agent.  
+   Outlook often will attach a TNEF section or other body parts. If the 
+   receiving system rejected the message because it could not render 
+   TNEF, the sender would be understandably confused and upset. 
+    
+   Thus, there is a need for a method of indicating to a Mail Transfer 
+   Agent (MTA) or User Agent (UA) that the sender considers parts of a 
+   message to be critical.  From the sender's perspective, he would not 
+   consider the message delivered if the system did not deliver the 
+   critical parts. 
+    
+   One method of indicating critical content of a message is to define 
+   a profile.  The profile defines discard rules based on knowledge of 
+   the user population for silently deleting body parts.  Citing the 
+   example above, a voice profile can easily declare that MTAs or UAs 
+   can silently delete TNEF data and yet consider the message 
+   successfully delivered.  This is, in fact, the approach taken by 
+   VPIMv2 [5]. 
+    
+   Since one aspect of the issue is deciding when to notify the sender 
+   that the system cannot deliver part of a message, one could use a 
+   partial non-delivery notification mechanism [6] to indicate a 
+   problem with delivering a given body part.  However, this requires 
+   the user request a MDN.  Moreover, the sender will receive PNDN 
+   failures for objects the sender may not be aware he is sending.  An 
+   example would be the TNEF part. 
+    
+   Summarizing the needs, we need a mechanism that will let the sender 
+   or sender's UA mark body parts he considers critical to the message 
+   that the system must deliver.  The mechanism MUST NOT burden the 
+   sender with failure notifications for non-critical body parts.  The 
+   mechanism MUST conform to the general notification status request 
+   mechanism for positive or negative notification.  When requested, 
+   the mechanism MUST indicate to the sender when a receiving system 
+   cannot deliver a critical body part. 
+    
+   In short, we need a method of letting the sender indicate what body-
+   parts he considers to be critical. 
+    
+   This document describes a Critical Content marking mechanism that 
+   satisfies these needs.  Following the format for Internet message 
+   bodies [3], this document introduces the Content-Criticality body 
+   part header.  Values for this header are CRITICAL, NOTIFY, or 
+   IGNORE.  The receiving MTA or UA will generate a DSN or MDN at 
+   delivery time or reading time if it receives a request for 
+   notification and the (non-)delivery status of the parts marked 
+   NOTIFY meet the criteria for notification.   
+    
+   NOTE: A straight-forward alternative implementation method for 
+   marking a body part critical is to use a content-disposition 
+   parameter called "criticality". 
+  
+Burger and Candell         Expires 4/18/01                    [Page 4] 
+                  Critical Content of Internet Mail       October 2000 
+ 
+ 
+    
+   NOTE: We could have made the critical content indicator a parameter 
+   to content-disposition.  This has the benefit of being very easy for 
+   IMAP servers to implement.  In particular, IMAP servers 
+   automatically present the content-disposition entity when a UA 
+   requests information on a message.  On the other hand, the UA must 
+   explicitly request the presence and value of different entities, 
+   such as content-criticality.  However, implementing the critical 
+   content indicator as a parameter to content-disposition overloads 
+   the meaning of the entity.  Moreover, IMAP servers can present, in 
+   the future, content-criticality by default.  Lastly, most UA's that 
+   have interest in content-criticality will explicitly request the 
+   header in any event. 
+    
+    
+4.   Content-Criticality Entity 
+    
+   The Content-Criticality field is a MIME body part header inserted by 
+   the sending UA to indicate to the receiving MTA or UA whether to 
+   consider this body part critical. 
+    
+   A CRITICAL body part is one the sender requires the receiving system 
+   to deliver for him to consider the message delivered. 
+    
+   An IGNORE body part is one the sender doesn't care whether the 
+   receiving system delivers it or not.  The receiving system can 
+   silently delete such body parts if the receiving system cannot 
+   deliver the part. 
+    
+   The terms "entity" and "body part" have the meanings defined in [3]. 
+    
+   One obvious application of critical content is generating a 
+   (non-)delivery message.  If the value of the field is IGNORE, the 
+   receiving MTA or UA MUST NOT generate a notification.  If the value 
+   of the field is CRTITICAL, the receiving MTA or UA will generate a 
+   notification, based on the normal notification request mechanisms.  
+   Normal notification request mechanisms include the SMTP RCPT NOTIFY 
+   command [7] and the Disposition-Notification-To header [8]. 
+    
+   For example, if the sending system requests a notification, and a 
+   CRITICAL part fails, the receiving system will generate a NDN for 
+   the whole message.  Conversely, if only an IGNORE part fails, the 
+   receiving system will not generate a NDN.  
+    
+   The next sections examine the actions taken by an MTA or UA given 
+   the different values of Content-Criticality. 
+    
+   NOTE: This implies that the MTA must examine the entire message on 
+   receipt to determine whether it needs to generate a notification.  
+   However, the MTA need not examine the message if it knows it can 
+   store and forward all media types.  Said differently, an Internet e-
+   mail MTA can, by default, handle any arbitrary MIME-encapsulated 
+  
+Burger and Candell         Expires 4/18/01                    [Page 5] 
+                  Critical Content of Internet Mail       October 2000 
+ 
+ 
+   type.  Some voice mail systems, on the other hand, cannot store 
+   binary attachments at all, such as application/ms-word.  The voice 
+   mail MTA, in this example, would be scanning for non-renderable body 
+   parts in any event.  
+    
+  4.1. CRITICAL 
+    
+   "Content-Criticality: CRITICAL" signifies that this body part is 
+   critical to the sender. 
+    
+   If the receiving system cannot render or store a body part marked 
+   CRITICAL, then the entire message has failed.  In this case, the 
+   receiving system MUST take the appropriate failure action. 
+    
+   NOTE: We say "appropriate action", because the sender may have 
+   suppressed all notifications.  In this case, the appropriate action 
+   is to simply discard the message. 
+    
+  4.2. IGNORE 
+    
+   "Content-Criticality: IGNORE" signifies that the sender does not 
+   care about notification reports for this body part. 
+    
+   If the receiving system cannot render or store a body part marked 
+   IGNORE, the receiving system may silently delete the body part.  The 
+   receiving system MUST NOT return a delivery failure, unless parts 
+   marked IMPORTANT or CRITICAL have also failed. 
+    
+  4.3. Other Values 
+    
+   The receiving system MUST treat unrecognized values as CRITICAL.  
+   This is to provide backward compatibility with future uses of the 
+   Content-Criticality entity. 
+    
+   The most likely new value is IMPORTANT.  An IMPORTANT body part is 
+   something the sender wants the receiver to get, but would not want 
+   the message rejected outright if the IMPORTANT body part fails.  A 
+   receiving system that does not understand IMPORTANT MUST take the 
+   default value of CRITICAL.  In this case, the MTA or UA MUST take 
+   the conservative action of rejecting the message. 
+     
+  4.4. Summary 
+    
+   The following table summarizes the actions expected of a conforming 
+   MTA or UA. 
+    
+
+
+
+
+
+
+  
+Burger and Candell         Expires 4/18/01                    [Page 6] 
+                  Critical Content of Internet Mail       October 2000 
+ 
+ 
+                            +--------------------------------------+ 
+                            |    Sending UA Has Marked Body Part   | 
+                            |---------------------+----------------| 
+                            |      CRITICAL       |     IGNORE     | 
+       +--------------------+---------------------+----------------+ 
+       | Body Part is       |                     |                | 
+       | Deliverable/read   | Appropriate Action  |     ignore     | 
+       +--------------------+---------------------+----------------+ 
+       | Body Part is       |                     |                | 
+       | Undeliverable /    |                     |                | 
+       |  Unreadable        | Fail Entire Message |     ignore     | 
+       +--------------------+--------------------------------------+ 
+    
+   The distinction between deliverable/read is as follows.  A MTA can 
+   determine if a body part is deliverable.  Sample actions a MTA can 
+   take are generating a NDN or DSN.  An UA can determine if a body 
+   part is readable.  A sample action an UA can take is generating a 
+   MDN. 
+    
+   The "Appropriate Action" is the action the MTA or UA would take 
+   given the context of execution.  For example, if a sender requests 
+   return receipt and the receiver reads a CRITICAL body part, the 
+   receiving UA must generate the appropriate MDN (following the rules 
+   for MDN). 
+    
+   "Ignore" means the MTA or UA MUST ignore the operation on the body 
+   part.  The MTA or UA MUST treat the message as if the body part was 
+   not present in the message. 
+    
+    
+5.   Backward Compatibility Considerations 
+    
+   If there are no Content-Criticality entities in the message, the 
+   default value for Content-Criticality is CRITICAL.  The standard 
+   notification mechanisms work for sending user agents (UA) that do 
+   not know about the content notification entity.  All body parts are 
+   critical, because they have the default marking of CRITICAL. 
+    
+   If there is at least one Content-Criticality entity in the message, 
+   the default value for unspecified body parts is IGNORE.  The 
+   philosophy is that UAs, especially manually constructed messages, 
+   will explicitly mark the critical body parts. 
+    
+   NOTE: We could choose the default value for Content-Criticality to 
+   be IGNORE.  This would make VPIMv2 automatically compliant with this 
+   document, as VPIMv2 has provision to silently delete undeliverable 
+   parts.  However, VPIMv2 systems should not be receiving arbitrary e-
+   mail from the Internet.  If they do, they should be compliant with 
+   this series of documents.  By defaulting to CRITICAL, this draft is 
+   compliant with the rest of the Internet infrastructure. 
+    
+
+  
+Burger and Candell         Expires 4/18/01                    [Page 7] 
+                  Critical Content of Internet Mail       October 2000 
+ 
+ 
+   NOTE: Some VPIMv2 implementations can receive arbitrary e-mail from 
+   the Internet.  However, these systems are really acting in the 
+   capacity of an Internet Voice Mail system.  In this case, one would 
+   expect the implementation to provide Internet Voice Mail semantics 
+   to Internet Voice Mail messages. 
+    
+ 
+6.   MIME Interactions 
+    
+  6.1. multipart/alternative 
+    
+   Content-Criticality is only in effect for the selected alternative.  
+   If the selected alternative has the critical content indicator, then 
+   the entire alternative takes on the criticality indicated.  That is, 
+   if the alternative selected has Content-Criticality: IGNORE, then 
+   the receiving system MUST NOT generate any delivery notifications 
+   (MDN, NDN, return-receipt, etc.). 
+    
+   It is unlikely for a selected alternative to fail, as the receiving 
+   UA presumably picks the alternative specifically because it can 
+   render it.  
+    
+   If the selected alternative is a message/rfc822 that encloses a 
+   multipart MIME message or the selected alternative is itself a 
+   multipart MIME type, the individual top-level body parts follow the 
+   Content-Criticality mechanism described in this document. 
+    
+  6.2. multipart/related 
+    
+   Content-Criticality fits in rather well with the multipart/related 
+   construction.  For example, consider a multipart/related message 
+   consisting of a Macintosh data fork and a Macintosh resource fork.  
+   For a Microsoft Word document, the data fork is likely to be 
+   critical.  The receiving system can safely ignore the resource fork. 
+    
+  6.3. message/rfc822 
+    
+   Content-Criticality only affects the outermost level of the message 
+   or, in the case of multipart/alternative, the outermost level of the 
+   selected alternative.  Specifically, the receiving system ignores 
+   Content-Criticality indicators in embedded body parts.  This avoids 
+   the situation of a forwarded message triggering or suppressing 
+   undesired or desired reporting. 
+    
+7.   Security Considerations 
+ 
+   Receiving systems and users should not place any authentication 
+   value on the Content-Criticality entity.  Just because a message has 
+   a particular Content-Criticality value doesn't mean that the message 
+   really originated at a given type of system. 
+    
+    
+  
+Burger and Candell         Expires 4/18/01                    [Page 8] 
+                  Critical Content of Internet Mail       October 2000 
+ 
+ 
+8.   Collected Syntax 
+    
+   The format of the collected syntax is in accordance with the ABNF of 
+   [9].  Note that per RFC 2045, none of the strings are case 
+   sensitive. 
+    
+    
+        "Content-Criticality" ":" notification-type CRLF 
+    
+        notification-type = "CRITICAL" / "IGNORE" 
+    
+    
+ 
+9.   References 
+    
+ 
+   1  Bradner, S., "The Internet Standards Process -- Revision 3", BCP 
+      9, RFC 2026, October 1996. 
+    
+   2  Bradner, S., "Key words for use in RFCs to Indicate Requirement 
+      Levels", BCP 14, RFC 2119, March 1997. 
+    
+   3  Freed, N. and Borenstein, N., "Multipurpose Internet Mail 
+      Extensions (MIME) Part One: Format of Internet Message Bodies", 
+      RFC 2045, Innosoft and First Virtual, November 1996. 
+    
+   4  Freed, N. and Borenstein, N., "Multipurpose Internet Mail 
+      Extensions (MIME) Part Two: Media Types", RFC 2046, Innosoft and 
+      First Virtual, November 1996. 
+    
+   5  Vaudreuil, G. and Parsons, G., "Voice Profile for Internet Mail -         
+      version 2", RFC 2321, Lucent Technologies and Nortel Networks, 
+      September 1998. 
+    
+   6  Burger, E., "Partial Non-Delivery Notification", Work in 
+      Progress, draft-ema-burger-pndn-01.txt, March 2000. 
+    
+   7  Moore, K., "SMTP Service Extension for Delivery Status 
+      Notifications", RFC 1981, University of Tennessee, January 1996. 
+    
+   8  Fajman, R., "An Extensible Message Format for Message Disposition 
+      Notifications", RFC 2298, National Institutes of Health, March 
+      1998. 
+    
+   9  Crocker, D. and Overell, P.(Editors), "Augmented BNF for Syntax 
+      Specifications: ABNF", RFC 2234, Internet Mail Consortium and 
+      Demon Internet Ltd., November 1997. 
+    
+    
+    
+    
+
+  
+Burger and Candell         Expires 4/18/01                    [Page 9] 
+                  Critical Content of Internet Mail       October 2000 
+ 
+ 
+10.    Acknowledgments 
+    
+   We'd like to thank Ned Freed for pointing out that this mechanism 
+   was about criticality, not notification per se.  That insight made 
+   the concept and descriptions infinitely more straight forward.  If 
+   it's still confusing, it's our fault! 
+    
+   We'd also like to thank Keith Moore for helping us tighten-up our 
+   explanations. 
+    
+   Dropping the IMPORTANT critical content type took away one of the 
+   reasons for partial non-delivery notification.  That makes Jutta 
+   Degener very happy! 
+    
+    
+11.    Author's Addresses 
+    
+   Eric Burger 
+   SnowShore Networks 
+   c/o CRV 
+   1000 Winter St. 
+   Waltham, MA  02451 
+   USA 
+    
+   Phone: +1 703/304-3883 
+   Email: e.burger@ieee.org 
+    
+    
+   Emily Candell 
+   Comverse Network Systems 
+   200 Quannapowitt Pkwy. 
+   Wakefield, MA  01880 
+   USA 
+    
+   Phone: +1 781/213-2324 
+   Email: emily@comversens.com 
+    
+    
+Full Copyright Statement                         
+
+   The IETF takes no position regarding the validity or scope of any 
+   intellectual property or other rights that might be claimed to  
+   pertain to the implementation or use of the technology described in 
+   this document or the extent to which any license under such rights 
+   might or might not be available; neither does it represent that it 
+   has made any effort to identify any such rights.  Information on the 
+   IETF's procedures with respect to rights in standards-track and 
+   standards-related documentation can be found in BCP-11.  Copies of 
+   claims of rights made available for publication and any assurances 
+   of licenses to be made available, or the result of an attempt made 
+   to obtain a general license or permission for the use of such 
+
+  
+Burger and Candell         Expires 4/18/01                   [Page 10] 
+                  Critical Content of Internet Mail       October 2000 
+ 
+ 
+   proprietary rights by implementers or users of this specification 
+   can be obtained from the IETF Secretariat. 
+    
+   The IETF invites any interested party to bring to its attention any 
+   copyrights, patents or patent applications, or other proprietary 
+   rights which may cover technology that may be required to practice 
+   this standard.  Please address the information to the IETF Executive 
+   Director. 
+    
+   Copyright (C) 2000 The Internet Society.  All Rights Reserved. 
+    
+   This document and translations of it may be copied and furnished to 
+   others, and derivative works that comment on or otherwise explain it 
+   or assist in its implementation may be prepared, copied, published 
+   and distributed, in whole or in part, without restriction of any 
+   kind, provided that the above copyright notice and this paragraph 
+   are included on all such copies and derivative works.  However, this 
+   document itself may not be modified in any way, such as by removing 
+   the copyright notice or references to the Internet Society or other 
+   Internet organizations, except as needed for the  purpose of 
+   developing Internet standards in which case the procedures for 
+   copyrights defined in the Internet Standards process must be 
+   followed, or as required to translate it into languages other than 
+   English. 
+    
+   The limited permissions granted above are perpetual and will not be 
+   revoked by the Internet Society or its successors or assigns. 
+    
+   This document and the information contained herein is provided on an 
+   "AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING 
+   TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING 
+   BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION 
+   HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF 
+   MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+Burger and Candell         Expires 4/18/01                   [Page 11] 
+
