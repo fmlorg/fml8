@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: Message.sgml,v 1.1 2003/07/28 10:41:30 fukachan Exp $
    $jaFML: Message.sgml,v 1.2 2003/04/15 14:51:42 fukachan Exp $
 -->
 
@@ -36,14 +36,15 @@ provides several methods to manipulate these structures.
 
 <para>
 Each part of this chain is a Mail::Message object. In other words, one
-mail message consits of a chain of plural Mail::Message objects.
+mail message consits of a chain of plural Mail::Message objects in
+&fml8; internal.
 </para>
 
 <para>
 For example, "header" is a Mail::Message, which type is
-text/rfc822-headers and the data is Mail::Header object. Instead
-"part1" is a Mail::Message object, which type is text/plain and the
-data is reference to the data string.
+text/rfc822-headers and the data is stored as Mail::Header
+object. Instead "part1" is a Mail::Message object, which type is
+text/plain and the data is reference to the message string.
 </para>
 
 <para>
@@ -62,8 +63,8 @@ Mail::Message module manual.
 	</title>
 
 <para>
-parse() analyzes the file which file name or the file handle for the
-file should be specified at the argument.
+parse() analyzes the file. The argument is the file name or the file
+handle for the file which should be specified at the argument.
 </para>
 
 <para>
@@ -81,8 +82,8 @@ For example, MIME/multipart consists of the following objects.
   type[ 8]: multipart.close-delimiter | multipart/mixed
   type[ 9]: text/plain                | multipart/mixed
 </screen>
-The center is the object type, the right one is the mime type of the
-whole message (content-type in the mail header).
+The center row is the object type, the right one is the mime type of
+the whole message (content-type in the mail header).
 </para>
 
 </sect1>
@@ -104,7 +105,7 @@ build_mime_multipart_chain($args)
 parse_and_build_mime_multipart_chain($args)
 build_mime_header($args)
 </screen>
-These method is used internally now.
+These methods are used internally now.
 So these will become private methods in the furure.
 Please do not use these methods.
 </para>
@@ -124,8 +125,9 @@ is MIME::Lite class in fact :-)
 
 <para>
 dup_header() method duplicates only header part of a chain and left
-the body part. The new chain has different head (header object) but
-the second part is the same as the original chain.
+the body part as it is. The new chain has different head (header
+object) but others begining from the second part is same as the
+original chain.
 <screen>
               |<--------------- mail body ------------->
 header0 ----> part1 -> part2 -> ...
@@ -137,12 +139,12 @@ dup_header0 ---
 
 
 <para>
-whole_message_header() returns the header object the chain. The return
-value is a Mail::Message object not string.
+whole_message_header() returns the header object of the chain. The
+return value is a Mail::Message object not string.
 </para>
 
 <para>
-header_data_type() return the type of the whole message as string.
+header_data_type() returns the type of the whole message as string.
 It tells whether this message is text or multipart.
 </para>
 
@@ -157,11 +159,11 @@ It tells whether this message is text or multipart.
 <para>
 Consider the following object chain.
 <screen>
-If multipart
+If not multipart
 
 header -> body
 
-else if not multipart
+else if multipart
 
 header -> preamble -> part1 -> part2 -> trailor
 </screen>
@@ -206,14 +208,15 @@ chain and returns the first matched object.
 	</title>
 
 <para>
-print() method is useual print() functions.
-Usually specify the file descriptor as the argument.
+print() method is usual print() function. Usually specify the file
+descriptor as an argument.
 </para>
 
 <para>
 print() has the concept "mode" to specify CRLF or LF. use
 set_print_mode(mode) and reset_print_mode() to set the mode. By
-default, mode is raw. Specify smtp mode in SMTP codes.
+default, mode is raw. Specify smtp mode in using print() within SMTP
+codes.
 </para>
 
 </sect1>
@@ -226,13 +229,15 @@ default, mode is raw. Specify smtp mode in SMTP codes.
 
 <sect2>
 	<title>
-	size
+	Size
 	</title>
 
 <para>
-size() returns the size of the object not the whole size.
+size() returns the size of the object not the whole message size.
+<!--
 header_size() tells the size of the header.
 body_size() tells the size of the body part.
+-->
 </para>
 
 <para>
@@ -243,7 +248,7 @@ is_empty() tells the object data is empty or not.
 
 <sect2>
 	<title>
-	general information
+	General information
 	</title>
 
 <para>
@@ -271,7 +276,7 @@ encoding mechanism.
 	</title>
 
 <para>
-num_paragraph() returns the number of paragraph in the data of the
+num_paragraph() returns the number of paragraphs in the data of the
 object.
 </para>
 
@@ -283,8 +288,8 @@ Caution that N starts from 1 not 0.
 
 
 <para>
-header() return the header part of a multipart block.
-data() returns the data part.
+header() return the header part of a multipart block (header part of
+an object). data() returns the data part (data part of an object).
 Respectively, alias of message_fields($size) and message_text($size).
 </para>
 
@@ -295,7 +300,7 @@ Respectively, alias of message_fields($size) and message_text($size).
 
 <sect1 id="module.mail.message.ref">
 	<title>
-	Rerefences
+	Refernces
 	</title>
 
 <para>

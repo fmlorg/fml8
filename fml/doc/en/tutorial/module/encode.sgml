@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: encode.sgml,v 1.1 2003/07/28 10:41:31 fukachan Exp $
    $jaFML: encode.sgml,v 1.2 2003/04/15 14:51:42 fukachan Exp $
 -->
 
@@ -9,7 +9,7 @@
 	</title>
 
 <para>
-[reference] fml-help ML's Count: 02012, 02013, 02016.
+[References] fml-help ML's Count: 02012, 02013, 02016.
 </para>
 
 <screen>
@@ -85,11 +85,11 @@ The main code is within _convert_str_ref() method.
 sub base64 {}
 sub quoted_printable {}
 </screen>
-is useful for convenience.
+is implemented for convenience.
 <screen>
 $x = $encode->base64($s);
 </screen>
-For backward compatibility, STR2XXX() functoins are prepared.
+For backward compatibility, STR2XXX() functoins are prepared, too.
 <screen>
    STR2EUC(  $str, [$icode] )
    STR2JIS(  $str, [$icode] )
@@ -110,7 +110,7 @@ These wraps convert_str_ref().
 In language dependent processes, convert the charset to machine
 friendly one, process something and back it to the original chaset
 each time. This step is widely used. So it is convenient to prepare a
-function to unify these steps in one function.
+function to pack these steps into one function.
 <screen>
 run_in_chcode example:
 

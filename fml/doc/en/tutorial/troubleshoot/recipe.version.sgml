@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: recipe.version.sgml,v 1.1 2003/07/25 17:05:48 fukachan Exp $
    $jaFML: recipe.version.sgml,v 1.4 2003/04/15 14:51:45 fukachan Exp $
 -->
 
@@ -26,7 +26,7 @@ fml_version                          = fml-devel current-20021029
 <qandaentry>
 <question>
 <para>
-check Postfix version.
+Check Postfix version.
 </para>
 </question>
 

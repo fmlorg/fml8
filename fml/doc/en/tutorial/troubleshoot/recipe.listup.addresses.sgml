@@ -1,19 +1,20 @@
 <!--
-   $FML$
+   $FML: recipe.listup.addresses.sgml,v 1.1 2003/07/25 17:05:48 fukachan Exp $
    $jaFML: recipe.listup.addresses.sgml,v 1.2 2003/04/15 14:51:45 fukachan Exp $
 -->
 
 <qandaentry>
 <question>
 <para>
-list up pre-defined addresses on the system.
+List up pre-defined addresses on the system.
 </para>
 </question>
 
 <answer>
 
 <para>
-"fmladdr" command lists up users defined at /etc/passwd and aliases.
+"fmladdr" command lists up users defined at both /etc/passwd and
+aliases. 
 <screen>
 % fmladdr
 </screen>
@@ -23,9 +24,9 @@ list up pre-defined addresses on the system.
 <warning>
 <para>
 The difference between fmladdr and fmlalias is whether
-it contais users defined at /etc/passwd or not.
+it contains users defined at /etc/passwd or not.
 fmladdr contains it but fmlalias not.
-fmlalias lists up users defined at aliases.
+fmlalias lists up only users defined at aliases.
 </para>
 </warning>
 </para>
