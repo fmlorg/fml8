@@ -1,58 +1,11 @@
 <!--
-   $FML$
+   $FML: merge.sgml,v 1.1.1.1 2001/05/19 05:14:57 fukachan Exp $
 -->
 
 <chapter id="merge">
 	<title>
 	TODO: fml 4.0 から 5.0 への検討事項
 	</title>
-
-<sect1 id="merge.suspend">
-	<title>
-	HTML 関係はどうする？
-	</title>
-
-<para>
-そもそも fml 5.0 で実装するのか？不明
-<screen>
-     AUTO_HTML_GEN:
-     
-     HTML_THREAD:			1
-     
-     HTML_INDEX_REVERSE_ORDER:	1
-     
-     HTML_DIR:			htdocs
-     
-     HTML_EXPIRE_LIMIT:
-     
-     HTML_INDEX_TITLE:
-     
-     HTML_DATA_CACHE:
-     HTML_DATA_THREAD:
-     
-     HTML_OUTPUT_FILTER:
-     
-     HTML_STYLESHEET_BASENAME:	
-     
-     HTML_THREAD_REF_TYPE:		prefer-in-reply-to
-     
-     HTML_THREAD_SORT_TYPE:
-     
-     HTML_INDEX_UNIT:		day
-     
-     HTML_INDENT_STYLE:		UL
-     
-     HTML_MULTIPART_IMAGE_REF_TYPE:
-     
-     HTML_DEFAULT_UMASK:
-     HTML_WRITE_UMASK:
-</screen>
-</para>
-
-</sect1>
-
-
-
 
 <sect1 id="merge.removed">
 	<title>

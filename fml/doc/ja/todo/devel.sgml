@@ -1,5 +1,5 @@
 <!--
-   $FML: devel.sgml,v 1.7 2001/07/15 09:51:19 fukachan Exp $
+   $FML: devel.sgml,v 1.8 2001/11/25 00:41:06 fukachan Exp $
 -->
 
 <chapter id="fml5.todo">
@@ -57,6 +57,52 @@ Mail::Bounce
 
 <para>
 モデレータの承認は www でぽーんといきたい
+</para>
+
+</sect1>
+
+
+<!-- ============================================ -->
+<sect1>
+	<title>
+	HTML 関係は実装済み、細かい属性はどうする？
+	</title>
+
+<para>
+そもそも fml 5.0 で実装するのか？不明
+<screen>
+     AUTO_HTML_GEN:
+     
+     HTML_THREAD:			1
+     
+     HTML_INDEX_REVERSE_ORDER:	1
+     
+     HTML_DIR:			htdocs
+     
+     HTML_EXPIRE_LIMIT:
+     
+     HTML_INDEX_TITLE:
+     
+     HTML_DATA_CACHE:
+     HTML_DATA_THREAD:
+     
+     HTML_OUTPUT_FILTER:
+     
+     HTML_STYLESHEET_BASENAME:	
+     
+     HTML_THREAD_REF_TYPE:		prefer-in-reply-to
+     
+     HTML_THREAD_SORT_TYPE:
+     
+     HTML_INDEX_UNIT:		day
+     
+     HTML_INDENT_STYLE:		UL
+     
+     HTML_MULTIPART_IMAGE_REF_TYPE:
+     
+     HTML_DEFAULT_UMASK:
+     HTML_WRITE_UMASK:
+</screen>
 </para>
 
 </sect1>
