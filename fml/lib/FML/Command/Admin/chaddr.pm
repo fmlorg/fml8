@@ -4,13 +4,15 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.12 2003/02/01 13:45:58 fukachan Exp $
+# $FML: chaddr.pm,v 1.13 2003/02/09 12:31:41 fukachan Exp $
 #
 
 package FML::Command::Admin::chaddr;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+use FML::Log qw(Log LogWarn LogError);
+
 
 =head1 NAME
 
@@ -85,64 +87,26 @@ sub process
     croak("\$member_maps is not specified")    unless $member_maps;
     croak("\$recipient_maps is not specified") unless $recipient_maps;
 
-    use IO::Adapter;
-    use FML::Credential;
-    use FML::Log qw(Log LogWarn LogError);
-
     # change all maps including this $address.
     my (@maps) = ();
     push(@maps, @$member_maps);
     push(@maps, @$recipient_maps);
-    for my $map (@maps) {
-	my $cred = new FML::Credential $curproc;
 
-	# exatct match as could as possible.
-	$cred->set_compare_level( 100 );
+    # FML::Command::UserControl specific parameters
+    my $uc_args = {
+	old_address => $old_address,
+	new_address => $new_address,
+	maplist     => \@maps,
+    };
+    my $r = '';
 
-	# XXX-TODO: this condition is correct ?
-	# XXX-TODO: we should remove old one when both old and new ones exist.
-	# the current member/recipient file must have $old_address
-	# but should not contain $new_address.
-	if ($cred->has_address_in_map($map, $config, $old_address)) {
-	    my $old_address_in_map = $cred->matched_address();
-
-	    unless ($cred->has_address_in_map($map, $config, $new_address)) {
-		# remove the old address only if $new_address not included.
-		{
-		    my $obj = new IO::Adapter $map, $config;
-		    $obj->touch();
-
-		    $obj->open();
-		    $obj->delete( $old_address_in_map );
-		    unless ($obj->error()) {
-			Log("delete $old_address from map=$map");
-		    }
-		    else {
-			croak("fail to delete $old_address to map=$map");
-		    }
-		    $obj->close();
-		}
-
-		# restart map to add the new address.
-		# XXX we need to restart or rewrind map.
-		{
-		    my $obj = new IO::Adapter $map, $config;
-		    $obj->open();
-		    $obj->add( $new_address );
-		    unless ($obj->error()) {
-			Log("add $new_address to map=$map");
-		    }
-		    else {
-			croak("fail to add $new_address to map=$map");
-		    }
-		    $obj->close();
-		}
-	    }
-	    else {
-		croak("$new_address is already member (map=$map)");
-		return undef;
-	    }
-	}
+    eval q{
+	use FML::Command::UserControl;
+	my $obj = new FML::Command::UserControl;
+	$obj->user_chaddr($curproc, $command_args, $uc_args);
+    };
+    if ($r = $@) {
+	croak($r);
     }
 }
 
