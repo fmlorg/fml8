@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.14 2002/08/03 10:35:08 fukachan Exp $
+# $FML: Error.pm,v 1.15 2002/08/07 04:00:40 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -161,11 +161,13 @@ sub run
 		Log("bounced: status=$status");
 		Log("bounced: reason=\"$reason\"");
 
+		$curproc->lock('errorcache');
 		$errorcache->add({
 		    address => $address,
 		    status  => $status,
 		    reason  => $reason,
 		});
+		$curproc->unlock('errorcache');
 
 		$found++;
 	    }
@@ -173,10 +175,42 @@ sub run
     };
     LogError($@) if $@;
 
-    $pcb->set("error", "found", 1) if $found;
+    if ($found) {
+	$pcb->set("error", "found", 1);
+	$curproc->_clean_up_bouncers($args);
+    }
 
     $eval = $config->get_hook( 'error_run_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+}
+
+
+# run analyzer() if long time spent after the last analyze.
+sub _clean_up_bouncers
+{
+    my ($curproc, $args) = @_;
+    my $channel = 'erroranalyzer';
+
+    if ($curproc->is_timeout($channel)) {
+	Log("(debug) event timeout");
+
+	$curproc->lock('errorcache');
+
+	eval q{
+	    use FML::Error;
+	    my $error = new FML::Error $curproc;
+	    $error->analyze();
+	    $error->remove_bouncers();
+	};
+	LogError($@) if $@;
+
+	$curproc->unlock('errorcache');
+
+	$curproc->set_timeout($channel, time + 3600);
+    }
+    else {
+	Log("(debug) event not timeout");
+    }
 }
 
 
@@ -227,9 +261,7 @@ sub finish
 
     if ($pcb->get("error", "found")) {
 	Log("error message found");
-
-	my $scheduler = $curproc->scheduler();
-
+	# inform ? 
     }
     else {
 	Log("error message not found");

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error::Cache.pm,v 1.2 2002/08/03 13:13:19 fukachan Exp $
+# $FML: Cache.pm,v 1.1.1.1 2002/08/07 03:51:11 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -60,9 +60,11 @@ sub new
 sub add
 {
     my ($self, $info) = @_;
-    my $io = $self->_open_cache();
 
-    if (defined $io) {
+    $self->_open_cache();
+
+    my $db = $self->{ _db };
+    if (defined $db) {
 	my ($address, $reason, $status);
 	my $unixtime = time;
 
@@ -73,7 +75,7 @@ sub add
 	if ($address) {
 	    $status =~ s/\s+/_/g;
 	    $reason =~ s/\s+/_/g;
-	    $io->set($address, "$unixtime status=$status reason=$reason");
+	    $db->{ $address } = "$unixtime status=$status reason=$reason";
 	}
 	else {
 	    LogWarn("Error::Cache: cache_on: invalid data");
@@ -84,25 +86,6 @@ sub add
     else {
 	croak("add_to_cache: unknown data input type");
     }
-}
-
-
-# Descriptions: check cache and determine bounced or not
-#               apply deluser() for addressed looked as bounced
-#    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: delete addresses
-# Return Value: none
-sub is_bounced
-{
-    my ($self) = @_;
-
-    my $io = $self->_open_cache();
-
-    if (defined $io) {
-	$self->_close_cache();
-    }
-
-    return 0;
 }
 
 
@@ -120,19 +103,12 @@ sub _open_cache
     my $mode    = $config->{ error_analyzer_cache_mode } || 'temporal';
     my $days    = $config->{ error_analyzer_cache_size } || 14;
 
-    if ($type eq 'File::CacheDir') {
-	if ($dir) {
-	    use File::CacheDir;
-	    my $obj = new File::CacheDir {
-		directory  => $dir,
-		cache_type => $mode,
-		expires_in => $days,
-	    };
-	    return $obj;
-	}
-    }
+    use Tie::JournaledDir;
 
-    return undef;
+    # tie style
+    my %db = ();
+    tie %db, 'Tie::JournaledDir', { dir => $dir };
+    $self->{ _db } = \%db;
 }
 
 
@@ -142,70 +118,52 @@ sub _open_cache
 # Return Value: none
 sub _close_cache
 {
-    ;
+    my ($self) = @_;
+    my $db = $self->{ _db };
+
+    if (defined $db) {
+	untie %$db;
+    }
 }
 
 
-# Descriptions: delete the specified address
-#    Arguments: OBJ($self) STR($address)
-# Side Effects: none
-# Return Value: none
-sub deluser
+sub get_addr_list
 {
-    my ($self, $address) = @_;
+    my ($self) = @_;
+
+    $self->_open_cache();
+    my $db = $self->{ _db };
+
+    my @addr = keys %$db;
+
+    $self->_close_cache();
+
+    return \@addr;
+}
+
+
+sub _new
+{
+    my ($self) = @_;
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->{ config };
-    my $ml_name = $config->{ ml_name };
+    my $type    = $config->{ error_analyzer_cache_type };
+    my $dir     = $config->{ error_analyzer_cache_dir  };
+    my $mode    = $config->{ error_analyzer_cache_mode } || 'temporal';
+    my $days    = $config->{ error_analyzer_cache_size } || 14;
 
-    use FML::Restriction::Base;
-    my $safe    = new FML::Restriction::Base;
-    my $regexp  = $safe->basic_variable();
-    my $addrreg = $regexp->{ address };
+    use Tie::JournaledDir;
+    return new Tie::JournaledDir { dir => $dir };
+}
 
-    # check if $address is a safe string.
-    if ($address =~ /^($addrreg)$/) {
-	Log("deluser: ok <$address>");
-    }
-    else {
-	Log("deluser: invalid address");
-	return;
-    }
 
-    # arguments to pass off to each method
-    my $method       = 'unsubscribe';
-    my $command_args = {
-        command_mode => 'admin',
-        comname      => $method,
-        command      => "$method $address",
-        ml_name      => $ml_name,
-        options      => [ $address ],
-        argv         => undef,
-        args         => undef,
-    };
 
-    # here we go
-    require FML::Command;
-    my $obj = new FML::Command;
+sub get_all_values_as_hash_ref
+{
+    my ($self) = @_;
+    my $obj = $self->_new();
 
-    if (defined $obj) {
-        # execute command ($comname method) under eval().
-        eval q{
-            $obj->$method($curproc, $command_args);
-        };
-        unless ($@) {
-            ; # not show anything
-        }
-        else {
-            my $r = $@;
-            LogError("command $method fail");
-            LogError($r);
-            if ($r =~ /^(.*)\s+at\s+/) {
-                my $reason = $1;
-                Log($reason); # pick up reason
-                croak($reason);
-            }
-        }
-    }
+    $obj->get_all_values_as_hash_ref();
 }
 
 
