@@ -9,7 +9,7 @@
 #
 
 package IO::MapAdapter;
-use vars qw(@ISA);
+use vars qw(@ISA @ORIG_ISA $FirstTime);
 use strict;
 use Carp;
 
@@ -131,7 +131,10 @@ sub new
 	}
     }
 
-    unshift(@ISA, $pkg);
+    # save @ISA for further use, re-evaluate @ISA
+    @ORIG_ISA = @ISA unless $FirstTime++;
+    @ISA = ($pkg, @ORIG_ISA);
+
     eval qq{ require $pkg; $pkg->import();};
     $pkg->configure($me) if $pkg->can('configure');
     _error_reason($me, $@) if $@;
@@ -221,6 +224,7 @@ sub get_recipient { my ($self) = @_; $self->get_next_value;}
 
 =head2 C<add( $address )>
 
+=cut
 
 # Descriptions: 
 #    Arguments: $self $args
@@ -230,7 +234,7 @@ sub add
 {
     my ($self, $addr) = @_;
 
-    if ($self->SUPER::can('add')) {
+    if ($self->can('add')) {
 	$self->SUPER::add($addr);
     }
     else {
@@ -239,7 +243,6 @@ sub add
     }
 }
 
-=cut
 
 # Descriptions: destructor
 #               request is forwarded to close() method.
