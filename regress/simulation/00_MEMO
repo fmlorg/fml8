@@ -7,10 +7,18 @@
         XXX 遠大なビジョンやとりあえず後まわしでよいものは STATUS.txt へ
 
 
-[TODO]	インストーラ
+[TODO]	Mail::Message->print() ???
 
-	ユーザとグループの存在チェックのエラーメッセージを
-	もうちょっと長く
+	FML/Filter/External/spamc.pm:	$msg->print($wh);
+	FML/Filter/External/clamscan.pm:	$msg->print($wh);
+	FML/Filter/External/bogofilter.pm:	$msg->print($wh);
+	FML/Filter/MimeComponent.pm:	    $msg->print($wh);
+
+	FML/Process/Kernel.pm:		    $msg->print($wh);
+	FML/Process/Kernel.pm:	$msg_queue->print();
+	FML/Process/Kernel.pm:	$msg_in->print($wh);
+
+	Mail/Delivery/Queue.pm:	$msg->print($fh);
 
 
 [TODO]	content filter
@@ -300,5 +308,5 @@
 
 
 ----------
-$FML: 00_MEMO,v 1.113 2004/06/26 12:43:15 fukachan Exp $
+$FML: 00_MEMO,v 1.114 2004/07/23 15:15:55 fukachan Exp $
 
