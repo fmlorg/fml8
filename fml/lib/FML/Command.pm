@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.18 2002/02/13 10:41:16 fukachan Exp $
+# $FML: Command.pm,v 1.19 2002/02/17 03:13:47 fukachan Exp $
 #
 
 package FML::Command;
@@ -83,9 +83,9 @@ sub AUTOLOAD
 
     Log("load $pkg") if $0 =~ /loader/; # debug
 
-    eval qq{ require $pkg; $pkg->import();};
+    my $command = undef;
+    eval qq{ use $pkg; \$command = new $pkg;};
     unless ($@) {
-	my $command   = $pkg->new();
 	my $need_lock = 1; # default.
 
 	if ($command->can('auth')) {
@@ -95,14 +95,17 @@ sub AUTOLOAD
 	# this command needs lock (currently giant lock) ?
 	if ($command->can('need_lock')) {
 	    $need_lock = $command->need_lock($mode);
+
+	    # override lock()
+	    if (defined $command_args->{ override_need_no_lock }) {
+		$need_lock = 0 if $command_args->{ override_need_no_lock };
+	    }
 	}
 
 	if ($command->can('process')) {
 	    $curproc->lock()   if $need_lock;
 	    $command->process($curproc, $command_args);
 	    $curproc->unlock() if $need_lock;
-
-	    if ($command->error()) { Log($command->error());}
 	}
 	else {
 	    LogError("${pkg} has no process method");
