@@ -1,10 +1,13 @@
 =head1	エラーメール解析
 
-# Descriptions: use libexe/fml/{error,mead} or not
-#      History:
+=head2	プロセス
+
+
+# Descriptions: エラー解析プログラムを使うか？
+#      History: なし
 #        Value: yes
 #     Examples: yes / no
-use_error_analyzer	=	yes
+use_error_analyzer_program	=	yes
 
 
 =head2	キャッシュ
