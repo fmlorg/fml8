@@ -40,14 +40,27 @@ sub prepare
 sub run
 {
     my ($curproc, $args) = @_;
+    my $config  = $curproc->{ config };
+    my $myname  = $args->{ myname };
+    my $argv    = $args->{ ARGV };
+    my $command = $argv->[ 0 ] || croak("command not specified\n");
 
-    # use Data::Dumper; print Dumper( $args ); sleep 30;
+    # XXX debug
+    # use Data::Dumper; print Dumper( $args ); sleep 3;
 
-    $curproc->lock();
-    {
+    if ($myname eq 'fmlconf') {
 	$curproc->_show_conf($args);
     }
-    $curproc->unlock();
+    elsif ($myname eq 'fmldoc') {
+	exec 'perldoc', @$argv;
+    }
+    else {
+	$curproc->lock();
+	{
+	    ;
+	}
+	$curproc->unlock();
+    }
 }
 
 

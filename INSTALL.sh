@@ -81,7 +81,7 @@ if [ ! -f $libexec_dir/loader ];then
 	cd $libexec_dir/
 
 	echo -n "   link loader to: "
-	for x in fml.pl distribute command fmlserv mead fmlconf fmlticket
+	for x in fml.pl distribute command fmlserv mead fmlconf fmlticket fmldoc
 	do
 		rm -f $x
 		ln -s loader $x && echo -n "$x "
