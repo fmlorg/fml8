@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.172 2003/08/18 14:05:03 fukachan Exp $
+# $FML: Kernel.pm,v 1.173 2003/08/23 04:35:39 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1143,6 +1143,63 @@ makefml not support message handling not yet.
 =cut
 
 
+# Descriptions: set reply message
+#    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
+sub reply_message
+{
+    my ($curproc, $msg, $args) = @_;
+    my $myname = $curproc->myname();
+
+    $curproc->caller_info($msg, caller) if $debug;
+
+    # XXX-TODO: hard-coded. move condition statements to configuration file.
+    # XXX makefml not support message handling not yet.
+    if ($myname eq 'makefml' ||
+	$myname eq 'fml'     ||
+	$myname =~ /\.cgi$/) {
+	LogWarn("(debug) $myname disables reply_message()");
+	return;
+    }
+
+    # get recipients list
+    my ($recipient, $recipient_maps) = $curproc->_analyze_recipients($args);
+    my $hdr                          = $curproc->_analyze_header($args);
+
+    # check text messages and fix if needed.
+    unless (ref($msg)) {
+	# \n in the last always.
+	$msg .= "\n" unless $msg =~ /\n$/;
+    }
+
+    $curproc->_append_message_into_queue2($msg, $args,
+					 $recipient, $recipient_maps,
+					 $hdr);
+
+    if (defined $args->{ always_cc }) {
+	# only if $recipient above != always_cc, duplicate $msg message.
+	my $sent = $recipient;
+	my $cc   = $args->{ always_cc };
+
+	my $recipient = [];
+	if (ref($cc) eq 'ARRAY') {
+	    $recipient = $cc;
+	}
+	else {
+	    $recipient = [ $cc ];
+	}
+
+	if (_array_is_different($sent, $recipient)) {
+	    Log("cc: [ @$recipient ]");
+	    $curproc->_append_message_into_queue($msg, $args,
+						 $recipient, $recipient_maps,
+						 $hdr);
+	}
+    }
+}
+
+
 # Descriptions: return recipient info.
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
@@ -1207,63 +1264,6 @@ sub _analyze_header
 {
     my ($curproc, $args) = @_;
     return $args->{ header };
-}
-
-
-# Descriptions: set reply message
-#    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($args)
-# Side Effects: none
-# Return Value: none
-sub reply_message
-{
-    my ($curproc, $msg, $args) = @_;
-    my $myname = $curproc->myname();
-
-    $curproc->caller_info($msg, caller) if $debug;
-
-    # XXX-TODO: hard-coded. move condition statements to configuration file.
-    # XXX makefml not support message handling not yet.
-    if ($myname eq 'makefml' ||
-	$myname eq 'fml'     ||
-	$myname =~ /\.cgi$/) {
-	LogWarn("(debug) $myname disables reply_message()");
-	return;
-    }
-
-    # get recipients list
-    my ($recipient, $recipient_maps) = $curproc->_analyze_recipients($args);
-    my $hdr                          = $curproc->_analyze_header($args);
-
-    # check text messages and fix if needed.
-    unless (ref($msg)) {
-	# \n in the last always.
-	$msg .= "\n" unless $msg =~ /\n$/;
-    }
-
-    $curproc->_append_message_into_queue2($msg, $args,
-					 $recipient, $recipient_maps,
-					 $hdr);
-
-    if (defined $args->{ always_cc }) {
-	# only if $recipient above != always_cc, duplicate $msg message.
-	my $sent = $recipient;
-	my $cc   = $args->{ always_cc };
-
-	my $recipient = [];
-	if (ref($cc) eq 'ARRAY') {
-	    $recipient = $cc;
-	}
-	else {
-	    $recipient = [ $cc ];
-	}
-
-	if (_array_is_different($sent, $recipient)) {
-	    Log("cc: [ @$recipient ]");
-	    $curproc->_append_message_into_queue($msg, $args,
-						 $recipient, $recipient_maps,
-						 $hdr);
-	}
-    }
 }
 
 
