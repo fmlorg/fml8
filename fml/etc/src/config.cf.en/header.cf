@@ -102,4 +102,13 @@ article_subject_tag			=	[$ml_name:%05d]
 #      History:
 #        Value: ML_NAME
 #     Examples: elena
-outgoing_mail_header_x_ml_name			=	$ml_name
+outgoing_mail_header_x_ml_name		=	$ml_name
+
+
+# Descriptions: Errors-To: field
+#      History: fml 4.0 's $ERRORS_TO
+#        Value: RFC822_ADDRESS
+#     Examples: elena-admin@fml.org
+outgoing_mail_header_errors_to		=	$maintainer
+
+
