@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: install.pl.in,v 1.2 2003/01/29 13:58:10 fukachan Exp $
+# $FML: install.pl.in,v 1.3 2003/01/29 14:22:53 fukachan Exp $
 #
 
 use strict;
@@ -49,22 +49,23 @@ sub _install
 
     printf $format, "version", $installer->get_version() if $debug;
 
-    my $list = $config->get_as_array_ref('mandatory_dirs');
-    for my $dir (@$list) {
-	my $path = $installer->path($dir);
-	printf $format, $dir, $path if $debug;
-	unless (-d $path) {
-	    $installer->mkdir($path);
-	}
-	else {
-	    print STDERR "ok $path\n" if $debug;
-	}
-    }
-
     $installer->is_valid_owner( $config->{ owner } );
     $installer->is_valid_group( $config->{ group } );
 
     if ($installer->is_run_as_root()) {
+
+	my $list = $config->get_as_array_ref('mandatory_dirs');
+	for my $dir (@$list) {
+	    my $path = $installer->path($dir);
+	    printf $format, $dir, $path if $debug;
+	    unless (-d $path) {
+		$installer->mkdir($path);
+	    }
+	    else {
+		print STDERR "ok $path\n" if $debug;
+	    }
+	}
+
 	$installer->install_main_cf();
 	$installer->install_sample_cf_files();
 	$installer->install_default_config_files();
