@@ -540,7 +540,17 @@ error_analyzer_function</entry>
 <entry>
  FML::Error::Analyze 中の関数名。</entry>
 <entry>
-error_continuity
+histgram
+   </entry>
+</row>
+<row>
+<entry>
+error_analyzer_function_list</entry>
+<entry>
+ FML::Error::Analyze 中の関数名。</entry>
+<entry>
+simple_count
+   histgram
    </entry>
 </row>
 <row>
