@@ -1,0 +1,10 @@
+From: test@example.com
+To: test@example.com
+Date: Sun, 16 Dec 2001 00:00:00 +0900
+Subject: test
+MIME-Version: 1.0
+Content-Type: text/html
+
+<HTML>
+<IMG SRC=javascript:alert(document.domain)>
+</HTML>
