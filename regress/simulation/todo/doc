@@ -2,78 +2,81 @@
 
 	we ends the developement toward the first prototype once.
 
+---------------
+2001/05 todo (document clean up)
 
-TODO of document clean up
-
+	FML/Article.pm
+	FML/CGI/Configure.pm
+	FML/CGI/TicketSystem.pm
+	FML/Checksum.pm
+	FML/Command.pm
+	FML/Command/add.pm
+	FML/Command/bye.pm
+	FML/Command/newml.pm
+	FML/Command/remove.pm
+	FML/Command/resign.pm
+	FML/Command/subscribe.pm
+	FML/Command/unsubscribe.pm
 	FML/Config.pm
 	FML/Credential.pm
+	FML/Debug.pm
+	FML/Header.pm
+	FML/Header/Subject.pm
+	FML/Log.pm
+	FML/MIME.pm
+	FML/Mailer.pm
+	FML/MemberControl.pm
+	FML/Messages.pm
+	FML/PCB.pm
+	FML/Parse.pm
+	FML/Process/CGI.pm
+	FML/Process/Command.pm
+	FML/Process/Configure.pm
+	FML/Process/Distribute.pm
+	FML/Process/DocViewer.pm
+	FML/Process/Flow.pm
+	FML/Process/Kernel.pm
+	FML/Process/QMail.pm
+	FML/Process/QueueManager.pm
+	FML/Process/Switch.pm
+	FML/Process/TicketSystem.pm
+	FML/Ticket/Model/minimal_states.pm
+	FML/Ticket/System.pm
+	File/RingBuffer.pm
+	File/Rotate.pm
+	File/Sequence.pm
+	File/SimpleLock.pm
+	File/Utils.pm
+	IO/Adapter.pm
+	IO/Adapter/Array.pm
+	IO/Adapter/DBI.pm
+	IO/Adapter/File.pm
+	IO/Adapter/MySQL.pm
+	IO/Adapter/NIS.pm
+	IO/Adapter/RDBMS.pm
+	IO/Adapter/UnixGroup.pm
+	IO/File/Atomic.pm
+	Language/ISO2022JP.pm
+	Language/Japanese/String.pm
+	Language/Japanese/Subject.pm
+	Language/Japanese/Utils.pm
+	Mail/Bounce/Postfix19991231.pm
+	Mail/Bounce/SimpleMatch.pm
+	Mail/Delivery.pm
+	Mail/Delivery/Net/INET6.pm
+	Mail/Delivery/Queue.pm
+	Mail/Delivery/SMTP.pm
+	Mail/Message.pm
+	Mail/Message/Compose.pm
+	Mail/Message/Parse.pm
+	MailingList/Delivery.pm
 	MailingList/Messages.pm
-	Process/TicketSystem.pm ( not yet implemented )
-	CGI/TicketSystem.pm     ( not yet implemented )
-
----------------
-2001/03 末チェックしないといけないリスト？
-
-
-ErrorMessages/Status.pm
-FML/Article.pm
-FML/Checksum.pm
-FML/Command.pm
-FML/Config.pm
-FML/Debug.pm
-FML/Header.pm
-FML/Log.pm
-FML/MIME.pm
-FML/MemberControl.pm
-FML/Messages.pm
-FML/PCB.pm
-FML/Parse.pm
-FML/CGI/Configure.pm
-FML/CGI/TicketSystem.pm
-FML/Command/add.pm
-FML/Command/bye.pm
-FML/Command/newml.pm
-FML/Command/remove.pm
-FML/Command/resign.pm
-FML/Command/subscribe.pm
-FML/Command/unsubscribe.pm
-FML/Header/Subject.pm
-FML/Process/CGI.pm
-FML/Process/Command.pm
-FML/Process/Configure.pm
-FML/Process/Distribute.pm
-FML/Process/DocViewer.pm
-FML/Process/Flow.pm
-FML/Process/Kernel.pm
-FML/Process/QMail.pm
-FML/Process/Switch.pm
-FML/Process/TicketSystem.pm
-FML/Ticket/System.pm
-FML/Ticket/Model/minimal_states.pm
-File/RingBuffer.pm
-File/Rotate.pm
-File/Sequence.pm
-File/SimpleLock.pm
-File/Utils.pm
-IO/Adapter.pm
-IO/Adapter/Array.pm
-IO/Adapter/DBI.pm
-IO/Adapter/File.pm
-IO/Adapter/MySQL.pm
-IO/Adapter/NIS.pm
-IO/Adapter/RDBMS.pm
-IO/Adapter/UnixGroup.pm
-IO/File/Atomic.pm
-Language/ISO2022JP.pm
-Language/Japanese/String.pm
-Language/Japanese/Subject.pm
-Language/Japanese/Utils.pm
-MailingList/Delivery.pm
-MailingList/Messages.pm
-MailingList/SMTP.pm
-MailingList/Utils.pm
-MailingList/Net/INET4.pm
-MailingList/Net/INET6.pm
-SQL/Schema/toymodel.pm
-Tie/JournaledFile.pm
-libexec/Standalone.pm
+	MailingList/Messages.pm
+	MailingList/Net/INET4.pm
+	MailingList/Net/INET6.pm
+	MailingList/SMTP.pm
+	MailingList/Utils.pm
+	Process/TicketSystem.pm
+	SQL/Schema/toymodel.pm
+	Tie/JournaledFile.pm
+	libexec/Standalone.pm
