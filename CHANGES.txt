@@ -4,8 +4,31 @@
 2001/10/21
 
    Mail::HTML::Lite 
-	oops, fix untie() operation to be ensured
+	月ごとの ID インデックスも作る (TABLE)。
+	make monthly index always
+		monthly_index.html
+		month.YYYYMM.html
+
+	clean up codes, documents
 	
+	implement _print_index_{begin,end}() and modified to use them
+	
+	sort location of function definition
+	rename functin name:
+	_print_attachment -> _print_inline_object
+	_raw_text_print   -> _text_print_by_raw_mode
+	
+	oops, fix untie() operation to be ensured
+
+	check target html is already processed or not
+	
+	bug fix _address_clean_up() syntax check
+	
+	check already processed or not
+	you can know it by $self->is_ignore($id) method.
+	
+	move a lot of debug code to "if $debug > 3" in cache_message_info()
+
 2001/10/20
 
    Mail::HTML::Lite 
@@ -640,4 +663,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.21 2001/10/20 07:55:55 fukachan Exp $
+$FML: CHANGES.txt,v 1.22 2001/10/20 17:04:17 fukachan Exp $
