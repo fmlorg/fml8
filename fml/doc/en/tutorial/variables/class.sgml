@@ -276,6 +276,11 @@ html {
           $html_archive_index_order_type
           $use_html_archive
    }
+
+   html_archive_address_mask { 
+          $html_archive_address_mask_type
+          $use_html_archive_address_mask
+   }
 }
 
 incoming {
