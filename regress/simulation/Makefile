@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.65 2003/03/09 03:11:59 fukachan Exp $
+# $FML: Makefile,v 1.66 2003/03/11 14:43:20 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -26,6 +26,7 @@ check:
 	- test -f 33_TODO && mv -f 33_TODO 33_TODO.bak
 	@ echo "   *********** 00_MEMO ********** " >> 33_TODO
 	- grep '^\[TODO' 00_MEMO >> 33_TODO
+	@ echo "   *********** PERL SYNTAX CHECKS ********** " >> 33_TODO
 	- (cd ../../fml; make check 2>&1 |\
 		grep -v 'syntax OK' |\
 		tee -a ../regress/simulation/33_TODO) |\
@@ -100,6 +101,10 @@ _test:
 
 diag:
 	env PATH=/usr/pkg/bin:$$PATH make check
+
+depend:
+	perl .module_dependence.pl `find lib/ -type f |grep pm` |\
+	tee 55_DEPEND.bak
 
 
 #
