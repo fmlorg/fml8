@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.62 2003/10/15 08:16:22 fukachan Exp $
+# $FML: Kernel.pm,v 1.63 2003/10/15 10:12:51 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -94,6 +94,13 @@ sub prepare
     $curproc->_cgi_resolve_ml_specific_variables( $args );
     $curproc->load_config_files( $args->{ cf_list } );
     $curproc->fix_perl_include_path();
+
+    # modified for admin/*.cgi
+    unless ($curproc->cgi_var_ml_name()) {
+	$curproc->_cgi_fix_log_file();
+    }
+
+    # fix charset 
     $curproc->_set_charset();
 
     my $charset = $curproc->get_charset("cgi"); # updated charset.
@@ -110,17 +117,47 @@ sub prepare
 sub _set_charset
 {
     my ($curproc) = @_;
-    my $lang = $curproc->cgi_var_language();
+    my $lang = $curproc->cgi_var_language() || 
+	$curproc->_http_accept_language();
 
-    if ($lang =~ /japanese/i) {
+    if ($lang =~ /japanese|^ja/i) {
 	$curproc->set_charset("template_file", 'euc-jp');
     }
-    elsif ($lang =~ /english/i) {
+    elsif ($lang =~ /english|^en/i) {
 	$curproc->set_charset("template_file", 'us-ascii');
     }
     else {
 	$curproc->set_charset("template_file", 'us-ascii');
     }
+}
+
+
+# Descriptions: speculate default language preferred by user browser.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub _http_accept_language
+{
+    my ($curproc) = @_;
+    my $r = '';
+
+    if ($ENV{'HTTP_ACCEPT_LANGUAGE'}) {
+	my $buf = $ENV{'HTTP_ACCEPT_LANGUAGE'};
+
+      LANG:
+	for my $lang (split(/\s*,\s*/, $buf)) {
+	    if ($lang =~ /^ja/) {
+		$r = 'ja';
+		last LANG;
+	    }
+	    elsif ($lang =~ /^en/) {
+		$r = 'en';
+		last LANG;
+	    }
+	}
+    }
+
+    return $r;
 }
 
 
@@ -131,27 +168,19 @@ sub _set_charset
 sub _cgi_resolve_ml_specific_variables
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->config();
-    my ($ml_home_dir, $config_cf);
+    my $config         = $curproc->config();
+    my $ml_name        = $curproc->cgi_var_ml_name();
+    my $ml_domain      = $curproc->cgi_var_ml_domain();
+    my $ml_home_prefix = $curproc->cgi_var_ml_home_prefix();
 
-    # inherit ml_domain from $hints
-    # which is defined/hard-coded in *.cgi (libexec/loader) script.
-    my $hints          = $curproc->hints();
-    my $ml_domain      = $hints->{ ml_domain };
-    my $ml_home_prefix = $curproc->ml_home_prefix( $ml_domain );
-
-    # cheap sanity
+    # cheap sanity 1.
     unless ($ml_home_prefix) {
 	my $r = "ml_home_prefix undefined";
 	croak("__ERROR_cgi.fail_to_get_ml_home_prefix__: $r");
     }
 
-    # reset
-    $config->set('ml_domain',      $ml_domain);
-    $config->set('ml_home_prefix', $ml_home_prefix);
-
-    # speculate ml_name, which is not used in some cases.
-    my $ml_name = $curproc->safe_param_ml_name() || do {
+    # cheap sanity 2.
+    unless ($ml_name) {
 	my $is_need_ml_name = $args->{ 'need_ml_name' };
 	if ($is_need_ml_name) {
 	    my $r = "fail to get ml_name from HTTP";
@@ -159,11 +188,15 @@ sub _cgi_resolve_ml_specific_variables
 	}
     };
 
+    # reset $ml_domain and $ml_home_prefix.
+    $config->set('ml_domain',      $ml_domain);
+    $config->set('ml_home_prefix', $ml_home_prefix);
+
     # speculate $ml_home_dir when $ml_name is determined.
     if ($ml_name) {
 	use File::Spec;
-	$ml_home_dir = $curproc->ml_home_dir($ml_name, $ml_domain);
-	$config_cf   = $curproc->config_cf_filepath($ml_name, $ml_domain);
+	my $ml_home_dir = $curproc->ml_home_dir($ml_name, $ml_domain);
+	my $config_cf   = $curproc->config_cf_filepath($ml_name, $ml_domain);
 
 	$config->set('ml_name',     $ml_name);
 	$config->set('ml_home_dir', $ml_home_dir);
@@ -172,8 +205,26 @@ sub _cgi_resolve_ml_specific_variables
 	my $cflist = $args->{ cf_list };
 	push(@$cflist, $config_cf);
     }
+    else {
+	$curproc->log("debug: no ml_name, overwrite ml_home_dir,log_file");
+    }
 
     $curproc->__debug_ml_xxx('cgi:');
+}
+
+
+# Descriptions: fix logging system for admin/*.cgi
+#    Arguments: OBJ($curproc)
+# Side Effects: update variables.
+# Return Value: none
+sub _cgi_fix_log_file
+{
+    my ($curproc) = @_;
+    my $config    = $curproc->config();
+
+    $config->set('ml_home_dir', $config->{ domain_local_tmp_dir  });
+    $config->set('log_file',    $config->{ domain_local_log_file });
+    $curproc->log("debug: log_file = $config->{ log_file }");
 }
 
 
