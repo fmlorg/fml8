@@ -27,11 +27,14 @@ sub new
     my $cfargs    = {};
 
     # import variables
-    if ($args->{ ml_home_dir }) {
-	$cfargs->{ ml_home_dir } = $args->{ ml_home_dir };
-    }
-    else {
-	croak "ml_home_dir is not defined.\n";
+    my (@import_vars) = qw(ml_home_dir ml_home_prefix);
+    for my $var (@import_vars) {
+	if ($args->{ $var }) {
+	    $cfargs->{ $var } = $args->{ $var };
+	}
+	else {
+	    croak "variable $var is not defined.\n";
+	}
     }
 
     # import $fml_version
