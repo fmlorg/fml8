@@ -142,6 +142,13 @@ command_restrictions	=	reject_system_accounts
 				reject
 
 
+# Descriptions: admin コマンドへの制限
+#      History: fml 4.0 の ?
+#     Examples:
+admin_command_restrictions	=	check_password
+					reject
+
+
 =head2 メンバーとみなされるのは誰か？
 
 # Descriptions: 登録などの際に対象となるメンバーリスト
