@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.5 2001/12/22 09:21:10 fukachan Exp $
+# $FML: Utils.pm,v 1.6 2001/12/23 11:37:08 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -139,6 +139,36 @@ sub command_line_options
     my $args = $curproc->{ __parent_args };
 
     return $args->{ options };
+}
+
+
+=head2 get_virtual_maps()
+
+return virtual maps.
+
+=cut
+
+
+# Descriptions: options, which is the result by getopts() analyze
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: HASH_ARRAY
+sub get_virtual_maps
+{
+    my ($curproc) = @_;
+    my $args = $curproc->{ __parent_args }->{ main_cf };
+
+    if (defined $args->{ virtual_maps } && $args->{ virtual_maps }) {
+	my (@r) = ();   
+	my (@maps) = split(/\s+/, $args->{ virtual_maps });
+	for (@maps) {
+	    if (-f $_) { push(@r, $_);}
+	}
+	return \@r;
+    }
+    else {
+	return undef;
+    }
 }
 
 
