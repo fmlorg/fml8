@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Command.pm,v 1.9 2001/04/06 16:25:43 fukachan Exp $
+# $FML: Command.pm,v 1.10 2001/05/28 16:17:14 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -98,17 +98,16 @@ sub run
 {
     my ($curproc, $args) = @_;
 
-    $curproc->lock();
+    # $curproc->lock();
     {
-	# user credential
-	my $cred = $curproc->{ credential };
-
-	# Q: the mail sender is a ML member?
-	if ($cred->is_member) {
+	if ($curproc->permit_command($args)) {
 	    $curproc->_evaluate_command($args); 
 	}
+	else {
+	    Log("deny command submission");
+	}
     }
-    $curproc->unlock();
+    # $curproc->unlock();
 }
 
 
@@ -123,6 +122,7 @@ sub finish
     my ($curproc, $args) = @_;
 
     $curproc->inform_reply_messages();
+    $curproc->queue_flush();
 }
 
 
@@ -137,6 +137,7 @@ sub _evaluate_command
     my $body    = $curproc->{ incoming_message }->{ body }->data_in_body_part;
     my @body    = split(/\n/, $body);
 
+  COMMAND:
     for my $command (@body) { 
 	my $is_valid = 
 	    $config->has_attribute( "available_commands", $command )
@@ -145,22 +146,31 @@ sub _evaluate_command
 	next if $is_valid eq 'no';
 
 	# arguments to pass off to each method
+	my @options = ();
 	my $optargs = {
-	    command => $command,
-	    ml_name => $ml_name,
-	    argv    => $argv,
-	    args    => $args,
+	    command_mode => 'user',
+	    command      => $command,
+	    ml_name      => $ml_name,
+	    options      => \@options,
+	    argv         => $argv,
+	    args         => $args,
 	};
 
-	my $pkg = 'FML::Command';
-	eval qq{ require $pkg; $pkg->import();};
-	unless ($@) {
-	    my $obj = new $pkg;
-	    $obj->$command($curproc, $optargs);
+	use FML::Command;
+	my $obj = new FML::Command;
+	if (defined $obj) {
+	    eval q{
+		$obj->$command($curproc, $optargs);
+	    };
+	    if ($@) {
+		LogError("fail to exec ${command}");
+		LogError($@);
+	    }
 	}
-	else { 
-	    Log($@);
-	}
+
+	#
+	# next COMMAND;
+	#
     }
 }
 
