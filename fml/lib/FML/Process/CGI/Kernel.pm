@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.9 2001/11/25 09:06:31 fukachan Exp $
+# $FML: Kernel.pm,v 1.10 2001/12/22 09:21:10 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -47,9 +47,13 @@ ordinary constructor which is used widely in FML::Process classes.
 =cut
 
 
-# XXX now we re-evaluate $ml_home_dir and @cf again.
-# XXX but we need the mechanism to re-evaluate $args passed from
-# XXX libexec/loader.
+# Descriptions: constructor.
+#               now we re-evaluate $ml_home_dir and @cf again.
+#               but we need the mechanism to re-evaluate $args passed from
+#               libexec/loader.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self, $args) = @_;
@@ -87,8 +91,12 @@ The charset is C<euc-jp> by default.
 =cut
 
 
-# XXX FML::Process::Kernel::prepare() parses incoming_message
-# XXX CGI do not parse incoming_message;
+# Descriptions: html header.
+#               FML::Process::Kernel::prepare() parses incoming_message
+#               CGI do not parse incoming_message;
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
 sub prepare
 {
     my ($curproc) = @_;
@@ -132,6 +140,13 @@ run() executes
 =cut
 
 
+# Descriptions: run FML::CGI::* methods
+#                  html_start()
+#                  run_cgi()
+#                  html_end()
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub run
 {
     my ($curproc, $args) = @_;
@@ -149,6 +164,10 @@ get HASH ARRAY of valid mailing lists.
 =cut
 
 
+# Descriptions: list up ML 
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: HASH_ARRAY
 sub get_ml_list
 {
     my ($curproc, $args) = @_;
@@ -176,6 +195,10 @@ get and filter param('xxx') via AUTOLOAD().
 =cut
 
 
+# Descriptions: trap safe_param_XXX()
+#    Arguments: OBJ($curproc)
+# Side Effects: callback to safe_param*().
+# Return Value: depend on safe_param*() return value
 sub AUTOLOAD
 {
     my ($curproc) = @_;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.4 2001/11/09 10:39:40 fukachan Exp $
+# $FML: Utils.pm,v 1.5 2001/12/22 09:21:10 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -16,19 +16,47 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Process::Utils - small utilities
+FML::Process::Utils - small utilities for FML::Process::
 
 =head1 SYNOPSIS
 
+See FML::Process::Kernel.
+
 =head1 DESCRIPTION
 
-=head1 TODO
-
 =head1 METHODS
+
+=head2 fml_version()
+
+return fml version.
+
+=head2 myname()
+
+return current process name.
+
+=head2 command_line_raw_argv()
+
+@ARGV before getopts() analyze.
+
+=head2 command_line_argv()
+
+@ARGV after getopts() analyze.
+
+=head2 command_line_argv_find(pat)
+
+search pattern in @ARGV and return it if found.
+
+=head2 command_line_options()
+
+return options, result of getopts() analyze.
 
 =cut
 
 
+# Descriptions: return fml version
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
 sub fml_version
 {
     my ($curproc) = @_;
@@ -38,6 +66,10 @@ sub fml_version
 }
 
 
+# Descriptions: return current process name
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
 sub myname
 {
     my ($curproc) = @_;
@@ -47,6 +79,11 @@ sub myname
 }
 
 
+# Descriptions: return raw @ARGV of current process,
+#               where @ARGV is before getopts() applied
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: HASH_ARRAY
 sub command_line_raw_argv
 {
     my ($curproc) = @_;
@@ -56,6 +93,11 @@ sub command_line_raw_argv
 }
 
 
+# Descriptions: return @ARGV of current process,
+#               where @ARGV is after getopts() applied
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: HASH_ARRAY
 sub command_line_argv
 {
     my ($curproc) = @_;
@@ -65,6 +107,11 @@ sub command_line_argv
 }
 
 
+# Descriptions: search string matched with specified pattern and
+#               return it.
+#    Arguments: OBJ($curproc) STR($pat)
+# Side Effects: none
+# Return Value: STR or UNDEF
 sub command_line_argv_find
 {
     my ($curproc, $pat) = @_;
@@ -82,6 +129,10 @@ sub command_line_argv_find
 }
 
 
+# Descriptions: options, which is the result by getopts() analyze
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: HASH_ARRAY
 sub command_line_options
 {
     my ($curproc) = @_;
@@ -91,6 +142,17 @@ sub command_line_options
 }
 
 
+=head2 article_id_max()
+
+return the current article number (sequence number).
+
+=cut
+
+
+# Descriptions: return the current article number (sequence number)
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: NUM
 sub article_id_max
 {
     my ($curproc) = @_;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.48 2001/12/22 09:21:10 fukachan Exp $
+# $FML: Switch.pm,v 1.49 2001/12/22 16:10:00 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -16,7 +16,7 @@ use vars qw($debug);
 
 =head1 NAME
 
-FML::Process::Switch - dispatch the suitable library
+FML::Process::Switch - dispatch the suitable module
 
 =head1 SYNOPSIS
 
@@ -35,7 +35,7 @@ analyzes the command arguments
 and call C<ProcessSwitch()> finally.
 
 C<ProcessSwitch()> emulates "use $package" to load
-the corresponding library with the arguments.
+module suitable with the arguments.
 The fml flow bifurcates here through C<ProcessSwitch()>.
 
 The flow details of program exists in FML::Process:: class.
@@ -77,10 +77,9 @@ We pass it to C<ProcessSwitch()> later.
 
 
 # Descriptions: the second phase of bootstrap
-#    Arguments: $main_cf_file
-#               /etc/fml/main.cf in typical case.
+#    Arguments: STR($main_cf_file) HASH_REF($main_cf)
 # Side Effects: none
-# Return Value: the same as FML::Process::Flow::ProcessStart()
+# Return Value: same as FML::Process::Flow::ProcessStart()
 sub main::Bootstrap2
 {
     my ($main_cf_file, $main_cf) = @_;
@@ -195,9 +194,9 @@ sub main::Bootstrap2
 
 
 # Descriptions: analyze argument vector
-#    Arguments: $main_cf_file_name
+#    Arguments: STR($myname) HASH_REF($main_cf)
 # Side Effects: none
-# Return Value: ARRAY REFERENCE (a list of config.cf's)
+# Return Value: HASH_ARRAY (list of config.cf's)
 sub _parse_argv
 {
     my ($myname, $main_cf) = @_;
@@ -211,6 +210,10 @@ sub _parse_argv
 }
 
 
+# Descriptions: analyze argument vector
+#    Arguments: STR($myname) HASH_REF($main_cf)
+# Side Effects: none
+# Return Value: HASH_ARRAY (list of config.cf's)
 sub _usual_parse_argv
 {
     my ($myname, $main_cf) = @_;
@@ -253,6 +256,10 @@ sub _usual_parse_argv
 }
 
 
+# Descriptions: analyze argument vector
+#    Arguments: STR($myname) HASH_REF($main_cf)
+# Side Effects: none
+# Return Value: HASH_ARRAY (list of config.cf's)
 sub _makefml_parse_argv
 {
     my ($myname, $main_cf) = @_;
@@ -326,11 +333,10 @@ C<$args> is like this:
 # Descriptions: top level process switch
 #               emulates "use $package" but $package is dynamically
 #               determined by e.g. $0.
-#    Arguments: $args
-#               XXX non OO interface
+#    Arguments: HASH_REF($args)
 # Side Effects: process switching :-)
 #               ProcessSwtich() is exported to main:: Name Space.
-# Return Value: package name
+# Return Value: STR(package name)
 sub ProcessSwitch
 {
     my ($args) = @_;
@@ -353,9 +359,9 @@ sub ProcessSwitch
 
 
 # Descriptions: return the suitable getopt options
-#    Arguments: $myname (determined by $0)
+#    Arguments: STR($myname)
 # Side Effects: none
-# Return Value: getopt parameters
+# Return Value: ARRAY (getopt parameters)
 sub _module_specific_options
 {
     my ($myname) = @_;
@@ -412,7 +418,7 @@ sub _module_specific_options
 
 
 # Descriptions: this program ($0) requires ML name always or not?
-#    Arguments: $myname ($0)
+#    Arguments: STR($myname)
 # Side Effects: none
 # Return Value: 1 (require ml name always) or 0
 sub _ml_name_is_required
@@ -435,10 +441,9 @@ sub _ml_name_is_required
 
 
 # Descriptions: determine package we need and require() it if needed.
-#    Arguments: $args
-#               XXX non OO interface
+#    Arguments: HASH_REF($args)
 # Side Effects: none
-# Return Value: FML::Process::SOMETHING module name
+# Return Value: STR(FML::Process::SOMETHING module name)
 sub _module_we_use
 {
     my ($args) = @_;

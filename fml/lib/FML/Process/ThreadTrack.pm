@@ -3,7 +3,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ThreadTrack.pm,v 1.17 2001/11/27 11:40:30 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.18 2001/12/22 09:21:10 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -44,6 +44,10 @@ dummy.
 =cut
 
 
+# Descriptions: standard constructor
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self, $args) = @_;
@@ -54,8 +58,8 @@ sub new
 
 
 # Descriptions: dummy to avoid to take data from STDIN
-#    Arguments: $self $args
-# Side Effects:
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
 # Return Value: none
 sub prepare
 {
@@ -69,6 +73,11 @@ call the actual thread tracking system.
 
 =cut
 
+
+# Descriptions: switch of commands to use Mail::ThreadTrack module
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: load module
+# Return Value: none
 sub run
 {
     my ($curproc, $args) = @_;
@@ -183,6 +192,10 @@ sub _speculate_last_id
 }
 
 
+# Descriptions: speculate maximum sequence number for ML article
+#    Arguments: OBJ($curproc) STR($spool_dir)
+# Side Effects: none
+# Return Value: NUM
 sub _speculate_max_id
 {
     my ($curproc, $spool_dir) = @_;
@@ -218,6 +231,10 @@ sub _speculate_max_id
 }
 
 
+# Descriptions: read filter list
+#    Arguments: OBJ($thread) STR($file)
+# Side Effects: none
+# Return Value: none
 sub _read_filter_list
 {
     my ($thread, $file) = @_;
@@ -240,8 +257,12 @@ sub _read_filter_list
 }
 
 
-# $thread_id accepts MH style format.
-# MH style is expanded by C<Mail::Messsage::MH>.
+# Descriptions: change status to "closed".
+#               $thread_id accepts MH style format.
+#               MH style is expanded by C<Mail::Messsage::MH>.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: update thread status database
+# Return Value: none
 sub _close
 {
     my ($thread, $thread_id, $min, $max) = @_;
@@ -267,6 +288,10 @@ sub _close
 }
 
 
+# Descriptions: show help
+#    Arguments: none
+# Side Effects: none
+# Return Value: none
 sub help
 {
     use File::Basename;
@@ -289,11 +314,7 @@ _EOF_
 
 sub DESTROY {}
 
-# Descriptions: dummy routine to avoid errors
-#               since we need all methods defined in FML::Process::Flow.
-#    Arguments: $self $args
-# Side Effects: none
-# Return Value: none
+
 sub AUTOLOAD
 {
     my ($curproc, $args) = @_;
@@ -308,6 +329,11 @@ use strict;
 use Carp;
 
 
+# Descriptions: top level interface for CUI.
+#               This routine is in loop.
+#    Arguments: OBJ($curproc) HASH_REF($args) OBJ($thread) HASH_REF($ttargs)
+# Side Effects: none
+# Return Value: none
 sub interactive
 {
     my ($curproc, $args, $thread, $ttargs) = @_;
@@ -332,6 +358,12 @@ sub interactive
 }
 
 
+# Descriptions: CUI command switch
+#    Arguments: OBJ($curproc) HASH_REF($args)
+#               OBJ($xthread) HASH_REF($ttargs)
+#               STR($buf)
+# Side Effects: exit for some type of input.
+# Return Value: none
 sub _exec
 {
     my ($curproc, $args, $xthread, $ttargs, $buf) = @_;
@@ -386,10 +418,10 @@ sub _exec
 }
 
 
-#
-# commands
-#
-
+# Descriptions: show CUI help
+#    Arguments: none
+# Side Effects: none
+# Return Value: none
 sub help
 {
     print "Usage: $0\n\n";

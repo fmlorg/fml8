@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.57 2001/12/18 12:56:05 fukachan Exp $
+# $FML: Distribute.pm,v 1.58 2001/12/22 09:21:09 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -41,15 +41,16 @@ where C<$obj> is the object C<FML::Process::$module::new()> returns.
 
 create C<FML::Process::Distribute> object.
 C<$curproc> is the object C<FML::Process::Kernel> returns but
-we bless it as C<FML::Process::Distribute> object.
+we bless it as C<FML::Process::Distribute> object again.
 
 =cut
 
+
 # Descriptions: constructor.
 #               sub class of FML::Process::Kernel
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
-# Return Value: FML::Process::Distribute object
+# Return Value: OBJ(FML::Process::Distribute)
 sub new
 {
     my ($self, $args) = @_;
@@ -65,8 +66,9 @@ forward the request to the base class.
 
 =cut
 
+
 # Descriptions: prepare miscellaneous work before the main routine starts
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub prepare
@@ -82,9 +84,10 @@ check the mail sender and the mail loop possibility.
 
 =cut
 
+
 # Descriptions: verify the mail sender and others
-#    Arguments: $self $args
-# Side Effects: none
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: lock
 # Return Value: none
 sub verify_request
 {
@@ -107,8 +110,9 @@ Lastly we unlock the current process.
 
 =cut
 
-# Descriptions: the main routine
-#    Arguments: $self $args
+
+# Descriptions: the main routine, kick off _distribute()
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: distribution of articles.
 #               See _distribute() for more details.
 # Return Value: none
@@ -158,9 +162,11 @@ If needed, we send back error messages to the mail sender.
 
 =cut
 
-# Descriptions: clean up in the end of the curreen process
-#    Arguments: $self $args
-# Side Effects: none
+
+# Descriptions: clean up in the end of the curreen process.
+#               return error messages et. al.
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: queue flush
 # Return Value: none
 sub finish
 {
@@ -176,7 +182,7 @@ sub finish
 #                  $article->header_rewrite();
 #                  $article->increment_id();
 #                  $article->spool();
-#    Arguments: $self $args
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: header rewrite
 #               the article sequence number is incremanted
 #               article spooling.
@@ -221,9 +227,9 @@ sub _distribute
 
 
 # Descriptions: build and return FML::Article object
-#    Arguments: $self $args
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
-# Return Value: FML::Article object
+# Return Value: OBJ(FML::Article)
 sub _prepare_article
 {
     my ($curproc, $args) = @_;
@@ -239,7 +245,7 @@ sub _prepare_article
 # Descriptions: header rewrite followed by
 #               $config->{ article_header_rewrite_rules }
 #               each method exists in FML::Header module.
-#    Arguments: $self $args
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: $curproc->{ article }->{ header } is rewritten
 # Return Value: none
 sub _header_rewrite
@@ -268,8 +274,8 @@ sub _header_rewrite
 
 
 # Descriptions: deliver the article
-#    Arguments: $self $args
-# Side Effects: smtp logging
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: mail delivery, logging
 # Return Value: none
 sub _deliver_article
 {
@@ -335,7 +341,7 @@ sub _deliver_article
 
 
 # Descriptions: the top level interface to drive thread tracking system
-#    Arguments: $self $args
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: update thread information
 # Return Value: none
 sub _thread_check
@@ -373,6 +379,10 @@ sub _thread_check
 }
 
 
+# Descriptions: the top level entry to create HTML article
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: update html database
+# Return Value: none
 sub htmlify
 {
     my ($curproc, $args) = @_;
@@ -402,6 +412,7 @@ sub htmlify
 	Log($@) if $@;
     }
 }
+
 
 =head1 AUTHOR
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.4 2001/09/13 14:43:28 fukachan Exp $
+# $FML: QueueManager.pm,v 1.5 2001/12/22 09:21:09 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -26,13 +26,12 @@ or if you send specific queue C<$queue_id>, use
 
     $obj->send($curproc, $queue_id);
 
-where C<$queue_id> is like this 1000390413.14775.1 not file path.
+where C<$queue_id> is queue id such as 1000390413.14775.1, 
+not file path.
 
 =head1 DESCRIPTION
 
-not yet implemented.
-
-Now it can send a mail in queue.
+queue flush!
 
 =head1 METHODS
 
@@ -42,9 +41,14 @@ constructor.
 
 =cut
 
+
 use FML::Log qw(Log LogWarn LogError);
 
 
+# Descriptions: standard constructor
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self, $args) = @_;
@@ -64,6 +68,11 @@ If queue id C<$id> is specified, send queue for C<$id>.
 
 =cut
 
+
+# Descriptions: send message in queue directory sequentially
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args)
+# Side Effects: queue flush-ed
+# Return Value: none
 sub send
 {
     my ($self, $curproc, $id) = @_;
@@ -95,6 +104,10 @@ sub send
 }
 
 
+# Descriptions: send message object $q
+#    Arguments: OBJ($self) OBJ($curproc) OBJ($q)
+# Side Effects: queue flush-ed
+# Return Value: STR
 sub _send
 {
     my ($self, $curproc, $q) = @_;

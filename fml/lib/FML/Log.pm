@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.13 2001/11/27 15:19:39 fukachan Exp $
+# $FML: Log.pm,v 1.14 2001/12/22 09:21:01 fukachan Exp $
 #
 
 package FML::Log;
@@ -13,7 +13,6 @@ require Exporter;
 
 use strict;
 use Carp;
-use Mail::Message::Date;
 use FML::Config;
 use FML::Credential;
 
@@ -73,22 +72,35 @@ same as Log("error: $message", $args);
 =cut
 
 
+# Descriptions: write message $msg to logfile
+#    Arguments: STR($msg) HASH_REF($args)
+# Side Effects: update logfile
+# Return Value: none
 sub Log
 {
     my ($mesg, $args) = @_;
-    my $config = new FML::Config;
+    my $config   = new FML::Config;
+    my $log_file = '';
+    my $priority = '';
+    my $facility = '';
+    my $level    = '';
+    my $rdate    = '';
+
+    # simple check: null $mesg string is invalid.
+    return undef unless defined $mesg;
+    return undef unless $mesg;
 
     # parse arguments
-    my $log_file = $args->{ log_file };
-    my $priority = $args->{ priority };
-    my $facility = $args->{ facility };
-    my $level    = $args->{ level };
-
-    # invalid calling
-    $mesg || return undef ;
+    $log_file = $args->{ log_file } if defined $args->{ log_file };
+    $priority = $args->{ priority } if defined $args->{ priority };
+    $facility = $args->{ facility } if defined $args->{ facility };
+    $level    = $args->{ level }    if defined $args->{ level };
 
     # reference to "date" object
-    my $rdate = new Mail::Message::Date;
+    eval q{ 
+	use Mail::Message::Date;
+	$rdate = new Mail::Message::Date;
+    };
 
     # open the $file by using FileHandle.pm
     use FileHandle;
@@ -118,6 +130,10 @@ sub Log
 }
 
 
+# Descriptions: write message "warn: $msg", call Log() ASAP
+#    Arguments: STR($msg) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub LogWarn
 {
     my ($mesg, $args) = @_;
@@ -125,6 +141,10 @@ sub LogWarn
 }
 
 
+# Descriptions: write message "error: $msg", call Log() ASAP
+#    Arguments: STR($msg) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub LogError
 {
     my ($mesg, $args) = @_;

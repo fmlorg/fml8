@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.65 2001/12/22 03:20:39 fukachan Exp $
+# $FML: Kernel.pm,v 1.66 2001/12/22 09:21:09 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -68,7 +68,7 @@ use File::SimpleLock;
 push(@ISA, qw(FML::Process::Utils));
 
 # Descriptions: constructor
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: FML::Process::Kernel object
 sub new
@@ -160,7 +160,7 @@ sub new
 
 
 # Descriptions: set up default signal handling
-#    Arguments: $self $args
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub _signal_init
@@ -177,7 +177,7 @@ sub _signal_init
 
 
 # Descriptions: show help and exit here, (ASAP)
-#    Arguments: $self $args
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: longjmp() to help
 # Return Value: none
 sub _trap_help
@@ -205,7 +205,7 @@ a set of the header and the body object.
 =cut
 
 # Descriptions: preliminary works before the main part
-#    Arguments: $self $args
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: same as parse_incoming_message()
 sub prepare
@@ -228,7 +228,7 @@ It is a giant lock now.
 =cut
 
 # Descriptions:
-#    Arguments: $self $args
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects:
 # Return Value: none
 sub lock
@@ -273,7 +273,7 @@ sub lock
 
 
 # Descriptions:
-#    Arguments: $self $args
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects:
 # Return Value: none
 sub unlock
@@ -302,7 +302,7 @@ If valid, it sets the adddress within $curproc->{ credential } object.
 =cut
 
 # Descriptions:
-#    Arguments: $self $args
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects:
 # Return Value: none
 sub verify_sender_credential
@@ -342,7 +342,7 @@ See C<FML::Header> object for more details.
 =cut
 
 # Descriptions: top level of loop checks
-#    Arguments: $self $args
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub simple_loop_check
@@ -379,7 +379,7 @@ $config->get() of FETCH() method is called.
 =cut
 
 # Descriptions: load configuration files and evaluate variables
-#    Arguments: $self $args
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub load_config_files
@@ -417,7 +417,7 @@ The C<body> is C<Mail::Message> object.
 =cut
 
 # Descriptions: parse the message to a set of header and body
-#    Arguments: $self $args
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: $curproc->{'incoming_message'} is set up
 # Return Value: none
 sub parse_incoming_message
@@ -627,7 +627,7 @@ Prepare the message and queue it in by C<Mail::Delivery::Queue>.
 #               $r  = get(message, queue)
 #               msg = header + "text" + $r->[0] + $r->[1] + ...
 #
-#    Arguments: $self $args
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects:
 # Return Value: none
 sub inform_reply_messages
@@ -650,6 +650,10 @@ sub inform_reply_messages
 =cut
 
 
+# Descriptions: queue in. queueing only not delivered.
+#    Arguments: OBJ($curproc) STR($category) HASH_REF($optargs)
+# Side Effects: add message into queue
+# Return Value: OBJ(queue object)
 sub queue_in
 {
     my ($curproc, $category, $optargs) = @_;
@@ -742,6 +746,10 @@ sub queue_in
 }
 
 
+# Descriptions: add some info into header
+#    Arguments: OBJ($config) OBJ($msg)
+# Side Effects: none
+# Return Value: none
 sub _add_info_on_header
 {
     my ($config, $msg) = @_;
@@ -769,6 +777,11 @@ C<TODO:>
 
 =cut
 
+
+# Descriptions: flush all queue.
+#    Arguments: OBJ($curproc) OBJ($queue)
+# Side Effects: none
+# Return Value: none
 sub queue_flush
 {
     my ($curproc, $queue) = @_;
@@ -806,7 +819,7 @@ C<Caution:>
 #               2. expand variables: $ml_name -> elena
 #               3. back kanji code: euc -> iso-2022-jp
 #               4. return the new created template
-#    Arguments: $self $filename_string $args
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: a new filepath (string) to be prepared
 sub prepare_file_to_return
@@ -847,6 +860,11 @@ return the object for C<$module>.
 
 =cut
 
+
+# Descriptions: load module
+#    Arguments: OBJ($curpros) HASH_REF($args) STR($pkg)
+# Side Effects: load module
+# Return Value: OBJ
 sub load_module
 {
     my ($curproc, $args, $pkg) = @_;

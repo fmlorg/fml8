@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Param.pm,v 1.9 2001/11/25 11:29:33 fukachan Exp $
+# $FML: Param.pm,v 1.10 2001/12/22 09:21:10 fukachan Exp $
 #
 
 package FML::Process::CGI::Param;
@@ -17,37 +17,30 @@ use CGI qw/:standard/;
 
 =head1 NAME
 
-FML::Process::CGI::Param - CGI basic functions
+FML::Process::CGI::Param - CGI input restriction
 
 =head1 SYNOPSIS
 
-   use FML::Process::CGI::Param;
-   my $obj = new FML::Process::CGI::Param;
-   $obj->prepare($args);
-      ... snip ...
-
-This new() creates CGI object which wraps C<FML::Process::Param>.
+See FML::CGI:: on usage.
 
 =head1 DESCRIPTION
 
-the base class of CGI programs.
-It provides basic functions and flow.
+cleaner for data.
 
 =head1 METHODS
 
-=head2 safe_param(str, filter)
+=head2 safe_param(str, key)
+
+return value for key if the value is appropriate.
 
 =cut
 
 
-my $debug = defined $ENV{'debug'} ? 1 : 0;
-
-
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-#      History: fml 4.0's SecureP()
-# Return Value: none
+# Descriptions: return value for key if the value is appropriate.
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: none
+#      History: similar to fml 4.0's SecureP() and libcgi_cleanup.pl
+# Return Value: STR
 sub safe_param
 {
     my ($self, $key) = @_;
@@ -56,8 +49,6 @@ sub safe_param
     my $safe = new FML::Restriction::CGI;
     my $safe_param_regexp  = $safe->param_regexp();
     my $safe_method_regexp = $safe->method_regexp();
-
-    print STDERR "\n<!-- check param $key -->\n" if $debug;
 
     if (defined $safe_param_regexp->{ $key }) {
 	if (defined param($key)) {
@@ -82,11 +73,18 @@ sub safe_param
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-#      History: fml 4.0's SecureP()
-# Return Value: none
+=head2 safe_paramlist($self, $numregexp, $key)
+
+return HASH_ARRAY for $key.
+
+=cut
+
+
+# Descriptions: return HASH_ARRAY for key if the value is appropriate.
+#    Arguments: OBJ($self) NUM($numregexp) STR($key)
+# Side Effects: none
+#      History: similar to fml 4.0's SecureP() and libcgi_cleanup.pl
+# Return Value: HASH_ARRAY
 sub safe_paramlist
 {
     my ($self, $numregexp, $key) = @_;
