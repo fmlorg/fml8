@@ -69,6 +69,7 @@ fi
 
 echo update $config_dir/defaults/$fml_version/
 cp fml/etc/default_config.cf.ja $config_dir/defaults/$fml_version/default_config.cf
+cp fml/etc/config.cf.ja $config_dir/defaults/$fml_version/config.cf
 
 echo update $lib_dir/$fml_version/
 cp -pr fml/lib/*	$lib_dir/$fml_version/
