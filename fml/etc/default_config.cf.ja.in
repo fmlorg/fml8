@@ -1010,6 +1010,13 @@ summary_file		=	$ml_home_dir/summary
 #     Examples:
 summary_format_style	=	fml4_compatible
 
+
+# Descriptions: アドレスは先頭の何バイトかだけを記録する。詳しくはログ見ろ
+#      History:
+#        Value: \d+
+#     Examples: 15
+summary_format_address_length	=	15
+
 =head1	記事を HTML 化する
 
 # Descriptions: 記事を HTML 化するか否か
@@ -1447,17 +1454,32 @@ cgi_charset		=	$default_cgi_charset
 
 # Descriptions: デフォルトの bgcolor
 #      History:
-#        Value:
-#     Examples:
+#        Value: #%6x
+#     Examples: #FFFFFF
 cgi_main_menu_color		=	#FFFFFF
 
 
 # Descriptions: デフォルトの bgcolor
-#      History:
-#        Value:
-#     Examples:
+#      History: 4.0 には該当する変数はない
+#        Value: #%6x
+#     Examples: #FFFFFF
 cgi_navigation_bar_color	=	#FFFFFF
 
+
+# Descriptions: CGI のアドレス操作の際に選べる種類
+#      History: 4.0 には該当する変数はない
+#        Value: member recipient admin_member
+#     Examples: member recipient admin_member
+cgi_menu_map_list		=	member
+					recipient
+					admin_member
+
+
+# Descriptions: CGI のアドレス操作の際に選べる種類のデフォルト値
+#      History: 4.0 には該当する変数はない
+#        Value: member recipient admin_member
+#     Examples: member
+cgi_menu_default_map		=	member
 
 =head1	MTA に依存する設定のヒント
 
