@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SimpleMatch.pm,v 1.20 2001/07/29 15:08:36 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.21 2001/07/30 14:42:34 fukachan Exp $
 #
 
 
@@ -14,7 +14,11 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
-@ISA = qw(Mail::Bounce);
+use Mail::Bounce::Language::Japanese;
+@ISA = qw(
+	Mail::Bounce
+	Mail::Bounce::Language::Japanese
+	  );
 
 =head1 NAME
 
@@ -175,7 +179,11 @@ sub analyze
 	    my $buf = $m->nth_paragraph($i + 1); # 1 not 0 for 1st paragraph
 	    $args->{ buf } = \$buf;
 
-	    unless ( $self->look_like_japanese( $buf ) ) {
+	    if ( $self->look_like_japanese( $buf ) ) {
+		if ($debug) { print "{$buf}\n";}
+		$self->_japanese_address_match($args);
+	    }
+	    else {
 		if ($debug) { print "{$buf}\n";}
 		$self->_address_match($args);
 	    }
