@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Install.pm,v 1.16 2004/07/27 15:47:39 fukachan Exp $
+# $FML: Install.pm,v 1.17 2004/09/29 05:05:40 fukachan Exp $
 #
 
 package FML::Install;
@@ -51,6 +51,7 @@ FML::Install - utility functions used in installation.
     $installer->install_sample_cf_files();
     $installer->install_default_config_files();
     $installer->install_mtree_dir();
+    $installer->install_compat_dir();
     $installer->install_lib_dir();
     $installer->install_libexec_dir();
     $installer->install_data_dir();
@@ -298,6 +299,10 @@ install default templates at /etc/fml/defautls/$version/.
 
 install mtree info at /etc/fml/defautls/$version/mtree/.
 
+=head2 install_compat_dir()
+
+install compat info at /etc/fml/defautls/$version/compat/.
+
 =cut
 
 
@@ -366,6 +371,26 @@ sub install_mtree_dir
 				      $self->path( 'default_config_dir' ),
 				      "mtree");
     my $src_dir = File::Spec->catfile("fml", "etc", "mtree");
+
+    print STDERR "updating $dst_dir\n" if $debug;
+    $self->copy_dir( $src_dir, $dst_dir );
+}
+
+
+# Descriptions: install compat config.
+#    Arguments: OBJ($self)
+# Side Effects: create files in /etc/fml/defaults/$version/compat/.
+# Return Value: none
+sub install_compat_dir
+{
+    my ($self) = @_;
+    my $config = $self->{ _config };
+
+    # XXX src = relative path, dst = absolute path
+    my $dst_dir = File::Spec->catfile($install_root,
+				      $self->path( 'default_config_dir' ),
+				      "compat");
+    my $src_dir = File::Spec->catfile("fml", "etc", "compat");
 
     print STDERR "updating $dst_dir\n" if $debug;
     $self->copy_dir( $src_dir, $dst_dir );
