@@ -97,7 +97,7 @@ sub _distribute
 {
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
-
+    
     # XXX   $ah is "article handler" object.
     # XXX   $ah != $curproc->{ article } (which is just a key)
     # XXX   $curproc->{ article } is prepared as a side effect.
