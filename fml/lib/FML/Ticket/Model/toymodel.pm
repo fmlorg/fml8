@@ -656,11 +656,11 @@ sub _header_summary
 
     use Jcode;
 
-    if ($subject =~ /=\?ISO\-2022\-JP\S+B\?(\S+)=\?=/) { 
+    if ($subject =~ /=\?ISO\-2022\-JP\S+B\?(\S+)=\?=/i) { 
 	my $y = decode_base64($1);
 	$subject = Jcode::convert(\$y, 'euc')."\n";
     }
-    if ($from =~ /=\?ISO\-2022\-JP\S+B\?(\S+)=\?=/) { 
+    if ($from =~ /=\?ISO\-2022\-JP\S+B\?(\S+)=\?=/i) { 
 	my $y = decode_base64($1);
 	$from = Jcode::convert(\$y, 'euc')."\n";
     }
