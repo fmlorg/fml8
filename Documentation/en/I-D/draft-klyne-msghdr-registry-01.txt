@@ -1,0 +1,784 @@
+
+
+Network Working Group                                           G. Klyne
+Internet-Draft                                         MIMEsweeper Group
+Expires: July 5, 2002                                        Jan 4, 2002
+
+
+              Registration procedures for message headers
+                     draft-klyne-msghdr-registry-01
+
+Status of this Memo
+
+   This document is an Internet-Draft and is in full conformance with
+   all provisions of Section 10 of RFC2026.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF), its areas, and its working groups.  Note that
+   other groups may also distribute working documents as Internet-
+   Drafts.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   The list of current Internet-Drafts can be accessed at
+   http://www.ietf.org/ietf/1id-abstracts.txt.
+
+   The list of Internet-Draft Shadow Directories can be accessed at
+   http://www.ietf.org/shadow.html.
+
+   This Internet-Draft will expire on July 5, 2002.
+
+Copyright Notice
+
+   Copyright (C) The Internet Society (2002).  All Rights Reserved.
+
+Abstract
+
+   This specification defines registration procedures for the message
+   headers used by Internet mail, newsgroup feeds, HTTP and other
+   Internet applications.
+
+Discussion of this document
+
+   Please send comments to <ietf-822@imc.org>.  To subscribe to this
+   list, send a message with the body 'subscribe' to <ietf-822-
+   request@imc.org>.
+
+
+
+
+
+
+Klyne                     Expires July 5, 2002                  [Page 1]
+
+Internet-Draft         Message header registration              Jan 2002
+
+
+Table of Contents
+
+   1.    Introduction . . . . . . . . . . . . . . . . . . . . . . . .  3
+   1.1   Structure of this document . . . . . . . . . . . . . . . . .  3
+   1.2   Document terminology and conventions . . . . . . . . . . . .  4
+   2.    Message headers  . . . . . . . . . . . . . . . . . . . . . .  4
+   2.1   Standard and non-standard headers  . . . . . . . . . . . . .  4
+   2.2   Definitions of message headers . . . . . . . . . . . . . . .  5
+   2.2.1 Application-specific message headers . . . . . . . . . . . .  5
+   3.    Registration procedure . . . . . . . . . . . . . . . . . . .  5
+   3.1   Header specification . . . . . . . . . . . . . . . . . . . .  6
+   3.2   Registration templates . . . . . . . . . . . . . . . . . . .  6
+   3.2.1 Normative header template  . . . . . . . . . . . . . . . . .  6
+   3.2.2 Provisional header template  . . . . . . . . . . . . . . . .  7
+   3.3   Submission of registration . . . . . . . . . . . . . . . . .  8
+   3.4   Change control . . . . . . . . . . . . . . . . . . . . . . .  8
+   3.5   Comments on header definitions . . . . . . . . . . . . . . .  8
+   3.6   Location of message header registry  . . . . . . . . . . . .  9
+   4.    Initial registrations  . . . . . . . . . . . . . . . . . . .  9
+   5.    IANA considerations  . . . . . . . . . . . . . . . . . . . .  9
+   6.    Security considerations  . . . . . . . . . . . . . . . . . .  9
+   7.    Acknowledgements . . . . . . . . . . . . . . . . . . . . . .  9
+         References . . . . . . . . . . . . . . . . . . . . . . . . .  9
+         Author's Address . . . . . . . . . . . . . . . . . . . . . . 12
+   A.    Revision history . . . . . . . . . . . . . . . . . . . . . . 12
+   A.1   draft-klyne-msghdr-registry-01 . . . . . . . . . . . . . . . 12
+   A.2   draft-klyne-msghdr-registry-00 . . . . . . . . . . . . . . . 12
+   B.    Todo . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12
+         Full Copyright Statement . . . . . . . . . . . . . . . . . . 14
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Klyne                     Expires July 5, 2002                  [Page 2]
+
+Internet-Draft         Message header registration              Jan 2002
+
+
+1. Introduction
+
+   This specification defines registration procedures for the message
+   headers used by Internet mail, newsgroup feeds, HTTP and other
+   Internet applications.
+
+   Benefits of a central registry for message headers include:
+
+   o  to provide a single point of reference for standardized headers;
+
+   o  to provide a central point of discovery for established headers,
+      and easy location of their defining documents;
+
+   o  to discourage multiple definitions of a header name for different
+      purposes;
+
+   o  to help those proposing new headers discern established trends and
+      conventions, and avoid names that might be confused with existing
+      ones;
+
+   o  to encourage convergence of header name usage across multiple
+      applications/protocols.
+
+   The primary specification for Internet message headers is the
+   Internet mail message format specification, RFC 2822 [22], but there
+   are many other Internet standards track documents that define
+   additional headers within the same namespace, notably MIME [7] and
+   related specifications.  Other Internet applications that use MIME,
+   such as newsgroup feeds (RFC 1036 [1]) and HTTP web access (RFC 2616
+   [19]), also use many of the same headers.
+
+   Although in principle each application defines its own set of valid
+   headers, exchange of messages between applications (e.g.  mail to
+   news gateways), common use of MIME encapsulation, and the possibility
+   of common processing for various message types (e.g.  a common
+   message archive and retrieval facility) makes it desirable to have a
+   single point of reference for standardized headers.  The message
+   header registry defined here serves that purpose.
+
+1.1 Structure of this document
+
+   Section Section 2 discusses the purpose of this specification, and
+   indicates some sources of information about defined message headers.
+
+   Section Section 3 defines the message header registry, and sets out
+   requirements and procedures for creating entries in it.
+
+
+
+
+
+Klyne                     Expires July 5, 2002                  [Page 3]
+
+Internet-Draft         Message header registration              Jan 2002
+
+
+1.2 Document terminology and conventions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in RFC 2119 [10].
+
+      NOTE: indented comments like this provide additional nonessential
+      information about the rationale behind this document.
+
+   [[[Editorial comments and questions about outstanding issues are
+   provided in triple brackets like this.  These working comments should
+   be resolved and removed prior to final publication.]]]
+
+2. Message headers
+
+2.1 Standard and non-standard headers
+
+   Many message headers are defined in standards-track documents, which
+   means they have been subjected to a process of community review and
+   achieved consensus that they provide a useful and well-founded
+   capability.  Many other headers have been defined and adopted for
+   private use; some of these have found widespread use.
+
+   The registry defined here is intended to cater for all of these
+   headers, while maintaining a clear distinction and status for those
+   which have community consensus.  To this end, the registry is defined
+   in two parts (or maybe as two separate registries):
+
+   o  Normative Message Headers, intended for headers defined in IETF
+      standards-track documents, or those that have achieved a
+      comparable level of community review.  The assignment policy for
+      such registration is "IETF Consensus", as defined by RFC 2434
+      [18].
+
+   o  Provisional Message Headers, intended for any header proposed by
+      any developer, without making any claim about the usefulness
+      quality of its definition.  The assignment policy for registration
+      of these is "Private Use", per RFC 2434 [18].
+
+   Note that there exist at least two other sources information about
+   message headers:
+
+   o  RFC 2076 [8], as updated [25], contains a list of commonly used
+      message headers, and
+
+   o  Dan Bernstein maintains a list of standard and non-standard mail
+      message headers [26].
+
+
+
+
+Klyne                     Expires July 5, 2002                  [Page 4]
+
+Internet-Draft         Message header registration              Jan 2002
+
+
+2.2 Definitions of message headers
+
+   RFC 2822 [22] defines a general syntax for Internet message headers.
+   It also defines a number of headers for use with Internet mail.
+   Additional header names are defined in a variety of standards-track
+   RFC documents, including: RFC 1036 [1], RFC 1496 [2], RFC 1505 [3],
+   RFC 1766 [5], RFC 1864 [6], RFC 2156 [12], RFC 2183 [13], RFC 2045
+   [7], RFC 2110 [9], RFC 2298 [14], RFC 2369 [15], RFC 2421 [17], RFC
+   2616 [19], RFC 2821 [21], RFC 2912 [23] and RFC 2919 [24].
+
+2.2.1 Application-specific message headers
+
+   Internet applications that use message headers include Internet mail
+   [21][22], NNTP newsgroup feeds [1], HTTP web access [19] and any
+   other that uses MIME [7] encapsulation of message content.
+
+   In some cases (notably HTTP [19]), the header syntax and usage is
+   redefined for the specific application.  This registration is
+   concerned only with the allocation and specification of header names,
+   and not with the details of header implementation in specific
+   protocols.
+
+   In some cases, the same header name may be specified differently (by
+   different documents) for use with different application protocols
+   [[[example?]]].  In other cases, a header name may have a common
+   specification across multiple protocols (ignoring protocol-specific
+   lexical and character set conventions);  e.g.  this is generally the
+   case for MIME headers with names of the form 'Content-*'.
+
+   Thus, we need to accommodate application-specific headers, while
+   recognizing the commonality of other headers across multiple
+   applications.  Common registries are used for all applications, and
+   each registered header specifies the application protocol(s) for
+   which the registered definition applies.  A given header name may
+   have multiple registry entries for different protocols; in the
+   Normative Message Headers registry, a given header name may be
+   registered only once for any given protocol.
+
+3. Registration procedure
+
+   The procedure for registering a message header is:
+
+   1.  Construct a header specification
+
+   2.  Prepare a registration template
+
+   3.  Submit the registration template
+
+
+
+
+Klyne                     Expires July 5, 2002                  [Page 5]
+
+Internet-Draft         Message header registration              Jan 2002
+
+
+3.1 Header specification
+
+   Registration of a new message header starts with construction of a
+   proposal that describes the syntax, semantics and intended use of the
+   header.  This proposal MUST be published as an RFC.
+
+   A registered header name MUST conform at least to the syntax defined
+   by RFC 2822, section 3.6.8, for "field name".
+
+   Further, the "." character is reserved to indicate a naming sub-
+   structure and MUST NOT be included in any registered header name.
+   Currently, no specific sub-structure is defined; if used, any such
+   structure MUST be defined by a standards track RFC document.
+
+   It is further RECOMMENDED that characters in a registered message
+   header name are restricted to those characters that can be used
+   without escaping in a URI [16] or URN [11], namely upper- or lower-
+   case ASCII letters, decimal digits, "(", ")", "+", ",", "-", "=",
+   "@", ";", "$", "_", "!", "*" and "'".  Of course, a header name must
+   also conform to any applicable rules of the protocol(s) with which it
+   may be used.  Many headers names may find some use in conjunction
+   with XML, in which case the name characters should be further
+   restricted to just letters, digits, hyphen ('-') and underscore ('_')
+   characters, with the first character being a letter or underscore.
+
+3.2 Registration templates
+
+   The registration template for a message header may be contained in
+   the defining document, or prepared separately.
+
+3.2.1 Normative header template
+
+   An header registered as a Normative Message Header MUST be defined
+   according to "IETF Consensus" rules (per RFC 2434 [18]), and MUST
+   have a name which is unique among all the Normative Message Headers
+   that may be used with the same application protocol(s).  The header
+   name MUST NOT start with "X-" or "x-".
+
+   The registration template contains the following information:
+
+   NORMATIVE HEADER REGISTRATION TEMPLATE:
+
+   Header name:
+      The name requested for the new header.  This MUST conform to the
+      header specification details above.
+
+   Applicable protocol(s):
+      Specify "mail", "news", "http", or cite any other standards-track
+
+
+
+Klyne                     Expires July 5, 2002                  [Page 6]
+
+Internet-Draft         Message header registration              Jan 2002
+
+
+      RFC defining the protocol with which the header is intended to be
+      used.
+      Alternatively, specify "any" to indicate that there is no
+      specified restriction on the protocol with which the registered
+      header may be used; in this case, the header name must be unique
+      within the Normative Message Header registry.
+
+   Specification document(s):
+      Reference to the RFC(s) that specify the header for use with the
+      indicated protocol(s).
+
+   Related information:
+      Optionally, citations to additional documents containing further
+      relevant information.
+
+
+3.2.2 Provisional header template
+
+   Registration as a Provisional Message Header does not imply any kind
+   of endorsement by the IETF, IANA or any other body.
+
+   The only requirement for a header to be registered as a Provisional
+   Message Header is that it MUST have a citable specification.
+
+   The registration template contains the following information:
+
+   PROVISIONAL HEADER REGISTRATION TEMPLATE:
+
+   Header name:
+      The name requested for the new header.  This SHOULD conform to the
+      header specification details above.
+
+   Applicable protocol(s):
+      Specify "mail", "news", "http", or cite any other standards-track
+      RFC defining the protocol with which the header is intended to be
+      used.
+      Alternatively, specify "any" to indicate that there is no
+      specified restriction on the protocol with which the registered
+      header may be used.
+
+   Specification document(s):
+      Reference to document(s) that specifies the header for use with
+      the indicated protocol(s).
+
+   Related information:
+      Optionally, citations to additional documents containing further
+      relevant information.
+
+
+
+
+Klyne                     Expires July 5, 2002                  [Page 7]
+
+Internet-Draft         Message header registration              Jan 2002
+
+
+
+      The name and email address of the author, and person who may
+      authorize changes to or retraction of the registration.
+
+
+3.3 Submission of registration
+
+   The registration is submitted for incorporation in the IANA message
+   header registry by one of the following means:
+
+   o  An IANA considerations section in a defining RFC, calling for
+      registration of the message header and referencing the
+      registration template within the same document.  Registration of
+      the header is processed as part of the RFC publication process.
+
+   o  Sending the registration template in an email to the designated
+      email address [27].  IANA will register the message header if the
+      requested name and the specification document meet the criteria
+      stated.
+
+
+3.4 Change control
+
+   Change control of a header registration is subject to the same
+   condition as the initial registration; i.e.  publication of an IESG-
+   approved RFC for a Normative Message Header, or on request of the
+   indicated author/cgange controller for a Provisional Message Header.
+
+   In addition, retraction of Provisional Message Header registration
+   may be requested by the IESG.
+
+   It is intended that entries in the Normative Header Registry may be
+   used in the construction of URNs (per RFC 2141 [11]) which have
+   particular requirements for uniqueness and persistence (per RFC 1737
+   [4]).  Therefore, once an entry is made in the Normative Message
+   Header registry, the combination of the header name and any
+   applicable protcol MUST NOT subsequently be registered for any other
+   purpose.  (This is not to preclude revision of the applicable
+   specification(s) within the appropriate IETF Consensus rules, and
+   corresponding updates to the specification citation in the header
+   registration.)
+
+3.5 Comments on header definitions
+
+   [[[Review this]]]
+
+   Comments on registered Normative Message Headers should be sent to
+   the IETF-822 email discussion list [27].
+
+
+
+Klyne                     Expires July 5, 2002                  [Page 8]
+
+Internet-Draft         Message header registration              Jan 2002
+
+
+   Comments on proposed message headers should preferably be sent to the
+   discusion forum for the specification concerned.  They may also be
+   sent to the IETF-822 list [27] if they concern wider implications
+   than are addressed by the specification document.
+
+3.6 Location of message header registry
+
+   The message header registry is accessible from IANA's web site [28].
+
+4. Initial registrations
+
+   [[[I am currently minded to prepare two companion documents that
+   template the normative and provisional headers from RFC 2076, rather
+   than try to have them all in this document.]]]
+
+   This specification calls for initial registration of all message
+   headers defined in existing standards-track documents.  A list of
+   such headers can be found in RFC 2076 [8] and updates [25].  Section
+   Section 2.2 of this document contains a list of standards-track
+   specifications that define message headers.
+
+   [[[Need to provide list of headers+documents here for initial
+   registration?]]]
+
+5. IANA considerations
+
+   This specification calls for:
+
+   o  A new two-part IANA registry for message headers per section
+      Section 3 of this document.  The policies for inclusion in the
+      registry are described in sections Section 3.1 and Section 3.2.
+
+   o  [[[Details TBD: Initial message header registrations, per section
+      Section 4 of this document.]]]
+
+
+6. Security considerations
+
+   No security considerations are introduced by this specification
+   beyond those already inherrent in the use of message headers.
+
+7. Acknowledgements
+
+   The author gratefully acknowledges the contributions of: Charles
+   Lindsey, [[[...]]]
+
+References
+
+
+
+
+Klyne                     Expires July 5, 2002                  [Page 9]
+
+Internet-Draft         Message header registration              Jan 2002
+
+
+   [1]   Horton, M. and R. Adams, "Standard for interchange of USENET
+         messages", RFC 1036, December 1987.
+
+   [2]   Alvestrand, H., Jordan, K. and J. Romaguera, "Rules for
+         downgrading messages from X.400/88 to X.400/84 when MIME
+         content-types are present in the messages", RFC 1496, August
+         1993.
+
+   [3]   Costanzo, A., Robinson, D. and R. Ullmann, "Encoding Header
+         Field for Internet Messages", RFC 1505, August 1993.
+
+   [4]   Masinter, L. and K. Sollins, "Functional Requirements for
+         Uniform Resource Names", RFC 1737, December 1994.
+
+   [5]   Alvestrand, H., "Tags for the Identification of Languages", RFC
+         1766, March 1995.
+
+   [6]   Myers, J. and M. Rose, "The Content-MD5 Header Field", RFC
+         1864, October 1995.
+
+   [7]   Freed, N. and N. Borenstein, "Multipurpose Internet Mail
+         Extensions (MIME) Part One: Format of Internet Message Bodies",
+         RFC 2045, November 1996.
+
+   [8]   Palme, J., "Common Internet Message Headers", RFC 2076,
+         February 1997.
+
+   [9]   Palme, J. and A. Hopmann, "MIME E-mail Encapsulation of
+         Aggregate Documents, such as HTML (MHTML)", RFC 2110, March
+         1997.
+
+   [10]  Bradner, S., "Key words for use in RFCs to Indicate Requirement
+         Levels", BCP 14, RFC 2119, March 1997.
+
+   [11]  Moats, R., "URN Syntax", RFC 2141, May 1997.
+
+   [12]  Kille, S., "MIXER (Mime Internet X.400 Enhanced Relay): Mapping
+         between X.400 and RFC 822/MIME", RFC 2156, January 1998.
+
+   [13]  Moore, K., Troost, R. and S. Dorner, "Communicating
+         Presentation Information in Internet Messages: The Content-
+         Disposition Header Field", RFC 2183, August 1997.
+
+   [14]  Fajman, R., "An Extensible Message Format for Message
+         Disposition Notifications", RFC 2298, March 1998.
+
+   [15]  Baer, J. and G. Neufeld, "The Use of URLs as Meta-Syntax for
+         Core Mail List Commands and their Transport through Message
+
+
+
+Klyne                     Expires July 5, 2002                 [Page 10]
+
+Internet-Draft         Message header registration              Jan 2002
+
+
+         Header Fields", RFC 2369, July 1998.
+
+   [16]  Berners-Lee, T., Fielding, R. and L. Masinter, "Uniform
+         Resource Identifiers (URI): Generic Syntax", RFC 2396, August
+         1998.
+
+   [17]  Parsons, G. and G. Vaudreuil, "Voice Profile for Internet Mail
+         - version 2", RFC 2421, September 1998.
+
+   [18]  Narten, T. and H. Alvestrand, "Guidelines for Writing an IANA
+         Considerations Section in RFCs", BCP 26, RFC 2434, October
+         1998.
+
+   [19]  Fielding, R., Gettys, J., Mogul, J., Nielsen, H., Masinter, L.,
+         Leach, P. and T. Berners-Lee, "Hypertext Transfer Protocol --
+         HTTP/1.1", RFC 2616, June 1999.
+
+   [20]  Moats, R., "A URN Namespace for IETF Documents", RFC 2648,
+         August 1999.
+
+   [21]  Klensin, J., "Simple Mail Transfer Protocol", RFC 2821, April
+         2001.
+
+   [22]  Resnick, P., "Internet Message Format", RFC 2822, April 2001.
+
+   [23]  Klyne, G., "Indicating Media Features for MIME Content", RFC
+         2912, September 2000.
+
+   [24]  Chandhok, R. and G. Wenger, "List-Id: A Structured Field and
+         Namespace for the Identification of Mailing Lists", RFC 2919,
+         April 2001.
+
+   [25]  Palme, J., "Common Internet Message Header Fields", Internet
+         draft draft-palme-mailext-headers-05, May 2001,
+         <http://search.ietf.org/internet-drafts/draft-palme-mailext-
+         headers-05.txt>.
+
+   [26]  Bernstein, D., "Internet mail field name index",
+         <http://cr.yp.to/immhf/index.html>.
+
+   [27]  "Mail address for submission of header registration template",
+         <mailto:[[[ietf-message-headers]]]@iana.org>.
+
+   [28]  "IANA list of registered message headers",
+         <http://www.iana.org/[[[ToBeDefined]]]>.
+
+
+
+
+
+
+Klyne                     Expires July 5, 2002                 [Page 11]
+
+Internet-Draft         Message header registration              Jan 2002
+
+
+Author's Address
+
+   Graham Klyne
+   MIMEsweeper Group
+   1310 Waterside
+   Arlington Business Park
+   Theale, Reading  RG7 4SA
+   UK
+
+   Phone: +44 118 903 8000
+   Fax:   +44 118 903 9000
+   EMail: Graham.Klyne@MIMEsweeper.com
+
+Appendix A. Revision history
+
+   (This section to be removed on final publication)
+
+A.1 draft-klyne-msghdr-registry-01
+
+   01a 04-Jan-2002:
+
+      *  In response to feedback from interested parties, expanded the
+         registry to cover Normative and Provisional message header
+         registrations.
+
+      *  Defined a formal role for the applicable protocol(s) in the
+         registry:  the combination of header name and any applicable
+         protocol must be unique for a Normative Message Header.
+
+      *  Noted further constraints to the header name format for XML
+         name compatibility.
+
+      *  Fixed registration policy for a Normative Message Header to be
+         "IETF Consensus".
+
+
+A.2 draft-klyne-msghdr-registry-00
+
+   00a 27-Sep-2001:
+
+      *  Document initially created.
+
+
+Appendix B. Todo
+
+   (This section to be removed on final publication)
+
+   o  Finalize initial registrations.
+
+
+
+Klyne                     Expires July 5, 2002                 [Page 12]
+
+Internet-Draft         Message header registration              Jan 2002
+
+
+   o  Finalize email address for submission of registration templates.
+
+   o  Finalize web address for registry.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Klyne                     Expires July 5, 2002                 [Page 13]
+
+Internet-Draft         Message header registration              Jan 2002
+
+
+Full Copyright Statement
+
+   Copyright (C) The Internet Society (2002).  All Rights Reserved.
+
+   This document and translations of it may be copied and furnished to
+   others, and derivative works that comment on or otherwise explain it
+   or assist in its implementation may be prepared, copied, published
+   and distributed, in whole or in part, without restriction of any
+   kind, provided that the above copyright notice and this paragraph are
+   included on all such copies and derivative works.  However, this
+   document itself may not be modified in any way, such as by removing
+   the copyright notice or references to the Internet Society or other
+   Internet organizations, except as needed for the purpose of
+   developing Internet standards in which case the procedures for
+   copyrights defined in the Internet Standards process must be
+   followed, or as required to translate it into languages other than
+   English.
+
+   The limited permissions granted above are perpetual and will not be
+   revoked by the Internet Society or its successors or assigns.
+
+   This document and the information contained herein is provided on an
+   "AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
+   TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING
+   BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION
+   HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF
+   MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+Acknowledgement
+
+   Funding for the RFC Editor function is currently provided by the
+   Internet Society.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Klyne                     Expires July 5, 2002                 [Page 14]
+
