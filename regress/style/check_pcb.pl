@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML$
+# $FML: check_pcb.pl,v 1.1 2003/10/29 14:50:55 fukachan Exp $
 #
 
 use strict;
@@ -9,7 +9,7 @@ use FileHandle;
 
 my $wh     = new FileHandle "|rev|sort|rev";
 my $fn     = '';
-my $format = "%25s %25s %3s %s\n";
+my $format = "%23s %30s %3s %s\n";
 
 $| = 1;
 
