@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.35 2002/05/27 08:53:23 fukachan Exp $
+# $FML: newml.pm,v 1.36 2002/05/28 13:36:01 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -113,10 +113,12 @@ sub process
     mkdirhier( $ml_home_dir, $config->{ default_dir_mode } || 0755 );
 
     # $ml_home_dir/etc/mail
-    my $mailconfdir = $config->{ domain_mail_config_dir };
-    unless (-d $mailconfdir) {
-	print STDERR "creating $mailconfdir\n";
-	mkdirhier( $mailconfdir, $config->{ default_dir_mode } || 0755 );
+    my $dirlist = $config->get_as_array_ref('init_config_dir_list');
+    for my $_dir (@$dirlist) {
+	unless (-d $_dir) {
+	    print STDERR "creating $_dir\n";
+	    mkdirhier( $_dir, $config->{ default_dir_mode } || 0755 );
+	}
     }
 
     # 1. install $ml_home_dir/{config.cf,include,include-ctl}
