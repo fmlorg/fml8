@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.48 2003/07/21 04:51:34 fukachan Exp $
+# $FML: ToHTML.pm,v 1.49 2003/08/01 14:42:27 tmu Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.48 2003/07/21 04:51:34 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.49 2003/08/01 14:42:27 tmu Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -2174,6 +2174,7 @@ if ($0 eq __FILE__) {
     my $max      = defined $ENV{'MAX'} ? $ENV{'MAX'} : 1000;
     my $charset  = 'euc-jp';
     my $opts     = {
+	output_dir  => "/tmp/htdocs",
 	db_base_dir => "/tmp/",
 	db_name     => "elena",
     };
@@ -2188,6 +2189,7 @@ if ($0 eq __FILE__) {
 		eval q{
 		    my $obj = new Mail::Message::ToHTML $opts;
 		    $obj->htmlify_file($x, {
+			output_dir  => "/tmp/htdocs",
 			directory   => $dir,
 			charset     => $charset,
 			db_base_dir => "/tmp/",
@@ -2199,6 +2201,7 @@ if ($0 eq __FILE__) {
 	    elsif (-d $x) {
 		my $obj = new Mail::Message::ToHTML $opts;
 		$obj->htmlify_dir($x, {
+		    output_dir  => "/tmp/htdocs",
 		    directory => $dir,
 		    has_fork  => $has_fork,
 		    max       => $max,
