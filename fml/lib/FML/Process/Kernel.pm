@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.180 2003/09/13 13:05:18 fukachan Exp $
+# $FML: Kernel.pm,v 1.181 2003/09/14 04:05:46 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2157,6 +2157,7 @@ sub _add_info_on_header
 	type    => 'MIME::Lite',
 	message => $msg,
     };
+  FML::Header->add_message_id($config, $args);
   FML::Header->add_software_info($config, $args);
   FML::Header->add_rfc2369($config, $args);
 }

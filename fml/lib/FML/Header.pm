@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.62 2003/08/23 04:35:27 fukachan Exp $
+# $FML: Header.pm,v 1.63 2003/08/23 14:37:58 fukachan Exp $
 #
 
 package FML::Header;
@@ -264,6 +264,10 @@ when $args->{type} is 'MIME::Lite'.
 
 add X-Sequence.
 
+=head2 add_message_id($config, $args)
+
+add Message-Id.
+
 =cut
 
 
@@ -336,6 +340,27 @@ sub add_rfc2369
 	    $header->add('List-UnSubscribe',
 			 "<mailto:${command}?body=unsubscribe>");
 	}
+    }
+}
+
+# Descriptions: add "Message-ID if not define
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($args)
+# Side Effects: update $header
+# Return Value: none
+sub add_message_id
+{
+    my ($header, $config, $args) = @_;
+    my $object_type = defined $args->{ type } ? $args->{ type } : '';
+
+    use FML::Header::MessageID;
+    my $mid = FML::Header::MessageID->new->gen_id($config,$args);
+
+    if ($object_type eq 'MIME::Lite') {
+	my $msg = $args->{ message };
+	$msg->attr('Message-Id' => $mid);
+    }
+    else {
+	$header->add('Message-Id', $mid);
     }
 }
 
