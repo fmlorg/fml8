@@ -52,6 +52,7 @@ header_checks        =	validate_message_id
 			verify_unique_list_post
 
 header_rewrite_rules =	rewrite_subject_tag
+			rewrite_reply_to
 			add_software_info
 			add_fml_ml_name
 			add_fml_article_id

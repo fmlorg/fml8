@@ -126,6 +126,10 @@ sub _header_rewrite
 	    $header->rewrite_subject_tag($config, { id => $id } );
 	}
 
+	if ($rule eq 'rewrite_reply_to') {
+	    $header->rewrite_reply_to($config);
+	}
+
 	if ($rule eq 'add_software_info') {
 	    $header->add_software_info($config, { id => $id } );
 	}

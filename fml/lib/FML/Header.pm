@@ -120,6 +120,16 @@ sub rewrite_subject_tag
 }
 
 
+sub rewrite_reply_to
+{
+    my ($header, $config, $args) = @_;
+    my $reply_to = $header->get('reply-to');
+    unless (defined $reply_to) {
+	$header->add('reply-to', $config->{ address_for_post });
+    }
+}
+
+
 =head1 SEE ALSO
 
 L<Mail::Address>
