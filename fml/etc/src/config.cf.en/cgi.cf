@@ -30,11 +30,17 @@ ml_admin_cgi_base_dir	=	$cgi_base_dir/ml-admin/$ml_name
 #     Examples:
 cgi_default_charset	=	us-ascii
 
-# Descriptions: cgi charset
+# Descriptions: cgi charset in Japanese
 #      History:
 #        Value:
 #     Examples:
-cgi_charset		=	$cgi_default_charset
+cgi_charset_ja		=	euc-jp
+
+# Descriptions: cgi charset in English
+#      History:
+#        Value:
+#     Examples:
+cgi_charset_en		=	us-ascii
 
 # Descriptions: language mode of CGI (!= charset) 
 #      History:

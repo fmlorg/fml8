@@ -9,11 +9,6 @@
 maintainer	=
 
 
-=head2	language
-
-default_charset		=	us-ascii
-
-
 =head2	default modes
 
 

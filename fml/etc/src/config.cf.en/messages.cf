@@ -6,14 +6,44 @@
 #      History:
 #        Value:
 #     Examples:
-reply_message_charset	=	$default_charset
+reply_message_default_charset	=	$reply_message_charset_en
 
 # Descriptions:
 #      History:
 #        Value:
 #     Examples:
-template_file_charset	=	euc-jp
+reply_message_charset_ja	=	iso-2022-jp
 
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+reply_message_charset_en	=	us-ascii
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+template_file_default_charset	=	$template_file_charset_ja
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+template_file_charset_ja	=	euc-jp
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+template_file_charset_en	=	us-ascii
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+template_file_charset_list	=	euc-jp	
+					us-ascii
 
 # Descriptions:
 #      History:
