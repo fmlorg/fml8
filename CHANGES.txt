@@ -28,6 +28,13 @@
    FML::CGI::Admin::Menu 
 	classify the command in the navigation and main
 
+   FML::Process::Utils 
+	define ml_name() method
+	ml_domain() returns the current process's domain not default one.
+	ml_home_prefix() and get_ml_list() behave more properly to reflect the
+	current situation.
+	fix ml_domain handling of rewrite_config_if_needed().
+
 2002/06/21
 
    CGI bug fixes
@@ -2603,4 +2610,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.80 2002/06/01 15:01:38 fukachan Exp $
+$FML: CHANGES.txt,v 1.81 2002/06/22 14:47:05 fukachan Exp $
