@@ -1,6 +1,23 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/01/13, 01/12, ...
+
+   final clean up campaign in 2001 
+   	クリーニングキャンペーン 2001 final はいまだに続いているぞ;-)
+
+   Mail::Message
+   FML::parse
+	rfc822_message_FUNCTION()
+
+	メッセージ全体( Mail::Message の chain 全体)に対する
+	メソッドには rfc822_message_ を頭につけるように名前をあわせる
+
+   File::SimpleLock 
+   Mail::Delivery::Queue 
+        
+        use Fcntl qw(:DEFAULT :flock), remove LOCK_XX() definitions.
+
 2001/12/25
 
    Mail::HTML::Lite 
@@ -1315,4 +1332,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.44 2001/12/22 16:22:15 fukachan Exp $
+$FML: CHANGES.txt,v 1.45 2001/12/26 14:33:29 fukachan Exp $
