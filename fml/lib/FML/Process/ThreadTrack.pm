@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: ThreadTrack.pm,v 1.1 2001/11/03 11:49:21 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.2 2001/11/04 05:04:43 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -94,14 +94,12 @@ sub run
     my $thread = new Mail::ThreadTrack $ttargs;
     $thread->set_mode('text');
 
-    if ($command eq 'list') {
+    if ($command eq 'list' || $command eq 'summary') {
 	$thread->show_summary();
     }
-    elsif ($command eq 'mkdb') {
+    elsif ($command eq 'db_mkdb') {
 	my $max_id = $curproc->article_id_max();
-	for my $id ( 1 .. $max_id ) {
-	    print STDERR "process $id\n";
-	}
+	$thread->db_mkdb(1, $max_id);
     }
     elsif ($command eq 'db_clear') {
 	$thread->db_open();
@@ -126,10 +124,28 @@ sub run
 	$curproc->unlock();
     }
     else {
-	croak("unknown command=$command\n");
+	_help();
     }
 }
 
+
+sub help
+{
+    use File::Basename;
+    my $name = basename($0);
+
+print <<"_EOF_";
+
+Usage: $name \$command \$ml_name [options]
+
+$name list     \$ml_name          list up summary
+$name summary  \$ml_name          list up summary
+$name close    \$ml_name \$id     close ticket specified by \$id 
+$name db_mkdb  \$ml_name          recreate \$ml_name thread database
+$name db_clear \$ml_name          clear \$ml_name thread database
+
+_EOF_
+}
 
 sub DESTROY {}
 
