@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ML.pm,v 1.8 2003/02/15 02:54:25 fukachan Exp $
+# $FML: ML.pm,v 1.9 2003/08/29 15:33:56 fukachan Exp $
 #
 
 package FML::CGI::Admin::ML;
@@ -40,7 +40,7 @@ sub cgi_menu
     my $config       = $curproc->config();
     my $action       = $curproc->safe_cgi_action_name();
     my $ml_domain    = $curproc->ml_domain();
-    my $ml_list      = $curproc->get_ml_list($args, $ml_domain);
+    my $ml_list      = $curproc->get_ml_list($ml_domain);
     my $address      = $curproc->safe_param_address() || '';
     my $target       = '_top';
     my $comname      = $command_args->{ comname };
