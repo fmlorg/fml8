@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.41 2002/06/21 09:28:13 fukachan Exp $
+# $FML: newml.pm,v 1.42 2002/06/22 14:32:00 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -247,6 +247,18 @@ sub _install_postfix_virtual_map
     my $src     = File::Spec->catfile($template_dir, 'postfix_virtual');
     my $dst     = $virtual . "." . $$;
     print STDERR "updating $virtual\n";
+
+    # at the first time
+    unless( -f $virtual) {
+	my $fh = new FileHandle ">> $virtual";
+	if (defined $fh) {
+	    print $fh "# $ml_domain is one of \$mydestination\n";
+	    print $fh "# CAUTION: DO NOT REMOVE THE FOLLOWING LINE.\n";
+	    print $fh "$ml_domain\t$ml_domain\n\n";
+	    $fh->close();
+	}
+    }
+
     _install($src, $dst, $params);
     append($dst, $virtual);
     unlink $dst;
