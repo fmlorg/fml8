@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.38 2002/08/19 15:19:46 fukachan Exp $
+# $FML: File.pm,v 1.39 2002/08/21 14:31:05 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -307,11 +307,14 @@ sub get_value_as_array_ref
 sub _get_value
 {
     my ($self, $key, $style) = @_;
-    my $xkey = '';
-    my $buf  = '';
+    my $xkey   = '';
+    my $buf    = '';
+    my $curpos = $self->getpos();
 
     my $fh = $self->{_fh};
     if (defined $fh) {
+	$self->setpos(0);
+
       LOOP:
 	while (<$fh>) {
 	    ($xkey, $buf) = split(/\s+/, $_, 2);
@@ -328,10 +331,18 @@ sub _get_value
 	    $buf =~ s/^\s*//;
 	    $buf =~ s/\s*$//;
 	    my @a = split(/\s+/, $buf);
+
+	    $self->setpos( $curpos );
 	    return \@a;
 	}
+
+    }
+    else {
+	carp("cannot defined \$fh");
     }
 
+
+    $self->setpos( $curpos );
     return $buf;
 }
 
