@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.20 2002/02/17 13:35:13 fukachan Exp $
+# $FML: Command.pm,v 1.21 2002/02/19 13:32:43 fukachan Exp $
 #
 
 package FML::Command;
@@ -112,8 +112,8 @@ sub AUTOLOAD
 	}
     }
     else {
-	LogError("$pkg module is not found");
 	LogError($@) if $@;
+	LogError("$pkg module is not found");
 	croak("$pkg module is not found"); # upcall to FML::Process::Command
     }
 }
