@@ -193,7 +193,6 @@ primary_recipient_map	=	 file:$ml_home_dir/actives
 #     Examples: file:$ml_home_dir/recipients
 #		unix.group:fml
 recipient_maps		=	$primary_recipient_map
-				file:$ml_home_dir/recipients
 
 
 =head2 管理者メンバーとみなされるのは誰か？
