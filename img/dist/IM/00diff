@@ -1,3 +1,7 @@
+		Differences between IM146 and IM145
+
+* Fix that TCP transaction fails with Perl 5.8.1.
+
 		Differences between IM145 and IM144
 
 * Fix that imget fails when modern delivery identifiers are used in a

@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Jun  1, 2003
+### Revised: Oct 28, 2003
 ###
 
-my $PM_VERSION = "IM::Pop.pm version 20030601(IM145)";
+my $PM_VERSION = "IM::Pop.pm version 20031028(IM146)";
 
 package IM::Pop;
 require 5.003;
@@ -148,15 +148,8 @@ sub pop_retr($$$) {
 	return -1;
     }
     alarm(pop_timeout()) unless win95p();
-    $! = 0;
     while (<POPd>) {
-	unless (win95p()) {
-	    alarm(0);
-	    if ($!) {	# may be channel truoble
-		im_warn("lost connection for RETR.\n");
-		return -1;
-	    }
-	}
+	alarm(0) unless win95p();
 	s/\r\n$/\n/;
 	last if ($_ =~ /^\.\n$/);
 	s/^\.//;
@@ -164,6 +157,11 @@ sub pop_retr($$$) {
 	push (@Message, $_);
     }
     alarm(0) unless win95p();
+    if (!defined($_)) {
+	# may be channel trouble
+	im_warn("lost connection for RETR.\n");
+	return -1;
+    }
 
     return -1 if (store_message(\@Message, $dst, $noscan) < 0);
     &exec_getsbrfile($dst);
@@ -184,15 +182,8 @@ sub pop_head($) {
     my(%head);
     undef %head;
     alarm(pop_timeout()) unless win95p();
-    $! = 0;
     while (<POPd>) {
-	unless (win95p()) {
-	    alarm(0);
-	    if ($!) {	# may be channel truoble
-		im_warn("lost connection for HEAD.\n");
-		return 0;
-	    }
-	}
+	alarm(0) unless win95p();
 	s/\r?\n$//;
 	last if ($_ =~ /^\.$/);
 	s/^\.//;
@@ -214,6 +205,11 @@ sub pop_head($) {
 	}
     }
     alarm(0) unless win95p();
+    if (!defined($_)) {
+	# may be channel trouble
+	im_warn("lost connection for HEAD.\n");
+	return 0;
+    }
     return \%head;
 }
 
@@ -238,15 +234,8 @@ sub pop_uidl($) {
 	return -1;
     }
     alarm(pop_timeout()) unless win95p();
-    $! = 0;
     while (<POPd>) {
-	unless (win95p()) {
-	    alarm(0);
-	    if ($!) {	# may be channel truoble
-		im_warn("lost connection for UIDL.\n");
-		return -1;
-	    }
-	}
+	alarm(0) unless win95p();
 	s/\r\n$/\n/;
 	last if ($_ =~ /^\.\n$/);
 	im_debug($_) if (&debug('pop'));
@@ -255,6 +244,11 @@ sub pop_uidl($) {
 	}
     }
     alarm(0) unless win95p();
+    if (!defined($_)) {
+	# may be channel trouble
+	im_warn("lost connection for UIDL.\n");
+	return -1;
+    }
     return 0;
 }
 

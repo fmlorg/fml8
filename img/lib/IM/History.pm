@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Jul 6, 1997
-### Revised: Jun  1, 2003
+### Revised: Oct 28, 2003
 ###
 
-my $PM_VERSION = "IM::History.pm version 20030601(IM145)";
+my $PM_VERSION = "IM::History.pm version 20031028(IM146)";
 
 package IM::History;
 require 5.003;

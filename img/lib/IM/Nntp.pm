@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Jun  1, 2003
+### Revised: Oct 28, 2003
 ###
 
-my $PM_VERSION = "IM::Nntp.pm version 20030601(IM145)";
+my $PM_VERSION = "IM::Nntp.pm version 20031028(IM146)";
 
 package IM::Nntp;
 require 5.003;
@@ -170,23 +170,15 @@ sub nntp_head_as_string($) {
 
     im_notice("getting article $i.\n");
     $rc = &tcp_command(\*NNTPd, "HEAD $i", '');
-    next if ($rc > 0);
-    if ($rc < 0) {
+    if ($rc != 0) {
 	im_warn("HEAD command failed.\n");
 	return -1;
     }
     $count++;
     my($found, $f) = (0, '');
     alarm(nntp_timeout()) unless win95p();
-    $! = 0;
     while (<NNTPd>) {
-	unless (win95p()) {
-	    alarm(0);
-	    if ($!) {   # may be channel truoble
-		im_warn("lost connection for HEAD.\n");
-		return -1;
-	    }
-	}
+	alarm(0) unless win95p();
 	s/\r\n$/\n/;
 	last if ($_ =~ /^\.\n$/);
 	s/^\.//;
@@ -194,6 +186,11 @@ sub nntp_head_as_string($) {
 	$f .= $_;
     }
     alarm(0) unless win95p();
+    if (!defined($_)) {
+	# may be channel trouble
+	im_warn("lost connection for HEAD.\n");
+	return -1;
+    }
     return $f;
 }
 
@@ -214,15 +211,8 @@ sub nntp_head($$) {
 	$count++;
 	my($found, $f) = (0, '');
 	alarm(nntp_timeout()) unless win95p();
-	$! = 0;
 	while (<NNTPd>) {
-	    unless (win95p()) {
-		alarm(0);
-		if ($!) {   # may be channel truoble
-		    im_warn("lost connection for HEAD.\n");
-		    return -1;
-		}
-	    }
+	    alarm(0) unless win95p();
 	    s/\r\n$/\n/;
 	    last if ($_ =~ /^\.\n$/);
 	    s/^\.//;
@@ -235,6 +225,12 @@ sub nntp_head($$) {
 	    } else {
 		$found = 0;
 	    }
+	}
+	alarm(0) unless win95p();
+	if (!defined($_)) {
+	    # may be channel trouble
+	    im_warn("lost connection for HEAD.\n");
+	    return -1;
 	}
 	$f =~ s/\n[ \t]*/ /g;
 	$f = '(sender unknown)' unless ($f);
@@ -285,15 +281,8 @@ sub nntp_article($) {
     }
     my @Article = ();
     alarm(nntp_timeout()) unless win95p();
-    $! = 0;
     while (<NNTPd>) {
-	unless (win95p()) {
-	    alarm(0);
-	    if ($!) {   # may be channel truoble
-		im_warn("lost connection for ARTICLE.\n");
-		return(-1, '');
-	    }
-	}
+	alarm(0) unless win95p();
 	s/\r\n$/\n/;
 	last if ($_ =~ /^\.\n$/);
 	s/^\.//;
@@ -301,6 +290,11 @@ sub nntp_article($) {
 	im_debug($_) if (&debug('nntp'));
     }
     alarm(0) unless win95p();
+    if (!defined($_)) {
+	# may be channel trouble
+	im_warn("lost connection for ARTICLE.\n");
+	return(-1, '');
+    }
     return(0, \@Article);
 }
 

@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Jun  1, 2003
+### Revised: Oct 28, 2003
 ###
 
-my $PM_VERSION = "IM::Imap.pm version 20030601(IM145)";
+my $PM_VERSION = "IM::Imap.pm version 20031028(IM146)";
 
 package IM::Imap;
 require 5.003;
@@ -195,15 +195,8 @@ sub imap_get($$) {
     if ($resp =~ /^\* \d+ FETCH \((UID $num )?RFC822 \{(\d+)\}/i) {
 	my $size = $2;
 	alarm(imap_timeout()) unless win95p();
-	$! = 0;
 	while (<$HANDLE>) {
-	    unless (win95p()) {
-		alarm(0);
-		if ($!) {   # may be channel truoble
-		    im_warn("lost connection for FETCH(get).\n");
-		    return (-1, 0);
-		}
-	    }
+	    alarm(0) unless win95p();
 	    $size -= length($_);
 	    s/\r\n$/\n/;
 	    im_debug($_) if (&debug('imap'));
@@ -211,6 +204,11 @@ sub imap_get($$) {
 	    last if ($size <= 0);
 	}
 	alarm(0) unless win95p();
+	if ($size > 0) {
+	    # may be channel trouble
+	    im_warn("lost connection for FETCH(get).\n");
+	    return (-1, 0);
+	}
 	$resp = &next_response($HANDLE);
 	return (-1, 0) if ($resp !~ /^\)/ &&
 			   $resp !~ /^( FLAGS \(.*\)| UID $num)+\)/);
@@ -240,15 +238,8 @@ sub imap_head($$) {
 	my($size, $len) = ($2, $3);
 	my $field = '';
 	alarm(imap_timeout()) unless win95p();
-	$! = 0;
 	while (<$HANDLE>) {
-	    unless (win95p()) {
-		alarm(0);
-		if ($!) {   # may be channel truoble
-		    im_warn("lost connection for FETCH(head).\n");
-		    return (-1, 0);
-		}
-	    }
+	    alarm(0) unless win95p();
 	    $len -= length($_);
 	    s/\r?\n$//;
 	    im_debug("$_\n") if (&debug('imap'));
@@ -269,6 +260,11 @@ sub imap_head($$) {
 	    last if ($len <= 0);
 	}
 	alarm(0) unless win95p();
+	if ($len > 0) {
+	    # may be channel trouble
+	    im_warn("lost connection for FETCH(head).\n");
+	    return (-1, 0);
+	}
 #	$head{'bytes:'} = $size;
 	$head{'kbytes:'} = int(($size + 1023) / 1024);
 	$resp = &next_response($HANDLE);
@@ -299,15 +295,8 @@ sub imap_from($$) {
 	my $found = 0;
 	my $f;
 	alarm(imap_timeout()) unless win95p();
-	$! = 0;
 	while (<$HANDLE>) {
-	    unless (win95p()) {
-		alarm(0);
-		if ($!) {   # may be channel truoble
-		    im_warn("lost connection for FETCH(from).\n");
-		    return -1;
-		}
-	    }
+	    alarm(0) unless win95p();
 	    $size -= length($_);
 	    s/\r\n$/\n/;
 	    im_debug($_) if (&debug('imap'));
@@ -322,6 +311,11 @@ sub imap_from($$) {
 	    last if ($size <= 0);
 	}
 	alarm(0) unless win95p();
+	if ($size > 0) {
+	    # may be channel trouble
+	    im_warn("lost connection for FETCH(from).\n");
+	    return -1;
+	}
 	$f =~ s/\n[ \t]*/ /g;
 	$f = '(sender unknown)' unless ($f);
 	print "From $f\n";
@@ -793,15 +787,8 @@ sub imap_scan_folder($$@) {
 	($uid, $size, $len) = ($2, $3, $4);
 	my @hdr;
 	alarm(imap_timeout()) unless win95p();
-	$! = 0;
 	while (<$HANDLE>) {
-	    unless (win95p()) {
-		alarm(0);
-		if ($!) {   # may be channel truoble
-		    im_warn("lost connection for FETCH(scan).\n");
-		    return -1;
-		}
-	    }
+	    alarm(0) unless win95p();
 	    $len -= length;
 	    s/\r?\n$/\n/;
 	    im_warn($_) if (&debug('imap'));
@@ -809,6 +796,11 @@ sub imap_scan_folder($$@) {
 	    last if ($len <= 0);
 	}
 	alarm(0) unless win95p();
+	if ($len > 0) {
+	    # may be channel trouble
+	    im_warn("lost connection for FETCH(scan).\n");
+	    return -1;
+	}
 	$resp = &next_response($HANDLE);
 	if (!$uid) {
 	    return -1 if ($resp !~ /^ UID (\d+)\)/);

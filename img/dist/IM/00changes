@@ -1,3 +1,9 @@
+146 (2003/10/28)
+
+* IM/TcpTransaction.pm, IM/Pop.pm, IM/Nntp.pm, IM/Imap.pm: Don't use $! as
+  an error indicator.
+* IM/Nntp.pm (nntp_head_as_string): Don't use `next' outside a loop block.
+
 145 (2003/06/01)
 
 * IM/LocalMbox.pm (process_maildir): Fix for modern delivery identifiers in
@@ -78,7 +84,7 @@
 * IM/Config.pm.in, IM/EncDec.pm: Prevent a warning of `called too early to
   check prototype'.
 * IM/MsgStore.pm (new_message): Use message_number() instead of $MsgNum++.
-* install-sh: Bug fix from GNU libtool 1.4.3.  This file is under M.I.T.
+* install-sh: Bug fix from GNU libtool 1.4.3.  This file is under the X11
   license.
 * imhsync.in, immknmz.in, IM/Ssh.pm: Clarify copyright notice.
 * imcat.in: `-S' option for SSHServer.

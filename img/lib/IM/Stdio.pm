@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: May 7, 1997
-### Revised: Jun  1, 2003
+### Revised: Oct 28, 2003
 ###
 
-my $PM_VERSION = "IM::Stdio.pm version 20030601(IM145)";
+my $PM_VERSION = "IM::Stdio.pm version 20031028(IM146)";
 
 package IM::Stdio;
 require 5.003;

@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Jun  1, 2003
+### Revised: Oct 28, 2003
 ###
 
-my $PM_VERSION = "IM::TcpTransaction.pm version 20030601(IM145)";
+my $PM_VERSION = "IM::TcpTransaction.pm version 20031028(IM146)";
 
 package IM::TcpTransaction;
 require 5.003;
@@ -207,7 +207,7 @@ sub tcp_command($$$) {
 	im_notice("<<< $logcmd\n");
 	$Session_log .= "<<< $logcmd\n" if ($Logging);
 	unless (print $CHAN "$command\r\n") {
-	    # may be channel truoble
+	    # may be channel trouble
 	    @Response = ($!);
 	    return 1;
 	}
@@ -220,14 +220,15 @@ sub tcp_command($$$) {
     }
     do {
 	alarm(command_timeout()) unless win95p();
-	$! = 0;
 	$resp = <$CHAN>;
-	unless (win95p()) {
-	    alarm(0);
-	    if ($!) {	# may be channel truoble
-		@Response = ("$!");
-		return 1;
-	    }
+	if (!defined($resp)) {
+	    # may be channel trouble
+	    @Response = ("$!");
+	}
+	alarm(0) unless win95p();
+	if (!defined($resp)) {
+	    # may be channel trouble
+	    return 1;
 	}
 	$resp =~ s/[\r\n]+$//;
 	if ($resp =~ /^([0-9][0-9][0-9])/) {
@@ -268,14 +269,15 @@ sub send_command($$$) {
 	$0 = progname() . ": greeting ($Cur_server)";
     }
     alarm(command_timeout()) unless win95p();
-    $! = 0;
     $resp = <$CHAN>;
-    unless (win95p()) {
-	alarm(0);
-	if ($!) {	# may be channel truoble
-	    im_notice("$!\n");
-	    return '';
-	}
+    if (!defined($resp)) {
+	# may be channel trouble
+	im_notice("$!\n");
+    }
+    alarm(0) unless win95p();
+    if (!defined($resp)) {
+	# may be channel trouble
+	return '';
     }
     $resp =~ s/[\r\n]+/\n/;
     im_notice(">>> $resp");
@@ -303,14 +305,15 @@ sub next_response($) {
     my $resp;
 
     alarm(command_timeout()) unless win95p();
-    $! = 0;
     $resp = <$CHAN>;
-    unless (win95p()) {
-	alarm(0);
-	if ($!) {	# may be channel truoble
-	    im_notice("$!\n");
-	    return '';
-	}
+    if (!defined($resp)) {
+	# may be channel trouble
+	im_notice("$!\n");
+    }
+    alarm(0) unless win95p();
+    if (!defined($resp)) {
+	# may be channel trouble
+	return '';
     }
     $resp =~ s/[\r\n]+/\n/;
     im_notice(">>> $resp");
