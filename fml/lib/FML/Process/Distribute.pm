@@ -150,42 +150,14 @@ sub _header_rewrite
     for my $rule (split(/\s+/, $rules)) {
 	Log("_header_rewrite( $rule )") if $config->yes('debug');
 
-	if ($rule eq 'rewrite_subject_tag') {
-	    $header->rewrite_subject_tag($config, { id => $id } );
-	}
-
-	if ($rule eq 'rewrite_reply_to') {
-	    $header->rewrite_reply_to($config);
-	}
-
-	if ($rule eq 'add_software_info') {
-	    $header->add_software_info($config, { id => $id } );
-	}
-
-	if ($rule eq 'add_fml_traditional_article_id') {
-	    $header->add_fml_traditional_article_id($config, { id => $id } );
-	}
-
-	if ($rule eq 'add_fml_ml_name') {
-	    $header->add_fml_ml_name($config, { id => $id } );
-	}
-
-	if ($rule eq 'add_fml_article_id') {
-	    $header->add_fml_article_id($config, { id => $id } );
-	}
-
-	if ($rule eq 'add_x_sequence') {
-	    $header->add_x_sequence($config, { 
-		name => $config->{ address_for_post },
-		id   => $id,
-	    });
-	}
-
-	if ($rule eq 'add_rfc2369') {
-	    $header->add_rfc2369($config, {
-		id   => $id,
+	if ($header->can($rule)) {    # See FML::Header and FML::Header::*
+	    $header->$rule($config, { # for methods themself
 		mode => 'distribute',
+		id   => $id,
 	    });
+	}
+	else {
+	    Log("Error: header->$rule is undefined");
 	}
     }
 }
@@ -195,10 +167,10 @@ sub _deliver_article
 {
     my ($curproc, $args) = @_;
 
-    my $config  = $curproc->{ config };  # FML::Config object
-    my $body    = $curproc->{ article }->{ body };  # MailingList::Messages;
-    my $header  = $curproc->{ article }->{ header };# FML::Header;
-    
+    my $config  = $curproc->{ config };             # FML::Config object;
+    my $body    = $curproc->{ article }->{ body };  # MailingList::Messages object;
+    my $header  = $curproc->{ article }->{ header };# FML::Header object;
+	
     unless ( $config->yes( 'use_article_delivery' ) ) {
 	return;
     }
