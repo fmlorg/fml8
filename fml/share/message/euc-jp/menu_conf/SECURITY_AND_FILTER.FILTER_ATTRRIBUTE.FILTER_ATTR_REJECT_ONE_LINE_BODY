@@ -1,0 +1,7 @@
+一行メールのメールは弾くか？
+
+
+menu_conf.SECURITY_AND_FILTER.FILTER_ATTRRIBUTE.FILTER_ATTR_REJECT_INVALID_COMMAND :
+不正なコマンドメールは弾くか？
+
+

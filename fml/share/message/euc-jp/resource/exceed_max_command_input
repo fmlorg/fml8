@@ -1,0 +1,3 @@
+エラー:メール一通あたりに書けるコマンド数の上限を越えました。
+
+# &Mesg(*e, $NULL, 'resource.exceed_max_proc_req',$_,$limit);
