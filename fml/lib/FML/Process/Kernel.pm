@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.203 2004/01/02 10:23:57 fukachan Exp $
+# $FML: Kernel.pm,v 1.204 2004/01/02 14:50:36 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -623,7 +623,7 @@ with considering virtual domains.
 
 
 # Descriptions: determine ml_* variables with considering virtual domains.
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: update $config->{ ml_* } variables.
 # Return Value: none
 sub resolve_ml_specific_variables
@@ -951,7 +951,7 @@ The C<body> is C<Mail::Message> object.
 
 
 # Descriptions: parse the message to a set of header and body
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: $curproc->{'incoming_message'} is set up
 # Return Value: none
 sub parse_incoming_message
