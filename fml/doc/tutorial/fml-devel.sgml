@@ -10,7 +10,7 @@
 This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
 to generate various output formats.
 
-$FML: fml-devel.sgml,v 1.4 2001/04/22 09:13:04 fukachan Exp $
+$FML: fml-devel.sgml,v 1.5 2001/04/22 12:45:46 fukachan Exp $
 -->
 
 <book>
@@ -47,12 +47,8 @@ $FML: fml-devel.sgml,v 1.4 2001/04/22 09:13:04 fukachan Exp $
     &intro;
   </chapter>
 
-  <chapter id="terms">
-    &terms;
-  </chapter>
-
   <chapter id="reference">
-    &reference;
+	&reference;
   </chapter>
 
 </book>
