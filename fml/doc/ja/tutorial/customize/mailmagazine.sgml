@@ -1,10 +1,11 @@
 <!--
-   $FML: mailmagazine.sgml,v 1.3 2003/07/27 17:45:30 fukachan Exp $
+   $FML: mailmagazine.sgml,v 1.4 2004/04/07 11:07:02 fukachan Exp $
 -->
 
-<sect1 id="config.mailmagazine">
+
+<sect1 id="config.mailmagazine.1">
 	<title>
-	ケーススタディ: メールマガジン
+	ケーススタディ: メールマガジン (1)
 	</title>
 
 
@@ -47,6 +48,51 @@ primary_member_map	=	$tmp_dir/members-dummy
 などとメンバーリストの新規分追加先を変更して闇に葬り、
 membersには投稿可能なアドレスだけを書くというやり方もあります。
 このほうが &fml4; 風で分かりやすいでしょう。
+</para>
+
+</sect1>
+
+
+<sect1 id="config.mailmagazine.2">
+	<title>
+	ケーススタディ: メールマガジン (2)
+	</title>
+
+<para>
+2004/06 後半以降: キューイングシステムの改変により、「わざとエラーにし
+てメールキューに落し、メールの中身を確認してから flush する(配送する)」
+なんて技もできるようになりました。
+</para>
+
+<para>
+設定は次のようになります。
+</para>
+
+<para>
+config.cf では、次のように存在しないポートでも指定しておきます。
+<screen>
+smtp_servers = 無意味なトランスポート
+
+[例]
+
+smtp_servers = 127.0.0.1:2025
+</screen>
+こうしておくと、
+記事を投稿したさいには配送エラーになり、
+メールキューに落ちます。
+</para>
+
+<para>
+メールの中身や配送先を間違えなかったと確信があり、
+配送して良いと判断した場合、
+正しいトランスポートを指定してキューをフラッシュしてください。
+<screen>
+% fml -o smtp_servers=正しいトランスポート ＭＬ名 flushq
+
+[例]
+
+% fml -o smtp_servers=127.0.0.1:25 ＭＬ名 flushq
+</screen>
 </para>
 
 </sect1>
