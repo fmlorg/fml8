@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.16 2002/09/11 23:18:14 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.17 2002/09/22 14:56:52 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -223,8 +223,15 @@ sub _fmlconf
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
     my $mode   = $args->{ options }->{ n } ? 'difference_only' : 'all';
+    my $argv   = $curproc->command_line_argv();
 
-    $config->dump_variables({ mode => $mode });
+    if (defined $argv->[1]) {
+	my $k = $argv->[1];
+	print "$k = ", $config->{ $k }, "\n";
+    }
+    else {
+	$config->dump_variables({ mode => $mode });
+    }
 }
 
 
