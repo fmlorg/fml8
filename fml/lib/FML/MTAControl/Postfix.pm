@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.17 2003/01/07 08:38:33 fukachan Exp $
+# $FML: Postfix.pm,v 1.18 2003/01/27 03:23:17 fukachan Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -89,14 +89,18 @@ sub postfix_remove_alias
     my $rh = new FileHandle $alias;
     my $wh = new FileHandle "> $alias_new";
     if (defined $rh && defined $wh) {
+	my $buf;
+
       LINE:
-	while (<$rh>) {
-	    if (/\<ALIASES\s+$key\@/ .. /\<\/ALIASES\s+$key\@/) {
+	while ($buf = <$rh>) {
+	    if ($buf =~ /\<ALIASES\s+$key\@/
+		   ..
+		$buf =~ /\<\/ALIASES\s+$key\@/) {
 		$removed++;
 		next LINE;
 	    }
 
-	    print $wh $_;
+	    print $wh $buf;
 	}
 	$wh->close;
 	$rh->close;
@@ -190,6 +194,7 @@ sub _find_key_in_file
 
     if (defined $fh) {
 	my $buf;
+
       LINE:
 	while ($buf = <$fh>) {
 	    if ($buf =~ /^$key:/) {

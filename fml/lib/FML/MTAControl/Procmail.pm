@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Procmail.pm,v 1.4 2002/09/22 14:56:51 fukachan Exp $
+# $FML: Procmail.pm,v 1.5 2002/12/18 04:03:16 fukachan Exp $
 #
 
 package FML::MTAControl::Procmail;
@@ -79,14 +79,18 @@ sub procmail_remove_alias
     my $rh = new FileHandle $alias;
     my $wh = new FileHandle "> $alias_new";
     if (defined $rh && defined $wh) {
+	my $buf;
+
       LINE:
-	while (<$rh>) {
-	    if (/\<ALIASES\s+$key\@/ .. /\<\/ALIASES\s+$key\@/) {
+	while ($buf = <$rh>) {
+	    if ($buf =~ /\<ALIASES\s+$key\@/ 
+		  ..
+		$buf =~ /\<\/ALIASES\s+$key\@/) {
 		$removed++;
 		next LINE;
 	    }
 
-	    print $wh $_;
+	    print $wh $buf;
 	}
 	$wh->close;
 	$rh->close;
@@ -136,8 +140,9 @@ sub procmail_find_key_in_alias_maps
 	use FileHandle;
 	my $fh = new FileHandle $map;
 	if (defined $fh) {
-	    while (<$fh>) {
-		return 1 if /^$key:/;
+	    my $buf;
+	    while ($buf = <$fh>) {
+		return 1 if $buf =~ /^$key:/;
 	    }
 	    $fh->close;
 	}
@@ -176,15 +181,15 @@ sub procmail_get_aliases_as_hash_ref
 	use FileHandle;
 	my $fh = new FileHandle $map;
 	if (defined $fh) {
-	    my ($key, $value);
+	    my ($buf, $key, $value);
 
 	  LINE:
-	    while (<$fh>) {
-		next LINE if /^#/;
-		next LINE if /^\s*$/;
+	    while ($buf = <$fh>) {
+		next LINE if $buf =~ /^#/;
+		next LINE if $buf =~ /^\s*$/;
 
-		chomp;
-		($key, $value)   = split(/:/, $_, 2);
+		chomp $buf;
+		($key, $value)   = split(/:/, $buf, 2);
 		$value =~ s/^\s*//;
 		$value =~ s/s*$//;
 		$aliases->{ $key } = $value;
