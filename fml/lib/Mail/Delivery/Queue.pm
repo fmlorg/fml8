@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.10 2002/01/13 15:46:53 fukachan Exp $
+# $FML: Queue.pm,v 1.11 2002/01/30 15:42:26 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -96,12 +96,12 @@ sub new
     $me->{ _info }->{ recipients } = File::Spec->catfile($dir, "info", "recipients", $id);
 
     for ($dir,
-	 &File::Spec->catfile($dir, "active"),
-	 &File::Spec->catfile($dir, "new"),
-	 &File::Spec->catfile($dir, "deferred"),
-	 &File::Spec->catfile($dir, "info"),
-	 &File::Spec->catfile($dir, "info", "sender"),
-	 &File::Spec->catfile($dir, "info", "recipients")) {
+	 File::Spec->catfile($dir, "active"),
+	 File::Spec->catfile($dir, "new"),
+	 File::Spec->catfile($dir, "deferred"),
+	 File::Spec->catfile($dir, "info"),
+	 File::Spec->catfile($dir, "info", "sender"),
+	 File::Spec->catfile($dir, "info", "recipients")) {
 	-d $_ || _mkdirhier($_);
     }
 
