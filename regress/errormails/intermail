@@ -1,0 +1,58 @@
+Received: from imfep04.nuinui.net (imfep04.nuinui.net [210.174.120.150])
+	by ahodori.fml.org (Postfix) with ESMTP id 97F1686659
+	for <fml-support-admin@ffs.fml.org>; Tue, 30 Jan 2001 15:58:30 +0900 (JST)
+To: fml-support-admin@ffs.fml.org
+From: Mail Administrator <Postmaster@mb.nuinui.net>
+Reply-To: Mail Administrator <Postmaster@mb.nuinui.net>
+Subject: Mail System Error - Returned Mail
+Date: Tue, 30 Jan 2001 15:58:30 +0900
+Message-ID: <20010130065830.FUVR15086.imfep04.nuinui.net@imfep04>
+MIME-Version: 1.0
+Content-Type: multipart/report;
+		report-type=delivery-status;
+		Boundary="===========================_ _= 571594(15086)980837910"
+
+
+--===========================_ _= 571594(15086)980837910
+Content-Type: text/plain
+
+This Message was undeliverable due to the following reason:
+
+The user(s) account is temporarily over quota.
+
+<kenken@mb.nuinui.net>
+
+Please reply to Postmaster@mb.nuinui.net
+if you feel this message to be in error.
+
+--===========================_ _= 571594(15086)980837910
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; imfep04.nuinui.net
+Arrival-Date: Tue, 30 Jan 2001 15:58:29 +0900
+Received-From-MTA: dns; ahodori.fml.org (202.232.137.17)
+
+Final-Recipient: RFC822; <kenken@mb.nuinui.net>
+Action: failed
+Status: 4.2.2
+
+--===========================_ _= 571594(15086)980837910
+Content-Type: message/rfc822
+
+Received: by hikari.fml.org (8.9.3/3.4W6+Hikari-2.1) with ESMTP id RAA17788 for <caesar@fml.org>; Tue, 2 Jan 2001 17:08:04 +0900 (JST)
+Received: by iris.fml.org (Postfix, from userid 0)
+	id 1BCBE15024; Tue,  2 Jan 2001 17:08:03 +0900 (JST)
+From: fukachan@sapporo.iij.ad.jp (Ken'ichi Fukamachi)
+To: elena@nuinui.net
+Reply-To: rudo@nuinui.net
+Subject: [elena:00300] test 01
+	appended_mesg
+Message-Id: <20010102080803.1BCBE15024@iris.fml.org>
+Date: Tue,  2 Jan 2001 17:08:03 +0900 (JST)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+
+test message
+
+-- rudo's mabuachi
