@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: summary.pm,v 1.4 2003/08/23 04:35:32 fukachan Exp $
+# $FML: summary.pm,v 1.5 2003/08/29 15:33:59 fukachan Exp $
 #
 
 package FML::Command::Admin::summary;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::summary - show outgoing mail queue.
+FML::Command::Admin::summary - maintain article summary file.
 
 =head1 SYNOPSIS
 
@@ -23,11 +23,13 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-change delivery mode from real time to digest.
+maintain article summary file.
 
 =head1 METHODS
 
 =head2 process($curproc, $command_args)
+
+maintain article summary file.
 
 =cut
 
@@ -59,7 +61,7 @@ sub need_lock { 1;}
 sub lock_channel { return 'article_spool_modify';}
 
 
-# Descriptions: change delivery mode from real time to digest.
+# Descriptions: top level dispatcher to maintain article summary file.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $recipient_map
 # Return Value: none
@@ -79,21 +81,18 @@ sub _summary
 {
     my ($self, $curproc, $command_args) = @_;
     my $config  = $curproc->config();
-    my $myname  = $curproc->myname();
-    my $argv    = $curproc->command_line_argv();
-    my $id_max  = $curproc->article_max_id();
+    my $max_id  = $curproc->article_max_id();
     my $options = $command_args->{ options };
 
     use FML::Article::Summary;
     my $summary = new FML::Article::Summary $curproc;
 
     my ($method) =  @$options;
-
     if ($method eq 'update') {
 	croak("update not implemented");
     }
     elsif ($method eq 'rebuild') {
-	$summary->rebuild(1, $id_max);
+	$summary->rebuild(1, $max_id);
     }
     else {
 	my $wh = \*STDOUT;
