@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.84 2002/04/10 08:59:39 fukachan Exp $
+# $FML: Kernel.pm,v 1.85 2002/04/13 14:54:51 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1144,6 +1144,32 @@ sub prepare_file_to_return
 
 
 =head1 MISCELLANEOUS METHODS
+
+=cut
+
+
+sub set_umask_as_public
+{
+    my ($curproc) = @_;
+    my $pcb = $curproc->{ pcb };
+
+    # reset umask since html archives should be public open.
+    my $saved_umask = umask;
+    $pcb->set('umask', 'saved_umask', $saved_umask);
+    umask(000);
+}
+
+
+sub reset_umask
+{
+    my ($curproc) = @_;
+    my $pcb = $curproc->{ pcb };
+    my $saved_umask = $pcb->get('umask', 'saved_umask');
+
+    # back to the original umask;
+    umask($saved_umask);
+}
+
 
 =head2 C<load_module($args, $module)>
 
