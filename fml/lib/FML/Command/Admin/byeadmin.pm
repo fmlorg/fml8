@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: byeadmin.pm,v 1.2 2002/03/30 11:08:35 fukachan Exp $
+# $FML: byeadmin.pm,v 1.3 2002/04/03 11:32:59 fukachan Exp $
 #
 
 package FML::Command::Admin::byeadmin;
@@ -65,8 +65,10 @@ sub process
     my $address       = $command_args->{ command_data } || $options->[ 0 ];
 
     # fundamental check
-    croak("address is not specified")         unless defined $address;
-    croak("\$member_map is not specified")    unless $member_map;
+    croak("address is not undefined")    unless defined $address;
+    croak("member_map is not undefined") unless defined $member_map;
+    croak("address is not specified")    unless $address;
+    croak("member_map is not specified") unless $member_map;
 
     # FML::Command::UserControl specific parameters
     my $uc_args = {
