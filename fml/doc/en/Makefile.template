@@ -1,5 +1,5 @@
 #
-# $FML: Makefile.template,v 1.5 2001/06/05 13:28:44 fukachan Exp $
+# $FML: Makefile.template,v 1.1 2003/07/24 15:37:33 fukachan Exp $
 #
 
 TMP_DIR     = /tmp/sgmltools
@@ -25,7 +25,7 @@ JADE_OPTS   = -v -c $(SGML_DIR)/catalog
 FML_DSSSL   = -d $(SGML_DIR)/fml.dsl
 HTMLify     = sgmltools -v -d -j "$(JADE_OPTS) $(FML_DSSSL)"
 TEXTify     = sgmltools -v -d -j "$(JADE_OPTS)"
-FIX_CHARSET = ../utils/bin/fix_charset.pl
+FIX_CHARSET =  ../../ja/utils/bin/fix_charset.pl
 
 ENV_VARS    = TMPDIR=$(TMP_DIR) SGML_CATALOG_FILES=$(SGML_CATALOG_FILES) COLS=72
 
