@@ -12,6 +12,48 @@
 	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
 	気をつけてください。
 
+2004/03/31
+
+   総書き直しをした新しいスレッドシステムへ切替える。
+
+   etc/modules
+	switch to FML::CGI::Thread (purge old thread module)
+	
+   FML::CGI::Thread 
+	check existence of $ml_name value.
+	use Japanese title.
+	
+   FML::CGI::Menu 
+   FML::Process::CGI::Kernel 
+	move config.cgi specific methods run_*() from
+	FML::Process::CGI::Kernel to FML::CGI::Menu.
+
+   FML::CGI::Menu 
+	use cgi.config.$key as message translation
+	
+   FML::Article::Thread 
+   FML::CGI::Thread 
+	modify message output engine.
+	enable close operation.
+	
+   Mail::ThreadTrack is removed.
+	Mail::ThreadTrack is obsoleted.
+
+   FML::Command::Admin::thread 
+   FML::Process::Distribute Switch 
+   FML::CGI::ThreadTrack 
+	Mail::ThreadTrack is obsoleted. remove related codes.
+
+2004/03/29
+
+   FML::Command::Admin::thread 
+	list sub command do not run print_one_line_summary().
+	fix typo.
+	
+   FML::Article::Thread 
+   FML::CGI::Thread 
+	preliminary implementation of thread GUI.
+
 2004/03/28
 
    スレッド操作の再構成
@@ -6626,4 +6668,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.191 2004/03/21 02:18:14 fukachan Exp $
+$FML: CHANGES.txt,v 1.192 2004/03/28 15:37:25 fukachan Exp $
