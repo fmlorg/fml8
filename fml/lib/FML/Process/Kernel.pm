@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.166 2003/03/18 10:39:40 fukachan Exp $
+# $FML: Kernel.pm,v 1.167 2003/03/28 10:32:23 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1463,7 +1463,7 @@ sub reply_message_add_header_info
     my $hdr_str = sprintf("\n%s\n", $hdr->as_string());
     $hdr_str    =~ s/\n/\n$tag/g;
 
-    $curproc->reply_message($hdr_str);
+    $curproc->reply_message($hdr_str, $msg_args);
 }
 
 
