@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.24 2003/02/01 13:53:13 fukachan Exp $
+# $FML: UserControl.pm,v 1.25 2003/02/09 12:31:41 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -62,7 +62,11 @@ sub useradd
     my $maplist  = $uc_args->{ maplist };
     my $trycount = 0;
 
-    # XXX-TODO: validate $address by regexp here ?
+    # XXX check if $address is safe (persistent ?).
+    my $safe = new FML::Restriction::Base;
+    unless ($safe->regexp_match('address', $address)) {
+	croak("unsafe address");
+    }
 
     # pass info into reply_message()
     my $msg_args = $command_args->{ msg_args };
@@ -125,7 +129,11 @@ sub userdel
     my $maplist  = $uc_args->{ maplist };
     my $trycount = 0;
 
-    # XXX-TODO: validate $address by regexp here ?
+    # XXX check if $address is safe (persistent ?).
+    my $safe = new FML::Restriction::Base;
+    unless ($safe->regexp_match('address', $address)) {
+	croak("unsafe address");
+    }
 
     # pass info to reply_message()
     my $msg_args = $command_args->{ msg_args };

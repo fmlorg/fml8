@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: off.pm,v 1.6 2003/01/25 12:48:39 fukachan Exp $
+# $FML: off.pm,v 1.7 2003/02/13 13:34:26 fukachan Exp $
 #
 
 package FML::Command::Admin::off;
@@ -76,7 +76,6 @@ sub process
     };
     my $r = '';
 
-    # XXX-TODO: we expect userdel() validates $address.
     eval q{
 	use FML::Command::UserControl;
 	my $obj = new FML::Command::UserControl;

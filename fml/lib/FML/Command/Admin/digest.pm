@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.6 2003/01/25 12:48:38 fukachan Exp $
+# $FML: digest.pm,v 1.7 2003/02/09 12:31:41 fukachan Exp $
 #
 
 package FML::Command::Admin::digest;
@@ -141,7 +141,6 @@ sub _digest_on
 	maplist => [ $digest_recipient_map ],
     };
 
-    # XXX-TODO: we expect userdel() and useradd() validate $address.
     $self->_userdel($curproc, $command_args, $uc_normal_args);
     $self->_useradd($curproc, $command_args, $uc_digest_args);
 }
@@ -173,7 +172,6 @@ sub _digest_off
 	maplist => $digest_recipient_maps,
     };
 
-    # XXX-TODO: we expect userdel() and useradd() validate $address.
     $self->_userdel($curproc, $command_args, $uc_digest_args);
     $self->_useradd($curproc, $command_args, $uc_normal_args);
 }

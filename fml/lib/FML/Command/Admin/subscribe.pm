@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.19 2002/12/20 03:40:12 fukachan Exp $
+# $FML: subscribe.pm,v 1.20 2003/01/25 12:48:39 fukachan Exp $
 #
 
 package FML::Command::Admin::subscribe;
@@ -80,7 +80,6 @@ sub process
     };
     my $r = '';
 
-    # XXX-TODO: we expect useradd() validates $address.
     eval q{
 	use FML::Command::UserControl;
 	my $obj = new FML::Command::UserControl;
