@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newdomain.pm,v 1.4 2003/11/16 23:49:12 fukachan Exp $
+# $FML: newdomain.pm,v 1.5 2003/12/28 13:23:16 fukachan Exp $
 #
 
 package FML::Command::Admin::newdomain;
@@ -23,7 +23,7 @@ See C<FML::Command> for more detainewdomain.
 
 =head1 DESCRIPTION
 
-an alias of C<FML::Command::Admin::dir>.
+declare a new domain we use.
 
 =cut
 
