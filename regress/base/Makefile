@@ -1,5 +1,5 @@
 #
-# $FML$
+# $FML: Makefile,v 1.5 2001/07/08 14:02:01 fukachan Exp $
 #
 
 PERL = perl -I ../../fml/lib -I ../../cpan/lib -I ../../img/lib
@@ -13,6 +13,8 @@ test:
 	@ $(PERL) ../base/md5.pl
 	@ echo "* FML::Date test"
 	@ $(PERL) ../base/date2unixtime.pl
+	@ echo "* Tie::JournaledFile test"
+	@ $(PERL) ../base/journaledfile.pl
 	@ echo "* Mail::Message module IO test"
 	@ sh ../base/multipart_io.sh
 	@ sh ../base/multipart_maker.sh
