@@ -81,7 +81,7 @@ if [ ! -f $libexec_dir/fmlwrapper ];then
 	cd $libexec_dir/
 
 	echo -n "   link fmlwrapper to: "
-	for x in fml.pl distribute command fmlserv mead
+	for x in fml.pl distribute command fmlserv mead fmlconf fmlticket
 	do
 		rm -f $x
 		ln -s fmlwrapper $x && echo -n "$x "
