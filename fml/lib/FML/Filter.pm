@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.29 2003/05/14 12:02:00 fukachan Exp $
+# $FML: Filter.pm,v 1.30 2003/06/25 13:10:50 tmu Exp $
 #
 
 package FML::Filter;
@@ -331,6 +331,7 @@ sub _filter_reject_notice
 			       "reason(s) for rejection: $r",
 			       $msg_args);
 
+    # XXX-TODO: need swtich to forward whether header or header+body ?
     # what we forward ?
     if ($type eq 'multipart') {
 	$curproc->reply_message($msg, $msg_args);
