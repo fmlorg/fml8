@@ -1,8 +1,8 @@
 #-*- perl -*-
 #
-# Copyright (C) 2003 Ken'ichi Fukamachi
+# Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #
-# $FML: Language.pm,v 1.2 2004/02/26 12:59:52 fukachan Exp $
+# $FML: Language.pm,v 1.3 2004/02/29 15:57:26 fukachan Exp $
 #
 
 package Mail::Message::Language;
@@ -62,7 +62,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003 Ken'ichi Fukamachi
+Copyright (C) 2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
