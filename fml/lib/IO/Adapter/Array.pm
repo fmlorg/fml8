@@ -93,7 +93,7 @@ sub open
     $self->{_elements}     = $r_array;
     $self->{_num_elements} = $#elements;
     $self->{_counter}      = 0;
-    return defined @elements ? \@elements : undef;
+    return( @elements ? \@elements : undef );
 }
 
 
