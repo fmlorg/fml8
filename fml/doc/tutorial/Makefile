@@ -1,4 +1,4 @@
-all: html
+all: export
 
 html:
 	sgmltools -v -b html -j "-v" fml-devel.sgml 2>&1 |\
