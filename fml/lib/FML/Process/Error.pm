@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.2 2002/05/19 09:45:54 fukachan Exp $
+# $FML: Error.pm,v 1.3 2002/05/19 11:25:24 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -130,6 +130,7 @@ XXX Each command determines need of lock or not.
 sub run
 {
     my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
     my $found = 0;
     my $pcb   = $curproc->{ pcb };
     my $msg   = $curproc->{ incoming_message }->{ message };
@@ -156,7 +157,7 @@ sub run
 
     $pcb->set("error", "found", 1) if $found;
 
-    my $eval = $config->get_hook( 'error_run_end_hook' );
+    $eval = $config->get_hook( 'error_run_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
