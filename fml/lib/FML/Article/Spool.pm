@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2003 Ken'ichi Fukamachi
+# Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.4 2003/12/30 08:22:36 fukachan Exp $
+# $FML: Spool.pm,v 1.5 2004/02/01 15:28:48 fukachan Exp $
 #
 
 package FML::Article::Spool;
@@ -232,7 +232,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003 Ken'ichi Fukamachi
+Copyright (C) 2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
