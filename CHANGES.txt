@@ -1,6 +1,62 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/01/27
+
+   FML::Command::Admin::newml 
+	"makefml newml" virtual domain support. For exmaple,
+
+		% makefml newml elena@nuinui.net
+
+	The ml_home_dir is speculated from $virtual_maps in main.cf.
+
+
+   IO::Adapter clean up campaign ?:)
+
+   Mail::Delivery::SMTP
+   IO::Adapter
+   IO::Adapter::{Array,DBI,File,MySQL}
+	clarify IO::Adapter definition and clean up get_XXX() functions.
+	remove get_member(), get_active() and get_recipient()
+	define get_next_key() and get_next_value() and clarify thier definitions.
+	add IMPLEMENTATION.jp 
+	
+   FML::Credential 
+   IO::Adapter 
+   IO::Adapter::DBI 
+	clarify IO::Adapter::find() usage.
+	find() returns "key value" by default and "key" if requested.
+	add want option e.g. find(key, { want => $what } ).
+	
+   File::Sequence 
+	search_max_id() searches all keys if full_search option specified
+
+   FML::Command::SendFile 
+	clarify function acl, arguments more
+	
+   FML::Command::User::get 
+	clarify function arguments more
+	
+2002/01/20
+
+   /etc/fml/main.cf
+	define $virtual_maps
+	
+   FML::Process::Utils 
+	implement get_virtual_maps()
+
+   FML::Process::Kernel 
+	fix module loading of Mail::Delivery::Queue
+	
+   FML::Command 
+   FML::Command::SendFile 
+	fixed to call up error to FML::Process::Command layer
+	
+   FML::Process::Command 
+	more comments, log.
+	fix message handling to use object to get command string returned by
+	find_first_plaintext_message().
+
 2002/01/16
 
    change Mail::Message naming convention.
@@ -1379,4 +1435,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.47 2002/01/14 12:01:48 fukachan Exp $
+$FML: CHANGES.txt,v 1.48 2002/01/18 15:40:13 fukachan Exp $
