@@ -200,24 +200,6 @@ reject_not_iso2022jp_japanese_string
 </row>
 <row>
 <entry>
-body_cksum_cache_dir</entry>
-<entry>
- Message-ID cache directory</entry>
-<entry>
-$db_dir/body_cksum
-   </entry>
-</row>
-<row>
-<entry>
-body_loop_check_rules</entry>
-<entry>
- body loop check rules</entry>
-<entry>
-check_body_cksum
-   </entry>
-</row>
-<row>
-<entry>
 cgi_base_dir</entry>
 <entry>
  base directory which locates .cgi for this domain.</entry>
@@ -748,17 +730,6 @@ yes
 </row>
 <row>
 <entry>
-header_loop_check_rules</entry>
-<entry>
- loop check rules</entry>
-<entry>
-check_message_id
-   check_x_ml_info
-   check_list_post
-   </entry>
-</row>
-<row>
-<entry>
 help_file</entry>
 <entry>
  help file</entry>
@@ -813,6 +784,24 @@ $default_mail_header_size_limit
 </row>
 <row>
 <entry>
+incoming_mail_body_cksum_cache_dir</entry>
+<entry>
+ Message-ID cache directory</entry>
+<entry>
+$db_dir/body_cksum
+   </entry>
+</row>
+<row>
+<entry>
+incoming_mail_body_loop_check_rules</entry>
+<entry>
+ body loop check rules</entry>
+<entry>
+check_body_cksum
+   </entry>
+</row>
+<row>
+<entry>
 incoming_mail_cache_dir</entry>
 <entry>
  incoming mail queue directory</entry>
@@ -827,6 +816,17 @@ incoming_mail_cache_size</entry>
  the maximum number of cached incoming mails</entry>
 <entry>
 128
+   </entry>
+</row>
+<row>
+<entry>
+incoming_mail_header_loop_check_rules</entry>
+<entry>
+ loop check rules</entry>
+<entry>
+check_message_id
+   check_x_ml_info
+   check_list_post
    </entry>
 </row>
 <row>
@@ -1611,15 +1611,6 @@ yes
 </row>
 <row>
 <entry>
-use_body_loop_check</entry>
-<entry>
- use loop check based on body information</entry>
-<entry>
-yes
-   </entry>
-</row>
-<row>
-<entry>
 use_command_mail_filter_reject_notice</entry>
 <entry>
  inform filter rejection ?</entry>
@@ -1674,15 +1665,6 @@ yes
 </row>
 <row>
 <entry>
-use_header_loop_check</entry>
-<entry>
- use loop check based on header information ?</entry>
-<entry>
-yes
-   </entry>
-</row>
-<row>
-<entry>
 use_html_archive</entry>
 <entry>
  use html converter function ?</entry>
@@ -1692,9 +1674,27 @@ yes
 </row>
 <row>
 <entry>
+use_incoming_mail_body_loop_check</entry>
+<entry>
+ use loop check based on body information</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
 use_incoming_mail_cache</entry>
 <entry>
  cache incoing mail ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_incoming_mail_header_loop_check</entry>
+<entry>
+ use loop check based on header information ?</entry>
 <entry>
 yes
    </entry>

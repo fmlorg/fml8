@@ -86,18 +86,6 @@ article {
    }
 }
 
-body {
-
-   body_loop_check { 
-          $body_loop_check_rules
-          $use_body_loop_check
-   }
-
-   body_* {
-          $body_cksum_cache_dir
-   }
-}
-
 cgi {
 
    cgi_* {
@@ -306,14 +294,6 @@ has {
    }
 }
 
-header {
-
-   header_loop_check { 
-          $header_loop_check_rules
-          $use_header_loop_check
-   }
-}
-
 html {
 
    html_archive { 
@@ -340,10 +320,24 @@ incoming {
           $incoming_command_mail_header_size_limit
    }
 
+   incoming_mail_body_loop_check { 
+          $incoming_mail_body_loop_check_rules
+          $use_incoming_mail_body_loop_check
+   }
+
    incoming_mail_cache { 
           $incoming_mail_cache_dir
     ?     $incoming_mail_cache_size
           $use_incoming_mail_cache
+   }
+
+   incoming_mail_header_loop_check { 
+          $incoming_mail_header_loop_check_rules
+          $use_incoming_mail_header_loop_check
+   }
+
+   incoming_* {
+          $incoming_mail_body_cksum_cache_dir
    }
 }
 
