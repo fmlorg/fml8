@@ -7,8 +7,6 @@
 # $command_prepare_end_hook = q{ 1;};
 # $command_prepare_start_hook = q{ 1;};
 # $command_run_end_hook = q{ 1;};
-# $command_run_end_hook = q{ 1;};
-# $command_run_start_hook = q{ 1;};
 # $command_run_start_hook = q{ 1;};
 # $command_verify_request_end_hook = q{ 1;};
 # $command_verify_request_start_hook = q{ 1;};
