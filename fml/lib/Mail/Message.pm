@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.44 2002/01/13 15:19:52 fukachan Exp $
+# $FML: Message.pm,v 1.45 2002/01/16 13:34:01 fukachan Exp $
 #
 
 package Mail::Message;
@@ -967,7 +967,7 @@ sub _print
 sub _is_head_message
 {
     my ($self) = @_;
-    my $hm = $self->head_message;
+    my $hm = $self->__head_message;
     ($hm eq $self) ? 1 : 0;
 }
 
