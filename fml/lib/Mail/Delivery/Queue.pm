@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.42 2004/08/13 13:23:46 fukachan Exp $
+# $FML: Queue.pm,v 1.43 2004/08/14 16:34:56 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -74,12 +74,14 @@ C<new()> assigns them but do no actual works.
 
 =cut
 
-my $default_strategy = "oldest";
+my $default_policy = "oldest";
 
 my $dir_mode = 0755;
 
-@class_list = qw(new deferred active incoming info sender recipients
-		 transport);
+@class_list = qw(lock
+		 new deferred active incoming info sender recipients
+		 transport strategy
+		 );
 
 # Descriptions: constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
@@ -88,15 +90,13 @@ my $dir_mode = 0755;
 sub new
 {
     my ($self, $args) = @_;
-    my ($type) = ref($self) || $self;
-    my $me     = {};
-
-    # XXX-TODO: _status is used ?
-    my $dir = $args->{ directory } || croak("specify directory");
-    my $id  = defined $args->{ id } ? $args->{ id } : _new_queue_id();
-    $me->{ _directory } = $dir;
-    $me->{ _id }        = $id;
-    $me->{ _status }    = "new";
+    my ($type)        = ref($self) || $self;
+    my $dir           = $args->{ directory } || croak("specify directory");
+    my $id            = $args->{ id } || _new_queue_id();
+    my $me            = {
+	_directory    => $dir,
+	_id           => $id,
+    };
 
     # bless !
     bless $me, $type;
@@ -105,35 +105,31 @@ sub new
     $dir_mode = $args->{ directory_mode } || $dir_mode;
 
     # initialize directories.
-    -d $dir || _mkdirhier($dir);
+    -d $dir || $me->_mkdirhier($dir);
     for my $class (@class_list) {
 	my $fp   = sprintf("%s_dir_path", $class);
 	my $_dir = $me->can($fp) ? $me->$fp($id) : undef;
-	-d $_dir || _mkdirhier($_dir);
+	-d $_dir || $me->_mkdirhier($_dir);
     }
 
     # hold information for delivery
-    $me->{ _new_qf }               = $me->new_file_path($id);
-    $me->{ _active_qf }            = $me->active_file_path($id);
-    $me->{ _incoming_qf }          = $me->incoming_file_path($id);
-    $me->{ _info }->{ sender }     = $me->sender_file_path($id);
-    $me->{ _info }->{ recipients } = $me->recipients_file_path($id);
-    $me->{ _info }->{ transport }  = $me->transport_file_path($id);
-
-    # strategy
-    $me->{ strategy } = $default_strategy;
+    my $qf_new = $me->new_file_path($id);
+    my $files  = [];
+    push(@$files, $qf_new);
+    $me->{ _clean_up_files } = $files;
+    
 
     return bless $me, $type;
 }
 
 
 # Descriptions: mkdir recursively.
-#    Arguments: STR($dir)
+#    Arguments: OBJ($self) STR($dir)
 # Side Effects: none
 # Return Value: ARRAY or UNDEF
 sub _mkdirhier
 {
-    my ($dir) = @_;
+    my ($self, $dir) = @_;
 
     eval q{
 	use File::Path;
@@ -169,24 +165,6 @@ sub id
 {
     my ($self) = @_;
     $self->{ _id };
-}
-
-
-=head2 filename()
-
-return the file name of the queue id assigned to this object C<$self>.
-
-=cut
-
-
-# Descriptions: return queue file name assigned to this object.
-#    Arguments: OBJ($self)
-# Side Effects: none
-# Return Value: STR
-sub filename
-{
-    my ($self) = @_;
-    -f $self->{ _active_qf } ? $self->{ _active_qf } : undef;
 }
 
 
@@ -231,7 +209,7 @@ sub list
 	    push(@r, $file);
 	}
 
-	return $self->strategy(\@r);
+	return $self->_list_ordered_by_policy(\@r);
     }
 
     return [];
@@ -262,43 +240,40 @@ sub list_all
 }
 
 
+=head2 set_policy($policy)
 
-=head2 set_strategy($strategy)
+set queue management policy.
 
-set queue management strategy.
+=head2 get_policy()
 
-=head2 get_strategy()
-
-return queue management strategy.
-
-=head2 strategy(list)
+return queue management policy.
 
 =cut
 
 
-# Descriptions: set queue management strategy.
-#    Arguments: OBJ($self) STR($strategy)
+# Descriptions: set queue management policy.
+#    Arguments: OBJ($self) STR($policy)
 # Side Effects: update $self.
 # Return Value: none
-sub set_strategy
+sub set_policy
 {
-    my ($self, $strategy) = @_;
+    my ($self, $policy) = @_;
 
-    if (defined $strategy) {
-	$self->{ strategy } = $strategy;
+    if (defined $policy) {
+	$self->{ _policy } = $policy;
     }
 }
 
 
-# Descriptions: get queue management strategy.
-#    Arguments: OBJ($self) STR($strategy)
+# Descriptions: get queue management policy.
+#    Arguments: OBJ($self) STR($policy)
 # Side Effects: update $self.
 # Return Value: none
-sub get_strategy
+sub get_policy
 {
-    my ($self, $strategy) = @_;
+    my ($self, $policy) = @_;
 
-    return( $self->{ strategy } || $default_strategy );
+    return( $self->{ _policy } || $default_policy );
 }
 
 
@@ -306,20 +281,20 @@ sub get_strategy
 #    Arguments: OBJ($self) ARRAY_REF($list)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub strategy
+sub _list_ordered_by_policy
 {
     my ($self, $list) = @_;
-    my $strategy = $self->{ strategy } || $default_strategy;
+    my $policy = $self->get_policy() || $default_policy;
 
-    if ($strategy eq 'oldest') {
+    if ($policy eq 'oldest') {
 	my (@r) = sort _queue_streategy_oldest @$list;
 	return \@r;
     }
-    elsif ($strategy eq 'newest') {
+    elsif ($policy eq 'newest') {
 	my (@r) = sort _queue_streategy_newest @$list;
 	return \@r;
     }
-    elsif ($strategy eq 'fair_queue' || $strategy eq 'fair-queue') {
+    elsif ($policy eq 'fair_queue' || $policy eq 'fair-queue') {
 	my (@o) = sort _queue_streategy_oldest @$list;
 	my (@n) = sort _queue_streategy_newest @$list;
 	my (@p) = ();
@@ -375,6 +350,129 @@ sub _queue_streategy_newest
     $xb =~ s/\.\d+.*$//;
 
     $xb <=> $xa;
+}
+
+
+# Descriptions: update queue info for queue management policy.
+#    Arguments: OBJ($self) HASH_REF($policy_args)
+# Side Effects: update $self.
+# Return Value: none
+sub update_schedule
+{
+    my ($self, $policy_args) = @_;
+    my $id          = $policy_args->{ queue_id } || $self->id();
+    my $qf_deferred = $self->deferred_file_path($id);
+
+    # get hints. 
+    my $hints = $self->_update_schedule_info($id);
+    my $sleep = $hints->{ sleep } || 300;
+    my $time  = time + $sleep;
+
+    # set expired time.
+    utime $time, $time, $qf_deferred;
+}
+
+
+# Descriptions: get hints for this queue id.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: none
+sub _update_schedule_info
+{
+    my ($self, $id) = @_;
+    my $info = {};
+    my $file = $self->strategy_file_path($id);
+
+    use IO::Adapter;
+    my $hint = new IO::Adapter $file;
+    $hint->touch();
+    $hint->open();
+
+    # sleep time
+    my $cur_sleep = $hint->find("SLEEP") || 300;
+    my $new_sleep = $cur_sleep * 2;
+    $hint->delete("SLEEP");
+    $hint->add("SLEEP", [ $new_sleep ]);
+    $info->{ sleep } = $new_sleep;
+
+    $hint->close();
+
+    return $info;
+}
+
+
+# Descriptions: move deferred queue to active one.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: update queue.
+# Return Value: none
+sub wakeup_queue
+{
+    my ($self, $id) = @_;
+    $self->_change_queue_mode($id, "active");
+}
+
+
+# Descriptions: move active queue to deferred one.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: update queue.
+# Return Value: none
+sub sleep_queue
+{
+    my ($self, $id) = @_;
+    $self->_change_queue_mode($id, "deferred");
+}
+
+
+# Descriptions: change mode. 
+#               move active queue to deferred one, vice versa.
+#    Arguments: OBJ($self) STR($id) STR($to_mode)
+# Side Effects: update queue.
+# Return Value: none
+sub _change_queue_mode
+{
+    my ($self, $id, $to_mode) = @_;
+
+    $id ||= $self->id();
+
+    if ($self->lock()) {
+	my $qf_deferred = $self->deferred_file_path($id);
+	my $qf_active   = $self->active_file_path($id);
+	my $qstr_args   = { 
+	    queue_id    => $id,
+	};
+
+	if ($to_mode eq 'active') {
+	    if (-f $qf_deferred) {
+		rename($qf_deferred, $qf_active);
+		$self->touch($qf_active);
+	    }
+	}
+	elsif ($to_mode eq 'deferred' || $to_mode eq 'defer') {
+	    if (-f $qf_active) {
+		rename($qf_active, $qf_deferred);
+		$self->touch($qf_deferred);
+		$self->update_schedule($qstr_args);
+	    }
+	}
+
+	$self->unlock();
+    }
+}
+
+
+sub reschedule
+{
+    my ($self) = @_;
+    my $q_list = $self->list("deferred");
+
+    use File::stat;
+    for my $qid (@$q_list) {
+	my $qf = $self->deferred_file_path($qid);
+	my $st = stat($qf);
+	if ($st->mtime < time) {
+	    $self->wakeup_queue($qid);
+	}
+    }
 }
 
 
@@ -487,10 +585,14 @@ use Fcntl qw(:DEFAULT :flock);
 sub lock
 {
     my ($self, $args) = @_;
-    my $wait = defined $args->{ wait } ? $args->{ wait } : 10;
-    my $prep = defined $args->{ lock_before_runnable } ? 1 : 0;
-    my $file = $prep ? $self->{ _new_qf } : $self->{ _active_qf };
-    my $fh   = new FileHandle $file;
+    my $wait    = defined $args->{ wait } ? $args->{ wait } : 10;
+    my $is_prep = defined $args->{ lock_before_runnable } ? 1 : 0;
+    my $id      = $self->id();
+    my $qf_new  = $self->new_file_path($id);
+    my $qf_lock = $self->lock_file_path($id);
+    my $qf_act  = $self->active_file_path($id);
+    my $lckfile = $is_prep ? $qf_new : (-f $qf_lock ? $qf_lock : $qf_act);
+    my $fh      = new FileHandle $lckfile;
 
     eval {
 	local($SIG{ALRM}) = sub { croak("lock timeout");};
@@ -511,8 +613,11 @@ sub lock
 sub unlock
 {
     my ($self) = @_;
-    my $fh = $self->{ _lock }->{ _fh };
-    flock($fh, &LOCK_UN);
+    my $fh = $self->{ _lock }->{ _fh } || undef;
+
+    if (defined $fh) {
+	flock($fh, &LOCK_UN);
+    }
 }
 
 
@@ -539,10 +644,17 @@ C<DESTRUCTOR>.
 sub in
 {
     my ($self, $msg) = @_;
-    my $qf = $self->{ _new_qf };
+    my $id           = $self->id();
+    my $qf_qstr      = $self->strategy_file_path($id);
+    my $qf_lock      = $self->lock_file_path($id);
+    my $qf_new       = $self->new_file_path($id);
+
+    $self->touch($qf_lock) unless -f $qf_lock;
+    $self->touch($qf_qstr) unless -f $qf_qstr;
+    $self->touch($qf_new)  unless -f $qf_new;
 
     use FileHandle;
-    my $fh = new FileHandle "> $qf";
+    my $fh = new FileHandle "> $qf_new";
     if (defined $fh) {
 	$fh->autoflush(1);
 	$fh->clearerr();
@@ -560,7 +672,7 @@ sub in
 	    my $ok = 0;
 	  TRY:
 	    while ($try_count-- > 0) {
-		my $st = stat($qf);
+		my $st = stat($qf_new);
 		if ($st->size == $write_count) {
 		    $ok = 1;
 		    last TRY;
@@ -575,7 +687,7 @@ sub in
     }
 
     # check the existence and the size > 0.
-    return( (-e $qf && -s $qf) ? 1 : 0 );
+    return( (-e $qf_new && -s $qf_new) ? 1 : 0 );
 }
 
 
@@ -609,9 +721,10 @@ C<info/recipients/> directories.
 sub set
 {
     my ($self, $key, $value) = @_;
-    my $qf_sender     = $self->{ _info }->{ sender };
-    my $qf_recipients = $self->{ _info }->{ recipients };
-    my $qf_transport  = $self->{ _info }->{ transport };
+    my $id            = $self->id();
+    my $qf_sender     = $self->sender_file_path($id);
+    my $qf_recipients = $self->recipients_file_path($id);
+    my $qf_transport  = $self->transport_file_path($id);
 
     use FileHandle;
 
@@ -699,9 +812,11 @@ directory to C<active/> directory like C<postfix> queue strategy.
 sub setrunnable
 {
     my ($self)        = @_;
-    my $qf_new        = $self->{ _new_qf };
-    my $qf_sender     = $self->{ _info }->{ sender };
-    my $qf_recipients = $self->{ _info }->{ recipients };
+    my $id            = $self->id();
+    my $qf_new        = $self->new_file_path($id);
+    my $qf_active     = $self->active_file_path($id);
+    my $qf_sender     = $self->sender_file_path($id);
+    my $qf_recipients = $self->recipients_file_path($id);
 
     # something error.
     if ($self->error()) {
@@ -720,11 +835,36 @@ sub setrunnable
     }
 
     # move new/$id to active/$id
-    if (rename( $self->{ _new_qf }, $self->{ _active_qf } )) {
+    if (rename($qf_new, $qf_active)) {
 	return 1;
     }
 
     return 0;
+}
+
+
+=head2 touch($file)
+
+=cut
+
+
+# Descriptions: touch file.
+#    Arguments: OBJ($self) STR($file)
+# Side Effects: create $file.
+# Return Value: none
+sub touch
+{
+    my ($self, $file) = @_;
+
+    use FileHandle;
+    my $fh = new FileHandle;
+    if (defined $fh) {
+        $fh->open($file, "a");
+        $fh->close();
+
+	my $now = time;
+	utime $now, $now, $file;
+    }
 }
 
 
@@ -747,13 +887,11 @@ return 1 (valid) or 0 (broken).
 sub remove
 {
     my ($self) = @_;
+    my $id     = $self->id();
 
-    for my $f ($self->{ _new_qf },
-	       $self->{ _active_qf },
-	       $self->{ _incoming_qf },
-	       $self->{ _info }->{ sender },
-	       $self->{ _info }->{ recipients },
-	       $self->{ _info }->{ transport }) {
+    for my $class (@class_list) {
+        my $fp = sprintf("%s_file_path", $class);
+        my $f  = $self->can($fp) ? $self->$fp($id) : undef;
 	unlink $f if -f $f;
     }
 }
@@ -763,14 +901,18 @@ sub remove
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: 1 or 0
-sub valid_active_queue
+sub is_valid_active_queue
 {
     my ($self) = @_;
-    my $ok = 0;
+    my $ok     = 0;
+    my $id     = $self->id();
 
-    for my $f ($self->{ _active_qf },
-	       $self->{ _info }->{ sender },
-	       $self->{ _info }->{ recipients }) {
+    # files to check.
+    my $qf_active     = $self->active_file_path($id);
+    my $qf_sender     = $self->sender_file_path($id);
+    my $qf_recipients = $self->recipients_file_path($id);
+
+    for my $f ($qf_active, $qf_sender, $qf_recipients) {
 	$ok++ if -f $f && -s $f;
     }
 
@@ -785,11 +927,15 @@ sub valid_active_queue
 sub is_valid_queue
 {
     my ($self) = @_;
-    my $ok = 0;
+    my $ok     = 0;
+    my $id     = $self->id();
 
-    for my $f ($self->{ _active_qf },
-	       $self->{ _info }->{ sender },
-	       $self->{ _info }->{ recipients }) {
+    # files to check.
+    my $qf_active     = $self->active_file_path($id);
+    my $qf_sender     = $self->sender_file_path($id);
+    my $qf_recipients = $self->recipients_file_path($id);
+
+    for my $f ($qf_active, $qf_sender, $qf_recipients) {
 	$ok++ if -f $f && -s $f;
     }
 
@@ -804,8 +950,11 @@ sub is_valid_queue
 sub DESTROY
 {
     my ($self) = @_;
+    my $files  = $self->{ _clean_up_files } || [];
 
-    unlink $self->{ _new_qf } if -f $self->{ _new_qf };
+    for my $file (@$files) {
+	unlink $file if -f $file;
+    }
 }
 
 
@@ -814,146 +963,29 @@ sub DESTROY
 =cut
 
 
-# Descriptions: return "new" file path.
+# Descriptions: return "lock" directory path.
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
 # Return Value: STR
-sub new_file_path
+sub lock_dir_path
 {
     my ($self, $id) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
 
-    return File::Spec->catfile($dir, "new", $id);
+    return File::Spec->catfile($dir, "lock");
 }
 
 
-# Descriptions: return "deferred" file path.
+# Descriptions: return "lock" file path.
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
 # Return Value: STR
-sub deferred_file_path
+sub lock_file_path
 {
     my ($self, $id) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
 
-    return File::Spec->catfile($dir, "deferred", $id);
-}
-
-
-# Descriptions: return "active" file path.
-#    Arguments: OBJ($self) STR($id)
-# Side Effects: none
-# Return Value: STR
-sub active_file_path
-{
-    my ($self, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
-
-    return File::Spec->catfile($dir, "active", $id);
-}
-
-
-# Descriptions: return "incoming" file path.
-#    Arguments: OBJ($self) STR($id)
-# Side Effects: none
-# Return Value: STR
-sub incoming_file_path
-{
-    my ($self, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
-
-    return File::Spec->catfile($dir, "incoming", $id);
-}
-
-
-# Descriptions: return "info" file path.
-#    Arguments: OBJ($self) STR($id)
-# Side Effects: none
-# Return Value: STR
-sub info_file_path
-{
-    my ($self, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
-
-    return File::Spec->catfile($dir, "info", $id);
-}
-
-
-# Descriptions: return "sender" file path.
-#    Arguments: OBJ($self) STR($id)
-# Side Effects: none
-# Return Value: STR
-sub sender_file_path
-{
-    my ($self, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
-
-    return File::Spec->catfile($dir, "info", "sender", $id);
-}
-
-
-# Descriptions: return "recipients" file path.
-#    Arguments: OBJ($self) STR($id)
-# Side Effects: none
-# Return Value: STR
-sub recipients_file_path
-{
-    my ($self, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
-
-    return File::Spec->catfile($dir, "info", "recipients", $id);
-}
-
-
-# Descriptions: return "transport" file path.
-#    Arguments: OBJ($self) STR($id)
-# Side Effects: none
-# Return Value: STR
-sub transport_file_path
-{
-    my ($self, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
-
-    return File::Spec->catfile($dir, "info", "transport", $id);
-}
-
-
-# Descriptions: return "new" directory path.
-#    Arguments: OBJ($self) STR($id)
-# Side Effects: none
-# Return Value: STR
-sub new_dir_path
-{
-    my ($self, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
-
-    return File::Spec->catfile($dir, "new");
-}
-
-
-# Descriptions: return "deferred" directory path.
-#    Arguments: OBJ($self) STR($id)
-# Side Effects: none
-# Return Value: STR
-sub deferred_dir_path
-{
-    my ($self, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
-
-    return File::Spec->catfile($dir, "deferred");
-}
-
-
-# Descriptions: return "active" directory path.
-#    Arguments: OBJ($self) STR($id)
-# Side Effects: none
-# Return Value: STR
-sub active_dir_path
-{
-    my ($self, $id) = @_;
-    my $dir = $self->{ _directory } || croak("directory undefined");
-
-    return File::Spec->catfile($dir, "active");
+    return File::Spec->catfile($dir, "lock", $id);
 }
 
 
@@ -970,6 +1002,97 @@ sub incoming_dir_path
 }
 
 
+# Descriptions: return "incoming" file path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub incoming_file_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "incoming", $id);
+}
+
+
+# Descriptions: return "new" directory path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub new_dir_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "new");
+}
+
+
+# Descriptions: return "new" file path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub new_file_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "new", $id);
+}
+
+
+# Descriptions: return "active" directory path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub active_dir_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "active");
+}
+
+
+# Descriptions: return "active" file path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub active_file_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "active", $id);
+}
+
+
+# Descriptions: return "deferred" directory path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub deferred_dir_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "deferred");
+}
+
+
+# Descriptions: return "deferred" file path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub deferred_file_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "deferred", $id);
+}
+
+
 # Descriptions: return "info" directory path.
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
@@ -983,6 +1106,20 @@ sub info_dir_path
 }
 
 
+# Descriptions: return "info" file path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub info_file_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "info", $id);
+}
+
+
+
 # Descriptions: return "sender" directory path.
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
@@ -993,6 +1130,19 @@ sub sender_dir_path
     my $dir = $self->{ _directory } || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info", "sender");
+}
+
+
+# Descriptions: return "sender" file path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub sender_file_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "info", "sender", $id);
 }
 
 
@@ -1009,6 +1159,19 @@ sub recipients_dir_path
 }
 
 
+# Descriptions: return "recipients" file path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub recipients_file_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "info", "recipients", $id);
+}
+
+
 # Descriptions: return "transport" directory path.
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: none
@@ -1019,6 +1182,45 @@ sub transport_dir_path
     my $dir = $self->{ _directory } || croak("directory undefined");
 
     return File::Spec->catfile($dir, "info", "transport");
+}
+
+
+# Descriptions: return "transport" file path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub transport_file_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "info", "transport", $id);
+}
+
+
+# Descriptions: return "strategy" directory path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub strategy_dir_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "info", "strategy");
+}
+
+
+# Descriptions: return "strategy" file path.
+#    Arguments: OBJ($self) STR($id)
+# Side Effects: none
+# Return Value: STR
+sub strategy_file_path
+{
+    my ($self, $id) = @_;
+    my $dir = $self->{ _directory } || croak("directory undefined");
+
+    return File::Spec->catfile($dir, "info", "strategy", $id);
 }
 
 

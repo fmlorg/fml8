@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.32 2004/07/26 06:40:15 fukachan Exp $
+# $FML: SMTP.pm,v 1.33 2004/08/14 08:35:52 fukachan Exp $
 #
 
 
@@ -671,6 +671,9 @@ sub _fallback_into_queue
 		}
 
 		$qid = $queue->id();
+
+		# into deferred queue.
+		$queue->sleep_queue();
 	    };
 	    unless ($@) {
 		Log("fallback: total=$num_rcpt qid=$qid");

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.24 2004/08/14 06:28:55 fukachan Exp $
+# $FML: QueueManager.pm,v 1.25 2004/08/14 16:32:14 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -83,6 +83,7 @@ sub send
     my $count       = 0;
     my $count_ok    = 0;
     my $count_err   = 0;
+    my $channel     = 'qmgr_reschedule';
 
     use Mail::Delivery::Queue;
     my $queue = new Mail::Delivery::Queue { directory => $queue_dir };
@@ -92,8 +93,12 @@ sub send
 	$ra = [ $id ];
     }
     else {
-	$queue->set_strategy("fair-queue");
+	$queue->set_policy("fair-queue");
 	$ra = $queue->list();
+	if (@$ra) {
+	    $curproc->log("qmgr: empty active queue. re-schedule");
+	    $queue->reschedule();
+	}
     }
 
   QUEUE:
@@ -104,11 +109,17 @@ sub send
 	};
 
 	if ( $q->lock() ) {
-	    if ( $q->valid_active_queue() ) {
-		$self->_send($curproc, $q) && do {
+	    if ( $q->is_valid_active_queue() ) {
+		my $r = $self->_send($curproc, $q);
+		if ($r) {
 		    $q->remove();
 		    $count_ok++;
-		};
+		}
+		else {
+		    $curproc->log("qmgr: qid=$qid try later.");
+		    $q->sleep_queue();
+		    $count_err++;
+		}
 		$count++;
 	    }
 	    else {
@@ -127,6 +138,14 @@ sub send
 
     if ($count) {
 	$curproc->log("qmgr: $count requests processed: ok=$count_ok/$count");
+    }
+
+    if ($curproc->is_event_timeout($channel)) {
+	if (defined $queue) {
+	    $curproc->log("qmgr: re-schedule");
+	    $queue->reschedule();
+	}
+	$curproc->set_event_timeout($channel, time + 300);
     }
 }
 
