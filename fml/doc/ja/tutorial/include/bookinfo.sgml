@@ -1,5 +1,5 @@
 <!--
-   $FML: bookinfo.sgml,v 1.9 2002/12/20 04:02:49 fukachan Exp $
+   $FML: bookinfo.sgml,v 1.10 2003/01/05 08:06:00 fukachan Exp $
 -->
 
 <bookinfo>
@@ -47,14 +47,23 @@
 	</para>
 
 	<para>
-	なお、以下の環境で動作実績が確認されています。
+	なお、以下の環境で動作実績が確認されています(詳しくは
+	上述の
+	<ulink url="../../../fml/doc/ja/todo/STATUS.html">
+	STATUS
+	</ulink>
+	のドキュメントを参照して下さい)。
 <screen>
-postfix          + perl 5.6.1   on NetBSD 1.5.x (1.5 stable)
-postfix          + perl 5.6.1   on Redhat Linux 7.2
-sendmail 8.11.6  + perl 5.00503 on Redhat Linux 6.2
-postfix          + perl 5.00503 on FreeBSD 4.3 STABLE
-?                + perl ?       on FreeBSD 4.6 RELEASE
-(postfix         + perl 5.6.1   on Solaris 7)
+	perl 5.6.1   on NetBSD 1.5.x (1.5 stable)		
+	perl 5.6.1   on NetBSD 1.6				
+	perl 5.00503 on FreeBSD 4.3 STABLE
+	perl ?       on FreeBSD 4.6 RELEASE
+	perl 5.00503 on FreeBSD 4.7 RELEASE-p3
+	perl 5.00503 on FreeBSD 4.6.2 RELEASE			
+	perl 5.6.1   on Redhat Linux 7.2 (postfix)		
+	perl 5.00503 on Redhat Linux 6.2 (sendmail8.11.6)	
+	postfix       + perl 5.6.1 on Solaris 7			
+	postfix 2.0.3 + perl 5.6.1 on Solaris 9			
 </screen>
 	</para>
 
