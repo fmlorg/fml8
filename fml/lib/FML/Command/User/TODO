@@ -3,7 +3,8 @@
 		ack			removed (たぶん confirm に統合)
 		active			removed ?
 		actives			removed ?
-addr					う〜ん？
+		addr			実装するべきなのか不明
+					新スタイル？ 例: set addrlevel 10
 		admin			emulated in FML::Process::Command
 approve					
 		bye			done
@@ -21,15 +22,15 @@ digest
 		help			done
 		iam			removed
 index
-info
-library
+		info			done
+		library			実装するべきなのか不明
 matome
 		member			removed ?
 		members			removed ?
 		mget			done
 		mget2			removed
 		mget3			removed
-mode
+		mode			新スタイル ? set ... ?
 moderator
 		msend			removed ?
 		msg			removed ?
@@ -37,17 +38,17 @@ noskip
 		objective		done
 off
 on
-passwd
+		passwd			unknown
 		quit			removed
 		send			done
 		sendfile		removed
-set
+		set			新スタイル ? set ... ?
 skip
 		stat			removed ?
 		status			removed ?
 		subscribe		done
 		summary			done
-traffic
+traffic			
 undigest
 unmatome
 		unsubscribe		done
