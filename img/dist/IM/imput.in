@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Aug 31, 1995
-### Revised: Feb 28, 2000
+### Revised: Apr 14, 2000
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-$VERSION = "imput version 20000228(IM140)";
+$VERSION = "imput version 20000414(IM141)";
 
 $Prog = 'imput';
 
@@ -111,6 +111,8 @@ Usage: $Prog [options] msg
     'NNTPservers;s;localhost;Nntp_servers'
 	=> "List of NNTP servers (separated with ',').
 		Each element should be server[/remote_port][%local_port]",
+    'NNTPauthuser;s;;Nntp_authuser'
+	=> 'User name for NNTP authentication.',
     'ClientName;s;localhost;Client_name'
 	=> 'Name as a SMTP client (used for SMTP HELO).',
     'SSHServer;s;localhost;SSH_server'
@@ -941,12 +943,12 @@ sub send_message {
 	    for ($i = 1; $i <= $split; $i++) {
 		sleep($Partial_sleep) if ($i > 1);
 		$rcode = &nntp_transaction(\@Nntp_servers, \@Header, \@Body,
-		  $Newsgroups, $i, $split);
+		  $Newsgroups, $i, $split, $Nntp_authuser);
 		return $rcode if ($rcode);
 	    }
 	} else {
 	    $rcode = &nntp_transaction(\@Nntp_servers, \@Header, \@Body,
-	      $Newsgroups, 0, 0);
+	      $Newsgroups, 0, 0, $Nntp_authuser);
 	    return $rcode if ($rcode);
 	}
 	# XXX should be controlable? --- yes, of course!
@@ -1775,6 +1777,7 @@ sub process_queue {
 	    if (/^S:(.*)/)   { $Sender = $1; next; }
 	    if (/^SSV:(.*)/) { @Smtp_servers = split(',', $1); next; }
 	    if (/^NSV:(.*)/) { @Nntp_servers = split(',', $1); next; }
+	    if (/^NAU:(.*)/) { $Nntp_authuser = $1; next; }
 	    if (/^SSH:(.*)/) { $SSH_server = $1; next; }
 	    if (/^R:(.*)/)   { @Recipients = split(',', $1); next; }
 	    if (/^RQ:(.*)/)  { $User_require = $1; next; }
@@ -1901,6 +1904,7 @@ sub queue_message {
     print QUEUE "RQ:$User_require\n";
     print QUEUE "SSV:$Smtp_servers\n";
     print QUEUE "NSV:$Nntp_servers\n";
+    print QUEUE "NAU:$Nntp_authuser\n";
     print QUEUE "SSH:$SSH_server\n";
     print QUEUE "R:".join(',', @Recipients)."\n";
     print QUEUE "\n";

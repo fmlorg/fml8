@@ -5,7 +5,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: May  9, 1997
-### Revised: Feb 28, 2000
+### Revised: Apr 14, 2000
 ###
 
 BEGIN {
@@ -13,7 +13,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "imsetup version 20000228(IM140)";
+my $VERSION = "imsetup version 20000414(IM141)";
 
 $Prog = 'imsetup';
 
@@ -23,13 +23,13 @@ $Prog = 'imsetup';
 
 use File::Copy;
 use Sys::Hostname;
-use IM::Config qw(init_opt read_opt read_cfg help);
+use IM::Config qw(init_opt read_opt read_cfg use_cl no_sync help);
 use IM::Util;
 use IM::Address qw(extract_addr);
 use integer;
 use strict;
 use vars qw($Prog $EXPLANATION @OptConfig
-	    $opt_fromdomain $opt_noharm $opt_help);
+	    $opt_fromdomain $opt_noharm $opt_usecl $opt_nosync $opt_help);
 
 ##
 ## Environments
@@ -41,11 +41,13 @@ my $alias = "Aliases";
 
 my $home = $ENV{'HOME'};
 my $address;
+my $username;
 my $mail = "Mail";
 my $news = "News";
-my $usecl  = "@im_usecl@";
-my $nosync = "@im_nosync@";
+my $usecl;
+my $nosync;
 my $src = "local";
+my $mailbox_style = "mbox";
 my $auth = "";
 my ($user, $host) = split(/\@/, $address);
 my $keep = 0;
@@ -84,6 +86,8 @@ if ($opt_fromdomain =~ /\./) {
 } else {
     $address = im_getlogin() . "\@" . get_domain_name();
 }
+$usecl = use_cl() ? 'yes' : 'no';
+$nosync = no_sync() ? 'yes' : 'no';
 
 &read_conf();
 &check_im_directory();
@@ -131,7 +135,14 @@ sub read_conf () {
         $src = &input_config("What kind of mail spool do you use? (local/POP/IMAP)", $src);
     } while (! ($src =~ /^local$|^pop$|^imap$/i));
   
+    if ($src =~ /^local/i) {
+	do {
+	    $mailbox_style = &input_config("What kind of mailbox style do you use? (mbox/maildir)", $mailbox_style);
+	} while (! ($mailbox_style =~ /^mbox$|^maildir$/i));
+    }
+
     if ($src =~ /^pop|^imap/i) {
+        my $a = extract_addr($address);
         if ($src =~ /^pop/i) {
             $auth = "POP";
             do {
@@ -143,7 +154,7 @@ sub read_conf () {
                 $auth = &input_config("What kind of IMAP authentication mechanism? (AUTH/LOGIN)", $auth);
             } while (! ($auth =~ /^auth$|^login$/i));
         }
-        ($user, $host) = split(/\@/, $address);
+        ($user, $host) = split(/\@/, $a);
         $host = "mail." . $host;
         $user = &input_config("What is your $src account name?", $user);
         $host = &input_config("What is your $src server name or IP address?", $host);
@@ -287,9 +298,7 @@ sub make_conf_file () {
     print "Setup $im_config.\n";
     if (!$opt_noharm) {
 	my $a = extract_addr($address);
-	if ($a =~ /\@(.*)/) {
-	    $domain = $1;
-	}
+	($username, $domain) = split(/\@/, $a);
 	$nntpservers = $ENV{'NNTPSERVER'} || "localhost";
 	open(CONFIG, ">$im_config");
 	print CONFIG <<"---";
@@ -328,7 +337,7 @@ ToDomain=$domain
 				# should not contain 8bit characters
 #AddrRegex=
 #Org=The Mew Organization	# for news posting
-#User=user_name
+User=$username
 
 ##
 ## Default global parameters
@@ -360,6 +369,7 @@ NewsDir=$news			# for saved news
 
 ## Address Book
 #AddrBookFile=Addrbook		# relative to ~/.im/
+#AddrBookFile=\${HOME}/Mail/Addrbook	# if you share Addrbook with Mew 2
 ## Mail address aliases
 #AliasesFile=Aliases		# relative to ~/.im/
 ## PetName: mail address aliases for displaying
@@ -396,20 +406,28 @@ Smtpservers=$smtpserver
 #GetSbr=get.sbr			# hook for special processing (rel. to ~/.im/)
 ---
 
-        if ($src =~ /^local/i ) {
-            print CONFIG <<"---";
+	if ($src =~ /^local/i) {
+	    if ($mailbox_style =~ /^maildir/i) {
+		print CONFIG <<"---";
+MBoxStyle=qmail
+Imget.Src=local:\${HOME}/Maildir
+keep=$keep
+---
+	    } else {
+		print CONFIG <<"---";
 Imget.Src=local
 keep=$keep
 ---
-        }
+	    }
+	}
         print CONFIG <<"---";
 #Imget.Src=local		# default source of imget (local mailbox)
 #lock=flock			# locking style of local mailbox
 #rpath=append			# conversion of UNIX From into Return-Path:
 #PopHistory=pophist-{POPSERVERID}	# to save last state (relative to ~/.im/)
 #NntpHistory=newshist		# to save last state (relative to ~/.im/)
-#MBoxStyle=qmail		# if folder style mbox of qmail is used
-#Imget.Src=local:\${HOME}/MailDir# in case of qmail
+#MBoxStyle=qmail			# if folder style mbox of qmail is used
+#Imget.Src=local:\${HOME}/Maildir	# in case of qmail
 UseCL=$usecl			# Use value of Content-Length header
 NoSync=$nosync			# Do not need fsync(2) on writing file
 

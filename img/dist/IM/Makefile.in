@@ -4,7 +4,7 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Feb 28, 2000
+### Revised: Apr 14, 2000
 ###
 
 SHELL=	/bin/sh
@@ -48,8 +48,9 @@ all:
 install:: installbin installdata
 
 installbin::
-	[ -d $(bindir) ] || \
-		($(mkdir) -p $(bindir) && $(chmod) 755 $(bindir))
+	-if test ! -d $(bindir); then \
+		$(mkdir) -p $(bindir) && $(chmod) 755 $(bindir); \
+	fi
 	for f in $(PROG); do \
 		$(sed) -e '/###DELETE-ON-INSTALL###/d' $${f} > $${f}.tmp ; \
 		$(INSTALL) -m 555 $${f}.tmp $(bindir)/$${f} ; \
@@ -60,12 +61,16 @@ installbin::
 	$(rm) -f imget.tmp
 
 installdata::
-	[ -d $(moddir) ] || $(mkdir) -p $(moddir)
+	-if test ! -d $(moddir); then \
+		$(mkdir) -p $(moddir); \
+	fi
 	$(chmod) 755 $(moddir)
 	for f in IM/*.pm; do \
 		$(INSTALL_DATA) $${f} $(moddir) ; \
 	done
-	[ -d $(imlibdir) ] || $(mkdir) -p $(imlibdir)
+	-if test ! -d $(imlibdir); then \
+		$(mkdir) -p $(imlibdir); \
+	fi
 	$(chmod) 755 $(imlibdir)
 	for cnf_im in SiteConfig ; do \
 		if test ! -f $(imlibdir)/$$cnf_im; then \

@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Feb 28, 2000
+### Revised: Apr 14, 2000
 ###
 
-my $PM_VERSION = "IM::Pop.pm version 20000228(IM140)";
+my $PM_VERSION = "IM::Pop.pm version 20000414(IM141)";
 
 package IM::Pop;
 require 5.003;
@@ -142,7 +142,7 @@ sub pop_stat () {
 	im_warn("STAT command failed.\n");
 	return -1;
     }
-    @field = split(' ', $resp);
+    @field = split(/\s+/, $resp);
     im_notice("$field[1] message(s) found.\n");
     return $field[1];
 }
@@ -260,7 +260,7 @@ sub pop_uidl ($) {
 	s/\r\n$/\n/;
 	last if ($_ =~ /^\.\n$/);
 	im_debug($_) if (&debug('pop'));
-	if (/^(\d+)\s(\S+)$/) {
+	if (/^(\d+)\s+(\S+)$/) {
 	    $$uidlp[$1] = $2;
 	}
     }
@@ -321,7 +321,7 @@ sub pop_process ($$$$) {
 	    if ($resp !~ /^\+/) {
 		im_warn("LAST command failed.\n");
 	    } else {
-		$resp =~ /\+OK (\d+)/i;
+		$resp =~ /\+OK\s+(\d+)/i;
 		$last = $1;
 	    }
 #	} elsif ($keep_proto eq 'STATUS') {

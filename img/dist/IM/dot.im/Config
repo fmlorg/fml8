@@ -65,6 +65,7 @@ ToDomain=_domain_when_domain_part_is_omitted_
 
 ## Address Book
 #AddrBookFile=Addrbook		# relative to ~/.im/
+#AddrBookFile=${HOME}/Mail/Addrbook	# if you share Addrbook with Mew 2
 ## Mail address aliases
 #AliasesFile=Aliases		# relative to ~/.im/
 ## PetName: mail address aliases for displaying
@@ -103,8 +104,8 @@ ToDomain=_domain_when_domain_part_is_omitted_
 #rpath=append			# conversion of UNIX From into Return-Path:
 #PopHistory=pophist-{POPSERVERID}	# to save last state (relative to ~/.im/)
 #NntpHistory=newshist		# to save last state (relative to ~/.im/)
-#MBoxStyle=qmail		# if folder style mbox of qmail is used
-#Imget.Src=local:${HOME}/MailDir# in case of qmail
+#MBoxStyle=qmail			# if folder style mbox of qmail is used
+#Imget.Src=local:${HOME}/Maildir	# in case of qmail
 #UseCL=no			# Use value of Content-Length header
 #NoSync=no			# Do not need fsync(2) on writing file
 

@@ -6,7 +6,7 @@
 ###
 ### Author:  Shuichi Kitaguchi <kit@Mew.org>
 ### Created: Sep 23, 1999
-### Revised: Feb 28, 2000
+### Revised: Apr 14, 2000
 ###
 
 BEGIN {
@@ -14,7 +14,7 @@ BEGIN {
     @im_src_siteperl@
 };
 
-my $VERSION = "immknmz version 20000228(IM140)";
+my $VERSION = "immknmz version 20000414(IM141)";
 
 $Prog = 'immknmz';
 
@@ -31,8 +31,9 @@ my @ignorefolders = ( "draft", "trash", "schedule", "queue", );
 use IM::Config;
 use IM::Util;
 use IM::Folder;
+use IO::File;
 use strict;
-use vars qw($Prog $EXPLANATION @OptConfig $opt_help $opt_gcnmz $opt_verbose);
+use vars qw($Prog $EXPLANATION @OptConfig $opt_help $opt_gcnmz $opt_verbose $opt_timestamp);
 
 $EXPLANATION = "
 $Prog :: mew-nmz-mknmz-all-folders
@@ -44,6 +45,7 @@ Usage: $Prog [options]
 @OptConfig = (
 	      'gcnmz;b;;'   => "Use gcnmz after mknmz (Garbage Collection for Namazu index).",
 	      'verbose;b;;' => "With verbose messages.",
+	      'timestamp;b;;' => "Use checking time stamp.",
 	      'help;b;;'    => "Show this message.",
 	      );
 
@@ -51,6 +53,14 @@ init_opt(\@OptConfig);
 read_cfg();
 read_opt(\@ARGV);
 help($EXPLANATION) && exit $EXIT_SUCCESS if $opt_help;
+
+sub get_mtime {
+    my ($path) = @_;
+    my ($dev,$ino,$mode,$nlink,$uid,$gid,
+        $rdev,$size,$atime,$mtime,$ctime,
+        $blksize,$blocks) = stat($path) or return -1;
+    return $mtime;
+}
 
 my $mailpath = mail_path()."/";
 my $namazupath = home_dir()."/$nmzdir/".mail_dir()."/";
@@ -69,6 +79,7 @@ my $gcnmztgt;
 my $ret;
 my @filelist;
 my $tempfile;
+my $timestamp;
 if ( $ENV{'TEMP'} eq "" ){
     if ( $ENV{'TMP'} eq "" ){
 	$tempfile = "/tmp"; # UNIX system, may be.
@@ -100,11 +111,30 @@ while ( <FILE> ){
     }
     if ( $flag != 0 ){
 	print "skipping $msgfolder...\n";
+	flush('STDOUT');
     } else {
 	$nmzfolder = $msgfolder;
 	$msgfolder =~ s/^\+/$mailpath/g;
 	$msgdir = $msgfolder;
 	$nmzfolder =~ s/^\+/$namazupath/g;
+
+        $timestamp = "$nmzfolder/NMZ.stamp";
+        if ($opt_timestamp) {
+	    my $foldermtime;
+	    if (&usetouchfile() && -r $msgfolder . "/" . &touchfile()) {
+		$foldermtime = get_mtime($msgfolder . "/" . &touchfile());
+	    } else {
+		$foldermtime = get_mtime("$msgfolder");
+	    }
+            if ($foldermtime < get_mtime("$timestamp")) {
+                print "index of $msgfolder may be up to date.\n" if $opt_verbose;
+		flush('STDOUT');
+                next;
+            }
+        }
+        im_open(\*STAMP,">$timestamp.new");
+        print STAMP "touched by IM.";
+        close(STAMP);
 
 	opendir(DIR,$msgfolder);
 	@filelist = grep(/^[0-9]*$/ && -f "$msgfolder/$_",readdir(DIR));
@@ -115,7 +145,8 @@ while ( <FILE> ){
 	}
 
 	if ( scalar(@filelist) > 0 ){
-	    im_open(\*TEMPFILE,">$tempfile");
+	    sysopen(\*TEMPFILE, "$tempfile", O_RDWR | O_EXCL | O_CREAT, 0600) || die;
+	    binmode(\*TEMPFILE);
 	    foreach ( @filelist ){
 		if (!-d "$msgdir/$_"){
 		    if ((&win95p() || &os2p()) && !&namazuv2()){
@@ -131,6 +162,7 @@ while ( <FILE> ){
 	    $gcnmztgt = "$nmzfolder" . "/NMZ";
 	    
 	    print "$Prog: processing $msgfolder ...\n";
+            flush('STDOUT');
 	    if ( $incfile eq "" ){
 		$ret = system "mknmz -Uh $mknmz_args -O $nmzfolder -F $tempfile";
 	    } else {
@@ -139,11 +171,13 @@ while ( <FILE> ){
 	    unlink $tempfile;
 	    if ( $ret == 2 ){
 		print "$Prog: abort.\n";
+		flush('STDOUT');
 		last;
 	    } elsif ($opt_gcnmz) {
 		print "$Prog: gcnmz $msgfolder ...\n" if $opt_verbose;
+		flush('STDOUT');
 		if (&namazuv2()) {
-		    system "gcnmz --no-backup $gcnmztgt";
+		    system "gcnmz --no-backup --quiet $gcnmztgt";
 		} else {
 		    system "gcnmz $gcnmztgt";
 		    opendir(DIR,$nmzfolder);
@@ -157,6 +191,7 @@ while ( <FILE> ){
 		}
 	    }
 	}
+        rename("$timestamp.new", "$timestamp");
     }
 }
 close(FILE);

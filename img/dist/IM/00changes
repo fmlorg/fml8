@@ -1,3 +1,16 @@
+141 (2000/04/14) mew-dist release
+
+* IMAP password hack.
+	Ryoji KATO <ryoji.kato@nrj.ericsson.se>
+* A bug fix for NNTPAuth.
+	Tatsuya Kinoshita <tatsuyak@pop21.odn.ne.jp>
+* A bug fix for word_iso2022jp_mimefy.
+	Takashi Kawachi <kawachi@i.am>
+* immknmz hack.
+	Hideyuki SHIRAI <shirai@rdmg.mgcs.mei.co.jp>
+* ISO-2022-JP-3
+	Hideyuki SHIRAI <shirai@rdmg.mgcs.mei.co.jp>
+
 140 (2000/02/28) mew-release release
 
 * Patches for namazu.

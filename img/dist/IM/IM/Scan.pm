@@ -5,10 +5,10 @@
 ###
 ### Author:  Internet Message Group <img@mew.org>
 ### Created: Apr 23, 1997
-### Revised: Feb 28, 2000
+### Revised: Apr 14, 2000
 ###
 
-my $PM_VERSION = "IM::Scan.pm version 20000228(IM140)";
+my $PM_VERSION = "IM::Scan.pm version 20000414(IM141)";
 
 package IM::Scan;
 require 5.003;
@@ -781,7 +781,7 @@ sub substr_safe ($$) {
 		my $i;
 
 		if ($room % 2 and $charset =~
-		    /^(jisx0208|jisx0212|ksc5601|cns11643-plane-2)/) {
+		    /^(jisx0208|jisx0212|jisx0213|ksc5601|cns11643-plane-2|big5-1|big5-2)/) {
 		    $room--;
 		    $last_char = ' ';
 		}
@@ -810,6 +810,9 @@ sub substr_safe ($$) {
 	elsif (s/(^\e\$\(C)//)	{ $G1 = $charset = 'ksc5601-1987';
 				  $G0 = 'ascii'; }
 
+	elsif (s/(^\e\$\(O)//)	{ $G0 = $charset = 'jisx0213-1'; }
+	elsif (s/(^\e\$\(P)//)	{ $G0 = $charset = 'jisx0213-2'; }
+
 	elsif (s/(^\e-A)//)	{ $G1 = $charset = 'iso8859-1'; }
 	elsif (s/(^\e-B)//)	{ $G1 = $charset = 'iso8859-2'; }
 	elsif (s/(^\e-C)//)	{ $G1 = $charset = 'iso8859-3'; }
@@ -834,6 +837,10 @@ sub substr_safe ($$) {
 				  $G0 = 'ascii'; }
 	elsif (s/(^\e\$\*H)//)	{ $G2 = $charset = 'cns11643-plane-2';
 				  $G0 = 'ascii';}
+
+	elsif (s/(^\e\$\(0)//)	{ $G0 = $charset = 'big5-1';}
+	elsif (s/(^\e\$\(1)//)	{ $G0 = $charset = 'big5-2';}
+
 	elsif (s/(^\e)//) {
 	    ;
 	}
@@ -845,7 +852,7 @@ sub substr_safe ($$) {
 
     join ('',
 	@res,
-	$charset =~ /^jisx02/ ? "\e(B" : '',
+	($G0 ne 'ascii') ? "\e(B" : '',
 	$shift_in,
 	$last_char,
 	$fill_char x ($len - $count),
