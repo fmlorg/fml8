@@ -53,4 +53,5 @@ test:
 	@ make -f ../base/Makefile
 
 regen:
-	(cd ../../fml/etc; sh .gen.sh)
+	(cd ../../fml/etc; make )
+	(cd ../../;make doc)
