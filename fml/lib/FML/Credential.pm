@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.35 2002/09/22 14:56:40 fukachan Exp $
+# $FML: Credential.pm,v 1.36 2002/09/22 15:01:20 fukachan Exp $
 #
 
 package FML::Credential;
-
 use strict;
-use vars qw(%Credential @ISA @EXPORT @EXPORT_OK);
 use Carp;
+use vars qw(%Credential @ISA @EXPORT @EXPORT_OK);
 use ErrorStatus qw(errstr error error_set error_clear);
 
 my $debug = 0;
@@ -43,12 +42,12 @@ So this hash is accessible in public.
 =head2 C<new()>
 
 bind $self to the module internal C<\%Credential> hash and return the
-has reference as an object.
+hash reference as an object.
 
 =cut
 
 
-# Descriptions: usual constructor
+# Descriptions: constructor.
 #               bind $self ($me) to \%Credential, so
 #               you can access the same \%Credential through this object.
 #    Arguments: OBJ($self) OBJ($curproc)
@@ -80,7 +79,15 @@ sub new
 sub DESTROY {}
 
 
-=head2 ACCESS METHODS
+=head1 ACCESS METHODS
+
+=head2 set_user_part_case_sensitive() 
+
+compare user part case sensitively (default).
+
+=head2 set_user_part_case_insensitive() 
+
+compare user part case insensitively.
 
 =cut
 
@@ -96,7 +103,7 @@ sub set_user_part_case_sensitive
 }
 
 
-# Descriptions: compare user part case insensitively (default)
+# Descriptions: compare user part case insensitively.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: none
@@ -191,7 +198,7 @@ sub is_same_address
 
 =head2 C<is_member($curproc, $args)>
 
-return 1 if the sender is a ML member.
+return 1 if the sender is an ML member.
 return 0 if not.
 
 =cut
@@ -307,6 +314,7 @@ sub has_address_in_map
     my $obj = new IO::Adapter $map, $config;
 
     # 1. get all entries match /^$user/ from $map.
+    # XXX-TODO: case sensitive / insensitive ?
     if ($debug) {
 	print STDERR "find( $user , { want => 'key', all => 1 });\n";
     }
@@ -445,6 +453,8 @@ sub get_compare_level
    XXX NUKE THIS ?
 
 =cut
+
+# XXX-TODO: remove get() and set(), which are not used ?
 
 
 # Descriptions: get value for the specified key
