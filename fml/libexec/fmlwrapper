@@ -56,7 +56,7 @@ sub Bootstrap
     my %options = ();
     my $my_default_config = '';
     GetOptions(\%options, 
-	       qw(ctladdr! debug! params! -c=s)
+	       qw(ctladdr! debug! params=s -c=s)
 	       );
 
     for (@ARGV) {
@@ -83,6 +83,9 @@ sub Bootstrap
     # 4. inspect my mode from $0
     use File::Basename;
     my $myname = basename($0);
+
+    # debug;
+    # use Data::Dumper; print Dumper( $main_cf ); exit 1;
 
     # 5. o.k. here we go!
     require "$libexec_dir/fml";
