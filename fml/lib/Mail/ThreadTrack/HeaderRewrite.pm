@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HeaderRewrite.pm,v 1.7 2001/11/20 07:29:27 fukachan Exp $
+# $FML: HeaderRewrite.pm,v 1.8 2001/12/22 09:21:20 fukachan Exp $
 #
 
 package Mail::ThreadTrack::HeaderRewrite;
@@ -14,15 +14,13 @@ use Carp;
 
 =head1 NAME
 
-Mail::ThreadTrack::HeaderRewrite - what is this
+Mail::ThreadTrack::HeaderRewrite - header manipulation
 
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
 
 =head1 METHODS
-
-=cut
 
 =head2 C<rewrite_header($msg)>
 
@@ -31,18 +29,10 @@ C<$msg> is Mail::Message object.
 =cut
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
-=head2 rewrite_header($msg)
-
-=cut
-
-
-# Descriptions:
-#    Arguments: $self $msg
-# Side Effects:
+# Descriptions: add thread track info into $msg where
+#               $msg is Mail::Message object.
+#    Arguments: OBJ($self) OBJ($msg)
+# Side Effects: modify $msg header
 # Return Value: none
 sub rewrite_header
 {
@@ -81,9 +71,9 @@ sub rewrite_header
 }
 
 
-# Descriptions: prepare header information
-#    Arguments: $self $msg
-# Side Effects:
+# Descriptions: prepare history infomation for further header rewrite
+#    Arguments: OBJ($self) OBJ($msg)
+# Side Effects: update $self->{ _status_history }
 # Return Value: none
 sub prepare_history_info
 {
@@ -122,7 +112,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
