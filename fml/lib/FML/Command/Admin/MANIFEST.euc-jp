@@ -20,11 +20,16 @@ unsubscribe	ＭＬからの脱退
 
 chaddr		登録してあるメールアドレスを変更する
 
+edit		config.cf を編集する( $EDITOR config.cf するだけ)
+
 newml		ＭＬを作る(初期化する)
 rmml		remove mailing lists
 
 htmlify		記事を HTML 化する (新コマンド、 spool2html の代わりともいう)
 		オプション: outdir=$directory srcdir=$source_directory
+
+off		メンバーの誰かを off にする
+on		メンバーの誰かを on  にする
 
 
 get		任意のファイルを取り寄せる ( MIME/multipart only )
@@ -41,11 +46,8 @@ pass
 
 ○ 未実装
 
-edit		config.cf を編集する
 
 help		admin のヘルプファイルを取り寄せる
 
-off		メンバーの誰かを off にする
-on		メンバーの誰かを on  にする
 
-$FML: MANIFEST.euc-jp,v 1.6 2002/04/23 09:30:42 fukachan Exp $
+$FML: MANIFEST.euc-jp,v 1.7 2002/07/13 13:09:03 fukachan Exp $
