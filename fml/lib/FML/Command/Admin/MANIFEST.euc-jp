@@ -27,6 +27,10 @@ get		任意のファイルを取り寄せる ( MIME/multipart only )
 (send)
 
 
+addadmin	add a new administrator
+byeadmin	remove the specified administrator
+
+
 ○ 未実装
 
 edit		config.cf を編集する
@@ -36,4 +40,4 @@ help		admin のヘルプファイルを取り寄せる
 off		メンバーの誰かを off にする
 on		メンバーの誰かを on  にする
 
-$FML: MANIFEST.euc-jp,v 1.2 2001/10/22 12:41:59 fukachan Exp $
+$FML: MANIFEST.euc-jp,v 1.3 2002/02/20 14:10:37 fukachan Exp $
