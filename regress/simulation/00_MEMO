@@ -253,14 +253,31 @@
 	FML::Process::Fake
 
 
+[TODO]	2004/06 年のオーバホールの残り
 
 
+	FML/Process/Fake.pm
+	FML/Process/QMail.pm
+	FML/Data/Deadline.pm
 
-[TODO]	2002,2003 年のオーバホールの残り
+   [THREAD, DB and HTML]
+	FML/Article/Thread.pm
+	FML/CGI/Thread.pm
+	Mail/Message/Thread.pm
+	Mail/Message/String.pm
+	Mail/Message/ToHTML.pm
+	FML/Process/HTMLify.pm
+	Mail/Message/DB.pm
+	FML/Command/Admin/thread.pm
+	FML/Command/Admin/htmlify.pm
 
-  ＊おもたい
+   [SMTP and MAIL QUEUE HANDLING]
+	FML/Process/Distribute.pm
+	Mail/Delivery/SMTP.pm
 	FML/Process/Kernel.pm
 	Mail/Message.pm
+
+	---->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8 ---->8
 
    * IN/OUT のチェック
 	Mail/Message/ToHTML.pm
@@ -281,17 +298,7 @@
 	FML::Filter::TextPlain
 	FML::Filter::Header
 
-  * 2003-2004 オーバホール、やりのこし
-	FML/Log.pm
-	FML/Process/Kernel.pm
-	FML/Process/Switch.pm
-
-    スレッドモジュールの改変があるので、この辺もとりあえずオーバホール無視
-	Mail/Message.pm
-	Mail/Message/Thread.pm
-	Mail/Message/ToHTML.pm
-
 
 ----------
-$FML: 00_MEMO,v 1.112 2004/06/24 12:25:02 fukachan Exp $
+$FML: 00_MEMO,v 1.113 2004/06/26 12:43:15 fukachan Exp $
 
