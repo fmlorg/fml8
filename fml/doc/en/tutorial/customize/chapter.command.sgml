@@ -1,0 +1,30 @@
+<!--
+   $FML$
+   $jaFML: chapter.command.sgml,v 1.1 2002/09/15 01:46:30 fukachan Exp $
+-->
+
+<chapter id="customize.command">
+	<title>
+	Extend command
+	</title>
+
+
+<sect1 id="customize.command.myproc">
+	<title>
+	case study: create your own help command.
+	</title>
+
+<para>
+To extend help command of elena ML.
+Create help.pm perl module at
+<screen>
+/var/spool/ml/elena/local/lib/FML/Command/User/help.pm
+</screen>
+In loading module, libraries under local/ path is preferred.  So, this
+help command is loaded for help command (FML::Command::User::help).
+</para>
+
+</sect1>
+
+
+</chapter>

@@ -1,0 +1,44 @@
+<!--
+   $FML$
+   $jaFML$
+-->
+
+<sect1 id="config.mailmagazine">
+	<title>
+	case study: mail magazine
+	</title>
+
+
+<para>
+Consider asymmetric case of member list (list of persons who can post)
+and recipient list.
+</para>
+
+<para>
+Firstly, remove primary_member_maps from $member_maps.  Instead, add
+$ml_home_dir/members-mailmag who can post to $member_maps.
+<screen>
+member_maps	=	$ml_home_dir/members-mailmag
+</screen>
+</para>
+
+<para>
+In this case, when a new user is subscribed, the user address is added
+to both $ml_home_dir/members and $ml_home_dir/recipinets.
+But $member_maps is defined as $ml_home_dir/members-mailmag.
+$ml_home_dir/members is not used.
+Hence, recipients is updated but the list of posters is unchanged.
+</para>
+
+<warning>
+<para>
+Strictly speaking, this configuration is not enough safe.  If somebody
+fakes From: address, he/she can post since fml checks only From:
+address.
+</para>
+</warning>
+
+<para>
+
+
+</sect1>

@@ -1,0 +1,30 @@
+<!--
+   $FML$
+   $jaFML: chapter.message.sgml,v 1.2 2003/04/15 14:51:36 fukachan Exp $
+-->
+
+<chapter id="customize.message">
+	<title>
+	extend message
+	</title>
+
+
+<sect1 id="customize.message.myproc">
+	<title>
+	case study: customze message
+	</title>
+
+<para>
+Create file at
+<screen>
+/var/spool/ml/elena/local/share/message/$language/class
+</screen>
+See 
+/usr/local/share/fml/$version/message/$language/class
+as samples. Copy, cut and paste one of them :)
+</para>
+
+</sect1>
+
+
+</chapter>

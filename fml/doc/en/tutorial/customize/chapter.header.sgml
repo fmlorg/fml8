@@ -1,0 +1,34 @@
+<!--
+   $FML$
+   $jaFML: chapter.header.sgml,v 1.3 2003/04/15 14:51:36 fukachan Exp $
+-->
+
+<chapter id="customize.header">
+	<title>
+	header rewriting
+	</title>
+
+<para>
+Header information is stored at FML::Header class object.
+FML::Header class inherits Mail::Header.
+See Mail::Header for method details.
+</para>
+
+
+
+<sect1 id="recipies.cutomize.header">
+	<title>
+	Recipe's
+	</title>
+
+<qandaset>
+
+&recipe.header.tag.uppercase;
+&recipe.header.tag.lowercase;
+
+</qandaset>
+
+</sect1>
+
+
+</chapter>

@@ -1,0 +1,32 @@
+<!--
+   $FML$
+   $jaFML: command_rejectall.sgml,v 1.3 2003/04/15 14:51:36 fukachan Exp $
+-->
+
+<sect1 id="config.command.rejectall">
+	<title>
+	case study: disable command mail
+	</title>
+
+<para>
+It is most safe to remove entries from aliases.
+</para>
+
+<para>
+<screen>
+use_command_mail_program	=	no
+</screen>
+In this case, /usr/local/libexec/fml/command is kicked off once but
+does not work and exit as soon as possible.
+</para>
+
+<para>
+In another level of rejection, this configuration is possible:
+<screen>
+command_restrictions = reject
+</screen>
+When fml receives the command mail, 
+it inform the rejection to the sender.
+</para>
+
+</sect1>

@@ -1,0 +1,25 @@
+<!--
+   $FML$
+   $jaFML: chapter.ml_style.sgml,v 1.4 2003/02/16 13:07:15 fukachan Exp $
+-->
+<chapter id="cuctomize">
+	<title>
+	Case studies of customization
+	</title>
+
+
+&sect.config.autoreply;
+&sect.config.command.permit.anyone;
+&sect.config.command.rejectall;
+&sect.config.mailmagazine;
+&sect.config.post.permit.anyone;
+&sect.config.ml.hier;
+
+<!-- procmail -->
+&sect.usage.procmail;
+
+<!-- case studies -->
+&sect.customize.casestudies;
+
+
+</chapter>

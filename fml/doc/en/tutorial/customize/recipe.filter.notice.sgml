@@ -1,0 +1,53 @@
+<!--
+   $FML$
+   $jaFML: recipe.filter.notice.sgml,v 1.2 2003/04/15 14:51:37 fukachan Exp $
+-->
+
+
+<qandaentry>
+
+<question>
+<para>
+where the mail is sent back to when filter system rejects ?
+</para>
+</question>
+
+<answer>
+
+<para>
+By default, these are defined
+<screen>
+use_article_filter_reject_notice	=	yes
+article_filter_reject_notice_recipient	=	maintainer sender
+</screen>
+When the filter system rejects the request,
+fml sends back it to the ML maintainer not the sender.
+</para>
+
+
+<para>
+To change the recipient to the sender (From: address), set
+<screen>
+article_filter_reject_notice_recipient	=	sender
+</screen>
+</para>
+
+
+<para>
+To notify the rejection to both ML maintainer and the sender, set
+<screen>
+article_filter_reject_notice_recipient	=	maintainer sender
+</screen>
+</para>
+
+
+<para>
+To disable notification of rejection, set 
+<screen>
+use_article_filter_reject_notice	=	no
+</screen>
+</para>
+
+</answer>
+
+</qandaentry>
