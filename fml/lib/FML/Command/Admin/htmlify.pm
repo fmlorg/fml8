@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: htmlify.pm,v 1.4 2001/12/23 03:50:27 fukachan Exp $
+# $FML: htmlify.pm,v 1.5 2002/02/13 10:41:16 fukachan Exp $
 #
 
 package FML::Command::Admin::htmlify;
@@ -33,18 +33,16 @@ For example, make HTMLified articles in
 /var/www/htdocs/mlarchives/elena
 
    makefml htmlify elena \
-    srcdir=/var/spool/ml/elena/spool \
-    outdir=/var/www/htdocs/mlarchives/elena
+    --outdir=/var/www/htdocs/mlarchives/elena
 
-C<XXX>
-This options format is irregular, isn't it?
-We should normalized it in the following way?
+or
 
    makefml htmlify elena \
     --srcdir=/var/spool/ml/elena/spool \
     --outdir=/var/www/htdocs/mlarchives/elena
 
-Hmm, ... but it is strange.
+if --srcdir is not specified, the source is taken from
+/var/spool/ml/$ml_name/spool/. 
 
 =head1 METHODS
 
@@ -72,8 +70,8 @@ sub process
     my $dst_dir   = undef;
 
     for (@$options) {
-	if (/outdir=(\S+)/) { $dst_dir = $1;}
-	if (/srcdir=(\S+)/) { $src_dir = $1;}
+	if (/\-\-outdir=(\S+)/) { $dst_dir = $1;}
+	if (/\-\-srcdir=(\S+)/) { $src_dir = $1;}
     }
 
     if (defined $dst_dir) {
