@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.4 2001/05/05 03:53:39 fukachan Exp $
+	$FML: chapters.ent,v 1.5 2001/05/06 23:11:49 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -49,6 +49,7 @@
 <!-- 開発 -->
 <!entity cvstree   SYSTEM "devel/cvstree.sgml">
 <!entity cvstags   SYSTEM "devel/cvstags.sgml">
+<!entity docbook   SYSTEM "devel/docbook.sgml">
 
 
 <!-- プログラムの説明 -->
@@ -60,7 +61,4 @@
 
 
 <!-- Appendix -->
-<!entity reference SYSTEM "reference.sgml">
-<!entity appendix  SYSTEM "appendix.sgml">
 <!entity glossary  SYSTEM "glossary.sgml">
-<!entity docbook   SYSTEM "docbook.sgml">

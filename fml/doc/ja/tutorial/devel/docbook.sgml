@@ -1,5 +1,5 @@
 <!--
-	$FML: docbook.sgml,v 1.4 2001/04/26 11:31:18 fukachan Exp $
+	$FML: docbook.sgml,v 1.5 2001/05/02 11:38:24 fukachan Exp $
 -->
 
 <appendix id="docbook">
@@ -22,7 +22,14 @@ fml-devel (fml 5.0) のドキュメントでは、SGML の DTD は
 </para>
 
 <para>
-基本的な SGML の書式は、当たり前ですが、正しい HTML の書き方と同様です。
+基本的な SGML の書式は、当たり前
+	<footnote>
+        <para>
+        HTML は SGML 形式の応用の(最も有名な)一例です。
+        そのため本質的なシンタックスは HTML と同じということになります。
+        </para>
+	</footnote>	
+ですが、正しい HTML の書き方と同様です。
 本 Appendix で、２、３の典型的な SGML テンプレートをメモしておくので、
 それらを適当に切り剥ぎしていけばなんとかなるはずです。
 </para>
@@ -30,12 +37,114 @@ fml-devel (fml 5.0) のドキュメントでは、SGML の DTD は
 
 <!--  =========================================================  -->
 <sect1>
+   <title>
+   SGML の概念
+   </title>
+
+<para> 
+SGML は本や短い文書(記事)を作成するに使います。
+本や記事の論理構造を記述するための規格です。
+HTML のもっと厳密なものだと思って下さい
+  <footnote>
+  <para> 
+  正確には HTML が SGML の一部です。 
+  HTML の方がはるかに有名になってしまったので、
+  「HTML のもっと厳密なもの…」といった説明が良くされます :)
+  </para> 
+  </footnote>
+</para> 
+
+<para> 
+例えば、”本”という概念を考えてみます。
+まず”本”には章、節といった構成単位があります。
+節の中にはパラグラフがありますし、文には脚注がついたり、
+図などが挟み込まれたりします。
+</para>
+
+<para> 
+これらの概念には、ある関係があります。
+例えば”章”は”節”を含みますが、”節”は”章”を含みません。
+そして、文は必ずあるパラグラフの中にあるものです。
+</para>
+
+<para> 
+そういった概念をどう表現するべきか？を規定したものが DTD (Data Type
+Definition)といえます。
+DTD は自由に定義すれば良いのですが、かなり大変です。
+誰かが作った DTD コレクションが世の中にはあるので、それを
+使うのが便利です。
+我々は DTD として docbook というものを使う
+   <footnote>
+   <para> 
+   我々が DOCBOOK を選んだ理由は簡単で、
+   多くの場所で使われているからです。
+   ということは、docbook のタグを書ける人は世の中に多いという意味です。
+   </para> 
+   </footnote>
+ことにしています。
+</para>
+
+<para>
+DOCBOOK は OASIS-0PEN.ORG が保守している DTD 集です。
+非常に有名なもので、デファクトスタンダードといってもよいでしょう。
+リファレンスですが、オライリーから本も出ていますし、
+(わかりやすいかどうかは別として;)
+ドキュメントも豊富です。
+Free の UNIX などをはじめ、多くのプロジェクトで使われています。
+</para>
+
+<para> 
+つまり
+SGML を使うことで得られる最大の意義は「ある基準となるもの」に
+規格化ないしは強制されるということです。
+これは SGML の構文による規制という意味ではありません。
+ある概念に従うことに強制されようということです。
+</para> 
+
+<para> 
+ここで”概念”といっているのであって、”見栄え”については
+降れていないことに注意して下さい。
+HTML では概念と見栄えは(むしろ意識的に)はっきり分離していないといえま
+す。
+</para> 
+
+<para> 
+見栄えは DTD とは別の何かで定義されます。
+通常スタイルシートというものです。
+HTML 4.0 などでご存知の CSS と同じ概念です。
+</para>
+
+<para> 
+スタイルシートの記述をするプログラミング言語が必要です。
+docbook では schema (lisp の一種) ベースの
+DSSSL (Document Style Semantics and Specification Language)
+を使います。
+</para> 
+
+
+<para> 
+また SGML では論理構造しか記述しないので見栄えはコンバータ次第で
+どうとでもなります。
+HTML、テキスト、ROFF、PS、PDF、RTF を始め、
+いろいろなものへ変換するやり方が用意されています。
+</para> 
+
+
+</sect1>
+
+
+<!--  =========================================================  -->
+<sect1 id="book.sgml">
 
 <title> 本( book )形式のテンプレート </title>
 
 <para>
-book スタイルの典型的な SGML のテンプレートは次のようになります。
+docbook DTD には book や article といった代表的な形式についての
+定義があります。
 </para>
+
+<para>
+book スタイルの典型的な SGML のテンプレートは次のようになります。
 
 <screen>
 &lt;!doctype book public "-//OASIS//DTD DocBook V3.1//EN" [
@@ -61,6 +170,7 @@ book スタイルの典型的な SGML のテンプレートは次のようになります。
   &lt;/part&gt;
 &lt;/book&gt;
 </screen>
+</para>
 
 <para>
 part や title は文字通りの意味です。
@@ -272,9 +382,15 @@ include するべき定義ファイルを
 <title> ツール群 </title>
 
 <para>
-
 SGML を HTML などに翻訳するために、いくつかのツールが必要です。
-僕は、これらのプログラムを使っています。
+DTD と DSL の規格文書群は必須です。
+おそらく openjade と opensp も必須のプログラムです。
+その他はオプショナルで、各自が好きにすればよいようです。
+</para>
+
+<para>
+fml 5.0 では、以下のプログラムを使って HTML やテキストファイルを作成し
+ています。
 <itemizedlist>
 
    <listitem>
@@ -301,12 +417,10 @@ SGML を HTML などに翻訳するために、いくつかのツールが必要です。
 </para>
 
 <para>
-適宜、これらのプログラムをインストール後、
-fml/doc/share/sgml/catalog.sample 
-を参考にして
-/etc/sgml/catalog を編集する必要があるかも知れません。
+なお
+sgmltools がなくても SGML から HTML を作ることができます。
+どのツールを使うかは、あなたがどれを便利に思うか？次第です。
 </para>
-
 
 <para>
 SGML からの変換には
@@ -328,6 +442,40 @@ openjade をうまく compile できないことがありました。
 </warning>
 
 </sect1>
+
+<!--  =========================================================  -->
+<sect1>
+   <title>
+   例: SGML から HTML を作る
+   </title>
+
+<para>
+<link linkend="book.sgml">
+book.sgml
+</link>
+から html ファイルを作るには sgmltools を次のように実行します。
+<screen>
+% sgmltools -b html book.sgml
+</screen>
+正しく動けば、
+これだけで book/ ディレクトリの下に HTML ファイルが作成されるはずです。
+</para>
+
+<para>
+もし、独自のカタログや DSSSL のファイルを指定する必要があれば
+<screen>
+% sgmltools -b html -j '-c /some/where/catalog -d /some/where/your.dsl' book.sgml
+</screen>
+などとします。
+-j
+は openjade に与えるオプションを指定しています。
+-c 
+でカタログを指定しない場合、
+sgmltools は /etc/sgml/catalog ファイルを使います。
+</para>
+
+</sect1>
+
 
 <!--  =========================================================  -->
 <sect1>
@@ -377,6 +525,17 @@ SGML の書き方については
 	</ulink>
 
 などを参照して下さい。
+</para>
+
+<para>
+必要なツールのインストールについては
+        <ulink url="http://www.linuxdoc.org/HOWTO/mini/DocBook-Install/">
+        http://www.linuxdoc.org/HOWTO/mini/DocBook-Install/
+	</ulink>
+を参照して下さい。
+</para>
+
+<para>
 SGML のタグの一覧は
 	
 	<ulink url="http://www.oasis-open.org/docbook/documentation/reference/html/docbook.html">
