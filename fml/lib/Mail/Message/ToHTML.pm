@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.41 2003/05/27 11:34:14 fukachan Exp $
+# $FML: ToHTML.pm,v 1.41.2.1 2003/06/01 12:28:56 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -13,11 +13,11 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 my $is_strict_warn = 0;
-my $debug = 0;
+my $debug = 1;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.41 2003/05/27 11:34:14 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.41.2.1 2003/06/01 12:28:56 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -125,6 +125,12 @@ sub new
 }
 
 
+sub DESTROY
+{
+    1;
+}
+
+
 =head2 C<htmlfy_rfc822_message($args)>
 
 convert mail to html.
@@ -166,7 +172,6 @@ sub htmlfy_rfc822_message
     #   $src  = source file
     #   $dst  = destination file (target html)
     my ($id, $src, $dst)   = $self->_init_htmlfy_rfc822_message($args);
-    $self->{ _current_id } = $id;
 
     # target html exists already.
     if (-f $dst) {
@@ -174,9 +179,6 @@ sub htmlfy_rfc822_message
 	warn("html file for $id already exists") if $debug;
 	return undef;
     }
-
-    # hints
-    $self->{ _hints }->{ src }->{ filepath } = $src;
 
     # save information for index.html and thread.html
     $self->cache_message_info($msg, { id  => $id,
@@ -353,11 +355,10 @@ sub html_filename
     my ($self, $id) = @_;
     my $use_subdir = $self->{ _use_subdir };
 
+    # relative path under html_base_dir
     if (defined($id) && ($id > 0)) {
 	if ($use_subdir eq 'yes') {
-	    my $r = $self->_html_file_subdir_name($id);
-	    # print STDERR "xdebug: $id => $r\n";
-	    return $r;
+	    return $self->_html_file_subdir_name($id);
 	}
 	else {
 	    return "msg${id}.html";
@@ -467,8 +468,6 @@ sub _init_htmlfy_rfc822_message
     else {
 	croak("htmlfy_rfc822_message: specify \$id or \$dst\n");
     }
-
-    $self->{ _id } = $id;
 
     return ($id, $src, $dst);
 }
@@ -934,6 +933,8 @@ sub cache_message_info
     $ndb->set_key($id);
     $self->{ _ndb_key } = $id;
 
+    $ndb->set('html_filepath', $dst);
+
     $ndb->analyze($msg);
 }
 
@@ -1031,7 +1032,7 @@ sub __search_default_next_id_in_thread
 }
 
 
-=head2 C<update_relation($id)>
+=head2 C<update_msg_html_links($id)>
 
 update link relation around C<$id>.
 
@@ -1039,14 +1040,14 @@ update link relation around C<$id>.
 
 
 # Descriptions: top level dispatcher to update database.
-#               _update_relation() has real function for updating.
+#               _msg_file_rewrite_links() has real function for updating.
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: update databse
 # Return Value: none
-sub update_relation
+sub update_msg_html_links
 {
     my ($self, $id) = @_;
-    my $args = $self->evaluate_relation($id);
+    my $info = $self->evaluate_links_relation($id);
     my $list = $self->{ _affected_idlist } = [];
 
     if ($self->is_ignore($id)) {
@@ -1055,7 +1056,7 @@ sub update_relation
     }
 
     # update target itself, of course
-    $self->_update_relation($id);
+    $self->_msg_file_rewrite_links($id);
     push(@$list, $id);
 
     # rewrite links of files for
@@ -1064,13 +1065,16 @@ sub update_relation
     my $db = $self->{ _db };
     my %uniq = ( $id => 1 );
 
-  UPDATE:
+  KEY:
     for my $id (qw(prev_id next_id prev_thread_id next_thread_id)) {
-	if (defined $args->{ $id }) {
-	    next UPDATE if $uniq{ $args->{$id} }; $uniq{ $args->{$id} } = 1;
+	if (defined $info->{ $id }) {
+	    my $_id = $info->{ $id };
 
-	    $self->_update_relation( $args->{ $id });
-	    push(@$list, $args->{ $id });
+	    next KEY if $uniq{ $_id };
+	    $uniq{ $_id } = 1;
+
+	    $self->_msg_file_rewrite_links($_id);
+	    push(@$list, $_id);
 	}
     }
 
@@ -1078,9 +1082,12 @@ sub update_relation
 	my $thread_list = __str2array( $db->{ _thread_list }->{ $id } );
 
 	# update link relation for all articles in this thread.
+      KEY:
 	for my $id (@$thread_list) {
-	    next UPDATE if $uniq{ $id}; $uniq{ $id } = 1;
-	    $self->_update_relation( $id );
+	    next KEY if $uniq{ $id};
+	    $uniq{ $id } = 1;
+
+	    $self->_msg_file_rewrite_links( $id );
 	    push(@$list, $id);
 	}
     }
@@ -1091,12 +1098,12 @@ sub update_relation
 #    Arguments: OBJ($self) STR($id)
 # Side Effects: rewrite index file
 # Return Value: none
-sub _update_relation
+sub _msg_file_rewrite_links
 {
     my ($self, $id) = @_;
-    my $args     = $self->evaluate_relation($id);
-    my $preamble = $self->evaluate_safe_preamble($args);
-    my $footer   = $self->evaluate_safe_footer($args);
+    my $info     = $self->evaluate_links_relation($id);
+    my $preamble = $self->evaluate_safe_preamble($info);
+    my $footer   = $self->evaluate_safe_footer($info);
     my $code     = _charset_to_code($self->{ _charset });
 
     my $pat_preamble_begin = quotemeta($preamble_begin);
@@ -1108,10 +1115,10 @@ sub _update_relation
 
     umask(022);
 
-    _PRINT_DEBUG("_update_relation $id");
+    _PRINT_DEBUG("_msg_file_rewrite_links $id");
 
     use FileHandle;
-    my $file = $args->{ file };
+    my $file = $info->{ file };
     if (defined $file && $file && -f $file) {
 	my ($old, $new) = ($file, "$file.new.$$");
 	my $rh = new FileHandle $old;
@@ -1170,29 +1177,23 @@ sub _update_relation
 #    Arguments: OBJ($self) NUM($id)
 # Side Effects: none
 # Return Value: HASH_REF
-sub evaluate_relation
+sub evaluate_links_relation
 {
     my ($self, $id) = @_;
-
-    $self->_db_open();
-    my $db   = $self->{ _db };
-    my $file = $db->{ _filepath }->{ $id };
-
-    my $next_file      = $self->html_filepath( $id + 1 );
-    my $prev_id        = $id > 1 ? $id - 1 : undef;
-    my $next_id        = $id + 1 if -f $next_file;
-    my $prev_thread_id = $db->{ _prev_id }->{ $id } || undef;
-    my $next_thread_id = $db->{ _next_id }->{ $id } || undef;
+    my $ndb            = $self->ndb();
+    my $file           = $self->html_filepath($id);
+    my $summary        = $ndb->thread_summary($id);
+    my $prev_id        = $summary->{ prev_id };
+    my $next_id        = $summary->{ next_id };
+    my $prev_thread_id = $summary->{ prev_thread_id };
+    my $next_thread_id = $summary->{ next_thread_id };
 
     # diagnostic
-    if ($prev_thread_id) {
-	undef $prev_thread_id if $prev_thread_id == $id;
-    }
-    if ($next_thread_id) {
-	undef $next_thread_id if $next_thread_id == $id;
-    }
-    else {
-	my $xid = _search_default_next_thread_id($db, $id);
+    my $next_file = $self->html_filepath( $next_id );
+    undef $next_file unless -f $next_file;
+
+    unless ($next_thread_id) {
+	my $xid = _search_default_next_thread_id($ndb, $id);
 	if ($xid && ($xid != $id)) {
 	    $next_thread_id = $xid;
 	    _PRINT_DEBUG("override next_thread_id = $next_thread_id");
@@ -1206,16 +1207,16 @@ sub evaluate_relation
 
     my $subject = {};
     if (defined $prev_id) {
-	$subject->{ prev_id } = $db->{ _subject }->{ $prev_id };
+	$subject->{ prev_id } = $ndb->get('subject', $prev_id);
     }
     if (defined $next_id) {
-	$subject->{ next_id } = $db->{ _subject }->{ $next_id };
+	$subject->{ next_id } = $ndb->get('subject', $next_id);
     }
     if (defined $prev_thread_id) {
-	$subject->{ prev_thread_id } = $db->{ _subject }->{ $prev_thread_id };
+	$subject->{ prev_thread_id } = $ndb->get('subject', $prev_thread_id);
     }
     if (defined $next_thread_id) {
-	$subject->{ next_thread_id } = $db->{ _subject }->{ $next_thread_id };
+	$subject->{ next_thread_id } = $ndb->get('subject', $next_thread_id);
     }
 
     my $args = {
@@ -1232,8 +1233,6 @@ sub evaluate_relation
 	subject             => $subject,
     };
     _PRINT_DEBUG_DUMP_HASH( $args );
-
-    $self->_db_close();
 
     return $args;
 }
@@ -2234,7 +2233,7 @@ sub htmlify_file
     if ($debug) {
 	printf STDERR "htmlify_file( id=%-6s ) update relation\n", $id;
     }
-    $html->update_relation( $id );
+    $html->update_msg_html_links( $id );
     $html->update_id_monthly_index({ id => $id });
     $html->update_id_index({ id => $id });
     $html->update_thread_index({ id => $id });
@@ -2327,32 +2326,37 @@ if ($0 eq __FILE__) {
     };
 
     eval q{
-	my $obj = new Mail::Message::ToHTML $opts;
-
 	for my $x (@ARGV) {
+	    print STDERR "processing $x ... \n";
+
 	    if (-f $x) {
-		$obj->htmlify_file($x, {
-		    directory   => $dir,
-		    charset     => $charset,
-		    db_base_dir => "/tmp/",
-		    db_name     => "elena", 
+		eval q{
+		    my $obj = new Mail::Message::ToHTML $opts;
+		    $obj->htmlify_file($x, {
+			directory   => $dir,
+			charset     => $charset,
+			db_base_dir => "/tmp/",
+			db_name     => "elena", 
 		    });
+		};
+		print STDERR $@ if $@;
 	    }
 	    elsif (-d $x) {
+		my $obj = new Mail::Message::ToHTML $opts;
 		$obj->htmlify_dir($x, {
 		    directory => $dir,
 		    has_fork  => $has_fork,
 		    max       => $max,
 		    charset   => $charset,
+		    db_base_dir => "/tmp/",
+		    db_name     => "elena", 
 		});
 	    }
 	}
+	print STDERR "done.\n";
     };
 
-    if ($@) {
-	print STDERR $@;
-	exit(1);
-    }
+    if ($@) { croak($@);}
 }
 
 
