@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.1.2.1 2004/03/04 04:06:22 fukachan Exp $
+# $FML: State.pm,v 1.2 2004/03/04 04:30:14 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -26,6 +26,96 @@ FML::Process::State - interface to handle states within this process
 
 =cut
 
+
+# Descriptions: dummy.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub restriction_state_init
+{
+    my ($curproc) = @_;
+
+}
+
+
+# Descriptions: save reason on denial.
+#    Arguments: OBJ($curproc) STR($reason)
+# Side Effects: none
+# Return Value: none
+sub restriction_state_set_deny_reason
+{
+    my ($curproc, $reason) = @_;
+    my $pcb = $curproc->pcb();
+    $pcb->set("check_restrictions", "deny_reason", $reason);
+
+    $curproc->log("restriction_state_set_deny_reason: $reason");
+}
+
+
+# Descriptions: return the latest reason on denial.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub restriction_state_get_deny_reason
+{
+    my ($curproc) = @_;
+    my $pcb = $curproc->pcb();
+    $pcb->get("check_restrictions", "deny_reason");
+}
+
+
+# Descriptions: send message on the latest reason on denial.
+#    Arguments: OBJ($curproc) STR($type) HASH_REF($msg_args)
+# Side Effects: none
+# Return Value: none
+sub restriction_state_reply_reason
+{
+    my ($curproc, $type, $msg_args) = @_;
+
+    my $rule = $curproc->restriction_state_get_deny_reason();
+
+    $curproc->log("restriction_state_reply_reason: $rule");
+
+    if ($rule eq 'reject_system_special_accounts') {
+	my $r = "deny request from a system account";
+	$curproc->reply_message_nl("error.system_special_accounts",
+				   $r, $msg_args);
+    }
+    elsif ($rule eq 'permit_member_maps') {
+	my $r = "denied since you are not a member";
+	if ($type eq 'command_mail') {
+	    $curproc->reply_message_nl("command.deny", $r, $msg_args);
+	}
+
+	my $count = $curproc->error_message_get_count("error.not_member");
+	unless ($count) {
+	    $curproc->reply_message_nl("error.not_member", $r, $msg_args);
+	    $curproc->error_message_set_count("error.not_member");
+	}
+    }
+    elsif ($rule eq 'permit_user_command') {
+	my $r = "you are not allowed to use this command.";
+	$curproc->reply_message_nl("command.deny", $r, $msg_args);
+    }
+    elsif ($rule eq 'reject') {
+	my $r = "deny your request";
+	if ($type eq 'article_post') {
+	    $curproc->reply_message_nl("error.reject_post", $r, $msg_args);
+	}
+	elsif ($type eq 'command_mail') {
+	    $curproc->reply_message_nl("error.reject_command", $r, $msg_args);
+	}
+    }
+    else {
+	my $r = "deny your request due to an unknown reason";
+	if ($type eq 'article_post') {
+	    $curproc->reply_message_nl("error.reject_post", $r, $msg_args);
+	}
+	elsif ($type eq 'command_mail') {
+	    $curproc->reply_message_nl("error.reject_command", $r, $msg_args);
+	}
+    }
+}
 
 
 =haed1 COMMAND PROCESSOER STATES
@@ -49,6 +139,9 @@ sub command_context_init
     # save original string, set the command mode be "user" by default.
     $context->{ command_mode }     = "User";
     $context->{ original_command } = $orig_command;
+
+    # reset error reason
+    $curproc->restriction_state_set_deny_reason('');
 
     return $context;
 }
@@ -200,6 +293,50 @@ sub command_context_get_admin_password
     my $pcb = $curproc->pcb();
 
     return( $pcb->get("process_command", "admin_password") || '' );
+}
+
+
+=head1 UTILITY
+
+=head2 error_message_set_count($class)
+
+increment error count on this class $class to avoid duplicated error
+messages.
+
+=head2 error_message_get_count($class)
+
+get error count on this class $class to avoid duplicated error
+messages.
+
+=cut
+
+
+# Descriptions: increment error count on this class $class
+#               to avoid duplicated error messages.
+#    Arguments: OBJ($curproc) STR($class)
+# Side Effects: none
+# Return Value: none
+sub error_message_set_count
+{
+    my ($curproc, $class) = @_;
+    my $pcb   = $curproc->pcb();
+
+    my $count = $pcb->get("reply_messaged_count", $class) || 0;
+    $pcb->set("reply_messaged_count", $class, $count + 1);
+}
+
+
+# Descriptions: get error count on this class $class
+#               to avoid duplicated error messages.
+#    Arguments: OBJ($curproc) STR($class)
+# Side Effects: none
+# Return Value: none
+sub error_message_get_count
+{
+    my ($curproc, $class) = @_;
+    my $pcb = $curproc->pcb();
+
+    return $pcb->get("reply_messaged_count", $class) || 0;
 }
 
 
