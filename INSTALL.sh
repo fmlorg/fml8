@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: INSTALL.sh,v 1.32 2001/11/12 23:46:38 fukachan Exp $
+# $FML: INSTALL.sh,v 1.33 2001/11/17 15:01:57 fukachan Exp $
 #
 
 # Run this from the top-level fml source directory.
@@ -52,28 +52,28 @@ done
 
 
 if [ ! -f $config_dir/main.cf ];then
-	echo create $config_dir/main.cf
+	echo creating $config_dir/main.cf
 	sed 	-e s@__fml_version__@$fml_version@ \
 		-e s@__config_dir__@$config_dir@ \
 		fml/etc/main.cf > $config_dir/main.cf
 fi
 
-echo update $default_config_dir/
+echo updating $default_config_dir/
 cp fml/etc/default_config.cf.ja $default_config_dir/default_config.cf
 cp fml/etc/config.cf.ja $default_config_dir/config.cf
 
-echo update $lib_dir/$fml_version/
+echo updating $lib_dir/$fml_version/
 cp -pr fml/lib/*	$lib_dir/$fml_version/
 cp -pr cpan/lib/*	$lib_dir/$fml_version/
 cp -pr img/lib/*	$lib_dir/$fml_version/
 
-echo update $libexec_dir/$fml_version/
+echo updating $libexec_dir/$fml_version/
 cp -pr fml/libexec/*	$libexec_dir/$fml_version/
 
-echo update ${bindir}/
+echo updating ${bindir}/
 for prog in fmldoc fmlthread fmlconf makefml fmlsch fmlhtmlify
 do
-	echo update ${bindir}/$prog
+	echo updating ${bindir}/$prog
 	cp fml/bin/$prog ${bindir}/$prog.new
 	chmod 755 ${bindir}/$prog.new
 	mv ${bindir}/$prog.new ${bindir}/$prog
