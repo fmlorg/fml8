@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.26 2002/06/30 14:27:47 fukachan Exp $
+# $FML: Credential.pm,v 1.27 2002/06/30 14:30:13 fukachan Exp $
 #
 
 package FML::Credential;
@@ -60,6 +60,9 @@ sub new
     # default comparison level
     set_compare_level( $me, 3 );
 
+    # case sensitive for user part comparison.
+    $me->{ _user_part_case_sensitive } = 1;
+
     return bless $me, $type;
 }
 
@@ -69,6 +72,33 @@ sub new
 # Side Effects: none
 # Return Value: none
 sub DESTROY {}
+
+
+=head2 ACCESS METHODS
+
+=cut
+
+
+# Descriptions: compare user part case sensitively (default)
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
+sub set_user_part_case_sensitive
+{
+    my ($self) = @_;
+    $self->{ _user_part_case_sensitive } = 1;
+}
+
+
+# Descriptions: compare user part case insensitively (default)
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
+sub set_user_part_case_insensitive
+{
+    my ($self) = @_;
+    $self->{ _user_part_case_sensitive } = 0;
+}
 
 
 =head2 C<is_same_address($addr1, $addr2 [, $level])>
@@ -115,12 +145,18 @@ sub is_same_address
     my ($xuser, $xdomain) = split(/\@/, $xaddr);
     my ($yuser, $ydomain) = split(/\@/, $yaddr);
     my $level             = 0;
+    my $is_case_sensitive = $self->{ _user_part_case_sensitive };
 
     # the max recursive level in comparison
     $max_level = $max_level || $self->{ _max_level } || 3;
 
     # rule 1: case sensitive
-    if ($xuser ne $yuser) { return 0;}
+    if ($is_case_sensitive) {
+	if ($xuser ne $yuser) { return 0;}
+    }
+    else {
+	if ("\L$xuser\E" ne "\L$yuser\E") { return 0;}
+    }
 
     # rule 2: case insensitive
     if ("\L$xdomain\E" eq "\L$ydomain\E") { return 1;}
