@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.87 2004/04/02 04:53:40 fukachan Exp $
+	$FML: chapters.ent,v 1.88 2004/05/19 13:18:00 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -206,12 +206,13 @@
 
 
 <!-- トラブルシューティング -->
-<!entity chapter.troubleshoot        SYSTEM "troubleshoot/chapter.sgml">
+<!entity chapter.troubleshoot         SYSTEM "troubleshoot/chapter.sgml">
 
-<!entity recipe.version              SYSTEM "troubleshoot/recipe.version.sgml">
-<!entity recipe.listup.addresses     SYSTEM "troubleshoot/recipe.listup.addresses.sgml">
-<!entity recipe.listup.aliases       SYSTEM "troubleshoot/recipe.listup.aliases.sgml">
+<!entity recipe.version               SYSTEM "troubleshoot/recipe.version.sgml">
+<!entity recipe.listup.addresses      SYSTEM "troubleshoot/recipe.listup.addresses.sgml">
+<!entity recipe.listup.aliases        SYSTEM "troubleshoot/recipe.listup.aliases.sgml">
 
+<!entity sect.troubleshoot.filesystem SYSTEM "troubleshoot/filesystem.sgml">
 
 <!-- changes -->
 <!entity chapter.changes         SYSTEM "changes/chapter.sgml">

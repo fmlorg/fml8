@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.sgml,v 1.2 2002/10/29 04:10:03 fukachan Exp $
+   $FML: chapter.sgml,v 1.3 2002/11/09 14:16:19 fukachan Exp $
 -->
 
 
@@ -9,6 +9,7 @@
 	</title>
 
 
+<!-- 基礎的なツール -->
 <qandaset>
 
 &recipe.version;
@@ -16,6 +17,10 @@
 &recipe.listup.aliases;
 
 </qandaset>
+
+
+<!-- ファイルシステム -->
+&sect.troubleshoot.filesystem;
 
 
 </chapter>
