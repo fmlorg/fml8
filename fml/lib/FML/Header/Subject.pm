@@ -12,6 +12,7 @@ package FML::Header::Subject;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
+use FML::Log qw(Log);
 
 require Exporter;
 @ISA = qw(Exporter);
@@ -35,10 +36,16 @@ sub rewrite_subject_tag
     my $tag     = $config->{ subject_tag };
     my $subject = $header->get('subject');
 
+    # cut off Re: Re: Re: ...
+    $self->_cut_off_reply(\$subject);
+
     # de-tag
     $subject = _delete_subject_tag( $subject, $tag );
 
-    # add the updated tag
+    # cut off Re: Re: Re: ...
+    $self->_cut_off_reply(\$subject);
+
+    # add(prepend) the updated tag
     $tag = sprintf($tag, $ml_name, $args->{ id });
     my $new_subject = $tag." ".$subject;
     $header->replace('subject', $new_subject);
@@ -90,6 +97,22 @@ sub is_reply
     };
 
     return 0;
+}
+
+
+sub _cut_off_reply
+{
+    my ($self, $r_subject) = @_;
+
+    my $pkg = 'Dialect::Japanese::Subject';
+    eval qq{ require $pkg; $pkg->import();};
+    unless ($@) {
+	$$r_subject = 
+	    &Dialect::Japanese::Subject::cut_off_reply_tag($$r_subject);
+    }
+    else  {
+	Log($@);
+    }
 }
 
 
