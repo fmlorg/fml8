@@ -1,8 +1,8 @@
 <!--
-	$FML$
+	$FML: programing_style.sgml,v 1.2 2001/04/24 06:52:00 fukachan Exp $
 -->
 
-<appendix id="programingstyle">
+<chapter id="programingstyle">
 
 <TITLE>プログラミング・スタイル</TITLE>
 
@@ -89,4 +89,4 @@
 </para>
 
 
-</appendix>
+</chapter>
