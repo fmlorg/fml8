@@ -1,0 +1,54 @@
+From: Norton_AntiVirus_Gateways@nuinui.net
+To: fml-help-admin@ffs.fml.org
+Subject: Returned mail
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status; boundary="==M2002032620061919568"
+Date: Tue, 26 Mar 2002 20:06:19 +0900
+Message-Id: <M2002032620061919568@navsg4.nuinui.net>
+
+
+--==M2002032620061919568
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+--- The message cannot be delivered to the following address. ---
+
+rudo@nuinui.net    Mailbox unknown or not accepting mail.
+503 Need MAIL before RCPT
+
+
+--==M2002032620061919568
+Content-Type: message/delivery-status
+
+Reporting-MTA: Norton AntiVirus Gateway;Norton_AntiVirus_Gateways@nuinui.net
+Final-Recipient: rfc822;rudo@nuinui.net
+Action: failed
+Status: 5.1.1
+Diagnostic-Code: X-Notes; Cannot route mail to user (rudo@nuinui.net).
+
+--==M2002032620061919568
+Content-Type: message/rfc822
+
+Return-Path: <fukachan@fml.org>
+Received: from hikari.fml.org (hikari.fml.org [192.168.1.6])
+	by elena.fml.org (Postfix) with ESMTP id C995C1D8C9
+	for <mailbox@elena.fml.org>; Tue,  2 Jan 2001 17:08:05 +0900 (JST)
+Received: by hikari.fml.org (8.9.3/3.4W6+Hikari-2.1) with ESMTP id RAA17788 for <caesar@fml.org>; Tue, 2 Jan 2001 17:08:04 +0900 (JST)
+Received: by iris.fml.org (Postfix, from userid 0)
+	id 1BCBE15024; Tue,  2 Jan 2001 17:08:03 +0900 (JST)
+From: fukachan@sapporo.iij.ad.jp (Ken'ichi Fukamachi)
+To: elena@nuinui.net
+Reply-To: rudo@nuinui.net
+Subject: [elena:00300] test 01
+	appended_mesg
+Message-Id: <20010102080803.1BCBE15024@iris.fml.org>
+Date: Tue,  2 Jan 2001 17:08:03 +0900 (JST)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+
+test message.
+
+-- rudo's mabuachi
+
+--==M2002032620061919568--

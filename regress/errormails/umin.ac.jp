@@ -1,0 +1,50 @@
+Received: by hikari.fml.org (8.9.3/3.4W6+Hikari-2.1) with ESMTP id XAA19997 for <fukachan@fml.org>; Mon, 25 Feb 2002 23:28:46 +0900 (UTC)
+Received: by eve.fml.org; id XAA25747; Mon, 25 Feb 2002 23:28:45 +0900 (JST)
+Received: from ahodori.fml.org(10.20.30.3) by eve.fml.org via smap (V4.2)
+	id xma025735; Mon, 25 Feb 02 23:28:27 +0900
+Received: by ahodori.fml.org (Postfix)
+	id 4FFE1867D4; Mon, 25 Feb 2002 23:28:26 +0900 (JST)
+Delivered-To: fukachan@ahodori.fml.org
+Received: from richet.umin.ac.jp (richet.umin.ac.jp [10.20.30.8])
+	by ahodori.fml.org (Postfix) with ESMTP id BCC95866B6
+	for <fml-help-admin@ffs.fml.org>; Mon, 25 Feb 2002 23:28:25 +0900 (JST)
+Received: from bordet.umin.ac.jp (localhost.umin.ac.jp [10.20.30.11])
+	by richet.umin.ac.jp (8.11.2/8.11.2) with ESMTP id g1PESPH08380
+	for <fml-help-admin@ffs.fml.org>; Mon, 25 Feb 2002 23:28:25 +0900
+Received: (from root@localhost)
+	by bordet.umin.ac.jp (8.11.4+3.4W/3.7W-UMIN/v1) id g1PESPP05915;
+	Mon, 25 Feb 2002 23:28:25 +0900
+Date: Mon, 25 Feb 2002 23:28:25 +0900
+Message-Id: <200202251428.g1PESPP05915@bordet.umin.ac.jp>
+From: admin@umin.ac.jp
+To: fml-help-admin@ffs.fml.org
+Subject: メール配信サーバ障害（２月２２日）のご連絡
+X-UIDL: 095eda8699d9cbd1726e15034edca145
+
+メール配信サーバ障害（２月２２日）のご連絡
+
+fml-help-admin@ffs.fml.org 様
+　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　UMIN事務局　
+
+日頃はUMNの活動にご支援・ご協力を頂きありがとうございます。
+
+平成１４年２月２２日（金）１２時５５分〜１７時１２分までUMINの
+メール配信サーバにてUMIN以外のメールアドレスから送信された
+メールが、UMINメールアドレスで受信できないという障害が発生
+致しました。
+
+この障害により　
+
+fml-help-admin@ffs.fml.org 様より	15:11:14ごろ
+	rudo@nuinui.net 様
+
+に送信されたメールが先方に届いていない可能性が大きいため
+お手数をお掛けし申し訳ございませんが同時間に送信されたメール
+を再送して頂きたいと存じます。
+
+この度はメール配信サーバの調査に時間がかかりご連絡が遅れた
+事をお詫び致します。
+
+今後ともよろしくお願いいたします。
+
+
