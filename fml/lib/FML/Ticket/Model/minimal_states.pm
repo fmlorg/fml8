@@ -499,10 +499,8 @@ sub show_summary
     my $mode    = $self->{ _mode } || 'text';
     my $ml_name = $curproc->{ config }->{ ml_name };
 
-    print "<HR><TABLE BORDER=4>" if $mode eq 'html';
-
+    print "<TABLE BORDER=4>\n" if $mode eq 'html';
     $self->_show_summary($curproc, $args, $optargs);
-
     print "</TABLE>\n" if $mode eq 'html';
 }
 
@@ -778,18 +776,26 @@ sub cgi_top_menu
 {
     my ($self, $curproc, $args) = @_;
     my $config = $curproc->{ config };
-    my $action = $config->{ ticket_cgi_base_url } || '/cgi-bin/fmlticket.cgi';
+    my $action = 'fmlticket.cgi';
     my $target = $config->{ ticket_cgi_target_window } || 'TicketCGIWindow';
 
     use DirHandle;
     my $dh = new DirHandle $config->{ ml_home_prefix };
     my @dirlist;
+    my $prefix = $config->{ ml_home_prefix };
     while ($_ = $dh->read()) {
 	next if /^\./;
 	next if /^\@/;
-	push(@dirlist, $_);
+	push(@dirlist, $_) if -f "$prefix/$_/config.cf";
     }
     $dh->close;
+
+    if ($self->{ _mode } eq 'html') {
+	require 'ctime.pl';
+	my $time = ctime(time);
+	my $ml_name = $config->{  ml_name };
+	print "[$time] the brief summary for \"$ml_name\" ML<BR>";
+    }
 
     use CGI qw/:standard/;
     print start_form(-action=>$action, -target=>$target);
@@ -859,6 +865,9 @@ sub run_cgi
     my $config = $curproc->{ config };
     my $title  = $config->{ ticket_cgi_title }   || 'ticket system interface';
     my $color  = $config->{ ticket_cgi_bgcolor } || '#E6E6FA';
+
+    # XXX $ml_name may change by HTTP request
+    $config->{ ml_name } = param('ml_name') if param('ml_name');
 
     # ensure the current mode
     $self->mode({ mode => 'html' });
