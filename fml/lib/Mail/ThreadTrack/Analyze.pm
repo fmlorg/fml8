@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.20 2001/12/22 09:21:20 fukachan Exp $
+# $FML: Analyze.pm,v 1.21 2001/12/26 14:23:30 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -421,8 +421,8 @@ sub _extract_thread_id_in_subject
 }
 
 
-# Descriptions: 
-#               For example, consider a posting to both elena ML and 
+# Descriptions:
+#               For example, consider a posting to both elena ML and
 #               rudo (DM) from kenken.
 #
 #                    From: kenken

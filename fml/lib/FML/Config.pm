@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.47 2001/12/22 09:21:01 fukachan Exp $
+# $FML: Config.pm,v 1.48 2001/12/24 09:23:00 fukachan Exp $
 #
 
 package FML::Config;
@@ -106,7 +106,7 @@ pseudo variable C<_pid> is reserved for process id reference.
 
 # Descriptions: constructor.
 #               newly blessed object is binded to internal variable
-#               %_fml_config. So changes are shared among all objects. 
+#               %_fml_config. So changes are shared among all objects.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: object is binded to common %_fml_config area
 # Return Value: OBJ
@@ -454,7 +454,7 @@ The expanded result is saved in the same hash.
 =cut
 
 
-# Descriptions: expand variable name 
+# Descriptions: expand variable name
 #               e.g. $dir/xxx -> /var/spool/ml/elena/xxx
 #    Arguments: OBJ($self)
 # Side Effects: update config

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CacheDir.pm,v 1.11 2002/01/13 05:57:40 fukachan Exp $
+# $FML: CacheDir.pm,v 1.12 2002/01/13 06:59:49 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -44,7 +44,7 @@ If so, the file names become _smtplog.0, _smtplog.1, ...
 The C<File::CacheDir> described above is limited by size.
 
 You can use File::CacheDir based on time not size.
-It is time based expiretion. 
+It is time based expiretion.
 If you so, use new() like this:
 
    $obj = new File::CacheDir {
@@ -58,7 +58,7 @@ where C<cache_type> is C<cyclic> by default.
 
 =head1 DESCRIPTION
 
-To log messages up to some limit, 
+To log messages up to some limit,
 it may be useful to use filenames in cyclic way.
 The file to write is chosen among a set of files allocated as a buffer.
 
@@ -71,7 +71,7 @@ C<ring/> may have 5 files in it.
 To log a message is to write it to one of them.
 At the first time the message is logged to the file C<0>,
 and next time to C<1> and so on.
-If all 5 files are used, 
+If all 5 files are used,
 this module reuses and overwrites the oldest one C<0>.
 So we use a file in cyclic way as follows:
 
@@ -327,7 +327,7 @@ sub find
 }
 
 
-=head2 set(key, value) 
+=head2 set(key, value)
 
 set value for key.
 

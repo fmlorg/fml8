@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.41 2002/01/13 13:26:38 fukachan Exp $
+# $FML: Message.pm,v 1.42 2002/01/13 13:32:09 fukachan Exp $
 #
 
 package Mail::Message;
@@ -437,7 +437,7 @@ You can specify file not file descriptor.
 
 # Descriptions: parse given file (file path or descriptor)
 #               create header OBJ and body OBJ chain.
-#               combine them into one chain of Mail::Message OBJ, 
+#               combine them into one chain of Mail::Message OBJ,
 #               so that we get
 #                  header -> body1 -> body2 -> ... body-end
 #               object chain.
@@ -1535,7 +1535,7 @@ sub _next_part_pos
 }
 
 
-# Descriptions: get the current position 
+# Descriptions: get the current position
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM

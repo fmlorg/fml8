@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.17 2001/12/22 09:21:20 fukachan Exp $
+# $FML: DB.pm,v 1.18 2001/12/26 14:23:30 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -50,7 +50,7 @@ my @kind_of_databases = qw(thread_id date status sender articles
                            message_id);
 
 
-# Descriptions: open database by tie() 
+# Descriptions: open database by tie()
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: none

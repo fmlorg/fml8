@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.9 2002/01/13 06:03:55 fukachan Exp $
+# $FML: Utils.pm,v 1.10 2002/01/13 06:59:50 fukachan Exp $
 #
 
 package File::Utils;
@@ -189,7 +189,7 @@ This routine uses C<IO::File::Atomic> module.
 =cut
 
 
-# Descriptions: copy in atomic way. 
+# Descriptions: copy in atomic way.
 #    Arguments: STR($src) STR($dst)
 # Side Effects: $dst is created/updated.
 # Return Value: NUM

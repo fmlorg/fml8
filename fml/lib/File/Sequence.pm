@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.14 2002/01/13 05:57:40 fukachan Exp $
+# $FML: Sequence.pm,v 1.15 2002/01/13 06:59:50 fukachan Exp $
 #
 
 package File::Sequence;
@@ -111,7 +111,7 @@ sub increment_id
 
     # touch the sequence file if it does not exist.
     unless (-f $seq_file) {
-	eval q{ 
+	eval q{
 	    use File::Utils qw(touch);
 	    touch($seq_file);
 	};

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Parse.pm,v 1.3 2001/12/22 09:21:19 fukachan Exp $
+# $FML: Parse.pm,v 1.4 2001/12/24 12:52:46 fukachan Exp $
 #
 
 
@@ -18,7 +18,7 @@ use Mail::Message;
 @ISA = qw(Mail::Message);
 
 
-# Descriptions: fake constructor. 
+# Descriptions: fake constructor.
 #               run Mail::Message->parse($args) in fact.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
