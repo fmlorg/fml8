@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: INSTALL.sh,v 1.62 2003/01/02 15:42:23 fukachan Exp $
+# $FML: INSTALL.sh,v 1.63 2003/01/05 02:22:47 fukachan Exp $
 #
 
 # Run this from the top-level fml source directory.
@@ -124,7 +124,8 @@ echo updating $data_dir/$fml_version/
 cp -pr fml/share/*	$data_dir/$fml_version/
 
 echo updating ${bindir}/
-for prog in 	fmladdr fmlalias fmldoc fmlthread fmlconf fmlerror \
+for prog in 	fml \
+		fmladdr fmlalias fmldoc fmlthread fmlconf fmlerror \
 		makefml fmlsch fmlhtmlify fmlspool fmlsummary fmlsuper
 do
 	echo updating ${bindir}/$prog
@@ -134,9 +135,9 @@ do
 done
 
 PROGRAMS="fml.pl distribute digest command error mead";
+PROGRAMS="$PROGRAMS fml makefml makefml.cgi menu.cgi"
 PROGRAMS="$PROGRAMS fmlserv fmlconf fmldoc"
 PROGRAMS="$PROGRAMS fmlthread fmlthread.cgi"
-PROGRAMS="$PROGRAMS makefml makefml.cgi menu.cgi"
 PROGRAMS="$PROGRAMS fmlsch fmlsch.cgi"
 PROGRAMS="$PROGRAMS fmlhtmlify fmlalias fmladdr fmlsummary"
 PROGRAMS="$PROGRAMS fmlspool fmlsuper fmlerror"

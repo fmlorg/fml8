@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.149 2002/12/25 03:11:02 fukachan Exp $
+# $FML: Kernel.pm,v 1.150 2002/12/26 15:11:52 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -580,11 +580,19 @@ sub resolve_ml_specific_variables
     # XXX-TODO: for example, if ($config->is_makefml_argv_style( $myname ) {;}
     # 1. virtual domain or not ?
     # 1.1 search ml@domain syntax arg in @ARGV
-    if ($myname eq 'makefml' ||
-	$myname eq 'fmlthread' ||
-	$myname eq 'fmlsummary') {
+    if ($myname eq 'makefml'   ||
+	$myname eq 'fml'       ||
+	$myname eq 'fmlspool'  ||
+	$myname eq 'fmlsummary'||
+	$myname eq 'fmlthread') {
 	my $default_domain = $curproc->default_domain();
-	($command, $ml_name, @options) = @ARGV;
+
+	if ($myname eq 'fml') {
+	    ($ml_name, $command, @options) = @ARGV;
+	}
+	else {
+	    ($command, $ml_name, @options) = @ARGV;
+	}
 
 	# makefml $ml->$command
 	if (defined $command && $command =~ /\-\>/) {
@@ -1180,7 +1188,10 @@ sub reply_message
     my $myname = $curproc->myname();
 
     # XXX makefml not support message handling not yet.
-    if ($myname eq 'makefml' || $myname =~ /\.cgi$/ || $myname eq 'error') {
+    if ($myname eq 'makefml' || 
+	$myname eq 'fml'     || 
+	$myname eq 'error'   ||
+	$myname =~ /\.cgi$/) {
 	LogWarn("(debug) $myname disables reply_message()");
 	return;
     }

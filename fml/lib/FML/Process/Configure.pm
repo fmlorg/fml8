@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.45 2002/09/22 14:56:52 fukachan Exp $
+# $FML: Configure.pm,v 1.46 2002/12/18 04:43:52 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -176,6 +176,50 @@ sub help
 	$name = basename($0);
     };
 
+    # XXX-TODO: show all available commands at the last of help message.
+    if ($name eq 'fml') {
+	_fml_help($name);
+    }
+    else {
+	_makefml_help($name);
+    }
+}
+
+
+sub _fyi_help
+{
+print <<"_EOF_";
+
+FYI:
+
+\"makefml\" and \"fml\" are same program except for the argument order.
+So, available commands are same as makefml.
+
+Usage: 
+   fml     \$ml_name \$command [command_options]
+   makefml \$command \$ml_name [command_options]
+
+_EOF_
+}
+
+
+sub _fml_help
+{
+    my ($name) = @_;
+
+print <<"_EOF_";
+Usage: $name \$ml_name \$command [command_options]
+
+_EOF_
+
+    _fyi_help();
+}
+
+
+sub _makefml_help
+{	
+    my ($name) = @_;
+
 print <<"_EOF_";
 
 Usage: $name \$command \$ml_name [options]
@@ -187,8 +231,7 @@ $name unsubscribe  \$ml_name ADDRESS
 ...
 _EOF_
 
-    # XXX-TODO: show all available commands at the last of help message.
-
+    _fyi_help();
 }
 
 
@@ -221,8 +264,14 @@ sub _makefml
     my $ml_name = $config->{ ml_name };
     my $myname  = $curproc->myname();
     my $argv    = $curproc->command_line_argv();
+    my ($method, $argv_ml_name, @options);
 
-    my ($method, $argv_ml_name, @options) =  @$argv;
+    if ($myname eq 'makefml') {
+	($method, $argv_ml_name, @options) =  @$argv;
+    }
+    elsif ($myname eq 'fml') {
+	($argv_ml_name, $method, @options) =  @$argv;
+    }
 
     # arguments to pass off to each method
     # XXX-TODO: command = [ $method, @options ]; ? (no, used only for message?)
