@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DB.pm,v 1.3 2001/11/03 01:22:14 fukachan Exp $
+# $FML: DB.pm,v 1.4 2001/11/03 07:42:35 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -46,7 +46,6 @@ untie() corresponding hashes opened by C<db_open()>.
 
 
 my @kind_of_databases = qw(thread_id
-			   info
                            date
 			   status
 			   sender
