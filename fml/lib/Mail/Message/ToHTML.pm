@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.1 2002/03/31 03:39:15 fukachan Exp $
+# $FML: ToHTML.pm,v 1.2 2002/03/31 05:29:50 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.1 2002/03/31 03:39:15 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.2 2002/03/31 05:29:50 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -361,7 +361,7 @@ sub _html_file_subdir_name
 	}
     }
 
-    if ($subdir) { 
+    if ($subdir) {
 	use File::Spec;
 	return File::Spec->catfile($subdir, "msg$id.html");
     }
@@ -1000,7 +1000,7 @@ sub cache_message_info
 }
 
 
-# Descriptions: return 
+# Descriptions: return
 #    Arguments: OBJ($self) STR($type)
 # Side Effects: none
 # Return Value: STR

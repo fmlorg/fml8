@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #
-# $FML: Spool.pm,v 1.1 2002/03/30 15:29:43 fukachan Exp $
+# $FML: Spool.pm,v 1.2 2002/03/31 02:25:44 fukachan Exp $
 #
 
 package Mail::Message::Spool;
@@ -46,7 +46,7 @@ sub new
 return article file path.
 
    $args = {
-	base_dir   => $base_dir, 
+	base_dir   => $base_dir,
 	id         => $id,
 	use_subdir => 0,    # 1 or 0
    };
@@ -93,7 +93,7 @@ if ($0 eq __FILE__) {
 
     for my $is_hash (0, 1) {
 	print "\nhashed ? ", ($is_hash ? "yes" : "no"), "\n\n";
-	
+
 	for my $id (qw(0 1 2 99 100 101
 		       999 1000 1001 1999 2000 2001
 		       9999 10000 10001
