@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SimpleMatch.pm,v 1.6 2001/04/12 11:47:16 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.7 2001/04/12 13:39:56 fukachan Exp $
 #
 
 
@@ -145,7 +145,10 @@ sub _reach_end
 	next unless $mta_type;
 
 	my $end_regexp = $address_trap_regexp->{ $mta_type }->{ 'end' };
-	return 1 if ($$rbuf =~ /$end_regexp/);
+	if ($end_regexp && ($$rbuf =~ /$end_regexp/)) {
+	    print "last match {$$rbuf} ~ /$end_regexp/\n" if $debug;
+	    return 1;
+	}
     }
 
     0;
