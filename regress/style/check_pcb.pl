@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: check_pcb.pl,v 1.1 2003/10/29 14:50:55 fukachan Exp $
+# $FML: check_pcb.pl,v 1.2 2004/01/04 13:36:52 fukachan Exp $
 #
 
 use strict;
@@ -9,7 +9,7 @@ use FileHandle;
 
 my $wh     = new FileHandle "|rev|sort|rev";
 my $fn     = '';
-my $format = "%23s %30s %3s %s\n";
+my $format = "%-10s %-40s %3s %s\n";
 
 $| = 1;
 
@@ -41,6 +41,7 @@ sub cleanup
 
     $s =~ s@.pm$@@;
     $s =~ s@//@/@g;
+    $s =~ s@FML/Process/@@g;
 
     return $s;
 }
