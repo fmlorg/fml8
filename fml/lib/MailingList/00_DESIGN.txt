@@ -1,0 +1,8 @@
+MailingList::
+
+              Delivery -------------->   (?MTP)
+                                           |
+                                           A
+                                 --------------------
+                                |         |          |  
+                                SMTP      ESMP       LMTP

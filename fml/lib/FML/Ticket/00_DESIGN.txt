@@ -1,0 +1,17 @@
+
+
+           --------->  Ticket::System
+                             |
+                             A
+          ---------------------------------------
+         |                   |                   |
+Ticket::Model::toymol   Ticket::Model::toymol2   .......
+
+
+
+=head1  SYNOPSIS
+
+	use Ticket::Model::toymodel;
+	$ticket = new Ticket::Model::toymodel;
+	$ticket->asign($curproc, $args);
+	$ticket->update_cache($curproc, $args);
