@@ -375,7 +375,7 @@ sub load_config_files
 
     # load configuration variables from given files e.g. /some/where.cf 
     # XXX overload variables from each $cf
-    for my $cf (@$files) { 
+    for my $cf (@$files) {
       $curproc->{ config }->overload( $cf );
     }
 
