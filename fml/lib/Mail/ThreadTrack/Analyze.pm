@@ -4,13 +4,15 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.27 2002/09/11 23:18:29 fukachan Exp $
+# $FML: Analyze.pm,v 1.28 2002/09/22 14:57:06 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+# XXX-TODO: we should remove not used function ?
 
 my $debug = 0;
 
@@ -42,7 +44,7 @@ This is top level entrance for
 
 
 # Descriptions: top level entrance
-#    Arguments: OBJ($self) STR($msg)
+#    Arguments: OBJ($self) OBJ($msg)
 #               $msg = "Mail::Messge object"
 # Side Effects: none
 # Return Value: none
@@ -90,11 +92,13 @@ sub assign
     my $subject  = $header->get('subject');
     my $is_reply = _is_reply($subject);
 
+    # XXX-TODO: who validate $thread_id regexp 
+    # XXX-TODO: since $thread_id is given from outside.
     # 1. try to extract $thread_id from header
     my $thread_id = $self->_extract_thread_id_in_subject($header);
     unless ($thread_id) {
-	# we fail to pick up thread id from subject
-	# but we try to speculate id from other fields in header.
+	# If we fail to pick up thread id from subject,
+	# we try to speculate id from other fields in header.
 	$thread_id = $self->_speculate_thread_id_from_header($header);
 	if ($thread_id) {
 	    $is_reply = 1; # message already have thread_id, so replied one?
@@ -110,7 +114,7 @@ sub assign
     #    we ignore this mail if the pragma is specified as "ignore".
     if (defined $header->get('x-thread-pragma')) {
 	my $pragma = $header->get('x-thread-pragma') || '';
-	if ($pragma =~ /ignore/i) {
+	if ($pragma =~ /ignore/io) {
 	    $self->{ _pragma } = 'ignore';
 	    $self->_append_thread_status_info("ignored");
 	    return undef;
@@ -181,11 +185,11 @@ sub _append_thread_status_info
 
 =head2 get_thread_status()
 
-get thread status
+get thread status.
 
 =head2 set_thread_status($status)
 
-set thread status
+set thread status.
 
 =cut
 
@@ -214,6 +218,11 @@ sub set_thread_status
 
 
 =head2 update_thread_status($msg)
+
+ignore this procedure if "ignore" pragma is specified.
+
+update status to "close" if "close" pragma or "close" commmand in the
+message is found.
 
 =cut
 
@@ -296,14 +305,18 @@ sub _is_ignore
 
 =head2 get_thread_id()
 
+get thread_id in object ($self->{ _thread_id }).
+
 =head2 set_thread_id($thread_id)
+
+set thread_id in object ($self->{ _thread_id }).
 
 =cut
 
 
-# Descriptions: get thread_id
+# Descriptions: get thread_id in object ($self->{ _thread_id }).
 #    Arguments: OBJ($self)
-# Side Effects: none
+# Side Effects: none.
 # Return Value: STR or UNDEF
 sub get_thread_id
 {
@@ -314,7 +327,7 @@ sub get_thread_id
 
 # Descriptions: set thread_id
 #    Arguments: OBJ($self) STR($thread_id)
-# Side Effects: none
+# Side Effects: update $self->{ _thread_id }.
 # Return Value: STR
 sub set_thread_id
 {
@@ -360,6 +373,8 @@ sub _extract_message_id_references
     my ($header) = @_;
     my (@addrs, @r, %uniq) = ();
 
+    # XXX-TODO: Mail::Message should provide this function ?
+
     use Mail::Address;
 
     if (defined $header->get('in-reply-to')) {
@@ -374,14 +389,14 @@ sub _extract_message_id_references
 
     for my $addr (@addrs) {
         my $a = $addr->address;
-        unless ($uniq{ $a }) {
+        unless (defined $uniq{ $a } && $uniq{ $a }) {
 	    # RFC822 says msg-id = "<" addr-spec ">" ; Unique message id
             push(@r, "<".$addr->address.">");
             $uniq{ $a } = 1;
         }
     }
 
-    \@r;
+    return \@r;
 }
 
 
@@ -492,6 +507,8 @@ sub _create_thread_id_strings
 
 
 =head2 update_db($msg)
+
+update database.
 
 =cut
 
