@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.64 2002/02/17 03:07:55 fukachan Exp $
+# $FML: Distribute.pm,v 1.65 2002/02/17 13:46:29 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -223,18 +223,17 @@ sub _distribute
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
 
-    # XXX   $ah is "article handler" object.
-    # XXX   $ah != $curproc->{ article } (which is just a key)
-    # XXX   $curproc->{ article } is prepared as a side effect.
-    my $ah = $curproc->_prepare_article($args);
+    # XXX $article != $curproc->{ article } (which is just a key)
+    # XXX $curproc->{ article } is prepared as a side effect for the future.
+    my $article = $curproc->_build_article_object($args);
 
     # get sequence number
-    my $id = $ah->increment_id;
+    my $id = $article->increment_id;
 
     # XXX debug, remove here in the future
     {
 	my $ha_msg = $curproc->{ article }->{ body }->data_type_list;
-	for (@$ha_msg) { Log($_);}
+	for (@$ha_msg) { Log("debug: $_");}
     }
 
     # thread system checks the message before header rewritings.
@@ -245,7 +244,7 @@ sub _distribute
     $curproc->_header_rewrite({ id => $id });
 
     # spool in the article before delivery
-    $ah->spool_in($id);
+    $article->spool_in($id);
 
     # delivery starts !
     $curproc->_deliver_article($args);
@@ -261,7 +260,7 @@ sub _distribute
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: OBJ(FML::Article)
-sub _prepare_article
+sub _build_article_object
 {
     my ($curproc, $args) = @_;
 
@@ -428,10 +427,9 @@ sub htmlify
     my $ml_name        = $config->{ ml_name };
     my $spool_dir      = $config->{ spool_dir };
     my $html_dir       = $config->{ html_archive_dir };
+    my $article        = $curproc->_build_article_object($args);
     my $article_id     = $pcb->get('article', 'id');
-
-    use File::Spec;
-    my $article_file   = File::Spec->catfile($spool_dir, $article_id);
+    my $article_file   = $article->filepath($article_id);
 
     eval q{
 	use Mail::HTML::Lite;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.12 2002/02/17 03:13:48 fukachan Exp $
+# $FML: SendFile.pm,v 1.13 2002/02/23 10:22:16 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -67,7 +67,9 @@ sub send_article
 	my $filelist = $self->_is_valid_argument($curproc, $fn);
 	if (defined $filelist) {
 	    for my $fn (@$filelist) {
-		my $file = File::Spec->catfile($spool_dir, $fn);
+		use FML::Article;
+		my $article = new FML::Article $curproc;
+		my $file    = $article->filepath($fn);
 		if (-f $file) {
 		    Log("send back article $fn");
 		    $curproc->reply_message( {
