@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.44 2002/07/23 09:34:07 fukachan Exp $
+	$FML: chapters.ent,v 1.45 2002/07/28 06:26:57 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -48,8 +48,8 @@
 
 
 <!-- パート II: 使い方の例とカスタマイズについて -->
-<!entity chapter.usage.user         SYSTEM "usage/user.sgml">
-<!entity chapter.usage.onhost       SYSTEM "usage/onhost.sgml">
+<!entity chapter.usage.user         SYSTEM "usage/chapter.user.sgml">
+<!entity chapter.usage.onhost       SYSTEM "usage/chapter.onhost.sgml">
 <!entity chapter.customize.mlstyle  SYSTEM "customize/chapter.ml_style.sgml">
 <!entity chapter.customize.header   SYSTEM "customize/chapter.header.sgml">
 
