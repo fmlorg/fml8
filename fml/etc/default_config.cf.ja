@@ -51,6 +51,8 @@ header_checks        =	validate_message_id
 			verify_unique_x_ml_info
 			verify_unique_list_post
 
+# もちろん”記事”に対してのものだ（自明？）
+# article_header_rewrite_rules とかの方がよいか？
 header_rewrite_rules =	rewrite_subject_tag
 			rewrite_reply_to
 			add_software_info
@@ -60,8 +62,11 @@ header_rewrite_rules =	rewrite_subject_tag
 			add_x_sequence
 			add_rfc2369
 
+
+# Subject: につけるタグの制御
 subject_tag_name	=	$ml_name
 
+# % の意味は UNIX マニュアルを参照。例えば sprintf 関数など 
 subject_tag		=	[$ml_name:%05d]
 =head2 ロック
 
@@ -100,7 +105,7 @@ use_ticket		=	yes
 
 ticket_model		=	toymodel
 
-ticket_id_syntax	=	%s_#%08d
+ticket_id_syntax	=	$ml_name_#%08d
 
 # please use [] or () or {} for the ends
 ticket_subject_tag	=	[$ticket_id_syntax]

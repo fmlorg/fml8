@@ -111,12 +111,12 @@ sub _gen_ticket_id
 
     # ticket_id in subject
     my $tag       = $config->{ ticket_subject_tag };
-    my $ticket_id = sprintf($tag, $ml_name, $id);
+    my $ticket_id = sprintf($tag, $id);
     $self->{ _ticket_subject_tag } = $ticket_id;
 
     $tag       = $config->{ ticket_id_syntax };
-    $ticket_id = sprintf($tag, $ml_name, $id);
-    $self->{ _ticket_id }          = $ticket_id;
+    $ticket_id = sprintf($tag, $id);
+    $self->{ _ticket_id } = $ticket_id;
 
     return $ticket_id;
 }
