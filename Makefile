@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.14 2001/04/28 09:26:36 fukachan Exp $
+# $FML: Makefile,v 1.15 2001/04/28 10:14:53 fukachan Exp $
 #
 
 CONV = doc/bin/text2html.pl
@@ -36,7 +36,6 @@ _new_doc:
 	-fml/utils/bin/pm2txt.pl cpan/lib Documentation/en/modules
 
 _html:
-	@ (cd fml/lib/;make html)
 	@ (cd fml/libexec/;make html)
 	@ (cd fml/etc/;make html)
 	@ (cd cpan/dist/;make html)

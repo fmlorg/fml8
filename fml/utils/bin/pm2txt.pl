@@ -5,12 +5,12 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML$
+# $FML: pm2txt.pl,v 1.1 2001/04/27 04:42:13 fukachan Exp $
 #
 
 use strict;
 use Carp;
-use vars qw($debug);
+use vars qw($debug %PMList %TxtList);
 use FileHandle;
 use File::stat;
 
@@ -27,6 +27,7 @@ sub convert
 
     _mkdir(@_);
     _convert(@_);
+    _make_index(@_);
 }
 
 
@@ -73,6 +74,10 @@ sub _convert
 	$dst =~ s@//@/@g;
 	$dst =~ s/.pm/.txt/;
 
+	# saved for 
+	$PMList{ $src }  = $src;
+	$TxtList{ $src } = $dst;
+
 	$go = 0;
 	$sstat = stat($src) || croak("cannot stat $src");
 
@@ -96,5 +101,57 @@ sub _convert
     close($fh);
 }
 
+
+sub _make_index
+{
+    my ($src_dir, $dst_dir) = @_;
+    my ($up_dir);
+    my (%list, %pmlink, %txtlink);
+
+    $up_dir = $dst_dir;
+    $up_dir =~ s/\w+/../g;
+
+    for (keys %PMList) {
+	my $x = $_;
+	$x =~ s/$src_dir//;
+	$x =~ s@^/@@;
+	$list{ $_ }    = $x;
+	$pmlink{ $x }  = "$up_dir/$src_dir/$x";
+    }
+
+    my $dir = $src_dir;
+    $dir =~ s@^/@@;
+    $dir =~ s@/$@@;
+    $dir =~ s@/@-@g;
+    my $index = "$dst_dir/${dir}-index.html";
+    my $wh = new FileHandle "> $index";
+
+    print "generate $index\n";
+
+    my $level = 0;
+    print $wh "<TABLE>\n";
+    for (sort keys %list) {
+	my $name = $_;
+	my $txt  = $TxtList{ $_ };
+	my $x    = $list{ $_ };
+
+	$name =~ s@$src_dir@@;
+	$name =~ s@^/@@;
+	$name =~ s@.pm$@@;
+	$name =~ s@/@::@g;
+
+	$txt  =~ s@$dst_dir@@;
+	$txt  =~ s@^/@@;
+
+	print $wh "<TR>\n";
+	print $wh "<TD>$name\n";
+	print $wh "<TD><A HREF=\"", $pmlink{ $x }, "\">[source]</A>\n";
+	print $wh "<TD><A HREF=\"", $txt, "\">[manual]</A>\n";
+	print $wh "\n";
+    }
+    print $wh "</TABLE>\n";
+
+    $wh->close;
+}
 
 1;
