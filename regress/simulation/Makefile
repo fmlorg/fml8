@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.67 2003/03/16 06:24:58 fukachan Exp $
+# $FML: Makefile,v 1.68 2003/05/31 02:24:03 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -103,7 +103,7 @@ diag:
 	env PATH=/usr/pkg/bin:$$PATH make check
 
 depend:
-	perl .module_dependence.pl `find lib/ -type f |grep pm` |\
+	perl ../style/list_up_dependence.pl `find lib/ -type f |grep pm` |\
 	tee 55_DEPEND.bak
 
 
