@@ -22,3 +22,16 @@ address_for_post    = $ml_name@$ml_domain
 
 # コマンド用のアドレス
 address_for_command = $ml_name-ctl@$ml_domain
+
+
+=cut
+
+#
+# write HOOKS after here if needed.
+#
+
+$distribute_run_start_hook = q{
+
+	print STDERR "hook: hey!\n"; sleep 2;
+
+};
