@@ -1,4 +1,4 @@
-PERL = perl -w -I ./lib/fml5 -I ./lib/CPAN -I ./lib/3RDPARTY -I ./lib
+PERL = perl -w -I ../cpan/lib -I ./lib
 
 all: test
 
@@ -25,6 +25,7 @@ test3:
 
 check:
 	@ for x in `find lib* -type f -print|grep pm|grep -v CPAN` ; do $(PERL) -c $$x || echo '' ;done
+	@ for x in libexec/loader libexec/process_switch ; do $(PERL) -c $$x || echo '' ;done
 
 clean:
 	@ find . |grep '~' |perl -nple unlink
