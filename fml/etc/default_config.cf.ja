@@ -522,11 +522,12 @@ use_database	=	no
 #     Examples:
 database_method	=	mysql
 
-# Descriptions: データベース管理システムとの通信方法のモデル
+# Descriptions: データベース管理システムとの通信方法が
+#		記述されているモジュール
 #      History:
-#        Value: toymodel
+#        Value: SQL::Schema::toymodel
 #     Examples:
-database_model	=	toymodel
+database_model	=	SQL::Schema::toymodel
 
 
 =head2	SQL の場合
