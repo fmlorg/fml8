@@ -730,17 +730,25 @@ return the message size.
 
 return this message has empty content or not.
 
-=head2 C<set_log_function()>
-
-internal use. set CODE REFERENCE to the log function
-
 =cut
 
+    my $total = 0;
 sub size
 {
     my ($self) = @_;
-    my $c = $self->{ content };
-    length($$c);
+    my $rc = $self->{ content };
+    my $pb = $self->{ offset_begin };
+    my $pe = $self->{ offset_end };
+
+    if ((defined $pe) && (defined $pb)) {
+	if ($pe - $pb > 0) {
+	    $total += ($pe - $pb);
+	    return ($pe - $pb);
+	}
+    }
+    else {
+	defined $rc ? length($$rc) : 0;
+    }
 }
 
 
@@ -748,22 +756,15 @@ sub is_empty
 {
     my ($self) = @_;
     my $size   = $self->size;
-    my $c      = $self->{ content };
+    my $rc     = $self->{ content };
 
     if ($size == 0) { return 1;}
     if ($size <= 8) {
-	if ($$c =~ /^\s*$/) { return 1;}
+	if ($$rc =~ /^\s*$/) { return 1;}
     }
 
     # false
     return 0;
-}
-
-
-sub set_log_function
-{
-    my ($self, $fp) = @_;
-    $self->{ _log_function } = $fp; # log function pointer
 }
 
 
@@ -799,11 +800,7 @@ where $body is the mail body (string).
 sub get_content_header
 {
     my ($self, $size) = @_;
-    my $content = $self->{ content };
-    my $pos     = index($$content, "\n\n", $self->{ offset_begin });
-    my $len     = $pos - $self->{ offset_begin };
-
-    substr($$content, $self->{ offset_begin }, $len);
+    return defined $self->{ header } ? $self->{ header } : undef;
 }
 
 
@@ -814,9 +811,11 @@ sub get_content_body
     my $base_content_type = $self->{ base_content_type };
     my ($pos, $pos_begin, $msglen);
 
+    # if the content is undef, do nothing.
+    return undef unless $content; 
+
     if ($base_content_type =~ /multipart/i) {
-	$pos       = index($$content, "\n\n", $self->{ offset_begin });
-	$pos_begin = $pos + 2;
+	$pos_begin = $self->{ offset_begin };
 	$msglen    = $self->{ offset_end } - $pos_begin;
     }
     else {
@@ -870,6 +869,20 @@ get the reference to xxx, which is a key of the message.
 For example,
 C<get_content_reference()>
 returns the reference to the content of the message.
+
+=head2 C<set_log_function()>
+
+internal use. set CODE REFERENCE to the log function
+
+=cut
+
+sub set_log_function
+{
+    my ($self, $fp) = @_;
+    $self->{ _log_function } = $fp; # log function pointer
+}
+
+
 
 =head1 APPENDIX (RFC2046 Appendix A)
 
