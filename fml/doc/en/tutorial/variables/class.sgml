@@ -284,14 +284,6 @@ error {
 }
 
 has {
-
-   has_* {
-          $has_alarm
-          $has_fork
-          $has_getpwgid
-          $has_getpwuid
-          $has_select
-   }
 }
 
 html {
@@ -596,6 +588,11 @@ system {
 
    system_* {
     ?     $system_accounts
+    ?     $system_has_alarm
+    ?     $system_has_fork
+    ?     $system_has_getpwgid
+    ?     $system_has_getpwuid
+    ?     $system_has_select
    }
 }
 

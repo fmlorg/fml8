@@ -667,51 +667,6 @@ $ml_home_dir/guide
 </row>
 <row>
 <entry>
-has_alarm</entry>
-<entry>
- alarm(2) があるか？</entry>
-<entry>
-yes
-   </entry>
-</row>
-<row>
-<entry>
-has_fork</entry>
-<entry>
- fork(2) があるか？</entry>
-<entry>
-yes
-   </entry>
-</row>
-<row>
-<entry>
-has_getpwgid</entry>
-<entry>
- getpwgid(2) があるか？</entry>
-<entry>
-yes
-   </entry>
-</row>
-<row>
-<entry>
-has_getpwuid</entry>
-<entry>
- getpwuid(2) があるか？</entry>
-<entry>
-yes
-   </entry>
-</row>
-<row>
-<entry>
-has_select</entry>
-<entry>
- select(2) があるか？</entry>
-<entry>
-yes
-   </entry>
-</row>
-<row>
-<entry>
 help_file</entry>
 <entry>
  ヘルプファイル</entry>
@@ -1400,6 +1355,51 @@ root
    \S+\-help
    \S+\-subscribe
    \S+\-unsubscribe
+   </entry>
+</row>
+<row>
+<entry>
+system_has_alarm</entry>
+<entry>
+ alarm(2) があるか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+system_has_fork</entry>
+<entry>
+ fork(2) があるか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+system_has_getpwgid</entry>
+<entry>
+ getpwgid(2) があるか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+system_has_getpwuid</entry>
+<entry>
+ getpwuid(2) があるか？</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+system_has_select</entry>
+<entry>
+ select(2) があるか？</entry>
+<entry>
+yes
    </entry>
 </row>
 <row>

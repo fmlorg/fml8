@@ -685,51 +685,6 @@ $ml_home_dir/guide
 </row>
 <row>
 <entry>
-has_alarm</entry>
-<entry>
- has alarm(2) ?</entry>
-<entry>
-yes
-   </entry>
-</row>
-<row>
-<entry>
-has_fork</entry>
-<entry>
- has fork(2) ?</entry>
-<entry>
-yes
-   </entry>
-</row>
-<row>
-<entry>
-has_getpwgid</entry>
-<entry>
- has getpwgid(2) ?</entry>
-<entry>
-yes
-   </entry>
-</row>
-<row>
-<entry>
-has_getpwuid</entry>
-<entry>
- has getpwuid(2) ?</entry>
-<entry>
-yes
-   </entry>
-</row>
-<row>
-<entry>
-has_select</entry>
-<entry>
- has select(2) ?</entry>
-<entry>
-yes
-   </entry>
-</row>
-<row>
-<entry>
 help_file</entry>
 <entry>
  help file</entry>
@@ -1418,6 +1373,51 @@ root
    \S+\-help
    \S+\-subscribe
    \S+\-unsubscribe
+   </entry>
+</row>
+<row>
+<entry>
+system_has_alarm</entry>
+<entry>
+ has alarm(2) ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+system_has_fork</entry>
+<entry>
+ has fork(2) ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+system_has_getpwgid</entry>
+<entry>
+ has getpwgid(2) ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+system_has_getpwuid</entry>
+<entry>
+ has getpwuid(2) ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+system_has_select</entry>
+<entry>
+ has select(2) ?</entry>
+<entry>
+yes
    </entry>
 </row>
 <row>
