@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.1 2003/09/25 11:40:57 fukachan Exp $
+# $FML: Menu.pm,v 1.2 2003/09/27 06:58:16 fukachan Exp $
 #
 
 package FML::CGI::Menu;
@@ -72,13 +72,14 @@ This module has routines needed for the admin CGI.
 sub html_start
 {
     my ($curproc, $args) = @_;
-    my $config  = $curproc->config();
-    my $myname  = $curproc->myname();
-    my $domain  = $curproc->cgi_var_ml_domain();
-    my $ml_name = $curproc->cgi_var_ml_name();
-    my $title   = "${ml_name}\@${domain} configuration interface";
-    my $color   = $config->{ cgi_main_menu_color } || '#FFFFFF';
-    my $charset = $curproc->language_of_cgi_message();
+    my $config    = $curproc->config();
+    my $myname    = $curproc->cgi_var_myname();
+    my $ml_name   = $curproc->cgi_var_ml_name();
+    my $ml_domain = $curproc->cgi_var_ml_domain();
+    my $name_ui   = $curproc->message_nl('term.config_interface');
+    my $title     = "${ml_name}\@${ml_domain} $name_ui";
+    my $color     = $config->{ cgi_main_menu_color } || '#FFFFFF';
+    my $charset   = $curproc->language_of_cgi_message();
 
     # o.k start html
     print start_html(-title   => $title,

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.55 2003/09/25 14:58:17 fukachan Exp $
+# $FML: Kernel.pm,v 1.56 2003/09/27 06:58:16 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -403,15 +403,20 @@ show title.
 sub run_cgi_title
 {
     my ($curproc, $args) = @_;
-    my $myname  = $curproc->cgi_var_myname();
-    my $domain  = $curproc->cgi_var_ml_domain();
-    my $ml_name = $curproc->cgi_var_ml_name();
-    my $role    = '';
-    my $title   = '';
+    my $myname    = $curproc->cgi_var_myname();
+    my $ml_domain = $curproc->cgi_var_ml_domain();
+    my $ml_name   = $curproc->cgi_var_ml_name();
+    my $role      = '';
+    my $title     = '';
 
-    $role  = "for thread view"   if $myname =~ /thread/;
-    $role  = "for configuration" if $myname =~ /config|menu/;
-    $title = "${ml_name}\@${domain} CGI $role";
+    if ($myname =~ /thread/) {
+	$role  = "for thread view";
+    }
+    elsif ($myname =~ /config|menu/) {
+	$role  = $curproc->message_nl('term.config_interface');
+    }
+
+    $title = "${ml_name}\@${ml_domain} CGI $role";
     print $title;
 }
 
@@ -430,20 +435,28 @@ help.
 sub run_cgi_help
 {
     my ($curproc, $args) = @_;
-    my $domain = $curproc->cgi_var_ml_domain();
+    my $ml_name   = $curproc->cgi_var_ml_name();
+    my $ml_domain = $curproc->cgi_var_ml_domain();
+    my $mode      = $curproc->cgi_var_cgi_mode();
+    my $role      = $curproc->message_nl('term.config_interface');
+    my $msg_args  = $curproc->_gen_msg_args();
 
-    print "<B>\n";
-    print "<CENTER>fml CGI interface for \@$domain ML's</CENTER><BR>\n";
-    print "</B>\n";
-
-    # top level help message
-    my $mode = $curproc->cgi_var_cgi_mode();
-    my $buf  = '';
+    print "<B>\n<CENTER>\n";
     if ($mode eq 'admin') {
-	$buf = $curproc->message_nl("cgi.admin.top");
+	print "fml CGI $role for \@$ml_domain ML's\n";
     }
     else {
-	$buf = $curproc->message_nl("cgi.ml-admin.top");
+	print "fml CGI $role for $ml_name\@$ml_domain ML\n";
+    }
+    print "</CENTER><BR>\n</B>\n";
+
+    # top level help message
+    my $buf  = '';
+    if ($mode eq 'admin') {
+	$buf = $curproc->message_nl("cgi.admin.top", "", $msg_args);
+    }
+    else {
+	$buf = $curproc->message_nl("cgi.ml-admin.top", "", $msg_args);
     }
 
     print $buf;
@@ -467,17 +480,10 @@ sub run_cgi_command_help
     my $buf          = '';
     my $navi_command = $curproc->safe_param_navi_command();
     my $command      = $curproc->safe_param_command();
+    my $msg_args     = $curproc->_gen_msg_args();
 
     # natural language-ed name
-    my $name_usage  = $curproc->message_nl('term.usage',  'usage');
-    my $name_submit = $curproc->message_nl('term.submit', 'submit');
-    my $name_show   = $curproc->message_nl('term.show',   'show');
-    my $name_map    = $curproc->message_nl('term.map',    'map');
-    my $msg_args    = {
-	_arg_button_submit => $name_submit,
-	_arg_button_show   => $name_show,
-	_arg_scroll_map    => $name_map,
-    };
+    my $name_usage   = $curproc->message_nl('term.usage',  'usage');
 
     if ($navi_command) {
 	print "[$name_usage]<br> <b> $navi_command </b> <br>\n";
@@ -489,6 +495,24 @@ sub run_cgi_command_help
     }
 
     print $buf;
+}
+
+
+sub _gen_msg_args
+{
+    my ($curproc, $args) = @_;
+
+    # natural language-ed name
+    my $name_submit = $curproc->message_nl('term.submit', 'submit');
+    my $name_show   = $curproc->message_nl('term.show',   'show');
+    my $name_map    = $curproc->message_nl('term.map',    'map');
+    my $msg_args    = {
+	_arg_button_submit => $name_submit,
+	_arg_button_show   => $name_show,
+	_arg_scroll_map    => $name_map,
+    };
+
+    return $msg_args;
 }
 
 
