@@ -1,15 +1,14 @@
 #-*- perl -*-
-# Copyright (C) 2000 Ken'ichi Fukamachi
+# Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $Id$
-# $FML: Config.pm,v 1.27 2001/04/08 13:25:38 fukachan Exp $ # 注意: cvs のタグを $FML: Config.pm,v 1.27 2001/04/08 13:25:38 fukachan Exp $ にする
+# $FML: Config.pm,v 1.28 2001/05/05 04:01:55 fukachan Exp $
 #
 
 package FML::Config;
 
 use strict;
 use Carp;
-use vars qw($need_expantion_variables
+use vars qw($need_expansion_variables
 	    %_fml_config_result
 	    %_fml_config
 	    %_default_fml_config);
@@ -190,8 +189,8 @@ sub load_file
 	%_default_fml_config = %_fml_config;
     }
 
-    # flag on: we need $config->{ key } needs variable expantion
-    $need_expantion_variables = 1;
+    # flag on: we need $config->{ key } needs variable expansion
+    $need_expansion_variables = 1;
 }
 
 
@@ -326,12 +325,14 @@ sub dump_variables
 
     $self->expand_variables();
 
-    for $k (keys %_fml_config) { $len = $len > length($k) ? $len : length($k);}
+    for $k (keys %_fml_config_result) { 
+	$len = $len > length($k) ? $len : length($k);
+    }
 
     my $format = '%-'. $len. 's = %s'. "\n";
-    for $k (sort keys %_fml_config) {
+    for $k (sort keys %_fml_config_result) {
 	next unless $k =~ /^[a-z0-9]/io;
-	$v = $_fml_config{ $k };
+	$v = $_fml_config_result{ $k };
 
 	# print out all keys
 	if ($mode eq 'all') {
@@ -371,9 +372,9 @@ sub FETCH
 {
     my ($self, $key) = @_;
 
-    if ($need_expantion_variables) {
+    if ($need_expansion_variables) {
 	$self->expand_variables();
-	$need_expantion_variables = 0;
+	$need_expansion_variables = 0;
     }
 
     defined($_fml_config_result{$key}) ? $_fml_config_result{$key} : undef;
@@ -386,7 +387,7 @@ sub STORE
 
     # inform fml we need to expand variable again when FETCH() is
     # called.
-    if ($value =~ /\$/) { $need_expantion_variables = 1;}
+    if ($value =~ /\$/) { $need_expansion_variables = 1;}
 
     $_fml_config{$key} = $value;
 }
