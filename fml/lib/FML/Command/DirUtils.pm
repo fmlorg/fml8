@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DirUtils.pm,v 1.4 2002/03/30 11:08:34 fukachan Exp $
+# $FML: DirUtils.pm,v 1.5 2002/04/07 12:13:03 fukachan Exp $
 #
 
 package FML::Command::DirUtils;
@@ -16,7 +16,7 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Command::DirUtils - utilities for directory handling
+FML::Command::DirUtils - utilities for directory handlings
 
 =head1 SYNOPSIS
 
@@ -45,9 +45,9 @@ sub new
 }
 
 
-# Descriptions: ls
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($command_args)
-#               HASH_REF($du_args)
+# Descriptions: show the result by executing "ls"
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($command_args) HASH_REF($du_args)
 # Side Effects: none
 # Return Value: none
 sub dir
@@ -69,14 +69,15 @@ sub dir
 	}
     }
 
-    # regexp
+    # regexp allowed to use here
     my $basic_variable = $self->{ _basic_variable };
     my $dir_regexp     = $basic_variable->{ directory };
-    my $ml_home_dir    = $config->{ ml_home_dir };
 
-    # chdir
+    # chdir the ml's home dir
+    my $ml_home_dir    = $config->{ ml_home_dir };
     chdir $ml_home_dir || croak("cannot chdir \$ml_home_dir");
 
+    # build a safe argument
     my $y = '';
     for my $x (@$argv) {
 	if ($x =~ /^$dir_regexp$/ || $x =~ /^\s*$/) {
