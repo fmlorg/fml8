@@ -1,0 +1,1722 @@
+<para>
+<table>
+<title> table description </title>
+<tgroup cols=3><thead>
+<row>
+<entry>
+variable name</entry>
+<entry>
+descrition</entry>
+<entry>
+default value(s)</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry>
+admin_cgi_base_dir</entry>
+<entry>
+ base directory which locates .cgi for this domain.</entry>
+<entry>
+$cgi_base_dir/admin
+   </entry>
+</row>
+<row>
+<entry>
+admin_command_restrictions</entry>
+<entry>
+ restrictions for admin command mail</entry>
+<entry>
+reject_system_accounts
+   check_admin_member_password
+   reject
+   </entry>
+</row>
+<row>
+<entry>
+admin_member_maps</entry>
+<entry>
+ all remote administrator lists</entry>
+<entry>
+$primary_admin_member_map
+   </entry>
+</row>
+<row>
+<entry>
+admin_member_password_maps</entry>
+<entry>
+ all password files.</entry>
+<entry>
+$primary_admin_member_password_map
+   file:$ml_home_dir/etc/passwd
+   </entry>
+</row>
+<row>
+<entry>
+admin_recipient_maps</entry>
+<entry>
+ dummy</entry>
+<entry>
+$primary_admin_recipient_map
+   </entry>
+</row>
+<row>
+<entry>
+article_filter_reject_notice_data_type</entry>
+<entry>
+ how fml refer the rejeced message.</entry>
+<entry>
+string
+   </entry>
+</row>
+<row>
+<entry>
+article_filter_reject_notice_recipients</entry>
+<entry>
+ recipients to inform</entry>
+<entry>
+maintainer
+   sender
+   </entry>
+</row>
+<row>
+<entry>
+article_header_filter_rules</entry>
+<entry>
+ header filter rules.</entry>
+<entry>
+check_message_id
+   check_date
+   permit
+   </entry>
+</row>
+<row>
+<entry>
+article_header_rewrite_rules</entry>
+<entry>
+ header rewriting rules</entry>
+<entry>
+delete_unsafe_header_fields
+   rewrite_article_subject_tag
+   rewrite_reply_to
+   rewrite_errors_to
+   add_software_info
+   add_fml_ml_name
+   add_fml_traditional_article_id
+   add_fml_article_id
+   add_x_sequence
+   add_rfc2369
+   </entry>
+</row>
+<row>
+<entry>
+article_mime_component_filter_rules</entry>
+<entry>
+ file of filter rules</entry>
+<entry>
+$fml_config_dir/mime_component_filter
+   </entry>
+</row>
+<row>
+<entry>
+article_non_mime_filter_rules</entry>
+<entry>
+ dummy</entry>
+<entry>
+permit
+   </entry>
+</row>
+<row>
+<entry>
+article_sequence_file</entry>
+<entry>
+ file to store sequence number</entry>
+<entry>
+$sequence_file
+   </entry>
+</row>
+<row>
+<entry>
+article_size_filter_rules</entry>
+<entry>
+ size based filter rules.</entry>
+<entry>
+check_header_size
+   check_body_size
+   permit
+   </entry>
+</row>
+<row>
+<entry>
+article_subject_tag</entry>
+<entry>
+ Subject: tag.</entry>
+<entry>
+[$ml_name:%05d]
+   </entry>
+</row>
+<row>
+<entry>
+article_text_plain_filter_rules</entry>
+<entry>
+ filter rules of text/plain filter.</entry>
+<entry>
+reject_not_iso2022jp_japanese_string
+   reject_null_mail_body
+   reject_one_line_message
+   reject_old_fml_command_syntax
+   reject_invalid_fml_command_syntax
+   reject_japanese_command_syntax
+   reject_ms_guid
+   permit
+   </entry>
+</row>
+<row>
+<entry>
+body_cksum_cache_dir</entry>
+<entry>
+ Message-ID cache directory</entry>
+<entry>
+$db_dir/body_cksum
+   </entry>
+</row>
+<row>
+<entry>
+body_loop_check_rules</entry>
+<entry>
+ body loop check rules</entry>
+<entry>
+check_body_cksum
+   </entry>
+</row>
+<row>
+<entry>
+cgi_base_dir</entry>
+<entry>
+ base directory which locates .cgi for this domain.</entry>
+<entry>
+$fml_owner_home_dir/public_html/cgi-bin/fml/$ml_domain
+   </entry>
+</row>
+<row>
+<entry>
+cgi_charset</entry>
+<entry>
+ cgi charset</entry>
+<entry>
+$default_cgi_charset
+   </entry>
+</row>
+<row>
+<entry>
+cgi_main_menu_color</entry>
+<entry>
+ default bgcolor</entry>
+<entry>
+#FFFFFF
+   </entry>
+</row>
+<row>
+<entry>
+cgi_menu_default_map</entry>
+<entry>
+ default value of list types in CGI operations.</entry>
+<entry>
+member
+   </entry>
+</row>
+<row>
+<entry>
+cgi_menu_map_list</entry>
+<entry>
+ choise of address list types in CGI operations.</entry>
+<entry>
+member
+   recipient
+   admin_member
+   </entry>
+</row>
+<row>
+<entry>
+cgi_navigation_bar_color</entry>
+<entry>
+ default bgcolor in navigation menu</entry>
+<entry>
+#FFFFFF
+   </entry>
+</row>
+<row>
+<entry>
+chaddr_command_auth_type</entry>
+<entry>
+ use comnfirmation in chaddr command ?</entry>
+<entry>
+confirmation
+   </entry>
+</row>
+<row>
+<entry>
+command_mail_filter_reject_notice_data_type</entry>
+<entry>
+ how fml refer the rejeced message.</entry>
+<entry>
+string
+   </entry>
+</row>
+<row>
+<entry>
+command_mail_filter_reject_notice_recipients</entry>
+<entry>
+ recipients to inform</entry>
+<entry>
+maintainer
+   sender
+   </entry>
+</row>
+<row>
+<entry>
+command_mail_invalid_command_limit</entry>
+<entry>
+ the numfer of ineffective commands in one command mail.</entry>
+<entry>
+100
+   </entry>
+</row>
+<row>
+<entry>
+command_mail_line_length_limit</entry>
+<entry>
+ maximum length of one command line.</entry>
+<entry>
+128
+   </entry>
+</row>
+<row>
+<entry>
+command_mail_size_filter_rules</entry>
+<entry>
+ size based filter rules.</entry>
+<entry>
+check_header_size
+   check_body_size
+   check_command_limit
+   check_line_length_limit
+   permit
+   </entry>
+</row>
+<row>
+<entry>
+command_mail_valid_command_limit</entry>
+<entry>
+ the numfer of effective commands in one command mail.</entry>
+<entry>
+100
+   </entry>
+</row>
+<row>
+<entry>
+command_prompt</entry>
+<entry>
+ command prompt in message reply</entry>
+<entry>
+>>>
+   </entry>
+</row>
+<row>
+<entry>
+command_restrictions</entry>
+<entry>
+ restrictions for command mail</entry>
+<entry>
+reject_system_accounts
+   permit_commands_for_stranger
+   permit_member_maps
+   reject
+   </entry>
+</row>
+<row>
+<entry>
+commands_for_user</entry>
+<entry>
+ effective command in normal commnd mail (for usual users)</entry>
+<entry>
+help
+   get
+   mget
+   get
+   mget
+   send
+   subscribe
+   add
+   unsubscribe
+   bye
+   on
+   off
+   digest
+   remove
+   resign
+   signoff
+   chaddr
+   confirm
+   guide
+   info
+   admin
+   objective
+   summary
+   </entry>
+</row>
+<row>
+<entry>
+confirm_command_prefix</entry>
+<entry>
+ special command name used as confirmation</entry>
+<entry>
+confirm
+   </entry>
+</row>
+<row>
+<entry>
+db_dir</entry>
+<entry>
+ directoy to hold several data files</entry>
+<entry>
+$var_dir/db
+   </entry>
+</row>
+<row>
+<entry>
+default_cgi_charset</entry>
+<entry>
+ default charset</entry>
+<entry>
+us-ascii
+   </entry>
+</row>
+<row>
+<entry>
+default_directory_mode</entry>
+<entry>
+ default mode in mkdir</entry>
+<entry>
+0755
+   </entry>
+</row>
+<row>
+<entry>
+default_file_mode</entry>
+<entry>
+ default mode in creating file</entry>
+<entry>
+0600
+   </entry>
+</row>
+<row>
+<entry>
+default_mail_body_size_limit</entry>
+<entry>
+ body size limit</entry>
+<entry>
+10240000
+   </entry>
+</row>
+<row>
+<entry>
+default_mail_header_size_limit</entry>
+<entry>
+ header size limit</entry>
+<entry>
+102400
+   </entry>
+</row>
+<row>
+<entry>
+digest_header_rewrite_rules</entry>
+<entry>
+ digest article header rewrite rules</entry>
+<entry>
+add_software_info
+   add_rfc2369
+   </entry>
+</row>
+<row>
+<entry>
+digest_member_maps</entry>
+<entry>
+ dummy</entry>
+<entry>
+$primary_member_maps
+   </entry>
+</row>
+<row>
+<entry>
+digest_recipient_maps</entry>
+<entry>
+ all maps of digest recipients.</entry>
+<entry>
+$primary_digest_recipient_map
+   </entry>
+</row>
+<row>
+<entry>
+digest_sequence_file</entry>
+<entry>
+ file to store the last sequence to deliver</entry>
+<entry>
+$ml_home_dir/seq-digest
+   </entry>
+</row>
+<row>
+<entry>
+domain_config_base_dir</entry>
+<entry>
+ system data directory provided by fml</entry>
+<entry>
+$ml_home_prefix/etc
+   </entry>
+</row>
+<row>
+<entry>
+domain_exim_config_dir</entry>
+<entry>
+ directory to hold exim specific config files.</entry>
+<entry>
+$domain_config_base_dir/exim
+   </entry>
+</row>
+<row>
+<entry>
+domain_mail_config_dir</entry>
+<entry>
+ directory to hold config files for MTA</entry>
+<entry>
+$domain_config_base_dir/mail
+   </entry>
+</row>
+<row>
+<entry>
+domain_postfix_config_dir</entry>
+<entry>
+ directory to hold postfix specific config files.</entry>
+<entry>
+$domain_config_base_dir/postfix
+   </entry>
+</row>
+<row>
+<entry>
+domain_procmail_config_dir</entry>
+<entry>
+ directory to hold procmail specific config files.</entry>
+<entry>
+$domain_config_base_dir/procmail
+   </entry>
+</row>
+<row>
+<entry>
+domain_qmail_config_dir</entry>
+<entry>
+ directory to hold qmail specific config files.</entry>
+<entry>
+$domain_config_base_dir/qmail
+   </entry>
+</row>
+<row>
+<entry>
+domain_sendmail_config_dir</entry>
+<entry>
+ directory to hold sendmail specific config files.</entry>
+<entry>
+$domain_config_base_dir/sendmail
+   </entry>
+</row>
+<row>
+<entry>
+error_analyzer_cache_dir</entry>
+<entry>
+ directory to cache error messages.</entry>
+<entry>
+$db_dir/error
+   </entry>
+</row>
+<row>
+<entry>
+error_analyzer_cache_mode</entry>
+<entry>
+ mode of cache expiration</entry>
+<entry>
+temporal
+   </entry>
+</row>
+<row>
+<entry>
+error_analyzer_cache_size</entry>
+<entry>
+ cache size.</entry>
+<entry>
+14
+   </entry>
+</row>
+<row>
+<entry>
+error_analyzer_cache_type</entry>
+<entry>
+ module as cache engine</entry>
+<entry>
+File::CacheDir
+   </entry>
+</row>
+<row>
+<entry>
+error_analyzer_function</entry>
+<entry>
+ function in FML::Error::Analyze to analyze.</entry>
+<entry>
+histgram
+   </entry>
+</row>
+<row>
+<entry>
+error_analyzer_function_list</entry>
+<entry>
+ functions defined in FML::Error::Analyze</entry>
+<entry>
+simple_count
+   histgram
+   </entry>
+</row>
+<row>
+<entry>
+error_analyzer_simple_count_limit</entry>
+<entry>
+ error limit in using simple_count as anlyzer function.</entry>
+<entry>
+5
+   </entry>
+</row>
+<row>
+<entry>
+event_queue_dir</entry>
+<entry>
+ event queue directory for scheduler</entry>
+<entry>
+$var_dir/event/queue
+   </entry>
+</row>
+<row>
+<entry>
+get_command_request_limit</entry>
+<entry>
+ maximu number of request in get command(s) in one mail.</entry>
+<entry>
+100
+   </entry>
+</row>
+<row>
+<entry>
+guide_file</entry>
+<entry>
+ guilde file</entry>
+<entry>
+$ml_home_dir/guide
+   </entry>
+</row>
+<row>
+<entry>
+has_alarm</entry>
+<entry>
+ has alarm(2) ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+has_fork</entry>
+<entry>
+ has fork(2) ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+has_getpwgid</entry>
+<entry>
+ has getpwgid(2) ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+has_getpwuid</entry>
+<entry>
+ has getpwuid(2) ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+has_select</entry>
+<entry>
+ has select(2) ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+header_loop_check_rules</entry>
+<entry>
+ loop check rules</entry>
+<entry>
+check_message_id
+   check_x_ml_info
+   check_list_post
+   </entry>
+</row>
+<row>
+<entry>
+help_file</entry>
+<entry>
+ help file</entry>
+<entry>
+$ml_home_dir/help
+   </entry>
+</row>
+<row>
+<entry>
+html_archive_dir</entry>
+<entry>
+ html archive directory of the specific ML.</entry>
+<entry>
+$fml_owner_home_dir/public_html/fml/mlarchive/$ml_domain/$ml_name
+   </entry>
+</row>
+<row>
+<entry>
+incoming_article_body_size_limit</entry>
+<entry>
+ maximum size limit of article body passed from MTA.</entry>
+<entry>
+$default_mail_body_size_limit
+   </entry>
+</row>
+<row>
+<entry>
+incoming_article_header_size_limit</entry>
+<entry>
+ maximum size limit of article header passed from MTA.</entry>
+<entry>
+$default_mail_header_size_limit
+   </entry>
+</row>
+<row>
+<entry>
+incoming_command_mail_body_size_limit</entry>
+<entry>
+ maximum size limit of article body passed from MTA.</entry>
+<entry>
+$default_mail_body_size_limit
+   </entry>
+</row>
+<row>
+<entry>
+incoming_command_mail_header_size_limit</entry>
+<entry>
+ maximum size limit of article header passed from MTA.</entry>
+<entry>
+$default_mail_header_size_limit
+   </entry>
+</row>
+<row>
+<entry>
+incoming_mail_cache_dir</entry>
+<entry>
+ incoming mail queue directory</entry>
+<entry>
+$var_dir/mail/incoming
+   </entry>
+</row>
+<row>
+<entry>
+incoming_mail_cache_size</entry>
+<entry>
+ the maximum number of cached incoming mails</entry>
+<entry>
+128
+   </entry>
+</row>
+<row>
+<entry>
+ldap_query_filter</entry>
+<entry>
+ LDAP filter</entry>
+<entry>
+(objectclass=*)
+   </entry>
+</row>
+<row>
+<entry>
+list_addresses</entry>
+<entry>
+ addresses fml uses: e.g. elena, elena-ctl</entry>
+<entry>
+$address_for_post
+   $address_for_command
+   $maintainer
+   </entry>
+</row>
+<row>
+<entry>
+listinfo_base_dir</entry>
+<entry>
+ base directory for ML information</entry>
+<entry>
+$fml_owner_home_dir/public_html/fml/listinfo
+   </entry>
+</row>
+<row>
+<entry>
+listinfo_dir</entry>
+<entry>
+ directory for ML information</entry>
+<entry>
+$listinfo_base_dir/$ml_domain/$ml_name
+   </entry>
+</row>
+<row>
+<entry>
+listinfo_template_dir</entry>
+<entry>
+ listinfo template</entry>
+<entry>
+$fml_share_dir/listinfo/$template_file_charset
+   </entry>
+</row>
+<row>
+<entry>
+lock_dir</entry>
+<entry>
+ directory where lock files are created.</entry>
+<entry>
+$var_dir/lock
+   </entry>
+</row>
+<row>
+<entry>
+lock_file</entry>
+<entry>
+ giant lock file name</entry>
+<entry>
+$lock_dir/giantlock
+   </entry>
+</row>
+<row>
+<entry>
+lock_type</entry>
+<entry>
+ lock algorithm type</entry>
+<entry>
+flock
+   </entry>
+</row>
+<row>
+<entry>
+log_dir</entry>
+<entry>
+ log dir</entry>
+<entry>
+$var_dir/log
+   </entry>
+</row>
+<row>
+<entry>
+log_file</entry>
+<entry>
+ log file</entry>
+<entry>
+$ml_home_dir/log
+   </entry>
+</row>
+<row>
+<entry>
+log_format_type</entry>
+<entry>
+ log message format</entry>
+<entry>
+process[pid]
+   </entry>
+</row>
+<row>
+<entry>
+log_type</entry>
+<entry>
+ logging type</entry>
+<entry>
+file
+   </entry>
+</row>
+<row>
+<entry>
+mail_aliases_file</entry>
+<entry>
+ aliases</entry>
+<entry>
+$domain_mail_config_dir/aliases
+   </entry>
+</row>
+<row>
+<entry>
+mail_queue_dir</entry>
+<entry>
+ mail queue directory</entry>
+<entry>
+$var_dir/mail/queue
+   </entry>
+</row>
+<row>
+<entry>
+member_maps</entry>
+<entry>
+ all maps used to check member list.</entry>
+<entry>
+$primary_member_map
+   $admin_member_maps
+   </entry>
+</row>
+<row>
+<entry>
+message_id_cache_dir</entry>
+<entry>
+ Message-ID cache directory</entry>
+<entry>
+$db_dir/message_id
+   </entry>
+</row>
+<row>
+<entry>
+message_template_dir</entry>
+<entry>
+ directory to hold message template files</entry>
+<entry>
+$fml_share_dir/message
+   </entry>
+</row>
+<row>
+<entry>
+ml_admin_cgi_base_dir</entry>
+<entry>
+ base directory which locates .cgi for this ML.</entry>
+<entry>
+$cgi_base_dir/ml-admin/$ml_name
+   </entry>
+</row>
+<row>
+<entry>
+ml_local_dir</entry>
+<entry>
+ ML local directory</entry>
+<entry>
+$ml_home_dir/local
+   </entry>
+</row>
+<row>
+<entry>
+ml_local_lib_dir</entry>
+<entry>
+ ML local library path</entry>
+<entry>
+$ml_local_dir/lib
+   </entry>
+</row>
+<row>
+<entry>
+ml_local_message_template_dir</entry>
+<entry>
+ directory to hold ml specific message template files</entry>
+<entry>
+$ml_local_share_dir/message
+   </entry>
+</row>
+<row>
+<entry>
+ml_local_share_dir</entry>
+<entry>
+ ML local share/</entry>
+<entry>
+$ml_local_dir/share
+   </entry>
+</row>
+<row>
+<entry>
+moderator_member_maps</entry>
+<entry>
+ all list of moderator lists.</entry>
+<entry>
+$primary_moderator_member_map
+   </entry>
+</row>
+<row>
+<entry>
+moderator_recipient_maps</entry>
+<entry>
+ dummy</entry>
+<entry>
+$primary_moderator_recipient_map
+   </entry>
+</row>
+<row>
+<entry>
+newml_command_postfix_template_files</entry>
+<entry>
+ templates of include files</entry>
+<entry>
+include
+   include-ctl
+   include-error
+   </entry>
+</row>
+<row>
+<entry>
+newml_command_qmail_template_files</entry>
+<entry>
+ templates files of ~fml/.qmail-*</entry>
+<entry>
+dot-qmail
+   dot-qmail-ctl
+   dot-qmail-admin
+   dot-qmail-request
+   dot-qmail-default
+   </entry>
+</row>
+<row>
+<entry>
+newml_command_template_files</entry>
+<entry>
+ template files used in running "makefml newml"</entry>
+<entry>
+config.cf
+   </entry>
+</row>
+<row>
+<entry>
+objective_file</entry>
+<entry>
+ objective file</entry>
+<entry>
+$ml_home_dir/objective
+   </entry>
+</row>
+<row>
+<entry>
+outgoing_article_body_size_limit</entry>
+<entry>
+ maximum size limit of deliverd article body.</entry>
+<entry>
+$default_mail_body_size_limit
+   </entry>
+</row>
+<row>
+<entry>
+outgoing_article_header_size_limit</entry>
+<entry>
+ maximum size limit of deliverd article header. </entry>
+<entry>
+$default_mail_header_size_limit
+   </entry>
+</row>
+<row>
+<entry>
+outgoing_command_mail_body_size_limit</entry>
+<entry>
+ maximum size limit of deliverd article body.</entry>
+<entry>
+$default_mail_body_size_limit
+   </entry>
+</row>
+<row>
+<entry>
+outgoing_command_mail_header_size_limit</entry>
+<entry>
+ maximum size limit of deliverd article header. </entry>
+<entry>
+$default_mail_header_size_limit
+   </entry>
+</row>
+<row>
+<entry>
+outgoing_mail_cache_dir</entry>
+<entry>
+ outgoing mail cache directory</entry>
+<entry>
+$var_dir/mail/outgoing
+   </entry>
+</row>
+<row>
+<entry>
+outgoing_mail_cache_size</entry>
+<entry>
+ the maximum number of cached outgoing mails</entry>
+<entry>
+128
+   </entry>
+</row>
+<row>
+<entry>
+post_restrictions</entry>
+<entry>
+ restrictions for post</entry>
+<entry>
+reject_system_accounts
+   permit_member_maps
+   reject
+   </entry>
+</row>
+<row>
+<entry>
+post_restrictions_reject_notice_data_type</entry>
+<entry>
+ how to inform the rejected message </entry>
+<entry>
+string
+   </entry>
+</row>
+<row>
+<entry>
+postfix_verp_delimiters</entry>
+<entry>
+ verps delimieters used in postfix</entry>
+<entry>
++=
+   </entry>
+</row>
+<row>
+<entry>
+postfix_virtual_map_file</entry>
+<entry>
+ virtual map file</entry>
+<entry>
+$domain_postfix_config_dir/virtual
+   </entry>
+</row>
+<row>
+<entry>
+primary_admin_member_map</entry>
+<entry>
+ list of remote administrators who has priviledge </entry>
+<entry>
+file:$ml_home_dir/members-admin
+   </entry>
+</row>
+<row>
+<entry>
+primary_admin_member_password_map</entry>
+<entry>
+ primary password file to authenticate remote administrator </entry>
+<entry>
+file:$ml_home_dir/etc/passwd-admin
+   </entry>
+</row>
+<row>
+<entry>
+primary_admin_recipient_map</entry>
+<entry>
+ dummy</entry>
+<entry>
+file:$ml_home_dir/recipients-admin
+   </entry>
+</row>
+<row>
+<entry>
+primary_digest_member_map</entry>
+<entry>
+ dummy</entry>
+<entry>
+$primary_member_map
+   </entry>
+</row>
+<row>
+<entry>
+primary_digest_recipient_map</entry>
+<entry>
+ primary list of digest recipients.</entry>
+<entry>
+file:$ml_home_dir/recipients-digest
+   </entry>
+</row>
+<row>
+<entry>
+primary_member_map</entry>
+<entry>
+ member list == primary address list who can post.</entry>
+<entry>
+file:$ml_home_dir/members
+   </entry>
+</row>
+<row>
+<entry>
+primary_moderator_member_map</entry>
+<entry>
+ primary list of moderators.</entry>
+<entry>
+file:$ml_home_dir/members-moderator
+   </entry>
+</row>
+<row>
+<entry>
+primary_moderator_recipient_map</entry>
+<entry>
+ dummy</entry>
+<entry>
+file:$ml_home_dir/recipients-moderator
+   </entry>
+</row>
+<row>
+<entry>
+primary_recipient_map</entry>
+<entry>
+ primary recipients list.</entry>
+<entry>
+file:$ml_home_dir/recipients
+   </entry>
+</row>
+<row>
+<entry>
+privileged_command_prefix</entry>
+<entry>
+ special command name used as admin command mail</entry>
+<entry>
+admin
+   </entry>
+</row>
+<row>
+<entry>
+procmail_aliases_file</entry>
+<entry>
+ sample of ~fml/.procmailrc</entry>
+<entry>
+$domain_procmail_config_dir/procmailrc
+   </entry>
+</row>
+<row>
+<entry>
+qmail_verp_delimiters</entry>
+<entry>
+ verps delimieters used in qmail</entry>
+<entry>
+-=
+   </entry>
+</row>
+<row>
+<entry>
+qmail_virtual_map_file</entry>
+<entry>
+ template of /var/qmail/control/virtualdomains</entry>
+<entry>
+$domain_qmail_config_dir/virtualdomains
+   </entry>
+</row>
+<row>
+<entry>
+qmail_virtualdomains_file</entry>
+<entry>
+ virtual domain configurations for qmail</entry>
+<entry>
+/var/qmail/control/virtualdomains
+   </entry>
+</row>
+<row>
+<entry>
+recipient_maps</entry>
+<entry>
+ all maps used as recipient list.</entry>
+<entry>
+$primary_recipient_map
+   file:$ml_home_dir/actives
+   </entry>
+</row>
+<row>
+<entry>
+sendmail_virtual_map_file</entry>
+<entry>
+ sample of /etc/mail/virtusertable</entry>
+<entry>
+$domain_sendmail_config_dir/virtusertable
+   </entry>
+</row>
+<row>
+<entry>
+sequence_file</entry>
+<entry>
+ file to store article sequence.</entry>
+<entry>
+$ml_home_dir/seq
+   </entry>
+</row>
+<row>
+<entry>
+shared_db_dir</entry>
+<entry>
+ database directory shared among ML's</entry>
+<entry>
+$ml_home_prefix/@db@
+   </entry>
+</row>
+<row>
+<entry>
+smtp_recipient_limit</entry>
+<entry>
+ recipient limits over one smtp transaction.</entry>
+<entry>
+1000
+   </entry>
+</row>
+<row>
+<entry>
+smtp_sender</entry>
+<entry>
+ MAIL FROM:<$smtp_sender> in SMTP</entry>
+<entry>
+$maintainer
+   </entry>
+</row>
+<row>
+<entry>
+smtp_servers</entry>
+<entry>
+ smtp servers.</entry>
+<entry>
+[::1]:25
+   127.0.0.1:25
+   </entry>
+</row>
+<row>
+<entry>
+spool_dir</entry>
+<entry>
+ spool directory</entry>
+<entry>
+$ml_home_dir/spool
+   </entry>
+</row>
+<row>
+<entry>
+spool_type</entry>
+<entry>
+ use subdir in spool directory ?</entry>
+<entry>
+plane
+   </entry>
+</row>
+<row>
+<entry>
+subscribe_command_auth_type</entry>
+<entry>
+ use comnfirmation in subscribe command ?</entry>
+<entry>
+confirmation
+   </entry>
+</row>
+<row>
+<entry>
+summary_file</entry>
+<entry>
+ article summary file.</entry>
+<entry>
+$ml_home_dir/summary
+   </entry>
+</row>
+<row>
+<entry>
+summary_format_address_length</entry>
+<entry>
+ save the first N bytes of the address in summary.</entry>
+<entry>
+15
+   </entry>
+</row>
+<row>
+<entry>
+summary_format_style</entry>
+<entry>
+ format style.</entry>
+<entry>
+fml4_compatible
+   </entry>
+</row>
+<row>
+<entry>
+system_accounts</entry>
+<entry>
+ list of system accounts.</entry>
+<entry>
+root
+   postmaster
+   MAILER-DAEMON
+   msgs
+   nobody
+   news
+   majordomo
+   listserv
+   listproc
+   \S+\-help
+   \S+\-subscribe
+   \S+\-unsubscribe
+   </entry>
+</row>
+<row>
+<entry>
+thread_cgi_base_url</entry>
+<entry>
+ CGI relative path</entry>
+<entry>
+/cgi-bin/fmlthread.cgi
+   </entry>
+</row>
+<row>
+<entry>
+thread_cgi_bgcolor</entry>
+<entry>
+ CGI color</entry>
+<entry>
+#E6E6FA
+   </entry>
+</row>
+<row>
+<entry>
+thread_cgi_title</entry>
+<entry>
+ CGI title</entry>
+<entry>
+thread tracking system interface
+   </entry>
+</row>
+<row>
+<entry>
+thread_db_dir</entry>
+<entry>
+ directory to hold ticket data</entry>
+<entry>
+$shared_db_dir/thread
+   </entry>
+</row>
+<row>
+<entry>
+thread_id_syntax</entry>
+<entry>
+ ticket number</entry>
+<entry>
+$ml_name/%d
+   </entry>
+</row>
+<row>
+<entry>
+thread_sequence_file</entry>
+<entry>
+ file to store ticket sequence</entry>
+<entry>
+$ml_home_dir/thread.seq
+   </entry>
+</row>
+<row>
+<entry>
+thread_subject_tag</entry>
+<entry>
+ syntax added to Subject:</entry>
+<entry>
+[$thread_id_syntax]
+   </entry>
+</row>
+<row>
+<entry>
+thread_subject_tag_location</entry>
+<entry>
+ location of insertion of tag</entry>
+<entry>
+appended
+   </entry>
+</row>
+<row>
+<entry>
+thread_subject_tag_name</entry>
+<entry>
+ ml name assigned to ticket</entry>
+<entry>
+$ml_name
+   </entry>
+</row>
+<row>
+<entry>
+tmp_dir</entry>
+<entry>
+ directory to hold temporary files</entry>
+<entry>
+$ml_home_dir/tmp
+   </entry>
+</row>
+<row>
+<entry>
+udb_base_dir</entry>
+<entry>
+ database directory shared among ML's.</entry>
+<entry>
+$ml_home_prefix/@udb@
+   </entry>
+</row>
+<row>
+<entry>
+unsafe_header_fields</entry>
+<entry>
+ remove unsafe header fields</entry>
+<entry>
+Return-Receipt-To
+   </entry>
+</row>
+<row>
+<entry>
+unsubscribe_command_auth_type</entry>
+<entry>
+ use comnfirmation in unsubscribe command ?</entry>
+<entry>
+confirmation
+   </entry>
+</row>
+<row>
+<entry>
+use_article_delivery</entry>
+<entry>
+ user article delivery function ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_article_filter_reject_notice</entry>
+<entry>
+ infor the filter rejection ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_article_header_filter</entry>
+<entry>
+ use header based filter ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_article_header_rewrite</entry>
+<entry>
+ use article header rewrite function ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_article_mime_component_filter</entry>
+<entry>
+ MIME structure based filter</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_article_non_mime_filter</entry>
+<entry>
+ dummy</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_article_size_filter</entry>
+<entry>
+ use size based filter</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_article_text_plain_filter</entry>
+<entry>
+ use text/plain filter, which is a simple syntax checker.</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_body_loop_check</entry>
+<entry>
+ use loop check based on body information</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_command_mail_filter_reject_notice</entry>
+<entry>
+ inform filter rejection ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_command_mail_program</entry>
+<entry>
+ use commnd mail ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_command_mail_size_filter</entry>
+<entry>
+ use size based filter</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_digest_header_rewrite</entry>
+<entry>
+ use digest article header rewrite function ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_distribute_program</entry>
+<entry>
+ use function of article delivery</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_error_analyzer_program</entry>
+<entry>
+ use error message analyzer ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_header_loop_check</entry>
+<entry>
+ use loop check based on header information ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_html_archive</entry>
+<entry>
+ use html converter function ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_incoming_mail_cache</entry>
+<entry>
+ cache incoing mail ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_lock</entry>
+<entry>
+ use lock system ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_log</entry>
+<entry>
+ user logging function</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_outgoing_mail_cache</entry>
+<entry>
+ cache outgoing mail cache ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_spool</entry>
+<entry>
+ store article into spool directory ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+use_thread_subject_tag</entry>
+<entry>
+ use special subject tag ?</entry>
+<entry>
+no
+   </entry>
+</row>
+<row>
+<entry>
+use_thread_track</entry>
+<entry>
+ user thread tracking system ?</entry>
+<entry>
+yes
+   </entry>
+</row>
+<row>
+<entry>
+var_dir</entry>
+<entry>
+ directory hoding</entry>
+<entry>
+$ml_home_dir/var
+   </entry>
+</row>
+<row>
+<entry>
+x_ml_name</entry>
+<entry>
+ ml name in both X-ML-Name: and X-Sequence header fields.</entry>
+<entry>
+$ml_name
+   </entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>

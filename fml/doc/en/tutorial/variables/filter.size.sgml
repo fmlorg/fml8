@@ -1,0 +1,169 @@
+<para>
+<screen>
+=head1	size limit
+
+=head2	default size limit
+
+
+# Descriptions: header size limit
+#      History:
+#        Value: NUM
+#     Examples: 102400
+default_mail_header_size_limit	=	102400
+
+
+# Descriptions: body size limit
+#      History:
+#        Value: NUM
+#     Examples: 10240000
+default_mail_body_size_limit	=	10240000
+
+
+# Descriptions: the maximum number of cached incoming mails
+#      History: $NUM_LOG_MAIL
+#        Value: NUM
+#     Examples: 128
+incoming_mail_cache_size	=	128
+
+
+# Descriptions: the maximum number of cached outgoing mails
+#      History: $NUM_LOG_MAIL
+#        Value: NUM
+#     Examples: 128
+outgoing_mail_cache_size	=	128
+
+
+=head2	size limit
+
+
+# Descriptions: maximum size limit of article header passed from MTA.
+#      History:
+#        Value: NUM
+#     Examples: 102400
+incoming_article_header_size_limit	= $default_mail_header_size_limit
+
+
+# Descriptions: maximum size limit of article body passed from MTA.
+#      History:
+#        Value: NUM
+#     Examples: 10240000
+incoming_article_body_size_limit	= $default_mail_body_size_limit
+
+
+# Descriptions: maximum size limit of deliverd article header. 
+#               (not yet implemented ;-)
+#      History:
+#        Value: NUM
+#     Examples: 102400
+outgoing_article_header_size_limit	= $default_mail_header_size_limit
+
+
+# Descriptions: maximum size limit of deliverd article body.
+#               (not yet implemented ;-)
+#        Value: NUM
+#     Examples: 10240000
+outgoing_article_body_size_limit	= $default_mail_body_size_limit
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+article_filter_functions	=	article_size_filter
+					article_header_filter
+					article_non_mime_filter
+					article_mime_component_filter
+					article_text_plain_filter
+
+
+=head2	size based filter
+
+
+# Descriptions: use size based filter
+#      History:
+#        Value: yes / no
+#     Examples:
+use_article_size_filter	=	yes
+
+
+# Descriptions: size based filter rules.
+#               first match. 
+#               permit post if no rule matched.
+#      History:
+#        Value:
+#     Examples:
+article_size_filter_rules	=	check_header_size
+					check_body_size
+					permit
+
+
+=head2	size limit
+
+
+# Descriptions: maximum size limit of article header passed from MTA.
+#      History:
+#        Value: NUM
+#     Examples: 102400
+incoming_command_mail_header_size_limit	= $default_mail_header_size_limit
+
+
+# Descriptions: maximum size limit of article body passed from MTA.
+#      History:
+#        Value: NUM
+#     Examples: 10240000
+incoming_command_mail_body_size_limit	= $default_mail_body_size_limit
+
+
+# Descriptions: maximum size limit of deliverd article header. 
+#               (not yet implemented ;-)
+#      History:
+#        Value: NUM
+#     Examples: 102400
+outgoing_command_mail_header_size_limit	= $default_mail_header_size_limit
+
+
+# Descriptions: maximum size limit of deliverd article body.
+#               (not yet implemented ;-)
+#      History:
+#        Value: NUM
+#     Examples: 10240000
+outgoing_command_mail_body_size_limit	= $default_mail_body_size_limit
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+command_mail_filter_functions	=	command_mail_size_filter
+
+
+=head2	size based filter
+
+
+# Descriptions: use size based filter
+#      History:
+#        Value: yes / no
+#     Examples:
+use_command_mail_size_filter	=	yes
+
+
+# Descriptions: size based filter rules.
+#               first match.
+#               permit if no rule matched.
+#      History:
+#        Value:
+#     Examples:
+command_mail_size_filter_rules	=	check_header_size
+					check_body_size
+					check_command_limit
+					check_line_length_limit
+					permit
+
+
+# Descriptions: cache size.
+#		it implies days if the cache mode is temporal.
+#      History: none
+#        Value: number
+#     Examples: 
+error_analyzer_cache_size		=	14
+
+</screen>
+</para>
