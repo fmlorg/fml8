@@ -4,6 +4,14 @@ __exceptional__ {
     ?     $timezone
 }
 
+address {
+
+   address_compare { 
+          $address_compare_function_type
+          $use_address_compare_function
+   }
+}
+
 admin {
 
    admin_command { 

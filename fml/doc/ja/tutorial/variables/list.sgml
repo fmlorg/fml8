@@ -14,6 +14,15 @@ default value(s)</entry>
 <tbody>
 <row>
 <entry>
+address_compare_function_type</entry>
+<entry>
+ メンバーチェックをする際に、ユーザパートの比較で</entry>
+<entry>
+user_part_case_insensitive
+   </entry>
+</row>
+<row>
+<entry>
 admin_cgi_base_dir</entry>
 <entry>
  このＭＬの admin CGI を置くディレクトリ</entry>
@@ -1535,6 +1544,15 @@ unsubscribe_command_auth_type</entry>
  unsubscribe コマンドで confirmation 認証(コールバック認証)</entry>
 <entry>
 confirmation
+   </entry>
+</row>
+<row>
+<entry>
+use_address_compare_function</entry>
+<entry>
+ FML::Credential でアドレスの比較をするか?(当然する)</entry>
+<entry>
+yes
    </entry>
 </row>
 <row>

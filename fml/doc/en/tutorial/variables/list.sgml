@@ -14,6 +14,15 @@ default value(s)</entry>
 <tbody>
 <row>
 <entry>
+address_compare_function_type</entry>
+<entry>
+ case insensitive comparison of user part of mail address.</entry>
+<entry>
+user_part_case_insensitive
+   </entry>
+</row>
+<row>
+<entry>
 admin_cgi_base_dir</entry>
 <entry>
  base directory which locates .cgi for this domain.</entry>
@@ -1553,6 +1562,15 @@ unsubscribe_command_auth_type</entry>
  use comnfirmation in unsubscribe command ?</entry>
 <entry>
 confirmation
+   </entry>
+</row>
+<row>
+<entry>
+use_address_compare_function</entry>
+<entry>
+ FML::Credential checks address comparison</entry>
+<entry>
+yes
    </entry>
 </row>
 <row>
