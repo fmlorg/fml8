@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.58 2002/08/03 10:30:06 fukachan Exp $
+# $FML: Makefile,v 1.59 2002/09/29 06:07:52 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -26,7 +26,10 @@ check:
 	- (cd ../../fml; make check 2>&1 ) | grep -v OK || echo ''
 	- mv -f 33_TODO 33_TODO.bak
 	- ./find_bad_style.pl \
-	  `find lib/ -type f -print | egrep '\.pm$$' ` | tee 33_TODO
+	  `find lib/ -type f -print |\
+	   egrep '\.pm$$' ` |\
+	   sed -e 's@^lib//@@' -e 's@^lib/@@' |\
+	   tee 33_TODO
 
 link: clean_link _link
 
