@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.34 2002/04/03 11:32:57 fukachan Exp $
+# $FML: Article.pm,v 1.35 2002/04/05 04:19:43 fukachan Exp $
 #
 
 package FML::Article;
@@ -210,11 +210,18 @@ sub filepath
 
     use Mail::Message::Spool;
     my $spool = new Mail::Message::Spool;
-    my $file  = $spool->filepath( {
+    my $args = {
 	base_dir   => $spool_dir,
 	id         => $id,
 	use_subdir => $use_subdir,
-    } );
+    } ;
+    my $file = $spool->filepath($args);
+    my $dir  = $spool->dirpath($args);
+
+    unless (-d $dir) {
+	eval q{ use File::Utils qw(mkdirhier);};
+	mkdirhier($dir, 0700);
+    }
 
     return $file;
 }
