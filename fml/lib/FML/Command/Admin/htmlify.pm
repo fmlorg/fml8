@@ -4,43 +4,25 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: htmlify.pm,v 1.9 2002/03/17 06:24:29 fukachan Exp $
+# $FML: htmlify.pm,v 1.10 2002/03/31 03:39:13 fukachan Exp $
 #
 
 package FML::Command::Admin::htmlify;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-
 use FML::Log qw(Log LogWarn LogError);
 
 
 =head1 NAME
 
-FML::Command::Admin::htmlify - htmlify $spool_dir
+FML::Command::Admin::htmlify - convert $spool_dir to html files
 
 =head1 SYNOPSIS
 
 See C<FML::Command>.
 
 =head1 DESCRIPTION
-
-=head2 makefml usage
-
-For example, make HTMLified articles in
-/var/www/htdocs/mlarchives/elena
-
-   makefml htmlify elena \
-    --outdir=/var/www/htdocs/mlarchives/elena
-
-or
-
-   makefml htmlify elena \
-    --srcdir=/var/spool/ml/elena/spool \
-    --outdir=/var/www/htdocs/mlarchives/elena
-
-if --srcdir is not specified, the source is taken from
-/var/spool/ml/$ml_name/spool/.
 
 =head1 METHODS
 
@@ -82,6 +64,7 @@ sub process
 
     for (@$options) {
 	if (/\-\-outdir=(\S+)/) { $dst_dir = $1;}
+	if (/\-\-dstdir=(\S+)/) { $dst_dir = $1;}
 	if (/\-\-srcdir=(\S+)/) { $src_dir = $1;}
     }
 
@@ -92,7 +75,9 @@ sub process
 	}
 
 	use Mail::Message::ToHTML;
-	&Mail::Message::ToHTML::htmlify_dir($src_dir, { directory => $dst_dir });
+	&Mail::Message::ToHTML::htmlify_dir($src_dir, { 
+	    directory => $dst_dir,
+	});
     }
     else {
 	croak("no destination directory\n");
