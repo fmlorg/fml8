@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledDir.pm,v 1.8 2002/02/01 12:04:03 fukachan Exp $
+# $FML: JournaledDir.pm,v 1.9 2002/02/02 08:04:55 fukachan Exp $
 #
 
 package Tie::JournaledDir;
@@ -75,6 +75,19 @@ It uses C<Tie::JournaledFile> in background.
 =cut
 
 
+#
+# See Tie::Hash
+#    sub TIEHASH  { bless {}, $_[0] }
+#    sub STORE    { $_[0]->{$_[1]} = $_[2] }
+#    sub FETCH    { $_[0]->{$_[1]} }
+#    sub FIRSTKEY { my $a = scalar keys %{$_[0]}; each %{$_[0]} }
+#    sub NEXTKEY  { each %{$_[0]} }
+#    sub EXISTS   { exists $_[0]->{$_[1]} }
+#    sub DELETE   { delete $_[0]->{$_[1]} }
+#    sub CLEAR    { %{$_[0]} = () }
+#
+
+
 use Tie::JournaledFile;
 
 my $debug = 0;
@@ -106,8 +119,8 @@ sub new
     }
 
     # set up object
-    $me->{ 'dir' }   = $dir;
-    $me->{ 'files' } = \@filelist;
+    $me->{ '_dir' }   = $dir;
+    $me->{ '_files' } = \@filelist;
     return bless $me, $type;
 }
 
@@ -155,7 +168,7 @@ sub TIEHASH
 sub FETCH
 {
     my ($self, $key) = @_;
-    my $files = $self->{ 'files' } || [];
+    my $files = $self->{ '_files' } || [];
     my $x     = '';
 
   FILES_LOOP:
@@ -185,7 +198,7 @@ sub FETCH
 sub STORE
 {
     my ($self, $key, $value) = @_;
-    my $f = $self->{ 'files' }->[ 0 ]; # XXX [0] is the latest file.
+    my $f = $self->{ '_files' }->[ 0 ]; # XXX [0] is the latest file.
 
     my $obj = new Tie::JournaledFile {
 	'last_match' => 1,
@@ -196,104 +209,48 @@ sub STORE
 }
 
 
-# Descriptions: find key in file
+# Descriptions: generate and return HASH_REF on memory over all data
 #    Arguments: OBJ($self)
-# Side Effects: update object and negative cache in $self
-#               where the cache is file list already searched
-# Return Value: STR(key string)
-sub __find_key
+# Side Effects: generate hash on memory
+# Return Value: HASH_REF
+sub __gen_hash
 {
-    my ($self) = @_;
-    my $files = $self->{ 'files' };
+    my ($self) = @_; 
+    my $files = $self->{ '_files' } || [];
+    my $hash  = {};
+    my %db    = ();
+    my ($k, $v);
 
-    # we open some file now, search in the file.
-    if (defined $self->{ '_key_files_obj' }) {
-	my $obj = $self->{ '_key_files_obj' };
-	my $x   = $obj->NEXTKEY();
+    use FileHandle;
+    for my $f (reverse @$files) { 
+	tie %db, 'Tie::JournaledFile', { 
+	    'last_match' => 1,
+	    'file'       => $f,
+	};
 
-	if (defined $x) {
-	    print STDERR "NEXTKEY: $x\n" if $debug;
-	    return $x;
+	while (($k, $v) = each %db) {
+	    $hash->{ $k } = $v;
 	}
-	else {
-	    delete $self->{ '_key_files_obj' };
-	}
+
+	untie %db;
     }
 
-    # 1. for the first time
-    # 2. no more valid keys in the file ( _key_files_obj object )
-    # so try to read the first/next file
-  FILES:
-    for my $f (@$files) {
-	# skip the file already done
-	next FILES if defined $self->{ '_key_files_done' }->{ $f };
-
-	# try to open the next file
-	if (-f $f) {
-	    print STDERR "open $f\n" if $debug;
-	    my $obj = new Tie::JournaledFile {
-		'last_match' => 1,
-		'file'       => $f,
-	    };
-
-	    if (defined $obj) {
-		# negative cache: mark which file is opened.
-		$self->{ '_key_files_done' }->{ $f } = 1;
-
-		# XXX for the first time
-		my $x = $obj->FIRSTKEY();
-
-		# save object if this file has valid value(s).
-		if (defined $x) {
-		    print STDERR "FIRSTKEY: $x\n" if $debug;
-		    $self->{ '_key_files_obj' } = $obj;
-		    return $x;
-		}
-		# skip this file if this file has no valid value.
-		else {
-		    print STDERR "FIRSTKEY: not found\n" if $debug;
-		    next FILES;
-		}
-	    }
-	    else {
-		delete $self->{ '_key_files_obj' };
-	    }
-	}
-    }
-
-    undef;
-}
-
-
-# Descriptions: object for cache file is alive
-#    Arguments: OBJ($self)
-# Side Effects: none
-# Return Value: 1 or 0
-sub __in_valid_search
-{
-    my ($self) = @_;
-    return $self->{ '_key_files_obj' } ? 1 : 0;
+    return $hash;
 }
 
 
 # Descriptions: return the first key in the latest file
 #    Arguments: OBJ($self)
-# Side Effects: initialize _key_files{done,obj}
-# Return Value: STR(key string)
+# Side Effects: __gen_hash() creates hash on momery.
+# Return Value: ARRAY(STR, STR)
 sub FIRSTKEY
 {
     my ($self) = @_;
-    my $files = $self->{ 'files' };
+    my $hash = $self->__gen_hash();
 
-    # initialize cache area which holds done lists
-    delete $self->{ '_key_files_done' };
-    delete $self->{ '_key_files_obj' };
-
-    my $x = $self->__find_key();
-
-    if (defined $x) {
-	$self->{ '_key_cache' }->{ $x } = 1;
-	return $x;
+    if (defined $hash) {
+	$self->{ _hash } = $hash;
+	return each %$hash;
     }
     else {
 	return undef;
@@ -303,33 +260,51 @@ sub FIRSTKEY
 
 # Descriptions: fetch the next key in the cache
 #               file to search changes automatically by Tie::JournaledFile.
-#    Arguments: OBJ($self)
+#    Arguments: OBJ($self) STR($lastkey)
 # Side Effects: none
-# Return Value: STR(key string)
+# Return Value: ARRAY(STR, STR)
 sub NEXTKEY
 {
-    my ($self) = @_;
+    my ($self, $lastkey) = @_;
+    my $hash = $self->{ _hash };
 
-    # XXX we need the duplication check.
-    # XXX This class opens plural files and
-    # XXX is responsible to check return values.
-
-    while ($self->__in_valid_search()) { # 1/0 is returned.
-	my $x = $self->__find_key();
-
-	if (defined $x) {
-	    unless (defined $self->{ '_key_cache' }->{ $x }) {
-		$self->{ '_key_cache' }->{ $x } = 1;
-		return $x;
-	    }
-	    else {
-		return undef;
-	    }
-	}
+    if (defined $hash) {
+	return each %$hash;
     }
-
-    undef;
+    else {
+	return undef;
+    }
 }
+
+
+sub EXISTS   
+{ 
+    my ($self, $key) = @_;
+    my $v = $self->FETCH($key);
+
+    return $v ? 1 : 0;
+}
+
+
+sub DELETE   
+{ 
+    my ($self, $key) = @_;
+    $self->STORE($key, '');
+}
+
+
+sub CLEAR    
+{
+    ;
+}
+
+
+=head1 LOG
+
+$Log$
+Revision 1.10  2002/08/03 04:21:30  fukachan
+bug fix keys() and each(), modified to use hash on memory.
+implement EXISTS(), DELETE(), CLEAR()
 
 
 =head1 AUTHOR
