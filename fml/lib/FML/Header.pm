@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.55 2003/03/14 03:50:18 fukachan Exp $
+# $FML: Header.pm,v 1.56 2003/04/08 15:41:42 tmu Exp $
 #
 
 package FML::Header;
@@ -198,9 +198,13 @@ sub mime_boundary
     my $content_type = $header->get('content-type');
 
     if (defined $content_type) {
-	if ($content_type =~ /boundary=\"(.*)\"/) {
+	if ($content_type =~ /boundary=\"(.*?)\"/) {
 	    return $1;
 	}
+	if ($content_type =~ /boundary=([^\s\(\)\<\>\@\,\;\:\\\"\/\[\]\?\=]+)/) {
+	    return $1;
+	}
+
     }
 
     return undef;
