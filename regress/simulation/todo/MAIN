@@ -48,6 +48,17 @@
 		for LMTP 
 
 
+=head1	フィルタ
+
+	FML::Filter::HeaderCheck
+
+	FML::Filter::BodyCheck
+		fml 4.0 の EnvelopeFilter
+
+	FML::Filter:: はあまりきれいでない。
+	FML::Process::Distribute に組み込まれていない。	
+
+
 =head1	ループチェック
 
 	MAIL_LIST != MAINTAINER
@@ -73,6 +84,8 @@
 =head1	将来実装予定だけど、まだ手つかず
 
 	newsyslog()
+		File::Rotate に実装されている。
+		組み込まれてはいない。
 
 	mode-expire
 
