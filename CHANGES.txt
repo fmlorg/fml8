@@ -1,6 +1,22 @@
 		CHANGES
 		Last Modified: $Date$
 
+2001/11/05
+
+   fmlthread review
+	review() mode to show summary for articles in each thread
+
+   FML::Process::Utils 
+	implement command_line_options()
+
+   fmlhtmlify [-I dir] src_dir dst_dir
+		new utility for convenience
+	Affected Files:
+		INSTALL.sh 
+		fml/bin/fmlhtmlify 
+		FML::Process::Switch 
+		FML::Process::HTMLify 
+
 2001/11/04
 
    プログラム全域で ticket -> thread
@@ -821,4 +837,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.29 2001/11/03 15:48:16 fukachan Exp $
+$FML: CHANGES.txt,v 1.30 2001/11/04 13:55:01 fukachan Exp $
