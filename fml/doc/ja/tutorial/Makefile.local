@@ -1,15 +1,24 @@
 #
-# $FML: Makefile.local,v 1.2 2002/03/21 07:09:30 fukachan Exp $
+# $FML: Makefile.local,v 1.3 2002/12/25 11:50:28 fukachan Exp $
 #
 
-FORMATER = ../../../utils/bin/varlist.pl
-SOURCE   =  ../../../etc/default_config.cf.ja.in
+PROG_LIST  = ../../../utils/bin/varlist.pl
+PROG_CLASS = ../../../utils/bin/varclass.pl
+SOURCE     =  ../../../etc/default_config.cf.ja.in
 
 VARLIST  = internals/list.variables.sgml
 
+VARCLASS = internals/class.variables.sgml
+
+all: $(VARLIST) $(VARCLASS)
+
 $(VARLIST): $(SOURCE)
-	$(FORMATER) -sgml $(SOURCE) > $(VARLIST).new
+	$(PROG_LIST) -sgml $(SOURCE) > $(VARLIST).new
 	mv $(VARLIST).new $(VARLIST)
+
+$(VARCLASS): $(SOURCE)
+	$(PROG_CLASS) -sgml $(SOURCE) > $(VARCLASS).new
+	mv $(VARCLASS).new $(VARCLASS)
 
 install: install_image
 

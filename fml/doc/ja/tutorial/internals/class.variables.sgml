@@ -1,0 +1,620 @@
+<para>
+<screen>
+__exceptional__ {
+    ?     $timezone
+}
+
+admin {
+
+   admin_command_restrictions { 
+          $admin_command_restrictions
+   }
+
+   admin_member { 
+          $admin_member_maps
+          $primary_admin_member_map
+   }
+
+   admin_member_password { 
+          $admin_member_password_maps
+          $primary_admin_member_password_map
+   }
+
+   admin_recipient { 
+          $admin_recipient_maps
+          $primary_admin_recipient_map
+   }
+
+   admin_* {
+          $admin_cgi_base_dir
+   }
+}
+
+article {
+
+   article_delivery { 
+          $use_article_delivery
+   }
+
+   article_filter { 
+          $article_filter_functions
+          $use_article_filter
+   }
+
+   article_filter_reject_notice { 
+          $article_filter_reject_notice_data_type
+    ?     $article_filter_reject_notice_recipients
+          $use_article_filter_reject_notice
+   }
+
+   article_header_filter { 
+          $article_header_filter_rules
+          $use_article_header_filter
+   }
+
+   article_header_rewrite { 
+          $article_header_rewrite_rules
+          $use_article_header_rewrite
+   }
+
+   article_mime_component_filter { 
+          $article_mime_component_filter_rules
+          $use_article_mime_component_filter
+   }
+
+   article_non_mime_filter { 
+          $article_non_mime_filter_rules
+          $use_article_non_mime_filter
+   }
+
+   article_size_filter { 
+          $article_size_filter_rules
+          $use_article_size_filter
+   }
+
+   article_text_plain_filter { 
+          $article_text_plain_filter_rules
+          $use_article_text_plain_filter
+   }
+
+   article_* {
+          $article_sequence_file
+    ?     $article_subject_tag
+   }
+}
+
+body {
+
+   body_loop_check { 
+          $body_loop_check_rules
+          $use_body_loop_check
+   }
+
+   body_* {
+          $body_cksum_cache_dir
+   }
+}
+
+cgi {
+
+   cgi_* {
+          $cgi_base_dir
+    ?     $cgi_charset
+    ?     $cgi_main_menu_color
+          $cgi_menu_default_map
+    ?     $cgi_menu_map_list
+    ?     $cgi_navigation_bar_color
+   }
+}
+
+chaddr {
+
+   chaddr_command { 
+          $chaddr_command_auth_type
+   }
+}
+
+command {
+
+   command_mail { 
+          $use_command_mail_program
+   }
+
+   command_mail_filter { 
+          $command_mail_filter_functions
+          $use_command_mail_filter
+   }
+
+   command_mail_filter_reject_notice { 
+          $command_mail_filter_reject_notice_data_type
+    ?     $command_mail_filter_reject_notice_recipients
+          $use_command_mail_filter_reject_notice
+   }
+
+   command_mail_size_filter { 
+          $command_mail_size_filter_rules
+          $use_command_mail_size_filter
+   }
+
+   command_restrictions { 
+          $command_restrictions
+   }
+
+   command_* {
+    ?     $command_prompt
+   }
+}
+
+commands_for {
+
+   commands_for_* {
+    ?     $commands_for_admin
+    ?     $commands_for_admin_cgi
+    ?     $commands_for_privileged_user
+    ?     $commands_for_stranger
+    ?     $commands_for_user
+   }
+}
+
+confirm {
+
+   confirm_command { 
+    ?     $confirm_command_prefix
+   }
+}
+
+default {
+
+   default_* {
+    ?     $default_cgi_charset
+    ?     $default_charset
+    ?     $default_directory_mode
+    ?     $default_file_mode
+          $default_mail_body_size_limit
+          $default_mail_header_size_limit
+    ?     $default_message_subject
+    ?     $default_umask
+   }
+}
+
+digest {
+
+   digest { 
+          $digest_sequence_file
+          $use_digest_program
+   }
+
+   digest_header_rewrite { 
+          $digest_header_rewrite_rules
+          $use_digest_header_rewrite
+   }
+
+   digest_member { 
+          $digest_member_maps
+          $primary_digest_member_map
+   }
+
+   digest_recipient { 
+          $digest_recipient_maps
+          $primary_digest_recipient_map
+   }
+}
+
+directory {
+
+   directory_* {
+    ?     $directory_private_mode
+    ?     $directory_public_mode
+   }
+}
+
+distribute {
+
+   distribute { 
+          $use_distribute_program
+   }
+}
+
+domain {
+
+   domain_* {
+          $domain_config_base_dir
+          $domain_exim_config_dir
+          $domain_mail_config_dir
+          $domain_postfix_config_dir
+          $domain_procmail_config_dir
+          $domain_qmail_config_dir
+          $domain_sendmail_config_dir
+   }
+}
+
+error {
+
+   error_analyzer { 
+          $error_analyzer_cache_dir
+    ?     $error_analyzer_cache_mode
+    ?     $error_analyzer_cache_size
+          $error_analyzer_cache_type
+    ?     $error_analyzer_function
+    ?     $error_analyzer_function_list
+    ?     $error_analyzer_simple_count_limit
+          $use_error_analyzer_program
+   }
+}
+
+has {
+
+   has_* {
+          $has_alarm
+          $has_fork
+          $has_getpwgid
+          $has_getpwuid
+          $has_select
+   }
+}
+
+header {
+
+   header_loop_check { 
+          $header_loop_check_rules
+          $use_header_loop_check
+   }
+}
+
+html {
+
+   html_archive { 
+          $html_archive_dir
+          $html_archive_index_order_type
+          $use_html_archive
+   }
+}
+
+incoming {
+
+   incoming_article { 
+          $incoming_article_body_size_limit
+          $incoming_article_header_size_limit
+   }
+
+   incoming_command_mail { 
+          $incoming_command_mail_body_size_limit
+          $incoming_command_mail_header_size_limit
+   }
+
+   incoming_mail_cache { 
+          $incoming_mail_cache_dir
+    ?     $incoming_mail_cache_size
+          $use_incoming_mail_cache
+   }
+}
+
+ldap {
+
+   ldap_* {
+    ?     $ldap_query_filter
+    ?     $ldap_search_base
+    ?     $ldap_server_bind
+    ?     $ldap_server_password
+    ?     $ldap_servers
+   }
+}
+
+lock {
+
+   lock { 
+          $lock_dir
+          $lock_file
+          $lock_type
+          $use_lock
+   }
+}
+
+log {
+
+   log { 
+          $log_dir
+          $log_file
+          $log_format_type
+          $log_type
+          $use_log
+   }
+}
+
+mail {
+
+   mail_* {
+          $mail_aliases_file
+          $mail_queue_dir
+   }
+}
+
+maintainer {
+
+   maintainer_recipient { 
+          $maintainer_recipient_maps
+   }
+
+   maintainer_* {
+    ?     $maintainer
+   }
+}
+
+member {
+
+   member { 
+          $member_maps
+          $primary_member_map
+   }
+}
+
+moderator {
+
+   moderator_member { 
+          $moderator_member_maps
+          $primary_moderator_member_map
+   }
+
+   moderator_recipient { 
+          $moderator_recipient_maps
+          $primary_moderator_recipient_map
+   }
+}
+
+newml {
+
+   newml_command { 
+          $newml_command_init_private_dirs
+          $newml_command_init_public_dirs
+    ?     $newml_command_mta_config_list
+          $newml_command_postfix_template_files
+          $newml_command_qmail_template_files
+          $newml_command_template_files
+   }
+}
+
+outgoing {
+
+   outgoing_article { 
+          $outgoing_article_body_size_limit
+          $outgoing_article_header_size_limit
+   }
+
+   outgoing_command_mail { 
+          $outgoing_command_mail_body_size_limit
+          $outgoing_command_mail_header_size_limit
+   }
+
+   outgoing_mail_cache { 
+          $outgoing_mail_cache_dir
+    ?     $outgoing_mail_cache_size
+          $use_outgoing_mail_cache
+   }
+}
+
+path {
+
+   path_* {
+          $path_bunzip2
+          $path_bzip2
+          $path_cksum
+          $path_compress
+          $path_gpg
+          $path_gunzip
+          $path_gzcat
+          $path_gzip
+          $path_ish
+          $path_kakasi
+          $path_less
+          $path_lha
+          $path_ls
+          $path_makemap
+          $path_md5
+          $path_more
+          $path_namazu
+          $path_newaliases
+          $path_nkf
+          $path_perl
+          $path_pgp
+          $path_pgp5
+          $path_pgpe
+          $path_pgpk
+          $path_pgps
+          $path_pgpv
+          $path_postalias
+          $path_postconf
+          $path_postfix
+          $path_postmap
+          $path_sendmail
+          $path_spamassassin
+          $path_spamc
+          $path_spamd
+          $path_sum
+          $path_tar
+          $path_uuencode
+          $path_w3m
+          $path_zcat
+   }
+}
+
+post {
+
+   post_restrictions { 
+          $post_restrictions
+          $post_restrictions_reject_notice_data_type
+   }
+}
+
+postfix {
+
+   postfix_* {
+    ?     $postfix_verp_delimiters
+          $postfix_virtual_map_file
+   }
+}
+
+privileged {
+
+   privileged_command { 
+    ?     $privileged_command_prefix
+   }
+}
+
+procmail {
+
+   procmail_* {
+          $procmail_aliases_file
+   }
+}
+
+qmail {
+
+   qmail_* {
+    ?     $qmail_verp_delimiters
+          $qmail_virtual_map_file
+          $qmail_virtualdomains_file
+   }
+}
+
+recipient {
+
+   recipient { 
+          $primary_recipient_map
+          $recipient_maps
+    ?     $smtp_recipient_limit
+   }
+}
+
+rmml {
+
+   rmml_command { 
+    ?     $rmml_command_mta_config_list
+   }
+}
+
+sendmail {
+
+   sendmail_* {
+          $sendmail_virtual_map_file
+   }
+}
+
+smtp {
+
+   smtp_* {
+    ?     $smtp_sender
+    ?     $smtp_servers
+   }
+}
+
+spool {
+
+   spool { 
+          $spool_dir
+    ?     $spool_subdir_unit
+          $spool_type
+          $use_spool
+   }
+}
+
+sql {
+
+   sql_* {
+    ?     $sql_add
+    ?     $sql_database
+    ?     $sql_delete
+    ?     $sql_find
+    ?     $sql_get_next_key
+    ?     $sql_getline
+    ?     $sql_password
+    ?     $sql_server
+    ?     $sql_table
+    ?     $sql_user
+   }
+}
+
+subscribe {
+
+   subscribe_command { 
+          $subscribe_command_auth_type
+   }
+}
+
+system {
+
+   system_* {
+    ?     $system_accounts
+    ?     $system_message_charset
+    ?     $system_message_subject
+   }
+}
+
+thread {
+
+   thread_subject_tag { 
+    ?     $thread_subject_tag
+    ?     $thread_subject_tag_location
+    ?     $thread_subject_tag_name
+          $use_thread_subject_tag
+   }
+
+   thread_track { 
+          $use_thread_track
+   }
+
+   thread_* {
+    ?     $thread_cgi_base_url
+    ?     $thread_cgi_bgcolor
+    ?     $thread_cgi_title
+          $thread_db_dir
+    ?     $thread_id_syntax
+          $thread_sequence_file
+   }
+}
+
+unsubscribe {
+
+   unsubscribe_command { 
+          $unsubscribe_command_auth_type
+   }
+}
+
+
+_file$ {
+          $guide_file
+          $help_file
+          $objective_file
+          $sequence_file
+          $summary_file
+}
+
+_dir$ {
+          $db_dir
+          $event_queue_dir
+          $listinfo_base_dir
+          $listinfo_dir
+          $listinfo_template_dir
+          $message_id_cache_dir
+          $message_template_dir
+          $ml_admin_cgi_base_dir
+          $ml_local_dir
+          $ml_local_lib_dir
+          $ml_local_message_template_dir
+          $ml_local_share_dir
+          $shared_db_dir
+          $tmp_dir
+          $var_dir
+}
+
+
+*** unclassified ***
+    ?     $list_addresses
+    ?     $reply_message_charset
+    ?     $reply_message_subject
+    ?     $summary_format_address_length
+    ?     $summary_format_style
+    ?     $template_file_charset
+    ?     $unsafe_header_fields
+    ?     $x_ml_name
+</screen>
+</para>

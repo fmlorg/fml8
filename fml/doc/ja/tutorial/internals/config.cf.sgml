@@ -1,5 +1,5 @@
 <!--
-   $FML: config.cf.sgml,v 1.8 2002/07/06 14:55:18 fukachan Exp $
+   $FML: config.cf.sgml,v 1.9 2003/04/15 14:51:40 fukachan Exp $
 -->
 
 <chapter>
@@ -245,5 +245,16 @@ get() はこのハッシュではなく %_fml_config_result の値を返しています。
 &table.list.variables;
 
 </sect1>
+
+
+<sect1 id="list.variables.by.class">
+	<title>
+	変数一覧 (クラス分類)
+	</title>
+
+&table.class.variables;
+
+</sect1>
+
 
 </chapter>
