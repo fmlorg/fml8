@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Debug.pm,v 1.3 2003/03/28 11:01:54 fukachan Exp $
+# $FML: Debug.pm,v 1.4 2003/08/23 04:35:38 fukachan Exp $
 #
 
 package FML::Process::Debug;
@@ -14,7 +14,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Process::Debug - what is this
+FML::Process::Debug - debug tool
 
 =head1 SYNOPSIS
 
@@ -44,6 +44,104 @@ sub new
     my $me     = {};
     return bless $me, $type;
 }
+
+
+=head1 TOOLS for debug
+
+simplified version of FML::Process::* only used for debug.
+
+=head2 mkdir
+
+=head2 log
+
+=head2 logwarn
+
+=head2 logerror
+
+=cut
+
+
+# Descriptions: create directory $dir if needed
+#    Arguments: OBJ($self) STR($dir) STR($mode)
+# Side Effects: create directory $dir
+# Return Value: NUM(1 or 0)
+sub mkdir
+{
+    my ($self, $dir, $mode) = @_;
+
+    print STDERR "mkdir($dir, 0755);\n";
+    mkdir($dir, 0755);
+}
+
+
+# Descriptions: log message
+#    Arguments: OBJ($self) STR($msg) HASH_REF($msg_args)
+# Side Effects: none
+# Return Value: none
+sub log
+{
+    my ($self, $msg, $msg_args) = @_;
+    print STDERR "log: $msg\n";
+}
+
+
+# Descriptions: log message
+#    Arguments: OBJ($self) STR($msg) HASH_REF($msg_args)
+# Side Effects: none
+# Return Value: none
+sub logwarn
+{
+    my ($self, $msg, $msg_args) = @_;
+    print STDERR "warn: $msg\n";
+}
+
+
+# Descriptions: log message
+#    Arguments: OBJ($self) STR($msg) HASH_REF($msg_args)
+# Side Effects: none
+# Return Value: none
+sub logerror
+{
+    my ($self, $msg, $msg_args) = @_;
+    print STDERR "error: $msg\n";
+}
+
+
+=head2 ml_home_prefix($domain)
+
+search ml_home_prefi in /etc/fml/ml_home_prefix
+and return the prefix.
+
+=cut
+
+
+# Descriptions: $curproc->ml_home_prefix() emulator.
+#    Arguments: OBJ($self) STR($domain)
+# Side Effects: none
+# Return Value: STR
+sub ml_home_prefix
+{
+    my ($self, $domain) = @_;
+
+    use IO::Adapter;
+    my $obj = new IO::Adapter "/etc/fml/ml_home_prefix";
+    my $ent = $obj->find($domain, { want => 'key,value', all => 1 });
+
+    # debug
+    for my $buf (@$ent) {
+	my ($x_domain, $x_prefix) = split(/\s+/, $buf);
+	return $x_prefix if $x_domain eq $domain;
+    }
+
+    return '';
+}
+
+
+=head2 dump_curproc($curproc)
+
+dump the curproc structure.
+
+=cut
 
 
 # Descriptions: dump the curproc structure.
