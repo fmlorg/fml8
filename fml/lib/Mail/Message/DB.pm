@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.10 2003/10/14 10:06:08 fukachan Exp $
+# $FML: DB.pm,v 1.11 2003/10/15 01:03:39 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -26,7 +26,7 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.10 2003/10/14 10:06:08 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.11 2003/10/15 01:03:39 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -406,7 +406,7 @@ sub _analyze_thread
     # II. ok. go to speculate prev/next links
     #   1. If In-Reply-To: is found, use it as "pointer to previous id"
     my $idp = 0;
-    if (defined $in_reply_to) {
+    if (defined $in_reply_to and $in_reply_to ne '') {
 	# XXX idp (id pointer) = id1 by _head_of_list_str( (id1 id2 id3 ...)
 	$idp = $self->_db_get($db, 'inv_message_id', $in_reply_to);
     }
@@ -995,7 +995,7 @@ sub get_as_array_ref
 
     _PRINT_DEBUG("get_as_array_ref($table, $key)");
 
-    my $db  = $self->db_open( { table => $table } );
+    my $db  = $self->db_open();
     my $val = $self->_db_get($db, $table, $key);
     $val =~ s/^\s*//;
     $val =~ s/\s*$//;
@@ -1179,7 +1179,7 @@ sub get_key
 sub get_table_as_hash_ref
 {
     my ($self, $table) = @_;
-    my $db = $self->db_open( { table => $table } );
+    my $db = $self->db_open();
 
     return( $db->{ "_$table" } || {} );
 }
