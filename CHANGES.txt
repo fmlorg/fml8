@@ -1,6 +1,27 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/04/09
+
+   FML::Header 
+	add rewrite_received() for replace Received::to X-Received:
+
+2003/04/07
+
+   Mail::Bounce::SimpleMatch 
+	add analize ybb.ne.jp and Webshield
+
+2003/04/04
+
+   フィルタが弾いた時のメッセージの返り先が微妙に間違ってるのを修正
+   FML::Process::Kernel 
+	reply_message_add_header_info() should pass $msg_args to
+	reply_message().
+
+2003/03/28
+
+   rename method: article_id_max() -> article_max_id()
+
 2003/03/24
 
    img/ is updated to im-144.
@@ -4610,4 +4631,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.137 2003/03/18 14:21:37 fukachan Exp $
+$FML: CHANGES.txt,v 1.138 2003/03/23 15:20:04 fukachan Exp $
