@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Postfix19991231.pm,v 1.3 2001/04/12 11:45:28 fukachan Exp $
+# $FML: Postfix19991231.pm,v 1.4 2001/04/12 14:07:40 fukachan Exp $
 #
 
 
@@ -37,15 +37,30 @@ Mail::Bounce::Postfix19991231 - Postfix-19991231 error message format parser
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 C<analyze($msg, $result)>
 
 =cut
+
 
 sub analyze
 {
     my ($self, $msg, $result) = @_;
-    my $state   = 0;
-    my $pattern = '--- Delivery error report follows ---';
+    my $data_type = $msg->message_data_type;
+
+    if ($data_type =~ /multipart/i) {
+	$self->_analyze_broken_dsn($msg, $result);
+    }
+    else {
+	$self->_analyze_plaintext($msg, $result);
+    }
+}
+
+
+sub _analyze_plaintext
+{
+    my ($self, $msg, $result) = @_;
+    my $state       = 0;
+    my $pattern     = '--- Delivery error report follows ---';
     my $end_pattern = '--- Undelivered message follows ---';
 
     # search data
@@ -57,16 +72,16 @@ sub analyze
 	    for ( my $i = 0; $i < $num ; $i++ ) {
 		my $data = $m->nth_paragraph( $i + 1 );
 
+		# debug
+		print STDERR "paragraph($i){$data}\n" if $ENV{'debug'};
+
 		if ($data =~ /$pattern/)     { $state = 1;}
 		if ($data =~ /$end_pattern/) { $state = 0;}
 
 		if ($state == 1) {
 		    $data =~ s/\n/ /g;
 		    if ($data =~ /\<(\S+\@\S+\w+)\>:\s*(.*)/) {
-			($addr, $reason) = ($1, $2);
-			$addr = $self->address_clean_up($self, $addr);
-			$result->{ $addr }->{ 'Diagnostic-Code' } = $reason;
-			$result->{ $addr }->{ 'Status' }          = '5.x.y';
+			$self->_parse_address($data, $result);
 		    }
 		} 
 	    }
@@ -77,6 +92,44 @@ sub analyze
 
     $result;
 }
+
+
+sub _analyze_broken_dsn
+{
+    my ($self, $msg, $result) = @_;
+    my $m = $msg->find( { data_type => 'text/plain' } );
+
+    if (defined $m) {
+	my $num  = $m->num_paragraph;
+	for ( my $i = 0; $i < $num ; $i++ ) {
+	    my $data = $m->nth_paragraph( $i + 1 );
+
+	    # debug
+	    print STDERR "paragraph($i){$data}\n" if $ENV{'debug'};
+
+	    if ($data =~ /\<(\S+\@\S+\w+)\>:\s*(.*)/) {
+		$self->_parse_address($data, $result);
+	    }
+	}
+    }
+    else {
+	undef;
+    }
+}
+
+
+sub _parse_address
+{
+    my ($self, $data, $result) = @_;
+
+    if ($data =~ /\<(\S+\@\S+\w+)\>:\s*(.*)/) {
+	my ($addr, $reason) = ($1, $2);
+	$addr = $self->address_clean_up($self, $addr);
+	$result->{ $addr }->{ 'Diagnostic-Code' } = $reason;
+	$result->{ $addr }->{ 'Status' }          = '5.x.y';
+    }
+}
+
 
 =head1 AUTHOR
 
