@@ -1,5 +1,5 @@
 <!--
-	$FML: commands.sgml,v 1.5 2001/08/26 05:55:51 fukachan Exp $
+	$FML: commands.sgml,v 1.6 2001/08/26 13:12:07 fukachan Exp $
 -->
 
 <chapter id="fml.command.op">
@@ -27,13 +27,13 @@ CGI でのコマンド処理
 
 <para>
 FML::Command:: クラスの再構成
-<sceen>
+<screen>
 FML::Command.pm		FML::Command クラス以下への入口
 FML::Command::ACL	ACL
 FML::Command::Utils	よもやまの定義
 FML::Command::User	ユーザ用コマンド群
 FML::Command::Admin	ユーザ用コマンド群
-</sceen>
+</screen>
 </para>
 
 <para>
