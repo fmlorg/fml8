@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.8 2002/04/06 02:42:39 fukachan Exp $
+# $FML: Base.pm,v 1.9 2002/04/07 05:35:09 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -86,6 +86,7 @@ my %basic_variable =
      'domain'            => $domain_regexp,
      'user'              => $user_regexp,
      'ml_name'           => $user_regexp,
+     'ml_name_specified' => $user_regexp,
 
      # fml specific parameters
      'action'            => '[-A-Za-z_]+',
