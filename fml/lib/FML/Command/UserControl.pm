@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.28 2003/03/17 13:27:15 fukachan Exp $
+# $FML: UserControl.pm,v 1.29 2003/03/18 10:42:41 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -277,8 +277,32 @@ sub _try_chaddr_in_map
     # 3. both conditions are o.k., here we go!
     # XXX-TODO: this condition is correct ?
     # XXX-TODO: we should remove old one when both old and new ones exist.
+    # XXX WHICH STEP IS IT BETTER TO UPDATE LIST ?
+    #  [I] 1. remove the old address only if $new_address not included.
+    #      2. add the newadderss 
+    # [II] 1. add the newadderss 
+    #      2. remove the old address only if $new_address not included.
+    # 
+    # Plan [II] is better for authentication without reader lock.
+    # Consider the case the process executing chaddr is preempted, and
+    # another distributing process starts to run.
+    # 
     if ($is_old_address_ok && $is_new_address_ok) {
-	# remove the old address only if $new_address not included.
+	{
+	    my $obj = new IO::Adapter $map, $config;
+	    $obj->open();
+	    $obj->add( $new_address );
+	    unless ($obj->error()) {
+		Log("add $new_address to map=$map");
+	    }
+	    else {
+		LogError("fail to add $new_address to map=$map");
+	    }
+	    $obj->close();
+	}
+
+	# restart map to add the new address.
+	# XXX we need to restart or rewrind map.
 	{
 	    my $obj = new IO::Adapter $map, $config;
 	    $obj->touch();
@@ -292,21 +316,6 @@ sub _try_chaddr_in_map
 		LogError("fail to delete $old_address to map=$map");
 	    }
 	    $obj->close();	
-	}
-
-	# restart map to add the new address.
-	# XXX we need to restart or rewrind map.
-	{
-	    my $obj = new IO::Adapter $map, $config;
-	    $obj->open();
-	    $obj->add( $new_address );
-	    unless ($obj->error()) {
-		Log("add $new_address to map=$map");
-	    }
-	    else {
-		LogError("fail to add $new_address to map=$map");
-	    }
-	    $obj->close();
 	}
     }
 }
