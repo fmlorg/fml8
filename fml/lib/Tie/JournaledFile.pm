@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledFile.pm,v 1.23 2002/09/22 14:57:08 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.24 2002/12/22 03:37:15 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -226,7 +226,7 @@ sub get_all_values_as_hash_ref
     use IO::File;
     my $fh = new IO::File;
 
-    if (-f $file) {
+    if (-f $file && defined $fh) {
 	$fh->open($file, "r");
 
 	if (defined $fh) {
