@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.72 2004/01/02 02:11:29 fukachan Exp $
+# $FML: Kernel.pm,v 1.73 2004/01/02 02:34:53 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -764,6 +764,8 @@ sub cgi_hidden_info_language
 		  -default => [ $lang ]);
 }
 
+
+# XXX-TODO: cgi_try_get_address() -> cgi_var_address() ?
 
 =head2 cgi_try_get_address()
 
