@@ -154,7 +154,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::__MODULE_NAME__.pm appeared in fml5.
+FML::Header::Subject appeared in fml5.
 
 =cut
 

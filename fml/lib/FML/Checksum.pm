@@ -119,7 +119,7 @@ sub _md5_by_program
 
 =head1 NAME
 
-FML::__HERE_IS_YOUR_MODULE_NAME__.pm - what is this
+FML::Checksum - what is this
 
 =head1 SYNOPSIS
 
@@ -146,7 +146,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::__HERE_IS_YOUR_MODULE_NAME__.pm appeared in fml5.
+FML::Checksum appeared in fml5.
 
 =cut
 

@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::__HERE_IS_YOUR_MODULE_NAME__.pm - what is this
+FML::Process::Flow - what is this
 
 =head1 SYNOPSIS
 
@@ -42,7 +42,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::__HERE_IS_YOUR_MODULE_NAME__.pm appeared in fml5.
+FML::Process::Flow appeared in fml5.
 
 =cut
 
