@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.37 2002/04/15 10:31:17 fukachan Exp $
+# $FML: Article.pm,v 1.38 2002/04/18 22:24:53 fukachan Exp $
 #
 
 package FML::Article;
@@ -169,15 +169,21 @@ sub spool_in
 	# translate the article path e.g. spool/1900,  spool/2/1900
 	my $file = $self->filepath($id);
 
-	use FileHandle;
-	my $fh = new FileHandle;
-	$fh->open($file, "w");
-	if (defined $fh) {
-	    $curproc->{ article }->{ header }->print($fh);
-	    print $fh "\n";
-	    $curproc->{ article }->{ body }->print($fh);
-	    $fh->close;
-	    Log("Article $id");
+	unless (-f $file) {
+
+	    use FileHandle;
+	    my $fh = new FileHandle;
+	    $fh->open($file, "w");
+	    if (defined $fh) {
+		$curproc->{ article }->{ header }->print($fh);
+		print $fh "\n";
+		$curproc->{ article }->{ body }->print($fh);
+		$fh->close;
+		Log("Article $id");
+	    }
+	}
+	else {
+	    LogError("$id article already exists");
 	}
     }
     else {
