@@ -69,7 +69,9 @@ sub ProcessStart
     # e.g. parse the incoming message (e.g. STDIN)
     $process->prepare($args);
 
-    # validate the request e.g. permit post from the sender ...
+    # validate the request, for example,
+    #    permit post from the sender,
+    #    check the mail loop or not ...
     $process->verify_request($args);
 
     # start main transaction

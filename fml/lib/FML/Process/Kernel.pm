@@ -197,6 +197,24 @@ sub sender_is_member
 }
 
 
+sub simple_loop_check
+{
+    my ($curproc, $args) = @_;
+    my $config = $curproc->{ config };
+    my $r_msg  = $curproc->{ incoming_message };
+    my $header = $r_msg->{ header };
+
+    for my $rule (split(/\s+/, $config->{ header_check_rules })) {
+	if ($header->can($rule)) {
+	    $header->$rule($config, $args);
+	}
+	else {
+	    Log("header->${rule}() is undefined");
+	}
+    }
+}
+
+
 # fml5::init_main() routine
 sub load_config_files
 {

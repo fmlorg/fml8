@@ -35,7 +35,7 @@ use Mail::Header;
 use FML::Log qw(Log);
 
 require Exporter;
-@ISA = qw(Exporter Mail::Header);
+@ISA = qw(Mail::Header Exporter);
 
 
 sub new
@@ -151,10 +151,13 @@ sub rewrite_subject_tag
     my ($header, $config, $args) = @_;
 
     my $pkg = "FML::Header::Subject";
-    eval qq{ require $pkg}; $pkg->import();
-
-    # subject tag 
-    $pkg->rewrite_subject_tag($header, $config, $args);
+    eval qq{ require $pkg; $pkg->import();};
+    unless ($@) {
+	$pkg->rewrite_subject_tag($header, $config, $args);
+    }
+    else {
+	Log("Error: cannot load $pkg");
+    }
 }
 
 

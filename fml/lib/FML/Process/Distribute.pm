@@ -58,6 +58,7 @@ sub verify_request
 {
     my ($curproc, $args) = @_;
     $curproc->verify_sender_credential();
+    $curproc->simple_loop_check();
 }
 
 

@@ -4,10 +4,9 @@ use_header_rewrite		=	yes
 
 use_header_check		=	yes
 
-
-header_check_rules		=	validate_message_id
-					verify_unique_x_ml_info
-					verify_unique_list_post
+header_check_rules		=	verify_message_id_uniqueness
+					verify_x_ml_info_uniqueness
+					verify_list_post_uniqueness
 
 # もちろん”記事”に対してのものだ（自明？）
 # article_header_rewrite_rules とかの方がよいか？
