@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Addr.pm,v 1.4 2003/01/03 10:15:40 fukachan Exp $
+# $FML: Addr.pm,v 1.5 2003/01/07 08:38:34 fukachan Exp $
 #
 
 package FML::Process::Addr;
@@ -233,9 +233,9 @@ sub _fmladdr
 	use FileHandle;
 	my $fh = new FileHandle "/etc/passwd";
 	if (defined $fh) {
-	    my ($user);
-	    while (<$fh>) {
-		($user) = split(/:/, $_);
+	    my ($user, $buf);
+	    while ($buf = <$fh>) {
+		($user) = split(/:/, $buf);
 
 		# which definition survives ? alias > user ?
 		unless (defined $aliases->{ $user }) {
