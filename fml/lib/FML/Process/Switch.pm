@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.59 2002/04/01 14:42:57 fukachan Exp $
+# $FML: Switch.pm,v 1.60 2002/04/01 23:41:13 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -149,7 +149,8 @@ sub main::Bootstrap2
 
     # 5. o.k. here we go!
     use FML::Process::Utils;
-    my $ml_home_prefix = FML::Process::Utils::__ml_home_prefix_from_main_cf($main_cf);
+    my $ml_home_prefix =
+      FML::Process::Utils::__ml_home_prefix_from_main_cf($main_cf);
     my $args = {
 	fml_version    => $main_cf->{ fml_version },
 
@@ -218,7 +219,8 @@ sub _usual_parse_argv
 {
     my ($myname, $main_cf) = @_;
     use FML::Process::Utils;
-    my $ml_home_prefix = FML::Process::Utils::__ml_home_prefix_from_main_cf($main_cf);
+    my $ml_home_prefix = 
+      FML::Process::Utils::__ml_home_prefix_from_main_cf($main_cf);
     my $ml_home_dir    = '';
     my $found_cf       = 0;
     my @cf             = ();

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.11 2002/01/30 15:42:26 fukachan Exp $
+# $FML: Queue.pm,v 1.12 2002/01/30 15:50:31 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -92,8 +92,10 @@ sub new
     $me->{ _active_qf } = File::Spec->catfile($dir, "active", $id);
 
     # infomation for delivery
-    $me->{ _info }->{ sender }     = File::Spec->catfile($dir, "info", "sender", $id);
-    $me->{ _info }->{ recipients } = File::Spec->catfile($dir, "info", "recipients", $id);
+    $me->{ _info }->{ sender }     = 
+      File::Spec->catfile($dir, "info", "sender", $id);
+    $me->{ _info }->{ recipients } = 
+      File::Spec->catfile($dir, "info", "recipients", $id);
 
     for ($dir,
 	 File::Spec->catfile($dir, "active"),

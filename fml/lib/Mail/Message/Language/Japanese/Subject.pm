@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.4 2001/12/22 09:21:20 fukachan Exp $
+# $FML: Subject.pm,v 1.5 2001/12/24 12:52:47 fukachan Exp $
 #
 
 
@@ -21,12 +21,12 @@ use Jcode;
 
 =head1 NAME
 
-Mail::Message::Language::Japanese::Subject - Japanese specific handling of a subject
+Mail::Message::Language::Japanese::Subject - functions for Japanese subject
 
 =head1 SYNOPSIS
 
-    use Mail::Message::Language::Japanese::Subject;
-    $is_reply = Mail::Message::Language::Japanese::Subject::is_reply($subject);
+ use Mail::Message::Language::Japanese::Subject;
+ $is_reply = Mail::Message::Language::Japanese::Subject::is_reply($subject);
 
 =head1 DESCRIPTION
 
@@ -146,7 +146,8 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Mail::Message::Language::Japanese::Subject appeared in fml5 mailing list driver package.
+Mail::Message::Language::Japanese::Subject 
+appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
