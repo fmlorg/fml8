@@ -1,8 +1,6 @@
 hier.ja.html
 
 
-doc/architecture.gif
-doc/architecture.html
 doc/components.ja.html
 doc/dirhier.ja.html
 doc/index.ja.html
@@ -23,9 +21,6 @@ etc/defaults/spool.cf.ja
 etc/defaults/system_dependence.cf.ja
 etc/defaults/tickets.cf.ja
 etc/defaults/cgi.cf.ja
-
-
-etc/config.cf
 
 
 Dialect/Japanese/String.pm
@@ -106,7 +101,3 @@ MailingList/Utils.pm
 
 ErrorMessages/00_PARSE.ja.txt
 ErrorMessages/00_README.ja.txt
-
-
-libexec/Standalone.pm
-libexec/loader

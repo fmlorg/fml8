@@ -27,7 +27,7 @@ FML::Ticket::Model::toymodel - a toymodel of ticket systems
 
 =head1 DESCRIPTION
 
-=head1 CLASS HIERARCHY
+=head2 CLASS HIERARCHY
 
         FML::Ticket::System
                 |

@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $Id: loader,v 1.11 2001/02/17 07:39:38 fukachan Exp $ 
+# $Id: loader,v 1.12 2001/02/17 14:39:16 fukachan Exp $ 
 # $FML$
 #
 
@@ -112,3 +112,25 @@ C<--params>
     --params 'key1=value1 key2=value2 ...'
 
 =cut
+
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1 HISTORY
+
+libexec/loader appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
+=cut
+
+
+1;

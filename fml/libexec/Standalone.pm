@@ -14,6 +14,46 @@ package Standalone;
 use strict;
 use Carp;
 
+=head1 NAME
+
+Standalone - minimal parser for libexec/* programs
+
+=head1 SYNOPSIS
+
+   use Standalone;
+   my $main_cf = Standalone::load_cf($main_cf_file, $params);
+
+where $param is optional and the format of it is
+
+  $params = "key1=value1 key2=value2";
+
+=head1 DESCRIPTION
+
+C<load_cf()> reads the C<key = value> style configuration file and
+return the hash. The file format is like this:
+
+   key1 = value1
+
+   key2 = value2
+          value3
+
+key2 is equivalent to 
+
+   key2 = value2 value3
+
+A set of space separeted elements is an array of values.
+
+
+=head1 METHODS
+
+=head2 C<load_cf()>
+
+load "key = value" style configuration file and build a hash.
+return the reference to the hash.
+
+=cut
+
+
 # Descriptions: load "key = value" style configuration.
 #               It is available to use the following style.
 #                    key = value1 value2
@@ -119,6 +159,27 @@ sub _parse_params
 
     \%config;
 }
+
+
+
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1 HISTORY
+
+Standalone appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
+=cut
 
 
 1;

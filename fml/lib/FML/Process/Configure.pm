@@ -17,10 +17,26 @@ use FML::Process::Kernel;
 use FML::Log qw(Log);
 use FML::Config;
 
+
+=head1 NAME
+
+FML::Process::Configure -- fmlconf and makefml
+
+=head1 SYNOPSIS
+
+=head1 DESCRIPTION
+
+=cut
+
+
 require Exporter;
 @ISA = qw(FML::Process::Kernel Exporter);
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub new
 {
     my ($self, $args) = @_;
@@ -30,13 +46,17 @@ sub new
 }
 
 
-# dummy
-sub prepare
-{
-    ;
-}
+# Descriptions: dummy yet now
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub prepare {    ; }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub run
 {
     my ($curproc, $args) = @_;
@@ -64,6 +84,10 @@ sub run
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub _show_conf
 {
     my ($curproc, $args) = @_;    
@@ -82,14 +106,23 @@ sub AUTOLOAD
 }
 
 
-=head1 NAME
+=head1 AUTHOR
 
-Configure -- fmlconf and makefml
+Ken'ichi Fukamachi
 
-=head1 SYNOPSIS
+=head1 COPYRIGHT
 
-=head1 DESCRIPTION
+Copyright (C) 2001 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1 HISTORY
+
+FML::Process::Configure appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
 
 =cut
+
 
 1;
