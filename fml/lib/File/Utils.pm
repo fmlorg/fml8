@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.7 2001/08/26 08:39:51 fukachan Exp $
+# $FML: Utils.pm,v 1.8 2001/12/22 09:21:12 fukachan Exp $
 #
 
 package File::Utils;
@@ -38,22 +38,32 @@ C<copy>.
 
 =head1 METHODS
 
+=head2 error()
+
+return error message.
+
+=head2 error_clear()
+
+clear error message.
+
 =cut
+
 
 # Descriptions: return the error
 #    Arguments: none
 # Side Effects: none
-# Return Value: error message
+# Return Value: STR(error message)
 sub error       { return $ErrorString;}
+
 
 # Descriptions: remove the error message buffer
 #    Arguments: none
 # Side Effects: undef $ErrorString buffer
-# Return Value: none
+# Return Value: UNDEF
 sub error_clear { undef $ErrorString;}
 
 
-=head2 C<mkdiehier($dir, $mode)>
+=head2 mkdiehier($dir, $mode)
 
 make a directory C<$dir> by the mode C<$mode> recursively.
 
@@ -61,9 +71,9 @@ make a directory C<$dir> by the mode C<$mode> recursively.
 
 
 # Descriptions: "mkdir -p" or "mkdirhier"
-#    Arguments: directory [file_mode]
+#    Arguments: STR($cdir) STR($mode)
 # Side Effects: set $ErrorString
-# Return Value: succeeded to create directory or not
+# Return Value: 1 or UNDEF
 sub mkdirhier
 {
     my ($dir, $mode) = @_;
@@ -80,16 +90,17 @@ sub mkdirhier
 }
 
 
-=head2 C<touch($file, $mode)>
+=head2 touch($file, $mode)
 
 create a file (which size is 0) if the file not exists.
 
 =cut
 
+
 # Descriptions: touch: create file if file not exists
-#    Arguments: file file_mode
+#    Arguments: STR($file) STR($mode)
 # Side Effects: none
-# Return Value: 1 if succeed, 0 if not
+# Return Value: 1 or 0 (1 if succeed, 0 if not)
 sub touch
 {
     my ($file, $mode) = @_;
@@ -133,14 +144,15 @@ The default search path list is
 
 =cut
 
-# Descriptions: file $file executable
-#    Arguments: file [path_list]
+
+# Descriptions: search executable named as $file
+#    Arguments: STR($file) HASH_ARRAY($path_list)
 #               The "path_list" is an ARRAY_REFERENCE.
 #               For example,
 #               search_program('md5');
 #               search_program('md5', [ '/bin', '/sbin' ]);
 # Side Effects: none
-# Return Value: pathname if found, undef if not
+# Return Value: STR
 sub search_program
 {
     my ($file, $path_list) = @_;
@@ -169,14 +181,18 @@ sub search_program
 }
 
 
-=head2 C<copy($src, $dst)>
+=head2 copy($src, $dst)
 
 copy C<$src> to C<$dst> in atomic way.
 This routine uses C<IO::File::Atomic> module.
 
 =cut
 
-# wrappers for delegation :-)
+
+# Descriptions: copy in atomic way. 
+#    Arguments: STR($src) STR($dst)
+# Side Effects: $dst is created/updated.
+# Return Value: NUM
 sub copy
 {
     my ($src, $dst) = @_;
