@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent.pm,v 1.7 2004/01/01 23:52:14 fukachan Exp $
+# $FML: MimeComponent.pm,v 1.8 2004/01/02 14:50:31 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -97,9 +97,14 @@ C<Usage>:
 =cut
 
 
+# XXX-TODO: $default_action customizable ?
 my $default_action = 'permit';
 
+# XXX-TODO: $opt_cut_off_empty_part customizable ?
 my $opt_cut_off_empty_part = 1;
+
+# XXX-TODO: $recursive_max_level customizable ?
+my $recursive_max_level    = 10;
 
 
 # Descriptions: parser of child multipart
@@ -109,8 +114,7 @@ my $opt_cut_off_empty_part = 1;
 sub _rfc822_mime_component_check
 {
     my ($self, $msg) = @_;
-    my $recursive_max_level = 10;
-    my $curproc = $self->{ _curproc };
+    my $curproc      = $self->{ _curproc };
 
     $recursive_level ||= 0;
     $recursive_level++;
@@ -173,13 +177,10 @@ sub _temp_file_path
 sub mime_component_check
 {
     my ($self, $msg) = @_;
-    my ($data_type, $prevmp, $nextmp, $mp, $action, $reject_reason);
-    my $curproc = $self->{ _curproc };
-    my $is_cutoff = 0; # debug
-    my $i = 1;
-    my $j = 1;
-    my $count  = $self->{ _count };
-    my $reason = $self->{ _reason };
+    my $curproc      = $self->{ _curproc };
+    my $count        = $self->{ _count };
+    my $reason       = $self->{ _reason };
+    my $is_cutoff    = 0; # debug
 
     # whole message type
     my $whole_data_type = $msg->whole_message_header_data_type();
@@ -189,14 +190,15 @@ sub mime_component_check
 
     $recursive_level ||= 0;
 
+    my ($data_type, $prevmp, $nextmp, $mp, $action, $reject_reason, $i, $j);
   MSG:
-    for ($mp = $msg, $i = 1; $mp; $mp = $mp->{ next }) {
+    for ($mp = $msg, $i = 1, $j = 1; $mp; $mp = $mp->{ next }) {
 	$data_type = $mp->data_type();
 
 	# ignore the header part of the whole RFC822 message.
 	#        and parts of Mail::Message internal use.
 	next MSG if ($data_type eq "text/rfc822-headers");
-	next MSG if ($data_type =~ "multipart\.");
+	next MSG if ($data_type =~ /multipart\./);
 
 	if ($recursive_level > 0) {
 	    __dprint("\n   msg($recursive_level/$i) $data_type");
@@ -309,8 +311,8 @@ sub mime_component_check
 sub _rule_match
 {
     my ($self, $msg, $rule, $mp, $whole_type) = @_;
-    my ($r_whole_type, $r_type, $r_action) = @$rule;
-    my $type                               = $mp->data_type() || '';
+    my ($r_whole_type, $r_type, $r_action)    = @$rule;
+    my $type                                  = $mp->data_type() || '';
 
     if (__regexp_match($whole_type, $r_whole_type)) {
 	if (__regexp_match($type, $r_type)) {
