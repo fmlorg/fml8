@@ -1,5 +1,5 @@
 <!--
-   $FML: extension.sgml,v 1.5 2002/09/28 12:45:52 fukachan Exp $
+   $FML: extension.sgml,v 1.6 2002/09/28 13:46:31 fukachan Exp $
 -->
 
 
@@ -130,7 +130,7 @@ commands_for_ 系の変数の設定変更は不要です。
 
 
 
-<sect1 id="fml.command.hack.makefml">
+<sect1 id="fml.command.hack.cgi">
 	<title>
 	コマンドの拡張: CGI
 	</title>
