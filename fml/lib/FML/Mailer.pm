@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.24 2004/01/02 10:23:55 fukachan Exp $
+# $FML: Mailer.pm,v 1.25 2004/01/02 14:50:28 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -28,7 +28,7 @@ FML::Mailer - utilities to send mails
     });
 
 where C<$message> is a C<Mail::Message> object to send.
-If you want to sent plural recipinets,
+If you want to sent to plural recipinets,
 specify the recipients as ARRAY REFERENCE at C<recipients> parameter.
 
     $obj->send( {
@@ -49,7 +49,7 @@ If you send a file, you can specify the filename as a data to send.
 
 =head1 DESCRIPTION
 
-It sends Mail::Message objects.
+This module sends Mail::Message object(s).
 
 =head1 METHODS
 
@@ -76,14 +76,14 @@ sub new
 =head2 send($send_args)
 
 send the given C<message>.
-$send_args can take the following arguments:
+$send_args (HASH_REF) can take the following arguments:
 
    ----------------------------------
-   sender             string
-   recipient          string
+   sender             STR
+   recipient          STR
    recipients         ARRAY_REF
-   message            Mail::Message object
-   file               string
+   message            Mail::Message OBJ
+   file               STR
 
 =cut
 
@@ -126,7 +126,7 @@ sub send
     }
 
     # 1. sender
-    my $sender = (defined $send_args->{sender} ? $send_args->{sender} : $maintainer);
+    my $sender = $send_args->{sender} || $maintainer || '';
     unless ($sender) {
 	$curproc->logerror("FML::Mailer: no sender");
 	return 0;
@@ -135,13 +135,30 @@ sub send
     # 2. recipient(s)
     my $recipients = [];
     if (defined $send_args->{ recipients }) {    # ARRAY_REF
-	$recipients = $send_args->{ recipients };
+	if (ref($send_args->{ recipients }) eq 'ARRAY') {
+	    $recipients = $send_args->{ recipients };
+	}
+	else {
+	    $curproc->logerror("FML::Mailer: invalid type: recipients");
+	    $recipients = [];
+	}
     }
     elsif (defined $send_args->{ recipient }) {  # STR
-	my $recipient = $send_args->{ recipient };
-	$recipients = [ $recipient ];
+	unless (ref($send_args->{ recipient })) {
+	    my $recipient = $send_args->{ recipient };
+	    $recipients = [ $recipient ];
+	}
+	else {
+	    $curproc->logerror("FML::Mailer: invalid type: recipient");
+	    $recipients = [];
+	}
     }
     else {
+	$curproc->logerror("FML::Mailer: no recipient(s)");
+	return 0;
+    }
+
+    unless (@$recipients) {
 	$curproc->logerror("FML::Mailer: no recipient(s)");
 	return 0;
     }
@@ -150,7 +167,7 @@ sub send
     my $message = undef;
 
     # 3.1 message object
-    if (defined($send_args->{ message })) {
+    if (defined($send_args->{ message }) && ref($send_args->{ message })) {
 	$message = $send_args->{ message };
     }
     else {
