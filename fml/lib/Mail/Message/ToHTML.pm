@@ -4,12 +4,12 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.69 2004/06/19 02:24:41 fukachan Exp $
+# $FML: ToHTML.pm,v 1.70 2004/06/30 15:05:13 tmu Exp $
 #
 
 package Mail::Message::ToHTML;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD $hints);
 use Carp;
 
 my $is_strict_warn = 0;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.69 2004/06/19 02:24:41 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.70 2004/06/30 15:05:13 tmu Exp $;
 my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $versionid = "$1";
@@ -110,6 +110,9 @@ sub new
     $me->{ _html_id_order }       = $args->{ index_order }  || 'normal';
     $me->{ _use_address_mask }    = $args->{ use_address_mask }  || 'yes';
     $me->{ _address_mask_type }   = $args->{ address_mask_type } || 'all';
+
+    # global hints
+    $hints                        = $args->{ hints } || {};
 
     use Mail::Message::Thread;
     my $t = new Mail::Message::Thread $args;
@@ -1894,7 +1897,8 @@ sub _sprintf_safe_str
 sub __sprintf_safe_str
 {
     my ($attr_pre, $wh, $str, $code) = @_;
-    my $rbuf = '';
+    my $regexp = $hints->{ subject_tag_regexp } || '';
+    my $rbuf   = '';
 
     # XXX-TODO: euc-jp is hard-coded.
     if (defined($str) && $str) {
@@ -1906,7 +1910,16 @@ sub __sprintf_safe_str
 	$str =~ s#(http://[^\s\<\>\'\"]+[\w\d/])#_separete_url($1)#ge;
 
 	use HTML::FromText;
-	return text2html($str, urls => 1, pre => $attr_pre);
+	# NOT CONVERT subject tag (see fml-devel:726).
+	if ($str =~ /^\s*($regexp)(.*)/) {
+	    my ($tag, $post) = ($1, $2);
+	    my $tag_s  = text2html($tag,  urls => 0, pre => $attr_pre);
+	    my $post_s = text2html($post, urls => 1, pre => $attr_pre);
+	    return sprintf("%s%s", $tag_s, $post_s);
+	}
+	else {
+	    return text2html($str, urls => 1, pre => $attr_pre);
+	}
     }
     else {
 	return undef;
