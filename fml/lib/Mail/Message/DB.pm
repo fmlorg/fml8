@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.1.2.3 2003/06/02 23:27:11 fukachan Exp $
+# $FML: DB.pm,v 1.1.2.4 2003/06/03 13:49:08 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -17,7 +17,7 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.1.2.3 2003/06/02 23:27:11 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.1.2.4 2003/06/03 13:49:08 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 my $debug = 1;
@@ -611,6 +611,10 @@ sub db_close
 }
 
 
+# Descriptions: set $key = $value of $table
+#    Arguments: OBJ($self) STR($table) STR($key) STR($value)
+# Side Effects: one
+# Return Value: STR
 sub set
 {
     my ($self, $table, $key, $value) = @_;
@@ -620,6 +624,10 @@ sub set
 }
 
 
+# Descriptions: get $key of $table
+#    Arguments: OBJ($self) STR($table) STR($key)
+# Side Effects: one
+# Return Value: STR
 sub get
 {
     my ($self, $table, $key) = @_;
@@ -629,6 +637,10 @@ sub get
 }
 
 
+# Descriptions: set $key = $value of $table
+#    Arguments: OBJ($self) HASH_REF($db) STR($table) STR($key) STR($value)
+# Side Effects: one
+# Return Value: STR
 sub _db_set
 {
     my ($self, $db, $table, $key, $value) = @_;
@@ -640,6 +652,10 @@ sub _db_set
 }
 
 
+# Descriptions: get $key of $table
+#    Arguments: OBJ($self) HASH_REF($db) STR($table) STR($key)
+# Side Effects: one
+# Return Value: STR
 sub _db_get
 {
     my ($self, $db, $table, $key) = @_;
@@ -648,6 +664,10 @@ sub _db_get
 }
 
 
+# Descriptions: set module name
+#    Arguments: OBJ($self) STR($module)
+# Side Effects: none
+# Return Value: none
 sub set_db_module_name
 {
     my ($self, $module) = @_;
@@ -656,6 +676,10 @@ sub set_db_module_name
 }
 
 
+# Descriptions: get module name
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub get_db_module_name
 {
     my ($self) = @_;
@@ -664,6 +688,10 @@ sub get_db_module_name
 }
 
 
+# Descriptions: set db_base_dir
+#    Arguments: OBJ($self) STR($dir)
+# Side Effects: none
+# Return Value: none
 sub set_db_base_dir
 {
     my ($self, $dir) = @_;
@@ -672,6 +700,10 @@ sub set_db_base_dir
 }
 
 
+# Descriptions: get db_base_dir
+#    Arguments: OBJ($self) STR($dir)
+# Side Effects: none
+# Return Value: none
 sub get_db_base_dir
 {
     my ($self) = @_;
@@ -680,6 +712,10 @@ sub get_db_base_dir
 }
 
 
+# Descriptions: set db_name
+#    Arguments: OBJ($self) STR($name)
+# Side Effects: none
+# Return Value: none
 sub set_db_name
 {
     my ($self, $name) = @_;
@@ -688,6 +724,10 @@ sub set_db_name
 }
 
 
+# Descriptions: get db_name
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub get_db_name
 {
     my ($self) = @_;
@@ -696,6 +736,10 @@ sub get_db_name
 }
 
 
+# Descriptions: set the curent key
+#    Arguments: OBJ($self) STR($name)
+# Side Effects: none
+# Return Value: none
 sub set_key
 {
     my ($self, $key) = @_;
@@ -704,6 +748,10 @@ sub set_key
 }
 
 
+# Descriptions: get the curent key
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
 sub get_key
 {
     my ($self) = @_;
