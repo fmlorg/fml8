@@ -3,10 +3,10 @@
 # Copyright (C) 2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.16 2003/02/01 08:51:41 fukachan Exp $
+# $FML: Spool.pm,v 1.1 2003/03/15 09:07:03 fukachan Exp $
 #
 
-package FML::Spool;
+package FML::Article::Spool;
 
 use strict;
 use Carp;
@@ -22,7 +22,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::Spool -- utilities for small maintenance jobs on the spool directory
+FML::Article::Spool -- utilities for small maintenance jobs on the spool directory
 
 =head1 SYNOPSIS
 
@@ -61,6 +61,19 @@ sub new
 }
 
 
+# Descriptions: return lock channel name.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub get_lock_channel_name
+{
+    my ($self) = @_;
+    my $obj = $self->{ _article };
+
+    return $obj->get_lock_channel_name();
+}
+
+
 # Descriptions: convert files from src_dir/ to dst_dir/
 #    Arguments: OBJ($self) OBJ($curproc) HASH_RER($command_args)
 # Side Effects: none
@@ -73,7 +86,10 @@ sub convert
     my $src_dir  = $command_args->{ _src_dir };
     my $dst_dir  = $command_args->{ _dst_dir };
     my $ml_name  = $command_args->{ ml_name };
+    my $channel  = $self->get_lock_channel_name();
     my $use_link = 0;
+
+    $curproc->lock($channel);
 
     print $wh "convert spool of $ml_name ML.\n\n";
 
@@ -142,6 +158,8 @@ sub convert
     }
 
     print $wh "done.\n\n";
+
+    $curproc->unlock($channel);
 }
 
 
@@ -220,10 +238,10 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Core functions of FML::Process::Spool is moved to FML::Spool at
+Core functions of FML::Process::Spool is moved to FML::Article::Spool at
 2003/03.
 
-FML::Spool first appeared in fml8 mailing list driver package.
+FML::Article::Spool first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
