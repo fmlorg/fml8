@@ -12,6 +12,9 @@ package FML::Process::Kernel;
 
 use strict;
 use Carp;
+
+use FML::Process::Flow;
+
 use FML::Parse;
 use FML::Header;
 use FML::Config;

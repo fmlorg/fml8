@@ -15,50 +15,36 @@ use Carp;
 
 
 # Descriptions: top level process switch
-#               1. initialize processes and load configurations from *.cf
-#                  switch to each process according with $0 and @ARGV.
-#               2. parse the incoming message(mail)
-#               3. start the main transaction
-#                  lock, execute main routine, unlock
-#               4. inform error messages, clean up and more ...
+#               emulates "use $package" but $package is dynamically 
+#               determined by e.g. $0.
 #    Arguments: $args
 #               XXX non OO interface
-# Side Effects: process running :-)
-# Return Value: none
+# Side Effects: process switching :-)
+#               ProcessSwtich() is exported to main:: Name Space.
+# Return Value: package name
 sub main::ProcessSwitch
 {
     my ($args) = @_;
 
     # Firstly, create process 
     # $pkg is a  package name, for exampl,e "FML::Process::Distribute".
-    my $pkg = _package_we_use($args);
+    my $pkg = _module_we_use($args);
     croak("$args->{ myname } is unknown program\n") unless ($pkg);
 
     eval qq{ require $pkg; }; # XXX require() needs bare words.
     croak($@) if $@;
     $pkg->import();   # fake to use() method.
-    my $process = $pkg->new($args); # create a new process object
 
-    # e.g. parse the incoming message (e.g. STDIN)
-    $process->prepare($args);
-
-    # validate the request e.g. permit post from the sender ...
-    $process->verify_request($args);
-
-    # start main transaction
-    $process->run($args);
-
-    # closing the process
-    $process->finish($args);
+    return $pkg;
 }
 
 
 # Descriptions: determine package we need and require() it if needed.
 #    Arguments: $args
 #               XXX non OO interface
-# Side Effects: 
+# Side Effects: none
 # Return Value: FML::Process::SOMETHING process object
-sub _package_we_use
+sub _module_we_use
 {
     my ($args) = @_;    
     my $name   = $args->{ myname };
@@ -91,48 +77,45 @@ sub _package_we_use
 }
 
 
-
 =head1 NAME
 
-fml -- net/fml switch programs
+process_switch - switch or dispacther table to execute real fml programs
 
 =head1 SYNOPSIS
 
-   fml
+	require "$libexec_dir/process_switch";
+	ProcessSwitch( 
+		      {
+			  fml_version    => $main_cf->{ fml_version },
+
+			  myname         => $myname,
+			  ml_home_prefix => $main_cf->{ ml_home_prefix },
+			  ml_home_dir    => $ml_home_dir,
+
+			  cf_list        => \@cf,
+			  options        => \%options,
+		      });
+
+See also C<libexec/fml/loader>.
 
 =head1 DESCRIPTION
 
-libexec/fml.pl, the wrapper, executes this program. For example, The
-incoming mail to elena@fml.org kicks off libexec/distribute via
-libexec/fml.pl, whereas mail to elena-ctl@fml.org kicks off
-libexec/command finally.
+C<libexec/loader>
+(C<libexec/fml/loader>), 
+the wrapper, loads this program and calls C<ProcessSwitch()>.  
+C<ProcessSwitch()> emulates "use $package" for a program specified by
+the arguments.
 
-   incoming_message =>
-      elena@fml.org       => fml.pl => libexec/distribute
-      elena-ctl@fml.org   => fml.pl => libexec/command
-      elena-admin@fml.org => forwarded to administrator(s)
-                                  OR
-                          => libexec/mead
+The details of each program exists in FML::Process:: class.
 
-C<-d>
-    debug on.
+=head1 SEE ALSO
 
-=head1 FLOW AROUND COMPONENTS
-
-   |  <=> FML::BaseSystem
-   |      load configuration files
-   |      start logging service
-   |
-   |  STDIN                           => FML::Parse
-   |  $CurProc->{'incoming_message'} <=
-   |  $CurProc->{'credential'}
-   | 
-   |  (lock)
-   |  prepare article
-   |  $CurProc->{'article'} is spooled in.
-   |  $CurProc->{'article'}    <=> Service::SMTP
-   |  (unlock)
-   V
+L<FML::Process::Distribute>,
+L<FML::Process::Command>,
+L<FML::Process::ListServer>,
+L<FML::Process::Configure>,
+L<FML::Process::TicketSystem>,
+L<FML::Process::MailErrorAnalyzer>
 
 =cut
 

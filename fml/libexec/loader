@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $Id: loader,v 1.1 2001/01/29 03:18:14 fukachan Exp $ 
+# $Id: loader,v 1.2 2001/01/29 03:23:41 fukachan Exp $ 
 # $FML$
 #
 
@@ -34,10 +34,14 @@ BEGIN {
 
 
 # Descriptions: top lebel bootstrap program
-#               which load the required library and switch myself to it.
-#               loading order: 
-#               libexec/loader -> libexec/process_switch -> FML::Process::Something
+#               which load a dispather program (process_switch) 
+#               for process switch. The flow of execution follows:
+#               libexec/loader -> 
+#                  libexec/process_switch -> 
+#                      FML::Process::Something
 #    Arguments: none
+#               XXX this program sees $0
+#                   (program name, == argv[0] of C language) 
 # Side Effects: switch to the real process
 # Return Value: none
 sub Bootstrap
@@ -96,18 +100,25 @@ sub Bootstrap
 
     # 5. o.k. here we go!
     if (-f "$libexec_dir/process_switch") {
+	my ($args, $pkg);
+
+	$args = {
+	    fml_version    => $main_cf->{ fml_version },
+	    
+	    myname         => $myname,
+	    ml_home_prefix => $main_cf->{ ml_home_prefix },
+	    ml_home_dir    => $ml_home_dir,
+	    
+	    cf_list        => \@cf,
+	    options        => \%options,
+	};
+
+	# See libexec/process_switch on ProcessSwitch()
 	require "$libexec_dir/process_switch";
-	ProcessSwitch( 
-		      {
-			  fml_version    => $main_cf->{ fml_version },
+	$pkg = ProcessSwitch($args);
 
-			  myname         => $myname,
-			  ml_home_prefix => $main_cf->{ ml_home_prefix },
-			  ml_home_dir    => $ml_home_dir,
-
-			  cf_list        => \@cf,
-			  options        => \%options,
-		      });
+	# See FML::Process::Kernel module on ProcessStart()
+	ProcessStart($pkg, $args);
     }
     else {
 	croak("$libexec_dir/fml is not found.");
@@ -121,9 +132,20 @@ loader -- the wrapper which executes a real fml5 program.
 
 =head1 SYNOPSIS
 
-loader C<[-c main.cf]> C<[--debug]> C<[--ctladdr]> ml_home_dir
+loader C<[-c main.cf]> C<[--debug]> C<[--ctladdr]> [ml_home_dir]
 
 =head1 DESCRIPTION
+
+The loader resolves fml version dependence.
+It checks /etc/fml/main.cf and prepare @INC for some fml version.
+The real process switch routine is dependent on fml version.
+
+C<libexec/fml/loader> switches itself to a program specified by $0.
+C<libexec/fml/$VERSION/process_switch> analyzes several conditions
+specified by main.cf, @INC and $0 et. al.
+The swithing is done in libexec/fml/$VERSION/process_switch.
+See C<libexec/fml/$VERSION/process_switch> for more details on process
+switching.
 
 C<-c main.cf>
     main.cf alternative
