@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.46 2002/09/15 00:11:42 fukachan Exp $
+# $FML: Article.pm,v 1.47 2002/09/22 14:56:39 fukachan Exp $
 #
 
 package FML::Article;
@@ -170,9 +170,10 @@ If the variable C<$use_spool> is 'yes', this routine works.
 sub spool_in
 {
     my ($self, $id) = @_;
-    my $curproc   = $self->{ curproc };
-    my $config    = $curproc->{ config };
-    my $spool_dir = $config->{ spool_dir };
+    my $curproc    = $self->{ curproc };
+    my $config     = $curproc->{ config };
+    my $spool_dir  = $config->{ spool_dir };
+    my $use_subdir = $config->{ spool_type } eq 'subdir' ? 1 : 0;
 
     if ( $config->yes( 'use_spool' ) ) {
 	unless (-d $spool_dir) {
@@ -242,15 +243,10 @@ sub subdirpath
 sub _filepath
 {
     my ($self, $id) = @_;
-    my $use_subdir = 0;
     my $curproc    = $self->{ curproc };
     my $config     = $curproc->{ config };
     my $spool_dir  = $config->{ spool_dir };
-
-    # use subdir ? e.g. spool/0/999 style
-    if ($config->{ spool_type } eq 'subdir') {
-	$use_subdir = 1;
-    }
+    my $use_subdir = $config->{ spool_type } eq 'subdir' ? 1 : 0;
 
     use Mail::Message::Spool;
     my $spool = new Mail::Message::Spool;
@@ -287,10 +283,42 @@ max (latest) article number in its folder.
 sub speculate_max_id
 {
     my ($curproc, $spool_dir) = @_;
-    my $config = $curproc->{ config };
+    my $config     = $curproc->{ config };
+    my $use_subdir = $config->{ spool_type } eq 'subdir' ? 1 : 0;
 
     unless (defined $spool_dir) {
 	$spool_dir = $config->{ spool_dir };
+    }
+
+    Log("max_id: (debug) scan $spool_dir subdir=$use_subdir");
+
+    if ($use_subdir) {
+	use DirHandle;
+	my $dh = new DirHandle $spool_dir;
+
+	if (defined $dh) {	
+	    my $fn         = ''; # file name
+	    my $subdir     = '';
+	    my $max_subdir = 0;
+
+	  ENTRY:
+	    while (defined($fn = $dh->read)) {
+		next ENTRY unless $fn =~ /^\d+$/;
+
+		use File::Spec;
+		$subdir = File::Spec->catfile($spool_dir, $fn);
+
+		if (-d $subdir) {
+		    my $max_subdir = $max_subdir > $fn ? $max_subdir : $fn;
+		}
+	    }
+
+	    $dh->close();
+
+	    $subdir = File::Spec->catfile($spool_dir, $max_subdir);
+	    Log("max_id: (debug) scan $subdir");
+	    $curproc->speculate_max_id($subdir);
+	}
     }
 
     use DirHandle;
@@ -303,6 +331,7 @@ sub speculate_max_id
 	    next unless $fn =~ /^\d+$/;
 	    $max = $max < $fn ? $fn : $max;
 	}
+
 	$dh->close();
 
 	return( $max > 0 ? $max : undef );
