@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
+#-*- perl -*-
 #
-# $FML$
+# $FML: stylecheck,v 1.1 2002/01/13 22:06:34 fukachan Exp $
 #
 
 use strict;
@@ -11,7 +12,7 @@ my $package    = '';
 my $fn         = '';
 my $PrevARGV   = '';
 my $num_file   = 0;
- 
+
 while (<>) {
     next if /^\#/;
 
@@ -47,7 +48,9 @@ while (<>) {
 	}
     }
 
-	if (/^1\;\s*$/ && $in_perldoc) {
-	    print STDERR "${package} ends in document ???\n";
-	}
+    if (/^1\;\s*$/ && $in_perldoc) {
+	print STDERR "${package} ends in document ???\n";
+    }
 }
+
+exit 0
