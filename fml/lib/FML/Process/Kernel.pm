@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.131 2002/08/15 08:04:41 fukachan Exp $
+# $FML: Kernel.pm,v 1.132 2002/08/16 15:59:21 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -599,8 +599,23 @@ sub resolve_ml_specific_variables
 	}
     }
     else {
+	# XXX "fmlconf -n elena@fml.org" works ?
+	# XXX yes, but "fmlconf -n elena" works ? no ;-)
 	for my $arg (@ARGV) {
 	    if ($arg =~ /\S+\@\S+/) { $ml_addr = $arg;}
+	}
+
+	# not found. Hmm, "fmlconf -n elena" case ?
+	unless ($ml_addr) {
+	    my $default_domain = $curproc->default_domain();
+
+	  ARGS:
+	    for my $arg (@ARGV) {	    
+		last ARGS if $ml_addr;
+		next ARGS if $arg =~ /^-/o;
+
+		$ml_addr = $arg. '@' . $default_domain;
+	    }
 	}
     }
 
