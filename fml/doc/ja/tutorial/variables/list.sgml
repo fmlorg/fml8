@@ -36,7 +36,7 @@ admin_command_restrictions</entry>
 <entry>
  admin コマンドへの制限</entry>
 <entry>
-reject_system_accounts
+reject_system_special_accounts
    check_admin_member_password
    reject
    </entry>
@@ -365,7 +365,7 @@ command_restrictions</entry>
 <entry>
  コマンドへの制限</entry>
 <entry>
-reject_system_accounts
+reject_system_special_accounts
    permit_commands_for_stranger
    permit_member_maps
    reject
@@ -1114,7 +1114,7 @@ post_restrictions</entry>
 <entry>
  投稿への制限</entry>
 <entry>
-reject_system_accounts
+reject_system_special_accounts
    permit_member_maps
    reject
    </entry>
@@ -1384,26 +1384,6 @@ confirmation
 </row>
 <row>
 <entry>
-system_accounts</entry>
-<entry>
- OS が使っているようなアカウントや自動プログラムのリスト</entry>
-<entry>
-root
-   postmaster
-   MAILER-DAEMON
-   msgs
-   nobody
-   news
-   majordomo
-   listserv
-   listproc
-   \S+\-help
-   \S+\-subscribe
-   \S+\-unsubscribe
-   </entry>
-</row>
-<row>
-<entry>
 system_has_alarm</entry>
 <entry>
  alarm(2) があるか？</entry>
@@ -1445,6 +1425,26 @@ system_has_select</entry>
  select(2) があるか？</entry>
 <entry>
 yes
+   </entry>
+</row>
+<row>
+<entry>
+system_special_accounts</entry>
+<entry>
+ OS が使っているようなアカウントや自動プログラムのリスト</entry>
+<entry>
+root
+   postmaster
+   MAILER-DAEMON
+   msgs
+   nobody
+   news
+   majordomo
+   listserv
+   listproc
+   \S+\-help
+   \S+\-subscribe
+   \S+\-unsubscribe
    </entry>
 </row>
 <row>

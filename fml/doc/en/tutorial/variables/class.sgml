@@ -604,12 +604,12 @@ sql {
 system {
 
    system_* {
-    ?     $system_accounts
     ?     $system_has_alarm
     ?     $system_has_fork
     ?     $system_has_getpwgid
     ?     $system_has_getpwuid
     ?     $system_has_select
+    ?     $system_special_accounts
    }
 }
 

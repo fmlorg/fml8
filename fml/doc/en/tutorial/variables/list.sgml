@@ -36,7 +36,7 @@ admin_command_restrictions</entry>
 <entry>
  restrictions for admin command mail</entry>
 <entry>
-reject_system_accounts
+reject_system_special_accounts
    check_admin_member_password
    reject
    </entry>
@@ -383,7 +383,7 @@ command_restrictions</entry>
 <entry>
  restrictions for command mail</entry>
 <entry>
-reject_system_accounts
+reject_system_special_accounts
    permit_commands_for_stranger
    permit_member_maps
    reject
@@ -1132,7 +1132,7 @@ post_restrictions</entry>
 <entry>
  restrictions for post</entry>
 <entry>
-reject_system_accounts
+reject_system_special_accounts
    permit_member_maps
    reject
    </entry>
@@ -1402,26 +1402,6 @@ confirmation
 </row>
 <row>
 <entry>
-system_accounts</entry>
-<entry>
- list of system accounts.</entry>
-<entry>
-root
-   postmaster
-   MAILER-DAEMON
-   msgs
-   nobody
-   news
-   majordomo
-   listserv
-   listproc
-   \S+\-help
-   \S+\-subscribe
-   \S+\-unsubscribe
-   </entry>
-</row>
-<row>
-<entry>
 system_has_alarm</entry>
 <entry>
  has alarm(2) ?</entry>
@@ -1463,6 +1443,26 @@ system_has_select</entry>
  has select(2) ?</entry>
 <entry>
 yes
+   </entry>
+</row>
+<row>
+<entry>
+system_special_accounts</entry>
+<entry>
+ list of system accounts.</entry>
+<entry>
+root
+   postmaster
+   MAILER-DAEMON
+   msgs
+   nobody
+   news
+   majordomo
+   listserv
+   listproc
+   \S+\-help
+   \S+\-subscribe
+   \S+\-unsubscribe
    </entry>
 </row>
 <row>
