@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.22 2003/01/09 10:41:14 fukachan Exp $
+# $FML: UserControl.pm,v 1.23 2003/02/01 05:27:51 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -143,12 +143,16 @@ sub userdel
 	$cred->set_compare_level( 100 );
 
 	if ($cred->has_address_in_map($map, $config, $address)) {
+	    # $address may differ matched address in case.
+	    # we need to use $address_in_map which is the matched string.
+	    my $address_in_map = $cred->matched_address();
+
 	    $msg_args->{ _arg_map } = $curproc->which_map_nl($map);
 
 	    $trycount++;
 
 	    my $obj = new IO::Adapter $map, $config;
-	    $obj->delete( $address );
+	    $obj->delete( $address_in_map );
 	    unless ($obj->error()) {
 		Log("remove $address from map=$_map");
 		$curproc->reply_message_nl('command.del_ok',
