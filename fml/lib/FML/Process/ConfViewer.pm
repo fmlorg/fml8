@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.6 2001/12/22 09:21:09 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.7 2001/12/22 14:25:24 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -11,7 +11,7 @@ package FML::Process::ConfViewer;
 use vars qw($debug @ISA @EXPORT @EXPORT_OK);
 use strict;
 use Carp;
-
+use FML::Log qw(Log LogWarn LogError);
 use FML::Process::Kernel;
 @ISA = qw(FML::Process::Kernel);
 
@@ -61,7 +61,22 @@ sub new
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
-sub prepare { ; }
+sub prepare
+{
+    my ($curproc, $args) = @_;
+
+    my $eval = $config->get_hook( 'fmlconf_prepare_start_hook' );
+    if ($eval) {
+	eval qq{ $eval; };
+	print STDERR $@ if $@;
+    }
+
+    $eval = $config->get_hook( 'fmlconf_prepare_end_hook' );
+    if ($eval) {
+	eval qq{ $eval; };
+	print STDERR $@ if $@;
+    }
+}
 
 
 # Descriptions: check @ARGV, call help() if needed
@@ -74,9 +89,21 @@ sub verify_request
     my ($curproc, $args) = @_;
     my $argv = $curproc->command_line_argv();
 
+    my $eval = $config->get_hook( 'fmlconf_verify_request_start_hook' );
+    if ($eval) {
+	eval qq{ $eval; };
+	print STDERR $@ if $@;
+    }
+
     if (length(@$argv) == 0) {
 	$curproc->help();
 	exit(0);
+    }
+
+    $eval = $config->get_hook( 'fmlconf_verify_request_end_hook' );
+    if ($eval) {
+	eval qq{ $eval; };
+	print STDERR $@ if $@;
     }
 }
 
@@ -108,7 +135,19 @@ sub run
     my $myname  = $curproc->myname();
     my $argv    = $curproc->command_line_argv();
 
+    my $eval = $config->get_hook( 'fmlconf_run_start_hook' );
+    if ($eval) {
+	eval qq{ $eval; };
+	print STDERR $@ if $@;
+    }
+
     $curproc->_fmlconf($args);
+
+    $eval = $config->get_hook( 'fmlconf_run_end_hook' );
+    if ($eval) {
+	eval qq{ $eval; };
+	print STDERR $@ if $@;
+    }
 }
 
 
@@ -144,7 +183,22 @@ _EOF_
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
-sub finish { 1;}
+sub finish
+{
+    my ($curproc, $args) = @_;
+
+    my $eval = $config->get_hook( 'fmlconf_finish_start_hook' );
+    if ($eval) {
+	eval qq{ $eval; };
+	print STDERR $@ if $@;
+    }
+
+    $eval = $config->get_hook( 'fmlconf_finish_end_hook' );
+    if ($eval) {
+	eval qq{ $eval; };
+	print STDERR $@ if $@;
+    }
+}
 
 
 =head2 C<_fmlconf($args)> (INTERNAL USE)

@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.11 2001/12/22 13:24:32 fukachan Exp $
+# $FML: DocViewer.pm,v 1.12 2001/12/22 14:40:34 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -67,7 +67,16 @@ sub new
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
-sub prepare { ; }
+sub prepare
+{
+    my ($curproc, $args) = @_;
+
+    my $eval = $config->get_hook( 'fmldoc_prepare_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
+    $eval = $config->get_hook( 'fmldoc_prepare_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+}
 
 
 # Descriptions: check @ARGV and show help if needed
@@ -80,10 +89,16 @@ sub verify_request
     my ($curproc, $args) = @_;
     my $argv = $curproc->command_line_argv();
 
+    my $eval = $config->get_hook( 'fmldoc_verify_request_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
     if (length(@$argv) == 0) {
 	$curproc->help();
 	exit(0);
     }
+
+    $eval = $config->get_hook( 'fmldoc_verify_request_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
 
@@ -122,6 +137,9 @@ sub _fmldoc
     my $myname  = $curproc->myname();
     my $argv    = $curproc->command_line_argv();
 
+    my $eval = $config->get_hook( 'fmldoc_run_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
     my (@opts);
     push(@opts, '-v') if $args->{ options }->{ v };
     push(@opts, '-t') if $args->{ options }->{ t };
@@ -136,6 +154,9 @@ sub _fmldoc
 	exec 'perldoc', @opts, @$argv;
     };
     croak($@);
+
+    $eval = $config->get_hook( 'fmldoc_run_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
 
@@ -169,6 +190,30 @@ _EOF_
 }
 
 
+=head2 finish()
+
+finalize.
+
+=cut
+
+
+# Descriptions: clean up in the end of the curreen process.
+#               return error messages et. al.
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: queue flush
+# Return Value: none
+sub finish
+{
+    my ($curproc, $args) = @_;
+
+    my $eval = $config->get_hook( 'fmldoc_finish_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
+    $eval = $config->get_hook( 'fmldoc_finish_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+}
+
+
 # dummy to avoid the error ( undefined function )
 sub AUTOLOAD
 {
@@ -181,7 +226,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2000-2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

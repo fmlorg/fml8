@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.34 2001/12/22 09:21:09 fukachan Exp $
+# $FML: Configure.pm,v 1.35 2001/12/22 14:25:24 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -66,7 +66,14 @@ sub new
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
-sub prepare { ; }
+sub prepare
+{
+    my $eval = $config->get_hook( 'makefml_prepare_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
+    $eval = $config->get_hook( 'makefml_prepare_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+}
 
 
 # Descriptions: check @ARGV, call help() if needed.
@@ -80,10 +87,16 @@ sub verify_request
     my $argv = $curproc->command_line_argv();
     my $len  = $#$argv + 1;
 
+    my $eval = $config->get_hook( 'makefml_verify_request_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
     if ($len <= 1) {
 	$curproc->help();
 	exit(0);
     }
+
+    $eval = $config->get_hook( 'makefml_verify_request_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
 
@@ -199,6 +212,9 @@ sub _makefml
 	args         => $args,
     };
 
+    my $eval = $config->get_hook( 'makefml_run_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
     # here we go
     require FML::Command;
     my $obj = new FML::Command;
@@ -220,6 +236,33 @@ sub _makefml
 	    }
 	}
     }
+
+    $eval = $config->get_hook( 'makefml_run_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+}
+
+
+=head2 finish()
+
+finalize.
+
+=cut
+
+
+# Descriptions: clean up in the end of the curreen process.
+#               return error messages et. al.
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: queue flush
+# Return Value: none
+sub finish
+{
+    my ($curproc, $args) = @_;
+
+    my $eval = $config->get_hook( 'makefml_finish_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
+    $eval = $config->get_hook( 'makefml_finish_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
 

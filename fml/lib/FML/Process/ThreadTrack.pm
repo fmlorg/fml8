@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000-2001,2002 Ken'ichi Fukamachi
+# Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ThreadTrack.pm,v 1.20 2002/02/01 12:03:57 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.21 2002/02/04 14:15:05 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -63,7 +63,30 @@ sub new
 # Return Value: none
 sub prepare
 {
-    ;
+    my ($curproc, $args) = @_;
+
+    my $eval = $config->get_hook( 'fmlthread_prepare_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
+    $eval = $config->get_hook( 'fmlthread_prepare_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+}
+
+
+# Descriptions: none
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none.
+# Return Value: none
+sub verify_request
+{
+    my ($curproc, $args) = @_;
+    my $argv = $curproc->command_line_argv();
+
+    my $eval = $config->get_hook( 'fmlthread_verify_request_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
+    $eval = $config->get_hook( 'fmlthread_verify_request_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
 
@@ -104,6 +127,8 @@ sub run
 	reverse_order => (defined $options->{ reverse } ? 1 : 0),
     };
 
+    my $eval = $config->get_hook( 'fmlthread_run_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
     use Mail::ThreadTrack;
     my $thread = new Mail::ThreadTrack $ttargs;
@@ -166,6 +191,9 @@ sub run
     }
 
     $curproc->unlock();
+
+    $eval = $config->get_hook( 'fmlthread_run_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
 
@@ -179,10 +207,10 @@ sub _speculate_last_id
 
     if (-f $seq_file) {
 	my $st = undef;
-	eval q{ 
+	eval q{
 	    use File::stat;
 	    my $st = stat($seq_file);
-	    $sf_last_modified = 
+	    $sf_last_modified =
 		$sf_last_modified > $st->mtime ? $sf_last_modified : $st->mtime;
 	};
     }
@@ -191,11 +219,11 @@ sub _speculate_last_id
     # true since FML::Process::Distribute updates the thread db after
     # updaiteing $seq_file.
     # XXX 3600 is the magic number. How long time is appropriate ?
-    if (-f $seq_file && 
+    if (-f $seq_file &&
 	($sf_last_modified + 3600 > $db_last_modified)
 	) {
 	print STDERR "read seqfile\n"; sleep 3;
-	eval q{ 
+	eval q{
 	    use File::Sequence;
 	    my $sfh      = new File::Sequence { sequence_file => $seq_file };
 	    return $sfh->get_id();
@@ -342,6 +370,23 @@ $name db_rebuild \$ml_name      rebuild database for whole of ML
 $name db_clear   \$ml_name      clear thread database for \$ml_name ML
 
 _EOF_
+}
+
+
+# Descriptions: clean up in the end of the curreen process.
+#               return error messages et. al.
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: queue flush
+# Return Value: none
+sub finish
+{
+    my ($curproc, $args) = @_;
+
+    my $eval = $config->get_hook( 'fmlthread_finish_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
+    $eval = $config->get_hook( 'fmlthread_finish_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
 

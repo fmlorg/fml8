@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.62 2002/01/16 13:34:00 fukachan Exp $
+# $FML: Distribute.pm,v 1.63 2002/01/16 13:43:20 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -74,7 +74,14 @@ forward the request to the base class.
 sub prepare
 {
     my ($self, $args) = @_;
+
+    my $eval = $config->get_hook( 'distribute_prepare_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
     $self->SUPER::prepare($args);
+
+    $eval = $config->get_hook( 'distribute_prepare_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
 
@@ -92,8 +99,15 @@ check the mail sender and the mail loop possibility.
 sub verify_request
 {
     my ($curproc, $args) = @_;
+
+    my $eval = $config->get_hook( 'distribute_verify_request_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
     $curproc->verify_sender_credential();
     $curproc->simple_loop_check();
+
+    $eval = $config->get_hook( 'distribute_verify_request_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
 
@@ -120,6 +134,9 @@ sub run
 {
     my ($curproc, $args) = @_;
 
+    my $eval = $config->get_hook( 'distribute_run_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
     $curproc->lock();
     {
 	if ($curproc->permit_post($args)) {
@@ -130,6 +147,9 @@ sub run
 	}
     }
     $curproc->unlock();
+
+    $eval = $config->get_hook( 'distribute_run_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
 
@@ -172,8 +192,15 @@ sub finish
 {
     my ($curproc, $args) = @_;
 
+    my $eval = $config->get_hook( 'distribute_finish_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
     $curproc->inform_reply_messages();
     $curproc->queue_flush();
+
+    $eval = $config->get_hook( 'distribute_finish_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
 }
 
 

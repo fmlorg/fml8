@@ -3,7 +3,7 @@
 # Copyright (C) 2000-2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.8 2002/02/01 12:03:56 fukachan Exp $
+# $FML: HTMLify.pm,v 1.9 2002/02/02 08:04:53 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -65,7 +65,11 @@ sub new
 # Return Value: none
 sub prepare
 {
-    ;
+    my $eval = $config->get_hook( 'fmlhtmlify_prepare_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
+    $eval = $config->get_hook( 'fmlhtmlify_prepare_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
 
@@ -75,7 +79,11 @@ sub prepare
 # Return Value: none
 sub verify_request
 {
-    ;
+    my $eval = $config->get_hook( 'fmlhtmlify_verify_request_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
+    $eval = $config->get_hook( 'fmlhtmlify_verify_request_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
 
@@ -98,6 +106,9 @@ sub run
     my $dst_dir = $argv->[1];
 
     print STDERR "htmlify\t$src_dir =>\n\t\t$dst_dir\n" if $debug;
+
+    my $eval = $config->get_hook( 'fmlhtmlify_run_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
     # prepend $opt_I as @INC
     if (defined $options->{ I }) {
@@ -126,6 +137,9 @@ sub run
     else {
         croak("no destination directory\n");
     }
+
+    $eval = $config->get_hook( 'fmlhtmlify_run_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
 
@@ -154,7 +168,16 @@ _EOF_
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
-sub finish {}
+sub finish
+{
+    my ($curproc, $args) = @_;
+
+    my $eval = $config->get_hook( 'fmlhtmlify_finish_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
+    $eval = $config->get_hook( 'fmlhtmlify_finish_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+}
 
 
 # Descriptions: dummy to avoid to take data from STDIN

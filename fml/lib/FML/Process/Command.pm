@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.30 2002/02/11 12:29:27 fukachan Exp $
+# $FML: Command.pm,v 1.31 2002/02/13 10:39:33 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -75,7 +75,14 @@ forward the request to SUPER CLASS.
 sub prepare
 {
     my ($self, $args) = @_;
+
+    my $eval = $config->get_hook( 'command_prepare_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
     $self->SUPER::prepare($args);
+
+    $eval = $config->get_hook( 'command_prepare_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
 
@@ -93,7 +100,14 @@ verify the sender is a valid member or not.
 sub verify_request
 {
     my ($curproc, $args) = @_;
+
+    my $eval = $config->get_hook( 'command_verify_request_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
     $curproc->verify_sender_credential();
+
+    $eval = $config->get_hook( 'command_verify_request_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
 
@@ -162,8 +176,14 @@ sub finish
 {
     my ($curproc, $args) = @_;
 
+    my $eval = $config->get_hook( 'command_finish_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
     $curproc->inform_reply_messages();
     $curproc->queue_flush();
+
+    $eval = $config->get_hook( 'command_finish_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
 
@@ -293,6 +313,9 @@ sub _evaluate_command
     my @body    = split(/\n/, $body);
     my $id      = $curproc->_pre_scan( \@body ); # confirmation reply ?
 
+    my $eval = $config->get_hook( 'command_run_start_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
     $curproc->reply_message("result for your command requests follows:");
 
   COMMAND:
@@ -310,7 +333,7 @@ sub _evaluate_command
 	# Case: not "confirm" reply message.
 	#       check whether we need to accpet this command ?
 	#       we accpet commands from ML members only by default.
-	# 
+	#
 	#       validate general command except for confirmation
 	#       if $id is 1, this message must be confirmation reply.
 	unless ($command =~ /$keyword/ && defined($id)) {
@@ -363,6 +386,9 @@ sub _evaluate_command
 	    }
 	}
     } # END OF FOR LOOP: for my $command (@body) { ... }
+
+    $eval = $config->get_hook( 'command_run_end_hook' );
+    if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 }
 
 
