@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.13 2002/07/30 04:03:26 fukachan Exp $
+# $FML: Error.pm,v 1.14 2002/08/03 10:35:08 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -145,30 +145,31 @@ sub run
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
     eval q{
-	my $bounce_info = [];
-
 	use Mail::Bounce;
 	my $bouncer = new Mail::Bounce;
 	$bouncer->analyze( $msg );
 
+	use FML::Error::Cache;
+	my $errorcache = new FML::Error::Cache $curproc;
+
 	for my $address ( $bouncer->address_list ) {
 	    my $status = $bouncer->status( $address );
 	    my $reason = $bouncer->reason( $address );
-	    Log("bounced: address=<$address>");
-	    Log("bounced: status=$status");
-	    Log("bounced: reason=\"$reason\"");
 
-	    my $hint = {
-		address => $address,
-		status  => $status,
-		reason  => $reason,
-	    };
-	    $bounce_info->[ $found++ ] = $hint;
+	    if ($address) {
+		Log("bounced: address=<$address>");
+		Log("bounced: status=$status");
+		Log("bounced: reason=\"$reason\"");
+
+		$errorcache->add({
+		    address => $address,
+		    status  => $status,
+		    reason  => $reason,
+		});
+
+		$found++;
+	    }
 	}
-
-	use FML::ErrorAnalyze;
-	my $error = new FML::ErrorAnalyze $curproc;
-	$error->cache_on( $bounce_info );
     };
     LogError($@) if $@;
 
@@ -226,8 +227,9 @@ sub finish
 
     if ($pcb->get("error", "found")) {
 	Log("error message found");
-	# $curproc->inform_reply_messages();
-	# $curproc->queue_flush();
+
+	my $scheduler = $curproc->scheduler();
+
     }
     else {
 	Log("error message not found");
