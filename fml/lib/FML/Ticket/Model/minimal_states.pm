@@ -128,6 +128,7 @@ sub assign
     my $config  = $curproc->{ config };
     my $header  = $curproc->{ incoming_message }->{ header };
     my $subject = $header->get('subject');
+    my $pcb     = $curproc->{ pcb };
 
     use FML::Header::Subject;
     my $is_reply      = FML::Header::Subject->is_reply( $subject );
@@ -179,6 +180,8 @@ sub assign
 	# O.K. rewrite Subject: of the article to distribute
 	unless ($self->error) {
 	    my $header = $curproc->{ article }->{ header };
+
+	    $pcb->set('article', 'id', $id); # save $id info in PCB
 	    $self->_rewrite_header($header, $config, $id);
 	    $self->_set_status_info("newly assigned");
 	}
