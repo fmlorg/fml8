@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: ConfViewer.pm,v 1.3 2001/11/25 14:53:41 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.4 2001/11/27 11:40:30 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -13,15 +13,12 @@ use strict;
 use Carp;
 
 use FML::Process::Kernel;
-use FML::Log qw(Log LogWarn LogError);
-use FML::Config;
-
 @ISA = qw(FML::Process::Kernel);
 
 
 =head1 NAME
 
-FML::Process::ConfViewer -- fmlconf and makefml main functions
+FML::Process::ConfViewer -- show variables
 
 =head1 SYNOPSIS
 
@@ -31,18 +28,7 @@ FML::Process::ConfViewer -- fmlconf and makefml main functions
 
 =head1 DESCRIPTION
 
-FML::Process::ConfViewer provides the main function for 
-C<fmlconf>
- and 
-C<makefml>.
-
-These programs, 
-C<fmlconf> and C<makefml>,
-bootstrap by using these modules in this order.
-
-   libexec/loader -> FML::Process::Switch -> FML::Process::ConfViewer
-
-See C<FML::Process::Flow> for the flow detail.
+FML::Process::ConfViewer provides the main function for C<fmlconf>.
 
 =head1 METHODS
 
@@ -57,8 +43,9 @@ dummy.
 
 =cut
 
+
 # Descriptions: constructor
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: FML::Process::ConfViewer object
 sub new
@@ -71,14 +58,14 @@ sub new
 
 
 # Descriptions: dummy yet now
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub prepare { ; }
 
 
 # Descriptions: check @ARGV
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: longjmp() to help() if appropriate
 # Return Value: none
 sub verify_request
@@ -108,8 +95,9 @@ See <FML::Process::Switch()> on C<$args> for more details.
 
 =cut
 
+
 # Descriptions: just a switch
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub run
@@ -129,7 +117,7 @@ sub run
 
 
 # Descriptions: show help
-#    Arguments: none
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub help
@@ -149,10 +137,11 @@ _EOF_
 }
 
 
-sub finish
-{
-   1;
-}
+# Descriptions: dummy yet now
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
+sub finish { 1;}
 
 
 =head2 C<_fmlconf($args)> (INTERNAL USE)
@@ -163,7 +152,7 @@ run dump_variables of C<FML::Config>.
 
 
 # Descriptions: show configurations variables in the sytle "key = value"
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub _fmlconf
