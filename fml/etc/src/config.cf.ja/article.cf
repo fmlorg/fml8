@@ -1,5 +1,14 @@
 =head1	記事の処理
 
+=head2	記事番号
+
+
+# Descriptions: 記事番号を保存するファイル (ダミー？)
+#      History: $SEQ_FILE
+#        Value: filename
+#     Examples:
+article_sequence_file	= $sequence_file
+
 
 =head2	フィルタ
 
