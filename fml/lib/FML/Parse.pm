@@ -122,7 +122,11 @@ sub _parse
 
     # extract each field from the header array
     my $r_header = new FML::Header \@h, Modify => 0;
-    my $r_body   = new MailingList::Messages { content => \$InComingMessage };
+    my $r_body   = new MailingList::Messages {
+	boundary     => $r_header->mime_boundary(),
+	content_type => $r_header->content_type(),
+	content      => \$InComingMessage,
+    };
 
     # return ( $ref_to_mail_header, $ref_to_mail_body, $error_code);
     return ($r_header, $r_body, 0);
