@@ -1,6 +1,25 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/10/26
+
+   FML::Install 
+   etc/install.cf.in
+	To remove hard-coded file list to install as sample,
+	define $sample_cf_files in install.cf and use it.
+	
+   FML::Process::Kernel Switch 
+   etc/main.cf.in 	
+	define $site_default_config_cf to remove hard-coded
+	site_default_config.cf. sort entries in main.cf.
+
+2003/10/22
+
+   variables
+   FML::CGI::User 
+	change address list shown on the cgi menu from member to
+	recipient. 
+
 2003/10/17
 
    変数名の変更
@@ -5536,4 +5555,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.165 2003/10/16 05:26:09 fukachan Exp $
+$FML: CHANGES.txt,v 1.166 2003/10/18 09:29:55 fukachan Exp $
