@@ -36,6 +36,8 @@ path_postfix              = @POSTFIX@
 
 path_postalias            = @POSTALIAS@
 
+path_postconf             = @POSTCONF@
+
 path_nkf                  = @NKF@
 
 path_kakasi               = @KAKASI@
