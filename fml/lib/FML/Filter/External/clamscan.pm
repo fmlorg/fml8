@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.8 2004/01/01 07:29:27 fukachan Exp $
+# $FML: clamscan.pm,v 1.1 2004/06/24 11:01:33 fukachan Exp $
 #
 
 package FML::Filter::External::clamscan;
@@ -73,7 +73,7 @@ sub process
 sub _check
 {
     my ($self, $curproc, $program) = @_;
-    my $opts = "--quiet --mbox"
+    my $opts = "--quiet --mbox";
 
     use FileHandle;
     my $tmp_file = $curproc->temp_file_path();
