@@ -1,4 +1,6 @@
-○ HTML 生成
+	そもそも fml 5.0 で実装するのか？不明のもの
+
+=head1 HTML 生成
 
      AUTO_HTML_GEN:
      
@@ -31,8 +33,3 @@
      
      HTML_DEFAULT_UMASK:
      HTML_WRITE_UMASK:
-
-
-○ Dialect::Japanese::Subject のマージが中途半端
-
-   "Dialect::Japanese::Subject::CUT_OFF_RERERE_PATTERN" used only once: 

@@ -1,9 +1,14 @@
-FML/Config.pm
-FML/Credential.pm
+2001/03/17 
 
-MailingList/Messages.pm
+	we ends the developement toward the first prototype once.
 
---- not yet implemented ---
 
-Process/TicketSystem.pm
-CGI/TicketSystem.pm
+TODO of document clean up
+
+	FML/Config.pm
+	FML/Credential.pm
+	MailingList/Messages.pm
+	Process/TicketSystem.pm ( not yet implemented )
+	CGI/TicketSystem.pm     ( not yet implemented )
+
+---------------
