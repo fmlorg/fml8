@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ConfViewer.pm,v 1.23 2003/08/24 14:12:18 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.24 2003/08/29 15:34:07 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -123,7 +123,7 @@ sub verify_request
 
 the top level dispatcher for C<fmlconf>.
 
-It kicks off internal function C<_fmlconf($args)> for C<fmlconf>.
+It kicks off internal function C<_fmlconf()> for C<fmlconf>.
 
 NOTE:
 C<$args> is passed from parrent libexec/loader.
@@ -149,7 +149,7 @@ sub run
 	$curproc->logwarn($@) if $@;
     }
 
-    $curproc->_fmlconf($args);
+    $curproc->_fmlconf();
 
     $eval = $config->get_hook( 'fmlconf_run_end_hook' );
     if ($eval) {
@@ -210,7 +210,7 @@ sub finish
 }
 
 
-=head2 _fmlconf($args)
+=head2 _fmlconf()
 
 run dump_variables of C<FML::Config>.
 
@@ -218,15 +218,16 @@ run dump_variables of C<FML::Config>.
 
 
 # Descriptions: show configurations variables in the sytle "key = value".
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub _fmlconf
 {
-    my ($curproc, $args) = @_;
-    my $config = $curproc->config();
-    my $mode   = $args->{ options }->{ n } ? 'difference_only' : 'all';
-    my $argv   = $curproc->command_line_argv();
+    my ($curproc) = @_;
+    my $config  = $curproc->config();
+    my $options = $curproc->command_line_options();
+    my $mode    = $options->{ n } ? 'difference_only' : 'all';
+    my $argv    = $curproc->command_line_argv();
 
     # if variable name is given, show the value.
     if (defined $argv->[1]) {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.196 2003/11/29 14:32:03 fukachan Exp $
+# $FML: Kernel.pm,v 1.197 2003/12/06 04:48:20 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -629,7 +629,7 @@ sub resolve_ml_specific_variables
     my ($ml_name, $ml_domain, $ml_home_prefix, $ml_home_dir);
     my ($command, @options, $config_cf_path);
     my $config  = $curproc->config();
-    my $myname  = $args->{ myname };
+    my $myname  = $curproc->myname();
     my $ml_addr = '';
 
     # XXX-TODO: $config should determine makefml like argument or not ?
@@ -719,7 +719,7 @@ sub resolve_ml_specific_variables
     # Example: "| /usr/local/libexec/fml/fml.pl /var/spool/ml/elena"
     #    XXX the following code is true if config.cf has $ml_name definition.
     else {
-	my $r = $curproc->_find_ml_home_dir_in_argv($args->{ main_cf });
+	my $r = $curproc->_find_ml_home_dir_in_argv();
 
 	# [1.2.b.1]
 	# determine default $ml_home_dir and $hom_home_prefix by main.cf.
@@ -818,12 +818,12 @@ sub __debug_ml_xxx
 
 
 # Descriptions: analyze argument vector and return ml_home_dir and .cf list.
-#    Arguments: OBJ($curproc) HASH_REF($main_cf)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: HASH_REF
 sub _find_ml_home_dir_in_argv
 {
-    my ($curproc, $main_cf) = @_;
+    my ($curproc) = @_;
     my $ml_home_prefix = $curproc->ml_home_prefix();
     my $ml_home_dir    = '';
     my $found_cf       = 0;
@@ -1358,12 +1358,12 @@ makefml not support message handling not yet.
 
 
 # Descriptions: set reply message
-#    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($args)
+#    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($rm_args)
 # Side Effects: none
 # Return Value: none
 sub reply_message
 {
-    my ($curproc, $msg, $args) = @_;
+    my ($curproc, $msg, $rm_args) = @_;
     my $myname = $curproc->myname();
 
     $curproc->caller_info($msg, caller) if $debug;
@@ -1378,8 +1378,8 @@ sub reply_message
     }
 
     # get recipients list
-    my ($recipient, $recipient_maps) = $curproc->_analyze_recipients($args);
-    my $hdr                          = $curproc->_analyze_header($args);
+    my ($recipient, $recipient_maps) = $curproc->_analyze_recipients($rm_args);
+    my $hdr                          = $curproc->_analyze_header($rm_args);
 
     # check text messages and fix if needed.
     unless (ref($msg)) {
@@ -1387,14 +1387,14 @@ sub reply_message
 	$msg .= "\n" unless $msg =~ /\n$/;
     }
 
-    $curproc->_append_message_into_queue2($msg, $args,
+    $curproc->_append_message_into_queue2($msg, $rm_args,
 					 $recipient, $recipient_maps,
 					 $hdr);
 
-    if (defined $args->{ always_cc }) {
+    if (defined $rm_args->{ always_cc }) {
 	# only if $recipient above != always_cc, duplicate $msg message.
 	my $sent = $recipient;
-	my $cc   = $args->{ always_cc };
+	my $cc   = $rm_args->{ always_cc };
 
 	my $recipient = [];
 	if (ref($cc) eq 'ARRAY') {
@@ -1406,7 +1406,7 @@ sub reply_message
 
 	if (_array_is_different($sent, $recipient)) {
 	    $curproc->log("cc: [ @$recipient ]");
-	    $curproc->_append_message_into_queue($msg, $args,
+	    $curproc->_append_message_into_queue($msg, $rm_args,
 						 $recipient, $recipient_maps,
 						 $hdr);
 	}
@@ -1415,17 +1415,17 @@ sub reply_message
 
 
 # Descriptions: return recipient info.
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($rm_args)
 # Side Effects: none
 # Return Value: ARRAY( ARRAY_REF, ARRAY_REF)
 sub _analyze_recipients
 {
-    my ($curproc, $args) = @_;
+    my ($curproc, $rm_args) = @_;
     my $recipient      = [];
     my $recipient_maps = [];
-    my $rcpt = $args->{ recipient }      if defined $args->{ recipient };
-    my $map  = $args->{ recipient_map }  if defined $args->{ recipient_map };
-    my $maps = $args->{ recipient_maps } if defined $args->{ recipient_maps };
+    my $rcpt = $rm_args->{ recipient }      if defined $rm_args->{ recipient };
+    my $map  = $rm_args->{ recipient_map }  if defined $rm_args->{ recipient_map };
+    my $maps = $rm_args->{ recipient_maps } if defined $rm_args->{ recipient_maps };
 
     if (defined($rcpt)) {
 	if (ref($rcpt) eq 'ARRAY') {
@@ -1471,13 +1471,13 @@ sub _analyze_recipients
 
 
 # Descriptions: return header parameters
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($rm_args)
 # Side Effects: none
 # Return Value: HASH_REF
 sub _analyze_header
 {
-    my ($curproc, $args) = @_;
-    return $args->{ header };
+    my ($curproc, $rm_args) = @_;
+    return $rm_args->{ header };
 }
 
 
@@ -2263,17 +2263,17 @@ C<Caution:>
 #               2. expand variables: $ml_name -> elena
 #               3. back kanji code: euc -> iso-2022-jp
 #               4. return the new created template
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($pf_args)
 # Side Effects: none
 # Return Value: a new filepath (string) to be prepared
 sub prepare_file_to_return
 {
-    my ($curproc, $args) = @_;
+    my ($curproc, $pf_args) = @_;
     my $config      = $curproc->config();
     my $tmp_dir     = $config->{ tmp_dir };
     my $tmpf        = File::Spec->catfile($tmp_dir, $$);
-    my $src_file    = $args->{ src };
-    my $charset_out = $args->{ charset };
+    my $src_file    = $pf_args->{ src };
+    my $charset_out = $pf_args->{ charset };
 
     -d $tmp_dir || $curproc->mkdir($tmp_dir, "mode=private");
 
@@ -2292,7 +2292,7 @@ sub prepare_file_to_return
 	    my $buf;
 	    while ($buf = <$rh>) {
 		if ($buf =~ /\$/o) {
-		    $config->expand_variable_in_buffer(\$buf, $args);
+		    $config->expand_variable_in_buffer(\$buf, $pf_args);
 		}
 		$wh->print( $obj->convert( $buf, 'jis-jp' ) );
 	    }

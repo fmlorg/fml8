@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.129 2003/11/29 10:24:28 fukachan Exp $
+# $FML: Distribute.pm,v 1.130 2003/11/30 09:59:19 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -421,16 +421,16 @@ sub _build_article_object
 # Descriptions: header rewrite followed by
 #               $config->{ article_header_rewrite_rules }
 #               each method exists in FML::Header module.
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($hw_args)
 # Side Effects: $curproc->{ article }->{ header } is rewritten
 # Return Value: none
 sub _header_rewrite
 {
-    my ($curproc, $args) = @_;
+    my ($curproc, $hw_args) = @_;
     my $config = $curproc->config();
     my $header = $curproc->article_message_header();
     my $rules  = $config->get_as_array_ref('article_header_rewrite_rules');
-    my $id     = $args->{ id };
+    my $id     = $hw_args->{ id };
 
     for my $rule (@$rules) {
 	$curproc->log("_header_rewrite( $rule )") if $config->yes('debug');

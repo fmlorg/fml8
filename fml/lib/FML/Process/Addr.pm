@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Addr.pm,v 1.10 2003/08/23 07:24:45 fukachan Exp $
+# $FML: Addr.pm,v 1.11 2003/08/29 15:34:06 fukachan Exp $
 #
 
 package FML::Process::Addr;
@@ -119,7 +119,7 @@ sub verify_request
 
 the top level dispatcher for C<fmladdr>.
 
-It kicks off C<_fmladdr($args)> for fmladdr.
+It kicks off C<_fmladdr()> for fmladdr.
 
 NOTE:
 C<$args> is passed from parrent libexec/loader.
@@ -139,7 +139,7 @@ sub run
     my $myname  = $curproc->myname();
     my $argv    = $curproc->command_line_argv();
 
-    $curproc->_fmladdr($args);
+    $curproc->_fmladdr();
 }
 
 
@@ -193,31 +193,30 @@ _EOF_
 }
 
 
-=head2 _fmladdr($args)
+=head2 _fmladdr()
 
 show all aliases (accounts + aliases).
 show only accounts if -n option specified.
-
-See <FML::Process::Switch()> on C<$args> for more details.
 
 =cut
 
 
 # Descriptions: show all aliases (accounts + aliases).
 #               show only accounts if -n option specified.
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: load FML::Command::command module and execute it.
 # Return Value: none
 sub _fmladdr
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'fmladdr_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # show only accounts if -n option specified.
-    my $mode = $args->{ options }->{ n } ? 'fmlonly' : 'all';
+    my $options = $curproc->command_line_options();
+    my $mode    = $options->{ n } ? 'fmlonly' : 'all';
 
     use FML::MTAControl;
     my $mta     = new FML::MTAControl;

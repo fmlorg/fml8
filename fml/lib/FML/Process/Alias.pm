@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Alias.pm,v 1.11 2003/08/23 07:24:46 fukachan Exp $
+# $FML: Alias.pm,v 1.12 2003/08/29 15:34:06 fukachan Exp $
 #
 
 package FML::Process::Alias;
@@ -133,7 +133,7 @@ sub run
     my $myname  = $curproc->myname();
     my $argv    = $curproc->command_line_argv();
 
-    $curproc->_fmlalias($args);
+    $curproc->_fmlalias();
 }
 
 
@@ -186,7 +186,7 @@ _EOF_
 }
 
 
-=head2 _fmlalias($args)
+=head2 _fmlalias()
 
 switch of C<fmlalias> command.
 
@@ -203,19 +203,20 @@ See <FML::Process::Switch()> on C<$args> for more details.
 
 
 # Descriptions: fmlalias top level dispacher
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: load FML::Command::command module and execute it.
 # Return Value: none
 sub _fmlalias
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $config = $curproc->config();
 
     my $eval = $config->get_hook( 'fmlalias_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # show fmlonly aliases if -n option specified.
-    my $mode = $args->{ options }->{ n } ? 'fmlonly' : 'all';
+    my $options = $curproc->command_line_options();
+    my $mode    = $options->{ n } ? 'fmlonly' : 'all';
 
     use FML::MTAControl;
     my $mta     = new FML::MTAControl;

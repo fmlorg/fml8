@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calendar.pm,v 1.5 2003/08/29 15:34:06 fukachan Exp $
+# $FML: Calendar.pm,v 1.6 2003/09/02 09:18:45 fukachan Exp $
 #
 
 package FML::Process::Calendar;
@@ -100,8 +100,8 @@ sub run
 {
     my ($curproc, $args) = @_;
     my $config = $curproc->config();
-    my $argv   = $args->{ argv };
-    my $option = $args->{ options };
+    my $argv   = $curproc->command_line_raw_argv();
+    my $option = $curproc->command_line_options();
     my $mode   = 'text';
 
     # -h or --help

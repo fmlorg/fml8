@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DocViewer.pm,v 1.25 2003/08/23 07:24:47 fukachan Exp $
+# $FML: DocViewer.pm,v 1.26 2003/08/29 15:34:07 fukachan Exp $
 #
 
 package FML::Process::DocViewer;
@@ -133,17 +133,17 @@ sub run
     my $myname = $curproc->myname();
     my $argv   = $curproc->command_line_argv();
 
-    $curproc->_fmldoc($args);
+    $curproc->_fmldoc();
 }
 
 
 # Descriptions: fmldoc wrapper / top level dispacher
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: none
 # Return Value: none
 sub _fmldoc
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
     my $config = $curproc->config();
     my $myname = $curproc->myname();
     my $argv   = $curproc->command_line_argv();
@@ -151,12 +151,13 @@ sub _fmldoc
     my $eval = $config->get_hook( 'fmldoc_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
-    my (@opts);
-    push(@opts, '-v') if $args->{ options }->{ v };
-    push(@opts, '-t') if $args->{ options }->{ t };
-    push(@opts, '-u') if $args->{ options }->{ u };
-    push(@opts, '-m') if $args->{ options }->{ m };
-    push(@opts, '-l') if $args->{ options }->{ l };
+    my (@opts)  = ();
+    my $options = $curproc->command_line_options();
+    push(@opts, '-v') if defined $options->{ v };
+    push(@opts, '-t') if defined $options->{ t };
+    push(@opts, '-u') if defined $options->{ u };
+    push(@opts, '-m') if defined $options->{ m };
+    push(@opts, '-l') if defined $options->{ l };
 
     # add path for perl executatbles e.g. /usr/local/bin
     eval q{

@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Digest.pm,v 1.10 2003/08/23 15:33:14 fukachan Exp $
+# $FML: Digest.pm,v 1.11 2003/08/29 15:34:07 fukachan Exp $
 #
 
 package FML::Process::Digest;
@@ -157,7 +157,7 @@ sub run
 
     $curproc->lock();
     unless ($curproc->is_refused()) {
-	$curproc->_digest($args);
+	$curproc->_digest();
     }
     else {
 	$curproc->logerror("ignore this request.");
@@ -222,12 +222,12 @@ sub finish
 
 
 # Descriptions: primitive digest delivery.
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: update digest sequence.
 # Return Value: none
 sub _digest
 {
-    my ($curproc, $args) = @_;
+    my ($curproc) = @_;
 
     use FML::Digest;
     my $digest = new FML::Digest $curproc;
