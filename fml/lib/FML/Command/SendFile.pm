@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.6 2001/12/23 09:20:42 fukachan Exp $
+# $FML: SendFile.pm,v 1.7 2002/01/20 13:50:22 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -144,7 +144,8 @@ sub _is_valid_argument
 }
 
 
-# Descriptions: make an array from $fist to $last number
+# Descriptions: make an array from $fist to $last number.
+#               This array is composed of article numbers.              
 #    Arguments: NUM($first_number) NUM($last_number)
 # Side Effects: none
 # Return Value: HASH_ARRAY as [ $first .. $last ]
@@ -166,6 +167,7 @@ send back file specified as C<$command_args->{ _file_to_send }>.
 
 
 # Descriptions: send arbitrary file in $ml_home_dir.
+#               XXX we permit arbitrary file for admin to get.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: none
 # Return Value: none
@@ -204,7 +206,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
