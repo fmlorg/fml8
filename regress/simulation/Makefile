@@ -24,6 +24,7 @@ allclean: clean
 	rm -f SQL
 	rm -f ErrorMessages
 	rm -f Language
+	rm -f doc-devel
 
 scan:
 	@ (cd ../..; make scan 2>&1) |tee __scan__ || echo 'nothing changed'
@@ -52,6 +53,8 @@ link:
 	rm -f Mail; ln -s ../../fml/lib/Mail
 	rm -f libexec; ln -s ../../fml/libexec
 	rm -f log; ln -s /var/spool/ml/elena/log
+	rm -f doc-devel; ln -s ../../doc/devel/memo doc-devel
+
 
 diff:
 	@ (cd ../..;cvs diff -ub)
