@@ -5,7 +5,7 @@
 #      History: $DEBUG
 #        Value: YES_OR_NO
 #     Examples: no
-debug		=	no
+use_debug	=	no
 
 
 
