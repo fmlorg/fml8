@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.18 2003/08/23 07:24:43 fukachan Exp $
+# $FML: chaddr.pm,v 1.19 2003/08/29 15:33:58 fukachan Exp $
 #
 
 package FML::Command::Admin::chaddr;
@@ -94,7 +94,7 @@ sub process
     croak("\$member_map not specified")    unless $member_map;
     croak("\$recipient_map not specified") unless $recipient_map;
 
-    # uc_args = FML::Command::UserControl specific parameters
+    # uc_args = FML::User::Control specific parameters
     my (@maps) = ($member_map, $recipient_map);
     my $uc_args = {
 	old_address => $old_address,
@@ -104,8 +104,8 @@ sub process
     my $r = '';
 
     eval q{
-	use FML::Command::UserControl;
-	my $obj = new FML::Command::UserControl;
+	use FML::User::Control;
+	my $obj = new FML::User::Control;
 	$obj->user_chaddr($curproc, $command_args, $uc_args);
     };
     if ($r = $@) {

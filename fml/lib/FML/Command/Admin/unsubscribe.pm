@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.25 2003/08/29 15:34:00 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.26 2003/09/27 03:00:15 fukachan Exp $
 #
 
 package FML::Command::Admin::unsubscribe;
@@ -80,7 +80,7 @@ sub process
     croak("member_map not specified")    unless $member_map;
     croak("recipient_map not specified") unless $recipient_map;
 
-    # FML::Command::UserControl specific parameters
+    # FML::User::Control specific parameters
     my $maplist = [ $member_map, $recipient_map ];
     my $uc_args = {
 	address => $address,
@@ -89,8 +89,8 @@ sub process
     my $r = '';
 
     eval q{
-	use FML::Command::UserControl;
-	my $obj = new FML::Command::UserControl;
+	use FML::User::Control;
+	my $obj = new FML::User::Control;
 	$obj->userdel($curproc, $command_args, $uc_args);
     };
     if ($r = $@) {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: delmoderator.pm,v 1.10 2003/08/23 04:35:30 fukachan Exp $
+# $FML: delmoderator.pm,v 1.11 2003/09/27 03:00:17 fukachan Exp $
 #
 
 package FML::Command::Admin::delmoderator;
@@ -82,7 +82,7 @@ sub process
     croak("recipient_map not undefined") unless defined $recipient_map;
     croak("recipient_map not specified") unless $recipient_map;
 
-    # $uc_args = FML::Command::UserControl specific parameters
+    # $uc_args = FML::User::Control specific parameters
     my $maplist = [ $member_map, $recipient_map ];
     my $uc_args = {
 	address => $address,
@@ -91,8 +91,8 @@ sub process
     my $r = '';
 
     eval q{
-	use FML::Command::UserControl;
-	my $obj = new FML::Command::UserControl;
+	use FML::User::Control;
+	my $obj = new FML::User::Control;
 	$obj->userdel($curproc, $command_args, $uc_args);
     };
     if ($r = $@) {

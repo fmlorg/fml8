@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: addmoderator.pm,v 1.7 2003/08/29 15:33:58 fukachan Exp $
+# $FML: addmoderator.pm,v 1.8 2003/09/27 03:00:16 fukachan Exp $
 #
 
 package FML::Command::Admin::addmoderator;
@@ -78,7 +78,7 @@ sub process
     croak("address is not specified")    unless $address;
     croak("member_map is not specified") unless $member_map;
 
-    # FML::Command::UserControl specific parameters
+    # FML::User::Control specific parameters
     my $uc_args = {
 	address => $address,
 	maplist => [ $member_map, $recipient_map ],
@@ -86,8 +86,8 @@ sub process
     my $r = '';
 
     eval q{
-	use FML::Command::UserControl;
-	my $obj = new FML::Command::UserControl;
+	use FML::User::Control;
+	my $obj = new FML::User::Control;
 	$obj->useradd($curproc, $command_args, $uc_args);
     };
     if ($r = $@) {

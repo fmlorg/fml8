@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: list.pm,v 1.16 2003/09/25 11:36:24 fukachan Exp $
+# $FML: list.pm,v 1.17 2003/09/27 03:00:16 fukachan Exp $
 #
 
 package FML::Command::Admin::list;
@@ -100,7 +100,7 @@ sub _show_list
     unless (defined $maplist) { croak("list: map undefined");}
     unless ($maplist)         { croak("list: map unspecified");}
 
-    # FML::Command::UserControl specific parameters
+    # FML::User::Control specific parameters
     my $uc_args = {
 	maplist => $maplist,
 	wh      => \*STDOUT,
@@ -109,8 +109,8 @@ sub _show_list
     my $r = '';
 
     eval q{
-	use FML::Command::UserControl;
-	my $obj = new FML::Command::UserControl;
+	use FML::User::Control;
+	my $obj = new FML::User::Control;
 	$obj->userlist($curproc, $command_args, $uc_args);
     };
     if ($r = $@) {
