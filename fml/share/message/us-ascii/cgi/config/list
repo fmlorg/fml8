@@ -1,0 +1,9 @@
+list up addresses.
+show the list of recipients by default.
+You can change list(map) to show within scroll.
+clock $_arg_button_show button after selection.
+Map you can select is either of
+member
+recipient
+and
+admin_member.
