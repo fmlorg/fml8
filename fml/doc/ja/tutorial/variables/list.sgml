@@ -132,7 +132,8 @@ article_non_mime_filter_rules</entry>
 <entry>
  とりあえず、だみ〜</entry>
 <entry>
-permit
+reject_empty_content_type
+   permit
    </entry>
 </row>
 <row>
@@ -856,6 +857,15 @@ lock_type</entry>
  ロックのタイプ</entry>
 <entry>
 flock
+   </entry>
+</row>
+<row>
+<entry>
+log_command_tail_starting_location</entry>
+<entry>
+ 最後の何行を表示するか？つまり tail -30 log の 30 の部分。</entry>
+<entry>
+30
    </entry>
 </row>
 <row>

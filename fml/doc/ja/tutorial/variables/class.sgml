@@ -184,6 +184,13 @@ list_command {
    }
 }
 
+log_command {
+
+   log_command { 
+    ?     $log_command_tail_starting_location
+   }
+}
+
 newml_command {
 
    newml_command { 
@@ -395,6 +402,9 @@ log {
           $log_format_type
           $log_type
           $use_log
+   }
+
+   log_command { 
    }
 
    log_computer_output { 
