@@ -1,6 +1,29 @@
 		CHANGES
 		Last Modified: $Date$
 
+2001/12/22
+
+   final clean up campaign in 2001
+   	クリーニングキャンペーン 2001 ファイナル:)
+	コメントおよびドキュメントの更新
+	空白の削除 \s*$
+	使っていないので削除したモジュール
+		FML::Messages
+		FML::MIME
+
+   renamed
+	FML::Checksum -> Mail::Message::Checksum
+  
+   FML::Process::Kernel 
+	remove FML::Messages
+	
+   TinyScheduler 
+	update documents and comments.
+	define get_mode for symmetric definition.
+	
+   FML::Confirm Credential.pm PCB.pm Parse.pm 
+	update comments
+
 2001/12/18
 
   記事の HTML 化を可能にする(デフォルトで ON)
@@ -1287,4 +1310,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.42 2001/12/18 12:59:58 fukachan Exp $
+$FML: CHANGES.txt,v 1.43 2001/12/22 02:54:34 fukachan Exp $
