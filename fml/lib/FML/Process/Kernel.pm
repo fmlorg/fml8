@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.231 2004/06/09 14:57:27 fukachan Exp $
+# $FML: Kernel.pm,v 1.232 2004/06/14 14:51:19 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1977,6 +1977,7 @@ sub __convert_message_nl
     my $local_dir = $config->{ ml_local_message_template_dir };
     my $charset   = $charsets->{ template_file_charset };
     my $buf       = '';
+    my $_m_args   = {};
 
     use File::Spec;
     $class =~ s@\.@/@g; # XXX . -> /
@@ -1989,26 +1990,56 @@ sub __convert_message_nl
 
     # import message template
     if (-f $file) {
-	use FileHandle;
-	my $fh = new FileHandle $file;
-	if (defined $fh) {
-	    my $xbuf;
-	    while ($xbuf = <$fh>) { $buf .= $xbuf;}
-	    $fh->close();
-	}
+	$buf = $curproc->__import_message_from_file($file);
     }
     else {
 	$curproc->logwarn("no such file: $file");
     }
 
+    # copy $m_args -> $_m_args;
+    my ($k, $v);
+    while (($k, $v) = each %$m_args) { 
+	# TERM_NL(XXX) -> XXX(natural language) or XXX (if failed);
+	if ($v =~ /TERM_NL\((\S+)\)/o) {
+	    my $x  = $1;
+	    my $lf = File::Spec->catfile($local_dir, $charset, "term", $x);
+	    my $f  = File::Spec->catfile($dir,       $charset, "term", $x);
+	    if (-f $lf) { $f = $lf;}
+	    $v = $curproc->__import_message_from_file($f) || $x;
+	    $v =~ s/[\s\n]*$//o;
+	}
+	$_m_args->{ $k } = $v;
+    }
+
     if (defined $buf) {
 	my $config = $curproc->config();
         if ($buf =~ /\$/o) {
-            $config->expand_variable_in_buffer(\$buf, $m_args);
+            $config->expand_variable_in_buffer(\$buf, $_m_args);
         }
     }
 
     return( $buf || $default_msg || '' );
+}
+
+
+# Descriptions: get message from file.
+#    Arguments: OBJ($curproc) STR($file)
+# Side Effects: none
+# Return Value: STR
+sub __import_message_from_file
+{
+    my ($curproc, $file) = @_;
+    my $buf = '';
+
+    use FileHandle;
+    my $fh = new FileHandle $file;
+    if (defined $fh) {
+	my $xbuf;
+	while ($xbuf = <$fh>) { $buf .= $xbuf;}
+	$fh->close();
+    }
+
+    return $buf;
 }
 
 
