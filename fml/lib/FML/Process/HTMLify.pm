@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: HTMLify.pm,v 1.1 2001/11/05 12:26:38 fukachan Exp $
+# $FML: HTMLify.pm,v 1.2 2001/11/05 13:02:35 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -132,6 +132,8 @@ options:
 _EOF_
 }
 
+
+sub finish {}
 
 sub DESTROY {}
 
