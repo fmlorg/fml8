@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MessageID.pm,v 1.19 2004/01/02 09:42:34 fukachan Exp $
+# $FML: MessageID.pm,v 1.20 2004/01/02 14:50:31 fukachan Exp $
 #
 
 package FML::Header::MessageID;
@@ -44,7 +44,7 @@ standard constructor.
 =cut
 
 
-# Descriptions: standard constructor
+# Descriptions: standard constructor.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: OBJ
@@ -68,12 +68,12 @@ open db and return HASH_REF for the db access.
 
 # Descriptions: open message-id database
 #    Arguments: OBJ($self) HASH_REF($db_args)
-# Side Effects: none
+# Side Effects: open database.
 # Return Value: HASH_ERF
 sub db_open
 {
     my ($self, $db_args) = @_;
-    my $dir  = $db_args->{ 'directory' };
+    my $dir  = $db_args->{ 'directory' } || '';
     my $mode = 'temporal';
     my $days = 14;
 
@@ -119,7 +119,7 @@ set value for the key $key in message-id database.
 =cut
 
 
-# Descriptions: get value for $key
+# Descriptions: get value for $key.
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: none
 # Return Value: STR
@@ -137,7 +137,7 @@ sub get
 }
 
 
-# Descriptions: set value for $key
+# Descriptions: set value for $key.
 #    Arguments: OBJ($self) STR($key) STR($value)
 # Side Effects: none
 # Return Value: STR

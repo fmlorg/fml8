@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.41 2004/01/01 23:52:15 fukachan Exp $
+# $FML: Subject.pm,v 1.42 2004/01/02 14:50:32 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -15,7 +15,7 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Header::Subject - manipule the mail header subject
+FML::Header::Subject - manipulate the mail header subject
 
 =head1 SYNOPSIS
 
@@ -35,7 +35,7 @@ constructor.
 =cut
 
 
-# Descriptions: constructor
+# Descriptions: constructor.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
@@ -57,7 +57,7 @@ replace the subject with the newer content e.g. including the ML tag.
 =cut
 
 
-# Descriptions: add or rewrite the subject tag
+# Descriptions: add or rewrite the subject tag.
 #    Arguments: OBJ($self) OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: the header subject is rewritten
 # Return Value: none
@@ -95,13 +95,13 @@ sub rewrite_article_subject_tag
 }
 
 
-# Descriptions: delete subject tag
+# Descriptions: delete subject tag.
 #    Arguments: OBJ($self) STR($subject) STR($tag)
 # Side Effects: none
 # Return Value: STR
 sub clean_up
 {
-    my ($self, $subject, $tag) = @_;
+    my ($self, $subject, $tag)   = @_;
     my ($s, $in_code, $out_code) = $self->decode($subject, $tag);
     return $self->delete_subject_tag($s, $tag);
 }
@@ -114,7 +114,7 @@ sub clean_up
 sub decode
 {
     my ($self, $subject, $tag) = @_;
-    my ($in_code, $out_code) = ();
+    my ($in_code, $out_code)   = ();
 
     # for example, ml_name = elena
     # if $tag has special regexp such as \U$ml_name\E or \L$ml_name\E
@@ -150,6 +150,8 @@ sub decode
 sub delete_subject_tag
 {
     my ($self, $subject, $tag) = @_;
+
+    # XXX-TODO: method-fy ?
     return _delete_subject_tag($subject, $tag);
 }
 
@@ -241,6 +243,7 @@ sub is_reply
     return 1 if $subject =~ /^\s*Re:/i;
 
     # XXX-TODO: care for not Japanese string!
+    # XXX-TODO: method-ify ?
     my $pkg = 'Mail::Message::Language::Japanese::Subject';
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {

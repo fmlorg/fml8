@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.67 2004/01/02 14:50:28 fukachan Exp $
+# $FML: Header.pm,v 1.68 2004/01/21 03:49:14 fukachan Exp $
 #
 
 package FML::Header;
@@ -93,7 +93,7 @@ alias of C<Mail::Header::set($key, $value)>.
 =cut
 
 
-# Descriptions: get() wrapper to remove \n$
+# Descriptions: get() wrapper to remove \n$.
 #    Arguments: OBJ($self) ARRAY(@x)
 # Side Effects: none
 # Return Value: STR
@@ -108,7 +108,7 @@ sub get
 }
 
 
-# Descriptions: set() wrapper
+# Descriptions: set() wrapper.
 #    Arguments: OBJ($self) ARRAY(@x)
 # Side Effects: none
 # Return Value: none
@@ -408,7 +408,7 @@ replace original C<Received:> to C<X-Received:>.
 =cut
 
 
-# Descriptions: rewrite subject if needed
+# Descriptions: rewrite subject if needed.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: update $header
 # Return Value: none
@@ -630,7 +630,7 @@ sub check_message_id
 }
 
 
-# Descriptions: check X-ML-Info: duplication against mail loop
+# Descriptions: check X-ML-Info: duplication against mail loop.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: none
 # Return Value: 1 or 0
@@ -649,7 +649,7 @@ sub check_x_ml_info
 }
 
 
-# Descriptions: check mail loop by List-Post: field
+# Descriptions: check mail loop by List-Post: field.
 #    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
 # Side Effects: none
 # Return Value: 1 or 0
