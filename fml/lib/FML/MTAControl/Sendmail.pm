@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sendmail.pm,v 1.1 2003/01/04 12:20:38 fukachan Exp $
+# $FML: Sendmail.pm,v 1.2 2003/01/07 08:38:33 fukachan Exp $
 #
 
 package FML::MTAControl::Sendmail;
@@ -28,6 +28,9 @@ set up aliases and virtual maps for sendmail.
 =head1 METHODS
 
 =cut
+
+# BUGS
+XXX-TODO: We should check "Tfml" in sendmail.cf in installation.
 
 
 # Descriptions: install new alias entries
