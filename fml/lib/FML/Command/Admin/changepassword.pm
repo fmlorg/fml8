@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: changepassword.pm,v 1.12 2004/04/23 04:10:29 fukachan Exp $
+# $FML: changepassword.pm,v 1.13 2004/04/28 04:10:36 fukachan Exp $
 #
 
 package FML::Command::Admin::changepassword;
@@ -164,6 +164,7 @@ sub _change_password
 {
     my ($self, $curproc, $command_args, $address, $password) = @_;
     my $config = $curproc->config();
+    my $cred   = $curproc->{ credential };
 
     # XXX We should always add/rewrite only $primary_*_map maps via
     # XXX command mail, CUI and GUI.
@@ -179,6 +180,17 @@ sub _change_password
 	password => $password,
     };
     my $r = '';
+
+    my $member_map = $config->{ primary_admin_member_map };
+    unless ($cred->has_address_in_map($member_map, $config, $address)) {
+	my $r  = "no such admin member";
+	my $r0 = "please add the address as an admin member.";
+	$curproc->reply_message_nl('error.no_such_admin_member', $r);
+	$curproc->reply_message_nl('command.please_add_admin_member',
+				   $r0);
+	$curproc->logerror($r);
+	croak($r);
+    }
 
     eval q{
 	use FML::Command::Auth;
@@ -200,7 +212,10 @@ sub rewrite_prompt
     my ($self, $curproc, $command_args, $rbuf) = @_;
 
     if (defined $rbuf) {
-	$$rbuf =~ s/^(.*(password|pass)\s+).*/$1 ********/;
+	$$rbuf =~ s/^(.*(password|pass)\s+\S+).*/$1 ********/;
+	unless ($$rbuf =~ /\*\*\*\*\*\*\*\*/o) {
+	    $$rbuf =~ s/^(.*(password|pass)\s+).*/$1 ********/;
+	}
     }
 }
 
