@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.19 2004/05/17 11:55:44 fukachan Exp $
+# $FML: Utils.pm,v 1.20 2004/05/17 12:33:31 fukachan Exp $
 #
 
 package Mail::Delivery::Utils;
@@ -48,7 +48,7 @@ require Exporter;
 
 =head1 NAME
 
-Mail::Delivery::Utils - utility functions for mail delivery class
+Mail::Delivery::Utils - utility functions for mail delivery class.
 
 =head1 SYNOPSIS
 
@@ -87,7 +87,7 @@ the logging message is forwarded to STDERR channel.
 # XXX-TODO: NO, we should NOT USE Log().
 
 
-# Descriptions: log by specified function pointer or into STDERR
+# Descriptions: log by specified function pointer or into STDERR.
 #    Arguments: STR($buf)
 # Side Effects: none
 # Return Value: none
@@ -125,7 +125,7 @@ C<$buf> is sent to C<STDERR>.
 =cut
 
 
-# Descriptions: log by specified function pointer or into STDERR
+# Descriptions: smtp sessoin log by specified function pointer or into STDERR.
 #    Arguments: OBJ($self) STR($buf)
 # Side Effects: none
 # Return Value: none
@@ -145,7 +145,7 @@ sub smtplog
 }
 
 
-# Descriptions: log by specified function pointer or into STDERR
+# Descriptions: smtp sessoin log by specified function pointer or into STDERR.
 #    Arguments: STR($buf)
 # Side Effects: none
 # Return Value: none
@@ -173,7 +173,7 @@ sub _smtplog
 
 =head2 error_set($mesg)
 
-save C<$mesg>.
+set C<$mesg> as error (latest error message).
 
 =head2 error()
 
@@ -288,13 +288,10 @@ For example, C<$status> is 'not done'.
 
 save the C<$position> for C<$map> IO.
 
-=head2 get_map_status($map)
 
-get the current C<$status> for C<$map> IO.
+=head2 set_mta_status($mta, $status)
 
-=head2 get_map_position($map)
-
-get the current C<$position> for C<$map> IO.
+save C<$status> for C<$mta>.
 
 =cut
 
@@ -336,6 +333,21 @@ sub set_mta_status
 	$self->{ _mtainfo }->{ $mta }->{status} || 'unknown';
     $self->{ _mtainfo }->{ $mta }->{status}      = $status;
 }
+
+
+=head2 get_map_status($map)
+
+get the current C<$status> for C<$map> IO.
+
+=head2 get_map_position($map)
+
+get the current C<$position> for C<$map> IO.
+
+=head2 get_mta_status($mta)
+
+get the current C<$status> for C<$mta>.
+
+=cut
 
 
 # Descriptions: get map status.
@@ -393,7 +405,7 @@ clear information around the latest map operation.
 =cut
 
 
-# Descriptions: rollback IO for current map.
+# Descriptions: rollback IO for current map back to the starting position.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: none

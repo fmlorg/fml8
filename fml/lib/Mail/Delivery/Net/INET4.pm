@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET4.pm,v 1.8 2004/01/02 14:42:47 fukachan Exp $
+# $FML: INET4.pm,v 1.9 2004/01/24 09:03:58 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET4;
@@ -37,7 +37,7 @@ sub connect4
     };
     if ($@) {
 	Log("Error: cannot create socket for $mta");
-	$self->error_set("Error: cannot create socket: $@");
+	$self->error_set("cannot create socket: $@");
 	return undef;
     }
 
@@ -49,7 +49,7 @@ sub connect4
     }
     else {
 	Log("(debug) error. fail to connect $mta");
-	$self->error_set("Error: cannot open socket: $!");
+	$self->error_set("cannot open socket: $!");
 	return undef;
     }
 }
@@ -57,7 +57,7 @@ sub connect4
 
 =head1 NAME
 
-Mail::Delivery::Net::INET4 - establish tcp connection over IPv4
+Mail::Delivery::Net::INET4 - establish tcp connection over IPv4.
 
 =head1 SYNOPSIS
 
@@ -76,14 +76,12 @@ IPv4. This is a typical socket program.
 =item C<connect4()>
 
 try L<connect(2)>.
-If it succeeds, returned
-$self->{ _socket } has true value.
-If not,
-$self->{ _socket } is undef.
+If it succeeds, returned file handle and set the value at $self->{ _socket }.
+If failed, $self->{ _socket } is undef.
 
 Avaialble arguments follows:
 
-    connect4( { _mta => $mta });
+    connect4( { _mta => $mta } );
 
 $mta is a hostname or [raw_ipv4_addr]:port form, for example,
 127.0.0.1:25.

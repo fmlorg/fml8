@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: admin.pm,v 1.7 2004/03/14 09:05:05 fukachan Exp $
+# $FML: admin.pm,v 1.8 2004/04/30 13:39:15 fukachan Exp $
 #
 
 package FML::Command::User::admin;
@@ -65,7 +65,7 @@ sub rewrite_prompt
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
@@ -265,7 +265,7 @@ sub _apply_new_admin_command_mail_restrictions
 	    return 0;
 	}
 	else {
-	    $curproc->log("unknown result");
+	    $curproc->log("unknown result: $result");
 	    return 0;
 	}
     }

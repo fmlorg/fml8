@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Address.pm,v 1.2 2004/02/04 15:13:12 fukachan Exp $
+# $FML: Address.pm,v 1.3 2004/02/15 04:38:37 fukachan Exp $
 #
 
 package Mail::Message::Address;
@@ -22,9 +22,13 @@ Mail::Message::Address - manipulate address type string.
 
 =head1 DESCRIPTION
 
+This class is an adapter for Mail::Address for convenience.
+
 =head1 METHODS
 
 =head2 C<new()>
+
+constructor.
 
 =cut
 
@@ -39,17 +43,18 @@ sub new
     my ($type) = ref($self) || $self;
 
     # parse it by Mail::Address.
-    my (@addrs) = Mail::Address->parse($str);
-    my $addr    = $addrs[0]->address;
+    my (@addrs) = Mail::Address->parse($str) || ();
+    my $addr    = $addrs[0]->address || '';
 
     # XXX in-core data area.
-    # XXX this aread may break Mail::Address object, so
-    # XXX we not use @ISA to Mail::Address class but use it via AUTOLOAD().
+    # XXX if we manipulate Mail::Address object, it is dangerous. So
+    # XXX not use @ISA to Mail::Address class but use it via AUTOLOAD()
+    # XXX as object composition.
     my $me = {
 	_addrs       => \@addrs,
-	_addr_head   => $addrs[0],
-	_string      => $addr,
-	_orig_string => $str,
+	_addr_head   => $addrs[0] || '',
+	_string      => $addr     || '',
+	_orig_string => $str      || '',
     };
 
     return bless $me, $type;
@@ -72,7 +77,7 @@ sub as_str
 
 =head2 clean_up()
 
-clean up address and return it.
+clean up address. no return value.
 
 =cut
 
@@ -119,9 +124,8 @@ sub substr
 
 =head1 Mail::Address FORWARDING.
 
-=head2 address()
-
-return address by string.
+forward request to Mail::Address class. Forwarded requests follow:
+phrase, address, comment, format, name, host, user, path, canon.
 
 =cut
 

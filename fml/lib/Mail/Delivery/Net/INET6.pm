@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: INET6.pm,v 1.13 2003/12/31 04:08:45 fukachan Exp $
+# $FML: INET6.pm,v 1.14 2004/01/24 09:03:58 fukachan Exp $
 #
 
 package Mail::Delivery::Net::INET6;
@@ -99,7 +99,7 @@ sub connect6
 	}
     }
 
-    # hmm, invalid MTA
+    # Error: hmm, invalid MTA
     unless ($host && $port) {
 	Log("connect6: cannot find mta=$mta");
 	$self->{_socket} = undef;
@@ -118,7 +118,7 @@ sub connect6
 	my @res = getaddrinfo($host, $port, AF_UNSPEC, SOCK_STREAM);
 	$family = -1;
 
-	# clean up
+	# reset.
 	delete $self->{_socket} if defined $self->{_socket};
 
       ADDR_ENTRY:
@@ -133,8 +133,9 @@ sub connect6
 
 	    $fh = new IO::Socket;
 	    socket($fh, $family, $type, $proto) || do {
+		# XXX-TODO: need error_clear() some where ???
 		Log("Error: cannot create IPv6 socket");
-		$self->error_set("Error: cannot create IPv6 socket");
+		$self->error_set("cannot create IPv6 socket");
 		next ADDR_ENTRY;
 	    };
 	    if (connect($fh, $saddr)) {
@@ -143,7 +144,7 @@ sub connect6
 	    }
 	    else {
 		Log("Error: cannot connect [$host]:$port via IPv6");
-		$self->error_set("Error: cannot [$host]:$port via IPv6");
+		$self->error_set("cannot [$host]:$port via IPv6");
 	    }
 
 	    $family = -1;
@@ -164,7 +165,7 @@ sub connect6
 	} else {
 	    delete $self->{_socket};
 	    Log("(debug6) fail to connect [$host]:$port by IPv6");
-	    $self->error_set("Error: cannot [$host]:$port via IPv6");
+	    $self->error_set("cannot [$host]:$port via IPv6");
 	}
     };
 
@@ -174,7 +175,7 @@ sub connect6
 
 =head1 NAME
 
-Mail::Delivery::Net::INET6 - establish tcp connection over IPv6
+Mail::Delivery::Net::INET6 - establish tcp connection over IPv6.
 
 =head1 SYNOPSIS
 
@@ -197,14 +198,12 @@ If Socket6 module exists, we assume your operating system is IPv6 ready!
 =item C<connect6()>
 
 try L<connect(2)>.
-If it succeeds, returned
-$self->{ _socket } has true value.
-If not,
-$self->{ _socket } is undef.
+If it succeeds, returned socket and set the value at $self->{ _socket }.
+If failed, $self->{ _socket } is undef.
 
 Avaialble arguments follows:
 
-    connect6( { _mta => $mta });
+    connect6( { _mta => $mta } );
 
 $mta is a hostname or [raw_ipv6_addr]:port form, for example,
 [::1]:25.

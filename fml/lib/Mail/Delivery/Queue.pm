@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.38 2004/06/27 02:39:31 fukachan Exp $
+# $FML: Queue.pm,v 1.39 2004/06/27 06:02:59 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -17,7 +17,7 @@ use Mail::Delivery::ErrorStatus qw(error_set error error_clear);
 
 =head1 NAME
 
-Mail::Delivery::Queue - hashed directory holding queue files
+Mail::Delivery::Queue - handle queue directory.
 
 =head1 SYNOPSIS
 
@@ -50,21 +50,21 @@ C<in()> method creates a new queue file C<$qf>. So, C<$qf> follows:
 
    $qf = "$queue_dir/new/$qid"
 
-When C<$qid> is prepared to be deliverd, you must move the queue file
-from new/ to active/ by C<rename(2)>. You can do it by C<setrunnable()>
-method.
+When C<$qid> queue is ready to be delivered, you must move the queue
+file from new/ to active/ by C<rename(2)>. To make this queue
+deliverable, use C<setrunnable()> method.
 
    $queue_dir/new/$qid  --->  $queue_dir/active/$qid
 
 The actual delivery is done by other modules such as
 C<Mail::Delivery>.
-C<Mail::Delivery::Queue> manipulats only queue around things.
+C<Mail::Delivery::Queue> manipulates only queue around things.
 
 =head1 METHODS
 
 =head2 new($args)
 
-constructor. You must specify C<queue directory> as
+constructor. You must specify at least C<queue directory> as
 
     $args->{ dirctory } .
 
@@ -208,7 +208,7 @@ where C<$qid> is like this: 990157187.20792.1
 =cut
 
 
-# Descriptions: return queue file list.
+# Descriptions: return queue file list as ARRAY_REF.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -289,8 +289,8 @@ sub getidinfo
     return {
 	id         => $id,
 	path       => $self->active_file_path($id),
-	sender     => $sender,
-	recipients => \@recipients,
+	sender     => $sender      || '',
+	recipients => \@recipients || [],
     };
 }
 
@@ -311,7 +311,7 @@ use Fcntl qw(:DEFAULT :flock);
 # Descriptions: lock queue.
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: flock queue
-# Return Value: 1 or 0
+# Return Value: NUM(1 or 0)
 sub lock
 {
     my ($self, $args) = @_;
@@ -335,7 +335,7 @@ sub lock
 # Descriptions: unlock queue.
 #    Arguments: OBJ($self)
 # Side Effects: unlock queue by flock(2)
-# Return Value: 1 or 0
+# Return Value: NUM(1 or 0)
 sub unlock
 {
     my ($self) = @_;
@@ -353,7 +353,7 @@ C<$msg> is C<Mail::Message> object by default.
 If C<$msg> object has print() method,
 arbitrary C<$msg> is acceptable.
 
-REMEMBER YOU MUST DO C<setrunnable()> for the queue to deliver.
+REMEMBER YOU MUST DO C<setrunnable()> for the queue to be delivered.
 If you not C<setrunnable()> it, the queue file is removed by
 C<DESTRUCTOR>.
 
@@ -430,7 +430,7 @@ C<info/recipients/> directories.
 =cut
 
 
-# Descriptions: set value for key
+# Descriptions: set value for key.
 #    Arguments: OBJ($self) STR($key) STR($value)
 # Side Effects: none
 # Return Value: same as close()
@@ -520,10 +520,10 @@ directory to C<active/> directory like C<postfix> queue strategy.
 =cut
 
 
-# Descriptions: enable this object queue to be delivery ready.
+# Descriptions: enable this object queue to be deliverable.
 #    Arguments: OBJ($self)
 # Side Effects: move $queue_id file from new/ to active/
-# Return Value: 1 (success) or 0 (fail)
+# Return Value: NUM( 1 (success) or 0 (fail) )
 sub setrunnable
 {
     my ($self)        = @_;
@@ -562,13 +562,13 @@ remove all queue assigned to this object C<$self>.
 
 =head2 valid()
 
-It checks the queue file is broken or not.
-return 1 (valid) or 0.
+check if the queue file is broken or not.
+return 1 (valid) or 0 (broken).
 
 =cut
 
 
-# Descriptions: remove queue files for this object (queue)
+# Descriptions: remove queue files for this object (queue).
 #    Arguments: OBJ($self)
 # Side Effects: remove queue file(s)
 # Return Value: none

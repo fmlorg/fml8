@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ESMTP.pm,v 1.9 2003/01/11 15:14:24 fukachan Exp $
+# $FML: ESMTP.pm,v 1.10 2003/01/11 15:16:34 fukachan Exp $
 #
 
 package Mail::Delivery::ESMTP;
@@ -29,7 +29,7 @@ sub new
 
 =head1 NAME
 
-Mail::Delivery::ESMTP - Extended SMTP class
+Mail::Delivery::ESMTP - Extended SMTP class.
 
 =head1 SYNOPSIS
 
@@ -37,8 +37,8 @@ Mail::Delivery::ESMTP - Extended SMTP class
 
       ... make Mail::Message object ...
 
-    use Mail::Delivery::ESMTP;
-    $service = new Mail::Delivery::ESMTP;
+    use Mail::Delivery;
+    $service = new Mail::Delivery { protocol => 'ESMTP' };
     $service->deliver( ... );
 
 See L<Mail::Delivery::SMTP> for more details since this ESMTP class

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Delivery.pm,v 1.10 2003/02/11 09:48:18 fukachan Exp $
+# $FML: Delivery.pm,v 1.11 2004/01/24 09:00:54 fukachan Exp $
 #
 
 package Mail::Delivery;
@@ -17,7 +17,7 @@ use IO::Socket;
 
 =head1 NAME
 
-Mail::Delivery - mail delivery system interface
+Mail::Delivery - mail delivery system interface.
 
 =head1 SYNOPSIS
 
