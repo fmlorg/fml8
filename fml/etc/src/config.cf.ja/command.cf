@@ -64,6 +64,8 @@ commands_for_user	=		help
 					add
 					unsubscribe
 					bye
+					on
+					off
 					remove
 					resign
 					signoff
