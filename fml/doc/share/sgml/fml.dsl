@@ -1,4 +1,4 @@
-<!-- $FML: fml.dsl,v 1.4 2002/04/01 23:41:08 fukachan Exp $ -->
+<!-- $FML: fml.dsl,v 1.5 2002/09/24 14:18:45 fukachan Exp $ -->
 
 <!DOCTYPE style-sheet PUBLIC "-//James Clark//DTD DSSSL Style Sheet//EN" [
    <!ENTITY docbook.dsl PUBLIC "-//Norman Walsh//DOCUMENT DocBook HTML Stylesheet//EN" CDATA DSSSL>
@@ -24,7 +24,7 @@ CDATA DSSSL>
   <style-specification use="docbook">
     <style-specification-body>
 
-      <![ %output.html; [
+      <![ %output.html; [ 
 
         (define %root-filename%
           ;; Name for the root HTML document
@@ -49,13 +49,14 @@ CDATA DSSSL>
 
 	(define ($email-footer$)
           (make sequence
-	    (make element gi: "p"
-                  attributes: (list (list "align" "center"))
+
               (make element gi: "small"
-                (literal "fml-devel (fml 8.0), fml next generation prototype, homepage is ")
+                 attributes: (list (list "align" "center"))
+
+                (literal "fml 8.0 (fml-devel) project homepage is ")
 	        (make element gi: "a"
-                      attributes:
-                      (list (list "href" "http://www.fml.org/software/fml-devel/")
+                      attributes: 
+                     (list (list "href" "http://www.fml.org/software/fml-devel/")
                             (list "target" "_top"))
                   (literal "www.fml.org/software/fml-devel/"))
                 (literal "."))
@@ -63,22 +64,70 @@ CDATA DSSSL>
                 (make empty-element gi: "br")
 
               (make element gi: "small"
-                (literal "fml 4.0 homepage is ")
+
+                (literal "fml 4.0 project homepage is ")
 	        (make element gi: "a"
-                      attributes:
-                     (list (list "href" "http://www.fml.org/fml/menu.html")
+                      attributes: 
+                     (list (list "href" "http://www.fml.org/fml/")
                             (list "target" "_top"))
-                  (literal "www.fml.org/fml/menu.html"))
+                  (literal "www.fml.org/fml/menu.ja.html"))
                 (literal "."))
 
                 (make empty-element gi: "br")
 
               (make element gi: "small"
+                (literal "about one floppy bsd routers, see ")
+	        (make element gi: "a"
+                      attributes: 
+                     (list (list "href" "http://www.bsdrouter.org/")
+                            (list "target" "_top"))
+                  (literal "www.bsdrouter.org/"))
+                (literal "."))
+
+                (make empty-element gi: "br")
+
+              (make element gi: "small"
+                (literal "other free softwares are found at ")
+	        (make element gi: "a"
+                      attributes: 
+                      (list (list "href" "http://www.fml.org/software/") 
+                            (list "target" "_top"))
+                  (literal "www.fml.org/software/"))
+                (literal "."))
+
+                (make empty-element gi: "br")
+
+
+	    (make element gi: "p"
+              (make element gi: "small"
+                (literal "author's homepage is ")
+	        (make element gi: "a"
+                      attributes: 
+                      (list (list "href" "http://www.fml.org/home/fukachan/") 
+                            (list "target" "_top"))
+                  (literal "www.fml.org/home/fukachan/"))
+                (literal "."))
+
+                (make empty-element gi: "br")
+
+              (make element gi: "small"
+                (literal "Also, visit nuinui's world :) at ")
+	        (make element gi: "a"
+                      attributes: 
+                     (list (list "href" "http://www.nuinui.net/")
+                            (list "target" "_top"))
+                  (literal "www.nuinui.net"))
+                (literal "."))
+
+                (make empty-element gi: "br")
+
+              (make element gi: "p"
                 (literal "For questions about FML, e-mail <")
                 (make element gi: "a"
                       attributes: (list (list "href" "mailto:fml-bugs@fml.org"))
                   (literal "fml-bugs@fml.org"))
 	        (literal ">.")))))
+
       ]]>
 
     </style-specification-body>
