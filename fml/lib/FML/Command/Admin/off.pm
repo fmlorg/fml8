@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: off.pm,v 1.3 2002/09/22 14:56:45 fukachan Exp $
+# $FML: off.pm,v 1.4 2002/12/20 03:40:12 fukachan Exp $
 #
 
 package FML::Command::Admin::off;
@@ -61,7 +61,7 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ config };
 
-    # XXX-TODO: we should use $config->get_as_array_ref(). 
+    # XXX-TODO: we should use $config->get_as_array_ref().
     my @recipient_map = split(/\s+/, $config->{ recipient_maps });
     my $options       = $command_args->{ options };
     my $address       = $command_args->{ command_data } || $options->[ 0 ];

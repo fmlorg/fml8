@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.28 2002/09/22 14:57:06 fukachan Exp $
+# $FML: Analyze.pm,v 1.29 2002/12/22 03:20:44 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -92,7 +92,7 @@ sub assign
     my $subject  = $header->get('subject');
     my $is_reply = _is_reply($subject);
 
-    # XXX-TODO: who validate $thread_id regexp 
+    # XXX-TODO: who validate $thread_id regexp
     # XXX-TODO: since $thread_id is given from outside.
     # 1. try to extract $thread_id from header
     my $thread_id = $self->_extract_thread_id_in_subject($header);

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.44 2002/09/22 14:56:55 fukachan Exp $
+# $FML: Kernel.pm,v 1.45 2002/12/22 03:46:21 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -350,7 +350,7 @@ sub cgi_execute_command
     unless ($config->has_attribute("commands_for_admin_cgi", $comname)) {
 	LogError("cgi deny command: mode=$commode level=cgi");
 
-	# XXX-TODO: validate $comname (CSS). 
+	# XXX-TODO: validate $comname (CSS).
 	my $buf = $curproc->message_nl("cgi.deny",
 				       "Error: deny $comname command");
 	print $buf, "<BR>\n";
@@ -369,7 +369,7 @@ sub cgi_execute_command
 	    $obj->$comname($curproc, $command_args);
 	};
 	unless ($@) {
-	    # XXX-TODO: validate $comname (CSS). 
+	    # XXX-TODO: validate $comname (CSS).
 	    print "OK! $comname succeed.\n";
 	}
 	else {

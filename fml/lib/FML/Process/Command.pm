@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.75 2002/09/22 14:56:52 fukachan Exp $
+# $FML: Command.pm,v 1.76 2002/12/24 10:08:54 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -166,7 +166,7 @@ sub run
 				       "deny request from a not member");
 	}
 
-	# append the incoming message into the error message sent back 
+	# append the incoming message into the error message sent back
 	# as the reference.
 	my $msg = $curproc->incoming_message();
 	$curproc->reply_message( $msg );
@@ -279,7 +279,7 @@ sub _config_permit_command
 				       "not command, ignored.");
 	}
 	elsif ($level eq 'stranger') {
-	    ; # ignored. 
+	    ; # ignored.
 	}
 	else {
 	    LogWarn("unknown level=$level");
@@ -485,7 +485,7 @@ sub _get_command_mode
 	    my $sender  = $curproc->{'credential'}->{'sender'};
 	    my $data    = $command;
 
-	    # XXX-TODO: (password|pass) hard-coded. 
+	    # XXX-TODO: (password|pass) hard-coded.
 	    $data =~ s/^.*(password|pass)\s+//;
 	    my $optargs = { address => $sender, password => $data };
 
@@ -744,11 +744,11 @@ sub _evaluate_command_lines
 
 
 	# [CAUTION]
-	#    mode  = { user, admin }; 
+	#    mode  = { user, admin };
 	#    level = { strange, user, admin };
 
 
-	# 1.3 valid mode 
+	# 1.3 valid mode
 	unless ($mode eq 'user' || $mode eq 'admin') {
 	    LogError("command processing stop.");
 	    $curproc->__stop_here($args, $status, $cominfo, $orig_command);

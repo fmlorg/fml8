@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.50 2002/12/18 04:43:52 fukachan Exp $
+# $FML: Utils.pm,v 1.51 2002/12/23 14:45:46 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -111,12 +111,12 @@ See L<Mail::Message> for more details.
 
 =head2 incoming_message_header()
 
-return the header part for the incoming message. 
+return the header part for the incoming message.
 It is the head of a chain of Mail::Message objects.
 
 =head2 incoming_message_body()
 
-return the body part for the incoming message. 
+return the body part for the incoming message.
 It is the 2nd part of a chain of Mail::Message objects and after.
 For example,
 
@@ -657,7 +657,7 @@ return $ml_home_prefix in main.cf.
 =cut
 
 # XXX-TODO: __ml_home_prefix_from_main_cf() is not needed.
-# XXX-TODO: since FML::Process::Switch calculate this variable and 
+# XXX-TODO: since FML::Process::Switch calculate this variable and
 # XXX-TODO: set it to $curproc->{ main_cf }.
 
 

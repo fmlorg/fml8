@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: off.pm,v 1.4 2002/09/22 14:56:47 fukachan Exp $
+# $FML: off.pm,v 1.5 2002/12/18 04:22:37 fukachan Exp $
 #
 
 package FML::Command::User::off;
@@ -65,9 +65,9 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ config };
 
-    # 
+    #
     # XXX-TODO: correct to use primary_*_map for on/off ?
-    # 
+    #
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };

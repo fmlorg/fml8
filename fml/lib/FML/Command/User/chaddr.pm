@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.14 2002/09/22 14:56:47 fukachan Exp $
+# $FML: chaddr.pm,v 1.15 2002/12/18 04:22:36 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -68,9 +68,9 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ config };
 
-    # 
+    #
     # XXX-TODO: correct to use *_maps not primary_*_map for chaddr?
-    # 
+    #
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };

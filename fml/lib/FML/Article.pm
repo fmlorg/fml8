@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.49 2002/10/20 13:20:12 fukachan Exp $
+# $FML: Article.pm,v 1.50 2002/12/15 14:02:08 fukachan Exp $
 #
 
 package FML::Article;
@@ -81,7 +81,7 @@ sub new
 
 # Descriptions: build an article template to distribute.
 #    Arguments: OBJ($curproc)
-# Side Effects: build $curproc->{ article } HASH_REF. 
+# Side Effects: build $curproc->{ article } HASH_REF.
 # Return Value: none
 sub _setup_article_template
 {

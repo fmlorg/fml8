@@ -4,13 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.33 2002/09/22 14:56:39 fukachan Exp $
+# $FML: Command.pm,v 1.34 2002/12/22 03:39:43 fukachan Exp $
 #
 
-# XXX 
+# XXX
 # XXX FML::Command should be simple since all program uses this wrapper.
 # XXX So, complicated checks are moved to FML::Process::* and each module.
-# XXX 
+# XXX
 
 package FML::Command;
 use strict;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.37 2002/12/20 03:35:41 fukachan Exp $
+# $FML: Credential.pm,v 1.38 2002/12/23 14:36:24 fukachan Exp $
 #
 
 package FML::Credential;
@@ -85,11 +85,11 @@ sub DESTROY {}
 
 =head1 ACCESS METHODS
 
-=head2 set_user_part_case_sensitive() 
+=head2 set_user_part_case_sensitive()
 
 compare user part case sensitively (default).
 
-=head2 set_user_part_case_insensitive() 
+=head2 set_user_part_case_insensitive()
 
 compare user part case insensitively.
 

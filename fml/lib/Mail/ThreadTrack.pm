@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.30 2002/09/28 09:27:43 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.31 2002/12/22 03:21:32 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -79,7 +79,7 @@ Available variables in $args follows:
     msg_base_url            STR        "" or URL
     dir_mode                NUM        0755
     thread_id_syntax        STR        elena/%d
-    thread_subject_tag      STR        [elena/%d] 
+    thread_subject_tag      STR        [elena/%d]
     fd                      HANDLE     \*STDOUT
     logfp                   CODE       \&Log()
 

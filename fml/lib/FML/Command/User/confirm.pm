@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: confirm.pm,v 1.17 2002/09/22 14:56:47 fukachan Exp $
+# $FML: confirm.pm,v 1.18 2002/12/18 04:22:37 fukachan Exp $
 #
 
 package FML::Command::User::confirm;
@@ -162,7 +162,7 @@ sub _switch_command
 	croak("no such rule");
     }
 
-    # XXX-TODO: send back welcome file. 
+    # XXX-TODO: send back welcome file.
     # XXX-TODO: temporary solution, please clean up in near future!
     if ($class eq 'subscribe') {
 	use File::Spec;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.16 2002/12/18 04:46:21 fukachan Exp $
+# $FML: Auth.pm,v 1.17 2002/12/23 14:38:16 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -167,8 +167,8 @@ sub check_admin_member_password
 		my ($u, $p_infile) = split(/\s+/, $r);
 		my $p_input        = crypt( $password, $p_infile );
 
-		# XXX-TODO: is_same_assress() validates input ??? 
-		# XXX-TODO: we need to validate addresses here ??? 
+		# XXX-TODO: is_same_assress() validates input ???
+		# XXX-TODO: we need to validate addresses here ???
 		# 1.1 user match ?
 		if ($cred->is_same_address($u, $address)) {
 		    # 1.2 password match ?

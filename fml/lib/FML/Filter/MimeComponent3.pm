@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent3.pm,v 1.4 2002/11/10 14:50:19 fukachan Exp $
+# $FML: MimeComponent3.pm,v 1.5 2002/12/24 10:05:18 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -261,7 +261,7 @@ sub __basic_regexp_match
 }
 
 
-# Descriptions: cut off $mp from a chain of Mail::Message objects. 
+# Descriptions: cut off $mp from a chain of Mail::Message objects.
 #    Arguments: OBJ($self) OBJ($mp)
 # Side Effects: change a chain of objects.
 # Return Value: none

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: FileUtils.pm,v 1.6 2002/09/22 14:56:43 fukachan Exp $
+# $FML: FileUtils.pm,v 1.7 2002/12/18 04:46:22 fukachan Exp $
 #
 
 package FML::Command::FileUtils;
@@ -55,8 +55,8 @@ same as remove() below.
 
 =head2 remove($curproc, $command_args, $du_aregs)
 
-remove files specified in $du_args->{ options } 
-if the file exsits and the file name matches safe file regexp defined 
+remove files specified in $du_args->{ options }
+if the file exsits and the file name matches safe file regexp defined
 in FML::Restriction class.
 
 =cut

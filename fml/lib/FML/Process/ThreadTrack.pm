@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ThreadTrack.pm,v 1.36 2002/12/22 03:46:20 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.37 2002/12/24 10:06:25 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -353,7 +353,7 @@ sub _close
 
     for my $id (@$ra) {
 	# e.g. 100 -> elena/100
-	if ($id =~ /^\d+$/) { 
+	if ($id =~ /^\d+$/) {
 	    $id = $thread->_create_thread_id_strings($id);
 	}
 

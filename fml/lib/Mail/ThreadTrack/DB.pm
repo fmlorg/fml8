@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.30 2002/10/23 02:30:10 tmu Exp $
+# $FML: DB.pm,v 1.31 2002/12/22 03:21:32 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -30,7 +30,7 @@ Mail::ThreadTrack::DB - database access.
 
 open database.
 It uses tie() to bind a hash to a DB file.
-Our thread model uses several DB files such as 
+Our thread model uses several DB files such as
 C<%thread_id>,
 C<%date>,
 C<%status>,
@@ -284,7 +284,7 @@ sub db_last_modified
     my $db_dir        = $self->{ _db_dir };
     my $last_modified = 0;
 
-    # XXX-TODO: we supporse Berkeley DB. fix it. 
+    # XXX-TODO: we supporse Berkeley DB. fix it.
     use File::Spec;
     my $file = File::Spec->catfile($db_dir, "date.db");
     if (-f $file) {

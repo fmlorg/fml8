@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Digest.pm,v 1.4 2002/12/10 12:00:47 fukachan Exp $
+# $FML: Digest.pm,v 1.5 2002/12/22 03:39:43 fukachan Exp $
 #
 
 package FML::Digest;
@@ -48,7 +48,7 @@ sub new
 }
 
 
-=head1 GIANT LOCK VERSION of DIGEST 
+=head1 GIANT LOCK VERSION of DIGEST
 
 =head2 id()
 

@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.74 2002/12/18 04:35:25 fukachan Exp $
+# $FML: Config.pm,v 1.75 2002/12/22 04:43:05 fukachan Exp $
 #
 
 package FML::Config;
@@ -385,7 +385,7 @@ sub _read_file
 
 # Descriptions: update $config by re-evaluating variables relation.
 #    Arguments: OBJ($obj) STR($key) STR($value) STR($name_space) STR($mode)
-# Side Effects: update $config on memory. 
+# Side Effects: update $config on memory.
 # Return Value: none
 sub __update_config
 {

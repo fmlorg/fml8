@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.1 2002/11/20 10:58:09 tmu Exp $
+# $FML: digest.pm,v 1.2 2002/12/23 14:45:01 fukachan Exp $
 #
 
 package FML::Command::User::digest;
@@ -63,9 +63,9 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ config };
 
-    # 
+    #
     # XXX-TODO: correct to use primary_*_map for chaddr ?
-    # 
+    #
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
@@ -95,7 +95,7 @@ sub process
 
     if ($mode) {
 	Log("digest $mode");
-    
+
 	$command_args->{ command_data } = $address;
 	$command_args->{ options }->[0] = $address;
 	$command_args->{ options }->[1] = $mode;

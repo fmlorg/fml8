@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.12 2002/11/18 22:47:25 fukachan Exp $
+# $FML: HTMLify.pm,v 1.13 2002/12/23 14:43:18 fukachan Exp $
 #
 
 package FML::Command::HTMLify;
@@ -52,7 +52,7 @@ sub convert
     croak("dst_dir not defined") unless defined $dst_dir;
     croak("dst_dir not exists")  unless -d $dst_dir;
 
-    # XXX-TODO: NOT NEED THIS CHECK ? No, it it soog that 
+    # XXX-TODO: NOT NEED THIS CHECK ? No, it it soog that
     # XXX-TODO: we can convert MH folder to HTML format files.
     #     unless ($curproc->is_config_cf_exist()) {
     #		croak("invalid ML");

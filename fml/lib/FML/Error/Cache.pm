@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Cache.pm,v 1.6 2002/11/20 14:31:44 fukachan Exp $
+# $FML: Cache.pm,v 1.7 2002/12/18 04:23:41 fukachan Exp $
 #
 
 package FML::Error::Cache;
@@ -25,8 +25,8 @@ FML::Error::Cache - manipulate error/bounce information database.
 
 where C<$bounce_info) follows:
 
-    $bounce_info = [ 
-            { 
+    $bounce_info = [
+            {
 		address => 'rudo@nuinui.net',
 		status  => '5.x.y',
 		reason  => '... reason ... ',
@@ -170,9 +170,9 @@ sub _new
     my $mode    = $config->{ error_analyzer_cache_mode } || 'temporal';
     my $days    = $config->{ error_analyzer_cache_size } || 14;
 
-    # 
+    #
     # XXX-TODO: this _new() method is required ?
-    # 
+    #
     use Tie::JournaledDir;
     return new Tie::JournaledDir { dir => $dir };
 }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.3 2002/12/10 12:00:49 fukachan Exp $
+# $FML: digest.pm,v 1.4 2002/12/20 03:40:12 fukachan Exp $
 #
 
 package FML::Command::Admin::digest;
@@ -175,7 +175,7 @@ sub _digest_off
 
 
 # Descriptions: add the specified user.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($args) HASH_REF($uc_args)
 # Side Effects: update address list(s).
 # Return Value: none
@@ -197,7 +197,7 @@ sub _useradd
 
 
 # Descriptions: remove the specified user.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($args) HASH_REF($uc_args)
 # Side Effects: update address list(s).
 # Return Value: none
@@ -227,9 +227,9 @@ sub cgi_menu
     my ($self, $curproc, $args, $command_args) = @_;
     my $r = '';
 
-    # 
+    #
     # XXX-TODO: NOT IMPLEMENTED.
-    # 
+    #
     return;
 
     eval q{

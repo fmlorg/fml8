@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DataCheck.pm,v 1.6 2002/09/22 14:56:42 fukachan Exp $
+# $FML: DataCheck.pm,v 1.7 2002/12/18 04:46:22 fukachan Exp $
 #
 
 package FML::Command::DataCheck;
@@ -74,7 +74,7 @@ sub parse_command_arguments
     # Example:
     #    $comname = "subscribe";
     #    $command = "subscribe rudo von schmit";
-    #    @options = [ 'rudo', 'von', 'shmit' ]; 
+    #    @options = [ 'rudo', 'von', 'shmit' ];
     for my $buf (split(/\s+/, $command)) {
 	push(@options, $buf) if $found;
 	$found = 1 if $buf eq $comname;

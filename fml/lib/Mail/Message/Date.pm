@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.14 2002/09/22 14:57:03 fukachan Exp $
+# $FML: Date.pm,v 1.15 2002/12/22 03:09:56 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -342,7 +342,7 @@ sub date_to_unixtime
     }
     elsif ($in =~
 	/(\d+)\s+(\w+)\s+(\d+)\s+(\d+):(\d+)\s+([\+\-])(\d\d)(\d\d)/) {
-	if ($debug_mti) { 
+	if ($debug_mti) {
 	    print STDERR "Date2UnixTime: Standard without \$sec\n";
 	}
 
