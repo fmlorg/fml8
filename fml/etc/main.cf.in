@@ -1,5 +1,5 @@
 #
-# $FML: main.cf.in,v 1.1 2001/11/12 14:33:03 fukachan Exp $
+# $FML: main.cf.in,v 1.2 2001/11/18 04:50:58 fukachan Exp $
 #
 
 # fml version
@@ -21,7 +21,7 @@ exec_prefix		=	@exec_prefix@
 # $config_dir holds the global main configuration and 
 # several version-dependent default configurations
 # Example: /etc/fml
-config_dir		= 	@sysconfdir@
+config_dir		= 	@sysconfdir@/fml
 
 # Example: /etc/fml/defaults/$fml_version
 default_config_dir	=	$config_dir/defaults/$fml_version
