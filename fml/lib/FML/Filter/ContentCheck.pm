@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ContentCheck.pm,v 1.4 2002/04/23 23:52:50 tmu Exp $
+# $FML: ContentCheck.pm,v 1.5 2002/04/24 03:16:06 fukachan Exp $
 #
 
 package FML::Filter::ContentCheck;
@@ -12,6 +12,7 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use ErrorStatus qw(error_set error error_clear);
+use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
@@ -35,6 +36,8 @@ usual constructor.
 my $debug = 0;
 
 my (@default_rules) = qw(only_plaintext);
+my (@default_permit_rules) = qw(text/plain);
+my (@default_reject_rules) = qw();
 
 # Descriptions: constructor.
 #    Arguments: OBJ($self)
@@ -48,6 +51,8 @@ sub new
 
     # apply default rules
     $me->{ _rules } = \@default_rules;
+    $me->{ _permit_rules } = \@default_permit_rules;
+    $me->{ _reject_rules } = \@default_reject_rules;
 
     return bless $me, $type;
 }
@@ -69,6 +74,40 @@ sub rules
 {
     my ($self, $rarray) = @_;
     $self->{ _rules } = $rarray;
+}
+
+=head2 C<permit_rules( $rules )>
+
+overwrite rules by specified C<@$rules> ($rules is HASH ARRAY).
+
+=cut
+
+
+# Descriptions: access method to overwrite rule
+#    Arguments: OBJ($self) ARRAY_REF($rarray)
+# Side Effects: overwrite info in object
+# Return Value: none
+sub permit_rules
+{
+    my ($self, $rarray) = @_;
+    $self->{ _permit_rules } = $rarray;
+}
+
+=head2 C<reject_rules( $rules )>
+
+overwrite rules by specified C<@$rules> ($rules is HASH ARRAY).
+
+=cut
+
+
+# Descriptions: access method to overwrite rule
+#    Arguments: OBJ($self) ARRAY_REF($rarray)
+# Side Effects: overwrite info in object
+# Return Value: none
+sub reject_rules
+{
+    my ($self, $rarray) = @_;
+    $self->{ _reject_rules } = $rarray;
 }
 
 
@@ -132,9 +171,78 @@ sub only_plaintext
 	    my $prev_type = $prevmp->data_type();
 	    if ($prev_type eq "multipart.delimiter") {
 		$prevmp->delete_message_part_link();
+		Log("only_plaintext delete multipart delimiter");
 	    }
 	}
 	$mp->delete_message_part_link();
+	Log("only_plaintext delete not plain");
+    }
+    return 0;
+}
+
+# Descriptions: permit mimetype
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
+# Side Effects: croak()
+# Return Value: none
+sub permit_mimetype
+{
+    my ($self, $msg, $args) = @_;
+    my $mp   = $msg;
+    my ($data_type,$prevmp,$nextmp);
+    my $permits = $self->{ _permit_rules };
+
+   for ( ; $mp; $mp = $mp->{ next }) {
+        LOOPSTART:
+	$data_type = $mp->data_type();
+	next if($data_type eq "text/rfc822-headers");
+
+	foreach my $permit_type (@$permits) {
+	    next LOOPSTART if($data_type =~ $permit_type);
+	}
+
+	$prevmp = $mp->{ prev };
+	if($prevmp) {
+	    my $prev_type = $prevmp->data_type();
+	    if ($prev_type eq "multipart.delimiter") {
+		$prevmp->delete_message_part_link();
+		Log("permit_mimetype delete multipart delimiter");
+	    }
+	}
+	$mp->delete_message_part_link();
+	Log("permit_mimetype delete $reject_type");
+    }
+    return 0;
+}
+
+# Descriptions: reject mimetype
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
+# Side Effects: croak()
+# Return Value: none
+sub reject_mimetype
+{
+    my ($self, $msg, $args) = @_;
+    my $mp   = $msg;
+    my ($data_type,$prevmp,$nextmp);
+    my $rejects = $self->{ _reject_rules };
+
+   for ( ; $mp; $mp = $mp->{ next }) {
+	$data_type = $mp->data_type();
+	next if($data_type eq "text/rfc822-headers");
+
+	foreach my $reject_type (@$rejects) {
+	    next if($data_type ne $reject_type);
+
+	    $prevmp = $mp->{ prev };
+	    if($prevmp) {
+		my $prev_type = $prevmp->data_type();
+		if ($prev_type eq "multipart.delimiter") {
+		    $prevmp->delete_message_part_link();
+		    Log("reject_mimetype delete multipart delimiter");
+		}
+	    }
+	    $mp->delete_message_part_link();
+	    Log("reject_mimetype delete $reject_type");
+	}
     }
     return 0;
 }
