@@ -7,11 +7,10 @@
 #
 
 package FML::Log;
-require Exporter;
 
+require Exporter;
 @ISA       = qw(Exporter);
-@EXPORT    = qw(Log);
-@EXPORT_OK = qw(Log);
+@EXPORT_OK = qw(Log LogWarn LogError);
 
 use strict;
 use Carp;
@@ -27,14 +26,15 @@ FML::Log - several interfaces to open several files
 
 To import Log(),
 
-   use FML::Log qw(Log);
+   use FML::Log qw(Log LogWarn LogError);
    &Log( $log_message );
 
 or specify arguments in the hash reference
 
-   use FML::Log qw(Log);
+   use FML::Log qw(Log LogWarn LogError);
    &Log( $log_message , { 
        log_file => $log_file,
+       priority => $priority,
        facility => $facility,
        level    => $level,
    });
@@ -52,6 +52,7 @@ You can specify C<log_file>, C<facility> and C<level> as an optional.
 
     $args = {
        log_file => $log_file,
+       priority => $priority,
        facility => $facility,
        level    => $level,
    };
@@ -60,12 +61,17 @@ This routine depends on C<FML::Config> and C<FML::Credential>.
 $config->{ log_format_type } defines the format sytle.
 C<sender> to log is taken from C<FML::Credential> object.
 
+=head2 LogWarn( $message [, $args])
+
+same as Log("warn: $message", $args);
+
+=head2 LogError( $message [, $args])
+
+same as Log("error: $message", $args);
+
 =cut
 
 
-#  usage: &Log( message, { log_file => $log_file } );
-# return: none
-#
 sub Log
 {
     my ($mesg, $args) = @_;
@@ -73,6 +79,7 @@ sub Log
 
     # parse arguments
     my $log_file = $args->{ log_file };
+    my $priority = $args->{ priority };
     my $facility = $args->{ facility };
     my $level    = $args->{ level };
 
@@ -105,8 +112,22 @@ sub Log
 	}
     }
     else {
-	croak "Error: cannot open $file\n";
+	croak("cannot open $file");
     }
+}
+
+
+sub LogWarn
+{
+    my ($mesg, $args) = @_;
+    Log("warn: ".$mesg, $args);
+}
+
+
+sub LogError
+{
+    my ($mesg, $args) = @_;
+    Log("error: ".$mesg, $args);
 }
 
 
