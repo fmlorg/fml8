@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.64 2002/04/15 10:29:55 fukachan Exp $
+# $FML: Switch.pm,v 1.65 2002/04/16 04:04:44 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -239,6 +239,8 @@ sub _usual_parse_argv
 		push(@cf, $cf);
 	    }
 	}
+
+	last if $found_cf;
 
 	# 2. /var/spool/ml/elena looks a $ml_home_dir ?
 	if (-d $_) {
