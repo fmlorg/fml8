@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.62 2002/05/11 09:46:29 fukachan Exp $
+# $FML: Message.pm,v 1.63 2002/05/11 09:52:45 fukachan Exp $
 #
 
 package Mail::Message;
@@ -2012,6 +2012,20 @@ sub message_text
     else {
 	return substr($$data, $pos_begin, $msglen);
     }
+}
+
+
+# Descriptions: get body in message as ARRAY REF
+#    Arguments: OBJ($self) NUM($size)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub message_text_as_array_ref
+{
+    my ($self, @argv) = @_;
+    my $x = $self->message_text(@argv);
+    my @x = split(/\n/, $x);
+
+    return \@x;
 }
 
 
