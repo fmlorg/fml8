@@ -4,11 +4,12 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.45 2004/03/04 04:30:12 fukachan Exp $
+# $FML: Command.pm,v 1.46 2004/04/23 04:10:27 fukachan Exp $
 #
 
 # XXX
-# XXX FML::Command should be simple since all program uses this wrapper.
+# XXX FML::Command should be simple since many programs use this wrapper
+# XXX as the entrance into command modules.
 # XXX So, complicated checks are moved to FML::Process::* and each module.
 # XXX
 
@@ -23,7 +24,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::Command - fml command dispatcher
+FML::Command - fml command dispatcher.
 
 =head1 SYNOPSIS
 
@@ -89,7 +90,7 @@ sub set_mode
     my ($self, $curproc, $command_args, $mode) = @_;
 
     # always 'user' if invalid mode specified.
-    # XXX use capital letter for module name used latter.
+    # XXX use capital letter for module name used latter (module loading).
     if ($mode =~ /admin/i) {
 	$command_args->{'command_mode'} = 'Admin';
     }
@@ -108,8 +109,8 @@ sub get_mode
     my ($self, $curproc, $command_args) = @_;
 
     if (defined $command_args->{ command_mode }) {
-	# XXX use capital letter for module name used latter.
-	if ($command_args->{'command_mode'} =~ /admin/i) {
+	# XXX use capital letter for module name used latter (module loading).
+	if ($command_args->{'command_mode'} eq 'Admin') {
 	    return 'Admin';
 	}
 	else {
@@ -194,7 +195,7 @@ sub notice_cc_recipient
     eval qq{ use $pkg; \$command = new $pkg;};
     unless ($@) {
 	if ($command->can('notice_cc_recipient')) {
-	    $command->notice_cc_recipient($curproc, $command_args);
+	    return $command->notice_cc_recipient($curproc, $command_args);
 	}
     }
 
@@ -245,14 +246,14 @@ sub simple_syntax_check
     my $options    = $command_args->{ options }    || [];
 
     # test pattern
-    my @test = @$options;
+    my (@test) = @$options;
     unshift(@test, $comsubname);
     unshift(@test, $comname);
     $self->safe_regexp_match($curproc, $command_args, \@test);
 }
 
 
-# Descriptions: simple syntax of given array by FML::Restriction::Command.
+# Descriptions: simple syntax check by FML::Restriction::Command.
 #    Arguments: OBJ($self) 
 #               OBJ($curproc) HASH_REF($command_args) ARRAY_REF($testlist)
 # Side Effects: none
@@ -286,9 +287,9 @@ C<FML::Command::$MODE::$command>.
 =cut
 
 
-# Descriptions: run FML::Command::XXX:YYY()
+# Descriptions: run FML::Command::MODE::COMMAND().
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
-# Side Effects: load appropriate module
+# Side Effects: load appropriate module.
 # Return Value: none
 sub AUTOLOAD
 {
@@ -297,7 +298,7 @@ sub AUTOLOAD
     my $default_lock_channel = 'command_serialize';
 
     # we need to ignore DESTROY()
-    return if $AUTOLOAD =~ /DESTROY/;
+    return if $AUTOLOAD =~ /DESTROY/o;
 
     # user mode by default
     # XXX IMPORTANT: user mode if the given mode is invalid.
