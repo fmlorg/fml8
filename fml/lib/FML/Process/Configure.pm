@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Configure.pm,v 1.25 2001/08/26 08:41:58 fukachan Exp $
+# $FML: Configure.pm,v 1.26 2001/10/14 00:58:41 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -171,7 +171,8 @@ sub _makefml
     # arguments to pass off to each method
     my $command_args = {
 	command_mode => 'admin',
-	command      => $method,
+	comname      => $method,
+	command      => "$method @options",
 	ml_name      => $ml_name,
 	options      => \@options,
 	argv         => $argv,
@@ -181,7 +182,24 @@ sub _makefml
     # here we go
     require FML::Command;
     my $obj = new FML::Command;
-    $obj->$method($curproc, $command_args);
+
+    if (defined $obj) {
+	# execute command ($comname method) under eval().
+	eval q{
+	    $obj->$method($curproc, $command_args);
+	};
+	unless ($@) {
+	    ; # not show anything
+	}
+	else {
+	    LogError("command $method fail");
+	    if ($@ =~ /^(.*)\s+at\s+/) {
+		my $reason = $1;
+		Log($reason); # pick up reason
+		croak($reason);
+	    }
+	}
+    }
 }
 
 
