@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.41.2.11 2003/06/14 14:54:22 fukachan Exp $
+# $FML: ToHTML.pm,v 1.41.2.12 2003/06/15 01:34:17 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 1;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.41.2.11 2003/06/14 14:54:22 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.41.2.12 2003/06/15 01:34:17 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -952,23 +952,6 @@ sub ndb
 }
 
 
-# Descriptions: convert space-separeted string to array
-#    Arguments: STR($str)
-# Side Effects: none
-# Return Value: ARRAY_REF
-sub __str2array
-{
-    my ($str) = @_;
-
-    return undef unless defined $str;
-
-    $str =~ s/^\s*//;
-    $str =~ s/\s*$//;
-    my (@a) = split(/\s+/, $str);
-    return \@a;
-}
-
-
 =head2 C<update_msg_html_links($id)>
 
 update link relation around C<$id>.
@@ -1023,8 +1006,9 @@ sub update_msg_html_links
 	}
     }
 
-    if (defined $self->{ _thread_list }->{ $id } ) {
-	my $thread_list = __str2array( $self->{ _thread_list }->{ $id } );
+    # hint cached on memory, provided by _print_thread().
+    if (defined $self->{ _hint_ref_key_list }->{ $id }) {
+	my $thread_list = $self->{ _hint_ref_key_list }->{ $id } || [];
 
 	# update link relation for all articles in this thread.
       KEY:
@@ -1701,11 +1685,11 @@ sub _print_thread
     if (@$idlist) {
       IDLIST:
 	for my $id (@$idlist) {
-	    # save $head_id => "id1 id2 id3 ..." for further use.
-	    # XXX override always (correct ?)
+	    # save $head_id => "id1 id2 id3 ..." on memory for further use.
+	    # "> 1" implies idlist contains others than myself.
 	    if ($#$idlist > 1) {
-		$self->{ _thread_list }->{ $id } = $buf;
-		_PRINT_DEBUG("\$self->{ _thread_list }->{ $id } = $buf");
+		my $ra = $ndb->get_as_array_ref('ref_key_list', $head_id);
+		$self->{ _hint_ref_key_list }->{ $id } = $ra;
 	    }
 
 	    # @$idlist = (number's)
