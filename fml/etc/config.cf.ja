@@ -6,6 +6,8 @@ ml_domain           = fml.org
 # Fully Qualified Domain Name
 fqdn                = ahodori.fml.org
 
+maintainer	    = elena-admin@$ml_domain
+
 # 投稿用のアドレス
 address_for_post    = elena@$ml_domain
 
