@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.2 2002/04/16 04:05:10 fukachan Exp $
+# $FML: Spool.pm,v 1.3 2002/04/19 05:21:54 fukachan Exp $
 #
 
 package FML::Process::Spool;
@@ -81,10 +81,16 @@ sub prepare
 sub verify_request
 {
     my ($curproc, $args) = @_;
+    my $argv   = $curproc->command_line_argv();
     my $config = $curproc->{ config };
 
     my $eval = $config->get_hook( 'fmlspool_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+
+    if (length(@$argv) == 0) {
+	$curproc->help();
+	exit(0);
+    }
 
     $eval = $config->get_hook( 'fmlspool_verify_request_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
