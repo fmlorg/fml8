@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: html2sgml.pl,v 1.2 2001/04/24 03:41:52 fukachan Exp $
+# $FML: html2sgml.pl,v 1.3 2001/04/24 13:46:31 fukachan Exp $
 #
 
 use strict;
