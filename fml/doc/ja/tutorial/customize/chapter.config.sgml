@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: chapter.config.sgml,v 1.1 2002/07/29 09:32:57 fukachan Exp $
 -->
 
 <chapter id="config">
@@ -8,7 +8,7 @@
 	</title>
 
 
-<sect1 id="config.site_default_config.cf">
+<sect1 id="config.sitedefaultconfig.cf">
 	<title>
 	そのホストのすべてのＭＬに同じ設定を強制する
 	</title>
