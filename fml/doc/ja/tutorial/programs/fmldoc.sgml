@@ -1,0 +1,22 @@
+<!--
+	$FML$
+-->
+
+<sect1 id="fmldoc">
+
+<title> fmldoc (/usr/local/bin/fmldoc) </title>
+
+<para>
+fmldoc の使い方は perldoc と同様です。fml の任意のモジュールに対しその
+ドキュメントを表示します。
+実のところ perldoc への wrapper です。
+
+<example>
+<screen>
+% fmldoc FML::Process::Kernel
+</screen>
+</example>
+
+</para>
+
+</sect1>
