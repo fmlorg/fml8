@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.74 2003/02/09 12:31:46 fukachan Exp $
+# $FML: Message.pm,v 1.75 2003/02/13 11:02:09 fukachan Exp $
 #
 
 package Mail::Message;
@@ -731,6 +731,9 @@ sub _header_mime_boundary
     my $m = $header->get('content-type');
 
     if (defined($m) && ($m =~ /boundary\s*=\s*\"(.*)\"/i)) { # case insensitive
+	return $1;
+    }
+    if (defined($m) && ($m =~ /boundary\s*=([^\s\(\)\<\>\@\,\;\:\\\"\/\[\]\?\=]+)/i)) { # case insensitive
 	return $1;
     }
     else {
