@@ -8,29 +8,6 @@
 	XXX
 
 
-[TODO]	$ml-admin の取り扱い
-
-	X-Sequence: fml-devel 435
-
-	Q: makefml newml elena --maintainer=foo@bar.domain
-
-	aliases は
-
-		elena-admin: foo@bar.domain
-	
-	とかなるのはあり?
-
-	Q: configure で?
-
-		elena-admin: fml
-
-	を
-
-		elena-admin: foo@bar.domain
-
-	にできるおぷしょん？
-
-
 [TODO]	fml 4 の cf を解釈できる互換ルーチン
 
 	cf シンタックスを読んで、
@@ -51,12 +28,6 @@
 	でも、ml-error はちがうだろうなぁ
 
 
-[TODO]	01_RFC_IO_ADAPTER.txt
-[TODO]	01_RFC_UPGRADE.txt
-
-	かんがえよー／まとめようー
-
-
 [TODO]	フィルタの拡張機能？
 
 	Q: content-type が正しいかどうかを調べる
@@ -73,121 +44,20 @@
 	れなど、てんこもりなので、text_plain_filter ってちょっと整理が
 	大変だなと。
 
+	Q: 古いメールは SPAM に違いない
+
 
 [TODO]	fml $ml spool {status,convert}: --srcdir= とか必要じゃない？
 
 		コマンドラインオプションは、OK？
 
 
-[TODO]	受信者としてだけの登録 (add2actives 相当、メールマガジンなど)は？
-
-	admin コマンド アドレス        --as-recipient
-
-	例:
-	admin useradd  rudo@nuinui.net --as-recipient
-
-	?
-
-	＊ こういう形式を認めると言うのはどうだ？
-
-		fml $ml コマンド-サブコマンド アドレス
-		fml $ml useradd-as-recipient アドレス
-
-
-[TODO]	off/on の問題
-
-	on は primary_recipient_map にだけ作用するが、
-	off は recipient_maps すべてに作用する(マッチする全ての map を
-	変化させる)
-
-	unsubscribe はすべての map をサーチし、該当するもの全てを
-	削除する。	 
-
-	いや、「どの *map からはずしたか」をどこかに保存しておいて、
-	適宜戻すようにしないといけない？
-
-	複数マッチするものがあったらどうするの？
-
-
-[TODO]	reply-to: special hack
-
-	   if (	To: ml1, ml2 ) {
-		set Reply-To: ml1, ml2
-	   }
-
-
 [TODO]	Accept-Language: を考慮する
-
-
-[TODO]	IO::Adapter
-
-	get_*() には File or !File にだけしかないのがある？
-
-	% grep -r 'sub get' ...
-
-		IO::Adapter::File	sub get_value_as_str
-		IO::Adapter::File	sub get_value_as_array_ref
-
-	XXX get_value_as_* ってつかわれてはいないのですよ、いまはね
-
-	SQL まわりの改良を （もういいの？）
-
-	write LDAP ;-)
-
-   [チェックリスト]
-	IO/Adapter/File.pm
-
-	IO/Adapter/Array.pm
-		IO/Adapter/NIS.pm
-		IO/Adapter/UnixGroup.pm
-
-	IO/Adapter/DBI.pm
-		IO/Adapter/MySQL.pm
 
 
 [TODO]	時間つき newml だと、あれか…
 
 	libexec/auto-newml ?
-
-
-[TODO]	時間つき subscribe 
-
-	subscribe -> 一カ月すると削除される？
-
-
-[TODO]	フィルタ: 古いメールは SPAM に違いない
-
-
-[TODO]	digest こまんど？ for CGI
-
-
-[TODO]	digest こまんど？ for user
-
-
-[TODO]	makefml で動くもの、動かないものは何？
-
-			get	***disabled***
-			mget	***disabled***
-			send	***disabled***
-			password	不要？
-			pass		不要？
-			dir 	＊不要？
-			ls 	＊不要？
-			file 	＊不要？
-			list 	＊不要？
-
-	* CGI でも不要？
-
-		dir ls file
-
-	   FML::Command::Admin::dir
-		cgi_menu() ?
-		ディレクトリ listing してくれる perl module ないかな？
-
-	* makefml get ???
-
-	ところで、誰に送信するんじゃ？ :-) って、そうか、makefml じゃ
-	なくて admin コマンドの時は考えなくてもいいからだな、それは …
 
 
 [TODO]	FML::Process::Scheduler ってかなり？
@@ -216,8 +86,6 @@
 		is_iso2022jp_string()
 		_look_not_iso2022jp_string()
 		compare_euc_string()
-
-	[TODO]
 
 	Mail/ThreadTrack/Print/Utils.pm に STR2EUC がある
 
@@ -276,8 +144,162 @@
 	ローカルな更新は、あまりよい結果にならないようだ。
 
 
+[TODO]	Subroutine_O_CREAT_redefined_at_
+
+>qmailで使っていると出る最近のメッセージ(送信は出来ています)
+>#なんで再定義なんだかよくわからん
+>
+>Subroutine_O_CREAT_redefined_at_
+>/usr/local/fml5/lib/fml/current-20030305/IO/Adapter/File.pm_line_161
+>Subroutine_O_RDWR_redefined_at_
+>/usr/local/fml5/lib/fml/current-20030305/IO/Adapter/File.pm_line_161
+
+おー これもたまに見る。module の load の順番だか何だかからくるんだろうけど…
+
+FileHandle と IO::File 両方 use しちゃうからか？
+
+うーん、わからん。
+
+
 ======================================================================
-		FNF-ify およびドキュメント
+○		アドレスの操作
+
+
+[TODO]	$ml-admin の取り扱い
+
+	X-Sequence: fml-devel 435
+
+	Q: makefml newml elena --maintainer=foo@bar.domain
+
+	aliases は
+
+		elena-admin: foo@bar.domain
+	
+	とかなるのはあり?
+
+	Q: configure で?
+
+		elena-admin: fml
+
+	を
+
+		elena-admin: foo@bar.domain
+
+	にできるおぷしょん？
+
+
+[TODO]	受信者としてだけの登録 (add2actives 相当、メールマガジンなど)は？
+
+	admin コマンド アドレス        --as-recipient
+
+	例:
+	admin useradd  rudo@nuinui.net --as-recipient
+
+	?
+
+	＊ こういう形式を認めると言うのはどうだ？
+
+		fml $ml コマンド-サブコマンド アドレス
+		fml $ml useradd-as-recipient アドレス
+
+
+[TODO]	off/on の問題
+
+	on は primary_recipient_map にだけ作用するが、
+	off は recipient_maps すべてに作用する(マッチする全ての map を
+	変化させる)
+
+	unsubscribe はすべての map をサーチし、該当するもの全てを
+	削除する。	 
+
+	いや、「どの *map からはずしたか」をどこかに保存しておいて、
+	適宜戻すようにしないといけない？
+
+	複数マッチするものがあったらどうするの？
+
+
+[TODO]	reply-to: special hack
+
+	   if (	To: ml1, ml2 ) {
+		set Reply-To: ml1, ml2
+	   }
+
+
+[TODO]	IO::Adapter
+
+	get_*() には File or !File にだけしかないのがある？
+
+	% grep -r 'sub get' ...
+
+		IO::Adapter::File	sub get_value_as_str
+		IO::Adapter::File	sub get_value_as_array_ref
+
+	XXX get_value_as_* ってつかわれてはいないのですよ、いまはね
+
+	SQL まわりの改良を （もういいの？）
+
+	write LDAP ;-)
+
+   [チェックリスト]
+	IO/Adapter/File.pm
+
+	IO/Adapter/Array.pm
+		IO/Adapter/NIS.pm
+		IO/Adapter/UnixGroup.pm
+
+	IO/Adapter/DBI.pm
+		IO/Adapter/MySQL.pm
+
+
+[TODO]	時間つき subscribe 
+
+	subscribe -> 一カ月すると削除される？
+
+
+[TODO]	digest こまんど？ for CGI
+
+
+[TODO]	digest こまんど？ for user
+
+
+[TODO]	makefml で動くもの、動かないものは何？
+
+			get	***disabled***
+			mget	***disabled***
+			send	***disabled***
+			password	不要？
+			pass		不要？
+			dir 	＊不要？
+			ls 	＊不要？
+			file 	＊不要？
+			list 	＊不要？
+
+	* CGI でも不要？
+
+		dir ls file
+
+	   FML::Command::Admin::dir
+		cgi_menu() ?
+		ディレクトリ listing してくれる perl module ないかな？
+
+	* makefml get ???
+
+	ところで、誰に送信するんじゃ？ :-) って、そうか、makefml じゃ
+	なくて admin コマンドの時は考えなくてもいいからだな、それは …
+
+
+
+
+
+======================================================================
+○		FNF-ify およびドキュメント
+
+
+
+[TODO]	01_RFC_IO_ADAPTER.txt
+[TODO]	01_RFC_UPGRADE.txt
+
+	かんがえよー／まとめようー
 
 
 [TODO]	ドキュメント( tutorial )
@@ -342,21 +364,6 @@
 	ちょっとコーディングスタイルが古いかな?
 	近々に見直すべし
 
-[TODO]	Subroutine_O_CREAT_redefined_at_
-
->qmailで使っていると出る最近のメッセージ(送信は出来ています)
->#なんで再定義なんだかよくわからん
->
->Subroutine_O_CREAT_redefined_at_
->/usr/local/fml5/lib/fml/current-20030305/IO/Adapter/File.pm_line_161
->Subroutine_O_RDWR_redefined_at_
->/usr/local/fml5/lib/fml/current-20030305/IO/Adapter/File.pm_line_161
-
-おー これもたまに見る。module の load の順番だか何だかからくるんだろうけど…
-
-FileHandle と IO::File 両方 use しちゃうからか？
-
-うーん、わからん。
 
 ----------
-$FML: 00_MEMO,v 1.74 2003/04/15 15:35:46 fukachan Exp $
+$FML: 00_MEMO,v 1.75 2003/05/03 02:27:11 fukachan Exp $
