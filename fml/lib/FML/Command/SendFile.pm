@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.11 2002/02/13 11:13:14 fukachan Exp $
+# $FML: SendFile.pm,v 1.12 2002/02/17 03:13:48 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -173,6 +173,7 @@ send back file specified as C<$command_args->{ _file_to_send }>.
 sub send_file
 {
     my ($self, $curproc, $command_args) = @_;
+    my $file_name = $command_args->{ _filename_to_send };
     my $what_file = $command_args->{ _file_to_send };
     my $config    = $curproc->{ config };
     my $charset   = $config->{ reply_message_charset };
@@ -188,8 +189,8 @@ sub send_file
 	$curproc->reply_message( {
 	    type        => "text/plain; charset=$charset",
 	    path        => $xxxx_template,
-	    filename    => "help",
-	    disposition => "help",
+	    filename    => $file_name,
+	    disposition => $file_name,
 	});
     }
     else {

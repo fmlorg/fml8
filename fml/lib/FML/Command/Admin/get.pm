@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.9 2002/02/20 14:10:37 fukachan Exp $
+# $FML: get.pm,v 1.10 2002/02/23 10:04:03 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
@@ -76,12 +76,12 @@ sub process
 	use File::Spec;
 	my $file = File::Spec->catfile($ml_home_dir, $f);
 
-	Log("send back $file"); # XXX but return to whom ?
-
 	if (-f $file) {
-	    Log("send back $file");
-	    $command_args->{ _file_to_send } = $file;
+	    Log("send back $f");
+	    $command_args->{ _filename_to_send } = $f;
+	    $command_args->{ _file_to_send }     = $file;
 	    $self->send_file($curproc, $command_args);
+	    delete $command_args->{ _filename_to_send };
 	    delete $command_args->{ _file_to_send };
 	}
 	else {
