@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: on.pm,v 1.4 2002/09/22 14:56:48 fukachan Exp $
+# $FML: digest.pm,v 1.1 2002/11/20 10:58:09 tmu Exp $
 #
 
 package FML::Command::User::digest;
@@ -16,7 +16,7 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Command::User::digest - digest
+FML::Command::User::digest - change delivery mode between digest and real time
 
 =head1 SYNOPSIS
 
@@ -53,7 +53,7 @@ sub new
 sub need_lock { 1;}
 
 
-# Descriptions: digest on or off adapter.
+# Descriptions: digest off/on adapter.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update database for confirmation.
 #               prepare reply message.
@@ -62,13 +62,17 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ config };
+
+    # 
+    # XXX-TODO: correct to use primary_*_map for chaddr ?
+    # 
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
     my $cache_dir     = $config->{ db_dir };
     my $keyword       = $config->{ confirm_command_prefix };
     my $command       = $command_args->{ command };
     my $address       = $curproc->{ credential }->sender();
-    my $mode          = "";
+    my $mode          = '';
 
     # fundamental check
     croak("\$member_map is not specified")    unless $member_map;
@@ -77,28 +81,38 @@ sub process
     use FML::Credential;
     my $cred = new FML::Credential $curproc;
 
-    # if not member, on request is wrong.
+    # if not member, "on" request is wrong.
     unless ($cred->is_member($address)) {
 	$curproc->reply_message_nl('error.not_member');
 	LogError("digest request from not member");
-	croak("not member");
+	croak("digest request from not member");
 	return;
     }
 
-    if ($command =~ /digest\s+(\w+)/)
-    {
+    if ($command =~ /digest\s+(\w+)/) {
     	$mode = $1;
     }
 
-    $command_args->{ command_data } = $address;
-    Log("change digest mode $command $mode");
-    use FML::Command::Admin::digest;
-    my $obj = new FML::Command::Admin::digest $curproc,$command_args;
-    if($mode eq "on") {
-	$obj->_on($curproc, $command_args);
+    if ($mode) {
+	Log("digest $mode");
+    
+	$command_args->{ command_data } = $address;
+	$command_args->{ options }->[0] = $address;
+	$command_args->{ options }->[1] = $mode;
+
+	use FML::Command::Admin::digest;
+	my $obj = new FML::Command::Admin::digest;
+	if ($mode eq "on" || $mode eq 'off') {
+	    $obj->process($curproc, $command_args);
+	}
+	else {
+	    LogError("unknown digest mode");
+	    croak("no such digest mode: off or on");
+	}
     }
-    if($mode eq "off") {
-	$obj->_off($curproc, $command_args);
+    else {
+	LogError("digest: mode not specified");
+	croak("digest: mode not specified");
     }
 }
 
