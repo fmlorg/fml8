@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.35 2002/12/20 03:44:52 fukachan Exp $
+# $FML: Subject.pm,v 1.36 2003/01/11 16:05:16 fukachan Exp $
 #
 
 package FML::Header::Subject;
@@ -72,7 +72,7 @@ sub rewrite_article_subject_tag
     my $subject = $header->get('subject');
 
     # decode MIME encoded string and get charset info if could.
-    ($subject, $in_code, $out_code) = $self->decode($subject, $tag);
+    ($subject, $tag, $in_code, $out_code) = $self->decode($subject, $tag);
 
     # cut off Re: Re: Re: ...
     $self->_cut_off_reply(\$subject);
@@ -110,7 +110,7 @@ sub clean_up
 # Descriptions: exapnd special regexp(s) and mime-decode subject.
 #    Arguments: OBJ($self) STR($subject) STR($tag)
 # Side Effects: none
-# Return Value: ARRAY(STR, STR, STR)
+# Return Value: ARRAY(STR, STR, STR, STR)
 sub decode
 {
     my ($self, $subject, $tag) = @_;
@@ -137,7 +137,7 @@ sub decode
     my $obj = new Mail::Message::Encode;
     $subject = $obj->decode_mime_string($subject , $out_code);
 
-    return ($subject, $in_code, $out_code);
+    return ($subject, $tag, $in_code, $out_code);
 }
 
 
