@@ -513,7 +513,7 @@ ldap_server_bind	=
 #      History:
 #        Value:
 #     Examples:
-ldap_query_filter	=	
+ldap_query_filter	=	(objectclass=*)
 
 =head1	CGI 関連の設定
 
