@@ -144,6 +144,11 @@ III部　fmlのカスタマイズ
 		登録しているアドレスの変更	OK
 		off/on				OK
 	簡単なまとめおくりはできます。
+
+		use_digest_program = yes / no
+
+		により使う/使わないが指定できます(yes by default)。
+
 	[TODO]	まとめおくり (fml 4 のような複雑なバージョン)
 
 	リモート管理は現在パスワード認証だけできます。			
@@ -442,4 +447,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.25 2003/02/11 13:51:01 fukachan Exp $
+$FML: STATUS.txt,v 1.26 2003/02/18 12:40:29 fukachan Exp $
