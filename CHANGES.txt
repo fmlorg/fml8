@@ -13,6 +13,33 @@
 	気をつけてください。
 
 
+2004/06/08
+
+   パッケージシステムのためにインストーラを拡張した
+	パッケージを作る際に、どこか仮想的なディレクトリに
+	一度インストールする必要があるなら、
+
+		make install install_root=/some/where
+
+	を使って下さい。/ のかわりに /some/where 以下へ
+	インストールされます。もちろんインストールされる各ファイルに埋
+	め込まれているパスは /some/where 部分がない状態のものです。
+
+	注意: 他のシステムでは
+
+		make install prefix=/some/where
+		make install DESTDIR=/some/where (←きっとBSDな人でしょう)
+
+	などが使われることもありますが、パッケージシステムを作る人にし
+	か関係がないこと、そして configure --prefix とまぎらわしいという
+	理由により、prefix ではないキーワードを使っています。
+
+2004/06/02
+
+   Mail::Bounce::SimpleMatch 
+	add yahoo.co.jp
+	change ybb.ne.jp end pattern
+
 2004/05/28
 
    FML::Article 
@@ -7157,4 +7184,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.206 2004/05/22 13:26:18 fukachan Exp $
+$FML: CHANGES.txt,v 1.207 2004/06/01 04:29:10 fukachan Exp $
