@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.105 2004/02/26 08:07:00 fukachan Exp $
+# $FML: Utils.pm,v 1.106 2004/02/26 13:19:37 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -14,6 +14,8 @@ use Carp;
 use FML::Log qw(Log LogWarn LogError);
 use File::Spec;
 use File::stat;
+
+my $debug = 0;
 
 
 =head1 NAME
@@ -1590,13 +1592,35 @@ sub get_charset
 	    }
 	}
 	else {
-	    $curproc->log("debug: no Accpet-Language:");
+	    $curproc->log("debug: no Accpet-Language:") if $debug;
 	}
     }
 
     $charset ||= $default;
-    $curproc->log("debug: category=$category charset=$charset");
+    $curproc->log("debug: category=$category charset=$charset") if $debug;
     return $charset;
+}
+
+
+# Descriptions: convert lang (e.g. ja) to charset (e.g. iso-2022-jp).
+#    Arguments: OBJ($curproc) STR($category) STR($lang)
+# Side Effects: none
+# Return Value: none
+sub lang_to_charset
+{
+    my ($curproc, $category, $lang) = @_;
+    my $config  = $curproc->config();
+    my $key     = sprintf("%s_charset_%s", $category, $lang);
+    my $charset = $config->{ $key } || '';
+
+    if ($charset) {
+	return $charset;
+    }
+    else {
+	my $s = "category=$category lang=$lang charset=none";
+	$curproc->logerror("lang_to_charset: $s");
+	return 'us-ascii';
+    }
 }
 
 
@@ -1643,7 +1667,7 @@ sub get_accept_language_list
     my $pcb = $curproc->pcb();
 
     if (defined $pcb) {
-	return $pcb->get('incoming_message', 'accept-language');
+	return( $pcb->get('incoming_message', 'accept-language') || [] );
     }
     else {
 	return [ ];
