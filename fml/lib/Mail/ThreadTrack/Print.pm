@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Print.pm,v 1.7 2001/11/07 04:07:23 fukachan Exp $
+# $FML: Print.pm,v 1.8 2001/11/07 09:28:28 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Print;
@@ -326,7 +326,7 @@ sub _valid_buf
     my ($str) = @_;
     $str = STR2EUC( $str );
 
-    if ($str =~ /^[\>\#\|]/) {
+    if ($str =~ /^[\>\#\|\*\:\;]/) {
 	return 0;
     }
     elsif ($str =~ /^in /) { # quotation ?
@@ -346,7 +346,7 @@ sub _valid_buf
 sub _delete_subject_tag_like_string
 {
     my ($str) = @_;
-    $str =~ s/\W[-\w]+.\s*\d+\W//g;
+    $str =~ s/^\s*\W[-\w]+.\s*\d+\W//g;
     $str =~ s/\s+/ /g;
     $str =~ s/^\s*//g;
     $str;
