@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.64 2003/10/16 15:06:57 fukachan Exp $
+# $FML: Kernel.pm,v 1.65 2003/10/18 04:43:51 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -868,6 +868,32 @@ sub cgi_try_get_ml_name
     }
     else {
 	return '';
+    }
+}
+
+
+=head2 safe_cgi_action_name
+
+return the current action name,
+
+=cut
+
+
+# Descriptions: return the current action name,
+#               which syntax is checked by regexp.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub safe_cgi_action_name
+{
+    my ($curproc) = @_;
+    my $name = $curproc->myname();
+
+    if ($curproc->is_safe_syntax('action', $name)) {
+	return $name;
+    }
+    else {
+	return undef;
     }
 }
 
