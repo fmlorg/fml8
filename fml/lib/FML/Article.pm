@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.30 2002/01/16 13:43:19 fukachan Exp $
+# $FML: Article.pm,v 1.31 2002/03/30 13:48:25 fukachan Exp $
 #
 
 package FML::Article;
@@ -161,7 +161,7 @@ sub spool_in
 	    mkpath( $spool_dir, 0, 0700 );
 	}
 
-	my $file = $self->filepath($curproc, $id);
+	my $file = $self->filepath($id);
 
 	use FileHandle;
 	my $fh = new FileHandle;
@@ -180,7 +180,7 @@ sub spool_in
 }
 
 
-=head2 filepath($curproc, $id)
+=head2 filepath($id)
 
 return article file path.
 
@@ -198,8 +198,12 @@ sub filepath
     my $config    = $curproc->{ config };
     my $spool_dir = $config->{ spool_dir };
 
-    use File::Spec;
-    my $file = File::Spec->catfile($spool_dir, $id); # ok.
+    use Mail::Message::Spool;
+    my $spool = new Mail::Message::Spool;
+    my $file  = $spool->filepath( {
+	spool_dir => $spool_dir,
+	id        => $id,
+    } );
 
     Log("debug: spooled path = $file");
 
