@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.1 2003/11/23 04:07:02 fukachan Exp $
+# $FML: DB.pm,v 1.2 2003/11/23 14:16:49 fukachan Exp $
 #
 
 package FML::User::DB;
@@ -104,7 +104,7 @@ search value for $key in $user_db_${class}_maps.
 
 
 # Descriptions: search value for $key in $user_db_${class}_maps.
-#    Arguments: OBJ($self) STR($class) STR($key) STR($value)
+#    Arguments: OBJ($self) STR($class) STR($key)
 # Side Effects: update database
 # Return Value: STR
 sub find
