@@ -1,0 +1,11 @@
+
+
+
+
+
+
+mail-message-0-5	mail-message-0-4 の bug fixes 他
+mail-message-0-4	0-3 以降で、一通り hack した直後のブレークポイント
+mail-message-0-3	パーサ部分ももつ
+mail-message-0-2	clean up
+mail-message-0-1	MailingList:: から Mail:: へ移行
