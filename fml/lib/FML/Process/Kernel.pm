@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.217 2004/03/12 11:45:51 fukachan Exp $
+# $FML: Kernel.pm,v 1.218 2004/03/13 06:03:24 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1478,7 +1478,7 @@ sub _reply_message_queuein
     $curproc->caller_info($msg, caller) if $debug;
 
     # process running under MTA can handle reply messages by mail.
-    unless ($curproc->is_under_mta_process() || $myname eq 'loader') {
+    unless ($curproc->allow_reply_message()) {
 	$curproc->logwarn("(debug) $myname disables reply_message()");
 	return;
     }
