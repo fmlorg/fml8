@@ -10,6 +10,14 @@
 # $command_run_start_hook = q{ 1;};
 # $command_verify_request_end_hook = q{ 1;};
 # $command_verify_request_start_hook = q{ 1;};
+# $digest_finish_end_hook = q{ 1;};
+# $digest_finish_start_hook = q{ 1;};
+# $digest_prepare_end_hook = q{ 1;};
+# $digest_prepare_start_hook = q{ 1;};
+# $digest_run_end_hook = q{ 1;};
+# $digest_run_start_hook = q{ 1;};
+# $digest_verify_request_end_hook = q{ 1;};
+# $digest_verify_request_start_hook = q{ 1;};
 # $distribute_finish_end_hook = q{ 1;};
 # $distribute_finish_start_hook = q{ 1;};
 # $distribute_prepare_end_hook = q{ 1;};
