@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: addadmin.pm,v 1.13 2003/09/27 03:00:15 fukachan Exp $
+# $FML: addadmin.pm,v 1.14 2003/11/23 03:54:45 fukachan Exp $
 #
 
 package FML::Command::Admin::addadmin;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::addadmin - add a new administrator
+FML::Command::Admin::addadmin - add a new remote administrator
 
 =head1 SYNOPSIS
 
@@ -23,7 +23,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-add a new administrator mail address.
+add a new remote administrator mail address.
 
 =head1 METHODS
 
@@ -66,22 +66,31 @@ sub lock_channel { return 'command_serialize';}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config        = $curproc->config();
+    my $config  = $curproc->config();
+    my $options = $command_args->{ options };
+    my $address = $command_args->{ command_data } || $options->[ 0 ];
+
+    # XXX We should always add/rewrite only $primary_*_map maps via 
+    # XXX command mail, CUI and GUI.
+    # XXX Rewriting of maps not $primary_*_map is
+    # XXX 1) may be not writable.
+    # XXX 2) ambigous and dangerous 
+    # XXX    since the map is under controlled by other module.
+    # XXX    for example, one of member_maps is under admin_member_maps. 
     my $member_map    = $config->{ primary_admin_member_map };
     my $recipient_map = $config->{ primary_admin_recipient_map };
-    my $options       = $command_args->{ options };
-    my $address       = $command_args->{ command_data } || $options->[ 0 ];
 
-    # fundamental check
+    # fundamental sanity check
     croak("address is not undefined")    unless defined $address;
     croak("member_map is not undefined") unless defined $member_map;
     croak("address is not specified")    unless $address;
     croak("member_map is not specified") unless $member_map;
 
-    # FML::User::Control specific parameters
+    # $uc_args  = FML::User::Control specific parameters
+    my $maplist = [ $member_map, $recipient_map ];
     my $uc_args = {
 	address => $address,
-	maplist => [ $member_map, $recipient_map ],
+	maplist => $maplist,
     };
     my $r = '';
 
