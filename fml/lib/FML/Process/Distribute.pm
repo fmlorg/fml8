@@ -199,6 +199,7 @@ sub _deliver_article
 
     # SMTP-FROM is a must!
     unless ( $config->{'maintainer'} ) {
+	Log("not delivery for undefined \$maintainer");
 	return;
     }
 
