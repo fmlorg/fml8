@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.6 2002/06/21 07:53:03 fukachan Exp $
+# $FML: UserControl.pm,v 1.7 2002/06/21 09:25:39 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -115,6 +115,7 @@ sub userlist
     my ($self, $curproc, $command_args, $uc_args) = @_;
     my $maplist = $uc_args->{ maplist };
     my $wh      = $uc_args->{ wh };
+    my $is_cgi  = 1 if defined $uc_args->{ is_cgi } && $uc_args->{ is_cgi };
 
     for my $map (@$maplist) {
 	my $obj = new IO::Adapter $map;
@@ -122,7 +123,14 @@ sub userlist
 	if (defined $obj) {
 	    my $x = '';
 	    $obj->open;
-	    while ($x = $obj->get_next_key()) { print $wh $x, "\n"; }
+	    while ($x = $obj->get_next_key()) {
+		if ($is_cgi) {
+		    print $wh $x, "<br>\n"; 
+		}
+		else {
+		    print $wh $x, "\n"; 
+		}
+	    }
 	    $obj->close;
 	}
 	else {
