@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.26 2002/09/11 23:18:18 fukachan Exp $
+# $FML: Sequence.pm,v 1.27 2002/09/22 14:56:57 fukachan Exp $
 #
 
 package File::Sequence;
@@ -202,7 +202,7 @@ sub get_id
 	return 0;
     }
 
-    return $id;
+    return chomp($id);
 }
 
 
