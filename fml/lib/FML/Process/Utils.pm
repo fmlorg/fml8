@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.60 2003/02/16 08:55:42 fukachan Exp $
+# $FML: Utils.pm,v 1.61 2003/02/20 04:32:50 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1109,6 +1109,45 @@ sub which_map_nl
     }
 
     return $found;
+}
+
+
+=head2 convert_to_mail_address($list)
+
+convert_to_mail_address() converts $list to mail addresses.
+For example
+
+    admin	=>	$maintainer
+    sender	=>	sender of the current message (From: in header)
+
+=cut
+
+
+# Descriptions: convert to mail addresses.
+#    Arguments: OBJ($curproc) ARRAY_REF($list)
+# Side Effects: none
+# Return Value: ARRAY_REF
+sub convert_to_mail_address
+{
+    my ($curproc, $list) = @_;
+    my $config = $curproc->config();
+    my $cred   = $curproc->{ credential };
+    my $result = [];
+
+    for my $rcpt (@$list) {
+	if ($rcpt eq 'admin') {
+	    push(@$result, $config->{ maintainer });
+	}
+	elsif ($rcpt eq 'sender') {
+	    my $sender = $cred->sender();
+	    push(@$result, $sender);
+	}
+	else {
+	    LogError("unknown recipient type $rcpt");
+	}
+    }
+
+    return $result;
 }
 
 

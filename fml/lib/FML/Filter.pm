@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.22 2003/03/05 15:10:42 fukachan Exp $
+# $FML: Filter.pm,v 1.23 2003/03/05 15:47:21 fukachan Exp $
 #
 
 package FML::Filter;
@@ -244,8 +244,17 @@ send back message on rejection, with reason if could.
 sub article_filter_reject_notice
 {
     my ($self, $curproc, $msg_args) = @_;
-    my $msg = $curproc->incoming_message();
-    my $r   = $msg_args->{ _arg_reason } || 'unknown';
+    my $config = $curproc->config();
+    my $msg    = $curproc->incoming_message();
+    my $r      = $msg_args->{ _arg_reason } || 'unknown';
+
+    # recipients
+    my $list  =
+	$config->get_as_array_ref('article_filter_reject_notice_recipients');
+    my $rcpts = $curproc->convert_to_mail_address($list);
+    $msg_args->{ recipient } = $rcpts;
+
+    Log("filter notice: [ @$rcpts ]");
 
     $curproc->reply_message_nl("error.reject_post",
 			       "your post is rejected.",
