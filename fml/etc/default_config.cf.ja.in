@@ -92,7 +92,7 @@ db_dir		= $var_dir/db
 
 
 # Descriptions: 入力されるメールを置くディレクトリ
-#      History: $DIR/var/Mail/
+#      History: LOG_MAIL_DIR ($DIR/var/Mail/)
 #        Value: directory
 #     Examples: /var/spool/ml/elena/var/mincoming
 mincoming_dir	= $var_dir/mincoming
@@ -442,23 +442,26 @@ x_ml_name			=	$ml_name
 
 =head1	メール本文(ボディ)への操作
 
+
 # Descriptions: ヘッダ情報を根拠にしたフィルタリングをするか？
 #      History:
 #        Value: yes / no
 #     Examples:
 use_body_filter		=	yes
 
+
 # Descriptions: フィルタリングのルール
 #      History:
 #        Value:
 #     Examples:
-body_filter_rules		=	reject_not_iso2022jp_japanese_string
-					reject_null_mail_body
-					reject_one_line_message
-					reject_old_fml_command_syntax
-					reject_invalid_fml_command_syntax
-					reject_japanese_command_syntax
-					reject_ms_guid
+body_filter_rules	=	reject_not_iso2022jp_japanese_string
+				reject_null_mail_body
+				reject_one_line_message
+				reject_old_fml_command_syntax
+				reject_invalid_fml_command_syntax
+				reject_japanese_command_syntax
+				reject_ms_guid
+
 
 # Descriptions: ヘッダ情報を根拠にしたループチェックをするか？
 #      History:
@@ -466,11 +469,13 @@ body_filter_rules		=	reject_not_iso2022jp_japanese_string
 #     Examples:
 use_body_loop_check		=	yes
 
+
 # Descriptions: ヘッダに対するループチェックのルール群
 #      History:
 #        Value:
 #     Examples:
 body_loop_check_rules		=	verify_body_cksum_uniqueness
+
 
 # Descriptions: Message-ID のキャッシュを格納するディレクトリ
 #      History:
@@ -1067,6 +1072,24 @@ has_select	=	yes
 #        Value: yes / no
 #     Examples:
 has_fork	=	yes
+
+=head1	デバッグに役立つ機能
+
+=head2	キャッシュ
+
+
+# Descriptions: 入力されるメールをキャッシュするか？
+#      History: $NUM_LOG_MAIL
+#        Value: yes / no
+#     Examples: y
+use_incoming_message_cache	=	yes
+
+
+# Descriptions: 入力されるメールを最大何通キャッシュするか
+#      History: $NUM_LOG_MAIL
+#        Value: NUM
+#     Examples: 128
+incoming_message_cache_size	=	128
 
 =head1 フック's
 
