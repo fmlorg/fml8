@@ -9,6 +9,7 @@ header.cf
 body.cf
 lock.cf
 log.cf
+distribute.cf
 spool.cf
 htmlarchive.cf
 command.cf
