@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.44 2002/06/23 08:15:43 fukachan Exp $
+# $FML: newml.pm,v 1.45 2002/06/25 12:35:31 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -85,10 +85,11 @@ sub process
     croak("\$ml_name is not specified")     unless $ml_name;
     croak("\$ml_home_dir is not specified") unless $ml_home_dir;
 
-    # update $ml_home_prefix and expand variables again.
-    $config->set( 'ml_home_prefix' , $ml_home_prefix );
+    # update $ml_home_prefix and $ml_home_dir to expand variables again.
+    $config->set( 'ml_home_prefix', $ml_home_prefix );
+    $config->set( 'ml_home_dir',    $ml_home_dir );
 
-    # "makefml --force newml elena" makes elena ML even if elena
+    # "makefml --force newml elena" creates elena ML even if elena
     # already exists.
     unless (defined $options->{ force } ) {
 	if (-d $ml_home_dir) {
@@ -97,20 +98,51 @@ sub process
 	}
     }
 
-    # check alias key defined in MTA aliases
-    if ($self->_mta_alias_has_ml_entry($curproc, $ml_name)) {
+    # check the duplication of alias keys in MTA aliases
+    # Example: search among all entries in postfix $alias_maps
+    if ($self->_is_mta_alias_maps_has_ml_entry($curproc, $params, $ml_name)) {
 	warn("$ml_name already exists (somewhere in MTA aliases)");
 	return ;
     }
 
-    # o.k. here we go !
+    # 0. creat $ml_home_dir
+    # 1. install $ml_home_dir/{config.cf,include,include-ctl}
+    # 2. set up aliases
+    # 3. prepare mail archive at ~fml/public_html/$domain/$ml/ ?
+    # 4. prepare cgi interface at ?
+    #      ~fml/public_html/cgi-bin/fml/$domain/admin/
+    #    prepare thread cgi interface at ?
+    #      ~fml/public_html/cgi-bin/fml/$domain/threadview.cgi ?
+    # 5. prepare listinfo url
+    $self->_init_ml_home_dir($curproc, $command_args, $params);
+    $self->_install_template_files($curproc, $command_args, $params);
+    $self->_update_aliases($curproc, $command_args, $params);
+    $self->_setup_mail_archive_dir($curproc, $command_args, $params);
+    $self->_setup_cgi_interface($curproc, $command_args, $params);
+    $self->_setup_listinfo($curproc, $command_args, $params);
+}
+
+
+# Descriptions: create $ml_home_dir if needed
+#    Arguments: OBJ($self)
+#               OBJ($curproc)
+#               HASH_REF($command_args)
+#               HASH_REF($params)
+# Side Effects: create $ml_home_dir dirctory if needed
+# Return Value: none
+sub _init_ml_home_dir
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $config      = $curproc->{ 'config' };
+    my $ml_home_dir = $config->{ ml_home_dir };
+
     eval q{
 	use File::Utils qw(mkdirhier);
-	use File::Spec;
+	unless (-d $ml_home_dir) {
+	    mkdirhier( $ml_home_dir, $config->{ default_dir_mode } || 0755 );
+	}
     };
     croak($@) if $@;
-
-    mkdirhier( $ml_home_dir, $config->{ default_dir_mode } || 0755 );
 
     # $ml_home_dir/etc/mail
     my $dirlist = $config->get_as_array_ref('init_config_dir_list');
@@ -120,20 +152,6 @@ sub process
 	    mkdirhier( $_dir, $config->{ default_dir_mode } || 0755 );
 	}
     }
-
-    # 1. install $ml_home_dir/{config.cf,include,include-ctl}
-    # 2. set up aliases
-    # 3. prepare mail archive at ~fml/public_html/$domain/$ml/ ?
-    # 4. prepare cgi interface at ?
-    #      ~fml/public_html/cgi-bin/fml/$domain/admin/
-    #    prepare thread cgi interface at ?
-    #      ~fml/public_html/cgi-bin/fml/$domain/threadview.cgi ?
-    # 5. prepare listinfo url
-    $self->_install_template_files($curproc, $command_args, $params);
-    $self->_update_aliases($curproc, $command_args, $params);
-    $self->_setup_mail_archive_dir($curproc, $command_args, $params);
-    $self->_setup_cgi_interface($curproc, $command_args, $params);
-    $self->_setup_listinfo($curproc, $command_args, $params);
 }
 
 
@@ -153,6 +171,8 @@ sub _install_template_files
     my $templ_files  =
 	$config->get_as_array_ref('newml_command_template_files');
 
+    # 1. set up fml specific files e.g. config.cf
+    use File::Spec;
     for my $file (@$templ_files) {
 	my $src = File::Spec->catfile($template_dir, $file);
 	my $dst = File::Spec->catfile($ml_home_dir, $file);
@@ -161,13 +181,14 @@ sub _install_template_files
 	_install($src, $dst, $params);
     }
 
+    # 2. set up MTA specific files e.g. include, .qmail-*
     use FML::MTAControl;
 
-    # setup include include-ctl ...
+    # 2.1 setup include include-ctl ... (postfix/sendmail style)
     my $postfix = new FML::MTAControl { mta_type => 'postfix' };
     $postfix->setup($curproc, $params);
 
-    # setup ~fml/.qmail-*
+    # 2.2 setup ~fml/.qmail-* (qmail style)
     my $qmail = new FML::MTAControl { mta_type => 'qmail' };
     $qmail->setup($curproc, $params);
 }
@@ -183,128 +204,36 @@ sub _install_template_files
 sub _update_aliases
 {
     my ($self, $curproc, $command_args, $params) = @_;
-    my $template_dir = $curproc->template_files_dir_for_newml();
-    my $config       = $curproc->{ config };
-    my $ml_name      = $config->{ ml_name };
-    my $ml_domain    = $config->{ ml_domain };
-
-    use File::Spec;
-    my $alias = $config->{ mail_aliases_file };
-    my $src   = File::Spec->catfile($template_dir, 'aliases');
-    my $dst   = $alias . "." . $$;
-
-    # update params
-    use FML::MTAControl;
-    my $postfix = new FML::MTAControl;
-    my $xparams = {};
-    for my $k (keys %$params) { $xparams->{ $k } = $params->{ $k };}
-    $postfix->virtual_params($curproc, $xparams);
-    _install($src, $dst, $xparams);
+    my $config    = $curproc->{ config };
+    my $ml_name   = $config->{ ml_name };
+    my $ml_domain = $config->{ ml_domain };
+    my $alias     = $config->{ mail_aliases_file };
 
     # append
-    if ($self->_alias_has_ml_entry($curproc, $alias, $ml_name)) {
+    if ($self->_is_mta_alias_maps_has_ml_entry($curproc, $params, $ml_name)) {
 	print STDERR "warning: $ml_name already defined!\n";
 	print STDERR "         ignore aliases updating.\n";
     }
     else {
-	print STDERR "updating $alias as $ml_name is a new ml\n";
 	eval q{
-	    use File::Utils qw(append);
-	    append($dst, $alias);
-	    unlink $dst;
+	    for my $mta (qw(postfix qmail)) {
+		my $optargs = { mta_type => $mta };
 
-	    unless ($curproc->is_default_domain($ml_domain)) {
+		use FML::MTAControl;
+		my $obj = new FML::MTAControl;
+
 		# we need to use the original $params here
-		$self->_install_postfix_virtual_map($curproc, $params);
-
 		# update templates for qmail/control/virtualdomains
-		$self->_install_qmail_virtual_map($curproc, $params);
-	    }
+		unless ($curproc->is_default_domain($ml_domain)) {
+		    $obj->install_virtual_map($curproc, $params, $optargs);
+		    $obj->update_virtual_map($curproc, $params, $optargs);
+		}
 
-	    use FML::MTAControl;
-	    my $postfix = new FML::MTAControl;
-	    $postfix->update_alias($curproc, {
-		mta_type   => 'postfix',
-		alias_maps => [ $alias ],
-	    });
+		$obj->install_alias($curproc, $params, $optargs);
+		$obj->update_alias($curproc, $params, $optargs);
+	    }
 	};
 	croak($@) if $@;
-    }
-}
-
-
-# Descriptions: install postfix virtual_maps
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params)
-# Side Effects: install/udpate postfix virtual_maps and the .db
-# Return Value: none
-sub _install_postfix_virtual_map
-{
-    my ($self, $curproc, $params) = @_;
-    my $template_dir = $curproc->template_files_dir_for_newml();
-    my $config       = $curproc->{ config };
-    my $ml_name      = $config->{ ml_name };
-    my $ml_domain    = $config->{ ml_domain };
-    my $postmap      = $config->{ path_postmap };
-
-    my $virtual = $config->{ postfix_virtual_map_file };
-    my $src     = File::Spec->catfile($template_dir, 'postfix_virtual');
-    my $dst     = $virtual . "." . $$;
-    print STDERR "updating $virtual\n";
-
-    # at the first time
-    unless( -f $virtual) {
-	my $fh = new FileHandle ">> $virtual";
-	if (defined $fh) {
-	    print $fh "# $ml_domain is one of \$mydestination\n";
-	    print $fh "# CAUTION: DO NOT REMOVE THE FOLLOWING LINE.\n";
-	    print $fh "$ml_domain\t$ml_domain\n\n";
-	    $fh->close();
-	}
-    }
-
-    _install($src, $dst, $params);
-    append($dst, $virtual);
-    unlink $dst;
-    system "$postmap $virtual";
-}
-
-
-# Descriptions: prepare a template for qmail/control/virtualdomains
-#               for example: rule of a virtual domain for "nuinui.net"
-#                            nuinui.net:fml-.nuinui.net
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($params)
-#         bugs: we cannot update /var/qmail/control/virtualdomains
-#               since it needs root priviledge.
-#               So, we can only update our templates for qmail. 
-# Side Effects: update template not /var/qmail/control/virtualdomains
-# Return Value: none
-sub _install_qmail_virtual_map
-{
-    my ($self, $curproc, $params) = @_;
-    my $fmlowner     = $curproc->fml_owner();
-    my $config       = $curproc->{ config };
-    my $ml_domain    = $config->{ ml_domain };
-    my $virtual      = $config->{ qmail_virtual_map_file };
-
-    # 1. check the current temlate file firstly
-    my $found = 0;
-    my $fh    = new FileHandle $virtual;
-    if (defined $fh) {
-	while (<$fh>) {
-	    $found = 1 if /^$ml_domain:/i;
-	}
-	$fh->close();
-    }
-
-    # 2. if not found
-    unless ($found) {
-	print STDERR "updating $virtual\n";
-
-	my $fh = new FileHandle ">> $virtual";
-	if (defined $fh) {
-	    print $fh "$ml_domain:$fmlowner-$ml_domain\n";
-	    $fh->close();
-	}
     }
 }
 
@@ -313,50 +242,25 @@ sub _install_qmail_virtual_map
 #    Arguments: OBJ($self) OBJ($curproc) STR($ml_name)
 # Side Effects: none
 # Return Value: NUM( 1 or 0 )
-sub _mta_alias_has_ml_entry
+sub _is_mta_alias_maps_has_ml_entry
 {
-    my ($self, $curproc, $ml_name) = @_;
+    my ($self, $curproc, $params, $ml_name) = @_;
     my $found = 0;
 
     eval q{
 	use FML::MTAControl;
-	my $postfix = new FML::MTAControl;
-	$found = $postfix->find_key_in_alias($curproc, {
-	    mta_type   => 'postfix',
-	    key        => $ml_name,
-	});
+
+	for my $mta (qw(postfix qmail)) {
+	    my $obj = new FML::MTAControl;
+	    $found = $obj->find_key_in_alias_maps($curproc, $params, {
+		mta_type   => $mta,
+		key        => $ml_name,
+	    });
+	}
     };
     croak($@) if $@;
 
     return $found;
-}
-
-
-# Descriptions: $alias file has an $ml_name entry or not
-#    Arguments: OBJ($self) OBJ($curproc) STR($alias) STR($ml_name)
-# Side Effects: none
-# Return Value: NUM( 1 or 0 )
-sub _alias_has_ml_entry
-{
-    my ($self, $curproc, $alias, $ml_name) = @_;
-    my $found = 0;
-
-    # search all entries defined in MTA
-    $found = $self->_mta_alias_has_ml_entry($curproc, $ml_name);
-    return 1 if $found;
-
-    use FileHandle;
-    my $fh = new FileHandle $alias;
-    if (defined $fh) {
-	while (<$fh>) {
-	    if (/ALIASES $ml_name\@/) {
-		return 1;
-	    }
-	}
-	$fh->close;
-    }
-
-    return 0;
 }
 
 
@@ -451,6 +355,7 @@ sub _setup_cgi_interface
 	    };
 	};
 
+	use File::Spec;
 	for my $dst (
 		   File::Spec->catfile($admin_cgi_dir, 'menu.cgi'),
 		   File::Spec->catfile($admin_cgi_dir, 'config.cgi'),

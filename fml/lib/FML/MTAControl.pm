@@ -4,13 +4,18 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MTAControl.pm,v 1.7 2002/06/01 05:02:31 fukachan Exp $
+# $FML: MTAControl.pm,v 1.8 2002/06/01 05:09:23 fukachan Exp $
 #
 
 package FML::MTAControl;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+use FML::MTAControl::Postfix;
+use FML::MTAControl::Qmail;
+@ISA = qw(FML::MTAControl::Postfix
+	  FML::MTAControl::Qmail);
 
 my $debug = 0;
 
@@ -52,37 +57,7 @@ sub new
     $me->{ mta_type } =
 	defined $args->{ mta_type } ? $args->{ mta_type } : 'postfix';
 
-    _update_isa($me);
-
     return bless $me, $type;
-}
-
-
-# Descriptions: load a sub module and update @ISA
-#    Arguments: OBJ($self) HASH_REF($optargs)
-# Side Effects: load FML::Control::$MTA and update @ISA
-# Return Value: none
-sub _update_isa
-{
-    my ($self, $optargs) = @_;
-    my $mta_type =
-	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
-	    $self->{ mta_type };
-
-    if ($mta_type eq 'postfix') {
-	eval q{
-	    use FML::MTAControl::Postfix;
-	    push(@ISA, qw(FML::MTAControl::Postfix));
-	};
-	croak($@) if $@;
-    }
-    elsif ($mta_type eq 'qmail') {
-	eval q{
-	    use FML::MTAControl::Qmail;
-	    push(@ISA, qw(FML::MTAControl::Qmail));
-	};
-	croak($@) if $@;
-    }
 }
 
 
@@ -114,14 +89,14 @@ sub setup
 # Return Value: none
 sub update_alias
 {
-    my ($self, $curproc, $optargs) = @_;
+    my ($self, $curproc, $params, $optargs) = @_;
     my $mta_type =
 	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
 	    $self->{ mta_type };
 
     if ($mta_type eq 'postfix' || $mta_type eq 'qmail') {
 	my $method = "${mta_type}_update_alias";
-	$self->$method($curproc, $optargs);
+	$self->$method($curproc, $params, $optargs);
     }
     else {
 	croak("unknown MTA");
@@ -133,17 +108,17 @@ sub update_alias
 #    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: none
-sub find_key_in_alias
+sub find_key_in_alias_maps
 {
-    my ($self, $curproc, $optargs) = @_;
+    my ($self, $curproc, $params, $optargs) = @_;
     my $mta_type =
 	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
 	    $self->{ mta_type };
     my $key      = $optargs->{ key };
 
     if ($mta_type eq 'postfix' || $mta_type eq 'qmail') {
-	my $method = "${mta_type}_find_key_in_alias";
-	$self->$method($curproc, $optargs);
+	my $method = "${mta_type}_find_key_in_alias_maps";
+	$self->$method($curproc, $params, $optargs);
     }
     else {
 	croak("unknown MTA");
@@ -157,14 +132,14 @@ sub find_key_in_alias
 # Return Value: none
 sub get_aliases_as_hash_ref
 {
-    my ($self, $curproc, $optargs) = @_;
+    my ($self, $curproc, $params, $optargs) = @_;
     my $mta_type =
 	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
 	    $self->{ mta_type };
 
     if ($mta_type eq 'postfix' || $mta_type eq 'qmail') {
 	my $method = "${mta_type}_get_aliases_as_hash_ref";
-	$self->$method($curproc, $optargs);
+	$self->$method($curproc, $params, $optargs);
     }
     else {
 	croak("unknown MTA");
@@ -177,7 +152,7 @@ sub get_aliases_as_hash_ref
 #               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
-sub virtual_params
+sub install_alias
 {
     my ($self, $curproc, $params, $optargs) = @_;
     my $mta_type =
@@ -185,7 +160,94 @@ sub virtual_params
 	    $self->{ mta_type };
 
     if ($mta_type eq 'postfix' || $mta_type eq 'qmail') {
-	my $method = "${mta_type}_virtual_params";
+	my $method = "${mta_type}_install_alias";
+	$self->$method($curproc, $params, $optargs);
+    }
+    else {
+	croak("unknown MTA");
+    }
+}
+
+
+# Descriptions: remove configuration temaplate alias
+#    Arguments: OBJ($self)
+#               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
+# Side Effects: update aliases
+# Return Value: none
+sub remove_alias
+{
+    my ($self, $curproc, $params, $optargs) = @_;
+    my $mta_type =
+	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
+	    $self->{ mta_type };
+
+    if ($mta_type eq 'postfix' || $mta_type eq 'qmail') {
+	my $method = "${mta_type}_remove_alias";
+	$self->$method($curproc, $params, $optargs);
+    }
+    else {
+	croak("unknown MTA");
+    }
+}
+
+
+# Descriptions: install configuration temaplate alias
+#    Arguments: OBJ($self)
+#               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
+# Side Effects: update aliases
+# Return Value: none
+sub install_virtual_map
+{
+    my ($self, $curproc, $params, $optargs) = @_;
+    my $mta_type =
+	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
+	    $self->{ mta_type };
+
+    if ($mta_type eq 'postfix' || $mta_type eq 'qmail') {
+	my $method = "${mta_type}_install_virtual_map";
+	$self->$method($curproc, $params, $optargs);
+    }
+    else {
+	croak("unknown MTA");
+    }
+}
+
+
+# Descriptions: remove configuration temaplate alias
+#    Arguments: OBJ($self)
+#               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
+# Side Effects: update aliases
+# Return Value: none
+sub remove_virtual_map
+{
+    my ($self, $curproc, $params, $optargs) = @_;
+    my $mta_type =
+	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
+	    $self->{ mta_type };
+
+    if ($mta_type eq 'postfix' || $mta_type eq 'qmail') {
+	my $method = "${mta_type}_remove_virtual_map";
+	$self->$method($curproc, $params, $optargs);
+    }
+    else {
+	croak("unknown MTA");
+    }
+}
+
+
+# Descriptions: update virtual_map
+#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
+# Side Effects: update virtual_map
+# Return Value: none
+sub update_virtual_map
+{
+    my ($self, $curproc, $params, $optargs) = @_;
+    my $mta_type =
+	defined $optargs->{ mta_type } ? $optargs->{ mta_type } :
+	    $self->{ mta_type };
+
+    if ($mta_type eq 'postfix' || $mta_type eq 'qmail') {
+	my $method = "${mta_type}_update_virtual_map";
 	$self->$method($curproc, $params, $optargs);
     }
     else {

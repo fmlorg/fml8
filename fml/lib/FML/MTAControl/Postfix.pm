@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.3 2002/06/01 05:02:32 fukachan Exp $
+# $FML: Postfix.pm,v 1.4 2002/06/24 16:25:33 tmu Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -27,41 +27,122 @@ FML::MTAControl - postfix utilities
 
 =head1 METHODS
 
-=head2 new($args)
-
-    $args = {
-	mta_type => 'postfix',
-    };
-
-C<postfix> as C<mta_type> is available now.
+=head2 new()
 
 =cut
 
 
-# Descriptions: update alias
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
+# Descriptions: install new alias entries
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
-sub postfix_update_alias
+sub postfix_install_alias
 {
-    my ($self, $curproc, $optargs) = @_;
-    my $config = $curproc->{ config };
-    my $prog   = $config->{ path_postalias };
-    my $maps   = $optargs->{ alias_maps };
+    my ($self, $curproc, $params, $optargs) = @_;
+    my $config       = $curproc->{ config };
+    my $template_dir = $curproc->template_files_dir_for_newml();
 
-    for my $alias (@$maps) {
-	system "$prog $alias";
+    use File::Spec;
+    my $alias = $config->{ mail_aliases_file };
+    my $src   = File::Spec->catfile($template_dir, 'aliases');
+    my $dst   = $alias . "." . $$;
+
+    # update params
+    my $xparams = {};
+    for my $k (keys %$params) { $xparams->{ $k } = $params->{ $k };}
+    $self->_postfix_rewrite_virtual_params($curproc, $xparams);
+    $self->_install($src, $dst, $xparams);
+
+    print STDERR "updating $alias\n";
+
+    use File::Utils qw(append);
+    append($dst, $alias);
+    unlink $dst;
+}
+
+
+# Descriptions: remove alias
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
+# Side Effects: update aliases
+# Return Value: none
+sub postfix_remove_alias
+{
+    my ($self, $curproc, $params, $optargs) = @_;
+    my $config    = $curproc->{ config };
+    my $alias     = $config->{ mail_aliases_file };
+    my $alias_new = $alias."new.$$";
+    my $ml_name   = $params->{ ml_name  };
+    my $ml_domain = $params->{ ml_domain };
+    my $removed   = 0;
+
+    # update params
+    my $xparams = {};
+    for my $k (keys %$params) { $xparams->{ $k } = $params->{ $k };}
+    $self->_postfix_rewrite_virtual_params($curproc, $xparams);
+
+    my $key = $xparams->{ ml_name };
+
+    print STDERR "removing $key in $alias\n";
+
+    use FileHandle;
+    my $rh = new FileHandle $alias;
+    my $wh = new FileHandle "> $alias_new";
+    if (defined $rh && defined $wh) {
+      LINE:
+	while (<$rh>) {
+	    if (/\<ALIASES\s+$key\@/ .. /\<\/ALIASES\s+$key\@/) {
+		$removed++;
+		next LINE;
+	    }
+
+	    print $wh $_;
+	}
+	$wh->close;
+	$rh->close;
+
+	if ($removed > 3) {
+	    if (rename($alias_new, $alias)) {
+		print STDERR "\tremoved.\n";
+	    }
+	    else {
+		print STDERR "\twarning: fail to rename alias files.\n";
+	    }
+	}
+    }
+    else {
+	warn("cannot open $alias")     unless defined $rh;
+	warn("cannot open $alias_new") unless defined $wh;
     }
 }
 
 
+# Descriptions: regenerate aliases.db
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
+# Side Effects: update aliases
+# Return Value: none
+sub postfix_update_alias
+{
+    my ($self, $curproc, $params, $optargs) = @_;
+    my $config = $curproc->{ config };
+    my $prog   = $config->{ path_postalias };
+    my $alias  = $config->{ mail_aliases_file };
+
+    print STDERR "updating $alias database\n";
+    system "$prog $alias";
+}
+
+
 # Descriptions: find key in aliases
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
-sub postfix_find_key_in_alias
+sub postfix_find_key_in_alias_maps
 {
-    my ($self, $curproc, $optargs) = @_;
+    my ($self, $curproc, $params, $optargs) = @_;
     my $key  = $optargs->{ key };
     my $maps = $self->postfix_alias_maps($curproc, $optargs);
 
@@ -86,12 +167,13 @@ sub postfix_find_key_in_alias
 
 
 # Descriptions: get { key => value } in aliases
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: HASH_REF
 sub postfix_get_aliases_as_hash_ref
 {
-    my ($self, $curproc, $optargs) = @_;
+    my ($self, $curproc, $params, $optargs) = @_;
     my $config     = $curproc->{ config };
     my $alias_file = $config->{ mail_aliases_file };
     my $key        = $optargs->{ key };
@@ -135,12 +217,13 @@ sub postfix_get_aliases_as_hash_ref
 
 
 # Descriptions: return alias_maps as ARRAY_REF
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: ARRAY_REF
 sub postfix_alias_maps
 {
-    my ($self, $curproc, $optargs) = @_;
+    my ($self, $curproc, $params, $optargs) = @_;
     my $config = $curproc->{ config };
     my $prog   = $config->{ path_postconf };
 
@@ -157,12 +240,13 @@ sub postfix_alias_maps
 
 
 # Descriptions: install configuratin templates
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: create include*
 # Return Value: none
 sub postfix_setup
 {
-    my ($self, $curproc, $params) = @_;
+    my ($self, $curproc, $params, $optargs) = @_;
     my $config       = $curproc->{ config };
     my $template_dir = $curproc->template_files_dir_for_newml();
     my $ml_home_dir  = $params->{ ml_home_dir };
@@ -182,12 +266,13 @@ sub postfix_setup
 
 
 # Descriptions: rewrite $params
-#    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($params)
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update $params
 # Return Value: none
-sub postfix_virtual_params
+sub _postfix_rewrite_virtual_params
 {
-    my ($self, $curproc, $params) = @_;
+    my ($self, $curproc, $params, $optargs) = @_;
     my $config    = $curproc->{ config };
     my $ml_name   = $config->{ ml_name  };
     my $ml_domain = $config->{ ml_domain };
@@ -195,6 +280,117 @@ sub postfix_virtual_params
     unless ($curproc->is_default_domain($ml_domain)) {
 	$params->{ ml_name } = "${ml_name}=${ml_domain}";
     }
+}
+
+
+# Descriptions: install postfix virtual_maps
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
+# Side Effects: install/udpate postfix virtual_maps and the .db
+# Return Value: none
+sub postfix_install_virtual_map
+{
+    my ($self, $curproc, $params, $optargs) = @_;
+    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $config       = $curproc->{ config };
+    my $ml_name      = $config->{ ml_name };
+    my $ml_domain    = $config->{ ml_domain };
+    my $postmap      = $config->{ path_postmap };
+
+    use File::Spec;
+    my $virtual = $config->{ postfix_virtual_map_file };
+    my $src     = File::Spec->catfile($template_dir, 'postfix_virtual');
+    my $dst     = $virtual . "." . $$;
+    print STDERR "updating $virtual\n";
+
+    # at the first time
+    unless( -f $virtual) {
+	use FileHandle;
+	my $fh = new FileHandle ">> $virtual";
+	if (defined $fh) {
+	    print $fh "# $ml_domain is one of \$mydestination\n";
+	    print $fh "# CAUTION: DO NOT REMOVE THE FOLLOWING LINE.\n";
+	    print $fh "$ml_domain\t$ml_domain\n\n";
+	    $fh->close();
+	}
+    }
+
+    $self->_install($src, $dst, $params);
+
+    use File::Utils qw(append);
+    append($dst, $virtual);
+    unlink $dst;
+    system "$postmap $virtual";
+}
+
+
+
+# Descriptions: remove postfix virtual_maps
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
+# Side Effects: remove/udpate postfix virtual_maps and the .db
+# Return Value: none
+sub postfix_remove_virtual_map
+{
+    my ($self, $curproc, $params, $optargs) = @_;
+    my $config  = $curproc->{ config };
+    my $postmap = $config->{ path_postmap };
+    my $key     = $params->{ ml_name };
+    my $removed = 0;
+
+    use File::Spec;
+    my $virtual     = $config->{ postfix_virtual_map_file };
+    my $virtual_new = $virtual . 'new'. $$;
+
+    print STDERR "removing $key in $virtual\n";
+
+    use FileHandle;
+    my $rh = new FileHandle $virtual;
+    my $wh = new FileHandle "> $virtual_new";
+    if (defined $rh && defined $wh) {
+      LINE:
+	while (<$rh>) {
+	    if (/\<VIRTUAL\s+$key\@/ .. /\<\/VIRTUAL\s+$key\@/) {
+		$removed++;
+		next LINE;
+	    }
+
+	    print $wh $_;
+	}
+	$wh->close;
+	$rh->close;
+
+	if ($removed > 3) {
+	    if (rename($virtual_new, $virtual)) {
+		print STDERR "\tremoved.\n";
+	    }
+	    else {
+		print STDERR "\twarning: fail to rename virtual files.\n";
+	    }
+	}
+    }
+    else {
+	warn("cannot open $virtual")     unless defined $rh;
+	warn("cannot open $virtual_new") unless defined $wh;
+    }
+
+}
+
+
+# Descriptions: regenerate virtual.db
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
+# Side Effects: update aliases
+# Return Value: none
+sub postfix_update_virtual_map
+{
+    my ($self, $curproc, $params, $optargs) = @_;
+    my $config  = $curproc->{ config };
+    my $postmap = $config->{ path_postmap };
+    my $virtual = $config->{ postfix_virtual_map_file };
+
+    print STDERR "updating $virtual database\n";
+    system "$postmap $virtual";
 }
 
 

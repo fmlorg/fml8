@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmml.pm,v 1.4 2002/06/25 09:38:09 fukachan Exp $
+# $FML: rmml.pm,v 1.5 2002/06/25 12:36:51 fukachan Exp $
 #
 
 package FML::Command::Admin::rmml;
@@ -88,19 +88,33 @@ sub process
     $config->set( 'ml_home_prefix' , $ml_home_prefix );
 
     # check if $ml_name already exists.
-    my $found = 0;
-
-    # --force: ignore the existence of $ml_home_dir
-    unless (defined $options->{ force }) {
-	if (-d $ml_home_dir) {
-	    $found = 1;
-	}
-    }
-
-    unless ($found) {
-	warn("no such ml");
+    unless (-d $ml_home_dir) {
+	warn("no such ml ($ml_home_dir)");
 	return;
     }
+
+    # o.k. here we go!
+    $self->_remove_ml_home_dir($curproc, $command_args, $params);
+    $self->_remove_aliases($curproc, $command_args, $params);
+}
+
+
+# Descriptions: remove $ml_home_dir and update aliases if needed
+#    Arguments: OBJ($self)
+#               OBJ($curproc)
+#               HASH_REF($command_args)
+#               HASH_REF($params)
+# Side Effects: remove ml_home_dir, update aliases entry
+# Return Value: none
+sub _remove_ml_home_dir
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $ml_name        = $params->{ ml_name };
+    my $ml_domain      = $params->{ ml_domain };
+    my $ml_home_prefix = $params->{ ml_home_prefix };
+    my $ml_home_dir    = $params->{ ml_home_dir };
+
+    print STDERR "removing ml_home_dir for $ml_name\n";
 
     # /var/spool/ml/elena -> /var/spool/ml/@elena
     use File::Spec;
@@ -108,13 +122,11 @@ sub process
     rename($ml_home_dir, $removed_dir);
 
     if (-d $removed_dir && (! -d $ml_home_dir)) {
-	print STDERR "$ml_name home_dir removed.\n";
+	print STDERR "\tremoved.\n";
     }
     else {
-	print STDERR "cannot rmdir $ml_name home_dir.\n";
+	print STDERR "\tfailed.\n";
     }
-
-    $self->_update_aliases($curproc, $command_args, $params);
 }
 
 
@@ -125,94 +137,25 @@ sub process
 #               HASH_REF($params)
 # Side Effects: update aliases entry
 # Return Value: none
-sub _update_aliases
+sub _remove_aliases
 {
     my ($self, $curproc, $command_args, $params) = @_;
     my $config  = $curproc->{ config };
-    my $ml_name = $self->{ _ml_name };
-    my $alias   = $config->{ mail_aliases_file };
+    my $ml_name = $params->{ ml_name };
 
-    # append
-    if ($self->_alias_has_ml_entry($alias, $ml_name)) {
-	$self->_remove_alias_entry($alias, $ml_name);
-	eval q{
-	    use FML::MTAControl;
-	    my $postfix = new FML::MTAControl;
-	    $postfix->update_alias($curproc, {
-		mta_type   => 'postfix',
-		alias_maps => [ $alias ],
-	    });
-	};
-	croak($@) if $@;
-    }
-    else {
-	warn("no such ml in aliases");
-    }
-}
+    eval q{
+	use FML::MTAControl;
 
-
-# Descriptions: $alias file has an $ml_name entry or not
-#    Arguments: OBJ($self) STR($alias) STR($ml_name)
-# Side Effects: none
-# Return Value: NUM( 1 or 0 )
-sub _alias_has_ml_entry
-{
-    my ($self, $alias, $ml_name) = @_;
-
-    use FileHandle;
-    my $fh = new FileHandle $alias;
-    if (defined $fh) {
-	while (<$fh>) {
-	    if (/ALIASES $ml_name\@/) {
-		return 1;
-	    }
+	for my $mta (qw(postfix qmail)) {
+	    my $optargs = { mta_type => $mta };
+	    my $obj = new FML::MTAControl;
+	    $obj->remove_alias($curproc, $params, $optargs);
+	    $obj->update_alias($curproc, $params, $optargs);
+	    $obj->remove_virtual_map($curproc, $params, $optargs);
+	    $obj->update_virtual_map($curproc, $params, $optargs);
 	}
-	$fh->close;
-    }
-
-    return 0;
-}
-
-
-# Descriptions: $alias file has an $ml_name entry or not
-#    Arguments: OBJ($self) STR($alias) STR($ml_name)
-# Side Effects: none
-# Return Value: NUM( 1 or 0 )
-sub _remove_alias_entry
-{
-    my ($self, $alias, $ml_name) = @_;
-    my $alias_new = $alias."new.$$";
-    my $removed   = 0;
-
-    use FileHandle;
-    my $rh = new FileHandle $alias;
-    my $wh = new FileHandle "> $alias_new";
-    if (defined $rh && defined $wh) {
-      LINE:
-	while (<$rh>) {
-	    if (/\<ALIASES\s+$ml_name\@/ .. /\<\/ALIASES\s+$ml_name\@/) {
-		$removed++;
-		next LINE;
-	    }
-
-	    print $wh $_;
-	}
-	$wh->close;
-	$rh->close;
-
-	if ($removed > 3) {
-	    if (rename($alias_new, $alias)) {
-		print STDERR "$ml_name aliases removed.\n";
-	    }
-	    else {
-		print STDERR "warning: fail to rename alias files.\n";
-	    }
-	}
-    }
-    else {
-	warn("cannot open $alias")     unless defined $rh;
-	warn("cannot open $alias_new") unless defined $wh;
-    }
+    };
+    croak($@) if $@;
 }
 
 
