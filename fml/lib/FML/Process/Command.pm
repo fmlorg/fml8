@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Command.pm,v 1.17 2001/10/13 03:12:35 fukachan Exp $
+# $FML: Command.pm,v 1.18 2001/10/13 13:09:50 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -222,20 +222,28 @@ sub _evaluate_command
 	use FML::Command;
 	my $obj = new FML::Command;
 	if (defined $obj) {
+	    my $found = 0;
+	    my (@options) = ();
+	    for (split(/\s+/, $command)) {
+		push(@options, $_) if $found;
+		$found = 1 if $_ eq $comname;
+	    }
+
 	    # arguments to pass off to each method
-	    my $optargs = {
+	    my $command_args = {
 		command_mode => 'user',
 		comname      => $comname,
 		command      => $command,
 		ml_name      => $ml_name,
-		options      => [],
+		options      => _parse_command_options($command),
 		argv         => $argv,
 		args         => $args,
 	    };
 
+
 	    $curproc->reply_message("\n$prompt $command");
 	    eval q{
-		$obj->$comname($curproc, $optargs);
+		$obj->$comname($curproc, $command_args);
 	    };
 	    unless ($@) {
 		$curproc->reply_message_nl('command.ok', "ok.");
@@ -250,6 +258,26 @@ sub _evaluate_command
 	    }
 	}
     } # END OF FOR LOOP: for my $command (@body) { ... }
+}
+
+
+# Descriptions: parse command buffer to make 
+#               argument vector after command name
+#    Arguments: $string_to_parse
+# Side Effects: none
+# Return Value: ARRAY REFERENCE
+sub _parse_command_options
+{
+    my ($command) = @_;
+    my $found = 0;
+    my (@options) = ();
+
+    for (split(/\s+/, $command)) {
+	push(@options, $_) if $found;
+	$found = 1 if $_ eq $comname;
+    }
+
+    return \@options;
 }
 
 
