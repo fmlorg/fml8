@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.138 2004/03/12 11:45:51 fukachan Exp $
+# $FML: Distribute.pm,v 1.139 2004/03/14 06:45:02 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -145,31 +145,36 @@ sub _check_filter
     my ($curproc) = @_;
     my $config    = $curproc->config();
 
-    eval q{
-	use FML::Filter;
-	my $filter = new FML::Filter;
-	my $r = $filter->article_filter($curproc);
+    if ($config->yes('use_article_filter')) {
+	eval q{
+	    use FML::Filter;
+	    my $filter = new FML::Filter;
+	    my $r = $filter->article_filter($curproc);
 
-	# filter traps this message.
-	if ($r = $filter->error()) {
-	    if ($config->yes('use_article_filter_reject_notice')) {
-		my $msg_args = {
-		    _arg_reason => $r,
-		};
+	    # filter traps this message.
+	    if ($r = $filter->error()) {
+		if ($config->yes('use_article_filter_reject_notice')) {
+		    my $msg_args = {
+			_arg_reason => $r,
+		    };
 
-		$curproc->log("(debug) filter: inform rejection");
-		$filter->article_filter_reject_notice($curproc, $msg_args);
+		    $curproc->log("(debug) filter: inform rejection");
+		    $filter->article_filter_reject_notice($curproc, $msg_args);
+		}
+		else {
+		    $curproc->log("filter: not inform rejection");
+		}
+
+		# we should stop this process ASAP.
+		$curproc->stop_this_process();
+		$curproc->log("rejected by filter due to $r");
 	    }
-	    else {
-		$curproc->log("filter: not inform rejection");
-	    }
-
-	    # we should stop this process ASAP.
-	    $curproc->stop_this_process();
-	    $curproc->log("rejected by filter due to $r");
-	}
-    };
-    $curproc->log($@) if $@;
+	};
+	$curproc->log($@) if $@;
+    }
+    else {
+	$curproc->log("debug: article_filter disabled");
+    }
 }
 
 
