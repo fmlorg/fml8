@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.34 2002/03/18 13:34:36 fukachan Exp $
+	$FML: chapters.ent,v 1.35 2002/04/02 23:16:31 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -8,8 +8,8 @@
 <!entity fmlbible    "『fml バイブル』(オライリージャパン刊)">
 <!entity www.fml.org "http://www.fml.org/software/fml/">
 <!entity fml4        "fml 4.0">
-<!entity fml5        "fml-devel (5.0)">
-<!entity fmldevel    "fml-devel (5.0)">
+<!entity fml5        "fml-devel">
+<!entity fmldevel    "fml-devel">
 
 
 <!-- 画像 -->
