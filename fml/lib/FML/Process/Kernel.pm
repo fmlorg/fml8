@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.227 2004/04/27 13:36:40 fukachan Exp $
+# $FML: Kernel.pm,v 1.228 2004/05/19 10:19:19 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2822,6 +2822,28 @@ sub finalize
 
     # log rotation
     $curproc->log_rorate();
+}
+
+
+=head1 EXIT AS SPECIAL CODE 
+
+=head2 exit_as_tempfail()
+
+exit as EX_TEMPFAIL.
+
+=cut
+
+
+# Descriptions: exit as EX_TEMPFAIL.
+#    Arguments: OBJ($curproc)
+# Side Effects: long jump.
+# Return Value: none
+sub exit_as_tempfail
+{
+    my ($curproc) = @_;
+
+    $main::ERROR_EXIT_CODE = 75;
+    exit(75);
 }
 
 
