@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.78 2003/05/01 14:00:57 fukachan Exp $
+# $FML: Message.pm,v 1.79 2003/05/09 13:54:44 fukachan Exp $
 #
 
 package Mail::Message;
@@ -2143,13 +2143,24 @@ sub message_text
     # if the content is undef, do nothing.
     return undef unless $data;
 
+    if (ref($data) eq 'FML::Header' || ref($data) eq 'Mail::Header') {
+	my $buf = $data->as_string();
+	$data   = \$buf;
+    }
+
     if ($base_data_type =~ /multipart/i) {
 	$pos_begin = $self->{ offset_begin };
 	$msglen    = $self->{ offset_end } - $pos_begin;
     }
     else {
 	$pos_begin = 0;
-	$msglen    = length($$data);
+
+	if (ref($data) eq 'SCALAR') {
+	    $msglen = length($$data);
+	}
+	else {
+	    $msglen = -1;
+	}
     }
 
     if (defined $size) {
