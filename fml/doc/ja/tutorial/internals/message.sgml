@@ -1,5 +1,5 @@
 <!--
-	$FML: message.sgml,v 1.1 2001/05/06 23:11:49 fukachan Exp $	
+	$FML: message.sgml,v 1.2 2001/05/07 03:16:24 fukachan Exp $	
 -->
 
 <chapter id="message">
@@ -55,8 +55,13 @@ Mail::Bounce や Mail::Delivery を始め、
    <title> Mail::Message::Parse クラス </title>
 
 <para>
-Mail::Message::Compose と同様の階層を作るためのダミーです。
-実体は Mail::Message クラスの中にあります。
+ダミーの派生クラスです。
+これは Mail::Message::Compose と同様の階層を便宜上作っています。
+あまり深い意味はありません。
+</para>
+
+<para>
+パーサの実体は Mail::Message クラスの中にあります。
 </para>
 
 </sect1>
@@ -68,15 +73,18 @@ Mail::Message::Compose と同様の階層を作るためのダミーです。
 
 <para>
 これはメールを構築する際に用いるクラスですが、単なるアダプタです。
-実体は MIME::Lite クラスで、このクラスへリクエストは丸投げされています。
+メールを作成する実体は 
+CPAN の MIME::Lite クラスです。
+作成のリクエストは
+MIME::Lite クラスへ
+丸投げされています。
 </para>
 
 <para>
-使い方やメソッドは MIME::Lite クラスを参照して下さい。
+使い方やメソッドについての詳細は MIME::Lite クラスを参照して下さい。
 </para>
 
 </sect1>
-
 
 
 </chapter>

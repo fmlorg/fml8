@@ -1,15 +1,15 @@
 <!--
-    $FML$
+    $FML: chapter.sgml,v 1.1 2001/04/30 10:21:43 fukachan Exp $
 -->
 
 <chapter id="delivery">
 
-   <TITLE> メールの配送 </TITLE>
+   <TITLE> fml5 のメール配送システム </TITLE>
 
 <sect1 id="fml5-delivery">
 
-   <title> fml5 のメール配送システムについて 
-           (fml4 と fml5 の相違点)
+   <title> 
+           fml4 と fml5 の相違点
    </title>
 
 <para>
@@ -34,21 +34,26 @@ Mail::Delivery::* に属するクラスは SMTP および LMTP 配送へのインターフェ
                           recipient_maps  => $recipient_maps,
                           recipient_limit => 1000,
 
-                          header          => $header_object,
-                          body            => $body_object,
+                          mesage          => $message
                       });
 </screen>
 
-ここで $header_object はヘッダで、FML::Header オブジェクトです。
-そして $body_oject   はメール本文で、Mail::Message オブジェクトです。
+ここで $message は Mail::Message オブジェクトです。
+このオブジェクトは
+<screen>
+header -> body
+header -> preamble -> part1 -> part2 -> trailor (multipart)
+</screen>
+のようにオブジェクトが数珠つなぎになっているオブジェクトです。
 </para>
 
 <para>
-ここで、Delivery は
+Mail::Delivery は
+Mail::Delivery 以下の派生クラス
 SMTP
 ESMTP
 LMTP
-などへのインターフェイスです。
+へのインターフェイスを提供するアダプター層です。
 </para>
 
 </sect1>
