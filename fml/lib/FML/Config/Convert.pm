@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Convert.pm,v 1.15 2003/02/01 06:12:17 fukachan Exp $
+# $FML: Convert.pm,v 1.16 2003/04/19 06:13:01 fukachan Exp $
 #
 
 
@@ -16,7 +16,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Config::Convert -- variable expansion for __variable__
+FML::Config::Convert -- tiny non object-style variable expansion tool
 
 =head1 SYNOPSIS
 
@@ -47,7 +47,11 @@ expansion for __variable__ style string.
 
 conversion filter. The source is given by file handle $in,
 output is specified as file handle $out.
-Specify HASH_REF $config as real value.
+Specify HASH_REF $config as source of { key => value }.
+
+=head2 convert_file($src, $dst, $config)
+
+convert() wrapper for files.
 
 =cut
 
@@ -63,7 +67,7 @@ sub convert
    if (defined $in && defined $out && defined $config) {
        my $buf;
        while ($buf = <$in>) {
-	   $buf = _replace($buf, $config) if $buf =~ /__/;
+	   $buf = _replace($buf, $config) if $buf =~ /__/o;
 	   print $out $buf;
        }
    }
