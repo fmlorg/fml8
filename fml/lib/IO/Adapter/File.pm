@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.50 2003/11/27 04:26:09 fukachan Exp $
+# $FML: File.pm,v 1.51 2004/01/24 09:03:56 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -444,6 +444,7 @@ sub delete
     my $wh = $self->{ _wh };
 
     if (defined $fh) {
+	my $key = quotemeta($key);
 	my $buf;
 
       FILE_IO:

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.27 2003/08/23 04:35:43 fukachan Exp $
+# $FML: Adapter.pm,v 1.28 2004/01/24 09:03:55 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -410,6 +410,9 @@ sub find
 	return $self->md_find($regexp, $args);
     }
 
+    # we may need quote for special address e.g. a+b@domain.
+    $regexp = quotemeta($regexp);
+
     # What we want, key or  key+value ?
     if (defined $args->{ want }) {
 	if ($args->{ want } eq 'key' ||
@@ -422,7 +425,8 @@ sub find
     }
 
     # search regexp by reading the specified map.
-    my (@buf, $x);
+    my (@buf) = ();
+    my $x     = '';
 
     $self->open;
     my $fp = $want eq 'key' ? 'get_next_key' : 'getline';
