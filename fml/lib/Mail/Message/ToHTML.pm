@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.70 2004/06/30 15:05:13 tmu Exp $
+# $FML: ToHTML.pm,v 1.71 2004/07/26 05:47:23 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.70 2004/06/30 15:05:13 tmu Exp $;
+my $version = q$FML: ToHTML.pm,v 1.71 2004/07/26 05:47:23 fukachan Exp $;
 my $versionid = 0;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $versionid = "$1";
@@ -780,7 +780,7 @@ sub _format_safe_header
 }
 
 
-my @indexs = qw(all thread month top);
+my @indexs = qw(all thread month month_thread top);
 
 # Descriptions: show link to indexes as navigation
 #    Arguments: HASH_REF($args)
@@ -798,6 +798,7 @@ sub _format_index_navigator
 	$str .= qq{<A HREF=\"${prefix}index_all.html\">[ID Index]</A>\n} if ($index eq "all");
 	$str .= qq{<A HREF=\"${prefix}thread.html\">[Thread Index]</A>\n} if ($index eq "thread");
 	$str .= qq{<A HREF=\"${prefix}monthly_index.html\">[Monthly ID Index]</A>\n} if ($index eq "month");
+	$str .= qq{<A HREF=\"${prefix}monthly_thread.html\">[Monthly Thread Index]</A>\n} if ($index eq "month_thread");
 	$str .= qq{<A HREF=\"${prefix}index.html\">[Top Index]</A>\n} if ($index eq "top");
     };
 
@@ -1791,6 +1792,152 @@ sub _print_thread
     }
 }
 
+=head2 update_monthly_thread_index($args)
+
+=cut
+
+# Descriptions: update monthly thread index
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: rewrite monthly thread index
+# Return Value: none
+sub update_monthly_thread_index
+{
+    my ($self, $args) = @_;
+    my $affected_list = $self->{ _affected_idlist };
+
+    if ($self->is_ignore($args->{id})) {
+	warn("not update monthly_thread.html around $args->{id}") if $debug;
+	return undef;
+    }
+
+    # open databaes
+    my $db = $self->ndb();
+    my %month_update = ();
+
+  IDLIST:
+    for my $id (@$affected_list) {
+	next IDLIST unless $id =~ /^\d+$/o;
+	next IDLIST     if $id =~ /^\s*$/o;
+
+	my $month = $db->get('month', $id);
+	if (defined $month && $month !~ /^\s*$/o) {
+	    $month_update{ $month } = 1;
+	}
+    }
+
+    # todo list
+    for my $month (sort keys %month_update) {
+	my $this_month = $month;                     # yyyy/mm
+	my $suffix     = $month; $suffix =~ s@/@@go; # yyyymm
+
+	$self->_update_monthly_thread_index($args, {
+	    this_month => $this_month,
+	    suffix     => $suffix,
+	});
+    }
+
+    # update monthly_index.html
+    $self->_update_montly_thread_index_master($args);
+}
+
+
+# Descriptions: update monthly thread index master
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: rewrite monthly_thread.html
+# Return Value: none
+sub _update_montly_thread_index_master
+{
+    my ($self, $args) = @_;
+    my $html_base_dir = $self->{ _html_base_directory };
+    my $code          = _charset_to_code($self->{ _charset });
+
+    use File::Spec;
+    my $old = File::Spec->catfile($html_base_dir, "monthly_thread.html");
+    my $new = File::Spec->catfile($html_base_dir, "monthly_thread.html.new.$$");
+    my $htmlinfo = {
+	title => defined($args->{ title }) ? $args->{ title } : "ID Index",
+	old   => $old,
+	new   => $new,
+	code  => $code,
+    };
+
+    $self->_print_index_begin( $htmlinfo );
+    my $wh      = $htmlinfo->{ wh };
+    my $db      = $self->ndb();
+    my $mlist   = $db->get_table_as_hash_ref('inv_month'); # month => (id ...)
+    my (@list)  = sort __sort_yyyymm keys %$mlist;
+    my ($years) = _yyyy_range(\@list);
+
+    _print_raw_str($wh, "<TABLE>", $code);
+
+    for my $year (sort {$b <=> $a} @$years) {
+	_print_raw_str($wh, "<TR>", $code);
+
+	for my $month (1 .. 12) {
+	    _print_raw_str($wh, "<TR>", $code) if $month == 7;
+
+	    my $id = sprintf("%04d/%02d", $year, $month); # YYYY/MM
+	    my $xx = sprintf("%04d%02d",  $year, $month); # YYYYMM
+	    my $fn = "thread.$xx.html";
+
+	    use File::Spec;
+	    my $file = File::Spec->catfile($html_base_dir, $fn);
+	    if (-f $file) {
+		_print_raw_str($wh, "<TD><A HREF=\"$fn\"> $id </A>", $code);
+	    }
+	    else {
+		_print_raw_str($wh, "<TD>", $code);
+	    }
+	}
+    }
+    _print_raw_str($wh, "</TABLE>", $code);
+
+    $self->_print_index_end( $htmlinfo );
+}
+
+
+# Descriptions: update thread.YYYYMM.html
+#    Arguments: OBJ($self) HASH_REF($args) HASH_REF($monthlyinfo)
+# Side Effects: update thread.YYYYMM.html
+# Return Value: none
+sub _update_monthly_thread_index
+{
+    my ($self, $args, $monthlyinfo) = @_;
+    my $html_base_dir = $self->{ _html_base_directory };
+    my $code          = _charset_to_code($self->{ _charset });
+    my $this_month    = $monthlyinfo->{ this_month }; # yyyy/mm
+    my $suffix        = $monthlyinfo->{ suffix };     # yyyymm
+    my $order         = $self->{ _html_id_order } || 'normal';
+    my $htmlinfo = {
+	title => "Monthly Thread Index $this_month",
+	old   => "$html_base_dir/thread.${suffix}.html",
+	new   => "$html_base_dir/thread.${suffix}.html.new.$$",
+	code  => $code,
+    };
+
+    $self->_print_index_begin( $htmlinfo );
+    my $wh     = $htmlinfo->{ wh };
+    my $db     = $self->ndb();
+    my $max_id = $db->get('hint', 'max_id');
+    my $list   = $db->get_as_array_ref('inv_month', $this_month);
+
+    # initialize negagtive cache to ensure uniquness
+    delete $self->{ _uniq };
+
+    # debug information (it is useful not to remove this ?)
+    _print_raw_str($wh, "<!-- this month ids=(@$list) -->\n", $code);
+
+    $self->_print_ul($wh, $db, $code);
+    for my $id (sort {$a <=> $b} @$list) {
+	# head of the thread (not referenced yet)
+	unless (defined $self->{ _uniq }->{ $id }) {
+	    $self->_print_thread($wh, $db, $id, $code);
+	}
+    }
+    $self->_print_end_of_ul($wh, $db, $code);
+
+    $self->_print_index_end( $htmlinfo );
+}
 
 =head2 internal utility functions for IO
 
@@ -2229,6 +2376,11 @@ sub htmlify_file
 	if ($index eq "thread") {
 	    _PRINT_DEBUG("-- thread index");
 	    $html->update_thread_index({ id => $id });
+	}
+
+	if ($index eq "month_thread") {
+	    _PRINT_DEBUG("-- month thread index");
+	    $html->update_monthly_thread_index({ id => $id });
 	}
 
 	if ($index eq "top") {
