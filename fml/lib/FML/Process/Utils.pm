@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.115 2004/04/23 04:10:37 fukachan Exp $
+# $FML: Utils.pm,v 1.116 2004/04/27 13:30:03 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1509,8 +1509,13 @@ sub which_map_nl
     my $config = $curproc->config();
     my $found  = '';
 
+    # XXX try longer term firstly.
   SEARCH_MAPS:
-    for my $mode (qw(member recipient admin_member digest_recipient)) {
+    for my $mode (qw(digest_member    digest_recipient
+		     admin_member     admin_recipient 
+		     moderator_member moderator_recipient
+		     member recipient 
+		     )) {
 	my $maps = $config->get_as_array_ref("${mode}_maps");
 	for my $m (@$maps) {
 	    if ($map eq $m) {
@@ -1520,7 +1525,9 @@ sub which_map_nl
 	}
     }
 
-    return $found;
+    my $term = $curproc->message_nl("term.$found", $found) || $found;
+    $term =~ s/[\s\n]*$//;
+    return $term;
 }
 
 
