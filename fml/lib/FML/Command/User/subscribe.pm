@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.15 2002/09/22 14:56:48 fukachan Exp $
+# $FML: subscribe.pm,v 1.16 2002/12/18 04:22:37 fukachan Exp $
 #
 
 package FML::Command::User::subscribe;
@@ -79,6 +79,9 @@ sub process
 
     use FML::Credential;
     my $cred = new FML::Credential $curproc;
+
+    # exatct match as could as possible.
+    $cred->set_compare_level( 100 );
 
     # if already member, subscriber request is wrong.
     if ($cred->is_member($address)) {

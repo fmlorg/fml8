@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.8 2002/09/22 14:56:44 fukachan Exp $
+# $FML: chaddr.pm,v 1.9 2002/12/20 03:40:11 fukachan Exp $
 #
 
 package FML::Command::Admin::chaddr;
@@ -95,6 +95,9 @@ sub process
     push(@maps, @$recipient_maps);
     for my $map (@maps) {
 	my $cred = new FML::Credential $curproc;
+	
+	# exatct match as could as possible.
+	$cred->set_compare_level( 100 );
 
 	# XXX-TODO: this condition is correct ?
 	# XXX-TODO: we should remove old one when both old and new ones exist.

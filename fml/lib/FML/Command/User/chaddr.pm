@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: chaddr.pm,v 1.15 2002/12/18 04:22:36 fukachan Exp $
+# $FML: chaddr.pm,v 1.16 2002/12/24 10:19:45 fukachan Exp $
 #
 
 package FML::Command::User::chaddr;
@@ -85,6 +85,9 @@ sub process
 
     use FML::Credential;
     my $cred = new FML::Credential $curproc;
+
+    # exatct match as could as possible.
+    $cred->set_compare_level( 100 );
 
     # addresses we check and send back confirmation messages to
     my $optargs = {};
