@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: @template.pm,v 1.1 2001/08/07 12:23:48 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.1.1.1 2001/11/02 09:07:39 fukachan Exp $
 #
 
 package Mail::ThreadTrack;
@@ -16,10 +16,12 @@ use Mail::ThreadTrack::ErrorStatus qw(error_set error error_clear);
 use Mail::ThreadTrack::Analyze;
 use Mail::ThreadTrack::HeaderRewrite;
 use Mail::ThreadTrack::DB;
+use Mail::ThreadTrack::Print;
 
 @ISA = qw(Mail::ThreadTrack::Analyze
 	Mail::ThreadTrack::DB
 	Mail::ThreadTrack::HeaderRewrite
+	Mail::ThreadTrack::Print
 	  );
 
 
@@ -38,12 +40,14 @@ Mail::ThreadTrack - analyze mail threading
     $args = {
 	db_base_dir => "/var/spool/ml/\@db\@/ticket",
 	fd          => \*STDOUT,
+	article_id  => $id,
 	config      => {
 	    ml_name => 'elena',
 	},
     };
 
 C<db_base_dir> and C<ml_name> in C<config> are mandatory.
+C<$id> is sequential number for input data (article).
 
 =cut
 
@@ -57,21 +61,17 @@ sub new
     my ($self, $args) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
-
-    # config
     my $config = $me->{ _config } = {};
 
-    for my $key (qw(ml_name spool_dir)) {
-	$config->{ $key } = $args->{ config }->{ $key };
+    for my $key (qw(ml_name spool_dir article_id db_base_dir)) {
+	if (defined $args->{ $key }) {
+	    $config->{ $key } = $args->{ $key };
+	}
+	else {
+	    croak("specify $key");
+	}
     }
-
     my $ml_name = $config->{ ml_name };
-    if (defined $ml_name) {
-	$config->{ _ml_name } = $ml_name;
-    }
-    else {
-	croak("specify \$ml_name\n");
-    }
 
     unless (defined $args->{ ticket_id_syntax }) {
 	$config->{ ticket_id_syntax } = "$ml_name/\%d";
@@ -84,11 +84,10 @@ sub new
 
     # database directory used to store thread information et. al.
     use File::Spec;
-    my $base_dir          = $args->{ db_base_dir };
+    my $base_dir          = $config->{ db_base_dir };
     $me->{ _db_base_dir } = $base_dir;
     $me->{ _db_dir }      = File::Spec->catfile($base_dir, $ml_name);
     $me->{ _fd }          = $args->{ fd } || \*STDOUT;
-    $me->{ _pcb }         = {};
 
     # initialize directory
     _init_ticket_db_dir($me);
@@ -305,38 +304,14 @@ sub get_mode
 }
 
 
-#
-# DEBUG
-#
-if ($0 eq __FILE__) {
-    eval q{
-	my $args = {
-	    db_base_dir => "/var/spool/ml/\@db\@/ticket",
-	    fd          => \*STDOUT,
-	    config      => {
-		ml_name    => 'elena',
-		spool_dir  => '/var/spool/ml/elena/spool',
-	    },
-	};
+=head2 log( $str )
 
-	for my $f (@ARGV) {
-	    use Mail::Message;
-	    my $fh  = new FileHandle $f;
-	    my $msg = Mail::Message->parse( { fd => $fh } );
+=cut
 
-	    my $ticket = new Mail::ThreadTrack $args;
-	    $ticket->analyze($msg);
-
-	    use Mail::ThreadTrack::Print;
-	    push(@ISA, 'Mail::ThreadTrack::Print');
-	    $ticket->show_summary();
-
-	    use Data::Dumper;
-	    print Dumper( $ticket );
-	}
-
-    };
-    croak($@) if $@;
+sub log
+{
+    my ($self, $str) = @_;
+    print STDERR "Log> $str\n";
 }
 
 
