@@ -1,19 +1,20 @@
-version     =	 current-20010120
+version     =	test
 
-config_dir  = 	/etc/fml
+config_dir  = 	$pwd/../fml/etc
 
-prefix_dir  = 	/usr/local
+prefix_dir  = 	$pwd/..
 
-libexec_dir = 	$prefix_dir/libexec/fml/$version
+libexec_dir = 	$prefix_dir/fml/libexec
 
-lib_dir     =	$prefix_dir/lib/fml/$version
+lib_dir     =	$prefix_dir/fml/lib
+		$prefix_dir/cpan/lib
 
 # site local
-local_lib_dir = $prefix_dir/lib/fml/site_local
+local_lib_dir = $prefix_dir/site_local
 
 
 # default_config.cf
-default_config = $config_dir/defaults/$version/default_config.cf
+default_config = $config_dir/default_config.cf
 
 
 # default domain
