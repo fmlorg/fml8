@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Calender.pm,v 1.1 2002/02/13 13:01:37 fukachan Exp $
+# $FML: Calender.pm,v 1.2 2002/04/06 01:34:45 fukachan Exp $
 #
 
 package FML::CGI::Calender;
@@ -107,7 +107,7 @@ sub _show_guide
 #    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
-sub run_cgi
+sub run_cgi_main
 {
     my ($curproc, $args) = @_;
     my $user = $curproc->safe_param_user;
@@ -118,6 +118,28 @@ sub run_cgi
     for my $n ('this', 'next', 'last') {
 	$schedule->print_specific_month(\*STDOUT, $n);
     }
+}
+
+
+# Descriptions: show menu (table based menu)
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
+sub run_cgi_navigator
+{
+    my ($curproc, $args) = @_;
+    ;
+}
+
+
+# Descriptions: show menu (table based menu)
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
+sub run_cgi_options
+{
+    my ($curproc, $args) = @_;
+    ;
 }
 
 
