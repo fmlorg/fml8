@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.43 2004/04/02 11:56:26 fukachan Exp $
+# $FML: Error.pm,v 1.44 2004/04/23 04:10:37 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -72,7 +72,7 @@ sub prepare
     my ($curproc, $args) = @_;
     my $config = $curproc->config();
 
-    my $eval = $config->get_hook( 'error_prepare_start_hook' );
+    my $eval = $config->get_hook( 'error_mail_analyzer_prepare_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->resolve_ml_specific_variables();
@@ -88,7 +88,7 @@ sub prepare
 	exit(0);
     }
 
-    $eval = $config->get_hook( 'error_prepare_end_hook' );
+    $eval = $config->get_hook( 'error_mail_analyzer_prepare_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
@@ -110,13 +110,13 @@ sub verify_request
     my $config     = $curproc->config();
     my $maintainer = $config->{ maintainer };
 
-    my $eval = $config->get_hook( 'error_verify_request_start_hook' );
+    my $eval = $config->get_hook( 'error_mail_analyzer_verify_request_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # set dummy sender to avoid unexpected error
     $curproc->{'credential'}->set( 'sender', $maintainer );
 
-    $eval = $config->get_hook( 'error_verify_request_end_hook' );
+    $eval = $config->get_hook( 'error_mail_analyzer_verify_request_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
@@ -147,7 +147,7 @@ sub run
     my $pcb    = $curproc->pcb();
     my $msg    = $curproc->incoming_message();
 
-    my $eval = $config->get_hook( 'error_run_start_hook' );
+    my $eval = $config->get_hook( 'error_mail_analyzer_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     $curproc->_forward_error_message();
@@ -191,7 +191,7 @@ sub run
 	}
     }
 
-    $eval = $config->get_hook( 'error_run_end_hook' );
+    $eval = $config->get_hook( 'error_mail_analyzer_run_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
@@ -204,7 +204,7 @@ sub run
 sub _clean_up_bouncers
 {
     my ($curproc) = @_;
-    my $channel   = 'erroranalyzer';
+    my $channel   = 'error_mail_analyzer';
 
     if ($curproc->is_event_timeout($channel)) {
 	$curproc->log("(debug) event timeout");
@@ -268,7 +268,7 @@ sub finish
     my $config = $curproc->config();
     my $pcb    = $curproc->pcb();
 
-    my $eval = $config->get_hook( 'error_finish_start_hook' );
+    my $eval = $config->get_hook( 'error_mail_analyzer_finish_start_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # XXX NOT INFORM ANY RESULTS BUT ONLY LOG IT TO AVOID LOOP.
@@ -282,7 +282,7 @@ sub finish
     $curproc->inform_reply_messages();
     $curproc->queue_flush();
 
-    $eval = $config->get_hook( 'error_finish_end_hook' );
+    $eval = $config->get_hook( 'error_mail_analyzer_finish_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
