@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.197 2003/12/06 04:48:20 fukachan Exp $
+# $FML: Kernel.pm,v 1.198 2003/12/24 14:29:36 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -981,8 +981,15 @@ sub parse_incoming_message
 
 	if (defined $obj) {
 	    my $wh = $obj->open();
-	    $msg->print($wh) if defined $wh;
-	    $obj->close();
+	    if (defined $wh) {
+		$msg->print($wh);
+		$wh->close();
+		$obj->close();
+	    }
+
+	    # save the cache file path.
+	    my $path = $obj->cache_file_path();
+	    $curproc->set_incoming_message_cache_file_path($path);
 	}
     }
 
