@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Distribute.pm,v 1.46 2001/05/30 14:35:09 fukachan Exp $
+# $FML: Distribute.pm,v 1.47 2001/06/10 11:24:12 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -121,6 +121,9 @@ sub run
     {
 	if ($curproc->permit_post($args)) {
 	    $curproc->_distribute($args);
+	}
+	else {
+	    Log("deny article submission");
 	}
     }
     $curproc->unlock();
