@@ -2,9 +2,6 @@
 		Last Modified: $Date$
 
 
-○	CGI からのエラーをあげる
-
-
 ○	要再構成
 
    * makefml htmlify ...
@@ -17,17 +14,6 @@
 
 
 ○	etc/src/config.cf.ja/ の説明文を見直すように
-
-
-○	トラフィックの統計？
-
-
-○	CGI ?
-
-	$object->configure( {
-			header => \&xxx_header(),
-
-		});
 
 
 ○	makefml get ???
@@ -247,4 +233,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.14 2002/04/07 13:07:41 fukachan Exp $
+$FML: 00_MEMO,v 1.15 2002/04/10 09:54:34 fukachan Exp $
