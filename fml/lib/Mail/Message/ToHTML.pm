@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.25 2002/10/02 15:01:50 tmu Exp $
+# $FML: ToHTML.pm,v 1.26 2002/10/03 22:10:16 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.25 2002/10/02 15:01:50 tmu Exp $;
+my $version = q$FML: ToHTML.pm,v 1.26 2002/10/03 22:10:16 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -1719,7 +1719,7 @@ sub update_id_index
 	for my $id ( 1 .. $id_max ) {
 	    $self->_print_li_filename($wh, $db, $id, $code);
 	}
-	    }
+    }
     $self->_print_end_of_ul($wh, $db, $code);
 
     $self->_db_close();
@@ -1878,6 +1878,7 @@ sub _update_id_monthly_index
     my $code          = _charset_to_code($self->{ _charset });
     my $this_month    = $monthlyinfo->{ this_month }; # yyyy/mm
     my $suffix        = $monthlyinfo->{ suffix };     # yyyymm
+    my $order         = $self->{ _html_id_order } || 'normal';
     my $htmlinfo = {
 	title => "ID Monthly Index $this_month",
 	old   => "$html_base_dir/month.${suffix}.html",
@@ -1898,9 +1899,16 @@ sub _update_id_monthly_index
     my (@list) = split(/\s+/, $db->{ _monthly_idlist }->{ $this_month });
 
     $self->_print_ul($wh, $db, $code);
-    for my $id (sort {$a <=> $b} @list) {
-	next unless $id =~ /^\d+$/;
-	$self->_print_li_filename($wh, $db, $id, $code);
+    if($order eq 'reverse') {
+	for my $id (reverse sort {$a <=> $b} @list) {
+	    next unless $id =~ /^\d+$/;
+	    $self->_print_li_filename($wh, $db, $id, $code);
+	}
+    } else {
+	for my $id (sort {$a <=> $b} @list) {
+	    next unless $id =~ /^\d+$/;
+	    $self->_print_li_filename($wh, $db, $id, $code);
+	}
     }
     $self->_print_end_of_ul($wh, $db, $code);
 
@@ -1924,6 +1932,7 @@ sub update_thread_index
 {
     my ($self, $args) = @_;
     my $html_base_dir = $self->{ _html_base_directory };
+    my $order         = $self->{ _html_id_order } || 'normal';
     my $code          = _charset_to_code($self->{ _charset });
     my $htmlinfo = {
 	title => defined($args->{ title }) ? $args->{ title } : "Thread Index",
