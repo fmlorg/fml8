@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: toymodel.pm,v 1.2 2001/08/05 03:24:45 fukachan Exp $
+# $FML: toymodel.pm,v 1.3 2001/08/05 12:07:23 fukachan Exp $
 #
 
 
@@ -60,7 +60,7 @@ sub delete
 }
 
 
-sub fetch_and_cache_address_list
+sub fetch_all
 {
     my ($self, $args) = @_;
 
@@ -68,6 +68,50 @@ sub fetch_and_cache_address_list
 	query   => 'get_next_value',
     });
     $self->execute({ query => $query });
+}
+
+
+sub md_find
+{
+    my ($self, $regexp, $args) = @_;
+    my $case_sensitive = $args->{ case_sensitive } ? 1 : 0;
+    my $show_all       = $args->{ all } ? 1 : 0;
+    my (@buf, $x);
+
+    my $query = $self->_build_sql_query({ 
+	query  => 'search',
+	regexp => $regexp,
+    });
+    $self->execute({ query => $query });
+
+    if (defined $self->{ _res }) {
+	my ($row);
+	while (defined ($row = $self->{ _res }->fetchrow_arrayref)) {
+	    $x = join(" ", @$row);
+
+	    if ($show_all) {
+		if ($case_sensitive) {
+		    push(@buf, $x) if $x =~ /$regexp/;
+		}
+		else {
+		    push(@buf, $x) if $x =~ /$regexp/i;
+		}
+	    }
+	    else {
+		if ($case_sensitive) {
+		    last if $x =~ /$regexp/;
+		}
+		else {
+		    last if $x =~ /$regexp/i;
+		}
+	    }
+	}
+    }
+    else {
+	return undef;
+    }
+
+   $show_all ? \@buf : $x;
 }
 
 
@@ -103,6 +147,10 @@ sub _build_sql_query
     }
     elsif ($query eq 'delete') {
 	"delete from $table where ml='$ml_name' and address='$address'";
+    }
+    elsif ($query eq 'search') {
+	my $p = $args->{ 'regexp' };
+	"select address from $table where address like '\%${p}\%'";
     }
     else {
 	"select address from $table where ml='$ml_name' and file='$file'";
