@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>
+on upgrade installation
+</TITLE>
+<META http-equiv="Content-Type"
+	content="text/html; charset=EUC-JP">
+</HEAD>
+
+<BODY BGCOLOR="#E6E6FA">
+<PRE>
+		アップグレードについて
+
+  * 用語について:
+	% 一般ユーザのプロンプト
+	# ユーザ root のプロンプト
+	fml 4 ( fml 4.0 シリーズのこと )
+</PRE>
+
+普通に<A HREF="install.ja.html">インストール</A>してください。
+
+インストール後、/etc/fml/main.cf の fml_version 行の日付を
+最新のものにして下さい。
+
+ファイルをセーブした瞬間から新しい fml に切り替わります
+(注: エディタで編集中は古い内容)。
+
+<HR>
+<P><H4>注意点</H4>
+
+<UL>
+<LI>
+Q: loader や Bootstrap() がどーとかいうエラーが出る
+<BR>
+A: ブートストラップのやり方がまだ収束してないので、稀に
+<BR>
+
+	/usr/local/fml/libexec/loader
+
+を入れ替える必要がある時があります。loader は /etc/fml/main.cf を読む
+前に起動されるものなので、手動で切替えるしかない。
+
+やりかたはインストール後に、
+
+	# /usr/local/fml/libexec/
+	# mv current-yyyymmdd/loader loader
+
+などとする。cp でもいいけど同一パーティッション上の mv なら atomic で
+あることが保証されるので、good 。
+
+
+<LI>
+Q: アップグレードしたがうまく動かないので、元に戻したい
+<BR>
+A: /etc/fml/main.cf の fml_verison をアップグレード前のものに
+   戻して下さい。
+</UL>
+</BODY>
+</HTML>
