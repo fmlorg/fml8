@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: find_bad_style.pl,v 1.5 2003/01/29 13:35:27 fukachan Exp $
+# $FML: find_bad_style.pl,v 1.6 2003/03/28 11:05:25 fukachan Exp $
 #
 
 use strict;
@@ -73,7 +73,7 @@ while (<>) {
     # 
     if (/IO::Adapter/) { $ioadapter = 1;};
     if (/defined/) { $defined = 1;}
-    if (/\$\S+\-\>(close|open)/ && (!/^sub /) && (!/^=head/) && (!/\$self/)) {
+    if (/\$\S+\-\>(close|open)\(/ && (!/^sub /) && (!/^=head/) && (!/\$self/)) {
 	unless ($defined || $ioadapter) {
 	    $buf .= " ===> ". $_;
 	    $buf =~ s/\n/\n\t/gm;
