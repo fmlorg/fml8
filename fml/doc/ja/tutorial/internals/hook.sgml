@@ -1,5 +1,5 @@
 <!--
-   $FML: hook.sgml,v 1.2 2002/07/06 14:55:18 fukachan Exp $
+   $FML: hook.sgml,v 1.3 2003/04/15 14:51:41 fukachan Exp $
 -->
 
 <chapter id="hook">
@@ -10,7 +10,7 @@
 
 <sect1 id="hook.problems">
 	<title>
-	hook における諸問題
+	概要もしくは HOOK における諸問題
 	</title>
 
 <para>
@@ -19,17 +19,49 @@ hook は微妙な、もしくは複雑なカスタマイズのために是非必要です。
 </para>
 
 <para>
-まず、第一に hook の名前に一定の基準が必要です。
-$START_HOOK のような曖昧なものではなく。
+まず、&fml4; の $START_HOOK のような曖昧なものではなく、
+hook の名前に一定の基準が必要でしょう。
+そのため &fml8; では、ある関数の最初と最後にHOOKを用意する場合、
+次のようなスタイルの HOOK 名称になっています。
+<screen>
+$役割_関数_start_hook
+$役割_関数_end_hook
+</screen>
 </para>
 
 <para>
-また、HOOK の書き方が少々良くなくても動くのがよいでしょう。通常
+これにより配送システムとコマンドメールシステムで共通の HOOK などという
+ものはなくなり、別々のHOOKをしかけることができるようになります。逆に、
+共通のものをしかけようとするなら、一杯書いて下さい;)ということです。
+まぁコピーすればいいだけだから、さして難しくないですよね？(と思いたい)
+<screen>
+$distribute_XXX_start_hook = q{ ... };
+$YYY_XXX_start_hook = $distribute_XXX_start_hook;
+</screen>
+</para>
+
+<para>
+また、HOOK の書き方が少々良くなくても動かないと困るでしょう。
+通常、各モジュールでは
 <screen>
 use strict;
 </screen>
-になっていますが、HOOK を評価する lexical scope では無視するようにする
-べきでしょう。
+になっていますが、HOOK を評価する lexical scope では無視するようにして
+あります。
+実際には、HOOK を評価する際に、つねに
+<screen>
+no strict;
+HOOK の内容
+</screen>
+という構文に変換した上で eval() しています。
+</para>
+
+<para>
+&fml4; と &fml8; の大きなちがいのひとつは変数、関数のスコープです。
+&fml4; はグローバルなので、どんな関数でも使えますが、&fml8; では、そう
+はいきません。とはいえ、まったくてがかりがないのも困るので、$curproc 
+が使えるような場所にのみ HOOK を用意するといったルールが必要でしょう。
+いまのところ、そういう方針になっています。
 </para>
 
 </sect1>
@@ -43,11 +75,11 @@ use strict;
 <para>
 hook 名前の標準的な形式については
 <screen>
-プログラム名_メソッド名_start_hook
-プログラム名_メソッド名_end_hook
+役割名_メソッド名_start_hook
+役割名_メソッド名_end_hook
 </screen>
 のようにすることにしました。
-たとえば、fmlconf のメインの部分 run() の HOOK の名前は
+たとえば、fmlconf コマンドのメインの部分 run() の HOOK の名前は
 <screen>
 fmlconf_run_start_hook
 fmlconf_run_end_hook
