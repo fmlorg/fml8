@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.3 2002/05/19 11:25:24 fukachan Exp $
+# $FML: Error.pm,v 1.4 2002/05/19 11:53:43 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -75,6 +75,7 @@ sub prepare
 
     if ($config->yes('use_error_analyzer')) {
 	$self->SUPER::prepare($args);
+	$config->{ log_format_type } = 'new_style';
     }
     else {
 	exit(0);
@@ -131,9 +132,9 @@ sub run
 {
     my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
-    my $found = 0;
-    my $pcb   = $curproc->{ pcb };
-    my $msg   = $curproc->{ incoming_message }->{ message };
+    my $found  = 0;
+    my $pcb    = $curproc->{ pcb };
+    my $msg    = $curproc->{ incoming_message }->{ message };
 
     my $eval = $config->get_hook( 'error_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
@@ -143,14 +144,23 @@ sub run
 	my $bouncer = new Mail::Bounce;
 	$bouncer->analyze( $msg );
 
-	# show results
-	for my $a ( $bouncer->address_list ) {
+	for my $address ( $bouncer->address_list ) {
 	    $found++;
-	    my $status = $bouncer->status( $a );
-	    my $reason = $bouncer->reason( $a );
-	    Log("bounced: $a");
-	    Log("bounced: reason=$reason");
+	    my $status = $bouncer->status( $address );
+	    my $reason = $bouncer->reason( $address );
+	    Log("bounced: address=<$address>");
 	    Log("bounced: status=$status");
+	    Log("bounced: reason=\"$reason\"");
+	}
+
+	my $obj = $curproc->__open_cache();
+	if (defined $obj) {
+	    # show results
+	    for my $address ( $bouncer->address_list ) {
+		my $status = $bouncer->status( $address );
+		my $reason = $bouncer->reason( $address );
+		$obj->set($address, $status);
+	    }
 	}
     };
     LogError($@) if $@;
@@ -209,8 +219,8 @@ sub finish
 
     if ($pcb->get("error", "found")) {
 	Log("error message found");
-	$curproc->inform_reply_messages();
-	$curproc->queue_flush();
+	# $curproc->inform_reply_messages();
+	# $curproc->queue_flush();
     }
     else {
 	Log("error message not found");
@@ -218,6 +228,29 @@ sub finish
 
     $eval = $config->get_hook( 'error_finish_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
+}
+
+
+sub __open_cache
+{
+    my ($curproc) = @_;
+    my $config = $curproc->{ config };
+    my $dir    = $config->{ error_cache_dir };
+    my $mode   = 'temporal';
+    my $days   = 14;
+
+    if ($dir) {
+        use File::CacheDir;
+        my $obj = new File::CacheDir {
+            directory  => $dir,
+            cache_type => $mode,
+            expires_in => $days,
+        };
+
+        return $obj;
+    }
+
+    return undef;
 }
 
 
