@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Bounce.pm,v 1.6 2001/04/12 12:06:11 fukachan Exp $
+# $FML: Bounce.pm,v 1.7 2001/04/12 13:37:15 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -129,6 +129,34 @@ sub look_japanese
     }
 
     0;
+}
+
+
+sub address_clean_up
+{
+    my ($self, $type, $addr) = @_;
+
+    # nuke predecing and trailing strings around user@domain pattern
+    my $prev_addr = $addr;
+    do { 
+	$prev_addr = $addr;
+	print "    address_clean_up.in: $prev_addr\n" if $debug;
+
+	$addr      =~ s/\.$//;
+	$addr      =~ s/^\<//;
+	$addr      =~ s/\>$//;
+	$addr      =~ s/^\"//;
+	$addr      =~ s/\"$//;
+
+	print "   address_clean_up.out: $addr\n" if $debug;
+    } while ($addr ne $prev_addr);
+
+    if ($type eq 'nifty.ne.jp' && $addr !~ /\@/) {
+	$addr . '@nifty.ne.jp';
+    }
+    else {
+	$addr;
+    }
 }
 
 
