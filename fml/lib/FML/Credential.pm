@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.53 2004/01/02 14:42:45 fukachan Exp $
+# $FML: Credential.pm,v 1.54 2004/01/18 14:04:31 fukachan Exp $
 #
 
 package FML::Credential;
@@ -495,6 +495,12 @@ sub match_system_special_accounts
 
 =head2 sender()
 
+same as get_sender().
+
+=head2 set_sender()
+
+=head2 get_sender()
+
 return the mail address of the mail sender who kicks off this fml
 process.
 
@@ -507,7 +513,36 @@ process.
 sub sender
 {
     my ($self) = @_;
-    $Credential{ sender };
+    $self->get_sender();
+}
+
+
+# Descriptions: set the mail sender.
+#    Arguments: OBJ($self) STR($address)
+# Side Effects: none
+# Return Value: STR(mail address)
+sub set_sender
+{
+    my ($self, $address) = @_;
+
+    if (defined $address && $address) {
+	$Credential{ sender } = $address;
+    }
+    else {
+	croak("wrong credential usage");
+    }
+}
+
+
+# Descriptions: return the mail sender.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR(mail address)
+sub get_sender
+{
+    my ($self) = @_;
+
+    return( $Credential{ sender } || '' );
 }
 
 
