@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: TinyScheduler.pm,v 1.9 2001/11/23 02:52:27 fukachan Exp $
+# $FML: TinyScheduler.pm,v 1.10 2001/11/25 14:53:41 fukachan Exp $
 #
 
 package TinyScheduler;
@@ -32,11 +32,10 @@ TinyScheduler - scheduler with minimal functions
     system "w3m -dump $tmp";
     unlink $tmp;
 
-See the debug code in this module.
-
 =head1 DESCRIPTION
 
-demonstration module to show how to use and build up modules.
+demonstration module to show how to use and build up modules
+especially to couple with CPAN and FML modules.
 
 It parses files in ~/.schedule/ and output schedule of this month as
 HTML TABLE by default.
@@ -54,7 +53,7 @@ To see it, you need WWW browser e.g. "w3m".
 #               parameters from CGI.pm  if fmlsci.cgi uses.
 #                    OR
 #               libexec/loaders's $args if fmlsch uses.
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: object
 sub new
@@ -96,7 +95,7 @@ sub new
 
 
 # Descriptions: determine template file location
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: STR(filename)
 sub tmpfile
@@ -128,7 +127,7 @@ sub tmpfile
 
 
 # Descriptions: parse file(s)
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: update calender entries in $self object
 #               (actually by _add_entry() calleded here)
 # Return Value: none
@@ -317,43 +316,6 @@ sub set_mode
 {
     my ($self, $mode) = @_;
     $self->{ _mode } = $mode;
-}
-
-
-#
-# debug
-#
-
-if ($0 eq __FILE__) {
-    eval q{
-	my %options;
-
-	use Getopt::Long;
-	GetOptions(\%options, "e! -D=s -m=s");
-
-	require FileHandle; import FileHandle;
-	require TinyScheduler; import TinyScheduler;
-	my $schedule = new TinyScheduler;
-
-	if ($options{'e'}) {
-	    my $editor = $ENV{'EDITOR'} || 'mule';
-	    system $editor, '-nw', $schedule->{ _schedule_file };
-	}
-
-	$schedule->parse;
-
-	my $tmp = $schedule->tmpfile;
-	my $fh  = new FileHandle $tmp, "w";
-	$schedule->print($fh);
-	$fh->close;
-
-	my $formater = defined $ENV{'BROWSER'} ? $ENV{'BROWSER'} : 'w3m';
-	
-	system "$formater -dump $tmp";
-
-	unlink $tmp;
-    };
-    croak($@) if $@;
 }
 
 
