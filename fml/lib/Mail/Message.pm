@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.29 2001/09/23 14:28:17 fukachan Exp $
+# $FML: Message.pm,v 1.30 2001/10/20 07:44:13 fukachan Exp $
 #
 
 package Mail::Message;
@@ -277,7 +277,8 @@ sub _build_message
     $self->_set_up_template($args);
 
     # parse the non multipart mail and build a chain
-    if ($args->{ data_type } =~ /multipart/i) {
+    if (defined( $args->{ data_type } ) && 
+	$args->{ data_type } =~ /multipart/i) {
 	$self->parse_and_build_mime_multipart_chain($args);
     }
     # parse the mail data.
@@ -696,7 +697,7 @@ sub _header_mime_boundary
     my ($self, $header) = @_;
     my $m = $header->get('content-type');
 
-    if ($m =~ /boundary\s*=\s*\"(.*)\"/i) { # case insensitive
+    if (defined($m) && ($m =~ /boundary\s*=\s*\"(.*)\"/i)) { # case insensitive
 	return $1;
     }
     else {
