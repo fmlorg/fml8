@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.12 2003/01/25 09:14:04 fukachan Exp $
+# $FML: Error.pm,v 1.13 2003/02/09 12:31:40 fukachan Exp $
 #
 
 package FML::Error;
@@ -56,6 +56,31 @@ sub new
 }
 
 
+# Descriptions: open cache database.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
+sub db_open
+{
+    my ($self)  = @_;
+    my $curproc = $self->{ _curproc };
+
+    use FML::Error::Cache;
+    return new FML::Error::Cache $curproc;
+}
+
+
+# Descriptions: dummy.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
+sub db_close
+{
+    my ($self)  = @_;
+    my $curproc = $self->{ _curproc };
+}
+
+
 =head2 analyze()
 
 open error message cache and
@@ -75,13 +100,11 @@ error_analyzer_function } is unspecified.
 # Return Value: none
 sub analyze
 {
-    my ($self) = @_;
+    my ($self)  = @_;
     my $curproc = $self->{ _curproc };
     my $config  = $curproc->config();
-
-    use FML::Error::Cache;
-    my $cache = new FML::Error::Cache $curproc;
-    my $rdata = $cache->get_all_values_as_hash_ref();
+    my $cache   = $self->db_open();
+    my $rdata   = $cache->get_all_values_as_hash_ref();
 
     use FML::Error::Analyze;
     my $analyzer = new FML::Error::Analyze $curproc;

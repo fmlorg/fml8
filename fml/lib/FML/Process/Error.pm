@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.26 2003/02/03 12:25:59 fukachan Exp $
+# $FML: Error.pm,v 1.27 2003/02/11 09:48:16 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -152,8 +152,9 @@ sub run
 	    my $bouncer = new Mail::Bounce;
 	    $bouncer->analyze( $msg );
 
-	    use FML::Error::Cache;
-	    my $errorcache = new FML::Error::Cache $curproc;
+	    use FML::Error;
+	    my $error_obj  = new FML::Error $curproc;
+	    my $errorcache = $error_obj->db_open();
 
 	    for my $address ( $bouncer->address_list ) {
 		my $status = $bouncer->status( $address );
