@@ -1,6 +1,6 @@
 #!/usr/local/bin/perl
 #
-# $FML: multipart_maker.pl,v 1.7 2001/04/06 16:25:45 fukachan Exp $
+# $FML: multipart_maker.pl,v 1.8 2001/04/07 06:35:54 fukachan Exp $
 #
 
 use strict;
@@ -40,7 +40,7 @@ for $msg (@ARGV) {
     # text 
     else {
 	$args->{ data_type } = 'text/plain';
-	$args->{ charset      } = 'iso-2022-jp';
+	$args->{ charset   } = 'iso-2022-jp';
     }
 
     my $m = new Mail::Message $args;
@@ -50,8 +50,8 @@ for $msg (@ARGV) {
 $master = $m[0];
 $master = $master->build_mime_multipart_chain( {
     base_data_type => 'multipart/mixed',
-    boundary          => $boundary,
-    message_list      => \@m,
+    boundary       => $boundary,
+    message_list   => \@m,
 });
 
 
