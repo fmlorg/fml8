@@ -1,6 +1,6 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
 # $Id$
@@ -25,10 +25,14 @@ This module is a top level driver to talk with a DBI server in SQL
 (Structured Query Language).
 
 The model dependent SQL statement is expected to be holded in
-C<SQL::Schema::> modules. 
+other modules in such as C<SQL::Schema::> class.
 Each model name is specified at $args->{ schema } in new($args).
 
 =head1 METHODS
+
+=head2 C<make_dsn($args)>
+
+prepare C<dsn>.
 
 =cut
 
@@ -83,7 +87,11 @@ sub execute
 
 =head2 C<open($args)>
 
+connected to SQL server specified by C<dsn>.
+
 =head2 C<close($args)>
+
+close connection to SQL server specified by C<dsn>.
 
 =cut
 
@@ -130,5 +138,23 @@ sub close
     delete $self->{ _dbh };
 }
 
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1 HISTORY
+
+IO::Adapter::Array appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
+=cut
 
 1;

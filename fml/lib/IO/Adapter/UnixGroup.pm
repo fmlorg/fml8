@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: UnixGroup.pm,v 1.11 2001/04/03 09:45:46 fukachan Exp $
+# $FML: UnixGroup.pm,v 1.12 2001/05/04 14:32:34 fukachan Exp $
 #
 
 package IO::Adapter::UnixGroup;
@@ -16,18 +15,6 @@ use Carp;
 use IO::Adapter::Array;
 
 @ISA = qw(IO::Adapter::Array);
-
-sub configure
-{
-    my ($self, $me) = @_;
-    my ($type) = ref($self) || $self;
-
-    # emulate an array on memory
-    my (@x)        = getgrnam( $me->{_name} );
-    my (@elements) = split ' ', $x[3];
-    $me->{_array_reference} = \@elements;
-}
-
 
 
 =head1 NAME
@@ -53,6 +40,27 @@ IO::Adapter::UnixGroup - IO wrapper to read /etc/group
 See L<IO::Adapter::Array> for more details.
 
 C<CAUTION: this map is read only>.
+
+=head1 METHOD
+
+=head2 C<configure($obj)>
+
+Configure object for array IO operation.
+
+=cut
+
+
+sub configure
+{
+    my ($self, $me) = @_;
+    my ($type) = ref($self) || $self;
+
+    # emulate an array on memory
+    my (@x)        = getgrnam( $me->{_name} );
+    my (@elements) = split ' ', $x[3];
+    $me->{_array_reference} = \@elements;
+}
+
 
 =head1 SEE ALSO
 

@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: File.pm,v 1.21 2001/04/08 13:25:40 fukachan Exp $
+# $FML: File.pm,v 1.22 2001/05/04 14:32:33 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -44,7 +43,7 @@ To delete it
 =head1 DESCRIPTION
 
 This module provides real IO functions for a file used in
-IO::Adapter. 
+C<IO::Adapter>. 
 The map is the fully path-ed file name or a file name with 'file:/'
 prefix. 
 

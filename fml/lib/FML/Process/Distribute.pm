@@ -1,10 +1,10 @@
 #!/usr/local/bin/perl -w
 #-*- perl -*-
 #
-# Copyright (C) 2000 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Distribute.pm,v 1.44 2001/04/15 09:05:41 fukachan Exp $
+# $FML: Distribute.pm,v 1.45 2001/05/19 03:30:37 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -16,6 +16,8 @@ use Carp;
 use FML::Process::Kernel;
 use FML::Log qw(Log LogWarn LogError);
 use FML::Config;
+
+@ISA = qw(FML::Process::Kernel);
 
 
 =head1 NAME
@@ -31,14 +33,10 @@ See L<FML::Process::Flow> for details of the fml flow.
 
 =head1 DESCRIPTION
 
-C<FML::Process::Flow::ProcessStart($pkg, $args)> drives the fml flow
-where C<$pkg> is the object C<FML::Process::$module::new()> returns.
+C<FML::Process::Flow::ProcessStart($obj, $args)> drives the fml flow
+where C<$obj> is the object C<FML::Process::$module::new()> returns.
 
-=cut
-
-require Exporter;
-@ISA = qw(FML::Process::Kernel Exporter);
-
+=head1 METHOD
 
 =head2 C<new($args)>
 
@@ -103,6 +101,8 @@ Firstly it locks (giant lock) the current process.
 
 If the mail sender is one of our mailing list member,
 we can distribute the mail as an article.
+If not, we inform "you are not a member" which is sent by
+C<inform_reply_messages()> in C<FML::Process::Kernel>.
 
 Lastly we unlock the current process.
 
@@ -129,8 +129,8 @@ sub run
 
 =head2 C<finish($args)>
 
-send back or inform reply messages to the mail sender, for example,
-error messages.
+Finalize the current process.
+If needed, we send back error messages to the mail sender.
 
 =cut
 

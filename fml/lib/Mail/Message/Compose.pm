@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: __template.pm,v 1.5 2001/04/03 09:45:39 fukachan Exp $
+# $FML: Compose.pm,v 1.1 2001/05/06 08:21:05 fukachan Exp $
 #
 
 
@@ -16,6 +16,18 @@ use Carp;
 
 use MIME::Lite;
 @ISA = qw(MIME::Lite);
+
+=head1 NAME
+
+Mail::Message::Compose - message composer
+
+=head1 SYNOPSIS
+
+See C<Mail::Message>.
+
+=head1 DESCRIPTION
+
+This class is the adapter for C<MIME::Lite>.
 
 =head1 AUTHOR
 

@@ -1,4 +1,4 @@
-$FML: doc,v 1.44 2001/05/29 16:21:17 fukachan Exp $
+$FML: doc,v 1.45 2001/05/30 04:03:22 fukachan Exp $
 
 	TODO for documents
 	Last Modified: $Date$
@@ -7,19 +7,9 @@ $FML: doc,v 1.44 2001/05/29 16:21:17 fukachan Exp $
 2001/05 todo (document clean up)
 
 	FML/Process/Configure.pm
-	FML/Process/Distribute.pm
 	FML/Process/Kernel.pm
 	FML/Ticket/Model/minimal_states.pm
 	File/Rotate.pm
-	IO/Adapter.pm
-	IO/Adapter/Array.pm
-	IO/Adapter/DBI.pm
-	IO/Adapter/File.pm
-	IO/Adapter/MySQL.pm
-	IO/Adapter/NIS.pm
-	IO/Adapter/RDBMS.pm
-	IO/Adapter/UnixGroup.pm
-	Language/ISO2022JP.pm
 	Language/Japanese/String.pm
 	Language/Japanese/Subject.pm
 	Language/Japanese/Utils.pm
@@ -29,7 +19,5 @@ $FML: doc,v 1.44 2001/05/29 16:21:17 fukachan Exp $
 	Mail/Delivery/Queue.pm
 	Mail/Delivery/SMTP.pm
 	Mail/Message.pm
-	Mail/Message/Compose.pm
-	Process/TicketSystem.pm
 	SQL/Schema/toymodel.pm
 	Tie/JournaledFile.pm

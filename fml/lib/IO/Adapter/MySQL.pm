@@ -1,6 +1,6 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
 # $Id$
@@ -219,5 +219,4 @@ See C<http://www.fml.org/> for more details.
 
 =cut
 
-1;
 1;

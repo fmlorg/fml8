@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: MapAdapter.pm,v 1.28 2001/04/15 08:41:59 fukachan Exp $
+# $FML: Adapter.pm,v 1.1 2001/05/04 14:32:33 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -29,7 +28,7 @@ IO::Adapter - adapter for several IO interfaces
     while ($x = $obj->getline) { ... }
     $obj->close;
 
-where C<$map_params> is map specific parametes used for C<RDBMS>.
+where C<$map_params> is map specific parameters used for such as C<RDBMS>.
 For example, C<$map_params> is:
 
     $map_params = {
@@ -59,7 +58,7 @@ you can use the same methods as usual file IO.
 
 C<map> specifies the type of the database we read/write.  
 
-For example, C<file> map imples we hold our data in a file.
+For example, C<file> map implies we hold our data in a file.
 The format is one line for one entry in a lot of cases.
 
    key1
@@ -94,7 +93,7 @@ This wrapper provides IO like a usual file for the specified C<$map>.
 
 =head1 METHODS
 
-=item C<new()>
+=item C<new($map, $args)>
 
 the constructor. The first argument is a map decribed above.
 

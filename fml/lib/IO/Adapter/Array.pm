@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: Array.pm,v 1.17 2001/04/03 09:45:45 fukachan Exp $
+# $FML: Array.pm,v 1.18 2001/04/08 13:25:40 fukachan Exp $
 #
 
 package IO::Adapter::Array;
@@ -17,7 +16,7 @@ use IO::Adapter::ErrorStatus qw(error_set error error_clear);
 
 =head1 NAME
 
-IO::Adapter::Array - emulation of IO for the ARRAY
+IO::Adapter::Array - IO emulation for the ARRAY
 
 =head1 SYNOPSIS
 
@@ -37,7 +36,7 @@ emulate IO operation for the ARRAY.
 
 =item C<new()>
 
-constructor. It is a dummy in fact now.
+constructor.
 
 =cut
 
@@ -127,6 +126,16 @@ sub get_next_value
 }
 
 
+=head2 C<getpos()>
+
+return the current position in the array
+
+=head2 C<setpos($pos)>
+
+set the current position to $pos -th element.
+
+=cut
+
 # Descriptions: return the current position in the array, that is,
 #               which element in the array
 #    Arguments: $self
@@ -151,6 +160,17 @@ sub setpos
 }
 
 
+=head2 C<eof()>
+
+whether the current position reaches the end of the array or not.
+If it already reaches the end, return 1.
+
+=head2 C<close()>
+
+end of IO operation. It is a dummy.
+
+=cut
+
 # Descriptions: whether end of the array is not now
 #    Arguments: $self
 # Side Effects: none
@@ -172,25 +192,6 @@ sub close
     my ($self) = @_;
 }
 
-
-=head2
-
-=item C<getpos()>
-
-return the current position in the array
-
-=item C<setpos($pos)>
-
-set the current position to $pos -th element.
-
-=item C<eof()>
-
-whether the current position reaches the end of the array or not.
-If it already reaches the end, return 1.
-
-=item C<close()>
-
-end of IO operation. It is a dummy.
 
 =head1 AUTHOR
 
