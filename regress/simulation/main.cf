@@ -1,5 +1,5 @@
 #
-# $FML: main.cf,v 1.10 2002/01/27 08:31:30 fukachan Exp $
+# $FML: main.cf,v 1.11 2002/06/25 08:12:23 fukachan Exp $
 # 
 
 fml_version	=	__fml_version__
@@ -44,10 +44,11 @@ domain_default_config = $config_dir/domains/__domain__/config.cf
 
 # ml's home directories
 # $ml_home_dir (e.g. /var/spool/ml/elena ) is taken from loader's @ARGV.
+default_ml_home_prefix	= /var/spool/ml
 
-ml_home_prefix	= /var/spool/ml
+
 # virtual format: domain directory
 # for example,
 #   fml.org	/var/spool/ml/fml.org
 #   nuinui.net	/var/spool/ml/nuinui.net
-virtual_maps		=	$config_dir/virtual
+virtual_maps		=	/etc/fml/virtual
