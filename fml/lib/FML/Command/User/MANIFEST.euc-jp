@@ -21,6 +21,10 @@ unsubscribe	ＭＬからの脱退
 (signoff)
 
 
+chaddr		登録してあるメールアドレスを変更する
+		=> confirm
+
+
 confirm		subscribe, unsubscribe, chaddr で用いる
 		汎用 confirmation アダプタ
 
@@ -47,11 +51,6 @@ deny		deny ファイルを取り寄せる if found
 
 ○ 未実装
 
-chaddr		登録してあるメールアドレスを変更する
-		前半 ok		confirm を返す
-		後半 だめ	Admin::chaddr が未実装 ;)
-
-
 members
 actives
 
@@ -59,4 +58,4 @@ off
 on
 
 
-$FML: MANIFEST.euc-jp,v 1.4 2002/02/20 14:10:38 fukachan Exp $
+$FML: MANIFEST.euc-jp,v 1.5 2002/02/23 13:29:20 fukachan Exp $

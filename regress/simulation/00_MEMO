@@ -4,15 +4,7 @@
 
 ○	コマンド clean up キャンペーン
 
-   * user
-
-	chaddr		Admin::chaddr が未実装 ;)
-
-	chaddr の両方のアドレスに返してないぞ
-
    * admin
-
-	chaddr		未実装 ;)
 	(send)		この名前でいいかしら？
 
 
@@ -298,4 +290,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.7 2002/02/27 14:45:45 fukachan Exp $
+$FML: 00_MEMO,v 1.8 2002/03/16 11:15:01 fukachan Exp $
