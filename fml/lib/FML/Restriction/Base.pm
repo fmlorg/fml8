@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.22 2003/04/29 12:33:24 fukachan Exp $
+# $FML: Base.pm,v 1.23 2003/08/23 04:35:41 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -118,6 +118,9 @@ my %basic_variable =
 
      # unix command switch
      'command_line_options' => $option_regexp,
+
+     # misc
+     'language'          => $option_regexp,		
      );
 
 
