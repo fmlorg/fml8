@@ -32,6 +32,17 @@ File::RingBuffer - IO operations to ring buffer which consists of files
 
    ... unlock ...
 
+The buffer directory has files with the name C<0>, C<1>, ...
+You can specify C<file_name> parameter.
+
+   $obj = new File::RingBuffer { 
+       directory => '/some/where',
+       file_name => '_smtplog',
+   };
+
+If so, the file names become _smtplog.0, _smtplog.1, ... 
+
+
 =head1 DESCRIPTION
 
 To log messages but up to some limit, it may be useful to use a file
@@ -59,6 +70,14 @@ The latest number is holded in C<ring/.seq> file (C<.seq> in that
 direcotry by default) and truncated to 0 by the modulus C<5>.
 
 =head1 METHODS
+
+=head2 C<open()>
+
+no argument.
+
+=head2 C<close()>
+
+no argument.
 
 =cut
 
@@ -88,20 +107,21 @@ sub new
 sub _take_file_name
 {
     my ($self, $args) = @_;
+    my $file_name          = $args->{ file_name } || '';
     my $sequence_file_name = $args->{ sequence_file_name } || '.seq';
     my $modulus            = $args->{ modulus } || 128;
 
     use File::Spec;
     my $seq_file = 
       File::Spec->catfile($args->{ directory }, $sequence_file_name);
-			  
+
     use File::Sequence;
     my $sfh = new File::Sequence {
 	sequence_file => $seq_file,
 	modulus       => $modulus,
     };
     my $id   = $sfh->increment_id;
-    my $file = File::Spec->catfile($args->{ directory }, $id);
+    my $file = File::Spec->catfile($args->{ directory }, $file_name.$id);
     ${*$self}{ _file } = $file;
 }
 
