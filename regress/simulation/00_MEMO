@@ -8,6 +8,15 @@
 	XXX
 
 
+[TODO]	fml 4 の cf を解釈できる互換ルーチン
+
+	cf シンタックスを読んで、
+	＃ そういえば、Config::Tiny で出来るね
+
+	8 の .cf シンタックスに置き換えて
+	値をよろしく変換する （←ここがむずかしー）
+
+
 [TODO]	case insensitive of user part of user@domain
 
 
@@ -29,16 +38,18 @@
 		rmml を連発で実行しまくる rmdomain ってのがあればいい？
 
 
-[TODO]	エラートラップフレーム？
+[TODO]	エラーをどのように呼びだし側へ組織的に伝えるか？
+
+	エラートラップフレーム？
 
 		$curproc->error_regist( { キー => オブジェクト } );
 		croak(エラーのキー);
 
 	？ 必要な場所すべてに $curproc ってのが難しそう？
 
-
-[TODO]	エラーをどのように呼びだし側へ組織的に伝えるか？
+	エラーをどのように呼びだし側へ組織的に伝えるか？
 	オブジェクトか HASH_REF ごとわたせないか？
+
 
 [TODO]	$main_cf (HASH_REF) が FML::Process::{Switch,Utils,Kernel}
 	以外で参照されているのは間違いだ！ (FNF?)
@@ -57,15 +68,6 @@
 
 [TODO]	$use_log_dup
 	$log_dup_print_engine
-
-
-[TODO]	fml 4 の cf を解釈できる互換ルーチン
-
-	cf シンタックスを読んで、
-	＃ そういえば、Config::Tiny で出来るね
-
-	8 の .cf シンタックスに置き換えて
-	値をよろしく変換する （←ここがむずかしー）
 
 
 [TODO]	libexec/error エラーメールのフォワードについて改良
@@ -399,15 +401,7 @@ FileHandle と IO::File 両方 use しちゃうからか？
 		一度削除するか？
 
 	FML::Process::Qmail
-	FML::Filter::TrafficMonitor
-
-
-[TODO]	FML::Process::Scheduler ってかなり？
-
-	うーん、なかみがない。予約だけされてるモジュールやね
-	mkdir するだけ？ :-)
-
 
 
 ----------
-$FML: 00_MEMO,v 1.87 2003/10/15 02:40:29 fukachan Exp $
+$FML: 00_MEMO,v 1.88 2003/10/15 02:43:51 fukachan Exp $
