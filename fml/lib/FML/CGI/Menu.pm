@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.3 2003/09/27 13:56:42 fukachan Exp $
+# $FML: Menu.pm,v 1.4 2003/10/14 10:55:27 fukachan Exp $
 #
 
 package FML::CGI::Menu;
@@ -79,7 +79,7 @@ sub html_start
     my $name_ui   = $curproc->message_nl('term.config_interface');
     my $title     = "${ml_name}\@${ml_domain} $name_ui";
     my $color     = $config->{ cgi_main_menu_color } || '#FFFFFF';
-    my $charset   = $curproc->language_of_cgi_message();
+    my $charset   = $curproc->get_charset("cgi");
 
     # o.k start html
     print start_html(-title   => $title,
