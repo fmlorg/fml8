@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.93 2003/09/13 05:03:12 fukachan Exp $
+# $FML: Switch.pm,v 1.94 2003/09/13 06:14:38 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -95,6 +95,7 @@ sub main::Bootstrap2
     my $myname      = basename($0); # inspect my name from $0
 
     # 0.1
+    # XXX valid use of STDERR
     print STDERR "\nsetuid is not set $< != $>\n\n" if $< != $>;
     print STDERR "\nsetgid is not set $( != $)\n\n" if $( ne $);
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Obsolete.pm,v 1.1 2003/03/14 03:45:58 fukachan Exp $
+# $FML: Obsolete.pm,v 1.2 2003/08/23 04:35:40 fukachan Exp $
 #
 
 package FML::Process::Obsolete;
@@ -51,6 +51,7 @@ sub help
     use File::Basename;
     my $myname = basename($0);
 
+    # XXX valid use of STDERR
     print STDERR "\nWARNING: $myname command is obsolete.\n\n";
 
     exit(0);

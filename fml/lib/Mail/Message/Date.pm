@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.22 2003/07/21 13:59:30 fukachan Exp $
+# $FML: Date.pm,v 1.23 2003/08/23 04:35:47 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -273,6 +273,8 @@ my %zone = ("JST", "+0900",
 sub _log
 {
     my ($s) = @_;
+
+    # XXX_TODO: valid use of STDERR ???
     print STDERR $s, "\n" if defined $s;
 }
 

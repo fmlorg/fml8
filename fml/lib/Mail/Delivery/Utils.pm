@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.11 2003/08/23 04:35:46 fukachan Exp $
+# $FML: Utils.pm,v 1.12 2003/08/23 15:33:16 fukachan Exp $
 #
 
 package Mail::Delivery::Utils;
@@ -94,6 +94,7 @@ sub Log
     # function pointer to logging function
     my $fp = $LogFunctionPointer;
 
+    # XXX valid use of STDERR ?
     if ($fp) {
 	eval &$fp($buf);
 	print STDERR $@, "\n" if $@;

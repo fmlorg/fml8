@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #
-# $FML: Log.pm,v 1.25 2002/12/26 04:26:10 fukachan Exp $
+# $FML: Log.pm,v 1.26 2003/01/11 06:58:45 fukachan Exp $
 #
 
 package FML::Log;
@@ -167,6 +167,7 @@ sub LogWarn
 	Log("warn: ".$mesg, $args);
     };
     if ($@) {
+	# XXX valid use of STDERR
 	print STDERR "warn: ", $mesg, "\n";
     }
 }
@@ -185,6 +186,7 @@ sub LogError
 	Log("error: ".$mesg, $args);
     };
     if ($@) {
+	# XXX valid use of STDERR
 	print STDERR "error: ", $mesg, "\n";
     }
 }
