@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: install.sh,v 1.11 2002/04/20 11:22:57 fukachan Exp $
+# $FML: install.sh,v 1.12 2002/04/22 04:43:58 fukachan Exp $
 #
 
 if [ ! -f .this_is_a_test_machine ];then
@@ -28,6 +28,6 @@ fi
 sudo rm -f /etc/fml/main.cf 
 sudo rm -f /etc/fml/site_default_config.cf 
 sudo rm -f /usr/local/libexec/fml/loader
-(cd ../..; sudo sh INSTALL.sh )
+(cd ../..; sudo ./install.pl fml/etc/install.cf )
 
 sudo -v
