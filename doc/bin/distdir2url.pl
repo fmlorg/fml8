@@ -24,7 +24,8 @@ exit 0;
 
 sub Show
 {
-    print "<TABLE BORDER=4>\n";
+    print "<CENTER>\n";
+    print "<TABLE>\n";
 
     foreach my $pathname (<*>) {
 	next if $pathname =~ /^\__template/;
@@ -49,6 +50,7 @@ sub Show
     }
 
     print "</TABLE>\n";
+    print "</CENTER>\n";
 }
 
 
