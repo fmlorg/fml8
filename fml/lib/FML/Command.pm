@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.35 2002/12/24 10:19:41 fukachan Exp $
+# $FML: Command.pm,v 1.36 2003/01/03 07:03:35 fukachan Exp $
 #
 
 # XXX
@@ -210,6 +210,7 @@ sub AUTOLOAD
 
 	# run the actual process
 	if ($command->can('process')) {
+	    # XXX_LOCK_CHANNEL: default 
 	    $curproc->lock()   if $need_lock;
 	    $command->process($curproc, $command_args);
 	    $curproc->unlock() if $need_lock;

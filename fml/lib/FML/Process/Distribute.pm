@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.108 2003/03/06 04:16:00 fukachan Exp $
+# $FML: Distribute.pm,v 1.109 2003/03/06 13:37:34 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -201,7 +201,7 @@ sub run
     my $eval = $config->get_hook( 'distribute_run_start_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
-    $curproc->lock();
+    $curproc->lock(); # XXX_LOCK_CHANNEL: default 
     unless ($curproc->is_refused()) {
 	if ($curproc->permit_post($args)) {
 	    $curproc->_distribute($args);
