@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.93 2003/11/16 11:53:19 fukachan Exp $
+# $FML: Utils.pm,v 1.94 2003/11/23 03:54:46 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -383,7 +383,7 @@ sub mkfile
 	my $obj = new IO::Adapter $file;
 	$obj->touch();
 
-	# verify 
+	# verify
 	unless (-f $file) {
 	    $curproc->logerror("fail to create file: $file");
 	}
@@ -1070,7 +1070,7 @@ sub is_config_cf_exist
 
 =head2 get_ml_home_prefix_maps()
 
-return ml_home_prefix maps. 
+return ml_home_prefix maps.
 By default, ml_home_prefix and virtual under $fml_config_dir.
 
 =cut
@@ -1096,7 +1096,7 @@ sub __get_ml_home_prefix_maps
 {
     my ($main_cf) = @_;
 
-    if (defined $main_cf->{ ml_home_prefix_maps } && 
+    if (defined $main_cf->{ ml_home_prefix_maps } &&
 	$main_cf->{ ml_home_prefix_maps }) {
 	my (@r) = ();
 	my (@maps) = split(/\s+/, $main_cf->{ ml_home_prefix_maps });
@@ -1446,7 +1446,7 @@ sub get_charset
 		    last ACCEPT_LANGUAGE;
 		}
 		elsif ($a eq '*') { # any charset is o.k.
-		    last ACCEPT_LANGUAGE;		
+		    last ACCEPT_LANGUAGE;
 		}
 	    }
 	}

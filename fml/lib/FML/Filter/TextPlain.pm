@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: TextPlain.pm,v 1.4 2003/08/23 15:33:15 fukachan Exp $
+# $FML: TextPlain.pm,v 1.5 2003/10/18 06:53:57 fukachan Exp $
 #
 
 package FML::Filter::TextPlain;
@@ -456,7 +456,7 @@ sub is_signature
 	return 1;
     }
 
-    # XXX Japanese specific condition	
+    # XXX Japanese specific condition
     use Mail::Message::Encode;
     my $obj = new Mail::Message::Encode;
     $data   = $obj->convert( $data, 'euc-jp' );

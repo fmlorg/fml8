@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.65 2003/10/18 04:43:51 fukachan Exp $
+# $FML: Kernel.pm,v 1.66 2003/11/02 05:12:37 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -100,7 +100,7 @@ sub prepare
 	$curproc->_cgi_fix_log_file();
     }
 
-    # fix charset 
+    # fix charset
     $curproc->_set_charset();
 
     my $charset = $curproc->get_charset("cgi"); # updated charset.
@@ -117,7 +117,7 @@ sub prepare
 sub _set_charset
 {
     my ($curproc) = @_;
-    my $lang = 
+    my $lang =
 	$curproc->cgi_var_language() || $curproc->_http_accept_language();
 
     use Mail::Message::Charset;

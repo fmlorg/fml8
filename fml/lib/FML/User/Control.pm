@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.5 2003/11/26 11:02:05 fukachan Exp $
+# $FML: Control.pm,v 1.6 2003/11/27 04:25:07 fukachan Exp $
 #
 
 package FML::User::Control;
@@ -146,7 +146,7 @@ sub useradd
 	    my $info = new FML::User::Info $curproc;
 	    $info->import_from_mail_header($curproc, $info_args);
 	};
-	$curproc->logerror($@) if $@;	
+	$curproc->logerror($@) if $@;
     }
 }
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.195 2003/11/29 11:08:04 fukachan Exp $
+# $FML: Kernel.pm,v 1.196 2003/11/29 14:32:03 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -107,7 +107,7 @@ sub new
 			    ml_home_prefix_maps
 			    default_config_cf
 			    site_default_config_cf
-			
+
 			)) {
 	if (defined $args->{ main_cf }->{ $main_cf_var }) {
 	    my $key = sprintf("fml_%s", $main_cf_var);

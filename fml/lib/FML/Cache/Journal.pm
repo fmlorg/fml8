@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.7 2003/01/01 02:06:22 fukachan Exp $
+# $FML: Journal.pm,v 1.1 2003/11/22 05:41:51 fukachan Exp $
 #
 
 package FML::Cache::Journal;
@@ -26,7 +26,7 @@ FML::Cache::Journal - inteface into Tie::JournaledDir
 
 =head2 open_db()
 
-=head2 close_db() 
+=head2 close_db()
 
 =cut
 
