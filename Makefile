@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.15 2001/04/28 10:14:53 fukachan Exp $
+# $FML: Makefile,v 1.16 2001/04/28 10:55:09 fukachan Exp $
 #
 
 CONV = doc/bin/text2html.pl
@@ -21,7 +21,7 @@ scan:
 	@ cvs -n update 2>&1 |grep -v : || echo ''
 
 update:
-	@ cvs update -dAP|grep -v : || echo ''
+	@ cvs update -d -P|grep -v : || echo ''
 
 clean:
 	@ find . |grep '~' |perl -nple unlink
