@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Analyze.pm,v 1.8 2001/11/03 11:58:45 fukachan Exp $
+# $FML: Analyze.pm,v 1.9 2001/11/04 04:43:18 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -223,7 +223,9 @@ sub update_thread_status
     my $subject = '';
     my $pragma  = '';
 
-    return if $self->{ _pragma } eq 'ignore';
+    if (defined $self->{ _pragma }) {
+	return if $self->{ _pragma } eq 'ignore';
+    }
 
     unless (ref($msg) eq 'Mail::Message') {
 	croak("invalid object");
@@ -451,7 +453,9 @@ sub update_db
     my $config  = $self->{ _config };
     my $ml_name = $config->{ ml_name };
 
-    return if $self->{ _pragma } eq 'ignore';
+    if (defined $self->{ _pragma }) {
+	return if $self->{ _pragma } eq 'ignore';
+    }
 
     $self->db_open();
 
