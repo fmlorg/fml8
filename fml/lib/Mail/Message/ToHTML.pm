@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.40 2002/03/31 02:43:21 fukachan Exp $
+# $FML: ToHTML.pm,v 1.1 2002/03/31 03:39:15 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: Lite.pm,v 1.40 2002/03/31 02:43:21 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.1 2002/03/31 03:39:15 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -99,6 +99,8 @@ sub new
     $me->{ _db_type }        = $args->{ db_type };
     $me->{ _args }           = $args;
     $me->{ _num_attachment } = 0; # for child process
+    $me->{ _use_subdir }     = 'yes';
+    $me->{ _subdir_style }   = 'yyyymm';
 
     return bless $me, $type;
 }
@@ -129,6 +131,17 @@ sub htmlfy_rfc822_message
 {
     my ($self, $args) = @_;
 
+    # prepare source
+    use Mail::Message;
+    use FileHandle;
+    my $rh   = new FileHandle $args->{ src };
+    my $msg  = Mail::Message->parse( { fd => $rh } );
+    my $hdr  = $msg->whole_message_header;
+    my $body = $msg->whole_message_body;
+    $self->{ _current_msg  } = $msg;
+    $self->{ _current_hdr  } = $hdr;
+    $self->{ _current_body } = $body;
+
     # initialize basic information
     #    $id  = article id
     #   $src  = source file
@@ -142,12 +155,8 @@ sub htmlfy_rfc822_message
 	return undef;
     }
 
-    use Mail::Message;
-    use FileHandle;
-    my $rh   = new FileHandle $src;
-    my $msg  = Mail::Message->parse( { fd => $rh } );
-    my $hdr  = $msg->whole_message_header;
-    my $body = $msg->whole_message_body;
+    # hints
+    $self->{ _hints }->{ src }->{ filepath } = $src;
 
     # save information for index.html and thread.html
     $self->cache_message_info($msg, { id => $id,
@@ -158,7 +167,7 @@ sub htmlfy_rfc822_message
     # prepare output channel
     my $wh = $self->_set_output_channel( { dst => $dst } );
     unless (defined $wh) {
-	croak("cannot open output file\n");
+	croak("cannot open output file $dst\n");
     }
 
     # before main message
@@ -314,9 +323,47 @@ sub _disable_html_tag_in_file
 sub html_filename
 {
     my ($self, $id) = @_;
+    my $use_subdir = $self->{ _use_subdir };
 
     if (defined($id) && ($id > 0)) {
-	return "msg${id}.html";
+	if ($use_subdir eq 'yes') {
+	    return $self->_html_file_subdir_name($id);
+	}
+	else {
+	    return "msg${id}.html";
+	}
+    }
+    else {
+	return undef;
+    }
+}
+
+
+# Descriptions: return HTML sub directory string
+#    Arguments: OBJ($self) NUM($id)
+# Side Effects: none
+# Return Value: STR
+sub _html_file_subdir_name
+{
+    my ($self, $id) = @_;
+    my $html_base_dir = $self->{ _html_base_directory };
+    my $subdir        = '';
+    my $subdir_style  = $self->{ _subdir_style };
+    my $month_db      = $self->{ _db }->{ _month };
+
+    if ($subdir_style eq 'yyyymm') {
+	$subdir = $self->_msg_time('yyyymm');
+
+	use File::Spec;
+	my $xsubdir = File::Spec->catfile($html_base_dir, $subdir);
+	unless (-d $xsubdir) {
+	    mkdir($xsubdir, 0755);
+	}
+    }
+
+    if ($subdir) { 
+	use File::Spec;
+	return File::Spec->catfile($subdir, "msg$id.html");
     }
     else {
 	return undef;
@@ -334,7 +381,10 @@ sub html_filepath
     my $html_base_dir = $self->{ _html_base_directory };
 
     if (defined($id) && ($id > 0)) {
-	return "$html_base_dir/msg$id.html";
+	my $filename = $self->html_filename($id);
+
+	use File::Spec;
+	return File::Spec->catfile($html_base_dir, $filename);
     }
     else {
 	return undef;
@@ -662,10 +712,14 @@ sub _format_safe_header
 # Return Value: none
 sub _format_index_navigator
 {
+    my ($args) = @_;
+    my $use_subdir = defined $args->{use_subdir} ? $args->{use_subdir} : 0;
+    my $prefix = $use_subdir ? '../' : '';
+
     my $str = qq{
-<A HREF=\"index.html\">[ID Index]</A>
-<A HREF=\"thread.html\">[Thread Index]</A>
-<A HREF=\"monthly_index.html\">[Monthly ID Index]</A>
+<A HREF=\"${prefix}index.html\">[ID Index]</A>
+<A HREF=\"${prefix}thread.html\">[Thread Index]</A>
+<A HREF=\"${prefix}monthly_index.html\">[Monthly ID Index]</A>
 };
 
 return $str;
@@ -828,23 +882,19 @@ sub cache_message_info
 
     _PRINT_DEBUG("   cache_message_info( id=$id ) running");
 
-    $db->{ _filename }->{ $id } = $self->html_filename($id);
-    $db->{ _filepath }->{ $id } = $dst;
-
     # HASH { $id => Date: }
     $db->{ _date }->{ $id } = $hdr->get('date');
 
-    use Time::ParseDate;
-    my $unixtime = parsedate( $hdr->get('date') );
-    $db->{ _unixtime }->{ $id } = $unixtime;
-    my ($sec,$min,$hour,$mday,$mon,$year,$wday) = localtime( $unixtime );
-    my $month  = sprintf("%04d/%02d", 1900 + $year, $mon + 1);
-
     # HASH { $id => YYYY/MM }
+    my $month = $self->_msg_time('yyyy/mm');
     $db->{ _month }->{ $id } = $month;
 
     # HASH { YYYY/MM => (id1 id2 id3 ..) }
     __add_value_to_array($db, '_monthly_idlist', $month, $id);
+
+    # need month database to determine subdir for the html file
+    $db->{ _filename }->{ $id } = $self->html_filename($id);
+    $db->{ _filepath }->{ $id } = $dst;
 
     # HASH { $id => Subject: }
     $db->{ _subject }->{ $id } =
@@ -947,6 +997,28 @@ sub cache_message_info
     }
 
     $self->_db_close();
+}
+
+
+# Descriptions: return 
+#    Arguments: OBJ($self) STR($type)
+# Side Effects: none
+# Return Value: STR
+sub _msg_time
+{
+    my ($self, $type) = @_;
+    my $hdr = $self->{ _current_hdr  };
+
+    use Time::ParseDate;
+    my $unixtime = parsedate( $hdr->get('date') );
+    my ($sec,$min,$hour,$mday,$mon,$year,$wday) = localtime( $unixtime );
+
+    if ($type eq 'yyyymm') {
+	return sprintf("%04d%02d", 1900 + $year, $mon + 1);
+    }
+    elsif ($type eq 'yyyy/mm') {
+	return sprintf("%04d/%02d", 1900 + $year, $mon + 1);
+    }
 }
 
 
@@ -1268,28 +1340,30 @@ sub evaluate_safe_preamble
     my $link_prev_thread_id = $args->{ link_prev_thread_id };
     my $link_next_thread_id = $args->{ link_next_thread_id };
 
-    my $preamble = $preamble_begin. "\n";
+    my $use_subdir = $self->{ _use_subdir } eq 'yes' ? 1 : 0;
+    my $prefix     = $use_subdir ? '../' : '';
+    my $preamble   = $preamble_begin. "\n";
 
     if (defined($link_prev_id)) {
-	$preamble .= "<A HREF=\"$link_prev_id\">[Prev by ID]</A>\n";
+	$preamble .= "<A HREF=\"${prefix}$link_prev_id\">[Prev by ID]</A>\n";
     }
     else {
 	$preamble .= "[No Prev ID]\n";
     }
 
     if (defined($link_next_id)) {
-	$preamble .= "<A HREF=\"$link_next_id\">[Next by ID]</A>\n";
+	$preamble .= "<A HREF=\"${prefix}$link_next_id\">[Next by ID]</A>\n";
     }
     else {
 	$preamble .= "[No Next ID]\n";
     }
 
     if (defined $link_prev_thread_id) {
-	$preamble .= "<A HREF=\"$link_prev_thread_id\">[Prev by Thread]</A>\n";
+	$preamble .= "<A HREF=\"${prefix}$link_prev_thread_id\">[Prev by Thread]</A>\n";
     }
     else {
 	if (defined $link_prev_id) {
-	    $preamble .= "<A HREF=\"$link_prev_id\">[Prev by Thread]</A>\n";
+	    $preamble .= "<A HREF=\"${prefix}$link_prev_id\">[Prev by Thread]</A>\n";
 	}
 	else {
 	    $preamble .= "[No Prev Thread]\n";
@@ -1297,18 +1371,18 @@ sub evaluate_safe_preamble
     }
 
     if (defined $link_next_thread_id) {
-	$preamble .= "<A HREF=\"$link_next_thread_id\">[Next by Thread]</A>\n";
+	$preamble .= "<A HREF=\"${prefix}$link_next_thread_id\">[Next by Thread]</A>\n";
     }
     else {
 	if (defined $link_next_id) {
-	    $preamble .= "<A HREF=\"$link_next_id\">[Next by Thread]</A>\n";
+	    $preamble .= "<A HREF=\"${prefix}$link_next_id\">[Next by Thread]</A>\n";
 	}
 	else {
 	    $preamble .= "[No Next Thread]\n";
 	}
     }
 
-    $preamble .= _format_index_navigator();
+    $preamble .= _format_index_navigator( { use_subdir => $use_subdir } );
     $preamble .= $preamble_end. "\n";;
 
     return $preamble;
@@ -1328,38 +1402,40 @@ sub evaluate_safe_footer
     my $link_next_thread_id = $args->{ link_next_thread_id };
     my $subject     = $args->{ subject };
 
-    my $footer = $footer_begin. "\n";;
+    my $use_subdir = $self->{ _use_subdir } eq 'yes' ? 1 : 0;
+    my $prefix     = $use_subdir ? '../' : '';
+    my $footer     = $footer_begin. "\n";;
 
     if (defined($link_prev_id)) {
 	$footer .= "<BR>\n";
-	$footer .= "<A HREF=\"$link_prev_id\">Prev by ID: ";
+	$footer .= "<A HREF=\"${prefix}$link_prev_id\">Prev by ID: ";
 	$footer .= _sprintf_safe_str( $subject->{ prev_id } );
 	$footer .= "</A>\n";
     }
 
     if (defined($link_next_id)) {
 	$footer .= "<BR>\n";
-	$footer .= "<A HREF=\"$link_next_id\">Next by ID: ";
+	$footer .= "<A HREF=\"${prefix}$link_next_id\">Next by ID: ";
 	$footer .= _sprintf_safe_str( $subject->{ next_id } );
 	$footer .= "</A>\n";
     }
 
     if (defined $link_prev_thread_id) {
 	$footer .= "<BR>\n";
-	$footer .= "<A HREF=\"$link_prev_thread_id\">Prev by Thread: ";
+	$footer .= "<A HREF=\"${prefix}$link_prev_thread_id\">Prev by Thread: ";
 	$footer .= _sprintf_safe_str($subject->{ prev_thread_id });
 	$footer .= "</A>\n";
     }
 
     if (defined $link_next_thread_id) {
 	$footer .= "<BR>\n";
-	$footer .= "<A HREF=\"$link_next_thread_id\">Next by Thread: ";
+	$footer .= "<A HREF=\"${prefix}$link_next_thread_id\">Next by Thread: ";
 	$footer .= _sprintf_safe_str($subject->{ next_thread_id });
 	$footer .= "</A>\n";
     }
 
     $footer .= qq{<BR>\n};
-    $footer .= _format_index_navigator();
+    $footer .= _format_index_navigator( { use_subdir => $use_subdir } );
     $footer .= $footer_end. "\n";;
 
     return $footer;
