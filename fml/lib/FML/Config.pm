@@ -89,12 +89,15 @@ sub load_file
 
 	    if (/^([A-Za-z0-9_]+)\s+=\s*(.*)/) {
 		my ($key, $value) = ($1, $2);
+		$value =~ s/\s*$//o;
 		$curkey           = $key;
 		$config->{$key}   = $value;
 		push(@key_order, $key);
 	    }
 	    if (/^\s+(.*)/) {
-		$config->{ $curkey }  .= " ". $1;
+		my $value = $1;
+		$value =~ s/\s*$//o;
+		$config->{ $curkey }  .= " ". $value;
 	    }
 	}
 	$fh->close;
