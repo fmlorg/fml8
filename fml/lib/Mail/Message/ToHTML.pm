@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.7 2002/04/14 07:20:29 fukachan Exp $
+# $FML: ToHTML.pm,v 1.8 2002/04/14 07:54:52 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -19,7 +19,7 @@ my $debug = 0;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.7 2002/04/14 07:20:29 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.8 2002/04/14 07:54:52 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -756,7 +756,7 @@ sub _text_safe_print
     my $buf = $args->{ data };
     my $fh  = $args->{ fh } || \*STDOUT;
 
-    if (defined $buf) {
+    if (defined $buf && $buf) {
 	use Jcode;
 	&Jcode::convert(\$buf, 'euc');
     }
@@ -782,7 +782,7 @@ sub _text_raw_print
 	use FileHandle;
 	my $fh = new FileHandle "> $outf";
 
-	if (defined $buf) {
+	if (defined $buf && $buf) {
 	    use Jcode;
 	    &Jcode::convert(\$buf, 'euc');
 	}
@@ -2058,9 +2058,10 @@ sub _print_raw_str
     my ($wh, $str, $code) = @_;
     $code = defined($code) ? $code : 'euc'; # euc-jp by default
 
-    if (defined $str) {
+    if (defined($str) && $str) {
 	use Jcode;
-	&Jcode::convert( \$str, $code);
+	warn("code not specified") unless defined $code;
+	&Jcode::convert( \$str, $code || 'euc');
     }
 
     print $wh $str;
@@ -2125,9 +2126,10 @@ sub __sprintf_safe_str
     my ($attr_pre, $wh, $str, $code) = @_;
     my $rbuf = '';
 
-    if (defined($str) && defined($code)) {
+    if (defined($str) && $str) {
 	use Jcode;
-	&Jcode::convert(\$str, $code);
+	warn("code not specified") unless defined $code;
+	&Jcode::convert(\$str, $code || 'euc');
     }
 
     if (defined $str) {
@@ -2349,7 +2351,7 @@ sub _decode_mime_string
 {
     my ($self, $str, $options) = @_;
     my $charset = $options->{ 'charset' } || $self->{ _charset };
-    my $code    = _charset_to_code($charset);
+    my $code    = _charset_to_code($charset) || 'euc';
 
     # If looks Japanese and $code is specified as Japanese, decode !
     if (defined($str) &&
@@ -2365,9 +2367,11 @@ sub _decode_mime_string
             $str =~ s/=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/decode_qp($1)/gie;
         }
 
-	if (defined $str) {
+	if (defined($str) && $str) {
 	    eval q{ use Jcode;};
 	    my $icode = &Jcode::getcode(\$str);
+	    warn("code not specified") unless defined $code;
+	    warn("icode not specified") unless defined $icode;
 	    &Jcode::convert(\$str, $code, $icode);
 	}
     }
