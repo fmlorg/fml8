@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ESMTP.pm,v 1.4 2001/12/22 09:21:17 fukachan Exp $
+# $FML: ESMTP.pm,v 1.5 2001/12/26 02:48:50 fukachan Exp $
 #
 
 package Mail::Delivery::ESMTP;
@@ -22,8 +22,8 @@ use Mail::Delivery::SMTP;
 # Return Value: OBJ
 sub new
 {
-    my ($self) = @_;
-    $self->SUPER::new(@_);
+    my ($self, @args) = @_;
+    $self->SUPER::new(@args);
 }
 
 
@@ -51,7 +51,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
