@@ -11,6 +11,7 @@ exec /usr/local/libexec/fml/fmlticket \
 		--params pwd=$PWD \
 		-c $pwd/main.cf \
 		-R open \
-		list /var/spool/ml/elena
+		list /var/spool/ml/elena |sort +2
+
 
 
