@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mergeml.pm,v 1.3 2004/07/23 13:04:07 fukachan Exp $
+# $FML: mergeml.pm,v 1.4 2004/09/06 07:06:04 fukachan Exp $
 #
 
 package FML::Command::Admin::mergeml;
@@ -103,6 +103,19 @@ sub process
     # HERE WE GO!
     my $ml_list = "$ml_name\@$ml_domain";
     print STDERR "merge configurations at @$options into $ml_list\n";
+    $self->merge($curproc, $command_args, $params);
+}
+
+
+# Descriptions: merge ML configurations.
+#    Arguments: OBJ($self) 
+#               OBJ($curproc) HASH_REF($command_args) HASH_REF($params)
+# Side Effects: none
+# Return Value: none
+sub merge
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $src_dir = $params->{ src_dir } || undef;
 
     # XXX-TODO: configurable.
     use FML::Merge;
