@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SimpleMatch.pm,v 1.8 2001/04/12 13:50:23 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.9 2001/04/12 14:09:07 fukachan Exp $
 #
 
 
@@ -80,6 +80,12 @@ my $address_trap_regexp = {
     'smail' => {
 	'start' => 'Failed addresses follow:',
 	'end'   => 'Message text follows:',
+    },
+
+
+    'interscan' => {
+	'start' => 'Message from InterScan E-Mail VirusWall NT',
+	'end'   => '     End of message     \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*',
     },
 
 
