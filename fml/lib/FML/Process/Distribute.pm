@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.115 2003/05/13 04:26:48 fukachan Exp $
+# $FML: Distribute.pm,v 1.116 2003/07/19 12:58:49 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -539,13 +539,26 @@ sub _thread_check
 
     my $msg = $curproc->article_message();
 
+    # old thread engine
     eval q{
 	use Mail::ThreadTrack;
 	my $thread = new Mail::ThreadTrack $ttargs;
 	$thread->analyze($msg);
     };
-
     Log($@) if $@;
+
+    # new thread engine
+    {
+	use Mail::Message::Thread;
+
+	# XXX we need to specify article_id here since
+	# XXX analyzer routine has no clue for the curren primary key.
+	my $tdb_args = $curproc->thread_db_args($args);
+	$tdb_args->{ id } = $article_id;
+
+	my $thread   = new Mail::Message::Thread $tdb_args;
+	$thread->analyze($msg);
+    }
 }
 
 
@@ -567,20 +580,7 @@ sub htmlify
     my $article_id   = $pcb->get('article', 'id');
     my $article_file = $article->filepath($article_id);
     my $index_order  = $config->{ html_archive_index_order_type };
-    my $cur_lang     = $curproc->language_of_html_file();
-
-    unless (-d $udb_dir) { $curproc->mkdir($udb_dir);}
-
-    # XXX-TODO: care for non Japanese.
-    my $htmlifier_args = {
-	charset     => $cur_lang,
-
-	output_dir  => $html_dir,    # ~fml/public_html/mlarchive/$domain/$ml/
-	db_base_dir => $udb_dir,     # /var/spool/ml/@udb@
-	db_name     => $ml_name,     # elena
-
-	index_order => $index_order, # normal/reverse
-    };
+    my $_tdb_args    = $curproc->thread_db_args($args);
 
     $curproc->set_umask_as_public();
 
@@ -594,8 +594,8 @@ sub htmlify
 	}
 
 	eval q{
-	    my $obj = new Mail::Message::ToHTML $htmlifier_args;
-	    $obj->htmlify_file($article_file, $htmlifier_args);
+	    my $obj = new Mail::Message::ToHTML $_tdb_args;
+	    $obj->htmlify_file($article_file, $_tdb_args);
 	};
 	LogError($@) if $@;
     }

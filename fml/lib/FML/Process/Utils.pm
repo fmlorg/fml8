@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.67 2003/04/16 15:42:46 fukachan Exp $
+# $FML: Utils.pm,v 1.68 2003/05/01 13:14:54 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1235,6 +1235,45 @@ sub language_of_html_file
 {
     my ($curproc) = @_;
     $curproc->language_default();
+}
+
+
+=head2 thread_db_args($args)
+
+prepare and return information (HASH_REF) needed to manipulate thread
+database.
+
+=cut
+
+
+# Descriptions: return information (HASH_REF) needed for thread database.
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: HASH_REF
+sub thread_db_args
+{
+    my ($curproc, $args) = @_;
+    my $config       = $curproc->config();
+    my $ml_name      = $config->{ ml_name };
+    my $html_dir     = $config->{ html_archive_dir };
+    my $udb_dir      = $config->{ udb_base_dir };
+    my $index_order  = $config->{ html_archive_index_order_type };
+    my $cur_lang     = $curproc->language_of_html_file();
+
+    unless (-d $udb_dir) { $curproc->mkdir($udb_dir);}
+
+    # XXX-TODO: care for non Japanese.
+    return {
+
+	charset     => $cur_lang,
+
+	output_dir  => $html_dir,    # ~fml/public_html/mlarchive/$domain/$ml/
+	db_base_dir => $udb_dir,     # /var/spool/ml/@udb@
+	db_name     => $ml_name,     # elena
+
+	index_order => $index_order, # normal/reverse
+
+    };
 }
 
 
