@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.40 2002/01/13 12:50:52 fukachan Exp $
+# $FML: Message.pm,v 1.41 2002/01/13 13:26:38 fukachan Exp $
 #
 
 package Mail::Message;
@@ -657,61 +657,6 @@ sub rfc822_message_body
 }
 
 
-=head2 find($args)
-
-return the first C<Mail::Message> object with the specified attrribute.
-You can specify C<data_type> in C<$args> HASH REFERENCE.
-For example,
-
-    $m = $msg->find( { data_type => 'text/plain' } );
-
-C<$m> is the first "text/plain" object in a chain of C<$msg> object.
-This method is used for the exact match.
-
-    $m = $msg->find( { data_type_regexp => 'text' } );
-
-C<$m> is the first "text/*" object in a chain of C<$msg> object.
-
-=cut
-
-
-# Descriptions: find the first OBJ with the specified data_type or
-#               data_type_regexp.
-#    Arguments: OBJ($self) HASH_REF($args)
-# Side Effects: none
-# Return Value: OBJ(Mail::Message)
-sub find
-{
-    my ($self, $args) = @_;
-
-    if (defined $args->{ data_type }) {
-	my $type = $args->{ data_type };
-	my $mp   = $self;
-	for ( ; $mp; $mp = $mp->{ next }) {
-	    if ($debug) { print "   msg->find(", $type, " eq $type)\n";}
-	    if ($type eq $mp->get_data_type()) {
-		if ($debug) { print "   msg->find($type match) = $mp\n";}
-		return $mp;
-	    }
-	}
-    }
-    elsif (defined $args->{ data_type_regexp }) {
-	my $regexp = $args->{ data_type_regexp };
-	my $mp     = $self;
-	for ( ; $mp; $mp = $mp->{ next }) {
-	    my $type = $mp->get_data_type();
-	    if ($debug) { print "   msg->find(", $type, "=~ /$regexp/)\n";}
-	    if ($type =~ /$regexp/i) {
-		if ($debug) { print "   msg->find($type match) = $mp\n";}
-		return $mp;
-	    }
-	}
-    }
-
-    undef;
-}
-
-
 =head2 rfc822_message_header_data_type()
 
 return the C<type> string. It is the whole message type which is
@@ -773,6 +718,61 @@ sub _header_data_type
 
 
 =head1 METHODS to manipulate a chain
+
+=head2 find($args)
+
+return the first C<Mail::Message> object with the specified attrribute.
+You can specify C<data_type> in C<$args> HASH REFERENCE.
+For example,
+
+    $m = $msg->find( { data_type => 'text/plain' } );
+
+C<$m> is the first "text/plain" object in a chain of C<$msg> object.
+This method is used for the exact match.
+
+    $m = $msg->find( { data_type_regexp => 'text' } );
+
+C<$m> is the first "text/*" object in a chain of C<$msg> object.
+
+=cut
+
+
+# Descriptions: find the first OBJ with the specified data_type or
+#               data_type_regexp.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: OBJ(Mail::Message)
+sub find
+{
+    my ($self, $args) = @_;
+
+    if (defined $args->{ data_type }) {
+	my $type = $args->{ data_type };
+	my $mp   = $self;
+	for ( ; $mp; $mp = $mp->{ next }) {
+	    if ($debug) { print "   msg->find(", $type, " eq $type)\n";}
+	    if ($type eq $mp->get_data_type()) {
+		if ($debug) { print "   msg->find($type match) = $mp\n";}
+		return $mp;
+	    }
+	}
+    }
+    elsif (defined $args->{ data_type_regexp }) {
+	my $regexp = $args->{ data_type_regexp };
+	my $mp     = $self;
+	for ( ; $mp; $mp = $mp->{ next }) {
+	    my $type = $mp->get_data_type();
+	    if ($debug) { print "   msg->find(", $type, "=~ /$regexp/)\n";}
+	    if ($type =~ /$regexp/i) {
+		if ($debug) { print "   msg->find($type match) = $mp\n";}
+		return $mp;
+	    }
+	}
+    }
+
+    undef;
+}
+
 
 =head2 head_message()
 
