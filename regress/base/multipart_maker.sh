@@ -7,17 +7,18 @@ dir=`dirname $0`
 
 tmp=/tmp/buf$$
 buf=/tmp/buf2-$$
+log=/tmp/log$$
 
-trap "rm -f $tmp $buf" 0 1 3 15
+trap "rm -f $tmp $buf $log" 0 1 3 15
 
 
 DIFF () {
-	local msg=$1
-
-	perl $dir/multipart_maker.pl $1 $2 $3 > $buf
-	sed '1,/^$/d' $buf > $tmp
-
-	diff -ub $msg $tmp && echo ok || echo fail
+	cat $1 $2 $3 > $buf
+	perl $dir/multipart_maker.pl $1 $2 $3 > $tmp
+	diff -ub $buf $tmp > $log && echo ok || echo "$1 $2 $3 multipart"
+	echo ""
+	sed -n -e 1,2d -e '/^\+/p' -e '/^\-/p' $log
+	echo ""
 }
 
 DIFF /etc/fml/main.cf
