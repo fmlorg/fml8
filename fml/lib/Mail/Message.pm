@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.35 2001/10/29 13:54:20 fukachan Exp $
+# $FML: Message.pm,v 1.36 2001/12/22 09:21:14 fukachan Exp $
 #
 
 package Mail::Message;
@@ -227,11 +227,12 @@ you will get the whole set of a chain and a body message.
 
 =cut
 
+
 # Descriptions: usual constructor
 #               call $self->_build_message($args) if $args is given.
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
-# Return Value: Mail::Message object
+# Return Value: OBJ(Mail::Message object)
 sub new
 {
     my ($self, $args) = @_;
@@ -266,8 +267,8 @@ sub new
 #                           data      => Mail::Header or FML::Header object,
 #               } in $args.
 #
-#    Arguments: $self $args
-# Side Effects: none
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create a chain of OBJ
 # Return Value: none
 sub _build_message
 {
@@ -289,7 +290,7 @@ sub _build_message
 
 
 # Descriptions: build a Mail::Message object template
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: set up default values within $self if needed
 # Return Value: none
 sub _set_up_template
@@ -319,7 +320,7 @@ sub _set_up_template
 
 
 # Descriptions: simple plain/text builder
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: set up the default values if needed
 # Return Value: none
 sub __build_message
@@ -381,6 +382,10 @@ is the first body part C<part1> of the origianl chain.
 =cut
 
 
+# Descriptions: duplicate a message chain.
+#    Arguments: OBJ($self)
+# Side Effects: create new object
+# Return Value: OBJ
 sub dup_header
 {
     my ($self) = @_;
@@ -429,6 +434,16 @@ You can specify file not file descriptor.
 
 =cut
 
+
+# Descriptions: parse given file (file path or descriptor)
+#               create header OBJ and body OBJ chain.
+#               combine them into one chain of Mail::Message OBJ, 
+#               so that we get
+#                  header -> body1 -> body2 -> ... body-end
+#               object chain.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create a chain of objects
+# Return Value: OBJ
 sub parse
 {
     my ($self, $args) = @_;
@@ -472,9 +487,10 @@ sub parse
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: cut off content into header and body
+#               and prepare buffer for further parsing
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: fill in $inComingMessage on memory
 # Return Value: none
 sub _parse
 {
@@ -514,10 +530,11 @@ sub _parse
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: return hash array for header for further parsing.
+#               get reverse_path if possible.
+#    Arguments: OBJ($self) HASH_REF($r)
+# Side Effects: update $r
+# Return Value: HASH_ARRAY
 sub _parse_header
 {
     my ($self, $r) = @_;
@@ -536,10 +553,10 @@ sub _parse_header
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: create header object (the head of OBJ chain)
+#    Arguments: OBJ($self) HASH_REF($args) HASH_REF($r)
+# Side Effects: create header OBJ, the head of OBJ chain
+# Return Value: OBJ
 sub _build_header_object
 {
     my ($self, $args, $r) = @_;
@@ -564,10 +581,11 @@ sub _build_header_object
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: create OBJ chain for message "only" body part.
+#               XXX header OBJ is created at another part
+#    Arguments: OBJ($self) HASH_REF($args) HASH_REF($result)
+# Side Effects: create OBJ(s)
+# Return Value: OBJ
 sub _build_body_object
 {
     my ($self, $args, $result) = @_;
@@ -599,6 +617,12 @@ body part of the message C<$self>.
 =cut
 
 
+# Descriptions: get header OBJ (Mail::Header not Mail::Message)
+#               in the head of chain.
+#               HEADER(THIS PART) -> body1 -> body2 -> ...
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ(Mail::Header)
 sub rfc822_message_header
 {
     my ($self) = @_;
@@ -608,6 +632,11 @@ sub rfc822_message_header
 }
 
 
+# Descriptions: get the head OBJ of body part in the chain.
+#               header -> body1 (HERE) -> body2 -> ...
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ(Mail::Message)
 sub rfc822_message_body_head
 {
     my ($self) = @_;
@@ -616,6 +645,11 @@ sub rfc822_message_body_head
 }
 
 
+# Descriptions: get the head OBJ of body part in the chain.
+#               header -> body1 (HERE) -> body2 -> ...
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ(Mail::Message)
 sub rfc822_message_body
 {
     my ($self) = @_;
@@ -640,6 +674,12 @@ C<$m> is the first "text/*" object in a chain of C<$msg> object.
 
 =cut
 
+
+# Descriptions: find the first OBJ with the specified data_type or
+#               data_type_regexp.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: OBJ(Mail::Message)
 sub find
 {
     my ($self, $args) = @_;
@@ -680,6 +720,11 @@ speculated from header C<Content-Type:>.
 =cut
 
 
+# Descriptions: type of the whole message, which is defined in
+#               Content-Type: header field.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub header_data_type
 {
     my ($self) = @_;
@@ -689,9 +734,9 @@ sub header_data_type
 
 
 # Descriptions: return boundary defined in Content-Type
-#    Arguments: $self $args
+#    Arguments: OBJ($self) OBJ($Header)
 # Side Effects: none.
-# Return Value: none
+# Return Value: STR
 sub _header_mime_boundary
 {
     my ($self, $header) = @_;
@@ -707,9 +752,9 @@ sub _header_mime_boundary
 
 
 # Descriptions: return the type defind in the header's Content-Type field.
-#    Arguments: $self
+#    Arguments: OBJ($self) OBJ($header)
 # Side Effects: extra spaces in the type to return is removed.
-# Return Value: none
+# Return Value: STR
 sub _header_data_type
 {
     my ($self, $header) = @_;
@@ -744,6 +789,11 @@ Usually it is the last message in the body part.
 =cut
 
 
+# Descriptions: get the head OBJ in the chain.
+#               obj1 (HERE) -> obj2 -> ... -> obj_end
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
 sub head_message
 {
     my ($self) = @_;
@@ -762,6 +812,11 @@ sub head_message
 }
 
 
+# Descriptions: get the last OBJ in the chain.
+#               obj1 -> obj2 -> ... -> obj_end(HERE)
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
 sub last_message
 {
     my ($self) = @_;
@@ -780,17 +835,21 @@ sub last_message
 }
 
 
-=head2 C<next_message( $obj )>
+=head2 next_message( $obj )
 
 The next part of C<$self> object is C<$obj>.
 
-=head2 C<prev_message( $obj )>
+=head2 prev_message( $obj )
 
 The previous part of C<$self> object is C<$obj>.
 
 =cut
 
 
+# Descriptions: set next message in the chain
+#    Arguments: OBJ($self) OBJ(ref_next_message)
+# Side Effects: update next pointer in object
+# Return Value: OBJ
 sub next_message
 {
     my ($self, $ref_next_message) = @_;
@@ -798,6 +857,10 @@ sub next_message
 }
 
 
+# Descriptions: set previous message in the chain
+#    Arguments: OBJ($self) OBJ(ref_prev_message)
+# Side Effects: update prev pointer in object
+# Return Value: OBJ
 sub prev_message
 {
     my ($self, $ref_prev_message) = @_;
@@ -826,6 +889,10 @@ It sets the mode to be C<raw>.
 =cut
 
 
+# Descriptions: print message into file descriptor $fd
+#    Arguments: OBJ($self) HANDLE($fd)
+# Side Effects: none
+# Return Value: none
 sub print
 {
     my ($self, $fd) = @_;
@@ -833,13 +900,22 @@ sub print
 }
 
 
+# Descriptions: reset mode of print() to 'raw' (default)
+#    Arguments: OBJ($self)
+# Side Effects: update object
+# Return Value: none
 sub reset_print_mode
 {
-    my ($self, $mode) = @_;
+    my ($self) = @_;
     $self->{ _print_mode } = 'raw';
 }
 
 
+# Descriptions: set mode of print()
+#               mode is either of 'raw' or 'smtp'.
+#    Arguments: OBJ($self) STR($mode)
+# Side Effects: update object
+# Return Value: none
 sub set_print_mode
 {
     my ($self, $mode) = @_;
@@ -853,9 +929,9 @@ sub set_print_mode
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: print message, all messages in the current chain ($self).
+#    Arguments: OBJ($self) HANDLE($fd)
+# Side Effects: none
 # Return Value: none
 sub _print
 {
@@ -884,9 +960,13 @@ sub _print
 }
 
 
+# Descriptions: $self is the head of chain or not ?
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: 1 or 0
 sub _is_head_message
 {
-    my ($self, $msg) = @_;
+    my ($self) = @_;
     my $hm = $self->head_message;
     ($hm eq $self) ? 1 : 0;
 }
@@ -897,7 +977,7 @@ sub _is_head_message
 #               We should do it to use as less memory as possible.
 #               So we use substr() to process each line.
 #               XXX the message to send out is $self->{ data }.
-#    Arguments: $self $socket
+#    Arguments: OBJ($self) HANDLE($fd) HASH_REF($args)
 # Side Effects: none
 # Return Value: none
 sub _print_messsage_on_memory
@@ -994,10 +1074,9 @@ sub _print_messsage_on_memory
 }
 
 
-
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: print out
+#    Arguments: OBJ($self) HANDLE($fd) HASH_REF($args)
+# Side Effects: none
 # Return Value: none
 sub _print_messsage_on_disk
 {
@@ -1056,10 +1135,11 @@ we use C<MIME::Lite> to build a mime message now.
 
 =cut
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+
+# Descriptions: build a mime message by scratch.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create a chain
+# Return Value: OBJ
 sub build_mime_multipart_chain
 {
     my ($self, $args) = @_;
@@ -1133,8 +1213,8 @@ C<new()> calls this routine if the message looks MIME multipart.
 #                                           close-delimiter transport-padding
 #                                           [CRLF epilogue]
 #
-#    Arguments: $self $args
-# Side Effects:
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
 # Return Value: none
 sub parse_and_build_mime_multipart_chain
 {
@@ -1324,6 +1404,10 @@ sub parse_and_build_mime_multipart_chain
 }
 
 
+# Descriptions: get content type in $args->{ header }
+#    Arguments: HASH_REF($args) STR($default)
+# Side Effects: none
+# Return Value: STR
 sub _get_data_type
 {
     my ($args, $default) = @_;
@@ -1338,6 +1422,13 @@ sub _get_data_type
 }
 
 
+# Descriptions: get header part in $data, which is data in Mail::Message.
+#               this header is not header for the whole message but
+#               each header in Mail::Message.
+#               each message has each mime header, e.g. for MIME/multipart.
+#    Arguments: REF_STR($data) NUM($pos_begin) NUM($pos_end)
+# Side Effects: none
+# Return Value: (STR, NUM)
 sub _get_mime_header
 {
     my ($data, $pos_begin, $pos_end) = @_;
@@ -1370,10 +1461,11 @@ make a fundamental mime header fields and return it.
 
 =cut
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+
+# Descriptions: make a fundamental mime header fields and return it.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: STR
 sub build_mime_header
 {
     my ($self, $args) = @_;
@@ -1399,10 +1491,10 @@ sub build_mime_header
 #     {Content-Type: ...
 #
 #       ... body ...}
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: make a new Mail::Message object.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create a new Mail::Message object.
+# Return Value: OBJ
 sub _alloc_new_part
 {
     my ($self, $args) = @_;
@@ -1413,10 +1505,10 @@ sub _alloc_new_part
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: search the next MIME boundary
+#    Arguments: OBJ($self) HASH_STR($data) STR($delimeter)
+# Side Effects: none
+# Return Value: (NUM, NUM)
 sub _next_part_pos
 {
     my ($self, $data, $delimeter) = @_;
@@ -1443,10 +1535,10 @@ sub _next_part_pos
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: get the current position 
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
 sub _get_pos
 {
     my ($self) = @_;
@@ -1454,10 +1546,10 @@ sub _get_pos
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: set the postion
+#    Arguments: OBJ($self) NUM($pos)
+# Side Effects: update object
+# Return Value: NUM
 sub _set_pos
 {
     my ($self, $pos) = @_;
@@ -1480,10 +1572,11 @@ return this message has empty content or not.
 
 my $total = 0;
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: return the message size of this object
+#               XXX not size for the whole message.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
 sub size
 {
     my ($self) = @_;
@@ -1510,10 +1603,10 @@ sub size
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: content of this object is empty ?
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
 sub is_empty
 {
     my ($self) = @_;
@@ -1537,6 +1630,12 @@ The return value is one of base64, quoted-printable or undef.
 
 =cut
 
+
+# Descriptions: return encoding type for specified Mail::Message not
+#               whole mail.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub get_encoding_mechanism
 {
     my ($self) = @_;
@@ -1564,6 +1663,11 @@ on the Mail::Message object.
 
 =cut
 
+
+# Descriptions: return offset information in the data.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
 sub get_offset
 {
     my ($self) = @_;
@@ -1573,12 +1677,19 @@ sub get_offset
 
 =head2 C<header_size()>
 
+get whole header size for this object ($self)
+
 =head2 C<body_size()>
 
-=head2 C<envelope_sender()>
+get whole body size for this object ($self)
 
 =cut
 
+
+# Descriptions: get whole header size for this object ($self)
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
 sub header_size
 {
     my ($self) = @_;
@@ -1586,6 +1697,10 @@ sub header_size
 }
 
 
+# Descriptions: get whole body size for this object ($self)
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
 sub body_size
 {
     my ($self) = @_;
@@ -1593,6 +1708,17 @@ sub body_size
 }
 
 
+=head2 C<envelope_sender()>
+
+return reverse_path for this object ($self)
+
+=cut
+
+
+# Descriptions: return reverse_path for this object ($self)
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub envelope_sender
 {
     my ($self) = @_;
@@ -1607,10 +1733,11 @@ mail message.
 
 =cut
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+
+# Descriptions: return the data type.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub get_data_type
 {
     my ($self) = @_;
@@ -1634,10 +1761,10 @@ The syntax is usual not C language flabour.
 =cut
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: return number of paragraphs in this object
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: NUM
 sub num_paragraph
 {
     my ($self) = @_;
@@ -1652,6 +1779,10 @@ sub num_paragraph
 }
 
 
+# Descriptions: return content in $i-th paragraph in this object
+#    Arguments: OBJ($self) NUM($i)
+# Side Effects: none
+# Return Value: STR
 sub nth_paragraph
 {
     my ($self, $i) = @_;
@@ -1664,6 +1795,10 @@ sub nth_paragraph
 }
 
 
+# Descriptions: analyze paragraph position map in this object
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: HASH_ARRAY
 sub _evaluate_pmap
 {
     my ($self) = @_;
@@ -1726,13 +1861,21 @@ alias of C<body_in_body_part( ... )>.
 =cut
 
 
+# Descriptions: alias of header_in_body_part()
+#    Arguments: OBJ($self) ...
+# Side Effects: none
+# Return Value: STR
 sub header
 {
-    my ($self) = @_;
-    $self->header_in_body_part(@_[1 .. $#_]);
+    my ($self, @args) = @_;
+    $self->header_in_body_part(@args);
 }
 
 
+# Descriptions: alias of data_in_body_part()
+#    Arguments: OBJ($self) ...
+# Side Effects: none
+# Return Value: STR
 sub data
 {
     my ($self, @args) = @_;
@@ -1742,13 +1885,12 @@ sub data
 
 =head2 C<header_in_body_part()>
 
-return header in the message content.
-It is not mail header but header for each message such as
-mime header information of one part in a multipart.
+return header string in the message content.
+It is mie header for whole mail or each message of MIME/multipart.
 
 =head2 C<data_in_body_part($size)>
 
-get body part in the message content, which is the whole mail (plain
+get body string in the message content, which is the whole mail (plain
 text) or body part of a block of multipart.
 
 If C<$size> is specified, return the first $size bytes in the body.
@@ -1756,21 +1898,21 @@ If C<$size> is specified, return the first $size bytes in the body.
 =cut
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: return header in the message content.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
 sub header_in_body_part
 {
-    my ($self, $size) = @_;
+    my ($self) = @_;
     return defined $self->{ header } ? $self->{ header } : undef;
 }
 
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+# Descriptions: get body string in message
+#    Arguments: OBJ($self) NUM($size)
+# Side Effects: none
+# Return Value: STR
 sub data_in_body_part
 {
     my ($self, $size) = @_;
@@ -1811,10 +1953,11 @@ where $body is the mail body (string).
 
 =cut
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+
+# Descriptions: get first text/plain OBJ, return undef if search fails.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: OBJ or UNDEF
 sub get_first_plaintext_message
 {
     my ($self, $args) = @_;
@@ -1844,10 +1987,11 @@ internal use. set CODE REFERENCE to the log function
 
 =cut
 
+
 # Descriptions: set log function pointer (CODE REFERNCE)
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: set log function pointer to $self object
+# Return Value: REF_CODE
 sub set_log_function
 {
     my ($self, $fp) = @_;
@@ -1862,10 +2006,11 @@ This is defined for debug and removed in the future.
 
 =cut
 
+
 # Descriptions: XXX debug, remove this in the future
-#    Arguments: $self $args
-# Side Effects:
-# Return Value: none
+#    Arguments: OBJ($msg) HASH_REF($args)
+# Side Effects: none
+# Return Value: REF_ARRAY
 sub get_data_type_list
 {
     my ($msg, $args) = @_;
@@ -1976,7 +2121,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
@@ -1985,7 +2130,5 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 Mail::Message appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
-
-=cut
 
 1;
