@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.5 2001/10/20 12:58:35 fukachan Exp $
+# $FML: Lite.pm,v 1.6 2001/10/20 15:53:03 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -659,11 +659,14 @@ sub cache_message_info
     $db->{ _filename }->{ $id } = $self->message_filename($id);
     $db->{ _filepath }->{ $id } = $dst;
 
+    print STDERR "   date\n" if $debug;
     $db->{ _date }->{ $id } = $hdr->get('date');
 
+    print STDERR "   subject\n" if $debug;
     $db->{ _subject }->{ $id } = 
 	$self->_decode_mime_string( $hdr->get('subject') );
 	
+    print STDERR "   from\n" if $debug;
     my $ra = _address_clean_up( $hdr->get('from') );
     $db->{ _from }->{ $id } = $ra->[0];
     $db->{ _who }->{ $id } = $self->_who_of_address( $hdr->get('from') );
@@ -1182,7 +1185,12 @@ sub _db_close
     print STDERR "_db_close()\n" if $debug;
 
     for my $db (@kind_of_databases) {
-	eval qq{ untie \$self->{ _db }->{ _$db };};
+	my $str = qq{ 
+	    my \$${db} = \$self->{ _db }->{ _$db };
+	    untie \%\$${db};
+	};
+	print STDERR $str if $debug;
+	eval $str;
 	croak($@) if $@;
     }
 }
