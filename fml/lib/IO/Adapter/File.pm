@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.42 2002/09/22 14:56:59 fukachan Exp $
+# $FML: File.pm,v 1.43 2002/09/22 15:01:23 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -174,7 +174,7 @@ my $ec = 0;
 
 # Descriptions: line couter (for debug).
 #               XXX remove this in the future
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: none
 sub line_count
@@ -371,7 +371,7 @@ sub getpos
 
 
 # Descriptions: reset postion in file descriptor
-#    Arguments: OBJ($self)
+#    Arguments: OBJ($self) NUM($pos)
 # Side Effects: none
 # Return Value: NUM
 sub setpos
@@ -521,7 +521,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

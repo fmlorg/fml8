@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.21 2002/09/22 14:56:58 fukachan Exp $
+# $FML: DBI.pm,v 1.22 2002/12/22 02:54:37 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -187,7 +187,7 @@ sub getline
 
 
 # Descriptions: return the primary key in the table sequentially
-#    Arguments: OBJ($self) HASH_REF($args) STR($mode)
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: STR
 sub get_next_key
@@ -200,7 +200,7 @@ sub get_next_key
 # Descriptions: return value(s) to the primary key in the table
 #               as ARRAY_REF
 #               XXX definition is o.k.?
-#    Arguments: OBJ($self) HASH_REF($args) STR($mode)
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: ARRAY_REF
 sub get_next_value
@@ -396,7 +396,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

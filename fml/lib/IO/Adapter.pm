@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.23 2002/09/22 14:56:58 fukachan Exp $
+# $FML: Adapter.pm,v 1.24 2002/09/22 15:01:23 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -274,7 +274,7 @@ It is dummy for maps other than file: type.
 
 
 # Descriptions: create a file if not exists.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self)
 # Side Effects: create $map if needed or possible
 # Return Value: none
 sub touch
@@ -509,7 +509,7 @@ Ken'ichi Fukamchi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamchi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamchi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
