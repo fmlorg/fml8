@@ -2386,6 +2386,14 @@ path_spamd                = @SPAMD@
 
 path_spamc                = @SPAMC@
 
+path_bogofilter           = @BOGOFILTER@
+
+
+=head2 virus checker
+
+
+path_clamscan             = @CLAMSCAN@
+
 =head1	システム依存 (主に BSD との非互換性を記述している)
 
 #
