@@ -546,6 +546,7 @@ outgoing {
 
    outgoing_* {
     ?     $outgoing_mail_header_errors_to
+    ?     $outgoing_mail_header_precedence
     ?     $outgoing_mail_header_x_ml_name
    }
 }

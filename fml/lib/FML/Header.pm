@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.79 2004/10/28 03:34:47 fukachan Exp $
+# $FML: Header.pm,v 1.80 2004/12/30 04:23:34 fukachan Exp $
 #
 
 package FML::Header;
@@ -522,6 +522,44 @@ sub rewrite_date
 
     $header->add('X-Date', $orgdate) if ($orgdate);
     $header->replace('Date', $newdate);
+}
+
+
+# Descriptions: add/rewrite startrek stardate if needed.
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
+# Side Effects: update $header
+# Return Value: none
+sub rewrite_stardate
+{
+    my ($header, $config, $rw_args) = @_;
+
+    use Mail::Message::Date;
+    my $nowdate  = new Mail::Message::Date time;
+    my $stardate = $nowdate->stardate();
+    if ($header->get('X-Stardate')) {
+	$header->replace('X-Stardate', $stardate);
+    }
+    else {
+	$header->add('X-Stardate', $stardate);
+    }
+}
+
+
+# Descriptions: add/rewrite Precedence: field if needed.
+#    Arguments: OBJ($header) OBJ($config) HASH_REF($rw_args)
+# Side Effects: update $header
+# Return Value: none
+sub rewrite_precedence
+{
+    my ($header, $config, $rw_args) = @_;
+    my $precedence = $config->{ outgoing_mail_header_precedence } || 'bulk';
+
+    if ($header->get('Precedence')) {
+	$header->replace('Precedence', $precedence);
+    }
+    else {
+	$header->add('Precedence', $precedence);
+    }
 }
 
 

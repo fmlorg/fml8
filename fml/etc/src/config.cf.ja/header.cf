@@ -63,6 +63,8 @@ article_header_rewrite_rules	=	delete_unsafe_header_fields
 					rewrite_article_subject_tag
 					rewrite_reply_to
 					rewrite_errors_to
+					rewrite_stardate
+					rewrite_precedence
 					add_software_info
 					add_fml_ml_name
 					add_fml_traditional_article_id
@@ -115,5 +117,12 @@ outgoing_mail_header_x_ml_name		=	$ml_name
 #        Value: RFC822_ADDRESS
 #     Examples: elena-admin@fml.org
 outgoing_mail_header_errors_to		=	$maintainer
+
+
+# Descriptions: Precedence: field
+#      History: $PRECEDENCE in fml 4.0
+#        Value: STR
+#     Examples: bulk
+outgoing_mail_header_precedence		=	bulk
 
 

@@ -118,6 +118,8 @@ delete_unsafe_header_fields
    rewrite_article_subject_tag
    rewrite_reply_to
    rewrite_errors_to
+   rewrite_stardate
+   rewrite_precedence
    add_software_info
    add_fml_ml_name
    add_fml_traditional_article_id
@@ -1284,6 +1286,15 @@ outgoing_mail_header_errors_to</entry>
  Errors-To: field</entry>
 <entry>
 $maintainer
+   </entry>
+</row>
+<row>
+<entry>
+outgoing_mail_header_precedence</entry>
+<entry>
+ Precedence: field</entry>
+<entry>
+bulk
    </entry>
 </row>
 <row>
