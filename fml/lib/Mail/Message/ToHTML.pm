@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.41.2.1 2003/06/01 12:28:56 fukachan Exp $
+# $FML: ToHTML.pm,v 1.41.2.2 2003/06/02 04:57:18 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 1;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.41.2.1 2003/06/01 12:28:56 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.41.2.2 2003/06/02 04:57:18 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -2085,31 +2085,6 @@ sub _print_li_filename
 =head2 misc
 
 =cut
-
-
-# Descriptions: clean up email address by Mail::Address.
-#               return clean-up'ed address list.
-#    Arguments: STR($addr)
-# Side Effects: none
-# Return Value: ARRAY_REF
-sub _address_clean_up
-{
-    my ($addr) = @_;
-    my (@r);
-
-    use Mail::Address;
-    my (@addrs) = Mail::Address->parse($addr);
-
-    my $i = 0;
-  LIST:
-    for my $addr (@addrs) {
-	my $xaddr = $addr->address();
-	next LIST unless $xaddr =~ /\@/;
-	push(@r, $xaddr);
-    }
-
-    return \@r;
-}
 
 
 # Descriptions: extrace gecos field in $address
