@@ -1,10 +1,11 @@
 =head1 configurations
 
-domain		= fml.org
+# domain		= fml.org
 
-fqdn		= mx0.fml.org
+# fqdn		= mx0.fml.org
 
-ml_home_dir	= /tmp
+
+# ml_home_dir	= /tmp
 
 
 
