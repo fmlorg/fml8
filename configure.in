@@ -1,4 +1,7 @@
-AC_REVISION($FML: configure.in,v 1.2 2001/11/12 14:34:16 fukachan Exp $)
+dnl
+dnl $FML$
+dnl
+AC_REVISION($Revision$)
 
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(fml/libexec/loader.in)
