@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.35 2002/07/25 00:11:23 fukachan Exp $
+# $FML: File.pm,v 1.36 2002/07/25 11:34:02 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -251,9 +251,6 @@ sub _get_next_xxx
 	    next INPUT if not defined $buf;
 	    next INPUT if $buf =~ /^\s*$/o;
 	    next INPUT if $buf =~ /^\#/o;
-	    next INPUT if $buf =~ /\sm=/o;
-	    next INPUT if $buf =~ /\sr=/o;
-	    next INPUT if $buf =~ /\ss=/o;
 	    last INPUT;
 	}
 
