@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.41.2.8 2003/06/14 10:51:42 fukachan Exp $
+# $FML: ToHTML.pm,v 1.41.2.9 2003/06/14 10:52:48 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 1;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.41.2.8 2003/06/14 10:51:42 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.41.2.9 2003/06/14 10:52:48 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -1197,10 +1197,10 @@ sub evaluate_links_relation
 	}
     }
 
-    my $link_prev_id        = $self->html_filename($prev_id);
-    my $link_next_id        = $self->html_filename($next_id);
-    my $link_prev_thread_id = $self->html_filename($prev_thread_id);
-    my $link_next_thread_id = $self->html_filename($next_thread_id);
+    my $link_prev_id        = $ndb->get('html_filename', $prev_id);
+    my $link_next_id        = $ndb->get('html_filename', $next_id);
+    my $link_prev_thread_id = $ndb->get('html_filename', $prev_thread_id);
+    my $link_next_thread_id = $ndb->get('html_filename', $next_thread_id);
 
     my $subject = {};
     if (defined $prev_id) {
