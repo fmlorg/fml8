@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mergeml.pm,v 1.2 2004/07/11 15:43:38 fukachan Exp $
+# $FML: mergeml.pm,v 1.3 2004/07/23 13:04:07 fukachan Exp $
 #
 
 package FML::Command::Admin::mergeml;
@@ -92,7 +92,7 @@ sub process
     croak("\$ml_home_prefix is not writable") unless -w $ml_home_prefix;
 
     # get and check argument.
-    croak("specify old \$ml_home_dir")       unless $src_dir;
+    croak("specify old \$ml_home_dir")        unless $src_dir;
     croak("specify directory as an argument") unless -d $src_dir;
 
     # update $ml_home_prefix and $ml_home_dir to expand variables again.
@@ -127,6 +127,23 @@ sub process
     # 5. analyze fml4 configuration and build diff only.
     # 6. translate diff into fml8 cf.
     $merge->merge_into_config_cf();
+
+    # 7. warning.
+    use File::Basename;
+    use File::Spec;
+
+    my $_dir = dirname($src_dir);
+    my $i = File::Spec->catfile($_dir, "etc", "fml", "site_init.ph");
+    if (-f $i) {
+	print STDERR "WARNING: $i exist.\n";
+	print STDERR "WARNING: you need to translate site_init.ph by hand.\n";
+    }
+
+    my $f = File::Spec->catfile($_dir, "etc", "fml", "site_force.ph");
+    if (-f $f) {
+	print STDERR "WARNING: $f exist.\n";
+	print STDERR "WARNING: you need to translate site_force.ph by hand.\n";
+    }
 }
 
 
