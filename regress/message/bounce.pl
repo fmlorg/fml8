@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: bounce.pl,v 1.1 2001/04/09 15:33:30 fukachan Exp $
+# $FML: bounce.pl,v 1.2 2001/04/09 15:56:53 fukachan Exp $
 #
 
 use strict;
@@ -14,20 +14,26 @@ use lib qw(../../cpan/lib);
 use Mail::Message;
 
 for my $f (@ARGV) {
+    print "// check $f\n";
     my $fh  = new FileHandle $f;
     my $msg = Mail::Message->parse( { fd => $fh } );
     my $r   = {};
 
-    for my $pkg ('DSN', 'Postfix19991231', 'Qmail') {
-	print "--- $pkg\n";
-	eval qq { 
-	    require Mail::Bounce::$pkg; 
-	    \$r = Mail::Bounce::$pkg->analyze( \$msg );
-	};
-	print $@ if $@;
+    use Mail::Bounce;
+    my $bouncer = new Mail::Bounce;
+    $bouncer->analyze( $msg );
 
-	eval q{ use Data::Dumper; print Dumper( $r );};
-	print $@ if $@;
+    for my $a ( $bouncer->address_list ) {
+	print "address: $a\n";
+
+	print " status: ";
+	print $bouncer->status( $a );
+	print "\n";
+
+	print " reason: ";
+	print $bouncer->reason( $a );
+	print "\n";
+	print "\n";
     }
 }
 
