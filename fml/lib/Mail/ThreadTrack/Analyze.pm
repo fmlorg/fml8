@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Analyze.pm,v 1.12 2001/11/09 13:02:34 fukachan Exp $
+# $FML: Analyze.pm,v 1.13 2001/11/09 13:30:06 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -507,6 +507,21 @@ sub update_db
 }
 
 
+sub _speculate_time
+{
+    my ($msg) = @_;
+    my $header = $msg->rfc822_message_header;
+
+    if (defined $header->get('date')) {
+	use Mail::Message::Date;
+	return Mail::Message::Date::date_to_unixtime($header->get('date'));
+    }
+    else {
+	return time;
+    }
+}
+
+
 # Descriptions: 
 #    Arguments: $self $args
 # Side Effects: 
@@ -532,7 +547,7 @@ sub _update_db
 
     # 1. 
     $rh->{ _thread_id }->{ $article_id }  = $thread_id;
-    $rh->{ _date      }->{ $article_id }  = time;
+    $rh->{ _date      }->{ $article_id }  = _speculate_time($msg);
     $rh->{ _articles  }->{ $thread_id  } .= $article_id . " ";
 
     # 2. record the sender information
