@@ -12,6 +12,70 @@
 	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
 	気をつけてください。
 
+2004/04/17
+
+   log rotation が出来るようにした。
+
+   File::* クラスを一掃する。
+
+   FML::Process::Kernel 
+   FML::Cache::Ring 
+   File::CacheDir is removed
+	imported into FML::* once. File::CacheDir -> FML::Cache::Ring
+	
+   FML::IPC::Queue 
+	use queue on memory by default.
+
+2004/04/15
+
+   Mail::Message 
+	Content-Type case-insensitive in _data_type()
+	
+   File::CacheDir 
+	IO::Adapter based sequence operation.
+
+2004/04/13
+
+   FML::Article::Sequence 
+	bug fix variable initialization.
+	
+   FML::IPC::{Message,Queue}
+	implement basic handling code of queues on file system.
+
+   FML::IPC::Queue 
+	implement rollback()
+
+2004/04/11
+
+   IO::Adapter の拡張
+	ロックおよび sequence 取り扱いの機能を IO::Adapter へ移した
+
+   IO::Adapter 
+   IO::Adapter::File 
+   File::SimpleLock 
+	import lock mechanism from File::SimpleLock class. Now IO::Adapter
+	provides lock() and unlock() metohds though file map only is
+	supported.
+	
+   FML::Article::Spool 
+   FML::MTA::Control::Postfix Procmail Sendmail 
+   FML::Process::Utils 
+	implement copy() and append() methods $curproc provides to remove
+	File::Utils class.
+	
+   FML::Process::Kernel 
+	IO::Adapter based lock system
+
+   IO::Adapter 
+   IO::Adapter::File 
+	implement methods suitable for sequence file operation.
+	+ sequence_increment()
+	+ sequence_replace()
+	
+   FML::Article::Sequence 
+   FML::Digest 
+	switch File::Sequence to IO::Adapter based sequence operation
+
 2004/04/02
 
    FML::Process::Utils 
@@ -6680,4 +6744,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.193 2004/03/31 15:03:55 fukachan Exp $
+$FML: CHANGES.txt,v 1.194 2004/04/02 14:28:44 fukachan Exp $
