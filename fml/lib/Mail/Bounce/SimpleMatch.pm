@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SimpleMatch.pm,v 1.4 2001/04/10 11:52:26 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.1 2001/04/11 16:17:41 fukachan Exp $
 #
 
 
@@ -21,18 +21,6 @@ Mail::Bounce::SimpleMatch - SimpleState error message format parser
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
-
-
- $result = {
-      addr => {
-             Original-Recipient => 'rfc822; addr'
-             Final-Recipient    => 'rfc822; addr'
-             Diagnostic-Code    => 'reason ...'
-             Action             => 'failed'
-             Status             => '4.0.0'
-          }
-      }
-
 
 =head1 SIMPLE STATE MACHINE
 
@@ -52,6 +40,8 @@ When we trap C<end>,   the state changes from l to 0.
 
 =cut
 
+
+my $debug = $ENV{'debug'} ? 1 : 0;
 
 my $address_trap_regexp = {
     'biglobe.ne.jp' => {
@@ -106,7 +96,7 @@ sub _address_match
 
       SCAN:
 	for (@buf) {
-	    print "scan> $_\n";
+	    print "scan> $_\n" if $debug;
 	    last SCAN if /$end_regexp/;
 
 	    if (/(\S+\@\S+)/) { 
