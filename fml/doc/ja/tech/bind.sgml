@@ -1,0 +1,19 @@
+<!--
+   $FML$
+-->
+
+<chapter id="bind">
+
+<title> BIND (Berkeley Internet Name Domain) </title>
+
+
+<sect1>
+<title> BIND のバージョンを知る </title>
+
+<screen>
+% nslookup -type=txt -class=CHAOS version.bind $HOST
+</screen>     
+
+</sect1>
+
+</chapter>
