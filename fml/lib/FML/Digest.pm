@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Digest.pm,v 1.13 2003/10/14 12:57:42 fukachan Exp $
+# $FML: Digest.pm,v 1.14 2003/10/15 11:57:03 fukachan Exp $
 #
 
 package FML::Digest;
@@ -42,8 +42,7 @@ sub new
 {
     my ($self, $curproc) = @_;
     my ($type) = ref($self) || $self;
-    my $me     = {};
-    $me->{ _curproc } = $curproc;
+    my $me     = { _curproc => $curproc };
     return bless $me, $type;
 }
 
@@ -95,7 +94,7 @@ sub id
 # Return Value: NUM
 sub get_digest_id
 {
-    my ($self) = @_;
+    my ($self)   = @_;
     my $curproc  = $self->{ _curproc };
     my $config   = $curproc->config();
     my $seq_file = $config->{ digest_sequence_file };
@@ -110,7 +109,7 @@ sub get_digest_id
 # Return Value: NUM
 sub get_article_id
 {
-    my ($self) = @_;
+    my ($self)  = @_;
     my $curproc = $self->{ _curproc };
 
     return $curproc->article_max_id();
@@ -125,6 +124,10 @@ sub _get_id
 {
     my ($self, $seq_file) = @_;
     my $curproc = $self->{ _curproc };
+    my $channel = $self->get_lock_channel_name();
+    my $id      = 1; # XXX return default value if something fails.
+
+    $curproc->lock($channel);
 
     # XXX-TODO: we should enhance IO::Adapter module to handle
     # XXX-TODO: sequential number.
@@ -132,15 +135,20 @@ sub _get_id
 	use File::Sequence;
 	my $sfh = new File::Sequence { sequence_file => $seq_file };
 	if (defined $sfh) {
-	    my $id  = $sfh->get_id();
-	    if ($sfh->error) { $curproc->logerror( $sfh->error ); }
-
-	    return $id;
+	    my $_id = $sfh->get_id();
+	    unless ($sfh->error) { 
+		$id = $_id;
+	    }
+	    else {
+		$curproc->logerror( $sfh->error );
+	    }
 	}
     }
 
-    # return default value if something fails.
-    return 1;
+    $curproc->unlock($channel);
+
+    # XXX return default value if something fails.
+    return $id;
 }
 
 
@@ -189,6 +197,8 @@ sub create_multipart_message
     my $rcptmaps  = $config->get_as_array_ref('digest_recipient_maps');
     my $count_ok  = 0;
     my $count_err = 0;
+
+    # XXX-TODO: subject should be configurable.
     my $msgopts   = {
 	recipient_maps => $rcptmaps,
 	header         => {
@@ -206,6 +216,7 @@ sub create_multipart_message
 	my $article  = new FML::Article $curproc;
 	my $filepath = $article->filepath($filename);
 	if (-f $filepath) {
+	    # XXX-TODO: disposition should be configurable.
 	    $curproc->reply_message( {
 		type        => "message/rfc822",
 		path        => $filepath,
@@ -224,7 +235,7 @@ sub create_multipart_message
 }
 
 
-# Descriptions: eat "10-20", return file list as \[10 11 ... 20].
+# Descriptions: eat "10-20", return file list as \( 10 11 ... 20 ).
 #    Arguments: OBJ($self) STR($fn)
 # Side Effects: none
 # Return Value: ARRAY_REF
@@ -266,7 +277,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
