@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.49 2001/10/21 09:19:47 fukachan Exp $
+# $FML: Makefile,v 1.50 2001/11/25 02:56:19 fukachan Exp $
 #
 
 all: link
@@ -41,14 +41,13 @@ _link:
 	ln -s ../../fml/lib/File
 	ln -s ../../fml/lib/Tie
 	ln -s ../../fml/lib/Mail
-	ln -s ../../fml/lib/Mail/HTML
 	ln -s ../../fml/lib/Mail/ThreadTrack
 	ln -s ../../fml/libexec
 	ln -s /var/spool/ml/elena/log
 	ln -s ../../cpan/doc doc-devel
 	ln -s ../../fml/doc/ja/tutorial tutorial
+	ln -s ../../fml/doc/ja/recipes  recipies
 	ln -s ../../fml/share/message/euc-jp  message-euc-jp
-	ln -s ../../fml/share/template/euc-jp template-euc-jp
 
 diff:
 	@ (cd ../..;cvs diff -ub)
