@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: SimpleLock.pm,v 1.14 2002/09/22 14:56:57 fukachan Exp $
+# $FML: SimpleLock.pm,v 1.15 2002/12/13 04:19:59 fukachan Exp $
 #
 
 package File::SimpleLock;
@@ -11,6 +11,11 @@ use vars qw(%LockedFileHandle %FileIsLocked @ISA $Error);
 use strict;
 use Carp;
 use ErrorStatus qw(error_set error error_clear);
+
+
+#
+# XXX-TODO: merge this module into IO::Adapter.
+#
 
 =head1 NAME
 
