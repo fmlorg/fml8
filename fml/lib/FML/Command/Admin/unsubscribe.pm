@@ -4,16 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: unsubscribe.pm,v 1.8 2002/02/20 14:10:37 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.9 2002/03/17 05:27:31 fukachan Exp $
 #
 
 package FML::Command::Admin::unsubscribe;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-
-
-
 
 
 =head1 NAME
@@ -84,6 +81,26 @@ sub process
 	else {
 	    LogError("fail to remove $address from map=$map");
 	}
+    }
+}
+
+
+# Descriptions: subscribe a new user
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: update $member_map $recipient_map
+# Return Value: none
+sub cgi_menu
+{
+    my ($self, $curproc, $args, $command_args) = @_;
+    my $r = '';
+
+    eval q{ 
+	use FML::CGI::Admin::User;
+	my $obj = new FML::CGI::Admin::User;
+	$obj->cgi_menu($curproc, $args, $command_args);
+    };
+    if ($r = $@) {
+	croak($r); 
     }
 }
 
