@@ -1,15 +1,29 @@
 <!--
-   $FML: upgrade.sgml,v 1.3 2003/04/15 14:51:39 fukachan Exp $
+   $FML: upgrade.sgml,v 1.4 2003/07/26 09:06:37 fukachan Exp $
 -->
 
 <chapter id="xxxgrade">
 	<title>
-	アップグレード/ダウングレード
+	fml8 のアップグレード/ダウングレード
 	</title>
+
+<warning>
+
+<para>
+本章では fml8 のバージョンをアップグレード/ダウングレードする方法につ
+いて解説します。
+</para>
+
+<para>
+fml4 から fml8 へのアップグレードは、別の章で説明します。
+</para>
+
+</warning>
+
 
 <sect1 id="upgrade">
 	<title>
-	アップグレード
+	fml8 のアップグレード
 	</title>
 
 <para>
@@ -29,7 +43,7 @@
 
 <sect1 id="downgrade">
 	<title>
-	ダウングレード
+	fml8 のダウングレード
 	</title>
 
 <para>
