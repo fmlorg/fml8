@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.7 2003/01/01 02:06:22 fukachan Exp $
+# $FML: Simple.pm,v 1.1 2003/11/29 10:24:26 fukachan Exp $
 #
 
 package FML::Log::Print::Simple;
@@ -28,7 +28,7 @@ FML::Log::Print::Simple - simplest engine
 
 
 # Descriptions: constructor.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
 sub new
