@@ -5,7 +5,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML$
+# $FML: install.pl.in,v 1.1 2003/01/28 04:16:16 fukachan Exp $
 #
 
 use strict;
@@ -61,7 +61,8 @@ sub _install
 	}
     }
 
-    # XXX-TODO: check uid, gid
+    $installer->is_valid_owner( $config->{ owner } );
+    $installer->is_valid_group( $config->{ group } );
 
     $installer->install_main_cf();
     $installer->install_sample_cf_files();
