@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2001,2002 Ken'ichi Fukamachi
+# Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.15 2002/04/15 04:01:47 fukachan Exp $
+# $FML: Spool.pm,v 1.1 2002/04/15 10:34:10 fukachan Exp $
 #
 
 package FML::Process::Spool;
@@ -23,7 +23,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::Process::Spool -- spool handling
+FML::Process::Spool -- handle a spool directory
 
 =head1 SYNOPSIS
 
@@ -105,7 +105,7 @@ sub run
 {
     my ($curproc, $args) = @_;
     my $config  = $curproc->{ config };
-    my $src_dir = $config->{ spool_dir };
+    my $dst_dir = $config->{ spool_dir };
     my $options = $curproc->command_line_options();
 
     my $eval = $config->get_hook( 'fmlspool_run_start_hook' );
@@ -115,8 +115,8 @@ sub run
     use FML::Article;
     my $article = new FML::Article $curproc;
 
-    # use $src_dir if --dstdir=DIR not specified.
-    my $dst_dir = defined $options->{dstdir} ? $options->{dstdir} : $src_dir;
+    # use $dst_dir if --srcdir=DIR not specified.
+    my $src_dir = defined $options->{srcdir} ? $options->{srcdir} : $dst_dir;
     my $optargs = {
 	article => $article,
 	src_dir => $src_dir, 
@@ -142,39 +142,69 @@ sub run
 sub _convert
 {
     my ($curproc, $args, $optargs) = @_;
-    my $src_dir = $optargs->{ src_dir };
-    my $dst_dir = $optargs->{ dst_dir };
-    my $article = $optargs->{ article };
+    my $src_dir  = $optargs->{ src_dir };
+    my $dst_dir  = $optargs->{ dst_dir };
+    my $article  = $optargs->{ article };
+    my $use_link = 0;
 
-    print STDERR "converting $src_dir to subdir style...\n";
+    if ($src_dir eq $dst_dir) {
+	$src_dir .= ".old";
+	rename($dst_dir, $src_dir);
+	mkdir($dst_dir, 0700);
+	$use_link = 1;
+    }
+
+    print STDERR "converting $dst_dir from $src_dir\n";
 
     use File::Spec;
     use DirHandle;
     my $dh = new DirHandle $src_dir;
     if (defined $dh) {
-	my $target = '';
-	my $tmpnew = '';
+	my $source = '';
 
 	while (defined($_ = $dh->read)) { 
 	    next if /^\./;
-	    $target = File::Spec->catfile($src_dir, $_);
-	    $tmpnew = File::Spec->catfile($src_dir, $_ . ".new.$$");
 
-	    if (-d $target) {
-		print STDERR "   $target is a subdir.\n";
+	    $source = File::Spec->catfile($src_dir, $_);
+
+	    if (-d $source) {
+		print STDERR "   $source is a subdir.\n";
 	    }
-	    elsif (-f $target) {
-		my $filepath   = $article->filepath($_);
+	    elsif (-f $source) {
 		my $subdirpath = $article->subdirpath($_);
-		rename($target, $tmpnew);
-		mkdir($subdirpath, 0700);
-		rename($tmpnew, $filepath);
+		my $filepath   = $article->filepath($_);
+
+		next if -f $filepath;
+
+		# may conflict $subdirpath (directory) name with
+		# $source file name.
+		if (-f $subdirpath) {
+		    croak("$subdirpath file/dir conflict");
+		}
+		else { 
+		    unless (-d $subdirpath) {
+			mkdir($subdirpath, 0700);
+		    }
+
+		    if (-d $subdirpath) {
+			if ($use_link) {
+			    link($source, $filepath);
+			}
+			else {
+			    use File::Utils qw(copy);
+			    copy($source, $filepath);
+			}
+		    }
+		    else {
+			croak("cannot mkdir $filepath\n");
+		    }
+		}
 
 		if (-f $filepath) {
-		    print STDERR "   mv $target $filepath\n";
+		    print STDERR "   $source -> $filepath\n";
 		}
 		else {
-		    print STDERR "   Error: fail to mv $target $filepath\n";
+		    print STDERR "   Error: fail $source -> $filepath\n";
 		}
 	    }
 	}
@@ -187,12 +217,12 @@ sub _convert
 sub _check
 {
     my ($curproc, $args, $optargs) = @_;
-    my $src_dir  = $optargs->{ src_dir };
+    my $dst_dir  = $optargs->{ dst_dir };
     my $suffix   = '';
 
-    my ($num_file, $num_dir) = _scan_dir( $src_dir );
+    my ($num_file, $num_dir) = _scan_dir( $dst_dir );
 
-    print STDERR "spool directory = $src_dir\n";
+    print STDERR "spool directory = $dst_dir\n";
 
     $suffix = $num_file > 1 ? 's' : '';
     printf STDERR "%20d %s\n", $num_file, "file$suffix";
@@ -204,19 +234,19 @@ sub _check
 
 sub _scan_dir
 {
-    my ($src_dir) = @_;
+    my ($dir) = @_;
     my $num_dir  = 0;
     my $num_file = 0;
     my $f = '';
 
     use File::Spec;
     use DirHandle;
-    my $dh = new DirHandle $src_dir;
+    my $dh = new DirHandle $dir;
     if (defined $dh) {
 	while (defined($_ = $dh->read)) { 
 	    next if /^\./;
 
-	    $f = File::Spec->catfile($src_dir, $_);
+	    $f = File::Spec->catfile($dir, $_);
 	    if (-f $f) {
 		$num_file++;
 	    }
@@ -244,7 +274,7 @@ sub help
 
 print <<"_EOF_";
 
-Usage: $name [--convert] [--style=STR] [-I DIR] DIR
+Usage: $name [--convert] [--style=STR] [--srcdir=DIR] [-I DIR] DIR
 
 options:
 
