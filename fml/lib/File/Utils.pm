@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.12 2002/04/08 12:44:26 fukachan Exp $
+# $FML: Utils.pm,v 1.13 2002/04/24 03:47:51 fukachan Exp $
 #
 
 package File::Utils;
@@ -32,9 +32,10 @@ this module provides utility functions to handle files,
 for example,
 C<mkdirhier>,
 C<touch>,
-C<search_program>
+C<search_program>,
+C<copy>
 and
-C<copy>.
+C<append>.
 
 =head1 METHODS
 
@@ -53,7 +54,12 @@ clear error message.
 #    Arguments: none
 # Side Effects: none
 # Return Value: STR(error message)
-sub error       { return $ErrorString;}
+sub error
+{ 
+    if (defined $ErrorString) {
+	return $ErrorString;
+    }
+}
 
 
 # Descriptions: remove the error message buffer
@@ -85,7 +91,7 @@ sub mkdirhier
 	use File::Path;
 	mkpath($dir, 0, $mode);
     };
-    $ErrorString = $@;
+    $ErrorString = $@ if $@;
     return ($@ ? undef : 1);
 }
 
@@ -134,7 +140,7 @@ sub touch
 =head2 C<search_program($file [, $path_list ])>
 
 search C<$file>.
-C<$path_list> is the hash array.
+C<$path_list> is the ARRAY_REF.
 It searches it among C<$path_list> if specified.
 
 The default search path list is
