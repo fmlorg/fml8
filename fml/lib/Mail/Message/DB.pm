@@ -4,12 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.1.2.13 2003/06/24 04:43:25 fukachan Exp $
+# $FML: DB.pm,v 1.1.2.14 2003/06/24 13:41:30 fukachan Exp $
 #
 
 package Mail::Message::DB;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
+	    $NULL_VALUE
 	    @table_list
 	    @orig_header_fields @header_fields
 	    %old_db_to_udb_map
@@ -17,14 +18,18 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD
 	    %header_field_type
 	    );
 use Carp;
+use File::Spec;
 
 use lib qw(../../../../fml/lib
 	   ../../../../cpan/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.1.2.13 2003/06/24 04:43:25 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.1.2.14 2003/06/24 13:41:30 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
+
+# special value
+$NULL_VALUE = '___NULL___';
 
 my $debug             = 0;
 my $is_keepalive      = 1;
@@ -850,9 +855,10 @@ sub db_open
 
     eval qq{ use $db_type; use Fcntl;};
     unless ($@) {
+	my ($file, $str);
  	for my $db (@orig_header_fields, @header_fields, @table_list) {
-	    my $file = "$db_dir/${db}";
-	    my $str = qq{
+	    $file = File::Spec->catfile($db_dir, $db);
+	    $str  = qq{
 		my \%$db = ();
 		tie \%$db, \$db_type, \$file, O_RDWR|O_CREAT, $file_mode;
 		\$self->{ _db }->{ '_$db' } = \\\%$db;
@@ -971,13 +977,24 @@ sub _db_get
     my ($self, $db, $table, $key) = @_;
     my $v = $db->{ "_$table" }->{ $key } || '';
 
+    if ($v eq $NULL_VALUE) {
+	return '';
+    }
+
     unless ($v) {
 	if ($is_demand_copying) {
+	    _PRINT_DEBUG("_old_db_copyin(\$db, $table, $key)");
 	    $self->_old_db_copyin($db, $table, $key);
 	}
 	$v = $db->{ "_$table" }->{ $key } || '';
-	_PRINT_DEBUG("_db_get: demand copying");
-	_PRINT_DEBUG($v ? "_db_get: '$v' found" : "_db_get: $key not found");
+
+	unless ($v) {
+	    $db->{ "_$table" }->{ $key } = $NULL_VALUE;
+	}
+    }
+
+    if ($v eq $NULL_VALUE) {
+	return '';
     }
 
     return $v;
@@ -1110,54 +1127,56 @@ sub get_table_as_hash_ref
 sub _old_db_copyin
 {
     my ($self, $db, $table, $key) = @_;
-    my $old_db_dir = $self->{ _old_db_base_dir };
+    my (%old_db);
     my $db_type    = $self->get_db_module_name();
     my $db_dir     = $self->get_db_base_dir();
     my $file_mode  = $self->{ _file_mode } || 0644;
-    my %old_db;
-    my $file;
+    my $old_db_dir = $self->{ _old_db_base_dir };
+    my $_table     = $udb_to_old_db_map{ $table } || $table;
+    my $file       = File::Spec->catfile($old_db_dir, ".htdb_${_table}");
+    my $file_db    = File::Spec->catfile($old_db_dir, ".htdb_${_table}.db");
+    my $file_pag   = File::Spec->catfile($old_db_dir, ".htdb_${_table}.pag");
 
-    _PRINT_DEBUG("_old_db_copyin(\$db, $table, $key)");
-
-    eval qq{ use $db_type; use Fcntl;};
-    unless ($@) {
-	my $table = $udb_to_old_db_map{ $table } || $table;
-	my $str = qq{
-	    \$file = \"$old_db_dir/.htdb_${table}\";
-	    tie \%old_db, \$db_type, \$file, O_RDWR|O_CREAT, $file_mode;
-	};
-        eval $str;
-        croak($@) if $@;
-    }
-    else {
-	croak("cannot use $db_type");
-    }
-
-    if ($key =~ /^\d+$/o) {
-	my $start = $key - 25 > 0 ? $key - 25 : 0;
-	my $end   = $key + 25;
-
-	_PRINT_DEBUG("copy ($start .. $end) into $table from $file");
-	for my $i ($start .. $end) {
-	    $self->_db_set($db, $table, $i, $old_db{ $i });
+    if (-f $file_db || -f $file_pag) {
+	eval qq{ use $db_type; use Fcntl;};
+	unless ($@) {
+	    eval q{
+		tie %old_db, $db_type, $file, O_RDWR|O_CREAT, $file_mode;
+	    };
+	    croak($@) if $@;
 	}
-    }
-    # we may need to copy all contents
-    else {
-	my $value = $old_db{ $key } || '';
+	else {
+	    croak("cannot use $db_type");
+	}
 
-	if ($value) {
+	if ($key =~ /^\d+$/o) {
+	    my $value = $old_db{ $key } || $NULL_VALUE;
+	    $self->_db_set($db, $table, $key, $value);
+
+	    my $start = $key - 25 > 0 ? $key - 25 : 1;
+	    my $end   = $key + 25;
+	    _PRINT_DEBUG("copy ($start .. $end) into $table from $file");
+	    for my $i ($start .. $end) {
+		$self->_db_set($db, $table, $i, $old_db{ $i } || $NULL_VALUE);
+	    }
+	}
+	# we may need to copy all contents
+	else {
+	    my $value = $old_db{ $key } || $NULL_VALUE;
 	    $self->_db_set($db, $table, $key, $value);
 
 	    _PRINT_DEBUG("all copy into $table from $file");
 	    my ($k, $v);
 	    while (($k, $v) = each %old_db) {
-		$self->_db_set($db, $table, $k, $v);
+		$self->_db_set($db, $table, $k, $v || $NULL_VALUE);
 	    }
 	}
-    }
 
-    eval q{ untie %old_db; };
+	eval q{ untie %old_db; };
+    }
+    else {
+	_PRINT_DEBUG("$file not found");
+    }
 }
 
 
