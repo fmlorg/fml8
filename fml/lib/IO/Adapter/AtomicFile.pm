@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: AtomicFile.pm,v 1.3 2002/09/11 23:18:20 fukachan Exp $
+# $FML: AtomicFile.pm,v 1.4 2002/09/22 14:56:58 fukachan Exp $
 #
 
 package IO::Adapter::AtomicFile;
@@ -82,7 +82,7 @@ The request is forwarded to SUPER CLASS's new().
 
 =cut
 
-# Descriptions: ordinary constructor
+# Descriptions: ordinary constructor.
 #               forward new() request to superclass (IO::File)
 #               XXX returned object $self is blessed file handle.
 #    Arguments: OBJ($self)
@@ -91,7 +91,8 @@ The request is forwarded to SUPER CLASS's new().
 sub new
 {
     my ($self, @argv) = shift;
-    my $me = $self->SUPER::new();
+    my $me = $self->SUPER::new(); # call IO::File::new().
+
     if (defined $me) {
 	$me->open(@argv) if @argv;
 	return $me;
@@ -192,7 +193,9 @@ sub close
     my $temp = ${ *$fh }{ _temp_file };
 
     # XXX close the "write" file handle (write .. to $temp file)
-    close($fh);
+    if (defined $fh) {
+       $fh->close();
+    }
 
     if (rename($temp, $orig)) {
        return 1;
@@ -271,14 +274,14 @@ sub error
 sub rollback
 {
     my ($self) = @_;
-    my $fh = $self;
+    my $fh   = $self;
     my $temp = ${ *$fh }{ _temp_file };
     if (-f $temp) { unlink $temp;}
 }
 
 
-# Descriptions: destructor
-#               forward the request to rollback() in this class
+# Descriptions: destructor.
+#               forward the request to rollback() in this class.
 #    Arguments: OBJ($self)
 #               XXX $self is blessed file handle.
 # Side Effects: none
