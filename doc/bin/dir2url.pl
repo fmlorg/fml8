@@ -73,7 +73,7 @@ sub Show
 	    $module =~ s/\.pm$//;
 
 	    if (-f $pathname) {
-		$doc = $pathname;
+		$doc = '@'.$pathname;
 		$doc =~ s/pm$/txt/;
 		print STDERR "\tpod2text $pathname > $doc\n";
 		system "pod2text $pathname > $doc";
