@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SimpleMatch.pm,v 1.9 2001/04/12 14:09:07 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.10 2001/04/12 14:27:44 fukachan Exp $
 #
 
 
@@ -77,6 +77,11 @@ my $address_trap_regexp = {
     },
 
 
+    'odn.ne.jp' => {
+	'start' => 'This Message was undeliverable due to the following reason:',
+    },
+
+
     'smail' => {
 	'start' => 'Failed addresses follow:',
 	'end'   => 'Message text follows:',
@@ -86,6 +91,12 @@ my $address_trap_regexp = {
     'interscan' => {
 	'start' => 'Message from InterScan E-Mail VirusWall NT',
 	'end'   => '     End of message     \*\*\*\*\*\*\*\*\*\*\*\*\*\*\*',
+    },
+
+
+    'netscape messaging server' => {
+	'start' => 'This Message was undeliverable due to the following reason:',
+	'end' => 'Please reply to ',
     },
 
 
