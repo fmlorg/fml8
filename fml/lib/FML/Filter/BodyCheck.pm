@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: BodyCheck.pm,v 1.6 2001/09/23 11:34:42 fukachan Exp $
+# $FML: BodyCheck.pm,v 1.7 2001/09/23 14:30:35 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -35,15 +35,40 @@ usual constructor.
 
 my $debug = $ENV{'debug'} ? 1 : 0;
 
+# default rules to apply
+my (@default_rules) = qw(reject_not_iso2022jp_japanese_string
+			 reject_null_mail_body
+			 reject_one_line_message
+			 reject_old_fml_command_syntax
+			 reject_invalid_fml_command_syntax
+			 reject_japanese_command_syntax
+			 reject_ms_guid);
+
 
 sub new
 {
     my ($self) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
+
+    # apply default rules
+    $me->{ _rules } = \@default_rules;
+
     return bless $me, $type;
 }
 
+
+=head2 C<rules( $rules )>
+
+overwrite rules by specified C<@$rules> ($rules is HASH ARRAY).
+
+=cut
+
+sub rules
+{
+    my ($self, $rarray) = @_;
+    $self->{ _rules } = $rarray;
+}
 
 
 =head2 C<body_check($msg, $args)>
@@ -95,14 +120,8 @@ sub body_check
     ## $self->_clean_up_buffer($m);
 
     ## 6. main fules
-    for my $rule (qw(reject_not_iso2022jp_japanese_string
-		     reject_null_mail_body
-		     reject_one_line_message
-		     reject_old_fml_command_syntax
-		     reject_invalid_fml_command_syntax
-		     reject_japanese_command_syntax
-		     reject_ms_guid
-		     )) {
+    my $rules = $self->{ _rules };
+    for my $rule (@$rules) {
 	if ($self->can($rule)) {
 	    eval q{
 		$self->$rule($msg, $args, $m);

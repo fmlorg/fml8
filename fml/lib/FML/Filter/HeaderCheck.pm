@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: HeaderCheck.pm,v 1.4 2001/08/05 14:07:08 fukachan Exp $
+# $FML: HeaderCheck.pm,v 1.5 2001/09/23 09:30:28 fukachan Exp $
 #
 
 package FML::Filter::HeaderCheck;
@@ -36,14 +36,34 @@ usual constructor.
 my $debug = $ENV{'debug'} ? 1 : 0;
 
 
+my (@default_rules) = qw(is_valid_message_id);
+
+
 sub new
 {
     my ($self) = @_;
     my ($type) = ref($self) || $self;
     my $me     = {};
+
+    # apply default rules
+    $me->{ _rules } = \@default_rules;
+
     return bless $me, $type;
 }
 
+
+
+=head2 C<rules( $rules )>
+
+overwrite rules by specified C<@$rules> ($rules is HASH ARRAY).
+
+=cut
+
+sub rules
+{
+    my ($self, $rarray) = @_;
+    $self->{ _rules } = $rarray;
+}
 
 
 =head2 C<header_check($msg, $args)>
@@ -68,13 +88,16 @@ sub header_check
 {
     my ($self, $msg, $args) = @_;
     my $h = $msg->rfc822_message_header();
+    my $rules = $self->{ _rules };
 
-    eval q{
-	$self->is_valid_message_id($h, $args);
-    };
+    for my $rule (@$rules) {
+	eval q{
+	    $self->$rule($h, $args);
+	};
 
-    if ($@) {
-	$self->error_set($@);
+	if ($@) {
+	    $self->error_set($@);
+	}
     }
 }
 
