@@ -10,6 +10,7 @@
 	perl 5.00503 on FreeBSD 4.3 STABLE
 	perl ?       on FreeBSD 4.6 RELEASE
 	perl 5.00503 on FreeBSD 4.7 RELEASE-p3
+	perl 5.00503 on FreeBSD 4.6.2 RELEASE			*
 	perl 5.6.1   on Redhat Linux 7.2 (postfix)		*
 	perl 5.00503 on Redhat Linux 6.2 (sendmail8.11.6)	*
 			smrsh はリンク張る必要はあります。
@@ -435,4 +436,4 @@ VIII部　付録
 
 
 ---
-$FML: STATUS.txt,v 1.22 2003/02/08 09:03:41 fukachan Exp $
+$FML: STATUS.txt,v 1.23 2003/02/10 09:05:37 fukachan Exp $
