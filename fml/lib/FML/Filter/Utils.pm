@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML$
+# $FML: Utils.pm,v 1.1.1.1 2001/03/28 15:13:31 fukachan Exp $
 #
 
 package FML::Filter::Utils;
@@ -114,6 +113,47 @@ sub is_one_line
     }
 
     $one_line_check_p;
+}
+
+
+# XXX fml 4.0: EUCCompare($buf, $pat) 
+# XXX          where $pat should be $& (matched pattern)
+sub euc_compare
+{
+    my ($self, $a, $pat) = @_;
+
+    # (Refeence: jcode 2.12)
+    # $re_euc_c    = '[\241-\376][\241-\376]';
+    # $re_euc_kana = '\216[\241-\337]';
+    # $re_euc_0212 = '\217[\241-\376][\241-\376]';
+    my ($re_euc_c, $re_euc_kana, $re_euc_0212);
+    $re_euc_c    = '[\241-\376][\241-\376]';
+    $re_euc_kana = '\216[\241-\337]';
+    $re_euc_0212 = '\217[\241-\376][\241-\376]';
+
+    # always true if given buffer is not EUC.
+    if ($a !~ /($re_euc_c|$re_euc_kana|$re_euc_0212)/) {
+	&Log("EUCCompare: do nothing for non EUC strings") if $debug;
+	return 1;
+    }
+
+    # extract EUC code (e.g. .*EUC_PATTERN.*)
+    # but how to do for "EUC ASCII EUC" case ???
+    my ($pa, $loc, $i);
+    do {
+	if ($a =~ /(($re_euc_c|$re_euc_kana|$re_euc_0212)+)/) {
+	    $pa  = $1;
+	    $loc = index($pa, $pat);
+	}
+
+	print "buf = <$a> pa=<$pa> pat=<$pat> loc=$loc\n";
+
+	return 1 if ($loc % 2) == 0;
+
+	$a = substr($a, index($a, $pa) + length($pa) );
+    } while ($i++ < 16);
+
+    0;
 }
 
 
