@@ -25,7 +25,28 @@
 
          Netlib::SMTP
                  IO::*
+
+-------------------------------------------------
+$curproc (current process struct) 構造体のうちわけ
+
+$curproc                    FML::Process::Kernel オブジェクト
+
+          config            FML::Config オブジェクト
+
+          credential        FML::Credential オブジェクト
+
+          incoming_mail     (単なるキーワード)
+               ヘッダ       FML::Header オブジェクト
+               メール本文   Netlib::Messages オブジェクト
+
+          article           (単なるキーワード)
+               ヘッダ       FML::Header オブジェクト
+               メール本文   Netlib::Messages オブジェクト
+
+          reply_messages    (単なるキーワード)
+
 </PRE>
+オペレーションは各オブジェクトのメソッドが責任を持って実行する。
 
 <!-- =================================================================== -->
 </BODY>
