@@ -603,48 +603,74 @@ sub _print_article_summary
 sub _article_summary
 {
     my ($self, $file) = @_;
-    my $buf     = '';
-    my $line    = 5;
-    my $padding = '      > ';
+    my (@header) = ();
+    my $buf      = '';
+    my $line     = 5;
+    my $padding  = '      > ';
 
     use FileHandle;
     my $fh = new FileHandle $file;
 
     if (defined $fh) {
-	use Jcode;
-
+      ARTICLE:
 	while (<$fh>) {
-	    if (1 ../^$/) {
-		if (/^(Subject:.*)=\?ISO\S+B\?(\S+)=\?=/) { 
-		    my ($x, $y) = ($1, $2);
-		    $y = decode_base64($y);
-		    $buf .= $padding;
-		    $buf .= $x. Jcode::convert(\$y, 'euc')."\n";
-		    $buf .= $padding."\n";
-		}
-		elsif (/^(Subject:.*)/) {
-		    $buf .= $padding. $_;
-		    $buf .= $padding."\n";
-		}
-		next;
-	    }
-
 	    # nuke useless lines
-	    next if /^\s*$/;
-	    next if /^\>/;
-	    next if /^\-/;
+	    next ARTICLE if /^\>/;
+	    next ARTICLE if /^\-/;
 
-	    # pick up effetive the first $line lines
-	    if ($line--> 0) {
-		$buf .= $padding. $_;
+	    if (1 ../^$/) {
+		push(@header, $_);
 	    }
 	    else {
-		last;
+		next ARTICLE if /^\s*$/;
+
+		# pick up effetive the first $line lines
+		if ($line--> 0) {
+		    $buf .= $padding. $_;
+		}
+		else {
+		    last ARTICLE;
+		}
 	    }
 	}
+	close($fh);
     }
 
-    $buf;
+    use FML::Header;
+    my $h = new FML::Header \@header;
+    my $header_info = _header_summary({
+	header  => $h,
+	padding => $padding,
+    }); 
+
+    return $header_info	. $buf;
+}
+
+
+sub _header_summary
+{
+    my ($args) = @_;
+    my $from    = $args->{ header }->get('from');
+    my $subject = $args->{ header }->get('subject');
+    my $padding = $args->{ padding };
+
+    use Jcode;
+
+    if ($subject =~ /=\?ISO\-2022\-JP\S+B\?(\S+)=\?=/) { 
+	my $y = decode_base64($1);
+	$subject = Jcode::convert(\$y, 'euc')."\n";
+    }
+    if ($from =~ /=\?ISO\-2022\-JP\S+B\?(\S+)=\?=/) { 
+	my $y = decode_base64($1);
+	$from = Jcode::convert(\$y, 'euc')."\n";
+    }
+
+    $from    =~ s/\n/ /g;
+    $subject =~ s/\n/ /g;
+
+    return 
+	$padding. "   From: ". $from ."\n". 
+	$padding. "Subject: ". $subject ."\n";
 }
 
 
