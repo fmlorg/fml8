@@ -1,0 +1,128 @@
+<!--
+   $FML: dbms.sgml,v 1.5 2003/05/31 08:51:09 fukachan Exp $
+
+   注意: cgi.sgml の中にはめ込むので <chapter> は不必要だ。
+-->
+
+
+
+<sect1 id="cgi.internal.example.isa">
+	<title>
+	CGI の実装: CGI 関連クラスの継承関係
+	</title>
+
+<para>
+config.cgi では、@ISA (継承関係)が次のようになっています。
+<screen>
+FML::CGI::Menu   FML::Process::CGI::Kernel FML::Process::CGI::Param
+</screen>
+thread.cgi の継承も同様で、次のようになっています。
+<screen>
+FML::CGI::Thread FML::Process::CGI::Kernel FML::Process::CGI::Param
+</screen>
+</para>
+
+<para>
+各 .cgi 固有のコードは FML::CGI:: の階層に置くようにします。
+</para>
+
+<para>
+FML::Process::CGI::Kernel には、
+プロセス全体の制御部分と、
+デフォルトの CGI 固有関数 run_cgi_なんとか() を置きます。
+必要に応じて FML::CGI:: の階層でオーバーロードしてください。
+なお、FML::Process::CGI::Kernel の以下のメソッドは使われていません。
+<screen>
+run_cgi_log
+run_cgi_dummy
+run_cgi_date
+</screen>
+</para>
+
+</sect1>
+
+
+<sect1 id="cgi.internal.example.config.cgi">
+	<title>
+	CGI の実装: config.cgi の実装
+	</title>
+
+<para>
+前述のように config.cgi の場合、継承関係は次のようになっています。
+<screen>
+FML::CGI::Menu FML::Process::CGI::Kernel FML::Process::CGI::Param
+</screen>
+以下では、config.cgi の処理をみてみましょう。
+</para>
+
+<para>
+config.cgi のプロセスオブジェクト $curproc は
+FML::Process::CGI::Kernel クラスです。
+FML::Process::CGI::Kernel では
+<screen>
+	new()
+	prepare()
+	verify_request()
+	run()
+	finish()
+</screen>
+が順に呼ばれます。
+</para>
+
+<para>
+重要なのは run() です。run() は
+<screen>
+    $curproc->html_start();          (FML::CGI::Menu)
+    $curproc->_drive_cgi_by_table(); (FML::Process::CGI::Kernel)
+    $curproc->html_end();            (FML::CGI::Menu)
+</screen>
+を実行します。画面を作るのは _drive_cgi_by_table() です。
+この関数から呼ばれる関数が CGI のメイン部分です。
+</para>
+
+<para>
+$curproc->_drive_cgi_by_table()
+は、以下の各「run_いろいろ()」メソッドを呼び出します。
+<screen>
+run_cgi_main              (FML::CGI::Menu)
+</screen>
+cgi_execute_command (FML::Process::CGI::Kernel) を使い、
+FML::Command 経由で FML::Command::Admin::コマンドを実行します。
+これが、GUI からコマンドを実行するコードの本体です。
+ただし、画面の表示は別です。
+</para>
+
+<para>
+たとえば GUI から「ユーザのメールアドレスを登録する」場合、
+run_cgi_main() が実際の登録作業を行ないます。
+run_cgi_menu() は、入力画面の生成をおこないます。
+前者は FML::Command::Admin::subscribe::process() メソッド、
+後者は FML::Command::Admin::subscribe::cgi_menu() メソッドを呼び出しています。
+</para>
+
+<para>
+他にも run_cgi_* 関数がありますが、これらは画面の作りに関係する補助的
+なものたちといってよいでしょう。
+</para>
+
+<para>
+この２つはデフォルトのものを使っているという気分です。
+<screen>
+run_cgi_title             FML::Process::CGI::Kernel クラス (タイトル表示)
+run_cgi_options           FML::Process::CGI::Kernel クラス (言語選択画面)
+</screen>
+また、この .cgi 固有のメソッド群として次のものがあります。
+<screen>
+run_cgi_navigator         FML::CGI::Menu クラス
+run_cgi_help              FML::CGI::Menu クラス
+run_cgi_command_help      FML::CGI::Menu クラス
+run_cgi_menu              FML::CGI::Menu クラス
+</screen>
+</para>
+
+<para>
+ちなみに run_cgi_menu() は cgi_execute_cgi_menu() 経由で
+FML::Command::Admin::コマンド::cgi_menu() を実行しています。
+</para>
+
+</sect1>

@@ -1,14 +1,14 @@
 <!--
-   $FML: cgi.sgml,v 1.10 2003/03/09 08:29:10 fukachan Exp $
+   $FML: cgi.sgml,v 1.11 2003/04/15 14:51:40 fukachan Exp $
 -->
 
-<chapter id="internalcgi">
+<chapter id="cgi.internal">
 	<title>
 	CGI プロセスの内部構造
 	</title>
 
 
-<sect1 id="internalcgi.method">
+<sect1 id="cgi.internal.method">
 	<title>
 	メソッド
 	</title>
@@ -58,7 +58,7 @@ finish()
 </sect1>
 
 
-<sect1 id="internalcgi.frames">
+<sect1 id="cgi.internal.frames">
 	<title>
 	CGI の画面の作りとメソッド
 	</title>
@@ -142,7 +142,7 @@ run_cgi_main() ではなく run_cgi_menu() 経由で表示しているともいえるの
 </sect1>
 
 
-<sect1 id="internalcgi.trampoline">
+<sect1 id="cgi.internal.trampoline">
 	<title>
 	画面とトランポリン機構
 	</title>
@@ -171,7 +171,7 @@ Mach のトランポリン機構のように、いったりきたりします。
 </sect1>
 
 
-<sect1 id="internalcgi.problems">
+<sect1 id="cgi.internal.problems">
 	<title>
 	備考: FML::CGI::Admin:: ではハードコーディングするしかない？	
 	</title>
@@ -188,6 +188,10 @@ $comname と maps の関係がハードコーディングされてるけれど、
 </para>
 
 </sect1>
+
+
+<!-- 後半では .cgi の実装例について解説する -->
+&sect.internal.cgi.examples;
 
 
 </chapter>

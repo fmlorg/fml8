@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.84 2004/03/23 05:16:51 fukachan Exp $
+	$FML: chapters.ent,v 1.85 2004/03/25 04:10:03 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -140,6 +140,7 @@
 <!entity chapter.bootloader          SYSTEM "internals/bootloader.sgml">
 <!entity sect.main.cf                SYSTEM "internals/main.cf.sgml">
 <!entity chapter.internal.cgi	     SYSTEM "internals/cgi.sgml">
+<!entity sect.internal.cgi.examples  SYSTEM "internals/cgi.examples.sgml">
 <!entity chapter.programingstyle     SYSTEM "internals/style.sgml">
 <!entity chapter.design              SYSTEM "internals/design.sgml">
 <!entity chapter.config.cf           SYSTEM "internals/config.cf.sgml">
