@@ -242,21 +242,22 @@ sub _makefml_parse_argv
 =head2 C<ProcessSwitch($args)> 
 
     my $args = {
-        fml_version    => $main_cf->{ fml_version },
-        
-        myname         => $myname,
-        ml_home_prefix => $main_cf->{ ml_home_prefix },
-        ml_home_dir    => $main_cf->{ ml_home_dir },
-        
-        cf_list        => $cf,
-        options        => \%options,
+	fml_version    => $main_cf->{ fml_version },
+	
+	myname         => $myname,
+	ml_home_prefix => $main_cf->{ ml_home_prefix },
+	ml_home_dir    => $main_cf->{ ml_home_dir },
+	
+	cf_list        => $cf,
+	options        => \%options,
 
-        # pass the original information to each process
-        argv           => \@argv,
-        ARGV           => \@ARGV,
+	argv           => \@argv, # pass the original @ARGV
+	ARGV           => \@ARGV, # @ARGV after getopts()
 
-        # options
-        need_ml_name   => _ml_name_is_required($myname),
+	main_cf        => $main_cf,
+
+	# options
+	need_ml_name   => _ml_name_is_required($myname),
     };
 
     # get the object. The suitable module is speculcated by $0.
@@ -266,6 +267,7 @@ sub _makefml_parse_argv
     FML::Process::Flow::ProcessStart($obj, $args);
 
 =cut
+
 
 # Descriptions: top level process switch
 #               emulates "use $package" but $package is dynamically 
