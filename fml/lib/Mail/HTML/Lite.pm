@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.3 2001/10/20 06:57:40 fukachan Exp $
+# $FML: Lite.pm,v 1.4 2001/10/20 07:29:59 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -82,6 +82,9 @@ sub new
 
     $me->{ _charset } = $args->{ charset } || 'us-ascii';
     $me->{ _html_base_directory } = $args->{ directory };
+    $me->{ _is_attachment } = defined($args->{ attachment }) ? 1 : 0;
+    $me->{ _db_type } = $args->{ db_type };
+    $me->{ _args } = $args;
 
     return bless $me, $type;
 }
@@ -135,7 +138,7 @@ sub htmlfy_rfc822_message
     }
 
     # before main message
-    $self->html_begin($wh, $msg);
+    $self->html_begin($wh, { message => $msg });
     $self->mhl_preamble($wh);
 
     # analyze $msg (message chain)
@@ -172,7 +175,9 @@ sub htmlfy_rfc822_message
 	    if (defined $tmpf && -f $tmpf) {
 		# write attachement into a separete file
 		my $outf = _gen_attachment_filename($dst, $attach, 'html');
-		my $text = new Mail::HTML::Lite;
+		my $args = $self->{ _args };
+		$args->{ attachment } = 1; # clarify not top level content.
+		my $text = new Mail::HTML::Lite $args;
 		$text->htmlfy_rfc822_message({
 		    src => $tmpf,
 		    dst => $outf,
@@ -306,11 +311,20 @@ sub _init_htmlfy_rfc822_message
 # Return Value: none
 sub html_begin
 {
-    my ($self, $wh, $msg) = @_;
-    my $hdr   = $msg->rfc822_message_header;
-    my $title = $self->_decode_mime_string( $hdr->get('subject') );
+    my ($self, $wh, $args) = @_;
+    my ($msg, $hdr, $title);
 
-    print $wh q{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">};
+    if (defined $args->{ title }) {
+	$title = $args->{ title };
+    }
+    elsif (defined $args->{ message }) {
+	$msg   = $args->{ message };
+	$hdr   = $msg->rfc822_message_header;
+	$title = $self->_decode_mime_string( $hdr->get('subject') );
+    }
+
+    print $wh 
+	q{<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">};
     print $wh "\n";
     print $wh "<HTML>\n";
     print $wh "<HEAD>\n";
@@ -489,6 +503,10 @@ sub _gen_attachment_filename
 }
 
 
+# default header to show
+my @header_field = qw(From To Cc Subject Date);
+
+
 # Descriptions: 
 #    Arguments: $self $args
 # Side Effects: 
@@ -496,11 +514,12 @@ sub _gen_attachment_filename
 sub _format_header
 {
     my ($self, $msg) = @_;
+    my ($buf);
     my $hdr = $msg->rfc822_message_header;
-    my $buf = '';
+    my $header_field = \@header_field;
 
     # header
-    for my $field (qw(From To Cc Subject Date)) {
+    for my $field (@$header_field) {
 	if (defined($hdr->get($field))) {
 	    $buf .= "${field}: ";
 	    my $xbuf = $hdr->get($field); 
@@ -509,6 +528,17 @@ sub _format_header
     }
 
     return($buf);
+}
+
+
+sub _format_index_navigator
+{
+    my $str = qq{
+<A HREF=\"index.html\">[ID Index]</A>
+<A HREF=\"thread.html\">[Thread Index]</A>
+};
+
+return $str;
 }
 
 
@@ -608,29 +638,50 @@ sub cache_message_info
     $self->_db_open();
     my $db = $self->{ _db };
 
+    # update max id
+    if (defined $db->{ _info }->{ id_max }) {
+	$db->{_info}->{id_max} = 
+	    $db->{_info}->{id_max} < $id ? $id : $db->{_info}->{id_max};
+    }
+    else {
+	$db->{_info }->{id_max } = $id;
+    }
+
+    $db->{ _filename }->{ $id } = $self->message_filename($id);
     $db->{ _filepath }->{ $id } = $dst;
 
     $db->{ _date }->{ $id } = $hdr->get('date');
 
-    $db->{ _subject }->{ $id } = $self->_decode_mime_string( $hdr->get('subject') );
+    $db->{ _subject }->{ $id } = 
+	$self->_decode_mime_string( $hdr->get('subject') );
 	
     my $ra = _address_clean_up( $hdr->get('from') );
     $db->{ _from }->{ $id } = $ra->[0];
+    $db->{ _who }->{ $id } = $self->_who_of_address( $hdr->get('from') );
 
     $ra  = _address_clean_up( $hdr->get('message-id') );
     my $mid = $ra->[0];
     $db->{ _message_id }->{ $id } = $mid;
     $db->{ _msgidref }->{ $mid }  = $id;
+    $db->{ _idref }->{ $id }      = $id;
 
     $ra = _address_clean_up( $hdr->get('in-reply-to') );
     my $in_reply_to = $ra->[0];
     for my $mid (@$ra) {
 	$db->{ _msgidref }->{ $mid } .= " ".$id;
+
+	# message-id => id
+	my $idp = _list_head($db->{ _msgidref }->{ $mid });
+	$db->{ _idref }->{ $idp } .= " ".$id if defined $idp;
     }
 
     $ra = _address_clean_up( $hdr->get('references') );
     for my $mid (@$ra) {
 	$db->{ _msgidref }->{ $mid } .= " ".$id;
+
+	# message-id => id
+	my $idp = _list_head($db->{ _msgidref }->{ $mid });
+	$db->{ _idref }->{ $idp } .= " ".$id if defined $idp;
     }
 
     # thread information for convenience
@@ -640,8 +691,7 @@ sub cache_message_info
     #  $ids = (id1 id2 id3 ...)
     my $ids = $db->{ _msgidref }->{ $in_reply_to };
     if (defined $ids) {
-	$ids =~ s/^\s*//;
-	my $prev_id = (split(/\s+/, $ids))[0];
+	my $prev_id = _list_head($ids);
 	$db->{ _prev_id }->{ $id } = $prev_id;
 
 	# XXX we should not overwrite " id => next_id " hash.
@@ -658,6 +708,15 @@ sub cache_message_info
 }
 
 
+sub _list_head
+{
+    my ($buf) = @_;
+    $buf =~ s/^\s*//;
+    $buf =~ s/\s*$//;
+    return (split(/\s+/, $buf))[0];
+}
+
+
 sub _address_clean_up
 {
     my ($addr) = @_;
@@ -666,11 +725,37 @@ sub _address_clean_up
     use Mail::Address;
     my (@addrs) = Mail::Address->parse($addr);
 
+    my $i = 0;
     for my $addr (@addrs) {
-	push(@r, $addr->address());
+	my $xaddr = $addr->address();
+	push(@r, $xaddr);
     }
 
     return \@r;
+}
+
+
+sub _who_of_address
+{
+    my ($self, $address, $options) = @_;
+    my ($user);
+
+    use Mail::Address;
+    my (@addrs) = Mail::Address->parse($address);
+
+    for my $addr (@addrs) {
+	if (defined( $addr->phrase() )) {
+	    my $phrase = $self->_decode_mime_string( $addr->phrase() );
+
+	    if ($phrase) {
+		return($phrase);
+	    }
+	}
+
+	$user = $addr->user();
+    }
+
+    return( $user ? "$user\@xxx.xxx.xxx.xxx" : $address );
 }
 
 
@@ -681,7 +766,7 @@ sub _decode_mime_string
     my $code    = _charset_to_code($charset);
 
     # If looks Japanese and $code is specified as Japanese, decode !
-    if (($str =~ /=\?ISO\-2022\-JP\?[BQ]\?(\S+\=*)\?=/i) &&
+    if (($str =~ /=\?ISO\-2022\-JP\?[BQ]\?/i) &&
 	($code eq 'euc' || $code eq 'jis')) {
         use MIME::Base64;
         if ($str =~ /=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/i) { 
@@ -694,7 +779,8 @@ sub _decode_mime_string
         }
 
 	use Jcode;
-	&Jcode::convert(\$str, $code);
+	my $icode = &Jcode::getcode(\$str);
+	&Jcode::convert(\$str, $code, $icode);
     }
 
     return $str;
@@ -748,7 +834,7 @@ sub _update_relation
 
     use FileHandle;
     my $file        = $args->{ file };
-    my ($old, $new) = ($file, "$file.new");
+    my ($old, $new) = ($file, "$file.new.$$");
     my $rh = new FileHandle $old;
     my $wh = new FileHandle "> $new";
     if (defined $rh && defined $wh) {
@@ -914,8 +1000,7 @@ sub evaluate_preamble
 	$preamble .= "[No Next Thread]\n";
     }
 
-    $preamble .= qq{<A HREF=\"index.html\">[ID Index]</A>\n};
-    $preamble .= qq{<A HREF=\"thread.html\">[Thread Index]</A>\n};
+    $preamble .= _format_index_navigator();
     $preamble .= $preamble_end. "\n";;
 
     return $preamble;
@@ -962,8 +1047,7 @@ sub evaluate_footer
     }
 
     $footer .= qq{<BR>\n};
-    $footer .= qq{<A HREF=\"index.html\">[ID Index]</A>\n};
-    $footer .= qq{<A HREF=\"thread.html\">[Thread Index]</A>\n};
+    $footer .= _format_index_navigator();
     $footer .= $footer_end. "\n";;
 
     return $footer;
@@ -982,6 +1066,7 @@ sub evaluate_footer
    message_id    id => Message-Id: header field
    references    id => References: header field
    filepath      id => file location ( /some/where/YYYY/MM/DD/xxx.html )
+   idref         id => id(myself) refered-by-id1 refered-by-id2 ...
    msgidref      message-id => id(myself) refered-by-id1 refered-by-id2 ...
 
 We need several information to speculate thread relation rapidly.
@@ -1025,8 +1110,9 @@ For example, you can set { $key => $value } for C<from> data in this way:
 =cut
 
 my @kind_of_databases = qw(from date subject message_id references
-			   msgidref next_id prev_id
-			   filename filepath);
+			   msgidref idref next_id prev_id
+			   filename filepath
+			   who info);
 
 
 # 1. Hmm, what database is needed for 
@@ -1041,8 +1127,10 @@ my @kind_of_databases = qw(from date subject message_id references
 sub _db_open
 {
     my ($self, $args) = @_;
-    my $db_type = $args->{ db_type } || 'AnyDBM_File';
+    my $db_type = $args->{ db_type } || $self->{ _db_type } || 'AnyDBM_File';
     my $db_dir  = $self->{ _html_base_directory };
+
+    print STDERR "_db_open( type = $db_type )\n" if $debug;
 
     eval qq{ use $db_type; use Fcntl;};
     unless ($@) {
@@ -1069,19 +1157,19 @@ sub _db_open
 sub _db_close
 {
     my ($self, $args) = @_;
-    my $db_type = $args->{ db_type } || 'AnyDBM_File';
+    my $db_type = $args->{ db_type } || $self->{ _db_type } || 'AnyDBM_File';
     my $db_dir  = $self->{ _html_base_directory };
 
     for my $db (@kind_of_databases) {
 	eval qq{ untie \$self->{ _db }->{ _$db };};
 	croak($@) if $@;
     }
-
-    system "sync";
 }
 
 
-=head2 C<make_index($args)>
+=head2 C<update_id_index($args)>
+
+update index.html.
 
 =cut
 
@@ -1090,9 +1178,196 @@ sub _db_close
 #    Arguments: $self $args
 # Side Effects: 
 # Return Value: none
-sub make_index
+sub update_id_index
 {
     my ($self, $args) = @_;
+    my $html_base_dir = $self->{ _html_base_directory };
+    my $title = defined($args->{ title }) ? $args->{ title } : "ID Index";
+    my $old   = "$html_base_dir/index.html";
+    my $new   = "$html_base_dir/index.html.new.$$";
+    my $code  = _charset_to_code($self->{ _charset });
+
+    use FileHandle;
+    my $wh = new FileHandle "> $new";
+
+    $self->html_begin($wh, { title => $title });
+
+    _print($wh, _format_index_navigator(), $code);
+    $self->mhl_separator($wh);
+
+    $self->_db_open();
+    my $db = $self->{ _db };
+    my $id_max =  $db->{ _info }->{ id_max };
+
+    _print($wh, "<UL>\n", $code);
+    for my $id ( 1 .. $id_max ) {
+	$self->_print_li_filename($wh, $db, $id, $code);
+    }
+    _print($wh, "</UL>\n", $code);
+
+    $self->_db_close();
+
+    $self->mhl_separator($wh);
+    _print($wh, _format_index_navigator(), $code);
+    $self->html_end($wh);
+
+    unless (rename($new, $old)) {
+	croak("rename($new, $old) fail\n");
+    }
+}
+
+
+=head2 C<update_thread_index($args)>
+
+update thread.html.
+
+=cut
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub update_thread_index
+{
+    my ($self, $args) = @_;
+    my $html_base_dir = $self->{ _html_base_directory };
+    my $title = defined($args->{ title }) ? $args->{ title } : "Thread Index";
+    my $old   = "$html_base_dir/thread.html";
+    my $new   = "$html_base_dir/thread.html.new.$$";
+    my $code  = _charset_to_code($self->{ _charset });
+
+    use FileHandle;
+    my $wh = new FileHandle "> $new";
+
+    $self->html_begin($wh, { title => $title });
+    _print($wh, _format_index_navigator(), $code);
+    $self->mhl_separator($wh);
+
+    $self->_db_open();
+    my $db = $self->{ _db };
+    my $id_max = $db->{ _info }->{ id_max };
+
+    # initialize negagtive cache to ensure uniquness
+    delete $self->{ _uniq };
+
+    $self->_print_ul($wh, $db, $code);
+    for my $id ( 1 .. $id_max ) {
+	# head of the thread (not referenced yet)
+	unless (defined $self->{ _uniq }->{ $id }) {
+	    $self->_print_thread($wh, $db, $id, $code);
+	}
+    }
+    $self->_print_end_of_ul($wh, $db, $code);
+
+    $self->_db_close();
+
+    $self->mhl_separator($wh);
+    _print($wh, _format_index_navigator(), $code);
+    $self->html_end($wh);
+
+    unless (rename($new, $old)) {
+	croak("rename($new, $old) fail\n");
+    }
+}
+
+
+sub _has_link
+{
+    my ($self, $db, $id) = @_;
+
+    if (defined( $db->{ _next_id }->{ $id } ) ||
+	defined( $db->{ _prev_id }->{ $id } )) {
+	return 1;
+    }
+    else {
+	return 0;
+    }
+}
+
+
+#  print thread array of (head_id id2 id3 ...)
+#
+sub _print_thread
+{
+    my ($self, $wh, $db, $head_id, $code) = @_;
+    my $saved_stack_level = $self->{ _stack };
+    my $uniq = $self->{ _uniq };
+
+    # debug information (it is useful not to remove this ?)
+    _print($wh, "<!-- thread head=$head_id -->\n", $code);
+
+    # get id list: @idlist = ( $head_id id2 id3 ... )
+    my $buf = $db->{ _idref }->{ $head_id };
+    $buf =~ s/^\s*//;
+    $buf =~ s/\s*$//;
+    my (@idlist) = split(/\s+/, $buf);
+
+  IDLIST:
+    for my $id (@idlist) {
+	_print($wh, "<!-- thread (@idlist) -->\n", $code);
+
+	next IDLIST if $uniq->{ $id };
+	$uniq->{ $id } = 1;
+
+	$self->_print_ul($wh, $db, $code);
+
+	# oops, we should ignore head of the thread ( myself ;-)
+	if (($id != $head_id) && $self->_has_link($db, $id)) {
+	    $self->_print_li_filename($wh, $db, $id, $code);
+	    $self->_print_thread($wh, $db, $id, $code);
+	}
+	else {
+	    $self->_print_li_filename($wh, $db, $id, $code);
+	}
+    }
+
+    while ($self->{ _stack } > $saved_stack_level) {
+	$self->_print_end_of_ul($wh, $db, $code);
+    }
+}
+
+
+sub _print_ul
+{
+    my ($self, $wh, $db, $code) = @_;
+
+    $self->{ _stack }++;
+
+    my $padding = "   " x $self->{ _stack };
+    _print($wh, "${padding}<UL>\n", $code);
+}
+
+
+sub _print_end_of_ul
+{
+    my ($self, $wh, $db, $code) = @_;
+
+    return unless $self->{ _stack } > 0;
+
+    my $padding = "   " x $self->{ _stack };
+    _print($wh, "${padding}</UL>\n", $code);
+
+    $self->{ _stack }--;
+}
+
+
+sub _print_li_filename
+{
+    my ($self, $wh, $db, $id, $code) = @_;
+    my $filename = $db->{ _filename }->{ $id };
+    my $subject  = $db->{ _subject }->{ $id };
+    my $who      = $db->{ _who }->{ $id };
+
+    _print($wh, "<!-- LI id=$id -->\n", $code);
+
+    _print($wh, "<LI>\n", $code);
+    _print($wh, "<A HREF=\"$filename\">\n", $code);
+    # _print($wh, "[ $id ] ", $code);
+    _print($wh, $subject, $code);
+    _print($wh, ",\n", $code);
+    _print($wh, "$who\n", $code);
+    _print($wh, "</A>\n", $code);
 }
 
 
@@ -1109,6 +1384,7 @@ sub _debug
     my $html = new Mail::HTML::Lite {
 	charset   => "euc-jp",
 	directory => "/tmp/htdocs",
+	db_type   => 'SDBM_File',
     };
 
     print STDERR "\n_debug(id=$f src=$file)\n";
@@ -1118,6 +1394,24 @@ sub _debug
 	src => $file,
     });
     $html->update_relation( $f );
+
+    # update index.html
+    my $start_time = time;
+    print STDERR "update index.html ... ";
+    $html->update_id_index({ 
+	title => "index",
+	id    => $f,
+    });
+    print STDERR "end ", (time - $start_time), "\n";
+
+    # update thread.html
+    my $start_time = time;
+    print STDERR "update thread.html ... ";
+    $html->update_thread_index({
+	title => "thread",
+	id    => $f,
+    });
+    print STDERR "end ", (time - $start_time), "\n";
 }
 
 
