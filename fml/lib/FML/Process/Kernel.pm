@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.49 2001/09/13 11:55:05 fukachan Exp $
+# $FML: Kernel.pm,v 1.50 2001/09/13 13:47:48 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -585,8 +585,11 @@ sub queue_in
 
     # cheap sanity check
     unless (defined($sender) && defined($recipient)) {
+	my $reason = '';
 	use Carp;
-	croak("panic: queue_in() must be given sender and recipient\n");
+	$reason = "no sender specified\n"    unless defined $sender;
+	$reason = "no recipient specified\n" unless defined $recipient;
+	croak("panic: queue_in()\n\treason: $reason\n");
     }
 
 
@@ -643,6 +646,9 @@ sub queue_in
     $queue->set('recipients', [ $recipient ]);
     $queue->in( $msg ) && Log("queue=$qid in");
     $queue->setrunnable();
+
+    # return queue object
+    return $queue;
 }
 
 
@@ -661,6 +667,24 @@ sub _add_info_on_header
     };
   FML::Header->add_software_info($config, $args);
   FML::Header->add_rfc2369($config, $args);
+}
+
+
+=head2 C<queue_flush($queue)>
+
+flush C<$queue>, that is, send mail specified by C<$queue>.
+
+=cut
+
+sub queue_flush
+{
+    my ($curproc, $queue) = @_;
+    my $config    = $curproc->{ config };
+    my $queue_dir = $config->{ mqueue_dir };
+
+    use FML::Process::QueueManager;
+    my $obj = new FML::Process::QueueManager { directory => $queue_dir };
+    $obj->send($curproc);
 }
 
 
