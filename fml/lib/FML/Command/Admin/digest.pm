@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.18 2004/02/15 04:38:28 fukachan Exp $
+# $FML: digest.pm,v 1.19 2004/04/28 04:10:36 fukachan Exp $
 #
 
 package FML::Command::Admin::digest;
@@ -157,9 +157,11 @@ sub process
 sub _digest_on
 {
     my ($self, $curproc, $command_args, $dargs) = @_;
-    my $address               = $dargs->{ address };
-    my $recipient_map         = $dargs->{ primary_recipient_map };
-    my $digest_recipient_map  = $dargs->{ primary_digest_recipient_map };
+    my $config               = $curproc->config();
+    my $cred                 = $curproc->{ credential };
+    my $address              = $dargs->{ address };
+    my $recipient_map        = $dargs->{ primary_recipient_map };
+    my $digest_recipient_map = $dargs->{ primary_digest_recipient_map };
 
     # move $address from normal $recipient_map to $digest_recipient_map
     my $uc_normal_args = {
@@ -172,8 +174,34 @@ sub _digest_on
 	maplist => [ $digest_recipient_map ],
     };
 
-    $self->_userdel($curproc, $command_args, $uc_normal_args);
-    $self->_useradd($curproc, $command_args, $uc_digest_args);
+    my $msg_args = {
+	_arg_address => $address,	
+    };
+
+    # 1. remove address from $recipient_map (normal delivery recipients).
+    #    we should remove address if $recipient_map conatins it.
+    if ($cred->has_address_in_map($recipient_map, $config, $address)) {
+	$self->_userdel($curproc, $command_args, $uc_normal_args);
+    }
+    else {
+	my $r = "no such recipient";
+	$curproc->reply_message_nl('error.no_such_recipient', $r, $msg_args);
+	$curproc->logerror($r);
+	croak($r);
+    }
+
+    # 2. add address into $digest_recipient_map
+    if ($cred->has_address_in_map($digest_recipient_map, $config, $address)) {
+	my $r = "already digest recipient";
+	$curproc->reply_message_nl('error.already_digest_recipient', 
+				   $r, 
+				   $msg_args);
+	$curproc->logerror($r);
+	croak($r);
+    }
+    else {
+	$self->_useradd($curproc, $command_args, $uc_digest_args);
+    }
 }
 
 
@@ -185,9 +213,11 @@ sub _digest_on
 sub _digest_off
 {
     my ($self, $curproc, $command_args, $dargs) = @_;
-    my $address               = $dargs->{ address };
-    my $recipient_map         = $dargs->{ primary_recipient_map };
-    my $digest_recipient_map  = $dargs->{ primary_digest_recipient_map };
+    my $config               = $curproc->config();
+    my $cred                 = $curproc->{ credential };
+    my $address              = $dargs->{ address };
+    my $recipient_map        = $dargs->{ primary_recipient_map };
+    my $digest_recipient_map = $dargs->{ primary_digest_recipient_map };
 
     # move $address from normal $digest_recipient_maps to $prmary_recipient_map
     my $uc_normal_args = {
@@ -200,8 +230,36 @@ sub _digest_off
 	maplist => [ $digest_recipient_map ],
     };
 
-    $self->_userdel($curproc, $command_args, $uc_digest_args);
-    $self->_useradd($curproc, $command_args, $uc_normal_args);
+    my $msg_args = {
+	_arg_address => $address,	
+    };
+
+    # 1. remove address from digest_recipient_map.
+    #    we should remove address if $digest_recipient_map contains it.
+    if ($cred->has_address_in_map($digest_recipient_map, $config, $address)) {
+	$self->_userdel($curproc, $command_args, $uc_digest_args);
+    }
+    else {
+	my $r = "no such digest recipient";
+	$curproc->reply_message_nl('error.no_such_digest_recipient', 
+				   $r, 
+				   $msg_args);
+	$curproc->logerror($r);
+	croak($r);
+    }
+
+    # 2. add address into normal recipient map.
+    if ($cred->has_address_in_map($recipient_map, $config, $address)) {
+	my $r = "already recipient";
+	$curproc->reply_message_nl('error.already_recipient', 
+				   $r, 
+				   $msg_args);
+	$curproc->logerror($r);
+	croak($r);
+    }
+    else {
+	$self->_useradd($curproc, $command_args, $uc_normal_args);
+    }
 }
 
 

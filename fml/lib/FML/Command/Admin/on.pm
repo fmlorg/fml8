@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: on.pm,v 1.17 2004/02/15 04:38:29 fukachan Exp $
+# $FML: on.pm,v 1.18 2004/04/28 04:10:37 fukachan Exp $
 #
 
 package FML::Command::Admin::on;
@@ -81,6 +81,7 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config  = $curproc->config();
+    my $cred    = $curproc->{ credential };
     my $options = $command_args->{ options };
     my $address = $command_args->{ command_data } || $options->[ 0 ];
 
@@ -105,6 +106,32 @@ sub process
 	maplist => [ $recipient_map ],
     };
     my $r = '';
+
+    # diag: $recipient_map should not have this user.
+    my $symmetric_mode = 1; # XXX NOT YET IMPLEMENTD;
+    my $msg_args       = {
+	_arg_address => $address,
+    };
+    if ($symmetric_mode) {
+	my $member_map = $config->{ primary_member_map };
+	unless ($cred->has_address_in_map($member_map, $config, $address)) {
+	    my $r = "no such member";
+	    $curproc->reply_message_nl('error.no_such_member',
+				       $r, 
+				       $msg_args);
+	    $curproc->logerror($r);
+	    croak($r);
+	}
+
+	if ($cred->has_address_in_map($recipient_map, $config, $address)) {
+	    my $r = "already recipient";
+	    $curproc->reply_message_nl('error.already_recipient', 
+				       $r, 
+				       $msg_args);
+	    $curproc->logerror($r);
+	    croak($r);
+	}
+    }
 
     eval q{
 	use FML::User::Control;
