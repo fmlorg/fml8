@@ -69,45 +69,32 @@ sub overload
 sub load_file
 {
     my ($self, $file) = @_;
-    my (@_fml_config) = ();
+    my (@key_order) = ();
+    my $config        = \%_fml_config;
 
     # open the $file by using FileHandle.pm
     use FileHandle;
     my $fh = new FileHandle $file;
 
     if (defined $fh) {
-	my ($key, $value, $comment);
+	my ($key, $value, $curkey);
 
 	while (<$fh>) {
-	    # end of postfix format
-	    last if /^=cut/;
+	    last if /^=cut/; # end of postfix format
+	    next if /^=/;    # ignore special keywords of pod formats
+	    next if /^\#/;   # ignore comments
 
 	    # here we go
 	    chop;
 
-	    # reset { key => value }
-	    if (/^\s*$/) { 
-		if ($key) {
-		    $_fml_config{$key} = $value;
-		}
-
-		undef $key; undef $value; undef $comment;
+	    if (/^([A-Za-z0-9_]+)\s+=\s*(.*)/) {
+		my ($key, $value) = ($1, $2);
+		$curkey           = $key;
+		$config->{$key}   = $value;
+		push(@key_order, $key);
 	    }
-
-	    # ignore special keywords of pod formats
-	    next if /^=/;
-
-	    if (/^([A-Za-z]\w+)\s+=\s*(.*)/) {
-		($key, $value) = ($1, $2);
-
-		# record the keyword order
-		push(@_fml_config, $key);
-	    }
-	    elsif (/^\s+(.*)/ && $key) {
-		$value .= " ".$1;
-	    }
-	    else {
-		$comment .= $_;
+	    if (/^\s+(.*)/) {
+		$config->{ $curkey }  .= " ". $1;
 	    }
 	}
 	$fh->close;
@@ -117,7 +104,7 @@ sub load_file
     }
 
     # expand variable name e.g. $dir/xxx -> /var/spool/ml/elena/xxx
-    _expand_variables( \%_fml_config , \@_fml_config );
+    _expand_variables( $config, \@key_order );
 }
 
 
