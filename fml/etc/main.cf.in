@@ -1,5 +1,5 @@
 #
-# $FML: main.cf.in,v 1.6 2002/01/20 14:31:26 fukachan Exp $
+# $FML: main.cf.in,v 1.7 2002/01/27 08:30:24 fukachan Exp $
 #
 
 # fml version
@@ -49,7 +49,7 @@ local_lib_dir		=	@libdir@/fml/site_local
 # $ml_home_dir (e.g. /var/spool/ml/elena ) is taken from loader's @ARGV.
 # This is compatible with fml 4.0.
 # Example: /var/spool/ml
-ml_home_prefix		=	/var/spool/ml
+default_ml_home_prefix	=	/var/spool/ml
 
 
 
