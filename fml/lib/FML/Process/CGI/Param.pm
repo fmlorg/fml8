@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Param.pm,v 1.3 2001/11/11 01:08:00 fukachan Exp $
+# $FML: Param.pm,v 1.4 2001/11/11 11:05:45 fukachan Exp $
 #
 
 package FML::Process::CGI::Param;
@@ -41,13 +41,19 @@ It provides basic functions and flow.
 
 @EXPORT_OK = qw(safe_param %allow_regexp);
 
-my %allow_regexp = (
-		    'address'    => '[-a-z0-9_]@[-A-Z0-9\.]+',
-		    'ml_name'    => '[-a-z0-9_]+',
-		    'action'     => '[-a-z_]+',
-		    'user'       => '[-a-z0-9_]+',
-		    'article_id' => '\d+',
-		    );
+my %allow_regexp = 
+    (
+     'address'    => '[-a-z0-9_]@[-A-Z0-9\.]+',
+     'ml_name'    => '[-a-z0-9_]+',
+     'action'     => '[-a-z_]+',
+     'user'       => '[-a-z0-9_]+',
+     'article_id' => '\d+',
+     );
+
+my %allow_regexp_list = 
+    (
+     'threadcgi_change_status' => 'change_status\.(__ml_name_regexp__)\/(\d+)',
+     );
 
 
 # Descriptions: 
@@ -73,6 +79,38 @@ sub safe_param
     else {
 	croak("parameter $key not permitted");
     }
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+#      History: fml 4.0's SecureP()
+# Return Value: none
+sub safe_paramlist
+{
+    my ($self, $numregexp, $key) = @_;
+    my (@list) = ();
+
+    # convert $key => regexp
+    $key = $allow_regexp_list{ $key };
+    for my $regexpkey (keys %allow_regexp) {
+	my $x = "__${regexpkey}_regexp__";
+	my $y = $allow_regexp{$regexpkey};
+	$key =~ s/$x/$y/g;
+    }
+
+    # search
+    for my $x (param()) {
+	if ($x =~ /^$key$/) {
+	    my $value = defined param($x) ? param($x) : '';
+	    if ($numregexp == 1) { push(@list, [ $1, $value ] );}
+	    if ($numregexp == 2) { push(@list, [ $1, $2, $value ] );}
+	    if ($numregexp == 3) { push(@list, [ $1, $2, $3, $value ] );}
+	}
+    }
+
+    return \@list;
 }
 
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Kernel.pm,v 1.4 2001/11/11 01:08:40 fukachan Exp $
+# $FML: Kernel.pm,v 1.5 2001/11/11 11:04:58 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -155,9 +155,13 @@ sub AUTOLOAD
     my $comname = $AUTOLOAD;
     $comname =~ s/.*:://;
 
-    if ($comname =~ /^safe_param_(\S+)/) {
-        my $varname = $1;
-        return $curproc->safe_param($varname);
+    if ($comname =~ /^(safe_paramlist)(\d+)_(\S+)/) {
+        my ($method, $numregexp, $varname) = ($1, $2, $3);
+        return $curproc->$method($numregexp, $varname);
+    }
+    elsif ($comname =~ /^(safe_param)_(\S+)/) {
+        my ($method, $varname) = ($1, $2);
+        return $curproc->$method($varname);
     }
     else {
         croak("unknown method $comname");
