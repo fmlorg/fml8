@@ -89,10 +89,15 @@ sub finish
 sub _evaluate_command
 {
     my ( $curproc ) = @_;
-    my $body = $curproc->{ incoming_message }->{ body }->get_content_body;
-    my @body = split(/\n/, $body);
+    my $config = $curproc->{ config };
+    my $body   = $curproc->{ incoming_message }->{ body }->get_content_body;
+    my @body   = split(/\n/, $body);
 
-    for (@body) { Log($_);}
+    for (@body) { 
+	my $valid = $config->has_attribute( "available_commands", $_ )
+	    ? "valid" : "invalid";
+	Log("command($valid) = " . $_);
+    }
 }
 
 

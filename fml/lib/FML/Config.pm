@@ -327,6 +327,21 @@ sub no
 }
 
 
+# has_attribute( key, attribute )
+# e.g. has_attribute( "available_command_list" , "help" );
+sub has_attribute
+{
+    my ($self, $key, $attribute) = @_;
+    my (@attribute) = split(/\s+/, $_fml_config{$key});
+
+    for my $k (@attribute) {
+	return 1 if $k eq $attribute;
+    }
+
+    return 0;
+}
+
+
 sub FETCH
 {
     my ($self, $key) = @_;

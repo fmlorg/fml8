@@ -4,3 +4,13 @@
 command_chaddr_type		=	confirmation
 
 command_unsubscribe_type	=	confirmation
+
+
+
+# コマンド一覧
+available_commands		=	help
+					get
+					mget
+					subscribe
+					unsubscribe
+					chaddr
