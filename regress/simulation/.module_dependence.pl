@@ -1,23 +1,26 @@
 #!/usr/bin/env perl
 #
-# $FML$
+# $FML: .module_dependence.pl,v 1.1 2003/03/16 06:24:58 fukachan Exp $
 #
 
 use strict;
 use Carp;
-use vars qw(@filter %MODULE);
+use vars qw(@filter %MODULE %LOCK_CHANNEL);
 
 (@filter) = qw(CGI
 	     Calendar::Lite
 	       Carp
 	       Config
 	     Crypt::UnixCrypt
+	     Data::Dumper
 	       DirHandle
 	       ErrorStatus
+	       Exporter
 	     File::Basename
 	     File::Copy
 	     File::Find
 	     File::Path
+	     File::SimpleLock
 	     File::Spec
 	     File::stat
 	       FileHandle
@@ -30,25 +33,30 @@ use vars qw(@filter %MODULE);
 	     IO::File
 	     IO::Handle
 	     IO::Socket
+	     IPC::Open2
 	       Jcode
 	       MD5
 	     MIME::Lite
 	     MIME::Base64
 	     MIME::QuotedPrint
 	     Mail::Address
+	     Mail::Bounce
 	     Mail::Header
 	     Mail::Message
 	       Socket
 	       Socket6
 	       Something
 	     Term::ReadLine
+	     Tie::JournaledFile 
 	     Time::ParseDate
 	     Unicode::Japanese
 	     User::grent
 	     User::pwent);
 
-
+my $aggregate_to_two_level = 1;
+my $shlink_key = defined $ENV{ shlink_key } ? $ENV{ shlink_key } : 1;
 my $on = 0;
+
 while (<>) {
     if (/^=head/o) { $on = 1;}
     if (/^=cut/o)  { $on = 0;}
@@ -56,10 +64,14 @@ while (<>) {
 
     chomp;
 
+    if (/LOCK.*CHANNEL:\s*(\S+)/) {
+	add_channel_entry($ARGV, $1);
+    }
+
     s/\#.*$//;
 
-    if (/use\s+([A-Z]\S+)/) {
-	add_entry($ARGV, $1);
+    if (/(use|require)\s+([A-Z]\S+)/) {
+	add_entry($ARGV, $2);
     }
 }
 
@@ -68,42 +80,78 @@ for my $k (sort keys %MODULE) {
     my @a = keys %{$MODULE{ $k }};
 
     print "\n";
-    printf "%-20s %s\n", $k, "";
+    printf "%-15s %s\n", $k, "";
 
     for my $x (@a) {
-	printf "%-20s %s\n", "", $x;
+	printf "%-15s %s\n", "", module($x);
     }
+}
+
+print "\n--- lock channel list ---\n\n";
+
+for my $k (sort keys %LOCK_CHANNEL) {
+    printf "%-30s %s\n", $k, $LOCK_CHANNEL{ $k };
 }
 
 exit 0;
 
 
+sub module
+{
+    my ($x) = @_;
+    my $file = $LOCK_CHANNEL{ $x };
+
+    return( $file ? "$x (lock at $file)" : $x);  
+}
+
+
+sub _clean_up
+{
+    my ($key) = @_;
+
+    $key =~ s@\s*$@@g;
+    $key =~ s@//@/@g;
+    $key =~ s@;@@g;
+    $key =~ s@\}@@g;
+    $key =~ s@lib/@@g;
+
+    return $key;
+}
+
+
 sub add_entry
 {
     my ($file, $class) = @_;
-
-    $file =~ s@\s*$@@g;
-    $file =~ s@//@/@g;
-    $file =~ s@;@@g;
-    $file =~ s@\}@@g;
-    $file =~ s@lib/@@g;
-
-    $class =~ s@\s*$@@g;
-    $class =~ s@//@/@g;
-    $class =~ s@;@@g;
-    $class =~ s@\}@@g;
-    $class =~ s@lib/@@g;
+    $file  = _clean_up($file);
+    $class = _clean_up($class);
 
     # cut off the 3rd layer.
-    if (1 && $class =~ /::/o) {
+    if ($shlink_key && $class =~ /::/o) {
 	my @c  = split(/::/, $class);
 	$class = join("::", $c[0], $c[1]);
     }
 
+    if ($aggregate_to_two_level) {
+	my $xfile = $file;
+	$xfile =~ s@.pm$@@;
+	$xfile =~ s@/@::@g;
+	if ($xfile =~ /$class/) {
+	    return;
+	}
+    }
 
     unless (ignore($class)) {
 	$MODULE{ $class }->{ $file } = $file;
     }
+}
+
+
+sub add_channel_entry
+{
+    my ($file, $channel) = @_;
+    $file  = _clean_up($file);
+
+    $LOCK_CHANNEL{ $file } .= " ".$channel;
 }
 
 
