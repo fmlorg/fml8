@@ -8,6 +8,32 @@
 	XXX
 
 
+○ reply-to: special hack
+
+
+   if (	To: ml1, ml2 ) {
+	
+	set Reply-To: ml1, ml2
+
+   }
+
+
+○ FML::Credential::has_addr_in_map()
+
+
+	user@domain
+
+	user@DOMAIN
+
+は同じだ！と判定されるけど
+
+	IO::Adapter->delete() 
+
+する時は、case が違うアドレスを引数に持ち得る。
+
+	ただしくは Credential が教えて挙げないといけないのね
+
+
 ○	libexec/relocated , Process/Relocated
 
 
@@ -322,4 +348,4 @@ sub compare_euc_string
 
 
 ----------
-$FML: 00_MEMO,v 1.57 2002/12/30 13:20:10 fukachan Exp $
+$FML: 00_MEMO,v 1.58 2003/01/07 11:45:31 fukachan Exp $
