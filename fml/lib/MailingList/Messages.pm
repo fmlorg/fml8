@@ -17,6 +17,16 @@ require Exporter;
 @ISA = qw(Exporter);
 
 
+# virtual content-type
+my %content_type = 
+    (
+     'preamble'        => 'multipart.preamble/plain',
+     'delimiter'       => 'multipart.delimiter/plain',
+     'close-delimiter' => 'multipart.close-delimiter/plain',
+     'trailer'         => 'multipart.trailer/plain',
+     );
+
+
 sub new
 {
     my ($self, $args) = @_;
@@ -168,7 +178,7 @@ build a template message following the given $args (a hash reference).
 
 # Descriptions: adapter to forward the request to object builders
 #               by following content-type. The real work is done at
-#                 &build_mime_multipart_chain() if multipart
+#                 &parse_and_build_mime_multipart_chain() if multipart
 #                 &_create() if not
 #    Arguments: $self $args
 # Side Effects: none
@@ -182,7 +192,7 @@ sub create
 
     # parse the non multipart mail and build a chain
     if ($args->{ content_type } =~ /multipart/i) {
-	$self->build_mime_multipart_chain($args);
+	$self->parse_and_build_mime_multipart_chain($args);
     }
     else {
 	$self->_create($args);
@@ -259,6 +269,49 @@ sub prev_chain
 {
     my ($self, $ref_prev_message) = @_;
     $self->{ prev } = $ref_prev_message;
+}
+
+
+sub build_mime_multipart_chain
+{
+    my ($self, $args) = @_;
+    my ($head, $prev_m);
+
+    my $base_content_type = $args->{ base_content_type };
+    my $msglist           = $args->{ message_list };
+    my $boundary          = $args->{ boundary } || "---". time ."-$$-";
+    my $buffer            = $boundary."\n";
+    my $buffer_end        = $boundary . "--\n";
+
+    for my $m (@$msglist) {
+	# delimeter: --boundary
+	my $msg = new MailingList::Messages {
+	    base_content_type => $base_content_type,
+	    content_type      => $content_type{'delimeter'},
+	    boundary          => $boundary,
+	    content           => \$buffer,
+	};
+
+	$head = $msg unless $head; # save the head $msg
+
+	# boundary -> content -> boundary ...
+	if (defined $prev_m) { $prev_m->next_chain( $msg );}
+	$msg->next_chain( $m );
+
+	# for the next loop
+	$prev_m = $m;
+    }
+
+    # close delimeter: --boundary--
+    my $msg = new MailingList::Messages {
+	base_content_type => $base_content_type,
+	content_type      => $content_type{'close-delimeter'},
+	boundary          => $boundary,
+	content           => \$buffer_end,
+    };
+    $prev_m->next_chain( $msg ); # ... -> content -> close-delimeter
+
+    return $head; # return the pointer to the head of a chain
 }
 
 
@@ -421,7 +474,7 @@ sub _print_messsage_on_disk
 }
 
 
-=head2 C<build_mime_multipart_chain($args)>
+=head2 C<parse_and_build_mime_multipart_chain($args)>
 
 parse the multipart mail. Actually it calculates the begin and end
 offset for each part of content, not split() and so on.
@@ -442,19 +495,9 @@ C<new()> calls this routine if the message looks MIME multipart.
 #      ---boundary--
 #         ... trailor ...
 #
-sub build_mime_multipart_chain
+sub parse_and_build_mime_multipart_chain
 {
     my ($self, $args) = @_;
-
-    # virtual content-type
-    my %content_type = 
-	(
-	 'preamble'        => 'multipart.preamble/plain',
-	 'delimiter'       => 'multipart.delimiter/plain',
-	 'close-delimiter' => 'multipart.close-delimiter/plain',
-	 'trailer'         => 'multipart.trailer/plain',
-	 );
-
 
     # check input parameters
     return undef unless $args->{ boundary };
