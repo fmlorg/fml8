@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.15 2002/02/18 14:24:12 fukachan Exp $
+# $FML: newml.pm,v 1.16 2002/02/20 14:10:37 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -70,6 +70,7 @@ sub process
     my ($ml_name, $ml_domain, $ml_home_prefix, $ml_home_dir) =
 	$self->_get_domain_info($curproc, $command_args);
     my $params         = {
+	fml_owner         => $curproc->fml_owner(),
 	executable_prefix => $curproc->executable_prefix(),
 	ml_name           => $ml_name,
 	ml_domain         => $ml_domain,
@@ -81,6 +82,10 @@ sub process
     croak("\$ml_name is not specified") unless $ml_name;
     croak("\$ml_home_dir is not specified") unless $ml_home_dir;
 
+    # update $ml_home_prefix and expand variables again.
+    $config->set( 'ml_home_prefix' , $ml_home_prefix );
+
+    # o.k. here we go !
     unless (-d $ml_home_dir) {
 	eval q{
 	    use File::Utils qw(mkdirhier);
@@ -90,18 +95,56 @@ sub process
 
 	mkdirhier( $ml_home_dir, $config->{ default_dir_mode } || 0755 );
 
-	my $template_dir = $curproc->template_files_dir_for_newml();
-	for my $file (qw(config.cf include include-ctl)) {
-	    my $src = File::Spec->catfile($template_dir, $file);
-	    my $dst = File::Spec->catfile($ml_home_dir, $file);
-
-	    print STDERR "installing $dst\n";
-	    _install($src, $dst, $params);
+	# $ml_home_dir/etc/mail
+	my $mailconfdir = $config->{ mailconf_dir };
+	unless (-d $mailconfdir) {
+	    print STDERR "creating $mailconfdir\n";
+	    mkdirhier( $mailconfdir, $config->{ default_dir_mode } || 0755 );
 	}
+
+	# 1. install $ml_home_dir/{config.cf,include,include-ctl}
+	# 2. set up aliases
+	$self->_install_files_for_newml($curproc, $command_args, $params);
+	$self->_setup_aliases_for_newml($curproc, $command_args, $params);
     }
     else {
 	warn("$ml_name already exists");
     }
+}
+
+
+sub _install_files_for_newml
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $ml_home_dir  = $params->{ ml_home_dir };
+
+    for my $file (qw(config.cf include include-ctl)) {
+	my $src = File::Spec->catfile($template_dir, $file);
+	my $dst = File::Spec->catfile($ml_home_dir, $file);
+
+	print STDERR "installing $dst\n";
+	_install($src, $dst, $params);
+    }
+}
+
+
+sub _setup_aliases_for_newml
+{
+    my ($self, $curproc, $command_args, $params) = @_;
+    my $template_dir = $curproc->template_files_dir_for_newml();
+    my $config = $curproc->{ config };
+
+    use File::Spec;
+    my $alias = $config->{ mail_aliases_file };
+    my $src   = File::Spec->catfile($template_dir, 'aliases');
+    my $dst   = $alias . "." . $$;
+
+    print STDERR "updating $dst\n";
+    _install($src, $dst, $params);
+
+    # append
+    system "cat $dst >> $alias";
 }
 
 
@@ -144,19 +187,18 @@ sub _install
 {
     my ($src, $dst, $config) = @_;
 
-    eval q{
-	use FileHandle;
-	use FML::Config::Convert;
-    };
-    croak($@) if $@;
-
+    use FileHandle;
     my $in  = new FileHandle $src;
     my $out = new FileHandle "> $dst.$$";
 
     if (defined $in && defined $out) {
 	chmod 0644, "$dst.$$";
 
-	&FML::Config::Convert::convert($in, $out, $config);
+	eval q{
+	    use FML::Config::Convert;
+	    &FML::Config::Convert::convert($in, $out, $config);
+	};
+	croak($@) if $@;
 
 	$out->close();
 	$in->close();
