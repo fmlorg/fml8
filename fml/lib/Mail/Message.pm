@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.68 2002/09/22 14:57:00 fukachan Exp $
+# $FML: Message.pm,v 1.69 2002/12/30 15:06:46 fukachan Exp $
 #
 
 package Mail::Message;
@@ -479,8 +479,8 @@ sub parse
     my $ref_body = $me->_build_body_object($args, $result);
 
     # make a chain such as "undef -> header -> body -> undef"
-    $me->_next_message_is( $ref_body );
-    $ref_body->_prev_message_is( $me );
+    _next_message_is( $me, $ref_body );
+    _prev_message_is( $ref_body, $me );
 
     # return information
     if (defined($data) && $data) {
@@ -1229,8 +1229,12 @@ sub build_mime_multipart_chain
 	$head = $msg unless $head; # save the head $msg
 
 	# boundary -> data -> boundary ...
-	if (defined $prev_m) { $prev_m->_next_message_is( $msg );}
+	if (defined $prev_m) { 
+		$prev_m->_next_message_is( $msg );
+		_prev_message_is( $msg, $prev_m );
+	}
 	$msg->_next_message_is( $m );
+	_prev_message_is( $m, $msg );
 
 	# for the next loop
 	$prev_m = $m;
@@ -1244,6 +1248,7 @@ sub build_mime_multipart_chain
 	data           => \$delbuf_end,
     };
     $prev_m->_next_message_is( $msg ); # ... -> data -> close-delimeter
+    _prev_message_is( $msg, $prev_m );
 
     return $head; # return the pointer to the head of a chain
 }
@@ -1320,6 +1325,7 @@ sub parse_and_build_mime_multipart_chain
 		data         => $data,
 	    };
 	    my $m = $self->_alloc_new_part($args);
+	    _prev_message_is($m, $self);
 	    return _next_message_is($self, $m);
 	}
 	# close-delimiter is not found.
@@ -1472,14 +1478,17 @@ sub parse_and_build_mime_multipart_chain
     for ($j = 0; $j < $i; $j++) {
 	if (defined $m[ $j + 1 ]) {
 	    _next_message_is( $m[ $j ], $m[ $j + 1 ] );
+	    _prev_message_is( $m[ $j +1 ], $m[ $j ] );
 	}
 	if (($j > 1) && defined $m[ $j - 1 ]) {
 	    _prev_message_is( $m[ $j ], $m[ $j - 1 ] );
+	    _next_message_is( $m[ $j -1 ], $m[ $j ] );
 	}
     }
 
     # chain $self and our chains built here.
     _next_message_is($self, $m[0]);
+    _prev_message_is($m[0], $self);
 }
 
 
@@ -1595,10 +1604,15 @@ sub delete_message_part_link
     my $nextmp = $mp->{ next };
     my $data_type = $mp->data_type();
 
-    return if($data_type eq "text/rfc822-headers");
+    return if ($data_type eq "text/rfc822-headers");
 
-    _prev_message_is($nextmp,$prevmp);
-    _next_message_is($prevmp,$nextmp);
+    if (defined $prevmp && defined $nextmp) {
+	_prev_message_is($nextmp, $prevmp);
+	_next_message_is($prevmp, $nextmp);
+    }
+    else {
+	carp("$mp has invalid chain");
+    }
 }
 
 
@@ -2249,7 +2263,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
