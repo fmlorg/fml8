@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.33 2001/10/27 04:50:39 fukachan Exp $
+# $FML: Message.pm,v 1.34 2001/10/27 16:42:50 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1211,10 +1211,11 @@ sub parse_and_build_mime_multipart_chain
 	if ($pe > $pb) { # XXX not effective region if $pe <= $pb
 	    print "   new block ($pb, $pe) " if $debug;
 
-	    my ($header, $pb) = _get_mime_header($data, $pb);
+	    my ($header, $pb) = _get_mime_header($data, $pb, $pe);
 	    if ($debug) {
 		my $type; $header =~ /(\w+\/\w+)/ && ($type = $1);
 		print "type=$type ";
+		print "\n   *new block ($pb, $pe) header={$header}\n";
 	    }
 
 	    my $args = {
@@ -1339,11 +1340,16 @@ sub _get_data_type
 
 sub _get_mime_header
 {
-    my ($data, $pos_begin) = @_;
+    my ($data, $pos_begin, $pos_end) = @_;
     my $pos = index($$data, "\n\n", $pos_begin) + 1;
     my $buf = substr($$data, $pos_begin, $pos - $pos_begin);
 
-    if ($buf =~ /Content-Type:\s*(\S+)\;/i) {
+    print "\t_get_mime_header pos=$pos should be < end=$pos_end\n" if $debug;
+
+    if ($pos > $pos_end) {
+	return ('', $pos_begin);
+    }
+    elsif ($buf =~ /Content-Type:\s*(\S+)\;/i) {
 	return ($buf, $pos + 1);
     }
     elsif ($buf =~ /Content-Type:\s*(\S+)\s*$/i) {
