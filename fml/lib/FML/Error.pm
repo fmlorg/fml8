@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.3 2002/08/09 08:37:24 fukachan Exp $
+# $FML: Error.pm,v 1.4 2002/08/15 04:21:52 fukachan Exp $
 #
 
 package FML::Error;
@@ -12,6 +12,7 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use FML::Log qw(Log LogWarn LogError);
+
 
 my $debug = 1;
 
@@ -44,62 +45,27 @@ sub new
 }
 
 
+# Descriptions: analyzer
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
 sub analyze
 {
     my ($self) = @_;
     my $curproc = $self->{ _curproc };
+    my $config  = $curproc->config();
 
     use FML::Error::Cache;
     my $cache = new FML::Error::Cache $curproc;
     my $rdata = $cache->get_all_values_as_hash_ref();
-    my $list  = $self->md_analyze($curproc, $rdata);
+
+    use FML::Error::Analyze;
+    my $analyzer = new FML::Error::Analyze $curproc;
+    my $fp       = $config->{ error_analyzer_function } || 'simple_count';
+    my $list     = $analyzer->$fp($curproc, $rdata);
 
     # pass address list to remove
     $self->{ _remove_addr_list } = $list;
-}
-
-
-# *** model specific analyzer ***
-# $data = {
-#    address => [ 
-#           error_string_1,
-#           error_string_2, ... 
-#    ]
-# };
-
-sub md_analyze
-{
-    my ($self, $curproc, $data) = @_;
-    my ($addr, $bufarray, $count);
-    my @removelist = ();
-    my $debug      = {};
-
-    while (($addr, $bufarray) = each %$data) {
-	$count = 0;
-	if (defined $bufarray) {
-	    for my $buf (@$bufarray) {
-		if ($buf =~ /status=5/i) {
-		    $count++;
-		    $debug->{ $addr } = $count;
-		}
-	    }
-	}
-
-	if ($count > 5) {
-	    push(@removelist, $addr);
-	}
-    }
-
-    # debug info
-    {
-	Log("analyze summary");
-	my ($k, $v);
-	while (($k, $v) = each %$debug) {
-	    Log("summary: $k = $v points");
-	}
-    }
-
-    return \@removelist;
 }
 
 
