@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.5 2004/02/01 15:28:48 fukachan Exp $
+# $FML: Spool.pm,v 1.6 2004/02/01 15:54:45 fukachan Exp $
 #
 
 package FML::Article::Spool;
@@ -90,7 +90,11 @@ sub convert
 
     print $wh "convert $ml_name ML spool.\n\n";
 
-    # XXX-TODO: more restricted checks.
+    # sanity
+    unless ($src_dir) { croak("\$src_dir not defined.");}
+    unless ($dst_dir) { croak("\$dst_dir not defined.");}
+    unless ($src_dir && -d $src_dir) { croak("\$src_dir not found.");}
+    unless ($dst_dir && -d $dst_dir) { croak("\$dst_dir not found.");}
     if ($src_dir eq $dst_dir) {
 	$src_dir .= ".old";
 	rename($dst_dir, $src_dir);
