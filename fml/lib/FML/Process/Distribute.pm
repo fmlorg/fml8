@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.147 2004/05/21 11:52:27 fukachan Exp $
+# $FML: Distribute.pm,v 1.148 2004/05/22 06:42:11 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -154,7 +154,7 @@ sub _check_filter
 
 	eval q{
 	    use FML::Filter;
-	    my $filter = new FML::Filter;
+	    my $filter = new FML::Filter $curproc;
 	    my $r = $filter->article_filter($curproc);
 
 	    # filter traps this message.
@@ -178,7 +178,7 @@ sub _check_filter
 	};
 	$curproc->log($@) if $@;
 
-	my $eval = $config->get_hook( 'article_filter_end_hook' );
+	$eval = $config->get_hook( 'article_filter_end_hook' );
 	if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
     }
     else {
@@ -370,7 +370,16 @@ sub _distribute
 
     # get sequence number
     my $id = $article->increment_id;
-    $curproc->set_article_id($id);
+    if ($id > 0) {
+	$curproc->set_article_id($id);
+    }
+    else {
+	$curproc->log("returned article id=$id");
+	$curproc->logerror("article sequence number not updated");
+	$curproc->unlock($lock_channel);
+	$curproc->exit_as_tempfail(); # XXX LONG JUMP!
+	# NOT REACH HERE
+    }
 
     # XXX debug, remove here in the future
     if ($debug) {
@@ -463,7 +472,7 @@ sub _header_rewrite
 	}
     }
 
-    my $eval = $config->get_hook( 'article_header_rewrite_end_hook' );
+    $eval = $config->get_hook( 'article_header_rewrite_end_hook' );
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 }
 
@@ -507,10 +516,11 @@ sub _deliver_article
     my $queue_dir = $config->{ mail_queue_dir };
     my $queue     = new Mail::Delivery::Queue { directory => $queue_dir };
     my $qid       = $queue->id();
+    my $fatal     = 0;
     if (defined $queue) {
 	$curproc->lock($lock_channel);
 
-	$curproc->log("article queue=$qid");
+	$curproc->log("article: qid=$qid");
 
 	$queue->set('sender', $config->{ smtp_sender });
 
@@ -519,7 +529,11 @@ sub _deliver_article
 
 	$queue->in($message);
 	$queue->lock( { lock_before_runnable => "yes" } );
-	$queue->setrunnable();
+	unless ($queue->setrunnable()) {
+	    $curproc->logerror("queue: cannot setrunnable");
+	    $curproc->log("try to deliver on the fly");
+	    $fatal = 1;
+	}
 
 	$curproc->unlock($lock_channel);
     }
@@ -550,15 +564,17 @@ sub _deliver_article
 
     if ($service->error) {
 	$curproc->logerror($service->error);
-	$curproc->logerror("left queue=$qid for later delivery");
+	$curproc->logerror("article: retry qid=$qid later");
 	$curproc->smtp_server_state_set_error();
 	return;
     }
 
-    # recipient_maps;
+    # replace recipient_maps if $quque creation succeed.
     my $recipient_maps = $config->{recipient_maps};
     if (defined $queue) {
-	$recipient_maps = $queue->recipients_file_path($qid);
+	unless ($fatal) {
+	    $recipient_maps = $queue->recipients_file_path($qid);
+	}
     }
 
     $curproc->lock($lock_channel) unless defined $queue;
@@ -592,7 +608,7 @@ sub _deliver_article
     if (defined $queue) {
 	$queue->remove();
 	$queue->unlock();
-	$curproc->log("remove article queue=$qid");
+	$curproc->log("article: qid=$qid removed");
     }
 }
 
