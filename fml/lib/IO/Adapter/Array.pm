@@ -83,6 +83,11 @@ sub open
     my $flag    = $args->{ flag } || 'r';
     my $r_array = $self->{ _array_reference};
 
+    if ($flag ne 'r') {
+	$self->_error_reason("Error: type=$self->{_type} is read only.");
+	return undef;
+    }
+
     # malloc()
     my @elements = @$r_array;
     $self->{_elements}     = $r_array;
