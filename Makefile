@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.12 2001/04/24 15:47:03 fukachan Exp $
+# $FML: Makefile,v 1.13 2001/04/27 04:42:14 fukachan Exp $
 #
 
 CONV = doc/bin/text2html.pl
@@ -28,7 +28,7 @@ clean:
 
 doc: html
 
-html: _new_doc _html tutorial
+html: _new_doc _html ja.doc
 
 _new_doc:
 	-fml/utils/bin/pm2txt.pl fml/lib  Documentation/en/modules
@@ -40,6 +40,5 @@ _html:
 	@ (cd fml/etc/;make html)
 	@ (cd cpan/dist/;make html)
 
-tutorial:
-	@ (cd fml/doc/ja/tutorial; make clean; make ; make clean)
-
+ja.doc:
+	@ (cd fml/doc/ja/; make clean; make ; make clean)
