@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2000,2001 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.10 2001/12/24 07:40:56 fukachan Exp $
+# $FML: DBI.pm,v 1.11 2002/01/27 09:21:52 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -259,7 +259,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
