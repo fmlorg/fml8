@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.14 2002/12/22 14:22:24 fukachan Exp $
+# $FML: Postfix.pm,v 1.15 2002/12/31 00:37:26 fukachan Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -142,27 +142,69 @@ sub postfix_update_alias
 sub postfix_find_key_in_alias_maps
 {
     my ($self, $curproc, $params, $optargs) = @_;
-    my $key  = $optargs->{ key };
-    my $maps = $self->postfix_alias_maps($curproc, $optargs);
+    my $config = $curproc->config();
+    my $map    = $config->{ mail_aliases_file };
+    my $maps   = $self->postfix_alias_maps($curproc, $optargs);
 
-    for my $map (@$maps) {
+    # default domain
+    my $key  = $optargs->{ key };
+
+    # virtual domain
+    my $xparams = {};
+    for my $k (keys %$params) { $xparams->{ $k } = $params->{ $k };}
+    $self->_postfix_rewrite_virtual_params($curproc, $xparams);
+    my $key_virtual = $xparams->{ ml_name };
+
+    # search
+    for my $map (@$maps, $map) {
 	print STDERR "scan key = $key, map = $map\n" if $debug;
 
-	use FileHandle;
-	my $fh = new FileHandle $map;
-	if (defined $fh) {
-	    while (<$fh>) {
-		return 1 if /^$key:/;
-	    }
-	    $fh->close;
+	if ($self->_find_key_in_file($map, $key)) {
+	    print STDERR "\tkey=$key found\n" if $debug;
+	    return 1;
 	}
-	else {
-	    warn("cannot open $map");
+
+	if ($self->_find_key_in_file($map, $key_virtual)) {
+	    print STDERR "\tkey=$key_virtual found\n" if $debug;
+	    return 1;
 	}
     }
 
     return 0;
 }
+
+
+# Descriptions: search key in the specifiled file.
+#    Arguments: OBJ($self) STR($map) STR($key)
+# Side Effects: none
+# Return Value: NUM( 1 or 0 )
+sub _find_key_in_file
+{
+    my ($self, $map, $key) = @_;
+    my $found = 0;
+
+    unless (-f $map) { return 0;}
+
+    use FileHandle;
+    my $fh = new FileHandle $map;
+
+    if (defined $fh) {
+      LINE:
+	while (<$fh>) {
+	    if (/^$key:/) {
+		$found = 1;
+		last LINE;
+	    }
+	}
+	$fh->close;
+    }
+    else {
+	warn("cannot open $map");
+    }
+
+    return $found;
+}
+
 
 
 # Descriptions: get { key => value } in aliases
@@ -339,51 +381,13 @@ sub postfix_remove_virtual_map
 {
     my ($self, $curproc, $params, $optargs) = @_;
     my $config  = $curproc->{ config };
-    my $postmap = $config->{ path_postmap };
+    my $map     = $config->{ postfix_virtual_map_file };
     my $key     = $params->{ ml_name };
-    my $removed = 0;
-
-    use File::Spec;
-    my $virtual     = $config->{ postfix_virtual_map_file };
-    my $virtual_new = $virtual . 'new'. $$;
-
-    if (-f $virtual) {
-	print STDERR "removing $key in $virtual\n";
-    }
-    else {
-	return;
-    }
-
-    use FileHandle;
-    my $rh = new FileHandle $virtual;
-    my $wh = new FileHandle "> $virtual_new";
-    if (defined $rh && defined $wh) {
-      LINE:
-	while (<$rh>) {
-	    if (/\<VIRTUAL\s+$key\@/ .. /\<\/VIRTUAL\s+$key\@/) {
-		$removed++;
-		next LINE;
-	    }
-
-	    print $wh $_;
-	}
-	$wh->close;
-	$rh->close;
-
-	if ($removed > 3) {
-	    if (rename($virtual_new, $virtual)) {
-		print STDERR "\tremoved.\n";
-	    }
-	    else {
-		print STDERR "\twarning: fail to rename virtual files.\n";
-	    }
-	}
-    }
-    else {
-	warn("cannot open $virtual")     unless defined $rh;
-	warn("cannot open $virtual_new") unless defined $wh;
-    }
-
+    my $p       = {
+	key => $key,
+	map => $map,
+    };
+    $self->_remove_postfix_style_virtual($curproc, $params, $optargs, $p);
 }
 
 
