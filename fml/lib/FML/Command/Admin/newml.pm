@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.60 2003/01/29 08:48:48 fukachan Exp $
+# $FML: newml.pm,v 1.61 2003/02/09 12:31:42 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -102,9 +102,10 @@ sub process
 	}
     }
 
-    # XXX-TODO: check /etc/paswd ?
     # check the duplication of alias keys in MTA aliases
-    # Example: search among all entries in postfix $alias_maps
+    # Example: search among all entries in postfix $alias_maps and /etc/passwd
+    # XXX we assume /etc/passwd exists for backword compatibility
+    # XXX on all unix plathomes.
     if ($self->_is_mta_alias_maps_has_ml_entry($curproc, $params, $ml_name)) {
 	warn("$ml_name already exists (somewhere in MTA aliases)");
 	return ;
@@ -280,7 +281,6 @@ sub _is_mta_alias_maps_has_ml_entry
 	}
 
 	unless ($found) {
-	    # XXX-TODO: procmail ?
 	  MTA:
 	    for my $mta (@$list) {
 		my $obj = new FML::MTAControl;
