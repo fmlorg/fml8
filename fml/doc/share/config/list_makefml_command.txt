@@ -29,6 +29,7 @@ log
 ls
 mailq
 mget
+newdomain
 newml
 off
 on
@@ -37,6 +38,7 @@ passwd
 password
 remove
 resign
+rmdomain
 rmml
 signoff
 spool
