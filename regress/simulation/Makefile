@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.69 2003/05/31 04:46:03 fukachan Exp $
+# $FML: Makefile,v 1.70 2003/06/22 16:05:53 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -125,3 +125,4 @@ $(LIST_TARGET): ../../fml/etc/src/config.cf.ja/command.cf
 
 _doc_tutorial:
 	(cd ../../fml/doc/ja/tutorial;make -f Makefile.local)
+	(cd ../../fml/doc/en/tutorial;make -f Makefile.local)
