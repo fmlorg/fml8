@@ -4,13 +4,15 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DirUtils.pm,v 1.1 2002/03/24 11:26:44 fukachan Exp $
+# $FML: DirUtils.pm,v 1.2 2002/03/24 12:32:36 fukachan Exp $
 #
 
 package FML::Command::DirUtils;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+use FML::Log qw(Log LogWarn LogError);
+
 
 =head1 NAME
 
@@ -35,13 +37,9 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {};
 
-    use FML::Restriction::CGI;
-    my $safe = new FML::Restriction::CGI;
-    my $safe_param_regexp  = $safe->param_regexp();
-    my $safe_method_regexp = $safe->method_regexp();
-
-    $me->{ _safe_param_regexp }  = $safe_param_regexp;
-    $me->{ _safe_method_regexp } = $safe_method_regexp;
+    use FML::Restriction::Base;
+    my $safe = new FML::Restriction::Base;
+    $me->{ _basic_variable } = $safe->basic_variable();
 
     return bless $me, $type;
 }
@@ -67,8 +65,8 @@ sub dir
     }
 
     # regexp
-    my $safe_param_regexp = $self->{ _safe_param_regexp };
-    my $regexp = $safe_param_regexp->{ directory };
+    my $basic_variable = $self->{ _basic_variable };
+    my $regexp = $basic_variable->{ directory };
 
     my $ml_home_dir = $config->{ ml_home_dir };
     chdir $ml_home_dir;
@@ -81,6 +79,7 @@ sub dir
     }
 
     if (-x $path_ls) {
+	Log("$path_ls $opt_ls $y");
 	my $buf = `$path_ls $opt_ls $y`;
 	$curproc->reply_message($buf);
     }
