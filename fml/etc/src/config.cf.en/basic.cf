@@ -26,4 +26,4 @@ default_umask		=	077
 #      History:
 #        Value:
 #     Examples:
-timezone		=	+0900
+system_timezone		=	+0900
