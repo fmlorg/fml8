@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: config_ph.pm,v 1.11 2004/12/15 14:48:02 fukachan Exp $
+# $FML: config_ph.pm,v 1.12 2004/12/29 08:28:18 fukachan Exp $
 #
 
 package FML::Merge::FML4::config_ph;
@@ -93,6 +93,7 @@ sub _load_default_config_ph
     $CONTROL_ADDRESS   = '$ml_name-ctl@$ml_domain';
     $OUTGOING_ADDRESS  = '$ml_name-outgoing@$ml_domain';
     $MAINTAINER        = '$ml_name-admin@$ml_domain';
+    $ERRORS_TO         = '$ml_name-admin@$ml_domain';
     $BRACKET           = '$ml_name';
     $ML_FN             = '($ml_name ML)';
     $XMLNAME           = '';
@@ -107,6 +108,7 @@ sub _load_default_config_ph
     $CONTROL_ADDRESS  = '$ml_name-ctl@$ml_domain';
     $OUTGOING_ADDRESS = '$ml_name-outgoing@$ml_domain';
     $MAINTAINER       = '$ml_name-admin@$ml_domain';
+    $ERRORS_TO        = '$ml_name-admin@$ml_domain';
     $BRACKET          = '$ml_name';
     $ML_FN            = '($ml_name ML)';
     $GOOD_BYE_PHRASE  = '--$ml_name@$ml_domain, Be Seeing You!';
@@ -325,6 +327,7 @@ sub translate
     my ($self, $diff, $key, $value) = @_;
     my $dispatch = {
 	rule_convert           => \&translate_xxx,
+	rule_ignore            => \&translate_ignore,
 	rule_prefer_fml4_value => \&translate_xxx,
 	rule_prefer_fml8_value => \&translate_use_fml8_value,
     };
@@ -343,12 +346,14 @@ sub translate_xxx
 {
     my ($self, $diff, $key, $value) = @_;
 
-    if ($key eq 'SUBJECT_TAG_TYPE'  ||
-	$key eq 'BRACKET'           ||
-	$key eq 'BRACKET_SEPARATOR' ||
-	$key eq 'SUBJECT_FREE_FORM' ||
+    if ($key eq 'SUBJECT_TAG_TYPE'         ||
+	$key eq 'BRACKET'                  ||
+	$key eq 'BRACKET_SEPARATOR'        ||
+	$key eq 'SUBJECT_FREE_FORM'        ||
 	$key eq 'SUBJECT_FREE_FORM_REGEXP' ||
-	$key eq 'SUBJECT_FORM_LONG_ID') {
+	$key eq 'SUBJECT_FORM_LONG_ID'     ||
+	$key eq 'SUBJECT_HML_FORM'         ||
+	$key eq 'HML_FORM_LONG_ID') {
 	return $self->_fix_subject_tag($diff, $key, $value);
     }
     elsif ($key eq 'MAINTAINER') {
@@ -376,21 +381,37 @@ sub translate_xxx
 	return "smtp_servers = $host:$port";
     }
     elsif ($key eq 'SPOOL_DIR') {
-	return "spool_dir = $value";
+	my $v = $self->_fix_dir($diff, $key, $value, "spool");
+	if ($v) {
+	    return "spool_dir = $v";
+	}
+	else {
+	    return "";
+	}
     }
     elsif ($key eq 'TMP_DIR') {
-	return "tmp_dir = $value";
+	my $v = $self->_fix_dir($diff, $key, $value, "tmp");
+	if ($v) {
+	    return "tmp_dir = $v";
+	}
+	else {
+	    return "";
+	}
     }
     elsif ($key eq 'ADMIN_MEMBER_LIST') {
+	$value = $self->_fix_map($diff, $key, $value);
 	return "primary_admin_member_map = $value";
     }
     elsif ($key eq 'MEMBER_LIST') {
+	$value = $self->_fix_map($diff, $key, $value);
 	return "primary_member_map = $value";
     }
     elsif ($key eq 'ACTIVE_LIST') {
+	$value = $self->_fix_map($diff, $key, $value);
 	return "primary_recipient_map = $value";
     }
     elsif ($key eq 'PASSWD_FILE') {
+	$value = $self->_fix_map($diff, $key, $value);
 	return "primary_admin_member_password_map = $value";
     }
     elsif ($key eq 'LOGFILE') {
@@ -412,6 +433,7 @@ sub translate_xxx
 	return $self->_fix_skip_fields($diff, $key, $value);
     }
     elsif ($key eq 'FILE_TO_REGIST') {
+	$value = $self->_fix_map($diff, $key, $value);
 	my $s = '';
 	$s .= "primary_member_map      = $value\n";
 	$s .= "primary_recipient_map   = $value\n";
@@ -420,8 +442,111 @@ sub translate_xxx
     elsif ($key eq 'NUM_LOG_MAIL') {
 	return "incoming_mail_cache_size = $value\n";
     }
+    elsif ($key eq 'ML_MEMBER_CHECK') {
+	return $self->_fix_acl_policy($diff, $key, $value);
+    }
+    elsif ($key eq 'LOAD_LIBRARY') {
+	return $self->_fix_module_definition($diff, $key, $value);
+    }
+    elsif ($key eq 'TZone') {
+	return $self->_fix_time_zone($diff, $key, $value);
+    }
 
     return '# ***ERROR*** UNKNOWN TRANSLATION RULE';
+}
+
+
+# Descriptions: handle map info.
+#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+# Side Effects: none
+# Return Value: STR
+sub _fix_map
+{
+    my ($self, $diff, $key, $value) = @_;
+
+    $value =~ s@\$DIR/@\$ml_home_dir/@g;
+    return $value;
+}
+
+
+# Descriptions: handle directory info.
+#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value) STR($match)
+# Side Effects: none
+# Return Value: STR
+sub _fix_dir
+{
+    my ($self, $diff, $key, $value, $match) = @_;
+    my $x = $value;
+
+    $x =~ s@\$DIR/@@;
+    $x =~ s@^/@@;
+    $x =~ s@^/@@;
+    $x =~ s@^/@@;
+
+    print "// CHECK key=<$key> value=<$value> x=<$x>\n";
+    if ($key eq $x) {
+	return "";
+    }
+    else {
+	$value =~ s@\$DIR/@\$ml_home_dir/@;
+	return $value;
+    }
+}
+
+
+# Descriptions: acl policy.
+#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+# Side Effects: none
+# Return Value: STR
+sub _fix_acl_policy
+{
+    my ($self, $diff, $key, $value) = @_;
+
+    if ($key eq 'ML_MEMBER_CHECK') {
+	if ($value) {
+	    return '# same as fml8 default';
+	}
+	else {
+	    # post = auto_regist, command = auto_regist
+	    return '# same as fml8 default';
+	}
+    }
+
+    return '# ***ERROR*** UNKNOWN TRANSLATION POLICY';
+}
+
+
+# Descriptions: acl policy.
+#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+# Side Effects: none
+# Return Value: STR
+sub _fix_module_definition
+{
+    my ($self, $diff, $key, $value) = @_;
+
+    if ($key eq 'LOAD_LIBRARY') {
+	if ($value eq 'libfml.pl') {
+	    return '# same as fml8 default';
+	}
+    }
+
+    return '# ***ERROR*** UNKNOWN TRANSLATION POLICY';
+}
+
+
+# Descriptions: fix time zone.
+#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+# Side Effects: none
+# Return Value: STR
+sub _fix_time_zone
+{
+    my ($self, $diff, $key, $value) = @_;
+
+    if ($value eq ' JST') {
+	return "+0900";
+    }
+
+    return "# ***ERROR*** UNKNOWN TIME ZONE";
 }
 
 
@@ -458,6 +583,14 @@ sub _fix_subject_tag
     my $free_form        = $diff->{ 'SUBJECT_FREE_FORM' }        || '';
     my $free_form_regexp = $diff->{ 'SUBJECT_FREE_FORM_REGEXP' } || '';
     my $free_long_id     = $diff->{ 'SUBJECT_FORM_LONG_ID' }     || 5;
+
+    # fml2 compatible
+    if ($diff->{ 'SUBJECT_HML_FORM' }) {
+	$type = '[:]';
+    }
+    if ($diff->{ 'HML_FORM_LONG_ID' }) {
+	$free_long_id = $diff->{ 'HML_FORM_LONG_ID' };
+    }
 
     if ($type eq '[:]') {
 	$s .= "article_subject_tag = [\$ml_name:\%05d]\n";
@@ -499,11 +632,27 @@ sub _fix_subject_tag
 }
 
 
+# Descriptions: ignore translation since this variable uses fml8 value.
+#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+# Side Effects: none
+# Return Value: STR
 sub translate_use_fml8_value
 {
     my ($self, $diff, $key, $value) = @_;
 
    return "# IGNORED since \$$key uses fml8 value";
+}
+
+
+# Descriptions: ignore translation since this variable uses fml8 value.
+#    Arguments: OBJ($self) HASH_REF($diff) STR($key) STR($value)
+# Side Effects: none
+# Return Value: STR
+sub translate_ignore
+{
+    my ($self, $diff, $key, $value) = @_;
+
+   return "# IGNORED since \$$key is of no means";
 }
 
 
