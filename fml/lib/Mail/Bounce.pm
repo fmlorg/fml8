@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Bounce.pm,v 1.22 2002/09/22 14:56:59 fukachan Exp $
+# $FML: Bounce.pm,v 1.23 2002/12/20 03:49:15 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -130,7 +130,7 @@ sub analyze
     if ($debug) {
 	my $h = $msg->data_type_list( { debug => 1 } );
 	print STDERR "   ----- dump msg -----\n";
-	for (@$h) { print STDERR "   ", $_, "\n";}
+	for my $hdr (@$h) { print STDERR "   ", $hdr, "\n";}
 	print STDERR "   ----- dump msg end -----\n";
     }
 
@@ -340,7 +340,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

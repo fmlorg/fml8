@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.17 2003/01/11 15:14:25 fukachan Exp $
+# $FML: Date.pm,v 1.18 2003/01/11 15:16:35 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -300,9 +300,9 @@ sub date_to_unixtime
 
     # hints
     my $c = 1;
-    for ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-	 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec') {
-	$month{ $_ } = $c++;
+    for my $month ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+		   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec') {
+	$month{ $month } = $c++;
     }
 
     if ($in =~ /([A-Z]+)\s*$/) {

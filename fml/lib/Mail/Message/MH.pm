@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #
-# $FML: MH.pm,v 1.11 2003/01/11 15:14:25 fukachan Exp $
+# $FML: MH.pm,v 1.12 2003/01/11 15:16:35 fukachan Exp $
 #
 
 package Mail::Message::MH;
@@ -117,7 +117,7 @@ sub _expand_range
     my ($first, $last) = @_;
     my (@fn) = ();
 
-    for ($first .. $last) { push(@fn, $_);}
+    for my $n ($first .. $last) { push(@fn, $n);}
 
     return \@fn;
 }

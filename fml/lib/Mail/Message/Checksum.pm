@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Checksum.pm,v 1.5 2002/09/22 14:57:03 fukachan Exp $
+# $FML: Checksum.pm,v 1.6 2002/12/22 03:09:56 fukachan Exp $
 #
 
 package Mail::Message::Checksum;
@@ -123,9 +123,9 @@ sub _md5_native
     $p = 0;
     while (1) {
 	last if $p > $pe;
-	$_  = substr($$r_data, $p, 128);
-	$p += 128;
-	$md5->add($_);
+	$buf = substr($$r_data, $p, 128);
+	$p  += 128;
+	$md5->add($buf);
     }
 
     $md5->hexdigest();
@@ -258,7 +258,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
