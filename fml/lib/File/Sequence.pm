@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Sequence.pm,v 1.10 2001/11/20 06:59:00 fukachan Exp $
+# $FML: Sequence.pm,v 1.11 2001/11/20 07:27:38 fukachan Exp $
 #
 
 package File::Sequence;
@@ -78,7 +78,7 @@ get the sequence number from specified C<$file>.
 
 
 # Descriptions: constructor
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: object itself holds a few local _variables
 # Return Value: object
 sub new
@@ -93,7 +93,7 @@ sub new
 
 
 # Descriptions: increment sequence
-#    Arguments: $self [$file]
+#    Arguments: OBJ($self) [STR($file)]
 #               If $file is not specified, 
 #               the sequence_file parameter in new().
 # Side Effects: the number holded in $file is incremented
@@ -148,7 +148,7 @@ sub increment_id
 
 
 # Descriptions: get sequence
-#    Arguments: $self [$file]
+#    Arguments: OBJ($self) [STR($file)]
 #               If $file is not specified, 
 #               the sequence_file parameter in new().
 # Side Effects: the number holded in $file is incremented
@@ -196,7 +196,7 @@ To search max_id in hash key,
 
 
 # Descriptions: search max id number
-#    Arguments: $self $args
+#    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: number
 sub search_max_id
