@@ -72,6 +72,10 @@ available_commands_for_privileged_user	=	subscribe
 					resign
 					signoff
 					chaddr
+					addadmin
+					addpriv
+					byeadmin
+					byepriv
 					get
 					mget
 					send
@@ -79,6 +83,9 @@ available_commands_for_privileged_user	=	subscribe
 
 available_commands_for_admin_cgi	=	subscribe
 						unsubscribe
+						addadmin
+						byeadmin
+						log
 
 
 # Descriptions: confirmation の返事を表す特別なコマンド
