@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Merge.pm,v 1.10 2004/07/23 13:16:32 fukachan Exp $
+# $FML: Merge.pm,v 1.11 2004/07/23 15:59:00 fukachan Exp $
 #
 
 package FML::Merge;
@@ -288,16 +288,66 @@ sub merge_into_config_cf
     my ($self)   = @_;
     my $m_config = $self->{ _m_config };
 
-    # XXX-TODO: "/tmp/default_config.ph" ???
-    # files to compare.
+    # check config.ph path files.
     my $old_config_ph     = $m_config->old_file_path("config.ph");
-    my $default_config_ph = "/tmp/default_config.ph";
+    my $default_config_ph = $self->speculate_default_config_ph_path();
 
     use FML::Merge::FML4::config_ph;
     my $config_ph = new FML::Merge::FML4::config_ph;
-    $config_ph->set_default_config_ph("/tmp/default_config.ph");
+    $config_ph->set_default_config_ph($default_config_ph);
     my $diff      = $config_ph->diff($old_config_ph);
     $self->_inject_into_config_cf($diff);
+}
+
+
+# Descriptions: speculate the path of default_config.ph file.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR
+sub speculate_default_config_ph_path
+{
+    my ($self)   = @_;
+    my $m_config = $self->{ _m_config };
+    my $old_include_path = $m_config->old_file_path("include");
+    my $bak_include_path = $m_config->backup_file_path("include");
+    my $path = '';
+
+    use FileHandle;
+    use File::Basename;
+
+    my $rh = undef;
+    if (-f $bak_include_path) {
+	$rh = new FileHandle $bak_include_path;
+    }
+    elsif (-f $old_include_path) {
+	$rh = new FileHandle $old_include_path;
+    }
+
+    if (defined $rh) {
+	my $buf;
+
+      BUF:
+	while ($buf = <$rh>) {
+	    if ($buf =~ /^\s*\"\|\s*(\S+fml\.pl)/) {
+		$path = $1;
+		$path =~ s/\|//og;
+		$path =~ s/\"//og;
+		$path = dirname($path);
+		last BUF;
+	    }
+	}
+	$rh->close();
+    }
+
+    use File::Spec;
+    my $file = File::Spec->catfile($path, "default_config.ph");
+    if (-f $file) {
+	print STDERR "   using $file as default_config.ph\n";
+	return $file;
+    }
+    else {
+	croak("default_config.ph path undefined.");
+    }
 }
 
 
@@ -360,7 +410,7 @@ sub _inject_diff_into_config_cf
 	print $wh "# $k => $y\n";
 
 	if ($x = $config_ph->translate($k, $v)) {
-	    print $wh $x ,"\n";
+	    print $wh $x ,"\n\n";
 	}
     }
 
