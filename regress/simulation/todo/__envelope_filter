@@ -1,0 +1,27 @@
+# Called under $USE_DISTRIBUTE_FILTER is not null.
+# IF *HOOK is not defined, we apply default checkes.
+# The function name looks strange but this is derived from
+# that "filtering for %Envelope hash, not only mail message/body".
+sub __EnvelopeFilter
+{
+    local(*e, $mode) = @_;
+
+    # XXX 3 XXX
+
+    # extract the buffer to check
+    if ($p >= 0 && $p < 1024) {
+	$xbuf    = substr($e{'Body'}, $pmap[0], $pmap[$#pmap]);
+	$fparbuf = substr($e{'Body'}, $pmap[0], $pmap[1]); # first par(agraph)
+	$lparbuf = substr($e{'Body'}, $pmap[ $#pmap - 1 ], $pmap[$#pmap]); # last
+    }
+    else { # may be null or continuous character buffer?
+	my ($i);
+	for ($i = 0; $i < $#pmap && $pmap[$i] < 1024; $i++) {;}
+	&Log("EnvelopeFilter: check from $pmap[0] to $pmap[$i] since too big");
+	$xbuf = substr($e{'Body'}, $pmap[0], $pmap[$i]);
+    }
+
+
+
+    $* = $org_mlp;
+}
