@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.191 2003/11/02 13:37:41 fukachan Exp $
+# $FML: Kernel.pm,v 1.192 2003/11/05 03:37:52 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2356,7 +2356,8 @@ sub _reopen_stderr_channel
     if ($curproc->is_cgi_process()       ||
 	$curproc->is_under_mta_process() ||
 	defined $option->{ quiet }  || defined $option->{ q } ||
-	$config->yes('use_log_dup') || $option->{ 'log-dup' } ) {
+	$config->yes('use_log_dup') || $option->{ 'log-dup' } ||
+	$option->{ 'computer-output' } ) {
 	my $tmpfile = $curproc->temp_file_path();
 	my $pcb     = $curproc->pcb();
 	$pcb->set("stderr", "logfile", $tmpfile);
@@ -2389,7 +2390,8 @@ sub _finalize_stderr_channel
 	if ($curproc->is_cgi_process()       ||
 	    $curproc->is_under_mta_process() ||
 	    defined $option->{ quiet }  || defined $option->{ q } ||
-	    $config->yes('use_log_dup') || $option->{ 'log-dup' } ) {
+	    $config->yes('use_log_dup') || $option->{ 'log-dup' } ||
+	    $option->{ 'computer-output' } ) {
 
 	    close(STDERR);
 	    open(STDERR, ">&STDOUT");
@@ -2464,7 +2466,8 @@ sub be_quiet
     if ($curproc->is_cgi_process()       ||
 	$curproc->is_under_mta_process() ||
 	defined $option->{ quiet }  || defined $option->{ q } ||
-	$config->yes('use_log_dup') || $option->{ 'log-dup' } ) {
+	$config->yes('use_log_dup') || $option->{ 'log-dup' } ||
+	$option->{ 'computer-output' } ) {
 	return 1;
     }
     else {
@@ -2484,7 +2487,8 @@ sub finalize
     my $config    = $curproc->config();
     my $option    = $curproc->command_line_options();
 
-    if ($config->yes('use_log_dup') || $option->{ 'log-dup' } ) {
+    if ($config->yes('use_log_dup') || $option->{ 'log-dup' } ||
+	$option->{ 'computer-output' } ) {
 	$curproc->_finalize_stderr_channel();
 	$curproc->_log_message_print();
     }
