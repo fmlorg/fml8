@@ -778,6 +778,15 @@ check_message_id
 </row>
 <row>
 <entry>
+language_preference_order</entry>
+<entry>
+ 言語の優先順位</entry>
+<entry>
+ja en
+   </entry>
+</row>
+<row>
+<entry>
 ldap_query_filter</entry>
 <entry>
  LDAP のフィルタ</entry>

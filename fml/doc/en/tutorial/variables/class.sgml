@@ -693,6 +693,7 @@ _dir$ {
     ?     $commands_for_stranger
     ?     $commands_for_user
     ?     $file_default_mode
+    ?     $language_preference_order
     ?     $list_addresses
     ?     $unsafe_header_fields
 </screen>
