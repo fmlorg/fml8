@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.41 2002/04/28 13:34:15 fukachan Exp $
+# $FML: Header.pm,v 1.42 2002/05/31 14:09:21 tmu Exp $
 #
 
 package FML::Header;
@@ -73,13 +73,6 @@ sub new
 # Side Effects: none
 # Return Value: none
 sub DESTROY {}
-
-
-sub AUTOLOAD
-{
-    my ($self, $args) = @_;
-    Log("Error: $AUTOLOAD is not defined");
-}
 
 
 =head2 C<get($key)>
@@ -619,7 +612,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2001,2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
