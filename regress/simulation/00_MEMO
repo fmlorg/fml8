@@ -2,12 +2,6 @@
 		Last Modified: $Date$
 
 
-○	要再構成
-
-   * makefml htmlify ...
-
-	FML/Process/HTMLify.pm
-
 ○	etc/src/config.cf.ja/ の説明文を見直すように
 
 
@@ -228,4 +222,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.16 2002/04/12 13:07:29 fukachan Exp $
+$FML: 00_MEMO,v 1.17 2002/04/12 13:56:21 fukachan Exp $
