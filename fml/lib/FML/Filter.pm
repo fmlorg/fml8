@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.17 2002/10/26 04:03:31 fukachan Exp $
+# $FML: Filter.pm,v 1.18 2002/12/20 03:36:44 fukachan Exp $
 #
 
 package FML::Filter;
@@ -128,7 +128,7 @@ sub _apply_article_header_filter
 
 
 # Descriptions: filter non MIME format message
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) OBJ($mesg)
 # Side Effects: none
 # Return Value: 0 (always ok, anyway)
 sub _apply_article_non_mime_filter
@@ -158,7 +158,7 @@ sub _apply_article_non_mime_filter
 
 
 # Descriptions: syntax check for text(/plain)
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) OBJ($mesg)
 # Side Effects: none
 # Return Value: none
 sub _apply_article_text_plain_filter
@@ -193,7 +193,7 @@ sub _apply_article_text_plain_filter
 
 
 # Descriptions: analyze MIME structure and filter it if matched.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) OBJ($mesg)
 # Side Effects: none
 # Return Value: none
 sub _apply_article_mime_component_filter
@@ -238,7 +238,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.38 2002/12/23 14:36:24 fukachan Exp $
+# $FML: Credential.pm,v 1.39 2002/12/24 10:19:42 fukachan Exp $
 #
 
 package FML::Credential;
@@ -153,7 +153,7 @@ are same since the last 3 top level domains are same.
 
 
 # Descriptions: compare whether the given addresses are same or not.
-#    Arguments: OBJ($self) STR($xaddr) STR($xaddr) NUM($max_level)
+#    Arguments: OBJ($self) STR($xaddr) STR($yaddr) NUM($max_level)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub is_same_address
@@ -263,7 +263,7 @@ sub is_recipient
 
 
 # Descriptions: sender of the current process is an ML member or not.
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args) HASH_REF($optargs)
+#    Arguments: OBJ($self) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub _is_member
@@ -521,7 +521,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.78 2002/12/25 03:13:19 fukachan Exp $
+# $FML: Command.pm,v 1.79 2003/01/03 07:06:38 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -590,7 +590,9 @@ sub _get_command_mode
 
 # Descriptions: this command is allowd under the current $mode and $level
 #    Arguments: OBJ($curproc)
-#               HASH_REF($args) HASH_REF($status) HAS_REF($command_info)
+#               STR($mode)
+#               HASH_REF($status)
+#               HASH_REF($command_info)
 # Side Effects: none
 # Return Value: NUM
 sub _config_allow_command

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Parse.pm,v 1.27 2002/09/22 14:56:41 fukachan Exp $
+# $FML: Parse.pm,v 1.28 2002/12/18 04:34:41 fukachan Exp $
 #
 
 package FML::Parse;
@@ -56,7 +56,7 @@ sub new
 
 
 # Descriptions: parse message read from file handle $fd
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($curproc) HANDLE($fd)
 # Side Effects: none
 # Return Value: OBJ
 sub _parse
@@ -107,7 +107,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

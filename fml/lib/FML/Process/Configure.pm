@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Configure.pm,v 1.47 2003/01/05 05:13:50 fukachan Exp $
+# $FML: Configure.pm,v 1.48 2003/01/07 08:38:34 fukachan Exp $
 #
 
 package FML::Process::Configure;
@@ -186,6 +186,10 @@ sub help
 }
 
 
+# Descriptions: show FYI help
+#    Arguments: none
+# Side Effects: none
+# Return Value: none
 sub _fyi_help
 {
 print <<"_EOF_";
@@ -203,6 +207,10 @@ _EOF_
 }
 
 
+# Descriptions: show help usage
+#    Arguments: STR($name)
+# Side Effects: none
+# Return Value: none
 sub _fml_help
 {
     my ($name) = @_;
@@ -216,6 +224,10 @@ _EOF_
 }
 
 
+# Descriptions: show help usage
+#    Arguments: STR($name)
+# Side Effects: none
+# Return Value: none
 sub _makefml_help
 {	
     my ($name) = @_;

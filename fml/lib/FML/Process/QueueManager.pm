@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002 Ken'ichi Fukamachi
+#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.9 2002/09/22 14:56:53 fukachan Exp $
+# $FML: QueueManager.pm,v 1.10 2002/12/22 03:46:20 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -70,7 +70,7 @@ If queue id C<$id> is specified, send queue for C<$id>.
 
 
 # Descriptions: send message in queue directory sequentially
-#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($self) OBJ($curproc) STR($id)
 # Side Effects: queue flush-ed
 # Return Value: none
 sub send
@@ -149,7 +149,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

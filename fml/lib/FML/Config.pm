@@ -1,9 +1,9 @@
 #-*- perl -*-
-# Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
+# Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.75 2002/12/22 04:43:05 fukachan Exp $
+# $FML: Config.pm,v 1.76 2002/12/24 10:19:41 fukachan Exp $
 #
 
 package FML::Config;
@@ -197,7 +197,7 @@ sub get_as_array_ref
 
 # Descriptions: set vaule for $key.
 #               flag on we need to re-evaludate variable expansion.
-#    Arguments: OBJ($self) STR($key)
+#    Arguments: OBJ($self) STR($key) STR($value)
 # Side Effects: update internal area
 # Return Value: STR
 sub set
@@ -384,7 +384,8 @@ sub _read_file
 
 
 # Descriptions: update $config by re-evaluating variables relation.
-#    Arguments: OBJ($obj) STR($key) STR($value) STR($name_space) STR($mode)
+#    Arguments: HASH_REF($config) 
+#               STR($key) STR($value) STR($name_space) STR($mode)
 # Side Effects: update $config on memory.
 # Return Value: none
 sub __update_config
@@ -412,7 +413,8 @@ sub __update_config
 
 
 # Descriptions: append $value into $config
-#    Arguments: OBJ($obj) STR($key) STR($value) STR($name_space) STR($mode)
+#    Arguments: HASH_REF($config) 
+#               STR($key) STR($value) STR($name_space) STR($mode)
 # Side Effects: update $config
 # Return Value: none
 sub __append_config
@@ -436,7 +438,8 @@ sub __append_config
 #                  key becomes "value1 value3".
 #               If "key += value4, key becomes
 #                  "value1 value2 value3 value4".
-#    Arguments: OBJ($config) STR($key) STR($mode) STR($value)
+#    Arguments: HASH_REF($config) 
+#               STR($key) STR($mode) STR($value) STR($name_space)
 # Side Effects: update $config by $mode
 # Return Value: STR(new value for $config{ $key })
 sub _evaluate
@@ -740,7 +743,7 @@ sub _expand_variables
 # Return Value: none
 sub __expand_special_macros
 {
-    my ( $config, $x ) = @_;
+    my ($config, $x) = @_;
 
     return unless defined $config;
     return unless defined $x;
@@ -1173,7 +1176,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
