@@ -62,7 +62,7 @@ db_dir		= $var_dir/db
 
 
 # Descriptions: 入力されるメールを置くディレクトリ
-#      History: $DIR/var/Mail/
+#      History: LOG_MAIL_DIR ($DIR/var/Mail/)
 #        Value: directory
 #     Examples: /var/spool/ml/elena/var/mincoming
 mincoming_dir	= $var_dir/mincoming
