@@ -22,11 +22,22 @@ IO::Adapter::File - IO functions for a file
 
     $map = 'file:/some/where/file';
 
+To read list
+
     use IO::MapAdapter;
     $obj = new IO::MapAdapter $map;
     $obj->open || croak("cannot open $map");
     while ($x = $obj->getline) { ... }
     $obj->close;
+
+To add the address
+
+    $obj = new IO::MapAdapter $map;
+    $obj->add( $address );
+
+To delete it
+
+    $obj->delete( $address );
 
 =head1 DESCRIPTION
 
@@ -65,12 +76,30 @@ C<flag> is the mode of open().
 sub open
 {
     my ($self, $args) = @_;
-
     my $file = $args->{ file };
     my $flag = $args->{ flag };
-    my $fh;
+
+    if ($flag eq 'r') {
+	$self->_read_open($args); # read only open()
+    }
+    else {
+	$self->_rw_open($args); # read/write open in atomic way
+    }
+}
+
+
+# Descriptions: open file in "read only" mode
+#    Arguments: $self $args
+# Side Effects: file is opened for read
+# Return Value: file descriptor
+sub _read_open
+{
+    my ($self, $args) = @_;
+    my $file = $args->{ file };
+    my $flag = $args->{ flag };
+
     use FileHandle;
-    $fh = new FileHandle $file, $flag;
+    my $fh = new FileHandle $file, $flag;
     if (defined $fh) {
 	$self->{_fh} = $fh;
 	return $fh;
@@ -79,6 +108,20 @@ sub open
 	$self->_error_reason("Error: cannot open $file $flag");
 	return undef;
     }
+}
+
+
+sub _rw_open
+{
+    my ($self, $args) = @_;
+    my $file = $args->{ file };
+    my $flag = $args->{ flag };
+
+    require IO::File::Atomic;
+    my ($rh, $wh)  = IO::File::Atomic->rw_open($file);
+    $self->{ _fh } = $rh;
+    $self->{ _wh } = $wh;
+    $rh;
 }
 
 
@@ -191,6 +234,37 @@ sub close
 {
     my ($self) = @_;
     $self->{_fh}->close if defined $self->{_fh};
+}
+
+
+=head2 C<add($address)>
+
+add $address to this map.
+
+=cut
+
+sub add
+{
+    my ($self, $addr) = @_;
+
+    $self->open("w");
+
+    my $fh = $self->{ _fh };
+    my $wh = $self->{ _wh };
+
+    if (defined $fh) {
+	while (<$fh>) {
+	    print $wh $_;
+	}
+	close($fh);
+    }
+    else {
+	$self->_error_reason("Error: cannot open $self->{ _file }");
+	return undef;
+    }
+
+    print $wh $addr, "\n";
+    $wh->close;
 }
 
 
