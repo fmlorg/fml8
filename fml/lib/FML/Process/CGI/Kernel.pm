@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.67 2003/12/06 04:48:22 fukachan Exp $
+# $FML: Kernel.pm,v 1.68 2003/12/24 14:24:14 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -209,7 +209,7 @@ sub _cgi_resolve_ml_specific_variables
 	push(@$cflist, $config_cf);
     }
     else {
-	$curproc->log("debug: no ml_name, overwrite ml_home_dir,log_file");
+	$curproc->log("debug: no ml_name");
     }
 
     $curproc->__debug_ml_xxx('cgi:');
