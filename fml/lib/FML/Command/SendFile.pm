@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.17 2002/07/02 12:05:49 fukachan Exp $
+# $FML: SendFile.pm,v 1.18 2002/07/17 12:09:26 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -13,6 +13,9 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use File::Spec;
 use FML::Log qw(Log LogWarn LogError);
+
+my $debug = 0;
+
 
 =head1 NAME
 
@@ -147,6 +150,8 @@ sub send_file
     my $config   = $curproc->{ config };
     my $charset  = $config->{ reply_message_charset };
 
+    Log("send_file: $filepath");
+
     # template substitution: kanji code, $varname expansion et. al.
     my $params = {
 	src         => $filepath,
@@ -192,6 +197,7 @@ sub send_user_xxx_message
     # send it.
     if (-f $config->{ "${type}_file" }) {
 	$command_args->{ _filepath_to_send } = $config->{ "${type}_file" };
+	$command_args->{ _filename_to_send } = $type;
 	$self->send_file($curproc, $command_args);
     }
     # if "help" is not found, use the default help message.
