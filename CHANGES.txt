@@ -29,6 +29,9 @@
 		addrecipient
 		addrecipients
 
+   FML::Header 
+	modify List-* header message and condition a little.
+
 2004/04/30
 
    コマンドのより厳しいエラーチェック
@@ -6904,4 +6907,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.200 2004/05/01 01:45:59 fukachan Exp $
+$FML: CHANGES.txt,v 1.201 2004/05/01 15:02:07 fukachan Exp $
