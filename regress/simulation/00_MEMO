@@ -3,34 +3,6 @@
 
 	XXX 作業したら TODO/STATUS.txt もアップデートしてね XXX
 
-* IO::Adapter TODO
-
-   [used]
-	getline			()		STR
-	get_next_key		()		STR
-	add			(KEY, STR)	*
-				(KEY, [])	*	
-	delete			(KEY)		*	
-
-   [ok]
-	touch			(引数なし)	NUM
-
-   [?]
-	(only Mail::Delivery::SMTP)
-	getpos			()		NUM
-	setpos			(NUM)		---	
-	eof			()		*
-
-   [not used now]
-	get_next_value		()		STR	←
-	get_next_values		()		[]	←
-	replace			(KEY, STR)	*	←	
-				(KEY, [])	*	←
-
-	--------------------
-	KEY = STR
-	*   = ステータス
-
 -------------------- 2002-06 AUDIT --------------------
    FML::Article
 
@@ -153,6 +125,32 @@
 
 -------------------- 2002-06 AUDIT --------------------
 
+○	ドキュメント( tutorial )
+
+	setup/test.sgml
+	usage/fmlhtmlify.sgml
+	module/IO::Adapter.sgml
+	module/Mail::HTML::Lite.sgml
+	command/extension.sgml
+	threadtrack/chapter.sgml
+	threadtrack/tools.sgml
+	
+	usage/ がいまいち(fml bible のパートIIIの最初の部分にあたるもの)
+		usage/command.sgml
+		usage/post.sgml
+
+○	makefml でうごかない？
+
+	get
+	mget
+	send
+	password
+	pass
+	dir
+	ls
+	file
+	list
+
 ○	postconf で file じゃないものは無視しないとだね
 
 
@@ -171,14 +169,6 @@
 
    * MTI
 	fmltreadで使っているDBをうまく利用できないものでしょうか？
-
-
-○	IO::Adapter
-
-		replace(),
-		get_next_value(),
-		getline()
-	つかってないみたい？ 不必要 ?
 
 
 ○	RFC 3282
@@ -487,4 +477,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.29 2002/07/02 13:48:04 fukachan Exp $
+$FML: 00_MEMO,v 1.30 2002/07/03 13:27:15 fukachan Exp $
