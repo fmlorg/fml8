@@ -1,34 +1,35 @@
-		cpan/ LIST
+		list of softwars imported from cpan/
 
-	
-AsciiDB-TagFile			1.05
+				version		license	type
+----------------------------------------------------------------
+AsciiDB-TagFile			1.05		perl itself
 
-Class-NamedParms		1.04
-Class-ParmList			1.03
-Crypt-RandPasswd		0.02	
-Crypt-TripleDES			0.24
+Class-NamedParms		1.04		perl itself
+Class-ParmList			1.03		perl itself
+Crypt-RandPasswd		0.02		perl itself
+Crypt-TripleDES			0.24		perl itself
 
-File-Spec			0.82
+File-Spec			0.82		perl itself
 
-HTML-CalendarMonthSimple	1.02	
+HTML-CalendarMonthSimple	1.02		? (freesoftware, unlimited)
 
-IO-stringy			1.220
+IO-stringy			1.220		?
 
-Jcode				0.71
+Jcode				0.71		perl itself
 
-Log-ErrLogger			1.5
+Log-ErrLogger			1.5		perl itself
 
-MIME-Base64			2.11
-MIME-Lite			2.108
+MIME-Base64			2.11		perl itself
+MIME-Lite			2.108		perl itself
 MIME-Lite-HTML			1.2
-MailTools			1.15
+MailTools			1.15		perl itself
 
-Rcs				0.09
+Rcs				0.09		perl itself
 
-Socket6				0.07
+Socket6				0.07		WIDE (BSD flabour)
 
-Time-modules			100.010301
+Time-modules			100.010301	unknown (your own risk)
 
-VCS-CVS				2.00
+VCS-CVS				2.00		perl itself
 
-$FML$
+$FML: MANIFEST,v 1.1 2001/06/01 14:58:14 fukachan Exp $
