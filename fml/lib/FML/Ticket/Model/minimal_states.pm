@@ -778,6 +778,47 @@ sub _header_summary
 }
 
 
+sub show_articles_for_ticket
+{
+    my ($self, $curproc, $args, $ticket_id) = @_;
+    my $mode      = $self->{ _mode } || 'text';
+    my $config    = $curproc->{ config };
+    my $spool_dir = $config->{ spool_dir };
+
+    $self->open_db($curproc, $args);
+
+    my $articles = $self->{ _hash_table }->{ _articles }->{ $ticket_id };
+
+    print "<B>" if $mode eq 'html';
+    print "show contents related with ticket_id=$ticket_id\n";
+    print "</B><HR><PRE>\n" if $mode eq 'html';
+
+    use FileHandle;
+    use Language::ISO2022JP qw(STR2EUC);
+
+    my $s = '';
+    for (split(/\s+/, $articles)) {
+	my $file = $spool_dir.'/'.$_;
+
+	my $fh = new FileHandle $file;
+	while (defined($_ = $fh->getline())) {
+	    next if 1 .. /^$/;
+
+	    $s = STR2EUC($_);
+	    $s =~ s/&/&amp;/g;
+	    $s =~ s/</&lt;/g;
+	    $s =~ s/>/&gt;/g;
+	    $s =~ s/\"/&quot;/g;
+	    print $s;
+	}
+	$fh->close;
+    }
+
+    print "</PRE>" if $mode eq 'html';
+
+    $self->close_db($curproc, $args);
+}
+
 
 sub cgi_top_menu
 {
@@ -840,12 +881,16 @@ sub _show_ticket_by_html_table
 
     # <FORM ACTION=> ..>
     my $xtid = CGI::escape($tid);
-    $action  = "${action}?ml_name=${ml_name}&action=close";
+    $action  = "${action}?ml_name=${ml_name}";
     $action .= "&ticket_id=$xtid&article_id=$aid";
-    $target  = $target.".close";
 
     print "<TR>\n";
-    print "<TD><A HREF=\"$action\" TARGET=\"$target\">[close]</A>\n";
+    print "<TD>";
+    print "<A HREF=\"$action&action=close\" TARGET=\"$target.close\">";
+    print "[close]</A>\n";
+    print "<BR>\n";
+    print "<A HREF=\"$action&action=show\" TARGET=\"$target.show\">";
+    print "[see articles]</A>\n";
     print "<TD>$date\n";
     print "<TD>$age\n";
     print "<TD>$status\n";
@@ -884,20 +929,23 @@ sub run_cgi
 
     # get action parameter via HTTP
     my $action = param('action') || 'list';
+    my $ticket_id = param('ticket_id');
 
     # o.k start html
     print start_html(-title=>$title,-BGCOLOR=>$color), "\n";
 
     if ($action eq 'close') {
-	my $ticket_id = param('ticket_id');
 	$self->set_status($curproc, {
 	    ticket_id => $ticket_id,
 	    status    => 'closed',
 	});
     }
 
-    # represent this always
-    {
+    if ($action eq 'show') {
+	Log("run.cgi.show_articles for $ticket_id");
+	$self->show_articles_for_ticket($curproc, $args, $ticket_id);
+    }
+    else {
 	# menu at the top of scrren
 	$self->cgi_top_menu($curproc, $args);
 
