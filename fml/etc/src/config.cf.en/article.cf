@@ -162,7 +162,27 @@ use_article_text_plain_filter		=	yes
 # Descriptions: filter rules of text/plain filter.
 #               first match.
 #               permit post if no rule matched.
-#      History:
+#      History: See kern/libenvf.pl for more detail.
+#		[DISABLED BY DEFAULT]
+#
+#			reject_not_iso2022jp_japanese_string
+#				<=> FILTER_ATTR_REJECT_INVALID_JAPANESE
+#			reject_old_fml_command_syntax
+#				<=> FILTER_ATTR_REJECT_COMMAND
+#			reject_japanese_command_syntax
+#				<=> FILTER_ATTR_REJECT_2BYTES_COMMAND
+#
+#		[ENABLED BY DEFAULT]
+#
+#			reject_null_mail_body
+#				<=> FILTER_ATTR_REJECT_NULL_BODY
+#			reject_invalid_fml_command_syntax
+#				<=> FILTER_ATTR_REJECT_INVALID_COMMAND
+#			reject_one_line_message
+#				<=> FILTER_ATTR_REJECT_ONE_LINE_BODY
+#			reject_ms_guid
+#				<=> FILTER_ATTR_REJECT_MS_GUID
+#
 #         Note: permit by default 
 #        Value:
 #     Examples:
@@ -180,14 +200,20 @@ article_text_plain_filter_rules	=	reject_not_iso2022jp_japanese_string
 
 
 # Descriptions: infor the filter rejection ?
-#      History: hard-coded in fml 4.0
+#      History: halfly hard-coded in fml 4.0.
+#		notice is always sent to maintainer, 
+#		but not to sender by default.
+#		$FILTER_NOTIFY_REJECTION controlls notice to sender.
 #        Value: yes / no
 #     Examples: yes
 use_article_filter_reject_notice	=	yes
 
 
 # Descriptions: recipients to inform
-#      History: hard-coded in fml 4.0
+#      History: halfly hard-coded in fml 4.0.
+#		notice is always sent to maintainer, 
+#		but not to sender by default.
+#		$FILTER_NOTIFY_REJECTION controlls notice to sender.
 #        Value: maintainer | sender
 #     Examples: maintainer sender
 article_filter_reject_notice_recipients	=	maintainer

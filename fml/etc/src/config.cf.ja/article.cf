@@ -164,7 +164,27 @@ use_article_text_plain_filter		=	yes
 
 # Descriptions: テキスト部分へのフィルタリングのルール。
 #               正確には弾くべき特別なもののルール(マッチしないなら通す)
-#      History:
+#      History: See kern/libenvf.pl for more detail.
+#		[DISABLED BY DEFAULT]
+#
+#			reject_not_iso2022jp_japanese_string
+#				<=> FILTER_ATTR_REJECT_INVALID_JAPANESE
+#			reject_old_fml_command_syntax
+#				<=> FILTER_ATTR_REJECT_COMMAND
+#			reject_japanese_command_syntax
+#				<=> FILTER_ATTR_REJECT_2BYTES_COMMAND
+#
+#		[ENABLED BY DEFAULT]
+#
+#			reject_null_mail_body
+#				<=> FILTER_ATTR_REJECT_NULL_BODY
+#			reject_invalid_fml_command_syntax
+#				<=> FILTER_ATTR_REJECT_INVALID_COMMAND
+#			reject_one_line_message
+#				<=> FILTER_ATTR_REJECT_ONE_LINE_BODY
+#			reject_ms_guid
+#				<=> FILTER_ATTR_REJECT_MS_GUID
+#
 #         Note: permit by default 
 #        Value:
 #     Examples:
@@ -182,14 +202,18 @@ article_text_plain_filter_rules	=	reject_not_iso2022jp_japanese_string
 
 
 # Descriptions: フィルタで弾かれたことを教える
-#      History: 4.0 ではハードコードだったような…
+#      History: maintainer には常に弾かれたことを知らせるが、
+#		sender に対しては $FILTER_NOTIFY_REJECTION (= 0 by default)。
+#		デフォルトでは、管理者にのみ知らせる。
 #        Value: yes / no
 #     Examples: yes
 use_article_filter_reject_notice	=	yes
 
 
 # Descriptions: エラーのお知らせの受信者
-#      History: 4.0 ではハードコードだったような…
+#      History: 4.0 では maintainer あてはハードコーデイングで常に知らせる。
+#		sender 宛ては $FILTER_NOTIFY_REJECTION で制御されていて
+#		デフォルトでは知らせない。
 #        Value: maintainer | sender
 #     Examples: maintainer sender
 article_filter_reject_notice_recipients	=	maintainer
