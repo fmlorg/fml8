@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MessageID.pm,v 1.17 2003/12/30 03:52:07 fukachan Exp $
+# $FML: MessageID.pm,v 1.18 2004/01/01 23:52:15 fukachan Exp $
 #
 
 package FML::Header::MessageID;
@@ -57,7 +57,7 @@ sub new
 }
 
 
-=head2 db_open($args)
+=head2 db_open($db_args)
 
 open db and return HASH_REF for the db access.
 
@@ -67,13 +67,13 @@ open db and return HASH_REF for the db access.
 
 
 # Descriptions: open message-id database
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) HASH_REF($db_args)
 # Side Effects: none
 # Return Value: HASH_ERF
 sub db_open
 {
-    my ($self, $args) = @_;
-    my $dir  = $args->{ 'directory' };
+    my ($self, $db_args) = @_;
+    my $dir  = $db_args->{ 'directory' };
     my $mode = 'temporal';
     my $days = 14;
 
@@ -155,7 +155,7 @@ sub set
 }
 
 
-=head2 gen_id($curproc, $args)
+=head2 gen_id($config)
 
 generate and return a new message-id.
 

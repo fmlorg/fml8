@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.85 2003/09/27 06:50:25 fukachan Exp $
+# $FML: Config.pm,v 1.86 2004/01/01 23:52:07 fukachan Exp $
 #
 
 package FML::Config;
@@ -94,7 +94,7 @@ called.
 
 =head1 METHODS
 
-=head2 new( ref_to_curproc )
+=head2 new($cfargs)
 
 special method used only in the fml initialization phase.
 This method binds $curproc and the %_fml_config hash on memory.
@@ -112,12 +112,12 @@ pseudo variable C<_pid> is reserved for process id reference.
 # Descriptions: constructor.
 #               newly blessed object is binded to internal variable
 #               %_fml_config. So changes are shared among all objects.
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) HASH_REF($cfargs)
 # Side Effects: object is binded to common %_fml_config area
 # Return Value: OBJ
 sub new
 {
-    my ($self, $args) = @_;
+    my ($self, $cfargs) = @_;
 
     unless (defined %_fml_config) { %_fml_config = ( _pid => $$ );}
 
@@ -127,9 +127,9 @@ sub new
     tie %$me, $self;
 
     # import variables
-    if (defined $args) {
+    if (defined $cfargs) {
 	my ($k, $v);
-	while (($k, $v) = each %$args) {
+	while (($k, $v) = each %$cfargs) {
 	    set($me, $k, $v);
 	}
     }
@@ -284,19 +284,19 @@ sub load_file
 #               XXX we should not reset $config since we permit
 #               XXX $config can be overwritten.
 #
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) HASH_REF($cfargs)
 #                     $file = configuration file
 #                   $config = area to store {key => value } hash
 # Side Effects: $config changes
 # Return Value: none
 sub _read_file
 {
-    my ($self, $args) = @_;
-    my $file    = defined $args->{ 'file' }    ? $args->{ 'file' }    : '';
-    my $config  = defined $args->{ 'config' }  ? $args->{ 'config' }  : {};
-    my $comment = defined $args->{ 'comment' } ? $args->{ 'comment' } : {};
-    my $order   = defined $args->{ 'order' }   ? $args->{ 'order' }   : [];
-    my $mode    = defined $args->{ 'mode' }    ? $args->{ 'mode' } : 'default';
+    my ($self, $cfargs) = @_;
+    my $file    = defined $cfargs->{ 'file' }    ? $cfargs->{ 'file' }    : '';
+    my $config  = defined $cfargs->{ 'config' }  ? $cfargs->{ 'config' }  : {};
+    my $comment = defined $cfargs->{ 'comment' } ? $cfargs->{ 'comment' } : {};
+    my $order   = defined $cfargs->{ 'order' }   ? $cfargs->{ 'order' }   : [];
+    my $mode    = defined $cfargs->{ 'mode' }    ? $cfargs->{ 'mode' } : 'default';
 
     # sanity
     return unless $file;
@@ -784,12 +784,12 @@ expand $varname to $config->{ varname } in C<$rbuf>.
 
 
 # Descriptions: expand $varname to $config->{ varname }
-#    Arguments: OBJ($config) STR_REF($rbuf) HASH_REF($args)
+#    Arguments: OBJ($config) STR_REF($rbuf) HASH_REF($cfargs)
 # Side Effects: $ref_buffer is rewritten.
 # Return Value: none
 sub expand_variable_in_buffer
 {
-    my ($config, $rbuf, $args) = @_;
+    my ($config, $rbuf, $cfargs) = @_;
     my $loop_max = 16;
     my $loop     = 0;
 
@@ -804,8 +804,8 @@ sub expand_variable_in_buffer
 	    my $x = $config->{ $varname };
 	    $$rbuf =~ s/\$$varname/$x/g;
 	}
-	if (defined $args->{ $varname }) {
-	    my $x = $args->{ $varname };
+	if (defined $cfargs->{ $varname }) {
+	    my $x = $cfargs->{ $varname };
 	    $$rbuf =~ s/\$$varname/$x/g;
 	}
     }
@@ -898,16 +898,16 @@ show all {key => value} for debug.
 
 
 # Descriptions: dump all variables
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) HASH_REF($cfargs)
 # Side Effects: none
 # Return Value: none
 sub dump_variables
 {
-    my ($self, $args) = @_;
+    my ($self, $cfargs) = @_;
     my ($k, $v);
     my $len     = 0;
     my $use_sql = 0;
-    my $mode    = $args->{ mode } || 'all';
+    my $mode    = $cfargs->{ mode } || 'all';
 
     $self->expand_variables();
 
