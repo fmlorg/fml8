@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.152 2003/01/07 08:38:34 fukachan Exp $
+# $FML: Kernel.pm,v 1.153 2003/01/25 09:14:05 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -715,7 +715,7 @@ sub resolve_ml_specific_variables
 my @delayed_buffer = ();
 
 # Descriptions: debug log. removed in the future
-#    Arguments: OBJ($curproc)
+#    Arguments: OBJ($curproc) STR($str)
 # Side Effects: none
 # Return Value: none
 sub __debug_ml_xxx
@@ -803,7 +803,7 @@ $config->get() of FETCH() method is called.
 =cut
 
 # Descriptions: load configuration files and evaluate variables
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc) ARRAY_REF($files)
 # Side Effects: none
 # Return Value: none
 sub load_config_files
@@ -836,7 +836,7 @@ sub load_config_files
 
 
 # Descriptions: add ml local library path into @INC
-#    Arguments: OBJ($OBJ)
+#    Arguments: OBJ($curproc)
 # Side Effects: update @INC
 # Return Value: none
 sub fix_perl_include_path
@@ -929,7 +929,7 @@ The restriction rules follows the order of C<command_restrictions>.
 
 
 # Descriptions: permit this post process
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: set the error reason at "check_restriction" in pcb.
 # Return Value: NUM(1 or 0)
 sub permit_post
@@ -940,7 +940,7 @@ sub permit_post
 
 
 # Descriptions: permit this command process
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($curproc) HASH_REF($args)
 # Side Effects: set the error reason at "check_restriction" in pcb.
 # Return Value: NUM(1 or 0)
 sub permit_command
@@ -1254,7 +1254,7 @@ sub _array_is_different
 
 # Descriptions: add the specified $msg into on memory queue
 #    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($args)
-#               ARRAY_REF($recipient) ARRAY_REF($recipient_maps)
+#               ARRAY_REF($recipient) ARRAY_REF($recipient_maps) OBJ($hdr)
 # Side Effects: update on momory queue which is on PCB area.
 # Return Value: none
 sub _append_message_into_queue
@@ -1313,7 +1313,7 @@ sub _reply_message_recipient_keys
 
 
 # Descriptions: make a key
-#    Arguments: ARRAY_REF($rarray)
+#    Arguments: ARRAY_REF($rarray) ARRAY_REF($rmaps)
 # Side Effects: none
 # Return Value: STR
 sub _gen_recipient_key
@@ -1458,7 +1458,7 @@ Prepare the message and queue it in by C<Mail::Delivery::Queue>.
 #               msg = header + "text" + $r->[0] + $r->[1] + ...
 #
 #    Arguments: OBJ($curproc) HASH_REF($args)
-# Side Effects:
+# Side Effects: none
 # Return Value: none
 sub inform_reply_messages
 {
