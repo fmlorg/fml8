@@ -100,8 +100,6 @@ sub spool_in
     my $config    = $curproc->{ config };
     my $spool_dir = $config->{ spool_dir };
 
-    print "yes: ",  $config->yes( 'use_spool' ) , "\n";
-
     if ( $config->yes( 'use_spool' ) ) {
 	unless (-d $spool_dir) {
 	    use File::Path;
