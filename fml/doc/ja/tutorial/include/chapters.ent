@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.68 2003/04/12 15:20:02 fukachan Exp $
+	$FML: chapters.ent,v 1.69 2003/04/13 03:29:02 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -73,7 +73,7 @@
 
 <!-- フィルタ -->
 <!entity chapter.customize.filter    SYSTEM "customize/filter.sgml">
-<!entity recipe.filter.notice.sgml   SYSTEM "customize/recipe.filter.notice.sgml.sgml">
+<!entity recipe.filter.notice        SYSTEM "customize/recipe.filter.notice.sgml">
 
 
 

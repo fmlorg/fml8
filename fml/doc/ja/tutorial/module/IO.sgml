@@ -1,5 +1,5 @@
 <!--
-   $FML: IO.sgml,v 1.1 2003/02/18 02:29:14 fukachan Exp $
+   $FML: IO.sgml,v 1.2 2003/03/14 02:57:44 fukachan Exp $
 -->
 
 <chapter id="module.io.adapter">
@@ -320,21 +320,21 @@ sql_getline	=	select * from $sql_table
 				fml_domain = '$ml_domain'
 
 sql_add		=	insert into $sql_table
-			values ('$ml_name', '$ml_domain', '&address', 1, 1)
+			values ('$ml_name', '$ml_domain', '&amp;address', 1, 1)
 
 sql_delete	=	delete from $sql_table
 			where	fml_ml = '$ml_name'
 					and
 				fml_domain = '$ml_domain'
 					and
-				fml_address = '&address'
+				fml_address = '&amp;address'
 
 sql_find	=	select * from $sql_table
 			where	fml_ml = '$ml_name'
 					and
 				fml_domain = '$ml_domain'
 					and
-				fml_address like '&regexp'
+				fml_address like '&amp;regexp'
 
 
 
@@ -366,7 +366,7 @@ sql_add		=	update ml
 					and
 				fml_domain = '$ml_domain'
 					and
-				fml_address = '&address'
+				fml_address = '&amp;address'
 
 sql_delete	=	update ml
 			set recipient = 0
@@ -374,7 +374,7 @@ sql_delete	=	update ml
 					and
 				fml_domain = '$ml_domain'
 					and
-				fml_address = '&address'
+				fml_address = '&amp;address'
 
 
 sql_find	=	select * from $sql_table
@@ -384,7 +384,7 @@ sql_find	=	select * from $sql_table
 					and
 				fml_recipient = '1'
 					and
-				fml_address like '&regexp'
+				fml_address like '&amp;regexp'
 </screen>
 </para>
 

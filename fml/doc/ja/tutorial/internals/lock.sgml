@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: lock.sgml,v 1.1 2003/04/12 15:20:03 fukachan Exp $
 -->
 
 
@@ -68,7 +68,6 @@ chaddr の途中で sleep したら敗けやから;)
 </footnote>
 perl thread をつかえばできるけど、
 汎用的な実装はかなりむつかしいぽい;)
-</para>
 </para>
 
 </sect1>

@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: filter.sgml,v 1.1 2003/04/13 03:29:01 fukachan Exp $
 -->
 
 <chapter>
@@ -7,6 +7,10 @@
 	フィルタ
 	</title>
 
-&recipe.filter.notice.sgml;
+<qandaset>
+
+&recipe.filter.notice;
+
+</qandaset>
 
 </chapter>

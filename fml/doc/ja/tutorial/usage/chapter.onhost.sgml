@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.onhost.sgml,v 1.5 2003/03/14 08:28:00 fukachan Exp $
+   $FML: chapter.onhost.sgml,v 1.6 2003/04/12 15:21:22 fukachan Exp $
 -->
 
 <chapter id="usage.onhost">
@@ -76,7 +76,7 @@ fml     ＭＬ名 コマンド オプション
 </para>
 
 
-<setc2>
+<sect2>
 	<title>
 	特定のＭＬに操作を施すコマンド
 	</title>
@@ -93,7 +93,7 @@ fml     ＭＬ名 コマンド オプション
 </sect2>
 
 
-<setc2>
+<sect2>
 	<title>
 	特定のＭＬのデータを見るコマンド
 	</title>
@@ -110,7 +110,7 @@ fml     ＭＬ名 コマンド オプション
 </sect2>
 
 
-<setc2>
+<sect2>
 	<title>
 	データを見るだけのコマンド
 	</title>
@@ -128,10 +128,10 @@ fmlconf  [-n] $ml
 </screen>
 </para>
 
-</setc2>
+</sect2>
 
 
-<setc2>
+<sect2>
 	<title>
 	操作を施すコマンドだが、
 	特定のＭＬとの関わりはないかも知れないタイプ

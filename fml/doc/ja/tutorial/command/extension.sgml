@@ -1,5 +1,5 @@
 <!--
-   $FML: extension.sgml,v 1.7 2002/09/29 06:01:10 fukachan Exp $
+   $FML: extension.sgml,v 1.8 2002/10/29 04:15:57 fukachan Exp $
 -->
 
 
@@ -64,7 +64,6 @@ commands_for_user += uja
 	admin uja コマンドを作る。
 	</title>
 
-
 <para>
 admin 向けのコマンド uja を作りたい場合、
 FML::Command 以下から適当に cut and paste して
@@ -82,7 +81,6 @@ commands_for_privileged_user += uja
 </sect2>
 
 </sect1>
-
 
 
 <sect1 id="fml.command.hack.makefml">
