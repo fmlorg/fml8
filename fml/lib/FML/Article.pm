@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.62 2004/04/11 13:00:59 fukachan Exp $
+# $FML: Article.pm,v 1.63 2004/04/23 04:10:26 fukachan Exp $
 #
 
 package FML::Article;
@@ -74,7 +74,9 @@ sub new
     my $msg    = $curproc->incoming_message();
 
     if (defined $msg) {
-	_setup_article_template($curproc, $msg);
+	unless (defined $curproc->{ article }->{ message }) {
+	    _setup_article_template($curproc, $msg);
+	}
     }
 
     return bless $me, $type;
@@ -102,11 +104,14 @@ sub _setup_article_template
 {
     my ($curproc, $msg_in) = @_;
 
+    # already defined.
+    return if defined $curproc->{ article }->{ message };
+
     # create an article template by duplicating the incoming message
     my $duphdr = $msg_in->dup_header;
     if (defined $duphdr) {
 	# here, we handle raw $curproc to build $curproc->{ article } ...
-	$curproc->{ article }->{ message } = $duphdr;
+	$curproc->{ article }->{ message } = $duphdr; # head of a chain.
 	$curproc->{ article }->{ header }  = $duphdr->whole_message_header;
 	$curproc->{ article }->{ body }    = $duphdr->whole_message_body;
     }
@@ -160,10 +165,15 @@ sub spool_in
 	    use FileHandle;
 	    my $fh = new FileHandle;
 	    if (defined $fh) {
+	        $fh->autoflush(1);
 		$fh->open($file, "w");
-		$curproc->{ article }->{ header }->print($fh);
+
+		my $header = $curproc->article_message_header();
+		my $body   = $curproc->article_message_body();
+		$header->print($fh);
 		print $fh "\n";
-		$curproc->{ article }->{ body }->print($fh);
+		$body->print($fh);
+
 		$fh->close;
 		$curproc->log("article $id");
 	    }
