@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.20 2003/05/13 09:30:09 fukachan Exp $
+# $FML: Postfix.pm,v 1.21 2003/08/29 15:34:05 fukachan Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -156,7 +156,8 @@ sub postfix_find_key_in_alias_maps
     my $maps   = $self->postfix_alias_maps($curproc, $optargs);
 
     # default domain
-    my $key  = $optargs->{ key };
+    my $key    = $optargs->{ key };
+    my $domain = $params->{ ml_domain };
 
     # virtual domain
     my $xparams = {};
@@ -166,16 +167,25 @@ sub postfix_find_key_in_alias_maps
 
     # search
     for my $map (@$maps, $map) {
-	print STDERR "scan key = $key, map = $map\n" if $debug;
+	print STDERR "scan key = $key/$key_virtual, map = $map\n" if $debug;
 
-	if ($self->_find_key_in_file($map, $key)) {
-	    print STDERR "\tkey=$key found\n" if $debug;
-	    return 1;
+	# default domain case
+	if ($curproc->is_default_domain($domain)) {
+	    print STDERR "   search $key (default domain).\n" if $debug;
+	    if ($self->_find_key_in_file($map, $key)) {
+		print STDERR "\tkey=$key found\n" if $debug;
+		return 1;
+	    }
 	}
-
-	if ($self->_find_key_in_file($map, $key_virtual)) {
-	    print STDERR "\tkey=$key_virtual found\n" if $debug;
-	    return 1;
+	# virtual domain case
+	else {
+	    if ($debug) {
+		print STDERR "   search $key_virtual (virtual domain).\n";
+	    }
+	    if ($self->_find_key_in_file($map, $key_virtual)) {
+		print STDERR "\tkey=$key_virtual found\n" if $debug;
+		return 1;
+	    }
 	}
     }
 
