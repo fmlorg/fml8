@@ -1,0 +1,55 @@
+File::MMagic
+
+Copyright(C) 1999-2001 NOKUBI Takatsugu <knok@daionet.gr.jp>
+
+1. はじめに
+
+このモジュールは、file(1)コマンドに相当する機能、すなわちファイルの内
+容からその種類を推測するためのものです。
+
+2. インストール
+
+アーカイブファイルを展開し、作成されたディレクトリFile-MMagic-x.xx
+("x.xx"にはバージョン番号が入ります)をカレントディレクトリに移します。
+そこで、perl Makefile.PLを実行してMakefileを生成し、make installでイン
+ストールがおこなわれます。
+
+3. 使い方
+
+このモジュールは、perl5のオブジェクトを用いてファイルの種類をファイル
+名やファイルハンドルから推測することができます。
+
+詳しい使い方は、perldoc File::MMagic等で確認してください。
+
+4. 著作権表示
+
+Copyright(C) 1999-2001 NOKUBI Takatsugu <knok@daionet.gr.jp>
+
+* Copyright (c) Ian F. Darwin, 1987.
+* Written by Ian F. Darwin.
+* Copyright (c) 1995-1999 The Apache Group.  All rights reserved.
+
+このモジュールは完全に無保障です。
+
+また、このモジュールはThe Unix Reconstruction Projectの成果物である
+Perl Power Toolsのfile.kulpを元に作成されています。さらに、The Apache 
+HTTP server projectの成果物の一部であるmagicファイルを元にしたデータを
+内包しています。よって、著作権はこれらオリジナルのソフトウェアに準じた
+扱いとします。
+  詳細は、アーカイブに含まれるCOPYINGというファイルを参照してください。
+
+The Unix Reconstruction Project
+<http://language.perl.com/ppt/index.html>
+The Apache HTTP server project
+<http://www.apache.org/>
+
+5. 注意点
+
+このモジュールを mod_perl で利用するときは、MMagic.pm から magic entry 部分
+を抜き出し、それを magic file として陽に指定するようにして下さい。
+モジュールに組み込まれている magic entry は mod_perl では正しく動作しません。
+
+例:
+
+my $magic = File::MMagic::new('/etc/mime-magic');
+   # /etc/mime-magic is separated file from MMagic.pm

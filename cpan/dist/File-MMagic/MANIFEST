@@ -1,0 +1,10 @@
+ChangeLog
+MMagic.pm
+MANIFEST
+COPYING
+README.ja
+README.en
+Makefile.PL
+t/01-selfcheck.t
+t/02-extmagic.t
+
