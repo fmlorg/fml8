@@ -7,24 +7,6 @@
         XXX 遠大なビジョンやとりあえず後まわしでよいものは STATUS.txt へ
 
 
-[TODO]	FML::Process::State
-
-	FML::PCB を変更するルーチンは、	
-	FML::Process::State か FML::Process::Utils だけにあるべきじゃ
-	ないかな？
-	
-
-[TODO]	エラートラップフレームワーク
-
-
-[TODO]	FML::Restriction::* のつかいかた
-
-		FML/Process/CGI/Param.pm
-
-
-[TODO]	FML::PCB FML::Config は、コンテキスト切替時にどうする？
-
-
 [TODO]	使ってないモジュール?
 
 		FML::Data::Deadline
@@ -46,6 +28,8 @@
 		rmml_command_mta_config_list
 		template_file_charset_list
 
+	select?
+	choice?
 
 
 [TODO]	charset と言語(japanese,english)との対応関係を一箇所にまとめて定義
@@ -56,7 +40,7 @@
 		FML/Article/Summary.pm
 		Mail/Message/Encode.pm
 		Mail/Message/ToHTML.pm
-
+ 
 	OUTPUT をどうすればよいか？で決まる処理はなんとかなる。
 	入力は自動判定になるが、出力は設定ファイルで決まる。
 
@@ -65,50 +49,21 @@
 	出力(たとえば .html の content-type)も入力と同期して変化するべきだ。
 
 
-[TODO]	fml $ml spool {status,convert}: --srcdir= とか必要じゃない？
-
-	コマンドラインオプションは、OK？
-
-	コマンド固有オプションは + ってのは、どうよ？
-
-
 [TODO]	スレッド関連のモジュール全部見直せよ
 
 	スレッド DB 再生成の呪文がないよ;)
 
 	スレッドその他のエンジンもそれを使うことになる。
 
-	Mail/ThreadTrack/Print/Utils.pm に STR2EUC がある
-
 	MTI との統合
-
-	Mail::ThreadTrack のクリーニング
-
-	fml $ml thread $subcommand: モジュールの clean up
-
-	スレッド関連のモジュール全部見直せよ
-
-		コマンドラインオプションは、OK？
-
-		Mail::ThreadTrack
-		FML::Article::Thread		(不要じゃないの？)
-
-	どこに、なんのメソッドがあるべきなのか？
 
 	output とモードの明瞭化を
 	どこでどう CSS とたたかうの？
-	Mail::ThreadTrack::Analyze をきれいにしないとね
 
 	index.html (fml-devel 234)
 	 	最近のＭＬのレビュー
 	 		＋
 	 	選択画面 → index thread monthly
-
-	ちょっと見栄えが？
-		見栄えを config.cgi などと合わせる方が良いでしょう
-		＃ テーブルベースの見栄え
-
-	ドキュメントの見直し（？）
 
 	subdir によって、ちょくせつのリンクがつらい？
 
@@ -131,14 +86,6 @@
 	とりあえず、すれっど全部のファイルに修正を試みるべきだ。
 	ローカルな更新は、あまりよい結果にならないようだ。
 
-
-    ＊ (debug ではない) print STDERR をなくそう => error upcall system
-
-	->ui_message() 化
-	やりのこし （スレッド関連は改造の予定があるので放置）
-		FML/Command/Admin/thread.pm
-		Mail/ThreadTrack/Analyze.pm
-		Mail/ThreadTrack/DB.pm
 
 
 ======================================================================
@@ -173,31 +120,9 @@
 		set Reply-To: ml1, ml2
 	   }
 
-
-[TODO]	makefml で動くもの、動かないものは何？
-
-			get	***disabled***
-			mget	***disabled***
-			send	***disabled***
-			password	不要？
-			pass		不要？
-			dir 	＊不要？
-			ls 	＊不要？
-			file 	＊不要？
-			list 	＊不要？
-
-	* CGI でも不要？
-
-		dir ls file
-
-	   FML::Command::Admin::dir
-		cgi_menu() ?
-		ディレクトリ listing してくれる perl module ないかな？
-
-	* makefml get ???
-
-	ところで、誰に送信するんじゃ？ :-) って、そうか、makefml じゃ
-	なくて admin コマンドの時は考えなくてもいいからだな、それは …
+	if ($curproc->is_managed_ml_address($address)) {
+		...
+	}
 
 
 [TODO]	xxx_restrictions = pgp_signature_check ?
@@ -209,26 +134,19 @@
 
 
 
-[TODO]	$main_cf (HASH_REF) が FML::Process::{Switch,Utils,Kernel}
-	以外で参照されているのは間違いだ！ (FNF?)
-
-
 [TODO]	HOOK のガイドライン？
 
 	どの HOOK あたりで、なにをかくべきか？
 
 
 [TODO]	01_RFC_IO_ADAPTER.txt
-[TODO]	01_RFC_UPGRADE.txt
 
-	かんがえよー／まとめようー
+	PostgreSQL をかけ
 
 
 [TODO]	ドキュメント( tutorial )
 
 	module/Mail::Message::ToHTML
-	threadtrack/chapter.sgml
-	threadtrack/tools.sgml
 
 	usage/ がいまいち
 	fml bible のパートIIIの最初の部分のように編成し直すべき
@@ -260,7 +178,6 @@
 	OUT のちぇっくで最重要なのは？
 
 	Mail/Message/ToHTML.pm
-	Mail/ThreadTrack/Print
 
 	Mail/Message/Print などに集結させるべきだろう？
 		print_axss (against cross site scripting).
@@ -289,10 +206,46 @@
 ○	内部構造
 
 
-[TODO]	File::* は、なくすべきだとおもうなぁ。
+[TODO]	エラートラップ・フレームワーク
 
 
-[TODO]	フィルタ関数は、やっぱり FML::FIlter 以下に集結している
+[TODO]	FML::PCB、FML::Config は、コンテキスト切替時にどうする？
+
+
+[TODO]	File::* は、なるたけ、なくすべきだとおもうなぁ。
+
+	- File::SimpleLock
+	- File::Rotate
+		つかってない or つかわないようにかいしゃくした
+
+	- File::CacheDir
+		FML/Error/Cache.pm
+		FML/Process/Kernel.pm
+
+	- File::Sequence
+		File/CacheDir.pm
+
+			increment_id()		つかわれてる
+			get_id()		つかわれてる
+			set_id()		つかわれてる
+			search_max_id()		つかわれていない
+
+
+	- File::Utils
+
+		used		ok, not used.
+		--------------------------------
+				error
+				error_clear
+				mkdirhier
+		touch (File::Sequence がつかってるだけ)
+				search_program
+				copy
+				append
+
+
+
+[TODO]	フィルタ関数は、やっぱり FML::Filter 以下に集結している
 	べきかもしれない？ FML::Command::Filter ?
 	FML::Article::Filter はないのに？
 
@@ -302,9 +255,9 @@
 	->regexp_match() は、まぁいいとおもうが、それいがいのところ
 
 
-[TODO]	remove $pcb->{set,get} other than FML::Process::{Kernel,Utils}
+[TODO]	FML::Restriction::* のつかいかた
 
-	or PCB {category, key} list up in somewhere (fml/etc ?)
+		FML/Process/CGI/Param.pm
 
 
 [TODO]	IO::Adapter::LDAP
@@ -321,6 +274,14 @@
 	MySQL につっこみたいとか〜
 
 
+[TODO]	FML/Process/00_USAGE
+
+
+[TODO]	FML::Command::Admin::dir
+	cgi_menu() ?
+	ディレクトリ listing してくれる perl module ないかな？
+
+
 ======================================================================
 ○	用意しただけ/途中も途中…
 
@@ -334,4 +295,4 @@
 
 
 ----------
-$FML: 00_MEMO,v 1.107 2004/03/12 08:38:04 fukachan Exp $
+$FML: 00_MEMO,v 1.108 2004/03/21 03:15:37 fukachan Exp $
