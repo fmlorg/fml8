@@ -1,7 +1,84 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/05/21
+
+   variables
+   	define $error_cache_dir
+	define $newml_command_postfix_template_files
+	define $newml_command_qmail_template_files
+	define $incoming_message_dir
+	define $outgoing_message_dir
+		var/mail/{incoming,outgoing,queue}/ 
+
+	define $use_outgoing_message_cache     =       yes
+	define $outgoing_message_cache_size    =       128
+	
+   etc/aliases	
+	enable auto error analyzer by default
+	
+   FML::Process::Kernel 
+	implement $curproc->open_outgoing_message_channel()
+	$mincoming_dir -> $incoming_message_dir
+	
+   FML::Process::Distribute 
+	use $curproc->open_outgoing_message_channel() not _smtplog to save
+	SMTP transaction logs.
+	
+   FML::Command::Admin::newml 
+	$newml_command_template_files ->
+	$newml_command_postfix_template_files
+	
+   Mail::Bounce::Postfix19991231 
+	validate input data
+	
+   FML::Process::Error 
+	implement a prototype to cache error data
+
+2002/05/19
+
+   add/enable a prototype of libexe::fml::error (mead)
+
+   variables	
+	define $use_error_analyzer
+	define $subscribe_command_auth_type
+	define $listinfo_base_dir
+	$command_prompot          -> $command_prompt
+	$command_chaddr_type      -> $chaddr_command_auth_type
+	$command_unsubscribe_type -> $unsubscribe_command_auth_type
+
+   FML::Process::Error 
+	work if $use_error_analyzer is 'yes'
+	add hooks
+	finish() checks if this error message is effective or not.
+	fix typo and missing definition
+	
+   FML::Process::Command 
+	fix building logic of $command_args and $options to make admin
+	command work again.
+	fix $admin_prefix trap
+	rearrange structure
+	FNF-ify
+	clarify the current context is under confirmation or not.
+	ignorance of commands are dependent on this context.
+	nuke mode=special which is not used.
+	send back statistics and original message
+	
+   FML::Command::DataCheck 
+	fix parse_command_arguments() arguments
+	
+   Mail::Message::MH 
+	fix wrong last:\d+ counting logic
+	
 2002/05/18
+
+   FML::Process::Command 
+	reconstruct command check logic (1)
+	
+   Mail::Message 
+	implement message_text_as_array_ref()
+	
+   updated IM to im-141 + local patch (tats20020413.diff)
 
    FML::Filter::BodyCheck 
 	add reject_uuencode()
@@ -2317,4 +2394,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.74 2002/05/16 15:01:40 fukachan Exp $
+$FML: CHANGES.txt,v 1.75 2002/05/18 04:01:45 fukachan Exp $
