@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.61 2001/11/25 03:53:00 fukachan Exp $
+# $FML: Kernel.pm,v 1.62 2001/11/25 05:15:37 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -813,7 +813,7 @@ sub prepare_file_to_return
     my $src_file    = $args->{ src };
     my $charset_out = $args->{ charset };
 
-    -d $tmp_dir || mkdir $tmp_dir;
+    -d $tmp_dir || mkdir $tmp_dir, 0755;
 
     use FileHandle;
     my $rh = new FileHandle $src_file;
