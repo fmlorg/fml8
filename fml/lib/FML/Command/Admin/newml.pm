@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.55 2002/11/10 14:50:18 fukachan Exp $
+# $FML: newml.pm,v 1.56 2002/12/24 10:04:17 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -194,16 +194,12 @@ sub _install_template_files
     use FML::MTAControl;
 
     # 2.1 setup include include-ctl ... (postfix/sendmail style)
-    my $postfix = new FML::MTAControl { mta_type => 'postfix' };
-    $postfix->setup($curproc, $params);
-
     # 2.2 setup ~fml/.qmail-* (qmail style)
-    my $qmail = new FML::MTAControl { mta_type => 'qmail' };
-    $qmail->setup($curproc, $params);
-
-    # 2.3
-    my $procmail = new FML::MTAControl { mta_type => 'procmail' };
-    $procmail->setup($curproc, $params);
+    my $list = $config->get_as_array_ref('newml_command_mta_config_list');
+    for my $mta (@$list) {
+	my $obj = new FML::MTAControl { mta_type => $mta };
+	$obj->setup($curproc, $params);
+    }
 }
 
 
@@ -229,12 +225,17 @@ sub _update_aliases
 	print STDERR "         ignore aliases updating.\n";
     }
     else {
+	my $list = $config->get_as_array_ref('newml_command_mta_config_list');
 	eval q{
-	    for my $mta (qw(postfix qmail procmail)) {
-		my $optargs = { mta_type => $mta };
+	    for my $mta (@$list) {
+		my $optargs = { mta_type => $mta, key => $ml_name };
 
 		use FML::MTAControl;
 		my $obj = new FML::MTAControl;
+		my $found = $obj->find_key_in_alias_maps($curproc, $params, {
+		    mta_type   => $mta,
+		    key        => $ml_name,
+		});
 
 		# we need to use the original $params here
 		# update templates for qmail/control/virtualdomains
@@ -243,8 +244,13 @@ sub _update_aliases
 		    $obj->update_virtual_map($curproc, $params, $optargs);
 		}
 
-		$obj->install_alias($curproc, $params, $optargs);
-		$obj->update_alias($curproc, $params, $optargs);
+		if ($found) {
+		    print STDERR "skipping alias update for $mta\n";
+		}
+		else {
+		    $obj->install_alias($curproc, $params, $optargs);
+		    $obj->update_alias($curproc, $params, $optargs);
+		}
 	    }
 	};
 	croak($@) if $@;
@@ -261,13 +267,15 @@ sub _update_aliases
 sub _is_mta_alias_maps_has_ml_entry
 {
     my ($self, $curproc, $params, $ml_name) = @_;
-    my $found = 0;
+    my $config = $curproc->config();
+    my $list   = $config->get_as_array_ref('newml_command_mta_config_list');
+    my $found  = 0;
 
     eval q{
 	use FML::MTAControl;
 
 	# XXX-TODO: procmail ?
-	for my $mta (qw(postfix qmail)) {
+	for my $mta (@$list) {
 	    my $obj = new FML::MTAControl;
 	    $found = $obj->find_key_in_alias_maps($curproc, $params, {
 		mta_type   => $mta,
