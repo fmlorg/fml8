@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: CacheDir.pm,v 1.1 2001/04/03 09:31:27 fukachan Exp $
+# $FML: CacheDir.pm,v 1.2 2001/04/04 12:21:19 fukachan Exp $
 #
 
 package File::CacheDir;
@@ -110,9 +110,12 @@ END   {}
 sub new
 {
     my ($self, $args) = @_;
-    my $me = $self->SUPER::new();
+    my ($type) = ref($self) || $self;
+    my $me     = {};
+
     _take_file_name($me, $args);
-    $me;
+
+    return bless $me, $type;
 }
 
 
@@ -150,8 +153,10 @@ sub _take_file_name
 	$file  = File::Spec->catfile($directory, $file_name.$id);
     }
 
-    ${*$self}{ _cache_type } = $cache_type;
-    ${*$self}{ _file }       = $file;
+    $self->{ _cache_type } = $cache_type;
+    $self->{ _cache_data } = {};
+    $self->{ _directory }  = $directory;
+    $self->{ _file }       = $file;
 }
 
 
@@ -162,18 +167,24 @@ sub _take_file_name
 # Return Value: write file handle (for $file.new.$$)
 sub open
 {
-    my ($self) = @_;
-
-    # temporary file
-    my $file = ${*$self}{ _file};
-
-    # real open with $mode
-    $self->autoflush;
+    my ($self, $file, $mode) = @_;
+    $file = $file || $self->{ _file };
+    $mode = $mode || ($self->{ _cache_type } eq 'temporal' ? "a+" : "w+");
 
     # If the cache is limited by "time", we only add values to the file.
     # If limited by space, we ovewrite the file, so open it by the mode "w".
-    my $mode = ${*$self}{ _cache_type } eq 'temporal' ? "a" : "w";
-    $self->SUPER::open($file, $mode) ? $self : undef;
+    my $fh = new IO::File;
+
+    # real open with $mode
+    if (defined $fh) {
+	$fh->open($file, $mode);
+	$fh->autoflush(1);
+	$self->{ _fh } = $fh;
+	return $fh;
+    }
+    else {
+	return undef;
+    }
 }
 
 
@@ -184,7 +195,87 @@ sub open
 sub close
 {
     my ($self) = @_;
-    $self->SUPER::close();
+    my $fh = $self->{ _fh };
+    defined $fh ? $fh->close() : undef;
+}
+
+
+
+=head2 C<get(key)>
+
+=head2 C<set(key, value)>
+
+=cut
+
+
+sub get
+{
+    my ($self, $key) = @_;
+    $self->get_latest_value($key);
+}
+
+
+sub get_latest_value
+{
+    my ($self, $key) = @_;
+    my $file = $self->{ _file };
+    my $buf  = $self->_search($file, $key);
+    return $buf if $buf; 
+
+    my $dir = $self->{ _directory };
+    my $dh  = new IO::Handle;
+
+    opendir($dh, $dir);
+    my @dh = sort { $b <=> $a } readdir($dh);
+
+    for (@dh) {
+	next if $_ =~ /^\./;
+	next if $_ !~ /^\d/;
+	next if $_ =~ /^\d{1,2}$/;
+
+	$file = $dir .'/'. $_;
+	$buf  = $self->_search($file, $key);
+	last if $buf;
+    }
+    closedir($dh) if defined $dh;
+
+    return $buf;
+}
+
+
+sub _search
+{
+    my ($self, $file, $key) = @_;
+    my $hash = $self->{ _cache_data };
+    my $pkey = substr($key, 0, 1);
+    my $buf;
+
+    # negative cache
+    return '' if defined $hash->{ $file };
+    $hash->{ $file } = 1;
+
+    my $fh = $self->open($file, "r");
+    while ($_ = $fh->getline) {
+	next unless /^$pkey/;
+
+	if (/^$key\s+/ || /^$key$/) {
+	    chop $_;
+	    my ($k, $v) = split(/\s+/, $_, 2);
+	    $buf = $v;
+	}
+    }
+    $self->close;
+
+    $buf;
+}
+
+
+sub set
+{
+    my ($self, $key, $value) = @_;
+    my $fh = $self->open;
+    print $fh $key, "\t", $value, "\n";
+    $self->close;
 }
 
 
