@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.48 2003/08/24 14:09:25 fukachan Exp $
+# $FML: File.pm,v 1.49 2003/11/26 11:00:32 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -240,6 +240,7 @@ sub _get_next_xxx
 {
     my ($self, $mode) = @_;
     my ($buf) = '';
+    my (@buf) = ();
 
     my $fh = $self->{_fh};
     if (defined $fh) {
@@ -264,15 +265,24 @@ sub _get_next_xxx
 	    elsif ($mode eq 'value_as_array_ref') {
 		$value =~ s/^\s*//;
 		$value =~ s/\s*$//;
-		my (@buf) = split(/\s+/, $value);
+		(@buf) = split(/\s+/, $value);
 		$buf = \@buf;
 	    }
 	    elsif ($mode eq 'key,value_as_array_ref') {
-		$value =~ s/^\s*//;
-		$value =~ s/\s*$//;
-		my (@buf) = split(/\s+/, $value);
-		unshift(@buf, $key);
-		$buf = \@buf;
+		@buf = (); # reset;
+
+		if (defined $key && $key) {
+		    if (defined $value && $value) {
+			$value =~ s/^\s*//;
+			$value =~ s/\s*$//;
+			(@buf) = split(/\s+/, $value);
+		    }
+		    unshift(@buf, $key);
+		    $buf = \@buf;
+		}
+		else {
+		    $buf = [];
+		}
 	    }
 	    $ec++;
 	}
