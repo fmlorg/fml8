@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.66 2003/03/28 10:03:36 fukachan Exp $
+# $FML: Utils.pm,v 1.67 2003/04/16 15:42:46 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1122,7 +1122,7 @@ sub convert_to_mail_address
     my $result = [];
 
     for my $rcpt (@$list) {
-	if ($rcpt eq 'maitainer') {
+	if ($rcpt eq 'maintainer') {
 	    push(@$result, $config->{ maintainer });
 	}
 	elsif ($rcpt eq 'sender') {
