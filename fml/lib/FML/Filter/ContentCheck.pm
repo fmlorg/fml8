@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ContentCheck.pm,v 1.2 2002/04/08 12:44:24 fukachan Exp $
+# $FML: ContentCheck.pm,v 1.3 2002/04/10 04:28:34 fukachan Exp $
 #
 
 package FML::Filter::ContentCheck;
@@ -72,7 +72,7 @@ sub rules
 }
 
 
-=head2 C<header_check($msg, $args)>
+=head2 C<content_check($msg, $args)>
 
 C<$msg> is C<Mail::Message> object.
 
@@ -82,7 +82,7 @@ C<Usage>:
     my $obj  = new FML::Filter::ContentCheck;
     my $msg  = $curproc->{'incoming_message'};
 
-    $obj->header_check($msg, $args);
+    $obj->content_check($msg, $args);
     if ($obj->error()) {
        # do something for wrong formated message ...
     }
@@ -97,12 +97,11 @@ C<Usage>:
 sub content_check
 {
     my ($self, $msg, $args) = @_;
-    my $h = $msg->whole_message_header();
     my $rules = $self->{ _rules };
 
     for my $rule (@$rules) {
 	eval q{
-	    $self->$rule($h, $args);
+	    $self->$rule($msg, $args);
 	};
 
 	if ($@) {
@@ -119,7 +118,7 @@ sub content_check
 sub only_plaintext
 {
     my ($self, $msg, $args) = @_;
-    my $mp   = $self;
+    my $mp   = $msg;
     my ($data_type,$prevmp,$nextmp);
 
    for ( ; $mp; $mp = $mp->{ next }) {
@@ -137,6 +136,7 @@ sub only_plaintext
 	}
 	$mp->delete_message_part_link();
     }
+    return 0;
 }
 
 =head1 AUTHOR
