@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.3 2004/01/22 15:14:23 fukachan Exp $
+# $FML: Control.pm,v 1.4 2004/01/23 09:17:36 fukachan Exp $
 #
 
 package FML::ML::Control;
@@ -34,7 +34,7 @@ sub new
 {
     my ($self, $curproc) = @_;
     my ($type) = ref($self) || $self;
-    my $me     = {}; 
+    my $me     = {};
     return bless $me, $type;
 }
 
@@ -103,7 +103,7 @@ sub init_ml_home_dir
     }
 
     # $ml_home_dir/etc/mail
-    my $dirlist = 
+    my $dirlist =
 	$config->get_as_array_ref('newml_command_init_public_directories');
     for my $_dir (@$dirlist) {
 	unless (-d $_dir) {

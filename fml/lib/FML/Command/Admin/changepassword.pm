@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: changepassword.pm,v 1.9 2004/01/01 08:48:39 fukachan Exp $
+# $FML: changepassword.pm,v 1.10 2004/02/01 14:40:02 fukachan Exp $
 #
 
 package FML::Command::Admin::changepassword;
@@ -107,9 +107,9 @@ sub process
 	use FML::Restriction::Base;
 	my $safe = new FML::Restriction::Base;
 	if ($safe->regexp_match('address', $address)) {
-	    $self->_change_password($curproc, 
-				    $command_args, 
-				    $address, 
+	    $self->_change_password($curproc,
+				    $command_args,
+				    $address,
 				    $password);
 	}
 	else {
@@ -134,13 +134,13 @@ sub _change_password
     my ($self, $curproc, $command_args, $address, $password) = @_;
     my $config = $curproc->config();
 
-    # XXX We should always add/rewrite only $primary_*_map maps via 
+    # XXX We should always add/rewrite only $primary_*_map maps via
     # XXX command mail, CUI and GUI.
     # XXX Rewriting of maps not $primary_*_map is
     # XXX 1) may be not writable.
-    # XXX 2) ambigous and dangerous 
+    # XXX 2) ambigous and dangerous
     # XXX    since the map is under controlled by other module.
-    # XXX    for example, one of member_maps is under admin_member_maps. 
+    # XXX    for example, one of member_maps is under admin_member_maps.
     my $pri_map = $config->{ primary_admin_member_password_map };
     my $up_args = {
 	map      => $pri_map,

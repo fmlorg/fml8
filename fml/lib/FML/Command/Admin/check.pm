@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: check.pm,v 1.9 2003/08/29 15:33:58 fukachan Exp $
+# $FML: check.pm,v 1.10 2003/12/31 03:51:49 fukachan Exp $
 #
 
 package FML::Command::Admin::check;
@@ -70,7 +70,7 @@ sub process
 }
 
 
-# XXX-TODO: which correct ? use ui_message() / print() 
+# XXX-TODO: which correct ? use ui_message() / print()
 
 
 # Descriptions: check the existence of $ml_home_dir.

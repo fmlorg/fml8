@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.89 2004/01/18 14:09:05 fukachan Exp $
+# $FML: Config.pm,v 1.90 2004/02/01 06:38:34 fukachan Exp $
 #
 
 package FML::Config;
@@ -121,7 +121,7 @@ sub new
 
 =head2 get( key )
 
-get value for key. 
+get value for key.
 return '' (null string) if undefined.
 
 =head2 get_as_array_ref( key )

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: log.pm,v 1.24 2004/01/01 23:52:12 fukachan Exp $
+# $FML: log.pm,v 1.25 2004/02/01 14:39:00 fukachan Exp $
 #
 
 package FML::Command::Admin::log;
@@ -86,7 +86,7 @@ sub cgi_menu
 }
 
 
-# Descriptions: show log file. 
+# Descriptions: show log file.
 #               This function is same as "tail -30 log" by default.
 #    Arguments: OBJ($self) OBJ($curproc) STR($log_file) HASH_REF($sl_args)
 # Side Effects: none

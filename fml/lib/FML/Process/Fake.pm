@@ -3,7 +3,7 @@
 # Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Fake.pm,v 1.7 2004/01/24 15:37:03 fukachan Exp $
+# $FML: Fake.pm,v 1.8 2004/01/31 04:06:33 fukachan Exp $
 #
 
 package FML::Process::Fake;
@@ -247,7 +247,7 @@ sub _faker_prepare
 {
     my ($curproc) = @_;
 
-    # 1. parse message 
+    # 1. parse message
     $curproc->parse_incoming_message();
 }
 
@@ -308,7 +308,7 @@ sub _faker_main
     if ($eval) { eval qq{ $eval; }; $curproc->logwarn($@) if $@; }
 
     # 3. validate and create a new $ml_name\@$faker_domain if needed.
-    # 4. start emulation.  
+    # 4. start emulation.
     my $ml_list   = $pcb->get("faker", "ml_user_part_list");
     my $ml_domain = $curproc->get_emul_domain();
     for my $ml_name (@$ml_list) {
@@ -406,7 +406,7 @@ sub _faker_process_switch
 	    open(STDIN, $path);
 	}
 	else {
-	    $curproc->log("path = <$path>"); 
+	    $curproc->log("path = <$path>");
 	    croak("fail to open STDIN");
 	}
 
@@ -452,7 +452,7 @@ sub is_valid_ml
 	return 1;
     }
     else {
-	return 0; 
+	return 0;
     }
 }
 

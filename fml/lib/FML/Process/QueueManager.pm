@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.17 2004/01/02 14:50:37 fukachan Exp $
+# $FML: QueueManager.pm,v 1.18 2004/01/02 16:08:39 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -18,7 +18,7 @@ FML::Process::QueueManager - provide queue manipulation functions
 
 =head1 SYNOPSIS
 
-To flush all entries in the queue, 
+To flush all entries in the queue,
 
     use FML::Process::QueueManager;
     my $queue = new FML::Process::QueueManager { directory => $queue_dir };

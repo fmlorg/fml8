@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digeston.pm,v 1.8 2004/01/01 08:48:40 fukachan Exp $
+# $FML: digeston.pm,v 1.9 2004/01/01 23:52:12 fukachan Exp $
 #
 
 package FML::Command::Admin::digeston;
@@ -61,7 +61,7 @@ sub lock_channel { return 'command_serialize';}
 
 
 # Descriptions: digest mode off/on for the specified user.
-#               change delivery mode to this address from real to digest one. 
+#               change delivery mode to this address from real to digest one.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: update $recipient_map,$digest_recipient_maps
 # Return Value: none

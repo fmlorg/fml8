@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.76 2004/01/02 14:45:04 fukachan Exp $
+# $FML: newml.pm,v 1.77 2004/01/18 03:34:44 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -109,8 +109,8 @@ sub process
     my $control = new FML::ML::Control;
 
     # define _ml_name_xxx variables in $parms for virtual domain
-    $control->adjust_params_for_virtual_domain($curproc, 
-					       $command_args, 
+    $control->adjust_params_for_virtual_domain($curproc,
+					       $command_args,
 					       $params);
 
     # "makefml --force newml elena" creates elena ML even if elena

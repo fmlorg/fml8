@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digest.pm,v 1.16 2004/01/01 23:52:11 fukachan Exp $
+# $FML: digest.pm,v 1.17 2004/02/01 14:40:02 fukachan Exp $
 #
 
 package FML::Command::Admin::digest;
@@ -74,13 +74,13 @@ sub process
     my $config  = $curproc->config();
     my $options = $command_args->{ options } || [];
 
-    # XXX We should always add/rewrite only $primary_*_map maps via 
+    # XXX We should always add/rewrite only $primary_*_map maps via
     # XXX command mail, CUI and GUI.
     # XXX Rewriting of maps not $primary_*_map is
     # XXX 1) may be not writable.
-    # XXX 2) ambigous and dangerous 
+    # XXX 2) ambigous and dangerous
     # XXX    since the map is under controlled by other module.
-    # XXX    for example, one of member_maps is under admin_member_maps. 
+    # XXX    for example, one of member_maps is under admin_member_maps.
     my $recipient_map         = $config->{ primary_recipient_map };
     my $recipient_maps        = $config->get_as_array_ref('recipient_maps');
     my $digest_recipient_map  = $config->{ primary_digest_recipient_map };

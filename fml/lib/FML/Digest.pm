@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Digest.pm,v 1.14 2003/10/15 11:57:03 fukachan Exp $
+# $FML: Digest.pm,v 1.15 2004/01/02 16:06:20 fukachan Exp $
 #
 
 package FML::Digest;
@@ -136,7 +136,7 @@ sub _get_id
 	my $sfh = new File::Sequence { sequence_file => $seq_file };
 	if (defined $sfh) {
 	    my $_id = $sfh->get_id();
-	    unless ($sfh->error) { 
+	    unless ($sfh->error) {
 		$id = $_id;
 	    }
 	    else {

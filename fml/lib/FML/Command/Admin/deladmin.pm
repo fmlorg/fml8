@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: deladmin.pm,v 1.15 2004/01/01 23:52:11 fukachan Exp $
+# $FML: deladmin.pm,v 1.16 2004/01/02 14:45:04 fukachan Exp $
 #
 
 package FML::Command::Admin::deladmin;
@@ -68,13 +68,13 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $config = $curproc->config();
 
-    # XXX We should always add/rewrite only $primary_*_map maps via 
+    # XXX We should always add/rewrite only $primary_*_map maps via
     # XXX command mail, CUI and GUI.
     # XXX Rewriting of maps not $primary_*_map is
     # XXX 1) may be not writable.
-    # XXX 2) ambigous and dangerous 
+    # XXX 2) ambigous and dangerous
     # XXX    since the map is under controlled by other module.
-    # XXX    for example, one of member_maps is under admin_member_maps. 
+    # XXX    for example, one of member_maps is under admin_member_maps.
     my $member_map    = $config->{ 'primary_admin_member_map' };
     my $recipient_map = $config->{ 'primary_admin_recipient_map' };
     my $options       = $command_args->{ options };

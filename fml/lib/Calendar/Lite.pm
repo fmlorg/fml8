@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.18 2004/01/17 14:47:22 fukachan Exp $
+# $FML: Lite.pm,v 1.19 2004/01/31 04:59:05 fukachan Exp $
 #
 
 package Calendar::Lite;
@@ -241,7 +241,7 @@ sub _init_calender
 
 
 # Descriptions: parse the specified file.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               STR($year) STR($month) STR($file) ARRAY_REF($pattern)
 # Side Effects: none
 # Return Value: none
@@ -258,7 +258,7 @@ sub _analyze_file
 
 
 # Descriptions: parse the specified files in the directory.
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               STR($year) STR($month) STR($data_dir) ARRAY_REF($pattern)
 # Side Effects: none
 # Return Value: none

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: simple_count.pm,v 1.5 2004/01/01 08:44:48 fukachan Exp $
+# $FML: simple_count.pm,v 1.6 2004/01/01 08:48:42 fukachan Exp $
 #
 
 package FML::Error::Analyze::simple_count;
@@ -83,7 +83,7 @@ sub _simple_count
     my $day        = 24*3600;
     my $threshold  = $day * $daylimit;
 
-    # $data format = { 
+    # $data format = {
     #             key1 => [ value1, value2, ... ],
     #             key2 => [ value1, value2, ... ],
     #          }

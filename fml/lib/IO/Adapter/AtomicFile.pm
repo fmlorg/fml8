@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: AtomicFile.pm,v 1.9 2003/08/23 04:35:43 fukachan Exp $
+# $FML: AtomicFile.pm,v 1.10 2004/01/24 09:00:53 fukachan Exp $
 #
 
 package IO::Adapter::AtomicFile;
@@ -233,7 +233,7 @@ sub copy
 	$wh->close;
 	$rh->close;
 
-	# XXX-TODO: chmod too late 
+	# XXX-TODO: chmod too late
 	chmod $mode, $dst;
     }
     else {

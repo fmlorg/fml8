@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.70 2004/02/04 15:19:14 fukachan Exp $
+# $FML: Header.pm,v 1.71 2004/02/06 12:41:20 fukachan Exp $
 #
 
 package FML::Header;
@@ -434,7 +434,7 @@ sub rewrite_article_subject_tag
 
     # mime decode
     $sbj->mime_decode();
-	
+
     # de-tag and cut off Re: Re: Re: ... (duplicated reply tag).
     $sbj->delete_dup_reply_tag() if $sbj->has_reply_tag();
     $sbj->delete_tag($tag);

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.36 2004/01/21 03:51:16 fukachan Exp $
+# $FML: SendFile.pm,v 1.37 2004/02/13 14:10:26 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -176,7 +176,7 @@ sub send_file
     my $filepath = $command_args->{ _filepath_to_send };
     my $config   = $curproc->config();
 
-    # XXX get_charset() take Accpet-Language: header field into account. 
+    # XXX get_charset() take Accpet-Language: header field into account.
     my $charset  = $curproc->get_charset("reply_message");
 
     # XXX-TODO: who validate $filename and $filepath ?

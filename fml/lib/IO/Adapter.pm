@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.28 2004/01/24 09:03:55 fukachan Exp $
+# $FML: Adapter.pm,v 1.29 2004/02/03 04:15:32 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -393,7 +393,7 @@ For example, to search mail addresses in recipient list,
 =cut
 
 
-# Descriptions: search method. 
+# Descriptions: search method.
 #               call map dependent routine md_find() if defined in the map.
 #    Arguments: OBJ($self) STR($regexp) HASH_REF($args)
 # Side Effects: none

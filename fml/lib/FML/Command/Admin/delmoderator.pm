@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: delmoderator.pm,v 1.14 2004/01/01 23:52:11 fukachan Exp $
+# $FML: delmoderator.pm,v 1.15 2004/01/02 14:45:04 fukachan Exp $
 #
 
 package FML::Command::Admin::delmoderator;
@@ -70,13 +70,13 @@ sub process
     my $options = $command_args->{ options };
     my $address = $command_args->{ command_data } || $options->[ 0 ];
 
-    # XXX We should always add/rewrite only $primary_*_map maps via 
+    # XXX We should always add/rewrite only $primary_*_map maps via
     # XXX command mail, CUI and GUI.
     # XXX Rewriting of maps not $primary_*_map is
     # XXX 1) may be not writable.
-    # XXX 2) ambigous and dangerous 
+    # XXX 2) ambigous and dangerous
     # XXX    since the map is under controlled by other module.
-    # XXX    for example, one of member_maps is under admin_member_maps. 
+    # XXX    for example, one of member_maps is under admin_member_maps.
     my $member_map    = $config->{ 'primary_moderator_member_map' };
     my $recipient_map = $config->{ 'primary_moderator_recipient_map' };
 

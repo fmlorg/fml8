@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Control.pm,v 1.3 2004/01/02 14:50:32 fukachan Exp $
+# $FML: Control.pm,v 1.4 2004/01/22 15:01:01 fukachan Exp $
 #
 
 package FML::MTA::Control;
@@ -273,7 +273,7 @@ sub _install
 {
     my ($self, $src, $dst, $config) = @_;
 
-    # XXX-TODO: method-ify ? 
+    # XXX-TODO: method-ify ?
     eval q{
 	use FML::Config::Convert;
 	&FML::Config::Convert::convert_file($src, $dst, $config);
@@ -294,7 +294,7 @@ sub _remove_postfix_style_virtual
     my $key     = $p->{ key };
 
     #
-    # XXX-TODO: ERROR: this module is private but used over modules. 
+    # XXX-TODO: ERROR: this module is private but used over modules.
     #
 
     use File::Spec;

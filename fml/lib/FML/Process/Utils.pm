@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.102 2004/01/02 14:50:37 fukachan Exp $
+# $FML: Utils.pm,v 1.103 2004/01/24 15:37:03 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -208,7 +208,7 @@ sub get_incoming_message_cache_file_path
     my ($curproc) = @_;
     my $pcb  = $curproc->pcb();
     my $path = $pcb->get("incoming_message", "file_path");
-    return( $path || '' );  
+    return( $path || '' );
 }
 
 

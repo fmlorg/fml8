@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.31 2003/12/30 03:06:38 fukachan Exp $
+# $FML: Queue.pm,v 1.32 2004/01/24 09:03:57 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
@@ -650,7 +650,7 @@ sub active_dir_path
 {
     my ($self, $id) = @_;
     my $dir = $self->{ _directory } || croak("directory undefined");
-    
+
     return File::Spec->catfile($dir, "active");
 }
 

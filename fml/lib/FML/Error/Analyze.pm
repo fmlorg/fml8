@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.25 2004/01/01 08:44:48 fukachan Exp $
+# $FML: Analyze.pm,v 1.26 2004/01/01 08:48:41 fukachan Exp $
 #
 
 package FML::Error::Analyze;
@@ -27,7 +27,7 @@ FML::Error::Analyze - provide model specific analyzer routines.
     my $cache = new FML::Error::Cache $curproc;
     my $rdata = $cache->get_all_values_as_hash_ref();
 
-    # $rdata format = { 
+    # $rdata format = {
     #             key1 => [ value1, value2, ... ],
     #             key2 => [ value1, value2, ... ],
     #          }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Address.pm,v 1.1 2004/01/31 06:32:40 fukachan Exp $
+# $FML: Address.pm,v 1.2 2004/02/04 15:13:12 fukachan Exp $
 #
 
 package Mail::Message::Address;
@@ -134,14 +134,14 @@ sub AUTOLOAD
 {
     my ($self) = @_;
     my $addr   = $self->{ _addr_head } || undef;
-    
+
     # we need to ignore DESTROY()
     return if $AUTOLOAD =~ /DESTROY/o;
 
     my $function = $AUTOLOAD;
     $function =~ s/.*:://o;
 
-    if ($function =~ 
+    if ($function =~
 	/^(phrase|address|comment|format|name|host|user|path|canon)$/o) {
 	if (defined $addr) {
 	    return $addr->$function();

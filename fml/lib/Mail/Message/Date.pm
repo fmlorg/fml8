@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.25 2004/01/24 09:04:00 fukachan Exp $
+# $FML: Date.pm,v 1.26 2004/02/04 15:16:25 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -127,7 +127,7 @@ sub _date
 
 =head2 set($date)
 
-    $date = new Mail::Message::Date; 
+    $date = new Mail::Message::Date;
     $date->set("Tue Dec 30 17:06:34 JST 2003");
     $date->to_unixtime();
     print $date->as_str(), "\n";
@@ -135,7 +135,7 @@ sub _date
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($self) STR($date)
 # Side Effects: none
 # Return Value: none
@@ -147,7 +147,7 @@ sub set
     my ($k, $v);
 
     while(($k, $v) = each %$type) {
-	$self->{ $k } = $v; 
+	$self->{ $k } = $v;
     }
 
     # flag on

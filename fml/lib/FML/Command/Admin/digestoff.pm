@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: digestoff.pm,v 1.8 2004/01/01 08:48:40 fukachan Exp $
+# $FML: digestoff.pm,v 1.9 2004/01/01 23:52:11 fukachan Exp $
 #
 
 package FML::Command::Admin::digestoff;
@@ -23,7 +23,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-disable digest mode for the specified address. 
+disable digest mode for the specified address.
 It means delivery to this address from digest to real delivery mode.
 
 =head1 METHODS

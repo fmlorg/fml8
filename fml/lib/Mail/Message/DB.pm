@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.12 2003/12/10 04:00:05 tmu Exp $
+# $FML: DB.pm,v 1.13 2004/01/24 09:03:59 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -26,7 +26,7 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.12 2003/12/10 04:00:05 tmu Exp $;
+my $version = q$FML: DB.pm,v 1.13 2004/01/24 09:03:59 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -250,9 +250,9 @@ sub analyze
     my $month  = $self->msg_time($hdr, 'yyyy/mm');
     my $subdir = $self->msg_time($hdr, 'yyyymm');
 
-    # 
+    #
     # XXX-TODO: analyze() must not be here ?
-    # 
+    #
 
     _PRINT_DEBUG("analyze start");
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: histgram.pm,v 1.6 2004/01/01 08:44:48 fukachan Exp $
+# $FML: histgram.pm,v 1.7 2004/01/01 08:48:42 fukachan Exp $
 #
 
 package FML::Error::Analyze::histgram;
@@ -86,12 +86,12 @@ sub _histgram
     my $config     = $curproc->config();
     my $limit      = $config->{ error_analyzer_simple_count_limit } || 14;
     my $daylimit   = $config->{ error_analyzer_day_limit } || 14;
-    my $now        = time;                 # unix time (seconds). 
+    my $now        = time;                 # unix time (seconds).
     my $half_day   = 12   * 3600 ;         # 12 hours  (seconds).
     my $one_day    = 24   * 3600 ;         # 24 hours  (seconds).
     my $threshold  = $one_day * $daylimit; # how old   (seconds).
 
-    # $data format = { 
+    # $data format = {
     #             key1 => [ value1, value2, ... ],
     #             key2 => [ value1, value2, ... ],
     #          }

@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calendar.pm,v 1.11 2004/01/14 13:31:28 fukachan Exp $
+# $FML: Calendar.pm,v 1.12 2004/01/31 04:06:31 fukachan Exp $
 #
 
 package FML::Process::Calendar;
@@ -51,7 +51,7 @@ main routine.
 
 parse files under ~$user/.schedule/ directory and summarize it.
 
-Lastly, use w3m to show schedul as html table. 
+Lastly, use w3m to show schedul as html table.
 
 =head2 finish($args)
 
