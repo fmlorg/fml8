@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.101 2004/03/12 11:45:50 fukachan Exp $
+# $FML: Command.pm,v 1.102 2004/03/14 06:47:38 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -304,11 +304,24 @@ sub _command_process_loop
 	# XXX analyze the iput command and set info into $context.
 	$context = $curproc->command_context_init($orig_command);
 
-	# XXX call command actually.
-	$curproc->_command_switch($context);
+	# if $context is empty HASH_REF, no valid command in this line.
+	if (defined $context->{ comname }) {
+	    # XXX call command actually.
+	    $curproc->_command_switch($context);
+	}
+	else {
+	    $num_ignored++;
+	}
 
 	# XXX error handlings.
-	# 1. command evaluation ends.
+	# 1. stop here e.g. we processed "unsubscribe" above, so stop here.
+	if ($curproc->command_context_get_normal_stop()) {
+	    $curproc->reply_message_nl('command.stop', "stopped.");
+	    $curproc->log("command processing stop.");
+	    last COMMAND;
+	}
+
+	# 2. command evaluation ends.
 	#    it should be notified by using $curproc->stop_this_process().
 	if ($curproc->command_context_get_stop_process()) {
 	    $curproc->logerror("command processing stop.");
