@@ -1,5 +1,5 @@
 <!--
-   $FML: post_permit_anyone.sgml,v 1.2 2003/01/05 08:00:59 fukachan Exp $
+   $FML: post_permit_anyone.sgml,v 1.3 2003/04/15 14:51:37 fukachan Exp $
 -->
 
 <sect1 id="config.post.permitanyone">
@@ -18,14 +18,14 @@ post_restrictions は記事の投稿を許すメンバーを定義しています。
 <para>
 &fml4; と異なり、上のように書くと本当に「誰でも投稿可能」であることに
 注意して下さい。
-reject_system_accounts という root などを弾くルールが別途あります。
+reject_system_special_accounts という root などを弾くルールが別途あります。
 </para>
 
 <para>
 ちなみに post_restrictions のデフォルトは &fml4; 互換のため、
 次のようになっています。 
 <screen>
-post_restrictions	=	reject_system_accounts
+post_restrictions	=	reject_system_special_accounts
 				permit_member_maps
 				reject
 </screen>
