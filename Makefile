@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.23 2003/02/11 11:10:57 fukachan Exp $
+# $FML: Makefile,v 1.24 2003/07/24 23:25:47 fukachan Exp $
 #
 
 CONV = doc/bin/text2html.pl
@@ -26,9 +26,18 @@ update:
 clean:
 	@ find . |grep '~' |perl -nple unlink
 
-doc: html
+doc: text html
 
 html: _new_doc _html ja.doc en.doc
+
+text: gen_changes
+
+gen_changes:
+	test -d Documentation/ja/text || mkdir Documentation/ja/text
+	test -d Documentation/en/text || mkdir Documentation/en/text
+	- cp CHANGES.txt Documentation/ja/text
+	- fml/utils/bin/del_jaline.pl CHANGES.txt \
+			> Documentation/en/text/CHANGES.txt
 
 _new_doc:
 	test -d Documentation/en/modules || mkdir Documentation/en/modules
