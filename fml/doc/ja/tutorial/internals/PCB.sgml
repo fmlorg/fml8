@@ -14,10 +14,10 @@
       FML/Process/Command                       run <-- check_restrictions
    FML/Process/Distribute                       run <-- check_restrictions
      FML/Restriction/Post        permit_member_maps <-- check_restrictions
-     FML/Restriction/Post    reject_system_accounts <-- check_restrictions
+     FML/Restriction/Post reject_system_special_accounts <-- check_restrictions
      FML/Restriction/Post                    reject <-- check_restrictions
      FML/Restriction/Post        permit_member_maps --> check_restrictions
-     FML/Restriction/Post    reject_system_accounts --> check_restrictions
+     FML/Restriction/Post reject_system_special_accounts --> check_restrictions
      FML/Restriction/Post                    reject --> check_restrictions
         FML/Process/Utils               get_charset <-- charset
         FML/Process/Utils               get_charset <-- charset
