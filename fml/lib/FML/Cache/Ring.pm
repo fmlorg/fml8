@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: CacheDir.pm,v 1.27 2004/04/15 11:33:03 fukachan Exp $
+# $FML: Ring.pm,v 1.1 2004/04/17 06:18:05 fukachan Exp $
 #
 
 package FML::Cache::Ring;
@@ -246,6 +246,51 @@ sub close
     my ($self) = @_;
     my $fh = $self->{ _fh };
     defined $fh ? $fh->close() : undef;
+}
+
+
+=head2 import_data_from($args)
+
+import data from file.
+Actually, link(2) $src to cache file.
+
+    KEY        VALUE
+    ---------------------------
+    file       STR
+    try_link   STR ( yes | no )
+
+=cut
+
+
+# Descriptions: import data from file.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create $dst file (linked).
+# Return Value: NUM(1(success) or 0(fail))
+sub import_data_from
+{
+    my ($self, $args) = @_;
+    my $link = $args->{ try_link }      || 1;
+    my $src  = $args->{ file }          || '';
+    my $dst  = $self->cache_file_path() || '';
+
+    unless ($src) { return 0;}
+    unless ($dst) {
+	$self->open();
+	$dst = $self->cache_file_path() || '';
+    }
+
+    if ($dst && $src) {
+	return 0 unless -f $src;
+	unlink $dst  if -f $dst;
+	if (link($src, $dst)) {
+	    return 1;
+	}
+	else {
+	    return 0;
+	}
+    }
+
+    return 0;
 }
 
 
