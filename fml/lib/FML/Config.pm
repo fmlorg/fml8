@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.34 2001/07/15 08:20:25 fukachan Exp $
+# $FML: Config.pm,v 1.35 2001/07/15 08:38:22 fukachan Exp $
 #
 
 package FML::Config;
@@ -11,7 +11,9 @@ use Carp;
 use vars qw($need_expansion_variables
 	    %_fml_config_result
 	    %_fml_config
-	    %_default_fml_config);
+	    %_default_fml_config
+	    $object_id
+	    );
 use ErrorStatus qw(error_set error error_clear);
 
 
@@ -118,6 +120,9 @@ sub new
 	my ($k, $v);
 	while (($k, $v) = each %$args) { set($me, $k, $v);}
     }
+
+    # unique object identifier
+    set($me, "_object_id", $object_id++);
 
     return bless $me, $self;
 }
@@ -307,9 +312,10 @@ sub read
     }
 
     # save the value in the object
-    $config_hold_space->{ config }  = $config;
-    $config_hold_space->{ comment } = $comment;
-    $config_hold_space->{ order  }  = $order;
+    my $object_id = $self->{ _object_id };
+    $config_hold_space->{ $object_id }->{ config }  = $config;
+    $config_hold_space->{ $object_id }->{ comment } = $comment;
+    $config_hold_space->{ $object_id }->{ order  }  = $order;
 }
 
 
@@ -320,12 +326,19 @@ sub read
 sub write
 {
     my ($self, $file) = @_;
-    my $config  = $config_hold_space->{ config };
-    my $comment = $config_hold_space->{ comment };
-    my $order   = $config_hold_space->{ order  };
+    my $object_id = $self->{ _object_id };
+    my $config  = $config_hold_space->{ $object_id }->{ config };
+    my $comment = $config_hold_space->{ $object_id }->{ comment };
+    my $order   = $config_hold_space->{ $object_id }->{ order  };
 
     # get handle to update $file
     my $fh = IO::File::Atomic->open($file);
+
+    # back up config.cf firstly
+    my $st = IO::File::Atomic->copy($file, $file.".bak");
+    unless ($st) {
+	Log("cannot backup $file");
+    }
 
     if (defined $fh) {
 	$fh->autoflush(1);
