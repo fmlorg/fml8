@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmml.pm,v 1.1 2002/04/23 09:31:08 fukachan Exp $
+# $FML: rmml.pm,v 1.2 2002/04/24 03:50:01 fukachan Exp $
 #
 
 package FML::Command::Admin::rmml;
@@ -165,9 +165,10 @@ sub _update_aliases
     if ($self->_alias_has_ml_entry($alias, $ml_name)) {
 	$self->_remove_alias_entry($alias, $ml_name);
 	eval q{
-	    use FML::Command::PostfixControl;
-	    my $postfix = new FML::Command::PostfixControl;
+	    use FML::MTAControl;
+	    my $postfix = new FML::MTAControl;
 	    $postfix->update_alias($curproc, {
+		mta_type   => 'postfix',
 		alias_maps => [ $alias ],
 	    });
 	};

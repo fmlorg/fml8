@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.26 2002/04/23 09:30:22 fukachan Exp $
+# $FML: newml.pm,v 1.27 2002/04/24 03:50:00 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -191,9 +191,10 @@ sub _update_aliases
 	    append($dst, $alias);
 	    unlink $dst;
 
-	    use FML::Command::PostfixControl;
-	    my $postfix = new FML::Command::PostfixControl;
+	    use FML::MTAControl;
+	    my $postfix = new FML::MTAControl;
 	    $postfix->update_alias($curproc, {
+		mta_type   => 'postfix',
 		alias_maps => [ $alias ],
 	    });
 	};
