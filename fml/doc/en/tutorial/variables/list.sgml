@@ -912,6 +912,42 @@ process[pid]
 </row>
 <row>
 <entry>
+log_rotate_interval</entry>
+<entry>
+ The interval field specifies the time separation</entry>
+<entry>
+86400
+   </entry>
+</row>
+<row>
+<entry>
+log_rotate_num_backlog</entry>
+<entry>
+ number of archive files to be kept besides the log</entry>
+<entry>
+4
+   </entry>
+</row>
+<row>
+<entry>
+log_rotate_policy</entry>
+<entry>
+ log rotation policy. </entry>
+<entry>
+size
+   </entry>
+</row>
+<row>
+<entry>
+log_rotate_size</entry>
+<entry>
+ rotate log if the size is over this size.</entry>
+<entry>
+300000
+   </entry>
+</row>
+<row>
+<entry>
 log_type</entry>
 <entry>
  logging type</entry>
@@ -1772,6 +1808,15 @@ yes
 use_log_computer_output</entry>
 <entry>
  if yes, makefml/fml outputs machine friendly log.</entry>
+<entry>
+no
+   </entry>
+</row>
+<row>
+<entry>
+use_log_rotate</entry>
+<entry>
+ rotate log files or not.</entry>
 <entry>
 no
    </entry>

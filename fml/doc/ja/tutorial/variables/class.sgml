@@ -431,6 +431,14 @@ log {
     ?     $log_computer_output_engine
           $use_log_computer_output
    }
+
+   log_rotate { 
+    ?     $log_rotate_interval
+    ?     $log_rotate_num_backlog
+    ?     $log_rotate_policy
+    ?     $log_rotate_size
+          $use_log_rotate
+   }
 }
 
 mail {

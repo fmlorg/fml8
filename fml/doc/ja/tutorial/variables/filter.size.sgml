@@ -29,6 +29,23 @@ incoming_mail_cache_size	=	128
 outgoing_mail_cache_size	=	128
 
 
+# Descriptions: ログローテションのポリシー。
+#               サイズが一定値を越えたら行なうのか？(デフォルト)
+#               それても一定時間おきに行なうのか？
+#      History: none
+#        Value: size | interval
+#     Examples: size
+log_rotate_policy	=	size
+
+
+# Descriptions: ログファイルのサイズが、
+#               この大きさを越えたらローテーションを行なう。
+#      History: $LOGFILE_NEWSYSLOG_LIMIT の値
+#        Value: NUM
+#     Examples: 300000 (300K bytes)
+log_rotate_size		=	300000
+
+
 # Descriptions: 投稿された記事のヘッダの上限値
 #               (MTA から fml が受けとる際の記事のヘッダサイズの上限値)
 #      History:

@@ -904,6 +904,42 @@ process[pid]
 </row>
 <row>
 <entry>
+log_rotate_interval</entry>
+<entry>
+ ログファイルローテーションを行なう間隔。</entry>
+<entry>
+86400
+   </entry>
+</row>
+<row>
+<entry>
+log_rotate_num_backlog</entry>
+<entry>
+ log.0 log.1 などの .数字 部分は最大いくつ？</entry>
+<entry>
+4
+   </entry>
+</row>
+<row>
+<entry>
+log_rotate_policy</entry>
+<entry>
+ ログローテションのポリシー。</entry>
+<entry>
+size
+   </entry>
+</row>
+<row>
+<entry>
+log_rotate_size</entry>
+<entry>
+ ログファイルのサイズが、</entry>
+<entry>
+300000
+   </entry>
+</row>
+<row>
+<entry>
 log_type</entry>
 <entry>
  ログとりのタイプ (syslog は未実装)</entry>
@@ -1764,6 +1800,15 @@ yes
 use_log_computer_output</entry>
 <entry>
  機会処理にやさしいフォーマットでログを出力する。</entry>
+<entry>
+no
+   </entry>
+</row>
+<row>
+<entry>
+use_log_rotate</entry>
+<entry>
+ ログファイルローテションを行なうか否か</entry>
 <entry>
 no
    </entry>

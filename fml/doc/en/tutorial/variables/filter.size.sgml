@@ -33,6 +33,20 @@ incoming_mail_cache_size	=	128
 outgoing_mail_cache_size	=	128
 
 
+# Descriptions: log rotation policy. 
+#      History: none
+#        Value: size | interval
+#     Examples: size
+log_rotate_policy	=	size
+
+
+# Descriptions: rotate log if the size is over this size.
+#      History: $LOGFILE_NEWSYSLOG_LIMIT value.
+#        Value: NUM
+#     Examples: 300000 (300K bytes)
+log_rotate_size		=	300000
+
+
 =head2	size limit
 
 
