@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FML: .gen.sh,v 1.5 2001/12/09 10:21:43 fukachan Exp $
+# $FML: .gen.sh,v 1.6 2002/04/01 23:41:09 fukachan Exp $
 #
 
 tmp=default_config.cf.xx.$$
@@ -20,7 +20,7 @@ do
 	mv $tmp default_config.cf.$lang.in
 
 	if [ -f default_config.cf.$lang.in ];then
-		echo default_config.cf.$lang.in created
+		echo creating default_config.cf.$lang.in
 	fi
 done
 
