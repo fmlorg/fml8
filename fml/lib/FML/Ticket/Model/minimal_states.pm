@@ -740,9 +740,10 @@ sub _article_summary
 		next LINE if /^Mime-[-A-Za-z0-9]+:/i;
 		next LINE if /^Content-[-A-Za-z0-9]+:/i;
 		next LINE if /^(To|From|Subject|Reply-To|Received):/i;
+		next LINE if /^(Message-ID|Date):/i;
 
 		# pick up effetive the first $line lines
-		if ($line--> 0) {
+		if ($line-- > 0) {
 		    $buf .= $padding. $_;
 		}
 		else {
@@ -755,7 +756,7 @@ sub _article_summary
 
     use FML::Header;
     my $h = new FML::Header \@header;
-    my $header_info = _header_summary({
+    my $header_info = $self->_header_summary({
 	header  => $h,
 	padding => $padding,
     }); 
@@ -766,7 +767,7 @@ sub _article_summary
 
 sub _header_summary
 {
-    my ($args) = @_;
+    my ($self, $args) = @_;
     my $from    = $args->{ header }->get('from');
     my $subject = $args->{ header }->get('subject');
     my $padding = $args->{ padding };
@@ -779,9 +780,10 @@ sub _header_summary
     $from    = decode_mime_string($from, { charset => 'euc-japan' });
     $from    =~ s/\n/ /g;
 
+    my $br = '<BR>' if $self->{ _mode } eq 'html';
     return 
-	$padding. "   From: ". $from ."\n". 
-	$padding. "Subject: ". $subject ."\n";
+	$padding. "   From: ". $from ."$br\n". 
+	$padding. "Subject: ". $subject ."$br\n";
 }
 
 
@@ -906,7 +908,6 @@ sub _show_ticket_by_html_table
 
     $aid = (split(/\s+/, $articles))[0];
     my $buf = $self->_article_summary( $spool_dir ."/". $aid );
-    $buf    =~ s/\n/<BR>\n/g;
     use Language::ISO2022JP qw(STR2EUC);
     print STR2EUC($buf);
 }
