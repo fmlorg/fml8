@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.58 2001/12/22 09:21:09 fukachan Exp $
+# $FML: Distribute.pm,v 1.59 2001/12/23 11:37:07 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -297,8 +297,6 @@ sub _deliver_article
     }
 
     # distribute article
-    use Mail::Delivery;
-
     my $fp  = sub { Log(@_);}; # pointer to the log function
     my $sfp = sub { my ($s) = @_; print $s; print "\n" if $s !~ /\n$/o;};
 
@@ -319,11 +317,17 @@ sub _deliver_article
 	}
     }
 
-    # start delivery
-    my $service = new Mail::Delivery {
-	log_function       => $fp,
-	smtp_log_function  => $sfp,
+    # delay loading of module
+    my $service = {};
+    eval q{ 
+	use Mail::Delivery;
+	$service = new Mail::Delivery {
+	    log_function       => $fp,
+	    smtp_log_function  => $sfp,
+	};
     };
+    croak($@) if $@;
+
     if ($service->error) { Log($service->error); return;}
 
     $service->deliver(
