@@ -1,16 +1,22 @@
 #!/bin/sh
 #
-# $FML: install.sh,v 1.13 2003/01/28 09:06:07 fukachan Exp $
+# $FML: install.sh,v 1.14 2003/02/11 11:10:58 fukachan Exp $
 #
+
+prefix=/usr/local
+conf_dir=$prefix/etc
 
 if [ ! -f .this_is_a_test_machine ];then
 	echo "touch .this_is_a_test_machine here if you use this script"
 	exit 1
 fi
 
-(cd ../..; ./configure \
+(cd ../..; \
+	rm -f config.log config.cache ;\
+	./configure \
+	--prefix=$prefix \
 	--with-warning \
-	--with-fmlconfdir=/etc/fml \
+	--with-fmlconfdir=$conf_dir/fml \
 	--with-fml-owner=fukachan \
 	--with-fml-group=wheel \
 	)
@@ -25,8 +31,8 @@ if [ -d /var/spool/ml/elena ];then
 fi
 
 ( cd ../../fml/etc/; sh .gen.sh )
-sudo rm -f /etc/fml/main.cf 
-sudo rm -f /etc/fml/site_default_config.cf 
+sudo rm -f $conf_dir/fml/main.cf 
+sudo rm -f $conf_dir/fml/site_default_config.cf 
 sudo rm -f /usr/local/libexec/fml/loader
 ( cd ../..; sudo make install )
 
