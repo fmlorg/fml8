@@ -311,7 +311,8 @@ sub _module_specific_options
 	return qw(debug! params=s -c=s n!);
     }
     elsif ($myname eq 'fmldoc') {
-	return qw(debug! params=s -c=s);	
+	# perldoc [-h] [-v] [-t] [-u] [-m] [-l]
+	return qw(debug! params=s -c=s v! t! u! m! l!);
     }
     elsif ($myname eq 'makefml') {
 	return qw(debug! params=s -c=s);	
