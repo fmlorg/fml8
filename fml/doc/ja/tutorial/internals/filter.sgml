@@ -1,5 +1,5 @@
 <!--
-   $FML: filter.sgml,v 1.2 2003/04/13 04:36:12 fukachan Exp $
+   $FML: filter.sgml,v 1.3 2003/04/15 14:51:41 fukachan Exp $
 -->
 
 <chapter id="internals.filter">
@@ -8,7 +8,7 @@
 	</title>
 
 
-<sect1>
+<sect1  id="internals.filter.overview">
 	<title>
 	フィルタの概要
 	</title>
@@ -47,7 +47,75 @@ text/plain に対してより厳しいシンタックスチェックを行なうフィルタも
 </sect1>
 
 
-<sect1>
+<sect1 id="internals.filter.config">
+	<title>
+	設定変数
+	</title>
+
+<para>
+配送やコマンドメールといった機能別に、「フィルタを使うか使わないか？」
+「使うフィルタルールは？」などが定義されています。
+</para>
+
+<para>
+変数名体系の基本は以下の通りです。
+<screen>
+use_サービス_filter       = yes
+サービス_filter_functions = 機能A 機能B
+
+use_機能A   = yes
+機能A_rules = ルール1 ルール2
+</screen>
+</para>
+
+&table.list.filter.rules;
+
+</sect1>
+
+
+<sect1 id="internals.filter.size">
+	<title>
+	サイズ制限
+	</title>
+
+<para>
+ヘッダ部分およびメール本文の部分のサイズに制限がかけられます。また、変
+数は記事とコマンドメールについてそれぞれ別に存在します。必要なケースで
+だけ使うとか、○○の場合だけサイズ制限の機能を切るといった使い方も可能
+です。
+</para>
+
+<para>
+parse() する時にサイズもはかっているので、このフィルタの実装は簡単だ。
+</para>
+
+&table.list.filter.size;
+
+</sect1>
+
+
+<sect1 id="internals.filter.command">
+	<title>
+	コマンドメールへの制限
+	</title>
+
+<para>
+コマンドメールには「一通当たりのコマンド数」とか「コマンド依存の制限一
+回のコマンドメールでgetできるファイルは100個まで」といった制限が必要で
+しょう。
+</para>
+
+<para>
+TODO: でも、コマンドメールを一行ずつ解析するコード(Mail::Message)のメ
+モリ効率がよくない ;)もっと良い方法を考えるべし。
+</para>
+
+<!-- &table.list.filter.commandmail; -->
+
+</sect1>
+
+
+<sect1 id="internals.filter.mimecomponent">
 	<title>
 	mime component filter のルール構成法
 	</title>
@@ -351,7 +419,7 @@ text/plain + text/plain + text/html
 </sect1>
 
 
-<sect1>
+<sect1 id="internals.filter.mimecomponent.functions">
 	<title>
 	議論: mime component filter に必要な機能とは？
 	</title>
