@@ -11,10 +11,34 @@
 	気をつけてください。
 
 
+2004/11/14
+
+   variables
+	article_post_article_thread_lifetime ?
+		スレッドの続きであれば短時間のあいだ、
+		From: に関わらず投稿を許すオプションの”時間”を指定する。
+		でも、この変数名でいいかなぁ？
+
+2004/11/03
+
+   ちょっとクリーニング中…
+
+    etc/dot_htaccess 
+	add dummy configuration for convenience:
+	AuthUserFile "/dev/null" by default.
+
+   FML::Process::Distribute 
+	rename private method::_distribute -> _deliver_article_prep
+
 2004/10/31
 
    クリーニング中…
 
+   Mail::Message::Thread 
+	bug fix comment::fixed return value
+	
+   FML::Article::Thread 
+	sort, clean up.
 
 2004/10/28
 
@@ -7797,4 +7821,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.227 2004/10/28 13:19:20 fukachan Exp $
+$FML: CHANGES.txt,v 1.228 2004/10/31 08:38:30 fukachan Exp $
