@@ -3,7 +3,7 @@
 # Copyright (C) 2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Base.pm,v 1.3 2001/12/22 09:21:11 fukachan Exp $
+# $FML: Base.pm,v 1.4 2001/12/23 12:19:14 fukachan Exp $
 #
 
 package FML::Restriction::Base;
@@ -58,12 +58,16 @@ sub new
 
 my %basic_variable =
     (
-     'address'    => '[-a-z0-9_]+\@[-A-Za-z0-9\.]+',
+     'address'           => '[-a-z0-9_]+\@[-A-Za-z0-9\.]+',
+     'address_specified' => '[-a-z0-9_]+\@[-A-Za-z0-9\.]+',
+     'address_selected'  => '[-a-z0-9_]+\@[-A-Za-z0-9\.]+',
+
      'ml_name'    => '[-a-z0-9_]+',
      'action'     => '[-a-z_]+',
      'command'    => '[-a-z_]+',
      'user'       => '[-a-z0-9_]+',
      'article_id' => '\d+',
+
      );
 
 
