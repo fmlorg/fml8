@@ -4,13 +4,21 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Kernel.pm,v 1.1.1.1 2001/11/08 15:35:32 fukachan Exp $
+# $FML: Kernel.pm,v 1.2 2001/11/09 00:07:10 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+use FML::Process::Kernel;
+use FML::Log qw(Log LogWarn LogError);
+@ISA = qw(FML::Process::Kernel);
+
+# load standard CGI routines
+use CGI qw/:standard/;
+
 
 =head1 NAME
 
@@ -37,15 +45,6 @@ It provides basic functions and flow.
 ordinary constructor which is used widely in FML::Process classes.
 
 =cut
-
-use FML::Process::Kernel;
-use FML::Log qw(Log LogWarn LogError);
-use FML::Config;
-
-# load standard CGI routines
-use CGI qw/:standard/;
-
-@ISA = qw(FML::Process::Kernel);
 
 
 # XXX now we re-evaluate $ml_home_dir and @cf again.
@@ -116,50 +115,25 @@ sub finish { 1;}
 
 dispatch *.cgi programs.
 
+FML::CGI::XXX module should implement these routines:
+star_html(), run_cgi() and end_html().
+
+run() executes
+
+    $curproc->start_html($args);
+    $curproc->run_cgi($args);
+    $curproc->end_html($args);
+
 =cut
 
-# See CGI.pm for more details
+
 sub run
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
-    my $myname = $config->{ program_name };
 
-    # model specific ticket object
-    if ($myname eq 'makefml.cgi') {
-	$curproc->_makefml($args);
-    }
-    else {
-	croak("Who am I ($myname)? I don't know $myname\n");
-    }
-}
-
-
-sub _makefml
-{
-    my ($curproc, $args) = @_;
-    my $method  = $curproc->safe_param_method;
-    my $ml_name = $curproc->safe_param_ml_name;
-    my $address = $curproc->safe_param_address || '';
-    my $argv    = $curproc->command_line_argv();
-    my @options = ();
-
-    # arguments to pass off to each method
-    my $optargs = {
-	command => $method,
-	ml_name => $ml_name,
-	address => $address,
-	options => \@options,
-	argv    => $argv,
-	args    => $args,
-    };
-
-    Log("makefml.cgi ml_name=$ml_name command=$method address=$address");
-
-    # here we go
-    require FML::Command;
-    my $obj = new FML::Command;
-    $obj->$method($curproc, $optargs);
+    $curproc->html_start($args);
+    $curproc->run_cgi($args);
+    $curproc->html_end($args);
 }
 
 
