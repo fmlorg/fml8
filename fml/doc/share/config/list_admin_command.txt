@@ -5,6 +5,7 @@ bye
 byeadmin
 byepriv
 chaddr
+digest
 dir
 file
 get

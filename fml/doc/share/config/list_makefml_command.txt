@@ -12,6 +12,7 @@ check
 deladmin
 delmoderator
 deluser
+digest
 dir
 edit
 file
