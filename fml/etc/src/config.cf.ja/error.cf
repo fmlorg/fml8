@@ -1,5 +1,18 @@
 =head1	エラーメール解析
 
+=head2
+
+# Descriptions: エラーメールの転送先。デフォルトは未定義。
+#               エラーメールの転送先を mysql で制御したいとか
+#               リモート管理の時は、admin_recipient_maps にしたいなどの
+#               需要があると思われる。
+#      History: 4.0 に該当するものはない
+#        Value: maps
+#     Examples: file:$ml_home_dir/recipients-maintainer
+#               $admin_recipient_maps 
+maintainer_recipient_maps	=
+
+
 =head2	プロセス
 
 
