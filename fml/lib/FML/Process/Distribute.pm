@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Distribute.pm,v 1.48 2001/10/08 15:51:08 fukachan Exp $
+# $FML: Distribute.pm,v 1.49 2001/10/08 20:26:26 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -316,26 +316,30 @@ sub _ticket_check
 {
     my ($curproc, $args) = @_;    
     my $config = $curproc->{ config };
-    my $model  = $config->{ ticket_model };
-    my $pkg    = $config->{ ticket_driver };
+    my $pcb    = $curproc->{ pcb };
 
-    # fake use() to do "use FML::Ticket::$model;"
-    eval qq{ require $pkg; $pkg->import();};
-    unless ($@) {
-	my $ticket = $pkg->new($curproc, $args);
-	if (defined $ticket) {
-	    $ticket->assign($curproc, $args);
-	    $ticket->update_status($curproc, $args);
-	    $ticket->update_db($curproc, $args);
-	    $ticket->add_info($curproc, $args);
-	}
-	else {
-	    Log("creating ticket object failed");
-	}
-    }
-    else {
-	Log($@);
-    }
+    my $ml_name       = $config->{ ml_name };
+    my $ticket_db_dir = $config->{ ticket_db_dir };
+    my $spool_dir     = $config->{ spool_dir };
+    my $article_id    = $pcb->get('article', 'id');
+    my $ttargs        = {
+	logfp       => \&Log,
+	fd          => \*STDOUT,
+	db_base_dir => $ticket_db_dir,
+	ml_name     => $ml_name,
+	spool_dir   => $spool_dir,
+	article_id  => $article_id,
+    };
+
+    my $msg = $curproc->{ article }->{ message };
+
+    eval q{ 
+	use Mail::ThreadTrack;
+	my $thread = new Mail::ThreadTrack $ttargs;
+	$thread->analyze($msg);
+    };
+
+    Log($@) if $@;
 }
 
 
