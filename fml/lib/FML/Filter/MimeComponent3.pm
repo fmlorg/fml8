@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent3.pm,v 1.17 2003/08/23 14:38:00 fukachan Exp $
+# $FML: MimeComponent3.pm,v 1.18 2003/08/25 14:13:58 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -221,7 +221,7 @@ sub _rule_match
 {
     my ($self, $msg, $rule, $mp, $whole_type) = @_;
     my ($r_whole_type, $r_type, $r_action) = @$rule;
-    my $type                               = $mp->data_type();
+    my $type                               = $mp->data_type() || '';
 
     if (__regexp_match($whole_type, $r_whole_type)) {
 	if (__regexp_match($type, $r_type)) {
@@ -249,6 +249,9 @@ sub __regexp_match
 {
     my ($type, $regexp) = @_;
     my $reverse = 0;
+
+    $type   ||= '';
+    $regexp ||= '';
 
     # case insensitive
     $type   =~ tr/A-Z/a-z/;
@@ -280,24 +283,28 @@ sub __basic_regexp_match
 {
     my ($type, $regexp) = @_;
 
-    # prepare variables to compare
-    my ($xl, $xr) = split(/\//, $type);     # text/plain
-    my ($rl, $rr) = split(/\//, $regexp);   # text/*
-    if ($regexp eq '*') { $rl = $rr = '*';} # * => */*
+    if (defined $type && $type && defined $regexp && $regexp) {
+	# prepare variables to compare
+	my ($xl, $xr) = split(/\//, $type);     # text/plain
+	my ($rl, $rr) = split(/\//, $regexp);   # text/*
+	if ($regexp eq '*') { $rl = $rr = '*';} # * => */*
 
-    # check left hand side
-    if ($xl eq $rl || $rl eq '*') {
-	# check right hand side
-	if ($xr eq $rr || $rr eq '*') {
-	    return 1; # both left and right hand sides ok
+	# check left hand side
+	if ($xl eq $rl || $rl eq '*') {
+	    # check right hand side
+	    if ($xr eq $rr || $rr eq '*') {
+		return 1; # both left and right hand sides ok
+	    }
+	    else {
+		return 0;
+	    }
 	}
 	else {
 	    return 0;
 	}
     }
-    else {
-	return 0;
-    }
+    
+    return 0;
 }
 
 

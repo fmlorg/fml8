@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.83 2003/08/20 15:21:17 fukachan Exp $
+# $FML: Message.pm,v 1.84 2003/09/08 09:30:09 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1921,7 +1921,7 @@ return this message has empty content or not.
 sub is_multipart
 {
     my ($self) = @_;
-    my $type = $self->whole_message_header_data_type();
+    my $type = $self->whole_message_header_data_type() || '';
 
     return( ($type =~ /multipart/i) ? 1 : 0 );
 }
@@ -1941,13 +1941,13 @@ return charset.
 sub charset
 {
     my ($self) = @_;
-    my $buf = $self->message_fields();
+    my $buf = $self->message_fields() || '';
 
     # special case: $self equals to header object (head of a chain)
     unless ($buf) {
 	my $data = $self->{ data };
 	if (ref($data) eq 'Mail::Header' || ref($data) eq 'FML::Header') {
-	    $buf = $data->get('content-type');
+	    $buf = $data->get('content-type') || '';
 	    $buf =~ s/\s+/ /g;
 	    $buf = "content-type: $buf";
 	}
@@ -1984,13 +1984,13 @@ The return value is one of base64, quoted-printable or undef.
 sub encoding_mechanism
 {
     my ($self) = @_;
-    my $buf = $self->message_fields();
+    my $buf = $self->message_fields() || '';
 
     # special case: $self equals to header object (head of a chain)
     unless ($buf) {
 	my $data = $self->{ data };
 	if (ref($data) eq 'Mail::Header' || ref($data) eq 'FML::Header') {
-	    $buf = $data->get('content-transfer-encoding');
+	    $buf = $data->get('content-transfer-encoding') || '';
 	    $buf = "Content-Transfer-Encoding: $buf";
 	}
     }
