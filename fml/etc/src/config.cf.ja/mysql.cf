@@ -1,0 +1,39 @@
+=head1 MySQL の例
+
+#
+# 注意: 次の ^=head で名前空間はリセットされる
+#
+# [Example]
+# create table ml (
+# 	fml_ml        char(64),
+# 	fml_address   char(64),
+# 	fml_member    int,
+# 	fml_recipient int
+# );
+
+[mysql:fml]
+
+sql_server	=	localhost
+sql_user	=	fml
+sql_password	=	uja
+sql_database	=	ml
+sql_table	=	fml
+
+get_next_key	=	select fml_address from $sql_table
+			where fml_ml = '&ml_name'
+
+getline		=	select * from $sql_table
+			where fml_ml = '&ml_name'
+
+add		=	insert into $sql_table
+			values ('&ml_name', '&address', 1, 1)
+
+delete		=	delete from $sql_table
+			where	fml_ml = '&ml_name'
+				and
+				fml_address = '&address'
+
+find		=	select * from $sql_table
+			where	fml_ml = '&ml_name'
+				and
+				fml_address like '&regexp'

@@ -19,5 +19,6 @@ cgi.cf
 mta.cf
 paths.cf
 system_dependence.cf
+mysql.cf
 __end__.cf
 ../hooks.cf
