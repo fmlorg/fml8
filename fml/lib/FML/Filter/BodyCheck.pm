@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: BodyCheck.pm,v 1.25 2002/09/22 14:56:49 fukachan Exp $
+# $FML: BodyCheck.pm,v 1.26 2002/09/23 02:02:05 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -138,7 +138,13 @@ sub body_check
 
     ## 6. main fules
     my $rules = $self->{ _rules };
+
+  RULE:
     for my $rule (@$rules) {
+	if ($rule eq 'permit') {
+	    last RULE;
+	}
+
 	if ($self->can($rule)) {
 	    eval q{
 		$self->$rule($msg, $args, $m);
