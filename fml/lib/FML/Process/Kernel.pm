@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.85 2002/04/13 14:54:51 fukachan Exp $
+# $FML: Kernel.pm,v 1.86 2002/04/15 03:46:44 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -532,6 +532,9 @@ sub _check_resitrictions
 		$curproc->reply_message_nl('kern.not_member',
 					   "you are not a ML member." );
 		$curproc->reply_message( "   your address: $sender" );
+
+		$pcb->set("check_restrictions", "deny_reason", $rule);
+		return 0;
 	    }
 	}
 	elsif ($rule eq 'reject') {
@@ -542,6 +545,9 @@ sub _check_resitrictions
 	    LogWarn("unknown rule=$rule");
 	}
     }
+
+    # deny by default
+    return 0;
 }
 
 
