@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Configure.pm,v 1.30 2001/11/25 03:55:38 fukachan Exp $
+# $FML: ConfViewer.pm,v 1.1 2001/11/25 05:13:22 fukachan Exp $
 #
 
 package FML::Process::ConfViewer;
@@ -87,7 +87,7 @@ sub verify_request
     my ($curproc, $args) = @_;
     my $argv = $curproc->command_line_argv();
 
-    if (length(@$argv) == 1) {
+    if (length(@$argv) == 0) {
 	$curproc->help();
 	exit(0);
     }
@@ -150,6 +150,12 @@ Usage: $name [-n] \$ml_name
 -n        show only difference from default
 
 _EOF_
+}
+
+
+sub finish
+{
+   1;
 }
 
 
