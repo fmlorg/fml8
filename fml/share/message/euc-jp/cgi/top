@@ -1,3 +1,46 @@
 左のナビゲーションバーから、
 ＭＬ(mailing list)とコマンド(command)を選択し、
 submit ボタンを押して下さい。
+
+<table>
+<tr>
+	<td>	subscribe
+	<td>	アドレスの追加
+</tr>
+
+<tr>
+	<td>	unsubscribe
+	<td>	アドレスの削除
+</tr>
+
+<tr>
+	<td>	addadmin
+	<td>	リモート管理者アドレスの追加
+</tr>
+
+<tr>
+	<td>	byeadmin
+	<td>	リモート管理者アドレスの削除
+</tr>
+
+<tr>
+	<td>	list
+	<td>	アドレスリストを見る
+</tr>
+
+<tr>
+	<td>	log
+	<td>	ログを見る
+</tr>
+
+<tr>
+	<td>	newml
+	<td>	ＭＬの作成
+</tr>
+
+<tr>
+	<td>	rmml
+	<td>	ＭＬの削除
+</tr>
+
+</table>
