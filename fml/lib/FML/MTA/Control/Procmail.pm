@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Procmail.pm,v 1.15 2003/09/14 03:53:47 fukachan Exp $
+# $FML: Procmail.pm,v 1.1 2003/12/28 13:23:19 fukachan Exp $
 #
 
 package FML::MTA::Control::Procmail;
@@ -30,7 +30,7 @@ set up aliases and virtual maps for procmail.
 =cut
 
 
-# Descriptions: install new alias entries
+# Descriptions: install new alias entries.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
@@ -48,7 +48,7 @@ sub procmail_install_alias
 
     $self->_install($src, $dst, $params);
 
-    $curproc->ui_message( "updating $alias\n");
+    $curproc->ui_message("updating $alias\n");
 
     use File::Utils qw(append);
     append($dst, $alias);
@@ -56,7 +56,7 @@ sub procmail_install_alias
 }
 
 
-# Descriptions: remove alias
+# Descriptions: remove alias.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
@@ -73,7 +73,7 @@ sub procmail_remove_alias
 
     my $key = $params->{ ml_name };
 
-    $curproc->ui_message( "removing $key in $alias\n");
+    $curproc->ui_message("removing $key in $alias\n");
 
     use FileHandle;
     my $rh = new FileHandle $alias;
@@ -97,10 +97,11 @@ sub procmail_remove_alias
 
 	if ($removed > 3) {
 	    if (rename($alias_new, $alias)) {
-		$curproc->ui_message( "\tremoved.\n");
+		$curproc->ui_message("\tremoved.\n");
 	    }
 	    else {
-		$curproc->ui_message( "\twarning: fail to rename alias files.\n");
+		my $s = "\twarning: fail to rename alias files.\n";
+		$curproc->ui_message($s);
 	    }
 	}
     }
@@ -111,7 +112,7 @@ sub procmail_remove_alias
 }
 
 
-# Descriptions: regenerate aliases.db
+# Descriptions: regenerate aliases.db.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
@@ -123,7 +124,7 @@ sub procmail_update_alias
 }
 
 
-# Descriptions: find key in aliases
+# Descriptions: find key in aliases.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
@@ -136,7 +137,7 @@ sub procmail_find_key_in_alias_maps
     my $addr = sprintf("%s\@%s", $params->{ ml_name }, $params->{ ml_domain });
 
     for my $map (@$maps) {
-	$curproc->ui_message( "scan key = $key, map = $map") if $debug;
+	$curproc->ui_message("scan key = $key, map = $map") if $debug;
 
 	if (-f $map) {
 	    use FileHandle;
@@ -179,7 +180,7 @@ sub procmail_get_aliases_as_hash_ref
     }
 
     for my $map (@$maps) {
-	$curproc->ui_message( "scan key = $key, map = $map") if $debug;
+	$curproc->ui_message("scan key = $key, map = $map") if $debug;
 
 	use FileHandle;
 	my $fh = new FileHandle $map;
@@ -188,27 +189,31 @@ sub procmail_get_aliases_as_hash_ref
 
 	  LINE:
 	    while ($buf = <$fh>) {
-		next LINE if $buf =~ /^#/;
-		next LINE if $buf =~ /^\s*$/;
+		next LINE if $buf =~ /^#/o;
+		next LINE if $buf =~ /^\s*$/o;
 
 		chomp $buf;
-		($key, $value)   = split(/:/, $buf, 2);
-		$value =~ s/^\s*//;
-		$value =~ s/s*$//;
+
+		# XXX-TODO: we need filter.
+		# XXX-TODO: this code assumes /etc/mail/aliases only.
+		($key, $value) = split(/:/, $buf, 2);
+		$value =~ s/^\s*//o;
+		$value =~ s/s*$//o;
 		$aliases->{ $key } = $value;
 	    }
+
+	    $fh->close;
 	}
 	else {
 	    warn("cannot open $map");
 	}
-	$fh->close;
     }
 
     return $aliases;
 }
 
 
-# Descriptions: return alias_maps as ARRAY_REF
+# Descriptions: return alias_maps as ARRAY_REF.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: none
