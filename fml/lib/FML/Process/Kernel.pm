@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.92 2002/04/27 12:27:35 fukachan Exp $
+# $FML: Kernel.pm,v 1.93 2002/04/27 14:28:05 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -329,10 +329,16 @@ sub verify_sender_credential
     my ($addr, @addrs) = Mail::Address->parse($from);
 
     # extract the first address as a sender.
-    $from = $addr->address;
-    $from =~ s/\n$//o;
+    if (defined $addr) {
+	$from = $addr->address;
+	$from =~ s/\n$//o;
+    }
+    else {
+	$curproc->refuse_further_processing("cannot extract From:");
+	LogError("cannot extract From:");
+    }
 
-    # XXX "@addrs must be empty" is valid.
+    # XXX "@addrs must be empty" is valid since From: is unique.
     unless (@addrs) {
 	# XXX o.k. From: is proven to be valid now.
 	# XXX log it anyway
