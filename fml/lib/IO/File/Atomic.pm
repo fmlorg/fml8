@@ -64,6 +64,9 @@ To copy from $src to $dst,
 
 =head1 DESCRIPTION
 
+library to wrap atomic IO operations. 
+The C<atomic> feature is based on C<rename()> call.
+
 =cut
 
 # Descriptions: constructor
