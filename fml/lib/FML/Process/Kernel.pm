@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: Kernel.pm,v 1.39 2001/04/03 09:45:43 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -411,9 +411,12 @@ sub parse_incoming_message
 
     # malloc the incoming message on memory.
     # $r_msg is the reference to the memory area.
-    my $r_msg = {};
-    ($r_msg->{'header'}, $r_msg->{'body'}) = new FML::Parse $curproc, \*STDIN;
-    $curproc->{'incoming_message'} = $r_msg;
+    my $msg = new FML::Parse $curproc, \*STDIN;
+
+    # store the message to $curproc
+    $curproc->{ incoming_message }->{ message } = $msg;
+    $curproc->{ incoming_message }->{ header  } = $msg->rfc822_message_header;
+    $curproc->{ incoming_message }->{ body  }   = $msg->rfc822_message_body;
 }
 
 

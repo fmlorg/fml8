@@ -4,7 +4,7 @@
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Distribute.pm,v 1.40 2001/04/03 09:45:43 fukachan Exp $
+# $FML: Distribute.pm,v 1.41 2001/04/06 16:25:43 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -250,9 +250,10 @@ sub _deliver_article
 {
     my ($curproc, $args) = @_;
 
-    my $config  = $curproc->{ config };             # FML::Config obj
-    my $body    = $curproc->{ article }->{ body };  # Mail::Message obj
-    my $header  = $curproc->{ article }->{ header };# FML::Header obj
+    my $config  = $curproc->{ config };               # FML::Config   object
+    my $message = $curproc->{ article }->{ message }; # Mail::Message object
+    my $header  = $curproc->{ article }->{ header };  # FML::Header   object
+    my $body    = $curproc->{ article }->{ body };    # Mail::Message object
 	
     unless ( $config->yes( 'use_article_delivery' ) ) {
 	return;
@@ -287,6 +288,7 @@ sub _deliver_article
 	}
     }
 
+    # start delivery
     my $service = new Mail::Delivery {
 	log_function       => $fp,
 	smtp_log_function  => $sfp,
@@ -301,8 +303,7 @@ sub _deliver_article
 			  'recipient_maps'  => $config->{recipient_maps},
 			  'recipient_limit' => $config->{recipient_limit},
 
-			  'header'          => $header,
-			  'body'            => $body,
+			  'message'         => $message,
 		      });
     if ($service->error) { Log($service->error); return;}
 }
