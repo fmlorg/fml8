@@ -1,0 +1,8 @@
+addadmin
+adduser
+deladmin
+deluser
+list
+log
+newml
+rmml
