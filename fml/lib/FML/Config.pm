@@ -1,7 +1,9 @@
 #-*- perl -*-
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
+#   All rights reserved. This program is free software; you can
+#   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.57 2002/03/05 13:25:25 fukachan Exp $
+# $FML: Config.pm,v 1.58 2002/03/06 14:38:02 fukachan Exp $
 #
 
 package FML::Config;
@@ -666,7 +668,7 @@ sub no
 sub has_attribute
 {
     my ($self, $key, $attribute) = @_;
-    my (@attribute) = split(/\s+/, $_fml_config{$key});
+    my (@attribute) = split(/\s+/, $_fml_config_result{$key});
 
     return 0 unless defined $attribute;
 
