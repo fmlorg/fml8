@@ -1,6 +1,39 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/09/27
+
+   natural language extension in cgi menu.
+
+   FML::CGI::Admin::{List,ML,User} -> FML::CGI::{List,ML,User}
+	
+   FML::Process::CGI::Utils 
+   FML::CGI::List ML User 
+	define new methods::cgi_var_address_map() cgi_var_address_map_list()
+	cgi_var_action() cgi_var_frame_target()
+	
+	switched to use cgi_var_*().
+	
+	sort::cleanup initialization parts in each cgi_menu().
+	
+   FML::CGI::ML 
+	cgi_var_ml_name_list($ml_domain) -> cgi_var_ml_name_list()
+	
+   FML::CGI::User 
+	fix selected_key name
+	
+   FML::CGI::List 
+	add reset button
+	
+   FML::Config 
+	bug fix expand_variable_in_buffer() to match as many as could.
+	
+   FML::Process::Kernel 
+	make message_nl() handle enable language translation
+	
+   FML::Process::CGI::Utils 
+	define methods::cgi_var_navigator_title(), cgi_var_fml_project_url().
+
 2003/09/26
 
    ml-admin/*/*.cgi を利用可能にする
@@ -5357,4 +5390,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.161 2003/09/19 14:39:18 fukachan Exp $
+$FML: CHANGES.txt,v 1.162 2003/09/25 22:08:44 fukachan Exp $
