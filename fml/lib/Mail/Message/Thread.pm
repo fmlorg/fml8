@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Thread.pm,v 1.2 2003/07/20 06:43:26 fukachan Exp $
+# $FML: Thread.pm,v 1.3 2004/03/27 09:23:07 fukachan Exp $
 #
 
 package Mail::Message::Thread;
@@ -162,6 +162,63 @@ sub get_thread_member_as_array_ref
     my $db = $self->db();
 
     return $db->get_as_array_ref('ref_key_list', $head_id);
+}
+
+
+=head1 UTILITY
+
+=cut
+
+
+# Descriptions: set thread status.
+#    Arguments: OBJ($self) NUM($head_id) STR($status)
+# Side Effects: update UDB
+# Return Value: none
+sub set_thread_status
+{
+    my ($self, $head_id, $status) = @_;
+    my $db = $self->db();
+
+    $db->set('thread_status', $head_id, $status);
+}
+
+
+# Descriptions: get thread status.
+#    Arguments: OBJ($self) NUM($head_id)
+# Side Effects: none
+# Return Value: STR
+sub get_thread_status
+{
+    my ($self, $head_id) = @_;
+    my $db = $self->db();
+
+    $db->get('thread_status', $head_id);
+}
+
+
+# Descriptions: set thread status.
+#    Arguments: OBJ($self) NUM($id) STR($status)
+# Side Effects: update UDB
+# Return Value: none
+sub set_article_status
+{
+    my ($self, $id, $status) = @_;
+    my $db = $self->db();
+
+    $db->set('article_status', $id, $status);
+}
+
+
+# Descriptions: get article status.
+#    Arguments: OBJ($self) NUM($id)
+# Side Effects: none
+# Return Value: STR
+sub get_article_status
+{
+    my ($self, $id) = @_;
+    my $db = $self->db();
+
+    $db->get('article_status', $id);
 }
 
 
