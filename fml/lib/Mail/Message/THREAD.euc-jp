@@ -1,0 +1,56 @@
+○ _analyze_thread()
+
+スレッドの依存関係を調べる処理は _thread_analyze() が真髄の一つだ。
+この関数は HASH_REF(ref_key_list) を更新するためにある。
+
+HASH_REF(ref_key_list) は、次のように更新される。
+
+for $message_id (In-Reply-To と References にふくまれるID) {
+
+	inv_message_id hash
+		$message_id から参照されている ID を割出す
+
+	ref_key_list->{ 参照されているID } に現記事の ID を追加
+
+}
+
+たとえば、記事101を処理しているとし、記事１０１が１００へのフォローだ
+としましょう。そして、１０１は９０と９１も参照せよと指示しているとしま
+す。90がスレッドの先頭で、91は90へのフォローだとしましょう。この場合、
+初期状態は次のようになっています。
+
+ref_key_list = {
+ 	 90 => 91,
+};
+
+101の処理は次のようなループです。
+
+for $message_id (100のmid, 90のmid, 91のmid) {
+	$inv_message_id{ 100のmid } => 100 
+	ref_key_list へ追加
+}
+
+結果として
+
+ref_key_list = {
+	100 => 101,
+ 	 90 => "91 101",
+ 	 91 => 101,
+};
+
+
+次に、記事102が101へのフォローなら、ref_key_list は次のようになるだろ
+う。
+
+ref_key_list = {
+	101 => 102,
+	100 => "101 102",
+ 	 90 => "91 101 102",
+ 	 91 => "101 102",
+};
+
+なお、以上のような処理のため、
+
+	for $message_id (In-Reply-To と References にふくまれるID) {
+
+の処理の順番はどうでもいいです。
