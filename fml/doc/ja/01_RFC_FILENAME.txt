@@ -1,6 +1,0 @@
-	ここまできたらファイル名も変える方が建設的だろうという話
-
-http://www.fml.org/software/fml-devel/Documentation/ja/tutorial/filename.html
-
------
-$FML: 01_RFC_FILENAME.txt,v 1.2 2002/08/21 15:30:25 fukachan Exp $

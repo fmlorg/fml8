@@ -1,13 +1,14 @@
-		Mail::Message::Encode クラス(?)
+<chapter id="module.mail.message.encode">
+	<title>
+	Mail::Message::Encode クラス
+	</title>
 
-	XXX じゃ Mail::Message::Decode も必要ですな？
-	XXX FML::Encode vs Mail::Message::Encode 
-
-
+<para>
 [リファレンス]
-	fml-help ML's Count: 02012, 02013, 02016 など
+fml-help ML's Count: 02012, 02013, 02016 など
+</para>
 
-
+<screen>
 [使い方の例]
 
 	use Mail::Message::Encode;
@@ -25,13 +26,18 @@
    * 4.0 互換
 	ues Mail::Message::Encode qw(STR2EUC);
 	my $euc_s = STR2EUC( $s );
+</screen>
 
 
-[仕様]
+<sect1>
+	<title>
+	仕様
+	</title>
 
+<para>
 本体は _convert_str_ref() にまとめる。
 
-
+<screen>
    sub convert # 引数が STR
    {
 	my ($self, $str, $out_code, $in_code) = @_;
@@ -68,30 +74,37 @@
 
         return 0 ; # 失敗
    }
+</screen>
 
-
+<screen>
    sub base64 {}
    sub quoted_printable {}
 
 	があるといいかな〜
 
 	$x = $encode->base64($s);
+</screen>
 
-
-[互換性というか便宜上、STR2XXX() も準備する]
-
+また、互換性というか便宜上、STR2XXX() も準備する。
+<screen>
    STR2EUC(  $str, [$icode] )
    STR2JIS(  $str, [$icode] )
    STR2SJIS( $str, [$icode] )
-
+</screen>
 は convert_str_ref を wrap する。
+</para>
+
+</sect1>
 
 
-[特別な関数]
+<sect1>
+	<title>
+	特別な関数
+	</title>
 
+<para>
 euc にしてごにょごにょ する典型的なコードは全部 wrap する。
-
-
+<screen>
 # change code and do $proc
 sub run_in_chcode
 {
@@ -102,30 +115,9 @@ sub run_in_chcode
    convert_str_ref($s, $out_code, $EUC_JP) if $conv_status && $out_code;
    return wantarray ? ($conv_status, $proc_status): $conv_status;
 }
+</screen>
+</para>
 
+</sect1>
 
-
-[Mail::Message::Encode へマージしたいもの]
-
-	Mail/Message/Decode.pm
-	Mail/Message/Encode.pm
-		はどうする？
-
-	FML::Language を削除
-	FML::Language::ISO2022JP を削除
-		実態は以下の2つのクラス
-
-	FML::Language::Japanese::String
-		STR2EUC()
-		STR2JIS()
-		STR2SJIS()
-
-
-	FML::Language::Japanese::Utils
-		is_iso2022jp_string()
-		_look_not_iso2022jp_string()
-		compare_euc_string()
-
-	[TODO]
-
-	Mail/ThreadTrack/Print/Utils.pm に STR2EUC がある
+</chapter>

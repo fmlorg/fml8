@@ -1,5 +1,5 @@
 <!--
-   $FML: cgi.sgml,v 1.8 2002/07/19 03:21:55 fukachan Exp $
+   $FML: cgi.sgml,v 1.9 2002/07/23 09:34:34 fukachan Exp $
 -->
 
 <chapter id="internalcgi">
@@ -98,6 +98,47 @@ sw   south  se
 という３x３の精度で表現されています。
 </para>
 
+
+<sect2>
+	<title>
+	現在の CGI の画面の構造	
+	</title>
+
+<para>
+以下のような３x３のテーブル構造をとっており、
+<screen>
+run_cgi_main
+			run_cgi_title
+run_cgi_navigator	run_cgi_menu	run_cgi_command_help
+run_cgi_options
+</screen>
+HTML のレベルでは、TABLE 命令を使って疑似的なナビゲーションバーのよう
+なものを作っている。そして、ハッシュテーブルで定義されている関数を決め
+られた順番で実行し、テーブルを作成している。
+</para>
+
+<para>
+run_cgi_main() は何らかの処理をしない限り何も表示しない。
+大抵は「なし」か「OK …」程度。エラーメッセージを表示することもある。
+また、この関数はＭＬ一覧などをきちんと最新の情報にするために、
+画面を描く前に実行する必要がある。
+</para>
+
+<para>
+ちなみに、run_cgi_main() は個々の関数を呼び出すためのトップレベルのア
+ダプター層で、FML::CGI::Menu::Admin に定義されている。個々のコマンドは 
+makefml の時と同様にこの関数経由で実行される。
+</para>
+
+<para>
+ただし、ログやメンバーリスト一覧のように run_cgi_menu() から結果の表示
+をしているものもある。これは表示のオプションの指定をさせるために、
+run_cgi_main() ではなく run_cgi_menu() 経由で表示しているともいえるの
+だが、なにしろコマンドの結果の表示が長いので、今のように menu() 経由の
+ほうがよいと思われる。
+</para>
+
+</sect2>
 
 </sect1>
 
