@@ -1,6 +1,41 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/11/29
+
+   機械処理（および、その出力形式をカスタマイズ)しやすいログを出力する
+   オプションを作りこむ。
+
+   --log-computer-output コマンドラインオプション
+   $use_log_computer_output と $log_computer_output_engine を定義する。
+   フォーマットは $log_computer_output_engine で指定するモジュールで変
+   えてくださいな。
+
+   etc/command_line_options 
+   FML::Process::Kernel 
+	support --log-computer-output option
+
+   FML::Process::{Command,Configure,Distribute,Error,Kernel}
+   FML::Log::Print::Simple 
+	define $use_log_computer_output.
+	modify FML::Process::* to use it.
+	
+	FML::Process::Kernel supports customization by
+	$log_computer_output_engine definition.
+	
+	$curproc->log_message_init() is called within prepare() method
+	of each	program.
+
+   FML::Process::Debug 
+	implement config() method.
+	
+   FML::User::DB 
+	use $curproc->config() to get config object.
+	
+   variables
+   FML::Header 
+	x_ml_name -> outgoing_mail_header_x_ml_name
+
 2003/11/27
 
    FML::User::Control 
@@ -5771,4 +5806,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.174 2003/11/25 11:41:07 fukachan Exp $
+$FML: CHANGES.txt,v 1.175 2003/11/28 15:44:04 fukachan Exp $
