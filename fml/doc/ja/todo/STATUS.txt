@@ -15,12 +15,21 @@ II部　fmlのセットアップ〜MLの作成
 	fml プロセスのユーザや使用するディレクトリは
 	configure のオプションで変更可能です。
 
+	* メールサーバの設定は 4.0 の場合と同様です。
+
+	注意: ユーザ fml を作るだけでなく、きちんとユーザ fml さんの
+	      ホームディレクトリも作って下さい。
+
 5章　Unix上でMLを作る
 
 	"makefml newml elena" を使って下さい。
 	つまり fml 4 と使い方は一緒です。
 	ただし fml-devel では newml 時に設定用 CGI や、HTML 化された記事
 	をおくディレクトリ ~fml/public_html/ .. を用意する点が異なります。
+
+	* postfix ( および sendmail ) がターゲットシステムです。
+
+	[TODO] qmail 用の設定はまだ作れません。
 
 6章　Windows 2000/NT4上でのfmlのインストール
 
@@ -71,6 +80,15 @@ III部　fmlのカスタマイズ
 	makefml で操作可能な項目は FML::Command::Admin:: クラスの
 	コマンドすべてです。
 
+		ＭＬの作成			OK
+	[TODO]	ＭＬの削除
+		ＭＬのメンバーの登録と削除	OK
+		登録しているアドレスの変更	OK
+	[TODO]	off/on
+	[TODO]	まとめおくり
+		リモート管理			OK
+	[TODO]	ＭＬのカスタマイズはファイルの編集あるのみ
+
 	注意: 当然リモートコマンドよりいろいろなことができます。
 
 12章　fmlの設定ファイルを変更する
@@ -79,11 +97,53 @@ III部　fmlのカスタマイズ
 
 	[TODO] 設定支援ツールはまだありません。
 
-13章　MLのスタイルのカスタマイズ
+	/etc/fml/ (とか /usr/local/etc/fml/ とか) 以下に
+	デフォルトの .cf がおかれますし、サイト依存、ドメイン依存
+	の .cf を作ることでサイト、ドメインごとの全ＭＬの
+	デフォルトを変更することもできます。
+
+13章　MLのスタイルのカスタマイズ (ケーススタディ)
+
+	投稿の制御: $post_restrictions で制御
+		
+	コマンドメールの制御: $command_restrictions で制御
+
+	コマンドメールの禁止: $command_restrictions で reject とだけ指定
+
+	[TODO] 自動登録
+		今はデフォルトで自動登録ですわ :-)
+		まだ confirmation タイプしかありません。
+
+	誰でも投稿可能:	$post_restrictions で permit_anyone
+
+	メールマガジン型:
+		$member_maps から $primary_member_map をはずす
+		$member_maps に投稿可能なメンバーのリストを追加
+
+	[TODO] モデレータ 
+
+	[TODO] 自動ファイル返送
+
+	[TODO] 複数の管理者による運用
+
+	登録と削除をまとめておこなう
+
+	[TODO] listserv 風のコマンドアドレス
+
+	[TODO] qmail-ext によるコマンド
+
+	階層化されたＭＬ: $member_maps $recipient_maps をよろしく書く
+
+	procmail:	4.0 と同様だ
+
+	[削除?] ＭＬ本体でコマンドメールも受けられるように
+
 
 14章　ヘッダの書き換え
 
 	FML::Header とフックを使えばできます。
+	多くのヘッダ操作は FML::Header クラスの提供するアクセスメソッ
+	ドになっています。
 
 15章　fmlの返すメッセージをカスタマイズする
 
@@ -93,8 +153,12 @@ III部　fmlのカスタマイズ
 16章　記事のフィルタリング
 
 	実装済み (FML::Filter)
+		検出できるルール: ヘッダ、本文、特殊なウィルス
 
-	[TODO] 4.0 の ContertFilter を FML::Filter へ統合する。
+	[TODO] 4.0 の ContertFilter にあたるものを FML::Filter へ統合する。
+
+	[TOOD] 入力サイズ制限
+
 
 17章　トラフィックを制限する（メール爆弾対策）
 
@@ -115,6 +179,11 @@ III部　fmlのカスタマイズ
 	dir ls file list
 
 	＊これらは FML::Command::Admin:: クラスで定義されています。
+
+	[TODO] ”approve パスワード コマンド”型構文サポート
+
+	[TODO] 非対称鍵暗号認証
+
 
 19章　MLの暗号化
 
@@ -142,11 +211,21 @@ IV部　トラブルシューティング
 
 V部　その他のトピック
 26章　日々の運用について
+
+	[TODO] ログファイルの expire
+	[TODO] スプールの圧縮
+	[TODO] スプールの expire
+	[TODO] RCS
+
+
 27章　エラーメールを自動解析する
 
 	[TODO] モジュールは作ったが、組み込んでない;)
 
 28章　メールサーバの変更/引越し
+
+	手間は 4.0 とほとんど同じかな
+
 29章　バーチャルドメイン
 
 	デフォルトで考えてある。
@@ -164,13 +243,17 @@ VI部　fmlの内部構造と機能拡張
 VII部　Advanced Study
 36章　fmlからデータベースへのアクセス
 
-	はじめから前提としてある。
+	はじめから前提だぜ
 
 37章　配送の高速化について
+
+	[TODO] Mail::Delivery の LMTP モード
+
+
 38章　試論：現代的サーバデザインについて
 VIII部　付録
 付録D　virus_check.phの例
 
 
 ---
-$FML: STATUS.txt,v 1.1 2002/04/11 14:00:12 fukachan Exp $
+$FML: STATUS.txt,v 1.2 2002/04/12 13:07:29 fukachan Exp $
