@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.11 2002/02/03 12:30:30 fukachan Exp $
+# $FML: Utils.pm,v 1.12 2002/02/17 03:13:48 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -29,6 +29,14 @@ See FML::Process::Kernel.
 =head2 fml_version()
 
 return fml version.
+
+=head2 fml_owner()
+
+return fml owner.
+
+=head2 fml_group()
+
+return fml group.
 
 =head2 myname()
 
@@ -63,6 +71,32 @@ sub fml_version
     my $args = $curproc->{ __parent_args };
 
     return $args->{ main_cf }->{ fml_version };
+}
+
+
+# Descriptions: return fml owner
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub fml_owner
+{
+    my ($curproc) = @_;
+    my $args = $curproc->{ __parent_args };
+
+    return $args->{ main_cf }->{ fml_owner };
+}
+
+
+# Descriptions: return fml group
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub fml_group
+{
+    my ($curproc) = @_;
+    my $args = $curproc->{ __parent_args };
+
+    return $args->{ main_cf }->{ fml_group };
 }
 
 
@@ -235,10 +269,12 @@ sub __ml_home_prefix_from_main_cf
     if (defined $domain) {
 	my ($virtual_maps) = __get_virtual_maps($main_cf);
 	if (@$virtual_maps) {
-	    __ml_home_prefix_search_in_virtual_maps($main_cf, $domain, $virtual_maps);
+	    __ml_home_prefix_search_in_virtual_maps($main_cf, 
+						    $domain,
+						    $virtual_maps);
 	}
 	else {
-
+	    ;
 	}
     }
     else {
@@ -299,6 +335,20 @@ sub __ml_home_prefix_search_in_virtual_maps
 #    since FML::Process::Switch calculate this variable and set it to
 #    $curproc->{ main_cf }.
 #
+
+
+=head2 get_aliases_filepath($domain)
+
+return file path of the aliases for this domain $domain.
+
+=cut
+
+
+sub mail_aliases
+{
+    my ($curproc, $domain) = @_;
+    return $curproc->{ config }->{ mail_aliases_file };
+}
 
 
 =head2 get_virtual_maps()
