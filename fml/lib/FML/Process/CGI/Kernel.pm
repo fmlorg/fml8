@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.24 2002/04/23 09:32:37 fukachan Exp $
+# $FML: Kernel.pm,v 1.25 2002/04/27 07:24:27 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -176,10 +176,17 @@ sub run
 # Return Value: none
 sub _error_string
 {
-    my ($r) = @_;
+    my ($curproc, $r) = @_;
+    my ($key, $msg) = $curproc->parse_exception($r);
+    my $nlmsg       = $curproc->message_nl($key);
 
     if ($r =~ /__ERROR_cgi\.insecure__/) {
-	print "<B>Error! insecure input.</B>\n";
+	if ($nlmsg) {
+	    print "<B>Error! $nlmsg </B>\n";
+	}
+	else {
+	    print "<B>Error! insecure input.</B>\n";
+	}
     }
     else {
 	print "<B>Error! unknown reason.</B>\n";
@@ -218,7 +225,7 @@ sub _drive_cgi_by_table
     print "<td>\n";
 
     eval q{ $curproc->run_cgi_title($args);};
-    if ($r = $@) { _error_string($r);}
+    if ($r = $@) { _error_string($curproc, $r);}
 
     print "</td>\n";
     print "<td></td>\n";
@@ -229,18 +236,18 @@ sub _drive_cgi_by_table
     print "<td valign=\"top\" BGCOLOR=\"#E0E0F0\">\n";
 
     eval q{ $curproc->run_cgi_navigator($args);};
-    if ($r = $@) { _error_string($r);}
+    if ($r = $@) { _error_string($curproc, $r);}
 
     print "<td rowspan=2 valign=\"top\">\n";
 
     eval q{ $curproc->run_cgi_main($args);};
-    if ($r = $@) { _error_string($r);}
+    if ($r = $@) { _error_string($curproc, $r);}
 
     print "</td>\n";
     print "<td rowspan=2 valign=\"top\">\n";
 
     eval q{ $curproc->run_cgi_options($args);};
-    if ($r = $@) { _error_string($r);}
+    if ($r = $@) { _error_string($curproc, $r);}
 
     print "</td>\n";
     print "</tr>\n";
