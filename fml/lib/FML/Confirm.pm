@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Confirm.pm,v 1.10 2003/08/23 04:35:27 fukachan Exp $
+# $FML: Confirm.pm,v 1.11 2003/08/23 15:33:11 fukachan Exp $
 #
 
 package FML::Confirm;
@@ -258,14 +258,17 @@ specify $found (database value) for $id as argument.
 
 
 # Descriptions: request for $id is expired or not
-#    Arguments: OBJ($self) STR($found) NUM($howold)
+#    Arguments: OBJ($self) STR($id) NUM($howold)
 # Side Effects: none
 # Return Value: 1 or 0
 sub is_expired
 {
-    # XXX-TODO: strange argument ? should be is_expired($id) ?
-    my ($self, $found, $howold) = @_;
+    my ($self, $id, $howold) = @_;
+    my $found = $self->find($id);
     my ($time, $commont) = split(/\s+/, $found);
+
+    # expired in 2 weeks by default.
+    $howold ||= 14*24*3600;
 
     if ((time - $time) > $howold) {
 	return 1; # expired
