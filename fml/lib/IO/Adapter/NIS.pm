@@ -45,11 +45,6 @@ IO::Adapter::NIS.pm - NIS map definition under IO::MapAdapter
     while ($x = $obj->getline) { ... }
     $obj->close;
 
-/etc/group has C<fml> entry like this:
-
-  fml:*:1000:fukachan
-
-
 =head1 DESCRIPTION
 
 fake IO for 

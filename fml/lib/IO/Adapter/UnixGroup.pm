@@ -32,19 +32,29 @@ sub configure
 
 =head1 NAME
 
-IO::Adapter::UnixGroup.pm - what is this
+IO::Adapter::UnixGroup - IO wrapper for /etc/group
 
 =head1 SYNOPSIS
 
+    $map = 'unix.group:fml';
+
+    use IO::MapAdapter;
+    $obj = new IO::MapAdapter $map;
+    $obj->open || croak("cannot open $map");
+    while ($x = $obj->getline) { ... }
+    $obj->close;
+
+/etc/group has C<fml> entry like this:
+
+  fml:*:1000:fukachan
+
 =head1 DESCRIPTION
 
-=head1 CLASSES
+See L<IO::Adapter::Array> for more details.
 
-=head1 METHODS
+=head1 SEE ALSO
 
-=item C<new()>
-
-... what is this ...
+L<IO::Adapter::Array>
 
 =head1 AUTHOR
 
@@ -63,5 +73,6 @@ IO::Adapter::UnixGroup appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
+
 
 1;

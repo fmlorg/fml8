@@ -1,5 +1,4 @@
 FML/Config.pm
-FML/Credential.pm
 FML/Header.pm
 FML/Ticket/Model/toymodel.pm
 FML/Ticket/System.pm
@@ -12,14 +11,10 @@ FML/Process/Command.pm
 FML/Process/Switch.pm
 FML/Header/Subject.pm
 
-
-IO/Adapter/UnixGroup.pm
 IO/Adapter/Array.pm
-
 
 Dialect/Japanese/Subject.pm
 Dialect/Japanese/Utils.pm
-
 
 MailingList/Net/INET4.pm
 MailingList/Net/INET6.pm

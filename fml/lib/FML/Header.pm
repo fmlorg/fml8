@@ -10,6 +10,13 @@
 
 package FML::Header;
 
+use strict;
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
+use Carp;
+use Mail::Header;
+use FML::Log qw(Log);
+
+
 =head1 NAME
 
 FML::Header - header manipulators
@@ -24,15 +31,9 @@ FML::Header - header manipulators
 FML::Header is an adapter for Mail::Address class.
 That is, Mail::Address is the base class. 
 
-=head1 METHOD
+=head1 METHODS
 
 =cut
-
-use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
-use Carp;
-use Mail::Header;
-use FML::Log qw(Log);
 
 require Exporter;
 @ISA = qw(Mail::Header Exporter);
@@ -210,5 +211,6 @@ FML::Header appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
+
 
 1;

@@ -40,6 +40,12 @@ bind \%Credential to $self and return it as an object.
 =cut
 
 
+# Descriptions: usual constructor
+#               bind $self ($me) to \%Credential, so
+#               you can access the same \%Credential through this object.
+#    Arguments: $self
+# Side Effects: bind $self ($me) to \%Credential
+# Return Value: object
 sub new
 {
     my ($self) = @_;
@@ -71,10 +77,10 @@ process.
 sub is_member { 1;}
 
 
-# Descriptions: 
-#    Arguments: $self $args
-# Side Effects: 
-# Return Value: none
+# Descriptions: returh the mail sender
+#    Arguments: $self
+# Side Effects: none
+# Return Value: mail address
 sub sender
 {
     my ($self) = @_;
@@ -90,9 +96,9 @@ sub sender
 
 
 # Descriptions: 
-#    Arguments: $self $args
-# Side Effects: 
-# Return Value: none
+#    Arguments: $self key
+# Side Effects: none
+# Return Value: string
 sub get
 {
     my ($self, $key) = @_;
@@ -101,9 +107,9 @@ sub get
 
 
 # Descriptions: 
-#    Arguments: $self $args
-# Side Effects: 
-# Return Value: none
+#    Arguments: $self key value
+# Side Effects: none
+# Return Value: string
 sub set
 {
     my ($self, $key, $value) = @_;
