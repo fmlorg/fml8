@@ -1,18 +1,24 @@
-=head1 configurations
+# THE CHARSET OF THIS FILE IS EUC-JP.
+# このファイルの文字コードは EUC-JP です。
+#
+# 使用法: (このファイルの編集の仕方)
+#    最初の２つの変数 ml_domain ml_name の値を指定して下さい。
+#    あとはとりあえずデフォルトでいいでしょう。
+#    デフォルト値以外を指定したい場合は
+#    このファイルに明示的に値を書き足して下さい。
+#
 
-# 各種アドレスに使うドメイン名
+# ドメイン名 (参照: 以下のアドレスを見よ $ml_domain がこの値に展開される)
 ml_domain           = fml.org
 
-# Fully Qualified Domain Name
-fqdn                = ahodori.fml.org
+# ML の名前
+ml_name		    = elena		
 
-maintainer	    = elena-admin@$ml_domain
+# 管理者のアドレス
+maintainer	    = $ml_name-admin@$ml_domain
 
 # 投稿用のアドレス
-address_for_post    = elena@$ml_domain
+address_for_post    = $ml_name@$ml_domain
 
 # コマンド用のアドレス
-address_for_command = elena-ctl@$ml_domain
-
-# fml 4.0 の $DIR
-# ml_home_dir         = /var/spool/ml/elena
+address_for_command = $ml_name-ctl@$ml_domain
