@@ -4,6 +4,12 @@
 	XXX 作業したら TODO/STATUS.txt もアップデートしてね XXX
 
 
+○	IO::Adapter の改造
+
+
+	FML/Credential.pm	*	argv がだめ
+
+
 ○	FML::Article
 
 	subdir の取り扱いが不十分
@@ -400,4 +406,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.35 2002/07/17 09:35:50 fukachan Exp $
+$FML: 00_MEMO,v 1.36 2002/07/19 03:46:53 fukachan Exp $
