@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Kernel.pm,v 1.7 2001/11/13 03:42:47 fukachan Exp $
+# $FML: Kernel.pm,v 1.8 2001/11/13 15:18:07 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -97,7 +97,7 @@ sub prepare
 
     print header(-type    => "text/html; charset=$charset",
 		 -charset => $charset,
-		 -target  => "ResultsWindow");
+		 -target  => "_top");
 }
 
 
