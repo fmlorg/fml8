@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.10 2001/12/22 09:21:12 fukachan Exp $
+# $FML: Adapter.pm,v 1.11 2001/12/24 07:40:55 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -357,12 +357,26 @@ It searches C<$regexp> in case insenssitive by default.
 You can change the search behaviour by C<$args> (HASH REFERENCE).
 
     $args = {
+	want           => 'key', # 'key' or 'key,value'
 	case_sensitive => 1, # case senssitive
 	all            => 1, # get all entries matching $regexp as ARRAY REF
     };
 
-Normaly the result is given as a string.
+The result returned by find() is primary key of data or key and value
+e.g the whole line in the file format. find() returns the whole one
+line by default. If want options is specified in $args, return value
+changes. 'want' options is 'key' or 'key,value', 'key,value' by default.
+
+find() returns the result as STRING or ARRAY REFERENCE.
+You get only the first entry as string by default.
 If you specify C<all>, you get the result(s) as ARRAY REFERENCE.
+
+For example, to search mail addresses in recipient list, 
+
+    my $a = $self->find($regexp, { want => 'key', all => 1});
+    for my $addr (@$a) {
+        do_somethig() if ($addr =~ /$regexp/);
+    }
 
 =cut
 
@@ -376,6 +390,7 @@ sub find
     my ($self, $regexp, $args) = @_;
     my $case_sensitive = $args->{ case_sensitive } ? 1 : 0;
     my $show_all       = $args->{ all } ? 1 : 0;
+    my $want           = 'key,value';
     my (@buf, $x);
 
     # forward the request to SUPER class (md = map dependent)
@@ -383,9 +398,21 @@ sub find
 	return $self->md_find($regexp, $args);
     }
 
+    # What we want, key or  key+value ?
+    if (defined $args->{ want }) {
+	if ($args->{ want } eq 'key' ||
+	    $args->{ want } eq 'key,value') {
+	    $want = $args->{ want };
+	}
+	else {
+	    warn("invalid option");
+	}
+    }
+
     # search regexp by reading the specified map.
     $self->open;
-    while (defined ($x = $self->get_next_value())) {
+    my $fp = $want eq 'key' ? 'get_next_value' : 'getline';
+    while (defined ($x = $self->$fp())) {
 	if ($show_all) {
 	    if ($case_sensitive) {
 		push(@buf, $x) if $x =~ /$regexp/;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.18 2001/12/22 09:11:55 fukachan Exp $
+# $FML: Credential.pm,v 1.19 2001/12/22 09:21:01 fukachan Exp $
 #
 
 package FML::Credential;
@@ -187,14 +187,12 @@ sub has_address_in_map
     my $obj = new IO::Adapter $map;
 
     # 1. get all entries match /^$user/ from $map.
-    my $addrs = $obj->find( $user , { all => 1 });
+    my $addrs = $obj->find( $user , { want => 'key', all => 1 });
 
     # 2. try each address in the result matches $address to check.
     if (defined $addrs) {
       LOOP:
-	for my $x (@$addrs) {
-	    my ($r) = split(/\s+/, $x);
-
+	for my $r (@$addrs) {
 	    # 3. is_same_address() conceals matching algorithm details.
 	    if ($self->is_same_address($r, $address)) {
 		$status = 1; # found

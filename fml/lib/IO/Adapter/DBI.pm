@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.9 2001/12/22 09:21:12 fukachan Exp $
+# $FML: DBI.pm,v 1.10 2001/12/24 07:40:56 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -237,7 +237,7 @@ sub replace
     my (@addr);
 
     # firstly, get list matching /$regexp/i;
-    my $a = $self->find($regexp, { all => 1});
+    my $a = $self->find($regexp, { want => 'key', all => 1});
 
     # secondarly double check: get list matchi /$regexp/;
     for my $addr (@$a) {
