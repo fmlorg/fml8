@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.74 2003/08/25 14:13:58 fukachan Exp $
+# $FML: Utils.pm,v 1.75 2003/08/29 15:34:09 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -51,8 +51,8 @@ sub config
 {
     my ($curproc) = @_;
 
-    if (defined $curproc->config()) {
-	return $curproc->config();
+    if (defined $curproc->{ config }) {
+	return $curproc->{ config };
     }
     else {
 	return undef;
@@ -68,8 +68,8 @@ sub pcb
 {
     my ($curproc) = @_;
 
-    if (defined $curproc->pcb()) {
-	return $curproc->pcb();
+    if (defined $curproc->{ pcb }) {
+	return $curproc->{ pcb };
     }
     else {
 	return undef;
