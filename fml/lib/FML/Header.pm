@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.69 2004/01/22 12:34:21 fukachan Exp $
+# $FML: Header.pm,v 1.70 2004/02/04 15:19:14 fukachan Exp $
 #
 
 package FML::Header;
@@ -416,6 +416,15 @@ sub rewrite_article_subject_tag
 {
     my ($header, $config, $rw_args) = @_;
     my $tag = $config->{ article_subject_tag };
+
+    # for example, ml_name = elena
+    # if $tag has special regexp such as \U$ml_name\E or \L$ml_name\E
+    if (defined $tag) {
+	if ($tag =~ /\\E/o && $tag =~ /\\U|\\L/o) {
+	    eval qq{ \$tag = "$tag";};
+	    Log($@) if $@;
+	}
+    }
 
     # XXX-TODO: need $article_subject_tag expaned already e.g. "\Lmlname\E"
     # XXX-TODO: we should include this exapansion method within this module?
