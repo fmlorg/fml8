@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: get.pm,v 1.12 2002/04/07 05:00:17 fukachan Exp $
+# $FML: get.pm,v 1.13 2002/04/07 12:08:32 fukachan Exp $
 #
 
 package FML::Command::Admin::get;
@@ -62,9 +62,9 @@ sub need_lock { 1;}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $command     = $command_args->{ 'command' };
     my $config      = $curproc->{ 'config' };
     my $ml_home_dir = $config->{ ml_home_dir };
+    my $command     = $command_args->{ 'command' };
     my $options     = $command_args->{ options };
 
     # This module is called after
@@ -78,9 +78,12 @@ sub process
 
 	if (-f $filepath) {
 	    Log("send back $filename");
+
 	    $command_args->{ _filename_to_send } = $filename;
-	    $command_args->{ _filepath_to_send }     = $filepath;
+	    $command_args->{ _filepath_to_send } = $filepath;
+
 	    $self->send_file($curproc, $command_args);
+
 	    delete $command_args->{ _filename_to_send };
 	    delete $command_args->{ _filepath_to_send };
 	}
