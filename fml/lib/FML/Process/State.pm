@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: State.pm,v 1.6 2004/04/17 11:37:56 fukachan Exp $
+# $FML: State.pm,v 1.7 2004/04/22 12:48:19 fukachan Exp $
 #
 
 package FML::Process::State;
@@ -67,7 +67,7 @@ sub get_current_process_ml_name
 }
 
 
-=haed1 BASIC RESTRICTION STATES
+=head1 BASIC RESTRICTION STATES
 
 CAUTION: restriction_state_*() is reset each command.
 
@@ -166,7 +166,38 @@ sub restriction_state_reply_reason
 }
 
 
-=haed1 COMMAND PROCESSOER STATES
+=head1 ARTICLE STATES
+
+=cut
+
+
+# Descriptions: get the current article id on this process.
+#    Arguments: OBJ($curproc) NUM($id)
+# Side Effects: update pcb.
+# Return Value: NUM
+sub set_article_id
+{
+    my ($curproc, $id) = @_;
+    my $pcb = $curproc->pcb();
+
+    $pcb->set("article_message", "id", $id);
+}
+
+
+# Descriptions: get the current article id on this process.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: NUM
+sub get_article_id
+{
+    my ($curproc) = @_;
+    my $pcb = $curproc->pcb();
+
+    return $pcb->get("article_message", "id");
+}
+
+
+=head1 COMMAND PROCESSOER STATES
 
 command_context_init() called for each command, so
 restriction_state_*() is reset each time.
@@ -304,7 +335,7 @@ sub command_context_get_ml_name
 }
 
 
-# Descriptions: declare no more further command processing needed 
+# Descriptions: declare no more further command processing needed
 #               due to critical error.
 #    Arguments: OBJ($curproc)
 # Side Effects: update pcb.
@@ -444,6 +475,39 @@ sub command_context_get_admin_password
     my $class  = sprintf("admin_password_ml_name=%s", $cur_ml);
 
     return( $pcb->get("process_command", "admin_password") || '' );
+}
+
+
+=head1 SMTP STATE
+
+=cut
+
+
+# Descriptions: set $mta as error for later hint.
+#               implies "all servers" unless $mta specified.
+#    Arguments: OBJ($curproc) MTA($mta)
+# Side Effects: update pcb.
+# Return Value: none
+sub smtp_server_state_set_error
+{
+    my ($curproc, $mta) = @_;
+    my $pcb = $curproc->pcb();
+
+    $pcb->set("smtp_transaction", $mta || "ALL", "error");
+}
+
+
+# Descriptions: check if $mta as error for later hint.
+#               implies "all servers" unless $mta specified.
+#    Arguments: OBJ($curproc)
+# Side Effects: update pcb.
+# Return Value: NUM(1 or 0)
+sub smtp_server_state_get_error
+{
+    my ($curproc, $mta) = @_;
+    my $pcb = $curproc->pcb();
+
+    return( $pcb->get("smtp_transaction", $mta || "ALL") ? 1 :  0 );
 }
 
 
