@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.53 2003/09/13 09:08:12 fukachan Exp $
+# $FML: Kernel.pm,v 1.54 2003/09/25 11:40:58 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -437,7 +437,15 @@ sub run_cgi_help
     print "</B>\n";
 
     # top level help message
-    my $buf = $curproc->message_nl("cgi.top");
+    my $mode = $curproc->cgi_var_cgi_mode();
+    my $buf  = '';
+    if ($mode eq 'admin') {
+	$buf = $curproc->message_nl("cgi.admin.top");
+    }
+    else {
+	$buf = $curproc->message_nl("cgi.ml-admin.top");
+    }
+
     print $buf;
 }
 
