@@ -1,0 +1,9 @@
+# MIME component Filter example.
+# 
+# $FML$
+#
+
+# allow text/plain messages.
+text/plain	*		permit
+text/html	*		reject
+multipart/*	!plain/text	reject
