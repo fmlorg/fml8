@@ -365,8 +365,8 @@ command_mail_restrictions</entry>
  コマンドへの制限</entry>
 <entry>
 reject_system_special_accounts
-   permit_anonymous_command_mail
-   permit_member_maps
+   permit_anonymous_command
+   permit_user_command
    reject
    </entry>
 </row>
