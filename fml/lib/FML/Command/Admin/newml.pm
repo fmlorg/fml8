@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.24 2002/04/10 09:57:23 fukachan Exp $
+# $FML: newml.pm,v 1.25 2002/04/21 13:52:02 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -168,7 +168,8 @@ sub _update_aliases
 {
     my ($self, $curproc, $command_args, $params) = @_;
     my $template_dir = $curproc->template_files_dir_for_newml();
-    my $config = $curproc->{ config };
+    my $config       = $curproc->{ config };
+    my $ml_name      = $self->{ _ml_name };
 
     use File::Spec;
     my $alias = $config->{ mail_aliases_file };
@@ -179,7 +180,41 @@ sub _update_aliases
     _install($src, $dst, $params);
 
     # append
-    system "cat $dst >> $alias";
+    if ($self->_alias_has_ml_entry($alias, $ml_name)) {
+	print STDERR "warning: $ml_name already defined!\n";
+	print STDERR "         ignore aliases updating.\n";
+    }
+    else {
+	print STDERR "$ml_name is a new ml. updating aliases ...\n";
+	system "cat $dst >> $alias";
+	unlink $dst;
+
+	my $prog = $config->{ path_postalias };
+	system "$prog $alias";
+    }
+}
+
+
+# Descriptions: $alias file has an $ml_name entry or not
+#    Arguments: OBJ($self) STR($alias) STR($ml_name)
+# Side Effects: none
+# Return Value: NUM( 1 or 0 )
+sub _alias_has_ml_entry
+{
+    my ($self, $alias, $ml_name) = @_;
+
+    use FileHandle;
+    my $fh = new FileHandle $alias;
+    if (defined $fh) {
+	while (<$fh>) {
+	    if (/ALIASES $ml_name\@/) {
+		return 1;
+	    }
+	}
+	$fh->close;
+    }
+
+    return 0;
 }
 
 
@@ -396,6 +431,26 @@ sub _setup_listinfo
 	    print STDERR "creating $dst\n";
 	    _install($src, $dst, $params);
 	}
+    }
+}
+
+
+# Descriptions: show cgi menu for newml
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
+# Side Effects: create home directories, update aliases, ...
+# Return Value: none
+sub cgi_menu
+{
+    my ($self, $curproc, $args, $command_args) = @_;
+    my $r = '';
+
+    eval q{
+        use FML::CGI::Admin::ML;
+        my $obj = new FML::CGI::Admin::ML;
+        $obj->cgi_menu($curproc, $args, $command_args);
+    };
+    if ($r = $@) {
+        croak($r);
     }
 }
 
