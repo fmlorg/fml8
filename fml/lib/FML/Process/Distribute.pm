@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.71 2002/04/15 03:47:23 fukachan Exp $
+# $FML: Distribute.pm,v 1.72 2002/04/18 05:11:23 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -480,12 +480,15 @@ sub htmlify
 	    if ($@) { LogError($@);}
 	}
 
-	&Mail::Message::ToHTML::htmlify_file($article_file, {
-	    directory => $html_dir,
-	});
+	eval q{
+	    &Mail::Message::ToHTML::htmlify_file($article_file, {
+		directory => $html_dir,
+	    });
+	};
+	LogError($@) if $@;
     }
     else {
-	Log($@) if $@;
+	LogError($@) if $@;
     }
 
     $curproc->reset_umask();
