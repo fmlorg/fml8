@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: date2unixtime.pl,v 1.2 2001/11/18 02:22:10 fukachan Exp $
+# $FML: date2unixtime.pl,v 1.3 2002/04/18 14:18:07 fukachan Exp $
 #
 
 use strict;
@@ -17,13 +17,14 @@ chop $date;
 
 my $tx = Mail::Message::Date::date_to_unixtime( $date );
 
-print "* date -> unixtime: $t => $date => $tx\n" if $debug;
+print STDERR "Mail::Message::Date ";
+print STDERR "(date -> unixtime): $t => $date => $tx\n" if $debug;
 
 if ($t == $tx) {
-   print "ok\n";
+   print STDERR "ok\n";
 }
 else {
-   print "fail\n";
+   print STDERR "fail\n";
 }
 
 exit 0;

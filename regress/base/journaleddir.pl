@@ -1,11 +1,12 @@
 #!/usr/bin/env perl
 #
-# $FML: journaleddir.pl,v 1.4 2001/10/18 03:40:51 fukachan Exp $
+# $FML: journaleddir.pl,v 1.5 2002/04/18 14:18:07 fukachan Exp $
 #
 
 BEGIN {
     my $debug = defined $ENV{'debug'} ? 1 : 0;
-    print "init  journaleddir ...\n" if $debug;
+    $| = 1; 
+    print "Tie::JournaledDir init  journaleddir ...\n" if $debug;
 };
 
 use Tie::JournaledDir;
@@ -15,6 +16,8 @@ $| = 1;
 my $key  = shift || 'uja';
 my $unit = shift || 2;
 my $dir  = "/tmp/fml5/jd";
+
+print "Tie::JournaledDir ";
 
 my $debug = defined $ENV{'debug'} ? 1 : 0;
 

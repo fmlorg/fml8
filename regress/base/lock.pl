@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: lock.pl,v 1.5 2001/08/05 13:09:00 fukachan Exp $
+# $FML: lock.pl,v 1.6 2002/04/18 14:18:07 fukachan Exp $
 #
 
 use strict;
@@ -8,6 +8,8 @@ my $debug = defined $ENV{'debug'} ? 1 : 0;
 
 use File::SimpleLock;
 my $lockobj = new File::SimpleLock;
+
+print STDERR "File::SimpleLock ";
 
 my $r = $lockobj->lock( { file => '/tmp/fml5' });
 if ($r) { 
@@ -18,6 +20,8 @@ else {
 }
 
 sleep 1;
+
+print STDERR "File::SimpleLock ";
 
 $r = $lockobj->unlock( { file => '/tmp/fml5' });
 if ($r) { 

@@ -1,11 +1,14 @@
 #!/usr/bin/env perl
 #
-# $FML: journaledfile.pl,v 1.2 2001/08/21 03:46:40 fukachan Exp $
+# $FML: journaledfile.pl,v 1.3 2002/04/18 14:18:07 fukachan Exp $
 #
 
 use strict;
 use lib qw(../../fml/lib);
 use Tie::JournaledFile;
+
+$| = 1;
+print "Tie::JournaledFile ";
 
 my $debug = defined $ENV{'debug'} ? 1 : 0;
 my %db   = ();
