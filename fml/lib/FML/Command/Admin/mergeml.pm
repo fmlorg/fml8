@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mergeml.pm,v 1.1 2004/03/18 10:20:28 fukachan Exp $
+# $FML: mergeml.pm,v 1.2 2004/07/11 15:43:38 fukachan Exp $
 #
 
 package FML::Command::Admin::mergeml;
@@ -22,7 +22,9 @@ FML::Command::Admin::mergeml - top level dispather of configuration merge.
 
 =head1 METHODS
 
-=head2 C<new()>
+=head2 new()
+
+constructor.
 
 =cut
 
@@ -91,16 +93,18 @@ sub process
 
     # get and check argument.
     croak("specify old \$ml_home_dir")       unless $src_dir;
-    croak("specify directory as a argument") unless -d $src_dir;
+    croak("specify directory as an argument") unless -d $src_dir;
 
     # update $ml_home_prefix and $ml_home_dir to expand variables again.
     $config->set( 'ml_home_prefix', $ml_home_prefix );
     $config->set( 'ml_home_dir',    $ml_home_dir );
 
+    # XXX-TODO: we should use ui_message() ?
     # HERE WE GO!
     my $ml_list = "$ml_name\@$ml_domain";
     print STDERR "merge configurations at @$options into $ml_list\n";
 
+    # XXX-TODO: configurable.
     use FML::Merge;
     my $merge = new FML::Merge $curproc, $params;
     $merge->set_target_system("fml4");

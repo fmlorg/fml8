@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: changepassword.pm,v 1.13 2004/04/28 04:10:36 fukachan Exp $
+# $FML: changepassword.pm,v 1.14 2004/04/30 13:38:35 fukachan Exp $
 #
 
 package FML::Command::Admin::changepassword;
@@ -15,7 +15,7 @@ use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::changepassword - change remote administrator password
+FML::Command::Admin::changepassword - change remote administrator password.
 
 =head1 SYNOPSIS
 
@@ -23,7 +23,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-password a new address.
+set password of a new address or change password.
 
 =head1 METHODS
 
@@ -47,14 +47,14 @@ sub new
 }
 
 
-# Descriptions: need lock or not
+# Descriptions: need lock or not.
 #    Arguments: none
 # Side Effects: none
 # Return Value: NUM( 1 or 0)
 sub need_lock { 1;}
 
 
-# Descriptions: lock channel
+# Descriptions: lock channel.
 #    Arguments: none
 # Side Effects: none
 # Return Value: STR
@@ -87,6 +87,7 @@ sub verify_syntax
         }
     }
 
+    # 2. check syntax of (only) command name.
     use FML::Command;
     my $dispatch = new FML::Command;
     return $dispatch->safe_regexp_match($curproc, $command_args, \@test);
@@ -121,6 +122,7 @@ sub process
 	    $password = $options->[ 1 ];
 	}
 	elsif ($options->[0]) {
+	    # XXX-TODO really ???
 	    # XXX special treatment only for command mails.
 	    if ($myname eq 'command' || $myname eq 'fml.pl') {
 		my $cred  = $curproc->{ credential };
@@ -144,7 +146,7 @@ sub process
 				    $password);
 	}
 	else {
-	    croak("unsafe address: $address");
+	    croak("unsafe address");
 	    $curproc->logerror("unsafe address: $address");
 	}
     }
@@ -184,7 +186,7 @@ sub _change_password
     my $member_map = $config->{ primary_admin_member_map };
     unless ($cred->has_address_in_map($member_map, $config, $address)) {
 	my $r  = "no such admin member";
-	my $r0 = "please add the address as an admin member.";
+	my $r0 = "firstly, please add the address as admin member.";
 	$curproc->reply_message_nl('error.no_such_admin_member', $r);
 	$curproc->reply_message_nl('command.please_add_admin_member',
 				   $r0);
@@ -203,7 +205,7 @@ sub _change_password
 }
 
 
-# Descriptions: rewrite buffer to hide the password phrase in $rbuf
+# Descriptions: rewrite buffer to hide the password phrase in $rbuf.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args) STR_REF($rbuf)
 # Side Effects: none
 # Return Value: none
