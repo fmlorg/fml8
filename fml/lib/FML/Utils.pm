@@ -16,7 +16,7 @@ use Carp;
 
 require Exporter;
 @ISA       = qw(Exporter);
-@EXPORT_OK = qw(mkdirhier touch);
+@EXPORT_OK = qw(mkdirhier touch search_program);
 
 =head1 NAME
 
@@ -93,6 +93,34 @@ sub touch
     }
 
     return $ok;
+}
+
+
+sub search_program
+{
+    my ($file, $path_list) = @_;
+
+    my $default_path_list = [
+			     '/usr/bin', 
+			     '/bin', 
+			     '/sbin', 
+			     '/usr/local/bin', 
+			     '/usr/gnu/bin', 
+			     '/usr/pkg/bin'
+			     ];
+
+    $path_list ||= $default_path_list;
+
+    use File::Spec;
+    my $path;
+    for $path (@$path_list) {
+	my $prog = File::Spec->catfile($path, $file);
+	if (-x $prog) {
+	    return $prog;
+	}
+    }
+
+    return wantarray ? () : undef;
 }
 
 
