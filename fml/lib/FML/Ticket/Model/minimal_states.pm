@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: minimal_states.pm,v 1.18 2001/04/17 09:52:54 fukachan Exp $
+# $FML: minimal_states.pm,v 1.19 2001/06/10 10:22:47 fukachan Exp $
 #
 
 package FML::Ticket::Model::minimal_states;
@@ -901,7 +901,7 @@ sub show_articles_for_ticket
     print "</B><HR><PRE>\n" if $mode eq 'html';
 
     use FileHandle;
-    use FML::NL::ISO2022JP qw(STR2EUC);
+    use FML::Language::ISO2022JP qw(STR2EUC);
 
     my $s = '';
     for (split(/\s+/, $articles)) {
@@ -1006,7 +1006,7 @@ sub _show_ticket_by_html_table
 
     $aid = (split(/\s+/, $articles))[0];
     my $buf = $self->_article_summary( $spool_dir ."/". $aid );
-    use FML::NL::ISO2022JP qw(STR2EUC);
+    use FML::Language::ISO2022JP qw(STR2EUC);
     print STR2EUC($buf);
 }
 

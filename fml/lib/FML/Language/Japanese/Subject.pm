@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Subject.pm,v 1.2 2001/06/10 10:22:47 fukachan Exp $
+# $FML: Subject.pm,v 1.1.1.1 2001/07/31 14:13:08 fukachan Exp $
 #
 
 
@@ -13,7 +13,7 @@
 ###                                                   ###
 
 
-package FML::NL::Japanese::Subject;
+package FML::Language::Japanese::Subject;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
@@ -21,12 +21,12 @@ use Jcode;
 
 =head1 NAME
 
-FML::NL::Japanese::Subject - Japanese specific handling of a subject
+FML::Language::Japanese::Subject - Japanese specific handling of a subject
 
 =head1 SYNOPSIS
 
-    use FML::NL::Japanese::Subject;
-    $is_reply = FML::NL::Japanese::Subject::is_reply($subject);
+    use FML::Language::Japanese::Subject;
+    $is_reply = FML::Language::Japanese::Subject::is_reply($subject);
 
 =head1 DESCRIPTION
 
@@ -152,7 +152,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::NL::Japanese::Subject appeared in fml5 mailing list driver package.
+FML::Language::Japanese::Subject appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

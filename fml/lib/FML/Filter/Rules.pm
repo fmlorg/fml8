@@ -6,7 +6,7 @@ sub reject_null_mail_body
 
 sub reject_not_iso2022jp_japanese_string
 {
-    use FML::NL::ISO2022JP;
+    use FML::Language::ISO2022JP;
     not is_iso2022jp_string();
 }
 
