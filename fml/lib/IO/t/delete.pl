@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: delete.pl,v 1.2 2001/04/03 09:45:47 fukachan Exp $
 #
 
 use strict;
@@ -25,8 +25,8 @@ system "head -1 $org_file > $tmpf";
 system "cp $org_file /tmp/";
 
 # append
-use IO::MapAdapter;
-my $obj = new IO::MapAdapter $map;
+use IO::Adapter;
+my $obj = new IO::Adapter $map;
 $obj->delete( $buffer ) || croak("cannot add to $map");
 if ($obj->error) { croak( $obj->error );}
 
@@ -46,7 +46,7 @@ else {
 
 $map = 'unix.group:fml';
 print "${map}->delete()    ... ";
-$obj = new IO::MapAdapter $map;
+$obj = new IO::Adapter $map;
 eval q{ $obj->delete( $buffer ); };
 if ($@) {
     print "ok\n"; # XXX fail (non null $@) is ok here.

@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: File.pm,v 1.20 2001/04/03 09:45:45 fukachan Exp $
+# $FML: File.pm,v 1.21 2001/04/08 13:25:40 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -25,15 +25,15 @@ IO::Adapter::File - IO functions for a file
 
 To read list
 
-    use IO::MapAdapter;
-    $obj = new IO::MapAdapter $map;
+    use IO::Adapter;
+    $obj = new IO::Adapter $map;
     $obj->open || croak("cannot open $map");
     while ($x = $obj->getline) { ... }
     $obj->close;
 
 To add the address
 
-    $obj = new IO::MapAdapter $map;
+    $obj = new IO::Adapter $map;
     $obj->add( $address );
 
 To delete it
@@ -44,7 +44,7 @@ To delete it
 =head1 DESCRIPTION
 
 This module provides real IO functions for a file used in
-IO::MapAdapter. 
+IO::Adapter. 
 The map is the fully path-ed file name or a file name with 'file:/'
 prefix. 
 
@@ -339,7 +339,7 @@ sub replace
 
 =head1 SEE ALSO
 
-L<IO::MapAdapter>
+L<IO::Adapter>
 
 =head1 AUTHOR
 

@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: unsubscribe.pm,v 1.7 2001/04/03 09:45:42 fukachan Exp $
 #
 
 package FML::Command::unsubscribe;
@@ -39,11 +39,11 @@ sub unsubscribe
     croak("\$member_map is not specified")    unless $member_map;
     croak("\$recipient_map is not specified") unless $recipient_map;
 
-    use IO::MapAdapter;
-    my $obj = new IO::MapAdapter $member_map;
+    use IO::Adapter;
+    my $obj = new IO::Adapter $member_map;
     $obj->delete( $address );
 
-    $obj = new IO::MapAdapter $recipient_map;
+    $obj = new IO::Adapter $recipient_map;
     $obj->delete( $address );
 }
 

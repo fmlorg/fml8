@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: Credential.pm,v 1.7 2001/04/03 09:45:40 fukachan Exp $
+# $FML: Credential.pm,v 1.8 2001/04/15 09:07:12 fukachan Exp $
 #
 
 package FML::Credential;
@@ -111,10 +111,10 @@ sub is_member
     my $address = $curproc->{'credential'}->{'sender'};
     my ($user, $domain) = split(/\@/, $address);
 
-    use IO::MapAdapter;
+    use IO::Adapter;
     for my $map (split(/\s+/, $member_maps)) {
 	if ($map) {
-	    my $obj = new IO::MapAdapter $map;
+	    my $obj = new IO::Adapter $map;
 	    my $x = $obj->find( $user );
 	    my ($r) = split(/\s+/, $x);
 

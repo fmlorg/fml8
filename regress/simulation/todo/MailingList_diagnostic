@@ -3,7 +3,7 @@ ErrorMessages::Status qw(error_set error error_clear);
 IO::File::Atomic;
 IO::Adapter::Array;
 IO::Adapter::DBI;
-IO::MapAdapter;
+IO::Adapter;
 
 Mail::Delivery;
 MailingList::ESMTP;

@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: NIS.pm,v 1.13 2001/04/03 09:45:46 fukachan Exp $
 #
 
 package IO::Adapter::NIS;
@@ -39,8 +39,8 @@ IO::Adapter::NIS - NIS map operations
 
     $map = 'nis.group:fml';
 
-    use IO::MapAdapter;
-    $obj = new IO::MapAdapter $map;
+    use IO::Adapter;
+    $obj = new IO::Adapter $map;
     $obj->open || croak("cannot open $map");
     while ($x = $obj->getline) { ... }
     $obj->close;

@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: unixgroup_map.pl,v 1.3 2001/04/03 09:45:47 fukachan Exp $
 #
 
 use Carp;
@@ -16,8 +16,8 @@ my $map = 'unix.group:wheel';
 my @group  = getgrnam( 'wheel' );
 my @member = split(/\s+/,$group[3]);
 
-use IO::MapAdapter;
-my $obj = new IO::MapAdapter $map;
+use IO::Adapter;
+my $obj = new IO::Adapter $map;
 $obj->open || croak("cannot open $map");
 if ($obj->error) { croak( $obj->error );}
 

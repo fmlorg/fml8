@@ -22,7 +22,7 @@ IO::Adapter::MySQL - interface to talk with a MySQL server
 
 =head1 SYNOPSIS
 
-   use IO::MapAdapter;
+   use IO::Adapter;
    
    my $map        = 'mysql:toymodel';
    my $map_params = {
@@ -39,7 +39,7 @@ IO::Adapter::MySQL - interface to talk with a MySQL server
        },
    };
    
-   my $obj = new IO::MapAdapter ($map, $map_params);
+   my $obj = new IO::Adapter ($map, $map_params);
    $obj->open();
    $obj->add( 'rudo@nuinui.net' );
    $obj->close();

@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: append.pl,v 1.3 2001/04/03 09:45:47 fukachan Exp $
 #
 
 use strict;
@@ -24,8 +24,8 @@ print "${map}->add() ";
 system "cp $org_file /tmp/";
 
 # append
-use IO::MapAdapter;
-my $obj = new IO::MapAdapter $map;
+use IO::Adapter;
+my $obj = new IO::Adapter $map;
 $obj->add( $buffer ) || croak("cannot add to $map");
 if ($obj->error) { croak( $obj->error );}
 
@@ -46,7 +46,7 @@ else {
 
 $map = 'unix.group:fml';
 print "${map}->add()    ... ";
-$obj = new IO::MapAdapter $map;
+$obj = new IO::Adapter $map;
 eval q{ $obj->add( $buffer ); };
 if ($@) {
     print "ok\n"; # XXX fail (non null $@) is ok here.

@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: UnixGroup.pm,v 1.11 2001/04/03 09:45:46 fukachan Exp $
 #
 
 package IO::Adapter::UnixGroup;
@@ -38,8 +38,8 @@ IO::Adapter::UnixGroup - IO wrapper to read /etc/group
 
     $map = 'unix.group:fml';
 
-    use IO::MapAdapter;
-    $obj = new IO::MapAdapter $map;
+    use IO::Adapter;
+    $obj = new IO::Adapter $map;
     $obj->open || croak("cannot open $map");
     while ($x = $obj->getline) { ... }
     $obj->close;

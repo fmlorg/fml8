@@ -5,10 +5,10 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: MapAdapter.pm,v 1.27 2001/04/08 13:25:39 fukachan Exp $
+# $FML: MapAdapter.pm,v 1.28 2001/04/15 08:41:59 fukachan Exp $
 #
 
-package IO::MapAdapter;
+package IO::Adapter;
 use vars qw(@ISA @ORIG_ISA $FirstTime);
 use strict;
 use Carp;
@@ -19,12 +19,12 @@ END   {}
 
 =head1 NAME
 
-IO::MapAdapter - adapter for several IO interfaces
+IO::Adapter - adapter for several IO interfaces
 
 =head1 SYNOPSIS
 
-    use IO::MapAdapter;
-    $obj = new IO::MapAdapter ($map, $map_params);
+    use IO::Adapter;
+    $obj = new IO::Adapter ($map, $map_params);
     $obj->open || croak("cannot open $map");
     while ($x = $obj->getline) { ... }
     $obj->close;
@@ -150,7 +150,7 @@ sub new
 	    $pkg           = 'IO::Adapter::LDAP';
 	}
 	else {
-	    my $s = "IO::MapAdapter::new: map='$map' is unknown.";
+	    my $s = "IO::Adapter::new: map='$map' is unknown.";
 	    error_set($me, $s);
 	}
     }
@@ -384,7 +384,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-IO::MapAdapter appeared in fml5 mailing list driver package.
+IO::Adapter appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

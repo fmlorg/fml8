@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: SMTP.pm,v 1.3 2001/04/08 06:01:38 fukachan Exp $
+# $FML: SMTP.pm,v 1.4 2001/04/15 04:58:40 fukachan Exp $
 #
 
 
@@ -85,9 +85,9 @@ C<Mail::Delivery::Net::INET4> and
 C<Mail::Delivery::Net::INET6>.
 
 It sends a list of all recipients indicated by $recipient_maps.
-C<IO::MapAdapter> resolves $recipient_maps and provides the abstract
+C<IO::Adapter> resolves $recipient_maps and provides the abstract
 IO layer. It provides the usual file IO methods for each C<map>.
-See L<IO::MapAdapter> for more details.
+See L<IO::Adapter> for more details.
 
 =head1 METHODS
 
@@ -320,7 +320,7 @@ C<smtp_sender> is the sender's email address.
 It is used at MAIL FROM: command.
 
 C<recipient_maps> is a list of C<maps>.
-See L<IO::MapAdapter> for more details. 
+See L<IO::Adapter> for more details. 
 For example,
 
 To read addresses from a file, specify the map as
@@ -388,8 +388,8 @@ sub deliver
 
 	# try to open $map
 	eval q{
-	    use IO::MapAdapter;
-	    my $obj = new IO::MapAdapter ($map, $args->{ map_params });
+	    use IO::Adapter;
+	    my $obj = new IO::Adapter ($map, $args->{ map_params });
 	    if (defined $obj) { 
 		$obj->open || croak("cannot open $map");
 	    }
@@ -584,7 +584,7 @@ sub _send_mail_from
 #               Example: recipient_maps = file:members
 #                                         unix.group:admin
 #                                         mysql:toymodel
-#               IO::MapAdapter class is essential to handle abstract 
+#               IO::Adapter class is essential to handle abstract 
 #               $recipient_map.
 #    Arguments: $self $args
 # Side Effects: $self->{ _retry_recipient_table } has recipients which 
@@ -600,11 +600,11 @@ sub _send_recipient_list_by_recipient_map
     # open abstract recipient list objects.
     # $map syntax is "type:parameter", e.g., 
     # file:$filename mysql:$schema_name
-    use IO::MapAdapter;
-    my $obj = new IO::MapAdapter $map;
+    use IO::Adapter;
+    my $obj = new IO::Adapter $map;
 
     unless (defined $obj) {
-	Log("Error: cannot get object for $map by IO::MapAdapter");
+	Log("Error: cannot get object for $map by IO::Adapter");
     }
     else { # $obj is good.
 	my $rcpt;
@@ -776,7 +776,7 @@ L<IO::Socket>,
 L<Mail::Delivery::Utils>,
 L<Mail::Delivery::INET4>,
 L<Mail::Delivery::INET6>,
-L<IO::MapAdapter>
+L<IO::Adapter>
 
 See I<http://www.postfix.org/> on C<Postfix> 
 which replaces sendmail with little effort 

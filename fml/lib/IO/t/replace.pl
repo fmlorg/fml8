@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: replace.pl,v 1.2 2001/04/03 09:45:47 fukachan Exp $
 #
 
 use strict;
@@ -26,8 +26,8 @@ system "sed 1d $org_file > $tmpf";
 system "cp $org_file /tmp/";
 
 # append
-use IO::MapAdapter;
-my $obj = new IO::MapAdapter $map;
+use IO::Adapter;
+my $obj = new IO::Adapter $map;
 $obj->replace( $regexp, $value ) || croak("cannot add to $map");
 if ($obj->error) { croak( $obj->error );}
 
@@ -47,7 +47,7 @@ else {
 
 $map = 'unix.group:fml';
 print "${map}->replace()    ... ";
-$obj = new IO::MapAdapter $map;
+$obj = new IO::Adapter $map;
 eval q{ $obj->replace( $regexp, $value ); };
 if ($@) {
     print "ok\n"; # XXX fail (non null $@) is ok here.

@@ -5,7 +5,7 @@
 
 use strict;
 use Carp;
-use IO::MapAdapter;
+use IO::Adapter;
 
 my $map = 'mysql:toymodel';
 
@@ -25,7 +25,7 @@ my $map_params = {
 };
 
 
-my $obj = new IO::MapAdapter ($map, $map_params);
+my $obj = new IO::Adapter ($map, $map_params);
 
 _dump($obj); print "\n";
 

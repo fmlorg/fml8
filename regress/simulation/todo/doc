@@ -55,7 +55,7 @@ File/Rotate.pm
 File/Sequence.pm
 File/SimpleLock.pm
 File/Utils.pm
-IO/MapAdapter.pm
+IO/Adapter.pm
 IO/Adapter/Array.pm
 IO/Adapter/DBI.pm
 IO/Adapter/File.pm

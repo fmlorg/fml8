@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: file_map.pl,v 1.3 2001/04/03 09:45:47 fukachan Exp $
 #
 
 use Carp;
@@ -21,8 +21,8 @@ while (1) {
 }
 close($file);
 
-use IO::MapAdapter;
-$obj = new IO::MapAdapter $map;
+use IO::Adapter;
+$obj = new IO::Adapter $map;
 $obj->open || croak("cannot open $map");
 if ($obj->error) { croak( $obj->error );}
 while ($x = $obj->getline) { $buf .= $x; }
