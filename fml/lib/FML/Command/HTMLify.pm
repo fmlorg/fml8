@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.4 2002/04/27 05:25:01 fukachan Exp $
+# $FML: HTMLify.pm,v 1.5 2002/05/13 14:24:46 fukachan Exp $
 #
 
 package FML::Command::HTMLify;
@@ -44,9 +44,10 @@ sub convert
 	croak("no such source directory");
     }
 
-    unless ($curproc->is_config_cf_exist()) {
-	croak("invalid ML");
-    }
+    # XXX NOT NEED THIS CHECK ?
+    #     unless ($curproc->is_config_cf_exist()) {
+    #		croak("invalid ML");
+    #    }
 
     my ($is_subdir_exists, $subdirs) = _check_subdir_exists($src_dir);
     if ($is_subdir_exists) { Log("looks subdir exists");}
