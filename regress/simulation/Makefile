@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.64 2003/02/16 09:03:48 fukachan Exp $
+# $FML: Makefile,v 1.65 2003/03/09 03:11:59 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -28,7 +28,7 @@ check:
 	- grep '^\[TODO' 00_MEMO >> 33_TODO
 	- (cd ../../fml; make check 2>&1 |\
 		grep -v 'syntax OK' |\
-		tee ../regress/simulation/33_TODO) |\
+		tee -a ../regress/simulation/33_TODO) |\
 		grep -v OK || echo ''
 	@ echo "" >> 33_TODO
 	@ echo "   *********** STATUS.txt ********** " >> 33_TODO
