@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.103 2004/04/22 12:43:19 fukachan Exp $
+# $FML: Command.pm,v 1.104 2004/04/23 04:10:35 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -449,8 +449,10 @@ sub _command_execute
 
 	# command dependent syntax checker.
 	unless ($dispatch->verify_syntax($curproc, $command_args)) {
-	    $curproc->reply_message_nl('command.fail', "fail.", $msg_args);
-	    $curproc->logerror("fail to execute \"$masked_command\"");
+	    $curproc->reply_message_nl('command.insecure', 
+				       "stopped due to insecure syntax.",
+				       $msg_args);
+	    $curproc->logerror("insecure syntax: \"$masked_command\"");
 	    return 0;
 	}
 
