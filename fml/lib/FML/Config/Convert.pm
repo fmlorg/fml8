@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Convert.pm,v 1.3 2001/12/22 09:21:05 fukachan Exp $
+# $FML: Convert.pm,v 1.4 2001/12/22 14:23:40 fukachan Exp $
 #
 
 
@@ -82,6 +82,10 @@ sub _replace
 {
     my ($buf, $config) = @_;
 
+    if (defined $config->{ fml_owner }) {
+	$buf =~ s/__fml_owner__/$config->{ fml_owner }/g;
+    }
+
     if (defined $config->{ ml_name }) {
 	$buf =~ s/__ml_name__/$config->{ ml_name }/g;
     }
@@ -92,6 +96,10 @@ sub _replace
 
     if (defined $config->{ libexec_dir }) {
 	$buf =~ s/__libexec_dir__/$config->{ libexec_dir }/g;
+    }
+
+    if (defined $config->{ ml_home_dir }) {
+	$buf =~ s/__ml_home_dir__/$config->{ ml_home_dir }/g;
     }
 
     if (defined $config->{ ml_home_prefix }) {
