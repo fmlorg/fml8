@@ -54,7 +54,7 @@ Message Format
 
    %message = {
                 version      => 1.0
-                content_type => message/rfc822
+                content_type => text/plain
                 next         => \%next_message
                 prev         => \%prev_message
                 header       => {
