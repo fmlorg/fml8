@@ -1,6 +1,29 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/07/13
+
+   コマンドシンタックスの見直し
+	CGI もこれに合わせて修正
+
+	admin adduser
+	admin useradd
+	admin addadmin
+	admin adminadd
+	admin deluser
+	admin userdel
+	admin deladmin
+	admin admindel
+
+   FML::MTAControl 
+   FML::MTAControl::Procmail 
+   FML::Command::Admin::newml rmml.pm 
+	newml 時に procmail の設定のテンプレートを作る。
+	rmml  時には消す。
+
+   FML::Process::Kernel 
+	check defined($ml_name) in ml_* variable handlings
+
 2002/07/12
 
    procmailrc のサンプルもつくってみやう
@@ -2723,4 +2746,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.86 2002/07/11 15:12:27 fukachan Exp $
+$FML: CHANGES.txt,v 1.87 2002/07/12 15:16:57 fukachan Exp $
