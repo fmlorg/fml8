@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: edit.pm,v 1.7 2002/02/18 14:24:12 fukachan Exp $
+# $FML: edit.pm,v 1.8 2002/02/20 14:10:37 fukachan Exp $
 #
 
 package FML::Command::Admin::edit;
@@ -13,11 +13,9 @@ use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 
-
-
 =head1 NAME
 
-FML::Command::Admin::edit - edit config.cf
+FML::Command::Admin::edit - edit config.cf (not yet implemented)
 
 =head1 SYNOPSIS
 

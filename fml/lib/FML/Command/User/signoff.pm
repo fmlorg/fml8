@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: signoff.pm,v 1.7 2002/02/18 14:14:53 fukachan Exp $
+# $FML: signoff.pm,v 1.8 2002/02/20 14:10:38 fukachan Exp $
 #
 
 package FML::Command::User::signoff;
@@ -30,7 +30,7 @@ sub process
 
 =head1 NAME
 
-FML::Command::User::signoff - signoff the specified member
+FML::Command::User::signoff - unsubscribe the specified member
 
 =head1 SYNOPSIS
 
@@ -38,7 +38,7 @@ See C<FML::Command> for more details.
 
 =head1 DESCRIPTION
 
-same as C<unsubscribe>.
+an alias of C<FML::Command::User::unsubscribe>.
 
 =head1 AUTHOR
 

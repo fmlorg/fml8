@@ -4,16 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: deny.pm,v 1.2 2002/02/13 10:41:17 fukachan Exp $
+# $FML: deny.pm,v 1.3 2002/02/18 14:14:52 fukachan Exp $
 #
 
 package FML::Command::User::deny;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-
-
-
 use FML::Command::SendFile;
 use FML::Log qw(Log LogWarn LogError);
 @ISA = qw(FML::Command::SendFile);

@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001 Ken'ichi Fukamachi
+#  Copyright (C) 2002 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Calender.pm,v 1.9 2001/12/23 11:39:45 fukachan Exp $
+# $FML: Calender.pm,v 1.1 2002/02/13 13:01:37 fukachan Exp $
 #
 
 package FML::CGI::Calender;
@@ -19,7 +19,7 @@ use FML::Process::CGI;
 
 =head1 NAME
 
-FML::CGI::Calender - demonstration CGI module to show schedule (HTML TABLE)
+FML::CGI::Calender - CGI module to show calender as HTML TABLE (DEMO)
 
 =head1 SYNOPSIS
 
@@ -39,12 +39,9 @@ See L<FML::Process::Flow> for flow details.
 
 C<FML::CGI::Calender> is a subclass of C<FML::Process::CGI>.
 
+Almost all methods inherits C<FML::Process::CGI> base class.
+
 =head1 METHODS
-
-Almost methods common for CGI or HTML are forwarded to
-C<FML::Process::CGI> base class.
-
-This module has routines needed for CGI main methond run().
 
 =cut
 
@@ -137,7 +134,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.

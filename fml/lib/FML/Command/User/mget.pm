@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: mget.pm,v 1.7 2002/02/13 10:41:17 fukachan Exp $
+# $FML: mget.pm,v 1.8 2002/02/18 14:14:53 fukachan Exp $
 #
 
 package FML::Command::User::mget;
@@ -16,7 +16,7 @@ use FML::Command::User::get;
 @ISA = qw(FML::Command::User::get);
 
 
-# Descriptions: send articles, files, et.al...
+# Descriptions: send article(s)
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: forward request to get module
 # Return Value: none
@@ -29,7 +29,7 @@ sub process
 
 =head1 NAME
 
-FML::Command::User::mget - what is this
+FML::Command::User::mget - send articles
 
 =head1 SYNOPSIS
 
@@ -37,7 +37,7 @@ forwarded C<FML::Command::User::get>.
 
 =head1 DESCRIPTION
 
-forwarded C<FML::Command::User::get>.
+an alias of C<FML::Command::User::get>.
 
 =head1 AUTHOR
 

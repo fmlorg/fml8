@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: info.pm,v 1.3 2001/12/22 09:53:09 fukachan Exp $
+# $FML: info.pm,v 1.4 2002/02/18 14:14:52 fukachan Exp $
 #
 
 package FML::Command::User::info;
@@ -17,7 +17,7 @@ use FML::Command::User::guide;
 @ISA = qw(FML::Command::User::guide);
 
 
-# Descriptions: send back guide
+# Descriptions: send back guide file
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: forward request to guide module
 # Return Value: none
@@ -30,7 +30,7 @@ sub process
 
 =head1 NAME
 
-FML::Command::User::info - send guide file
+FML::Command::User::info - send back guide file
 
 =head1 SYNOPSIS
 
