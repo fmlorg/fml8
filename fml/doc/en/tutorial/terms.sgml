@@ -1,5 +1,5 @@
 <!--
-   $FML: terms.sgml,v 1.1 2003/07/24 15:37:35 fukachan Exp $
+   $FML: terms.sgml,v 1.2 2003/07/26 09:10:40 fukachan Exp $
    $jaFML: terms.sgml,v 1.5 2003/04/15 14:51:35 fukachan Exp $
 -->
 
@@ -13,14 +13,14 @@
    <varlistentry>
 	<term> % </term>
 	<listitem>
-	<para>	prompt of a user on the shell	</para>
+	<para>	user prompt on the shell	</para>
 	</listitem>
    </varlistentry>
 
    <varlistentry>
 	<term> # </term>
 	<listitem>
-	<para>	prompt of the user root </para>
+	<para>	root user prompt on the shell </para>
 	</listitem>
    </varlistentry>
 

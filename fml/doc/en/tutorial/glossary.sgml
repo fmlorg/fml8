@@ -1,19 +1,29 @@
 <!--
-   $FML: glossary.sgml,v 1.1 2003/07/24 15:37:35 fukachan Exp $
+   $FML: glossary.sgml,v 1.2 2003/07/26 09:10:39 fukachan Exp $
    $jaFML: glossary.sgml,v 1.5 2003/04/15 14:51:34 fukachan Exp $
 -->
 
 <glossary id="glossary">
    <title>
-	Glossary (function and variable names)
+	Glossary (function and variable names convention)
 	</title>
 
 
    <glossentry>
-	<glossterm>	fml 4	</glossterm>
+	<glossterm>	fml4	</glossterm>
 	<glossdef>
 	<para>
 	&fml4; series
+	</para>
+	</glossdef>
+
+   </glossentry>
+
+   <glossentry>
+	<glossterm>	fml8	</glossterm>
+	<glossdef>
+	<para>
+	&fml8; series
 	</para>
 	</glossdef>
 
@@ -28,8 +38,9 @@
 	</para>
 
 	<para>
-	We call it fml 8, too.
+	same as &fml8; now.
 	</para>
+
 	</glossdef>
 
 
@@ -153,7 +164,7 @@
 	<glossdef>
 	<para>
 	The first "r" implies "reference".
-	This called hangalian form but we use it little in fml8.
+	This called hangalian form but we use it very little in fml8.
 	</para>
 	</glossdef>
    </glossentry>
@@ -174,7 +185,7 @@
 	<glossterm>	Japanese character set name </glossterm>
 	<glossdef>
 	<para>
-	JIS SJIS EUC ...
+	JIS, SJIS, EUC ...
 	</para>
 	</glossdef>
    </glossentry>
@@ -216,9 +227,9 @@ $euc_string = STR2EUC($string);
 
 	<para>
 	By sending the command mail to some address, 
-	a user can make fml8 action something, such as 
+	a user can make &fml8; action something, such as 
 	subscribe, file retrieve, unsubscribe et.al, 
-	The address is typically $ml-ctl@$domain.
+	The address is typically $ml-ctl@$domain for $ml@$domain ML.
 	</para>
 
 	</glossdef>
