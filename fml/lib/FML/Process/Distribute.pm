@@ -105,6 +105,12 @@ sub _distribute
     # get sequence number
     my $id = $ah->increment_id;
 
+    # XXX debug, remove here in the future
+    {
+	my $ha_msg = $curproc->{ article }->{ body }->get_content_type_list;
+	for (@$ha_msg) { Log($_);}
+    }
+
     # ticket system checks the message before header rewritings.
     $curproc->_ticket_check($args) if $config->yes('use_ticket');
 

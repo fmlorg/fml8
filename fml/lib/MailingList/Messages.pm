@@ -626,10 +626,7 @@ sub parse_and_build_mime_multipart_chain
 sub _get_content_type
 {
     my ($args, $default) = @_;
-    my $content   = $args->{ content };
-    my $pos_begin = $args->{ offset_begin };
-    my $pos       = index($$content, "\n\n", $pos_begin);
-    my $buf       = substr($$content, $pos_begin, $pos - $pos_begin );
+    my $buf = $args->{ header } || '';
 
     if ($buf =~ /Content-Type:\s*(\S+)\;/) {
 	return $1;
@@ -884,6 +881,19 @@ sub set_log_function
     $self->{ _log_function } = $fp; # log function pointer
 }
 
+
+# XXX debug, remove here in the future
+sub get_content_type_list
+{
+    my ($msg) = @_;
+    my ($m, @buf, $i);
+
+    for ($i = 0, $m = $msg; defined $m ; $m = $m->{ next }) {
+	$i++;
+	push(@buf, "type[$i]: $m->{'content_type'} | $m->{'base_content_type'}");
+    }
+    \@buf;
+}
 
 
 =head1 APPENDIX (RFC2046 Appendix A)
