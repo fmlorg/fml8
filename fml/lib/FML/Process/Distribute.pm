@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.150 2004/06/24 10:40:25 fukachan Exp $
+# $FML: Distribute.pm,v 1.151 2004/06/27 02:39:32 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -233,6 +233,7 @@ sub run
 	}
 	else {
 	    $curproc->log("deny article submission");
+	    $curproc->stop_this_process();
 
 	    # send back deny request with the original message.
 	    $curproc->restriction_state_reply_reason('article_post',
