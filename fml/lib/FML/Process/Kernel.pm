@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.233 2004/06/27 06:09:49 fukachan Exp $
+# $FML: Kernel.pm,v 1.234 2004/07/23 15:59:10 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2998,6 +2998,8 @@ exit as EX_TEMPFAIL.
 sub exit_as_tempfail
 {
     my ($curproc) = @_;
+
+    $curproc->logerror("exit(EX_TEMPFAIL) to retry later.");
 
     $main::ERROR_EXIT_CODE = 75;
     exit(75);
