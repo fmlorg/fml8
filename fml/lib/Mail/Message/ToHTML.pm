@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.41.2.6 2003/06/14 06:55:04 fukachan Exp $
+# $FML: ToHTML.pm,v 1.41.2.7 2003/06/14 10:46:34 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 1;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.41.2.6 2003/06/14 06:55:04 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.41.2.7 2003/06/14 10:46:34 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -932,19 +932,11 @@ sub cache_message_info
     my $dst = $args->{ dst };
 
     $ndb->set_key($id);
-    $self->{ _ndb_key } = $id;
 
     $ndb->set('html_filename', $id, $self->html_filename($id));
     $ndb->set('html_filepath', $id, $dst);
 
     $ndb->analyze($msg);
-}
-
-
-sub ndb_key
-{
-    my ($self) = @_;
-    return $self->{ _ndb_key };
 }
 
 
