@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QueueManager.pm,v 1.28 2004/09/03 13:04:47 fukachan Exp $
+# $FML: QueueManager.pm,v 1.29 2004/09/03 13:56:42 fukachan Exp $
 #
 
 package FML::Process::QueueManager;
@@ -233,7 +233,7 @@ sub cleanup
 	};
 	$q->set_log_function($fp);
 
-	unless ( $q->is_valid_queue() ) {
+	unless ( $q->is_valid_active_queue() ) {
 	    my $mtime = $q->last_modified_time();
 
 	    # enough old.
