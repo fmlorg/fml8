@@ -4,6 +4,9 @@
 	XXX 作業したら TODO/STATUS.txt もアップデートしてね XXX
 
 
+○	Mail::Message::*Code は日本語依存過ぎじゃない？
+
+
 ○	CGI で xxx-admin さんをかすたまいずしたい？
 
 
@@ -288,4 +291,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.22 2002/04/28 14:55:54 fukachan Exp $
+$FML: 00_MEMO,v 1.23 2002/05/18 03:58:24 fukachan Exp $
