@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.66 2003/03/09 08:29:10 fukachan Exp $
+	$FML: chapters.ent,v 1.67 2003/03/12 00:18:30 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -129,6 +129,7 @@
 <!entity chapter.config.cf        SYSTEM "internals/config.cf.sgml">
 <!entity chapter.restriction      SYSTEM "internals/restriction.sgml">
 <!entity chapter.credential       SYSTEM "internals/credential.sgml">
+<!entity chapter.lock             SYSTEM "internals/lock.sgml">
 
 <!entity chapter.virtual          SYSTEM "virtual/chapter.sgml">
 

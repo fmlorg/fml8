@@ -1,0 +1,77 @@
+<!--
+   $FML$
+-->
+
+
+<chapter id="lock">
+	<title>
+	ロック
+	</title>
+
+
+<sect1 id="lock.overview">
+	<title>
+	ロックの概要
+	</title>
+
+<para>
+ながらく giant lock だったが、2002/03 に giant lock をなくした。
+</para>
+
+<para>
+Mail::Delivery 関連はメンバーリストにアクセスするので、いろいろありそう。
+でも、Mail::Delivery::Queue は見るだけ (mailq コマンド)か、並列操作可
+能なものだけなので、ロックは考えなくて良いはずです。
+</para>
+
+<para>
+一方、Mail::Delivery::SMTP の操作の際にはメンバーリストのロックが必要です。
+現在は、
+Mail::Delivery::SMTP を呼び出す FML のクラス(
+実は FML::Send と FML::Process::Delivery の２箇所しかない
+)がロック処理をしています。
+</para>
+
+<para>
+そして、write lock とは限らないが、一般に map を使うモジュールには
+ロックが必要です。write が必要とは限りません。
+たとえば
+FML/Command/UserControl.pm 
+や
+FML/Command/Auth.pm
+には write lock が必要だが、
+FML/Credential.pm
+には read lock だけでよさそう。
+</para>
+
+</sect1>
+
+
+<sect1 id="lock.todo">
+	<title>
+	TODO
+	</title>
+
+<para>
+*_maps をよぶまえには MUTEX ロックをする。
+いや、やりすぎかもしれんが
+</para>
+
+<para>
+メンバーリストへ IO::Adapter をかます時に、
+READ,WRITE LOCK がほしい。
+<footnote>
+<para>
+READ ロックは不要か？いや、だめだろ
+chaddr の途中で sleep したら敗けやから;)
+</para>
+</footnote>
+perl thread をつかえばできるけど、
+汎用的な実装はかなりむつかしいぽい;)
+</para>
+</para>
+
+</sect1>
+
+
+</chapter>
