@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.64 2004/05/18 08:36:05 fukachan Exp $
+# $FML: Article.pm,v 1.65 2004/05/25 04:04:43 fukachan Exp $
 #
 
 package FML::Article;
@@ -185,12 +185,13 @@ sub spool_in
 		$error++ if $fh->error();
 
 		if ($error) {
-			$fh->close;
-		   $curproc->logerror("failed to create article");
+		    $fh->close;
+		    $curproc->logerror("failed to create article");
+		    $self->_try_failover($curproc, $file);
 		}
 		else {		
-			$fh->close;
-		   $curproc->log("article $id");
+		    $fh->close;
+		    $curproc->log("article $id");
 		}
 	    }
 	}
@@ -202,6 +203,36 @@ sub spool_in
     }
     else {
 	$curproc->log("not spool article $id");
+    }
+}
+
+
+# Descriptions: When we fail to create article file, 
+#               we try to save the original message at least.
+#               So, we try to save article content from incoming queue.
+#    Arguments: OBJ($self) OBJ($curproc) STR($article_file)
+# Side Effects: link(2) or rename(2).
+# Return Value: none
+sub _try_failover
+{
+    my ($self, $curproc, $article_file) = @_;
+    my $queue      = $curproc->mail_queue_get_incoming_queue();
+    my $queue_id   = $queue->id();
+    my $queue_file = $queue->incoming_file_path($queue_id);
+
+    # 0. nuke (must be) broken article file.
+    if (-f $article_file) { unlink $article_file;}
+
+    # 1. try link(2).
+    if (link($queue_file, $article_file)) {
+	$curproc->log("article: link queue to article file");
+    }
+    # 2. try rename(2).
+    elsif (rename($queue_file, $article_file)) {
+	$curproc->log("article: rename queue to article file");
+    }
+    else {
+	$curproc->logerror("article: give up failover.");
     }
 }
 
