@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.96 2002/09/15 00:11:43 fukachan Exp $
+# $FML: Distribute.pm,v 1.97 2002/09/22 14:56:52 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -142,12 +142,11 @@ sub verify_request
 sub _check_filter
 {
     my ($curproc, $args) = @_;
-    my $config = $curproc->{ config };
 
     eval q{
 	use FML::Filter;
 	my $filter = new FML::Filter;
-	my $r = $filter->check($curproc, $args);
+	my $r = $filter->article_filter($curproc, $args);
 
 	# filter traps this message.
 	if ($r = $filter->error()) {
