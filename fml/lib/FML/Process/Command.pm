@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.66 2002/07/18 23:51:03 fukachan Exp $
+# $FML: Command.pm,v 1.67 2002/07/19 03:11:01 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -475,8 +475,23 @@ sub _get_command_mode
 	    }
 	}
 	else {
-	    $status->{ _stop_reason_key } = 'command.auth_fail';
-	    $status->{ _stop_reason_str } = "not authenticated.";
+	    # Exapmle: incorrect password 
+	    if ($is_admin && (! $is_auth)) {
+		$status->{ _stop_reason_key } = 'command.auth_fail';
+		$status->{ _stop_reason_str } = "not authenticated.";
+	    }
+	    # Example: not admin member (not in members-admin)
+	    elsif ((! $is_admin) && $is_auth) {
+		$status->{ _stop_reason_key } = 'error.not_admin_member';
+		$status->{ _stop_reason_str } = "not admin member.";
+		LogError("not admin member");
+	    }
+	    # other reasons
+	    else {
+		$status->{ _stop_reason_key } = 'command.auth_fail';
+		$status->{ _stop_reason_str } = "not authenticated.";
+	    }
+
 	    LogError("admin command not authenticated");
 	    return '__LAST__';
 	}
