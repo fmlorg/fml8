@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: addadmin.pm,v 1.3 2002/04/03 11:32:58 fukachan Exp $
+# $FML: addadmin.pm,v 1.4 2002/07/02 12:07:07 fukachan Exp $
 #
 
 package FML::Command::Admin::addadmin;
@@ -59,10 +59,11 @@ sub need_lock { 1;}
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $config     = $curproc->{ config };
-    my $member_map = $config->{ primary_admin_member_map };
-    my $options    = $command_args->{ options };
-    my $address    = $command_args->{ command_data } || $options->[ 0 ];
+    my $config        = $curproc->{ config };
+    my $member_map    = $config->{ primary_admin_member_map };
+    my $recipient_map = $config->{ primary_admin_recipient_map };
+    my $options       = $command_args->{ options };
+    my $address       = $command_args->{ command_data } || $options->[ 0 ];
 
     # fundamental check
     croak("address is not undefined")    unless defined $address;
@@ -73,7 +74,7 @@ sub process
     # FML::Command::UserControl specific parameters
     my $uc_args = {
 	address => $address,
-	maplist => [ $member_map ],
+	maplist => [ $member_map, $recipient_map ],
     };
     my $r = '';
 
