@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.212 2004/02/27 12:47:42 fukachan Exp $
+# $FML: Kernel.pm,v 1.213 2004/02/27 22:23:12 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1627,7 +1627,7 @@ sub _append_message_into_queue
 # Descriptions: add the specified $msg into on memory queue
 #    Arguments: OBJ($curproc) OBJ($msg) HASH_REF($rm_args)
 #               ARRAY_REF($rcpt) ARRAY_REF($rcpt_maps) OBJ($hdr)
-#               HASH_REF($charsetes)
+#               HASH_REF($charsets)
 # Side Effects: update on momory queue which is on PCB area.
 # Return Value: none
 sub _append_message_into_queue2
