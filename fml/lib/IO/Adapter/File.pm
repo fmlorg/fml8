@@ -150,7 +150,8 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-IO::Adapter::File.pm appeared in fml5.
+IO::Adapter::File appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
 
 =cut
 

@@ -26,7 +26,7 @@ sub new
 
 =head1 NAME
 
-MailingList::ESMTP.pm - Extended SMTP class
+MailingList::ESMTP - Extended SMTP class
 
 =head1 SYNOPSIS
 
@@ -35,7 +35,7 @@ MailingList::ESMTP.pm - Extended SMTP class
    $service->deliver( ... );
 
 See L<MailingList::SMTP> for more details since this ESMTP class
-is an alias of SMTP class for convenience.
+is an adapter for SMTP (super) class for convenience.
 
 =head1 AUTHOR
 
@@ -50,7 +50,8 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-MailingList::ESMTP.pm appeared in fml5.
+MailingList::ESMTP appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
 
 =cut
 

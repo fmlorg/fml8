@@ -118,7 +118,8 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Dialect::Japanese::Subject.pm appeared in fml5.
+Dialect::Japanese::Subject appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
 
 =cut
 

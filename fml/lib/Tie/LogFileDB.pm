@@ -198,7 +198,8 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Tie::LogFileDB.pm appeared in fml5.
+Tie::LogFileDB appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
 
 =cut
 
