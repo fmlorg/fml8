@@ -85,7 +85,7 @@ sub new
     my $pkg      = 'MailingList::SMTP';
 
     # char's of the protocol name is aligned to upper case.
-    $protocol =~ tr/A-Z/a-z/;
+    $protocol =~ tr/a-z/A-Z/;
  
     if ($protocol eq 'SMTP') {
 	$pkg = 'MailingList::SMTP';
