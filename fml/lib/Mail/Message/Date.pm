@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000,2001,2002,2003 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.19 2003/01/26 03:23:10 fukachan Exp $
+# $FML: Date.pm,v 1.20 2003/03/14 06:53:01 fukachan Exp $
 #
 
 package Mail::Message::Date;
@@ -279,28 +279,18 @@ sub _log
 
 
 # Descriptions: convert Date: string to UNIXTIME (sec)
-#    Arguments: STR($in)
+#    Arguments: OBJ($self) STR($in)
 # Side Effects: none
 # Return Value: NUM(unix time)
 sub date_to_unixtime
 {
-    my ($in) = @_;
-    my ($input) = $in;
-    my ($day, $month, $year, $hour, $min, $sec, $pm);
-    my ($shift, $shift_t, $shift_m);
-    my (%month);
-    my ($zone);
+    my ($self, $in) = @_;
+    my ($day, %month, $month, $year, $hour, $min, $sec, $pm, $zone,
+	$shift, $shift_t, $shift_m);
 
-    # cheap sanity, but ok?;)
+    # cheap sanity, but "return 0" is ok?;)
     return 0 unless defined $in;
     return 0 unless $in;
-
-    # XXX-TODO: method-ify date_to_unixtime() ?
-    # XXX-TODO: more documents
-
-    $in =~ s/[\s\n]*$//;
-
-    require 'timelocal.pl';
 
     # hints
     my $c = 1;
@@ -309,6 +299,9 @@ sub date_to_unixtime
 	$month{ $month } = $c++;
     }
 
+    # $in = clean up-ed string. $input = original one.
+    my $input = $in;
+    $in =~ s/[\s\n]*$//;
     if ($in =~ /([A-Z]+)\s*$/) {
 	$zone = $1;
 	if ($zone{$zone} ne "") {
@@ -332,15 +325,15 @@ sub date_to_unixtime
     if ($in =~
 	/(\d+)\s+(\w+)\s+(\d+)\s+(\d+):(\d+):(\d+)\s+([\+\-])(\d\d)(\d\d)/) {
 	if ($debug_mti) { print STDERR "Date2UnixTime: Standard\n";}
-	$day   = $1;
-	$month = ($month{$2} || $month) - 1;
-	$year  = $3 > 1900 ? $3 - 1900 : $3;
-	$hour  = $4;
-	$min   = $5;
-	$sec   = $6;
+	$day     = $1;
+	$month   = ($month{$2} || $month) - 1;
+	$year    = $3 > 1900 ? $3 - 1900 : $3;
+	$hour    = $4;
+	$min     = $5;
+	$sec     = $6;
 
 	# time zone
-	$pm    = $7;
+	$pm      = $7;
 	$shift_t = $8;
 	$shift_m = $9;
     }
@@ -350,15 +343,15 @@ sub date_to_unixtime
 	    print STDERR "Date2UnixTime: Standard without \$sec\n";
 	}
 
-	$day   = $1;
-	$month = ($month{$2} || $month) - 1;
-	$year  = $3 > 1900 ? $3 - 1900 : $3;
-	$hour  = $4;
-	$min   = $5;
-	$sec   = 0;
+	$day     = $1;
+	$month   = ($month{$2} || $month) - 1;
+	$year    = $3 > 1900 ? $3 - 1900 : $3;
+	$hour    = $4;
+	$min     = $5;
+	$sec     = 0;
 
 	# time zone
-	$pm    = $6;
+	$pm      = $6;
 	$shift_t = $7;
 	$shift_m = $8;
     }
@@ -366,15 +359,15 @@ sub date_to_unixtime
     # no timezone case ... WHAT SHOULD WE DO ? ;_;
     elsif ($in =~ /([A-Za-z]+)\s+(\d{1,2})\s+(\d+):(\d+):(\d+)\s+(\d{4})\s*/) {
 	if ($debug_mti) { print STDERR "Date2UnixTime: Japan specific?\n";}
-	$month = ($month{$1} || $month) - 1;
-	$day   = $2;
-	$hour  = $3;
-	$min   = $4;
-	$sec   = $5;
-	$year  = $6 > 1900 ? $6 - 1900 : $6;
+	$month   = ($month{$1} || $month) - 1;
+	$day     = $2;
+	$hour    = $3;
+	$min     = $4;
+	$sec     = $5;
+	$year    = $6 > 1900 ? $6 - 1900 : $6;
 
 	# time zone
-	$pm    = '+';
+	$pm      = '+';
 	$shift_t = '09';
 	$shift_m = '00';
     }
@@ -398,13 +391,15 @@ sub date_to_unixtime
 	return 0;
     }
 
-    # get gmtime
+    # calculate shift between local time and UTC
     $shift_t =~ s/^0*//;
     $shift_m =~ s/^0*//;
     $shift_m = 0 unless $shift_m;
+    $shift   = $shift_t + ($shift_m/60);
+    $shift   = ($pm eq '+' ? -1 : +1) * $shift;
 
-    $shift = $shift_t + ($shift_m/60);
-    $shift = ($pm eq '+' ? -1 : +1) * $shift;
+    # conversion to gmtime (UTC)
+    require 'timelocal.pl';
 
     if ($debug_mti) {
 	print STDERR

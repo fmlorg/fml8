@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.10 2003/02/16 08:48:05 fukachan Exp $
+# $FML: Summary.pm,v 1.11 2003/03/14 06:54:51 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -99,7 +99,8 @@ sub _prepare_info
 	my $header   = $msg->whole_message_header();
 	my $address  = $header->get( 'from' ) || '';
 	my $date     = $header->get( 'date' ) || '';
-	my $unixtime = Mail::Message::Date::date_to_unixtime( $date );
+	my $obj      = new Mail::Message::Date;
+	my $unixtime = $obj->date_to_unixtime( $date );
 
 	# log the first 15 bytes of user@domain in From: header field.
 	if (defined $address) {
