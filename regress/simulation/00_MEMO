@@ -83,7 +83,7 @@
 	newml --reuse ? --rewind ? --return ?
 	こんなかんじ？
 
-	それより、renew かなぁ
+	それより、renew かなぁ。うむ、renew がいいだろ。
 
 
 [TODO]	エラーをどのように呼びだし側へ組織的に伝えるか？
@@ -99,42 +99,8 @@
 	オブジェクトか HASH_REF ごとわたせないか？
 
 
-[TODO]	(debug ではない) print STDERR をなくそう => error upcall system
-
-	STDERR は閉じて、$tmp_dir/stderr.$$ などに吐いておくほうがよい？
-
-	->ui_message() 化
-	やりのこし （スレッド関連は改造の予定があるので放置）
-		FML/Command/Admin/thread.pm
-		Mail/ThreadTrack/Analyze.pm
-		Mail/ThreadTrack/DB.pm
-
-
 [TODO]	$use_log_dup
 	$log_dup_print_engine
-
-
-[TODO]	$main_cf (HASH_REF) が FML::Process::{Switch,Utils,Kernel}
-	以外で参照されているのは間違いだ！ (FNF?)
-
-
-[TODO]	remove $pcb->{set,get} other than FML::Process::{Kernel,Utils}
-
-	or PCB {category, key} list up in somewhere (fml/etc ?)
-
-
-[TODO]	libexec/error エラーメールのフォワードについて改良
-
-	X-Sequence: fml-devel 451
-
-	maintainer_recipient_maps は実装しました。デフォルトは未定義な
-	ので、エラーメールのフォワードィングは行なわれません。
-
-	あと、単にフォワーディングしてるだけ == 中身が message/rfc822
-	一通だけのかなーり無意味な mime/multipart です。
-
-	ヘッダ情報＋そのエラーメールのアドレスの分析レポートとかなんか
-	付けてやれやーとかちょっと思っているっす。
 
 
 [TODO]	「このＭＬはもうありません」
@@ -151,13 +117,7 @@
 		makefml disable elena
 		makefml enable  elena
 
-	このコマンドは…ファイルでも作るの？
-
-
-[TODO]	ファイル数が多い場合、分割して送り返す (fml-devel 485)
-
-	reply_message() によろしくねーとしかしてないので、
-	メールキューに入れる時に分割？
+	このコマンドは…いや、コマンドじゃなくて変数がいいでしょうねぇ。
 
 
 [TODO]	fml $ml spool {status,convert}: --srcdir= とか必要じゃない？
@@ -167,9 +127,28 @@
 	コマンド固有オプションは + ってのは、どうよ？
 
 
-[TODO]	時間つき newml だと、あれか…
+[TODO]	期限つき subscribe
 
-	libexec/auto-newml ?
+	subscribe -> 一カ月すると削除される？
+
+		FML::User::Info -> FML::User::DB	ok
+
+	o.k. so, how to kick off removal process ?
+
+
+[TODO]	期限つき newml
+
+	libexec/faker
+			時刻を FML::User::DB でどっかに記録
+				shared_db_dir/ml_create_time
+				
+		いや、うむをいわさず、newml コマンドでごーでいいのかな？
+			
+	/etc/postfix/virtual
+	   @nuinui.net       faker=nuinui.net
+
+	/etc/mail/aliases
+	   faker=nuinui.net  :include:/var/ml/nuinui.net/@@faker@@/include
 
 
 [TODO]	スレッド関連のモジュール全部見直せよ
@@ -230,6 +209,15 @@
 
 	とりあえず、すれっど全部のファイルに修正を試みるべきだ。
 	ローカルな更新は、あまりよい結果にならないようだ。
+
+
+    ＊ (debug ではない) print STDERR をなくそう => error upcall system
+
+	->ui_message() 化
+	やりのこし （スレッド関連は改造の予定があるので放置）
+		FML/Command/Admin/thread.pm
+		Mail/ThreadTrack/Analyze.pm
+		Mail/ThreadTrack/DB.pm
 
 
 [TODO]	Subroutine_O_CREAT_redefined_at_
@@ -311,11 +299,6 @@ FileHandle と IO::File 両方 use しちゃうからか？
 	ん？もういいのかな？
 
 
-[TODO]	時間つき subscribe
-
-	subscribe -> 一カ月すると削除される？
-
-
 [TODO]	makefml で動くもの、動かないものは何？
 
 			get	***disabled***
@@ -375,6 +358,10 @@ FileHandle と IO::File 両方 use しちゃうからか？
 ======================================================================
 ○		FNF-ify およびドキュメント
 
+
+
+[TODO]	$main_cf (HASH_REF) が FML::Process::{Switch,Utils,Kernel}
+	以外で参照されているのは間違いだ！ (FNF?)
 
 
 [TODO]	HOOK のガイドライン？
@@ -448,6 +435,16 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ======================================================================
+○	内部構造
+
+
+[TODO]	remove $pcb->{set,get} other than FML::Process::{Kernel,Utils}
+
+	or PCB {category, key} list up in somewhere (fml/etc ?)
+
+
+
+======================================================================
 ○	用意しただけ/途中も途中…
 
 
@@ -460,4 +457,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.95 2003/11/17 04:02:26 fukachan Exp $
+$FML: 00_MEMO,v 1.96 2003/11/21 11:35:56 fukachan Exp $
