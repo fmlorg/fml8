@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.8 2003/10/01 03:27:13 fukachan Exp $
+# $FML: DB.pm,v 1.9 2003/10/06 10:42:19 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -26,7 +26,7 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.8 2003/10/01 03:27:13 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.9 2003/10/06 10:42:19 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -1022,7 +1022,6 @@ sub _db_set
 	    $self->db_open( { table => $table } );
 	}
 
-	print "table=$table key=$key /^($mime_decode_filter)$/\n";
 	if ($table =~ /^($mime_decode_filter)$/) {
 	    if ($value =~ /ISO.*\?[BQ]/i) {
 		$value = $self->_decode_mime_string($value);
