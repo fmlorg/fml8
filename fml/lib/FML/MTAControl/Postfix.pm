@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.5 2002/06/27 08:24:09 fukachan Exp $
+# $FML: Postfix.pm,v 1.6 2002/06/30 14:30:15 fukachan Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -21,7 +21,7 @@ FML::MTAControl - postfix utilities
 
 =head1 SYNOPSIS
 
-   nothing implemented yet.
+set up aliases and virtual maps for postfix.
 
 =head1 DESCRIPTION
 

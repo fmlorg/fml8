@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.9 2002/07/02 03:57:48 fukachan Exp $
+# $FML: Qmail.pm,v 1.10 2002/07/11 15:05:49 fukachan Exp $
 #
 
 package FML::MTAControl::Qmail;
@@ -21,7 +21,7 @@ FML::MTAControl - qmail utilities
 
 =head1 SYNOPSIS
 
-   nothing implemented yet.
+set up aliases and virtual maps for qmail.
 
 =head1 DESCRIPTION
 
