@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.40 2001/08/05 03:28:47 fukachan Exp $
+# $FML: Makefile,v 1.41 2001/08/05 13:09:00 fukachan Exp $
 #
 
 all: link
@@ -67,6 +67,7 @@ test:
 	@ apply perl IO/t/*pl
 	@ test -d /tmp/fml5 || mkdir /tmp/fml5
 	@ make -f ../base/Makefile
+	@ (cd ../cf; make test)
 	@ echo "* errormails"
 	@ (cd ../errormails; make check)
 
