@@ -1,0 +1,14 @@
+=head1	記事のサマリ
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+summary_file		=	$ml_home_dir/summary
+
+
+# Descriptions:
+#      History:
+#        Value: fml4_compatible
+#     Examples:
+summary_format_style	=	fml4_compatible
