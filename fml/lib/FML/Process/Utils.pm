@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.72 2003/08/23 07:24:48 fukachan Exp $
+# $FML: Utils.pm,v 1.73 2003/08/23 14:38:01 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -314,7 +314,7 @@ sub mkdir
 
 
 # Descriptions: mkdir with the specified dir mode
-#    Arguments: STR($dir) NUM($mode)
+#    Arguments: OBJ($curproc) STR($dir) NUM($mode)
 # Side Effects: mkdir && chmod
 # Return Value: none
 sub _mkpath_num
@@ -339,7 +339,7 @@ sub _mkpath_num
 
 
 # Descriptions: mkdir with the specified dir mode
-#    Arguments: STR($dir) STR($mode)
+#    Arguments: OBJ($curproc) STR($dir) STR($mode)
 # Side Effects: mkdir && chmod
 # Return Value: none
 sub _mkpath_str

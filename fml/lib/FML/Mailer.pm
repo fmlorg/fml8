@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.20 2003/08/23 14:37:58 fukachan Exp $
+# $FML: Mailer.pm,v 1.21 2003/08/23 15:33:11 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -61,7 +61,7 @@ standard constructor.
 
 
 # Descriptions: standard constructor
-#    Arguments: OBJ($self)
+#    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: none
 # Return Value: OBJ
 sub new
