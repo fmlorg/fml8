@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: minimal_states.pm,v 1.13 2001/04/03 09:45:44 fukachan Exp $
+# $FML: minimal_states.pm,v 1.14 2001/04/06 16:25:44 fukachan Exp $
 #
 
 package FML::Ticket::Model::minimal_states;
@@ -775,7 +775,7 @@ sub _header_summary
     use FML::MIME qw(decode_mime_string);
     $subject = decode_mime_string($subject, { charset => 'euc-japan' });
     $subject =~ s/\n/ /g;
-    $subject = FML::Header::remove_subject_tag_like_string($subject);
+    $subject = FML::Header->delete_subject_tag_like_string($subject);
 
     $from    = decode_mime_string($from, { charset => 'euc-japan' });
     $from    =~ s/\n/ /g;

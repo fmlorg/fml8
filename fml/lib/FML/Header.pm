@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: Header.pm,v 1.29 2001/04/14 14:46:45 fukachan Exp $
+# $FML: Header.pm,v 1.30 2001/04/14 15:35:37 fukachan Exp $
 #
 
 package FML::Header;
@@ -307,16 +307,16 @@ sub delete_unsafe_header_fields
 
 =head1 MISCELLANEOUS UTILITIES
 
-=head2 C<remove_subject_tag_like_string($string)>
+=head2 C<delete_subject_tag_like_string($string)>
 
 remove subject tag like string in C<$string>.
 
 =cut
 
 
-sub remove_subject_tag_like_string
+sub delete_subject_tag_like_string
 {
-    my ($str) = @_;
+    my ($self, $str) = @_;
     $str =~ s/\W[-\w]+.\s*\d+\W//g;
     $str =~ s/\s+/ /g;
     $str =~ s/^\s*//g;
