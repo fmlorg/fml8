@@ -1,0 +1,13 @@
+default_umask
+has_alarm
+has_getuid
+has_getgid
+
+
+loop_check
+
+    MAIL_LIST != MAINTAINER
+
+time_zone config?
+
+newsyslog()
