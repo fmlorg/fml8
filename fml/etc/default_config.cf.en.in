@@ -1075,6 +1075,23 @@ use_article_post_function = ${use_distribute_program:-yes}
 
 =head1	article handling
 
+
+=head2	article delivery system
+
+# Descriptions: user article delivery function ?
+#      History:
+#        Value: yes / no
+#     Examples:
+use_article_delivery	=	yes
+
+# Descriptions: specify transport for article delivery.
+#               try MTA of $smtp_servers incrementary in the case of smtp.
+#      History: none
+#        Value: smtp / lmtp
+#     Examples: smtp
+article_delivery_transport	=	smtp
+
+
 =head2	article sequence number
 
 
@@ -1313,12 +1330,6 @@ article_filter_reject_notice_recipients	=	maintainer
 article_filter_reject_notice_data_type	=	string
 
 =head1	article and article spool
-
-# Descriptions: user article delivery function ?
-#      History:
-#        Value: yes / no
-#     Examples:
-use_article_delivery	=	yes
 
 # Descriptions: store article into spool directory ?
 #      History: $NOT_USE_SPOOL
