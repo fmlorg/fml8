@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Command.pm,v 1.10 2001/10/13 02:33:12 fukachan Exp $
+# $FML: Command.pm,v 1.11 2001/10/14 00:56:54 fukachan Exp $
 #
 
 package FML::Command;
@@ -12,6 +12,9 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use FML::Log qw(Log LogWarn LogError);
+
+use FML::Command::Attribute;
+@ISA = qw(FML::Command::Attribute);
 
 =head1 NAME
 
@@ -64,7 +67,7 @@ sub AUTOLOAD
     $comname =~ s/.*:://;
     my $pkg = "FML::Command::${mode}::${comname}";
 
-    Log("AUTOLOAD->load $pkg") if $0 =~ /loader/; # debug
+    Log("load $pkg") if $0 =~ /loader/; # debug
 
     eval qq{ require $pkg; $pkg->import();};
     unless ($@) {
@@ -75,9 +78,9 @@ sub AUTOLOAD
 	}
 
 	if ($command->can('process')) {
-	    $curproc->lock() if $self->require_lock($comname);
+	    $curproc->lock() if $self->require_lock($mode, $comname);
 	    $command->process($curproc, $command_args);
-	    $curproc->unlock() if $self->require_lock($comname);
+	    $curproc->unlock() if $self->require_lock($mode, $comname);
 
 	    if ($command->error()) { Log($command->error());}
 	}
@@ -92,7 +95,7 @@ sub AUTOLOAD
 }
 
 
-=head2 C<require_lock(command)>
+=head2 C<require_lock($comname)>
 
 specifield C<command> requires lock (giant lock) ?
 return 1 by default (almost all command requires lock).
@@ -101,8 +104,15 @@ return 1 by default (almost all command requires lock).
 
 sub require_lock
 {
-    my ($self, $command) = @_;
-    $command eq 'newml' ? 0 : 1;
+    my ($self, $mode, $comname) = @_;
+
+    my $r = $self->get_attribute($mode, $comname, 'require_lock');
+
+    if ($0 =~ /loader/) {
+	Log("get_attribute($mode, $comname, 'require_lock') = $r");
+    }
+
+    return $r;
 }
 
 
