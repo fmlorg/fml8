@@ -24,6 +24,11 @@ address_for_post    = $ml_name@$ml_domain
 address_for_command = $ml_name-ctl@$ml_domain
 
 
+[mysql:fml]
+
+sql_server	=	mysql.home.fml.org
+
+
 =cut
 
 #
