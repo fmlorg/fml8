@@ -1,16 +1,16 @@
 #! @PERL@ -w
 #-*- perl -*-
 #
-# Copyright (C) 2000-2001 Ken'ichi Fukamachi
+# Copyright (C) 2000-2002 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: loader.in,v 1.7 2001/11/27 11:50:26 fukachan Exp $
+# $FML: loader.in,v 1.8 2001/12/16 13:32:50 fukachan Exp $
 #
 
 eval 'exec @PERL@ -S $0 ${1+"$@"}'
         if $running_under_some_shell;
 
-use vars qw($running_under_some_shell);
+use vars qw($running_under_some_shell $hints);
 use strict;
 use IO::File;
 
@@ -23,6 +23,9 @@ delete @ENV{'IFS', 'CDPATH', 'ENV', 'BASH_ENV'};
     my $prefix      = "@prefix@";
     my $exec_prefix = "@exec_prefix@";
     my $main_cf     = "@fmlconfdir@/main.cf";
+
+    # hints for further processing
+    # $hints = '__hints_for_fml_process__';
 
     eval q{ Bootstrap($main_cf);};
 
@@ -108,6 +111,9 @@ sub Bootstrap
     else {
 	__CROAK("\$lib_dir not defined in main.cf");
     }
+
+    # 2.1.2 inherit some parameters to change behaviour
+    $main_cf->{ _hints } = $hints;
 
     # 2.2 load version dependent Bootstrap2(), 
     #     which is imported from FML::Process::Switch
@@ -266,7 +272,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001 Ken'ichi Fukamachi
+Copyright (C) 2000-2002 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself. 
