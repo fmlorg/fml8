@@ -80,12 +80,18 @@ lock_type	= flock
 ### basic logging
 ###
 
+# enable logging function
+use_log		=	yes
+
 # logfile
 log_file	=	$ml_home_dir/log
 
 # type of logging
 # value: file / syslog
 log_type	=	file
+
+# log message format
+log_message_format	=	traditional
 =head2 ¤¹¤×¡¼¤ë
 
 sequence_file	= $ml_home_dir/seq
