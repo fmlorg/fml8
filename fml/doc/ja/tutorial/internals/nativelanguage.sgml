@@ -1,0 +1,16 @@
+<!--
+   $FML: errormessage.sgml,v 1.3 2001/06/01 04:31:01 fukachan Exp $
+-->
+
+<chapter>
+   <title> 言語別の処理関数 </title>
+
+<para>
+fml 内部では言語に依存した変換処理が必要です。
+例えば、JIS と EUC の相互変換は随所で必要です。
+これはメールでは JIS が使われますが、
+プログラムでは EUC の方が扱いやすいためです。
+</para>
+
+
+</chapter>

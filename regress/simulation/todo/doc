@@ -1,4 +1,4 @@
-$FML: doc,v 1.47 2001/05/31 11:02:34 fukachan Exp $
+$FML: doc,v 1.48 2001/06/02 12:38:21 fukachan Exp $
 
 	TODO for documents
 	Last Modified: $Date$
@@ -7,10 +7,6 @@ $FML: doc,v 1.47 2001/05/31 11:02:34 fukachan Exp $
 2001/05 todo (document clean up)
 
 	FML/Ticket/Model/minimal_states.pm
-
-	Language/Japanese/String.pm
-	Language/Japanese/Subject.pm
-	Language/Japanese/Utils.pm
 
 	SQL/Schema/toymodel.pm
 

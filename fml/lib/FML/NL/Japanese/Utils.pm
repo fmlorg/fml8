@@ -4,21 +4,21 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Utils.pm,v 1.3 2001/04/03 09:45:48 fukachan Exp $
+# $FML: Utils.pm,v 1.1.1.1 2001/06/10 04:11:39 fukachan Exp $
 #
 
-package Language::Japanese::Utils;
+package FML::NL::Japanese::Utils;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 =head1 NAME
 
-Language::Japanese::Utils - what is this
+FML::NL::Japanese::Utils - what is this
 
 =head1 SYNOPSIS
 
-   use Language::Japanese::Utils qw(is_iso2022jp_string);
+   use FML::NL::Japanese::Utils qw(is_iso2022jp_string);
    if ( is_iso2022jp_string($string) ) { do_something_if_Japanese;}
 
 =head1 DESCRIPTION
@@ -93,7 +93,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Language::Japanese::Utils appeared in fml5 mailing list driver package.
+FML::NL::Japanese::Utils appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

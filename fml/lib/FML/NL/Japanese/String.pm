@@ -4,21 +4,21 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: String.pm,v 1.3 2001/04/03 09:45:48 fukachan Exp $
+# $FML: String.pm,v 1.1.1.1 2001/06/10 04:11:39 fukachan Exp $
 #
 
-package Language::Japanese::String;
+package FML::NL::Japanese::String;
 use strict;
 use Carp;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 =head1 NAME
 
-Language::Japanese::String -- utilities to manipulate strings
+FML::NL::Japanese::String -- utilities to manipulate strings
 
 =head1 SYNOPSIS
 
-    use Language::Japanese::String qw(STR2JIS);
+    use FML::NL::Japanese::String qw(STR2JIS);
     $euc_str = STR2JIS($str);
 
 =head1 METHOD
@@ -82,7 +82,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-Language::Japanese::String appeared in fml5 mailing list driver package.
+FML::NL::Japanese::String appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
