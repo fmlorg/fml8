@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Bounce.pm,v 1.11 2001/07/30 14:42:33 fukachan Exp $
+# $FML: Bounce.pm,v 1.12 2001/07/30 23:09:04 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -253,7 +253,7 @@ It is rarely used.
 
 sub address_clean_up
 {
-    my ($self, $type, $addr) = @_;
+    my ($self, $hint, $addr) = @_;
 
     # nuke predecing and trailing strings around user@domain pattern
     my $prev_addr = $addr;
@@ -270,12 +270,11 @@ sub address_clean_up
 	print "   address_clean_up.out: $addr\n" if $debug;
     } while ($addr ne $prev_addr);
 
-    if ($type eq 'nifty.ne.jp' && $addr !~ /\@/) {
-	$addr . '@nifty.ne.jp';
-    }
-    else {
-	$addr;
-    }
+    # Mail::Bounce::FixBrokenAddress class provides irrgular
+    # address handlings, so handles domain/MTA specific addresses.
+    # For example, nifty.ne.jp, webtv.ne.jp, ...
+    use Mail::Bounce::FixBrokenAddress;
+    return Mail::Bounce::FixBrokenAddress::FixIt($hint, $addr);
 }
 
 
