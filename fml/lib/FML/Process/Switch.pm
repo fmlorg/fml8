@@ -370,7 +370,10 @@ sub _module_we_use
     elsif ($name eq 'fmlserv') {
 	$pkg = 'FML::Process::ListServer';
     }
-    elsif ($name eq 'fmlconf' || $name eq 'fmldoc' || $name eq 'makefml') {
+    elsif ($name eq 'fmldoc') {
+	$pkg = 'FML::Process::DocViewer';
+    }
+    elsif ($name eq 'fmlconf' || $name eq 'makefml') {
 	$pkg = 'FML::Process::Configure';
     }
     elsif ($name eq 'fmlticket.cgi') {
