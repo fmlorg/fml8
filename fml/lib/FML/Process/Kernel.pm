@@ -417,6 +417,30 @@ sub parse_incoming_message
 }
 
 
+=head1 MISCELLANEOUS METHODS
+
+=head2 C<load_module($args, $module)>
+
+load model dependent module.
+return the object for C<$module>.
+
+=cut
+
+sub load_module
+{
+    my ($curproc, $args, $pkg) = @_;
+
+    # fake use() to do "use FML::Ticket::$model;"
+    eval qq{ require $pkg; $pkg->import();};
+    unless ($@) {
+	return $pkg->new($curproc, $args);
+    }
+    else {
+	Log($@);
+    }
+}
+
+
 =head1 AUTHOR
 
 Ken'ichi Fukamachi
