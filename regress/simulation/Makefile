@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.50 2001/11/25 02:56:19 fukachan Exp $
+# $FML: Makefile,v 1.51 2002/04/01 13:12:42 fukachan Exp $
 #
 
 all: link
@@ -46,6 +46,7 @@ _link:
 	ln -s /var/spool/ml/elena/log
 	ln -s ../../cpan/doc doc-devel
 	ln -s ../../fml/doc/ja/tutorial tutorial
+	ln -s ../../fml/doc/ja/todo     TODO
 	ln -s ../../fml/doc/ja/recipes  recipies
 	ln -s ../../fml/share/message/euc-jp  message-euc-jp
 
