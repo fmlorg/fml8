@@ -1,24 +1,24 @@
 <para>
 <screen>
 __parent_args        => HASH {
-                       ARGV                 => ARRAY
-                       argv                 => ARRAY
-                       cf_list              => ARRAY
-                       fml_version
-                       main_cf              => HASH
-                       module_info          => HASH
-                       myname
-                       need_ml_name
-                       options              => HASH
-                       program_name
+                        ARGV                 => ARRAY
+                        argv                 => ARRAY
+                        cf_list              => ARRAY
+                        fml_version
+                        main_cf              => HASH
+                        module_info          => HASH
+                        myname
+                        need_ml_name
+                        options              => HASH
+                        program_name
                      }
 
 __print_style        => SCALAR
 
 article              => HASH {
-                       body                 => Mail::Message
-                       header               => FML::Header
-                       message              => Mail::Message
+                        body                 => Mail::Message
+                        header               => FML::Header
+                        message              => Mail::Message
                      }
 
 config               => FML::Config
@@ -26,35 +26,35 @@ config               => FML::Config
 credential           => FML::Credential
 
 incoming_message     => HASH {
-                       body                 => Mail::Message
-                       header               => FML::Header
-                       message              => Mail::Message
+                        body                 => Mail::Message
+                        header               => FML::Header
+                        message              => Mail::Message
                      }
 
 main_cf              => HASH {
-                       _hints
-                       config_dir
-                       debug
-                       default_command_line_option_config
-                       default_config_cf
-                       default_config_dir
-                       default_domain
-                       default_ml_home_prefix
-                       default_module_config
-                       default_paths_cf
-                       domain_default_config
-                       exec_prefix
-                       executable_prefix
-                       fml_group
-                       fml_owner
-                       fml_version
-                       lib_dir
-                       libexec_dir
-                       local_lib_dir
-                       prefix
-                       prefix_dir
-                       share_dir
-                       virtual_maps
+                        _hints
+                        config_dir
+                        debug
+                        default_command_line_option_config
+                        default_config_cf
+                        default_config_dir
+                        default_domain
+                        default_ml_home_prefix
+                        default_module_config
+                        default_paths_cf
+                        domain_default_config
+                        exec_prefix
+                        executable_prefix
+                        fml_group
+                        fml_owner
+                        fml_version
+                        lib_dir
+                        libexec_dir
+                        local_lib_dir
+                        prefix
+                        prefix_dir
+                        share_dir
+                        virtual_maps
                      }
 
 pcb                  => FML::PCB

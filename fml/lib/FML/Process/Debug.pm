@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Debug.pm,v 1.1 2003/03/14 03:49:44 fukachan Exp $
+# $FML: Debug.pm,v 1.2 2003/03/28 10:32:23 fukachan Exp $
 #
 
 package FML::Process::Debug;
@@ -63,10 +63,10 @@ sub dump_curproc
 	    for my $v (sort keys %$x) {
 		my $y = $x->{ $v };
 		if (ref($y)) {
-		    printf "%-20s   %-20s => %s\n", "", $v, ref($y);
+		    printf "%-20s    %-20s => %s\n", "", $v, ref($y);
 		}
 		else {
-		    printf "%-20s   %s\n", "", $v;
+		    printf "%-20s    %s\n", "", $v;
 		}
 	    }
 	    printf "%-20s }\n", "", $k;
