@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.235 2004/07/27 16:34:32 fukachan Exp $
+# $FML: Kernel.pm,v 1.236 2004/08/12 09:53:38 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -2680,11 +2680,19 @@ sub queue_flush
     my ($curproc, $queue) = @_;
     my $config    = $curproc->config();
     my $queue_dir = $config->{ mail_queue_dir };
+    my $qmgr_args = { directory => $queue_dir };
+    my $channel   = 'mail_queue_clean_up';
 
+    # XXX-TODO: timeout should be customizable.
     eval q{
 	use FML::Process::QueueManager;
-	my $obj = new FML::Process::QueueManager { directory => $queue_dir };
-	$obj->send($curproc);
+	my $q = new FML::Process::QueueManager $curproc, $qmgr_args;
+	$q->send();
+
+	if ($curproc->is_event_timeout($channel)) {
+	    $q->cleanup();
+	    $curproc->set_event_timeout($channel, time + 3600);
+	}
     };
     croak($@) if $@;
 }
