@@ -16,7 +16,7 @@ fml のブートしていく様
 <UL>
    <LI> libexec/loader (wrapper)
 	<BR>
-	Bootstrap() を起動する。
+	Bootstrap() を実行する。
    <UL>
 	<LI>   /etc/fml/main.cf を読み込む。
 		読み込むと fml のバージョンが分かる。
@@ -28,47 +28,40 @@ fml のブートしていく様
 		どのＭＬの config.cf 群をロードすればいいのかを準備する。
 
 	<LI>	次に
-		libexec/process_switch ( バージョン依存 )ファイルを
-		ロードする。そして、
-		ProcessSwitch() 内部を実行し、
-		配送用、コマンドモード用
-		プログラム/プロセスなどへ制御を移す(分岐する)。
+		libexec/fml/バージョン/process_switch
+		( バージョン依存 )ファイルを
+		ロードする。
 	   <UL>
 		<LI>
+		ProcessSwitch() を実行し、
+		配送用、コマンドモード用などの各
+		プログラム/プロセスなどへ制御を移す(分岐する)。
+		この時は
 		$0 から自分の名前を知り、
-		どのプロセスへ分岐すればいいのかを判断する。
+		どのプロセスへ分岐すればいいのかを判断している。
 
-		<LI>(ポリモーフィズム)
+		<LI>
+		(ポリモーフィズムの例)
 		モジュールをダイナミックバインディングし、
 		該当するプロセスオブジェクトを生成する。
 		そして、プロセスをスタートさせる。
-
-		具体的には
+		<BR>
+		FML::Process::Flow でどのように実行するかが
+		定義されています。具体的には
 <PRE>
     $process = new FML::Process::なにか;
     $process->prepare($args);
     $process->run($args);
     $process->finish($args);
 </PRE>
-		などと書く。
+		などと書きます。
+		各プロセスは、それぞれについて適当な関数を
+		用意する必要があります。
 
 	   </UL>
 </UL>
 
 <HR>
-<P>Standalone.pm
-
-<PRE>
-loader (uses) Standalone.pm
-   |
-  * 動的にライブラリ(バージョン情報を含む)を選択する
-    例: /usr/local/lib/fml/5.000/ほえ/ほえ.pm
-   |
-  fml
-  * 動的にクラスをバインディングしつつ、プロセススタートする。
-       実際のコードは $process->run() などとなる。
-
-
 ○ クラスの階層構造？
 
 FML::Process::Distribute-|
