@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Subject.pm,v 1.13 2003/01/11 15:16:36 fukachan Exp $
+# $FML: Subject.pm,v 1.14 2003/07/21 11:25:38 fukachan Exp $
 #
 
 
@@ -128,8 +128,6 @@ sub cut_off_reply_tag
 {
     my ($self, $subject) = @_;
     my ($y, $limit);
-
-    # XXX-TODO: method-ify ?
 
     Jcode::convert(\$subject, 'euc');
 
