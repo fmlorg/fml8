@@ -51,10 +51,20 @@ OS 依存
 	LOCK_NB:	 4
 	LOCK_UN: 	 8
 
+MIME 関連
+
+	USE_MIME:		1
+
+	MIME_DECODED_ARTICLE:
+
+
+ロック
+	MAX_TIMEOUT:	 200
+
 
 その他
-	5.0 では ReloadMySelf() って必要ないような気がするが…
 
+	5.0 では ReloadMySelf() って必要ないような気がするが…
 
 	RCS バックアップ？
 		CVS のみサポートか？
