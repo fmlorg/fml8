@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Mailer.pm,v 1.14 2002/09/11 23:18:03 fukachan Exp $
+# $FML: Mailer.pm,v 1.15 2002/09/22 14:56:41 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -15,7 +15,7 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Mailer - Utilities to send mails
+FML::Mailer - utilities to send mails
 
 =head1 SYNOPSIS
 
@@ -120,6 +120,10 @@ sub send
 	    $handle = $wh;
 	}
     }
+    else {
+	LogError("FML::Mailer: curproc not specified");
+	return 0;
+    }
 
     # 1. sender
     my $sender = (defined $args->{sender} ? $args->{sender} : $maintainer);
@@ -130,10 +134,10 @@ sub send
 
     # 2. recipient(s)
     my $recipients = [];
-    if (defined $args->{ recipients }) {
+    if (defined $args->{ recipients }) {    # ARRAY_REF
 	$recipients = $args->{ recipients };
     }
-    elsif (defined $args->{ recipient }) {
+    elsif (defined $args->{ recipient }) {  # STR
 	my $recipient = $args->{ recipient };
 	$recipients = [ $recipient ];
     }

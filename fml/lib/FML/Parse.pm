@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Parse.pm,v 1.26 2002/09/11 23:18:03 fukachan Exp $
+# $FML: Parse.pm,v 1.27 2002/09/22 14:56:41 fukachan Exp $
 #
 
 package FML::Parse;
@@ -33,10 +33,10 @@ header and body.  C<new()> returns a C<Mail::Message> object.
 
 =head1 METHODS
 
-=item new( fd )
+=item new( $curproc, [$fd] )
 
-C<fd> is the file handle.
-Normally C<fd> is the handle for STDIN channel.
+C<$fd> is the file handle.
+Normally C<$fd> is the handle for STDIN channel.
 
 =cut
 
@@ -76,7 +76,12 @@ sub _parse
 
     if (defined $msg->envelope_sender()) {
 	my $pcb = $curproc->{ pcb };
-	$pcb->set('credential', 'unix-from', $msg->envelope_sender());
+	if (defined $pcb) {
+	    $pcb->set('credential', 'unix-from', $msg->envelope_sender());
+	}
+	else {
+	    LogError("parse: pcb not defined");
+	}
     }
 
     return $msg;
