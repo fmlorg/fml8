@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent2.pm,v 1.4 2002/10/21 09:09:46 fukachan Exp $
+# $FML: MimeComponent2.pm,v 1.5 2002/10/21 12:41:37 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -189,10 +189,37 @@ sub _rule_match
 sub __regexp_match
 {
     my ($type, $regexp) = @_;
+    my $reverse = 0;
 
     # case insensitive
     $type   =~ tr/A-Z/a-z/;
     $regexp =~ tr/A-Z/a-z/;
+
+    if ($regexp =~ /^\!/o) { 
+	$reverse = 1; 
+	$regexp =~ s/^\!//o;
+	$regexp =~ s/^\(\S+\)/$1/o;
+    }
+
+    my $status = __basic_regexp_match($type, $regexp);
+
+    if ($status) {
+	return $reverse ? 0 : 1;
+    }
+    else {
+	return $reverse ? 1 : 0;
+    }
+}
+
+
+# Descriptions: compare the given strings with regexp fuzziness
+#               where $regexp has "^!" (not mode).
+#    Arguments: STR($type) STR($regexp)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub __basic_regexp_match
+{
+    my ($type, $regexp) = @_;
 
     # prepare variables to compare
     my ($xl, $xr) = split(/\//, $type);     # text/plain
@@ -213,7 +240,6 @@ sub __regexp_match
 	return 0;
     }
 }
-
 
 
 sub _cutoff
