@@ -24,7 +24,7 @@ lib_dir=$default_prefix/lib/fml
 ml_spool_dir=/var/spool/ml
 
 # owner of /var/spool/ml
-owner=fukachan
+owner=`id -un`
 
 ######################
 
@@ -45,8 +45,6 @@ _mkdir () {
 
 
 get_fml_version
-
-exit 0
 
 for dir in 	$config_dir \
 		$config_dir/defaults \
