@@ -1,0 +1,29 @@
+Return-Path: <>
+Received: from mgsaqf05.jp-q.ne.jp (mgsaqf205.jp-q.ne.jp [10.20.30.2])
+ by sv.nuinui.net (Postfix) with ESMTP id 226A382
+ for <*********@Nuinui.net>; Mon,  9 Apr 2001 18:27:02 +0900 (JST)
+Received: from 
+ by mgsaqf05.jp-q.ne.jp (8.9.2+3.1W/3.7W/99030510) id SAA25177
+ for <*********@Nuinui.net>; Mon, 9 Apr 2001 18:27:02 +0900 (JST)
+Message-Id: <2001********.********@mgsaqf05.jp-q.ne.jp>
+Received:  from *********@Nuinui.net
+ by mgsaqf05.jp-q.ne.jp (8.9.2+3.1W/3.7W/99030510) with ESMTP id SAA25154
+ for <****@jp-r.ne.jp>; Mon, 9 Apr 2001 18:27:01 +0900 (JST)
+Received:  from sv.Nuinui.net (sv [10.20.30.12])
+ by sv.nuinui.net (Postfix) with ESMTP
+ id D3E5B86; Mon,  9 Apr 2001 18:27:00 +0900 (JST)
+To: *********@Nuinui.net
+From: MAILER-DAEMON@jp-r.ne.jp
+Subject: Non Delivery Notification
+Date: Mon, 9 Apr 2001 18:27:01 +0900
+X-Priority: 3
+MIME-Version: 1.0
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: 7bit
+
+送信先E-mailアドレスの不一致です
+To:****@jp-r.ne.jp
+Subject:** 送ったsubjectが入る
+** 送った本文が192文字程度入る
+
+ちゃんと JIS だそうです。
