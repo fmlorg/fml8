@@ -4,13 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Queue.pm,v 1.47 2004/09/04 03:12:26 fukachan Exp $
+# $FML: Queue.pm,v 1.48 2004/09/23 08:05:51 fukachan Exp $
 #
 
 package Mail::Delivery::Queue;
 use strict;
 use Carp;
-use vars qw($Counter @class_list);
+use vars qw($Counter @class_list $counter);
 use File::Spec;
 use Mail::Delivery::ErrorStatus qw(error_set error error_clear);
 
@@ -188,12 +188,12 @@ return all queue list in all classes.
 
 
 # Descriptions: return queue file list as ARRAY_REF.
-#    Arguments: OBJ($self) STR($class)
+#    Arguments: OBJ($self) STR($class) STR($policy)
 # Side Effects: none
 # Return Value: ARRAY_REF
 sub list
 {
-    my ($self, $class) = @_;
+    my ($self, $class, $policy) = @_;
     my $fp  = $class ? "${class}_dir_path" : "active_dir_path";
     my $dir = $self->can($fp) ? $self->$fp() : undef;
 
@@ -209,7 +209,7 @@ sub list
 	    push(@r, $file);
 	}
 
-	return $self->_list_ordered_by_policy(\@r);
+	return $self->_list_ordered_by_policy(\@r, $policy);
     }
 
     return [];
@@ -227,7 +227,7 @@ sub list_all
     my (%r)    = ();
 
     for my $class (@class_list) {
-	my $ra = $self->list($class);
+	my $ra = $self->list($class, "default");
 	push(@r, @$ra);
     }
 
@@ -278,13 +278,13 @@ sub get_policy
 
 
 # Descriptions: return re-ordering queue list.
-#    Arguments: OBJ($self) ARRAY_REF($list)
+#    Arguments: OBJ($self) ARRAY_REF($list) STR($_policy)
 # Side Effects: none
 # Return Value: ARRAY_REF
 sub _list_ordered_by_policy
 {
-    my ($self, $list) = @_;
-    my $policy = $self->get_policy() || $default_policy;
+    my ($self, $list, $_policy) = @_;
+    my $policy = $_policy || $self->get_policy() || $default_policy;
 
     if ($policy eq 'oldest') {
 	my (@r) = sort _queue_streategy_oldest @$list;
@@ -295,22 +295,27 @@ sub _list_ordered_by_policy
 	return \@r;
     }
     elsif ($policy eq 'fair_queue' || $policy eq 'fair-queue') {
-	my (@o) = sort _queue_streategy_oldest @$list;
-	my (@n) = sort _queue_streategy_newest @$list;
-	my (@p) = ();
-	my $max = $#o;
+	my ($queue_hash, $qlist, @qlist);
 
-      ENTRY:
-	while ($max >= 0) {
-	    push(@p, shift @o);
-	    $max--;
-	    last ENTRY if $max < 0;
-
-	    push(@p, shift @n);
-	    $max--;
-	    last ENTRY if $max < 0;
+	# create hash { TIME_SLICE => [ qid1,  qid2,  ... ] }
+	$queue_hash = {};
+	for my $q (@$list) {
+	    if ($q =~ /^(\d+)/o) { 
+		my $t = int( $1 / 87400 );
+		$qlist = $queue_hash->{ $t } || [];
+		push(@$qlist, $q);
+		$queue_hash->{ $t } = $qlist;
+	    }
 	}
-	
+
+	# randomized queue.
+	my @p = ();
+	srand(time | $$);
+	$counter = rand( time );
+	for my $i (sort _rand keys %$queue_hash) {
+	    my $qlist = $queue_hash->{ $i } || [];
+	    push(@p, sort _rand @$qlist);
+	}
 	return \@p;
     }
     else {
@@ -318,6 +323,18 @@ sub _list_ordered_by_policy
     }
 
     return $list;
+}
+
+
+# Descriptions: randomize (for sort routine).
+#    Arguments: none
+# Side Effects: none
+# Return Value: NUM
+sub _rand
+{
+    my $x = rand(time + $counter++);
+    my $y = rand(time + $counter++);
+    $x <=> $y;
 }
 
 
@@ -1349,6 +1366,43 @@ sub set_log_function
     my ($self, $fp) = @_;
 
     $self->{ _log_function } = $fp || undef;
+}
+
+
+=head1 DEBUG
+
+=cut
+
+
+if ($0 eq __FILE__) {
+    my $queue_dir = shift @ARGV;
+    my $queue     = new Mail::Delivery::Queue { directory => $queue_dir };
+    $queue->set_policy("fair-queue");
+
+    my $fp = sub { print STDERR "LOG> ", @_, "\n"; };
+    $queue->set_log_function($fp);
+
+    print "\n1. queue_id = ", $queue->id(), "\n";
+
+    my $ra = $queue->list_all() || [];
+    for my $qid (@$ra) {
+	$queue->log("wakeup_queue($qid)");
+	$queue->wakeup_queue($qid);
+    }
+
+    print "\n2. list up active queue in $queue_dir\n";
+    $ra = $queue->list() || [];
+    for my $q (@$ra) {
+	print "\t", $q, "\n";
+    }
+
+    print "\n3. list up all queue in $queue_dir\n";
+    $ra = $queue->list_all() || [];
+    for my $q (@$ra) {
+	print "\t", $q, "\n";
+    }
+
+    print "\n\n";
 }
 
 
