@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.60 2004/01/01 23:52:07 fukachan Exp $
+# $FML: Article.pm,v 1.61 2004/01/02 14:50:27 fukachan Exp $
 #
 
 package FML::Article;
@@ -247,8 +247,7 @@ sub _filepath
 =head1 SEE ALSO
 
 L<FML::Header>,
-L<Mail::Message>,
-L<File::Sequence>
+L<Mail::Message>
 
 =head1 CODING STYLE
 
