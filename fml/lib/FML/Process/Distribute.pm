@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Distribute.pm,v 1.73 2002/04/18 15:36:30 fukachan Exp $
+# $FML: Distribute.pm,v 1.74 2002/04/23 14:10:33 fukachan Exp $
 #
 
 package FML::Process::Distribute;
@@ -108,8 +108,14 @@ sub verify_request
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }
 
     $curproc->verify_sender_credential();
-    $curproc->simple_loop_check();
-    $curproc->_check_filter($args);
+
+    unless ($curproc->is_refused()) {
+	$curproc->simple_loop_check();
+    }
+
+    unless ($curproc->is_refused()) {
+	$curproc->_check_filter($args);
+    }
 
     $eval = $config->get_hook( 'distribute_verify_request_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }

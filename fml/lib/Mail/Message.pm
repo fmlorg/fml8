@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.58 2002/04/28 10:38:16 fukachan Exp $
+# $FML: Message.pm,v 1.59 2002/04/28 11:25:43 fukachan Exp $
 #
 
 package Mail::Message;
@@ -556,16 +556,21 @@ sub _parse_header
     my ($self, $r) = @_;
 
     # parse the header
-    my (@h) = split(/\n/, $r->{ header });
-    for my $x (@h) { $x .= "\n";}
+    if (defined $r->{ header }) {
+	my (@h) = split(/\n/, $r->{ header });
+	for my $x (@h) { $x .= "\n";}
 
-    # save unix-from (mail-from) in PCB and remove it in the header
-    if ($h[0] =~ /^From\s/o) {
-	$r->{ envelope_sender } = (split(/\s+/, $h[0]))[1];
-	shift @h;
+	# save unix-from (mail-from) in PCB and remove it in the header
+	if ($h[0] =~ /^From\s/o) {
+	    $r->{ envelope_sender } = (split(/\s+/, $h[0]))[1];
+	    shift @h;
+	}
+
+	$r->{ header_array } = \@h;
     }
-
-    $r->{ header_array } = \@h;
+    else {
+	$r->{ header_array } = [];
+    }
 }
 
 
@@ -1760,7 +1765,13 @@ get whole body size for this object ($self)
 sub whole_message_header_size
 {
     my ($self) = @_;
-    $self->{ data_info }->{ header_size };
+
+    if (defined $self->{ data_info }->{ header_size }) {
+	return $self->{ data_info }->{ header_size };
+    }
+    else {
+	return 0;
+    }
 }
 
 
@@ -1771,7 +1782,13 @@ sub whole_message_header_size
 sub whole_message_body_size
 {
     my ($self) = @_;
-    $self->{ data_info }->{ body_size };
+
+    if (defined $self->{ data_info }->{ body_size }) {
+	$self->{ data_info }->{ body_size };
+    }
+    else {
+	return 0;
+    }
 }
 
 
@@ -1789,7 +1806,13 @@ return reverse_path for this object ($self)
 sub envelope_sender
 {
     my ($self) = @_;
-    $self->{ data_info }->{ envelope_sender };
+
+    if (defined $self->{ data_info }->{ envelope_sender }) {
+	return $self->{ data_info }->{ envelope_sender };
+    }
+    else {
+	return '';
+    }
 }
 
 

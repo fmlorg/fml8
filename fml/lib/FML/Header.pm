@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.39 2001/12/23 09:20:41 fukachan Exp $
+# $FML: Header.pm,v 1.40 2002/04/08 12:44:23 fukachan Exp $
 #
 
 package FML::Header;
@@ -138,12 +138,17 @@ sub address_clean_up
     my @addrlist = Mail::Address->parse($addr);
 
     # only the first element in the @addrlist array is effective.
-    $addr = $addrlist[0]->address;
-    $addr =~ s/^\s*<//;
-    $addr =~ s/>\s*$//;
+    if (defined $addrlist[0]) {
+	$addr = $addrlist[0]->address;
+	$addr =~ s/^\s*<//;
+	$addr =~ s/>\s*$//;
 
-    # return the result.
-    return $addr;
+	# return the result.
+	return $addr;
+    }
+    else {
+	return undef;
+    }
 }
 
 
