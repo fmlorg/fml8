@@ -1,6 +1,16 @@
 		CHANGES
 		Last Modified: $Date$
 
+2003/10/30
+
+   variables
+   FML::Process::Kernel 
+	header_loop_check_rules -> incoming_mail_header_loop_check_rules
+	use_header_loop_check   -> use_incoming_mail_header_loop_check
+	body_loop_check_rules   -> incoming_mail_body_loop_check_rules
+	use_body_loop_check     -> use_incoming_mail_body_loop_check
+	body_cksum_cache_dir    -> incoming_mail_body_cksum_cache_dir
+
 2003/10/29
 
    import im-146.
@@ -5559,4 +5569,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.167 2003/10/26 05:47:21 fukachan Exp $
+$FML: CHANGES.txt,v 1.168 2003/10/29 14:48:13 fukachan Exp $
