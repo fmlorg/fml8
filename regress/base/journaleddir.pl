@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: journaleddir.pl,v 1.2 2001/08/21 10:30:32 fukachan Exp $
+# $FML: journaleddir.pl,v 1.3 2001/08/22 21:58:50 fukachan Exp $
 #
 
 BEGIN {
@@ -12,7 +12,7 @@ use Tie::JournaledDir;
 $| = 1; 
 
 my $key  = shift || 'uja';
-my $unit = 2;
+my $unit = shift || 2;
 my $dir  = "/tmp/fml5/jd";
 
 
