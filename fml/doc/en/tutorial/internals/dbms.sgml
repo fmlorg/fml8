@@ -1,11 +1,11 @@
 <!--
-   $FML$
+   $FML: dbms.sgml,v 1.1 2003/07/29 12:13:54 fukachan Exp $
    $jaFML: dbms.sgml,v 1.5 2003/05/31 08:51:09 fukachan Exp $
 -->
 
 <chapter id="dbms">
 	<title>
-	database management system
+	Database management system
 	</title>
 
 
@@ -39,11 +39,10 @@ preprocessing module calling IO::Adapter should handle it.
 
 <para>
 Consider if methods are least set or not. 
-But
 <link linkend="module.io.adapter">
 IO::Adapter 
 </link>
-is enough ?
+is enough minimum ?
 </para>
 
 </sect1>

@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: discussion.sgml,v 1.1 2003/07/29 12:13:55 fukachan Exp $
    $jaFML: discussion.sgml,v 1.4 2003/04/15 14:51:42 fukachan Exp $
 -->
 
@@ -9,8 +9,12 @@
 	</title>
 
 <para>
-fml needs to send back language dependent error mesages.
+Fml needs to send back language dependent error messages.
 How we should implement it ?
+</para>
+
+<para>
+(Below, just a discussion not implemation in fact.)
 </para>
 
 
@@ -21,15 +25,15 @@ How we should implement it ?
 	</title>
 
 <para>
-In the case of &fml4;, call language dependent message converter like
-this:
+In the case of &fml4;, &fml4; call language dependent message
+converter like this:
 <screen>
    Mesg(*e, KEYWORD, DEFAULT MESSAGE, ARGUMENT);
 </screen>
 </para>
 
 <para>
-Mesg() searches the specified keyword in files
+Mesg() searches the specified keyword in files under
 /usr/local/fml/messages/Japanese/ directory. Each file contains
 messages with keywords to be substituted properly.
 </para>
@@ -50,9 +54,8 @@ For example, the keyword not_found matches not_found entry in
 	</title>
 
 <para>
-Hmm, which is better ? "One file has one keyword" and "one file for
-one category, so one file contains plural entries".
-I don't determine it.
+"One file has one keyword" and "one file for one category, so one file
+contains plural entries". Hmm, which is better? I don't determine it.
 </para>
 
 <sect3>
@@ -75,7 +78,7 @@ For example, the usage is as follows:
 <screen>
 printf(catgets(catd, 30,  4,  "%s: Internal match error.\n"), progname);
 </screen>
-Thie function uses se 30 and entry 4 in th local definition file such
+This function uses se 30 and entry 4 in the local definition file such
 as /usr/pkg/share/nls/ja_JP.EUC/PROGNAME.cat.
 </para>
 
@@ -88,7 +91,7 @@ as /usr/pkg/share/nls/ja_JP.EUC/PROGNAME.cat.
 
 <para>
 One problem is whether we should use locale or not ?
-By considering CUI e.g. makefml, it is better to use locale.
+In considering CUI e.g. makefml, it is better to use locale.
 For example, prepare
 <screen>
 /usr/local/lib/fml/$fml_version/messages/ja_JP.EUC/kern
@@ -100,8 +103,8 @@ For example, prepare
 </para>
 
 <para>
-Instead one file for one message may be useful.
-Especially we can customize only one message.
+Instead, one file for one message may be useful.
+Especially it is easy we can customize only one message.
 </para>
 
 <para>
@@ -136,7 +139,7 @@ This methods has the following problems:
 
 
 <para>
-Consider the example. In the latter case, 
+Consider an example. In the latter case, 
 the message module will be like this?
 <screen>
 sub not_found

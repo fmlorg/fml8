@@ -1,11 +1,11 @@
 <!--
-   $FML$
+   $FML: struct.sgml,v 1.1 2003/07/28 10:41:30 fukachan Exp $
    $jaFML: struct.sgml,v 1.2 2003/04/15 14:51:41 fukachan Exp $
 -->
 
 <appendix id="structure">
 	<title>
-	curproc struct (object in fact)
+	Struct curproc (object in fact)
 	</title>
 
 

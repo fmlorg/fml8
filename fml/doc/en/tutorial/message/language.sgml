@@ -1,12 +1,12 @@
 <!--
-   $FML$
+   $FML: language.sgml,v 1.1 2003/07/29 12:13:55 fukachan Exp $
    $jaFML: language.sgml,v 1.5 2003/04/15 14:51:42 fukachan Exp $
 -->
 
 
 <sect1 id="message.nl">
 	<title>
-	message internationalization: 
+	Message internationalization: a
 	the usage of reply_message_nl()
 	</title>
 
@@ -30,7 +30,7 @@ This function uses the message template at
 </para>
 
 <para>
-$_arg_VARNAME in the message such as
+$_arg_VARNAME in the message template such as
 <screen>
 $_args_address
 </screen>
@@ -40,7 +40,7 @@ reply_mesage_nl().
 
 <para>
 Usual $VARIABLE is also expaned by replacing it with value of config.cf.
-For example, $ml_name is expanded to ML name defined in config.cf
+For example, $ml_name is expanded to ML name defined in config.cf.
 $_arg_ prefix is used for lexical scope variables to avoid
 conflicts against variables in config.cf.
 </para>

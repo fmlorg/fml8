@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: filename.sgml,v 1.1 2003/07/26 07:58:26 fukachan Exp $
    $jaFML: filename.sgml,v 1.3 2003/04/15 14:51:41 fukachan Exp $
 -->
 
@@ -24,7 +24,8 @@ The fundamental syntax is
 <screen>
 FILENAME-ROLE
 </screen>
-. For example, fml uses the following syntax for address lists.
+. 
+For example, fml uses the following syntax for address lists.
 <screen>
 recipients-ROLE
 members-ROLE
@@ -32,7 +33,8 @@ members-ROLE
 </para>
 
 <para>
-Other than address lists, fml uses similar manner. For example, 
+Other than address lists, fml uses similar manner for other type of
+files. For example,
 <screen>
 passwd-admin
 passwd-moderator
@@ -47,7 +49,7 @@ for several password files.
 
 <sect1>
 	<title>
-	case study: address list
+	Case study: address list
 	</title>
 
 <para>
@@ -65,7 +67,7 @@ recipient_maps	=	recipients
 
 <sect1>
 	<title>
-	case study: remote administrators
+	Case study: list of remote administrators
 	</title>
 
 <para>
@@ -80,7 +82,7 @@ members-admin
 
 <sect1>
 	<title>
-	case study: moderators
+	Case study: list of moderators
 	</title>
 
 
@@ -97,7 +99,7 @@ members-moderator
 
 <sect1>
 	<title>
-	case study: remote administraotr passwords
+	Case study: remote administrator password files
 	</title>
 
 
@@ -109,7 +111,7 @@ etc/passwd-admin
 
 <warning>
 <para>
-etc/passwd is used in the case of &fml4;
+etc/passwd is used in the case of &fml4;.
 </para>
 </warning>
 
