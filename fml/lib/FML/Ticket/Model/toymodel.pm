@@ -84,8 +84,9 @@ sub update_status
     my $rbody   = $curproc->{ article }->{ body };
     my $content = $rbody->get_first_plaintext_message();
 
-    if ($content =~ /close/) {
+    if ($content =~ /^\s*close/) {
 	$self->{ _status } = "close";
+	Log("ticket is closed");
     }
     else {
 	Log("(debug) ticket status not changes");
