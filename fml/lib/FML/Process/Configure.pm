@@ -51,7 +51,7 @@ sub run
 	$curproc->_show_conf($args);
     }
     elsif ($myname eq 'fmldoc') {
-	exec 'perldoc', '-v', @$argv;
+	exec 'perldoc', @$argv;
     }
     else {
 	my $command = $argv->[ 0 ] || croak("command not specified\n");
