@@ -93,6 +93,9 @@ sub _date
 
     $date->{'YYYYMMDD'} = 
 	sprintf("%04d%02d%02d", 1900 + $year, $mon + 1, $mday);
+
+    $date->{'YYYY/MM/DD'} = 
+	sprintf("%04d/%02d/%02d", 1900 + $year, $mon + 1, $mday);
 		
     $date->{'current_time'} = 
 	sprintf("%04d%02d%02d%02d%02d", 
@@ -127,6 +130,14 @@ sub YYYYMMDD
     my ($self, $time) = @_;
     my $p = _date($time || time);
     $p->{'YYYYMMDD'};
+}
+
+
+sub YYYY_MM_DD
+{
+    my ($self, $time) = @_;
+    my $p = _date($time || time);
+    $p->{'YYYY/MM/DD'};
 }
 
 
