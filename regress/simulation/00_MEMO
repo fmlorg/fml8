@@ -17,10 +17,28 @@
 	値をよろしく変換する （←ここがむずかしー）
 
 
+[TODO]	ＭＬの管理者へエラーを転送する機能
+
+	libexec/maitainer_notify なんてのも?
+		IO::Adpater つかえないとだめじゃん
+
+
+[TODO]	「このＭＬはもうありません」
+
+	libexec/relocated , Process/Relocated とかじゃだめだね。
+	libexec/ の下の全部のプログラム全部が対応するべきのような…
+	つまり
+		ml
+		ml-ctl
+	宛に来たもの両方に返事を返すべきだろう。
+	でも、ml-error はちがうだろうなぁ
+
+
 [TODO]	01_RFC_IO_ADAPTER.txt
 [TODO]	01_RFC_UPGRADE.txt
 
 	かんがえよー／まとめようー
+
 
 [TODO]	01_RFC_FILTER.txt
 
@@ -30,37 +48,6 @@
 [TODO]	fml $ml spool {status,convert}: --srcdir= とか必要じゃない？
 
 		コマンドラインオプションは、OK？
-
-[TODO]	*_maps をよぶまえには MUTEX ロックを
-
-	→ giant lock をなくす
-
-	○ Mail::Delivery::Queue  
-
-		見るだけ (mailq コマンド)か、
-		並列操作可能なものだけなので、ロックは考えなくて良い
-
-	○ Mail::Delivery::SMTP
-
-		メンバーリストのロックが必要ざましょ
-
-	○ メンバーリストへ IO::Adapter をかます時
-
-		READ,WRITE LOCK がほしいよぉ、が、
-		いや、実装はかなりむつかしいかも… ;)
-
-		READ ロックは不要か？いや、だめだろ
-		chaddr の途中で sleep したら敗けやから;)
-
-	[_map を使うモジュール一覧]
-
-	？ write lock が必要
-                FML/Command/UserControl.pm
-		FML/Command/Auth.pm
-
-	？ read lock だけでよい
-		FML/Credential.pm
-
 
 
 [TODO]	受信者としてだけの登録 (add2actives 相当、メールマガジンなど)は？
@@ -87,6 +74,11 @@
 	unsubscribe はすべての map をサーチし、該当するもの全てを
 	削除する。	 
 
+	いや、「どの *map からはずしたか」をどこかに保存しておいて、
+	適宜戻すようにしないといけない？
+
+	複数マッチするものがあったらどうするの？
+
 
 [TODO]	reply-to: special hack
 
@@ -95,39 +87,8 @@
 	   }
 
 
-[TODO]	libexec/relocated , Process/Relocated
-
-	「このＭＬはもうありません」
-	deny とはちょっとちがうとおもうねぇ。
-
-		ml
-		ml-ctl
-	宛に来たもの両方に返事を返すべきだろう。
-
-
 [TODO]	Accept-Language: を考慮する
 
-
-[TODO]	2002 年のオーバホールの残り
-
-  ＊ 要 BUG FIX
-	Mail/Delivery/SMTP.pm
-
-  ＊おもたい
-	FML/Process/Kernel.pm
-	Mail/Message.pm
-
-   * IN/OUT のチェック
-	Mail/Message/ToHTML.pm
-
-	OUT のちぇっくで最重要なのは？
-
-	Mail/Message/ToHTML.pm
-	Mail/ThreadTrack/Print
-
-	Mail/Message/Print などに集結させるべきだろう？
-
-		print_axss (against cross site scripting).
 
 [TODO]	IO::Adapter
 
@@ -155,13 +116,12 @@
 		IO/Adapter/MySQL.pm
 
 
-[TODO]	時間つき newml だと、あれか… (上述の newml)
+[TODO]	時間つき newml だと、あれか…
 
 	libexec/auto-newml ?
 
 
 [TODO]	時間つき subscribe 
-	時間つき newml だと、あれか… (上述の newml)
 
 	subscribe -> 一カ月すると削除される？
 
@@ -173,47 +133,6 @@
 
 
 [TODO]	digest こまんど？ for user
-
-
-[TODO]	ファイルを用意しただけやんシリーズ;)
-	これから改造するので、ほとんど未修正のままのこす
-
-		一度削除するか？
-
-	FML::Process::Qmail
-	FML::Filter::TrafficMonitor
-
-
-[TODO]	remove $msg->{ next }
-
-	FML/Filter/TextPlain.pm
-	Mail/Message/ToHTML.pm
-	Mail/Message.pm
-	Mail/Bounce/Postfix19991231.pm
-	Mail/Bounce/Qmail.pm
-
-
-[TODO]	ちょっとコーディングスタイルが古いかな?
-
-		FML::Header
-		FML::Header::Subject
-		File::Sequence
-		Mail::Delivery::* (?)
-		FML::Filter::TextPlain
-		FML::Filter::Header
-
-	ちょっとコーディングスタイルが古いかな?
-	近々に見直すべし
-
-
-[TODO]	ドキュメント( tutorial )
-
-	module/Mail::Message::ToHTML
-	threadtrack/chapter.sgml
-	threadtrack/tools.sgml
-	
-	usage/ がいまいち
-	fml bible のパートIIIの最初の部分のように編成し直すべき
 
 
 [TODO]	makefml で動くもの、動かないものは何？
@@ -240,13 +159,6 @@
 
 	ところで、誰に送信するんじゃ？ :-) って、そうか、makefml じゃ
 	なくて admin コマンドの時は考えなくてもいいからだな、それは …
-
-
-
-[TODO]	FML::Process::Scheduler ってかなり？
-
-	うーん、なかみがない。予約だけされてるモジュールやね
-	mkdir するだけ？ :-)
 
 
 [TODO]	fml $ml thread $subcommand: モジュールの clean up
@@ -302,5 +214,72 @@
 	ローカルな更新は、あまりよい結果にならないようだ。
 
 
+======================================================================
+		FNF-ify およびドキュメント
+
+
+[TODO]	ドキュメント( tutorial )
+
+	module/Mail::Message::ToHTML
+	threadtrack/chapter.sgml
+	threadtrack/tools.sgml
+	
+	usage/ がいまいち
+	fml bible のパートIIIの最初の部分のように編成し直すべき
+
+
+[TODO]	2002 年のオーバホールの残り
+
+  ＊ 要 BUG FIX
+	Mail/Delivery/SMTP.pm
+
+  ＊おもたい
+	FML/Process/Kernel.pm
+	Mail/Message.pm
+
+   * IN/OUT のチェック
+	Mail/Message/ToHTML.pm
+
+	OUT のちぇっくで最重要なのは？
+
+	Mail/Message/ToHTML.pm
+	Mail/ThreadTrack/Print
+
+	Mail/Message/Print などに集結させるべきだろう？
+
+		print_axss (against cross site scripting).
+
+
+[TODO]	ファイルを用意しただけやんシリーズ;)
+	これから改造するので、ほとんど未修正のままのこす
+
+		一度削除するか？
+
+	FML::Process::Qmail
+	FML::Filter::TrafficMonitor
+
+
+[TODO]	remove $msg->{ next }
+
+	FML/Filter/TextPlain.pm
+	Mail/Message/ToHTML.pm
+	Mail/Message.pm
+	Mail/Bounce/Postfix19991231.pm
+	Mail/Bounce/Qmail.pm
+
+
+[TODO]	ちょっとコーディングスタイルが古いかな?
+
+		FML::Header
+		FML::Header::Subject
+		File::Sequence
+		Mail::Delivery::* (?)
+		FML::Filter::TextPlain
+		FML::Filter::Header
+
+	ちょっとコーディングスタイルが古いかな?
+	近々に見直すべし
+
+
 ----------
-$FML: 00_MEMO,v 1.70 2003/03/16 13:05:58 fukachan Exp $
+$FML: 00_MEMO,v 1.71 2003/03/17 13:29:01 fukachan Exp $
