@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: TextPlain.pm,v 1.27 2002/09/24 14:24:35 fukachan Exp $
+# $FML: TextPlain.pm,v 1.1 2002/09/30 11:00:55 fukachan Exp $
 #
 
 package FML::Filter::TextPlain;
@@ -16,25 +16,26 @@ use ErrorStatus qw(error_set error error_clear);
 
 =head1 NAME
 
-FML::Filter::TextPlain - filter by mail body content
+FML::Filter::TextPlain - analyze the first plain text part in mail.
 
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
 
 C<FML::Filter::TextPlain> is a collectoin of filter rules based on
-mail body content.
+mail body content, which tuned for plain texts.
 
 =head1 METHODS
 
 =head2 C<new()>
 
-usual constructor.
+constructor.
 
 =cut
 
 
 # default rules to apply
+# XXX-TODO: need this default rules here ? (principle of least surprise?)
 my (@default_rules) = qw(reject_not_iso2022jp_japanese_string
 			 reject_null_mail_body
 			 reject_one_line_message
@@ -68,7 +69,7 @@ overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 =cut
 
 
-# Descriptions: access method to overwrite rule
+# Descriptions: access method to overwrite rule(s).
 #    Arguments: OBJ($self) ARRAY_REF($rarray)
 # Side Effects: overwrite info in object
 # Return Value: ARRAY_REF
@@ -117,10 +118,10 @@ sub body_check
     # If the incoming message is a mime multipart format,
     # find_first_plaintext_message() return the first mime part block
     # with the "plain/text" type.
-    my $m = $msg->find_first_plaintext_message();
+    my $first_msg = $msg->find_first_plaintext_message();
     # message without valid text part e.g. text/html (not multipart)
-    unless (defined $m) {
-	my $r = "no text part, ignored";
+    unless (defined $first_msg) {
+	# "no text part, ignored";
 	return undef;
     }
 
@@ -130,8 +131,8 @@ sub body_check
     #     XXX for small enough buffer. The information comes from @pmap, but
     #     XXX we should implement methods for them within $m message object.
     # get useful information for the message object.
-    my $num_paragraph       = $m->num_paragraph();
-    my $need_one_line_check = $self->need_one_line_check($m);
+    # my $num_paragraph       = $m->num_paragraph();
+    # my $need_one_line_check = $self->need_one_line_check($m);
 
     ## 5. preparation for main rules.
     ## $self->_clean_up_buffer($m);
@@ -147,7 +148,7 @@ sub body_check
 
 	if ($self->can($rule)) {
 	    eval q{
-		$self->$rule($msg, $args, $m);
+		$self->$rule($msg, $args, $first_msg);
 	    };
 	    if ($@) {
 		$self->error_set($@);
@@ -161,7 +162,7 @@ sub body_check
 }
 
 
-# Descriptions: reject if not Japanese in JIS
+# Descriptions: reject if not Japanese in JIS is included in the message.
 #    Arguments: OBJ($self) OBJ($msg) HASH_REF($args) OBJ($first_msg)
 # Side Effects: croak if error
 # Return Value: none
@@ -185,7 +186,6 @@ sub reject_not_iso2022jp_japanese_string
 sub reject_null_mail_body
 {
     my ($self, $msg, $args, $first_msg) = @_;
-    my $buf = $first_msg->nth_paragraph(1);
 
     if ($first_msg->is_empty) {
 	my $size = $first_msg->size();
@@ -210,6 +210,7 @@ sub reject_ms_guid
     my ($self, $msg, $args, $first_msg) = @_;
 
     for (my $mp = $msg->{ next }; $mp ; $mp = $mp->{ next } ) {
+	# XXX croak() if GUID found.
 	$self->_probe_guid($mp);
     }
 }
@@ -245,6 +246,7 @@ sub _probe_guid
 	$buf = $self->_decode_mime_buffer($buf, $encoding);
     }
 
+    # XXX-TODO: sliding window for GUID check.
     # check current window
     if ($buf =~ /($guid_pat)/) {
 	croak "MS GUID ($1) found, may be a virus";
@@ -375,7 +377,7 @@ sub reject_japanese_command_syntax
 }
 
 
-# Descriptions: should we check $m according to number of paragraphs?
+# Descriptions: should we check $m according to the number of paragraphs?
 #    Arguments: OBJ($self) OBJ($m)
 # Side Effects: none
 # Return Value: 1 or 0
@@ -420,6 +422,7 @@ sub is_citation
 
     if ($data =~ /(\n.)/) { $trap_pat = quotemeta($1);}
 
+    # XXX-TODO: only /\n>/ regexp is correct ?
     # > a i u e o ...
     # > ka ki ku ke ko ...
     if ($data =~ /\n>/) { return 1;}
@@ -534,6 +537,7 @@ sub _probe_uuencode
 	$buf = $self->_decode_mime_buffer($buf, $encoding);
     }
 
+    # XXX-TODO: sliding window
     # check current window
     if ($buf =~ /($uuencode_pat)/m) {
 	croak "uuencode($1) found, may be a virus";
