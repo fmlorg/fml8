@@ -668,12 +668,12 @@ sub _header_summary
     my $subject = $args->{ header }->get('subject');
     my $padding = $args->{ padding };
 
-    use FML::MIME qw(mime_decode_string);
-    $subject = mime_decode_string($subject, { charset => 'euc-japan' });
+    use FML::MIME qw(decode_mime_string);
+    $subject = decode_mime_string($subject, { charset => 'euc-japan' });
     $subject =~ s/\n/ /g;
     $subject = FML::Header::remove_subject_tag_like_string($subject);
 
-    $from    = mime_decode_string($from, { charset => 'euc-japan' });
+    $from    = decode_mime_string($from, { charset => 'euc-japan' });
     $from    =~ s/\n/ /g;
 
     return 

@@ -2,7 +2,7 @@
 
 use strict;
 use Carp;
-use FML::MIME qw(mime_decode_string mime_encode_string);
+use FML::MIME qw(decode_mime_string encode_mime_string);
 use MIME::Base64;
 
 
@@ -18,8 +18,8 @@ sub try_mime
     my ($separator) = @_;
 
     my $orig_str = "うじゃ". $separator ."あじゃじゃ";
-    my $in_str   = mime_encode_string($orig_str);
-    my $out_str  = mime_decode_string($in_str, {charset => 'euc-japan'}), 
+    my $in_str   = encode_mime_string($orig_str);
+    my $out_str  = decode_mime_string($in_str, {charset => 'euc-japan'}), 
 
     print "   >", $orig_str, "<\n";
     print "   >", $in_str, "<\n";

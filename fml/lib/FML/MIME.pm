@@ -16,10 +16,10 @@ use Carp;
 
 require Exporter;
 @ISA       = qw(Exporter);
-@EXPORT_OK = qw(mime_decode_string mime_encode_string);
+@EXPORT_OK = qw(decode_mime_string encode_mime_string);
 
 
-sub mime_decode_string
+sub decode_mime_string
 {
     my ($str, $options) = @_;
     my $charset = $options->{ 'charset' } || 'euc-japan';
@@ -42,7 +42,7 @@ sub mime_decode_string
 }
 
 
-sub mime_encode_string
+sub encode_mime_string
 {
     my ($str, $options) = @_;
     my $charset = $options->{ 'charset' } || 'iso-2022-jp';
