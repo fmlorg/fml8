@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.240 2004/10/06 23:35:53 fukachan Exp $
+# $FML: Kernel.pm,v 1.241 2004/11/21 06:59:42 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -974,7 +974,7 @@ sub load_config_files
     # load configuration variables from given files e.g. /some/where.cf
     # XXX overload variables from each $cf
     for my $cf (@$_files) {
-      $config->overload( $cf );
+	$config->overload( $cf );
     }
 
     #  overwrite variables by -o options (2)
