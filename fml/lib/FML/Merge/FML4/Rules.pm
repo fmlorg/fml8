@@ -302,6 +302,13 @@ sub translate
       return $s if defined $s;
    }
    
+   
+   if ($key eq 'TZone' && $value eq 'JST') {
+      $s = undef;
+      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+      return $s if defined $s;
+   }
+   
    if ($key eq 'TZONE_DST' && defined $value) {
       $s = undef;
       $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
@@ -523,17 +530,17 @@ sub translate
    }
    
    
-   if ($key eq 'POSTFIX_VERP_DELIMITERS' && $value eq '+=') {
+   if ($key eq 'VARLOG_DIR' && $value eq 'var/log') {
       $s = undef;
-      $s .= "postfix_verp_delimiters = POSTFIX_VERP_DELIMITERS";
-      $s .= "\n";
+      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
       return $s if defined $s;
    }
    
    
-   if ($key eq 'VARLOG_DIR' && $value eq 'var/log') {
+   if ($key eq 'POSTFIX_VERP_DELIMITERS' && $value eq '+=') {
       $s = undef;
-      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+      $s .= "postfix_verp_delimiters = POSTFIX_VERP_DELIMITERS";
+      $s .= "\n";
       return $s if defined $s;
    }
    
@@ -800,6 +807,24 @@ sub translate
    }
    
    if ($key eq 'MD5' && defined $value) {
+      $s = undef;
+      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+      return $s if defined $s;
+   }
+   
+   if ($key eq 'SMTPLOG' && defined $value) {
+      $s = undef;
+      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+      return $s if defined $s;
+   }
+   
+   if ($key eq 'CP' && defined $value) {
+      $s = undef;
+      $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
+      return $s if defined $s;
+   }
+   
+   if ($key eq 'RM' && defined $value) {
       $s = undef;
       $s .= &$fp_rule_prefer_fml8_value($self, $diff, $key, $value);
       return $s if defined $s;
