@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: subscribe.pm,v 1.23 2003/08/23 04:35:32 fukachan Exp $
+# $FML: subscribe.pm,v 1.24 2003/08/29 15:33:59 fukachan Exp $
 #
 
 package FML::Command::Admin::subscribe;
@@ -109,8 +109,8 @@ sub cgi_menu
     my $r = '';
 
     eval q{
-	use FML::CGI::Admin::User;
-	my $obj = new FML::CGI::Admin::User;
+	use FML::CGI::User;
+	my $obj = new FML::CGI::User;
 	$obj->cgi_menu($curproc, $args, $command_args);
     };
     if ($r = $@) {

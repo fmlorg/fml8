@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: deladmin.pm,v 1.10 2003/05/12 10:16:42 fukachan Exp $
+# $FML: deladmin.pm,v 1.11 2003/08/23 04:35:30 fukachan Exp $
 #
 
 package FML::Command::Admin::deladmin;
@@ -112,8 +112,8 @@ sub cgi_menu
     my $r = '';
 
     eval q{
-	use FML::CGI::Admin::User;
-	my $obj = new FML::CGI::Admin::User;
+	use FML::CGI::User;
+	my $obj = new FML::CGI::User;
 	$obj->cgi_menu($curproc, $args, $command_args);
     };
     if ($r = $@) {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: addmoderator.pm,v 1.6 2003/08/23 04:35:29 fukachan Exp $
+# $FML: addmoderator.pm,v 1.7 2003/08/29 15:33:58 fukachan Exp $
 #
 
 package FML::Command::Admin::addmoderator;
@@ -107,8 +107,8 @@ sub cgi_menu
     my $r = '';
 
     eval q{
-	use FML::CGI::Admin::User;
-	my $obj = new FML::CGI::Admin::User;
+	use FML::CGI::User;
+	my $obj = new FML::CGI::User;
 	$obj->cgi_menu($curproc, $args, $command_args);
     };
     if ($r = $@) {

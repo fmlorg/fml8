@@ -4,10 +4,10 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ML.pm,v 1.9 2003/08/29 15:33:56 fukachan Exp $
+# $FML: ML.pm,v 1.10 2003/09/25 11:37:33 fukachan Exp $
 #
 
-package FML::CGI::Admin::ML;
+package FML::CGI::ML;
 use strict;
 use Carp;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
@@ -130,7 +130,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::CGI::Admin::ML first appeared in fml8 mailing list driver package.
+FML::CGI::ML first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

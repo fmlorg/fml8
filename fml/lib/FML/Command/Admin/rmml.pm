@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: rmml.pm,v 1.18 2003/09/06 03:34:04 fukachan Exp $
+# $FML: rmml.pm,v 1.19 2003/09/13 09:16:59 fukachan Exp $
 #
 
 package FML::Command::Admin::rmml;
@@ -174,8 +174,8 @@ sub cgi_menu
     my $r = '';
 
     eval q{
-        use FML::CGI::Admin::ML;
-        my $obj = new FML::CGI::Admin::ML;
+        use FML::CGI::ML;
+        my $obj = new FML::CGI::ML;
         $obj->cgi_menu($curproc, $args, $command_args);
     };
     if ($r = $@) {
