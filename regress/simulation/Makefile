@@ -22,6 +22,7 @@ allclean: clean
 	rm -f Command
 	rm -f SQL
 	rm -f ErrorMessages
+	rm -f Language
 
 scan:
 	@ (cd ../..; make scan 2>&1) |tee __scan__ || echo 'nothing changed'
