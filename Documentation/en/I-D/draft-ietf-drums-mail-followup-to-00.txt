@@ -1,0 +1,245 @@
+Network Working Group                                       Jacob Palme
+Internet Draft                                 Stockholm University/KTH
+draft-ietf-drums-mail-followup-to-00.txt
+Expires: May 1998                                         November 1997
+
+
+The ''Mail-Followup-To'' header
+
+
+
+Status of this Document
+
+
+This document is an Internet-Draft. Internet-Drafts are working
+documents of the Internet Engineering Task Force (IETF), its areas, and
+its working groups. Note that other groups may also distribute working
+documents as Internet-Drafts.
+
+Internet-Drafts are draft documents valid for a maximum of six months
+and may be updated, replaced, or obsoleted by other documents at any
+time. It is inappropriate to use Internet-Drafts as reference material
+or to cite them other than as ``work in progress.''
+
+To learn the current status of any Internet-Draft, please check the
+``1id-abstracts.txt'' listing contained in the Internet-Drafts Shadow
+Directories on ftp.is.co.za (Africa), nic.nordu.net (Europe),
+munnari.oz.au (Pacific Rim), ds.internic.net (US East Coast), or
+ftp.isi.edu (US West Coast).
+
+NOTE: This document is a proposal for text to be incorporated in the
+new message format standard or published as a separate RFC. It is
+written as input for discussions in the drums working group and does
+not yet reflect any consensus within that group.
+
+
+Abstract
+
+This proposal contains a proposed new e-mail header ''Mail-Followup-To'',
+which is intended to be used instead of the ''Reply-To'' header for
+suggesting where replies to the group who participates in a discussion
+should be sent.
+
+Temporary note
+
+This proposal does not represent any consensus opinion in the drums
+working group at this time (21 November 1997).
+
+
+Table of Contents
+
+1. Introduction
+2. The "Mail-Followup-To" Header
+   2.1 Syntax
+   2.2 Sender action
+   2.3 Mailing list action
+   2.4 Mail Client Action
+   2.5 Usenet News Client Action
+   2.6 A note about the "From:" header
+   2.7 Security Considerations
+3. The "Message-ID" Header
+   3.1 Relation of changes "Message-ID" and other headers and body
+   3.2 Security Considerations
+4. Copyright
+5. Acknowledgments
+6. References
+7. Contact Information
+   7.1 Author's Addresses
+   7.2 Working Group Chairman
+   7.3 Applications Area Director(s):
+   7.4 Area Advisor
+   7.5 Mailing lists:
+
+
+
+
+1.    Introduction
+
+The "Reply-To" e-mail header is known to be problematic because it is
+used for different purposes by different mailers and when the mailer
+inserting this header and the mailer using the header interpret it in
+different ways, unexpected results can happen. For example, a message
+intended for the author of a previous message only may by mistake be
+sent to a mailing list. One way to reduce this problem is to define a
+new header "Mail-Followup-To" which replaces "Reply-To" in recommending
+recipients for replies destined for the group of people discussing an
+issue.
+
+
+2.    The "Mail-Followup-To" Header
+
+2.1   Syntax
+
+"Mail-Followup-To"    =    "Mail-Followup-To" mailbox-list CRLF
+
+
+2.2   Sender action
+
+The "Mail-Followup-To" header can be inserted by the sender of a
+message to indicate suggestions on where replies, intended for the
+group of people who are discussing the issue of the previous message,
+are to be sent. Here are some ways of constructing this header:
+
+1. Merge the recipients in the "From:", "To:" and "Cc:" headers in
+   order to suggest that replies are to be sent to all except "Bcc:"
+   recipients of the previous message. Note that omitting any
+   "Mail-Followup-To:" header is not the same thing, it does not
+   give the protection described in point 4. below.
+
+2. When a message is sent to a mailing list, and the author is a member
+   of this list, and wants to get only one copy of replies, the author
+   can be omitted from the "Mail-Followup-To" header.
+
+3. When a message is sent to several mailing lists, but the author
+   suggests that further discussion should take place only in one of
+   them, the names of the other lists can be omitted from the header.
+   This is similar to the usage of the "Followup-To" header in Usenet
+   News.
+
+4. When a message is sent to a mailing list, which contains sublists,
+   there is a risk that the sublists will insert "Reply-To" or
+   "Mail-Follow-Up-To" headers referring to the sublist. If this
+   happens, replies might be sent to the sublist, and thus not
+   reaching the full set of readers of the primary mailing list.
+   Use of the "Mail-Followup-To" can be used by the author or the
+   primary mailing list to stop sublists inserting "Mail-Followup-To"
+   in the header.
+
+2.3   Mailing list action
+
+A mailing list expander may insert the "Mail-Followup-To" header, with
+a reference to the list, if there is no previous "Mail-Followup-To" in
+the message. A mailing list expander SHOULD NOT change an existing
+"Mail-Followup-To" header, since this may reduce the set of recipients
+suggested in the original message.
+
+If a message has a "Followup-To" header, indicating a suggestion for
+further discussion in a newsgroup, a mailing list expander SHOULD NOT
+insert "Mail-Followup-To" except to refer to a mailing list which is
+gatewayed to the newsgroup in the "Followup-To" header. A message
+should not contain both a "Followup-To" referring to a newsgroup and a
+"Mail-Followup-To" referring to a mailing list which is gatewayed to
+and from that newsgroup, so if such a "Mail-Followup-To" is inserted,
+the "Followup-To" SHOULD be removed.
+
+2.4   Mail Client Action
+
+The "Mail-Followup-To" contains a suggestion to the recipient of where
+to send group replies, but the recipient SHOULD be free to choose other
+recipients of a reply. If a mail client contains a command intended to
+write a reply to all recipients of a message, the value of the
+"Mail-Followup-To" SHOULD be used instead of the merge of the "From:",
+"To:" and "Cc:" fields in construction a default suggested set of
+recipients for such a reply.
+
+2.5   Usenet News Client Action
+
+If a message has a "Mail-Followup-To" header, and no "Followup-To"
+header, this is an indication that further discussion should take place
+only in e-mail, not in Usenet News, and thus a Usenet News client
+SHOULD NOT automatically assemble a proposed set of recipients which
+includes any Usenet News newsgroup. Instead, the "Mail-Followup-To"
+header should be used also by the Usenet News client in suggesting a
+default set of reply recipients to its users.
+
+2.6   A note about the "From:" header
+
+Whenever the text above specifies the "From:" header, its value SHOULD
+be replaced by the value of a "Reply-To" header, if there is such a
+header.
+
+2.7   Security Considerations
+
+There are no particular security risks with the "Mail-Followup-To" if
+implemented correctly. Instead, they will reduce the security risk of
+having personal messages inadvertently sent to more recipients than
+intended.
+
+
+3.    Copyright
+
+Copyright (C) The Internet Society (date). All Rights Reserved.
+
+This document and translations of it may be copied and furnished to
+others, and derivative works that comment on or otherwise explain it or
+assist in its implementation may be prepared, copied, published and
+distributed, in whole or in part, without restriction of any kind,
+provided that the above copyright notice and this paragraph are
+included on all such copies and derivative works. However, this
+document itself may not be modified in any way, such as by removing the
+copyright notice or references to the Internet Society or other
+Internet organizations, except as needed for the purpose of developing
+Internet standards in which case the procedures for copyrights defined
+in the Internet Standards process must be followed, or as required to
+translate it into languages other than English.
+
+The limited permissions granted above are perpetual and will not be
+revoked by the Internet Society or its successors or assigns.
+
+This document and the information contained herein is provided on an
+"AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
+TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT
+NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL
+NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR
+FITNESS FOR A PARTICULAR PURPOSE.
+
+
+4.    Acknowledgments
+
+Chris Newman and several other people have helped me with preparing
+this document. I alone take responsibility for any errors which may
+still be in the document.
+
+
+5.    References
+
+Not ready
+
+6.    Contact Information
+
+6.1   Author's Addresses
+
+Jacob Palme                          Phone: +46-8-16 16 67
+Stockholm University and KTH         Fax: +46-8-783 08 29
+Electrum 230                         Email: jpalme@dsv.su.se
+S-164 40 Kista, Sweden
+
+6.2   Working Group Chairman
+
+Chris Newman <chris.newman@innosoft.com>
+
+6.3    Applications Area Director(s):
+
+Keith Moore  <moore+iesg@cs.utk.edu>
+Harald Alvestrand  <Harald.T.Alvestrand@uninett.no>
+
+6.4    Area Advisor
+
+Harald Alvestrand  <Harald.T.Alvestrand@uninett.no>
+
+6.5    Mailing lists:
+
+General Discussion:drums@cs.utk.edu
+To Subscribe:      drums-request@cs.utk.edu
+Archive:           ftp://cs.utk.edu/pub/drums/mail-archive/
+
