@@ -4,14 +4,13 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.4 2002/09/11 23:18:04 fukachan Exp $
+# $FML: List.pm,v 1.5 2002/09/22 14:56:42 fukachan Exp $
 #
 
 package FML::CGI::Admin::List;
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-
+use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use CGI qw/:standard/; # load standard CGI routines
 
 
@@ -41,30 +40,32 @@ sub cgi_menu
     my $action       = $curproc->myname();
     my $target       = '_top';
     my $ml_name      = $command_args->{ ml_name };
-    my $comname      = $command_args->{ comname };
     my $map_list     = [ 'member', 'recipient', 'admin_member' ];
     my $map_default  = $curproc->safe_param_map() || 'member';
 
+    # XXX-TODO: we can validate $action ?
     # create <FORM ... > ... by (start_form() ... end_form())
     print start_form(-action=>$action, -target=>$target);
 
     print hidden(-name => 'command', -default => 'list');
 
+    # XXX-TODO: we should validate $ml_name by safe regexp ?
+    # XXX-TODO: check $map_default included in $map_list.
     print table( { -border => undef },
 		Tr( undef,
 		   td([
 		       "ML:",
-		       textfield(-name => 'ml_name',
+		       textfield(-name    => 'ml_name',
 				 -default => $ml_name),
 		       ])
 		   ),
 		Tr( undef,
 		   td([
 		       "map",
-		       scrolling_list(-name   => 'map',
-				      -values => $map_list,
+		       scrolling_list(-name    => 'map',
+				      -values  => $map_list,
 				      -default => $map_default,
-				      -size   => $#$map_list + 1)
+				      -size    => $#$map_list + 1)
 		       ]),
 		   )
 		);
