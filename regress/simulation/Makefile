@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.66 2003/03/11 14:43:20 fukachan Exp $
+# $FML: Makefile,v 1.67 2003/03/16 06:24:58 fukachan Exp $
 #
 
 TMPFILE	=	/tmp/log.fml-devel.test
@@ -44,7 +44,7 @@ check:
 	   sed -e 's@^lib//@@' -e 's@^lib/@@' |\
 	   tee -a 33_TODO
 	- test -f 44_STYLE && mv -f 44_STYLE 44_STYLE.bak
-	- ./find_bad_style.pl \
+	- ../style/find_bad_style.pl \
 	  `find lib/ -type f -print |\
 	   egrep '\.pm$$' ` |\
 	   sed -e 's@^lib//@@' -e 's@^lib/@@' |\
