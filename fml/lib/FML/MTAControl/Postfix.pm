@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Postfix.pm,v 1.11 2002/09/22 14:56:51 fukachan Exp $
+# $FML: Postfix.pm,v 1.12 2002/11/07 08:38:23 fukachan Exp $
 #
 
 package FML::MTAControl::Postfix;
@@ -17,7 +17,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::MTAControl - postfix utilities
+FML::MTAControl::Postfix - handle postfix specific configurations
 
 =head1 SYNOPSIS
 
@@ -26,8 +26,6 @@ set up aliases and virtual maps for postfix.
 =head1 DESCRIPTION
 
 =head1 METHODS
-
-=head2 new()
 
 =cut
 
@@ -48,7 +46,7 @@ sub postfix_install_alias
     my $src   = File::Spec->catfile($template_dir, 'aliases');
     my $dst   = $alias . "." . $$;
 
-    # update params
+    # update params with considering virtual domain support if needed.
     my $xparams = {};
     for my $k (keys %$params) { $xparams->{ $k } = $params->{ $k };}
     $self->_postfix_rewrite_virtual_params($curproc, $xparams);
@@ -56,6 +54,7 @@ sub postfix_install_alias
 
     print STDERR "updating $alias\n";
 
+    # XXX-TODO: we should prepare methods such as $curproc->util->append() ?
     use File::Utils qw(append);
     append($dst, $alias);
     unlink $dst;
@@ -233,6 +232,7 @@ sub postfix_alias_maps
     my $config = $curproc->{ config };
     my $prog   = $config->{ path_postconf };
 
+    # XXX-TODO: postconf returns $xxx in some cases. we need to expand it.
     my $maps   = `$prog alias_maps`;
     $maps      =~ s/,/ /g;
     $maps      =~ s/\s+hash:/ /g;
@@ -245,7 +245,7 @@ sub postfix_alias_maps
 }
 
 
-# Descriptions: install configuratin templates
+# Descriptions: install configuration templates
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: create include*

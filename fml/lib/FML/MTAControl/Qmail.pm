@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.12 2002/09/11 23:18:13 fukachan Exp $
+# $FML: Qmail.pm,v 1.13 2002/09/22 14:56:51 fukachan Exp $
 #
 
 package FML::MTAControl::Qmail;
@@ -17,7 +17,7 @@ my $debug = 0;
 
 =head1 NAME
 
-FML::MTAControl - qmail utilities
+FML::MTAControl::Qmail - handle qmail specific configurations
 
 =head1 SYNOPSIS
 
@@ -27,18 +27,10 @@ set up aliases and virtual maps for qmail.
 
 =head1 METHODS
 
-=head2 new($args)
-
-    $args = {
-	mta_type => 'qmail',
-    };
-
-C<qmail> as C<mta_type> is available now.
-
 =cut
 
 
-# Descriptions: update alias
+# Descriptions: udummy. qmail not needs installation of alias files.
 #    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
@@ -50,7 +42,7 @@ sub qmail_install_alias
 }
 
 
-# Descriptions: update alias
+# Descriptions: remove .qmail-$ml* files (remove aliases).
 #    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
@@ -87,7 +79,7 @@ sub qmail_remove_alias
 }
 
 
-# Descriptions: update alias
+# Descriptions: dummy (update alias).
 #    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
@@ -99,7 +91,7 @@ sub qmail_update_alias
 }
 
 
-# Descriptions: find key in aliases
+# Descriptions: dummy (find key in aliases).
 #    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
@@ -107,6 +99,7 @@ sub qmail_find_key_in_alias_maps
 {
     my ($self, $curproc, $params, $optargs) = @_;
 
+    # XXX-TODO: implement this!
     0;
 }
 
@@ -119,6 +112,7 @@ sub qmail_get_aliases_as_hash_ref
 {
     my ($self, $curproc, $params, $optargs) = @_;
 
+    # XXX-TODO: implement this!
     0;
 }
 
@@ -131,11 +125,12 @@ sub qmail_alias_maps
 {
     my ($self, $curproc, $params, $optargs) = @_;
 
+    # XXX-TODO: implement this!
     0;
 }
 
 
-# Descriptions: install configuratin templates
+# Descriptions: create ~/.qmail-* files
 #    Arguments: OBJ($self) HASH_REF($curproc) HASH_REF($optargs)
 # Side Effects: creates ~/.qmail-XXX
 # Return Value: none
@@ -154,6 +149,7 @@ sub qmail_setup
     my $ml_name   = $config->{ ml_name };
     my $ml_domain = $config->{ ml_domain }; $ml_domain =~ s/\./:/g;
     for my $file (@$qmail_template_files) {
+	# XXX-TODO: we should define dot-qmail file name generator as method.
 	my $xfile = $file;
 	$xfile =~ s/dot-/\./;
 	$xfile =~ s/dot-/\./;
@@ -195,7 +191,7 @@ sub qmail_install_virtual_map
     my $ml_domain    = $config->{ ml_domain };
     my $virtual      = $config->{ qmail_virtual_map_file };
 
-    # 1. check the current temlate file firstly
+    # 1. check the current template file firstly
     my $found = 0;
     my $fh    = new FileHandle $virtual;
     if (defined $fh) {
@@ -216,7 +212,7 @@ sub qmail_install_virtual_map
 	}
     }
     else {
-	print STDERR "skipping $virtual\n";
+	print STDERR "skip updating $virtual\n";
     }
 }
 
