@@ -52,7 +52,7 @@ cgi_default_language   =       english
 #      History:
 #        Value:
 #     Examples:
-cgi_language_list      =	english
+cgi_language_select_list      =	english
 				japanese
 
 # Descriptions: default bgcolor
@@ -73,7 +73,7 @@ cgi_navigation_bar_color	=	#FFFFFF
 #      History: 
 #        Value: member recipient admin_member
 #     Examples: member recipient admin_member
-cgi_menu_address_map_list		=	member
+cgi_menu_address_map_select_list		=	member
 					recipient
 					admin_member
 

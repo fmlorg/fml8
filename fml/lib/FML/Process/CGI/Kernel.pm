@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.77 2004/03/12 11:45:53 fukachan Exp $
+# $FML: Kernel.pm,v 1.78 2004/03/31 05:28:18 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -578,7 +578,7 @@ sub run_cgi_options
     my $action    = $curproc->safe_cgi_action_name();
     my $lang      = $curproc->cgi_var_language();
     my $config    = $curproc->config();
-    my $langlist  = $config->get_as_array_ref('cgi_language_list');
+    my $langlist  = $config->get_as_array_ref('cgi_language_select_list');
 
     if ($#$langlist > 0) {
 	# natural language-ed name

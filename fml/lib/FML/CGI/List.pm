@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.10 2004/01/18 14:05:05 fukachan Exp $
+# $FML: List.pm,v 1.11 2004/02/15 04:38:26 fukachan Exp $
 #
 
 package FML::CGI::List;
@@ -49,7 +49,7 @@ sub cgi_menu
     }
 
     # check $map_default included in $map_list.
-    unless ($config->has_attribute("cgi_menu_address_map_list",
+    unless ($config->has_attribute("cgi_menu_address_map_select_list",
 				   $map_default)) {
 	croak("invalid map: $map_default");
     }
