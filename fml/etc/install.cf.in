@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: install.cf.in,v 1.16 2004/09/29 05:04:07 fukachan Exp $
+# $FML: install.cf.in,v 1.17 2004/11/21 06:58:52 fukachan Exp $
 #
 
 
@@ -108,6 +108,8 @@ bin_programs	=	fml
 
 
 libexec_programs 	=	fml.pl
+				msend.pl
+				mead.pl
 				distribute
 				digest
 				command

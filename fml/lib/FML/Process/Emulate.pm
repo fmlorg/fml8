@@ -3,7 +3,7 @@
 # Copyright (C) 2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Emulate.pm,v 1.3 2004/11/25 12:25:56 fukachan Exp $
+# $FML: Emulate.pm,v 1.4 2004/12/09 04:53:41 fukachan Exp $
 #
 
 package FML::Process::Emulate;
@@ -101,8 +101,15 @@ sub _fml4_emulate
 {
     my ($curproc) = @_;
     my $option    = $curproc->command_line_options || {};
+    my $myname    = $curproc->myname();
 
-    if (defined $option->{ ctladdr } && $option->{ ctladdr }) {
+    if ($myname eq 'mead.pl') {
+	$curproc->_fml4_emulate_error_process();
+    }
+    elsif ($myname eq 'msend.pl') {
+	$curproc->_fml4_emulate_digest_process();
+    }
+    elsif (defined $option->{ ctladdr } && $option->{ ctladdr }) {
 	$curproc->_fml4_emulate_command_mail_process();
     }
     else {
@@ -166,6 +173,74 @@ sub _fml4_emulate_command_mail_process
     }
     else {
 	$curproc->logerror("use of command_mail program prohibited");
+	exit(0);
+    }
+}
+
+
+# Descriptions: emulate error (mead.pl in fact) process.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub _fml4_emulate_error_process
+{
+    my ($curproc) = @_;
+    my $config    = $curproc->config();
+
+    # |/usr/local/fml/libexec/mead.pl \
+    #  -E /usr/local/fml -S /var/spool/ml -D /var/spool/ml/elena
+
+    $curproc->log("start as error mail analyzer mode");
+
+    exit(0);
+
+    eval q{
+	use FML::Process::Error;
+	unshift(@ISA, "FML::Process::Error");
+    };
+    if ($@) {
+	$curproc->logerror($@);
+	croak("failed to initialize error_mail process.");
+    }
+
+    if ($config->yes('use_error_mail_analyzer_function')) {
+	$curproc->parse_incoming_message();
+    }
+    else {
+	$curproc->logerror("use of error_mail program prohibited");
+	exit(0);
+    }
+}
+
+
+# Descriptions: emulate digest (msend.pl in fact) process.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub _fml4_emulate_digest_process
+{
+    my ($curproc) = @_;
+    my $config    = $curproc->config();
+
+    # /usr/local/fml/msend.pl /var/spool/ml/elena
+    $curproc->log("start as article digest mode");
+
+    exit(0);
+
+    eval q{
+	use FML::Process::Digest;
+	unshift(@ISA, "FML::Process::Digest");
+    };
+    if ($@) {
+	$curproc->logerror($@);
+	croak("failed to initialize digest_mail process.");
+    }
+
+    if ($config->yes('use_article_digest_function')) {
+	;
+    }
+    else {
+	$curproc->logerror("use of article digest program prohibited");
 	exit(0);
     }
 }
