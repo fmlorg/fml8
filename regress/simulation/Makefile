@@ -63,3 +63,6 @@ test:
 regen:
 	(cd ../../fml/etc; make )
 	(cd ../../;make doc)
+
+diag:
+	env PATH=/usr/pkg/bin:$$PATH make check
