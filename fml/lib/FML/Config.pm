@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.56 2002/02/24 08:27:01 fukachan Exp $
+# $FML: Config.pm,v 1.57 2002/03/05 13:25:25 fukachan Exp $
 #
 
 package FML::Config;
@@ -144,6 +144,10 @@ sub new
 
 get value for key.
 
+=head2  C<get_as_array_ref( key )>
+
+get value for key as an array reference.
+
 =head2  C<set( key, value )>
 
 set value for key.
@@ -159,6 +163,27 @@ sub get
 {
     my ($self, $key) = @_;
     $self->{ $key };
+}
+
+
+# Descriptions: get vaule for $key
+#    Arguments: OBJ($self) STR($key)
+# Side Effects: update internal area
+# Return Value: ARRAY_REF
+sub get_as_array_ref
+{
+    my ($self, $key) = @_;
+
+    if (defined($key) && defined($self->{ $key })) {
+	my $x = $self->{ $key };
+	$x =~ s/^\s*//;
+	$x =~ s/\s*$//;
+	my (@x) = split(/\s+/, $x);
+	return \@x;
+    }
+    else {
+	return [];
+    }
 }
 
 
