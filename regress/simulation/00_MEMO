@@ -8,6 +8,15 @@
 	XXX
 
 
+○	配送ルーチンでの自動分割ってできる？
+
+	んー某、メール爆撃なあれ？
+		あれは、いけてませんなぁー
+
+	text/plain をてきとうにぶったぎる？
+		んーよめなくなりそー	
+
+
 ○	File::CachdDir と Tie::JournaledDir
 
 	どうつかいわける？
@@ -415,4 +424,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.41 2002/08/01 14:10:28 fukachan Exp $
+$FML: 00_MEMO,v 1.42 2002/08/03 10:34:16 fukachan Exp $
