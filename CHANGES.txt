@@ -11,6 +11,27 @@
 	気をつけてください。
 
 
+2004/12/09
+
+   FML::Merge 
+	enhance arguments of translate() call to pass $diff.
+	
+   FML::Merge::FML4::config_ph 
+	FML::Merge::FML4::Rules based version.
+	implement fallback mechanism to support complicated cases.
+	
+   FML::Merge::FML4::RULES.txt 
+	keywords changed
+	
+   FML::Process::Emulate Kernel 
+	run fallback to generate config.cf when config.ph is newer
+	than config.cf.
+
+2004/12/08
+
+   Mail::Message 
+	implement message_chain_as_array_ref() method.
+
 2004/12/05
 
    FML::Article Digest Error Filter Mailer Merge Parse 
@@ -7932,4 +7953,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.231 2004/11/25 13:16:53 fukachan Exp $
+$FML: CHANGES.txt,v 1.232 2004/12/06 23:21:07 fukachan Exp $
