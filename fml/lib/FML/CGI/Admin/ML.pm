@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ML.pm,v 1.2 2002/06/22 14:37:23 fukachan Exp $
+# $FML: ML.pm,v 1.3 2002/06/24 11:06:11 fukachan Exp $
 #
 
 package FML::CGI::Admin::ML;
@@ -38,15 +38,12 @@ sub new
 sub cgi_menu
 {
     my ($self, $curproc, $args, $command_args) = @_;
-    my $config    = $curproc->{ config };
-    my $action    = $curproc->myname();
-    my $ml_domain = $curproc->ml_domain();
-    my $ml_list   = $curproc->get_ml_list($args, $ml_domain);
-    my $address   = $curproc->safe_param_address() || '';
-    my $target    = '_top';
-
-    #
-    my $address_list = $curproc->get_recipient_list();
+    my $config       = $curproc->{ config };
+    my $action       = $curproc->myname();
+    my $ml_domain    = $curproc->ml_domain();
+    my $ml_list      = $curproc->get_ml_list($args, $ml_domain);
+    my $address      = $curproc->safe_param_address() || '';
+    my $target       = '_top';
     my $comname      = $command_args->{ comname };
     my $command_list = [ 'newml', 'rmml' ];
 
@@ -107,7 +104,9 @@ sub cgi_menu
 		       ),
 		    );
     }
-
+    else {
+	croak("Admin::ML::cgi_menu: unknown command");
+    }
 
     print submit(-name => 'submit');
     print reset(-name  => 'reset');
