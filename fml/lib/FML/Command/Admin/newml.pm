@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.10 2002/01/27 15:04:36 fukachan Exp $
+# $FML: newml.pm,v 1.11 2002/02/03 12:11:55 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -51,11 +51,10 @@ sub process
 {
     my ($self, $curproc, $command_args) = @_;
     my $config         = $curproc->{ 'config' };
-    my $main_cf        = $curproc->{ 'main_cf' };
     my ($ml_name, $ml_domain, $ml_home_prefix, $ml_home_dir) = 
 	$self->_get_domain_info($curproc, $command_args);
     my $params         = {
-	executable_prefix => $main_cf->{ executable_prefix },
+	executable_prefix => $curproc->executable_prefix(),
 	ml_name           => $ml_name,
 	ml_domain         => $ml_domain, 
 	ml_home_prefix    => $ml_home_prefix,
@@ -75,10 +74,9 @@ sub process
 
 	mkdirhier( $ml_home_dir, $config->{ default_dir_mode } || 0755 );
 
-	my $default_config_dir = $main_cf->{ 'default_config_dir' };
-
+	my $template_dir = $curproc->template_files_dir_for_newml();
 	for my $file (qw(config.cf include include-ctl)) {
-	    my $src = File::Spec->catfile($default_config_dir, $file);
+	    my $src = File::Spec->catfile($template_dir, $file);
 	    my $dst = File::Spec->catfile($ml_home_dir, $file);
 
 	    print STDERR "installing $dst\n";

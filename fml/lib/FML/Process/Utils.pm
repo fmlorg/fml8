@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.9 2002/02/02 15:18:00 fukachan Exp $
+# $FML: Utils.pm,v 1.10 2002/02/03 12:11:55 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -152,13 +152,51 @@ return the default domain defined in /etc/fml/main.cf.
 # Descriptions: return the default domain defined in /etc/fml/main.cf.
 #    Arguments: OBJ($curproc) STR($domain)
 # Side Effects: none
-# Return Value: HASH_ARRAY
+# Return Value: STR
 sub default_domain
 {
     my ($curproc, $domain) = @_;
     my $main_cf = $curproc->{ __parent_args }->{ main_cf };
 
     return $main_cf->{ default_domain };
+}
+
+
+=head2 executable_prefix()
+
+return executable prefix such as "/usr/local".
+
+=cut
+
+
+# Descriptions: return the path for executables
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub executable_prefix
+{
+    my ($curproc) = @_;
+    my $main_cf = $curproc->{ __parent_args }->{ main_cf };
+
+    return $main_cf->{ executable_prefix };
+}
+
+
+=head2 template_files_dir_for_newml()
+
+=cut
+
+
+# Descriptions: return the path where template files used in "newml" method exist 
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: STR
+sub template_files_dir_for_newml
+{
+    my ($curproc) = @_;
+    my $main_cf = $curproc->{ __parent_args }->{ main_cf };
+
+    return $main_cf->{ default_config_dir };
 }
 
 
@@ -218,6 +256,11 @@ sub __ml_home_prefix_from_main_cf
 
 
 
+# Descriptions: search virtual domain in $virtual_maps.
+#               return $ml_home_prefix for the virtual domain if found.
+#    Arguments: HASH_REF($main_cf) STR($virtual_domain) ARRAY_REF($virtual_maps)
+# Side Effects: none
+# Return Value: STR
 sub __ml_home_prefix_search_in_virtual_maps
 {
     my ($main_cf, $virtual_domain, $virtual_maps) = @_;
@@ -246,7 +289,7 @@ sub __ml_home_prefix_search_in_virtual_maps
 	}
     }
 
-    return undef;
+    return '';
 }
 
 
