@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.11 2004/04/12 10:27:08 fukachan Exp $
+# $FML: Sequence.pm,v 1.12 2004/04/22 12:20:07 fukachan Exp $
 #
 
 package FML::Article::Sequence;
@@ -37,7 +37,7 @@ save it to C<$sequence_file>.
 # Descriptions: determine article id (sequence number)
 #    Arguments: OBJ($self)
 # Side Effects: save and update the current article sequence number
-# Return Value: NUM(sequence identifier)
+# Return Value: NUM(sequence identifier) or 0(failed)
 sub increment_id
 {
     my ($self)   = @_;
@@ -45,6 +45,7 @@ sub increment_id
     my $config   = $curproc->config();
     my $pcb      = $curproc->pcb();
     my $seq_file = $config->{ article_sequence_file };
+    my $error    = 0;
 
     $curproc->lock($lock_channel);
 
@@ -52,15 +53,22 @@ sub increment_id
     my $io = new IO::Adapter "file:$seq_file";
     my $id = $io->sequence_increment();
     if ($io->error()) {
-	$curproc->logerror( $io->error() );
+	my $err = $io->error();
+	$curproc->logerror( "article_id: $err" );
+	$error = 1;
     }
-
-    # save $id in pcb (process control block) and return $id
-    $pcb->set('article', 'id', $id);
 
     $curproc->unlock($lock_channel);
 
-    return $id;
+    unless ($error) {
+	# save $id in pcb (process control block) and return $id
+	$pcb->set('article', 'id', $id);
+
+	return $id;
+    }
+    else {
+	return 0;
+    }
 }
 
 
