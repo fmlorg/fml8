@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.59 2002/05/27 08:59:14 fukachan Exp $
+# $FML: Command.pm,v 1.60 2002/06/01 05:02:33 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -264,7 +264,7 @@ sub _is_valid_command
 
 
 # Descriptions: validate command syntax
-#    Arguments: OBJ($curproc) 
+#    Arguments: OBJ($curproc)
 #               HASH_REF($args) HASH_REF($status) HASH_REF($cominfo)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
@@ -310,7 +310,7 @@ sub _parse_command_args
     use FML::Command::DataCheck;
     my $check   = new FML::Command::DataCheck;
     my $options = $check->parse_command_arguments($fixed_command, $comname);
-    
+
     my $cominfo = {
 	command    => $fixed_command,
 	comname    => $comname,
@@ -478,7 +478,7 @@ sub _get_command_mode
     # ignore all requests
     elsif ($is_confirm) {
 	Log("ignore(confirm stage): $command");
-	return '__NEXT__';	
+	return '__NEXT__';
     }
     # Case: use command (commands "a usual member" can use)
     else {
@@ -542,7 +542,7 @@ sub _gen_command_args
 {
     my ($curproc, $status, $cominfo) = @_;
     my $xargs = $cominfo;
-    my $mode  = $status->{ mode };    
+    my $mode  = $status->{ mode };
     $xargs->{ command_mode }  = $status->{ mode };
     $xargs->{ command_level } = $status->{ level };
 
@@ -579,7 +579,7 @@ sub __stop_here
     my $prompt  = $config->{ command_prompt } || '>>>';
     my $key     = $status->{ _stop_reason_key };
     my $str     = $status->{ _stop_reason_str };
-    
+
     use FML::Command;
     my $obj = new FML::Command;
     if (defined $obj) {

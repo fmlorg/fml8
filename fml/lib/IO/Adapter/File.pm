@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.29 2002/06/01 03:01:55 fukachan Exp $
+# $FML: File.pm,v 1.30 2002/06/01 05:02:34 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -173,7 +173,7 @@ my $ec = 0;
 # Side Effects: none
 # Return Value: none
 sub line_count
-{ 
+{
     my ($self) = @_;
     return "${ec}/${c}";
 }

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.68 2002/05/19 09:44:00 fukachan Exp $
+# $FML: Switch.pm,v 1.69 2002/05/29 16:34:26 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -208,7 +208,7 @@ sub __log
     eval q{
 	use File::Spec;
 	use FileHandle;
-	my $dir  = $args->{ ml_home_prefix }; 
+	my $dir  = $args->{ ml_home_prefix };
 	my $logf = File::Spec->catfile($dir, '@log.crit@');
 	my $wh   = new FileHandle ">> $logf";
 	if (defined $wh) {

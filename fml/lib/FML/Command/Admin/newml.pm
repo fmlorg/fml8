@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.38 2002/05/28 14:55:31 fukachan Exp $
+# $FML: newml.pm,v 1.39 2002/06/01 05:02:32 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -150,7 +150,7 @@ sub _install_template_files
     my $config       = $curproc->{ config };
     my $template_dir = $curproc->template_files_dir_for_newml();
     my $ml_home_dir  = $params->{ ml_home_dir };
-    my $templ_files  = 
+    my $templ_files  =
 	$config->get_as_array_ref('newml_command_template_files');
 
     for my $file (@$templ_files) {
@@ -163,7 +163,7 @@ sub _install_template_files
 
     use FML::MTAControl;
 
-    # setup include include-ctl ... 
+    # setup include include-ctl ...
     my $postfix = new FML::MTAControl { mta_type => 'postfix' };
     $postfix->setup($curproc, $params);
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.13 2002/01/27 13:11:57 fukachan Exp $
+# $FML: SMTP.pm,v 1.14 2002/05/27 11:20:02 fukachan Exp $
 #
 
 
@@ -760,7 +760,7 @@ sub _send_body_to_mta
     $msg->set_log_function( $SmtpLogFunctionPointer );
     $msg->set_print_mode('smtp');
     $msg->print($socket);
-    
+
     if (defined $self->{ _smtp_log_handle }) {
 	$msg->print( $self->{ _smtp_log_handle });
     }

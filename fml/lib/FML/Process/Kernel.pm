@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.103 2002/06/01 03:01:54 fukachan Exp $
+# $FML: Kernel.pm,v 1.104 2002/06/01 04:59:09 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -464,7 +464,7 @@ sub parse_incoming_message
 
     # save input message for further investigation
     my $config  = $curproc->{ config };
-    if ($config->yes('use_incoming_mail_cache')) { 
+    if ($config->yes('use_incoming_mail_cache')) {
 	my $dir     = $config->{ incoming_mail_dir };
 	my $modulus = $config->{ incoming_mail_cache_size };
         my $obj     = new File::CacheDir {
@@ -1084,7 +1084,7 @@ sub queue_in
 }
 
 
-# Descriptions: append message in $msg_in into $msg_out 
+# Descriptions: append message in $msg_in into $msg_out
 #    Arguments: OBJ($curproc) OBJ($msg_in) OBJ($msg_out)
 # Side Effects: create a new $tmpfile
 #               update garbage collection queue (clean_up_queue)
@@ -1300,7 +1300,7 @@ sub open_outgoing_message_channel
     my $config = $curproc->{ config };
 
     # save message for further investigation
-    if ($config->yes('use_outgoing_mail_cache')) { 
+    if ($config->yes('use_outgoing_mail_cache')) {
 	my $dir     = $config->{ outgoing_mail_dir };
 	my $modulus = $config->{ outgoing_mail_cache_size };
         my $obj     = new File::CacheDir {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.7 2002/05/28 13:36:59 fukachan Exp $
+# $FML: Auth.pm,v 1.8 2002/06/01 04:57:51 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -81,7 +81,7 @@ sub permit_anyone
 sub permit_admin_member_maps
 {
     my ($self, $curproc, $args, $optargs) = @_;
-    my $cred  = $curproc->{ credential }; 
+    my $cred  = $curproc->{ credential };
     my $match = $cred->is_privileged_member($curproc, $args);
 
     if ($match) {
@@ -100,7 +100,7 @@ sub permit_admin_member_maps
 sub reject_system_accounts
 {
     my ($self, $curproc, $args, $optargs) = @_;
-    my $cred  = $curproc->{ credential }; 
+    my $cred  = $curproc->{ credential };
     my $match = $cred->match_system_accounts($curproc, $args);
 
     if ($match) {

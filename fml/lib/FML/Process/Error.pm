@@ -3,7 +3,7 @@
 # Copyright (C) 2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Error.pm,v 1.5 2002/05/21 08:37:52 fukachan Exp $
+# $FML: Error.pm,v 1.6 2002/06/01 05:02:33 fukachan Exp $
 #
 
 package FML::Process::Error;
@@ -31,7 +31,7 @@ See L<FML::Process::Flow> for details of fml process flow.
 =head1 DESCRIPTION
 
 C<FML::Process::Error> is a command wrapper and top level
-dispatcher for commands. 
+dispatcher for commands.
 
 =head1 METHODS
 
@@ -79,7 +79,7 @@ sub prepare
     }
     else {
 	exit(0);
-    }	
+    }
 
     $eval = $config->get_hook( 'error_prepare_end_hook' );
     if ($eval) { eval qq{ $eval; }; LogWarn($@) if $@; }

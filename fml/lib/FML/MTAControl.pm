@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MTAControl.pm,v 1.6 2002/05/27 08:53:24 fukachan Exp $
+# $FML: MTAControl.pm,v 1.7 2002/06/01 05:02:31 fukachan Exp $
 #
 
 package FML::MTAControl;
@@ -70,14 +70,14 @@ sub _update_isa
 	    $self->{ mta_type };
 
     if ($mta_type eq 'postfix') {
-	eval q{ 
+	eval q{
 	    use FML::MTAControl::Postfix;
 	    push(@ISA, qw(FML::MTAControl::Postfix));
 	};
 	croak($@) if $@;
     }
     elsif ($mta_type eq 'qmail') {
-	eval q{ 
+	eval q{
 	    use FML::MTAControl::Qmail;
 	    push(@ISA, qw(FML::MTAControl::Qmail));
 	};
@@ -87,7 +87,7 @@ sub _update_isa
 
 
 # Descriptions: install configuration temaplate alias
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none
@@ -173,7 +173,7 @@ sub get_aliases_as_hash_ref
 
 
 # Descriptions: install configuration temaplate alias
-#    Arguments: OBJ($self) 
+#    Arguments: OBJ($self)
 #               HASH_REF($curproc) HASH_REF($params) HASH_REF($optargs)
 # Side Effects: update aliases
 # Return Value: none

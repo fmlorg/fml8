@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Convert.pm,v 1.6 2002/03/20 03:19:24 fukachan Exp $
+# $FML: Convert.pm,v 1.7 2002/05/24 06:36:02 fukachan Exp $
 #
 
 
@@ -90,7 +90,7 @@ sub convert_file
 	chmod 0644, "$dst.$$";
 
 	eval q{ convert($in, $out, $config);};
-	croak($@) if $@;	    
+	croak($@) if $@;
 
 	$out->close();
 	$in->close();

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Qmail.pm,v 1.3 2002/05/27 08:53:24 fukachan Exp $
+# $FML: Qmail.pm,v 1.4 2002/06/01 05:02:32 fukachan Exp $
 #
 
 package FML::MTAControl::Qmail;
@@ -94,14 +94,14 @@ sub qmail_setup
 
     my $qmail_template_files =
 	$config->get_as_array_ref('newml_command_qmail_template_files');
-    my $fml_owner_home_dir = $config->{ fml_owner_home_dir }; 
+    my $fml_owner_home_dir = $config->{ fml_owner_home_dir };
     my $ml_name   = $config->{ ml_name };
     my $ml_domain = $config->{ ml_domain }; $ml_domain =~ s/\./:/g;
     for my $file (@$qmail_template_files) {
-	my $xfile = $file; 
-	$xfile =~ s/dot-/\./; 
-	$xfile =~ s/dot-/\./; 
-	$xfile =~ s/qmail/qmail-$ml_domain-$ml_name/; 
+	my $xfile = $file;
+	$xfile =~ s/dot-/\./;
+	$xfile =~ s/dot-/\./;
+	$xfile =~ s/qmail/qmail-$ml_domain-$ml_name/;
 
 	my $src   = File::Spec->catfile($template_dir, $file);
 	my $dst   = File::Spec->catfile($fml_owner_home_dir, $xfile);
@@ -112,7 +112,7 @@ sub qmail_setup
 
     my $virtual_domain_conf = $config->{ qmail_control_virtualdomains_file };
     unless (-f $virtual_domain_conf) {
-	print STDERR "  XXX We assume $ml_domain:fml-$ml_domain\n"; 
+	print STDERR "  XXX We assume $ml_domain:fml-$ml_domain\n";
 	print STDERR "  XXX in $virtual_domain_conf\n";
 	print STDERR "  XXX\n";
     }
