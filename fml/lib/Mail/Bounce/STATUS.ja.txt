@@ -23,14 +23,17 @@
 	MAILsweeper
 	MailShield
 	Microsoft Exchange
+	Microsoft SMTPSVC
 	Netscape Messagin Server 3.62
 	Norton-AntiVirus
 	SLmail
 	SMI-8.6
-	SkyWalker
 	fetchmail
 	netscape
 	Exim
+	Lotus SMTP MTA SMTP v4.6 (notes gateway ?) 
+	openmail ?
+
 
   * 特定の ISP やメール関連のサービスなど
 
@@ -43,13 +46,16 @@
 	Lycos			独自 && 日本語はつらい;)
 
 
+	SkyWalker		独自
+	J-Phone			独自
+
+
 ○ エラーメールのサンプルなし
 
   * MTA
 
 	Smail
 	Novell GroupWise
-	Microsoft SMTPSVC
 	SMTP32
 
   * 特定の ISP など
@@ -63,3 +69,6 @@
 	Yahoo
 		messages from yahoo.com ってフォーマットは昔の話か？
 		今は sendmail みたいだ
+
+
+$FML$
