@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: RDBMS.pm,v 1.8 2001/04/03 09:45:46 fukachan Exp $
+# $FML: RDBMS.pm,v 1.9 2001/05/30 14:35:11 fukachan Exp $
 #
 
 package IO::Adapter::RDBMS;
@@ -31,10 +31,11 @@ IO::Adapter::RDBMS - IO with SQL servers
 Configure object for C<dsn>.
 
     new({
-	driver => 'IO::Model::MySQL::toymodel',
+	driver => 'SQL::Schema::toymodel',
     });
 
-It forwards the request to the specified subclass or DBI base class.
+It forwards the request to the specified driver, 
+which knows the sql statement how to add, delete and select.
 
 =cut
 
