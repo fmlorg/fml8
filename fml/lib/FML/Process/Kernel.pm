@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.147 2002/12/24 10:06:24 fukachan Exp $
+# $FML: Kernel.pm,v 1.148 2002/12/24 10:19:46 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -957,6 +957,8 @@ sub _check_restrictions
     my $cred   = $curproc->{ credential }; # user credential
     my $pcb    = $curproc->{ pcb };
     my $sender = $cred->sender();
+
+    # XXX-TODO: method()-ify these functions for further enhancement.
 
     # XXX-TODO: we should use $config->get_as_array_ref().
     for my $rule (split(/\s+/, $config->{ "${type}_restrictions" })) {

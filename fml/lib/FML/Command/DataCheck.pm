@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DataCheck.pm,v 1.7 2002/12/18 04:46:22 fukachan Exp $
+# $FML: DataCheck.pm,v 1.8 2002/12/24 10:19:43 fukachan Exp $
 #
 
 package FML::Command::DataCheck;
@@ -104,6 +104,7 @@ sub find_special_keyword
 
     # XXX $ra_data is not whole body but already parsed and prepared buffer.
     # XXX See below and FML::Process::Command module, for example.
+    # XXX not use /^$regexp/ due to the case such as "> confirm ...".
     for my $buf (@$ra_data) {
 	if ($buf =~ /$confirm_prefix\s+\w+\s+([\w\d]+)/) {
 	    $confirm_found = $1;
