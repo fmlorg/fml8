@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: unsubscribe.pm,v 1.1.1.1 2001/08/26 05:43:10 fukachan Exp $
+# $FML: unsubscribe.pm,v 1.4 2001/10/11 23:59:03 fukachan Exp $
 #
 
 package FML::Command::User::unsubscribe;
@@ -14,17 +14,19 @@ use Carp;
 
 use ErrorStatus;
 use FML::Command::Utils;
+use FML::Log qw(Log LogWarn LogError);
 @ISA = qw(FML::Command::Utils ErrorStatus);
+
 
 =head1 NAME
 
-FML::Command::User::unsubscribe - remove the specified member
+FML::Command::User::unsubscribe - unsubscribe member
 
 =head1 SYNOPSIS
 
-See C<FML::Command> for more details.
-
 =head1 DESCRIPTION
+
+See C<FML::Command> for more details.
 
 =head1 METHODS
 
@@ -39,19 +41,38 @@ sub process
     my $config        = $curproc->{ config };
     my $member_map    = $config->{ primary_member_map };
     my $recipient_map = $config->{ primary_recipient_map };
-    my $options       = $optargs->{ options };
-    my $address       = $optargs->{ address } || $options->[ 0 ];
+    my $cache_dir     = $config->{ db_dir };
+    my $keyword       = $config->{ confirm_keyword };
+    my $command       = $optargs->{ command };
+    my $address       = $curproc->{ credential }->sender();
 
     # fundamental check
     croak("\$member_map is not specified")    unless $member_map;
     croak("\$recipient_map is not specified") unless $recipient_map;
 
-    use IO::Adapter;
-    my $obj = new IO::Adapter $member_map;
-    $obj->delete( $address );
+    use FML::Credential;
+    my $cred = new FML::Credential;
 
-    $obj = new IO::Adapter $recipient_map;
-    $obj->delete( $address );
+    # if not member, unsubscriber request is wrong.
+    unless ($cred->is_member($curproc, { address => $address })) {
+	$curproc->reply_message_nl('error.not_member');
+	croak("not member");
+    }
+    # try confirmation before unsubscribe
+    else {
+	Log("unsubscriber request, try confirmation");
+	use FML::Confirm;
+	my $confirm = new FML::Confirm {
+	    keyword   => $keyword,
+	    cache_dir => $cache_dir,
+	    class     => 'unsubscribe',
+	    address   => $address,
+	    buffer    => $command,
+	};
+	my $id = $confirm->assign_id;
+	$curproc->reply_message_nl('command.confirm');
+	$curproc->reply_message("\n$id\n");
+    }
 }
 
 
