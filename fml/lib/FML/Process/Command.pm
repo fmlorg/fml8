@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.55 2002/05/19 04:57:46 fukachan Exp $
+# $FML: Command.pm,v 1.56 2002/05/19 09:05:02 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -308,14 +308,14 @@ sub _parse_command_args
     my ($comname, $comsubname) = _get_command_name($fixed_command);
 
     use FML::Command::DataCheck;
-    my $check = new FML::Command::DataCheck;
-    my $comoptions = $check->parse_command_arguments($fixed_command, $comname);
+    my $check   = new FML::Command::DataCheck;
+    my $options = $check->parse_command_arguments($fixed_command, $comname);
     
     my $cominfo = {
 	command    => $fixed_command,
 	comname    => $comname,
 	comsubname => $comsubname,
-	options    => $comoptions,
+	options    => $options,
 
 	ml_name    => $ml_name,
 	argv       => $argv,
@@ -384,7 +384,7 @@ sub _auth_admin
 # Descriptions: determine $mode and $level for the current command
 #    Arguments: OBJ($curproc)
 #               HASH_REF($args) HASH_REF($status) HAS_REF($command_info)
-# Side Effects: update $status
+# Side Effects: update $status, $command_info
 # Return Value: STR
 sub _get_command_mode
 {
@@ -428,11 +428,13 @@ sub _get_command_mode
 	}
     }
     # Case: "admin" command is exceptional. try priviledged mode.
-    elsif ($comname =~ /$admin_prefix\s+/) {
+    elsif ($command =~ /$admin_prefix\s+/) {
 	if ($is_auth) {
 	    Log("admin auth already: $command");
 	}
 	else { # for the first time ?
+	    Log("admin try auth");
+
 	    my $sender  = $curproc->{'credential'}->{'sender'};
 	    my $data    = $command;
 
@@ -441,18 +443,21 @@ sub _get_command_mode
 
 	    # try auth by FML::Command::Auth;
 	    $is_auth = $curproc->_auth_admin($args, $optargs);
+	    $status->{ is_auth } = $is_auth;
 	    Log("authenticated as an ML administrator") if $is_auth;
 	}
 
 	if ($is_admin && $is_auth) {
 	    $comname = $comsubname;
 	    $command =~ s/^.*$comname/admin $comname/;
-	    my $opts    = { comname => $comname, command => $command };
+	    my $opts = { comname => $comname, command => $command };
 
 	    my $xmode = 'privileged_user';
 	    if ($curproc->_is_valid_command($args, $xmode, $opts)) {
-		$status->{ mode }  = 'admin';
-		$status->{ level } = 'admin';
+		$status->{ mode }          = 'admin';
+		$status->{ level }         = 'admin';
+		$command_info->{ command } = $command;
+		$command_info->{ comname } = $comname;
 	    }
 	    else {
 		# no, we do not accept this command.
@@ -522,6 +527,27 @@ sub _allow_command
     Log("(debug) mode=$mode level=$level");
 
     1;
+}
+
+
+# Descriptions: build $command_args for FML::Command execution
+#    Arguments: OBJ($curproc) HASH_REF($status) HASH_REF($cominfo)
+# Side Effects: none
+# Return Value: HASH_REF
+sub _gen_command_args
+{
+    my ($curproc, $status, $cominfo) = @_;
+    my $xargs = $cominfo;
+    my $mode  = $status->{ mode };    
+    $xargs->{ command_mode }  = $status->{ mode };
+    $xargs->{ command_level } = $status->{ level };
+
+    # we need to modify [ $comsubname, @options ] to [ @options ]
+    if ($mode eq 'admin' && @{ $xargs->{ options } }) {
+	shift @{ $xargs->{ options } };
+    }
+
+    return $xargs;
 }
 
 
@@ -630,9 +656,7 @@ sub _evaluate_command_lines
 	my $obj = new FML::Command;
 	if (defined $obj) {
 	    # arguments to pass off into each method
-	    my $command_args = $cominfo;
-	    $command_args->{ command_mode }  = $status->{ mode };
-	    $command_args->{ command_level } = $status->{ level };
+	    my $command_args = $curproc->_gen_command_args($status, $cominfo);
 
 	    # rewrite prompt e.g. to hide the password
 	    $obj->rewrite_prompt($curproc, $command_args, \$orig_command);
