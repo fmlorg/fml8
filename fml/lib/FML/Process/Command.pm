@@ -4,7 +4,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: Command.pm,v 1.11 2001/10/08 20:30:06 fukachan Exp $
+# $FML: Command.pm,v 1.12 2001/10/10 03:12:51 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -136,6 +136,9 @@ sub _evaluate_command
     my $argv    = $config->{ main_cf }->{ ARGV };
     my $body    = $curproc->{ incoming_message }->{ body }->data_in_body_part;
     my @body    = split(/\n/, $body);
+    my $prompt  = $config->{ command_prompt } || '>>>';
+
+    $curproc->reply_message("result for your command requests follows:\n");
 
   COMMAND:
     for my $command (@body) { 
@@ -160,6 +163,7 @@ sub _evaluate_command
 	use FML::Command;
 	my $obj = new FML::Command;
 	if (defined $obj) {
+	    $curproc->reply_message("$prompt $command");
 	    eval q{
 		$obj->$comname($curproc, $optargs);
 	    };
