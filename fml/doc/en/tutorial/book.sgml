@@ -1,0 +1,210 @@
+<!--
+This is an sgml using DocBook dtd. Use sgmltools version 2.0.x or above
+to generate various output formats.
+
+# $FML$
+$jaFML: book.sgml,v 1.58 2003/05/31 08:51:07 fukachan Exp $
+-->
+
+<!doctype book public "-//FML//DTD DocBook V3.1-Based Extension//EN" [
+	<!entity % include SYSTEM "include/chapters.ent"> %include;
+]>
+
+<book>
+
+  &bookinfo;
+
+  &preface;
+
+  <toc></toc>
+
+  <part>
+	<title> fml fundamental usage </title>
+	<partintro>
+	<para>
+	This part describes brief guide for beginners.
+	</para>
+	<para>
+	See &www.fml.org; and other sites for more details on 
+	the mailing list.
+	</para>
+	</partintro>
+
+	<!-- chapters ... -->
+	&chapter.overview.ml;
+	&chapter.overview.fml;
+  </part>
+
+
+  <part>
+	<title> fml: how to set up ML.</title>
+	<partintro>
+	<para>
+	topics driven in this part.
+	</para>
+	</partintro>
+
+	&chapter.download;
+
+	<!-- unix -->
+	&chapter.install.fml.unix;
+	&chapter.setup.newml;
+
+	<!-- 2000/nt -->
+	&chapter.install.fml.nt;
+
+	<!-- misc around installation/setup -->
+	&chapter.upgrade;
+
+	<!-- CGI -->
+	&chapter.setup.cgi;
+
+	<!-- test -->
+	&chapter.setup.test;
+  </part>
+
+
+  <part>
+	<title> fml: how to customise </title>
+	<partintro>
+	<para>
+	topics driven in this part.
+	</para>
+	</partintro>
+
+	&chapter.usage.user;
+	&chapter.usage.onhost;
+	&chapter.config;
+	&chapter.filename; <!-- appropriate here ? -->
+
+	<!-- customize -->
+	&chapter.customize.mlstyle;
+	&chapter.customize.header;
+	&chapter.customize.command;
+	&chapter.customize.filter;
+
+	<!-- thread track system -->
+	&chapter.threadtrack;
+  </part>
+
+
+  <part>
+	<title> troubleshooting </title>
+	<partintro>
+	<para>
+	This part describes how to shoot troubles.
+	</para>
+	</partintro>
+
+
+	&chapter.troubleshoot;
+
+  </part>
+
+
+  <part>
+	<title> fml design </title>
+	<partintro>
+	<para>
+	THis part describes the design policy of fml.
+	</para>
+	</partintro>
+
+	&chapter.design;
+	&chapter.programingstyle;
+  </part>
+
+
+  <part>
+	<title> fml internals </title>
+	<partintro>
+	<para>
+	This part describles the fml internals for developers.
+	</para>
+	</partintro>
+
+	<!-- boot -->
+	&chapter.bootloader;
+        &chapter.config.cf;
+
+	<!-- how to write a new program -->
+	&chapter.program.create;
+
+	<!-- delivery and command processing -->
+        &chapter.delivery;
+        &chapter.digest;
+        &chapter.message;
+	&chapter.filter;
+        <!-- &chapter.replybyfml; -->
+
+	<!-- user access control -->
+	&chapter.userctl;
+
+	<!-- command -->
+	&chapter.command;
+
+	<!-- CGI -->
+        &chapter.internal.cgi;
+
+	<!-- directory -->
+	&chapter.directory;
+
+	<!-- security -->
+	&chapter.restriction;
+	&chapter.credential;
+
+	<!-- hook -->
+	&chapter.hook;
+
+	<!-- virtual domains -->
+	&chapter.virtual;
+
+	<!-- misc -->
+	&chapter.io.abstraction;
+	&chapter.lock;
+	&chapter.db.modules;
+	&chapter.dbms;
+  </part>
+
+
+  <part>
+	<title> modules </title>
+	<partintro>
+	<para>
+	This part descripbes how to use most important modules.
+	</para>
+	</partintro>
+
+	&chapter.module.io.adapter;
+	&chapter.module.mail.message;
+	&chapter.module.nl;
+	&chapter.module.encode;
+	&chapter.module.create;
+  </part>
+
+
+  <!--
+	*************** appendixes hereafter **************
+  -->
+  <part>
+	<title> Apendixes </title>
+
+	&chapter.glossary;
+
+<!--
+
+	&chapter.cvstree;
+	&chapter.docbook;
+	&chapter.inet6;
+
+	<!-- thread track -->
+	&chapter.threadtrack.tools;
+
+-->
+
+	<!-- internals -->
+	&chapter.struct;
+  </part>
+
+
+</book>

@@ -1,0 +1,228 @@
+<!--
+# $FML$
+	$jaFML: glossary.sgml,v 1.5 2003/04/15 14:51:34 fukachan Exp $
+-->
+
+<glossary id="glossary">
+   <title>
+	Glossary (function and variable names)
+	</title>
+
+
+   <glossentry>
+	<glossterm>	fml 4	</glossterm>
+	<glossdef>
+	<para>
+	&fml4; series
+	</para>
+	</glossdef>
+
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	fml-devel	</glossterm>
+	<glossdef>
+	<para>
+	current development version on the way to &fmldevel; in the future.
+	</para>
+
+	<para>
+	We call it fml 8, too.
+	</para>
+	</glossdef>
+
+
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	curproc	</glossterm>
+	<glossdef>
+	<para>
+	abbrebiation of "current process".
+	</para>
+
+	<para>
+	Typical abbrebiation form used in UNIX kernel.
+	</para>
+
+	</glossdef>
+
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	PCB	</glossterm>
+	<glossdef>
+	<para>
+	Process Control Block.
+	</para>
+
+	<para>
+	Typical abbrebiation form used in UNIX kernel.
+	</para>
+
+	</glossdef>
+
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	config	</glossterm>
+	<glossdef>
+	<para>
+	configuration.
+	</para>
+	</glossdef>
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	conf	</glossterm>
+	<glossdef>
+	<para>
+	configuration.
+	</para>
+	</glossdef>
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	arg / args	</glossterm>
+	<glossdef>
+	<para>
+	argument.
+	</para>
+	</glossdef>
+
+
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	fh	</glossterm>
+	<glossdef>
+	<para>
+	file handle.
+	</para>
+	</glossdef>
+
+
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	dh	</glossterm>
+	<glossdef>
+	<para>
+	directory handle.
+	</para>
+	</glossdef>
+
+
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	fp	</glossterm>
+	<glossdef>
+	<para>
+	function pointer == code reference for perl 5. 
+	</para>
+	</glossdef>
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	_foobar	</glossterm>
+	<glossdef>
+	<para>
+	keyword begininng with _ is used for internal function or variable.
+	</para>
+
+	<para>
+	private in other words.
+	</para>
+	</glossdef>
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	rfoobar	</glossterm>
+	<glossdef>
+	<para>
+	The first "r" implies "reference".
+	This called hangalian form but we use it little in fml8.
+	</para>
+	</glossdef>
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm> 	STR	</glossterm>
+	<glossdef>
+	<para>
+	string.
+	</para>
+	</glossdef>
+
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm>	Japanese character set name </glossterm>
+	<glossdef>
+	<para>
+	JIS SJIS EUC ...
+	</para>
+	</glossdef>
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm> 	2	</glossterm>
+	<glossdef>
+	<para>
+	the same pronounciation as "to".
+	</para>
+	<para>
+		STR2EUC (== STRing to EUC)
+<screen>
+use String qw(STR2EUC);
+$euc_string = STR2EUC($string);
+</screen>
+	</para>
+	</glossdef>
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm> 	4	</glossterm>
+	<glossdef>
+	<para>
+	the same pronounciation as "for".
+	</para>
+	</glossdef>
+   </glossentry>
+
+
+   <glossentry>
+	<glossterm> command mail </glossterm>
+	<glossdef>
+	<para>
+	a mail which message body includes commands for fml.
+	</para>
+
+	<para>
+	By sending the command mail to some address, 
+	a user can make fml8 action something, such as 
+	subscribe, file retrieve, unsubscribe et.al, 
+	The address is typically $ml-ctl@$domain.
+	</para>
+
+	</glossdef>
+   </glossentry>
+
+
+</glossary>

@@ -1,0 +1,164 @@
+<!--
+   $FML$
+   $jaFML: extension.sgml,v 1.10 2003/04/15 14:51:36 fukachan Exp $
+-->
+
+
+<sect1 id="fml.command.hack.commandmail">
+	<title>
+	command extensoin: command mail
+	</title>
+
+
+<warning>
+<para>
+To make a new command usable for all ML's on this host, 
+put the module you wrote at
+<screen>
+/usr/local/lib/fml/site_local/
+</screen>
+
+If you permit the command is used only for the specifiec ML
+(e.g. elena ML), put it at the ML local library path
+<screen>
+/var/spool/ml/elena/local/lib/
+</screen>
+.
+</para>
+
+<para>
+In this section, we consider the former case.
+In both cases, the module codes are same.
+</para>
+</warning>
+
+
+<sect2>
+	<title> 
+	create a new user command
+	</title>
+
+<para>
+Consider to make a new user command "uja".
+Pick up a command at FML::Command, cut and paste it.
+Please put it at
+<screen>
+/usr/local/lib/fml/site_local/FML/Command/User/uja.pm
+</screen>
+Edit site_default_config.cf to add it into $commands_for_user
+to permit the user of "uja" command.
+<screen>
+commands_for_user += uja
+</screen>
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title> 
+	create a new admin command "admin uja"
+	</title>
+
+<para>
+In the same way describe above, hack the module!:)
+but the location differs.
+Put it at the FML::Command::Admin:: class.
+<screen>
+/usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
+</screen>
+Edit site_default_config.cf to add it into $commands_for_privileged_user
+to permit the use of "admin uja" command.
+<screen>
+commands_for_privileged_user += uja
+</screen>
+</para>
+
+</sect2>
+
+</sect1>
+
+
+<sect1 id="fml.command.hack.makefml">
+	<title>
+	CUI command extension: makefml/fml
+	</title>
+
+<warning>
+<para>
+To make a new command usable for all ML's on this host, 
+put the module you wrote at
+<screen>
+/usr/local/lib/fml/site_local/
+</screen>
+
+If you permit the command is used only for the specifiec ML
+(e.g. elena ML), put it at the ML local library path
+<screen>
+/var/spool/ml/elena/local/lib/
+</screen>
+.
+</para>
+
+<para>
+In this section, we consider the former case.
+In both cases, the module codes are same.
+</para>
+</warning>
+
+<para>
+Create a module "uja" and put it at 
+<screen>
+/usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
+</screen>
+No editing of .cf files.
+The existence of module file enables the command automatically 
+in the case CUI since the use of CUI implies administrator use.
+</para>
+
+</sect1>
+
+
+<sect1 id="fml.command.hack.cgi">
+	<title>
+	GUI command extension: CGI
+	</title>
+
+
+<warning>
+<para>
+To make a new command usable for all ML's on this host, 
+put the module you wrote at
+<screen>
+/usr/local/lib/fml/site_local/
+</screen>
+
+If you permit the command is used only for the specifiec ML
+(e.g. elena ML), put it at the ML local library path
+<screen>
+/var/spool/ml/elena/local/lib/
+</screen>
+.
+</para>
+
+<para>
+In this section, we consider the former case.
+In both cases, the module codes are same.
+</para>
+</warning>
+
+
+<para>
+craete a module "uja" and put it at
+<screen>
+/usr/local/lib/fml/site_local/FML/Command/Admin/uja.pm
+</screen>
+Edit site_default_config.cf to add it into $commands_for_admin_cgi
+to permit the use of "uja" command.
+<screen>
+commands_for_admin_cgi += uja
+</screen>
+</para>
+
+
+</sect1>

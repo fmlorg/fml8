@@ -1,0 +1,15 @@
+<!--
+# $FML$
+   $jaFML: dataflow.sgml,v 1.1 2002/12/25 11:50:42 fukachan Exp $
+-->
+
+
+<sect1 id="fml.command.dataflow">
+	<title>
+	data flow of command request processing
+	</title>
+
+
+<graphic entityref="image.command.dataflow"></graphic>
+
+</sect1>

@@ -1,0 +1,43 @@
+#
+# $FML$
+# $jaFML: Makefile.local,v 1.5 2003/06/20 22:03:11 fukachan Exp $
+#
+
+SHOW_CONFIG = ../../../utils/bin/show_config.pl --sgml
+PROG_LIST   = ../../../utils/bin/varlist.pl --sgml
+PROG_CLASS  = ../../../utils/bin/varclass.pl --sgml
+SOURCE      = ../../../etc/default_config.cf.en.in
+
+# destination
+VARLIST           = variables/list.sgml
+VARCLASS          = variables/class.sgml
+SGML_FILTER_RULES = variables/filter.rules.sgml
+SGML_FILTER_SIZE  = variables/filter.size.sgml
+
+
+all: $(VARLIST) $(VARCLASS) $(SGML_FILTER_RULES) $(SGML_FILTER_SIZE)
+
+$(VARLIST): $(SOURCE)
+	$(PROG_LIST) $(SOURCE) > $(VARLIST).new
+	mv $(VARLIST).new $(VARLIST)
+
+$(VARCLASS): $(SOURCE)
+	$(PROG_CLASS) $(SOURCE) > $(VARCLASS).new
+	mv $(VARCLASS).new $(VARCLASS)
+
+install: install_image
+
+install_image: ../../en/figures/command.dataflow.gif
+
+../../en/figures/command.dataflow.gif: command/states.gif
+	cp command/states.gif ../../en/figures/command.dataflow.gif
+
+$(SGML_FILTER_RULES): $(SOURCE)
+	$(SHOW_CONFIG) --type filter_rules $(SOURCE) \
+		> $(SGML_FILTER_RULES).new
+	mv $(SGML_FILTER_RULES).new $(SGML_FILTER_RULES)
+
+$(SGML_FILTER_SIZE): $(SOURCE)
+	$(SHOW_CONFIG) --type filter_size $(SOURCE) \
+		> $(SGML_FILTER_SIZE).new
+	mv $(SGML_FILTER_SIZE).new $(SGML_FILTER_SIZE)

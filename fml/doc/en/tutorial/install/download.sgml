@@ -1,0 +1,87 @@
+<!--
+# $FML$
+   $jaFML: download.sgml,v 1.2 2002/07/06 14:55:17 fukachan Exp $
+-->
+
+<chapter id="download">
+	<title>
+	Download &fmldevel; source code.
+	</title>
+
+
+<!-- ====================================================  -->
+<sect1 id="ftp.fml.org">
+	<title>
+	Download via ftp.
+	</title>
+
+<para>
+You can find &fml8; source at
+	<ulink url="ftp://ftp.fml.org/pub/fml-devel/">
+	ftp://ftp.fml.org/pub/fml-devel/
+	</ulink>.
+You can get it by ftp.
+</para>
+
+<para>
+We build snapshot as a tarball in some interval.
+The file name contains date such as YYYYMMDD form.
+Please get the latest one.
+</para>
+
+<para>
+Also, you can find a daily snapshot at
+<ulink url="ftp://ftp.fml.org/pub/fml/daily-snapshots/fml-devel/source/">
+ftp://ftp.fml.org/pub/fml/daily-snapshots/fml-devel/source/
+</ulink>.
+This snapshot is auto-build. 
+So it may not work well.
+</para>
+
+</sect1>
+
+
+<!-- ====================================================  -->
+<sect1 id="anoncvs">
+	<title>
+	Access to cvs.
+	</title>
+
+<para>
+You can find &fmldevel; under /fmlsrc in anoncvs.fml.org.
+</para>
+
+<para>
+If you have cvs account of cvs.fml.org, use cvs over ssh.
+<screen>
+cvs -d cvs.fml.org:/cvsroot co fmlsrc
+</screen>
+</para>
+
+</sect1>
+
+
+<!-- ====================================================  -->
+<sect1 id="cvsweb">
+	<title>
+	Access to cvs via cvsweb.
+	</title>
+
+<para>
+<ulink url="http://www.fml.org/cvsweb/fmlsrc/">
+http://www.fml.org/cvsweb/fmlsrc/
+</ulink>
+provides the cvs acesss via web interface.
+</para>
+
+<warning>
+<para>
+It is useful to retrieve the specified version of the file.
+Instead, it is not useful to get the whole source.
+</para>
+</warning>
+
+</sect1>
+
+
+</chapter>

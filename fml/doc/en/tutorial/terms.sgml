@@ -1,0 +1,29 @@
+<!--
+# $FML$
+	$jaFML: terms.sgml,v 1.5 2003/04/15 14:51:35 fukachan Exp $
+-->
+
+<sect1 id="terms">
+	<title>
+	Technical terms in this tutorial
+	</title>
+
+<variablelist>
+
+   <varlistentry>
+	<term> % </term>
+	<listitem>
+	<para>	prompt of a user on the shell	</para>
+	</listitem>
+   </varlistentry>
+
+   <varlistentry>
+	<term> # </term>
+	<listitem>
+	<para>	prompt of the user root </para>
+	</listitem>
+   </varlistentry>
+
+</variablelist>
+
+</sect1>

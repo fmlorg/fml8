@@ -1,0 +1,76 @@
+<!--
+   $FML$
+   $jaFML: postfix.sgml,v 1.3 2003/04/15 14:51:39 fukachan Exp $
+-->
+
+<sect1 id="install.postfix">
+	<title>
+	MTA configuration (postfix)
+	</title>
+
+
+<sect2>
+	<title>
+	default domain (example: fml.org)
+	</title>
+
+
+<para>
+set up /etc/postfix/main.cf like this:
+<screen>
+allow_mail_to_commands = alias,forward,include
+
+alias_maps	=	hash:/etc/mail/aliases
+			hash:/var/spool/ml/etc/mail/aliases
+</screen>
+</para>
+
+<warning>
+<para>
+Please check that $mydestination contains the default domain (may be
+$mydomain).
+</para>
+</warning>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	virtual domain (example: nuinui.net)
+	</title>
+
+<para>
+You need to edit both main.cf and virtual_map.
+<screen>
+allow_mail_to_commands = alias,forward,include
+
+alias_maps	=	hash:/etc/mail/aliases
+			hash:/var/spool/ml/etc/mail/aliases
+			hash:/var/spool/nuinui.net/etc/mail/aliases
+
+virtual_maps	=	hash:/var/spool/nuinui.net/etc/postfix/virtual
+
+</screen>
+/var/spool/nuinui.net/etc/postfix/virtual is updated by makefml
+automatically.
+</para>
+
+<warning>
+
+<para>
+$mydestination should contain the default domain (may be $mydomain)
+but not virtual domain. Please see postfix document for more details.
+</para>
+
+<para>
+When a new virtual domain is added, 
+add the new aliases file to $alias_maps but do not edit virtual_maps.
+</para>
+
+</warning>
+
+</sect2>
+
+
+</sect1>

@@ -1,0 +1,69 @@
+<!--
+# $FML$
+   $jaFML: bookinfo.sgml,v 1.11 2003/02/11 13:54:11 fukachan Exp $
+-->
+
+<bookinfo>
+  <bookbiblio>
+     <title>
+	fml 8 tutorial
+     </title>
+
+     <author>
+   	<honorific> Dr        </honorific>
+   	<firstname> Ken'ichi  </firstname>
+   	<surname>   Fukamachi </surname>
+   	<affiliation>
+   		<orgname>FML.ORG</orgname>
+   	    <address>
+   		<email>
+   		<ulink url="mailto:fukachan@fml.org">
+   		fukachan@fml.org
+   		</ulink>
+   		</email>
+   	    </address>
+   	</affiliation>
+     </author>
+
+     <copyright>
+   	<year> 2001,2002,2003 </year>
+   	<holder> Ken'ichi Fukamachi </holder>
+     </copyright>
+
+  </bookbiblio>
+
+  <legalnotice>
+    <para>
+	All rights reserved. This program is free software; you can
+	redistribute it and/or modify it under the same terms as Perl itself.
+    </para>
+
+
+	<para>
+	The current TODO is seen at
+	<ulink url="../../../fml/doc/ja/todo/STATUS.html">
+	http://www.fml.org/software/fml-devel/fml/doc/ja/todo/STATUS.html
+	</ulink>
+	(Japanese only now, sorry).
+	</para>
+
+	<para>
+	It is verified that &fml8; works on the following environemnt now.
+<screen>
+	perl 5.6.1   on NetBSD 1.5.x (1.5 stable)		
+	perl 5.6.1   on NetBSD 1.6				
+	perl 5.00503 on FreeBSD 4.3 STABLE
+	perl ?       on FreeBSD 4.6 RELEASE
+	perl 5.00503 on FreeBSD 4.7 RELEASE-p3
+	perl 5.00503 on FreeBSD 4.6.2 RELEASE			
+	perl 5.6.1   on Redhat Linux 7.2 (postfix)		
+	perl 5.00503 on Redhat Linux 6.2 (sendmail8.11.6)	
+	postfix       + perl 5.6.1 on Solaris 7			
+	postfix 2.0.3 + perl 5.6.1 on Solaris 9			
+</screen>
+	</para>
+
+  </legalnotice>
+
+
+</bookinfo>

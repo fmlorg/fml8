@@ -1,0 +1,199 @@
+<!--
+   $FML$
+   $jaFML: chapters.ent,v 1.75 2003/06/20 22:03:12 fukachan Exp $
+-->
+
+<!entity versin "1.1">
+
+<!-- pointer -->
+<!entity fmlbible    "fml bible(oreilly japan)">
+<!entity www.fml.org "http://www.fml.org/software/fml/">
+<!entity fml4        "fml 4">
+<!entity fmldevel    "fml 8">
+
+
+<!-- images -->
+<!entity image.architecture SYSTEM "architecture.gif" ndata gif>
+<!entity image.command.dataflow SYSTEM "command.dataflow.gif" ndata gif>
+<!entity image.ml           SYSTEM "ml.gif" ndata gif>
+<!entity image.cgi.top      SYSTEM "cgi.top.gif" ndata gif>
+<!entity image.cgi.newml    SYSTEM "cgi.newml.gif" ndata gif>
+<!entity image.cgi.useradd  SYSTEM "cgi.useradd.gif" ndata gif>
+
+
+<!-- meta -->
+<!entity bookinfo   SYSTEM "include/bookinfo.sgml">
+<!entity preface    SYSTEM "preface.sgml">
+<!entity sect.terms SYSTEM "terms.sgml">
+
+
+<!-- part I: introduction .. test -->
+<!entity chapter.overview.fml     SYSTEM "overview/fml.sgml">
+<!entity chapter.overview.ml      SYSTEM "overview/ml.sgml">
+
+
+<!-- part II: set up -->
+<!entity chapter.download         SYSTEM "install/download.sgml">
+<!entity chapter.install.fml.unix SYSTEM "install/fml_on_unix.sgml">
+<!entity chapter.install.fml.nt   SYSTEM "install/fml_on_nt.sgml">
+<!entity sect.install.postfix     SYSTEM "install/postfix.sgml">
+<!entity sect.install.qmail       SYSTEM "install/qmail.sgml">
+<!entity chapter.upgrade          SYSTEM "install/upgrade.sgml">
+
+<!entity chapter.setup.newml      SYSTEM "setup/newml.sgml">
+<!entity sect.setup.postfix       SYSTEM "setup/postfix.sgml">
+<!entity sect.setup.qmail         SYSTEM "setup/qmail.sgml">
+<!entity sect.setup.config.cf     SYSTEM "setup/config.cf.sgml">
+<!entity chapter.setup.cgi        SYSTEM "setup/cgi.sgml">
+<!entity chapter.setup.test       SYSTEM "setup/test.sgml">
+
+
+<!-- part III: customize -->
+
+<!entity chapter.config             SYSTEM "customize/chapter.config.sgml">
+<!entity chapter.usage.user         SYSTEM "usage/chapter.user.sgml">
+<!entity chapter.usage.onhost       SYSTEM "usage/chapter.onhost.sgml">
+<!entity chapter.customize.mlstyle  SYSTEM "customize/chapter.ml_style.sgml">
+<!entity chapter.customize.header   SYSTEM "customize/chapter.header.sgml">
+<!entity chapter.customize.command  SYSTEM "customize/chapter.command.sgml">
+
+<!entity sect.config.autoreply              SYSTEM "customize/autoreply.sgml">
+<!entity sect.config.command.permit.anyone  SYSTEM "customize/command_permit_anyone.sgml">
+<!entity sect.config.command.rejectall      SYSTEM "customize/command_rejectall.sgml">
+<!entity sect.config.mailmagazine           SYSTEM "customize/mailmagazine.sgml">
+<!entity sect.config.post.permit.anyone     SYSTEM "customize/post_permit_anyone.sgml">
+
+<!entity sect.config.ml.hier		SYSTEM "customize/ml.hier.ml">
+
+<!entity sect.customize.casestudies	SYSTEM "customize/case_studies.sgml">
+
+
+
+<!entity recipe.header.tag.uppercase SYSTEM "customize/recipe.header.tag.uppercase.sgml">
+<!entity recipe.header.tag.lowercase SYSTEM "customize/recipe.header.tag.lowercase.sgml">
+
+<!-- filter -->
+<!entity chapter.customize.filter    SYSTEM "customize/filter.sgml">
+<!entity recipe.filter.notice        SYSTEM "customize/recipe.filter.notice.sgml">
+<!entity chapter.filter              SYSTEM "internals/filter.sgml">
+<!entity var.filter.rules            SYSTEM "variables/filter.rules.sgml">
+<!entity var.filter.size             SYSTEM "variables/filter.size.sgml">
+
+
+<!entity sect.usage.guide            SYSTEM "usage/guide.sgml">
+<!entity sect.usage.subscribe        SYSTEM "usage/subscribe.sgml">
+<!entity sect.usage.unsubscribe      SYSTEM "usage/unsubscribe.sgml">
+<!entity sect.usage.get              SYSTEM "usage/get.sgml">
+<!entity sect.usage.help             SYSTEM "usage/help.sgml">
+<!entity sect.usage.post             SYSTEM "usage/post.sgml">
+<!entity sect.usage.command          SYSTEM "usage/command.sgml">
+<!entity sect.usage.procmail         SYSTEM "setup/procmail.sgml">
+<!entity sect.usage.makefml          SYSTEM "usage/makefml.sgml">
+<!entity sect.usage.fml              SYSTEM "usage/fml.sgml">
+<!entity sect.usage.fmladdr          SYSTEM "usage/fmladdr.sgml">
+<!entity sect.usage.fmlalias         SYSTEM "usage/fmlalias.sgml">
+<!entity sect.usage.fmlconf          SYSTEM "usage/fmlconf.sgml">
+<!entity sect.usage.fmldoc           SYSTEM "usage/fmldoc.sgml">
+<!entity sect.usage.fmlthread        SYSTEM "usage/fmlthread.sgml">
+<!entity sect.usage.fmlhtmlify       SYSTEM "usage/fmlhtmlify.sgml">
+<!entity sect.usage.fmlsummary       SYSTEM "usage/fmlsummary.sgml">
+
+
+<!-- command -->
+<!entity chapter.command             SYSTEM "command/chapter.sgml">
+<!entity sect.command.dataflow       SYSTEM "command/dataflow.sgml">
+<!entity sect.command.internal       SYSTEM "command/internal.sgml">
+<!entity sect.command.extension      SYSTEM "command/extension.sgml">
+<!entity sect.command.module         SYSTEM "command/module.sgml">
+
+
+<!-- ? ;-) -->
+<!entity chapter.directory           SYSTEM "internals/directory.sgml">
+<!entity chapter.db                  SYSTEM "internals/db.sgml">
+<!entity chapter.db.modules          SYSTEM "internals/db_modules.sgml">
+<!entity chapter.dbms                SYSTEM "internals/dbms.sgml">
+<!entity chapter.hook                SYSTEM "internals/hook.sgml">
+<!entity chapter.policy              SYSTEM "policy.sgml">
+
+<!entity chapter.filename            SYSTEM "internals/filename.sgml">
+
+<!entity chapter.userctl             SYSTEM "internals/userctl.sgml">
+
+
+
+<!-- delivery -->
+<!entity chapter.delivery            SYSTEM "delivery/chapter.sgml">
+<!entity sect.mailqueue              SYSTEM "delivery/queue.sgml">
+
+<!-- digest -->
+<!entity chapter.digest              SYSTEM "digest/chapter.sgml">
+
+
+<!entity recipe.delivery.forward     SYSTEM "delivery/recipe.forward.sgml">
+
+
+<!-- internals -->
+<!entity chapter.bootloader          SYSTEM "internals/bootloader.sgml">
+<!entity sect.main.cf                SYSTEM "internals/main.cf.sgml">
+<!entity chapter.internal.cgi	     SYSTEM "internals/cgi.sgml">
+<!entity chapter.programingstyle     SYSTEM "internals/style.sgml">
+<!entity chapter.design              SYSTEM "internals/design.sgml">
+<!entity chapter.config.cf           SYSTEM "internals/config.cf.sgml">
+<!entity chapter.restriction         SYSTEM "internals/restriction.sgml">
+<!entity chapter.credential          SYSTEM "internals/credential.sgml">
+<!entity chapter.lock                SYSTEM "internals/lock.sgml">
+<!entity chapter.io.abstraction      SYSTEM "internals/io_abstraction.sgml">
+
+<!entity chapter.virtual             SYSTEM "virtual/chapter.sgml">
+
+<!-- variable list -->
+<!entity var.table.list.variables    SYSTEM "variables/list.sgml">
+<!entity var.table.class.variables   SYSTEM "variables/class.sgml">
+
+<!-- -->
+<!entity chapter.struct              SYSTEM "internals/struct.sgml">
+<!entity struct.curproc              SYSTEM "internals/CURPROC.sgml">
+
+
+
+<!-- message -->
+<!entity chapter.message             SYSTEM "message/chapter.sgml">
+<!entity sect.message.nl             SYSTEM "message/language.sgml">
+<!entity sect.message.discuss        SYSTEM "message/discussion.sgml">
+
+
+<!-- development -->
+<!entity chapter.cvstree             SYSTEM "devel/cvstree.sgml">
+<!entity chapter.cvstags             SYSTEM "devel/cvstags.sgml">
+<!entity chapter.docbook             SYSTEM "devel/docbook.sgml">
+<!entity chapter.inet6               SYSTEM "devel/inet6.sgml">
+<!entity chapter.program.create      SYSTEM "devel/create_program.sgml">
+
+
+<!-- misc -->
+<!entity chapter.threadtrack		SYSTEM "threadtrack/chapter.sgml">
+<!entity sect.threadtrack.states	SYSTEM "threadtrack/states.sgml">
+<!entity sect.threadtrack.model		SYSTEM "threadtrack/model.sgml">
+<!entity sect.threadtrack.db		SYSTEM "threadtrack/db.sgml">
+<!entity chapter.threadtrack.tools	SYSTEM "threadtrack/tools.sgml">
+
+
+<!-- Appendix -->
+<!entity chapter.glossary         SYSTEM "glossary.sgml">
+
+
+<!-- modules -->
+<!entity chapter.module.io.adapter   SYSTEM "module/IO.sgml">
+<!entity chapter.module.mail.message SYSTEM "module/Message.sgml">
+<!entity chapter.module.nl           SYSTEM "module/nativelanguage.sgml">
+<!entity chapter.module.create       SYSTEM "module/create.sgml">
+<!entity chapter.module.encode       SYSTEM "module/encode.sgml">
+
+
+
+<!-- trouble shoot -->
+<!entity chapter.troubleshoot        SYSTEM "troubleshoot/chapter.sgml">
+
+<!entity recipe.version              SYSTEM "troubleshoot/recipe.version.sgml">
+<!entity recipe.listup.addresses     SYSTEM "troubleshoot/recipe.listup.addresses.sgml">
+<!entity recipe.listup.aliases       SYSTEM "troubleshoot/recipe.listup.aliases.sgml">

@@ -1,0 +1,22 @@
+<!--
+# $FML$
+   $jaFML: chapter.sgml,v 1.7 2002/12/25 11:50:42 fukachan Exp $
+-->
+
+<chapter>
+	<title>
+	command (command mail, CUI, GUI)
+	</title>
+
+
+<!-- module usage,  FML::Command::* modules -->
+&sect.command.module;
+
+&sect.command.dataflow;
+
+&sect.command.extension;
+
+&sect.command.internal;
+
+
+</chapter>

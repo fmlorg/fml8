@@ -1,0 +1,70 @@
+#
+# $FML: Makefile.template,v 1.5 2001/06/05 13:28:44 fukachan Exp $
+#
+
+TMP_DIR     = /tmp/sgmltools
+
+# targets
+SOURCE      = book
+BOOK        = tech
+BOOK_ID     = tips
+TARGET_HTML_DIR  = ../../../../Documentation/en/$(BOOK)
+TARGET_TEXT_DIR  = ../../../../Documentation/en/text
+
+# programs (except for /bin/*)
+UNIQ        = uniq
+PERL        = perl
+FIND        = find
+GREP        = grep
+CVS         = cvs
+ENV         = env
+EXPORTER    = rsync -a
+SGML_DIR    = ../../share/sgml
+SGML_CATALOG_FILES = ../../share/sgml/catalog
+JADE_OPTS   = -v -c $(SGML_DIR)/catalog
+FML_DSSSL   = -d $(SGML_DIR)/fml.dsl
+HTMLify     = sgmltools -v -d -j "$(JADE_OPTS) $(FML_DSSSL)"
+TEXTify     = sgmltools -v -d -j "$(JADE_OPTS)"
+FIX_CHARSET = ../utils/bin/fix_charset.pl
+
+ENV_VARS    = TMPDIR=$(TMP_DIR) SGML_CATALOG_FILES=$(SGML_CATALOG_FILES) COLS=72
+
+
+###
+### RULES
+###
+
+all: export
+
+html:
+	$(ENV) $(ENV_VARS) $(HTMLify) -b html $(SOURCE).sgml 2>&1 | $(UNIQ)
+	@ $(PERL) -i.bak $(FIX_CHARSET) $(SOURCE)/$(BOOK_ID).html
+	@ rm -f $(SOURCE)/@*/*.html.bak
+
+txt:
+	$(ENV) $(ENV_VARS) $(TEXTify) -b txt $(SOURCE).sgml 2>&1 | $(UNIQ)
+
+lynx:
+	$(ENV) $(ENV_VARS) $(TEXTify) -b lynx $(SOURCE).sgml 2>&1 | $(UNIQ)
+
+ps:
+	$(ENV) $(ENV_VARS) $(TEXTify) -b ps $(SOURCE).sgml 2>&1 | $(UNIQ)
+
+clean:
+	$(FIND) . -type f -print |$(GREP) '~' |$(PERL) -nple unlink
+	rm -f book.txt
+	rm -fr $(SOURCE)
+
+export: _init html lynx
+	$(EXPORTER) $(SOURCE)/ $(TARGET_HTML_DIR)/
+	@ rsync -a ../../en/figures/*.gif $(TARGET_HTML_DIR)/
+	@ cp book.txt $(TARGET_TEXT_DIR)/$(BOOK).txt
+	chmod 755 $(TARGET_HTML_DIR)
+
+scan:
+	@ $(CVS) -n update 2>&1 |$(GREP) -v : || echo ''
+
+_init:
+	test -d $(TARGET_HTML_DIR) || mkdir $(TARGET_HTML_DIR)
+	test -d $(TARGET_TEXT_DIR) || mkdir $(TARGET_TEXT_DIR)
+	test -d $(TMP_DIR) || mkdir $(TMP_DIR)

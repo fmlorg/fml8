@@ -1,0 +1,95 @@
+<!--
+   $FML$
+   $jaFML: module.sgml,v 1.4 2003/04/15 14:51:36 fukachan Exp $
+-->
+
+
+<sect1 id="fml.command.module.hierarchy">
+	<title>
+	modules for commands
+	</title>
+
+<para>
+In &fmldevel;, all command modules are shared among command mail,
+CUI(makefml, fml) and GUI. 
+Commands are caregorized into user and administrative ones by the
+priviledge. 
+</para>
+
+<para>
+FML::Command:: consists of the following classes:
+<screen>
+FML::Command		entrance into FML::Command
+FML::Command::User	command for usual ML users.
+FML::Command::Admin	command for administrators.
+</screen>
+For example, a user command in a command mail kicks off
+FML::Command firstly, after some steps, 
+calls FML::Command::User::$command where $command is the specified
+command name. 
+</para>
+
+
+<sect2>
+	<title>
+	usre command in command mail
+	</title>
+
+<para>
+FML::Process::Command call FML::Command::User::$command for $command
+via FML::Command.  
+</para>
+
+<para>
+
+Finally, some module calls FML::Command::Admin::$command for real work even if it is
+a user command. 
+For example, 
+FML::Command::Admin::subscribe works for subscription.
+In this case, 
+FML::Command::User::subscribe module is a wrapper or an entrance for
+confirmation before the real subscription work. 
+</para>
+</sect2>
+
+<sect2>
+	<title>
+	admin command (administrative command in command mail)
+	</title>
+
+<para>
+call FML::Command::Admin::$command for $command via FML::Command
+via FML::Process::Command.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	CUI (makefml/fml)
+	</title>
+
+<para>
+FML::Process::Configure calls 
+FML::Command::Admin::$command via FML::Command.
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	GUI (CGI)
+	</title>
+
+
+<para>
+FML::Process::CGI calls
+FML::Command::Admin::$command via FML::Command.
+</para>
+
+</sect2>
+
+
+</sect1>
