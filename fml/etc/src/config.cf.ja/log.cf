@@ -40,6 +40,48 @@ log_format_type	=	process[pid]
 log_dir		=	$var_dir/log
 
 
+=head2 log rotation
+
+
+# Descriptions: ログファイルローテションを行なうか否か
+#      History: $LOGFILE_NEWSYSLOG_LIMIT が 0 なら no、0 でないなら yes
+#        Value: yes | no
+#     Examples: no
+use_log_rotate		=	no
+
+
+# Descriptions: ログローテションのポリシー。
+#               サイズが一定値を越えたら行なうのか？(デフォルト)
+#               それても一定時間おきに行なうのか？
+#      History: none
+#        Value: size | interval
+#     Examples: size
+log_rotate_policy	=	size
+
+
+# Descriptions: ログファイルのサイズが、
+#               この大きさを越えたらローテーションを行なう。
+#      History: $LOGFILE_NEWSYSLOG_LIMIT の値
+#        Value: NUM
+#     Examples: 300000 (300K bytes)
+log_rotate_size		=	300000
+
+
+# Descriptions: ログファイルローテーションを行なう間隔。
+#      History: none
+#        Value: NUM
+#     Examples: 86400 (1 day)
+log_rotate_interval	=	86400
+
+
+# Descriptions: log.0 log.1 などの .数字 部分は最大いくつ？
+#		大きい数字にすれば、より多く保存することになる
+#      History: none
+#        Value: NUM
+#     Examples: 4
+log_rotate_num_backlog 	=	4
+
+
 =head2 charset
 
 # Descriptions:
