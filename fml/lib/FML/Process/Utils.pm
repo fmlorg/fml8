@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.122 2004/07/26 05:46:35 fukachan Exp $
+# $FML: Utils.pm,v 1.123 2004/10/03 12:06:36 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -520,7 +520,7 @@ sub _cat
 
 
 # Descriptions: chown utility.
-#    Arguments: OBJ($self) STR($owner) STR($group) VAR_ARG(@argv)
+#    Arguments: OBJ($curproc) STR($owner) STR($group) VAR_ARG(@argv)
 # Side Effects: change owner and group of $dir
 # Return Value: none
 sub chown
