@@ -1,0 +1,255 @@
+Network Working Group                                       Jacob Palme
+Internet Draft                                 Stockholm University/KTH
+draft-palme-newfields-info-02.doc
+IETF status: To become an informational RFC
+Expires: May 1998                                         November 1998
+
+
+
+
+Advice on the implementation of In-Reply-To, References and Supersedes
+e-mail and netnews headers
+
+
+
+Status of this Document
+
+
+This document is an Internet-Draft. Internet-Drafts are working
+documents of the Internet Engineering Task Force (IETF), its areas, and
+its working groups. Note that other groups may also distribute working
+documents as Internet-Drafts.
+
+Internet-Drafts are draft documents valid for a maximum of six months
+and may be updated, replaced, or obsoleted by other documents at any
+time. It is inappropriate to use Internet-Drafts as reference material
+or to cite them other than as ``work in progress.''
+
+To learn the current status of any Internet-Draft, please check the
+``1id-abstracts.txt'' listing contained in the Internet-Drafts Shadow
+Directories on ftp.is.co.za (Africa), nic.nordu.net (Europe),
+munnari.oz.au (Pacific Rim), ftp.ietf.org (US East Coast), or
+ftp.isi.edu (US West Coast).
+
+Copyright (C) The Internet Society 1998. All Rights Reserved.
+
+
+
+Abstract
+
+Separate Internets standards documents define the e-mail headers
+In-Reply-To, References, Supersedes and Expires. This document, which
+is an informational RFC, gives some advice on the implementation of
+these features.
+
+
+Table of Contents
+
+1. User interface
+2. Hard and soft Supersedes
+3. Data base
+4. Copyright
+5. References
+6. Author's Address
+
+1.    User interface
+
+The fields "In-Reply-To", "References" and "Supersedes" are all used to
+convey information about references between different e-mail messages
+or netnews articles.
+
+A good way to implement these fields is to tell the recipient that two
+messages reference each other, and to make it easy for readers to
+traverse threads (series of linked messages) up and down.
+
+It is also possible to have special features to see a whole thread (set
+of related messages) graphically, or as an indented list, and to allow
+users to traverse, print, save or do other actions on a thread.
+
+Example of showing a thread as an indented list:
+
+   This is entry no. 1, the start entry of the thread
+     This is entry no. 2, a reply to entry no. 1
+       This is entry no. 3, a reply to entry no. 2
+     This is entry no. 4, a reply to entry no. 1
+
+In the particular case of "Supersedes", a user who has not yet read
+either the old or the new version, may be shown only the new version as
+a new message, but with methods to easily find the old version.
+
+A way to show this information to users is to show the "In-Reply-To",
+"Supersedes" and "References" fields, possibly as buttons, and allow
+the user to click on them to get to the referred-to messages.
+Additionally, it is useful to add buttons to follow threads forward,
+with texts like "Next in thread" or "Replies" or "This document is
+referenced by" or "Superseding documents". This allows a user, when
+reading a message, to see if someone else has already replied, and it
+allows users to traverse threads downwards and not only upwards. Such
+reverse buttons should not be sent in e-mail, they are just for local
+handling in user mailbox databases. Note that their values may change
+after a message has been submitted, when more new messages arrive which
+reference it.
+
+Example of showing a message with thread information:
+
+   To: IETF-Announce: ;
+   From: The IESG <iesg-secretary@ns.ietf.org>
+   Subject: Last Call: The Auto-Submitted, Supersedes and Expires
+      Headers in E-mail and Netnews to Proposed Standard
+   In-Reply-To: <v04003a00b12335fb8686@ns.ietf.org>
+   Replied-By: <v04003a00b12335fb8687@ns.ietf.org>
+   Date: Thu, 05 Mar 1998 07:02:47 -0500
+   Sender: scoya@cnri.reston.va.us
+
+
+2.    Hard and soft Supersedes
+
+By a hard supersedes is meant a Supersedes which causes deletion of the
+superseded message. By a soft supersedes is meant a Supersedes which
+still keeps both messages, and allows a user to see and use the
+reference between them, somewhat similar to In-Reply-To and References.
+
+Supersedes is best implemented as soft supersedes. Users of the
+supersedes field should however be aware that some implementations,
+especially in Usenet News, do implement it as hard supersedes.
+
+Hard supersedes has the same security problem as the Cancel command of
+Usenet News. They can be used to maliciously delete other people's
+messages. Use of strong authentication of the author can reduce this
+risk.
+
+
+3.    Data base
+
+In order to implement threads, a data base is needed which, given a
+Message-ID, can find the message which this Message-ID refers to. This
+data base has a very simple structure, just a single value mapped to
+one or more messages. Note, however, that the same message can be
+copied to more than one mailbox, so the data base should not be
+restricted to only one location for each Message-ID.
+
+Every time a message is added, moved, copied, deleted or purged, this
+data base need to be updated.
+
+When a new message arrives, the mailer can find the messages, to which
+this message has references. Note that there is a risk that replies
+arrive before the replied-to message, so a good implementation should
+work even in this case.
+
+A problem with these kinds of Message-ID data bases is that they tend
+to become very large with time, and they easily collect garbage
+(Message-ID-s of messages not any more available in the mailbox data
+base).
+
+The two most common methods to implement such data bases are:
+
+(a) Implement a large data base, but with some method of purging to
+    avoid unlimited growth of the data base.
+
+(b) Implement a smaller data base, where all objects are deleted
+    after a certain time. A couple of months is enough if the
+    techniques described in the next paragraph are used.
+
+With implementation method (b), information about the references in the
+form of "In-Reply-To", "References", "Supersedes", "Replied-By",
+"Referenced-By" and "Superseded-By" should also be stored in the
+message headers themselves. The reason method (b) works is that it is
+very uncommon that a message has a reference to other than very recent
+messages. Thus, the lack of "Replied-By", "Referenced-By" and
+"Superseded-By" headers in these very uncommon cases is acceptable.
+
+The advantage with method (b) is that a complex garbage collection
+method, as for method (a), is not needed. A much simpler garbage
+collection method can be used instead, just removing records after a
+certain expiration time.
+
+4.    More implementation hints
+
+More implementation hints can be found at URL
+http://www.dsv.su.se/~jpalme/ietf/thread-support-proposal.html
+
+See also URL
+http://www.dsv.su.se/~jpalme/ietf/jp-ietf-home.html#newfields
+
+
+5.    Acknowledgements
+
+Peter Kaminski has given me valuable ideas for this document.
+
+6.    Copyright
+
+Copyright (C) The Internet Society (date). All Rights Reserved.
+
+This document and translations of it may be copied and furnished to
+others, and derivative works that comment on or otherwise explain it or
+assist in its implementation may be prepared, copied, published and
+distributed, in whole or in part, without restriction of any kind,
+provided that the above copyright notice and this paragraph are
+included on all such copies and derivative works. However, this
+document itself may not be modified in any way, such as by removing the
+copyright notice or references to the Internet Society or other
+Internet organizations, except as needed for the purpose of developing
+Internet standards in which case the procedures for copyrights defined
+in the Internet Standards process must be followed, or as required to
+translate it into languages other than English.
+
+The limited permissions granted above are perpetual and will not be
+revoked by the Internet Society or its successors or assigns.
+
+This document and the information contained herein is provided on an
+"AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
+TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT
+NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL
+NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR
+FITNESS FOR A PARTICULAR PURPOSE.
+
+
+
+7.    References
+
+Ref.            Author, title
+---------       --------------------------------------------------------
+
+[AUTOLOOP]      J. Palme: "Loop control for the Auto-Submitted e-mail
+                header", draft-palme-autosub-03.txt, July 1997.
+
+[MIME1]         N. Freed, N. Borenstein, "Multipurpose Internet Mail
+                Extensions (MIME) Part One: Format of Internet Message
+                Bodies", RFC 2045, December 1996.
+                .
+[MIME2]         N. Freed, N. Borenstein, "Multipurpose Internet Mail
+                Extensions (MIME) Part Two:  Media Types", RFC 2046,
+                December 1996.
+
+[MIME3]         K. Moore, "MIME (Multipurpose Internet Mail Extensions)
+                Part Three:  Message Header Extensions for Non-ASCII
+                Text", RFC 2047, December 1996.
+
+[MIME4]          N. Freed, J. Klensin, J. Postel, "Multipurpose Internet
+                Mail Extensions (MIME) Part Four:  Registration
+                Procedures", RFC 2048, January 1997.
+
+[MIME5]         "Multipurpose Internet Mail Extensions (MIME) Part Five:
+                Conformance Criteria and Examples", RFC 2049, December
+                1996.
+
+[NEWFIELDS]     J. Palme: "The Auto-Submitted, Supersedes and Expires
+                E-mail Headers", draft-ietf-mailext-new-fields-12.txt,
+                March 1998.
+
+[NEWS]          M.R. Horton, R. Adams: "Standard for interchange of
+                USENET messages", RFC 1036, December 1987.
+
+[RFC822]        D. Crocker: "Standard for the format of ARPA Internet
+                text messages." STD 11, RFC 822, August 1982.
+
+[SMTP]          J. Postel: "Simple Mail Transfer Protocol", STD 10, RFC
+                821, August 1982.
+
+8.    Author's Address
+
+Jacob Palme                          Phone: +46-8-16 16 67
+Stockholm University and KTH         Fax: +46-8-783 08 29
+Electrum 230                         E-mail: jpalme@dsv.su.se
+S-164 40 Kista, Sweden
+

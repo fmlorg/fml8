@@ -1,0 +1,395 @@
+Network Working Group                               Greg Bernstein
+Internet Draft                                      Ciena Networks
+Expiration Date:  August 2000
+
+
+    Some Comments on the Use of MPLS Traffic Engineering for 
+                    SONET/SDH Path Establishment
+
+                   draft-bernstein-mpls-sonet-00.txt
+
+
+1. Status of this Memo
+
+   This document is an Internet-Draft and is in full conformance with
+   all provisions of Section 10 of RFC2026.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF), its areas, and its working groups.  Note that
+   other groups may also distribute working documents as Internet-
+   Drafts.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as ``work in progress.''
+
+   The list of current Internet-Drafts can be accessed at
+   http://www.ietf.org/ietf/1id-abstracts.txt
+
+   The list of Internet-Draft Shadow Directories can be accessed at
+   http://www.ietf.org/shadow.html.
+
+
+2. Abstract
+
+   In [Awduche] the MPLS Traffic Engineering control plane was applied
+   to the creation of light paths (optical circuits). Due to the general
+   hierarchical capabilities of MPLS, and the flexibility of the label 
+   switching paradigm the same techniques used to apply the MPLS control 
+   plane to the optical layer can be used to apply it to the SONET/SDH 
+   path layer and in fact any form of circuit switching. This note 
+   discusses advantages of such an approach and some of the issues 
+   involved in its application. 
+
+
+3. Introduction
+
+   In [Awduche] the MPLS Traffic Engineering control plane was applied 
+   to the creation of light paths (optical circuits). This initial work 
+   along with the formation of a new optical signaling working group at 
+   the Optical Internetworking Forum (OIF), and a new industry 
+   coalition, the Optical Domain Service Interconnect(ODSI)has very much 
+   underscored the desire to automate the control of optical networks.
+   Due to the hierarchical capabilities of MPLS and the flexibility of 
+   the MPLS paradigm, MPLS techniques can be applied to the general 
+   problem of control of hierarchical circuit switched networks. Given 
+   the number of recent internet drafts concerning the optical domain
+   [Kompella, Wang, Fan, Krishna]  the comments here will be 
+   concentrated on time division multiplexed hierarchies. Before 
+   focusing on some SONET specific issues (note that [Mannie] gives a 
+   good overview of the SDH specific issues) we review some of the
+   problems to be solved.
+
+3.1 Transport Network Issues
+ 
+3.1.1 Multi Vendor Topology/Resource Discovery 
+
+   Although modern transport networks based on SONET/SDH excel at 
+   interoperability in the performance monitoring (PM) and fault 
+   management (FM) areas, they do not inter-operate in the areas of 
+   topology discovery or resource status.  Although link state route 
+   protocols, such as IS-IS and OSPF, have been used for some time in 
+   the IP world to compute destination based next hops for routes 
+   (without routing loops). Their value in providing timely topology and 
+   network status information in a distributed manner, i.e., at any 
+   network node, is immense. If resource utilization information is 
+   disseminated along with the link status (as was done in ATM's PNNI 
+   routing protocol) then a very complete picture of network status is 
+   available to a network operator for use in planning, provisioning and 
+   operations. Note that in the circuit switch domain bandwidth 
+   utilization and connection admission control is much simplified over 
+   similar concepts in the packet switching world.
+   Other items of interest for circuit based network control include 
+   switching capabilities of the nodes (granularity, signal types, 
+   etc.), protection properties of the links (linear 1+1, linear 1:N, 
+   ring), failure risk of the links (which links have a tendency to fail 
+   at the same time - ).  At this point the main difference in this 
+   application of link state routing versus that for IP is that no 
+   routes have actually be calculated.
+
+3.1.2 Multi Vendor Connection Control
+
+   Traditionally end-to-end circuit connections have been set up via an 
+   equipment vendor's element management system (EMS). Only limited 
+   interoperability has been achieved via management systems. Hence, 
+   end-to-end circuits in a multi-vendor environment typically require 
+   the use of multiple management systems and the infamous configuration 
+   via "yellow sticky notes". A common signaling protocol such as RSVP 
+   with TE extensions or CR-LDP appropriately extended for circuit 
+   switching applications can solve this interoperability problem.
+
+3.1.3 Customer/Edge Connection Control
+
+   This is the case where the edge device, by desire, does not fully 
+   participate in the routing protocol, i.e., does not receive or share 
+   topology information with the rest of the network. Such a device 
+   would typically be discovered/register through a separate protocol 
+   from the routing protocol.  The edge device would then typically use 
+   a signaling protocol similar to that used in the network to request 
+   services associated with circuits (setup, clear, query). Note that 
+   the multiplex hierarchy used in TDM networks generally alleviates the 
+   scaling issues that could otherwise be troublesome, i.e., a core 
+   SONET switch with OC-192 trunks will not be dealing with signals of 
+   DS0 or DS1 granularity. Defining some these protocols is the type of 
+   work of initial interest at both ODSI and the OIF's signaling working 
+   group.
+
+3.1.4 Path Computation
+
+   Although a link state route protocol can be used to obtain network 
+   topology and resource information, this does not imply the use of an 
+   "open shortest path first" route. The path must be open in the sense 
+   that the bandwidth must be available, however the switches along the 
+   path must also be capable, in some way, of transporting the desired 
+   signal type, i.e., we've got an additional constraint.  Other 
+   constraints may include hop count, total delay (mostly propagation), 
+   and hop count. In addition, in addition it may be desirable to route 
+   traffic in order to optimize overall network capacity, reliability or 
+   some combination of the two. Dikstra's algorithm computes the 
+   shortest path with respect to link weights for a single connection at 
+   a time. This can be much different than the paths that would be 
+   selected in response to a request to set up a batch of connections 
+   between a set of endpoints in order to optimize network link 
+   utilization. One can think along the line of global or local 
+   optimization of the network. Due to the complexity of some of the 
+   route algorithms (high dimensionality non-linear integer programming 
+   problems) and various criteria by which one may optimize their 
+   network it may not be possible or desirable to run these algorithms 
+   on network nodes. However, it may still be desirable to have some 
+   basic path computation ability running on the network nodes, 
+   particularly in restoration situations. Such an approach is in line 
+   with the use of MPLS for traffic engineering but is much different 
+   than typical OSPF or IS-IS usage where all nodes must run the same 
+   route algorithm.
+
+3.2 Decomposition of the MPLS/Circuit Switching Problem Space
+
+   Although those familiar with MPLS may be familiar with its 
+   application in a variety of application areas, e.g., ATM, Frame 
+   Relay, etc.  We quickly review its decomposition when applied to the 
+   circuit switching problem space.
+   
+   (i) Information needed to compute paths must be made globally 
+   available throughout the network.  Since this is done via the 
+   link state route protocol any information of this nature must 
+   either be in the existing link state advertisements (LSAs) or 
+   the LSAs must be supplemented to convey this information.  For 
+   example, if its desirable to offer different levels of service 
+   in a network based on whether a circuit is routed over SONET 
+   lines are Ring protected vs. not being protected 
+   (differentiation based on reliability). Then the type of 
+   protection on a SONET line would be an important topological 
+   parameter that should be distributed via the link state route 
+   protocol. Other important parameters are described in 
+   [Kompella].
+
+   (ii) Information that is only needed between two "adjacent" switches 
+   for the purposes of connection establishment is appropriate for 
+   distribution via one of the label distribution protocols. In 
+   fact this information may form the "virtual" label. For example 
+   in SONET if we are distributing information to switches 
+   concerning an end-to-end STS-1 path traversing a network. It is 
+   critical that adjacent switches agree on the "time slot" used 
+   by this STS-1 (but this information is only of local 
+   significance between the two switches). Hence the time slot 
+   number in this case can be used as a virtual label. Note that 
+   it is virtual in that it is not appended to the payload in 
+   anyway, but it is still a label in the sense that it uniquely 
+   identifies the signal local to the link between the two 
+   switches.
+
+   (iii) Information that all switches in the path will need to know 
+   about a connection will also be distributed via the label 
+   distribution protocol. Example of such information can include 
+   bandwidth, priority, and preemption information.
+
+   (iv) Information intended only for end systems of the connection. 
+   Some of the payload type information in [Mannie] may fall into 
+   this category.
+
+
+4. SONET Considerations
+
+   SONET/SDH is a a TDM based multiplexing technology that has a number
+   of standard options that a network user may choose to use. In
+   addition a number of extensions have been proposed [Jones] or are
+   beneficial for network operations, e.g., eliminate the need for link
+   grooming.  This draft reviews the SONET multiplex structure, options
+   and possible extensions with respect to the information that is
+   required to be shared between MPLS LSRs working at the SONET layer
+   for the establishment of SONET layer LSPs.
+
+
+4.1 SONET Structure and Extensions
+
+   The fundamental signal in SONET is the STS-1 (about 51 Mbps). This 
+   signal consists of a transport overhead and a Synchronous Payload 
+   Envelope (SPE). The SPE floats within its alloted space within the 
+   SONET frame structure with the pointer bytes (H1, H2 and H3) in the 
+   Line Overhead of the SONET transport overhead pointing to the 
+   begining of the SPE.  An STS-N signal is formed from a SONET STS-(N- 
+   1) signal and an STS-1 signal via byte interleaving.  The transport 
+   overhead structures are frame aligned prior to interleaving but this 
+   is not required of the SPEs, i.e., there is no special relationship 
+   between the payload envelopes.  To transport signals in excess of 
+   about 50Mbps the SPEs can be concatenated, i.e., glued together. In 
+   this case their relationship with respect to each other is fixed in 
+   time and hence this relieves, when possible, and end system of any 
+   inverse multiplexing bonding processes.
+   
+   Due to the previously describe structure the end points of SONET 
+   connections can be identified by the "time slots" (position) that 
+   they occupy within the interleaved frame structure. In the standard 
+   SONET case we are concerned with which of the M STS-1 paths within an 
+   STS-N signal will be used to transport our data (M <= N, and N = 3, 
+   12, 48, 192,...). The SPEs of these M STS-1s can be concatenated to 
+   form an STS-Mc. The STS-Mc notation is really a short hand way of 
+   describing an STS-M signal whose SPEs have been concatenated.
+   
+   In BellCore GR-253 [GR-253] section 6.1.2 (requirement R6-3) two 
+   conventions are given for identifying an STS-1 within an STS-N:
+
+         - A two-level "STS-3 #, STS-1 #"
+
+         - A single-level "1 to N in order of appearance at the input to
+         the byte-interleaver"
+
+   For example STS-1 number 23 within an OC-48 can also be represented
+   by the tuple (8, 2).  We will be using the single-level numbering
+   scheme in our discussion, but this is not imply an encoding format.
+
+   A second complication is in dealing with concatenated signals. In
+   Bellcore GR-253 section 5.1 the multiplexing procedures for SONET are
+   given. Constraints are imposed on the size of STS-Mc signals, i.e.,
+   they must be a multiple of 3, and on their starting location and
+   interleaving.  This has the following advantages: (a) restriction to
+   multiples of 3 helps with SDH compatibility (there is no STS-1
+   equivalent signal in STS-1 an STM-1 is equivalent (essentially) to an
+   STS-3c); (b) the restriction to multiples of 3 reduces the number of
+   connection types; (c) the restriction on the placement and
+   interleaving could allow more compact representation of the "label";
+   The major disadvantage of these restrictions are: (a) Limited
+   flexibility in bandwidth assignment (somewhat inhibits finer grained
+   traffic engineering). (b) The lack of flexibility in starting time
+   slots for STS-Mc signals and in their interleaving (where the rest of
+   the signal gets put in terms of STS-1 slot numbers) leads to the
+   requirement for re-grooming (due to bandwidth fragmentation).
+
+4.2 SONET Concatenation Extensions
+
+   Due to these disadvantages some SONET framer manufacturers now 
+   support "arbitrary" concatenation, i.e., no restrictions on the size 
+   of an STS-Mc (as long as M <= N) and no constraints on the STS-1 
+   timeslots used to convey it. It is recommended that arbitrary 
+   concatenation be supported in the format for SONET labels. It is also 
+   recommended that the use of arbitrary concatenation or "standard" 
+   concatenation be negotiated as part of the label assignment process 
+   between two SONET LSRs.
+   
+   Note that arbitrary concatenation as used here is a network service 
+   that is similar in nature to the SONET end system service of higher 
+   order virtual concatenation [Jones],[Mannie]. In one example of 
+   virtual concatenation two end systems supporting this feature could 
+   essentially "inverse multiplex" two STS-1s into a virtual STS-2c for 
+   the efficient transport of 100Mbps Ethernet traffic.  The burden in 
+   virtual concatenation is on the end systems while in arbitrary 
+   concatenation it is on the network.  In addition arbitrary 
+   concatenation includes arbitrary interleaving which avoids the need 
+   for link regrooming between any pair of nodes supporting this 
+   feature.
+
+4.3 SONET Connection Bundling
+
+   Connection Bundling is the process of routing a set of non-
+   concatenated STS-1s together as a group, i.e., they are all contained 
+   within the same SONET line (or WDM signal) and receive essentially 
+   the same delay and propagation. This simplifies connection 
+   establishment (especially for batches of DS-3s that are being 
+   wholesaled) and speeds re-routes. Such bundling may be important when 
+   establishing STS-1s that will be used between end systems 
+   implementing virtual concatenation. It is recommended that the labels 
+   chosen for SONET paths can incorporate the concept of STS-1 bundling. 
+   Whether it is desirable to bundle larger signals, i.e., groups of 
+   STS-Mc, is for further study.
+
+4.4 SONET Transparency
+
+   One last transport technique that bears mentioning since it can be 
+   viewed as a service is that of transparent multiplexing or switching. 
+   The SONET over head is broken into three layers: Section, Line and 
+   Path. All these layers are concerned with fault and performance 
+   monitoring. Section overhead is primarily concerned with framing and 
+   Line overhead is primarily concerned with multiplexing and 
+   protection. To perform multiplexing a SONET network element should be 
+   line terminating. However not all SONET multiplexers/switches perform 
+   SONET pointer adjustments on all the STS-1s contained within them or 
+   if they perform the pointer adjustments they do not terminate the 
+   line overhead. For example a multiplexer may take four SONET STS-48 
+   signals and multiplex them onto an STS-192 without performing 
+   standard line pointer adjustments on the individual STS-1s.  This can 
+   be looked at as a service since it may be desirable to pass SONET 
+   signals, like an STS-12 or STS-48, with some level of transparency 
+   through a network and still take advantage of TDM.  Transparent 
+   multiplexing and switching can also be viewed as a constraint since 
+   some multiplexers and switches may not switch at as fine a 
+   granularity as others.  The levels of transparency and their 
+   representation is for further study.
+
+4.5 SONET Protection
+
+   SONET and SDH networks offer a variety of protection options at both 
+   the SONET line and SONET path level.  Standardized SONET line level 
+   protection techniques include Linear 1+1 and Linear 1:N automatic 
+   protection switching (APS)[GR-253] and both two fiber and four fiber 
+   bi-directional line switched rings (BLSRs) [GR-1230]. At the path 
+   layer SONET offers uni-directional path switched ring protection. 
+   Both ring and 1:N line protection also allow for "extra traffic" to 
+   be carried over the protection line when it is not being used, i.e., 
+   not carrying traffic for a failed working line. It may be desirable 
+   to route some connections over lines with protection of a given type, 
+   unprotected lines, or primarily over protection lines as "extra 
+   data". In order to do this the method of protecting a line (if any) 
+   or whether a line is a protection line is useful topology information 
+   that can be disseminated via the link state route protocol. In 
+   addition, a signaling protocol should allow the optional 
+   specification of link protection types as one of the connection 
+   attributes.
+
+5. Summary
+
+   This note has discussed some of the advantages of a circuit switching 
+   control plane based on MPLS in terms of the current interoperability 
+   problems that MPLS can help solve. An overview of the application of 
+   MPLS to circuit switching and its decomposition into routing and 
+   label distribution components was presented. And, finally a few of 
+   the subtleties particular to SONET that need to be taken into account 
+   when an MPLS control plane is applied to this application were 
+   detailed.
+
+6. Acknowledgements
+   The author would like to thank Yakov Rekhter and Jeff Weiss for a 
+   number of enlightening and stimulating discussions that prompted 
+   these notes.
+
+7. References
+
+   [Awduche] Awduche, D., Rekhter, Y., Drake, J., Coltun, R., "Multi-
+   Protocol Lambda Switching: Combining MPLS Traffic Engineering Control
+   With Optical Crossconnects", draft-awduche-mpls-te-optical-01.txt
+
+   [Jones] Jones, N., Murton, C., "Extending PPP over SONET/SDH, with
+   virtual concatenation, high order and low order payloads", draft-
+   ietf-pppext-posvcholo-01.txt
+
+   [GR-253] Bellcore Generic Requirements, GR-253-CORE, Synchronous
+   Optical Network (SONET) Transport Systems: Common Generic Criteria,
+   Issue 2, December 1995.
+
+   [Mannie] Mannie, E., "MPLS for SDH control", draft-mannie-mpls-sdh-
+   control-00.txt.
+   
+   [Kompella] Kireeti Kompella, et. al., "Extensions to IS-IS/OSPF and 
+   RSVP in support of MPL(ambda)S", draft-kompella-mpls-optical-00.txt.
+   
+   [Wang] Gouqiand Wang, et. al., "Extensions to OSPF/IS-IS for Optical 
+   Routing", March 2000, Internet Draft, draft-wang-ospf-isis-lambda-te-
+   routing-00.txt. 
+   
+   [Fan] Yanhe Fan, et. al., "Extensions to CR-LDP and RSVP-TE for 
+   Optical Path Set-up", March 2000, draft-fan-mpls-lambda-signaling-
+   00.txt.
+   
+   [Krishna] Murali Krishnaswamy, et. al., "MPLS control plane for 
+   Switched Optical Networks",2/25/00,draft-krishnaswamy-mpls-son-
+   00.txt.
+
+8. Author Information
+
+   Greg Bernstein
+   Ciena Core Switching Division
+   10201 Bubb Road
+   Cupertino, CA 95014
+   e-mail: Greg@ciena.com
+   Phone: (408) 865-6213
+

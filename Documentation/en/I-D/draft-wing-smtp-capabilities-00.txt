@@ -1,0 +1,4 @@
+
+This Internet-Draft <draft-wing-smtp-capabilities-00.txt> 
+has been replaced by
+another Internet-Draft <draft-ietf-fax-smtp-capabilities-00.txt>

@@ -1,0 +1,412 @@
+INTERNET-DRAFT                                    Jacob Palme
+Network Working Group                Stockholm University/KTH
+draft-palme-supersedes-00.txt                          Sweden
+Expires August 1999                             February 1999
+
+
+
+
+The Supersedes or Replaces Header in E-mail
+
+
+
+Status of this Memo
+
+
+This document is an Internet-Draft and is in full conformance
+with all provisions of Section 10 of RFC2026.
+
+Internet-Drafts are working documents of the Internet Engineering
+Task Force (IETF), its areas, and its working groups.  Note that
+other groups may also distribute working documents as
+Internet-Drafts.
+
+Internet-Drafts are draft documents valid for a maximum of six
+months and may be updated, replaced, or obsoleted by other
+documents at any time.  It is inappropriate to use Internet-
+Drafts as reference material or to cite them other than as
+"work in progress."
+
+The list of current Internet-Drafts can be accessed at
+http://www.ietf.org/ietf/1id-abstracts.txt
+
+The list of Internet-Draft Shadow Directories can be accessed at
+http://www.ietf.org/shadow.html.
+
+Copyright (C) The Internet Society 1998. All Rights Reserved.
+
+
+Abstract
+
+This memo introduces one new e-mail header, Supersedes.  This
+document may, if accepted by the IESG, become a proposed
+standard, at some time in the future.
+
+Differences from draft-ietf-mailext-new-fields-14.txt
+
+Most of these changes are to agree with a similar
+specification by Charles Lindsey on the Supersedes and
+Replaces headers in Usenet News, which is being developed as
+part of the IETF USEFOR working group, and by other
+suggestions made in the USEFOR mailing list.
+
+Parameters "noshow", "show" and "repost" have been added to
+the "Supersedes" header, in accordance with discussions in the
+usefor mailing list.
+
+A parameter "version=<decimal-version-number>" might also be
+considered, but has not been added.
+
+The discussion in chapter 1.2.1 Who may supersede a
+message/article? has been extended to more fully explain the
+reasons for the recommended practices for implementing hard
+supersedes.
+
+A discussion note has been added to chapter 1.2.4 When to use
+soft and hard supersedes to explain why the author of a
+message may want hard superseding of a message in certain
+cases.
+
+
+Table of contents
+
+1.   Supersedes
+ 1.1   Syntax
+ 1.2   Semantics
+   1.2.1  Who may supersede a message/article?
+   1.2.2  Semantic variant 1: Soft supersedes
+   1.2.3  Semantic variant 2: Hard supersedes
+   1.2.4  When to use soft and hard supersedes
+   1.2.5  Multiple field values
+2.   Security considerations
+3.   Copyright
+4.   Acknowledgments
+5.   References
+6.   Author's address
+
+
+1.    Supersedes
+
+1.1   Syntax
+
+    Supersedes-field          = "Supersedes:" CFWS identifier
+                                *(identifier)
+                                optional-parameter-list
+                                [CFWS] CRLF
+
+    optional-parameter-list   = *( ";" LWSP parameter )
+
+    parameter                 = parameter-name [ "="
+                                parameter-value ]
+
+    parameter-name            = "noshow" / "show" / "repost"
+                                private-parameter /
+                                future-parameter
+
+Note: There is no comma between multiple values, and that each
+Message-ID value is to be surrounded by angle brackets.
+
+Warning: Some software may not work correctly with comments in
+header fields, especially comments in other places than at the
+beginning and end of the field value.
+
+Warning: This header MUST be spelled "Supersedes" and not
+"Supercedes".
+
+1.2   Semantics
+
+The Supersedes header identifies previous correspondence,
+which this message supersedes. Different messaging agents such
+as user agents, mailing list expanders and mailing list
+archives. A user agent is expected to handle this field in
+much the same way as the In-Reply-To and References header.
+
+Note: The Message-ID of a superseding message MUST be
+different from the Message-ID of the superseded message. The
+Message-ID of the superseded message is used as value in the
+"Supersedes:" header, not in the Message-ID of the superseding
+message.
+
+Parameters:
+
+noshow   In the opinion of the sender, this message makes such
+         a minor change to the superseded version, that a
+         recipient, who has already seen the previous verson,
+         will probably not want to see the new version, unless
+         the user explicitly asks for it.
+
+show     In the opinion of the sender, this message makes such
+         a large change to the superseded version, that a
+         recipient, who has already seen the previous version,
+         will probably want to see the new version, too.
+
+repost   This document is a document which is repeatedly, at
+         regular or irregular intervals, reposted, such as
+         FAQs or mailing list monthly information.
+
+None of these parameters have values. The "noshow" and the
+"show" parameters are mutually exclusive, but both of them can
+occur together with the "repost" parameter.
+
+1.2.1 Who may supersede a message/article?
+
+Agents receiving superseding messages MAY ignore, or issue a
+warning, for the Supersedes header, if the author of the
+message is not approved. Approved authors of superseding
+messages MAY be:
+
+(1) The author of the message being superseded.
+
+(2) For moderated mailing lists, the moderator. Note that a
+    moderator may only supersede messages/articles in groups,
+    for which the moderator is responsible, and such a
+    moderator SHOULD not send superseding messages/articles to
+    other groups.
+
+        Discussion: There are two kinds of moderated lists,
+        pre-moderated and post-moderated. In pre-moderated
+        lists, the moderator approves all contributions
+        before they are sent out to list members.
+        In post-moderated lists, contributions are sent
+        out immediately, but the moderator can supersede
+        inappropriate contributions afterwards. The
+        advantage with pre-moderated lists is that no
+        inappropriate contributions will ever be sent out.
+        The advantage with post-moderated list is faster
+        turnaround time in discussion threads.
+
+(3) Other users given the authority to supersede messages.
+    Such authority is often local to one particular server
+    only.
+
+        Discussion: A server administrator may be legally
+        required to supersede illegal messages, if these
+        are available for download by people who have
+        not yet received them.
+
+An agent MAY ignore or issue a warning for Supersedes headers
+if the Superseding message does not have a verifyable digital
+signature of its author or another agent who the agent owner
+thinks should be allowed to supersede this message. Digital
+signatures are separately standardized (like SMIME [9] and PGP
+[10] or other standards for digital signatures) and their
+format and semantics are not specified in this standard.
+
+1.2.2 Semantic variant 1: Soft supersedes
+
+(a) With soft supersedes this header does not imply any
+    mandatory deletion of the previous correspondence in
+    mailboxes and user agent databases. The user is still able
+    to view old versions of superseded messages.
+
+(b) Agents which provide user commands for getting from a
+    reply to the replied-to message (or for getting from a
+    replied-to message to its replies), MAY provide similar
+    commands for getting from a superseding message to the
+    superseded message (or for getting from a superseded
+    message to its superseding version).
+
+(c) Agents MAY normally show the recipient both the previous
+    and the superseding message. If, however, both the
+    previous and the superseding message have arrived, both
+    having the same author, but the user has not yet seen
+    either of them, a user agent MAY show only the superseding
+    message, but also show a mark to inform the recipient that
+    this message supersedes a previous message.
+
+1.2.3 Semantic variant 2: Hard supersedes
+
+With hard supersedes, the arrival of a superseding message or
+article will cause the deletion of the superseded message. The
+new message will however still have a new Message-ID and will
+not take over the Message-ID of the superseded
+message/article.
+
+1.2.4 When to use soft and hard supersedes
+
+Hard and soft supersedes are differentiated by the receiving
+client, not the sender. There is no format difference in the
+header between hard and soft supersedes.
+
+Mail stores under the control of an individual user (for
+example, POP or IMAP mail boxes) SHOULD implement soft
+supersedes but MAY implement hard supersedes, possibly only as
+an (off by default) option.  (Please read the security
+considerations if you plan to implement this). Multi-user
+message archives and servers MAY implement HARD supersedes.
+
+    Discussion: A person, who has by mistake written an
+    illegal message, may be legally required to hard supersede
+    the illegal message, in places where it is available for
+    download by people who have not yet received it.
+
+Note: In Usenet News, servers commonly implement hard
+supersedes.
+
+If the handler of a message/article storage has a mechanism
+for automatic purging of old messages, the fact that there is
+a superseding message may be a component in the decision of
+when to purge the previous version.
+
+1.2.5 Multiple field values
+
+When this is written (1999) some Usenet News softwares cannot
+handle Supersedes with more than one previous articles listed
+as parameters. This can be expected to change, but until then,
+a gateway from e-mail to news MAY because of this delete all
+but the first parameter of this attribute when conveying
+messages from e-mail to news.
+
+
+2.    Security considerations
+
+
+If a server or receiving user agent suppresses showing of
+superseded messages, the "Supersedes:" feature might be used
+maliciously to suppress messages written by other people. To
+reduce the risk for this, it is RECOMMENDED that user agents
+give a warning to the recipient when a superseding message has
+a different "From:" name than the superseded message.
+
+A moderately clever forger can of course circumvent this by
+sending messages with falsified "From:" field and even
+falsified SMTP senders. User agents supporting S/MIME [9] or
+PGP [10] or other standards for digital signature can require
+and check digital signatures to reduce also this risk (see
+section 1.2.1 above).
+
+Even more reduction of security problems can be achieved if
+user agents handle "Supersedes:" exactly in the same way as
+"In-Reply-To:" and "References:", i.e. show both versions of
+the message, and only use the "Supersedes:" header as
+information to readers of messages of the relation between
+different messages.
+
+Another possible risk with "Supersedes:" is that it allows
+people to "change their minds", possibly changing the meaning
+of replies to them. Example: A message with the text "Do you
+like your mother" gets the reply "Yes, very much", and then
+the original message might be changed to "Do you like Hitler",
+changing the meaning of the reply. Note, however, that the
+"In-Reply-To" or "References" headers in the reply refers to
+the Message-ID of the original message, not of the superseding
+message. Thus, a user agent can avoid this problem by
+designing the user interface so that replies are not shown as
+referring to the superseding message, when they use the
+Message-ID of the superseded message.
+
+Also, since "Supersedes:" in e-mail is meant to not actually
+cause deletion of the superseded message, recipients can look
+up the superseded message to see if the author has changed his
+mind. In general, it is not illegal or unethical to change
+your mind, rather, it shows your openness to new ideas and
+willingness to listen to the arguments of other people.
+
+The fact that some implementations of Supersedes cause
+deletion of the Superseded message (hard supersedes, section
+1.2.3 above), but others do not (soft supersedes, section
+1.2.2 above), may cause security problems. To reduce this
+problem, a server should clarify its policy on this to its
+users and follow the recommendations in section 1.2.4 above.
+
+
+3.    Copyright and disclaimer
+
+The IETF takes no position regarding the validity or scope of
+any intellectual property or other rights that might be
+claimed to pertain to the implementation or use of the
+technology described in this document or the extent to which
+any license under such rights might or might not be available;
+neither does it represent that it has made any effort to
+identify any such rights. Information on the IETF's procedures
+with respect to rights in standards-track and standards-
+related documentation can be found in BCP-11. Copies of claims
+of rights made available for publication and any assurances of
+licenses to be made available, or the result of an attempt
+made to obtain a general license or permission for the use of
+such proprietary rights by implementors or users of this
+specification can be obtained from the IETF Secretariat."
+
+The IETF invites any interested party to bring to its
+attention any copyrights, patents or patent applications, or
+other proprietary rights which may cover technology that may
+be required to practice this standard. Please address the
+information to the IETF Executive Director.
+
+This document and translations of it may be copied and
+furnished to others, and derivative works that comment on or
+otherwise explain it or assist in its implmentation may be
+prepared, copied, published and distributed, in whole or in
+part, without restriction of any kind, provided that the above
+copyright notice and this paragraph are included on all such
+copies and derivative works. However, this document itself may
+not be modified in any way, such as by removing the copyright
+notice or references to the Internet Society or other Internet
+organizations, except as needed for the purpose of developing
+Internet standards in which case the procedures for copyrights
+defined in the Internet Standards process must be followed, or
+as required to translate it into languages other than English.
+
+The limited permissions granted above are perpetual and will
+not be revoked by the Internet Society or its successors or
+assigns.
+
+
+4.    Acknowledgments
+
+Many people have helped with the production of this document.
+Of special value have been R. Allbery, H. T. Alvestrand, A.
+Bowesman, B. Franz, P. Hoffman, S. Kille, S. Lyall, K. Moore,
+P. Overell, U. Paz, E. Sommarskog, H. Spencer, J. Stanley, B.
+Templeton, K. Weide and R. Zellich
+
+
+5.    References
+
+[1]  D. Crocker: "Standard for the format of ARPA Internet
+     text messages." STD 11, RFC 822, August 1982.
+
+[2]  S. Hardcastle-Kille: "Mapping between X.400(1988) / ISO
+     10021 and RFC 822",  RFC 1327 May 1992.
+
+[3]  ISO/ITU: "Message Handling Systems", ISO international
+     standard 10021, ITU  recommendation X.400.
+
+[4]  ISO/ITU: "Message Handling Systems, Part 7: Interpersonal
+     Messaging System, ISO international standard 10021-7, ITU
+     recommendation X.420.
+
+[5]  N. Freed, N. Borenstein, "Multipurpose Internet Mail
+     Extensions (MIME) Part One: Format of Internet Message
+     Bodies", RFC 2045, December 1996
+
+[6]  K. Moore, G. Vaudreuil, "An Extensible Message Format for
+     Delivery Status Notifications", RFC 1894, January 1996.
+
+[7]  K. Moore, "SMTP Service Extension for Delivery Status
+     Notifications", RFC 1891, January 1996.
+
+[8]  M.R. Horton, R. Adams: "Standard for interchange of
+     USENET messages", RFC 1036, December 1987.
+
+[9]  B. Ramsdell: S/MIME Version 3 Message Specification. Work
+     in progress.
+
+[10] J. Callas, L. Donnerhacke, H. Finney, R. Thayer: OpenPGP
+     Message Format. Work in progress.
+
+[11] J. Palme: "Advise on the implementation of In-Reply-To,
+     References and Supersedes e-mail and netnews headers",
+     draft-palme-newfields-info-02.doc, March 1998.
+
+[12] D. Crocker: Augmented BNF for Syntax Specifications:
+     ABNF, RFC 2234, November 1997.
+
+
+6.    Author's address
+
+Jacob Palme                          Phone: +46-8-16 16 67
+Stockholm University/KTH             Fax: +46-8-783 08 29
+Skeppargatan 73                      E-mail: jpalme@dsv.su.se
+S-115 30 Stockholm, Sweden
+

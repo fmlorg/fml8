@@ -1,0 +1,1737 @@
+Network Working Group                                     Jacob Palme
+Internet Draft                               Stockholm University/KTH
+draft-palme-mailext-headers-03.txt                             Sweden
+Category: Informational                               Date: June 2000
+Revision of: RFC 2076                          Expires: December 2000
+
+
+
+                  Common Internet Message Header Fields
+
+
+                        Status of this Memo
+
+This document is an Internet-Draft and is in full conformance
+with all provisions of Section 10 of RFC2026.
+
+Internet-Drafts are working documents of the Internet Engineering
+Task Force (IETF), its areas, and its working groups.  Note that
+other groups may also distribute working documents as
+Internet-Drafts.
+
+Internet-Drafts are draft documents valid for a maximum of six
+months and may be updated, replaced, or obsoleted by other
+documents at any time.  It is inappropriate to use Internet-
+Drafts as reference material or to cite them other than as
+"work in progress."
+
+The list of current Internet-Drafts can be accessed at
+http://www.ietf.org/ietf/1id-abstracts.txt
+
+The list of Internet-Draft Shadow Directories can be accessed at
+http://www.ietf.org/shadow.html.
+
+Copyright (C) The Internet Society 1998. All Rights
+Reserved.
+
+                            Abstract
+
+This memo contains tables of commonly occurring header fields in
+headings of e-mail messages. The document compiles information from
+other RFCs such as RFC 822, RFC 1036, RFC 1123, RFC 2156, RFC 1496,
+RFC 1766, RFC 2183, RFC 1864, RFC 2421 and RFC 2045. A few commonly
+occurring header fields which are not defined in RFCs are also
+included. For each header field, the memo gives a short description
+and a reference to the RFC in which the header field is defined.
+
+                  Changes since previous version
+
+This document is a revision of RFC 2076. The following new header
+fields, not included in RFC 2076, have been added:
+Also-Control, Approved-By, Content-Alias, Content-Alternative,
+Content-Class, Content-Conversion, Content-Features, Content-ID,
+Delivered-To, Disposition-Notification-Options, Disposition-
+Notification-To, Expiry-Date, For-Approval, List-Archive, List-
+Digest, List-Help, List-ID, List-Owner, List-Post, List-Software,
+List-Subscribe, List-Unsubscribe, List-URL, Original-Recipient,
+Originator, Originator-Info, Path, PICS-Label, Read-Receipt-To,
+Received, Registered-Mail-Reply-Requested-By, Replaces, Return-
+Receipt-Requested, Speech-Act, Translated-By. Translation-Of, X-
+Confirm-Reading-To, X-Envelope-From, X-Envelope-To, X-Face, X-List-
+Host, X-Listserver, X-Loop, X-MIME-Autoconverted, X-No-Archive, X-
+OriginalArrivalTime, X-Priority, X-Sender, X-X-Sender, X-UIDL, X-URL,
+X-URI.
+
+The latest, revised version of this document is available from URL
+http://www.dsv.su.se/jpalme/ietf/mail-headers
+
+
+                         Table of contents
+
+Abstract
+Changes since previous version
+1. Introduction
+2. Use of gatewaying header fields
+3. Table of header fields
+     3.1 Phrases used in the tables
+     3.2 Trace information
+     3.3 Format and control information
+     3.4 Sender and recipient indication
+     3.5 Response control
+     3.6 Message identification and referral header fields
+     3.7 Other textual header fields
+     3.8 Header fields containing dates and times
+     3.9 Quality information
+     3.10 Language information
+     3.11 Size information
+     3.12 Conversion control
+     3.13 Encoding information
+     3.14 Resent-header fields
+     3.15 Security and reliability
+     3.16 Mailing list control
+     3.17 Miscellaneous
+4. Acknowledgments
+Copyright and disclaimer
+5. References
+6. Author's address
+Appendix A:
+Header fields sorted by Internet RFC document in which they
+appear.
+     RFC 822
+     RFC 976
+     RFC 1049
+     RFC 1036
+     RFC 1123
+     RFC 2156
+     RFC 1505
+     RFC 1766
+     RFC 2183
+     RFC 1864
+     RFC 2421
+     RFC 2045
+     RFC 2110
+     RFC 2369
+     son-of-RFC1036 [21]
+     draft-ietf-receipt
+     World Wide Web Consortium (W3C) Recommendations
+     Not Internet standard (as of June 2000)
+Appendix B: Alphabetical index
+
+
+                         1. Introduction
+
+Many different Internet standards and RFCs define header fields which
+may occur on Internet Mail Messages and Usenet News Articles. The
+intention of this document is to list all such header fields in one
+document as an aid to people developing message systems or interested
+in Internet Mail standards.
+
+The document contains all header fields which the author has found in
+the following Internet standards: RFC 822 [2], RFC 1036 [3], RFC 1123
+[5], RFC 2156 [7], RFC 1496 [8], RFC 2045 [11], RFC 1766 [12], RFC
+2183 [14], RFC 1864[17] and RFC 2421[20]. Note in particular that
+heading attributes defined in PEM (RFC 1421-1424) and MOSS (RFC 1848
+[16]) are not included. PEM and MOSS header fields only appear inside
+the body of a message, and thus are not header fields in the RFC 822
+sense. Mail attributes in envelopes, i.e. attributes controlling the
+message transport mechanism between mail and news servers, are not
+included. This means that attributes from SMTP [1], UUCP [18] and
+NNTP [15] are mainly not covered either. Headings used only in HTTP
+[19] are not included yet, but may be included in future version of
+this memo. Some additional header fields which often can be found in
+e-mail headings but are not part of any Internet standard are also
+included.
+
+The author does not promise that this document contains a complete
+list of all heading fields which are specified in any standard or
+used by any mailer.
+
+For each header field, the document gives a short description and a
+reference to the Internet standard or RFC, in which they are defined.
+
+The header field names given here are spelled the same way as when
+they are actually used. This is usually American but sometimes
+English spelling.  One header field in particular,
+"Organisation/Organization", occurs in e-mail header fields sometimes
+with the English and other times with the American spelling.
+
+The following words are used in this memo with the meaning specified
+below:
+
+heading           Formatted text at the top of a message, ended by a
+                  blank line
+
+header field      One field in the heading, beginning with a field
+                  name, colon, and followed by the field value(s). The
+                  words "heading field" and "header" are also
+                  sometimes used with this meaning.
+
+It is my intention to continue updating this document after its
+publication as an RFC. The latest version, which may be more up-to-
+date (but also less fully checked out) will be kept available for
+downloading from URL
+http://www.dsv.su.se/jpalme/ietf/mail-headers
+
+Please e-mail me (Jacob Palme <jpalme@dsv.su.se>) if you have noted
+header fields which should be included in this memo but are not.
+
+
+                 2. Use of gatewaying header fields
+
+RFC 2156 defines a number of new header fields in Internet mail,
+which are defined to map header fields which X.400 has but which were
+previously not standardized in Internet mail. The fact that a header
+field occurs in RFC 2156 indicates that it is recommended for use in
+gatewaying messages between X.400 and Internet mail, but does not
+mean that the header field is recommended for messages wholly within
+Internet mail. Some of these header fields may eventually see
+widespread implementation and use in Internet mail, but at the time
+of this writing (2000) they are not widely implemented or used.
+
+Header fields defined only in RFC 1036 for use in Usenet News
+sometimes appear in mail messages, either because the messages have
+been gatewayed from Usenet News to e-mail, or because the messages
+were written in combined clients supporting both e-mail and Usenet
+News in the same client. These header fields are not standardized for
+use in Internet e-mail and should be handled with caution by e-mail
+agents.
+
+
+                      3. Table of header fields
+
+3.1 Phrases used in the tables
+
+"not for general        Used to mark header fields which are defined
+usage"                  in RFC 2156 for use in messages from or to
+                        Internet mail/X.400 gateways. These header
+                        fields have not been standardized for general
+                        usage in the exchange of messages between
+                        Internet mail-based systems.
+
+"not standardized       Used to mark header fields defined only in RFC
+for use in e-mail"      1036 for use in Usenet News. These header
+                        fields have no standard meaning when appearing
+                        in e-mail, some of them may even be used in
+                        different ways by different software. When
+                        appearing in e-mail, they should be handled
+                        with caution. Note that RFC 1036, although
+                        generally used as a de-facto standard for
+                        Usenet News, is not an official IETF standard
+                        or even on the IETF standards track.
+
+"non-standard"          This header field is not specified in any of
+                        referenced RFCs which define Internet
+                        protocols, including Internet Standards, draft
+                        standards or proposed standards. The header
+                        field appears here because it often appears in
+                        e-mail or Usenet News. Usage of these header
+                        fields is not in general recommended. Some
+                        header field proposed in ongoing IETF
+                        standards development work, but not yet
+                        accepted, are also marked in this way.
+
+"discouraged"           This header field, which is non-standard, is
+                        known to create problems and should not be
+                        generated. Handling of such header fields in
+                        incoming mail should be done with great
+                        caution.
+
+"controversial"         The meaning and usage of this header field is
+                        controversial, i.e. different implementors
+                        have chosen to implement the header field in
+                        different ways. Because of this, such header
+                        fields should be handled with caution and
+                        understanding of the different possible
+                        interpretations.
+
+"experimental"          This header field is used for newly defined
+                        header fields, which are to be tried out
+                        before entering the IETF standards track.
+                        These should only be used if both
+                        communicating parties agree on using them. In
+                        practice, some experimental protocols become
+                        de-facto-standards before they are made into
+                        IETF standards.
+
+3.2 Trace information
+
+Trace of distribution lists          DL-Expansion-   RFC 2156, not for
+passed.                              History:        general usage.
+
+List of MTAs passed.                 Path:           RFC 1036: 2.1.6,
+                                                     only in Usenet
+                                                     News, not in e-
+                                                     mail.
+
+Trace of MTAs which a message has    Received:       RFC 822: 4.3.2,
+passed.                                              RFC 1123: 5.2.8.
+
+Used to convey the information       Return-Path:    RFC 821,
+from the MAIL FROM envelope                          RFC 1123: 5.2.13.
+attribute in final delivery, when
+the message leaves the SMTP
+environment in which "MAIL FROM"
+is used.
+
+3.3 Format and control information
+
+Special Usenet News commands and     Also-Control:   son-of-RFC1036
+a normal article at the same                         [21], non-
+time.                                                standard, only in
+                                                     Usenet News, not
+                                                     in e-mail
+
+Controls whether this message may    Alternate-      RFC 2156, not for
+be forwarded to alternate            Recipient:      general usage.
+recipients such as a postmaster
+if delivery is not possible to
+the intended recipient. Default:
+Allowed.
+
+Whether a MIME body part is to be    Content-        RFC 2183,
+shown inline or is an attachment;    Disposition:    experimental
+can also indicate a suggested
+filename for use when saving an
+attachment to a file.
+
+Only in Usenet News, contains        Control:        RFC 1036: 2.1.6,
+commands to be performed by News                     only in Usenet
+agents.                                              News, not in e-
+                                                     mail.
+
+Whether recipients are to be told    Disclose-       RFC 2156, not for
+the names of other recipients of     Recipients:     general usage.
+the same message. This is
+primarily an X.400 facility. In
+X.400, this is an envelope
+attribute and refers to
+disclosure of the envelope
+recipient list. Disclosure of
+other recipients is in Internet
+mail done via the To:, cc: and
+bcc: header fields.
+
+An indicator that this message is    MIME-Version:   RFC 2045: 4.
+formatted according to the MIME
+standard, and an indication of
+which version of MIME is
+utilized.
+
+Which body part types occur in       Original-       RFC 2156, not for
+this message.                        Encoded-        general usage.
+                                     Information-
+                                     Types:
+
+3.4 Sender and recipient indication
+
+Inserted by Sendmail when there      Apparently-     Non-standard,
+is no "To:" recipient in the         To:             discouraged,
+original message, listing                            mentioned in
+recipients derived from the                          RFC 1211.
+envelope into the message
+heading. This behavior is not
+quite proper, MTAs should not
+modify headings (except inserting
+Received lines), and it can in
+some cases cause Bcc recipients
+to be wrongly divulged to non-Bcc
+recipients.
+
+Name of the moderator of the         Approved:       RFC 1036: 2.2.11,
+newsgroup to which this article                      not standardized
+is sent; necessary on an article                     for use in e-mail.
+sent to a moderated newsgroup to
+allow its distribution to the
+newsgroup members. Also used on
+certain control messages, which
+are only performed if they are
+marked as Approved.
+
+Name of the moderator of a           Approved-By:    Non-standard, used
+mailing list, and who has                            by some mailing
+approved this message for                            list expansion
+distribution to the members of                       systems.
+the list.
+Recipients not to be disclosed to    bcc:            RFC 822: 4.5.3,
+other recipients. (bcc = Blind                       RFC 1123: 5.2.15-
+Carbon Copy).                                        16, 5.3.7.
+
+Secondary, informational             cc:             RFC 822: 4.5.2,
+recipients. (cc = Carbon Copy)                       RFC 1123. 5.2.15-
+                                                     16, 5.3.7.
+
+Geographical or organizational       Distribution:   RFC 1036: 2.2.7,
+limitation on where this article                     not standardized
+can be distributed. Value can be                     for use in e-mail.
+a compete or incomplete domain
+names, also various special
+values are accepted like "world",
+"usenet", "USA", etc.
+
+Fax number of the originator.        Fax:,           Non-standard.
+                                     Telefax:
+
+Primary recipients, who are          For-Approval:   Non-standard
+requested to approve the
+information in this message or
+its attachments.
+
+Primary recipients, who are          For-Comment:    Non-standard
+requested to comment on the
+information in this message or
+its attachments.
+
+Primary recipients, who are          For-Handling:   Non-standard
+requested to handle the
+information in this message or
+its attachments.
+
+(2) Used in Usenet News mail         From            RFC 976: 2.4 for
+transport, to indicate the path      or              use in Usenet News
+through which an article has gone    >From
+when transferred to a new host.      (not followed
+                                     by a colon)
+Sometimes called "From_" header
+field.
+
+(1) This header field should         From (not       not standardized
+never appear in e-mail being         followed by a   for use in e-mail
+sent, and should thus not appear     colon)
+in this memo. It is however
+included, since people often ask
+about it.
+
+This header field is used in the
+so-called Unix mailbox format,
+also known as Berkely mailbox
+format or the MBOX format. This
+is a format for storing a set of
+messages in a file. A line
+beginning with "From " is used to
+separate successive messages in
+such files.
+
+This header field will thus
+appear when you use a text editor
+to look at a file in the Unix
+mailbox format. Some mailers also
+use this format when printing
+messages on paper.
+
+The information in this header
+field should NOT be used to find
+an address to which replies to a
+message are to be sent.
+
+Authors or persons taking            From:           RFC 822: 4.4.1,
+responsibility for the message.                      RFC 1123: 5.2.15-
+                                                     16, 5.3.7,
+Note difference from the "From "                     RFC 1036 2.1.1
+header field (not followed by
+":") below.
+
+
+Information about the client         Mail-System-    Non-standard.
+software of the originator.          Version:,
+                                     Mailer:,
+                                     Originating-
+                                     Client:, X-
+                                     Mailer, X-
+                                     Newsreader, X-
+                                     MimeOLE:
+
+In Usenet News: group(s) to which    Newsgroups:     RFC 1036: 2.1.3,
+this article was posted.                             not standardized
+Some systems provide this header                     and controversial
+field also in e-mail although it                     for use in e-mail.
+is not standardized there.
+Unfortunately, the header field
+can appear in e-mail with three
+different and contradictory
+meanings:
+
+(a) Indicating the newsgroup
+recipient of an article/message
+sent to both e-mail and Usenet
+News recipients.
+
+(b) In a message adressed to some
+mail to news gateways, indicates
+the newsgroup(s) that the message
+is to be posted to.
+
+(c) In a personally addressed
+reply to an article in a news-
+group, indicating the newsgroup
+in which this discussion
+originated.
+
+Sometimes used in Usenet News in     Originator:     Non-standard in
+similar ways to "Sender:"                            Usenet News,
+                                                     Experimental in
+Also used in printing protocols.                     RFC 1528.
+
+Contains information about the       Originator-     Non-standard [25]
+authentication of the originator     Info:
+in a format which is not easily
+used to send email to, to avoid
+the problems with "Sender" and "X-
+Sender".
+
+Phone number of the originator.      Phone:          Non-standard.
+
+The person or agent submitting       Sender:         RFC 822: 4.4.2,
+the message to the network, if                       RFC 1123: 5.2.15-
+other than shown by the From:                        16, 5.3.7, RFC
+header field. Should be                              1036.
+authenticated,
+according to RFC 822, but what
+kind of authentication is not
+clear. Some implementations
+expect that the e-mail address
+used in this field can be used to
+reach the sender, others do not.
+See also "X-Sender".
+
+Primary recipients.                  To:             RFC 822: 4.5.1,
+                                                     RFC 1123: 5.2.15-
+                                                     16, 5.3.7.
+
+If the sender in the envelope        X-Envelope-     Non-standard.
+(SMTP "RCTP TO") is not the same     From
+as the senders in the "From" or
+"Sender" RFC822 header fields,
+some mail servers add this to the
+RFC822 header fields as an aid to
+clients which would otherwise not
+be able to display this
+information.
+
+If the recipient in the envelope     X-Envelope-To   Non-standard.
+(SMTP "MAIL FROM") is not
+included in the CC list, some
+mail servers add this to the
+RFC822 header field as an aid to
+clients which would otherwise not
+be able to display the envelope
+recipients.
+
+48x48 bitmap with picture of the     X-Face          Non-Standard
+sender of this message.
+
+Indication in the mail header of     X-RCPT-TO:      Non-standard
+recipient on the SMTP envelope.
+
+Some mail software expect            X-Sender:       Non-standard
+"Sender:" to be an e-mail address
+which you can send mail to.
+However, some mail software has
+as the best authenticated sender
+a POP or IMAP account, which you
+might not be able to send to.
+Because of this, some mail
+software put the POP or IMAP
+account into an X-sender header
+field instead of a Sender header
+field, to indicate that you may
+not be able to send e-mail to
+this address. See also "X-X-
+Sender".
+
+Another use of" X-Sender:" is
+that some e-mail software, which
+wants to insert a "Sender:"
+header, will first change an
+existing "Sender:" header to "X-
+Sender". This use is actually
+often the same as that described
+in the previous paragraph, since
+the new "Sender:" is added
+because it is better
+authenticated than the old value.
+
+Even though some systems put the     X-X-Sender:     Non-standard
+POP or IMAP account name into the
+"X-Sender:" instead of the Sender
+header field, some mail software
+tries to send to the "X-Sender:"
+too. To stop this, some systems
+have begun to use "X-X-Sender:"
+to indicate an authentication of
+the sender which might not be
+useable to send e-mail to. See
+also "Originator-Info:"
+
+3.5 Response control
+
+Indicates whether the content of     Content-        RFC 2156, not for
+a message is to be returned with     Return:         general usage.
+non-delivery notifications.
+For future options on disposition    Disposition-    RFC 2298
+notifications.                       Notification-
+                                     Options:
+
+
+Indicate that the sender wants a     Disposition-    RFC 2298
+dispoisition notification when       Notification-
+this message is received (read,      To:
+processed, etc.) by its
+receipents.
+
+Address to which notifications       Errors-To:,     Non-standard,
+are to be sent and a request to      Return-         discouraged.
+get delivery notifications.          Receipt-To:,
+Internet standards recommend,        Read-Receipt-
+however, the use of MAIL FROM and    To:, X-
+Return-Path, not Errors-To, for      Confirm-
+where delivery notifications are     reading-to:,
+to be sent.                          Return-
+                                     Receipt-
+                                     Requested,
+                                     Register-Mail-
+                                     Reply-
+                                     Requested-By:
+
+Used in Usenet News to indicate      Followup-To:    RFC 1036: 2.2.3,
+that future discussions (=follow-                    not standardized
+up) on an article should go to a                     for use in e-mail.
+different set of newsgroups than
+the replied-to article. The most
+common usage is when an article
+is posted to several newsgroups,
+and further discussions is to
+take place in only one of them.
+
+In e-mail, this header field may
+occur in a message which is sent
+to both e-mail and Usenet News,
+to show where follow-up in Usenet
+news is wanted. The header field
+does not say anything about where
+follow-up in e-mail is to be
+sent.
+
+The value of this header field
+should be one or more newsgroup
+names.
+
+The special value "poster" as in
+"Followup-To: poster" means that
+replies are to be sent as e-mail
+to the author only.
+
+Whether a delivery report is         Generate-       RFC 2156, not for
+wanted at successful delivery.       Delivery-       general usage.
+Default is not to generate such a    Report:
+report.
+Original Recipient information       Original-       RFC 2298
+for inclusion in disposition         Recipient
+notifications.
+
+Whether non-delivery report is       Prevent-        RFC 2156, not for
+wanted at delivery error. Default    NonDelivery-    general usage.
+is to want such a report.            Report:
+
+This header field is meant to        Reply-To:       RFC 822: 4.4.3,
+indicate where the sender wants                      RFC 1036: 2.2.1
+replies to go. Unfortunately,                        controversial.
+this is ambiguous, since there
+are different kinds of replies,
+which the sender may wish to go
+to different addresses. In
+particular, there are personal
+replies intended for only one
+person, and group replies,
+intended for the whole group of
+people who read the replied-to
+message (often a mailing list,
+anewsgroup name cannot appear
+here because of different syntax,
+see "Followup-To" below.).
+
+Some mail systems use this header    Reply-To2
+field to indicate a better form
+of the e-mail address of the
+sender. Some mailing list
+expanders puts the name of the
+list in this header field. These
+practices are controversial. The
+personal opinion of the author of
+this RFC is that this header
+field should be avoided except in
+special cases, but this is a
+personal opinion not shared by
+all specialists in the area.
+
+Possible future change of name       X400-Content-   non-standard
+for "Content-Return:"                Return:
+
+3.6 Message identification and referral header fields
+
+Reference to specially important     Article-        son-of-RFC1036
+articles for a particular Usenet     Names:          [21], non-standard
+Newsgroup.
+Only in Usenet News, similar to      Article-        son-of-RFC1036
+"Supersedes:" but does not cause     Updates:        [21], non-standard
+the referenced article to be
+physically deleted.
+
+Used in addition to Content-         Content-        Work in progress
+Location if this content part can    Alias:
+be retrieved through more than
+one URI. Only one of them is
+allowed in the Content-Location,
+the other can be specified in
+Content-Alias.
+
+Base to be used for resolving        Content-Base:   RFC 2110
+relative URIs within this content
+part.
+
+Unique ID of one body part of the    Content-ID:     RFC 2045: 7.
+content of a message.
+URI with which the content of        Content-        RFC 2110
+this content part might be           Location:
+retrievable.
+Used by some automatic services      Delivered-To:   non-standard
+(mainly MLMs and autoresponders)     or
+for the purpose of loop              X-Loop:
+detection. The service adds the
+Delivered-To header to outgoing
+messages, with its e-mail address
+as a value, and discards incoming
+messages which already have it.
+
+Reference to message which this      In-Reply-To:    RFC 822: 4.6.2.
+message is a reply to.
+Unique ID of this message.           Message-ID:     RFC 822: 4.6.1
+                                                     RFC 1036: 2.1.5.
+
+Reference to previous message        Obsoletes:      RFC 2156, not for
+being corrected and replaced.                        general usage.
+Compare to "Supersedes:" below.
+This field may in the future be
+replaced with "Supersedes:".
+
+In e-mail: reference to other        References:     RFC 822: 4.6.3
+related messages, in Usenet News:                    RFC 1036: 2.1.5.
+reference to replied-to-articles.
+Still another name for similar       Replaces:       non-standard,
+functionality as for "Obsoletes:"                    proposed in IETF
+and "Supersedes:". This may                          USEFOR working
+become the most recommended                          group
+header in the future, but is
+still under discussion in IETF
+standards development work.
+
+References to other related          See-Also:       Son-of-RFC1036
+articles in Usenet News.                             [21], non-standard
+
+Commonly used in Usenet News in      Supersedes:     son-of-RFC1036
+similar ways to the "Obsoletes"                      [21], non-standard
+header field described above. In
+Usenet News, however, Supersedes
+causes a full deletion of the
+replaced article in the server,
+while "Supersedes" and
+"Obsoletes" in e-mail is
+implemented in the client and
+often does not remove the old
+version of the text.
+
+Mailbox of the person who made       Translated-     non-standard
+the translation.                     By:
+
+Reference to the Message-ID of a     Translation-    non-standard
+message, which the current           Of:
+message is a translation of.
+
+Unique identifier for a message,     X-UIDL:         non-standard
+local to a particular local
+mailbox store. The UIDL
+identifier is defined in the POP3
+standard, but not the "X-UIDL:"
+header.
+
+Similar usage as "X-URL". The URI    X-URI:          Non-standard
+can be either a URL or a URN.
+URNs are meant to become more
+persistent references to
+resources than URLs.
+
+Sometimes used with the same         X-URL:          Non-standard
+meaning as "Content-Location:",
+sometimes to indicate the web
+home page of the sender or of his
+organisation.
+
+The UID, as defined in the IMAP      X-IMAP:         Non-standard
+standard. Only used in internal
+mailbox storage in some mail
+systems, should never be visible
+to a user.
+
+3.7 Other textual header fields
+
+Comments on a message.               Comments:       RFC 822: 4.7.2.
+
+Description of a particular body     Content-        RFC 2045: 8.
+part of a message, for example a     Description:
+caption for an image body part.
+A text string which identifies       Content-        RFC 2156, not for
+the content of a message.            Identifier:     general usage.
+
+Search keys for data base            Keywords:       RFC 822: 4.7.1
+retrieval.                                           RFC 1036: 2.2.9.
+
+See Organization above.              Organisation:   Non-standard.
+
+Organization to which the sender     Organization:   RFC 1036: 2.2.8,
+of this article belongs.                             not standardized
+                                                     for use in e-mail.
+
+Title, heading, subject. Often       Subject:        RFC 822: 4.7.1
+used as thread indicator for                         RFC 1036: 2.1.4.
+messages replying to or
+commenting on other messages.
+
+Short text describing a longer       Summary:        RFC 1036: 2.2.10,
+article. Warning: Some mail                          not standardized
+systems will not display this                        for use in e-mail,
+text to the recipient. Because of                    discouraged.
+this, do not use this header
+field for text which you want to
+ensure that the recipient gets.
+
+3.8 Header fields containing dates and times
+
+In Internet, the date when a         Date:           RFC 822: 5.1,
+message was written, in X.400,                       RFC 1123: 5.2.14
+the time a message was submitted.                    RFC 1036: 2.1.2.
+Some Internet mail systems also
+use the date when the message was
+submitted.
+
+The time when a message was          Delivery-       RFC 2156, not for
+delivered to its recipient.          Date:           general usage.
+
+A suggested expiration date. Can     Expires:        RFC 1036: 2.2.4,
+be used both to limit the time of                    not standardized
+an article which is not                              for use in e-mail.
+meaningful after a certain date,
+and to extend the storage of
+important articles.
+
+Time at which a message loses its    Expiry-Date:    RFC 2156, not for
+validity. This field may in the                      general usage.
+future be replaced by "Expires:".
+Latest time at which a reply is      Reply-By:       RFC 2156, not for
+requested (not demanded).                            general usage.
+
+Time when this message was           X-OriginalArr   Non-standard
+delivered into the message           ivalTime:
+transport system (usually the
+same time as in the last
+"Received:" header)
+
+3.9 Quality information
+
+A hint from the originator to the    Importance:     RFC 2156 and
+recipients about how important a                     RFC 2421, proposed
+message is. Values: High, normal
+or low. Not used to control
+transmission speed.
+
+Body parts are missing.              Incomplete-     RFC 2156, not for
+                                     Copy:           general usage.
+
+Ratings label to control             PICS-Label:     REC-PICS-labels,
+selection (filtering) of messages                    W3C document [23].
+according to the PICS protocol.
+Sometimes used as a priority         Precedence:     Non-standard,
+value which can influence                            controversial.
+transmission speed and delivery.
+Common values are "bulk" and
+"first-class". Other uses is to
+control automatic replies and to
+control return-of-content
+facilities, and to stop mailing
+list loops.
+
+Can be "normal", "urgent" or "non-   Priority:       RFC 2156, not for
+urgent" and can influence                            general usage.
+transmission speed and delivery.
+How sensitive it is to disclose      Sensitivity:    RFC 2156 and
+this message to other people than                    RFC 2421, proposed
+the specified recipients. Values:
+Personal, private, company
+confidential. The absence of this
+header field in messages
+gatewayed from X.400 indicates
+that the message is not
+sensitive.
+
+Yet another priority indication.     X-MSMail-       Non-standard
+                                     Priority:
+
+Values: 1 (Highest), 2 (High), 3     X-Priority:     Non-standard [24]
+(Normal), 4 (Low), 5 (Lowest). 3
+(Normal) is default if the field
+is omitted.
+
+3.10 Language information
+
+Can include a code for the           Content-        RFC 1766, proposed
+natural language used in a           Language:       standard.
+message, e.g. "en" for English.
+Can include a code for the           Language:       RFC 2156, not for
+natural language used in a                           general usage.
+message, e.g. "en" for English.
+3.11 Size information
+
+Inserted by certain mailers to       Content-        Non-standard,
+indicate the size in bytes of the    Length:         discouraged.
+message text. This is part of a
+format some mailers use when
+showing a message to its users,
+and this header field should not
+be used when sending a message
+through the net. The use of this
+header field in transmission of a
+message can cause several
+robustness and interoperability
+problems.
+
+Size of the message.                 Lines:          RFC 1036: 2.2.12,
+                                                     not standardized
+                                                     for use in e-mail.
+
+3.12 Conversion control
+
+Information on where an              Content-        Non-standard [27].
+alternative variant of this          Alternative:
+document might be found.
+Non-standard variant of              Content-        Non-standard.
+Conversion: with the same values.    Conversion:
+
+The body of this message may not     Conversion:     RFC 2156, not for
+be converted from one character                      general usage.
+set to another. Values:
+Prohibited and allowed.
+
+The body of this message may not     Conversion-     RFC 2156, not for
+be converted from one character      With-Loss:      general usage.
+set to another if information
+will be lost. Values: Prohibited
+and allowed.
+
+3.13 Encoding information
+
+Type information of the content      Content-        non-standard
+in some class hierarchy. Class       Class:
+hierarchies are commonly used to
+classify data structures in
+software development.
+
+Can give more detailed               Content-        non-standard
+information about the Content-       Features:
+Type. Example:
+
+(&  (color=binary)
+    (image-file-structure=TIFF-S)
+    (dpi=200)
+    (paper-size=A4)
+    (image-coding=MH)
+    (MRC-mode=0)
+    (ua-media=stationery) )
+
+This header is meant to be used
+when you can choose between
+different versions of a resource,
+such as when using
+multipart/atlernative.
+
+Information from the SGML entity     Content-SGML-   non-standard
+declaration corresponding to the     Entity:
+entity contained in the body of
+the body part.
+
+Coding method used in a MIME         Content-        RFC 2045: 6.
+message body.                        Transfer-
+                                     Encoding:
+
+Format of content (character set     Content-Type:   RFC 1049,
+etc.) Note that the values for                       RFC 1123: 5.2.13,
+this header field are defined in                     RFC 1766: 4.1
+different ways in RFC 1049 and in                    RFC 2045: 5.
+MIME (RFC 2045), look for the
+"MIME-version" header field to
+understand if Content-Type is to
+be interpreted according to RFC
+1049 or according to MIME. The
+MIME definition should be used in
+generating mail. RFC 1049 has
+"historic" status.
+
+RFC 1766 defines a parameter
+"difference" to this header
+field.
+
+Various other Content-Type define
+various additional parameters.
+For example, the parameter
+"charset" is mandatory for all
+textual Content-Types.
+
+Used in several different ways by    Encoding:       RFC 1154,
+different mail systems. Some use                     RFC 1505,
+it for a kind of content-type                        experimental.
+information, some for encoding
+and length information, some for
+a kind of boundary information,
+some in other ways.
+
+Only used with the value             Message-Type:   RFC 2156, not for
+"Delivery Report" to indicates                       general usage.
+that this is a delivery report
+gatewayed from X.400.
+
+Information about conversion of      X-MIME-         non-standard
+this message on the path from        Autoconverted:
+sender to recipient, like
+conversion between MIME encoding
+formats. Note: Auto-conversion
+may invalidate digital seals and
+signatures.
+
+3.14 Resent-header fields
+
+When manually forwarding a           Resent-Reply-   RFC 822: C.3.3.
+message, header fields referring     To:,
+to the forwarding, not to the        Resent-From:,
+original message.  Note: MIME        Resent-
+specifies another way of             Sender:,
+resending messages, using the        Resent-From:,
+"Message" Content-Type.              Resent-Date:,
+                                     Resent-To:,
+                                     Resent-cc:,
+                                     Resent-bcc:,
+                                     Resent-
+                                     Message-ID:
+
+3.15 Security and reliability
+
+Checksum of content to ensure        Content-MD5:    RFC 1864, proposed
+that it has not been modified.                       standard.
+
+Used in Usenet News to store         Xref:           RFC 1036: 2.2.13,
+information to avoid showing a                       only in Usenet
+reader the same article twice if                     News, not in e-
+it was sent to more than one                         mail.
+newsgroup. Only for local usage
+within one Usenet News server,
+should not be sent between
+servers.
+
+3.16 Mailing list control
+
+Contains URL to use to browse the    List-Archive    RFC 2369 [26]
+archives of the mailing list from
+which this message was relayed.
+
+URL to use to get a subscription     List-Digest     Non-standard
+to the digest version of the
+mailing list from which this
+message was relayed.
+
+Contains URL to use to get a         List-Help       RFC 2369 [26]
+information about the mailing
+list from which this message was
+relayed.
+
+Stores an identification of the      List-ID         Approved by the
+mailing list, through which this                     IESG for
+message was distributed.                             standardization.
+
+Contains URL to send e-mail to       List-Owner      RFC 2369 [26]
+the owner of the mailing list
+from which this message was
+relayed.
+
+Contains URL to use to send          List-Post       RFC 2369 [26]
+contributions to the mailing list
+from which this message was
+relayed.
+
+Information about the software       List-Software   Non-standard, has
+used in a mailing list expander                      been considered
+through which this message has                       for inclusion in
+passed.                                              [26].
+
+Contains URL to use to get a         List-           RFC 2369 [26]
+subscription to the mailing list     Subscribe
+from which this message was
+relayed.
+
+Contains URL to use to               List-           RFC 2369 [26]
+unsubscribe the mailing list from    Unsubscribe
+which this message was relayed.
+
+Contains URL where information of    List-URL        Non-standard
+various kinds about the mailing
+list from which this message was
+relayed.
+
+Information about the server and     X-Listserver,   Non-standard.
+software used in a mailing list      X-List-Host     Recommended to use
+expander through which this                          "List-Software"
+message has passed. Warning:                         instead.
+"Listserv" is a trademark and
+should not be used for other than
+the "Listserv" product. Use,
+instead the "List-Software"
+header field.
+
+3.17 Miscellaneous
+
+Has been automatically forwarded.    Autoforwarded   RFC 2156, not for
+                                     :               general usage.
+
+Can be used in Internet mail to      Discarded-      RFC 2156, not for
+indicate X.400 IPM extensions        X400-IPMS-      general usage.
+which could not be mapped to         Extensions:
+Internet mail format.
+Can be used in Internet mail to      Discarded-      RFC 2156, not for
+indicate X.400 MTS extensions        X400-MTS-       general usage.
+which could not be mapped to         Extensions:
+Internet mail format.
+Name of file in which a copy of      Fcc:            Non-standard.
+this message is stored.
+Speech act categoriztion of a        Speech-Act:     Non-standard
+message, examples of speeach acts
+are Question, Idea, More,
+Promise, Sad, Happy, Angry,
+summary, Decision
+This field is used by some mail      Status:         Non-standard,
+delivery systems to indicate the                     should never
+status of delivery for this                          appear in mail in
+message when stored. Common                          transit.
+values of this field are:
+U    message is not downloaded
+     and not deleted.
+
+R    message is read or
+     downloaded.
+
+O    message is old but not
+     deleted.
+
+D    to be deleted.
+
+N    new (a new message also
+     sometimes is distinguished
+     by not having any "Status:"
+     header field.
+
+Combinations of these characters
+can occur, such as "Status: OR"
+to indicate that a message is
+downloaded but not deleted.
+
+Do not archive this message in       X-No-Archive:   Non-standard
+publicly available archives.         Yes
+
+
+
+                          4. Acknowledgments
+
+Harald Tveit Alvestrand, Neil Carpenter, William C. Carpenter, Rob
+Chandhok, Ned Freed, Olle J„rnefors, Usi Paz, Martin Platt, Keith
+Moore, Robert A. Rosenberg, Mark Symons, Nick Smith Michael C.
+Tiernan and several other people have helped me with compiling this
+list. I especially thank Ned Freed and Olle J„rnefors for their
+thorough review and many helpful suggestions for improvements. I
+alone take responsibility for any errors which may still be in the
+list.
+
+An earlier version of this list has been published as part of [13].
+
+
+                 Copyright and disclaimer
+
+The IETF takes no position regarding the validity or scope
+of any intellectual property or other rights that might be
+claimed to pertain to the implementation or use of the
+technology described in this document or the extent to
+which any license under such rights might or might not be
+available; neither does it represent that it has made any
+effort to identify any such rights. Information on the
+IETF's procedures with respect to rights in standards-track
+and standards-related documentation can be found in BCP-11.
+Copies of claims of rights made available for publication
+and any assurances of licenses to be made available, or the
+result of an attempt made to obtain a general license or
+permission for the use of such proprietary rights by
+implementors or users of this specification can be obtained
+from the IETF Secretariat."
+
+The IETF invites any interested party to bring to its
+attention any copyrights, patents or patent applications,
+or other proprietary rights which may cover technology that
+may be required to practice this standard. Please address
+the information to the IETF Executive Director.
+
+Copyright (C) The Internet Society (date). All Rights
+Reserved.
+
+This document and translations of it may be copied and
+furnished to others, and derivative works that comment on
+or otherwise explain it or assist in its implmentation may
+be prepared, copied, published and distributed, in whole or
+in part, without restriction of any kind, provided that the
+above copyright notice and this paragraph are included on
+all such copies and derivative works. However, this
+document itself may not be modified in any way, such as by
+removing the copyright notice or references to the Internet
+Society or other Internet organizations, except as needed
+for the purpose of developing Internet standards in which
+case the procedures for copyrights defined in the Internet
+Standards process must be followed, or as required to
+translate it into languages other than English.
+
+The limited permissions granted above are perpetual and
+will not be revoked by the Internet Society or its
+successors or assigns.
+
+
+                            5. References
+
+Ref.    Author, title                                    IETF status
+                                                         (July 1999)
+-----   ---------------------------------------------    -----------
+[1]     J. Postel: "Simple Mail Transfer Protocol",      Standard,
+        STD 10, RFC 821, August 1982.                    Recommended
+
+[2]     D. Crocker: "Standard for the format of ARPA     Standard,
+        Internet text messages." STD 11, RFC 822,        Recommended
+        August 1982.
+
+[3]     M.R. Horton, R. Adams: "Standard for             Not an offi-
+        interchange of USENET messages", RFC 1036,       cial IETF
+        December 1987.                                   standard,
+                                                         but in
+                                                         reality a de-
+                                                         facto
+                                                         standard for
+                                                         Usenet News
+
+[4]     M. Sirbu: "A Content-Type header field header    Historic
+        field for internet messages", RFC 1049, March
+        1988.
+
+[5]     R. Braden (editor): "Requirements for            Standard,
+        Internet Hosts -- Application and Support",      Required
+        STD-3, RFC 1123, October 1989.
+
+[6]     D. Robinson, R. Ullman: "Encoding Header         Non-standard
+        field for Internet Messages", RFC 1505,
+        August 1993.
+
+[7]     S. Hardcastle-Kille: "Mapping between            Proposed
+        X.400(1988) / ISO 10021 and RFC 822",  RFC       standard,
+        2156 January 1998.                               elective
+
+[8]     H. Alvestrand & J. Romaguera: "Rules for         Proposed
+        Downgrading Messages from X.400/88 to            standard,
+        X.400/84 When MIME Content-Types are Present     elective
+        in the Messages", RFC 1496, August 1993.
+
+[9]     A. Costanzo: "Encoding Header field Header       Non-standard
+        field for Internet Messages", RFC 1154, April
+        1990.
+
+[10]    A. Costanzo, D. Robinson: "Encoding Header       Experimental
+        field Header field for Internet Messages",
+        RFC 1505, August 1993.
+
+[11]    N. Freed & N. Borenstein: "MIME (Multipurpose    Draft
+        Internet Mail Extensions) Part One: Format of    Standard,
+        Internet Message Bodies. RFC 2045. November      elective
+        1996.
+
+[12]    H. Alvestrand: "Tags for the Identification      Proposed
+        of Languages", RFC 1766, February 1995.          standard,
+                                                         elective
+
+[13]    J. Palme: "Electronic Mail", Artech House        Non-standard
+        publishers, London-Boston January 1995.
+
+[14]    R. Troost, S. Dorner: "Communicating             Experimental
+        Presentation Information in Internet
+        Messages: The Content-Disposition Header
+        field", RFC 2183, June 1995.
+
+[15]    B. Kantor, P. Lapsley, "Network News Transfer    Proposed
+        Protocol: "A Proposed Standard for the Stream-   standard
+        Based Transmission of News", RFC 977, January
+        1986.
+[16]    1848  PS   S. Crocker, N. Freed, J. Galvin,      Proposed
+        S. Murphy, "MIME Object Security Services",      standard
+        RFC 1848, March 1995.
+
+[17]    J. Myers, M. Rose: The Content-MD5 Header        Draft
+        field Header field, RFC 1864, October 1995.      standard
+
+[18]    M. Horton, UUCP mail interchange format          Not an offi-
+        standard, RFC 976, Januari 1986.                 cial IETF
+                                                         standard,
+                                                         but in
+                                                         reality a de-
+                                                         facto
+                                                         standard for
+                                                         Usenet News
+
+[19]    T. Berners-Lee, R. Header fielding, H.           Informatio
+        Frystyk: Hypertext Transfer Protocol --          nal
+        HTTP/1.0, RFC 1945.
+
+[20]    G. Vaudreuil: Voice Profile for Internet         Proposed
+        Mail, RFC 2421 Feburary 1998.
+
+[21]    H. Spencer: News Article Format and              Not even an
+        Transmission, June 1994,                         RFC, but
+        FTP://zoo.toronto.edu/pub/news.ps.Z              still widely
+        FTP://zoo.toronto.edu/pub/news.txt.Z             used and
+                                                         partly almost
+        This document is often referenced under the      a de-facto
+        name "son-of-RFC1036".                           standard for
+                                                         Usenet News
+
+[23]    PICS Label Distribution Label Syntax and         Other
+        Communication Protocols, World Wide Web          standard
+        Consortium, October 1996.
+
+[24]    Eudora Pro Macintosh User Manual, Qualcomm       Non-standard
+        Inc., 1988-1995.
+
+[25]    C. Newman: Originator-Info Message Header        Non-standard
+        field. work in progress, July 1997.
+
+[26]    Grant Neufeld and Joshua D. Baer: The Use of     Proposed
+        URLs as Meta-Syntax for Core Mail List           standard
+        Commands and their Transport through Message
+        Header fields, RFC 2369, July 1998.
+
+[27]    G. Klyne (ed.): Content Negotiation for          Non-standard
+        Facsimile Using Internet Mail, Work in
+        progress, March 2000.
+
+                          6. Author's address
+
+Jacob Palme                     Phone: +46-8-16 16 67
+Stockholm University/KTH        Fax: +46-8-783 08 29
+Electrum 230                    E-mail: jpalme@dsv.su.se
+S-164 40 Kista, Sweden
+
+
+                             Appendix A:
+Header fields sorted by Internet RFC document in which they appear.
+
+RFC 822
+-------
+
+bcc
+cc
+Comments
+Date
+From
+In-Reply-To
+Keywords
+Message-ID
+Received
+References
+Reply-To
+Resent-
+Resent-bcc
+Resent-cc
+Resent-Date
+Resent-From
+Resent-From
+Resent-Message-ID
+Resent-Reply-To
+Resent-Sender
+Resent-To
+Return-Path
+Sender
+Subject
+To
+
+RFC 976
+-------
+
+"From " (followed by space, not colon (:")
+
+RFC 1049
+--------
+
+Content-Type
+
+RFC 1036
+--------
+
+Approved
+Control
+Distribution
+Expires
+Followup-To
+Lines
+Newsgroups
+Organization
+Path
+Summary
+Xref
+
+RFC 1123
+--------
+
+Content-Type
+
+RFC 2156
+--------
+
+Alternate-recipient
+Auto-forwarded see Autoforwarded
+Autoforwarded
+Content-Identifier
+Content-Return
+Conversion
+Conversion-With-Loss
+Delivery-Date
+Discarded-X400-IPMS-Extensions
+Discarded-X400-MTS-Extensions
+Disclose-Recipients
+DL-Expansion-History
+Expiry-Date
+Generate-Delivery-Report
+Importance
+Incomplete-Copy
+Language
+Message-Type
+Obsoletes
+Original-Encoded-Information-Types
+Prevent-NonDelivery-Report
+Priority
+Reply-By
+Sensitivity
+
+RFC 1505
+--------
+
+Encoding
+
+RFC 1766
+--------
+
+Content-Language
+
+RFC 2183
+--------
+
+Content-Disposition
+
+RFC 1864
+--------
+
+Content-MD5
+
+RFC 2421
+--------
+
+Importance
+Sensitivity
+
+RFC 2045
+--------
+
+Content-Description
+Content-ID
+Content-Transfer-Encoding
+Content-Type
+MIME-Version
+
+RFC 2110
+--------
+
+Content-Base
+Content-Location
+
+RFC 2369
+--------
+
+List-Archive
+List-Help
+List-Owner
+List-Post
+List-Software
+List-Subscribe
+List-Unsubscribe
+
+son-of-RFC1036 [21]
+-------------------
+
+Also-Control
+Article-Names
+Article-Updates
+See-Also
+Supersedes
+
+draft-ietf-receipt
+------------------
+
+Disposition-Notification-To
+Disposition-Notification-Options
+Original-Recipient
+
+World Wide Web Consortium (W3C) Recommendations
+-----------------------------------------------
+
+Pics-Label
+
+Not Internet standard (as of June 2000)
+---------------------------------------
+
+"From " (not followed by ":")
+Apparently-To
+Approved-By
+Content-Alias
+Content-Alternative
+Content-Class
+Content-Conversion
+Content-Features
+Content-Length
+Content-SGML-Entity
+Delivered-To
+Encoding
+Errors-To
+Fax
+Fcc
+For-Approval
+For-Comment
+For-Handling
+List-Digest
+List-ID
+List-URL
+Mail-System-Version
+Mailer
+Organisation
+Originating-Client
+Originator
+Originator-Info
+Phone
+Precedence
+Registered-Mail-Reply-Requested-By
+Replaces
+Return-Receipt-Requested
+Return-Receipt-To
+Read-Receipt-To
+Speech-Act
+Status
+Supersedes
+Telefax
+Translated-By
+Translation-Of
+X-Confirm-Reading-To
+X-Envelope-From
+X-Envelope-To
+X-Face
+X-IMAP
+X-Loop
+X-List-Host
+X-Listserver
+X-Mailer
+X-MIME-Autoconverted
+X-MIMEOLE
+X-MSMail-Priority
+X-Newsreader
+X-No-Archive
+X-OriginalArrivalTime
+X-Priority
+X-RCPT-TO
+X-Sender
+X-UIDL
+X-URI
+X-URL
+X-X-Sender
+X400-Content-Return
+
+                   Appendix B: Alphabetical index
+
+Section Header field
+------- ------------
+
+3.3     Also-Control
+3.3     Alternate-Recipient
+3.4     Apparently-To
+3.4     Approved
+3.4     Approved-By
+3.6     Article-Names
+3.6     Article-Updates
+        Auto-Forwarded see Autoforwarded
+3.17    Autoforwarded
+3.4     bcc
+3.4     cc
+        Client, see Originating-Client
+        Comment, see For-Comment
+3.7     Comments
+3.6     Content-Alias
+3.12    Content-Alternative
+3.6     Content-Base
+3.13    Content-Class
+3.12    Content-Conversion
+3.7     Content-Description
+3.3     Content-Disposition
+3.13    Content-Features
+3.6     Content-ID
+3.7     Content-Identifier
+3.10    Content-Language see also Language
+3.11    Content-Length
+3.6     Content-Location
+3.15    Content-MD5
+3.4     Content-Return
+3.13    Content-SGML-Entity
+3.13    Content-Transfer-Encoding
+3.13    Content-Type
+3.3     Control
+3.12    Conversion
+3.12    Conversion-With-Loss
+        Copy, see Incomplete-Copy
+3.8     Date, see also Delivery-Date, Received, Expires, Expiry-
+        Date
+3.6     Delivered-To
+3.8     Delivery-Date
+        Delivery-Report, see Generate-Delivery-Report, Prevent-
+        Delivery-Report, Non-Delivery-Report, Content-Type
+        Description, see Content-Description
+3.17    Discarded-X400-IPMS-Extensions
+3.17    Discarded-X400-MTS-Extensions
+3.3     Disclose-Recipients
+        Disposition, see also Content-Disposition
+3.5     Disposition-Notification-Options
+3.5     Disposition-Notification-To
+3.4     Distribution
+3.2     DL-Expansion-History
+3.13    Encoding see also Content-Transfer-Encoding
+3.4     Errors-To
+3.8     Expires
+3.8     Expiry-Date
+        Extension see Discarded-X400-IPMS-Extensions, Discarded-
+        X400-MTS-Extensions
+3.4     Fax see also Telefax
+3.17    Fcc
+3.4     Followup-To
+3.4     For-Approval
+3.4     For-Comment
+3.4     For-Handling
+        Forwarded, see Autoforwarded
+3.4     From (not followed by (":" or preceded by ">")
+3.4     From (followed by ":")
+3.4     Generate-Delivery-Report
+        Handling, see For-Handling
+        History, see DL-Expansion-History
+        ID, see Content-ID and Message-ID
+        Identifier, see Content-ID and Message-ID
+3.9     Importance
+3.6     In-Reply-To
+3.9     Incomplete-Copy
+3.7     Keywords
+        Label, see PICS-Label
+3.10    Language see also Content-Language
+        Length see Content-Length
+3.11    Lines
+3.16    List-Archive
+3.16    List-Digest
+3.16    List-Help
+3.16    List-ID
+3.16    List-Owner
+3.16    List-Post
+3.16    List-Software
+3.16    List-Subscribe
+3.16    List-URL
+3.16    List-Unsubscribe
+        Loss, see Conversion-With-Loss
+3.4     Mail-System-Version see also X-mailer
+3.4     Mailer
+        MD5 see Content-MD5
+3.6     Message-ID
+3.13    Message-Type
+3.3     MIME-Version
+3.4     Newsgroups
+        Newsreader, see X-Newsreader
+3.6     Obsoletes
+3.7     Organisation
+3.7     Organization
+3.3     Original-Encoded-Information-Types
+3.6     Original-Recipient
+3.4     Originating-Client
+3.4     Originator
+3.4     Originator-Info see also Sender
+3.2     Path
+3.4     Phone
+3.9     PICS-Label
+3.9     Precedence
+3.4     Prevent-NonDelivery-Report
+3.9     Priority
+3.5     Read-Reciept-To
+3.2     Received
+        Recipient, see To, cc, bcc, Alternate-Recipient, Disclose-
+        Recipient
+3.6     References
+3.5     Registered-Mail-Reply-Requested-By
+3.6     Replaces
+3.8     Reply-By
+3.4     Reply-To, see also In-Reply-To, References
+3.14    Resent-
+        Return see Content-Return
+3.2     Return-Path
+3.5     Return-Receipt-Requested
+3.5     Return-Receipt-To
+3.6     See-Also
+3.4     Sender
+3.9     Sensitivity
+3.17    Speech-Act
+3.17    Status
+3.7     Subject
+3.7     Summary
+3.6     Supersedes
+3.4     Telefax see also Fax
+3.4     To
+        Transfer-Encoding see Content-Transfer-Encoding
+3.6     Translated-By
+3.6     Translation-Of
+        Type see Content-Type, Message-Type, Original-Encoded-
+        Information-Types
+        Version, see MIME-Version, X-Mailer
+3.5     X-Confirm-Reading-To
+3.4     X-Envelope-From
+3.4     X-Envelope-To
+3.4     X-Face
+3.6     X-IMAP
+3.16    X-List-Host
+3.16    X-Listserver
+3.6     X-Loop
+3.4     X-Mailer see also Mail-System-Version
+3.13    X-MIME-Autoconverted
+3.4     X-MimeOLE
+3.9     X-MSMail-Priority
+3.4     X-Newsreader
+3.17    X-No-Archive
+3.8     X-OriginalArrivaltime
+3.9     X-Priority
+3.4     X-RCPT-TO
+3.4     X-Sender see also Originator-Info
+3.6     X-UIDL
+3.6     X-URI
+3.6     X-URL see also Content-Location
+3.4     X-X-Sender see also Originator-Info
+3.4     X400-Content-Return
+3.15    Xref

@@ -1,0 +1,719 @@
+Network Working Group                                       Jacob Palme
+Internet Draft                             Stockholm University and KTH
+draft-palme-newsmail-00.txt                                 August 1997
+Category-to-be: Proposed standard                Expires: February 1998
+
+
+
+                  Messages between Email and Netnews
+
+                         Status of this Memo
+
+ This document is an Internet-Draft. Internet-Drafts are working
+documents of the Internet Engineering Task Force (IETF), its areas, and
+its working groups. Note that other groups may also distribute working
+documents as Internet-Drafts.
+
+ Internet-Drafts are draft documents valid for a maximum of six months
+and may be updated, replaced, or obsoleted by other documents at any
+time. It is inappropriate to use Internet- Drafts as reference material
+or to cite them other than as ``work in progress.''
+
+ To learn the current status of any Internet-Draft, please check the
+``1id-abstracts.txt'' listing contained in the Internet- Drafts Shadow
+Directories on ftp.is.co.za (Africa), nic.nordu.net (Europe),
+munnari.oz.au (Pacific Rim), ds.internic.net (US East Coast), or
+ftp.isi.edu (US West Coast).
+
+ This memo provides information for the Internet community. This' memo
+does not specify an Internet standard of any kind, since this document
+is mainly a compilation of information taken from other RFC-s..
+Distribution of this memo is unlimited.
+
+
+                            Abstract
+
+Messages can be transported through gateways between email and netnews.
+Combined clients for mail and netnews can submit the same message at the
+same time to email and netnews. Many netnews clients can produce email
+replies to the author of netnews articles. This standard specifies how
+to handle these kinds of messages. This standard specifies three new
+email headers: 'Posted-To', 'Group-Reply-To' and 'Personal-Reply-To'.
+Further discussions on this memo should take place in the mailing-list
+MAILNEWS-L@SEGATE.SUNET.SE. More info in the full text of this memo or
+at URL http://www.dsv.su.se/~jpalme/ietf/jp-ietf-home.html#newsharmony.
+
+
+Table of contents
+
+1. Mailing List
+2. Status
+3. Introduction
+4. Definitions
+5. Headers in Combined and Converted Messages
+    5.1 References and In-Reply-To
+    5.2 Message-ID Header
+    5.3 "Followup-To" and "Group-Reply-To" Headers
+    5.4 "Posted-To" header
+    5.5 "Newsgroups" Header
+    5.6 "Approved" Header
+    5.7 "Subject" Header
+    5.8 "Received" and "Path" headers
+    5.9 "Control" messages
+    5.10 Other Headers
+    5.11 Headers Mandatory in Netnews but not in Email
+    5.12 Headers Optional in Netnews and not Defined in Email
+6. Preparation of Replies to Combined Messages
+7. Cooperating Clients and Gateways
+8. Security considerations
+9. Acknowledgments
+10. References
+11. Author's Addresses
+Appendix A: Examples
+Appendix B: Algorithm for Assigning Message-IDs to Messages in Gateways
+from Email to Netnews
+Appendix C: Example of two partially overlapping threads
+
+1.    Mailing List
+
+Further discussion on this memo should be done through the mailing list
+MAILNEWS-L@SEGATE.SUNET.SE. To subscribe to this list, send a message to
+LISTSERV@SEGATE.SUNET.SE which contains the text
+SUB MHTML <your name (not your email address)>
+
+Archives of this list are available by anonymous ftp from
+FTP://SEGATE.SUNET.SE in the
+directory /lists/mailnews-l. The archives are also available by email.
+Send a message to
+LISTSERV@SEGATE.SUNET.SE with the text INDEX MAILNEWS-L to get a list of
+the archive files,
+and then a new message GET <file name> to retrieve the archive files.
+
+You can also browse the archives by http from
+HTTP://segate.sunet.se/archives/mailnews-l.html. The FTP archives are
+better if you want to
+download all messages, the HTTP archives are better if you want to
+browse and find a
+particular message only.
+
+Finally, the archives from December 3, 1996 are also available in
+searchable format from URL
+http://www.reference.com/cgi-bin/pn/listarch?list=MAILNEWS-L@segate.sune
+t.se
+
+
+2.    Status
+
+This standard updates current email and netnews standards [RFC822],
+[RFC1036], [RFC1123] and [MIME].
+
+
+3.    Introduction
+
+Clients which can handle both email and netnews are becoming more
+common. Also those clients which are mainly intended for netnews often
+provide facilities for replying by email to the author of netnews
+articles. Messages are often gatewayed between netnews and email, for
+example by having a mailing list paralleling a newsgroup. Thus the same
+message is often sent to both email and netnews, or an email message is
+a reply to a netnews article. This standard specifies the use and
+interpretation of certain header information in such messages. This
+standard specifies three not-previously standardized email headers:
+"Posted-To", "Group-Reply-To" and "Personal-Reply-To" and gives
+additional advice on the use of other email and netnews headers. This
+standard also registers a global domain name, "md5.net" which should not
+be used except as specified in this standard.
+
+One goal of this standard is that the recipient should be able to
+unambiguously identify the recipients (newsgroups and/or email) of a
+message and get information as a basis for decisions on where to send
+replies and followups to such messages.
+
+In particular, some existing practice can cause the undesired public
+posting of private email messages to news. It is for this reason that a
+solution is necessary.  Because of the installed base of software which
+is based on two irreconcilable meanings of the "Newsgroups" header, when
+it occurs in email, it is not feasible to simply change the definition
+of these headers. New agents which use one of the two uses of this
+header might increase the likelihood of very undesirable results, in
+particular the undesired and unintended automatic conversion of private
+messages to public newsgroup postings.
+
+This standard does not repeat information which is in the email and
+netnews standards [SMTP], [RFC822], [RFC1036], [RFC1123] and [MIME],
+except where this is needed for clarity.
+
+
+4.    Definitions
+
+The following terms are used in this standard. These terms may have a
+broader meaning in other standards, but are limited to the specific
+definitions within this document.
+
+News Client        A program used by a user to read and post news.
+
+Mail Client        A program used by a user to read and send mail.
+
+Combined Client    A program which combines the some or all of the functions
+                   of a mail client and a news client.
+
+Message            A message sent to either netnews, email or both.
+
+Mail Message       Any message prepared by a client for transmission by mail
+                   only.
+
+News Message       Any message prepared by a client for transmission by news
+                   only.
+
+Combined Message   Any message which a combined agent distributes via both
+                   news and mail.
+
+Group              A group of people receiving a message. A group can be a
+                   newsgroup (representing its subscribers), a mailing list
+                   (representing its subscribers), a set of nested mailing
+                   lists, or a number of recipient names in To, Cc or Bcc
+                   headers, or any combinations of these kinds of groups.
+
+Original Message   The message to which the current message is a reply.
+
+Root Message       A message which does not have any References, In-Reply-To
+                   or Supersedes headers.
+
+Thread             The set of messages which can be found by finding all
+                   messages which have "References", "In-Reply-To" or
+                   "Supersedes" references to a certain root message, and
+                   continuing this operation recursively. Note that a message
+                   which has "In-Reply-To", "References" or "Supersedes"
+                   headers referring to messages in more than one thread, will
+                   not cause these two threads to merge into one thread.
+                   Successive messages, however, will in this case belong to
+                   more than one thread. See appendix C for an example.
+
+Netnews Standards  See [RFC 1036]
+
+Email Standards    See [RFC822], [RFC1123], [SMTP], [MIME]
+
+
+5.    Headers in Combined and Converted Messages
+
+5.1   References and In-Reply-To
+
+Messages which are sent at the same time to both mail and news MUST use
+the References field according to the definitions in netnews standards
+[RFC 1036], both for the copy of the message sent via email and the copy
+sent via netnews.
+
+Gateways from news to mail SHOULD not modify the "References" field.
+
+Gateways from mail to news MUST, if needed, modify the syntax of
+References and In-Reply-To to agree with netnews standards (where the
+"phrase" variant is not allowed).
+
+Gateways from mail to news MAY transport the "References" and
+"In-Reply-To" header unchanged except for necessary syntax changes
+("phrase" is not allowed in netnews). If they are able to do it
+correctly, they MAY convert the "References" and "In-Reply-To" field
+contents from the usage specified for email to the usage specified for
+netnews. Note that such a conversion requires a check on the messages
+whose Message-ID are given in the "References" and "In-Reply-To" field,
+and this check may have to be performed recursively all the way back to
+the root message of a thread (since the netnews usage of the
+"References" field requires the "References" field to contain the first,
+the last and as many as possible of the intermediate earlier messages in
+the thread, see [RFC 1036] clause 2.2.5). Thus, such a conversion is not
+easy to perform. Conversion should not be done unless the gateway is
+capable of doing it correctly.
+
+Netnews messages can get replies, which are sent only as personal mail
+and are not to be gatewayed to netnews. Such replies SHOULD use the
+netnews (? or email?) conventions for "References" and "In-Reply-To".
+
+Email replies to news messages MAY indicate the newsgroup of the
+original message as a comment in the "In-Reply-To" header. Example:
+
+In-Reply-To: <message.id@some.host> (article in newsgroup foo.bar)
+
+
+5.2   Message-ID Header
+
+The "Message-ID" header MUST [RFC1036] be used (with its netnews syntax
+[RFC1036]) in messages sent to netnews and in combined messages and
+SHOULD be used with this syntax in messages sent via email to gateways
+from mail to news.
+
+A message to be gatewayed from email to netnews may lack a "Message-ID"
+header. For creation of the Message-ID, the algorithm described in
+appendix B is recommended. Mail and news software should however not
+assume, without further checking, that a Message-ID which looks like it
+had been generated according to this algorithm is the same for copies of
+the same message which have been gatewayed at different places.
+
+
+5.3   "Followup-To" and "Group-Reply-To" Headers
+
+If the sender wishes to specify that further discussion on a message
+sent to more than one newsgroup and/or mailing list is to be sent to
+only one newsgroup, the "Followup-To" header MUST be used according to
+netnews conventions in both the email and netnews version of combined
+messages. It MUST only contain newsgroup names or the string "poster",
+never email addresses, not even email addresses which are gatewayed to
+newsgroups.
+
+If the sender of a message wants followups, intended for the group of
+people who saw the replied-to article, to be sent to a mailing-list,
+this SHOULD be indicated using the "Group-Reply-To" header. The
+"Group-Reply-To" header has the same syntax as the "Reply-To" header in
+email standards, thus, multiple values are allowed. The "Group-Reply-To"
+can be used to indicate a recommended reply-address for replies intended
+for the same group of people who read the original message. Like
+"Followup-To" in netnews, this header can suggest followups to only some
+of the groups who got the original message. Readers of messages that
+contain "Followup-To" or "Group-Reply-To" headers, who want to read
+followups, should ensure that they are subscribed to one of the
+newsgroups in "Followup-To" or one of the mailing lists in
+"Group-Reply-To".
+
+If the sender wants group followups to be sent to both a newsgroup and a
+mailing-list, both a Followup-To and a Group-Reply-To header can be
+used. This SHOULD however not be done if there is a gateway between the
+mailing-list and the newsgroup.
+
+A person who sends a message to a mailing list, and does not want to get
+group replies except via this list, can include the list name in a
+"Group-Reply-To" header. If this person wants group replies both
+directly to his e- mail address and through the list, or if the person
+does not subscribe to the list, s/he can put both his/her personal
+e-mail address and the mailing list name in a "Group-Reply-To" header.
+
+If "Group-Reply-To" refers to a mailing list which is run in parallel
+with a newsgroup, gateways from mail to news may translate the
+"Group-Reply-To" mailing list to its newsgroup equivalent in a
+"Followup-To" clause, and gateways from news to mail may translate the
+"Followup-To" clause to the equivalent "Group-Reply-To" header referring
+to its parallel mailing list.
+
+The "Reply-To" header in e-mail is unfortunately used in two conflicting
+ways: (A) to indicate a replacement for the author as recipient of
+personal replies, (B) as specified above for "Group-Reply-To". Because
+of this, it SHOULD be phased-out, and replaced by the more explicit
+headers "Personal-Reply-To" and "Group-Reply-To". However, because of
+the wide usage of "Reply-To" (in both meanings) its phasing-out may take
+some years. "Personal-Reply-To" can be used both in e-mail and netnews
+to indicate where personal replies should be sent.
+
+
+5.4   "Posted-To" header
+
+This standard defines the new header "Posted-To".  The "Posted-To"
+header shall have the same syntax as the "Newsgroups" header defined in
+netnews standards.
+
+The email version of a combined message MUST use the "Posted-To" header
+to indicate the newsgroups which this message is sent to. "Posted-To"
+MUST NOT be used in the netnews version of the message (there, the
+"Newsgroups" header is used instead). "Posted-To" must not be used for
+any other purpose than described here.
+
+Gateways between netnews and email SHOULD convert the "Newsgroups"
+header in netnews to the "Posted-To" header in email and the reverse.
+Gateways which do not perform this conversion MUST remove the
+"Newsgroups" header from outgoing email messages and remove "Posted-To"
+from outgoing news articles.
+
+
+5.5   "Newsgroups" Header
+
+The "Newsgroups" header SHOULD not be used in email messages, even if
+these messages are also sent to newsgroups or are replies to news
+messages. If a message arriving via email has a "Newsgroups" header, the
+value of this header should be ignored. The value of this header shall
+in particular not be interpreted either to indicate the newsgroup to
+which this message is also posted (use Posted-To see 5.4), or to
+indicate the newsgroup of the original message (use a comment in the
+"In-Reply-To" field instead, see 5.1).
+
+Note: the reason for this rule is that older software uses the
+"Newsgroups" header in either of these two very different ways in email.
+It is not possible to agree on a single meaning of the "Newsgroups"
+header in email, therefore its use is deprecated and replaced by other
+notation instead.
+
+
+5.6   "Approved" Header
+
+The "Approved" header defined in netnews standards may be used in email
+with the same meaning: This message has been approved by the moderator
+for distribution to members of a moderated group.
+
+
+5.7   "Subject" Header
+
+Combined messages SHOULD follow the netnews rules for the "Subject"
+header.
+
+It is the responsibility of the client to create "Subject" headers which
+are correct. It is recommended that the netnews "Re: " convention is
+used also in email.
+
+
+5.8   "Received" and "Path" headers
+
+Email to news gateways MUST remove "Received" headers from incoming
+email messages while converting them to netnews. Attempts at converting
+"Received" headers to "Path" header MUST NOT be done. It is STRONGLY
+RECOMMENDED that the original email message be stored in the gateway
+(including all headers) for a period following processing, to allow
+tracing of forged or otherwise problematical articles. Netnews to email
+gateways MAY copy the "Path" header from the news article into the
+outgoing email.
+
+Note: The "Path" header in netnews has as one of its uses to avoid
+duplicates of the same message. Because of this, trying to convert
+"Received" headers to "Path" headers might cause a message to be skipped
+in netnews, and that is why such conversion MUST NOT be done.
+
+
+5.9   "Control" messages
+
+Mail to netnews gateways should provide the ability for users to cancel
+articles they have used the gateway to post. To prevent the use of such
+gateways for illegitimate cancels, gateways should not post cancels for
+articles which were not posted through that gateway, and should require
+some authentication for cancels it does post.
+
+For example, the gateway may generate a key which is returned to the
+user by email for each article posted. The user would include this key
+in the cancel message he sends to the gateway.
+
+
+5.10  Other Headers
+
+Headers defined for netnews only can occur in email, and headers defined
+for email can occur in netnews. An exception to this is the "Newsgroups"
+header, which must be handled as described in clause 5.4 and 5.5 above.
+Headers defined only for netnews should not be interpreted by email
+clients, nor should email-only headers be interpreted by news clients.
+
+Some headers have a more restricted syntax in netnews than in email, in
+that case, the netnews syntax shall be used in combined messages.
+Gateways must restrict the syntax of such headers if they are conveyed
+from email to netnews.
+
+
+5.11  Headers Mandatory in Netnews but not in Email
+
+The following headers are mandatory in netnews but optional in email:
+"Newsgroups", "Subject", "Message-ID" and "Path". Combined messages
+SHOULD include these fields in both the mail and the netnews copy of the
+message, except that the "Newsgroups" header in netnews is replaced by
+the "Posted-To" header in email.
+
+
+5.12  Headers Optional in Netnews and not Defined in Email
+
+Headers optional in netnews and not defined in email may occur in email
+messages. Combined clients MUST, and email to news gateways SHOULD,
+include these optional headers in the netnews versions of any messages
+they post.
+
+
+6.    Preparation of Replies to Combined Messages
+
+Combined clients generating replies intended only for the author or for
+only a few email recipients shall follow the email conventions for
+replies and MAY indicate the newsgroup of the original message in a
+comment in the "In-Reply-To" clause as specified in section 5.1 of this
+standard.
+
+Combined clients generating replies intended for the group who saw the
+original message should use the information in any "Followup-To" (or
+"Posted-To"/"Newsgroups" header, lacking a "Followup-To") to determine a
+default list of newsgroups to which the reply may be posted, and
+information from "Group-Reply-To" to determine a list of email
+recipients for group replies. The client MUST allow the user to modify
+any default list of email and newsgroup destinations.
+
+"Group-Reply-To" indicates recommendations by the author of where to
+send group replies, when these recommendations are email addresses (or
+email addresses of mail gateways to newsgroups). "Followup-To" also
+indicates such recommendations as specified in RFC 1036. A message may
+include both "Followup-To" indicating a newsgroup, and "Group-Reply-To"
+indicating a mailing list, which for example is run in parallel with the
+same newsgroup or where the message is intended for recipients of both
+the newsgroup and the mailing list.
+
+A client which knows that a followup will reach a mailing list in a
+"Group-Reply-To" header through a gateway from a newsgroup in a
+"Followup-To" header may send a followup only to the newsgroup, relying
+on the gateway to forward it to the mailing list. In this way, the risk
+of recipients getting multiple copies of the message can be reduced. If
+the client is not sure this will work, it should send the followup to
+both "Followup-To" and "Group-Reply-To" recipients.
+
+The choice of the appropriate recipients for a reply to the same group
+as the original message is not always easy, and good user interfaces
+will help users by clarifying to them what they are doing and where
+their reply will be sent, and make the user aware if s/he is moving a
+mail discussion to a news discussion or the reverse.
+
+In particular, any "Newsgroups" header in an email message SHOULD NOT be
+used as an indication that the original message has been sent to this
+newsgroup. Use of the "Newsgroups" header can otherwise easily result in
+a reply to a private message being sent to a newsgroup even though the
+original message was not sent to this newsgroup.
+
+
+7.    Cooperating Clients and Gateways
+
+If an email client is designed to cooperate with a certain gateway from
+email to netnews, then messages sent only between clients of this type
+and gateways of this type may employ additional information, not
+standardized here, to improve the cooperation between them. Such
+additional information MUST not be specified in ways which can cause
+misunderstandings if the message gets to other than the specified
+cooperating recipients.
+
+
+8.    Security considerations
+
+This standard will reduce the risk of various unexpected results for
+combined messages. Some existing risks in email and netnews may stay
+even with this standard, but no new risks are expected as a result of
+this standard. In general, increased transportation of messages between
+news and email may mean that existing risks in news are propagated to
+email or the reverse, but these risks would not be reduced by the lack
+of a standard for such combined messages.
+
+One security problem is that many Usenet News servers will totally
+reject an incoming article, if the server already has an article with
+the same Message-ID. This is of course proper if the new copy is
+destined for the same newsgroup, but if the new copy is destined for
+another newsgroup, the proper handling would be to distribute it to that
+group, but not to the group where it already appears.
+
+Newsgroup servers SHOULD accept articles even if the server already has
+an article with the same Message-ID, but only if the new article has as
+recipient some newsgroup where this message is not already stored, and
+then only distribute the new copy to the new newsgroup. Until all Usenet
+News servers have been modified to work this way, there is a security
+risk with gatewaying mailing lists to news, in that a message sent to
+more than one mailing lists, which are gatewayed to news at different
+hosts, might not get to both newsgroups. The best way to handle this
+problem is to change the behavious of news servers. An alternate
+solution might be to change the Message-ID in gateways, but this
+alternative has obvious drawbacks and is not recommended.
+
+The algorithm for generating Message-IDs for messages lacking them can
+slightly increase this security risk, but since most messages have
+Message-IDs, the problem is there with or without this algorithm.
+
+
+9.    Acknowledgments
+
+This standard is based on an earlier draft written by John Stanley.
+
+
+10.   References
+
+Ref.          Author, title                         IETF status (May 1997)
+                                                    ----------------------
+---           -------------
+
+[SMTP]        J. Postel: "Simple Mail Transfer      Standard, Recommended.
+              Protocol", STD 10, RFC 821, August
+              1982.
+
+[RFC822]      D. Crocker: "Standard for the         Standard, Recommended.
+              format of ARPA Internet text
+              messages." STD 11, RFC 822, August
+              1982.
+
+[RFC1036]     M.R. Horton, R. Adams: "Standard      Non-standard (but still
+              for interchange of USENET             widely used as a de-facto
+              messages", RFC 1036, December         standard).
+              1987.
+
+[RFC1123]     R. Braden (editor): "Requirements     Standard, Required.
+              for Internet Hosts -- Application
+              and Support", STD-3, RFC 1123,
+              October 1989.
+
+[MIME]        N. Freed, N. Borenstein and           Draft Standard, elective.
+              others, "Multipurpose Internet
+              Mail Extensions (MIME) Part One to
+              Five, RFC 2045 to 2049.
+
+[MD5]         Rivest, R., "The MD5                  Non-standard
+              Message-Digest Algorithm", RFC
+              1321, MIT Laboratory for Computer
+              Science and RSA Data Security,
+              Inc., April 1992.
+
+[CMD5]        J. Myers, M. Rose: The Content-MD5    Draft standard, Elective
+              Header. RFC 1864, October 1995.
+
+
+11.   Author's Addresses
+
+Jacob Palme                        Phone: +46-8-16 16 67
+Stockholm University/KTH           Fax: +46-8-783 08 29
+Electrum 230                       Email: jpalme@dsv.su.se
+S-164 40 Kista, Sweden
+
+
+Appendix A: Examples
+
+A.1 One Combined Message in two Instances.
+
+The following is an example of a combined message, sent both to a
+newsgroup comp.lang.c and via e-mail to a person mary@foo.bar when
+transported via netnews:
+
+   Newsgroups: comp.lang.c
+   To: mary@foo.bar
+   Date: 7 Jan 1997 12:34:21 +0000 (GMT)
+   Subject: A message about inheritance
+   From: fred@somewhere.zz
+   Message-ID: <123zx@somewhere.zz>
+   Path: a.news.system!b.news.system!somewhere.zz!fred
+
+   What is it?
+
+
+The same message when transported via email:
+
+   Posted-To: comp.lang.c
+   To: mary@foo.bar
+   Date: 7 Jan 1997 12:34:21 +0000 (GMT)
+   Subject: A message about inheritance
+   From: fred@somewhere.zz
+   Message-ID: <123zx@somewhere.zz>
+   Path: a.news.system!b.news.system!somewhere.zz!fred
+
+   What is it?
+
+
+A.2 Conversion Performed by Email to News Gateway.
+
+In this case, the mailing list name is not copied to a "To:" header in
+netnews, since it gives the same information which the "Newsgroups:"
+header gives in netnews. The email message before conversion:
+
+   Received: from ietf.org (ietf.org [132.151.1.19])
+             by info.dsv.su.se (8.8.5/8.8.5) with SMTP
+             id QAA00061 for <jpalme@dsv.su.se>;
+             Mon, 2 Jun 1997 16:23:10 +0200 (MET DST)
+   Received: from ietf.org by ietf.org id aa05468; 2 Jun 97 9:50 EDT
+   Received: from ietf.ietf.org by ietf.org id aa04922; 2 Jun 97 9:28
+             EDT
+   Mime-Version: 1.0
+   Content-Type: Multipart/Mixed; Boundary="NextPart"
+   To: IETF-Announce@ietf.org
+   Sender: ietf-announce-request@ietf.org
+   From: Internet-Drafts@ietf.org
+   Reply-to: Internet-Drafts@ietf.org
+   Subject: I-D ACTION:draft-leiba-imap-idle-02.txt
+   Date: Mon, 02 Jun 1997 09:28:44 -0400
+   X-Orig-Sender: cclark@ietf.org
+   Message-ID: <9706020928.aa04922@ietf.org>
+
+   A Revised Internet-Draft is available from the on-line Internet-
+   Drafts directories.
+
+The same message after gatewaying to netnews:
+
+   Mime-Version: 1.0
+   Content-Type: Multipart/Mixed; Boundary="NextPart"
+   Newsgroups: comp.standards.ietf.announcements
+   Sender: ietf-announce-request@ietf.org
+   From: Internet-Drafts@ietf.org
+   Reply-to: Internet-Drafts@ietf.org
+   Subject: I-D ACTION:draft-leiba-imap-idle-02.txt
+   Date: Mon, 02 Jun 1997 09:28:44 -0400
+   X-Orig-Sender: cclark@ietf.org
+   Message-ID: <9706020928.aa04922@ietf.org>
+
+   A Revised Internet-Draft is available from the on-line
+   Internet-Drafts directories.
+
+
+A.3 Conversion Performed by News to Email Gateway.
+
+Original netnews article:
+
+   Newsgroups: comp.sys.mac
+   From: PHLLB@leeds.ac.uk (L. Burkholder)
+   Subject: cocoa (formerly kidsim)
+   Message-ID: <4p1ul5$88k_001@leeds.ac.uk>
+   NNTP-Posting-Host: woolhouse_pc37.leeds.ac.uk
+   Organization: University of Leeds
+   Date: Tue, 4 Jun 1996 19:16:24 +0100 (BST)
+   X-Newsreader: News Xpress Version 1.0 Beta #4
+
+   Does anyone know how to get a copy of the recently announced Apple
+   visual programming language Cocoa (formerly called Kidsim)?
+
+The same message after gatewaying to email:
+
+   Posted-To: comp.sys.mac
+   To: info-mac@sumex-aim.stanford.edu
+   From: PHLLB@leeds.ac.uk (L. Burkholder)
+   Subject: cocoa (formerly kidsim)
+   Message-ID: <4p1ul5$88k_001@leeds.ac.uk>
+   NNTP-Posting-Host: woolhouse_pc37.leeds.ac.uk
+   Organization: University of Leeds
+   Date: Tue, 4 Jun 1996 19:16:24 +0100 (BST)
+   X-Newsreader: News Xpress Version 1.0 Beta #4
+
+   Does anyone know how to get a copy of the recently announced Apple
+   visual programming language Cocoa (formerly called Kidsim)?
+
+
+Appendix B: Algorithm for Assigning Message-IDs to Messages in Gateways
+from Email to Netnews
+
+The intention of the following algorithm is to make it likely that the
+same message will get the same Message-ID even if it is gatewayed in
+more than one place from email to news, and to make it very unlikely
+that two different messages get the same Message-ID. This algorithm is
+only intended for gateways from email to netnews, and only when
+gatewaying messages which do not have a Message-ID.
+
+Step 1: Remove all headers except From, Date, Sender, Subject.
+
+Step 2: Compute an MD5 checksum using the algorithm described in [1].
+
+Step 3: Encode the checksum using BASE64 encoding as specified in [2].
+
+Step 4: Concatenate the string "@MD5.net" to the encoded string.
+
+Note: If the message does not have any Date header, this algorithm
+should not be attempted, instead an algorithm giving a globally unique
+Message-ID based on a domain controlled by the gateway should be used.
+
+
+Appendix C: Example of two partially overlapping threads
+
+THREAD A:                            THREAD B:
+
+Subject: The beatles<-------+        Subject: Abba
+Message-ID: a1@foo.bar       \       Message-ID: b1@foo.bar
+          ^                   \                ^
+          |                    \               |
+References: a1@foo.bar          \    References: b1@foo.bar
+Subject: Re: The beatles         \   Subject: Re: Abba
+Message-ID: a2@foo.bar            \  Message-ID: b2@foo.bar
+          ^                        \           ^
+          |                         \          |   THREADS A+B:
+          |                          \         |
+References: a1@foo.bar, a2@foo.bar   References: a1@foo.bar, b1@foo.bar,
+Subject: Re: The beatles                        b2@foo.bar
+Message-ID: a3@foo.bar               Subject: Re: Abba and the beatles
+          ^                          Message-ID: ab1@foo.bar
+          |                                    ^
+          |                                    |
+References: a1@foo.bar, a2@foo.bar,  References: a1@foo.bar, b1@foo.bar,
+            a3@foo.bar                           b2@foo.bar, ab1@foo.bar
+Subject:    Re: The beatles          Subject: Re: Abba and the beatles
+Message-ID: a4@foo.bar               Message-ID: ab2@foo.bar
+

@@ -1,0 +1,258 @@
+
+Easily Parsed LIST Format (EPLF)
+
+INTERNET-DRAFT   draft-bernstein-eplf-02.txt   (expires 1 August 1997)
+
+   This document is an Internet-Draft. Internet-Drafts are working
+   documents of the Internet Engineering Task Force (IETF), its areas,
+   and its working groups. Note that other groups may also distribute
+   working documents as Internet-Drafts.
+
+   Internet-Drafts are draft documents valid for a maximum of six
+   months and may be updated, replaced, or obsoleted by other documents
+   at any time. It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as ``work in progress.''
+
+   To learn the current status of any Internet-Draft, please check the
+   ``1id-abstracts.txt'' listing contained in the Internet-Drafts
+   Shadow Directories on ftp.is.co.za (Africa), nic.nordu.net (Europe),
+   munnari.oz.au (Pacific Rim), ds.internic.net (US East Coast), or
+   ftp.isi.edu (US West Coast).
+
+Status of this memo
+
+   This memo provides information for the Internet community. This memo
+   does not specify an Internet standard of any kind. Distribution of
+   this memo is unlimited.
+
+Abstract
+
+   The File Transfer Protocol (FTP) supports two commands that list
+   files: NLST and LIST. The NLST response is easy to parse but provides
+   very little information. The LIST response provides more information,
+   but in a format that varies from system to system. The most common
+   LIST formats are undocumented and impossible to parse reliably.
+
+   This document defines Easily Parsed LIST Format (EPLF), a format
+   for the LIST response that is usable by humans yet easy for programs
+   to handle. This format is supported by anonftpd, a secure FTP server.
+
+   One visible advantage of EPLF is that a browser can easily display
+   dates in the viewer's time zone and native language. EPLF also makes
+   it straightforward for an indexing program to automatically traverse
+   an FTP area and for a mirroring program to avoid downloading the same
+   file twice.
+
+
+Easily Parsed LIST Format (EPLF)
+D. J. Bernstein, djb@pobox.com
+19970201
+
+
+1. Introduction
+
+   The File Transfer Protocol (FTP) supports two commands that list
+   files: NLST and LIST. The NLST response is easy to parse but provides
+   very little information. The LIST response provides more information,
+   but in a format that varies from system to system. The most common
+   LIST formats are undocumented and impossible to parse reliably.
+
+   This document defines Easily Parsed LIST Format (EPLF), a format
+   for the LIST response that is usable by humans yet easy for programs
+   to handle. This format is supported by anonftpd, a secure FTP server.
+
+   One visible advantage of EPLF is that a browser can easily display
+   dates in the viewer's time zone and native language. EPLF also makes
+   it straightforward for an indexing program to automatically traverse
+   an FTP area and for a mirroring program to avoid downloading the same
+   file twice.
+
+   EPLF also corrects a design flaw in FTP's handling of LIST arguments.
+   An EPLF server must respond to ``LIST filename'' with information
+   about that file and no others, even if that file is a directory. A
+   client that wants an EPLF list of the contents of a directory must
+   first CWD to that directory. A client that merely wants a list of
+   file names in a different directory may use NLST.
+
+   In this document, a string of 8-bit bytes may be written in two
+   different forms: as a series of hexadecimal numbers between angle
+   brackets, or as a sequence of ASCII characters between double quotes.
+   For example, <68 65 6c 6c 6f 20 77 6f 72 6c 64 21> is a string of
+   length 12; it is the same as the string "hello world!".
+
+
+2. Format
+
+   An EPLF response to LIST is a series of lines, each line specifying a
+   different file. Each line begins with "+", continues with a series of
+   facts about the file, and ends with <09> followed by the file name.
+   Each fact is zero or more bytes of information, terminated by "," and
+   not containing <09>.
+
+   There are several possible facts, each of which appears at most once,
+   in any order:
+
+      "r"
+         If this file name is supplied in a RETR command, the RETR
+         should succeed. The server must supply this fact unless it is
+         aware of file type problems, permission problems, or other
+         reasons that RETR will fail. The presence of "r" does not
+         guarantee success: for example, the file may be removed or
+         renamed, or the RETR may suffer a temporary failure.
+
+      "/"
+         If this file name is supplied in a CWD command, the CWD should
+         succeed. As with "r", the server must supply this fact unless
+         it is aware of reasons that CWD will fail. The presence of "/"
+         does not guarantee success.
+
+      "i"[ident]
+         This file has identifier [ident]. [ident] is a sequence of
+         bytes not including "," or <09>. If two files on the same FTP
+	 server (not necessarily in the same LIST response) have the
+	 same [ident], those files have the same contents; a successful
+         RETR of each file should produce the same results, and a
+         successful CWD to each file should lead to the same working
+         directory. (Under UNIX, for example, [dev].[ino] could be used
+	 as [ident], where [dev] and [ino] are the device number and
+	 inode number of the file.)
+
+      "s"[size]
+         The size of this file is [size]. [size] is a sequence of ASCII
+         digits specifying a number. If the file is retrieved in TYPE I
+         and is not modified, it will contain exactly [size] bytes. This
+         fact should not be supplied if "r" is not supplied.
+
+      "m"[time]
+         This file was last modified at [time]. [time] is a sequence of
+         ASCII digits specifying a number of seconds, real time, since
+         the beginning of 1970 GMT. This fact cannot be used for files
+         modified before 1970 GMT.
+
+   Further facts may be defined in the future. Pieces of the fact-space
+   beginning with "x" will be parcelled out to organizations that would
+   like to define their own facts. Facts beginning with "X" are reserved
+   for experimental use.
+
+   All facts other than "/" and "r" are optional. Any statement of
+   adherence to EPLF by a server FTP implementation must include a list
+   of facts supported by that implementation other than "/" and "r".
+
+   The server is under no obligation to ensure that LISTs in different
+   directories produce disjoint lists of targets. For example, some
+   servers may list a special ".." name that refers to the parent
+   directory, or a "/" name that refers to the top directory. To avoid
+   loops, a client attempting to traverse the FTP area must notice that
+   the identifiers of these directories are the same as identifiers of
+   directories already traversed.
+
+   The server is also under no obligation to list all possible targets
+   of RETR or CWD in a LIST command. Some servers may avoid listing
+   special names such as ".." or "/". A client that wishes to return to
+   a directory must use PWD and record the reply rather than relying on
+   any useful meaning of CDUP, CWD .., or CWD /.
+
+   Operating systems support a wide variety of means for obtaining the
+   contents of a file from its name. For example, many systems support
+   symbolic links: if ONE is a link to TWO, any reference to ONE is
+   first replaced by a reference to TWO. Such information is irrelevant
+   to FTP and is not displayed by any of the above facts. (Under UNIX
+   this means that the server should use stat(), not lstat().)
+
+   Servers are permitted to use arbitrary characters in file names,
+   except for <0a> and <0d>. Beware that the characters <00>, <09>,
+   <20>, and <ff> cause all sorts of trouble, ranging from inadequacies
+   in the syntax of FTP commands to misinterpretation by some clients.
+
+
+3. Examples
+
+   Here is a typical EPLF response:
+
+      "+i8388621.48594,m825718503,r,s280," <09> "djb.html" <0d 0a>
+      "+i8388621.50690,m824255907,/," <09> "514" <0d 0a>
+      "+i8388621.48598,m824253270,r,s612," <09> "514.html" <0d 0a>
+
+   A typical EPLF-ignorant client will show the response to the user:
+
+      ftp> dir
+      200 Okay.
+      150 I'm looking through the directory. Trying to connect...
+      +i8388621.48594,m825718503,r,s280,      djb.html
+      +i8388621.50690,m824255907,/,   514
+      +i8388621.48598,m824253270,r,s612,      514.html
+      226 Finished transferring 127 bytes.
+      ftp> 
+
+   A more sophisticated client (in the Pacific timezone) might instead
+   display the following human-readable listing:
+
+                         Tue Feb 13 15:58:27 1996   514/
+             612 bytes   Tue Feb 13 15:14:30 1996   514.html
+             280 bytes   Fri Mar  1 14:15:03 1996   djb.html
+
+
+4. Sample code
+
+   The following C function takes a pointer to a string containing one
+   line of an EPLF response. It assumes that the original response did
+   not contain <00>, and that the trailing <0d 0a> has been replaced by
+   <00>. It returns a pointer to the filename, or 0 if the line does not
+   appear to be an EPLF response.
+
+      char *eplf_name(line) char *line;
+      {
+       if (*line != 43) return 0;
+       while (*line) if (*line++ == 9) return line;
+       return 0;
+      }
+
+   The following C function takes a pointer as above, and prints a
+   human-readable listing as shown in section 3. It assumes that the
+   local character set is ASCII, that file modification times fit into a
+   local time_t, and that file sizes fit into a local unsigned long. It
+   also assumes that time_t is interpreted as a number of seconds since
+   the beginning of 1970 GMT. (A more portable function could use
+   mktime() to discover the time_t representation of 1970 GMT.) Note
+   that its output is not machine-readable, since the file name might
+   contain the local newline sequence.
+
+      #include <time.h>
+      int eplf_readable(line) char *line;
+      {
+       int flagcwd = 0; time_t when = 0;
+       int flagsize = 0; unsigned long size;
+       if (*line++ != '+') return 0;
+       while (*line)
+         switch (*line)
+          {
+           case '\t':
+             if (flagsize) printf("%10lu bytes   ",size);
+             else printf("                   ");
+             if (when) printf("%24.24s",ctime(&when));
+             else printf("                        ");
+             printf("   %s%s\n",line + 1,flagcwd ? "/" : "");
+             return 1;
+           case 's':
+             flagsize = 1; size = 0;
+             while (*++line && (*line != ','))
+               size = size * 10 + (*line - '0');
+             break;
+           case 'm':
+             while (*++line && (*line != ','))
+               when = when * 10 + (*line - '0');
+             break;
+           case '/':
+             flagcwd = 1;
+           default:
+             while (*line) if (*line++ == ',') break;
+          }
+       return 0;
+      }
+
+
+5. Acknowledgments
+
+   Thanks to Scott Schwartz for pointing out that "i"[ident] was
+   originally overspecified. Thanks to Benjamin Riefenstahl for
+   several helpful suggestions.

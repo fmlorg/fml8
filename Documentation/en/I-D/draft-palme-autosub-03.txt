@@ -1,0 +1,151 @@
+Network Working Group                           Jacob Palme
+Internet Draft                     Stockholm University/KTH
+<draft-palme-autosub-03.txt>                         Sweden
+Category-to-be: Experimental standard             July 1997
+Expires January 1998
+
+
+
+    Loop control for the Auto-Submitted e-mail header
+
+
+Status of this Memo
+
+This document is an Internet-Draft. Internet-Drafts are
+working documents of the Internet Engineering Task Force
+(IETF), its areas, and its working groups. Note that other
+groups may also distribute working documents as Internet-
+Drafts.
+
+Internet-Drafts are draft documents valid for a maximum of
+six months and may be updated, replaced, or obsoleted by
+other documents at any time. It is inappropriate to use
+Internet- Drafts as reference material or to cite them
+other than as ``work in progress.''
+
+To learn the current status of any Internet-Draft, please
+check the ``1id-abstracts.txt'' listing contained in the
+Internet- Drafts Shadow Directories on ftp.is.co.za
+(Africa), nic.nordu.net (Europe), munnari.oz.au (Pacific
+Rim), ds.internic.net (US East Coast), or ftp.isi.edu (US
+West Coast).
+
+This memo provides information for the Internet community.
+This memo does not specify an Internet standard of any
+kind, since this document is mainly a compilation of
+information taken from other RFC-s.. Distribution of this
+memo is unlimited.
+
+
+Abstract
+
+This memo introduces certain advanced features for the
+Auto-Submitted e-mail header.
+
+
+Changes from the previous version of this IETF draft
+
+The specification of the Auto-Submitted header itself has
+been moved to draft-ietf-mailext-new-fields-08-txt.
+However, the controversial loop control feature has been
+removed from that document, and is instead specified here.
+The intention is that Auto-Submitted without loop control
+is to become a proposed standard, while the loop-control
+feature is to become an experimental standard.
+
+
+1.    Introduction
+
+This memo introduces loop control features for the Auto-
+Submitted header defined in [8].
+
+
+2.    New syntax for the Auto-Submitted header
+
+Syntax:
+
+     auto-submitted-field = "Auto-Submitted ":" auto-
+submitted
+
+     auto-submitted           = ( "no" / "auto-generated" /
+                                "auto-replied" /
+                                "inter-application" /
+                                "x-" <private-extension> /
+                                "<future-extension> )
+                                <optional-parameter-list>
+
+    <optional-parameter-list> = *( ";" <optional-parameter> )
+
+    <optional-parameter>      = "loopstep: <number> /
+                                <other-optional-parameter>
+
+     <number> =                 *DIGIT
+
+The added syntax as compared to [8] is the new value
+"inter-application" and the new parameter "loopstep:"
+followed by a positive number. These are used in the
+following ways:
+
+inter-application is used when it is known that both the
+sender and the recipient of this message is an automatic
+process.
+
+When an Auto-Submitted message is sent in response to
+another Auto-Submitted message, the value of loopstep is
+increased by 1. A message without any loopstep parameter
+is assumed to have "loopstep: 1". The value of loopstep
+can be used to stop loops by not producing automatic
+responses to messages if loopstep has a value above a
+certain limit. The size of this limit is application-
+dependent.
+
+
+3.    Security considerations
+
+This proposal raises no new security concerns, instead, it
+reduces the risk to security of certain kinds of loops.
+
+
+4.    Acknowledgments
+
+Keith Moore and Uzi Paz have influenced this document with
+valuable suggestions.
+
+
+5.    References
+
+[1]  D. Crocker: "Standard for the format of ARPA Internet text
+     messages." STD 11, RFC 822, August 1982.
+
+[2]  S. Hardcastle-Kille: "Mapping between X.400(1988) / ISO 10021
+     and RFC 822",  RFC 1327 May 1992.
+
+[3]  ISO/ITU: "Message Handling Systems", ISO
+international standard
+     10021, ITU  recommendation X.400.
+
+[4]  ISO/ITU: "Message Handling Systems, Part 7: Interpersonal
+     Messaging System, ISO international standard 10021-7, ITU
+     recommendation X.420.
+
+[5]  N. Borenstein, N. Freed: "MIME (Multipurpose Internet Mail
+     Extensions)", RFC 1521, September 1993.
+
+[6]  K. Moore, G. Vaudreuil, "An Extensible Message Format for
+     Delivery Status Notifications", RFC 1894, January
+1996.
+
+[7]  K. Moore, "SMTP Service Extension for Delivery Status
+     Notifications", RFC 1891, January 1996.
+
+[8]  J. Palme, "The Auto-Submitted, Supersedes and Expires E-mail
+     Headers. drafti-ietf-mailext-new-fields-08.txt. July 1997.
+
+
+6.    Author's address
+
+Jacob Palme                          Phone: +46-8-16 16 67
+Stockholm University/KTH             Fax: +46-8-783 08 29
+Electrum 230                         E-mail: jpalme@dsv.su.se
+S-164 40 Kista, Sweden
+

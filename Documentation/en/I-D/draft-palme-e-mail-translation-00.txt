@@ -1,0 +1,350 @@
+Network Working Group                                     Jacob Palme
+Internet Draft                               Stockholm University/KTH
+draft-palme-e-mail-translation-00.txt                          Sweden
+Category-to-be: Proposed standard                    Date: April 1999
+                                                Expires: October 1999
+
+
+                  Support for Language Translation of E-Mail
+
+                        Status of this Memo
+
+
+This document is an Internet-Draft and is in full conformance
+with all provisions of Section 10 of RFC2026.
+
+Internet-Drafts are working documents of the Internet Engineering
+Task Force (IETF), its areas, and its working groups.  Note that
+other groups may also distribute working documents as
+Internet-Drafts.
+
+Internet-Drafts are draft documents valid for a maximum of six
+months and may be updated, replaced, or obsoleted by other
+documents at any time.  It is inappropriate to use Internet-
+Drafts as reference material or to cite them other than as
+"work in progress."
+
+The list of current Internet-Drafts can be accessed at
+http://www.ietf.org/ietf/1id-abstracts.txt
+
+The list of Internet-Draft Shadow Directories can be accessed at
+http://www.ietf.org/shadow.html.
+
+Copyright (C) The Internet Society 1998. All Rights Reserved.
+
+
+1.1.1.                            Abstract
+
+This memo proposes extensions to e-mail and netnews standards, to allow
+for the submission of translation of messages, not only at initial
+submission time, but also at later time, and made by other translators
+than the original author of the message. Two new e-mail/netnews header
+fields are proposed, "Translation-Of" and "Translator".
+
+This proposal does not propose any change to the already existing
+proposed standard for the Content-Language header (RFC 1766).
+
+Further discussion of this memo can take place in the mailing list WG-
+I18N@TERENA.NL.
+
+Mailing List Information
+
+To write contributions
+
+ Further discussion on this document should be done through the
+ mailing list WG-I18N@TERENA.NL.
+
+ Comments on less important details may also be sent to the editor,
+ Jacob Palme <jpalme@dsv.su.se>.
+
+To subscribe
+
+ To subscribe to this mailing list, send a message to
+ LISTSERV@TERENA.NL
+ which contains the text
+ SUB[SCRIBE] WG-I18N <your name (not your email address)>
+
+To unsubscribe
+
+ To unsubscribe from this list, send a message to
+ LISTSERV@TERENA.NL
+ which contains the text
+ UNS[UBSCRIBE] WG-I18N
+
+To access mailing list archives
+
+ The archives are available for browsing from
+ http://www.terena.nl/working-groups/wg-i18n/hypermail/
+
+The archives are also available by email. Send a message to
+ LISTSERV@TERENA.NL with the text "INDEX WG-I18N" to get a list
+ of the archive files, and then a new message "GET <file name>" to
+ retrieve archive files.
+
+                         Table of contents
+
+1.   Introduction
+2.   Multi-Language Scenario
+3.   The Translation-Of Header Field
+4.   The Translator Header Field
+5.   Examples
+6.   Security considerations
+7.   Copyright and disclaimer
+8.   Acknowledgments
+9.   References
+10.  Author's address
+
+
+1.    Introduction
+
+The "Language:" e-mail content header specified in RFC 1766 [5] can be
+used to specify one or a list of natural languages used in that message
+body.
+
+The "Content-Type: Multipart/alternative" defined in MIME [4] can be
+used to send the same text in more than one language. Each part is
+marked with the "Language:" header to indicate its language, and the
+recipient can choose the body part according to his or her language
+preferences.
+
+In HTTP [6], a GET operation can indicate a list of preferred
+languages, and the server can then deliver the resource in the
+preferred language. HTTP also has facilities for the server to tell the
+client which alternatives are available in different languages, letting
+the client choose between them. It is also possible, with HTTP, to
+deliver a resource in the "Multipart/alternative" format, if the
+recipient wants to store the resource in all available language
+versions.
+
+All of these methods of transmitting information is based on the
+assumption that all language versions are ready and available when a
+message is sent.
+
+
+2.    Multi-Language Scenario
+
+John Smith writes a message in English and submits it to a mailing list
+or to a Usenet newsgroup. An automatic translation agent gets this
+message and translates it into German. The German translation is
+submitted to the same mailing list or newsgroup. Ernst Dürrenmatt reads
+this message in English, because he has indicated that he prefers
+English original documents to automatic German translations. Hilda
+Schmidt reads the message in both English and German, decides that the
+automatic German translation is not very good, and cleans it up,
+submitting a new better translation to German. Ernst Dürrenmatt checks
+this translation, makes some corrections, and submits a final corrected
+version of the German translation of the original message.
+
+
+3.    The Translation-Of Header Field
+
+The "Translation-Of" header field is used when submitting a translation
+to a message, which earlier has been sent in another language. The
+syntax for this header field is similar to the syntax for the "In-Reply-
+To" header, but only one value is allowed, since every translation can
+only be the translation of one previous message. The value contains the
+Message-ID of the original message before translation. If a message is
+available in more than one language, "Translation-Of" should always
+reference the original message, even if the translation was actually
+based on a translated version. If the original message is available in
+more than one version, with "Supersedes" or "Replaces" references
+between the versions, then the "Translation-Of" should reference the
+version which was the basis of this translation.
+
+If more than one translation is available of the same original message,
+the "Supersedes" or "Replaces" header field should not be used between
+them. "Supersedes" or "Replaces" is only to be used when the original
+message is revised. Example:
+
+
+4.    The Translator Header Field
+
+The "Translator" header field indicates who made the translation. When
+a translation is submitted, the "From" header field should still
+indicate the original author, but the "Translator" header field can
+indicate who made the translation.
+
+The syntax of the "Translator" header field is:
+
+translator           = "Translator:" CFWS mailbox-list
+                       *(";" translator-parameter) CFWS CRLF
+
+translator-parameter = art / fluency / future-extension
+
+art                  = "Human" / "Machine"
+
+fluency              = "Expert" / "Native"
+
+The meaning of these parameters are:
+
+Human   = Translation was made or revised/approved by a human
+          translator.
+
+Machine = Translation was entirely automatic, with no human checking
+          of the translation. In this case, the "Auto-Submitted" [7]
+          header should also be added to the message heading.
+
+Expert  = Translation was made by an expert translator.
+
+Native  = Translation was made by a native speaker of the target
+          language.
+
+
+5.    Examples
+
+Message-ID: A
+From: John Smith <jsmit@foo.bar.net>
+To: Tropical Flowers Mailing list
+Language: en
+
+Message-ID: B
+From: John Smith <jsmit@foo.bar.net>
+To: Tropical Flowers Mailing list
+Translation-Of: A
+Translator: Erika Ernst <eernst@foo.bar.de>; human; native
+Language: de
+
+Message-ID: C
+From: John Smith <jsmit@foo.bar.net>
+To: Tropical Flowers Mailing list
+Translation-Of: A
+Translator: Tomas Dürrenmatt <tdurrenmatt@foo.bar.de>; expert
+Language: de
+
+Message-ID: D
+From: John Smith <jsmit@foo.bar.net>
+To: Tropical Flowers Mailing list
+Language: en
+Supersedes: A
+
+Message-ID: E
+From: John Smith <jsmit@foo.bar.net>
+To: Tropical Flowers Mailing list
+Translation-Of: D
+Translator: Supertrans Super Translation Engine <supertrans@foo.bar>
+Auto-Submitted: Auto-generated
+Language: de
+Supersedes: A
+
+
+6.    Security considerations
+
+Translations made by other people than the original author of
+a message will of ourse entail the risk of intentional or
+unintentional incorrectness of the translation. But this is a
+risk we must accept if we want to have translations, and if
+everyone is not fluent in every language.
+
+Some people claim that machine translation technology is so
+bad, that it should not be used at all. However, if the
+recipient has a choice of either not understanding a message
+at all, or getting a bad machine translation, the recipient
+may still prefer the automatic translation. Based on this, the
+recipient might decide whether the message is of enough
+interest to be willing to pay for a human to make a better
+translation.
+
+The risk can be reduced, if the receiving user agent clearly
+shows that a message is a translator, who made the
+translation, and allows the user to check the original text
+and compare it with the translation.
+
+
+7.    Copyright and disclaimer
+
+The IETF takes no position regarding the validity or scope of
+any intellectual property or other rights that might be
+claimed to pertain to the implementation or use of the
+technology described in this document or the extent to which
+any license under such rights might or might not be available;
+neither does it represent that it has made any effort to
+identify any such rights. Information on the IETF's procedures
+with respect to rights in standards-track and standards-
+related documentation can be found in BCP-11. Copies of claims
+of rights made available for publication and any assurances of
+licenses to be made available, or the result of an attempt
+made to obtain a general license or permission for the use of
+such proprietary rights by implementors or users of this
+specification can be obtained from the IETF Secretariat."
+
+The IETF invites any interested party to bring to its
+attention any copyrights, patents or patent applications, or
+other proprietary rights which may cover technology that may
+be required to practice this standard. Please address the
+information to the IETF Executive Director.
+
+Copyright (C) The Internet Society (date). All Rights
+Reserved.
+
+This document and translations of it may be copied and
+furnished to others, and derivative works that comment on or
+otherwise explain it or assist in its implmentation may be
+prepared, copied, published and distributed, in whole or in
+part, without restriction of any kind, provided that the above
+copyright notice and this paragraph are included on all such
+copies and derivative works. However, this document itself may
+not be modified in any way, such as by removing the copyright
+notice or references to the Internet Society or other Internet
+organizations, except as needed for the purpose of developing
+Internet standards in which case the procedures for copyrights
+defined in the Internet Standards process must be followed, or
+as required to translate it into languages other than English.
+
+The limited permissions granted above are perpetual and will
+not be revoked by the Internet Society or its successors or
+assigns.
+
+
+8.    Acknowledgments
+
+Suggestions during the development of this memo has been given by Henry
+Spencer and Larry Masinter.
+
+
+9.    References
+
+Ref.    Author, title                                    IETF status
+                                                         (July 1996)
+-----   ---------------------------------------------    -----------
+[1]     J. Postel: "Simple Mail Transfer Protocol",      Standard,
+        STD 10, RFC 821, August 1982.                    Recommended
+
+[2]     D. Crocker: "Standard for the format of ARPA     Standard,
+        Internet text messages." STD 11, RFC 822,        Recommended
+        August 1982.
+
+[3]     M.R. Horton, R. Adams: "Standard for             Not an offi-
+        interchange of USENET messages", RFC 1036,       cial IETF
+        December 1987.                                   standard,
+                                                         but in
+                                                         reality a de-
+                                                         facto
+                                                         standard for
+                                                         Usenet News
+
+[4]     N. Freed & N. Borenstein: "MIME (Multipurpose    Draft
+        Internet Mail Extensions) Part One: Format of    Standard,
+        Internet Message Bodies. RFC 2945. November      elective
+        1996.
+
+[5]     H. Alvestrand: "Tags for the Identification      Proposed
+        of Languages", RFC 1766, February 1995.          standard,
+                                                         elective
+
+[6]     R. Fielding, J. Gettys, J. Mogul, H. Frystyk,    Proposed
+        T. Berners-Lee: Hypertext Transfer Protocol -    standard
+        - HTTP/1.1, RFC 2068, January 1997.
+
+[7]     J. Palme: The Auto-Submitted, Supersedes and     Work in
+        Expires Headers in E-mail and Netnews, draft-    progress
+        ietf-mailext-new-fields-14.txt, November
+        1998.
+
+
+10.   Author's address
+
+Jacob Palme                     Phone: +46-8-16 16 67
+Stockholm University/KTH        Fax: +46-8-783 08 29
+Electrum 230                    E-mail: jpalme@dsv.su.se
+S-164 40 Kista, Sweden
+

@@ -1,0 +1,174 @@
+
+Public Information Retrieval Protocol (PIRP)
+
+INTERNET-DRAFT   draft-bernstein-pirp-02.txt   (expires 1 August 1997)
+
+   This document is an Internet-Draft. Internet-Drafts are working
+   documents of the Internet Engineering Task Force (IETF), its areas,
+   and its working groups. Note that other groups may also distribute
+   working documents as Internet-Drafts.
+
+   Internet-Drafts are draft documents valid for a maximum of six
+   months and may be updated, replaced, or obsoleted by other documents
+   at any time. It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as ``work in progress.''
+
+   To learn the current status of any Internet-Draft, please check the
+   ``1id-abstracts.txt'' listing contained in the Internet-Drafts
+   Shadow Directories on ftp.is.co.za (Africa), nic.nordu.net (Europe),
+   munnari.oz.au (Pacific Rim), ds.internic.net (US East Coast), or
+   ftp.isi.edu (US West Coast).
+
+Status of this memo
+
+   This memo provides information for the Internet community. This memo
+   does not specify an Internet standard of any kind. Distribution of
+   this memo is unlimited.
+
+Abstract
+
+   The Public Information Retrieval Protocol (PIRP) gives Internet hosts
+   a simple, uniform, efficient, extensible, easily implemented method
+   of publishing information. This document defines PIRP and outlines
+   the structure of PIRP names.
+
+   Unlike FTP and HTTP, PIRP is dedicated to publication. Implementing
+   PIRP ought to be a small and trivial task.
+
+
+Public Information Retrieval Protocol (PIRP)
+D. J. Bernstein, djb@pobox.com
+19970201
+
+
+1. Introduction
+
+   The Public Information Retrieval Protocol (PIRP) gives Internet hosts
+   a simple, uniform, efficient, extensible, easily implemented method
+   of publishing information. This document defines PIRP and outlines
+   the structure of PIRP names.
+
+   Unlike FTP and HTTP, PIRP is dedicated to publication. Implementing
+   PIRP ought to be a small and trivial task.
+
+   In this document, a string of 8-bit bytes may be written in two
+   different forms: as a series of hexadecimal numbers between angle
+   brackets, or as a sequence of ASCII characters between double quotes.
+   For example, <68 65 6c 6c 6f 20 77 6f 72 6c 64 21> is a string of
+   length 12; it is the same as the string "hello world!".
+
+
+2. Protocol
+
+   A PIRP client connects to a PIRP server, as discussed in section 5,
+   over a reliable stream protocol allowing transmission of 8-bit bytes.
+
+   The client sends a PIRP name. A PIRP name is a sequence of
+   components. Each component is a string of 8-bit bytes. The final
+   component is the empty string. Each previous component is nonempty.
+
+   A PIRP name is encoded as the concatenation of the encodings of its
+   components. Each component is encoded as a netstring, as discussed in
+   section 4.
+
+   Here are three examples of encoded PIRP names:
+
+      "6:finger,3:djb,0:,"
+      "3:ftp,3:pub,8:software,17:qmail-0.90.tar.gz,0:,"
+      "0:,"
+
+   The reader should not conclude from these examples that PIRP names
+   are required to be printable ASCII codes. The server must be prepared
+   to accept arbitrary bytes from the client.
+
+   After receiving the PIRP name from the client, the server normally
+   returns information associated with the name. This information is a
+   string of 8-bit bytes, encoded as a netstring. The server then closes
+   the connection.
+
+   Instead of returning an encoded component, the server may send the
+   string "!", which may mean either ``There is no information
+   associated with that name'' or ``I refuse to give you the information
+   associated with that name.''
+
+   Further server responses, beginning with a byte different from "!"
+   and from the ASCII digits, may be defined in the future. Any server
+   response beginning with "x" is reserved for experimental use.
+
+   The server may indicate temporary failure by closing the connection
+   before sending a complete response, or even before reading everything
+   from the client. However, the server must not begin a response before
+   reading everything from the client.
+
+   The client may close the connection before reading everything from
+   the server.
+
+   A PIRP session should take at most 1 hour. Both sides are expected to
+   close the connection after this time.
+
+
+3. Name interpretation
+
+   It is natural to divide PIRP names into categories based on the first
+   component. A document may identify a particular component---for
+   example, "finger"---and supply rules for the use of names with that
+   first component, as well as for the information conveyed by the
+   server's response. The first-level PIRP namespace will always have
+   lots of room for future extensions. Lower-level namespaces might also
+   leave room for growth.
+
+   The first component "experimental" is reserved for experimental use.
+
+   This document does not require that servers support any particular
+   portion of the PIRP namespace. However, PIRP-over-TCP servers
+   accessible through the Internet (see section 5) should not use any
+   non-experimental portion of the PIRP namespace in any non-standard
+   way.
+
+   The server's response to a single PIRP name may be fixed for long
+   periods of time, or it may change without human intervention. The
+   server may give the same response to all clients or different
+   responses to different clients.
+
+
+4. Netstrings
+
+   Any string of 8-bit bytes may be encoded as [len]":"[string]",".
+   Here [string] is the string and [len] is a nonempty sequence of ASCII
+   digits giving the length of [string] in decimal. The ASCII digits are
+   <30> for 0, <31> for 1, and so on up through <39> for 9. Extra zeros
+   at the front of [len] are prohibited: [len] begins with <30> exactly
+   when [string] is empty.
+
+   For example, the string "hello world!" is encoded as <31 32 3a 68
+   65 6c 6c 6f 20 77 6f 72 6c 64 21 2c>, i.e., "12:hello world!,". The
+   empty string is encoded as "0:,".
+
+   [len]":"[string]"," is called a netstring. [string] is called the
+   interpretation of the netstring.
+
+
+5. Encapsulation
+
+   PIRP may be used on top of TCP. A PIRP-over-TCP server listens for
+   TCP connections on port 553.
+
+
+6. Security considerations
+
+   Is the name received by a PIRP server the same as the name sent by
+   the client? Is the information received by the client the same as the
+   information sent by the server? The answers depend on the security
+   and reliability of the underlying communications mechanism. It is
+   easy to subvert TCP, for example, so if PIRP is used over TCP, an
+   attacker can subvert the client's request or the server's response.
+
+   It is a good idea to use a secure link instead of TCP. Note, however,
+   that one can safely transmit public information through an insecure
+   link, if in the meantime a cryptographic hash of the information is
+   sent through a secure link.
+
+   If PIRP is used over a secure, reliable communications link, the
+   client will correctly receive the server's response to its request.
+   Further security considerations depend on the client's use of this
+   response, and are not addressed in this document.

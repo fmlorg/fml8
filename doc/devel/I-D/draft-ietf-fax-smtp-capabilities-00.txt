@@ -1,0 +1,503 @@
+
+Network Working Group                                           Dan Wing
+Internet Draft                                                Neil Joffe
+November 3, 1997                                     Cisco Systems, Inc.
+Expires May 1998
+
+
+            SMTP Service Extension for Capabilities Exchange
+                draft-ietf-fax-smtp-capabilities-00.txt
+
+
+Status of this memo
+
+This document is an Internet-Draft. Internet-Drafts are working
+documents .br of the Internet Engineering Task Force (IETF), its areas, and
+its working groups.  Note that other groups may also distribute working
+documents as Internet-Drafts.
+
+Internet-Drafts are draft documents valid for a maximum of six months
+and may be updated, replaced, or obsoleted by other documents at any
+time.  It is inappropriate to use Internet-Drafts as reference material
+or to cite them other than as "work in progress."
+
+To learn the current status of any Internet-Draft, please check the
+"1id-abstracts.txt" listing contained in the Internet-Drafts Shadow
+Directories on ftp.is.co.za (Africa), ftp.nordu.net (Europe),
+munnari.oz.au (Pacific Rim), ds.internic.net (US East Coast), or
+ftp.isi.edu (US West Coast).
+
+     Note: although this work has been discussed in the
+     IETF-FAX working group, it does not purport to represent
+     the consensus of the group.
+
+
+0.  Administrivia
+
+0.1.  Changes since previous versions
+
+Changes from draft-wing-smtp-capabilities-00.txt to
+draft-ietf-fax-smtp-capabilities-00.txt:
+
+  * Filename changed from -wing- to -ietf-fax-.
+  * More example methods to get recipient capabilities in section
+    2.1.
+  * Reference fax requirements document and fax profile for internet
+    mail document.
+
+
+1.  Abstract
+
+
+
+Wing, Joffe                 Expires May 1998                    [Page 1]
+
+Internet Draft        SMTP Capabilities Exchange           November 1997
+
+
+This document describes an extension to SMTP [SMTP] which provides a
+mechanism for capabilities exchange so the sender of a message can know
+selected capabilities of its ultimate recipient, or of the message
+transmission path to that recipient.
+
+
+2.  Introduction
+
+This memo defines a mechanism to allow an SMTP client to determine the
+capabilities (such as viewers, word processors, and color support) and
+preferences (such as language) of a recipient, which allows the SMTP
+client to send a message in a format that is usable by the recipient.
+
+This memo was motivated by an analysis of the requirements for using the
+Internet to deliver fax messages, described in [FAX-REQ] and
+[FAX-PROFILE].  While capabilities exchange is necessary for fax, it can
+be useful in other messaging scenerios such as delivery to cellular
+telephones via SMS, security [SMIME-40BIT], and to send normal messages
+that will be usable by the recipient.
+
+
+2.1.  CAPABILITIES Extension
+
+The CAPABILITIES extension permits an SMTP client to easily obtain a
+list of a recipient's capabilities.  These capabilities can be used by
+the client to send a message that is known to be readable, processable,
+or understood by the recipient, or to inform the mail user agent that
+the recipient will be unable to read the message.
+
+The CAPS esmtp-keyword for the RCPT command causes the server to
+advertise recipient capabilities.  These capabilities can be:
+
+  (a)  those of the actual recipient (if known through a mechanism
+       such as [ACAP], [DIR-EMAIL], [DS-EMAIL], [SALUTATION], querying
+       the next MTA in the SMTP path, or some other
+       implementation-specific mechanism), or
+
+  (b)  the recipient's capabilities (from (a)), plus those capabilities
+       the SMTP server is willing to accept and translate to the
+       recipient's capabilities (text/8bit to text/quoted-printable, for
+       example).
+
+This memo uses the mechanism described in [SMTP-EXT] to define an
+extension to the SMTP protocol for indicating recipient's capabilities
+to the SMTP client.
+
+
+2.2.  Discussion of this draft
+
+
+
+Wing, Joffe                 Expires May 1998                    [Page 2]
+
+Internet Draft        SMTP Capabilities Exchange           November 1997
+
+
+
+This draft is being discussed on the "ietf-fax" mailing list.  To
+subscribe, send a message to:
+     ietf-fax-request@imc.org
+with the line:
+     subscribe
+in the body of the message.  Archives are available from
+http://www.imc.org/ietf-fax.
+
+
+2.3.  Requirements notation
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+"SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this
+document are to be interpreted as described in RFC 2119 [REQ].
+
+
+3.  Framework for capabilities extension
+
+The following service extension is defined for capabilities exchange.
+
+  (1)  The name of the capabilities extension is Capabilities;
+
+  (2)  the EHLO keyword value associated with the capabilities extension
+       is CAPABILITIES;
+
+  (3)  no parameters are allowed with this extension;
+
+  (4)  no new SMTP verbs are associated with this extension;
+
+  (5)  one optional parameter for the RCPT command, using the
+       esmtp-keyword "CAPS", (used to request the capabilities of the
+       recipient), is defined in section 4,
+
+       no parameters are added to the MAIL command;
+
+  (6)  the maximum length of RCPT TO is increased by 5 characters.
+
+
+4.  Behavior of RCPT TO:<forward-path> CAPS
+
+A RCPT command issued by a client may contain the optional esmtp-keyword
+"CAPS" to indicate that the SMTP client wishes to receive recipient
+capabilities information in the RCPT response from the SMTP server.
+
+The server should be aware of the nature of the recipient via some
+implementation-specific method (LDAP or other directory query,
+contacting the destination system directly, [DIR-EMAIL], or some other
+
+
+
+Wing, Joffe                 Expires May 1998                    [Page 3]
+
+Internet Draft        SMTP Capabilities Exchange           November 1997
+
+
+implementation-specific method).
+
+
+4.1.  Responses to RCPT TO esmtp-keyword CAPS
+
+The response to the esmtp-keyword CAPS on a RCPT TO command is a
+multiline reply, consisting of the standard SMTP reply, followed by
+recipient capabilities in the format specified in section 6 and 8.2 of
+[HTTP-NEG] and section 14 of [HTTP-1.1].  The response should be split
+on multiple lines to not exceed the 512 character limit for a reply line
+as specified in [RFC821, SMTP-UPD].
+
+The SMTP server only needs to indicate capabilities if the SMTP server
+is responding with a positive (2xx) reply.  Non-positive replies don't
+need to include capabilities and such capabilities are to be ignored by
+the SMTP client if they are present.
+
+The positive response, in [ABNF] form is:
+
+  caps-response = rsp-code SP rcpt-response CR LF /
+                  ( rsp-code "-" rcpt-response CR LF
+                    1*( rsp-code "-" caps-line CR LF )
+                    rsp-code SP caps-line CR LF )
+
+  rsp-code = "2" 2DIGIT
+
+  rcpt-response = <normal response to RCPT command by this SMTP server
+                   in the absence of the esmtp-keyword CAPABILITIES>
+
+  caps-line = [status-code SP] features-line CR LF
+
+  features-line = http-line / ( ttl-caps ttl-seconds )
+
+  status-code   = <This is <status-code> of section 4 of [SMTP-ENH-ERR]
+                   if SMTP server implements [SMTP-ENH-ERR]>
+
+  http-line     = <Accept-Features, as described in [HTTP-NEG]>
+
+  ttl-caps    = "ttl=" ttl-seconds
+  ttl-seconds = 1*DIGIT
+
+
+(XXX - ttl-caps and ttl-seconds aren't defined in [HTTP-NEG], but
+ they should probably be moved there, as they're more appropriate
+ there
+
+ The purpose of <ttl> is to indicate how long the list of capabilties
+ should be considered an authoritative list of capabilities.  The ttl is
+
+
+
+Wing, Joffe                 Expires May 1998                    [Page 4]
+
+Internet Draft        SMTP Capabilities Exchange           November 1997
+
+
+ decremented by the SMTP server for the length of time since the data
+ was last refreshed.  A ttl of 0 indicates the capabilities list is
+ out-of-date but newer authoritative capabilities are not obtainable at
+ this time.  )
+
+
+
+
+4.2.  SMTP server unable to obtain capabilities
+
+If the SMTP server receives a request for recipient capabilities but
+cannot determine the capabilities of the recipient for some reason, the
+SMTP server may reply with:
+
+  (1) ttl=0, or
+  (2) an expired capabilities list and ttl=0
+
+This allows the SMTP client to:
+
+  (a) abort the transaction, or
+  (b) send whatever data it wishes (case 1, above), or
+  (c) send data meeting the capabilities listed in (case 2, above).
+
+
+4.3.  Behavior when client exceeds recipient's capabilities
+
+The SMTP server MAY verify that the SMTP client did not exceed the
+recipient capabilities advertised by the server.  If the SMTP server
+determines that the SMTP client exceeded the advertised capabilities,
+the SMTP server can reject the message after the end-of-mail-data
+indicator.  See the discussion in section 2.4.1 in [SMTP-UPD] for more
+information.
+
+
+5.  Examples
+
+5.1.  Simple capabilities exchange
+
+  S: 220 gw.cisco.com ESMTP service ready
+  C: EHLO joffe-pc.cisco.com
+  S: 250-gw.cisco.com says hello
+  S: 250 CAPABILITIES
+  C: MAIL FROM:<njoffe@cisco.com>
+  S: 250 <njoffe@cisco.com> sender okay
+  C: RCPT TO:<masinter@parc.xerox.com> CAPS
+  S: 250-<masinter@parc.xerox.com> recipient ok
+  S: 250-Accept: audio/basic
+  S: 250-Accept: text/*
+
+
+
+Wing, Joffe                 Expires May 1998                    [Page 5]
+
+Internet Draft        SMTP Capabilities Exchange           November 1997
+
+
+  S: 250-Accept: image/tiff;application=f, image/tiff;application=fx,
+       application/octet-stream; q=0.2
+  S: 250-Accept-Features: papersize=na-letter, papersize=iso-a4
+  S: 250-Accept-Features: pix-x=1728, res=204x196
+  S: 250 ttl=500
+  C: DATA
+  S: 354 Send your data
+  ...
+
+5.2.  SMTP server isn't able to obtain capabilities for recipient
+
+  S: 220 gw.cisco.com SMTP service ready
+  C: EHLO wing-pc.cisco.com
+  S: 250-gw.cisco.com says hello
+  S: 250 CAPABILITIES
+  C: MAIL FROM:<dwing@cisco.com>
+  S: 250 <dwing@cisco.com> sender okay
+  C: RCPT TO:<adelman@adelman.com> CAPS
+  S: 250 <adelman@adelman.com> recipient ok
+  C: DATA
+  S: 354 Send your data
+  ...
+
+5.3.  SMTP server can only obtain expired capabilities information
+
+  S: 220 gw.cisco.com SMTP service ready
+  C: EHLO wing-pc.cisco.com
+  S: 250-gw.cisco.com says hello
+  S: 250 CAPABILITIES
+  C: MAIL FROM:<dwing@cisco.com>
+  S: 250 <dwing@cisco.com> sender okay
+  C: RCPT TO:<benefits@cisco.com>
+  S: 250-<benefits@cisco.com> recipient ok
+  S: 250-Accept: text/*
+  S: 250-Accept: application/ms-word, application/powerpoint
+  S: 250 ttl=0
+  C: DATA
+  S: 354 Send your data
+  ...
+
+
+6.  Security Considerations
+
+As detailed in section 14 of [HTTP-NEG], Accept- headers, in particular
+Accept-Language headers, may reveal information which the user would
+rather keep private.  For this reason it may be desirable to restrict
+externally-accessible information on user preferences and capabilities.
+
+
+
+
+Wing, Joffe                 Expires May 1998                    [Page 6]
+
+Internet Draft        SMTP Capabilities Exchange           November 1997
+
+
+7.  Acknowledgments
+
+This document was produced by work initially started in the Internet Fax
+Working Group.
+
+The authors would like to thank Graham Klyne (Integralis Ltd.) and
+Larry Masinter (Xerox PARC) for their contributions to this work.
+
+
+8.  References
+
+  [ACAP]
+       J. Myers, C. Newman, "ACAP -- Application Configuration Access
+       Protocol", Internet Draft, Work in Progress,
+       draft-ietf-acap-spec-??.txt.
+
+  [ABNF]
+       D. Crocker, P. Overell, "Augmented BNF for Syntax Specifications:
+       ABNF", Internet Draft, Work in Progress,
+       draft-ietf-drums-abnf-??.txt.
+
+  [DIR-EMAIL]
+       B. Greenblatt, "Directory Entries From Email Address", Internet
+       Draft, Work in Progress, draft-greenblatt-defema-??.txt.
+
+  [DS-EMAIL]
+       P. Leach, "Locating DS Entries by E-mail Address", Internet
+       Draft, Work in Progress, draft-leach-asid-ds-email-??.txt.
+
+  [FAX-PROFILE]
+       ?, "FAX Profile for Internet Mail", Internet Draft, Work in
+       Progress, draft-ietf-fax-profile-??.txt
+
+  [FAX-REQ]
+       L. Masinter, "Requirements for Internet FAX", Internet Draft,
+       Work in Progress, draft-ietf-fax-requirements-??.txt.
+
+  [HTTP-1.1]
+       R. Fielding, J. Gettys, J. Mogul, H. Frystyk, T. Berners-Lee,
+       "Hypertext Transfer Protocol -- HTTP/1.1", RFC 2068, January
+       1997.
+
+  [HTTP-NEG]
+       K. Holtman, A. Mutz, "Transparent Content Negotiation in HTTP",
+       Internet Draft, Work In Progress,
+       draft-ietf-http-negotiation-??.txt.
+
+  [REQ]
+
+
+
+Wing, Joffe                 Expires May 1998                    [Page 7]
+
+Internet Draft        SMTP Capabilities Exchange           November 1997
+
+
+       S. Bradner, "Key words for use in RFCs to Indicate Requirement
+       Levels", BCP-14, RFC 2119, March 1997.
+
+  [SALUTATION]
+       The Salutation Consortium, "Salutation Architecture
+       Specification", December 1996.
+
+  [SMIME-40BIT]
+       Bruce Schneier, "Counterpane Systems Releases Windows
+       95-compatible S/MIME 40-bit RC2 Cracking ScreenSaver",
+       http://www.counterpane.com/smime.html.
+
+  [SMTP]
+       D. Crocker, "Standard for the Format of ARPA Internet Text
+       Messages", STD-10, RFC 822, August 1982.
+
+  [SMTP-EXT]
+       J. Klensin, N. Freed, M. Rose, E. Stefferud, D. Crocker, "SMTP
+       Service Extensions", STD-10, RFC 1869, November 1995.
+
+  [SMTP-UPD]
+       J. Klensin, D. Mann, "Simple Mail Transfer Protocol", Internet
+       Draft, Work in Progress, draft-ietf-drums-smtpupd-??.txt.
+
+  [SMTP-ENH-ERR]
+       N. Freed, "SMTP Service Extension for Returning Enhanced Error
+       Codes", RFC 2034, October 1996.
+
+
+9.  Author's Addresses
+
+   Dan Wing
+   Cisco Systems, Inc.
+   101 Cooper Street
+   Santa Cruz, CA 95060  USA
+
+   Phone: +1 408 457 5200
+   Fax:   +1 408 457 5208
+   EMail: dwing@cisco.com
+
+
+   Neil Joffe
+   Cisco Systems, Inc.
+   170 West Tasman Drive
+   San Jose, CA 95134-1706  USA
+
+   Phone: +1 408 526 4000
+   Email: njoffe@cisco.com
+
+
+
+Wing, Joffe                 Expires May 1998                    [Page 8]
+
+Internet Draft        SMTP Capabilities Exchange           November 1997
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wing, Joffe                 Expires May 1998                    [Page 9]
+
+

@@ -1,0 +1,507 @@
+
+
+
+
+
+
+Network Working Group                                           J. Myers
+Internet Draft: SMTP Authentication                        February 1998
+Document: draft-myers-smtp-auth-11.txt
+
+
+                         SMTP Service Extension
+                           for Authentication
+Status of this Memo
+
+   This document is an Internet Draft.  Internet Drafts are working
+   documents of the Internet Engineering Task Force (IETF), its Areas,
+   and its Working Groups.  Note that other groups may also distribute
+   working documents as Internet Drafts.
+
+   Internet Drafts are draft documents valid for a maximum of six
+   months.  Internet Drafts may be updated, replaced, or obsoleted by
+   other documents at any time.  It is not appropriate to use Internet
+   Drafts as reference material or to cite them other than as a
+   ``working draft'' or ``work in progress``.
+
+   To learn the current status of any Internet-Draft, please check the
+   1id-abstracts.txt listing contained in the Internet-Drafts Shadow
+   Directories on ds.internic.net, nic.nordu.net, ftp.isi.edu, or
+   munnari.oz.au.
+
+   A revised version of this draft document will be submitted to the RFC
+   editor as a Proposed Standard for the Internet Community.  Discussion
+   and suggestions for improvement are requested.  This document will
+   expire before July 1996.  Distribution of this draft is unlimited.
+
+
+1. Introduction
+
+   This document defines an SMTP service extension [ESMTP] whereby an
+   SMTP client may indicate an authentication mechanism to the server,
+   perform an authentication protocol exchange, and optionally negotiate
+   a security layer for subsequent protocol interactions.  This
+   extension is a profile of the Simple Authentication and Security
+   Layer [SASL].
+
+
+
+
+
+
+
+
+
+
+
+
+Myers                                                           [Page 1]
+
+Internet Draft            SMTP Authentication          February 26, 1998
+
+
+2. Conventions Used in this Document
+
+   In examples, "C:" and "S:" indicate lines sent by the client and
+   server respectively.
+
+   The key words "MUST", "MUST NOT", "SHOULD", "SHOULD NOT", and "MAY"
+   in this document are to be interpreted as defined in "Key words for
+   use in RFCs to Indicate Requirement Levels" [KEYWORDS].
+
+
+3. The Authentication service extension
+
+
+   (1) the name of the SMTP service extension is "Authentication"
+
+   (2) the EHLO keyword value associated with this extension is "AUTH"
+
+   (3) The AUTH EHLO keyword contains as a parameter a space separated
+       list of the names of supported SASL mechanisms.
+
+   (4) a new SMTP verb "AUTH" is defined
+
+   (5) an optional parameter using the keyword "AUTH" is added to the
+       MAIL FROM command.
+
+
+4. The AUTH command
+
+   AUTH mechanism [initial-response]
+
+     Arguments:
+         a string identifying a SASL authentication mechanism.
+         an optional base64-encoded response
+
+     Restrictions:
+         after an AUTH command has successfully completed, no more AUTH
+         commands may be issued in the same session.  After a successful
+         AUTH command completes, a server MUST reject any further AUTH
+         commands with a 503 reply.
+
+     Discussion:
+         The AUTH command indicates an authentication mechanism to the
+         server.  If the server supports the requested authentication
+         mechanism, it performs an authentication protocol exchange to
+         authenticate and identify the user.  Optionally, it also
+         negotiates a security layer for subsequent protocol
+         interactions.  If the requested authentication mechanism is not
+         supported, the server rejects the AUTH command with a 504
+
+
+
+Myers                                                           [Page 2]
+
+Internet Draft            SMTP Authentication          February 26, 1998
+
+
+         reply.
+
+         The authentication protocol exchange consists of a series of
+         server challenges and client answers that are specific to the
+         authentication mechanism.  A server challenge, otherwise known
+         as a ready response, is a 334 reply with the text part
+         containing a BASE64 encoded string.  The client answer consists
+         of a line containing a BASE64 encoded string.  If the client
+         wishes to cancel an authentication exchange, it issues a line
+         with a single "*".  If the server receives such an answer, it
+         MUST reject the AUTH command by sending a 501 reply.
+
+         The optional initial-response argument to the AUTH command is
+         used to save a round trip when using authentication mechanisms
+         that are defined to send no data in the initial challenge.
+         When the initial-response argument is used with such a
+         mechanism, the initial empty challenge is not sent to the
+         client and the server uses the data in the initial-response
+         argument as if it were sent in response to the empty challenge.
+         If the initial-response argument to the AUTH command is used
+         with a mechanism that sends data in the initial challenge, the
+         server rejects the AUTH command with a 535 reply.
+
+         If the server cannot BASE64 decode the argument, it rejects the
+         AUTH command with a 501 reply.  If the server rejects the
+         authentication data, it SHOULD reject the AUTH command with a
+         535 reply unless a more specific error code, such as one listed
+         in section 6, is appropriate.  Should the client successfully
+         complete the authentication exchange, the SMTP server issues a
+         235 reply.
+
+         The service name specified by this protocol's profile of SASL
+         is "smtp".
+
+         If a security layer is negotiated through the SASL
+         authentication exchange, it takes effect immediately following
+         the CRLF that concludes the authentication exchange for the
+         client, and the CRLF of the success reply for the server.
+
+         The server is not required to support any particular
+         authentication mechanism, nor are authentication mechanisms
+         required to support any security layers.  If an AUTH command
+         fails, the client may try another authentication mechanism by
+         issuing another AUTH command.  In other words, the client may
+         request authentication types in decreasing order of preference.
+
+         If an AUTH command fails, the server MUST behave the same as if
+         the client had not issued the AUTH command.
+
+
+
+Myers                                                           [Page 3]
+
+Internet Draft            SMTP Authentication          February 26, 1998
+
+
+         The BASE64 string may in general be arbitrarily long.  Clients
+         and servers MUST be able to support challenges and responses
+         that are as long as are generated by the authentication
+         mechanisms they support, independent of any line length
+         limitations the client or server may have in other parts of its
+         protocol implementation.
+
+     Examples:
+         S: 220 smtp.andrew.cmu.edu ESMTP server ready
+         C: EHLO jgm.pc.cc.cmu.edu
+         S: 250-smtp.andrew.cmu.edu
+         S: 250 AUTH SKEY PLAIN
+         C: AUTH FOOBAR
+         S: 504 Unrecognized authentication type
+         C: AUTH SKEY c21pdGg=
+         S: 334 OTUgUWE1ODMwOA==
+         C: BsAY3g4gBNo=
+         S: 235 S/Key authentication successful
+
+
+
+5. The AUTH parameter to the MAIL FROM command
+
+   AUTH=addr-spec
+
+   Arguments:
+       An addr-spec containing the identity which submitted the message
+       to the delivery system.  To comply with the restrictions imposed
+       on ESMTP parameters, the addr-spec is encoded inside an xtext.
+       The syntax of an xtext is described in section 5 of [ESMTP-DSN].
+
+   Discussion:
+       The optional AUTH parameter to the MAIL FROM command allows
+       cooperating agents in a trusted environment to communicate the
+       authentication of individual messages.
+
+       If the server trusts the authenticated identity of the client to
+       assert that the message was originally submitted by the supplied
+       addr-spec, then the server SHOULD supply the same addr-spec in an
+       AUTH parameter when relaying the message to any server which
+       supports the AUTH extension.
+
+       If the server does not sufficiently trust the authenticated
+       identity of the client, or if the client is not authenticated,
+       then the server MUST behave as if no AUTH parameter was supplied.
+       The server MAY, however, place the value of the AUTH parameter in
+       a comment in the inserted Received: header and/or write it to a
+       log file.
+
+
+
+Myers                                                           [Page 4]
+
+Internet Draft            SMTP Authentication          February 26, 1998
+
+
+       A server MAY treat expansion of a mailing list as a new
+       submission, setting the AUTH parameter to the mailing list
+       address or mailing list administration address when relaying the
+       message to list subscribers.
+
+       It is conforming for an implementation to be hard-coded to treat
+       all clients as being insufficiently trusted.  In that case, the
+       implementation does nothing more than parse and discard
+       syntactically valid AUTH parameters to the MAIL FROM command.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Myers                                                           [Page 5]
+
+Internet Draft            SMTP Authentication          February 26, 1998
+
+
+6. Error Codes
+
+   The following error codes may be used to indicate various conditions
+   as described.
+
+   422 A password transition is needed
+
+   This response to the AUTH command indicates that the user needs to
+   transition to the selected authentication mechanism.  This typically
+   done by authenticating once using the PLAIN authentication mechanism.
+
+   522 Authentication mechanism is too weak
+
+   This response to the AUTH command indicates that the selected
+   authentication mechanism is weaker than server policy permits for
+   that user.
+
+   523 Encryption required for requested authentication mechanism
+
+   This response to the AUTH command indicates that the selected
+   authentication mechanism may only be used when the underlying SMTP
+   connection is encrypted.
+
+   454 Temporary authentication failure
+
+   This response to the AUTH command indicates that the authentication
+   failed due to a temporary server failure.
+
+   505 Authentication required
+
+   This response may be returned by any command other than AUTH, EHLO,
+   NOOP, or QUIT.  It indicates that server policy requires
+   authentication in order to perform the requested action.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Myers                                                           [Page 6]
+
+Internet Draft            SMTP Authentication          February 26, 1998
+
+
+7. Formal Syntax
+
+   The following syntax specification uses the augmented Backus-Naur
+   Form (BNF) notation as specified in [RFC822].
+
+   Except as noted otherwise, all alphabetic characters are case-
+   insensitive.  The use of upper or lower case characters to define
+   token strings is for editorial clarity only.  Implementations MUST
+   accept these strings in a case-insensitive fashion.
+
+   ATOM_CHAR       = <any CHAR except atom_specials>
+
+   atom_specials   = "(" / ")" / "{" / SPACE / CTLs / "%" / "*" /
+                       <"> / "\"
+
+   auth_command    = "AUTH" SPACE auth_type [SPACE base64]
+       *(CRLF base64) CRLF
+
+   auth_param      = "AUTH=" xtext
+                       ;; xtext is defined in section 5 of RFC 1891
+                       ;; The decoded form of the xtext MUST be an addr-spec
+
+   auth_type       = 1*ATOM_CHAR
+
+   base64          = *(4base64_CHAR) [base64_terminal]
+
+   base64_char     = "A" / "B" / "C" / "D" / "E" / "F" / "G" / "H" /
+                     "I" / "J" / "K" / "L" / "M" / "N" / "O" / "P" /
+                     "Q" / "R" / "S" / "T" / "U" / "V" / "W" / "X" /
+                     "Y" / "Z" /
+                     "a" / "b" / "c" / "d" / "e" / "f" / "g" / "h" /
+                     "i" / "j" / "k" / "l" / "m" / "n" / "o" / "p" /
+                     "q" / "r" / "s" / "t" / "u" / "v" / "w" / "x" /
+                     "y" / "z" /
+                     "0" / "1" / "2" / "3" / "4" / "5" / "6" / "7" /
+                     "8" / "9" / "+" / "/"
+                       ;; Case-sensitive
+
+   base64_terminal = (2base64_char "==") / (3base64_char "=")
+
+   CHAR            = <any 7-bit US-ASCII character except NUL,
+                        0x01 - 0x7f>
+
+   continue_req    = "334" SPACE base64 CRLF
+
+   CR              = <ASCII CR, carriage return, 0x0C>
+
+   CRLF            = CR LF
+
+
+
+Myers                                                           [Page 7]
+
+Internet Draft            SMTP Authentication          February 26, 1998
+
+
+   CTL             = <any ASCII control character and DEL,
+                      0x00 - 0x1f, 0x7f>
+
+   LF              = <ASCII LF, line feed, 0x0A>
+
+   SPACE           = <ASCII SP, space, 0x20>
+
+
+
+8. References
+
+   [ESMTP] Klensin et al, "SMTP Service Extensions", RFC 1869, November
+   1995.
+
+   [ESMTP-DSN] Moore, K, "SMTP Service Extension for Delivery Status
+   Notifications", RFC 1890.
+
+   [KEYWORDS] Bradner, "Key words for use in RFCs to Indicate
+   Requirement Levels", RFC 2119, March 1997.
+
+   [SASL]  Myers, J., "Simple Authentication and Security Layer",
+   draft-myers-auth-sasl-13.txt, November 1997.
+
+   [RFC821] Postel, J., "Simple Mail Transfer Protocol", RFC 821, August
+   1982.
+
+   [RFC822] Crocker, D., "Standard for the Format of ARPA Internet Text
+   Messages", RFC 822, August 1982.
+
+
+
+9. Security Considerations
+
+   Security issues are discussed throughout this memo.
+
+   If a client uses this extension to get an encrypted tunnel through an
+   insecure network to a cooperating server, it needs to be configured
+   to never send mail to that server when the connection is not mutually
+   authenticated and encrypted.  Otherwise, an attacker could steal the
+   client's mail by hijacking the SMTP connection and either pretending
+   the server does not support the Authentication extension or causing
+   all AUTH commands to fail.
+
+   This extension does not provide a defined mechanism for
+   authentication using a plaintext password.  This omission is
+   intentional.
+
+   This extension is not intended to replace or be used instead of end-
+
+
+
+Myers                                                           [Page 8]
+
+Internet Draft            SMTP Authentication          February 26, 1998
+
+
+   to-end message signature and encryption systems such as PEM or PGP.
+   This extension addresses a different problem than end-to-end systems;
+   it has the following key differences:
+
+   (1) it is generally useful only within a trusted enclave
+
+   (2) it protects the entire envelope of a message, not just the
+       message's body.
+
+   (3) it authenticates the message submission, not authorship of the
+       message content
+
+   (4) it can give the sender some assurance the message was delivered
+       to the next hop in the case where the sender mutually
+       authenticates with the next hop and negotiates an appropriate
+       security layer.
+
+       Additional security considerations are mentioned in the SASL
+       specification [SASL].
+
+
+
+10. Author's Address:
+
+John Gardiner Myers
+Netscape Communications
+501 East Middlefield Road
+Mail Stop MV-029
+Mountain View, CA 94043
+
+Email: jgmyers@netscape.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Myers                                                           [Page 9]
+

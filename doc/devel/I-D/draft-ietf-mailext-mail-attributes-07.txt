@@ -1,0 +1,54 @@
+
+
+A new Request for Comments is now available in online RFC libraries.
+
+
+        RFC 2076:
+
+        Title:      Common Internet Message Headers
+        Author:     J. Palme
+        Date:       February 1997
+        Mailbox:    jpalme@dsv.su.se
+        Pages:      27
+        Characters: 47639
+        Updates/Obsoletes: None
+
+        URL:        ftp://ds.internic.net/rfc/rfc2076.txt
+
+
+This memo contains a table of commonly occurring headers in headings
+of e-mail messages. This document is a product of the Mail Extensions
+Working Group of the IETF.
+
+This memo provides information for the Internet community.  This memo
+does not specify an Internet standard of any kind.  Distribution of
+this memo is unlimited.
+
+This announcement is sent to the IETF list and the RFC-DIST list.
+Requests to be added to or deleted from the IETF distribution list
+should be sent to IETF-REQUEST@CNRI.RESTON.VA.US.  Requests to be
+added to or deleted from the RFC-DIST distribution list should
+be sent to RFC-DIST-REQUEST@ISI.EDU.
+
+Details on obtaining RFCs via FTP or EMAIL may be obtained by sending
+an EMAIL message to rfc-info@ISI.EDU with the message body 
+help: ways_to_get_rfcs.  For example:
+
+        To: rfc-info@ISI.EDU
+        Subject: getting rfcs
+
+        help: ways_to_get_rfcs
+
+Requests for special distribution should be addressed to either the
+author of the RFC in question, or to admin@DS.INTERNIC.NET.  Unless
+specifically noted otherwise on the RFC itself, all RFCs are for
+unlimited distribution.
+
+Submissions for Requests for Comments should be sent to
+RFC-EDITOR@ISI.EDU.  Please consult RFC 1543, Instructions to RFC
+Authors, for further information.
+
+
+Joyce K. Reynolds and Mary Kennedy
+USC/Information Sciences Institute
+

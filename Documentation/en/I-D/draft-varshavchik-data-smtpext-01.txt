@@ -1,0 +1,353 @@
+INTERNET-DRAFT                                            S. Varshavchik
+Expires Jan 26, 2000                              Double Precision, Inc.
+                                                           July 26, 1999
+
+                        Extended SMTP DATA Reply
+                 draft-varshavchik-data-smtpext-01.txt
+
+Status Of This Memo
+
+   This document is an Internet-Draft and is in full conformance with
+   all provisions of Section 10 of RFC2026.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF), its areas, and its working groups.  Note that
+   other groups may also distribute working documents as Internet-
+   Drafts.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet- Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   The list of current Internet-Drafts can be accessed at
+
+   http://www.ietf.org/ietf/1id-abstracts.txt
+
+   The list of Internet-Draft Shadow Directories can be accessed at
+   http://www.ietf.org/shadow.html.
+
+0. Revision history
+
+   01 - fixed a footnote typo.  Added references to related documents:
+   RFC2033, RFC1047, draft-ietf-fax-smtp-session.
+
+1. Abstract
+
+   This document describes an extension to the SMTP service [RFC1425],
+   called Extended DATA Reply.  This is an extended format of the SMTP
+   response to the DATA verb which provides recipient-specific status
+   information.  This allows mail recipients to use individual mail
+   filters as part of the Simple Mail Transfer Protocol.  This is a very
+   desirable feature because of escalating amounts of unwanted junk E-
+   mail sent over the Internet.
+
+2. Introduction
+
+   The reply to the SMTP [RFC821] DATA verb is a status code indicating
+   if the message was accepted or rejected.  The status code also
+
+Expires Jan 26, 2000                                            [Page 1]
+
+EXDATA SMTP Extension        S. Varshavchik                July 26, 1999
+
+   indicates if the rejection is temporary or permanent.  Additional
+   delivery attempts will be made for messages that are temporarily
+   rejected.
+
+   SMTP allows a message to have multiple recipients, but the reply to
+   the DATA verb cannot indicate if the message was successfully
+   accepted for some recipients only and rejected for the rest of them
+   (permanently or temporarily).  It can only indicate if the message
+   was accepted or rejected for every one of the listed recipients.
+
+   The only way to handle this condition within the current protocol is
+   to send a status code indicating that the message was accepted, then
+   immediately generate a non-delivery report for undeliverable
+   recipients.  This imposes additional resources and overhead, to
+   generate and transmit the non-delivery report.
+
+   The ability to have recipient-specific status in the reply to the
+   DATA verb is desirable for the following reasons:
+
+        A) The receiving SMTP server does not have to generate and send
+           a non-delivery report.
+
+        B) Recipients can install individual mail filters that
+           selectively block unwanted E-mail, and the mail filters will
+           be able to examine the entire contents of the message before
+           deciding to reject the message.  Currently, recipient-
+           specific filtering is only possible in response to the "RCPT
+           TO:" verb.  But the only available information at that point
+           is the network address of the sending mail server and return
+           address of the message.  Filtering unwanted junk mail based
+           only on the network address and the return address is of very
+           limited benefit.
+
+   There are several other mail enhancements that involve recipient-
+   specific processing.  [RFC2033] defines a related, but a completely
+   different, mail delivery protocol which features recipient-specific
+   processing.  There was also another draft memo published, draft-ietf-
+   fax-smtp-session, which defined an extension for recipient-specific
+   mail processing, however its scope is different from the scope of
+   this memo.
+
+3. Framework for the EXDATA SMTP transport extension
+
+   This SMTP transport extension [RFC1425] is laid out as follows.
+
+      (1) The name of the SMTP transport extension defined here is
+          Extended Data Reply (EXDATA).
+
+Expires Jan 26, 2000                                            [Page 2]
+
+EXDATA SMTP Extension        S. Varshavchik                July 26, 1999
+
+      (2) The EHLO keyword associated with this extension is EXDATA.
+
+      (3) The EXDATA EHLO keyword takes no parameters.
+
+      (4) One optional ESMTP keyword EXDATA is associated with the MAIL
+          FROM command. This parameter takes no values.
+
+      (5) No additional ESMTP verbs are defined by this extension.
+
+      (6) The next sections specify how support for this extension
+          affects the behavior of a server and client SMTP server.
+
+4. The EXDATA SMTP extension
+
+   The receiving SMTP server indicates that it is capable of supporting
+   the Extended Data Reply SMTP extension by including the EXDATA
+   keyword in the EHLO list.
+
+   The sending SMTP server indicates that it supports this extension by
+   including the EXDATA keyword in the MAIL FROM command.
+
+   If the sending SMTP server includes the EXDATA keyword in the first
+   MAIL FROM command, it MUST include the keyword in every MAIL FROM
+   command used in the same SMTP session.  If the sending SMTP server
+   does not include the EXDATA keyword in the first MAIL FROM command,
+   it MUST NOT include the keyword in any MAIL FROM command used in the
+   same SMTP session.
+
+   The receiving SMTP server SHOULD NOT send extended replies to the
+   DATA verb if the EXDATA keyword is not included in the MAIL FROM
+   command.
+
+   An extended DATA verb reply MAY be sent instead of the second status
+   code reply to the DATA verb. It MUST NOT be sent as the first reply
+   to the DATA verb (before the message is transmitted).  Using the
+   extended format in the second reply to the DATA verb is optional, and
+   not required.  The receiving SMTP server is always permitted to send
+   regular status replies.
+
+5. Format of an extended SMTP DATA reply
+
+   The extended SMTP DATA reply uses the 558 numeric status code which
+   is explicitly reserved for this purpose.  When a 558 numeric status
+   code is the second reply to the DATA verb, the reply MUST be
+   formatted as follows, where <SP>, <CR> and <LF> represent the ASCII
+   space, carriage return, and line feed characters:
+
+   ex-reply-code: ex-reply-recipient-list
+
+Expires Jan 26, 2000                                            [Page 3]
+
+EXDATA SMTP Extension        S. Varshavchik                July 26, 1999
+
+   ex-reply-recipient-list: non-final-recipient ex-reply-recipient-list
+                       | final-recipient
+
+   non-final-recipient: non-term-line non-final-recipient
+                        | non-final-recipient-term-line
+
+   non-term-line: "558-" result-code "-" result-text
+
+   non-final-recipient-term-line: "558-" result-code <SP> result-text
+
+   final-recipient: non-term-line final-recipient
+                    | final-recipient-term-line
+
+   final-recipient-term-line: "558" <SP> result-code <SP> result-text
+
+   result-code: digit digit digit
+
+   result-text: 0 or more characters, except <CR> and <LF>, terminated
+                by the <CR> <LF> sequence
+
+   digit: Characters "0" through "9"
+
+   The extended DATA reply is formatted like a standard multiline SMTP
+   reply with a 558 numeric status code.  The extended information is
+   contained within the text portion of the 558 multiline reply.  The
+   extended information consists of one or more individual replies,
+   where each reply itself is formatted like an SMTP reply.  There will
+   be exactly one reply for each recipient.  Each individual reply may
+   be a multiline reply itself.
+
+6. Restrictions on the extended SMTP DATA reply
+
+   Extended replies MUST contain exactly one individual reply for each
+   recipient whose RCPT TO command was acknowledged with a 2xx result
+   code.  Extended replies MUST NOT have any replies for recipients
+   whose RCPT TO commands were previously rejected with a 4xx or 5xx
+   result code.
+
+   For example, if a message had three recipients, and the second RCPT
+   TO command was rejected, the extended reply MUST contain two
+   individual replies: the first one is for the first recipient, the
+   second one for the last recipient.
+
+7.  Examples
+
+   In this example the first recipient of a two-recipient message is
+   accepted.  The second recipient is rejected:
+
+Expires Jan 26, 2000                                            [Page 4]
+
+EXDATA SMTP Extension        S. Varshavchik                July 26, 1999
+
+   558-250 Message accepted
+   558-550-Access denied:
+   558 550 Insufficient permission
+
+   In this example the first recipient is rejected. The second recipient
+   is accepted:
+
+   558-550-Access denied
+   558-550 Insufficient permission
+   558-250-Message accepted
+   558 250 Queue ID is 120
+
+7.1 Parsing extended replies
+
+   Extended replies can be parsed rather easily by noting that extended
+   replies are wrapped inside a standard SMTP multiline reply with a 558
+   status code.  If the numeric code of the second status reply to the
+   DATA verb is 558, and if the receiving server listed EXDATA in the
+   EHLO keyword list, the "558-" and "558<SP>" characters are removed
+   from the start of every line in the multiline response. The remaining
+   text is now interpreted as a series of individual SMTP replies, one
+   reply per recipient.  Each individual reply may be a multiline reply
+   itself.
+
+8.  Security Concerns
+
+8.1 Transitional behavior
+
+   The stated benefit of this extension is to allow recipients to use
+   individual mail filters to reject mail during an SMTP transaction.
+   However this extension must be widely implemented for this to happen.
+   Furthermore, the sending mail server can always omit the EXDATA
+   keyword from the MAIL FROM: verb.
+
+   It follows that recipient-specific filtering should still be used
+   even if the sending server does not state its support for the EXDATA
+   extension.  One approach is to reply to the DATA verb with an
+   accepted status, then apply individual filters and generate a non-
+   delivery report for recipients whose filters rejected the message.
+   But this would be exactly how individual mail filtering is currently
+   implemented, and it carries with it the same disadvantages and
+   setbacks.
+
+   Another possible approach is to go ahead and issue an extended reply,
+   which will be interpreted as a permanent failure by the sending mail
+   server.  This approach is unacceptable in most cases because the
+   sending mail server will correctly conclude that every recipient was
+
+Expires Jan 26, 2000                                            [Page 5]
+
+EXDATA SMTP Extension        S. Varshavchik                July 26, 1999
+
+   undeliverable.  If a message comes from a mailing list, the mailing
+   list management software can end up removing all recipients from the
+   mailing list only because of a malfunctioning mail filter used by one
+   recipient only.
+
+   The following approach MUST be used to implement recipient-specific
+   mail filtering during a transition period, using the EXDATA
+   extension, without allowing one recipient's malfunctioning filters to
+   disrupt mail for everyone.
+
+        A) Allow each recipient to specify "white-listed" senders and/or
+           network addresses.
+
+        B) Determine if the message is white-listed in response to the
+           RCPT TO: verb, according to the first recipient's rules.
+
+        C) If the message is white-listed by the first recipient, any
+           additional recipients MUST also have the message white-
+           listed.  If not, reject the corresponding RCPT TO: verb with
+           a temporary 421 status code.  The sending server will
+           retransmit the message for all non white-listed recipients
+           after a small delay.
+
+        D) If the message is not white-listed by the first recipient,
+           any additional recipients MUST NOT have the sender and/or the
+           sending network address white-listed.  If they do, reject the
+           corresponding RCPT TO: verb with a temporary 421 status code.
+           The sending server will retransmit the message for all white-
+           listed recipients after a small delay.
+
+        E) This logic results in separate delivery attempts for white-
+           listed and non white-listed recipients (with a small delay in
+           between).  Individual recipients can white-list specific
+           sources of mail (such as mailing lists).  The mail server
+           will not do any filtering on white-listed mail, and will
+           never send extended replies to those sources.  By white-
+           listing a known mail source recipients can make sure that any
+           other mail filter will not affect their mail delivery.
+
+8.2 Response time to SMTP DATA
+
+   Implementors should try to avoid any lengthy delays, due to mail
+   filters being used, before returning a reply to the SMTP DATA.  Many
+   SMTP clients wait for a response for only a short period of time,
+   before giving up.  This can lead to a message duplication problem,
+   described in [RFC1047].
+
+9. Comments
+
+Expires Jan 26, 2000                                            [Page 6]
+
+EXDATA SMTP Extension        S. Varshavchik                July 26, 1999
+
+   An experimental patch was made available in September 1997 (with
+   various revisions that followed) to a relatively popular mail server.
+   The patch used an XEXDATA EHLO keyword.  The experimental patch was
+   mainly used to implement recipient-specific mail filtering:
+   permitting individual recipients of a message to selectively reject
+   incoming E-mail traffic based on the contents of the message.  The
+   patch implemented the XEXDATA extension only for the receiving side,
+   not for the sending side.
+
+   No issues have been reported concerning the theoretical design of the
+   extended result code.
+
+10. References
+
+       [RFC1425] Klensin, J., Freed, N., Rose, M., Stefferud, E.,
+           Crocker, D.  "SMTP Service Extensions", RFC 1425, United
+           Nations University, Innosoft International, Inc., Dover Beach
+           Consulting, Inc., Network Management Associates, Inc., The
+           Branch Office, February 1993
+
+       [RFC821] Postel, J., "Simple Mail Transfer Protocol", STD 10, RFC
+           821, USC/Information Sciences Institute, August 1982.
+
+       [RFC2033] Myers, J., "Local Mail Transfer Protocol", RFC 2033,
+           Carnegie Mellon, October 1996.
+
+       [RFC1047] Partridge, C., "DUPLICATE MESSAGES AND SMTP", RFC 1047,
+           CIC at BBN Labs, February 1988.
+
+11. Author's address
+
+   Sam Varshavchik
+   Double Precision, Inc.
+   PO Box 668
+   Greenwood Lake, NY 10925
+   <mrsam@concentric.net>
+
+Expires Jan 26, 2000                                            [Page 7]

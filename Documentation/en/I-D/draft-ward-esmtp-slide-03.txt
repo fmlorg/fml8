@@ -1,0 +1,563 @@
+
+
+
+
+
+
+                                                             A. Ward
+INTERNET-DRAFT
+Category:  Experimental                                 15 June 2000
+draft-ward-esmtp-slide-03.txt            Exprires:  15 December 2000
+
+
+
+             SMTP Service Extension for Slightly Differing
+                       Multicast Messages (SLIDE)
+
+
+
+Status of this Memo
+
+   This document is an Internet-Draft and is in full conformance with
+   all provisions of Section 10 of RFC2026.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF), its areas, and its working groups.  Note that
+   other groups may also distribute working documents as Internet-
+   Drafts.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   The list of current Internet-Drafts can be accessed at
+   http://www.ietf.org/ietf/1id-abstracts.txt
+
+   The list of Internet-Draft Shadow Directories can be accessed at
+   http://www.ietf.org/shadow.html.
+
+i. Revision History
+
+   The first version (-00) of this document was unleashed on 9 March
+   2000.
+
+   (-01)  Added section (5.1), regarding the impact of the SLIDE
+   extension to signed or encrypted messages.  Modified the first
+   example in section (4.) to make the impact of SLIDE more explicit. (7
+   April 2000)
+
+   (-02)  Added examples to section (5.1.1) and section (5.1.2). (4 May
+   2000)
+
+   (-03)  Minor formatting changes to comply with RFC 2223. (15 June
+   2000)
+
+
+
+Ward                                                            [Page 1]
+
+INTERNET-DRAFT        SMTP Service Extension SLIDE          15 June 2000
+
+
+Abstract
+
+   This memo defines an extension to the SMTP service [Klensin, et al
+   1995] to realize efficiency improvements in the relaying and delivery
+   of slightly differing messages bound for more than one recipient, as
+   specified by multiple RCPT TO commands [Postel 1982].
+
+0. Conventions Used in this Document
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in RFC 2119 [Bradner
+   1997].
+
+1. Introduction
+
+   SMTP is an Internet message protocol that is used to send messages to
+   one or more recipients.  To realize any efficiency when sending a
+   message to multiple recipients, the message body and all headers must
+   be identical.  It is desirable, under some circumstances, to send
+   messages to multiple recipients that differ only slightly in their
+   body and/or headers.
+
+   Under SMTP [Postel 1982] such a scenario would result in a different
+   message being sent from the initial client SMTP through each relay
+   server until the final server SMTP is reached.  In situations where
+   more that one of the multiple recipients have mail handled by the
+   same server SMTP, a significant bandwidth reduction can be realized
+   with the SLIDE service extension.
+
+2. Framework for the Slightly Differing Multicast Message Extension
+
+   The slightly differing multicast message extension is as follows:
+
+   (1) the name of the SMTP service extension defined here is slightly-
+   differing-multicast-message;
+
+   (2) the EHLO keyword value associated with the extension is SLIDE;
+
+   (3) no parameter is used with the SLIDE EHLO keyword;
+
+   (4) no additional SMTP verbs are defined by this extension
+
+   (5) one optional parameter using the keyword SLIDERANGE is added to
+   the RCPT TO command.  The value associated with this parameter is a
+   comma-delimited list of octet ranges indicating which pieces of the
+   overall message SHOULD be delivered to the specified recipient.  The
+   syntax for the value follows, using the ABNF notation of [Crocker
+
+
+
+Ward                                                            [Page 2]
+
+INTERNET-DRAFT        SMTP Service Extension SLIDE          15 June 2000
+
+
+   1982]:
+
+   sliderange-value ::= octet-range *( "," octet-range )
+
+   octet-range ::= octet-address [ "-" octet-address ]
+
+   octet-address ::= DIGIT *(DIGIT)
+
+   DIGIT ::= <any one of the 10 numeric characters (0 through 9)>
+
+   (6) the next section specifies how support for the extension affects
+   the behaviour of a server and client SMTP; and,
+
+   (7) the maximum length of a RCPT TO command line is increased by 256
+   characters by the possible addition of the SLIDERANGE keyword and
+   value.  Of course, since the value could conceivably be longer than
+   256 characters, implementations are welcome to allot more space for
+   this purpose.
+
+3. The slightly-differing-multicast-message Service Extension
+
+   3.1 Effects on the Client SMTP
+
+      When a client SMTP wishes to submit (using the MAIL command)
+      messages with slightly different content to recipients at the same
+      server SMTP, it first issues the EHLO command to the server SMTP.
+      If the server SMTP responds with code 250 to the EHLO command, and
+      the response includes the EHLO keyword value SLIDE, then the
+      server SMTP is indicating that it supports the extended RCPT
+      command.  Such a server SMTP will accept a message containing the
+      combined contents of the slightly differing messages addressed to
+      all of the recipients for delivery.  The method for combining the
+      various message bodies (and interpreting combined message bodies)
+      is described in the next section.
+
+      The extended RCPT command is issued by a client SMTP when it
+      wishes to transmit part of a combined message body to the
+      specified recipient.  The syntax for this command is identical to
+      the RCPT command in [Postel 1982], except that a SLIDERANGE
+      parameter must appear after the address.  Multiple SLIDERANGE
+      parameters may be used in a single RCPT command; however, in such
+      a case, the values of the several parameters SHOULD be combined
+      into a single, continuous, comma-delimited list of octet ranges.
+
+      The value associated with the SLIDERANGE parameter lists which
+      octets in the impending DATA command are to be sent to the
+      specified recipient.
+
+
+
+
+Ward                                                            [Page 3]
+
+INTERNET-DRAFT        SMTP Service Extension SLIDE          15 June 2000
+
+
+   3.2 Effects on the Server SMTP
+
+      A server SMTP which supports the slightly differing multicast
+      message service extension SHOULD relay only those octets bound for
+      recipients at a particular domain to the mail exchange for that
+      domain.  If this suggested message trimming occurs, the octets
+      specified in the SLIDERANGE parameter for each recipient MUST be
+      adjusted to correspond with the changes to the message DATA.
+
+      The final 5 octets of the message DATA (<CR><LF>.<CR><LF>) MUST
+      always be relayed, even if not explicitly specified in the
+      SLIDERANGE parameter value.
+
+      Once a server SMTP supporting the slightly differing multicast
+      message service extension accepts a message for which any
+      recipient has a non-trivial SLIDERANGE parameter value, the server
+      SMTP MUST deliver or relay the message in such a way as to ensure
+      that only the octets specified for a particular recipient will be
+      received by that recipient.  As well, when the server SMTP is
+      relaying the message, it SHOULD attempt to minimize the number of
+      octets that are relayed to each downstream server SMTP.
+
+4. Usage Examples
+
+   The following dialogue illustrates the use of the slightly differing
+   multicast message service extension:
+
+   S: <wait for connection>
+   C: <open connection to server>
+   S: 220 anstruther.elsewhere.com SMTP ready
+   C: EHLO burleigh.uwaterloo.ca
+   S: 250-hello burleigh.uwaterloo.ca
+   S: 250 SLIDE
+   C: MAIL FROM:<andrew@burleigh.uwaterloo.ca>
+   S: 250 <andrew@burleigh.uwaterloo.ca>... sender okay
+   C: RCPT TO:<ed@elsewhere.com> SLIDERANGE=0-148,180-322
+   S: 250 <ed@elsewhere.com>... recipient and SLIDERANGE okay
+   C: RCPT TO:<doug@elsewhere.com> SLIDERANGE=0-121,149-272,320-322
+   S: 250 <doug@elsewhere.com>... recipient and SLIDERANGE okay
+   C: DATA
+   S: 354 octets beyond 323 will not be relayed, end with CRLF.CRLF
+   C: Message-ID: <1234.abcd@uwaterloo.ca>
+   C: Date: Mon, 03 Apr 2000 12:05:10 -0400
+   C: From: Andrew <andrew@burleigh.uwaterloo.ca>
+   C: To: Ed <ed@elsewhere.com>
+   C: To: Doug <doug@elsewhere.com>
+   C: Subject: special message
+   C:
+
+
+
+Ward                                                            [Page 4]
+
+INTERNET-DRAFT        SMTP Service Extension SLIDE          15 June 2000
+
+
+   C: this is the message body for a special message
+   C:
+   C: enjoy, andrew
+   C:
+   C: ps. this is a secret that Doug doesn't know
+   C: .
+   S: 250 okay
+   C: QUIT
+   S: 250 bye bye
+
+   This transaction would result in ed@elsewhere.com receiving the
+   message:
+
+   Message-ID: <1234.abcd@uwaterloo.ca>
+   Date: Mon, 03 Apr 2000 12:05:10 -0400
+   From: Andrew <andrew@burleigh.uwaterloo.ca>
+   To: Ed <ed@elsewhere.com>
+   Subject: special message
+
+   this is the message body for a special message
+
+   enjoy, andrew
+
+   ps. this is a secret that Doug doesn't know
+   .
+
+   while doug@elsewhere.com would receive:
+
+   Message-ID: <1234.abcd@uwaterloo.ca>
+   Date: Mon, 03 Apr 2000 12:05:10 -0400
+   From: Andrew <andrew@burleigh.uwaterloo.ca>
+   To: Doug <doug@elsewhere.com>
+   Subject: special message
+
+   this is the message body for a special message
+
+   enjoy, andrew
+   .
+
+   The following dialogue illustrates the efficiencies that can be
+   realized in a relaying scenario:
+
+   S1: 220 one.there.com SMTP ready
+   C0: EHLO zero.here.com
+   S1: 250-hello zero.here.com
+   S1: 250 SLIDE
+   C0: MAIL FROM:<me@here.com>
+   S1: 250 <me@here.com>... sender okay
+
+
+
+Ward                                                            [Page 5]
+
+INTERNET-DRAFT        SMTP Service Extension SLIDE          15 June 2000
+
+
+   C0: RCPT TO:<ed@everywhere.com> SLIDERANGE=0-150,200-250
+   S1: 250 <ed@everywhere.com>... recipient and SLIDERANGE okay
+   C0: RCPT TO:<doug@everywhere.com> SLIDERANGE=0-199
+   S1: 250 <doug@everywhere.com>... recipient and SLIDERANGE okay
+   C0: RCPT TO:<laurene@everywhere.com> SLIDERANGE=0-250
+   S1: 250 <laurene@everywhere.com>... recipient and SLIDERANGE okay
+   C0: RCPT TO:<rachael@elsewhere.com>
+   S1: 250 <rachael@elsewhere.com>... recipient okay
+   C0: DATA
+   S1: 354 okay, send message body, end with CRLF.CRLF
+   C0: ...<1000 octets of message>...
+   C0: .
+   S1: 250 okay
+   C0: QUIT
+   S1: 250 bye bye
+    ...
+   S2: 220 two.everywhere.com SMTP ready
+   C1: EHLO one.there.com
+   S2: 250-hello one.there.com
+   S2: 250 SLIDE
+   C1: MAIL FROM:<me@here.com>
+   S2: 250 <me@here.com>... sender okay
+   C1: RCPT TO:<ed@everywhere.com> SLIDERANGE=0-150,200-250
+   S2: 250 <ed@everywhere.com>... recipient and SLIDERANGE okay
+   C1: RCPT TO:<doug@everywhere.com> SLIDERANGE=0-199
+   S2: 250 <doug@everywhere.com>... recipient and SLIDERANGE okay
+   C1: RCPT TO:<laurene@everywhere.com>
+   S2: 250 <laurene@everywhere.com>... recipient okay
+   C1: DATA
+   S2: 354 okay, send message body, end with CRLF.CRLF
+   C1: ...<octets 0 to 250 of message>...
+   C1: .
+   S2: 250 okay
+   C1: QUIT
+   S2: 250 bye bye
+    ...
+   S3: 220 three.elsewhere.com SMTP ready
+   C1: EHLO one.there.com
+   S3: 250-hello one.there.com
+   S3: 250 SLIDE
+   C1: MAIL FROM:<me@here.com>
+   S3: 250 <me@here.com>... sender okay
+   C1: RCPT TO:<rachael@elsewhere.com>
+   S3: 250 <rachael@elsewhere.com>... recipient okay
+   C1: DATA
+   S3: 354 okay, send message body, end with CRLF.CRLF
+   C1: ...<all octets of message>...
+   C1: .
+
+
+
+Ward                                                            [Page 6]
+
+INTERNET-DRAFT        SMTP Service Extension SLIDE          15 June 2000
+
+
+   S3: 250 okay
+   C1: QUIT
+   S3: 250 bye bye
+
+5. Security Considerations
+
+   This extension takes some of the "final control" over the message
+   body out of the hands of the client, and places it on the server
+   SMTPs that are charged with relaying and delivering the message.
+   While any server SMTP has access to change the content of a message
+   that it relays or delivers, a server SMTP that supports the slightly
+   differing multicast message service extension is obliged to be able
+   to alter a message that takes advantage of this extension.  As a
+   result of the increased handling by the server SMTP, there is more
+   room for error in the message transmission.
+
+   5.1 Impact on Signed and Encrypted Messages
+
+      Messages that are transferred between a client SMTP and a server
+      SMTP over a secure channel such as SSL or TLS should not be
+      adversely affected by the SLIDE extension.
+
+      Things get messy when it comes to signing or encrypting the
+      message data (all or part of the information sent to the server
+      SMTP following a 354 response to the DATA command).  Two
+      alternatives are suggested in section (5.1.1) and section (5.1.2).
+      A client SMTP may implement either method, as both methods can be
+      used transparently to all other nodes in the chain of relays
+      (including the final server SMTP node).
+
+      5.1.1 Piecewise Signing and Encryption
+
+         With this method, the initial client SMTP may sign or encrypt
+         each separate range of bytes (or part thereof), as defined by
+         the various SLIDERANGE values.
+
+         As an example, consider the piecewise approach as applied to
+         the first usage example presented in section 4.
+
+         S: <wait for connection>
+         C: <open connection to server>
+         S: 220 anstruther.elsewhere.com SMTP ready
+         C: EHLO burleigh.uwaterloo.ca
+         S: 250-hello burleigh.uwaterloo.ca
+         S: 250 SLIDE
+         C: MAIL FROM:<andrew@burleigh.uwaterloo.ca>
+         S: 250 <andrew@burleigh.uwaterloo.ca>... sender okay
+         C: RCPT TO:<ed@elsewhere.com> SLIDERANGE=0-148,180-727
+
+
+
+Ward                                                            [Page 7]
+
+INTERNET-DRAFT        SMTP Service Extension SLIDE          15 June 2000
+
+
+         S: 250 <ed@elsewhere.com>... recipient and SLIDERANGE okay
+         C: RCPT TO:<doug@elsewhere.com> SLIDERANGE=0-121,149-483,725-727
+         S: 250 <doug@elsewhere.com>... recipient and SLIDERANGE okay
+         C: DATA
+         S: 354 octets beyond 728 will not be relayed, end with CRLF.CRLF
+         C: Message-ID: <1234.abcd@uwaterloo.ca>
+         C: Date: Mon, 03 Apr 2000 12:05:10 -0400
+         C: From: Andrew <andrew@burleigh.uwaterloo.ca>
+         C: To: Ed <ed@elsewhere.com>
+         C: To: Doug <doug@elsewhere.com>
+         C: Subject: special message
+         C:
+         C: -----BEGIN PGP SIGNED MESSAGE-----
+         C: Hash: SHA1
+         C:
+         C: this is the message body for a special message
+         C:
+         C: enjoy, andrew
+         C: -----BEGIN PGP SIGNATURE-----
+         C: Version: fakePGP v0.0
+         C:
+         C: aefiuh98ar7ehfpo34h9q83h4fp9q34h9a8efha9348hao
+         C: 98h5nbq3rub9a08ahfoi4no34=
+         C: -----END PGP SIGNATURE-----
+         C:
+         C: -----BEGIN PGP SIGNED MESSAGE-----
+         C: Hash: SHA1
+         C:
+         C: ps. this is a secret that Doug doesn't know
+         C: -----BEGIN PGP SIGNATURE-----
+         C: Version: fakePGP v0.0
+         C:
+         C: 98sdu9bd9fu4eiob3iovb9eb93buiou908fhv9sf
+         C: jlknsdfi0h93un=
+         C: -----END PGP SIGNATURE-----
+         C: .
+         S: 250 okay
+         C: QUIT
+         S: 250 bye bye
+
+
+      5.1.2 Component Message Signing
+
+         This method creates a single signature for each distinct
+         message contained in a set of messages encoded using the SLIDE
+         extension.  During encoding of the SLIDE message, each
+         component message that needs to be signed can have a signature
+         generated for it before the component messages are SLIDE
+
+
+
+Ward                                                            [Page 8]
+
+INTERNET-DRAFT        SMTP Service Extension SLIDE          15 June 2000
+
+
+         encoded.
+
+         It is important to note that in most (if not all) cases this
+         will not work for encryption, as the same text in the
+         unencrypted component messages will not generate the same
+         encrypted group of octets.
+
+         As an example, consider the component message approach as
+         applied to the first usage example presented in section 4.
+
+         S: <wait for connection>
+         C: <open connection to server>
+         S: 220 anstruther.elsewhere.com SMTP ready
+         C: EHLO burleigh.uwaterloo.ca
+         S: 250-hello burleigh.uwaterloo.ca
+         S: 250 SLIDE
+         C: MAIL FROM:<andrew@burleigh.uwaterloo.ca>
+         S: 250 <andrew@burleigh.uwaterloo.ca>... sender okay
+         C: RCPT TO:<ed@elsewhere.com> SLIDERANGE=0-148,180-322,484-677
+         S: 250 <ed@elsewhere.com>... recipient and SLIDERANGE okay
+         C: RCPT TO:<doug@elsewhere.com> SLIDERANGE=0-121,149-483,675-677
+         S: 250 <doug@elsewhere.com>... recipient and SLIDERANGE okay
+         C: DATA
+         S: 354 octets beyond 678 will not be relayed, end with CRLF.CRLF
+         C: Message-ID: <1234.abcd@uwaterloo.ca>
+         C: Date: Mon, 03 Apr 2000 12:05:10 -0400
+         C: From: Andrew <andrew@burleigh.uwaterloo.ca>
+         C: To: Ed <ed@elsewhere.com>
+         C: To: Doug <doug@elsewhere.com>
+         C: Subject: special message
+         C:
+         C: -----BEGIN PGP SIGNED MESSAGE-----
+         C: Hash: SHA1
+         C:
+         C: this is the message body for a special message
+         C:
+         C: enjoy, andrew
+         C: -----BEGIN PGP SIGNATURE-----
+         C: Version: fakePGP v0.0
+         C:
+         C: nsdf9n934nioq3j4un9ua9fvuerh98h43n9ae8u85
+         C: 34kjfbna9ea9e8rb8d9sd0ge3=
+         C: -----END PGP SIGNATURE-----
+         C:
+         C: ps. this is a secret that Doug doesn't know
+         C: -----BEGIN PGP SIGNATURE-----
+         C: Version: fakePGP v0.0
+         C:
+
+
+
+Ward                                                            [Page 9]
+
+INTERNET-DRAFT        SMTP Service Extension SLIDE          15 June 2000
+
+
+         C: ikbdfv98u4bka8rhi34ubkq3828756bkjai7rf7
+         C: 1kj3k4jnkj3kjk3=
+         C: -----END PGP SIGNATURE-----
+         C: .
+         S: 250 okay
+         C: QUIT
+         S: 250 bye bye
+
+
+6. Acknowledgements
+
+   Thanks to Ed, Doug, Laurene and Rachael for their (unwilling)
+   participation in the usage examples.  Thanks to Dan Wing for his
+   suggested improvements in usage examples and security considerations.
+
+7. References
+
+   [Bradner 1997]  Bradner, S.  "Key words for use in RFCs to Indicate
+   Requirement Levels", BCP 14, RFC 2119.  March 1997.
+
+   [Crocker 1982]  Crocker, D.  "Standard for the Format of ARPA
+   Internet Text Messages", STD 11, RFC 822.  UDEL, August 1982.
+
+   [Klensin, et al 1995]  Klensin, J., N. Freed, M. Rose, E. Stefferud,
+   and D. Crocker.  "SMTP Service Extensions", STD 10, RFC 1869.
+   November 1995.
+
+   [Postel 1982]  Postel, J.  "Simple Mail Transfer Protocol", STD 10,
+   RFC 821.  USC/Information Sciences Institute, August 1982.
+
+8. Author's Address
+
+   Andrew Ward
+   70 Gruhn Street
+   Kitchener, ON  N2G 1S6
+   CANADA
+
+   Phone:  +1 519 581 1201
+   EMail:  amward@uwaterloo.ca
+
+
+
+                        EXPIRES:  15 December 2000
+
+
+
+
+
+
+
+
+Ward                                                           [Page 10]
+

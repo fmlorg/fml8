@@ -1,0 +1,955 @@
+
+
+
+
+
+
+Applications Area                                             Neil Joffe
+Internet Draft                                                  Dan Wing
+August 7, 1998                                             Cisco Systems
+Expires January 1999                                      Larry Masinter
+                                                       Xerox Corporation
+
+                       SMTP Service Extension for
+                           Immediate Delivery
+
+                   draft-ietf-fax-smtp-session-04.txt
+
+Status of this memo
+
+   This document is an Internet-Draft. Internet-Drafts are working
+   documents of the Internet Engineering Task Force (IETF), its areas,
+   and its working groups.  Note that other groups may also distribute
+   working documents as Internet-Drafts.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   To view the entire list of current Internet-Drafts, please check
+   the "1id-abstracts.txt" listing contained in the Internet-Drafts
+   Shadow Directories on ftp.is.co.za (Africa), ftp.nordu.net
+   (Northern Europe), ftp.nis.garr.it (Southern Europe), munnari.oz.au
+   (Pacific Rim), ftp.ietf.org (US East Coast), or ftp.isi.edu
+   (US West Coast).
+
+
+      NOTE: although this work has been discussed in the IETF-FAX
+      working group, it does not purport to represent the
+      consensus of the group.
+
+Copyright Notice
+
+   Copyright (C) The Internet Society (1997, 1998).  All Rights
+   Reserved.
+
+Abstract
+
+   This memo defines an extension to SMTP which provides a mechanism for
+   requesting immediate message delivery over SMTP instead of normal
+   store-and-forward delivery.  It also provides a mechanism for
+   querying the SMTP server if immediate delivery was successful, is
+   still in progress, or was simply queued as a normal store-and-forward
+   message.
+
+
+
+Joffe, Wing, Masinter     Expires January 1999                 [Page 1]
+
+Internet Draft          SMTP Immediate Delivery              August 1998
+
+
+0.  Administrivia
+
+0.1.  Changes Since Previous Versions
+
+   Changes from -03 to -04:
+      * Added "failed" code.
+      * Added status=x.y.z, where x.y.z is from RFC1893 and
+        FAX Report Extensions [REPORT-EXTEND].
+
+   Changes from draft-ietf-fax-smtp-session-02.txt to -03:
+      * Corrected grammer and typos.  Added clarifications to
+        some areas.
+
+   Changes from draft-ietf-fax-smtp-session-01.txt to -02:
+
+      * Added sequence of events and state diagram sections
+        to clarify timing and responsibility issues.
+
+      * Server's reply to STAT is now a sequence of simple codes instead
+        of a multipart/report.
+
+      * STAT command polls for all recipients that had SESSION
+        on the RCPT command.
+
+   Changes from draft-ietf-fax-smtp-session-00.txt to -01:
+
+      * Added copyright notice
+
+      * Reference to [FAX-DSN].
+
+   Changes from draft-wing-smtp-session-00 to
+   draft-ietf-fax-smtp-session-00.txt:
+
+      * Server's reply to STAT is now a complete multipart/report
+
+      * Language clarifications
+
+      * Require immediate SMTP server reply after client sends "."
+
+      * Specify SMTP server must respond to STAT within 30 seconds
+
+1.  Introduction
+
+   Historically, SMTP [RFC821] has been used for store and forward
+   delivery of messages.  This memo describes a new SMTP extension
+   called SESSION.  This new extension allows an SMTP client to request
+   immediate delivery by the SMTP server.
+
+
+
+
+Joffe, Wing, Masinter     Expires January 1999                 [Page 2]
+
+Internet Draft          SMTP Immediate Delivery              August 1998
+
+
+   This Session extension was motivated by an analysis of the
+   requirements for using the Internet to deliver fax messages, and,
+   coupled with a mechanism for exchanging capabilities and preferences
+   of sender and recipient, can be used by email<->fax gateway
+   applications.  In addition, the SESSION extension may be useful for
+   other messaging applications where immediate delivery and
+   confirmation of immediate delivery are requested.
+
+   The LMTP protocol [RFC2033] provides immediate delivery, but as
+   discussed in [RFC2033] can aggravate the duplicate message delivery
+   problem [RFC1047], especially over a WAN.  The Session extension
+   described in this memo is intended to provide immediate delivery of
+   SMTP messages without aggravating the duplicate message delivery
+   problem.
+
+   This extension presumes either a direct connection between sender and
+   recipient or a chain of session-enabled servers in which each
+   supports this Session extension.
+
+   If an MTA in the SMTP "path" does not support Session, delivery
+   automatically falls back to normal store and forward, and such
+   fallback is communicated to the SMTP client, as described in section
+   3.2.
+
+   Unlike the deprecated SAML, SOML and SEND commands (documented in
+   [RFC821] and deprecated in [DRUMS]) the SESSION extension allows for a
+   mix of immediate and store & forward delivery recipients.
+
+   This memo uses the mechanism described in [RFC1869] to define an
+   extension to the SMTP protocol for immediate delivery.
+
+1.2.  Discussion of This Draft
+
+   This draft is being discussed on the "ietf-fax" mailing list.  To
+   subscribe, send a message to <ietf-fax-request@imc.org> with the line
+   "subscribe" in the body of the message.  Archives are available from
+   http://www.imc.org/ietf-fax.
+
+1.3.  Requirements Notation
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in [RFC2119].
+
+2.  Framework for Immediate Delivery Support
+
+   The immediate message delivery is defined as follows:
+
+
+
+
+Joffe, Wing, Masinter     Expires January 1999                 [Page 3]
+
+Internet Draft          SMTP Immediate Delivery              August 1998
+
+
+       (1)  The name of the immediate extension is Session;
+
+       (2)  the EHLO keyword value associated with the immediate
+            extension is SESSION;
+
+       (3)  no parameter is used with the SESSION EHLO keyword;
+
+       (4)  one new SMTP verb, STAT (used to determine if immediate
+            delivery was successful) is defined with this extension, and
+            is described in section 3;
+
+       (5)  one optional parameter is added to the RCPT command, using
+            the esmtp-keyword SESSION, and is described in section 4,
+
+            no parameters are added to the MAIL FROM command;
+
+       (6)  the maximum length of a RCPT TO is increased by 8
+            characters.
+
+3.  Esmtp-keyword SESSION
+
+   Upon receiving a RCPT command with the esmtp-keyword SESSION, a
+   session-enabled server will normally send either a positive (2xx) or
+   negative (5xx) reply to the SMTP client.
+
+   A 250 reply code indicates that the session-enabled server believes
+   the message will be sent immediately -- that is, that the request for
+   SESSION delivery will be honored.
+
+   If a session-enabled server is aware that it will be unable to
+   send the message immediately (that is, the request for SESSION will
+   not be honored), but the session-enabled server is willing to send
+   the message via its normal SMTP queue, it SHOULD respond with a 252
+   reply code.  The SMTP client can use this information to inform the
+   user that immediate delivery isn't available, and the SMTP client (or
+   the user) may decide on a different transmission mechanism.
+
+3.1.  Delivery Responsibility
+
+   As per normal SMTP, once a sender has received a positive response to
+   its end of mail data indicator, the receiver has accepted all
+   responsibility for message delivery.
+
+   If an MTA is relaying a message using this Session extension,
+   and it fails to receive a positive response to its end of mail data
+   indicator from the next-hop mailer, the Session-enabled MTA MUST
+   queue the message as a normal SMTP store-and-forward message for
+   later delivery.  This is because the MTA performing the relaying
+
+
+
+Joffe, Wing, Masinter     Expires January 1999                 [Page 4]
+
+Internet Draft          SMTP Immediate Delivery              August 1998
+
+
+   accepted responsibility for message delivery at this point.  See
+   the section "Sequence of Events" for details.
+
+3.2.  Fallback to Store and Forward
+
+   This section describes scenarios which would cause immediate delivery
+   to fallback to normal store-and-forward delivery.
+
+3.2.1.  Mailers that do not implemention this Session extension
+
+   If an MTA is encountered which does not support the Session
+   extension, the MTA which detected this SHOULD respond to
+   its incoming SMTP connection with a 252 response code.  As
+   Session delivery is not possible to the next-hop mailer,
+   normal store-and-forward mail delivery will occur.
+
+3.2.1.  Excessive Delays with Multiple MTAs
+
+   The cumulative delays of going through many MTAs will cause Session
+   delivery to fail (by falling back to normal store-and-forward).
+   Proper configuration and deployment of SMTP servers will prevent this
+   problem.
+
+   Implementors must carefully design session-enabled MTAs to respond
+   quickly when Session recipients are present to minimize timing
+   problems.  Each MTA is maintaining its own SMTP timeouts
+   which can't be exceeded by the entire end-to-end delay [RFC1123].
+
+   Additionally, Session is not expected to work reliably across
+   lossy links or with overloaded mailers.
+
+3.3.  Sequence of Events and State Diagrams
+
+   This section describes the sequence of events for a RCPT command
+   that contains the esmtp-keyword SESSION, and also includes
+   State Diagrams for various components.
+
+3.3.1.  Events - Single Remote MTA
+
+   If the RCPT command contains the esmtp-keyword SESSION, the
+   SMTP server SHOULD connect to the next-hop mailer prior to
+   responding to the SMTP client's RCPT command.
+
+      +-----+    +--------+     +-------+    +-----------+
+      | user| => |Original| ==> | MTA-1 | => | receiving |  user@host-x
+      |agent|    |  MTA   |     |       |    |   MTA-1   |
+      +-----+    +--------+     +-------+    +-----------+
+        (A)         (B)           (C)           (D)
+
+
+
+Joffe, Wing, Masinter     Expires January 1999                 [Page 5]
+
+Internet Draft          SMTP Immediate Delivery              August 1998
+
+
+
+   Using the above diagram:
+
+      1.  the SMTP client (A) would initiate an SMTP transaction with
+          (B), and send a RCPT command with the esmtp-keyword SESSION to
+          (B), then
+
+      2.  (B) would initiate an SMTP transaction with (C) and send the
+          same RCPT command with the esmtp-keyword SESSION to (C), then
+
+      3.  (C) would initiate an SMTP transaction with (D) and send the
+          same RCPT command with the esmtp-keyword to (D), then
+
+      4.  (D) would send its response to (C), which would send the
+          response to (B), which would send the response to (A), then
+
+      5.  (A) would send its next RCPT command (if sending to
+          multiple recipients), then
+
+      6.  (A) would indicate it wants to send the message body by
+          sending the DATA (or BDAT if using [RFC1830]) command, then
+
+      7.  (B) would send the DATA (or BDAT) command to (C),
+          which would send it to (D), which would send its response
+          code to (C), which is sent to (B), which is sent to
+          (A), then
+
+      8.  (A) sends its message body to (B), which SHOULD spool
+          it to a local disk while sending it to (C), which SHOULD
+          spool it to a local disk while sending it to (D), which
+          writes it to the local user's mailstore.
+
+      9.  (A) sends its end of mail data indicator ("." unless using
+          [RFC1830]), then
+
+     10.  (B) responds to the end of mail data indicator immediately
+          (and is now responsible for message delivery should it
+          fail after this point), then (B) sends the end of mail data
+          indicator to (C), then
+
+     11.  (C) responds to the end of mail data indicator
+          immediately (and is now responsible for message delivery
+          should it fail after this point), then (C) sends the end of
+          mail data indicator to (D)
+
+     12.  (D) responds to the end of mail data indicator when it has
+          finished writing to the user's mailbox.
+
+
+
+
+Joffe, Wing, Masinter     Expires January 1999                 [Page 6]
+
+Internet Draft          SMTP Immediate Delivery              August 1998
+
+
+          If there are multiple local recipients and one or more
+          recipients succeeded, but at least one failed, (D) must issue
+          a postive response code to prevent duplicate message delivery
+          [RFC1047].  It MUST generate a bounce message for the failed
+          local recipient(s), and the bounce SHOULD be in the format
+          of a DSN [DSN].
+
+3.3.2.  Events - Multiple Remote MTAs
+
+   The case where there are multiple remote MTAs is a more complex
+   case than described above, but the same rules apply.
+
+                                 +-----------+
+                             -=> | receiving |  user@host-x
+                            /    |   MTA-1   |
+   +-----+    +--------+   /     +-----------+
+   | user| => |Original| =<          (C)
+   |agent|    |  MTA   |   \
+   +-----+    +--------+    \    +-----------+
+     (A)         (B)         -=> | receiving |  user@host-y
+                                 |   MTA-2   |
+                                 +-----------+
+                                     (D)
+
+   (B) would have to send the appropriate RCPT command with the
+   esmtp-keyword SESSION, the appropriate next-hop MTA (C or D) for each
+   recipient (user@host-x, user@host-y) and echo the responses back to
+   (A).
+
+   When (A) sends its DATA command, (B) would have to send the DATA
+   command to both MTAs, and reply to (A) if both MTAs have responded
+   positively.
+
+   When (A) sends its end of mail data indicator, (B) must respond
+   immediately, and then (B) can send the end of mail data indicator
+   to (C) and (D).
+
+   If (B) does not receive a positive (2xx) response from (C) or (D),
+   (B) must queue the message as a normal store and forward message.
+
+3.3.3.  State diagram - MTA relay
+
+   The following state diagram describes the behavior of an MTA relaying
+   Session connection.
+
+        |
+        V (1)
+      +---------+  (2)  +---------+
+
+
+
+Joffe, Wing, Masinter     Expires January 1999                 [Page 7]
+
+Internet Draft          SMTP Immediate Delivery              August 1998
+
+
+      | Setup   |------>| Connect |
+      | message |<------| forward |
+      +---------+  (3)  +---------+
+        |
+        V (4)
+      +---------+ (5) +---------+ (6) +---------+ (7) +--------+
+      | Sending |---->| Waiting |---->| Gather  |---->| Query  |
+      |  data   |     |         |<----| status  |<----| status |
+      +---------+     +---------+ (9) +---------+ (8) +--------+
+                          |
+                          V (10)
+                        +----------+
+                        | Complete |
+                        +----------+
+
+
+   (1)  Event:  Incoming MAIL FROM.
+        Test:   -
+        Action: Prepare to forward message.
+
+   (2)  Event:  incoming RCPT TO
+        Test:
+        Action: IF connection to next-hop server for this message does
+                not already exist then create connection and issue MAIL
+                FROM command.  Issue RCPT TO command to next-hop
+                server.
+
+   (3)  Event:  Response to RCPT TO command.
+        Test:   -
+        Action: Respond to incoming RCPT TO.
+
+   (4)  Event:  Incoming DATA/BDAT.
+        Test:   -
+        Action: Issue DATA/BDAT on forward connections, and
+                forward data as it is received.
+
+   (5)  Event:  End of data, with confirmation from all downstream MTAs
+        Test:   -
+        Action: Wait
+
+   (6)  Event:  Incoming STAT command.
+        Test:   -
+        Action: Start gathering status - straight to (7)
+
+   (7)  Event:  -
+        Test:   There are more downstream MTAs to query.
+        Action: Issue STAT command on next downstream MTA.
+
+
+
+
+Joffe, Wing, Masinter     Expires January 1999                 [Page 8]
+
+Internet Draft          SMTP Immediate Delivery              August 1998
+
+
+   (8)  Event:  Response to STAT command.
+        Test:   -
+        Action: Pass back as response to incoming STAT.  If status
+                indicates completion then close the downstream
+                connection.
+
+   (9)  Event:  -
+        Test:   There are no more downstream MTAs to query.
+        Action: Wait.
+
+   (10) Event:  Incoming RSET, MAIL FROM or SMTP connection broken.
+        Test:   -
+        Action: Close any remaining downstream connections.
+
+4.  New SMTP Verb STAT
+
+   One new SMTP verb is introduced with this extension.  The STAT verb
+   causes the SMTP server to respond with the Session delivery status of
+   all Session recipients.
+
+   An SMTP client MAY send the STAT command if it used the esmtp-keyword
+   SESSION on one of its RCPT commands, but the SMTP client is not
+   required to use the STAT verb.  SMTP servers which implement the
+   SESSION extension MUST implement the STAT verb.
+
+   The SMTP client MUST NOT send the STAT command unless all of the
+   following are true:  (1) the SMTP client sent a RCPT command with the
+   esmtp-keyword SESSION; (2) the SMTP server sent a positive response
+   to that RCPT command; (3) the SMTP client has finished sending the
+   message body and sent the end of mail data indicator ("." or BDAT
+   LAST).  If the SMTP client sends the STAT command when not all of the
+   above conditions are met, the SMTP server MUST send a response code
+   of 503.
+
+   The syntax of the STAT verb, using the notation described in
+   [RFC2234], is:
+
+      stat-cmd = "STAT" CR LF
+
+4.1.  Format of STAT Response
+
+   The SMTP server's positive response to the STAT command is a
+   multiline SMTP response.  Each line contains information on each
+   Session recipient, in the order specified by the SMTP client.
+
+   If the SMTP server is making a negative response to the STAT command
+   the response should be a 5xx response code and follow the normal SMTP
+   rules for multiple line responses.  There is no specific format of
+
+
+
+Joffe, Wing, Masinter     Expires January 1999                 [Page 9]
+
+Internet Draft          SMTP Immediate Delivery              August 1998
+
+
+   5xx responses.
+
+   The syntax of the positive response must be parsable by an SMTP
+   client.  Using the notation described in [RFC2234], the syntax is:
+
+      stat-response  = *( "250-" [cmd-status SP] resp-line CR LF )
+                          "250 " [cmd-status SP] resp-line CR LF
+
+      resp-line      = forward-path SP session-status
+                       [SP "by=" mta-hostname]
+
+      session-status = "delivered" terminal /
+                       "in-progress" SP prog-value /
+                       "queued" terminal /
+                       "failed" terminal
+
+      terminal       = SP trans-status [SP trans-id]
+
+      trans-status   = "status=" status-code
+
+      trans-id       = "trans=" transaction
+
+      status-code    = <"status-code" from [RFC1893], with
+                        extensions defined in [REPORT-EXTENSIONS]>
+
+      prog-value     = sent-count "/" total-count
+
+      sent-count     = 1*DIGIT
+
+      total-count    = 1*DIGIT
+
+      mta-hostname   = *( ALPHA / DIGIT / "." / "-" / "_" )
+
+      transaction    = *( ALPHA / DIGIT / "." / "-" / "_" )
+
+      cmd-status     = "2.5.0" <only present if SMTP server supports
+                                [RFC2034]>
+
+      forward-path   = <forward-path as specified in the RCPT command,
+                        including "<" and ">" characters>
+
+   The <session-status> can be spelled in any combination of uppercase
+   and lowercase letters.  The meaning of the various values are
+   as follows:
+
+   "delivered"    Session delivery was successful.  Message was
+                  delivered to the recipient immediately.  This is a
+                  terminal value.  This can optionally be followed
+
+
+
+Joffe, Wing, Masinter     Expires January 1999                [Page 10]
+
+Internet Draft          SMTP Immediate Delivery              August 1998
+
+
+                  with <trans-id>.
+
+   "in-progress"  Session delivery has not yet completed.  A STAT
+                  command issued later will show final status of this
+                  message.  This is the only non-terminal value.  This
+                  must be followed by <prog-value>.
+
+   "queued"       Session delivery failed for some reason, but the MTA
+                  was able to successfully queue the message using
+                  normal SMTP store-and-forward.  One cause of this
+                  status is when the session-enabled server forwards the
+                  message to a non-session-enabled server.  This is a
+                  terminal value.  This can optionally be followed
+                  with <trans-id>.
+
+   "failed"       Delivery failed.  The message will be bounced if
+                  no DSN was requested, or if a DSN including
+                  "NOTIFY=FAILED" was requested [RFC1891].
+
+
+   <mta-hostname> indicates the host generating the information,
+   and can be used to help trace a message passing along a path
+   of session-aware mailers.
+
+   <trans-id> is used to provide the client with a unique transaction
+   number to associate with each delivery.  This can be useful for
+   accounting or tracing messages.  This number need only be unique
+   for that MTA, it doesn't need to be world-unique.
+
+   The two values of the <prog-value> element can be page numbers, byte
+   counts, disk blocks, or any other useful count of the progress of
+   this transaction, as determined by the SMTP server.  The values
+   can be displayed by the MUA to the user as-is, or the MUA can use the
+   values to calculate the percentage of completion for presentation
+   to the user.  The value of <total-count> is the number of units
+   the SMTP server has received, the value of <sent-count> is the
+   number of units the SMTP server has sent to the next-hop
+   mailer.  See example 6.1.
+
+   If an SMTP client sends a STAT command and the SMTP server has
+   already informed the SMTP client (in the response to a previous
+   STAT command) that all recipients had terminal values, the SMTP
+   server MAY return a 503 reply.
+
+4.2.  Sequence of Events
+
+   The STAT command has a similar sequence of events as described
+   in section 3.3, above.
+
+
+
+Joffe, Wing, Masinter     Expires January 1999                [Page 11]
+
+Internet Draft          SMTP Immediate Delivery              August 1998
+
+
+
+   Note that the STAT command can only be issued in the same
+   SMTP transaction.  There is no provision for an SMTP client to
+   start a new SMTP transaction and query the status of Session
+   delivery for a previous SMTP transaction.
+
+4.3.  Timing Considerations
+
+   The SMTP server SHOULD respond to a STAT command no later than 60
+   seconds after a STAT command is received.  After 120 seconds an SMTP
+   client MAY assume the connection to the SMTP server is broken.
+
+   To prevent excessive network activity by an SMTP client querying
+   delivery status "too often", the SMTP server may delay responding to
+   a client's STAT command.  Such a delay MUST NOT exceed 10 seconds.
+
+   Due to the delays inherent in establishing connections with each MTA
+   in the SMTP "path", SMTP servers that implement the Session extension
+   SHOULD also implement [RFC2197], and SMTP clients SHOULD use
+   pipelining if available.
+
+5.  Security Considerations
+
+   This section describes new security vulnerabilities that are
+   introduced with this SMTP extension.  Security vulnerabilities
+   that are inherient to SMTP itself are not described.
+
+5.1.  Denial of Service
+
+   As Session consumes more resources on MTAs, denial of service attacks
+   against MTAs may be more effective.
+
+   XXX - more verbage
+
+5.2.  Abuse of Immediate Delivery
+
+   This is some concern that users will always choose the 'deliver
+   immediately' button or mailer option in their MUA.  As immediate
+   delivery requires more resources on MTAs, this is indeed a
+   concern.
+
+   To alleviate such concerns, ISPs could charge extra for immediate
+   delivery involving their mailers, offering immediate delivery
+   as a value-add service, not accept Session messages during periods of
+   high usage, or limit the total number of Session connections or
+   the number of Session connections to/from certain hosts or
+   domains.
+
+
+
+
+Joffe, Wing, Masinter     Expires January 1999                [Page 12]
+
+Internet Draft          SMTP Immediate Delivery              August 1998
+
+
+6.  Examples
+
+   In examples, "C:" and "S:" indicate lines sent by the client and
+   server respectively.  If such lines are wrapped without a new "C:" or
+   "S:" label, then the wrapping is for editorial clarity and is not
+   part of the command.
+
+6.1.  Successful Session Delivery to Two Recipients
+
+   This example shows a successful Session delivery with two recipients.
+   The first recipient, bill@fuggles.com, was still being queued when
+   the first STAT command was sent by the client, but a subsequent STAT
+   command shows the final status.
+
+      S: 220 mailer.cisco.com ESMTP service ready
+      C: EHLO pc.cisco.com
+      S: 250-mailer.cisco.com says hello
+      S: 250 SESSION
+      C: MAIL FROM:<dwing@cisco.com>
+      S: 250 <dwing@cisco.com> Sender ok
+      C: RCPT TO:<bill@fuggles.com> SESSION
+      S: 250 <bill@fuggles.com> and options ok
+      C: RCPT TO:<njoffe@cisco.com> SESSION
+      S: 250 <njoffe@cisco.com> and options ok
+      C: DATA
+      S: 354 Enter your data
+      C: From: Dan Wing <dwing@cisco.com>
+      C: To: njoffe@cisco.com, bill@fuggles.com
+      C: Date: Mon, 6 Oct 1997 12:42:32 -0700
+      C: Subject: Palo Alto Coffee shops
+      C:
+      C: What is a good coffee shop in Palo Alto?
+      C: .
+      S: 250 message accepted
+      C: STAT
+      S: 250-<bill@fuggles.com> in-progress 5/184 by=fwall.cisco.com
+      S: 250 <njoffe@cisco.com> delivered by=popstore.cisco.com
+      trans=E23132
+      C: STAT
+      S: 250-<bill@fuggles.com> in-progress 43/50 by=example.com
+      S: 250 <njoffe@cisco.com> delivered by=popstore.cisco.com
+      trans=E23132
+      C: STAT
+      S: 250-<bill@fuggles.com> delivered by=mailer.fuggles.com
+      S: 250 <njoffe@cisco.com> delivered by=popstore.cisco.com
+      trans=E23132
+      C: QUIT
+      S: 221 Goodbye
+
+
+
+Joffe, Wing, Masinter     Expires January 1999                [Page 13]
+
+Internet Draft          SMTP Immediate Delivery              August 1998
+
+
+   (The string "trans=E23132" is shown on a separate line in
+   this example for clarity.  The string would appear on one line.
+
+6.2.  Unsuccessful Session Delivery
+
+   This example shows the client wanted to send the message
+   immediately, and the server responded with a "250" (indicating
+   it believed the message could be sent immediately), but a problem
+   occurred forcing the mailer at pea.com to deliver the message
+   using store-and-forward.
+
+      S: 220 mailer.cisco.com ESMTP service ready
+      C: EHLO pc.cisco.com
+      S: 250-mailer.cisco.com says hello
+      S: 250 SESSION
+      C: MAIL FROM:<dwing@cisco.com>
+      S: 250 <dwing@cisco.com> Sender ok
+      C: RCPT TO:<greengiant@peas.com> SESSION
+      S: 250 <greengiant@peas.com> and options ok
+      C: DATA
+      S: 354 Enter your data
+      C: From: Dan Wing <dwing@cisco.com>
+      C: To: "Jolly" <greengiant@peas.com>
+      C: Date: Mon, 6 Oct 1997 12:42:32 -0700
+      C: Subject: Veggies
+      C:
+      C: Veggies are good for you, but from a can?
+      C: .
+      S: 250 message accepted
+      C: STAT
+      S: 250 <greengiant@peas.com> queued by=peas.com
+      C: QUIT
+      S: 221 Goodbye
+
+6.3.  SMTP Client Disconnects Before Sending STAT
+
+   The SMTP client is not required to query the success/failure
+   of immediate message delivery.  The following transaction
+   is legal.
+
+      S: 220 mailer.cisco.com ESMTP service ready
+      C: EHLO pc.cisco.com
+      S: 250-mailer.cisco.com says hello
+      S: 250 SESSION
+      C: MAIL FROM:<dwing@cisco.com>
+      S: 250 <dwing@cisco.com> Sender ok
+      C: RCPT TO:<masinter@parc.xerox.com> SESSION
+      S: 250 <masinter@parc.xerox.com> and options ok
+
+
+
+Joffe, Wing, Masinter     Expires January 1999                [Page 14]
+
+Internet Draft          SMTP Immediate Delivery              August 1998
+
+
+      C: DATA
+      S: 354 Enter your data
+      C: From: Dan Wing <dwing@cisco.com>
+      C: To: masinter@parc.xerox.com
+      C: Date: Mon, 6 Oct 1997 12:42:32 -0700
+      C: Subject: Palo Alto Coffee shops
+      C:
+      C: How does this look?
+      C: .
+      S: 250 message accepted
+      C: QUIT
+      S: 221 Goodbye
+
+7.  Acknowledgments
+
+   Much of this document was produced by work begun in the Internet FAX
+   Working Group of the IETF.
+
+   The authors would like to thank Ned Freed (Innosoft), Graham Klyne
+   (Integralis), Keith Moore (University of Tennessee), Jeff
+   VanDyke (NetCentric), and Greg Vaudreuil (Lucent) for their
+   contributions to this work.
+
+   ((others?))
+
+8.  References
+
+   [DRUMS] J. Klensin, D. Mann, "Simple Mail Transfer Protocol",
+   Internet Draft, Work in Progress, draft-ietf-drums-smtpupd-??.txt.
+
+   [REPORT-EXTENSIONS] D. Wing, "Fax Extensions to DSN and MDN",
+   Internet Draft, Work in Progress,
+   draft-ietf-fax-report-extensions.txt.
+
+   [RFC821] J. Postel, "Simple Mail Transfer Protocol", STD-10, RFC 821,
+   August 1982.
+
+   [RFC1047] C. Partridge, "DUPLICATE MESSAGES AND SMTP", RFC 1047,
+   February 1988.
+
+   [RFC1123] R. Braden, "Requirements for Internet Hosts -- Application
+   and Support", RFC 1123, October 1989.
+
+   [RFC1830] G. Vaudreuil, "SMTP Service Extensions for Transmission of
+   Large and Binary MIME Messages", RFC 1830 (Experimental), August
+   1995.
+
+   [RFC1891] K. Moore, "SMTP Service Extension for Delivery Status
+
+
+
+Joffe, Wing, Masinter     Expires January 1999                [Page 15]
+
+Internet Draft          SMTP Immediate Delivery              August 1998
+
+
+   Notifications", RFC 1891, January 1996.
+
+   [RFC1893] G. Vaudreuil, "Enhanced Mail System Status Codes", RFC
+   1893, January 1996.
+
+   [RFC1869] J. Klensin, N. Freed, M. Rose, E. Stefferud, D. Crocker,
+   "SMTP Service Extensions", STD-10, RFC 1869, November 1995.
+
+   [RFC2033] J. Myers, "Local Mail Transfer Protocol", RFC 2033, October
+   1996.
+
+   [RFC2119] S. Bradner, "Key words for use in RFCs to Indicate
+   Requirement Levels", BCP-14, RFC 2119, March 1997.
+
+   [RFC2197] N. Freed, "SMTP Service Extension for Command Pipelining",
+   RFC 2197, September 1997.  .in -5
+
+   [RFC2234] D. Crocker, P. Overell, "Augmented BNF for Syntax
+   Specifications: ABNF", RFC 2234, November 1997.
+
+9.  Copyright
+
+   Copyright (C) The Internet Society (1997, 1998).  All Rights
+   Reserved.
+
+   This document and translations of it may be copied and furnished to
+   others, and derivative works that comment on or otherwise explain it
+   or assist in its implmentation may be prepared, copied, published and
+   distributed, in whole or in part, without restriction of any kind,
+   provided that the above copyright notice and this paragraph are
+   included on all such copies and derivative works.  However, this
+   document itself may not be modified in any way, such as by removing
+   the copyright notice or references to the Internet Society or other
+   Internet organizations, except as needed for the  purpose of
+   developing Internet standards in which case the procedures for
+   copyrights defined in the Internet Standards process must be
+   followed, or as required to translate it into languages other than
+   English.
+
+   The limited permissions granted above are perpetual and will not be
+   revoked by the Internet Society or its successors or assigns.
+
+   This document and the information contained herein is provided on an
+   "AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
+   TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING
+   BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION
+   HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF
+   MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+
+
+Joffe, Wing, Masinter     Expires January 1999                [Page 16]
+
+Internet Draft          SMTP Immediate Delivery              August 1998
+
+
+10.  Authors' Addresses
+
+   Neil Joffe
+   Cisco Systems, Inc.
+   170 West Tasman Drive
+   San Jose, CA 95134-1706  USA
+
+   Phone: +1 408 526 4000
+   Email: njoffe@cisco.com
+
+
+   Dan Wing
+   Cisco Systems, Inc.
+   101 Cooper Street
+   Santa Cruz, CA 95060  USA
+
+   Phone: +1 408 457 5200
+   Fax:   +1 408 457 5208
+   Email: dwing@cisco.com
+
+
+   Larry Masinter
+   Xerox Palo Alto Research Center
+   3333 Coyote Hill Road
+   Palo Alto, CA 94304  USA
+
+   Phone:  +1 415 812 4365
+   Fax:    +1 415 812 4333
+   Email:  masinter@parc.xerox.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Joffe, Wing, Masinter     Expires January 1999                [Page 17]
+
