@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Convert.pm,v 1.5 2002/02/24 08:25:40 fukachan Exp $
+# $FML: Convert.pm,v 1.6 2002/03/20 03:19:24 fukachan Exp $
 #
 
 
@@ -71,6 +71,36 @@ sub convert
    else {
        croak("convert: invalid in/out channel");
    }
+}
+
+
+# Descriptions: conversion filter.
+#    Arguments: STR($src) STR($dst) HASH_REF($config)
+# Side Effects: print out to file $out
+# Return Value: none
+sub convert_file
+{
+   my ($src, $dst, $config) = @_;
+
+    use FileHandle;
+    my $in  = new FileHandle $src;
+    my $out = new FileHandle "> $dst.$$";
+
+    if (defined $in && defined $out) {
+	chmod 0644, "$dst.$$";
+
+	eval q{ convert($in, $out, $config);};
+	croak($@) if $@;	    
+
+	$out->close();
+	$in->close();
+
+	rename("$dst.$$", $dst) || croak("fail to rename $dst");
+    }
+    else {
+	croak("fail to open $src") unless defined $in;
+	croak("fail to open $dst") unless defined $out;
+    }
 }
 
 
