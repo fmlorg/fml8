@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: TinyScheduler.pm,v 1.2 2001/04/01 23:32:04 fukachan Exp $
+# $FML: TinyScheduler.pm,v 1.3 2001/04/02 04:05:04 fukachan Exp $
 #
 
 package TinyScheduler;
@@ -128,6 +128,11 @@ sub parse
 			if (/$pat(.*)/) {
 			    $self->_parse($1, $2);
 			}
+		    }
+
+		    # for example, "*/24 something"
+		    if (/^\*\/(\d+)\s+(.*)/) {
+			$self->_parse($1, $2);
 		    }
 		}
 		close($fh);
