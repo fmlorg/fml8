@@ -326,6 +326,12 @@ FileHandle と IO::File 両方 use しちゃうからか？
 	なくて admin コマンドの時は考えなくてもいいからだな、それは …
 
 
+[TODO]	cgi のスタイルシート対応
+
+	文字を小さくした方がいいとか…の類。
+	＃だれか、やってぇ〜 ;)
+
+
 [TODO]	Mail::Message::ToHTML
 
 	X-Sequence: fml-devel 515
@@ -438,4 +444,4 @@ FileHandle と IO::File 両方 use しちゃうからか？
 
 
 ----------
-$FML: 00_MEMO,v 1.91 2003/10/18 04:37:42 fukachan Exp $
+$FML: 00_MEMO,v 1.92 2003/10/26 02:41:38 fukachan Exp $
