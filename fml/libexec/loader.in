@@ -4,19 +4,23 @@
 # Copyright (C) 2000-2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: loader.in,v 1.10 2002/04/01 23:41:17 fukachan Exp $
+# $FML: loader.in,v 1.11 2002/09/24 14:19:50 fukachan Exp $
 #
 
 eval 'exec @PERL@ -S $0 ${1+"$@"}'
         if $running_under_some_shell;
 
-use vars qw($running_under_some_shell $hints);
+use vars qw($running_under_some_shell $hints $ERROR_EXIT_CODE);
 use strict;
 use IO::File;
 
 # reset PATH in the early stage
 $ENV{'PATH'} = '/bin:/usr/bin';
 delete @ENV{'IFS', 'CDPATH', 'ENV', 'BASH_ENV'};
+
+# XXX irregular global variable permitted to handle emergency cases.
+# default exit code in error.
+$ERROR_EXIT_CODE = 1;
 
 # main routine to boot off
 {
@@ -30,10 +34,10 @@ delete @ENV{'IFS', 'CDPATH', 'ENV', 'BASH_ENV'};
     eval q{ Bootstrap($main_cf);};
 
     # not use Carp.pm to be quiet if needed
-    if ($@) { print STDERR "Error: ", $@, "\n"; exit 1;}
+    if ($@) { print STDERR "Error: ", $@, "\n"; exit($ERROR_EXIT_CODE);}
 }
 
-exit 0;
+exit(0);
 
 
 =head1 NAME
@@ -258,7 +262,7 @@ sub __CROAK
 
     print STDERR "fml loader error: $reason\n";
     print STDERR "  reason(detail): $detail\n" if defined $detail;
-    exit(1);
+    exit($ERROR_EXIT_CODE);
 }
 
 
