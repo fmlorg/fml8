@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: DB.pm,v 1.13 2001/11/18 08:57:30 fukachan Exp $
+# $FML: DB.pm,v 1.14 2001/11/20 07:28:50 fukachan Exp $
 #
 
 package Mail::ThreadTrack::DB;
@@ -169,6 +169,8 @@ sub db_mkdb
     my $config     = $self->{ _config };
     my $spool_dir  = $config->{ spool_dir };
     my $saved_args = $self->{ _saved_args }; # original $args 
+
+    return undef unless (defined $min_id && defined $max_id);
 
     use Mail::Message;
     use File::Spec;
