@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: BodyCheck.pm,v 1.8 2001/10/14 22:25:31 fukachan Exp $
+# $FML: BodyCheck.pm,v 1.9 2001/10/27 04:50:38 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -106,6 +106,11 @@ sub body_check
     # get_first_plaintext_message() return the first mime part block
     # with the "plain/text" type.
     my $m = $msg->get_first_plaintext_message();
+    # message without valid text part e.g. text/html (not multipart)
+    unless (defined $m) {
+	my $r = "no text part, ignored";
+	return undef;
+    }
 
     ## 4. check only the last paragraph
     #     XXX if message size > 1024 or not, we change the buffer to check.
