@@ -21,28 +21,37 @@ FML::Process::Switch - switch or dispather table to run the suitable library
 
 =head1 SYNOPSIS
 
-   require "$libexec_dir/process_switch";
-   ProcessSwitch( {
-       fml_version    => $main_cf->{ fml_version },
+(in libexec/loader)
 
-       myname         => $myname,
-       ml_home_prefix => $main_cf->{ ml_home_prefix },
-       ml_home_dir    => $ml_home_dir,
-
-       cf_list        => \@cf,
-       options        => \%options,
-   });
-
-See also C<libexec/fml/loader>.
+   package main;
+   use FML::Process::Switch;
+   &Bootstrap2($main_cf_file); # main::Bootstrap2()
 
 =head1 DESCRIPTION
 
 C<libexec/loader> (C<libexec/fml/loader>), the wrapper, loads this
-program and calls C<Bootstrap2()> and C<ProcessSwitch()>.
+program and calls C<Bootstrap2()>.
+C<Bootstrap2()> loads main.cf,
+analyzes the command argument
+and kicks off C<ProcessSwitch()> finally.
 C<ProcessSwitch()> emulates "use $package" to load a program specified
 by the arguments.
+The fml flow bifurcates here through C<ProcessSwitch()>.
 
 The details of each program exists in FML::Process:: class.
+For example, libexec/distribute (fml.pl) runs in this way.
+   
+       main::Bootstrap()        libexec/loader
+            |
+            V
+       main::Bootstrap2()       Process::Switch
+            |
+            V
+       ProcessSwitch()          Process::Switch
+            |
+            V
+       FML::Process:Distribute  FML::Process::Distribute
+
 
 =head1 FUNCTIONS
 
@@ -63,6 +72,11 @@ We pass it to C<ProcessSwitch()> later.
 =cut
 
 
+# Descriptions: the second phase of bootstrap
+#    Arguments: $main_cf_file
+#               /etc/fml/main.cf in typical case.
+# Side Effects: none
+# Return Value: the same as FML::Process::Flow::ProcessStart()
 sub main::Bootstrap2
 {
     my ($main_cf_file)    = @_;
@@ -74,7 +88,7 @@ sub main::Bootstrap2
     use File::Basename;
     my $myname            = basename($0); # inspect my name from $0
 
-    # 2.0 parse command line options (preliminary)
+    # 1.0 parse command line options (preliminary)
     use Getopt::Long;
     GetOptions(\%options, _module_specific_options($myname));
 
@@ -126,14 +140,18 @@ sub main::Bootstrap2
 	need_ml_name   => _ml_name_is_required($myname),
     };
 
-    # See libexec/process_switch on ProcessSwitch()
-    my $pkg = ProcessSwitch($args);
+    # get the object. The suitable module is speculcated by $0.
+    my $obj = ProcessSwitch($args);
 
-    # See FML::Process::Kernel module on ProcessStart()
-    FML::Process::Flow::ProcessStart($pkg, $args);
+    # start the process.
+    FML::Process::Flow::ProcessStart($obj, $args);
 }
 
 
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
 sub _parse_argv
 {
     my ($main_cf) = @_;
@@ -142,8 +160,8 @@ sub _parse_argv
     my $found_cf       = 0;
     my @cf             = ();
 
+    # "elena" is translated to "/var/spool/ml/elena"
     for (@ARGV) {
-	# elena is translated to "/var/spool/ml/elena"
 	unless ($found_cf) {
 	    my $x = "$ml_home_prefix/$_";
 	    if (-d $x && -f "$x/config.cf") {
@@ -172,6 +190,34 @@ sub _parse_argv
 }
 
 
+=head2 C<ProcessSwitch($args)> 
+
+    my $args = {
+        fml_version    => $main_cf->{ fml_version },
+        
+        myname         => $myname,
+        ml_home_prefix => $main_cf->{ ml_home_prefix },
+        ml_home_dir    => $main_cf->{ ml_home_dir },
+        
+        cf_list        => $cf,
+        options        => \%options,
+
+        # pass the original information to each process
+        argv           => \@argv,
+        ARGV           => \@ARGV,
+
+        # options
+        need_ml_name   => _ml_name_is_required($myname),
+    };
+
+    # get the object. The suitable module is speculcated by $0.
+    my $obj = ProcessSwitch($args);
+
+    # start the process.
+    FML::Process::Flow::ProcessStart($obj, $args);
+
+=cut
+
 # Descriptions: top level process switch
 #               emulates "use $package" but $package is dynamically 
 #               determined by e.g. $0.
@@ -197,6 +243,10 @@ sub ProcessSwitch
 }
 
 
+# Descriptions: return the suitable getopt options
+#    Arguments: $myname (determined by $0)
+# Side Effects: none
+# Return Value: getopt parameters
 sub _module_specific_options
 {
     my ($myname) = @_;
@@ -220,6 +270,10 @@ sub _module_specific_options
 }
 
 
+# Descriptions: this program ($0) requires ML name always or not?
+#    Arguments: $myname ($0)
+# Side Effects: none
+# Return Value: 1 (require ml name always) or 0
 sub _ml_name_is_required
 {
     my ($myname) = @_;
@@ -240,7 +294,7 @@ sub _ml_name_is_required
 #    Arguments: $args
 #               XXX non OO interface
 # Side Effects: none
-# Return Value: FML::Process::SOMETHING process object
+# Return Value: FML::Process::SOMETHING module name
 sub _module_we_use
 {
     my ($args) = @_;    

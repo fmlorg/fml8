@@ -23,12 +23,15 @@ FML::Ticket::System - ticket system core engine
 
 =head1  SYNOPSIS
 
-	use Ticket::Model::toymodel;
-	$ticket = new Ticket::Model::toymodel;
-	$ticket->asign($curproc, $args);
-	$ticket->update_cache($curproc, $args);
+   use Ticket::Model::toymodel;
+   $ticket = new Ticket::Model::toymodel;
+   $ticket->assign($curproc, $args);
+   $ticket->update_cache($curproc, $args);
 
 =head1 DESCRIPTION
+
+the base class of ticket systems.
+This module provides basic functions to help sub classes.
 
 =head2 CLASS HIERARCHY
 
@@ -37,13 +40,14 @@ FML::Ticket::System - ticket system core engine
                 A 
        -------------------
        |        |        |
+       A        A        A
     toymodel  model2    ....
 
 =head1 METHODS
 
 =head2 C<new()>
 
-usual constructor.
+the usual constructor.
 
 =cut
 

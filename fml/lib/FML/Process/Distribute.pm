@@ -24,20 +24,35 @@ FML::Process::Distribute -- fml5 article distributer library.
 
 =head1 SYNOPSIS
 
-   use FML::Process::Command;
+   use FML::Process::Distribute;
    ...
 
-See L<FML::Process::Flow> for details of flow.
+See L<FML::Process::Flow> for details of the fml flow.
 
 =head1 DESCRIPTION
 
-=cut
+C<FML::Process::Flow::ProcessStart($pkg, $args)> drives the fml flow
+where C<$pkg> is the object C<FML::Process::$module::new()> returns.
 
+=cut
 
 require Exporter;
 @ISA = qw(FML::Process::Kernel Exporter);
 
 
+=head2 C<new($args)>
+
+create C<FML::Process::Distribute> object.
+C<$curproc> is the object C<FML::Process::Kernel> returns but
+we bless it as C<FML::Process::Distribute> object.
+
+=cut
+
+# Descriptions: constructor.
+#               sub class of FML::Process::Kernel
+#    Arguments: $self $args
+# Side Effects: none
+# Return Value: FML::Process::Distribute object
 sub new
 {
     my ($self, $args) = @_;
@@ -47,6 +62,16 @@ sub new
 }
 
 
+=head2 C<prepare($args)>
+
+forward the request to the base class.
+
+=cut
+
+# Descriptions: prepare miscellaneous work before the main routine starts
+#    Arguments: $self $args
+# Side Effects: none
+# Return Value: none
 sub prepare
 {
     my ($self, $args) = @_;
@@ -54,6 +79,16 @@ sub prepare
 }
 
 
+=head2 C<verify_request($args)>
+
+check the mail sender and the mail loop possibility.
+
+=cut
+
+# Descriptions: verify the mail sender and others
+#    Arguments: $self $args
+# Side Effects: none
+# Return Value: none
 sub verify_request
 {
     my ($curproc, $args) = @_;
@@ -62,6 +97,22 @@ sub verify_request
 }
 
 
+=head2 C<run($args>)
+
+Firstly it locks (giant lock) the current process.
+
+If the mail sender is one of our mailing list member,
+we can distribute the mail as an article.
+
+Lastly we unlock the current process.
+
+=cut
+
+# Descriptions: the main routine
+#    Arguments: $self $args
+# Side Effects: distribution of articles.
+#               See _distribute() for more details.
+# Return Value: none
 sub run
 {
     my ($curproc, $args) = @_;
@@ -81,6 +132,17 @@ sub run
 }
 
 
+=head2 C<finish($args)>
+
+send back or inform reply messages to the mail sender, for example,
+error messages.
+
+=cut
+
+# Descriptions: clean up in the end of the curreen process
+#    Arguments: $self $args
+# Side Effects: none
+# Return Value: none
 sub finish
 {
     my ($curproc, $args) = @_;
@@ -89,10 +151,16 @@ sub finish
 }
 
 
-# $article->header_rewrite;
-# $article->increment_id;
-# $article->spool;
-# distribute( $article );
+# Descriptions: the top level routine to drive the article spooling and
+#               distribution.
+#                  $article->header_rewrite();
+#                  $article->increment_id();
+#                  $article->spool();
+#    Arguments: $self $args
+# Side Effects: header rewrite
+#               the article sequence number is incremanted
+#               article spooling. 
+# Return Value: none
 sub _distribute
 {
     my ($curproc, $args) = @_;
@@ -127,6 +195,10 @@ sub _distribute
 }
 
 
+# Descriptions: build and return FML::Article object
+#    Arguments: $self $args
+# Side Effects: none
+# Return Value: FML::Article object
 sub _prepare_article
 {
     my ($curproc, $args) = @_;
@@ -139,6 +211,12 @@ sub _prepare_article
 }
 
 
+# Descriptions: header rewrite followed by
+#               $config->{ article_header_rewrite_rules }
+#               each method exists in FML::Header module.
+#    Arguments: $self $args
+# Side Effects: $curproc->{ article }->{ header } is rewritten
+# Return Value: none
 sub _header_rewrite
 {
     my ($curproc, $args) = @_;
@@ -164,13 +242,17 @@ sub _header_rewrite
 }
 
 
+# Descriptions: deliver the article
+#    Arguments: $self $args
+# Side Effects: smtp logging
+# Return Value: none
 sub _deliver_article
 {
     my ($curproc, $args) = @_;
 
-    my $config  = $curproc->{ config };             # FML::Config object;
-    my $body    = $curproc->{ article }->{ body };  # MailingList::Messages object;
-    my $header  = $curproc->{ article }->{ header };# FML::Header object;
+    my $config  = $curproc->{ config };             # FML::Config obj
+    my $body    = $curproc->{ article }->{ body };  # MailingList::Messages obj
+    my $header  = $curproc->{ article }->{ header };# FML::Header obj
 	
     unless ( $config->yes( 'use_article_delivery' ) ) {
 	return;
@@ -226,6 +308,10 @@ sub _deliver_article
 }
 
 
+# Descriptions: the top level interface to drive ticket system
+#    Arguments: $self $args
+# Side Effects: update ticket information
+# Return Value: none
 sub _ticket_check
 {
     my ($curproc, $args) = @_;    
@@ -258,6 +344,25 @@ sub _ticket_check
 	Log($@);
     }
 }
+
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1 HISTORY
+
+FML::Process::Distribute appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
+=cut
 
 
 1;

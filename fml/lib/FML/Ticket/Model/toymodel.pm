@@ -443,7 +443,7 @@ sub _set_status
 
 
 
-=haead1 OUTPUT ROUTINES
+=head1 OUTPUT ROUTINES
 
 =head2 C<show_summary($curproc, $args>)
 
