@@ -1,29 +1,30 @@
-###
-### Section: Header Manipulations
-###
+=head1	ヘッダの操作
 
-#
-# XXX: The action to cut off "Re:" is default. need not specified.
-#
+use_header_rewrite	=	yes
 
-header_checks        =	validate_message_id
-			verify_unique_x_ml_info
-			verify_unique_list_post
+use_header_checks	=	yes
+
+
+header_check_rules	=	validate_message_id
+				verify_unique_x_ml_info
+				verify_unique_list_post
 
 # もちろん”記事”に対してのものだ（自明？）
 # article_header_rewrite_rules とかの方がよいか？
-header_rewrite_rules =	rewrite_subject_tag
-			rewrite_reply_to
-			add_software_info
-			add_fml_ml_name
-			add_fml_traditional_article_id
-			add_fml_article_id
-			add_x_sequence
-			add_rfc2369
+# XXX: The action to cut off "Re:" is default. need not specified.
+header_rewrite_rules	=	rewrite_subject_tag
+				rewrite_reply_to
+				add_software_info
+				add_fml_ml_name
+				add_fml_traditional_article_id
+				add_fml_article_id
+				add_x_sequence
+				add_rfc2369
 
 
 # Subject: につけるタグの制御
 subject_tag_name	=	$ml_name
+
 
 # % の意味は UNIX マニュアルを参照。例えば sprintf 関数など 
 subject_tag		=	[$ml_name:%05d]

@@ -2,7 +2,10 @@
 
 # domain	= fml.org
 # fqdn		= mx0.fml.org
-# ml_home_dir	= /var/spool/ml/$ml_name
 
+
+=head2 default modes
+
+default_file_mode	=	0600
 
 default_directory_mode	=	0755

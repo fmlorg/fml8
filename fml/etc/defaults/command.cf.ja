@@ -1,2 +1,3 @@
 # value: confirmation / ? 
-chaddr_type	=	confirmation
+
+command_chaddr_type	=	confirmation

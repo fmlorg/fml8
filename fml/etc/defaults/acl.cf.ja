@@ -1,19 +1,20 @@
 =head2 アクセス制御
 
-# 配列表現には本質的に
-
-# 現在の PERMIT_POST_FROM と REJECT_ADDR をがったいしたもの
+# fml 4.0 の PERMIT_POST_FROM と REJECT_ADDR を合体したもの
 post_restrictions	=	reject_system_accounts
 				permit_members_only
 				reject
 
-# 現在の PERMIT_COMMAND_FROM と REJECT_ADDR をがったいしたもの
+# fml 4.0 の PERMIT_COMMAND_FROM と REJECT_ADDR を合体したもの
 command_restrictions	=	reject_system_accounts
 				permit_members_only
 				reject
 
+# fml 4.0 の $MEMBER_LIST @MEMBER_LIST 相当
 member_maps		=	file:$ml_home_dir/members 
 
+
+# fml 4.0 の $ACTIVE_LIST @ACTIVE_LIST 相当
 recipient_maps		=	file:$ml_home_dir/recipients
 				file:$ml_home_dir/actives
 				unix.group:fml

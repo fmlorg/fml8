@@ -13,4 +13,4 @@ log_file	=	$ml_home_dir/log
 log_type	=	file
 
 # log message format
-log_message_format	=	traditional
+log_message_format	=	fml4-compatible

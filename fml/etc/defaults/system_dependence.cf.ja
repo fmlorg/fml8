@@ -1,0 +1,12 @@
+=head1	システム依存
+
+#
+# 注意: デフォールトは NetBSD
+#
+
+has_getpwuid	=	yes
+
+has_getpwgid	=	yes
+
+has_alarm	=	yes
+

@@ -1,4 +1,4 @@
-=head2 すぷーる
+=head2 記事のスプール
 
 sequence_file	= $ml_home_dir/seq
 

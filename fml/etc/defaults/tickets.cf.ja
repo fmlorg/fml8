@@ -6,6 +6,8 @@ use_ticket		=	yes
 
 ticket_model		=	toymodel
 
+ticket_subject_tag_name	=	$ml_name
+
 ticket_id_syntax	=	$ml_name_#%08d
 
 # please use [] or () or {} for the ends
