@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.22 2002/09/11 23:18:05 fukachan Exp $
+# $FML: SendFile.pm,v 1.23 2002/09/22 14:56:43 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -68,7 +68,7 @@ sub send_article
     my (@files) = split(/\s+/, $command);
     shift @files; # remove get
     for my $fn (@files) {
-	my $filelist = $self->_is_valid_argument($curproc, $fn);
+	my $filelist = $self->_get_valid_article_list($curproc, $fn);
 	if (defined $filelist) {
 	    for my $filename (@$filelist) {
 		use FML::Article;
@@ -107,7 +107,7 @@ sub send_article
 #    Arguments: OBJ($self) OBJ($curproc) STR($fn)
 # Side Effects: none
 # Return Value: ARRAY_REF as [ $fist .. $last ]
-sub _is_valid_argument
+sub _get_valid_article_list
 {
     my ($self, $curproc, $fn) = @_;
 
@@ -120,11 +120,12 @@ sub _is_valid_argument
     my $config   = $curproc->{ config };
     my $file     = $config->{ sequence_file };
     my $sequence = new File::Sequence { sequence_file => $file };
+    my $last_id  = $sequence->get_id();
 
     use Mail::Message::MH;
     my $mh      = new Mail::Message::MH;
-    my $last_id = $sequence->get_id();
 
+    # XXX expand() validates $fn. o.k.
     # XXX we assume min_id = 1, but not correct always.
     return $mh->expand($fn, 1, $last_id);
 }
@@ -148,11 +149,16 @@ sub send_file
     my $filename = $command_args->{ _filename_to_send };
     my $filepath = $command_args->{ _filepath_to_send };
     my $config   = $curproc->{ config };
+
+    # XXX-TODO: handle non Japanese.
+    # XXX-TODO: care for Accept-Language: header field.
     my $charset  = $config->{ reply_message_charset };
 
+    # XXX-TODO: who validate $filename and $filepath ?
     Log("send_file: $filepath");
 
     # template substitution: kanji code, $varname expansion et. al.
+    # we prepare file to send back which has proper kanji code et.al.
     my $params = {
 	src         => $filepath,
 	charset_out => $charset,
@@ -193,6 +199,8 @@ sub send_user_xxx_message
     my ($self, $curproc, $command_args, $type) = @_;
     my $config = $curproc->{ config };
 
+    # XXX-TODO: care for non Japanese
+    # XXX-TODO: hmm, we can handle file.ja file.ja.euc file.en file.ru ?
     # if "help" is found in $ml_home_dir (e.g. /var/spool/ml/elena),
     # send it.
     if (-f $config->{ "${type}_file" }) {
