@@ -12,3 +12,27 @@ use_error_analyzer	=	yes
 #        Value: directory
 #     Examples: 
 error_analyzer_cache_dir		=	$db_dir/error
+
+
+# Descriptions: キャッシュのタイプ
+#      History: none
+#        Value: string
+#     Examples: File::CacheDir
+error_analyzer_cache_type		=	File::CacheDir
+
+
+# Descriptions: キャッシュのモード
+#      History: none
+#        Value: string
+#     Examples: 
+error_analyzer_cache_mode		=	temporal
+
+
+# Descriptions: キャッシュのサイズ
+#		mode が temporal なら日数だ。
+#      History: none
+#        Value: number
+#     Examples: 
+error_analyzer_cache_size		=	14
+
+
