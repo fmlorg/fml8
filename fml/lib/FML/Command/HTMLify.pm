@@ -4,8 +4,9 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HTMLify.pm,v 1.22 2004/01/21 03:49:55 fukachan Exp $
+# $FML: HTMLify.pm,v 1.23 2004/04/23 04:10:30 fukachan Exp $
 #
+
 
 package FML::Command::HTMLify;
 use strict;
@@ -51,7 +52,7 @@ sub convert
     croak("dst_dir not defined") unless defined $dst_dir;
     croak("dst_dir not exists")  unless -d $dst_dir;
 
-    # XXX-TODO: NOT NEED THIS CHECK ? No, it it soog that
+    # XXX-TODO: NOT NEED THIS CHECK ? No, it it soon that
     # XXX-TODO: we can convert MH folder to HTML format files.
     #     unless ($curproc->is_config_cf_exist()) {
     #		croak("invalid ML");
@@ -109,7 +110,7 @@ sub convert
 }
 
 
-# Descriptions: sort subdirs by the last dirname
+# Descriptions: sort subdirs by the last dirname.
 #    Arguments: implicit ($a, $b)
 # Side Effects: none
 # Return Value: NUM(-1, 0, 1)
@@ -117,13 +118,13 @@ sub _sort_subdirs
 {
     my ($xa, $xb);
 
-    if ($a =~ /(\d+)$/) { $xa = $1;}
-    if ($b =~ /(\d+)$/) { $xb = $1;}
+    if ($a =~ /(\d+)$/o) { $xa = $1;}
+    if ($b =~ /(\d+)$/o) { $xb = $1;}
 
     $xa <=> $xb;
 }
 
-# Descriptions: check wheter $src_dir has sub-directories in it
+# Descriptions: check whether $src_dir has sub-directories in it.
 #    Arguments: STR($src_dir)
 # Side Effects: none
 # Return Value: ARRAY( STR, ARRAY_REF )
