@@ -8,6 +8,9 @@
 # $FML$
 #
 
+eval 'exec /usr/local/bin/perl -S $0 ${1+"$@"}'
+        if $running_under_some_shell;
+
 use vars qw($MainCF);
 use strict;
 use Carp;

@@ -2,7 +2,7 @@
 <HTML>
 <HEAD>
 <TITLE>
-net/fml ブートの仕方
+fml のブートしていく様
 </TITLE>
 <META http-equiv="Content-Type"
 	content="text/html; charset=EUC-JP">
@@ -11,6 +11,8 @@ net/fml ブートの仕方
 <BODY BGCOLOR="#E6E6FA">
 <!-- ================== body =========================================== -->
 
+<P>fml のブートしていく様について
+
 <UL>
    <LI> libexec/fmlwrapper (wrapper)
 	<BR>
@@ -18,37 +20,43 @@ net/fml ブートの仕方
    <UL>
 	<LI>   /etc/fml/main.cf を読み込む。
 		読み込むと fml のバージョンが分かる。
-
-	<LI> 	@ARGV を評価し、
-		どの config.cf 群をロードすればいいのかを準備する。
 		default_config.cf はバージョン依存であるので、
-		ここで評価することに注意。	
+		ここでまずバージョンを評価しなければいけないことに注意。
 
-	<LI>	libexec/fml ( バージョン依存 )ファイルを
-		ロードし、
-	   <UL>
-		<LI> 
-		ProcessSwitch() を実行して、配送用、コマンドモード用
+	<LI> 	( fml.pl を例にとると)
+		@ARGV を評価し、
+		どのＭＬの config.cf 群をロードすればいいのかを準備する。
+
+	<LI>	次に
+		libexec/fml ( バージョン依存 )ファイルを
+		ロードする。そして、
+		ProcessSwitch() 内部を実行し、
+		配送用、コマンドモード用
 		プログラム/プロセスなどへ制御を移す(分岐する)。
-
+	   <UL>
 		<LI>
 		$0 から自分の名前を知り、
 		どのプロセスへ分岐すればいいのかを判断する。
 
 		<LI>(ポリモーフィズム)
-		ダイナミックバインディングし、
-		プロセスオブジェクトを生成する( fork(2) という意味ではない)。
+		モジュールをダイナミックバインディングし、
+		該当するプロセスオブジェクトを生成する。
 		そして、プロセスをスタートさせる。
 
 		具体的には
-		<PRE>
-		$process = new FML::Process::なにか;
-		$process->run() 
-		</PRE>
-		を実行する。
+<PRE>
+    $process = new FML::Process::なにか;
+    $process->prepare($args);
+    $process->run($args);
+    $process->finish($args);
+</PRE>
+		などと書く。
 
 	   </UL>
 </UL>
+
+<HR>
+<P>Standalone.pm
 
 <PRE>
 fmlwrapper (uses) Standalone.pm
@@ -58,16 +66,18 @@ fmlwrapper (uses) Standalone.pm
    |
   fml
   * 動的にクラスをバインディングしつつ、プロセススタートする。
-       実際のコードは $process->run() などとなるが、書き下すと
-       このようになるだろう。
+       実際のコードは $process->run() などとなる。
 
-       FML::Process::Distribute->run() |
-       FML::Process::Command->run()    |-(uses)-> FML::Process::Kernel
-       FML::Process::Mead->run()       |          |   
-                                                  |-  FML::Parse
-                                                  |-  FML::Config
-                                                  |-  FML::Log
-                                                  |-   ... その他 ...
+
+○ クラスの階層構造？
+
+FML::Process::Distribute-|
+FML::Process::Command   -|>- FML::Process::Kernel
+FML::Process::Mead      -|    |   
+                              |->  FML::Parse
+                              |->  FML::Config
+                              |->  FML::Log
+                              |->   ... その他 ...
 </PRE>
 
 <!-- =================================================================== -->
