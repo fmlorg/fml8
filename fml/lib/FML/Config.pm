@@ -158,6 +158,7 @@ sub expand_variables
     my ($self) = @_;
     _expand_variables( \%_default_fml_config );
     _expand_variables( \%_fml_config );
+    _expand_special_syntax( \%_fml_config );
 }
 
 
@@ -203,6 +204,29 @@ sub _expand_variables
 	if ($max >= 16) {
 	    croak("variable expansion of $x causes infinite loop\n");
 	} 
+    }
+}
+
+
+sub _expand_special_syntax
+{
+    my ($config) = @_;
+    my @order  = keys %$config;
+    my $use_strftime = 0;
+
+    for my $x ( @order ) {
+	if ($config->{ $x } =~ /\%/) { $use_strftime = 1;}
+    }
+
+    if ($use_strftime) {
+	eval qq{ require POSIX; import POSIX ();};
+	unless ($@) {
+	    for my $x ( @order ) {
+		if ($config->{ $x } =~ /\%/) { 
+		    $config->{ $x } = strftime($config->{ $x }, localtime);
+		}
+	    }    
+	}
     }
 }
 
