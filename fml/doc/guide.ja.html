@@ -105,6 +105,29 @@ fml 4.0 と同様です。
 config.cf
 </PRE>
 
+とりあえず config.cf の先頭の ml_domain と ml_name を
+自分のＭＬに変更して下さい。
+まだ自動変換できません（そのうちします）。
+<PRE>
+config.cf の例
+
+# ドメイン名 (参照: 以下のアドレスを見よ $ml_domain がこの値に展開される)
+ml_domain           = fml.org
+
+# ML の名前
+ml_name		    = elena		
+
+# 管理者のアドレス
+maintainer	    = $ml_name-admin@$ml_domain
+
+# 投稿用のアドレス
+address_for_post    = $ml_name@$ml_domain
+
+# コマンド用のアドレス
+address_for_command = $ml_name-ctl@$ml_domain
+</PRE>
+
+
 include include-ctl aliases も fml 4.0 と同様です。
 が、まだ、makefml newml で自動生成できるようになっていません _o_
 
@@ -148,6 +171,7 @@ elena ＭＬの設定のカスタマイズは /var/spool/ml/elena/config.cf を編集
 インストールした fml のバージョンごとに全部別のディレクトリに
 置かれることに注意して下さい。
 この仕組みのおかげでアップグレードしても元に戻すのが簡単です。
+
 
 </BODY>
 </HTML>
