@@ -36,8 +36,8 @@
    [要再実装(今はとりあえず使っていない)]
 	getline			()		STR	← implemented.
 				join by space.
-	get_value_as_str	()		STR	←要拡張？
-	get_value_as_array_ref	()		[]	←要拡張？
+	get_value_as_str	(KEY)		STR	←要拡張？
+	get_value_as_array_ref	(KEY)		[]	←要拡張？
 
    [ removed ]
 	replace			(KEY, STR)	*	←要拡張？
