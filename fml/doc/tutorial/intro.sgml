@@ -1,7 +1,7 @@
 <!-- 
 	すでに <chapter> 〜 </chapter> の中で include されていることに注意
 
-	$FML$
+	$FML: intro.sgml,v 1.2 2001/04/22 09:13:26 fukachan Exp $
 -->
 
 <title>fml5 (仮名) プロジェクトの目的</title>
@@ -9,6 +9,16 @@
 <para>
 fml-devel は将来 fml 5.0 になるであろうという… 
 </para>
+
+
+<!-- ========================================================
+		section 1
+     ========================================================
+-->
+
+<sect1>
+
+<title> fml-devel プロジェクトの構想 </title>
 
 
 <para>
@@ -55,3 +65,164 @@ fml 5.0 のアルファ版のアルファ版のアルファ版
 スれていく予定です。
 逆に 5.0 は本当の開発用のコード( fml-current )ということになります。
 </PARA>
+
+</sect1>
+
+
+<!-- ========================================================
+		section 2
+     ========================================================
+-->
+
+<sect1>
+
+<title> 開発ブランチの関係  </title>
+
+<programlisting>
+             -----------------------------> 5.0 (本プロジェクトの目標)
+                       ↑↓交流
+1.2  〜 4.0 ------------------------------> 4.0-current
+              |      |
+            4.0.1   4.0.2 .... (リリース / 4.0-stable バージョン)
+</programlisting>
+
+</sect1>
+
+
+<!-- ========================================================
+		section 3
+     ========================================================
+-->
+
+<sect1>
+
+<title> 構想（詳細）</title>
+
+<para>
+5.0 のアイデアのついて、ご意見・御感想をお待ちしております。
+端的にいえば 4.0 のここは受け継ぎたいが、あの機能は
+どうでもよいとか、あの機能はこう実装するべきだなどといった
+意見も募集しています。
+</para>
+
+
+<itemizedlist>
+
+   <listitem>
+	<para>
+	設定ファイルとメニュープログラムの負荷を少なくしたい
+	</para>
+   </listitem>
+
+   <listitem>
+	<para>
+	全部 perl module 形式 (要 5.004 以降)
+	</para>
+   </listitem>
+
+   <listitem>
+	<para>
+	CUI (makefml) インターフェイスおよび CGI インターフェイス
+	</para>
+	<para>
+	これは従来通りのもの。
+	ただしより統合化され、
+	よりメニューなどが書きやすいものであるように
+	(実装者が楽できる設定ファイル形式がのぞましい et.al.)
+	</para>
+   </listitem>
+
+   <listitem>
+	<para>
+	乖離層
+	</para>
+
+	<itemizedlist>
+
+	   <listitem>
+		<para>
+		バージョンアップを簡単にできるように
+		</para>
+	   </listitem>
+
+	   <listitem>
+		<para>
+		CPAN モジュール使いまくり
+		 (ただし、できるだけ直接使うより、
+		一層被せておくほうがよい)
+		</para>
+	   </listitem>
+
+	   <listitem>
+		<para>
+		3rd party 用ディレクトリ
+		</para>
+	   </listitem>
+
+	</itemizedlist>
+   </listitem>
+
+   <listitem>
+	<para>
+	統一化されたメンバーリストなどへのアクセスをできるだけ抽象化する。
+	</para>
+		
+		<itemizedlist>
+		
+		   <listitem>
+			<para>
+				ファイル (実装済み)
+			</para>
+		   </listitem>
+		
+		   <listitem>
+			<para>
+				/etc/group (実装済み)
+			</para>
+		   </listitem>
+		
+		   <listitem>
+			<para>
+				NIS (実装済み)
+			</para>
+		   </listitem>
+		
+		   <listitem>
+			<para>
+				SQL (プロトタイプは実装済み)
+			</para>
+		   </listitem>
+		
+		   <listitem>
+			<para>
+				LDAP
+			</para>
+		   </listitem>
+		
+	</itemizedlist>
+
+	<para>
+	実際には効率の問題もあり、
+	あらゆる抽象化は重たくなってしまう。
+	しかし少々重くなっても実装しよう。
+	</para>		
+   </listitem>
+
+   <listitem>
+	<para>
+	IPv4/IPv6 ready (実装済み)
+	</para>
+   </listitem>
+
+</itemizedlist>
+</sect1>
+
+
+<!-- =================================================================== -->
+<sect1>
+
+<title> アーキテクチャア・イメージ </title>
+
+<graphic entityref="architecture"></graphic>
+
+</sect1>

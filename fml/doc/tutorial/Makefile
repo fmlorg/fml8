@@ -1,3 +1,9 @@
+#
+# $FML$
+#
+
+TARGET_DIR = ../../../Documentation/ja/tutorial
+
 all: export
 
 html:
@@ -9,5 +15,5 @@ clean:
 	rm -fr fml-devel
 
 export: html
-	rsync -av fml-devel/@*/ ../../../Documentation/ja/tutorial/
-
+	rsync -a fml-devel/@*/ $(TARGET_DIR)/
+	rsync -a *.gif         $(TARGET_DIR)/

@@ -1,0 +1,28 @@
+<title>
+	本チュートリアル中における用語について
+</title>
+	
+<variablelist>
+
+   <varlistentry>
+	<term> % </term>
+	<listitem>
+	<para>	一般ユーザのプロンプト	</para>
+	</listitem>
+   </varlistentry>
+
+   <varlistentry>
+	<term> # </term>
+	<listitem>
+	<para>	ユーザ root のプロンプト </para>
+	</listitem>
+   </varlistentry>
+
+   <varlistentry>
+	<term> fml4 </term>
+	<listitem>
+	<para>	fml 4.0 シリーズのこと </para>
+	</listitem>
+   </varlistentry>
+
+</variablelist>
