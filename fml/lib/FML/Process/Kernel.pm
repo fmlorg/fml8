@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.109 2002/06/30 14:30:16 fukachan Exp $
+# $FML: Kernel.pm,v 1.110 2002/07/02 12:45:32 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -435,11 +435,13 @@ sub resolve_ml_specific_variables
 	    ($ml_name, $command) = split('::', $command);
 	}
 
-	if ($ml_name =~ /\@/) {
-	    $ml_addr = $ml_name;
-	}
-	else {
-	    $ml_addr = $ml_name . '@'. $default_domain;
+	if (defined $ml_name) {
+	    if ($ml_name =~ /\@/) {
+		$ml_addr = $ml_name;
+	    }
+	    else {
+		$ml_addr = $ml_name . '@'. $default_domain;
+	    }
 	}
     }
     else {
