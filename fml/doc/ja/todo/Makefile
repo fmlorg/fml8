@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.1.1.1 2001/05/19 05:14:57 fukachan Exp $
+# $FML: Makefile,v 1.2 2002/04/11 15:10:10 fukachan Exp $
 #
 
 # targets
@@ -25,7 +25,7 @@ _ARGV = SOURCE=$(SOURCE) BOOK=$(BOOK) BOOK_ID=$(BOOK_ID)
 _MAKE = $(MAKE) -f ../Makefile.template $(_ARGV)
 
 
-all: export STATUS.html
+all: export STATUS.html MEMO.html
 
 html:
 	@ $(_MAKE) html
@@ -42,3 +42,11 @@ scan:
 STATUS.html: STATUS.txt
 	perl ../../../utils/bin/text2html.pl STATUS.txt > STATUS.html.new
 	mv STATUS.html.new STATUS.html
+
+MEMO.html:  ../../../../regress/simulation/00_MEMO
+	(	echo "MEMO (from regress/simulation/00_MEMO)";\
+		echo ""; \
+		egrep '^\[TODO\]' ../../../../regress/simulation/00_MEMO;\
+	) | nkf -e |\
+	perl ../../../utils/bin/text2html.pl > MEMO.html.new
+	mv MEMO.html.new MEMO.html
