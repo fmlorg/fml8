@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.7 2003/10/16 14:06:57 fukachan Exp $
+# $FML: Utils.pm,v 1.8 2003/10/17 08:16:27 fukachan Exp $
 #
 
 package FML::Process::CGI::Utils;
@@ -179,7 +179,7 @@ sub cgi_var_cgi_mode
     my ($curproc) = @_;
     my $hints     = $curproc->hints();
 
-    return $hints->{ cgi_mode };
+    return( $hints->{ cgi_mode } || '' );
 }
 
 
