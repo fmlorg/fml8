@@ -264,6 +264,9 @@ sub _module_specific_options
     elsif ($myname eq 'fmldoc') {
 	return qw(ctladdr! debug! params=s -c=s n!);	
     }
+    elsif ($myname eq 'makefml') {
+	return qw(ctladdr! debug! params=s -c=s n!);	
+    }
     else {
 	croak "options for $myname are not defined.\n";
     }
@@ -279,6 +282,9 @@ sub _ml_name_is_required
     my ($myname) = @_;
 
     if ($myname eq 'fmldoc') {
+	return 0;
+    }
+    elsif ($myname eq 'makefml') {
 	return 0;
     }
     elsif ($myname eq 'fmlticket.cgi') {

@@ -67,6 +67,24 @@ sub run
     elsif ($myname eq 'fmldoc') {
 	exec 'perldoc', @$argv;
     }
+    elsif ($myname eq 'makefml') {
+	require FML::MemberControl;
+	my $obj = new FML::MemberControl;
+	my ($command, $ml_name, @options) =  @$argv;
+	if ($command eq 'add' || $command eq 'subscribe') {
+	    $curproc->lock();
+	    $obj->add($curproc, @options);
+	    $curproc->unlock();
+	}
+	elsif ($command eq 'bye' || $command eq 'unsubscribe') {
+	    $curproc->lock();
+	    $obj->delete($curproc, @options);
+	    $curproc->unlock();
+	}
+	else {
+	    croak("unknown");
+	}
+    }
     else {
 	my $command = $argv->[ 0 ] || croak("command not specified\n");
 	$curproc->lock();
@@ -92,6 +110,12 @@ sub _show_conf
     $config->dump_variables({ mode => $mode });
 }
 
+
+# dummy to avoid the error ( undefined function )
+sub AUTOLOAD
+{
+    ;
+}
 
 =head1 AUTHOR
 
