@@ -81,6 +81,8 @@ available_commands_for_privileged_user	=	subscribe
 					send
 					password
 					pass
+					dir
+					ls
 
 
 available_commands_for_admin_cgi	=	subscribe

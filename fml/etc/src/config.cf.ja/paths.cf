@@ -16,6 +16,8 @@ path_gunzip               = @GUNZIP@
 
 path_lha                  = @LHA@
 
+path_ls                   = @LS@
+
 path_ish                  = @ISH@
 
 path_bzip2                = @BZIP2@
