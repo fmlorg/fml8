@@ -1,8 +1,3 @@
-doc/components.ja.html
-doc/dirhier.ja.html
-doc/interfaces.ja.html
-doc/objects.ja.html
-
 etc/defaults/basic.cf.ja
 etc/defaults/command.cf.ja
 etc/defaults/dbms.cf.ja
