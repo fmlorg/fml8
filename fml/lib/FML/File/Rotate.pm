@@ -1,13 +1,13 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Rotate.pm,v 1.15 2003/08/23 15:33:16 fukachan Exp $
+# $FML: Rotate.pm,v 1.16 2003/08/24 14:09:25 fukachan Exp $
 #
 
-package File::Rotate;
+package FML::File::Rotate;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
@@ -17,11 +17,11 @@ END   {}
 
 =head1 NAME
 
-File::Rotate - file rotatation utilities
+FML::File::Rotate - file rotatation utilities
 
 =head1 SYNOPSIS
 
-    $obj = new File::Rotate {
+    $obj = new FML::File::Rotate {
 	max_size    => 10000,
 	num_backlog => 4,
     };
@@ -185,15 +185,18 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-File::Rotate first appeared in fml8 mailing list driver package.
+FML::File::Rotate first appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
+
+FML::File::Rotate (2001-2003) is renamed from File::Rotate class in
+2004. 
 
 =cut
 
