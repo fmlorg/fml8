@@ -1,56 +1,6 @@
 	ここまできたらファイル名も変える方が建設的だろうという話
 
-
-X-Sequence: fml-devel 205
-
-	基本系
-		recipients-役割
-		members-役割
-
-	さらに
-		ファイル-役割
-		例: 
-			passwd-admin
-			passwd-moderator
-			passwd-cgiadmin ?
-
-	以下同様に『役割』を新設するごとに
-
-		members-役割
-		recipient-役割
-
-	を使う、でも recipient-* はないことが多いと:)
-	＃ 理論的には使い分けても良い（が、どういう場合があるのかはよ
-	＃ くわからないけど）。
-
-
-例 1. ＭＬのメンバー／受信者リスト
-
-	primary_recipient_maps	=	recipients
-
-	# 互換性のため actives をいれておく
-	recipient_maps	=	recipients
-				actives
-
-	[TODO] warning 出るところがあるので、なんとかせな
-
-例 2. リモート管理者のリスト
-
-	recipients-admin
-	members-admin
- 
-例 3.	モデレータのリスト
-
-	recipients-moderator
-	members-moderator
-
-
-例 4.	リモート管理者のパスワード
-
-	etc/passwd-admin
-
-	注意: 4.0 では etc/passwd
-
+http://www.fml.org/software/fml-devel/Documentation/ja/tutorial/filename.html
 
 -----
-$FML$
+$FML: 01_RFC_FILENAME.txt,v 1.2 2002/08/21 15:30:25 fukachan Exp $
