@@ -12,6 +12,93 @@
 	fml-devel-20040313 では、変数命名のルールが大きく変わりました。
 	気をつけてください。
 
+2004/03/28
+
+   スレッド操作の再構成
+
+   Mail::Message 
+	implement methods to detect the end of thread:
+	has_closing_phrase()
+	set_closing_phrase_rules($rules)
+	get_closing_phrase_rules()
+	
+	implement one_line_summary($params) and summary($params) to return
+	summarized content.
+	
+   Mail::Message::String 
+	implement is_citation(), is_signature().
+	
+   Mail::Message::MH 
+	check if the sequence is positive value.
+	
+   Mail::Message::Thread 
+	implement get_thread_data(), get_thread_member_as_array_ref().
+	
+	define new db::thread_status article_status
+	
+	implement new methods::set_thread_status(), get_thread_status(),
+	set_article_status() and get_article_status().
+
+   Mail::Message::DB 
+	implement get_thread_data() which return thread data around the
+	specified key.
+	
+	define new db::thread_status article_status
+	
+	implement new methods::set_thread_status(), get_thread_status(),
+	set_article_status() and get_article_status().
+	
+	bug fix handling of range expanded by Mail::Message::MH module.
+	
+   Mail::Message::{DB,Thread} 
+	define {set,get}_article_summary() and article_summary db to handle
+	article summary easily.
+	
+   FML::Process::Distribute 
+	move details of thread manipulation to FML::Article::Thread as could
+	as possible.
+	
+   FML::Header::Subject 
+   Mail::Message::Subject 
+	fix usage of Mail::Message::Language::Japanese::Subject.
+	
+   FML::Article::Thread 
+	re-implemented for further plan to purge Mail::ThreadTrack.
+	
+   FML::Command::Admin::thread 
+	re-implemented. currently FML::Article::Thread based one.
+
+2004/03/24
+
+   Mail::Message::DB IMPLEMENTATION TODO ToHTML 
+	clean up campaign around thread function.
+	rename function name:
+	o thread_summary        -> get_thread_summary
+	o tohtml_thread_summary -> get_tohtml_thread_summary
+	o msg_time              -> get_time_from_header
+
+2004/03/23
+
+   etc/command_line_options 
+   FML::Command::Admin::spool 
+   FML::Process::Utils 
+	try to allow -O key=value command line options. Internally each
+	function uses cui_command_specific_options() to get the command
+	specific options.
+
+   etc/command_line_options 
+   FML::Command::SendFile 
+   FML::Command::Admin::get 
+   FML::Process::Kernel Utils 
+	allow CUI(fml,makefml) to send messages.
+	this function disabled by default.
+	fml and makefml can use --allow-send-message --send-to=ADDRESS
+	option for it.
+	
+   FML::Command::DirUtils 
+	modified for "--allow-send-message --send-to=ADDRESS" option.
+
+
 2004/03/20
 
    FML::Merge 
@@ -6539,4 +6626,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.190 2004/03/18 02:09:10 fukachan Exp $
+$FML: CHANGES.txt,v 1.191 2004/03/21 02:18:14 fukachan Exp $
