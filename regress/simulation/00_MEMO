@@ -8,7 +8,12 @@
 	XXX
 
 
-○ off/on の問題
+○	../scheduler/HOW_TO_MAKE.ja.txt
+
+	もう install.sh じゃないんで、ていせい
+
+
+○	off/on の問題
 
 	on は primary_recipient_map にだけ作用するが、
 	off は recipient_maps すべてに作用する(マッチする全ての map を
@@ -18,14 +23,16 @@
 	削除する。	 
 
 
-○ reply-to: special hack
+○	reply-to: special hack
 
-   if (	To: ml1, ml2 ) {
-	set Reply-To: ml1, ml2
-   }
+	   if (	To: ml1, ml2 ) {
+		set Reply-To: ml1, ml2
+	   }
 
 
 ○	libexec/relocated , Process/Relocated
+
+	ん？なに、するんだ…
 
 
 ○	libexec/auto-newml
@@ -269,7 +276,7 @@
 
 ○ 	check the address looks safe pattern.
 
-create FML::Utils ?
+create FML::Utils ? ん、これ、不要？
 
     # check the address looks safe pattern.
     if (1) {
@@ -344,4 +351,4 @@ sub compare_euc_string
 
 
 ----------
-$FML: 00_MEMO,v 1.61 2003/01/30 03:33:54 fukachan Exp $
+$FML: 00_MEMO,v 1.62 2003/02/01 13:59:07 fukachan Exp $
