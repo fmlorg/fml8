@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: HeaderRewrite.pm,v 1.4 2001/11/03 07:42:08 fukachan Exp $
+# $FML: HeaderRewrite.pm,v 1.5 2001/11/03 11:58:45 fukachan Exp $
 #
 
 package Mail::ThreadTrack::HeaderRewrite;
@@ -91,24 +91,26 @@ sub prepare_history_info
     # prepare hash table tied to db_dir/*db's
     my $rh = $self->{ _hash_table };
 
-    my $buf    = '';
-    my (@aid)  = split(/\s+/, $rh->{ _articles  }->{ $thread_id });
-    my $sender = $rh->{ _sender }->{ $aid[0] };
-    my $when   = $rh->{ _date }->{ $aid[0] };
+    if (defined $rh->{ _articles  }->{ $thread_id }) {
+	my $buf    = '';
+	my (@aid)  = split(/\s+/, $rh->{ _articles  }->{ $thread_id });
+	my $sender = $rh->{ _sender }->{ $aid[0] };
+	my $when   = $rh->{ _date }->{ $aid[0] };
 
-    # clean up
-    $sender =~ s/[\s\n]*$//;
-    $when   =~ s/[\s\n]*$//;
+	# clean up
+	$sender =~ s/[\s\n]*$//;
+	$when   =~ s/[\s\n]*$//;
 
-    use Mail::Message::Date;
-    $when = Mail::Message::Date->new($when)->mail_header_style();
-    
-    $buf .= "\t\n";
-    $buf .= "\tthis thread is opended at article $aid[0]\n";
-    $buf .= "\tby $sender\n";
-    $buf .= "\ton $when\n";
-    $buf .= "\tarticle references: @aid\n";
-    $self->{ _status_history } = $buf;
+	use Mail::Message::Date;
+	$when = Mail::Message::Date->new($when)->mail_header_style();
+	
+	$buf .= "\t\n";
+	$buf .= "\tthis thread is opended at article $aid[0]\n";
+	$buf .= "\tby $sender\n";
+	$buf .= "\ton $when\n";
+	$buf .= "\tarticle references: @aid\n";
+	$self->{ _status_history } = $buf;
+    }
 }
 
 
