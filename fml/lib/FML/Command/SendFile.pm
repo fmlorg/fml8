@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SendFile.pm,v 1.9 2002/01/30 15:32:24 fukachan Exp $
+# $FML: SendFile.pm,v 1.10 2002/02/11 10:59:36 fukachan Exp $
 #
 
 package FML::Command::SendFile;
@@ -12,8 +12,6 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 use File::Spec;
-
-use ErrorStatus;
 use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
