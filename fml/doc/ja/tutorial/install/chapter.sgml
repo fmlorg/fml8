@@ -1,15 +1,18 @@
 <!--
-	$FML: chapter.sgml,v 1.8 2002/02/02 07:58:45 fukachan Exp $
+	$FML: chapter.sgml,v 1.9 2002/02/03 10:33:50 fukachan Exp $
 -->
 
 <chapter id="install">
-
-	<title> インストール </title>
+	<title>
+	インストール
+	</title>
 
 
 <!-- ====================================================== --> 
 <sect1 id="install.configure">
-	<title> 概要 </title>
+	<title>
+	概要
+	</title>
 
 
 <para>
@@ -111,7 +114,9 @@ creating fml/bin/makefml
 
 <!-- ====================================================== --> 
 <sect1>
-	<title> 各ディレクトリの役割 </title>
+	<title>
+	各ディレクトリの役割
+	</title>
 
 <para>
 それぞれのディレクトリの役割は次の通りです。
@@ -120,7 +125,10 @@ creating fml/bin/makefml
 
 <para>
   <table>
-    	<title> ディレクトリの構造 </title>
+    	<title>
+	ディレクトリの構造
+	</title>
+
     <tgroup cols=2>
 
       <thead>
@@ -196,7 +204,9 @@ creating fml/bin/makefml
 
 <!-- ====================================================== --> 
 <sect1 id="upgrade">
-	<title> アップグレード </title>
+	<title>
+	アップグレード
+	</title>
 
 <para>
 単に、もう一度
@@ -212,8 +222,11 @@ creating fml/bin/makefml
 </para>
 </sect1>
 
-<sect1>
-	<title> ダウングレード </title>
+
+<sect1 id="downgrade">
+	<title>
+	ダウングレード
+	</title>
 
 <para>
 ソースのインストールし直しなどは必要ありません。
