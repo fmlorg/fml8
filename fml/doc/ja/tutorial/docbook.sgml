@@ -1,0 +1,27 @@
+<title> SGML の書き方 </title>
+
+<para>
+SGML の DTD は
+
+	<ulink url="http://www.oasis-open.org/docbook/">
+	DOCBOOK
+	</ulink>
+
+をごくごく普通に使います。
+</para>
+
+<para>
+SGML の書き方については
+
+	<ulink url="http://www.freebsd.org/tutorials/docproj-primer/index.html">
+	FreeBSD の初心者向けチュートリアル
+	</ulink>
+
+などを参照して下さい。一覧は
+	
+	<ulink url="http://www.oasis-open.org/docbook/documentation/reference/html/docbook.html">
+	DOCBOOK definitive guide (O'reilly)
+	</ulink>
+
+のオンライン版を見ると良いでしょう。
+</para>
