@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: INSTALL.sh,v 1.34 2001/11/18 02:39:33 fukachan Exp $
+# $FML: INSTALL.sh,v 1.35 2001/11/18 04:50:58 fukachan Exp $
 #
 
 # Run this from the top-level fml source directory.
@@ -36,6 +36,10 @@ _mkdir () {
 
 get_fml_version
 default_config_dir=$config_dir/defaults/$fml_version
+
+# check whether $ml_spool_dir exists or not.
+need_fix_ml_spool_dir=0
+test -d $ml_spool_dir || need_fix_ml_spool_dir=1
 
 for dir in 	$config_dir \
 		$config_dir/defaults \
@@ -90,10 +94,8 @@ PROGRAMS="$PROGRAMS fmlhtmlify"
 if [ ! -f $libexec_dir/loader ];then
 
    echo install libexec/loader
-   cp -pr fml/libexec/loader    $libexec_dir/
-
-   echo install libexec/Standalone.pm
-   cp -pr fml/libexec/Standalone.pm $libexec_dir/
+   cp -p fml/libexec/loader $libexec_dir/loader.new.$$
+   mv $libexec_dir/loader.new.$$ $libexec_dir/loader
 
    (
 	cd $libexec_dir/
@@ -127,9 +129,13 @@ id -un $owner 2>/dev/null || (
 	echo warning: user $owner is not defined
 )
 
-if [ -d $ml_spool_dir -a -w $ml_spool_dir ]; then
+if [ need_fix_ml_spool_dir = 1 ]; then
+   if [ -d $ml_spool_dir -a -w $ml_spool_dir ]; then
 	echo set up the owner of $ml_spool_dir to be $owner
 	chown -R $owner $ml_spool_dir
+   fi
+else
+  echo "info: $ml_spool_dir exists. We do not touch it.";
 fi
 
 exit 0
