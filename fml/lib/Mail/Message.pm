@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.51 2002/04/13 14:43:09 fukachan Exp $
+# $FML: Message.pm,v 1.52 2002/04/19 05:21:58 fukachan Exp $
 #
 
 package Mail::Message;
@@ -516,7 +516,10 @@ sub _parse
     }
 
     # read the message (mail body) from the incoming mail
-    my $body_size = length($$InComingMessage);
+    my $body_size = 0;
+    if (defined($InComingMessage)) {
+	$body_size = length($$InComingMessage);
+    }
 
     if ($debug > 2) {
 	print STDERR "  (debug) header_size: $header_size\n";
