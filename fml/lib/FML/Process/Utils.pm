@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.111 2004/04/02 11:51:32 fukachan Exp $
+# $FML: Utils.pm,v 1.112 2004/04/10 12:41:30 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -1930,6 +1930,52 @@ sub command_specific_recipient
     my $sender    = $cred->sender() || '';
 
     return( $rcpt || $sender || '' );
+}
+
+
+=head1 LOG ROTATION
+
+=head2 log_rorate()
+
+rotate log files.
+
+=cut
+
+
+# Descriptions: rotate log files.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub log_rorate
+{
+    my ($curproc) = @_;
+    my $config    = $curproc->config();
+    my $log       = undef;
+
+    if ($config->yes('use_log_rotate')) {
+	eval q{
+	    use FML::File::Rotate;
+	    $log = new FML::File::Rotate $curproc;
+	};
+	my $r = $@;
+
+	if (defined $log) {
+	    my $log_file = $config->{ log_file };
+	    my $size     = $config->{ log_rotate_size };
+	    my $num      = $config->{ log_rotate_num_backlog };
+
+	    $log->set_max_size($size);
+	    $log->set_num_backlog($num);
+	    if ($log->is_time_to_rotate($log_file)) {
+		$log->rotate($log_file);
+		$curproc->log("log rotated.");
+	    }
+	}
+	else {
+	    $curproc->logerror("cannot attach log rotate object");
+	    $curproc->logerror($r);
+	}
+    }
 }
 
 
