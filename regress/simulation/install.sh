@@ -1,13 +1,13 @@
 #!/bin/sh
 #
-# $FML: install.sh,v 1.5 2001/11/12 14:38:00 fukachan Exp $
+# $FML: install.sh,v 1.6 2001/11/17 15:15:55 fukachan Exp $
 #
 
-(cd ../..; ./configure --sysconfdir=/etc/fml --with-fml-owner=fukachan )
+(cd ../..; ./configure --sysconfdir=/etc --with-fml-owner=fukachan )
 
 # config.cf
 sudo -v
-echo update /var/spool/ml/elena/config.cf
+echo updating /var/spool/ml/elena/config.cf
 cp /var/spool/ml/elena/config.cf /var/spool/ml/elena/config.cf.bak
 cp config.cf /var/spool/ml/elena/config.cf
 
