@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML$
+# $FML: Subject.pm,v 1.3 2001/04/03 09:45:48 fukachan Exp $
 #
 
 
@@ -50,7 +50,8 @@ my $CUT_OFF_RERERE_HOOK    = '';
 # apply patch from OGAWA Kunihiko <kuni@edit.ne.jp> 
 #            fml-support:7626 7653 07666
 #            Re: Re2:   Re[2]:     Re(2):     Re^2:    Re*2:
-my $pattern  = 'Re:|Re\d+:|Re\[\d+\]:|Re\(\d+\):|Re\^\d+:|Re\*\d+:';
+# i-mode ? (PR fml-help: 00157 by OGAWA Kunihiko)
+my $pattern  = 'Re:|Re\d+:|Re\[\d+\]:|Re\(\d+\):|Re\^\d+:|Re\*\d+:|Re>';
    $pattern .= '|( ÷øÆ| ÷|£“£≈|£“£Â)(\s*:|°ß)';
 
 
