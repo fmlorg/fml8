@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Deadline.pm,v 1.1 2003/11/22 05:41:52 fukachan Exp $
+# $FML: DB.pm,v 1.1 2003/11/23 04:07:02 fukachan Exp $
 #
 
 package FML::User::DB;
@@ -84,6 +84,9 @@ sub add
 	my $obj = new IO::Adapter $map;
 	$obj->open();
 	$obj->touch();
+	if ($self->find($class, $key)) { # avoid duplication.
+	    $obj->delete($key);
+	}
 	$obj->add($key, [ $value ]);
 	$obj->close();
     }
