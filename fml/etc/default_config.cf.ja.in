@@ -212,8 +212,9 @@ primary_admin_member_map	=	file:$ml_home_dir/members-admin
 #     Examples:
 admin_member_maps		=	$primary_admin_member_map
 
+primary_admin_member_password_map	=	file:$ml_home_dir/etc/passwd
 
-admin_member_passwd_maps	=	file:$ml_home_dir/etc/passwd
+admin_member_password_maps	=	$primary_admin_member_password_map
 
 
 =head2 アカウントベースのアクセス制限をかける
