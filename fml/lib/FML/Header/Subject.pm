@@ -36,14 +36,24 @@ sub rewrite_subject_tag
     my $subject = $header->get('subject');
 
     # de-tag
-    my $retag   = _regexp_compile($tag);
-    $subject  =~ s/$retag//g;
-    $subject  =~ s/^\s*//;
+    $subject = _delete_subject_tag( $subject, $tag );
 
     # add the updated tag
     $tag = sprintf($tag, $ml_name, $args->{ id });
     my $new_subject = $tag." ".$subject;
     $header->replace('subject', $new_subject);
+}
+
+
+sub _delete_subject_tag
+{
+    my ($subject, $tag) = @_;
+    my $retag = _regexp_compile($tag);
+
+    $subject  =~ s/$retag//g;
+    $subject  =~ s/^\s*//;
+
+    return $subject;
 }
 
 
