@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $FML: loader.in,v 1.4 2001/11/25 14:14:08 fukachan Exp $
+# $FML: loader.in,v 1.5 2001/11/27 04:00:20 fukachan Exp $
 #
 
 eval 'exec @PERL@ -S $0 ${1+"$@"}'
@@ -17,12 +17,13 @@ use strict;
 $ENV{'PATH'} = '/bin:/usr/bin';
 delete @ENV{'IFS', 'CDPATH', 'ENV', 'BASH_ENV'};
 
+# main routine to boot off
 {
     my $prefix      = "@prefix@";
     my $exec_prefix = "@exec_prefix@";
     my $main_cf     = "@sysconfdir@/fml/main.cf";
 
-    eval q{ &Bootstrap($main_cf);};
+    eval q{ Bootstrap($main_cf);};
 
     # not use Carp.pm to be quiet if needed 
     if ($@) { print STDERR "Error: ", $@, "\n"; exit 1;}
@@ -43,7 +44,8 @@ loader C<[-c main.cf]> [program specific options]
 
 Perl modules C<fml> uses are dependent on fml version.
 C<loader> resolves fml version dependence by 
-@sysconfdir@/main.cf, set up proper @INC and load C<FML::Process::Switch>.
+@sysconfdir@/main.cf, 
+set up proper @INC and load C<FML::Process::Switch>.
 
 See C<FML::Process::Switch> for boot strap phase 2 of fml process.
 
@@ -78,17 +80,16 @@ sub Bootstrap
 
     # 1. main.cf exists and I can open it?
     unless (-f $main_cf_default) {
-	_simple_croak("cannot find ${main_cf_default}");
+	__CROAK("cannot find $main_cf_default");
     }
     my $fh = new FileHandle $main_cf_default;
     unless (defined $fh) {
-	_simple_croak("cannot open ${main_cf_default}");
+	__CROAK("cannot open $main_cf_default");
     }
 
     # 1.1 parse command line options (preliminary).
     #     we check @ARGV again after by getopt().
     my $main_cf_file = $main_cf_default; # main.cf by default 
-    my $params       = {};
     for (my $i = 0; $i <= $#ARGV; $i++) {
 	# -c main.cf
 	if ($ARGV[ $i ] =~ /^\-c$/) {
@@ -97,14 +98,14 @@ sub Bootstrap
     }
 
     # 2.1 o.k. try to load main.cf (1st pass) to resolve @INC
-    my $main_cf = _simple_load_cf($main_cf_file, $params);
+    my $main_cf = loader_read_main_cf($main_cf_file);
 
     # 2.1.1 set up @INC to load FML::Process::Switch
     if (defined $main_cf->{ lib_dir }) {
 	push(@INC, split(/\s+/, $main_cf->{ lib_dir }));
     }
     else {
-	_simple_croak("\$lib_dir not defined in main.cf");
+	__CROAK("\$lib_dir not defined in main.cf");
     }
 
     # 2.2 load version dependent Bootstrap2(), 
@@ -116,28 +117,29 @@ sub Bootstrap
 	eval q{ &Bootstrap2($main_cf_file, $main_cf);};
 	if ($@) {
 	    my $reason = $@;
-	    if ($ENV{'debug'} || defined( $main_cf->{ debug } )) {
-		_simple_croak("fail to execute Bootstrap2($main_cf_file)\n$@\n");
+	    if (defined($main_cf->{ debug })) {
+		__CROAK("fail to execute Bootstrap2($main_cf_file)", $reason);
 	    }
 	    else {
 		$reason =~ s/[\n\s]*\s+at\s+.*$//m;
-		print STDERR "Error: ", $reason, "\n";
-		exit(1);
+		__CROAK($reason, $reason);
 	    }
 	}
     }
     else {
-	_simple_croak("cannot load FML::Process::Switch\n");
+	my $reason = $@;
+	$reason =~ s/[\n\s]*\s+at\s+.*$//m;
+	__CROAK("cannot load FML::Process::Switch", $reason);
     }
 }
 
 
-=head2 _simple_load_cf(cf_file, params)
+=head2 loader_read_main_cf(cf_file)
 
 load "key = value" style configuration file and build a hash.
 return HASH REFERENCE.
 
-   my $main_cf = _simple_load_cf($main_cf_file, $params);
+   my $main_cf = loader_read_main_cf($main_cf_file, $params);
 
 where $param is optional.
 
@@ -154,10 +156,10 @@ where $param is optional.
 #               $params is 'key1=value1 key2=value2' syntax.
 # Side Effects: $config (hash reference) is allocated on memory here.
 # Return Value: hash reference to configuration parameters
-sub _simple_load_cf
+sub loader_read_main_cf
 {
-    my ($file, $params) = @_;
-    my $config = $params ? _simple_parse_params($params) : {};
+    my ($file) = @_;
+    my $config = {};
 
     use FileHandle;
     my $fh = new FileHandle $file;
@@ -180,10 +182,10 @@ sub _simple_load_cf
 	$fh->close;
     }
     else {
-	_simple_croak("Error: cannot open $file");
+	__CROAK("Error: cannot open $file");
     }
 
-    _simple_expand_variables( $config );
+    loader_expand_variables( $config );
     return $config;
 }
 
@@ -192,7 +194,7 @@ sub _simple_load_cf
 #    Arguments: $ref_to_config
 # Side Effects: rewrite the given $config 
 # Return Value: none
-sub _simple_expand_variables
+sub loader_expand_variables
 {
     my ($config) = @_;
     my (@order) = keys %$config;
@@ -202,7 +204,7 @@ sub _simple_expand_variables
     for my $x ( @order ) {
 	if ((defined $x) && defined ($config->{ $x })) {
 	    if ($config->{ $x } =~ /\$$x/) {
-		_simple_croak("loop1: definition of $x is recursive\n");
+		__CROAK("loop1: definition of $x is recursive");
 	    }
 	}
     }
@@ -232,35 +234,27 @@ sub _simple_expand_variables
 	    last EXPANSION_LOOP if $org eq $config->{ $x };
 
 	    if ($config->{ $x } =~ /\$$x/) {
-		_simple_croak("loop2: definition of $x is recursive\n");
+		__CROAK("loop2: definition of $x is recursive");
 	    }
         }
 
 	if ($max >= 16) {
-	    _simple_croak("variable expansion of $x causes infinite loop\n");
+	    __CROAK("variable expansion of $x causes infinite loop");
 	} 
     }
 }
 
 
-sub _simple_parse_params
+# Descriptions: print error reason
+#    Arguments: STR($reason) STR($detail)
+# Side Effects: print out error reason and exit here
+# Return Value: none
+sub __CROAK
 {
-    my ($params) = @_;
-    my %config = ();
+    my ($reason, $detail) = @_;
 
-    for my $x (split(/\s+/, $params)) {
-	my ($key, $value) = split(/=/, $x);
-	$config{ $key } = $value;
-    }
-
-    \%config;
-}
-
-
-sub _simple_croak
-{
-    my ($reason) = @_;
-    print STDERR "fml loader error: $reason";
+    print STDERR "fml loader error: $reason\n";
+    print STDERR "  reason(detail): $detail\n" if defined $detail;
     exit(1);
 }
 
