@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.54 2002/04/26 00:26:23 fukachan Exp $
+# $FML: Message.pm,v 1.55 2002/04/27 05:21:41 fukachan Exp $
 #
 
 package Mail::Message;
@@ -494,30 +494,33 @@ sub parse
 
 # Descriptions: cut off content into header and body
 #               and prepare buffer for further parsing
-#    Arguments: OBJ($self) HASH_REF($args)
+#    Arguments: OBJ($self) HANDLE($fd) HASH_REF($result)
 # Side Effects: fill in $inComingMessage on memory
 # Return Value: none
 sub _parse
 {
     my ($self, $fd, $result) = @_;
-    my ($header, $header_size, $p, $buf);
+    my ($header, $header_size, $p, $buf, $data);
     my $total_buffer_size;
 
-    while ($p = sysread($fd, $_, 1024)) {
+  DATA:
+    while ($p = sysread($fd, $data, 1024)) {
 	$total_buffer_size += $p;
-	$buf .= $_;
+	$buf               .= $data;
+
 	if (($p = index($buf, "\n\n", 0)) > 0) {
 	    $header      = substr($buf, 0, $p + 1);
 	    $header_size = $p + 1;
 	    $$InComingMessage = substr($buf, $p + 2);
-	    last;
+	    last DATA;
 	}
     }
 
     # extract mail body and put it to $$InComingMessage
-    while ($p = sysread($fd, $_, 1024)) {
+  DATA:
+    while ($p = sysread($fd, $data, 1024)) {
 	$total_buffer_size += $p;
-	$$InComingMessage   .= $_;
+	$$InComingMessage  .= $data;
     }
 
     # read the message (mail body) from the incoming mail
@@ -535,6 +538,7 @@ sub _parse
     $result->{ header }      = $header;
     $result->{ header_size } = $header_size;
     $result->{ body_size }   = $body_size;
+    $result->{ total_read_size } = $total_buffer_size;
 }
 
 
@@ -723,10 +727,11 @@ sub _header_mime_boundary
 sub _header_data_type
 {
     my ($self, $header) = @_;
+    my $ctype = $header->get('content-type');
 
-    if (defined $header->get('content-type')) {
+    if (defined($ctype) && $ctype) {
 	my ($type) = split(/;/, $header->get('content-type'));
-	if (defined $type) {
+	if (defined($type) && $type) {
 	    $type =~ s/\s*//g;
 	    $type =~ tr/A-Z/a-z/;
 	    return $type;
@@ -766,7 +771,7 @@ sub find
 {
     my ($self, $args) = @_;
 
-    if (defined $args->{ data_type }) {
+    if (defined $args->{ data_type } && $args->{ data_type }) {
 	my $type = $args->{ data_type };
 	my $mp   = $self;
 	for ( ; $mp; $mp = $mp->{ next }) {
@@ -777,7 +782,8 @@ sub find
 	    }
 	}
     }
-    elsif (defined $args->{ data_type_regexp }) {
+    elsif (defined $args->{ data_type_regexp } && 
+	   $args->{ data_type_regexp }) {
 	my $regexp = $args->{ data_type_regexp };
 	my $mp     = $self;
 	for ( ; $mp; $mp = $mp->{ next }) {
@@ -790,7 +796,7 @@ sub find
 	}
     }
 
-    undef;
+    return undef;
 }
 
 
@@ -819,16 +825,17 @@ sub __head_message
     my ($self) = @_;
     my $m = $self;
 
+  LINK:
     while (1) {
 	if (defined $m->{ prev }) {
 	    $m = $m->{ prev };
 	}
 	else {
-	    last;
+	    last LINK;
 	}
     }
 
-    $m;
+    return $m;
 }
 
 
@@ -842,16 +849,17 @@ sub __last_message
     my ($self) = @_;
     my $m = $self;
 
+  LINK:
     while (1) {
 	if (defined $m->{ next }) {
 	    $m = $m->{ next };
 	}
 	else {
-	    last;
+	    last LINK;
 	}
     }
 
-    $m;
+    return $m;
 }
 
 
@@ -940,11 +948,13 @@ sub set_print_mode
 {
     my ($self, $mode) = @_;
 
+    if (defined($mode) && $mode) {
     if ($mode eq 'raw') {
 	$self->{ _print_mode } = 'raw';
     }
     elsif ($mode eq 'smtp') {
 	$self->{ _print_mode } = 'smtp';
+    }
     }
 }
 
