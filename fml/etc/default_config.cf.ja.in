@@ -618,6 +618,8 @@ html_archive_dir	= $fml_owner_home_dir/public_html/fml/mlarchive/$ml_domain/$ml_
 
 =head1	コマンドの定義
 
+=head2	コマンドの定義
+
 #
 # 注意: まだまだ考え中といえます
 #
@@ -626,7 +628,15 @@ html_archive_dir	= $fml_owner_home_dir/public_html/fml/mlarchive/$ml_domain/$ml_
 #      History: hard coded in fml (< 4.0)
 #        Value: string without spaces
 #     Examples: >>>
-command_prompot			=	>>>
+command_prompt			=	>>>
+
+
+# Descriptions: subscribe コマンドで confirmation 認証(コールバック認証)
+#               を行なうか否か？
+#      History:
+#        Value:  confirmation / ""
+#     Examples:
+subscribe_command_auth_type	=	confirmation
 
 
 # Descriptions: chaddr コマンドで confirmation 認証(コールバック認証)
@@ -634,7 +644,7 @@ command_prompot			=	>>>
 #      History:
 #        Value:  confirmation / ""
 #     Examples:
-command_chaddr_type		=	confirmation
+chaddr_command_auth_type	=	confirmation
 
 
 # Descriptions: unsubscribe コマンドで confirmation 認証(コールバック認証)
@@ -642,7 +652,7 @@ command_chaddr_type		=	confirmation
 #      History:
 #        Value:  confirmation / ""
 #     Examples:
-command_unsubscribe_type	=	confirmation
+unsubscribe_command_auth_type	=	confirmation
 
 
 
@@ -652,7 +662,7 @@ command_unsubscribe_type	=	confirmation
 #               変更を加える
 #        Value:
 #     Examples:
-commands_for_user	=	help
+commands_for_user	=		help
 					get
 					mget
 					get
@@ -674,7 +684,7 @@ commands_for_user	=	help
 					summary
 
 
-commands_for_stranger	=	guide
+commands_for_stranger	=		guide
 					info
 					add
 					subscribe
@@ -705,13 +715,13 @@ commands_for_privileged_user	=	subscribe
 					list
 
 
-commands_for_admin_cgi	=	subscribe
-						unsubscribe
-						addadmin
-						byeadmin
-						log
-						newml
-						rmml
+commands_for_admin_cgi	=		subscribe
+					unsubscribe
+					addadmin
+					byeadmin
+					log
+					newml
+					rmml
 
 
 # Descriptions: confirmation の返事を表す特別なコマンド
@@ -736,11 +746,21 @@ newml_command_template_files 	=	config.cf
 
 
 
+=head2	CGI
+
+
 # Descriptions: information をおくディレクトリ (ＭＬごと)
 #      History: none
 #        Value: directory
 #     Examples: ~fml/public_html/fml/listinfo/fml.org/elena
-listinfo_dir	= $fml_owner_home_dir/public_html/fml/listinfo/$ml_domain/$ml_name
+listinfo_base_dir	= $fml_owner_home_dir/public_html/fml/listinfo
+
+
+# Descriptions: information をおくディレクトリ (ＭＬごと)
+#      History: none
+#        Value: directory
+#     Examples: ~fml/public_html/fml/listinfo/fml.org/elena
+listinfo_dir	= $listinfo_base_dir/$ml_domain/$ml_name
 
 =head1	スレッド追跡システム
 
