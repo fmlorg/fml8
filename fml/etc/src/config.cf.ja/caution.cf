@@ -7,6 +7,24 @@
 #
 #	message		subject やメール本文の文章の方を指す
 #
+# [ルール]
+#		$ACTION_$CONDITION 形式
+#
+#		permit_xxx	条件 xxx にマッチすれば許可、スイッチ処理終
+#				条件 xxx にマッチしない場合は次へ続く
+#
+#		reject_xxx	条件 xxx にマッチしたら拒否、スイッチ処理終
+#				条件 xxx にマッチしない場合は次へ続く
+#
+#		check_xxx	条件 xxx にマッチして permit/reject が
+#				指示されるので、それによって許可/拒否 
+#				そして、スイッチ処理は終り。
+#				条件 xxx にマッチしない場合は次へ続く
+#
+#		permit		permit_all のこと、スイッチ処理終
+#
+#		reject		reject_all のこと、スイッチ処理終
+#
 # [プレフィックス]
 #
 #	fml_		fml システム共通＆＆全ドメイン共通
