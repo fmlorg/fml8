@@ -13,9 +13,136 @@
 	気をつけてください。
 
 
+2004/05/28
+
+   FML::Article 
+	When we fail to create article file, we try to save the original
+	message at least.
+
+2004/05/25
+
+   メールキューとエラーリカバリの拡張
+
+   loader
+	define global variable $ERROR_EXIT_CODE for emergency handling.
+	run exit($ERROR_EXIT_CODE) if error.
+	
+   FML::Process::Kernel 
+	implement exit_as_tempfail()
+	
+	firstly queue in. Secondarly parse it after writing of the queue is
+	verified.
+	
+	implement clean_up_incoming_queue(), which is run at the last of
+	process.
+	
+   FML::Process::QueueManager 
+	modify log message format a little.
+	$q->valid() changed to $q->valid_active_queue().
+	
+   FML::Process::Flow 
+	call $process->clean_up_incoming_queue();
+	
+   FML::Process::Distribute 
+	exit(EX_TEMPFAIL) when we cannot update article sequence.
+	
+	if setrunnable() for the current article queue failed,
+	try to deliver it on the fly anyway.
+	
+	new FML::Filter $curproc;
+	bug fix my() usage.
+	change log message around queue id.
+	
+   FML::Process::State 
+	fix comments (FNF).
+	
+	add methods:
+	filter_state_set_error()
+	filter_state_get_error()
+	mail_queue_set_incoming_queue()
+	mail_queue_get_incoming_queue()
+	
+   FML::Article::Sequence 
+	more strict write error tracking
+	
+   FML::Article 
+	more strict write error handling.
+	
+	
+   FML::Cache::Ring 
+	import data from file directly.
+	Actually, link(2) $src to cache file.
+	
+   Mail::Delivery::Queue 
+	check write error more strictly.
+	
+	define incoming queue.
+	implement new method::incoming_file_path(), incoming_dir_path().
+	
+	not set transport (not touch transport info file) by default.
+	
+	more rigid write error tracking.
+	
+	rename valid() -> valid_active_queue() to clarify the role.
+	
+   Mail::Message 
+	\*HANDLE -> *HANDLE{IO}.
+	imlement error*().
+	write error track.
+	
+   IO::Adapter::File 
+	more strict write error tracking.
+	sequence_increment verifies if the value is writtern.
+	
+   IO::Adapter::AtomicFile 
+	check temporary file is non-zero.
+
+   variables
+	define variables around article_spam_filter and article_virus_filter.
+	
+   FML::Filter 
+	preliminary external spam::virus checker support.
+	new() takes $curproc as an argv.
+	use filter_state_set_error() to save determined action for later use.
+
+   FML::Process::Command 
+	new FML::Filter $curproc;
+	
 2004/05/22
 
    HOOKの名前を整理整頓する。
+
+   variables
+	error_analyzer_day_limit -> error_mail_analyzer_day_limit
+	error_analyzer_cache_dir -> error_mail_analyzer_cache_dir
+	error_analyzer_cache_type -> error_mail_analyzer_cache_type
+	error_analyzer_cache_mode -> error_mail_analyzer_cache_mode
+	error_analyzer_cache_size -> error_mail_analyzer_cache_size
+	error_analyzer_function_select_list -> error_mail_analyzer_function_select_list
+	error_analyzer_function -> error_mail_analyzer_function
+	error_analyzer_simple_count_limit -> error_mail_analyzer_simple_count_limit
+	
+   FML::Process::Command 
+	add $command_mail_filter_{start,end}_hook hooks.
+	rename $command_*_hook -> $command_mail_*_hook.
+
+   FML::Error 
+   FML::Command::Admin::error 
+   FML::Error::Analyze::histgram simple_count 
+   FML::Error::Cache 
+	rename variable::$error_* -> $error_mail_*
+
+   FML::Process::Error 
+	rename hooks::$error_*_hook -> $error_mail_analyzer_*_hook
+	
+   FML::Process::Distribute 
+	add $article_post_XXX_hook but $distribute_XXX_hook is available too.
+	add $article_header_rewrite_{start,end}_hook
+	add $article_filter_{start,end}_hook
+	
+   FML::Process::Digest 
+	rename hook::digest_*_hook -> article_digest_*_hook
+
 
 2004/05/21
 
@@ -7030,4 +7157,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.205 2004/05/18 14:21:19 fukachan Exp $
+$FML: CHANGES.txt,v 1.206 2004/05/22 13:26:18 fukachan Exp $
