@@ -5,7 +5,7 @@
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
 # $Id$
-# $FML: Kernel.pm,v 1.39 2001/04/03 09:45:43 fukachan Exp $
+# $FML: Kernel.pm,v 1.40 2001/04/08 06:13:16 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -346,14 +346,21 @@ sub simple_loop_check
     my $config = $curproc->{ config };
     my $r_msg  = $curproc->{ incoming_message };
     my $header = $r_msg->{ header };
+    my $match = 0;
 
     for my $rule (split(/\s+/, $config->{ header_check_rules })) {
 	if ($header->can($rule)) {
-	    $header->$rule($config, $args);
+	    $match = $header->$rule($config, $args) ? $rule : 0;
 	}
 	else {
 	    Log("header->${rule}() is undefined");
 	}
+
+	last if $match;
+    }
+
+    if ($match) {
+	Log("mail loop detected for $match");
     }
 }
 
