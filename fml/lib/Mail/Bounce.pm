@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: __template.pm,v 1.5 2001/04/03 09:45:39 fukachan Exp $
+# $FML: Bounce.pm,v 1.1 2001/04/10 11:48:53 fukachan Exp $
 #
 
 package Mail::Bounce;
@@ -41,7 +41,7 @@ sub analyze
     my ($self, $msg) = @_;
     my $result = {};
 
-    for my $pkg ('DSN', 'Postfix19991231', 'Qmail') {
+    for my $pkg ('DSN', 'Postfix19991231', 'Qmail', 'Exim') {
 	eval qq { 
 	    require Mail::Bounce::$pkg; 
             Mail::Bounce::$pkg->import();
