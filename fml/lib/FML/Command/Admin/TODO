@@ -1,0 +1,47 @@
+  not yet	何らかの意味で決定済み	status or コメント
+------------------------------------------------------
+actives
+		add			done	
+add2actives
+add2members
+addactives
+addadmin
+addmembers
+addpriv
+		bye			done
+byeadmin
+byepriv
+		chaddr			done
+		change			removed
+		change-address		removed
+dir
+forward
+		get			done
+help
+iam
+initpass
+initpasswd
+log
+ls
+matome
+members
+newguide
+newinfo
+noskip
+off
+on
+pass
+passwd
+password
+pgp
+put
+remove
+remove-article
+rename
+resend
+send
+skip
+		subscribe		done
+unlink
+unlink-article
+		unsubscribe		done

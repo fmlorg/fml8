@@ -1,0 +1,56 @@
+  not yet	何らかの意味で決定済み	status or コメント
+------------------------------------------------------
+		ack			removed (たぶん confirm に統合)
+		active			removed ?
+		actives			removed ?
+addr					う〜ん？
+admin					
+approve					
+		bye			done
+		chaddr			done
+		chaddr-confirm		removed
+		change			removed
+		change-address		removed
+		confirm			done
+digest
+		end			removed
+		exit			removed
+		get			done
+		getfile			removed
+		guide			done
+		help			done
+		iam			removed
+index
+info
+library
+matome
+		member			removed ?
+		members			removed ?
+		mget			done
+		mget2			removed
+		mget3			removed
+mode
+moderator
+		msend			removed ?
+		msg			removed ?
+noskip
+		objective		done
+off
+on
+passwd
+		quit			removed
+		send			done
+		sendfile		removed
+set
+skip
+		stat			removed ?
+		status			removed ?
+		subscribe		done
+		summary			done
+traffic
+undigest
+unmatome
+		unsubscribe		done
+		unsubscribe-confirm	removed
+		who			removed
+		whois			removed
