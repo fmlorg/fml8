@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.81 2004/07/23 15:18:32 fukachan Exp $
+# $FML: Kernel.pm,v 1.82 2004/07/23 15:59:11 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -592,11 +592,11 @@ sub run_cgi_options
 	# natural language-ed name
 	my $name_options = $curproc->message_nl('term.options',  'options');
 	my $name_lang    = $curproc->message_nl('term.language', 'language');
-	my $name_change  = $curproc->message_nl('term.change',   'change');
+	my $name_switch  = $curproc->message_nl('term.switch',   'switch to');
 	my $name_reset   = $curproc->message_nl('term.reset',    'reset');
 
 	print "<P> <B> $name_options </B>\n";
-
+	print "<BR>\n";
 	print start_form(-action=>$action);
 
 	print $name_lang, ":\n";
@@ -605,7 +605,8 @@ sub run_cgi_options
 			     -default => [ $lang ],
 			     -size    => 1);
 
-	print submit(-name => $name_change);
+	print "<BR>\n";
+	print submit(-name => $name_switch);
 	print reset(-name  => $name_reset);
 
 	print end_form;
@@ -629,6 +630,9 @@ sub cgi_execute_cgi_menu
     my ($curproc)    = @_;
     my $pcb          = $curproc->pcb();
     my $command_args = $pcb->get('cgi', 'command_args');
+
+    # navigation to top menu.
+    $curproc->cgi_menu_back_to_top();
 
     if (defined $command_args) {
 	# XXX-TODO: validate $comname
@@ -676,6 +680,31 @@ sub cgi_hidden_info_language
 
     return hidden(-name    => 'language',
 		  -default => [ $lang ]);
+}
+
+
+# Descriptions: show "back to top" menu.
+#    Arguments: OBJ($curproc)
+# Side Effects: none
+# Return Value: none
+sub cgi_menu_back_to_top
+{
+    my ($curproc) = @_;
+    my $target    = $curproc->cgi_var_frame_target();
+    my $action    = $curproc->cgi_var_action();
+
+    # XXX-TODO: hard-coded. remove this.
+    unless ($0 =~ /config\.cgi/o) {
+	print start_form(-action=>$action, -target=>$target);
+	print $curproc->cgi_hidden_info_language();
+
+	print hidden(-name => 'navi_command', [ '' ]);
+	print hidden(-name => 'command',      [ '' ]);
+
+	my $n = $curproc->message_nl("cgi.select_top", "back to top menu.");
+	print submit(-name => $n);
+	print end_form;
+    }
 }
 
 
