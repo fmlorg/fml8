@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Credential.pm,v 1.28 2002/07/17 09:35:17 fukachan Exp $
+# $FML: Credential.pm,v 1.29 2002/07/22 15:33:16 tmu Exp $
 #
 
 package FML::Credential;
@@ -13,6 +13,9 @@ use strict;
 use vars qw(%Credential @ISA @EXPORT @EXPORT_OK);
 use Carp;
 use ErrorStatus qw(errstr error error_set error_clear);
+
+my $debug = 0;
+
 
 =head1 NAME
 
@@ -251,6 +254,7 @@ sub is_recipient
 sub _is_member
 {
     my ($self, $curproc, $args, $optargs) = @_;
+    my $config = $curproc->config();
     my $status = 0;
     my $user   = '';
     my $domain = '';
@@ -274,7 +278,7 @@ sub _is_member
   MAP:
     for my $map (@$member_maps) {
 	if (defined $map) {
-	    $status = $self->has_address_in_map($map, $address);
+	    $status = $self->has_address_in_map($map, $config, $address);
 	    last MAP if $status;
 	}
     }
@@ -285,20 +289,24 @@ sub _is_member
 
 # Descriptions: $map contains $address or not in some ambiguity
 #               by is_same_address().
-#    Arguments: OBJ($self) STR($map) STR($address)
+#    Arguments: OBJ($self) STR($map) HASH_REF($config) STR($address)
 # Side Effects: none
 # Return Value: NUM(1 or 0)
 sub has_address_in_map
 {
-    my ($self, $map, $address) = @_;
+    my ($self, $map, $config, $address) = @_;
     my ($user, $domain) = split(/\@/, $address);
     my $status          = 0;
 
     use IO::Adapter;
-    my $obj = new IO::Adapter $map;
+    my $obj = new IO::Adapter $map, $config;
 
     # 1. get all entries match /^$user/ from $map.
     my $addrs = $obj->find( $user , { want => 'key', all => 1 });
+
+    if (ref($addrs) && $debug) {
+	print STDERR "cred: matched [ @$addrs ]\n";
+    }
 
     # 2. try each address in the result matches $address to check.
     if (defined $addrs) {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.13 2002/07/17 12:13:23 fukachan Exp $
+# $FML: UserControl.pm,v 1.14 2002/07/23 13:03:12 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -15,6 +15,8 @@ use File::Spec;
 use FML::Credential;
 use FML::Log qw(Log LogWarn LogError);
 use IO::Adapter;
+
+my $debug = 0;
 
 
 =head1 NAME
@@ -55,12 +57,15 @@ sub useradd
     my $address  = $uc_args->{ address };
     my $maplist  = $uc_args->{ maplist };
     my $msg_args = $command_args->{ msg_args };
+    my $trycount = 0;
     $msg_args->{ _arg_address } = $address;
 
     for my $map (@$maplist) {
 	my $cred = new FML::Credential;
-	unless ($cred->has_address_in_map($map, $address)) {
+	unless ($cred->has_address_in_map($map, $config, $address)) {
 	    $msg_args->{ _arg_map } = $curproc->which_map_nl($map);
+
+	    $trycount++;
 
 	    my $obj    = new IO::Adapter $map, $config;
 	    $obj->touch(); # create a new map entry (e.g. file) if needed.
@@ -83,6 +88,10 @@ sub useradd
 	    return undef;
 	}
     }
+
+    unless ($trycount) {
+	LogError("no trail to add $address");
+    }
 }
 
 
@@ -98,17 +107,20 @@ sub userdel
     my $address  = $uc_args->{ address };
     my $maplist  = $uc_args->{ maplist };
     my $msg_args = $command_args->{ msg_args };
+    my $trycount = 0;
     $msg_args->{ _arg_address } = $address;
 
     for my $map (@$maplist) {
 	my $cred = new FML::Credential;
-	if ($cred->has_address_in_map($map, $address)) {
+	if ($cred->has_address_in_map($map, $config, $address)) {
 	    $msg_args->{ _arg_map } = $curproc->which_map_nl($map);
+
+	    $trycount++;
 	    
-	    my $obj    = new IO::Adapter $map, $config;
+	    my $obj = new IO::Adapter $map, $config;
 	    $obj->delete( $address );
 	    unless ($obj->error()) {
-		Log("removed $address from map=$map");
+		Log("remove $address from map=$map");
 		$curproc->reply_message_nl('command.del_ok',
 					   "$address removed.",
 					   $msg_args);
@@ -121,8 +133,12 @@ sub userdel
 	    }
 	}
 	else {
-	    LogWarn("no such user in map=$map");
+	    LogWarn("no such user in map=$map") if $debug;
 	}
+    }
+
+    unless ($trycount) {
+	LogError("no trail to remove $address");
     }
 }
 
