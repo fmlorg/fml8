@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: list.pm,v 1.19 2003/11/26 09:19:10 fukachan Exp $
+# $FML: list.pm,v 1.20 2003/12/20 07:50:41 fukachan Exp $
 #
 
 package FML::Command::Admin::list;
@@ -16,7 +16,7 @@ use FML::Log qw(Log LogWarn LogError);
 
 =head1 NAME
 
-FML::Command::Admin::list - show user list(s)
+FML::Command::Admin::list - show the content of arbitorary map
 
 =head1 SYNOPSIS
 
@@ -49,20 +49,19 @@ sub new
 sub need_lock { 0;}
 
 
-# Descriptions: show the address list.
+# Descriptions: show the specified map.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 # Side Effects: forward request to dir module
 # Return Value: none
 sub process
 {
     my ($self, $curproc, $command_args) = @_;
-    my $options = [];
+    my $options   = [];
+    my $x_options = $command_args->{ options } || [];
 
     # import makefml options
-    if (defined $command_args->{ options } &&
-	ref($command_args->{ options }) eq 'ARRAY') {
-	my $xopt = $command_args->{ options };
-	if (@$xopt) { $options = $xopt;}
+    if (defined $x_options && ref($x_options) eq 'ARRAY') {
+	if (@$x_options) { $options = $x_options;}
     }
 
     $command_args->{ is_cgi } = 0;
@@ -70,7 +69,7 @@ sub process
 }
 
 
-# Descriptions: show the address list.
+# Descriptions: show content of the specified maps.
 #    Arguments: OBJ($self) OBJ($curproc) HASH_REF($command_args)
 #               HASH_ARRAY($options)
 # Side Effects: none
@@ -79,12 +78,12 @@ sub _show_list
 {
     my ($self, $curproc, $command_args, $options) = @_;
     my $config  = $curproc->config();
-    my $maplist = $config->get_as_array_ref( 'list_command_default_maps');
+    my $maplist = $config->get_as_array_ref('list_command_default_maps');
 
     # XXX first match is ok ?
   ARGV:
     for my $option (@$options) {
-	my $list = $self->_gen_key_list($option);
+	my $list = $self->_gen_map_candidates($option);
 
       KEY:
 	for my $key (@$list) {
@@ -99,7 +98,7 @@ sub _show_list
     unless (defined $maplist) { croak("list: map undefined");}
     unless ($maplist)         { croak("list: map unspecified");}
 
-    # FML::User::Control specific parameters
+    # $uc_args  = FML::User::Control specific parameters
     my $uc_args = {
 	maplist => $maplist,
 	wh      => \*STDOUT,
@@ -118,11 +117,11 @@ sub _show_list
 }
 
 
-# Descriptions: generate keyword list
+# Descriptions: generate map name list with $key word.
 #    Arguments: OBJ($self) STR($key)
 # Side Effects: none
 # Return Value: ARRAY_REF
-sub _gen_key_list
+sub _gen_map_candidates
 {
     my ($self, $key) = @_;
     my (@list) = (sprintf("%s_maps", $key),
@@ -137,7 +136,7 @@ sub _gen_key_list
 }
 
 
-# Descriptions: show cgi menu.
+# Descriptions: show cgi menu for list command.
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($args) HASH_REF($command_args)
 # Side Effects: update $member_map $recipient_map
@@ -145,16 +144,13 @@ sub _gen_key_list
 sub cgi_menu
 {
     my ($self, $curproc, $args, $command_args) = @_;
-    my $map_default = $curproc->safe_param_map() || 'member';
-    my $options     = [ $map_default ];
-    my $ml_name     = $curproc->cgi_var_ml_name($args);
-    my $r           = '';
+    my $r = '';
 
-    # declare CGI mode now.
+    # declare CGI mode.
     $command_args->{ is_cgi } = 1;
 
     # navigation bar
-      eval q{
+    eval q{
 	use FML::CGI::List;
 	my $obj = new FML::CGI::List;
 	$obj->cgi_menu($curproc, $args, $command_args);
@@ -166,10 +162,15 @@ sub cgi_menu
 
     print "<hr>\n";
 
+    # the default map is defined in _show_list().
+    # so, we set null string by default.
+    my $map_default = $curproc->safe_param_map() || '';
+    my $options     = [ $map_default ];
     eval q{
 	$self->_show_list($curproc, $command_args, $options);
     };
     if ($r = $@) {
+	print $r;
 	croak($r);
     }
 }
