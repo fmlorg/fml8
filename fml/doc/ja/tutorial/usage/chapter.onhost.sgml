@@ -1,5 +1,5 @@
 <!--
-   $FML: chapter.onhost.sgml,v 1.2 2002/11/09 14:16:19 fukachan Exp $
+   $FML: chapter.onhost.sgml,v 1.3 2002/11/26 11:17:13 fukachan Exp $
 -->
 
 <chapter id="usage.onhost">
@@ -49,6 +49,7 @@ makefml の基本的な使い方は &fml4; の makefml と同様です。
 
 
 &sect.usage.makefml;
+&sect.usage.fml;
 &sect.usage.fmladdr;
 &sect.usage.fmlalias;
 &sect.usage.fmlconf;

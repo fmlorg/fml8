@@ -1,0 +1,30 @@
+<!--
+   $FML$
+-->
+
+<sect1 id="usage.fml">
+	<title>
+	fml コマンドと makefml コマンド
+	</title>
+
+<para>
+引数の順が異なることを除けば、
+fml (/usr/local/bin/fml)
+は makefml と全く同じです。 
+単に、引数順の好き嫌いで使い分けて下さい。
+</para>
+
+<para>
+fml コマンドでは
+<screen>
+% fml ＭＬ名 コマンド [コマンドのオプション]
+</screen>
+となります。一方、makefml では
+<screen>
+% makefml コマンド ＭＬ名 [コマンドのオプション]
+</screen>
+です。
+各コマンドの使い方については makefml を参照して下さい。
+</para>
+
+</sect1>
