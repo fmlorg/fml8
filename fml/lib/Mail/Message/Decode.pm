@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Decode.pm,v 1.1 2001/12/23 02:59:48 fukachan Exp $
+# $FML: Decode.pm,v 1.2 2002/05/23 12:47:50 fukachan Exp $
 #
 
 package Mail::Message::Decode;
@@ -56,7 +56,9 @@ by $options->{ charset }.
 sub decode_mime_string
 {
     my ($str, $options) = @_;
-    my $charset = $options->{ 'charset' } || 'euc-japan';
+    my $charset = (defined $options->{ 'charset' } ?
+		   $options->{ 'charset' } :
+		   'euc-japan');
 
     if ($charset eq 'euc-japan') {
 	use MIME::Base64;
