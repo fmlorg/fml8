@@ -43,7 +43,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::MemberControl appeared in fml5 mailing list driver package.
+FML::Command::add appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
