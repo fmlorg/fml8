@@ -143,7 +143,8 @@ sub update_status
 
     # entries to check
     my $subject = $header->get('subject');
-    my $content = $body->get_first_plaintext_message();
+    my $message = $body->get_first_plaintext_message();
+    my $content = $message->get_content_body();
     my $pragma  = $header->get('x-ticket-pragma') || '';
 
     if ($content =~ /^\s*close/ || 

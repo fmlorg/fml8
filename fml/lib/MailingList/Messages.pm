@@ -785,7 +785,13 @@ which is the whole mail or a part of multipart.
 
 =head2 C<get_first_plaintext_message($args)>
 
-return the content for the first "plain/text" message in a chain.
+return the Messages object for the first "plain/text" message in a
+chain. For example,
+
+         $m    = $msg->get_first_plaintext_message();
+         $body = $m->get_content_body();
+
+where $body is the mail body (string).
 
 =cut
 
@@ -827,10 +833,7 @@ sub get_content_body
 sub get_first_plaintext_message
 {
     my ($self, $args) = @_;
-
     my $size = $args->{ size } || 512;
-
-    # use Data::Dumper; print STDERR Dumper( $self ), "\n";
 
     my $mp;
     for ($mp = $self; 
@@ -839,7 +842,7 @@ sub get_first_plaintext_message
 	my $type = $mp->get_content_type;
 
 	if ($type eq 'text/plain') {
-	    return $mp->get_content_body($size);
+	    return $mp;
 	}
     }
 
