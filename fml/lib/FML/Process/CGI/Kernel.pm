@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.23 2002/04/22 11:11:09 fukachan Exp $
+# $FML: Kernel.pm,v 1.24 2002/04/23 09:32:37 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -66,7 +66,8 @@ sub new
     my $ml_home_prefix = FML::Process::Utils::__ml_home_prefix_from_main_cf($args);
     my $ml_name        = safe_param_ml_name($self) || do {
 	if ($is_need_ml_name) {
-	    croak("not get ml_name from HTTP") if $args->{ need_ml_name };
+	    my $r = "fail to get ml_name from HTTP";
+	    croak("__ERROR_cgi.fail_to_get_ml_name__: $r");
 	}
     };
 
@@ -177,7 +178,7 @@ sub _error_string
 {
     my ($r) = @_;
 
-    if ($r =~ /ERROR\.INSECURE/) {
+    if ($r =~ /__ERROR_cgi\.insecure__/) {
 	print "<B>Error! insecure input.</B>\n";
     }
     else {
@@ -505,7 +506,7 @@ sub cgi_try_get_address
     else {
 	# XXX longjmp() if insecure input is given.
 	my $r = $@;
-	if ($r =~ /ERROR\.INSECURE/) { croak($r);}
+	if ($r =~ /__ERROR_cgi\.insecure__/) { croak($r);}
     }
 
     # retry !
@@ -517,7 +518,7 @@ sub cgi_try_get_address
 	else {
 	    # XXX longjmp() if insecure input is given.
 	    my $r = $@;
-	    if ($r =~ /ERROR\.INSECURE/) { croak($r);}
+	    if ($r =~ /__ERROR_cgi\.insecure__/) { croak($r);}
 	}
     }
 
@@ -549,7 +550,7 @@ sub cgi_try_get_ml_name
     else {
 	# XXX longjmp() if insecure input is given.
 	my $r = $@;
-	if ($r =~ /ERROR\.INSECURE/) { croak($r);}
+	if ($r =~ /__ERROR_cgi\.insecure__/) { croak($r);}
     }
 
     # retry !
@@ -561,7 +562,7 @@ sub cgi_try_get_ml_name
 	else {
 	    # XXX longjmp() if insecure input is given.
 	    my $r = $@;
-	    if ($r =~ /ERROR\.INSECURE/) { croak($r);}
+	    if ($r =~ /__ERROR_cgi\.insecure__/) { croak($r);}
 	}
     }
 
@@ -598,7 +599,7 @@ sub AUTOLOAD
         return $curproc->$method($varname);
     }
     else {
-        croak("unknown method $comname");
+        croak("__ERROR_cgi.unknown_method__: unknown method $comname");
     }
 }
 

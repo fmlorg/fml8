@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Param.pm,v 1.13 2002/03/19 07:59:52 fukachan Exp $
+# $FML: Param.pm,v 1.14 2002/04/08 12:44:26 fukachan Exp $
 #
 
 package FML::Process::CGI::Param;
@@ -62,7 +62,8 @@ sub safe_param
 		return '';
 	    }
 	    else {
-		croak("ERROR.INSECURE: CGI parameter $key has invalid character(s).");
+		my $r = "CGI parameter $key has invalid character(s).";
+		croak("__ERROR_cgi.insecure__: $r");
 	    }
 	}
 	else {
@@ -112,7 +113,7 @@ sub safe_paramlist
 	    return '';
 	}
 	else {
-	    croak("ERROR.INSECURE");
+	    croak("__ERROR_cgi.insecure__");
 	}
     }
 
