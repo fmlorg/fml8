@@ -1,0 +1,41 @@
+<!--
+   $FML$
+-->
+
+<sect1 id="internal.cgi">
+	<title>
+	CGI の構造
+	</title>
+
+<para>
+FML::CGI のクラスは以下の３つのメソッドを実装して下さい。
+<screen>
+html_start()
+run_cgi()
+html_end()
+</screen>
+</para>
+
+<para>
+$curproc の run() メソッドは
+<screen>
+html_start()
+run_cgi()
+html_end()
+</screen>
+を順番に実行しています。
+つまり CGI プロセスの実行のフロー( FML::Process::Flow 参照)は
+<screen>
+new()
+prepare()
+verify_request()
+run() 
+   html_start()
+   run_cgi()
+   html_end()
+finish()
+</screen>
+などということになります。
+</para>
+
+</sect1>

@@ -1,5 +1,5 @@
 <!--
-	$FML: bootloader.sgml,v 1.1.1.1 2001/05/01 14:52:05 fukachan Exp $
+	$FML: bootloader.sgml,v 1.2 2001/05/10 03:11:43 fukachan Exp $
 -->
 
 <chapter id="bootloader">    	
@@ -166,5 +166,7 @@ $process->finish($args);
    </listitem>
 </itemizedlist>
 </sect1>
+
+&sect.internal.cgi;
 
 </chapter>
