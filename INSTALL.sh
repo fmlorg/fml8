@@ -14,8 +14,6 @@ PATH=/bin:/usr/bin:/usr/sbin:/usr/etc:/sbin:/etc
 umask 022
 
 ### configurations ###
-date=`date +%C%y%m%d`
-fml_version=current-${date}
 default_prefix=/usr/local
 config_dir=/etc/fml
 libexec_dir=$default_prefix/libexec/fml
@@ -30,6 +28,14 @@ owner=fukachan
 
 ######################
 
+get_fml_version () {
+   if [ -f .version ];then
+	fml_version=`cat .version`
+   else
+	date=`date +%C%y%m%d`
+	fml_version=current-${date}
+   fi
+}
 
 _mkdir () {
 	local dir=$1 
@@ -37,6 +43,10 @@ _mkdir () {
 	test -d $dir || mkdir -p $dir
 }
 
+
+get_fml_version
+
+exit 0
 
 for dir in 	$config_dir \
 		$config_dir/defaults \
