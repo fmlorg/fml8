@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002,2003 Ken'ichi Fukamachi
+#  Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Summary.pm,v 1.16 2003/12/30 08:22:36 fukachan Exp $
+# $FML: Summary.pm,v 1.17 2004/02/04 15:19:13 fukachan Exp $
 #
 
 package FML::Article::Summary;
@@ -96,8 +96,9 @@ sub _prepare_info
     if (-f $file) {
 	my $msg      = new Mail::Message->parse( { file => $file } );
 	my $header   = $msg->whole_message_header();
-	my $address  = $header->get( 'from' ) || '';
-	my $date_str = $header->get( 'date' ) || '';
+	my $address  = $header->get('from')    || '';
+	my $date_str = $header->get('date')    || '';
+	my $subject  = $header->get('subject') || '';
 
 	# data -> unix time.
 	use Mail::Message;
@@ -105,29 +106,25 @@ sub _prepare_info
 	my $unixtime = $date->as_unixtime();
 
 	# log the first 15 bytes of user@domain in From: header field.
-	if (defined $address) {
+	if ($address) {
 	    use Mail::Message::Address;
 	    my $addr = new Mail::Message::Address $address;
 	    $addr->clean_up();
 	    $address = $addr->substr(0, $addrlen) || '';
 	}
 
-	# XXX-TODO $subject->clean_up() ? (object flavour?)
-	# XXX-TODO $subject = new FML::Header::Subject $subject_string; 
-	# XXX-TODO $subject->clean_up();
-	use FML::Header::Subject;
-	my $subjobj = new FML::Header::Subject;
-	my $subject = $subjobj->clean_up($header->get('subject'), $tag);
-	$subject =~ s/\s*\n/ /g; # fold "\n".
-	$subject =~ s/\s+/ /g;
+	# de-tag, unfold, and charset conversion.
+	if ($subject) {
+	    use Mail::Message::Subject;
+	    my $sbj = new Mail::Message::Subject $subject;
+	    $sbj->mime_decode();
+	    $sbj->unfold();
+	    $sbj->delete_tag($tag);
+	    $sbj->unfold();
+	    $sbj->charcode_convert();
+	    $subject = $sbj->as_str();
+	}
 
-	# XXX-TODO "jis-jp" and "euc-jp" is hard-coded.
-	# XXX-TODO: $in_code = subject->code(); $out_code = $config->{ ? }
-	use Mail::Message::Encode;
-	my $enc  = new Mail::Message::Encode;
-	$subject = $enc->convert($subject, "jis-jp", "euc-jp");
-
-	# XXX-TODO: $address->str() ? $subject->str() ?
 	my $info = {
 	    id       => $id,
 	    address  => $address,
@@ -293,7 +290,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002,2003 Ken'ichi Fukamachi
+Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
