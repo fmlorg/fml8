@@ -1,0 +1,25 @@
+USE_WHOIS:
+DEFAULT_WHOIS_SERVER:
+WHOIS_DB:		$VARDB_DIR/whoisdb
+WHOIS_HELP_FILE:
+WHOIS_JCODE_P:		1
+
+
+LOCK_SH: 	 1
+LOCK_EX: 	 2
+LOCK_NB:	 4
+LOCK_UN: 	 8
+
+
+LOG_CONNECTION:	0
+
+
+Subject:
+From_address:	 not.found
+User:		 not.found
+Date:		 not.found
+
+PASS_ALL_FIELDS_IN_HEADER: 1
+
+BASE64_DECODE:
+BASE64_ENCODE:
