@@ -14,20 +14,20 @@ addmembers
 		chaddr			done
 		change			removed
 		change-address		removed
-dir
+		dir			done
 forward
 		get			done
 help
-iam
+		iam			removed
 initpass
-initpasswd
+		initpasswd		removed
 		log			half done
-ls
+		ls			done
 matome
 members
 newguide
 newinfo
-noskip
+		noskip			removed
 off
 on
 		pass			done
@@ -35,13 +35,15 @@ passwd
 		password		done
 pgp
 put
-remove
+		remove			注意: 別の意味になる
 remove-article
 rename
 resend
 send
-skip
+		skip			removed
 		subscribe		done
-unlink
+		unlink			done
+					? もっとわかりやすいものへ？
+					file unlink とかか？
 unlink-article
 		unsubscribe		done
