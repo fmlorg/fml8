@@ -208,7 +208,6 @@ sub list_up
 
     my ($tid, $status) = ();
     while (($tid, $status) = each %$rh_status) {
-	next if $status eq 'close';
 	my ($aid) = split(/\s+/, $rh_articles->{ $tid });
 	my $date  = $dh->YYYYMMDD( $rh_date->{ $aid } );
 	printf "%8d  %5s  %-20s  %s\n", 
