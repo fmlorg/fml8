@@ -1,0 +1,17 @@
+#! @SHELL@
+#
+#  Copyright (C) 2001 Ken'ichi Fukamachi
+#   All rights reserved. This program is free software; you can
+#   redistribute it and/or modify it under the same terms as Perl itself.
+#
+# $FML: fmlspool.in,v 1.3 2002/04/01 23:40:53 fukachan Exp $
+#
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libexec_dir=@libexecdir@/fml
+
+exec $libexec_dir/fmlspool $*
+
+echo 'not reach here'
+exit 0;
