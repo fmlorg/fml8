@@ -19,6 +19,7 @@ digestoff
 digeston
 dir
 edit
+error
 file
 get
 htmlify
@@ -26,6 +27,7 @@ initpass
 list
 log
 ls
+mailq
 mget
 newml
 off
@@ -37,7 +39,10 @@ remove
 resign
 rmml
 signoff
+spool
 subscribe
+summary
+thread
 unsubscribe
 useradd
 userdel
