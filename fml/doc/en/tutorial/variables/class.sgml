@@ -332,6 +332,9 @@ error {
 html {
 
    html_archive { 
+    ?     $html_archive_charset_en
+    ?     $html_archive_charset_ja
+    ?     $html_archive_default_charset
           $html_archive_dir
           $html_archive_index_order_type
           $use_html_archive
@@ -526,9 +529,11 @@ outgoing {
 path {
 
    path_* {
+          $path_bogofilter
           $path_bunzip2
           $path_bzip2
           $path_cksum
+          $path_clamscan
           $path_compress
           $path_gpg
           $path_gunzip

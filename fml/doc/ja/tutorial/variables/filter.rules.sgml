@@ -216,5 +216,7 @@ command_mail_size_filter_rules	=	check_header_size
 					check_line_length_limit
 					permit
 
+path_bogofilter           = @BOGOFILTER@
+
 </screen>
 </para>

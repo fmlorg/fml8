@@ -257,5 +257,7 @@ command_mail_filter_reject_notice_recipients	=	maintainer
 #     Examples: string
 command_mail_filter_reject_notice_data_type	=	string
 
+path_bogofilter           = @BOGOFILTER@
+
 </screen>
 </para>
