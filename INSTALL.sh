@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML$
+# $FML: INSTALL.sh,v 1.25 2001/04/28 14:41:03 fukachan Exp $
 #
 
 # Run this from the top-level fml source directory.
@@ -77,6 +77,7 @@ cp fml/etc/config.cf.ja $default_config_dir/config.cf
 echo update $lib_dir/$fml_version/
 cp -pr fml/lib/*	$lib_dir/$fml_version/
 cp -pr cpan/lib/*	$lib_dir/$fml_version/
+cp -pr img/lib/*	$lib_dir/$fml_version/
 
 echo update $libexec_dir/$fml_version/
 cp -pr fml/libexec/*	$libexec_dir/$fml_version/
