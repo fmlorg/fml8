@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.38 2001/06/09 08:14:47 fukachan Exp $
+# $FML: Makefile,v 1.39 2001/06/10 10:25:10 fukachan Exp $
 #
 
 all: link
@@ -25,7 +25,6 @@ allclean: clean
 	rm -f File
 	rm -f CGI
 	rm -f Command
-	rm -f SQL
 	rm -f doc-devel
 	rm -f tutorial
 
@@ -51,7 +50,6 @@ link:
 	rm -f Command; ln -s ../../fml/lib/FML/Command
 	rm -f IO; ln -s ../../fml/lib/IO
 	rm -f File; ln -s ../../fml/lib/File
-	rm -f SQL; ln -s ../../fml/lib/SQL
 	rm -f Tie; ln -s ../../fml/lib/Tie
 	rm -f Mail; ln -s ../../fml/lib/Mail
 	rm -f libexec; ln -s ../../fml/libexec
