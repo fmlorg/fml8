@@ -1,0 +1,74 @@
+100.010301:
+	W. Phillip Moore <Phil.Moore@msdw.com> reproted a Y2K bug: it could
+	not parse 'Jan  1 2000 10:30:30AM'.  Fixed.  This is embarassing
+	beasue <alangmead@boston.com> sent in a patch Dec 9th!
+99.111701:
+	Allen Smith <easmith@beatrice.rutgers.edu> noticed that VALIDATE
+	wouldn't accept hours > 0...  
+	Hugh C Kennedy <kennedyh@engin.umich.edu> contributed patches to
+	parse months like `Jan.' in additon to `Jan' and `January'.
+99.062401:
+	Randy Kobes <randy@theoryx5.uwinnipeg.ca> sent in a fix for
+	Timezone.pm that allows all tests to pass on MSWin32.
+99.062301:
+	Eric Prestemon <ecp@adknowledge.com> noticed that %y would print
+	"0" in 2000, not "00" as it should.  Fixed.
+
+	Parsedate() now checks for wantarray() and returns what remains of
+	its input when called from array context.
+
+	Added another parsing option: VALIDATE.  When VALIDATE is set,
+	silly values for hours, months, etc will be rejected.  Like the
+	32nd of December will no longer be new years day.
+99.062201:
+	Optionally return fractional seconds from ParseDate (including 
+	the SYBASE formatted ones).  Provide for printing fractional
+	seconds in CTime.  Changes from Douglas Wegscheid 
+	<wegscd@whirlpool.com>
+99.061601:
+	More attempts to support systems whose time function isn't 
+	centered around Jan 1, 1970 midnight GMT.
+99.061501:
+	Fixed a couple of compiler warnings.  Did extensive testing with
+	dates beyond 2000 and before 1970.  Quite a few code changes.
+	Old code would have worked in many > 2000 cases but broke 
+	terribly for dates < 1970.
+	New code should work until year 10k.  Well, there's one problem:
+	unix time format is only 32 bits, signed. 
+98.112901:
+	Slight change to avoid an "Use of uninitialized value" error
+	pointed out by Mike Coffin <mhc@Eng.Sun.COM>.
+98.112801:
+	It turns out that Sybase emits time values like "3:09:59:000PM".  The
+	last three digits are milliseconds.  Such times are now recognized
+	but the milliseconds are ignored.  Change requested by
+	ryanmcleish <ryan@email.labmed.umn.edu>.
+
+	Corrected the documenation on strftime conversions for %d and %e.  The
+	code and the documentation now agree:
+		%d - 01 to 31
+		%e -  1 to 31
+98.052201:
+	Minor bugfix: didn't recognize 5/18/1998.
+97.092101:
+	Fix a 5.004 warning.
+	Add support for "June 4, 1997"
+96.110801:
+	Added support for negative relative times.
+	Bugfix: "now" by itself was ignored.
+	Bugfix: could not combine "now" with time offsets (only date offsets)
+96.032801:
+	Added support for "TZN
+96.032702: 
+	This is the first release to use the Makefile.PL 
+	packaging.  There are many changes with repect to 
+	previous releases.  All modules now running with -w and
+	use strict.
+
+	CTime.pm: should be faster
+	ParseDate.pm: core logic changed, more dates parsed.
+	datetime.t: more tests
+	Timezone.pm: ripped out tzset code and replaced it
+		with code from Graham Barr <bodg@tiuk.ti.com>
+??.?????:
+	Patch for UK-style dates: Sam Yates <syates@maths.adelaide.edu.au>
