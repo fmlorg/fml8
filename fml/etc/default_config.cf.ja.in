@@ -1161,10 +1161,11 @@ use_article_non_mime_filter		=	yes
 
 
 # Descriptions: とりあえず、だみ〜
-#      History:
-#        Value: permit / reject
+#      History: なし
+#        Value: permit / reject_empty_content_type
 #     Examples: permit
-article_non_mime_filter_rules		=	permit
+article_non_mime_filter_rules		=	reject_empty_content_type
+						permit
 
 
 # Descriptions: MIME の構造に基づいたフィルタを行なう
@@ -1679,6 +1680,13 @@ newml_command_ml_admin_default_address 	=	$fml_owner
 #        Value: ARRAY
 #     Examples:
 list_command_default_maps		=	$recipient_maps
+
+
+# Descriptions: 最後の何行を表示するか？つまり tail -30 log の 30 の部分。
+#      History: none
+#        Value: NUM
+#     Examples: 30
+log_command_tail_starting_location	=	30
 
 =head1	エラーメール解析
 
