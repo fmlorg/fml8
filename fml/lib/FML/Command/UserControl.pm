@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.9 2002/06/30 14:30:14 fukachan Exp $
+# $FML: UserControl.pm,v 1.10 2002/07/02 03:55:54 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -62,8 +62,16 @@ sub useradd
 	    $obj->add( $address );
 	    unless ($obj->error()) {
 		Log("add $address to map=$map");
+		$curproc->reply_message('command.add_ok',
+					"$address added.",
+					{ _arg_address => $address,}
+					);
 	    }
 	    else {
+		$curproc->reply_message('command.add_fail',
+					"failed to add $address",
+					{ _arg_address => $address,}
+					);
 		croak("fail to add $address to map=$map");
 	    }
 	}
@@ -93,9 +101,17 @@ sub userdel
 	    $obj->delete( $address );
 	    unless ($obj->error()) {
 		Log("removed $address from map=$map");
+		$curproc->reply_message('command.del_ok',
+					"$address added.",
+					{ _arg_address => $address,}
+					);
 	    }
 	    else {
 		croak("fail to remove $address from map=$map");
+		$curproc->reply_message('command.del_ok',
+					"$address added.",
+					{ _arg_address => $address,}
+					);
 	    }
 	}
 	else {
