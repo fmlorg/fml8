@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Menu.pm,v 1.9 2004/01/18 13:56:04 fukachan Exp $
+# $FML: Menu.pm,v 1.10 2004/03/31 05:28:17 fukachan Exp $
 #
 
 package FML::CGI::Menu;
@@ -343,11 +343,11 @@ sub run_cgi_command_help
 
     if ($navi_command) {
 	print "[$name_usage]<br> <b> $navi_command </b> <br>\n";
-	$buf = $curproc->message_nl("cgi.$navi_command", '', $msg_args);
+	$buf = $curproc->message_nl("cgi.config.$navi_command", '', $msg_args);
     }
     elsif ($command) {
 	print "[$name_usage]<br> <b> $command </b> <br>\n";
-	$buf = $curproc->message_nl("cgi.$command", '', $msg_args);
+	$buf = $curproc->message_nl("cgi.config.$command", '', $msg_args);
     }
 
     print $buf;
