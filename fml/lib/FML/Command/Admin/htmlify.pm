@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: htmlify.pm,v 1.14 2002/04/20 05:24:19 fukachan Exp $
+# $FML: htmlify.pm,v 1.15 2002/04/20 05:40:14 fukachan Exp $
 #
 
 package FML::Command::Admin::htmlify;
@@ -61,6 +61,10 @@ sub process
     my $src_dir = $config->{ spool_dir };
     my $dst_dir = $config->{ html_archive_dir };
     my $debug   = 0;
+
+    unless ($config->yes('use_html_archive')) {
+	croak("html archive disabled");
+    }
 
     print STDERR "htmlify\t$src_dir =>\n\t\t$dst_dir\n" if $debug;
 
