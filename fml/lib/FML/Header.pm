@@ -285,6 +285,30 @@ sub remove_subject_tag_like_string
 }
 
 
+=head2 C<verify_list_post_uniqueness()>
+
+=cut
+
+
+sub verify_message_id_uniqueness
+{
+    my ($header, $config, $args) = @_;    
+    Log("run verify_message_id_uniqueness");
+}
+
+sub verify_x_ml_info_uniqueness
+{
+    my ($header, $config, $args) = @_;    
+    Log("run verify_x_ml_info_uniqueness");
+}
+
+sub verify_list_post_uniqueness
+{
+    my ($header, $config, $args) = @_;    
+    Log("run verify_list_post_uniqueness");
+}
+
+
 =head1 SEE ALSO
 
 L<Mail::Header>

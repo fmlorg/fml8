@@ -26,3 +26,11 @@ var_dir		= $ml_home_dir/var
 #        Value: directory
 #     Examples: /var/spool/ml/elena/tmp
 tmp_dir		= $ml_home_dir/tmp
+
+
+# Descriptions: 各種データファイルを置くディレクトリ
+#      History: $VARDB_DIR
+#        Value: directory
+#     Examples: /var/spool/ml/elena/var/db
+db_dir		= $var_dir/db
+
