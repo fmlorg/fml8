@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.42 2002/01/13 13:32:09 fukachan Exp $
+# $FML: Message.pm,v 1.43 2002/01/13 13:35:25 fukachan Exp $
 #
 
 package Mail::Message;
@@ -2097,5 +2097,8 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 Mail::Message appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
+
+=cut
+
 
 1;
