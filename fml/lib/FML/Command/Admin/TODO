@@ -65,7 +65,9 @@ resend
 					file unlink とかか？
 		unlink-article		removed *新スタイルへ
 
-file    remove
+		file remove		done
+		file unlink		done
+		file delete		done
 file    rename
 file    put
 file    get				(例外: get と同じ機能)
@@ -94,4 +96,4 @@ help
 
 
 ----------
-$FML$
+$FML: TODO,v 1.5 2002/03/30 08:11:53 fukachan Exp $
