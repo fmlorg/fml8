@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.71 2004/01/01 23:52:18 fukachan Exp $
+# $FML: Kernel.pm,v 1.72 2004/01/02 02:11:29 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -91,7 +91,7 @@ sub prepare
 {
     my ($curproc, $args) = @_;
 
-    $curproc->_cgi_resolve_ml_specific_variables( $args );
+    $curproc->_cgi_resolve_ml_specific_variables();
     my $cf_list = $curproc->get_config_files_list();
     $curproc->load_config_files($cf_list);
     $curproc->fix_perl_include_path();
@@ -166,12 +166,12 @@ sub _http_accept_language
 
 
 # Descriptions: analyze data input from CGI
-#    Arguments: OBJ($curproc) HASH_REF($args)
+#    Arguments: OBJ($curproc)
 # Side Effects: update $config{ ml_* }, $args->{ cf_list }
 # Return Value: none
 sub _cgi_resolve_ml_specific_variables
 {
-    my ($curproc, $args) = @_;
+    my ($curproc)      = @_;
     my $config         = $curproc->config();
     my $ml_name        = $curproc->cgi_var_ml_name();
     my $ml_domain      = $curproc->cgi_var_ml_domain();
@@ -205,9 +205,8 @@ sub _cgi_resolve_ml_specific_variables
 	$config->set('ml_name',     $ml_name);
 	$config->set('ml_home_dir', $ml_home_dir);
 
-	# fix $args { cf_list, ml_home_dir };
-	my $cflist = $args->{ cf_list };
-	push(@$cflist, $config_cf);
+	# add this ml's config.cf to the .cf list.
+	$curproc->append_to_config_files_list($config_cf);
     }
     else {
 	$curproc->log("debug: no ml_name");
