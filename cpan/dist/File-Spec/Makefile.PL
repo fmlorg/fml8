@@ -3,15 +3,16 @@ use ExtUtils::MakeMaker;
 # the contents of the Makefile that is written.
 WriteMakefile(
     'NAME'          => 'File::Spec',
-    'VERSION_FROM'  => 'Spec.pm',
+    'VERSION_FROM'  => 'lib/File/Spec.pm',
     'LIBS'          => [''],   # e.g., '-lm' 
     'DEFINE'        => '',     # e.g., '-DHAVE_SOMETHING' 
     'INC'           => '',     # e.g., '-I/usr/include/other' 
     'INSTALLDIRS'   => 'perl', # 'perl' makes it replace std modules
-#    'PM'	=> {'Spec.pm'	=> '$(INST_LIBDIR)/File/Spec.pm',
-#    			'OS2.pm'	=> '$(INST_LIBDIR)/File/Spec/OS2.pm',
-#    			'Win32.pm'	=> '$(INST_LIBDIR)/File/Spec/Win32.pm',
-#    			'VMS.pm'	=> '$(INST_LIBDIR)/File/Spec/VMS.pm',
-#   			'Unix.pm'	=> '$(INST_LIBDIR)/File/Spec/Unix.pm',
-#    			}
+    'PL_FILES'      => {},
+    'PREREQ_PM'     => {
+			'File::Basename' => 0,
+			'Cwd' => 0,
+			'Test::More' => 0,
+			'Test' => 0,
+		       },
 );

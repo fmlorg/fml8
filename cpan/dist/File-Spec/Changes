@@ -1,0 +1,172 @@
+CHANGES for File::Spec
+
+0.85_03  Mon Sep 15 09:35:53 CDT 2003
+
+ - On VMS, if catpath() receives volume specifiers in both its first
+   two arguments, it will now use the volume in the first argument
+   only.  Previously it returned a non-syntactical result which
+   included both volumes.  This change is the same in spirit to the
+   catpath() MacOS change from version 0.85_02.
+
+ - Fixed an abs2rel() bug on VMS - previously
+   abs2rel('[t1.t2.t3]file','[t1.t2]') returned '[t3]file', now it
+   properly returns '[.t3]file'.
+
+0.85_02  Fri Sep 12 17:11:13 CDT 2003
+
+ - abs2rel() now behaves more consistently across platforms with the
+   notion of a volume.  If the volumes of the first and second
+   argument (the second argument may be implicit) do not agree, we do
+   not attempt to reconcile the paths, and simply return the first
+   argument.  Previously the volume of the second argument was
+   (usually) ignored, resulting in sometimes-garbage output.
+
+ - catpath() on MacOS now looks for a volume element (i.e. "Macintosh HD:")
+   in its first argument, and then its second argument.  The first
+   volume found will be used, and if none is found, none will be used.
+
+ - Fixed a problem in abs2rel() on Win32 in which the volume of the
+   current working directory would get added to the second argument if
+   none was specified.  This might have been somewhat helpful, but it
+   was contrary to the documented behavior.  For example,
+   abs2rel('C:/foo/bar', '/foo') used to return 'bar', now it returns
+   'C:/foo/bar' because there's no guarantee /foo is actually C:/foo .
+
+ - catdir('/', '../') on OS2 previously erroneously returned '//..',
+   and now it returns '/'.
+
+0.85_01  Thu Sep 11 16:18:54 CDT 2003
+
+ Working toward 0.86, the version that will be released with perl 5.8.1.
+
+ - The t/rel2abs2rel.t test now is a little friendlier about emitting
+   its diagnostic debugging output. [Jarkko Hietaniemi]
+
+ - We now only require() Cwd when it's needed, on demand. [Michael
+   Schwern, Tels]
+
+ - Fixed some POD errors and redundancies in OS2.pm and Cygwin.pm.
+   [Michael Schwern]
+
+ - The internal method cwd() has been renamed to _cwd(), since it was
+   never meant for public use. [Michael Schwern]
+
+ - Several methods in File::Spec::Unix that just return constant
+   strings have been sped up.  catdir() has also been sped up there.
+   [Tels]
+
+ - Several canonpath() and catdir() bugs on Win32 have been fixed, and
+   tests added for them:
+      catdir('/', '../')   -> '\\'     (was '\..')
+      catdir('/', '..\\')  -> '\\      (was '')
+      canonpath('\\../')   -> '\\'     (was '')
+      canonpath('\\..\\')  -> '\\'     (was '')
+      canonpath('/../')    -> '\\'     (was '\..')
+      canonpath('/..\\')   -> '\\'     (was '')
+      catdir('\\', 'foo')  -> '\foo'   (was '\\foo')
+
+ - catpath($volume, $dirs, $file) on Mac OS now ignores any volume
+   that might be part of $dirs, enabling catpath($volume,
+   catdir(rootdir(), 'foo'), '') to work portably across platforms.
+
+0.85  Tue Jul 22 11:31 CDT 2003
+
+ A bug-fix release relative to 0.84.  I've forked development into a
+ "stable" branch (this one) and a more aggressive branch (as yet
+ unreleased), with an eye toward getting the stable features in perl
+ 5.8.1.
+
+ - File::Spec::Mac->case_tolerant() returned 0 when it should have
+   returned 1.
+
+ - Many cases in File::Spec::Win32->abs2rel() were broken, because of
+   the way in which volumes were/weren't ignored.  Unfortunately, part
+   of the regression tests were broken too.  Now, if the $path
+   argument to abs2rel() is on a different volume than the $base
+   argument, the result will be an absolute path rather than the
+   broken relative path previous versions returned.
+
+ - Fixed a problem in File::Spec::Win32->canonpath, which was turning
+   \../foo into "foo" rather than \foo
+
+ - Greatly simplified the code in File::Spec::Unix->splitdir().
+
+0.84_01  Fri Jul 11 16:14:29 CDT 2003
+
+ No actual code changes, just changes in other distribution files
+
+ - Dependencies are now listed explicitly in the Makefile.PL and
+   Build.PL scripts, as well as in the META.yml file.
+
+ - The t/abs2rel2abs.t test should now be more friendly about skipping
+   on platforms where it can't run properly.
+
+0.84  Wed Jul  9 22:21:23 CDT 2003
+
+ I (Ken)'ve taken the changes from bleadperl and created a new CPAN release
+ from them, since they're pretty important changes.  The highlights,
+ from what I can tell, are listed here.
+
+ - A huge number of changes to File::Spec::Mac in order to bring it in
+   line with the other platforms.  This work was mostly/completely
+   done by Thomas Wegner.
+
+ - The Epoc and Cygwin platforms are now supported.
+
+ - Lots of generically-applicable documentation has been taken from
+   File::Spec::Unix and put in File::Spec.
+
+ - A Build.PL has been provided for people who wish to install via
+   Module::Build.
+
+ - Some spurious warnings and errors in the tests have been
+   eliminated. [Michael Schwern]
+
+ - canonpath() on File::Spec::Unix now honors a //node-name at the
+   beginning of a path.
+
+ - Cwd.pm wasn't being loaded properly on MacOS. [Chris Nandor]
+
+ - Various POD fixups
+
+ - Several testing patches for the Epoc and Cygwin platforms [Tels]
+
+ - When running under taint mode and perl >= 5.8, all the tmpdir()
+   implementations now avoid returning a tainted path.
+
+ - File::Spec::OS2 now implements canonpath(), splitpath(),
+   splitdir(), catpath(), abs2rel(), and rel2abs() directly rather
+   than inheriting them from File::Spec::Unix.
+
+ - Added 'SYS:/temp' and 'C:/temp' to the list of possible tmpdir()s
+   on Win32.
+
+ - catfile() on Win32 and VMS will now automatically call canonpath()
+   on its final argument.
+
+ - canonpath() on Win32 now does a much more extensive cleanup of the
+   path.
+
+ - abs2rel() on Win32 now defaults to using cwd() as the base of
+   relativity when no base is given.
+
+ - abs2rel() on Win32 now explicitly ignores any volume component in
+   the $path argument.
+
+ - canonpath() on VMS now does []foo ==> foo, and foo.000000] ==> foo].
+   It also fixes a bug in multiple [000000.foo ==> [foo translations.
+
+ - tmpdir() on VMS now uses 'sys$scratch:' instead of 'sys$scratch'.
+
+ - abs2rel() on VMS now uses '000000' in both the path and the base.
+
+0.82 Wed Jun 28 11:24:05 EDT 2000
+   - Mac.pm: file_name_is_absolute( '' ) now returns TRUE on all platforms
+   - Spec.pm: unbreak C<$VERSION = '0.xx'> to be C<$VERSION = 0.xx>, so
+     underscores can be used when I want to update CPAN without anyone
+     needing to update the perl repository.
+   - abs2rel, rel2abs doc tweaks
+   - VMS.pm: get $path =~ /\s/ checks from perl repository.
+   - Makefile.PL: added INSTALLDIRS => 'perl', since these are std. modules.
+   - Remove vestigial context prototypes from &rel2abs until some future
+     arrives where method prototypes are honored.
