@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.37 2002/06/28 03:40:55 fukachan Exp $
+# $FML: Kernel.pm,v 1.38 2002/06/30 14:30:17 fukachan Exp $
 #
 
 package FML::Process::CGI::Kernel;
@@ -117,8 +117,8 @@ sub _cgi_resolve_ml_specific_variables
     }
 
     # reset
-    $config->set('ml_domain',       $ml_domain);
-    $config->set('ml_home_prefix',  $ml_home_prefix);
+    $config->set('ml_domain',      $ml_domain);
+    $config->set('ml_home_prefix', $ml_home_prefix);
 
     # speculate ml_name, which is not used in some cases.
     my $ml_name = $curproc->safe_param_ml_name() || do {
@@ -378,7 +378,7 @@ sub run_cgi_title
     my $role    = '';
     my $title   = '';
 
-    $role  = "for thread view" if $myname =~ /thread/;
+    $role  = "for thread view"   if $myname =~ /thread/;
     $role  = "for configuration" if $myname =~ /config|menu/;
     $title = "${ml_name}\@${domain} CGI $role";
     print $title;
@@ -518,12 +518,11 @@ sub run_cgi_options
 
     print "Language:\n";
     my $langlist = [ 'Japanese', 'English' ];
-    print scrolling_list(-name    => 'language',
-			 -values  => $langlist,
-			 -size    => 1);
+    print scrolling_list(-name   => 'language',
+			 -values => $langlist,
+			 -size   => 1);
 
     print submit(-name => 'change');
-    # print reset(-name  => 'reset');
 
     print end_form;
 }
