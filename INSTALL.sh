@@ -71,7 +71,7 @@ if [ ! -f $config_dir/main.cf ];then
 		fml/etc/main.cf > $config_dir/main.cf
 fi
 
-echo update $default_config_dir
+echo update $default_config_dir/
 cp fml/etc/default_config.cf.ja $default_config_dir/default_config.cf
 cp fml/etc/config.cf.ja $default_config_dir/config.cf
 
@@ -81,6 +81,14 @@ cp -pr cpan/lib/*	$lib_dir/$fml_version/
 
 echo update $libexec_dir/$fml_version/
 cp -pr fml/libexec/*	$libexec_dir/$fml_version/
+
+echo update /usr/local/bin/
+for prog in fmldoc fmlticket fmlconf makefml
+do
+	echo update /usr/local/bin/$prog
+	cp fml/bin/$prog /usr/local/bin/$prog.new
+	mv /usr/local/bin/$prog.new /usr/local/bin/$prog
+done
 
 PROGRAMS="fml.pl distribute command ";
 PROGRAMS="$PROGRAMS fmlserv mead fmlconf fmldoc"
