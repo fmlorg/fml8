@@ -3,7 +3,7 @@
 # Copyright (C) 2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Thread.pm,v 1.1 2003/03/16 04:53:32 fukachan Exp $
+# $FML: Thread.pm,v 1.2 2003/03/16 10:48:11 fukachan Exp $
 #
 
 package FML::Article::Thread;
@@ -90,7 +90,7 @@ sub speculate_last_id
     # XXX 3600 is the magic number. How long time is appropriate ?
     if (-f $seq_file &&
 	($sf_last_modified + 3600 > $db_last_modified)) {
-	return $curproc->article_id_max();
+	return $curproc->article_max_id();
     }
     else {
 	my $last_id = 0;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: thread.pm,v 1.1 2003/03/16 04:53:33 fukachan Exp $
+# $FML: thread.pm,v 1.2 2003/03/18 10:42:43 fukachan Exp $
 #
 
 package FML::Command::Admin::thread;
@@ -74,7 +74,7 @@ sub process
     my $ml_name       = $config->{ ml_name };
     my $thread_db_dir = $config->{ thread_db_dir };
     my $spool_dir     = $config->{ spool_dir };
-    my $max_id        = $curproc->article_id_max();
+    my $max_id        = $curproc->article_max_id();
     my $ttargs        = {
 	myname        => $myname,
 	logfp         => \&Log,

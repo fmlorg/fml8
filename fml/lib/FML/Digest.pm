@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Digest.pm,v 1.7 2003/01/11 16:05:12 fukachan Exp $
+# $FML: Digest.pm,v 1.8 2003/03/16 10:57:27 fukachan Exp $
 #
 
 package FML::Digest;
@@ -113,7 +113,7 @@ sub get_article_id
     my ($self) = @_;
     my $curproc = $self->{ _curproc };
 
-    return $curproc->article_id_max();
+    return $curproc->article_max_id();
 }
 
 

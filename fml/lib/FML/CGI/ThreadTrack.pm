@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ThreadTrack.pm,v 1.23 2003/02/15 02:54:24 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.24 2003/02/16 08:33:08 fukachan Exp $
 #
 
 package FML::CGI::ThreadTrack;
@@ -152,11 +152,11 @@ sub _build_threadtrack_param
     my $option = $curproc->command_line_options();
 
     # prepare arguments for thread track module
-    # XXX-TODO: hmm, we should provide $curproc->util->article_id_max() ?
+    # XXX-TODO: hmm, we should provide $curproc->util->article_max_id() ?
     my $ml_name       = $curproc->safe_param_ml_name();
     my $thread_db_dir = $config->{ thread_db_dir };
     my $spool_dir     = $config->{ spool_dir };
-    my $max_id        = $curproc->article_id_max();
+    my $max_id        = $curproc->article_max_id();
     my $ttargs        = {
 	myname        => $myname,
 	logfp         => \&Log,
