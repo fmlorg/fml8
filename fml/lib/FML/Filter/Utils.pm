@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.5 2001/10/11 04:16:39 fukachan Exp $
+# $FML: Utils.pm,v 1.6 2001/12/22 09:21:06 fukachan Exp $
 #
 
 package FML::Filter::Utils;
@@ -26,11 +26,11 @@ collection of utility functions
 
 =cut
 
-# Descriptions:
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: $s looks secure ?
+#    Arguments: STR($s)
+# Side Effects: none
 #      History: fml 4.0's SecureP()
-# Return Value: none
+# Return Value: 1 or 0
 sub is_secure_command_string
 {
    my ($s) = @_;
@@ -63,6 +63,10 @@ sub is_secure_command_string
 =cut
 
 
+# Descriptions: $s is valid email address ?
+#    Arguments: STR($s)
+# Side Effects: none
+# Return Value: 1 or 0
 sub is_valid_mail_address
 {
     my ($s) = @_;

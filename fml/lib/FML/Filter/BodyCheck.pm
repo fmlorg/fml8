@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: BodyCheck.pm,v 1.10 2001/11/25 15:02:48 fukachan Exp $
+# $FML: BodyCheck.pm,v 1.11 2001/12/22 09:21:06 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -33,8 +33,6 @@ usual constructor.
 =cut
 
 
-my $debug = $ENV{'debug'} ? 1 : 0;
-
 # default rules to apply
 my (@default_rules) = qw(reject_not_iso2022jp_japanese_string
 			 reject_null_mail_body
@@ -45,6 +43,10 @@ my (@default_rules) = qw(reject_not_iso2022jp_japanese_string
 			 reject_ms_guid);
 
 
+# Descriptions: constructor.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self) = @_;
@@ -64,6 +66,11 @@ overwrite rules by specified C<@$rules> ($rules is HASH ARRAY).
 
 =cut
 
+
+# Descriptions: access method to overwrite rule
+#    Arguments: OBJ($self) HASH_ARRAY($rarray)
+# Side Effects: overwrite info in object
+# Return Value: none
 sub rules
 {
     my ($self, $rarray) = @_;
@@ -89,6 +96,10 @@ C<Usage>:
 =cut
 
 
+# Descriptions: top level dispatcher 
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub body_check
 {
     my ($self, $msg, $args) = @_;
@@ -143,6 +154,10 @@ sub body_check
 }
 
 
+# Descriptions: reject if not Japanese in JIS
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args) OBJ($first_msg)
+# Side Effects: croak if error
+# Return Value: none
 sub reject_not_iso2022jp_japanese_string
 {
     my ($self, $msg, $args, $first_msg) = @_;
@@ -155,6 +170,10 @@ sub reject_not_iso2022jp_japanese_string
 }
 
 
+# Descriptions: reject if mail body is empty
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args) OBJ($first_msg)
+# Side Effects: croak if error
+# Return Value: none
 sub reject_null_mail_body
 {
     my ($self, $msg, $args, $first_msg) = @_;
@@ -170,14 +189,13 @@ sub reject_null_mail_body
 # Descriptions: virus check against some types of M$ products
 #               Even if Multipart, evaluate all blocks agasint virus checks.
 #
-#             [HISTORY]
-#             research by Yoshihiro Kawashima <katino@kyushu.iij.ad.jp>
-#             helps me to speculate the virus family?
-#             This GUID trap idea is based on ZDNet news information.
-#             Thanks hama@sunny.co.jp on M$ GUID pattern.
-#
-#    Arguments: $self $args
-# Side Effects:
+#               [HISTORY]
+#               research by Yoshihiro Kawashima <katino@kyushu.iij.ad.jp>
+#               helps me to speculate the virus family?
+#               This GUID trap idea is based on ZDNet news information.
+#               Thanks hama@sunny.co.jp on M$ GUID pattern.
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args) OBJ($first_msg)
+# Side Effects: croak if error
 # Return Value: none
 sub reject_ms_guid
 {
@@ -189,6 +207,11 @@ sub reject_ms_guid
 }
 
 
+# Descriptions: check $msg contains MS GUID or not.
+#               If so, it may be a Melissa family virus.
+#    Arguments: OBJ($self) OBJ($msg)
+# Side Effects: croak() if error
+# Return Value: none
 sub _probe_guid
 {
     my ($self, $msg) = @_;
@@ -224,6 +247,10 @@ sub _probe_guid
 }
 
 
+# Descriptions: decode $buf
+#    Arguments: OBJ($self) STR($buf) STR($encoding)
+# Side Effects: none
+# Return Value: STR
 sub _decode_mime_buffer
 {
     my ($self, $buf, $encoding) = @_;
@@ -245,14 +272,15 @@ sub _decode_mime_buffer
 }
 
 
-# Descriptions: e.g. "unsubscribe", "help", ("subscribe" in some case)
+# Descriptions: reject if $msg is one line message.
+#               e.g. "unsubscribe", "help", ("subscribe" in some case)
 #               XXX DO NOT INCLUDE ".", "?" (I think so ...)!
 #               XXX but we need "." for mail address syntax
 #               XXX e.g. "chaddr a@d1 b@d2".
 #               If we include them,
 #               we cannot identify a command or an English phrase ;D
-# Arguments: $self $args
-# Side Effects:
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args) OBJ($first_msg)
+# Side Effects: croak if error
 # Return Value: none
 sub reject_one_line_message
 {
@@ -267,12 +295,12 @@ sub reject_one_line_message
 }
 
 
-# Descriptions:
-#              XXX fml 4.0: fml.pl (distribute) should not accpet commands
-#              XXX: "# command" is internal represention
-#              XXX: but to reject the old compatible syntaxes.
-#    Arguments: $self $args
-# Side Effects:
+# Descriptions: reject if $msg looks command (old fml style command).
+#               XXX fml 4.0: fml.pl (distribute) should not accpet commands
+#               XXX: "# command" is internal represention
+#               XXX: but to reject the old compatible syntaxes.
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args) OBJ($first_msg)
+# Side Effects: croak if error
 # Return Value: none
 sub reject_old_fml_command_syntax
 {
@@ -288,6 +316,10 @@ sub reject_old_fml_command_syntax
 }
 
 
+# Descriptions: reject if $msg looks command (wrong fml command).
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args) OBJ($first_msg)
+# Side Effects: croak if error
+# Return Value: none
 sub reject_invalid_fml_command_syntax
 {
     my ($self, $msg, $args, $first_msg) = @_;
@@ -307,8 +339,8 @@ sub reject_invalid_fml_command_syntax
 #                e.g. reject "SUBSCRIBE" : octal code follows:
 #                243 323 243 325 243 302 243 323 243 303
 #                243 322 243 311 243 302 243 305
-#    Arguments: $self $args
-# Side Effects:
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args) OBJ($first_msg)
+# Side Effects: croak if error
 # Return Value: none
 sub reject_japanese_command_syntax
 {
@@ -333,6 +365,10 @@ sub reject_japanese_command_syntax
 }
 
 
+# Descriptions: should we check $m according to number of paragraphs?
+#    Arguments: OBJ($self) OBJ($m)
+# Side Effects: none
+# Return Value: 1 or 0
 sub need_one_line_check
 {
     my ($self, $m) = @_;
@@ -363,6 +399,10 @@ sub need_one_line_check
 }
 
 
+# Descriptions: $data looks a citation or not
+#    Arguments: OBJ($self) STR($data)
+# Side Effects: none
+# Return Value: 1 or 0
 sub is_citation
 {
     my ($self, $data) = @_;
@@ -379,9 +419,13 @@ sub is_citation
 }
 
 
-# XXX fml 4.0 assumes:
-# XXX If the paragraph has @ or ://, it must be signature.
-# trap special keyword like tel:011-123-456789 ...
+# Descriptions: $data looks a citation or not
+#               XXX fml 4.0 assumes:
+#               XXX If the paragraph has @ or ://, it must be signature.
+#               trap special keyword like tel:011-123-456789 ...
+#    Arguments: OBJ($self) STR($data)
+# Side Effects: none
+# Return Value: 1 or 0
 sub is_signature
 {
     my ($self, $data) = @_;
@@ -419,6 +463,11 @@ We remove it and check the remained buffer whether it is safe or not.
 
 =cut
 
+
+# Descriptions: clean up buffer before main check begins
+#    Arguments: OBJ($self) STR($xbuf)
+# Side Effects: none
+# Return Value: 1 or 0
 sub clean_up_buffer
 {
     my ($self, $xbuf) = @_;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Filter.pm,v 1.2 2001/12/22 09:21:01 fukachan Exp $
+# $FML: Filter.pm,v 1.3 2001/12/22 16:10:50 fukachan Exp $
 #
 
 package FML::Filter;
@@ -32,6 +32,11 @@ where C<$message> is C<Mail::Message> object.
 
 =head1 DESCRIPTION
 
+top level dispatcher for FML filtering engine.
+It consists of two types, header and body filtering engines.
+Detail of rules is found in 
+L<FML::Filter::HeaderCheck> and L<FML::Filter::BodyCheck>.
+
 =head1 METHODS
 
 =head2 C<new()>
@@ -40,6 +45,11 @@ standard constructor.
 
 =cut
 
+
+# Descriptions: standard constructor.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self) = @_;
@@ -50,10 +60,9 @@ sub new
 
 
 # Descriptions: entry point for FML::Filter::* modules
-#    Arguments: $self $m
-#               $m = Mail::Message object
+#    Arguments: OBJ($self) OBJ($curproc) HASH_REF($args)
 # Side Effects: none
-# Return Value: error reason (string). return undef if ok.
+# Return Value: STR or UNDEF, error reason (string). return undef if ok.
 sub check
 {
     my ($self, $curproc, $args) = @_;

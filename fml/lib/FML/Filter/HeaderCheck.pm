@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HeaderCheck.pm,v 1.6 2001/10/14 22:25:31 fukachan Exp $
+# $FML: HeaderCheck.pm,v 1.7 2001/12/22 09:21:06 fukachan Exp $
 #
 
 package FML::Filter::HeaderCheck;
@@ -39,6 +39,10 @@ my $debug = $ENV{'debug'} ? 1 : 0;
 my (@default_rules) = qw(is_valid_message_id);
 
 
+# Descriptions: constructor.
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self) = @_;
@@ -59,6 +63,11 @@ overwrite rules by specified C<@$rules> ($rules is HASH ARRAY).
 
 =cut
 
+
+# Descriptions: access method to overwrite rule
+#    Arguments: OBJ($self) HASH_ARRAY($rarray)
+# Side Effects: overwrite info in object
+# Return Value: none
 sub rules
 {
     my ($self, $rarray) = @_;
@@ -84,6 +93,10 @@ C<Usage>:
 =cut
 
 
+# Descriptions: top level dispatcher 
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub header_check
 {
     my ($self, $msg, $args) = @_;
@@ -102,6 +115,10 @@ sub header_check
 }
 
 
+# Descriptions: check whether message-id has @ 
+#    Arguments: OBJ($self) OBJ($msg) HASH_REF($args)
+# Side Effects: croak()
+# Return Value: none
 sub is_valid_message_id
 {
     my ($self, $msg, $args) = @_;
