@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2003 Ken'ichi Fukamachi
+#  Copyright (C) 2003,2004 Ken'ichi Fukamachi
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.3 2003/11/24 13:27:04 fukachan Exp $
+# $FML: DB.pm,v 1.4 2003/11/29 06:37:26 fukachan Exp $
 #
 
 package FML::User::DB;
@@ -17,6 +17,7 @@ use Carp;
 # debug
 $debug = 0;
 
+# XXX-TODO: $default_expire_period customizable ?
 # 30 days
 my $default_expire_period = 30*24*3600;
 
@@ -133,12 +134,14 @@ sub find
 	    });
 	    if ($value) {
 		if ($value =~ /^$key\s+|^$key\s*$/) {
+		    $obj->close();
 		    last MAP;
 		}
 	    }
 	    $obj->close();
 	}
 
+	# XXX-TODO: $value = "key value" ? correct ?
 	return $value;
     }
     else {
@@ -190,7 +193,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2003 Ken'ichi Fukamachi
+Copyright (C) 2003,2004 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
