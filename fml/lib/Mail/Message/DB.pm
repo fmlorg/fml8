@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DB.pm,v 1.1.2.15 2003/06/24 16:26:53 fukachan Exp $
+# $FML: DB.pm,v 1.2 2003/07/19 10:23:33 fukachan Exp $
 #
 
 package Mail::Message::DB;
@@ -25,7 +25,7 @@ use lib qw(../../../../fml/lib
 	   ../../../../img/lib
 	   );
 
-my $version = q$FML: DB.pm,v 1.1.2.15 2003/06/24 16:26:53 fukachan Exp $;
+my $version = q$FML: DB.pm,v 1.2 2003/07/19 10:23:33 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) { $version = $1;}
 
 # special value
@@ -210,6 +210,12 @@ sub DESTROY
 
 
 =head1 PARSE and ANALYZE
+
+=head2 analyze()
+
+update database on message header, thread relation information.
+
+XXX-TODO: This routine should be moved to Mail::Message::Thread ?
 
 =cut
 
