@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: HeaderRewrite.pm,v 1.8 2001/12/22 09:21:20 fukachan Exp $
+# $FML: HeaderRewrite.pm,v 1.9 2002/01/13 21:59:08 fukachan Exp $
 #
 
 package Mail::ThreadTrack::HeaderRewrite;
@@ -39,7 +39,7 @@ sub rewrite_header
     my ($self, $msg) = @_;
     my $config  = $self->{ _config };
     my $loctype = $config->{ thread_subject_tag_location } || 'appended';
-    my $header  = $msg->rfc822_message_header();
+    my $header  = $msg->whole_message_header();
     my $tag     = $self->{ _thread_subject_tag } || '';
 
     # append the thread tag to the subject

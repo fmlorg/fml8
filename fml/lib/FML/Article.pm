@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Article.pm,v 1.27 2001/12/22 09:21:00 fukachan Exp $
+# $FML: Article.pm,v 1.28 2001/12/23 09:20:41 fukachan Exp $
 #
 
 package FML::Article;
@@ -73,8 +73,8 @@ sub _setup_article_template
     my $dupmsg  = $curproc->{'incoming_message'}->{ message }->dup_header;
     if (defined $dupmsg) {
 	$curproc->{ article }->{ message } = $dupmsg;
-	$curproc->{ article }->{ header }  = $dupmsg->rfc822_message_header;
-	$curproc->{ article }->{ body }    = $dupmsg->rfc822_message_body;
+	$curproc->{ article }->{ header }  = $dupmsg->whole_message_header;
+	$curproc->{ article }->{ body }    = $dupmsg->whole_message_body;
     }
     else {
 	croak("cannot duplicate message");

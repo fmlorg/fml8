@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Exim.pm,v 1.4 2001/12/22 09:21:15 fukachan Exp $
+# $FML: Exim.pm,v 1.5 2001/12/23 14:26:45 fukachan Exp $
 #
 
 
@@ -55,7 +55,7 @@ need to guess MTA as "exim" ???
 sub analyze
 {
     my ($self, $msg, $result) = @_;
-    my $m    = $msg->rfc822_message_header();
+    my $m    = $msg->whole_message_header();
     my $addr = $m->get('X-Failed-Recipients');
 
     # set up return buffer if $addr is found.

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Analyze.pm,v 1.21 2001/12/26 14:23:30 fukachan Exp $
+# $FML: Analyze.pm,v 1.22 2002/01/13 13:35:30 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
@@ -86,7 +86,7 @@ sub _is_reply
 sub assign
 {
     my ($self, $msg) = @_;
-    my $header   = $msg->rfc822_message_header();
+    my $header   = $msg->whole_message_header();
     my $subject  = $header->get('subject');
     my $is_reply = _is_reply($subject);
 
@@ -245,9 +245,9 @@ sub update_thread_status
 	}
     }
 
-    my $header  = $msg->rfc822_message_header();
-    my $textmsg = $msg->get_first_plaintext_message();
-    $content    = $textmsg->data_in_body_part() if defined $textmsg;
+    my $header  = $msg->whole_message_header();
+    my $textmsg = $msg->find_first_plaintext_message();
+    $content    = $textmsg->message_text() if defined $textmsg;
     $subject    = $header->get('subject') || '';
     $pragma     = $header->get('x-thread-pragma') || $pragma || '';
 
@@ -275,9 +275,9 @@ sub _is_ignore
     my ($field, $rule);
     my $filterlist = $self->{ _filterlist };
 
-    $header  = $msg->rfc822_message_header();
-    $textmsg = $msg->get_first_plaintext_message();
-    $content = $textmsg->data_in_body_part() if defined $textmsg;
+    $header  = $msg->whole_message_header();
+    $textmsg = $msg->find_first_plaintext_message();
+    $content = $textmsg->message_text() if defined $textmsg;
 
     # check header
     while (($field, $rule) = each %$filterlist) {
@@ -529,7 +529,7 @@ sub update_db
 sub _speculate_time
 {
     my ($msg) = @_;
-    my $header = $msg->rfc822_message_header;
+    my $header = $msg->whole_message_header;
 
     if (defined $header->get('date')) {
 	use Mail::Message::Date;
@@ -570,7 +570,7 @@ sub _update_db
     $rh->{ _articles  }->{ $thread_id  } .= $article_id . " ";
 
     # 2. record the sender information
-    my $header = $msg->rfc822_message_header;
+    my $header = $msg->whole_message_header;
     $rh->{ _sender }->{ $article_id } = $header->get('from');
 
     # 3. update status information

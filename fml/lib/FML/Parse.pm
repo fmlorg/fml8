@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Parse.pm,v 1.19 2002/01/13 12:50:51 fukachan Exp $
+# $FML: Parse.pm,v 1.20 2002/01/13 13:26:39 fukachan Exp $
 #
 
 package FML::Parse;
@@ -77,8 +77,8 @@ sub _parse
     });
 
     # log information
-    my $header_size = $msg->rfc822_message_header_size();
-    my $body_size   = $msg->rfc822_message_body_size();
+    my $header_size = $msg->whole_message_header_size();
+    my $body_size   = $msg->whole_message_body_size();
     Log("read header=$header_size body=$body_size");
 
     if (defined $msg->envelope_sender()) {

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: GOO.pm,v 1.3 2001/12/22 09:21:15 fukachan Exp $
+# $FML: GOO.pm,v 1.4 2001/12/23 14:26:45 fukachan Exp $
 #
 
 
@@ -47,7 +47,7 @@ See C<Mail::Bounce> for more details.
 sub analyze
 {
     my ($self, $msg, $result) = @_;
-    my $hdr  = $msg->rfc822_message_header();
+    my $hdr  = $msg->whole_message_header();
     my $subj = $hdr->get('subject');
 
     if ($subj =~ /Rejecting your mail to (\S+)/) {

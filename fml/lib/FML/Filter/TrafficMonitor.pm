@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: TrafficMonitor.pm,v 1.1 2001/12/02 02:09:52 fukachan Exp $
+# $FML: TrafficMonitor.pm,v 1.2 2001/12/22 09:21:06 fukachan Exp $
 #
 
 package FML::Filter::TrafficMonitor;
@@ -68,7 +68,7 @@ sub _get_addrinfo
 {
     my ($self, $curproc) = @_;
     my $msg  = $curproc->{'incoming_message'}->{ message };
-    my $hdr  = $msg->rfc822_message_header;
+    my $hdr  = $msg->whole_message_header;
     my $info = {};
 
     use Mail::Message::Date;
@@ -87,7 +87,7 @@ sub _get_hostinfo
 {
     my ($self, $curproc) = @_;
     my $msg  = $curproc->{'incoming_message'}->{ message };
-    my $hdr  = $msg->rfc822_message_header;
+    my $hdr  = $msg->whole_message_header;
     my $info = {};
 
     # Analizeing Received:

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: DSN.pm,v 1.13 2001/12/23 15:03:27 fukachan Exp $
+# $FML: DSN.pm,v 1.14 2001/12/24 02:23:31 fukachan Exp $
 #
 
 
@@ -84,12 +84,12 @@ See C<Mail::Bounce> for more details.
 sub analyze
 {
     my ($self, $msg, $result) = @_;
-    my $m = $msg->rfc822_message_body_head;
+    my $m = $msg->whole_message_body_head;
     $m = $m->find( { data_type => 'message/delivery-status' } );
 
     if (defined $m) {
 	# data in the part
-	my $data = $m->data_in_body_part;
+	my $data = $m->message_text;
 	my $n    = $m->num_paragraph;
 
 	for (my $i = 0; $i < $n; $i++) {

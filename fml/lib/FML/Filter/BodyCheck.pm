@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: BodyCheck.pm,v 1.12 2001/12/23 13:46:14 fukachan Exp $
+# $FML: BodyCheck.pm,v 1.13 2001/12/23 13:48:07 fukachan Exp $
 #
 
 package FML::Filter::BodyCheck;
@@ -114,9 +114,9 @@ sub body_check
 
     # get the message object for the first plain/text message.
     # If the incoming message is a mime multipart format,
-    # get_first_plaintext_message() return the first mime part block
+    # find_first_plaintext_message() return the first mime part block
     # with the "plain/text" type.
-    my $m = $msg->get_first_plaintext_message();
+    my $m = $msg->find_first_plaintext_message();
     # message without valid text part e.g. text/html (not multipart)
     unless (defined $m) {
 	my $r = "no text part, ignored";
@@ -226,9 +226,9 @@ sub _probe_guid
 	'\{([0-9A-F]{8}\-[0-9A-F]{4}\-[0-9A-F]{4}\-[0-9A-F]{4}\-[0-9A-F]{12})\}';
 
     my $window_size = 1024; # at lease 32*2
-    my ($pb, $pe)   = $msg->get_offset();
+    my ($pb, $pe)   = $msg->offset_pair();
     my $dataref     = $msg->{ data };
-    my $encoding    = $msg->get_encoding_mechanism();
+    my $encoding    = $msg->encoding_mechanism();
 
     # get $window_size bytes window and decode it
     $buf = substr($$dataref, $pb, $pe - $pb);
@@ -305,7 +305,7 @@ sub reject_one_line_message
 sub reject_old_fml_command_syntax
 {
     my ($self, $msg, $args, $first_msg) = @_;
-    my $buf = $first_msg->data_in_body_part;
+    my $buf = $first_msg->message_text;
 
     if ($buf =~ /^[\s\n]*(\#\s*[\w\d\:\-\s]+)[\n\s]*$/) {
 	my $r = $1;
@@ -323,7 +323,7 @@ sub reject_old_fml_command_syntax
 sub reject_invalid_fml_command_syntax
 {
     my ($self, $msg, $args, $first_msg) = @_;
-    my $buf = $first_msg->data_in_body_part;
+    my $buf = $first_msg->message_text;
 
     if ($buf =~ /^[\s\n]*\%\s*echo.*/i) {
 	croak "invalid command in the mail body";
@@ -345,7 +345,7 @@ sub reject_invalid_fml_command_syntax
 sub reject_japanese_command_syntax
 {
     my ($self, $msg, $args, $first_msg) = @_;
-    my $buf = $first_msg->data_in_body_part;
+    my $buf = $first_msg->message_text;
 
     if ($buf =~ /\033\044\102(\043[\101-\132\141-\172])/) {
 	# trap /JIS"2byte"[A-Za-z]+/

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SimpleMatch.pm,v 1.25 2001/12/23 15:03:27 fukachan Exp $
+# $FML: SimpleMatch.pm,v 1.26 2002/01/13 06:23:27 fukachan Exp $
 #
 
 
@@ -172,7 +172,7 @@ sub analyze
     };
 
     # skip the first header part and search "text/*" in the body part(s).
-    $m = $msg->rfc822_message_body_head;
+    $m = $msg->whole_message_body_head;
     $m = $m->find( { data_type_regexp => 'text' } );
 
     if (defined $m) {

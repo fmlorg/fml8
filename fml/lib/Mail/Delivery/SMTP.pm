@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: SMTP.pm,v 1.10 2001/12/22 09:21:17 fukachan Exp $
+# $FML: SMTP.pm,v 1.11 2002/01/13 07:01:28 fukachan Exp $
 #
 
 
@@ -771,8 +771,8 @@ sub _send_data_to_mta
     my ($self, $args) = @_;
 
     # prepare smtp information
-    my $header     = $args->{ message }->rfc822_message_header;
-    my $body       = $args->{ message }->rfc822_message_body;
+    my $header     = $args->{ message }->whole_message_header;
+    my $body       = $args->{ message }->whole_message_body;
     my $socket     = $self->{'_socket'};
 
     if (defined $body) {

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.25 2001/12/22 09:21:08 fukachan Exp $
+# $FML: Command.pm,v 1.26 2001/12/22 14:25:24 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -285,7 +285,7 @@ sub _evaluate_command
     my $keyword = $config->{ confirm_keyword };
     my $prompt  = $config->{ command_prompt } || '>>>';
 
-    my $body    = $curproc->{ incoming_message }->{ body }->data_in_body_part;
+    my $body    = $curproc->{ incoming_message }->{ body }->message_text;
     my @body    = split(/\n/, $body);
     my $id      = $curproc->_pre_scan( \@body );
 

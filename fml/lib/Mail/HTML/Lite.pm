@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Lite.pm,v 1.36 2002/01/14 05:44:46 fukachan Exp $
+# $FML: Lite.pm,v 1.37 2002/01/14 11:59:02 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -15,7 +15,7 @@ use Carp;
 my $debug = $ENV{'debug'} ? 1 : 0;
 my $URL   = "<A HREF=\"http://www.fml.org/software/\">Mail::HTML::Lite</A>";
 
-my $version = q$FML: Lite.pm,v 1.36 2002/01/14 05:44:46 fukachan Exp $;
+my $version = q$FML: Lite.pm,v 1.37 2002/01/14 11:59:02 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -146,8 +146,8 @@ sub htmlfy_rfc822_message
     use FileHandle;
     my $rh   = new FileHandle $src;
     my $msg  = Mail::Message->parse( { fd => $rh } );
-    my $hdr  = $msg->rfc822_message_header;
-    my $body = $msg->rfc822_message_body;
+    my $hdr  = $msg->whole_message_header;
+    my $body = $msg->whole_message_body;
 
     # save information for index.html and thread.html
     $self->cache_message_info($msg, { id => $id,
@@ -172,7 +172,7 @@ sub htmlfy_rfc822_message
     my ($m, $type, $attach);
   CHAIN:
     for ($m = $msg; defined($m) ; $m = $m->{ 'next' }) {
-	$type = $m->get_data_type;
+	$type = $m->data_type;
 
 	last CHAIN if $type eq 'multipart.close-delimiter'; # last of multipart
 	next CHAIN if $type =~ /^multipart/; # multipart type is special.
@@ -224,7 +224,7 @@ sub htmlfy_rfc822_message
 	elsif ($type eq 'text/plain') {
 	    $self->_text_safe_print({
 		fh   => $wh,                    # parent html
-		data => $m->data_in_body_part(),
+		data => $m->message_text(),
 	    });
 	}
 	# create a separete file for attachment
@@ -233,7 +233,7 @@ sub htmlfy_rfc822_message
 
 	    # write attachement into a separete file
 	    my $outf    = _gen_attachment_filename($dst, $attach, $type);
-	    my $enc     = $m->get_encoding_mechanism;
+	    my $enc     = $m->encoding_mechanism;
 	    my $msginfo = { message => $m };
 
 	    # e.g. text/xxx case (e.g. text/html case)
@@ -399,7 +399,7 @@ sub html_begin
     }
     elsif (defined $args->{ message }) {
 	$msg   = $args->{ message };
-	$hdr   = $msg->rfc822_message_header;
+	$hdr   = $msg->whole_message_header;
 	$title = $self->_decode_mime_string( $hdr->get('subject') );
     }
 
@@ -541,7 +541,7 @@ sub _create_temporary_file_in_raw_mode
     if (defined $wh) {
 	$wh->autoflush(1);
 
-	my $buf = $msg->data_in_body_part();
+	my $buf = $msg->message_text();
 	$wh->print($buf);
 	$wh->close;
 
@@ -631,7 +631,7 @@ sub _format_safe_header
 {
     my ($self, $msg) = @_;
     my ($buf);
-    my $hdr = $msg->rfc822_message_header;
+    my $hdr = $msg->whole_message_header;
     my $header_field = \@header_field;
 
     # header
@@ -699,9 +699,9 @@ sub _text_raw_print
 {
     my ($self, $args) = @_;
     my $msg  = $args->{ message }; # Mail::Message object
-    my $type = $msg->get_data_type;
-    my $enc  = $msg->get_encoding_mechanism;
-    my $buf  = $msg->data_in_body_part();
+    my $type = $msg->data_type;
+    my $enc  = $msg->encoding_mechanism;
+    my $buf  = $msg->message_text();
 
     if (defined( $args->{ file } )) {
 	my $outf = $args->{ file };
@@ -727,8 +727,8 @@ sub _binary_print
 {
     my ($self, $args) = @_;
     my $msg  = $args->{ message }; # Mail::Message object
-    my $type = $msg->get_data_type;
-    my $enc  = $msg->get_encoding_mechanism;
+    my $type = $msg->data_type;
+    my $enc  = $msg->encoding_mechanism;
 
     if (defined( $args->{ file } )) {
 	my $outf = $args->{ file };
@@ -742,17 +742,17 @@ sub _binary_print
 	    if ($enc eq 'base64') {
 		eval q{
 		    use MIME::Base64;
-		    print $fh decode_base64( $msg->data_in_body_part() );
+		    print $fh decode_base64( $msg->message_text() );
 		};
 	    }
 	    elsif ($enc eq 'quoted-printable') {
 		eval q{
 		    use MIME::QuotedPrint;
-		    print $fh decode_qp( $msg->data_in_body_part() );
+		    print $fh decode_qp( $msg->message_text() );
 		};
 	    }
 	    elsif ($enc eq '7bit') {
-		_print_safe_str($fh, $msg->data_in_body_part());
+		_print_safe_str($fh, $msg->message_text());
 	    }
 	    else {
 		croak("unknown MIME encoding enc=$enc");
@@ -802,7 +802,7 @@ See section C<Internal Data Presentation> for more detail.
 sub cache_message_info
 {
     my ($self, $msg, $args) = @_;
-    my $hdr = $msg->rfc822_message_header;
+    my $hdr = $msg->whole_message_header;
     my $id  = $args-> { id };
     my $dst = $args-> { dst };
 

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.43 2002/01/13 13:35:25 fukachan Exp $
+# $FML: Message.pm,v 1.44 2002/01/13 15:19:52 fukachan Exp $
 #
 
 package Mail::Message;
@@ -403,8 +403,8 @@ sub dup_header
 	# 2. overwrite only header data in $dupmsg
 	my $header = $self->{ data };
 	$dupmsg->{ data } = $header->dup();
-	$dupmsg->next_message( $body );
-	$body->prev_message( $dupmsg );
+	$dupmsg->__next_message( $body );
+	$body->__prev_message( $dupmsg );
 
 	# 3. return the new object.
 	return $dupmsg;
@@ -475,8 +475,8 @@ sub parse
     my $ref_body = $me->_build_body_object($args, $result);
 
     # make a chain such as "undef -> header -> body -> undef"
-    $me->next_message( $ref_body );
-    $ref_body->prev_message( $me );
+    $me->__next_message( $ref_body );
+    $ref_body->__prev_message( $me );
 
     # return information
     $result->{ body_size } = length($$InComingMessage);
@@ -600,16 +600,16 @@ sub _build_body_object
 }
 
 
-=head2 rfc822_message_header()
+=head2 whole_message_header()
 
 return Mail::Header object corresponding to the header part for the
 object C<$self>.
 
-=head2 rfc822_message_body()
+=head2 whole_message_body()
 
-alias of C<rfc822_message_body_head()>.
+alias of C<whole_message_body_head()>.
 
-=head2 rfc822_message_body_head()
+=head2 whole_message_body_head()
 
 return the first or the head Mail::Message object in a chain for the
 body part of the message C<$self>.
@@ -623,7 +623,7 @@ body part of the message C<$self>.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ(Mail::Header)
-sub rfc822_message_header
+sub whole_message_header
 {
     my ($self) = @_;
     my $m = $self->find( { data_type => 'text/rfc822-headers' } );
@@ -637,10 +637,10 @@ sub rfc822_message_header
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ(Mail::Message)
-sub rfc822_message_body_head
+sub whole_message_body_head
 {
     my ($self) = @_;
-    my $type = $self->get_data_type();
+    my $type = $self->data_type();
     return ( ($type eq 'text/rfc822-headers') ? $self->{ next } : undef );
 }
 
@@ -650,14 +650,14 @@ sub rfc822_message_body_head
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ(Mail::Message)
-sub rfc822_message_body
+sub whole_message_body
 {
     my ($self) = @_;
-    $self->rfc822_message_body_head();
+    $self->whole_message_body_head();
 }
 
 
-=head2 rfc822_message_header_data_type()
+=head2 whole_message_header_data_type()
 
 return the C<type> string. It is the whole message type which is
 speculated from header C<Content-Type:>.
@@ -670,10 +670,10 @@ speculated from header C<Content-Type:>.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
-sub rfc822_message_header_data_type
+sub whole_message_header_data_type
 {
     my ($self) = @_;
-    my $hdr = $self->rfc822_message_header();
+    my $hdr = $self->whole_message_header();
     $self->_header_data_type($hdr);
 }
 
@@ -751,7 +751,7 @@ sub find
 	my $mp   = $self;
 	for ( ; $mp; $mp = $mp->{ next }) {
 	    if ($debug) { print "   msg->find(", $type, " eq $type)\n";}
-	    if ($type eq $mp->get_data_type()) {
+	    if ($type eq $mp->data_type()) {
 		if ($debug) { print "   msg->find($type match) = $mp\n";}
 		return $mp;
 	    }
@@ -761,7 +761,7 @@ sub find
 	my $regexp = $args->{ data_type_regexp };
 	my $mp     = $self;
 	for ( ; $mp; $mp = $mp->{ next }) {
-	    my $type = $mp->get_data_type();
+	    my $type = $mp->data_type();
 	    if ($debug) { print "   msg->find(", $type, "=~ /$regexp/)\n";}
 	    if ($type =~ /$regexp/i) {
 		if ($debug) { print "   msg->find($type match) = $mp\n";}
@@ -774,13 +774,13 @@ sub find
 }
 
 
-=head2 head_message()
+=head2 __head_message()
 
 no argument.
 It return the head object of a chain of C<Mail::Message> objects.
 Usually it is the header part.
 
-=head2 last_message()
+=head2 __last_message()
 
 no argument.
 It return the last object of a chain of C<Mail::Message> objects.
@@ -794,7 +794,7 @@ Usually it is the last message in the body part.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
-sub head_message
+sub __head_message
 {
     my ($self) = @_;
     my $m = $self;
@@ -817,7 +817,7 @@ sub head_message
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: OBJ
-sub last_message
+sub __last_message
 {
     my ($self) = @_;
     my $m = $self;
@@ -835,11 +835,11 @@ sub last_message
 }
 
 
-=head2 next_message( $obj )
+=head2 __next_message( $obj )
 
 The next part of C<$self> object is C<$obj>.
 
-=head2 prev_message( $obj )
+=head2 __prev_message( $obj )
 
 The previous part of C<$self> object is C<$obj>.
 
@@ -850,7 +850,7 @@ The previous part of C<$self> object is C<$obj>.
 #    Arguments: OBJ($self) OBJ(ref_next_message)
 # Side Effects: update next pointer in object
 # Return Value: OBJ
-sub next_message
+sub __next_message
 {
     my ($self, $ref_next_message) = @_;
     $self->{ 'next' } = $ref_next_message;
@@ -861,7 +861,7 @@ sub next_message
 #    Arguments: OBJ($self) OBJ(ref_prev_message)
 # Side Effects: update prev pointer in object
 # Return Value: OBJ
-sub prev_message
+sub __prev_message
 {
     my ($self, $ref_prev_message) = @_;
     $self->{ 'prev' } = $ref_prev_message;
@@ -1164,8 +1164,8 @@ sub build_mime_multipart_chain
 	$head = $msg unless $head; # save the head $msg
 
 	# boundary -> data -> boundary ...
-	if (defined $prev_m) { $prev_m->next_message( $msg );}
-	$msg->next_message( $m );
+	if (defined $prev_m) { $prev_m->__next_message( $msg );}
+	$msg->__next_message( $m );
 
 	# for the next loop
 	$prev_m = $m;
@@ -1178,7 +1178,7 @@ sub build_mime_multipart_chain
 	data_type      => $virtual_data_type{'close-delimeter'},
 	data           => \$delbuf_end,
     };
-    $prev_m->next_message( $msg ); # ... -> data -> close-delimeter
+    $prev_m->__next_message( $msg ); # ... -> data -> close-delimeter
 
     return $head; # return the pointer to the head of a chain
 }
@@ -1255,7 +1255,7 @@ sub parse_and_build_mime_multipart_chain
 		data         => $data,
 	    };
 	    my $m = $self->_alloc_new_part($args);
-	    return next_message($self, $m);
+	    return __next_message($self, $m);
 	}
 	# close-delimiter is not found.
 	elsif ($mpb_end < 0) {
@@ -1313,7 +1313,7 @@ sub parse_and_build_mime_multipart_chain
 		    $virtual_data_type{'preamble'};
 	    }
 
-	    $args->{ data_type } = _get_data_type($args, $default);
+	    $args->{ data_type } = _data_type($args, $default);
 
 	    if ($debug) {
 		my $r = substr($$data, $pb, $pe - $pb);
@@ -1392,15 +1392,15 @@ sub parse_and_build_mime_multipart_chain
     my $j = 0;
     for ($j = 0; $j < $i; $j++) {
 	if (defined $m[ $j + 1 ]) {
-	    next_message( $m[ $j ], $m[ $j + 1 ] );
+	    __next_message( $m[ $j ], $m[ $j + 1 ] );
 	}
 	if (($j > 1) && defined $m[ $j - 1 ]) {
-	    prev_message( $m[ $j ], $m[ $j - 1 ] );
+	    __prev_message( $m[ $j ], $m[ $j - 1 ] );
 	}
     }
 
     # chain $self and our chains built here.
-    next_message($self, $m[0]);
+    __next_message($self, $m[0]);
 }
 
 
@@ -1408,7 +1408,7 @@ sub parse_and_build_mime_multipart_chain
 #    Arguments: HASH_REF($args) STR($default)
 # Side Effects: none
 # Return Value: STR
-sub _get_data_type
+sub _data_type
 {
     my ($args, $default) = @_;
     my $buf = $args->{ header } || '';
@@ -1623,7 +1623,7 @@ sub is_empty
 }
 
 
-=head2 get_encoding_mechanism()
+=head2 encoding_mechanism()
 
 return encoding type for specified Mail::Message not whole mail.
 The return value is one of base64, quoted-printable or undef.
@@ -1636,10 +1636,10 @@ The return value is one of base64, quoted-printable or undef.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
-sub get_encoding_mechanism
+sub encoding_mechanism
 {
     my ($self) = @_;
-    my $buf = $self->header_in_body_part();
+    my $buf = $self->message_fields();
 
     if ($buf =~ /Content-Transfer-Encoding:\s*(\S+)/mi) {
 	my $mechanism = $1;
@@ -1652,7 +1652,7 @@ sub get_encoding_mechanism
 }
 
 
-=head2 get_offset()
+=head2 offset_pair()
 
 return offset information in the data.
 return value is ARRAY
@@ -1668,7 +1668,7 @@ on the Mail::Message object.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM
-sub get_offset
+sub offset_pair
 {
     my ($self) = @_;
     return( $self->{ offset_begin }, $self->{ offset_end });
@@ -1690,7 +1690,7 @@ get whole body size for this object ($self)
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM
-sub rfc822_message_header_size
+sub whole_message_header_size
 {
     my ($self) = @_;
     $self->{ data_info }->{ header_size };
@@ -1701,7 +1701,7 @@ sub rfc822_message_header_size
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: NUM
-sub rfc822_message_body_size
+sub whole_message_body_size
 {
     my ($self) = @_;
     $self->{ data_info }->{ body_size };
@@ -1726,7 +1726,7 @@ sub envelope_sender
 }
 
 
-=head2 get_data_type()
+=head2 data_type()
 
 return the data type of the given message object ($self) not the whole
 mail message.
@@ -1738,7 +1738,7 @@ mail message.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
-sub get_data_type
+sub data_type
 {
     my ($self) = @_;
     my $type = $self->{ data_type };
@@ -1850,12 +1850,12 @@ sub _evaluate_pmap
 }
 
 
-=head2 header_in_body_part()
+=head2 message_fields()
 
 return header string in the message content.
 It is mie header for whole mail or each message of MIME/multipart.
 
-=head2 data_in_body_part($size)
+=head2 message_text($size)
 
 get body string in the message content, which is the whole mail (plain
 text) or body part of a block of multipart.
@@ -1869,7 +1869,7 @@ If C<$size> is specified, return the first $size bytes in the body.
 #    Arguments: OBJ($self)
 # Side Effects: none
 # Return Value: STR
-sub header_in_body_part
+sub message_fields
 {
     my ($self) = @_;
     return defined $self->{ header } ? $self->{ header } : undef;
@@ -1880,7 +1880,7 @@ sub header_in_body_part
 #    Arguments: OBJ($self) NUM($size)
 # Side Effects: none
 # Return Value: STR
-sub data_in_body_part
+sub message_text
 {
     my ($self, $size) = @_;
     my $data           = $self->{ data };
@@ -1908,13 +1908,13 @@ sub data_in_body_part
 }
 
 
-=head2 get_first_plaintext_message($args)
+=head2 find_first_plaintext_message($args)
 
 return the Messages object for the first "plain/text" message in a
 chain. For example,
 
-         $m    = $msg->get_first_plaintext_message();
-         $body = $m->data_in_body_part();
+         $m    = $msg->find_first_plaintext_message();
+         $body = $m->message_text();
 
 where $body is the mail body (string).
 
@@ -1925,7 +1925,7 @@ where $body is the mail body (string).
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: none
 # Return Value: OBJ or UNDEF
-sub get_first_plaintext_message
+sub find_first_plaintext_message
 {
     my ($self, $args) = @_;
     my $size = $args->{ 'size' } || 512;
@@ -1937,7 +1937,7 @@ sub get_first_plaintext_message
     for ($mp = $self;
 	 defined $mp->{ data } || defined $mp->{ 'next' };
 	 $mp = $mp->{ 'next' }) {
-	my $type = $mp->get_data_type;
+	my $type = $mp->data_type;
 
 	if ($type eq 'text/plain') {
 	    return $mp;
@@ -1966,7 +1966,7 @@ sub set_log_function
 }
 
 
-=head2 get_data_type_list()
+=head2 data_type_list()
 
 show the list of data_types in the chain order.
 This is defined for debug and removed in the future.
@@ -1978,7 +1978,7 @@ This is defined for debug and removed in the future.
 #    Arguments: OBJ($msg) HASH_REF($args)
 # Side Effects: none
 # Return Value: REF_ARRAY
-sub get_data_type_list
+sub data_type_list
 {
     my ($msg, $args) = @_;
     my ($m, @buf, $i);
