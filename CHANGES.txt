@@ -1,6 +1,72 @@
 		CHANGES
 		Last Modified: $Date$
 
+
+	   ドキュメントクリーニング きゃんぺーん
+
+
+2002/06/30
+
+   ドキュメントクリーニング きゃんぺーん
+
+   FML::Command::HTMLify 
+	more check of input
+	
+   FML::Process::ThreadTrack 
+	fix ISA for ->speculate_max_id()
+	
+   FML::Process::ConfViewer Spool.pm 
+	fix the condition to show help
+
+   FML::Process::Error 
+	$self -> $curproc
+
+2002/06/28
+
+   FML::CGI::Admin::Menu 
+   FML::Process::CGI::Kernel 
+	separate execution of the command and the menu pop up.
+	Firstly execute run_cgi_main() and show tables after that.
+
+	CGI の情報更新をきちんとするために、CGI の関数呼びだしの基本構
+	造を修正
+
+2002/06/27
+
+  バーチャルドメインサポートの修正、全面的オーバホール
+
+   FML::MTAControl 
+   FML::Command::Admin::newml rmml.pm 
+   FML::MTAControl::Postfix Qmail.pm 
+	major overhaul
+	o reconstruct architecture
+	o bug fix virtual domain support
+	o sync w:::FML::Process overhaul to bug fix virtual domain support
+	
+   FML::Process::Alias Command.pm ConfViewer.pm 
+		                            Configure Distribute.pm 
+		                            DocViewer Error.pm HTMLify.pm 
+		                            Kernel Spool.pm Switch.pm 
+		                            ThreadTrack Utils.pm 
+   FML::Process::CGI::Kernel 
+	major overhaul::delayed loading of *.cf files.  The loading is done
+	within prepare() method now to handle virtual domains properly.
+	
+   FML::Command::HTMLify 
+	not need to validate ml existence
+	
+2002/06/25
+
+   clean up CGI ...
+
+   FML::CGI::Admin::List 
+	scroll size is set by the length of maps
+	
+   FML::Command::Admin::rmml 
+	fix virtual domain handling. sync w:::newml logic
+	clean up (white spaces)
+	clean up. nuke _get_domain_info (not used)
+
 2002/06/24
 
    CGI の見栄えを大改良中
@@ -2640,4 +2706,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.82 2002/06/23 03:39:02 fukachan Exp $
+$FML: CHANGES.txt,v 1.83 2002/06/24 15:01:51 fukachan Exp $
