@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.121 2002/08/03 10:35:09 fukachan Exp $
+# $FML: Kernel.pm,v 1.122 2002/08/07 03:59:18 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -246,38 +246,101 @@ sub prepare
 }
 
 
-=head2 C<lock($args)>
+=head2 lock( [$channel] )
 
-lock the current process.
-It is a giant lock now.
+lock the specified channel. 
+lock a giant lock if the channel is not specified.
 
-=head2 C<unlock($args)>
+=head2 unlock( [$channel] )
 
-unlocks the current process.
-It is a giant lock now.
+unlock the specified channel.
+unlock a giant lock if the channel is not specified.
 
 =cut
 
 
-# Descriptions: do a giant lock
-#    Arguments: OBJ($curproc) HASH_REF($args)
+# Descriptions: lock the channel
+#    Arguments: OBJ($curproc) STR($channel)
 # Side Effects: none
 # Return Value: none
 sub lock
 {
-    my ($curproc, $args) = @_;
+    my ($curproc, $channel) = @_;
+    my $lock_file = '';
 
-    # lock information
+    # initialize
+    ($channel, $lock_file) = $curproc->_lock_init($channel);
+
+    require File::SimpleLock;
+    my $lockobj = new File::SimpleLock;
+
+    my $r = $lockobj->lock( { file => $lock_file } );
+    if ($r) {
+	my $pcb = $curproc->{ pcb };
+	$pcb->set('lock', $channel, $lockobj);
+	Log("lock channel=$channel");
+    }
+    else {
+	LogError("cannot lock");
+	croak("Error: cannot lock");
+    }
+}
+
+
+# Descriptions: unlock the channel 
+#    Arguments: OBJ($curproc) STR($channel)
+# Side Effects: none
+# Return Value: none
+sub unlock
+{
+    my ($curproc, $channel) = @_;
+    my $lock_file = '';
+
+    # initialize
+    ($channel, $lock_file) = $curproc->_lock_init($channel);
+
+    my $pcb     = $curproc->{ pcb };
+    my $lockobj = $pcb->get('lock', $channel);
+
+    if (defined $lockobj) {
+	my $r = $lockobj->unlock( { file => $lock_file } );
+	if ($r) {
+	    Log("unlock channel=$channel");
+	}
+	else {
+	    LogError("cannot unlock");
+	    croak("Error: cannot unlock");
+	}
+    }
+    else {
+	LogError("object undefined, cannot unlock");
+	croak("Error: object undefined, cannot unlock");
+    }
+}
+
+
+# Descriptions: initialize lock information et.al.
+#    Arguments: OBJ($curproc) STR($channel)
+# Side Effects: mkdir $lock_dir
+# Return Value: ARRAY(STR, STR)
+sub _lock_init
+{
+    my ($curproc, $channel) = @_;
     my $config    = $curproc->{ config };
     my $lock_dir  = $config->{ lock_dir };
-    my $lock_file = $config->{ lock_file };
     my $lock_type = $config->{ lock_type };
 
+    # our lock channel
+    $channel ||= 'giantlock';
+
+    # only user "fml" should read lock files.
     unless (-d $lock_dir) {
 	use File::Path;
-	# only user "fml" should read lock files.
 	mkpath($lock_dir, 0, 0700);
     }
+
+    use File::Spec;
+    my $lock_file = File::Spec->catfile($lock_dir, $channel);
 
     unless (-f $lock_file) {
 	use FileHandle;
@@ -288,44 +351,104 @@ sub lock
 	}
     }
 
-    require File::SimpleLock;
-    my $lockobj = new File::SimpleLock;
+    return($channel, $lock_file);
+}
 
-    return 0 unless $lock_file ;
-    my $r = $lockobj->lock( { file => $lock_file } );
-    if ($r) {
-	my $pcb = $curproc->{ pcb };
-	$pcb->set('lock', 'object', $lockobj);
-	$pcb->set('lock', 'file',   $lock_file);
-	Log("locked $lock_file") if $debug;
+
+=head2 is_timeout( $channel )
+
+=head2 get_timeout( $channel )
+
+=head2 set_timeout( $channel, $time )
+
+=cut
+
+
+# Descriptions: event sleeping at $channel should be waked up ?
+#    Arguments: OBJ($curproc) STR($channel)
+# Side Effects: none
+# Return Value: NUM(1 or 0)
+sub is_timeout
+{
+    my ($curproc, $channel) = @_;
+    my $t = $curproc->get_timeout($channel);
+
+    if ($t) {	
+	return (time > $t) ? 1 : 0;
     }
     else {
-	LogError("cannot lock");
-	croak("Error: cannot lock");
+	LogWarn("visit timeout channel=$channel at the first time");
+	return 1;
     }
 }
 
 
-# Descriptions:
-#    Arguments: OBJ($curproc) HASH_REF($args)
-# Side Effects:
-# Return Value: none
-sub unlock
+# Descriptions: return the upper time event sleeps at $channel until
+#    Arguments: OBJ($curproc) STR($channel)
+# Side Effects: none
+# Return Value: NUM
+sub get_timeout
 {
-    my ($curproc, $args) = @_;
+    my ($curproc, $channel) = @_;
+    my $qf = $curproc->_init_timeout($channel);
 
-    my $pcb       = $curproc->{ pcb };
-    my $lockobj   = $pcb->get('lock', 'object');
-    my $lock_file = $pcb->get('lock', 'file');
+    if (-f $qf) {
+	use FileHandle;
+	my $fh = new FileHandle $qf;
+	my $t  = $fh->getline(); $t =~ s/\s*//g;
 
-    my $r = $lockobj->unlock( { file => $lock_file } );
-    if ($r) {
-	Log("unlocked $lock_file") if $debug;
+	return $t;
     }
     else {
-	LogError("cannot unlock");
-	croak("Error: cannot unlock");
+	return 0;
     }
+}
+
+
+# Descriptions: set the upper time for event sleeps at $channel until
+#    Arguments: OBJ($curproc) STR($channel) NUM($time)
+# Side Effects: none
+# Return Value: NUM
+sub set_timeout
+{
+    my ($curproc, $channel, $time) = @_;
+    my $qf = $curproc->_init_timeout($channel);
+
+    use FileHandle;
+    my $wh = new FileHandle "> $qf";
+    if (defined $wh) {
+	print $wh $time, "\n";
+	$wh->close;
+    }
+}
+
+
+# Descriptions: utility function to manipulate event sleeping at $channel
+#    Arguments: OBJ($curproc) STR($channel)
+# Side Effects: none
+# Return Value: STR
+sub _init_timeout
+{
+    my ($curproc, $channel) = @_;
+    
+    my $config = $curproc->config();
+    my $dir    = $config->{ event_queue_dir };
+
+    unless (-d $dir) {
+	use File::Path;
+	mkpath($dir, 0, 0700);
+    }
+
+    use File::Spec;
+    my $qf = File::Spec->catfile($dir, $channel);
+
+    unless (-f $qf) {
+	use FileHandle;
+	my $wh = new FileHandle ">> $qf";
+	print $wh "\n" if defined $wh;
+    }
+
+    return $qf;
 }
 
 
