@@ -647,12 +647,6 @@ guide_file		=	$ml_home_dir/guide
 #      History:
 #        Value:
 #     Examples:
-summary_file		=	$ml_home_dir/summary
-
-# Descriptions: ヘルプファイル
-#      History:
-#        Value:
-#     Examples:
 objective_file		=	$ml_home_dir/objective
 
 =head1	ヘッダの操作
@@ -999,6 +993,21 @@ spool_dir	= $ml_home_dir/spool
 #        Value: plane
 #     Examples:
 spool_type	= plane
+
+=head1	記事のサマリ
+
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+summary_file		=	$ml_home_dir/summary
+
+
+# Descriptions:
+#      History:
+#        Value: fml4_compatible
+#     Examples:
+summary_format_style	=	fml4_compatible
 
 =head1	記事を HTML 化する
 
@@ -1822,6 +1831,14 @@ sql_find	=	select fml_address from $sql_table
 # $fmlspool_run_start_hook = q{ 1;};
 # $fmlspool_verify_request_end_hook = q{ 1;};
 # $fmlspool_verify_request_start_hook = q{ 1;};
+# $fmlsummary_finish_end_hook = q{ 1;};
+# $fmlsummary_finish_start_hook = q{ 1;};
+# $fmlsummary_prepare_end_hook = q{ 1;};
+# $fmlsummary_prepare_start_hook = q{ 1;};
+# $fmlsummary_run_end_hook = q{ 1;};
+# $fmlsummary_run_start_hook = q{ 1;};
+# $fmlsummary_verify_request_end_hook = q{ 1;};
+# $fmlsummary_verify_request_start_hook = q{ 1;};
 # $fmlthread_finish_end_hook = q{ 1;};
 # $fmlthread_finish_start_hook = q{ 1;};
 # $fmlthread_prepare_end_hook = q{ 1;};
