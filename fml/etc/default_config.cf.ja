@@ -433,6 +433,11 @@ ticket_db_dir		=	$shared_db_dir/ticket
 #     Examples:
 ticket_cgi_base_url	=	/cgi-bin/fmlticket.cgi
 
+
+ticket_cgi_title	=	ticket system interface
+
+ticket_cgi_bgcolor	=	#E6E6FA
+
 =head1	データベース管理システムとの連携
 
 ###
