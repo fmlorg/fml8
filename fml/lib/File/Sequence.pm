@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.22 2002/04/03 11:33:00 fukachan Exp $
+# $FML: Sequence.pm,v 1.23 2002/04/08 12:44:26 fukachan Exp $
 #
 
 package File::Sequence;
@@ -103,8 +103,13 @@ sub new
 sub increment_id
 {
     my ($self, $file) = @_;
-    my $id = 0;
-    my $seq_file = $file || $self->{ _sequence_file };
+    my $id       = 0;
+    my $seq_file = defined $file ? $file : $self->{ _sequence_file };
+
+    unless (defined $seq_file) {
+	$self->error_set("the sequence file is undefined");
+	return 0;
+    };
 
     unless ($seq_file) {
 	$self->error_set("the sequence file is not specified");
@@ -144,8 +149,13 @@ sub increment_id
     }
 
     # save $id
-    print $wh $id, "\n";
-    $wh->close;
+    if (defined $wh) {
+	print $wh $id, "\n";
+	$wh->close;
+    }
+    else {
+	$self->error_set("cannot save id");
+    }
 
     $id;
 }
@@ -160,8 +170,13 @@ sub increment_id
 sub get_id
 {
     my ($self, $file) = @_;
-    my $id = 0;
-    my $seq_file = $file || $self->{ _sequence_file };
+    my $id       = 0;
+    my $seq_file = defined $file ? $file : $self->{ _sequence_file };
+
+    unless (defined $seq_file) {
+	$self->error_set("the sequence file is undefined");
+	return 0;
+    };
 
     unless ($seq_file) {
 	$self->error_set("the sequence file is not specified");
@@ -170,6 +185,7 @@ sub get_id
 
     # touch the sequence file if it does not exist.
     unless (-f $seq_file) {
+	$self->error_set("the sequence file not found");
 	return 0;
     };
 
@@ -220,7 +236,7 @@ sub search_max_id
 	my $max  = 0;
 
 	my ($k, $v);
-	while ( ($k, $v) = each %$hash) {
+	while (($k, $v) = each %$hash) {
 	    $max = $max > $k ? $max : $k;
 	}
 
@@ -228,10 +244,11 @@ sub search_max_id
     }
     # old style, search max from bottom or top (e.g. 0 or 1)
     elsif (defined $args->{ hash }) {
-    	if($self->get_id() > 0) {
-		$self->_search_max_id_from_top($args);
-	} else {
-		$self->_search_max_id_from_bottom($args);
+    	if ($self->get_id() > 0) {
+	    $self->_search_max_id_from_top($args);
+	}
+	else {
+	    $self->_search_max_id_from_bottom($args);
 	}
     }
     else {
@@ -284,7 +301,7 @@ sub _search_max_id_from_top
 {
     my ($self, $args) = @_;
     my ($pebot, $k, $v);
-    my $unit = 50;
+    my $unit  = 50;
     my $debug = 1;
 
     $pebot = $self->get_id();
