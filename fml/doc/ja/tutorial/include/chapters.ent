@@ -1,5 +1,5 @@
 <!--
-	$FML: chapters.ent,v 1.75 2003/06/20 22:03:12 fukachan Exp $
+	$FML: chapters.ent,v 1.76 2003/07/26 04:39:16 fukachan Exp $
 -->
 
 <!entity versin "1.1">
@@ -153,7 +153,7 @@
 <!-- -->
 <!entity chapter.struct              SYSTEM "internals/struct.sgml">
 <!entity struct.curproc              SYSTEM "internals/CURPROC.sgml">
-
+<!entity list.pcb                    SYSTEM "internals/PCB.sgml">
 
 
 <!-- メッセージの取り扱い -->

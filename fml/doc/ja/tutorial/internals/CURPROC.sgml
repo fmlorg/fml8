@@ -4,12 +4,14 @@ __parent_args        => HASH {
                         ARGV                 => ARRAY
                         argv                 => ARRAY
                         cf_list              => ARRAY
+                        curproc              => FML::Process::Distribute
                         fml_version
                         main_cf              => HASH
                         module_info          => HASH
                         myname
                         need_ml_name
                         options              => HASH
+                        program_fullname
                         program_name
                      }
 
@@ -34,7 +36,7 @@ incoming_message     => HASH {
 log_message_queue    => FML::IPC::Queue
 
 main_cf              => HASH {
-                        _hints
+                        _hints               => HASH
                         config_dir
                         debug
                         default_command_line_option_config

@@ -1,0 +1,26 @@
+<para>
+<screen>
+                   module                  function     category
+                                                    <-- (get value)
+                                                    --> (set value)
+--------------------------------------------------------------------------------
+        FML/Process/Error                    finish <-- error
+        FML/Process/Error                       run --> error
+       FML/Process/Kernel  _finalize_stderr_channel <-- stderr
+       FML/Process/Kernel  _finalize_stderr_channel <-- stderr
+       FML/Process/Kernel  _finalize_stderr_channel --> stderr
+       FML/Process/Kernel    _reopen_stderr_channel --> stderr
+       FML/Process/Kernel    _reopen_stderr_channel --> stderr
+      FML/Process/Command                       run <-- check_restrictions
+   FML/Process/Distribute                       run <-- check_restrictions
+     FML/Restriction/Post        permit_member_maps <-- check_restrictions
+     FML/Restriction/Post    reject_system_accounts <-- check_restrictions
+     FML/Restriction/Post                    reject <-- check_restrictions
+     FML/Restriction/Post        permit_member_maps --> check_restrictions
+     FML/Restriction/Post    reject_system_accounts --> check_restrictions
+     FML/Restriction/Post                    reject --> check_restrictions
+        FML/Process/Utils               get_charset <-- charset
+        FML/Process/Utils               get_charset <-- charset
+        FML/Process/Utils               set_charset --> charset
+</screen>
+</para>

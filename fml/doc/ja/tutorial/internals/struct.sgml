@@ -1,14 +1,39 @@
 <!--
-   $FML$
+   $FML: struct.sgml,v 1.2 2003/04/15 14:51:41 fukachan Exp $
 -->
 
 <appendix id="structure">
 	<title>
-	curproc 構造体 (本当はオブジェクト)
+	データ構造のサンプル
 	</title>
 
 
+<sect1 id="structure.curproc">
+	<title>
+	curproc オブジェクト
+	</title>
+
+<para>
+FML::Process::Distribute が走っている時のデータ構造の例。
+</para>
+
 &struct.curproc;
+
+</sect1>
+
+
+<sect1 id="structure.pcb">
+	<title>
+	PCB のカテゴリ一覧
+	</title>
+
+<para>
+PCB で使っているカテゴリとモジュール、および関数のリスト。
+</para>
+
+&list.pcb;
+
+</sect1>
 
 
 </appendix>
