@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2003 Ken'ichi Fukamachi
 #
-# $FML$
+# $FML: Language.pm,v 1.1 2003/10/15 09:09:14 fukachan Exp $
 #
 
 package Mail::Message::Language;
@@ -32,11 +32,12 @@ sub accept_language_list
 {
     my ($self) = @_;
     my $header = $self->whole_message_header();
-    my $buf    = $header->get('Accept-Language');
+    my $buf1   = $header->get('Accept-Language')   || '';
+    my $buf2   = $header->get('X-Accept-Language') || '';
     my $list   = [];
 
   LANG:
-    for my $s (split(/\s*,\s*/, $buf)) {
+    for my $s (split(/\s*,\s*/, "$buf1 $buf2")) {
 	if ($s =~ /^\s*ja/oi) {
 	    push(@$list, 'ja');
 	    last LANG;
