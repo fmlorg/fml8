@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: JournaledFile.pm,v 1.19 2002/08/03 10:30:44 fukachan Exp $
+# $FML: JournaledFile.pm,v 1.20 2002/08/03 13:13:29 fukachan Exp $
 #
 
 package Tie::JournaledFile;
@@ -221,29 +221,34 @@ sub get_all_values_as_hash_ref
     my $fh = new IO::File;
     $self->{ _fh } = $fh;
 
-    $fh->open($self->{ '_file' }, "r");
+    if (-f $self->{ '_file' }) {
+	$fh->open($self->{ '_file' }, "r");
 
-    if (defined $fh) {
-	my ($a, $k, $v);
-	while (<$fh>) {
-	    chomp;
+	if (defined $fh) {
+	    my ($a, $k, $v);
+	    while (<$fh>) {
+		chomp;
 
-	    ($k, $v) = split(/\s+/, $_, 2);
+		($k, $v) = split(/\s+/, $_, 2);
 
-	    if (defined $hash->{ $k }) {
-		$a = $hash->{ $k };
+		if (defined $hash->{ $k }) {
+		    $a = $hash->{ $k };
+		}
+		else {
+		    $a = [];
+		}
+
+		push(@$a, $v);
+		$hash->{ $k } = $a;
 	    }
-	    else {
-		$a = [];
-	    }
-
-	    push(@$a, $v);
-	    $hash->{ $k } = $a;
+	    $fh->close();
 	}
-	$fh->close();
-    }
 
-    return $hash;
+	return $hash;
+    }
+    else {
+	return undef;
+    }
 }
 
 
