@@ -1,6 +1,50 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/08/21
+
+   IO::Adapter 
+	enhance add() to add($address, [$argv])
+	
+   IO::Adapter::File 
+	enhance add()
+	implement get_next_value()
+	define get_value_as_str($key), get_value_as_array_ref($key)
+
+   IO::Adapter::AtomicFile 
+	more unique temp filename
+	
+2002/08/20
+
+   FML::Process::Distribute 
+	modify error message
+	
+   FML::Command::SendFile 
+	message key change
+	command.get.invalid.args -> command.get_invalid_args
+	
+   IO::Adapter::File 
+	remove fml 4 specific ignore rules such as m=.. option
+	delete(KEY) not (REGEXP)
+
+2002/08/19
+
+   FML::Process::Error 
+	rename::$use_error_analyzer -> $use_error_analyzer_program
+	use default $log_format_type now
+	
+   FML::Process::Command 
+	enable process if $use_command_mail_program is defined.
+	
+   FML::Process::Distribute 
+	enable process if $use_distribute_program is defined.
+	
+   variables
+	define $use_command_mail_program ("yes" by default).
+	rename $use_error_analyzer to $use_error_analyzer_program
+
+   message key reconstructuring
+
 2002/08/18
 
    FML::Command::SendFile 
@@ -3224,4 +3268,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.96 2002/08/13 03:19:17 fukachan Exp $
+$FML: CHANGES.txt,v 1.97 2002/08/18 02:20:25 fukachan Exp $
