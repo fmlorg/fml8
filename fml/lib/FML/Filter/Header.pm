@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Header.pm,v 1.6 2004/01/01 23:52:13 fukachan Exp $
+# $FML: Header.pm,v 1.7 2004/01/02 14:50:30 fukachan Exp $
 #
 
 package FML::Filter::Header;
@@ -66,14 +66,20 @@ overwrite rules by specified C<@$rules> ($rules is ARRAY_REF).
 =cut
 
 
-# Descriptions: access method to overwrite rule
+# Descriptions: access method to overwrite filter rules.
 #    Arguments: OBJ($self) ARRAY_REF($rarray)
 # Side Effects: overwrite info in object
 # Return Value: ARRAY_REF
 sub rules
 {
     my ($self, $rarray) = @_;
-    $self->{ _rules } = $rarray;
+
+    if (ref($rarray) eq 'ARRAY') {
+	$self->{ _rules } = $rarray;
+    }
+    else {
+	carp("rules: invalid input");
+    }
 }
 
 
@@ -84,8 +90,8 @@ C<$msg> is C<Mail::Message> object.
 C<Usage>:
 
     use FML::Filter::Header;
-    my $obj  = new FML::Filter::Header;
-    my $msg  = $curproc->{'incoming_message'};
+    my $obj = new FML::Filter::Header;
+    my $msg = $curproc->incoming_message();
 
     $obj->header_check($msg);
     if ($obj->error()) {
@@ -95,7 +101,7 @@ C<Usage>:
 =cut
 
 
-# Descriptions: top level dispatcher
+# Descriptions: top level dispatcher.
 #    Arguments: OBJ($self) OBJ($msg)
 # Side Effects: none
 # Return Value: none
@@ -136,7 +142,7 @@ sub header_check
 sub check_message_id
 {
     my ($self, $msg) = @_;
-    my $mid = $msg->get('message-id');
+    my $mid = $msg->get('message-id') || '';
 
     if ($mid !~ /\@/) {
 	croak( "invalid Message-Id" );
@@ -151,8 +157,9 @@ sub check_message_id
 sub check_date
 {
     my ($self, $msg) = @_;
+    my $date = $msg->get('date') || '';
 
-    if (! $msg->get('date')) {
+    unless ($date) {
 	croak( "Missing Date: field" );
     }
 }
