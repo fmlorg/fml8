@@ -1,0 +1,286 @@
+                                                                [Page 1]
+
+INTERNET-DRAFT
+File Name: draft-bose-smtp-integrity-00.txt              Author: R. Bose
+Expires on: 4th October,2001
+
+
+        CHECKING OF MESSAGE INTEGRITY DURING SMTP TRANSACTIONS
+
+   Status of this memo:
+
+   This document is an Internet-Draft and is in full conformance with
+   all provisions of Section 10 of RFC 2026.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF), its areas, and its working groups.
+   Note that other groups may also distribute working documents as
+   Internet-Drafts.
+
+   Internet-Drafts are draft documents valid for a maximum of six
+   months and may be updated, replaced, or obsoleted by other documents 
+   at any time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+   The list of current Internet-Drafts can be accessed at
+   http://www.ietf.org/ietf/1id-abstracts.txt
+
+   The list of Internet-Draft Shadow Directories can be accessed at
+   http://www.ietf.org/shadow.html.
+
+   Abstract:
+
+   This Internet Draft describes an extension to the SMTP Services which
+   will enable an SMTP Server/Client to check the Integrity of Mails
+   received by it and immediately request for the Mail to be resent if
+   it is found to be corrupted during that particular transaction.
+
+   This extension is meant to apply to both SMTP Clients and Servers as
+   described in detail below.
+
+1. INTRODUCTION
+   
+   As of now there is NO provision in the Simple Mail Transfer Protocol
+   for error checking of messages while they are being transported from
+   client to server OR server to server.This sometimes results in the
+   recipient getting corrupted or truncated messages.And inspite of the
+   speed of the E-Mail delivery system a lot of time is wasted while the
+   recipient informs the original sender about the corruption of the
+   message and waits for the receipt of the uncorrupted message.
+
+   This time delay becomes even more prominent when attachments of
+   significant size (binary or otherwise) are included in the message.
+
+   Hence, an Error Checking provision like the one described below is
+   necessary.An effort has been made so that if the features described
+   below are implemented then only a minimum amount of change has to be
+   done to the current SMTP Server/Client softwares.
+
+
+draft-bose-smtp-integrity-00.txt                                [Page 2]
+
+
+2. INCLUSION OF CHECKSUM IN MESSAGE BODY OF MAIL
+   
+   In order to check the integrity of a message (including any
+   attachments in it) the checksum of the message should be calculated
+   and appended to the beginning of the message.The message then will
+   look like as follows:
+
+   <CHECKSUM TYPE=XX>checksum_string_here<CHECKSUM>
+   ................................................
+   ................................................ 
+   ................................................
+   .......[MESSAGE BODY IS CONTAINED HERE].........
+   ................................................
+   ................................................
+   ................................................
+   ................................................
+
+   The Dotted lines indicate the original message body
+   as inputted by user of Mail Client.
+
+   The Checksum as seen above is stored in the Checksum Header:
+   <CHECKSUM TYPE=XX>checksum_string_here<CHECKSUM>
+   The Checksum Header should be stored as the first line of the mail
+   body with the original mail message starting from the second line.
+
+   The Tag "TYPE" indicates the type of checksum used.Therefore, if:
+
+   Checksum Type     XX
+       16 bit        16
+       32 bit        32   
+ 
+   This will enable the SMTP Server/Client to calculate the appropriate
+   Checksum value in order to compare it with the Original Value stored 
+   in the Checksum Header.But, it is proposed that a 32 bit checksum be
+   used by all SMTP Servers/Clients to check Mail Integrity.
+
+3. CALCULATION/VERIFICATION OF CHECKSUM BY SMTP CLIENT/SERVER
+   
+NOTE: In Sections 3 and beyond, the term "Sender Server" is used for 
+      the SMTP Server which initiates the connection and
+      "Recipient Server" for the SMTP Server to which the mail is being
+      relayed at that stage.
+      "Sender Client" is the SMTP Client who sends the original message 
+      and "Original Recipient Client" is the SMTP Client to whom the 
+      "Sender Client" is sending the Mail.
+ 
+   In this section, the entire process of sending a mail, calculation
+   of it's checksum & it's verification during each stage of transport
+   till it reaches the intended recipient is described.
+
+
+
+
+
+
+draft-bose-smtp-integrity-00.txt                                [Page 3]
+
+                  DIAGRAM OF AN EXAMPLE SMTP TRANSACTION
+
++------+      +-------------+      +---------+     +------------------+
+|Sender|----->|Sender Server|----->|Recipient|---->|Original Recipient|
+|Client| (a)  |             | (b)  | Server  | (c) |    Client        | 
++------+      +-------------+      +---------+     +------------------+
+      
+ a)When the Sender of a Mail has inputted his/her message, the Sender
+   Client will calculate it's checksum and append it to the beginning of
+   the message in the format described in Section 2 above.Then it will
+   send the message in the usual way to the SMTP Server by using the
+   "DATA" command.
+
+ b)When a Recipient Server receives the message body of a Mail from 
+   Sender Client or Server it will immediately extract the first line 
+   from the message body and parse it to extract the values of the 
+   Checksum and the Checksum Type(given by the Tag TYPE).Then it will 
+   calculate the checksum accordingly and compare it to the Original 
+   Checksum which was extracted from the message body.
+   
+   Possible Numeric Replies by the Recipient Server:
+
+   250 OK, Requested mail action okay, completed
+   453 Checksum does not match, resend data
+
+   453 is a new proposed Numerical Error Reply.For maintaining
+   compatibility and dealing with Servers without the checksum 
+   features (which will not be supporting this New numerical reply) 
+   refer to Section 4 (b).
+
+
+   On receiving the 453 numeric reply,the Sender client/server should
+   resend the message body again.If the number of requests to resend
+   message exceeds a user specified number of times(ideally 2-4 times)
+   i.e. if the checksum error occurs persistently then the Sender
+   client/server should simply remove the Checksum Header and then send
+   the message body allowing the Recipient SMTP Server to act in the
+   manner described in Section 4 (a).
+  
+ c)When the Original Recipient Client downloads the message from the
+   Mail Server (for e.g., it is a POP3 Server) it will also immediately
+   extract the first line from the message body and parse it to extract
+   the values of the Checksum and the Checksum Type  (given by the
+   Tag TYPE).Then it will calculate the checksum accordingly and compare
+   it to the Original Checksum which was extracted from message body.
+
+   Possible Actions of the Recipient Client:
+
+    (i)If the Checksum matches then no further action is required.
+
+   (ii)If the Checksum DOES NOT match then the Client should again try
+       to download the message.If Checksum error occurs persistently
+       then it will be prudent for the client to try downloading the
+       message only a user specified number of times(ideally 2-4 times).
+
+
+draft-bose-smtp-integrity-00.txt                                [Page 4]
+
+NOTE: The Concepts mentioned in the Sections 4(b),4(c) and 5 should
+      eventually lose their relevance if the features mentioned in this
+      document are widely accepted and implemented.
+    
+4. MAINTAINING COMPATIBILITY WITH OLDER VERSIONS OF SMTP SERVERS/CLIENTS
+ 
+   In order to maintain backwards compatibility with older versions of
+   SMTP Servers and Clients the procedures described in this section
+   should be used.
+
+(a)If a Recipient Server on receiving a Message Body from the Sender
+   Server/Client tries to extract the Checksum and Checksum Type but
+   fails then the reason for failure can be attributed to the fact that
+   the Sender Server/Client does not have the Checksum facility
+   implemented or a situation has occured like the one described in
+   Section 3 (b).
+
+   If this is the case, then the Recipient Server itself should simply
+   calculate the Checksum and append it to the beginning of the Message
+   Body in the manner described in Section 2 above, so that atleast the
+   integrity of the message can be checked in subsequent transactions.
+
+(b)It is quite possible that during the relaying of a Mail, one of the
+   servers in the middle of the link may not have the checksum features
+   so if the recipient server encounters a Checksum Error during such
+   kinds of transaction it should act in the manner described in 
+   Section 5.
+
+(c)If the Original Recipient Client on receiving a Message Body from 
+   the Mail Server tries to extract the Checksum and Checksum Type but
+   fails then it should simply accept the message download without
+   any comments on it's checksum.
+   
+5. CHECKSUM COMMAND
+
+   It is proposed that a new command be added to the SMTP Commands
+   list to enable the Sender Server to inform the Recipient Server 
+   whether the Sender Server supports the checksum features described 
+   in this document or not.Therefore, every Sender Server **must** send
+   the CHECKSUM Command to the Recipient Server before sending the Mail
+   data by invoking the DATA Command.
+
+   Command Name: CHECKSUM
+   Usage Syntax: CHECKSUM
+   Possible Replies:  250 OK, Requested mail action okay, completed
+                      502 Command not implemented
+
+   Example:
+
+   (1)    Sender Server: CHECKSUM
+       Recipient Server: 250 OK, Requested mail action okay, completed
+
+   (2)    Sender Server: CHECKSUM
+       Recipient Server: 502 Command not implemented         
+ 
+
+draft-bose-smtp-integrity-00.txt                                [Page 5]
+
+   Unlike most SMTP commands, the reply for this command sent by the
+   Recipient Server to the Sender Server is immaterial since this 
+   command is for the benefit of the Recipient Server only, as 
+   given below.
+
+   If the Recipient Server receives the CHECKSUM Command before the 
+   DATA command then only it should send the 453 Numerical Error Reply,
+   when a Checksum Error is encountered.
+
+   If the Recipient Server does not receive the CHECKSUM Command during
+   an SMTP Transaction then it should assume that the Sender Server 
+   does not support the Checksum features mentioned in this document.
+   Therefore, on encountering a Checksum Error,it should simply 
+   recalculate the Checksum of the Mail and replace the old value of the
+   checksum in the Checksum Header which is already present as the first
+   line of the Message Body.
+
+   If the Recipient Server itself does not support the Checksum features
+   mentioned in this document it will simply send a 502 Error to the
+   Sender Server. But the receipt of this Numerical Error Reply does not
+   require any action on the part of the Sender Server.
+
+
+6. REFERENCES
+  
+   1) RFC 821: Simple Mail Transfer Protocol
+      Jonathan B. Postel,
+      Information Sciences Institute,
+      University of Southern California,
+      August 1982.
+    
+   2) RFC 822: Standard for the Format of ARPA Internet Text Messages
+      D. Crocker,
+      Department of Electrical Engineering,
+      University of Delaware,
+      August 1982.
+
+
+7. CONTACT ADDRESS OF AUTHOR
+
+Postal Address: Raja Bose
+                D-4/3,Vasant Vihar,
+                New Delhi - 110057,
+                India.
+
+E-Mail: alokebose@bol.net.in
+
+Telephone: (+91) (011) 614-4638 & 615-1930
+                                                                    
+
+This Internet Draft expires on: 4th October,2001
+

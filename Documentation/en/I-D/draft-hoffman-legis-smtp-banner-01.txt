@@ -1,0 +1,153 @@
+
+Internet Draft                              Paul Hoffman
+draft-hoffman-legis-smtp-banner-01.txt      Internet Mail Consortium
+September 10, 1998                          John Levine
+Expires in six months                       IECC
+
+                Anti-UBE and Anti-UCE Keywords in SMTP Banners
+
+Status of this memo
+
+This document is an Internet-Draft. Internet-Drafts are working documents
+of the Internet Engineering Task Force (IETF), its areas, and its working
+groups. Note that other groups may also distribute working documents as
+Internet-Drafts.
+
+Internet-Drafts are draft documents valid for a maximum of six months and
+may be updated, replaced, or obsoleted by other documents at any time. It
+is inappropriate to use Internet-Drafts as reference material or to cite
+them other than as "work in progress."
+
+To learn the current status of any Internet-Draft, please check the
+"1id-abstracts.txt" listing contained in the Internet-Drafts Shadow
+Directories on ftp.is.co.za (Africa), nic.nordu.net (Europe), munnari.oz.au
+(Pacific Rim), ftp.ietf.org (US East Coast), or ftp.isi.edu (US West
+Coast).
+
+1. Introduction
+
+Legislators writing laws that would limit or prohibit the sending of
+unsolicited bulk email (UBE) or unsolicited commercial email (UCE) have
+begun to include rules that require mail servers to include particular
+wording in the SMTP banner. To date, this wording has had two distinct
+purposes: to warn senders that they may not send UBE or UCE to that SMTP
+host, and to state the physical location of the host so that the sender may
+know which laws apply.
+
+This document is meant to help clarify how such legislation might be
+worded, and to help increase interoperability of various laws. It is not
+meant to be a standard of any kind, but is meant only for its informational
+value.
+
+2. The SMTP Banner
+
+SMTP, as defined in [RFC821], is a client-server protocol that runs over
+TCP/IP. When the SMTP client connects to the SMTP server, the server TCP
+immediately emits a banner, also called an "opening message" or "connection
+greeting". The contents of this banner must be in the ASCII character
+set, and the banner must be no longer than 512 characters, including the
+response code, separator, and <CRLF> at the end of the banner.
+
+The banner normally contains software and version information, and often
+contains other useful debugging information. Most SMTP server products
+allow the system administrator to specify the contents of the banner. The
+banner must start with a three-digit status code followed by a space, but
+the rest of banner is not specified by any existing standard.
+
+3. Rationale for Using the SMTP Banner for Anti-UBE and Anti-UCE Messages
+
+There has been some debate about whether or not the SMTP banner is the best
+place to put notices to UBE senders.
+
+The arguments in favor of using the SMTP banner include:
+
+- A potential UBE sender uses almost no resources on the part of the SMTP
+  server to find out that UBE is not allowed.
+
+- It is very easy to describe in legislation, and thus is most likely to be
+  upheld in courts if challenged.
+
+- An SMTP client who wants to send UBE does not need to identify itself
+  before determining if the SMTP server will accept such mail.
+
+- It is easy for a mail system administrator to configure and check the
+  SMTP banner.
+
+- Existing banners are typically much shorter than 512 characters, so the
+  addition of a short phrase is unlikely to violate any standard limits.
+
+The arguments against using the SMTP banner include:
+
+- This overloads the semantics of the banner contents.
+
+- This could instead be done with an ESMTP extension.
+
+4. Suggested Wording for Legislation Restricting UBE and UCE
+
+Legislation that requires wording in the SMTP banner to indicate that UBE
+or UCE is not allowed or is restricted on the server should include the
+exact phrase used. That phrase should be short, succinct, and must not be
+required to be in a particular position in the SMTP banner. We recommend
+the phrase "NO UBE" or "NO UCE", in all uppercase characters. Legislation
+mandating either phrase should specify that the phrase must be preceded by
+a non-alphanumeric character, and followed by non-alphanumeric character or
+the end of the banner.
+
+Note that such a phrase will be human-readable, but it is also easily
+machine-readable if the exact phrase is specified in the legislation. Using
+such a machine-readable phrase makes it easier for potential UBE senders to
+avoid problems by having a program check whether or not the mail server
+accepts UBE before sending the mail. Although the banner phrase should be
+in uppercase characters, clients should recognize the phrase in any
+combination of upper- and lowercase characters.
+
+It should also be noted that most languages around the world require
+characters outside the ASCII character set, but these characters must not
+be used in an SMTP banner. In such cases, the legislation might choose a
+phrase for the SMTP banner which does not make sense in the native language
+of the area in question but is unlikely to appear in a banner for other
+reasons.
+
+5. Suggested wording for Legislation Stating Server Location
+
+Legislation that requires a server administrator to state the location of
+the server should use standardized abbreviations for countries and local
+states or provinces. These locations should be easy to pick out from other
+information in the SMTP banner.
+
+Legislation that requires that the server identify the country that it is
+in should use "C=" followed by the official two-letter country code defined
+in [ISO3166]. Legislation that requires the server identify the state or
+province that it is in should use "L=" followed by an officially-accepted
+abbreviation (if any) for the state or province name. For instance, in the
+state of California, such legislation might require the phrase "C=US L=CA"
+to be included in the banner. (The "C" for country and "L" for location
+come from the widely-used X.500 directory standard.)
+
+6. Security Considerations
+
+Forcing a mail server to state its location can possibly cause an attacker
+to gain valuable information about the server or its characteristics.
+
+7. References
+
+[RFC821] RFC 821, Simple Mail Transport Protocol.
+
+[ISO3166] ISO 3166:1988, Codes for the representation of names of
+countries.
+
+8. Authors' Addresses
+
+Paul Hoffman
+Internet Mail Consortium
+127 Segre Place
+Santa Cruz, CA  95060
+(831) 426-9827
+phoffman@imc.org
+
+John Levine
+IECC
+PO Box 727
+Trumansburg, NY 14886
+johnl@iecc.com
+

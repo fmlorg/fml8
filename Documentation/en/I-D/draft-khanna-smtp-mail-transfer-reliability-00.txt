@@ -1,0 +1,291 @@
+INTERNET-DRAFT									3rd October 2000    
+      									   Expires: 3rd April 2001
+
+   Mail transfer reliability in Simple Mail Tranfer Protocol(SMTP)
+          draft-khanna-smtp-mail-transfer-reliability-00.txt
+                       Kumar Gaurav Khanna
+
+
+Status of this Memo
+
+This document is an Internet-Draft and is in full conformance with all
+provisions of Section 10 of RFC2026.
+
+Internet-Drafts are working documents of the Internet Engineering Task
+Force (IETF), its areas, and its working groups. Note that other groups
+may also distribute working documents as Internet-Drafts.
+
+Internet-Drafts are draft documents valid for a maximum of six months
+and maybe updated, replaced, or obsoleted by other documents at any
+time. It is inappropriate to use Internet-Drafts as reference material
+or to cite them other than as "work in progress."
+
+The list of current Internet-Drafts can be accessed at
+http://www.ietf.org/ietf/1id-abstracts.txt
+
+The list of Internet-Draft Shadow Directories can be accessed at
+http://www.ietf.org/shadow.html
+
+
+Abstract
+
+This draft discusses the issue which makes the data tranfer in SMTP 
+protocol highly vulnerable to a "resend" in case of a network 
+disruption. We then discuss a means by which such a "resend" can be 
+avoided, by tranferring mail data only from the point of disruption.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Expires: 3rd April, 2001									[Page 1]
+
+
+INTERNET-DRAFT draft-khanna-smtp-mail-transfer-reliability-00.txt 3rd Oct,2K
+
+1. Introduction
+
+So tell me, how many times has it happened that when you were sending a 
+lengthy mail, then due to network disruption (either due to the dialup 
+connection breaking up, or the network timing out, or for some reason 
+which I forgot to mention here!), your mail transfer was forced to come 
+to an abrupt halt ??? You, then, had to send it all over again, and 
+transfer would be successful only if the lady luck be with you. Else, 
+the irony repeats itself.
+
+The problem, that incase of a failed mail tranfer you have to send the 
+mail all over again, resending what you had sent earlier, is due to the 
+nature of the SMTP protocol. This draft is aimed at discussing why and 
+how this problem occurs, and also suggests a solution which can help 
+solve it effectively.
+
+2. The Problem
+
+To understand why we have to resend a mail entirely incase of 
+disruption while sending it previously, lets look at a simple SMTP
+conversation between a SMTP client (C) and a SMTP server (S):
+
+<Server waits for an incoming connection...>
+<Client connects to the SMTP server...>
+
+S: 220 SMTP service ready
+C: Helo mydomain.com
+S: 250 Pleased to meet you
+C: MAIL FROM: <gauravkhanna@mailandnews.com>
+S: 250 sender okay
+C: RCPT TO: <prabhakhanna@yahoo.com>
+S: 250 Recipient okay
+C: Data
+S: 354 send data with <CRLF>.<CRLF> to end
+
+<Client sends the mail here. The mail is comprised of all the standard 
+SMTP headers, including the X- headers, and any attachments. Finally, 
+the termination period is sent.>
+
+S: 250 message accepted for delivery
+C: QUIT
+S: 221 Transmission channel closed
+
+That's how the most basic of SMTP conversations are held. Note that 
+after the DATA command, when the client is sending the mail, the entire 
+mail is sent as one big chunk!! Now suppose, that while sending that  
+chunk, the connection breaks up for some reason. Bingo! The SMTP 
+server closes the transmission channel (it gets to know that connection 
+has broken up, so it cleans up its resource usage), and the SMTP client 
+is left with no option but to resend the entire mail. Infact, this 
+entire conversation has to occur again!! Consider the amount of 
+bandwidth going waste, let alone time.
+
+Expires: 3rd April, 2001									[Page 2]
+
+INTERNET-DRAFT draft-khanna-smtp-mail-transfer-reliability-00.txt 3rd Oct,2K
+
+3. The Solution
+
+This draft suggests a mechanism by introducing few additional commands
+in the SMTP protocol, which can help overcome this problem. So, lets
+look at it...
+
+The philosophy behind the solution to the above problem is to divide
+the chunk to be sent by the SMTP client, after the DATA command, be
+divided in blocks of size, say N. 
+
+Next, during the course of a SMTP conversation, instead of sending a
+DATA command, the SMTP client sends the (new) DB command. The syntax
+of the command is:
+
+DB <N>
+
+Its purpose is to tell the SMTP server that the mail shall now be
+delivered in small(er) blocks of size N. This block size is decided
+by the client. If the server doesn't accept the command, it returns
+421 error code. However, if the server accepts this command, it saves
+the block size and returns...
+
+250 <mesg ID>
+
+where <mesg ID> is a unique number produced by the SMTP server to 
+uniquely identify this mail transaction. This ID is saved both by the
+SMTP server and the SMTP client.
+
+After the acceptence of the DB command by the SMTP server, the SMTP
+client sends the first block of the mail to the server, which 
+maintains an internal count (CNT) of the number of mail blocks 
+successfully transferred from the client to the server. After 
+receiving each block successfully, the server increments CNT and 
+sends a 250 success code. The client continues to send the blocks
+of mail in this manner to server. The server should make sure that the 
+block sent by the client is not more than N bytes, as decided. It can, 
+however, be less than N. 
+
+The termination of the blocks is indicated by the SMTP client by sending 
+the <CRLF>.<CRLF>, as done conventionally. The server responds with a 
+successful 250 code, after which the client can issue the QUIT command 
+and proceed normally. After a successful QUIT, both the server and
+client discard the block size N and the <mesg ID>. The server, in
+addition, discards the CNT. Here's a sample conversation illustrating 
+this concept between the SMTP client (C) and the SMTP Server (S)...
+
+<Server waits for an incoming connection>
+<Client connects to the SMTP server>
+
+S: 220 SMTP Server Ready
+C: Helo mydomain.com
+S: 250 Pleased to meet you
+C: MAIL FROM: <gauravkhanna@mailandnews.com>
+
+Expires: 3rd April, 2001									[Page 3]
+
+INTERNET-DRAFT draft-khanna-smtp-mail-transfer-reliability-00.txt Oct,2K
+
+S: 250 Sender okay
+C: RCPT TO: <prabhakhanna@yahoo.com>
+S: 250 Recipient okay
+C: DB 100
+S: 250 20001003152543
+
+<Assume that the mail is 450 bytes in length>
+
+C: <send the 1st block of 100 bytes>
+S: 250 block 1 accepted
+C: <send the 2nd block of 100 bytes>
+S: 250 block 2 accepted
+C: <send the 3rd block of 100 bytes>
+S: 250 block 3 accepted
+C: <send the 4th block of 100 bytes>
+S: 250 block 4 accepted
+C: <send the 5th block of 50 bytes>
+S: 250 block 5 accepted
+C: <CRLF>.<CRLF>
+S: 250 message accepted for delivery
+C: QUIT
+S: 221 Transmission channel closed
+
+As evident from above, the server maintains an internal count of the 
+number of blocks transmitted. after a successful QUIT, the server
+can work upon the mail as it does normally, either by queueing it, or
+asking a Message Transfer Agent (MTA) to work on it.
+
+Now, for example, while the 4th block was being transmitted, the network 
+got disrupted and the connection broke up. In such a case, the server 
+shall save the partial mail sent to it by the client, for some defined 
+period of time (after which it may discard it), indentifying it with its 
+<mesg ID>. The client shall re-establish a connection with the SMTP 
+server and, instead of HELO, shall give the RESEND command whose syntax 
+is:
+
+RESEND <mesg ID>
+
+where <mesg ID> is the unique identifier which the server returned to
+the client, in reply to the DB command. If there is partial mail saved 
+by the server, whose <mesg ID> matches the one sent by the SMTP client
+in the RESEND command, then the server shall read the partial mail in
+the memory and proceed ahead to complete the interrupted transmission
+by sending the block size (N) and the number of blocks already sent by
+the SMTP client as part of 250 response code. Else, it shall send a 421
+error code.
+
+In the conversation above, if the connection broke up during the sending 
+of the 4th block, the SMTP server saves the <mesg ID>, the block size N 
+and the number of blocks which have already been sent by the SMTP 
+client. The SMTP client also, upon connection breakup, saves the 
+<mesg ID>. It then proceeds to resend the mail as follows (C=> SMTP
+Client, S=> SMTP Server) :
+
+Expires: 3rd April, 2001									[Page 4]
+
+INTERNET-DRAFT draft-khanna-smtp-mail-transfer-reliability-00.txt 3rd Oct,2K
+
+<Server waits for an incoming connection>
+<Client connects to the server>
+S: 220 SMTP service ready
+C: RESEND 20001003152543
+S: 250 100 3
+
+<This reply tells the SMTP client that block size is 100 bytes, and
+3 blocks have already been sent.>
+
+C: <sends the 4th block of 100 bytes again>
+S: 250 block 4 accepted
+C: <sends the 5th block of 50 bytes>
+S: 250 block 5 accepted
+C: <CRLF>.<CRLF>
+S: 250 message accepted for delivery
+C: QUIT
+S: 221 Transmission channel closed
+
+As can be seen above, during the "recovery" by the RESEND command, the
+SMTP client doesn't sends the MAIL FROM and RCPT TO commands again as
+they have already been stored by the SMTP server in the partial mail
+that it saves. Also, the SMTP server tells the client the block size
+that was decided, and how many blocks have been sent. This helps the
+SMTP client to send blocks of mail of size N and resume the broken
+transmission from the block where it had got disrupted, thereby saving
+the time and bandwidth involved in resending what had already been sent
+to the SMTP server.
+
+Thus, as we can see, if modified in the manner suggested by this draft,
+the SMTP protocol can inherit good amount of reliability in the 
+transfer of mails, which can help save time and network bandwidth.
+
+5. Author's Address
+
+Kumar Gaurav Khanna,
+#23, TTTI Campus,
+Sector 26,
+Chandigarh - 160 019
+India
+Phone: 91-172-773454
+WWW: http://www.wintools.f2s.com/
+Email: gauravkhanna@mailandnews.com
+       gaurav@wintools.f2s.com
+
+
+
+
+
+
+
+
+
+
+
+Expires: 3rd April, 2001									[Page 5]
