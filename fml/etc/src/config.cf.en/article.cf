@@ -39,6 +39,19 @@ article_sequence_file	= $sequence_file
 article_post_restrictions_reject_notice_data_type	=	string
 
 
+=head2 ACL and thread
+
+
+# Descriptions: permit post from anyone if the posted message follows
+#		one of valid current threads.
+#		useful to permit post from another mail address,
+#		which receives forwarded ML articles.
+#      History: none
+#        Value: NUM
+#     Examples: 86400
+article_post_article_thread_lifetime = 86400
+
+
 =head2	size limit
 
 

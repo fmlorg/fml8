@@ -40,6 +40,18 @@ article_sequence_file	= $sequence_file
 article_post_restrictions_reject_notice_data_type	=	string
 
 
+=head2 ACL とスレッド
+
+
+# Descriptions: 記事の投稿時に、スレッドの続きであるなら、短時間の間、 
+#		From: に関わらず投稿を許す。
+#		たとえば転送先からでも投稿を許すといった場合には便利。
+#      History: none
+#        Value: NUM
+#     Examples: 86400
+article_post_article_thread_lifetime = 86400
+
+
 =head2	サイズ制限
 
 
