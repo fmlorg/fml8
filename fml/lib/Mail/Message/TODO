@@ -1,11 +1,5 @@
-o replace _db_open with ::DB
+o msg_time() は、Utils へ？
 
-	sub update_id_index
-	sub update_id_monthly_index
-	sub _update_id_montly_index_master
-	sub _update_id_monthly_index
-	sub update_thread_index
- 
 
 o set_article_file_path() / get_article_file_path() ?
 

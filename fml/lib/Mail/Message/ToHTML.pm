@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: ToHTML.pm,v 1.41.2.5 2003/06/14 06:03:20 fukachan Exp $
+# $FML: ToHTML.pm,v 1.41.2.6 2003/06/14 06:55:04 fukachan Exp $
 #
 
 package Mail::Message::ToHTML;
@@ -17,7 +17,7 @@ my $debug = 1;
 my $URL   =
     "<A HREF=\"http://www.fml.org/software/\">Mail::Message::ToHTML</A>";
 
-my $version = q$FML: ToHTML.pm,v 1.41.2.5 2003/06/14 06:03:20 fukachan Exp $;
+my $version = q$FML: ToHTML.pm,v 1.41.2.6 2003/06/14 06:55:04 fukachan Exp $;
 if ($version =~ /,v\s+([\d\.]+)\s+/) {
     $version = "$URL $1";
 }
@@ -127,6 +127,7 @@ sub new
 
 sub DESTROY
 {
+    _PRINT_DEBUG("ToHTML::DESTROY");
     1;
 }
 
@@ -171,7 +172,7 @@ sub htmlfy_rfc822_message
     #    $id  = article id
     #   $src  = source file
     #   $dst  = destination file (target html)
-    my ($id, $src, $dst)   = $self->_init_htmlfy_rfc822_message($args);
+    my ($id, $src, $dst) = $self->_init_htmlfy_rfc822_message($args);
 
     # target html exists already.
     if (-f $dst) {
@@ -925,15 +926,16 @@ See section C<Internal Data Presentation> for more detail.
 sub cache_message_info
 {
     my ($self, $msg, $args) = @_;
-    my $ndb     = $self->ndb();
-    my $id      = $args->{ id };
-    my $src     = $args->{ src };
-    my $dst     = $args->{ dst };
+    my $ndb = $self->ndb();
+    my $id  = $args->{ id };
+    my $src = $args->{ src };
+    my $dst = $args->{ dst };
 
     $ndb->set_key($id);
     $self->{ _ndb_key } = $id;
 
-    $ndb->set('html_filepath', $dst);
+    $ndb->set('html_filename', $id, $self->html_filename($id));
+    $ndb->set('html_filepath', $id, $dst);
 
     $ndb->analyze($msg);
 }
@@ -976,8 +978,8 @@ sub __str2array
 # Return Value: STR
 sub _search_default_next_thread_id
 {
-    my ($db, $id) = @_;
-    my $list = __str2array( $db->{ _thread_list }->{ $id } );
+    my ($self, $db, $id) = @_;
+    my $list = __str2array( $self->{ _thread_list }->{ $id } );
     my (@ra, @c0, @c1) = ();
     @ra = reverse @$list if defined $list;
 
@@ -989,7 +991,7 @@ sub _search_default_next_thread_id
     # 3. last resort: thread includes ($id+1),
     #                 thread includes ($id+2), ...
     for my $xid ($id, @ra, @c0) {
-	my $default = __search_default_next_id_in_thread($db, $xid);
+	my $default = $self->__search_default_next_id_in_thread($db, $xid);
 	return $default if defined $default;
     }
 }
@@ -1001,13 +1003,13 @@ sub _search_default_next_thread_id
 # Return Value: STR
 sub __search_default_next_id_in_thread
 {
-    my ($db, $id) = @_;
+    my ($self, $db, $id) = @_;
     my $list = [];
     my $prev = 0;
 
     # thread_list HASH { $id => $id1 $id2 $id3 ... }
-    if (defined $db->{ _thread_list }->{ $id }) {
-	$list = __str2array( $db->{ _thread_list }->{ $id } );
+    if (defined $self->{ _thread_list }->{ $id }) {
+	$list = __str2array( $self->{ _thread_list }->{ $id } );
 	return undef unless $#$list > 1;
 
 	# thread_list HASH { $id => $id1 $id2 $id3 ... $id $prev ... }
@@ -1062,7 +1064,6 @@ sub update_msg_html_links
     # rewrite links of files for
     #      prev/next id (article id) and
     #      prev/next by thread
-    my $db = $self->{ _db };
     my %uniq = ( $id => 1 );
 
   KEY:
@@ -1078,8 +1079,8 @@ sub update_msg_html_links
 	}
     }
 
-    if (defined $db->{ _thread_list }->{ $id } ) {
-	my $thread_list = __str2array( $db->{ _thread_list }->{ $id } );
+    if (defined $self->{ _thread_list }->{ $id } ) {
+	my $thread_list = __str2array( $self->{ _thread_list }->{ $id } );
 
 	# update link relation for all articles in this thread.
       KEY:
@@ -1193,7 +1194,7 @@ sub evaluate_links_relation
     undef $next_file unless -f $next_file;
 
     unless ($next_thread_id) {
-	my $xid = _search_default_next_thread_id($ndb, $id);
+	my $xid = $self->_search_default_next_thread_id($ndb, $id);
 	if ($xid && ($xid != $id)) {
 	    $next_thread_id = $xid;
 	    _PRINT_DEBUG("override next_thread_id = $next_thread_id");
@@ -1353,6 +1354,15 @@ sub evaluate_safe_footer
 	}
 	$footer .= "</A>\n";
     }
+    elsif (defined($link_prev_id)) {
+	$footer .= "<BR>\n";
+	$footer .=
+	    "<A HREF=\"${prefix}$link_prev_id\">Prev by Thread: ";
+	if (defined $subject->{ prev_id }) {
+	    $footer .= _sprintf_safe_str($subject->{ prev_id });
+	}
+	$footer .= "</A>\n";
+    }
 
     if (defined $link_next_thread_id) {
 	$footer .= "<BR>\n";
@@ -1360,6 +1370,15 @@ sub evaluate_safe_footer
 	    "<A HREF=\"${prefix}$link_next_thread_id\">Next by Thread: ";
 	if (defined $subject->{ next_thread_id }) {
 	    $footer .= _sprintf_safe_str($subject->{ next_thread_id });
+	}
+	$footer .= "</A>\n";
+    }
+    elsif (defined($link_next_id)) {
+	$footer .= "<BR>\n";
+	$footer .=
+	    "<A HREF=\"${prefix}$link_next_id\">Next by Thread: ";
+	if (defined $subject->{ next_id }) {
+	    $footer .= _sprintf_safe_str($subject->{ next_id });
 	}
 	$footer .= "</A>\n";
     }
@@ -1483,31 +1502,28 @@ sub update_id_index
     }
 
     $self->_print_index_begin( $htmlinfo );
-    my $wh = $htmlinfo->{ wh };
-
-    $self->_db_open();
-    my $db = $self->{ _db };
-    my $max_id = $db->{ _info }->{ max_id };
+    my $wh     = $htmlinfo->{ wh };
+    my $db     = $self->ndb();
+    my $max_id = $db->get('hint', 'max_id');
 
     $self->_print_ul($wh, $db, $code);
     if ($order eq 'reverse') {
-	for my $id ( reverse (1 .. $max_id )) {
+	for my $id (reverse (1 .. $max_id)) {
 	    $self->_print_li_filename($wh, $db, $id, $code);
 	}
     }
     else {
-	for my $id ( 1 .. $max_id ) {
+	for my $id (1 .. $max_id) {
 	    $self->_print_li_filename($wh, $db, $id, $code);
 	}
     }
     $self->_print_end_of_ul($wh, $db, $code);
 
-    $self->_db_close();
     $self->_print_index_end( $htmlinfo );
 }
 
 
-=head2 C<update_id_monthly_index($args)>
+=head2 C<update_monthly_id_index($args)>
 
 =cut
 
@@ -1516,7 +1532,7 @@ sub update_id_index
 #    Arguments: OBJ($self) HASH_REF($args)
 # Side Effects: rewrite monthly index
 # Return Value: none
-sub update_id_monthly_index
+sub update_monthly_id_index
 {
     my ($self, $args) = @_;
     my $affected_list = $self->{ _affected_idlist };
@@ -1527,26 +1543,26 @@ sub update_id_monthly_index
     }
 
     # open databaes
-    $self->_db_open();
-    my $db = $self->{ _db };
-
+    my $db = $self->ndb();
     my %month_update = ();
 
   IDLIST:
     for my $id (@$affected_list) {
-	next IDLIST unless $id =~ /^\d+$/;
-	my $month = $db->{ _month }->{ $id };
-	if (defined $month) {
+	next IDLIST unless $id =~ /^\d+$/o;
+	next IDLIST     if $id =~ /^\s*$/o;
+
+	my $month = $db->get('month', $id);
+	if (defined $month && $month !~ /^\s*$/o) {
 	    $month_update{ $month } = 1;
 	}
     }
 
     # todo list
     for my $month (sort keys %month_update) {
-	my $this_month = $month;                    # yyyy/mm
-	my $suffix     = $month; $suffix =~ s@/@@g; # yyyymm
+	my $this_month = $month;                     # yyyy/mm
+	my $suffix     = $month; $suffix =~ s@/@@go; # yyyymm
 
-	$self->_update_id_monthly_index($args, {
+	$self->_update_monthly_id_index($args, {
 	    this_month => $this_month,
 	    suffix     => $suffix,
 	});
@@ -1578,11 +1594,9 @@ sub _update_id_montly_index_master
     };
 
     $self->_print_index_begin( $htmlinfo );
-    my $wh = $htmlinfo->{ wh };
-
-    $self->_db_open();
-    my $db = $self->{ _db };
-    my $mlist   = $db->{ _monthly_idlist };
+    my $wh      = $htmlinfo->{ wh };
+    my $db      = $self->ndb();
+    my $mlist   = $db->get_table_as_hash_ref('inv_month'); # month => (id ...)
     my (@list)  = sort __sort_yyyymm keys %$mlist;
     my ($years) = _yyyy_range(\@list);
 
@@ -1595,7 +1609,7 @@ sub _update_id_montly_index_master
 	    _print_raw_str($wh, "<TR>", $code) if $month == 7;
 
 	    my $id = sprintf("%04d/%02d", $year, $month); # YYYY/MM
-	    my $xx = sprintf("%04d%02d", $year, $month); # YYYYMM
+	    my $xx = sprintf("%04d%02d",  $year, $month); # YYYYMM
 	    my $fn = "month.$xx.html";
 
 	    use File::Spec;
@@ -1610,7 +1624,6 @@ sub _update_id_montly_index_master
     }
     _print_raw_str($wh, "</TABLE>", $code);
 
-    $self->_db_close();
     $self->_print_index_end( $htmlinfo );
 }
 
@@ -1625,7 +1638,7 @@ sub _yyyy_range
     my ($yyyy) = {};
 
     for my $y (@$list) {
-	if ($y =~ /^(\d{4})\/(\d{2})/) {
+	if ($y =~ /^(\d{4})\/(\d{2})/o) {
 	    $yyyy->{ $1 } = $1;
 	}
     }
@@ -1655,7 +1668,7 @@ sub __sort_yyyymm
 #    Arguments: OBJ($self) HASH_REF($args) HASH_REF($monthlyinfo)
 # Side Effects: update month.YYYYMM.html
 # Return Value: none
-sub _update_id_monthly_index
+sub _update_monthly_id_index
 {
     my ($self, $args, $monthlyinfo) = @_;
     my $html_base_dir = $self->{ _html_base_directory };
@@ -1671,33 +1684,31 @@ sub _update_id_monthly_index
     };
 
     $self->_print_index_begin( $htmlinfo );
-    my $wh = $htmlinfo->{ wh };
+    my $wh     = $htmlinfo->{ wh };
+    my $db     = $self->ndb();
+    my $max_id = $db->get('hint', 'max_id');
+    my $list   = $db->get_as_array_ref('inv_month', $this_month);
 
-    $self->_db_open();
-    my $db = $self->{ _db };
-    my $max_id = $db->{ _info }->{ max_id };
-
-    # oops, this list may be " a b c d e " string, nuke \s* to avoid warning.
-    $db->{ _monthly_idlist }->{ $this_month } =~ s/^\s*//;
-    $db->{ _monthly_idlist }->{ $this_month } =~ s/\s*$//;
-    my (@list) = split(/\s+/, $db->{ _monthly_idlist }->{ $this_month });
+    # debug information (it is useful not to remove this ?)
+    _print_raw_str($wh, "<!-- this month ids=(@$list) -->\n", $code);
 
     $self->_print_ul($wh, $db, $code);
     if ($order eq 'reverse') {
-	for my $id (reverse sort {$a <=> $b} @list) {
-	    next unless $id =~ /^\d+$/;
+      ID:
+	for my $id (reverse sort {$a <=> $b} @$list) {
+	    next ID unless $id =~ /^\d+$/o;
 	    $self->_print_li_filename($wh, $db, $id, $code);
 	}
     }
     else {
-	for my $id (sort {$a <=> $b} @list) {
-	    next unless $id =~ /^\d+$/;
+      ID:
+	for my $id (sort {$a <=> $b} @$list) {
+	    next ID unless $id =~ /^\d+$/o;
 	    $self->_print_li_filename($wh, $db, $id, $code);
 	}
     }
     $self->_print_end_of_ul($wh, $db, $code);
 
-    $self->_db_close();
     $self->_print_index_end( $htmlinfo );
 }
 
@@ -1732,11 +1743,9 @@ sub update_thread_index
     }
 
     $self->_print_index_begin( $htmlinfo );
-    my $wh = $htmlinfo->{ wh };
-
-    $self->_db_open();
-    my $db = $self->{ _db };
-    my $max_id = $db->{ _info }->{ max_id };
+    my $wh     = $htmlinfo->{ wh };
+    my $db     = $self->ndb();
+    my $max_id = $db->get('hint', 'max_id');
 
     # initialize negagtive cache to ensure uniquness
     delete $self->{ _uniq };
@@ -1750,7 +1759,6 @@ sub update_thread_index
     }
     $self->_print_end_of_ul($wh, $db, $code);
 
-    $self->_db_close();
     $self->_print_index_end( $htmlinfo );
 }
 
@@ -1763,8 +1771,7 @@ sub _has_link
 {
     my ($self, $db, $id) = @_;
 
-    if (defined( $db->{ _next_id }->{ $id } ) ||
-	defined( $db->{ _prev_id }->{ $id } )) {
+    if ($db->get('next_key', $id) || $db->get('prev_key', $id)) {
 	return 1;
     }
     else {
@@ -1781,29 +1788,28 @@ sub _print_thread
 {
     my ($self, $wh, $db, $head_id, $code) = @_;
     my $saved_stack_level = $self->{ _stack };
-    my $uniq = $self->{ _uniq };
-
-    # debug information (it is useful not to remove this ?)
-    _print_raw_str($wh, "<!-- thread head=$head_id -->\n", $code);
+    my $uniq              = $self->{ _uniq };
 
     # get id list: @idlist = ( $head_id id2 id3 ... )
-    my $buf = $db->{ _idref }->{ $head_id };
+    my $ndb = $self->ndb();
+    my $buf = $ndb->get('ref_key_list', $head_id);
 
-    if (defined $buf) {
-	my $ra       = __str2array($buf);
-	my (@idlist) = @$ra;
+    # debug information (it is useful not to remove this ?)
+    _print_raw_str($wh, "<!-- thread head=$head_id ($buf) -->\n", $code);
 
+    my $idlist = $ndb->get_as_array_ref('ref_key_list', $head_id);
+    if (@$idlist) {
       IDLIST:
-	for my $id (@idlist) {
-	    # save $id => " @idlist " for further use
-	    # XXX override occurs but select latest information (no reason;)
-	    if ($#idlist > 1) {
-		$db->{ _thread_list }->{ $id } = $buf;
-		_PRINT_DEBUG("\$db->{ _thread_list }->{ $id } = $buf");
+	for my $id (@$idlist) {
+	    # save $head_id => "id1 id2 id3 ..." for further use.
+	    # XXX override always (correct ?)
+	    if ($#$idlist > 1) {
+		$self->{ _thread_list }->{ $id } = $buf;
+		_PRINT_DEBUG("\$self->{ _thread_list }->{ $id } = $buf");
 	    }
 
-	    # @idlist = (number's)
-	    _print_raw_str($wh, "<!-- thread (@idlist) -->\n", $code);
+	    # @$idlist = (number's)
+	    _print_raw_str($wh, "<!-- thread (@$idlist) -->\n", $code);
 
 	    next IDLIST if $uniq->{ $id };
 	    $uniq->{ $id } = 1;
@@ -1812,6 +1818,7 @@ sub _print_thread
 
 	    # oops, we should ignore head of the thread ( myself ;-)
 	    if (($id != $head_id) && $self->_has_link($db, $id)) {
+		_print_raw_str($wh, "<!-- thread $id has link -->\n", $code);
 		$self->_print_li_filename($wh, $db, $id, $code);
 		$self->_print_thread($wh, $db, $id, $code);
 	    }
@@ -2065,9 +2072,11 @@ sub _print_end_of_ul
 sub _print_li_filename
 {
     my ($self, $wh, $db, $id, $code) = @_;
-    my $filename = $db->{ _filename }->{ $id };
-    my $subject  = $db->{ _subject }->{ $id };
-    my $who      = $db->{ _who }->{ $id };
+    my $filename = $db->get('html_filename', $id);
+    my $subject  = $db->get('subject', $id);
+    my $who      = $db->get('who', $id);
+
+    _PRINT_DEBUG("-- print_li_filename id=$id file=$filename");
 
     if (defined $filename && $filename) {
 	_print_raw_str($wh, "<!-- LI id=$id -->\n", $code);
@@ -2168,18 +2177,30 @@ sub htmlify_file
 	printf STDERR "htmlify_file( id=%-6s src=%s )\n", $id, $file;
     }
 
+    _PRINT_DEBUG("htmlfy_rfc822_message begin");
     $html->htmlfy_rfc822_message({
 	id  => $id,
 	src => $file,
     });
+    _PRINT_DEBUG("htmlfy_rfc822_message end");
 
     if ($debug) {
 	printf STDERR "htmlify_file( id=%-6s ) update relation\n", $id;
     }
+
+    _PRINT_DEBUG("-- msg_html_links");
     $html->update_msg_html_links( $id );
-    $html->update_id_monthly_index({ id => $id });
+
+    _PRINT_DEBUG("-- monthly id index");
+    $html->update_monthly_id_index({ id => $id });
+
+    _PRINT_DEBUG("-- id index");
     $html->update_id_index({ id => $id });
+
+    _PRINT_DEBUG("-- thread index");
     $html->update_thread_index({ id => $id });
+
+    _PRINT_DEBUG("-- top index");
     $html->create_top_index();
 
     # no more action for old files
@@ -2265,7 +2286,7 @@ if ($0 eq __FILE__) {
     my $charset  = 'euc-jp';
     my $opts     = {
 	db_base_dir => "/tmp/",
-	db_name     => "elena", 
+	db_name     => "elena",
     };
 
     eval q{
@@ -2279,7 +2300,7 @@ if ($0 eq __FILE__) {
 			directory   => $dir,
 			charset     => $charset,
 			db_base_dir => "/tmp/",
-			db_name     => "elena", 
+			db_name     => "elena",
 		    });
 		};
 		print STDERR $@ if $@;
@@ -2292,7 +2313,7 @@ if ($0 eq __FILE__) {
 		    max       => $max,
 		    charset   => $charset,
 		    db_base_dir => "/tmp/",
-		    db_name     => "elena", 
+		    db_name     => "elena",
 		});
 	    }
 	}
