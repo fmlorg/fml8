@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Adapter.pm,v 1.18 2002/07/23 13:06:35 fukachan Exp $
+# $FML: Adapter.pm,v 1.19 2002/07/24 09:29:53 fukachan Exp $
 #
 
 package IO::Adapter;
@@ -381,29 +381,6 @@ sub delete
     }
     else {
 	$self->error_set("Error: delete() method is not supported.");
-	undef;
-    }
-}
-
-
-# Descriptions: replace $value for key matching $regexp
-#    Arguments: OBJ($self) STR($regexp) STR($value)
-# Side Effects: modify map content
-# Return Value: replace()
-sub replace
-{
-    my ($self, $regexp, $value) = @_;
-
-    if ($self->{ _hints }->{ read_only }) {
-	my $map = $self->{ _map };
-	croak("this map $map is read only.");
-    }
-
-    if ($self->can('replace')) {
-	$self->SUPER::replace($regexp, $value);
-    }
-    else {
-	$self->error_set("Error: replace() method is not supported.");
 	undef;
     }
 }

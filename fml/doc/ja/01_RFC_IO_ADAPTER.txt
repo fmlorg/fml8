@@ -37,6 +37,8 @@
 	getline			()		STR	←要拡張？
 	get_value_as_str	()		STR	←要拡張？
 	get_value_as_array_ref	()		[]	←要拡張？
+
+   [ removed ]
 	replace			(KEY, STR)	*	←要拡張？
 				(KEY, [])	*	←要拡張？
 

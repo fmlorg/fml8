@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: DBI.pm,v 1.15 2002/07/23 13:06:36 fukachan Exp $
+# $FML: DBI.pm,v 1.16 2002/07/24 09:30:45 fukachan Exp $
 #
 
 package IO::Adapter::DBI;
@@ -314,35 +314,11 @@ sub delete
 }
 
 
-=head2 C<replace($regexp, $value)>
+=head2 md_find()
+
+map specific find(). 
 
 =cut
-
-
-# Descriptions: replace value
-#    Arguments: OBJ($self) STR($regexp) STR($value)
-# Side Effects: update map
-# Return Value: none
-sub replace
-{
-    my ($self, $regexp, $value) = @_;
-    my (@addr);
-
-    # firstly, get list matching /$regexp/i;
-    my $a = $self->find($regexp, { want => 'key', all => 1});
-
-    # secondarly double check: get list matchi /$regexp/;
-    for my $addr (@$a) {
-	push(@addr, $addr) if ($addr =~ /$regexp/);
-    }
-
-    # thirdly, replace it
-    for my $addr (@addr) {
-	$self->delete( $addr );
-	$self->add( $value );
-    }
-
-}
 
 
 # Descriptions: search, md = map dependent

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: File.pm,v 1.32 2002/06/21 03:54:13 fukachan Exp $
+# $FML: File.pm,v 1.33 2002/07/24 09:29:39 fukachan Exp $
 #
 
 package IO::Adapter::File;
@@ -402,46 +402,6 @@ sub delete
 	}
 	$fh->close;
 	$wh->close;
-    }
-    else {
-	$self->error_set("Error: cannot open file=$self->{ _file }");
-	return undef;
-    }
-}
-
-
-=head2 C<replace($regexp, $value)>
-
-replace lines which matches $regexp with $value.
-
-=cut
-
-
-# Descriptions: replace address(es) matching $reexp with $value
-#    Arguments: OBJ($self) STR($regexp) STR($value)
-# Side Effects: update map
-# Return Value: same as close()
-sub replace
-{
-    my ($self, $regexp, $value) = @_;
-
-    $self->open("w");
-
-    my $rh = $self->{ _fh };
-    my $wh = $self->{ _wh };
-
-    if (defined $rh) {
-      FILE_IO:
-	while (<$rh>) {
-	    if (/$regexp/) {
-		print $wh $value, "\n";
-	    }
-	    else {
-		print $wh $_;
-	    }
-	}
-	$wh->close;
-	$rh->close;
     }
     else {
 	$self->error_set("Error: cannot open file=$self->{ _file }");
