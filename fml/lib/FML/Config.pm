@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Config.pm,v 1.78 2003/01/28 05:33:33 fukachan Exp $
+# $FML: Config.pm,v 1.79 2003/02/01 08:53:11 fukachan Exp $
 #
 
 package FML::Config;
@@ -318,6 +318,7 @@ sub _read_file
 	# [mysql:fml]
 	#    var = key1 ...
 	#
+      LINE:
 	while ($buf = <$fh>) {
 	    # Example: [mysql:fml]
 	    #   switched to the new name space.
@@ -328,20 +329,20 @@ sub _read_file
 	    if ($after_cut) {
 		$hook     .= $buf unless $buf =~ /^=/o;
 		$after_cut = 0        if $buf =~ /^=\w+/o;
-		next;
+		next LINE;
 	    }
 	    $after_cut = 1 if $buf =~ /^=cut/o; # end of postfix format
 
 	    if ($buf =~ /^=/o) { # ignore special keywords of pod formats
 		$name_space = '';
-		next;
+		next LINE;
 	    }
 
 	    if ($mode eq 'raw') { # save comment buffer
 		if ($buf =~ /^\s*\#/o) { $comment_buffer .= $buf;}
 	    }
 	    else { # by default, nuke trailing "\n"
-		chomp;
+		chomp $buf;
 	    }
 
 	    # case 1. "key = value1"
