@@ -1,0 +1,40 @@
+=head1	データベースとの連携
+
+use_database	=	no
+
+# value: mysql postgresql ldap
+database_method	=	mysql
+
+database_model	=	toymodel
+
+# うー？
+# DATABASE_CACHE_FILE_SUFFIX:
+
+=head2	SQL の場合
+
+sql_servers		=
+
+#
+# sql_port		=
+
+sql_user		=	fml
+
+sql_use_password	=
+
+sql_database_name	=	fml
+
+
+
+=head2	LDAP の場合
+
+ldap_servers		=
+
+# ldap_port		=
+
+ldap_server_password	=	
+
+ldap_search_base	=	
+
+ldap_server_bind	=	
+
+ldap_query_filter	=	

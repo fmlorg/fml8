@@ -8,6 +8,7 @@ log.cf
 spool.cf
 command.cf
 tickets.cf
+dbms.cf
 paths.cf
 system_dependence.cf
 __end__.cf
