@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: minimal_states.pm,v 1.21 2001/08/22 03:08:00 fukachan Exp $
+# $FML: minimal_states.pm,v 1.22 2001/10/08 23:26:08 fukachan Exp $
 #
 
 package FML::Ticket::Model::minimal_states;
@@ -179,8 +179,6 @@ sub assign
 	# O.K. rewrite Subject: of the article to distribute
 	unless ($self->error) {
 	    my $header = $curproc->{ article }->{ header };
-
-	    $self->_pcb_set_id($curproc, $id); # save $id info in PCB
 	    $self->_rewrite_header($header, $config, $id);
 	    $self->_set_status_info("newly assigned");
 	}

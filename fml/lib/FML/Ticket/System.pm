@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: System.pm,v 1.25 2001/06/10 11:24:13 fukachan Exp $
+# $FML: System.pm,v 1.26 2001/10/22 14:10:07 fukachan Exp $
 #
 
 package FML::Ticket::System;
@@ -61,30 +61,6 @@ sub new
     my ($type) = ref($self) || $self;
     my $me     = {};
     return bless $me, $type;
-}
-
-
-# Descriptions: save the ticket $id in FML::PCB object
-#    Arguments: $self $curproc $id
-# Side Effects: set id in PCB
-# Return Value: none
-sub _pcb_set_id
-{
-    my ($self, $curproc, $id) = @_;
-    my $pcb = $curproc->{ pcb }; # FML::PCB object
-    $pcb->set('ticket', 'id', $id);
-}
-
-
-# Descriptions: get the ticket $id from FML::PCB
-#    Arguments: $self $curproc
-# Side Effects: none
-# Return Value: number (ticket id)
-sub _pcb_get_id
-{
-    my ($self, $curproc) = @_;
-    my $pcb = $curproc->{ pcb }; # FML::PCB object
-    $pcb->get('ticket', 'id');
 }
 
 
