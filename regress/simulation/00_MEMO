@@ -3,6 +3,129 @@
 
 	XXX 作業したら TODO/STATUS.txt もアップデートしてね XXX
 
+
+-------------------- 2002-06 AUDIT --------------------
+   FML::Article
+
+	subdir の取り扱いが不十分
+	$curpoc->{ article }->{ header } じゃだめ、
+	$curpoc->{ article }->header() などへ移行せよ
+	0700 とかハードコードされてるじょ 
+
+   FML::Command
+
+	Log("load $pkg") if $0 =~ /loader/; # debug
+
+   FML::Credential
+
+	case sensitive / case insensitive
+	今は
+		USER	パートは sensitive
+		ドメインパートは insensitive
+	オプションで、USER パートも insensitive にできるように
+	できた方がよい？
+
+   Tie::JournaledFile
+
+	IO::Adapter で journaled file をサポートしてほしい
+
+	[BUG] ?
+	この negative cache ってまちがってないか？
+		find() して ->{} すると negative cache 
+		が間違って有効になってるんじゃないの？
+ 
+   FML::CGI::Admin::User
+
+	$comname と maps の関係がハードコーディングされてる
+
+   FML::CGI::ThreadTrack
+
+	見栄えを config.cgi などと合わせる方が良いでしょう
+	＃ テーブルベースの見栄え
+
+   FML::Command::Auth
+
+	パスワードエントリのサーチで、検索範囲が冗長過ぎ
+
+	[BUG]
+	ユーザ名の一致も検査しなはれ
+
+   FML::Parse
+
+	new() である必然性ってあるの？
+
+   FML::Mailer
+
+	FML::Process::QueueManager が使っているのみ
+	独立したモジュールである必要があるだろうか？
+
+	reply_message() が何でもしてしまうので、
+	FML::Mailer を呼ぶことはないかもしれない。
+
+	→ FML::Process::QueueManager に合併するべきか？
+
+	論点２: 継承か、object composition か？
+
+
+   FML::Header
+   FML::Header::Subject
+   File::Sequence
+   Mail::Delivery::* (?)
+   FML/Filter.pm
+   FML/Filter/BodyCheck.pm
+   FML/Filter/HeaderCheck.pm
+
+	ちょっとコーディングスタイルが古いかな?
+	近々に見直すべし
+
+   File::Sequence
+
+	IO::Adapter 経由にするべきでし
+
+
+   FML::Command::Admin::dir
+   FML::Command::Admin::file
+   FML::Command::DirUtils
+	ファイルの正規表現に FML::Restriction:: を使うように変更
+
+   FML::Command::Admin::dir
+	cgi_menu() ?
+		ディレクトリ listing してくれる perl module ないかな？
+
+ 
+   FML::Command::SendFile
+	Mail::Message::MH を使うように修正
+
+
+   FML::Command::UserControl
+
+	if defined $uc_args->{ is_cgi } && $uc_args->{ is_cgi };
+
+	はよろしくないとおもうなぁ。もうちょっとモジュールに共通する
+	$curproc->is_cgi() みたいなメソッドがほしい感じ？
+
+   FML::Restriction::
+	と RFC っていってもねぇ… RFC の定義が広すぎるよね
+
+   FML::Restriction::Command
+	コマンドのシンタックスチェックはもうちょっと粒度を上げるべきか？
+
+   FML::Command::Admin::log
+	    my $is_cgi       = 1 if $args->{ mode } eq 'cgi';
+
+   FML::Config
+
+	if $0 =~ /loader/; # debug
+
+   FML::Process::Command
+
+	_allow_command() が途中
+
+   FML/Command/User/confirm.pm
+	(ユーザに返す)エラーメッセージが少ない？
+
+-------------------- 2002-06 AUDIT --------------------
+
 ○	postconf で file じゃないものは無視しないとだね
 
 
@@ -85,6 +208,7 @@ http://www.cs.utk.edu/~moore/internet-drafts/draft-moore-auto-email-response-00
 ○	ファイルを用意しただけやんシリーズ;) 
 	これから改造するので、ほとんど未修正のままのこす
 
+	FML/Command/Admin/edit.pm
 	FML::Process::Qmail
 	FML/Filter/TrafficMonitor.pm
 	IO::Adapter::LDAP
@@ -330,4 +454,4 @@ HTML::Widgets::Menu - Builds an HTML menu
 
 
 ----------
-$FML: 00_MEMO,v 1.26 2002/06/23 03:38:17 fukachan Exp $
+$FML: 00_MEMO,v 1.27 2002/06/25 08:13:31 fukachan Exp $
