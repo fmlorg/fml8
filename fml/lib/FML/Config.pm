@@ -63,15 +63,6 @@ sub dump_variables
 }
 
 
-sub _fml_config_sort
-{
-    my ($x, $y) = ($a, $b);
-    $x =~ s/^use_//ig;
-    $y =~ s/^use_//ig;
-    $x cmp $y;
-}
-
-
 sub _log
 {
    my ($self, $msg) = @_;

@@ -12,9 +12,7 @@ package FML::Process::QMail;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
-
-require Exporter;
-@ISA = qw(Exporter);
+use FML::Log;
 
 
 sub new
@@ -28,19 +26,54 @@ sub new
 
 =head1 NAME
 
-NOT YET MERGED - qmail-ext
+FML::Process::QMail - emulate C<qmail-ext> address
 
 =head1 SYNOPSIS
 
-=head1 DESCRIPTION
+NOT YET MERGED 
 
-=head1 CLASSES
+=head1 DESCRIPTION
 
 =head1 METHODS
 
-=item C<new()>
+=cut
 
-... what is this ...
+
+sub DotQmailExt
+{
+    my ($curproc) = @_;
+    my $config = $curproc->{ config };
+
+    # get ?
+    my $ext = $ENV{'EXT'};
+
+    unless ($ext) {
+	Log("no extension address");
+	return;
+    }
+
+    &Log("dot-qmail-ext[0]: $ext");
+    my ($key)    = (split(/\@/, $config->{ address_for_post }))[0];
+    my ($keyctl) = (split(/\@/, $config->{ address_for_command }))[0];
+
+    if ($ext =~ /^($key)$/i) {
+	return '';
+    }
+    elsif ($keyctl&& ($ext =~ /^($keyctl)$/i)) {
+	return '';
+    }
+
+    &Log("dot-qmail-ext: $ext");
+    $ext =~ s/^$key//i;
+    $ext =~ s/\-\-/\@/i; # since @ cannot be used
+    $ext =~ s/\-/ /g;
+    $ext =~ s/\@/-/g;
+    &Log("\$ext -> $ext");
+
+    # XXX: "# command" is internal represention
+    return sprintf("# %s", $ext);
+}
+
 
 =head1 AUTHOR
 
@@ -60,36 +93,5 @@ See C<http://www.fml.org/> for more details.
 
 =cut
 
-
-sub DotQmailExt
-{
-    local(*e) = @_;
-    local($ext, $key, $keyctl);
-
-    # get ?
-    ($ext = $ENV{'EXT'}) || return $NULL;
-
-    &Log("dot-qmail-ext[0]: $ext") if $debug_qmail;
-
-    $key    = (split(/\@/, $MAIL_LIST))[0];
-    $keyctl = (split(/\@/, $CONTROL_ADDRESS))[0];
-
-    if ($ext =~ /^($key)$/i) {
-	return $NULL;
-    }
-    elsif ($keyctl&& ($ext =~ /^($keyctl)$/i)) {
-	return $NULL;
-    }
-
-    &Log("dot-qmail-ext: $ext") if $debug_qmail;
-    $ext =~ s/^$key//i;
-    $ext =~ s/\-\-/\@/i; # since @ cannot be used
-    $ext =~ s/\-/ /g;
-    $ext =~ s/\@/-/g;
-    &Log("\$ext -> $ext");
-
-    # XXX: "# command" is internal represention
-    $e{'Body'} = sprintf("# %s", $ext);
-}
 
 1;
