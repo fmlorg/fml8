@@ -62,7 +62,7 @@ header_rewrite_rules =	rewrite_subject_tag
 
 subject_tag_name	=	$ml_name
 
-subject_tag		=	[%s:%05d]
+subject_tag		=	[$ml_name:%05d]
 =head2 ¥í¥Ã¥¯
 
 lock_dir	= $ml_home_dir/var/lock

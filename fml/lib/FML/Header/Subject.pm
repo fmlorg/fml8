@@ -46,7 +46,7 @@ sub rewrite_subject_tag
     $self->_cut_off_reply(\$subject);
 
     # add(prepend) the updated tag
-    $tag = sprintf($tag, $ml_name, $args->{ id });
+    $tag = sprintf($tag, $args->{ id });
     my $new_subject = $tag." ".$subject;
     $header->replace('subject', $new_subject);
 }
@@ -76,9 +76,11 @@ sub _regexp_compile
     $s =~ s@\%s@\\S+@g;
     $s =~ s@\%0\d+d@\\d+@g;
     $s =~ s@\%\d+d@\\d+@g;
+    $s =~ s@\%\-\d+d@\\d+@g;
 
-    $s =~ s/^(.)/\\$1/;
-    $s =~ s/(.)$/\\$1/;
+    # quote for regexp substitute: [ something ] -> \[ something \]
+    $s =~ s/^(.)/quotemeta($1)/e;
+    $s =~ s/(.)$/quotemeta($1)/e;
 
     $s;
 }
