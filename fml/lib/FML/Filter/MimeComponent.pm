@@ -1,10 +1,10 @@
 #-*- perl -*-
 #
-#  Copyright (C) 2002 Takuya MURASHITA
+#  Copyright (C) 2002,2003 Takuya MURASHITA
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: MimeComponent.pm,v 1.1 2002/09/30 11:00:54 fukachan Exp $
+# $FML: MimeComponent.pm,v 1.2 2003/08/23 04:35:35 fukachan Exp $
 #
 
 package FML::Filter::MimeComponent;
@@ -269,7 +269,7 @@ Takuya MURASHITA
 
 =head1 COPYRIGHT
 
-Copyright (C) 2002 Takuya MURASHITA
+Copyright (C) 2002,2003 Takuya MURASHITA
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
