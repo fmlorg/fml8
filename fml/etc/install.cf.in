@@ -3,7 +3,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: install.cf.in,v 1.15 2003/12/26 14:51:37 fukachan Exp $
+# $FML: install.cf.in,v 1.16 2004/09/29 05:04:07 fukachan Exp $
 #
 
 
@@ -94,6 +94,7 @@ template_files	=	include
 			main.cf
 			modules
 			command_line_options
+			menu
 
 
 bin_programs	=	fml
