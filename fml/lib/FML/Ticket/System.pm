@@ -23,8 +23,8 @@ FML::Ticket::System - ticket system core engine
 
 =head1  SYNOPSIS
 
-   use Ticket::Model::toymodel;
-   $ticket = new Ticket::Model::toymodel;
+   use Ticket::Model::minimal_states;
+   $ticket = new Ticket::Model::minimal_states;
    $ticket->assign($curproc, $args);
    $ticket->update_cache($curproc, $args);
 
@@ -39,9 +39,9 @@ This module provides basic functions to help sub classes.
                 |
                 A 
        -------------------
-       |        |        |
-       A        A        A
-    toymodel  model2    ....
+       |                 |
+       A                 A
+    minimal_states
 
 =head1 METHODS
 
