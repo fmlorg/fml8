@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: newml.pm,v 1.66 2003/08/29 15:33:59 fukachan Exp $
+# $FML: newml.pm,v 1.67 2003/09/04 12:27:53 fukachan Exp $
 #
 
 package FML::Command::Admin::newml;
@@ -108,7 +108,7 @@ sub process
     # already exists.
     unless (defined $options->{ force } ) {
 	if (-d $ml_home_dir) {
-	    warn("$ml_name already exists ($ml_home_dir)");
+	    warn("$ml_name ml_home_dir($ml_home_dir) already exists"); 
 	    return ;
 	}
     }
@@ -329,6 +329,7 @@ sub _is_mta_alias_maps_has_ml_entry
 
 	my $obj = new FML::MTAControl;
 	if ($obj->is_user_entry_exist_in_passwd($ml_name)) {
+	    print STDERR "error: $ml_name is found in passwd\n";
 	    $found = 1;
 	}
 
@@ -340,7 +341,11 @@ sub _is_mta_alias_maps_has_ml_entry
 		    mta_type   => $mta,
 		    key        => $ml_name,
 		});
-		last MTA if $found;
+
+		if ($found) {
+		    print STDERR "error: $ml_name is found in $mta aliases\n";
+		    last MTA;
+		}
 	    }
 	}
     };
