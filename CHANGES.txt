@@ -1,6 +1,25 @@
 		CHANGES
 		Last Modified: $Date$
 
+2002/12/09
+
+   update CPAN modules
+	import File-MMagic 1.16
+	import MIME-Types  1.004
+	update MailTools   1.15 -> 1.52
+
+2002/12/01
+
+   FML::Article::Summary 
+   FML::Process::Distribute 
+	bug fix article object handling:
+	we should not initialize article object under
+	libexec::distribute runs. pass $article object to $summary
+	object by append($article, $id). 
+
+   FML::Article::Summary 
+	summary date should be sync-ed with article date
+
 2002/11/26
 
    implement fmlsummary program
@@ -3655,4 +3674,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.112 2002/11/26 11:15:35 fukachan Exp $
+$FML: CHANGES.txt,v 1.113 2002/11/26 14:24:48 fukachan Exp $
