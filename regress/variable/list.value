@@ -1,0 +1,108 @@
+^use_			YES_OR_NO
+^system_has_		YES_OR_NO
+
+_length$		NUM
+_size$			NUM
+_unit$			NUM
+_limit$			NUM
+_interval$		NUM
+_backlog$		NUM
+_location$		NUM
+_lifetime$		NUM
+
+_policy$		SELECT
+_type$			SELECT
+_charset$		SELECT
+_charset_\w{2}$		SELECT
+_subject_tag_location$	SELECT
+
+_functions$		MIX
+_restrictions$		MIX
+_rules$			MIX
+_config_list$		MIX
+_drivers$		MIX
+_select_list$		MIX
+
+_dir$			DIR
+_directories$		DIR_LIST
+
+_file$			FILE
+^path_			FILE
+_template_files$	FILE_LIST
+
+_map$			MAP
+_maps$			MAP_LIST
+
+_command_prefix$	FML_COMMAND
+_allowed_commands$	FML_COMMAND_LIST
+_options$		COMMAND_LINE_OPTIONS
+
+smtp_sender		RFC822_ADDRESS
+maintainer		RFC822_ADDRESS
+_address$		RFC822_ADDRESS
+list_addresses		RFC822_ADDRESS_LIST
+verp_delimiters		RFC822_ADDRESS_DELIMITERS
+
+_password$		PASSWORD
+
+_subject$		SUBJECT
+_subject_tag$		SUBJECT_TAG
+thread_id_syntax	SUBJECT_TAG
+
+_timezone$		TIMEZONE
+
+_prompt$		PROMPT
+
+cgi.*color		HTML_COLOR
+
+default_umask   	UMASK
+
+directory_default_mode  FILE_MODE
+directory_private_mode  FILE_MODE
+directory_public_mode   FILE_MODE
+file_default_mode       FILE_MODE
+
+
+_servers$		HOSTNAME_LIST
+_servers$		TRANSPORT_LIST
+
+
+
+#
+# SQL
+#
+sql_add			SQL_STATEMENT
+sql_delete		SQL_STATEMENT
+sql_find		SQL_STATEMENT
+sql_get_next_key	SQL_STATEMENT
+sql_getline		SQL_STATEMENT
+
+
+#
+# SPECIAL
+#
+log_computer_output_engine		CLASS
+error_mail_analyzer_cache_type		CLASS
+error_mail_analyzer_cache_mode		SELECT
+error_mail_analyzer_function		SELECT
+article_summary_file_format_style	SELECT
+cgi_default_language			SELECT
+article_delivery_transport		SELECT
+_filter_reject_notice_recipients	MIX
+_function_select_list			MIX
+language_preference_order		MIX
+cgi_menu_default_address_map		MIX
+system_special_accounts			REGEXP_LIST
+unsafe_header_fields			HEADER_FIELD_LIST
+log_format_type				STR
+
+
+ldap_query_filter			LDAP_QUERY_FILTER
+ldap_search_base			LDAP_SEARCH_BASE
+ldap_server_bind			LDAP_SEVERVER_BIND
+
+sql_database				SQL_DATABASE
+sql_server				HOSTNAME
+sql_table				SQL_TABLE
+sql_user				USER
+
