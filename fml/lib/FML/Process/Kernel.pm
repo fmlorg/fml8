@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.60 2001/11/04 03:46:50 fukachan Exp $
+# $FML: Kernel.pm,v 1.61 2001/11/25 03:53:00 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -130,18 +130,6 @@ sub new
 
     bless $curproc, $self;
 
-    # show help and exit here, (ASAP)
-    # XXX longjmp()
-    {
-	my $option = $curproc->command_line_options();
-	if (defined $option->{ help }) {
-	    if ($curproc->can('help')) {
-		$curproc->help();
-	    }
-	    exit 0;
-	}
-    }
-
     # load config.cf files, which is passed from loader.
     $curproc->load_config_files( $args->{ cf_list } );
 
@@ -180,6 +168,25 @@ sub _signal_init
 	sleep 1;
 	croak("SIG$signal trapped");
     };
+}
+
+
+# Descriptions: show help and exit here, (ASAP)
+#    Arguments: $self $args
+# Side Effects: longjmp() to help
+# Return Value: none
+sub _trap_help
+{
+    my ($curproc, $args) = @_;
+    my $option = $curproc->command_line_options();
+
+    if (defined $option->{ help }) {
+	print STDERR "FML::Process::Kernel trapped\n" if defined $ENV{'debug'};
+	if ($curproc->can('help')) {
+	    $curproc->help();
+	}
+	exit 0;
+    }
 }
 
 

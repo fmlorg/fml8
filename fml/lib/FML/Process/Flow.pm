@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Flow.pm,v 1.9 2001/04/03 09:45:43 fukachan Exp $
+# $FML: Flow.pm,v 1.10 2001/05/29 16:21:16 fukachan Exp $
 #
 
 package FML::Process::Flow;
@@ -65,6 +65,11 @@ sub ProcessStart
 
     # create a new process object
     my $process = $pkg->new($args);
+
+    # XXX private method to show help ASAP
+    # XXX we need to trap here since $process object is clarified after 
+    # XXX $pkg->new() above.
+    $process->_trap_help($args);
 
     # e.g. parse the incoming message (e.g. STDIN)
     $process->prepare($args);
