@@ -25,7 +25,7 @@ default_directory_mode	=	0755
 #      History: fml 4.0 の $DIR にあたるもの
 #         Type: directory_string
 #     Examples: /var/spool/ml/elena
-ml_home_dir	=
+# ml_home_dir	=
 
 # Descriptions: ML 間でシェアするデータベースをおくホームディレクトリ
 #      History: fml 4.0 に該当するものはない
