@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: errormail.sgml,v 1.1 2003/05/28 13:35:16 fukachan Exp $
 -->
 
 
@@ -66,6 +66,37 @@ FML::Erorr::Cache 経由で Tie::JournaledDir への IO を行ないます。
 FML::Erorr::Cache が Tie::JournaledDir の直前に位置し、アダプタとなり
 ます。すべての IO は FML::Erorr::Cache が提供する primitive なメソッド
 を通じてのみ行なわなければなりません。
+</para>
+
+</sect1>
+
+
+<sect1 id="error.internal.message.forward">
+	<title>
+	エラーメッセージをフォワードする	
+	</title>
+
+<para>
+<screen>
+$maintainer_recipient_maps
+</screen>
+で、エラーメッセージの転送先を指定することができます。
+デフォルトは未定義で、転送は行なわれません。
+&fml8; がログを残すだけです。
+</para>
+
+<para>
+現在は、単にエラーメールをフォワーディングしてるだけです。中身は
+message/rfc822 一通だけの無味乾燥な mime/multipart です。
+</para>
+
+<para>
+そのうち、ヘッダ情報 + そのエラーメールのアドレスの分析レポートとか
+なんか付けてやれや〜とかちょっと思ってはいるっす。
+</para>
+
+<para>
+リファレンス: fml-devel ML 451 あたりを参照かな。
 </para>
 
 </sect1>
