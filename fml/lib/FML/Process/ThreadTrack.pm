@@ -3,7 +3,7 @@
 # Copyright (C) 2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ThreadTrack.pm,v 1.22 2002/02/17 03:07:56 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.23 2002/02/17 13:45:10 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -242,7 +242,7 @@ sub _speculate_last_id
 	if (defined $rh) {
 	    eval q{
 		use File::Sequence;
-		my $obj = new File::Sequence;
+		my $obj = new File::Sequence { sequence_file => $seq_file };
 		$last_id = $obj->search_max_id( { hash => $rh } );
 	    };
 	    warn($@) if $@;

@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Sequence.pm,v 1.19 2002/02/17 03:13:49 fukachan Exp $
+# $FML: Sequence.pm,v 1.20 2002/02/20 11:53:22 tmu Exp $
 #
 
 package File::Sequence;
@@ -226,9 +226,13 @@ sub search_max_id
 
 	return $max;
     }
-    # old style, search max from bottom (e.g. 0 or 1)
+    # old style, search max from bottom or top (e.g. 0 or 1)
     elsif (defined $args->{ hash }) {
-	$self->_search_max_id_from_bottom($args);
+    	if($self->get_id() > 0) {
+		$self->_search_max_id_from_top($args);
+	} else {
+		$self->_search_max_id_from_bottom($args);
+	}
     }
     else {
 	warn("no argument");
@@ -294,16 +298,17 @@ sub _search_max_id_from_top
 		PEBOT_SEARCH:
 		while ($pebot > 0) {
 			last PEBOT_SEARCH if defined $hash->{ $pebot - $unit };
+			last PEBOT_SEARCH if(($pebot - $unit) <= 0);
 			$pebot -= $unit;
 			print STDERR "1. ", $pebot, "\n" if defined $ENV{'debug'};
 		}
 
 # decrement by 1.
-		do {
+		while(! defined $hash->{ $pebot - 1 }) {
 			$pebot--;
 			return 0 if($pebot <= 0);
 			print STDERR "2. ", $pebot, "\n" if defined $ENV{'debug'};
-		} unless (defined $hash->{ $pebot - 1 });
+		}
 
 		return $pebot;
 
