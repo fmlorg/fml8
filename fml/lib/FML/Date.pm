@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2000 Ken'ichi Fukamachi
 #
-# $FML: Date.pm,v 1.7 2001/04/03 09:45:40 fukachan Exp $
+# $FML: Date.pm,v 1.8 2001/06/17 08:57:09 fukachan Exp $
 #
 
 package FML::Date;
@@ -39,17 +39,17 @@ The style you use follows:
 You can also method like $date->$style() style.
 specify the C<style> name described above as a method.
 
-=item    log_file_style()
+=head2 C<log_file_style()>
 
-=item    mail_header_style()
+=head2 C<mail_header_style()>
 
-=item    YYYYMMDD()
+=head2 C<YYYYMMDD()>
 
-=item    current_time()
+=head2 C<current_time()>
 
-=item    precise_current_time()
+=head2 C<precise_current_time()>
 
-=item    stardate()
+=head2 C<stardate()>
 
 return STAR TREK stardate :-)
 
@@ -201,6 +201,170 @@ sub stardate
 }
 
 
+=head2 C<date_to_unixtime($date)>
+
+eat patter in Date: and return the corresponding unix time.
+For example, let C<$date> be
+
+   Mon Jul  2 22:59:45 2001
+
+C<date_to_unixtime($date)> returns
+
+   994082385
+
+You can use like this.
+
+    use FML::Date;
+    $unixtime = FML::Date::date_to_unixtime( $date );
+
+=cut
+
+my $debug_mti = 0;
+
+# TIME ZONES: RFC822 except for "JST"
+my %zone = ("JST", "+0900",
+	    "UT",  "+0000",
+	    "GMT", "+0000",
+	    "EST", "-0500",
+	    "EDT", "-0400",
+	    "CST", "-0600",
+	    "CDT", "-0500",
+	    "MST", "-0700",
+	    "MDT", "-0600",	     
+	    "PST", "-0800",
+	    "PDT", "-0700",	     
+	    "Z",   "+0000",	     
+	    );
+
+sub _log
+{
+    print STDERR @_, "\n";
+}
+
+
+sub date_to_unixtime
+{
+    my ($in) = @_;
+    my ($input) = $in;
+    my ($day, $month, $year, $hour, $min, $sec, $pm);
+    my ($shift, $shift_t, $shift_m);
+    my (%month);
+    my ($zone);
+
+    require 'timelocal.pl';
+
+    # hints
+    my $c = 1;
+    for ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+	 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec') {
+	$month{ $_ } = $c++;
+    }
+    
+    if ($in =~ /([A-Z]+)\s*$/) {
+	$zone = $1;
+	if ($zone{$zone} ne "") { 
+	    $in =~ s/$zone/$zone{$zone}/;
+	}
+    }
+
+    # RFC822
+    # date        =  1*2DIGIT month 2DIGIT        ; day month year
+    #                                             ;  e.g. 20 Jun 82
+    # date-time   =  [ day "," ] date time        ; dd mm yy
+    #                                             ;  hh:mm:ss zzz
+    # hour        =  2DIGIT ":" 2DIGIT [":" 2DIGIT]
+    # time        =  hour zone                    ; ANSI and Military
+    # 
+    # RFC1123
+    # date = 1*2DIGIT month 2*4DIGIT
+    # 
+    # 
+    # 
+    if ($in =~ 
+	/(\d+)\s+(\w+)\s+(\d+)\s+(\d+):(\d+):(\d+)\s+([\+\-])(\d\d)(\d\d)/) {
+	if ($debug_mti) { print STDERR "Date2UnixTime: Standard\n";}
+	$day   = $1;
+	$month = ($month{$2} || $month) - 1;
+	$year  = $3 > 1900 ? $3 - 1900 : $3;
+	$hour  = $4;
+	$min   = $5;
+	$sec   = $6;	    
+
+	# time zone
+	$pm    = $7;
+	$shift_t = $8;
+	$shift_m = $9;
+    }
+    elsif ($in =~ 
+	/(\d+)\s+(\w+)\s+(\d+)\s+(\d+):(\d+)\s+([\+\-])(\d\d)(\d\d)/) {
+	if ($debug_mti) { print STDERR "Date2UnixTime: Standard without \$sec\n";}
+	$day   = $1;
+	$month = ($month{$2} || $month) - 1;
+	$year  = $3 > 1900 ? $3 - 1900 : $3;
+	$hour  = $4;
+	$min   = $5;
+	$sec   = 0;
+
+	# time zone
+	$pm    = $6;
+	$shift_t = $7;
+	$shift_m = $8;
+    }
+    # INVALID BUT MANY Only in Japan ??? e.g. "Apr 1 04:01:00 1999"
+    # no timezone case ... WHAT SHOULD WE DO ? ;_;
+    elsif ($in =~ /([A-Za-z]+)\s+(\d{1,2})\s+(\d+):(\d+):(\d+)\s+(\d{4})\s*/) {
+	if ($debug_mti) { print STDERR "Date2UnixTime: Japan specific?\n";}
+	$month = ($month{$1} || $month) - 1;
+	$day   = $2;
+	$hour  = $3;
+	$min   = $4;
+	$sec   = $5;
+	$year  = $6 > 1900 ? $6 - 1900 : $6;
+
+	# time zone
+	$pm    = '+';
+	$shift_t = '09';
+	$shift_m = '00';	   
+    }
+    elsif ($in =~ /\;\s*(\d{9,})\s*$/) {
+	if ($debug_mti) { print STDERR "Date2UnixTime: unixtime case\n";}
+	if (abs($1 - time) < 7*24*3600) { 
+	    return $1;
+	}
+	elsif ($debug_mti) {
+	    my (@caller) = caller;
+	    _log("MTI[$$]::Date2UnixTime: invalid [$input]");
+	    _log("MIT[$$]: callded from @caller");
+	}
+    }
+    else {
+	if ($debug_mti) {
+	    my (@caller) = caller;
+	    _log("MTI[$$]::Date2UnixTime: invalid [$input]");
+	    _log("MIT[$$]: callded from @caller");
+	}
+	return 0;
+    }
+
+    # get gmtime
+    $shift_t =~ s/^0*//; 
+    $shift_m =~ s/^0*//;
+
+    $shift = $shift_t + ($shift_m/60);
+    $shift = ($pm eq '+' ? -1 : +1) * $shift;
+
+    if ($debug_mti) {
+	print STDERR 
+	    "timegm($sec,$min,$hour,$day,$month,$year) + $shift*3600')\n";
+    }
+
+    my $t;
+    eval('$t = &timegm($sec,$min,$hour,$day,$month,$year) + $shift*3600');
+    _log($@) if $@;
+    $t;
+}
+
+
 =head1 AUTHOR
 
 Ken'ichi Fukamachi
@@ -216,6 +380,8 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 FML::Date appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
+
+C<date_to_unixtime> is imported from fml 4.0-current libmti.pl.
 
 =cut
 
