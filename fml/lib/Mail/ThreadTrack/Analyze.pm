@@ -4,13 +4,15 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Analyze.pm,v 1.11 2001/11/07 03:14:22 fukachan Exp $
+# $FML: Analyze.pm,v 1.12 2001/11/09 13:02:34 fukachan Exp $
 #
 
 package Mail::ThreadTrack::Analyze;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
+
+my $debug = defined $ENV{'debug'} ? 1 : 0;
 
 =head1 NAME
 
@@ -521,6 +523,12 @@ sub _update_db
 
     # prepare hash table tied to db_dir/*db's
     my $rh = $self->{ _hash_table };
+
+    # check
+    if (defined $rh->{ _thread_id }->{ $article_id }) {
+	print STDERR "_update_db.ignore id=$article_id\n" if $debug;
+	return;
+    }
 
     # 1. 
     $rh->{ _thread_id }->{ $article_id }  = $thread_id;
