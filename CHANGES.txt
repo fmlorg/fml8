@@ -1,6 +1,109 @@
 		CHANGES
 		Last Modified: $Date$
 
+   月末だから、クリーンナップキャンペーン
+	FNF-ify (update/clean up documents, coding style ...)
+
+
+2003/01/29
+
+   FNF-ify (update/clean up documents, coding style ...)
+	FML::Install
+	File::CacheDir Utils.pm 
+	IO::Adapter::AtomicFile 
+
+   FML::Command::Admin::newml 
+   FML::MTAControl::Utils 
+	in newml, we should check if $ml_name already exists as a user
+	name or not. 
+	
+   FML::MTAControl 
+	add FML::MTAControl::Utils into @ISA
+
+   FML::Process::Calender 
+	prepare() loads default configuration to use $path_* info.
+	w3m -> $path_w3m
+	cat -> $curproc->cat() method (XXX temporary use).
+	
+   FML::Process::Utils 
+	implement cat() method for convenience
+	
+   FML::Command::Admin::unsubscribe 
+	use $config->get_as_array_ref() method.
+
+   install.pl.in
+   FML::Install 
+	implement is_run_as_root().
+	we verify install.pl runs as root.
+
+2003/01/28
+
+   FML::Config 
+	expand ${variable}
+	
+   FML::Header::Subject 
+	decode() returns tag info, too
+	
+   FML::Install 
+	At the first time, do not ask if upgrade or not loader.
+	bug fix checks in copy_dir().
+	copy_dir() install files by preserving [am]time.
+
+   installer perl version
+	fml/etc/install.cf.in
+	install.pl.in
+
+2003/01/27
+
+   FML::Command::Admin::{deladmin,byeadmin}
+	mv real codes from byeadmin to deladmin module.
+	now, byeadmin is a forwarder to deladmin.
+	
+   FML::Command::Admin::delmoderator 
+	sync with deladmin codes
+
+2003/01/26
+
+   FNF-ify (update/clean up documents, coding style ...)
+
+   FML::Command::DirUtils 
+	use FML::Restriction::Base::regexp_match() to check command
+	line options.
+	FNF::remove $_
+	
+   FML::Restriction::Base 
+	define 'command_line_options' regexp.
+	
+   FML::Command::Admin::byeadmin 
+	bug fix target maps to handle.
+
+2003/01/25
+
+   FNF-ify (update/clean up documents, coding style ...)
+
+   FML::Command::Utils
+	removed since it is not used. 
+
+   FML::Process::Utils 
+	get_ml_list() checks arguments matched with regxp provided by
+	FML::Restriction::Base.
+	
+   FML::Error 
+   FML::Command::DirUtils FileUtils.pm 
+   FML::Command::Admin::dir file.pm 
+   FML::Process::Kernel 
+   FML::Restriction::Base 
+	implement FML::Restriction::Base::regexp_match() and
+	switched to use it.
+	
+   Calender::Lite 
+   FML::Restriction::Base 
+	implement FML::Restriction::Base::regexp_match() can handle special
+	class "fullpath" not based on regexp.
+	
+	switch Calender::Lite to use this method for checking of fully path-ed
+	directory.
+
 2003/01/10
 
    mime component filter に次の機能を仕込みました。
@@ -4083,4 +4186,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.125 2003/01/07 11:47:43 fukachan Exp $
+$FML: CHANGES.txt,v 1.126 2003/01/09 04:02:11 fukachan Exp $
