@@ -1,6 +1,28 @@
 		CHANGES
 		$Date$
 
+2001/10/17
+
+   variables
+	add $confirm_keyword to $available_commands_for_stranger
+	add $available_commands_for_stranger to $available_commands
+
+   FML::Command 
+	modified FML::Command uses get_attribute() in FML::Command::Attribute
+
+   FML::Command::Attribute 
+	renamed FML::Command::ACL -> FML::Command::Attribute.pm
+
+   FML::Command::SendFile 
+	support MH style arg::first, last, cur, first:\d+ and last:\d+
+	
+   FML::Command::User::bye 
+	fix typo
+
+   File::Sequence 
+	implemente get_id() method to return the latest article id
+	update document
+
 2001/10/15
 
    フィルタリングを有効にする
@@ -549,4 +571,4 @@
 
    このファイルを創設する:)
 
-$FML: CHANGES.txt,v 1.18 2001/10/10 15:05:30 fukachan Exp $
+$FML: CHANGES.txt,v 1.19 2001/10/14 23:09:57 fukachan Exp $
