@@ -1,5 +1,7 @@
 <!doctype book public "-//OASIS//DTD DocBook V3.1//EN" [
-<!entity intro SYSTEM "intro.sgml">
+<!entity intro     SYSTEM "intro.sgml">
+<!entity terms     SYSTEM "terms.sgml">
+<!entity install   SYSTEM "install.sgml">
 <!entity reference SYSTEM "reference.sgml">
 ]>
 
@@ -10,19 +12,47 @@ to generate various output formats.
 
 <book>
   <bookinfo>
-    <title>fml-devel reference manual</title>
-    <author>Ken'ichi Fukamachi</author>
-    <copyright><year/2001/<holder/Ken'ichi Fukamachi/</copyright>
+  <bookbiblio>
+    <title>
+	fml-devel ((仮) forward fml 5.0) チュートリアル
+    </title>
+
+    <authorgroup>
+	<corpauthor>
+	fml project
+	</corpauthor>
+	<othercredit>
+	<authorblurb>
+		<para>
+		Ken'ichi Fukamachi
+		</para>
+	</authorblurb>
+	</othercredit>
+    </authorgroup>
+
+    <copyright>
+		<year/2001/<holder/Ken'ichi Fukamachi/
+    </copyright>
+
+  </bookbiblio>
+
     <legalnotice>
       <para>
 	All rights reserved. This program is free software; you can
 	redistribute it and/or modify it under the same terms as Perl itself. 
       </para>
     </legalnotice>
+
   </bookinfo>
+
+  <TOC></TOC>
 
   <chapter id="intro">
     &intro;
+  </chapter>
+
+  <chapter id="terms">
+    &terms;
   </chapter>
 
   <chapter id="reference">
