@@ -11,3 +11,9 @@ update:
 
 clean:
 	@ find . |grep '~' |perl -nple unlink
+
+doc: html
+
+html:
+	@ (cd fml/lib/;make html)
+
