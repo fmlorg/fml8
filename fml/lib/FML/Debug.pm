@@ -17,11 +17,12 @@ FML::Debug -- debug utilities
     use FML::Debug;
     FML::Debug->show_structure( $variable );
 
-=head1 METHOD
+=head1 METHODS
 
 =item show_structure()
 
 It shows the data structure for the given variable.
+It is just an wrapper for L<Data::Dumper>.
 
 =cut
 
@@ -35,11 +36,15 @@ sub new
 }
 
 
+# Descriptions: dump the target data structure
+#    Arguments: $self target
+# Side Effects: none
+# Return Value: none
 sub show_structure
 {
-    my ($class, $ref) = @_;
+    my ($self, $r_target) = @_;
     use Data::Dumper;
-    print Dumper( $ref );
+    print Dumper( $r_target );
 }
 
 

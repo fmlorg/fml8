@@ -9,6 +9,7 @@
 #
 
 package Dialect::ISO2022JP;
+
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
@@ -20,12 +21,16 @@ require Exporter;
 
 =head1 NAME
 
-Dialect::ISO2022JP.pm - adapter for Dialect::Japanese
+Dialect::ISO2022JP - adapter for Dialect::Japanese
 
 =head1 SYNOPSIS
 
     use Dialect::ISO2022JP qw(is_iso2022jp_string);
     if ( is_iso2022jp_string($string) ) { do_something_if_Japanese;}
+
+=head1 SEE ALSO
+
+L<Dialect::Japanese>
 
 =head1 AUTHOR
 

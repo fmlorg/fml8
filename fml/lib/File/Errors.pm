@@ -38,6 +38,9 @@ When you use Something module,
 	$obj = new Something;
 	unless ($obj->error) { $obj->do_somting( ...); };
 
+=head1 DESCRIPTION
+
+utility functions to manipulate error messages.
 
 =head1 METHODS
 

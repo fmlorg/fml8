@@ -36,6 +36,7 @@ MailingList::ESMTP - Extended SMTP class
 
 See L<MailingList::SMTP> for more details since this ESMTP class
 is an adapter for SMTP (super) class for convenience.
+All requests are forwarded to SMTP super class.
 
 =head1 AUTHOR
 

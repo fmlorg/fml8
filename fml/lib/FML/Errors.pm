@@ -13,13 +13,15 @@ use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK);
 use Carp;
 
+use File::Errors qw(error_reason error error_reset);
+
 require Exporter;
-@ISA       = qw(Exporter);
+@ISA       = qw(File::Errors Exporter);
 @EXPORT_OK = qw(error_reason error error_reset);
 
 =head1 NAME
 
-FML::Errors.pm - error handling utilities
+FML::Errors - error handling utilities
 
 =head1 SYNOPSIS
 
@@ -38,8 +40,14 @@ When you use Something module,
 	$obj = new Something;
 	unless ($obj->error) { $obj->do_somting( ...); };
 
-
 =head1 DESCRIPTION
+
+a wrapper to L<File::Errors>.
+All requests are forwarddt to C<File::Errors>.
+
+=head1 SEE ALSO
+
+L<File::Errors>
 
 =head1 AUTHOR
 
@@ -58,30 +66,6 @@ FML::Errors appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
-
-
-sub error_reason
-{
-    my ($self, $mesg) = @_;
-    $self->{'_error_reason'} = $mesg;
-}
-
-
-sub error
-{
-    my ($self, $args) = @_;
-    return $self->{'_error_reason'};
-}
-
-
-sub error_reset
-{
-    my ($self, $args) = @_;
-    my $msg = $self->{'_error_reason'};
-    undef $self->{'_error_reason'} if defined $self->{'_error_reason'};
-    undef $self->{'_error_action'} if defined $self->{'_error_action'};
-    return $msg;
-}
 
 
 1;
