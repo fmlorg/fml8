@@ -8,7 +8,7 @@
 # $FML$
 #
 
-package IO::MapAdapter::UnixGroup;
+package IO::Adapter::UnixGroup;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
@@ -33,7 +33,7 @@ sub new
 
 =head1 NAME
 
-IO::MapAdapter::UnixGroup.pm - what is this
+IO::Adapter::UnixGroup.pm - what is this
 
 =head1 SYNOPSIS
 
@@ -60,7 +60,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-IO::MapAdapter::UnixGroup.pm appeared in fml5.
+IO::Adapter::UnixGroup.pm appeared in fml5.
 
 =cut
 

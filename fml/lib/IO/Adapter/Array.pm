@@ -88,7 +88,7 @@ sub close
 
 =head1 NAME
 
-IO::MapAdapter::Array.pm - what is this
+IO::Adapter::Array.pm - what is this
 
 =head1 SYNOPSIS
 
@@ -115,7 +115,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-IO::MapAdapter::Array.pm appeared in fml5.
+IO::Adapter::Array.pm appeared in fml5.
 
 =cut
 

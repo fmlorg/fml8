@@ -8,7 +8,7 @@
 # $FML$
 #
 
-package IO::MapAdapter::RDBMS;
+package IO::Adapter::RDBMS;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
@@ -33,7 +33,7 @@ sub new
 
 =head1 NAME
 
-IO::MapAdapter::RDBMS.pm - what is this
+IO::Adapter::RDBMS.pm - what is this
 
 =head1 SYNOPSIS
 
@@ -60,7 +60,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-IO::MapAdapter::RDBMS.pm appeared in fml5.
+IO::Adapter::RDBMS.pm appeared in fml5.
 
 =cut
 
