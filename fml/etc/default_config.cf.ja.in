@@ -314,15 +314,16 @@ article_post_restrictions	=	reject_system_special_accounts
 #      History: fml 4.0 の PERMIT_COMMAND_FROM と REJECT_ADDR を合体したもの
 #        Value: list of attributes (
 #			permit_anyone
-#			permit_anonymous_command_mail
 #			permit_member_maps
+#			permit_anonymous_command
+#			permit_user_command
 #			reject_system_special_accounts
 #			reject
 #		)
 #     Examples:
 command_mail_restrictions	=	reject_system_special_accounts
-					permit_anonymous_command_mail
-					permit_member_maps
+					permit_anonymous_command
+					permit_user_command
 					reject
 
 
