@@ -4,7 +4,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved. 
 #
-# $Id: loader,v 1.5 2001/02/05 04:44:49 fukachan Exp $ 
+# $Id: loader,v 1.6 2001/02/05 10:18:20 fukachan Exp $ 
 # $FML$
 #
 
@@ -142,7 +142,9 @@ sub prepare_myname_options
 {
     my ($myname) = @_;
 
-    if ($myname eq 'fml.pl' || $myname eq 'loader') { 
+    if ($myname eq 'fml.pl' || 
+	$myname eq 'loader' ||
+	$myname eq 'fmlconf') { 
 	return qw(ctladdr! debug! params=s -c=s);
     }
     elsif ($myname eq 'fmlticket') {
