@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: MIME.pm,v 1.12 2001/05/28 16:17:12 fukachan Exp $
+# $FML: MIME.pm,v 1.13 2001/06/28 05:03:59 fukachan Exp $
 #
 
 package FML::MIME;
@@ -109,6 +109,16 @@ sub encode_mime_string
     return $str;
 }
 
+
+=head1 Data IN/OUT among modules
+
+=head2 Style
+
+    function
+
+=head2 Data IN
+
+=head2 Data OUT
 
 =head1 SEE ALSO
 

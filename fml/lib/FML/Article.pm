@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Article.pm,v 1.22 2001/05/27 14:27:53 fukachan Exp $
+# $FML: Article.pm,v 1.23 2001/08/22 03:07:59 fukachan Exp $
 #
 
 package FML::Article;
@@ -39,7 +39,7 @@ the C<body> is a C<Mail::Message> object.
 =head2 C<new(curproc)>
 
 prepare an article message, which is duplicated from the incoming
-message C<$curproc->{ incoming_message }>.
+message $curproc->{ incoming_message }.
 
 =cut
 
@@ -180,6 +180,21 @@ sub spool_in
     }
 }
 
+
+=head1 Data IN/OUT among modules
+
+=head2 Style
+
+    OO
+
+=head2 Data IN
+
+    $curproc 
+
+=head2 Data OUT
+
+    $config->{ sequence_file } (increment number)
+    $config->{ spool_dir } (create file)
 
 =head1 SEE ALSO
 

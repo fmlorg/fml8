@@ -1,7 +1,7 @@
 #-*- perl -*-
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #
-# $FML: Config.pm,v 1.44 2001/10/13 03:00:12 fukachan Exp $
+# $FML: Config.pm,v 1.45 2001/10/13 13:11:34 fukachan Exp $
 #
 
 package FML::Config;
@@ -699,5 +699,38 @@ sub NEXTKEY
     shift @$keys;
 }
 
+
+=head1 Data IN/OUT among modules
+
+=head2 Style
+
+    OO
+
+=head2 Data IN
+
+    $args { key => value }
+    read file $args->{ file }
+
+=head2 Data OUT
+
+    rewrite config.cf
+
+=head1 AUTHOR
+
+Ken'ichi Fukamachi
+
+=head1 COPYRIGHT
+
+Copyright (C) 2001 Ken'ichi Fukamachi
+
+All rights reserved. This program is free software; you can
+redistribute it and/or modify it under the same terms as Perl itself. 
+
+=head1 HISTORY
+
+FML::Article appeared in fml5 mailing list driver package.
+See C<http://www.fml.org/> for more details.
+
+=cut
 
 1;
