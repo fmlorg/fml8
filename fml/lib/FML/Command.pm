@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Command.pm,v 1.19 2002/02/17 03:13:47 fukachan Exp $
+# $FML: Command.pm,v 1.20 2002/02/17 13:35:13 fukachan Exp $
 #
 
 package FML::Command;
@@ -116,32 +116,6 @@ sub AUTOLOAD
 	LogError($@) if $@;
 	croak("$pkg module is not found"); # upcall to FML::Process::Command
     }
-}
-
-
-=head2 C<require_lock($comname)>
-
-specifield C<command> requires lock (giant lock) ?
-return 1 by default (almost all command requires lock).
-
-=cut
-
-
-# Descriptions: we need lock or not
-#    Arguments: OBJ($self) STR($mode) STR($comname)
-# Side Effects: none
-# Return Value: 1 / 0 / undef
-sub require_lock
-{
-    my ($self, $mode, $comname) = @_;
-
-    my $r = $self->get_attribute($mode, $comname, 'require_lock');
-
-    if ($0 =~ /loader/) {
-	Log("get_attribute($mode, $comname, 'require_lock') = $r");
-    }
-
-    return $r;
 }
 
 
