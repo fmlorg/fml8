@@ -4,17 +4,17 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: merge.pm,v 1.2 2004/03/17 04:09:37 fukachan Exp $
+# $FML: merge.pm,v 1.3 2004/03/17 06:06:42 fukachan Exp $
 #
 
-package FML::Command::Admin::merge;
+package FML::Command::Admin::mergeml;
 use strict;
 use vars qw(@ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 use Carp;
 
 =head1 NAME
 
-FML::Command::Admin::merge - top level dispather of configuration merge
+FML::Command::Admin::mergeml - top level dispather of configuration merge
 
 =head1 SYNOPSIS
 
@@ -143,7 +143,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Command::Admin::merge appeared in fml8 mailing list driver package.
+FML::Command::Admin::mergeml appeared in fml8 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut
