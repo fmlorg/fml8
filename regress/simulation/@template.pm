@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: __template.pm,v 1.5 2001/04/03 09:45:39 fukachan Exp $
+# $FML: __template.pm,v 1.6 2001/05/16 13:30:46 fukachan Exp $
 #
 
 package __MODULE_NAME__;
