@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Mailer.pm,v 1.2 2001/05/06 12:59:21 fukachan Exp $
+# $FML: Mailer.pm,v 1.3 2001/05/18 14:59:21 fukachan Exp $
 #
 
 package FML::Mailer;
@@ -95,9 +95,10 @@ sub send
     my $recipient  = $args->{ recipient }  || undef;
     my $recipients = $args->{ recipients } || [ $recipient ] || undef;
 
-    # error
+    # validate input argument
     if ((defined($recipient) && ref($recipient) ne '') ||
-	(defined($recipients) && (ref($recipients)) ne 'ARRAY')) {
+	(defined($recipients) && (ref($recipients)) ne 'ARRAY') ||
+	(not defined($args->{ message }))) {
 	return 0;
     }
 
