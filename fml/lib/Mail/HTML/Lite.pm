@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: Lite.pm,v 1.10 2001/10/21 03:26:32 fukachan Exp $
+# $FML: Lite.pm,v 1.11 2001/10/21 04:01:00 fukachan Exp $
 #
 
 package Mail::HTML::Lite;
@@ -198,7 +198,7 @@ sub htmlfy_rfc822_message
 		});
 
 		# show inline href appeared in parent html.
-		$self->_print_attachment({
+		$self->_print_inline_object({
 		    fh   => $wh,
 		    type => $type,
 		    num  => $attach,
@@ -218,7 +218,7 @@ sub htmlfy_rfc822_message
 
 	    # e.g. text/html case 
 	    if ($type =~ /^text/ && (not $enc)) {
-		$self->_raw_text_print({ 
+		$self->_text_print_by_raw_mode({ 
 		    message => $m,
 		    file    => $outf,
 		});
@@ -232,7 +232,7 @@ sub htmlfy_rfc822_message
 	    }
 
 	    # show inline href appeared in parent html.
-	    $self->_print_attachment({
+	    $self->_print_inline_object({
 		inline => 1,
 		fh   => $wh,
 		type => $type,
@@ -482,7 +482,7 @@ sub _relative_path
 #    Arguments: $self $args
 # Side Effects: 
 # Return Value: none
-sub _print_attachment
+sub _print_inline_object
 {
     my ($self, $args) = @_;
     my $wh   = $args->{ fh };
@@ -579,7 +579,7 @@ sub _text_print
 #    Arguments: $self $args
 # Side Effects: 
 # Return Value: none
-sub _raw_text_print
+sub _text_print_by_raw_mode
 {
     my ($self, $args) = @_;
     my $msg  = $args->{ message }; # Mail::Message object
@@ -626,6 +626,22 @@ sub _binary_print
 	}
     }
 }
+
+
+=head2 C<is_ignore($id)>
+
+we should not process this C<$id>
+
+=cut
+
+
+sub is_ignore
+{
+    my ($self, $id) = @_;
+
+    return defined($self->{ _ignore_list }->{ $id }) ? 1 : 0;
+}
+
 
 
 =head1 METHODS for index and thread
@@ -740,88 +756,9 @@ sub cache_message_info
 }
 
 
-sub _list_head
-{
-    my ($buf) = @_;
-    $buf =~ s/^\s*//;
-    $buf =~ s/\s*$//;
-    return (split(/\s+/, $buf))[0];
-}
+=head2 C<update_relation($id)>
 
-
-sub _address_clean_up
-{
-    my ($addr) = @_;
-    my (@r);
-
-    use Mail::Address;
-    my (@addrs) = Mail::Address->parse($addr);
-
-    my $i = 0;
-  LIST:
-    for my $addr (@addrs) {
-	my $xaddr = $addr->address();
-	next LIST unless $xaddr =~ /\@/;
-	push(@r, $xaddr);
-    }
-
-    return \@r;
-}
-
-
-sub _who_of_address
-{
-    my ($self, $address, $options) = @_;
-    my ($user);
-
-    use Mail::Address;
-    my (@addrs) = Mail::Address->parse($address);
-
-    for my $addr (@addrs) {
-	if (defined( $addr->phrase() )) {
-	    my $phrase = $self->_decode_mime_string( $addr->phrase() );
-
-	    if ($phrase) {
-		return($phrase);
-	    }
-	}
-
-	$user = $addr->user();
-    }
-
-    return( $user ? "$user\@xxx.xxx.xxx.xxx" : $address );
-}
-
-
-sub _decode_mime_string
-{
-    my ($self, $str, $options) = @_;
-    my $charset = $options->{ 'charset' } || $self->{ _charset };
-    my $code    = _charset_to_code($charset);
-
-    # If looks Japanese and $code is specified as Japanese, decode !
-    if (($str =~ /=\?ISO\-2022\-JP\?[BQ]\?/i) &&
-	($code eq 'euc' || $code eq 'jis')) {
-        use MIME::Base64;
-        if ($str =~ /=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/i) { 
-            $str =~ s/=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/decode_base64($1)/gie;
-        }
-
-        use MIME::QuotedPrint;
-        if ($str =~ /=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/i) { 
-            $str =~ s/=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/decode_qp($1)/gie;
-        }
-
-	use Jcode;
-	my $icode = &Jcode::getcode(\$str);
-	&Jcode::convert(\$str, $code, $icode);
-    }
-
-    return $str;
-}
-
-
-=head2 C<update_relation()>
+update link relation around C<$id>.
 
 =cut
 
@@ -899,48 +836,6 @@ sub _update_relation
     else {
 	warn("cannot open $file (id=$id)\n");
     }
-}
-
-
-# Descriptions: 
-#    Arguments: $self $args
-# Side Effects: 
-# Return Value: none
-sub _charset_to_code
-{
-    my ($charset) = @_;
-
-    if (defined $charset) {
-	$charset =~ tr/A-Z/a-z/;
-	if ($charset eq 'euc-jp') {
-	    return 'euc';
-	}
-	elsif ($charset eq 'iso-2022-jp') {
-	    return 'jis';
-	}
-	else {
-	    return $charset; # may be wrong, but I hope it works well:-)
-	}
-    }
-    else {
-	return 'euc'; # euc-jp by default
-    }
-}
-
-
-# Descriptions: 
-#    Arguments: $self $args
-# Side Effects: 
-# Return Value: none
-sub _print
-{
-    my ($wh, $str, $code) = @_;
-    $code = defined($code) ? $code : 'euc'; # euc-jp by default
-
-    use Jcode;
-    &Jcode::convert( \$str, $code);
-
-    print $wh $str;
 }
 
 
@@ -1215,21 +1110,6 @@ sub _db_close
 }
 
 
-=head2 C<is_ignore($id)>
-
-we should not process this C<$id>
-
-=cut
-
-
-sub is_ignore
-{
-    my ($self, $id) = @_;
-
-    return defined($self->{ _ignore_list }->{ $id }) ? 1 : 0;
-}
-
-
 =head2 C<update_id_index($args)>
 
 update index.html.
@@ -1430,6 +1310,61 @@ sub _print_thread
 }
 
 
+=head2 internal utility functions for IO
+
+=cut
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub _charset_to_code
+{
+    my ($charset) = @_;
+
+    if (defined $charset) {
+	$charset =~ tr/A-Z/a-z/;
+	if ($charset eq 'euc-jp') {
+	    return 'euc';
+	}
+	elsif ($charset eq 'iso-2022-jp') {
+	    return 'jis';
+	}
+	else {
+	    return $charset; # may be wrong, but I hope it works well:-)
+	}
+    }
+    else {
+	return 'euc'; # euc-jp by default
+    }
+}
+
+
+# Descriptions: 
+#    Arguments: $self $args
+# Side Effects: 
+# Return Value: none
+sub _print
+{
+    my ($wh, $str, $code) = @_;
+    $code = defined($code) ? $code : 'euc'; # euc-jp by default
+
+    use Jcode;
+    &Jcode::convert( \$str, $code);
+
+    print $wh $str;
+}
+
+
+=head2 internal utility functions for HTML TAGS
+
+C<_print_something()> internal function provides wrapper to print HTML
+tags et.al.
+
+=cut
+
+
 sub _print_ul
 {
     my ($self, $wh, $db, $code) = @_;
@@ -1470,6 +1405,92 @@ sub _print_li_filename
     _print($wh, ",\n", $code);
     _print($wh, "$who\n", $code);
     _print($wh, "</A>\n", $code);
+}
+
+
+=head2 misc
+
+=cut
+
+
+sub _address_clean_up
+{
+    my ($addr) = @_;
+    my (@r);
+
+    use Mail::Address;
+    my (@addrs) = Mail::Address->parse($addr);
+
+    my $i = 0;
+  LIST:
+    for my $addr (@addrs) {
+	my $xaddr = $addr->address();
+	next LIST unless $xaddr =~ /\@/;
+	push(@r, $xaddr);
+    }
+
+    return \@r;
+}
+
+
+sub _who_of_address
+{
+    my ($self, $address, $options) = @_;
+    my ($user);
+
+    use Mail::Address;
+    my (@addrs) = Mail::Address->parse($address);
+
+    for my $addr (@addrs) {
+	if (defined( $addr->phrase() )) {
+	    my $phrase = $self->_decode_mime_string( $addr->phrase() );
+
+	    if ($phrase) {
+		return($phrase);
+	    }
+	}
+
+	$user = $addr->user();
+    }
+
+    return( $user ? "$user\@xxx.xxx.xxx.xxx" : $address );
+}
+
+
+sub _list_head
+{
+    my ($buf) = @_;
+    $buf =~ s/^\s*//;
+    $buf =~ s/\s*$//;
+    return (split(/\s+/, $buf))[0];
+}
+
+
+sub _decode_mime_string
+{
+    my ($self, $str, $options) = @_;
+    my $charset = $options->{ 'charset' } || $self->{ _charset };
+    my $code    = _charset_to_code($charset);
+
+    # If looks Japanese and $code is specified as Japanese, decode !
+    if (($str =~ /=\?ISO\-2022\-JP\?[BQ]\?/i) &&
+	($code eq 'euc' || $code eq 'jis')) {
+        use MIME::Base64;
+        if ($str =~ /=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/i) { 
+            $str =~ s/=\?ISO\-2022\-JP\?B\?(\S+\=*)\?=/decode_base64($1)/gie;
+        }
+
+        use MIME::QuotedPrint;
+        if ($str =~ /=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/i) { 
+            $str =~ s/=\?ISO\-2022\-JP\?Q\?(\S+\=*)\?=/decode_qp($1)/gie;
+        }
+
+	use Jcode;
+	my $icode = &Jcode::getcode(\$str);
+	&Jcode::convert(\$str, $code, $icode);
+    }
+
+    return $str;
 }
 
 
