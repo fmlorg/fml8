@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.49 2002/04/07 14:51:15 tmu Exp $
+# $FML: Message.pm,v 1.50 2002/04/08 12:44:27 fukachan Exp $
 #
 
 package Mail::Message;
@@ -654,6 +654,18 @@ sub whole_message_body
 {
     my ($self) = @_;
     $self->whole_message_body_head();
+}
+
+
+# Descriptions: return the incoming message on memory as string reference
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: STR_REF
+sub whole_message_as_string_ref
+{
+    my ($self) = @_;    
+
+    return $InComingMessage;
 }
 
 
