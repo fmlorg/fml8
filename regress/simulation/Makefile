@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.36 2001/05/27 14:27:57 fukachan Exp $
+# $FML: Makefile,v 1.37 2001/05/31 12:34:00 fukachan Exp $
 #
 
 all: link
@@ -9,7 +9,7 @@ clean:
 	rm -f __scan__
 
 allclean: clean
-	rm -f doc
+	rm -f doc ja-doc en-doc
 	rm -f etc
 	rm -f lib
 	rm -f FML
