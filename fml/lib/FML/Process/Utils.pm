@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Utils.pm,v 1.35 2002/07/17 12:13:25 fukachan Exp $
+# $FML: Utils.pm,v 1.36 2002/07/23 13:03:13 fukachan Exp $
 #
 
 package FML::Process::Utils;
@@ -788,6 +788,10 @@ which member of maps is this $map ?
 =cut
 
 
+# Descriptions: which member of maps is this $map ?
+#    Arguments: OBJ($curproc) STR($map)
+# Side Effects: none
+# Return Value: STR
 sub which_map_nl
 {
     my ($curproc, $map) = @_;

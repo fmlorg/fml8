@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.115 2002/07/17 12:13:24 fukachan Exp $
+# $FML: Kernel.pm,v 1.116 2002/07/19 03:11:36 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -900,6 +900,10 @@ sub reply_message
 }
 
 
+# Descriptions: compare two array references
+#    Arguments: ARRAY_REF($a) ARRAY_REF($b)
+# Side Effects: none
+# Return Value: NUM
 sub _array_is_different
 {
     my ($a, $b) = @_;
