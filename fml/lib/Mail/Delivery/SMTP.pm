@@ -4,8 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $Id$
-# $FML: SMTP.pm,v 1.1.1.1 2001/04/03 09:53:30 fukachan Exp $
+# $FML: SMTP.pm,v 1.2 2001/04/07 06:40:04 fukachan Exp $
 #
 
 
@@ -17,9 +16,6 @@ use IO::Socket;
 use Mail::Delivery::Utils;
 use Mail::Delivery::Net::INET4;
 use Mail::Delivery::Net::INET6;
-
-require Exporter;
-@ISA = qw(Exporter);
 
 
 BEGIN {}
@@ -33,6 +29,10 @@ Mail::Delivery::SMTP - interface for SMTP service
 =head1 SYNOPSIS
 
 To initialize, 
+
+    use Mail::Message;
+
+      ... make $message (Mail::Message object) ...
 
     use Mail::Delivery::SMTP;
     my $fp  = sub { Log(@_);}; # pointer to the log function
@@ -48,31 +48,30 @@ To start delivery, use deliver() method in this way.
 
     $service->deliver(
                       {
-                          smtp_servers    => '127.0.0.1:25',
+                          smtp_servers    => '[::1]:25 127.0.0.1:25',
 
                           smtp_sender     => 'rudo@nuinui.net',
                           recipient_maps  => $recipient_maps,
                           recipient_limit => 1000,
 
-                          header          => $header_object,
-                          body            => $body_object,
+                          message         => $message,
                       });
 
+C<message> is a C<Mail::Message> object.
 You can specify the recipient list as an ARRAY REFERENCE.
 
     # reference to an array of recipients
-    $rarray = [ 'kenken@nuinui.net' ];
+    @array = ( 'kenken@nuinui.net' );
 
     $service->deliver(
                       {
-                          smtp_servers    => '127.0.0.1:25',
+                          smtp_servers    => '[::1]:25 127.0.0.1:25',
 
                           smtp_sender     => 'rudo@nuinui.net',
-                          recipient_array_reference => $rarray,
+                          recipient_array => \@array,
                           recipient_limit => 1000,
 
-                          header          => $header_object,
-                          body            => $body_object,
+                          message         => $message,
                       });
 
 =head1 DESCRIPTION
@@ -376,8 +375,8 @@ sub deliver
     }
 
     # alloc virtual recipient map
-    if (ref( $args->{ recipient_array_reference } ) eq 'ARRAY') {
-	my $map = $args->{ recipient_array_reference };
+    if (ref( $args->{ recipient_array } ) eq 'ARRAY') {
+	my $map = $args->{ recipient_array };
 	push(@maps, $map);
     }
 
@@ -716,14 +715,13 @@ sub _send_body_to_mta
 #    Arguments: $self $args
 # Side Effects: 
 # Return Value: none
-#         TODO: MIME/multipart
 sub _send_data_to_mta
 {
     my ($self, $args) = @_;
 
     # prepare smtp information
-    my $body       = $args->{ body };
-    my $header     = $args->{ header };
+    my $header     = $args->{ message }->rfc822_message_header;
+    my $body       = $args->{ message }->rfc822_message_body;
     my $socket     = $self->{'_socket'};
 
     if (defined $body) {
