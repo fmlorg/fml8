@@ -1,5 +1,5 @@
 <!--
-   $FML: errormail.sgml,v 1.1 2003/05/28 13:35:16 fukachan Exp $
+   $FML: errormail.sgml,v 1.2 2003/11/24 14:37:34 fukachan Exp $
 -->
 
 
@@ -10,6 +10,13 @@
 
 <para>
 libexec/error は &fml4; の libexec/mead に相当するものです。
+</para>
+
+<para>
+$use_error_analyzer_program を yes にすると、エラー解析機能が有効にな
+ります。ちなみに、デフォルトで $use_error_analyzer_program は yes つま
+りエラー解析機能は有効になっています。このへんは &fml4; と異なります。
+&fml8; では、&fml4; でよく使う機能は始めから有効になっています。
 </para>
 
 
@@ -24,8 +31,8 @@ libexec/error は &fml4; の libexec/mead に相当するものです。
 </para>
 
 <para>
-libexec/error は標準入力からメールを読みこみ、distribute などと同様に 
-parse し、Mail::Message オブジェクトの鎖を作ります。そして、
+distribute などと同様に libexec/error は標準入力からメールを読みこみ、
+それを解析し、Mail::Message オブジェクトの鎖を作ります。そして、
 Mail::Bounce クラスがエラー内容の解析をします。
 </para>
 
@@ -35,22 +42,75 @@ Mail::Bounce は、エラーメールについて「どの MTA が生成したものか？」
 </para>
 
 <para>
-解析結果は $error_analyzer_cache_dir ディレクトリに格納され、
-ます。
+解析結果は $error_analyzer_cache_dir ディレクトリに格納されます。
 </para>
 
 <para>
 一定時間以上経過すると、$error_analyzer_function がキャッシュのデータ
-を解析し、あるメールアドレスが存在しないように思えるかいなか？を判定し
-ます。その結果、消すべきだと判断されると、削除されます。
+を解析し、あるメールアドレスが存在しないように思えるか否か？を判定しま
+す。その結果、消すべきだと判断されると、削除されます。
 </para>
+
+</sect1>
+
+
+<sect1 id="error.internal.algorithm">
+	<title>
+	エラー判定のアルゴリズム
+	</title>
+
+<para>
+$error_analyzer_function_list にある関数名が利用し得るアルゴリズムです。
+現在は simple_count histgram という２つのアルゴリズムがあり、histgram 
+がデフォルトです。
+</para>
+
+
+<sect2>
+	<title>
+	アルゴリズム: simple_count
+	</title>
+
+<para>
+単純にエラーが返ってきたメールの総数で、エラーか否かを判定します。
+</para>
+
+<para>
+単純にエラーの数ですので、たまたま受信者が設定を少しの間だけ間違えてい
+て、たまたまその日の流量が多い場合には、その受信者はエラーとみなされる
+でしょう。そういった場合にも、ようしゃなく削除します。
+</para>
+
+</sect2>
+
+
+<sect2>
+	<title>
+	アルゴリズム: histgram
+	</title>
+
+<para>
+エラーが連続してＮ日続いた時に限り、削除を行ないます。
+デフォルトでは14日連続してエラーの場合に削除が行なわれます。
+</para>
+
+<para>
+少なくとも一日一通は流量がないと、このアルゴリズムは動作しませんが、
+ちょっと間違えただけの受信者が削除されることはありません。
+</para>
+
+<para>
+現在のデフォルトは、このアルゴリズムです。
+</para>
+
+</sect2>
 
 </sect1>
 
 
 <sect1 id="error.internal.cache">
 	<title>
-	キャッシュ
+	データのキャッシュ
 	</title>
 
 <para>
@@ -59,13 +119,14 @@ Mail::Bounce は、エラーメールについて「どの MTA が生成したものか？」
 
 <para>
 現在、キャッシュの入出力には Tie::JournaledDir クラスを使っていますが、
-FML::Erorr::Cache 経由で Tie::JournaledDir への IO を行ないます。
+正確には FML::Error::Cache 経由で Tie::JournaledDir への IO を行ないま
+す。
 </para>
 
 <para>
-FML::Erorr::Cache が Tie::JournaledDir の直前に位置し、アダプタとなり
-ます。すべての IO は FML::Erorr::Cache が提供する primitive なメソッド
-を通じてのみ行なわなければなりません。
+FML::Error::Cache が Tie::JournaledDir の直前に位置し、アダプタとなり
+ます。すべての IO は、FML::Error::Cache が提供する primitive なメソッ
+ドを通じてのみ行なわなければなりません。
 </para>
 
 </sect1>
