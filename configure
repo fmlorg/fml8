@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# From configure.in Revision: 1.4 
+# From configure.in Revision: 1.6 
 
 # Guess values for system-dependent variables and create Makefiles.
 # Generated automatically using autoconf version 2.13 
@@ -606,6 +606,819 @@ else
 fi
 
 
+echo "$ac_t""checking whether optional useful commands are available" 1>&6
+
+# Extract the first word of "cksum", so it can be a program name with args.
+set dummy cksum; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:615: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_CKSUM'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$CKSUM" in
+  /*)
+  ac_cv_path_CKSUM="$CKSUM" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_CKSUM="$CKSUM" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_CKSUM="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+CKSUM="$ac_cv_path_CKSUM"
+if test -n "$CKSUM"; then
+  echo "$ac_t""$CKSUM" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "md5", so it can be a program name with args.
+set dummy md5; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:650: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_MD5'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$MD5" in
+  /*)
+  ac_cv_path_MD5="$MD5" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_MD5="$MD5" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_MD5="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+MD5="$ac_cv_path_MD5"
+if test -n "$MD5"; then
+  echo "$ac_t""$MD5" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+
+# Extract the first word of "tar", so it can be a program name with args.
+set dummy tar; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:686: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_TAR'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$TAR" in
+  /*)
+  ac_cv_path_TAR="$TAR" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_TAR="$TAR" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_TAR="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+TAR="$ac_cv_path_TAR"
+if test -n "$TAR"; then
+  echo "$ac_t""$TAR" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "gzip", so it can be a program name with args.
+set dummy gzip; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:721: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_GZIP'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$GZIP" in
+  /*)
+  ac_cv_path_GZIP="$GZIP" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_GZIP="$GZIP" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_GZIP="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+GZIP="$ac_cv_path_GZIP"
+if test -n "$GZIP"; then
+  echo "$ac_t""$GZIP" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "zcat", so it can be a program name with args.
+set dummy zcat; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:756: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_ZCAT'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$ZCAT" in
+  /*)
+  ac_cv_path_ZCAT="$ZCAT" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_ZCAT="$ZCAT" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_ZCAT="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+ZCAT="$ac_cv_path_ZCAT"
+if test -n "$ZCAT"; then
+  echo "$ac_t""$ZCAT" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "gunzip", so it can be a program name with args.
+set dummy gunzip; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:791: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_GUNZIP'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$GUNZIP" in
+  /*)
+  ac_cv_path_GUNZIP="$GUNZIP" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_GUNZIP="$GUNZIP" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_GUNZIP="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+GUNZIP="$ac_cv_path_GUNZIP"
+if test -n "$GUNZIP"; then
+  echo "$ac_t""$GUNZIP" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "lha", so it can be a program name with args.
+set dummy lha; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:826: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_LHA'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$LHA" in
+  /*)
+  ac_cv_path_LHA="$LHA" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_LHA="$LHA" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_LHA="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+LHA="$ac_cv_path_LHA"
+if test -n "$LHA"; then
+  echo "$ac_t""$LHA" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "ish", so it can be a program name with args.
+set dummy ish; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:861: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_ISH'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$ISH" in
+  /*)
+  ac_cv_path_ISH="$ISH" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_ISH="$ISH" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_ISH="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+ISH="$ac_cv_path_ISH"
+if test -n "$ISH"; then
+  echo "$ac_t""$ISH" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "bzip2", so it can be a program name with args.
+set dummy bzip2; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:896: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_BZIP2'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$BZIP2" in
+  /*)
+  ac_cv_path_BZIP2="$BZIP2" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_BZIP2="$BZIP2" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_BZIP2="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+BZIP2="$ac_cv_path_BZIP2"
+if test -n "$BZIP2"; then
+  echo "$ac_t""$BZIP2" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "bunzip2", so it can be a program name with args.
+set dummy bunzip2; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:931: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_BUNZIP2'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$BUNZIP2" in
+  /*)
+  ac_cv_path_BUNZIP2="$BUNZIP2" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_BUNZIP2="$BUNZIP2" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_BUNZIP2="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+BUNZIP2="$ac_cv_path_BUNZIP2"
+if test -n "$BUNZIP2"; then
+  echo "$ac_t""$BUNZIP2" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "uuencode", so it can be a program name with args.
+set dummy uuencode; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:966: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_UUENCODE'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$UUENCODE" in
+  /*)
+  ac_cv_path_UUENCODE="$UUENCODE" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_UUENCODE="$UUENCODE" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_UUENCODE="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+UUENCODE="$ac_cv_path_UUENCODE"
+if test -n "$UUENCODE"; then
+  echo "$ac_t""$UUENCODE" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "compress", so it can be a program name with args.
+set dummy compress; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1001: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_COMPRESS'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$COMPRESS" in
+  /*)
+  ac_cv_path_COMPRESS="$COMPRESS" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_COMPRESS="$COMPRESS" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_COMPRESS="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+COMPRESS="$ac_cv_path_COMPRESS"
+if test -n "$COMPRESS"; then
+  echo "$ac_t""$COMPRESS" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+
+# Extract the first word of "sendmail", so it can be a program name with args.
+set dummy sendmail; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1037: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_SENDMAIL'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$SENDMAIL" in
+  /*)
+  ac_cv_path_SENDMAIL="$SENDMAIL" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_SENDMAIL="$SENDMAIL" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_SENDMAIL="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+SENDMAIL="$ac_cv_path_SENDMAIL"
+if test -n "$SENDMAIL"; then
+  echo "$ac_t""$SENDMAIL" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+
+# Extract the first word of "nkf", so it can be a program name with args.
+set dummy nkf; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1073: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_NKF'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$NKF" in
+  /*)
+  ac_cv_path_NKF="$NKF" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_NKF="$NKF" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_NKF="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+NKF="$ac_cv_path_NKF"
+if test -n "$NKF"; then
+  echo "$ac_t""$NKF" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "kakasi", so it can be a program name with args.
+set dummy kakasi; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1108: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_KAKASI'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$KAKASI" in
+  /*)
+  ac_cv_path_KAKASI="$KAKASI" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_KAKASI="$KAKASI" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_KAKASI="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+KAKASI="$ac_cv_path_KAKASI"
+if test -n "$KAKASI"; then
+  echo "$ac_t""$KAKASI" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "namazu", so it can be a program name with args.
+set dummy namazu; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1143: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_NAMAZU'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$NAMAZU" in
+  /*)
+  ac_cv_path_NAMAZU="$NAMAZU" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_NAMAZU="$NAMAZU" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_NAMAZU="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+NAMAZU="$ac_cv_path_NAMAZU"
+if test -n "$NAMAZU"; then
+  echo "$ac_t""$NAMAZU" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+
+# Extract the first word of "pgp", so it can be a program name with args.
+set dummy pgp; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1179: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_PGP'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$PGP" in
+  /*)
+  ac_cv_path_PGP="$PGP" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_PGP="$PGP" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_PGP="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+PGP="$ac_cv_path_PGP"
+if test -n "$PGP"; then
+  echo "$ac_t""$PGP" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "pgp5", so it can be a program name with args.
+set dummy pgp5; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1214: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_PGP5'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$PGP5" in
+  /*)
+  ac_cv_path_PGP5="$PGP5" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_PGP5="$PGP5" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_PGP5="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+PGP5="$ac_cv_path_PGP5"
+if test -n "$PGP5"; then
+  echo "$ac_t""$PGP5" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "pgpe", so it can be a program name with args.
+set dummy pgpe; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1249: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_PGPe'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$PGPe" in
+  /*)
+  ac_cv_path_PGPe="$PGPe" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_PGPe="$PGPe" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_PGPe="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+PGPe="$ac_cv_path_PGPe"
+if test -n "$PGPe"; then
+  echo "$ac_t""$PGPe" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "pgpk", so it can be a program name with args.
+set dummy pgpk; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1284: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_PGPK'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$PGPK" in
+  /*)
+  ac_cv_path_PGPK="$PGPK" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_PGPK="$PGPK" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_PGPK="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+PGPK="$ac_cv_path_PGPK"
+if test -n "$PGPK"; then
+  echo "$ac_t""$PGPK" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "pgps", so it can be a program name with args.
+set dummy pgps; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1319: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_PGPS'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$PGPS" in
+  /*)
+  ac_cv_path_PGPS="$PGPS" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_PGPS="$PGPS" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_PGPS="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+PGPS="$ac_cv_path_PGPS"
+if test -n "$PGPS"; then
+  echo "$ac_t""$PGPS" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "pgpv", so it can be a program name with args.
+set dummy pgpv; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1354: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_PGPV'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$PGPV" in
+  /*)
+  ac_cv_path_PGPV="$PGPV" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_PGPV="$PGPV" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_PGPV="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+PGPV="$ac_cv_path_PGPV"
+if test -n "$PGPV"; then
+  echo "$ac_t""$PGPV" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+# Extract the first word of "gpg", so it can be a program name with args.
+set dummy gpg; ac_word=$2
+echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+echo "configure:1389: checking for $ac_word" >&5
+if eval "test \"`echo '$''{'ac_cv_path_GPG'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  case "$GPG" in
+  /*)
+  ac_cv_path_GPG="$GPG" # Let the user override the test with a path.
+  ;;
+  ?:/*)			 
+  ac_cv_path_GPG="$GPG" # Let the user override the test with a dos path.
+  ;;
+  *)
+  IFS="${IFS= 	}"; ac_save_ifs="$IFS"; IFS=":"
+  ac_dummy="$PATH"
+  for ac_dir in $ac_dummy; do 
+    test -z "$ac_dir" && ac_dir=.
+    if test -f $ac_dir/$ac_word; then
+      ac_cv_path_GPG="$ac_dir/$ac_word"
+      break
+    fi
+  done
+  IFS="$ac_save_ifs"
+  ;;
+esac
+fi
+GPG="$ac_cv_path_GPG"
+if test -n "$GPG"; then
+  echo "$ac_t""$GPG" 1>&6
+else
+  echo "$ac_t""no" 1>&6
+fi
+
+
+
 mlspooldir=/var/spool/ml
 # Check whether --with-mlspooldir or --without-mlspooldir was given.
 if test "${with_mlspooldir+set}" = set; then
@@ -742,8 +1555,9 @@ ac_given_srcdir=$srcdir
 
 trap 'rm -fr `echo "\
 	config.sh \
-	fml/libexec/loader \
 	fml/etc/main.cf \
+	fml/etc/paths.cf \
+	fml/libexec/loader \
 	fml/bin/fmlconf \
 	fml/bin/fmldoc \
 	fml/bin/fmlhtmlify \
@@ -784,6 +1598,29 @@ s%@infodir@%$infodir%g
 s%@mandir@%$mandir%g
 s%@have_perl@%$have_perl%g
 s%@PERL@%$PERL%g
+s%@CKSUM@%$CKSUM%g
+s%@MD5@%$MD5%g
+s%@TAR@%$TAR%g
+s%@GZIP@%$GZIP%g
+s%@ZCAT@%$ZCAT%g
+s%@GUNZIP@%$GUNZIP%g
+s%@LHA@%$LHA%g
+s%@ISH@%$ISH%g
+s%@BZIP2@%$BZIP2%g
+s%@BUNZIP2@%$BUNZIP2%g
+s%@UUENCODE@%$UUENCODE%g
+s%@COMPRESS@%$COMPRESS%g
+s%@SENDMAIL@%$SENDMAIL%g
+s%@NKF@%$NKF%g
+s%@KAKASI@%$KAKASI%g
+s%@NAMAZU@%$NAMAZU%g
+s%@PGP@%$PGP%g
+s%@PGP5@%$PGP5%g
+s%@PGPe@%$PGPe%g
+s%@PGPK@%$PGPK%g
+s%@PGPS@%$PGPS%g
+s%@PGPV@%$PGPV%g
+s%@GPG@%$GPG%g
 s%@mlspooldir@%$mlspooldir%g
 s%@fml_owner@%$fml_owner%g
 
@@ -829,8 +1666,9 @@ cat >> $CONFIG_STATUS <<EOF
 
 CONFIG_FILES=\${CONFIG_FILES-"\
 	config.sh \
-	fml/libexec/loader \
 	fml/etc/main.cf \
+	fml/etc/paths.cf \
+	fml/libexec/loader \
 	fml/bin/fmlconf \
 	fml/bin/fmldoc \
 	fml/bin/fmlhtmlify \
