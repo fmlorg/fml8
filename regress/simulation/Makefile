@@ -1,5 +1,5 @@
 #
-# $FML: Makefile,v 1.35 2001/05/20 13:19:59 fukachan Exp $
+# $FML: Makefile,v 1.36 2001/05/27 14:27:57 fukachan Exp $
 #
 
 all: link
@@ -41,7 +41,8 @@ check:
 	@ (cd ../../fml; make check 2>&1 ) | grep -v OK || echo ''
 
 link:
-	rm -f doc; ln -s ../../fml/doc
+	rm -f ja-doc; ln -s ../../fml/doc/ja ja-doc
+	rm -f en-doc; ln -s ../../fml/doc/en en-doc
 	rm -f etc; ln -s ../../fml/etc
 	rm -f lib; ln -s ../../fml/lib
 	rm -f FML; ln -s ../../fml/lib/FML
