@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Flow.pm,v 1.11 2001/11/25 05:15:36 fukachan Exp $
+# $FML: Flow.pm,v 1.12 2001/12/22 09:21:09 fukachan Exp $
 #
 
 package FML::Process::Flow;
@@ -26,8 +26,10 @@ C<$args> is HASH REFERENCE.
 
 =head1 DESCRIPTION
 
-This module describes the fml program flow.
-Each function is implemented in each module of FML::Process classes.
+This module describes the fml program flow. All methods, even if
+dummy, should be implemented in each module for FML::Process::CLASS.
+This flow is same among fml processes which includes
+programs kicked by MTA, command line interfaces and CGI's.
 
     # create a new process object
     my $process = $pkg->new($args);
@@ -48,7 +50,8 @@ Each function is implemented in each module of FML::Process classes.
 
 =cut
 
-# Descriptions: drives basic flow
+
+# Descriptions: drive top level process flow
 #               1. initialize processes and load configurations from *.cf
 #                  switch to each process according with $0 and @ARGV.
 #               2. parse the incoming message(mail)

@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Scheduler.pm,v 1.9 2001/11/27 11:40:30 fukachan Exp $
+# $FML: Scheduler.pm,v 1.10 2001/12/22 09:21:10 fukachan Exp $
 #
 
 package FML::Process::Scheduler;
@@ -17,32 +17,26 @@ use FML::Process::Kernel;
 
 =head1 NAME
 
-FML::Process::Scheduler -- demonstration
+FML::Process::Scheduler -- demonstration of FML module usage 
 
 =head1 SYNOPSIS
 
-    use FML::Process::Configure;
-    $curproc = new FML::Process::Configure;
+    use FML::Process::Scheduler;
+    $curproc = new FML::Process::Scheduler;
     $curproc->run();
 
 =head1 DESCRIPTION
 
-FML::Process::Configure is the wrapper for fmlconf and makefml.
-See C<FML::Process::Flow> for each method definition.
-
-=head2 MODULES
-
-These programs,
-C<fmlconf> and C<makefml>,
-bootstrap by using these modules in this order.
-
-   libexec/loader -> FML::Process::Switch -> FML::Process::Configure
+FML::Process::Scheduler is demonstration module to show fml module
+usage.
+This module provides calender presentation for simple scheduler,
+TinyScheduler calss.
 
 =head1 METHODS
 
 =head2 C<new($args)>
 
-usual constructor.
+standard constructor.
 
 =head2 C<prepare($args)>
 
@@ -51,7 +45,11 @@ dummy.
 =cut
 
 
-# avoid default fml new() since we do not need it.
+# Descriptions: dummy
+#               avoid default fml new() since we do not need it.
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: OBJ
 sub new
 {
     my ($self) = @_;
@@ -61,11 +59,20 @@ sub new
 }
 
 
+# Descriptions: dummy
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub prepare        { 1; }
 sub verify_request { 1; }
 sub finish         { 1; }
 
 
+# Descriptions: prepare parameters and call TinyScheduler module.
+#               we use w3m to show calender (HTML table).  
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: create temporary file and remove it in the last
+# Return Value: none
 sub run
 {
     my ($self, $args) = @_;
@@ -126,6 +133,10 @@ sub run
 
 
 
+# Descriptions: show help
+#    Arguments: OBJ($self)
+# Side Effects: none
+# Return Value: none
 sub help
 {
     my ($self) = @_;
@@ -167,7 +178,7 @@ redistribute it and/or modify it under the same terms as Perl itself.
 
 =head1 HISTORY
 
-FML::Process::Configure appeared in fml5 mailing list driver package.
+FML::Process::Scheduler appeared in fml5 mailing list driver package.
 See C<http://www.fml.org/> for more details.
 
 =cut

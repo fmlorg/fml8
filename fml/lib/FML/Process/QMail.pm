@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: QMail.pm,v 1.8 2001/05/28 16:17:14 fukachan Exp $
+# $FML: QMail.pm,v 1.9 2001/12/22 09:21:09 fukachan Exp $
 #
 
 package FML::Process::QMail;
@@ -25,7 +25,7 @@ sub new
 
 =head1 NAME
 
-FML::Process::QMail - emulate C<qmail-ext> address
+FML::Process::QMail - emulate C<qmail-ext> address such as elena-subscribe@
 
 =head1 SYNOPSIS
 
@@ -50,9 +50,15 @@ C<NOT YET IMPLERMENTED>.
 =cut
 
 
+# Descriptions: qmail style command extention
+#               elena-subscribe@domain implies 
+#               "mail message body with subscribe to elena-ctl@domain"
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: none
+# Return Value: STR
 sub DotQmailExt
 {
-    my ($curproc) = @_;
+    my ($curproc, $args) = @_;
     my $config = $curproc->{ config };
 
     # get ?

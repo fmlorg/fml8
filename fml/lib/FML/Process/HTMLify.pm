@@ -3,7 +3,7 @@
 # Copyright (C) 2000-2001 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: HTMLify.pm,v 1.5 2001/11/27 11:40:30 fukachan Exp $
+# $FML: HTMLify.pm,v 1.6 2001/12/22 09:21:09 fukachan Exp $
 #
 
 package FML::Process::HTMLify;
@@ -21,7 +21,7 @@ use FML::Config;
 
 =head1 NAME
 
-FML::Process::HTMLify -- yet another interface to htmlify
+FML::Process::HTMLify -- htmlify articles
 
 =head1 SYNOPSIS
 
@@ -31,7 +31,7 @@ See C<Mail::HTML::Lite> module.
 
 This class drives thread tracking system in the top level.
 
-=head1 METHOD
+=head1 METHODS
 
 =head2 C<new($args)>
 
@@ -39,11 +39,15 @@ create a C<FML::Process::Kernel> object and return it.
 
 =head2 C<prepare()>
 
-dummy.
+dummy :)
 
 =cut
 
 
+# Descriptions: standard constructor
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: inherit FML::Process::Kernel
+# Return Value: OBJ
 sub new
 {
     my ($self, $args) = @_;
@@ -54,8 +58,8 @@ sub new
 
 
 # Descriptions: dummy to avoid to take data from STDIN
-#    Arguments: $self $args
-# Side Effects:
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
 # Return Value: none
 sub prepare
 {
@@ -63,6 +67,10 @@ sub prepare
 }
 
 
+# Descriptions: dummy to avoid to take data from STDIN
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub verify_request
 {
     ;
@@ -75,6 +83,10 @@ call the actual thread tracking system.
 
 =cut
 
+# Descriptions: convert text format article to HTML by Mail::HTML::Lite
+#    Arguments: OBJ($curproc) HASH_REF($args)
+# Side Effects: load modules, create HTML files and directories
+# Return Value: none
 sub run
 {
     my ($curproc, $args) = @_;
@@ -115,6 +127,10 @@ sub run
 }
 
 
+# Descriptions: show help
+#    Arguments: none
+# Side Effects: none
+# Return Value: none
 sub help
 {
     use File::Basename;
@@ -132,8 +148,17 @@ _EOF_
 }
 
 
+# Descriptions: dummy to avoid to take data from STDIN
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub finish {}
 
+
+# Descriptions: dummy to avoid to take data from STDIN
+#    Arguments: OBJ($self) HASH_REF($args)
+# Side Effects: none
+# Return Value: none
 sub DESTROY {}
 
 
