@@ -142,25 +142,6 @@ use_command_mail_filter	= 	yes
 command_mail_filter_functions	=	command_mail_size_filter
 
 
-# Descriptions: サイズ情報を根拠にしたフィルタリングをするか？
-#      History:
-#        Value: yes / no
-#     Examples:
-use_command_mail_size_filter	=	yes
-
-
-# Descriptions: フィルタリングのルール。
-#               どのルールにもマッチしないなら、コマンドメールは認められる。
-#      History:
-#        Value:
-#     Examples:
-command_mail_size_filter_rules	=	check_header_size
-					check_body_size
-					check_command_limit
-					check_line_length_limit
-					permit
-
-
 # Descriptions: フィルタで弾かれたことを教える
 #      History: 4.0 ではハードコードだったような…
 #        Value: yes / no
@@ -182,6 +163,25 @@ command_mail_filter_reject_notice_recipients	=	maintainer
 #        Value: multipart / string
 #     Examples: string
 command_mail_filter_reject_notice_data_type	=	string
+
+
+# Descriptions: サイズ情報を根拠にしたフィルタリングをするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_command_mail_size_filter	=	yes
+
+
+# Descriptions: フィルタリングのルール。
+#               どのルールにもマッチしないなら、コマンドメールは認められる。
+#      History:
+#        Value:
+#     Examples:
+command_mail_size_filter_rules	=	check_header_size
+					check_body_size
+					check_command_limit
+					check_line_length_limit
+					permit
 
 </screen>
 </para>

@@ -88,6 +88,30 @@ article_size_filter_rules	=	check_header_size
 					check_body_size
 					permit
 
+# Descriptions:
+#      History:
+#        Value:
+#     Examples:
+command_mail_filter_functions	=	command_mail_size_filter
+
+
+# Descriptions: サイズ情報を根拠にしたフィルタリングをするか？
+#      History:
+#        Value: yes / no
+#     Examples:
+use_command_mail_size_filter	=	yes
+
+
+# Descriptions: フィルタリングのルール。
+#               どのルールにもマッチしないなら、コマンドメールは認められる。
+#      History:
+#        Value:
+#     Examples:
+command_mail_size_filter_rules	=	check_header_size
+					check_body_size
+					check_command_limit
+					check_line_length_limit
+					permit
 
 # Descriptions: MTA から fml が受けとる際のコマンドメールのヘッダサイズの上限値
 #      History:
@@ -117,31 +141,6 @@ outgoing_command_mail_header_size_limit	= $default_mail_header_size_limit
 #        Value: NUM
 #     Examples: 10240000
 outgoing_command_mail_body_size_limit	= $default_mail_body_size_limit
-
-# Descriptions:
-#      History:
-#        Value:
-#     Examples:
-command_mail_filter_functions	=	command_mail_size_filter
-
-
-# Descriptions: サイズ情報を根拠にしたフィルタリングをするか？
-#      History:
-#        Value: yes / no
-#     Examples:
-use_command_mail_size_filter	=	yes
-
-
-# Descriptions: フィルタリングのルール。
-#               どのルールにもマッチしないなら、コマンドメールは認められる。
-#      History:
-#        Value:
-#     Examples:
-command_mail_size_filter_rules	=	check_header_size
-					check_body_size
-					check_command_limit
-					check_line_length_limit
-					permit
 
 
 # Descriptions: キャッシュのサイズ

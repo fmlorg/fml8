@@ -797,6 +797,15 @@ $address_for_post
 </row>
 <row>
 <entry>
+list_command_default_maps</entry>
+<entry>
+ 引数で指定しない時に、list コマンドが表示するべきマップ</entry>
+<entry>
+$recipient_maps
+   </entry>
+</row>
+<row>
+<entry>
 listinfo_base_dir</entry>
 <entry>
  information をおくディレクトリ (ＭＬごと)</entry>
@@ -1001,6 +1010,15 @@ moderator_recipient_maps</entry>
  とりあえず定義してあるけど、使われてはいない</entry>
 <entry>
 $primary_moderator_recipient_map
+   </entry>
+</row>
+<row>
+<entry>
+newml_command_ml_admin_default_address</entry>
+<entry>
+ ＭＬ作成時の際に作われる fml_owner の値の指定。</entry>
+<entry>
+$fml_owner
    </entry>
 </row>
 <row>
