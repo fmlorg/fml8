@@ -1,5 +1,5 @@
 #
-# $FML: RULES.txt,v 1.4 2004/12/15 14:47:37 fukachan Exp $
+# $FML: RULES.txt,v 1.5 2004/12/29 08:22:59 fukachan Exp $
 #     BASED ON fml/cf/MANIFEST 1.104
 #
 #	.convert		よろしく変換して頑張る
@@ -1340,6 +1340,9 @@
 # # value: +\d{4} / -\d{4}
 # TZone:		 +0900
 .if TZone == +0900
+	.use_fml8_value
+
+.if TZone == JST
 	.use_fml8_value
 
 
@@ -2797,6 +2800,24 @@
 .if MD5
 	.use_fml8_value
 
+
+#
+# ??? OLD CONFIGURATIONS ???
+#
+.if SMTPLOG
+	.use_fml8_value
+
+.if CP
+	.use_fml8_value
+
+.if RM
+	.use_fml8_value
+
+.if _Ds
+	.ignore
+
+.if _Dm
+	.ignore
 
 
 # LOCAL_CONFIG:
