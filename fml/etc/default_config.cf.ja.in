@@ -2259,7 +2259,7 @@ ldap_search_base	=
 
 # Descriptions: LDAP ¤Î search bind
 #      History:
-#        Value: LDAP_SEVERVER_BIND
+#        Value: LDAP_SERVER_BIND
 #     Examples:
 ldap_server_bind	=
 
