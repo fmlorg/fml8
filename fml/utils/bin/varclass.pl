@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-# $FML: varclass.pl,v 1.3 2003/07/03 00:11:06 fukachan Exp $
+# $FML: varclass.pl,v 1.4 2003/10/17 06:18:09 fukachan Exp $
 # based on 'FML: check_varname.pl,v 1.3 2003/05/30 13:59:17 fukachan Exp'
 #
 
@@ -41,7 +41,7 @@ sub init
     @exceptional = qw(timezone);
 
     # top level category
-    for (qw(path directory system has
+    for (qw(path directory system
 	    default
 	    domain 
 	    cgi 
@@ -49,6 +49,7 @@ sub init
 	    ldap
 	    message
 	    reply_message
+	    report_mail
 	    template_file
 	    ml_local
 	    x
