@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: deladmin.pm,v 1.4 2002/07/02 12:07:33 fukachan Exp $
+# $FML: deladmin.pm,v 1.1 2002/07/13 09:45:41 fukachan Exp $
 #
 
 package FML::Command::Admin::deladmin;
@@ -61,6 +61,7 @@ sub process
     my ($self, $curproc, $command_args) = @_;
     my $config        = $curproc->{ config };
     my $member_map    = $config->{ primary_admin_member_map };
+    my $recipient_map = $config->{ primary_admin_recipient_map };
     my $options       = $command_args->{ options };
     my $address       = $command_args->{ command_data } || $options->[ 0 ];
 
@@ -73,7 +74,7 @@ sub process
     # FML::Command::UserControl specific parameters
     my $uc_args = {
 	address => $address,
-	maplist => [ $member_map ],
+	maplist => [ $member_map, $recipient_map ],
     };
     my $r = '';
 
