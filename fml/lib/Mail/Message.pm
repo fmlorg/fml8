@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.26 2001/08/02 02:00:14 fukachan Exp $
+# $FML: Message.pm,v 1.27 2001/08/23 13:10:34 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1512,6 +1512,29 @@ sub is_empty
 
     # false
     return 0;
+}
+
+
+=head2 C<get_encoding_mechanism()>
+
+return encoding type for specified Mail::Message not whole mail.
+The return value is one of base64, quoted-printable or undef.
+
+=cut
+
+sub get_encoding_mechanism
+{
+    my ($self) = @_;
+    my $buf = $self->header_in_body_part();
+
+    if ($buf =~ /Content-Transfer-Encoding:\s*(\S+)/i) {
+	my $mechanism = $1;
+	$mechanism =~ tr/A-Z/a-z/;
+	return $mechanism;
+    }
+    else {
+	return undef;
+    }
 }
 
 

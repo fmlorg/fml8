@@ -1,5 +1,5 @@
 <!--
-   $FML$
+   $FML: Mail::Message.sgml,v 1.1.1.1 2001/09/23 10:56:33 fukachan Exp $
 -->
 
 <chapter id=="module.mail.message">
@@ -291,6 +291,15 @@ envelope_sender()
 get_data_type()
 は
 Mail::Message オブジェクトのタイプ(文字列)を返します。
+これは、メール全体のタイプ（マルチパートとか text/plain)
+どではなく、鎖の各部分のオブジェクトのタイプであることに注意して下さい。
+</para>
+
+<para>
+get_encoding_mechanism()
+は
+Mail::Message オブジェクトのエンコーディングメカニズム(文字列)を返します。
+エンコーディングされていないなら undef が返ります。
 これは、メール全体のタイプ（マルチパートとか text/plain)
 どではなく、鎖の各部分のオブジェクトのタイプであることに注意して下さい。
 </para>
