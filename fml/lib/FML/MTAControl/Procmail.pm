@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Procmail.pm,v 1.9 2003/02/20 04:32:50 fukachan Exp $
+# $FML: Procmail.pm,v 1.10 2003/03/06 10:11:18 fukachan Exp $
 #
 
 package FML::MTAControl::Procmail;
@@ -235,7 +235,7 @@ sub procmail_setup
 }
 
 
-# Descriptions: dummy. 
+# Descriptions: dummy.
 #               This module do not need to handle virtual issue since
 #               ml_name@ml_domain is written in procmailrc.
 #    Arguments: OBJ($self)
@@ -248,7 +248,7 @@ sub _procmail_rewrite_virtual_params
 }
 
 
-# Descriptions: dummy. 
+# Descriptions: dummy.
 #               This module do not need to handle virtual issue since
 #               ml_name@ml_domain is written in procmailrc.
 #    Arguments: OBJ($self)
@@ -261,7 +261,7 @@ sub procmail_install_virtual_map
 }
 
 
-# Descriptions: dummy. 
+# Descriptions: dummy.
 #               This module do not need to handle virtual issue since
 #               ml_name@ml_domain is written in procmailrc.
 #    Arguments: OBJ($self)
@@ -274,7 +274,7 @@ sub procmail_remove_virtual_map
 }
 
 
-# Descriptions: dummy. 
+# Descriptions: dummy.
 #               This module do not need to handle virtual issue since
 #               ml_name@ml_domain is written in procmailrc.
 #    Arguments: OBJ($self)

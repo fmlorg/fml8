@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Auth.pm,v 1.23 2003/03/17 13:24:33 fukachan Exp $
+# $FML: Auth.pm,v 1.24 2003/03/18 10:42:41 fukachan Exp $
 #
 
 package FML::Command::Auth;
@@ -208,7 +208,7 @@ sub check_admin_member_password
 =cut
 
 
-# Descriptions: 
+# Descriptions:
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($up_args)
 # Side Effects: admin password modified.

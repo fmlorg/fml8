@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Error.pm,v 1.16 2003/03/16 08:02:56 fukachan Exp $
+# $FML: Error.pm,v 1.17 2003/03/16 10:47:10 fukachan Exp $
 #
 
 package FML::Error;
@@ -58,7 +58,7 @@ sub new
 
 # Descriptions: lock channel we should use to lock this object.
 #    Arguments: OBJ($self)
-# Side Effects: lock "error_analyzer_cache_dir" channel 
+# Side Effects: lock "error_analyzer_cache_dir" channel
 # Return Value: STR
 sub get_lock_channel_name
 {

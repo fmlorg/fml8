@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.165 2003/03/17 08:58:50 fukachan Exp $
+# $FML: Kernel.pm,v 1.166 2003/03/18 10:39:40 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -1010,7 +1010,7 @@ sub _check_restrictions
     for my $rule (@$rules) {
 	if ($acl->can($rule)) {
 	    # match  = matched. return as soon as possible from here.
-	    #          ASAP or RETRY the next rule, depends on the rule. 
+	    #          ASAP or RETRY the next rule, depends on the rule.
 	    # result = action determined by matched rule.
 	    ($match, $result) = $acl->$rule($rule, $sender);
 	}
@@ -2122,7 +2122,7 @@ sub reset_umask
 
 
 # Descriptions: finalize curproc.
-#    Arguments: OBJ($curproc) 
+#    Arguments: OBJ($curproc)
 # Side Effects: non
 # Return Value: none
 sub finalize

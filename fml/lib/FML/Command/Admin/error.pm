@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: error.pm,v 1.2 2003/03/14 14:17:59 fukachan Exp $
+# $FML: error.pm,v 1.3 2003/03/18 10:42:42 fukachan Exp $
 #
 
 package FML::Command::Admin::error;
@@ -86,7 +86,7 @@ sub _fmlerror
     my $data = $obj->analyze();
     my $info = $obj->get_data_detail();
 
-    # XXX-TODO: move to FML::Error more. 
+    # XXX-TODO: move to FML::Error more.
     my ($k, $v);
     while (($k, $v) = each %$info) {
 	if (defined($v) && ref($v) eq 'ARRAY') {

@@ -3,7 +3,7 @@
 # Copyright (C) 2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Spool.pm,v 1.1 2003/03/15 09:07:03 fukachan Exp $
+# $FML: Spool.pm,v 1.1 2003/03/16 10:45:45 fukachan Exp $
 #
 
 package FML::Article::Spool;
@@ -52,7 +52,7 @@ sub new
     use FML::Article;
     my $article = new FML::Article $curproc;
 
-    my $me = { 
+    my $me = {
 	_curproc => $curproc,
 	_article => $article,
     };

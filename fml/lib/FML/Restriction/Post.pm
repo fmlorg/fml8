@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Post.pm,v 1.1 2003/03/06 09:34:15 fukachan Exp $
+# $FML: Post.pm,v 1.2 2003/03/09 03:52:12 fukachan Exp $
 #
 
 package FML::Restriction::Post;
@@ -105,7 +105,7 @@ sub permit_member_maps
 	# save reason for later use.
 	$pcb->set("check_restrictions", "deny_reason", $rule);
 
-	# XXX "deny ASAP if this method fails." ? NO, wrong! 
+	# XXX "deny ASAP if this method fails." ? NO, wrong!
 	# XXX permit_XXX() allows the trial match of another rules.
 	# return("matched", "deny");
     }

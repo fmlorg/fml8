@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Switch.pm,v 1.89 2003/03/09 03:52:13 fukachan Exp $
+# $FML: Switch.pm,v 1.90 2003/03/11 06:17:10 fukachan Exp $
 #
 
 package FML::Process::Switch;
@@ -377,13 +377,13 @@ sub _ml_name_is_required
 sub _module_we_use
 {
     my ($args)  = @_;
-    my $main_cf = $args->{ main_cf }; 
+    my $main_cf = $args->{ main_cf };
     my $name    = $args->{ myname };
     my $modules = $main_cf->{ default_module_config };
     my $pkg     = undef;
     my $pkgopts = undef;
 
-    if (defined $args->{ options }->{ ctladdr } && 
+    if (defined $args->{ options }->{ ctladdr } &&
 	$args->{ options }->{ ctladdr }) {
 	$name .= "__--ctladdr";
     }

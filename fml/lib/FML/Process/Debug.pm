@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: @template.pm,v 1.7 2003/01/01 02:06:22 fukachan Exp $
+# $FML: Debug.pm,v 1.1 2003/03/14 03:49:44 fukachan Exp $
 #
 
 package FML::Process::Debug;
@@ -47,13 +47,13 @@ sub new
 
 
 # Descriptions: dump the curproc structure.
-#    Arguments: OBJ($self) OBJ($curproc) 
+#    Arguments: OBJ($self) OBJ($curproc)
 # Side Effects: non
 # Return Value: none
 sub dump_curproc
 {
     my ($self, $curproc) = @_;
- 
+
     print "CURPROC_BEGIN\n";
     my (@c) = sort keys %$curproc;
     for my $k (@c) {
@@ -90,7 +90,7 @@ See C<http://www.fml.org/software/FNF/> on fml coding style guide.
 
 =head1 AUTHOR
 
-Ken'ichi Fukamachi 
+Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 

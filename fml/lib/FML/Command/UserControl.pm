@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: UserControl.pm,v 1.30 2003/03/18 14:14:50 fukachan Exp $
+# $FML: UserControl.pm,v 1.31 2003/03/23 15:57:52 fukachan Exp $
 #
 
 package FML::Command::UserControl;
@@ -123,7 +123,7 @@ sub useradd
     }
 
     $curproc->unlock($lock_channel);
-    if ($reason) { 
+    if ($reason) {
 	croak($reason);
     }
 
@@ -213,7 +213,7 @@ sub userdel
 }
 
 
-# Descriptions: dispatch chaddr operation 
+# Descriptions: dispatch chaddr operation
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
 # Side Effects: none
@@ -231,7 +231,7 @@ sub user_chaddr
     $curproc->lock($lock_channel);
 
     for my $map (@$maplist) {
-	$self->_try_chaddr_in_map($curproc, $command_args, $uc_args, 
+	$self->_try_chaddr_in_map($curproc, $command_args, $uc_args,
 				   $cred, $map);
     }
 
@@ -245,7 +245,7 @@ sub user_chaddr
 # Descriptions: chaaddr
 #    Arguments: OBJ($self)
 #               OBJ($curproc) HASH_REF($command_args) HASH_REF($uc_args)
-#               OBJ($cred) STR($map) 
+#               OBJ($cred) STR($map)
 # Side Effects: update member list
 # Return Value: none
 sub _try_chaddr_in_map
@@ -255,7 +255,7 @@ sub _try_chaddr_in_map
     my $old_address = $uc_args->{ old_address };
     my $new_address = $uc_args->{ new_address };
 
-    # 
+    #
     my $is_old_address_ok  = 0;
     my $is_new_address_ok  = 0;
     my $old_address_in_map = '';
@@ -269,7 +269,7 @@ sub _try_chaddr_in_map
     }
 
     # 2. new address NOT EXISTS
-    unless ($cred->has_address_in_map($map, $config, $new_address)) { 
+    unless ($cred->has_address_in_map($map, $config, $new_address)) {
 	$is_new_address_ok = 1;
     }
     else {
@@ -282,14 +282,14 @@ sub _try_chaddr_in_map
     # XXX-TODO: we should remove old one when both old and new ones exist.
     # XXX WHICH STEP IS IT BETTER TO UPDATE LIST ?
     #  [I] 1. remove the old address only if $new_address not included.
-    #      2. add the newadderss 
-    # [II] 1. add the newadderss 
+    #      2. add the newadderss
+    # [II] 1. add the newadderss
     #      2. remove the old address only if $new_address not included.
-    # 
+    #
     # Plan [II] is better for authentication without reader lock.
     # Consider the case the process executing chaddr is preempted, and
     # another distributing process starts to run.
-    # 
+    #
     if ($is_old_address_ok && $is_new_address_ok) {
 	{
 	    my $obj = new IO::Adapter $map, $config;
@@ -318,7 +318,7 @@ sub _try_chaddr_in_map
 	    else {
 		LogError("fail to delete $old_address to map=$map");
 	    }
-	    $obj->close();	
+	    $obj->close();
 	}
     }
 }
