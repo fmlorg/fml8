@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Message.pm,v 1.13 2001/04/10 11:48:06 fukachan Exp $
+# $FML: Message.pm,v 1.14 2001/04/12 13:00:49 fukachan Exp $
 #
 
 package Mail::Message;
@@ -1010,6 +1010,9 @@ sub parse_and_build_mime_multipart_chain
     my $pe              = $mpb_begin; # pe = position of the end in $data
     $self->_set_pos( $pe + 1 );
 
+    # fix the end of multipart block against broken MIME/multipart
+    $mpb_end = ($data_end - 1) if $mpb_end < 0;
+
     # prepare lexical variables
     my ($msg, $next_part, $prev_part, @m);
     my $i = 0; # counter to indicate the $i-th message
@@ -1103,7 +1106,7 @@ sub _get_data_type
     my ($args, $default) = @_;
     my $buf = $args->{ header } || '';
 
-    if ($buf =~ /Content-Type:\s*(\S+)(\;|\s*$)/) {
+    if ($buf =~ /Content-Type:\s*(\S+)(\n|\;|\s*$)/) {
 	return $1;
     }
     else {
@@ -1122,6 +1125,9 @@ sub _get_mime_header
 	return ($buf, $pos + 1);
     }
     elsif ($buf =~ /Content-Type:\s*(\S+)\s*$/) {
+	return ($buf, $pos + 1);
+    }
+    elsif ($buf =~ /Content-Type:\s*(\S+)\s*/) {
 	return ($buf, $pos + 1);
     }
     else {
