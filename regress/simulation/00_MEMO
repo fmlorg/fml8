@@ -7,29 +7,22 @@
         XXX 遠大なビジョンやとりあえず後まわしでよいものは STATUS.txt へ
 
 
+[TODO]	List-* を config とあわせる
+
+
 [TODO]	使ってないモジュール?
 
 		FML::Data::Deadline
-		FML::IPC::Message
 		FML::Process::QMail
 		FML::Sys::Alias
-		File::Rotate
 
 
-[TODO]	変数の ...s vs _list 
+[TODO]	変数名なんだが… *_mta_config_list は困ったな
 
-	xxxs vs xxx_list ?
-	"all of" vs "either of" ?
-
-		cgi_language_list
-		cgi_menu_address_map_list
-		error_analyzer_function_list
 		newml_command_mta_config_list
 		rmml_command_mta_config_list
-		template_file_charset_list
 
-	select?
-	choice?
+	こいつらは select_list とも、びみょうにちがうか…
 
 
 [TODO]	charset と言語(japanese,english)との対応関係を一箇所にまとめて定義
@@ -53,11 +46,14 @@
 
 	スレッド DB 再生成の呪文がないよ;)
 
+		makefml udb $ml_name rebuild (?)
+
 	スレッドその他のエンジンもそれを使うことになる。
 
 	MTI との統合
 
 	output とモードの明瞭化を
+
 	どこでどう CSS とたたかうの？
 
 	index.html (fml-devel 234)
@@ -77,7 +73,7 @@
 	+ (4)
 		+
 
-	となっているときに (3) の next_thread はいつ次のリンクがわかる
+	となっているときに (3) の next_thread は、いつ次のリンクがわかる
 	のか？予言できない。過去に向かってスレッドを修正するアルゴリズ
 	ムなので、過去の修正がいつ行なわれるかは良くわからない;)
 
@@ -130,6 +126,101 @@
 
 
 ======================================================================
+○	内部構造
+
+
+[TODO]	エラートラップ・フレームワーク
+
+
+[TODO]	FML::PCB、FML::Config は、コンテキスト切替時にどうする？
+
+
+[TODO]	FML::Restriction
+
+	->regexp_match() は、まぁいいとおもうが、それいがいのところ
+
+	FML/Process/CGI/Param.pm で使っているけど
+		->regexp_match() スタイルにしてほしい
+
+
+[TODO]	IO::Adapter::LDAP
+
+
+[TODO]	IO::Adapter の SQL まわりの改良を？
+
+	ん？もういいのかな？
+
+
+[TODO]	IO::Adapter の PostgreSQL 
+
+
+[TODO]	udb_write_map ? udb_store_map ?
+
+	local いがいのばあい、はどうすればいいの？
+	MySQL につっこみたいとか〜
+
+
+[TODO]	FML/Process/00_USAGE
+
+
+[TODO]	FML::Command::Admin::dir
+	cgi_menu() ?
+	ディレクトリ listing してくれる perl module ないかな？
+
+
+[TODO]	Mail::Delivery
+
+	Mail::Delivery::Queue
+		キュー管理システムから flock(2) をはずそうかね
+
+		FML/Command/Admin/mailq.pm
+		FML/Process/Kernel.pm
+		FML/Process/QueueManager.pm
+		Mail/Delivery/Queue.pm
+
+		lock + unlock ->
+
+		sub pick_up
+		{
+			dst = ",$qid"
+			if (rename($qid, $dst)) {
+				return 1;
+			}
+			add_rollback_list($qid);
+			return 0;
+		}
+
+		sub remove
+		{
+			delete_rollback_list($qid);
+			unlink ",$qid";
+		}
+
+		sub rollback
+		{
+			src = ",$qid"
+			rename($src, $qid);
+		}
+
+		sub DESTROY
+		{
+			rollback();
+		}
+ 
+
+	Mail::Delivery::SMTP オーバホール
+
+
+[TODO]	remove $msg->{ next }
+
+	FML/Filter/TextPlain.pm
+	Mail/Message/ToHTML.pm
+	Mail/Message.pm
+	Mail/Bounce/Postfix19991231.pm
+	Mail/Bounce/Qmail.pm
+
+
+======================================================================
 ○		FNF-ify およびドキュメント
 
 
@@ -137,11 +228,6 @@
 [TODO]	HOOK のガイドライン？
 
 	どの HOOK あたりで、なにをかくべきか？
-
-
-[TODO]	01_RFC_IO_ADAPTER.txt
-
-	PostgreSQL をかけ
 
 
 [TODO]	ドキュメント( tutorial )
@@ -155,15 +241,6 @@
 [TODO]	ドキュメントの翻訳
 
 	どうやってシンクロするの？
-
-
-[TODO]	remove $msg->{ next }
-
-	FML/Filter/TextPlain.pm
-	Mail/Message/ToHTML.pm
-	Mail/Message.pm
-	Mail/Bounce/Postfix19991231.pm
-	Mail/Bounce/Qmail.pm
 
 
 [TODO]	2002,2003 年のオーバホールの残り
@@ -202,97 +279,5 @@
 	Mail/Message/ToHTML.pm
 
 
-======================================================================
-○	内部構造
-
-
-[TODO]	エラートラップ・フレームワーク
-
-
-[TODO]	FML::PCB、FML::Config は、コンテキスト切替時にどうする？
-
-
-[TODO]	File::* は、なるたけ、なくすべきだとおもうなぁ。
-
-	- File::SimpleLock
-	- File::Rotate
-		つかってない or つかわないようにかいしゃくした
-
-	- File::CacheDir
-		FML/Error/Cache.pm
-		FML/Process/Kernel.pm
-
-	- File::Sequence
-		File/CacheDir.pm
-
-			increment_id()		つかわれてる
-			get_id()		つかわれてる
-			set_id()		つかわれてる
-			search_max_id()		つかわれていない
-
-
-	- File::Utils
-
-		used		ok, not used.
-		--------------------------------
-				error
-				error_clear
-				mkdirhier
-		touch (File::Sequence がつかってるだけ)
-				search_program
-				copy
-				append
-
-
-
-[TODO]	フィルタ関数は、やっぱり FML::Filter 以下に集結している
-	べきかもしれない？ FML::Command::Filter ?
-	FML::Article::Filter はないのに？
-
-
-[TODO]	FML::Restriction って、これでいいのか？
-
-	->regexp_match() は、まぁいいとおもうが、それいがいのところ
-
-
-[TODO]	FML::Restriction::* のつかいかた
-
-		FML/Process/CGI/Param.pm
-
-
-[TODO]	IO::Adapter::LDAP
-
-
-[TODO]	IO::Adapter の SQL まわりの改良を？
-
-	ん？もういいのかな？
-
-
-[TODO]	udb_write_map ?
-
-	local いがいのばあい、はどうすればいいの？
-	MySQL につっこみたいとか〜
-
-
-[TODO]	FML/Process/00_USAGE
-
-
-[TODO]	FML::Command::Admin::dir
-	cgi_menu() ?
-	ディレクトリ listing してくれる perl module ないかな？
-
-
-======================================================================
-○	用意しただけ/途中も途中…
-
-
-[TODO]	ファイルを用意しただけやんシリーズ;)
-	これから改造するので、ほとんど未修正のままのこす
-
-		一度削除するか？
-
-	FML::Process::Qmail
-
-
 ----------
-$FML: 00_MEMO,v 1.108 2004/03/21 03:15:37 fukachan Exp $
+$FML: 00_MEMO,v 1.109 2004/04/11 13:29:02 fukachan Exp $
