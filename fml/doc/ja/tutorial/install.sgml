@@ -1,5 +1,5 @@
 <!--
-	$FML: install.sgml,v 1.1 2001/04/24 10:57:45 fukachan Exp $
+	$FML: install.sgml,v 1.2 2001/04/24 11:40:58 fukachan Exp $
 -->
 
 <chapter id="installation">
@@ -110,7 +110,9 @@
 <title> アップグレード </title>
 
 <para>
-単に、もう一度インストールして下さい。
+単に、もう一度
+<link linkend="install">インストール</link>
+して下さい。
 </para>
 
 <para>
