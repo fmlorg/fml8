@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: Kernel.pm,v 1.77 2002/03/16 10:51:59 fukachan Exp $
+# $FML: Kernel.pm,v 1.78 2002/03/16 14:24:58 fukachan Exp $
 #
 
 package FML::Process::Kernel;
@@ -546,16 +546,33 @@ If you attach a plain text with the charset = iso-2022-jp,
 sub reply_message
 {
     my ($curproc, $msg, $args) = @_;
-    my $rcpt     = $curproc->{ credential }->sender();
-    my $pcb      = $curproc->{ pcb };
-    my $category = 'reply_message';
-    my $class    = 'queue';
-    my $rarray   = $pcb->get($category, $class) || [];
+    my $recipient = [ $curproc->{ credential }->sender() ];
+
+    if (defined($args->{recipient})) {
+	if (ref($args->{recipient}) eq 'ARRAY') {
+	    $recipient = $args->{ recipient };
+	}
+	elsif (ref($args->{recipient}) eq '') {
+	    $recipient = [ $args->{ recipient } ];
+	}
+    }
+
+    $curproc->_append_message_into_queue($msg, $args, $recipient);
+}
+
+
+sub _append_message_into_queue
+{
+    my ($curproc, $msg, $args, $recipient) = @_;
+    my $pcb       = $curproc->{ pcb };
+    my $category  = 'reply_message';
+    my $class     = 'queue';
+    my $rarray    = $pcb->get($category, $class) || [];
 
     $rarray->[ $#$rarray + 1 ] = {
 	message   => $msg,
 	type      => ref($msg) ? ref($msg) : 'text',
-	recipient => $rcpt,
+	recipient => $recipient,
     };
 
     $pcb->set($category, $class, $rarray);
@@ -569,15 +586,29 @@ sub _reply_message_recipient_keys
     my $category = 'reply_message';
     my $class    = 'queue';
     my $rarray   = $pcb->get($category, $class) || [];
+    my %rcptattr = ();
     my %rcptlist = ();
+    my ($rcptlist, $key, $type) = ();
 
-    for my $r (@$rarray) {
-	if (defined $r->{ recipient } ) {
-	    $rcptlist{ $r->{ recipient } }++;
+    for my $m (@$rarray) {
+	if (defined $m->{ recipient } ) {
+	    $rcptlist = $m->{ recipient };
+	    $type     = ref($m->{ message });
+	    $key      = _gen_recipient_key( $rcptlist );
+	    $rcptattr{ $key }->{ $type }++;
+	    $rcptlist{ $key } = $rcptlist;
 	}
     }
 
-    return \%rcptlist;
+    return ( \%rcptattr, \%rcptlist );
+}
+
+
+sub _gen_recipient_key
+{
+    my ($rarray) = @_;
+
+    return join(" ", @$rarray);
 }
 
 
@@ -675,16 +706,17 @@ sub inform_reply_messages
     #    2. pick up messages for it/them.
     #       merge messages by types if needed.
     #
-    my $rcptlist = $curproc->_reply_message_recipient_keys();
-    for my $rcpt (keys %$rcptlist) {
-	Log("reply rcpt: $rcpt");
+    my ($attr, $list)  = $curproc->_reply_message_recipient_keys();
+    my $need_multipart = 0;
 
-	# inject message string to queue in
+    for my $key (keys %$list) {
 	for my $category ('reply_message', 'system_message') {
 	    if (defined($pcb->get($category, 'queue'))) {
+		# inject messages into message queue
 		$curproc->queue_in($category, {
-		    recipient    => $rcpt,
-		    num_messages => $rcptlist->{ $rcpt },
+		    recipient_key  => $key,
+		    recipient_list => $list->{ $key },
+		    recipient_attr => $attr,
 		});
 	    }
 	}
@@ -711,33 +743,50 @@ sub queue_in
     my $subject      = $config->{ "${category}_subject" };
     my $reply_to     = $config->{ address_for_command };
     my $is_multipart = 0;
-    my $recipient    = '';
+    my $rcptkey    = '';
+    my $rcptlist     = [];
     my $msg          = ''; 
 
-    # overwrite
+    # override parameters (may be processed here always)
     if (defined $optargs) {
-	$sender    = $optargs->{'sender'}    if defined $optargs->{'sender'};
-	$charset   = $optargs->{'charset'}   if defined $optargs->{'charset'};
-	$subject   = $optargs->{'subject'}   if defined $optargs->{'subject'};
-	$recipient = $optargs->{'recipient'} if defined $optargs->{'recipient'};
+	my $a = $optargs;
+	$sender    = $a->{'sender'}         if defined $a->{'sender'};
+	$charset   = $a->{'charset'}        if defined $a->{'charset'};
+	$subject   = $a->{'subject'}        if defined $a->{'subject'};
+	$rcptkey   = $a->{'recipient_key'}  if defined $a->{'recipient_key'};
+	$rcptlist  = $a->{ recipient_list } if defined $a->{'recipient_list'};
 
-	$is_multipart = $optargs->{ num_messages } > 1 ? 1 : 0;
+	# we need multipart style or not ?
+	if (defined $a->{'recipient_attr'}) {
+	    my $attr  = $a->{ recipient_attr }->{ $rcptkey };
+
+	    # count up non text message in the queue
+	    for my $attr (keys %$attr) {
+		$is_multipart++ if $attr;
+	    }
+	}
     }
 
     # default recipient if undefined.
-    unless ($recipient) {
+    unless ($rcptkey) {
 	if (defined $curproc->{ credential }) {
-	    $recipient = $curproc->{ credential }->sender();
+	    $rcptkey = $curproc->{ credential }->sender();
 	}
     }
 
     # cheap sanity check
-    unless ($sender && $recipient) {
+    unless ($sender && $rcptkey) {
 	my $reason = '';
 	$reason = "no sender specified\n"    unless defined $sender;
-	$reason = "no recipient specified\n" unless defined $recipient;
+	$reason = "no recipient specified\n" unless defined $rcptkey;
 	croak("panic: queue_in()\n\treason: $reason\n");
     }
+
+
+    Log("debug: queue_in: sender=$sender");
+    Log("debug: queue_in: recipient=$rcptkey");
+    Log("debug: queue_in: rcptlist=[ @$rcptlist ]");
+    Log("debug: queue_in: is_multipart=$is_multipart");
 
 
     ###############################################################
@@ -753,7 +802,7 @@ sub queue_in
 	eval q{
 	    $msg = new Mail::Message::Compose
 		From     => $sender,
-		To       => $recipient,
+		To       => $rcptkey,
 		Subject  => $subject,
 		Type     => "multipart/mixed";
 	};
@@ -767,10 +816,10 @@ sub queue_in
 	for my $m ( @$mesg_queue ) {
 	    my $q = $m->{ message };
 	    my $t = $m->{ type };
-	    my $r = $m->{ recipient };
+	    my $r = _gen_recipient_key( $m->{ recipient } );
 
-	    # pick up only messages returned to specified $recipient
-	    next QUEUE unless $r eq $recipient;  
+	    # pick up only messages returned to specified $rcptkey
+	    next QUEUE unless $r eq $rcptkey;
 
 	    if ($t eq 'text') {
 		$s .= $q;
@@ -785,14 +834,14 @@ sub queue_in
 	}
 
 	# 2. pick up non text parts after the second part.
-	# pick up only messages returned to specified $recipient
+	# pick up only messages returned to specified $rcptkey
       QUEUE:
 	for my $m ( @$mesg_queue ) {
 	    my $q = $m->{ message };
 	    my $t = $m->{ type };
-	    my $r = $m->{ recipient };
+	    my $r = _gen_recipient_key( $m->{ recipient } );
 
-	    next QUEUE unless $r eq $recipient;  
+	    next QUEUE unless $r eq $rcptkey;  
 
 	    unless ($t eq 'text') {
 		$msg->attach(Type        => $q->{ type },
@@ -807,14 +856,14 @@ sub queue_in
 	my $mesg_queue = $pcb->get($category, 'queue');
 	my $s = '';
 
-	# pick up only messages returned to specified $recipient
+	# pick up only messages returned to specified $rcptkey
       QUEUE:
 	for my $m ( @$mesg_queue ) {
 	    my $q = $m->{ message };
 	    my $t = $m->{ type };
-	    my $r = $m->{ recipient };
+	    my $r = _gen_recipient_key( $m->{ recipient } );
 
-	    next QUEUE unless $r eq $recipient;  
+	    next QUEUE unless $r eq $rcptkey;  
 
 	    if ($t eq 'text') {
 		$s .= $q;
@@ -824,7 +873,7 @@ sub queue_in
 	eval q{
 	    $msg = new Mail::Message::Compose
 		From     => $sender,
-		To       => $recipient,
+		To       => $rcptkey,
 		Subject  => $subject,
 		Data     => $s,
 	};
@@ -848,7 +897,7 @@ sub queue_in
 
     if (defined $queue) {
 	$queue->set('sender',     $sender);
-	$queue->set('recipients', [ $recipient ]);
+	$queue->set('recipients', $rcptlist);
 	$queue->in( $msg ) && Log("queue=$qid in");
 	$queue->setrunnable();
 
