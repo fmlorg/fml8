@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself.
 #
-# $FML: List.pm,v 1.2 2003/09/27 03:44:05 fukachan Exp $
+# $FML: List.pm,v 1.3 2003/09/27 04:06:53 fukachan Exp $
 #
 
 package FML::CGI::List;
@@ -76,6 +76,7 @@ sub cgi_menu
 		);
 
     print submit(-name => 'show');
+    print reset(-name  => 'reset');
     print end_form;
 }
 
