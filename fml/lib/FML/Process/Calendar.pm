@@ -3,7 +3,7 @@
 # Copyright (C) 2002,2003,2004 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Calendar.pm,v 1.8 2004/01/02 02:11:26 fukachan Exp $
+# $FML: Calendar.pm,v 1.9 2004/01/02 14:50:33 fukachan Exp $
 #
 
 package FML::Process::Calendar;
@@ -39,9 +39,21 @@ standard constructor.
 
 =head2 prepare($args)
 
-dummy.
+load default configuration file to use path_* variables.
 
 =head2 verify_request($args)
+
+dummy.
+
+=head2 run($args)
+
+main routine.
+
+parse files under ~$user/.schedule/ directory and summarize it.
+
+Lastly, use w3m to show schedul as html table. 
+
+=head2 finish($args)
 
 dummy.
 
@@ -127,10 +139,16 @@ sub run
     my $tmpf     = $schedule->tmpfilepath;
     my $wh       = new FileHandle $tmpf, "w";
 
+    unless (defined $wh) {
+	my $s = "cannot open temporary file";
+	$curproc->logerror($s);
+	croak($s);
+    }
+
     # set output mode
     $schedule->set_mode( $mode );
 
-    # -a option: show three calendar for this, next and last month.
+    # -a option: show three calendars for this, next and last month.
     if (defined($option->{ a })) {
 	for my $month ('this', 'next', 'last') {
 	    $schedule->print_specific_month($wh, $month);
@@ -151,7 +169,12 @@ sub run
 
     if ($mode eq 'text') {
 	my $w3m = $config->{ path_w3m } || 'w3m';
-	system "$w3m -dump $tmpf";
+	if (-x $w3m) {
+	    system "$w3m -dump $tmpf";
+	}
+	else {
+	    $curproc->logerror("w3m not found");
+	}
     }
     else {
 	$curproc->cat( [ $tmpf ] );
