@@ -3,7 +3,7 @@
 # Copyright (C) 2000,2001,2002 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: Command.pm,v 1.56 2002/05/19 09:05:02 fukachan Exp $
+# $FML: Command.pm,v 1.57 2002/05/19 11:14:30 fukachan Exp $
 #
 
 package FML::Process::Command;
@@ -466,8 +466,9 @@ sub _get_command_mode
 	    }
 	}
 	else {
-	    LogError("privileged command from not an admin user");
-	    LogError("command processing stop.");
+	    $status->{ _stop_reason_key } = 'command.auth_fail';
+	    $status->{ _stop_reason_str } = "not authenticated.";
+	    LogError("admin command not authenticated");
 	    return '__LAST__';
 	}
     }
@@ -563,6 +564,27 @@ sub __clean_up
 }
 
 
+sub __stop_here
+{
+    my ($curproc, $args, $status, $cominfo, $orig_command) = @_;
+    my $config  = $curproc->{ config };
+    my $prompt  = $config->{ command_prompt } || '>>>';
+    my $key     = $status->{ _stop_reason_key };
+    my $str     = $status->{ _stop_reason_str };
+    
+    use FML::Command;
+    my $obj = new FML::Command;
+    if (defined $obj) {
+	# rewrite prompt e.g. to hide the password
+	my $command_args = $curproc->_gen_command_args($status, $cominfo);
+	$obj->rewrite_prompt($curproc, $command_args, \$orig_command);
+	$curproc->reply_message("\n$prompt $orig_command");
+	$curproc->reply_message_nl($key, $str);
+	$curproc->reply_message_nl('command.stop', "stopped.");
+    }
+}
+
+
 # Descriptions: scan message body and execute approviate command
 #               with dynamic loading of command definition.
 #               It resolves your customized command easily.
@@ -630,7 +652,8 @@ sub _evaluate_command_lines
 	    next COMMAND;
 	}
 	unless ($mode eq 'user' || $mode eq 'admin') {
-	    LogError("command processing looks insane. stop.");
+	    LogError("command processing stop.");
+	    $curproc->__stop_here($args, $status, $cominfo, $orig_command);
 	    last COMMAND;
 	}
 
