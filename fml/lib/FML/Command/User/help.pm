@@ -4,7 +4,7 @@
 #   All rights reserved. This program is free software; you can
 #   redistribute it and/or modify it under the same terms as Perl itself. 
 #
-# $FML: help.pm,v 1.1 2001/10/08 15:54:42 fukachan Exp $
+# $FML: help.pm,v 1.2 2001/10/10 10:08:07 fukachan Exp $
 #
 
 package FML::Command::User::help;
@@ -38,21 +38,17 @@ sub process
 {
     my ($self, $curproc, $optargs) = @_;
     my $config        = $curproc->{ config };
-    my $member_map    = $config->{ primary_member_map };
-    my $recipient_map = $config->{ primary_recipient_map };
-    my $charset       = $config->{ template_file_charset };
+    my $charset       = $config->{ reply_message_charset };
     my $help_file     = $config->{ help_file };
-    my $options       = $optargs->{ options };
-    my $address       = $optargs->{ address } || $options->[ 0 ];
 
-    # *** template substitution ***
-    # 1. in Japanese case, convert kanji code: iso-2022-jp -> euc
-    # 2. expand variables: $ml_name -> elena
-    # 3. back kanji code: euc -> iso-2022-jp
-    # 4. return the new created template
-    my $help_template = $curproc->expand_variables_in_file( $help_file );
+    # template substitution: kanji code, $varname expansion et. al.
+    my $params = {
+	src         => $help_file,
+	charset_out => $charset,
+    };
+    my $help_template = $curproc->prepare_file_to_return( $params ); 
 
-    if (-f $help_file) {
+    if (-f $help_template) {
 	$curproc->reply_message( {
 	    type        => "text/plain; charset=$charset",
 	    path        => $help_template,
@@ -61,7 +57,7 @@ sub process
 	});
     }
     else {
-	croak("no help file ($help_file)\n");
+	croak("no help file ($help_template)\n");
     }
 }
 
