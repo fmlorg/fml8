@@ -1,9 +1,9 @@
 #-*- perl -*-
 #
-# Copyright (C) 2001,2002 Ken'ichi Fukamachi
+# Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 #          All rights reserved.
 #
-# $FML: ThreadTrack.pm,v 1.38 2002/12/24 10:19:47 fukachan Exp $
+# $FML: ThreadTrack.pm,v 1.39 2003/02/01 08:51:41 fukachan Exp $
 #
 
 package FML::Process::ThreadTrack;
@@ -546,7 +546,7 @@ Ken'ichi Fukamachi
 
 =head1 COPYRIGHT
 
-Copyright (C) 2001,2002 Ken'ichi Fukamachi
+Copyright (C) 2001,2002,2003 Ken'ichi Fukamachi
 
 All rights reserved. This program is free software; you can
 redistribute it and/or modify it under the same terms as Perl itself.
